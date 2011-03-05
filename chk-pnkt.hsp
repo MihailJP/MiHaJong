@@ -1,0 +1,154 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *    [加符点判定ルーチン]
+ *=============================
+ */
+
+/* 符を算出する */
+#module
+#include "const.hsp"
+#deffunc calcbasepoints var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int TsumoAgari, var MachiType
+	trace "符計算の処理に入ります。"
+	/* 副底…２０符 */
+	setYakuInfo tmpYakuInfo, YAKUINF_FU, 20
+	/* 雀頭加符…役牌のみ２符 */
+	if ((haiMianziDat(0) >= TILE_WIND_MIN)&&(haiMianziDat(0) <= TILE_WIND_MAX)) {
+		/* 風牌は条件によって役牌 */
+		if ((getRound(GameStat)/4) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+			// 場風牌
+			addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
+		}
+		if (playerWind(targetPlayer, getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+			// 自風牌
+			addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
+		}
+		if (getRule(RULE_KAIMENKAZE) != "0") {
+			// 開門風牌
+			if (playerWind(getWareme(GameStat), getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+				addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
+			}
+		}
+#ifndef SANMA
+		if (getRule(RULE_URAKAZE) != "0") {
+			if (playerWind(targetPlayer+2, getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+				// 裏風牌
+				addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
+			}
+		}
+#endif
+	}
+	if ((haiMianziDat(0) >= TILE_DRAGON_MIN)&&(haiMianziDat(0) <= TILE_DRAGON_MAX)) {
+		/* 三元牌は常に役牌 */
+		addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
+	}
+	/* 面子加符 */
+	repeat 4, 1
+		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
+			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
+			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
+			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9
+			case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
+			case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
+				/* 一九字牌の場合 */
+				/* 明刻子 */ if (((haiMianziDat(cnt) / MELD_TYPE_STEP) >= MELD_TRIPLET_EXPOSED_MIN)&&((haiMianziDat(cnt) / MELD_TYPE_STEP) <= MELD_TRIPLET_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 4}
+				/* 暗刻子 */ if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_TRIPLET_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 8}
+				/* 明槓子 */ if (((haiMianziDat(cnt) / MELD_TYPE_STEP) >= MELD_QUAD_EXPOSED_MIN)&&((haiMianziDat(cnt) / MELD_TYPE_STEP) <= MELD_QUAD_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 16}
+				/* 暗槓子 */ if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 32}
+			swbreak
+			default:
+				/* 断幺牌の場合 */
+				/* 明刻子 */ if (((haiMianziDat(cnt) / MELD_TYPE_STEP) >= MELD_TRIPLET_EXPOSED_MIN)&&((haiMianziDat(cnt) / MELD_TYPE_STEP) <= MELD_TRIPLET_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 2}
+				/* 暗刻子 */ if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_TRIPLET_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 4}
+				/* 明槓子 */ if (((haiMianziDat(cnt) / MELD_TYPE_STEP) >= MELD_QUAD_EXPOSED_MIN)&&((haiMianziDat(cnt) / MELD_TYPE_STEP) <= MELD_QUAD_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 8}
+				/* 暗槓子 */ if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 16}
+			swbreak
+		swend
+	loop
+	/* 役牌が雀頭ではなく、刻子や槓子がない場合、フラグを立てる */
+	if (getYakuInfo(tmpYakuInfo, YAKUINF_FU) == 20) {NoTriplets = 1} else {NoTriplets = 0}
+	LiangMianFlag = 0
+	/* 聴牌形加符 */
+	if (haiMianziDat(0) == getHand(GameStat, HAND_TILECODE, 13, targetPlayer)) {MachiType = MACHI_TANKI /* 単騎待ち */}
+	repeat 4, 1
+		if (haiMianziDat(cnt) >= MELD_TRIPLET*MELD_TYPE_STEP) {
+			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == getHand(GameStat, HAND_TILECODE, 13, targetPlayer)) {
+				MachiType = MACHI_SHANPON /* 双ポン待ち */
+			}
+		} else {
+			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, 13, targetPlayer)-1)) {
+				MachiType = MACHI_KANCHAN /* 嵌張待ち */
+			}
+			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, 13, targetPlayer))) {
+				if ((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 7) {
+					MachiType = MACHI_PENCHAN /* 辺張待ち */
+				} else {
+					MachiType = MACHI_RYANMEN /* 両面待ち */
+					LiangMianFlag = 1
+				}
+			}
+			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, 13, targetPlayer)-2)) {
+				if ((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 1) {
+					MachiType = MACHI_PENCHAN /* 辺張待ち */
+				} else {
+					MachiType = MACHI_RYANMEN /* 両面待ち */
+					LiangMianFlag = 1
+				}
+			}
+		}
+	loop
+	/* 嵌張、辺張、単騎は＋２符「不利な待ちには２点付く」 */
+	if ((MachiType == MACHI_KANCHAN)||(MachiType == MACHI_PENCHAN)||(MachiType == MACHI_TANKI)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 2}
+	/* 双ポン待ちでロンした場合の例外 */
+	/* 明刻として扱うための減点 */
+	if ((MachiType == MACHI_SHANPON)&&(TsumoAgari == 0)) {
+		switch (getHand(GameStat, HAND_TILECODE, 13, targetPlayer))
+			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
+			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
+			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9
+			case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
+			case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
+				/* 一九字牌の場合 */
+				addYakuInfo tmpYakuInfo, YAKUINF_FU, -4
+			swbreak
+			default:
+				/* 断幺牌の場合 */
+				addYakuInfo tmpYakuInfo, YAKUINF_FU, -2
+			swbreak
+		swend
+	}
+	/* 平和が成立しうる場合 */
+	if ((NoTriplets == 1)&&(LiangMianFlag == 1)) {
+		if (getMenzen(GameStat, targetPlayer) == 1) {
+			/* 門前であれば、役として平和が成立する */
+			MachiType == 1
+			if ((TsumoAgari == 0)||(getRule(RULE_TSUMO_PINFU) == "0")) {
+				addyaku tmpYakuInfo, "平和", 1
+				setYakuInfo tmpYakuInfo, YAKUINF_FU, 20
+			} else {
+				addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
+			}
+		} else {
+			/* 門前でなければ、３０符とする */
+			MachiType == MACHI_RYANMEN
+			if ((getRule(RULE_EXPOSED_PINFU) == "0")||(getRule(RULE_EXPOSED_PINFU) == "2")||(getRule(RULE_EXPOSED_PINFU) == "4")) {
+				setYakuInfo tmpYakuInfo, YAKUINF_FU, 30
+			}
+			/* 喰い平を役にする場合 */
+			if ((getRule(RULE_EXPOSED_PINFU) == "2")||(getRule(RULE_EXPOSED_PINFU) == "3")||(getRule(RULE_EXPOSED_PINFU) == "4")||(getRule(RULE_EXPOSED_PINFU) == "5")) {
+				if ((getRule(RULE_EXPOSED_PINFU) == "2")||(getRule(RULE_EXPOSED_PINFU) == "3")) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1}
+				addyaku tmpYakuInfo, "平和", 1
+			}
+		}
+	} else {
+		/* 平和でないツモ和了りは２符 */
+		if (TsumoAgari == 1) {
+			addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
+		}
+	}
+	/* 門前加符…１０符 */
+	if ((getMenzen(GameStat, targetPlayer) == 1)&&(TsumoAgari == 0)) {
+		addYakuInfo tmpYakuInfo, YAKUINF_FU, 10
+	}
+	trace strf("この手牌は [%d] 符です。", getYakuInfo(tmpYakuInfo, YAKUINF_FU))
+return
+#global

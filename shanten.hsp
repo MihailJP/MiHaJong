@@ -1,0 +1,535 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *    [向聴数計算ルーチン]
+ *=============================
+ */
+
+/* 向聴数の計算 */
+#module
+#include "const.hsp"
+#defcfunc countshanten var GameStat, int targetPlayer, int Mode
+/*
+		val=countshanten(p1, p2, p3)
+		向聴数を計算する
+
+		p1 : 卓の状況を格納した構造体
+		p2 : 調べるプレイヤー
+		p3 : モード
+
+		向聴数を計算します。p3の値により、特定パターンのみの向聴数を求めることもできます。
+		0 : 通常
+		1 : 四面子一雀頭の通常手
+		2 : 七対子
+		3 : 国士無双
+		4 : 七星不靠
+		5 : 南北戦争
+		6 : 惑星直列
+*/
+	debug strf("向聴数を計算します。プレイヤー [%d]", targetPlayer)
+	countTilesInHand haiCount, GameStat, targetPlayer
+	// エラー防止のため、４枚を超える分は無視する
+	repeat TILE_CODE_MAXIMUM
+		if (haiCount(cnt) > 4) {
+			warn strf("牌コード [%d] の数が異常です [%d] 。4枚とみなします。", cnt, haiCount(cnt))
+			haiCount(cnt) = 4
+		}
+	loop
+	
+	switch Mode
+		case 1:
+			gosub *calcshanten_regular: return MianziShanten: swbreak
+		case 2:
+			gosub *calcshanten_chiitoi: return QiduiShanten: swbreak
+		case 3:
+			gosub *calcshanten_kokushi: return ShisanYaoShanten: swbreak
+		case 4:
+			gosub *calcshanten_stellar: return QixingShanten: swbreak
+		case 5:
+			gosub *calcshanten_civilwar: return CivilWarShanten: swbreak
+		case 6:
+			gosub *calcshanten_syzygy: return SyzygyShanten: swbreak
+		default:
+			gosub *calcshanten_regular
+			gosub *calcshanten_chiitoi
+			gosub *calcshanten_kokushi
+			gosub *calcshanten_stellar
+			gosub *calcshanten_civilwar
+			gosub *calcshanten_syzygy
+			// この結果のうち、最も少ない値が全体の向聴数となる
+			// ０ならば聴牌、－１ならば和了っている
+			Shanten = MianziShanten
+			if (Shanten > QiduiShanten) {Shanten = QiduiShanten}
+			if (Shanten > ShisanYaoShanten) {Shanten = ShisanYaoShanten}
+			if (getRule(RULE_STELLAR_UUSHII) != "0") {
+				if (Shanten > QixingShanten) {Shanten = QixingShanten}
+			}
+			if (getRule(RULE_CIVIL_WAR) != "0") {
+				if (Shanten > CivilWarShanten) {Shanten = CivilWarShanten}
+			}
+			if (getRule(RULE_SYZYGY) != "0") {
+				if (Shanten > SyzygyShanten) {Shanten = SyzygyShanten}
+			}
+			return Shanten
+			swbreak
+	swend
+	return 999
+	
+*calcshanten_regular
+	MianziShanten = 8 // 面子手に対する向聴数は最大８向聴
+	tmpMianzi = 0: tmpTarzi = 0: AtamaFlag = 0
+	// 数牌それぞれの面子の数
+	repeat TILE_NUMERAL_COLORS
+		tmpdat = peek(hncnMianziNumberData, haiCount(cnt*TILE_SUIT_STEP+9)*390625+haiCount(cnt*TILE_SUIT_STEP+8)*78125+haiCount(cnt*TILE_SUIT_STEP+7)*15625+haiCount(cnt*TILE_SUIT_STEP+6)*3125+haiCount(cnt*TILE_SUIT_STEP+5)*625+haiCount(cnt*TILE_SUIT_STEP+4)*125+haiCount(cnt*TILE_SUIT_STEP+3)*25+haiCount(cnt*TILE_SUIT_STEP+2)*5+haiCount(cnt*TILE_SUIT_STEP+1))
+		tmpMianzi += (tmpdat\128/16)
+		tmpTarzi += (tmpdat\16)
+		if (tmpdat/128 == 1) {AtamaFlag = 1}
+	loop
+	// 字牌の面子の数…刻子か対子だけ数えればいいから楽勝！
+	repeat 7
+		if (haiCount(cnt+TILE_SUIT_HONORS+1) == 2) {tmpTarzi++: AtamaFlag = 1}
+		if (haiCount(cnt+TILE_SUIT_HONORS+1) >= 3) {tmpMianzi++}
+	loop
+	// 鳴き面子や暗槓がある場合
+	tmpMianzi += MeldPointer(GameStat, targetPlayer)
+	
+	MianziCount = 0
+	if (tmpMianzi+tmpTarzi > 4) {
+		// 面子多多のとき
+		MianziShanten = 8 - (tmpMianzi*2) - (4-tmpMianzi)
+		// 面子多多でも、頭がある時は頭も数える
+		if (AtamaFlag == 1) {MianziShanten -= 1}
+	} else {
+		// そうでないとき
+		MianziShanten = 8 - (tmpMianzi*2) - tmpTarzi
+	}
+	trace strf("面子手に対する向聴数は [%d] です。", MianziShanten)
+	return
+
+*calcshanten_chiitoi
+	// 七対子に対する向聴数を求める。
+	countTilesInHand haiCount, GameStat, targetPlayer
+	QiduiShanten = 6
+	repeat TILE_NONFLOWER_MAX
+		// 単純に対子の数を調べればよい
+		// ただし、同じ牌４枚を対子２つとして使ってはならない
+		if (haiCount(cnt) >= 2) {
+			QiduiShanten--
+		}
+	loop
+	// 暗刻がある場合に聴牌とみなさないようにする
+	repeat TILE_NONFLOWER_MAX
+		if (haiCount(cnt) >= 3) {
+			if (QiduiShanten < 1) {QiduiShanten++}
+		}
+	loop
+	// 鳴き面子や暗槓がある場合は七対子は不可能
+	if (MeldPointer(GameStat, targetPlayer) > 0) {
+		QiduiShanten = 999
+	}
+	trace strf("七対子に対する向聴数は [%d] です。", QiduiShanten)
+	return
+
+*calcshanten_kokushi
+	// 国士無双に対する向聴数を求める。
+	countTilesInHand haiCount, GameStat, targetPlayer
+	YaojiuPai = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+9, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+9
+	YaojiuPai(6) = TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON, TILE_RED_DRAGON
+	ShisanYaoShanten = 13: AtamaFlag = 0
+	repeat 13
+		// ヤオ九牌１種類につき、１をカウントする。
+		if (haiCount(YaojiuPai(cnt)) >= 2) {
+			AtamaFlag = 1 // アタマ候補
+		}
+		if (haiCount(YaojiuPai(cnt)) >= 1) {
+			ShisanYaoShanten--
+		}
+	loop
+	/* 雀頭がある場合 */
+	if (AtamaFlag) {ShisanYaoShanten--}
+	// 鳴き面子や暗槓がある場合は国士無双も不可能
+	if (MeldPointer(GameStat, targetPlayer) > 0) {
+		ShisanYaoShanten = 999
+	}
+	trace strf("国士無双に対する向聴数は [%d] です。", ShisanYaoShanten)
+	return
+
+*calcshanten_stellar
+	// 特殊：七星不靠の向聴数を求める
+	if (getRule(RULE_STELLAR_UUSHII) != "0") {
+		countTilesInHand haiCount, GameStat, targetPlayer
+		QixingShanten == 999
+		QixingZiPai = TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON, TILE_RED_DRAGON
+		TmpQixingZiPaiCount = 0
+		repeat 7
+			if (haiCount(QixingZiPai(cnt)) >= 1) {
+				TmpQixingZiPaiCount++
+			}
+		loop
+		repeat 6
+			switch cnt
+				case 0:
+					QixingPai = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+9
+				swbreak
+				case 1:
+					QixingPai = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+8
+				swbreak
+				case 2:
+					QixingPai = TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+7, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+9
+				swbreak
+				case 3:
+					QixingPai = TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+7
+				swbreak
+				case 4:
+					QixingPai = TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+9, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+7, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+8
+				swbreak
+				case 5:
+					QixingPai = TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+9, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+7
+				swbreak
+			swend
+			TmpQixingShuPaiCount = 0
+			repeat 9
+				if (haiCount(QixingPai(cnt)) >= 1) {
+					if (TmpQixingShuPaiCount < 7) {TmpQixingShuPaiCount++}
+				}
+			loop
+			TmpQixingShanten = 13 - TmpQixingZiPaiCount - TmpQixingShuPaiCount
+			// 鳴き面子や暗槓がある場合は不可能
+			if (MeldPointer(GameStat, targetPlayer) > 0) {
+				TmpQixingShanten = 999
+			}
+			if (TmpQixingShanten < QixingShanten) {QixingShanten = TmpQixingShanten}
+		loop
+		trace strf("七星不靠に対する向聴数は [%d] です。", QixingShanten)
+	}
+	return
+
+*calcshanten_civilwar
+	// 特殊：南北戦争の向聴数を求める
+	if (getRule(RULE_CIVIL_WAR) != "0") {
+		countTilesInHand haiCount, GameStat, targetPlayer
+		CivilWarShanten = 13
+		// 以下、一枚ずつ調べる
+		repeat 6
+			dim haiCountTmp, TILE_CODE_MAXIMUM: repeat TILE_CODE_MAXIMUM: haiCountTmp(cnt) = haiCount(cnt): loop
+			switch cnt
+				case 0: CivilWarPai = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+1, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+5, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND: swbreak
+				case 1: CivilWarPai = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+1, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+5, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND: swbreak
+				case 2: CivilWarPai = TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+1, TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+5, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND: swbreak
+				case 3: CivilWarPai = TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+1, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+5, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND: swbreak
+				case 4: CivilWarPai = TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+1, TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+5, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND: swbreak
+				case 5: CivilWarPai = TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+1, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+5, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND: swbreak
+			swend
+			TmpCivilWarPaiCount = 0
+			repeat 14
+				if (haiCountTmp(CivilWarPai(cnt)) >= 1) {
+					TmpCivilWarPaiCount++
+					haiCountTmp(CivilWarPai(cnt))--
+				}
+			loop
+			TmpCivilWarShanten = 13 - TmpCivilWarPaiCount
+			if (TmpCivilWarShanten < CivilWarShanten) {CivilWarShanten = TmpCivilWarShanten}
+			// 鳴き面子や暗槓がある場合は考えない
+			if (MeldPointer(GameStat, targetPlayer) > 0) {
+				CivilWarShanten = 999
+			}
+		loop
+		trace strf("南北戦争に対する向聴数は [%d] です。", CivilWarShanten)
+	}
+	return
+
+*calcshanten_syzygy
+	// 特殊：惑星直列の向聴数を求める
+	if (getRule(RULE_SYZYGY) != "0") {
+		countTilesInHand haiCount, GameStat, targetPlayer
+		SyzygyShanten = 13
+		// 以下、一枚ずつ調べる
+		dim haiCountTmp, TILE_CODE_MAXIMUM: repeat TILE_CODE_MAXIMUM: haiCountTmp(cnt) = haiCount(cnt): loop
+		SyzygyPai = TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+2,TILE_SUIT_CIRCLES+3,TILE_SUIT_CIRCLES+3,TILE_SUIT_CIRCLES+4,TILE_SUIT_CIRCLES+5,TILE_SUIT_CIRCLES+5,TILE_SUIT_CIRCLES+6,TILE_SUIT_CIRCLES+7,TILE_SUIT_CIRCLES+7,TILE_SUIT_CIRCLES+8,TILE_SUIT_CIRCLES+9,TILE_SUIT_CIRCLES+9
+		TmpSyzygyPaiCount = 0
+		repeat 14
+			if (haiCountTmp(SyzygyPai(cnt)) >= 1) {
+				TmpSyzygyPaiCount++
+				haiCountTmp(SyzygyPai(cnt))--
+			}
+		loop
+		TmpSyzygyShanten = 13 - TmpSyzygyPaiCount
+		if (TmpSyzygyShanten < SyzygyShanten) {SyzygyShanten = TmpSyzygyShanten}
+		// 鳴き面子や暗槓がある場合は考えない
+		if (MeldPointer(GameStat, targetPlayer) > 0) {
+			SyzygyShanten = 999
+		}
+		trace strf("惑星直列に対する向聴数は [%d] です。", SyzygyShanten)
+	}
+	return
+
+// 行番号がおかしくなるので最後に移動
+#deffunc shantenInit
+/*
+		shantenInit
+		向聴計算用のデータを初期化する
+
+		向聴計算用のデータを読み込みます。
+*/
+	CompressedMianziDat = {"
+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
+"}
+	sdim CompressedMianziB64, 16856
+	notesel CompressedMianziDat
+	repeat notemax
+		noteget tmpline, cnt
+		CompressedMianziB64 += tmpline
+	loop
+	noteunsel
+	/* デコードに失敗するとクラッシュするのでそれを避けるための処理 */
+	b64allowedChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+	sdim CompressedMianziBinary, 12477
+	if strlen(CompressedMianziB64)\4 {fatal "BASE64の文字数が4の倍数ではありません。": stop}
+	info "BASE64をデコードしています。"
+	repeat strlen(CompressedMianziB64)/4
+		tmppos = cnt
+		tmpstr = strmid(CompressedMianziB64, cnt*4, 4)
+		sdim tmpchr, 4, 4: repeat 4: tmpchr(cnt) = strmid(tmpstr, cnt, 1): loop
+		dim tmpbt, 4: repeat 4:
+			tmpbt(cnt) = instr(b64allowedChar, 0, tmpchr(cnt))
+			if (tmppos == (strlen(CompressedMianziB64)/4-1)) {
+				if (cnt==2)&&(tmpchr(2)=="=")&&(tmpchr(3)=="=") {break}
+				if (cnt==3)&&(tmpchr(3)=="=") {break}
+			}
+			if (tmpbt(cnt) == -1) {fatal strf("BASE64として正しくない文字 [%s] が含まれています。", tmpchr(cnt)): stop}
+		loop
+		poke CompressedMianziBinary, cnt*3, tmpbt(0)*4+tmpbt(1)/16
+		if (tmpchr(2)!="=") {poke CompressedMianziBinary, cnt*3+1, tmpbt(1)\16*16+tmpbt(2)/4}
+		if (tmpchr(3)!="=") {poke CompressedMianziBinary, cnt*3+2, tmpbt(2)\4*64+tmpbt(3)}
+		await 0
+	loop
+	info "面子構成データベースをBASE64デコードしました。"
+	sdim hncnMianziNumberData, 1953126
+	lzmadecompress@ hncnMianziNumberData, 1953125, CompressedMianziBinary, 12476
+	if (stat) {
+		fatal strf("面子構成データベースの圧縮を解除できませんでした。返り値は [%d] です。", stat)
+		stop
+	} else {
+		info "面子構成データベースの圧縮を解除しました。"
+	}
+	//bload "dat\\mentz.dat", hncnMianziNumberData, 1953125
+	return
+#global
+

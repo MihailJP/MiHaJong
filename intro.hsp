@@ -1,0 +1,532 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *   [タイトル画面ルーチン]
+ *=============================
+ */
+
+/* タイトル画面 */
+*titlemenu
+	debug "タイトル画面を準備します。"
+	gsel 0
+	redraw 0: vanish
+#ifdef SANMA4
+	color 0, 64, 64
+#else
+#ifdef SANMA
+	color 0, 0, 64
+#else
+	color 0, 64, 0
+#endif
+#endif
+	boxf 0, 0, 839, 629
+	gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630
+	pos 100, 80: gcopy SCR_TITLE_LOGO, 0, 0, 640, 200: gmode 0
+	font fontname, 28, 0
+	borderedtxt2 "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC, 530, 125, 255, 255, 255, 1, 28, 192, 192, 192
+	tmptxt = "Copyright (c) 2011 MihailJP All rights reserved"
+	borderedtxt2 tmptxt, 825-(strlen(tmptxt)*10), 595, 255, 255, 255, 1, 20, 192, 192, 192
+#ifdef SANMA4
+	borderedtxt2 "四人三麻", 130, 100, 255, 255, 255, 1, 28, 192, 192, 192
+#endif
+#ifdef SANMA
+	borderedtxt2 "三人打ち", 130, 100, 255, 255, 255, 1, 28, 192, 192, 192
+#endif
+	redraw 1
+	objsize 200, 30
+	objmode 2: font fontname, 24, 0
+	pos 100, 410: button gosub "Offline Start", *modesel1
+	pos 320, 410: button gosub "Server Start", *modesel2
+	pos 540, 410: button gosub "Client Start", *modesel3
+	pos 100, 460: button gosub "Watch Mode", *modesel5
+	pos 320, 460: button gosub "Config", *selcat
+	pos 540, 460: button goto "Quit", *modesel4
+	tooltip 0, "コンピューターとの対戦を開始します"
+	tooltip 1, "通信対戦用の卓を準備します"
+	tooltip 2, "通信対戦用の卓に接続します"
+	tooltip 3, "コンピューター同士の対戦を観賞します"
+	tooltip 4, "ルールを設定します"
+	tooltip 5, "終了します"
+	GameMode = -1
+	debug "タイトル画面を準備しました。"
+	return
+
+/* モード選択画面 */
+*selmode
+	dim IsRemotePlayer, 4
+	gosub *titlemenu
+	debug "応答を待ちます。"
+	repeat
+		if (GameMode >= 0) {vanish: break}
+		await 1
+	loop: objmode 2: font fontname, 12, 0
+	return
+
+*modesel5
+	dsplay SND_BUTTON
+	PlayerName(0) = "[a]COM1"
+	PlayerName(1) = "[b]COM2"
+	PlayerName(2) = "[c]COM3"
+	PlayerName(3) = "[d]COM4"
+	GameMode = 0
+	WatchModeFlag = 1
+	ServerAddress = ""
+	return
+
+*modesel1
+	dsplay SND_BUTTON
+	gosub *entername
+	PlayerName(0) = "[A]"+InputPlayerName
+	PlayerName(1) = "[b]COM1"
+	PlayerName(2) = "[c]COM2"
+	PlayerName(3) = "[d]COM3"
+	GameMode = 0
+	ServerAddress = ""
+	return
+
+*modesel2
+	dsplay SND_BUTTON
+	gosub *entername
+	PlayerName(0) = "[A]"+InputPlayerName
+	PlayerName(1) = "[b]COM"
+	PlayerName(2) = "[c]COM"
+	PlayerName(3) = "[d]COM"
+	GameMode = 1
+	ServerAddress = ""
+	sockmake SOCK_GAME+0, PORT_GAME
+	vanish
+	objsize 440, 40
+	pos 200, 270: button gosub "この面子で開始する", *modesel2s
+	startflag = 0
+	repeat
+		redraw 0
+#ifdef SANMA4
+		color 0, 64, 64
+#else
+#ifdef SANMA
+		color 0, 0, 64
+#else
+		color 0, 64, 0
+#endif
+#endif
+		boxf 0, 0, 839, 629
+		gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode 0
+		CurrentConnection = 1
+		repeat 3
+			if (IsRemotePlayer(cnt+1) > 0) {CurrentConnection++}
+		loop
+#ifdef SANMA
+		sysscr fontname, "接続を待っています", "Waiting clients.", "\n現在の接続人数： "+CurrentConnection+" / 3 人"
+#else
+		sysscr fontname, "接続を待っています", "Waiting clients.", "\n現在の接続人数： "+CurrentConnection+" / 4 人"
+#endif
+		redraw 1
+		sockwait SOCK_GAME+0 // クライアントの接続を待機
+		if (stat == 0) {
+			if (IsRemotePlayer(1) == 0) {
+				IsRemotePlayer(1) = 2
+				sockputc 2, SOCK_GAME+0
+				sockclose SOCK_GAME+0
+				sockmake SOCK_GAME+1, PORT_GAME+1
+				repeat
+					sockwait SOCK_GAME+1
+					if (stat == 0) {
+						tmpclientnum = 1
+						gosub *receiveclientname
+						PlayerName(1) = "[B]"+tmpClientName
+						break
+					}
+					await 0
+				loop
+			} else {
+				if (IsRemotePlayer(2) == 0) {
+					IsRemotePlayer(2) = 3
+					sockputc 3, SOCK_GAME+0
+					sockclose SOCK_GAME+0
+					sockmake SOCK_GAME+2, SOCK_GAME+2
+					repeat
+						sockwait SOCK_GAME+2
+						if (stat == 0) {
+							tmpclientnum = 2
+							gosub *receiveclientname
+							PlayerName(2) = "[C]"+tmpClientName
+							break
+						}
+						await 0
+					loop
+#ifndef SANMA
+				} else {
+					IsRemotePlayer(3) = 4
+					sockputc 4, SOCK_GAME+0
+					sockclose SOCK_GAME+0
+					sockmake SOCK_GAME+3, PORT_GAME+3
+					repeat
+						sockwait SOCK_GAME+3
+						if (stat == 0) {
+							tmpclientnum = 3
+							gosub *receiveclientname
+							PlayerName(3) = "[D]"+tmpClientName
+							break
+						}
+						await 0
+					loop
+#endif
+				}
+			}
+			sockmake SOCK_GAME+0, PORT_GAME+0
+		}
+		await 0
+#ifdef SANMA
+		if (CurrentConnection = 3) {startflag = 1}
+#else
+		if (CurrentConnection = 4) {startflag = 1}
+#endif
+		if (startflag) {
+			serversend 0xb4, IsRemotePlayer
+#ifdef SANMA
+			repeat 3
+#else
+			repeat 4
+#endif
+				tmpcnt = cnt
+				serversend 0xb8, IsRemotePlayer
+				serversend strlen(PlayerName(tmpcnt)), IsRemotePlayer
+				repeat strlen(PlayerName(tmpcnt))
+					serversend peek(PlayerName(tmpcnt), cnt), IsRemotePlayer
+				loop
+			loop
+			serversend 0xb8, IsRemotePlayer
+			serversend strlen(RuleConf), IsRemotePlayer
+			repeat strlen(RuleConf): serversend peek(RuleConf, cnt), IsRemotePlayer: loop
+			serversend 0xb8, IsRemotePlayer
+			serversend strlen(RuleConf2), IsRemotePlayer
+			repeat strlen(RuleConf2): serversend peek(RuleConf2, cnt), IsRemotePlayer: loop
+			serversend 0xb8, IsRemotePlayer
+			serversend strlen(RuleConf3), IsRemotePlayer
+			repeat strlen(RuleConf3): serversend peek(RuleConf3, cnt), IsRemotePlayer: loop
+			serversend 0xb8, IsRemotePlayer
+			serversend strlen(RuleConf4), IsRemotePlayer
+			repeat strlen(RuleConf4): serversend peek(RuleConf4, cnt), IsRemotePlayer: loop
+			break
+		}
+	loop
+return
+
+*receiveclientname
+	sdim tmpClientName, 256
+	repeat
+		ReceivedMsg = 1023
+		sockcheck tmpclientnum
+		if (stat == 0) {
+			sockgetc ReceivedMsg, tmpclientnum
+			if (ReceivedMsg < 0) {ReceivedMsg += 256}
+			if (ReceivedMsg == 0xb8) {
+				break
+			}
+		}
+		await 0
+	loop
+	repeat
+		ReceivedMsg = 1023
+		sockcheck tmpclientnum
+		if (stat == 0) {
+			sockgetc ReceivedMsg, tmpclientnum
+			if (ReceivedMsg < 0) {ReceivedMsg += 256}
+			tmpstrsize = ReceivedMsg
+			break
+		}
+		await 0
+	loop
+	repeat tmpstrsize
+		tmpstrpos = cnt
+		repeat
+			ReceivedMsg = 1023
+			sockcheck tmpclientnum
+			if (stat == 0) {
+				sockgetc ReceivedMsg, tmpclientnum
+				if (ReceivedMsg < 0) {ReceivedMsg += 256}
+				poke tmpClientName, tmpstrpos, ReceivedMsg
+				break
+			}
+			await 0
+		loop
+	loop
+	return
+
+*modesel2s
+	dsplay SND_BUTTON
+	startflag = 1
+	return
+
+*modesel3
+	dsplay SND_BUTTON
+	gosub *entername
+	redraw 0
+#ifdef SANMA4
+	color 0, 64, 64
+#else
+#ifdef SANMA
+	color 0, 0, 64
+#else
+	color 0, 64, 0
+#endif
+#endif
+	boxf 0, 0, 839, 629
+	gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode 0
+	sysscr fontname, "接続先を入力してね", "Choose server.", "サーバーのIPアドレス、または\nドメイン名を入力してください"
+	redraw 1
+	GameMode = 2: vanish
+	ServerAddress = ""
+	objsize 440, 40
+	pos 200, 270: input ServerAddress
+	pos 200, 320: button gosub "Connect", *modesel3c
+	ServerSelected = 0
+	repeat
+		if (ServerSelected) {
+			vanish
+			redraw 0
+#ifdef SANMA4
+			color 0, 64, 64
+#else
+#ifdef SANMA
+			color 0, 0, 64
+#else
+			color 0, 64, 0
+#endif
+#endif
+			boxf 0, 0, 839, 629
+			gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode 0
+			sysscr fontname, "接続先を入力してね", "Choose server.", "サーバーに接続しています\nしばらくお待ちください"
+			redraw 1
+			sockopen SOCK_GAME+0, ServerAddress, PORT_GAME+0
+			if (stat == 0) {
+				repeat
+					sockcheck SOCK_GAME+0
+					if (stat == 0) {
+						repeat
+							clientreceive ClientReceived, ReceivedMsg
+							if (ClientReceived) {break}
+							await 0
+						loop
+						sockclose SOCK_GAME+0
+						tmp = ReceivedMsg
+						repeat
+							sockopen SOCK_GAME+0, ServerAddress, PORT_GAME-1+tmp
+							if (stat == 0) {break}
+							await 1000
+						loop
+						ClientNumber = tmp - 1
+#ifdef SANMA
+						repeat 3
+#else
+						repeat 4
+#endif
+							if (cnt != ClientNumber) {IsRemotePlayer(cnt) = 1}
+						loop
+						break
+					}
+					await 0
+				loop
+				redraw 0
+#ifdef SANMA4
+				color 0, 64, 64
+#else
+#ifdef SANMA
+				color 0, 0, 64
+#else
+				color 0, 64, 0
+#endif
+#endif
+				boxf 0, 0, 839, 629
+				gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode 0
+				sysscr fontname, "接続先を入力してね", "Choose server.", "開始合図を待っています\nしばらくお待ちください"
+				redraw 1
+				clientsend 0xb8
+				clientsend strlen(InputPlayerName)
+				repeat strlen(InputPlayerName)
+					clientsend peek(InputPlayerName, cnt)
+				loop
+				repeat
+					clientreceive ClientReceived, ReceivedMsg
+					if ((ClientReceived)&&(ReceivedMsg == 0xb4)) {break}
+					await 0
+				loop
+#ifdef SANMA
+				repeat 3
+#else
+				repeat 4
+#endif
+					tmpclientnum = 0
+					gosub *receiveclientname
+					PlayerName(cnt) = tmpClientName
+				loop
+				gosub *receiveclientname: RuleConf = tmpClientName
+				gosub *receiveclientname: RuleConf2 = tmpClientName
+				gosub *receiveclientname: RuleConf3 = tmpClientName
+				gosub *receiveclientname: RuleConf4 = tmpClientName
+				break
+			} else {
+				dialog "サーバーに接続できません\nオフラインモードで開始します", 1, "接続失敗"
+				GameMode = 0
+				PlayerName(0) = "[A]"+InputPlayerName
+				PlayerName(1) = "[b]"
+				PlayerName(2) = "[c]"
+				PlayerName(3) = "[d]"
+				break
+			}
+		}
+		await 1
+	loop
+	return
+
+*modesel3c
+	dsplay SND_BUTTON
+	ServerSelected = 1
+	return
+
+*modesel4
+	dsplay SND_BUTTON
+	goto *cleanup
+
+/* 名前の入力 */
+*entername
+	redraw 0
+	vanish
+#ifdef SANMA4
+	color 0, 64, 64
+#else
+#ifdef SANMA
+	color 0, 0, 64
+#else
+	color 0, 64, 0
+#endif
+#endif
+	boxf 0, 0, 839, 629
+	gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode 0
+	sysscr fontname, "名前を入力してね", "Enter your name.", "プレーヤー名を入力してください\n（全角８文字まで）"
+	redraw 1
+	InputPlayerName = ""
+	objsize 440, 40
+	pos 200, 270: input InputPlayerName
+	pos 200, 320: button gosub "Enter", *nameentered
+	nameenteredflag = 0
+	repeat
+		if (strlen(InputPlayerName) > 16) {
+			InputPlayerName = strmid(InputPlayerName, 0, 16)
+			objprm 0+STATBOX, InputPlayerName
+		}
+		if (nameenteredflag) {
+			if (InputPlayerName == "") {InputPlayerName = "(名無し)"}
+			if (strlen(InputPlayerName) > 16) {
+				InputPlayerName = strmid(InputPlayerName, 0, 16)
+			}
+			break
+		}
+		await 1
+	loop
+return
+
+*nameentered
+	dsplay SND_BUTTON
+	nameenteredflag = 1
+return
+
+*chrshuffle
+	if (GameMode == 1) {
+		repeat 4
+			if (IsRemotePlayer(cnt) > 1) {
+				sockmake SOCK_CHAT-1+IsRemotePlayer(cnt), PORT_CHAT-1+IsRemotePlayer(cnt)
+			}
+		loop
+	}
+#ifdef SANMA
+	repeat 3: TmpRemotePlayer(cnt) = IsRemotePlayer(cnt): loop
+	repeat 3: TmpPlayerName(cnt) = PlayerName(cnt): loop
+	repeat 3: TmpPosition(cnt) = cnt: loop
+#else
+	repeat 4: TmpRemotePlayer(cnt) = IsRemotePlayer(cnt): loop
+	repeat 4: TmpPlayerName(cnt) = PlayerName(cnt): loop
+	repeat 4: TmpPosition(cnt) = cnt: loop
+#endif
+	if (GameMode != 2) {
+		repeat 600
+#ifdef SANMA
+			tmp1 = rnd(3): tmp2 = rnd(3)
+#else
+			tmp1 = rnd(4): tmp2 = rnd(4)
+#endif
+			tmp3 = TmpPosition(tmp1)
+			TmpPosition(tmp1) = TmpPosition(tmp2)
+			TmpPosition(tmp2) = tmp3
+		loop
+		if (GameMode = 1) {
+#ifdef SANMA
+			repeat 3
+#else
+			repeat 4
+#endif
+				serversend TmpPosition(cnt), IsRemotePlayer
+			loop
+		}
+	} else {
+#ifdef SANMA
+		repeat 3
+#else
+		repeat 4
+#endif
+			tmp = cnt
+			repeat
+				clientreceive ClientReceived, ReceivedMsg
+				if (ClientReceived) {
+					TmpPosition(tmp) = ReceivedMsg
+					break
+				}
+				await 0
+			loop
+		loop
+	}
+	//await 500
+	titleJia = "東", "南", "西", "北"
+//	font fontname, 192, 0
+//	BorderTextX = 20: BorderTextY = 150: dsplay SND_TYPE
+//	BorderText = titleJia(TmpPosition(0)): borderedtxt BorderText, BorderTextX, BorderTextY, 255, 255, 255: await 500
+//	BorderTextX = 440: BorderTextY = 150: dsplay SND_TYPE
+//	BorderText = titleJia(TmpPosition(1)): borderedtxt BorderText, BorderTextX, BorderTextY, 255, 255, 255: await 500
+//	BorderTextX = 200: BorderTextY = 430: dsplay SND_TYPE
+//	BorderText = titleJia(TmpPosition(2)): borderedtxt BorderText, BorderTextX, BorderTextY, 255, 255, 255: await 500
+//#ifndef SANMA
+//	BorderTextX = 620: BorderTextY = 430: dsplay SND_TYPE
+//	BorderText = titleJia(TmpPosition(3)): borderedtxt BorderText, BorderTextX, BorderTextY, 255, 255, 255: await 500
+//#endif
+#ifdef SANMA
+	repeat 3: IsRemotePlayer(TmpPosition(cnt)) = TmpRemotePlayer(cnt): loop
+	repeat 3: PlayerName(TmpPosition(cnt)) = TmpPlayerName(cnt): loop
+#else
+	repeat 4: IsRemotePlayer(TmpPosition(cnt)) = TmpRemotePlayer(cnt): loop
+	repeat 4: PlayerName(TmpPosition(cnt)) = TmpPlayerName(cnt): loop
+#endif
+	tmpPlayer = TmpPosition(ClientNumber)
+	if (GameMode == 2) {
+#ifdef SANMA
+		repeat 3
+#else
+		repeat 4
+#endif
+			if (cnt == tmpPlayer) {IsRemotePlayer(cnt) = 0}
+			else {IsRemotePlayer(cnt) = 1}
+		loop
+	}
+	//await 3000
+	return
+
+#module
+#deffunc sysscr str fontname, str txt1, str txt2, str txt3
+	borderedtxt2 txt1, 152, 12, 255, 255, 255, 1, 48, 192, 192, 192
+	borderedtxt2 txt2, 600, 24, 255, 255, 255, 1, 24, 192, 192, 192
+	txtbuf = txt3: notesel txtbuf
+	repeat notemax
+		noteget tmptxt, cnt
+		borderedtxt2 tmptxt, 196, 192+32*cnt, 255, 255, 255, 1, 32, 192, 192, 192
+	loop
+	noteunsel
+	return
+#global

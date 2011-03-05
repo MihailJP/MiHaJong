@@ -1,0 +1,222 @@
+/*=============================
+ * HSPñÉêùÉNÉâÉCÉAÉìÉgMiHaJong
+ *     [ÉhÉâîªíËÉãÅ[É`Éì]
+ *=============================
+ */
+
+/* ÉhÉâÇêîÇ¶ÇÈ */
+#module
+#include "const.hsp"
+#deffunc countdora var GameStat, var tmpYakuInfo, int targetPlayer
+	countTilesInHand haiCount, GameStat, targetPlayer
+	/* ÉhÉâÇ≈òaóπÇ¡ÇΩÇÁ1„  */
+	if (getRule(RULE_DORAHOH) != "0") {
+		if ((getHand(GameStat, HAND_TILECODE, 13, targetPlayer) > TILE_MIN)&&(getHand(GameStat, HAND_TILECODE, 13, targetPlayer) <= TILE_NONFLOWER_STRICT_MAX)) {
+			if ((getDoraFlag(GameStat, DORA_OMOTE, getHand(GameStat, HAND_TILECODE, 13, targetPlayer)) > 0)||(getHand(GameStat, HAND_REDTILE, 13, targetPlayer) != 0)) {
+				addyaku tmpYakuInfo, "ì∫Ëtòa", 1
+			}
+		}
+	}
+	// ÉhÉâÇåvéZÇ∑ÇÈ
+	repeat TILE_NONFLOWER_MAX
+		addYakuInfo tmpYakuInfo, YAKUINF_DORA, (haiCount(cnt)*getDoraFlag(GameStat, DORA_OMOTE, cnt))
+		if ((getMenzen(GameStat, targetPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != "1")) {
+			addYakuInfo tmpYakuInfo, YAKUINF_DORA, (haiCount(cnt)*getDoraFlag(GameStat, DORA_URA, cnt))
+			addYakuInfo tmpYakuInfo, YAKUINF_URADORA, (haiCount(cnt)*getDoraFlag(GameStat, DORA_URA, cnt))
+		}
+	loop
+	// ñ¬Ç´ñ éqÇÃÉhÉâÇåvéZÇ∑ÇÈ
+	repeat MeldPointer(GameStat, targetPlayer), 1
+		tmptilecode = getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) \ TILE_CODE_MAXIMUM
+		switch (getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP)
+			case MELD_SEQUENCE_EXPOSED_LOWER: case MELD_SEQUENCE_EXPOSED_MIDDLE: case MELD_SEQUENCE_EXPOSED_UPPER:
+				addYakuInfo tmpYakuInfo, YAKUINF_DORA, (getDoraFlag(GameStat, DORA_OMOTE, tmptilecode))
+				addYakuInfo tmpYakuInfo, YAKUINF_DORA, (getDoraFlag(GameStat, DORA_OMOTE, tmptilecode+1))
+				addYakuInfo tmpYakuInfo, YAKUINF_DORA, (getDoraFlag(GameStat, DORA_OMOTE, tmptilecode+2))
+				if ((getMenzen(GameStat, targetPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != "1")) {
+					addYakuInfo tmpYakuInfo, YAKUINF_DORA, (getDoraFlag(GameStat, DORA_URA, tmptilecode))
+					addYakuInfo tmpYakuInfo, YAKUINF_DORA, (getDoraFlag(GameStat, DORA_URA, tmptilecode+1))
+					addYakuInfo tmpYakuInfo, YAKUINF_DORA, (getDoraFlag(GameStat, DORA_URA, tmptilecode+2))
+					addYakuInfo tmpYakuInfo, YAKUINF_URADORA, (getDoraFlag(GameStat, DORA_URA, tmptilecode))
+					addYakuInfo tmpYakuInfo, YAKUINF_URADORA, (getDoraFlag(GameStat, DORA_URA, tmptilecode+1))
+					addYakuInfo tmpYakuInfo, YAKUINF_URADORA, (getDoraFlag(GameStat, DORA_URA, tmptilecode+2))
+				}
+			swbreak
+			case MELD_TRIPLET_EXPOSED_LEFT: case MELD_TRIPLET_EXPOSED_CENTER: case MELD_TRIPLET_EXPOSED_RIGHT:
+				addYakuInfo tmpYakuInfo, YAKUINF_DORA, (getDoraFlag(GameStat, DORA_OMOTE, tmptilecode)*3)
+				if ((getMenzen(GameStat, targetPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != "1")) {
+					addYakuInfo tmpYakuInfo, YAKUINF_DORA, (getDoraFlag(GameStat, DORA_URA, tmptilecode)*3)
+					addYakuInfo tmpYakuInfo, YAKUINF_URADORA, (getDoraFlag(GameStat, DORA_URA, tmptilecode)*3)
+				}
+			swbreak
+			case MELD_QUAD_CONCEALED:
+			case MELD_QUAD_EXPOSED_LEFT: case MELD_QUAD_EXPOSED_CENTER: case MELD_QUAD_EXPOSED_RIGHT:
+			case MELD_QUAD_ADDED_LEFT: case MELD_QUAD_ADDED_CENTER: case MELD_QUAD_ADDED_RIGHT:
+				addYakuInfo tmpYakuInfo, YAKUINF_DORA, (getDoraFlag(GameStat, DORA_OMOTE, tmptilecode)*4)
+				if ((getMenzen(GameStat, targetPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != "1")) {
+					addYakuInfo tmpYakuInfo, YAKUINF_DORA, (getDoraFlag(GameStat, DORA_URA, tmptilecode)*4)
+					addYakuInfo tmpYakuInfo, YAKUINF_URADORA, (getDoraFlag(GameStat, DORA_URA, tmptilecode)*4)
+				}
+			swbreak
+		swend
+	loop
+	// ê‘ÉhÉâÇêîÇ¶ÇÈ
+	repeat 14
+		if (getHand(GameStat, HAND_REDTILE, cnt, targetPlayer) != 0) {
+			if ((getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) > TILE_MIN)&&(getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) < TILE_NONFLOWER_MAX)) {
+				addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1
+				addYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 1
+			}
+		}
+	loop
+	repeat MeldPointer(GameStat, targetPlayer), 1
+		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x01) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1: addYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 1}
+		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x02) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1: addYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 1}
+		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x04) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1: addYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 1}
+		if (getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) >= MELD_QUAD) {
+			if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x08) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1: addYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 1}
+		}
+	loop
+	// ÉAÉäÉXÉhÉâ
+	if ((getMenzen(GameStat, targetPlayer) == 1)&&(getRule(RULE_ALICE) != "0")) {
+		AlicePointer = getDoraPointer(GameStat)
+		haifuresetalicedora
+		repeat
+			AlicePointer -= 2
+			if (AlicePointer <= getDrawPointer(GameStat)) {
+				AlicePointer += 2: break
+			}
+			tmpDora = getWall(GameStat, WALL_TILECODE, AlicePointer)
+			haifurecalicedora tmpDora
+			if (haiCount(tmpDora) > 0) {
+				addYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 1
+			} else {
+				break
+			}
+		loop
+	}
+	// â‘îv
+	if (getRule(RULE_FLOWER_TILES) != "0") {
+#ifdef SANMAX
+		addYakuInfo tmpYakuInfo, YAKUINF_DORA, (getDoraFlag(GameStat, DORA_OMOTE, TILE_NORTH_WIND)+1)*getNorthFlag(GameStat, targetPlayer)
+		addYakuInfo tmpYakuInfo, YAKUINF_FLOWER, getNorthFlag(GameStat, targetPlayer)
+		if ((getMenzen(GameStat, targetPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != "1")) {
+			addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_URA, TILE_NORTH_WIND)*getNorthFlag(GameStat, targetPlayer)
+		}
+#else
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SPRING) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_OMOTE, TILE_DORA_FLOWER)+1: addYakuInfo tmpYakuInfo, YAKUINF_FLOWER, 1}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SUMMER) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_OMOTE, TILE_DORA_FLOWER)+1: addYakuInfo tmpYakuInfo, YAKUINF_FLOWER, 1}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_AUTUMN) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_OMOTE, TILE_DORA_FLOWER)+1: addYakuInfo tmpYakuInfo, YAKUINF_FLOWER, 1}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_WINTER) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_OMOTE, TILE_DORA_FLOWER)+1: addYakuInfo tmpYakuInfo, YAKUINF_FLOWER, 1}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_PLUM) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_OMOTE, TILE_DORA_FLOWER)+1: addYakuInfo tmpYakuInfo, YAKUINF_FLOWER, 1}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_ORCHID) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_OMOTE, TILE_DORA_FLOWER)+1: addYakuInfo tmpYakuInfo, YAKUINF_FLOWER, 1}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_CHRYSANTHEMUM) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_OMOTE, TILE_DORA_FLOWER)+1: addYakuInfo tmpYakuInfo, YAKUINF_FLOWER, 1}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_BAMBOO) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_OMOTE, TILE_DORA_FLOWER)+1: addYakuInfo tmpYakuInfo, YAKUINF_FLOWER, 1}
+		if ((getMenzen(GameStat, targetPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != "1")) {
+			if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SPRING) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_URA, TILE_DORA_FLOWER)}
+			if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SUMMER) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_URA, TILE_DORA_FLOWER)}
+			if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_AUTUMN) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_URA, TILE_DORA_FLOWER)}
+			if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_WINTER) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_URA, TILE_DORA_FLOWER)}
+			if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_PLUM) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_URA, TILE_DORA_FLOWER)}
+			if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_ORCHID) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_URA, TILE_DORA_FLOWER)}
+			if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_CHRYSANTHEMUM) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_URA, TILE_DORA_FLOWER)}
+			if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_BAMBOO) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_URA, TILE_DORA_FLOWER)}
+		}
+		if ((getRule(RULE_EIGHT_FLOWERS) != "0")&&((getFlowerFlag(GameStat, targetPlayer)&FLOWER_ALL) == FLOWER_ALL)) {
+			if (getRule(RULE_LIMITLESS) == "2") {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 13: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -13}
+			else {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1000: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1000}
+			addyakuman tmpYakuInfo, "î™êÂâﬂäC", 1
+		} else {
+			if ((getRule(RULE_FOUR_SEASONS) != "0")&&((getFlowerFlag(GameStat, targetPlayer)&FLOWER_ALL_SEASONS) == FLOWER_ALL_SEASONS)) {
+				switch int(getRule(RULE_FOUR_SEASONS))
+					case 1:
+						addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 2: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -2
+						addyaku tmpYakuInfo, "ètâƒèHì~", 2
+						swbreak
+					case 2:
+						addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 4: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -4
+						addyaku tmpYakuInfo, "ètâƒèHì~", 4
+						swbreak
+					case 3:
+						if (getRule(RULE_LIMITLESS) == "2") {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 13: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -13}
+						else {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1000: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1000}
+						addyakuman tmpYakuInfo, "ètâƒèHì~", 1
+						swbreak
+				swend
+			} else {
+				if (getRule(RULE_OWN_FLOWER) != "0") {
+					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_EAST) {
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SPRING) {
+							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
+							addyaku tmpYakuInfo, "ñ{â‘ãGêﬂîv", 1
+						}
+					}
+					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_SOUTH) {
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SUMMER) {
+							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
+							addyaku tmpYakuInfo, "ñ{â‘ãGêﬂîv", 1
+						}
+					}
+					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_WEST) {
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_AUTUMN) {
+							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
+							addyaku tmpYakuInfo, "ñ{â‘ãGêﬂîv", 1
+						}
+					}
+					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_NORTH) {
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_WINTER) {
+							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
+							addyaku tmpYakuInfo, "ñ{â‘ãGêﬂîv", 1
+						}
+					}
+				}
+			}
+			if ((getRule(RULE_FOUR_FLOWERS) != "0")&&((getFlowerFlag(GameStat, targetPlayer)&FLOWER_ALL_FLOWERS) == FLOWER_ALL_FLOWERS)) {
+				switch int(getRule(RULE_FOUR_FLOWERS))
+					case 1:
+						addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 2: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -2
+						addyaku tmpYakuInfo, "ètâƒèHì~", 2
+						swbreak
+					case 2:
+						addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 4: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -4
+						addyaku tmpYakuInfo, "ètâƒèHì~", 4
+						swbreak
+					case 3:
+						if (getRule(RULE_LIMITLESS) == "2") {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 13: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -13}
+						else {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1000: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1000}
+						addyakuman tmpYakuInfo, "ètâƒèHì~", 1
+						swbreak
+				swend
+			} else {
+				if (getRule(RULE_OWN_FLOWER) != "0") {
+					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_EAST) {
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_PLUM) {
+							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
+							addyaku tmpYakuInfo, "ñ{â‘ëêñÿîv", 1
+						}
+					}
+					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_SOUTH) {
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_ORCHID) {
+							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
+							addyaku tmpYakuInfo, "ñ{â‘ëêñÿîv", 1
+						}
+					}
+					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_WEST) {
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_CHRYSANTHEMUM) {
+							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
+							addyaku tmpYakuInfo, "ñ{â‘ëêñÿîv", 1
+						}
+					}
+					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_NORTH) {
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_BAMBOO) {
+							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
+							addyaku tmpYakuInfo, "ñ{â‘ëêñÿîv", 1
+						}
+					}
+				}
+			}
+		}
+#endif
+	}
+return
+#global

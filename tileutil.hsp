@@ -1,0 +1,600 @@
+/*=============================
+ * HSP–ƒƒNƒ‰ƒCƒAƒ“ƒgMiHaJong
+ *     [”vό‚θ‚ΜFXvZ]
+ *=============================
+ */
+
+/* —”v‚·‚ι */
+#module
+#include "const.hsp"
+#deffunc lipai var GameStat, int targetPlayer
+/*
+		lipai p1, p2
+		—”v‚·‚ι
+
+		p1 : ‘μ‚Μσ‹µ‚πi”[‚µ‚½\‘Ά‘Μ
+		p2 : —”v‚πs‚¤ƒvƒƒCƒ„[
+
+		w’θ‚µ‚½ƒvƒƒCƒ„[‚Μθ”v‚π•ΐ‚Χ‘Φ‚¦‚ά‚·B
+		δέqA“›qAυqA”vA(‚ ‚κ‚Ξ)‰Τ”v‚Μ‡‚Ι•ΐ‚Χ‘Φ‚¦‚η‚κ‚ά‚·B
+*/
+	debug strf("—”v‚πs‚Ά‚ά‚·BƒvƒƒCƒ„[ [%d]", targetPlayer)
+	lipaiTsumo = 0
+	if (getHand(GameStat, HAND_TILECODE, 13, targetPlayer) > 0) {
+		lipaiTsumo = 1
+		trace strf("ƒcƒ‚”v‚π‘Ò”π‚µ‚ά‚·B”vƒR[ƒh [%d]", getHand(GameStat, HAND_TILECODE, 13, targetPlayer))
+	}
+	trace strf("—”v‘O‚Μθ”v [%02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d]", getHand(GameStat, HAND_TILECODE, 0, targetPlayer), getHand(GameStat, HAND_TILECODE, 1, targetPlayer), getHand(GameStat, HAND_TILECODE, 2, targetPlayer), getHand(GameStat, HAND_TILECODE, 3, targetPlayer), getHand(GameStat, HAND_TILECODE, 4, targetPlayer), getHand(GameStat, HAND_TILECODE, 5, targetPlayer), getHand(GameStat, HAND_TILECODE, 6, targetPlayer), getHand(GameStat, HAND_TILECODE, 7, targetPlayer), getHand(GameStat, HAND_TILECODE, 8, targetPlayer), getHand(GameStat, HAND_TILECODE, 9, targetPlayer), getHand(GameStat, HAND_TILECODE, 10, targetPlayer), getHand(GameStat, HAND_TILECODE, 11, targetPlayer), getHand(GameStat, HAND_TILECODE, 12, targetPlayer), getHand(GameStat, HAND_TILECODE, 13, targetPlayer))
+	repeat 14
+		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 0) {
+			setHand GameStat, HAND_TILECODE, cnt, targetPlayer, 90
+		}
+	loop
+	repeat 14: tmp1 = cnt
+		repeat 14: tmp2 = cnt
+			if (tmp1 >= tmp2) {continue}
+			if (getHand(GameStat, HAND_TILECODE, tmp1, targetPlayer) > getHand(GameStat, HAND_TILECODE, tmp2, targetPlayer)) {
+				tmp = getHand(GameStat, HAND_REDTILE, tmp1, targetPlayer)
+				setHand GameStat, HAND_REDTILE, tmp1, targetPlayer, getHand(GameStat, HAND_REDTILE, tmp2, targetPlayer)
+				setHand GameStat, HAND_REDTILE, tmp2, targetPlayer, tmp
+				tmp = getHand(GameStat, HAND_TILECODE, tmp1, targetPlayer)
+				setHand GameStat, HAND_TILECODE, tmp1, targetPlayer, getHand(GameStat, HAND_TILECODE, tmp2, targetPlayer)
+				setHand GameStat, HAND_TILECODE, tmp2, targetPlayer, tmp
+			}
+			if (getHand(GameStat, HAND_TILECODE, tmp1, targetPlayer) == getHand(GameStat, HAND_TILECODE, tmp2, targetPlayer)) {
+				if (getHand(GameStat, HAND_REDTILE, tmp1, targetPlayer) < getHand(GameStat, HAND_REDTILE, tmp2, targetPlayer)) {
+					tmp = getHand(GameStat, HAND_REDTILE, tmp1, targetPlayer)
+					setHand GameStat, HAND_REDTILE, tmp1, targetPlayer, getHand(GameStat, HAND_REDTILE, tmp2, targetPlayer)
+					setHand GameStat, HAND_REDTILE, tmp2, targetPlayer, tmp
+					tmp = getHand(GameStat, HAND_TILECODE, tmp1, targetPlayer)
+					setHand GameStat, HAND_TILECODE, tmp1, targetPlayer, getHand(GameStat, HAND_TILECODE, tmp2, targetPlayer)
+					setHand GameStat, HAND_TILECODE, tmp2, targetPlayer, tmp
+				}
+			}
+		loop
+	loop
+	repeat 14
+		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 90) {
+			setHand GameStat, HAND_TILECODE, cnt, targetPlayer, 0
+		}
+	loop
+	trace strf("—”vγ‚Μθ”v [%02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d]", getHand(GameStat, HAND_TILECODE, 0, targetPlayer), getHand(GameStat, HAND_TILECODE, 1, targetPlayer), getHand(GameStat, HAND_TILECODE, 2, targetPlayer), getHand(GameStat, HAND_TILECODE, 3, targetPlayer), getHand(GameStat, HAND_TILECODE, 4, targetPlayer), getHand(GameStat, HAND_TILECODE, 5, targetPlayer), getHand(GameStat, HAND_TILECODE, 6, targetPlayer), getHand(GameStat, HAND_TILECODE, 7, targetPlayer), getHand(GameStat, HAND_TILECODE, 8, targetPlayer), getHand(GameStat, HAND_TILECODE, 9, targetPlayer), getHand(GameStat, HAND_TILECODE, 10, targetPlayer), getHand(GameStat, HAND_TILECODE, 11, targetPlayer), getHand(GameStat, HAND_TILECODE, 12, targetPlayer), getHand(GameStat, HAND_TILECODE, 13, targetPlayer))
+	if (lipaiTsumo == 0) {
+		setHand GameStat, HAND_TILECODE, 13, targetPlayer, 0
+	}
+return
+#global
+
+/* κ‚Ι©‚¦‚Δ‚ιΒ” */
+#module
+#include "const.hsp"
+#deffunc countseentiles array haiSeenCount, var GameStat
+/*
+		countseentiles p1, p2
+		κ‚Ι©‚¦‚Δ‚Ά‚ι”v‚Μ”‚π”‚¦‚ι
+
+		p1 : ‹‰Κ‚πi”[‚·‚ι”z—ρ
+		p2 : ‘μ‚Μσ‹µ‚πi”[‚µ‚½\‘Ά‘Μ
+
+		‚»‚κ‚Ό‚κ‚Μ”v‚ªκ‚Ι©‚¦‚Δ‚Ά‚ι”‚π”‚¦‚ά‚·B
+*/
+	dim haiSeenCount, TILE_CODE_MAXIMUM // vZ‚·‚ι”v
+	// Μ”v‚Ε©‚¦‚Δ‚ι–‡”
+	repeat 4: tmp = cnt
+		if (DiscardPointer(GameStat, tmp) == 0) {continue}
+		repeat DiscardPointer(GameStat, tmp), 1
+			haiSeenCount(getDiscard(GameStat, DISCARD_TILECODE, cnt, tmp))++
+		loop
+	loop
+	// ’N‚©‚Μ•›I‚Ε©‚¦‚Δ‚ι–‡”
+	repeat 4: tmp = cnt
+		if (MeldPointer(GameStat, tmp) == 0) {continue}
+		repeat MeldPointer(GameStat, tmp), 1
+			if (getMeld(GameStat, MELD_TILECODE, cnt, tmp) < MELD_TRIPLET*MELD_TYPE_STEP) {
+				// –Ύ‡q
+				haiSeenCount((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0)++
+				haiSeenCount((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+1)++
+				haiSeenCount((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+2)++
+			} else: if (getMeld(GameStat, MELD_TILECODE, cnt, tmp) < MELD_QUAD*MELD_TYPE_STEP) {
+				// –Ύq
+				haiSeenCount((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0) += 3
+			} else {
+				if ((getMeld(GameStat, MELD_TILECODE, cnt, tmp)/MELD_TYPE_STEP != MELD_QUAD_CONCEALED)||(getRule(RULE_ANKAN_CONCEAL) == 0)) {
+					// Θq (ΓΘ”ρJ¦έ’θ‚Ε©‚¦‚Δ‚Θ‚ΆΓΘ‚ά‚ΕƒJƒEƒ“ƒg‚µ‚Θ‚Ά‚ζ‚¤‚Ιπ®‚πΧH‚µ‚Δ‚¨‚­)
+					haiSeenCount((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0) += 4
+				}
+			}
+		loop
+	loop
+	// ƒhƒ‰•\¦”v‚Ε©‚¦‚Δ‚ι–‡”
+	repeat 6
+#ifdef SANMAX
+		if (getDoraPointer(GameStat) <= (102-getRinshanExtension(GameStat)-cnt*2)) {haiSeenCount(getWall(GameStat, WALL_TILECODE, 102-getRinshanExtension(GameStat)-cnt*2))++}
+#else
+		if (getDoraPointer(GameStat) <= (130-cnt*2)) {haiSeenCount(getWall(GameStat, WALL_TILECODE, 130-cnt*2))++}
+#endif
+	loop
+return
+#global
+
+#module
+#include "const.hsp"
+#deffunc countTilesInHand array haiCount, var GameStat, int targetPlayer
+/*
+		countTilesInHand p1, p2, p3
+		θ”v‚Ι‘¶έ‚·‚ι”v‚πν—ή•Κ‚ΙƒJƒEƒ“ƒg‚·‚ι
+
+		p1 : ‹‰Κ‚πi”[‚·‚ι”z—ρ
+		p2 : ‘μ‚Μσ‹µ‚πi”[‚µ‚½\‘Ά‘Μ
+		p3 : ’²‚Χ‚ιƒvƒƒCƒ„[
+
+		“Α’θ‚ΜƒvƒƒCƒ„[‚Μθ”v‚π’²‚ΧA”v‚Μν—ή•Κ‚Ι”‚π”‚¦‚ά‚·B
+*/
+	dim haiCount, TILE_CODE_MAXIMUM // vZ‚·‚ι”v
+	repeat 14
+		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) != 0) {
+			// θ”v‚Μ’†‚ΜA‚»‚κ‚Ό‚κ‚Μ”v‚Μ–‡”‚π”‚¦‚ι
+			haiCount(getHand(GameStat, HAND_TILECODE, cnt, targetPlayer))++
+		}
+	loop
+	return
+#global
+
+/* θ”v‚Μ‚¤‚Ώ‚ ‚ι‚P–‡‚Ι’–Ϊ‚·‚ι */
+#module
+#include "const.hsp"
+#defcfunc getpaiinfo var GameStat, int targetPlayer, int targetTile, int CheckMode
+/*
+		val=getpaiinfo(p1, p2, p3, p4)
+		θ”v‚Μ‚¤‚Ώ1–‡‚Ι’–Ϊ‚µ‚½ξ•ρ‚πζ“Ύ‚·‚ι
+
+		p1 : ‘μ‚Μσ‹µ‚πi”[‚µ‚½\‘Ά‘Μ
+		p2 : ’²‚Χ‚ιƒvƒƒCƒ„[
+		p3 : ’²‚Χ‚ι”v‚Μ”Τ†
+		p4 : ƒ‚[ƒh
+
+		“Α’θ‚ΜƒvƒƒCƒ„[‚Μθ”v‚Μ‚¤‚Ώ1–‡‚π’²‚Χ‚ά‚·B
+*/
+	countTilesInHand haiCount, GameStat, targetPlayer
+	haiTileInfo = 0
+	if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) == 0) {haiTileInfo = -999: return -999}
+	// ΓΘ‚ª‰Β”\‚Θ”v
+	if (haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) == 4) {haiTileInfo |= 64}
+	// Γ‚π`¬‚µ‚Δ‚Ά‚ικ‡
+	if (haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 3) {haiTileInfo |= 1}
+	// ‡q‚π`¬‚µ‚Δ‚Ά‚ικ‡
+	if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) < TILE_NUMERAL_MAX) {
+		if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&(haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)&&(haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+2) >= 1)) {haiTileInfo |= 2}
+		else:if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&(haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)) {haiTileInfo |= 2}
+		else:if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) > 1) {
+			if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-2) >= 1)&&(haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)) {haiTileInfo |= 2}
+		}
+	}
+	// ‘Ξq‚π`¬‚µ‚Δ‚Ά‚ικ‡
+	if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 2)&&(haiTileInfo\2 == 0)) {haiTileInfo |= 4}
+	// •Σ’£‚π`¬‚µ‚Δ‚Ά‚ικ‡
+	if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) < TILE_NUMERAL_MAX) {
+		if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&((haiTileInfo \ 4 < 2)||(CheckMode == 1))) {
+			if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP = 1)) {haiTileInfo |= 8}
+			else:if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP = 8)) {haiTileInfo |= 8}
+			else:if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP = 2)) {haiTileInfo |= 8}
+			else:if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP = 9)) {haiTileInfo |= 8}
+		}
+	}
+	// —Ό–Κ“ƒq‚π`¬‚µ‚Δ‚Ά‚ικ‡
+	if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) < TILE_NUMERAL_MAX) {
+		if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&((haiTileInfo \ 4 < 2)||(CheckMode == 1))) {
+			if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 8)) {haiTileInfo |= 16}
+			else: if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 2)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 9)) {haiTileInfo |= 16}
+		}
+	}
+	// ›Ζ’£‚π`¬‚µ‚Δ‚Ά‚ικ‡
+	if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) < TILE_NUMERAL_MAX) {
+		if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&((haiTileInfo \ 4 < 2)||(CheckMode == 1))) {
+			if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+2) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 9)) {haiTileInfo |= 32}
+			else: if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) > 1) {
+				if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-2) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 1)) {haiTileInfo |= 32}
+			}
+		}
+	}
+return haiTileInfo
+#global
+
+/* U’®‚Ε‚Θ‚Ά‚©‚Μƒ`ƒFƒbƒN */
+/* ‘Ò‚Ώ”v‚π”‚¦‚ι—‚ΰά‚ή */
+#module
+#include "const.hsp"
+#deffunc chkfuriten var haiFuriten, array haiMachihaiFlag, array haiMachihaiCount, var haiMachihaiTotal, var MachiMen, var GameStat, int targetPlayer
+	trace "U’®‚©‚Η‚¤‚©E‘Ò‚Ώ”v‚π’²‚Χ‚ά‚·B"
+	countseentiles haiSeenCount, GameStat
+	countTilesInHand haiCountCFTTmp, GameStat, targetPlayer
+	dim haiMachihaiCount, TILE_NONFLOWER_STRICT_MAX+1: haiMachihaiTotal = 0: MachiMen = 0
+	dim haiMachihaiFlag, TILE_NONFLOWER_STRICT_MAX+1
+	haiFuriten = 0
+	tmpTsumoHai = getHand(GameStat, HAND_TILECODE, 13, targetPlayer)
+	repeat TILE_NONFLOWER_STRICT_MAX,1
+		haiMachihaiCount(cnt) = -1
+		if (cnt\TILE_SUIT_STEP == 0) {continue}
+		setHand GameStat, HAND_TILECODE, 13, targetPlayer, cnt
+		Shanten = countshanten(GameStat, targetPlayer, 0)
+		if (Shanten == -1) {
+			MachiMen++: haiMachihaiFlag(cnt) = 1
+			haiMachihaiCount(cnt) = (4 - haiSeenCount(cnt) - haiCountCFTTmp(cnt))
+			haiMachihaiTotal += (4 - haiSeenCount(cnt) - haiCountCFTTmp(cnt))
+			tmpHai = cnt
+			repeat DiscardPointer(GameStat, targetPlayer), 1
+				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM) == tmpHai) {
+					haiFuriten = 1
+				}
+			loop
+		}
+		setHand GameStat, HAND_TILECODE, 13, targetPlayer, tmpTsumoHai
+	loop
+	repeat 4
+		tmpooooo = cnt
+		// ƒI[ƒvƒ“—§’ΌÒ‚Μθ”v‚ΰ”‚¦‚ι
+		if ((cnt != targetPlayer)&&(getRichiFlag(GameStat, RICHI_OPENFLAG, cnt) > 0)) {
+			repeat 13
+				if (getHand(GameStat, HAND_TILECODE, cnt, tmpooooo) > 0) {
+					if (haiMachihaiFlag(getHand(GameStat, HAND_TILECODE, cnt, tmpooooo)) == 1) {
+						haiMachihaiCount(getHand(GameStat, HAND_TILECODE, cnt, tmpooooo))--
+						haiMachihaiTotal--
+					}
+				}
+			loop
+		}
+	loop
+return
+#global
+
+/* ƒI[ƒvƒ“—§’Ό‚Μ‘Ò‚Ώ”v */
+*chkopenmachi
+	repeat TILE_NONFLOWER_STRICT_MAX+1
+		if (cnt\TILE_SUIT_STEP == 0) {continue}
+		setHand GameStat, HAND_TILECODE, 13, targetPlayer, cnt
+		Shanten = countshanten(GameStat, targetPlayer, 0)
+		if (Shanten == -1) {
+			setOpenWait GameStat, cnt, 1
+		}
+		setHand GameStat, HAND_TILECODE, 13, targetPlayer, 0
+	loop
+return
+
+/* ‹γν‹γ”v—¬‚µ‚ª‰Β”\‚©‚Η‚¤‚©‚Μƒ`ƒFƒbƒN */
+#module
+#include "const.hsp"
+#defcfunc chkdaopaiability var GameStat, int targetPlayer
+	haiDaoPaiable = 0
+	countTilesInHand haiCount, GameStat, targetPlayer
+	YaojiuPai = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+9, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+9
+	YaojiuPai(6) = TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON, TILE_RED_DRAGON
+	YaojiuCount = 0: AtamaFlag = 0
+	repeat 13
+		// ƒ„ƒI‹γ”v‚Pν—ή‚Ι‚Β‚«A‚P‚πƒJƒEƒ“ƒg‚·‚ιB
+		if (haiCount(YaojiuPai(cnt)) >= 1) {
+			YaojiuCount++
+		}
+	loop
+	if (YaojiuCount >= 9) {haiDaoPaiable = 1}
+return haiDaoPaiable
+#global
+
+/* ƒhƒ‰‚πέ’θ‚·‚ι */
+#module
+#include "const.hsp"
+#deffunc setdora var GameStat, int Mode
+	debug strf("ƒhƒ‰‚Μ’Η‰Α ƒ|ƒCƒ“ƒ^ [%d] ”vƒR[ƒh [%d] ƒ‚[ƒh [%d]", getDoraPointer(GameStat), getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode), Mode)
+	if (getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode) > TILE_SUIT_FLOWERS) {
+		tmpDora = getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode)
+		incDoraFlag GameStat, Mode, TILE_DORA_FLOWER	// ‰Τ”v‚ªƒhƒ‰•\¦”v‚Ι‚Θ‚Α‚½‚Ζ‚«
+		debug "‰Τ”v‚πƒhƒ‰‚Ι‚µ‚ά‚µ‚½B"
+		if (Mode) {haifurecuradora tmpdora} else {haifurecdora tmpdora}	// c‚θ‚Μ‰Τ”v‚πƒ_ƒuƒhƒ‰‚Ζ‚·‚ι
+	} else {
+		if (getRule(RULE_NAGATACHO) != "0") {
+			// ‰i“c’¬ƒ‹[ƒ‹—p
+			tmpDora = getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode)+1
+	#ifdef SANMAX
+			if (tmpDora == TILE_SUIT_CHARACTERS+2) {tmpDora == TILE_SUIT_CHARACTERS+9}
+	#endif
+			if (tmpDora == TILE_SUIT_CHARACTERS+10) {tmpDora == TILE_SUIT_CHARACTERS+1}
+			if (tmpDora == TILE_SUIT_CIRCLES+10) {tmpDora == TILE_SUIT_CIRCLES+1}
+			if (tmpDora == TILE_SUIT_BAMBOOS+10) {tmpDora == TILE_SUIT_BAMBOOS+1}
+			if (tmpDora == TILE_WIND_MAX+1) {tmpDora == TILE_WIND_MIN}
+			if (tmpDora == TILE_DRAGON_MAX+1) {tmpDora == TILE_DRAGON_MIN}
+			if (tmpDora > TILE_NUMERAL_MAX) {
+				incDoraFlag GameStat, Mode, tmpDora // ƒhƒ‰‚πέ’θ‚·‚ι
+				if (Mode) {haifurecuradora tmpdora} else {haifurecdora tmpdora}
+				debug strf("”vƒR[ƒh [%d] ‚πƒhƒ‰‚Ι‚µ‚ά‚µ‚½B", tmpDora)
+			} else {
+				repeat TILE_NUMERAL_COLORS
+					tmpDora = tmpDora \ TILE_SUIT_STEP + cnt * TILE_SUIT_STEP
+	#ifdef SANMAX
+					if (tmpDora/TILE_SUIT_STEP != TILE_SUIT_CHARACTERS/TILE_SUIT_STEP)||((tmpDora == 1)||(tmpDora == 9)) {
+	#endif
+						incDoraFlag GameStat, Mode, tmpDora: if (Mode) {haifurecuradora tmpdora} else {haifurecdora tmpdora}
+						debug strf("”vƒR[ƒh [%d] ‚πƒhƒ‰‚Ι‚µ‚ά‚µ‚½B", tmpDora)
+	#ifdef SANMAX
+					}
+	#endif
+				loop
+			}
+		} else {
+			if (getRule(RULE_DORA_INDICATOR) == "2") {
+				// ‘O‚Μ”v‚ªƒhƒ‰i’΄ƒCƒ“ƒtƒ—pj
+				tmpDora = getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode)-1
+	#ifdef SANMAX
+			if (tmpDora == TILE_SUIT_CHARACTERS+8) {tmpDora == TILE_SUIT_CHARACTERS+1}
+	#endif
+			if (tmpDora == TILE_SUIT_CHARACTERS+0) {tmpDora == TILE_SUIT_CHARACTERS+9}
+			if (tmpDora == TILE_SUIT_CIRCLES+0) {tmpDora == TILE_SUIT_CIRCLES+9}
+			if (tmpDora == TILE_SUIT_BAMBOOS+0) {tmpDora == TILE_SUIT_BAMBOOS+9}
+			if (tmpDora == TILE_WIND_MIN-1) {tmpDora == TILE_WIND_MAX}
+			if (tmpDora == TILE_DRAGON_MIN-1) {tmpDora == TILE_DRAGON_MAX}
+	#ifdef SANMAX
+				if (tmpDora/TILE_SUIT_STEP != TILE_SUIT_CHARACTERS/TILE_SUIT_STEP) {
+	#endif
+					incDoraFlag GameStat, Mode, tmpDora // ƒhƒ‰‚πέ’θ‚·‚ι
+					debug strf("”vƒR[ƒh [%d] ‚πƒhƒ‰‚Ι‚µ‚ά‚µ‚½B", tmpDora)
+					if (Mode) {haifurecuradora tmpdora} else {haifurecdora tmpdora}
+	#ifdef SANMAX
+				}
+	#endif
+			}
+			if ((getRule(RULE_DORA_INDICATOR) == "1")||(getRule(RULE_DORA_INDICATOR) == "2")) {
+				// »•¨ƒhƒ‰
+				tmpDora = getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode)
+				incDoraFlag GameStat, Mode, tmpDora // ƒhƒ‰‚πέ’θ‚·‚ι
+				debug strf("”vƒR[ƒh [%d] ‚πƒhƒ‰‚Ι‚µ‚ά‚µ‚½B", tmpDora)
+				if (Mode) {haifurecuradora tmpdora} else {haifurecdora tmpdora}
+			}
+			if (getRule(RULE_DORA_INDICATOR) != "1") {
+				// ƒlƒNƒXƒgƒhƒ‰
+				tmpDora = getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode)+1
+	#ifdef SANMAX
+				if (tmpDora == TILE_SUIT_CHARACTERS+2) {tmpDora == TILE_SUIT_CHARACTERS+9}
+	#endif
+				if (tmpDora == TILE_SUIT_CHARACTERS+10) {tmpDora == TILE_SUIT_CHARACTERS+1}
+				if (tmpDora == TILE_SUIT_CIRCLES+10) {tmpDora == TILE_SUIT_CIRCLES+1}
+				if (tmpDora == TILE_SUIT_BAMBOOS+10) {tmpDora == TILE_SUIT_BAMBOOS+1}
+				if (tmpDora == TILE_WIND_MAX+1) {tmpDora == TILE_WIND_MIN}
+				if (tmpDora == TILE_DRAGON_MAX+1) {tmpDora == TILE_DRAGON_MIN}
+				incDoraFlag GameStat, Mode, tmpDora // ƒhƒ‰‚πέ’θ‚·‚ι
+				debug strf("”vƒR[ƒh [%d] ‚πƒhƒ‰‚Ι‚µ‚ά‚µ‚½B", tmpDora)
+				if (Mode) {haifurecuradora tmpdora} else {haifurecdora tmpdora}
+			}
+		}
+	}
+	return
+#global
+
+*adddora
+	// •\ƒhƒ‰‚πέ’θ‚·‚ι
+	setdora GameStat, 0
+	// — ƒhƒ‰‚πέ’θ‚·‚ι
+	setdora GameStat, 1
+	haifurecdorap
+	return
+
+/* \O•s“ƒ‚Μ”»’θ */
+#module
+#defcfunc chkshisanbuda var GameStat, int targetPlayer
+	ShisanBuDa = 0
+	Ukihai = 0
+	Duizi = 0
+	repeat 14
+		haiTileInfo = getpaiinfo(GameStat, targetPlayer, cnt, 0)
+		if (haiTileInfo == 0) {Ukihai++}
+		if (haiTileInfo == 4) {Duizi++}
+	loop
+	if ((Ukihai == 12)&&(Duizi == 2)) {ShisanBuDa = 1}
+	return ShisanBuDa
+#global
+
+/* \l•s“ƒ‚Μ”»’θ */
+#module
+#defcfunc chkshisibuda var GameStat, int targetPlayer
+	ShisiBuDa = 0
+	Ukihai = 0
+	repeat 14
+		haiTileInfo = getpaiinfo(GameStat, targetPlayer, cnt, 0)
+		if (haiTileInfo == 0) {Ukihai++}
+		if (haiTileInfo == 4) {Duizi++}
+	loop
+	if (Ukihai == 14) {ShisiBuDa = 1}
+	return ShisiBuDa
+#global
+
+/* —§’Όγ‚ΜΓΘ‚Μ‰Β”Ϋ */
+#module
+#include "const.hsp"
+#defcfunc chkankanability var GameStat, int targetPlayer
+	debug strf("ΓΘ‚Μ‰Β”Ϋ‚π”»’θ‚µ‚ά‚·BƒvƒƒCƒ„[ [%d]", targetPlayer)
+	/* θ”v‚π’²‚Χ‚ι */
+	countTilesInHand haiCount, GameStat, targetPlayer
+	/* θ”v‚π‘ή”π‚·‚ι */
+	dim tmpkanhand, 14
+	repeat 14: tmpkanhand(cnt) = getHand(GameStat, HAND_TILECODE, cnt, targetPlayer): loop
+	/* ƒcƒ‚‚Α‚½”v‚ª‚S–‡‘µ‚Α‚Δ‚Θ‚Ά‚Θ‚η–ί‚ι */
+	/* —§’Όγ‚Ε‚ ‚θ‘—‚θΘ‚Ν‚Ε‚«‚Θ‚Ά‚Μ‚Εƒcƒ‚‚Α‚½”v‚Ύ‚―’²‚Χ‚κ‚Ξ‚ζ‚Ά */
+	if (haiCount(getHand(GameStat, HAND_TILECODE, 13, targetPlayer)) < 4) {
+		debug strf("ƒcƒ‚”v [%d] ‚ΝA4–‡‘µ‚Α‚Δ‚Ά‚ά‚Ή‚ρB", getHand(GameStat, HAND_TILECODE, 13, targetPlayer))
+		return 0
+	}
+	debug strf("ƒcƒ‚”v [%d] ‚ΝAθ”v‚Ι‡‚ν‚Ή‚Δ4–‡‚ ‚θ‚ά‚·B", getHand(GameStat, HAND_TILECODE, 13, targetPlayer))
+	/* ”v‚Θ‚η–ί‚ι */
+	if ((getHand(GameStat, HAND_TILECODE, 13, targetPlayer) > TILE_NUMERAL_MAX)&&(getHand(GameStat, HAND_TILECODE, 13, targetPlayer) <= TILE_NONFLOWER_STRICT_MAX)) {
+		debug strf("ƒcƒ‚”v [%d] ‚Ν”v‚Ε‚·B", getHand(GameStat, HAND_TILECODE, 13, targetPlayer))
+		return 1
+	}
+	debug strf("ƒcƒ‚”v [%d] ‚Ν””v‚Ε‚·B", getHand(GameStat, HAND_TILECODE, 13, targetPlayer))
+	/* ƒcƒ‚‚Α‚½”v‚ª“ª‚Ι‚Θ‚θ‚¤‚ι‚Θ‚η–ί‚ι */
+	tmptakencount = 0
+	repeat 13
+		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == getHand(GameStat, HAND_TILECODE, 13, targetPlayer)) {
+			setHand GameStat, HAND_TILECODE, cnt, targetPlayer, 0: tmptakencount++
+		}
+		if (tmptakencount == 2) {break}
+	loop
+	setHand GameStat, HAND_TILECODE, 13, targetPlayer, 0
+	/*	
+		—αF
+		–Κq‚π‚QA‘Ξq‚β“ƒq‚π‚PA“ªσ•β‚π‡@‚Ζ’θ‹`‚·‚ιB
+		–ΚqƒI[ƒo[‚ΝO‚·‚ι‚±‚ΖB‡v‚ª‚W‚Θ‚η’®”vA‚X‚Θ‚ηa—Ή
+		‚P‚P‚P‚R‚S‚S‚S“““”­”­”­ ©‚±‚Μκ‡
+		+‡@++‚P++-‚Q-++-‚Q-++-‚Q-+ c ‚W(’®”v)
+		––‚P‚R‚S‚S‚S“““”­”­”­ ©‚P‚π“ª‚Ιζ‚ι‚Ζ
+		    +‚P++-‚Q-++-‚Q-++-‚Q-+ c ‚V(κό’®)
+		‚P‚P‚P‚R‚S‚S‚S“““”­–– ©”­‚πζ‚λ‚¤‚Ζ‚·‚ι‚Ζ
+		+‡@++‚P++-‚Q-++-‚Q-+~     c ‚U(“ρό’®)
+	*/
+	Shanten = countshanten(GameStat, targetPlayer, 0)
+	repeat 14 /* θ”v‚π‘‚«–ί‚· */
+		setHand GameStat, HAND_TILECODE, cnt, targetPlayer, tmpkanhand(cnt)
+	loop
+	if (Shanten == 1) {
+		debug strf("ƒcƒ‚”v [%d] ‚ΝAƒAƒ^ƒ}σ•β‚Ε‚·B", getHand(GameStat, HAND_TILECODE, 13, targetPlayer))
+		return 0
+	}
+	debug strf("ƒcƒ‚”v [%d] ‚ΝAƒAƒ^ƒ}σ•β‚Ε‚Ν‚ ‚θ‚ά‚Ή‚ρB", getHand(GameStat, HAND_TILECODE, 13, targetPlayer))
+	/* ΓΘ‚·‚ι‘O‚Μ‘Ò‚Ώ”v‚π’²‚Χ‚ι */
+	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, targetPlayer
+	dim tmpchkMachihaiFlag, TILE_NONFLOWER_STRICT_MAX+1
+	repeat TILE_NONFLOWER_STRICT_MAX+1: tmpchkMachihaiFlag(cnt) = haiMachihaiFlag(cnt): loop
+	/* ΓΘ‚µ‚½‚ ‚Ζ‚Μ‘Ò‚Ώ”v‚π’²‚Χ‚ι */
+	repeat 13
+		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == getHand(GameStat, HAND_TILECODE, 13, targetPlayer)) {
+			setHand GameStat, HAND_TILECODE, cnt, targetPlayer, 0: tmptakencount++
+		}
+	loop
+	setHand GameStat, HAND_TILECODE, 13, targetPlayer, 0
+	MeldPointerIncrement GameStat, targetPlayer
+	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, targetPlayer
+	/* θ”v‚π‘‚«–ί‚· */
+	MeldPointerDecrement GameStat, targetPlayer: repeat 14 /* θ”v‚π‘‚«–ί‚· */
+		setHand GameStat, HAND_TILECODE, cnt, targetPlayer, tmpkanhand(cnt)
+	loop
+	/* ‘Ò‚Ώ”v‚ªκ’v‚µ‚Θ‚Ά‚Θ‚η–ί‚ι */
+	MachiHaiDifference = 0
+	repeat TILE_NONFLOWER_STRICT_MAX+1
+		if (tmpchkMachihaiFlag(cnt) != haiMachihaiFlag(cnt)) {
+			MachiHaiDifference = 1
+		}
+	loop
+	if (MachiHaiDifference == 1) {
+		debug "Θ‚Μ‘Oγ‚Ε‘Ò‚Ώ”v‚ªκ’v‚µ‚ά‚Ή‚ρB"
+		return 0
+	}
+	/* π‚π–‚½‚·ΓΘ */
+	debug "Θ‚Μ‘Oγ‚Ε‘Ò‚Ώ”v‚ªκ’v‚µ‚ά‚µ‚½B"
+	return 1
+#global
+
+/* “±‰Ξό‚ΜΚ’u‚π’²‚Χ‚ι */
+#module
+#include "const.hsp"
+#deffunc calcdoukasen var GameStat
+/*
+		calcdoukasen p1
+		“±‰Ξό‚ΜΚ’u‚πvZ‚·‚ι
+
+		p1 : ‘μ‚Μσ‹µ‚πi”[‚µ‚½\‘Ά‘Μ
+
+		“±‰Ξό‚ΜΚ’u‚πvZ‚µ‚ά‚·B
+*/
+#ifdef SANMAX
+	if (getRule(RULE_DOUKASEN) != "0") {
+		setDoukasen GameStat, ((30-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)-(getRound(GameStat)/4)))*36*2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/36)+30)\3
+#ifdef SANMA4
+		setDoukasen GameStat, ((30-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(0))*36*2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/36)+30)\3
+		if ((getRound(GameStat)\4) == 0) {tobePlayed = 0, 1, 2}
+		if ((getRound(GameStat)\4) == 1) {tobePlayed = 1, 2, 3}
+		if ((getRound(GameStat)\4) == 2) {tobePlayed = 2, 3, 0}
+		if ((getRound(GameStat)\4) == 3) {tobePlayed = 3, 0, 1}
+		setDoukasen GameStat, tobePlayed(getDoukasen(GameStat))
+#endif
+	}
+#else
+	if (getRule(RULE_DOUKASEN) != "0") {
+		if (getRule(RULE_FLOWER_TILES) != "0") {
+			if (getRule(RULE_FLOWER_TILES) == "3") {
+				setDoukasen GameStat, ((40-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\4))*36*3+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/36)+40)\4
+			} else {
+				setDoukasen GameStat, ((40-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\4))*70*3/2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/35)+40)\4
+				tmp = ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\4))*70*3/2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)\70
+				if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)+getRound(GameStat))\2 == 0) {
+					if (tmp == 0) {setDoukasen GameStat, (40+getDoukasen(GameStat)+1)\4}
+				} else {
+					if (tmp == 35) {setDoukasen GameStat, (40+getDoukasen(GameStat)+1)\4}
+				}
+			}
+		} else {
+			setDoukasen GameStat, ((40-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\4))*34*3+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/34)+40)\4
+		}
+	}
+#endif
+	return
+#global
+
+/* ‘μ‚Μσ‘Τ‚ΜƒTƒ“ƒhƒ{ƒbƒNƒX‚πμ‚ι */
+#module
+#include "const.hsp"
+#deffunc makesandbox var Sandbox, var GameStat, int targetPlayer
+	if (vartype(Sandbox) == vartype("struct")) {
+		if (varuse(Sandbox)) {
+			delmod Sandbox
+		}
+	}
+	newmod Sandbox, gameStruct
+	repeat 32: setScore Sandbox, cnt\4, cnt/4, getScore(GameStat, cnt\4, cnt/4): loop
+	repeat 4: setChip Sandbox, cnt, getChip(GameStat, cnt): loop
+	repeat 4: setSumaroFlag Sandbox, cnt, getSumaroFlag(GameStat, cnt): loop
+	repeat 4: setYakitori Sandbox, cnt, getYakitori(GameStat, cnt): loop
+	setPlayer Sandbox, getPlayer(GameStat)
+	setRound Sandbox, getRound(GameStat)
+	setRoundLoop Sandbox, getRoundLoop(GameStat)
+	setHonba Sandbox, getHonba(GameStat)
+	setDeposit Sandbox, getDeposit(GameStat)
+	setAgariChain Sandbox, getAgariChain(GameStat)
+	setLastAgariPlayer Sandbox, getLastAgariPlayer(GameStat)
+	
+	repeat 28: setHand Sandbox, cnt/14, cnt\14, targetPlayer, getHand(GameStat, cnt/14, cnt\14, targetPlayer): loop
+	repeat 396: setDiscard Sandbox, cnt\99/33, cnt\33, cnt/99, getDiscard(GameStat, cnt\99/33, cnt\33, cnt/99): loop
+	repeat 40: setMeld Sandbox, cnt\10/5, cnt\5, cnt/10, getMeld(GameStat, cnt\10/5, cnt\5, cnt/10): loop
+	repeat 4: setMenzen Sandbox, cnt, getMenzen(GameStat, cnt): loop
+	repeat 4: setHandStat Sandbox, cnt, getHandStat(GameStat, cnt): loop
+	repeat 4: setNumberOfQuads Sandbox, cnt, getNumberOfQuads(GameStat, cnt): loop
+	repeat 8: setRichiFlag Sandbox, cnt/4, cnt\4, getRichiFlag(GameStat, cnt/4, cnt\4): loop
+	repeat TILE_NONFLOWER_MAX: setOpenWait Sandbox, cnt, getOpenWait(GameStat, cnt): loop
+	repeat 4: setFirstDrawFlag Sandbox, cnt, getFirstDrawFlag(GameStat, cnt): loop
+	repeat 4: setDoujunFuriten Sandbox, cnt, getDoujunFuriten(GameStat, cnt): loop
+	repeat 4: setAgariHouki Sandbox, cnt, getAgariHouki(GameStat, cnt): loop
+	repeat 4: putFlowerFlag Sandbox, cnt, getFlowerFlag(GameStat, cnt): loop
+#ifdef SANMAX
+	repeat 4: setNorthFlag Sandbox, cnt, getNorthFlag(GameStat, cnt): loop
+#endif
+	repeat 4: setKangFlag Sandbox, cnt, getKangFlag(GameStat, cnt): loop
+	setTotalKang Sandbox, getTotalKang(GameStat)
+	setRichiCounterFlag Sandbox, getRichiCounterFlag(GameStat)
+	setDoukasen Sandbox, getDoukasen(GameStat)
+	repeat 4: setPao Sandbox, cnt\2, cnt/2, getPao(GameStat, cnt\2, cnt/2): loop
+	repeat 2: setDice Sandbox, cnt, 0, getDice(GameStat, cnt, 0): loop
+	repeat 6
+#ifdef SANMAX
+		if (getDoraPointer(GameStat) <= (102-getRinshanExtension(GameStat)-cnt*2)) {
+			setWall Sandbox, WALL_TILECODE, 102-getRinshanExtension(GameStat)-cnt*2, getWall(GameStat, WALL_TILECODE, 102-getRinshanExtension(GameStat)-cnt*2)
+		}
+#else
+		if (getDoraPointer(GameStat) <= (130-cnt*2)) {
+			setWall Sandbox, WALL_TILECODE, 130-cnt*2, getWall(GameStat, WALL_TILECODE, 130-cnt*2)
+		}
+#endif
+	loop
+	setDrawPointer Sandbox, getDrawPointer(GameStat)
+	setDoraPointer Sandbox, getDoraPointer(GameStat)
+	setRinshanPointer Sandbox, getRinshanPointer(GameStat)
+	setHeavenHandFlag Sandbox, getHeavenHandFlag(GameStat)
+	repeat 2: setPreviousMeld Sandbox, cnt, getPreviousMeld(GameStat, cnt): loop
+	repeat 4: setDisconnectFlag Sandbox, cnt, getDisconnectFlag(GameStat, cnt): loop
+	repeat TILE_NONFLOWER_MAX: setDoraFlag Sandbox, DORA_OMOTE, cnt, getDoraFlag(GameStat, DORA_OMOTE, cnt): loop
+	return
+#global

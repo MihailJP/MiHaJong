@@ -1,0 +1,578 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *     [卓の準備ルーチン]
+ *=============================
+ */
+
+/* 半荘の初期化 */
+*gameinit
+	closingchat
+	if (vartype(GameStat) == vartype("struct")) {
+		if (varuse(GameStat)) {
+			delmod GameStat
+		}
+	}
+	newmod GameStat, gameStruct
+	setPlayer GameStat, TmpPosition(ClientNumber)
+	sdim hncnTurnName, 8, 16: hncnTurnName = "東一局", "東二局", "東三局", "東四局", "南一局", "南二局", "南三局", "南四局", "西一局", "西二局", "西三局", "西四局", "北一局", "北二局", "北三局", "北四局"
+	dim haiMachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
+	haifubufinit
+	statmes "" // 情報窓への表示
+	initializechat GameMode, IsRemotePlayer, ServerAddress, ClientNumber
+return
+
+/* 卓の初期化 */
+*tableinit
+	ifaceinit // 押しボタン類のステータス初期化
+	inittable GameStat
+	// 局の開始で同期する。このとき落ち戻りが可能
+	if (GameMode == 1) {serversend 0xb6, IsRemotePlayer}
+	if (GameMode == 2) {
+		repeat
+			clientreceive ClientReceived, ReceivedMsg
+			if ((ClientReceived == 1)&&(ReceivedMsg == 0xb6)) {
+				break
+			}
+			if ((ClientReceived == 1)&&(ReceivedMsg == 1023)) {
+				setDisconnectFlag GameStat, ActivePlayer, 1
+				hncnMsg = "回線切断": gosub *redrscreen
+				gosub *reconnection
+				dialog "再接続しました", 0, "回線切断"
+				hncnKyokuEndType = ENDKYOKU_DISCONNECT
+				break
+			}
+			await 0
+		loop
+	}
+	// 牌譜バッファの初期化
+	haifuinit
+	// 場風のデータを送信。とりあえず１６周目の北四局まで対応
+	if (GameMode == 1) {
+		serversend getRoundLoop(GameStat)*16+getRound(GameStat), IsRemotePlayer
+	}
+	if (GameMode == 2) {
+		repeat
+			clientreceive ClientReceived, ReceivedMsg
+			if (ClientReceived == 1) {
+				setRoundLoop GameStat, ReceivedMsg / 16
+				setRound GameStat, ReceivedMsg \ 16
+				break
+			}
+			await 0
+		loop
+	}
+	// 積み棒のデータを送信。とりあえず２５５本場まで対応
+	if (GameMode == 1) {
+		serversend getHonba(GameStat), IsRemotePlayer
+	}
+	if (GameMode == 2) {
+		repeat
+			clientreceive ClientReceived, ReceivedMsg
+			if (ClientReceived == 1) {
+				setHonba GameStat, ReceivedMsg
+				break
+			}
+			await 0
+		loop
+	}
+	// 供託本数のデータを送信。とりあえず２５５０００点まで対応
+	if (GameMode == 1) {
+		serversend getDeposit(GameStat), IsRemotePlayer
+	}
+	if (GameMode == 2) {
+		repeat
+			clientreceive ClientReceived, ReceivedMsg
+			if (ClientReceived == 1) {
+				setDeposit GameStat, ReceivedMsg
+				break
+			}
+			await 0
+		loop
+	}
+	// 八連荘の判定に使うデータを送信
+	if (GameMode == 1) {
+		serversend (getLastAgariPlayer(GameStat)+1)*16+getAgariChain(GameStat), IsRemotePlayer
+	}
+	if (GameMode == 2) {
+		repeat
+			clientreceive ClientReceived, ReceivedMsg
+			if (ClientReceived == 1) {
+				setLastAgariPlayer GameStat, (ReceivedMsg/16) -1
+				setAgariChain GameStat, ReceivedMsg \ 16
+				break
+			}
+			await 0
+		loop
+	}
+	// 持ち点のデータを送信。符号込みで33バイトずつ・スモールエンディアン
+	if (GameMode == 1) {
+		repeat 4
+			tmp = cnt
+			repeat 8
+				serversend abs(getScore(GameStat,tmp, cnt)) \ 256, IsRemotePlayer
+				serversend abs(getScore(GameStat,tmp, cnt)) \ 65536 / 256, IsRemotePlayer
+				serversend abs(getScore(GameStat,tmp, cnt)) \ 16777216 / 65536, IsRemotePlayer
+				serversend abs(getScore(GameStat,tmp, cnt)) / 16777216, IsRemotePlayer
+			loop
+			if (getScore(GameStat,cnt, 0) < 0) {
+				serversend 0x01, IsRemotePlayer
+			} else {
+				serversend 0x00, IsRemotePlayer
+			}
+		loop
+	}
+	if (GameMode == 2) {
+		repeat 4: tmp = cnt
+			repeat 8: tmp2 = cnt
+				repeat
+					clientreceive ClientReceived, ReceivedMsg
+					if (ClientReceived == 1) {setScore GameStat, tmp, tmp2, ReceivedMsg: break}
+					await 0
+				loop
+				repeat
+					clientreceive ClientReceived, ReceivedMsg
+					if (ClientReceived == 1) {addScore GameStat, tmp, tmp2, ReceivedMsg*256: break}
+					await 0
+				loop
+				repeat
+					clientreceive ClientReceived, ReceivedMsg
+					if (ClientReceived == 1) {addScore GameStat, tmp, tmp2, ReceivedMsg*65536: break}
+					await 0
+				loop
+				repeat
+					clientreceive ClientReceived, ReceivedMsg
+					if (ClientReceived == 1) {addScore GameStat, tmp, tmp2, ReceivedMsg*16777216: break}
+					await 0
+				loop
+			loop
+			repeat
+				clientreceive ClientReceived, ReceivedMsg
+				if (ClientReceived == 1) {
+					if (ReceivedMsg == 1) {
+						repeat 8: setScore GameStat, tmp, cnt, -getScore(GameStat, tmp, cnt): loop
+					}
+					break
+				}
+				await 0
+			loop
+		loop
+	}
+	// 焼鳥のデータを送信
+	if (GameMode == 1) {
+		serversend getYakitori(GameStat, 0)*8+getYakitori(GameStat, 1)*4+getYakitori(GameStat, 2)*2+getYakitori(GameStat, 3), IsRemotePlayer
+	}
+	if (GameMode == 2) {
+		repeat
+			clientreceive ClientReceived, ReceivedMsg
+			if (ClientReceived == 1) {
+				setYakitori GameStat, 0, ReceivedMsg\16/8
+				setYakitori GameStat, 1, ReceivedMsg\8/4
+				setYakitori GameStat, 2, ReceivedMsg\4/2
+				setYakitori GameStat, 3,ReceivedMsg\2/1
+				break
+			}
+			await 0
+		loop
+	}
+	// チップのデータを送信。一応±１２７まで対応
+	if (GameMode == 1) {
+		repeat 4: serversend getChip(GameStat, cnt)+128, IsRemotePlayer: loop
+	}
+	if (GameMode == 2) {
+		repeat 4: tmp = cnt
+			repeat
+				clientreceive ClientReceived, ReceivedMsg
+				if (ClientReceived == 1) {
+					setChip GameStat, tmp, ReceivedMsg-128
+					break
+				}
+				await 0
+			loop
+		loop
+	}
+	// 四馬路解禁フラグを送信
+	if (GameMode == 1) {
+		serversend getSumaroFlag(GameStat, 0)*8+getSumaroFlag(GameStat, 1)*4+getSumaroFlag(GameStat, 2)*2+getSumaroFlag(GameStat, 3), IsRemotePlayer
+	}
+	if (GameMode == 2) {
+		repeat
+			clientreceive ClientReceived, ReceivedMsg
+			if (ClientReceived == 1) {
+				setSumaroFlag GameStat, 0, ReceivedMsg \ 16 / 8
+				setSumaroFlag GameStat, 1, ReceivedMsg \ 8 / 4
+				setSumaroFlag GameStat, 2, ReceivedMsg \ 4 / 2
+				setSumaroFlag GameStat, 3, ReceivedMsg \ 2
+				break
+			}
+			await 0
+		loop
+	}
+	// BGMを鳴らす
+	if (((getRoundLoop(GameStat)*16+getRound(GameStat)) == getGameLength(GameStat))&&(getGameLength(GameStat) > 0)) {
+		// オーラスだけ特別
+		bgmcode = MUS_FINAL: gosub *bgmplay
+	} else {
+		if ((getHonba(GameStat) >= 5)&&(getRule(RULE_RYANSHIBA) == "1")) {
+			// リャンシバ時専用BGM
+			bgmcode = MUS_SHIBARI: gosub *bgmplay
+		} else {
+			bgmcode = getRound(GameStat)\16: gosub *bgmplay
+		}
+	}
+	if (getHonba(GameStat)) {
+		tmpStatus = ""+hncnTurnName(getRound(GameStat))+getHonba(GameStat)+"本場"
+	} else {
+		tmpStatus = ""+hncnTurnName(getRound(GameStat))
+	}
+	chatappend "-------------\n*** "+tmpStatus+"\n"
+	if (WatchModeFlag == 1) {
+		tmpStatus += " Watch Mode"
+	} else {
+		switch playerWind(getPlayer(GameStat), getRound(GameStat))
+			case PLAYER_EAST: tmpStatus += " あなたが親です": swbreak
+			case PLAYER_SOUTH: tmpStatus += " あなたは南家です": swbreak
+			case PLAYER_WEST: tmpStatus += " あなたは西家です": swbreak
+#ifdef SANMA4
+			case PLAYER_NORTH: tmpStatus += " あなたは抜け番です": swbreak
+#else
+			case PLAYER_NORTH: tmpStatus += " あなたは北家です": swbreak
+#endif
+		swend
+	}
+	statmes tmpStatus
+	await 100
+	hncnMsg = "" // 画面中央に大書する文字列
+	initCall // 鳴きなど
+	if ((getRoundLoop(GameStat))\2 == 0) {
+		if (getRoundLoop(GameStat) == 0) {
+			if (getRound(GameStat)/4 == 0) {bgColorR = 0: bgColorG = 160: bgColorB = 0}
+			if (getRound(GameStat)/4 == 1) {bgColorR = 0: bgColorG = 160: bgColorB = 160}
+		} else {
+			if (getRound(GameStat)/4 == 0) {bgColorR = 80: bgColorG = 160: bgColorB = 0}
+			if (getRound(GameStat)/4 == 1) {bgColorR = 160: bgColorG = 80: bgColorB = 0}
+		}
+		if (getRound(GameStat)/4 == 2) {bgColorR = 0: bgColorG = 80: bgColorB = 160}
+		if (getRound(GameStat)/4 == 3) {bgColorR = 120: bgColorG = 0: bgColorB = 160}
+	} else {
+		if (getRound(GameStat)/4 == 0) {bgColorR = 160: bgColorG = 160: bgColorB = 160}
+		if (getRound(GameStat)/4 == 1) {bgColorR = 160: bgColorG = 160: bgColorB = 0}
+		if (getRound(GameStat)/4 == 2) {bgColorR = 160: bgColorG = 0: bgColorB = 0}
+		if (getRound(GameStat)/4 == 3) {bgColorR = 80: bgColorG = 80: bgColorB = 80}
+	}
+	if ((getRoundLoop(GameStat)*16+getRound(GameStat)) >= (getGameLength(GameStat)+1)) {
+		hncnMsg = " 延長戦 "
+	} else {
+		if ((getRoundLoop(GameStat)*16+getRound(GameStat)) == getGameLength(GameStat)) {
+			hncnMsg = "オーラス"
+		} else {
+			hncnMsg = " "+hncnTurnName(getRound(GameStat))+" "
+		}
+	}
+#ifdef SANMAX
+	repeat 1*4, 0: setWall GameStat, WALL_TILECODE, cnt, 1: loop // 萬子
+	repeat 1*4, 1*4: setWall GameStat, WALL_TILECODE, cnt, 9: loop // 萬子
+	repeat 9*4, 2*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+9: loop // 筒子
+	repeat 9*4, 11*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+10: loop // 索子
+	repeat 7*4, 20*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+11: loop // 字牌
+	if (getRule(RULE_RED_FIVE) != "2") {
+		setWall GameStat, WALL_REDTILE, 24, 1 // 赤五筒
+		if (getRule(RULE_RED_FIVE) == "1") {setWall GameStat, WALL_REDTILE, 25, 1} // 赤五筒
+		setWall GameStat, WALL_REDTILE, 60, 1 // 赤五索
+		if (getRule(RULE_RED_FIVE) == "1") {setWall GameStat, WALL_REDTILE, 61, 1} // 赤五索
+	}
+	if (int(getRule(RULE_RED_ONE))/4 == 1) {setWall GameStat, WALL_REDTILE, 0, 1} // 赤一萬
+	if (int(getRule(RULE_RED_NINE))/4 == 1) {setWall GameStat, WALL_REDTILE, 4, 1} // 赤九萬
+	if (int(getRule(RULE_RED_ONE))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 8, 1} // 赤一筒
+	if (int(getRule(RULE_RED_TWO))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 12, 1} // 赤二筒
+	if (int(getRule(RULE_RED_THREE))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 16, 1} // 赤三筒
+	if (int(getRule(RULE_RED_FOUR))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 20, 1} // 赤四筒
+	if (int(getRule(RULE_RED_SIX))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 28, 1} // 赤六筒
+	if (int(getRule(RULE_RED_SEVEN))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 32, 1} // 赤七筒
+	if (int(getRule(RULE_RED_EIGHT))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 36, 1} // 赤八筒
+	if (int(getRule(RULE_RED_NINE))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 40, 1} // 赤九筒
+	if (int(getRule(RULE_RED_ONE))\2 == 1) {setWall GameStat, WALL_REDTILE, 44, 1} // 赤一索
+	if (int(getRule(RULE_RED_TWO))\2 == 1) {setWall GameStat, WALL_REDTILE, 48, 1} // 赤二索
+	if (int(getRule(RULE_RED_THREE))\2 == 1) {setWall GameStat, WALL_REDTILE, 52, 1} // 赤三索
+	if (int(getRule(RULE_RED_FOUR))\2 == 1) {setWall GameStat, WALL_REDTILE, 56, 1} // 赤四索
+	if (int(getRule(RULE_RED_SIX))\2 == 1) {setWall GameStat, WALL_REDTILE, 64, 1} // 赤六索
+	if (int(getRule(RULE_RED_SEVEN))\2 == 1) {setWall GameStat, WALL_REDTILE, 68, 1} // 赤七索
+	if (int(getRule(RULE_RED_EIGHT))\2 == 1) {setWall GameStat, WALL_REDTILE, 72, 1} // 赤八索
+	if (int(getRule(RULE_RED_NINE))\2 == 1) {setWall GameStat, WALL_REDTILE, 76, 1} // 赤九索
+	if (getRule(RULE_KINKEI_DOKURITSU) != "0") {
+		// オールマイティー扱いはせず、赤ドラと同じ扱い
+		setWall GameStat, WALL_REDTILE, 96, 1 // 白ポッチ
+	}
+#else
+	repeat 9*4, 0: setWall GameStat, WALL_TILECODE, cnt, cnt/4+1: loop // 萬子
+	repeat 9*4, 9*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+2: loop // 筒子
+	repeat 9*4, 18*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+3: loop // 索子
+	repeat 7*4, 27*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+4: loop // 字牌
+	if (getRule(RULE_FLOWER_TILES) != "0") {
+		if (getRule(RULE_FLOWER_TILES) == "3") {
+			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-65: loop // 季節牌
+			repeat 4, 35*4: setWall GameStat, WALL_TILECODE, cnt, cnt-64: loop // 草木牌
+		} else:if (getRule(RULE_FLOWER_TILES) == "1") {
+			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-65: loop // 季節牌
+		} else {
+			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-60: loop // 草木牌
+		}
+	}
+	if (getRule(RULE_RED_FIVE) != "2") {
+		setWall GameStat, WALL_REDTILE, 16, 1 // 赤五萬
+		setWall GameStat, WALL_REDTILE, 52, 1 // 赤五筒
+		if (getRule(RULE_RED_FIVE) == "1") {setWall GameStat, WALL_REDTILE, 53, 1} // 赤五筒
+		setWall GameStat, WALL_REDTILE, 88, 1 // 赤五索
+	}
+	if (int(getRule(RULE_RED_ONE))/4 == 1) {setWall GameStat, WALL_REDTILE, 0, 1} // 赤一萬
+	if (int(getRule(RULE_RED_TWO))/4 == 1) {setWall GameStat, WALL_REDTILE, 4, 1} // 赤二萬
+	if (int(getRule(RULE_RED_THREE))/4 == 1) {setWall GameStat, WALL_REDTILE, 8, 1} // 赤三萬
+	if (int(getRule(RULE_RED_FOUR))/4 == 1) {setWall GameStat, WALL_REDTILE, 12, 1} // 赤四萬
+	if (int(getRule(RULE_RED_SIX))/4 == 1) {setWall GameStat, WALL_REDTILE, 20, 1} // 赤六萬
+	if (int(getRule(RULE_RED_SEVEN))/4 == 1) {setWall GameStat, WALL_REDTILE, 24, 1} // 赤七萬
+	if (int(getRule(RULE_RED_EIGHT))/4 == 1) {setWall GameStat, WALL_REDTILE, 28, 1} // 赤八萬
+	if (int(getRule(RULE_RED_NINE))/4 == 1) {setWall GameStat, WALL_REDTILE, 32, 1} // 赤九萬
+	if (int(getRule(RULE_RED_ONE))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 36, 1} // 赤一筒
+	if (int(getRule(RULE_RED_TWO))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 40, 1} // 赤二筒
+	if (int(getRule(RULE_RED_THREE))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 44, 1} // 赤三筒
+	if (int(getRule(RULE_RED_FOUR))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 48, 1} // 赤四筒
+	if (int(getRule(RULE_RED_SIX))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 56, 1} // 赤六筒
+	if (int(getRule(RULE_RED_SEVEN))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 60, 1} // 赤七筒
+	if (int(getRule(RULE_RED_EIGHT))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 76, 1} // 赤八筒
+	if (int(getRule(RULE_RED_NINE))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 68, 1} // 赤九筒
+	if (int(getRule(RULE_RED_ONE))\2 == 1) {setWall GameStat, WALL_REDTILE, 72, 1} // 赤一索
+	if (int(getRule(RULE_RED_TWO))\2 == 1) {setWall GameStat, WALL_REDTILE, 64, 1} // 赤二索
+	if (int(getRule(RULE_RED_THREE))\2 == 1) {setWall GameStat, WALL_REDTILE, 80, 1} // 赤三索
+	if (int(getRule(RULE_RED_FOUR))\2 == 1) {setWall GameStat, WALL_REDTILE, 84, 1} // 赤四索
+	if (int(getRule(RULE_RED_SIX))\2 == 1) {setWall GameStat, WALL_REDTILE, 92, 1} // 赤六索
+	if (int(getRule(RULE_RED_SEVEN))\2 == 1) {setWall GameStat, WALL_REDTILE, 96, 1} // 赤七索
+	if (int(getRule(RULE_RED_EIGHT))\2 == 1) {setWall GameStat, WALL_REDTILE, 100, 1} // 赤八索
+	if (int(getRule(RULE_RED_NINE))\2 == 1) {setWall GameStat, WALL_REDTILE, 104, 1} // 赤九索
+	if (getRule(RULE_KINKEI_DOKURITSU) != "0") {
+		// オールマイティー扱いはせず、赤ドラと同じ扱い
+		setWall GameStat, WALL_REDTILE, 124, 1 // 白ポッチ
+	}
+#endif
+	if (GameMode != 2) {
+#ifdef SANMAX
+		YamaLength = 108
+#else
+		if (getRule(RULE_FLOWER_TILES) != "0") {
+			if (getRule(RULE_FLOWER_TILES) == "3") {
+				YamaLength = 144
+			} else {
+				YamaLength = 140
+			}
+		} else {
+			YamaLength = 136
+		}
+#endif
+		repeat YamaLength // 洗牌する
+			tmp1 = cnt + rnd(YamaLength - cnt)
+			tmp = getWall(GameStat, WALL_TILECODE, tmp1)
+			setWall GameStat, WALL_TILECODE, tmp1, getWall(GameStat, WALL_TILECODE, cnt)
+			setWall GameStat, WALL_TILECODE, cnt, tmp
+			tmp = getWall(GameStat, WALL_REDTILE, tmp1)
+			setWall GameStat, WALL_REDTILE, tmp1, getWall(GameStat, WALL_REDTILE, cnt)
+			setWall GameStat, WALL_REDTILE, cnt, tmp
+		loop
+	}
+	if (GameMode == 2) { // クライアントの場合、データを受信
+#ifdef SANMAX
+			tmpNumberOfTiles = 108
+#else
+		if (getRule(RULE_FLOWER_TILES) != "0") {
+			if (getRule(RULE_FLOWER_TILES) == "3") {
+				tmpNumberOfTiles = 144
+			} else {
+				tmpNumberOfTiles = 140
+			}
+		} else {
+			tmpNumberOfTiles = 136
+		}
+#endif
+		repeat tmpNumberOfTiles
+			tmp = cnt
+			repeat
+				clientreceive ClientReceived, ReceivedMsg
+				if (ClientReceived) {
+					if ( ((ReceivedMsg-0x10) > TILE_NONFLOWER_MAX)&& ((ReceivedMsg-0x10) < TILE_SUIT_FLOWERS) ) {
+						setWall GameStat, WALL_TILECODE, tmp, (ReceivedMsg-0x10)\TILE_NONFLOWER_MAX
+						setWall GameStat, WALL_REDTILE, tmp, (ReceivedMsg-0x10)/TILE_NONFLOWER_MAX
+					} else {
+						setWall GameStat, WALL_TILECODE, tmp, (ReceivedMsg-0x10)
+						setWall GameStat, WALL_REDTILE, tmp, 0
+					}
+					if ((ReceivedMsg-0x10) == TILE_WHITE_DRAGON+40) {
+						// 白ポッチの場合
+						setWall GameStat, WALL_TILECODE, tmp, TILE_WHITE_DRAGON
+						setWall GameStat, WALL_REDTILE, tmp, 1
+					}
+					break
+				}
+				await 0
+			loop
+		loop
+	}
+	vanish
+	setDice GameStat, 0, 0, rnd(6)+1: setDice GameStat, 1, 0, rnd(6)+1
+	setDice GameStat, 0, 1, rnd(2): setDice GameStat, 1, 1, rnd(2)
+	hncnMsg = " "+hncnTurnName(getRound(GameStat))+" "
+	gosub *redrscreen: commonswitch GameStat, WatchModeFlag
+	repeat 10 // 賽を振る
+		setDice GameStat, 0, 0, rnd(6)+1: setDice GameStat, 1, 0, rnd(6)+1
+		setDice GameStat, 0, 1, rnd(2): setDice GameStat, 1, 1, rnd(2)
+		dsplay SND_SAIKORO
+		gosub *redrdice: await 80
+	loop
+	dsplay SND_SAIKORO
+	if (GameMode = 2) {
+		repeat
+			clientreceive ClientReceived, ReceivedMsg
+			if (ClientReceived) {
+				setDice GameStat, 0, 0, ReceivedMsg-0xa8
+				setDice GameStat, 0, 1, rnd(2)
+				break
+			}
+			await 0
+		loop
+		repeat
+			clientreceive ClientReceived, ReceivedMsg
+			if (ClientReceived) {
+				setDice GameStat, 1, 0, ReceivedMsg-0xa8
+				setDice GameStat, 1, 1, rnd(2)
+				break
+			}
+			await 0
+		loop
+	}
+	if (GameMode = 1) { // サーバーの場合、牌山のデータを送信
+#ifdef SANMAX
+			tmpNumberOfTiles = 108
+#else
+		if (getRule(RULE_FLOWER_TILES) != "0") {
+			if (getRule(RULE_FLOWER_TILES) == "3") {
+				tmpNumberOfTiles = 144
+			} else {
+				tmpNumberOfTiles = 140
+			}
+		} else {
+			tmpNumberOfTiles = 136
+		}
+#endif
+		repeat tmpNumberOfTiles
+			serversend getWall(GameStat, WALL_TILECODE, cnt)+(getWall(GameStat, WALL_REDTILE, cnt)*TILE_NONFLOWER_MAX)+0x10, IsRemotePlayer
+		loop
+		serversend getDice(GameStat, 0, 0)+0xa8, IsRemotePlayer
+		serversend getDice(GameStat, 1, 0)+0xa8, IsRemotePlayer
+	}
+	// 通常機能の表示
+	vanish: commonswitch GameStat, WatchModeFlag
+	// 配牌
+#ifdef SANMAX
+	repeat 36 // ２幢ずつを３回
+#ifdef SANMA4
+		setHand GameStat, HAND_TILECODE, (cnt\4)+((cnt/12)*4), ((cnt\12/4)+getRound(GameStat))\4, getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
+		setHand GameStat, HAND_REDTILE, (cnt\4)+((cnt/12)*4), ((cnt\12/4)+getRound(GameStat))\4, getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
+#else
+		setHand GameStat, HAND_TILECODE, (cnt\4)+((cnt/12)*4), ((cnt\12/4)+(getRound(GameStat)-(getRound(GameStat)/4)))\3, getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
+		setHand GameStat, HAND_REDTILE, (cnt\4)+((cnt/12)*4), ((cnt\12/4)+(getRound(GameStat)-(getRound(GameStat)/4)))\3, getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
+#endif
+#else
+	repeat 48 // ２幢ずつを３回
+		setHand GameStat, HAND_TILECODE, (cnt\4)+((cnt/16)*4), ((cnt\16/4)+getRound(GameStat))\4, getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
+		setHand GameStat, HAND_REDTILE, (cnt\4)+((cnt/16)*4), ((cnt\16/4)+getRound(GameStat))\4, getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
+#endif
+		incDrawPointer GameStat
+#ifdef SANMAX
+		if (cnt == 18) {
+#else
+		if (cnt == 24) {
+#endif
+			if (getHonba(GameStat) == 1) {hncnMsg = " １本場 "}
+			if (getHonba(GameStat) == 2) {hncnMsg = " ２本場 "}
+			if (getHonba(GameStat) == 3) {hncnMsg = " ３本場 "}
+			if (getHonba(GameStat) == 4) {hncnMsg = " ４本場 "}
+			if (getHonba(GameStat) == 5) {hncnMsg = " ５本場 "}
+			if (getHonba(GameStat) == 6) {hncnMsg = " ６本場 "}
+			if (getHonba(GameStat) == 7) {hncnMsg = " ７本場 "}
+			if (getHonba(GameStat) == 8) {hncnMsg = " ８本場 "}
+			if (getHonba(GameStat) == 9) {hncnMsg = " ９本場 "}
+			if (getHonba(GameStat) >= 10) {hncnMsg = " "+getHonba(GameStat)+"本場 "}
+		}
+		if (cnt\4 == 3) {
+			calcdoukasen GameStat
+			dsplay SND_TSUMO
+			gosub *redrscreen: await 250
+		}
+	loop
+	hncnMsg = ""
+#ifdef SANMAX
+	repeat 4 // １枚ずつを１回、親のチョンチョン
+#ifdef SANMA4
+		setHand GameStat, HAND_TILECODE, (cnt/3)+12, ((cnt\3)+getRound(GameStat))\4, getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
+		setHand GameStat, HAND_REDTILE, (cnt/3)+12, ((cnt\3)+getRound(GameStat))\4, getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
+#else
+		setHand GameStat, HAND_TILECODE, (cnt/3)+12, (cnt+(getRound(GameStat)-(getRound(GameStat)/4)))\3, getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
+		setHand GameStat, HAND_REDTILE, (cnt/3)+12, (cnt+(getRound(GameStat)-(getRound(GameStat)/4)))\3, getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
+#endif
+#else
+	repeat 5 // １枚ずつを１回、親のチョンチョン
+		setHand GameStat, HAND_TILECODE, (cnt/4)+12, (cnt+getRound(GameStat))\4, getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
+		setHand GameStat, HAND_REDTILE, (cnt/4)+12, (cnt+getRound(GameStat))\4, getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
+#endif
+		incDrawPointer GameStat
+		calcdoukasen GameStat
+		dsplay SND_TSUMO
+		gosub *redrscreen: await 250
+	loop
+	// ドラをめくる
+#ifdef SANMAX
+	setDoraPointer GameStat, 102-getRinshanExtension(GameStat) // ドラ表示牌のポインタ
+#else
+	setDoraPointer GameStat, 130 // ドラ表示牌のポインタ
+#endif
+	if (getRule(RULE_NAGATACHO) != "0") {
+		// 永田町ルール
+		tmpDora == TILE_SUIT_BAMBOOS+7: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora // 七索は常にドラ
+		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) <= 8) { // 2～8はその数牌がドラ　三麻では萬子がないので別処理
+#ifndef SANMAX
+			tmpDora == (getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+TILE_SUIT_CHARACTERS: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+#endif
+			tmpDora == (getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+TILE_SUIT_CIRCLES: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == (getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+TILE_SUIT_BAMBOOS: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+		}
+		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) == 9) { // 9はそのまま9がドラ
+			tmpDora == TILE_SUIT_CHARACTERS+9: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_SUIT_CIRCLES+9: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_SUIT_BAMBOOS+9: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+		}
+		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) == 10) { // 10は三元牌がドラ
+			tmpDora == TILE_WHITE_DRAGON: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_GREEN_DRAGON: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_RED_DRAGON: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+		}
+		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) == 11) { // 11は数牌の1がドラ
+			tmpDora == TILE_SUIT_CHARACTERS+1: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_SUIT_CIRCLES+1: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_SUIT_BAMBOOS+1: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+		}
+		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) == 12) { // 12は風牌全てドラ
+			tmpDora == TILE_EAST_WIND: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_SOUTH_WIND: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_WEST_WIND: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_NORTH_WIND: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+		}
+		haifurecdora tmpdorap
+	}
+	gosub *adddora: dsplay SND_MEKURI
+	if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
+		setDoraPointer GameStat, getDoraPointer(GameStat) - 2: gosub *adddora /*ドラドラ卓*/
+	}
+	
+	ActivePlayer = 0
+	haifurechaipai GameStat
+	statmes ""
+	repeat 4: lipai GameStat, cnt: loop
+	dsplay SND_BELL
+return
+

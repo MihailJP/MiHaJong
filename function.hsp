@@ -1,0 +1,245 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *    [雑多なサブルーチン]
+ *=============================
+ */
+
+/* デバッグログ */
+#module debuglog
+#include "const.hsp"
+#deffunc loginit
+#ifdef _debug
+	verbosity_level = "FATAL","ERROR","WARN","INFO","DEBUG","TRACE"
+	verbosity_border = 5
+	sdim filename, 1024
+	gsel 0
+	logdir = dirinfo(0)
+	winver = sysinfo(0)
+	if (instr(winver, 0, "WindowsNT ver6") >= 0) {
+		currentPath = dir_cur
+		if (instr(currentPath, 0, dirinfo(0x10026)) >= 0) {
+			appdataPath = dirinfo(0x1001a)
+			logdir = appdataPath+"\\MiHaJong\\"
+		}
+	}
+	filename = logdir+"\\debug.log"
+	exec "logger.exe "+PORT_LOGGER+"/"+filename
+	repeat 1
+		sockopen@ SOCK_LOGGER,"127.0.0.1",PORT_LOGGER
+		if (stat) {await 0: continue 0}
+	loop
+#endif
+return
+
+#deffunc debug_logging str debugmsg, str debugfile, int debugline, int verbosity
+#ifdef _debug
+	if (verbosity > verbosity_border) {return}
+	sdim log, 1024
+	log = strf("%04d-%02d-%02d %02d:%02d:%02d.%03d %-5s (%s:%d) %s\n", gettime(0),gettime(1),gettime(3),gettime(4),gettime(5),gettime(6),gettime(7), verbosity_level(verbosity),debugfile,debugline,debugmsg)
+	sockputb@ log, 0, strlen(log), SOCK_LOGGER
+#endif
+return
+#global
+
+#module
+#include "hspmath.as"
+#defcfunc julian int year, int month, int day, int hour, int min, int sec, int msec
+/*
+		val=julian(p1, p2, p3, p4, p5, p6, p7)
+		ユリウス日を計算する
+
+		p1 : 年
+		p2 : 月
+		p3 : 日
+		p4 : 時
+		p5 : 分
+		p6 : 秒
+		p7 : ミリ秒
+
+		指定した日時のユリウス日を求めます。
+*/
+	if (month < 3) {
+		JulianDay = floor(365.25*double(year-1))+floor(double(year-1)/400)-floor(double(year-1)/100)+floor(30.59*(double(month)+10))+double(day)-678912+2400000.5
+	} else {
+		JulianDay = floor(365.25*double(year))+floor(double(year)/400)-floor(double(year)/100)+floor(30.59*(double(month)-2))+double(day)-678912+2400000.5
+	}
+	JulianDay += double(hour)/24+double(min)/24/60+double(sec)/24/3600+double(msec)/24/3600/1000-0.5
+	return JulianDay
+#global
+
+
+#module
+#defcfunc notesearch array tmpnote, str txt
+/*
+		val=notesearch(p1, p2)
+		文字列バッファから特定の文字列を検索する
+
+		p1 : 検索されるバッファ
+		p2 : 検索する文字列
+
+		指定したバッファから特定の文字列になっている行を検索し、見つかった行を返します。
+		見つからなかった場合は-1を返します。
+*/
+	ans=-1
+	notesel tmpnote
+	repeat notemax
+		noteget a, cnt
+		if (a == txt) {ans = cnt: break}
+	loop
+	noteunsel
+	return ans
+#global
+
+/* 縁取りテキスト */
+#module
+#include "const.hsp"
+*doputtext
+	if (TextSize) {font fontname, TextSize, Style}
+	color 0, 0, 0
+	repeat BorderThickness*2+1
+		BorderOffsetY = cnt-BorderThickness
+		repeat BorderThickness*2+1
+			BorderOffsetX = cnt-BorderThickness
+			if ((BorderOffsetX*BorderOffsetX+BorderOffsetY*BorderOffsetY) <= (BorderThickness*BorderThickness+BorderThickness/2)) {
+				pos BorderTextX+BorderOffsetX, BorderTextY+BorderOffsetY: print BorderText
+			}
+		loop
+	loop
+	if (TextSize) {
+		tmpscr = ginfo_sel
+		buffer SCR_TEXT_BUF, 1200, TextSize: gsel SCR_TEXT_BUF
+		color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
+		repeat TextSize
+			ColorSlideDividend = (cnt\(TextSize/2))*(cnt\(TextSize/2))
+			ColorSlideDivisor = (TextSize/2)*(TextSize/2)
+			color BorderTextR-(BorderTextR-GradR)*ColorSlideDividend/ColorSlideDivisor, BorderTextG-(BorderTextG-GradG)*ColorSlideDividend/ColorSlideDivisor, BorderTextB-(BorderTextB-GradB)*ColorSlideDividend/ColorSlideDivisor
+			line 599, cnt, 0, cnt
+		loop
+		color 255, 255, 255: pos 600, 0: font fontname, TextSize, Style: print BorderText
+		gsel tmpscr: pos BorderTextX, BorderTextY: gmode 7, 600, TextSize
+		gcopy SCR_TEXT_BUF, 0, 0, 600, TextSize
+		gmode 0
+	} else {
+		color BorderTextR, BorderTextG, BorderTextB: pos BorderTextX, BorderTextY
+		print BorderText
+	}
+return
+
+#deffunc borderedtxt str BorderText1, int BorderTextX1, int BorderTextY1, int BorderTextR1, int BorderTextG1, int BorderTextB1
+/*
+		borderedtxt p1, p2, p3, p4, p5, p6
+		縁取りテキストを表示する
+
+		p1 : 表示する文字列
+		p2 : 表示するX座標
+		p3 : 表示するY座標
+		p4 : 文字の色の赤成分
+		p5 : 文字の色の緑成分
+		p6 : 文字の色の青成分
+
+		文字列を縁取りして表示します。
+*/
+	BorderText = BorderText1
+	BorderTextX = BorderTextX1: BorderTextY = BorderTextY1
+	BorderTextR = BorderTextR1: BorderTextG = BorderTextG1: BorderTextB = BorderTextB1
+	BorderThickness = 1
+	TextSize = 0
+	gosub *doputtext
+return
+
+#deffunc borderedtxt2 str BorderText2, int BorderTextX2, int BorderTextY2, int BorderTextR2, int BorderTextG2, int BorderTextB2, \
+int BorderThickness2, int TextSize2, int GradR2, int GradG2, int GradB2, int Style2
+	BorderText = BorderText2
+	BorderTextX = BorderTextX2: BorderTextY = BorderTextY2
+	BorderTextR = BorderTextR2: BorderTextG = BorderTextG2: BorderTextB = BorderTextB2
+	BorderThickness = BorderThickness2
+	TextSize = TextSize2: GradR = GradR2: GradG = GradG2: GradB = GradB2
+	Style = Style2
+	gosub *doputtext
+return
+#global
+
+#module
+#defcfunc playerwind int player, int Round
+#ifdef SANMA
+	return ((player+24-(Round-(Round/4)))\3)
+#else
+	return ((player+32-Round)\4)
+#endif
+#global
+
+#module
+#defcfunc windName int wind
+	switch wind
+		case 0: return "東家": swbreak
+		case 1: return "南家": swbreak
+		case 2: return "西家": swbreak
+		case 3: return "北家": swbreak
+		default: return "????": swbreak
+	swend
+#global
+
+#module
+#defcfunc isVista
+	wver = sysinfo(0)
+	/* sysinfo(0)で帰ってくる情報
+		XP    … ver5.2
+		Vista … ver6.0
+		7     … ver6.1
+	*/
+	if (instr(wver, 0, "WindowsNT ver6") >= 0) {
+		return 1
+	}
+	return 0
+#global
+
+#module
+#defcfunc confPath
+	configpath = ""
+	if (isVista()) {
+		currentPath = dir_cur
+		if (instr(currentPath, 0, dirinfo(0x10026)) >= 0) {
+			appdataPath = dirinfo(0x1001a)
+			chdir appdataPath
+			dirlist dir_roaming,"*",5
+			if (notesearch(dir_roaming, "MiHaJong") == -1) {
+				mkdir "MiHaJong"
+				chdir "MiHaJong"
+				mkdir "haifu"
+				bcopy currentPath+"\\haifu\\haifu.css", appdataPath+"\\MiHaJong\\haifu\\haifu.css"
+			}
+			configpath = appdataPath+"\\MiHaJong\\"
+			chdir currentPath
+		}
+	}
+	return configpath
+#global
+
+/* エラーがあったときに安全に終了させるための処理 */
+*errordlg
+	error strf("内部エラー [%d] が発生しました。", wparam)
+	dialog "内部エラー "+wparam+" が発生しました。", 1
+	/* FALLTHRU */
+
+/* 終了処理 */
+*cleanup
+	gsel SCR_CHAT, -1
+	gsel 0, -1
+	dmstop: dmend
+	info "DirectMusic を解放しました。"
+	repeat SND_END-SND_START+1
+		dsstop cnt+SND_START
+	loop
+	repeat VOX_END-VOX_START+1
+		dsstop cnt+VOX_START
+	loop
+	dsend
+	info "DirectSound を解放しました。"
+	repeat 4
+		sockclose SOCK_GAME+cnt
+		sockclose SOCK_CHAT+cnt
+	loop
+	sockclose SOCK_LOGGER
+	end
+
+#include "IMPORTED.hsp"

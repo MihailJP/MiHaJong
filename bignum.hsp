@@ -1,0 +1,292 @@
+/*=============================
+ * HSP–ƒƒNƒ‰ƒCƒAƒ“ƒgMiHaJong
+ *     [‘å”ˆ—ƒ‹[ƒ`ƒ“]
+ *=============================
+ */
+
+#module
+#deffunc bignum_duplicate array target, array orig, int arg
+	dim target, 8
+	if (length2(orig) == 0) {repeat 8: target(cnt) = orig(cnt):loop}
+	else {repeat 8: target(cnt) = orig(arg, cnt):loop}
+	return
+#global
+
+#module
+#deffunc bignum_transcribe array orig, array target, int arg
+	if (length2(target) == 0) {repeat 8: target(cnt) = orig(cnt):loop}
+	else {repeat 8: target(arg, cnt) = orig(cnt):loop}
+	return
+#global
+
+#module
+#defcfunc bignum_flag array bignum_, int arg
+	bignum_duplicate bignum, bignum_, arg
+	
+	tmpSign = 0 // ‘S‘Ì‚Æ‚µ‚Ä‚Ì•„†‚ğæ“¾
+	repeat 8
+		if (bignum(7-cnt) < 0) {tmpSign = -1: break}
+		if (bignum(7-cnt) > 0) {tmpSign = 1: break}
+	loop
+	return tmpSign
+#global
+
+#module
+#deffunc bignum_fix array bignum_, int arg, int FirstArgLimit
+	bignum_duplicate bignum, bignum_, arg
+
+	repeat 1
+		if (bignum(0) <= -FirstArgLimit) {bignum(0) += FirstArgLimit: bignum(1) -= 1: continue cnt}
+		if (bignum(0) >= FirstArgLimit) {bignum(0) -= FirstArgLimit: bignum(1) += 1: continue cnt}
+		repeat 6, 1
+			if (bignum(cnt) < -99999999) {bignum(cnt) += 100000000: bignum(cnt+1) -= 1: continue cnt}
+			if (bignum(cnt) > 99999999) {bignum(cnt) -= 100000000: bignum(cnt+1) += 1: continue cnt}
+		loop
+	
+		tmpSign = bignum_flag(bignum, cnt)
+		
+		if ((tmpSign == 1)&&(bignum(0) < 0)) {bignum(0) += FirstArgLimit: bignum(1) -= 1: continue cnt}
+		if ((tmpSign == -1)&&(bignum(0) > 0)) {bignum(0) -= FirstArgLimit: bignum(1) += 1: continue cnt}
+		repeat 6, 1
+			if ((tmpSign == 1)&&(bignum(cnt) < 0)) {bignum(cnt) += 100000000: bignum(cnt+1) -= 1: continue cnt}
+			if ((tmpSign == -1)&&(bignum(cnt) > 0)) {bignum(cnt) -= 100000000: bignum(cnt+1) += 1: continue cnt}
+		loop
+	loop
+	
+	bignum_transcribe bignum, bignum_, arg
+	return
+#global
+
+#module
+#deffunc bignum_add array augend, array addend, int arg, int FirstArgLimit
+	bignum_duplicate augend_, augend, arg
+	repeat 8: augend_(cnt) += addend(cnt): loop
+	bignum_fix augend_, arg, FirstArgLimit
+	bignum_transcribe augend_, augend, arg
+	return
+#global
+
+#module
+#deffunc bignum_multiply array multiplicand, int multiplier, int arg, int FirstArgLimit
+	bignum_duplicate multiplicand_, multiplicand, arg
+	repeat 8: multiplicand_(cnt) *= multiplier: loop
+	bignum_fix multiplicand_, arg, FirstArgLimit
+	bignum_transcribe multiplicand_, multiplicand, arg
+	return
+#global
+
+#module
+#deffunc bignum_subtract array minuend, array subtrahend, int arg, int FirstArgLimit
+	bignum_duplicate subtrahend_, subtrahend, arg
+	bignum_multiply subtrahend_, -1, 0, FirstArgLimit
+	bignum_add minuend, subtrahend_, arg, FirstArgLimit
+	return
+#global
+
+/* Â“Vˆä‘Î‰‚Ì“_–_ˆ— */
+#module
+#deffunc agaricalc array agariPointArray, array AgariPointRaw, int agariBairitsu, int agariBairitsu2, int agariCount
+	dim agariPointArray, 8
+	
+	agariPointArray(0) = (AgariPointRaw(0)*agariBairitsu+90)/100
+	repeat 7,1: agariPointArray(cnt) = AgariPointRaw(cnt)*agariBairitsu: loop
+	bignum_fix agariPointArray, 0, 1000000
+	
+	repeat agariCount
+		agariPointArray(0) += (AgariPointRaw(0)*agariBairitsu2+90)/100
+		repeat 7,1: agariPointArray(cnt) += AgariPointRaw(cnt)*agariBairitsu2: loop
+		bignum_fix agariPointArray, 0, 1000000
+	loop
+	return
+#global
+
+#module
+#deffunc deltacalcplus array AgariPointRaw, array hncnPointDelta, int agariBairitsu
+	dim addend, 8
+	addend(0) = (AgariPointRaw(0)*agariBairitsu+90)/100
+	repeat 7,1: addend(cnt) = AgariPointRaw(cnt)*agariBairitsu: loop
+	bignum_add hncnPointDelta, addend, cnt, 1000000
+	return
+#global
+
+#module
+#deffunc deltacalcminus array AgariPointRaw, array hncnPointDelta, int agariBairitsu
+	dim subtrahend, 8
+	subtrahend(0) = (AgariPointRaw(0)*agariBairitsu+90)/100
+	repeat 7,1: subtrahend(cnt) = AgariPointRaw(cnt)*agariBairitsu: loop
+	bignum_subtract hncnPointDelta, subtrahend, cnt, 1000000
+	return
+#global
+
+#module
+#deffunc deltadouble array hncnPointDelta, int agariTmpPlayer
+	bignum_multiply hncnPointDelta, 2, agariTmpPlayer, 1000000
+	return
+#global
+
+#module
+#deffunc deltawareme array hncnPointDelta, int agariTmpPlayer, int agariTmpWareme
+	bignum_duplicate subtrahend, hncnPointDelta, agariTmpWareme
+	bignum_subtract hncnPointDelta, subtrahend, agariTmpPlayer, 1000000
+	return
+#global
+
+#module
+#deffunc pointcalc var GameStat, array hncnPointDelta
+	exportScore GameStat, tmpScoreArray
+	dim Point, 8
+	repeat 4
+		bignum_duplicate addend, hncnPointDelta, cnt
+		tmpcnt = cnt
+		repeat 8: Point(cnt) = tmpScoreArray(tmpcnt, cnt): loop
+		bignum_add Point, addend, cnt, 1000000
+		repeat 8: tmpScoreArray(tmpcnt, cnt) = Point(cnt): loop
+	loop
+	importScore GameStat, tmpScoreArray
+	return
+#global
+
+/* ÅIƒXƒRƒA‚Ì•„† */
+*scoreflagfix
+	repeat 4
+		bignum_fix hncnPointScore, cnt, 100000
+	loop
+	return
+
+/* “_”•Ï‰»‚Ì•„† */
+#module
+#deffunc diffflagfix array diffPoint
+	bignum_fix diffPoint, 0, 1000000
+	return
+#global
+
+#module
+#deffunc deltatxt array rawPointDelta, int FirstValRate
+	dim PointDelta, 4, 8
+	if (length2(rawPointDelta) = 0) {
+		repeat 4: PointDelta(cnt, 0) = rawPointDelta(cnt): loop
+	} else {
+		repeat 32: PointDelta(cnt\4, cnt/4) = rawPointDelta(cnt\4, cnt/4): loop
+	}
+	tmpdigit="‚O‚P‚Q‚R‚S‚T‚U‚V‚W‚X"
+	repeat 4
+		PointDelta(cnt, 0) *= FirstValRate
+		bignum_fix PointDelta, cnt, 100000000
+		if (bignum_flag(PointDelta, cnt) > 0) {flag_fullwidth = "{": flag_halfwidth = "+"}
+		if (bignum_flag(PointDelta, cnt) < 0) {flag_fullwidth = "|": flag_halfwidth = "-"}
+		if (abs(PointDelta(cnt, 0)) > 0) {
+			if (abs(PointDelta(cnt, 0)) > 0) {
+				setCall cnt, "@"+flag_fullwidth+strmid(tmpdigit, abs(PointDelta(cnt, 0))*2, 2)
+			}
+			if (abs(PointDelta(cnt, 0)) > 9) {
+				setCall cnt, " "+flag_fullwidth+strmid(tmpdigit, (abs(PointDelta(cnt, 0))/10)*2, 2)+strmid(tmpdigit, (abs(PointDelta(cnt, 0))\10)*2, 2)
+			}
+			if (abs(PointDelta(cnt, 0)) > 99) {
+				if (FirstValRate >= 100) {
+					setCall cnt, "  "+flag_halfwidth+(abs(PointDelta(cnt, 0)))
+				} else {
+					setCall cnt, flag_fullwidth+strmid(tmpdigit, (abs(PointDelta(cnt, 0))/100)*2, 2)+strmid(tmpdigit, (abs(PointDelta(cnt, 0))\100/10)*2, 2)+strmid(tmpdigit, (abs(PointDelta(cnt, 0))\10)*2, 2)
+				}
+			}
+			if (abs(PointDelta(cnt, 0)) > 999) {
+				setCall cnt, " "+flag_halfwidth+(abs(PointDelta(cnt, 0)))
+			}
+			if (abs(PointDelta(cnt, 0)) > 99999) {
+				setCall cnt, flag_halfwidth+(abs(PointDelta(cnt, 0)))
+			}
+			if (abs(PointDelta(cnt, 0)) > 999999) {
+				setCall cnt, " "+flag_halfwidth+((abs(PointDelta(cnt,0)))\10000000/1000000)+((abs(PointDelta(cnt,0)))\1000000/100000)+((abs(PointDelta(cnt,0)))\100000/10000)+"–œ"
+			}
+			if (abs(PointDelta(cnt, 0)) > 9999999) {
+				setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,0)))\100000000/10000000)+((abs(PointDelta(cnt,0)))\10000000/1000000)+((abs(PointDelta(cnt,0)))\1000000/100000)+((abs(PointDelta(cnt,0)))\100000/10000)+"–œ"
+			}
+		} else {
+			setCall cnt, ""
+		}
+	loop
+	tmpNumName = "‰­’›‹š´`õaŠÀ³Ú‹ÉPˆ¢“ß•s"
+	repeat 7, 1
+		tmpNumDigit = cnt
+		repeat 4
+		if (bignum_flag(PointDelta, cnt) > 0) {flag_fullwidth = "{": flag_halfwidth = "+"}
+		if (bignum_flag(PointDelta, cnt) < 0) {flag_fullwidth = "|": flag_halfwidth = "-"}
+			if (PointDelta(cnt, tmpNumDigit) != 0) {
+				if (abs(PointDelta(cnt, tmpNumDigit)) > 0) {
+					setCall cnt, flag_halfwidth+strmid(tmpdigit, abs(PointDelta(cnt, tmpNumDigit))*2, 2)+"."+((abs(PointDelta(cnt,tmpNumDigit-1)))\100000000/10000000)+((abs(PointDelta(cnt,tmpNumDigit-1)))\10000000/1000000)+strmid(tmpNumName, (tmpNumDigit-1)*4, 2)
+				}
+				if (abs(PointDelta(cnt, tmpNumDigit)) > 9) {
+					setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\100/10)+((abs(PointDelta(cnt,tmpNumDigit)))\10)+"."+((abs(PointDelta(cnt,tmpNumDigit-1)))\100000000/10000000)+strmid(tmpNumName, (tmpNumDigit-1)*4, 2)
+				}
+				if (abs(PointDelta(cnt, tmpNumDigit)) > 99) {
+					setCall cnt, " "+flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\1000/100)+((abs(PointDelta(cnt,tmpNumDigit)))\100/10)+((abs(PointDelta(cnt,tmpNumDigit)))\10)+strmid(tmpNumName, (tmpNumDigit-1)*4, 2)
+				}
+				if (abs(PointDelta(cnt, tmpNumDigit)) > 999) {
+					setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\10000/1000)+((abs(PointDelta(cnt,tmpNumDigit)))\1000/100)+((abs(PointDelta(cnt,tmpNumDigit)))\100/10)+((abs(PointDelta(cnt,tmpNumDigit)))\10)+strmid(tmpNumName, (tmpNumDigit-1)*4, 2)
+				}
+				if (abs(PointDelta(cnt, tmpNumDigit)) > 9999) {
+					setCall cnt, flag_halfwidth+strmid(tmpdigit, ((abs(PointDelta(cnt,tmpNumDigit)))\100000/10000)*2, 2)+"."+((abs(PointDelta(cnt,tmpNumDigit)))\10000/1000)+((abs(PointDelta(cnt,tmpNumDigit)))\1000/100)+strmid(tmpNumName, (tmpNumDigit-1)*4+2, 2)
+				}
+				if (abs(PointDelta(cnt, tmpNumDigit)) > 99999) {
+					setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\1000000/100000)+((abs(PointDelta(cnt,tmpNumDigit)))\100000/10000)+"."+((abs(PointDelta(cnt,tmpNumDigit)))\10000/1000)+strmid(tmpNumName, (tmpNumDigit-1)*4+2, 2)
+				}
+				if (abs(PointDelta(cnt, tmpNumDigit)) > 999999) {
+					setCall cnt, " "+flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\10000000/1000000)+((abs(PointDelta(cnt,tmpNumDigit)))\1000000/100000)+((abs(PointDelta(cnt,tmpNumDigit)))\100000/10000)+strmid(tmpNumName, (tmpNumDigit-1)*4+2, 2)
+				}
+				if (abs(PointDelta(cnt, tmpNumDigit)) > 9999999) {
+					setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\100000000/10000000)+((abs(PointDelta(cnt,tmpNumDigit)))\10000000/1000000)+((abs(PointDelta(cnt,tmpNumDigit)))\1000000/100000)+((abs(PointDelta(cnt,tmpNumDigit)))\100000/10000)+strmid(tmpNumName, (tmpNumDigit-1)*4+2, 2)
+				}
+			}
+		loop
+	loop
+	return
+#global
+
+/* ‚¿“_ƒfƒ‹ƒ^•\¦ */
+*putdelta
+	deltatxt hncnPointDelta, 100
+	dsplay SND_PAGE
+	gosub *redrscreen
+	return
+
+/* ƒ`ƒbƒvƒfƒ‹ƒ^•\¦ */
+*putchipdelta
+	deltatxt hncnPointDelta, 1
+	dsplay SND_PAGE
+	gosub *redrscreen
+	return
+
+#module
+#defcfunc bignumtotext array rawPoint, int tmpcnt, int FirstValRate, str PlusSign, str MinusSign
+	dim Point, 8
+	if (length2(rawPoint) = 0) {
+		repeat 8: Point(cnt) = rawPoint(cnt): loop
+	} else {
+		repeat 8: Point(cnt) = rawPoint(tmpcnt, cnt): loop
+	}
+	tmpscoretxt = ""
+	if ((Point(0) != 0)||(Point(1) != 0)||(Point(2) != 0)||(Point(3) != 0)||(Point(4) != 0)||(Point(5) != 0)||(Point(6) != 0)||(Point(7) != 0)) {
+		if ((Point(0) < 0)||(Point(1) < 0)||(Point(2) < 0)||(Point(3) < 0)||(Point(4) < 0)||(Point(5) < 0)||(Point(6) < 0)||(Point(7) < 0)) {
+			tmpscoretxt += MinusSign
+		}
+		else {tmpscoretxt += PlusSign}
+	}
+	tmpscorenum = abs(Point(7)/100000000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"•s‰Âv‹c"}
+	tmpscorenum = abs(Point(7)\100000000/10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"“ß—R‘¼"}
+	tmpscorenum = abs(Point(7)\10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"ˆ¢‘m‹_"}
+	tmpscorenum = abs(Point(6)\100000000/10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"P‰Í¹"}
+	tmpscorenum = abs(Point(6)\10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"‹É"}
+	tmpscorenum = abs(Point(5)\100000000/10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"Ú"}
+	tmpscorenum = abs(Point(5)\10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"³"}
+	tmpscorenum = abs(Point(4)\100000000/10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"ŠÀ"}
+	tmpscorenum = abs(Point(4)\10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"a"}
+	tmpscorenum = abs(Point(3)\100000000/10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"õ"}
+	tmpscorenum = abs(Point(3)\10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"`"}
+	tmpscorenum = abs(Point(2)\100000000/10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"š´"}
+	tmpscorenum = abs(Point(2)\10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"‹"}
+	tmpscorenum = abs(Point(1)\100000000/10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"’›"}
+	tmpscorenum = abs(Point(1)\10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"‰­"}
+	tmpscorenum = abs((Point(0)*FirstValRate)\100000000/10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum+"–œ"}
+	tmpscorenum = abs((Point(0)*FirstValRate)\10000): if (tmpscorenum != 0) {tmpscoretxt += ""+tmpscorenum}
+	if (tmpscoretxt == "") {tmpscoretxt += "0"}
+	return tmpscoretxt
+#global

@@ -1,0 +1,424 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ * [ネットワーク処理ルーチン]
+ *=============================
+ */
+
+/* サーバーからメッセージを送信する */
+#module
+#include "const.hsp"
+#deffunc serversend int SendingMsg, array IsRemotePlayer
+#ifdef SANMA
+	repeat 2
+		if ((IsRemotePlayer(0) == cnt+2)||(IsRemotePlayer(1) ==  cnt+2)||(IsRemotePlayer(2) ==  cnt+2)) {
+#else
+	repeat 3
+		if ((IsRemotePlayer(0) == cnt+2)||(IsRemotePlayer(1) == cnt+2)||(IsRemotePlayer(2) == cnt+2)||(IsRemotePlayer(3) == cnt+2)) {
+#endif
+			sockputc@ SendingMsg, cnt+1+SOCK_GAME
+			if (stat) {error strf("データの送信に失敗しました。クライアント [%d] ステータスコード [%d]", cnt+1, stat)}
+			else {trace strf("クライアント [%d] にデータを送信 [0x%02X]", cnt+1, SendingMsg)}
+		}
+	loop
+	return
+#global
+
+/* サーバーがメッセージを受信 */
+#module
+#include "const.hsp"
+#deffunc serverreceive_init
+	ServerCheckRotation = 1, 2, 3
+	return
+
+#deffunc serverreceive var ServerReceived, var ReceivedMsg
+	ServerReceived = 0
+	ReceivedMsg = 1023
+#ifdef SANMA
+	repeat 2
+#else
+	repeat 3
+#endif
+		sockcheck@ ServerCheckRotation(cnt)+SOCK_GAME
+		if (stat == 0) {
+			ServerReceived = ServerCheckRotation(cnt)
+			sockgetc@ ReceivedMsg, ServerCheckRotation(cnt)+SOCK_GAME
+			if (ReceivedMsg < 0) {ReceivedMsg += 256 /* signedになっていた場合対策 */}
+			if (stat) {error strf("データの受信に失敗しました。クライアント [%d] ステータスコード [%d]", ServerCheckRotation(cnt), stat)}
+			else {trace strf("クライアント [%d] からデータを受信 [0x%02X]", ServerCheckRotation(cnt), ReceivedMsg)}
+			break
+		}
+	loop
+	ServerCheckRotationTmp = ServerCheckRotation(0)
+	ServerCheckRotation(0) = ServerCheckRotation(1)
+#ifdef SANMA
+	ServerCheckRotation(1) = ServerCheckRotationTmp
+#else
+	ServerCheckRotation(1) = ServerCheckRotation(2)
+	ServerCheckRotation(2) = ServerCheckRotationTmp
+#endif
+	return
+#global
+
+/* サーバーにメッセージを送る */
+#module
+#include "const.hsp"
+#deffunc clientsend int SendingMsg
+	sockputc@ SendingMsg, 0+SOCK_GAME
+	if (stat) {error strf("データの送信に失敗しました。ステータスコード [%d]", stat)}
+	else {trace strf("サーバーにデータを送信 [0x%02X]", SendingMsg)}
+	return
+#global
+
+/* サーバーのメッセージを受信する */
+#module
+#include "const.hsp"
+#deffunc clientreceive var ClientReceived, var ReceivedMsg
+	ClientReceived = 0
+	ReceivedMsg = 1023
+	sockcheck@ 0+SOCK_GAME
+	if (stat == 0) {
+		ClientReceived = 1
+		sockgetc@ ReceivedMsg, 0+SOCK_GAME
+		if (ReceivedMsg < 0) {ReceivedMsg += 256}
+		if (stat) {error strf("データの受信に失敗しました。ステータスコード [%d]", stat)}
+		else {trace strf("サーバーからデータを受信 [0x%02X]", ReceivedMsg)}
+	}
+	return
+#global
+
+/* 接続先の打牌 */
+#module
+#include "const.hsp"
+#deffunc remotedahai var GameStat, int GameMode, array IsRemotePlayer, array PlayerName, var teDahai, int ActivePlayer
+	if (GameMode == 2) {
+		repeat
+			chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
+			clientreceive ClientReceived, ReceivedMsg
+			if (ClientReceived) {
+				if (ReceivedMsg == 0x9f) {
+					if (getDisconnectFlag(GameStat, ActivePlayer) == 0) {
+						setDisconnectFlag GameStat, ActivePlayer, 1
+						warn strf("プレイヤー [%d] の回線切断を検知しました。", ActivePlayer)
+					}
+				}
+				break
+			}
+			await 0
+		loop
+	}
+	if (GameMode == 1) {
+		repeat
+			chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
+			serverreceive ServerReceived, ReceivedMsg
+			if (ServerReceived == (IsRemotePlayer(ActivePlayer)-1)) {
+				// 受信失敗の時
+				if (ReceivedMsg == 1023) {
+					repeat 4
+						if (IsRemotePlayer(cnt) == ServerReceived+1) {
+							if (getDisconnectFlag(GameStat, cnt) == 0) {
+								setDisconnectFlag GameStat, cnt, 1
+								warn strf("プレイヤー [%d] の回線切断を検知しました。", cnt)
+							}
+						}
+					loop
+					ReceivedMsg = 0x9f
+				}
+#ifdef SANMA
+				repeat 2
+					if (ServerReceived != cnt+1)&&((IsRemotePlayer(0) == cnt+2)||(IsRemotePlayer(1) ==  cnt+2)||(IsRemotePlayer(2) ==  cnt+2)) {
+#else
+				repeat 3
+					if (ServerReceived != cnt+1)&&((IsRemotePlayer(0) == cnt+2)||(IsRemotePlayer(1) == cnt+2)||(IsRemotePlayer(2) == cnt+2)||(IsRemotePlayer(3) == cnt+2)) {
+#endif
+						sockputc@ SendingMsg, cnt+1+SOCK_GAME
+						if (stat) {error strf("データの送信に失敗しました。クライアント [%d] ステータスコード [%d]", cnt+1, stat)}
+						else {trace strf("クライアント [%d] にデータを送信 [0x%02X]", cnt+1, ReceivedMsg)}
+					}
+				loop
+				break
+			}
+			await 0
+		loop
+	}
+	if ((ReceivedMsg >= 0x60)&&(ReceivedMsg <= 0x6d)) {teDahai = ReceivedMsg - 0x60 + DAHAI_TYPE_NORMAL}
+	if ((ReceivedMsg >= 0x70)&&(ReceivedMsg <= 0x7d)) {teDahai = ReceivedMsg - 0x70 + DAHAI_TYPE_KAN}
+	if ((ReceivedMsg >= 0x80)&&(ReceivedMsg <= 0x8d)) {teDahai = ReceivedMsg - 0x80 + DAHAI_TYPE_KAKAN}
+	if ((ReceivedMsg >= 0x90)&&(ReceivedMsg <= 0x9d)) {teDahai = ReceivedMsg - 0x90 + DAHAI_TYPE_RIICHI}
+	if ((ReceivedMsg >= 0xc0)&&(ReceivedMsg <= 0xcd)) {teDahai = ReceivedMsg - 0xc0 + DAHAI_TYPE_OPENRIICHI}
+#ifdef SANMAX
+	if ((ReceivedMsg >= 0xd0)&&(ReceivedMsg <= 0xdd)) {teDahai = ReceivedMsg - 0xd0 + DAHAI_TYPE_FLOWER}
+#endif
+	if (ReceivedMsg == 0x6e) {teDahai = DAHAI_TYPE_KYUUSHU}
+	if (ReceivedMsg == 0x6f) {teDahai = DAHAI_TYPE_AGARI}
+	if (ReceivedMsg == 0x9f) {teDahai = 13 + DAHAI_TYPE_NORMAL}
+	return
+#global
+
+/* 接続先の鳴き */
+#module
+#include "const.hsp"
+#deffunc remotenaki var GameStat, int GameMode, array IsRemotePlayer, array PlayerName, array haiRon, array haiPon, array haiMinkan, array haiChi, int haiCurrentSutehai, int haiCurrentSutehaiAkaDora
+
+	if (GameMode == 2) {
+#ifdef SANMA
+		repeat 3
+#else
+		repeat 4
+#endif
+			tmp = cnt
+			repeat
+				chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
+				clientreceive ClientReceived, ReceivedMsg
+				if (ClientReceived) {
+					if (tmp != getPlayer(GameStat)) {
+						if (ReceivedMsg == 0xa1) {haiRon(tmp) = 1}
+						if (ReceivedMsg == 0xa2) {haiPon(tmp) = 1}
+						if (ReceivedMsg == 0xa3) {haiMinkan(tmp) = 1}
+#ifndef SANMAX
+						if (ReceivedMsg == 0xa4) {haiChi(tmp) = 1}
+						if (ReceivedMsg == 0xa5) {haiChi(tmp) = 2}
+						if (ReceivedMsg == 0xa6) {haiChi(tmp) = 3}
+#endif
+						if (ReceivedMsg == 0xa7) {setDisconnectFlag GameStat, tmp, 1}
+					}
+					break
+				}
+				await 0
+			loop
+		loop
+	}
+	if (GameMode == 1) {
+		Received1 = 0: Received2 = 0: Received3 = 0
+#ifdef SANMA
+		if ((IsRemotePlayer(0) != 2)&&(IsRemotePlayer(1) != 2)&&(IsRemotePlayer(2) != 2)) {
+#else
+		if ((IsRemotePlayer(0) != 2)&&(IsRemotePlayer(1) != 2)&&(IsRemotePlayer(2) != 2)&&(IsRemotePlayer(3) != 2)) {
+#endif
+			Received1 = 1
+		}
+#ifdef SANMA
+		if ((IsRemotePlayer(0) != 3)&&(IsRemotePlayer(1) != 3)&&(IsRemotePlayer(2) != 3)) {
+#else
+		if ((IsRemotePlayer(0) != 3)&&(IsRemotePlayer(1) != 3)&&(IsRemotePlayer(2) != 3)&&(IsRemotePlayer(3) != 3)) {
+#endif
+			Received2 = 1
+		}
+#ifndef SANMA
+		if ((IsRemotePlayer(0) != 4)&&(IsRemotePlayer(1) != 4)&&(IsRemotePlayer(2) != 4)&&(IsRemotePlayer(3) != 4)) {
+			Received3 = 1
+		}
+#endif
+		repeat
+			chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
+			serverreceive ServerReceived, ReceivedMsg
+			if (ServerReceived) {
+				repeat 4
+					if ((ServerReceived == 1)&&(IsRemotePlayer(cnt) == 2)) {
+						gosub *checkremotenaki
+						Received1 = 1
+					}
+					if ((ServerReceived == 2)&&(IsRemotePlayer(cnt) == 3)) {
+						gosub *checkremotenaki
+						Received2 = 1
+					}
+#ifndef SANMA
+					if ((ServerReceived == 3)&&(IsRemotePlayer(cnt) == 4)) {
+						gosub *checkremotenaki
+						Received3 = 1
+					}
+#endif
+				loop
+			}
+#ifdef SANMA
+			if ((Received1 == 1)&&(Received2 == 1)) {
+				repeat 3
+#else
+			if ((Received1 == 1)&&(Received2 == 1)&&(Received3 == 1)) {
+				repeat 4
+#endif
+					SendingMsg = 0xa0
+					if (haiRon(cnt) == 1) {SendingMsg = 0xa1}
+					if (haiPon(cnt) == 1) {SendingMsg = 0xa2}
+					if (haiMinkan(cnt) == 1) {SendingMsg = 0xa3}
+#ifndef SANMAX
+					if (haiChi(cnt) == 1) {SendingMsg = 0xa4}
+					if (haiChi(cnt) == 2) {SendingMsg = 0xa5}
+					if (haiChi(cnt) == 3) {SendingMsg = 0xa6}
+#endif
+					if (getDisconnectFlag(GameStat, cnt) == 1) {SendingMsg = 0xa7}
+					serversend SendingMsg, IsRemotePlayer
+				loop
+				break
+			}
+			await 0
+		loop
+	}
+	repeat 4
+		if (haiRon(cnt) == 1) {
+			setHand GameStat, HAND_TILECODE, 13, cnt, haiCurrentSutehai
+			setHand GameStat, HAND_REDTILE, 13, cnt, haiCurrentSutehaiAkaDora
+		}
+	loop
+	return
+
+*checkremotenaki
+	if (ReceivedMsg == 1023) {
+		if (getDisconnectFlag(GameStat, cnt) == 0) {
+			setDisconnectFlag GameStat, cnt, 1
+			warn strf("プレイヤー [%d] の回線切断を検知しました。", cnt)
+		}
+		ReceivedMsg = 0xa7
+	}
+	if (ReceivedMsg == 0xa1) {haiRon(cnt) = 1}
+	if (ReceivedMsg == 0xa2) {haiPon(cnt) = 1}
+	if (ReceivedMsg == 0xa3) {haiMinkan(cnt) = 1}
+#ifndef SANMAX
+	if (ReceivedMsg == 0xa4) {haiChi(cnt) = 1}
+	if (ReceivedMsg == 0xa5) {haiChi(cnt) = 2}
+	if (ReceivedMsg == 0xa6) {haiChi(cnt) = 3}
+#endif
+	return
+#global
+
+/* 落ち戻り用の処理 */
+*reconnection
+	if (ReconnectionSuccess == 0) {
+		dialog "サーバーとの接続が切れました\n再接続を試みます", 1, "回線切断"
+	}
+	sockclose 0+SOCK_GAME: await 1000
+	ReconnectionSuccess = 0
+	repeat 10
+		sockopen 0+SOCK_GAME, ServerAddress, PORT_GAME+ClientNumber
+		if (stat == 0) {ReconnectionSuccess = 1: break}
+		await 1000
+	loop
+	if (ReconnectionSuccess == 0) {
+		dialog "再接続に失敗しました\nゲームは続行できません", 1, "回線切断"
+		if (GameMode != 0) {sockclose SOCK_GAME+0}
+		if (GameMode == 1) {sockclose SOCK_GAME+1: sockclose SOCK_GAME+2: sockclose SOCK_GAME+3}
+		font fontname, 48, 0: objsize 200, 60
+		pos 620, 560: button goto "確認", *startgame
+		stop
+	}
+return
+
+/* チャットバッファ受信 */
+#module
+#include "const.hsp"
+#deffunc initializechat int GameMode, array IsRemotePlayer, var ServerAddress, int ClientNumber
+	chatinit
+	if (GameMode == 0) {gsel SCR_CHAT: objgray 1, 0: objgray 2, 0: gsel 0}
+	if (GameMode == 1) {
+		ChatBuf1 = "": ChatBuf2 = "": ChatBuf3 = ""
+		repeat 4
+			if (IsRemotePlayer(cnt) > 1) {tmpClientWaiting(cnt) = 1}
+			else {tmpClientWaiting(cnt) = 0}
+		loop
+		repeat
+			repeat 4
+				if (IsRemotePlayer(cnt) > 1) {
+					if (tmpClientWaiting(cnt) == 1) {
+						sockwait@ SOCK_CHAT-1+IsRemotePlayer(cnt)
+						if (stat == 0) {tmpClientWaiting(cnt) = 0}
+					;	title ""+tmpClientWaiting(0)+" "+tmpClientWaiting(1)+" "+tmpClientWaiting(2)+" "+tmpClientWaiting(3)
+					}
+				}
+			loop
+			await 0
+			if ((tmpClientWaiting(0)+tmpClientWaiting(1)+tmpClientWaiting(2)+tmpClientWaiting(3)) == 0) {
+				break
+			}
+		loop
+	}
+	if (GameMode == 2) {
+		sockopen@ SOCK_CHAT+0, ServerAddress, PORT_CHAT+ClientNumber
+		ChatBuf = ""
+	}
+	gsel 0, 1
+	return
+
+#deffunc chatrecv var GameStat, int GameMode, array IsRemotePlayer, array PlayerName
+	if (GameMode == 1) {
+		repeat 4
+			if (IsRemotePlayer(cnt) >= 2) {
+				sockcheck@ SOCK_CHAT-1+IsRemotePlayer(cnt)
+				if (stat == 0) {
+					sdim chattmp, 65536: sockget@ chattmp, 65536, SOCK_CHAT-1+IsRemotePlayer(cnt)
+					switch IsRemotePlayer(cnt)
+						case 2: ChatBuf1 += chattmp: notesel ChatBuf1: swbreak
+						case 3: ChatBuf2 += chattmp: notesel ChatBuf2: swbreak
+						case 4: ChatBuf3 += chattmp: notesel ChatBuf3: swbreak
+					swend
+					repeat notemax
+						if (notemax == 0) {break}
+						tmpcht = "": noteget tmpcht, 0: notedel 0
+						#ifdef SANMA
+							if ((IsRemotePlayer(0) == 2)||(IsRemotePlayer(1) == 2)||(IsRemotePlayer(2) == 2)) {sockput@ tmpcht+"\n", SOCK_CHAT+1}
+							if ((IsRemotePlayer(0) == 3)||(IsRemotePlayer(1) == 3)||(IsRemotePlayer(2) == 3)) {sockput@ tmpcht+"\n", SOCK_CHAT+2}
+						#else
+							if ((IsRemotePlayer(0) == 2)||(IsRemotePlayer(1) == 2)||(IsRemotePlayer(2) == 2)||(IsRemotePlayer(3) == 2)) {sockput@ tmpcht+"\n", SOCK_CHAT+1}
+							if ((IsRemotePlayer(0) == 3)||(IsRemotePlayer(1) == 3)||(IsRemotePlayer(2) == 3)||(IsRemotePlayer(3) == 3)) {sockput@ tmpcht+"\n", SOCK_CHAT+2}
+							if ((IsRemotePlayer(0) == 4)||(IsRemotePlayer(1) == 4)||(IsRemotePlayer(2) == 4)||(IsRemotePlayer(3) == 4)) {sockput@ tmpcht+"\n", SOCK_CHAT+3}
+						#endif
+							if (strmid(tmpcht, 0, 1) == "0") {chatappend PlayerName(0)+"("+windName(playerWind(0, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
+							if (strmid(tmpcht, 0, 1) == "1") {chatappend PlayerName(1)+"("+windName(playerWind(1, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
+							if (strmid(tmpcht, 0, 1) == "2") {chatappend PlayerName(2)+"("+windName(playerWind(2, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
+						#ifndef SANMA
+							if (strmid(tmpcht, 0, 1) == "3") {chatappend PlayerName(3)+"("+windName(playerWind(3, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
+						#endif
+					loop
+					noteunsel
+				}
+			}
+		loop
+	}
+	if (GameMode == 2) {
+		sockcheck@ SOCK_CHAT+0
+		if (stat == 0) {
+			sdim chattmp, 65536: sockget@ chattmp, 65536, SOCK_CHAT+0
+			ChatBuf += chattmp: notesel ChatBuf
+			repeat notemax
+				if (notemax == 0) {break}
+				tmpcht = "": noteget tmpcht, 0: notedel 0
+					if (strmid(tmpcht, 0, 1) == "0") {chatappend PlayerName(0)+"("+windName(playerWind(0, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
+					if (strmid(tmpcht, 0, 1) == "1") {chatappend PlayerName(1)+"("+windName(playerWind(1, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
+					if (strmid(tmpcht, 0, 1) == "2") {chatappend PlayerName(2)+"("+windName(playerWind(2, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
+				#ifndef SANMA
+					if (strmid(tmpcht, 0, 1) == "3") {chatappend PlayerName(3)+"("+windName(playerWind(3, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
+				#endif
+			loop
+			noteunsel
+		}
+	}
+return
+
+#deffunc chatpost var GameStat, int GameMode, array IsRemotePlayer, array PlayerName
+	CurrentChatTxt = CurrentChatTxt()
+	if (GameMode == 1) {
+	#ifdef SANMA
+		if ((IsRemotePlayer(0) == 2)||(IsRemotePlayer(1) == 2)||(IsRemotePlayer(2) == 2)) {sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+1}
+		if ((IsRemotePlayer(0) == 3)||(IsRemotePlayer(1) == 3)||(IsRemotePlayer(2) == 3)) {sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+2}
+	#else
+		if ((IsRemotePlayer(0) == 2)||(IsRemotePlayer(1) == 2)||(IsRemotePlayer(2) == 2)||(IsRemotePlayer(3) == 2)) {sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+1}
+		if ((IsRemotePlayer(0) == 3)||(IsRemotePlayer(1) == 3)||(IsRemotePlayer(2) == 3)||(IsRemotePlayer(3) == 3)) {sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+2}
+		if ((IsRemotePlayer(0) == 4)||(IsRemotePlayer(1) == 4)||(IsRemotePlayer(2) == 4)||(IsRemotePlayer(3) == 4)) {sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+3}
+	#endif
+		tmpcht = ""+getPlayer(GameStat)+CurrentChatTxt
+			if (strmid(tmpcht, 0, 1) == "0") {chatappend PlayerName(0)+"("+windName(playerWind(0, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
+			if (strmid(tmpcht, 0, 1) == "1") {chatappend PlayerName(1)+"("+windName(playerWind(1, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
+			if (strmid(tmpcht, 0, 1) == "2") {chatappend PlayerName(2)+"("+windName(playerWind(2, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
+		#ifndef SANMA
+			if (strmid(tmpcht, 0, 1) == "3") {chatappend PlayerName(3)+"("+windName(playerWind(3, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
+		#endif
+	}
+	if (GameMode == 2) {
+		sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+0
+	}
+	clearChatTxt
+return
+#global
+
+/* チャット送信 */
+*chatpost_
+	chatpost GameStat, GameMode, IsRemotePlayer, PlayerName
+return

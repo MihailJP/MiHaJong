@@ -1,0 +1,206 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *    [七対子判定ルーチン]
+ *=============================
+ */
+
+/* 指定の対子があるか数える */
+#module
+#defcfunc countPairs array haiCount, array targetTiles
+/*
+		val=countPairs(p1, p2)
+		指定した種類の対子を数える
+
+		p1 : 手牌にある種類別の牌数の配列
+		p2 : 探したい牌の配列
+
+		指定した種類のうち何種類の対子があるかを返します。
+*/
+	trace "対子の種類を調べます。"
+	yakuflagcount = 0
+	repeat length(targetTiles)
+		if (haiCount(targetTiles(cnt)) >= 2) {yakuflagcount++}
+	loop
+	return yakuflagcount
+#global
+
+/* 七対子 */
+#module
+#include "const.hsp"
+#deffunc qiduiyaku var GameStat, var tmpYakuInfo, int targetPlayer
+	trace "七対子の処理に入ります。"
+	if (getRule(RULE_SEVEN_PAIRS) == "1") {
+		addyaku tmpYakuInfo, "七対子", 1: setYakuInfo tmpYakuInfo, YAKUINF_FU, 50
+	} else {
+		addyaku tmpYakuInfo, "七対子", 2: setYakuInfo tmpYakuInfo, YAKUINF_FU, 25
+	}
+	countTilesInHand haiCount, GameStat, targetPlayer
+	dim tmpTileList, 1: repeat 9:tmpTileList(cnt) = TILE_SUIT_CHARACTERS+cnt+1:loop
+	WanzDui = countPairs(haiCount, tmpTileList)
+	dim tmpTileList, 1: repeat 9:tmpTileList(cnt) = TILE_SUIT_CIRCLES+cnt+1:loop
+	PinzDui = countPairs(haiCount, tmpTileList)
+	dim tmpTileList, 1: repeat 9:tmpTileList(cnt) = TILE_SUIT_BAMBOOS+cnt+1:loop
+	SouzDui = countPairs(haiCount, tmpTileList)
+	dim tmpTileList, 1: tmpTileList = TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND,TILE_WHITE_DRAGON,TILE_GREEN_DRAGON,TILE_RED_DRAGON
+	ZiDui = countPairs(haiCount, tmpTileList)
+	dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+1,TILE_SUIT_CHARACTERS+9,TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+9,TILE_SUIT_BAMBOOS+1,TILE_SUIT_BAMBOOS+9,TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND,TILE_WHITE_DRAGON,TILE_GREEN_DRAGON,TILE_RED_DRAGON
+	YaojiuDui = countPairs(haiCount, tmpTileList)
+	/* 一色系 */
+	if (((WanzDui+ZiDui) == 7)||((PinzDui+ZiDui) == 7)||((SouzDui+ZiDui) == 7)) {
+		if (ZiDui == 0) {
+			if (getRule(RULE_CHINIISOH) != "0") {
+				addyaku tmpYakuInfo, "清一色", 3+getMenzen(GameStat, targetPlayer)
+			} else {
+				addyaku tmpYakuInfo, "清一色", 5+getMenzen(GameStat, targetPlayer)
+			}
+			/* 大車輪は面子手用のファイルで処理 */
+		} else {
+			addyaku tmpYakuInfo, "混一色", 2+getMenzen(GameStat, targetPlayer)
+		}
+	} else {
+		/* 絶一門 */
+		if (getRule(RULE_CHUEIIMEN) != "0") {
+			if ((WanzDui == 0)||(PinzDui == 0)||(SouzDui == 0)) {
+				if ((ZiDui == 0)||(getRule(RULE_CHUEIIMEN) != "2")) {
+					addyaku tmpYakuInfo, "絶一門", 1
+				}
+			}
+		}
+	}
+	/* 一九字牌系 */
+	if ((ZiDui+YaojiuDui) == 0) {
+		if (getMenzen(GameStat, targetPlayer) == 1) { // バグ対策？
+			addyaku tmpYakuInfo, "断幺九", 1
+		}
+	}
+	if ((ZiDui+YaojiuDui) == 7) {
+		if ((ZiDui == 7)&&(getRule(RULE_SEVEN_HONOR_PAIRS) != "1")) {
+			if (getRule(RULE_SEVEN_HONOR_PAIRS) == "0") {
+				addyakuman tmpYakuInfo, "字一色", 1
+			} else {
+				addyakuman tmpYakuInfo, "七福星", 2
+			}
+			delyaku tmpYakuInfo, "混一色"
+		} else {
+			addyaku tmpYakuInfo, "混老頭", 2
+		}
+	}
+	/* 推不倒 */
+	if (getRule(RULE_TOIPUUTAO) != "0") {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+2,TILE_SUIT_CIRCLES+3,TILE_SUIT_CIRCLES+4,TILE_SUIT_CIRCLES+5,TILE_SUIT_CIRCLES+8,TILE_SUIT_CIRCLES+9,TILE_SUIT_BAMBOOS+2,TILE_SUIT_BAMBOOS+4,TILE_SUIT_BAMBOOS+5,TILE_SUIT_BAMBOOS+6,TILE_SUIT_BAMBOOS+8,TILE_SUIT_BAMBOOS+9,TILE_WHITE_DRAGON
+		yakuflagcount = countPairs(haiCount, tmpTileList)
+		if (yakuflagcount == 7) {
+			if (getRule(RULE_TOIPUUTAO) == "3") {
+				addyakuman tmpYakuInfo, "推不倒", 1
+			} else {
+				if (getRule(RULE_TOIPUUTAO) == "1") {
+					addyaku tmpYakuInfo, "推不倒", 1
+				} else {
+					addyaku tmpYakuInfo, "推不倒", 4
+				}
+			}
+		}
+	}
+	/* 黒一色 */
+	if (getRule(RULE_HEIIISOH) != "0") {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+2,TILE_SUIT_CIRCLES+4,TILE_SUIT_CIRCLES+8,TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND
+		yakuflagcount = countPairs(haiCount, tmpTileList)
+		if (yakuflagcount == 7) {
+			addyakuman tmpYakuInfo, "黒一色", 1
+			delyaku tmpYakuInfo, "混一色"
+		}
+	}
+	/* 断紅和 */
+	if (getRule(RULE_NO_RED) != "0") {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
+		yakuflagcount = countPairs(haiCount, tmpTileList)
+		dim tmpTileList, 1: tmpTileList = TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND,TILE_WHITE_DRAGON,TILE_GREEN_DRAGON
+		yakuflagcount2 = countPairs(haiCount, tmpTileList)
+		tmpyakuCensored = searchyaku(tmpYakuInfo, "黒一色")
+		if ((yakuflagcount == 7)&&(tmpyakuCensored == 0)) {
+			if ((yakuflagcount2 == 0)&&(getRule(RULE_NO_RED) == "2")) {
+				/* 清断紅 */
+				addyaku tmpYakuInfo, "清断紅", 6
+			} else {
+				/* 混断紅 */
+				if (getRule(RULE_NO_RED) == "2") {
+					addyaku tmpYakuInfo, "混断紅", 3
+				} else {
+					addyaku tmpYakuInfo, "断紅和", 3
+				}
+			}
+		}
+	}
+	/* 五門斎 */
+	if (getRule(RULE_UUMENCHII) != "0") {
+		dim tmpTileList, 1: tmpTileList = TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND
+		WindDui = countPairs(haiCount, tmpTileList)
+		dim tmpTileList, 1: tmpTileList = TILE_WHITE_DRAGON,TILE_GREEN_DRAGON,TILE_RED_DRAGON
+		DragonDui = countPairs(haiCount, tmpTileList)
+		if ((WanzDui >= 1)&&(PinzDui >= 1)&&(SouzDui >= 1)&&(WindDui >= 1)&&(DragonDui >= 1)) {
+			addyaku tmpYakuInfo, "五門斎", 2
+		}
+	}
+	/* 三元七対子 */
+	if (getRule(RULE_DRAGON_PAIRS) != "0") {
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "字一色")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "七福星")
+		if ((haiCount(TILE_WHITE_DRAGON) >= 2)&&(haiCount(TILE_GREEN_DRAGON) >= 2)&&(haiCount(TILE_RED_DRAGON) >= 2)&&(tmpyakuCensored == 0)) {
+			addyaku tmpYakuInfo, "三元七対子", 1
+		}
+	}
+	/* 四喜七対子 */
+	if (getRule(RULE_WIND_PAIRS) != "0") {
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "字一色")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "七福星")
+		if ((haiCount(TILE_EAST_WIND) >= 2)&&(haiCount(TILE_SOUTH_WIND) >= 2)&&(haiCount(TILE_WEST_WIND) >= 2)&&(haiCount(TILE_NORTH_WIND) >= 2)&&(tmpyakuCensored == 0)) {
+			addyaku tmpYakuInfo, "四喜七対子", 1
+		}
+	}
+	/* 奇数七対子 */
+	if (getRule(RULE_ODD_PAIRS) != "0") {
+		dim tmpTileList, 1: repeat TILE_NUMERAL_COLORS: tmpTileList(cnt*5) = cnt*TILE_SUIT_STEP+1,cnt*TILE_SUIT_STEP+3,cnt*TILE_SUIT_STEP+5,cnt*TILE_SUIT_STEP+7,cnt*TILE_SUIT_STEP+9: loop
+		yakuflagcount = countPairs(haiCount, tmpTileList)
+		if (yakuFlagCount == 7) {
+			addyaku tmpYakuInfo, "奇数七対子", 1
+		}
+	}
+	/* 偶数七対子 */
+	if (getRule(RULE_EVEN_PAIRS) != "0") {
+		dim tmpTileList, 1: repeat TILE_NUMERAL_COLORS: tmpTileList(cnt*4) = cnt*TILE_SUIT_STEP+2,cnt*TILE_SUIT_STEP+4,cnt*TILE_SUIT_STEP+6,cnt*TILE_SUIT_STEP+8: loop
+		yakuflagcount = countPairs(haiCount, tmpTileList)
+		if (yakuFlagCount == 7) {
+			addyaku tmpYakuInfo, "偶数七対子", 2
+			if ((getRule(RULE_KUITAN) == "2")&&(getMenzen(GameStat, targetPlayer) == 0)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, -1}
+			delyaku tmpYakuInfo, "断幺九"
+		}
+	}
+	/* 紅白七対 */
+	if (getRule(RULE_KOUHAKU_CHIITOI) != "0") {
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "字一色")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "七福星")
+		if ((haiCount(TILE_WHITE_DRAGON) >= 2)&&(haiCount(TILE_RED_DRAGON) >= 2)&&(tmpyakuCensored == 0)) {
+			addyaku tmpYakuInfo, "紅白七対", 2
+		}
+	}
+	/* 北の大地 */
+	if (getRule(RULE_KITA_NO_DAICHI) != "0") {
+		if ((haiCount(TILE_SUIT_BAMBOOS+2) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+3) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+4) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+6) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+8) >= 2)&&(haiCount(TILE_NORTH_WIND) >= 2)&&(haiCount(TILE_WHITE_DRAGON) >= 2)) {
+			switch getHand(GameStat, HAND_TILECODE, 13, targetPlayer) /* 何で和了ったかで分岐 */
+				case TILE_NORTH_WIND: /* 北で和了るとダブル役満 */
+					addyakuman tmpYakuInfo, "北の大地", 2
+					swbreak
+				case TILE_WHITE_DRAGON: /* 白で和了るとトリプル役満 */
+					addyakuman tmpYakuInfo, "北の大地", 3
+					swbreak
+				default:
+					addyakuman tmpYakuInfo, "北の大地", 1
+			swend
+			delyaku tmpYakuInfo, "混一色"
+		}
+	}
+return
+#global

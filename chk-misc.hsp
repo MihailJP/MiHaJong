@@ -1,0 +1,660 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *  [その他の役判定ルーチン]
+ *=============================
+ */
+
+/* 指定の刻子・順子があるか数える */
+#module
+#defcfunc countSpecMentz array haiMianziDat, array targetKez, array targetShunz, int Mode
+/*
+		val=countSpecMentz(p1, p2, p3)
+		指定した種類の対子を数える
+
+		p1 : 面子構成を格納した配列
+		p2 : 探したい刻子の配列
+		p3 : 探したい順子の配列
+
+		指定した種類のうち何種類の刻子・順子があるかを返します。
+*/
+	if (Mode == 0) {countDuiz DuiCount, haiMianziDat} else {countKez DuiCount, haiMianziDat}
+	countShunz ShunzCount, haiMianziDat
+	yakuflagcount = 0
+	repeat length(targetKez)
+		if (targetKez(cnt)==0) {continue}
+		if (DuiCount(targetKez(cnt)) >= 1) {yakuflagcount++}
+	loop
+	repeat length(targetShunz)
+		if (targetShunz(cnt)==0) {continue}
+		if (ShunzCount(targetShunz(cnt)) >= 1) {yakuflagcount++}
+	loop
+	return yakuflagcount
+#global
+
+/* その他の役 */
+#module
+#include "const.hsp"
+#deffunc miscyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int TsumoAgari
+	/* 緑一色 */
+	dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_GREEN_DRAGON
+	dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+	yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+	dim targetKez,1: targetKez=TILE_GREEN_DRAGON
+	dim targetShunz,1: targetShunz=0
+	verdflag = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+	if (yakuflagcount == 5) {
+		if (verdflag == 0) {
+			if (getRule(RULE_SEVEN_HONOR_PAIRS) != "1") {
+				if (getRule(RULE_SEVEN_HONOR_PAIRS) == "0") {
+					/* 発無しも普通に役満とするルール
+					   この場合青天井で清一色が複合*/
+					addyakuman tmpYakuInfo, "緑一色", 1
+				} else {
+					/* 発無しはダブル役満というルール */
+					addyakuman tmpYakuInfo, "清緑一色", 2
+					// 緑一色が成立したら清一色の成立を解除する(青天井ルール用)
+					delyaku tmpYakuInfo, "清一色"
+				}
+			}
+		} else {
+			addyakuman tmpYakuInfo, "緑一色", 1
+			// 緑一色が成立したら混一色の成立を解除する(青天井ルール用)
+			delyaku tmpYakuInfo, "混一色"
+		}
+	}
+	/* 裸単騎１飜というローカル役 */
+	yakuflagcount = 0
+	repeat 4, 1
+		if (((haiMianziDat(cnt)/MELD_TYPE_STEP) != MELD_SEQUENCE_CONCEALED)&&((haiMianziDat(cnt)/MELD_TYPE_STEP) != MELD_TRIPLET_CONCEALED)&&((haiMianziDat(cnt)/MELD_TYPE_STEP) != MELD_QUAD_CONCEALED)) {
+			yakuflagcount++ // 副露面子の数 暗槓があってはならない
+		}
+	loop
+	if (yakuflagcount == 4) {
+		if (getRule(RULE_SHIIARU_RAOTAI) != "0") {
+			if ((getRule(RULE_SHIIARU_RAOTAI) == "1")||(TsumoAgari == 0)) {
+				if (TsumoAgari == 1) {addyaku tmpYakuInfo, "全倒鋪", 1}
+				else {addyaku tmpYakuInfo, "全求人", 1}
+			}
+		}
+		// 金鶏独立…一索待ち
+		if (getRule(RULE_KINKEI_DOKURITSU) != "0") {
+			if (getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == TILE_SUIT_BAMBOOS+1) {
+				addyakuman tmpYakuInfo, "金鶏独立", 1
+				delyaku tmpYakuInfo, "全倒鋪"
+				delyaku tmpYakuInfo, "全求人"
+			}
+		}
+		// 独釣寒江雪…白待ち
+		if (getRule(RULE_KINKEI_DOKURITSU) != "0") {
+			if (getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == TILE_WHITE_DRAGON) {
+				addyakuman tmpYakuInfo, "独釣寒江雪", 1
+				delyaku tmpYakuInfo, "全倒鋪"
+				delyaku tmpYakuInfo, "全求人"
+			}
+		}
+	}
+	/* 推不倒 */
+	if (getRule(RULE_TOIPUUTAO) != "0") {
+		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+9, TILE_WHITE_DRAGON
+		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_BAMBOOS+4
+		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		if (yakuflagcount == 5) {
+			if (getRule(RULE_TOIPUUTAO) == "3") {
+				addyakuman tmpYakuInfo, "推不倒", 1
+			} else {
+				if (getRule(RULE_TOIPUUTAO) == "1") {
+					addyaku tmpYakuInfo, "推不倒", 1
+				} else {
+					addyaku tmpYakuInfo, "推不倒", 4
+				}
+			}
+		}
+	}
+	/* 紅孔雀 */
+	if (getRule(RULE_BENIKUJAKU) != "0") {
+		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9, TILE_RED_DRAGON
+		dim targetShunz,1: targetShunz=0
+		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		dim targetKez,1: targetKez=TILE_RED_DRAGON
+		yakuflagcount += countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		if (yakuflagcount == 5) {
+			addyakuman tmpYakuInfo, "紅孔雀", 1
+			// 成立したら混一色の成立を解除する(青天井ルール用)
+			delyaku tmpYakuInfo, "混一色"
+			delyaku tmpYakuInfo, "対々和"
+		}
+	}
+	/* 萬緑叢中一点紅 */
+	if (getRule(RULE_KOUITTEN) != "0") {
+		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_RED_DRAGON
+		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		dim targetKez,1: targetKez=TILE_RED_DRAGON
+		dim targetShunz,1: targetShunz=0
+		yakuflagcount += countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		if (yakuflagcount == 6) {
+			addyakuman tmpYakuInfo, "紅一点", 1
+			// 成立したら混一色の成立を解除する(青天井ルール用)
+			delyaku tmpYakuInfo, "混一色"
+		}
+	}
+	/* 緑一色輪 */
+	if (getRule(RULE_RYUUIISOHRIN) != "0") {
+		yakuflagcount = 0
+		if (haiMianziDat(0) == TILE_SUIT_BAMBOOS+5) {yakuflagcount = 2}
+		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8
+		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+		yakuflagcount += countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		if (yakuflagcount == 6) {
+			addyakuman tmpYakuInfo, "緑一色輪", 1
+			// 成立したら混一色の成立を解除する(青天井ルール用) 清一色は複合させる
+			delyaku tmpYakuInfo, "混一色"
+		}
+	}
+	/* 黒一色 */
+	if (getRule(RULE_HEIIISOH) != "0") {
+		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND
+		dim targetShunz,1: targetShunz=0
+		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		if (yakuflagcount == 5) {
+			addyakuman tmpYakuInfo, "黒一色", 1
+			delyaku tmpYakuInfo, "混一色"
+			delyaku tmpYakuInfo, "対々和"
+		}
+	}
+	/* 青洞門 */
+	if (getRule(RULE_AO_NO_DOMON) != "0") {
+		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_GREEN_DRAGON
+		dim targetShunz,1: targetShunz=0
+		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND
+		windflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		if ((yakuflagcount == 5)&&(windflagcount == 1)) {
+			addyakuman tmpYakuInfo, "青洞門", 1
+			delyaku tmpYakuInfo, "混一色"
+			delyaku tmpYakuInfo, "対々和"
+		}
+	}
+	/* 断紅和 */
+	if (getRule(RULE_NO_RED) != "0") {
+		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
+		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
+		dim targetShunz,1: targetShunz=0
+		yakuflagcount2 = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "緑一色")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "黒一色")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "青洞門")
+		if ((yakuflagcount == 5)&&(tmpyakuCensored == 0)) {
+			if ((yakuflagcount2 == 0)&&(getRule(RULE_NO_RED) == "2")) {
+				/* 清断紅 */
+				addyaku tmpYakuInfo, "清断紅", 5+getMenzen(GameStat, targetPlayer)
+			} else {
+				/* 混断紅 */
+				if (getRule(RULE_NO_RED) == "2") {addyaku tmpYakuInfo, "混断紅", 2+getMenzen(GameStat, targetPlayer)}
+				else {addyaku tmpYakuInfo, "断紅和", 2+getMenzen(GameStat, targetPlayer)}
+			}
+		}
+	}
+	/* 大四帰四 */
+	if (getRule(RULE_GREAT_FOUR_INTO_FOUR) != "0") {
+		yakuflagcount = 0
+		countKez KezCount, haiMianziDat
+		countShunz ShunzCount, haiMianziDat
+		repeat TILE_NUMERAL_MAX /* 順子と雀頭で4枚使い３つ */
+			// 123 123 123 123: 牌式44440
+			// 123 123 123 234: 牌式34410
+			// 123 123 123 345: 牌式33411
+			// 123 123 234 234: 牌式24420
+			if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt) >= 2)&&(ShunzCount(cnt+1) >= 2)) {yakuflagcount++}
+			if ((haiMianziDat(0) == cnt+3)&&(ShunzCount(cnt) >= 2)&&(ShunzCount(cnt+1) >= 2)) {yakuflagcount++}
+			// 123 123 234 345: 牌式23421
+			if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt) >= 2)&&(ShunzCount(cnt+1) >= 1)&&(ShunzCount(cnt+2) >= 1)) {yakuflagcount++}
+			if ((haiMianziDat(0) == cnt+3)&&(ShunzCount(cnt) >= 2)&&(ShunzCount(cnt+1) >= 1)&&(ShunzCount(cnt+2) >= 1)) {yakuflagcount++}
+			// 123 123 345 345: 牌式22422
+			if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt) >= 2)&&(ShunzCount(cnt+2) >= 2)) {yakuflagcount++}
+			if ((haiMianziDat(0) == cnt+1)&&(ShunzCount(cnt) >= 2)&&(ShunzCount(cnt+2) >= 2)) {yakuflagcount++}
+			if ((haiMianziDat(0) == cnt+3)&&(ShunzCount(cnt) >= 2)&&(ShunzCount(cnt+2) >= 2)) {yakuflagcount++}
+			if ((haiMianziDat(0) == cnt+4)&&(ShunzCount(cnt) >= 2)&&(ShunzCount(cnt+2) >= 2)) {yakuflagcount++}
+			// 123 234 234 234: 牌式14430
+			// 123 234 234 345: 牌式13431
+			// 123 234 345 345: 牌式12432
+			if ((haiMianziDat(0) == cnt+1)&&(ShunzCount(cnt) >= 1)&&(ShunzCount(cnt+1) >= 1)&&(ShunzCount(cnt+2) >= 2)) {yakuflagcount++}
+			if ((haiMianziDat(0) == cnt+4)&&(ShunzCount(cnt) >= 1)&&(ShunzCount(cnt+1) >= 1)&&(ShunzCount(cnt+2) >= 2)) {yakuflagcount++}
+			// 123 345 345 345: 牌式11433
+		loop
+		if (yakuflagcount == 1) {
+			addyakuman tmpYakuInfo, "大四帰四", 1
+		}
+	}
+	/* 重四帰四 */
+	if (getRule(RULE_DOUBLE_FOUR_INTO_FOUR) != "0") {
+		yakuflagcount = 0
+		countKez KezCount, haiMianziDat
+		countShunz ShunzCount, haiMianziDat
+		repeat TILE_NUMERAL_MAX /* 順子で4枚使い */
+			// 123 123 123 234
+			if ((ShunzCount(cnt) >= 3)&&(ShunzCount(cnt+1) >= 1)) {yakuflagcount++}
+			// 123 123 234 234
+			if ((ShunzCount(cnt) >= 2)&&(ShunzCount(cnt+1) >= 2)) {yakuflagcount++}
+			// 123 234 234 234
+			if ((ShunzCount(cnt) >= 1)&&(ShunzCount(cnt+1) >= 3)) {yakuflagcount++}
+		loop
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "大四帰四")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "一色四順")
+		if ((yakuflagcount == 1)&&(tmpyakuCensored == 0)) {
+			addyaku tmpYakuInfo, "重四帰四", 8
+		}
+	}
+	/* 四帰四 */
+	if (getRule(RULE_FOUR_INTO_FOUR) != "0") {
+		yakuflagcount = 0
+		countKez KezCount, haiMianziDat
+		countShunz ShunzCount, haiMianziDat
+		repeat TILE_NUMERAL_MAX /* 順子で4枚使い */
+			// 123 123 123 345
+			if ((ShunzCount(cnt) >= 3)&&(ShunzCount(cnt+2) >= 1)) {yakuflagcount++}
+			// 123 123 234 345
+			if ((ShunzCount(cnt) >= 2)&&(ShunzCount(cnt+1) >= 1)&&(ShunzCount(cnt+2) >= 1)) {yakuflagcount++}
+			// 123 123 345 345
+			if ((ShunzCount(cnt) >= 2)&&(ShunzCount(cnt+2) >= 2)) {yakuflagcount++}
+			// 123 234 234 345
+			if ((ShunzCount(cnt) >= 1)&&(ShunzCount(cnt+1) >= 2)&&(ShunzCount(cnt+2) >= 1)) {yakuflagcount++}
+			// 123 234 345 345
+			if ((ShunzCount(cnt) >= 1)&&(ShunzCount(cnt+1) >= 1)&&(ShunzCount(cnt+2) >= 2)) {yakuflagcount++}
+			// 123 345 345 345
+			if ((ShunzCount(cnt) >= 1)&&(ShunzCount(cnt+2) >= 3)) {yakuflagcount++}
+		loop
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "大四帰四")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "重四帰四")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "一色四順")
+		if ((yakuflagcount == 1)&&(tmpyakuCensored == 0)) {
+			addyaku tmpYakuInfo, "四帰四", 6
+		}
+	}
+	/* 四帰三一 */
+	if (getRule(RULE_FOUR_INTO_THREE_ONE) != "0") {
+		yakuflagcount = 0: yakuflagcount2 = 0
+		countKez KezCount, haiMianziDat
+		countShunz ShunzCount, haiMianziDat
+		repeat TILE_NUMERAL_MAX
+			if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt) >= 2)) {yakuflagcount++}
+			if (cnt > 0) {
+				if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt-1) >= 1)&&(ShunzCount(cnt) >= 1)) {yakuflagcount++}
+				if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt-1) >= 2)) {yakuflagcount++}
+			}
+			if (cnt > 1) {
+				if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt-2) >= 1)&&(ShunzCount(cnt) >= 1)) {yakuflagcount++}
+				if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt-2) >= 1)&&(ShunzCount(cnt-1) >= 1)) {yakuflagcount++}
+				if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt-2) >= 2)) {yakuflagcount++}
+			}
+		loop
+		repeat TILE_NUMERAL_MAX /* 刻子と順子で4枚使い */
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt) >= 1)) {yakuflagcount2++}
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt+1) >= 1)) {yakuflagcount2++}
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt+2) >= 1)) {yakuflagcount2++}
+		loop
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "大四帰四")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "重四帰四")
+		if ((yakuflagcount == 1)&&(yakuflagcount2 == 1)&&(tmpyakuCensored == 0)) {
+			addyaku tmpYakuInfo, "四帰三一", 4
+		}
+	}
+	/* 四帰三 */
+	if (getRule(RULE_FOUR_INTO_THREE) != "0") {
+		yakuflagcount = 0
+		countKez KezCount, haiMianziDat
+		countShunz ShunzCount, haiMianziDat
+		repeat TILE_NUMERAL_MAX /* 順子二つと雀頭で4枚使い */
+			if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt) >= 2)) {yakuflagcount++}
+			if (cnt > 0) {
+				if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt-1) >= 1)&&(ShunzCount(cnt) >= 1)) {yakuflagcount++}
+				if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt-1) >= 2)) {yakuflagcount++}
+			}
+			if (cnt > 1) {
+				if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt-2) >= 1)&&(ShunzCount(cnt) >= 1)) {yakuflagcount++}
+				if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt-2) >= 1)&&(ShunzCount(cnt-1) >= 1)) {yakuflagcount++}
+				if ((haiMianziDat(0) == cnt)&&(ShunzCount(cnt-2) >= 2)) {yakuflagcount++}
+			}
+		loop
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "四帰三一")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "大四帰四")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "重四帰四")
+		if ((yakuflagcount == 1)&&(tmpyakuCensored == 0)) {
+			addyaku tmpYakuInfo, "四帰三", 3
+		}
+	}
+	/* 龍四帰一 */
+	if (getRule(RULE_DRAGON_FOUR_INTO_ONE) != "0") {
+		yakuflagcount = 0
+		countKez KezCount, haiMianziDat
+		countShunz ShunzCount, haiMianziDat
+		repeat TILE_NUMERAL_MAX
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt) >= 1)&&(KezCount(cnt+1) >= 1)&&(KezCount(cnt+2) >= 1)) {yakuflagcount++}
+		loop
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "大四帰四")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "重四帰四")
+		if ((yakuflagcount == 1)&&(tmpyakuCensored == 0)) {
+			addyakuman tmpYakuInfo, "龍四帰一", 1
+			delyaku tmpYakuInfo, "三連刻"
+		}
+	}
+	/* 虎四帰一 */
+	if (getRule(RULE_TIGER_FOUR_INTO_ONE) != "0") {
+		yakuflagcount = 0
+		countKez KezCount, haiMianziDat
+		countShunz ShunzCount, haiMianziDat
+		repeat TILE_NUMERAL_MAX
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt) >= 1)&&(KezCount(cnt+1) >= 1)) {yakuflagcount++}
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt) >= 1)&&(KezCount(cnt+2) >= 1)) {yakuflagcount++}
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt+1) >= 1)&&(KezCount(cnt+2) >= 1)) {yakuflagcount++}
+		loop
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "龍四帰一")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "大四帰四")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "重四帰四")
+		if ((yakuflagcount == 1)&&(tmpyakuCensored == 0)) {
+			switch int(getRule(RULE_TIGER_FOUR_INTO_ONE))
+				case 1: addyaku tmpYakuInfo, "虎四帰一", 2: swbreak
+				case 2: addyaku tmpYakuInfo, "虎四帰一", 3: swbreak
+			swend
+		}
+	}
+	/* 両四帰一 */
+	if (getRule(RULE_DOUBLE_FOUR_INTO_ONE) != "0") {
+		yakuflagcount = 0
+		countKez KezCount, haiMianziDat
+		countShunz ShunzCount, haiMianziDat
+		repeat TILE_NUMERAL_MAX /* 刻子と順子で4枚使い×2組 */
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt) >= 1)) {yakuflagcount++}
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt+1) >= 1)) {yakuflagcount++}
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt+2) >= 1)) {yakuflagcount++}
+		loop
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "龍四帰一")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "虎四帰一")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "大四帰四")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "重四帰四")
+		if ((yakuflagcount == 2)&&(tmpyakuCensored == 0)) {
+			switch int(getRule(RULE_DOUBLE_FOUR_INTO_ONE))
+				case 1: addyaku tmpYakuInfo, "両四帰一", 2: swbreak
+				case 2: addyaku tmpYakuInfo, "両四帰一", 3: swbreak
+			swend
+		}
+	}
+	/* 四帰一 */
+	if (getRule(RULE_FOUR_INTO_ONE) != "0") {
+		yakuflagcount = 0
+		countKez KezCount, haiMianziDat
+		countShunz ShunzCount, haiMianziDat
+		repeat TILE_NUMERAL_MAX /* 刻子と順子で4枚使い */
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt) >= 1)) {yakuflagcount++}
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt+1) >= 1)) {yakuflagcount++}
+			if ((ShunzCount(cnt) >= 1)&&(KezCount(cnt+2) >= 1)) {yakuflagcount++}
+		loop
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "龍四帰一")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "虎四帰一")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "両四帰一")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "四帰三")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "四帰三一")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "大四帰四")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "重四帰四")
+		if ((yakuflagcount == 1)&&(tmpyakuCensored == 0)) {
+			addyaku tmpYakuInfo, "四帰一", 1
+		}
+	}
+	/* 九蓮花燈 */
+	if (getRule(RULE_CHUUREN_HWATON) != "0") {
+		countTilesInHand haiCount, GameStat, targetPlayer
+		yakuflagcount = 0
+		if ((haiCount(TILE_SUIT_CHARACTERS+1)+haiCount(TILE_SUIT_CIRCLES+1)+haiCount(TILE_SUIT_BAMBOOS+1)) >= 3) {yakuflagcount++}
+		repeat 7,2
+			if ((haiCount(TILE_SUIT_CHARACTERS+cnt)+haiCount(TILE_SUIT_CIRCLES+cnt)+haiCount(TILE_SUIT_BAMBOOS+cnt)) >= 1) {yakuflagcount++}
+		loop
+		if ((haiCount(TILE_SUIT_CHARACTERS+9)+haiCount(TILE_SUIT_CIRCLES+9)+haiCount(TILE_SUIT_BAMBOOS+9)) >= 3) {yakuflagcount++}
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "純正九蓮宝燈")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "九蓮宝燈")
+		if ((yakuflagcount == 9)&&(tmpyakuCensored == 0)) {
+			if ((getRule(RULE_CHUUREN_HWATON) == "2")&&(getMenzen(GameStat, targetPlayer) == 1)) {
+				addyaku tmpYakuInfo, "九蓮花燈", 2
+			} else {
+				addyaku tmpYakuInfo, "九蓮花燈", 4
+			}
+		}
+	}
+	/* 鳴き九連宝燈 */
+	if (getRule(RULE_EXPOSED_CHUUREN) != "0") {
+		countTilesInHand haiCount, GameStat, targetPlayer
+		// 鳴き面子も計算 槓子は無視
+		repeat 4,1
+			switch (haiMianziDat(cnt) / MELD_TYPE_STEP)
+				case MELD_SEQUENCE_EXPOSED_LOWER: case MELD_SEQUENCE_EXPOSED_MIDDLE: case MELD_SEQUENCE_EXPOSED_UPPER
+					haiCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)++
+					haiCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM + 1)++
+					haiCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM + 2)++
+					swbreak
+				case MELD_TRIPLET_EXPOSED_LEFT: case MELD_TRIPLET_EXPOSED_CENTER: case MELD_TRIPLET_EXPOSED_RIGHT
+					haiCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) += 3
+					swbreak
+			swend
+		loop
+		yakuflag = 0
+		repeat 3
+			if ((haiCount(cnt*TILE_SUIT_STEP+1) >= 3)&&(haiCount(cnt*TILE_SUIT_STEP+2) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+3) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+4) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+5) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+6) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+7) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+8) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+9) >= 3)) {yakuFlag = 1}
+		loop
+		if ((yakuflag == 1)&&(getMenzen(GameStat, targetPlayer) == 0)) {
+			addyaku tmpYakuInfo, "九蓮碧燈", 3
+		}
+	}
+	/* 茴香ポン(非対々) */
+	if (getRule(RULE_UIKYOU_SHUNTSU) != "0") {
+		countKez KezCount, haiMianziDat
+		countShunz ShunzCount, haiMianziDat
+		yakuFlag = 0
+		repeat 5, 1
+			if ((KezCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(KezCount(cnt+TILE_SUIT_CIRCLES) >= 1)&&(KezCount(cnt+TILE_SUIT_BAMBOOS) >= 1)&&(ShunzCount(cnt+TILE_SUIT_CHARACTERS+1) >= 1)&&(haiMianziDat(0) == cnt+TILE_SUIT_CHARACTERS+4)) {yakuFlag = 1}
+			if ((KezCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(KezCount(cnt+TILE_SUIT_CIRCLES) >= 1)&&(KezCount(cnt+TILE_SUIT_BAMBOOS) >= 1)&&(ShunzCount(cnt+TILE_SUIT_CIRCLES+1) >= 1)&&(haiMianziDat(0) == cnt+TILE_SUIT_CIRCLES+4)) {yakuFlag = 1}
+			if ((KezCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(KezCount(cnt+TILE_SUIT_CIRCLES) >= 1)&&(KezCount(cnt+TILE_SUIT_BAMBOOS) >= 1)&&(ShunzCount(cnt+TILE_SUIT_BAMBOOS+1) >= 1)&&(haiMianziDat(0) == cnt+TILE_SUIT_BAMBOOS+4)) {yakuFlag = 1}
+		loop
+		repeat 5, 5
+			if ((KezCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(KezCount(cnt+TILE_SUIT_CIRCLES) >= 1)&&(KezCount(cnt+TILE_SUIT_BAMBOOS) >= 1)&&(ShunzCount(cnt+TILE_SUIT_CHARACTERS-3) >= 1)&&(haiMianziDat(0) == cnt+TILE_SUIT_CHARACTERS-4)) {yakuFlag = 1}
+			if ((KezCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(KezCount(cnt+TILE_SUIT_CIRCLES) >= 1)&&(KezCount(cnt+TILE_SUIT_BAMBOOS) >= 1)&&(ShunzCount(cnt+TILE_SUIT_CIRCLES-3) >= 1)&&(haiMianziDat(0) == cnt+TILE_SUIT_CIRCLES-4)) {yakuFlag = 1}
+			if ((KezCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(KezCount(cnt+TILE_SUIT_CIRCLES) >= 1)&&(KezCount(cnt+TILE_SUIT_BAMBOOS) >= 1)&&(ShunzCount(cnt+TILE_SUIT_BAMBOOS-3) >= 1)&&(haiMianziDat(0) == cnt+TILE_SUIT_BAMBOOS-4)) {yakuFlag = 1}
+		loop
+		if (yakuFlag) {
+			// 対々形と区別するために後ろにスペースを入れる
+			if (getRule(RULE_UIKYOU_SHUNTSU) == "2") {
+				addyaku tmpYakuInfo, "茴香ポン ", 3
+			} else {
+				addyaku tmpYakuInfo, "茴香ポン ", 4
+			}
+		}
+	}
+	/* 武太郎売焼餅 */
+	if (getRule(RULE_UUTAARAN) != "1") {
+		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+5, TILE_SUIT_CIRCLES+5, TILE_SUIT_BAMBOOS+5
+		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5
+		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 1)
+		if ((yakuflagcount == 4)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+1)) {
+			addyaku tmpYakuInfo, "武太郎売焼餅", 2+getMenzen(GameStat, targetPlayer)
+		}
+	}
+	/* 愚濫怒苦露酢 */
+	if (getRule(RULE_GRAND_CROSS) != "1") {
+		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+6
+		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+7
+		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 1)
+		if ((yakuflagcount == 4)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+5)&&(getMenzen(GameStat, targetPlayer) == 1)) {
+			if (getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == TILE_SUIT_CIRCLES+5) {
+				addyakuman tmpYakuInfo, "愚濫怒苦露酢", 1
+			} else {
+				addyakuman tmpYakuInfo, "愚濫怒苦露酢", 1
+			}
+			delyaku tmpYakuInfo, "清一色"
+		}
+	}
+	/* 喜鵲閙梅 */
+	if (getRule(RULE_XIQUE_NAOMEI) != "1") {
+		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+5, TILE_SUIT_BAMBOOS+1
+		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CIRCLES+1
+		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 1)
+		if ((yakuflagcount == 4)&&(haiMianziDat(0) == TILE_SUIT_BAMBOOS+5)) {
+			addyaku tmpYakuInfo, "喜鵲閙梅", 6
+		}
+	}
+	/* 花一色 */
+	if (getRule(RULE_HUAIISOH) != "0") {
+		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+9, TILE_RED_DRAGON, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9
+		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CIRCLES+5
+		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+9, TILE_RED_DRAGON
+		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7
+		yakuflagcount2 = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		if ((yakuflagcount == 5)&&(yakuflagcount2 < 5)) {
+			addyaku tmpYakuInfo, "花一色", 1
+		}
+	}
+	/* 赤眼青龍 */
+	if (getRule(RULE_SEKIGAN_SEIRYUU) != "1") {
+		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_WHITE_DRAGON, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8
+		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+2
+		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_WHITE_DRAGON
+		dim targetShunz,1: targetShunz=0
+		yakuflagcount2 = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		if ((yakuflagcount == 5)&&(yakuflagcount2 == 1)) {
+			addyakuman tmpYakuInfo, "赤眼青龍", 1
+		}
+	}
+	/* 満園花 */
+	tmpRuleCodeList = RULE_ALL_ONE, RULE_ALL_TWO, RULE_ALL_THREE, RULE_ALL_FOUR, RULE_ALL_FIVE, RULE_ALL_SIX, RULE_ALL_SEVEN, RULE_ALL_EIGHT, RULE_ALL_NINE
+	sdim tmpYakuNameList, 16, length(tmpRuleCodeList)
+	tmpYakuNameList = "全帯一", "全帯二", "全帯三", "全帯四", "全帯五", "全帯六", "全帯七", "全帯八", "全帯九"
+	repeat 9, 1
+		if (getRule(tmpRuleCodeList(cnt-1)) != "0") {
+			dim targetKez,1: targetKez=cnt, cnt+10, cnt+20
+			dim targetShunz,1
+			if (cnt <= 7) {targetShunz(0)=cnt+TILE_SUIT_CHARACTERS, cnt+TILE_SUIT_CIRCLES, cnt+TILE_SUIT_BAMBOOS}
+			if ((cnt >= 2)&&(cnt <= 8)) {targetShunz(3)=cnt+TILE_SUIT_CHARACTERS-1, cnt+TILE_SUIT_CIRCLES-1, cnt+TILE_SUIT_BAMBOOS-1}
+			if (cnt >= 3) {targetShunz(6)=cnt+TILE_SUIT_CHARACTERS-2, cnt+TILE_SUIT_CIRCLES-2, cnt+TILE_SUIT_BAMBOOS-2}
+			yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+			if (yakuflagcount == 5) {
+				if (cnt == 5) {
+					switch int(getRule(tmpRuleCodeList(cnt-1)))
+						case 1: addyaku tmpYakuInfo, tmpYakuNameList(cnt-1), 2: swbreak
+						case 2: addyaku tmpYakuInfo, tmpYakuNameList(cnt-1), 2+getMenzen(GameStat, targetPlayer): swbreak
+						case 3: addyaku tmpYakuInfo, tmpYakuNameList(cnt-1), 4: swbreak
+						case 4: addyaku tmpYakuInfo, tmpYakuNameList(cnt-1), 5+getMenzen(GameStat, targetPlayer): swbreak
+					swend
+				} else: if ((cnt == 1)||(cnt == 9)) {
+					switch int(getRule(tmpRuleCodeList(cnt-1)))
+						case 1: addyaku tmpYakuInfo, tmpYakuNameList(cnt-1), 4: swbreak
+						case 2: addyaku tmpYakuInfo, tmpYakuNameList(cnt-1), 5+getMenzen(GameStat, targetPlayer): swbreak
+					swend
+					delyaku tmpYakuInfo, "純全帯幺九"
+				} else {
+					switch int(getRule(tmpRuleCodeList(cnt-1)))
+						case 1: addyaku tmpYakuInfo, tmpYakuNameList(cnt-1), 4: swbreak
+					swend
+				}
+				if ((cnt >= 4)&&(cnt <= 6)) {
+					if ((getRule(RULE_KUITAN) == "2")&&(getMenzen(GameStat, targetPlayer) == 0)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, -1}
+					delyaku tmpYakuInfo, "断幺九"
+				}
+			}
+		}
+	loop
+return
+#global
+
+/* 十三不塔 */
+#module
+#include "const.hsp"
+#deffunc shisanbudayaku var GameStat, var tmpYakuInfo, int targetPlayer, array tmpScore, array ShantenArray
+	if (getRule(RULE_SHIISAN_PUUTAA) != "0") {
+		ShisanBuDa = chkshisanbuda(GameStat, targetPlayer)
+		if ((ShisanBuDa == 1)&&(ShantenArray(3) >= 0)&&(getFirstDrawFlag(GameStat, targetPlayer) == 1)) {
+			if (getRule(RULE_SHIISAN_PUUTAA) == "2") {
+				setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 5: setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST, "十三不搭\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  " \n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  ""
+				setYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 0: setYakuInfo tmpYakuInfo, YAKUINF_DORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_URADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 0
+				if (getRule(RULE_LIMITLESS) == "2") {
+					setYakuInfo tmpYakuInfo, YAKUINF_FU, 30: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 5
+					setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  "５飜\n"
+					tmpScore = 30: countdora GameStat, tmpYakuInfo, targetPlayer: aotenScoring tmpYakuInfo, tmpScore
+				} else {
+					setYakuInfo tmpYakuInfo, YAKUINF_FU, 30: tmpScore = 2000
+					setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 5
+					if (getRule(RULE_LIMITLESS) == "1") {
+						tmpScore = 30: setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  "５飜\n"
+						countdora GameStat, tmpYakuInfo, targetPlayer: aotenScoring tmpYakuInfo, tmpScore
+					}
+				}
+			} else {
+				if (getRule(RULE_LIMITLESS) == "2") {
+					setYakuInfo tmpYakuInfo, YAKUINF_FU, 30: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 13
+					setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST,  "十三不搭\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  "13飜\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  ""
+					setYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 0: setYakuInfo tmpYakuInfo, YAKUINF_DORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_URADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 0
+					tmpScore = 30: countdora GameStat, tmpYakuInfo, targetPlayer: aotenScoring tmpYakuInfo, tmpScore
+				} else {
+					setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  "十三不搭\n"
+					tmpScore = 8000: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1000
+				}
+			}
+		} else {
+			// 条件満たしてない場合、国士無双だったら何もしない。国士でないならチョンボ
+			Shanten = ShantenArray(0)
+			if (Shanten >= 0) {
+				tmpScore = 0: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0
+			}
+		}
+	} else {
+		// 和了ってない和了ってない
+		Shanten = ShantenArray(0)
+		if (Shanten >= 0) {
+			tmpScore = 0: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0
+		}
+	}
+return
+#global
+
+/* 十四不塔 */
+#module
+#include "const.hsp"
+#deffunc shisibudayaku var GameStat, var tmpYakuInfo, int targetPlayer, array tmpScore, array ShantenArray
+	if (getRule(RULE_SHIISAN_UUSHII) != "0") {
+		ShisiBuDa = chkshisibuda(GameStat, targetPlayer)
+		if ((ShisiBuDa == 1)&&(getFirstDrawFlag(GameStat, targetPlayer) == 1)) {
+			if (getRule(RULE_LIMITLESS) == "2") {
+				setYakuInfo tmpYakuInfo, YAKUINF_FU, 30: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 13
+				setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST,  "十三無靠\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  "13飜\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  ""
+				setYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 0: setYakuInfo tmpYakuInfo, YAKUINF_DORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_URADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 0
+				tmpScore = 30: countdora GameStat, tmpYakuInfo, targetPlayer: aotenScoring tmpYakuInfo, tmpScore
+			} else {
+				setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  "十三無靠\n"
+				tmpScore = 8000: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1000
+			}
+		} else {
+			// 和了ってない和了ってない
+			Shanten = ShantenArray(0)
+			if (Shanten >= 0) {
+				tmpScore = 0: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0
+			}
+		}
+	} else {
+		// 和了ってない和了ってない
+		Shanten = ShantenArray(0)
+		if (Shanten >= 0) {
+			tmpScore = 0: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0
+		}
+	}
+return
+#global

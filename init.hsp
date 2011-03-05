@@ -1,0 +1,288 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *      [初期化ルーチン]
+ *=============================
+ */
+
+/* コンパイル時のオプション */
+	#ifdef SANMA4
+	#packopt name "mihaysnm"
+	#define global SANMAX
+	#undef SANMA
+	#else
+		#ifdef SANMA
+		#packopt name "mihasanm"
+		#define global SANMAX
+		#else
+		#packopt name "mihajong"
+		#endif
+	#endif
+	#packopt hide 1
+	#packopt type 0
+	#cmpopt ppout 1
+	#cmpopt optcode 1
+	#cmpopt optinfo 1
+	#cmpopt varname 1
+	#runtime "hsp3mt"
+
+	#define WITH_MT19937AR
+
+/* 拡張機能の登録 */
+	#include "p2b.as"
+	#include "hmm.as"
+	#include "hspsock.as"
+	#include "llmod3.hsp"
+	#include "obj.hsp"
+	#include "l_tooltips.as"
+	#define tooltip(%1,%2) AddToolTips (%1)+1,%2
+	#define vanish clrobj:SetToolTips
+	#define global STATBOX 1
+	#ifdef WITH_MT19937AR
+		#undef rnd
+		#undef randomize
+		#module redef
+		#defcfunc rnd int p1
+		#include "hspda.as"
+			z=0: rndf_geti z, p1
+			return z
+		#deffunc randomize
+			rndf_int -1
+			return
+		#global
+	#endif
+	#include "hspmath.as"
+	#include "hsplzmax.as"
+
+	#ifdef NOWAIT
+		#undef await
+		#define global await(%1) await@hsp 0
+	#endif
+
+/* エイリアスの登録 */
+#include "alias.hsp"
+
+/* タイトルバーに表示する文字列 */
+	title "MiHaJong Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
+
+/* コンフィグファイルのパスを設定する(Vista/7用) */
+	/* Vista以降、Program Files以下にファイルを作れないので自分で調整する */
+#ifdef SANMA4
+	configFile = confPath()+"mihaysnm.cfg"
+#else
+	#ifdef SANMA
+	configFile = confPath()+"mihasanm.cfg"
+	#else
+	configFile = confPath()+"mihajong.cfg"
+	#endif
+#endif
+
+/* ログ初期化 */
+	loginit
+	info "MiHaJong Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
+	info "ビルド日時は "+__date__+" "+__time__+" です。"
+
+/* 解像度をチェックする */
+	info "画面の解像度は "+ginfo_dispx+" x "+ginfo_dispy+" です。"
+	if ((ginfo_dispx < 1024)||(ginfo_dispy < 768)) {
+		dialog "画面解像度が足りません\nXGA(1024x768)以上で起動してください", 1, "画面が小さすぎます"
+		error "解像度要件を満たしていません。終了します。"
+		end 1
+	}
+
+/* 画面を初期化 */
+	screen SCR_CHAT, 160, 630, 14, ((ginfo_dispx-840)/2)+840-76, (ginfo_dispy-630)/2-20
+	info "チャット用のウィンドウを仮初期化しました。"
+	gsel 0, -1: await 0
+
+/* スプラッシュスクリーン */
+	buffer SCR_SPLASH_BUF: pngload "img\\splash.png"
+	bgscr SCR_SPLASH_WINDOW, 320, 240, , (ginfo_dispx-320)/2, (ginfo_dispy-240)/2
+	gsel SCR_SPLASH_WINDOW, 2
+#ifdef SANMA4
+	color 0, 64, 64
+#else
+#ifdef SANMA
+	color 0, 0, 64
+#else
+	color 0, 64, 0
+#endif
+#endif
+	boxf 0, 0, 319, 239
+	gmode 7: pos 0, 0: gcopy SCR_SPLASH_BUF, 0, 0, 320, 240
+	color 0, 0, 0: line 319, 0, 0, 0: line 319, 239: line 0, 239: line 0, 0
+	tmptxt = "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
+	borderedtxt2 tmptxt, 160-(strlen(tmptxt)*4), 130, 255, 255, 255, 0, 16, 192, 192, 192
+	tmptxt = "Copyright (c) 2011 MihailJP"
+	borderedtxt2 tmptxt, 160-(strlen(tmptxt)*4), 160, 255, 255, 255, 0, 16, 192, 192, 192
+	tmptxt = "All rights reserved"
+	borderedtxt2 tmptxt, 160-(strlen(tmptxt)*4), 180, 255, 255, 255, 0, 16, 192, 192, 192
+	gsel 0, 0: await 0
+
+/* 設定ファイル読み込み */
+	setconffile configFile
+	exist configFile // 設定ファイルがあるかどうか調べる
+	EnvConf =  "00000000"
+	if (strsize == -1) {
+		info "設定ファイルが見つかりません。デフォルトの設定を使用します。"
+		// デフォルトのコンフィグデータを作成
+	#ifdef SANMAX
+		//          0   0    1    1    2    2    3    3    4    4    5    5    6    6    7    7    8
+		//          1   5    0    5    0    5    0    5    0    5    0    5    0    5    0    5    0
+		RuleConf = "000000000000-000--000000000000000000000000000000000000000000000000-00000-0000000"
+		#ifdef SANMA
+		RuleConf2= "000000000000000000-0000--000000000-0000000-0-00-0-----0000-0-0000-000-0000000000"
+		#else
+		RuleConf2= "000000000000000000-0000--00000000000000000-0-00-0-----0000-0-0000-000-0000000000"
+		#endif
+		//          0   0    1    1    2    2    3    3    4    4    5    5    6    6    7    7    8
+		//          1   5    0    5    0    5    0    5    0    5    0    5    0    5    0    5    0
+		RuleConf3= "00000000000-000---0---000000-00-00000000-00---0-0000-00000000--------00000-00000"
+		RuleConf4= "00000000000-0000000000000000000000------"
+	#else
+		//          0   0    1    1    2    2    3    3    4    4    5    5    6    6    7    7    8
+		//          1   5    0    5    0    5    0    5    0    5    0    5    0    5    0    5    0
+		RuleConf = "00000000000000000000000000000000000000000000000000000000000000000000000000000000"
+		RuleConf2= "00000000000000000000000000000000000000000000000000000000000000000000000000000000"
+		RuleConf3= "00000000000000000000000000000000000000000000000000000000000000000000000000000000"
+		RuleConf4= "00000000000000000000000000000000000000--"
+	#endif
+		RawConfDat = RuleConf+"\n"+RuleConf2+"\n"+RuleConf3+"\n"+RuleConf4+"\n"
+	} else {
+		// 設定ファイル読み込み
+		notesel RawConfDat
+		noteload configFile
+		info "設定ファイルを読み込みました。"
+		noteget RuleConf, 0
+		noteget RuleConf2, 1
+		noteget RuleConf3, 2
+		noteget RuleConf4, 3
+		noteunsel
+	}
+	sdim RuleDat, 84, 4
+	RuleDat = RuleConf, RuleConf2, RuleConf3, RuleConf4
+	storeRule RuleDat
+
+/* 雀牌の名前データ */
+	hainametable = "", "一萬", "二萬", "三萬", "四萬", "五萬", "六萬", "七萬", "八萬", "九萬", "", "一筒", "二筒", "三筒", "四筒", "五筒", "六筒", "七筒", "八筒", "九筒", "", "一索", "二索", "三索", "四索", "五索", "六索", "七索", "八索", "九索", "", "東", "南", "西", "北", "白", "發", "中", "", ""
+
+/* 音源を初期化 */
+	dminit: if (stat) {info "DirectMusic を初期化しました。"} else {error "DirectMusic の初期化に失敗しました。"}
+	dsinit: if (stat) {info "DirectSound を初期化しました。"} else {error "DirectSound の初期化に失敗しました。"}
+
+/* 終了時に音源をクリンナップするための処理 */
+	onexit *cleanup
+#ifndef _debug
+	onerror goto *errordlg
+#endif
+
+/* 面子構成データベースの読み込み */
+/* 向聴数の計算に使用：構築には１ヶ月必要 */
+	shantenInit
+
+/* 擬似乱数を初期化 */
+	randomize
+	info "疑似乱数を初期化しました。"
+
+/* grotate命令で使う円周率の値 */
+	#define PI M_PI
+
+/* 牌やサイコロの画像を読み込む */
+	gmode 0
+	buffer SCR_TILE_PIC: picload "img\\tileset.gif": info "牌の画像を読み込みました。"
+	buffer SCR_TILE_BLOCK, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
+	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X, TILE_BLOCK_SCREEN_Y, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
+	buffer SCR_TILE_SHADE, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
+	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X+TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_Y, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
+	buffer SCR_DICE_PIC, TILE_DICE_SCREEN_WIDTH, TILE_DICE_SCREEN_HEIGHT
+	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X-TILE_DICE_SCREEN_WIDTH, TILE_BLOCK_SCREEN_Y+TILE_BLOCK_SCREEN_HEIGHT-TILE_DICE_SCREEN_HEIGHT, TILE_DICE_SCREEN_WIDTH, TILE_DICE_SCREEN_HEIGHT
+	buffer SCR_DICE_SHADE, TILE_DICE_SCREEN_WIDTH, TILE_DICE_SCREEN_HEIGHT
+	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X-TILE_DICE_SCREEN_WIDTH*2, TILE_BLOCK_SCREEN_Y+TILE_BLOCK_SCREEN_HEIGHT-TILE_DICE_SCREEN_HEIGHT, TILE_DICE_SCREEN_WIDTH, TILE_DICE_SCREEN_HEIGHT
+	info "牌の画像の処理が完了しました。"
+
+/* タイトルロゴや画像の読み込み */
+	buffer SCR_MAIN_LOGO: pngload "img\\logo.png": info "闘牌時の右上ロゴを読み込みました。"
+	buffer SCR_MAIN_BACKGROUND: pngload "img\\mainbg.png": info "闘牌時の背景画像を読み込みました。"
+	buffer SCR_TITLE_BACKGROUND: pngload "img\\background.png": info "タイトルロゴを読み込みました。"
+	buffer SCR_TITLE_LOGO: pngload "img\\title.png": info "タイトル画面の背景画像を読み込みました。"
+
+/* ＢＧＭを読み込み */
+/* (再生には DirectMusicを使用) */
+	dim bgmmode, 64 // BGMのモードを格納
+	bgmload "bgm1", 0
+	bgmload "bgm2", 1
+	bgmload "bgm3", 2
+	bgmload "bgm4", 3
+	bgmload "bgm5", 4
+	bgmload "bgm6", 5
+	bgmload "bgm7", 6
+	bgmload "bgm8", 7
+	bgmload "bgm9", 8
+	bgmload "bgm10", 9
+	bgmload "bgm11", 10
+	bgmload "bgm12", 11
+	bgmload "bgm13", 12
+	bgmload "bgm14", 13
+	bgmload "bgm15", 14
+	bgmload "bgm16", 15
+
+/* ＢＧＭを読み込み（続き） */
+	bgmload "richi1", MUS_RICHI1 // 他家リーチ
+	bgmload "richi2", MUS_RICHI2 // 自家リーチ
+	bgmload "richi3", MUS_RICHI3 // 追っかけリーチ
+	bgmload "opnrichi", MUS_OPENRICHI // オープン立直
+	bgmload "agari1", MUS_AGARI_1HAN // ノミ手和了
+	bgmload "agari2", MUS_AGARI_2HAN // ２飜和了
+	bgmload "agari3", MUS_AGARI_3HAN // ３飜和了
+	bgmload "agari4", MUS_AGARI_MANGAN // 満貫和了
+	bgmload "agari5", MUS_AGARI_HANEMAN // 跳満和了
+	bgmload "agari6", MUS_AGARI_BAIMAN // 倍満和了
+	bgmload "agari7", MUS_AGARI_SANBAIMAN // 三倍満和了
+	bgmload "agari8", MUS_AGARI_KAZOE_YAKUMAN // 数え役満和了
+	bgmload "agari9", MUS_AGARI_YAKUMAN // 役満和了
+	bgmload "pingju", MUS_RYUUKYOKU // 流局・錯和
+	bgmload "final", MUS_FINAL // オーラス曲
+	bgmload "shibari", MUS_SHIBARI // リャンシバ時の曲
+	bgmload "title", MUS_TITLE
+	bgmload "ending", MUS_ENDING
+	bgmload "ending2", MUS_ENDING2
+
+/* 効果音読み込み(DirectSound使用) */
+	soundload "sound\\dahai1.wav", SND_DAHAI1
+	soundload "sound\\dahai2.wav", SND_DAHAI2
+	soundload "sound\\tsumo.wav", SND_TSUMO
+	soundload "sound\\saikoro.wav", SND_SAIKORO
+	soundload "sound\\bell.wav", SND_BELL
+	soundload "sound\\countdn.wav", SND_COUNTDOWN
+	soundload "sound\\chonbo.wav", SND_CUOHU
+	soundload "sound\\yakulst1.wav", SND_YAKULST1
+	soundload "sound\\yakulst2.wav", SND_YAKULST2
+	soundload "sound\\mekuri.wav", SND_MEKURI
+	soundload "sound\\button.wav", SND_BUTTON
+	soundload "sound\\click.wav", SND_CLICK
+	soundload "sound\\page.wav", SND_PAGE
+	soundload "sound\\type.wav", SND_TYPE
+	soundload "sound\\pingju.wav", SND_PINGJU
+	soundload "sound\\flash.wav", SND_FLASH
+	soundload "sound\\signal.wav", SND_SIGNAL
+	soundload "sound\\clock.wav", SND_CLOCK
+
+/* 鳴き仕掛け関係の効果音を読み込む */
+	soundload "sound\\chi.wav", VOX_CHI
+	soundload "sound\\pon.wav", VOX_PON
+	soundload "sound\\kan.wav", VOX_KAN
+	soundload "sound\\richi.wav", VOX_RICHI
+	soundload "sound\\agari1.wav", VOX_TSUMO
+	soundload "sound\\agari2.wav", VOX_RON
+	soundload "sound\\kyuushu.wav", VOX_KYUUSHU
+	soundload "sound\\flower.wav", VOX_FLOWER
+	soundload "sound\\kyuushu.wav", VOX_SIKANG
+	soundload "sound\\kyuushu.wav", VOX_SIFENG
+	soundload "sound\\kyuushu.wav", VOX_SANJIAHU
+	soundload "sound\\kyuushu.wav", VOX_SIJIARICHI
+	soundload "sound\\agari2.wav", VOX_RON_FURIKOMI
+
+/* スプラッシュスクリーンをしまう */
+	gsel SCR_SPLASH_WINDOW, -1
+	screen 0, 840, 630, , (ginfo_dispx-840)/2, (ginfo_dispy-630)/2-20
+	info "ウィンドウを初期化しました。"
+	gsel 0, 1

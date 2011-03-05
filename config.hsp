@@ -1,0 +1,221 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *  [コンフィグ画面ルーチン]
+ *=============================
+ */
+
+/* ルール設定 */
+#module
+
+#deffunc storeRule array RuleTxt
+/*
+		storeRule p1
+		ルール設定文字列を代入する
+
+		p1 : 項目番号
+
+		モジュール内に保持されているルール設定の項目を置き換えます。
+*/
+	sdim RuleDat, 84, length(RuleTxt)
+	repeat length(RuleDat)
+		RuleConf(cnt) = RuleTxt(cnt)
+	loop
+	info "設定がロードされました。"
+	return
+
+#defcfunc getRule int RuleID
+/*
+		val = getRule(p1)
+		ルール設定を取得する
+
+		p1 : 項目番号
+
+		ルール設定の指定した番号の項目を取得します。
+		文字列型で返されます。
+*/
+	return strmid(RuleConf(RuleID/80), RuleID\80, 1)
+
+#defcfunc getRuleInt int RuleID
+/*
+		val = getRuleInt(p1)
+		ルール設定を取得する
+
+		p1 : 項目番号
+
+		ルール設定の指定した番号の項目を取得します。
+		整数型で返されます。
+*/
+	RuleDigit = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	ans = instr(RuleDigit, , strmid(RuleConf(RuleID/80), RuleID\80, 1))
+	if (ans < 0) {ans = 0}
+	return ans
+#global
+
+/* 設定画面 */
+*selcat
+	selcat_
+return
+
+#module config
+#include "const.hsp"
+
+#deffunc setconffile str argFileName
+	configFile = argFileName
+	info "設定ファイルは "+configFile+" です。"
+	return
+
+/* 設定のテキスト */
+#include "conftxt.hsp"
+
+#include "ruletxt.hsp"
+
+#deffunc selcat_
+	gosub *configtxt
+	configPage = 1
+	repeat
+		switch configPage
+			case 0: break: swbreak
+			case 8: configPage = 7 /* FALLTHRU */
+			default: gosub *selcatpage
+		swend
+	loop
+	RebootFlag = 0
+	tmpDigit = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	sdim tmpRuleTxt, 84, (length(Rule)-1)/80+1
+	repeat length(Rule)-1
+		tmpRuleTxt(cnt/80) += (strmid(tmpDigit, Rule(cnt+1), 1))
+	loop
+	storeRule tmpRuleTxt
+	RuleConf=tmpRuleTxt(0): RuleConf2=tmpRuleTxt(1): RuleConf3=tmpRuleTxt(2): RuleConf4=tmpRuleTxt(3)
+	RawConfDat = RuleConf+"\n"+RuleConf2+"\n"+RuleConf3+"\n"+RuleConf4+"\n"
+	notesel RawConfDat
+	notesave configFile
+	noteunsel
+
+*rulereset
+	dsplay@ SND_BUTTON
+	repeat length(Rule): rule(cnt) = 0: loop
+	gsel 0
+	return
+*rulewrite
+	gosub *titlemenu@
+	confselFinished = 1
+	configPage = 0
+	bgmcode = MUS_TITLE: gosub *bgmplay@
+	return
+*rulenext
+	dsplay@ SND_BUTTON
+	confselFinished = 1
+	configPage++
+	return
+*ruleback
+	dsplay@ SND_BUTTON
+	confselFinished = 1
+	if(configPage > 1) {configPage--}
+	return
+
+*selcatpage
+	dsplay@ SND_BUTTON
+	gsel 0
+	vanish@: font fontname, 16, 0
+	objsize 40, 20
+	repeat 40
+		pos 50+400*(cnt/20), (cnt\20)*25+75: button gosub ">>", *ruleselbtn
+		tooltip@ cnt, RuleDescription(cnt+configPage*40-39)
+	loop
+	objsize 70, 20
+	pos 650, 575: button gosub "Back", *ruleback: tooltip@ 40, "前のページに移動します"
+	pos 730, 575: button gosub "Next", *rulenext: tooltip@ 41, "次のページに移動します"
+	pos 650, 600: button gosub "Reset", *rulereset: tooltip@ 42, "出荷時設定に戻します"
+	pos 730, 600: button gosub "Finish", *rulewrite: tooltip@ 43, "設定を保存し、タイトルに戻ります"
+	confselFinished = 0
+	repeat
+		redraw 0
+#ifdef SANMA4
+		color 0, 64, 64
+#else
+#ifdef SANMA
+		color 0, 0, 64
+#else
+		color 0, 64, 0
+#endif
+#endif
+		boxf 0, 0, 839, 629
+		gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode 0
+		font fontname, 48, 0
+		borderedtxt2 "環 境 設 定", 152, 12, 255, 255, 255, 1, 48, 192, 192, 192
+		font fontname, 24, 0
+		borderedtxt2 "Configuration.", 550, 24, 255, 255, 255, 1, 24, 192, 192, 192
+		font fontname, 20, 0
+		repeat 40
+			BorderTextX = 100+400*(cnt/20): BorderTextY = 75+25*(cnt\20)
+			borderedtxt2 RuleName(cnt+configPage*40-39)+"："+RuleTxt(Rule(cnt+configPage*40-39), cnt+configPage*40-39), BorderTextX, BorderTextY, 255, 255, 255, 1, 20, 192, 192, 192
+			if (RuleTxt(Rule(cnt+configPage*40-39), cnt+configPage*40-39) == "Ｎ／Ａ") {gosub *config_strikeout}
+			switch (cnt+configPage*40-40)
+				case RULE_LIMITHAND_BONUS:
+					if (Rule(RULE_CHIP+1) == 0) {gosub *config_strikeout}
+					swbreak
+				case RULE_SIMULTANEOUS_MAHJONG:
+					if (Rule(RULE_MULTIPLE_MAHJONG+1) < 2) {gosub *config_strikeout}
+					swbreak
+#ifndef SANMAX
+				case RULE_TRIPLE_MAHJONG:
+					if ((Rule(RULE_MULTIPLE_MAHJONG+1) ! 0)&&(Rule(RULE_MULTIPLE_MAHJONG+1) ! 2)) {gosub *config_strikeout}
+					swbreak
+#endif
+				case RULE_ROUND_TO_MANGAN:
+					if (Rule(RULE_LIMITLESS+1) > 0) {gosub *config_strikeout}
+					swbreak
+#ifndef SANMAX
+				case RULE_TANRON:
+					if (Rule(RULE_HUALONG+1) == 0) {gosub *config_strikeout}
+					swbreak
+				case RULE_GINKEI_HOUSHUN:
+					if ((Rule(RULE_FLOWER_TILES+1) == 0)||(Rule(RULE_FLOWER_TILES) == 2)) {gosub *config_strikeout}
+					swbreak
+				case RULE_BAXIAN_JUSHOU:
+					if (Rule(RULE_FLOWER_TILES+1) != 3) {gosub *config_strikeout}
+					swbreak
+#endif
+				case RULE_ANKAN_CHANKAN:
+					if (Rule(RULE_ANKAN_CONCEAL+1) == 1) {gosub *config_strikeout}
+					swbreak
+#ifndef SANMAX
+				case RULE_OWN_FLOWER:
+					if (Rule(RULE_FLOWER_TILES+1) == 0) {gosub *config_strikeout}
+					swbreak
+				case RULE_FOUR_SEASONS:
+					if ((Rule(RULE_FLOWER_TILES+1) == 0)||(Rule(RULE_FLOWER_TILES+1) == 2)) {gosub *config_strikeout}
+					swbreak
+				case RULE_FOUR_FLOWERS:
+					if ((Rule(RULE_FLOWER_TILES+1) == 0)||(Rule(RULE_FLOWER_TILES+1) == 1)) {gosub *config_strikeout}
+					swbreak
+				case RULE_EIGHT_FLOWERS:
+					if (Rule(RULE_FLOWER_TILES+1) != 3) {gosub *config_strikeout}
+					swbreak
+#endif
+			swend
+			if (cnt == 19) {borderedtxt2 "通信対戦時のルール設定はホスト側の設定が適用されます", BorderTextX, 590, 255, 255, 255, 1, 20, 192, 192, 192}
+		loop
+		redraw 1: await 0
+		if (confselFinished) {break}
+	loop
+	await 0
+return
+
+*config_strikeout
+	borderedtxt2 RuleName(cnt+configPage*40-39)+"："+RuleTxt(Rule(cnt+configPage*40-39), cnt+configPage*40-39), BorderTextX, BorderTextY, 192, 192, 192, 1, 20, 128, 128, 128
+	borderedtxt2 "――――――――――――――――", BorderTextX, BorderTextY, 255, 255, 255, 1, 20, 192, 192, 192
+	return
+
+*ruleselbtn
+	tmpBtnCode=stat
+	repeat 1
+		tmpRuleNum = (configPage-1)*40+tmpBtnCode
+		dsplay@ SND_CLICK
+		Rule(tmpRuleNum)++
+		if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == ">>>") {continue 0}
+		if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == "") {Rule(tmpRuleNum) == 0}
+	loop
+	return
+#global

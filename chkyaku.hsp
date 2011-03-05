@@ -1,0 +1,441 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *      [役判定ルーチン]
+ *=============================
+ */
+
+#module yakuStruct BasePoints, CoreHan, BonusHan, \
+DoraQuantity, UraDoraQuantity, AkaDoraQuantity, AliceDora, FlowerQuantity, \
+AgariPoints, yakuNameList, yakuValList, yakumanNameList
+#include "const.hsp"
+#modinit
+	BasePoints = 20
+	CoreHan = 0
+	BonusHan = 0
+	DoraQuantity = 0
+	UraDoraQuantity = 0
+	AkaDoraQuantity = 0
+	AliceDora = 0
+	FlowerQuantity = 0
+	dim AgariPoints, 8
+	yakuNameList = ""
+	yakuValList = ""
+	yakumanNameList = ""
+	return
+#modfunc exportYakuPoint array exportArray
+	dim exportArray, 8
+	repeat 8: exportArray(cnt) = AgariPoints(cnt): loop
+	return
+#modfunc setYakuInfo int Index, int value
+	switch Index
+		case YAKUINF_FU: BasePoints = value: swbreak
+		case YAKUINF_HAN_BASE: CoreHan = value: swbreak
+		case YAKUINF_HAN_BONUS: BonusHan = value: swbreak
+		case YAKUINF_DORA: DoraQuantity = value: swbreak
+		case YAKUINF_URADORA: UraDoraQuantity = value: swbreak
+		case YAKUINF_AKADORA: AkaDoraQuantity = value: swbreak
+		case YAKUINF_ALICEDORA: AliceDora = value: swbreak
+		case YAKUINF_FLOWER: FlowerQuantity = value: swbreak
+		default: AgariPoints(Index-YAKUINF_POINTS) = value: swbreak
+	swend
+	return
+#modfunc setYakuInfoTxt int Index, str value
+	switch Index
+		case YAKUINF_YAKULIST: yakuNameList = value: swbreak
+		case YAKUINF_YAKUVALLIST: yakuValList = value: swbreak
+		case YAKUINF_YAKUMANLIST: yakumanNameList = value: swbreak
+	swend
+	return
+#modfunc addYakuInfo int Index, int value
+	switch Index
+		case YAKUINF_FU: BasePoints += value: swbreak
+		case YAKUINF_HAN_BASE: CoreHan += value: swbreak
+		case YAKUINF_HAN_BONUS: BonusHan += value: swbreak
+		case YAKUINF_DORA: DoraQuantity += value: swbreak
+		case YAKUINF_URADORA: UraDoraQuantity += value: swbreak
+		case YAKUINF_AKADORA: AkaDoraQuantity += value: swbreak
+		case YAKUINF_ALICEDORA: AliceDora += value: swbreak
+		case YAKUINF_FLOWER: FlowerQuantity += value: swbreak
+		default: AgariPoints(Index-YAKUINF_POINTS) += value: swbreak
+	swend
+	return
+#modfunc addYakuInfoTxt int Index, str value
+	switch Index
+		case YAKUINF_YAKULIST: yakuNameList += value: swbreak
+		case YAKUINF_YAKUVALLIST: yakuValList += value: swbreak
+		case YAKUINF_YAKUMANLIST: yakumanNameList += value: swbreak
+	swend
+	return
+#modcfunc getYakuInfo int Index
+	switch Index
+		case YAKUINF_FU: return BasePoints: swbreak
+		case YAKUINF_HAN_BASE: return CoreHan: swbreak
+		case YAKUINF_HAN_BONUS: return BonusHan: swbreak
+		case YAKUINF_DORA: return DoraQuantity: swbreak
+		case YAKUINF_URADORA: return UraDoraQuantity: swbreak
+		case YAKUINF_AKADORA: return AkaDoraQuantity: swbreak
+		case YAKUINF_ALICEDORA: return AliceDora: swbreak
+		case YAKUINF_FLOWER: return FlowerQuantity: swbreak
+		case YAKUINF_YAKULIST: return yakuNameList: swbreak
+		case YAKUINF_YAKUVALLIST: return yakuValList: swbreak
+		case YAKUINF_YAKUMANLIST: return yakumanNameList: swbreak
+		default: return AgariPoints(Index-YAKUINF_POINTS): swbreak
+	swend
+	return 0x7fffffff
+#global
+
+/* 役を判定する */
+#module
+#include "const.hsp"
+#deffunc countyaku var GameStat, var yakuInfo, int targetPlayer, int furikomiPlayer, int TsumoAgari
+	debug strf("役判定処理を開始 プレイヤー [%d]", targetPlayer)
+	if (vartype(yakuInfo) == vartype("struct")) {
+		if (varuse(yakuInfo)) {
+			delmod yakuInfo
+		}
+	}
+	newmod yakuInfo, yakuStruct
+	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, targetPlayer
+	dim haiMianziDat, 5
+	dim ShantenArray, 7
+	repeat 7: ShantenArray(cnt) = countshanten(GameStat, targetPlayer, cnt): loop
+	Shanten = ShantenArray(0)
+	repeat 160
+		dim tmpScore, 8
+		if ((cnt \ 8) == 7) {await 0}
+		newmod tmpYakuInfo, yakuStruct
+		/* 国士無双 */
+		if (ShantenArray(3) == -1) {
+			contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
+			shisanyaoyaku GameStat, tmpYakuInfo, targetPlayer, haiFuriten
+			countdora GameStat, tmpYakuInfo, targetPlayer
+		}
+		/* 七星無靠 */
+		if (getRule(RULE_STELLAR_UUSHII) != "0") {
+			if (ShantenArray(4) == -1) {
+				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
+				addyakuman "七星無靠", 1
+				countdora GameStat, tmpYakuInfo, targetPlayer
+			}
+		}
+		/* 南北戦争 */
+		if (getRule(RULE_CIVIL_WAR) != "0") {
+			if (ShantenArray(5) == -1) {
+				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
+				addyakuman "南北戦争", 1
+				countdora GameStat, tmpYakuInfo, targetPlayer
+			}
+		}
+		/* 惑星直列 */
+		if (getRule(RULE_SYZYGY) != "0") {
+			if (ShantenArray(6) == -1) {
+				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
+				if ((getHand(GameStat, HAND_TILECODE, 13, targetPlayer) \ 2) == 0) {
+					addyakuman "惑星直列", 2
+				} else {
+					addyakuman "惑星直列", 1
+				}
+				countdora GameStat, tmpYakuInfo, targetPlayer
+			}
+		}
+		/* 七対子 */
+		if ((ShantenArray(2) == -1)&&(ShantenArray(1) != -1)) {
+			contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
+			qiduiyaku GameStat, tmpYakuInfo, targetPlayer
+			countdora GameStat, tmpYakuInfo, targetPlayer
+		}
+		/* 面子手ここから */
+		AtamaCode = cnt
+		makementsu GameStat, tmpYakuInfo, targetPlayer, Atamacode, haiProcessedTiles, haiMianziDat
+		if (haiProcessedTiles == 5) {
+			trace strf("面子を検出 プレイヤー [%d] モード [%d] 面子データ [%d %d %d %d %d]", targetPlayer, AtamaCode\4, haiMianziDat(0), haiMianziDat(1), haiMianziDat(2), haiMianziDat(3), haiMianziDat(4))
+			contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
+			calcbasepoints GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, TsumoAgari, MachiType
+			suityaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, haiFuriten
+			yaojiuyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer
+			tripletyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, haiFuriten, TsumoAgari, MachiType
+			quadyaku GameStat, tmpYakuInfo, haiMianziDat
+			sequenceyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType
+			miscyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, TsumoAgari
+			setYakuInfo tmpYakuInfo, YAKUINF_FU, ((getYakuInfo(tmpYakuInfo, YAKUINF_FU)+8)/10)*10 // 点パネする
+			countdora GameStat, tmpYakuInfo, targetPlayer
+		}
+		tmpScore(0) = getYakuInfo(tmpYakuInfo, YAKUINF_FU)
+		if (getrule(RULE_SIMPLIFIED_SCORING) != "0") {
+			trace "簡略計算ルールのため30符として扱います。"
+			tmpScore(0) = 30: setYakuInfo tmpYakuInfo, YAKUINF_FU, 30 /* 簡略計算用 */
+		}
+		if (getRule(RULE_LIMITLESS) == "0") {
+			tmpTotalHan = getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)
+			if (tmpTotalHan < 6) {
+				switch (tmpTotalHan)
+					case 0: tmpScore(0) = getYakuInfo(tmpYakuInfo, YAKUINF_FU)*4: swbreak
+					case 1: tmpScore(0) = getYakuInfo(tmpYakuInfo, YAKUINF_FU)*8: swbreak
+					case 2: tmpScore(0) = getYakuInfo(tmpYakuInfo, YAKUINF_FU)*16: swbreak
+					case 3: tmpScore(0) = getYakuInfo(tmpYakuInfo, YAKUINF_FU)*32: swbreak
+					case 4: tmpScore(0) = getYakuInfo(tmpYakuInfo, YAKUINF_FU)*64: swbreak
+					case 5: tmpScore(0) = getYakuInfo(tmpYakuInfo, YAKUINF_FU)*128: swbreak
+				swend
+				if (tmpScore(0) > 2000) {tmpScore(0) = 2000}
+			} else: if (tmpTotalHan < 8) {
+				tmpScore(0) = 3000
+			} else: if (tmpTotalHan < 11) {
+				tmpScore(0) = 4000
+			} else: if (tmpTotalHan < 13) {
+				tmpScore(0) = 6000
+			} else {
+				tmpScore(0) = 8000
+				if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
+					tmpScore(0) = ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS))/1000)*8000
+				}
+			}
+		} else {
+			// 青天井ルール
+			aotenScoring tmpYakuInfo, tmpScore
+		}
+		/* 人和が役満以外だった場合の処理 */
+		if (tmpRenHuFlag == 1) {
+			// 今まで計算した役が人和の規定未満だった場合消去する
+			switch int(getRule(RULE_RENHOH))
+				case 2:
+					if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_URADORA)+getYakuInfo(tmpYakuInfo, YAKUINF_AKADORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) < 8) {
+						setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 8: setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST, "人和\n"
+						setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST, "\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST, ""
+						setYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 0
+						setYakuInfo tmpYakuInfo, YAKUINF_DORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_URADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 0
+						setYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 0
+					}
+				swbreak
+				case 3:
+					if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_URADORA)+getYakuInfo(tmpYakuInfo, YAKUINF_AKADORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) < 5) {
+						setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 5: setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST, "人和\n"
+						setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST, "\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST, ""
+						setYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 0
+						setYakuInfo tmpYakuInfo, YAKUINF_DORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_URADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 0
+						setYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 0
+					}
+				swbreak
+			swend
+		}
+		/* 十三不塔の判定 */
+		shisanbudayaku GameStat, tmpYakuInfo, targetPlayer, tmpScore, ShantenArray
+		/* 十四不塔の判定 */
+		shisibudayaku GameStat, tmpYakuInfo, targetPlayer, tmpScore, ShantenArray
+		
+		if ((getRule(RULE_ROUND_TO_MANGAN) == "1")&&(getRule(RULE_LIMITLESS) == "0")) {
+			// 切り上げ満貫
+			if (tmpScore(0) == 1920) {tmpScore(0) = 2000}
+		}
+		// 青天井対応の高点法の処理
+		bignum_duplicate tmpDiff, tmpScore, 0
+		exportYakuPoint YakuInfo, scoreArray
+		bignum_subtract tmpDiff, scoreArray, 0, 100000000
+		tmpComparison = bignum_flag(tmpDiff, 0)
+		if ((tmpComparison == 1)||((tmpComparison == 0)&&(getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE) > getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)))) {
+			setYakuInfo yakuInfo, YAKUINF_FU, getYakuInfo(tmpYakuInfo, YAKUINF_FU)
+			setYakuInfo yakuInfo, YAKUINF_HAN_BASE, getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)
+			setYakuInfo yakuInfo, YAKUINF_HAN_BONUS, getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)
+			setYakuInfo yakuInfo, YAKUINF_DORA, getYakuInfo(tmpYakuInfo, YAKUINF_DORA)
+			setYakuInfo yakuInfo, YAKUINF_URADORA, getYakuInfo(tmpYakuInfo, YAKUINF_URADORA)
+			setYakuInfo yakuInfo, YAKUINF_AKADORA, getYakuInfo(tmpYakuInfo, YAKUINF_AKADORA)
+			setYakuInfo yakuInfo, YAKUINF_ALICEDORA, getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)
+			setYakuInfo yakuInfo, YAKUINF_FLOWER, getYakuInfo(tmpYakuInfo, YAKUINF_FLOWER)
+			repeat 8
+				setYakuInfo yakuInfo, YAKUINF_POINTS+cnt, tmpScore(cnt)
+			loop
+			addquan tmpYakuInfo, "ドラ", getYakuInfo(tmpYakuInfo, YAKUINF_DORA)-getYakuInfo(tmpYakuInfo, YAKUINF_URADORA)-getYakuInfo(tmpYakuInfo, YAKUINF_AKADORA)-getYakuInfo(tmpYakuInfo, YAKUINF_FLOWER)
+#ifdef SANMAX
+			addquan tmpYakuInfo, "ガリ", getYakuInfo(tmpYakuInfo, YAKUINF_FLOWER)
+#else
+			addquan tmpYakuInfo, "花牌", getYakuInfo(tmpYakuInfo, YAKUINF_FLOWER)
+#endif
+			addquan tmpYakuInfo, "赤ドラ", getYakuInfo(tmpYakuInfo, YAKUINF_AKADORA)
+			addquan tmpYakuInfo, "裏ドラ", getYakuInfo(tmpYakuInfo, YAKUINF_URADORA)
+			addquan tmpYakuInfo, "アリス祝儀", getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)
+			setYakuInfoTxt yakuInfo, YAKUINF_YAKULIST, getYakuInfo(tmpYakuInfo, YAKUINF_YAKULIST)
+			setYakuInfoTxt yakuInfo, YAKUINF_YAKUVALLIST, getYakuInfo(tmpYakuInfo, YAKUINF_YAKUVALLIST)
+			setYakuInfoTxt yakuInfo, YAKUINF_YAKUMANLIST, getYakuInfo(tmpYakuInfo, YAKUINF_YAKUMANLIST)
+		}
+		delmod tmpYakuInfo
+		if (ShantenArray(1) != -1) {break /* 面子手の和了りじゃないなら判定は1回でいい */}
+	loop
+return
+#global
+
+/* 青天井ルールの点数計算処理 */
+#module
+#include "const.hsp"
+#deffunc aotenScoring var tmpYakuInfo, array tmpScore
+	if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
+		// 役満は固定点にするルール
+		tmpScore(0) = 2500000
+	} else {
+		tmpScore(0) = tmpScore(0)*4
+		repeat (getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA))
+			// 符号つき32ビット型ではダブル役満程度でも簡単にオーバーフローしてしまう
+			// 変数を8つ用意し64桁まで用意しておく
+			if (getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA) == 0) {break}
+			bignum_multiply tmpScore, 2, 0, 100000000
+		loop
+	}
+	return
+#global
+
+/* 役を成立させる */
+#module
+#include "const.hsp"
+#deffunc addyaku var tmpYakuInfo, str yakuName, int yakuVal
+/*
+		addyaku p1, p2, p3
+		役を成立させる
+
+		p1 : 役情報を格納した構造体
+		p2 : 追加する役の名前
+		p3 : 追加する飜
+
+		成立している役のリストに役を追加します。
+*/
+	tmpDigit = "０１２３４５６７８９"
+	addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, yakuVal
+	addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST, yakuName+"\n"
+	if (yakuVal < 10) {addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST, strmid(tmpDigit, yakuVal*2, 2)+"飜\n"}
+	else {addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST, ""+yakuVal+"飜\n"}
+	trace strf("役を追加 [%s] 、 [%d] 飜、累計 [%d]",yakuName, yakuVal, getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE))
+	return
+#global
+
+#module
+#include "const.hsp"
+#deffunc addquan var tmpYakuInfo, str yakuName, int yakuVal
+/*
+		addquan p1, p2, p3
+		ドラの数をリストに反映させる
+
+		p1 : 役情報を格納した構造体
+		p2 : 追加する役の名前
+		p3 : 追加する飜
+
+		成立している役のリストにドラの数を追加します。
+*/
+	if (yakuVal > 0) {
+		tmpDigit = "０１２３４５６７８９"
+		if (yakuVal < 10) {addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST, yakuName+" "+strmid(tmpDigit, yakuVal*2, 2)+"\n"}
+		else {addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST, yakuName+" "+yakuVal+"\n"}
+		addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST, "\n"
+		trace strf("リストに追加 [%s] 、 [%d] 飜",yakuName, yakuVal)
+	}
+	return
+#global
+
+/* 役満を成立させる */
+#module
+#include "const.hsp"
+#deffunc addyakuman var tmpYakuInfo, str yakuName, int yakuVal
+/*
+		addyakuman p1, p2, p3
+		役満を成立させる
+
+		p1 : 役情報を格納した構造体
+		p2 : 追加する役の名前
+		p3 : 追加する役満の倍率(1=シングル役満、2=ダブル役満…)
+
+		成立している役満のリストに役を追加します。
+*/
+	if (getRule(RULE_LIMITLESS) == "2") {
+		addyaku tmpYakuInfo, yakuName, yakuVal*13
+	} else {
+		addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, yakuVal*1000
+		addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST, yakuName+"\n"
+		trace strf("役を追加 [%s] 、 [%d] 倍役満、累計 [%d]",yakuName, yakuVal, getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE))
+	}
+	return
+#global
+
+/* 役の成立を解除 */
+#module
+#include "const.hsp"
+#deffunc delyaku var tmpYakuInfo, str tmpyakuDelete
+/*
+		delyaku p1, p2
+		役の成立を取り消す
+
+		p1 : 役情報を格納した構造体
+		p2 : 削除したい役の名前
+
+		成立している役のリストから指定した役を削除します。
+*/
+	tmpYakuName = getYakuInfo(tmpYakuInfo, YAKUINF_YAKULIST)
+	tmpYakuVal = getYakuInfo(tmpYakuInfo, YAKUINF_YAKUVALLIST)
+	targetLine = notesearch(tmpYakuName, tmpyakuDelete)
+	if (targetLine >= 0) {
+		notesel tmpYakuName: noteget tmpValXX, targetLine: noteunsel
+		tmpDeleteHan = 0
+		switch tmpValXX
+			case "９飜": tmpDeleteHan++ /* FALLTHRU */
+			case "８飜": tmpDeleteHan++ /* FALLTHRU */
+			case "７飜": tmpDeleteHan++ /* FALLTHRU */
+			case "６飜": tmpDeleteHan++ /* FALLTHRU */
+			case "５飜": tmpDeleteHan++ /* FALLTHRU */
+			case "４飜": tmpDeleteHan++ /* FALLTHRU */
+			case "３飜": tmpDeleteHan++ /* FALLTHRU */
+			case "２飜": tmpDeleteHan++ /* FALLTHRU */
+			case "１飜": tmpDeleteHan++: swbreak
+			default:
+			tmpDeleteHan = int(strmid(tmpValXX, 0, 2))
+		swend
+		notesel tmpYakuName: notedel targetLine: noteunsel
+		notesel tmpYakuVal: notedel targetLine: noteunsel
+		setYakuInfoTxt tmpyakuInfo, YAKUINF_YAKULIST, tmpYakuName
+		setYakuInfoTxt tmpyakuInfo, YAKUINF_YAKUVALLIST, tmpYakuVal
+		addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -tmpDeleteHan
+		trace strf("役を削除 [%s] 、 [%d] 飜、累計 [%d]",tmpyakuDelete, tmpDeleteHan, getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE))
+	}
+	return
+#global
+
+/* 役が成立しているかを判定 */
+#module
+#include "const.hsp"
+#defcfunc searchyaku var tmpYakuInfo, str tmpCheckingYaku
+/*
+		val=searchyaku(p1, p2)
+		役が成立しているかを判定する
+
+		p1 : 役情報を格納した構造体
+		p2 : 成立しているかを判定する役の名前
+
+		指定した役が既に成立しているかを判定します。
+		既に成立していれば1、そうでなければ0を返します。
+*/
+	tmpyakuCensored = 0
+	tmpYakuName = getYakuInfo(tmpYakuInfo, YAKUINF_YAKULIST)
+	tmpYakumanName = getYakuInfo(tmpYakuInfo, YAKUINF_YAKUMANLIST)
+	if (notesearch(tmpYakuName, tmpCheckingYaku) >= 0) {tmpyakuCensored = 1}
+	if (notesearch(tmpYakumanName, tmpCheckingYaku) >= 0) {tmpyakuCensored = 1}
+	return tmpyakuCensored
+#global
+
+/* 国士無双の判定 */
+#include "chk-13y.hsp"
+/* 七対子の判定 */
+#include "chk-7par.hsp"
+/* 手牌を面子に分解 */
+#include "chk-mntz.hsp"
+/* 符計算、平和 */
+#include "chk-pnkt.hsp"
+/* 状況役 */
+#include "chk-cond.hsp"
+/* 一色系などの役 */
+#include "chk-suit.hsp"
+/* タンヤオ、チャンタなどの役 */
+#include "chk-yao.hsp"
+/* 刻子系の役 */
+#include "chk-trpl.hsp"
+/* 槓子系の役 */
+#include "chk-quad.hsp"
+/* 順子系の役 */
+#include "chk-seq.hsp"
+/* その他の役 */
+#include "chk-misc.hsp"
+/* ドラ */
+#include "chk-dora.hsp"

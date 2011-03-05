@@ -1,0 +1,68 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *  [断幺・全帯判定ルーチン]
+ *=============================
+ */
+
+/* タンヤオ、チャンタなどの役 */
+#module
+#include "const.hsp"
+#deffunc yaojiuyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer
+	trace "断幺・全帯系の処理に入ります。"
+	tmpyaojiu = 0: ShuntsuCount = 0: JihaiCount = 0
+	repeat 5
+		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
+			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
+			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
+			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
+				tmpyaojiu++
+			swbreak
+			case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
+			case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
+				tmpyaojiu++: JihaiCount++
+			swbreak
+		swend
+		if ((haiMianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 7)&&(cnt > 0)) {
+			tmpyaojiu++
+		}
+		if ((haiMianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&(cnt > 0)) {ShuntsuCount++}
+	loop
+	if (tmpyaojiu == 0) {
+		if ((getMenzen(GameStat, targetPlayer) == 1)||(getRule(RULE_KUITAN) != "1")) {
+			tmpyakuCensored = 0 // 大車輪が成立してたら飛ばす
+			tmpyakuCensored += searchyaku(tmpYakuInfo, "大車輪")
+			tmpyakuCensored += searchyaku(tmpYakuInfo, "大竹林")
+			tmpyakuCensored += searchyaku(tmpYakuInfo, "大数隣")
+			if (tmpyakuCensored == 0) {
+				if ((getRule(RULE_KUITAN) == "2")&&(getMenzen(GameStat, targetPlayer) == 0)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1}
+				addyaku tmpYakuInfo, "断幺九", 1
+			}
+		}
+	}
+	if (tmpyaojiu == 5) {
+		if (ShuntsuCount == 0) {
+			if (JihaiCount == 0) {
+				addyakuman tmpYakuInfo, "清老頭", 1
+			} else:if (JihaiCount == 5) {
+				addyakuman tmpYakuInfo, "字一色", 1
+				// 字一色が成立したら混一色の成立を解除する(青天井ルール用)
+				// 九連に門清が複合するとか、そういう取り決めはあるけど、
+				// 字一色に混一色がついてくるのは完全にバグ。
+				delyaku tmpYakuInfo, "混一色"
+			} else:if ((getRule(RULE_FOUR_HONORS) != "0")&&(JihaiCount == 4)&&(haiMianziDat(0) < TILE_NUMERAL_MAX)) {
+				addyakuman tmpYakuInfo, "四字刻", 1
+			} else:if (getRule(RULE_HONROUTOU) != "0") {
+				addyaku tmpYakuInfo, "混老頭", 3
+			} else {
+				addyaku tmpYakuInfo, "混老頭", 2
+			}
+		} else {
+			if (JihaiCount == 0) {
+				addyaku tmpYakuInfo, "純全帯幺九", 2+getMenzen(GameStat, targetPlayer)
+			} else {
+				addyaku tmpYakuInfo, "混全帯幺九", 1+getMenzen(GameStat, targetPlayer)
+			}
+		}
+	}
+return
+#global

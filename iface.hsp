@@ -1,0 +1,183 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *   [インターフェイス周り]
+ *=============================
+ */
+
+/* チャットウィンドウ関聯 */
+#module
+#include "const.hsp"
+#deffunc chatinit
+	sdim hncnChatLog, 32768 // チャットのログ
+	if (ginfo_dispx >= 1280) {
+		ChatWindowWidth = 440
+	} else : if (ginfo_dispx >= 1152) {
+		ChatWindowWidth = 312
+	} else {
+		ChatWindowWidth = 160
+	}
+	screen SCR_CHAT, ChatWindowWidth, 630, 14, ((ginfo_dispx-840)/2)+840-76, (ginfo_dispy-630)/2-20
+	gsel 0, 1: gsel SCR_CHAT, 0
+	font fontname, 12, 0: objmode 2
+	title "Chat"
+	
+	pos 0, 0: mesbox hncnChatLog, ChatWindowWidth, 610, 0
+	sdim CurrentChatTxt, 256
+	pos 0, 610: input CurrentChatTxt, ChatWindowWidth-20, 20, 120
+	pos ChatWindowWidth-20, 610: objsize 20, 20: button gosub "OK", *chatpost_@
+	chatshowrule
+	info "チャットウィンドウを初期化しました。"
+	
+	gsel 0
+	return
+
+#deffunc chatwnd int ChatSwitch
+	if (ChatSwitch == 1) {
+		gsel SCR_CHAT: width , , ((ginfo_dispx-840)/2)+840-(ChatWindowWidth/2)+4, (ginfo_dispy-630)/2-20
+		gsel 0: width , , ((ginfo_dispx-840)/2)-(ChatWindowWidth/2)-4, (ginfo_dispy-630)/2-20
+		gsel SCR_CHAT, 1: gsel 0, 1
+	} else {
+		gsel SCR_CHAT, -1: gsel 0, 1: width , , ((ginfo_dispx-840)/2), (ginfo_dispy-630)/2-20
+	}
+	return
+
+#deffunc chatreload
+	gsel SCR_CHAT: objprm 0, hncnChatLog
+	sendmsg objinfo(0, 2), 0x00BA: tmplines = stat /* 行数の取得 */
+	sendmsg objinfo(0, 2), 0x00B1, strlen(hncnChatLog), strlen(hncnChatLog) /* カーソル位置修正 */
+	sendmsg objinfo(0, 2), 0x00B6, 0, tmplines /* スクロールさせる */
+	gsel 0
+return
+
+#deffunc chatappend str String
+	hncnChatLog += String: chatreload
+return
+
+#defcfunc getChatTxt
+	return CurrentChatTxt
+
+#deffunc clearChatTxt
+	CurrentChatTxt = "": gsel SCR_CHAT: objprm 0, CurrentChatTxt: gsel 0
+return
+
+#global
+
+/* 共通スイッチの表示 */
+#module
+#include "const.hsp"
+#deffunc ifaceinit
+	hncnStatus = ""
+	AutoAgariSwitch = 0 // オート和了のスイッチ
+	AutoPassSwitch = 0 // オートパスのスイッチ
+	TsumogiriSwitch = 0 // 自動ツモ切りのスイッチ
+	return
+
+#deffunc closingchat
+	ChatSwitch = 0
+	return
+
+#deffunc statmes str msgtxt
+	hncnStatus = msgtxt
+	objprm STATBOX, hncnStatus
+	return
+
+#defcfunc AutoAgariFlag
+	return AutoAgariSwitch
+
+#defcfunc AutoPassFlag
+	return AutoPassSwitch
+
+#defcfunc TsumogiriFlag
+	return TsumogiriSwitch
+
+#deffunc commonswitch var GameStat, int WatchModeFlag
+	font fontname, 12, 0
+	pos 620, 430: objsize 200, 20
+	input hncnStatus: objgray STATBOX, 0
+	if (WatchModeFlag != 1) {
+		if (getAgariHouki(GameStat, getPlayer(GameStat)) == 0) {
+			pos 620, 460: objsize 100, 20
+			if (AutoAgariSwitch == 1) {
+				button gosub "オート和了【入】", *swAutoAgari
+			} else {
+				button gosub "オート和了【切】", *swAutoAgari
+			}
+			SwIDAutoAGARI = stat: tooltip@ SwIDAutoAGARI-STATBOX, "オンにすると当たり牌が出たか自摸ったときに自動的に和了します"
+		}
+	}
+	pos 720, 460: objsize 100, 20
+	if (ChatSwitch == 1) {
+		button gosub "チャット【入】", *swChat
+	} else {
+		button gosub "チャット【切】", *swChat
+	}
+	SwIDChat = stat: tooltip@ SwIDChat-STATBOX, "チャットウィンドウを開きます"
+	if (WatchModeFlag != 1) {
+		if (getAgariHouki(GameStat, getPlayer(GameStat)) == 0) {
+			if (getRichiFlag(GameStat, RICHI_FLAG, getPlayer(GameStat)) == RIICHI_NO) {
+				pos 620, 480: objsize 100, 20
+				if (AutoPassSwitch == 1) {
+					button gosub "オートパス【入】", *swAutoPass
+				} else {
+					button gosub "オートパス【切】", *swAutoPass
+				}
+				SwIDAutoPass = stat: tooltip@ SwIDAutoPass-STATBOX, "オンにすると他家の捨て牌を無視します"
+				pos 720, 480: objsize 100, 20
+				if (TsumogiriSwitch == 1) {
+					button gosub "ツモ切り【入】", *swTsumogiri
+				} else {
+					button gosub "ツモ切り【切】", *swTsumogiri
+				}
+				SwIDTsumogiri = stat: tooltip@ SwIDTsumogiri-STATBOX, "オンにすると自動的にツモ切りをします"
+			} else {
+				AutoPassSwitch = 0: TsumogiriSwitch = 0
+			}
+		} else {AutoAgariSwitch = 0: AutoPassSwitch = 0: TsumogiriSwitch = 0}
+	}
+	return
+
+*swAutoAgari
+	dsplay@ SND_CLICK
+	if (AutoAgariSwitch == 0) {
+		objprm SwIDAutoAGARI, "オート和了【入】"
+		AutoAgariSwitch = 1
+	} else {
+		objprm SwIDAutoAGARI, "オート和了【切】"
+		AutoAgariSwitch = 0
+	}
+	return
+
+*swAutoPass
+	dsplay@ SND_CLICK
+	if (AutoPassSwitch == 0) {
+		objprm SwIDAutoPass, "オートパス【入】"
+		AutoPassSwitch = 1
+	} else {
+		objprm SwIDAutoPass, "オートパス【切】"
+		AutoPassSwitch = 0
+	}
+	return
+
+*swTsumogiri
+	dsplay@ SND_CLICK
+	if (TsumogiriSwitch == 0) {
+		objprm SwIDTsumogiri, "ツモ切り【入】"
+		TsumogiriSwitch = 1
+	} else {
+		objprm SwIDTsumogiri, "ツモ切り【切】"
+		TsumogiriSwitch = 0
+	}
+	return
+
+*swChat
+	dsplay@ SND_CLICK
+	if (ChatSwitch == 0) {
+		objprm SwIDChat, "チャット【入】"
+		ChatSwitch = 1
+	} else {
+		objprm SwIDChat, "チャット【切】"
+		ChatSwitch = 0
+	}
+	chatwnd ChatSwitch
+	return
+#global

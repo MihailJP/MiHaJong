@@ -1,0 +1,103 @@
+/*=============================
+ * HSP–ƒƒNƒ‰ƒCƒAƒ“ƒgMiHaJong
+ *     [–Êq‰ğÍƒ‹[ƒ`ƒ“]
+ *=============================
+ */
+
+/* ‡q‚Ìˆ— */
+#module
+#include "const.hsp"
+#deffunc makementsu_shuntsu \
+array haiCountForMentsu, \
+array haiMianziDat, \
+var haiProcessedTiles, \
+int count
+	if ((haiCountForMentsu(count) >= 1)&&(haiCountForMentsu(count+1) >= 1)&&(haiCountForMentsu(count+2) >= 1)) {
+		haiMianziDat(haiProcessedTiles) = count
+		haiProcessedTiles++
+		haiCountForMentsu(count) -= 1
+		haiCountForMentsu(count+1) -= 1
+		haiCountForMentsu(count+2) -= 1
+		return 1 /* ˆê”uŒû‚Ì“Ç‚İ”ò‚Î‚µ–h~‚Ìˆ× */
+	}
+	return 0
+#global
+
+#module
+#include "const.hsp"
+#deffunc makementsu_koutsu \
+array haiCountForMentsu, \
+array haiMianziDat, \
+var haiProcessedTiles, \
+int count
+	if (haiCountForMentsu(count) >= 3) {
+		haiMianziDat(haiProcessedTiles) = MELD_TRIPLET_CONCEALED*MELD_TYPE_STEP+count
+		haiProcessedTiles++
+		haiCountForMentsu(count) -= 3
+	}
+	return
+#global
+
+/* –Êq‚É•ª‰ğ‚·‚é */
+#module
+#include "const.hsp"
+#deffunc makementsu var GameStat, var tmpYakuInfo, int targetPlayer, int Atamacode, var haiProcessedTiles, array haiMianziDat
+	dim haiMianziDat, 5 // ”z—ñ‚ğ‰Šú‰»‚·‚é
+	countTilesInHand haiCountForMentsu, GameStat, targetPlayer
+	haiProcessedTiles = 0
+	// “ª‚Æ‚È‚è‚¤‚é”v‚È‚ç‘±s
+	if (haiCountForMentsu(AtamaCode/4) >= 2) {
+		// “ª
+		haiMianziDat(0) = (AtamaCode/4)
+		haiProcessedTiles++
+		haiCountForMentsu(AtamaCode/4) -= 2
+		// ‡q(‡q—Dæ³‡ƒ‚[ƒh‚Ì)
+		if ((AtamaCode \ 4) == 1) {
+			repeat TILE_NUMERAL_MAX-1, 1
+				makementsu_shuntsu haiCountForMentsu, haiMianziDat, haiProcessedTiles, cnt
+				if (stat) {continue cnt} /* ˆê”uŒû‚Ì“Ç‚İ”ò‚Î‚µ–h~‚Ìˆ× */
+			loop
+		}
+		// ‡q(‡q—Dæ‹t‡ƒ‚[ƒh‚Ì)
+		if ((AtamaCode \ 4) == 3) {
+			repeat TILE_NUMERAL_MAX-1, 1
+				makementsu_shuntsu haiCountForMentsu, haiMianziDat, haiProcessedTiles, TILE_NUMERAL_MAX-cnt
+				if (stat) {continue cnt} /* ˆê”uŒû‚Ì“Ç‚İ”ò‚Î‚µ–h~‚Ìˆ× */
+			loop
+		}
+		// ˆÃ(³‡ƒ‚[ƒh‚Ì)
+		if ((AtamaCode \ 4) <= 1) {
+			repeat TILE_NONFLOWER_MAX-1, 1
+				makementsu_koutsu haiCountForMentsu, haiMianziDat, haiProcessedTiles, cnt
+			loop
+		}
+		// ˆÃ(‹t‡ƒ‚[ƒh‚Ì)
+		if ((AtamaCode \ 4) >= 2) {
+			repeat TILE_NONFLOWER_MAX-1, 1
+				makementsu_koutsu haiCountForMentsu, haiMianziDat, haiProcessedTiles, TILE_NONFLOWER_MAX-cnt
+			loop
+		}
+		// ‡q(ˆÃ—Dæ³‡ƒ‚[ƒh‚Ì)
+		if ((AtamaCode \ 4) == 0) {
+			repeat TILE_NUMERAL_MAX-1, 1
+				makementsu_shuntsu haiCountForMentsu, haiMianziDat, haiProcessedTiles, cnt
+				if (stat) {continue cnt} /* ˆê”uŒû‚Ì“Ç‚İ”ò‚Î‚µ–h~‚Ìˆ× */
+			loop
+		}
+		// ‡q(ˆÃ—Dæ‹t‡ƒ‚[ƒh‚Ì)
+		if ((AtamaCode \ 4) == 2) {
+			repeat TILE_NUMERAL_MAX-1, 1
+				makementsu_shuntsu haiCountForMentsu, haiMianziDat, haiProcessedTiles, TILE_NUMERAL_MAX-cnt
+				if (stat) {continue cnt} /* ˆê”uŒû‚Ì“Ç‚İ”ò‚Î‚µ–h~‚Ìˆ× */
+			loop
+		}
+		// –Â‚¢‚½–ÊqAˆÃÈ
+		if (MeldPointer(GameStat, targetPlayer) > 0) {
+			repeat MeldPointer(GameStat, targetPlayer), 1
+				haiMianziDat(haiProcessedTiles) = getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)
+				haiProcessedTiles++
+			loop
+		}
+	}
+return
+#global

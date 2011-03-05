@@ -1,0 +1,569 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *   [移植したサブルーチン]
+ *=============================
+ */
+
+/* 以下、Perlのモジュール Astro::MoonPhase からの移植 */
+/* License: Public Domain */
+/* http://search.cpan.org/~brett/Astro-MoonPhase/MoonPhase.pm */
+
+#module
+
+#include "hspmath.as"
+#define PI M_PI
+
+#define ctype fixangle(%1) (%1 - 360.0 * (floor(%1 / 360.0)))
+#define ctype torad(%1) (%1 * (PI / 180.0))
+#define ctype todeg(%1) (%1 * (180.0 / PI))
+
+*kepler /* solve the equation of Kepler */
+	KEPLER_e = 0.0: KEPLER_delta = 0.0
+	KEPLER_EPSILON = 1e-6
+
+	KEPLER_m = torad(KEPLER_m)
+	KEPLER_e = KEPLER_m
+	do
+		KEPLER_delta = 0.0+KEPLER_e - KEPLER_ecc * sin(KEPLER_e) - KEPLER_m
+		KEPLER_e -= KEPLER_delta / (1.0 - KEPLER_ecc * cos(KEPLER_e))
+	until (abs(KEPLER_delta) <= KEPLER_EPSILON)
+	return
+
+#deffunc CalcMoonPhase array Answer, double MoonPhaseCalculation_pdate
+/*
+		CalcMoonPhase p1, p2
+		月相を計算する
+
+		p1 : 結果を受けとる配列
+		p2 : 時刻(ユリウス日で指定)
+
+		時刻 p2 における月の満ち欠けを計算し、配列 p1 に代入します。
+		p1(0) : the terminator phase angle as a percentage of a full circle (i.e., 0 to 1)
+		p1(1) : the illuminated fraction of the Moon's disc
+		p1(2) : the Moon's age in days and fraction
+		p1(3) : the distance of the Moon from the centre of the Earth
+		p1(4) : the angular diameter subtended by the Moon as seen by an observer at the centre of the Earth.
+		p1(5) : the distance from the Sun in km
+		p1(6) : the angular size of Sun in degrees
+*/
+
+	// Astronomical constants.
+	ddim Answer, 7
+	
+	#define MoonPhaseCalculation_Epoch					2444238.5		// 1980 January 0.0
+	
+	// Constants defining the Sun's apparent orbit.
+	
+	#define MoonPhaseCalculation_Elonge					278.833540		// ecliptic longitude of the Sun at epoch 1980.0
+	#define MoonPhaseCalculation_Elongp					282.596403		// ecliptic longitude of the Sun at perigee
+	#define MoonPhaseCalculation_Eccent					0.016718		// eccentricity of Earth's orbit
+	#define MoonPhaseCalculation_Sunsmax				1.495985e8		// semi-major axis of Earth's orbit, km
+	#define MoonPhaseCalculation_Sunangsiz				0.533128		// sun's angular size, degrees, at semi-major axis distance
+	
+	// Elements of the Moon's orbit, epoch 1980.0.
+	
+	#define MoonPhaseCalculation_Mmlong					64.975464		// moon's mean longitude at the epoch
+	#define MoonPhaseCalculation_Mmlongp				349.383063		// mean longitude of the perigee at the epoch
+	#define MoonPhaseCalculation_Mlnode					151.950429		// mean longitude of the node at the epoch
+	#define MoonPhaseCalculation_Minc					5.145396		// inclination of the Moon's orbit
+	#define MoonPhaseCalculation_Mecc					0.054900		// eccentricity of the Moon's orbit
+	#define MoonPhaseCalculation_Mangsiz				0.5181		// moon's angular size at distance a from Earth
+	#define MoonPhaseCalculation_Msmax					384401.0		// semi-major axis of Moon's orbit in km
+	#define MoonPhaseCalculation_Mparallax				0.9507		// parallax at distance a from Earth
+	#define MoonPhaseCalculation_Synmonth				29.53058868		// synodic month (new Moon to new Moon)
+	
+	MoonPhaseCalculation_Day = MoonPhaseCalculation_pdate - MoonPhaseCalculation_Epoch						// date within epoch
+	MoonPhaseCalculation_N = fixangle((360.0 / 365.2422) * MoonPhaseCalculation_Day)				// mean anomaly of the Sun
+	MoonPhaseCalculation_M = fixangle(MoonPhaseCalculation_N + MoonPhaseCalculation_Elonge - MoonPhaseCalculation_Elongp)				// convert from perigee
+									// co-ordinates to epoch 1980.0
+	KEPLER_m = MoonPhaseCalculation_M: KEPLER_ecc = MoonPhaseCalculation_Eccent: gosub *kepler
+	MoonPhaseCalculation_Ec = KEPLER_e					// solve equation of Kepler
+	MoonPhaseCalculation_Ec = sqrt((1.0 + MoonPhaseCalculation_Eccent) / (1.0 - MoonPhaseCalculation_Eccent)) * tan(MoonPhaseCalculation_Ec / 2.0)
+	MoonPhaseCalculation_Ec = 2.0 * todeg(atan(MoonPhaseCalculation_Ec))					// true anomaly
+	MoonPhaseCalculation_Lambdasun = fixangle(MoonPhaseCalculation_Ec + MoonPhaseCalculation_Elongp)				// Sun's geocentric ecliptic
+									// longitude
+	// Orbital distance factor.
+	MoonPhaseCalculation_F = ((1.0 + MoonPhaseCalculation_Eccent * cos(torad(MoonPhaseCalculation_Ec))) / (1.0 - MoonPhaseCalculation_Eccent * MoonPhaseCalculation_Eccent))
+	MoonPhaseCalculation_SunDist = MoonPhaseCalculation_Sunsmax / MoonPhaseCalculation_F					// distance to Sun in km
+	MoonPhaseCalculation_SunAng = MoonPhaseCalculation_F * MoonPhaseCalculation_Sunangsiz					// Sun's angular size in degrees
+
+	// Calculation of the Moon's position.
+
+	// Moon's mean longitude.
+	MoonPhaseCalculation_ml = fixangle(13.1763966 * MoonPhaseCalculation_Day + MoonPhaseCalculation_Mmlong)
+
+	// Moon's mean anomaly.
+	MoonPhaseCalculation_MM = fixangle(MoonPhaseCalculation_ml - 0.1114041 * MoonPhaseCalculation_Day - MoonPhaseCalculation_Mmlongp)
+
+	// Moon's ascending node mean longitude.
+	MoonPhaseCalculation_MN = fixangle(MoonPhaseCalculation_Mlnode - 0.0529539 * MoonPhaseCalculation_Day)
+
+	// Evection.
+	MoonPhaseCalculation_Ev = 1.2739 * sin(torad(2 * (MoonPhaseCalculation_ml - MoonPhaseCalculation_Lambdasun) - MoonPhaseCalculation_MM))
+
+	// Annual equation.
+	MoonPhaseCalculation_Ae = 0.1858 * sin(torad(MoonPhaseCalculation_M))
+
+	// Correction term.
+	MoonPhaseCalculation_A3 = 0.37 * sin(torad(MoonPhaseCalculation_M))
+
+	// Corrected anomaly.
+	MoonPhaseCalculation_MmP = MoonPhaseCalculation_MM + MoonPhaseCalculation_Ev - MoonPhaseCalculation_Ae - MoonPhaseCalculation_A3
+
+	// Correction for the equation of the centre.
+	MoonPhaseCalculation_mEc = 6.2886 * sin(torad(MoonPhaseCalculation_MmP))
+
+	// Another correction term.
+	MoonPhaseCalculation_A4 = 0.214 * sin(torad(2.0 * MoonPhaseCalculation_MmP))
+
+	// Corrected longitude.
+	MoonPhaseCalculation_lP = MoonPhaseCalculation_ml + MoonPhaseCalculation_Ev + MoonPhaseCalculation_mEc - MoonPhaseCalculation_Ae + MoonPhaseCalculation_A4
+
+	// Variation.
+	MoonPhaseCalculation_V = 0.6583 * sin(torad(2.0 * (MoonPhaseCalculation_lP - MoonPhaseCalculation_Lambdasun)))
+
+	// True longitude.
+	MoonPhaseCalculation_lPP = MoonPhaseCalculation_lP + MoonPhaseCalculation_V
+
+	// Corrected longitude of the node.
+	MoonPhaseCalculation_NP = MoonPhaseCalculation_MN - 0.16 * sin(torad(MoonPhaseCalculation_M))
+
+	// Y inclination coordinate.
+	MoonPhaseCalculation_y = sin(torad(MoonPhaseCalculation_lPP - MoonPhaseCalculation_NP)) * cos(torad(MoonPhaseCalculation_Minc))
+
+	// X inclination coordinate.
+	MoonPhaseCalculation_x = cos(torad(MoonPhaseCalculation_lPP - MoonPhaseCalculation_NP))
+
+	// Ecliptic longitude.
+	MoonPhaseCalculation_Lambdamoon = todeg(atan(MoonPhaseCalculation_y, MoonPhaseCalculation_x))
+	MoonPhaseCalculation_Lambdamoon += MoonPhaseCalculation_NP
+
+	// Ecliptic latitude.
+	MoonPhaseCalculation_BetaM = todeg(asin(sin(torad(MoonPhaseCalculation_lPP - MoonPhaseCalculation_NP)) * sin(torad(MoonPhaseCalculation_Minc))))
+
+	// Calculation of the phase of the Moon.
+
+	// Age of the Moon in degrees.
+	MoonPhaseCalculation_MoonAge = MoonPhaseCalculation_lPP - MoonPhaseCalculation_Lambdasun
+
+	// Phase of the Moon.
+	MoonPhaseCalculation_MoonPhase = (1.0 - cos(torad(MoonPhaseCalculation_MoonAge))) / 2.0
+
+	// Calculate distance of moon from the centre of the Earth.
+
+	MoonPhaseCalculation_MoonDist = (MoonPhaseCalculation_Msmax * (1.0 - MoonPhaseCalculation_Mecc * MoonPhaseCalculation_Mecc)) / (1.0 + MoonPhaseCalculation_Mecc * cos(torad(MoonPhaseCalculation_MmP + MoonPhaseCalculation_mEc)))
+
+	// Calculate Moon's angular diameter.
+
+	MoonPhaseCalculation_MoonDFrac = MoonPhaseCalculation_MoonDist / MoonPhaseCalculation_Msmax
+	MoonPhaseCalculation_MoonAng = MoonPhaseCalculation_Mangsiz / MoonPhaseCalculation_MoonDFrac
+
+	// Calculate Moon's parallax.
+
+	MoonPhaseCalculation_MoonPar = MoonPhaseCalculation_Mparallax / MoonPhaseCalculation_MoonDFrac
+
+	MoonPhaseCalculation_pphase = MoonPhaseCalculation_MoonPhase
+	MoonPhaseCalculation_mage = MoonPhaseCalculation_Synmonth * (fixangle(MoonPhaseCalculation_MoonAge) / 360.0)
+	MoonPhaseCalculation_dist = MoonPhaseCalculation_MoonDist
+	MoonPhaseCalculation_angdia = MoonPhaseCalculation_MoonAng
+	MoonPhaseCalculation_sudist = MoonPhaseCalculation_SunDist
+	MoonPhaseCalculation_suangdia = MoonPhaseCalculation_SunAng
+	MoonPhaseCalculation_mpfrac = fixangle(MoonPhaseCalculation_MoonAge) / 360.0
+
+	Answer = MoonPhaseCalculation_mpfrac, MoonPhaseCalculation_pphase, MoonPhaseCalculation_mage, MoonPhaseCalculation_dist, MoonPhaseCalculation_angdia, MoonPhaseCalculation_sudist, MoonPhaseCalculation_suangdia
+	return
+
+#global
+/* 移植ここまで */
+
+
+/* 以下、Perlのモジュール Astro::Sunrise からの移植 */
+/* ライセンスは以下の通り
+	Here is the copyright information provided by Paul Schlyer:
+	
+	Written as DAYLEN.C, 1989-08-16
+	
+	Modified to SUNRISET.C, 1992-12-01
+	
+	(c) Paul Schlyter, 1989, 1992
+	
+	Released to the public domain by Paul Schlyter, December 1992
+	
+	Permission is hereby granted, free of charge, to any person obtaining a copy of
+	this software and associated documentation files (the "Software"), to deal in
+	the Software without restriction, including without limitation the rights to
+	use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+	of the Software, and to permit persons to whom the Software is furnished to do
+	so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+	ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+/* http://search.cpan.org/~rkhill/Astro-Sunrise-0.91/Sunrise.pm */
+
+#module
+
+#include "hspmath.as"
+#define PI M_PI
+
+#define RADEG (180.0/pi)
+#define DEGRAD (pi/180.0)
+#define INV360 (1.0/360.0)
+#define upper_limb 1
+
+#define ctype sind(%1) sin((%1)*DEGRAD)
+#define ctype cosd(%1) cos((%1)*DEGRAD)
+#define ctype tand(%1) tan((%1)*DEGRAD)
+#define ctype atand(%1) (RADEG*atan(%1))
+#define ctype asind(%1) (RADEG*asin(%1))
+#define ctype acosd(%1) (RADEG*acos(%1))
+#define ctype atan2d(%1,%2) (RADEG*atan((%1),(%2)))
+
+/*
+sub revolution {
+#
+#
+# FUNCTIONAL SEQUENCE for revolution
+#
+# _GIVEN
+# any angle
+#
+# _THEN
+#
+# reduces any angle to within the first revolution 
+# by subtracting or adding even multiples of 360.0
+# 
+#
+# _RETURN
+#
+# the value of the input is >= 0.0 and < 360.0
+#*/
+#define ctype revolution(%1) (%1-360.0*floor(%1*INV360))
+
+/*
+sub rev180 {
+#
+#
+# FUNCTIONAL SEQUENCE for rev180
+#
+# _GIVEN
+# 
+# any angle
+#
+# _THEN
+#
+# Reduce input to within +180..+180 degrees
+# 
+#
+# _RETURN
+#
+# angle that was reduced
+#*/
+#define ctype rev180(%1) ((%1)-360.0*floor((%1)*INV360+0.5))
+
+//#########################################################################################################
+//*GMST0
+/*#
+#
+# FUNCTIONAL SEQUENCE for GMST0 
+#
+# _GIVEN
+# Day number
+#
+# _THEN
+#
+# computes GMST0, the Greenwich Mean Sidereal Time  
+# at 0h UT (i.e. the sidereal time at the Greenwhich meridian at  
+# 0h UT).  GMST is then the sidereal time at Greenwich at any     
+# time of the day..
+# 
+#
+# _RETURN
+#
+# Sidtime
+#*/
+#define ctype GMST0(%1) revolution((180.0+356.0470+282.9404)+(0.9856002585+4.70935e-5)*%1)
+
+/*
+sub days_since_2000_Jan_0 {
+
+#
+#
+# FUNCTIONAL SEQUENCE for days_since_2000_Jan_0 
+#
+# _GIVEN
+# year, month, day
+#
+# _THEN
+#
+# process the year month and day (counted in days)
+# Day 0.0 is at Jan 1 2000 0.0 UT
+# Note that ALL divisions here should be INTEGER divisions
+#
+# _RETURN
+#
+# day number
+#*/
+
+#define ctype days_since_2000_Jan_0(%1,%2,%3) (367*(%1)-int((7*((%1)+(((%2)+9)/12)))/4)+int((275*(%2))/9)+(%3)-730530)
+
+*sunpos
+/*
+#
+#
+# FUNCTIONAL SEQUENCE for sunpos
+#
+# _GIVEN
+#  day number
+#
+# _THEN
+#
+# Computes the Sun's ecliptic longitude and distance
+# at an instant given in d, number of days since
+# 2000 Jan 0.0. 
+# 
+#
+# _RETURN
+#
+# ecliptic longitude and distance
+# ie. $True_solar_longitude, $Solar_distance
+#*/
+
+    //                       Mean anomaly of the Sun 
+    //                       Mean longitude of perihelion 
+    //                         Note: Sun's mean longitude = M + w 
+    //                       Eccentricity of Earth's orbit 
+    //                       Eccentric anomaly 
+    //                       x, y coordinates in orbit 
+    //                       True anomaly 
+
+    // Compute mean elements 
+    sunpos_Mean_anomaly_of_sun = revolution( 356.0470 + 0.9856002585 * sunpos_d )
+    sunpos_Mean_longitude_of_perihelion = 282.9404 + 4.70935e-5 * sunpos_d
+    sunpos_Eccentricity_of_Earth_orbit  = 0.016709 - 1.151e-9 * sunpos_d
+
+    // Compute true longitude and radius vector 
+    sunpos_Eccentric_anomaly = sunpos_Mean_anomaly_of_sun + sunpos_Eccentricity_of_Earth_orbit * RADEG * sind(sunpos_Mean_anomaly_of_sun) * ( 1.0 + sunpos_Eccentricity_of_Earth_orbit * cosd(sunpos_Mean_anomaly_of_sun) )
+
+    sunpos_x = cosd(sunpos_Eccentric_anomaly) - sunpos_Eccentricity_of_Earth_orbit
+
+    sunpos_y = sqrt( 1.0 - sunpos_Eccentricity_of_Earth_orbit * sunpos_Eccentricity_of_Earth_orbit ) * sind(sunpos_Eccentric_anomaly)
+
+    sunpos_Solar_distance = sqrt( sunpos_x * sunpos_x + sunpos_y * sunpos_y )    // Solar distance
+    sunpos_True_anomaly = 0.0+atan2d( sunpos_y, sunpos_x )               // True anomaly
+
+    sunpos_True_solar_longitude = sunpos_True_anomaly + sunpos_Mean_longitude_of_perihelion    // True solar longitude
+
+    if ( sunpos_True_solar_longitude >= 360.0 ) {
+        sunpos_True_solar_longitude -= 360.0    // Make it 0..360 degrees
+    }
+
+    return ;( $Solar_distance, $True_solar_longitude )
+
+*sun_RA_dec
+/*
+#
+#
+# FUNCTIONAL SEQUENCE for sun_RA_dec 
+#
+# _GIVEN
+# day number, $r and $lon (from sunpos) 
+#
+# _THEN
+#
+# compute RA and dec
+# 
+#
+# _RETURN
+#
+# Sun's Right Ascension (RA) and Declination (dec)
+# 
+#*/
+    // Compute Sun's ecliptical coordinates 
+    sunpos_d = sun_RA_dec_d: gosub *sunpos
+    sun_RA_dec_r = sunpos_Solar_distance
+    sun_RA_dec_lon = sunpos_True_solar_longitude
+
+    // Compute ecliptic rectangular coordinates (z=0) 
+    sun_RA_dec_x = sun_RA_dec_r * cosd(sun_RA_dec_lon)
+    sun_RA_dec_y = sun_RA_dec_r * sind(sun_RA_dec_lon)
+
+    // Compute obliquity of ecliptic (inclination of Earth's axis) 
+    sun_RA_dec_obl_ecl = 23.4393 - 3.563e-7 * sun_RA_dec_d
+
+    // Convert to equatorial rectangular coordinates - x is unchanged 
+    sun_RA_dec_z = sun_RA_dec_y * sind(sun_RA_dec_obl_ecl)
+    sun_RA_dec_y = sun_RA_dec_y * cosd(sun_RA_dec_obl_ecl)
+
+    // Convert to spherical coordinates 
+    sun_RA_dec_RA  = atan2d( sun_RA_dec_y, sun_RA_dec_x )
+    sun_RA_dec_dec = atan2d( sun_RA_dec_z, sqrt( sun_RA_dec_x * sun_RA_dec_x + sun_RA_dec_y * sun_RA_dec_y ) )
+
+    return ;( $RA, $dec )
+
+*sun_rise_set
+    ;my ($d, $lon, $lat,$altit) =@_
+    //my ( $year, $month, $day, $lon, $lat, $TZ, $isdst, $alt ) = @_
+    //my $altit      = $alt || -0.833
+    //my $d = days_since_2000_Jan_0( $year, $month, $day ) + 0.5 - $lon / 360.0
+
+    sun_rise_set_sidtime = revolution( GMST0(sun_rise_set_d) + 180.0 + sun_rise_set_lon )
+
+    sun_RA_dec_RA  = atan2d( sun_RA_dec_y, sun_RA_dec_x )
+    sun_RA_dec_dec = atan2d( sun_RA_dec_z, sqrt( sun_RA_dec_x * sun_RA_dec_x + sun_RA_dec_y * sun_RA_dec_y ) )
+
+    sun_RA_dec_d = sun_rise_set_d: gosub *sun_RA_dec
+    sun_rise_set_sRA = sun_RA_dec_RA
+    sun_rise_set_sdec = sun_RA_dec_dec
+    sun_rise_set_tsouth  = 12.0 - rev180( sun_rise_set_sidtime - sun_rise_set_sRA ) / 15.0
+    sun_rise_set_sradius = 0.2666 / sun_rise_set_sRA
+
+    if (upper_limb) {
+        sun_rise_set_altit -= sun_rise_set_sradius
+    }
+
+    // Compute the diurnal arc that the Sun traverses to reach 
+    // the specified altitude altit: 
+
+    sun_rise_set_cost = ( sind(sun_rise_set_altit) - sind(sun_rise_set_lat) * sind(sun_rise_set_sdec) ) / ( cosd(sun_rise_set_lat) * cosd(sun_rise_set_sdec) )
+
+    sun_rise_set_t = 0.0
+    if ( sun_rise_set_cost >= 1.0 ) {
+        ;carp "Sun never rises!!\n"
+        sun_rise_set_t = 0.0    // Sun always below altit
+    }
+    else: if ( sun_rise_set_cost <= -1.0 ) {
+        ;carp "Sun never sets!!\n"
+        sun_rise_set_t = 12.0    // Sun always above altit
+    }
+    else {
+        sun_rise_set_t = acosd(sun_rise_set_cost) / 15.0    // The diurnal arc, hours
+    }
+
+    // Store rise and set times - in hours UT 
+
+    sun_rise_set_hour_rise_ut = sun_rise_set_tsouth - sun_rise_set_t
+    sun_rise_set_hour_set_ut  = sun_rise_set_tsouth + sun_rise_set_t
+    return;($hour_rise_ut, $hour_set_ut)
+    //return convert_hour($hour_rise_ut,$hour_set_ut,$TZ, $isdst)
+
+*convert_hour
+/*
+#
+#
+# FUNCTIONAL SEQUENCE for convert_hour 
+#
+# _GIVEN
+# Hour_rise, Hour_set, Time zone offset, DST setting
+# hours are in UT
+#
+# _THEN
+#
+# convert to local time
+# 
+#
+# _RETURN
+#
+# hour:min rise and set 
+#*/
+
+  ;my ($hour_rise_ut, $hour_set_ut, $TZ, $isdst) = @_;
+
+  convert_hour_rise_local = convert_hour_hour_rise_ut + convert_hour_TZ
+  convert_hour_set_local = convert_hour_hour_set_ut + convert_hour_TZ
+  if (convert_hour_isdst) {
+    convert_hour_rise_local +=1
+    convert_hour_set_local +=1
+  }
+
+  // Rise and set should be between 0 and 24
+  if (convert_hour_rise_local<0) {
+    convert_hour_rise_local+=24
+  } else: if (convert_hour_rise_local>24) {
+    convert_hour_rise_local -=24
+  }
+  if (convert_hour_set_local<0) {
+    convert_hour_set_local+=24
+  } else: if (convert_hour_set_local>24) {
+    convert_hour_set_local -=24
+  }
+
+  convert_hour_hour_rise =  int (convert_hour_rise_local)
+  convert_hour_hour_set  =  int(convert_hour_set_local)
+
+  convert_hour_min_rise  = floor((convert_hour_rise_local-convert_hour_hour_rise)*60+0.5);
+  convert_hour_min_set   = floor((convert_hour_set_local-convert_hour_hour_set)*60+0.5);
+
+  if (convert_hour_min_rise>=60) {
+    convert_hour_min_rise -=60
+    convert_hour_hour_rise+=1
+    if (convert_hour_hour_rise>=24) {convert_hour_hour_rise-=24}
+  }
+  if (convert_hour_min_set>=60) {
+    convert_hour_min_set -=60
+    convert_hour_hour_set+=1
+    if (convert_hour_hour_set>=24) {convert_hour_hour_set-=24}
+  }
+
+  convert_hour_min_rise = strf( "%02d", convert_hour_min_rise )
+  convert_hour_min_set  = strf( "%02d", convert_hour_min_set )
+  convert_hour_hour_rise = strf( "%02d", convert_hour_hour_rise )
+  convert_hour_hour_set  = strf( "%02d", convert_hour_hour_set )
+  return; ( "$hour_rise:$min_rise", "$hour_set:$min_set" );
+
+#deffunc sunrise array Answer, int sunrise_year, int sunrise_month, int sunrise_day, double sunrise_TZ, int sunrise_isdst, double sunrise_lon, double sunrise_lat, double sunrise_altit
+/*
+		sunrise p1, p2
+		日出没時刻を計算する
+
+		p1 : 結果を受けとる配列
+		p2 : 観測年
+		p3 : 観測月
+		p4 : 観測日
+		p5 : タイムゾーン
+		p6 : 夏時間フラグ
+		p7 : 観測地の経度(東経がプラス、西経がマイナス)
+		p8 : 観測地の緯度(北緯がプラス、南緯がマイナス)
+		p9 : 太陽高度(日出没は -0.833 を指定)
+
+		指定した日付と緯度・経度をの日出没時刻計算し、配列 p1 に代入します。
+		p1(0) : 日の出(時)
+		p1(1) : 日の出(分)
+		p1(2) : 日の入り(時)
+		p1(3) : 日の入り(分)
+*/
+
+;my ( $year, $month, $day, $lon, $lat, $TZ, $isdst, $alt, $iter ) = @_;
+   ;my $altit      = $alt; || -0.833
+   ;my $iteration = defined($iter) ? $iter:0 
+
+   sdim Answer, 8, 4
+   sunrise_d = days_since_2000_Jan_0( sunrise_year, sunrise_month, sunrise_day ) + 0.5 - sunrise_lon / 360.0
+   sun_rise_set_d =sunrise_d
+   sun_rise_set_lon = sunrise_lon
+   sun_rise_set_lat = sunrise_lat
+   sun_rise_set_altit = sunrise_altit
+   sun_rise_set_TZ = 15.0
+   gosub *sun_rise_set
+   sunrise_h1 = sun_rise_set_hour_rise_ut
+   sunrise_h2 = sun_rise_set_hour_set_ut
+   convert_hour_hour_rise_ut = sunrise_h1
+   convert_hour_hour_set_ut = sunrise_h2
+   convert_hour_TZ = sunrise_TZ
+   convert_hour_isdst = sunrise_isdst
+   gosub *convert_hour
+   sunrise_hour_rise = convert_hour_hour_rise
+   sunrise_min_rise = convert_hour_min_rise
+   sunrise_hour_set = convert_hour_hour_set
+   sunrise_min_set = convert_hour_min_set
+   Answer = sunrise_hour_rise, sunrise_min_rise, sunrise_hour_set, sunrise_min_set
+   return ;convert_hour($h1,$h2,$TZ, $isdst)
+
+#global

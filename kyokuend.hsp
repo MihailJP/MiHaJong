@@ -1,0 +1,787 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *      [局終了ルーチン]
+ *=============================
+ */
+
+	// 局面終了コード
+	// ０…荒牌流局
+	// １…誰かの和了り
+	// ２…誰かのチョンボ
+	// ３…九種九牌流れ
+	// ４…四槓流れ
+	// ５…三家和流れ
+	// ６…四風流れ
+	// ７…四人立直流れ
+	// ８…流し満貫
+	// ９…回線切断
+	// 10…５回目の槓で流れた場合
+	info strf("局を終了 終了コード [%d]", hncnKyokuEndType)
+	statmes ""
+	vanish: commonswitch GameStat, WatchModeFlag
+	hncnOrigHonba = getHonba(GameStat)
+	hncnOrigTurn = getRound(GameStat)
+	if (hncnKyokuEndType == ENDKYOKU_RYUUKYOKU) {
+#ifdef SANMA
+		repeat 3
+#else
+		repeat 4
+#endif
+#ifdef SANMA4
+			if (playerWind(cnt, getRound(GameStat)) == PLAYER_NORTH) {
+				continue // 北家は無視
+			}
+#endif
+			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
+				continue // 和了り放棄時の処理→流し満貫を認めない
+			}
+			chkP = cnt: YaojiuSutehai = 0
+			repeat DiscardPointer(GameStat, chkP), 1
+				switch (getDiscard(GameStat, DISCARD_TILECODE, cnt, chkP))
+					case SUTEHAI_NORMAL+TILE_SUIT_CHARACTERS+1: case SUTEHAI_NORMAL+TILE_SUIT_CHARACTERS+9:
+					case SUTEHAI_NORMAL+TILE_SUIT_CIRCLES+1: case SUTEHAI_NORMAL+TILE_SUIT_CIRCLES+9:
+					case SUTEHAI_NORMAL+TILE_SUIT_BAMBOOS+1: case SUTEHAI_NORMAL+TILE_SUIT_BAMBOOS+9:
+					case SUTEHAI_NORMAL+TILE_EAST_WIND: case SUTEHAI_NORMAL+TILE_SOUTH_WIND:
+					case SUTEHAI_NORMAL+TILE_WEST_WIND: case SUTEHAI_NORMAL+TILE_NORTH_WIND:
+					case SUTEHAI_NORMAL+TILE_WHITE_DRAGON: case SUTEHAI_NORMAL+TILE_GREEN_DRAGON:
+					case SUTEHAI_NORMAL+TILE_RED_DRAGON:
+					case SUTEHAI_RIICHI+TILE_SUIT_CHARACTERS+1: case SUTEHAI_RIICHI+TILE_SUIT_CHARACTERS+9:
+					case SUTEHAI_RIICHI+TILE_SUIT_CIRCLES+1: case SUTEHAI_RIICHI+TILE_SUIT_CIRCLES+9:
+					case SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+1: case SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+9:
+					case SUTEHAI_RIICHI+TILE_EAST_WIND: case SUTEHAI_RIICHI+TILE_SOUTH_WIND:
+					case SUTEHAI_RIICHI+TILE_WEST_WIND: case SUTEHAI_RIICHI+TILE_NORTH_WIND:
+					case SUTEHAI_RIICHI+TILE_WHITE_DRAGON: case SUTEHAI_RIICHI+TILE_GREEN_DRAGON:
+					case SUTEHAI_RIICHI+TILE_RED_DRAGON:
+						YaojiuSutehai++
+					swbreak
+				swend
+			loop
+			if (getRule(RULE_NAGASHI_MANGAN) != "4") {
+				if (YaojiuSutehai == DiscardPointer(GameStat, chkP)) {hncnKyokuEndType = ENDKYOKU_NAGASHIMANGAN}
+			}
+		loop
+	}
+	/**************/
+	/* 荒牌流局時 */
+	/**************/
+	if (hncnKyokuEndType == ENDKYOKU_RYUUKYOKU) {
+		statmes "流局です"
+		ResultDesc = "荒牌流局"
+		chatappend "*** "+ResultDesc+"\n"
+		hncnMsg = "　流局　"
+		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		dsplay SND_PINGJU
+		gosub *redrscreen: await 1500
+		TenpaiCnt = 0
+		repeat 4
+#ifdef SANMA4
+			if (playerWind(cnt, getRound(GameStat)) == PLAYER_NORTH) {
+				continue // 北家は無視
+			}
+#endif
+			Shanten = countshanten(GameStat, cnt, 0)
+			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
+				Shanten = 1 // 強制不聴扱い
+			}
+			if (Shanten == 0) {
+				TenpaiCnt++
+				setHandStat GameStat, cnt, 1
+				setCall cnt, "　聴牌　"
+			} else:if (getRichiFlag(GameStat, RICHI_FLAG, cnt)) {
+				setHandStat GameStat, cnt, 1
+				setCall cnt, "　錯和　"
+			} else {
+				setHandStat GameStat, cnt, 2
+				setCall cnt, "　不聴　"
+			}
+		loop
+		switch TenpaiCnt
+#ifdef SANMAX
+			case 0: TenpaiCountTxt = "３人不聴": swbreak
+#else
+			case 0: TenpaiCountTxt = "４人不聴": swbreak
+#endif
+			case 1: TenpaiCountTxt = "１人聴牌": swbreak
+			case 2: TenpaiCountTxt = "２人聴牌": swbreak
+			case 3: TenpaiCountTxt = "３人聴牌": swbreak
+			case 4: TenpaiCountTxt = "４人聴牌": swbreak
+		swend
+		ResultDesc = "荒牌流局、"+TenpaiCountTxt
+		statmes "流局 "+TenpaiCountTxt
+		chatappend "*** "+TenpaiCountTxt+"です\n"
+		hncnMsg = TenpaiCountTxt
+//		title "流局"
+		gosub *redrscreen: await 5000
+		dim hncnPointDelta, 4, 8
+#ifdef SANMA
+		repeat 3
+#else
+		repeat 4
+#endif
+#ifdef SANMA4
+			if (playerWind(cnt, getRound(GameStat)) == PLAYER_NORTH) {
+				continue // 北家は無視
+			}
+#endif
+			Shanten = countshanten(GameStat, cnt, 0)
+			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
+				Shanten = 1 // 強制不聴扱い
+			}
+#ifdef SANMAX
+			if (Shanten == 0) {
+				if (TenpaiCnt == 1) {hncnPointDelta(cnt) += 30}
+				if (TenpaiCnt == 2) {hncnPointDelta(cnt) += 15}
+			} else {
+				if (TenpaiCnt == 1) {hncnPointDelta(cnt) -= 15}
+				if (TenpaiCnt == 2) {hncnPointDelta(cnt) -= 30}
+			}
+#else
+			if (Shanten == 0) {
+				if (TenpaiCnt == 1) {hncnPointDelta(cnt) += 30}
+				if (TenpaiCnt == 2) {hncnPointDelta(cnt) += 15}
+				if (TenpaiCnt == 3) {hncnPointDelta(cnt) += 10}
+			} else {
+				if (TenpaiCnt == 1) {hncnPointDelta(cnt) -= 10}
+				if (TenpaiCnt == 2) {hncnPointDelta(cnt) -= 15}
+				if (TenpaiCnt == 3) {hncnPointDelta(cnt) -= 30}
+			}
+#endif
+		loop
+#ifdef SANMAX
+		if ((TenpaiCnt > 0)&&(TenpaiCnt < 3)) {
+#else
+		if ((TenpaiCnt > 0)&&(TenpaiCnt < 4)) {
+#endif
+			hncnMsg = "不聴罰符"
+			gosub *putdelta
+			redraw 1: await 2500
+			pointcalc GameStat, hncnPointDelta
+		}
+		
+#ifdef SANMA
+		repeat 3
+#else
+		repeat 4
+#endif
+			dim hncnPointDelta, 4, 8
+			// 錯和立直（不聴立直）の者がいた場合
+			Shanten = countshanten(GameStat, cnt, 0)
+			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
+				Shanten = 1 // 強制不聴扱い
+			}
+			if ((Shanten > 0)&&(getRichiFlag(GameStat, RICHI_FLAG, cnt))) {
+#ifdef SANMA
+				if ((targetPlayer+24-(getRound(GameStat)-(getRound(GameStat)/4)))\3 == 0) {
+					repeat 3
+						if (cnt == targetPlayer) {
+							hncnPointDelta(cnt) -= 120
+						} else {
+							hncnPointDelta(cnt) += 60
+						}
+					loop
+				} else {
+					repeat 3
+						if (cnt == targetPlayer) {
+							hncnPointDelta(cnt) -= 80
+						} else {
+							hncnPointDelta(cnt) += 40
+						}
+					loop
+				}
+#else
+				if ((targetPlayer+32-getRound(GameStat))\4 == 0) {
+					repeat 4
+						if (cnt == targetPlayer) {
+							hncnPointDelta(cnt) -= 120
+						} else {
+							hncnPointDelta(cnt) += 40
+						}
+					loop
+				} else {
+					repeat 4
+						if (cnt == targetPlayer) {
+							hncnPointDelta(cnt) -= 80
+						} else {
+							if ((cnt+32-getRound(GameStat))\4 == 0) {
+								hncnPointDelta(cnt) += 40
+							} else {
+								hncnPointDelta(cnt) += 20
+							}
+						}
+					loop
+				}
+#endif
+				hncnMsg = "錯和罰符"
+				gosub *putdelta
+				redraw 1: await 2000
+				pointcalc GameStat, hncnPointDelta
+			}
+		loop
+		
+		hncnMsg = ""
+		repeat 4
+			setCall cnt, ""
+		loop
+		Shanten = countshanten(GameStat, (getRound(GameStat)\4), 0)
+		if ((getAgariHouki(GameStat, getRound(GameStat)\4) == 1)||(IsRemotePlayer(getRound(GameStat)\4) == -1)) {
+			Shanten = 1 // 強制不聴扱い
+		}
+		if (((Shanten <= 0)||(getRule(RULE_ROUND_CONTINUATION) == "2"))&&(getRule(RULE_ROUND_CONTINUATION) != "1")&&(getRule(RULE_ROUND_CONTINUATION) != "3")) {
+			setCall getRound(GameStat)\4, "　連荘　"
+		} else {
+			setCall getRound(GameStat)\4, " 親流れ "
+		}
+		dsplay SND_PAGE
+		gosub *redrscreen
+		redraw 1
+		Shanten = countshanten(GameStat, (getRound(GameStat)\4), 0)
+		if (((Shanten > 0)&&(getRule(RULE_ROUND_CONTINUATION) != "2"))||(getRule(RULE_ROUND_CONTINUATION) == "1")||(getRule(RULE_ROUND_CONTINUATION) == "3")) {incRound GameStat}
+		incHonba GameStat
+		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+	}
+	/************/
+	/* 和了処理 */
+	/************/
+	if ((hncnKyokuEndType == ENDKYOKU_AGARI)||(hncnKyokuEndType == ENDKYOKU_CHONBO)) {gosub *agariproc}
+	/**************/
+	/* 和了成立時 */
+	/**************/
+	if (hncnKyokuEndType == ENDKYOKU_AGARI) {
+		repeat 4
+			setCall cnt, ""
+		loop
+		hncnMsg = ""
+		if ((playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != "3")) {
+			setCall getRound(GameStat)\4, "　連荘　"
+		} else {
+			setCall getRound(GameStat)\4, " 親流れ "
+		}
+		dsplay SND_PAGE
+		gosub *redrscreen
+		redraw 1
+		
+		if ((playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != "3")) {
+			incHonba GameStat
+		} else {
+			setHonba GameStat, 0: incRound GameStat
+		}
+		setDeposit GameStat, 0
+		// 八連荘成立時、カウンタをリセット
+		if (getAgariChain(GameStat) == 8) {
+			setAgariChain GameStat, 0
+		}
+	}
+	/**************/
+	/* 錯和発生時 */
+	/**************/
+	if (hncnKyokuEndType == ENDKYOKU_CHONBO) {
+		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+	}
+	/**************/
+	/* 九種流局時 */
+	/**************/
+	if (hncnKyokuEndType == ENDKYOKU_KYUUSHUKYUUHAI) {
+		statmes "流局(九種九牌)"
+		switch playerWind(ActivePlayer, getRound(GameStat))
+			case PLAYER_EAST: ResultDesc = "東家の九種九牌": swbreak
+			case PLAYER_SOUTH: ResultDesc = "南家の九種九牌": swbreak
+			case PLAYER_WEST: ResultDesc = "西家の九種九牌": swbreak
+			case PLAYER_NORTH: ResultDesc = "北家の九種九牌": swbreak
+		swend
+		chatappend "*** "+ResultDesc+"\n"
+		await 1500
+		hncnMsg = "　流局　"
+		dsplay SND_PINGJU
+		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		gosub *redrscreen: redraw 1: await 3000
+		repeat 4
+			setCall cnt, ""
+		loop
+		hncnMsg = ""
+		if (getRule(RULE_NINE_TERMINALS) != "2") {
+			if ((getRule(RULE_NINE_TERMINALS) != "1")||(playerWind(ActivePlayer, getRound(GameStat)) == PLAYER_EAST)) {
+				setCall getRound(GameStat)\4, "　連荘　"
+			} else {
+				setCall getRound(GameStat)\4, " 親流れ "
+			}
+		} else {
+			setCall getRound(GameStat)\4, " 親流れ "
+		}
+		dsplay SND_PAGE
+		gosub *redrscreen
+		redraw 1
+		incHonba GameStat
+		if (getRule(RULE_NINE_TERMINALS) == "2") {incRound GameStat}
+		if (getRule(RULE_NINE_TERMINALS) == "1") {
+			if ((getRule(RULE_NINE_TERMINALS) == "1")&&(playerWind(ActivePlayer, getRound(GameStat)) == PLAYER_EAST)) {
+				incRound GameStat
+			}
+		}
+		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+	}
+	/**************/
+	/* 四槓流局時 */
+	/**************/
+	if (hncnKyokuEndType == ENDKYOKU_SUUKAIKAN) {
+		statmes "流局(四開槓)"
+		dsplay VOX_SIKANG
+		ResultDesc = "四開槓"
+		chatappend "*** "+ResultDesc+"\n"
+		hncnMsg = " 四開槓 "
+		gosub *redrscreen: redraw 1: await 3000
+		repeat 4
+			setCall cnt, ""
+		loop
+		dsplay SND_PINGJU
+		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		hncnMsg = "　流局　"
+		gosub *redrscreen: redraw 1: await 3000
+		repeat 4
+			setCall cnt, ""
+		loop
+		hncnMsg = ""
+		if (getRule(RULE_FOUR_KONG_RYUUKYOKU) != "1") {
+			setCall getRound(GameStat)\4, "　連荘　"
+		} else {
+			setCall getRound(GameStat)\4, " 親流れ "
+		}
+		dsplay SND_PAGE
+		gosub *redrscreen
+		redraw 1
+		incHonba GameStat
+		if (getRule(RULE_FOUR_KONG_RYUUKYOKU) == "1") {
+			incRound GameStat
+		}
+		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+	}
+	/**************/
+	/* 三家和の時 */
+	/**************/
+	if (hncnKyokuEndType == ENDKYOKU_TRIPLERON) {
+		statmes "流局(三家和)"
+		await 1300
+		dsplay VOX_SANJIAHU
+		ResultDesc = "三家和"
+		chatappend "*** "+ResultDesc+"\n"
+		hncnMsg = " 三家和 "
+		gosub *redrscreen: redraw 1: await 3000
+		repeat 4
+			setCall cnt, ""
+		loop
+		dsplay SND_PINGJU
+		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		hncnMsg = "　流局　"
+		gosub *redrscreen: redraw 1: await 3000
+		repeat 4
+			setCall cnt, ""
+		loop
+		hncnMsg = ""
+		if (getRule(RULE_TRIPLE_MAHJONG) == "0") {
+			if (playerWind(furikomiPlayer, getRound(GameStat)) != PLAYER_EAST) {
+				setCall getRound(GameStat)\4, "　連荘　"
+			} else {
+				setCall getRound(GameStat)\4, " 親流れ "
+			}
+		}
+		if (getRule(RULE_TRIPLE_MAHJONG) == "1") {
+			if (playerWind(furikomiPlayer, getRound(GameStat)) == PLAYER_NORTH) {
+				setCall getRound(GameStat)\4, "　連荘　"
+			} else {
+				setCall getRound(GameStat)\4, " 親流れ "
+			}
+		}
+		if (getRule(RULE_TRIPLE_MAHJONG) == "2") {
+			setCall getRound(GameStat)\4, "　連荘　"
+		}
+		if (getRule(RULE_TRIPLE_MAHJONG) == "3") {
+			setCall getRound(GameStat)\4, " 親流れ "
+		}
+		dsplay SND_PAGE
+		gosub *redrscreen
+		redraw 1
+		
+		if (getRule(RULE_TRIPLE_MAHJONG) == "0") {
+			if (playerWind(furikomiPlayer, getRound(GameStat)) != PLAYER_EAST) {
+				incHonba GameStat
+			} else {
+				incHonba GameStat: incRound GameStat
+			}
+		}
+		if (getRule(RULE_TRIPLE_MAHJONG) == "1") {
+			if (playerWind(furikomiPlayer, getRound(GameStat)) == PLAYER_NORTH) {
+				incHonba GameStat
+			} else {
+				incHonba GameStat: incRound GameStat
+			}
+		}
+		if (getRule(RULE_TRIPLE_MAHJONG) == "2") {
+			incHonba GameStat
+		}
+		if (getRule(RULE_TRIPLE_MAHJONG) == "3") {
+			incHonba GameStat: incRound GameStat
+		}
+		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+	}
+	/**************/
+	/* 四風流局時 */
+	/**************/
+	if (hncnKyokuEndType == ENDKYOKU_SUUFONRENDA) {
+		statmes "流局(四風連打)"
+		dsplay VOX_SIFENG
+		ResultDesc = "四風連打"
+		chatappend "*** "+ResultDesc+"\n"
+		hncnMsg = "四風連打"
+		gosub *redrscreen: redraw 1: await 3000
+		repeat 4
+			setCall cnt, ""
+		loop
+		dsplay SND_PINGJU
+		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		hncnMsg = "　流局　"
+		gosub *redrscreen: redraw 1: await 3000
+		repeat 4
+			setCall cnt, ""
+		loop
+		hncnMsg = ""
+		if (getRule(RULE_FOUR_WIND_RYUUKYOKU) != "1") {
+			setCall getRound(GameStat)\4, "　連荘　"
+		} else {
+			setCall getRound(GameStat)\4, " 親流れ "
+		}
+		dsplay SND_PAGE
+		gosub *redrscreen
+		redraw 1
+		incHonba GameStat
+		if (getRule(RULE_FOUR_WIND_RYUUKYOKU) == "1") {
+			incRound GameStat
+		}
+		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+	}
+	/**************/
+	/* 四人立直時 */
+	/**************/
+	if (hncnKyokuEndType == ENDKYOKU_SUUCHARIICHI) {
+		statmes "流局(四家立直)"
+		dsplay VOX_SIJIARICHI
+		ResultDesc = "四家立直"
+		chatappend "*** "+ResultDesc+"\n"
+		hncnMsg = "四家立直"
+		gosub *redrscreen: redraw 1: await 3000
+		repeat 4
+			setCall cnt, ""
+		loop
+		dsplay SND_PINGJU
+		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		hncnMsg = "　流局　"
+		gosub *redrscreen: redraw 1: await 1500
+		TenpaiCnt = 0
+		repeat 4
+			Shanten = countshanten(GameStat, cnt, 0)
+			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
+				Shanten = 1 // 和了り放棄時の処理→強制不聴扱い→不聴リーチとして罰符
+			}
+			setHandStat GameStat, cnt, 1
+			if (Shanten == 0) {
+				setCall cnt, "　聴牌　"
+			} else {
+				setCall cnt, "　錯和　"
+			}
+		loop
+		gosub *redrscreen: await 5000
+
+#ifdef SANMA
+		repeat 3
+#else
+		repeat 4
+#endif
+			// 錯和立直（不聴立直）の者がいた場合
+			Shanten = countshanten(GameStat, cnt, 0)
+			dim hncnPointDelta, 4, 8
+			if (Shanten > 0) {
+#ifdef SANMA
+				if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
+					repeat 3
+						if (cnt == targetPlayer) {
+							hncnPointDelta(cnt) -= 120
+						} else {
+							hncnPointDelta(cnt) += 60
+						}
+					loop
+				} else {
+					repeat 3
+						if (cnt == targetPlayer) {
+							hncnPointDelta(cnt) -= 80
+						} else {
+							hncnPointDelta(cnt) += 40
+						}
+					loop
+				}
+#else
+				if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
+					repeat 4
+						if (cnt == targetPlayer) {
+							hncnPointDelta(cnt) -= 120
+						} else {
+							hncnPointDelta(cnt) += 40
+						}
+					loop
+				} else {
+					repeat 4
+						if (cnt == targetPlayer) {
+							hncnPointDelta(cnt) -= 80
+						} else {
+							if (playerWind(cnt, getRound(GameStat)) == PLAYER_EAST) {
+								hncnPointDelta(cnt) += 40
+							} else {
+								hncnPointDelta(cnt) += 20
+							}
+						}
+					loop
+				}
+#endif
+				hncnMsg = "錯和罰符"
+				gosub *putdelta
+				redraw 1: await 2000
+				pointcalc GameStat, hncnPointDelta
+			}
+		loop
+
+		repeat 4
+			setCall cnt, ""
+		loop
+		hncnMsg = ""
+		if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != "1") {
+			setCall getRound(GameStat)\4, "　連荘　"
+		} else {
+			setCall getRound(GameStat)\4, " 親流れ "
+		}
+		dsplay SND_PAGE
+		gosub *redrscreen
+		redraw 1
+		incHonba GameStat
+		if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) == "1") {
+			incRound GameStat
+		}
+		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+	}
+	/**************/
+	/* 流し満貫時 */
+	/**************/
+	if (hncnKyokuEndType == ENDKYOKU_NAGASHIMANGAN) {
+		statmes "流局です"
+		dsplay SND_PINGJU
+		hncnMsg = "　流局　"
+		bgmcode = MUS_AGARI_MANGAN: gosub *bgmplay_norep
+		gosub *redrscreen: await 1500
+		statmes "流し満貫が成立しました"
+		dim hncnPointDelta, 4, 8
+		ResultDesc = ""
+#ifdef SANMA
+		repeat 3
+#else
+		repeat 4
+#endif
+			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
+				continue // 和了り放棄時の処理→流し満貫を認めない
+			}
+			chkP = cnt: YaojiuSutehai = 0
+			repeat DiscardPointer(GameStat, chkP), 1
+				switch (getDiscard(GameStat, DISCARD_TILECODE, cnt, chkP))
+					case SUTEHAI_NORMAL+TILE_SUIT_CHARACTERS+1: case SUTEHAI_NORMAL+TILE_SUIT_CHARACTERS+9:
+					case SUTEHAI_NORMAL+TILE_SUIT_CIRCLES+1: case SUTEHAI_NORMAL+TILE_SUIT_CIRCLES+9:
+					case SUTEHAI_NORMAL+TILE_SUIT_BAMBOOS+1: case SUTEHAI_NORMAL+TILE_SUIT_BAMBOOS+9:
+					case SUTEHAI_NORMAL+TILE_EAST_WIND: case SUTEHAI_NORMAL+TILE_SOUTH_WIND:
+					case SUTEHAI_NORMAL+TILE_WEST_WIND: case SUTEHAI_NORMAL+TILE_NORTH_WIND:
+					case SUTEHAI_NORMAL+TILE_WHITE_DRAGON: case SUTEHAI_NORMAL+TILE_GREEN_DRAGON:
+					case SUTEHAI_NORMAL+TILE_RED_DRAGON:
+					case SUTEHAI_RIICHI+TILE_SUIT_CHARACTERS+1: case SUTEHAI_RIICHI+TILE_SUIT_CHARACTERS+9:
+					case SUTEHAI_RIICHI+TILE_SUIT_CIRCLES+1: case SUTEHAI_RIICHI+TILE_SUIT_CIRCLES+9:
+					case SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+1: case SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+9:
+					case SUTEHAI_RIICHI+TILE_EAST_WIND: case SUTEHAI_RIICHI+TILE_SOUTH_WIND:
+					case SUTEHAI_RIICHI+TILE_WEST_WIND: case SUTEHAI_RIICHI+TILE_NORTH_WIND:
+					case SUTEHAI_RIICHI+TILE_WHITE_DRAGON: case SUTEHAI_RIICHI+TILE_GREEN_DRAGON:
+					case SUTEHAI_RIICHI+TILE_RED_DRAGON:
+						YaojiuSutehai++
+					swbreak
+				swend
+			loop
+			if (YaojiuSutehai == DiscardPointer(GameStat, chkP)) {
+				setCall chkP, "流し満貫"
+				switch playerWind(chkP, getRound(GameStat))
+					case PLAYER_EAST:
+						if (ResultDesc != "") {ResultDesc += "、"}
+						ResultDesc += "東家"
+					swbreak
+					case PLAYER_SOUTH:
+						if (ResultDesc != "") {ResultDesc += "、"}
+						ResultDesc += "南家"
+					swbreak
+					case PLAYER_WEST:
+						if (ResultDesc != "") {ResultDesc += "、"}
+						ResultDesc += "西家"
+					swbreak
+#ifndef SANMA
+					case PLAYER_NORTH:
+						if (ResultDesc != "") {ResultDesc += "、"}
+						ResultDesc += "北家"
+					swbreak
+#endif
+				swend
+#ifdef SANMA
+				if (playerWind(chkP, getRound(GameStat)) == PLAYER_EAST) {
+					// 親
+					repeat 3
+						if (cnt == chkP) {
+							switch int(getRule(RULE_NAGASHI_MANGAN))
+								case 0: hncnPointDelta(cnt) += 120: swbreak
+								case 1: hncnPointDelta(cnt) += 180: swbreak
+								case 2: hncnPointDelta(cnt) += 240: swbreak
+								case 3: hncnPointDelta(cnt) += 480: swbreak
+							swend
+						} else {
+							switch int(getRule(RULE_NAGASHI_MANGAN))
+								case 0: hncnPointDelta(cnt) -= 60: swbreak
+								case 1: hncnPointDelta(cnt) -= 90: swbreak
+								case 2: hncnPointDelta(cnt) -= 120: swbreak
+								case 3: hncnPointDelta(cnt) -= 240: swbreak
+							swend
+						}
+					loop
+				} else {
+					// 子
+					repeat 3
+						if (cnt == chkP) {
+							switch int(getRule(RULE_NAGASHI_MANGAN))
+								case 0: hncnPointDelta(cnt) += 80: swbreak
+								case 1: hncnPointDelta(cnt) += 120: swbreak
+								case 2: hncnPointDelta(cnt) += 160: swbreak
+								case 3: hncnPointDelta(cnt) += 320: swbreak
+							swend
+						} else {
+							switch int(getRule(RULE_NAGASHI_MANGAN))
+								case 0: hncnPointDelta(cnt) -= 40: swbreak
+								case 1: hncnPointDelta(cnt) -= 60: swbreak
+								case 2: hncnPointDelta(cnt) -= 80: swbreak
+								case 3: hncnPointDelta(cnt) -= 160: swbreak
+							swend
+						}
+					loop
+				}
+#else
+				if (playerWind(chkP, getRound(GameStat)) == PLAYER_EAST) {
+					// 親
+					repeat 4
+						if (cnt == chkP) {
+							switch int(getRule(RULE_NAGASHI_MANGAN))
+								case 0: hncnPointDelta(cnt) += 120: swbreak
+								case 1: hncnPointDelta(cnt) += 180: swbreak
+								case 2: hncnPointDelta(cnt) += 240: swbreak
+								case 3: hncnPointDelta(cnt) += 480: swbreak
+							swend
+						} else {
+							switch int(getRule(RULE_NAGASHI_MANGAN))
+								case 0: hncnPointDelta(cnt) -= 40: swbreak
+								case 1: hncnPointDelta(cnt) -= 60: swbreak
+								case 2: hncnPointDelta(cnt) -= 80: swbreak
+								case 3: hncnPointDelta(cnt) -= 160: swbreak
+							swend
+						}
+					loop
+				} else {
+					// 子
+					repeat 4
+						if (cnt == chkP) {
+							switch int(getRule(RULE_NAGASHI_MANGAN))
+								case 0: hncnPointDelta(cnt) += 80: swbreak
+								case 1: hncnPointDelta(cnt) += 120: swbreak
+								case 2: hncnPointDelta(cnt) += 160: swbreak
+								case 3: hncnPointDelta(cnt) += 320: swbreak
+							swend
+						} else {
+							if (playerWind(cnt, getRound(GameStat)) == PLAYER_EAST) {
+								switch int(getRule(RULE_NAGASHI_MANGAN))
+									case 0: hncnPointDelta(cnt) -= 40: swbreak
+									case 1: hncnPointDelta(cnt) -= 60: swbreak
+									case 2: hncnPointDelta(cnt) -= 80: swbreak
+									case 3: hncnPointDelta(cnt) -= 160: swbreak
+								swend
+							} else {
+								switch int(getRule(RULE_NAGASHI_MANGAN))
+									case 0: hncnPointDelta(cnt) -= 20: swbreak
+									case 1: hncnPointDelta(cnt) -= 30: swbreak
+									case 2: hncnPointDelta(cnt) -= 40: swbreak
+									case 3: hncnPointDelta(cnt) -= 80: swbreak
+								swend
+							}
+						}
+					loop
+				}
+#endif
+			}
+		loop
+		ResultDesc += "の流し満貫"
+		chatappend "*** "+ResultDesc+"\n"
+		dsplay SND_PAGE
+		gosub *redrscreen
+		redraw 1: await 1500
+		
+		hncnMsg = "流し満貫"
+		gosub *putdelta
+		redraw 1: await 1500
+		pointcalc GameStat, hncnPointDelta
+		
+		repeat 4
+			setCall cnt, ""
+		loop
+		hncnMsg = ""
+		setCall getRound(GameStat)\4, "　連荘　"
+		dsplay SND_PAGE
+		gosub *redrscreen
+		redraw 1
+		incHonba GameStat
+		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+	}
+	/**************/
+	/* 回線切断時 */
+	/**************/
+	if (hncnKyokuEndType == ENDKYOKU_DISCONNECT) {
+		statmes "回線が切断されました"
+		ResultDesc = "回線切断"
+		chatappend "*** 回線が切断されました\n"
+		// 特に何もしない
+	}
+	/**************/
+	/* 四槓流局時 */
+	/**************/
+	if (hncnKyokuEndType == ENDKYOKU_UUKAIKAN) {
+		statmes "流局(四開槓)"
+		dsplay VOX_SIKANG
+		ResultDesc = "四開槓(５回目の槓での流局)"
+		chatappend "*** "+ResultDesc+"\n"
+		hncnMsg = " 四開槓 "
+		gosub *redrscreen: redraw 1: await 3000
+		repeat 4
+			setCall cnt, ""
+		loop
+		dsplay SND_PINGJU
+		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		hncnMsg = "　流局　"
+		gosub *redrscreen: redraw 1: await 3000
+		repeat 4
+			setCall cnt, ""
+		loop
+		hncnMsg = ""
+		if (getRule(RULE_FIFTH_KONG) != "2") {
+			setCall getRound(GameStat)\4, "　連荘　"
+		} else {
+			setCall getRound(GameStat)\4, " 親流れ "
+		}
+		dsplay SND_PAGE
+		gosub *redrscreen
+		redraw 1
+		incHonba GameStat
+		if (getRule(RULE_FIFTH_KONG) == "2") {
+			incRound GameStat
+		}
+		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+	}

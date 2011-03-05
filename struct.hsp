@@ -1,0 +1,591 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *  [状態管理用ストラクチャ]
+ *=============================
+ */
+
+#module gameStruct \
+PlayerScore, playerChip, SumaroFlag, YakitoriFlag, \
+PlayerID, GameLength, GameRound, LoopRound, Honba, Deposit, AgariChain, LastAgariPlayer, \
+Hand, HandRed, Discard, DiscardRed, DiscardThru, Meld, MeldRed, \
+MenzenFlag, HandStat, NumberOfQuads, RichiFlag, OpenRichiFlag, OpenRichiWait, \
+FirstDrawFlag, DoujunFuriten, AgariHouki, FlowerFlag, NorthFlag, \
+KangFlag, KangCombo, TouKangFlag, ChanKanFlag, KangNum, haiRichiCounter, \
+haiWareme, haiDoukasen, haiDice1, haiDice2, haiDice1Direction, haiDice2Direction, \
+DaisangenPao, DaisixiPao, DaisangenPonPlayer, DaisixiPonPlayer, \
+haiYama, haiYamaAkaDora, haiDeadTiles, ExtraRinshan, hncnShibari, \
+haiDora, haiUraDora, haiPointer, haiDoraPointer, haiRinshanPointer, haiTian, \
+PreviousNaki, PreviousNakiSuji, ConnectionLost
+
+#include "const.hsp"
+
+/* メンバにアクセスするためのAPI */
+#modfunc setScore int Player, int Digit, int value
+	PlayerScore(Player, Digit) = value: return
+#modfunc addScore int Player, int Digit, int value
+	PlayerScore(Player, Digit) += value: return
+#modcfunc getScore int Player, int Digit
+	return PlayerScore(Player, Digit)
+#modfunc exportScore array exportArray
+	dim exportArray, 4, 8
+	repeat 32
+		exportArray(cnt\4, cnt/4) = PlayerScore(cnt\4, cnt/4)
+	loop
+	return
+#modfunc importScore array importArray
+	repeat 32
+		PlayerScore(cnt\4, cnt/4) = importArray(cnt\4, cnt/4)
+	loop
+	return
+
+#modfunc setChip int Player, int value
+	playerChip(Player) = value: return
+#modfunc addChip int Player, int value
+	playerChip(Player) += value: return
+#modcfunc getChip int Player
+	return playerChip(Player)
+
+#modfunc setSumaroFlag int Player, int value
+	SumaroFlag(Player) = value: return
+#modcfunc getSumaroFlag int Player
+	return SumaroFlag(Player)
+
+#modfunc setYakitori int Player, int value
+	YakitoriFlag(Player) = value: return
+#modcfunc getYakitori int Player
+	return YakitoriFlag(Player)
+
+#modfunc setPlayer int value
+	PlayerID = value: return
+#modcfunc getPlayer
+	return PlayerID
+
+#modcfunc getGameLength
+	return GameLength
+
+#modfunc setRound int value
+	GameRound = value: return
+#modfunc incRound
+	GameRound++: return
+#modcfunc getRound
+	return GameRound
+
+#modfunc setRoundLoop int value
+	LoopRound = value: return
+#modfunc incRoundLoop
+	LoopRound++: return
+#modcfunc getRoundLoop
+	return LoopRound
+
+#modfunc setHonba int value
+	Honba = value: return
+#modfunc incHonba
+	Honba++: return
+#modcfunc getHonba
+	return Honba
+
+#modfunc setDeposit int value
+	Deposit = value: return
+#modfunc addDeposit int value
+	Deposit += value: return
+#modcfunc getDeposit
+	return Deposit
+
+#modfunc setAgariChain int value
+	AgariChain = value: return
+#modfunc incAgariChain
+	AgariChain++: return
+#modcfunc getAgariChain
+	return AgariChain
+
+#modfunc setLastAgariPlayer int value
+	LastAgariPlayer = value: return
+#modcfunc getLastAgariPlayer
+	return LastAgariPlayer
+
+#modfunc setHand int Page, int Index, int Player, int value
+	switch Page
+		case HAND_TILECODE: Hand(Index, Player) = value: swbreak
+		case HAND_REDTILE: HandRed(Index, Player) = value: swbreak
+	swend
+	return
+#modcfunc getHand int Page, int Index, int Player
+	switch Page
+		case HAND_TILECODE: return Hand(Index, Player): swbreak
+		case HAND_REDTILE: return HandRed(Index, Player): swbreak
+	swend
+	return 0x7fffffff
+
+#modfunc setDiscard int Page, int Index, int Player, int value
+	switch Page
+		case DISCARD_TILECODE: Discard(Index, Player) = value: swbreak
+		case DISCARD_REDTILE: DiscardRed(Index, Player) = value: swbreak
+		case DISCARD_THROUGH: DiscardThru(Index, Player) = value: swbreak
+	swend
+	return
+#modcfunc getDiscard int Page, int Index, int Player
+	switch Page
+		case DISCARD_TILECODE: return Discard(Index, Player): swbreak
+		case DISCARD_REDTILE: return DiscardRed(Index, Player): swbreak
+		case DISCARD_THROUGH: return DiscardThru(Index, Player): swbreak
+	swend
+	return 0x7fffffff
+#modcfunc DiscardPointer int Player
+	return Discard(0, Player)
+#modfunc DiscardPointerIncrement int Player
+	Discard(0, Player)++
+	return
+#modfunc flagDiscard int Index, int Player, int value
+	Discard(Index, Player) += value
+	return
+
+#modfunc setMeld int Page, int Index, int Player, int value
+	switch Page
+		case MELD_TILECODE: Meld(Index, Player) = value: swbreak
+		case MELD_REDTILE: MeldRed(Index, Player) = value: swbreak
+	swend
+	return
+#modcfunc getMeld int Page, int Index, int Player
+	switch Page
+		case MELD_TILECODE: return Meld(Index, Player): swbreak
+		case MELD_REDTILE: return MeldRed(Index, Player): swbreak
+	swend
+	return 0x7fffffff
+#modcfunc MeldPointer int Player
+	return Meld(0, Player)
+#modfunc MeldPointerIncrement int Player
+	Meld(0, Player)++
+	return
+#modfunc MeldPointerDecrement int Player
+	Meld(0, Player)--
+	return
+#modfunc flagMeld int Page, int Index, int Player, int value
+	switch Page
+		case MELD_TILECODE: Meld(Index, Player) += value: swbreak
+		case MELD_REDTILE: MeldRed(Index, Player) += value: swbreak
+	swend
+	return
+
+#modfunc setMenzen int Player, int value
+	MenzenFlag(Player) = value
+	return
+#modcfunc getMenzen int Player
+	return MenzenFlag(Player)
+
+#modfunc setHandStat int Player, int value
+	HandStat(Player) = value
+	return
+#modcfunc getHandStat int Player
+	return HandStat(Player)
+
+#modfunc setNumberOfQuads int Player, int value
+	NumberOfQuads(Player) = value
+	return
+#modfunc incNumberOfQuads int Player
+	NumberOfQuads(Player)++
+	return
+#modcfunc getNumberOfQuads int Player
+	return NumberOfQuads(Player)
+
+#modfunc setRichiFlag int Page, int Player, int value
+	switch Page
+		case RICHI_FLAG: RichiFlag(Player) = value: swbreak
+		case RICHI_OPENFLAG: OpenRichiFlag(Player) = value: swbreak
+	swend
+	return
+#modcfunc getRichiFlag int Page, int Player
+	switch Page
+		case RICHI_FLAG: return RichiFlag(Player): swbreak
+		case RICHI_OPENFLAG: return OpenRichiFlag(Player): swbreak
+	swend
+	return 0x7fffffff
+
+#modfunc setOpenWait int Tile, int value
+	OpenRichiWait(Tile) = value
+	return
+#modcfunc getOpenWait int Tile
+	return OpenRichiWait(Tile)
+
+#modfunc setFirstDrawFlag int Player, int value
+	FirstDrawFlag(Player) = value
+	return
+#modcfunc getFirstDrawFlag int Player
+	return FirstDrawFlag(Player)
+
+#modfunc setDoujunFuriten int Player, int value
+	DoujunFuriten(Player) = value
+	return
+#modcfunc getDoujunFuriten int Player
+	return DoujunFuriten(Player)
+
+#modfunc setAgariHouki int Player, int value
+	AgariHouki(Player) = value
+	return
+#modcfunc getAgariHouki int Player
+	return AgariHouki(Player)
+
+#modfunc putFlowerFlag int Player, int value
+	FlowerFlag(Player) = value
+	return
+#modfunc setFlowerFlag int Player, int value
+	FlowerFlag(Player) |= value
+	return
+#modcfunc getFlowerFlag int Player
+	return FlowerFlag(Player)
+
+#modfunc setNorthFlag int Player, int value
+	NorthFlag(Player) = value
+	return
+#modfunc addNorthFlag int Player
+	NorthFlag(Player)++
+	return
+#modcfunc getNorthFlag int Player
+	return NorthFlag(Player)
+
+#modfunc setKangFlag int Page, int value
+	switch Page
+		case KANG_FLAG: KangFlag = value: swbreak
+		case KANG_CHAINFLAG: KangCombo = value: swbreak
+		case KANG_TOPFLAG: TouKangFlag = value: swbreak
+		case KANG_CHANKAN: ChanKanFlag = value: swbreak
+	swend
+	return
+#modfunc incKangFlag int Page
+	switch Page
+		case KANG_FLAG: KangFlag++: swbreak
+		case KANG_CHAINFLAG: KangCombo++: swbreak
+		case KANG_TOPFLAG: TouKangFlag++: swbreak
+		case KANG_CHANKAN: ChanKanFlag++: swbreak
+	swend
+	return
+#modcfunc getKangFlag int Page
+	switch Page
+		case KANG_FLAG: return KangFlag: swbreak
+		case KANG_CHAINFLAG: return KangCombo: swbreak
+		case KANG_TOPFLAG: return TouKangFlag: swbreak
+		case KANG_CHANKAN: return ChanKanFlag: swbreak
+	swend
+	return 0x7fffffff
+
+#modfunc setTotalKang int value
+	KangNum = value
+	return
+#modfunc incTotalKang
+	KangNum++
+	return
+#modcfunc getTotalKang
+	return KangNum
+
+#modfunc setRichiCounterFlag int value
+	haiRichiCounter = value
+	return
+#modcfunc getRichiCounterFlag
+	return haiRichiCounter
+
+#modcfunc getWareme
+	return haiWareme
+
+#modfunc setDoukasen int value
+	haiDoukasen = value
+	return
+#modcfunc getDoukasen
+	return haiDoukasen
+
+#modcfunc getShibari
+	return hncnShibari
+
+#modfunc setPao int Page, int Yaku, int value
+	switch Page+Yaku*2
+		case PAO_PLAYER_PAO+PAO_YAKU_DAISANGEN*2: DaisangenPao = value: swbreak
+		case PAO_PLAYER_AGARI+PAO_YAKU_DAISANGEN*2: DaisangenPonPlayer = value: swbreak
+		case PAO_PLAYER_PAO+PAO_YAKU_DAISIXI*2: DaisixiPao = value: swbreak
+		case PAO_PLAYER_AGARI+PAO_YAKU_DAISIXI*2: DaisixiPonPlayer = value: swbreak
+	swend
+	return
+#modcfunc getPao int Page, int Yaku
+	switch Page+Yaku*2
+		case PAO_PLAYER_PAO+PAO_YAKU_DAISANGEN*2: return DaisangenPao: swbreak
+		case PAO_PLAYER_AGARI+PAO_YAKU_DAISANGEN*2: return DaisangenPonPlayer: swbreak
+		case PAO_PLAYER_PAO+PAO_YAKU_DAISIXI*2: return DaisixiPao: swbreak
+		case PAO_PLAYER_AGARI+PAO_YAKU_DAISIXI*2: return DaisixiPonPlayer: swbreak
+	swend
+	return 0x7fffffff
+
+#modfunc setDice int ID, int Direction, int value
+	switch ID+Direction*2
+		case 0: haiDice1 = value: swbreak
+		case 1: haiDice2 = value: swbreak
+		case 2: haiDice1Direction = value: swbreak
+		case 3: haiDice2Direction = value: swbreak
+	swend
+	return
+#modcfunc getDice int ID, int Direction
+	switch ID+Direction*2
+		case 0: return haiDice1: swbreak
+		case 1: return haiDice2: swbreak
+		case 2: return haiDice1Direction: swbreak
+		case 3: return haiDice2Direction: swbreak
+	swend
+	return 0x7fffffff
+
+#modcfunc getDeadWallLength
+	return haiDeadTiles
+
+#modfunc setWall int Page, int Index, int value
+	switch Page
+		case WALL_TILECODE: haiYama(Index) = value: swbreak
+		case WALL_REDTILE: haiYamaAkaDora(Index) = value: swbreak
+	swend
+	return
+#modcfunc getWall int Page, int Index
+	switch Page
+		case WALL_TILECODE: return haiYama(Index): swbreak
+		case WALL_REDTILE: return haiYamaAkaDora(Index): swbreak
+	swend
+	return 0x7fffffff
+
+#modcfunc getRinshanExtension
+	return ExtraRinshan
+
+#modfunc setDrawPointer int value
+	haiPointer = value: return
+#modfunc incDrawPointer
+	haiPointer++: return
+#modcfunc getDrawPointer
+	return haiPointer
+
+#modfunc setDoraPointer int value
+	haiDoraPointer = value: return
+#modcfunc getDoraPointer
+	return haiDoraPointer
+
+#modfunc setRinshanPointer int value
+	haiRinshanPointer = value: return
+#modfunc decRinshanPointer
+	haiRinshanPointer--: return
+#modcfunc getRinshanPointer
+	return haiRinshanPointer
+
+#modfunc setHeavenHandFlag int value
+	haiTian = value
+	return
+#modcfunc getHeavenHandFlag
+	return haiTian
+
+#modfunc setPreviousMeld int Page, int value
+	switch Page
+		case PREVMELD_TILECODE: PreviousNaki = value: swbreak
+		case PREVMELD_STEPPED: PreviousNakiSuji = value: swbreak
+	swend
+	return
+#modcfunc getPreviousMeld int Page
+	switch Page
+		case PREVMELD_TILECODE: return PreviousNaki: swbreak
+		case PREVMELD_STEPPED: return PreviousNakiSuji: swbreak
+	swend
+	return 0x7fffffff
+
+#modfunc setDisconnectFlag int Player, int value
+	ConnectionLost(Player) = value
+	return
+#modcfunc getDisconnectFlag int Player
+	return ConnectionLost(Player)
+
+#modfunc setDoraFlag int Page, int Tile, int value
+	switch Page
+		case DORA_OMOTE: haiDora(Tile) = value: swbreak
+		case DORA_URA: haiUraDora(Tile) = value: swbreak
+	swend
+	return
+#modfunc incDoraFlag int Page, int Tile
+	switch Page
+		case DORA_OMOTE: haiDora(Tile)++: swbreak
+		case DORA_URA: haiUraDora(Tile)++: swbreak
+	swend
+	return
+#modcfunc getDoraFlag int Page, int Tile
+	switch Page
+		case DORA_OMOTE: return haiDora(Tile): swbreak
+		case DORA_URA: return haiUraDora(Tile): swbreak
+	swend
+	return 0x7fffffff
+
+
+
+/* 局単位での初期化 */
+#modfunc inittable
+	dim ConnectionLost, 4 // 回線切断による和了り放棄
+	if ((Honba >= 5)&&(getRule(RULE_RYANSHIBA) == "1")) {
+		hncnShibari = 1 //二飜縛り
+	} else {
+		hncnShibari = 0
+	}
+	DaisangenPao = -1 // 大三元包フラグ（-1…なし、0～3…該当プレイヤー）
+	DaisixiPao = -1 // 大四喜包フラグ（-1…なし、0～3…該当プレイヤー）
+	DaisangenPonPlayer = -1 // 大三元確定のポンをした人
+	DaisixiPonPlayer = -1 // 大四喜確定のポンをした人
+#ifdef SANMAX
+	if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(haiDice1 == haiDice2))) {
+		haiDeadTiles = 16 // 王牌の数
+	} else {
+		haiDeadTiles = 14 // 王牌の数
+	}
+	dim haiYama, 108 // 壁牌の配列
+	dim haiYamaAkaDora, 108 // 壁牌の赤ドラフラグ
+	if (getRule(RULE_FLOWER_TILES) != "0") {
+		ExtraRinshan = 4
+	} else {
+		ExtraRinshan = 0
+	}
+#else
+	if (getRule(RULE_FLOWER_TILES) != "0") {
+		if (getRule(RULE_FLOWER_TILES) == "3") {
+			if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(haiDice1 == haiDice2))) {
+				haiDeadTiles = 24 // 王牌の数(ドラドラ卓)
+			} else {
+				haiDeadTiles = 22 // 王牌の数(花牌を入れる時は特別に２２枚残しとする)
+			}
+			dim haiYama, 144 // 壁牌の配列
+			dim haiYamaAkaDora, 144 // 壁牌の赤ドラフラグ
+		} else {
+			if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(haiDice1 == haiDice2))) {
+				haiDeadTiles = 20 // 王牌の数(ドラドラ卓)
+			} else {
+				haiDeadTiles = 18 // 王牌の数
+			}
+			dim haiYama, 140 // 壁牌の配列
+			dim haiYamaAkaDora, 140 // 壁牌の赤ドラフラグ
+		}
+	} else {
+		if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(haiDice1 == haiDice2))) {
+			haiDeadTiles = 16 // 王牌の数(ドラドラ卓)
+		} else {
+			haiDeadTiles = 14 // 王牌の数
+		}
+		dim haiYama, 136 // 壁牌の配列
+		dim haiYamaAkaDora, 136 // 壁牌の赤ドラフラグ
+	}
+#endif
+	dim Hand, 14, 4 // 手牌の配列(４人分)
+	dim HandRed, 14, 4 // 手牌の赤ドラフラグ(４人分)
+	dim Discard, 33, 4 // 捨牌の配列(４人分)
+	dim DiscardRed, 33, 4 // 捨牌の赤ドラフラグ(４人分)
+	dim DiscardThru, 33, 4 // 捨牌のツモ切りフラグ(４人分)
+	dim MenzenFlag, 4 // 門前フラグ
+	dim HandStat, 4 // 手牌の状態（立てる・見せる・伏せる）
+	dim Meld, 5, 4 // 鳴き面子を格納
+	dim MeldRed, 5, 4 // 鳴き面子の赤ドラフラグ
+	dim NumberOfQuads, 4 // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
+	dim RichiFlag, 4 // リーチしているかどうか（０…不聴・ダマ・副露、１…リーチ、２…リー即圏内、３…ダブリー、４…ダブリー即圏内）
+	dim OpenRichiFlag, 4 // プンリーしているかどうか
+	dim OpenRichiWait, TILE_NONFLOWER_MAX // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
+	dim FirstDrawFlag, 4 // １巡目である（地和、ダブル立直の判定に使う）
+	dim DoujunFuriten, 4 // 同順振聴である
+	dim AgariHouki, 4 // 和了り放棄の罰則中かどうか
+	dim FlowerFlag, 4 // 晒している花牌を格納するフラグ
+#ifdef SANMAX
+	dim NorthFlag, 4 // 晒している北風牌を格納するフラグ
+#endif
+	KangFlag = 0 // 嶺上開花の判定に使う
+	KangCombo = 0 // 連開花と槓振りの判定に使う
+	TouKangFlag = 0 // 頭槓和の判定に使う
+	KangNum = 0 // 四槓流局、四槓子などの判定に使う
+	haiRichiCounter = 0 // リーチをカウンター(宣言牌をロン)
+	haiWareme = -1 // 割れ目の位置(-1で割れ目なし)
+	haiDoukasen = -1 // 導火線の位置(-1で導火線なし)
+	ChanKanFlag = 0 // 搶槓判定フラグ
+	haiDoraPointer = 999
+	haiDice1 = 0: haiDice2 = 0
+	haiDice1direction = 0: haiDice2direction = 0
+	haiPointer = 0 // ツモ牌のポインタ
+#ifdef SANMAX
+			haiRinshanPointer = 107 // 嶺上牌のポインタ
+#else
+		if (getRule(RULE_FLOWER_TILES) != "0") {
+			if (getRule(RULE_FLOWER_TILES) == "3") {
+				haiRinshanPointer = 143 // 嶺上牌のポインタ
+			} else {
+				haiRinshanPointer = 139 // 嶺上牌のポインタ
+			}
+		} else {
+			haiRinshanPointer = 135 // 嶺上牌のポインタ
+		}
+#endif
+	// 開門位置
+#ifdef SANMAX
+	if ((getRule(RULE_WAREME) != "0")||(getRule(RULE_KAIMENKAZE) != "0")) {
+		haiWareme = ((GameRound-(GameRound/4))+24+(haiDice1+haiDice2)-1)\3
+#ifdef SANMA4
+		haiWareme = ((0)+24+(haiDice1+haiDice2)-1)\3
+		if ((GameRound\4) == 0) {tobePlayed = 0, 1, 2}
+		if ((GameRound\4) == 1) {tobePlayed = 1, 2, 3}
+		if ((GameRound\4) == 2) {tobePlayed = 2, 3, 0}
+		if ((GameRound\4) == 3) {tobePlayed = 3, 0, 1}
+		haiWareme = tobePlayed(haiWareme)
+#endif
+	}
+#else
+	if ((getRule(RULE_WAREME) != "0")||(getRule(RULE_KAIMENKAZE) != "0")) {
+		haiWareme = ((GameRound\4)+32+(haiDice1+haiDice2)-1)\4
+	}
+#endif
+	haiTian = 1 // 親の第一打牌がまだ（天和の判定などに使う）
+	repeat 4: MenzenFlag(cnt) = 1: loop
+	repeat 4: FirstDrawFlag(cnt) = 1: loop
+	PreviousNaki = -999 // 先ほど鳴いた牌（喰い替えの判定に使う）
+	PreviousNakiSuji = -999 // 両面をチーしたときの喰い替えの判定に使う
+	repeat 4: HandStat(cnt) = 0: loop
+	dim haiDora, TILE_NONFLOWER_MAX: dim haiUraDora, TILE_NONFLOWER_MAX // ドラ判定の配列
+	return
+
+/* 初期化ルーチン */
+#modinit
+	dim PlayerScore, 4, 8
+#ifdef SANMA
+	switch int(getRule(RULE_STARTING_POINT))
+		case 0: repeat 3: PlayerScore(cnt,0) = 350: loop: swbreak
+		case 1: repeat 3: PlayerScore(cnt,0) = 400: loop: swbreak
+		case 2: repeat 3: PlayerScore(cnt,0) = 450: loop: swbreak
+		case 3: repeat 3: PlayerScore(cnt,0) = 500: loop: swbreak
+		case 4: repeat 3: PlayerScore(cnt,0) = 250: loop: swbreak
+		case 5: repeat 3: PlayerScore(cnt,0) = 300: loop: swbreak
+	swend
+	if (getRule(RULE_GAME_LENGTH) == "0") {GameLength = 6}
+	if (getRule(RULE_GAME_LENGTH) == "1") {GameLength = 2}
+	if (getRule(RULE_GAME_LENGTH) == "2") {GameLength = 14}
+	if (getRule(RULE_GAME_LENGTH) == "3") {GameLength = 14}
+	if (getRule(RULE_GAME_LENGTH) == "4") {GameLength = 0}
+	if (getRule(RULE_GAME_LENGTH) == "5") {GameLength = 18}
+	if (getRule(RULE_GAME_LENGTH) == "6") {GameLength = 10}
+	if (getRule(RULE_GAME_LENGTH) == "7") {GameLength = 2}
+#else
+	switch int(getRule(RULE_STARTING_POINT))
+		case 0: repeat 4: PlayerScore(cnt,0) = 250: loop: swbreak
+		case 1: repeat 4: PlayerScore(cnt,0) = 270: loop: swbreak
+		case 2: repeat 4: PlayerScore(cnt,0) = 300: loop: swbreak
+		case 3: repeat 4: PlayerScore(cnt,0) = 350: loop: swbreak
+		case 4: repeat 4: PlayerScore(cnt,0) = 400: loop: swbreak
+		case 5: repeat 4: PlayerScore(cnt,0) = 200: loop: swbreak
+	swend
+	if (getRule(RULE_GAME_LENGTH) == "0") {GameLength = 7}
+	if (getRule(RULE_GAME_LENGTH) == "1") {GameLength = 3}
+	if (getRule(RULE_GAME_LENGTH) == "2") {GameLength = 15}
+	if (getRule(RULE_GAME_LENGTH) == "3") {GameLength = 15}
+	if (getRule(RULE_GAME_LENGTH) == "4") {GameLength = 0}
+	if (getRule(RULE_GAME_LENGTH) == "5") {GameLength = 19}
+	if (getRule(RULE_GAME_LENGTH) == "6") {GameLength = 11}
+	if (getRule(RULE_GAME_LENGTH) == "7") {GameLength = 3}
+#endif
+	GameRound = 0: Honba = 0
+	PlayerID = 0
+	Deposit = 0 // 供託点棒（立直棒）の数
+	LoopRound = 0 // 帰り東以降、フラグがセットされる
+	AgariChain = 0 // 八連荘の判定に使うカウンタ
+	LastAgariPlayer = -1 // 八連荘の判定に使う
+	dim SumaroFlag, 4 // 四馬路解禁フラグ
+	dim YakitoriFlag, 4 // 焼き鳥フラグ
+	if (getRule(RULE_YAKITORI) != "0") {repeat 4: YakitoriFlag(cnt) = 1: loop}
+	dim playerChip, 4 // チップの収支
+	inittable thismod
+	return
+#global

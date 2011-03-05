@@ -1,0 +1,381 @@
+/*=============================
+ * HSPñÉêùÉNÉâÉCÉAÉìÉgMiHaJong
+ *     [òaóπâÊñ ÉãÅ[É`Éì]
+ *=============================
+ */
+
+#module
+#include "const.hsp"
+#deffunc agariscrproc var GameStat, var yakuInfo, int TsumoAgari, int agariPlayer, int furikomiPlayer, array PlayerName, array agariPointArray, var ChipAmount, var ResultDesc
+	buffer SCR_AGARI_BUF, 600, 600: color 0, 0, 0: boxf 0, 0, 599, 599
+	gsel 0: redraw 0: gmode 3, , , 192
+	pos 0, 0: gcopy SCR_AGARI_BUF, 0, 0, 600, 600
+	gmode 1: pos 10, 8
+	font fontname, 16, 1
+	if (TsumoAgari) {borderedtxt2 "é©ñÃòa "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(PlayerName(agariPlayer), 0, 3),56,10,255,255,255,1,16,192,192,192,1}
+	else {borderedtxt2 "âhòa "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(PlayerName(agariPlayer), 0, 3),56,10,255,255,255,1,16,192,192,192,1}
+	borderedtxt2 strmid(PlayerName(agariPlayer), 3, 16),56,30,255,255,255,1,16,192,192,192,1
+	if (TsumoAgari == 0) {
+		borderedtxt2 "ï˙èe "+windName(playerWind(furikomiPlayer, getRound(GameStat)))+strmid(PlayerName(furikomiPlayer), 0, 3),256,10,255,255,255,1,16,192,192,192,1
+		borderedtxt2 strmid(PlayerName(furikomiPlayer), 3, 16),256,30,255,255,255,1,16,192,192,192,1
+	}
+	if ((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer)||(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer)) {
+		TmpPaoPlayer = -1
+		if (getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer) {TmpPaoPlayer = getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN)}
+		if (getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer) {TmpPaoPlayer = DaisixiPao}
+		borderedtxt2 "ïÔê” "+windName(playerWind(TmpPaoPlayer, getRound(GameStat)))+strmid(PlayerName(TmpPaoPlayer), 0, 3),456,10,255,255,255,1,16,192,192,192,1
+		borderedtxt2 strmid(PlayerName(TmpPaoPlayer), 3, 16),456,30,255,255,255,1,16,192,192,192,1
+	}
+	if (agariPlayer == getPlayer(GameStat)) {drawcol= 255, 255, 0}
+	else {
+		if ((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer)||(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer)) {
+			if (((getPlayer(GameStat) == getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN))&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer))||((getPlayer(GameStat) == DaisixiPao)&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer))) {
+				drawcol= 255, 64, 64
+			} else:if (furikomiPlayer == getPlayer(GameStat)) {drawcol= 255, 64, 64}
+			else {drawcol= 255, 255, 255}
+		} else {
+			if (TsumoAgari) {drawcol= 255, 64, 64}
+			else:if (furikomiPlayer == getPlayer(GameStat)) {drawcol= 255, 64, 64}
+			else {drawcol= 255, 255, 255}
+		}
+	}
+	color drawcol(0),drawcol(1),drawcol(2)
+	gmode 0
+	puttehai GameStat, ActivePlayer, agariPlayer, 50, 60, 0
+	putnakihai GameStat, agariPlayer, 460-((4-MeldPointer(GameStat, agariPlayer))*40), 55, 0
+	tmpOffset = 0
+	if ((getMenzen(GameStat, agariPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != "1")) {
+		if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
+			if (getRule(RULE_FLOWER_TILES) == "3") {tmpOffset = -30}
+		}
+	}
+	borderedtxt2a "ÉhÉâ", 50+tmpOffset, 104, drawcol(0), drawcol(1), drawcol(2), 1, 18
+	if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {tmptimes = 6} else {tmptimes = 5}
+	repeat tmptimes
+		pos 90+tmpOffset+(cnt*23), 96
+#ifdef SANMAX
+		tmpHaiPos == 102-getRinshanExtension(GameStat)-(cnt*2)
+		if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= (102-getRinshanExtension(GameStat)))&&(tmpHaiPos\2 == 0)) {
+#else
+		tmpHaiPos == 130-(cnt*2)
+		if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= 130)&&(tmpHaiPos\2 == 0)) {
+#endif
+			showtileblock 0, ginfo_cx, ginfo_cy
+		} else {
+			showtileblockturned 0, ginfo_cx, ginfo_cy
+		}
+		pos 90+tmpOffset+(cnt*23), 96
+#ifdef SANMAX
+		tmpHaiPos == 102-getRinshanExtension(GameStat)-(cnt*2)
+		if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= (102-getRinshanExtension(GameStat)))&&(tmpHaiPos\2 == 0)) {
+#else
+		tmpHaiPos == 130-(cnt*2)
+		if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= 130)&&(tmpHaiPos\2 == 0)) {
+#endif
+			showtile getWall(GameStat, WALL_TILECODE, tmpHaiPos/2*2)+getWall(GameStat, WALL_REDTILE, tmpHaiPos/2*2)*TILE_NONFLOWER_MAX, ginfo_cx, ginfo_cy
+		} else {
+			showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+		}
+	loop
+	if ((getMenzen(GameStat, agariPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != "1")) {
+		tmpUraFlag = 1
+		if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
+			pos 235+tmpOffset, 104
+		} else {
+			pos 220+tmpOffset, 104
+		}
+		borderedtxt2a "ó†", ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 18
+		if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {tmptimes = 6} else {tmptimes = 5}
+		repeat tmptimes
+			if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
+				pos 260+tmpOffset+(cnt*23), 96
+			} else {
+				pos 245+tmpOffset+(cnt*23), 96
+			}
+#ifdef SANMAX
+			tmpHaiPos == 102-getRinshanExtension(GameStat)-(cnt*2)
+			if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= (102-getRinshanExtension(GameStat)))&&(tmpHaiPos\2 == 0)) {
+#else
+			tmpHaiPos == 130-(cnt*2)
+			if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= 130)&&(tmpHaiPos\2 == 0)) {
+#endif
+				showtileblock 0, ginfo_cx, ginfo_cy
+			} else {
+				showtileblockturned 0, ginfo_cx, ginfo_cy
+			}
+			if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
+				pos 260+tmpOffset+(cnt*23), 96
+			} else {
+				pos 245+tmpOffset+(cnt*23), 96
+			}
+#ifdef SANMAX
+			tmpHaiPos == 102-getRinshanExtension(GameStat)-(cnt*2)
+			if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= (102-getRinshanExtension(GameStat)))&&(tmpHaiPos\2 == 0)) {
+#else
+			tmpHaiPos == 130-(cnt*2)
+			if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= 130)&&(tmpHaiPos\2 == 0)) {
+#endif
+				showtile getWall(GameStat, WALL_TILECODE, tmpHaiPos/2*2+1)+getWall(GameStat, WALL_REDTILE, tmpHaiPos/2*2+1)*TILE_NONFLOWER_MAX, ginfo_cx, ginfo_cy
+			} else {
+				showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+			}
+		loop
+	}
+#ifdef SANMAX
+	if (getRule(RULE_FLOWER_TILES) != "0") {
+		if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
+			tmpOffsetX = 30
+		} else {tmpOffsetX = 0}
+		borderedtxt2a "ñk", 375+tmpOffsetX, 104, drawcol(0), drawcol(1), drawcol(2), 1, 18
+		repeat 4
+			pos 400+tmpOffsetX+(cnt*23), 96
+			if (getNorthFlag(GameStat, agariPlayer) > cnt) {
+				showtileblock 0, ginfo_cx, ginfo_cy
+			} else {
+				showtileblockturned 0, ginfo_cx, ginfo_cy
+			}
+			pos 400+tmpOffsetX+(cnt*23), 96
+			if (getNorthFlag(GameStat, agariPlayer) > cnt) {
+				showtile TILE_NORTH_WIND, ginfo_cx, ginfo_cy
+			} else {
+				showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+			}
+		loop
+	}
+#else
+	if (getRule(RULE_FLOWER_TILES) != "0") {
+		if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
+			tmpOffsetX = 30
+		} else {tmpOffsetX = 0}
+		if (getRule(RULE_FLOWER_TILES) == "3") {tmpOffsetX = 0}
+		borderedtxt2a "â‘", 375+tmpOffsetX, 104, drawcol(0), drawcol(1), drawcol(2), 1, 18
+		tmpcount = 1
+		if (getRule(RULE_FLOWER_TILES) == "3") {
+			repeat 8
+				pos 400+(cnt*23), 96
+				if ((getFlowerFlag(GameStat, agariPlayer)\(tmpcount*2)/(tmpcount)) == 1) {
+					showtileblock 0, ginfo_cx, ginfo_cy
+				} else {
+					showtileblockturned 0, ginfo_cx, ginfo_cy
+				}
+				pos 400+(cnt*23), 96
+				if ((getFlowerFlag(GameStat, agariPlayer)\(tmpcount*2)/(tmpcount)) == 1) {
+					showtile TILE_FLOWER_MIN+cnt+cnt/4, ginfo_cx, ginfo_cy
+				} else {
+					showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+				}
+				tmpcount = tmpcount * 2
+			loop
+		} else {
+			if (getRule(RULE_FLOWER_TILES) == "1") {
+				repeat 4
+					pos 400+tmpOffsetX+(cnt*23), 96
+					if ((getFlowerFlag(GameStat, agariPlayer)\(tmpcount*2)/(tmpcount)) == 1) {
+						showtileblock 0, ginfo_cx, ginfo_cy
+					} else {
+						showtileblockturned 0, ginfo_cx, ginfo_cy
+					}
+					pos 400+tmpOffsetX+(cnt*23), 96
+					if ((getFlowerFlag(GameStat, agariPlayer)\(tmpcount*2)/(tmpcount)) == 1) {
+						showtile TILE_SEASON_MIN+cnt, ginfo_cx, ginfo_cy
+					} else {
+						showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+					}
+					tmpcount = tmpcount * 2
+				loop
+			} else {
+				tmpcount = 16
+				repeat 4
+					pos 400+tmpOffsetX+(cnt*23), 96
+					if ((getFlowerFlag(GameStat, agariPlayer)\(tmpcount*2)/(tmpcount)) == 1) {
+						showtileblock 0, ginfo_cx, ginfo_cy
+					} else {
+						showtileblockturned 0, ginfo_cx, ginfo_cy
+					}
+					pos 400+tmpOffsetX+(cnt*23), 96
+					if ((getFlowerFlag(GameStat, agariPlayer)\(tmpcount*2)/(tmpcount)) == 1) {
+						showtile TILE_PLANT_MIN+cnt, ginfo_cx, ginfo_cy
+					} else {
+						showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+					}
+					tmpcount = tmpcount * 2
+				loop
+			}
+		}
+	}
+#endif
+	chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
+	redraw 1: redraw 0: await 1000
+	if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 480) {bgmcode@ = MUS_AGARI_1HAN: gosub *bgmplay_norep@}
+	if ((getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 480)&&(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 960)) {bgmcode@ = MUS_AGARI_2HAN: gosub *bgmplay_norep@}
+	if ((getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 960)&&(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 2000)) {bgmcode@ = MUS_AGARI_3HAN: gosub *bgmplay_norep@}
+	if ((getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 2000)&&(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 3000)) {bgmcode@ = MUS_AGARI_MANGAN: gosub *bgmplay_norep@}
+	if ((getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 3000)&&(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 4000)) {bgmcode@ = MUS_AGARI_HANEMAN: gosub *bgmplay_norep@}
+	if ((getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 4000)&&(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 6000)) {bgmcode@ = MUS_AGARI_BAIMAN: gosub *bgmplay_norep@}
+	if ((getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 6000)&&(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 8000)) {bgmcode@ = MUS_AGARI_SANBAIMAN: gosub *bgmplay_norep@}
+	if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 8000) {
+		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
+			bgmcode@ = MUS_AGARI_YAKUMAN: gosub *bgmplay_norep@
+		} else {
+			bgmcode@ = MUS_AGARI_KAZOE_YAKUMAN: gosub *bgmplay_norep@
+		}
+	}
+	/* òaóπñï\é¶ */
+	font fontname, 24, 0
+	if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
+		yakumanname = getYakuInfo(yakuInfo, YAKUINF_YAKUMANLIST): notesel yakumanname
+	} else {yakuname = getYakuInfo(yakuInfo, YAKUINF_YAKULIST): notesel yakuname}
+	yakuVal = getYakuInfo(yakuInfo, YAKUINF_YAKUVALLIST)
+	yakucnt = notemax
+	repeat yakucnt
+		noteget tmpdat, cnt
+		if (tmpdat != "") {ResultDesc += " "}
+		ResultDesc += tmpdat
+		pos 90+(cnt\2)*240, 140+(cnt/2)*32: tmpXpointer=90+(cnt\2)*240: tmpYpointer=140+(cnt/2)*32
+		borderedtxt2a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24
+		if (strmid(tmpdat, 0, 4) == "ÉhÉâ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+#ifdef SANMAX
+		if (strmid(tmpdat, 0, 4) == "ÉKÉä") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+#else
+		if (strmid(tmpdat, 0, 4) == "â‘îv") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+#endif
+		if (strmid(tmpdat, 0, 6) == "ê‘ÉhÉâ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+		if (strmid(tmpdat, 0, 6) == "ó†ÉhÉâ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+		if (strmid(tmpdat, 0, 6) == "ÉAÉäÉX") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) < 1000) {
+			notesel yakuVal
+			noteget tmpdat, cnt
+			if (tmpdat != "") {ResultDesc += "("+tmpdat+")"}
+			pos 240+(cnt\2)*240, 140+(cnt/2)*32
+			borderedtxt2a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24
+			if (tmpdat != "") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+			noteunsel
+		}
+	loop
+	noteunsel
+	font fontname, 48, 0: tmptxt = ""
+	if ((agariPointArray(7)>0)||(agariPointArray(6)>0)||(agariPointArray(5)>0)||(agariPointArray(4)>0)) {pos 120, 400} else {pos 120, 440}
+	if (agariPlayer == getPlayer(GameStat)) {
+		if (TsumoAgari) {if (getHeavenHandFlag(GameStat)) {tmptxt= "ìVòa"} else {tmptxt= "é©ñÃòa"}}
+		else {tmptxt= "âhòa"}
+	}
+	else {
+		if (((getPlayer(GameStat) == getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN))&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer))||((getPlayer(GameStat) == DaisixiPao)&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer))) {
+			tmptxt= "ïÔê”"
+		} else:if (TsumoAgari) {if (getHeavenHandFlag(GameStat)) {tmptxt= "ìVòa"} else {tmptxt= "é©ñÃòa"}}
+		else:if (furikomiPlayer == getPlayer(GameStat)) {tmptxt= "ï˙èe"}
+		else {tmptxt= "âhòa"}
+	}
+	borderedtxt2a tmptxt, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 48
+	font fontname, 48, 0: tmptxt = ""
+	totalHan = getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA)+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA)
+	if ((totalHan >= 5)||(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 2000)) {setSumaroFlag GameStat, agariPlayer, 1 /* ñûä—à»è„òaóπÇ¡ÇΩÇÁélînòHâã÷ */}
+	if (totalHan < 1000) {
+		if ((agariPointArray(7)>0)||(agariPointArray(6)>0)||(agariPointArray(5)>0)||(agariPointArray(4)>0)) {pos 320, 400} else {pos 320, 440}
+		tmptxt = ""+getYakuInfo(yakuInfo, YAKUINF_FU)+"ïÑ "+totalHan+"„ "
+	}
+	borderedtxt2a tmptxt, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 48
+	if (getRule(RULE_LIMITLESS) == "0") {
+		// ê¬ìVà‰Ç∂Ç·Ç»Ç¢èÍçá
+		font fontname, 72, 0: tmptxt=""
+		pos 30, 500
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 2000) {tmptxt= "Å@ñûä—"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 3000) {tmptxt= "Å@íµñû"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 4000) {tmptxt= "Å@î{ñû"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 6000) {tmptxt= "éOî{ñû"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 8000) {
+			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
+				tmptxt= "Å@ññû"
+			} else {
+				tmptxt= "êîÇ¶ññû"
+			}
+		}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 16000) {tmptxt= "ìÒî{ññû"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 24000) {tmptxt= "éOî{ññû"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 32000) {tmptxt= "élî{ññû"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 40000) {tmptxt= "å‹î{ññû"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 48000) {tmptxt= "òZî{ññû"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 56000) {tmptxt= "éµî{ññû"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 64000) {tmptxt= "î™î{ññû"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 72000) {tmptxt= "ã„î{ññû"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) == 80000) {tmptxt= "è\î{ññû"}
+		if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 88000) {tmp=getYakuInfo(yakuInfo, YAKUINF_POINTS+0)/8000: tmptxt= ""+tmp+"î{ññû"}
+		borderedtxt2a tmptxt, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 72
+	}
+	if ((agariPointArray(7)>0)||(agariPointArray(6)>0)||(agariPointArray(5)>0)||(agariPointArray(4)>0)||(agariPointArray(3)>0)||(agariPointArray(2)>0)||(agariPointArray(1)>0)||(agariPointArray(0)>999999)) {
+		tmpDigitName = "Å@ñúâ≠íõãûö¥û`èıçaä¿ê≥ç⁄"
+		repeat 5
+			if (agariPointArray(5-cnt)\100000000/10000 > 0) {
+				borderedtxt2a strf("%4d",(agariPointArray(5-cnt)\100000000/10000)), 75+250*(cnt\2), 450+40*(cnt/2), drawcol(0), drawcol(1), drawcol(2), 1, 50
+				borderedtxt2a strmid(tmpDigitName, (5-cnt)*4+2, 2), 175+250*(cnt\2), 470+40*(cnt/2), drawcol(0), drawcol(1), drawcol(2), 1, 25
+			}
+			if (agariPointArray(5-cnt)\10000 > 0) {
+				borderedtxt2a strf("%4d",(agariPointArray(5-cnt)\10000)), 200+250*(cnt\2), 450+40*(cnt/2), drawcol(0), drawcol(1), drawcol(2), 1, 50
+				borderedtxt2a strmid(tmpDigitName, (5-cnt)*4, 2), 300+250*(cnt\2), 470+40*(cnt/2), drawcol(0), drawcol(1), drawcol(2), 1, 25
+			}
+		loop
+		if (agariPointArray(0)\1000000/100 > 0) {
+			borderedtxt2a strf("%4d",(agariPointArray(0)\1000000/100)), 325, 530, drawcol(0), drawcol(1), drawcol(2), 1, 50
+			borderedtxt2a "ñú", 425, 550, drawcol(0), drawcol(1), drawcol(2), 1, 25
+		}
+		if (agariPointArray(0)\100 > 0) {borderedtxt2a strf("%4d",(agariPointArray(0)\100)*100), 450, 530, drawcol(0), drawcol(1), drawcol(2), 1, 50}
+	} else {
+		font fontname, 100, 0
+		pos 170, 480: borderedtxt2a strf("%8d", agariPointArray(0)*100), ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 100
+	}
+	ChipAmount = 0
+	if (getMenzen(GameStat, agariPlayer) == 1) {
+		ChipAmount = getYakuInfo(yakuInfo, YAKUINF_URADORA)+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA) // ó†ÉhÉâÇ∆ê‘ÉhÉâ
+		if ((getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_DOUBLE_IPPATSU)) {
+			if (getRule(RULE_RIICHI_IPPATSU) != "1") {
+				ChipAmount++ // àÍî≠èjãV
+			}
+		}
+	}
+	if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
+		// ññûèjãV
+		if (getRule(RULE_LIMITHAND_BONUS) == "0") {ChipAmount += 5}
+		if (getRule(RULE_LIMITHAND_BONUS) == "1") {ChipAmount += 10}
+	}
+	if ((getRule(RULE_CHIP) != "0")&&(ChipAmount > 0)) {
+#ifdef SANMA
+		if (TsumoAgari == 1) {ResultDesc += " [É`ÉbÉv "+ChipAmount+"Å~ÇQ]"}
+		else {ResultDesc += " [É`ÉbÉv "+ChipAmount+"]"}
+#else
+		if (TsumoAgari == 1) {ResultDesc += " [É`ÉbÉv "+ChipAmount+"Å~ÇR]"}
+		else {ResultDesc += " [É`ÉbÉv "+ChipAmount+"]"}
+#endif
+		font fontname, 16, 0: tmptxt = ""
+		pos 90, 582
+		if (getMenzen(GameStat, agariPlayer) == 1) {
+			if (getYakuInfo(yakuInfo, YAKUINF_URADORA) > 0) {tmptxt += "ó†ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_URADORA)+"ñá "}
+			if (getYakuInfo(yakuInfo, YAKUINF_AKADORA) > 0) {tmptxt += "ê‘ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"ñá "}
+		}
+		if (getYakuInfo(yakuInfo, YAKUINF_ALICEDORA) > 0) {tmptxt += "ÉAÉäÉX:"+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA)+"ñá "}
+		if (getMenzen(GameStat, agariPlayer) == 1) {
+		if ((getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_DOUBLE_IPPATSU)) {
+				if (getRule(RULE_RIICHI_IPPATSU) != "1") {
+					tmptxt += "àÍî≠:1ñá "
+				}
+			}
+		}
+		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
+			if (getRule(RULE_LIMITHAND_BONUS) == "0") {tmptxt += "ññûèjãV:5ñá "}
+			if (getRule(RULE_LIMITHAND_BONUS) == "1") {tmptxt += "ññûèjãV:10ñá "}
+		}
+		borderedtxt2a tmptxt, 90, 582, drawcol(0), drawcol(1), drawcol(2), 1, 16
+		font fontname, 20, 0
+#ifdef SANMA
+		if (TsumoAgari == 1) {borderedtxt2a "É`ÉbÉv "+ChipAmount+"Å~ÇQñá", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
+		else {borderedtxt2a "É`ÉbÉv "+ChipAmount+"ñá", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
+#else
+		if (TsumoAgari == 1) {borderedtxt2a "É`ÉbÉv "+ChipAmount+"Å~ÇRñá", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
+		else {borderedtxt2a "É`ÉbÉv "+ChipAmount+"ñá", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
+#endif
+	}
+	chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
+	dsplay@ SND_YAKULST2: redraw 1: await waittime
+	await 3000
+	setYakitori GameStat, agariPlayer, 0 // èƒíπÇâèúÇ∑ÇÈ
+return
+#global
