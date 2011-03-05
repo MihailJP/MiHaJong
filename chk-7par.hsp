@@ -26,7 +26,7 @@
 
 /* µ‘Îq */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc qiduiyaku var GameStat, var tmpYakuInfo, int targetPlayer
 	trace "µ‘Îq‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	if (getRule(RULE_SEVEN_PAIRS) == "1") {

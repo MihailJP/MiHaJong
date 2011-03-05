@@ -6,7 +6,7 @@
 
 /* 理牌する */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc lipai var GameStat, int targetPlayer
 /*
 		lipai p1, p2
@@ -67,7 +67,7 @@ return
 
 /* 場に見えてる個数 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc countseentiles array haiSeenCount, var GameStat
 /*
 		countseentiles p1, p2
@@ -80,14 +80,14 @@ return
 */
 	dim haiSeenCount, TILE_CODE_MAXIMUM // 計算する牌
 	// 捨牌で見えてる枚数
-	repeat 4: tmp = cnt
+	repeat NUM_OF_PLAYERS: tmp = cnt
 		if (DiscardPointer(GameStat, tmp) == 0) {continue}
 		repeat DiscardPointer(GameStat, tmp), 1
 			haiSeenCount(getDiscard(GameStat, DISCARD_TILECODE, cnt, tmp))++
 		loop
 	loop
 	// 誰かの副露で見えてる枚数
-	repeat 4: tmp = cnt
+	repeat NUM_OF_PLAYERS: tmp = cnt
 		if (MeldPointer(GameStat, tmp) == 0) {continue}
 		repeat MeldPointer(GameStat, tmp), 1
 			if (getMeld(GameStat, MELD_TILECODE, cnt, tmp) < MELD_TRIPLET*MELD_TYPE_STEP) {
@@ -118,7 +118,7 @@ return
 #global
 
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc countTilesInHand array haiCount, var GameStat, int targetPlayer
 /*
 		countTilesInHand p1, p2, p3
@@ -142,7 +142,7 @@ return
 
 /* 手牌のうちある１枚に注目する */
 #module
-#include "const.hsp"
+#include "const.as"
 #defcfunc getpaiinfo var GameStat, int targetPlayer, int targetTile, int CheckMode
 /*
 		val=getpaiinfo(p1, p2, p3, p4)
@@ -203,7 +203,7 @@ return haiTileInfo
 /* 振聴でないかのチェック */
 /* 待ち牌を数える処理も含む */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc chkfuriten var haiFuriten, array haiMachihaiFlag, array haiMachihaiCount, var haiMachihaiTotal, var MachiMen, var GameStat, int targetPlayer
 	trace "振聴かどうか・待ち牌を調べます。"
 	countseentiles haiSeenCount, GameStat
@@ -230,7 +230,7 @@ return haiTileInfo
 		}
 		setHand GameStat, HAND_TILECODE, 13, targetPlayer, tmpTsumoHai
 	loop
-	repeat 4
+	repeat NUM_OF_PLAYERS
 		tmpooooo = cnt
 		// オープン立直者の手牌も数える
 		if ((cnt != targetPlayer)&&(getRichiFlag(GameStat, RICHI_OPENFLAG, cnt) > 0)) {
@@ -262,7 +262,7 @@ return
 
 /* 九種九牌流しが可能かどうかのチェック */
 #module
-#include "const.hsp"
+#include "const.as"
 #defcfunc chkdaopaiability var GameStat, int targetPlayer
 	haiDaoPaiable = 0
 	countTilesInHand haiCount, GameStat, targetPlayer
@@ -281,7 +281,7 @@ return haiDaoPaiable
 
 /* ドラを設定する */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc setdora var GameStat, int Mode
 	debug strf("ドラの追加 ポインタ [%d] 牌コード [%d] モード [%d]", getDoraPointer(GameStat), getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode), Mode)
 	if (getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode) > TILE_SUIT_FLOWERS) {
@@ -406,7 +406,7 @@ return haiDaoPaiable
 
 /* 立直後の暗槓の可否 */
 #module
-#include "const.hsp"
+#include "const.as"
 #defcfunc chkankanability var GameStat, int targetPlayer
 	debug strf("暗槓の可否を判定します。プレイヤー [%d]", targetPlayer)
 	/* 手牌を調べる */
@@ -491,7 +491,7 @@ return haiDaoPaiable
 
 /* 導火線の位置を調べる */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc calcdoukasen var GameStat
 /*
 		calcdoukasen p1
@@ -506,10 +506,10 @@ return haiDaoPaiable
 		setDoukasen GameStat, ((30-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)-(getRound(GameStat)/4)))*36*2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/36)+30)\3
 #ifdef SANMA4
 		setDoukasen GameStat, ((30-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(0))*36*2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/36)+30)\3
-		if ((getRound(GameStat)\4) == 0) {tobePlayed = 0, 1, 2}
-		if ((getRound(GameStat)\4) == 1) {tobePlayed = 1, 2, 3}
-		if ((getRound(GameStat)\4) == 2) {tobePlayed = 2, 3, 0}
-		if ((getRound(GameStat)\4) == 3) {tobePlayed = 3, 0, 1}
+		if ((getRound(GameStat)\NUM_OF_PLAYERS) == 0) {tobePlayed = 0, 1, 2}
+		if ((getRound(GameStat)\NUM_OF_PLAYERS) == 1) {tobePlayed = 1, 2, 3}
+		if ((getRound(GameStat)\NUM_OF_PLAYERS) == 2) {tobePlayed = 2, 3, 0}
+		if ((getRound(GameStat)\NUM_OF_PLAYERS) == 3) {tobePlayed = 3, 0, 1}
 		setDoukasen GameStat, tobePlayed(getDoukasen(GameStat))
 #endif
 	}
@@ -517,18 +517,18 @@ return haiDaoPaiable
 	if (getRule(RULE_DOUKASEN) != "0") {
 		if (getRule(RULE_FLOWER_TILES) != "0") {
 			if (getRule(RULE_FLOWER_TILES) == "3") {
-				setDoukasen GameStat, ((40-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\4))*36*3+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/36)+40)\4
+				setDoukasen GameStat, ((40-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\NUM_OF_PLAYERS))*36*3+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/36)+40)\NUM_OF_PLAYERS
 			} else {
-				setDoukasen GameStat, ((40-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\4))*70*3/2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/35)+40)\4
-				tmp = ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\4))*70*3/2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)\70
+				setDoukasen GameStat, ((40-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\NUM_OF_PLAYERS))*70*3/2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/35)+40)\NUM_OF_PLAYERS
+				tmp = ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\NUM_OF_PLAYERS))*70*3/2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)\70
 				if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)+getRound(GameStat))\2 == 0) {
-					if (tmp == 0) {setDoukasen GameStat, (40+getDoukasen(GameStat)+1)\4}
+					if (tmp == 0) {setDoukasen GameStat, (40+getDoukasen(GameStat)+1)\NUM_OF_PLAYERS}
 				} else {
-					if (tmp == 35) {setDoukasen GameStat, (40+getDoukasen(GameStat)+1)\4}
+					if (tmp == 35) {setDoukasen GameStat, (40+getDoukasen(GameStat)+1)\NUM_OF_PLAYERS}
 				}
 			}
 		} else {
-			setDoukasen GameStat, ((40-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\4))*34*3+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/34)+40)\4
+			setDoukasen GameStat, ((40-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\NUM_OF_PLAYERS))*34*3+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/34)+40)\NUM_OF_PLAYERS
 		}
 	}
 #endif
@@ -537,7 +537,7 @@ return haiDaoPaiable
 
 /* 卓の状態のサンドボックスを作る */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc makesandbox var Sandbox, var GameStat, int targetPlayer
 	if (vartype(Sandbox) == vartype("struct")) {
 		if (varuse(Sandbox)) {
@@ -545,10 +545,10 @@ return haiDaoPaiable
 		}
 	}
 	newmod Sandbox, gameStruct
-	repeat 32: setScore Sandbox, cnt\4, cnt/4, getScore(GameStat, cnt\4, cnt/4): loop
-	repeat 4: setChip Sandbox, cnt, getChip(GameStat, cnt): loop
-	repeat 4: setSumaroFlag Sandbox, cnt, getSumaroFlag(GameStat, cnt): loop
-	repeat 4: setYakitori Sandbox, cnt, getYakitori(GameStat, cnt): loop
+	repeat NUM_OF_PLAYERS*NUM_OF_DIGIT_GROUPS: setScore Sandbox, cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS, getScore(GameStat, cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS): loop
+	repeat NUM_OF_PLAYERS: setChip Sandbox, cnt, getChip(GameStat, cnt): loop
+	repeat NUM_OF_PLAYERS: setSumaroFlag Sandbox, cnt, getSumaroFlag(GameStat, cnt): loop
+	repeat NUM_OF_PLAYERS: setYakitori Sandbox, cnt, getYakitori(GameStat, cnt): loop
 	setPlayer Sandbox, getPlayer(GameStat)
 	setRound Sandbox, getRound(GameStat)
 	setRoundLoop Sandbox, getRoundLoop(GameStat)
@@ -557,26 +557,26 @@ return haiDaoPaiable
 	setAgariChain Sandbox, getAgariChain(GameStat)
 	setLastAgariPlayer Sandbox, getLastAgariPlayer(GameStat)
 	
-	repeat 28: setHand Sandbox, cnt/14, cnt\14, targetPlayer, getHand(GameStat, cnt/14, cnt\14, targetPlayer): loop
-	repeat 396: setDiscard Sandbox, cnt\99/33, cnt\33, cnt/99, getDiscard(GameStat, cnt\99/33, cnt\33, cnt/99): loop
-	repeat 40: setMeld Sandbox, cnt\10/5, cnt\5, cnt/10, getMeld(GameStat, cnt\10/5, cnt\5, cnt/10): loop
-	repeat 4: setMenzen Sandbox, cnt, getMenzen(GameStat, cnt): loop
-	repeat 4: setHandStat Sandbox, cnt, getHandStat(GameStat, cnt): loop
-	repeat 4: setNumberOfQuads Sandbox, cnt, getNumberOfQuads(GameStat, cnt): loop
-	repeat 8: setRichiFlag Sandbox, cnt/4, cnt\4, getRichiFlag(GameStat, cnt/4, cnt\4): loop
+	repeat 14*HAND_PAGES: setHand Sandbox, cnt/14, cnt\14, targetPlayer, getHand(GameStat, cnt/14, cnt\14, targetPlayer): loop
+	repeat SIZE_OF_DISCARD_BUFFER*DISCARD_PAGES*NUM_OF_PLAYERS: setDiscard Sandbox, cnt\(DISCARD_PAGES*SIZE_OF_DISCARD_BUFFER)/SIZE_OF_DISCARD_BUFFER, cnt\SIZE_OF_DISCARD_BUFFER, cnt/(DISCARD_PAGES*SIZE_OF_DISCARD_BUFFER), getDiscard(GameStat, cnt\(DISCARD_PAGES*SIZE_OF_DISCARD_BUFFER)/SIZE_OF_DISCARD_BUFFER, cnt\SIZE_OF_DISCARD_BUFFER, cnt/(DISCARD_PAGES*SIZE_OF_DISCARD_BUFFER)): loop
+	repeat SIZE_OF_MELD_BUFFER*MELD_PAGES*NUM_OF_PLAYERS: setMeld Sandbox, cnt\(SIZE_OF_MELD_BUFFER*MELD_PAGES)/SIZE_OF_MELD_BUFFER, cnt\SIZE_OF_MELD_BUFFER, cnt/(SIZE_OF_MELD_BUFFER*MELD_PAGES), getMeld(GameStat, cnt\(SIZE_OF_MELD_BUFFER*MELD_PAGES)/SIZE_OF_MELD_BUFFER, cnt\SIZE_OF_MELD_BUFFER, cnt/(SIZE_OF_MELD_BUFFER*MELD_PAGES)): loop
+	repeat NUM_OF_PLAYERS: setMenzen Sandbox, cnt, getMenzen(GameStat, cnt): loop
+	repeat NUM_OF_PLAYERS: setHandStat Sandbox, cnt, getHandStat(GameStat, cnt): loop
+	repeat NUM_OF_PLAYERS: setNumberOfQuads Sandbox, cnt, getNumberOfQuads(GameStat, cnt): loop
+	repeat NUM_OF_PLAYERS*RICHI_PAGES: setRichiFlag Sandbox, cnt/NUM_OF_PLAYERS, cnt\NUM_OF_PLAYERS, getRichiFlag(GameStat, cnt/NUM_OF_PLAYERS, cnt\NUM_OF_PLAYERS): loop
 	repeat TILE_NONFLOWER_MAX: setOpenWait Sandbox, cnt, getOpenWait(GameStat, cnt): loop
-	repeat 4: setFirstDrawFlag Sandbox, cnt, getFirstDrawFlag(GameStat, cnt): loop
-	repeat 4: setDoujunFuriten Sandbox, cnt, getDoujunFuriten(GameStat, cnt): loop
-	repeat 4: setAgariHouki Sandbox, cnt, getAgariHouki(GameStat, cnt): loop
-	repeat 4: putFlowerFlag Sandbox, cnt, getFlowerFlag(GameStat, cnt): loop
+	repeat NUM_OF_PLAYERS: setFirstDrawFlag Sandbox, cnt, getFirstDrawFlag(GameStat, cnt): loop
+	repeat NUM_OF_PLAYERS: setDoujunFuriten Sandbox, cnt, getDoujunFuriten(GameStat, cnt): loop
+	repeat NUM_OF_PLAYERS: setAgariHouki Sandbox, cnt, getAgariHouki(GameStat, cnt): loop
+	repeat NUM_OF_PLAYERS: putFlowerFlag Sandbox, cnt, getFlowerFlag(GameStat, cnt): loop
 #ifdef SANMAX
-	repeat 4: setNorthFlag Sandbox, cnt, getNorthFlag(GameStat, cnt): loop
+	repeat NUM_OF_PLAYERS: setNorthFlag Sandbox, cnt, getNorthFlag(GameStat, cnt): loop
 #endif
-	repeat 4: setKangFlag Sandbox, cnt, getKangFlag(GameStat, cnt): loop
+	repeat KANG_PAGES: setKangFlag Sandbox, cnt, getKangFlag(GameStat, cnt): loop
 	setTotalKang Sandbox, getTotalKang(GameStat)
 	setRichiCounterFlag Sandbox, getRichiCounterFlag(GameStat)
 	setDoukasen Sandbox, getDoukasen(GameStat)
-	repeat 4: setPao Sandbox, cnt\2, cnt/2, getPao(GameStat, cnt\2, cnt/2): loop
+	repeat PAO_PLAYER_PAGES*PAO_YAKU_PAGES: setPao Sandbox, cnt\PAO_PLAYER_PAGES, cnt/PAO_PLAYER_PAGES, getPao(GameStat, cnt\PAO_PLAYER_PAGES, cnt/PAO_PLAYER_PAGES): loop
 	repeat 2: setDice Sandbox, cnt, 0, getDice(GameStat, cnt, 0): loop
 	repeat 6
 #ifdef SANMAX
@@ -593,8 +593,8 @@ return haiDaoPaiable
 	setDoraPointer Sandbox, getDoraPointer(GameStat)
 	setRinshanPointer Sandbox, getRinshanPointer(GameStat)
 	setHeavenHandFlag Sandbox, getHeavenHandFlag(GameStat)
-	repeat 2: setPreviousMeld Sandbox, cnt, getPreviousMeld(GameStat, cnt): loop
-	repeat 4: setDisconnectFlag Sandbox, cnt, getDisconnectFlag(GameStat, cnt): loop
+	repeat PREVMELD_PAGES: setPreviousMeld Sandbox, cnt, getPreviousMeld(GameStat, cnt): loop
+	repeat NUM_OF_PLAYERS: setDisconnectFlag Sandbox, cnt, getDisconnectFlag(GameStat, cnt): loop
 	repeat TILE_NONFLOWER_MAX: setDoraFlag Sandbox, DORA_OMOTE, cnt, getDoraFlag(GameStat, DORA_OMOTE, cnt): loop
 	return
 #global

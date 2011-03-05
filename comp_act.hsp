@@ -9,7 +9,7 @@
 
 /* Ç`ÇhÇÃë≈îv */
 #module COMP
-#include "const.hsp"
+#include "const.as"
 #define global COMTHINKTIME 600
 #deffunc compthink var GameStat, int Mode, int ActivePlayer, int PassivePlayer, var teDahai, int haiCurrentSutehai, int haiCurrentSutehaiAkadora, array haiRon, array haiMinkan, array haiPon, array haiChi
 	switch Mode
@@ -736,7 +736,7 @@ return
 			tmpflag = 0
 			if (tmpflag == 0) {
 				// çáÇÌÇπë≈ÇøÇ™Ç≈Ç´ÇÈÇ»ÇÁçáÇÌÇπë≈Çø
-				if ((getDiscard(GameStat, DISCARD_TILECODE, DiscardPointer(GameStat, (ActivePlayer+3)\4), (ActivePlayer+3)\4) \ TILE_CODE_MAXIMUM) == getHand(GameStat, HAND_TILECODE, tmphaiindex, ActivePlayer)) {
+				if ((getDiscard(GameStat, DISCARD_TILECODE, DiscardPointer(GameStat, KamichaOf(ActivePlayer)), KamichaOf(ActivePlayer)) \ TILE_CODE_MAXIMUM) == getHand(GameStat, HAND_TILECODE, tmphaiindex, ActivePlayer)) {
 					haiDiscardability(tmphaiindex) += 7000000
 					tmpflag = 1
 				}

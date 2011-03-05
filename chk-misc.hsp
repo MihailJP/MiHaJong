@@ -33,7 +33,7 @@
 
 /* その他の役 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc miscyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int TsumoAgari
 	/* 緑一色 */
 	dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_GREEN_DRAGON
@@ -42,7 +42,7 @@
 	dim targetKez,1: targetKez=TILE_GREEN_DRAGON
 	dim targetShunz,1: targetShunz=0
 	verdflag = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
-	if (yakuflagcount == 5) {
+	if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 		if (verdflag == 0) {
 			if (getRule(RULE_SEVEN_HONOR_PAIRS) != "1") {
 				if (getRule(RULE_SEVEN_HONOR_PAIRS) == "0") {
@@ -64,7 +64,7 @@
 	}
 	/* 裸単騎１飜というローカル役 */
 	yakuflagcount = 0
-	repeat 4, 1
+	repeat SIZE_OF_MELD_BUFFER-1, 1
 		if (((haiMianziDat(cnt)/MELD_TYPE_STEP) != MELD_SEQUENCE_CONCEALED)&&((haiMianziDat(cnt)/MELD_TYPE_STEP) != MELD_TRIPLET_CONCEALED)&&((haiMianziDat(cnt)/MELD_TYPE_STEP) != MELD_QUAD_CONCEALED)) {
 			yakuflagcount++ // 副露面子の数 暗槓があってはならない
 		}
@@ -98,7 +98,7 @@
 		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+9, TILE_WHITE_DRAGON
 		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_BAMBOOS+4
 		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
-		if (yakuflagcount == 5) {
+		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 			if (getRule(RULE_TOIPUUTAO) == "3") {
 				addyakuman tmpYakuInfo, "推不倒", 1
 			} else {
@@ -117,7 +117,7 @@
 		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
 		dim targetKez,1: targetKez=TILE_RED_DRAGON
 		yakuflagcount += countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
-		if (yakuflagcount == 5) {
+		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 			addyakuman tmpYakuInfo, "紅孔雀", 1
 			// 成立したら混一色の成立を解除する(青天井ルール用)
 			delyaku tmpYakuInfo, "混一色"
@@ -156,7 +156,7 @@
 		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND
 		dim targetShunz,1: targetShunz=0
 		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
-		if (yakuflagcount == 5) {
+		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 			addyakuman tmpYakuInfo, "黒一色", 1
 			delyaku tmpYakuInfo, "混一色"
 			delyaku tmpYakuInfo, "対々和"
@@ -169,7 +169,7 @@
 		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
 		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND
 		windflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
-		if ((yakuflagcount == 5)&&(windflagcount == 1)) {
+		if ((yakuflagcount == SIZE_OF_MELD_BUFFER)&&(windflagcount == 1)) {
 			addyakuman tmpYakuInfo, "青洞門", 1
 			delyaku tmpYakuInfo, "混一色"
 			delyaku tmpYakuInfo, "対々和"
@@ -187,7 +187,7 @@
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "緑一色")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "黒一色")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "青洞門")
-		if ((yakuflagcount == 5)&&(tmpyakuCensored == 0)) {
+		if ((yakuflagcount == SIZE_OF_MELD_BUFFER)&&(tmpyakuCensored == 0)) {
 			if ((yakuflagcount2 == 0)&&(getRule(RULE_NO_RED) == "2")) {
 				/* 清断紅 */
 				addyaku tmpYakuInfo, "清断紅", 5+getMenzen(GameStat, targetPlayer)
@@ -435,7 +435,7 @@
 	if (getRule(RULE_EXPOSED_CHUUREN) != "0") {
 		countTilesInHand haiCount, GameStat, targetPlayer
 		// 鳴き面子も計算 槓子は無視
-		repeat 4,1
+		repeat SIZE_OF_MELD_BUFFER-1,1
 			switch (haiMianziDat(cnt) / MELD_TYPE_STEP)
 				case MELD_SEQUENCE_EXPOSED_LOWER: case MELD_SEQUENCE_EXPOSED_MIDDLE: case MELD_SEQUENCE_EXPOSED_UPPER
 					haiCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)++
@@ -519,7 +519,7 @@
 		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+9, TILE_RED_DRAGON
 		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7
 		yakuflagcount2 = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
-		if ((yakuflagcount == 5)&&(yakuflagcount2 < 5)) {
+		if ((yakuflagcount == SIZE_OF_MELD_BUFFER)&&(yakuflagcount2 < SIZE_OF_MELD_BUFFER)) {
 			addyaku tmpYakuInfo, "花一色", 1
 		}
 	}
@@ -531,7 +531,7 @@
 		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_WHITE_DRAGON
 		dim targetShunz,1: targetShunz=0
 		yakuflagcount2 = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
-		if ((yakuflagcount == 5)&&(yakuflagcount2 == 1)) {
+		if ((yakuflagcount == SIZE_OF_MELD_BUFFER)&&(yakuflagcount2 == 1)) {
 			addyakuman tmpYakuInfo, "赤眼青龍", 1
 		}
 	}
@@ -547,7 +547,7 @@
 			if ((cnt >= 2)&&(cnt <= 8)) {targetShunz(3)=cnt+TILE_SUIT_CHARACTERS-1, cnt+TILE_SUIT_CIRCLES-1, cnt+TILE_SUIT_BAMBOOS-1}
 			if (cnt >= 3) {targetShunz(6)=cnt+TILE_SUIT_CHARACTERS-2, cnt+TILE_SUIT_CIRCLES-2, cnt+TILE_SUIT_BAMBOOS-2}
 			yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
-			if (yakuflagcount == 5) {
+			if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 				if (cnt == 5) {
 					switch int(getRule(tmpRuleCodeList(cnt-1)))
 						case 1: addyaku tmpYakuInfo, tmpYakuNameList(cnt-1), 2: swbreak
@@ -578,7 +578,7 @@ return
 
 /* 十三不塔 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc shisanbudayaku var GameStat, var tmpYakuInfo, int targetPlayer, array tmpScore, array ShantenArray
 	if (getRule(RULE_SHIISAN_PUUTAA) != "0") {
 		ShisanBuDa = chkshisanbuda(GameStat, targetPlayer)
@@ -628,7 +628,7 @@ return
 
 /* 十四不塔 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc shisibudayaku var GameStat, var tmpYakuInfo, int targetPlayer, array tmpScore, array ShantenArray
 	if (getRule(RULE_SHIISAN_UUSHII) != "0") {
 		ShisiBuDa = chkshisibuda(GameStat, targetPlayer)

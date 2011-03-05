@@ -6,7 +6,7 @@
 
 /* 副露の処理 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc fuuroproc var GameStat, array haiRon, array haiChi, var hncnKyokuEndType, int teDahai, var haiCurrentSutehai, var haiCurrentSutehaiAkaDora, int ActivePlayer, int PassivePlayer, int Mode
 	info strf("副露の処理を開始します。モード [%d]", Mode)
 	switch Mode
@@ -111,7 +111,7 @@
 			setMenzen GameStat, PassivePlayer, 0
 			/* 槓子として晒す */
 			MeldPointerIncrement GameStat, PassivePlayer
-			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, (((20+PassivePlayer-ActivePlayer)\4)+8)*1000+haiCurrentSutehai
+			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, (playerRelative(PassivePlayer, ActivePlayer)+MELD_QUAD)*MELD_TYPE_STEP+haiCurrentSutehai
 			if (haiCurrentSutehaiAkaDora == 1) {
 				flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, 1
 			}
@@ -127,7 +127,7 @@
 			setHeavenHandFlag GameStat, 0
 			setCall kangPlayer, "　 北 　"
 			lipai GameStat, kangPlayer
-			repeat 4
+			repeat NUM_OF_PLAYERS
 				setFirstDrawFlag GameStat, cnt, 0
 			loop
 			swbreak
@@ -151,7 +151,7 @@
 			setHeavenHandFlag GameStat, 0
 			setCall ActivePlayer, "　 花 　"
 			lipai GameStat, ActivePlayer
-			repeat 4
+			repeat NUM_OF_PLAYERS
 				setFirstDrawFlag GameStat, cnt, 0
 			loop
 			swbreak
@@ -177,7 +177,7 @@
 			setMenzen GameStat, cnt, 0
 			/* 明刻として晒す */
 			MeldPointerIncrement GameStat, cnt
-			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, cnt), cnt, (((20+PassivePlayer-ActivePlayer)\4)+4)*1000+haiCurrentSutehai
+			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, cnt), cnt, (playerRelative(PassivePlayer, ActivePlayer)+MELD_TRIPLET)*MELD_TYPE_STEP+haiCurrentSutehai
 			if (haiCurrentSutehaiAkaDora == 1) {
 				flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, cnt), cnt, 1
 			}
@@ -259,7 +259,7 @@
 		dsplay@ VOX_KAN
 		setCall kangPlayer, "　カン　"
 		lipai GameStat, kangPlayer
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setFirstDrawFlag GameStat, cnt, 0
 		loop
 	}
@@ -293,7 +293,7 @@
 				swbreak
 			case FUURO_DAIMINKAN:
 				/* バグ防止の為 */
-				repeat 4: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop
+				repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop
 				swbreak
 #ifdef SANMAX
 			case FUURO_NORTH:
@@ -344,7 +344,7 @@
 	/* 再描画 */
 	gosub *redrscreen@
 	/* 鳴きが成立したので、一発のフラグを降ろす */
-	repeat 4
+	repeat NUM_OF_PLAYERS
 		if (getRichiFlag(GameStat, RICHI_FLAG, cnt) == RIICHI_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, cnt, RIICHI_YES}
 		if (getRichiFlag(GameStat, RICHI_FLAG, cnt) == RIICHI_DOUBLE_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, cnt, RIICHI_DOUBLE}
 		setFirstDrawFlag GameStat, cnt, 0
@@ -354,7 +354,7 @@
 
 /* 包を判定する */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc checkpao var GameStat, int PassivePlayer, int ActivePlayer
 	// 大三元・大四喜包の判定 ここから
 	debug "包の条件を判定します。"
@@ -385,8 +385,8 @@
 *ronhuproc
 	info "リアクションを問い合わせます。"
 	/* 栄和や鳴き仕掛けをするかどうか問い合わせる */
-	dim haiRon, 4: dim haiPon, 4: dim haiChi, 4: dim haiMinkan, 4
-	repeat 4
+	dim haiRon, NUM_OF_PLAYERS: dim haiPon, NUM_OF_PLAYERS: dim haiChi, NUM_OF_PLAYERS: dim haiMinkan, NUM_OF_PLAYERS
+	repeat NUM_OF_PLAYERS
 		if (ActivePlayer != cnt) {
 			PassivePlayer = cnt
 			if (PassivePlayer == getPlayer(GameStat)) {
@@ -395,10 +395,10 @@
 				if (IsRemotePlayer(PassivePlayer) == 0) {
 					/* COMが「カンニング」しないように処理 */
 					makesandbox Sandbox, GameStat, PassivePlayer
-					dim reducedRon, 4: dim reducedMinkan, 4: dim reducedPon, 4: dim reducedChi, 4
+					dim reducedRon, NUM_OF_PLAYERS: dim reducedMinkan, NUM_OF_PLAYERS: dim reducedPon, NUM_OF_PLAYERS: dim reducedChi, NUM_OF_PLAYERS
 					/* 処理 */
 					compthink Sandbox, 1, ActivePlayer, PassivePlayer, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkadora, reducedRon, reducedMinkan, reducedPon, reducedChi
-					repeat 4
+					repeat NUM_OF_PLAYERS
 						if (haiRon(cnt) == 0) {haiRon(cnt) = reducedRon(cnt)}
 						if (haiMinkan(cnt) == 0) {haiMinkan(cnt) = reducedMinkan(cnt)}
 						if (haiPon(cnt) == 0) {haiPon(cnt) = reducedPon(cnt)}
@@ -427,14 +427,14 @@
 	}
 	trace strf("ロン [%d %d %d %d] カン [%d %d %d %d] ポン [%d %d %d %d] チー [%d %d %d %d]", haiRon(0),haiRon(1),haiRon(2),haiRon(3),haiMinkan(0),haiMinkan(1),haiMinkan(2),haiMinkan(3),haiPon(0),haiPon(1),haiPon(2),haiPon(3),haiChi(0),haiChi(1),haiChi(2),haiChi(3))
 	/* 和了り放棄の時は宣言を無効にする */
-	repeat 4
+	repeat NUM_OF_PLAYERS
 		if (getAgariHouki(GameStat, cnt) == 1) {
 			debug strf("プレイヤー [%d] は和了り放棄です。宣言フラグを下ろします。", cnt)
 			haiRon(cnt) = 0: haiPon(cnt) = 0: haiChi(cnt) = 0: haiMinkan(cnt) = 0
 		}
 	loop
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */
-	repeat 4
+	repeat NUM_OF_PLAYERS
 		if (haiRon(cnt) == 1) {
 			debug strf("プレイヤー [%d] は、栄和を宣言します。", cnt)
 			// 優先権のないロンも表示されるようにする
@@ -443,35 +443,35 @@
 		}
 	loop
 	/* 実際にロンできる人を表示 */
-	roncount = 0: repeat 3
-		if (haiRon((cnt+1+ActivePlayer)\4) == 1) {
+	roncount = 0: repeat NUM_OF_PLAYERS-1
+		if (haiRon(RelativePositionOf(ActivePlayer, cnt+1)) == 1) {
 			if (roncount == 0) {
-				debug strf("プレイヤー [%d] は、栄和できます。", (cnt+1+ActivePlayer)\4)
-				setCall (cnt+1+ActivePlayer)\4, "　ロン　"
+				debug strf("プレイヤー [%d] は、栄和できます。", RelativePositionOf(ActivePlayer, cnt+1))
+				setCall RelativePositionOf(ActivePlayer, cnt+1), "　ロン　"
 			}
 			if ((roncount == 1)&&(int(getRule(RULE_MULTIPLE_MAHJONG)) >= 2)) {
-				debug strf("プレイヤー [%d] は、栄和できます。", (cnt+1+ActivePlayer)\4)
-				setCall (cnt+1+ActivePlayer)\4, "　ロン　"
+				debug strf("プレイヤー [%d] は、栄和できます。", RelativePositionOf(ActivePlayer, cnt+1))
+				setCall RelativePositionOf(ActivePlayer, cnt+1), "　ロン　"
 			}
 			if ((roncount == 2)&&(int(getRule(RULE_MULTIPLE_MAHJONG)) == 4)) {
-				debug strf("プレイヤー [%d] は、栄和できます。", (cnt+1+ActivePlayer)\4)
-				setCall (cnt+1+ActivePlayer)\4, "　ロン　"
+				debug strf("プレイヤー [%d] は、栄和できます。", RelativePositionOf(ActivePlayer, cnt+1))
+				setCall RelativePositionOf(ActivePlayer, cnt+1), "　ロン　"
 			}
 			roncount++
 		}
 	loop
 	/* 実際に栄和を行なう処理 */
-	repeat 3
+	repeat NUM_OF_PLAYERS-1
 		await 0
-		if (haiRon((cnt+1+ActivePlayer)\4) == 1) {
+		if (haiRon(RelativePositionOf(ActivePlayer, cnt+1)) == 1) {
 			/* ウォッチモードの場合は和了った人に視点を向ける */
 			if (WatchModeFlag == 1) {
-				setPlayer GameStat, (cnt+1+ActivePlayer)\4
+				setPlayer GameStat, RelativePositionOf(ActivePlayer, cnt+1)
 			}
 			/* 栄和したことを変数に記録 */
 			hncnKyokuEndType = 1: TsumoAgari = 0
 			furikomiPlayer = ActivePlayer
-			agariPlayer = (cnt+1+ActivePlayer)\4
+			agariPlayer = RelativePositionOf(ActivePlayer, cnt+1)
 			/* 八連荘の判定に使う変数 */
 			if (getRule(RULE_PAARENCHAN) != "0") {
 				if (getLastAgariPlayer(GameStat) == agariPlayer) {
@@ -487,8 +487,8 @@
 			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, ActivePlayer, 0, 10: setRichiCounterFlag GameStat, 1}
 			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_DOUBLE_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, ActivePlayer, 0, 10: setRichiCounterFlag GameStat, 2}
 			/* 役や振聴の判定 */
-			countyaku GameStat, yakuInfo, (cnt+1+ActivePlayer)\4, furikomiPlayer, TsumoAgari
-			chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, (cnt+1+ActivePlayer)\4
+			countyaku GameStat, yakuInfo, RelativePositionOf(ActivePlayer, cnt+1), furikomiPlayer, TsumoAgari
+			chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, RelativePositionOf(ActivePlayer, cnt+1)
 			// 縛りを満たさないか、振聴のとき
 			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(haiFuriten == 1)||(getDoujunFuriten(GameStat, agariPlayer) == 1)||((getRule(RULE_RIICHI_SHIBARI) != "0")&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_NO))) {
 				trace "縛りを満たさないか振聴です。次の処理をチョンボ用に切り替えます。"

@@ -4,63 +4,6 @@
  *=============================
  */
 
-/* コンパイル時のオプション */
-	#ifdef SANMA4
-	#packopt name "mihaysnm"
-	#define global SANMAX
-	#undef SANMA
-	#else
-		#ifdef SANMA
-		#packopt name "mihasanm"
-		#define global SANMAX
-		#else
-		#packopt name "mihajong"
-		#endif
-	#endif
-	#packopt hide 1
-	#packopt type 0
-	#cmpopt ppout 1
-	#cmpopt optcode 1
-	#cmpopt optinfo 1
-	#cmpopt varname 1
-	#runtime "hsp3mt"
-
-	#define WITH_MT19937AR
-
-/* 拡張機能の登録 */
-	#include "p2b.as"
-	#include "hmm.as"
-	#include "hspsock.as"
-	#include "llmod3.hsp"
-	#include "obj.hsp"
-	#include "l_tooltips.as"
-	#define tooltip(%1,%2) AddToolTips (%1)+1,%2
-	#define vanish clrobj:SetToolTips
-	#define global STATBOX 1
-	#ifdef WITH_MT19937AR
-		#undef rnd
-		#undef randomize
-		#module redef
-		#defcfunc rnd int p1
-		#include "hspda.as"
-			z=0: rndf_geti z, p1
-			return z
-		#deffunc randomize
-			rndf_int -1
-			return
-		#global
-	#endif
-	#include "hspmath.as"
-	#include "hsplzmax.as"
-
-	#ifdef NOWAIT
-		#undef await
-		#define global await(%1) await@hsp 0
-	#endif
-
-/* エイリアスの登録 */
-#include "alias.hsp"
-
 /* タイトルバーに表示する文字列 */
 	title "MiHaJong Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
 
@@ -187,7 +130,7 @@
 	#define PI M_PI
 
 /* 牌やサイコロの画像を読み込む */
-	gmode 0
+	gmode gmode_gdi
 	buffer SCR_TILE_PIC: picload "img\\tileset.gif": info "牌の画像を読み込みました。"
 	buffer SCR_TILE_BLOCK, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
 	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X, TILE_BLOCK_SCREEN_Y, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT

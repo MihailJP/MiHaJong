@@ -22,11 +22,7 @@
 	hncnOrigHonba = getHonba(GameStat)
 	hncnOrigTurn = getRound(GameStat)
 	if (hncnKyokuEndType == ENDKYOKU_RYUUKYOKU) {
-#ifdef SANMA
-		repeat 3
-#else
-		repeat 4
-#endif
+		repeat NUM_OF_ACTUAL_PLAYERS
 #ifdef SANMA4
 			if (playerWind(cnt, getRound(GameStat)) == PLAYER_NORTH) {
 				continue // 北家は無視
@@ -73,7 +69,7 @@
 		dsplay SND_PINGJU
 		gosub *redrscreen: await 1500
 		TenpaiCnt = 0
-		repeat 4
+		repeat NUM_OF_PLAYERS
 #ifdef SANMA4
 			if (playerWind(cnt, getRound(GameStat)) == PLAYER_NORTH) {
 				continue // 北家は無視
@@ -96,11 +92,7 @@
 			}
 		loop
 		switch TenpaiCnt
-#ifdef SANMAX
-			case 0: TenpaiCountTxt = "３人不聴": swbreak
-#else
-			case 0: TenpaiCountTxt = "４人不聴": swbreak
-#endif
+			case 0: TenpaiCountTxt = "全員不聴": swbreak
 			case 1: TenpaiCountTxt = "１人聴牌": swbreak
 			case 2: TenpaiCountTxt = "２人聴牌": swbreak
 			case 3: TenpaiCountTxt = "３人聴牌": swbreak
@@ -112,12 +104,8 @@
 		hncnMsg = TenpaiCountTxt
 //		title "流局"
 		gosub *redrscreen: await 5000
-		dim hncnPointDelta, 4, 8
-#ifdef SANMA
-		repeat 3
-#else
-		repeat 4
-#endif
+		dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+		repeat NUM_OF_ACTUAL_PLAYERS
 #ifdef SANMA4
 			if (playerWind(cnt, getRound(GameStat)) == PLAYER_NORTH) {
 				continue // 北家は無視
@@ -147,23 +135,15 @@
 			}
 #endif
 		loop
-#ifdef SANMAX
-		if ((TenpaiCnt > 0)&&(TenpaiCnt < 3)) {
-#else
-		if ((TenpaiCnt > 0)&&(TenpaiCnt < 4)) {
-#endif
+		if ((TenpaiCnt > 0)&&(TenpaiCnt < NUM_OF_ACTUAL_PLAYERS)) {
 			hncnMsg = "不聴罰符"
 			gosub *putdelta
 			redraw 1: await 2500
 			pointcalc GameStat, hncnPointDelta
 		}
 		
-#ifdef SANMA
-		repeat 3
-#else
-		repeat 4
-#endif
-			dim hncnPointDelta, 4, 8
+		repeat NUM_OF_ACTUAL_PLAYERS
+			dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 			// 錯和立直（不聴立直）の者がいた場合
 			Shanten = countshanten(GameStat, cnt, 0)
 			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
@@ -171,8 +151,8 @@
 			}
 			if ((Shanten > 0)&&(getRichiFlag(GameStat, RICHI_FLAG, cnt))) {
 #ifdef SANMA
-				if ((targetPlayer+24-(getRound(GameStat)-(getRound(GameStat)/4)))\3 == 0) {
-					repeat 3
+				if (playerwind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
+					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == targetPlayer) {
 							hncnPointDelta(cnt) -= 120
 						} else {
@@ -180,7 +160,7 @@
 						}
 					loop
 				} else {
-					repeat 3
+					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == targetPlayer) {
 							hncnPointDelta(cnt) -= 80
 						} else {
@@ -189,8 +169,8 @@
 					loop
 				}
 #else
-				if ((targetPlayer+32-getRound(GameStat))\4 == 0) {
-					repeat 4
+				if (playerwind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
+					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == targetPlayer) {
 							hncnPointDelta(cnt) -= 120
 						} else {
@@ -198,11 +178,11 @@
 						}
 					loop
 				} else {
-					repeat 4
+					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == targetPlayer) {
 							hncnPointDelta(cnt) -= 80
 						} else {
-							if ((cnt+32-getRound(GameStat))\4 == 0) {
+							if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
 								hncnPointDelta(cnt) += 40
 							} else {
 								hncnPointDelta(cnt) += 20
@@ -219,22 +199,22 @@
 		loop
 		
 		hncnMsg = ""
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
-		Shanten = countshanten(GameStat, (getRound(GameStat)\4), 0)
-		if ((getAgariHouki(GameStat, getRound(GameStat)\4) == 1)||(IsRemotePlayer(getRound(GameStat)\4) == -1)) {
+		Shanten = countshanten(GameStat, (getRound(GameStat)\NUM_OF_PLAYERS), 0)
+		if ((getAgariHouki(GameStat, getRound(GameStat)\NUM_OF_PLAYERS) == 1)||(IsRemotePlayer(getRound(GameStat)\NUM_OF_PLAYERS) == -1)) {
 			Shanten = 1 // 強制不聴扱い
 		}
 		if (((Shanten <= 0)||(getRule(RULE_ROUND_CONTINUATION) == "2"))&&(getRule(RULE_ROUND_CONTINUATION) != "1")&&(getRule(RULE_ROUND_CONTINUATION) != "3")) {
-			setCall getRound(GameStat)\4, "　連荘　"
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, "　連荘　"
 		} else {
-			setCall getRound(GameStat)\4, " 親流れ "
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, " 親流れ "
 		}
 		dsplay SND_PAGE
 		gosub *redrscreen
 		redraw 1
-		Shanten = countshanten(GameStat, (getRound(GameStat)\4), 0)
+		Shanten = countshanten(GameStat, (getRound(GameStat)\NUM_OF_PLAYERS), 0)
 		if (((Shanten > 0)&&(getRule(RULE_ROUND_CONTINUATION) != "2"))||(getRule(RULE_ROUND_CONTINUATION) == "1")||(getRule(RULE_ROUND_CONTINUATION) == "3")) {incRound GameStat}
 		incHonba GameStat
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
@@ -247,14 +227,14 @@
 	/* 和了成立時 */
 	/**************/
 	if (hncnKyokuEndType == ENDKYOKU_AGARI) {
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
 		if ((playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != "3")) {
-			setCall getRound(GameStat)\4, "　連荘　"
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, "　連荘　"
 		} else {
-			setCall getRound(GameStat)\4, " 親流れ "
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, " 親流れ "
 		}
 		dsplay SND_PAGE
 		gosub *redrscreen
@@ -294,18 +274,18 @@
 		dsplay SND_PINGJU
 		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
 		gosub *redrscreen: redraw 1: await 3000
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
 		if (getRule(RULE_NINE_TERMINALS) != "2") {
 			if ((getRule(RULE_NINE_TERMINALS) != "1")||(playerWind(ActivePlayer, getRound(GameStat)) == PLAYER_EAST)) {
-				setCall getRound(GameStat)\4, "　連荘　"
+				setCall getRound(GameStat)\NUM_OF_PLAYERS, "　連荘　"
 			} else {
-				setCall getRound(GameStat)\4, " 親流れ "
+				setCall getRound(GameStat)\NUM_OF_PLAYERS, " 親流れ "
 			}
 		} else {
-			setCall getRound(GameStat)\4, " 親流れ "
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, " 親流れ "
 		}
 		dsplay SND_PAGE
 		gosub *redrscreen
@@ -329,21 +309,21 @@
 		chatappend "*** "+ResultDesc+"\n"
 		hncnMsg = " 四開槓 "
 		gosub *redrscreen: redraw 1: await 3000
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		dsplay SND_PINGJU
 		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
 		hncnMsg = "　流局　"
 		gosub *redrscreen: redraw 1: await 3000
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
 		if (getRule(RULE_FOUR_KONG_RYUUKYOKU) != "1") {
-			setCall getRound(GameStat)\4, "　連荘　"
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, "　連荘　"
 		} else {
-			setCall getRound(GameStat)\4, " 親流れ "
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, " 親流れ "
 		}
 		dsplay SND_PAGE
 		gosub *redrscreen
@@ -365,36 +345,36 @@
 		chatappend "*** "+ResultDesc+"\n"
 		hncnMsg = " 三家和 "
 		gosub *redrscreen: redraw 1: await 3000
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		dsplay SND_PINGJU
 		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
 		hncnMsg = "　流局　"
 		gosub *redrscreen: redraw 1: await 3000
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
 		if (getRule(RULE_TRIPLE_MAHJONG) == "0") {
 			if (playerWind(furikomiPlayer, getRound(GameStat)) != PLAYER_EAST) {
-				setCall getRound(GameStat)\4, "　連荘　"
+				setCall getRound(GameStat)\NUM_OF_PLAYERS, "　連荘　"
 			} else {
-				setCall getRound(GameStat)\4, " 親流れ "
+				setCall getRound(GameStat)\NUM_OF_PLAYERS, " 親流れ "
 			}
 		}
 		if (getRule(RULE_TRIPLE_MAHJONG) == "1") {
 			if (playerWind(furikomiPlayer, getRound(GameStat)) == PLAYER_NORTH) {
-				setCall getRound(GameStat)\4, "　連荘　"
+				setCall getRound(GameStat)\NUM_OF_PLAYERS, "　連荘　"
 			} else {
-				setCall getRound(GameStat)\4, " 親流れ "
+				setCall getRound(GameStat)\NUM_OF_PLAYERS, " 親流れ "
 			}
 		}
 		if (getRule(RULE_TRIPLE_MAHJONG) == "2") {
-			setCall getRound(GameStat)\4, "　連荘　"
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, "　連荘　"
 		}
 		if (getRule(RULE_TRIPLE_MAHJONG) == "3") {
-			setCall getRound(GameStat)\4, " 親流れ "
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, " 親流れ "
 		}
 		dsplay SND_PAGE
 		gosub *redrscreen
@@ -432,21 +412,21 @@
 		chatappend "*** "+ResultDesc+"\n"
 		hncnMsg = "四風連打"
 		gosub *redrscreen: redraw 1: await 3000
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		dsplay SND_PINGJU
 		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
 		hncnMsg = "　流局　"
 		gosub *redrscreen: redraw 1: await 3000
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
 		if (getRule(RULE_FOUR_WIND_RYUUKYOKU) != "1") {
-			setCall getRound(GameStat)\4, "　連荘　"
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, "　連荘　"
 		} else {
-			setCall getRound(GameStat)\4, " 親流れ "
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, " 親流れ "
 		}
 		dsplay SND_PAGE
 		gosub *redrscreen
@@ -467,7 +447,7 @@
 		chatappend "*** "+ResultDesc+"\n"
 		hncnMsg = "四家立直"
 		gosub *redrscreen: redraw 1: await 3000
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		dsplay SND_PINGJU
@@ -475,7 +455,7 @@
 		hncnMsg = "　流局　"
 		gosub *redrscreen: redraw 1: await 1500
 		TenpaiCnt = 0
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			Shanten = countshanten(GameStat, cnt, 0)
 			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
 				Shanten = 1 // 和了り放棄時の処理→強制不聴扱い→不聴リーチとして罰符
@@ -489,18 +469,14 @@
 		loop
 		gosub *redrscreen: await 5000
 
-#ifdef SANMA
-		repeat 3
-#else
-		repeat 4
-#endif
+		repeat NUM_OF_ACTUAL_PLAYERS
 			// 錯和立直（不聴立直）の者がいた場合
 			Shanten = countshanten(GameStat, cnt, 0)
-			dim hncnPointDelta, 4, 8
+			dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 			if (Shanten > 0) {
 #ifdef SANMA
 				if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
-					repeat 3
+					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == targetPlayer) {
 							hncnPointDelta(cnt) -= 120
 						} else {
@@ -508,7 +484,7 @@
 						}
 					loop
 				} else {
-					repeat 3
+					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == targetPlayer) {
 							hncnPointDelta(cnt) -= 80
 						} else {
@@ -518,7 +494,7 @@
 				}
 #else
 				if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
-					repeat 4
+					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == targetPlayer) {
 							hncnPointDelta(cnt) -= 120
 						} else {
@@ -526,7 +502,7 @@
 						}
 					loop
 				} else {
-					repeat 4
+					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == targetPlayer) {
 							hncnPointDelta(cnt) -= 80
 						} else {
@@ -546,14 +522,14 @@
 			}
 		loop
 
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
 		if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != "1") {
-			setCall getRound(GameStat)\4, "　連荘　"
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, "　連荘　"
 		} else {
-			setCall getRound(GameStat)\4, " 親流れ "
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, " 親流れ "
 		}
 		dsplay SND_PAGE
 		gosub *redrscreen
@@ -574,13 +550,9 @@
 		bgmcode = MUS_AGARI_MANGAN: gosub *bgmplay_norep
 		gosub *redrscreen: await 1500
 		statmes "流し満貫が成立しました"
-		dim hncnPointDelta, 4, 8
+		dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 		ResultDesc = ""
-#ifdef SANMA
-		repeat 3
-#else
-		repeat 4
-#endif
+		repeat NUM_OF_ACTUAL_PLAYERS
 			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
 				continue // 和了り放棄時の処理→流し満貫を認めない
 			}
@@ -630,7 +602,7 @@
 #ifdef SANMA
 				if (playerWind(chkP, getRound(GameStat)) == PLAYER_EAST) {
 					// 親
-					repeat 3
+					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == chkP) {
 							switch int(getRule(RULE_NAGASHI_MANGAN))
 								case 0: hncnPointDelta(cnt) += 120: swbreak
@@ -649,7 +621,7 @@
 					loop
 				} else {
 					// 子
-					repeat 3
+					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == chkP) {
 							switch int(getRule(RULE_NAGASHI_MANGAN))
 								case 0: hncnPointDelta(cnt) += 80: swbreak
@@ -670,7 +642,7 @@
 #else
 				if (playerWind(chkP, getRound(GameStat)) == PLAYER_EAST) {
 					// 親
-					repeat 4
+					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == chkP) {
 							switch int(getRule(RULE_NAGASHI_MANGAN))
 								case 0: hncnPointDelta(cnt) += 120: swbreak
@@ -689,7 +661,7 @@
 					loop
 				} else {
 					// 子
-					repeat 4
+					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == chkP) {
 							switch int(getRule(RULE_NAGASHI_MANGAN))
 								case 0: hncnPointDelta(cnt) += 80: swbreak
@@ -730,11 +702,11 @@
 		redraw 1: await 1500
 		pointcalc GameStat, hncnPointDelta
 		
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
-		setCall getRound(GameStat)\4, "　連荘　"
+		setCall getRound(GameStat)\NUM_OF_PLAYERS, "　連荘　"
 		dsplay SND_PAGE
 		gosub *redrscreen
 		redraw 1
@@ -760,21 +732,21 @@
 		chatappend "*** "+ResultDesc+"\n"
 		hncnMsg = " 四開槓 "
 		gosub *redrscreen: redraw 1: await 3000
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		dsplay SND_PINGJU
 		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
 		hncnMsg = "　流局　"
 		gosub *redrscreen: redraw 1: await 3000
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
 		if (getRule(RULE_FIFTH_KONG) != "2") {
-			setCall getRound(GameStat)\4, "　連荘　"
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, "　連荘　"
 		} else {
-			setCall getRound(GameStat)\4, " 親流れ "
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, " 親流れ "
 		}
 		dsplay SND_PAGE
 		gosub *redrscreen

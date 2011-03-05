@@ -5,27 +5,29 @@
  */
 
 #module
+#include "const.as"
 #deffunc haifuskip array haifuP, array HThaifuP, int PassivePlayer, int ActivePlayer
-	if (((PassivePlayer+4-ActivePlayer)\4) == 2) {
+	if (playerRelative(ActivePlayer, PassivePlayer) == RELATIVE_TOIMEN) {
 		// 対面からポンした場合
 		repeat 4,1
-			haifuP(((ActivePlayer+1)\4)*6+cnt) += "　 "
-			HThaifuP(((ActivePlayer+1)\4)*6+cnt) += "<td></td>"
+			haifuP(ShimochaOf(ActivePlayer)*6+cnt) += "　 "
+			HThaifuP(ShimochaOf(ActivePlayer)*6+cnt) += "<td></td>"
 		loop
 	}
-	if (((PassivePlayer+4-ActivePlayer)\4) == 3) {
+	if (playerRelative(ActivePlayer, PassivePlayer) == RELATIVE_KAMICHA) {
 		// 下家からポンした場合
 		repeat 4,1
-			haifuP(((ActivePlayer+1)\4)*6+cnt) += "　 "
-			haifuP(((ActivePlayer+2)\4)*6+cnt) += "　 "
-			HThaifuP(((ActivePlayer+1)\4)*6+cnt) += "<td></td>"
-			HThaifuP(((ActivePlayer+2)\4)*6+cnt) += "<td></td>"
+			haifuP(ShimochaOf(ActivePlayer)*6+cnt) += "　 "
+			haifuP(ToimenOf(ActivePlayer)*6+cnt) += "　 "
+			HThaifuP(ShimochaOf(ActivePlayer)*6+cnt) += "<td></td>"
+			HThaifuP(ToimenOf(ActivePlayer)*6+cnt) += "<td></td>"
 		loop
 	}
 return
 #global
 
 #module
+#include "const.as"
 #deffunc haifuwritetsumohai array haifuP, array HThaifuP, int ActivePlayer, int Tile, int Akadora, str PText, str HTText
 	haifuP(ActivePlayer*6+1) += strmid(tilecodelabel@haifu, (Tile+Akadora*TILE_NONFLOWER_MAX)*2, 2)+" "
 	haifuP(ActivePlayer*6+2) += PText
@@ -36,20 +38,21 @@ return
 #global
 
 #module
+#include "const.as"
 #deffunc haifuskipall array haifuP, array HThaifuP, int PassivePlayer
 	repeat 4,1
-		haifuP(((PassivePlayer+1)\4)*6+cnt) += "　 "
-		haifuP(((PassivePlayer+2)\4)*6+cnt) += "　 "
-		haifuP(((PassivePlayer+3)\4)*6+cnt) += "　 "
-		HThaifuP(((PassivePlayer+1)\4)*6+cnt) += "<td></td>"
-		HThaifuP(((PassivePlayer+2)\4)*6+cnt) += "<td></td>"
-		HThaifuP(((PassivePlayer+3)\4)*6+cnt) += "<td></td>"
+		haifuP(ShimochaOf(PassivePlayer)*6+cnt) += "　 "
+		haifuP(ToimenOf(PassivePlayer)*6+cnt) += "　 "
+		haifuP(KamichaOf(PassivePlayer)*6+cnt) += "　 "
+		HThaifuP(ShimochaOf(PassivePlayer)*6+cnt) += "<td></td>"
+		HThaifuP(ToimenOf(PassivePlayer)*6+cnt) += "<td></td>"
+		HThaifuP(KamichaOf(PassivePlayer)*6+cnt) += "<td></td>"
 	loop
 return
 #global
 
 #module haifu
-#include "const.hsp"
+#include "const.as"
 
 #define COLUMNS 40
 
@@ -61,7 +64,7 @@ return
 	HTtilecodelabel1 = " qwertyuio zxcvbnm,. asdfghjkl 1234567   qwertyuio zxcvbnm,. asdfghjkl -^\\[5@;:]"
 	HTtilecodelabel2 = " QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL -^\\[%@;:]"
 
-	dim origPoint, 4, 8
+	dim origPoint, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 	sdim haifuBuffer, 512*1024
 	notesel haifuBuffer
 #ifdef SANMA4
@@ -110,7 +113,7 @@ return
 
 /* 配牌を牌譜に記録 */
 #deffunc haifurechaipai var GameStat
-	repeat 4
+	repeat NUM_OF_PLAYERS
 		tmpcnt = cnt
 		repeat 14
 			if (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt) > 0) {
@@ -120,7 +123,7 @@ return
 				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(tmpcnt*6) += "</span>"}
 			}
 		loop
-		repeat 8
+		repeat NUM_OF_DIGIT_GROUPS
 			origPoint(tmpcnt, cnt) == getScore(GameStat,tmpcnt, cnt)
 		loop
 	loop
@@ -450,12 +453,8 @@ return
 	loop
 	noteadd "<tr>"+tmptxt+"</tr>"
 	noteunsel
-#ifdef SANMA
-	repeat 3
-#else
-	repeat 4
-#endif
-		tmpcnt = (cnt+hncnOrigTurn)\4
+	repeat NUM_OF_ACTUAL_PLAYERS
+		tmpcnt = RelativePositionOf(cnt, hncnOrigTurn\NUM_OF_PLAYERS)
 		// 最終牌姿
 		repeat 14
 			if (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt) > 0) {
@@ -662,8 +661,8 @@ return
 			if (tmpscoretxt == "") {tmpscoretxt += "0"}
 			haifutmpscore += tmpscoretxt
 
-			dim diffPoint, 8
-			repeat 8
+			dim diffPoint, NUM_OF_DIGIT_GROUPS
+			repeat NUM_OF_DIGIT_GROUPS
 				diffPoint(cnt) = getScore(GameStat,tmpcnt, cnt)-origPoint(tmpcnt, cnt)
 			loop
 			diffflagfix diffPoint

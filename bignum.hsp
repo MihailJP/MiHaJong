@@ -5,40 +5,44 @@
  */
 
 #module
+#include "const.as"
 #deffunc bignum_duplicate array target, array orig, int arg
-	dim target, 8
-	if (length2(orig) == 0) {repeat 8: target(cnt) = orig(cnt):loop}
-	else {repeat 8: target(cnt) = orig(arg, cnt):loop}
+	dim target, NUM_OF_DIGIT_GROUPS
+	if (length2(orig) == 0) {repeat NUM_OF_DIGIT_GROUPS: target(cnt) = orig(cnt):loop}
+	else {repeat NUM_OF_DIGIT_GROUPS: target(cnt) = orig(arg, cnt):loop}
 	return
 #global
 
 #module
+#include "const.as"
 #deffunc bignum_transcribe array orig, array target, int arg
-	if (length2(target) == 0) {repeat 8: target(cnt) = orig(cnt):loop}
-	else {repeat 8: target(arg, cnt) = orig(cnt):loop}
+	if (length2(target) == 0) {repeat NUM_OF_DIGIT_GROUPS: target(cnt) = orig(cnt):loop}
+	else {repeat NUM_OF_DIGIT_GROUPS: target(arg, cnt) = orig(cnt):loop}
 	return
 #global
 
 #module
+#include "const.as"
 #defcfunc bignum_flag array bignum_, int arg
 	bignum_duplicate bignum, bignum_, arg
 	
 	tmpSign = 0 // ëSëÃÇ∆ÇµÇƒÇÃïÑçÜÇéÊìæ
-	repeat 8
-		if (bignum(7-cnt) < 0) {tmpSign = -1: break}
-		if (bignum(7-cnt) > 0) {tmpSign = 1: break}
+	repeat NUM_OF_DIGIT_GROUPS
+		if (bignum((NUM_OF_DIGIT_GROUPS-1)-cnt) < 0) {tmpSign = -1: break}
+		if (bignum((NUM_OF_DIGIT_GROUPS-1)-cnt) > 0) {tmpSign = 1: break}
 	loop
 	return tmpSign
 #global
 
 #module
+#include "const.as"
 #deffunc bignum_fix array bignum_, int arg, int FirstArgLimit
 	bignum_duplicate bignum, bignum_, arg
 
 	repeat 1
 		if (bignum(0) <= -FirstArgLimit) {bignum(0) += FirstArgLimit: bignum(1) -= 1: continue cnt}
 		if (bignum(0) >= FirstArgLimit) {bignum(0) -= FirstArgLimit: bignum(1) += 1: continue cnt}
-		repeat 6, 1
+		repeat NUM_OF_DIGIT_GROUPS-2, 1
 			if (bignum(cnt) < -99999999) {bignum(cnt) += 100000000: bignum(cnt+1) -= 1: continue cnt}
 			if (bignum(cnt) > 99999999) {bignum(cnt) -= 100000000: bignum(cnt+1) += 1: continue cnt}
 		loop
@@ -47,7 +51,7 @@
 		
 		if ((tmpSign == 1)&&(bignum(0) < 0)) {bignum(0) += FirstArgLimit: bignum(1) -= 1: continue cnt}
 		if ((tmpSign == -1)&&(bignum(0) > 0)) {bignum(0) -= FirstArgLimit: bignum(1) += 1: continue cnt}
-		repeat 6, 1
+		repeat NUM_OF_DIGIT_GROUPS-2, 1
 			if ((tmpSign == 1)&&(bignum(cnt) < 0)) {bignum(cnt) += 100000000: bignum(cnt+1) -= 1: continue cnt}
 			if ((tmpSign == -1)&&(bignum(cnt) > 0)) {bignum(cnt) -= 100000000: bignum(cnt+1) += 1: continue cnt}
 		loop
@@ -58,18 +62,20 @@
 #global
 
 #module
+#include "const.as"
 #deffunc bignum_add array augend, array addend, int arg, int FirstArgLimit
 	bignum_duplicate augend_, augend, arg
-	repeat 8: augend_(cnt) += addend(cnt): loop
+	repeat NUM_OF_DIGIT_GROUPS: augend_(cnt) += addend(cnt): loop
 	bignum_fix augend_, arg, FirstArgLimit
 	bignum_transcribe augend_, augend, arg
 	return
 #global
 
 #module
+#include "const.as"
 #deffunc bignum_multiply array multiplicand, int multiplier, int arg, int FirstArgLimit
 	bignum_duplicate multiplicand_, multiplicand, arg
-	repeat 8: multiplicand_(cnt) *= multiplier: loop
+	repeat NUM_OF_DIGIT_GROUPS: multiplicand_(cnt) *= multiplier: loop
 	bignum_fix multiplicand_, arg, FirstArgLimit
 	bignum_transcribe multiplicand_, multiplicand, arg
 	return
@@ -85,35 +91,38 @@
 
 /* ê¬ìVà‰ëŒâûÇÃì_ñ_èàóù */
 #module
+#include "const.as"
 #deffunc agaricalc array agariPointArray, array AgariPointRaw, int agariBairitsu, int agariBairitsu2, int agariCount
-	dim agariPointArray, 8
+	dim agariPointArray, NUM_OF_DIGIT_GROUPS
 	
 	agariPointArray(0) = (AgariPointRaw(0)*agariBairitsu+90)/100
-	repeat 7,1: agariPointArray(cnt) = AgariPointRaw(cnt)*agariBairitsu: loop
+	repeat NUM_OF_DIGIT_GROUPS-1,1: agariPointArray(cnt) = AgariPointRaw(cnt)*agariBairitsu: loop
 	bignum_fix agariPointArray, 0, 1000000
 	
 	repeat agariCount
 		agariPointArray(0) += (AgariPointRaw(0)*agariBairitsu2+90)/100
-		repeat 7,1: agariPointArray(cnt) += AgariPointRaw(cnt)*agariBairitsu2: loop
+		repeat NUM_OF_DIGIT_GROUPS-1,1: agariPointArray(cnt) += AgariPointRaw(cnt)*agariBairitsu2: loop
 		bignum_fix agariPointArray, 0, 1000000
 	loop
 	return
 #global
 
 #module
+#include "const.as"
 #deffunc deltacalcplus array AgariPointRaw, array hncnPointDelta, int agariBairitsu
-	dim addend, 8
+	dim addend, NUM_OF_DIGIT_GROUPS
 	addend(0) = (AgariPointRaw(0)*agariBairitsu+90)/100
-	repeat 7,1: addend(cnt) = AgariPointRaw(cnt)*agariBairitsu: loop
+	repeat NUM_OF_DIGIT_GROUPS-1,1: addend(cnt) = AgariPointRaw(cnt)*agariBairitsu: loop
 	bignum_add hncnPointDelta, addend, cnt, 1000000
 	return
 #global
 
 #module
+#include "const.as"
 #deffunc deltacalcminus array AgariPointRaw, array hncnPointDelta, int agariBairitsu
-	dim subtrahend, 8
+	dim subtrahend, NUM_OF_DIGIT_GROUPS
 	subtrahend(0) = (AgariPointRaw(0)*agariBairitsu+90)/100
-	repeat 7,1: subtrahend(cnt) = AgariPointRaw(cnt)*agariBairitsu: loop
+	repeat NUM_OF_DIGIT_GROUPS-1,1: subtrahend(cnt) = AgariPointRaw(cnt)*agariBairitsu: loop
 	bignum_subtract hncnPointDelta, subtrahend, cnt, 1000000
 	return
 #global
@@ -132,15 +141,16 @@
 #global
 
 #module
+#include "const.as"
 #deffunc pointcalc var GameStat, array hncnPointDelta
 	exportScore GameStat, tmpScoreArray
-	dim Point, 8
-	repeat 4
+	dim Point, NUM_OF_DIGIT_GROUPS
+	repeat NUM_OF_PLAYERS
 		bignum_duplicate addend, hncnPointDelta, cnt
 		tmpcnt = cnt
-		repeat 8: Point(cnt) = tmpScoreArray(tmpcnt, cnt): loop
+		repeat NUM_OF_DIGIT_GROUPS: Point(cnt) = tmpScoreArray(tmpcnt, cnt): loop
 		bignum_add Point, addend, cnt, 1000000
-		repeat 8: tmpScoreArray(tmpcnt, cnt) = Point(cnt): loop
+		repeat NUM_OF_DIGIT_GROUPS: tmpScoreArray(tmpcnt, cnt) = Point(cnt): loop
 	loop
 	importScore GameStat, tmpScoreArray
 	return
@@ -148,7 +158,7 @@
 
 /* ç≈èIÉXÉRÉAÇÃïÑçÜ */
 *scoreflagfix
-	repeat 4
+	repeat NUM_OF_PLAYERS
 		bignum_fix hncnPointScore, cnt, 100000
 	loop
 	return
@@ -161,15 +171,16 @@
 #global
 
 #module
+#include "const.as"
 #deffunc deltatxt array rawPointDelta, int FirstValRate
-	dim PointDelta, 4, 8
+	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 	if (length2(rawPointDelta) = 0) {
-		repeat 4: PointDelta(cnt, 0) = rawPointDelta(cnt): loop
+		repeat NUM_OF_PLAYERS: PointDelta(cnt, 0) = rawPointDelta(cnt): loop
 	} else {
-		repeat 32: PointDelta(cnt\4, cnt/4) = rawPointDelta(cnt\4, cnt/4): loop
+		repeat NUM_OF_PLAYERS*NUM_OF_DIGIT_GROUPS: PointDelta(cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS) = rawPointDelta(cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS): loop
 	}
 	tmpdigit="ÇOÇPÇQÇRÇSÇTÇUÇVÇWÇX"
-	repeat 4
+	repeat NUM_OF_PLAYERS
 		PointDelta(cnt, 0) *= FirstValRate
 		bignum_fix PointDelta, cnt, 100000000
 		if (bignum_flag(PointDelta, cnt) > 0) {flag_fullwidth = "Å{": flag_halfwidth = "+"}
@@ -205,9 +216,9 @@
 		}
 	loop
 	tmpNumName = "â≠íõãûö¥û`èıçaä¿ê≥ç⁄ã…çPà¢ìﬂïs"
-	repeat 7, 1
+	repeat NUM_OF_DIGIT_GROUPS-1, 1
 		tmpNumDigit = cnt
-		repeat 4
+		repeat NUM_OF_PLAYERS
 		if (bignum_flag(PointDelta, cnt) > 0) {flag_fullwidth = "Å{": flag_halfwidth = "+"}
 		if (bignum_flag(PointDelta, cnt) < 0) {flag_fullwidth = "Å|": flag_halfwidth = "-"}
 			if (PointDelta(cnt, tmpNumDigit) != 0) {
@@ -256,12 +267,13 @@
 	return
 
 #module
+#include "const.as"
 #defcfunc bignumtotext array rawPoint, int tmpcnt, int FirstValRate, str PlusSign, str MinusSign
-	dim Point, 8
+	dim Point, NUM_OF_DIGIT_GROUPS
 	if (length2(rawPoint) = 0) {
-		repeat 8: Point(cnt) = rawPoint(cnt): loop
+		repeat NUM_OF_DIGIT_GROUPS: Point(cnt) = rawPoint(cnt): loop
 	} else {
-		repeat 8: Point(cnt) = rawPoint(tmpcnt, cnt): loop
+		repeat NUM_OF_DIGIT_GROUPS: Point(cnt) = rawPoint(tmpcnt, cnt): loop
 	}
 	tmpscoretxt = ""
 	if ((Point(0) != 0)||(Point(1) != 0)||(Point(2) != 0)||(Point(3) != 0)||(Point(4) != 0)||(Point(5) != 0)||(Point(6) != 0)||(Point(7) != 0)) {

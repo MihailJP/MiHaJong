@@ -6,7 +6,7 @@
 
 /* ‘m–³‘o */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc shisanyaoyaku var GameStat, var tmpYakuInfo, int targetPlayer, int haiFuriten
 	trace "‘m–³‘o‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	countTilesInHand haiCount, GameStat, targetPlayer

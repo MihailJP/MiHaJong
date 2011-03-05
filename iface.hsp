@@ -6,7 +6,7 @@
 
 /* チャットウィンドウ関聯 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc chatinit
 	sdim hncnChatLog, 32768 // チャットのログ
 	if (ginfo_dispx >= 1280) {
@@ -64,7 +64,7 @@ return
 
 /* 共通スイッチの表示 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc ifaceinit
 	hncnStatus = ""
 	AutoAgariSwitch = 0 // オート和了のスイッチ

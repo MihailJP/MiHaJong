@@ -5,7 +5,7 @@
  */
 
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc countShunz array ShunzCount, array haiMianziDat
 /*
 		countShunz p1, p2
@@ -18,7 +18,7 @@
 */
 	trace "順子の種類を調べます。"
 	dim ShunzCount, TILE_NONFLOWER_MAX
-	repeat 4, 1
+	repeat SIZE_OF_MELD_BUFFER-1, 1
 		if (haiMianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP) {
 			ShunzCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)++
 		}
@@ -28,13 +28,13 @@
 
 /* 順子系の役 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc sequenceyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int MachiType
 	trace "順子役の処理に入ります。"
 	countShunz ShunzCount, haiMianziDat
 	DragonW = 0: DragonG = 0: DragonR = 0: Wind = 0
 	EastWind = 0: SouthWind = 0: WestWind = 0: NorthWind = 0
-	repeat 4, 1
+	repeat SIZE_OF_MELD_BUFFER-1, 1
 		if (((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {Wind++}
 		if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_EAST_WIND) {EastWind++}
 		if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_SOUTH_WIND) {SouthWind++}
@@ -173,7 +173,7 @@
 		/* 一気通貫全帯幺九 */
 		if (getRule(RULE_ITTSUU_CHANTA) != "0") {
 			tmpyaojiu = 0: JihaiCount = 0
-			repeat 5
+			repeat SIZE_OF_MELD_BUFFER
 				switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
 					case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 					case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
@@ -740,7 +740,7 @@
 #ifndef SANMAX
 	/* 吃三嵌：三麻ではチーできないから不可 */
 	yakuFlagCount = 0
-	repeat 4, 1
+	repeat SIZE_OF_MELD_BUFFER-1, 1
 		if (haiMianziDat(cnt)/MELD_TYPE_STEP == MELD_SEQUENCE_EXPOSED_MIDDLE) {yakuFlagCount++}
 	loop
 	if (getRule(RULE_CHII_SANKAN) != "0")&&(yakuFlagCount == 3) {
@@ -751,7 +751,7 @@
 	}
 	/* 吃三辺：三麻ではチーできないから不可 */
 	yakuFlagCount = 0
-	repeat 4, 1
+	repeat SIZE_OF_MELD_BUFFER-1, 1
 		if (haiMianziDat(cnt) == MELD_SEQUENCE_EXPOSED_LOWER*MELD_TYPE_STEP+TILE_SUIT_CHARACTERS+7) {yakuFlagCount++}
 		if (haiMianziDat(cnt) == MELD_SEQUENCE_EXPOSED_LOWER*MELD_TYPE_STEP+TILE_SUIT_CIRCLES+7) {yakuFlagCount++}
 		if (haiMianziDat(cnt) == MELD_SEQUENCE_EXPOSED_LOWER*MELD_TYPE_STEP+TILE_SUIT_BAMBOOS+7) {yakuFlagCount++}
@@ -767,7 +767,7 @@
 	}
 	/* 吃小順：三麻ではチーできないから不可 */
 		yakuFlagCount = 0
-		repeat 4, 1
+		repeat SIZE_OF_MELD_BUFFER-1, 1
 			if ((haiMianziDat(cnt)/MELD_TYPE_STEP == MELD_SEQUENCE_EXPOSED_LOWER)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) != 7)) {yakuFlagCount++}
 		loop
 	if (getRule(RULE_CHII_SHAOSHUN) != "0")&&(yakuFlagCount == 3) {
@@ -778,7 +778,7 @@
 	}
 	/* 吃大順：三麻ではチーできないから不可 */
 	yakuFlagCount = 0
-	repeat 4, 1
+	repeat SIZE_OF_MELD_BUFFER-1, 1
 		if ((haiMianziDat(cnt)/MELD_TYPE_STEP == MELD_SEQUENCE_EXPOSED_UPPER)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) != 1)) {yakuFlagCount++}
 	loop
 	if (getRule(RULE_CHII_TAASHUN) != "0")&&(yakuFlagCount == 3) {

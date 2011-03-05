@@ -32,9 +32,12 @@
  * ‚»‚ê‚ç‚Ì“à—e‚ğ“Ç‚İ‚İAŒ‹‡‚·‚é
  */
 
-#include "const.hsp"
+#include "const.as"
+#include "init.as"
+#include "alias.as"
+#include "struct.as"
+
 #include "init.hsp"
-#include "struct.hsp"
 #include "mainloop.hsp"
 #include "prepare.hsp"
 #include "function.hsp"

@@ -5,7 +5,7 @@
  */
 /* ˆêFŒn‚È‚Ç‚Ì–ð */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc suityaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int haiFuriten
 	trace "ˆêFŒn‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	WanzMian = 0: PinzMian = 0: SouzMian = 0: ZiMian = 0
@@ -13,7 +13,7 @@
 	WindMian = 0: DragonMian = 0
 #endif
 	Cifr = 0
-	repeat 5
+	repeat SIZE_OF_MELD_BUFFER
 		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM / TILE_SUIT_STEP)
 			case TILE_SUIT_CHARACTERS/TILE_SUIT_STEP: WanzMian++: swbreak
 			case TILE_SUIT_CIRCLES/TILE_SUIT_STEP: PinzMian++: swbreak
@@ -46,7 +46,7 @@
 			}
 		}
 	loop
-	if (((WanzMian+Zimian) == 5)||((PinzMian+Zimian) == 5)||((SouzMian+Zimian) == 5)) {
+	if (((WanzMian+Zimian) == SIZE_OF_MELD_BUFFER)||((PinzMian+Zimian) == SIZE_OF_MELD_BUFFER)||((SouzMian+Zimian) == SIZE_OF_MELD_BUFFER)) {
 		if (Zimian == 0) {
 			if (getRule(RULE_CHINIISOH) != "0") {
 				addyaku tmpYakuInfo, "´ˆêF", 3+getMenzen(GameStat, targetPlayer)
@@ -116,7 +116,7 @@
 			}
 			/* •S–œÎ */
 			if (getRule(RULE_KAGA_MILLION) != "0") {
-				if (WanzMian == 5) {
+				if (WanzMian == SIZE_OF_MELD_BUFFER) {
 					if (Cifr == 100) {
 						if (getRule(RULE_KAGA_MILLION) == "2") {
 							addyakuman tmpYakuInfo, "‰Á‰ê•S–œÎ", 2
@@ -134,7 +134,7 @@
 				}
 			}
 			if (getRule(RULE_PINZU_MILLION) != "0") {
-				if (PinzMian == 5) {
+				if (PinzMian == SIZE_OF_MELD_BUFFER) {
 					if (Cifr >= 100) {
 						addyakuman tmpYakuInfo, "“›Žq•S–œÎ", 1
 						// ¬—§‚µ‚½‚ç´ˆêF‚Ì¬—§‚ð‰ðœ‚·‚é(Â“Vˆäƒ‹[ƒ‹—p)
@@ -144,9 +144,9 @@
 			}
 			/* ¯ŒõŽWà£ */
 			if (getRule(RULE_STARLIGHT) != "0") {
-				if (PinzMian == 5) {
+				if (PinzMian == SIZE_OF_MELD_BUFFER) {
 					yakuFlag = 0
-					repeat 4, 1
+					repeat SIZE_OF_MELD_BUFFER-1, 1
 						if ((haiMianziDat(cnt) >= MELD_TRIPLET*MELD_TYPE_STEP)&&((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_SUIT_CIRCLES+7)) {yakuFlag = 1}
 					loop
 					if (yakuFlag) {

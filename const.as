@@ -7,8 +7,8 @@
 /* バージョン情報 */
 #define VERSION_MAJ 1
 #define VERSION_MED 4
-#define VERSION_MIN 0
-#define VERSION_MIC ""
+#define VERSION_MIN 1
+#define VERSION_MIC "dev"
 
 /* フォントの指定 */
 /* 必ず等幅日本語フォントを指定すること */
@@ -433,30 +433,46 @@
 #define PLAYER_WEST		2
 #define PLAYER_NORTH	3
 
+/* プレイヤーの相対位置 */
+#define RELATIVE_SELF		0
+#define RELATIVE_SHIMOCHA	1
+#define RELATIVE_TOIMEN		2
+#define RELATIVE_KAMICHA	3
+
 /* 場の状態API用 */
 #define HAND_TILECODE	0
 #define HAND_REDTILE	1
+#define HAND_PAGES		2
 #define DISCARD_TILECODE	0
 #define DISCARD_REDTILE		1
 #define DISCARD_THROUGH		2
+#define DISCARD_PAGES		3
 #define MELD_TILECODE	0
 #define MELD_REDTILE	1
+#define MELD_PAGES		2
 #define RICHI_FLAG		0
 #define RICHI_OPENFLAG	1
+#define RICHI_PAGES		2
 #define KANG_FLAG		0
 #define KANG_CHAINFLAG	1
 #define KANG_TOPFLAG	2
 #define KANG_CHANKAN	3
+#define KANG_PAGES		4
 #define PAO_PLAYER_PAO		0
 #define PAO_PLAYER_AGARI	1
+#define PAO_PLAYER_PAGES	2
 #define PAO_YAKU_DAISANGEN	0
 #define PAO_YAKU_DAISIXI	1
+#define PAO_YAKU_PAGES		2
 #define WALL_TILECODE	0
 #define WALL_REDTILE	1
+#define WALL_PAGES		2
 #define PREVMELD_TILECODE	0
 #define PREVMELD_STEPPED	1
+#define PREVMELD_PAGES		2
 #define DORA_OMOTE	0
 #define DORA_URA	1
+#define DORA_PAGES	2
 
 #define YAKUINF_FU			0
 #define YAKUINF_HAN_BASE	1
@@ -470,6 +486,16 @@
 #define YAKUINF_YAKULIST	16
 #define YAKUINF_YAKUMANLIST	17
 #define YAKUINF_YAKUVALLIST	18
+
+#ifdef SANMA
+#define NUM_OF_ACTUAL_PLAYERS	3
+#else
+#define NUM_OF_ACTUAL_PLAYERS	4
+#endif
+#define NUM_OF_PLAYERS			4
+#define NUM_OF_DIGIT_GROUPS		8
+#define SIZE_OF_MELD_BUFFER		5
+#define SIZE_OF_DISCARD_BUFFER	33
 
 /* 牌の種類 */
 #define TILE_CODE_MAXIMUM			100

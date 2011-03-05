@@ -6,7 +6,7 @@
 
 /* 順子の処理 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc makementsu_shuntsu \
 array haiCountForMentsu, \
 array haiMianziDat, \
@@ -24,7 +24,7 @@ int count
 #global
 
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc makementsu_koutsu \
 array haiCountForMentsu, \
 array haiMianziDat, \
@@ -40,9 +40,9 @@ int count
 
 /* 面子に分解する */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc makementsu var GameStat, var tmpYakuInfo, int targetPlayer, int Atamacode, var haiProcessedTiles, array haiMianziDat
-	dim haiMianziDat, 5 // 配列を初期化する
+	dim haiMianziDat, SIZE_OF_MELD_BUFFER // 配列を初期化する
 	countTilesInHand haiCountForMentsu, GameStat, targetPlayer
 	haiProcessedTiles = 0
 	// 雀頭となりうる牌なら続行

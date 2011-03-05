@@ -5,12 +5,12 @@
  */
 
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc agariscrproc var GameStat, var yakuInfo, int TsumoAgari, int agariPlayer, int furikomiPlayer, array PlayerName, array agariPointArray, var ChipAmount, var ResultDesc
 	buffer SCR_AGARI_BUF, 600, 600: color 0, 0, 0: boxf 0, 0, 599, 599
-	gsel 0: redraw 0: gmode 3, , , 192
+	gsel 0: redraw 0: gmode gmode_alpha, , , 192
 	pos 0, 0: gcopy SCR_AGARI_BUF, 0, 0, 600, 600
-	gmode 1: pos 10, 8
+	gmode gmode_mem: pos 10, 8
 	font fontname, 16, 1
 	if (TsumoAgari) {borderedtxt2 "Ž©–Ì˜a "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(PlayerName(agariPlayer), 0, 3),56,10,255,255,255,1,16,192,192,192,1}
 	else {borderedtxt2 "‰h˜a "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(PlayerName(agariPlayer), 0, 3),56,10,255,255,255,1,16,192,192,192,1}
@@ -40,7 +40,7 @@
 		}
 	}
 	color drawcol(0),drawcol(1),drawcol(2)
-	gmode 0
+	gmode gmode_gdi
 	puttehai GameStat, ActivePlayer, agariPlayer, 50, 60, 0
 	putnakihai GameStat, agariPlayer, 460-((4-MeldPointer(GameStat, agariPlayer))*40), 55, 0
 	tmpOffset = 0

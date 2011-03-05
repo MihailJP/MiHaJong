@@ -6,23 +6,24 @@
 
 /* バッファから合成 */
 #module
+#include "const.as"
 #define PI 3.1415926535897932384626433832795
 #deffunc tablesynthesis int targetPlayer, int Zijia, int targetScreen
-	switch (targetPlayer+4-Zijia)\4
-		case 0:
-			pos 0, 300: gmode 4, 600, 300, 256: gcopy targetScreen+targetPlayer, 0, 0
+	switch playerRelative(targetPlayer,Zijia)
+		case RELATIVE_SELF:
+			pos 0, 300: gmode gmode_rgb0alpha, 600, 300, 256: gcopy targetScreen+targetPlayer, 0, 0
 			swbreak
-		case 1:
-			pos 450, 300: gmode 4, 600, 301, 256: grotate targetScreen+targetPlayer, 0, 0, -PI*0.5, 600, 300
+		case RELATIVE_SHIMOCHA:
+			pos 450, 300: gmode gmode_rgb0alpha, 600, 301, 256: grotate targetScreen+targetPlayer, 0, 0, -PI*0.5, 600, 300
 			swbreak
-		case 2:
-			gmode 4, 201, 301, 256
+		case RELATIVE_TOIMEN:
+			gmode gmode_rgb0alpha, 201, 301, 256
 			pos 100, 149: grotate targetScreen+targetPlayer, 400, 0, PI, 200, 300
 			pos 300, 149: grotate targetScreen+targetPlayer, 200, 0, PI, 200, 300
 			pos 499, 149: grotate targetScreen+targetPlayer, 0, 0, PI, 200, 300
 			swbreak
-		case 3:
-			pos 149, 300: gmode 4, 600, 301, 256: grotate targetScreen+targetPlayer, 0, 0, PI*0.5, 600, 300
+		case RELATIVE_KAMICHA:
+			pos 149, 300: gmode gmode_rgb0alpha, 600, 301, 256: grotate targetScreen+targetPlayer, 0, 0, PI*0.5, 600, 300
 			swbreak
 	swend
 return
@@ -30,30 +31,18 @@ return
 
 /* 再描画(賽振りの時) */
 *redrdice
-#ifdef SANMA
-	repeat 3
-#else
-	repeat 4
-#endif
-		gsel SCR_PLAYER_BUFFER_UPPER+cnt: gmode 1
+	repeat NUM_OF_ACTUAL_PLAYERS
+		gsel SCR_PLAYER_BUFFER_UPPER+cnt: gmode gmode_mem
 		if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
 			putsai GameStat, 340, 54, 0, 0
 		}
 	loop
 	gsel 0: redraw 0
 	color bgColorR, bgColorG, bgColorB
-#ifdef SANMA
-	repeat 3
-#else
-	repeat 4
-#endif
+	repeat NUM_OF_ACTUAL_PLAYERS
 		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_LOWER
 	loop
-#ifdef SANMA
-	repeat 3
-#else
-	repeat 4
-#endif
+	repeat NUM_OF_ACTUAL_PLAYERS
 		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_UPPER
 	loop
 	repeat 1, getPlayer(GameStat)
@@ -78,11 +67,7 @@ return
 	color bgColorR, bgColorG, bgColorB
 	boxf 0, 0, 599, 599
 	color 0, 0, 0
-#ifdef SANMA
-	repeat 3
-#else
-	repeat 4
-#endif
+	repeat NUM_OF_ACTUAL_PLAYERS
 		/* 画面の初期化 */
 		buffer SCR_PLAYER_BUFFER_UPPER+cnt, 600, 300
 		color bgColorR, bgColorG, bgColorB
@@ -93,9 +78,9 @@ return
 		/* 名前パネル */
 		putnamepanel GameStat, playername, cnt, bgColorR, bgColorG, bgColorB
 		/* 捨牌 */
-		if ((cnt+4-getPlayer(GameStat))\4 == 2) {
+		if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_TOIMEN) {
 			putsutehai GameStat, 232, 81, cnt, 1
-		} else:if ((cnt+4-getPlayer(GameStat))\4 == 0) {
+		} else:if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_SELF) {
 			putsutehai GameStat, 232, 74, cnt, 1
 		} else {
 			putsutehai GameStat, 232, 75, cnt, 1
@@ -103,25 +88,25 @@ return
 		/* 手牌 */
 		puttehai GameStat, ActivePlayer, cnt, 125, 265, 1
 		/* 下家の晒し面子 */
-		if ((cnt+4-getPlayer(GameStat))\4 == 1) {
+		if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_SHIMOCHA) {
 			putnakihai GameStat, cnt, 490, 260, 1
 		}
 		/* 壁牌 */
 		targetPlayer = cnt: targetPosX = 104: targetPosY = 200
-		if ((cnt+4-getPlayer(GameStat))\2 == 1) {targetPosX += 8}
+		if (playerRelative(cnt,getPlayer(GameStat))\2 == 1) {targetPosX += 8}
 #ifdef SANMA4
 		trueTargetPlayer = targetPlayer
-		if ((getRound(GameStat)\4) == 0) {tobePlayed = 0, 1, 2, 3}
-		if ((getRound(GameStat)\4) == 1) {tobePlayed = 3, 1, 2, 0}
-		if ((getRound(GameStat)\4) == 2) {tobePlayed = 1, 3, 2, 0}
-		if ((getRound(GameStat)\4) == 3) {tobePlayed = 1, 2, 3, 0}
+		if ((getRound(GameStat)\NUM_OF_PLAYERS) == 0) {tobePlayed = 0, 1, 2, 3}
+		if ((getRound(GameStat)\NUM_OF_PLAYERS) == 1) {tobePlayed = 3, 1, 2, 0}
+		if ((getRound(GameStat)\NUM_OF_PLAYERS) == 2) {tobePlayed = 1, 3, 2, 0}
+		if ((getRound(GameStat)\NUM_OF_PLAYERS) == 3) {tobePlayed = 1, 2, 3, 0}
 		targetPlayer = tobePlayed(trueTargetPlayer)
 		if (targetPlayer < 3) {
 #endif
-			if ((cnt+4-getPlayer(GameStat))\4 == 3) {
+			if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_KAMICHA) {
 				gsel SCR_PLAYER_BUFFER_UPPER+cnt: putyama GameStat, targetPosX, targetPosY, targetPlayer, trueTargetPlayer
 			}
-			if ((cnt+4-getPlayer(GameStat))\4 == 0) {
+			if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_SELF) {
 				gsel SCR_PLAYER_BUFFER_UPPER+cnt: putyama GameStat, targetPosX, targetPosY, targetPlayer, trueTargetPlayer
 			}
 			gsel SCR_PLAYER_BUFFER_LOWER+cnt: putyama GameStat, targetPosX, targetPosY, targetPlayer, trueTargetPlayer
@@ -132,17 +117,17 @@ return
 		/* 立直棒 */
 		gsel SCR_PLAYER_BUFFER_UPPER+cnt
 		if (getRichiFlag(GameStat, RICHI_FLAG, cnt) > RIICHI_NO) {
-			switch (cnt+4-getPlayer(GameStat))\4
-				case 0:
+			switch playerRelative(cnt,getPlayer(GameStat))
+				case RELATIVE_SELF:
 					putrichi 263, 60, 0, 2
 					swbreak
-				case 1:
+				case RELATIVE_SHIMOCHA:
 					putrichi 263, 60, -2, 0
 					swbreak
-				case 2:
+				case RELATIVE_TOIMEN:
 					putrichi 263, 60, 0, -2
 					swbreak
-				case 3:
+				case RELATIVE_KAMICHA:
 					putrichi 263, 60, 2, 0
 					swbreak
 			swend
@@ -150,40 +135,40 @@ return
 		/* サイコロ */
 		gsel SCR_PLAYER_BUFFER_UPPER+cnt
 		if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
-			switch (cnt+4-getPlayer(GameStat))\4
-				case 0:
+			switch playerRelative(cnt,getPlayer(GameStat))
+				case RELATIVE_SELF:
 					putsai GameStat, 340, 54, 0, 5
 					swbreak
-				case 1:
+				case RELATIVE_SHIMOCHA:
 					putsai GameStat, 340, 54, -5, 0
 					swbreak
-				case 2:
+				case RELATIVE_TOIMEN:
 					putsai GameStat, 340, 54, 0, -5
 					swbreak
-				case 3:
+				case RELATIVE_KAMICHA:
 					putsai GameStat, 340, 54, 5, 0
 					swbreak
 			swend
 		}
 		/* 下家以外の晒し面子 */
-		if ((cnt+4-getPlayer(GameStat))\4 != 1) {
+		if (playerRelative(cnt,getPlayer(GameStat)) != RELATIVE_SHIMOCHA) {
 			gsel SCR_PLAYER_BUFFER_UPPER+cnt
 			putnakihai GameStat, cnt, 490, 260, 1
 		}
 		/* 起家マーク */
 		gsel SCR_PLAYER_BUFFER_LOWER+cnt
 		if (cnt == 0) {
-			switch (cnt+4-getPlayer(GameStat))\4
-				case 0:
+			switch playerRelative(cnt,getPlayer(GameStat))
+				case RELATIVE_SELF:
 					putchichamark GameStat, 440, 140 , 0, 2
 					swbreak
-				case 1:
+				case RELATIVE_SHIMOCHA:
 					putchichamark GameStat, 440, 140 , -2, 0
 					swbreak
-				case 2:
+				case RELATIVE_TOIMEN:
 					putchichamark GameStat, 440, 140 , 0, -2
 					swbreak
-				case 3:
+				case RELATIVE_KAMICHA:
 					putchichamark GameStat, 440, 140 , 2, 0
 					swbreak
 			swend
@@ -200,20 +185,12 @@ return
 	/* 背景 */
 	color bgColorR, bgColorG, bgColorB
 	boxf 0, 0, 599, 599
-	gmode 7: pos 0, 0: gcopy SCR_MAIN_BACKGROUND, 0, 0, 840, 630
+	gmode gmode_pixela: pos 0, 0: gcopy SCR_MAIN_BACKGROUND, 0, 0, 840, 630
 	/* プレイヤー別の画面からメイン画面に合成 */
-#ifdef SANMA
-	repeat 3
-#else
-	repeat 4
-#endif
+	repeat NUM_OF_ACTUAL_PLAYERS
 		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_LOWER
 	loop
-#ifdef SANMA
-	repeat 3
-#else
-	repeat 4
-#endif
+	repeat NUM_OF_ACTUAL_PLAYERS
 		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_UPPER
 	loop
 	repeat 1, getPlayer(GameStat)
@@ -232,7 +209,7 @@ return
 return
 
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc putnamepanel var GameStat, array playername, int targetPlayer, int bgColorR, int bgColorG, int bgColorB
 	/* 名前パネル */
 	color bgColorR*10/8, bgColorG*10/8, bgColorB*10/8
@@ -241,31 +218,31 @@ return
 	if ((getScore(GameStat,targetPlayer,7)!=0)||(getScore(GameStat,targetPlayer,6)!=0)||(getScore(GameStat,targetPlayer,5)!=0)||(getScore(GameStat,targetPlayer,4)!=0)||(getScore(GameStat,targetPlayer,3)!=0)||(getScore(GameStat,targetPlayer,2)!=0)||(getScore(GameStat,targetPlayer,1)!=0)||(abs(getScore(GameStat,targetPlayer,0))>=10000)){
 		color bgColorR*12/8, bgColorG*12/8, bgColorB*12/8
 		tmpcnt=targetPlayer: tmpNumName = "億兆京垓杼穣溝澗正載極恒阿那不"
-		repeat 8
-			if (cnt < 7) {
-				if (getScore(GameStat,tmpcnt,7-cnt) >= 10000000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,7-cnt)\100000000/10000000)+abs(getScore(GameStat,tmpcnt,7-cnt)\10000000/1000000)+abs(getScore(GameStat,tmpcnt,7-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,7-cnt)\100000/10000)+strmid(tmpNumName, (6-cnt)*4+2, 2): break}
-				if (getScore(GameStat,tmpcnt,7-cnt) <= -10000000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,7-cnt)\100000000/10000000)+abs(getScore(GameStat,tmpcnt,7-cnt)\10000000/1000000)+abs(getScore(GameStat,tmpcnt,7-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,7-cnt)\100000/10000)+strmid(tmpNumName, (6-cnt)*4+2, 2): break}
-				if (getScore(GameStat,tmpcnt,7-cnt) >= 1000000) {pos 240, 65: tmptxt= "              "+abs(getScore(GameStat,tmpcnt,7-cnt)\10000000/1000000)+abs(getScore(GameStat,tmpcnt,7-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,7-cnt)\100000/10000)+strmid(tmpNumName, (6-cnt)*4+2, 2): break}
-				if (getScore(GameStat,tmpcnt,7-cnt) <= -1000000) {pos 240, 65: tmptxt= "             -"+abs(getScore(GameStat,tmpcnt,7-cnt)\10000000/1000000)+abs(getScore(GameStat,tmpcnt,7-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,7-cnt)\100000/10000)+strmid(tmpNumName, (6-cnt)*4+2, 2): break}
-				if (getScore(GameStat,tmpcnt,7-cnt) >= 100000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,7-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,7-cnt)\100000/10000)+"."+abs(getScore(GameStat,tmpcnt,7-cnt)\10000/1000)+strmid(tmpNumName, (6-cnt)*4+2, 2): break}
-				if (getScore(GameStat,tmpcnt,7-cnt) <= -100000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,7-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,7-cnt)\100000/10000)+"."+abs(getScore(GameStat,tmpcnt,7-cnt)\10000/1000)+strmid(tmpNumName, (6-cnt)*4+2, 2): break}
-				if (getScore(GameStat,tmpcnt,7-cnt) >= 10000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,7-cnt)\100000/10000)+"."+abs(getScore(GameStat,tmpcnt,7-cnt)\10000/1000)+abs(getScore(GameStat,tmpcnt,7-cnt)\1000/100)+strmid(tmpNumName, (6-cnt)*4+2, 2): break}
-				if (getScore(GameStat,tmpcnt,7-cnt) <= -10000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,7-cnt)\100000/10000)+"."+abs(getScore(GameStat,tmpcnt,7-cnt)\10000/1000)+abs(getScore(GameStat,tmpcnt,7-cnt)\1000/100)+strmid(tmpNumName, (6-cnt)*4+2, 2): break}
+		repeat NUM_OF_DIGIT_GROUPS
+			if (cnt < NUM_OF_DIGIT_GROUPS-2) {
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 10000000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000000/10000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000000/1000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -10000000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000000/10000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000000/1000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 1000000) {pos 240, 65: tmptxt= "              "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000000/1000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -1000000) {pos 240, 65: tmptxt= "             -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000000/1000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 100000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000/1000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -100000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000/1000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 10000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000/1000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000/100)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -10000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000/1000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000/100)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
 				
-				if (getScore(GameStat,tmpcnt,7-cnt) >= 1000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,7-cnt)\10000/1000)+abs(getScore(GameStat,tmpcnt,7-cnt)\1000/100)+abs(getScore(GameStat,tmpcnt,7-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,7-cnt)\10)+strmid(tmpNumName, (6-cnt)*4, 2): break}
-				if (getScore(GameStat,tmpcnt,7-cnt) <= -1000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,7-cnt)\10000/1000)+abs(getScore(GameStat,tmpcnt,7-cnt)\1000/100)+abs(getScore(GameStat,tmpcnt,7-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,7-cnt)\10)+strmid(tmpNumName, (6-cnt)*4, 2): break}
-				if (getScore(GameStat,tmpcnt,7-cnt) >= 100) {pos 240, 65: tmptxt= "              "+abs(getScore(GameStat,tmpcnt,7-cnt)\1000/100)+abs(getScore(GameStat,tmpcnt,7-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,7-cnt)\10)+strmid(tmpNumName, (6-cnt)*4, 2): break}
-				if (getScore(GameStat,tmpcnt,7-cnt) <= -100) {pos 240, 65: tmptxt= "             -"+abs(getScore(GameStat,tmpcnt,7-cnt)\1000/100)+abs(getScore(GameStat,tmpcnt,7-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,7-cnt)\10)+strmid(tmpNumName, (6-cnt)*4, 2): break}
-				if (cnt < 6) {
-					if (getScore(GameStat,tmpcnt,7-cnt) >= 10) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,7-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,7-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,7-cnt-1)\100000000/10000000)+strmid(tmpNumName, (6-cnt)*4, 2): break}
-					if (getScore(GameStat,tmpcnt,7-cnt) <= -10) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,7-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,7-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,7-cnt-1)\100000000/10000000)+strmid(tmpNumName, (6-cnt)*4, 2): break}
-					if (getScore(GameStat,tmpcnt,7-cnt) >= 1) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,7-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,7-cnt-1)\100000000/10000000)+abs(getScore(GameStat,tmpcnt,7-cnt-1)\10000000/1000000)+strmid(tmpNumName, (6-cnt)*4, 2): break}
-					if (getScore(GameStat,tmpcnt,7-cnt) <= -1) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,7-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,7-cnt-1)\100000000/10000000)+abs(getScore(GameStat,tmpcnt,7-cnt-1)\10000000/1000000)+strmid(tmpNumName, (6-cnt)*4, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 1000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000/1000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000/100)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -1000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000/1000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000/100)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 100) {pos 240, 65: tmptxt= "              "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000/100)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -100) {pos 240, 65: tmptxt= "             -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000/100)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+				if (cnt < NUM_OF_DIGIT_GROUPS-2) {
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 10) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\100000000/10000000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -10) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\100000000/10000000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 1) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\100000000/10000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\10000000/1000000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -1) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\100000000/10000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\10000000/1000000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
 				} else {
-					if (getScore(GameStat,tmpcnt,7-cnt) >= 10) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,7-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,7-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,7-cnt-1)\1000000/100000)+strmid(tmpNumName, (6-cnt)*4, 2): break}
-					if (getScore(GameStat,tmpcnt,7-cnt) <= -10) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,7-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,7-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,7-cnt-1)\1000000/100000)+strmid(tmpNumName, (6-cnt)*4, 2): break}
-					if (getScore(GameStat,tmpcnt,7-cnt) >= 1) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,7-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,7-cnt-1)\1000000/100000)+abs(getScore(GameStat,tmpcnt,7-cnt-1)\100000/10000)+strmid(tmpNumName, (6-cnt)*4, 2): break}
-					if (getScore(GameStat,tmpcnt,7-cnt) <= -1) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,7-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,7-cnt-1)\1000000/100000)+abs(getScore(GameStat,tmpcnt,7-cnt-1)\100000/10000)+strmid(tmpNumName, (6-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 10) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\1000000/100000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -10) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\1000000/100000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 1) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\100000/10000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -1) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\100000/10000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
 				}
 			} else {
 				if (getScore(GameStat,tmpcnt,0) >= 100000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,0)\1000000/100000)+abs(getScore(GameStat,tmpcnt,0)\100000/10000)+abs(getScore(GameStat,tmpcnt,0)\10000/1000)+abs(getScore(GameStat,tmpcnt,0)\1000/100)+"万": break}
@@ -283,33 +260,33 @@ return
 		borderedtxt2a tmptxt, 240, 65, bgColorR*12/8, bgColorG*12/8, bgColorB*12/8, 0, 14
 	}
 	borderedtxt2a strmid(PlayerName(targetPlayer), 0, 12), 240, 65, bgColorR*12/8, bgColorG*12/8, bgColorB*12/8, 0, 14
-	color 255, 255, 240: gmode 1
+	color 255, 255, 240: gmode gmode_mem
 	return
 #global
 
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc putcenterpanel var GameStat, int watchmodeflag, int bgColorR, int bgColorG, int bgColorB, array hncnturnname
 	haiNokori = getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)
 	/* 画面中央に表示する情報 */
-	gmode 0
+	gmode gmode_gdi
 	/* 現在何局目かを表示 */
 	font fontname, 32, 0
 	if ((getRoundLoop(GameStat))\2 == 0) {
 		if (getRoundLoop(GameStat) == 0) {
-			if (getRound(GameStat)/4 == 0) {color 128, 255, 128}
-			if (getRound(GameStat)/4 == 1) {color 128, 255, 255}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {color 128, 255, 128}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {color 128, 255, 255}
 		} else {
-			if (getRound(GameStat)/4 == 0) {color 192, 255, 128}
-			if (getRound(GameStat)/4 == 1) {color 255, 192, 128}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {color 192, 255, 128}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {color 255, 192, 128}
 		}
-		if (getRound(GameStat)/4 == 2) {color 192, 192, 255}
-		if (getRound(GameStat)/4 == 3) {color 255, 128, 255}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 2) {color 192, 192, 255}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {color 255, 128, 255}
 	} else {
-		if (getRound(GameStat)/4 == 0) {color 255, 255, 255}
-		if (getRound(GameStat)/4 == 1) {color 255, 255, 128}
-		if (getRound(GameStat)/4 == 2) {color 255, 128, 128}
-		if (getRound(GameStat)/4 == 3) {color 192, 192, 192}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {color 255, 255, 255}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {color 255, 255, 128}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 2) {color 255, 128, 128}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {color 192, 192, 192}
 	}
 	borderedtxt2a hncnTurnName(getRound(GameStat)), 250, 250, ginfo_r, ginfo_g, ginfo_b, 1, 32
 	/* 局の情報を表示 */
@@ -368,29 +345,29 @@ return
 			tmptxt += "Watch Mode\n"
 		} else {
 			switch playerWind(getPlayer(GameStat), getRound(GameStat))
-				case 0: tmptxt += "Player  親 \n": swbreak
-				case 1: tmptxt += "Player 南家\n": swbreak
-				case 2: tmptxt += "Player 西家\n": swbreak
-				case 3: tmptxt += "Player 北家\n": swbreak
+				case PLAYER_EAST: tmptxt += "Player  親 \n": swbreak
+				case PLAYER_SOUTH: tmptxt += "Player 南家\n": swbreak
+				case PLAYER_WEST: tmptxt += "Player 西家\n": swbreak
+				case PLAYER_NORTH: tmptxt += "Player 北家\n": swbreak
 			swend
 		}
 	}
 	/* 情報を表示 */
 	if ((getRoundLoop(GameStat))\2 == 0) {
 		if (getRoundLoop(GameStat) == 0) {
-			if (getRound(GameStat)/4 == 0) {color 128, 255, 128}
-			if (getRound(GameStat)/4 == 1) {color 128, 255, 255}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {color 128, 255, 128}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {color 128, 255, 255}
 		} else {
-			if (getRound(GameStat)/4 == 0) {color 192, 255, 128}
-			if (getRound(GameStat)/4 == 1) {color 255, 192, 128}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {color 192, 255, 128}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {color 255, 192, 128}
 		}
-		if (getRound(GameStat)/4 == 2) {color 192, 192, 255}
-		if (getRound(GameStat)/4 == 3) {color 255, 128, 255}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 2) {color 192, 192, 255}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {color 255, 128, 255}
 	} else {
-		if (getRound(GameStat)/4 == 0) {color 255, 255, 255}
-		if (getRound(GameStat)/4 == 1) {color 255, 255, 128}
-		if (getRound(GameStat)/4 == 2) {color 255, 128, 128}
-		if (getRound(GameStat)/4 == 3) {color 192, 192, 192}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {color 255, 255, 255}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {color 255, 255, 128}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 2) {color 255, 128, 128}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {color 192, 192, 192}
 	}
 	tmpr = ginfo_r: tmpg = ginfo_g: tmpb = ginfo_b
 	notesel tmptxt
@@ -404,45 +381,13 @@ return
 
 /* 各家の情報を表示 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc putplayerinfo var GameStat, int haiCurrentSutehai, int targetPlayer, int Activeplayer
 	gsel SCR_PLAYER_BUFFER_UPPER+targetPlayer
 	color 0, 0, 0
 	/* 暫定順位の計算 */
-	tmpRank = 1
-	tmpcnt = targetPlayer
-#ifdef SANMA
-	repeat 3
-#else
-	repeat 4
-#endif
-		if (getScore(GameStat,cnt,7) > getScore(GameStat,tmpcnt,7)) {tmpRank++}
-		if (getScore(GameStat,cnt,7) == getScore(GameStat,tmpcnt,7)) {
-			if (getScore(GameStat,cnt,6) > getScore(GameStat,tmpcnt,6)) {tmpRank++}
-			if (getScore(GameStat,cnt,6) == getScore(GameStat,tmpcnt,6)) {
-				if (getScore(GameStat,cnt,5) > getScore(GameStat,tmpcnt,5)) {tmpRank++}
-				if (getScore(GameStat,cnt,5) == getScore(GameStat,tmpcnt,5)) {
-					if (getScore(GameStat,cnt,4) > getScore(GameStat,tmpcnt,4)) {tmpRank++}
-					if (getScore(GameStat,cnt,4) == getScore(GameStat,tmpcnt,4)) {
-						if (getScore(GameStat,cnt,3) > getScore(GameStat,tmpcnt,3)) {tmpRank++}
-						if (getScore(GameStat,cnt,3) == getScore(GameStat,tmpcnt,3)) {
-							if (getScore(GameStat,cnt,2) > getScore(GameStat,tmpcnt,2)) {tmpRank++}
-							if (getScore(GameStat,cnt,2) == getScore(GameStat,tmpcnt,2)) {
-								if (getScore(GameStat,cnt,1) > getScore(GameStat,tmpcnt,1)) {tmpRank++}
-								if (getScore(GameStat,cnt,1) == getScore(GameStat,tmpcnt,1)) {
-									if (getScore(GameStat,cnt,0) > getScore(GameStat,tmpcnt,0)) {tmpRank++}
-									if ((getScore(GameStat,cnt,0) == getScore(GameStat,tmpcnt,0))&&(tmpcnt > cnt)) {tmpRank++}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	loop
-#ifdef SANMA
-	if (tmpRank == 4) {tmpRank = 3}
-#endif
+	calcRank Rank, GameStat
+	tmpRank = Rank(targetPlayer)
 	/* ツモ番マーカー */
 	/* ツモ番の人はマーカーを表示し、文字を黄色で表示 */
 	if (ActivePlayer == targetPlayer) {tmptxt = "▼"}
@@ -689,9 +634,9 @@ return
 
 /* 鳴き仕掛けなどのテキスト表示 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc initCall
-	sdim haiCall, 12, 4
+	sdim haiCall, 12, NUM_OF_PLAYERS
 return
 
 #deffunc setCall int pnum, str callStr
@@ -748,11 +693,11 @@ return
 #global
 
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc putsidepanel int bgColorR, int bgColorG, int bgColorB
 	/* 画面右 */
 	gsel 0: color bgColorR, bgColorG, bgColorB
-	gmode 7: pos 590, 0: gcopy SCR_MAIN_LOGO, 0, 0, 240, 120
+	gmode gmode_pixela: pos 590, 0: gcopy SCR_MAIN_LOGO, 0, 0, 240, 120
 	font fontname, 20, 0
 	tmpVersion = "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
 	borderedtxt2a tmpVersion, 600+((24-strlen(tmpVersion))*10), 16, (bgColorR+63+255)/2, (bgColorG+63+255)/2, (bgColorB+63+255)/2, 0, 20
@@ -805,12 +750,12 @@ return
 	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 820, 459, 619, 459
 	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 820, 620: line 619, 620
 	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 619, 459
-	gsel 0: gmode 4, , , 56: pos 0, 0: color 0, 0, 0: gcopy SCR_BUTTON_FLAME_BUFFER, 0, 0, 840, 630
+	gsel 0: gmode gmode_rgb0alpha, , , 56: pos 0, 0: color 0, 0, 0: gcopy SCR_BUTTON_FLAME_BUFFER, 0, 0, 840, 630
 	return
 #global
 
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc putlowerpanel var GameStat, int activeplayer
 	/* 画面下を黒で塗る */
 	color bgColorR/5, bgColorG/5, bgColorB/5
@@ -884,23 +829,27 @@ return
 	/* 点差を表示 */
 #ifdef SANMA
 	DiffPosCode = 0
-	repeat 3, 1
-		if ((getPlayer(GameStat)+cnt)\4 == 3) {continue}
+	repeat NUM_OF_PLAYERS-1, 1
+		if ((getPlayer(GameStat)+cnt)\NUM_OF_PLAYERS == 3) {continue}
 		if (DiffPosCode==0) {pos 535, 601}
 		if (DiffPosCode==1) {pos 470, 601}
-		if (cnt==1) {tmpposname = "下家"}
-		if (cnt==2) {tmpposname = "対面"}
-		if (cnt==3) {tmpposname = "上家"}
+		switch cnt
+			case RELATIVE_SHIMOCHA: tmpposname = "下家": swbreak
+			case RELATIVE_TOIMEN: tmpposname = "対面: swbreak
+			case RELATIVE_KAMICHA: tmpposname = "上家": swbreak
+		swend
 		DiffPosCode++
 #else
-	repeat 3, 1
-		if (cnt==1) {pos 535, 601: tmpposname = "下家"}
-		if (cnt==2) {pos 470, 601: tmpposname = "対面"}
-		if (cnt==3) {pos 10, 601: tmpposname = "上家"}
+	repeat NUM_OF_PLAYERS-1, 1
+		switch cnt
+			case RELATIVE_SHIMOCHA: pos 535, 601: tmpposname = "下家": swbreak
+			case RELATIVE_TOIMEN: pos 470, 601: tmpposname = "対面": swbreak
+			case RELATIVE_KAMICHA: pos 10, 601: tmpposname = "上家": swbreak
+		swend
 #endif
 		tmpcnt = cnt: tmpdiff = 0.0
-		repeat 8
-			tmpdiff += double((getScore(GameStat,getPlayer(GameStat), cnt) - getScore(GameStat,(getPlayer(GameStat)+tmpcnt)\4, cnt)))*powf(10,8*cnt)
+		repeat NUM_OF_DIGIT_GROUPS
+			tmpdiff += double((getScore(GameStat,getPlayer(GameStat), cnt) - getScore(GameStat,(getPlayer(GameStat)+tmpcnt)\NUM_OF_PLAYERS, cnt)))*powf(10,8*cnt)
 			if (cnt==0) {tmpdiff *= 100.0}
 		loop
 		if (tmpdiff > 48000.0)&&(getRule(RULE_LIMITLESS) == "0") {
@@ -953,7 +902,7 @@ return
 #global
 
 #module
-#include "const.hsp"
+#include "const.as"
 #define PI M_PI
 #deffunc showClock int bgColorR, int bgColorG, int bgColorB
 	/* 時計を表示してみる */

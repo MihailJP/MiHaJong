@@ -8,7 +8,7 @@
 *startgame
 	/* 変数類の初期化 */
 	WatchModeFlag = 0
-	sdim PlayerName, 20, 4
+	sdim PlayerName, 20, NUM_OF_PLAYERS
 	if (vartype(GameStat) == vartype("struct")) {
 		if (varuse(GameStat)) {
 			delmod GameStat
@@ -33,15 +33,15 @@ repeat
 	/* ウォッチモードの時は視点を親に移す */
 	ActivePlayer = -1
 	if (WatchModeFlag == 1) {
-		setPlayer GameStat, getRound(GameStat)\4
+		setPlayer GameStat, getRound(GameStat)\NUM_OF_PLAYERS
 	}
 	/* 破回八連荘の後始末 */
 	if (getAgariChain(GameStat) == -1) {setAgariChain GameStat, 1}
 	/* 半荘の初期化と配牌を行なう */
 	gosub *tableinit
 	/* 配牌終了時の処理 */
-	repeat 4: setHandStat GameStat, cnt, 0:lipai GameStat, cnt: loop
-	ActivePlayer = getRound(GameStat)\4 // 最初に親から捨牌を行なう
+	repeat NUM_OF_PLAYERS: setHandStat GameStat, cnt, 0:lipai GameStat, cnt: loop
+	ActivePlayer = getRound(GameStat)\NUM_OF_PLAYERS // 最初に親から捨牌を行なう
 	info "配牌を完了しました。"
 	/* 摸打ループ */
 	repeat
@@ -58,7 +58,7 @@ repeat
 		gosub *redrscreen
 		/* COMが「カンニング」しないように処理 */
 		makesandbox Sandbox, GameStat, ActivePlayer
-		dim reducedRon, 4: dim reducedMinkan, 4: dim reducedPon, 4: dim reducedChi, 4
+		dim reducedRon, NUM_OF_PLAYERS: dim reducedMinkan, NUM_OF_PLAYERS: dim reducedPon, NUM_OF_PLAYERS: dim reducedChi, NUM_OF_PLAYERS
 		/* 打牌を取得する */
 		if (ActivePlayer == getPlayer(GameStat)) {
 			if (getAgariHouki(GameStat, ActivePlayer) == 1) {
@@ -225,11 +225,7 @@ repeat
 		setKangFlag GameStat, KANG_FLAG, 0 // 嶺上開花のフラグを降ろす
 		/* 立直をするときの処理 */
 		if ((teDahai >= DAHAI_TYPE_RIICHI)&&(teDahai < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
-#ifdef SANMAX
-			if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) < 3) {
-#else
-			if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) < 4) {
-#endif
+			if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) < NUM_OF_ACTUAL_PLAYERS) {
 				// 残り４枚未満の時はリーチ無効
 				teDahai -= DAHAI_TYPE_RIICHI-DAHAI_TYPE_NORMAL
 				warn strf("山牌の残数要件を満たしていません。打牌コード [%d] に補正しました。", teDahai)
@@ -237,11 +233,7 @@ repeat
 		}
 		/* オープン立直をするときの処理 */
 		if ((teDahai >= DAHAI_TYPE_OPENRIICHI)&&(teDahai < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
-#ifdef SANMAX
-			if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) < 3) {
-#else
-			if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) < 4) {
-#endif
+			if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) < NUM_OF_ACTUAL_PLAYERS) {
 				// 残り４枚未満の時はリーチ無効
 				teDahai -= DAHAI_TYPE_OPENRIICHI-DAHAI_TYPE_NORMAL
 				warn strf("山牌の残数要件を満たしていません。打牌コード [%d] に補正しました。", teDahai)
@@ -316,7 +308,7 @@ repeat
 		/* 自動的に理牌を行なう */
 		lipai GameStat, ActivePlayer
 		// このとき牌を捨てているはず 表示バグ防止のため
-		repeat 4: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop
+		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop
 		/* 立直をした直後の場合、千点を供託し一発のフラグを立てる */
 		if ((teDahai >= DAHAI_TYPE_OPENRIICHI)&&(teDahai < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
 			setCall ActivePlayer, "　　　　"
@@ -344,7 +336,7 @@ repeat
 			dsplay SND_DAHAI1
 		}
 		/* このとき牌を捨てているはずなので、バグ防止のための処理 */
-		repeat 4: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop
+		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop
 		/* 再描画 */
 		gosub *redrscreen
 		await 80
@@ -376,7 +368,7 @@ repeat
 			}
 		}
 #endif
-		repeat 4: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop // バグ防止のため
+		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop // バグ防止のため
 		if (((haiCurrentSutehai == getPreviousMeld(GameStat, PREVMELD_TILECODE))||(haiCurrentSutehai == getPreviousMeld(GameStat, PREVMELD_STEPPED)))&&(getAgariHouki(GameStat, ActivePlayer) == 0)) {
 			// 喰い替えの場合の処理
 			if (getRule(RULE_KUIKAE) != "2") {
@@ -447,7 +439,7 @@ repeat
 		if (haiPon(0)+haiPon(1)+haiPon(2)+haiPon(3)+haiMinkan(0)+haiMinkan(1)+haiMinkan(2)+haiMinkan(3) > 1) {
 			error "複数同時のポン・槓が宣言されています。"
 		}
-		repeat 4: await 0
+		repeat NUM_OF_PLAYERS: await 0
 			/* 捨牌をポンする場合 */
 			if (haiPon(cnt) == 1) {
 				PassivePlayer = cnt // 鳴いたプレイヤーを設定
@@ -470,8 +462,8 @@ repeat
 		} else {
 			/* 吃の処理 */
 			/* 三人打ちでは吃なし */
-			if (haiChi((ActivePlayer+1)\4) > 0) {
-				PassivePlayer = (ActivePlayer+1)\4 // 吃ができるのは上家の捨牌のみ
+			if (haiChi(ShimochaOf(ActivePlayer)) > 0) {
+				PassivePlayer = ShimochaOf(ActivePlayer) // 吃ができるのは上家の捨牌のみ
 				fuuroproc GameStat, haiRon, haiChi, hncnKyokuEndType, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkaDora, ActivePlayer, PassivePlayer, FUURO_CHII
 				ActivePlayer = PassivePlayer
 				continue
@@ -481,17 +473,17 @@ repeat
 		/* ウェイトを入れる */
 		await 100
 		/* バグ防止のアレ */
-		repeat 4: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop
+		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop
 		/* 次のプレイヤーが牌を自摸る */
 		incDrawPointer GameStat: setHeavenHandFlag GameStat, 0
 #ifdef SANMA
-		ActivePlayer++: ActivePlayer = ActivePlayer\3
+		ActivePlayer++: ActivePlayer = ActivePlayer\NUM_OF_ACTUAL_PLAYERS
 #else
 #ifdef SANMA4
 		/* 北家をスキップ */
 		if (playerWind(ActivePlayer, getRound(GameStat)) == PLAYER_WEST) {ActivePlayer++}
 #endif
-		ActivePlayer++: ActivePlayer = ActivePlayer\4
+		ActivePlayer++: ActivePlayer = ActivePlayer\NUM_OF_PLAYERS
 #endif
 		setHand GameStat, HAND_TILECODE, 13, ActivePlayer, getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
 		setHand GameStat, HAND_REDTILE, 13, ActivePlayer, getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
@@ -516,27 +508,16 @@ repeat
 	// 和了り止め
 	if (getRule(RULE_AGARIYAME) != "1") {
 		if (((getRound(GameStat)+(getRoundLoop(GameStat)*16)) == getGameLength(GameStat))&&((hncnOrigTurn+(getRoundLoop(GameStat)*16)) == getGameLength(GameStat))&&(hncnKyokuEndType == ENDKYOKU_AGARI)) {
-			dim hncnRank, 4
-			repeat 4
-				hncnRank(cnt) = 1
-				if (getScore(GameStat,0) > getScore(GameStat,cnt)) {hncnRank(cnt)++}
-				if (getScore(GameStat,1) > getScore(GameStat,cnt)) {hncnRank(cnt)++}
-				if (getScore(GameStat,2) > getScore(GameStat,cnt)) {hncnRank(cnt)++}
-				if (getScore(GameStat,3) > getScore(GameStat,cnt)) {hncnRank(cnt)++}
-				if ((getScore(GameStat,0) == getScore(GameStat,cnt))&&(cnt > 0)) {hncnRank(cnt)++}
-				if ((getScore(GameStat,1) == getScore(GameStat,cnt))&&(cnt > 1)) {hncnRank(cnt)++}
-				if ((getScore(GameStat,2) == getScore(GameStat,cnt))&&(cnt > 2)) {hncnRank(cnt)++}
-				if ((getScore(GameStat,3) == getScore(GameStat,cnt))&&(cnt > 3)) {hncnRank(cnt)++}
-			loop
+			calcRank Rank, GameStat
 #ifdef SANMA
-			if ((hncnRank(getRound(GameStat)\4) == 1)&&(getScore(GameStat,getRound(GameStat)\4) >= 400)) {break}
+			if ((Rank(getRound(GameStat)\NUM_OF_PLAYERS) == 1)&&(getScore(GameStat,getRound(GameStat)\NUM_OF_PLAYERS) >= 400)) {break}
 #else
-			if ((hncnRank(getRound(GameStat)\4) == 1)&&(getScore(GameStat,getRound(GameStat)\4) >= 300)) {break}
+			if ((Rank(getRound(GameStat)\NUM_OF_PLAYERS) == 1)&&(getScore(GameStat,getRound(GameStat)\NUM_OF_PLAYERS) >= 300)) {break}
 #endif
 		}
 	}
 #ifdef SANMA
-	if (getRound(GameStat)\4 == 3) {incRound GameStat}
+	if (getRound(GameStat)\NUM_OF_PLAYERS == 3) {incRound GameStat}
 #endif
 	// 東北廻しのとき
 	if ((getRound(GameStat) == 4)&&(getRule(RULE_GAME_LENGTH) == "3")) {setRound GameStat, 12}

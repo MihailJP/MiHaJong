@@ -5,7 +5,7 @@
  */
 
 #module PLAYER
-#include "const.hsp"
+#include "const.as"
 /* プレイヤーの打牌 */
 #deffunc playerinput var GameStat, int ProcessMode, int GameMode, array isRemotePlayer, int ActivePlayer, int PassivePlayer, var teDahai, int haiCurrentSutehai, int haiCurrentSutehaiAkaDora, array haiRon, array haiMinkan, array haiPon, array haiChi
 	dim haiMachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化

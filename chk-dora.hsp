@@ -6,7 +6,7 @@
 
 /* ƒhƒ‰‚ğ”‚¦‚é */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc countdora var GameStat, var tmpYakuInfo, int targetPlayer
 	countTilesInHand haiCount, GameStat, targetPlayer
 	/* ƒhƒ‰‚Å˜a—¹‚Á‚½‚ç1ãÊ */

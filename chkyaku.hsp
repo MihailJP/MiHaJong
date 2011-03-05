@@ -4,89 +4,11 @@
  *=============================
  */
 
-#module yakuStruct BasePoints, CoreHan, BonusHan, \
-DoraQuantity, UraDoraQuantity, AkaDoraQuantity, AliceDora, FlowerQuantity, \
-AgariPoints, yakuNameList, yakuValList, yakumanNameList
-#include "const.hsp"
-#modinit
-	BasePoints = 20
-	CoreHan = 0
-	BonusHan = 0
-	DoraQuantity = 0
-	UraDoraQuantity = 0
-	AkaDoraQuantity = 0
-	AliceDora = 0
-	FlowerQuantity = 0
-	dim AgariPoints, 8
-	yakuNameList = ""
-	yakuValList = ""
-	yakumanNameList = ""
-	return
-#modfunc exportYakuPoint array exportArray
-	dim exportArray, 8
-	repeat 8: exportArray(cnt) = AgariPoints(cnt): loop
-	return
-#modfunc setYakuInfo int Index, int value
-	switch Index
-		case YAKUINF_FU: BasePoints = value: swbreak
-		case YAKUINF_HAN_BASE: CoreHan = value: swbreak
-		case YAKUINF_HAN_BONUS: BonusHan = value: swbreak
-		case YAKUINF_DORA: DoraQuantity = value: swbreak
-		case YAKUINF_URADORA: UraDoraQuantity = value: swbreak
-		case YAKUINF_AKADORA: AkaDoraQuantity = value: swbreak
-		case YAKUINF_ALICEDORA: AliceDora = value: swbreak
-		case YAKUINF_FLOWER: FlowerQuantity = value: swbreak
-		default: AgariPoints(Index-YAKUINF_POINTS) = value: swbreak
-	swend
-	return
-#modfunc setYakuInfoTxt int Index, str value
-	switch Index
-		case YAKUINF_YAKULIST: yakuNameList = value: swbreak
-		case YAKUINF_YAKUVALLIST: yakuValList = value: swbreak
-		case YAKUINF_YAKUMANLIST: yakumanNameList = value: swbreak
-	swend
-	return
-#modfunc addYakuInfo int Index, int value
-	switch Index
-		case YAKUINF_FU: BasePoints += value: swbreak
-		case YAKUINF_HAN_BASE: CoreHan += value: swbreak
-		case YAKUINF_HAN_BONUS: BonusHan += value: swbreak
-		case YAKUINF_DORA: DoraQuantity += value: swbreak
-		case YAKUINF_URADORA: UraDoraQuantity += value: swbreak
-		case YAKUINF_AKADORA: AkaDoraQuantity += value: swbreak
-		case YAKUINF_ALICEDORA: AliceDora += value: swbreak
-		case YAKUINF_FLOWER: FlowerQuantity += value: swbreak
-		default: AgariPoints(Index-YAKUINF_POINTS) += value: swbreak
-	swend
-	return
-#modfunc addYakuInfoTxt int Index, str value
-	switch Index
-		case YAKUINF_YAKULIST: yakuNameList += value: swbreak
-		case YAKUINF_YAKUVALLIST: yakuValList += value: swbreak
-		case YAKUINF_YAKUMANLIST: yakumanNameList += value: swbreak
-	swend
-	return
-#modcfunc getYakuInfo int Index
-	switch Index
-		case YAKUINF_FU: return BasePoints: swbreak
-		case YAKUINF_HAN_BASE: return CoreHan: swbreak
-		case YAKUINF_HAN_BONUS: return BonusHan: swbreak
-		case YAKUINF_DORA: return DoraQuantity: swbreak
-		case YAKUINF_URADORA: return UraDoraQuantity: swbreak
-		case YAKUINF_AKADORA: return AkaDoraQuantity: swbreak
-		case YAKUINF_ALICEDORA: return AliceDora: swbreak
-		case YAKUINF_FLOWER: return FlowerQuantity: swbreak
-		case YAKUINF_YAKULIST: return yakuNameList: swbreak
-		case YAKUINF_YAKUVALLIST: return yakuValList: swbreak
-		case YAKUINF_YAKUMANLIST: return yakumanNameList: swbreak
-		default: return AgariPoints(Index-YAKUINF_POINTS): swbreak
-	swend
-	return 0x7fffffff
-#global
+#include "ystruct.as"
 
 /* 役を判定する */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc countyaku var GameStat, var yakuInfo, int targetPlayer, int furikomiPlayer, int TsumoAgari
 	debug strf("役判定処理を開始 プレイヤー [%d]", targetPlayer)
 	if (vartype(yakuInfo) == vartype("struct")) {
@@ -96,12 +18,12 @@ AgariPoints, yakuNameList, yakuValList, yakumanNameList
 	}
 	newmod yakuInfo, yakuStruct
 	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, targetPlayer
-	dim haiMianziDat, 5
+	dim haiMianziDat, SIZE_OF_MELD_BUFFER
 	dim ShantenArray, 7
 	repeat 7: ShantenArray(cnt) = countshanten(GameStat, targetPlayer, cnt): loop
 	Shanten = ShantenArray(0)
 	repeat 160
-		dim tmpScore, 8
+		dim tmpScore, NUM_OF_DIGIT_GROUPS
 		if ((cnt \ 8) == 7) {await 0}
 		newmod tmpYakuInfo, yakuStruct
 		/* 国士無双 */
@@ -147,7 +69,7 @@ AgariPoints, yakuNameList, yakuValList, yakumanNameList
 		/* 面子手ここから */
 		AtamaCode = cnt
 		makementsu GameStat, tmpYakuInfo, targetPlayer, Atamacode, haiProcessedTiles, haiMianziDat
-		if (haiProcessedTiles == 5) {
+		if (haiProcessedTiles == SIZE_OF_MELD_BUFFER) {
 			trace strf("面子を検出 プレイヤー [%d] モード [%d] 面子データ [%d %d %d %d %d]", targetPlayer, AtamaCode\4, haiMianziDat(0), haiMianziDat(1), haiMianziDat(2), haiMianziDat(3), haiMianziDat(4))
 			contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
 			calcbasepoints GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, TsumoAgari, MachiType
@@ -240,7 +162,7 @@ AgariPoints, yakuNameList, yakuValList, yakumanNameList
 			setYakuInfo yakuInfo, YAKUINF_AKADORA, getYakuInfo(tmpYakuInfo, YAKUINF_AKADORA)
 			setYakuInfo yakuInfo, YAKUINF_ALICEDORA, getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)
 			setYakuInfo yakuInfo, YAKUINF_FLOWER, getYakuInfo(tmpYakuInfo, YAKUINF_FLOWER)
-			repeat 8
+			repeat NUM_OF_DIGIT_GROUPS
 				setYakuInfo yakuInfo, YAKUINF_POINTS+cnt, tmpScore(cnt)
 			loop
 			addquan tmpYakuInfo, "ドラ", getYakuInfo(tmpYakuInfo, YAKUINF_DORA)-getYakuInfo(tmpYakuInfo, YAKUINF_URADORA)-getYakuInfo(tmpYakuInfo, YAKUINF_AKADORA)-getYakuInfo(tmpYakuInfo, YAKUINF_FLOWER)
@@ -264,7 +186,7 @@ return
 
 /* 青天井ルールの点数計算処理 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc aotenScoring var tmpYakuInfo, array tmpScore
 	if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
 		// 役満は固定点にするルール
@@ -283,7 +205,7 @@ return
 
 /* 役を成立させる */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc addyaku var tmpYakuInfo, str yakuName, int yakuVal
 /*
 		addyaku p1, p2, p3
@@ -305,7 +227,7 @@ return
 #global
 
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc addquan var tmpYakuInfo, str yakuName, int yakuVal
 /*
 		addquan p1, p2, p3
@@ -329,7 +251,7 @@ return
 
 /* 役満を成立させる */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc addyakuman var tmpYakuInfo, str yakuName, int yakuVal
 /*
 		addyakuman p1, p2, p3
@@ -353,7 +275,7 @@ return
 
 /* 役の成立を解除 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc delyaku var tmpYakuInfo, str tmpyakuDelete
 /*
 		delyaku p1, p2
@@ -395,7 +317,7 @@ return
 
 /* 役が成立しているかを判定 */
 #module
-#include "const.hsp"
+#include "const.as"
 #defcfunc searchyaku var tmpYakuInfo, str tmpCheckingYaku
 /*
 		val=searchyaku(p1, p2)

@@ -57,7 +57,7 @@
 return
 
 #module config
-#include "const.hsp"
+#include "const.as"
 
 #deffunc setconffile str argFileName
 	configFile = argFileName
@@ -141,7 +141,7 @@ return
 #endif
 #endif
 		boxf 0, 0, 839, 629
-		gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode 0
+		gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
 		font fontname, 48, 0
 		borderedtxt2 "ä¬ ã´ ê› íË", 152, 12, 255, 255, 255, 1, 48, 192, 192, 192
 		font fontname, 24, 0

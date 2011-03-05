@@ -5,7 +5,7 @@
  */
 /* ó‹µ–ğ */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc contextualyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int MachiType, int FurikomiPlayer, int TsumoAgari, var tmpRenhuFlag
 	trace "ó‹µ–ğ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	/* —§’¼Œn */
@@ -148,7 +148,7 @@
 			/* “D’êå³ */
 			if (getRule(RULE_NITEI_RAOCHUN) != "0") {
 				yakuflagcount = 0
-				repeat 4, 1
+				repeat SIZE_OF_MELD_BUFFER-1, 1
 					if (((haiMianziDat(cnt)/MELD_TYPE_STEP) != MELD_SEQUENCE_CONCEALED)&&((haiMianziDat(cnt)/MELD_TYPE_STEP) != MELD_TRIPLET_CONCEALED)) {
 						yakuflagcount++ // •›˜I–Êq‚Ì” ˆÃÈ‚à‚ ‚Á‚Ä‚æ‚¢
 					}

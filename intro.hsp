@@ -19,8 +19,8 @@
 #endif
 #endif
 	boxf 0, 0, 839, 629
-	gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630
-	pos 100, 80: gcopy SCR_TITLE_LOGO, 0, 0, 640, 200: gmode 0
+	gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630
+	pos 100, 80: gcopy SCR_TITLE_LOGO, 0, 0, 640, 200: gmode gmode_gdi
 	font fontname, 28, 0
 	borderedtxt2 "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC, 530, 125, 255, 255, 255, 1, 28, 192, 192, 192
 	tmptxt = "Copyright (c) 2011 MihailJP All rights reserved"
@@ -52,7 +52,7 @@
 
 /* モード選択画面 */
 *selmode
-	dim IsRemotePlayer, 4
+	dim IsRemotePlayer, NUM_OF_PLAYERS
 	gosub *titlemenu
 	debug "応答を待ちます。"
 	repeat
@@ -109,16 +109,12 @@
 #endif
 #endif
 		boxf 0, 0, 839, 629
-		gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode 0
+		gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
 		CurrentConnection = 1
-		repeat 3
+		repeat NUM_OF_PLAYERS-1
 			if (IsRemotePlayer(cnt+1) > 0) {CurrentConnection++}
 		loop
-#ifdef SANMA
-		sysscr fontname, "接続を待っています", "Waiting clients.", "\n現在の接続人数： "+CurrentConnection+" / 3 人"
-#else
-		sysscr fontname, "接続を待っています", "Waiting clients.", "\n現在の接続人数： "+CurrentConnection+" / 4 人"
-#endif
+		sysscr fontname, "接続を待っています", "Waiting clients.", strf("\n現在の接続人数： %d / %d 人", CurrentConnection, NUM_OF_ACTUAL_PLAYERS)
 		redraw 1
 		sockwait SOCK_GAME+0 // クライアントの接続を待機
 		if (stat == 0) {
@@ -175,18 +171,10 @@
 			sockmake SOCK_GAME+0, PORT_GAME+0
 		}
 		await 0
-#ifdef SANMA
-		if (CurrentConnection = 3) {startflag = 1}
-#else
-		if (CurrentConnection = 4) {startflag = 1}
-#endif
+		if (CurrentConnection == NUM_OF_ACTUAL_PLAYERS) {startflag = 1}
 		if (startflag) {
 			serversend 0xb4, IsRemotePlayer
-#ifdef SANMA
-			repeat 3
-#else
-			repeat 4
-#endif
+			repeat NUM_OF_ACTUAL_PLAYERS
 				tmpcnt = cnt
 				serversend 0xb8, IsRemotePlayer
 				serversend strlen(PlayerName(tmpcnt)), IsRemotePlayer
@@ -271,7 +259,7 @@ return
 #endif
 #endif
 	boxf 0, 0, 839, 629
-	gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode 0
+	gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
 	sysscr fontname, "接続先を入力してね", "Choose server.", "サーバーのIPアドレス、または\nドメイン名を入力してください"
 	redraw 1
 	GameMode = 2: vanish
@@ -294,7 +282,7 @@ return
 #endif
 #endif
 			boxf 0, 0, 839, 629
-			gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode 0
+			gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
 			sysscr fontname, "接続先を入力してね", "Choose server.", "サーバーに接続しています\nしばらくお待ちください"
 			redraw 1
 			sockopen SOCK_GAME+0, ServerAddress, PORT_GAME+0
@@ -315,11 +303,7 @@ return
 							await 1000
 						loop
 						ClientNumber = tmp - 1
-#ifdef SANMA
-						repeat 3
-#else
-						repeat 4
-#endif
+						repeat NUM_OF_ACTUAL_PLAYERS
 							if (cnt != ClientNumber) {IsRemotePlayer(cnt) = 1}
 						loop
 						break
@@ -337,7 +321,7 @@ return
 #endif
 #endif
 				boxf 0, 0, 839, 629
-				gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode 0
+				gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
 				sysscr fontname, "接続先を入力してね", "Choose server.", "開始合図を待っています\nしばらくお待ちください"
 				redraw 1
 				clientsend 0xb8
@@ -350,11 +334,7 @@ return
 					if ((ClientReceived)&&(ReceivedMsg == 0xb4)) {break}
 					await 0
 				loop
-#ifdef SANMA
-				repeat 3
-#else
-				repeat 4
-#endif
+				repeat NUM_OF_ACTUAL_PLAYERS
 					tmpclientnum = 0
 					gosub *receiveclientname
 					PlayerName(cnt) = tmpClientName
@@ -401,7 +381,7 @@ return
 #endif
 #endif
 	boxf 0, 0, 839, 629
-	gmode 7: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode 0
+	gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
 	sysscr fontname, "名前を入力してね", "Enter your name.", "プレーヤー名を入力してください\n（全角８文字まで）"
 	redraw 1
 	InputPlayerName = ""
@@ -432,47 +412,31 @@ return
 
 *chrshuffle
 	if (GameMode == 1) {
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			if (IsRemotePlayer(cnt) > 1) {
 				sockmake SOCK_CHAT-1+IsRemotePlayer(cnt), PORT_CHAT-1+IsRemotePlayer(cnt)
 			}
 		loop
 	}
-#ifdef SANMA
-	repeat 3: TmpRemotePlayer(cnt) = IsRemotePlayer(cnt): loop
-	repeat 3: TmpPlayerName(cnt) = PlayerName(cnt): loop
-	repeat 3: TmpPosition(cnt) = cnt: loop
-#else
-	repeat 4: TmpRemotePlayer(cnt) = IsRemotePlayer(cnt): loop
-	repeat 4: TmpPlayerName(cnt) = PlayerName(cnt): loop
-	repeat 4: TmpPosition(cnt) = cnt: loop
-#endif
+	repeat NUM_OF_ACTUAL_PLAYERS
+		TmpRemotePlayer(cnt) = IsRemotePlayer(cnt)
+		TmpPlayerName(cnt) = PlayerName(cnt)
+		TmpPosition(cnt) = cnt
+	loop
 	if (GameMode != 2) {
 		repeat 600
-#ifdef SANMA
-			tmp1 = rnd(3): tmp2 = rnd(3)
-#else
-			tmp1 = rnd(4): tmp2 = rnd(4)
-#endif
+			tmp1 = rnd(NUM_OF_ACTUAL_PLAYERS): tmp2 = rnd(NUM_OF_ACTUAL_PLAYERS)
 			tmp3 = TmpPosition(tmp1)
 			TmpPosition(tmp1) = TmpPosition(tmp2)
 			TmpPosition(tmp2) = tmp3
 		loop
 		if (GameMode = 1) {
-#ifdef SANMA
-			repeat 3
-#else
-			repeat 4
-#endif
+			repeat NUM_OF_ACTUAL_PLAYERS
 				serversend TmpPosition(cnt), IsRemotePlayer
 			loop
 		}
 	} else {
-#ifdef SANMA
-		repeat 3
-#else
-		repeat 4
-#endif
+		repeat NUM_OF_ACTUAL_PLAYERS
 			tmp = cnt
 			repeat
 				clientreceive ClientReceived, ReceivedMsg
@@ -497,20 +461,13 @@ return
 //	BorderTextX = 620: BorderTextY = 430: dsplay SND_TYPE
 //	BorderText = titleJia(TmpPosition(3)): borderedtxt BorderText, BorderTextX, BorderTextY, 255, 255, 255: await 500
 //#endif
-#ifdef SANMA
-	repeat 3: IsRemotePlayer(TmpPosition(cnt)) = TmpRemotePlayer(cnt): loop
-	repeat 3: PlayerName(TmpPosition(cnt)) = TmpPlayerName(cnt): loop
-#else
-	repeat 4: IsRemotePlayer(TmpPosition(cnt)) = TmpRemotePlayer(cnt): loop
-	repeat 4: PlayerName(TmpPosition(cnt)) = TmpPlayerName(cnt): loop
-#endif
+	repeat NUM_OF_ACTUAL_PLAYERS
+		IsRemotePlayer(TmpPosition(cnt)) = TmpRemotePlayer(cnt)
+		PlayerName(TmpPosition(cnt)) = TmpPlayerName(cnt)
+	loop
 	tmpPlayer = TmpPosition(ClientNumber)
 	if (GameMode == 2) {
-#ifdef SANMA
-		repeat 3
-#else
-		repeat 4
-#endif
+		repeat NUM_OF_ACTUAL_PLAYERS
 			if (cnt == tmpPlayer) {IsRemotePlayer(cnt) = 0}
 			else {IsRemotePlayer(cnt) = 1}
 		loop

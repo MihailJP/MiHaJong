@@ -6,22 +6,15 @@
 
 /* デバッグログ */
 #module debuglog
-#include "const.hsp"
+#include "const.as"
 #deffunc loginit
 #ifdef _debug
 	verbosity_level = "FATAL","ERROR","WARN","INFO","DEBUG","TRACE"
 	verbosity_border = 5
 	sdim filename, 1024
 	gsel 0
-	logdir = dirinfo(0)
-	winver = sysinfo(0)
-	if (instr(winver, 0, "WindowsNT ver6") >= 0) {
-		currentPath = dir_cur
-		if (instr(currentPath, 0, dirinfo(0x10026)) >= 0) {
-			appdataPath = dirinfo(0x1001a)
-			logdir = appdataPath+"\\MiHaJong\\"
-		}
-	}
+	logdir = confPath()
+	if (logdir == "") {logdir = "."}
 	filename = logdir+"\\debug.log"
 	exec "logger.exe "+PORT_LOGGER+"/"+filename
 	repeat 1
@@ -92,7 +85,7 @@ return
 
 /* 縁取りテキスト */
 #module
-#include "const.hsp"
+#include "const.as"
 *doputtext
 	if (TextSize) {font fontname, TextSize, Style}
 	color 0, 0, 0
@@ -116,9 +109,9 @@ return
 			line 599, cnt, 0, cnt
 		loop
 		color 255, 255, 255: pos 600, 0: font fontname, TextSize, Style: print BorderText
-		gsel tmpscr: pos BorderTextX, BorderTextY: gmode 7, 600, TextSize
+		gsel tmpscr: pos BorderTextX, BorderTextY: gmode gmode_pixela, 600, TextSize
 		gcopy SCR_TEXT_BUF, 0, 0, 600, TextSize
-		gmode 0
+		gmode gmode_gdi
 	} else {
 		color BorderTextR, BorderTextG, BorderTextB: pos BorderTextX, BorderTextY
 		print BorderText
@@ -160,25 +153,62 @@ return
 #global
 
 #module
+#include "const.as"
 #defcfunc playerwind int player, int Round
 #ifdef SANMA
-	return ((player+24-(Round-(Round/4)))\3)
+	return ((player+24-(Round-(Round/4)))\NUM_OF_ACTUAL_PLAYERS)
 #else
-	return ((player+32-Round)\4)
+	return ((player+32-Round)\NUM_OF_ACTUAL_PLAYERS)
 #endif
 #global
 
 #module
+#include "const.as"
+#defcfunc playerRelative int targetPlayer, int basePlayer
+	// ((4+targetPlayer-getPlayer(GameStat))\4)*(haiShowMode) の値
+	// 0…自家 1…下家 2…対面 3…上家
+	return (NUM_OF_PLAYERS+targetPlayer-basePlayer)\NUM_OF_PLAYERS
+#global
+
+#module
+#include "const.as"
+#defcfunc RelativePositionOf int targetPlayer, int relative
+	return (targetPlayer+relative)\NUM_OF_PLAYERS
+#global
+
+#module
+#include "const.as"
 #defcfunc windName int wind
 	switch wind
-		case 0: return "東家": swbreak
-		case 1: return "南家": swbreak
-		case 2: return "西家": swbreak
-		case 3: return "北家": swbreak
+		case PLAYER_EAST: return "東家": swbreak
+		case PLAYER_SOUTH: return "南家": swbreak
+		case PLAYER_WEST: return "西家": swbreak
+		case PLAYER_NORTH: return "北家": swbreak
 		default: return "????": swbreak
 	swend
 #global
 
+/* 順位を計算する */
+#module
+#include "const.as"
+#deffunc calcRank array Rank, var GameStat
+	dim Rank, NUM_OF_PLAYERS
+	repeat NUM_OF_ACTUAL_PLAYERS
+		Rank(cnt) = 1
+		tmpcnt = cnt
+		repeat NUM_OF_ACTUAL_PLAYERS
+			tmpcntt = cnt
+			repeat NUM_OF_DIGIT_GROUPS
+				if (getScore(GameStat,tmpcntt,NUM_OF_DIGIT_GROUPS-1-cnt) > getScore(GameStat,tmpcnt,NUM_OF_DIGIT_GROUPS-1-cnt)) {Rank(tmpcnt)++: break}
+				if (getScore(GameStat,tmpcntt,NUM_OF_DIGIT_GROUPS-1-cnt) < getScore(GameStat,tmpcnt,NUM_OF_DIGIT_GROUPS-1-cnt)) {break}
+				if ((cnt == NUM_OF_DIGIT_GROUPS-1)&&(tmpcnt > tmpcntt)) {Rank(tmpcnt)++}
+			loop
+		loop
+	loop
+	return
+#global
+
+/* Vista/7を使っているかどうか */
 #module
 #defcfunc isVista
 	wver = sysinfo(0)
@@ -193,6 +223,8 @@ return
 	return 0
 #global
 
+/* コンフィグのパスを自動設定 */
+/* Vista以降でRoamingに準備できていなければ作る */
 #module
 #defcfunc confPath
 	configpath = ""
@@ -235,7 +267,7 @@ return
 	loop
 	dsend
 	info "DirectSound を解放しました。"
-	repeat 4
+	repeat NUM_OF_PLAYERS
 		sockclose SOCK_GAME+cnt
 		sockclose SOCK_CHAT+cnt
 	loop

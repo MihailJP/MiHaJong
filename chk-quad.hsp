@@ -5,7 +5,7 @@
  */
 
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc countKangz array KangzCount, array haiMianziDat
 /*
 		countKangz p1, p2
@@ -20,7 +20,7 @@
 	trace "槓子の種類を調べます。"
 	Kangzi = 0
 	dim KangzCount, TILE_NONFLOWER_MAX
-	repeat 5
+	repeat SIZE_OF_MELD_BUFFER
 		if (haiMianziDat(cnt) >= MELD_QUAD*MELD_TYPE_STEP) {KangzCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)++}
 	loop
 	return Kangzi
@@ -28,12 +28,12 @@
 
 /* 槓子系の役 */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc quadyaku var GameStat, var tmpYakuInfo, array haiMianziDat
 	trace "槓子役の処理に入ります。"
 	countKangz KangzCount, haiMianziDat
 	Kangzi = stat: AnKan = 0
-	repeat 5
+	repeat SIZE_OF_MELD_BUFFER
 		if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD) {
 			AnKan++
 		}

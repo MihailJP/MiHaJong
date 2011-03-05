@@ -106,9 +106,9 @@ return
 	}
 	// 持ち点のデータを送信。符号込みで33バイトずつ・スモールエンディアン
 	if (GameMode == 1) {
-		repeat 4
+		repeat NUM_OF_PLAYERS
 			tmp = cnt
-			repeat 8
+			repeat NUM_OF_DIGIT_GROUPS
 				serversend abs(getScore(GameStat,tmp, cnt)) \ 256, IsRemotePlayer
 				serversend abs(getScore(GameStat,tmp, cnt)) \ 65536 / 256, IsRemotePlayer
 				serversend abs(getScore(GameStat,tmp, cnt)) \ 16777216 / 65536, IsRemotePlayer
@@ -122,8 +122,8 @@ return
 		loop
 	}
 	if (GameMode == 2) {
-		repeat 4: tmp = cnt
-			repeat 8: tmp2 = cnt
+		repeat NUM_OF_PLAYERS: tmp = cnt
+			repeat NUM_OF_DIGIT_GROUPS: tmp2 = cnt
 				repeat
 					clientreceive ClientReceived, ReceivedMsg
 					if (ClientReceived == 1) {setScore GameStat, tmp, tmp2, ReceivedMsg: break}
@@ -149,7 +149,7 @@ return
 				clientreceive ClientReceived, ReceivedMsg
 				if (ClientReceived == 1) {
 					if (ReceivedMsg == 1) {
-						repeat 8: setScore GameStat, tmp, cnt, -getScore(GameStat, tmp, cnt): loop
+						repeat NUM_OF_DIGIT_GROUPS: setScore GameStat, tmp, cnt, -getScore(GameStat, tmp, cnt): loop
 					}
 					break
 				}
@@ -176,10 +176,10 @@ return
 	}
 	// チップのデータを送信。一応±１２７まで対応
 	if (GameMode == 1) {
-		repeat 4: serversend getChip(GameStat, cnt)+128, IsRemotePlayer: loop
+		repeat NUM_OF_PLAYERS: serversend getChip(GameStat, cnt)+128, IsRemotePlayer: loop
 	}
 	if (GameMode == 2) {
-		repeat 4: tmp = cnt
+		repeat NUM_OF_PLAYERS: tmp = cnt
 			repeat
 				clientreceive ClientReceived, ReceivedMsg
 				if (ClientReceived == 1) {
@@ -245,19 +245,19 @@ return
 	initCall // 鳴きなど
 	if ((getRoundLoop(GameStat))\2 == 0) {
 		if (getRoundLoop(GameStat) == 0) {
-			if (getRound(GameStat)/4 == 0) {bgColorR = 0: bgColorG = 160: bgColorB = 0}
-			if (getRound(GameStat)/4 == 1) {bgColorR = 0: bgColorG = 160: bgColorB = 160}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {bgColorR = 0: bgColorG = 160: bgColorB = 0}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {bgColorR = 0: bgColorG = 160: bgColorB = 160}
 		} else {
-			if (getRound(GameStat)/4 == 0) {bgColorR = 80: bgColorG = 160: bgColorB = 0}
-			if (getRound(GameStat)/4 == 1) {bgColorR = 160: bgColorG = 80: bgColorB = 0}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {bgColorR = 80: bgColorG = 160: bgColorB = 0}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {bgColorR = 160: bgColorG = 80: bgColorB = 0}
 		}
-		if (getRound(GameStat)/4 == 2) {bgColorR = 0: bgColorG = 80: bgColorB = 160}
-		if (getRound(GameStat)/4 == 3) {bgColorR = 120: bgColorG = 0: bgColorB = 160}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 2) {bgColorR = 0: bgColorG = 80: bgColorB = 160}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {bgColorR = 120: bgColorG = 0: bgColorB = 160}
 	} else {
-		if (getRound(GameStat)/4 == 0) {bgColorR = 160: bgColorG = 160: bgColorB = 160}
-		if (getRound(GameStat)/4 == 1) {bgColorR = 160: bgColorG = 160: bgColorB = 0}
-		if (getRound(GameStat)/4 == 2) {bgColorR = 160: bgColorG = 0: bgColorB = 0}
-		if (getRound(GameStat)/4 == 3) {bgColorR = 80: bgColorG = 80: bgColorB = 80}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {bgColorR = 160: bgColorG = 160: bgColorB = 160}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {bgColorR = 160: bgColorG = 160: bgColorB = 0}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 2) {bgColorR = 160: bgColorG = 0: bgColorB = 0}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {bgColorR = 80: bgColorG = 80: bgColorB = 80}
 	}
 	if ((getRoundLoop(GameStat)*16+getRound(GameStat)) >= (getGameLength(GameStat)+1)) {
 		hncnMsg = " 延長戦 "
@@ -572,7 +572,7 @@ return
 	ActivePlayer = 0
 	haifurechaipai GameStat
 	statmes ""
-	repeat 4: lipai GameStat, cnt: loop
+	repeat NUM_OF_PLAYERS: lipai GameStat, cnt: loop
 	dsplay SND_BELL
 return
 

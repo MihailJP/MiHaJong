@@ -6,7 +6,7 @@
 
 /* •„‚ðŽZo‚·‚é */
 #module
-#include "const.hsp"
+#include "const.as"
 #deffunc calcbasepoints var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int TsumoAgari, var MachiType
 	trace "•„ŒvŽZ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	/* •›’êc‚Q‚O•„ */
@@ -42,7 +42,7 @@
 		addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
 	}
 	/* –ÊŽq‰Á•„ */
-	repeat 4, 1
+	repeat SIZE_OF_MELD_BUFFER-1, 1
 		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
 			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
@@ -69,7 +69,7 @@
 	LiangMianFlag = 0
 	/* ’®”vŒ`‰Á•„ */
 	if (haiMianziDat(0) == getHand(GameStat, HAND_TILECODE, 13, targetPlayer)) {MachiType = MACHI_TANKI /* ’P‹R‘Ò‚¿ */}
-	repeat 4, 1
+	repeat SIZE_OF_MELD_BUFFER-1, 1
 		if (haiMianziDat(cnt) >= MELD_TRIPLET*MELD_TYPE_STEP) {
 			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == getHand(GameStat, HAND_TILECODE, 13, targetPlayer)) {
 				MachiType = MACHI_SHANPON /* ‘oƒ|ƒ“‘Ò‚¿ */

@@ -5,7 +5,7 @@
  */
 
 #module
-#include "const.hsp"
+#include "const.as"
 /* •Ç”v‚ð•\Ž¦‚·‚é */
 #deffunc putyama var GameStat, int targetPosX, int targetPosY, int targetPlayer, int trueTargetPlayer
 #ifdef SANMAX
@@ -22,9 +22,9 @@
 	}
 #endif
 #ifdef SANMA4
-	tmpPlayerCode = ((4+trueTargetPlayer-getPlayer(GameStat))\4)
+	tmpPlayerCode = playerRelative(trueTargetPlayer, getPlayer(GameStat))
 #else
-	tmpPlayerCode = ((4+targetPlayer-getPlayer(GameStat))\4)
+	tmpPlayerCode = playerRelative(targetPlayer, getPlayer(GameStat))
 #endif
 	repeat LoopCount
 		j=cnt:gosub *calcTileNum
@@ -128,13 +128,13 @@ return
 *calcTileNum
 	switch yamahaiMode
 		case 0:
-			ActiveTileNum = ((((targetPlayer+3)\4)*34)+j*2+(104*(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+34)+((getRound(GameStat)\4)*102))\136
+			ActiveTileNum = ((((targetPlayer+3)\NUM_OF_PLAYERS)*34)+j*2+(104*(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+34)+((getRound(GameStat)\NUM_OF_PLAYERS)*102))\136
 			swbreak
 		case 1:
-			ActiveTileNum = ((((targetPlayer+3)\4)*36)+j*2+(110*(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+36)+((getRound(GameStat)\4)*108))\144
+			ActiveTileNum = ((((targetPlayer+3)\NUM_OF_PLAYERS)*36)+j*2+(110*(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+36)+((getRound(GameStat)\NUM_OF_PLAYERS)*108))\144
 			swbreak
 		case 2:
-			ActiveTileNum = (((((targetPlayer+3)\4)*35)+j*2+(107*(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+35)+((getRound(GameStat)\4)*105))\140)/2*2
+			ActiveTileNum = (((((targetPlayer+3)\NUM_OF_PLAYERS)*35)+j*2+(107*(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+35)+((getRound(GameStat)\NUM_OF_PLAYERS)*105))\140)/2*2
 			swbreak
 		case 3:
 			ActiveTileNum = ((((targetPlayer+2)\3)*36)+j*2+(74*(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+36)+(((getRound(GameStat)-(getRound(GameStat)/4))\3)*72))\108
