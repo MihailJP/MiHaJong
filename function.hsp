@@ -208,6 +208,55 @@ return
 	return
 #global
 
+/* •ï‚©‚Ç‚¤‚©‚Ì”»’è */
+#module
+#include "const.as"
+#defcfunc isPao var GameStat, int agariPlayer, int paoPlayer
+	paoFlag = 0
+	repeat PAO_YAKU_PAGES
+		if ((paoPlayer == getPao(GameStat, PAO_PLAYER_PAO, cnt))&&(getPao(GameStat, PAO_PLAYER_AGARI, cnt) == agariPlayer)) {
+			paoFlag = 1
+		}
+	loop
+	return paoFlag
+#global
+
+#module
+#include "const.as"
+#defcfunc isPaoAgari var GameStat, int agariPlayer
+	paoFlag = 0
+	repeat PAO_YAKU_PAGES
+		if (getPao(GameStat, PAO_PLAYER_AGARI, cnt) == agariPlayer) {
+			paoFlag = 1
+		}
+	loop
+	return paoFlag
+#global
+
+#module
+#include "const.as"
+#defcfunc isGotPao var GameStat, int paoPlayer
+	paoFlag = 0
+	repeat PAO_YAKU_PAGES
+		if (paoPlayer == getPao(GameStat, PAO_PLAYER_PAO, cnt)) {
+			paoFlag = 1
+		}
+	loop
+	return paoFlag
+#global
+
+#module
+#include "const.as"
+#defcfunc getPaoPlayer var GameStat, int agariPlayer
+	PaoPlayer = -1
+	repeat PAO_YAKU_PAGES
+		if ((getPao(GameStat, PAO_PLAYER_PAO, cnt) >= 0)&&(getPao(GameStat, PAO_PLAYER_AGARI, cnt) == agariPlayer)) {
+			PaoPlayer = getPao(GameStat, PAO_PLAYER_PAO, cnt)
+		}
+	loop
+	return PaoPlayer
+#global
+
 /* Vista/7‚ðŽg‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚© */
 #module
 #defcfunc isVista

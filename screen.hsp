@@ -449,7 +449,7 @@ return
 						tmptxt += " 九種九牌"
 					}
 					/* 大三元か大四喜を包になっている場合 */
-					if ((getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN) == targetPlayer)||(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI) == targetPlayer)) {tmptxt += " 包責"}
+					if (isGotPao(GameStat, targetPlayer)) {tmptxt += " 包責"}
 					/* 自分のツモ番の場合、残り時間を表示 */
 //					if ((getPlayer(GameStat) == targetPlayer)&&(haiTimer > 0)) {tmptxt += " あと"+haiTimer+"秒"}
 //					else {

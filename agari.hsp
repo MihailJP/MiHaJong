@@ -146,7 +146,7 @@ repeat NUM_OF_PLAYERS-1
 		}
 		gosub *bgmstop
 		dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-		if ((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer)||(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer)) {
+		if (isPaoAgari(GameStat, agariPlayer)) {
 			// •ï“K—pŽž
 			if (playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST) {
 				// e‚Ì˜a—¹‚è
@@ -157,7 +157,7 @@ repeat NUM_OF_PLAYERS-1
 							agaricalc agariPointArray, AgariPointRaw, 6, 0, 0
 							deltacalcplus AgariPointRaw, hncnPointDelta, 6
 						}
-						if (((cnt == getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN))&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer))||((cnt == getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI))&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer))) {
+						if (isPao(GameStat, agariPlayer, cnt)) {
 							deltacalcminus AgariPointRaw, hncnPointDelta, 6
 						}
 					loop
@@ -171,7 +171,7 @@ repeat NUM_OF_PLAYERS-1
 						if (cnt == furikomiPlayer) {
 							deltacalcminus AgariPointRaw, hncnPointDelta, 3
 						}
-						if (((cnt == getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN))&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer))||((cnt == getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI))&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer))) {
+						if (isPao(GameStat, agariPlayer, cnt)) {
 							deltacalcminus AgariPointRaw, hncnPointDelta, 3
 						}
 					loop
@@ -184,7 +184,7 @@ repeat NUM_OF_PLAYERS-1
 							agaricalc agariPointArray, AgariPointRaw, 4, 0, 0
 							deltacalcplus AgariPointRaw, hncnPointDelta, 4
 						}
-						if (((cnt == getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN))&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer))||((cnt == getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI))&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer))) {
+						if (isPao(GameStat, agariPlayer, cnt)) {
 							deltacalcminus AgariPointRaw, hncnPointDelta, 4
 						}
 					loop
@@ -198,7 +198,7 @@ repeat NUM_OF_PLAYERS-1
 						if (cnt == furikomiPlayer) {
 							deltacalcminus AgariPointRaw, hncnPointDelta, 2
 						}
-						if (((cnt == getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN))&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer))||((cnt == getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI))&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer))) {
+						if (isPao(GameStat, agariPlayer, cnt)) {
 							deltacalcminus AgariPointRaw, hncnPointDelta, 2
 						}
 					loop
@@ -481,9 +481,8 @@ repeat NUM_OF_PLAYERS-1
 				}
 			}
 			/* •ï‚Ìê‡ */
-			if ((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer)||(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer)) {
-				if ((getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN) >= 0)&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer)) {PaoPlayer = getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN) >= 0}
-				if ((getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI) >= 0)&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer)) {PaoPlayer = getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI) >= 0}
+			if (isPaoAgari(GameStat, agariPlayer)) {
+				PaoPlayer = getPaoPlayer(GameStat, agariPlayer)
 				if (TsumoAgari) {
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if ((PaoPlayer != cnt)&&(agariPlayer != cnt)) {

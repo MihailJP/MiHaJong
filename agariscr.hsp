@@ -19,17 +19,15 @@
 		borderedtxt2 "ï˙èe "+windName(playerWind(furikomiPlayer, getRound(GameStat)))+strmid(PlayerName(furikomiPlayer), 0, 3),256,10,255,255,255,1,16,192,192,192,1
 		borderedtxt2 strmid(PlayerName(furikomiPlayer), 3, 16),256,30,255,255,255,1,16,192,192,192,1
 	}
-	if ((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer)||(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer)) {
-		TmpPaoPlayer = -1
-		if (getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer) {TmpPaoPlayer = getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN)}
-		if (getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer) {TmpPaoPlayer = DaisixiPao}
+	if (isPaoAgari(GameStat, agariPlayer)) {
+		TmpPaoPlayer = getPaoPlayer(GameStat, agariPlayer)
 		borderedtxt2 "ïÔê” "+windName(playerWind(TmpPaoPlayer, getRound(GameStat)))+strmid(PlayerName(TmpPaoPlayer), 0, 3),456,10,255,255,255,1,16,192,192,192,1
 		borderedtxt2 strmid(PlayerName(TmpPaoPlayer), 3, 16),456,30,255,255,255,1,16,192,192,192,1
 	}
 	if (agariPlayer == getPlayer(GameStat)) {drawcol= 255, 255, 0}
 	else {
-		if ((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer)||(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer)) {
-			if (((getPlayer(GameStat) == getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN))&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer))||((getPlayer(GameStat) == DaisixiPao)&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer))) {
+		if (isPaoAgari(GameStat, agariPlayer)) {
+			if (isPao(GameStat, agariPlayer, getPlayer(GameStat))) {
 				drawcol= 255, 64, 64
 			} else:if (furikomiPlayer == getPlayer(GameStat)) {drawcol= 255, 64, 64}
 			else {drawcol= 255, 255, 255}
@@ -260,7 +258,7 @@
 		else {tmptxt= "âhòa"}
 	}
 	else {
-		if (((getPlayer(GameStat) == getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN))&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN) == agariPlayer))||((getPlayer(GameStat) == DaisixiPao)&&(getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI) == agariPlayer))) {
+		if (isPao(GameStat, agariPlayer, getPlayer(GameStat))) {
 			tmptxt= "ïÔê”"
 		} else:if (TsumoAgari) {if (getHeavenHandFlag(GameStat)) {tmptxt= "ìVòa"} else {tmptxt= "é©ñÃòa"}}
 		else:if (furikomiPlayer == getPlayer(GameStat)) {tmptxt= "ï˙èe"}
