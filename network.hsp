@@ -144,7 +144,7 @@
 #endif
 	if (ReceivedMsg == 0x6e) {teDahai = DAHAI_TYPE_KYUUSHU}
 	if (ReceivedMsg == 0x6f) {teDahai = DAHAI_TYPE_AGARI}
-	if (ReceivedMsg == 0x9f) {teDahai = 13 + DAHAI_TYPE_NORMAL}
+	if (ReceivedMsg == 0x9f) {teDahai = TSUMOHAI_INDEX + DAHAI_TYPE_NORMAL}
 	return
 #global
 
@@ -244,8 +244,8 @@
 	}
 	repeat NUM_OF_PLAYERS
 		if (haiRon(cnt) == 1) {
-			setHand GameStat, HAND_TILECODE, 13, cnt, haiCurrentSutehai
-			setHand GameStat, HAND_REDTILE, 13, cnt, haiCurrentSutehaiAkaDora
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, haiCurrentSutehai
+			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, cnt, haiCurrentSutehaiAkaDora
 		}
 	loop
 	return

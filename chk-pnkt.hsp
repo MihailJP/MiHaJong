@@ -68,17 +68,17 @@
 	if (getYakuInfo(tmpYakuInfo, YAKUINF_FU) == 20) {NoTriplets = 1} else {NoTriplets = 0}
 	LiangMianFlag = 0
 	/* íÆîvå`â¡ïÑ */
-	if (haiMianziDat(0) == getHand(GameStat, HAND_TILECODE, 13, targetPlayer)) {MachiType = MACHI_TANKI /* íPãRë“Çø */}
+	if (haiMianziDat(0) == getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) {MachiType = MACHI_TANKI /* íPãRë“Çø */}
 	repeat SIZE_OF_MELD_BUFFER-1, 1
 		if (haiMianziDat(cnt) >= MELD_TRIPLET*MELD_TYPE_STEP) {
-			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == getHand(GameStat, HAND_TILECODE, 13, targetPlayer)) {
+			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) {
 				MachiType = MACHI_SHANPON /* ëoÉ|Éìë“Çø */
 			}
 		} else {
-			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, 13, targetPlayer)-1)) {
+			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)-1)) {
 				MachiType = MACHI_KANCHAN /* õ∆í£ë“Çø */
 			}
-			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, 13, targetPlayer))) {
+			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))) {
 				if ((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 7) {
 					MachiType = MACHI_PENCHAN /* ï”í£ë“Çø */
 				} else {
@@ -86,7 +86,7 @@
 					LiangMianFlag = 1
 				}
 			}
-			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, 13, targetPlayer)-2)) {
+			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)-2)) {
 				if ((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 1) {
 					MachiType = MACHI_PENCHAN /* ï”í£ë“Çø */
 				} else {
@@ -101,7 +101,7 @@
 	/* ëoÉ|Éìë“ÇøÇ≈ÉçÉìÇµÇΩèÍçáÇÃó·äO */
 	/* ñæçèÇ∆ÇµÇƒàµÇ§ÇΩÇﬂÇÃå∏ì_ */
 	if ((MachiType == MACHI_SHANPON)&&(TsumoAgari == 0)) {
-		switch (getHand(GameStat, HAND_TILECODE, 13, targetPlayer))
+		switch (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
 			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9

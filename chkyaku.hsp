@@ -52,7 +52,7 @@
 		if (getRule(RULE_SYZYGY) != "0") {
 			if (ShantenArray(6) == -1) {
 				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
-				if ((getHand(GameStat, HAND_TILECODE, 13, targetPlayer) \ 2) == 0) {
+				if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) \ 2) == 0) {
 					addyakuman "òfêØíºóÒ", 2
 				} else {
 					addyakuman "òfêØíºóÒ", 1

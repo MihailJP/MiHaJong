@@ -799,7 +799,7 @@
 	/* ¼›ù‘ÒŒŽ */
 	if (getRule(RULE_SEISOU_TAIGETSU) != "0") {
 		yakuFlag = 0
-		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+1) >= 1)&&(getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == TILE_SUIT_CIRCLES+1)) {yakuFlag = 1}
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+1) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CIRCLES+1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "¼›ù‘ÒŒŽ", 2
 		}
@@ -947,7 +947,7 @@
 	/* ‘¾Œö’Þ‹à‹T */
 	if (getRule(RULE_TAIKOU_TURTLE) != "0") {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == TILE_SUIT_BAMBOOS+3)&&(MachiType == MACHI_TANKI)) {
+		if ((KezCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_BAMBOOS+3)&&(MachiType == MACHI_TANKI)) {
 			addyaku tmpYakuInfo, "‘¾Œö’Þ‹à‹T", 1
 		}
 	}

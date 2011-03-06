@@ -29,8 +29,8 @@ if ((hncnKyokuEndType == ENDKYOKU_AGARI)||(hncnKyokuEndType == ENDKYOKU_CHONBO))
 				hncnKyokuEndType = ENDKYOKU_AGARI: agariPlayer++: agariPlayer = agariPlayer \ NUM_OF_PLAYERS
 				if (agariPlayer == furikomiPlayer) {break}
 				if (haiRon(agariPlayer\NUM_OF_PLAYERS) == 1) {
-					setHand GameStat, HAND_TILECODE, 13, agariPlayer, haiCurrentSutehai
-					setHand GameStat, HAND_REDTILE, 13, agariPlayer, haiCurrentSutehaiAkaDora
+					setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehai
+					setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehaiAkaDora
 					countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer, TsumoAgari
 					chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, agariPlayer\NUM_OF_PLAYERS
 					// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´
@@ -57,8 +57,8 @@ repeat NUM_OF_PLAYERS-1
 		agariPlayer = FirstAgariPlayer
 		if (TsumoAgari == 0) {
 			hncnKyokuEndType = ENDKYOKU_AGARI
-			setHand GameStat, HAND_TILECODE, 13, agariPlayer, haiCurrentSutehai
-			setHand GameStat, HAND_REDTILE, 13, agariPlayer, haiCurrentSutehaiAkaDora
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehai
+			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehaiAkaDora
 			countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer, TsumoAgari
 			chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, agariPlayer\NUM_OF_PLAYERS
 			// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´
@@ -79,8 +79,8 @@ repeat NUM_OF_PLAYERS-1
 			hncnKyokuEndType = ENDKYOKU_AGARI: agariPlayer++: agariPlayer = agariPlayer \ NUM_OF_PLAYERS
 			if (agariPlayer == furikomiPlayer) {break}
 			if (haiRon(agariPlayer\NUM_OF_PLAYERS) == 1) {
-				setHand GameStat, HAND_TILECODE, 13, agariPlayer, haiCurrentSutehai
-				setHand GameStat, HAND_REDTILE, 13, agariPlayer, haiCurrentSutehaiAkaDora
+				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehai
+				setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehaiAkaDora
 				countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer, TsumoAgari
 				chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, agariPlayer\NUM_OF_PLAYERS
 				// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´

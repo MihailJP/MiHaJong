@@ -82,7 +82,7 @@
 							tmpyakumanRate = 1
 							if (tmpYakuNameList(cnt) == "‹ã˜A•ó“•") {
 								countTilesInHand haiCount2, GameStat, targetPlayer
-								haiCount2(getHand(GameStat, HAND_TILECODE, 13, targetPlayer))--
+								haiCount2(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))--
 								yakuFlag2 = 0
 								repeat 3
 									if ((haiCount(cnt*TILE_SUIT_STEP+1) >= 3)&&(haiCount(cnt*TILE_SUIT_STEP+2) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+3) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+4) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+5) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+6) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+7) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+8) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+9) >= 3)) {yakuFlag2 = 1}

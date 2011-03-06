@@ -377,7 +377,7 @@ PreviousMeld, ConnectionLost
 		dim Deck, 136, WALL_PAGES // 壁牌の配列
 	}
 #endif
-	dim Hand, 14, NUM_OF_PLAYERS, HAND_PAGES // 手牌の配列(４人分)
+	dim Hand, NUM_OF_TILES_IN_HAND, NUM_OF_PLAYERS, HAND_PAGES // 手牌の配列(４人分)
 	dim Discard, SIZE_OF_DISCARD_BUFFER, NUM_OF_PLAYERS, DISCARD_PAGES // 捨牌の配列(４人分)
 	dim MenzenFlag, NUM_OF_PLAYERS // 門前フラグ
 	dim HandStat, NUM_OF_PLAYERS // 手牌の状態（立てる・見せる・伏せる）

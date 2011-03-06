@@ -189,7 +189,7 @@
 	/* –k‚Ì‘å’n */
 	if (getRule(RULE_KITA_NO_DAICHI) != "0") {
 		if ((haiCount(TILE_SUIT_BAMBOOS+2) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+3) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+4) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+6) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+8) >= 2)&&(haiCount(TILE_NORTH_WIND) >= 2)&&(haiCount(TILE_WHITE_DRAGON) >= 2)) {
-			switch getHand(GameStat, HAND_TILECODE, 13, targetPlayer) /* ‰½‚Å˜a—¹‚Á‚½‚©‚Å•ªŠò */
+			switch getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) /* ‰½‚Å˜a—¹‚Á‚½‚©‚Å•ªŠò */
 				case TILE_NORTH_WIND: /* –k‚Å˜a—¹‚é‚Æƒ_ƒuƒ‹–ð–ž */
 					addyakuman tmpYakuInfo, "–k‚Ì‘å’n", 2
 					swbreak

@@ -86,7 +86,7 @@
 		}
 		/* ŒÜ“›ŠJ‰Ô */
 		if (getRule(RULE_UUPIN_KAIHOH) != "0") {
-			if (getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == TILE_SUIT_CIRCLES+5) {
+			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CIRCLES+5) {
 				if (getRule(RULE_UUPIN_KAIHOH) == "1") {
 					addyakuman tmpYakuInfo, "ŒÜ“›ŠJ‰Ô", 1
 				} else {
@@ -110,7 +110,7 @@
 				addyaku tmpYakuInfo, "ŠC’ê–ÌŒŽ", 1
 				/* ˆê“›–ÌŒŽ */
 				if (getRule(RULE_IIPIN_MOYUE) != "0") {
-					if (getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == TILE_SUIT_CIRCLES+1) {
+					if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CIRCLES+1) {
 						if (getRule(RULE_IIPIN_MOYUE) == "1") {
 							addyakuman tmpYakuInfo, "ˆê“›–ÌŒŽ", 1
 						} else {
@@ -121,13 +121,13 @@
 				}
 				/* ŠC’êj */
 				if (getrule(RULE_HAITEI_RAOTSEN) != "0") {
-					if (getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == TILE_SUIT_CHARACTERS+1) {
+					if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CHARACTERS+1) {
 						addyaku tmpYakuInfo, "ŠC’êj", 1
 					}
 				}
 				/* ŠC’ê‰Ô */
 				if (getrule(RULE_HAITEI_RAOHWA) != "0") {
-					if (getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == TILE_SUIT_CIRCLES+5) {
+					if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CIRCLES+5) {
 						addyaku tmpYakuInfo, "ŠC’ê‰Ô", 1
 					}
 				}
@@ -135,7 +135,7 @@
 				addyaku tmpYakuInfo, "‰Í’ê‹›", 1
 				/* ‹ã“›‹› */
 				if (getRule(RULE_CHUUPIN_RAOYUI) != "0") {
-					if (getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == TILE_SUIT_CIRCLES+9) {
+					if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CIRCLES+9) {
 						if (getRule(RULE_CHUUPIN_RAOYUI) == "1") {
 							addyakuman tmpYakuInfo, "‹ã“›‹›", 1
 						} else {
@@ -168,7 +168,7 @@
 		addyaku tmpYakuInfo, "žÈ", 1
 		/* “ñõžÈ */
 		if (getRule(RULE_RYANZOH_CHANKAN) != "0") {
-			if (getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == TILE_SUIT_BAMBOOS+2) {
+			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_BAMBOOS+2) {
 				if (getRule(RULE_RYANZOH_CHANKAN) == "1") {
 					addyakuman tmpYakuInfo, "“ñõžÈ", 1
 				} else {
@@ -197,16 +197,16 @@
 	}
 	/* Žl”n˜H */
 	if (getRule(RULE_SUMARO) != "0") {
-		if (getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == TILE_SUIT_CHARACTERS+4)&&(getSumaroFlag(GameStat, targetPlayer) == 1)&&(TsumoAgari == 0) {
+		if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CHARACTERS+4)&&(getSumaroFlag(GameStat, targetPlayer) == 1)&&(TsumoAgari == 0) {
 			addyaku tmpYakuInfo, "Žl”n˜H", 1
 		}
 	}
 	/* ‹q—ˆ˜a */
 	if (getRule(RULE_OTAKAZE_RON) != "0") {
 		yakuFlag = 0
-		if ((getHand(GameStat, HAND_TILECODE, 13, targetPlayer) >= TILE_WIND_MIN)&&(getHand(GameStat, HAND_TILECODE, 13, targetPlayer) <= TILE_WIND_MAX)) {yakuFlag = 1}
+		if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) >= TILE_WIND_MIN)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) <= TILE_WIND_MAX)) {yakuFlag = 1}
 		repeat TILE_WIND_MAX-TILE_WIND_MIN+1
-			if (getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == cnt+TILE_WIND_MIN) {
+			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == cnt+TILE_WIND_MIN) {
 				if ((getRound(GameStat)/4) == cnt) {yakuFlag = 0}
 				if (playerWind(targetPlayer, getRound(GameStat)) == cnt) {
 					yakuFlag = 0
@@ -238,7 +238,7 @@
 			repeat DiscardPointer(GameStat, targetPlayer), 1
 				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) \ TILE_SUIT_STEP) == tmpTileCodeList(tmpcnt)) {yakuFlag = 1}
 			loop
-			if ((getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == tmpTileCodeList(cnt))&&(yakuFlag == 1)&&(TsumoAgari == 1)&&(MachiType == MACHI_TANKI)) {
+			if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == tmpTileCodeList(cnt))&&(yakuFlag == 1)&&(TsumoAgari == 1)&&(MachiType == MACHI_TANKI)) {
 				if (getRule(tmpRuleCodeList(cnt)) == "2") {addyaku tmpYakuInfo, tmpYakuNameList(cnt), 2}
 				else {addyaku tmpYakuInfo, tmpYakuNameList(cnt), 1}
 			}

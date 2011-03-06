@@ -24,11 +24,11 @@ return
 	/*teDahai = 13: return*/ /* ツモ切りだけを行う(デバッグ用) */
 	startTime = gettime(6)*1000+gettime(7)
 	/* ここに思考ルーチンが入る */
-	teDahai = 13 // ツモ切り
-	if (getHand(GameStat, HAND_TILECODE, 13, ActivePlayer) == 0) {teDahai = 0} // 鳴いた直後（多牌しないための処理）
+	teDahai = TSUMOHAI_INDEX+DAHAI_TYPE_NORMAL // ツモ切り
+	if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) == 0) {teDahai = 0} // 鳴いた直後（多牌しないための処理）
 	else {
 		// 花牌を抜く
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) > TILE_SUIT_FLOWERS) {teDahai = cnt+DAHAI_TYPE_KAN: break}
 		loop
 		if (teDahai >= DAHAI_TYPE_KAN) {
@@ -55,7 +55,7 @@ return
 				if ((nowTime-startTime) >= COMTHINKTIME) {break}
 			loop
 #endif
-			teDahai = DAHAI_TYPE_KAN+13: return
+			teDahai = DAHAI_TYPE_KAN+TSUMOHAI_INDEX: return
 		}
 	}
 	await 0: countseentiles haiSeenCount, GameStat
@@ -73,7 +73,7 @@ return
 #endif
 		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRule(RULE_RIICHI_SHIBARI) != "0")&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))) {
 			// 和了れないならツモ切り
-			teDahai = 13: return
+			teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX: return
 		} else {
 			// 和了れるなら和了る
 			teDahai = DAHAI_TYPE_AGARI: return
@@ -100,22 +100,22 @@ return
 		}
 	}
 	// リーチの場合は、和了れなければツモ切り
-	if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer)) {teDahai = 13: return}
+	if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer)) {teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX: return}
 	Shanten = countshanten(GameStat, ActivePlayer, 0)
 	nowShanten = Shanten
 	// リーチをかけるかどうか
-	dim haiDiscardability, 14
-	dim MinScore, 14
-	dim MaxScore, 14
-	dim MachihaiTotalTiles, 14
-	dim MachihaiFuritenFlag, 14
+	dim haiDiscardability, NUM_OF_TILES_IN_HAND
+	dim MinScore, NUM_OF_TILES_IN_HAND
+	dim MaxScore, NUM_OF_TILES_IN_HAND
+	dim MachihaiTotalTiles, NUM_OF_TILES_IN_HAND
+	dim MachihaiFuritenFlag, NUM_OF_TILES_IN_HAND
 	if ((nowShanten == 0)&&((getMenzen(GameStat, ActivePlayer) == 1)||(getRule(RULE_RIICHI_SHIBARI) != "0"))) {
 		Richiability = 0
-		dim tmpHaiHand, 14
-		repeat 14
+		dim tmpHaiHand, NUM_OF_TILES_IN_HAND
+		repeat NUM_OF_TILES_IN_HAND
 			tmpHaiHand(cnt) = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 		loop
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			await 0
 			if (cnt > 0) {
 				if (tmpHaiHand(cnt-1) == tmpHaiHand(cnt)) {
@@ -128,12 +128,12 @@ return
 			// 存在しない牌の場合
 			if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == 0) {haiDiscardability(cnt) = -9999999: continue}
 			// 向聴数から、大まかな評価値を算出
-			setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, getHand(GameStat, HAND_TILECODE, 13, ActivePlayer)
-			setHand GameStat, HAND_TILECODE, 13, ActivePlayer, 0
+			setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, 0
 			await 0
 			chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, ActivePlayer
 			Shanten = countshanten(GameStat, ActivePlayer, 0)
-			setHand GameStat, HAND_TILECODE, 13, ActivePlayer, getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 			setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHandTileCode
 			MachihaiTotalTiles(cnt) = haiMachihaiTotal
 			// ダブル立直になる時は一部の判定を省略する
@@ -158,15 +158,15 @@ return
 			MaxScore(cnt) = -999999999
 			repeat TILE_NONFLOWER_STRICT_MAX+1
 				if (cnt\TILE_SUIT_STEP == 0) {continue}
-				setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, 13, ActivePlayer)
-				setHand GameStat, HAND_TILECODE, 13, ActivePlayer, cnt
+				setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
+				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 				nowTime = gettime(6)*1000+gettime(7)
 				if (nowTime < startTime) {nowTime += 60000}
 				if ((nowTime-startTime) >= COMTHINKTIME) {
-					repeat 14
+					repeat NUM_OF_TILES_IN_HAND
 						if (haiDiscardability(cnt) > 0) {haiDiscardability(cnt) = 0}
 					loop
-					setHand GameStat, HAND_TILECODE, 13, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer)
+					setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer)
 					setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, tmpHandTileCode
 					break
 				}
@@ -180,44 +180,44 @@ return
 					if (MinScore(tmpTileNum) > (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MinScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
 					if (MaxScore(tmpTileNum) < (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MaxScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
 				}
-				setHand GameStat, HAND_TILECODE, 13, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer)
+				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer)
 				setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, tmpHandTileCode
 				if (MinScore(tmpTileNum) == 999999999) {MinScore(tmpTileNum) = 0}
 				if (MaxScore(tmpTileNum) ==-999999999) {MaxScore(tmpTileNum) = 0}
 			loop
 		loop
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHaiHand(cnt)
 		loop
 		if ((nowTime-startTime) >= COMTHINKTIME) {
 			// 時間がかかる時用の簡略版
-			repeat 14
+			repeat NUM_OF_TILES_IN_HAND
 				if (haiDiscardability(cnt) >= 0) {
 					tmpTileNum = cnt
 					MinScore(tmpTileNum) = 0: MaxScore(tmpTileNum) = 0
 					repeat TILE_NONFLOWER_STRICT_MAX+1
 						if (cnt\TILE_SUIT_STEP == 0) {continue}
-						setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, 13, ActivePlayer)
-						setHand GameStat, HAND_TILECODE, 13, ActivePlayer, cnt
+						setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
+						setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 						await 0
 						Shanten = countshanten(GameStat, ActivePlayer, 0)
 						if (Shanten == -1) {
 							haiDiscardability(tmpTileNum) += 2000*(4-haiCount(cnt)-haiSeenCount(cnt))+100000
 						}
-						setHand GameStat, HAND_TILECODE, 13, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer)
+						setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer)
 						setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, tmpHandTileCode
 					loop
 				}
 			loop
 		}
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHaiHand(cnt)
 		loop
 		if (Richiability > 0) {
-			teDahai = 13
-			repeat 14
-				if (haiDiscardability(teDahai) < haiDiscardability(13-cnt)) {
-					teDahai = 13-cnt
+			teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
+			repeat NUM_OF_TILES_IN_HAND
+				if (haiDiscardability(teDahai) < haiDiscardability(NUM_OF_TILES_IN_HAND-1-cnt)) {
+					teDahai = DAHAI_TYPE_NORMAL+NUM_OF_TILES_IN_HAND-1-cnt
 				}
 			loop
 			// 長考してるふり
@@ -262,24 +262,24 @@ return
 	// チー、ポンした直後はツモ牌がない状態なので、それを利用する
 	// カンをした直後はツモ牌が嶺上牌になっている
 	// カンをしたあと、続けて暗槓をすることはかまわない
-	if (getHand(GameStat, HAND_TILECODE, 13, ActivePlayer) != 0) {
+	if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0) {
 		await 0
 		/* 暗槓するかどうか */
-		dim tmpHaiHand, 14
-		repeat 14
+		dim tmpHaiHand, NUM_OF_TILES_IN_HAND
+		repeat NUM_OF_TILES_IN_HAND
 			tmpHaiHand(cnt) = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 		loop
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == 0) {continue}
 			haiTileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
 			tmpnum = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
-			repeat 14
+			repeat NUM_OF_TILES_IN_HAND
 				if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == tmpnum) {
 					setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
 				}
 			loop
 			Shanten = countshanten(GameStat, ActivePlayer, 0)
-			repeat 14
+			repeat NUM_OF_TILES_IN_HAND
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHaiHand(cnt)
 			loop
 			if ((haiTileInfo\128 / 64) == 1) {
@@ -299,14 +299,14 @@ return
 			}
 		loop
 		/* 加槓するかどうか */
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			Kakanability = 0
 			if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == 0) {continue}
 			haiTileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
 			tmpnum = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 			setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
 			Shanten = countshanten(GameStat, ActivePlayer, 0)
-			repeat 14
+			repeat NUM_OF_TILES_IN_HAND
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHaiHand(cnt)
 			loop
 			repeat MeldPointer(GameStat, ActivePlayer), 1
@@ -333,14 +333,14 @@ return
 		if (teDahai >= DAHAI_TYPE_KAN) {return}
 	}
 	/* それぞれを捨てたときの手の評価を計算する */
-	dim haiDiscardability, 14
+	dim haiDiscardability, NUM_OF_TILES_IN_HAND
 	startTime = gettime(6)*1000+gettime(7)
 	Yishanten = 0
-	dim tmpDiscardability, 14
+	dim tmpDiscardability, NUM_OF_TILES_IN_HAND
 
 	WanzCount = 0: PinzCount = 0: SouzCount = 0
 	YaojiuCount = 0: KeziCount = 0
-	repeat 14
+	repeat NUM_OF_TILES_IN_HAND
 		if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)/TILE_SUIT_STEP == TILE_SUIT_CHARACTERS/TILE_SUIT_STEP) {WanzCount++}
 		if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)/TILE_SUIT_STEP == TILE_SUIT_CIRCLES/TILE_SUIT_STEP) {PinzCount++}
 		if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)/TILE_SUIT_STEP == TILE_SUIT_BAMBOOS/TILE_SUIT_STEP) {SouzCount++}
@@ -355,7 +355,7 @@ return
 		if (getMeld(GameStat, MELD_TILECODE, cnt, ActivePlayer)/MELD_TYPE_STEP >= MELD_TRIPLET) {KeziCount += 3}
 	loop
 
-	repeat 14
+	repeat NUM_OF_TILES_IN_HAND
 		haiTileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
 		tmpHand = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 		// 存在しない牌の場合
@@ -457,8 +457,8 @@ return
 				if (cnt\TILE_SUIT_STEP == 0) {continue}
 				if (haiCount(cnt)+haiSeenCount(cnt) == 4) {continue} // ４枚見えてる
 				if ((cnt >= TILE_NUMERAL_MAX)&&(haiCount(cnt)+haiSeenCount(cnt) == 3)) {continue} // 字牌のラス牌はとりあえず無視
-				setHand GameStat, HAND_TILECODE, tmpXTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, 13, ActivePlayer)
-				setHand GameStat, HAND_TILECODE, 13, ActivePlayer, cnt
+				setHand GameStat, HAND_TILECODE, tmpXTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
+				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 				await 0
 				Shanten = countshanten(GameStat, ActivePlayer, 0)
 				tmpXde = 4-haiCount(cnt)-haiSeenCount(cnt)
@@ -466,7 +466,7 @@ return
 					nowTime = gettime(6)*1000+gettime(7)
 					if (nowTime < startTime) {nowTime += 60000}
 					if ((nowTime-startTime) < COMTHINKTIME) {
-						repeat 14
+						repeat NUM_OF_TILES_IN_HAND
 							nowTime = gettime(6)*1000+gettime(7)
 							tmpTileNum = cnt
 							tmpTile2a = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
@@ -481,12 +481,12 @@ return
 							if ((nowTime-startTime) < COMTHINKTIME) {break}
 						loop
 					} else { // 処理が遅い時
-						repeat 14
+						repeat NUM_OF_TILES_IN_HAND
 							tmpDiscardability(tmpXTileNum) = (4-haiCount(cnt)-haiSeenCount(cnt))*tmpXde
 						loop
 					}
 				}
-				setHand GameStat, HAND_TILECODE, 13, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpXTileNum, ActivePlayer)
+				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpXTileNum, ActivePlayer)
 				setHand GameStat, HAND_TILECODE, tmpXTileNum, ActivePlayer, tmpHand
 				nowTime = gettime(6)*1000+gettime(7)
 				if (nowTime < startTime) {nowTime += 60000}
@@ -514,12 +514,12 @@ return
 	if (nowTime < startTime) {nowTime += 60000}
 	if ((Yishanten)&&((nowTime-startTime) < COMTHINKTIME)) {
 		// 一向聴のとき
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			haiDiscardability(cnt) += tmpDiscardability(cnt)+100000
 		loop
 	}
 	// オープン立直の待ち牌を捨てない(捨ててはならない！)ようにする
-	repeat 14
+	repeat NUM_OF_TILES_IN_HAND
 		if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) < TILE_NONFLOWER_MAX) {
 			if (getOpenWait(GameStat, getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)) == 1) {
 				haiDiscardability(cnt) = -999999999
@@ -555,7 +555,7 @@ return
 			if ((haiSeenCount(TILE_GREEN_DRAGON) >= 2)&&(tmpDiscardabilityChkFlag == 5)) {tmpDiscardabilityChkFlag += 16}
 			if ((haiSeenCount(TILE_RED_DRAGON) >= 2)&&(tmpDiscardabilityChkFlag == 6)) {tmpDiscardabilityChkFlag += 16}
 		loop
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			if ((tmpDiscardabilityChkFlag == 3)&&(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == TILE_WHITE_DRAGON)) {
 				haiDiscardability(cnt) = -799999999
 			}
@@ -601,7 +601,7 @@ return
 			if ((haiSeenCount(TILE_WEST_WIND) >= 3)&&(tmpDiscardabilityChkFlag == 13)) {tmpDiscardabilityChkFlag += 32}
 			if ((haiSeenCount(TILE_NORTH_WIND) >= 3)&&(tmpDiscardabilityChkFlag == 14)) {tmpDiscardabilityChkFlag += 32}
 		loop
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			if ((tmpDiscardabilityChkFlag == 7)&&(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == TILE_EAST_WIND)) {
 				haiDiscardability(cnt) = -799999999
 			}
@@ -629,7 +629,7 @@ return
 				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, tmpchkcnt) \ TILE_CODE_MAXIMUM / 10) == 1) {tmpDiscardabilityChkCount2++}
 				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, tmpchkcnt) \ TILE_CODE_MAXIMUM / 10) == 2) {tmpDiscardabilityChkCount3++}
 			loop
-			repeat 14
+			repeat NUM_OF_TILES_IN_HAND
 				if ((tmpDiscardabilityChkCount2 > 0)&&(tmpDiscardabilityChkCount3 > 0)) {
 					if (((tmpDiscardabilityChkCount1*1000)/(tmpDiscardabilityChkCount2+tmpDiscardabilityChkCount3)) < 200) {
 						if ((getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) /10) == 0) {
@@ -665,7 +665,7 @@ return
 				if (((getDiscard(GameStat, DISCARD_TILECODE, cnt, tmpchkcnt) \ TILE_CODE_MAXIMUM / 10) < 3)&&((getDiscard(GameStat, DISCARD_TILECODE, cnt, tmpchkcnt) \ 10) > 1)&&((getDiscard(GameStat, DISCARD_TILECODE, cnt, tmpchkcnt) \ 10) < 9)) {tmpDiscardabilityChkCount1++}
 				tmpDiscardabilityChkCount2++
 			loop
-			repeat 14
+			repeat NUM_OF_TILES_IN_HAND
 				if (tmpDiscardabilityChkCount2 > 0) {
 					if (((tmpDiscardabilityChkCount1*1000)/(tmpDiscardabilityChkCount2)) > 840) {
 						if (((getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) \TILE_SUIT_STEP) == 1)||((getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) \TILE_SUIT_STEP) == 9)||(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) > 30)) {
@@ -696,7 +696,7 @@ return
 	// オリるかどうかの判定…和了り手の得点を調べる
 	TmpMinScore = 999999999
 	TmpMaxScore = -999999999
-	repeat 14
+	repeat NUM_OF_TILES_IN_HAND
 		if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == 0) {continue}
 		tmpTileCodeNum = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 		tmpTileNum = cnt
@@ -704,8 +704,8 @@ return
 		MaxScore(cnt) = -999999999
 		repeat TILE_NONFLOWER_STRICT_MAX+1
 			if (cnt\TILE_SUIT_STEP == 0) {continue}
-			setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, 13, ActivePlayer)
-			setHand GameStat, HAND_TILECODE, 13, ActivePlayer, cnt
+			setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 			await 0
 			Shanten = countshanten(GameStat, ActivePlayer, 0)
 			if (Shanten == -1) {
@@ -716,7 +716,7 @@ return
 				if (MinScore(tmpTileNum) > (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MinScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
 				if (MaxScore(tmpTileNum) < (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MaxScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
 			}
-			setHand GameStat, HAND_TILECODE, 13, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer)
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer)
 			setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, tmpHandTileCode
 			if (MinScore(tmpTileNum) == 999999999) {MinScore(tmpTileNum) = 0}
 			if (MaxScore(tmpTileNum) ==-999999999) {MaxScore(tmpTileNum) = 0}
@@ -730,7 +730,7 @@ return
 		repeat 4: haiMarkingPlayer(cnt) = 0: loop
 	}
 	// 降り打ちモードのための処理
-	repeat 14: tmphaiindex = cnt
+	repeat NUM_OF_TILES_IN_HAND: tmphaiindex = cnt
 		repeat 4: tmpchkcnt = cnt
 			if (haiMarkingPlayer(tmpchkcnt) == 0) {break}
 			tmpflag = 0
@@ -767,14 +767,14 @@ return
 		loop
 	loop
 	// 捨牌を決定する
-	repeat 14
-		if (haiDiscardability(teDahai) < haiDiscardability(13-cnt)) {
-			teDahai = 13-cnt
+	repeat NUM_OF_TILES_IN_HAND
+		if (haiDiscardability(teDahai) < haiDiscardability(NUM_OF_TILES_IN_HAND-1-cnt)) {
+			teDahai = SUTEHAI_NORMAL+NUM_OF_TILES_IN_HAND-1-cnt
 		}
 	loop
 #ifdef SANMAX
 	// 決定された捨牌が北だった場合、捨てる代わりに抜く
-	if ((getRule(RULE_FLOWER_TILES) != "0")&&(getHand(GameStat, HAND_TILECODE, 13, ActivePlayer) != 0)) {
+	if ((getRule(RULE_FLOWER_TILES) != "0")&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
 		if (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer) == TILE_NORTH_WIND) {
 			teDahai += DAHAI_TYPE_FLOWER
 		}
@@ -799,8 +799,8 @@ return
 		if (cnt\TILE_SUIT_STEP == 0) {continue}
 		if (haiCount(cnt)+haiSeenCount(cnt) == 4) {continue} // ４枚見えてる
 		if ((cnt >= TILE_NUMERAL_MAX)&&(haiCount(cnt)+haiSeenCount(cnt) == 3)) {continue} // 字牌のラス牌はとりあえず無視
-		setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, 13, ActivePlayer)
-		setHand GameStat, HAND_TILECODE, 13, ActivePlayer, cnt
+		setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
+		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 		await 0
 		Shanten = countshanten(GameStat, ActivePlayer, 0)
 		tmpde = 4-haiCount(cnt)-haiSeenCount(cnt)
@@ -808,7 +808,7 @@ return
 			nowTime = gettime(6)*1000+gettime(7)
 			if (nowTime < startTime) {nowTime += 60000}
 			if ((nowTime-startTime) < COMTHINKTIME) {
-				repeat 14
+				repeat NUM_OF_TILES_IN_HAND
 					nowTime = gettime(6)*1000+gettime(7)
 					if (nowTime < startTime) {nowTime += 60000}
 					if ((nowTime-startTime) >= COMTHINKTIME) {break}
@@ -817,12 +817,12 @@ return
 					gosub *comp_calculate
 				loop
 			} else { // 処理が遅い時
-				repeat 14
+				repeat NUM_OF_TILES_IN_HAND
 					tmpDiscardability(tmpTileNum) = (4-haiCount(cnt)-haiSeenCount(cnt))*tmpde
 				loop
 			}
 		}
-		setHand GameStat, HAND_TILECODE, 13, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer)
+		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer)
 		if (nowShanten == 1) {
 			setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, tmpHand
 		} else {
@@ -851,8 +851,8 @@ return
 			loop
 			if (tmpHe == 1) {tmpDiscardability == 0: break} // 振聴になる牌を避ける
 		}
-		setHand GameStat, HAND_TILECODE, tmpTileNum2, ActivePlayer, getHand(GameStat, HAND_TILECODE, 13, ActivePlayer)
-		setHand GameStat, HAND_TILECODE, 13, ActivePlayer, cnt
+		setHand GameStat, HAND_TILECODE, tmpTileNum2, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
+		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 		await 0
 		Shanten = countshanten(GameStat, ActivePlayer, 0)
 		if (Shanten == -1) {
@@ -869,7 +869,7 @@ return
 	return
 
 *comp_restore
-	setHand GameStat, HAND_TILECODE, 13, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum2, ActivePlayer)
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum2, ActivePlayer)
 	setHand GameStat, HAND_TILECODE, tmpTileNum2, ActivePlayer, tmpTile2
 	return
 
@@ -878,15 +878,15 @@ return
 	info strf("AIの副露判定に入ります。プレイヤー [%d]", PassivePlayer)
 	if (haiCurrentSutehai > TILE_SUIT_FLOWERS) {
 		/* 花牌の場合は戻る */
-		setHand GameStat, HAND_TILECODE, 13, PassivePlayer, 0
-		setHand GameStat, HAND_REDTILE, 13, PassivePlayer, 0
+		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
+		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
 		return
 	}
 
-	setHand GameStat, HAND_TILECODE, 13, PassivePlayer, 0
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
 	Shanten = countshanten(GameStat, PassivePlayer, 0): await 0
 	currentShanten = Shanten
-	setHand GameStat, HAND_TILECODE, 13, PassivePlayer, haiCurrentSutehai
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
 
 	Shanten = countshanten(GameStat, PassivePlayer, 0): await 0
 	TsumoAgari = 0: await 0: countyaku GameStat, yakuInfo, PassivePlayer, furikomiPlayer, TsumoAgari
@@ -894,25 +894,25 @@ return
 	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, PassivePlayer
 	// 暗槓に対する搶槓の判定で、国士聴牌でない場合は戻る
 	if ((countshanten(GameStat, PassivePlayer, 3) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {
-		setHand GameStat, HAND_TILECODE, 13, PassivePlayer, 0
-		setHand GameStat, HAND_REDTILE, 13, PassivePlayer, 0
+		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
+		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
 		return
 	}
-	setHand GameStat, HAND_TILECODE, 13, PassivePlayer, haiCurrentSutehai
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
 	Shanten = countshanten(GameStat, PassivePlayer, 0): await 0
 	if (Shanten == -1) {
 		haiRon(PassivePlayer) = 1 // 出和了り
-		setHand GameStat, HAND_TILECODE, 13, PassivePlayer, haiCurrentSutehai
-		setHand GameStat, HAND_REDTILE, 13, PassivePlayer, haiCurrentSutehaiAkaDora
+		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
+		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehaiAkaDora
 		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(haiFuriten == 1)||(getDoujunFuriten(GameStat, PassivePlayer) > 0)||((getRule(RULE_RIICHI_SHIBARI) != "0")&&(getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) == RIICHI_NO))) {
 			haiRon(PassivePlayer) = 0
-			setHand GameStat, HAND_TILECODE, 13, PassivePlayer, 0
-			setHand GameStat, HAND_REDTILE, 13, PassivePlayer, 0
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
+			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
 		}
 		return
 	}
-	setHand GameStat, HAND_TILECODE, 13, PassivePlayer, 0
-	setHand GameStat, HAND_REDTILE, 13, PassivePlayer, 0
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
+	setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
 	if (getKangFlag(GameStat, KANG_CHANKAN) == 1) {return} // 搶槓の判定中なら判定打ち切り
 	if (getDrawPointer(GameStat) >= (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1))) {return} // 河底牌なら判定打ち切り
 	if (getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) > RIICHI_NO) {return} // リーチしているなら判定打ち切り
@@ -947,7 +947,7 @@ return
 					return
 				} else {
 					tmpYaojiuTilesCount = 0
-					repeat 13
+					repeat NUM_OF_TILES_IN_HAND-1
 						switch getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer)
 							case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 							case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
@@ -995,9 +995,9 @@ return
 	}
 #ifndef SANMAX
 	// チーするかどうかを判定する
-	setHand GameStat, HAND_TILECODE, 13, PassivePlayer, haiCurrentSutehai
-	dim tmpHaiHand, 14
-	repeat 14
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
+	dim tmpHaiHand, NUM_OF_TILES_IN_HAND
+	repeat NUM_OF_TILES_IN_HAND
 		tmpHaiHand(cnt) = getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer)
 	loop
 	tmp2Shanten = Shanten
@@ -1008,7 +1008,7 @@ return
 		if ((haiCurrentSutehai-chiType) < 0) {
 			continue // バグ防止用
 		}
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			await 0
 			if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == haiCurrentSutehai+1-chiType)&&(nakiCount1 < 1)) {
 				setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, 0
@@ -1024,7 +1024,7 @@ return
 			}
 		loop
 		Shanten = countshanten(GameStat, PassivePlayer, 0): await 0
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, tmpHaiHand(cnt)
 		loop
 		if (haiCurrentSutehai >= TILE_NUMERAL_MAX) {
@@ -1036,14 +1036,14 @@ return
 		if (currentShanten > (Shanten - 2)) {chosenNaki == cnt}
 	loop
 	Shanten = tmp2Shanten
-	setHand GameStat, HAND_TILECODE, 13, PassivePlayer, 0
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
 	if (currentShanten > 0) { // すでにテンパってたら鳴かない
 		if (YakuhaiPon == 1) {
 			// すでに役牌を鳴いているならチー
 			haiChi(PassivePlayer) = chosenNaki
 		} else {
 			tmpYaojiuTilesCount = 0
-			repeat 13
+			repeat NUM_OF_TILES_IN_HAND-1
 				await 0
 				switch getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer)
 					case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:

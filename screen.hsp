@@ -515,9 +515,9 @@ return
 							haiMachihaiTotal++
 						}
 					}
-					if ((getHand(GameStat, HAND_TILECODE, 13, getPlayer(GameStat)) > 0)&&(getHand(GameStat, HAND_TILECODE, 13, getPlayer(GameStat)) <= TILE_NONFLOWER_STRICT_MAX)) {
-						if (haiMachihaiFlag(getHand(GameStat, HAND_TILECODE, 13, getPlayer(GameStat))) == 1) {
-							haiMachihaiCount(getHand(GameStat, HAND_TILECODE, 13, getPlayer(GameStat)))++
+					if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) > 0)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) <= TILE_NONFLOWER_STRICT_MAX)) {
+						if (haiMachihaiFlag(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat))) == 1) {
+							haiMachihaiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)))++
 							haiMachihaiTotal++
 						}
 					}
@@ -771,15 +771,15 @@ return
 				haiMachihaiTotal++
 			}
 		}
-		if ((getHand(GameStat, HAND_TILECODE, 13, getPlayer(GameStat)) > 0)&&(getHand(GameStat, HAND_TILECODE, 13, getPlayer(GameStat)) <= TILE_NONFLOWER_STRICT_MAX)) {
-			if (haiMachihaiFlag(getHand(GameStat, HAND_TILECODE, 13, getPlayer(GameStat))) == 1) {
-				haiMachihaiCount(getHand(GameStat, HAND_TILECODE, 13, getPlayer(GameStat)))++
+		if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) > 0)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) <= TILE_NONFLOWER_STRICT_MAX)) {
+			if (haiMachihaiFlag(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat))) == 1) {
+				haiMachihaiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)))++
 				haiMachihaiTotal++
 			}
 		}
-		if (getHand(GameStat, HAND_TILECODE, 13, getPlayer(GameStat)) == 0) {
-			if (getHand(GameStat, HAND_TILECODE, 13-(MeldPointer(GameStat, getPlayer(GameStat))*3), getPlayer(GameStat)) >= TILE_NONFLOWER_MAX) {MachiMen = 0}
-			else:if (haiMachihaiFlag(getHand(GameStat, HAND_TILECODE, 13-(MeldPointer(GameStat, getPlayer(GameStat))*3), getPlayer(GameStat))) != 0) {
+		if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) == 0) {
+			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX-(MeldPointer(GameStat, getPlayer(GameStat))*3), getPlayer(GameStat)) >= TILE_NONFLOWER_MAX) {MachiMen = 0}
+			else:if (haiMachihaiFlag(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX-(MeldPointer(GameStat, getPlayer(GameStat))*3), getPlayer(GameStat))) != 0) {
 				MachiMen = 0
 			}
 		}

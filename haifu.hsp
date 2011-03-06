@@ -115,7 +115,7 @@ return
 #deffunc haifurechaipai var GameStat
 	repeat NUM_OF_PLAYERS
 		tmpcnt = cnt
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			if (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt) > 0) {
 				haifuP(tmpcnt*6) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt)+(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)*TILE_NONFLOWER_MAX))*2, 2)
 				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(tmpcnt*6) += "<span class=\"akadora\">"}
@@ -181,14 +181,14 @@ return
 		HThaifuP(ActivePlayer*6+1) += "<td></td>"
 		HThaifuP(ActivePlayer*6+2) += "<td></td>"
 	} else {
-		if (getHand(GameStat, HAND_TILECODE, 13, ActivePlayer) == 0) {
+		if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) == 0) {
 			// 鳴いた直後
 			haifuP(ActivePlayer*6+1) += ""
 			haifuP(ActivePlayer*6+2) += ""
 			HThaifuP(ActivePlayer*6+1) += ""
 			HThaifuP(ActivePlayer*6+2) += ""
 		} else {
-			if ((teDahai\DAHAI_TYPE_STEP) == 13) {
+			if ((teDahai\DAHAI_TYPE_STEP) == TSUMOHAI_INDEX) {
 				// ツモ切り
 				haifuP(ActivePlayer*6+1) += "↓ "
 				haifuP(ActivePlayer*6+2) += "　 "
@@ -196,7 +196,7 @@ return
 				HThaifuP(ActivePlayer*6+2) += "<td></td>"
 			} else {
 				// 手出し(空出しの場合も含む)
-				haifuwritetsumohai haifuP, HThaifuP, ActivePlayer, getHand(GameStat, HAND_TILECODE, 13, ActivePlayer), getHand(GameStat, HAND_REDTILE, 13, ActivePlayer), "　 ", ""
+				haifuwritetsumohai haifuP, HThaifuP, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer), getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer), "　 ", ""
 			}
 		}
 	}
@@ -246,7 +246,7 @@ return
 
 /* 自摸和したことを牌譜に記録 */
 #deffunc haifurectsumo var GameStat, int ActivePlayer
-	haifuwritetsumohai haifuP, HThaifuP, ActivePlayer, getHand(GameStat, HAND_TILECODE, 13, ActivePlayer), getHand(GameStat, HAND_REDTILE, 13, ActivePlayer), "ﾂﾓ ", "ツモ"
+	haifuwritetsumohai haifuP, HThaifuP, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer), getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer), "ﾂﾓ ", "ツモ"
 return
 
 /* 大明槓したことを牌譜に記録 */
@@ -264,7 +264,7 @@ return
 #ifdef SANMAX
 /* 抜き北を牌譜に記録 */
 #deffunc haifurecnorth var GameStat, int ActivePlayer, int teDahai
-	if ((getHeavenHandFlag(GameStat) == 1)||((teDahai\DAHAI_TYPE_STEP) != 13)) {
+	if ((getHeavenHandFlag(GameStat) == 1)||((teDahai\DAHAI_TYPE_STEP) != TSUMOHAI_INDEX)) {
 		// 親の１巡目の場合か、ツモってきた牌以外をカンした場合
 		if (getHeavenHandFlag(GameStat) == 1) {
 			haifuP(ActivePlayer*6+1) += "　 "
@@ -276,13 +276,13 @@ return
 			HThaifuP(ActivePlayer*6+3) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 			haifukanflag = 1
 		} else {
-			if (getHand(GameStat, HAND_TILECODE, 13, ActivePlayer) == getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {
+			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) == getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {
 				haifuP(ActivePlayer*6+1) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
 				if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+1) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+1) += "<td>"}
 				HThaifuP(ActivePlayer*6+1) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 				haifukanflag = 0
 			} else {
-				haifuwritetsumohai haifuP, HThaifuP, ActivePlayer, getHand(GameStat, HAND_TILECODE, 13, ActivePlayer), getHand(GameStat, HAND_REDTILE, 13, ActivePlayer), "　 ", ""
+				haifuwritetsumohai haifuP, HThaifuP, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer), getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer), "　 ", ""
 				haifuP(ActivePlayer*6+3) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
 				if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+3) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+3) += "<td>"}
 				HThaifuP(ActivePlayer*6+3) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
@@ -330,7 +330,7 @@ return
 
 /* 暗槓ないし加槓を牌譜に記録 */
 #deffunc haifurecankan var GameStat, int ActivePlayer, int teDahai
-	if ((getHeavenHandFlag(GameStat) == 1)||((teDahai\DAHAI_TYPE_STEP) != 13)) {
+	if ((getHeavenHandFlag(GameStat) == 1)||((teDahai\DAHAI_TYPE_STEP) != TSUMOHAI_INDEX)) {
 		// 親の１巡目の場合か、ツモってきた牌以外をカンした場合
 		if (getHeavenHandFlag(GameStat) == 1) {
 			haifuP(ActivePlayer*6+1) += "　 "
@@ -342,13 +342,13 @@ return
 			HThaifuP(ActivePlayer*6+3) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 			haifukanflag = 1
 		} else {
-			if (getHand(GameStat, HAND_TILECODE, 13, ActivePlayer) == getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {
+			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) == getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {
 				haifuP(ActivePlayer*6+1) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
 				if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+1) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+1) += "<td>"}
 				HThaifuP(ActivePlayer*6+1) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 				haifukanflag = 0
 			} else {
-				haifuwritetsumohai haifuP, HThaifuP, ActivePlayer, getHand(GameStat, HAND_TILECODE, 13, ActivePlayer), getHand(GameStat, HAND_REDTILE, 13, ActivePlayer), "　 ", ""
+				haifuwritetsumohai haifuP, HThaifuP, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer), getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer), "　 ", ""
 				haifuP(ActivePlayer*6+3) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
 				if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+3) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+3) += "<td>"}
 				HThaifuP(ActivePlayer*6+3) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
@@ -395,7 +395,7 @@ return
 
 /* 花牌を牌譜に記録 */
 #deffunc haifurecflower var GameStat, int ActivePlayer, int teDahai
-	if ((getHeavenHandFlag(GameStat) == 1)||((teDahai\DAHAI_TYPE_STEP) != 13)) {
+	if ((getHeavenHandFlag(GameStat) == 1)||((teDahai\DAHAI_TYPE_STEP) != TSUMOHAI_INDEX)) {
 		// 親の１巡目の場合か、ツモってきた牌以外の場合
 		if (getHeavenHandFlag(GameStat) == 1) {
 			haifuP(ActivePlayer*6+1) += "　 "
@@ -403,10 +403,10 @@ return
 			HThaifuP(ActivePlayer*6+1) += "<td></td>"
 			HThaifuP(ActivePlayer*6+2) += "<td></td>"
 		} else {
-			haifuP(ActivePlayer*6+1) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, 13, ActivePlayer)+(getHand(GameStat, HAND_REDTILE, 13, ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
+			haifuP(ActivePlayer*6+1) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)+(getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
 			haifuP(ActivePlayer*6+2) += "　 "
-			if (getHand(GameStat, HAND_REDTILE, 13, ActivePlayer)) {HThaifuP(ActivePlayer*6+1) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+1) += "<td>"}
-			HThaifuP(ActivePlayer*6+1) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, 13, ActivePlayer)+(getHand(GameStat, HAND_REDTILE, 13, ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
+			if (getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer)) {HThaifuP(ActivePlayer*6+1) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+1) += "<td>"}
+			HThaifuP(ActivePlayer*6+1) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)+(getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 			HThaifuP(ActivePlayer*6+2) += "<td></td>"
 		}
 		haifuP(ActivePlayer*6+3) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
@@ -456,9 +456,9 @@ return
 	repeat NUM_OF_ACTUAL_PLAYERS
 		tmpcnt = RelativePositionOf(cnt, hncnOrigTurn\NUM_OF_PLAYERS)
 		// 最終牌姿
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			if (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt) > 0) {
-				if (cnt == 13) {
+				if (cnt == TSUMOHAI_INDEX) {
 					if ((hncnKyokuEndType == ENDKYOKU_RYUUKYOKU)||(hncnKyokuEndType == ENDKYOKU_AGARI)||(hncnKyokuEndType == ENDKYOKU_CHONBO)) {
 						if (TsumoAgari == 1) {haifuP(tmpcnt*6+5) += " ツモ": HThaifuP(tmpcnt*6+5) += "</span> ツモ<span class=\"tile\">"}
 						else {haifuP(tmpcnt*6+5) += " ロン": HThaifuP(tmpcnt*6+5) += "</span> ロン<span class=\"tile\">"}

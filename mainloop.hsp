@@ -62,7 +62,7 @@ repeat
 		/* 打牌を取得する */
 		if (ActivePlayer == getPlayer(GameStat)) {
 			if (getAgariHouki(GameStat, ActivePlayer) == 1) {
-				teDahai = 13
+				teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 			} else {
 				if (WatchModeFlag == 1) {
 					compthink Sandbox, 0, ActivePlayer, PassivePlayer, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkadora, reducedRon, reducedMinkan, reducedPon, reducedChi
@@ -72,7 +72,7 @@ repeat
 			}
 		} else {
 			if ((IsRemotePlayer(ActivePlayer) == -1)||(getAgariHouki(GameStat, ActivePlayer) == 1)) {
-				teDahai = 13
+				teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 			} else {
 				/* ネット対戦時の処理 */
 				if (IsRemotePlayer(ActivePlayer) > 0) {
@@ -92,11 +92,11 @@ repeat
 					if (GameMode == 1) {
 						if (teDahai == DAHAI_TYPE_KYUUSHU) {SendingMsg = 0x6e}
 						if (teDahai == DAHAI_TYPE_AGARI) {SendingMsg = 0x6f}
-						if ((teDahai >= DAHAI_TYPE_NORMAL)&&(teDahai <= DAHAI_TYPE_NORMAL+13)) {SendingMsg = teDahai-DAHAI_TYPE_NORMAL+0x60}
-						if ((teDahai >= DAHAI_TYPE_KAN)&&(teDahai <= DAHAI_TYPE_KAN+13)) {SendingMsg = teDahai-DAHAI_TYPE_KAN+0x70}
-						if ((teDahai >= DAHAI_TYPE_KAKAN)&&(teDahai <= DAHAI_TYPE_KAKAN+13)) {SendingMsg = teDahai-DAHAI_TYPE_KAKAN+0x80}
-						if ((teDahai >= DAHAI_TYPE_RIICHI)&&(teDahai <= DAHAI_TYPE_RIICHI+13)) {SendingMsg = teDahai-DAHAI_TYPE_RIICHI+0x90}
-						if ((teDahai >= DAHAI_TYPE_OPENRIICHI)&&(teDahai <= DAHAI_TYPE_OPENRIICHI+13)) {SendingMsg = teDahai-DAHAI_TYPE_OPENRIICHI+0xC0}
+						if ((teDahai >= DAHAI_TYPE_NORMAL)&&(teDahai <= DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX)) {SendingMsg = teDahai-DAHAI_TYPE_NORMAL+0x60}
+						if ((teDahai >= DAHAI_TYPE_KAN)&&(teDahai <= DAHAI_TYPE_KAN+TSUMOHAI_INDEX)) {SendingMsg = teDahai-DAHAI_TYPE_KAN+0x70}
+						if ((teDahai >= DAHAI_TYPE_KAKAN)&&(teDahai <= DAHAI_TYPE_KAKAN+TSUMOHAI_INDEX)) {SendingMsg = teDahai-DAHAI_TYPE_KAKAN+0x80}
+						if ((teDahai >= DAHAI_TYPE_RIICHI)&&(teDahai <= DAHAI_TYPE_RIICHI+TSUMOHAI_INDEX)) {SendingMsg = teDahai-DAHAI_TYPE_RIICHI+0x90}
+						if ((teDahai >= DAHAI_TYPE_OPENRIICHI)&&(teDahai <= DAHAI_TYPE_OPENRIICHI+TSUMOHAI_INDEX)) {SendingMsg = teDahai-DAHAI_TYPE_OPENRIICHI+0xC0}
 						serversend SendingMsg, IsRemotePlayer
 					}
 				}
@@ -156,7 +156,7 @@ repeat
 		}
 		/* 九種九牌が宣言された場合 */
 		if ((teDahai == DAHAI_TYPE_KYUUSHU)&&(getRule(RULE_NINE_TERMINALS) != "3")) {
-			teDahai = 13 // 九種流しができない時はツモ切りとみなす
+			teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX // 九種流しができない時はツモ切りとみなす
 			targetPlayer = ActivePlayer: haiDaoPaiable = chkdaopaiability(GameStat, ActivePlayer)
 			if (haiDaoPaiable) {
 				if (getFirstDrawFlag(GameStat, ActivePlayer)) {
@@ -170,7 +170,7 @@ repeat
 			warn strf("九種九牌はできません。打牌コード [%d] に補正しました。", teDahai)
 		}
 		if ((teDahai == DAHAI_TYPE_KYUUSHU)&&(getRule(RULE_NINE_TERMINALS) == "3")) {
-			teDahai = 13 // 九種流しができない時はツモ切りとみなす
+			teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX // 九種流しができない時はツモ切りとみなす
 			warn strf("九種九牌はできません。打牌コード [%d] に補正しました。", teDahai)
 		}
 		/* 打牌を牌譜に記録する */
@@ -297,7 +297,7 @@ repeat
 			setDiscard GameStat, DISCARD_TILECODE, DiscardPointer(GameStat, ActivePlayer)+1, ActivePlayer, haiCurrentSutehai
 		}
 		setDiscard GameStat, DISCARD_REDTILE, DiscardPointer(GameStat, ActivePlayer)+1, ActivePlayer, haiCurrentSutehaiAkaDora
-		if (((teDahai\DAHAI_TYPE_STEP) == 13)&&(getHeavenHandFlag(GameStat) == 0)) {
+		if (((teDahai\DAHAI_TYPE_STEP) == TSUMOHAI_INDEX)&&(getHeavenHandFlag(GameStat) == 0)) {
 			setDiscard GameStat, DISCARD_THROUGH, DiscardPointer(GameStat, ActivePlayer)+1, ActivePlayer, 1
 		}
 		DiscardPointerIncrement GameStat, ActivePlayer
@@ -308,7 +308,7 @@ repeat
 		/* 自動的に理牌を行なう */
 		lipai GameStat, ActivePlayer
 		// このとき牌を捨てているはず 表示バグ防止のため
-		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop
+		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
 		/* 立直をした直後の場合、千点を供託し一発のフラグを立てる */
 		if ((teDahai >= DAHAI_TYPE_OPENRIICHI)&&(teDahai < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
 			setCall ActivePlayer, "　　　　"
@@ -336,7 +336,7 @@ repeat
 			dsplay SND_DAHAI1
 		}
 		/* このとき牌を捨てているはずなので、バグ防止のための処理 */
-		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop
+		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
 		/* 再描画 */
 		gosub *redrscreen
 		await 80
@@ -368,7 +368,7 @@ repeat
 			}
 		}
 #endif
-		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop // バグ防止のため
+		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop // バグ防止のため
 		if (((haiCurrentSutehai == getPreviousMeld(GameStat, PREVMELD_TILECODE))||(haiCurrentSutehai == getPreviousMeld(GameStat, PREVMELD_STEPPED)))&&(getAgariHouki(GameStat, ActivePlayer) == 0)) {
 			// 喰い替えの場合の処理
 			if (getRule(RULE_KUIKAE) != "2") {
@@ -403,20 +403,20 @@ repeat
 		}
 		/* 多牌や少牌をしていないかのチェック */
 		tmptilecnt = 0
-		repeat 14
+		repeat NUM_OF_TILES_IN_HAND
 			if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) > 0) {tmptilecnt++}
 		loop
 		tmptilecnt += (MeldPointer(GameStat, ActivePlayer) * 3)
-		if ((tmptilecnt != 13)&&(getAgariHouki(GameStat, ActivePlayer) == 0)) {
+		if ((tmptilecnt != (NUM_OF_TILES_IN_HAND-1))&&(getAgariHouki(GameStat, ActivePlayer) == 0)) {
 //			多牌や少牌の場合の処理(通常起きることはないはずだが…)
-			if (tmptilecnt > 13) {
+			if (tmptilecnt > (NUM_OF_TILES_IN_HAND-1)) {
 				warn "多牌を検出しました。和了り放棄として扱いますが、摸打の処理で不整合が起きていた可能性があります。"
 			} else {
 				warn "少牌を検出しました。和了り放棄として扱いますが、摸打の処理で不整合が起きていた可能性があります。"
 			}
 			dsplay SND_CUOHU
 			repeat 2
-				if (tmptilecnt > 13) {
+				if (tmptilecnt > (NUM_OF_TILES_IN_HAND-1)) {
 					setCall ActivePlayer, "　多牌　"
 				} else {
 					setCall ActivePlayer, "　少牌　"
@@ -473,7 +473,7 @@ repeat
 		/* ウェイトを入れる */
 		await 100
 		/* バグ防止のアレ */
-		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, 13, cnt, 0: loop
+		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
 		/* 次のプレイヤーが牌を自摸る */
 		incDrawPointer GameStat: setHeavenHandFlag GameStat, 0
 #ifdef SANMA
@@ -485,8 +485,8 @@ repeat
 #endif
 		ActivePlayer++: ActivePlayer = ActivePlayer\NUM_OF_PLAYERS
 #endif
-		setHand GameStat, HAND_TILECODE, 13, ActivePlayer, getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
-		setHand GameStat, HAND_REDTILE, 13, ActivePlayer, getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
+		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
+		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer, getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
 		setPreviousMeld GameStat, PREVMELD_TILECODE, -999
 		setPreviousMeld GameStat, PREVMELD_STEPPED, -999
 		dsplay SND_TSUMO

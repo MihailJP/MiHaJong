@@ -117,9 +117,9 @@
 #deffunc puttehai var GameStat, int ActivePlayer, int targetPlayer, int targetPosX, int targetPosY, int haiShowMode
 	// â∫â∆ÇÃé©ñÃîvÇÃògÇï\é¶(ÇyÉIÅ[É_Å[ÇÃä÷åWè„êÊçsï\é¶)
 	tehaiCount = 0
-	repeat 14
+	repeat NUM_OF_TILES_IN_HAND
 		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 0) {continue}
-		if ((cnt == 13)&&((ActivePlayer == targetPlayer)||(getHeavenHandFlag(GameStat) == 1)||(haiShowMode == 0))) {
+		if ((cnt == TSUMOHAI_INDEX)&&((ActivePlayer == targetPlayer)||(getHeavenHandFlag(GameStat) == 1)||(haiShowMode == 0))) {
 			tmpxx = targetPosX+(TILE_WIDTH*tehaiCount)+(TILE_WIDTH*(1-getHeavenHandFlag(GameStat)))/3
 			tmpyy = targetPosY
 			if ((getHandStat(GameStat, targetPlayer) == 0)||(getHandStat(GameStat, targetPlayer) == 3)) {
@@ -136,13 +136,13 @@
 	loop
 	// éËîvÇÃògÇï\é¶
 	tehaiCount = 0
-	repeat 14
-		if (cnt == 13)&&((getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == 0)||((ActivePlayer != targetPlayer)&&(getHeavenHandFlag(GameStat) != 1)&&(haiShowMode != 0))) {
+	repeat NUM_OF_TILES_IN_HAND
+		if (cnt == TSUMOHAI_INDEX)&&((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == 0)||((ActivePlayer != targetPlayer)&&(getHeavenHandFlag(GameStat) != 1)&&(haiShowMode != 0))) {
 			break
 		}
 		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 0) {continue}
 		tmpxx = targetPosX+TILE_WIDTH*cnt
-		if ((cnt == 13)&&((ActivePlayer == targetPlayer)||(getHeavenHandFlag(GameStat) == 1)||(haiShowMode == 0))) {
+		if ((cnt == TSUMOHAI_INDEX)&&((ActivePlayer == targetPlayer)||(getHeavenHandFlag(GameStat) == 1)||(haiShowMode == 0))) {
 			tmpxx == targetPosX+TILE_WIDTH*tehaiCount+(TILE_WIDTH*(1-getHeavenHandFlag(GameStat)))/3
 		}
 		tmpyy = targetPosY
@@ -198,8 +198,8 @@
 		if (((targetPlayer == getPlayer(GameStat))||(haiShowMode == 0))&&(getHandStat(GameStat, targetPlayer) != 0)) {
 			tmp = TILE_THICKNESS
 		} else {tmp = 0}
-		repeat 14
-			if (cnt == 13)&&((getHand(GameStat, HAND_TILECODE, 13, targetPlayer) == 0)||((ActivePlayer != targetPlayer)&&(getHeavenHandFlag(GameStat) != 1)&&(haiShowMode != 0))) {
+		repeat NUM_OF_TILES_IN_HAND
+			if (cnt == TSUMOHAI_INDEX)&&((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == 0)||((ActivePlayer != targetPlayer)&&(getHeavenHandFlag(GameStat) != 1)&&(haiShowMode != 0))) {
 				break
 			}
 			if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 0) {tmp2 = 0: continue}
@@ -207,7 +207,7 @@
 			else {
 				tmp2 = getHand(GameStat, HAND_TILECODE, cnt, targetPlayer)+(getHand(GameStat, HAND_REDTILE, cnt, targetPlayer)*TILE_NONFLOWER_MAX)
 			}
-			if ((cnt == 13)&&((ActivePlayer == targetPlayer)||(getHeavenHandFlag(GameStat) == 1)||(haiShowMode == 0))) {
+			if ((cnt == TSUMOHAI_INDEX)&&((ActivePlayer == targetPlayer)||(getHeavenHandFlag(GameStat) == 1)||(haiShowMode == 0))) {
 				showtile tmp2, targetPosX+(TILE_WIDTH*tehaiCount)+(TILE_WIDTH*(1-getHeavenHandFlag(GameStat)))/3, targetPosY-tmp
 				if (getHandStat(GameStat, targetPlayer) == 0) {
 					gmode gmode_alpha, , , TILE_SHADOW
