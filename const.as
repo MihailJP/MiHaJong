@@ -611,6 +611,16 @@
 #define RIICHI_DOUBLE			3
 #define RIICHI_DOUBLE_IPPATSU	4
 
+/* 向聴計算用のオプション */
+#define SHANTEN_ALL			0
+#define SHANTEN_REGULAR		1
+#define SHANTEN_PAIRS		2
+#define SHANTEN_ORPHANS		3
+#define SHANTEN_STELLAR		4
+#define SHANTEN_CIVILWAR	5
+#define SHANTEN_SYZYGY		6
+#define SHANTEN_PAGES		7
+
 /* 和了フラグ */
 #define AGARI_KUIKAE	999
 

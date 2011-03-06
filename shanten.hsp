@@ -36,17 +36,17 @@
 	loop
 	
 	switch Mode
-		case 1:
+		case SHANTEN_REGULAR:
 			gosub *calcshanten_regular: return MianziShanten: swbreak
-		case 2:
+		case SHANTEN_PAIRS:
 			gosub *calcshanten_chiitoi: return QiduiShanten: swbreak
-		case 3:
+		case SHANTEN_ORPHANS:
 			gosub *calcshanten_kokushi: return ShisanYaoShanten: swbreak
-		case 4:
+		case SHANTEN_STELLAR:
 			gosub *calcshanten_stellar: return QixingShanten: swbreak
-		case 5:
+		case SHANTEN_CIVILWAR:
 			gosub *calcshanten_civilwar: return CivilWarShanten: swbreak
-		case 6:
+		case SHANTEN_SYZYGY:
 			gosub *calcshanten_syzygy: return SyzygyShanten: swbreak
 		default:
 			gosub *calcshanten_regular

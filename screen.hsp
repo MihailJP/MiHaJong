@@ -421,7 +421,7 @@ return
 				} else {
 					if (getPlayer(GameStat) == targetPlayer) {
 					/* ©‰Æ‚É‘Î‚µ‚Ä‚Ì‚İAŒ»İ‚ÌŒü’®”‚ğ•\¦ */
-						Shanten = countshanten(GameStat, targetPlayer, 0)
+						Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
 						/* ‚Ü‚¾’®”v‚µ‚Ä‚¢‚È‚¢‚È‚ç */
 						if (Shanten > 0) {tmptxt += " "+Shanten+"Œü’®"}
 						else {
@@ -507,7 +507,7 @@ return
 					   ‰½‘Ò‚¿‚Å‚ ‚é‚©•\¦‚·‚é */
 					/* U’®‚Å‚ ‚é‚©‚Ç‚¤‚©A‚Ü‚½A‰½‘Ò‚¿‚Å‚ ‚é‚©‚Ç‚¤‚©‚ğ’²‚×‚é */
 					chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, targetPlayer
-					Shanten = countshanten(GameStat, targetPlayer, 0)
+					Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
 					/* ‰½–Ê‘Ò‚¿‚©’²‚×‚é */
 					if ((haiCurrentSutehai > 0)&&(haiCurrentSutehai <= TILE_NONFLOWER_STRICT_MAX)) {
 						if ((haiMachihaiFlag(haiCurrentSutehai) == 1)&&(ActivePlayer != getPlayer(GameStat))) {
@@ -764,7 +764,7 @@ return
 	font fontname, 14, 0: color 255, 255, 255
 	if ((haiTimer@player == 0)||(ActivePlayer != getPlayer(GameStat))) {
 		chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, getPlayer(GameStat)
-		Shanten = countshanten(GameStat, getPlayer(GameStat), 0)
+		Shanten = countshanten(GameStat, getPlayer(GameStat), SHANTEN_ALL)
 		if ((haiCurrentSutehai > 0)&&(haiCurrentSutehai <= TILE_NONFLOWER_STRICT_MAX)) {
 			if ((haiMachihaiFlag(haiCurrentSutehai) == 1)&&(ActivePlayer != getPlayer(GameStat))) {
 				haiMachihaiCount(haiCurrentSutehai)++

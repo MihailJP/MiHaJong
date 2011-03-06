@@ -582,7 +582,7 @@ return
 #deffunc shisanbudayaku var GameStat, var tmpYakuInfo, int targetPlayer, array tmpScore, array ShantenArray
 	if (getRule(RULE_SHIISAN_PUUTAA) != "0") {
 		ShisanBuDa = chkshisanbuda(GameStat, targetPlayer)
-		if ((ShisanBuDa == 1)&&(ShantenArray(3) >= 0)&&(getFirstDrawFlag(GameStat, targetPlayer) == 1)) {
+		if ((ShisanBuDa == 1)&&(ShantenArray(SHANTEN_ORPHANS) >= 0)&&(getFirstDrawFlag(GameStat, targetPlayer) == 1)) {
 			if (getRule(RULE_SHIISAN_PUUTAA) == "2") {
 				setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 5: setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST, "\ŽO•s“‹\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  " \n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  ""
 				setYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 0: setYakuInfo tmpYakuInfo, YAKUINF_DORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_URADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 0
@@ -611,14 +611,14 @@ return
 			}
 		} else {
 			// ðŒ–ž‚½‚µ‚Ä‚È‚¢ê‡A‘Žm–³‘o‚¾‚Á‚½‚ç‰½‚à‚µ‚È‚¢B‘Žm‚Å‚È‚¢‚È‚çƒ`ƒ‡ƒ“ƒ{
-			Shanten = ShantenArray(0)
+			Shanten = ShantenArray(SHANTEN_ALL)
 			if (Shanten >= 0) {
 				tmpScore = 0: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0
 			}
 		}
 	} else {
 		// ˜a—¹‚Á‚Ä‚È‚¢˜a—¹‚Á‚Ä‚È‚¢
-		Shanten = ShantenArray(0)
+		Shanten = ShantenArray(SHANTEN_ALL)
 		if (Shanten >= 0) {
 			tmpScore = 0: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0
 		}
@@ -644,14 +644,14 @@ return
 			}
 		} else {
 			// ˜a—¹‚Á‚Ä‚È‚¢˜a—¹‚Á‚Ä‚È‚¢
-			Shanten = ShantenArray(0)
+			Shanten = ShantenArray(SHANTEN_ALL)
 			if (Shanten >= 0) {
 				tmpScore = 0: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0
 			}
 		}
 	} else {
 		// ˜a—¹‚Á‚Ä‚È‚¢˜a—¹‚Á‚Ä‚È‚¢
-		Shanten = ShantenArray(0)
+		Shanten = ShantenArray(SHANTEN_ALL)
 		if (Shanten >= 0) {
 			tmpScore = 0: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0
 		}

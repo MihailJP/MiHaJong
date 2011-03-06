@@ -75,7 +75,7 @@
 				continue // 北家は無視
 			}
 #endif
-			Shanten = countshanten(GameStat, cnt, 0)
+			Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
 			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
 				Shanten = 1 // 強制不聴扱い
 			}
@@ -111,7 +111,7 @@
 				continue // 北家は無視
 			}
 #endif
-			Shanten = countshanten(GameStat, cnt, 0)
+			Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
 			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
 				Shanten = 1 // 強制不聴扱い
 			}
@@ -145,7 +145,7 @@
 		repeat NUM_OF_ACTUAL_PLAYERS
 			dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 			// 錯和立直（不聴立直）の者がいた場合
-			Shanten = countshanten(GameStat, cnt, 0)
+			Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
 			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
 				Shanten = 1 // 強制不聴扱い
 			}
@@ -202,7 +202,7 @@
 		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
 		loop
-		Shanten = countshanten(GameStat, (getRound(GameStat)\NUM_OF_PLAYERS), 0)
+		Shanten = countshanten(GameStat, (getRound(GameStat)\NUM_OF_PLAYERS), SHANTEN_ALL)
 		if ((getAgariHouki(GameStat, getRound(GameStat)\NUM_OF_PLAYERS) == 1)||(IsRemotePlayer(getRound(GameStat)\NUM_OF_PLAYERS) == -1)) {
 			Shanten = 1 // 強制不聴扱い
 		}
@@ -214,7 +214,7 @@
 		dsplay SND_PAGE
 		gosub *redrscreen
 		redraw 1
-		Shanten = countshanten(GameStat, (getRound(GameStat)\NUM_OF_PLAYERS), 0)
+		Shanten = countshanten(GameStat, (getRound(GameStat)\NUM_OF_PLAYERS), SHANTEN_ALL)
 		if (((Shanten > 0)&&(getRule(RULE_ROUND_CONTINUATION) != "2"))||(getRule(RULE_ROUND_CONTINUATION) == "1")||(getRule(RULE_ROUND_CONTINUATION) == "3")) {incRound GameStat}
 		incHonba GameStat
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
@@ -456,7 +456,7 @@
 		gosub *redrscreen: redraw 1: await 1500
 		TenpaiCnt = 0
 		repeat NUM_OF_PLAYERS
-			Shanten = countshanten(GameStat, cnt, 0)
+			Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
 			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
 				Shanten = 1 // 和了り放棄時の処理→強制不聴扱い→不聴リーチとして罰符
 			}
@@ -471,7 +471,7 @@
 
 		repeat NUM_OF_ACTUAL_PLAYERS
 			// 錯和立直（不聴立直）の者がいた場合
-			Shanten = countshanten(GameStat, cnt, 0)
+			Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
 			dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 			if (Shanten > 0) {
 #ifdef SANMA

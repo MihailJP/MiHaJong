@@ -59,7 +59,7 @@ return
 		}
 	}
 	await 0: countseentiles haiSeenCount, GameStat
-	Shanten = countshanten(GameStat, ActivePlayer, 0)
+	Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 	if (Shanten == -1) {
 		TsumoAgari = 1
 		await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
@@ -101,7 +101,7 @@ return
 	}
 	// ÉäÅ[É`ÇÃèÍçáÇÕÅAòaóπÇÍÇ»ÇØÇÍÇŒÉcÉÇêÿÇË
 	if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer)) {teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX: return}
-	Shanten = countshanten(GameStat, ActivePlayer, 0)
+	Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 	nowShanten = Shanten
 	// ÉäÅ[É`ÇÇ©ÇØÇÈÇ©Ç«Ç§Ç©
 	dim haiDiscardability, NUM_OF_TILES_IN_HAND
@@ -132,7 +132,7 @@ return
 			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, 0
 			await 0
 			chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, ActivePlayer
-			Shanten = countshanten(GameStat, ActivePlayer, 0)
+			Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 			setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHandTileCode
 			MachihaiTotalTiles(cnt) = haiMachihaiTotal
@@ -171,7 +171,7 @@ return
 					break
 				}
 				await 0
-				Shanten = countshanten(GameStat, ActivePlayer, 0)
+				Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 				if (Shanten == -1) {
 					// Ç±Ç±Ç≈åvéZÇ≥ÇÍÇÈÇÃÇÕÉ_É}íÆÇ≈é©ñÃòaÇÃÇ∆Ç´ÇÃì_êî
 					TsumoAgari = 1: await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
@@ -200,7 +200,7 @@ return
 						setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
 						setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 						await 0
-						Shanten = countshanten(GameStat, ActivePlayer, 0)
+						Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 						if (Shanten == -1) {
 							haiDiscardability(tmpTileNum) += 2000*(4-haiCount(cnt)-haiSeenCount(cnt))+100000
 						}
@@ -278,7 +278,7 @@ return
 					setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
 				}
 			loop
-			Shanten = countshanten(GameStat, ActivePlayer, 0)
+			Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 			repeat NUM_OF_TILES_IN_HAND
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHaiHand(cnt)
 			loop
@@ -305,7 +305,7 @@ return
 			haiTileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
 			tmpnum = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 			setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
-			Shanten = countshanten(GameStat, ActivePlayer, 0)
+			Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 			repeat NUM_OF_TILES_IN_HAND
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHaiHand(cnt)
 			loop
@@ -362,7 +362,7 @@ return
 		if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == 0) {haiDiscardability(cnt) = -9999999: continue}
 		// å¸íÆêîÇ©ÇÁÅAëÂÇ‹Ç©Ç»ï]âøílÇéZèo
 		setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
-		Shanten = countshanten(GameStat, ActivePlayer, 0): await 0
+		Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL): await 0
 		haiDiscardability(cnt) = (6-Shanten)*1000
 		setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHand
 		if (haiTileInfo == 0) {
@@ -460,7 +460,7 @@ return
 				setHand GameStat, HAND_TILECODE, tmpXTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
 				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 				await 0
-				Shanten = countshanten(GameStat, ActivePlayer, 0)
+				Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 				tmpXde = 4-haiCount(cnt)-haiSeenCount(cnt)
 				if (Shanten == 1) { // éüÇÃÉcÉÇîvÇ≈àÍå¸íÆÇÃèÍçá
 					nowTime = gettime(6)*1000+gettime(7)
@@ -707,7 +707,7 @@ return
 			setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
 			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 			await 0
-			Shanten = countshanten(GameStat, ActivePlayer, 0)
+			Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 			if (Shanten == -1) {
 				// Ç±Ç±Ç≈åvéZÇ≥ÇÍÇÈÇÃÇÕÉ_É}íÆÇ≈é©ñÃòaÇÃÇ∆Ç´ÇÃì_êî
 				TsumoAgari = 1: await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
@@ -802,7 +802,7 @@ return
 		setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 		await 0
-		Shanten = countshanten(GameStat, ActivePlayer, 0)
+		Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 		tmpde = 4-haiCount(cnt)-haiSeenCount(cnt)
 		if (Shanten == 0) { // éüÇÃÉcÉÇîvÇ≈íÆîvÇÃèÍçá
 			nowTime = gettime(6)*1000+gettime(7)
@@ -854,7 +854,7 @@ return
 		setHand GameStat, HAND_TILECODE, tmpTileNum2, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 		await 0
-		Shanten = countshanten(GameStat, ActivePlayer, 0)
+		Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 		if (Shanten == -1) {
 			TsumoAgari = 1: await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
 			if (nowShanten > 0) {
@@ -884,22 +884,22 @@ return
 	}
 
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
-	Shanten = countshanten(GameStat, PassivePlayer, 0): await 0
+	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
 	currentShanten = Shanten
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
 
-	Shanten = countshanten(GameStat, PassivePlayer, 0): await 0
+	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
 	TsumoAgari = 0: await 0: countyaku GameStat, yakuInfo, PassivePlayer, furikomiPlayer, TsumoAgari
 	await 0
 	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, PassivePlayer
 	// à√û»Ç…ëŒÇ∑ÇÈùèû»ÇÃîªíËÇ≈ÅAçëémíÆîvÇ≈Ç»Ç¢èÍçáÇÕñﬂÇÈ
-	if ((countshanten(GameStat, PassivePlayer, 3) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {
+	if ((countshanten(GameStat, PassivePlayer, SHANTEN_ORPHANS) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
 		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
 		return
 	}
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
-	Shanten = countshanten(GameStat, PassivePlayer, 0): await 0
+	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
 	if (Shanten == -1) {
 		haiRon(PassivePlayer) = 1 // èoòaóπÇË
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
@@ -1023,7 +1023,7 @@ return
 				nakiCount3++
 			}
 		loop
-		Shanten = countshanten(GameStat, PassivePlayer, 0): await 0
+		Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
 		repeat NUM_OF_TILES_IN_HAND
 			setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, tmpHaiHand(cnt)
 		loop

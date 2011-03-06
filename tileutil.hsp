@@ -216,7 +216,7 @@ return haiTileInfo
 		haiMachihaiCount(cnt) = -1
 		if (cnt\TILE_SUIT_STEP == 0) {continue}
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer, cnt
-		Shanten = countshanten(GameStat, targetPlayer, 0)
+		Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
 		if (Shanten == -1) {
 			MachiMen++: haiMachihaiFlag(cnt) = 1
 			haiMachihaiCount(cnt) = (4 - haiSeenCount(cnt) - haiCountCFTTmp(cnt))
@@ -252,7 +252,7 @@ return
 	repeat TILE_NONFLOWER_STRICT_MAX+1
 		if (cnt\TILE_SUIT_STEP == 0) {continue}
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer, cnt
-		Shanten = countshanten(GameStat, targetPlayer, 0)
+		Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
 		if (Shanten == -1) {
 			setOpenWait GameStat, cnt, 1
 		}
@@ -449,7 +449,7 @@ return haiDaoPaiable
 		‚P‚P‚P‚R‚S‚S‚S“Œ“Œ“Œ”­–– ©”­‚ğæ‚ë‚¤‚Æ‚·‚é‚Æ
 		+‡@++‚P++-‚Q-++-‚Q-+~     c ‚U(“ñŒü’®)
 	*/
-	Shanten = countshanten(GameStat, targetPlayer, 0)
+	Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
 	repeat NUM_OF_TILES_IN_HAND /* è”v‚ğ‘‚«–ß‚· */
 		setHand GameStat, HAND_TILECODE, cnt, targetPlayer, tmpkanhand(cnt)
 	loop

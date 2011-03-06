@@ -24,7 +24,7 @@ return
 	mode = 0
 	ButtonPos = 0
 	dim haiSelectButtonMask, NUM_OF_TILES_IN_HAND: TsumoAgari = 1
-	Shanten = countshanten(GameStat, ActivePlayer, 0)
+	Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 	ShantenJustnow = Shanten
 	targetPlayer = ActivePlayer
 	if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) > RIICHI_NO) {
@@ -264,7 +264,7 @@ return
 			repeat NUM_OF_TILES_IN_HAND
 				tmpHand = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
-				Shanten = countshanten(GameStat, ActivePlayer, 0)
+				Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHand
 				if (Shanten > 0) {haiSelectButtonMask(cnt) = 1}
 			loop
@@ -280,7 +280,7 @@ return
 			repeat NUM_OF_TILES_IN_HAND
 				tmpHand = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
-				Shanten = countshanten(GameStat, ActivePlayer, 0)
+				Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHand
 				if (Shanten > 0) {haiSelectButtonMask(cnt) = 1}
 			loop
@@ -374,12 +374,12 @@ return
 	haiSelect = -99 // ñ¢ì¸óÕ
 	playerThru = 1: TsumoAgari = 0: tmpShanten = 999
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
-	Shanten = countshanten(GameStat, PassivePlayer, 0)
+	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL)
 	tmpShanten = Shanten
 	countyaku GameStat, yakuInfo, PassivePlayer, furikomiPlayer, TsumoAgari
 	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, PassivePlayer
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
-	if ((countshanten(GameStat, PassivePlayer, 3) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {
+	if ((countshanten(GameStat, PassivePlayer, SHANTEN_ORPHANS) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {
 		// à√û»Ç…ëŒÇ∑ÇÈùèû»îªíËÇÃÇ∆Ç´Ç≈ÅAçëémíÆîvÇ≈Ç»Ç¢èÍçáÇÕñﬂÇÈ
 		if (GameMode == 2) {clientsend 0xa0}
 		return
@@ -563,7 +563,7 @@ return
 		tmphai02 = getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat))
 		setHand GameStat, HAND_TILECODE, tmpButton, getPlayer(GameStat), tmphai02
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat), 0
-//		Shanten = countshanten(GameStat, getPlayer(GameStat), 0)
+//		Shanten = countshanten(GameStat, getPlayer(GameStat), SHANTEN_ALL)
 		chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, getPlayer(GameStat)
 		evalFuritenFlag = haiFuriten
 		if (AgariAbilityFlag == 0) {

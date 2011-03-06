@@ -19,22 +19,22 @@
 	newmod yakuInfo, yakuStruct
 	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, targetPlayer
 	dim haiMianziDat, SIZE_OF_MELD_BUFFER
-	dim ShantenArray, 7
-	repeat 7: ShantenArray(cnt) = countshanten(GameStat, targetPlayer, cnt): loop
-	Shanten = ShantenArray(0)
+	dim ShantenArray, SHANTEN_PAGES
+	repeat SHANTEN_PAGES: ShantenArray(cnt) = countshanten(GameStat, targetPlayer, cnt): loop
+	Shanten = ShantenArray(SHANTEN_ALL)
 	repeat 160
 		dim tmpScore, NUM_OF_DIGIT_GROUPS
 		if ((cnt \ 8) == 7) {await 0}
 		newmod tmpYakuInfo, yakuStruct
 		/* çëémñ≥ëo */
-		if (ShantenArray(3) == -1) {
+		if (ShantenArray(SHANTEN_ORPHANS) == -1) {
 			contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
 			shisanyaoyaku GameStat, tmpYakuInfo, targetPlayer, haiFuriten
 			countdora GameStat, tmpYakuInfo, targetPlayer
 		}
 		/* éµêØñ≥Ëœ */
 		if (getRule(RULE_STELLAR_UUSHII) != "0") {
-			if (ShantenArray(4) == -1) {
+			if (ShantenArray(SHANTEN_STELLAR) == -1) {
 				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
 				addyakuman "éµêØñ≥Ëœ", 1
 				countdora GameStat, tmpYakuInfo, targetPlayer
@@ -42,7 +42,7 @@
 		}
 		/* ìÏñkêÌëà */
 		if (getRule(RULE_CIVIL_WAR) != "0") {
-			if (ShantenArray(5) == -1) {
+			if (ShantenArray(SHANTEN_CIVILWAR) == -1) {
 				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
 				addyakuman "ìÏñkêÌëà", 1
 				countdora GameStat, tmpYakuInfo, targetPlayer
@@ -50,7 +50,7 @@
 		}
 		/* òfêØíºóÒ */
 		if (getRule(RULE_SYZYGY) != "0") {
-			if (ShantenArray(6) == -1) {
+			if (ShantenArray(SHANTEN_SYZYGY) == -1) {
 				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
 				if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) \ 2) == 0) {
 					addyakuman "òfêØíºóÒ", 2
@@ -61,7 +61,7 @@
 			}
 		}
 		/* éµëŒéq */
-		if ((ShantenArray(2) == -1)&&(ShantenArray(1) != -1)) {
+		if ((ShantenArray(SHANTEN_PAIRS) == -1)&&(ShantenArray(SHANTEN_REGULAR) != -1)) {
 			contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
 			qiduiyaku GameStat, tmpYakuInfo, targetPlayer
 			countdora GameStat, tmpYakuInfo, targetPlayer
@@ -179,7 +179,7 @@
 			setYakuInfoTxt yakuInfo, YAKUINF_YAKUMANLIST, getYakuInfo(tmpYakuInfo, YAKUINF_YAKUMANLIST)
 		}
 		delmod tmpYakuInfo
-		if (ShantenArray(1) != -1) {break /* ñ éqéËÇÃòaóπÇËÇ∂Ç·Ç»Ç¢Ç»ÇÁîªíËÇÕ1âÒÇ≈Ç¢Ç¢ */}
+		if (ShantenArray(SHANTEN_REGULAR) != -1) {break /* ñ éqéËÇÃòaóπÇËÇ∂Ç·Ç»Ç¢Ç»ÇÁîªíËÇÕ1âÒÇ≈Ç¢Ç¢ */}
 	loop
 return
 #global

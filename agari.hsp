@@ -586,7 +586,7 @@ repeat NUM_OF_PLAYERS-1
 				if ((haiFuriten == 1)||(getDoujunFuriten(GameStat, agariPlayer) == 1)) {hncnMsg = "U’®ö˜a": ResultDesc += "(U’®‚Å‚Ìƒƒ“˜a—¹‚è)"}
 				else {
 					// ˜a—¹‚è‚ª¬—§‚µ‚Ä‚¢‚È‚¢ê‡ö˜a
-					Shanten = countshanten(GameStat, agariPlayer, 0)
+					Shanten = countshanten(GameStat, agariPlayer, SHANTEN_ALL)
 					if (Shanten >= 0) {hncnMsg = "•s’®ö˜a": ResultDesc += "(¬—§‚µ‚Ä‚¢‚È‚¢˜a—¹‚è)"}
 					else {
 						// –ğ‚ª‚È‚©‚Á‚½ê‡‚Íö˜a
