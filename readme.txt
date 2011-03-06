@@ -322,6 +322,11 @@ C:\Users\(ユーザー名)\AppData\Roaming\MiHaJong\haifu に出力されます。それ以外の
 　バグレポートやパッチ、役満和了ったなどの報告は、次の連絡先にどうぞ。
 ・メール： mihailjp@gmail.com
 ・Twitter： @MihailJP
+　また、バグレポートや要望はTracのシステムでも受け付けています。
+http://trac.assembla.com/mihajong/ から「New Ticket」を選択し、報告したい内容を
+記入します。
+　また、最新の開発版は次のSubversionリポジトリで公開されています。
+http://subversion.assembla.com/svn/mihajong/trunk/
 
 【既知の問題点】
 ・OSの設定で左右のボタンを入れ替えているとマウスボタンで正常に打牌できない。
@@ -330,11 +335,12 @@ C:\Users\(ユーザー名)\AppData\Roaming\MiHaJong\haifu に出力されます。それ以外の
 ・ダブロンすると下家側のアリス判定が異常。
 ・たまにCOMが喰い変えをする。
 
-【開発環境】
+【MihailJPの開発環境】
 ・OS：Windows 7 Home Premium 32bit (Service Pack 1)
 ・物理メモリ：OS認識3GB、搭載4GB
 ・CPU：Intel Core i5 750 2.67GHz
 ・開発言語：Hot Soup Processor ver3.2
+・Subversionクライアント：Tortoise SVN と Cygwin SVN の併用
 
 【ビルドに別途必要なもの】
 ・Hot Soup Processor 本体 (http://hsp.tv/)
