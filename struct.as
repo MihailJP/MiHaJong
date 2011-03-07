@@ -402,17 +402,18 @@ PreviousMeld, ConnectionLost
 	haiDice1direction = 0: haiDice2direction = 0
 	haiPointer = 0 // ツモ牌のポインタ
 #ifdef SANMAX
-			haiRinshanPointer = 107 // 嶺上牌のポインタ
+	haiRinshanPointer = 107 // 嶺上牌のポインタ
 #else
-		if (getRuleInt(RULE_FLOWER_TILES) != 0) {
-			if (getRuleInt(RULE_FLOWER_TILES) == 3) {
-				haiRinshanPointer = 143 // 嶺上牌のポインタ
-			} else {
-				haiRinshanPointer = 139 // 嶺上牌のポインタ
-			}
-		} else {
-			haiRinshanPointer = 135 // 嶺上牌のポインタ
-		}
+	switch getRuleInt(RULE_FLOWER_TILES) // 嶺上牌のポインタ
+		case 1: case 2:
+			haiRinshanPointer = 139
+			swbreak
+		case 3:
+			haiRinshanPointer = 143
+			swbreak
+		default:
+			haiRinshanPointer = 135
+	swend
 #endif
 	// 開門位置
 #ifdef SANMAX
@@ -420,10 +421,12 @@ PreviousMeld, ConnectionLost
 		haiWareme = ((GameRound-(GameRound/4))+24+(haiDice1+haiDice2)-1)\3
 #ifdef SANMA4
 		haiWareme = ((0)+24+(haiDice1+haiDice2)-1)\3
-		if ((GameRound\NUM_OF_PLAYERS) == 0) {tobePlayed = 0, 1, 2}
-		if ((GameRound\NUM_OF_PLAYERS) == 1) {tobePlayed = 1, 2, 3}
-		if ((GameRound\NUM_OF_PLAYERS) == 2) {tobePlayed = 2, 3, 0}
-		if ((GameRound\NUM_OF_PLAYERS) == 3) {tobePlayed = 3, 0, 1}
+		switch (GameRound\NUM_OF_PLAYERS)
+			case 0: tobePlayed = 0, 1, 2: swbreak
+			case 1: tobePlayed = 1, 2, 3: swbreak
+			case 2: tobePlayed = 2, 3, 0: swbreak
+			case 3: tobePlayed = 3, 0, 1: swbreak
+		swend
 		haiWareme = tobePlayed(haiWareme)
 #endif
 	}

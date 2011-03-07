@@ -447,17 +447,18 @@ return
 	}
 	if (GameMode = 1) { // サーバーの場合、牌山のデータを送信
 #ifdef SANMAX
-			tmpNumberOfTiles = 108
+		tmpNumberOfTiles = 108
 #else
-		if (getRuleInt(RULE_FLOWER_TILES) != 0) {
-			if (getRuleInt(RULE_FLOWER_TILES) == 3) {
-				tmpNumberOfTiles = 144
-			} else {
+		switch getRuleInt(RULE_FLOWER_TILES)
+			case 1: case 2:
 				tmpNumberOfTiles = 140
-			}
-		} else {
-			tmpNumberOfTiles = 136
-		}
+				swbreak
+			case 3:
+				tmpNumberOfTiles = 144
+				swbreak
+			default:
+				tmpNumberOfTiles = 136
+		swend
 #endif
 		repeat tmpNumberOfTiles
 			serversend getWall(GameStat, WALL_TILECODE, cnt)+(getWall(GameStat, WALL_REDTILE, cnt)*TILE_NONFLOWER_MAX)+0x10, IsRemotePlayer
@@ -488,16 +489,19 @@ return
 #else
 		if (cnt == 24) {
 #endif
-			if (getHonba(GameStat) == 1) {hncnMsg = " １本場 "}
-			if (getHonba(GameStat) == 2) {hncnMsg = " ２本場 "}
-			if (getHonba(GameStat) == 3) {hncnMsg = " ３本場 "}
-			if (getHonba(GameStat) == 4) {hncnMsg = " ４本場 "}
-			if (getHonba(GameStat) == 5) {hncnMsg = " ５本場 "}
-			if (getHonba(GameStat) == 6) {hncnMsg = " ６本場 "}
-			if (getHonba(GameStat) == 7) {hncnMsg = " ７本場 "}
-			if (getHonba(GameStat) == 8) {hncnMsg = " ８本場 "}
-			if (getHonba(GameStat) == 9) {hncnMsg = " ９本場 "}
-			if (getHonba(GameStat) >= 10) {hncnMsg = " "+getHonba(GameStat)+"本場 "}
+			switch getHonba(GameStat)
+				case 0: /* do nothing */ swbreak
+				case 1: hncnMsg = " １本場 ": swbreak
+				case 2: hncnMsg = " ２本場 ": swbreak
+				case 3: hncnMsg = " ３本場 ": swbreak
+				case 4: hncnMsg = " ４本場 ": swbreak
+				case 5: hncnMsg = " ５本場 ": swbreak
+				case 6: hncnMsg = " ６本場 ": swbreak
+				case 7: hncnMsg = " ７本場 ": swbreak
+				case 8: hncnMsg = " ８本場 ": swbreak
+				case 9: hncnMsg = " ９本場 ": swbreak
+				default: hncnMsg = " "+getHonba(GameStat)+"本場 "
+			swend
 		}
 		if (cnt\4 == 3) {
 			calcdoukasen GameStat
