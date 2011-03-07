@@ -145,29 +145,24 @@
 				swend
 			} else {
 				if (getRuleInt(RULE_OWN_FLOWER) != 0) {
-					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_EAST) {
-						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SPRING) {
-							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
-							addyaku tmpYakuInfo, "ñ{â‘ãGêﬂîv", 1
-						}
-					}
-					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_SOUTH) {
-						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SUMMER) {
-							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
-							addyaku tmpYakuInfo, "ñ{â‘ãGêﬂîv", 1
-						}
-					}
-					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_WEST) {
-						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_AUTUMN) {
-							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
-							addyaku tmpYakuInfo, "ñ{â‘ãGêﬂîv", 1
-						}
-					}
-					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_NORTH) {
-						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_WINTER) {
-							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
-							addyaku tmpYakuInfo, "ñ{â‘ãGêﬂîv", 1
-						}
+					yakuFlag = 0
+					switch playerWind(targetPlayer, getRound(GameStat))
+						case PLAYER_EAST:
+							if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SPRING) {yakuFlag = 1}
+							swbreak
+						case PLAYER_SOUTH:
+							if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SUMMER) {yakuFlag = 1}
+							swbreak
+						case PLAYER_WEST:
+							if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_AUTUMN) {yakuFlag = 1}
+							swbreak
+						case PLAYER_NORTH:
+							if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_WINTER) {yakuFlag = 1}
+							swbreak
+					swend
+					if (yakuFlag) {
+						addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
+						addyaku tmpYakuInfo, "ñ{â‘ãGêﬂîv", 1
 					}
 				}
 			}
@@ -189,29 +184,24 @@
 				swend
 			} else {
 				if (getRuleInt(RULE_OWN_FLOWER) != 0) {
-					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_EAST) {
-						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_PLUM) {
-							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
-							addyaku tmpYakuInfo, "ñ{â‘ëêñÿîv", 1
-						}
-					}
-					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_SOUTH) {
-						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_ORCHID) {
-							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
-							addyaku tmpYakuInfo, "ñ{â‘ëêñÿîv", 1
-						}
-					}
-					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_WEST) {
-						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_CHRYSANTHEMUM) {
-							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
-							addyaku tmpYakuInfo, "ñ{â‘ëêñÿîv", 1
-						}
-					}
-					if ((playerWind(targetPlayer, getRound(GameStat))) == PLAYER_NORTH) {
-						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_BAMBOO) {
-							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
-							addyaku tmpYakuInfo, "ñ{â‘ëêñÿîv", 1
-						}
+					yakuFlag = 0
+					switch playerWind(targetPlayer, getRound(GameStat))
+						case PLAYER_EAST:
+							if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_PLUM) {yakuFlag = 1}
+							swbreak
+						case PLAYER_SOUTH:
+							if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_ORCHID) {yakuFlag = 1}
+							swbreak
+						case PLAYER_WEST:
+							if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_CHRYSANTHEMUM) {yakuFlag = 1}
+							swbreak
+						case PLAYER_NORTH:
+							if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_BAMBOO) {yakuFlag = 1}
+							swbreak
+					swend
+					if (yakuFlag) {
+						addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1
+						addyaku tmpYakuInfo, "ñ{â‘ëêñÿîv", 1
 					}
 				}
 			}

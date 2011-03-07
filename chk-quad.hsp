@@ -76,15 +76,17 @@
 	tmpyakuCensored += searchyaku(tmpYakuInfo, "大峡谷")
 	tmpyakuCensored += searchyaku(tmpYakuInfo, "雪化粧")
 	if ((Kangzi == 3)&&(tmpyakuCensored == 0)) {
-		if (getRuleInt(RULE_SANKANTSU) == 2) {
-			addyakuman tmpYakuInfo, "三槓子", 1
-		} else {
-			if (getRuleInt(RULE_SANKANTSU) != 0) {
-				addyaku tmpYakuInfo, "三槓子", 3
-			} else {
+		switch getRuleInt(RULE_SANKANTSU)
+			case 0:
 				addyaku tmpYakuInfo, "三槓子", 2
-			}
-		}
+				swbreak
+			case 1:
+				addyaku tmpYakuInfo, "三槓子", 3
+				swbreak
+			case 2:
+				addyakuman tmpYakuInfo, "三槓子", 1
+				swbreak
+		swend
 	}
 	/* 二暗槓 */
 	if (getRuleInt(RULE_RYANANKAN) != 0) {

@@ -44,18 +44,19 @@
 	verdflag = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
 	if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 		if (verdflag == 0) {
-			if (getRuleInt(RULE_SEVEN_HONOR_PAIRS) != 1) {
-				if (getRuleInt(RULE_SEVEN_HONOR_PAIRS) == 0) {
+			switch getRuleInt(RULE_DRAGONLESS_ALL_GREEN)
+				case 0:
 					/* ”­–³‚µ‚à•’Ê‚É–ğ–‚Æ‚·‚éƒ‹[ƒ‹
 					   ‚±‚Ìê‡Â“Vˆä‚Å´ˆêF‚ª•¡‡*/
 					addyakuman tmpYakuInfo, "—ÎˆêF", 1
-				} else {
+					swbreak
+				case 2:
 					/* ”­–³‚µ‚Íƒ_ƒuƒ‹–ğ–‚Æ‚¢‚¤ƒ‹[ƒ‹ */
 					addyakuman tmpYakuInfo, "´—ÎˆêF", 2
 					// —ÎˆêF‚ª¬—§‚µ‚½‚ç´ˆêF‚Ì¬—§‚ğ‰ğœ‚·‚é(Â“Vˆäƒ‹[ƒ‹—p)
 					delyaku tmpYakuInfo, "´ˆêF"
-				}
-			}
+					swbreak
+			swend
 		} else {
 			addyakuman tmpYakuInfo, "—ÎˆêF", 1
 			// —ÎˆêF‚ª¬—§‚µ‚½‚ç¬ˆêF‚Ì¬—§‚ğ‰ğœ‚·‚é(Â“Vˆäƒ‹[ƒ‹—p)
@@ -99,15 +100,17 @@
 		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_BAMBOOS+4
 		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
 		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
-			if (getRuleInt(RULE_TOIPUUTAO) == 3) {
-				addyakuman tmpYakuInfo, "„•s“|", 1
-			} else {
-				if (getRuleInt(RULE_TOIPUUTAO) == 1) {
+			switch getRuleInt(RULE_TOIPUUTAO)
+				case 1:
 					addyaku tmpYakuInfo, "„•s“|", 1
-				} else {
+					swbreak
+				case 2:
 					addyaku tmpYakuInfo, "„•s“|", 4
-				}
-			}
+					swbreak
+				case 3:
+					addyakuman tmpYakuInfo, "„•s“|", 1
+					swbreak
+			swend
 		}
 	}
 	/* gE */
@@ -424,10 +427,15 @@
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "ƒ³‹ã˜@•ó“•")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "‹ã˜@•ó“•")
 		if ((yakuflagcount == 9)&&(tmpyakuCensored == 0)) {
-			if ((getRuleInt(RULE_CHUUREN_HWATON) == 2)&&(getMenzen(GameStat, targetPlayer) == 1)) {
-				addyaku tmpYakuInfo, "‹ã˜@‰Ô“•", 2
-			} else {
-				addyaku tmpYakuInfo, "‹ã˜@‰Ô“•", 4
+			if (getMenzen(GameStat, targetPlayer) == 1) {
+				switch getRuleInt(RULE_CHUUREN_HWATON)
+					case 1:
+						addyaku tmpYakuInfo, "‹ã˜@‰Ô“•", 4
+						swbreak
+					case 2:
+						addyaku tmpYakuInfo, "‹ã˜@‰Ô“•", 2
+						swbreak
+				swend
 			}
 		}
 	}
@@ -495,7 +503,7 @@
 		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 1)
 		if ((yakuflagcount == 4)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+5)&&(getMenzen(GameStat, targetPlayer) == 1)) {
 			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CIRCLES+5) {
-				addyakuman tmpYakuInfo, "‹ğ—”“{‹ê˜I|", 1
+				addyakuman tmpYakuInfo, "‹ğ—”“{‹ê˜I|", 2
 			} else {
 				addyakuman tmpYakuInfo, "‹ğ—”“{‹ê˜I|", 1
 			}
