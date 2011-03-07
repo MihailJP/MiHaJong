@@ -407,6 +407,7 @@
 	AddRuleText2 "四華開嶺", RuleStat(RULE_FOUR_FLOWERS)
 	AddRuleText3 "八仙過海", RuleStat(RULE_EIGHT_FLOWERS)
 #endif
+	AddRuleText "雀頭符の重複", RuleStat(RULE_DOUBLE_YAKU_WIND_PAIR)
 	/* ルール設定を表示　ここまで */
 
 return

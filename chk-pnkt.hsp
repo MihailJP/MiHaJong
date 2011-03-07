@@ -14,28 +14,34 @@
 	/* “ª‰Á•„c–ð”v‚Ì‚Ý‚Q•„ */
 	if ((haiMianziDat(0) >= TILE_WIND_MIN)&&(haiMianziDat(0) <= TILE_WIND_MAX)) {
 		/* •—”v‚ÍðŒ‚É‚æ‚Á‚Ä–ð”v */
-		if ((getRound(GameStat)/4) == (haiMianziDat(0)-TILE_WIND_MIN)) {
-			// ê•—”v
-			addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
-		}
-		if (playerWind(targetPlayer, getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
-			// Ž©•—”v
-			addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
-		}
-		if (getRule(RULE_KAIMENKAZE) != "0") {
-			// ŠJ–å•—”v
-			if (playerWind(getWareme(GameStat), getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+		repeat 1
+			if ((getRound(GameStat)/4) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+				// ê•—”v
 				addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
+				if (getRuleInt(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 			}
-		}
+			if (playerWind(targetPlayer, getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+				// Ž©•—”v
+				addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
+				if (getRuleInt(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
+			}
+			if (getRule(RULE_KAIMENKAZE) != "0") {
+				// ŠJ–å•—”v
+				if (playerWind(getWareme(GameStat), getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+					addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
+					if (getRuleInt(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
+				}
+			}
 #ifndef SANMA
-		if (getRule(RULE_URAKAZE) != "0") {
-			if (playerWind(targetPlayer+2, getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
-				// — •—”v
-				addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
+			if (getRule(RULE_URAKAZE) != "0") {
+				if (playerWind(targetPlayer+2, getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+					// — •—”v
+					addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
+					if (getRuleInt(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
+				}
 			}
-		}
 #endif
+		loop
 	}
 	if ((haiMianziDat(0) >= TILE_DRAGON_MIN)&&(haiMianziDat(0) <= TILE_DRAGON_MAX)) {
 		/* ŽOŒ³”v‚Íí‚É–ð”v */

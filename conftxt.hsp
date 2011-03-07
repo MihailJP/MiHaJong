@@ -1377,4 +1377,8 @@
 	RuleTxt(0, RULE_EIGHT_FLOWERS+1) = "なし", "役満"
 #endif
 
+	RuleName(RULE_DOUBLE_YAKU_WIND_PAIR+1) = "雀頭符の重複"
+	RuleDescription(RULE_DOUBLE_YAKU_WIND_PAIR+1) = "ダブ風牌など、刻子にすると2飜以上になる役牌の雀頭に与えられる符を設定します（初期設定：あり）"
+	RuleTxt(0, RULE_DOUBLE_YAKU_WIND_PAIR+1) = "あり", "なし"
+
 return
