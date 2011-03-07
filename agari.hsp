@@ -347,25 +347,25 @@ repeat NUM_OF_PLAYERS-1
 		redraw 1: await 1500
 		pointcalc GameStat, hncnPointDelta
 		
-		if (getHonba(GameStat)) {
+		if ((getHonba(GameStat))&&(getRuleInt(RULE_TSUMIBOH_RATE) != 3)) {
 			dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 #ifdef SANMA
 			if (playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST) {
 				if (TsumoAgari) {
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == agariPlayer) {
-							hncnPointDelta(cnt) += (getHonba(GameStat)*2)
+							hncnPointDelta(cnt) += (getHonba(GameStat)*2)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						} else {
-							hncnPointDelta(cnt) -= getHonba(GameStat)
+							hncnPointDelta(cnt) -= getHonba(GameStat)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						}
 					loop
 				} else {
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == agariPlayer) {
-							hncnPointDelta(cnt) += (getHonba(GameStat)*2)
+							hncnPointDelta(cnt) += (getHonba(GameStat)*2)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						}
 						if (cnt == furikomiPlayer) {
-							hncnPointDelta(cnt) -= (getHonba(GameStat)*2)
+							hncnPointDelta(cnt) -= (getHonba(GameStat)*2)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						}
 					loop
 				}
@@ -373,18 +373,18 @@ repeat NUM_OF_PLAYERS-1
 				if (TsumoAgari) {
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == agariPlayer) {
-							hncnPointDelta(cnt) += (getHonba(GameStat)*2)
+							hncnPointDelta(cnt) += (getHonba(GameStat)*2)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						} else {
-							hncnPointDelta(cnt) -= getHonba(GameStat)
+							hncnPointDelta(cnt) -= getHonba(GameStat)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						}
 					loop
 				} else {
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == agariPlayer) {
-							hncnPointDelta(cnt) += (getHonba(GameStat)*2)
+							hncnPointDelta(cnt) += (getHonba(GameStat)*2)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						}
 						if (cnt == furikomiPlayer) {
-							hncnPointDelta(cnt) -= (getHonba(GameStat)*2)
+							hncnPointDelta(cnt) -= (getHonba(GameStat)*2)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						}
 					loop
 				}
@@ -394,18 +394,18 @@ repeat NUM_OF_PLAYERS-1
 				if (TsumoAgari) {
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == agariPlayer) {
-							hncnPointDelta(cnt) += (getHonba(GameStat)*3)
+							hncnPointDelta(cnt) += (getHonba(GameStat)*3)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						} else {
-							hncnPointDelta(cnt) -= getHonba(GameStat)
+							hncnPointDelta(cnt) -= getHonba(GameStat)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						}
 					loop
 				} else {
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == agariPlayer) {
-							hncnPointDelta(cnt) += (getHonba(GameStat)*3)
+							hncnPointDelta(cnt) += (getHonba(GameStat)*3)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						}
 						if (cnt == furikomiPlayer) {
-							hncnPointDelta(cnt) -= (getHonba(GameStat)*3)
+							hncnPointDelta(cnt) -= (getHonba(GameStat)*3)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						}
 					loop
 				}
@@ -413,22 +413,20 @@ repeat NUM_OF_PLAYERS-1
 				if (TsumoAgari) {
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == agariPlayer) {
-							hncnPointDelta(cnt) += (getHonba(GameStat)*3)
+							hncnPointDelta(cnt) += (getHonba(GameStat)*3)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
+						} else: if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
+							hncnPointDelta(cnt) -= getHonba(GameStat)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						} else {
-							if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
-								hncnPointDelta(cnt) -= getHonba(GameStat)
-							} else {
-								hncnPointDelta(cnt) -= getHonba(GameStat)
-							}
+							hncnPointDelta(cnt) -= getHonba(GameStat)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						}
 					loop
 				} else {
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == agariPlayer) {
-							hncnPointDelta(cnt) += (getHonba(GameStat)*3)
+							hncnPointDelta(cnt) += (getHonba(GameStat)*3)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						}
 						if (cnt == furikomiPlayer) {
-							hncnPointDelta(cnt) -= (getHonba(GameStat)*3)
+							hncnPointDelta(cnt) -= (getHonba(GameStat)*3)*(getRuleInt(RULE_TSUMIBOH_RATE)*2+1)
 						}
 					loop
 				}

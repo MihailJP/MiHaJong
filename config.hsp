@@ -121,7 +121,11 @@ return
 	objsize 40, 20
 	repeat 40
 		pos 50+400*(cnt/20), (cnt\20)*25+75: button gosub ">>", *ruleselbtn
-		tooltip@ cnt, RuleDescription(cnt+configPage*40-39)
+		if (RuleTxt(Rule(cnt+configPage*40-39), cnt+configPage*40-39) == "Ｎ／Ａ") {
+			tooltip@ cnt, RuleDescription(cnt+configPage*40-39)
+		} else {
+			tooltip@ cnt, strf("%s（初期設定：%s）", RuleDescription(cnt+configPage*40-39), RuleTxt(Rule(cnt+configPage*40-39), cnt+configPage*40-39))
+		}
 	loop
 	objsize 70, 20
 	pos 650, 575: button gosub "Back", *ruleback: tooltip@ 40, "前のページに移動します"
