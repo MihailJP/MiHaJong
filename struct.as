@@ -329,7 +329,7 @@ PreviousMeld, ConnectionLost
 /* 局単位での初期化 */
 #modfunc inittable
 	dim ConnectionLost, NUM_OF_PLAYERS // 回線切断による和了り放棄
-	if ((Honba >= 5)&&(getRule(RULE_RYANSHIBA) == "1")) {
+	if ((Honba >= 5)&&(getRuleInt(RULE_RYANSHIBA) == 1)) {
 		hncnShibari = 1 //二飜縛り
 	} else {
 		hncnShibari = 0
@@ -340,28 +340,28 @@ PreviousMeld, ConnectionLost
 		PaoFlag(cnt\PAO_YAKU_PAGES, cnt/PAO_YAKU_PAGES) = -1
 	loop
 #ifdef SANMAX
-	if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(haiDice1 == haiDice2))) {
+	if ((getRuleInt(RULE_DORA_TWICE) == 1)||((getRuleInt(RULE_DORA_TWICE) == 2)&&(haiDice1 == haiDice2))) {
 		haiDeadTiles = 16 // 王牌の数
 	} else {
 		haiDeadTiles = 14 // 王牌の数
 	}
 	dim Deck, 108, WALL_PAGES // 壁牌の配列
-	if (getRule(RULE_FLOWER_TILES) != "0") {
+	if (getRuleInt(RULE_FLOWER_TILES) != 0) {
 		ExtraRinshan = 4
 	} else {
 		ExtraRinshan = 0
 	}
 #else
-	if (getRule(RULE_FLOWER_TILES) != "0") {
-		if (getRule(RULE_FLOWER_TILES) == "3") {
-			if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(haiDice1 == haiDice2))) {
+	if (getRuleInt(RULE_FLOWER_TILES) != 0) {
+		if (getRuleInt(RULE_FLOWER_TILES) == 3) {
+			if ((getRuleInt(RULE_DORA_TWICE) == 1)||((getRuleInt(RULE_DORA_TWICE) == 2)&&(haiDice1 == haiDice2))) {
 				haiDeadTiles = 24 // 王牌の数(ドラドラ卓)
 			} else {
 				haiDeadTiles = 22 // 王牌の数(花牌を入れる時は特別に２２枚残しとする)
 			}
 			dim Deck, 144, WALL_PAGES // 壁牌の配列
 		} else {
-			if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(haiDice1 == haiDice2))) {
+			if ((getRuleInt(RULE_DORA_TWICE) == 1)||((getRuleInt(RULE_DORA_TWICE) == 2)&&(haiDice1 == haiDice2))) {
 				haiDeadTiles = 20 // 王牌の数(ドラドラ卓)
 			} else {
 				haiDeadTiles = 18 // 王牌の数
@@ -369,7 +369,7 @@ PreviousMeld, ConnectionLost
 			dim Deck, 140, WALL_PAGES // 壁牌の配列
 		}
 	} else {
-		if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(haiDice1 == haiDice2))) {
+		if ((getRuleInt(RULE_DORA_TWICE) == 1)||((getRuleInt(RULE_DORA_TWICE) == 2)&&(haiDice1 == haiDice2))) {
 			haiDeadTiles = 16 // 王牌の数(ドラドラ卓)
 		} else {
 			haiDeadTiles = 14 // 王牌の数
@@ -404,8 +404,8 @@ PreviousMeld, ConnectionLost
 #ifdef SANMAX
 			haiRinshanPointer = 107 // 嶺上牌のポインタ
 #else
-		if (getRule(RULE_FLOWER_TILES) != "0") {
-			if (getRule(RULE_FLOWER_TILES) == "3") {
+		if (getRuleInt(RULE_FLOWER_TILES) != 0) {
+			if (getRuleInt(RULE_FLOWER_TILES) == 3) {
 				haiRinshanPointer = 143 // 嶺上牌のポインタ
 			} else {
 				haiRinshanPointer = 139 // 嶺上牌のポインタ
@@ -416,7 +416,7 @@ PreviousMeld, ConnectionLost
 #endif
 	// 開門位置
 #ifdef SANMAX
-	if ((getRule(RULE_WAREME) != "0")||(getRule(RULE_KAIMENKAZE) != "0")) {
+	if ((getRuleInt(RULE_WAREME) != 0)||(getRuleInt(RULE_KAIMENKAZE) != 0)) {
 		haiWareme = ((GameRound-(GameRound/4))+24+(haiDice1+haiDice2)-1)\3
 #ifdef SANMA4
 		haiWareme = ((0)+24+(haiDice1+haiDice2)-1)\3
@@ -428,7 +428,7 @@ PreviousMeld, ConnectionLost
 #endif
 	}
 #else
-	if ((getRule(RULE_WAREME) != "0")||(getRule(RULE_KAIMENKAZE) != "0")) {
+	if ((getRuleInt(RULE_WAREME) != 0)||(getRuleInt(RULE_KAIMENKAZE) != 0)) {
 		haiWareme = ((GameRound\4)+32+(haiDice1+haiDice2)-1)\4
 	}
 #endif
@@ -446,7 +446,7 @@ PreviousMeld, ConnectionLost
 	dim PlayerScore, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 #ifdef SANMA
 	repeat NUM_OF_ACTUAL_PLAYERS
-		switch int(getRule(RULE_STARTING_POINT))
+		switch getRuleInt(RULE_STARTING_POINT)
 			case 0: PlayerScore(cnt,0) = 350: swbreak
 			case 1: PlayerScore(cnt,0) = 400: swbreak
 			case 2: PlayerScore(cnt,0) = 450: swbreak
@@ -455,7 +455,7 @@ PreviousMeld, ConnectionLost
 			case 5: PlayerScore(cnt,0) = 300: swbreak
 		swend
 	loop
-	switch int(getRule(RULE_GAME_LENGTH))
+	switch getRuleInt(RULE_GAME_LENGTH)
 		case 0: GameLength = 6: swbreak
 		case 1: case 7: GameLength = 2: swbreak
 		case 2: case 3: GameLength = 14: swbreak
@@ -465,7 +465,7 @@ PreviousMeld, ConnectionLost
 	swend
 #else
 	repeat NUM_OF_ACTUAL_PLAYERS
-		switch int(getRule(RULE_STARTING_POINT))
+		switch getRuleInt(RULE_STARTING_POINT)
 			case 0: PlayerScore(cnt,0) = 250: swbreak
 			case 1: PlayerScore(cnt,0) = 270: swbreak
 			case 2: PlayerScore(cnt,0) = 300: swbreak
@@ -474,7 +474,7 @@ PreviousMeld, ConnectionLost
 			case 5: PlayerScore(cnt,0) = 200: swbreak
 		swend
 	loop
-	switch int(getRule(RULE_GAME_LENGTH))
+	switch getRuleInt(RULE_GAME_LENGTH)
 		case 0: GameLength = 7: swbreak
 		case 1: case 7: GameLength = 3: swbreak
 		case 2: case 3: GameLength = 15: swbreak
@@ -491,7 +491,7 @@ PreviousMeld, ConnectionLost
 	LastAgariPlayer = -1 // 八連荘の判定に使う
 	dim SumaroFlag, NUM_OF_PLAYERS // 四馬路解禁フラグ
 	dim YakitoriFlag, NUM_OF_PLAYERS // 焼き鳥フラグ
-	if (getRule(RULE_YAKITORI) != "0") {repeat NUM_OF_PLAYERS: YakitoriFlag(cnt) = 1: loop}
+	if (getRuleInt(RULE_YAKITORI) != 0) {repeat NUM_OF_PLAYERS: YakitoriFlag(cnt) = 1: loop}
 	dim playerChip, NUM_OF_PLAYERS // チップの収支
 	inittable thismod
 	return

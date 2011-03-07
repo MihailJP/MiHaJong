@@ -33,7 +33,7 @@
 			countdora GameStat, tmpYakuInfo, targetPlayer
 		}
 		/* 七星無靠 */
-		if (getRule(RULE_STELLAR_UUSHII) != "0") {
+		if (getRuleInt(RULE_STELLAR_UUSHII) != 0) {
 			if (ShantenArray(SHANTEN_STELLAR) == -1) {
 				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
 				addyakuman "七星無靠", 1
@@ -41,7 +41,7 @@
 			}
 		}
 		/* 南北戦争 */
-		if (getRule(RULE_CIVIL_WAR) != "0") {
+		if (getRuleInt(RULE_CIVIL_WAR) != 0) {
 			if (ShantenArray(SHANTEN_CIVILWAR) == -1) {
 				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
 				addyakuman "南北戦争", 1
@@ -49,7 +49,7 @@
 			}
 		}
 		/* 惑星直列 */
-		if (getRule(RULE_SYZYGY) != "0") {
+		if (getRuleInt(RULE_SYZYGY) != 0) {
 			if (ShantenArray(SHANTEN_SYZYGY) == -1) {
 				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
 				if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) \ 2) == 0) {
@@ -83,11 +83,11 @@
 			countdora GameStat, tmpYakuInfo, targetPlayer
 		}
 		tmpScore(0) = getYakuInfo(tmpYakuInfo, YAKUINF_FU)
-		if (getrule(RULE_SIMPLIFIED_SCORING) != "0") {
+		if (getRuleInt(RULE_SIMPLIFIED_SCORING) != 0) {
 			trace "簡略計算ルールのため30符として扱います。"
 			tmpScore(0) = 30: setYakuInfo tmpYakuInfo, YAKUINF_FU, 30 /* 簡略計算用 */
 		}
-		if (getRule(RULE_LIMITLESS) == "0") {
+		if (getRuleInt(RULE_LIMITLESS) == 0) {
 			tmpTotalHan = getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)
 			if (tmpTotalHan < 6) {
 				switch (tmpTotalHan)
@@ -118,7 +118,7 @@
 		/* 人和が役満以外だった場合の処理 */
 		if (tmpRenHuFlag == 1) {
 			// 今まで計算した役が人和の規定未満だった場合消去する
-			switch int(getRule(RULE_RENHOH))
+			switch getRuleInt(RULE_RENHOH)
 				case 2:
 					if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_URADORA)+getYakuInfo(tmpYakuInfo, YAKUINF_AKADORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) < 8) {
 						setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 8: setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST, "人和\n"
@@ -144,7 +144,7 @@
 		/* 十四不塔の判定 */
 		shisibudayaku GameStat, tmpYakuInfo, targetPlayer, tmpScore, ShantenArray
 		
-		if ((getRule(RULE_ROUND_TO_MANGAN) == "1")&&(getRule(RULE_LIMITLESS) == "0")) {
+		if ((getRuleInt(RULE_ROUND_TO_MANGAN) == 1)&&(getRuleInt(RULE_LIMITLESS) == 0)) {
 			// 切り上げ満貫
 			if (tmpScore(0) == 1920) {tmpScore(0) = 2000}
 		}
@@ -263,7 +263,7 @@ return
 
 		成立している役満のリストに役を追加します。
 */
-	if (getRule(RULE_LIMITLESS) == "2") {
+	if (getRuleInt(RULE_LIMITLESS) == 2) {
 		addyaku tmpYakuInfo, yakuName, yakuVal*13
 	} else {
 		addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, yakuVal*1000

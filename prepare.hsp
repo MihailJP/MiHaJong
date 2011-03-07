@@ -212,7 +212,7 @@ return
 		// オーラスだけ特別
 		bgmcode = MUS_FINAL: gosub *bgmplay
 	} else {
-		if ((getHonba(GameStat) >= 5)&&(getRule(RULE_RYANSHIBA) == "1")) {
+		if ((getHonba(GameStat) >= 5)&&(getRuleInt(RULE_RYANSHIBA) == 1)) {
 			// リャンシバ時専用BGM
 			bgmcode = MUS_SHIBARI: gosub *bgmplay
 		} else {
@@ -274,31 +274,31 @@ return
 	repeat 9*4, 2*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+9: loop // 筒子
 	repeat 9*4, 11*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+10: loop // 索子
 	repeat 7*4, 20*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+11: loop // 字牌
-	if (getRule(RULE_RED_FIVE) != "2") {
+	if (getRuleInt(RULE_RED_FIVE) != 2) {
 		setWall GameStat, WALL_REDTILE, 24, 1 // 赤五筒
-		if (getRule(RULE_RED_FIVE) == "1") {setWall GameStat, WALL_REDTILE, 25, 1} // 赤五筒
+		if (getRuleInt(RULE_RED_FIVE) == 1) {setWall GameStat, WALL_REDTILE, 25, 1} // 赤五筒
 		setWall GameStat, WALL_REDTILE, 60, 1 // 赤五索
-		if (getRule(RULE_RED_FIVE) == "1") {setWall GameStat, WALL_REDTILE, 61, 1} // 赤五索
+		if (getRuleInt(RULE_RED_FIVE) == 1) {setWall GameStat, WALL_REDTILE, 61, 1} // 赤五索
 	}
-	if (int(getRule(RULE_RED_ONE))/4 == 1) {setWall GameStat, WALL_REDTILE, 0, 1} // 赤一萬
-	if (int(getRule(RULE_RED_NINE))/4 == 1) {setWall GameStat, WALL_REDTILE, 4, 1} // 赤九萬
-	if (int(getRule(RULE_RED_ONE))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 8, 1} // 赤一筒
-	if (int(getRule(RULE_RED_TWO))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 12, 1} // 赤二筒
-	if (int(getRule(RULE_RED_THREE))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 16, 1} // 赤三筒
-	if (int(getRule(RULE_RED_FOUR))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 20, 1} // 赤四筒
-	if (int(getRule(RULE_RED_SIX))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 28, 1} // 赤六筒
-	if (int(getRule(RULE_RED_SEVEN))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 32, 1} // 赤七筒
-	if (int(getRule(RULE_RED_EIGHT))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 36, 1} // 赤八筒
-	if (int(getRule(RULE_RED_NINE))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 40, 1} // 赤九筒
-	if (int(getRule(RULE_RED_ONE))\2 == 1) {setWall GameStat, WALL_REDTILE, 44, 1} // 赤一索
-	if (int(getRule(RULE_RED_TWO))\2 == 1) {setWall GameStat, WALL_REDTILE, 48, 1} // 赤二索
-	if (int(getRule(RULE_RED_THREE))\2 == 1) {setWall GameStat, WALL_REDTILE, 52, 1} // 赤三索
-	if (int(getRule(RULE_RED_FOUR))\2 == 1) {setWall GameStat, WALL_REDTILE, 56, 1} // 赤四索
-	if (int(getRule(RULE_RED_SIX))\2 == 1) {setWall GameStat, WALL_REDTILE, 64, 1} // 赤六索
-	if (int(getRule(RULE_RED_SEVEN))\2 == 1) {setWall GameStat, WALL_REDTILE, 68, 1} // 赤七索
-	if (int(getRule(RULE_RED_EIGHT))\2 == 1) {setWall GameStat, WALL_REDTILE, 72, 1} // 赤八索
-	if (int(getRule(RULE_RED_NINE))\2 == 1) {setWall GameStat, WALL_REDTILE, 76, 1} // 赤九索
-	if (getRule(RULE_KINKEI_DOKURITSU) != "0") {
+	if (getRuleInt(RULE_RED_ONE)/4 == 1) {setWall GameStat, WALL_REDTILE, 0, 1} // 赤一萬
+	if (getRuleInt(RULE_RED_NINE)/4 == 1) {setWall GameStat, WALL_REDTILE, 4, 1} // 赤九萬
+	if (getRuleInt(RULE_RED_ONE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 8, 1} // 赤一筒
+	if (getRuleInt(RULE_RED_TWO)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 12, 1} // 赤二筒
+	if (getRuleInt(RULE_RED_THREE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 16, 1} // 赤三筒
+	if (getRuleInt(RULE_RED_FOUR)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 20, 1} // 赤四筒
+	if (getRuleInt(RULE_RED_SIX)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 28, 1} // 赤六筒
+	if (getRuleInt(RULE_RED_SEVEN)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 32, 1} // 赤七筒
+	if (getRuleInt(RULE_RED_EIGHT)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 36, 1} // 赤八筒
+	if (getRuleInt(RULE_RED_NINE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 40, 1} // 赤九筒
+	if (getRuleInt(RULE_RED_ONE)\2 == 1) {setWall GameStat, WALL_REDTILE, 44, 1} // 赤一索
+	if (getRuleInt(RULE_RED_TWO)\2 == 1) {setWall GameStat, WALL_REDTILE, 48, 1} // 赤二索
+	if (getRuleInt(RULE_RED_THREE)\2 == 1) {setWall GameStat, WALL_REDTILE, 52, 1} // 赤三索
+	if (getRuleInt(RULE_RED_FOUR)\2 == 1) {setWall GameStat, WALL_REDTILE, 56, 1} // 赤四索
+	if (getRuleInt(RULE_RED_SIX)\2 == 1) {setWall GameStat, WALL_REDTILE, 64, 1} // 赤六索
+	if (getRuleInt(RULE_RED_SEVEN)\2 == 1) {setWall GameStat, WALL_REDTILE, 68, 1} // 赤七索
+	if (getRuleInt(RULE_RED_EIGHT)\2 == 1) {setWall GameStat, WALL_REDTILE, 72, 1} // 赤八索
+	if (getRuleInt(RULE_RED_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 76, 1} // 赤九索
+	if (getRuleInt(RULE_KINKEI_DOKURITSU) != 0) {
 		// オールマイティー扱いはせず、赤ドラと同じ扱い
 		setWall GameStat, WALL_REDTILE, 96, 1 // 白ポッチ
 	}
@@ -307,47 +307,47 @@ return
 	repeat 9*4, 9*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+2: loop // 筒子
 	repeat 9*4, 18*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+3: loop // 索子
 	repeat 7*4, 27*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+4: loop // 字牌
-	if (getRule(RULE_FLOWER_TILES) != "0") {
-		if (getRule(RULE_FLOWER_TILES) == "3") {
+	if (getRuleInt(RULE_FLOWER_TILES) != 0) {
+		if (getRuleInt(RULE_FLOWER_TILES) == 3) {
 			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-65: loop // 季節牌
 			repeat 4, 35*4: setWall GameStat, WALL_TILECODE, cnt, cnt-64: loop // 草木牌
-		} else:if (getRule(RULE_FLOWER_TILES) == "1") {
+		} else:if (getRuleInt(RULE_FLOWER_TILES) == 1) {
 			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-65: loop // 季節牌
 		} else {
 			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-60: loop // 草木牌
 		}
 	}
-	if (getRule(RULE_RED_FIVE) != "2") {
+	if (getRuleInt(RULE_RED_FIVE) != 2) {
 		setWall GameStat, WALL_REDTILE, 16, 1 // 赤五萬
 		setWall GameStat, WALL_REDTILE, 52, 1 // 赤五筒
-		if (getRule(RULE_RED_FIVE) == "1") {setWall GameStat, WALL_REDTILE, 53, 1} // 赤五筒
+		if (getRuleInt(RULE_RED_FIVE) == 1) {setWall GameStat, WALL_REDTILE, 53, 1} // 赤五筒
 		setWall GameStat, WALL_REDTILE, 88, 1 // 赤五索
 	}
-	if (int(getRule(RULE_RED_ONE))/4 == 1) {setWall GameStat, WALL_REDTILE, 0, 1} // 赤一萬
-	if (int(getRule(RULE_RED_TWO))/4 == 1) {setWall GameStat, WALL_REDTILE, 4, 1} // 赤二萬
-	if (int(getRule(RULE_RED_THREE))/4 == 1) {setWall GameStat, WALL_REDTILE, 8, 1} // 赤三萬
-	if (int(getRule(RULE_RED_FOUR))/4 == 1) {setWall GameStat, WALL_REDTILE, 12, 1} // 赤四萬
-	if (int(getRule(RULE_RED_SIX))/4 == 1) {setWall GameStat, WALL_REDTILE, 20, 1} // 赤六萬
-	if (int(getRule(RULE_RED_SEVEN))/4 == 1) {setWall GameStat, WALL_REDTILE, 24, 1} // 赤七萬
-	if (int(getRule(RULE_RED_EIGHT))/4 == 1) {setWall GameStat, WALL_REDTILE, 28, 1} // 赤八萬
-	if (int(getRule(RULE_RED_NINE))/4 == 1) {setWall GameStat, WALL_REDTILE, 32, 1} // 赤九萬
-	if (int(getRule(RULE_RED_ONE))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 36, 1} // 赤一筒
-	if (int(getRule(RULE_RED_TWO))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 40, 1} // 赤二筒
-	if (int(getRule(RULE_RED_THREE))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 44, 1} // 赤三筒
-	if (int(getRule(RULE_RED_FOUR))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 48, 1} // 赤四筒
-	if (int(getRule(RULE_RED_SIX))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 56, 1} // 赤六筒
-	if (int(getRule(RULE_RED_SEVEN))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 60, 1} // 赤七筒
-	if (int(getRule(RULE_RED_EIGHT))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 76, 1} // 赤八筒
-	if (int(getRule(RULE_RED_NINE))\4/2 == 1) {setWall GameStat, WALL_REDTILE, 68, 1} // 赤九筒
-	if (int(getRule(RULE_RED_ONE))\2 == 1) {setWall GameStat, WALL_REDTILE, 72, 1} // 赤一索
-	if (int(getRule(RULE_RED_TWO))\2 == 1) {setWall GameStat, WALL_REDTILE, 64, 1} // 赤二索
-	if (int(getRule(RULE_RED_THREE))\2 == 1) {setWall GameStat, WALL_REDTILE, 80, 1} // 赤三索
-	if (int(getRule(RULE_RED_FOUR))\2 == 1) {setWall GameStat, WALL_REDTILE, 84, 1} // 赤四索
-	if (int(getRule(RULE_RED_SIX))\2 == 1) {setWall GameStat, WALL_REDTILE, 92, 1} // 赤六索
-	if (int(getRule(RULE_RED_SEVEN))\2 == 1) {setWall GameStat, WALL_REDTILE, 96, 1} // 赤七索
-	if (int(getRule(RULE_RED_EIGHT))\2 == 1) {setWall GameStat, WALL_REDTILE, 100, 1} // 赤八索
-	if (int(getRule(RULE_RED_NINE))\2 == 1) {setWall GameStat, WALL_REDTILE, 104, 1} // 赤九索
-	if (getRule(RULE_KINKEI_DOKURITSU) != "0") {
+	if (getRuleInt(RULE_RED_ONE)/4 == 1) {setWall GameStat, WALL_REDTILE, 0, 1} // 赤一萬
+	if (getRuleInt(RULE_RED_TWO)/4 == 1) {setWall GameStat, WALL_REDTILE, 4, 1} // 赤二萬
+	if (getRuleInt(RULE_RED_THREE)/4 == 1) {setWall GameStat, WALL_REDTILE, 8, 1} // 赤三萬
+	if (getRuleInt(RULE_RED_FOUR)/4 == 1) {setWall GameStat, WALL_REDTILE, 12, 1} // 赤四萬
+	if (getRuleInt(RULE_RED_SIX)/4 == 1) {setWall GameStat, WALL_REDTILE, 20, 1} // 赤六萬
+	if (getRuleInt(RULE_RED_SEVEN)/4 == 1) {setWall GameStat, WALL_REDTILE, 24, 1} // 赤七萬
+	if (getRuleInt(RULE_RED_EIGHT)/4 == 1) {setWall GameStat, WALL_REDTILE, 28, 1} // 赤八萬
+	if (getRuleInt(RULE_RED_NINE)/4 == 1) {setWall GameStat, WALL_REDTILE, 32, 1} // 赤九萬
+	if (getRuleInt(RULE_RED_ONE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 36, 1} // 赤一筒
+	if (getRuleInt(RULE_RED_TWO)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 40, 1} // 赤二筒
+	if (getRuleInt(RULE_RED_THREE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 44, 1} // 赤三筒
+	if (getRuleInt(RULE_RED_FOUR)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 48, 1} // 赤四筒
+	if (getRuleInt(RULE_RED_SIX)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 56, 1} // 赤六筒
+	if (getRuleInt(RULE_RED_SEVEN)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 60, 1} // 赤七筒
+	if (getRuleInt(RULE_RED_EIGHT)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 76, 1} // 赤八筒
+	if (getRuleInt(RULE_RED_NINE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 68, 1} // 赤九筒
+	if (getRuleInt(RULE_RED_ONE)\2 == 1) {setWall GameStat, WALL_REDTILE, 72, 1} // 赤一索
+	if (getRuleInt(RULE_RED_TWO)\2 == 1) {setWall GameStat, WALL_REDTILE, 64, 1} // 赤二索
+	if (getRuleInt(RULE_RED_THREE)\2 == 1) {setWall GameStat, WALL_REDTILE, 80, 1} // 赤三索
+	if (getRuleInt(RULE_RED_FOUR)\2 == 1) {setWall GameStat, WALL_REDTILE, 84, 1} // 赤四索
+	if (getRuleInt(RULE_RED_SIX)\2 == 1) {setWall GameStat, WALL_REDTILE, 92, 1} // 赤六索
+	if (getRuleInt(RULE_RED_SEVEN)\2 == 1) {setWall GameStat, WALL_REDTILE, 96, 1} // 赤七索
+	if (getRuleInt(RULE_RED_EIGHT)\2 == 1) {setWall GameStat, WALL_REDTILE, 100, 1} // 赤八索
+	if (getRuleInt(RULE_RED_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 104, 1} // 赤九索
+	if (getRuleInt(RULE_KINKEI_DOKURITSU) != 0) {
 		// オールマイティー扱いはせず、赤ドラと同じ扱い
 		setWall GameStat, WALL_REDTILE, 124, 1 // 白ポッチ
 	}
@@ -356,8 +356,8 @@ return
 #ifdef SANMAX
 		YamaLength = 108
 #else
-		if (getRule(RULE_FLOWER_TILES) != "0") {
-			if (getRule(RULE_FLOWER_TILES) == "3") {
+		if (getRuleInt(RULE_FLOWER_TILES) != 0) {
+			if (getRuleInt(RULE_FLOWER_TILES) == 3) {
 				YamaLength = 144
 			} else {
 				YamaLength = 140
@@ -380,8 +380,8 @@ return
 #ifdef SANMAX
 			tmpNumberOfTiles = 108
 #else
-		if (getRule(RULE_FLOWER_TILES) != "0") {
-			if (getRule(RULE_FLOWER_TILES) == "3") {
+		if (getRuleInt(RULE_FLOWER_TILES) != 0) {
+			if (getRuleInt(RULE_FLOWER_TILES) == 3) {
 				tmpNumberOfTiles = 144
 			} else {
 				tmpNumberOfTiles = 140
@@ -449,8 +449,8 @@ return
 #ifdef SANMAX
 			tmpNumberOfTiles = 108
 #else
-		if (getRule(RULE_FLOWER_TILES) != "0") {
-			if (getRule(RULE_FLOWER_TILES) == "3") {
+		if (getRuleInt(RULE_FLOWER_TILES) != 0) {
+			if (getRuleInt(RULE_FLOWER_TILES) == 3) {
 				tmpNumberOfTiles = 144
 			} else {
 				tmpNumberOfTiles = 140
@@ -531,7 +531,7 @@ return
 #else
 	setDoraPointer GameStat, 130 // ドラ表示牌のポインタ
 #endif
-	if (getRule(RULE_NAGATACHO) != "0") {
+	if (getRuleInt(RULE_NAGATACHO) != 0) {
 		// 永田町ルール
 		tmpDora == TILE_SUIT_BAMBOOS+7: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora // 七索は常にドラ
 		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) <= 8) { // 2～8はその数牌がドラ　三麻では萬子がないので別処理
@@ -565,7 +565,7 @@ return
 		haifurecdora tmpdorap
 	}
 	gosub *adddora: dsplay SND_MEKURI
-	if ((getRule(RULE_DORA_TWICE) == "1")||((getRule(RULE_DORA_TWICE) == "2")&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
+	if ((getRuleInt(RULE_DORA_TWICE) == 1)||((getRuleInt(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
 		setDoraPointer GameStat, getDoraPointer(GameStat) - 2: gosub *adddora /*ドラドラ卓*/
 	}
 	

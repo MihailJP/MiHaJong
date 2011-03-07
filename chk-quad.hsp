@@ -40,7 +40,7 @@
 	loop
 	/* 四槓子 */
 	if (Kangzi == 4) {
-		if (getRule(RULE_SUUKANTSU) != "0") {
+		if (getRuleInt(RULE_SUUKANTSU) != 0) {
 			addyakuman tmpYakuInfo, "四槓子", 2
 		} else {
 			addyakuman tmpYakuInfo, "四槓子", 1
@@ -49,13 +49,13 @@
 		delyaku tmpYakuInfo, "対々和"
 	}
 	/* 三暗槓 */
-	if (getRule(RULE_SANANKAN) != "0") {
+	if (getRuleInt(RULE_SANANKAN) != 0) {
 		if (AnKan == 3) {
 			addyakuman tmpYakuInfo, "三暗槓", 1
 		}
 	}
 	/* 大峡谷 */
-	if (getRule(RULE_GRAND_CANYON) != "0") {
+	if (getRuleInt(RULE_GRAND_CANYON) != 0) {
 		yakuFlag = 0
 		countKez KezCount, haiMianziDat
 		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)||(KezCount(TILE_SUIT_CIRCLES+8) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+8) >= 1)) {yakuFlag = 1}
@@ -64,7 +64,7 @@
 		}
 	}
 	/* 雪化粧 */
-	if (getRule(RULE_YUKIGESHOU) != "0") {
+	if (getRuleInt(RULE_YUKIGESHOU) != 0) {
 		if ((KangzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KangzCount(TILE_SUIT_CIRCLES+9) >= 1)&&(KangzCount(TILE_WHITE_DRAGON) >= 1)) {
 			addyakuman tmpYakuInfo, "雪化粧", 1
 			delyaku tmpYakuInfo, "役牌・白"
@@ -76,10 +76,10 @@
 	tmpyakuCensored += searchyaku(tmpYakuInfo, "大峡谷")
 	tmpyakuCensored += searchyaku(tmpYakuInfo, "雪化粧")
 	if ((Kangzi == 3)&&(tmpyakuCensored == 0)) {
-		if (getRule(RULE_SANKANTSU) == "2") {
+		if (getRuleInt(RULE_SANKANTSU) == 2) {
 			addyakuman tmpYakuInfo, "三槓子", 1
 		} else {
-			if (getRule(RULE_SANKANTSU) != "0") {
+			if (getRuleInt(RULE_SANKANTSU) != 0) {
 				addyaku tmpYakuInfo, "三槓子", 3
 			} else {
 				addyaku tmpYakuInfo, "三槓子", 2
@@ -87,19 +87,19 @@
 		}
 	}
 	/* 二暗槓 */
-	if (getRule(RULE_RYANANKAN) != "0") {
+	if (getRuleInt(RULE_RYANANKAN) != 0) {
 		if (AnKan == 2) {
 			addyaku tmpYakuInfo, "二暗槓", 1
 		}
 	}
 	/* 声東撃西 */
-	if (getRule(RULE_SHENGDONG_JIXI) != "0") {
+	if (getRuleInt(RULE_SHENGDONG_JIXI) != 0) {
 		if ((KangzCount(TILE_EAST_WIND) >= 1)&&(KangzCount(TILE_WEST_WIND) >= 1)) {
 			addyaku tmpYakuInfo, "声東撃西", 6
 		}
 	}
 	/* 走南闖北 */
-	if (getRule(RULE_ZAONAN_CHUANGBEI) != "0") {
+	if (getRuleInt(RULE_ZAONAN_CHUANGBEI) != 0) {
 		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_NORTH_WIND) >= 1)) {
 			addyaku tmpYakuInfo, "走南闖北", 6
 		}

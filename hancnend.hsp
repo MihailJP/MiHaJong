@@ -53,7 +53,7 @@
 	}
 	setDeposit GameStat, 0
 
-	if ((getRule(RULE_YAKITORI) == "1")||(getRule(RULE_YAKITORI) == "2")) {
+	if ((getRuleInt(RULE_YAKITORI) == 1)||(getRuleInt(RULE_YAKITORI) == 2)) {
 #ifdef SANMA
 		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)) > 0) {
 #else
@@ -62,10 +62,10 @@
 			dim hncnPointDelta, NUM_OF_PLAYERS, 0
 			repeat NUM_OF_ACTUAL_PLAYERS
 				if (getYakitori(GameStat, cnt) == 1) {
-					hncnPointDelta(cnt, 0) -= 50*int(getRule(RULE_YAKITORI))
+					hncnPointDelta(cnt, 0) -= 50*getRuleInt(RULE_YAKITORI)
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (Rank(cnt) == 1) {
-							hncnPointDelta(cnt, 0) += 50*int(getRule(RULE_YAKITORI))
+							hncnPointDelta(cnt, 0) += 50*getRuleInt(RULE_YAKITORI)
 						}
 					loop
 				}
@@ -76,8 +76,8 @@
 			pointcalc GameStat, hncnPointDelta
 		}
 	}
-	if ((getRule(RULE_YAKITORI) == "3")||(getRule(RULE_YAKITORI) == "4")||(getRule(RULE_YAKITORI) == "5")) {
-		if (getRule(RULE_CHIP) != "0") {
+	if ((getRuleInt(RULE_YAKITORI) == 3)||(getRuleInt(RULE_YAKITORI) == 4)||(getRuleInt(RULE_YAKITORI) == 5)) {
+		if (getRuleInt(RULE_CHIP) != 0) {
 #ifdef SANMA
 			if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)) > 0) {
 #else
@@ -86,10 +86,10 @@
 				dim hncnPointDelta, NUM_OF_PLAYERS
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (getYakitori(GameStat, cnt) == 1) {
-						hncnPointDelta(cnt) -= (int(getRule(RULE_YAKITORI))-2)
+						hncnPointDelta(cnt) -= (getRuleInt(RULE_YAKITORI)-2)
 						repeat NUM_OF_ACTUAL_PLAYERS
 							if (Rank(cnt) == 1) {
-								hncnPointDelta(cnt) += (int(getRule(RULE_YAKITORI))-2)
+								hncnPointDelta(cnt) += (getRuleInt(RULE_YAKITORI)-2)
 							}
 						loop
 					}
@@ -105,256 +105,307 @@
 	}
 
 	dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+	if (getRuleInt(RULE_POINT_BASIS) != 12) {
 #ifdef SANMA
-	PlusCount = 0
-	repeat NUM_OF_ACTUAL_PLAYERS // 沈みウマの計算用に浮いてる人数を数える
-		if ((getScore(GameStat,cnt, 0) >= 400)||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {PlusCount++}
-	loop
-	if (getRule(RULE_POINT_BASIS) != "C") {
-		repeat NUM_OF_ACTUAL_PLAYERS
-			/* 順位ウマ */
-			if (getRule(RULE_POINT_BASIS) == "D") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 30}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 30}
-			}
-			if (getRule(RULE_POINT_BASIS) == "E") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 50}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 50}
-			}
-			if (getRule(RULE_POINT_BASIS) == "F") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 80}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 80}
-			}
-			if (getRule(RULE_POINT_BASIS) == "0") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 100}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 100}
-			}
-			if (getRule(RULE_POINT_BASIS) == "1") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 200}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 200}
-			}
-			if (getRule(RULE_POINT_BASIS) == "2") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 300}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 300}
-			}
-			if (getRule(RULE_POINT_BASIS) == "3") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 400}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 400}
-			}
-			if (getRule(RULE_POINT_BASIS) == "4") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 500}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 500}
-			}
-			if (getRule(RULE_POINT_BASIS) == "5") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 600}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 600}
-			}
-			/* 複合ウマ */
-			if (getRule(RULE_POINT_BASIS) == "6") {
-				if (Rank(cnt) == 1) {
-					if (PlusCount < 2) {hncnPointDelta(cnt,0) += 120}
-					else {hncnPointDelta(cnt) += 80}
-				}
-				if (Rank(cnt) == 2) {
-					if (PlusCount < 2) {hncnPointDelta(cnt,0) -= 40}
-				}
-				if (Rank(cnt) == 3) {
-					hncnPointDelta(cnt) -= 80
-				}
-			}
-			if (getRule(RULE_POINT_BASIS) == "7") {
-				if (Rank(cnt) == 1) {
-					if (PlusCount < 2) {hncnPointDelta(cnt,0) += 150}
-					else {hncnPointDelta(cnt) += 100}
-				}
-				if (Rank(cnt) == 2) {
-					if (PlusCount < 2) {hncnPointDelta(cnt,0) -= 50}
-				}
-				if (Rank(cnt) == 3) {
-					hncnPointDelta(cnt) -= 100
-				}
-			}
-			if (getRule(RULE_POINT_BASIS) == "8") {
-				if (Rank(cnt) == 1) {
-					if (PlusCount < 2) {hncnPointDelta(cnt,0) += 300}
-					else {hncnPointDelta(cnt) += 200}
-				}
-				if (Rank(cnt) == 2) {
-					if (PlusCount < 2) {hncnPointDelta(cnt,0) -= 100}
-				}
-				if (Rank(cnt) == 3) {
-					hncnPointDelta(cnt) -= 200
-				}
-			}
-			/* 沈みウマ */
-			if (getRule(RULE_POINT_BASIS) == "9") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 50*(3-PlusCount)}
-				if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 50}
-			}
-			if (getRule(RULE_POINT_BASIS) == "A") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 100*(3-PlusCount)}
-				if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 100}
-			}
-			if (getRule(RULE_POINT_BASIS) == "B") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 200*(3-PlusCount)}
-				if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 200}
-			}
+		PlusCount = 0
+		repeat NUM_OF_ACTUAL_PLAYERS // 沈みウマの計算用に浮いてる人数を数える
+			if ((getScore(GameStat,cnt, 0) >= 400)||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {PlusCount++}
 		loop
-#else
-	PlusCount = 0
-	repeat NUM_OF_ACTUAL_PLAYERS // 沈みウマの計算用に浮いてる人数を数える
-		if ((getScore(GameStat,cnt, 0) >= 300)||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {PlusCount++}
-	loop
-	if (getRule(RULE_POINT_BASIS) != "C") {
 		repeat NUM_OF_ACTUAL_PLAYERS
-			/* 順位ウマ */
-			if (getRule(RULE_POINT_BASIS) == "D") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 30}
-				if (Rank(cnt) == 4) {hncnPointDelta(cnt,0) -= 30}
-			}
-			if (getRule(RULE_POINT_BASIS) == "E") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 50}
-				if (Rank(cnt) == 4) {hncnPointDelta(cnt,0) -= 50}
-			}
-			if (getRule(RULE_POINT_BASIS) == "F") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 50}
-				if (Rank(cnt) == 2) {hncnPointDelta(cnt,0) += 30}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 30}
-				if (Rank(cnt) == 4) {hncnPointDelta(cnt,0) -= 50}
-			}
-			if (getRule(RULE_POINT_BASIS) == "0") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 100}
-				if (Rank(cnt) == 2) {hncnPointDelta(cnt,0) += 50}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 50}
-				if (Rank(cnt) == 4) {hncnPointDelta(cnt,0) -= 100}
-			}
-			if (getRule(RULE_POINT_BASIS) == "1") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 200}
-				if (Rank(cnt) == 2) {hncnPointDelta(cnt,0) += 100}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 100}
-				if (Rank(cnt) == 4) {hncnPointDelta(cnt,0) -= 200}
-			}
-			if (getRule(RULE_POINT_BASIS) == "2") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 300}
-				if (Rank(cnt) == 2) {hncnPointDelta(cnt,0) += 100}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 100}
-				if (Rank(cnt) == 4) {hncnPointDelta(cnt,0) -= 300}
-			}
-			if (getRule(RULE_POINT_BASIS) == "3") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 400}
-				if (Rank(cnt) == 2) {hncnPointDelta(cnt,0) += 200}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 200}
-				if (Rank(cnt) == 4) {hncnPointDelta(cnt,0) -= 400}
-			}
-			if (getRule(RULE_POINT_BASIS) == "4") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 500}
-				if (Rank(cnt) == 2) {hncnPointDelta(cnt,0) += 200}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 200}
-				if (Rank(cnt) == 4) {hncnPointDelta(cnt,0) -= 500}
-			}
-			if (getRule(RULE_POINT_BASIS) == "5") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 600}
-				if (Rank(cnt) == 2) {hncnPointDelta(cnt,0) += 200}
-				if (Rank(cnt) == 3) {hncnPointDelta(cnt,0) -= 200}
-				if (Rank(cnt) == 4) {hncnPointDelta(cnt,0) -= 600}
-			}
-			/* 複合ウマ */
-			if (getRule(RULE_POINT_BASIS) == "6") {
-				if (Rank(cnt) == 1) {
-					switch PlusCount
-						case 1: hncnPointDelta(cnt,0) += 150: swbreak
-						case 3: hncnPointDelta(cnt,0) += 70: swbreak
-						default: hncnPointDelta(cnt,0) += 100: swbreak
+			switch getRuleInt(RULE_POINT_BASIS)
+				/* 順位ウマ */
+				case 13:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 30: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 30: swbreak
 					swend
-				}
-				if (Rank(cnt) == 2) {
-					switch PlusCount
-						case 1: hncnPointDelta(cnt,0) -= 30: swbreak
-						default: hncnPointDelta(cnt,0) += 50: swbreak
+					swbreak
+				case 14:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 50: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 50: swbreak
 					swend
-				}
-				if (Rank(cnt) == 3) {
-					switch PlusCount
-						case 3: hncnPointDelta(cnt,0) += 30: swbreak
-						default: hncnPointDelta(cnt,0) -= 50: swbreak
+					swbreak
+				case 15:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 80: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 80: swbreak
 					swend
-				}
-				if (Rank(cnt) == 4) {
-					switch PlusCount
-						case 1: hncnPointDelta(cnt,0) -= 70: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 150: swbreak
-						default: hncnPointDelta(cnt,0) -= 100: swbreak
+					swbreak
+				case 0:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 100: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 100: swbreak
 					swend
-				}
-			}
-			if (getRule(RULE_POINT_BASIS) == "7") {
-				if (Rank(cnt) == 1) {
-					switch PlusCount
-						case 1: hncnPointDelta(cnt,0) += 120: swbreak
-						default: hncnPointDelta(cnt,0) += 80: swbreak
+					swbreak
+				case 1:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 200: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 200: swbreak
 					swend
-				}
-				if (Rank(cnt) == 2) {
-					switch PlusCount
-						case 1: hncnPointDelta(cnt,0) -= 10: swbreak
-						case 3: hncnPointDelta(cnt,0) += 30: swbreak
-						default: hncnPointDelta(cnt,0) += 40: swbreak
-					swend
-				}
-				if (Rank(cnt) == 3) {
-					switch PlusCount
-						case 1: hncnPointDelta(cnt,0) -= 30: swbreak
-						case 3: hncnPointDelta(cnt,0) += 10: swbreak
-						default: hncnPointDelta(cnt,0) -= 40: swbreak
-					swend
-				}
-				if (Rank(cnt) == 4) {
-					switch PlusCount
-						case 3: hncnPointDelta(cnt,0) -= 120: swbreak
-						default: hncnPointDelta(cnt,0) -= 80: swbreak
-					swend
-				}
-			}
-			if (getRule(RULE_POINT_BASIS) == "8") {
-				if (Rank(cnt) == 1) {
-					switch PlusCount
-						case 1: hncnPointDelta(cnt,0) += 600: swbreak
-						case 2: hncnPointDelta(cnt,0) += 400: swbreak
-						case 3: hncnPointDelta(cnt,0) += 300: swbreak
-					swend
-				}
-				if (Rank(cnt) == 2) {
-					switch PlusCount
-						case 1: hncnPointDelta(cnt,0) -= 100: swbreak
-					swend
-				}
-				if (Rank(cnt) == 3) {
-					switch PlusCount
-						case 1: hncnPointDelta(cnt,0) -= 200: swbreak
-						case 2: hncnPointDelta(cnt,0) -= 100: swbreak
-					swend
-				}
-				if (Rank(cnt) == 4) {
-					switch PlusCount
-						case 1: hncnPointDelta(cnt,0) -= 300: swbreak
-						case 2: hncnPointDelta(cnt,0) -= 300: swbreak
+					swbreak
+				case 2:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 300: swbreak
 						case 3: hncnPointDelta(cnt,0) -= 300: swbreak
 					swend
-				}
-			}
-			/* 沈みウマ */
-			if (getRule(RULE_POINT_BASIS) == "9") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 50*(NUM_OF_PLAYERS-PlusCount)}
-				if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 50}
-			}
-			if (getRule(RULE_POINT_BASIS) == "A") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 100*(NUM_OF_PLAYERS-PlusCount)}
-				if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 100}
-			}
-			if (getRule(RULE_POINT_BASIS) == "B") {
-				if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 200*(NUM_OF_PLAYERS-PlusCount)}
-				if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 200}
-			}
+					swbreak
+				case 3:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 400: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 400: swbreak
+					swend
+					swbreak
+				case 4:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 500: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 500: swbreak
+					swend
+					swbreak
+				case 5:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 600: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 600: swbreak
+					swend
+					swbreak
+				/* 複合ウマ */
+				case 6:
+					switch Rank(cnt)
+						case 1:
+							if (PlusCount < 2) {hncnPointDelta(cnt,0) += 120}
+							else {hncnPointDelta(cnt) += 80}
+							swbreak
+						case 2:
+							if (PlusCount < 2) {hncnPointDelta(cnt,0) -= 40}
+							swbreak
+						case 3:
+							hncnPointDelta(cnt) -= 80
+							swbreak
+					swend
+					swbreak
+				case 7:
+					switch Rank(cnt)
+						case 1:
+							if (PlusCount < 2) {hncnPointDelta(cnt,0) += 150}
+							else {hncnPointDelta(cnt) += 100}
+							swbreak
+						case 2:
+							if (PlusCount < 2) {hncnPointDelta(cnt,0) -= 50}
+							swbreak
+						case 3:
+							hncnPointDelta(cnt) -= 100
+							swbreak
+					swend
+					swbreak
+				case 8:
+					switch Rank(cnt)
+						case 1:
+							if (PlusCount < 2) {hncnPointDelta(cnt,0) += 300}
+							else {hncnPointDelta(cnt) += 200}
+							swbreak
+						case 2:
+							if (PlusCount < 2) {hncnPointDelta(cnt,0) -= 100}
+							swbreak
+						case 3:
+							hncnPointDelta(cnt) -= 200
+							swbreak
+					swend
+					swbreak
+				/* 沈みウマ */
+				case 9:
+					if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 50*(3-PlusCount)}
+					if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 50}
+					swbreak
+				case 10:
+					if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 100*(3-PlusCount)}
+					if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 100}
+					swbreak
+				case 11:
+					if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 200*(3-PlusCount)}
+					if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 200}
+					swbreak
+			swend
+		loop
+#else
+		PlusCount = 0
+		repeat NUM_OF_ACTUAL_PLAYERS // 沈みウマの計算用に浮いてる人数を数える
+			if ((getScore(GameStat,cnt, 0) >= 300)||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {PlusCount++}
+		loop
+		repeat NUM_OF_ACTUAL_PLAYERS
+			switch getRuleInt(RULE_POINT_BASIS)
+				/* 順位ウマ */
+				case 13:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 30: swbreak
+						case 4: hncnPointDelta(cnt,0) -= 30: swbreak
+					swend
+					swbreak
+				case 14:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 50: swbreak
+						case 4: hncnPointDelta(cnt,0) -= 50: swbreak
+					swend
+					swbreak
+				case 15:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 50: swbreak
+						case 2: hncnPointDelta(cnt,0) += 30: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 30: swbreak
+						case 4: hncnPointDelta(cnt,0) -= 50: swbreak
+					swend
+					swbreak
+				case 0:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 100: swbreak
+						case 2: hncnPointDelta(cnt,0) += 50: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 50: swbreak
+						case 4: hncnPointDelta(cnt,0) -= 100: swbreak
+					swend
+					swbreak
+				case 1:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 200: swbreak
+						case 2: hncnPointDelta(cnt,0) += 100: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 100: swbreak
+						case 4: hncnPointDelta(cnt,0) -= 200: swbreak
+					swend
+					swbreak
+				case 2:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 300: swbreak
+						case 2: hncnPointDelta(cnt,0) += 100: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 100: swbreak
+						case 4: hncnPointDelta(cnt,0) -= 300: swbreak
+					swend
+					swbreak
+				case 3:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 400: swbreak
+						case 2: hncnPointDelta(cnt,0) += 200: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 200: swbreak
+						case 4: hncnPointDelta(cnt,0) -= 400: swbreak
+					swend
+					swbreak
+				case 4:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 500: swbreak
+						case 2: hncnPointDelta(cnt,0) += 200: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 200: swbreak
+						case 4: hncnPointDelta(cnt,0) -= 500: swbreak
+					swend
+					swbreak
+				case 5:
+					switch Rank(cnt)
+						case 1: hncnPointDelta(cnt,0) += 600: swbreak
+						case 2: hncnPointDelta(cnt,0) += 200: swbreak
+						case 3: hncnPointDelta(cnt,0) -= 200: swbreak
+						case 4: hncnPointDelta(cnt,0) -= 600: swbreak
+					swend
+					swbreak
+				/* 複合ウマ */
+				case 6:
+					switch Rank(cnt)
+						case 1: 
+							switch PlusCount
+								case 1: hncnPointDelta(cnt,0) += 150: swbreak
+								case 3: hncnPointDelta(cnt,0) += 70: swbreak
+								default: hncnPointDelta(cnt,0) += 100: swbreak
+							swend
+							swbreak
+						case 2: 
+							switch PlusCount
+								case 1: hncnPointDelta(cnt,0) -= 30: swbreak
+								default: hncnPointDelta(cnt,0) += 50: swbreak
+							swend
+							swbreak
+						case 3: 
+							switch PlusCount
+								case 3: hncnPointDelta(cnt,0) += 30: swbreak
+								default: hncnPointDelta(cnt,0) -= 50: swbreak
+							swend
+							swbreak
+						case 4: 
+							switch PlusCount
+								case 1: hncnPointDelta(cnt,0) -= 70: swbreak
+								case 3: hncnPointDelta(cnt,0) -= 150: swbreak
+								default: hncnPointDelta(cnt,0) -= 100: swbreak
+							swend
+							swbreak
+					swend
+					swbreak
+				case 7:
+					switch Rank(cnt)
+						case 1: 
+							switch PlusCount
+								case 1: hncnPointDelta(cnt,0) += 120: swbreak
+								default: hncnPointDelta(cnt,0) += 80: swbreak
+							swend
+							swbreak
+						case 2: 
+							switch PlusCount
+								case 1: hncnPointDelta(cnt,0) -= 10: swbreak
+								case 3: hncnPointDelta(cnt,0) += 30: swbreak
+								default: hncnPointDelta(cnt,0) += 40: swbreak
+							swend
+							swbreak
+						case 3: 
+							switch PlusCount
+								case 1: hncnPointDelta(cnt,0) -= 30: swbreak
+								case 3: hncnPointDelta(cnt,0) += 10: swbreak
+								default: hncnPointDelta(cnt,0) -= 40: swbreak
+							swend
+							swbreak
+						case 4: 
+							switch PlusCount
+								case 3: hncnPointDelta(cnt,0) -= 120: swbreak
+								default: hncnPointDelta(cnt,0) -= 80: swbreak
+							swend
+							swbreak
+					swend
+					swbreak
+				case 8:
+					switch Rank(cnt)
+						case 1: 
+							switch PlusCount
+								case 1: hncnPointDelta(cnt,0) += 600: swbreak
+								case 2: hncnPointDelta(cnt,0) += 400: swbreak
+								case 3: hncnPointDelta(cnt,0) += 300: swbreak
+							swend
+							swbreak
+						case 2: 
+							switch PlusCount
+								case 1: hncnPointDelta(cnt,0) -= 100: swbreak
+							swend
+							swbreak
+						case 3: 
+							switch PlusCount
+								case 1: hncnPointDelta(cnt,0) -= 200: swbreak
+								case 2: hncnPointDelta(cnt,0) -= 100: swbreak
+							swend
+							swbreak
+						case 4: 
+							switch PlusCount
+								case 1: hncnPointDelta(cnt,0) -= 300: swbreak
+								case 2: hncnPointDelta(cnt,0) -= 300: swbreak
+								case 3: hncnPointDelta(cnt,0) -= 300: swbreak
+							swend
+							swbreak
+					swend
+					swbreak
+				/* 沈みウマ */
+				case 9:
+					if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 50*(NUM_OF_PLAYERS-PlusCount)}
+					if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 50}
+					swbreak
+				case 10:
+					if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 100*(NUM_OF_PLAYERS-PlusCount)}
+					if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 100}
+					swbreak
+				case 11:
+					if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 200*(NUM_OF_PLAYERS-PlusCount)}
+					if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 200}
+					swbreak
+			swend
 		loop
 #endif
 		hncnMsg = " 順位点 "
@@ -365,43 +416,43 @@
 	
 	dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 #ifdef SANMA
-	if (getRule(RULE_STARTING_POINT) != "1") {
+	if (getRuleInt(RULE_STARTING_POINT) != 1) {
 		repeat NUM_OF_ACTUAL_PLAYERS
 			if (Rank(cnt) == 1) {
-				switch int(getRule(RULE_STARTING_POINT))
+				switch getRuleInt(RULE_STARTING_POINT)
 					case 0: hncnPointDelta(cnt) += 150: swbreak
 					case 4: hncnPointDelta(cnt) += 450: swbreak
 					case 5: hncnPointDelta(cnt) += 300: swbreak
 				swend
 			}
 			if (Rank(cnt) == 3) {
-				switch int(getRule(RULE_STARTING_POINT))
+				switch getRuleInt(RULE_STARTING_POINT)
 					case 2: hncnPointDelta(cnt) -= 150: swbreak
 					case 3: hncnPointDelta(cnt) -= 300: swbreak
 				swend
 			}
 		loop
-		if ((getRule(RULE_STARTING_POINT) == "2")||(getRule(RULE_STARTING_POINT) == "3")) {
+		if ((getRuleInt(RULE_STARTING_POINT) == 2)||(getRuleInt(RULE_STARTING_POINT) == 3)) {
 			hncnMsg = "ラスペナ"
 		} else {hncnMsg = "トップ賞"}
 #else
-	if (getRule(RULE_STARTING_POINT) != "2") {
+	if (getRuleInt(RULE_STARTING_POINT) != 2) {
 		repeat NUM_OF_ACTUAL_PLAYERS
 			if (Rank(cnt) == 1) {
-				switch int(getRule(RULE_STARTING_POINT))
+				switch getRuleInt(RULE_STARTING_POINT)
 					case 0: hncnPointDelta(cnt) += 200: swbreak
 					case 1: hncnPointDelta(cnt) += 120: swbreak
 					case 5: hncnPointDelta(cnt) += 400: swbreak
 				swend
 			}
 			if (Rank(cnt) == 4) {
-				switch int(getRule(RULE_STARTING_POINT))
+				switch getRuleInt(RULE_STARTING_POINT)
 					case 3: hncnPointDelta(cnt) -= 200: swbreak
 					case 4: hncnPointDelta(cnt) -= 400: swbreak
 				swend
 			}
 		loop
-		if ((getRule(RULE_STARTING_POINT) == "3")||(getRule(RULE_STARTING_POINT) == "4")) {
+		if ((getRuleInt(RULE_STARTING_POINT) == 3)||(getRuleInt(RULE_STARTING_POINT) == 4)) {
 			hncnMsg = "ラスペナ"
 		} else {hncnMsg = "トップ賞"}
 #endif
@@ -420,10 +471,10 @@
 			} else {
 				hncnPointScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-400)-5)/10
 			}
-			if (getRule(RULE_CHIP) == "1") {
+			if (getRuleInt(RULE_CHIP) == 1) {
 				hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*2
 			}
-			if (getRule(RULE_CHIP) == "2") {
+			if (getRuleInt(RULE_CHIP) == 2) {
 				hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*5
 			}
 			tmpcnt = cnt
@@ -449,10 +500,10 @@
 			} else {
 				hncnPointScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-300)-5)/10
 			}
-			if (getRule(RULE_CHIP) == "1") {
+			if (getRuleInt(RULE_CHIP) == 1) {
 				hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*2
 			}
-			if (getRule(RULE_CHIP) == "2") {
+			if (getRuleInt(RULE_CHIP) == 2) {
 				hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*5
 			}
 			tmpcnt = cnt

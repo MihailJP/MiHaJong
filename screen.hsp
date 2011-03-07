@@ -299,7 +299,7 @@ return
 		} else {
 			tmptxt = "！八連荘ﾋﾟﾝﾁ！"
 		}
-	} else:if ((getHonba(GameStat) >= 5)&&(getRule(RULE_RYANSHIBA) == "1")) {
+	} else:if ((getHonba(GameStat) >= 5)&&(getRuleInt(RULE_RYANSHIBA) == 1)) {
 		tmptxt = " †二飜縛り† "
 	} else:if ((getRoundLoop(GameStat)*16+getRound(GameStat)) >= (getGameLength(GameStat)+1)) {
 		tmptxt = "  ▽延長戦▽  "
@@ -311,13 +311,13 @@ return
 		}
 	} else {
 		color bgColorR*10/8, bgColorG*10/8, bgColorB*10/8: colmode = 1
-		if (getRule(RULE_GAME_LENGTH) == "0") {tmptxt = "  - 東南戦 -  "}
-		if (getRule(RULE_GAME_LENGTH) == "1") {tmptxt = "  - 東風戦 -  "}
-		if (getRule(RULE_GAME_LENGTH) == "2") {tmptxt = "  - 一荘戦 -  "}
-		if (getRule(RULE_GAME_LENGTH) == "3") {tmptxt = "  - 東北戦 -  "}
-		if (getRule(RULE_GAME_LENGTH) == "5") {tmptxt = "  - 東々戦 -  "}
-		if (getRule(RULE_GAME_LENGTH) == "6") {tmptxt = " - 東南西戦 - "}
-		if (getRule(RULE_GAME_LENGTH) == "7") {tmptxt = "  - 東風戦 -  "}
+		if (getRuleInt(RULE_GAME_LENGTH) == 0) {tmptxt = "  - 東南戦 -  "}
+		if (getRuleInt(RULE_GAME_LENGTH) == 1) {tmptxt = "  - 東風戦 -  "}
+		if (getRuleInt(RULE_GAME_LENGTH) == 2) {tmptxt = "  - 一荘戦 -  "}
+		if (getRuleInt(RULE_GAME_LENGTH) == 3) {tmptxt = "  - 東北戦 -  "}
+		if (getRuleInt(RULE_GAME_LENGTH) == 5) {tmptxt = "  - 東々戦 -  "}
+		if (getRuleInt(RULE_GAME_LENGTH) == 6) {tmptxt = " - 東南西戦 - "}
+		if (getRuleInt(RULE_GAME_LENGTH) == 7) {tmptxt = "  - 東風戦 -  "}
 	}
 	if (colmode) {
 		borderedtxt2b tmptxt, 250, 282, bgColorR*10/8, bgColorG*10/8, bgColorB*10/8, 0, 14
@@ -327,9 +327,9 @@ return
 	/* 積み棒、残り自摸牌、供託点棒の数を表示 */
 	font fontname, 16, 0: color 0, 0, 0
 #ifdef SANMAX
-	if ((haiNokori < 53)||((haiNokori < 55)&&(((getRule(RULE_DORA_TWICE) != "1")&&((getRule(RULE_DORA_TWICE) != "2")||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
+	if ((haiNokori < 53)||((haiNokori < 55)&&(((getRuleInt(RULE_DORA_TWICE) != 1)&&((getRuleInt(RULE_DORA_TWICE) != 2)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
 #else
-	if ((haiNokori < 68)||((haiNokori < 70)&&(((getRule(RULE_DORA_TWICE) != "1")&&((getRule(RULE_DORA_TWICE) != "2")||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
+	if ((haiNokori < 68)||((haiNokori < 70)&&(((getRuleInt(RULE_DORA_TWICE) != 1)&&((getRuleInt(RULE_DORA_TWICE) != 2)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
 #endif
 		if (getHonba(GameStat)) {tmptxt = ""+getHonba(GameStat)+"本場"}
 		else {tmptxt = "平場"}
@@ -400,11 +400,11 @@ return
 		exportScore GameStat, scoreArray
 		tmpscoretxt = bignumtotext(scoreArray, targetPlayer, 100, "", "-")
 		tmptxt += " "+tmpscoretxt+"点"
-		if (getRule(RULE_WAREME) != "0") {
+		if (getRuleInt(RULE_WAREME) != 0) {
 			/* 割れ目の位置を表示 */
 			if (getWareme(GameStat) == targetPlayer) {tmptxt += " 割れ目"}
 		}
-		if (getRule(RULE_DOUKASEN) != "0") {
+		if (getRuleInt(RULE_DOUKASEN) != 0) {
 			/* 導火線の位置を表示 */
 			if (getDoukasen(GameStat) == targetPlayer) {tmptxt += " 導火線"}
 		}
@@ -472,7 +472,7 @@ return
 						if (getYakitori(GameStat, targetPlayer) == 1) {tmptxt += " 焼鳥"}
 						/* チップルールの場合、チップの収支を表示 */
 						/* チップレートはコンフィグで設定可能 */
-						if (getRule(RULE_CHIP) != "0") {
+						if (getRuleInt(RULE_CHIP) != 0) {
 							if (getChip(GameStat, targetPlayer) >= 0) {tmptxt += " ◎+"+getChip(GameStat, targetPlayer)}
 							else {tmptxt += " ◎"+getChip(GameStat, targetPlayer)}
 						}
@@ -483,11 +483,11 @@ return
 #endif
 		}
 	} else { /* 牌を倒したか伏せたとき */
-		if (getRule(RULE_WAREME) != "0") {
+		if (getRuleInt(RULE_WAREME) != 0) {
 			/* 割れ目の位置を表示 */
 			if (getWareme(GameStat) == targetPlayer) {tmptxt += " 割れ目"}
 		}
-		if (getRule(RULE_DOUKASEN) != "0") {
+		if (getRuleInt(RULE_DOUKASEN) != 0) {
 			/* 導火線の位置を表示 */
 			if (getDoukasen(GameStat) == targetPlayer) {tmptxt += " 導火線"}
 		}
@@ -606,7 +606,7 @@ return
 		if (getYakitori(GameStat, targetPlayer) == 1) {tmptxt += " 焼鳥"}
 		/* チップルールの場合、チップの収支を表示 */
 		/* チップレートはコンフィグで設定可能 */
-		if (getRule(RULE_CHIP) != "0") {
+		if (getRuleInt(RULE_CHIP) != 0) {
 			if (getChip(GameStat, targetPlayer) >= 0) {tmptxt += " ◎+"+getChip(GameStat, targetPlayer)}
 			else {tmptxt += " ◎"+getChip(GameStat, targetPlayer)}
 		}
@@ -852,24 +852,24 @@ return
 			tmpdiff += double((getScore(GameStat,getPlayer(GameStat), cnt) - getScore(GameStat,(getPlayer(GameStat)+tmpcnt)\NUM_OF_PLAYERS, cnt)))*powf(10,8*cnt)
 			if (cnt==0) {tmpdiff *= 100.0}
 		loop
-		if (tmpdiff > 48000.0)&&(getRule(RULE_LIMITLESS) == "0") {
+		if (tmpdiff > 48000.0)&&(getRuleInt(RULE_LIMITLESS) == 0) {
 			color 0, 128, 255
-		} else: if (tmpdiff > 5898240.0)&&(getRule(RULE_LIMITLESS) != "0") {
+		} else: if (tmpdiff > 5898240.0)&&(getRuleInt(RULE_LIMITLESS) != 0) {
 			color 0, 128, 255
 		} else: if (tmpdiff > 8000.0) {
-			if (getRule(RULE_LIMITLESS) == "0") {
+			if (getRuleInt(RULE_LIMITLESS) == 0) {
 				color 0, 255-((tmpdiff/100-80)*255/800), ((tmpdiff/100-80)*255/400)
 			} else {
 				color 0, 255-(((logf(tmpdiff)/logf(2)-12.96)/(22.50-12.96))*127), (((logf(tmpdiff)/logf(2)-12.96)/(22.50-12.96))*255)
 			}
 		} else: if (tmpdiff > 0) {
 			color 160-(tmpdiff/100*2), 255, 160-(tmpdiff/100*2)
-		} else: if (tmpdiff < -48000.0)&&(getRule(RULE_LIMITLESS) == "0") {
+		} else: if (tmpdiff < -48000.0)&&(getRuleInt(RULE_LIMITLESS) == 0) {
 			color 255, 0, 0
-		} else: if (tmpdiff < -5898240.0)&&(getRule(RULE_LIMITLESS) != "0") {
+		} else: if (tmpdiff < -5898240.0)&&(getRuleInt(RULE_LIMITLESS) != 0) {
 			color 255, 0, 0
 		} else: if (tmpdiff < -8000.0) {
-			if (getRule(RULE_LIMITLESS) == "0") {
+			if (getRuleInt(RULE_LIMITLESS) == 0) {
 				color 255, 255-((abs(tmpdiff/100)-80)*255/400), 0
 			} else {
 				color 255, 255-(((logf(abs(tmpdiff))/logf(2)-12.96)/(22.50-12.96))*255), 0

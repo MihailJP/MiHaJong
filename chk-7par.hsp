@@ -29,7 +29,7 @@
 #include "const.as"
 #deffunc qiduiyaku var GameStat, var tmpYakuInfo, int targetPlayer
 	trace "Žµ‘ÎŽq‚Ìˆ—‚É“ü‚è‚Ü‚·B"
-	if (getRule(RULE_SEVEN_PAIRS) == "1") {
+	if (getRuleInt(RULE_SEVEN_PAIRS) == 1) {
 		addyaku tmpYakuInfo, "Žµ‘ÎŽq", 1: setYakuInfo tmpYakuInfo, YAKUINF_FU, 50
 	} else {
 		addyaku tmpYakuInfo, "Žµ‘ÎŽq", 2: setYakuInfo tmpYakuInfo, YAKUINF_FU, 25
@@ -48,7 +48,7 @@
 	/* ˆêFŒn */
 	if (((WanzDui+ZiDui) == 7)||((PinzDui+ZiDui) == 7)||((SouzDui+ZiDui) == 7)) {
 		if (ZiDui == 0) {
-			if (getRule(RULE_CHINIISOH) != "0") {
+			if (getRuleInt(RULE_CHINIISOH) != 0) {
 				addyaku tmpYakuInfo, "´ˆêF", 3+getMenzen(GameStat, targetPlayer)
 			} else {
 				addyaku tmpYakuInfo, "´ˆêF", 5+getMenzen(GameStat, targetPlayer)
@@ -59,9 +59,9 @@
 		}
 	} else {
 		/* âˆê–å */
-		if (getRule(RULE_CHUEIIMEN) != "0") {
+		if (getRuleInt(RULE_CHUEIIMEN) != 0) {
 			if ((WanzDui == 0)||(PinzDui == 0)||(SouzDui == 0)) {
-				if ((ZiDui == 0)||(getRule(RULE_CHUEIIMEN) != "2")) {
+				if ((ZiDui == 0)||(getRuleInt(RULE_CHUEIIMEN) != 2)) {
 					addyaku tmpYakuInfo, "âˆê–å", 1
 				}
 			}
@@ -74,8 +74,8 @@
 		}
 	}
 	if ((ZiDui+YaojiuDui) == 7) {
-		if ((ZiDui == 7)&&(getRule(RULE_SEVEN_HONOR_PAIRS) != "1")) {
-			if (getRule(RULE_SEVEN_HONOR_PAIRS) == "0") {
+		if ((ZiDui == 7)&&(getRuleInt(RULE_SEVEN_HONOR_PAIRS) != 1)) {
+			if (getRuleInt(RULE_SEVEN_HONOR_PAIRS) == 0) {
 				addyakuman tmpYakuInfo, "ŽšˆêF", 1
 			} else {
 				addyakuman tmpYakuInfo, "Žµ•Ÿ¯", 2
@@ -86,14 +86,14 @@
 		}
 	}
 	/* „•s“| */
-	if (getRule(RULE_TOIPUUTAO) != "0") {
+	if (getRuleInt(RULE_TOIPUUTAO) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+2,TILE_SUIT_CIRCLES+3,TILE_SUIT_CIRCLES+4,TILE_SUIT_CIRCLES+5,TILE_SUIT_CIRCLES+8,TILE_SUIT_CIRCLES+9,TILE_SUIT_BAMBOOS+2,TILE_SUIT_BAMBOOS+4,TILE_SUIT_BAMBOOS+5,TILE_SUIT_BAMBOOS+6,TILE_SUIT_BAMBOOS+8,TILE_SUIT_BAMBOOS+9,TILE_WHITE_DRAGON
 		yakuflagcount = countPairs(haiCount, tmpTileList)
 		if (yakuflagcount == 7) {
-			if (getRule(RULE_TOIPUUTAO) == "3") {
+			if (getRuleInt(RULE_TOIPUUTAO) == 3) {
 				addyakuman tmpYakuInfo, "„•s“|", 1
 			} else {
-				if (getRule(RULE_TOIPUUTAO) == "1") {
+				if (getRuleInt(RULE_TOIPUUTAO) == 1) {
 					addyaku tmpYakuInfo, "„•s“|", 1
 				} else {
 					addyaku tmpYakuInfo, "„•s“|", 4
@@ -102,7 +102,7 @@
 		}
 	}
 	/* •ˆêF */
-	if (getRule(RULE_HEIIISOH) != "0") {
+	if (getRuleInt(RULE_HEIIISOH) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+2,TILE_SUIT_CIRCLES+4,TILE_SUIT_CIRCLES+8,TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND
 		yakuflagcount = countPairs(haiCount, tmpTileList)
 		if (yakuflagcount == 7) {
@@ -111,19 +111,19 @@
 		}
 	}
 	/* ’fg˜a */
-	if (getRule(RULE_NO_RED) != "0") {
+	if (getRuleInt(RULE_NO_RED) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
 		yakuflagcount = countPairs(haiCount, tmpTileList)
 		dim tmpTileList, 1: tmpTileList = TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND,TILE_WHITE_DRAGON,TILE_GREEN_DRAGON
 		yakuflagcount2 = countPairs(haiCount, tmpTileList)
 		tmpyakuCensored = searchyaku(tmpYakuInfo, "•ˆêF")
 		if ((yakuflagcount == 7)&&(tmpyakuCensored == 0)) {
-			if ((yakuflagcount2 == 0)&&(getRule(RULE_NO_RED) == "2")) {
+			if ((yakuflagcount2 == 0)&&(getRuleInt(RULE_NO_RED) == 2)) {
 				/* ´’fg */
 				addyaku tmpYakuInfo, "´’fg", 6
 			} else {
 				/* ¬’fg */
-				if (getRule(RULE_NO_RED) == "2") {
+				if (getRuleInt(RULE_NO_RED) == 2) {
 					addyaku tmpYakuInfo, "¬’fg", 3
 				} else {
 					addyaku tmpYakuInfo, "’fg˜a", 3
@@ -132,7 +132,7 @@
 		}
 	}
 	/* ŒÜ–åÖ */
-	if (getRule(RULE_UUMENCHII) != "0") {
+	if (getRuleInt(RULE_UUMENCHII) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND
 		WindDui = countPairs(haiCount, tmpTileList)
 		dim tmpTileList, 1: tmpTileList = TILE_WHITE_DRAGON,TILE_GREEN_DRAGON,TILE_RED_DRAGON
@@ -142,7 +142,7 @@
 		}
 	}
 	/* ŽOŒ³Žµ‘ÎŽq */
-	if (getRule(RULE_DRAGON_PAIRS) != "0") {
+	if (getRuleInt(RULE_DRAGON_PAIRS) != 0) {
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "ŽšˆêF")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "Žµ•Ÿ¯")
@@ -151,7 +151,7 @@
 		}
 	}
 	/* ŽlŠìŽµ‘ÎŽq */
-	if (getRule(RULE_WIND_PAIRS) != "0") {
+	if (getRuleInt(RULE_WIND_PAIRS) != 0) {
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "ŽšˆêF")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "Žµ•Ÿ¯")
@@ -160,7 +160,7 @@
 		}
 	}
 	/* Šï”Žµ‘ÎŽq */
-	if (getRule(RULE_ODD_PAIRS) != "0") {
+	if (getRuleInt(RULE_ODD_PAIRS) != 0) {
 		dim tmpTileList, 1: repeat TILE_NUMERAL_COLORS: tmpTileList(cnt*5) = cnt*TILE_SUIT_STEP+1,cnt*TILE_SUIT_STEP+3,cnt*TILE_SUIT_STEP+5,cnt*TILE_SUIT_STEP+7,cnt*TILE_SUIT_STEP+9: loop
 		yakuflagcount = countPairs(haiCount, tmpTileList)
 		if (yakuFlagCount == 7) {
@@ -168,17 +168,17 @@
 		}
 	}
 	/* ‹ô”Žµ‘ÎŽq */
-	if (getRule(RULE_EVEN_PAIRS) != "0") {
+	if (getRuleInt(RULE_EVEN_PAIRS) != 0) {
 		dim tmpTileList, 1: repeat TILE_NUMERAL_COLORS: tmpTileList(cnt*4) = cnt*TILE_SUIT_STEP+2,cnt*TILE_SUIT_STEP+4,cnt*TILE_SUIT_STEP+6,cnt*TILE_SUIT_STEP+8: loop
 		yakuflagcount = countPairs(haiCount, tmpTileList)
 		if (yakuFlagCount == 7) {
 			addyaku tmpYakuInfo, "‹ô”Žµ‘ÎŽq", 2
-			if ((getRule(RULE_KUITAN) == "2")&&(getMenzen(GameStat, targetPlayer) == 0)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, -1}
+			if ((getRuleInt(RULE_KUITAN) == 2)&&(getMenzen(GameStat, targetPlayer) == 0)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, -1}
 			delyaku tmpYakuInfo, "’f›ô‹ã"
 		}
 	}
 	/* g”’Žµ‘Î */
-	if (getRule(RULE_KOUHAKU_CHIITOI) != "0") {
+	if (getRuleInt(RULE_KOUHAKU_CHIITOI) != 0) {
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "ŽšˆêF")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "Žµ•Ÿ¯")
@@ -187,7 +187,7 @@
 		}
 	}
 	/* –k‚Ì‘å’n */
-	if (getRule(RULE_KITA_NO_DAICHI) != "0") {
+	if (getRuleInt(RULE_KITA_NO_DAICHI) != 0) {
 		if ((haiCount(TILE_SUIT_BAMBOOS+2) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+3) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+4) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+6) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+8) >= 2)&&(haiCount(TILE_NORTH_WIND) >= 2)&&(haiCount(TILE_WHITE_DRAGON) >= 2)) {
 			switch getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) /* ‰½‚Å˜a—¹‚Á‚½‚©‚Å•ªŠò */
 				case TILE_NORTH_WIND: /* –k‚Å˜a—¹‚é‚Æƒ_ƒuƒ‹–ð–ž */

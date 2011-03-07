@@ -11,8 +11,8 @@
 #ifdef SANMAX
 	yamahaiMode = 3: NumberOfTiles = 108: LoopCount = 18: PTiles = (102-getRinshanExtension(GameStat))
 #else
-	if (getRule(RULE_FLOWER_TILES) != "0") {
-		if (getRule(RULE_FLOWER_TILES) == "3") {
+	if (getRuleInt(RULE_FLOWER_TILES) != 0) {
+		if (getRuleInt(RULE_FLOWER_TILES) == 3) {
 			yamahaiMode = 1: NumberOfTiles = 144: LoopCount = 18: PTiles = 130
 		} else {
 			yamahaiMode = 2: NumberOfTiles = 140: LoopCount = 18: PTiles = 130

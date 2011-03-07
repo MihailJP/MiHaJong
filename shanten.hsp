@@ -60,13 +60,13 @@
 			Shanten = MianziShanten
 			if (Shanten > QiduiShanten) {Shanten = QiduiShanten}
 			if (Shanten > ShisanYaoShanten) {Shanten = ShisanYaoShanten}
-			if (getRule(RULE_STELLAR_UUSHII) != "0") {
+			if (getRuleInt(RULE_STELLAR_UUSHII) != 0) {
 				if (Shanten > QixingShanten) {Shanten = QixingShanten}
 			}
-			if (getRule(RULE_CIVIL_WAR) != "0") {
+			if (getRuleInt(RULE_CIVIL_WAR) != 0) {
 				if (Shanten > CivilWarShanten) {Shanten = CivilWarShanten}
 			}
-			if (getRule(RULE_SYZYGY) != "0") {
+			if (getRuleInt(RULE_SYZYGY) != 0) {
 				if (Shanten > SyzygyShanten) {Shanten = SyzygyShanten}
 			}
 			return Shanten
@@ -155,7 +155,7 @@
 
 *calcshanten_stellar
 	// 特殊：七星不靠の向聴数を求める
-	if (getRule(RULE_STELLAR_UUSHII) != "0") {
+	if (getRuleInt(RULE_STELLAR_UUSHII) != 0) {
 		countTilesInHand haiCount, GameStat, targetPlayer
 		QixingShanten == 999
 		QixingZiPai = TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON, TILE_RED_DRAGON
@@ -205,7 +205,7 @@
 
 *calcshanten_civilwar
 	// 特殊：南北戦争の向聴数を求める
-	if (getRule(RULE_CIVIL_WAR) != "0") {
+	if (getRuleInt(RULE_CIVIL_WAR) != 0) {
 		countTilesInHand haiCount, GameStat, targetPlayer
 		CivilWarShanten = 13
 		// 以下、一枚ずつ調べる
@@ -239,7 +239,7 @@
 
 *calcshanten_syzygy
 	// 特殊：惑星直列の向聴数を求める
-	if (getRule(RULE_SYZYGY) != "0") {
+	if (getRuleInt(RULE_SYZYGY) != 0) {
 		countTilesInHand haiCount, GameStat, targetPlayer
 		SyzygyShanten = 13
 		// 以下、一枚ずつ調べる

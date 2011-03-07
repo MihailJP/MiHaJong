@@ -432,8 +432,8 @@ return
 	tmptxt = ""+hncnTurnName(hncnOrigTurn)
 	if (hncnOrigHonba > 0) {tmptxt += " "+hncnOrigHonba+"本場"}
 	tmptxt += " ドラ："+haifuDora
-	if ((hncnKyokuEndType == ENDKYOKU_AGARI)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != "1")) {tmptxt += "裏ドラ："+haifuUraDora}
-	if ((hncnKyokuEndType == ENDKYOKU_AGARI)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != "0")) {tmptxt += "アリス："+haifuAliceDoraMax}
+	if ((hncnKyokuEndType == ENDKYOKU_AGARI)&&(tmpUraFlag == 1)&&(getRuleInt(RULE_URADORA) != 1)) {tmptxt += "裏ドラ："+haifuUraDora}
+	if ((hncnKyokuEndType == ENDKYOKU_AGARI)&&(tmpAliceFlag == 1)&&(getRuleInt(RULE_ALICE) != 0)) {tmptxt += "アリス："+haifuAliceDoraMax}
 	noteadd tmptxt
 	noteadd ""
 	noteadd "結果："+ResultDesc
@@ -442,8 +442,8 @@ return
 	tmptxt = ""+hncnTurnName(hncnOrigTurn)
 	if (hncnOrigHonba > 0) {tmptxt += " "+hncnOrigHonba+"本場"}
 	tmptxt += " ドラ：<span class=\"tile\">"+HThaifuDora+"</span>"
-	if ((hncnKyokuEndType == ENDKYOKU_AGARI)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != "1")) {tmptxt += "裏ドラ：<span class=\"tile\">"+HThaifuUraDora+"</span>"}
-	if ((hncnKyokuEndType == ENDKYOKU_AGARI)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != "0")) {tmptxt += "アリス：<span class=\"tile\">"+HThaifuAliceDoraMax+"</span>"}
+	if ((hncnKyokuEndType == ENDKYOKU_AGARI)&&(tmpUraFlag == 1)&&(getRuleInt(RULE_URADORA) != 1)) {tmptxt += "裏ドラ：<span class=\"tile\">"+HThaifuUraDora+"</span>"}
+	if ((hncnKyokuEndType == ENDKYOKU_AGARI)&&(tmpAliceFlag == 1)&&(getRuleInt(RULE_ALICE) != 0)) {tmptxt += "アリス：<span class=\"tile\">"+HThaifuAliceDoraMax+"</span>"}
 	noteadd "<h2>"+tmptxt+"</h2>"
 	noteadd "<p>結果："+ResultDesc+"</p>"
 	noteadd "<table>"
@@ -671,7 +671,7 @@ return
 
 			haifutmpscore += " ("+(tmpscoretxt)+")"
 		}
-		if (getRule(RULE_CHIP) != "0") {
+		if (getRuleInt(RULE_CHIP) != 0) {
 			if (getChip(GameStat, tmpcnt) >= 0) {haifutmpscore += " チップ: +"+getChip(GameStat, tmpcnt)}
 			else {haifutmpscore += " チップ: "+getChip(GameStat, tmpcnt)}
 		}
