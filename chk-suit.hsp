@@ -14,11 +14,11 @@
 #endif
 	Cifr = 0
 	repeat SIZE_OF_MELD_BUFFER
-		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM / TILE_SUIT_STEP)
-			case TILE_SUIT_CHARACTERS/TILE_SUIT_STEP: WanzMian++: swbreak
-			case TILE_SUIT_CIRCLES/TILE_SUIT_STEP: PinzMian++: swbreak
-			case TILE_SUIT_BAMBOOS/TILE_SUIT_STEP: SouzMian++: swbreak
-			case TILE_SUIT_HONORS/TILE_SUIT_STEP: ZiMian++: swbreak
+		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM / TILE_SUIT_STEP) * TILE_SUIT_STEP
+			case TILE_SUIT_CHARACTERS: WanzMian++: swbreak
+			case TILE_SUIT_CIRCLES: PinzMian++: swbreak
+			case TILE_SUIT_BAMBOOS: SouzMian++: swbreak
+			case TILE_SUIT_HONORS: ZiMian++: swbreak
 		swend
 #ifdef SANMAX
 		if (((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {
