@@ -35,14 +35,15 @@
 	DragonW = 0: DragonG = 0: DragonR = 0: Wind = 0
 	EastWind = 0: SouthWind = 0: WestWind = 0: NorthWind = 0
 	repeat SIZE_OF_MELD_BUFFER-1, 1
-		if (((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {Wind++}
-		if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_EAST_WIND) {EastWind++}
-		if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_SOUTH_WIND) {SouthWind++}
-		if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_WEST_WIND) {WestWind++}
-		if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_NORTH_WIND) {NorthWind++}
-		if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_WHITE_DRAGON) {DragonW++}
-		if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_GREEN_DRAGON) {DragonG++}
-		if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_RED_DRAGON) {DragonR++}
+		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
+			case TILE_EAST_WIND: EastWind++: Wind++: swbreak
+			case TILE_SOUTH_WIND: SouthWind++: Wind++: swbreak
+			case TILE_WEST_WIND: WestWind++: Wind++: swbreak
+			case TILE_NORTH_WIND: NorthWind++: Wind++: swbreak
+			case TILE_WHITE_DRAGON: DragonW++: swbreak
+			case TILE_GREEN_DRAGON: DragonG++: swbreak
+			case TILE_RED_DRAGO: DragonR++: swbreak
+		swend
 	loop
 	/* ˆêF‘o—´‰ï */
 	if (getRuleInt(RULE_ISSHOKU_SOURYUU) != 0) {
@@ -134,8 +135,8 @@
 		if ((yakuFlag == 2)&&(yakuFlag2 == 1)&&(getMenzen(GameStat, targetPlayer) == 1)) {
 			switch getRuleInt(RULE_CHINPEIKOU)
 				case 1: addyaku tmpYakuInfo, "´”uŒû", 6: swbreak
-				case 1: addyaku tmpYakuInfo, "´”uŒû", 5: swbreak
-				case 1: addyaku tmpYakuInfo, "´”uŒû", 4: swbreak
+				case 2: addyaku tmpYakuInfo, "´”uŒû", 5: swbreak
+				case 3: addyaku tmpYakuInfo, "´”uŒû", 4: swbreak
 			swend
 			delyaku tmpYakuInfo, "“ñ”uŒû"
 		}
@@ -175,14 +176,14 @@
 			tmpyaojiu = 0: JihaiCount = 0
 			repeat SIZE_OF_MELD_BUFFER
 				switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
+					case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
+					case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
+						JihaiCount++
+						/* FALLTHRU */
 					case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 					case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 					case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
 						tmpyaojiu++
-					swbreak
-					case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
-					case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
-						tmpyaojiu++: JihaiCount++
 					swbreak
 				swend
 				if ((haiMianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 7)&&(cnt > 0)) {
