@@ -83,6 +83,27 @@ return
 	return ans
 #global
 
+/* メニュー画面の背景を表示 */
+#module
+#include "const.as"
+#deffunc menubgcolor
+#ifdef SANMA4
+	color 0, 64, 64
+#else
+#ifdef SANMA
+	color 0, 0, 64
+#else
+	color 0, 64, 0
+#endif
+#endif
+	return
+#deffunc showbackground
+	menubgcolor
+	boxf 0, 0, 839, 629
+	gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
+	return
+#global
+
 /* 縁取りテキスト */
 #module
 #include "const.as"

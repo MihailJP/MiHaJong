@@ -41,15 +41,7 @@
 	buffer SCR_SPLASH_BUF: pngload "img\\splash.png"
 	bgscr SCR_SPLASH_WINDOW, 320, 240, , (ginfo_dispx-320)/2, (ginfo_dispy-240)/2
 	gsel SCR_SPLASH_WINDOW, 2
-#ifdef SANMA4
-	color 0, 64, 64
-#else
-#ifdef SANMA
-	color 0, 0, 64
-#else
-	color 0, 64, 0
-#endif
-#endif
+	menubgcolor
 	boxf 0, 0, 319, 239
 	gmode 7: pos 0, 0: gcopy SCR_SPLASH_BUF, 0, 0, 320, 240
 	color 0, 0, 0: line 319, 0, 0, 0: line 319, 239: line 0, 239: line 0, 0

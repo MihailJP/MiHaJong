@@ -9,18 +9,8 @@
 	debug "タイトル画面を準備します。"
 	gsel 0
 	redraw 0: vanish
-#ifdef SANMA4
-	color 0, 64, 64
-#else
-#ifdef SANMA
-	color 0, 0, 64
-#else
-	color 0, 64, 0
-#endif
-#endif
-	boxf 0, 0, 839, 629
-	gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630
-	pos 100, 80: gcopy SCR_TITLE_LOGO, 0, 0, 640, 200: gmode gmode_gdi
+	showbackground
+	gmode gmode_pixela: pos 100, 80: gcopy SCR_TITLE_LOGO, 0, 0, 640, 200: gmode gmode_gdi
 	font fontname, 28, 0
 	borderedtxt2 "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC, 530, 125, 255, 255, 255, 1, 28, 192, 192, 192
 	tmptxt = "Copyright (c) 2011 MihailJP All rights reserved"
@@ -99,17 +89,7 @@
 	startflag = 0
 	repeat
 		redraw 0
-#ifdef SANMA4
-		color 0, 64, 64
-#else
-#ifdef SANMA
-		color 0, 0, 64
-#else
-		color 0, 64, 0
-#endif
-#endif
-		boxf 0, 0, 839, 629
-		gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
+		showbackground
 		CurrentConnection = 1
 		repeat NUM_OF_PLAYERS-1
 			if (IsRemotePlayer(cnt+1) > 0) {CurrentConnection++}
@@ -249,17 +229,7 @@ return
 	dsplay SND_BUTTON
 	gosub *entername
 	redraw 0
-#ifdef SANMA4
-	color 0, 64, 64
-#else
-#ifdef SANMA
-	color 0, 0, 64
-#else
-	color 0, 64, 0
-#endif
-#endif
-	boxf 0, 0, 839, 629
-	gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
+	showbackground
 	sysscr fontname, "接続先を入力してね", "Choose server.", "サーバーのIPアドレス、または\nドメイン名を入力してください"
 	redraw 1
 	GameMode = 2: vanish
@@ -272,17 +242,7 @@ return
 		if (ServerSelected) {
 			vanish
 			redraw 0
-#ifdef SANMA4
-			color 0, 64, 64
-#else
-#ifdef SANMA
-			color 0, 0, 64
-#else
-			color 0, 64, 0
-#endif
-#endif
-			boxf 0, 0, 839, 629
-			gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
+			showbackground
 			sysscr fontname, "接続先を入力してね", "Choose server.", "サーバーに接続しています\nしばらくお待ちください"
 			redraw 1
 			sockopen SOCK_GAME+0, ServerAddress, PORT_GAME+0
@@ -311,17 +271,7 @@ return
 					await 0
 				loop
 				redraw 0
-#ifdef SANMA4
-				color 0, 64, 64
-#else
-#ifdef SANMA
-				color 0, 0, 64
-#else
-				color 0, 64, 0
-#endif
-#endif
-				boxf 0, 0, 839, 629
-				gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
+				showbackground
 				sysscr fontname, "接続先を入力してね", "Choose server.", "開始合図を待っています\nしばらくお待ちください"
 				redraw 1
 				clientsend 0xb8
@@ -371,17 +321,7 @@ return
 *entername
 	redraw 0
 	vanish
-#ifdef SANMA4
-	color 0, 64, 64
-#else
-#ifdef SANMA
-	color 0, 0, 64
-#else
-	color 0, 64, 0
-#endif
-#endif
-	boxf 0, 0, 839, 629
-	gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
+	showbackground
 	sysscr fontname, "名前を入力してね", "Enter your name.", "プレーヤー名を入力してください\n（全角８文字まで）"
 	redraw 1
 	InputPlayerName = ""

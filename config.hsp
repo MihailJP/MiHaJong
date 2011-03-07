@@ -131,17 +131,7 @@ return
 	confselFinished = 0
 	repeat
 		redraw 0
-#ifdef SANMA4
-		color 0, 64, 64
-#else
-#ifdef SANMA
-		color 0, 0, 64
-#else
-		color 0, 64, 0
-#endif
-#endif
-		boxf 0, 0, 839, 629
-		gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
+		showbackground
 		font fontname, 48, 0
 		borderedtxt2 "ä¬ ã´ ê› íË", 152, 12, 255, 255, 255, 1, 48, 192, 192, 192
 		font fontname, 24, 0
