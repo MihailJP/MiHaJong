@@ -162,18 +162,13 @@
 					serversend peek(PlayerName(tmpcnt), cnt), IsRemotePlayer
 				loop
 			loop
-			serversend 0xb8, IsRemotePlayer
-			serversend strlen(RuleConf), IsRemotePlayer
-			repeat strlen(RuleConf): serversend peek(RuleConf, cnt), IsRemotePlayer: loop
-			serversend 0xb8, IsRemotePlayer
-			serversend strlen(RuleConf2), IsRemotePlayer
-			repeat strlen(RuleConf2): serversend peek(RuleConf2, cnt), IsRemotePlayer: loop
-			serversend 0xb8, IsRemotePlayer
-			serversend strlen(RuleConf3), IsRemotePlayer
-			repeat strlen(RuleConf3): serversend peek(RuleConf3, cnt), IsRemotePlayer: loop
-			serversend 0xb8, IsRemotePlayer
-			serversend strlen(RuleConf4), IsRemotePlayer
-			repeat strlen(RuleConf4): serversend peek(RuleConf4, cnt), IsRemotePlayer: loop
+			exportRule RuleConf
+			repeat RULE_STRING_LINES
+				tmpcnt = cnt
+				serversend 0xb8, IsRemotePlayer
+				serversend strlen(RuleConf(tmpcnt)), IsRemotePlayer
+				repeat strlen(RuleConf(tmpcnt)): serversend peek(RuleConf(tmpcnt), cnt), IsRemotePlayer: loop
+			loop
 			break
 		}
 	loop
@@ -289,10 +284,11 @@ return
 					gosub *receiveclientname
 					PlayerName(cnt) = tmpClientName
 				loop
-				gosub *receiveclientname: RuleConf = tmpClientName
-				gosub *receiveclientname: RuleConf2 = tmpClientName
-				gosub *receiveclientname: RuleConf3 = tmpClientName
-				gosub *receiveclientname: RuleConf4 = tmpClientName
+				sdim RuleConf, RULE_IN_LINE+4, length(RuleTxt)
+				repeat RULE_STRING_LINES
+					gosub *receiveclientname: RuleConf(cnt) = tmpClientName
+				loop
+				storeRule RuleConf
 				break
 			} else {
 				dialog "サーバーに接続できません\nオフラインモードで開始します", 1, "接続失敗"

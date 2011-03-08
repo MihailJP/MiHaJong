@@ -5,13 +5,21 @@
  */
 
 /* 設定のテキスト */
-*configtxt
-	#define NUM_OF_RULE_SETTINGS 280
+#deffunc configinit
+	#define NUM_OF_RULE_SETTINGS RULES_IN_PAGE*RULE_PAGES
 	dim Rule, NUM_OF_RULE_SETTINGS+1
 	sdim RuleTxt, 128, 17, NUM_OF_RULE_SETTINGS+1
 	sdim RuleDescription, 128, NUM_OF_RULE_SETTINGS+1
 	sdim RuleName, 128, NUM_OF_RULE_SETTINGS+1
+	return
+
+#deffunc configtxt
+	configinit
 	repeat NUM_OF_RULE_SETTINGS: Rule(cnt+1) = getRuleInt(cnt): loop
+	configtxtdat
+	return
+
+#deffunc configtxtdat
 	
 	/* Page 1 */
 	

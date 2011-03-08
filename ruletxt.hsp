@@ -10,7 +10,7 @@
 #define AddRuleText2(%1,%2) chatappend ""+(%1): if(((%2)!="あり")&&((%2)!="なし")) {chatappend "は"}: chatappend (%2)+"、"
 #define AddRuleText3(%1,%2) chatappend ""+(%1): if(((%2)!="あり")&&((%2)!="なし")) {chatappend "は"}: chatappend (%2)+"\n"
 #define ctype RuleStat(%1) RuleTxt(Rule((%1)+1),(%1)+1)
-	gosub *configtxt
+	configtxt
 	/* ルール設定を表示　ここから */
 	chatappend "*** "+RuleStat(RULE_GAME_LENGTH)+"\n"
 	chatappend "*** チップ"+RuleStat(RULE_CHIP)+"\n"
