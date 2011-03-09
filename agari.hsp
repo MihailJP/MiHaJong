@@ -719,6 +719,7 @@ swend
 						addChip GameStat, cnt, hncnPointDelta(cnt)
 					loop
 				}
+			}
 			swbreak
 	swend
 return

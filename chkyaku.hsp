@@ -36,7 +36,7 @@
 		if (getRuleInt(RULE_STELLAR_UUSHII) != 0) {
 			if (ShantenArray(SHANTEN_STELLAR) == -1) {
 				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
-				addyakuman "µ¯–³èÏ", 1
+				addyakuman tmpYakuInfo, "µ¯–³èÏ", 1
 				countdora GameStat, tmpYakuInfo, targetPlayer
 			}
 		}
@@ -44,7 +44,7 @@
 		if (getRuleInt(RULE_CIVIL_WAR) != 0) {
 			if (ShantenArray(SHANTEN_CIVILWAR) == -1) {
 				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
-				addyakuman "“ì–kí‘ˆ", 1
+				addyakuman tmpYakuInfo, "“ì–kí‘ˆ", 1
 				countdora GameStat, tmpYakuInfo, targetPlayer
 			}
 		}
@@ -53,9 +53,9 @@
 			if (ShantenArray(SHANTEN_SYZYGY) == -1) {
 				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
 				if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) \ 2) == 0) {
-					addyakuman "˜f¯’¼—ñ", 2
+					addyakuman tmpYakuInfo, "˜f¯’¼—ñ", 2
 				} else {
-					addyakuman "˜f¯’¼—ñ", 1
+					addyakuman tmpYakuInfo, "˜f¯’¼—ñ", 1
 				}
 				countdora GameStat, tmpYakuInfo, targetPlayer
 			}

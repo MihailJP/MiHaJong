@@ -59,7 +59,7 @@
 #else
 		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)+getYakitori(GameStat, 3)) > 0) {
 #endif
-			dim hncnPointDelta, NUM_OF_PLAYERS, 0
+			dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 			repeat NUM_OF_ACTUAL_PLAYERS
 				if (getYakitori(GameStat, cnt) == 1) {
 					hncnPointDelta(cnt, 0) -= 50*getRuleInt(RULE_YAKITORI)

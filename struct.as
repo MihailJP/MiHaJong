@@ -266,7 +266,7 @@ PreviousMeld, ConnectionLost
 	swend
 	return 0x7fffffff
 
-#modcfunc addDeadWallLength int value
+#modfunc addDeadWallLength int value
 	haiDeadTiles += value
 	return
 #modcfunc getDeadWallLength
