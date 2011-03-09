@@ -266,6 +266,9 @@ PreviousMeld, ConnectionLost
 	swend
 	return 0x7fffffff
 
+#modcfunc addDeadWallLength int value
+	haiDeadTiles += value
+	return
 #modcfunc getDeadWallLength
 	return haiDeadTiles
 
@@ -340,11 +343,7 @@ PreviousMeld, ConnectionLost
 		PaoFlag(cnt\PAO_YAKU_PAGES, cnt/PAO_YAKU_PAGES) = -1
 	loop
 #ifdef SANMAX
-	if ((getRuleInt(RULE_DORA_TWICE) == 1)||((getRuleInt(RULE_DORA_TWICE) == 2)&&(haiDice1 == haiDice2))) {
-		haiDeadTiles = 16 // ‰¤”v‚Ì”
-	} else {
-		haiDeadTiles = 14 // ‰¤”v‚Ì”
-	}
+	haiDeadTiles = 14 // ‰¤”v‚Ì”
 	dim Deck, 108, WALL_PAGES // •Ç”v‚Ì”z—ñ
 	if (getRuleInt(RULE_FLOWER_TILES) != 0) {
 		ExtraRinshan = 4
@@ -354,26 +353,14 @@ PreviousMeld, ConnectionLost
 #else
 	if (getRuleInt(RULE_FLOWER_TILES) != 0) {
 		if (getRuleInt(RULE_FLOWER_TILES) == 3) {
-			if ((getRuleInt(RULE_DORA_TWICE) == 1)||((getRuleInt(RULE_DORA_TWICE) == 2)&&(haiDice1 == haiDice2))) {
-				haiDeadTiles = 24 // ‰¤”v‚Ì”(ƒhƒ‰ƒhƒ‰‘ì)
-			} else {
-				haiDeadTiles = 22 // ‰¤”v‚Ì”(‰Ô”v‚ğ“ü‚ê‚é‚Í“Á•Ê‚É‚Q‚Q–‡c‚µ‚Æ‚·‚é)
-			}
+			haiDeadTiles = 22 // ‰¤”v‚Ì”(‰Ô”v‚ğ“ü‚ê‚é‚Í“Á•Ê‚É‚Q‚Q–‡c‚µ‚Æ‚·‚é)
 			dim Deck, 144, WALL_PAGES // •Ç”v‚Ì”z—ñ
 		} else {
-			if ((getRuleInt(RULE_DORA_TWICE) == 1)||((getRuleInt(RULE_DORA_TWICE) == 2)&&(haiDice1 == haiDice2))) {
-				haiDeadTiles = 20 // ‰¤”v‚Ì”(ƒhƒ‰ƒhƒ‰‘ì)
-			} else {
-				haiDeadTiles = 18 // ‰¤”v‚Ì”
-			}
+			haiDeadTiles = 18 // ‰¤”v‚Ì”
 			dim Deck, 140, WALL_PAGES // •Ç”v‚Ì”z—ñ
 		}
 	} else {
-		if ((getRuleInt(RULE_DORA_TWICE) == 1)||((getRuleInt(RULE_DORA_TWICE) == 2)&&(haiDice1 == haiDice2))) {
-			haiDeadTiles = 16 // ‰¤”v‚Ì”(ƒhƒ‰ƒhƒ‰‘ì)
-		} else {
-			haiDeadTiles = 14 // ‰¤”v‚Ì”
-		}
+		haiDeadTiles = 14 // ‰¤”v‚Ì”
 		dim Deck, 136, WALL_PAGES // •Ç”v‚Ì”z—ñ
 	}
 #endif
