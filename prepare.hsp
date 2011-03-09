@@ -298,7 +298,7 @@ return
 	if (getRuleInt(RULE_RED_SEVEN)\2 == 1) {setWall GameStat, WALL_REDTILE, 68, 1} // 赤七索
 	if (getRuleInt(RULE_RED_EIGHT)\2 == 1) {setWall GameStat, WALL_REDTILE, 72, 1} // 赤八索
 	if (getRuleInt(RULE_RED_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 76, 1} // 赤九索
-	if (getRuleInt(RULE_KINKEI_DOKURITSU) != 0) {
+	if (getRuleInt(RULE_HAKU_POTCHI) != 0) {
 		// オールマイティー扱いはせず、赤ドラと同じ扱い
 		setWall GameStat, WALL_REDTILE, 96, 1 // 白ポッチ
 	}
@@ -347,7 +347,7 @@ return
 	if (getRuleInt(RULE_RED_SEVEN)\2 == 1) {setWall GameStat, WALL_REDTILE, 96, 1} // 赤七索
 	if (getRuleInt(RULE_RED_EIGHT)\2 == 1) {setWall GameStat, WALL_REDTILE, 100, 1} // 赤八索
 	if (getRuleInt(RULE_RED_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 104, 1} // 赤九索
-	if (getRuleInt(RULE_KINKEI_DOKURITSU) != 0) {
+	if (getRuleInt(RULE_HAKU_POTCHI) != 0) {
 		// オールマイティー扱いはせず、赤ドラと同じ扱い
 		setWall GameStat, WALL_REDTILE, 124, 1 // 白ポッチ
 	}
