@@ -1,10 +1,10 @@
-_FILEVERSION=1.4.0.0
-_PRODUCTVERSION=1.4.0.0
+_FILEVERSION=1.4.1.21
+_PRODUCTVERSION=1.4.1.21
 Comments=三人打ち麻雀MiHaJong
 CompanyName=MihailJP
 FileDescription=三人打ち麻雀MiHaJong
-FileVersion=1.4.0
+FileVersion=1.4.1
 InternalName=MiHaJong
 OriginalFilename=mihasanm.exe
 ProductName=MiHaJong
-ProductVersion=1.4.0
+ProductVersion=1.4.1
