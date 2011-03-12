@@ -66,6 +66,7 @@
 						setMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer), kangPlayer, getMeld(GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer), kangPlayer)*2 + 1
 					}
 					setHand GameStat, HAND_TILECODE, cnt, kangPlayer, 0
+					setHand GameStat, MELD_REDTILE, cnt, kangPlayer, 0
 					nakiCount++
 				}
 			loop
@@ -85,6 +86,7 @@
 				}
 			loop
 			setHand GameStat, HAND_TILECODE, teDahai\DAHAI_TYPE_STEP, kangPlayer, 0
+			setHand GameStat, MELD_REDTILE, teDahai\DAHAI_TYPE_STEP, kangPlayer, 0
 			if (nakiCount == 0) {error strf("加槓するための明刻子が見つかりません。牌コード [%d]", haiCurrentSutehai)}
 			if (nakiCount > 1) {error strf("加槓するための明刻子が複数見つかりました。面子データに不整合が発生しています。牌コード [%d]", haiCurrentSutehai)}
 			swbreak
@@ -102,6 +104,7 @@
 						flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 8
 					}
 					setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, 0
+					setHand GameStat, MELD_REDTILE, cnt, PassivePlayer, 0
 					nakiCount++
 				}
 			loop
@@ -169,6 +172,7 @@
 						flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 4
 					}
 					setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, 0
+					setHand GameStat, MELD_REDTILE, cnt, PassivePlayer, 0
 					nakiCount++
 				}
 			loop
@@ -205,6 +209,7 @@
 						flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 1
 					}
 					setHand GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
+					setHand GameStat, MELD_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
 					nakiCount1++
 				}
 				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == haiCurrentSutehai+2-haiChi(PassivePlayer))&&(nakiCount2 < 1)) {
@@ -212,6 +217,7 @@
 						flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 2
 					}
 					setHand GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
+					setHand GameStat, MELD_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
 					nakiCount2++
 				}
 				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == haiCurrentSutehai+3-haiChi(PassivePlayer))&&(nakiCount3 < 1)) {
@@ -219,6 +225,7 @@
 						flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 4
 					}
 					setHand GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
+					setHand GameStat, MELD_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
 					nakiCount3++
 				}
 			loop
@@ -294,6 +301,7 @@
 			case FUURO_DAIMINKAN:
 				/* バグ防止の為 */
 				repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
+				repeat NUM_OF_PLAYERS: setHand GameStat, MELD_REDTILE, TSUMOHAI_INDEX, cnt, 0: loop
 				swbreak
 #ifdef SANMAX
 			case FUURO_NORTH:
