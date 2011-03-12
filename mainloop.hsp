@@ -371,8 +371,8 @@ repeat
 		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop // バグ防止のため
 		if (((haiCurrentSutehai == getPreviousMeld(GameStat, PREVMELD_TILECODE))||(haiCurrentSutehai == getPreviousMeld(GameStat, PREVMELD_STEPPED)))&&(getAgariHouki(GameStat, ActivePlayer) == 0)) {
 			// 喰い替えの場合の処理
-			if (getRuleInt(RULE_KUIKAE) != 2) {
-				if (getRuleInt(RULE_KUIKAE) != 1) {
+			switch getRuleInt(RULE_KUIKAE)
+				case 0: case 3:
 					/* 和了り放棄とする設定 */
 					info strf("喰い変えを検出しました。和了り放棄として扱います。打牌 [%d] 鳴いた牌 [%d]", haiCurrentSutehai, getPreviousMeld(GameStat, PREVMELD_TILECODE))
 					dsplay SND_CUOHU
@@ -388,7 +388,8 @@ repeat
 					setAgariHouki GameStat, ActivePlayer, 1
 					if (WatchModeFlag == 0) {statmes "和了り放棄：強制ツモ切りされます"}
 					vanish: commonswitch GameStat, WatchModeFlag
-				} else {
+					swbreak
+				case 1: case 4:
 					/* 直ちに錯和とする設定 */
 					info strf("喰い変えを検出しました。チョンボとして扱います。打牌 [%d] 鳴いた牌 [%d]", haiCurrentSutehai, getPreviousMeld(GameStat, PREVMELD_TILECODE))
 					dsplay SND_CUOHU
@@ -398,8 +399,7 @@ repeat
 					gosub *redrscreen: await 1500
 					/* 局を打ち切り、満貫罰符の支払いに進む */
 					break
-				}
-			}
+			swend
 		}
 		/* 多牌や少牌をしていないかのチェック */
 		tmptilecnt = 0

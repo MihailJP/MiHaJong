@@ -57,7 +57,7 @@
 	
 	RuleName(RULE_KUIKAE+1) = "‹ò‚¢‘Ö‚¦"
 	RuleDescription(RULE_KUIKAE+1) = "‹ò‚¢‘Ö‚¦‚ð‚µ‚½Žž‚Ì”±‘¥‚ðÝ’è‚µ‚Ü‚·"
-	RuleTxt(0, RULE_KUIKAE+1) = "˜a—¹‚è•úŠü", "ö˜a", "‚ ‚è"
+	RuleTxt(0, RULE_KUIKAE+1) = "˜a—¹‚è•úŠü", "ö˜a", "‚ ‚è", "˜a—¹‚è•úŠü(Œ»•¨‚Ì‚Ý)", "ö˜a(Œ»•¨‚Ì‚Ý)"
 	
 	RuleName(RULE_LIMITHAND_BONUS+1) = "–ð–žj‹V"
 	RuleDescription(RULE_LIMITHAND_BONUS+1) = "–ð–ž‚ð˜a—¹‚Á‚½Žž‚É‚à‚ç‚¦‚éƒ`ƒbƒv‚Ì”‚ðÝ’è‚µ‚Ü‚·"

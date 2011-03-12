@@ -241,10 +241,16 @@
 			setCall PassivePlayer, "　チー　"
 			/* 喰い替え判定用の変数を指定 */
 			setPreviousMeld GameStat, PREVMELD_TILECODE, haiCurrentSutehai
-			switch (haiChi(PassivePlayer))
-				case 1: setPreviousMeld GameStat, PREVMELD_STEPPED, haiCurrentSutehai+3: swbreak
-				case 2: setPreviousMeld GameStat, PREVMELD_STEPPED, -999: swbreak
-				case 3: setPreviousMeld GameStat, PREVMELD_STEPPED, haiCurrentSutehai-3: swbreak
+			switch getRuleInt(RULE_KUIKAE)
+				case 1: case 2:
+					switch (haiChi(PassivePlayer))
+						case 1: setPreviousMeld GameStat, PREVMELD_STEPPED, haiCurrentSutehai+3: swbreak
+						case 2: setPreviousMeld GameStat, PREVMELD_STEPPED, -999: swbreak
+						case 3: setPreviousMeld GameStat, PREVMELD_STEPPED, haiCurrentSutehai-3: swbreak
+					swend
+					swbreak
+				default:
+					setPreviousMeld GameStat, PREVMELD_STEPPED, -999
 			swend
 			swbreak
 #endif
