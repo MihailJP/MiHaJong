@@ -507,7 +507,7 @@ repeat
 	}
 	// ˜a—¹‚è~‚ß
 	if (getRuleInt(RULE_AGARIYAME) != 1) {
-		if (((getRound(GameStat)+(getRoundLoop(GameStat)*16)) == getGameLength(GameStat))&&((hncnOrigTurn+(getRoundLoop(GameStat)*16)) == getGameLength(GameStat))&&(hncnKyokuEndType == ENDKYOKU_AGARI)) {
+		if (((getRound(GameStat)+(getRoundLoop(GameStat)*16)) == getGameLength(GameStat))&&((hncnOrigTurn+(getRoundLoop(GameStat)*16)) == getGameLength(GameStat))&&((hncnKyokuEndType == ENDKYOKU_AGARI)||(getRuleInt(RULE_AGARIYAME) == 2))) {
 			calcRank Rank, GameStat
 #ifdef SANMA
 			if ((Rank(getRound(GameStat)\NUM_OF_PLAYERS) == 1)&&(getScore(GameStat,getRound(GameStat)\NUM_OF_PLAYERS) >= 400)) {break}

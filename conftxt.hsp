@@ -123,7 +123,7 @@
 
 	RuleName(RULE_AGARIYAME+1) = "和了り止め"
 	RuleDescription(RULE_AGARIYAME+1) = "オーラスで浮いているトップの親の和了り止めを設定します"
-	RuleTxt(0, RULE_AGARIYAME+1) = "あり", "なし"
+	RuleTxt(0, RULE_AGARIYAME+1) = "あり", "なし", "あり(聴牌止めあり)"
 	
 	RuleName(RULE_KUITAN+1) = "喰い断"
 	RuleDescription(RULE_KUITAN+1) = "門前でない断幺九を許容するかを設定します"
