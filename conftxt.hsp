@@ -1397,4 +1397,10 @@
 	RuleTxt(0, RULE_TSUMIBOH_RATE+1) = "๊300“_", ">>>", "๊1500“_", "ศต"
 #endif
 
+	/* Page 8 */
+
+	RuleName(RULE_MINKAN_PAO+1) = "‘ๅ–พศฬ•๏"
+	RuleDescription(RULE_MINKAN_PAO+1) = "‘ๅ–พศตฝฦซฬ—ไใ”vลa—น่ษศมฝ๊ฬ—๐Ý’่ตÜท"
+	RuleTxt(0, RULE_MINKAN_PAO+1) = "ศต", " ่", " ่(AศÜÞ)", "ศต(Qใส)y–ขภ‘•z", " ่(Qใส)y–ขภ‘•z", " ่(AศÜÞQใส)y–ขภ‘•z", "a—นาฬ๖a"
+
 return

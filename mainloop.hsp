@@ -134,25 +134,20 @@ repeat
 			/* 自摸和したことを変数に設定 */
 			TsumoAgari = 1
 			countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
-			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRuleInt(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))) {
+			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRuleInt(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))||((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != 1)&&(getRuleInt(RULE_MINKAN_PAO) == 6))) {
 				/* 縛りを満たしていない場合(役が無いなど)…錯和として局を終了する */
-				hncnKyokuEndType = ENDKYOKU_CHONBO: TsumoAgari = 1
-				agariPlayer = ActivePlayer
-				setCall agariPlayer, "　ツモ　"
-				if (getHeavenHandFlag(GameStat) == 1) {setCall agariPlayer, "　ロン　"} //天和の時はロンと言う慣わし
-				setHandStat GameStat, agariPlayer, 1
-				if (getHeavenHandFlag(GameStat) == 1) {dsplay VOX_RON} else {dsplay VOX_TSUMO}
-				gosub *redrscreen: break
+				hncnKyokuEndType = ENDKYOKU_CHONBO
 			} else {
 				/* 縛りを満たすなら和了りとして成立 */
-				hncnKyokuEndType = ENDKYOKU_AGARI: TsumoAgari = 1
-				agariPlayer = ActivePlayer
-				setCall agariPlayer, "　ツモ　"
-				if (getHeavenHandFlag(GameStat) == 1) {setCall agariPlayer, "　ロン　"}
-				setHandStat GameStat, agariPlayer, 1
-				if (getHeavenHandFlag(GameStat) == 1) {dsplay VOX_RON} else {dsplay VOX_TSUMO}
-				gosub *redrscreen: break
+				hncnKyokuEndType = ENDKYOKU_AGARI
 			}
+			TsumoAgari = 1
+			agariPlayer = ActivePlayer
+			setCall agariPlayer, "　ツモ　"
+			if (getHeavenHandFlag(GameStat) == 1) {setCall agariPlayer, "　ロン　"} //天和の時はロンと言う慣わし
+			setHandStat GameStat, agariPlayer, 1
+			if (getHeavenHandFlag(GameStat) == 1) {dsplay VOX_RON} else {dsplay VOX_TSUMO}
+			gosub *redrscreen: break
 		}
 		/* 九種九牌が宣言された場合 */
 		if ((teDahai == DAHAI_TYPE_KYUUSHU)&&(getRuleInt(RULE_NINE_TERMINALS) != 3)) {
@@ -211,6 +206,10 @@ repeat
 		/* 暗槓するときの処理 */
 		if ((teDahai >= DAHAI_TYPE_KAN)&&(teDahai < DAHAI_TYPE_KAN+DAHAI_TYPE_STEP)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(getTotalKang(GameStat) < (4+getRuleInt(RULE_FIFTH_KONG)))) {
 			fuuroproc GameStat, haiRon, haiChi, hncnKyokuEndType, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkaDora, ActivePlayer, PassivePlayer, FUURO_ANKAN
+			if ((getRuleInt(RULE_MINKAN_PAO) == 1)||(getRuleInt(RULE_MINKAN_PAO) == 4)) {
+				setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
+				setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
+			}
 			if (stat == 1) {break}
 			/* 槓をすると嶺上牌の分自摸が増えるので次の打牌へ */
 			continue ActivePlayer
@@ -218,11 +217,17 @@ repeat
 		/* 加槓する時の処理 */
 		if ((teDahai >= DAHAI_TYPE_KAKAN)&&(teDahai < DAHAI_TYPE_KAKAN+DAHAI_TYPE_KAN)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(getTotalKang(GameStat) < (4+getRuleInt(RULE_FIFTH_KONG)))) {
 			fuuroproc GameStat, haiRon, haiChi, hncnKyokuEndType, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkaDora, ActivePlayer, PassivePlayer, FUURO_KAKAN
+			if ((getRuleInt(RULE_MINKAN_PAO) == 1)||(getRuleInt(RULE_MINKAN_PAO) == 4)) {
+				setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
+				setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
+			}
 			if (stat == 1) {break}
 			/* 槓をすると嶺上牌の分自摸が増えるので次の打牌へ */
 			continue ActivePlayer
 		}
 		setKangFlag GameStat, KANG_FLAG, 0 // 嶺上開花のフラグを降ろす
+		setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
+		setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
 		/* 立直をするときの処理 */
 		if ((teDahai >= DAHAI_TYPE_RIICHI)&&(teDahai < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
 			if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) < NUM_OF_ACTUAL_PLAYERS) {

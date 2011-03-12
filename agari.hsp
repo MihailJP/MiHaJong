@@ -580,31 +580,33 @@ repeat NUM_OF_PLAYERS-1
 		hncnMsg = "@ö˜a@"
 		// Œëƒƒ“‚Ü‚½‚ÍŒëƒcƒ‚
 		if ((TsumoAgari == 0)||(TsumoAgari == 1)) {
-			// —§’¼”›‚è‚Å—§’¼‚µ‚Ä‚È‚¢‚È‚çö˜a
-			if ((getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_NO)&&(getRuleInt(RULE_RIICHI_SHIBARI) != 0)) {hncnMsg = "–Ù’®ö˜a": ResultDesc += "(ƒ_ƒ}’®‚Å‚Ì˜a—¹‚è)"}
-			else {
+			if ((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != 1)&&(getRuleInt(RULE_MINKAN_PAO) == 6)) {
+				// ‘å–¾È‚Ì—äãŠJ‰Ô‹Ö~ƒ‹[ƒ‹‚Ìê‡
+				hncnMsg = "–¾Èö˜a": ResultDesc += "(‘å–¾È‚Ì—äã”v‚Å‚Ì˜a—¹‚è)"
+			}
+			else:if ((getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_NO)&&(getRuleInt(RULE_RIICHI_SHIBARI) != 0)) {
+				// —§’¼”›‚è‚Å—§’¼‚µ‚Ä‚È‚¢‚È‚çö˜a
+				hncnMsg = "–Ù’®ö˜a": ResultDesc += "(ƒ_ƒ}’®‚Å‚Ì˜a—¹‚è)"
+			}
+			else:if ((haiFuriten == 1)||(getDoujunFuriten(GameStat, agariPlayer) == 1)) {
 				// U’®‚È‚Ì‚Éƒƒ“‚µ‚½ê‡‚Íö˜a
-				if ((haiFuriten == 1)||(getDoujunFuriten(GameStat, agariPlayer) == 1)) {hncnMsg = "U’®ö˜a": ResultDesc += "(U’®‚Å‚Ìƒƒ“˜a—¹‚è)"}
+				hncnMsg = "U’®ö˜a": ResultDesc += "(U’®‚Å‚Ìƒƒ“˜a—¹‚è)"
+			}
+			else {
+				// ˜a—¹‚è‚ª¬—§‚µ‚Ä‚¢‚È‚¢ê‡ö˜a
+				Shanten = countshanten(GameStat, agariPlayer, SHANTEN_ALL)
+				if (Shanten >= 0) {hncnMsg = "•s’®ö˜a": ResultDesc += "(¬—§‚µ‚Ä‚¢‚È‚¢˜a—¹‚è)"}
 				else {
-					// ˜a—¹‚è‚ª¬—§‚µ‚Ä‚¢‚È‚¢ê‡ö˜a
-					Shanten = countshanten(GameStat, agariPlayer, SHANTEN_ALL)
-					if (Shanten >= 0) {hncnMsg = "•s’®ö˜a": ResultDesc += "(¬—§‚µ‚Ä‚¢‚È‚¢˜a—¹‚è)"}
-					else {
-						// –ğ‚ª‚È‚©‚Á‚½ê‡‚Íö˜a
-						countyaku GameStat, yakuInfo, agariPlayer, furikomiPlayer, TsumoAgari
-						if (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 0) {hncnMsg = "–³ãÊö˜a": ResultDesc += "(–ğ‚Ì‚È‚¢˜a—¹‚è)"}
-						else {
-							// “ñãÊ”›‚è‚Å‚PãÊ‚µ‚©‚È‚¢‚È‚çö˜a
-							if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 1)&&(getShibari(GameStat) == 1)) {
-								hncnMsg = "ˆêãÊö˜a": ResultDesc += "(ˆêãÊ‚µ‚©‚È‚¢˜a—¹‚è)"
-							} else {
-								if ((getAgariHouki(GameStat, agariPlayer) == 1)||(IsRemotePlayer(agariPlayer) == -1)) {
-									// ˜a—¹‚è•úŠü‚È‚Ì‚É˜a—¹‚ë‚¤‚Æ‚µ‚½
-									hncnMsg = "•úŠüö˜a": ResultDesc += "(˜a—¹‚è•úŠü“K—p’†)"
-								} else {hncnMsg = "@ö˜a@": ResultDesc += ""}
-							}
-						}
-					}
+					// –ğ‚ª‚È‚©‚Á‚½ê‡‚Íö˜a
+					countyaku GameStat, yakuInfo, agariPlayer, furikomiPlayer, TsumoAgari
+					if (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 0) {hncnMsg = "–³ãÊö˜a": ResultDesc += "(–ğ‚Ì‚È‚¢˜a—¹‚è)"}
+					else:if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 1)&&(getShibari(GameStat) == 1)) {
+						// “ñãÊ”›‚è‚Å‚PãÊ‚µ‚©‚È‚¢‚È‚çö˜a
+						hncnMsg = "ˆêãÊö˜a": ResultDesc += "(ˆêãÊ‚µ‚©‚È‚¢˜a—¹‚è)"
+					} else:if ((getAgariHouki(GameStat, agariPlayer) == 1)||(IsRemotePlayer(agariPlayer) == -1)) {
+						// ˜a—¹‚è•úŠü‚È‚Ì‚É˜a—¹‚ë‚¤‚Æ‚µ‚½
+						hncnMsg = "•úŠüö˜a": ResultDesc += "(˜a—¹‚è•úŠü“K—p’†)"
+					} else {hncnMsg = "@ö˜a@": ResultDesc += ""}
 				}
 			}
 		}

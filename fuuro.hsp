@@ -277,7 +277,7 @@
 		loop
 	}
 	gosub *redrscreen@
-	if (Mode != FUURO_PON)&&(Mode != FUURO_CHII) {
+	if (Mode != FUURO_DAIMINKAN)&&(Mode != FUURO_PON)&&(Mode != FUURO_CHII) {
 		/* 国士無双に限り、暗槓を搶槓可能 */
 		/* 断幺牌の暗槓は搶槓しようがないんですが、面倒なので区別せず処理
 		   暗槓非開示設定の時は何を暗槓したか分からないので処理をスキップ*/
@@ -308,6 +308,11 @@
 				/* バグ防止の為 */
 				repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
 				repeat NUM_OF_PLAYERS: setHand GameStat, MELD_REDTILE, TSUMOHAI_INDEX, cnt, 0: loop
+				/* 大明槓の包判定用 */
+				if ((getRuleInt(RULE_MINKAN_PAO) != 0)&&(getRuleInt(RULE_MINKAN_PAO) != 3)) {
+					setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, ActivePlayer
+					setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, PassivePlayer
+				}
 				swbreak
 #ifdef SANMAX
 			case FUURO_NORTH:
@@ -383,13 +388,13 @@
 	loop
 	if ((DragonPons == 3)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN) == -1)) {
 		debug strf("プレイヤー [%d] は、大三元を包になります。", kangPlayer)
-		setPao PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN, ActivePlayer
-		setPao PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN, PassivePlayer
+		setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN, ActivePlayer
+		setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN, PassivePlayer
 	}
 	if ((WindPons == 4)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI) == -1)) {
 		debug strf("プレイヤー [%d] は、大四喜を包になります。", kangPlayer)
-		setPao PAO_PLAYER_PAO, PAO_YAKU_DAISIXI, ActivePlayer
-		setPao PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI, PassivePlayer
+		setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI, ActivePlayer
+		setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI, PassivePlayer
 	}
 	// 大三元・大四喜包の判定 ここまで
 	return
