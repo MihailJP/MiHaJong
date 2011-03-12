@@ -88,7 +88,7 @@ repeat
 						}
 					}
 				} else {
-					compthink GameStat, 0, ActivePlayer, PassivePlayer, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkadora, reducedRon, reducedMinkan, reducedPon, reducedChi
+					compthink Sandbox, 0, ActivePlayer, PassivePlayer, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkadora, reducedRon, reducedMinkan, reducedPon, reducedChi
 					if (GameMode == 1) {
 						if (teDahai == DAHAI_TYPE_KYUUSHU) {SendingMsg = 0x6e}
 						if (teDahai == DAHAI_TYPE_AGARI) {SendingMsg = 0x6f}
