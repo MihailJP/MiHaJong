@@ -28,10 +28,24 @@ return
 
 #module
 #include "const.as"
+#defcfunc haifudoraClass int Akadora
+	switch Akadora
+		case 1:
+			return " class=\"akadora\"": swbreak
+		case 2:
+			return " class=\"aodora\"": swbreak
+		default:
+			return "": swbreak
+	swend
+return ""
+#global
+
+#module
+#include "const.as"
 #deffunc haifuwritetsumohai array haifuP, array HThaifuP, int ActivePlayer, int Tile, int Akadora, str PText, str HTText
 	haifuP(ActivePlayer*6+1) += strmid(tilecodelabel@haifu, (Tile+Akadora*TILE_NONFLOWER_MAX)*2, 2)+" "
 	haifuP(ActivePlayer*6+2) += PText
-	if (Akadora) {HThaifuP(ActivePlayer*6+1) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+1) += "<td>"}
+	HThaifuP(ActivePlayer*6+1) += "<td"+haifudoraClass(Akadora)+">"
 	HThaifuP(ActivePlayer*6+1) += ""+strmid(HTtilecodelabel1@haifu, (Tile+Akadora*TILE_NONFLOWER_MAX), 1)+"</td>"
 	HThaifuP(ActivePlayer*6+2) += "<td>"+HTText+"</td>"
 return
@@ -60,9 +74,9 @@ return
 #deffunc haifubufinit
 
 	/* êùîvÇÃñºëOÉfÅ[É^ */
-	tilecodelabel = "ÅHàÍìÒéOélå‹òZéµî™ã„ÅHá@áAáBáCáDáEáFáGáHÅHÇPÇQÇRÇSÇTÇUÇVÇWÇXÅHìåìÏêºñkîí·¢íÜÅHÅHÅHàÎìÛéQ„Êåﬁó§éΩéJãËÅHáJáKáLáMáNáOáPáQáRÅHáTáUáVáWáXáYáZá[á\ÅHètâƒèHì~ïSî~óñãeí|ÅH"
-	HTtilecodelabel1 = " qwertyuio zxcvbnm,. asdfghjkl 1234567   qwertyuio zxcvbnm,. asdfghjkl -^\\[5@;:]"
-	HTtilecodelabel2 = " QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL -^\\[%@;:]"
+	tilecodelabel = "ÅHàÍìÒéOélå‹òZéµî™ã„ÅHá@áAáBáCáDáEáFáGáHÅHÇPÇQÇRÇSÇTÇUÇVÇWÇXÅHìåìÏêºñkîí·¢íÜÅHÅHÅHàÎìÛéQ„Êåﬁó§éΩéJãËÅHáJáKáLáMáNáOáPáQáRÅHáTáUáVáWáXáYáZá[á\ÅHÇdÇrÇvÇmÇoÇeÇbÅHÅHÅH1]2]3]4]5]6]7]8]9]ÅH1)2)3)4)5)6)7)8)9)ÅH1}2}3}4}5}6}7}8}9}ÅHE>S>W>N>P>F>C>ÅHÅHÅHètâƒèHì~ïSî~óñãeí|ÅH"
+	HTtilecodelabel1 = " qwertyuio zxcvbnm,. asdfghjkl 1234567   qwertyuio zxcvbnm,. asdfghjkl 1234567   qwertyuio zxcvbnm,. asdfghjkl 1234567   -^\\[5@;:]"
+	HTtilecodelabel2 = " QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   -^\\[%@;:]"
 
 	dim origPoint, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 	sdim haifuBuffer, 512*1024
@@ -118,7 +132,7 @@ return
 		repeat NUM_OF_TILES_IN_HAND
 			if (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt) > 0) {
 				haifuP(tmpcnt*6) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt)+(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)*TILE_NONFLOWER_MAX))*2, 2)
-				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(tmpcnt*6) += "<span class=\"akadora\">"}
+				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(tmpcnt*6) += "<span"+haifudoraClass(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt))+">"}
 				HThaifuP(tmpcnt*6) += strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt)+(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)*TILE_NONFLOWER_MAX)), 1)
 				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(tmpcnt*6) += "</span>"}
 			}
@@ -202,7 +216,7 @@ return
 	}
 	// éÃÇƒÇΩîvÇãLò^
 	haifuP(ActivePlayer*6+3) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
-	if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+3) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+3) += "<td>"}
+	HThaifuP(ActivePlayer*6+3) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer))+">"
 	HThaifuP(ActivePlayer*6+3) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 return
 
@@ -272,26 +286,26 @@ return
 			haifuP(ActivePlayer*6+3) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
 			HThaifuP(ActivePlayer*6+1) += "<td></td>"
 			HThaifuP(ActivePlayer*6+2) += "<td></td>"
-			if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+3) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+3) += "<td>"}
+			HThaifuP(ActivePlayer*6+3) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer))+">"
 			HThaifuP(ActivePlayer*6+3) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 			haifukanflag = 1
 		} else {
 			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) == getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {
 				haifuP(ActivePlayer*6+1) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
-				if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+1) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+1) += "<td>"}
+				HThaifuP(ActivePlayer*6+1) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer))+">"
 				HThaifuP(ActivePlayer*6+1) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 				haifukanflag = 0
 			} else {
 				haifuwritetsumohai haifuP, HThaifuP, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer), getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer), "Å@ ", ""
 				haifuP(ActivePlayer*6+3) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
-				if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+3) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+3) += "<td>"}
+				HThaifuP(ActivePlayer*6+3) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer))+">"
 				HThaifuP(ActivePlayer*6+3) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 				haifukanflag = 1
 			}
 		}
 	} else {
 		haifuP(ActivePlayer*6+1) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
-	if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+1) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+1) += "<td>"}
+		HThaifuP(ActivePlayer*6+1) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer))+">"
 		HThaifuP(ActivePlayer*6+1) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 		haifukanflag = 0
 	}
@@ -338,26 +352,26 @@ return
 			haifuP(ActivePlayer*6+3) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
 			HThaifuP(ActivePlayer*6+1) += "<td></td>"
 			HThaifuP(ActivePlayer*6+2) += "<td></td>"
-			if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+3) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+3) += "<td>"}
+			HThaifuP(ActivePlayer*6+3) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer))+">"
 			HThaifuP(ActivePlayer*6+3) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 			haifukanflag = 1
 		} else {
 			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) == getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {
 				haifuP(ActivePlayer*6+1) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
-				if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+1) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+1) += "<td>"}
+				HThaifuP(ActivePlayer*6+1) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer))+">"
 				HThaifuP(ActivePlayer*6+1) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 				haifukanflag = 0
 			} else {
 				haifuwritetsumohai haifuP, HThaifuP, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer), getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer), "Å@ ", ""
 				haifuP(ActivePlayer*6+3) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
-				if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+3) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+3) += "<td>"}
+				HThaifuP(ActivePlayer*6+3) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer))+">"
 				HThaifuP(ActivePlayer*6+3) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 				haifukanflag = 1
 			}
 		}
 	} else {
 		haifuP(ActivePlayer*6+1) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
-		if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+1) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+1) += "<td>"}
+		HThaifuP(ActivePlayer*6+1) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer))+">"
 		HThaifuP(ActivePlayer*6+1) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 		haifukanflag = 0
 	}
@@ -405,13 +419,13 @@ return
 		} else {
 			haifuP(ActivePlayer*6+1) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)+(getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
 			haifuP(ActivePlayer*6+2) += "Å@ "
-			if (getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer)) {HThaifuP(ActivePlayer*6+1) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+1) += "<td>"}
+			HThaifuP(ActivePlayer*6+1) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer))+">"
 			HThaifuP(ActivePlayer*6+1) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)+(getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 			HThaifuP(ActivePlayer*6+2) += "<td></td>"
 		}
 		haifuP(ActivePlayer*6+3) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX))*2, 2)+" "
 		haifuP(ActivePlayer*6+4) += "â‘ "
-		if (getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)) {HThaifuP(ActivePlayer*6+3) += "<td class=\"akadora\">"} else {HThaifuP(ActivePlayer*6+3) += "<td>"}
+		HThaifuP(ActivePlayer*6+3) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer))+">"
 		HThaifuP(ActivePlayer*6+3) += ""+strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)+(getHand(GameStat, HAND_REDTILE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer)*TILE_NONFLOWER_MAX)), 1)+"</td>"
 		HThaifuP(ActivePlayer*6+4) += "<td>â‘</td>"
 	} else {
@@ -467,7 +481,7 @@ return
 					}
 				}
 				haifuP(tmpcnt*6+5) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt)+(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)*TILE_NONFLOWER_MAX))*2, 2)
-				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(tmpcnt*6+5) += "<span class=\"akadora\">"}
+				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(ActivePlayer*6+3) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt))+">"}
 				HThaifuP(tmpcnt*6+5) += strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt)+(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)*TILE_NONFLOWER_MAX)), 1)
 				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(tmpcnt*6+5) += "</span>"}
 			}
@@ -487,7 +501,7 @@ return
 			tmpAkaDoraFlag2 = getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x02
 			tmpAkaDoraFlag3 = getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x04
 			tmpAkaDoraFlag4 = getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x08
-			#define HT_NakiMianzi(%1,%2,%3)  if (%2) {HThaifuP(tmpcnt*6+5) += "<span class=\"akadora\">"}: HThaifuP(tmpcnt*6+5) += strmid((%3), (%1)+((%2)*TILE_NONFLOWER_MAX), 1): if (%2) {HThaifuP(tmpcnt*6+5) += "</span>"}
+			#define HT_NakiMianzi(%1,%2,%3)  if (%2) {HThaifuP(tmpcnt*6+5) += "<span"+haifudoraClass(%2)+">"}: HThaifuP(tmpcnt*6+5) += strmid((%3), (%1)+((%2)*TILE_NONFLOWER_MAX), 1): if (%2) {HThaifuP(tmpcnt*6+5) += "</span>"}
 			switch (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)/MELD_TYPE_STEP)
 				/* ñæèáéq */
 				case MELD_SEQUENCE_EXPOSED_LOWER:
