@@ -217,7 +217,7 @@ return
 #endif
 				case RULE_REDTILE_CHIP:
 					if (Rule(RULE_CHIP+1) == 0) {gosub *config_strikeout}
-					else: if ((Rule(RULE_RED_ONE+1) == 0)||(Rule(RULE_RED_TWO+1) == 0)||(Rule(RULE_RED_THREE+1) == 0)||(Rule(RULE_RED_FOUR+1) == 0)||(Rule(RULE_RED_FIVE+1) == 2)||(Rule(RULE_RED_SIX+1) == 0)||(Rule(RULE_RED_SEVEN+1) == 0)||(Rule(RULE_RED_EIGHT+1) == 0)||(Rule(RULE_RED_NINE+1) == 0)) {
+					else: if ((Rule(RULE_RED_ONE+1) == 0)||(Rule(RULE_RED_TWO+1) == 0)||(Rule(RULE_RED_THREE+1) == 0)||(Rule(RULE_RED_FOUR+1) == 0)||(Rule(RULE_RED_FIVE+1) == 2)||(Rule(RULE_RED_SIX+1) == 0)||(Rule(RULE_RED_SEVEN+1) == 0)||(Rule(RULE_RED_EIGHT+1) == 0)||(Rule(RULE_RED_NINE+1) == 0)||(Rule(RULE_RED_WEST+1) == 0)||(Rule(RULE_RED_NORTH+1) == 0)) {
 						gosub *config_strikeout
 					}
 					swbreak

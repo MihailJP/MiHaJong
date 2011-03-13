@@ -298,6 +298,13 @@ return
 	if (getRuleInt(RULE_RED_SEVEN)\2 == 1) {setWall GameStat, WALL_REDTILE, 68, 1} // 赤七索
 	if (getRuleInt(RULE_RED_EIGHT)\2 == 1) {setWall GameStat, WALL_REDTILE, 72, 1} // 赤八索
 	if (getRuleInt(RULE_RED_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 76, 1} // 赤九索
+	if (getRuleInt(RULE_RED_WEST) == 1) {setWall GameStat, WALL_REDTILE, 88, 1} // 赤西
+	switch getRuleInt(RULE_RED_NORTH) // 赤北
+		case 4: setWall GameStat, WALL_REDTILE, 95, 1 /* FALLTHRU */
+		case 3: setWall GameStat, WALL_REDTILE, 94, 1 /* FALLTHRU */
+		case 2: setWall GameStat, WALL_REDTILE, 93, 1 /* FALLTHRU */
+		case 1: setWall GameStat, WALL_REDTILE, 92, 1
+	swend
 	if (getRuleInt(RULE_HAKU_POTCHI) != 0) {
 		// オールマイティー扱いはせず、赤ドラと同じ扱い
 		setWall GameStat, WALL_REDTILE, 96, 1 // 白ポッチ
@@ -348,6 +355,13 @@ return
 	if (getRuleInt(RULE_RED_SEVEN)\2 == 1) {setWall GameStat, WALL_REDTILE, 96, 1} // 赤七索
 	if (getRuleInt(RULE_RED_EIGHT)\2 == 1) {setWall GameStat, WALL_REDTILE, 100, 1} // 赤八索
 	if (getRuleInt(RULE_RED_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 104, 1} // 赤九索
+	if (getRuleInt(RULE_RED_WEST) == 1) {setWall GameStat, WALL_REDTILE, 116, 1} // 赤西
+	switch getRuleInt(RULE_RED_NORTH) // 赤北
+		case 4: setWall GameStat, WALL_REDTILE, 123, 1 /* FALLTHRU */
+		case 3: setWall GameStat, WALL_REDTILE, 122, 1 /* FALLTHRU */
+		case 2: setWall GameStat, WALL_REDTILE, 121, 1 /* FALLTHRU */
+		case 1: setWall GameStat, WALL_REDTILE, 120, 1
+	swend
 	if (getRuleInt(RULE_HAKU_POTCHI) != 0) {
 		// オールマイティー扱いはせず、赤ドラと同じ扱い
 		setWall GameStat, WALL_REDTILE, 124, 1 // 白ポッチ

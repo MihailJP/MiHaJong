@@ -1411,4 +1411,12 @@
 	RuleDescription(RULE_REDTILE_CHIP+1) = "赤牌に対するチップの有無を設定します"
 	RuleTxt(0, RULE_REDTILE_CHIP+1) = "門前のみ", "立直時のみ", "常時", "門前のみ(非ドラ)", "立直時のみ(非ドラ)", "常時(非ドラ)"
 
+	RuleName(RULE_RED_WEST+1) = "赤西"
+	RuleDescription(RULE_RED_WEST+1) = "赤ドラ(西風牌)の有無を設定します"
+	RuleTxt(0, RULE_RED_WEST+1) = "なし", "１枚"
+
+	RuleName(RULE_RED_NORTH+1) = "赤北"
+	RuleDescription(RULE_RED_NORTH+1) = "赤ドラ(北風牌)の有無を設定します"
+	RuleTxt(0, RULE_RED_NORTH+1) = "なし", "１枚", "２枚", "３枚", "４枚"
+
 return
