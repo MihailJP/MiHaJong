@@ -389,15 +389,17 @@
 			NumOfKangs++
 		}
 	loop
-	if ((DragonPons == 3)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN) == -1)) {
-		debug strf("プレイヤー [%d] は、大三元を包になります。", kangPlayer)
-		setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN, ActivePlayer
-		setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN, PassivePlayer
-	}
-	if ((WindPons == 4)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI) == -1)) {
-		debug strf("プレイヤー [%d] は、大四喜を包になります。", kangPlayer)
-		setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI, ActivePlayer
-		setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI, PassivePlayer
+	if (getRuleInt(RULE_NORMAL_PAO) == 0) {
+		if ((DragonPons == 3)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN) == -1)) {
+			debug strf("プレイヤー [%d] は、大三元を包になります。", kangPlayer)
+			setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN, ActivePlayer
+			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN, PassivePlayer
+		}
+		if ((WindPons == 4)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI) == -1)) {
+			debug strf("プレイヤー [%d] は、大四喜を包になります。", kangPlayer)
+			setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI, ActivePlayer
+			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI, PassivePlayer
+		}
 	}
 	if ((getRuleInt(RULE_SUUKANTSU) >= 2)&&(NumOfKangs == 4)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_SIKANG) == -1)) {
 		debug strf("プレイヤー [%d] は、四槓子を包になります。", kangPlayer)

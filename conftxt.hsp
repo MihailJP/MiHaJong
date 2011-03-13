@@ -1403,4 +1403,8 @@
 	RuleDescription(RULE_MINKAN_PAO+1) = "大明槓したときの嶺上牌で和了りになった場合の処理を設定します"
 	RuleTxt(0, RULE_MINKAN_PAO+1) = "なし", "あり", "あり(連槓含む)", "なし(２飜)", "あり(２飜)", "あり(連槓含む２飜)", "和了者の錯和"
 
+	RuleName(RULE_NORMAL_PAO+1) = "一般役満の包"
+	RuleDescription(RULE_NORMAL_PAO+1) = "大三元・大四喜を確定させたプレイヤーの責任払いの有無を設定します"
+	RuleTxt(0, RULE_NORMAL_PAO+1) = "あり", "なし"
+
 return

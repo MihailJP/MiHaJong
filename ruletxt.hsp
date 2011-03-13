@@ -413,6 +413,7 @@
 	} else {
 		AddRuleText "大明槓の包", RuleStat(RULE_MINKAN_PAO)
 	}
+	AddRuleText "大三元・大四喜の包", RuleStat(RULE_NORMAL_PAO)
 	/* ルール設定を表示　ここまで */
 
 return
