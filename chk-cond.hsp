@@ -81,6 +81,8 @@
 	if ((getKangFlag(GameStat, KANG_FLAG) == 1)&&(TsumoAgari == 1)) {
 		if ((getKangFlag(GameStat, KANG_CHAINFLAG) >= 2)&&(getRuleInt(RULE_RENKAN_KAIHOH) != 0)) {
 			addyaku tmpYakuInfo, "連槓開花", 2
+		} else:if ((getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN) >= 0)&&(getRuleInt(RULE_MINKAN_PAO) >= 3)&&(getRuleInt(RULE_MINKAN_PAO) <= 5)) {
+			addyaku tmpYakuInfo, "明槓開花", 2
 		} else {
 			addyaku tmpYakuInfo, "嶺上開花", 1
 		}

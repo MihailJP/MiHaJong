@@ -408,6 +408,11 @@
 	AddRuleText3 "八仙過海", RuleStat(RULE_EIGHT_FLOWERS)
 #endif
 	AddRuleText "雀頭符の重複", RuleStat(RULE_DOUBLE_YAKU_WIND_PAIR)
+	if (Rule(RULE_MINKAN_PAO+1) == 6) {
+		chatappend "*** 大明槓の嶺上開花は錯和\n"
+	} else {
+		AddRuleText "大明槓の包", RuleStat(RULE_MINKAN_PAO)
+	}
 	/* ルール設定を表示　ここまで */
 
 return
