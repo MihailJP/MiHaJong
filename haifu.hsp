@@ -481,7 +481,7 @@ return
 					}
 				}
 				haifuP(tmpcnt*6+5) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt)+(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)*TILE_NONFLOWER_MAX))*2, 2)
-				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(ActivePlayer*6+5) += "<span"+haifudoraClass(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt))+">"}
+				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(tmpcnt*6+5) += "<span"+haifudoraClass(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt))+">"}
 				HThaifuP(tmpcnt*6+5) += strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt)+(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)*TILE_NONFLOWER_MAX)), 1)
 				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(tmpcnt*6+5) += "</span>"}
 			}
