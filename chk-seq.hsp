@@ -569,7 +569,7 @@
 		}
 	}
 	/* 三色山三順 */
-	if (getRuleInt(RULE_SANSHOKU_OKASANJUN) != 0) {
+	if (getRuleInt(RULE_SANSHOKU_YAMASANJUN) != 0) {
 		yakuFlag = 0
 		repeat 3,1
 			if ((ShunzCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(ShunzCount(cnt+TILE_SUIT_CIRCLES+2) >= 1)&&(ShunzCount(cnt+TILE_SUIT_BAMBOOS+4) >= 1)) {yakuFlag = 1}
@@ -582,7 +582,7 @@
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "大混連套")
 		if ((yakuFlag)&&(tmpyakuCensored == 0)) {
-			switch getRuleInt(RULE_SANSHOKU_OKASANJUN)
+			switch getRuleInt(RULE_SANSHOKU_YAMASANJUN)
 				case 1:
 					addyaku tmpYakuInfo, "混連環套", 1
 				swbreak
