@@ -375,15 +375,18 @@
 #module
 #include "const.as"
 #deffunc checkpao var GameStat, int PassivePlayer, int ActivePlayer
-	// 大三元・大四喜包の判定 ここから
+	// 包の判定 ここから
 	debug "包の条件を判定します。"
-	DragonPons = 0: WindPons = 0
+	DragonPons = 0: WindPons = 0: NumOfKangs = 0
 	repeat MeldPointer(GameStat, PassivePlayer), 1
 		if (((getMeld(GameStat, MELD_TILECODE, cnt , PassivePlayer)\TILE_CODE_MAXIMUM) >= TILE_DRAGON_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt , PassivePlayer)\TILE_CODE_MAXIMUM) <= TILE_DRAGON_MAX)) {
 			DragonPons++
 		}
 		if (((getMeld(GameStat, MELD_TILECODE, cnt , PassivePlayer)\TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt , PassivePlayer)\TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {
 			WindPons++
+		}
+		if ((getMeld(GameStat, MELD_TILECODE, cnt , PassivePlayer)/MELD_TYPE_STEP) >= MELD_QUAD) {
+			NumOfKangs++
 		}
 	loop
 	if ((DragonPons == 3)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN) == -1)) {
@@ -396,7 +399,12 @@
 		setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI, ActivePlayer
 		setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI, PassivePlayer
 	}
-	// 大三元・大四喜包の判定 ここまで
+	if ((getRuleInt(RULE_SUUKANTSU) >= 2)&&(NumOfKangs == 4)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_SIKANG) == -1)) {
+		debug strf("プレイヤー [%d] は、四槓子を包になります。", kangPlayer)
+		setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_SIKANG, ActivePlayer
+		setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_SIKANG, PassivePlayer
+	}
+	// 包の判定 ここまで
 	return
 #global
 

@@ -40,11 +40,14 @@
 	loop
 	/* 四槓子 */
 	if (Kangzi == 4) {
-		if (getRuleInt(RULE_SUUKANTSU) != 0) {
-			addyakuman tmpYakuInfo, "四槓子", 2
-		} else {
-			addyakuman tmpYakuInfo, "四槓子", 1
-		}
+		switch getRuleInt(RULE_SUUKANTSU)
+			case 0: case 2:
+				addyakuman tmpYakuInfo, "四槓子", 1
+				swbreak
+			case 1: case 3:
+				addyakuman tmpYakuInfo, "四槓子", 2
+				swbreak
+		swend
 		// 四槓子が成立したら対々和の成立を解除する(青天井ルール用)
 		delyaku tmpYakuInfo, "対々和"
 	}

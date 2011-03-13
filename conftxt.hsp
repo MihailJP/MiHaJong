@@ -333,8 +333,8 @@
 	RuleTxt(0, RULE_CHINIISOH+1) = "６飜", "４飜"
 
 	RuleName(RULE_SUUKANTSU+1) = "四槓子"
-	RuleDescription(RULE_SUUKANTSU+1) = "四槓子の飜数を設定します"
-	RuleTxt(0, RULE_SUUKANTSU+1) = "役満", "ダブル役満"
+	RuleDescription(RULE_SUUKANTSU+1) = "四槓子の飜数と包の有無を設定します"
+	RuleTxt(0, RULE_SUUKANTSU+1) = "役満", "ダブル役満", "役満(包あり)", "ダブル役満(包あり)"
 
 	RuleName(RULE_TENHOH+1) = "天和"
 	RuleDescription(RULE_TENHOH+1) = "天和の飜数を設定します"
