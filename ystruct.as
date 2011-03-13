@@ -5,7 +5,7 @@
  */
 
 #module yakuStruct BasePoints, CoreHan, BonusHan, \
-DoraQuantity, UraDoraQuantity, AkaDoraQuantity, AliceDora, FlowerQuantity, \
+DoraQuantity, UraDoraQuantity, AkaDoraQuantity, AoDoraQuantity, AliceDora, FlowerQuantity, \
 AgariPoints, yakuNameList, yakuValList, yakumanNameList
 #include "const.as"
 #modinit
@@ -15,6 +15,7 @@ AgariPoints, yakuNameList, yakuValList, yakumanNameList
 	DoraQuantity = 0
 	UraDoraQuantity = 0
 	AkaDoraQuantity = 0
+	AoDoraQuantity = 0
 	AliceDora = 0
 	FlowerQuantity = 0
 	dim AgariPoints, NUM_OF_DIGIT_GROUPS
@@ -34,6 +35,7 @@ AgariPoints, yakuNameList, yakuValList, yakumanNameList
 		case YAKUINF_DORA: DoraQuantity = value: swbreak
 		case YAKUINF_URADORA: UraDoraQuantity = value: swbreak
 		case YAKUINF_AKADORA: AkaDoraQuantity = value: swbreak
+		case YAKUINF_AODORA: AoDoraQuantity = value: swbreak
 		case YAKUINF_ALICEDORA: AliceDora = value: swbreak
 		case YAKUINF_FLOWER: FlowerQuantity = value: swbreak
 		default: AgariPoints(Index-YAKUINF_POINTS) = value: swbreak
@@ -54,6 +56,7 @@ AgariPoints, yakuNameList, yakuValList, yakumanNameList
 		case YAKUINF_DORA: DoraQuantity += value: swbreak
 		case YAKUINF_URADORA: UraDoraQuantity += value: swbreak
 		case YAKUINF_AKADORA: AkaDoraQuantity += value: swbreak
+		case YAKUINF_AODORA: AoDoraQuantity += value: swbreak
 		case YAKUINF_ALICEDORA: AliceDora += value: swbreak
 		case YAKUINF_FLOWER: FlowerQuantity += value: swbreak
 		default: AgariPoints(Index-YAKUINF_POINTS) += value: swbreak
@@ -74,6 +77,7 @@ AgariPoints, yakuNameList, yakuValList, yakumanNameList
 		case YAKUINF_DORA: return DoraQuantity: swbreak
 		case YAKUINF_URADORA: return UraDoraQuantity: swbreak
 		case YAKUINF_AKADORA: return AkaDoraQuantity: swbreak
+		case YAKUINF_AODORA: return AoDoraQuantity: swbreak
 		case YAKUINF_ALICEDORA: return AliceDora: swbreak
 		case YAKUINF_FLOWER: return FlowerQuantity: swbreak
 		case YAKUINF_YAKULIST: return yakuNameList: swbreak

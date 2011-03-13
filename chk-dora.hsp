@@ -60,21 +60,33 @@
 			swbreak
 		swend
 	loop
-	// 赤ドラを数える
+	// 赤ドラや青ドラを数える
 	repeat NUM_OF_TILES_IN_HAND
-		if (getHand(GameStat, HAND_REDTILE, cnt, targetPlayer) != 0) {
-			if ((getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) > TILE_MIN)&&(getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) < TILE_NONFLOWER_MAX)) {
-				if (getRuleInt(RULE_REDTILE_CHIP) < 3) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1}
-				addYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 1
-			}
-		}
+		switch getHand(GameStat, HAND_REDTILE, cnt, targetPlayer)
+			case 1:
+				if ((getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) > TILE_MIN)&&(getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) < TILE_NONFLOWER_MAX)) {
+					gosub *akadoraZaehlen
+				}
+				swbreak
+			case 2:
+				if ((getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) > TILE_MIN)&&(getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) < TILE_NONFLOWER_MAX)) {
+					gosub *aodoraZaehlen
+				}
+				swbreak
+		swend
 	loop
 	repeat MeldPointer(GameStat, targetPlayer), 1
-		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x01) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1: addYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 1}
-		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x02) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1: addYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 1}
-		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x04) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1: addYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 1}
+		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x01) {gosub *akadoraZaehlen}
+		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x02) {gosub *akadoraZaehlen}
+		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x04) {gosub *akadoraZaehlen}
 		if (getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) >= MELD_QUAD) {
-			if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x08) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1: addYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 1}
+			if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x08) {gosub *akadoraZaehlen}
+		}
+		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x10) {gosub *aodoraZaehlen}
+		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x20) {gosub *aodoraZaehlen}
+		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x40) {gosub *aodoraZaehlen}
+		if (getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) >= MELD_QUAD) {
+			if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x80) {gosub *aodoraZaehlen}
 		}
 	loop
 	// アリスドラ
@@ -209,4 +221,19 @@
 #endif
 	}
 return
+
+*akadoraZaehlen
+	if (getRuleInt(RULE_REDTILE_CHIP) < 3) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1}
+	addYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 1
+	return
+
+*aodoraZaehlen
+	switch getRuleInt(RULE_BLUE_TILES)
+		case 0: addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1: swbreak
+		case 1: addYakuInfo tmpYakuInfo, YAKUINF_DORA, 2: swbreak
+		case 2: addYakuInfo tmpYakuInfo, YAKUINF_DORA, -1: swbreak
+	swend
+	addYakuInfo tmpYakuInfo, YAKUINF_AODORA, 1
+	return
+
 #global

@@ -309,6 +309,15 @@ return
 		// オールマイティー扱いはせず、赤ドラと同じ扱い
 		setWall GameStat, WALL_REDTILE, 96, 1 // 白ポッチ
 	}
+	if (getRuleInt(RULE_BLUE_ONE)/4 == 1) {setWall GameStat, WALL_REDTILE, 3, 2} // 青一萬
+	if (getRuleInt(RULE_BLUE_NINE)/4 == 1) {setWall GameStat, WALL_REDTILE, 7, 2} // 青九萬
+	if (getRuleInt(RULE_BLUE_ONE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 11, 2} // 青一筒
+	if (getRuleInt(RULE_BLUE_FIVE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 27, 2} // 青五筒
+	if (getRuleInt(RULE_BLUE_NINE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 43, 2} // 青九筒
+	if (getRuleInt(RULE_BLUE_ONE)\2 == 1) {setWall GameStat, WALL_REDTILE, 47, 2} // 青一索
+	if (getRuleInt(RULE_BLUE_FIVE)\2 == 1) {setWall GameStat, WALL_REDTILE, 63, 2} // 青五索
+	if (getRuleInt(RULE_BLUE_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 79, 2} // 青九索
+	if (getRuleInt(RULE_BLUE_LVFA)) {setWall GameStat, WALL_REDTILE, 103, 2} // 青発
 #else
 	repeat 9*4, 0: setWall GameStat, WALL_TILECODE, cnt, cnt/4+1: loop // 萬子
 	repeat 9*4, 9*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+2: loop // 筒子
@@ -366,6 +375,16 @@ return
 		// オールマイティー扱いはせず、赤ドラと同じ扱い
 		setWall GameStat, WALL_REDTILE, 124, 1 // 白ポッチ
 	}
+	if (getRuleInt(RULE_BLUE_ONE)/4 == 1) {setWall GameStat, WALL_REDTILE, 3, 2} // 青一萬
+	if (getRuleInt(RULE_BLUE_FIVE)/4 == 1) {setWall GameStat, WALL_REDTILE, 19, 2} // 青五萬
+	if (getRuleInt(RULE_BLUE_NINE)/4 == 1) {setWall GameStat, WALL_REDTILE, 35, 2} // 青九萬
+	if (getRuleInt(RULE_BLUE_ONE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 39, 2} // 青一筒
+	if (getRuleInt(RULE_BLUE_FIVE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 55, 2} // 青五筒
+	if (getRuleInt(RULE_BLUE_NINE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 71, 2} // 青九筒
+	if (getRuleInt(RULE_BLUE_ONE)\2 == 1) {setWall GameStat, WALL_REDTILE, 75, 2} // 青一索
+	if (getRuleInt(RULE_BLUE_FIVE)\2 == 1) {setWall GameStat, WALL_REDTILE, 91, 2} // 青五索
+	if (getRuleInt(RULE_BLUE_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 107, 2} // 青九索
+	if (getRuleInt(RULE_BLUE_LVFA)) {setWall GameStat, WALL_REDTILE, 131, 2} // 青発
 #endif
 	if (GameMode != 2) {
 #ifdef SANMAX

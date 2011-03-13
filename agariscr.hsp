@@ -236,6 +236,7 @@
 		if (strmid(tmpdat, 0, 4) == "花牌") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
 #endif
 		if (strmid(tmpdat, 0, 6) == "赤ドラ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+		if (strmid(tmpdat, 0, 6) == "青ドラ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
 		if (strmid(tmpdat, 0, 6) == "裏ドラ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
 		if (strmid(tmpdat, 0, 6) == "アリス") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
 		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) < 1000) {

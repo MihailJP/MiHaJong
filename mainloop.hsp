@@ -337,6 +337,8 @@ repeat
 			dsplay SND_DAHAI2
 		} else:if ((haiCurrentSutehaiAkaDora == 1)||(getDoraFlag(GameStat, DORA_OMOTE, haiCurrentSutehai) > 0)) {
 			dsplay SND_DAHAI2
+		} else:if ((haiCurrentSutehaiAkaDora == 2)&&(getRuleInt(RULE_BLUE_TILES) != 2)) {
+			dsplay SND_DAHAI2
 		} else {
 			dsplay SND_DAHAI1
 		}

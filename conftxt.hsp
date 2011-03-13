@@ -1419,4 +1419,27 @@
 	RuleDescription(RULE_RED_NORTH+1) = "赤ドラ(北風牌)の有無を設定します"
 	RuleTxt(0, RULE_RED_NORTH+1) = "なし", "１枚", "２枚", "３枚", "４枚"
 
+	RuleName(RULE_BLUE_TILES+1) = "青ドラ"
+	RuleDescription(RULE_BLUE_TILES+1) = "青ドラの価値を設定します"
+	RuleTxt(0, RULE_BLUE_TILES+1) = "１飜", "２飜", "マイナス１飜"
+
+	RuleName(RULE_BLUE_ONE+1) = "青一"
+	RuleDescription(RULE_BLUE_ONE+1) = "青ドラ(１の牌)の有無を設定します"
+	RuleTxt(0, RULE_BLUE_ONE+1) = "なし", "筒子", "索子", "筒子と索子", "萬子", "萬子と筒子", "萬子と索子", "全種類"
+
+	RuleName(RULE_BLUE_FIVE+1) = "青五"
+	RuleDescription(RULE_BLUE_FIVE+1) = "青ドラ(５の牌)の有無を設定します"
+	RuleTxt(0, RULE_BLUE_FIVE+1) = "なし", "筒子", "索子", "筒子と索子"
+#ifndef SANMAX
+	RuleTxt(4, RULE_BLUE_FIVE+1) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
+#endif
+
+	RuleName(RULE_BLUE_NINE+1) = "青九"
+	RuleDescription(RULE_BLUE_NINE+1) = "青ドラ(９の牌)の有無を設定します"
+	RuleTxt(0, RULE_BLUE_NINE+1) = "なし", "筒子", "索子", "筒子と索子", "萬子", "萬子と筒子", "萬子と索子", "全種類"
+
+	RuleName(RULE_BLUE_LVFA+1) = "青発"
+	RuleDescription(RULE_BLUE_LVFA+1) = "青ドラ(発)の有無を設定します"
+	RuleTxt(0, RULE_BLUE_LVFA+1) = "なし", "あり"
+
 return

@@ -401,6 +401,10 @@ return
 		tmpAkaDoraFlag2 = (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x02)/0x02
 		tmpAkaDoraFlag3 = (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x04)/0x04
 		tmpAkaDoraFlag4 = (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x08)/0x08
+		tmpAkaDoraFlag1 += (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x10)/0x10*2
+		tmpAkaDoraFlag2 += (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x20)/0x20*2
+		tmpAkaDoraFlag3 += (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x40)/0x40*2
+		tmpAkaDoraFlag4 += (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x80)/0x80*2
 		gmode gmode_gdi
 		switch getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP
 			// óºñ ÇÃè¨Ç≥Ç¢ë§Ç©ï”í£ÇÃÇVÇ©ÇÁÇÃãh

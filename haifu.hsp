@@ -481,7 +481,7 @@ return
 					}
 				}
 				haifuP(tmpcnt*6+5) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt)+(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)*TILE_NONFLOWER_MAX))*2, 2)
-				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(ActivePlayer*6+3) += "<td"+haifudoraClass(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt))+">"}
+				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(ActivePlayer*6+5) += "<span"+haifudoraClass(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt))+">"}
 				HThaifuP(tmpcnt*6+5) += strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt)+(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)*TILE_NONFLOWER_MAX)), 1)
 				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(tmpcnt*6+5) += "</span>"}
 			}
@@ -497,10 +497,14 @@ return
 		if (getFlowerFlag(GameStat, tmpcnt)&FLOWER_CHRYSANTHEMUM) {haifuP(tmpcnt*6+5) += "ãe": HThaifuP(tmpcnt*6+5) += "["}
 		if (getFlowerFlag(GameStat, tmpcnt)&FLOWER_BAMBOO) {haifuP(tmpcnt*6+5) += "í|": HThaifuP(tmpcnt*6+5) += "\\"}
 		repeat MeldPointer(GameStat, tmpcnt), 1
-			tmpAkaDoraFlag1 = getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x01
-			tmpAkaDoraFlag2 = getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x02
-			tmpAkaDoraFlag3 = getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x04
-			tmpAkaDoraFlag4 = getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x08
+			tmpAkaDoraFlag1 = (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x01)/0x01
+			tmpAkaDoraFlag2 = (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x02)/0x02
+			tmpAkaDoraFlag3 = (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x04)/0x04
+			tmpAkaDoraFlag4 = (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x08)/0x08
+			tmpAkaDoraFlag1 += (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x10)/0x10*2
+			tmpAkaDoraFlag2 += (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x20)/0x20*2
+			tmpAkaDoraFlag3 += (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x40)/0x40*2
+			tmpAkaDoraFlag4 += (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x80)/0x80*2
 			#define HT_NakiMianzi(%1,%2,%3)  if (%2) {HThaifuP(tmpcnt*6+5) += "<span"+haifudoraClass(%2)+">"}: HThaifuP(tmpcnt*6+5) += strmid((%3), (%1)+((%2)*TILE_NONFLOWER_MAX), 1): if (%2) {HThaifuP(tmpcnt*6+5) += "</span>"}
 			switch (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)/MELD_TYPE_STEP)
 				/* ñæèáéq */

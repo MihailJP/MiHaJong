@@ -417,6 +417,11 @@
 	AddRuleText "赤牌チップ", RuleStat(RULE_REDTILE_CHIP)
 	AddRuleText1 "赤西", RuleStat(RULE_RED_WEST)
 	AddRuleText3 "赤北", RuleStat(RULE_RED_NORTH)
+	AddRuleText1 "青ドラ", RuleStat(RULE_BLUE_TILES)
+	AddRuleText2 "青一", RuleStat(RULE_BLUE_ONE)
+	AddRuleText2 "青五", RuleStat(RULE_BLUE_FIVE)
+	AddRuleText2 "青九", RuleStat(RULE_BLUE_NINE)
+	AddRuleText3 "青発", RuleStat(RULE_BLUE_LVFA)
 	/* ルール設定を表示　ここまで */
 
 return
