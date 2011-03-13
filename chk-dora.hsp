@@ -64,7 +64,7 @@
 	repeat NUM_OF_TILES_IN_HAND
 		if (getHand(GameStat, HAND_REDTILE, cnt, targetPlayer) != 0) {
 			if ((getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) > TILE_MIN)&&(getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) < TILE_NONFLOWER_MAX)) {
-				addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1
+				if (getRuleInt(RULE_REDTILE_CHIP) < 3) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, 1}
 				addYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 1
 			}
 		}

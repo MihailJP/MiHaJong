@@ -165,13 +165,15 @@
 			repeat NUM_OF_DIGIT_GROUPS
 				setYakuInfo yakuInfo, YAKUINF_POINTS+cnt, tmpScore(cnt)
 			loop
-			addquan tmpYakuInfo, "ƒhƒ‰", getYakuInfo(tmpYakuInfo, YAKUINF_DORA)-getYakuInfo(tmpYakuInfo, YAKUINF_URADORA)-getYakuInfo(tmpYakuInfo, YAKUINF_AKADORA)-getYakuInfo(tmpYakuInfo, YAKUINF_FLOWER)
+			omoteDoraQuantity = getYakuInfo(tmpYakuInfo, YAKUINF_DORA)-getYakuInfo(tmpYakuInfo, YAKUINF_URADORA)-getYakuInfo(tmpYakuInfo, YAKUINF_FLOWER)
+			if (getRuleInt(RULE_REDTILE_CHIP) < 3) {omoteDoraQuantity -= getYakuInfo(tmpYakuInfo, YAKUINF_AKADORA)}
+			addquan tmpYakuInfo, "ƒhƒ‰", omoteDoraQuantity
 #ifdef SANMAX
 			addquan tmpYakuInfo, "ƒKƒŠ", getYakuInfo(tmpYakuInfo, YAKUINF_FLOWER)
 #else
 			addquan tmpYakuInfo, "‰Ô”v", getYakuInfo(tmpYakuInfo, YAKUINF_FLOWER)
 #endif
-			addquan tmpYakuInfo, "Ôƒhƒ‰", getYakuInfo(tmpYakuInfo, YAKUINF_AKADORA)
+			if (getRuleInt(RULE_REDTILE_CHIP) < 3) {addquan tmpYakuInfo, "Ôƒhƒ‰", getYakuInfo(tmpYakuInfo, YAKUINF_AKADORA)}
 			addquan tmpYakuInfo, "— ƒhƒ‰", getYakuInfo(tmpYakuInfo, YAKUINF_URADORA)
 			addquan tmpYakuInfo, "ƒAƒŠƒXj‹V", getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)
 			setYakuInfoTxt yakuInfo, YAKUINF_YAKULIST, getYakuInfo(tmpYakuInfo, YAKUINF_YAKULIST)

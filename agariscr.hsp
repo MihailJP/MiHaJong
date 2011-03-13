@@ -321,13 +321,24 @@
 	}
 	ChipAmount = 0
 	if (getMenzen(GameStat, agariPlayer) == 1) {
-		ChipAmount = getYakuInfo(yakuInfo, YAKUINF_URADORA)+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA) // 裏ドラと赤ドラ
+		ChipAmount = getYakuInfo(yakuInfo, YAKUINF_URADORA)+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA) // 裏ドラとアリスドラ
 		if ((getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_DOUBLE_IPPATSU)) {
 			if (getRuleInt(RULE_RIICHI_IPPATSU) != 1) {
 				ChipAmount++ // 一発祝儀
 			}
 		}
 	}
+	switch getRuleInt(RULE_REDTILE_CHIP)
+		case 0: case 3:
+			if (getMenzen(GameStat, agariPlayer) == 1) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)}
+			swbreak
+		case 1: case 4:
+			if (getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) != RIICHI_NO) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)}
+			swbreak
+		case 2: case 5:
+			ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)
+			swbreak
+	swend
 	if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
 		// 役満祝儀
 		switch getRuleInt(RULE_LIMITHAND_BONUS)
@@ -347,7 +358,19 @@
 		pos 90, 582
 		if (getMenzen(GameStat, agariPlayer) == 1) {
 			if (getYakuInfo(yakuInfo, YAKUINF_URADORA) > 0) {tmptxt += "裏ドラ:"+getYakuInfo(yakuInfo, YAKUINF_URADORA)+"枚 "}
-			if (getYakuInfo(yakuInfo, YAKUINF_AKADORA) > 0) {tmptxt += "赤ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"枚 "}
+		}
+		if (getYakuInfo(yakuInfo, YAKUINF_AKADORA) > 0) {
+			switch getRuleInt(RULE_REDTILE_CHIP)
+				case 0: case 3:
+					if (getMenzen(GameStat, agariPlayer) == 1) {tmptxt += "赤ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"枚 "}
+					swbreak
+				case 1: case 4:
+					if (getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) != RIICHI_NO) {tmptxt += "赤ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"枚 "}
+					swbreak
+				case 2: case 5:
+					tmptxt += "赤ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"枚 "
+					swbreak
+			swend
 		}
 		if (getYakuInfo(yakuInfo, YAKUINF_ALICEDORA) > 0) {tmptxt += "アリス:"+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA)+"枚 "}
 		if (getMenzen(GameStat, agariPlayer) == 1) {

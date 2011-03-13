@@ -1407,4 +1407,8 @@
 	RuleDescription(RULE_NORMAL_PAO+1) = "大三元・大四喜を確定させたプレイヤーの責任払いの有無を設定します"
 	RuleTxt(0, RULE_NORMAL_PAO+1) = "あり", "なし"
 
+	RuleName(RULE_REDTILE_CHIP+1) = "赤牌祝儀"
+	RuleDescription(RULE_REDTILE_CHIP+1) = "赤牌に対するチップの有無を設定します"
+	RuleTxt(0, RULE_REDTILE_CHIP+1) = "門前のみ", "立直時のみ", "常時", "門前のみ(非ドラ)", "立直時のみ(非ドラ)", "常時(非ドラ)"
+
 return
