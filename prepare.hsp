@@ -307,16 +307,17 @@ return
 	repeat 9*4, 9*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+2: loop // ìõéq
 	repeat 9*4, 18*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+3: loop // çıéq
 	repeat 7*4, 27*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+4: loop // éöîv
-	if (getRuleInt(RULE_FLOWER_TILES) != 0) {
-		if (getRuleInt(RULE_FLOWER_TILES) == 3) {
-			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-65: loop // ãGêﬂîv
-			repeat 4, 35*4: setWall GameStat, WALL_TILECODE, cnt, cnt-64: loop // ëêñÿîv
-		} else:if (getRuleInt(RULE_FLOWER_TILES) == 1) {
-			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-65: loop // ãGêﬂîv
-		} else {
-			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-60: loop // ëêñÿîv
-		}
-	}
+	switch getRuleInt(RULE_FLOWER_TILES)
+		case 3:
+			repeat 4, 35*4: setWall GameStat, WALL_TILECODE, cnt, cnt-35*4+TILE_PLANT_MIN: loop // ëêñÿîv
+			/* FALLTHRU */
+		case 1:
+			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-34*4+TILE_SEASON_MIN: loop // ãGêﬂîv
+			swbreak
+		case 2:
+			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-34*4+TILE_PLANT_MIN: loop // ëêñÿîv
+			swbreak
+	swend
 	if (getRuleInt(RULE_RED_FIVE) != 2) {
 		setWall GameStat, WALL_REDTILE, 16, 1 // ê‘å‹‰›
 		setWall GameStat, WALL_REDTILE, 52, 1 // ê‘å‹ìõ
