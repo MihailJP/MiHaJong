@@ -314,3 +314,22 @@
 	if ((tmpFlag == 0)&&(getRuleInt(RULE_BUTTOBI_BORDER) == 1)) {dobonFlag = 1}
 	return dobonFlag
 #global
+
+#module
+#include "const.as"
+#defcfunc isRichiReqSatisfied var GameStat, int targetPlayer
+	Flag = 2
+	repeat NUM_OF_DIGIT_GROUPS-1,1
+		if (getScore(GameStat, targetPlayer, cnt) < 0) {Flag = 0: break}
+		if (getScore(GameStat, targetPlayer, cnt) > 0) {Flag = 1: break}
+	loop
+	if (Flag == 2) {
+		if (getScore(GameStat, targetPlayer, 0) < 10) {Flag = 0}
+		else:if ((getScore(GameStat, targetPlayer, 0) == 10)&&(getRuleInt(RULE_RIICHI_REQUISITE) == 1)) {Flag = 0}
+		else {Flag = 1}
+	}
+	if (getRuleInt(RULE_RIICHI_REQUISITE) == 2) {Flag = 1}
+	if (getRuleInt(RULE_PENALTY_NEGATIVE) != 6) {Flag = 1}
+	importScore GameStat, tmpScoreArray
+	return Flag
+#global

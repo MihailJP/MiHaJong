@@ -49,15 +49,17 @@ return
 		loop
 	}
 	ButtonFlag_Richi=0
+	if (isRichiReqSatisfied(GameStat, ActivePlayer)) {
 #ifdef SANMAX
-	if (((Shanten <= 0)&&((getMenzen(GameStat, ActivePlayer) == 1)||(getRuleInt(RULE_RIICHI_SHIBARI) != 0))&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))&&((getDrawPointer(GameStat)+2) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))) {
+		if (((Shanten <= 0)&&((getMenzen(GameStat, ActivePlayer) == 1)||(getRuleInt(RULE_RIICHI_SHIBARI) != 0))&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))&&((getDrawPointer(GameStat)+2) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))) {
 #else
-	if (((Shanten <= 0)&&((getMenzen(GameStat, ActivePlayer) == 1)||(getRuleInt(RULE_RIICHI_SHIBARI) != 0))&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))&&((getDrawPointer(GameStat)+3) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))) {
+		if (((Shanten <= 0)&&((getMenzen(GameStat, ActivePlayer) == 1)||(getRuleInt(RULE_RIICHI_SHIBARI) != 0))&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))&&((getDrawPointer(GameStat)+3) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))) {
 #endif
-		objsize 50, 30
-		pos 620, 500: button gosub "F1/立直", *playerRichi: tooltip@ stat-STATBOX, "リーチをします(クリックしたあとに牌を選択してください)"
-		objidpointer++
-		ButtonFlag_Richi=1
+			objsize 50, 30
+			pos 620, 500: button gosub "F1/立直", *playerRichi: tooltip@ stat-STATBOX, "リーチをします(クリックしたあとに牌を選択してください)"
+			objidpointer++
+			ButtonFlag_Richi=1
+		}
 	}
 	targetPlayer = ActivePlayer: haiDaoPaiable = chkdaopaiability(GameStat, ActivePlayer)
 	ButtonFlag_Kyuushu=0

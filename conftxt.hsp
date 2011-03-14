@@ -1450,4 +1450,8 @@
 	RuleDescription(RULE_BUTTOBI_BORDER+1) = "丁度０点を飛びとみなすかどうかを設定します"
 	RuleTxt(0, RULE_BUTTOBI_BORDER+1) = "０点未満", "０点以下"
 
+	RuleName(RULE_RIICHI_REQUISITE+1) = "立直時点棒要件"
+	RuleDescription(RULE_RIICHI_REQUISITE+1) = "立直宣言時に持っていなければならない点数を設定します(飛び無しルールでは無視されます)"
+	RuleTxt(0, RULE_RIICHI_REQUISITE+1) = "1000点以上", "1100点以上", "なし"
+
 return

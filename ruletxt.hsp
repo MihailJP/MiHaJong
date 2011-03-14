@@ -423,6 +423,14 @@
 	AddRuleText2 "青九", RuleStat(RULE_BLUE_NINE)
 	AddRuleText2 "青発", RuleStat(RULE_BLUE_LVFA)
 	AddRuleText3 "青牌チップ", RuleStat(RULE_BLUE_CHIP)
+	if (Rule(RULE_PENALTY_NEGATIVE+1) != 6) {
+		AddRuleText "飛び", RuleStat(RULE_MINKAN_PAO)
+		if (Rule(RULE_RIICHI_REQUISITE+1) == 2) {
+			chatappend "*** 持ち点が足りなくても立直可能\n"
+		} else {
+			chatappend "*** 立直宣言時"+RuleStat(RULE_RIICHI_REQUISITE)+"必要\n"
+		}
+	}
 	/* ルール設定を表示　ここまで */
 
 return

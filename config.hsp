@@ -229,6 +229,7 @@ return
 					}
 					swbreak
 				case RULE_BUTTOBI_BORDER:
+				case RULE_RIICHI_REQUISITE:
 					if (Rule(RULE_PENALTY_NEGATIVE+1) == 6) {gosub *config_strikeout}
 					swbreak
 			swend

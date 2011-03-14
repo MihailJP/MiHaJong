@@ -240,6 +240,10 @@ repeat
 				// 残り４枚未満の時はリーチ無効
 				teDahai -= DAHAI_TYPE_RIICHI-DAHAI_TYPE_NORMAL
 				warn strf("山牌の残数要件を満たしていません。打牌コード [%d] に補正しました。", teDahai)
+			} else: if (isRichiReqSatisfied(GameStat, ActivePlayer)) {
+				// 点棒条件を満たしていない時はリーチ無効
+				teDahai -= DAHAI_TYPE_RIICHI-DAHAI_TYPE_NORMAL
+				warn strf("持ち点の要件を満たしていません。打牌コード [%d] に補正しました。", teDahai)
 			}
 		}
 		/* オープン立直をするときの処理 */
@@ -248,6 +252,10 @@ repeat
 				// 残り４枚未満の時はリーチ無効
 				teDahai -= DAHAI_TYPE_OPENRIICHI-DAHAI_TYPE_NORMAL
 				warn strf("山牌の残数要件を満たしていません。打牌コード [%d] に補正しました。", teDahai)
+			} else: if (isRichiReqSatisfied(GameStat, ActivePlayer)) {
+				// 点棒条件を満たしていない時はリーチ無効
+				teDahai -= DAHAI_TYPE_OPENRIICHI-DAHAI_TYPE_NORMAL
+				warn strf("持ち点の要件を満たしていません。打牌コード [%d] に補正しました。", teDahai)
 			}
 		}
 		if (getRuleInt(RULE_OPEN_RIICHI) == 0) {
