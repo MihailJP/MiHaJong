@@ -340,6 +340,17 @@
 			ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)
 			swbreak
 	swend
+	switch getRuleInt(RULE_BLUE_CHIP)
+		case 0:
+			if (getMenzen(GameStat, agariPlayer) == 1) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)}
+			swbreak
+		case 1:
+			if (getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) != RIICHI_NO) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)}
+			swbreak
+		case 2:
+			ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)
+			swbreak
+	swend
 	if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
 		// 役満祝儀
 		switch getRuleInt(RULE_LIMITHAND_BONUS)
@@ -370,6 +381,19 @@
 					swbreak
 				case 2: case 5:
 					tmptxt += "赤ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"枚 "
+					swbreak
+			swend
+		}
+		if (getYakuInfo(yakuInfo, YAKUINF_AODORA) > 0) {
+			switch getRuleInt(RULE_BLUE_CHIP)
+				case 0:
+					if (getMenzen(GameStat, agariPlayer) == 1) {tmptxt += "青ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"枚 "}
+					swbreak
+				case 1:
+					if (getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) != RIICHI_NO) {tmptxt += "青ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"枚 "}
+					swbreak
+				case 2:
+					tmptxt += "青ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"枚 "
 					swbreak
 			swend
 		}

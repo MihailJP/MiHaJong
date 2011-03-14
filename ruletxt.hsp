@@ -421,7 +421,8 @@
 	AddRuleText2 "青一", RuleStat(RULE_BLUE_ONE)
 	AddRuleText2 "青五", RuleStat(RULE_BLUE_FIVE)
 	AddRuleText2 "青九", RuleStat(RULE_BLUE_NINE)
-	AddRuleText3 "青発", RuleStat(RULE_BLUE_LVFA)
+	AddRuleText2 "青発", RuleStat(RULE_BLUE_LVFA)
+	AddRuleText3 "青牌チップ", RuleStat(RULE_BLUE_CHIP)
 	/* ルール設定を表示　ここまで */
 
 return

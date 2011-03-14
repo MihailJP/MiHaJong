@@ -1421,7 +1421,7 @@
 
 	RuleName(RULE_BLUE_TILES+1) = "青ドラ"
 	RuleDescription(RULE_BLUE_TILES+1) = "青ドラの価値を設定します"
-	RuleTxt(0, RULE_BLUE_TILES+1) = "１飜", "２飜", "マイナス１飜"
+	RuleTxt(0, RULE_BLUE_TILES+1) = "１飜", "２飜", "マイナス１飜", "０飜"
 
 	RuleName(RULE_BLUE_ONE+1) = "青一"
 	RuleDescription(RULE_BLUE_ONE+1) = "青ドラ(１の牌)の有無を設定します"
@@ -1441,5 +1441,9 @@
 	RuleName(RULE_BLUE_LVFA+1) = "青発"
 	RuleDescription(RULE_BLUE_LVFA+1) = "青ドラ(発)の有無を設定します"
 	RuleTxt(0, RULE_BLUE_LVFA+1) = "なし", "あり"
+
+	RuleName(RULE_BLUE_CHIP+1) = "青牌祝儀"
+	RuleDescription(RULE_BLUE_CHIP+1) = "青牌に対するチップの有無を設定します"
+	RuleTxt(0, RULE_BLUE_CHIP+1) = "門前のみ", "立直時のみ", "常時", "なし"
 
 return
