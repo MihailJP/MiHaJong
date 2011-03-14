@@ -330,6 +330,5 @@
 	}
 	if (getRuleInt(RULE_RIICHI_REQUISITE) == 2) {Flag = 1}
 	if (getRuleInt(RULE_PENALTY_NEGATIVE) != 6) {Flag = 1}
-	importScore GameStat, tmpScoreArray
 	return Flag
 #global
