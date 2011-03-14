@@ -13,7 +13,7 @@ tmpUraFlag = 0
 tmpAliceFlag = 0
 yakumanflag = 0
 AgariPlayerPriority = -1
-haiTmpDoraPointer = getDoraPointer(GameStat)
+origDoraPointer = getDoraPointer(GameStat)
 exportYakuPoint yakuInfo, AgariPointRaw
 if ((hncnKyokuEndType == ENDKYOKU_AGARI)||(hncnKyokuEndType == ENDKYOKU_CHONBO)) {
 	repeat NUM_OF_PLAYERS-1
@@ -25,7 +25,6 @@ if ((hncnKyokuEndType == ENDKYOKU_AGARI)||(hncnKyokuEndType == ENDKYOKU_CHONBO))
 				if (cnt > 1) {break}
 				swbreak
 		swend
-		haiTmpDoraPointer = getDoraPointer(GameStat)
 		if (cnt > 0) {
 			if (TsumoAgari == 0) {
 				hncnKyokuEndType = ENDKYOKU_AGARI: agariPlayer++: agariPlayer = agariPlayer \ NUM_OF_PLAYERS
@@ -48,6 +47,7 @@ if ((hncnKyokuEndType == ENDKYOKU_AGARI)||(hncnKyokuEndType == ENDKYOKU_CHONBO))
 	loop
 }
 repeat NUM_OF_PLAYERS-1
+	setDoraPointer GameStat, origDoraPointer
 	switch getRuleInt(RULE_MULTIPLE_MAHJONG)
 		case 0: case 1:
 			if (cnt > 0) {break}
@@ -56,7 +56,6 @@ repeat NUM_OF_PLAYERS-1
 			if (cnt > 1) {break}
 			swbreak
 	swend
-	haiTmpDoraPointer = getDoraPointer(GameStat)
 	if (cnt == 0) {
 		agariPlayer = FirstAgariPlayer
 		if (TsumoAgari == 0) {
@@ -91,6 +90,7 @@ repeat NUM_OF_PLAYERS-1
 				if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(haiFuriten == 1)||(getDoujunFuriten(GameStat, agariPlayer) == 1)||((getRuleInt(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_NO))) {
 					hncnKyokuEndType = ENDKYOKU_CHONBO // ƒ`ƒ‡ƒ“ƒ{‚É‚·‚é
 				}
+				exportYakuPoint yakuInfo, AgariPointRaw
 			} else {
 				continue cnt
 			}
@@ -135,7 +135,7 @@ repeat NUM_OF_PLAYERS-1
 		chatappend "*** "+tmpResultDesc+"\n"
 		statmes tmpResultDesc
 		await 1500
-		tmpDoraPointer = getDoraPointer(GameStat)
+		tmpDoraPointer = origDoraPointer
 		AlicePointer = tmpDoraPointer-getYakuInfo(YakuInfo, YAKUINF_ALICEDORA)*2-2
 		if ((getMenzen(GameStat, agariPlayer) == 1)&&(getRuleInt(RULE_ALICE) != 0)) {
 			hncnMsg = "j‹V”»’è"

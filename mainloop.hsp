@@ -39,6 +39,12 @@ repeat
 	if (getAgariChain(GameStat) == -1) {setAgariChain GameStat, 1}
 	/* 半荘の初期化と配牌を行なう */
 	gosub *tableinit
+	/* デバッグ用のコード(バグ検証のときを除いてコメントアウトしておくこと！) */
+//	tmpTiles = 04,05,06,08,08,12,13,14,14,15,16,26,28
+//	repeat 13: setHand GameStat, 0, cnt, (getPlayer(GameStat)+3)\4, tmpTiles(cnt): loop
+//	tmpTiles = 04,04,06,07,08,16,17,18,26,26,27,28,28
+//	repeat 13: setHand GameStat, 0, cnt, (getPlayer(GameStat)+1)\4, tmpTiles(cnt): loop
+//	setHand GameStat, 0, 0, (getPlayer(GameStat))\4, 27
 	/* 配牌終了時の処理 */
 	repeat NUM_OF_PLAYERS: setHandStat GameStat, cnt, 0:lipai GameStat, cnt: loop
 	ActivePlayer = getRound(GameStat)\NUM_OF_PLAYERS // 最初に親から捨牌を行なう
