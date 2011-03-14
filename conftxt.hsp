@@ -1454,4 +1454,12 @@
 	RuleDescription(RULE_RIICHI_REQUISITE+1) = "—ง’ผ้พษมฤขศฏ๊ฮศ็ศข“_”๐Ý’่ตÜท(”๒ั–ณต[ลอ–ณณ๊Üท)"
 	RuleTxt(0, RULE_RIICHI_REQUISITE+1) = "1000“_ศใ", "1100“_ศใ", "ศต"
 
+	RuleName(RULE_SANBAIMAN_BORDER+1) = "O”{–"
+	RuleDescription(RULE_SANBAIMAN_BORDER+1) = "O”{–ฦท้ใส”๐Ý’่ตÜท(๊]๐ÜÜธ)"
+	RuleTxt(0, RULE_SANBAIMAN_BORDER+1) = "PPใสศใ", "POใสศใ"
+
+	RuleName(RULE_KAZOE_BORDER+1) = "”ฆ–๐–"
+	RuleDescription(RULE_KAZOE_BORDER+1) = "”ฆ–๐–ฦท้ใส”๐Ý’่ตÜท(๊]๐ÜÜธ)"
+	RuleTxt(0, RULE_KAZOE_BORDER+1) = "PRใสศใ", "PQใสศใ", "ศต"
+
 return

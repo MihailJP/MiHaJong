@@ -186,17 +186,13 @@ return
 					swbreak
 #endif
 				case RULE_ROUND_TO_MANGAN:
+				case RULE_SANBAIMAN_BORDER:
+				case RULE_KAZOE_BORDER:
 					if (Rule(RULE_LIMITLESS+1) > 0) {gosub *config_strikeout}
 					swbreak
 #ifndef SANMAX
 				case RULE_TANRON:
 					if (Rule(RULE_HUALONG+1) == 0) {gosub *config_strikeout}
-					swbreak
-				case RULE_GINKEI_HOUSHUN:
-					if ((Rule(RULE_FLOWER_TILES+1) == 0)||(Rule(RULE_FLOWER_TILES) == 2)) {gosub *config_strikeout}
-					swbreak
-				case RULE_BAXIAN_JUSHOU:
-					if (Rule(RULE_FLOWER_TILES+1) != 3) {gosub *config_strikeout}
 					swbreak
 #endif
 				case RULE_ANKAN_CHANKAN:
@@ -206,12 +202,14 @@ return
 				case RULE_OWN_FLOWER:
 					if (Rule(RULE_FLOWER_TILES+1) == 0) {gosub *config_strikeout}
 					swbreak
+				case RULE_GINKEI_HOUSHUN:
 				case RULE_FOUR_SEASONS:
 					if ((Rule(RULE_FLOWER_TILES+1) == 0)||(Rule(RULE_FLOWER_TILES+1) == 2)) {gosub *config_strikeout}
 					swbreak
 				case RULE_FOUR_FLOWERS:
 					if ((Rule(RULE_FLOWER_TILES+1) == 0)||(Rule(RULE_FLOWER_TILES+1) == 1)) {gosub *config_strikeout}
 					swbreak
+				case RULE_BAXIAN_JUSHOU:
 				case RULE_EIGHT_FLOWERS:
 					if (Rule(RULE_FLOWER_TILES+1) != 3) {gosub *config_strikeout}
 					swbreak
@@ -224,7 +222,8 @@ return
 					swbreak
 				case RULE_BLUE_TILES:
 				case RULE_BLUE_CHIP:
-					if ((Rule(RULE_BLUE_ONE+1) == 0)&&(Rule(RULE_BLUE_FIVE+1) == 0)&&(Rule(RULE_BLUE_NINE+1) == 0)&&(Rule(RULE_BLUE_LVFA+1) == 0)) {
+					if (Rule(RULE_CHIP+1) == 0) {gosub *config_strikeout}
+					else: if ((Rule(RULE_BLUE_ONE+1) == 0)&&(Rule(RULE_BLUE_FIVE+1) == 0)&&(Rule(RULE_BLUE_NINE+1) == 0)&&(Rule(RULE_BLUE_LVFA+1) == 0)) {
 						gosub *config_strikeout
 					}
 					swbreak

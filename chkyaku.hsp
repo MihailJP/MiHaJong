@@ -95,9 +95,9 @@
 				if (tmpScore(0) > 2000) {tmpScore(0) = 2000}
 			} else: if (tmpTotalHan < 8) {
 				tmpScore(0) = 3000
-			} else: if (tmpTotalHan < 11) {
+			} else: if ((tmpTotalHan < 10)||((tmpTotalHan < 11)&&(getRuleInt(RULE_SANBAIMAN_BORDER) == 0))) {
 				tmpScore(0) = 4000
-			} else: if (tmpTotalHan < 13) {
+			} else: if ((tmpTotalHan < 12)||((tmpTotalHan < 13)&&(getRuleInt(RULE_KAZOE_BORDER) == 0))||((tmpTotalHan < 1000)&&(getRuleInt(RULE_KAZOE_BORDER) == 2))) {
 				tmpScore(0) = 6000
 			} else {
 				tmpScore(0) = 8000
