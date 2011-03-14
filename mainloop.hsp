@@ -513,10 +513,12 @@ repeat
 	await 5000
 	// ƒnƒRŠ„‚êI—¹
 	if (getRuleInt(RULE_PENALTY_NEGATIVE) != 6) {
-		if (getScore(GameStat,0) < 0) {break}
-		if (getScore(GameStat,1) < 0) {break}
-		if (getScore(GameStat,2) < 0) {break}
-		if (getScore(GameStat,3) < 0) {break}
+		if (isDobon(GameStat,PLAYER_EAST)) {break}
+		if (isDobon(GameStat,PLAYER_SOUTH)) {break}
+		if (isDobon(GameStat,PLAYER_WEST)) {break}
+#ifndef SANMA
+		if (isDobon(GameStat,PLAYER_NORTH)) {break}
+#endif
 	}
 	// ˜a—¹‚è~‚ß
 	if (getRuleInt(RULE_AGARIYAME) != 1) {

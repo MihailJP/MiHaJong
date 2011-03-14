@@ -302,3 +302,15 @@
 	if (tmpscoretxt == "") {tmpscoretxt += "0"}
 	return tmpscoretxt
 #global
+
+#module
+#include "const.as"
+#defcfunc isDobon var GameStat, int targetPlayer
+	exportScore GameStat, tmpArray
+	tmpFlag = bignum_flag(tmpArray, targetPlayer)
+	
+	dobonFlag = 0
+	if (tmpFlag == -1) {dobonFlag = 1}
+	if ((tmpFlag == 0)&&(getRuleInt(RULE_BUTTOBI_BORDER) == 1)) {dobonFlag = 1}
+	return dobonFlag
+#global

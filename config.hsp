@@ -223,9 +223,13 @@ return
 					}
 					swbreak
 				case RULE_BLUE_TILES:
+				case RULE_BLUE_CHIP:
 					if ((Rule(RULE_BLUE_ONE+1) == 0)&&(Rule(RULE_BLUE_FIVE+1) == 0)&&(Rule(RULE_BLUE_NINE+1) == 0)&&(Rule(RULE_BLUE_LVFA+1) == 0)) {
 						gosub *config_strikeout
 					}
+					swbreak
+				case RULE_BUTTOBI_BORDER:
+					if (Rule(RULE_PENALTY_NEGATIVE+1) == 6) {gosub *config_strikeout}
 					swbreak
 			swend
 			if (cnt == 19) {borderedtxt2 "通信対戦時のルール設定はホスト側の設定が適用されます", BorderTextX, 590, 255, 255, 255, 1, 20, 192, 192, 192}

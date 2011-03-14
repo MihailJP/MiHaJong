@@ -683,13 +683,13 @@ swend
 	switch getRuleInt(RULE_PENALTY_NEGATIVE)
 		case 1: case 2:
 #ifdef SANMA
-			if ((getScore(GameStat,PLAYER_EAST) < 0)||(getScore(GameStat,PLAYER_SOUTH) < 0)||(getScore(GameStat,PLAYER_WEST) < 0)) {
+			if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))) {
 #else
-			if ((getScore(GameStat,PLAYER_EAST) < 0)||(getScore(GameStat,PLAYER_SOUTH) < 0)||(getScore(GameStat,PLAYER_WEST) < 0)||(getScore(GameStat,PLAYER_NORTH) < 0)) {
+			if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))||(isDobon(GameStat,PLAYER_NORTH))) {
 #endif
 				dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 				repeat NUM_OF_ACTUAL_PLAYERS
-					if (getScore(GameStat,cnt) < 0) {
+					if (isDobon(GameStat,cnt)) {
 						hncnPointDelta(cnt) -= 100*getRuleInt(RULE_PENALTY_NEGATIVE)
 						hncnPointDelta(AgariPlayerPriority) += 100*getRuleInt(RULE_PENALTY_NEGATIVE)
 					}
@@ -703,13 +703,13 @@ swend
 		case 3: case 4: case 5:
 			if (getRuleInt(RULE_CHIP) != 0) {
 #ifdef SANMA
-				if ((getScore(GameStat,PLAYER_EAST) < 0)||(getScore(GameStat,PLAYER_SOUTH) < 0)||(getScore(GameStat,PLAYER_WEST) < 0)) {
+				if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))) {
 #else
-				if ((getScore(GameStat,PLAYER_EAST) < 0)||(getScore(GameStat,PLAYER_SOUTH) < 0)||(getScore(GameStat,PLAYER_WEST) < 0)||(getScore(GameStat,PLAYER_NORTH) < 0)) {
+				if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))||(isDobon(GameStat,PLAYER_NORTH))) {
 #endif
 					dim hncnPointDelta, NUM_OF_PLAYERS,NUM_OF_DIGIT_GROUPS
 					repeat NUM_OF_ACTUAL_PLAYERS
-						if (getScore(GameStat,cnt) < 0) {
+						if (isDobon(GameStat,cnt)) {
 							hncnPointDelta(cnt) -= (getRuleInt(RULE_PENALTY_NEGATIVE)-2)
 							hncnPointDelta(AgariPlayerPriority) += (getRuleInt(RULE_PENALTY_NEGATIVE)-2)
 						}
