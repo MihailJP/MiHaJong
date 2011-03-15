@@ -115,12 +115,31 @@ return
 		repeat BorderThickness*2+1
 			BorderOffsetX = cnt-BorderThickness
 			if ((BorderOffsetX*BorderOffsetX+BorderOffsetY*BorderOffsetY) <= (BorderThickness*BorderThickness+BorderThickness/2)) {
-				pos BorderTextX+BorderOffsetX, BorderTextY+BorderOffsetY: print BorderText
+				if (TextWidthRate != 1.0) {
+					tmpscr = ginfo_sel
+					buffer SCR_TEXT_RESIZE_BUF, 1200, TextSize: gsel SCR_TEXT_RESIZE_BUF
+					color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
+					color 255, 255, 255: pos 0, 0: font fontname, TextSize, Style: print BorderText
+					buffer SCR_TEXT_BUF, 1200, TextSize: gsel SCR_TEXT_BUF
+					color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
+					color 255, 255, 255: pos 600, 0
+					gzoom int(1200.0*TextWidthRate), TextSize, SCR_TEXT_RESIZE_BUF, 0, 0, 1200, TextSize, 1
+					gsel tmpscr: pos BorderTextX+BorderOffsetX, BorderTextY+BorderOffsetY: gmode gmode_pixela, 600, TextSize
+					gcopy SCR_TEXT_BUF, 0, 0, 600, TextSize
+					gmode gmode_gdi
+				} else {
+					pos BorderTextX+BorderOffsetX, BorderTextY+BorderOffsetY: print BorderText
+				}
 			}
 		loop
 	loop
 	if (TextSize) {
 		tmpscr = ginfo_sel
+		if (TextWidthRate != 1.0) {
+			buffer SCR_TEXT_RESIZE_BUF, 1200, TextSize: gsel SCR_TEXT_RESIZE_BUF
+			color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
+			color 255, 255, 255: pos 0, 0: font fontname, TextSize, Style: print BorderText
+		}
 		buffer SCR_TEXT_BUF, 1200, TextSize: gsel SCR_TEXT_BUF
 		color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
 		repeat TextSize
@@ -129,7 +148,12 @@ return
 			color BorderTextR-(BorderTextR-GradR)*ColorSlideDividend/ColorSlideDivisor, BorderTextG-(BorderTextG-GradG)*ColorSlideDividend/ColorSlideDivisor, BorderTextB-(BorderTextB-GradB)*ColorSlideDividend/ColorSlideDivisor
 			line 599, cnt, 0, cnt
 		loop
-		color 255, 255, 255: pos 600, 0: font fontname, TextSize, Style: print BorderText
+		if (TextWidthRate == 1.0) {
+			color 255, 255, 255: pos 600, 0: font fontname, TextSize, Style: print BorderText
+		} else {
+			color 255, 255, 255: pos 600, 0
+			gzoom int(1200.0*TextWidthRate), TextSize, SCR_TEXT_RESIZE_BUF, 0, 0, 1200, TextSize, 1
+		}
 		gsel tmpscr: pos BorderTextX, BorderTextY: gmode gmode_pixela, 600, TextSize
 		gcopy SCR_TEXT_BUF, 0, 0, 600, TextSize
 		gmode gmode_gdi
@@ -157,7 +181,7 @@ return
 	BorderTextX = BorderTextX1: BorderTextY = BorderTextY1
 	BorderTextR = BorderTextR1: BorderTextG = BorderTextG1: BorderTextB = BorderTextB1
 	BorderThickness = 1
-	TextSize = 0
+	TextSize = 0: TextWidthRate = 1.0
 	gosub *doputtext
 return
 
@@ -168,7 +192,19 @@ int BorderThickness2, int TextSize2, int GradR2, int GradG2, int GradB2, int Sty
 	BorderTextR = BorderTextR2: BorderTextG = BorderTextG2: BorderTextB = BorderTextB2
 	BorderThickness = BorderThickness2
 	TextSize = TextSize2: GradR = GradR2: GradG = GradG2: GradB = GradB2
-	Style = Style2
+	Style = Style2: TextWidthRate = 1.0
+	gosub *doputtext
+return
+
+#deffunc borderedtxt3 str BorderText3, int BorderTextX3, int BorderTextY3, int BorderTextR3, int BorderTextG3, int BorderTextB3, \
+int BorderThickness3, int TextSize3, int GradR3, int GradG3, int GradB3, int Style3, \
+double TextWidthRate3
+	BorderText = BorderText3
+	BorderTextX = BorderTextX3: BorderTextY = BorderTextY3
+	BorderTextR = BorderTextR3: BorderTextG = BorderTextG3: BorderTextB = BorderTextB3
+	BorderThickness = BorderThickness3
+	TextSize = TextSize3: GradR = GradR3: GradG = GradG3: GradB = GradB3
+	Style = Style3: TextWidthRate = TextWidthRate3
 	gosub *doputtext
 return
 #global

@@ -228,7 +228,19 @@
 		if (tmpdat != "") {ResultDesc += " "}
 		ResultDesc += tmpdat
 		pos 90+(cnt\2)*240, 140+(cnt/2)*32: tmpXpointer=90+(cnt\2)*240: tmpYpointer=140+(cnt/2)*32
-		borderedtxt2a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24
+		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
+			if (strlen(tmpdat) > 16) {
+				borderedtxt2a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24
+			} else {
+				borderedtxt3a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24, , 16.0/double(strlen(tmpdat))
+			}
+		} else {
+			if (strlen(tmpdat) > 12) {
+				borderedtxt2a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24
+			} else {
+				borderedtxt3a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24, , 12.0/double(strlen(tmpdat))
+			}
+		}
 		if (strmid(tmpdat, 0, 4) == "ƒhƒ‰") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
 #ifdef SANMAX
 		if (strmid(tmpdat, 0, 4) == "ƒKƒŠ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
