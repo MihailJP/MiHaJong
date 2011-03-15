@@ -346,22 +346,22 @@
 			case FUURO_ANKAN: case FUURO_KAKAN:
 				haifureckanproc kangPlayer // 搶槓が無い場合、牌譜に記録
 				swbreak
-			case FUURO_DAIMINKAN:
-				/* バグ防止の為 */
-				repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
-				repeat NUM_OF_PLAYERS: setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, cnt, 0: loop
-				/* 大明槓の包判定用 */
-				if ((getRuleInt(RULE_MINKAN_PAO) != 0)&&(getRuleInt(RULE_MINKAN_PAO) != 3)) {
-					setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, ActivePlayer
-					setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, PassivePlayer
-				}
-				swbreak
 #ifdef SANMAX
 			case FUURO_NORTH:
 				haifurecnorthproc kangPlayer
 				swbreak
 #endif
 		swend
+	}
+	if (Mode == FUURO_DAIMINKAN) {
+		/* バグ防止の為 */
+		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
+		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, cnt, 0: loop
+		/* 大明槓の包判定用 */
+		if ((getRuleInt(RULE_MINKAN_PAO) != 0)&&(getRuleInt(RULE_MINKAN_PAO) != 3)) {
+			setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, ActivePlayer
+			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, PassivePlayer
+		}
 	}
 	gosub *redrscreen@
 	await 1000

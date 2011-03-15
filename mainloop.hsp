@@ -45,6 +45,8 @@ repeat
 //	tmpTiles = 04,04,06,07,08,16,17,18,26,26,27,28,28
 //	repeat 13: setHand GameStat, 0, cnt, (getPlayer(GameStat)+1)\4, tmpTiles(cnt): loop
 //	setHand GameStat, 0, 0, (getPlayer(GameStat))\4, 27
+//	tmpTiles = 12,12,12,13,14,15,16,17,17,17,36,36,36
+//	repeat 13: setHand GameStat, 0, cnt, (getPlayer(GameStat))\4, tmpTiles(cnt): loop
 	/* ”z”vI—¹‚Ìˆ— */
 	repeat NUM_OF_PLAYERS: setHandStat GameStat, cnt, 0:lipai GameStat, cnt: loop
 	ActivePlayer = getRound(GameStat)\NUM_OF_PLAYERS // Å‰‚Ée‚©‚çÌ”v‚ğs‚È‚¤
@@ -140,7 +142,7 @@ repeat
 			/* ©–Ì˜a‚µ‚½‚±‚Æ‚ğ•Ï”‚Éİ’è */
 			TsumoAgari = 1
 			countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
-			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRuleInt(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))||((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != 1)&&(getRuleInt(RULE_MINKAN_PAO) == 6))) {
+			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRuleInt(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))||((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != -1)&&(getRuleInt(RULE_MINKAN_PAO) == 6))) {
 				/* ”›‚è‚ğ–‚½‚µ‚Ä‚¢‚È‚¢ê‡(–ğ‚ª–³‚¢‚È‚Ç)cö˜a‚Æ‚µ‚Ä‹Ç‚ğI—¹‚·‚é */
 				hncnKyokuEndType = ENDKYOKU_CHONBO
 			} else {
@@ -211,22 +213,22 @@ repeat
 #endif
 		/* ˆÃÈ‚·‚é‚Æ‚«‚Ìˆ— */
 		if ((teDahai >= DAHAI_TYPE_KAN)&&(teDahai < DAHAI_TYPE_KAN+DAHAI_TYPE_STEP)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(getTotalKang(GameStat) < (4+getRuleInt(RULE_FIFTH_KONG)))) {
-			fuuroproc GameStat, haiRon, haiChi, hncnKyokuEndType, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkaDora, ActivePlayer, PassivePlayer, FUURO_ANKAN
 			if ((getRuleInt(RULE_MINKAN_PAO) == 1)||(getRuleInt(RULE_MINKAN_PAO) == 4)) {
 				setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
 				setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
 			}
+			fuuroproc GameStat, haiRon, haiChi, hncnKyokuEndType, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkaDora, ActivePlayer, PassivePlayer, FUURO_ANKAN
 			if (stat == 1) {break}
 			/* È‚ğ‚·‚é‚Æ—äã”v‚Ì•ª©–Ì‚ª‘‚¦‚é‚Ì‚ÅŸ‚Ì‘Å”v‚Ö */
 			continue ActivePlayer
 		}
 		/* ‰ÁÈ‚·‚é‚Ìˆ— */
 		if ((teDahai >= DAHAI_TYPE_KAKAN)&&(teDahai < DAHAI_TYPE_KAKAN+DAHAI_TYPE_KAN)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(getTotalKang(GameStat) < (4+getRuleInt(RULE_FIFTH_KONG)))) {
-			fuuroproc GameStat, haiRon, haiChi, hncnKyokuEndType, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkaDora, ActivePlayer, PassivePlayer, FUURO_KAKAN
 			if ((getRuleInt(RULE_MINKAN_PAO) == 1)||(getRuleInt(RULE_MINKAN_PAO) == 4)) {
 				setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
 				setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
 			}
+			fuuroproc GameStat, haiRon, haiChi, hncnKyokuEndType, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkaDora, ActivePlayer, PassivePlayer, FUURO_KAKAN
 			if (stat == 1) {break}
 			/* È‚ğ‚·‚é‚Æ—äã”v‚Ì•ª©–Ì‚ª‘‚¦‚é‚Ì‚ÅŸ‚Ì‘Å”v‚Ö */
 			continue ActivePlayer
