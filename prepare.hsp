@@ -482,6 +482,7 @@ return
 	if ((getRuleInt(RULE_DORA_TWICE) == 1)||((getRuleInt(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
 		addDeadWallLength GameStat, 2 /* ドラドラ卓なら王牌の数を増やす */
 	}
+	calcWareme GameStat // 割れ目
 	if (GameMode = 1) { // サーバーの場合、牌山のデータを送信
 #ifdef SANMAX
 		tmpNumberOfTiles = 108

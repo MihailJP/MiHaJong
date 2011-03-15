@@ -231,6 +231,27 @@ PreviousMeld, ConnectionLost
 #modcfunc getRichiCounterFlag
 	return haiRichiCounter
 
+#modfunc calcWareme
+#ifdef SANMAX
+	if ((getRuleInt(RULE_WAREME) != 0)||(getRuleInt(RULE_KAIMENKAZE) != 0)) {
+		haiWareme = ((GameRound-(GameRound/4))+24+(haiDice1+haiDice2)-1)\3
+#ifdef SANMA4
+		haiWareme = ((0)+24+(haiDice1+haiDice2)-1)\3
+		switch (GameRound\NUM_OF_PLAYERS)
+			case 0: tobePlayed = 0, 1, 2: swbreak
+			case 1: tobePlayed = 1, 2, 3: swbreak
+			case 2: tobePlayed = 2, 3, 0: swbreak
+			case 3: tobePlayed = 3, 0, 1: swbreak
+		swend
+		haiWareme = tobePlayed(haiWareme)
+#endif
+	}
+#else
+	if ((getRuleInt(RULE_WAREME) != 0)||(getRuleInt(RULE_KAIMENKAZE) != 0)) {
+		haiWareme = ((GameRound\4)+32+(haiDice1+haiDice2)-1)\4
+	}
+#endif
+	return
 #modcfunc getWareme
 	return haiWareme
 
@@ -401,26 +422,6 @@ PreviousMeld, ConnectionLost
 		default:
 			haiRinshanPointer = 135
 	swend
-#endif
-	// 開門位置
-#ifdef SANMAX
-	if ((getRuleInt(RULE_WAREME) != 0)||(getRuleInt(RULE_KAIMENKAZE) != 0)) {
-		haiWareme = ((GameRound-(GameRound/4))+24+(haiDice1+haiDice2)-1)\3
-#ifdef SANMA4
-		haiWareme = ((0)+24+(haiDice1+haiDice2)-1)\3
-		switch (GameRound\NUM_OF_PLAYERS)
-			case 0: tobePlayed = 0, 1, 2: swbreak
-			case 1: tobePlayed = 1, 2, 3: swbreak
-			case 2: tobePlayed = 2, 3, 0: swbreak
-			case 3: tobePlayed = 3, 0, 1: swbreak
-		swend
-		haiWareme = tobePlayed(haiWareme)
-#endif
-	}
-#else
-	if ((getRuleInt(RULE_WAREME) != 0)||(getRuleInt(RULE_KAIMENKAZE) != 0)) {
-		haiWareme = ((GameRound\4)+32+(haiDice1+haiDice2)-1)\4
-	}
 #endif
 	haiTian = 1 // 親の第一打牌がまだ（天和の判定などに使う）
 	repeat NUM_OF_PLAYERS: MenzenFlag(cnt) = 1: loop
