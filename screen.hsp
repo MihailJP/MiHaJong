@@ -53,7 +53,11 @@ return
 	loop
 
 	font fontname, 96, 0
-	borderedtxt2 hncnMsg, 110, 250, 255, 255, 255, 2, 96, 192, 192, 192
+	if (strlen(hncnMsg) > 8) {
+		borderedtxt3 hncnMsg, 110, 250, 255, 255, 255, 2, 96, 192, 192, 192, 0, 8.0/double(strlen(hncnMsg))
+	} else {
+		borderedtxt2 hncnMsg, 110+24*(8-strlen(hncnMsg)), 250, 255, 255, 255, 2, 96, 192, 192, 192
+	}
 
 	redraw 1
 return
@@ -203,7 +207,11 @@ return
 	putcenterpanel GameStat, watchmodeflag, bgColorR, bgColorG, bgColorB, hncnturnname
 	/* ‰æ–Ê’†‰›‚É•\Ž¦‚·‚éî•ñ */
 	font fontname, 96, 0
-	borderedtxt2 hncnMsg, 110, 250, 255, 255, 255, 2, 96, 192, 192, 192
+	if (strlen(hncnMsg) > 8) {
+		borderedtxt3 hncnMsg, 110, 250, 255, 255, 255, 2, 96, 192, 192, 192, 0, 8.0/double(strlen(hncnMsg))
+	} else {
+		borderedtxt2 hncnMsg, 110+24*(8-strlen(hncnMsg)), 250, 255, 255, 255, 2, 96, 192, 192, 192
+	}
 	/* Ä•`‰æ‚µ‚Ä–ß‚é */
 	redraw 1
 return
@@ -628,7 +636,11 @@ return
 			color 255, 255, 240
 		}
 	}
-	borderedtxt2a tmptxt, 125, 235, ginfo_r, ginfo_g, ginfo_b, 1, 18, 1
+	if (strlen(tmptxt) > 45) {
+		borderedtxt3a tmptxt, 125, 235, ginfo_r, ginfo_g, ginfo_b, 1, 18, 1, 45.0/double(strlen(tmptxt))
+	} else {
+		borderedtxt2a tmptxt, 125, 235, ginfo_r, ginfo_g, ginfo_b, 1, 18, 1
+	}
 	return
 #global
 
@@ -648,47 +660,65 @@ return
 
 #deffunc putCall int player
 	font fontname, 96, 0
-	if (haiCall(player) == "  ƒƒ“  ") {color 224, 224, 224} // —DæŒ ‚Ì‚È‚¢ƒƒ“
-	if (haiCall(player) == "@ƒƒ“@") {color 255, 224, 192} // —DæŒ ‚Ì‚ ‚éƒƒ“
-	if (haiCall(player) == "@ƒcƒ‚@") {color 255, 255, 192}
-	if (haiCall(player) == "@ƒ`[@") {color 240, 255, 192}
-	if (haiCall(player) == "@ƒ|ƒ“@") {color 192, 224, 255}
-	if (haiCall(player) == "@ƒJƒ“@") {color 224, 192, 255}
-	if (haiCall(player) == " ƒŠ[ƒ` ") {color 255, 192, 192}
-	if (haiCall(player) == "@’®”v@") {color 192, 255, 192}
-	if (haiCall(player) == "@•s’®@") {color 192, 255, 255}
-	if (haiCall(player) == "‹ãŽí‹ã”v") {color 192, 192, 192}
-#ifdef SANMAX
-	if (haiCall(player) == "@ –k @") {color 224, 224, 224}
-#else
-	if (haiCall(player) == "@ ‰Ô @") {color 255, 192, 224}
-#endif
-	if (haiCall(player) == "@ö˜a@") {color 192, 32, 32}
-	if (strmid(haiCall(player), 0, 3)  == "  +") {color 192, 255, 192}
-	if (strmid(haiCall(player), 0, 2)  == " +") {color 192, 255, 192}
+	switch haiCall(player)
+		case "ƒŠ[ƒ`":
+			/* ”–Ô */
+			color 255, 192, 192: swbreak
+		case "ƒƒ“": // —DæŒ ‚Ì‚ ‚éƒƒ“
+			/* žòF */
+			color 255, 224, 192: swbreak
+		case "ƒcƒ‚": case "—¬‚µ–žŠÑ":
+		case "‚O": case "e—¬‚ê":
+			/* ‰©F */
+			color 255, 255, 192: swbreak
+		case "ƒ`[":
+			/* ‰©—Î */
+			color 240, 255, 192: swbreak
+		case "’®”v": case "˜A‘‘":
+			/* ”–—Î */
+			color 192, 255, 192: swbreak
+		case "•s’®":
+			/* …F */
+			color 192, 255, 255: swbreak
+		case "ƒ|ƒ“":
+			/* ”–Â */
+			color 192, 224, 255: swbreak
+		case "ƒJƒ“":
+			/* ”–Ž‡ */
+			color 224, 192, 255: swbreak
+		case "‰Ô":
+			/* “F */
+			color 255, 192, 224: swbreak
+		case " ƒƒ“ ": // —DæŒ ‚Ì‚È‚¢ƒƒ“
+		case "–k": case "‚QˆÊ":
+			/* ”’‹â */
+			color 224, 224, 224: swbreak
+		case "‹ãŽí‹ã”v":
+			/* ‹âF */
+			color 192, 192, 192: swbreak
+		case "ö˜a": case "˜a—¹•úŠü":
+		case "‹ò‘Ö": case "‘½”v": case "­”v":
+			/* ÔF */
+			color 192, 32, 32: swbreak
+		case "‚PˆÊ":
+			/* ‹àF */
+			color 255, 224, 32: swbreak
+		case "‚RˆÊ":
+			/* “ºF */
+			color 192, 96, 32: swbreak
+		case "‚SˆÊ":
+			/* Ž‡F */
+			color 128, 32, 192: swbreak
+	swend
 	if (strmid(haiCall(player), 0, 1)  == "+") {color 192, 255, 192}
-	if (strmid(haiCall(player), 0, 3)  == "  -") {color 255, 192, 192}
-	if (strmid(haiCall(player), 0, 2)  == " -") {color 255, 192, 192}
 	if (strmid(haiCall(player), 0, 1)  == "-") {color 255, 192, 192}
-	if (strmid(haiCall(player), 0, 4)  == "@{") {color 192, 255, 192}
-	if (strmid(haiCall(player), 0, 3)  == " {") {color 192, 255, 192}
 	if (strmid(haiCall(player), 0, 2)  == "{") {color 192, 255, 192}
-	if (strmid(haiCall(player), 0, 4)  == "@|") {color 255, 192, 192}
-	if (strmid(haiCall(player), 0, 3)  == " |") {color 255, 192, 192}
 	if (strmid(haiCall(player), 0, 2)  == "|") {color 255, 192, 192}
-	if (haiCall(player) == "@ ‚O @") {color 255, 255, 192}
-	if (haiCall(player) == "@˜A‘‘@") {color 192, 255, 192}
-	if (haiCall(player) == " e—¬‚ê ") {color 255, 255, 192}
-	if (haiCall(player) == "—¬‚µ–žŠÑ") {color 255, 255, 192}
-	if (haiCall(player) == "@‚PˆÊ@") {color 255, 224, 32}
-	if (haiCall(player) == "@‚QˆÊ@") {color 224, 224, 224}
-	if (haiCall(player) == "@‚RˆÊ@") {color 192, 96, 32}
-	if (haiCall(player) == "@‚SˆÊ@") {color 128, 32, 192}
-	if (haiCall(player) == "@‹ò‘Ö@") {color 192, 32, 32}
-	if (haiCall(player) == "@‘½”v@") {color 192, 32, 32}
-	if (haiCall(player) == "@­”v@") {color 192, 32, 32}
-	if (haiCall(player) == "˜a—¹•úŠü") {color 192, 32, 32}
-	borderedtxt2a haiCall(player), 110, 160, ginfo_r, ginfo_g, ginfo_b, 2, 96
+	if (strlen(haiCall(player)) > 8) {
+		borderedtxt3a haiCall(player), 110+24*(8-strlen(haiCall(player))), 160, ginfo_r, ginfo_g, ginfo_b, 2, 96, , 8.0/double(strlen(haiCall(player)))
+	} else {
+		borderedtxt2a haiCall(player), 110+24*(8-strlen(haiCall(player))), 160, ginfo_r, ginfo_g, ginfo_b, 2, 96
+	}
 return
 #global
 

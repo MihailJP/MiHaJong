@@ -230,15 +230,15 @@
 		pos 90+(cnt\2)*240, 140+(cnt/2)*32: tmpXpointer=90+(cnt\2)*240: tmpYpointer=140+(cnt/2)*32
 		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
 			if (strlen(tmpdat) > 16) {
-				borderedtxt2a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24
-			} else {
 				borderedtxt3a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24, , 16.0/double(strlen(tmpdat))
+			} else {
+				borderedtxt2a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24
 			}
 		} else {
 			if (strlen(tmpdat) > 12) {
-				borderedtxt2a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24
-			} else {
 				borderedtxt3a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24, , 12.0/double(strlen(tmpdat))
+			} else {
+				borderedtxt2a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24
 			}
 		}
 		if (strmid(tmpdat, 0, 4) == "ÉhÉâ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
@@ -423,7 +423,11 @@
 				case 1: tmptxt += "ññûèjãV:10ñá ": swbreak
 			swend
 		}
-		borderedtxt2a tmptxt, 90, 582, drawcol(0), drawcol(1), drawcol(2), 1, 16
+		if (strlen(tmptxt) > 40) {
+			borderedtxt3a tmptxt, 90, 582, drawcol(0), drawcol(1), drawcol(2), 1, 16, , 40.0/double(strlen(tmptxt))
+		} else {
+			borderedtxt2a tmptxt, 90, 582, drawcol(0), drawcol(1), drawcol(2), 1, 16
+		}
 		font fontname, 20, 0
 #ifdef SANMA
 		if (TsumoAgari == 1) {borderedtxt2a "É`ÉbÉv "+ChipAmount+"Å~ÇQñá", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}

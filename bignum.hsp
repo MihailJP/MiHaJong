@@ -187,26 +187,23 @@
 		if (bignum_flag(PointDelta, cnt) < 0) {flag_fullwidth = "|": flag_halfwidth = "-"}
 		if (abs(PointDelta(cnt, 0)) > 0) {
 			if (abs(PointDelta(cnt, 0)) > 0) {
-				setCall cnt, "@"+flag_fullwidth+strmid(tmpdigit, abs(PointDelta(cnt, 0))*2, 2)
+				setCall cnt, flag_fullwidth+strmid(tmpdigit, abs(PointDelta(cnt, 0))*2, 2)
 			}
 			if (abs(PointDelta(cnt, 0)) > 9) {
-				setCall cnt, " "+flag_fullwidth+strmid(tmpdigit, (abs(PointDelta(cnt, 0))/10)*2, 2)+strmid(tmpdigit, (abs(PointDelta(cnt, 0))\10)*2, 2)
+				setCall cnt, flag_fullwidth+strmid(tmpdigit, (abs(PointDelta(cnt, 0))/10)*2, 2)+strmid(tmpdigit, (abs(PointDelta(cnt, 0))\10)*2, 2)
 			}
 			if (abs(PointDelta(cnt, 0)) > 99) {
 				if (FirstValRate >= 100) {
-					setCall cnt, "  "+flag_halfwidth+(abs(PointDelta(cnt, 0)))
+					setCall cnt, flag_halfwidth+(abs(PointDelta(cnt, 0)))
 				} else {
 					setCall cnt, flag_fullwidth+strmid(tmpdigit, (abs(PointDelta(cnt, 0))/100)*2, 2)+strmid(tmpdigit, (abs(PointDelta(cnt, 0))\100/10)*2, 2)+strmid(tmpdigit, (abs(PointDelta(cnt, 0))\10)*2, 2)
 				}
 			}
 			if (abs(PointDelta(cnt, 0)) > 999) {
-				setCall cnt, " "+flag_halfwidth+(abs(PointDelta(cnt, 0)))
-			}
-			if (abs(PointDelta(cnt, 0)) > 99999) {
 				setCall cnt, flag_halfwidth+(abs(PointDelta(cnt, 0)))
 			}
 			if (abs(PointDelta(cnt, 0)) > 999999) {
-				setCall cnt, " "+flag_halfwidth+((abs(PointDelta(cnt,0)))\10000000/1000000)+((abs(PointDelta(cnt,0)))\1000000/100000)+((abs(PointDelta(cnt,0)))\100000/10000)+"–œ"
+				setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,0)))\10000000/1000000)+((abs(PointDelta(cnt,0)))\1000000/100000)+((abs(PointDelta(cnt,0)))\100000/10000)+"–œ"
 			}
 			if (abs(PointDelta(cnt, 0)) > 9999999) {
 				setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,0)))\100000000/10000000)+((abs(PointDelta(cnt,0)))\10000000/1000000)+((abs(PointDelta(cnt,0)))\1000000/100000)+((abs(PointDelta(cnt,0)))\100000/10000)+"–œ"
@@ -229,7 +226,7 @@
 					setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\100/10)+((abs(PointDelta(cnt,tmpNumDigit)))\10)+"."+((abs(PointDelta(cnt,tmpNumDigit-1)))\100000000/10000000)+strmid(tmpNumName, (tmpNumDigit-1)*4, 2)
 				}
 				if (abs(PointDelta(cnt, tmpNumDigit)) > 99) {
-					setCall cnt, " "+flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\1000/100)+((abs(PointDelta(cnt,tmpNumDigit)))\100/10)+((abs(PointDelta(cnt,tmpNumDigit)))\10)+strmid(tmpNumName, (tmpNumDigit-1)*4, 2)
+					setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\1000/100)+((abs(PointDelta(cnt,tmpNumDigit)))\100/10)+((abs(PointDelta(cnt,tmpNumDigit)))\10)+strmid(tmpNumName, (tmpNumDigit-1)*4, 2)
 				}
 				if (abs(PointDelta(cnt, tmpNumDigit)) > 999) {
 					setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\10000/1000)+((abs(PointDelta(cnt,tmpNumDigit)))\1000/100)+((abs(PointDelta(cnt,tmpNumDigit)))\100/10)+((abs(PointDelta(cnt,tmpNumDigit)))\10)+strmid(tmpNumName, (tmpNumDigit-1)*4, 2)
@@ -241,7 +238,7 @@
 					setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\1000000/100000)+((abs(PointDelta(cnt,tmpNumDigit)))\100000/10000)+"."+((abs(PointDelta(cnt,tmpNumDigit)))\10000/1000)+strmid(tmpNumName, (tmpNumDigit-1)*4+2, 2)
 				}
 				if (abs(PointDelta(cnt, tmpNumDigit)) > 999999) {
-					setCall cnt, " "+flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\10000000/1000000)+((abs(PointDelta(cnt,tmpNumDigit)))\1000000/100000)+((abs(PointDelta(cnt,tmpNumDigit)))\100000/10000)+strmid(tmpNumName, (tmpNumDigit-1)*4+2, 2)
+					setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\10000000/1000000)+((abs(PointDelta(cnt,tmpNumDigit)))\1000000/100000)+((abs(PointDelta(cnt,tmpNumDigit)))\100000/10000)+strmid(tmpNumName, (tmpNumDigit-1)*4+2, 2)
 				}
 				if (abs(PointDelta(cnt, tmpNumDigit)) > 9999999) {
 					setCall cnt, flag_halfwidth+((abs(PointDelta(cnt,tmpNumDigit)))\100000000/10000000)+((abs(PointDelta(cnt,tmpNumDigit)))\10000000/1000000)+((abs(PointDelta(cnt,tmpNumDigit)))\1000000/100000)+((abs(PointDelta(cnt,tmpNumDigit)))\100000/10000)+strmid(tmpNumName, (tmpNumDigit-1)*4+2, 2)

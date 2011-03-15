@@ -25,20 +25,20 @@
 	repeat NUM_OF_PLAYERS
 		setCall cnt, ""
 	loop
-	hncnMsg = "Å@èIóπÅ@"
+	hncnMsg = "èIóπ"
 	dsplay SND_PAGE: gosub *redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
-		if (Rank(cnt) == 1) {setCall cnt, "Å@ÇPà Å@"}
+		if (Rank(cnt) == 1) {setCall cnt, "ÇPà "}
 	loop: dsplay SND_TYPE: gosub *redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
-		if (Rank(cnt) == 2) {setCall cnt, "Å@ÇQà Å@"}
+		if (Rank(cnt) == 2) {setCall cnt, "ÇQà "}
 	loop: dsplay SND_TYPE: gosub *redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
-		if (Rank(cnt) == 3) {setCall cnt, "Å@ÇRà Å@"}
+		if (Rank(cnt) == 3) {setCall cnt, "ÇRà "}
 #ifndef SANMA
 	loop: dsplay SND_TYPE: gosub *redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
-		if (Rank(cnt) == 4) {setCall cnt, "Å@ÇSà Å@"}
+		if (Rank(cnt) == 4) {setCall cnt, "ÇSà "}
 #endif
 	loop: dsplay SND_TYPE: gosub *redrscreen: await 3000
 	if (getDeposit(GameStat)) {
@@ -408,7 +408,7 @@
 			swend
 		loop
 #endif
-		hncnMsg = " èáà ì_ "
+		hncnMsg = "èáà ì_"
 		gosub *putdelta
 		redraw 1: await 3000
 		pointcalc GameStat, hncnPointDelta
@@ -532,7 +532,7 @@
 	loop
 	deltatxt hncnPointScore, 1
 	repeat NUM_OF_ACTUAL_PLAYERS
-		if (getCall(cnt) == "") {setCall cnt, "Å@ ÇO Å@"}
+		if (getCall(cnt) == "") {setCall cnt, "ÇO"}
 	loop
 	hncnMsg = "ç≈èIê¨ê—"
 	repeat NUM_OF_PLAYERS

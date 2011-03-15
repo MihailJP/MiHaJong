@@ -151,8 +151,8 @@ repeat
 			}
 			TsumoAgari = 1
 			agariPlayer = ActivePlayer
-			setCall agariPlayer, "　ツモ　"
-			if (getHeavenHandFlag(GameStat) == 1) {setCall agariPlayer, "　ロン　"} //天和の時はロンと言う慣わし
+			setCall agariPlayer, "ツモ"
+			if (getHeavenHandFlag(GameStat) == 1) {setCall agariPlayer, "ロン"} //天和の時はロンと言う慣わし
 			setHandStat GameStat, agariPlayer, 1
 			if (getHeavenHandFlag(GameStat) == 1) {dsplay VOX_RON} else {dsplay VOX_TSUMO}
 			gosub *redrscreen: break
@@ -269,7 +269,7 @@ repeat
 		}
 		/* 立直を宣言する */
 		if ((teDahai >= DAHAI_TYPE_OPENRIICHI)&&(teDahai < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
-			setCall ActivePlayer, " リーチ "
+			setCall ActivePlayer, "リーチ"
 			dsplay VOX_RICHI
 			gosub *redrscreen
 			await 1000
@@ -281,7 +281,7 @@ repeat
 			vanish: commonswitch GameStat, WatchModeFlag
 		}
 		if ((teDahai >= DAHAI_TYPE_RIICHI)&&(teDahai < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
-			setCall ActivePlayer, " リーチ "
+			setCall ActivePlayer, "リーチ"
 			dsplay VOX_RICHI
 			gosub *redrscreen
 			await 1000
@@ -332,14 +332,14 @@ repeat
 		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
 		/* 立直をした直後の場合、千点を供託し一発のフラグを立てる */
 		if ((teDahai >= DAHAI_TYPE_OPENRIICHI)&&(teDahai < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
-			setCall ActivePlayer, "　　　　"
+			setCall ActivePlayer, ""
 			setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_IPPATSU+(getFirstDrawFlag(GameStat, ActivePlayer)*(RIICHI_DOUBLE_IPPATSU-RIICHI_IPPATSU))
 			teDahai -= DAHAI_TYPE_OPENRIICHI
 			addDeposit GameStat, 1: addScore GameStat, ActivePlayer, 0, -10
 			targetPlayer = ActivePlayer: gosub *chkopenmachi
 		}
 		if ((teDahai >= DAHAI_TYPE_RIICHI)&&(teDahai < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
-			setCall ActivePlayer, "　　　　"
+			setCall ActivePlayer, ""
 			setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_IPPATSU+(getFirstDrawFlag(GameStat, ActivePlayer)*(RIICHI_DOUBLE_IPPATSU-RIICHI_IPPATSU))
 			teDahai -= DAHAI_TYPE_RIICHI
 			addDeposit GameStat, 1: addScore GameStat, ActivePlayer, 0, -10
@@ -400,12 +400,12 @@ repeat
 					info strf("喰い変えを検出しました。和了り放棄として扱います。打牌 [%d] 鳴いた牌 [%d]", haiCurrentSutehai, getPreviousMeld(GameStat, PREVMELD_TILECODE))
 					dsplay SND_CUOHU
 					repeat 2
-						setCall ActivePlayer, "　喰替　"
+						setCall ActivePlayer, "喰替"
 						gosub *redrscreen: await 1500
 						setCall ActivePlayer, "和了放棄"
 						gosub *redrscreen: await 1500
 					loop
-					setCall ActivePlayer, "　　　　"
+					setCall ActivePlayer, ""
 					gosub *redrscreen
 					/* 和了り放棄は以降強制ツモ切り、強制不聴扱いとなります */
 					setAgariHouki GameStat, ActivePlayer, 1
@@ -418,7 +418,7 @@ repeat
 					dsplay SND_CUOHU
 					hncnKyokuEndType = ENDKYOKU_CHONBO: TsumoAgari = AGARI_KUIKAE
 					agariPlayer = ActivePlayer
-					setCall ActivePlayer, "　錯和　"
+					setCall ActivePlayer, "錯和"
 					gosub *redrscreen: await 1500
 					/* 局を打ち切り、満貫罰符の支払いに進む */
 					break
@@ -440,15 +440,15 @@ repeat
 			dsplay SND_CUOHU
 			repeat 2
 				if (tmptilecnt > (NUM_OF_TILES_IN_HAND-1)) {
-					setCall ActivePlayer, "　多牌　"
+					setCall ActivePlayer, "多牌"
 				} else {
-					setCall ActivePlayer, "　少牌　"
+					setCall ActivePlayer, "少牌"
 				}
 				gosub *redrscreen: await 1500
 				setCall ActivePlayer, "和了放棄"
 				gosub *redrscreen: await 1500
 			loop
-			setCall ActivePlayer, "　　　　"
+			setCall ActivePlayer, ""
 			gosub *redrscreen
 			setAgariHouki GameStat, ActivePlayer, 1
 			if (WatchModeFlag == 0) {statmes "和了り放棄：強制ツモ切りされます"}

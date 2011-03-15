@@ -260,12 +260,12 @@ return
 		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {bgColorR = 80: bgColorG = 80: bgColorB = 80}
 	}
 	if ((getRoundLoop(GameStat)*16+getRound(GameStat)) >= (getGameLength(GameStat)+1)) {
-		hncnMsg = " ‰„’·í "
+		hncnMsg = "‰„’·í"
 	} else {
 		if ((getRoundLoop(GameStat)*16+getRound(GameStat)) == getGameLength(GameStat)) {
 			hncnMsg = "ƒI[ƒ‰ƒX"
 		} else {
-			hncnMsg = " "+hncnTurnName(getRound(GameStat))+" "
+			hncnMsg = hncnTurnName(getRound(GameStat))
 		}
 	}
 #ifdef SANMAX
@@ -450,7 +450,7 @@ return
 	vanish
 	setDice GameStat, 0, 0, rnd(6)+1: setDice GameStat, 1, 0, rnd(6)+1
 	setDice GameStat, 0, 1, rnd(2): setDice GameStat, 1, 1, rnd(2)
-	hncnMsg = " "+hncnTurnName(getRound(GameStat))+" "
+	hncnMsg = hncnTurnName(getRound(GameStat))
 	gosub *redrscreen: commonswitch GameStat, WatchModeFlag
 	repeat 10 // æÎ‚ğU‚é
 		setDice GameStat, 0, 0, rnd(6)+1: setDice GameStat, 1, 0, rnd(6)+1
@@ -529,16 +529,16 @@ return
 #endif
 			switch getHonba(GameStat)
 				case 0: /* do nothing */ swbreak
-				case 1: hncnMsg = " ‚P–{ê ": swbreak
-				case 2: hncnMsg = " ‚Q–{ê ": swbreak
-				case 3: hncnMsg = " ‚R–{ê ": swbreak
-				case 4: hncnMsg = " ‚S–{ê ": swbreak
-				case 5: hncnMsg = " ‚T–{ê ": swbreak
-				case 6: hncnMsg = " ‚U–{ê ": swbreak
-				case 7: hncnMsg = " ‚V–{ê ": swbreak
-				case 8: hncnMsg = " ‚W–{ê ": swbreak
-				case 9: hncnMsg = " ‚X–{ê ": swbreak
-				default: hncnMsg = " "+getHonba(GameStat)+"–{ê "
+				case 1: hncnMsg = "‚P–{ê": swbreak
+				case 2: hncnMsg = "‚Q–{ê": swbreak
+				case 3: hncnMsg = "‚R–{ê": swbreak
+				case 4: hncnMsg = "‚S–{ê": swbreak
+				case 5: hncnMsg = "‚T–{ê": swbreak
+				case 6: hncnMsg = "‚U–{ê": swbreak
+				case 7: hncnMsg = "‚V–{ê": swbreak
+				case 8: hncnMsg = "‚W–{ê": swbreak
+				case 9: hncnMsg = "‚X–{ê": swbreak
+				default: hncnMsg = getHonba(GameStat)+"–{ê"
 			swend
 		}
 		if (cnt\4 == 3) {

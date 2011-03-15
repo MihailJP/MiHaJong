@@ -138,7 +138,7 @@ repeat NUM_OF_PLAYERS-1
 		tmpDoraPointer = origDoraPointer
 		AlicePointer = tmpDoraPointer-getYakuInfo(YakuInfo, YAKUINF_ALICEDORA)*2-2
 		if ((getMenzen(GameStat, agariPlayer) == 1)&&(getRuleInt(RULE_ALICE) != 0)) {
-			hncnMsg = "èjãVîªíË"
+			hncnMsg = "ÉAÉäÉXîªíË"
 			repeat
 				if (getDoraPointer(GameStat) <= AlicePointer) {break}
 				setDoraPointer GameStat, getDoraPointer(GameStat) - 2
@@ -342,7 +342,7 @@ repeat NUM_OF_PLAYERS-1
 			setDoraPointer GameStat, AlicePointer
 		}
 		
-		hncnMsg = " òaóπì_ "
+		hncnMsg = "òaóπì_"
 		gosub *putdelta
 		redraw 1: await 1500
 		pointcalc GameStat, hncnPointDelta
@@ -577,7 +577,7 @@ repeat NUM_OF_PLAYERS-1
 		statmes tmpResultDesc
 		await 1500
 		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
-		hncnMsg = "Å@çˆòaÅ@"
+		hncnMsg = "çˆòa"
 		// åÎÉçÉìÇ‹ÇΩÇÕåÎÉcÉÇ
 		if ((TsumoAgari == 0)||(TsumoAgari == 1)) {
 			if ((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != 1)&&(getRuleInt(RULE_MINKAN_PAO) == 6)) {
@@ -602,10 +602,10 @@ repeat NUM_OF_PLAYERS-1
 					if (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 0) {hncnMsg = "ñ≥„ çˆòa": ResultDesc += "(ñÇÃÇ»Ç¢òaóπÇË)"}
 					else:if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 1)&&(getShibari(GameStat) == 1)) {
 						// ìÒ„ îõÇËÇ≈ÇP„ ÇµÇ©Ç»Ç¢Ç»ÇÁçˆòa
-						hncnMsg = "àÍ„ çˆòa": ResultDesc += "(àÍ„ ÇµÇ©Ç»Ç¢òaóπÇË)"
+						hncnMsg = "„ ïsë´çˆòa": ResultDesc += "(àÍ„ ÇµÇ©Ç»Ç¢òaóπÇË)"
 					} else:if ((getAgariHouki(GameStat, agariPlayer) == 1)||(IsRemotePlayer(agariPlayer) == -1)) {
 						// òaóπÇËï˙ä¸Ç»ÇÃÇ…òaóπÇÎÇ§Ç∆ÇµÇΩ
-						hncnMsg = "ï˙ä¸çˆòa": ResultDesc += "(òaóπÇËï˙ä¸ìKópíÜ)"
+						hncnMsg = "òaóπï˙ä¸çˆòa": ResultDesc += "(òaóπÇËï˙ä¸ìKópíÜ)"
 					} else {hncnMsg = "Å@çˆòaÅ@": ResultDesc += ""}
 				}
 			}

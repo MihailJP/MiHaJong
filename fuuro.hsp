@@ -160,7 +160,7 @@
 			setHand GameStat, HAND_TILECODE, teDahai-DAHAI_TYPE_FLOWER, kangPlayer, 0
 			setHand GameStat, HAND_REDTILE, teDahai-DAHAI_TYPE_FLOWER, kangPlayer, 0
 			setHeavenHandFlag GameStat, 0
-			setCall kangPlayer, "　 北 　"
+			setCall kangPlayer, "北"
 			lipai GameStat, kangPlayer
 			repeat NUM_OF_PLAYERS
 				setFirstDrawFlag GameStat, cnt, 0
@@ -184,7 +184,7 @@
 			setHand GameStat, HAND_TILECODE, teDahai\DAHAI_TYPE_STEP, kangPlayer, 0
 			setHand GameStat, HAND_REDTILE, teDahai\DAHAI_TYPE_STEP, kangPlayer, 0
 			setHeavenHandFlag GameStat, 0
-			setCall ActivePlayer, "　 花 　"
+			setCall ActivePlayer, "花"
 			lipai GameStat, ActivePlayer
 			repeat NUM_OF_PLAYERS
 				setFirstDrawFlag GameStat, cnt, 0
@@ -228,7 +228,7 @@
 			lipai GameStat, PassivePlayer
 			/* ポンを宣言する */
 			dsplay@ VOX_PON
-			setCall PassivePlayer, "　ポン　"
+			setCall PassivePlayer, "ポン"
 			/* 喰い替えの判定に使う変数を設定 */
 			setPreviousMeld GameStat, PREVMELD_TILECODE, haiCurrentSutehai
 			setPreviousMeld GameStat, PREVMELD_STEPPED, -999
@@ -280,7 +280,7 @@
 			lipai GameStat, PassivePlayer
 			/* チーを宣言 */
 			dsplay@ VOX_CHI
-			setCall PassivePlayer, "　チー　"
+			setCall PassivePlayer, "チー"
 			/* 喰い替え判定用の変数を指定 */
 			setPreviousMeld GameStat, PREVMELD_TILECODE, haiCurrentSutehai
 			switch getRuleInt(RULE_KUIKAE)
@@ -312,7 +312,7 @@
 	if (Mode==FUURO_ANKAN)||(Mode==FUURO_KAKAN)||(Mode==FUURO_DAIMINKAN) {
 		setHeavenHandFlag GameStat, 0
 		dsplay@ VOX_KAN
-		setCall kangPlayer, "　カン　"
+		setCall kangPlayer, "カン"
 		lipai GameStat, kangPlayer
 		repeat NUM_OF_PLAYERS
 			setFirstDrawFlag GameStat, cnt, 0
@@ -401,7 +401,7 @@
 		}
 	}
 	/* 事後処理 */
-	setCall kangPlayer, "　　　　"
+	setCall kangPlayer, ""
 	/* 再描画 */
 	gosub *redrscreen@
 	/* 鳴きが成立したので、一発のフラグを降ろす */
@@ -509,7 +509,7 @@
 		if (haiRon(cnt) == 1) {
 			debug strf("プレイヤー [%d] は、栄和を宣言します。", cnt)
 			// 優先権のないロンも表示されるようにする
-			setCall cnt, "  ロン  "
+			setCall cnt, " ロン "
 			setHandStat GameStat, cnt, 1
 		}
 	loop
@@ -518,15 +518,15 @@
 		if (haiRon(RelativePositionOf(ActivePlayer, cnt+1)) == 1) {
 			if (roncount == 0) {
 				debug strf("プレイヤー [%d] は、栄和できます。", RelativePositionOf(ActivePlayer, cnt+1))
-				setCall RelativePositionOf(ActivePlayer, cnt+1), "　ロン　"
+				setCall RelativePositionOf(ActivePlayer, cnt+1), "ロン"
 			}
 			if ((roncount == 1)&&(getRuleInt(RULE_MULTIPLE_MAHJONG) >= 2)) {
 				debug strf("プレイヤー [%d] は、栄和できます。", RelativePositionOf(ActivePlayer, cnt+1))
-				setCall RelativePositionOf(ActivePlayer, cnt+1), "　ロン　"
+				setCall RelativePositionOf(ActivePlayer, cnt+1), "ロン"
 			}
 			if ((roncount == 2)&&(getRuleInt(RULE_MULTIPLE_MAHJONG) == 4)) {
 				debug strf("プレイヤー [%d] は、栄和できます。", RelativePositionOf(ActivePlayer, cnt+1))
-				setCall RelativePositionOf(ActivePlayer, cnt+1), "　ロン　"
+				setCall RelativePositionOf(ActivePlayer, cnt+1), "ロン"
 			}
 			roncount++
 		}
@@ -568,7 +568,7 @@
 			// ロンをしたことを表示
 			//setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehai
 			//setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehaiAkaDora
-			setCall agariPlayer, "　ロン　"
+			setCall agariPlayer, "ロン"
 			setHandStat GameStat, agariPlayer, 1
 			/* 立直宣言牌での放銃の場合、立直を無効とし供託点棒を返却する */
 			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_IPPATSU) {
