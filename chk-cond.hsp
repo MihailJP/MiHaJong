@@ -191,9 +191,12 @@
 			addyakuman tmpYakuInfo, "îjâÒî™òAëë", 1
 		}
 	}
-	/* âçï‘Çµ(óßíºêÈåæîvÇ≈ÉçÉìÇ∑ÇÈÇ∆ñÇ™ïtÇ≠) */
-	if (getRuleInt(RULE_TSUBAME_GAESHI) != 0) {
-		if (getRichiCounterFlag(GameStat) == 1) {
+	/* îÚâç(É_ÉuÉäÅ[êÈåæîvÇ≈ÉçÉìÇ∑ÇÈÇ∆ñÇ™ïtÇ≠) */
+	if ((getRuleInt(RULE_TSUBAME_GAESHI) != 0)&&(getRichiCounterFlag(GameStat) == 2)) {
+		addyakuman tmpYakuInfo, "îÚâç", 2
+	}else:if (getRuleInt(RULE_TSUBAME_GAESHI) != 0) {
+		/* âçï‘Çµ(óßíºêÈåæîvÇ≈ÉçÉìÇ∑ÇÈÇ∆ñÇ™ïtÇ≠) */
+		if (getRichiCounterFlag(GameStat) > 0) {
 			addyaku tmpYakuInfo, "âçï‘Çµ", 1
 		}
 	}

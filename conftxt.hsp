@@ -1462,4 +1462,17 @@
 	RuleDescription(RULE_KAZOE_BORDER+1) = "数え役満とする飜数を設定します(場ゾロを含まず)"
 	RuleTxt(0, RULE_KAZOE_BORDER+1) = "１３飜以上", "１２飜以上", "なし"
 
+	RuleName(RULE_HIEN+1) = "飛燕"
+	RuleDescription(RULE_HIEN+1) = "飛燕の有無と価値を設定します(ダブル立直宣言牌をロンする)"
+	RuleTxt(0, RULE_HIEN+1) = "なし", "ダブル役満"
+
+	RuleName(RULE_KISHU550K+1) = "紀州五十五万石"
+#ifdef SANMAX
+	RuleDescription(RULE_KISHU550K+1) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_KISHU550K+1) = "Ｎ／Ａ"
+#else
+	RuleDescription(RULE_KISHU550K+1) = "紀州五十五万石の有無と価値を設定します(萬子の清一色で数字の合計が55)"
+	RuleTxt(0, RULE_KISHU550K+1) = "なし", "役満"
+#endif
+
 return
