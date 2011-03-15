@@ -22,7 +22,7 @@
 	} else {
 		// U’®‚Ì‚Í‚P‚R–Ê‘Ò‚¿‚Ìˆµ‚¢‚Æ‚µ‚È‚¢‚æ‚¤‚É•ÏX
 		if ((ShisanYaoMachiType == 2)&&(haiFuriten == 0)&&(getRuleInt(RULE_DOUBLE_YAKUMAN) == 0)) {
-			addyakuman tmpYakuInfo, "‘m–³‘o13–Ê", 2
+			addyakuman tmpYakuInfo, "‘m–³‘o\O–Ê", 2
 		} else {
 			addyakuman tmpYakuInfo, "‘m–³‘o", 1
 		}

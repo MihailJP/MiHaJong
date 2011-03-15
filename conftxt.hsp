@@ -1475,4 +1475,12 @@
 	RuleTxt(0, RULE_KISHU550K+1) = "なし", "役満"
 #endif
 
+	RuleName(RULE_JOETSU_ASAHI+1) = "上越あさひ"
+	RuleDescription(RULE_JOETSU_ASAHI+1) = "上越新幹線あさひの有無と価値を設定します(白と北のある一気通貫)"
+	RuleTxt(0, RULE_JOETSU_ASAHI+1) = "なし", "役満"
+
+	RuleName(RULE_JOETSU_TOKI+1) = "上越とき"
+	RuleDescription(RULE_JOETSU_TOKI+1) = "上越新幹線ときの有無と価値を設定します(北のある混一色一気通貫)"
+	RuleTxt(0, RULE_JOETSU_TOKI+1) = "なし", "２飜"
+
 return

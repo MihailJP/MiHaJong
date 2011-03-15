@@ -58,7 +58,7 @@
 				tmpRuleCodeList = -1, RULE_DAISHARIN, RULE_DAICHIKURIN, RULE_DAISUURIN, RULE_PI, RULE_SQUARE_ROOT_TWO, RULE_NATURAL_LOGARITHM, RULE_IMAGINARY_NUMBER, RULE_SQUARE_ROOT_TEN
 				tmpHaishikiList = "311111113", "022222220", "022222220", "022222220", "211131113", "323211100", "130110141", "111022411", "222004310"
 				sdim tmpYakuNameList, 16, length(tmpRuleCodeList)
-				tmpYakuNameList = "‹ã˜A•ó“•", "‘åÔ—Ö", "‘å’|—Ñ", "‘å”—×", "‰~ü—¦˜a", "ã‚Q˜a", "©‘R‘Î”‚Ì’ê", "‹•”˜a", "ã‚P‚O˜a"
+				tmpYakuNameList = "‹ã˜@•ó“•", "‘åÔ—Ö", "‘å’|—Ñ", "‘å”—×", "‰~ü—¦˜a", "ã‚Q˜a", "©‘R‘Î”‚Ì’ê", "‹•”˜a", "ã‚P‚O˜a"
 				
 				repeat length(tmpRuleCodeList)
 					ruleEnabled = 0
@@ -80,7 +80,7 @@
 						loop
 						if (yakuFlag) {
 							tmpyakumanRate = 1
-							if (tmpYakuNameList(cnt) == "‹ã˜A•ó“•") {
+							if (tmpYakuNameList(cnt) == "‹ã˜@•ó“•") {
 								countTilesInHand haiCount2, GameStat, targetPlayer
 								haiCount2(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))--
 								yakuFlag2 = 0

@@ -431,6 +431,14 @@
 			chatappend "*** 立直宣言時"+RuleStat(RULE_RIICHI_REQUISITE)+"必要\n"
 		}
 	}
+	AddRuleText1 "三倍満", RuleStat(RULE_SANBAIMAN_BORDER)
+	AddRuleText3 "数え役満", RuleStat(RULE_KAZOE_BORDER)
+	AddRuleText "飛燕", RuleStat(RULE_HIEN)
+#ifndef SANMAX
+	AddRuleText "紀州五十五万石", RuleStat(RULE_KISHU550K)
+#endif
+	AddRuleText1 "上越新幹線あさひ", RuleStat(RULE_JOETSU_ASAHI)
+	AddRuleText3 "上越新幹線とき", RuleStat(RULE_JOETSU_TOKI)
 	/* ルール設定を表示　ここまで */
 
 return

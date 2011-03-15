@@ -252,6 +252,21 @@
 				delyaku tmpYakuInfo, "一気通貫"
 			}
 		}
+		/* 上越新幹線とき */
+		if (getRuleInt(RULE_JOETSU_TOKI) != 0) {
+			if (((KezCount(TILE_NORTH_WIND) >= 1)||(haiMianziDat(0) == TILE_NORTH_WIND))&&(searchyaku(tmpYakuInfo, "混一色"))) {
+				addyaku tmpYakuInfo, "上越新幹線とき", 2
+			}
+		}
+		/* 上越新幹線あさひ */
+		if (getRuleInt(RULE_JOETSU_ASAHI) != 0) {
+			if (((haiMianziDat(0) == TILE_WHITE_DRAGON)&&(KezCount(TILE_NORTH_WIND) >= 1))||((haiMianziDat(0) == TILE_NORTH_WIND)&&(KezCount(TILE_WHITE_DRAGON) >= 1))) {
+				addyakuman tmpYakuInfo, "上越新幹線あさひ", 1
+				delyaku tmpYakuInfo, "上越新幹線とき"
+				delyaku tmpYakuInfo, "一気通貫"
+				delyaku tmpYakuInfo, "混一色"
+			}
+		}
 	}
 	/* 金門橋 */
 	if (getRuleInt(RULE_GOLDEN_GATE_BRIDGE) != 0) {
