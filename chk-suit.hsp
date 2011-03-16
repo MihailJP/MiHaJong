@@ -55,10 +55,10 @@
 			}
 			if (getMenzen(GameStat, targetPlayer) == 1) {
 				/* –å´‘O’ñ‚Ì–ğ‚ğ”»’è‚·‚é */
-				tmpRuleCodeList = -1, RULE_DAISHARIN, RULE_DAICHIKURIN, RULE_DAISUURIN, RULE_PI, RULE_SQUARE_ROOT_TWO, RULE_NATURAL_LOGARITHM, RULE_IMAGINARY_NUMBER, RULE_SQUARE_ROOT_TEN
-				tmpHaishikiList = "311111113", "022222220", "022222220", "022222220", "211131113", "323211100", "130110141", "111022411", "222004310"
+				tmpRuleCodeList = -1, RULE_DAISHARIN, RULE_DAICHIKURIN, RULE_DAISUURIN, RULE_PI, RULE_SQUARE_ROOT_TWO, RULE_NATURAL_LOGARITHM, RULE_IMAGINARY_NUMBER, RULE_SQUARE_ROOT_TEN, RULE_QINGHAIHU, RULE_QINGHAIHU
+				tmpHaishikiList = "311111113", "022222220", "022222220", "022222220", "211131113", "323211100", "130110141", "111022411", "222004310", "422000222", "222000224"
 				sdim tmpYakuNameList, 16, length(tmpRuleCodeList)
-				tmpYakuNameList = "‹ã˜@•ó“•", "‘åÔ—Ö", "‘å’|—Ñ", "‘å”—×", "‰~ü—¦˜a", "ã‚Q˜a", "©‘R‘Î”‚Ì’ê", "‹•”˜a", "ã‚P‚O˜a"
+				tmpYakuNameList = "‹ã˜@•ó“•", "‘åÔ—Ö", "‘å’|—Ñ", "‘å”—×", "‰~ü—¦˜a", "ã‚Q˜a", "©‘R‘Î”‚Ì’ê", "‹•”˜a", "ã‚P‚O˜a", "´ŠCŒÎ", "´ŠCŒÎ"
 				
 				repeat length(tmpRuleCodeList)
 					ruleEnabled = 0

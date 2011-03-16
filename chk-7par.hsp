@@ -223,5 +223,14 @@
 			delyaku tmpYakuInfo, "g”’µ‘Î"
 		}
 	}
+	/* ¢ŠEˆê */
+	if (getRuleInt(RULE_SEKAIICHI) != 0) {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CIRCLES+1, TILE_SUIT_BAMBOOS+1, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND
+		yakuflagcount = countPairs(haiCount, tmpTileList)
+		if (yakuflagcount >= 7) {
+			addyakuman tmpYakuInfo, "¢ŠEˆê", 1
+			delyaku tmpYakuInfo, "lŠìµ‘Îq"
+		}
+	}
 return
 #global

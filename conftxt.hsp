@@ -1520,4 +1520,29 @@
 	RuleDescription(RULE_KOHAKU_MANJU+1) = "紅白饅頭の有無と価値を設定します(白と中がある萬子の混一色:付加役)"
 	RuleTxt(0, RULE_KOHAKU_MANJU+1) = "なし", "１飜", "２飜"
 
+	RuleName(RULE_SEKAIICHI+1) = "世界一"
+	RuleDescription(RULE_SEKAIICHI+1) = "世界一の有無と価値を設定します(１の牌と風牌だけで七対子)"
+	RuleTxt(0, RULE_SEKAIICHI+1) = "なし", "役満"
+
+	RuleName(RULE_EAST_GREEN+1) = "東發つきもの"
+	RuleDescription(RULE_EAST_GREEN+1) = "東發つきものの有無と価値を設定します(東と発の刻子:付加役)"
+	RuleTxt(0, RULE_EAST_GREEN+1) = "なし", "１飜"
+
+	RuleName(RULE_SOUTH_WHITE+1) = "南白つきもの"
+	RuleDescription(RULE_SOUTH_WHITE+1) = "南白つきものの有無と価値を設定します(南と白の刻子:付加役)"
+	RuleTxt(0, RULE_SOUTH_WHITE+1) = "なし", "１飜"
+
+	RuleName(RULE_HUALONG_CHANTA+1) = "ﾌｧﾛﾝﾁｬﾝﾀ"
+#ifdef SANMAX
+	RuleDescription(RULE_HUALONG_CHANTA+1) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_HUALONG_CHANTA+1) = "Ｎ／Ａ"
+#else
+	RuleDescription(RULE_HUALONG_CHANTA+1) = "三色通貫全帯幺九の有無と価値を設定します(三色通貫以外の１面子と雀頭がチャンタor純チャンになっている)"
+	RuleTxt(0, RULE_HUALONG_CHANTA+1) = "なし", "混3飜、純4飜(喰下有)"
+#endif
+
+	RuleName(RULE_QINGHAIHU+1) = "清海湖"
+	RuleDescription(RULE_QINGHAIHU+1) = "清海湖の有無と価値を設定します(清一色・純全帯幺九・二盃口の複合)"
+	RuleTxt(0, RULE_QINGHAIHU+1) = "なし", "役満"
+
 return

@@ -58,7 +58,9 @@
 			}
 		} else {
 			if (JihaiCount == 0) {
-				addyaku tmpYakuInfo, "ƒ‘S‘Ñ›ô‹ã", 2+getMenzen(GameStat, targetPlayer)
+				if (searchyaku(tmpYakuInfo, "´ŠCŒÎ") == 0) {
+					addyaku tmpYakuInfo, "ƒ‘S‘Ñ›ô‹ã", 2+getMenzen(GameStat, targetPlayer)
+				}
 			} else {
 				addyaku tmpYakuInfo, "¬‘S‘Ñ›ô‹ã", 1+getMenzen(GameStat, targetPlayer)
 			}

@@ -110,6 +110,7 @@
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "大竹林")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "大数隣")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "一色双龍会")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "清海湖")
 		if (tmpyakuCensored == 0) {
 			if (getRuleInt(RULE_RYANPEIKOU) != 0) {
 				addyaku tmpYakuInfo, "二盃口", 2
@@ -173,31 +174,15 @@
 		}
 		/* 一気通貫全帯幺九 */
 		if (getRuleInt(RULE_ITTSUU_CHANTA) != 0) {
-			tmpyaojiu = 0: JihaiCount = 0
-			repeat SIZE_OF_MELD_BUFFER
-				switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
-					case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
-					case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
-						JihaiCount++
-						/* FALLTHRU */
-					case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
-					case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
-					case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
-						tmpyaojiu++
-					swbreak
-				swend
-				if ((haiMianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 7)&&(cnt > 0)) {
-					tmpyaojiu++
-				}
-			loop
+			gosub *checkIttsuuChanta
 			tmpyakuCensored = 0
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "混一色")
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "清一色")
 			if ((tmpyaojiu == 4)&&(tmpyakuCensored == 0)) {
 				if (JihaiCount == 0) {
-					addyaku tmpYakuInfo, "純一通全帯", 3+getMenzen(GameStat, targetPlayer)
+					addyaku tmpYakuInfo, "純一気通貫全帯幺九", 3+getMenzen(GameStat, targetPlayer)
 				} else {
-					addyaku tmpYakuInfo, "純一通全帯", 2+getMenzen(GameStat, targetPlayer)
+					addyaku tmpYakuInfo, "一気通貫全帯幺九", 2+getMenzen(GameStat, targetPlayer)
 				}
 				delyaku tmpYakuInfo, "一気通貫"
 			}
@@ -655,6 +640,18 @@
 				/* 普通の花龍 */
 				addyaku tmpYakuInfo, "三色通貫", 1+getMenzen(GameStat, targetPlayer)
 			}
+			/* 三色通貫全帯幺九 */
+			if (getRuleInt(RULE_HUALONG_CHANTA) != 0) {
+				gosub *checkIttsuuChanta
+				if (tmpyaojiu == 4) {
+					if (JihaiCount == 0) {
+						addyaku tmpYakuInfo, "純三色通貫全帯幺九", 3+getMenzen(GameStat, targetPlayer)
+					} else {
+						addyaku tmpYakuInfo, "三色通貫全帯幺九", 2+getMenzen(GameStat, targetPlayer)
+					}
+					delyaku tmpYakuInfo, "三色通貫"
+				}
+			}
 		}
 	}
 	/* 双龍双亀：萬子の順子を使うので三麻では不可能 */
@@ -815,5 +812,25 @@
 		addyaku tmpYakuInfo, "吃大四順", 2
 	}
 #endif
+return
+
+*checkIttsuuChanta
+	tmpyaojiu = 0: JihaiCount = 0
+	repeat SIZE_OF_MELD_BUFFER
+		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
+			case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
+			case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
+				JihaiCount++
+				/* FALLTHRU */
+			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
+			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
+			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
+				tmpyaojiu++
+			swbreak
+		swend
+		if ((haiMianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 7)&&(cnt > 0)) {
+			tmpyaojiu++
+		}
+	loop
 return
 #global

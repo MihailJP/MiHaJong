@@ -999,5 +999,21 @@
 			delyaku tmpYakuInfo, "三色小同刻"
 		}
 	}
+	/* 東發つきもの */
+	if (getRuleInt(RULE_EAST_GREEN) != 0) {
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "青函トンネル")
+		if ((KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_GREEN_DRAGON) >= 1)&&(tmpyakuCensored == 0)) {
+			addyaku tmpYakuInfo, "東發つきもの", 1
+		}
+	}
+	/* 南白つきもの */
+	if (getRuleInt(RULE_SOUTH_WHITE) != 0) {
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "南無八幡")
+		if ((KezCount(TILE_SOUTH_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(tmpyakuCensored == 0)) {
+			addyaku tmpYakuInfo, "南白つきもの", 1
+		}
+	}
 return
 #global

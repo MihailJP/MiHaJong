@@ -449,6 +449,11 @@
 	AddRuleText "大草原", RuleStat(RULE_DAISOUGEN)
 	AddRuleText1 "宝紅開花", RuleStat(RULE_BAOHONGKAIHUA)
 	AddRuleText3 "紅白饅頭", RuleStat(RULE_KOHAKU_MANJU)
+	AddRuleText "世界一", RuleStat(RULE_SEKAIICHI)
+	AddRuleText1 "東發つきもの", RuleStat(RULE_EAST_GREEN)
+	AddRuleText3 "南白つきもの", RuleStat(RULE_SOUTH_WHITE)
+	AddRuleText "三色通貫全帯幺九", RuleStat(RULE_HUALONG_CHANTA)
+	AddRuleText "清海湖", RuleStat(RULE_QINGHAIHU)
 	/* ルール設定を表示　ここまで */
 
 return
