@@ -369,5 +369,7 @@ return
 #include "chk-seq.hsp"
 /* ‚»‚Ì‘¼‚Ì–ð */
 #include "chk-misc.hsp"
+/* ‚»‚Ì‘¼‚Ì–ð */
+#include "chk-buda.hsp"
 /* ƒhƒ‰ */
 #include "chk-dora.hsp"

@@ -1,0 +1,119 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *   [十三不搭判定ルーチン]
+ *=============================
+ */
+
+/* 十三不塔の判定 */
+#module
+#include "const.as"
+#defcfunc chkshisanbuda var GameStat, int targetPlayer
+	ShisanBuDa = 0
+	Ukihai = 0
+	Duizi = 0
+	repeat NUM_OF_TILES_IN_HAND
+		haiTileInfo = getpaiinfo(GameStat, targetPlayer, cnt, 0)
+		if (haiTileInfo == 0) {Ukihai++}
+		if (haiTileInfo == 4) {Duizi++}
+	loop
+	if ((Ukihai == 12)&&(Duizi == 2)) {ShisanBuDa = 1}
+	return ShisanBuDa
+#global
+
+/* 十四不塔の判定 */
+#module
+#include "const.as"
+#defcfunc chkshisibuda var GameStat, int targetPlayer
+	ShisiBuDa = 0
+	Ukihai = 0
+	repeat NUM_OF_TILES_IN_HAND
+		haiTileInfo = getpaiinfo(GameStat, targetPlayer, cnt, 0)
+		if (haiTileInfo == 0) {Ukihai++}
+		if (haiTileInfo == 4) {Duizi++}
+	loop
+	if (Ukihai == NUM_OF_TILES_IN_HAND) {ShisiBuDa = 1}
+	return ShisiBuDa
+#global
+
+/* 十三不塔 */
+#module
+#include "const.as"
+#deffunc shisanbudayaku var GameStat, var tmpYakuInfo, int targetPlayer, array tmpScore, array ShantenArray
+	if (getRuleInt(RULE_SHIISAN_PUUTAA) != 0) {
+		ShisanBuDa = chkshisanbuda(GameStat, targetPlayer)
+		if ((ShisanBuDa == 1)&&(ShantenArray(SHANTEN_ORPHANS) >= 0)&&(getFirstDrawFlag(GameStat, targetPlayer) == 1)) {
+			if (getRuleInt(RULE_SHIISAN_PUUTAA) == 2) {
+				setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 5: setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST, "十三不搭\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  " \n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  ""
+				setYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 0: setYakuInfo tmpYakuInfo, YAKUINF_DORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_URADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 0
+				if (getRuleInt(RULE_LIMITLESS) == 2) {
+					setYakuInfo tmpYakuInfo, YAKUINF_FU, 30: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 5
+					setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  "５飜\n"
+					tmpScore = 30: countdora GameStat, tmpYakuInfo, targetPlayer: aotenScoring tmpYakuInfo, tmpScore
+				} else {
+					setYakuInfo tmpYakuInfo, YAKUINF_FU, 30: tmpScore = 2000
+					setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 5
+					if (getRuleInt(RULE_LIMITLESS) == 1) {
+						tmpScore = 30: setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  "５飜\n"
+						countdora GameStat, tmpYakuInfo, targetPlayer: aotenScoring tmpYakuInfo, tmpScore
+					}
+				}
+			} else {
+				if (getRuleInt(RULE_LIMITLESS) == 2) {
+					setYakuInfo tmpYakuInfo, YAKUINF_FU, 30: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 13
+					setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST,  "十三不搭\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  "13飜\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  ""
+					setYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 0: setYakuInfo tmpYakuInfo, YAKUINF_DORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_URADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 0
+					tmpScore = 30: countdora GameStat, tmpYakuInfo, targetPlayer: aotenScoring tmpYakuInfo, tmpScore
+				} else {
+					setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  "十三不搭\n"
+					tmpScore = 8000: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1000
+				}
+			}
+		} else {
+			// 条件満たしてない場合、国士無双だったら何もしない。国士でないならチョンボ
+			Shanten = ShantenArray(SHANTEN_ALL)
+			if (Shanten >= 0) {
+				tmpScore = 0: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0
+			}
+		}
+	} else {
+		// 和了ってない和了ってない
+		Shanten = ShantenArray(SHANTEN_ALL)
+		if (Shanten >= 0) {
+			tmpScore = 0: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0
+		}
+	}
+return
+#global
+
+/* 十四不塔 */
+#module
+#include "const.as"
+#deffunc shisibudayaku var GameStat, var tmpYakuInfo, int targetPlayer, array tmpScore, array ShantenArray
+	if (getRuleInt(RULE_SHIISAN_UUSHII) != 0) {
+		ShisiBuDa = chkshisibuda(GameStat, targetPlayer)
+		if ((ShisiBuDa == 1)&&(getFirstDrawFlag(GameStat, targetPlayer) == 1)) {
+			if (getRuleInt(RULE_LIMITLESS) == 2) {
+				setYakuInfo tmpYakuInfo, YAKUINF_FU, 30: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 13
+				setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST,  "十三無靠\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  "13飜\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  ""
+				setYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 0: setYakuInfo tmpYakuInfo, YAKUINF_DORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_URADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 0
+				tmpScore = 30: countdora GameStat, tmpYakuInfo, targetPlayer: aotenScoring tmpYakuInfo, tmpScore
+			} else {
+				setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  "十三無靠\n"
+				tmpScore = 8000: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1000
+			}
+		} else {
+			// 和了ってない和了ってない
+			Shanten = ShantenArray(SHANTEN_ALL)
+			if (Shanten >= 0) {
+				tmpScore = 0: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0
+			}
+		}
+	} else {
+		// 和了ってない和了ってない
+		Shanten = ShantenArray(SHANTEN_ALL)
+		if (Shanten >= 0) {
+			tmpScore = 0: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0
+		}
+	}
+return
+#global
