@@ -439,6 +439,11 @@
 #endif
 	AddRuleText1 "上越新幹線あさひ", RuleStat(RULE_JOETSU_ASAHI)
 	AddRuleText3 "上越新幹線とき", RuleStat(RULE_JOETSU_TOKI)
+	AddRuleText "白一点", RuleStat(RULE_HAKUITTEN)
+	AddRuleText "小三風", RuleStat(RULE_XIAOSANFENG)
+#ifndef SANMAX
+	AddRuleText "水戸三十五万石", RuleStat(RULE_MITO350K)
+#endif
 	/* ルール設定を表示　ここまで */
 
 return

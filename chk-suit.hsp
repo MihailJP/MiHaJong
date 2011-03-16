@@ -142,10 +142,21 @@
 					}
 				}
 			}
+			/* 紀州五十五万石 */
 			if (getRuleInt(RULE_KISHU550K) != 0) {
 				if (WanzMian == SIZE_OF_MELD_BUFFER) {
 					if (Cifr == 55) {
 						addyakuman tmpYakuInfo, "紀州五十五万石", 1
+						// 成立したら清一色の成立を解除する(青天井ルール用)
+						delyaku tmpYakuInfo, "清一色"
+					}
+				}
+			}
+			/* 水戸三十五万石 */
+			if (getRuleInt(RULE_MITO350K) != 0) {
+				if (WanzMian == SIZE_OF_MELD_BUFFER) {
+					if (Cifr <= 35) {
+						addyakuman tmpYakuInfo, "水戸三十五万石", 1
 						// 成立したら清一色の成立を解除する(青天井ルール用)
 						delyaku tmpYakuInfo, "清一色"
 					}

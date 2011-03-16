@@ -1483,4 +1483,21 @@
 	RuleDescription(RULE_JOETSU_TOKI+1) = "上越新幹線ときの有無と価値を設定します(北のある混一色一気通貫)"
 	RuleTxt(0, RULE_JOETSU_TOKI+1) = "なし", "２飜"
 
+	RuleName(RULE_HAKUITTEN+1) = "白一点"
+	RuleDescription(RULE_HAKUITTEN+1) = "白一点の有無と価値を設定します(筒子の135679と白のみで和了る。白は必須)"
+	RuleTxt(0, RULE_HAKUITTEN+1) = "なし", "５飜(喰い下がり有り)"
+
+	RuleName(RULE_XIAOSANFENG+1) = "小三風"
+	RuleDescription(RULE_XIAOSANFENG+1) = "小三風の有無と価値を設定します(風牌で2つの刻子と1つの雀頭)"
+	RuleTxt(0, RULE_XIAOSANFENG+1) = "なし", "１飜"
+
+	RuleName(RULE_MITO350K+1) = "水戸三十五万石"
+#ifdef SANMAX
+	RuleDescription(RULE_MITO350K+1) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_MITO350K+1) = "Ｎ／Ａ"
+#else
+	RuleDescription(RULE_MITO350K+1) = "水戸三十五万石の有無と価値を設定します(萬子の清一色で数字の合計が35以下)"
+	RuleTxt(0, RULE_MITO350K+1) = "なし", "役満"
+#endif
+
 return

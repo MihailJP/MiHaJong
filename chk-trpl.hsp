@@ -222,6 +222,12 @@
 		addyaku tmpYakuInfo, "役牌・中", 1
 		nmflag3 = 1
 	}
+	/* 小三風 */
+	if (getRuleInt(RULE_XIAOSANFENG) != 0) {
+		if (WindCnt == 5) {
+			addyaku tmpYakuInfo, "小三風", 1
+		}
+	}
 	/* 三風刻 */
 	if (getRuleInt(RULE_THREE_WINDS) != 0) {
 		if (WindCnt == 6) {
