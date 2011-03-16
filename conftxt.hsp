@@ -505,7 +505,7 @@
 	RuleDescription(RULE_UUSHINTONKAN+1) = "五心通貫の有無と価値を設定します(５の嵌張待ちで一気通貫：付加役)"
 	RuleTxt(0, RULE_UUSHINTONKAN+1) = "なし", "１飜"
 
-	RuleName(RULE_ITTSUU_CHANTA+1) = "ｲｯﾂｰﾁｬﾝﾀ"
+	RuleName(RULE_ITTSUU_CHANTA+1) = "一気通貫全帯幺九"
 	RuleDescription(RULE_ITTSUU_CHANTA+1) = "一気通貫全帯幺九の有無と価値を設定します(一気通貫以外の１面子と雀頭がチャンタor純チャンになっている)"
 	RuleTxt(0, RULE_ITTSUU_CHANTA+1) = "なし", "混3飜、純4飜(喰下有)"
 
@@ -1475,11 +1475,11 @@
 	RuleTxt(0, RULE_KISHU550K+1) = "なし", "役満"
 #endif
 
-	RuleName(RULE_JOETSU_ASAHI+1) = "上越あさひ"
+	RuleName(RULE_JOETSU_ASAHI+1) = "上越新幹線あさひ"
 	RuleDescription(RULE_JOETSU_ASAHI+1) = "上越新幹線あさひの有無と価値を設定します(白と北のある一気通貫)"
 	RuleTxt(0, RULE_JOETSU_ASAHI+1) = "なし", "役満"
 
-	RuleName(RULE_JOETSU_TOKI+1) = "上越とき"
+	RuleName(RULE_JOETSU_TOKI+1) = "上越新幹線とき"
 	RuleDescription(RULE_JOETSU_TOKI+1) = "上越新幹線ときの有無と価値を設定します(北のある混一色一気通貫:付加役)"
 	RuleTxt(0, RULE_JOETSU_TOKI+1) = "なし", "２飜"
 
@@ -1532,7 +1532,7 @@
 	RuleDescription(RULE_SOUTH_WHITE+1) = "南白つきものの有無と価値を設定します(南と白の刻子:付加役)"
 	RuleTxt(0, RULE_SOUTH_WHITE+1) = "なし", "１飜"
 
-	RuleName(RULE_HUALONG_CHANTA+1) = "ﾌｧﾛﾝﾁｬﾝﾀ"
+	RuleName(RULE_HUALONG_CHANTA+1) = "三色通貫全帯幺九"
 #ifdef SANMAX
 	RuleDescription(RULE_HUALONG_CHANTA+1) = "三人打ちでは設定できません"
 	RuleTxt(0, RULE_HUALONG_CHANTA+1) = "Ｎ／Ａ"
