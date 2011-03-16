@@ -101,6 +101,15 @@
 			}
 		}
 	}
+	/* ‘å‘Œ´ */
+	if (getRuleInt(RULE_DAISOUGEN) != 0) {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9
+		yakuflagcount = countPairs(haiCount, tmpTileList)
+		if (yakuflagcount == 7) {
+			addyakuman tmpYakuInfo, "‘å‘Œ´", 1
+			delyaku tmpYakuInfo, "´ˆêF"
+		}
+	}
 	/* •ˆêF */
 	if (getRuleInt(RULE_HEIIISOH) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+2,TILE_SUIT_CIRCLES+4,TILE_SUIT_CIRCLES+8,TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND
@@ -200,6 +209,18 @@
 					addyakuman tmpYakuInfo, "–k‚Ì‘å’n", 1
 			swend
 			delyaku tmpYakuInfo, "¬ˆêF"
+		}
+	}
+	/* g”’é\“ª */
+	if (getRuleInt(RULE_KOHAKU_MANJU) != 0) {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+9
+		yakuflagcount = countPairs(haiCount, tmpTileList)
+		if ((haiCount(TILE_WHITE_DRAGON) >= 2)&&(haiCount(TILE_RED_DRAGON) >= 2)&&(yakuflagcount >= 5)) {
+			switch getRuleInt(RULE_KOHAKU_MANJU)
+				case 1: addyaku tmpYakuInfo, "g”’é\“ª", 1: swbreak
+				case 2: addyaku tmpYakuInfo, "g”’é\“ª", 2: swbreak
+			swend
+			delyaku tmpYakuInfo, "g”’µ‘Î"
 		}
 	}
 return

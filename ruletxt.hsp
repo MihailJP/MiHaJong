@@ -444,6 +444,11 @@
 #ifndef SANMAX
 	AddRuleText "水戸三十五万石", RuleStat(RULE_MITO350K)
 #endif
+	AddRuleText1 "青函トンネル", RuleStat(RULE_SEIKAN_TUNNEL)
+	AddRuleText3 "青函連絡船", RuleStat(RULE_SEIKAN_SHIP)
+	AddRuleText "大草原", RuleStat(RULE_DAISOUGEN)
+	AddRuleText1 "宝紅開花", RuleStat(RULE_BAOHONGKAIHUA)
+	AddRuleText3 "紅白饅頭", RuleStat(RULE_KOHAKU_MANJU)
 	/* ルール設定を表示　ここまで */
 
 return

@@ -26,18 +26,35 @@
 	return Kangzi
 #global
 
+#module
+#include "const.as"
+#deffunc countAnKangz array KangzCount, array haiMianziDat
+/*
+		countAnKangz p1, p2
+		暗槓子の数を数える
+
+		p1 : 結果を格納する配列
+		p2 : 面子構成を格納した配列
+
+		手牌に存在する暗槓子を数え、種類別に格納します。
+		また、statには見つかった暗槓子の数が格納されます。
+*/
+	trace "暗槓子の種類を調べます。"
+	Kangzi = 0
+	dim KangzCount, TILE_NONFLOWER_MAX
+	repeat SIZE_OF_MELD_BUFFER
+		if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED) {KangzCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)++}
+	loop
+	return Kangzi
+#global
+
 /* 槓子系の役 */
 #module
 #include "const.as"
 #deffunc quadyaku var GameStat, var tmpYakuInfo, array haiMianziDat
 	trace "槓子役の処理に入ります。"
-	countKangz KangzCount, haiMianziDat
-	Kangzi = stat: AnKan = 0
-	repeat SIZE_OF_MELD_BUFFER
-		if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD) {
-			AnKan++
-		}
-	loop
+	countKangz KangzCount, haiMianziDat: Kangzi = stat
+	countAnKangz AnKangzCount, haiMianziDat: AnKan = stat
 	/* 四槓子 */
 	if (Kangzi == 4) {
 		switch getRuleInt(RULE_SUUKANTSU)

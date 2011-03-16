@@ -1480,7 +1480,7 @@
 	RuleTxt(0, RULE_JOETSU_ASAHI+1) = "なし", "役満"
 
 	RuleName(RULE_JOETSU_TOKI+1) = "上越とき"
-	RuleDescription(RULE_JOETSU_TOKI+1) = "上越新幹線ときの有無と価値を設定します(北のある混一色一気通貫)"
+	RuleDescription(RULE_JOETSU_TOKI+1) = "上越新幹線ときの有無と価値を設定します(北のある混一色一気通貫:付加役)"
 	RuleTxt(0, RULE_JOETSU_TOKI+1) = "なし", "２飜"
 
 	RuleName(RULE_HAKUITTEN+1) = "白一点"
@@ -1499,5 +1499,25 @@
 	RuleDescription(RULE_MITO350K+1) = "水戸三十五万石の有無と価値を設定します(萬子の清一色で数字の合計が35以下)"
 	RuleTxt(0, RULE_MITO350K+1) = "なし", "役満"
 #endif
+
+	RuleName(RULE_SEIKAN_TUNNEL+1) = "青函トンネル"
+	RuleDescription(RULE_SEIKAN_TUNNEL+1) = "青函トンネルの有無と価値を設定します(発の槓子、東の明刻、一筒の刻子)"
+	RuleTxt(0, RULE_SEIKAN_TUNNEL+1) = "なし", "役満"
+
+	RuleName(RULE_SEIKAN_SHIP+1) = "青函連絡船"
+	RuleDescription(RULE_SEIKAN_SHIP+1) = "青函連絡船の有無と価値を設定します(発の暗槓、北の雀頭、一気通貫)"
+	RuleTxt(0, RULE_SEIKAN_SHIP+1) = "なし", "役満"
+
+	RuleName(RULE_DAISOUGEN+1) = "大草原"
+	RuleDescription(RULE_DAISOUGEN+1) = "大草原の有無と価値を設定します(1と8以外の索子でメンチン)"
+	RuleTxt(0, RULE_DAISOUGEN+1) = "なし", "役満(門前のみ)"
+
+	RuleName(RULE_BAOHONGKAIHUA+1) = "宝紅開花"
+	RuleDescription(RULE_BAOHONGKAIHUA+1) = "宝紅開花の有無と価値を設定します(白と中の刻子と1の三色小同刻)"
+	RuleTxt(0, RULE_BAOHONGKAIHUA+1) = "なし", "役満"
+
+	RuleName(RULE_KOHAKU_MANJU+1) = "紅白饅頭"
+	RuleDescription(RULE_KOHAKU_MANJU+1) = "紅白饅頭の有無と価値を設定します(白と中がある萬子の混一色:付加役)"
+	RuleTxt(0, RULE_KOHAKU_MANJU+1) = "なし", "１飜", "２飜"
 
 return

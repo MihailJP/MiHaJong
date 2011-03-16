@@ -30,6 +30,30 @@
 
 #module
 #include "const.as"
+#deffunc countAnKez array KezCount, array haiMianziDat
+/*
+		countAnKez p1, p2
+		暗刻子の数を数える
+
+		p1 : 結果を格納する配列
+		p2 : 面子構成を格納した配列
+
+		手牌に存在する暗刻子または暗槓子を数え、種類別に格納します。
+		また、statには見つかった暗刻子・暗槓子の数が格納されます。
+*/
+	trace "暗刻子・暗槓子の種類を調べます。"
+	dim KezCount, TILE_NONFLOWER_MAX: Kezi = 0
+	repeat SIZE_OF_MELD_BUFFER
+		if (((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_TRIPLET_CONCEALED)||((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED)) {
+			KezCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)++
+			Kezi++
+		}
+	loop
+	return Kezi
+#global
+
+#module
+#include "const.as"
 #deffunc countDuiz array DuiCount, array haiMianziDat
 /*
 		countDuiz p1, p2
@@ -54,16 +78,14 @@
 	trace "刻子役の処理に入ります。"
 	countKez KezCount, haiMianziDat: Kezi = stat
 	countDuiz DuiCount, haiMianziDat
-	WindCnt = 0: DragonCnt = 0: AnKe = 0
+	countAnKez AnKezCount, haiMianziDat: AnKe = stat
+	WindCnt = 0: DragonCnt = 0
 	repeat SIZE_OF_MELD_BUFFER
 		if (((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {
 			if (cnt == 0) {WindCnt += 1} else {WindCnt += 2}
 		}
 		if (((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_DRAGON_MIN)&&((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_DRAGON_MAX)) {
 			if (cnt == 0) {DragonCnt += 1} else {DragonCnt += 2}
-		}
-		if (((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_TRIPLET_CONCEALED)||((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED)) {
-			AnKe++
 		}
 	loop
 	if ((MachiType == MACHI_SHANPON)&&(TsumoAgari == 0)) {AnKe-- /* 双ポン待ちの出和了りでできた刻子は明刻 */}
@@ -955,6 +977,26 @@
 		yakuFlag = 0
 		if ((KezCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_BAMBOOS+3)&&(MachiType == MACHI_TANKI)) {
 			addyaku tmpYakuInfo, "太公釣金亀", 1
+		}
+	}
+	/* 青函トンネル */
+	if (getRuleInt(RULE_SEIKAN_TUNNEL) != 0) {
+		countKangz KangzCount, haiMianziDat
+		if ((KangzCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(AnKezCount(TILE_EAST_WIND) == 0)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)) {
+			addyakuman tmpYakuInfo, "青函トンネル", 1
+		}
+	}
+	/* 宝紅開花 */
+	if (getRuleInt(RULE_BAOHONGKAIHUA) != 0) {
+		yakuFlag = 0
+		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+1) >= 1)&&(DuiCount(TILE_SUIT_BAMBOOS+1) >= 1)) {yakuFlag = 1}
+		if (yakuFlag) {
+			addyakuman tmpYakuInfo, "宝紅開花", 1
+			delyaku tmpYakuInfo, "対々和"
+			delyaku tmpYakuInfo, "役牌・白"
+			delyaku tmpYakuInfo, "役牌・中"
+			delyaku tmpYakuInfo, "混老頭"
+			delyaku tmpYakuInfo, "三色小同刻"
 		}
 	}
 return
