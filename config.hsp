@@ -170,8 +170,8 @@ return
 		borderedtxt2 "Configuration.", 550, 24, 255, 255, 255, 1, 24, 192, 192, 192
 		font fontname, 20, 0
 		repeat RULES_IN_PAGE
-			BorderTextX = 100+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
-			borderedtxt2 RuleName(cnt+(configPage-1)*RULES_IN_PAGE+1)+"："+RuleTxt(Rule(cnt+(configPage-1)*RULES_IN_PAGE+1), cnt+(configPage-1)*RULES_IN_PAGE+1), BorderTextX, BorderTextY, 255, 255, 255, 1, 20, 192, 192, 192
+			tmpcol = 255, 255, 255, 192, 192, 192
+			gosub *config_showruletext
 			if (RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE+1) == "Ｎ／Ａ") {gosub *config_strikeout}
 			switch (cnt+(configPage-1)*RULES_IN_PAGE)
 				case RULE_LIMITHAND_BONUS:
@@ -232,7 +232,7 @@ return
 					if (Rule(RULE_PENALTY_NEGATIVE+1) == 6) {gosub *config_strikeout}
 					swbreak
 			swend
-			if (cnt == 19) {borderedtxt2 "通信対戦時のルール設定はホスト側の設定が適用されます", BorderTextX, 590, 255, 255, 255, 1, 20, 192, 192, 192}
+			if (cnt == 19) {borderedtxt2 "通信対戦時のルール設定はホスト側の設定が適用されます", 100, 590, 255, 255, 255, 1, 20, 192, 192, 192}
 		loop
 		redraw 1: await 0
 		if (confselFinished) {break}
@@ -240,9 +240,30 @@ return
 	await 0
 return
 
+*config_showruletext
+	BorderTextX = 100+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
+	tmptxt = RuleName(cnt+(configPage-1)*RULES_IN_PAGE+1)
+	if (strlen(tmptxt) > 8) {
+		borderedtxt3 tmptxt, BorderTextX, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5), , 8.0/double(strlen(tmptxt))
+	} else {
+		borderedtxt2 tmptxt, BorderTextX, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5)
+	}
+	BorderTextX = 180+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
+	borderedtxt2 ":", BorderTextX, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5)
+	BorderTextX = 190+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
+	tmptxt = RuleTxt(Rule(cnt+(configPage-1)*RULES_IN_PAGE+1), cnt+(configPage-1)*RULES_IN_PAGE+1)
+	if (strlen(tmptxt) > 20) {
+		borderedtxt3 tmptxt, BorderTextX, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5), , 20.0/double(strlen(tmptxt))
+	} else {
+		borderedtxt2 tmptxt, BorderTextX, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5)
+	}
+	return
+
 *config_strikeout
-	borderedtxt2 RuleName(cnt+(configPage-1)*RULES_IN_PAGE+1)+"："+RuleTxt(Rule(cnt+(configPage-1)*RULES_IN_PAGE+1), cnt+(configPage-1)*RULES_IN_PAGE+1), BorderTextX, BorderTextY, 192, 192, 192, 1, 20, 128, 128, 128
-	borderedtxt2 "――――――――――――――――", BorderTextX, BorderTextY, 255, 255, 255, 1, 20, 192, 192, 192
+	tmpcol = 192, 192, 192, 128, 128, 128
+	gosub *config_showruletext
+	BorderTextX = 100+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
+	borderedtxt2 "―――――――――――――――", BorderTextX, BorderTextY, 255, 255, 255, 1, 20, 192, 192, 192
 	return
 
 *ruleselbtn
