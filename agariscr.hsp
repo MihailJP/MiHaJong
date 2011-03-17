@@ -233,12 +233,29 @@
 				borderedtxt3a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24, , 16.0/double(strlen(tmpdat))
 			} else {
 				borderedtxt2a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24
+				if (strmid(tmpdat, strlen(tmpdat)-1, 1) == " ") {poke tmpdat, strlen(tmpdat)-1, 0}
+				repeat strlen(tmpdat)
+					if (((peek(tmpdat, cnt) >= 0x81)&&(peek(tmpdat, cnt) <= 0x9f))||((peek(tmpdat, cnt) >= 0xe0)&&(peek(tmpdat, cnt) <= 0xfc))) {
+						borderedtxt2a strmid(tmpdat, cnt, 2), tmpXpointer+cnt*(12*16/strlen(tmpdat)), tmpYpointer, drawcol(0), drawcol(1), drawcol(2), 1, 24
+						continue cnt+2
+					} else {
+						borderedtxt2a strmid(tmpdat, cnt, 1), tmpXpointer+cnt*(12*16/strlen(tmpdat)), tmpYpointer, drawcol(0), drawcol(1), drawcol(2), 1, 24
+					}
+				loop
 			}
 		} else {
 			if (strlen(tmpdat) > 12) {
 				borderedtxt3a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24, , 12.0/double(strlen(tmpdat))
 			} else {
-				borderedtxt2a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24
+				if (strmid(tmpdat, strlen(tmpdat)-1, 1) == " ") {poke tmpdat, strlen(tmpdat)-1, 0}
+				repeat strlen(tmpdat)
+					if (((peek(tmpdat, cnt) >= 0x81)&&(peek(tmpdat, cnt) <= 0x9f))||((peek(tmpdat, cnt) >= 0xe0)&&(peek(tmpdat, cnt) <= 0xfc))) {
+						borderedtxt2a strmid(tmpdat, cnt, 2), tmpXpointer+cnt*(12*12/strlen(tmpdat)), tmpYpointer, drawcol(0), drawcol(1), drawcol(2), 1, 24
+						continue cnt+2
+					} else {
+						borderedtxt2a strmid(tmpdat, cnt, 1), tmpXpointer+cnt*(12*12/strlen(tmpdat)), tmpYpointer, drawcol(0), drawcol(1), drawcol(2), 1, 24
+					}
+				loop
 			}
 		}
 		if (strmid(tmpdat, 0, 4) == "ƒhƒ‰") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
