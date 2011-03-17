@@ -107,6 +107,40 @@ return
 /* 縁取りテキスト */
 #module
 #include "const.as"
+#deffunc borderedtxt str BorderText, int BorderTextX, int BorderTextY, int BorderTextR, int BorderTextG, int BorderTextB
+/*
+		borderedtxt p1, p2, p3, p4, p5, p6
+		縁取りテキストを表示する
+
+		p1 : 表示する文字列
+		p2 : 表示するX座標
+		p3 : 表示するY座標
+		p4 : 文字の色の赤成分
+		p5 : 文字の色の緑成分
+		p6 : 文字の色の青成分
+
+		文字列を縁取りして表示します。
+*/
+	BorderThickness = 1
+	TextSize = 0: TextWidthRate = 1.0
+	gosub *doputtext
+return
+
+#deffunc borderedtxt2 str BorderText, int BorderTextX, int BorderTextY, int BorderTextR, int BorderTextG, int BorderTextB, \
+int BorderThickness_, int TextSize_, int GradR, int GradG, int GradB, int Style
+	BorderThickness = BorderThickness_
+	TextSize = TextSize_: TextWidthRate = 1.0
+	gosub *doputtext
+return
+
+#deffunc borderedtxt3 str BorderText, int BorderTextX, int BorderTextY, int BorderTextR, int BorderTextG, int BorderTextB, \
+int BorderThickness_, int TextSize_, int GradR, int GradG, int GradB, int Style, \
+double TextWidthRate_
+	BorderThickness = BorderThickness_
+	TextSize = TextSize_: TextWidthRate = TextWidthRate_
+	gosub *doputtext
+return
+
 *doputtext
 	if (TextSize) {font fontname, TextSize, Style}
 	color 0, 0, 0
@@ -161,51 +195,6 @@ return
 		color BorderTextR, BorderTextG, BorderTextB: pos BorderTextX, BorderTextY
 		print BorderText
 	}
-return
-
-#deffunc borderedtxt str BorderText1, int BorderTextX1, int BorderTextY1, int BorderTextR1, int BorderTextG1, int BorderTextB1
-/*
-		borderedtxt p1, p2, p3, p4, p5, p6
-		縁取りテキストを表示する
-
-		p1 : 表示する文字列
-		p2 : 表示するX座標
-		p3 : 表示するY座標
-		p4 : 文字の色の赤成分
-		p5 : 文字の色の緑成分
-		p6 : 文字の色の青成分
-
-		文字列を縁取りして表示します。
-*/
-	BorderText = BorderText1
-	BorderTextX = BorderTextX1: BorderTextY = BorderTextY1
-	BorderTextR = BorderTextR1: BorderTextG = BorderTextG1: BorderTextB = BorderTextB1
-	BorderThickness = 1
-	TextSize = 0: TextWidthRate = 1.0
-	gosub *doputtext
-return
-
-#deffunc borderedtxt2 str BorderText2, int BorderTextX2, int BorderTextY2, int BorderTextR2, int BorderTextG2, int BorderTextB2, \
-int BorderThickness2, int TextSize2, int GradR2, int GradG2, int GradB2, int Style2
-	BorderText = BorderText2
-	BorderTextX = BorderTextX2: BorderTextY = BorderTextY2
-	BorderTextR = BorderTextR2: BorderTextG = BorderTextG2: BorderTextB = BorderTextB2
-	BorderThickness = BorderThickness2
-	TextSize = TextSize2: GradR = GradR2: GradG = GradG2: GradB = GradB2
-	Style = Style2: TextWidthRate = 1.0
-	gosub *doputtext
-return
-
-#deffunc borderedtxt3 str BorderText3, int BorderTextX3, int BorderTextY3, int BorderTextR3, int BorderTextG3, int BorderTextB3, \
-int BorderThickness3, int TextSize3, int GradR3, int GradG3, int GradB3, int Style3, \
-double TextWidthRate3
-	BorderText = BorderText3
-	BorderTextX = BorderTextX3: BorderTextY = BorderTextY3
-	BorderTextR = BorderTextR3: BorderTextG = BorderTextG3: BorderTextB = BorderTextB3
-	BorderThickness = BorderThickness3
-	TextSize = TextSize3: GradR = GradR3: GradG = GradG3: GradB = GradB3
-	Style = Style3: TextWidthRate = TextWidthRate3
-	gosub *doputtext
 return
 #global
 

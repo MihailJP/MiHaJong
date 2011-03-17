@@ -1015,5 +1015,19 @@
 			addyaku tmpYakuInfo, "“ì”’‚Â‚«‚à‚Ì", 1
 		}
 	}
+	/* ”’’¹ */
+	if (getRuleInt(RULE_HAKUCHO) != 0) {
+		if ((Kezi == 4)&&(KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)) {
+			tmpyakuCensored = 0
+			tmpyakuCensored += searchyaku(tmpYakuInfo, "gŒ{•ñ‹Å")
+			tmpyakuCensored += searchyaku(tmpYakuInfo, "‹âŒ{•ñt")
+			tmpyakuCensored += searchyaku(tmpYakuInfo, "•ógŠJ‰Ô")
+			if (tmpyakuCensored == 0) {
+				addyaku tmpYakuInfo, "”’’¹", 5
+				delyaku tmpYakuInfo, "‘ÎX˜a"
+				delyaku tmpYakuInfo, "–ğ”vE”’"
+			}
+		}
+	}
 return
 #global

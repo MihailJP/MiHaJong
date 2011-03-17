@@ -130,13 +130,66 @@ return
 
 		“Á’è‚ÌƒvƒŒƒCƒ„[‚ÌŽè”v‚ð’²‚×A”v‚ÌŽí—Þ•Ê‚É”‚ð”‚¦‚Ü‚·B
 */
+	mode = 0
+	gosub *doCount
+	return
+
+#deffunc countRedTilesInHand array haiCount, var GameStat, int targetPlayer
+/*
+		countRedTilesInHand p1, p2, p3
+		Žè”v‚É‘¶Ý‚·‚éÔƒhƒ‰‚ðŽí—Þ•Ê‚ÉƒJƒEƒ“ƒg‚·‚é
+
+		p1 : Œ‹‰Ê‚ðŠi”[‚·‚é”z—ñ
+		p2 : ‘ì‚Ìó‹µ‚ðŠi”[‚µ‚½\‘¢‘Ì
+		p3 : ’²‚×‚éƒvƒŒƒCƒ„[
+
+		“Á’è‚ÌƒvƒŒƒCƒ„[‚ÌŽè”v‚ðÔƒhƒ‰‚Ì‚Ý’²‚×A”v‚ÌŽí—Þ•Ê‚É”‚ð”‚¦‚Ü‚·B
+*/
+	mode = 1
+	gosub *doCount
+	return
+
+*doCount
 	dim haiCount, TILE_CODE_MAXIMUM // ŒvŽZ‚·‚é”v
 	repeat NUM_OF_TILES_IN_HAND
 		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) != 0) {
 			// Žè”v‚Ì’†‚ÌA‚»‚ê‚¼‚ê‚Ì”v‚Ì–‡”‚ð”‚¦‚é
-			haiCount(getHand(GameStat, HAND_TILECODE, cnt, targetPlayer))++
+			if ((mode == 0)||(getHand(GameStat, HAND_REDTILE, cnt, targetPlayer) == mode)) {
+				haiCount(getHand(GameStat, HAND_TILECODE, cnt, targetPlayer))++
+			}
 		}
 	loop
+	// Ôƒhƒ‰‚Ì‚Ý”‚¦‚é‚Æ‚«‚Í•Ö‹X‚Ì‚½‚ßA–Â‚«–ÊŽq‚à”‚¦‚é
+	if (mode == 1) {
+		repeat MeldPointer(GameStat, targetPlayer), 1
+			if (getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP >= MELD_TRIPLET) {
+				if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x01) {
+					haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
+				}
+				if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x02) {
+					haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
+				}
+				if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x04) {
+					haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
+				}
+				if (getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP >= MELD_QUAD) {
+					if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x08) {
+						haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
+					}
+				}
+			} else {
+				if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x01) {
+					haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
+				}
+				if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x02) {
+					haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM+1)++
+				}
+				if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x04) {
+					haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM+2)++
+				}
+			}
+		loop
+	}
 	return
 #global
 

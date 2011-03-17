@@ -77,7 +77,7 @@
 			suityaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, haiFuriten
 			yaojiuyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer
 			tripletyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, haiFuriten, TsumoAgari, MachiType
-			quadyaku GameStat, tmpYakuInfo, haiMianziDat
+			quadyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, TsumoAgari
 			sequenceyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType
 			miscyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, TsumoAgari
 			setYakuInfo tmpYakuInfo, YAKUINF_FU, ((getYakuInfo(tmpYakuInfo, YAKUINF_FU)+8)/10)*10 // “_ƒpƒl‚·‚é

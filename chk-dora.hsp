@@ -79,13 +79,13 @@
 		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x01) {gosub *akadoraZaehlen}
 		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x02) {gosub *akadoraZaehlen}
 		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x04) {gosub *akadoraZaehlen}
-		if (getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) >= MELD_QUAD) {
+		if (getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP >= MELD_QUAD) {
 			if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x08) {gosub *akadoraZaehlen}
 		}
 		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x10) {gosub *aodoraZaehlen}
 		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x20) {gosub *aodoraZaehlen}
 		if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x40) {gosub *aodoraZaehlen}
-		if (getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) >= MELD_QUAD) {
+		if (getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP >= MELD_QUAD) {
 			if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x80) {gosub *aodoraZaehlen}
 		}
 	loop

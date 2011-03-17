@@ -1545,4 +1545,20 @@
 	RuleDescription(RULE_QINGHAIHU+1) = "清海湖の有無と価値を設定します(清一色・純全帯幺九・二盃口の複合)"
 	RuleTxt(0, RULE_QINGHAIHU+1) = "なし", "役満"
 
+	RuleName(RULE_TAOYISE+1) = "桃一色"
+	RuleDescription(RULE_TAOYISE+1) = "桃一色の有無と価値を設定します(赤五筒と中があり、ほかは135679筒のみで和了)"
+	RuleTxt(0, RULE_TAOYISE+1) = "なし", "役満"
+
+	RuleName(RULE_CHAYISE+1) = "茶一色"
+	RuleDescription(RULE_CHAYISE+1) = "茶一色の有無と価値を設定します(索子の緑牌と東西南北白発のみで和了)"
+	RuleTxt(0, RULE_CHAYISE+1) = "なし", "２飜"
+
+	RuleName(RULE_HAKUCHO+1) = "白鳥"
+	RuleDescription(RULE_HAKUCHO+1) = "白鳥の有無と価値を設定します(白と一索の刻子がある対々和)"
+	RuleTxt(0, RULE_HAKUCHO+1) = "なし", "５飜"
+
+	RuleName(RULE_ANCHUMOSAKU+1) = "暗中模索"
+	RuleDescription(RULE_ANCHUMOSAKU+1) = "暗中模索の有無と価値を設定します(中を暗槓して索子で自摸和)"
+	RuleTxt(0, RULE_ANCHUMOSAKU+1) = "なし", "１飜"
+
 return

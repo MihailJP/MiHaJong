@@ -454,6 +454,10 @@
 	AddRuleText3 "南白つきもの", RuleStat(RULE_SOUTH_WHITE)
 	AddRuleText "三色通貫全帯幺九", RuleStat(RULE_HUALONG_CHANTA)
 	AddRuleText "清海湖", RuleStat(RULE_QINGHAIHU)
+	AddRuleText1 "桃一色", RuleStat(RULE_TAOYISE)
+	AddRuleText3 "茶一色", RuleStat(RULE_CHAYISE)
+	AddRuleText "白鳥", RuleStat(RULE_HAKUCHO)
+	AddRuleText "暗中模索", RuleStat(RULE_HAKUCHO)
 	/* ルール設定を表示　ここまで */
 
 return
