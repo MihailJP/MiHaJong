@@ -239,6 +239,9 @@ return
 			case RULE_RIICHI_REQUISITE:
 				if (Rule(RULE_PENALTY_NEGATIVE+1) == 6) {gosub *config_strikeout}
 				swbreak
+			case RULE_TAOYISE:
+				if (Rule(RULE_RED_FIVE+1) == 2) {gosub *config_strikeout}
+				swbreak
 		swend
 		if (cnt == 19) {borderedtxt2 "通信対戦時のルール設定はホスト側の設定が適用されます", 100, 590, 255, 255, 255, 1, 20, 192, 192, 192}
 	loop
@@ -251,7 +254,9 @@ return
 	if (strlen(tmptxt) > 8) {
 		borderedtxt3 tmptxt, BorderTextX, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5), , 8.0/double(strlen(tmptxt))
 	} else {
-		borderedtxt2 tmptxt, BorderTextX, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5)
+		repeat strlen(tmptxt)/2
+			borderedtxt2 strmid(tmptxt, cnt*2, 2), BorderTextX+(60/(strlen(tmptxt)/2-1))*cnt, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5)
+		loop
 	}
 	BorderTextX = 180+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
 	borderedtxt2 ":", BorderTextX, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5)
