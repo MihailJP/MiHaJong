@@ -458,6 +458,10 @@
 	AddRuleText3 "茶一色", RuleStat(RULE_CHAYISE)
 	AddRuleText "白鳥", RuleStat(RULE_HAKUCHO)
 	AddRuleText "暗中模索", RuleStat(RULE_HAKUCHO)
+	AddRuleText1 "カラス", RuleStat(RULE_KARASU)
+	AddRuleText3 "カラス立直", RuleStat(RULE_KARASU_RIICHI)
+	AddRuleText "欠牌和", RuleStat(RULE_KEPPAIHOH)
+	AddRuleText "北枕", RuleStat(RULE_KITAMAKURA)
 	/* ルール設定を表示　ここまで */
 
 return

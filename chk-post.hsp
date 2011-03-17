@@ -1,0 +1,54 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *  [後回しの役判定ルーチン]
+ *=============================
+ */
+
+/* 後回し判定の役 */
+#module
+#include "const.as"
+#deffunc posterioryaku var GameStat, var tmpYakuInfo, int targetPlayer, int TsumoAgari, int MachiType
+	trace "後回し判定の役の処理に入ります。"
+	/* 欠牌和 */
+	if (getRuleInt(RULE_KEPPAIHOH) != 0) {
+		countseentiles haiSeenCount, GameStat
+		countTilesInHand haiCount, GameStat, targetPlayer
+		if ((haiSeenCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+haiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) >= 4)&&(TsumoAgari == 1))||((haiSeenCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+haiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) > 4)&&(TsumoAgari == 0)) {
+			if ((MachiType == MACHI_KANCHAN)||(MachiType == MACHI_PENCHAN)||(MachiType == MACHI_TANKI)) {
+				addyaku tmpYakuInfo, "欠牌和", 1
+			}
+		}
+	}
+	/* カラス */
+	if (getRuleInt(RULE_KARASU) != 0) {
+		if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) <= 0) {
+			if ((MachiType == MACHI_KANCHAN)||(MachiType == MACHI_PENCHAN)||(MachiType == MACHI_TANKI)) {
+				addyaku tmpYakuInfo, "カラス", 1
+			}
+		}
+	}
+	/* カラス立直 */
+	if (getRuleInt(RULE_KARASU_RIICHI) != 0) {
+		if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) == 1) {
+			if (searchyaku(tmpYakuInfo, "立直")) {
+				addyaku tmpYakuInfo, "カラス立直", 1
+			}
+		}
+	}
+	/* 北枕 */
+	if (getRuleInt(RULE_KITAMAKURA) != 0) {
+		if (((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) >= 2)&&((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) < 1000)) {
+			if (getDoraFlag(GameStat, DORA_OMOTE, TILE_NORTH_WIND) == 0) {
+				if (getDoraFlag(GameStat, DORA_OMOTE, TILE_NORTH_WIND) == 0) {
+					if ((getMenzen(GameStat, targetPlayer) == 0)||(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_NO)||(getRuleInt(RULE_URADORA) == 1)||(getDoraFlag(GameStat, DORA_URA, TILE_NORTH_WIND) == 0)) {
+						if (haiMianziDat(0) == TILE_NORTH_WIND) {
+							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1
+							addyaku tmpYakuInfo, "北枕", -1
+						}
+					}
+				}
+			}
+		}
+	}
+return
+#global

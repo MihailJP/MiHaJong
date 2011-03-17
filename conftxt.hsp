@@ -1561,4 +1561,20 @@
 	RuleDescription(RULE_ANCHUMOSAKU+1) = "暗中模索の有無と価値を設定します(中を暗槓して索子で自摸和)"
 	RuleTxt(0, RULE_ANCHUMOSAKU+1) = "なし", "１飜"
 
+	RuleName(RULE_KARASU+1) = "カラス"
+	RuleDescription(RULE_KARASU+1) = "カラスの有無と価値を設定します(役なしの嵌張・辺張・単騎和了り)"
+	RuleTxt(0, RULE_KARASU+1) = "なし", "１飜"
+
+	RuleName(RULE_KARASU_RIICHI+1) = "カラス立直"
+	RuleDescription(RULE_KARASU_RIICHI+1) = "カラス立直の有無と価値を設定します(立直のみの和了)"
+	RuleTxt(0, RULE_KARASU_RIICHI+1) = "なし", "１飜"
+
+	RuleName(RULE_KEPPAIHOH+1) = "欠牌和"
+	RuleDescription(RULE_KEPPAIHOH+1) = "欠牌和の有無と価値を設定します(嵌張・辺張・単騎のラス牌和了り)"
+	RuleTxt(0, RULE_KEPPAIHOH+1) = "なし", "１飜"
+
+	RuleName(RULE_KITAMAKURA+1) = "北枕"
+	RuleDescription(RULE_KITAMAKURA+1) = "北枕の有無と価値を設定します(役満・１飜手以外でドラでない北が雀頭)"
+	RuleTxt(0, RULE_KITAMAKURA+1) = "なし", "マイナス１飜"
+
 return

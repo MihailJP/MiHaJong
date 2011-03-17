@@ -25,7 +25,7 @@
 	Shanten = ShantenArray(SHANTEN_ALL)
 	repeat 160
 		dim tmpScore, NUM_OF_DIGIT_GROUPS
-		if ((cnt \ 8) == 7) {await 0}
+		//if ((cnt \ 8) == 7) {await 0}
 		newmod tmpYakuInfo, yakuStruct
 		/* 国士無双 */
 		if (ShantenArray(SHANTEN_ORPHANS) == -1) {
@@ -82,6 +82,7 @@
 			miscyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, TsumoAgari
 			setYakuInfo tmpYakuInfo, YAKUINF_FU, ((getYakuInfo(tmpYakuInfo, YAKUINF_FU)+8)/10)*10 // 点パネする
 			countdora GameStat, tmpYakuInfo, targetPlayer
+			posterioryaku GameStat, tmpYakuInfo, targetPlayer, TsumoAgari, MachiType
 		}
 		tmpScore(0) = getYakuInfo(tmpYakuInfo, YAKUINF_FU)
 		if (getRuleInt(RULE_SIMPLIFIED_SCORING) != 0) {
@@ -369,7 +370,9 @@ return
 #include "chk-seq.hsp"
 /* その他の役 */
 #include "chk-misc.hsp"
-/* その他の役 */
+/* 十三不塔 */
 #include "chk-buda.hsp"
 /* ドラ */
 #include "chk-dora.hsp"
+/* 後回しの役 */
+#include "chk-post.hsp"
