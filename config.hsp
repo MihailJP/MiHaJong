@@ -152,7 +152,7 @@ return
 		if (RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE+1) == "Ｎ／Ａ") {
 			tooltip@ cnt, RuleDescription(cnt+(configPage-1)*RULES_IN_PAGE+1)
 		} else {
-			tooltip@ cnt, strf("%s（初期設定：%s）", RuleDescription(cnt+(configPage-1)*RULES_IN_PAGE+1), RuleTxt(Rule(cnt+(configPage-1)*RULES_IN_PAGE+1), cnt+(configPage-1)*RULES_IN_PAGE+1))
+			tooltip@ cnt, strf("%s（初期設定：%s）", RuleDescription(cnt+(configPage-1)*RULES_IN_PAGE+1), RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE+1))
 		}
 	loop
 	objsize 70, 20
