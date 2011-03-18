@@ -124,7 +124,7 @@ return
 	dsplay@ SND_BUTTON
 	repeat length(Rule): rule(cnt) = 0: loop
 	gsel 0
-	gosub *config_showruletext
+	gosub *config_redraw
 	return
 *rulewrite
 	dsplay@ SND_BUTTON
