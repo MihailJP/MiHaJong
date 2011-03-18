@@ -1,10 +1,10 @@
-_FILEVERSION=1.4.1.21
-_PRODUCTVERSION=1.4.1.21
+_FILEVERSION=1.4.2.69
+_PRODUCTVERSION=1.4.2.69
 Comments=四人打ち三麻MiHaJong
 CompanyName=MihailJP
 FileDescription=四人打ち三麻MiHaJong
-FileVersion=1.4.1
+FileVersion=1.4.2
 InternalName=MiHaJong
 OriginalFilename=mihaysnm.exe
 ProductName=MiHaJong
-ProductVersion=1.4.1
+ProductVersion=1.4.2
