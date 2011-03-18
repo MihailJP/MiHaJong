@@ -8,7 +8,7 @@
 #define VERSION_MAJ 1
 #define VERSION_MED 4
 #define VERSION_MIN 2
-#define VERSION_MIC "dev"
+#define VERSION_MIC ""
 
 /* フォントの指定 */
 /* 必ず等幅日本語フォントを指定すること */
@@ -89,69 +89,69 @@
 #define TILE_SHADOW			64
 #define TILE_DICE_SHADOW	144
 
-/* 音声データの管理番号範囲 */
-#define SND_START	40
-#define SND_END		57
-#define VOX_START	64
-#define VOX_END		76
-#define BGM_START	0
-#define BGM_END		35
-
 /* ＢＧＭの番号 */
-#define MUS_RICHI1				16
-#define MUS_RICHI2				17
-#define MUS_RICHI3				18
-#define MUS_OPENRICHI			19
-#define MUS_AGARI_1HAN			20
-#define MUS_AGARI_2HAN			21
-#define MUS_AGARI_3HAN			22
-#define MUS_AGARI_MANGAN		23
-#define MUS_AGARI_HANEMAN		24
-#define MUS_AGARI_BAIMAN		25
-#define MUS_AGARI_SANBAIMAN		26
-#define MUS_AGARI_KAZOE_YAKUMAN	27
-#define MUS_AGARI_YAKUMAN		28
-#define MUS_RYUUKYOKU			29
-#define MUS_TITLE				30
-#define MUS_ENDING				31
-#define MUS_ENDING2				32
-#define MUS_EFFECT				33
-#define MUS_FINAL				34
-#define MUS_SHIBARI				35
+#define BGM_START	0
+#enum MUS_RICHI1 = 16
+#enum MUS_RICHI2
+#enum MUS_RICHI3
+#enum MUS_OPENRICHI
+#enum MUS_AGARI_SELF_1
+#enum MUS_AGARI_SELF_2
+#enum MUS_AGARI_SELF_3
+#enum MUS_AGARI_FURIKOMI_1
+#enum MUS_AGARI_FURIKOMI_2
+#enum MUS_AGARI_FURIKOMI_3
+#enum MUS_AGARI_OTHER_1
+#enum MUS_AGARI_OTHER_2
+#enum MUS_AGARI_OTHER_3
+#enum MUS_RYUUKYOKU
+#enum MUS_TITLE
+#enum MUS_ENDING
+#enum MUS_ENDING2
+#enum MUS_EFFECT
+#enum MUS_FINAL
+#enum MUS_SHIBARI
+#define BGM_END		MUS_SHIBARI
 
 /* 効果音の管理番号 */
-#define SND_DAHAI1		40
-#define SND_DAHAI2		41
-#define SND_TSUMO		42
-#define SND_SAIKORO		43
-#define SND_BELL		44
-#define SND_COUNTDOWN	45
-#define SND_CUOHU		46
-#define SND_YAKULST1	47
-#define SND_YAKULST2	48
-#define SND_MEKURI		49
-#define SND_BUTTON		50
-#define SND_CLICK		51
-#define SND_PAGE		52
-#define SND_TYPE		53
-#define SND_PINGJU		54
-#define SND_FLASH		55
-#define SND_SIGNAL		56
-#define SND_CLOCK		57
+#const SND_START	BGM_END+1
+#enum SND_DAHAI1 = SND_START
+#enum SND_DAHAI2
+#enum SND_TSUMO
+#enum SND_SAIKORO
+#enum SND_BELL
+#enum SND_COUNTDOWN
+#enum SND_CUOHU
+#enum SND_YAKULST1
+#enum SND_YAKULST2
+#enum SND_MEKURI
+#enum SND_BUTTON
+#enum SND_CLICK
+#enum SND_PAGE
+#enum SND_TYPE
+#enum SND_PINGJU
+#enum SND_FLASH
+#enum SND_SIGNAL
+#enum SND_CLOCK
+#define SND_END		SND_CLOCK
 
-#define VOX_CHI				64
-#define VOX_PON				65
-#define VOX_KAN				66
-#define VOX_RICHI			67
-#define VOX_TSUMO			68
-#define VOX_RON				69
-#define VOX_KYUUSHU			70
-#define VOX_FLOWER			71
-#define VOX_SIKANG			72
-#define VOX_SIFENG			73
-#define VOX_SANJIAHU		74
-#define VOX_SIJIARICHI		75
-#define VOX_RON_FURIKOMI	76
+#const VOX_START	SND_END+1
+#enum VOX_CHI = VOX_START
+#enum VOX_PON
+#enum VOX_KAN
+#enum VOX_RICHI
+#enum VOX_TSUMO
+#enum VOX_RON
+#enum VOX_KYUUSHU
+#enum VOX_FLOWER
+#enum VOX_SIKANG
+#enum VOX_SIFENG
+#enum VOX_SANJIAHU
+#enum VOX_SIJIARICHI
+#enum VOX_RON_FURIKOMI
+#define VOX_END		VOX_RON_FURIKOMI
+
+/* 音声データの管理番号範囲 */
 
 /* ルール管理番号 */
 #define RULES_IN_PAGE		40

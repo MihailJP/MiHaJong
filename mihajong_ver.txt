@@ -1,5 +1,5 @@
-_FILEVERSION=1.4.2.69
-_PRODUCTVERSION=1.4.2.69
+_FILEVERSION=1.4.2.70
+_PRODUCTVERSION=1.4.2.70
 Comments=四人打ち麻雀MiHaJong
 CompanyName=MihailJP
 FileDescription=四人打ち麻雀MiHaJong

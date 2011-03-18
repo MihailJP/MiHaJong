@@ -25,17 +25,17 @@
 		borderedtxt2 "ïÔê” "+windName(playerWind(TmpPaoPlayer, getRound(GameStat)))+strmid(PlayerName(TmpPaoPlayer), 0, 3),456,10,255,255,255,1,16,192,192,192,1
 		borderedtxt2 strmid(PlayerName(TmpPaoPlayer), 3, 16),456,30,255,255,255,1,16,192,192,192,1
 	}
-	if (agariPlayer == getPlayer(GameStat)) {drawcol= 255, 255, 0}
+	if (agariPlayer == getPlayer(GameStat)) {drawcol= 255, 255, 0: agariBgmSet = 0}
 	else {
 		if (isPaoAgari(GameStat, agariPlayer)) {
 			if (isPao(GameStat, agariPlayer, getPlayer(GameStat))) {
-				drawcol= 255, 64, 64
-			} else:if (furikomiPlayer == getPlayer(GameStat)) {drawcol= 255, 64, 64}
-			else {drawcol= 255, 255, 255}
+				drawcol= 255, 64, 64: agariBgmSet = 1
+			} else:if (furikomiPlayer == getPlayer(GameStat)) {drawcol= 255, 64, 64: agariBgmSet = 1}
+			else {drawcol= 255, 255, 255: agariBgmSet = 2}
 		} else {
-			if (TsumoAgari) {drawcol= 255, 64, 64}
-			else:if (furikomiPlayer == getPlayer(GameStat)) {drawcol= 255, 64, 64}
-			else {drawcol= 255, 255, 255}
+			if (TsumoAgari) {drawcol= 255, 64, 64: agariBgmSet = 1}
+			else:if (furikomiPlayer == getPlayer(GameStat)) {drawcol= 255, 64, 64: agariBgmSet = 1}
+			else {drawcol= 255, 255, 255: agariBgmSet = 2}
 		}
 	}
 	color drawcol(0),drawcol(1),drawcol(2)
@@ -202,19 +202,27 @@
 	}
 	chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
 	redraw 1: redraw 0: await 1000
-	if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 480) {bgmcode@ = MUS_AGARI_1HAN: gosub *bgmplay_norep@}
-	if ((getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 480)&&(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 960)) {bgmcode@ = MUS_AGARI_2HAN: gosub *bgmplay_norep@}
-	if ((getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 960)&&(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 2000)) {bgmcode@ = MUS_AGARI_3HAN: gosub *bgmplay_norep@}
-	if ((getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 2000)&&(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 3000)) {bgmcode@ = MUS_AGARI_MANGAN: gosub *bgmplay_norep@}
-	if ((getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 3000)&&(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 4000)) {bgmcode@ = MUS_AGARI_HANEMAN: gosub *bgmplay_norep@}
-	if ((getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 4000)&&(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 6000)) {bgmcode@ = MUS_AGARI_BAIMAN: gosub *bgmplay_norep@}
-	if ((getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 6000)&&(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 8000)) {bgmcode@ = MUS_AGARI_SANBAIMAN: gosub *bgmplay_norep@}
-	if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 8000) {
-		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
-			bgmcode@ = MUS_AGARI_YAKUMAN: gosub *bgmplay_norep@
-		} else {
-			bgmcode@ = MUS_AGARI_KAZOE_YAKUMAN: gosub *bgmplay_norep@
-		}
+	if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 2000) {
+		switch agariBgmSet
+			case 0: bgmcode@ = MUS_AGARI_SELF_1: swbreak
+			case 1: bgmcode@ = MUS_AGARI_FURIKOMI_1: swbreak
+			case 2: bgmcode@ = MUS_AGARI_OTHER_1: swbreak
+		swend
+		gosub *bgmplay_norep@
+	} else: if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 8000) {
+		switch agariBgmSet
+			case 0: bgmcode@ = MUS_AGARI_SELF_2: swbreak
+			case 1: bgmcode@ = MUS_AGARI_FURIKOMI_2: swbreak
+			case 2: bgmcode@ = MUS_AGARI_OTHER_2: swbreak
+		swend
+		gosub *bgmplay_norep@
+	} else {
+		switch agariBgmSet
+			case 0: bgmcode@ = MUS_AGARI_SELF_3: swbreak
+			case 1: bgmcode@ = MUS_AGARI_FURIKOMI_3: swbreak
+			case 2: bgmcode@ = MUS_AGARI_OTHER_3: swbreak
+		swend
+		gosub *bgmplay_norep@
 	}
 	/* òaóπñï\é¶ */
 	font fontname, 24, 0
