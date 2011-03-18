@@ -21,8 +21,6 @@
 
 #deffunc configtxtdat
 	
-	/* Page 1 */
-	
 	RuleName(RULE_GAME_LENGTH+1) = "長さ"
 	RuleDescription(RULE_GAME_LENGTH+1) = "１試合の長さを設定します"
 	RuleTxt(0, RULE_GAME_LENGTH+1) = "半荘戦", "東風戦", "一荘戦", "東北戦", "一局清算", "東々戦", "東南西戦", "東風戦(東場固定)"
@@ -226,8 +224,6 @@
 	RuleDescription(RULE_RIICHI_SHIBARI+1) = "立直縛りの有無を設定します"
 	RuleTxt(0, RULE_RIICHI_SHIBARI+1) = "なし", "あり"
 	
-	/* Page 2 */
-	
 	RuleName(RULE_EXPOSED_PINFU+1) = "喰い平"
 	RuleDescription(RULE_EXPOSED_PINFU+1) = "鳴いた平和形の符を設定します"
 	RuleTxt(0, RULE_EXPOSED_PINFU+1) = "３０符", "２０符", "１飜30符(縛りを満たさない)", "１飜20符(縛りを満たさない)", "１飜３０符", "１飜２０符"
@@ -410,8 +406,6 @@
 	RuleDescription(RULE_FUUKA_SETSUGETSU+1) = "風花雪月の有無と価値を設定します(翻牌の風牌、五筒、白、一筒の刻子)"
 	RuleTxt(0, RULE_FUUKA_SETSUGETSU+1) = "なし", "役満"
 
-	/* Page 3 */
-	
 	RuleName(RULE_KACHOU_FUUGETSU+1) = "花鳥風月"
 	RuleDescription(RULE_KACHOU_FUUGETSU+1) = "花鳥風月の有無と価値を設定します(五筒、一索、翻牌の風牌、一筒の刻子)"
 	RuleTxt(0, RULE_KACHOU_FUUGETSU+1) = "なし", "役満"
@@ -590,8 +584,6 @@
 	RuleDescription(RULE_PINZU_MILLION+1) = "筒子百万石の有無と価値を設定します(筒子の清一色で数字の合計が100以上)"
 	RuleTxt(0, RULE_PINZU_MILLION+1) = "なし", "役満"
 
-	/* Page 4 */
-	
 	RuleName(RULE_CHUEIIMEN+1) = "絶一門"
 	RuleDescription(RULE_CHUEIIMEN+1) = "絶一門の有無と価値を設定します(萬子、筒子、索子のうちどれか一つがない)"
 	RuleTxt(0, RULE_CHUEIIMEN+1) = "なし", "１飜", "１飜（字牌不可）"
@@ -799,8 +791,6 @@
 	RuleDescription(RULE_CHUUGEN_CHIKUROKU+1) = "中原逐鹿の有無と価値を設定します(中、発、七筒、六筒の刻子)"
 	RuleTxt(0, RULE_CHUUGEN_CHIKUROKU+1) = "なし", "役満"
 
-	/* Page 5 */
-	
 	RuleName(RULE_NISHOKU_SANRENKOH+1) = "二色三連刻"
 	RuleDescription(RULE_NISHOKU_SANRENKOH+1) = "二色三連刻の有無と価値を設定します(二色で数字の連続した３刻子)"
 	RuleTxt(0, RULE_NISHOKU_SANRENKOH+1) = "なし", "１飜"
@@ -993,8 +983,6 @@
 	RuleDescription(RULE_KITA_NO_DAICHI+1) = "北の大地の有無と価値を設定します(索子の23468、北、白で七対子)"
 	RuleTxt(0, RULE_KITA_NO_DAICHI+1) = "なし", "役満"
 
-	/* Page 6 */
-	
 	RuleName(RULE_SHUANGFENG_ZHAYUN+1) = "双峰挿雲"
 #ifdef SANMAX
 	RuleDescription(RULE_SHUANGFENG_ZHAYUN+1) = "三人打ちでは設定できません"
@@ -1167,10 +1155,6 @@
 	RuleDescription(RULE_YUKIGESHOU+1) = "雪化粧の有無と価値を設定します(一筒、九筒、白の槓子)"
 	RuleTxt(0, RULE_YUKIGESHOU+1) = "なし", "役満"
 
-	RuleName(RULE_HOUKANSOU+1) = "鳳還巣"
-	RuleDescription(RULE_HOUKANSOU+1) = "鳳還巣の有無と価値を設定します(一索を捨てている状態で一索単騎をツモ和了り)"
-	RuleTxt(0, RULE_HOUKANSOU+1) = "なし", "１飜", "２飜"
-
 	RuleName(RULE_SEKIGAN_SEIRYUU+1) = "赤眼青龍"
 	RuleDescription(RULE_SEKIGAN_SEIRYUU+1) = "赤眼青龍の有無と価値を設定します(234筒の順子、二筒・四筒・八筒・(白or東)で刻子と雀頭)"
 	RuleTxt(0, RULE_SEKIGAN_SEIRYUU+1) = "なし", "役満"
@@ -1212,12 +1196,6 @@
 	RuleDescription(RULE_ZAONAN_CHUANGBEI+1) = "走南闖北の有無と価値を設定します(南と北の槓子)"
 	RuleTxt(0, RULE_ZAONAN_CHUANGBEI+1) = "なし", "６飜"
 
-	/* Page 7 */
-	
-	RuleName(RULE_GEKKANJUN+1) = "月還巡"
-	RuleDescription(RULE_GEKKANJUN+1) = "月還巡の有無と価値を設定します(一筒を捨てている状態で一筒単騎をツモ和了り)"
-	RuleTxt(0, RULE_GEKKANJUN+1) = "なし", "１飜", "２飜"
-
 	RuleName(RULE_TAIKOU_TURTLE+1) = "太公釣金亀"
 	RuleDescription(RULE_TAIKOU_TURTLE+1) = "太公釣金亀の有無と価値を設定します(二索の刻子があって三索単騎で和了る)"
 	RuleTxt(0, RULE_TAIKOU_TURTLE+1) = "なし", "１飜"
@@ -1245,6 +1223,14 @@
 	RuleName(RULE_SHANRON_TOUJA+1) = "双龍闘蛇"
 	RuleDescription(RULE_SHANRON_TOUJA+1) = "双龍闘蛇の有無と価値を設定します(筒子と索子で123789の形、一萬の雀頭)"
 	RuleTxt(0, RULE_SHANRON_TOUJA+1) = "なし", "４飜"
+
+	RuleName(RULE_HOUKANSOU+1) = "鳳還巣"
+	RuleDescription(RULE_HOUKANSOU+1) = "鳳還巣の有無と価値を設定します(一索を捨てている状態で一索単騎をツモ和了り)"
+	RuleTxt(0, RULE_HOUKANSOU+1) = "なし", "１飜", "２飜"
+
+	RuleName(RULE_GEKKANJUN+1) = "月還巡"
+	RuleDescription(RULE_GEKKANJUN+1) = "月還巡の有無と価値を設定します(一筒を捨てている状態で一筒単騎をツモ和了り)"
+	RuleTxt(0, RULE_GEKKANJUN+1) = "なし", "１飜", "２飜"
 
 	RuleName(RULE_SHINRIISHOU+1) = "針戻手"
 	RuleDescription(RULE_SHINRIISHOU+1) = "針戻手の有無と価値を設定します(一萬を捨てている状態で一萬単騎をツモ和了り)"
@@ -1396,8 +1382,6 @@
 #else
 	RuleTxt(0, RULE_TSUMIBOH_RATE+1) = "場300点", ">>>", "場1500点", "なし"
 #endif
-
-	/* Page 8 */
 
 	RuleName(RULE_MINKAN_PAO+1) = "大明槓の包"
 	RuleDescription(RULE_MINKAN_PAO+1) = "大明槓したときの嶺上牌で和了りになった場合の処理を設定します"

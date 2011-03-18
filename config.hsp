@@ -106,6 +106,8 @@ return
 	return
 
 #deffunc selcat_
+	sdim PageCaption, 32, RULE_PAGES
+	PageCaption = "基本のルール設定", "ドラとインフレルール設定", "基本の役設定", "順子役の設定①", "順子役の設定②", "刻子役の設定①", "刻子役の設定②", "槓子役・七対子系の役設定", "全体手役の設定", "状況役の設定", "その他の役設定"
 	dsplay@ SND_BUTTON
 	configtxt
 	configPage = 1
@@ -176,7 +178,8 @@ return
 	font fontname, 48, 0
 	borderedtxt2 "環 境 設 定", 152, 12, 255, 255, 255, 1, 48, 192, 192, 192
 	font fontname, 24, 0
-	borderedtxt2 "Configuration.", 550, 24, 255, 255, 255, 1, 24, 192, 192, 192
+	borderedtxt2 "Rule configuration.", 500, 18, 255, 255, 255, 1, 24, 192, 192, 192
+	borderedtxt2 strf("%2d/%2d頁 %s", configPage, RULE_PAGES, PageCaption(configPage-1)), 500, 48, 255, 255, 255, 1, 18, 192, 192, 192
 	font fontname, 20, 0
 	repeat RULES_IN_PAGE
 		tmpcol = 255, 255, 255, 192, 192, 192
@@ -229,10 +232,11 @@ return
 					gosub *config_strikeout
 				}
 				swbreak
-			case RULE_BLUE_TILES:
 			case RULE_BLUE_CHIP:
 				if (Rule(RULE_CHIP+1) == 0) {gosub *config_strikeout}
-				else: if ((Rule(RULE_BLUE_ONE+1) == 0)&&(Rule(RULE_BLUE_FIVE+1) == 0)&&(Rule(RULE_BLUE_NINE+1) == 0)&&(Rule(RULE_BLUE_LVFA+1) == 0)) {
+				/* FALLTHRU */
+			case RULE_BLUE_TILES:
+				if ((Rule(RULE_BLUE_ONE+1) == 0)&&(Rule(RULE_BLUE_FIVE+1) == 0)&&(Rule(RULE_BLUE_NINE+1) == 0)&&(Rule(RULE_BLUE_LVFA+1) == 0)) {
 					gosub *config_strikeout
 				}
 				swbreak
