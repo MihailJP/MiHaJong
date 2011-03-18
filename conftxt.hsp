@@ -1577,4 +1577,8 @@
 	RuleDescription(RULE_KITAMAKURA+1) = "北枕の有無と価値を設定します(役満・１飜手以外でドラでない北が雀頭)"
 	RuleTxt(0, RULE_KITAMAKURA+1) = "なし", "マイナス１飜"
 
+	RuleName(RULE_JINJI_DUOSHI+1) = "金鶏奪食"
+	RuleDescription(RULE_JINJI_DUOSHI+1) = "金鶏奪食の有無と価値を設定します(欠牌和を搶槓で和了)"
+	RuleTxt(0, RULE_JINJI_DUOSHI+1) = "なし", "１飜"
+
 return

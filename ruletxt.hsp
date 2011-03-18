@@ -462,6 +462,7 @@
 	AddRuleText3 "カラス立直", RuleStat(RULE_KARASU_RIICHI)
 	AddRuleText "欠牌和", RuleStat(RULE_KEPPAIHOH)
 	AddRuleText "北枕", RuleStat(RULE_KITAMAKURA)
+	AddRuleText "金鶏奪食", RuleStat(RULE_JINJI_DUOSHI)
 	/* ルール設定を表示　ここまで */
 
 return

@@ -15,7 +15,9 @@
 		countTilesInHand haiCount, GameStat, targetPlayer
 		if ((haiSeenCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+haiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) >= 4)&&(TsumoAgari == 1))||((haiSeenCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+haiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) > 4)&&(TsumoAgari == 0)) {
 			if ((MachiType == MACHI_KANCHAN)||(MachiType == MACHI_PENCHAN)||(MachiType == MACHI_TANKI)) {
-				addyaku tmpYakuInfo, "Œ‡”v˜a", 1
+				if ((searchyaku(tmpYakuInfo, "È") == 0)&&(searchyaku(tmpYakuInfo, "‹àŒ{’DH") == 0)) {
+					addyaku tmpYakuInfo, "Œ‡”v˜a", 1
+				}
 			}
 		}
 	}
