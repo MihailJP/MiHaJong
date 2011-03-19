@@ -7,8 +7,8 @@
 /* バージョン情報 */
 #define VERSION_MAJ 1
 #define VERSION_MED 4
-#define VERSION_MIN 2
-#define VERSION_MIC ""
+#define VERSION_MIN 3
+#define VERSION_MIC "dev"
 
 /* フォントの指定 */
 /* 必ず等幅日本語フォントを指定すること */
@@ -188,6 +188,7 @@
 #enum RULE_RIICHI_SHIBARI
 #enum RULE_ANKAN_CONCEAL
 #enum RULE_ANKAN_CHANKAN
+#enum RULE_TSUMO_PAYMENT
 
 #enum RULE_DORA_INDICATOR = RULES_IN_PAGE*1
 #enum RULE_URADORA

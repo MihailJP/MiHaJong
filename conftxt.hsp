@@ -1565,4 +1565,18 @@
 	RuleDescription(RULE_JINJI_DUOSHI+1) = "金鶏奪食の有無と価値を設定します(欠牌和を搶槓で和了)"
 	RuleTxt(0, RULE_JINJI_DUOSHI+1) = "なし", "１飜"
 
+	RuleName(RULE_TSUMO_PAYMENT+1) = "自摸和了の点数"
+#ifdef SANMA
+	RuleDescription(RULE_TSUMO_PAYMENT+1) = "ツモ和了りの点数の負担方法を設定します"
+	RuleTxt(0, RULE_TSUMO_PAYMENT+1) = "完全折半", ">>>", "自摸損", "千点加符", "丸取り", "北家分折半"
+#else
+#ifdef SANMA4
+	RuleDescription(RULE_TSUMO_PAYMENT+1) = "ツモ和了りの点数の負担方法を設定します"
+	RuleTxt(0, RULE_TSUMO_PAYMENT+1) = "四人打ち準拠", "完全折半", "自摸損", "千点加符", "丸取り", "北家分折半"
+#else
+	RuleDescription(RULE_TSUMO_PAYMENT+1) = "四人打ちでは設定できません"
+	RuleTxt(0, RULE_TSUMO_PAYMENT+1) = "Ｎ／Ａ"
+#endif
+#endif
+
 return

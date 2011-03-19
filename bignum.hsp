@@ -106,24 +106,66 @@
 	loop
 	return
 #global
-
 #module
 #include "const.as"
-#deffunc deltacalcplus array AgariPointRaw, array hncnPointDelta, int agariBairitsu
-	dim addend, NUM_OF_DIGIT_GROUPS
-	addend(0) = (AgariPointRaw(0)*agariBairitsu+90)/100
-	repeat NUM_OF_DIGIT_GROUPS-1,1: addend(cnt) = AgariPointRaw(cnt)*agariBairitsu: loop
-	bignum_add hncnPointDelta, addend, cnt, 1000000
+#deffunc agaricalc2 array agariPointArray, array AgariPointRaw, double agariBairitsu, double agariBairitsu2, int agariCount, double agariBairitsu3, int agariCount2
+	dim agariPointArray, NUM_OF_DIGIT_GROUPS
+	
+	agariPointArray(0) = int(double(AgariPointRaw(0))*agariBairitsu+90)/100
+	repeat NUM_OF_DIGIT_GROUPS-1,1: agariPointArray(cnt) = int(double(AgariPointRaw(cnt))*agariBairitsu): loop
+	bignum_fix agariPointArray, 0, 1000000
+	
+	repeat agariCount
+		agariPointArray(0) += int(double(AgariPointRaw(0))*agariBairitsu2+90)/100
+		repeat NUM_OF_DIGIT_GROUPS-1,1: agariPointArray(cnt) += int(double(AgariPointRaw(cnt))*agariBairitsu2): loop
+		bignum_fix agariPointArray, 0, 1000000
+	loop
+	
+	repeat agariCount2
+		agariPointArray(0) = int(double(AgariPointRaw(0))*agariBairitsu3+90)/100
+		repeat NUM_OF_DIGIT_GROUPS-1,1: agariPointArray(cnt) = int(double(AgariPointRaw(cnt))*agariBairitsu3): loop
+		bignum_fix agariPointArray, 0, 1000000
+	loop
 	return
 #global
 
 #module
 #include "const.as"
-#deffunc deltacalcminus array AgariPointRaw, array hncnPointDelta, int agariBairitsu
+#deffunc deltacalcplus array AgariPointRaw, array hncnPointDelta, int agariBairitsu, int targetPlayer
+	dim addend, NUM_OF_DIGIT_GROUPS
+	addend(0) = (AgariPointRaw(0)*agariBairitsu+90)/100
+	repeat NUM_OF_DIGIT_GROUPS-1,1: addend(cnt) = AgariPointRaw(cnt)*agariBairitsu: loop
+	bignum_add hncnPointDelta, addend, targetPlayer, 1000000
+	return
+#global
+
+#module
+#include "const.as"
+#deffunc deltacalcminus array AgariPointRaw, array hncnPointDelta, int agariBairitsu, int targetPlayer
 	dim subtrahend, NUM_OF_DIGIT_GROUPS
 	subtrahend(0) = (AgariPointRaw(0)*agariBairitsu+90)/100
 	repeat NUM_OF_DIGIT_GROUPS-1,1: subtrahend(cnt) = AgariPointRaw(cnt)*agariBairitsu: loop
-	bignum_subtract hncnPointDelta, subtrahend, cnt, 1000000
+	bignum_subtract hncnPointDelta, subtrahend, targetPlayer, 1000000
+	return
+#global
+
+#module
+#include "const.as"
+#deffunc deltacalcplusd array AgariPointRaw, array hncnPointDelta, double agariBairitsu, int targetPlayer
+	dim addend, NUM_OF_DIGIT_GROUPS
+	addend(0) = int(double(AgariPointRaw(0))*agariBairitsu+90)/100
+	repeat NUM_OF_DIGIT_GROUPS-1,1: addend(cnt) = int(double(AgariPointRaw(cnt))*agariBairitsu): loop
+	bignum_add hncnPointDelta, addend, targetPlayer, 1000000
+	return
+#global
+
+#module
+#include "const.as"
+#deffunc deltacalcminusd array AgariPointRaw, array hncnPointDelta, double agariBairitsu, int targetPlayer
+	dim subtrahend, NUM_OF_DIGIT_GROUPS
+	subtrahend(0) = int(double(AgariPointRaw(0))*agariBairitsu+90)/100
+	repeat NUM_OF_DIGIT_GROUPS-1,1: subtrahend(cnt) = int(double(AgariPointRaw(cnt))*agariBairitsu): loop
+	bignum_subtract hncnPointDelta, subtrahend, targetPlayer, 1000000
 	return
 #global
 
