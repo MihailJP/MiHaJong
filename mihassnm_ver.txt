@@ -1,0 +1,10 @@
+_FILEVERSION=1.4.3.74
+_PRODUCTVERSION=1.4.3.74
+Comments=””vO–ƒMiHaJong
+CompanyName=MihailJP
+FileDescription=””vO–ƒMiHaJong
+FileVersion=1.4.3
+InternalName=MiHaJong
+OriginalFilename=mihassnm.exe
+ProductName=MiHaJong
+ProductVersion=1.4.3
