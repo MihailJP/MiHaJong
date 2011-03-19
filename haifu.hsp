@@ -473,6 +473,9 @@ return
 	noteunsel
 	repeat NUM_OF_ACTUAL_PLAYERS
 		tmpcnt = RelativePositionOf(cnt, hncnOrigTurn\NUM_OF_PLAYERS)
+#ifdef SANMAT
+		if (((hncnOrigTurn\NUM_OF_PLAYERS)+cnt) >= NUM_OF_ACTUAL_PLAYERS) {tmpcnt = (tmpcnt+1)\NUM_OF_PLAYERS}
+#endif
 		// ÅI”vŽp
 		repeat NUM_OF_TILES_IN_HAND
 			if (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt) > 0) {
