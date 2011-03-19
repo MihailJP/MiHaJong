@@ -81,6 +81,9 @@ return
 	dim origPoint, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 	sdim haifuBuffer, 512*1024
 	notesel haifuBuffer
+#ifdef SANMAS
+	tmptxt = "MiHaJong 数牌三麻牌譜データ Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
+#else
 #ifdef SANMA4
 	tmptxt = "MiHaJong 四人三麻牌譜データ Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
 #else
@@ -88,6 +91,7 @@ return
 	tmptxt = "MiHaJong 三人打ち牌譜データ Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
 #else
 	tmptxt = "MiHaJong 四人打ち牌譜データ Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
+#endif
 #endif
 #endif
 	noteadd tmptxt
@@ -751,13 +755,17 @@ return
 	noteadd "</html>"
 	noteunsel
 	notesel haifuBuffer
-#ifdef SANMA4
-	tmpfilename1 = configPath+"haifu\\mihaysnm_"+VERSION_MAJ+"_"+VERSION_MED+"_"+VERSION_MIN+""+VERSION_MIC
+#ifdef SANMAS
+	tmpfilename1 = configPath+"haifu\\mihassnm_"+VERSION_MAJ+"_"+VERSION_MED+"_"+VERSION_MIN+""+VERSION_MIC
 #else
-	#ifdef SANMA
-		tmpfilename1 = configPath+"haifu\\mihasanm_"+VERSION_MAJ+"_"+VERSION_MED+"_"+VERSION_MIN+""+VERSION_MIC
+	#ifdef SANMA4
+		tmpfilename1 = configPath+"haifu\\mihaysnm_"+VERSION_MAJ+"_"+VERSION_MED+"_"+VERSION_MIN+""+VERSION_MIC
 	#else
-		tmpfilename1 = configPath+"haifu\\mihajong_"+VERSION_MAJ+"_"+VERSION_MED+"_"+VERSION_MIN+""+VERSION_MIC
+		#ifdef SANMA
+			tmpfilename1 = configPath+"haifu\\mihasanm_"+VERSION_MAJ+"_"+VERSION_MED+"_"+VERSION_MIN+""+VERSION_MIC
+		#else
+			tmpfilename1 = configPath+"haifu\\mihajong_"+VERSION_MAJ+"_"+VERSION_MED+"_"+VERSION_MIN+""+VERSION_MIC
+		#endif
 	#endif
 #endif
 	tmpfilename2 = strf("%04d%02d%02d_%02d%02d", gettime(0), gettime(1), gettime(3), gettime(4), gettime(5))

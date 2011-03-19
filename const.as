@@ -15,7 +15,7 @@
 #define fontname "ＭＳ 明朝"
 
 /* 基本的なゲーム用の定数 */
-#ifdef SANMA
+#ifdef SANMAT
 #define NUM_OF_ACTUAL_PLAYERS	3
 #else
 #define NUM_OF_ACTUAL_PLAYERS	4
@@ -48,13 +48,17 @@
 #enum SCR_SPLASH_BUF
 
 /* 通信ポート番号 */
-#ifdef SANMA4
-	#define PORT_GAME	50040
+#ifdef SANMAS
+	#define PORT_GAME	50030
 #else
-	#ifdef SANMA
-		#define PORT_GAME	50010
+	#ifdef SANMA4
+		#define PORT_GAME	50040
 	#else
-		#define PORT_GAME	50000
+		#ifdef SANMA
+			#define PORT_GAME	50010
+		#else
+			#define PORT_GAME	50000
+		#endif
 	#endif
 #endif
 #define PORT_CHAT	50020

@@ -232,7 +232,7 @@ PreviousMeld, ConnectionLost
 	return haiRichiCounter
 
 #modfunc calcWareme
-#ifdef SANMAX
+#ifdef ALLSANMA
 	if ((getRuleInt(RULE_WAREME) != 0)||(getRuleInt(RULE_KAIMENKAZE) != 0)) {
 		haiWareme = ((GameRound-(GameRound/4))+24+(haiDice1+haiDice2)-1)\3
 #ifdef SANMA4
@@ -363,7 +363,7 @@ PreviousMeld, ConnectionLost
 	repeat PAO_YAKU_PAGES*PAO_PLAYER_PAGES
 		PaoFlag(cnt\PAO_YAKU_PAGES, cnt/PAO_YAKU_PAGES) = -1
 	loop
-#ifdef SANMAX
+#ifdef ALLSANMA
 	haiDeadTiles = 14 // 王牌の数
 	dim Deck, 108, WALL_PAGES // 壁牌の配列
 	if (getRuleInt(RULE_FLOWER_TILES) != 0) {
@@ -409,7 +409,7 @@ PreviousMeld, ConnectionLost
 	haiDice1 = 0: haiDice2 = 0
 	haiDice1direction = 0: haiDice2direction = 0
 	haiPointer = 0 // ツモ牌のポインタ
-#ifdef SANMAX
+#ifdef ALLSANMA
 	haiRinshanPointer = 107 // 嶺上牌のポインタ
 #else
 	switch getRuleInt(RULE_FLOWER_TILES) // 嶺上牌のポインタ
@@ -435,7 +435,7 @@ PreviousMeld, ConnectionLost
 /* 初期化ルーチン */
 #modinit
 	dim PlayerScore, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-#ifdef SANMA
+#ifdef SANMAT
 	repeat NUM_OF_ACTUAL_PLAYERS
 		switch getRuleInt(RULE_STARTING_POINT)
 			case 0: PlayerScore(cnt,0) = 350: swbreak

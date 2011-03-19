@@ -7,6 +7,8 @@
 //#define global SANMA
 /* 四人三麻は以下のコメントを外す */
 //#define global SANMA4
+/* 数牌三麻は以下のコメントを外す */
+//#define global SANMAS
 
 /* このコメントを外すとできる限り高速に動作する(デバッグ専用！) */
 //#define global NOWAIT
@@ -32,8 +34,8 @@
  * それらの内容を読み込み、結合する
  */
 
-#include "const.as"
 #include "init.as"
+#include "const.as"
 #include "alias.as"
 #include "struct.as"
 

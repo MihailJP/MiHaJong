@@ -115,7 +115,7 @@
 			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
 				Shanten = 1 // 強制不聴扱い
 			}
-#ifdef SANMAX
+#ifdef ALLSANMA
 			if (Shanten == 0) {
 				if (TenpaiCnt == 1) {hncnPointDelta(cnt) += 30}
 				if (TenpaiCnt == 2) {hncnPointDelta(cnt) += 15}
@@ -150,7 +150,7 @@
 				Shanten = 1 // 強制不聴扱い
 			}
 			if ((Shanten > 0)&&(getRichiFlag(GameStat, RICHI_FLAG, cnt))) {
-#ifdef SANMA
+#ifdef SANMAT
 				if (playerwind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == targetPlayer) {
@@ -260,6 +260,7 @@
 	/**************/
 	/* 九種流局時 */
 	/**************/
+#ifndef SANMAS
 	if (hncnKyokuEndType == ENDKYOKU_KYUUSHUKYUUHAI) {
 		statmes "流局(九種九牌)"
 		switch playerWind(ActivePlayer, getRound(GameStat))
@@ -299,6 +300,7 @@
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 	}
+#endif
 	/**************/
 	/* 四槓流局時 */
 	/**************/
@@ -337,6 +339,7 @@
 	/**************/
 	/* 三家和の時 */
 	/**************/
+#ifndef ALLSANMA
 	if (hncnKyokuEndType == ENDKYOKU_TRIPLERON) {
 		statmes "流局(三家和)"
 		await 1300
@@ -402,9 +405,11 @@
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 	}
+#endif
 	/**************/
 	/* 四風流局時 */
 	/**************/
+#ifndef ALLSANMA
 	if (hncnKyokuEndType == ENDKYOKU_SUUFONRENDA) {
 		statmes "流局(四風連打)"
 		dsplay VOX_SIFENG
@@ -437,9 +442,11 @@
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 	}
+#endif
 	/**************/
 	/* 四人立直時 */
 	/**************/
+#ifndef ALLSANMA
 	if (hncnKyokuEndType == ENDKYOKU_SUUCHARIICHI) {
 		statmes "流局(四家立直)"
 		dsplay VOX_SIJIARICHI
@@ -474,7 +481,7 @@
 			Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
 			dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 			if (Shanten > 0) {
-#ifdef SANMA
+#ifdef SANMAT
 				if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == targetPlayer) {
@@ -540,6 +547,7 @@
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 	}
+#endif
 	/**************/
 	/* 流し満貫時 */
 	/**************/
@@ -592,14 +600,14 @@
 						if (ResultDesc != "") {ResultDesc += "、"}
 						ResultDesc += "西家"
 					swbreak
-#ifndef SANMA
+#ifndef SANMAT
 					case PLAYER_NORTH:
 						if (ResultDesc != "") {ResultDesc += "、"}
 						ResultDesc += "北家"
 					swbreak
 #endif
 				swend
-#ifdef SANMA
+#ifdef SANMAT
 				if (playerWind(chkP, getRound(GameStat)) == PLAYER_EAST) {
 					// 親
 					repeat NUM_OF_ACTUAL_PLAYERS

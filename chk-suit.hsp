@@ -9,7 +9,7 @@
 #deffunc suityaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int haiFuriten
 	trace "àÍêFånÇÃèàóùÇ…ì¸ÇËÇ‹Ç∑ÅB"
 	WanzMian = 0: PinzMian = 0: SouzMian = 0: ZiMian = 0
-#ifdef SANMAX
+#ifdef ALLSANMA
 	WindMian = 0: DragonMian = 0
 #endif
 	Cifr = 0
@@ -18,9 +18,11 @@
 			case TILE_SUIT_CHARACTERS: WanzMian++: swbreak
 			case TILE_SUIT_CIRCLES: PinzMian++: swbreak
 			case TILE_SUIT_BAMBOOS: SouzMian++: swbreak
+#ifndef SANMAS
 			case TILE_SUIT_HONORS: ZiMian++: swbreak
+#endif
 		swend
-#ifdef SANMAX
+#ifdef ALLSANMA
 		if (((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {
 			WindMian++
 		}
@@ -47,7 +49,9 @@
 		}
 	loop
 	if (((WanzMian+Zimian) == SIZE_OF_MELD_BUFFER)||((PinzMian+Zimian) == SIZE_OF_MELD_BUFFER)||((SouzMian+Zimian) == SIZE_OF_MELD_BUFFER)) {
+#ifndef SANMAS
 		if (Zimian == 0) {
+#endif
 			if (getRuleInt(RULE_CHINIISOH) != 0) {
 				addyaku tmpYakuInfo, "ê¥àÍêF", 3+getMenzen(GameStat, targetPlayer)
 			} else {
@@ -114,6 +118,7 @@
 					}
 				loop
 			}
+#ifndef SANMAX
 			/* ïSñúêŒ */
 			if (getRuleInt(RULE_KAGA_MILLION) != 0) {
 				if (WanzMian == SIZE_OF_MELD_BUFFER) {
@@ -133,6 +138,7 @@
 					}
 				}
 			}
+#endif
 			if (getRuleInt(RULE_PINZU_MILLION) != 0) {
 				if (PinzMian == SIZE_OF_MELD_BUFFER) {
 					if (Cifr >= 100) {
@@ -142,6 +148,7 @@
 					}
 				}
 			}
+#ifndef SANMAX
 			/* ãIèBå‹è\å‹ñúêŒ */
 			if (getRuleInt(RULE_KISHU550K) != 0) {
 				if (WanzMian == SIZE_OF_MELD_BUFFER) {
@@ -162,6 +169,7 @@
 					}
 				}
 			}
+#endif
 			/* êØåıéW‡£ */
 			if (getRuleInt(RULE_STARLIGHT) != 0) {
 				if (PinzMian == SIZE_OF_MELD_BUFFER) {
@@ -174,26 +182,34 @@
 					}
 				}
 			}
+#ifndef SANMAS
 		} else {
 			addyaku tmpYakuInfo, "ç¨àÍêF", 2+getMenzen(GameStat, targetPlayer)
 		}
+#endif
 	} else {
 		/* ê‚àÍñÂ */
 		if (getRuleInt(RULE_CHUEIIMEN) != 0) {
 			if ((WanzMian == 0)||(PinzMian == 0)||(SouzMian == 0)) {
+#ifndef SANMAS
 				if ((Zimian == 0)||(getRuleInt(RULE_CHUEIIMEN) != 2)) {
+#endif
 					if (getMenzen(GameStat, targetPlayer) == 1) {
 						addyaku tmpYakuInfo, "ê‚àÍñÂ", 1
 					}
+#ifndef SANMAS
 				}
+#endif
 			}
 		}
 	}
+#ifndef SANMAS
 	/* å‹ñÂç÷ */
 	if (getRuleInt(RULE_UUMENCHII) != 0) {
 		if ((WanzMian == 1)&&(PinzMian == 1)&&(SouzMian == 1)&&(WindMian == 1)&&(DragonMian == 1)) {
 			addyaku tmpYakuInfo, "å‹ñÂç÷", 2
 		}
 	}
+#endif
 return
 #global

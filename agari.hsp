@@ -115,7 +115,7 @@ repeat NUM_OF_PLAYERS-1
 			case PLAYER_EAST: tmpResultDesc += "ìåâ∆": swbreak
 			case PLAYER_SOUTH: tmpResultDesc += "ìÏâ∆": swbreak
 			case PLAYER_WEST: tmpResultDesc += "êºâ∆": swbreak
-#ifndef SANMA
+#ifndef SANMAT
 			case PLAYER_NORTH: tmpResultDesc += "ñkâ∆": swbreak
 #endif
 		swend
@@ -126,7 +126,7 @@ repeat NUM_OF_PLAYERS-1
 				case PLAYER_EAST: tmpResultDesc += "Ç™ìåâ∆Ç©ÇÁÉçÉìòaóπÇË": swbreak
 				case PLAYER_SOUTH: tmpResultDesc += "Ç™ìÏâ∆Ç©ÇÁÉçÉìòaóπÇË": swbreak
 				case PLAYER_WEST: tmpResultDesc += "Ç™êºâ∆Ç©ÇÁÉçÉìòaóπÇË": swbreak
-#ifndef SANMA
+#ifndef SANMAT
 				case PLAYER_NORTH: tmpResultDesc += "Ç™ñkâ∆Ç©ÇÁÉçÉìòaóπÇË": swbreak
 #endif
 			swend
@@ -214,7 +214,7 @@ repeat NUM_OF_PLAYERS-1
 				// êeÇÃòaóπÇË
 				OyaAgari = agariPlayer
 				if (TsumoAgari) {
-#ifdef SANMAX
+#ifdef ALLSANMA
 					switch getRuleInt(RULE_TSUMO_PAYMENT)
 #ifdef SANMA4
 						case 0:
@@ -230,7 +230,7 @@ repeat NUM_OF_PLAYERS-1
 									deltacalcminus AgariPointRaw, hncnPointDelta, 2, cnt
 								}
 							loop
-#ifdef SANMAX
+#ifdef ALLSANMA
 #ifdef SANMA4
 							swbreak
 #endif
@@ -274,7 +274,7 @@ repeat NUM_OF_PLAYERS-1
 			} else {
 				// éqÇÃòaóπÇË
 				if (TsumoAgari) {
-#ifdef SANMAX
+#ifdef ALLSANMA
 					switch getRuleInt(RULE_TSUMO_PAYMENT)
 #ifdef SANMA4
 						case 0:
@@ -292,7 +292,7 @@ repeat NUM_OF_PLAYERS-1
 									deltacalcminus AgariPointRaw, hncnPointDelta, 1, cnt
 								}
 							loop
-#ifdef SANMAX
+#ifdef ALLSANMA
 #ifdef SANMA4
 							swbreak
 						case 1:
@@ -377,7 +377,7 @@ repeat NUM_OF_PLAYERS-1
 				deltadouble hncnPointDelta, PLAYER_EAST
 				deltadouble hncnPointDelta, PLAYER_SOUTH
 				deltadouble hncnPointDelta, PLAYER_WEST
-#ifndef SANMA
+#ifndef SANMAT
 				deltadouble hncnPointDelta, PLAYER_NORTH
 #endif
 			} else {
@@ -393,7 +393,7 @@ repeat NUM_OF_PLAYERS-1
 				deltadouble hncnPointDelta, PLAYER_EAST
 				deltadouble hncnPointDelta, PLAYER_SOUTH
 				deltadouble hncnPointDelta, PLAYER_WEST
-#ifndef SANMA
+#ifndef SANMAT
 				deltadouble hncnPointDelta, PLAYER_NORTH
 #endif
 			} else {
@@ -409,7 +409,7 @@ repeat NUM_OF_PLAYERS-1
 				deltadouble hncnPointDelta, PLAYER_EAST
 				deltadouble hncnPointDelta, PLAYER_SOUTH
 				deltadouble hncnPointDelta, PLAYER_WEST
-#ifndef SANMA
+#ifndef SANMAT
 				deltadouble hncnPointDelta, PLAYER_NORTH
 #endif
 			} else {
@@ -430,7 +430,7 @@ repeat NUM_OF_PLAYERS-1
 		
 		if ((getHonba(GameStat))&&(getRuleInt(RULE_TSUMIBOH_RATE) != 3)) {
 			dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-#ifdef SANMA
+#ifdef SANMAT
 			if (playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST) {
 				if (TsumoAgari) {
 					repeat NUM_OF_ACTUAL_PLAYERS
@@ -521,7 +521,7 @@ repeat NUM_OF_PLAYERS-1
 					hncnPointDelta(PLAYER_EAST) += hncnPointDelta(PLAYER_EAST)
 					hncnPointDelta(PLAYER_SOUTH) += hncnPointDelta(PLAYER_SOUTH)
 					hncnPointDelta(PLAYER_WEST) += hncnPointDelta(PLAYER_WEST)
-#ifndef SANMA
+#ifndef SANMAT
 					hncnPointDelta(PLAYER_NORTH) += hncnPointDelta(PLAYER_NORTH)
 #endif
 				} else {
@@ -537,7 +537,7 @@ repeat NUM_OF_PLAYERS-1
 					hncnPointDelta(PLAYER_EAST) += hncnPointDelta(PLAYER_EAST)
 					hncnPointDelta(PLAYER_SOUTH) += hncnPointDelta(PLAYER_SOUTH)
 					hncnPointDelta(PLAYER_WEST) += hncnPointDelta(PLAYER_WEST)
-#ifndef SANMA
+#ifndef SANMAT
 					hncnPointDelta(PLAYER_NORTH) += hncnPointDelta(PLAYER_NORTH)
 #endif
 				} else {
@@ -554,7 +554,7 @@ repeat NUM_OF_PLAYERS-1
 					hncnPointDelta(PLAYER_EAST) += hncnPointDelta(PLAYER_EAST)
 					hncnPointDelta(PLAYER_SOUTH) += hncnPointDelta(PLAYER_SOUTH)
 					hncnPointDelta(PLAYER_WEST) += hncnPointDelta(PLAYER_WEST)
-#ifndef SANMA
+#ifndef SANMAT
 					hncnPointDelta(PLAYER_NORTH) += hncnPointDelta(PLAYER_NORTH)
 #endif
 				} else {
@@ -608,7 +608,7 @@ repeat NUM_OF_PLAYERS-1
 				hncnPointDelta(PLAYER_EAST) = -ChipAmount
 				hncnPointDelta(PLAYER_SOUTH) = -ChipAmount
 				hncnPointDelta(PLAYER_WEST) = -ChipAmount
-#ifndef SANMA
+#ifndef SANMAT
 				hncnPointDelta(PLAYER_NORTH) = -ChipAmount
 #endif
 				hncnPointDelta(agariPlayer) = ChipAmount*(NUM_OF_ACTUAL_PLAYERS-1)
@@ -621,7 +621,7 @@ repeat NUM_OF_PLAYERS-1
 			loop
 		}
 		/* élînòHÇ™ñkâ∆ÇÃï˙èeÇæÇ¡ÇΩèÍçá */
-#ifndef SANMA
+#ifndef SANMAT
 		if (playerWind(furikomiPlayer, getRound(GameStat)) == PLAYER_NORTH) {
 			yakuname = getYakuInfo(yakuInfo, YAKUINF_YAKULIST)
 			if (notesearch(yakuname, "élînòH") >= 0) {
@@ -649,7 +649,7 @@ repeat NUM_OF_PLAYERS-1
 			case PLAYER_EAST: tmpResultDesc += "ìåâ∆ÇÃÉ`ÉáÉìÉ{": swbreak
 			case PLAYER_SOUTH: tmpResultDesc += "ìÏâ∆ÇÃÉ`ÉáÉìÉ{": swbreak
 			case PLAYER_WEST: tmpResultDesc += "êºâ∆ÇÃÉ`ÉáÉìÉ{": swbreak
-#ifndef SANMA
+#ifndef SANMAT
 			case PLAYER_NORTH: tmpResultDesc += "ñkâ∆ÇÃÉ`ÉáÉìÉ{": swbreak
 #endif
 		swend
@@ -697,7 +697,7 @@ repeat NUM_OF_PLAYERS-1
 		gosub *redrscreen: await 5000
 
 		dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-#ifdef SANMA
+#ifdef SANMAT
 		if (playerWind(agariPlayer, getRound(GameStat)) == PLAYER_EAST) {
 			repeat NUM_OF_ACTUAL_PLAYERS
 				if (cnt == agariPlayer) {
@@ -763,7 +763,7 @@ swend
 
 	switch getRuleInt(RULE_PENALTY_NEGATIVE)
 		case 1: case 2:
-#ifdef SANMA
+#ifdef SANMAT
 			if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))) {
 #else
 			if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))||(isDobon(GameStat,PLAYER_NORTH))) {
@@ -783,7 +783,7 @@ swend
 			swbreak
 		case 3: case 4: case 5:
 			if (getRuleInt(RULE_CHIP) != 0) {
-#ifdef SANMA
+#ifdef SANMAT
 				if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))) {
 #else
 				if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))||(isDobon(GameStat,PLAYER_NORTH))) {

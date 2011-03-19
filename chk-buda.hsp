@@ -4,6 +4,21 @@
  *=============================
  */
 
+#ifdef SANMAS
+/* 数牌三麻用のダミー */
+#module
+#include "const.as"
+#defcfunc chkshisanbuda var GameStat, int targetPlayer
+	return 0 // dummy
+#global
+
+#module
+#include "const.as"
+#defcfunc chkshisibuda var GameStat, int targetPlayer
+	return 0 // dummy
+#global
+
+#else
 /* 十三不塔の判定 */
 #module
 #include "const.as"
@@ -117,3 +132,4 @@ return
 	}
 return
 #global
+#endif

@@ -157,6 +157,7 @@ repeat
 			if (getHeavenHandFlag(GameStat) == 1) {dsplay VOX_RON} else {dsplay VOX_TSUMO}
 			gosub *redrscreen: break
 		}
+#ifndef SANMAS
 		/* 九種九牌が宣言された場合 */
 		if ((teDahai == DAHAI_TYPE_KYUUSHU)&&(getRuleInt(RULE_NINE_TERMINALS) != 3)) {
 			teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX // 九種流しができない時はツモ切りとみなす
@@ -176,6 +177,7 @@ repeat
 			teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX // 九種流しができない時はツモ切りとみなす
 			warn strf("九種九牌はできません。打牌コード [%d] に補正しました。", teDahai)
 		}
+#endif
 		/* 打牌を牌譜に記録する */
 		if ((teDahai >= DAHAI_TYPE_NORMAL)&&(teDahai < DAHAI_TYPE_NORMAL+DAHAI_TYPE_STEP)) {
 			haifurecmota GameStat, ActivePlayer, teDahai
@@ -186,6 +188,7 @@ repeat
 		if ((teDahai >= DAHAI_TYPE_OPENRIICHI)&&(teDahai < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
 			haifurecmota GameStat, ActivePlayer, teDahai
 		}
+#ifndef SANMAS
 		/* 花牌を抜いた場合の処理 */
 		if ((teDahai >= DAHAI_TYPE_KAN)&&(teDahai < DAHAI_TYPE_KAN+DAHAI_TYPE_STEP)) {
 			if (getHand(GameStat, HAND_TILECODE, teDahai-DAHAI_TYPE_KAN, ActivePlayer) > TILE_SUIT_FLOWERS) {
@@ -210,6 +213,7 @@ repeat
 			if (stat == 1) {break}
 			continue ActivePlayer
 		}
+#endif
 #endif
 		/* 暗槓するときの処理 */
 		if ((teDahai >= DAHAI_TYPE_KAN)&&(teDahai < DAHAI_TYPE_KAN+DAHAI_TYPE_STEP)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(getTotalKang(GameStat) < (4+getRuleInt(RULE_FIFTH_KONG)))) {
@@ -375,7 +379,7 @@ repeat
 				gosub *redrscreen: break
 			}
 		}
-#ifndef SANMAX
+#ifndef ALLSANMA
 		// 四人立直の判定
 		if (((getRichiFlag(GameStat, RICHI_FLAG, 0)*getRichiFlag(GameStat, RICHI_FLAG, 1)*getRichiFlag(GameStat, RICHI_FLAG, 2)*getRichiFlag(GameStat, RICHI_FLAG, 3)) != 0)&&(getRuleInt(RULE_FOUR_RIICHI_RYUUKYOKU) != 2)) {
 			hncnKyokuEndType = ENDKYOKU_SUUCHARIICHI: break
@@ -481,7 +485,7 @@ repeat
 		if ((haiPon(0)+haiPon(1)+haiPon(2)+haiPon(3)+haiMinkan(0)+haiMinkan(1)+haiMinkan(2)+haiMinkan(3)) > 0) {
 			ActivePlayer = PassivePlayer
 			continue
-#ifndef SANMAX
+#ifndef ALLSANMA
 		} else {
 			/* 吃の処理 */
 			/* 三人打ちでは吃なし */
@@ -499,7 +503,7 @@ repeat
 		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
 		/* 次のプレイヤーが牌を自摸る */
 		incDrawPointer GameStat: setHeavenHandFlag GameStat, 0
-#ifdef SANMA
+#ifdef SANMAT
 		ActivePlayer++: ActivePlayer = ActivePlayer\NUM_OF_ACTUAL_PLAYERS
 #else
 #ifdef SANMA4
@@ -526,7 +530,7 @@ repeat
 		if (isDobon(GameStat,PLAYER_EAST)) {break}
 		if (isDobon(GameStat,PLAYER_SOUTH)) {break}
 		if (isDobon(GameStat,PLAYER_WEST)) {break}
-#ifndef SANMA
+#ifndef SANMAT
 		if (isDobon(GameStat,PLAYER_NORTH)) {break}
 #endif
 	}
@@ -534,14 +538,14 @@ repeat
 	if (getRuleInt(RULE_AGARIYAME) != 1) {
 		if (((getRound(GameStat)+(getRoundLoop(GameStat)*16)) == getGameLength(GameStat))&&((hncnOrigTurn+(getRoundLoop(GameStat)*16)) == getGameLength(GameStat))&&((hncnKyokuEndType == ENDKYOKU_AGARI)||(getRuleInt(RULE_AGARIYAME) == 2))) {
 			calcRank Rank, GameStat
-#ifdef SANMA
+#ifdef SANMAT
 			if ((Rank(getRound(GameStat)\NUM_OF_PLAYERS) == 1)&&(getScore(GameStat,getRound(GameStat)\NUM_OF_PLAYERS) >= 400)) {break}
 #else
 			if ((Rank(getRound(GameStat)\NUM_OF_PLAYERS) == 1)&&(getScore(GameStat,getRound(GameStat)\NUM_OF_PLAYERS) >= 300)) {break}
 #endif
 		}
 	}
-#ifdef SANMA
+#ifdef SANMAT
 	if (getRound(GameStat)\NUM_OF_PLAYERS == 3) {incRound GameStat}
 #endif
 	// 東北廻しのとき
@@ -549,7 +553,7 @@ repeat
 	// 東々廻しのとき
 	if ((getRound(GameStat) == 4)&&((getRuleInt(RULE_GAME_LENGTH) == 5)||(getRuleInt(RULE_GAME_LENGTH) == 7))) {setRound GameStat, 16}
 	// 通常の半荘終了時（トップが３００００点未満だと西入サドンデス）
-#ifdef SANMA
+#ifdef SANMAT
 	if ((((getRound(GameStat)+(getRoundLoop(GameStat)*16)) >= (getGameLength(GameStat)+1)))&&((getScore(GameStat,0) >= 400)||(getScore(GameStat,1) >= 400)||(getScore(GameStat,2) >= 400))) {break}
 #else
 	if ((((getRound(GameStat)+(getRoundLoop(GameStat)*16)) >= (getGameLength(GameStat)+1)))&&((getScore(GameStat,0) >= 300)||(getScore(GameStat,1) >= 300)||(getScore(GameStat,2) >= 300)||(getScore(GameStat,3) >= 300))) {break}
@@ -558,7 +562,7 @@ repeat
 	if (getRound(GameStat) == 16) {incRoundLoop GameStat: setRound GameStat, 0}
 	// 東々廻しのとき
 	if ((getRuleInt(RULE_GAME_LENGTH) == 5)||(getRuleInt(RULE_GAME_LENGTH) == 7)) {
-#ifdef SANMA
+#ifdef SANMAT
 		if (getRoundLoop(GameStat) == 1) {
 			hncnTurnName = "東四局", "東五局", "東六局"
 		}

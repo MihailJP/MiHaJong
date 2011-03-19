@@ -49,7 +49,7 @@
 	if ((Rule(RULE_MULTIPLE_MAHJONG+1) == 2)||(Rule(RULE_MULTIPLE_MAHJONG+1) == 3)) {
 		chatappend "*** ダブロンあり、"+RuleStat(RULE_SIMULTANEOUS_MAHJONG)+"\n"
 	}
-#ifndef SANMAX
+#ifndef ALLSANMA
 	if (Rule(RULE_MULTIPLE_MAHJONG+1) == 4) {
 		chatappend "*** トリロンあり、"+RuleStat(RULE_SIMULTANEOUS_MAHJONG)+"\n"
 	} else {
@@ -60,36 +60,50 @@
 		}
 	}
 #endif
+#ifndef SANMAS
 	chatappend "*** 九種九牌は"+RuleStat(RULE_NINE_TERMINALS)+"\n"
+#endif
 	chatappend "*** 四槓散了は"+RuleStat(RULE_FOUR_KONG_RYUUKYOKU)+"、"
 	switch Rule(RULE_FIFTH_KONG+1)
 		case 0: chatappend "５つ目の槓は誰もできない\n": swbreak
 		case 1: chatappend "５つ目の槓で流局連荘\n": swbreak
 		case 2: chatappend "５つ目の槓で流局親流れ\n": swbreak
 	swend
-#ifndef SANMAX
+#ifndef ALLSANMA
 	chatappend "*** 四風連打は"+RuleStat(RULE_FOUR_WIND_RYUUKYOKU)+"\n"
 	chatappend "*** 四人立直は"+RuleStat(RULE_FOUR_RIICHI_RYUUKYOKU)+"\n"
 #endif
+#ifdef SANMAS
+	chatappend "*** 純正九連宝燈・四暗刻単騎は"
+#else
 	chatappend "*** 国士無双十三面・純正九連宝燈・四暗刻単騎・大四喜は"
+#endif
 	if (Rule(RULE_DOUBLE_YAKUMAN+1) == 0) {chatappend "ダブル役満\n"} else {chatappend "シングル役満\n"}
 	AddRuleText "切り上げ満貫", RuleStat(RULE_ROUND_TO_MANGAN)
 	AddRuleText "点数計算", RuleStat(RULE_SIMPLIFIED_SCORING)
+#ifndef SANMAS
 	AddRuleText "雀頭符の重複", RuleStat(RULE_DOUBLE_YAKU_WIND_PAIR)
+#endif
 	AddRuleText "積み棒", RuleStat(RULE_TSUMIBOH_RATE)
 	if (Rule(RULE_MINKAN_PAO+1) == 6) {
 		chatappend "*** 大明槓の嶺上開花は錯和\n"
 	} else {
 		AddRuleText "大明槓の包", RuleStat(RULE_MINKAN_PAO)
 	}
+#ifndef SANMAS
 	AddRuleText "大三元・大四喜の包", RuleStat(RULE_NORMAL_PAO)
+#endif
 	AddRuleText1 "三倍満", RuleStat(RULE_SANBAIMAN_BORDER)
 	AddRuleText3 "数え役満", RuleStat(RULE_KAZOE_BORDER)
 	AddRuleText "立直縛り", RuleStat(RULE_RIICHI_SHIBARI)
 	if (Rule(RULE_ANKAN_CONCEAL+1) == 1) {AddRuleText "暗槓", RuleStat(RULE_ANKAN_CONCEAL)}
 	else {
+#ifdef SANMAS
+		AddRuleText "暗槓", RuleStat(RULE_ANKAN_CONCEAL)
+#else
 		AddRuleText1 "暗槓", RuleStat(RULE_ANKAN_CONCEAL)
 		AddRuleText3 "国士無双は暗槓の搶槓", RuleStat(RULE_ANKAN_CHANKAN)
+#endif
 	}
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText "ドラ", RuleStat(RULE_DORA_INDICATOR)
@@ -103,17 +117,27 @@
 	AddRuleText2 "赤六", RuleStat(RULE_RED_SIX)
 	AddRuleText2 "赤七", RuleStat(RULE_RED_SEVEN)
 	AddRuleText2 "赤八", RuleStat(RULE_RED_EIGHT)
+#ifdef SANMAS
+	AddRuleText3 "赤九", RuleStat(RULE_RED_NINE)
+#else
 	AddRuleText2 "赤九", RuleStat(RULE_RED_NINE)
 	AddRuleText2 "赤西", RuleStat(RULE_RED_WEST)
 	AddRuleText3 "赤北", RuleStat(RULE_RED_NORTH)
 	AddRuleText "白ポッチ", RuleStat(RULE_HAKU_POTCHI)
+#endif
 	AddRuleText1 "青ドラ", RuleStat(RULE_BLUE_TILES)
 	AddRuleText2 "青一", RuleStat(RULE_BLUE_ONE)
 	AddRuleText2 "青五", RuleStat(RULE_BLUE_FIVE)
+#ifdef SANMAS
+	AddRuleText3 "青九", RuleStat(RULE_BLUE_NINE)
+#else
 	AddRuleText2 "青九", RuleStat(RULE_BLUE_NINE)
 	AddRuleText3 "青発", RuleStat(RULE_BLUE_LVFA)
+#endif
 	AddRuleText "アリス", RuleStat(RULE_ALICE)
+#ifndef SANMAS
 	AddRuleText "花牌", RuleStat(RULE_FLOWER_TILES)
+#endif
 	chatappend "*** チップ"+RuleStat(RULE_CHIP)+"\n"
 	if (Rule(RULE_CHIP+1) != 0) {chatappend "*** 役満祝儀は"+RuleStat(RULE_LIMITHAND_BONUS)+"\n"}
 	AddRuleText1 "赤牌チップ", RuleStat(RULE_REDTILE_CHIP)
@@ -134,14 +158,20 @@
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText "喰い断", RuleStat(RULE_KUITAN)
 	AddRuleText "自摸平和", RuleStat(RULE_TSUMO_PINFU)
+#ifdef SANMAS
+	AddRuleText "緑一色", RuleStat(RULE_DRAGONLESS_ALL_GREEN)
+#else
 	AddRuleText "字一色七対子", RuleStat(RULE_SEVEN_HONOR_PAIRS)
 	AddRuleText "発無し緑一色", RuleStat(RULE_DRAGONLESS_ALL_GREEN)
+#endif
 	AddRuleText "立直一発", RuleStat(RULE_RIICHI_IPPATSU)
 	AddRuleText "七対子", RuleStat(RULE_SEVEN_PAIRS)
 	AddRuleText "三色同刻", RuleStat(RULE_SANSHOKU_DOUKOH)
 	AddRuleText "三槓子", RuleStat(RULE_SANKANTSU)
 	AddRuleText "二盃口", RuleStat(RULE_RYANPEIKOU)
+#ifndef SANMAS
 	AddRuleText "混老頭", RuleStat(RULE_HONROUTOU)
+#endif
 	AddRuleText "清一色", RuleStat(RULE_CHINIISOH)
 	AddRuleText "四槓子", RuleStat(RULE_SUUKANTSU)
 	AddRuleText "天和", RuleStat(RULE_TENHOH)
@@ -153,7 +183,9 @@
 	AddRuleText1 "一色三順", RuleStat(RULE_ISSHOKU_SANJUN)
 	AddRuleText3 "一色四順", RuleStat(RULE_ISSHOKU_SUUJUN)
 	AddRuleText "人和", RuleStat(RULE_RENHOH)
+#ifndef SANMAS
 	AddRuleText "十三不塔", RuleStat(RULE_SHIISAN_PUUTAA)
+#endif
 	AddRuleText "八連荘", RuleStat(RULE_PAARENCHAN)
 	AddRuleText "流し満貫", RuleStat(RULE_NAGASHI_MANGAN)
 	/* ルール設定を表示　セクション区切り */
@@ -193,11 +225,16 @@
 	AddRuleText3 "双龍闘蛇", RuleStat(RULE_SHANRON_TOUJA)
 	AddRuleText1 "五心通貫", RuleStat(RULE_UUSHINTONKAN)
 	AddRuleText2 "一気通貫全帯幺九", RuleStat(RULE_ITTSUU_CHANTA)
+#ifndef SANMAS
 	AddRuleText2 "東北新幹線", RuleStat(RULE_TOHOKU_SHINKANSEN)
 	AddRuleText2 "上越新幹線あさひ", RuleStat(RULE_JOETSU_ASAHI)
 	AddRuleText2 "上越新幹線とき", RuleStat(RULE_JOETSU_TOKI)
+#endif
 	AddRuleText2 "凱旋門", RuleStat(RULE_GAISENMON)
 	AddRuleText2 "長城", RuleStat(RULE_CHOUJOU)
+#ifdef SANMAS
+	AddRuleText3 "青龍在天", RuleStat(RULE_QINGLONG_ZAITIAN)
+#else
 	AddRuleText2 "青龍在天", RuleStat(RULE_QINGLONG_ZAITIAN)
 	AddRuleText2 "龍戯珠", RuleStat(RULE_LONGXIZHU)
 	AddRuleText3 "金龍戯北斗", RuleStat(RULE_JINLONG_DOU_BEIDOU)
@@ -219,6 +256,7 @@
 	AddRuleText2 "曲院風荷", RuleStat(RULE_QUYUAN_FENGHE)
 	AddRuleText3 "平湖秋月", RuleStat(RULE_PINGHU_QIUYUE)
 #endif
+#endif
 #ifndef SANMAX
 	if (Rule(RULE_HUALONG+1) == 0) {
 		AddRuleText "三色通貫", RuleStat(RULE_HUALONG)
@@ -228,7 +266,7 @@
 		AddRuleText3 "三色通貫全帯幺九", RuleStat(RULE_HUALONG_CHANTA)
 	}
 #endif
-#ifndef SANMAX
+#ifndef ALLSANMA
 	AddRuleText1 "吃三嵌", RuleStat(RULE_CHII_SANKAN)
 	AddRuleText2 "吃三辺", RuleStat(RULE_CHII_SANPEN)
 	AddRuleText2 "吃小順", RuleStat(RULE_CHII_SHAOSHUN)
@@ -239,6 +277,7 @@
 	AddRuleText3 "吃大四順", RuleStat(RULE_CHII_TAASUUSHUN)
 #endif
 	/* ルール設定を表示　セクション区切り */
+#ifndef SANMAS
 #ifdef SANMA
 	AddRuleText "開門風", RuleStat(RULE_KAIMENKAZE)
 #else
@@ -249,11 +288,14 @@
 	AddRuleText2 "三風刻", RuleStat(RULE_THREE_WINDS)
 	AddRuleText3 "小三風", RuleStat(RULE_XIAOSANFENG)
 	AddRuleText "四字刻", RuleStat(RULE_FOUR_HONORS)
+#endif
 	AddRuleText "二同刻", RuleStat(RULE_RYANDOUKOH)
 	AddRuleText1 "奇数対々和", RuleStat(RULE_ODD_TOITOI)
 	AddRuleText3 "偶数対々和", RuleStat(RULE_EVEN_TOITOI)
+#ifndef SANMAS
 	AddRuleText1 "東發つきもの", RuleStat(RULE_EAST_GREEN)
 	AddRuleText3 "南白つきもの", RuleStat(RULE_SOUTH_WHITE)
+#endif
 	AddRuleText1 "頂三刻", RuleStat(RULE_TINSANKOH)
 	AddRuleText2 "筋牌刻", RuleStat(RULE_CHINPAIKOH)
 	AddRuleText2 "跳牌刻", RuleStat(RULE_CHAOPAIKOH)
@@ -273,14 +315,19 @@
 	AddRuleText1 "金梯", RuleStat(RULE_GOLDEN_LADDER)
 	AddRuleText2 "銀梯", RuleStat(RULE_SILVER_LADDER)
 	AddRuleText3 "雲梯", RuleStat(RULE_SKY_LADDER)
+#ifndef SANMAS
 	AddRuleText1 "金鶏報暁", RuleStat(RULE_KINKEI_HOUGYOU)
 #ifndef SANMAX
 	if ((Rule(RULE_FLOWER_TILES+1) == 0)||(Rule(RULE_FLOWER_TILES+1) == 2)) {AddRuleText2 "銀鶏報春", RuleStat(RULE_GINKEI_HOUSHUN)}
 #endif
 	AddRuleText3 "紅鶏報暁", RuleStat(RULE_KOUKEI_HOUGYOU)
+#endif
 	AddRuleText1 "茴香ポンは、対々型", RuleStat(RULE_UIKYOU_TOITOI)
 	AddRuleText3 "非対々型", RuleStat(RULE_UIKYOU_SHUNTSU)
 #ifndef SANMAX
+#ifdef SANMAS
+	AddRuleText "八仙闘北斗", RuleStat(RULE_BAXIAN_DOU_BEIDOU)
+#else
 	AddRuleText1 "八仙乗風過海", RuleStat(RULE_BAXIAN_CHENGFENG)
 	AddRuleText2 "八仙戯鳳", RuleStat(RULE_BAXIAN_XIFENG)
 	AddRuleText2 "八仙戯四鳳", RuleStat(RULE_BAXIAN_XISIFENG)
@@ -288,12 +335,16 @@
 	if (Rule(RULE_FLOWER_TILES+1) == 3) {AddRuleText2 "八仙闘北斗", RuleStat(RULE_BAXIAN_DOU_BEIDOU)} else {AddRuleText3 "八仙闘北斗", RuleStat(RULE_BAXIAN_DOU_BEIDOU)}
 	if (Rule(RULE_FLOWER_TILES+1) == 3) {AddRuleText3 "八仙聚首", RuleStat(RULE_BAXIAN_JUSHOU)}
 #endif
+#endif
+#ifndef SANMAS
 	AddRuleText1 "風花雪月", RuleStat(RULE_FUUKA_SETSUGETSU)
 	AddRuleText3 "花鳥風月", RuleStat(RULE_KACHOU_FUUGETSU)
 	AddRuleText "東北自動車道", RuleStat(RULE_TOHOKU_EXPWY)
 	AddRuleText "西中島南方", RuleStat(RULE_NISHINAKAJIMA)
 	AddRuleText "中原逐鹿", RuleStat(RULE_CHUUGEN_CHIKUROKU)
+#endif
 	AddRuleText "金亀孵蛋", RuleStat(RULE_TURTLE_EGG)
+#ifndef SANMAS
 	AddRuleText1 "旭日東昇", RuleStat(RULE_KYOKUJITSU_TOUSHOU)
 	AddRuleText3 "日落西山", RuleStat(RULE_RIIRAO_SHIISHAN)
 	AddRuleText "揺望北斗", RuleStat(RULE_YOUBOU_HOKUTO)
@@ -304,23 +355,30 @@
 	AddRuleText "西湖十景", RuleStat(RULE_SEIKO_JIKKEI)
 	AddRuleText "火山爆発", RuleStat(RULE_VOLCANIC_ERRUPTION)
 	AddRuleText "丹鳳朝陽", RuleStat(RULE_TANFON_CHOUYOU)
+#endif
 	AddRuleText "鵲橋会", RuleStat(RULE_QUEQIAOHUI)
+#ifndef SANMAS
 	AddRuleText "一竿風月", RuleStat(RULE_YIGAN_FENGYUE)
 	AddRuleText "三杯美酒敬梅花", RuleStat(RULE_SANBEI_MEIJIU)
 	AddRuleText "東風圧倒西風", RuleStat(RULE_DONGFENG_YADAO)
+#endif
 	AddRuleText "太公釣金亀", RuleStat(RULE_TAIKOU_TURTLE)
+#ifndef SANMAS
 	AddRuleText1 "宝紅開花", RuleStat(RULE_BAOHONGKAIHUA)
 	AddRuleText3 "紅白饅頭", RuleStat(RULE_KOHAKU_MANJU)
 	AddRuleText "白鳥", RuleStat(RULE_HAKUCHO)
+#endif
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText1 "二暗槓", RuleStat(RULE_RYANANKAN)
 	AddRuleText3 "三暗槓", RuleStat(RULE_SANANKAN)
 #ifndef SANMAX
 	AddRuleText "大峡谷", RuleStat(RULE_GRAND_CANYON)
 #endif
+#ifndef SANMAS
 	AddRuleText "雪化粧", RuleStat(RULE_YUKIGESHOU)
 	AddRuleText1 "声東撃西", RuleStat(RULE_SHENGDONG_JIXI)
 	AddRuleText3 "走南闖北", RuleStat(RULE_ZAONAN_CHUANGBEI)
+#endif
 	/* ルール設定を表示　セクション区切り */
 #ifdef SANMAX
 	AddRuleText "大竹林", RuleStat(RULE_DAICHIKURIN)
@@ -328,18 +386,32 @@
 	AddRuleText1 "大竹林", RuleStat(RULE_DAICHIKURIN)
 	AddRuleText3 "大数隣", RuleStat(RULE_DAISUURIN)
 #endif
+#ifdef SANMAS
+	AddRuleText1 "奇数七対子", RuleStat(RULE_ODD_PAIRS)
+#else
 	AddRuleText1 "三元七対子", RuleStat(RULE_DRAGON_PAIRS)
 	AddRuleText2 "四喜七対子", RuleStat(RULE_WIND_PAIRS)
 	AddRuleText2 "奇数七対子", RuleStat(RULE_ODD_PAIRS)
+#endif
 	AddRuleText3 "偶数七対子", RuleStat(RULE_EVEN_PAIRS)
+#ifndef SANMAS
 	AddRuleText "紅白七対", RuleStat(RULE_KOUHAKU_CHIITOI)
 	AddRuleText "北の大地", RuleStat(RULE_KITA_NO_DAICHI)
 	AddRuleText "世界一", RuleStat(RULE_SEKAIICHI)
+#endif
 	/* ルール設定を表示　セクション区切り */
+#ifdef SANMAS
+	AddRuleText1 "緑一色輪", RuleStat(RULE_RYUUIISOHRIN)
+#else
 	AddRuleText1 "紅一点", RuleStat(RULE_KOUITTEN)
 	AddRuleText2 "紅孔雀", RuleStat(RULE_BENIKUJAKU)
 	AddRuleText2 "緑一色輪", RuleStat(RULE_RYUUIISOHRIN)
+#endif
 	AddRuleText3 "大草原", RuleStat(RULE_DAISOUGEN)
+#ifdef SANMAS
+	AddRuleText "断紅和", RuleStat(RULE_NO_RED)
+	AddRuleText "花一色", RuleStat(RULE_HUAIISOH)
+#else
 	AddRuleText1 "黒一色", RuleStat(RULE_HEIIISOH)
 	AddRuleText2 "青洞門", RuleStat(RULE_AO_NO_DOMON)
 	AddRuleText3 "断紅和", RuleStat(RULE_NO_RED)
@@ -347,10 +419,13 @@
 	AddRuleText2 "白一点", RuleStat(RULE_HAKUITTEN)
 	AddRuleText2 "桃一色", RuleStat(RULE_TAOYISE)
 	AddRuleText3 "茶一色", RuleStat(RULE_CHAYISE)
+#endif
 	AddRuleText "星光燦爛", RuleStat(RULE_STARLIGHT)
 	AddRuleText "武太郎売焼餅", RuleStat(RULE_UUTAARAN)
 	AddRuleText "推不倒", RuleStat(RULE_TOIPUUTAO)
+#ifndef SANMAS
 	AddRuleText "五門斉", RuleStat(RULE_UUMENCHII)
+#endif
 	AddRuleText "絶一門", RuleStat(RULE_CHUEIIMEN)
 	AddRuleText1 "九蓮花燈", RuleStat(RULE_CHUUREN_HWATON)
 	AddRuleText3 "九蓮碧燈", RuleStat(RULE_EXPOSED_CHUUREN)
@@ -391,13 +466,19 @@
 	AddRuleText1 "欠牌和", RuleStat(RULE_KEPPAIHOH)
 	AddRuleText3 "金鶏奪食", RuleStat(RULE_JINJI_DUOSHI)
 	AddRuleText "槓振り", RuleStat(RULE_KAMBURI)
+#ifndef SANMAS
 	AddRuleText "客来和", RuleStat(RULE_OTAKAZE_RON)
+#endif
 	AddRuleText "破回八連荘", RuleStat(RULE_BREAKING_PAARENCHAN)
+#ifndef SANMAS
 	AddRuleText "暗中模索", RuleStat(RULE_ANCHUMOSAKU)
+#endif
 	AddRuleText "ドラ和", RuleStat(RULE_DORAHOH)
 #ifndef SANMAX
 	AddRuleText "四馬路", RuleStat(RULE_SUMARO)
+#ifndef SANMAS
 	AddRuleText "南無八幡", RuleStat(RULE_NAMU_HACHIMAN)
+#endif
 #endif
 	AddRuleText1 "鳳還巣", RuleStat(RULE_HOUKANSOU)
 	AddRuleText2 "月還巡", RuleStat(RULE_GEKKANJUN)
@@ -405,27 +486,41 @@
 	AddRuleText2 "金亀帰還", RuleStat(RULE_KINKI_KIKAN)
 	AddRuleText2 "北斗召還", RuleStat(RULE_HOKUTO_SHOUKAN)
 #ifndef SANMAX
+#ifdef SANMAS
+	AddRuleText3 "大蛇還穴", RuleStat(RULE_DAIJA_KANKETSU)
+#else
 	AddRuleText2 "大蛇還穴", RuleStat(RULE_DAIJA_KANKETSU)
 #endif
+#endif
+#ifndef SANMAS
 	AddRuleText2 "東風吹", RuleStat(RULE_DONGFENGCHUI)
 	AddRuleText2 "南風吹", RuleStat(RULE_NANFENGCHUI)
 	AddRuleText2 "西風吹", RuleStat(RULE_XIFENGCHUI)
 	AddRuleText3 "北風吹", RuleStat(RULE_BEIFENGCHUI)
+#endif
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText1 "十二落抬", RuleStat(RULE_SHIIARU_RAOTAI)
+#ifdef SANMAS
+	AddRuleText3 "金鶏独立", RuleStat(RULE_KINKEI_DOKURITSU)
+#else
 	AddRuleText2 "金鶏独立", RuleStat(RULE_KINKEI_DOKURITSU)
 	AddRuleText3 "独釣寒江雪", RuleStat(RULE_KANKOU_NO_YUKI)
+#endif
 	AddRuleText1 "覇王鞭", RuleStat(RULE_HAOUBEN)
 	AddRuleText3 "劉関張", RuleStat(RULE_RYUUKANCHAN)
 #ifndef SANMAX
 	AddRuleText "喜鵲閙梅", RuleStat(RULE_XIQUE_NAOMEI)
 #endif
+#ifndef SANMAS
 	AddRuleText "赤眼青龍", RuleStat(RULE_SEKIGAN_SEIRYUU)
 	AddRuleText1 "青函トンネル", RuleStat(RULE_SEIKAN_TUNNEL)
 	AddRuleText3 "青函連絡船", RuleStat(RULE_SEIKAN_SHIP)
+#endif
 	AddRuleText1 "カラス", RuleStat(RULE_KARASU)
 	AddRuleText3 "カラス立直", RuleStat(RULE_KARASU_RIICHI)
+#ifndef SANMAS
 	AddRuleText "北枕", RuleStat(RULE_KITAMAKURA)
+#endif
 	AddRuleText1 "四帰一", RuleStat(RULE_FOUR_INTO_ONE)
 	AddRuleText2 "両四帰一", RuleStat(RULE_DOUBLE_FOUR_INTO_ONE)
 	AddRuleText2 "虎四帰一", RuleStat(RULE_TIGER_FOUR_INTO_ONE)
@@ -435,6 +530,7 @@
 	AddRuleText2 "四帰四", RuleStat(RULE_FOUR_INTO_FOUR)
 	AddRuleText2 "重四帰四", RuleStat(RULE_DOUBLE_FOUR_INTO_FOUR)
 	AddRuleText3 "大四帰四", RuleStat(RULE_GREAT_FOUR_INTO_FOUR)
+#ifndef SANMAS
 	AddRuleText1 "東の青龍", RuleStat(RULE_AZURE_DRAGON)
 	AddRuleText2 "南の朱雀", RuleStat(RULE_VERMILION_BIRD)
 #ifndef SANMAX
@@ -450,6 +546,7 @@
 	AddRuleText1 "十三無靠", RuleStat(RULE_SHIISAN_UUSHII)
 	AddRuleText3 "七星無靠", RuleStat(RULE_STELLAR_UUSHII)
 	AddRuleText "南北戦争", RuleStat(RULE_CIVIL_WAR)
+#endif
 	AddRuleText1 "惑星直列", RuleStat(RULE_SYZYGY)
 	AddRuleText3 "愚濫怒苦露酢", RuleStat(RULE_GRAND_CROSS)
 	/* ルール設定を表示　ここまで */

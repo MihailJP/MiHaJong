@@ -216,6 +216,7 @@
 			addyaku tmpYakuInfo, "Žl”n˜H", 1
 		}
 	}
+#ifndef SANMAS
 	/* ‹q—ˆ˜a */
 	if (getRuleInt(RULE_OTAKAZE_RON) != 0) {
 		yakuFlag = 0
@@ -231,7 +232,7 @@
 						yakuFlag = 0
 					}
 				}
-#ifndef SANMA
+#ifndef SANMAT
 				if (getRuleInt(RULE_URAKAZE) != 0) {
 					if (playerWind(targetPlayer+2, getRound(GameStat)) == cnt) {yakuFlag = 0}
 				}
@@ -242,6 +243,7 @@
 			addyaku tmpYakuInfo, "‹q—ˆ˜a", 1
 		}
 	}
+#endif
 	/* –PŠÒ‘ƒŒn—ñ‚Ì–ð */
 	tmpRuleCodeList = RULE_HOUKANSOU, RULE_GEKKANJUN, RULE_SHINRIISHOU, RULE_KINKI_KIKAN, RULE_HOKUTO_SHOUKAN, RULE_DAIJA_KANKETSU, RULE_DONGFENGCHUI, RULE_NANFENGCHUI, RULE_XIFENGCHUI, RULE_BEIFENGCHUI
 	tmpTileCodeList = TILE_SUIT_BAMBOOS+1, TILE_SUIT_CIRCLES+1, TILE_SUIT_CHARACTERS+1, TILE_SUIT_BAMBOOS+7, TILE_SUIT_CIRCLES+7, TILE_SUIT_CHARACTERS+7, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND

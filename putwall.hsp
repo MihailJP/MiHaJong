@@ -8,7 +8,7 @@
 #include "const.as"
 /* •Ç”v‚ð•\Ž¦‚·‚é */
 #deffunc putyama var GameStat, int targetPosX, int targetPosY, int targetPlayer, int trueTargetPlayer
-#ifdef SANMAX
+#ifdef ALLSANMA
 	yamahaiMode = 3: NumberOfTiles = 108: LoopCount = 18: PTiles = (102-getRinshanExtension(GameStat))
 #else
 	if (getRuleInt(RULE_FLOWER_TILES) != 0) {

@@ -87,7 +87,7 @@ return
 	if (haiDaoPaiable) {
 		// ã„éÌã„îv
 		if (getFirstDrawFlag(GameStat, ActivePlayer)) {
-#ifdef SANMA
+#ifdef SANMAT
 			if (((getScore(GameStat,ActivePlayer) > 400)&&(Shanten > 1))||(Shanten > 2)) {
 #else
 			if (((getScore(GameStat,ActivePlayer) > 300)&&(Shanten > 1))||(Shanten > 2)) {
@@ -993,7 +993,7 @@ return
 			}
 		}
 	}
-#ifndef SANMAX
+#ifndef ALLSANMA
 	// É`Å[Ç∑ÇÈÇ©Ç«Ç§Ç©ÇîªíËÇ∑ÇÈ
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
 	dim tmpHaiHand, NUM_OF_TILES_IN_HAND

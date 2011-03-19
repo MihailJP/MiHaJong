@@ -108,7 +108,7 @@ return
 	loop
 	// ドラ表示牌で見えてる枚数
 	repeat 6
-#ifdef SANMAX
+#ifdef ALLSANMA
 		if (getDoraPointer(GameStat) <= (102-getRinshanExtension(GameStat)-cnt*2)) {haiSeenCount(getWall(GameStat, WALL_TILECODE, 102-getRinshanExtension(GameStat)-cnt*2))++}
 #else
 		if (getDoraPointer(GameStat) <= (130-cnt*2)) {haiSeenCount(getWall(GameStat, WALL_TILECODE, 130-cnt*2))++}
@@ -525,7 +525,7 @@ return haiDaoPaiable
 
 		導火線の位置を計算します。
 */
-#ifdef SANMAX
+#ifdef ALLSANMA
 	if (getRuleInt(RULE_DOUKASEN) != 0) {
 		setDoukasen GameStat, ((30-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)-(getRound(GameStat)/4)))*36*2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/36)+30)\3
 #ifdef SANMA4
@@ -603,7 +603,7 @@ return haiDaoPaiable
 	repeat PAO_PLAYER_PAGES*PAO_YAKU_PAGES: setPao Sandbox, cnt\PAO_PLAYER_PAGES, cnt/PAO_PLAYER_PAGES, getPao(GameStat, cnt\PAO_PLAYER_PAGES, cnt/PAO_PLAYER_PAGES): loop
 	repeat 2: setDice Sandbox, cnt, 0, getDice(GameStat, cnt, 0): loop
 	repeat 6
-#ifdef SANMAX
+#ifdef ALLSANMA
 		if (getDoraPointer(GameStat) <= (102-getRinshanExtension(GameStat)-cnt*2)) {
 			setWall Sandbox, WALL_TILECODE, 102-getRinshanExtension(GameStat)-cnt*2, getWall(GameStat, WALL_TILECODE, 102-getRinshanExtension(GameStat)-cnt*2)
 		}

@@ -17,9 +17,11 @@
 			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
 				tmpyaojiu++
 			swbreak
+#ifndef SANMAS
 			case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
 			case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
 				tmpyaojiu++: JihaiCount++
+#endif
 			swbreak
 		swend
 		if ((haiMianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 7)&&(cnt > 0)) {
@@ -41,8 +43,11 @@
 	}
 	if (tmpyaojiu == SIZE_OF_MELD_BUFFER) {
 		if (ShuntsuCount == 0) {
+#ifndef SANMAS
 			if (JihaiCount == 0) {
+#endif
 				addyakuman tmpYakuInfo, "清老頭", 1
+#ifndef SANMAS
 			} else:if (JihaiCount == SIZE_OF_MELD_BUFFER) {
 				addyakuman tmpYakuInfo, "字一色", 1
 				// 字一色が成立したら混一色の成立を解除する(青天井ルール用)
@@ -56,14 +61,19 @@
 			} else {
 				addyaku tmpYakuInfo, "混老頭", 2
 			}
+#endif
 		} else {
+#ifndef SANMAS
 			if (JihaiCount == 0) {
+#endif
 				if (searchyaku(tmpYakuInfo, "清海湖") == 0) {
 					addyaku tmpYakuInfo, "純全帯幺九", 2+getMenzen(GameStat, targetPlayer)
 				}
+#ifndef SANMAS
 			} else {
 				addyaku tmpYakuInfo, "混全帯幺九", 1+getMenzen(GameStat, targetPlayer)
 			}
+#endif
 		}
 	}
 return

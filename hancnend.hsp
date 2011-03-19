@@ -35,7 +35,7 @@
 	loop: dsplay SND_TYPE: gosub *redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 3) {setCall cnt, "３位"}
-#ifndef SANMA
+#ifndef SANMAT
 	loop: dsplay SND_TYPE: gosub *redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 4) {setCall cnt, "４位"}
@@ -54,7 +54,7 @@
 	setDeposit GameStat, 0
 
 	if ((getRuleInt(RULE_YAKITORI) == 1)||(getRuleInt(RULE_YAKITORI) == 2)) {
-#ifdef SANMA
+#ifdef SANMAT
 		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)) > 0) {
 #else
 		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)+getYakitori(GameStat, 3)) > 0) {
@@ -78,7 +78,7 @@
 	}
 	if ((getRuleInt(RULE_YAKITORI) == 3)||(getRuleInt(RULE_YAKITORI) == 4)||(getRuleInt(RULE_YAKITORI) == 5)) {
 		if (getRuleInt(RULE_CHIP) != 0) {
-#ifdef SANMA
+#ifdef SANMAT
 			if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)) > 0) {
 #else
 			if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)+getYakitori(GameStat, 3)) > 0) {
@@ -106,7 +106,7 @@
 
 	dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 	if (getRuleInt(RULE_POINT_BASIS) != 12) {
-#ifdef SANMA
+#ifdef SANMAT
 		PlusCount = 0
 		repeat NUM_OF_ACTUAL_PLAYERS // 沈みウマの計算用に浮いてる人数を数える
 			if ((getScore(GameStat,cnt, 0) >= 400)||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {PlusCount++}
@@ -415,7 +415,7 @@
 	}
 	
 	dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-#ifdef SANMA
+#ifdef SANMAT
 	if (getRuleInt(RULE_STARTING_POINT) != 1) {
 		repeat NUM_OF_ACTUAL_PLAYERS
 			if (Rank(cnt) == 1) {
@@ -463,7 +463,7 @@
 	
 	/* 最終的なスコアを計算する */
 	dim hncnPointScore, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-#ifdef SANMA
+#ifdef SANMAT
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) > 1) {
 			if ((getScore(GameStat,cnt, 0) >= 400)||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {

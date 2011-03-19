@@ -235,7 +235,7 @@
 			/* 包の判定 */
 			checkpao GameStat, PassivePlayer, ActivePlayer
 			swbreak
-#ifndef SANMAX
+#ifndef ALLSANMA
 		case FUURO_CHII: /* チー */
 			/* チーする牌を設定 */
 			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
@@ -614,7 +614,7 @@
 			haifurecfurikomi GameStat, haiRon, ActivePlayer
 		}
 	}
-#ifndef SANMAX
+#ifndef ALLSANMA
 	// 三家和の判定
 	if (((haiRon(0)+haiRon(1)+haiRon(2)+haiRon(3)) >= 3)&&((getRuleInt(RULE_MULTIPLE_MAHJONG)==0)||(getRuleInt(RULE_MULTIPLE_MAHJONG)==2))) {
 		hncnKyokuEndType = ENDKYOKU_TRIPLERON: return

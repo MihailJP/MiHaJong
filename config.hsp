@@ -192,7 +192,7 @@ return
 			case RULE_SIMULTANEOUS_MAHJONG:
 				if (Rule(RULE_MULTIPLE_MAHJONG+1) < 2) {gosub *config_strikeout}
 				swbreak
-#ifndef SANMAX
+#ifndef ALLSANMA
 			case RULE_TRIPLE_MAHJONG:
 				if ((Rule(RULE_MULTIPLE_MAHJONG+1) ! 0)&&(Rule(RULE_MULTIPLE_MAHJONG+1) ! 2)) {gosub *config_strikeout}
 				swbreak
@@ -210,7 +210,7 @@ return
 			case RULE_ANKAN_CHANKAN:
 				if (Rule(RULE_ANKAN_CONCEAL+1) == 1) {gosub *config_strikeout}
 				swbreak
-#ifndef SANMAX
+#ifndef ALLSANMA
 			case RULE_OWN_FLOWER:
 				if (Rule(RULE_FLOWER_TILES+1) == 0) {gosub *config_strikeout}
 				swbreak

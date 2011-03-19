@@ -12,6 +12,7 @@
 	/* •›’êc‚Q‚O•„ */
 	setYakuInfo tmpYakuInfo, YAKUINF_FU, 20
 	/* “ª‰Á•„c–ð”v‚Ì‚Ý‚Q•„ */
+#ifndef SANMAS
 	if ((haiMianziDat(0) >= TILE_WIND_MIN)&&(haiMianziDat(0) <= TILE_WIND_MAX)) {
 		/* •—”v‚ÍðŒ‚É‚æ‚Á‚Ä–ð”v */
 		repeat 1
@@ -32,7 +33,7 @@
 					if (getRuleInt(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 				}
 			}
-#ifndef SANMA
+#ifndef SANMAT
 			if (getRuleInt(RULE_URAKAZE) != 0) {
 				if (playerWind(targetPlayer+2, getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
 					// — •—”v
@@ -47,14 +48,17 @@
 		/* ŽOŒ³”v‚Íí‚É–ð”v */
 		addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
 	}
+#endif
 	/* –ÊŽq‰Á•„ */
 	repeat SIZE_OF_MELD_BUFFER-1, 1
 		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
 			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9
+#ifndef SANMAS
 			case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
 			case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
+#endif
 				/* ˆê‹ãŽš”v‚Ìê‡ */
 				/* –¾Žq */ if (((haiMianziDat(cnt) / MELD_TYPE_STEP) >= MELD_TRIPLET_EXPOSED_MIN)&&((haiMianziDat(cnt) / MELD_TYPE_STEP) <= MELD_TRIPLET_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 4}
 				/* ˆÃŽq */ if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_TRIPLET_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 8}
@@ -111,8 +115,10 @@
 			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9
+#ifndef SANMAS
 			case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
 			case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
+#endif
 				/* ˆê‹ãŽš”v‚Ìê‡ */
 				addYakuInfo tmpYakuInfo, YAKUINF_FU, -4
 			swbreak

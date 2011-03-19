@@ -27,6 +27,7 @@
 		dim tmpScore, NUM_OF_DIGIT_GROUPS
 		//if ((cnt \ 8) == 7) {await 0}
 		newmod tmpYakuInfo, yakuStruct
+#ifndef SANMAS
 		/* 国士無双 */
 		if (ShantenArray(SHANTEN_ORPHANS) == -1) {
 			contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
@@ -49,6 +50,7 @@
 				countdora GameStat, tmpYakuInfo, targetPlayer
 			}
 		}
+#endif
 		/* 惑星直列 */
 		if (getRuleInt(RULE_SYZYGY) != 0) {
 			if (ShantenArray(SHANTEN_SYZYGY) == -1) {
@@ -134,10 +136,12 @@
 				swbreak
 			swend
 		}
+#ifndef SANMAS
 		/* 十三不塔の判定 */
 		shisanbudayaku GameStat, tmpYakuInfo, targetPlayer, tmpScore, ShantenArray
 		/* 十四不塔の判定 */
 		shisibudayaku GameStat, tmpYakuInfo, targetPlayer, tmpScore, ShantenArray
+#endif
 		
 		if ((getRuleInt(RULE_ROUND_TO_MANGAN) == 1)&&(getRuleInt(RULE_LIMITLESS) == 0)) {
 			// 切り上げ満貫
@@ -349,7 +353,9 @@ return
 #global
 
 /* 国士無双の判定 */
+#ifndef SANMAS
 #include "chk-13y.hsp"
+#endif
 /* 七対子の判定 */
 #include "chk-7par.hsp"
 /* 手牌を面子に分解 */

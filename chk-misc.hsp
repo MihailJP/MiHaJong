@@ -36,32 +36,50 @@
 #include "const.as"
 #deffunc miscyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int TsumoAgari
 	/* 緑一色 */
+#ifdef SANMAS
+	dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8
+	dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+	yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+	verdflag = 0
+#else
 	dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_GREEN_DRAGON
 	dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
 	yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
 	dim targetKez,1: targetKez=TILE_GREEN_DRAGON
 	dim targetShunz,1: targetShunz=0
 	verdflag = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+#endif
 	if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
+#ifndef SANMAS
 		if (verdflag == 0) {
+#endif
 			switch getRuleInt(RULE_DRAGONLESS_ALL_GREEN)
 				case 0:
 					/* 発無しも普通に役満とするルール
 					   この場合青天井で清一色が複合*/
 					addyakuman tmpYakuInfo, "緑一色", 1
+#ifdef SANMAS
+					delyaku tmpYakuInfo, "清一色"
+#endif
 					swbreak
 				case 2:
 					/* 発無しはダブル役満というルール */
+#ifdef SANMAS
+					addyakuman tmpYakuInfo, "緑一色", 2
+#else
 					addyakuman tmpYakuInfo, "清緑一色", 2
+#endif
 					// 緑一色が成立したら清一色の成立を解除する(青天井ルール用)
 					delyaku tmpYakuInfo, "清一色"
 					swbreak
 			swend
+#ifndef SANMAS
 		} else {
 			addyakuman tmpYakuInfo, "緑一色", 1
 			// 緑一色が成立したら混一色の成立を解除する(青天井ルール用)
 			delyaku tmpYakuInfo, "混一色"
 		}
+#endif
 	}
 	/* 裸単騎１飜というローカル役 */
 	yakuflagcount = 0
@@ -85,6 +103,7 @@
 				delyaku tmpYakuInfo, "全求人"
 			}
 		}
+#ifndef SANMAS
 		// 独釣寒江雪…白待ち
 		if (getRuleInt(RULE_KINKEI_DOKURITSU) != 0) {
 			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_WHITE_DRAGON) {
@@ -93,6 +112,7 @@
 				delyaku tmpYakuInfo, "全求人"
 			}
 		}
+#endif
 	}
 	/* 推不倒 */
 	if (getRuleInt(RULE_TOIPUUTAO) != 0) {
@@ -113,6 +133,7 @@
 			swend
 		}
 	}
+#ifndef SANMAS
 	/* 紅孔雀 */
 	if (getRuleInt(RULE_BENIKUJAKU) != 0) {
 		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9, TILE_RED_DRAGON
@@ -141,6 +162,7 @@
 			delyaku tmpYakuInfo, "混一色"
 		}
 	}
+#endif
 	/* 緑一色輪 */
 	if (getRuleInt(RULE_RYUUIISOHRIN) != 0) {
 		yakuflagcount = 0
@@ -151,7 +173,11 @@
 		if (yakuflagcount == 6) {
 			addyakuman tmpYakuInfo, "緑一色輪", 1
 			// 成立したら混一色の成立を解除する(青天井ルール用) 清一色は複合させる
+#ifdef SANMAS
+			delyaku tmpYakuInfo, "清一色"
+#else
 			delyaku tmpYakuInfo, "混一色"
+#endif
 		}
 	}
 	/* 大草原 */
@@ -164,6 +190,7 @@
 			delyaku tmpYakuInfo, "清一色"
 		}
 	}
+#ifndef SANMAS
 	/* 桃一色 */
 	if (getRuleInt(RULE_TAOYISE) != 0) {
 		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+9, TILE_RED_DRAGON
@@ -212,8 +239,16 @@
 			delyaku tmpYakuInfo, "対々和"
 		}
 	}
+#endif
 	/* 断紅和 */
 	if (getRuleInt(RULE_NO_RED) != 0) {
+#ifdef SANMAS
+		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8
+		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
+		yakuflagcount2 = 0
+		tmpyakuCensored = 0
+#else
 		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
 		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
 		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
@@ -224,17 +259,29 @@
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "緑一色")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "黒一色")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "青洞門")
+#endif
 		if ((yakuflagcount == SIZE_OF_MELD_BUFFER)&&(tmpyakuCensored == 0)) {
 			if ((yakuflagcount2 == 0)&&(getRuleInt(RULE_NO_RED) == 2)) {
 				/* 清断紅 */
+#ifdef SANMAS
+				addyaku tmpYakuInfo, "断紅和", 5+getMenzen(GameStat, targetPlayer)
+#else
 				addyaku tmpYakuInfo, "清断紅", 5+getMenzen(GameStat, targetPlayer)
+#endif
 			} else {
 				/* 混断紅 */
+#ifndef SANMAS
 				if (getRuleInt(RULE_NO_RED) == 2) {addyaku tmpYakuInfo, "混断紅", 2+getMenzen(GameStat, targetPlayer)}
-				else {addyaku tmpYakuInfo, "断紅和", 2+getMenzen(GameStat, targetPlayer)}
+				else {
+#endif
+					addyaku tmpYakuInfo, "断紅和", 2+getMenzen(GameStat, targetPlayer)
+#ifndef SANMAS
+				}
+#endif
 			}
 		}
 	}
+#ifndef SANMAS
 	/* 白一点 */
 	if (getRuleInt(RULE_HAKUITTEN) != 0) {
 		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+9, TILE_WHITE_DRAGON
@@ -263,6 +310,7 @@
 			swend
 		}
 	}
+#endif
 	/* 大四帰四 */
 	if (getRuleInt(RULE_GREAT_FOUR_INTO_FOUR) != 0) {
 		yakuflagcount = 0
@@ -593,6 +641,7 @@
 			addyaku tmpYakuInfo, "花一色", 1
 		}
 	}
+#ifndef SANMAS
 	/* 赤眼青龍 */
 	if (getRuleInt(RULE_SEKIGAN_SEIRYUU) != 1) {
 		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_WHITE_DRAGON, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8
@@ -605,6 +654,7 @@
 			addyakuman tmpYakuInfo, "赤眼青龍", 1
 		}
 	}
+#endif
 	/* 満園花 */
 	tmpRuleCodeList = RULE_ALL_ONE, RULE_ALL_TWO, RULE_ALL_THREE, RULE_ALL_FOUR, RULE_ALL_FIVE, RULE_ALL_SIX, RULE_ALL_SEVEN, RULE_ALL_EIGHT, RULE_ALL_NINE
 	sdim tmpYakuNameList, 16, length(tmpRuleCodeList)

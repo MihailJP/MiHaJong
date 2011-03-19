@@ -52,7 +52,7 @@
 	if (doubleDoraEnabled()) {tmptimes = 6} else {tmptimes = 5}
 	repeat tmptimes
 		pos 90+tmpOffset+(cnt*23), 96
-#ifdef SANMAX
+#ifdef ALLSANMA
 		tmpHaiPos == 102-getRinshanExtension(GameStat)-(cnt*2)
 		if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= (102-getRinshanExtension(GameStat)))&&(tmpHaiPos\2 == 0)) {
 #else
@@ -64,7 +64,7 @@
 			showtileblockturned 0, ginfo_cx, ginfo_cy
 		}
 		pos 90+tmpOffset+(cnt*23), 96
-#ifdef SANMAX
+#ifdef ALLSANMA
 		tmpHaiPos == 102-getRinshanExtension(GameStat)-(cnt*2)
 		if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= (102-getRinshanExtension(GameStat)))&&(tmpHaiPos\2 == 0)) {
 #else
@@ -91,7 +91,7 @@
 			} else {
 				pos 245+tmpOffset+(cnt*23), 96
 			}
-#ifdef SANMAX
+#ifdef ALLSANMA
 			tmpHaiPos == 102-getRinshanExtension(GameStat)-(cnt*2)
 			if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= (102-getRinshanExtension(GameStat)))&&(tmpHaiPos\2 == 0)) {
 #else
@@ -107,7 +107,7 @@
 			} else {
 				pos 245+tmpOffset+(cnt*23), 96
 			}
-#ifdef SANMAX
+#ifdef ALLSANMA
 			tmpHaiPos == 102-getRinshanExtension(GameStat)-(cnt*2)
 			if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= (102-getRinshanExtension(GameStat)))&&(tmpHaiPos\2 == 0)) {
 #else
@@ -396,7 +396,7 @@
 		swend
 	}
 	if ((getRuleInt(RULE_CHIP) != 0)&&(ChipAmount > 0)) {
-#ifdef SANMA
+#ifdef SANMAT
 		if (TsumoAgari == 1) {ResultDesc += " [チップ "+ChipAmount+"×２]"}
 		else {ResultDesc += " [チップ "+ChipAmount+"]"}
 #else
@@ -454,7 +454,7 @@
 			borderedtxt2a tmptxt, 90, 582, drawcol(0), drawcol(1), drawcol(2), 1, 16
 		}
 		font fontname, 20, 0
-#ifdef SANMA
+#ifdef SANMAT
 		if (TsumoAgari == 1) {borderedtxt2a "チップ "+ChipAmount+"×２枚", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
 		else {borderedtxt2a "チップ "+ChipAmount+"枚", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
 #else

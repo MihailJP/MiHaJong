@@ -107,6 +107,7 @@
 			}
 		loop
 	}
+#ifndef SANMAS
 	// ‰Ô”v
 	if (getRuleInt(RULE_FLOWER_TILES) != 0) {
 #ifdef SANMAX
@@ -220,6 +221,7 @@
 		}
 #endif
 	}
+#endif
 return
 
 *akadoraZaehlen

@@ -10,12 +10,16 @@
 /* コンフィグファイルのパスを設定する(Vista/7用) */
 	/* Vista以降、Program Files以下にファイルを作れないので自分で調整する */
 #ifdef SANMA4
-	configFile = confPath()+"mihaysnm.cfg"
+	configFile = confPath()+"mihassnm.cfg"
 #else
-	#ifdef SANMA
-	configFile = confPath()+"mihasanm.cfg"
+	#ifdef SANMA4
+		configFile = confPath()+"mihaysnm.cfg"
 	#else
-	configFile = confPath()+"mihajong.cfg"
+		#ifdef SANMA
+		configFile = confPath()+"mihasanm.cfg"
+		#else
+		configFile = confPath()+"mihajong.cfg"
+		#endif
 	#endif
 #endif
 

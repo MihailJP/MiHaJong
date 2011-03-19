@@ -322,6 +322,7 @@ return
 	repeat 9*4, 0: setWall GameStat, WALL_TILECODE, cnt, cnt/4+1: loop // 萬子
 	repeat 9*4, 9*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+2: loop // 筒子
 	repeat 9*4, 18*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+3: loop // 索子
+#ifndef SANMAS
 	repeat 7*4, 27*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+4: loop // 字牌
 	switch getRuleInt(RULE_FLOWER_TILES)
 		case 3:
@@ -334,6 +335,7 @@ return
 			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-34*4+TILE_PLANT_MIN: loop // 草木牌
 			swbreak
 	swend
+#endif
 	if (getRuleInt(RULE_RED_FIVE) != 2) {
 		setWall GameStat, WALL_REDTILE, 16, 1 // 赤五萬
 		setWall GameStat, WALL_REDTILE, 52, 1 // 赤五筒
@@ -364,6 +366,7 @@ return
 	if (getRuleInt(RULE_RED_SEVEN)\2 == 1) {setWall GameStat, WALL_REDTILE, 96, 1} // 赤七索
 	if (getRuleInt(RULE_RED_EIGHT)\2 == 1) {setWall GameStat, WALL_REDTILE, 100, 1} // 赤八索
 	if (getRuleInt(RULE_RED_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 104, 1} // 赤九索
+#ifndef SANMAS
 	if (getRuleInt(RULE_RED_WEST) == 1) {setWall GameStat, WALL_REDTILE, 116, 1} // 赤西
 	switch getRuleInt(RULE_RED_NORTH) // 赤北
 		case 4: setWall GameStat, WALL_REDTILE, 123, 1 /* FALLTHRU */
@@ -375,6 +378,7 @@ return
 		// オールマイティー扱いはせず、赤ドラと同じ扱い
 		setWall GameStat, WALL_REDTILE, 124, 1 // 白ポッチ
 	}
+#endif
 	if (getRuleInt(RULE_BLUE_ONE)/4 == 1) {setWall GameStat, WALL_REDTILE, 3, 2} // 青一萬
 	if (getRuleInt(RULE_BLUE_FIVE)/4 == 1) {setWall GameStat, WALL_REDTILE, 19, 2} // 青五萬
 	if (getRuleInt(RULE_BLUE_NINE)/4 == 1) {setWall GameStat, WALL_REDTILE, 35, 2} // 青九萬
@@ -384,10 +388,12 @@ return
 	if (getRuleInt(RULE_BLUE_ONE)\2 == 1) {setWall GameStat, WALL_REDTILE, 75, 2} // 青一索
 	if (getRuleInt(RULE_BLUE_FIVE)\2 == 1) {setWall GameStat, WALL_REDTILE, 91, 2} // 青五索
 	if (getRuleInt(RULE_BLUE_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 107, 2} // 青九索
+#ifndef SANMAS
 	if (getRuleInt(RULE_BLUE_LVFA)) {setWall GameStat, WALL_REDTILE, 131, 2} // 青発
 #endif
+#endif
 	if (GameMode != 2) {
-#ifdef SANMAX
+#ifdef ALLSANMA
 		YamaLength = 108
 #else
 		if (getRuleInt(RULE_FLOWER_TILES) != 0) {
@@ -411,7 +417,7 @@ return
 		loop
 	}
 	if (GameMode == 2) { // クライアントの場合、データを受信
-#ifdef SANMAX
+#ifdef ALLSANMA
 			tmpNumberOfTiles = 108
 #else
 		if (getRuleInt(RULE_FLOWER_TILES) != 0) {
@@ -450,7 +456,6 @@ return
 	vanish
 	setDice GameStat, 0, 0, rnd(6)+1: setDice GameStat, 1, 0, rnd(6)+1
 	setDice GameStat, 0, 1, rnd(2): setDice GameStat, 1, 1, rnd(2)
-	hncnMsg = hncnTurnName(getRound(GameStat))
 	gosub *redrscreen: commonswitch GameStat, WatchModeFlag
 	repeat 10 // 賽を振る
 		setDice GameStat, 0, 0, rnd(6)+1: setDice GameStat, 1, 0, rnd(6)+1
@@ -484,7 +489,7 @@ return
 	}
 	calcWareme GameStat // 割れ目
 	if (GameMode = 1) { // サーバーの場合、牌山のデータを送信
-#ifdef SANMAX
+#ifdef ALLSANMA
 		tmpNumberOfTiles = 108
 #else
 		switch getRuleInt(RULE_FLOWER_TILES)
@@ -507,7 +512,8 @@ return
 	// 通常機能の表示
 	vanish: commonswitch GameStat, WatchModeFlag
 	// 配牌
-#ifdef SANMAX
+	hncnMsg = hncnTurnName(getRound(GameStat))
+#ifdef ALLSANMA
 	repeat 36 // ２幢ずつを３回
 #ifdef SANMA4
 		setHand GameStat, HAND_TILECODE, (cnt\4)+((cnt/12)*4), ((cnt\12/4)+getRound(GameStat))\4, getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
@@ -522,7 +528,7 @@ return
 		setHand GameStat, HAND_REDTILE, (cnt\4)+((cnt/16)*4), ((cnt\16/4)+getRound(GameStat))\4, getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
 #endif
 		incDrawPointer GameStat
-#ifdef SANMAX
+#ifdef ALLSANMA
 		if (cnt == 18) {
 #else
 		if (cnt == 24) {
@@ -548,7 +554,7 @@ return
 		}
 	loop
 	hncnMsg = ""
-#ifdef SANMAX
+#ifdef ALLSANMA
 	repeat 4 // １枚ずつを１回、親のチョンチョン
 #ifdef SANMA4
 		setHand GameStat, HAND_TILECODE, (cnt/3)+12, ((cnt\3)+getRound(GameStat))\4, getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
@@ -568,7 +574,7 @@ return
 		gosub *redrscreen: await 250
 	loop
 	// ドラをめくる
-#ifdef SANMAX
+#ifdef ALLSANMA
 	setDoraPointer GameStat, 102-getRinshanExtension(GameStat) // ドラ表示牌のポインタ
 #else
 	setDoraPointer GameStat, 130 // ドラ表示牌のポインタ

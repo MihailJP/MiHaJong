@@ -41,29 +41,43 @@
 	PinzDui = countPairs(haiCount, tmpTileList)
 	dim tmpTileList, 1: repeat 9:tmpTileList(cnt) = TILE_SUIT_BAMBOOS+cnt+1:loop
 	SouzDui = countPairs(haiCount, tmpTileList)
+#ifdef SANMAS
+	ZiDui = 0
+	dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+1,TILE_SUIT_CHARACTERS+9,TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+9,TILE_SUIT_BAMBOOS+1,TILE_SUIT_BAMBOOS+9
+	YaojiuDui = countPairs(haiCount, tmpTileList)
+#else
 	dim tmpTileList, 1: tmpTileList = TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND,TILE_WHITE_DRAGON,TILE_GREEN_DRAGON,TILE_RED_DRAGON
 	ZiDui = countPairs(haiCount, tmpTileList)
 	dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+1,TILE_SUIT_CHARACTERS+9,TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+9,TILE_SUIT_BAMBOOS+1,TILE_SUIT_BAMBOOS+9,TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND,TILE_WHITE_DRAGON,TILE_GREEN_DRAGON,TILE_RED_DRAGON
 	YaojiuDui = countPairs(haiCount, tmpTileList)
+#endif
 	/* àÍêFån */
 	if (((WanzDui+ZiDui) == 7)||((PinzDui+ZiDui) == 7)||((SouzDui+ZiDui) == 7)) {
+#ifndef SANMAS
 		if (ZiDui == 0) {
+#endif
 			if (getRuleInt(RULE_CHINIISOH) != 0) {
 				addyaku tmpYakuInfo, "ê¥àÍêF", 3+getMenzen(GameStat, targetPlayer)
 			} else {
 				addyaku tmpYakuInfo, "ê¥àÍêF", 5+getMenzen(GameStat, targetPlayer)
 			}
 			/* ëÂé‘ó÷ÇÕñ éqéËópÇÃÉtÉ@ÉCÉãÇ≈èàóù */
+#ifndef SANMAS
 		} else {
 			addyaku tmpYakuInfo, "ç¨àÍêF", 2+getMenzen(GameStat, targetPlayer)
 		}
+#endif
 	} else {
 		/* ê‚àÍñÂ */
 		if (getRuleInt(RULE_CHUEIIMEN) != 0) {
 			if ((WanzDui == 0)||(PinzDui == 0)||(SouzDui == 0)) {
+#ifndef SANMAS
 				if ((ZiDui == 0)||(getRuleInt(RULE_CHUEIIMEN) != 2)) {
+#endif
 					addyaku tmpYakuInfo, "ê‚àÍñÂ", 1
+#ifndef SANMAS
 				}
+#endif
 			}
 		}
 	}
@@ -73,6 +87,7 @@
 			addyaku tmpYakuInfo, "ífõÙã„", 1
 		}
 	}
+#ifndef SANMAS
 	if ((ZiDui+YaojiuDui) == 7) {
 		if ((ZiDui == 7)&&(getRuleInt(RULE_SEVEN_HONOR_PAIRS) != 1)) {
 			if (getRuleInt(RULE_SEVEN_HONOR_PAIRS) == 0) {
@@ -85,6 +100,7 @@
 			addyaku tmpYakuInfo, "ç¨òVì™", 2
 		}
 	}
+#endif
 	/* êÑïsì| */
 	if (getRuleInt(RULE_TOIPUUTAO) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+2,TILE_SUIT_CIRCLES+3,TILE_SUIT_CIRCLES+4,TILE_SUIT_CIRCLES+5,TILE_SUIT_CIRCLES+8,TILE_SUIT_CIRCLES+9,TILE_SUIT_BAMBOOS+2,TILE_SUIT_BAMBOOS+4,TILE_SUIT_BAMBOOS+5,TILE_SUIT_BAMBOOS+6,TILE_SUIT_BAMBOOS+8,TILE_SUIT_BAMBOOS+9,TILE_WHITE_DRAGON
@@ -110,6 +126,7 @@
 			delyaku tmpYakuInfo, "ê¥àÍêF"
 		}
 	}
+#ifndef SANMAS
 	/* ìçàÍêF */
 	if (getRuleInt(RULE_TAOYISE) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+9, TILE_RED_DRAGON
@@ -138,27 +155,43 @@
 			delyaku tmpYakuInfo, "ç¨àÍêF"
 		}
 	}
+#endif
 	/* ífçgòa */
 	if (getRuleInt(RULE_NO_RED) != 0) {
+#ifdef SANMAS
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8
+		yakuflagcount = countPairs(haiCount, tmpTileList)
+		yakuflagcount2 = 0
+#else
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
 		yakuflagcount = countPairs(haiCount, tmpTileList)
 		dim tmpTileList, 1: tmpTileList = TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND,TILE_WHITE_DRAGON,TILE_GREEN_DRAGON
 		yakuflagcount2 = countPairs(haiCount, tmpTileList)
+#endif
 		tmpyakuCensored = searchyaku(tmpYakuInfo, "çïàÍêF")
 		if ((yakuflagcount == 7)&&(tmpyakuCensored == 0)) {
 			if ((yakuflagcount2 == 0)&&(getRuleInt(RULE_NO_RED) == 2)) {
 				/* ê¥ífçg */
+#ifdef SANMAS
+				addyaku tmpYakuInfo, "ífçgòa", 6
+#else
 				addyaku tmpYakuInfo, "ê¥ífçg", 6
+#endif
 			} else {
 				/* ç¨ífçg */
+#ifndef SANMAS
 				if (getRuleInt(RULE_NO_RED) == 2) {
 					addyaku tmpYakuInfo, "ç¨ífçg", 3
 				} else {
+#endif
 					addyaku tmpYakuInfo, "ífçgòa", 3
+#ifndef SANMAS
 				}
+#endif
 			}
 		}
 	}
+#ifndef SANMAS
 	/* å‹ñÂç÷ */
 	if (getRuleInt(RULE_UUMENCHII) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND
@@ -187,6 +220,7 @@
 			addyaku tmpYakuInfo, "éläÏéµëŒéq", 1
 		}
 	}
+#endif
 	/* äÔêîéµëŒéq */
 	if (getRuleInt(RULE_ODD_PAIRS) != 0) {
 		dim tmpTileList, 1: repeat TILE_NUMERAL_COLORS: tmpTileList(cnt*5) = cnt*TILE_SUIT_STEP+1,cnt*TILE_SUIT_STEP+3,cnt*TILE_SUIT_STEP+5,cnt*TILE_SUIT_STEP+7,cnt*TILE_SUIT_STEP+9: loop
@@ -205,6 +239,7 @@
 			delyaku tmpYakuInfo, "ífõÙã„"
 		}
 	}
+#ifndef SANMAS
 	/* çgîíéµëŒ */
 	if (getRuleInt(RULE_KOUHAKU_CHIITOI) != 0) {
 		tmpyakuCensored = 0
@@ -251,5 +286,6 @@
 			delyaku tmpYakuInfo, "éläÏéµëŒéq"
 		}
 	}
+#endif
 return
 #global

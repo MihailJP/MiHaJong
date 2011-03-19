@@ -34,6 +34,7 @@
 	countShunz ShunzCount, haiMianziDat
 	DragonW = 0: DragonG = 0: DragonR = 0: Wind = 0
 	EastWind = 0: SouthWind = 0: WestWind = 0: NorthWind = 0
+#ifndef SANMAS
 	repeat SIZE_OF_MELD_BUFFER-1, 1
 		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
 			case TILE_EAST_WIND: EastWind++: Wind++: swbreak
@@ -45,6 +46,7 @@
 			case TILE_RED_DRAGO: DragonR++: swbreak
 		swend
 	loop
+#endif
 	/* 一色双龍会 */
 	if (getRuleInt(RULE_ISSHOKU_SOURYUU) != 0) {
 		yakuFlag = 0
@@ -164,6 +166,7 @@
 	if (yakuFlag) {
 		addyaku tmpYakuInfo, "一気通貫", 1+getMenzen(GameStat, targetPlayer)
 		/* 一気通貫派生役 */
+#ifndef SANMAS
 		/* 東北新幹線 */
 		if ((getRuleInt(RULE_TOHOKU_SHINKANSEN) != 0)&&(EastWind > 0)&&(NorthWind > 0)) {
 			if ((getRuleInt(RULE_TOHOKU_SHINKANSEN) == 1)||(getMenzen(GameStat, targetPlayer) == 1)) {
@@ -172,6 +175,7 @@
 				delyaku tmpYakuInfo, "混一色"
 			}
 		}
+#endif
 		/* 一気通貫全帯幺九 */
 		if (getRuleInt(RULE_ITTSUU_CHANTA) != 0) {
 			gosub *checkIttsuuChanta
@@ -193,6 +197,7 @@
 				addyaku tmpYakuInfo, "五心通貫", 1
 			}
 		}
+#ifndef SANMAS
 		/* 竜戯珠 */
 		if (getRuleInt(RULE_LONGXIZHU) != 0) {
 			if ((WestWind > 0)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+1)) {
@@ -263,6 +268,7 @@
 				delyaku tmpYakuInfo, "混一色"
 			}
 		}
+#endif
 	}
 	/* 金門橋 */
 	if (getRuleInt(RULE_GOLDEN_GATE_BRIDGE) != 0) {
@@ -761,7 +767,7 @@
 			delyaku tmpYakuInfo, "鏡同和"
 		}
 	}
-#ifndef SANMAX
+#ifndef ALLSANMA
 	/* 吃三嵌：三麻ではチーできないから不可 */
 	yakuFlagCount = 0
 	repeat SIZE_OF_MELD_BUFFER-1, 1
@@ -818,10 +824,12 @@ return
 	tmpyaojiu = 0: JihaiCount = 0
 	repeat SIZE_OF_MELD_BUFFER
 		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
+#ifndef SANMAS
 			case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
 			case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
 				JihaiCount++
 				/* FALLTHRU */
+#endif
 			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:

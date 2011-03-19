@@ -37,6 +37,7 @@
 			}
 		}
 	}
+#ifndef SANMAS
 	/* –k– */
 	if (getRuleInt(RULE_KITAMAKURA) != 0) {
 		if (((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) >= 2)&&((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) < 1000)) {
@@ -52,5 +53,6 @@
 			}
 		}
 	}
+#endif
 return
 #global

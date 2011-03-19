@@ -334,7 +334,7 @@ return
 	}
 	/* 積み棒、残り自摸牌、供託点棒の数を表示 */
 	font fontname, 16, 0: color 0, 0, 0
-#ifdef SANMAX
+#ifdef ALLSANMA
 	if ((haiNokori < 53)||((haiNokori < 55)&&(((getRuleInt(RULE_DORA_TWICE) != 1)&&((getRuleInt(RULE_DORA_TWICE) != 2)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
 #else
 	if ((haiNokori < 68)||((haiNokori < 70)&&(((getRuleInt(RULE_DORA_TWICE) != 1)&&((getRuleInt(RULE_DORA_TWICE) != 2)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
@@ -857,7 +857,7 @@ return
 		}
 	}
 	/* 点差を表示 */
-#ifdef SANMA
+#ifdef SANMAT
 	DiffPosCode = 0
 	repeat NUM_OF_PLAYERS-1, 1
 		if ((getPlayer(GameStat)+cnt)\NUM_OF_PLAYERS == 3) {continue}
