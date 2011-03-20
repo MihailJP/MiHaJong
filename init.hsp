@@ -147,15 +147,15 @@
 	bgmload "richi2", MUS_RICHI2 // 自家リーチ
 	bgmload "richi3", MUS_RICHI3 // 追っかけリーチ
 	bgmload "opnrichi", MUS_OPENRICHI // オープン立直
-	bgmload "agari1", MUS_AGARI_1HAN // ノミ手和了
-	bgmload "agari2", MUS_AGARI_2HAN // ２飜和了
-	bgmload "agari3", MUS_AGARI_3HAN // ３飜和了
-	bgmload "agari4", MUS_AGARI_MANGAN // 満貫和了
-	bgmload "agari5", MUS_AGARI_HANEMAN // 跳満和了
-	bgmload "agari6", MUS_AGARI_BAIMAN // 倍満和了
-	bgmload "agari7", MUS_AGARI_SANBAIMAN // 三倍満和了
-	bgmload "agari8", MUS_AGARI_KAZOE_YAKUMAN // 数え役満和了
-	bgmload "agari9", MUS_AGARI_YAKUMAN // 役満和了
+	bgmload "agari1", MUS_AGARI_SELF_1 // 満貫未満、自分の和了
+	bgmload "agari2", MUS_AGARI_SELF_2 // 満貫以上、自分の和了
+	bgmload "agari3", MUS_AGARI_SELF_3 // 役満、自分の和了
+	bgmload "agari4", MUS_AGARI_FURIKOMI_1 // 満貫未満、放銃または被自摸
+	bgmload "agari5", MUS_AGARI_FURIKOMI_2 // 満貫以上、放銃または被自摸
+	bgmload "agari6", MUS_AGARI_FURIKOMI_3 // 役満、放銃または被自摸
+	bgmload "agari7", MUS_AGARI_OTHER_1 // 満貫未満、他家の栄和
+	bgmload "agari8", MUS_AGARI_OTHER_2 // 満貫以上、他家の栄和
+	bgmload "agari9", MUS_AGARI_OTHER_3 // 役満、他家の栄和
 	bgmload "pingju", MUS_RYUUKYOKU // 流局・錯和
 	bgmload "final", MUS_FINAL // オーラス曲
 	bgmload "shibari", MUS_SHIBARI // リャンシバ時の曲
