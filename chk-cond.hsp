@@ -183,6 +183,16 @@
 					addyakuman tmpYakuInfo, "ラストオーダー麻婆豆腐", 1
 				}
 			}
+			/* 石の上にも三年 */
+			if (getRuleInt(RULE_THREE_YEARS_ON_STONE) != 0) {
+				if ((getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_YES)||(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_IPPATSU)) {
+					addyakuman tmpYakuInfo, "石の上にも三年", 1
+					delyaku tmpYakuInfo, "ダブル立直"
+					delyaku tmpYakuInfo, "ダブル開立直"
+					delyaku tmpYakuInfo, "海底摸月"
+					delyaku tmpYakuInfo, "河底撈魚"
+				}
+			}
 			/* ツモ・ロン共通の役　ここまで */
 		}
 	}
