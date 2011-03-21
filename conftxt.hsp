@@ -141,7 +141,7 @@
 	
 	RuleName(RULE_KANDORA+1) = "žÈƒhƒ‰"
 	RuleDescription(RULE_KANDORA+1) = "žÈƒhƒ‰‚Ì—L–³‚ðÝ’è‚µ‚Ü‚·"
-	RuleTxt(0, RULE_KANDORA+1) = "‚ ‚è", "‚È‚µ"
+	RuleTxt(0, RULE_KANDORA+1) = "‚ ‚è", "‚È‚µ", "‚ ‚è(žÈ— –³‚µ)"
 	
 	RuleName(RULE_RED_FIVE+1) = "ÔŒÜ"
 #ifdef SANMAX

@@ -85,6 +85,7 @@
 		}
 		borderedtxt2a "— ", ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 18
 		if (doubleDoraEnabled()) {tmptimes = 6} else {tmptimes = 5}
+		if (getRuleInt(RULE_KANDORA) == 2) {tmptimes -= 4}
 		repeat tmptimes
 			if (doubleDoraEnabled()) {
 				pos 260+tmpOffset+(cnt*23), 96

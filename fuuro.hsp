@@ -388,7 +388,12 @@
 			if (getRuleInt(RULE_KANDORA) != 1) {
 				setDoraPointer GameStat, getDoraPointer(GameStat) - 2
 				dsplay@ SND_MEKURI
-				gosub *adddora@
+				setdora GameStat, 0 // •\ƒhƒ‰‚ğİ’è‚·‚é
+				if ((getRuleInt(RULE_KANDORA) == 0)&&(getRuleInt(RULE_URADORA) == 0)){
+					setdora GameStat, 1 // — ƒhƒ‰‚ğİ’è‚·‚é
+				}
+				haifurecdorap
+				return
 			}
 			/* •ï‚Ì”»’è */
 			checkpao GameStat, PassivePlayer, ActivePlayer

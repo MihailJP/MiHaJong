@@ -420,14 +420,6 @@ return haiDaoPaiable
 	return
 #global
 
-*adddora
-	// •\ƒhƒ‰‚ğİ’è‚·‚é
-	setdora GameStat, 0
-	// — ƒhƒ‰‚ğİ’è‚·‚é
-	setdora GameStat, 1
-	haifurecdorap
-	return
-
 /* —§’¼Œã‚ÌˆÃÈ‚Ì‰Â”Û */
 #module
 #include "const.as"
