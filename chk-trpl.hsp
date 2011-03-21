@@ -1046,6 +1046,30 @@
 			}
 		}
 	}
+	/* 火山爆発(五索と七索) */
+	if (getRuleInt(RULE_VOLCANIC_TOITOI) != 0) {
+		if ((DuiCount(TILE_SUIT_BAMBOOS+3) >= 1)&&(DuiCount(TILE_SUIT_BAMBOOS+5) >= 1)&&(DuiCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(DuiCount(TILE_GREEN_DRAGON) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
+			addyakuman tmpYakuInfo, "白鳥", 5
+			delyaku tmpYakuInfo, "対々和"
+			delyaku tmpYakuInfo, "役牌・中"
+			delyaku tmpYakuInfo, "役牌・發"
+			delyaku tmpYakuInfo, "混一色"
+		}
+	}
 #endif
+	/* 白一色 */
+	if (getRuleInt(RULE_HAKUIISOO) != 0) {
+		yakuFlagCount = 0
+		if (DuiCount(TILE_SUIT_CHARACTERS+8) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_CHARACTERS+9) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_CIRCLES+8) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_CIRCLES+9) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_BAMBOOS+8) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_BAMBOOS+9) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_WHITE_DRAGON) >= 1) {yakuFlagCount++}
+		if (yakuFlagCount == 5) {
+			addyakuman tmpYakuInfo, "白一色", 1
+		}
+	}
 return
 #global

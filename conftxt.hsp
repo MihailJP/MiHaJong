@@ -1182,7 +1182,7 @@
 	RuleTxt(0, RULE_KOUHAKU_CHIITOI+1) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_VOLCANIC_ERRUPTION+1) = "火山爆発"
+	RuleName(RULE_VOLCANIC_ERRUPTION+1) = "火山爆発(九の刻子)"
 #ifdef SANMAS
 	RuleDescription(RULE_VOLCANIC_ERRUPTION+1) = "数牌三麻では設定できません"
 	RuleTxt(0, RULE_VOLCANIC_ERRUPTION+1) = "Ｎ／Ａ"
@@ -2020,5 +2020,35 @@
 	RuleTxt(0, RULE_TSUMO_PAYMENT+1) = "Ｎ／Ａ"
 #endif
 #endif
+
+	RuleName(RULE_VOLCANIC_TOITOI+1) = "火山爆発(五索・七索)"
+#ifdef SANMAS
+	RuleDescription(RULE_VOLCANIC_TOITOI+1) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_VOLCANIC_TOITOI+1) = "Ｎ／Ａ"
+#else
+	RuleDescription(RULE_VOLCANIC_TOITOI+1) = "火山爆発の有無と価値を設定します(三索、五索、七索、中、発で対々和)"
+	RuleTxt(0, RULE_VOLCANIC_TOITOI+1) = "なし", "役満"
+#endif
+
+	RuleName(RULE_MAABOODOUFU+1) = "ラストオーダー麻婆豆腐"
+#ifdef SANMAS
+	RuleDescription(RULE_MAABOODOUFU+1) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_MAABOODOUFU+1) = "Ｎ／Ａ"
+#else
+	RuleDescription(RULE_MAABOODOUFU+1) = "ラストオーダー麻婆豆腐の有無と価値を設定します(海底または河底で白で和了る：付加役)"
+	RuleTxt(0, RULE_MAABOODOUFU+1) = "なし", "１飜"
+#endif
+
+	RuleName(RULE_HAKUIISOO+1) = "白一色"
+	RuleDescription(RULE_HAKUIISOO+1) = "白一色の有無と価値を設定します(８と９と白だけで和了る)"
+	RuleTxt(0, RULE_HAKUIISOO+1) = "なし", "役満"
+
+	RuleName(RULE_BIRD_RIICHI+1) = "鳥立直"
+	RuleDescription(RULE_BIRD_RIICHI+1) = "鳥立直の有無と価値を設定します(一索切ってリーチ：付加役)"
+	RuleTxt(0, RULE_BIRD_RIICHI+1) = "なし", "１飜"
+
+	RuleName(RULE_SANSHOKU_DOUKAN+1) = "三色同槓"
+	RuleDescription(RULE_SANSHOKU_DOUKAN+1) = "三色同槓の有無と価値を設定します(三色同刻を全て槓子にする)"
+	RuleTxt(0, RULE_SANSHOKU_DOUKAN+1) = "なし", "５飜(喰い下がり有り)", "役満"
 
 return

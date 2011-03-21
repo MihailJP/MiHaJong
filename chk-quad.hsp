@@ -92,11 +92,26 @@
 		}
 	}
 #endif
+	/* 三色同槓 */
+	if (getRuleInt(RULE_SANSHOKU_DOUKAN) != 0) {
+		yakuFlag = 0
+		repeat TILE_NUMERAL_MAX/TILE_NUMERAL_COLORS
+			if ((KangzCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(KangzCount(cnt+TILE_SUIT_CIRCLES) >= 1)&&(KangzCount(cnt+TILE_SUIT_BAMBOOS) >= 1)) {yakuFlag = 1}
+		loop
+		if (yakuFlag) {
+			switch getRuleInt(RULE_SANSHOKU_DOUKAN)
+				case 1: addyaku tmpYakuInfo, "三色同槓", 4+getMenzen(GameStat, targetPlayer): swbreak
+				case 2: addyakuman tmpYakuInfo, "三色同槓", 1: swbreak
+			swend
+			delyaku tmpYakuInfo, "三色同刻"
+		}
+	}
 	/* 三槓子…下手な役満よりも難しいのに何で２飜しかないの */
 	tmpyakuCensored = 0 // 三暗槓が成立してたら飛ばす
 	tmpyakuCensored += searchyaku(tmpYakuInfo, "三暗槓")
 	tmpyakuCensored += searchyaku(tmpYakuInfo, "大峡谷")
 	tmpyakuCensored += searchyaku(tmpYakuInfo, "雪化粧")
+	tmpyakuCensored += searchyaku(tmpYakuInfo, "三色同槓")
 	if ((Kangzi == 3)&&(tmpyakuCensored == 0)) {
 		switch getRuleInt(RULE_SANKANTSU)
 			case 0:

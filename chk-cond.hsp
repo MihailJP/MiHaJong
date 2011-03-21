@@ -42,6 +42,19 @@
 			if (getRuleInt(RULE_RIICHI_IPPATSU) == 2) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1}
 		}
 	}
+	/* 鳥リーチ */
+	if (getRuleInt(RULE_BIRD_RIICHI) != 0) {
+		if (getMenzen(GameStat, targetPlayer) == 1) {
+			if (getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) != RIICHI_NO) {
+				yakuFlag = 0
+				repeat DiscardPointer(GameStat, targetPlayer), 1
+					if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) == SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+1) {yakuFlag = 1}
+					if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) == SUTEHAI_RIICHI_TAKEN+TILE_SUIT_BAMBOOS+1) {yakuFlag = 1}
+				loop
+				addyaku tmpYakuInfo, "鳥立直", 1
+			}
+		}
+	}
 	/* 天和系 */
 	tmpRenHuFlag = 0 // 人和を役満以外に設定していたとき用
 	if (getMenzen(GameStat, targetPlayer) == 1) {
@@ -109,6 +122,7 @@
 		   elseブロックに組み込むことで嶺上と海底が複合するのを防止 */
 		if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) == 0) {
 			if (TsumoAgari == 1) {
+				/* 海底ツモ　ここから */
 				addyaku tmpYakuInfo, "海底摸月", 1
 				/* 一筒摸月 */
 				if (getRuleInt(RULE_IIPIN_MOYUE) != 0) {
@@ -133,7 +147,9 @@
 						addyaku tmpYakuInfo, "海底撈花", 1
 					}
 				}
+				/* 海底ツモ　ここまで */
 			} else {
+				/* 河底ロン　ここから */
 				addyaku tmpYakuInfo, "河底撈魚", 1
 				/* 九筒撈魚 */
 				if (getRuleInt(RULE_CHUUPIN_RAOYUI) != 0) {
@@ -146,7 +162,9 @@
 						delyaku tmpYakuInfo, "河底撈魚"
 					}
 				}
+				/* 河底ロン　ここまで */
 			}
+			/* ツモ・ロン共通の役　ここから */
 			/* 泥底撈蟲 */
 			if (getRuleInt(RULE_NITEI_RAOCHUN) != 0) {
 				yakuflagcount = 0
@@ -159,6 +177,13 @@
 					addyaku tmpYakuInfo, "泥底撈蟲", 1
 				}
 			}
+			/* ラストオーダー麻婆豆腐 */
+			if (getRuleInt(RULE_MAABOODOUFU) != 0) {
+				if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_WHITE_DRAGON) {
+					addyakuman tmpYakuInfo, "ラストオーダー麻婆豆腐", 1
+				}
+			}
+			/* ツモ・ロン共通の役　ここまで */
 		}
 	}
 	/* 槓振り */

@@ -353,7 +353,8 @@
 #endif
 	AddRuleText "西廂待月", RuleStat(RULE_SEISOU_TAIGETSU)
 	AddRuleText "西湖十景", RuleStat(RULE_SEIKO_JIKKEI)
-	AddRuleText "火山爆発", RuleStat(RULE_VOLCANIC_ERRUPTION)
+	AddRuleText1 "火山爆発(九の刻子)", RuleStat(RULE_VOLCANIC_ERRUPTION)
+	AddRuleText3 "火山爆発(五索・七索)", RuleStat(RULE_VOLCANIC_ERRUPTION)
 	AddRuleText "丹鳳朝陽", RuleStat(RULE_TANFON_CHOUYOU)
 #endif
 	AddRuleText "鵲橋会", RuleStat(RULE_QUEQIAOHUI)
@@ -368,9 +369,11 @@
 	AddRuleText3 "紅白饅頭", RuleStat(RULE_KOHAKU_MANJU)
 	AddRuleText "白鳥", RuleStat(RULE_HAKUCHO)
 #endif
+	AddRuleText "白一色", RuleStat(RULE_HAKUIISOO)
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText1 "二暗槓", RuleStat(RULE_RYANANKAN)
 	AddRuleText3 "三暗槓", RuleStat(RULE_SANANKAN)
+	AddRuleText "三色同槓", RuleStat(RULE_SANSHOKU_DOUKAN)
 #ifndef SANMAX
 	AddRuleText "大峡谷", RuleStat(RULE_GRAND_CANYON)
 #endif
@@ -452,6 +455,7 @@
 	AddRuleText2 "全帯八", RuleStat(RULE_ALL_EIGHT)
 	AddRuleText3 "全帯九", RuleStat(RULE_ALL_NINE)
 	/* ルール設定を表示　セクション区切り */
+	AddRuleText "鳥立直", RuleStat(RULE_BIRD_RIICHI)
 	AddRuleText1 "五筒開花", RuleStat(RULE_UUPIN_KAIHOH)
 	AddRuleText2 "頭槓和", RuleStat(RULE_TOUKANHOH)
 	AddRuleText3 "連槓開花", RuleStat(RULE_RENKAN_KAIHOH)
