@@ -8,12 +8,13 @@
 #module
 #defcfunc countSpecMentz array haiMianziDat, array targetKez, array targetShunz, int Mode
 /*
-		val=countSpecMentz(p1, p2, p3)
-		w’è‚µ‚½í—Ş‚Ì‘Îq‚ğ”‚¦‚é
+		val=countSpecMentz(p1, p2, p3, p4)
+		w’è‚µ‚½í—Ş‚Ì–Êq‚ğ”‚¦‚é
 
 		p1 : –Êq\¬‚ğŠi”[‚µ‚½”z—ñ
 		p2 : ’T‚µ‚½‚¢q‚Ì”z—ñ
 		p3 : ’T‚µ‚½‚¢‡q‚Ì”z—ñ
+		p4 : ƒ‚[ƒh(0‚È‚ç“ª‚à”‚¦‚é)
 
 		w’è‚µ‚½í—Ş‚Ì‚¤‚¿‰½í—Ş‚ÌqE‡q‚ª‚ ‚é‚©‚ğ•Ô‚µ‚Ü‚·B
 */
@@ -29,6 +30,41 @@
 		if (ShunzCount(targetShunz(cnt)) >= 1) {yakuflagcount++}
 	loop
 	return yakuflagcount
+#global
+
+/* ”š‚Ì‡Œv‚ğ”‚¦‚é */
+#module
+#include "const.as"
+#defcfunc countMentzNumerals array haiMianziDat
+/*
+		val=countMentzNumerals(p1)
+		”š‚Ì‡Œv‚ğ”‚¦‚é
+
+		p1 : –Êq\¬‚ğŠi”[‚µ‚½”z—ñ
+
+		–Êq‚É‚ ‚é””v‚Ì”š‚Ì‡Œv‚ğ•Ô‚µ‚Ü‚·B
+*/
+	Cifr = 0
+	repeat SIZE_OF_MELD_BUFFER
+		if (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM < TILE_NUMERAL_MAX) {
+			if (cnt == 0) {
+				Cifr += (haiMianziDat(0) \ TILE_SUIT_STEP) * 2
+			} else {
+				switch (haiMianziDat(cnt) / MELD_TYPE_STEP)
+					case MELD_SEQUENCE_CONCEALED: case MELD_SEQUENCE_EXPOSED_LOWER: case MELD_SEQUENCE_EXPOSED_MIDDLE: case MELD_SEQUENCE_EXPOSED_UPPER:
+						Cifr += (((haiMianziDat(cnt) \ TILE_SUIT_STEP)+1) * 3)
+					swbreak
+					case MELD_TRIPLET_CONCEALED: case MELD_TRIPLET_EXPOSED_LEFT: case MELD_TRIPLET_EXPOSED_CENTER: case MELD_TRIPLET_EXPOSED_RIGHT:
+						Cifr += ((haiMianziDat(cnt) \ TILE_SUIT_STEP) * 3)
+					swbreak
+					default:
+						Cifr += ((haiMianziDat(cnt) \ TILE_SUIT_STEP) * 4)
+					swbreak
+				swend
+			}
+		}
+	loop
+	return Cifr
 #global
 
 /* ‚»‚Ì‘¼‚Ì–ğ */
@@ -598,7 +634,7 @@
 		}
 	}
 	/* •‘¾˜Y”„Ä–İ */
-	if (getRuleInt(RULE_UUTAARAN) != 1) {
+	if (getRuleInt(RULE_UUTAARAN) != 0) {
 		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+5, TILE_SUIT_CIRCLES+5, TILE_SUIT_BAMBOOS+5
 		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5
 		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 1)
@@ -607,7 +643,7 @@
 		}
 	}
 	/* ‹ğ—”“{‹ê˜I| */
-	if (getRuleInt(RULE_GRAND_CROSS) != 1) {
+	if (getRuleInt(RULE_GRAND_CROSS) != 0) {
 		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+6
 		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+7
 		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 1)
@@ -621,7 +657,7 @@
 		}
 	}
 	/* ŠìêFè~”~ */
-	if (getRuleInt(RULE_XIQUE_NAOMEI) != 1) {
+	if (getRuleInt(RULE_XIQUE_NAOMEI) != 0) {
 		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+5, TILE_SUIT_BAMBOOS+1
 		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CIRCLES+1
 		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 1)
@@ -643,7 +679,7 @@
 	}
 #ifndef SANMAS
 	/* ÔŠáÂ—´ */
-	if (getRuleInt(RULE_SEKIGAN_SEIRYUU) != 1) {
+	if (getRuleInt(RULE_SEKIGAN_SEIRYUU) != 0) {
 		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_WHITE_DRAGON, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8
 		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+2
 		yakuflagcount = countSpecMentz(haiMianziDat, targetKez, targetShunz, 0)
@@ -694,4 +730,19 @@
 		}
 	loop
 return
+	/* •ˆß‹Rm */
+	if (getRuleInt(RULE_BLACKJACK) != 0) {
+		if (countMentzNumerals(haiMianziDat) == 21) {
+			addyaku tmpYakuInfo, "•ˆß‹Rm", 2
+		}
+	}
+	/* ”’ˆß‹Rm */
+	if (getRuleInt(RULE_WHITE_KNIGHT) != 0) {
+		countKez KezCount, haiMianziDat
+		if (KezCount(TILE_WHITE_DRAGON) >= 1) {
+			if (countMentzNumerals(haiMianziDat) == 21) {
+				addyakuman tmpYakuInfo, "”’ˆß‹Rm", 1
+			}
+		}
+	}
 #global

@@ -2051,4 +2051,25 @@
 	RuleDescription(RULE_SANSHOKU_DOUKAN+1) = "三色同槓の有無と価値を設定します(三色同刻を全て槓子にする)"
 	RuleTxt(0, RULE_SANSHOKU_DOUKAN+1) = "なし", "５飜(喰い下がり有り)", "役満"
 
+	RuleName(RULE_CHOUSANGEN+1) = "超三元"
+	RuleDescription(RULE_CHOUSANGEN+1) = "超三元の有無と価値を設定します(大三元を全て槓子にする)"
+	RuleTxt(0, RULE_CHOUSANGEN+1) = "なし", "ダブル役満"
+
+	RuleName(RULE_CHOUSIXI+1) = "超四喜"
+	RuleDescription(RULE_CHOUSIXI+1) = "超四喜の有無と価値を設定します(大四喜を全て槓子にする)"
+	RuleTxt(0, RULE_CHOUSIXI+1) = "なし", "トリプル役満"
+
+	RuleName(RULE_BLACKJACK+1) = "黒衣騎士"
+	RuleDescription(RULE_BLACKJACK+1) = "黒衣騎士の有無と価値を設定します(数牌の数字の合計が21)"
+	RuleTxt(0, RULE_BLACKJACK+1) = "なし", "２飜"
+
+	RuleName(RULE_WHITE_KNIGHT+1) = "白衣騎士"
+#ifdef SANMAS
+	RuleDescription(RULE_WHITE_KNIGHT+1) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_WHITE_KNIGHT+1) = "Ｎ／Ａ"
+#else
+	RuleDescription(RULE_WHITE_KNIGHT+1) = "白衣騎士の有無と価値を設定します(白の刻子がある黒衣騎士)"
+	RuleTxt(0, RULE_WHITE_KNIGHT+1) = "なし", "役満"
+#endif
+
 return

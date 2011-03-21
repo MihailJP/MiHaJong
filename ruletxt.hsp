@@ -374,6 +374,8 @@
 	AddRuleText1 "二暗槓", RuleStat(RULE_RYANANKAN)
 	AddRuleText3 "三暗槓", RuleStat(RULE_SANANKAN)
 	AddRuleText "三色同槓", RuleStat(RULE_SANSHOKU_DOUKAN)
+	AddRuleText1 "超三元", RuleStat(RULE_CHOUSANGEN)
+	AddRuleText3 "超四喜", RuleStat(RULE_CHOUSIXI)
 #ifndef SANMAX
 	AddRuleText "大峡谷", RuleStat(RULE_GRAND_CANYON)
 #endif
@@ -517,6 +519,8 @@
 #endif
 #ifndef SANMAS
 	AddRuleText "赤眼青龍", RuleStat(RULE_SEKIGAN_SEIRYUU)
+	AddRuleText1 "黒衣騎士", RuleStat(RULE_BLACKJACK)
+	AddRuleText3 "白衣騎士", RuleStat(RULE_WHITE_KNIGHT)
 	AddRuleText1 "青函トンネル", RuleStat(RULE_SEIKAN_TUNNEL)
 	AddRuleText3 "青函連絡船", RuleStat(RULE_SEIKAN_SHIP)
 #endif

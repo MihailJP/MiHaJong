@@ -12,7 +12,7 @@
 #ifdef ALLSANMA
 	WindMian = 0: DragonMian = 0
 #endif
-	Cifr = 0
+	Cifr = countMentzNumerals(haiMianziDat)
 	repeat SIZE_OF_MELD_BUFFER
 		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM / TILE_SUIT_STEP) * TILE_SUIT_STEP
 			case TILE_SUIT_CHARACTERS: WanzMian++: swbreak
@@ -30,23 +30,6 @@
 			DragonMian++
 		}
 #endif
-		if (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM < TILE_NUMERAL_MAX) {
-			if (cnt == 0) {
-				Cifr += (haiMianziDat(0) \ TILE_SUIT_STEP) * 2
-			} else {
-				switch (haiMianziDat(cnt) / MELD_TYPE_STEP)
-					case MELD_SEQUENCE_CONCEALED: case MELD_SEQUENCE_EXPOSED_LOWER: case MELD_SEQUENCE_EXPOSED_MIDDLE: case MELD_SEQUENCE_EXPOSED_UPPER:
-						Cifr += (((haiMianziDat(cnt) \ TILE_SUIT_STEP)+1) * 3)
-					swbreak
-					case MELD_TRIPLET_CONCEALED: case MELD_TRIPLET_EXPOSED_LEFT: case MELD_TRIPLET_EXPOSED_CENTER: case MELD_TRIPLET_EXPOSED_RIGHT:
-						Cifr += ((haiMianziDat(cnt) \ TILE_SUIT_STEP) * 3)
-					swbreak
-					default:
-						Cifr += ((haiMianziDat(cnt) \ TILE_SUIT_STEP) * 4)
-					swbreak
-				swend
-			}
-		}
 	loop
 	if (((WanzMian+Zimian) == SIZE_OF_MELD_BUFFER)||((PinzMian+Zimian) == SIZE_OF_MELD_BUFFER)||((SouzMian+Zimian) == SIZE_OF_MELD_BUFFER)) {
 #ifndef SANMAS
