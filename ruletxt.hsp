@@ -290,6 +290,7 @@
 	AddRuleText "四字刻", RuleStat(RULE_FOUR_HONORS)
 #endif
 	AddRuleText "二同刻", RuleStat(RULE_RYANDOUKOH)
+	AddRuleText "三色小同刻", RuleStat(RULE_SANSHOKU_SHOUDOUKOH)
 	AddRuleText1 "奇数対々和", RuleStat(RULE_ODD_TOITOI)
 	AddRuleText3 "偶数対々和", RuleStat(RULE_EVEN_TOITOI)
 #ifndef SANMAS
@@ -368,6 +369,7 @@
 	AddRuleText1 "宝紅開花", RuleStat(RULE_BAOHONGKAIHUA)
 	AddRuleText3 "紅白饅頭", RuleStat(RULE_KOHAKU_MANJU)
 	AddRuleText "白鳥", RuleStat(RULE_HAKUCHO)
+	AddRuleText "雪の銀閣", RuleStat(RULE_SNOW_GINKAKU)
 #endif
 	AddRuleText "白一色", RuleStat(RULE_HAKUIISOO)
 	/* ルール設定を表示　セクション区切り */

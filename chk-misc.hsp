@@ -295,6 +295,7 @@
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "—ÎˆêF")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "•ˆêF")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "Â“´–å")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "á‚Ì‹âŠt")
 #endif
 		if ((yakuflagcount == SIZE_OF_MELD_BUFFER)&&(tmpyakuCensored == 0)) {
 			if ((yakuflagcount2 == 0)&&(getRuleInt(RULE_NO_RED) == 2)) {

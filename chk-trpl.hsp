@@ -169,6 +169,17 @@
 			addyaku tmpYakuInfo, "三色同刻", 2
 		}
 	}
+	/* 三色小同刻 */
+	if (getRuleInt(RULE_SANSHOKU_SHOUDOUKOH) != 0) {
+		yakuFlag = 0
+		repeat TILE_NUMERAL_MAX/TILE_NUMERAL_COLORS
+			if ((DuiCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(DuiCount(cnt+TILE_SUIT_CIRCLES) >= 1)&&(DuiCount(cnt+TILE_SUIT_BAMBOOS) >= 1)) {yakuFlag = 1}
+			if ((KezCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(KezCount(cnt+TILE_SUIT_CIRCLES) >= 1)&&(KezCount(cnt+TILE_SUIT_BAMBOOS) >= 1)) {yakuFlag = 0}
+		loop
+		if (yakuFlag) {
+			addyaku tmpYakuInfo, "三色小同刻", 1
+		}
+	}
 #ifndef SANMAS
 	/* 小三元 */
 	if (DragonCnt == 5) {
@@ -1069,6 +1080,15 @@
 		if (DuiCount(TILE_WHITE_DRAGON) >= 1) {yakuFlagCount++}
 		if (yakuFlagCount == 5) {
 			addyakuman tmpYakuInfo, "白一色", 1
+		}
+	}
+	/* 雪の銀閣 */
+	if (getRuleInt(RULE_SNOW_GINKAKU) != 0) {
+		if ((DuiCount(TILE_SUIT_CIRCLES+2) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+4) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+8) >= 1)&&(DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)) {
+			addyakuman tmpYakuInfo, "雪の銀閣", 1
+			delyaku tmpYakuInfo, "対々和"
+			delyaku tmpYakuInfo, "役牌・白"
+			delyaku tmpYakuInfo, "混一色"
 		}
 	}
 return

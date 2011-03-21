@@ -2072,4 +2072,17 @@
 	RuleTxt(0, RULE_WHITE_KNIGHT+1) = "なし", "役満"
 #endif
 
+	RuleName(RULE_SNOW_GINKAKU+1) = "雪の銀閣"
+#ifdef SANMAS
+	RuleDescription(RULE_SNOW_GINKAKU+1) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SNOW_GINKAKU+1) = "Ｎ／Ａ"
+#else
+	RuleDescription(RULE_SNOW_GINKAKU+1) = "雪の銀閣の有無と価値を設定します(東、白、二筒、四筒、八筒で対々和)"
+	RuleTxt(0, RULE_SNOW_GINKAKU+1) = "なし", "役満"
+#endif
+
+	RuleName(RULE_SANSHOKU_SHOUDOUKOH+1) = "三色小同刻"
+	RuleDescription(RULE_SANSHOKU_SHOUDOUKOH+1) = "三色小同刻の有無と価値を設定します(三色で同じ数の数牌のうち2つを刻子、残りを雀頭にする)"
+	RuleTxt(0, RULE_SANSHOKU_SHOUDOUKOH+1) = "なし", "１飜"
+
 return
