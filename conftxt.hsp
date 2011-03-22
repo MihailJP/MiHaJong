@@ -75,7 +75,7 @@
 	RuleName(RULE_MULTIPLE_MAHJONG+1) = "複数和了"
 #ifdef ALLSANMA
 	RuleDescription(RULE_MULTIPLE_MAHJONG+1) = "二家和のルールを設定します"
-	RuleTxt(0, RULE_MULTIPLE_MAHJONG+1) = "頭ハネ", ">>>", "ダブロン"
+	RuleTxt(0, RULE_MULTIPLE_MAHJONG+1) = "頭ハネ", ">>>", "ダブロン", ">>>", ">>>", "流局"
 #else
 	RuleDescription(RULE_MULTIPLE_MAHJONG+1) = "二家和/三家和のルールを設定します"
 	RuleTxt(0, RULE_MULTIPLE_MAHJONG+1) = "頭ハネ/流局", "頭ハネ", "ダブロン/流局", "ダブロン", "トリロン"
@@ -85,11 +85,12 @@
 	RuleDescription(RULE_SIMULTANEOUS_MAHJONG+1) = "複数和了り時の連荘条件を設定します"
 	RuleTxt(0, RULE_SIMULTANEOUS_MAHJONG+1) = "親の和了りで連荘", "親が上家の場合連荘", "親流れ"
 	
-	RuleName(RULE_TRIPLE_MAHJONG+1) = "三家和流れ"
 #ifdef ALLSANMA
-	RuleDescription(RULE_TRIPLE_MAHJONG+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_TRIPLE_MAHJONG+1) = "Ｎ／Ａ"
+	RuleName(RULE_TRIPLE_MAHJONG+1) = "二家和流れ"
+	RuleDescription(RULE_TRIPLE_MAHJONG+1) = "二家和で流れる時の連荘条件を設定します"
+	RuleTxt(0, RULE_TRIPLE_MAHJONG+1) = "子の放銃で連荘", "北家の放銃で連荘", "連荘", "親流れ"
 #else
+	RuleName(RULE_TRIPLE_MAHJONG+1) = "三家和流れ"
 	RuleDescription(RULE_TRIPLE_MAHJONG+1) = "三家和で流れる時の連荘条件を設定します"
 	RuleTxt(0, RULE_TRIPLE_MAHJONG+1) = "子の放銃で連荘", "北家の放銃で連荘", "連荘", "親流れ"
 #endif
@@ -111,18 +112,20 @@
 	RuleDescription(RULE_FIFTH_KONG+1) = "５回目の槓ができるかどうかのルールを設定します"
 	RuleTxt(0, RULE_FIFTH_KONG+1) = "なし", "あり(連荘)", "あり(親流れ)"
 	
-	RuleName(RULE_FOUR_WIND_RYUUKYOKU+1) = "四風連打"
-	RuleName(RULE_FOUR_RIICHI_RYUUKYOKU+1) = "四人立直"
 #ifdef ALLSANMA
-	RuleDescription(RULE_FOUR_WIND_RYUUKYOKU+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_FOUR_WIND_RYUUKYOKU+1) = "Ｎ／Ａ"
+	RuleName(RULE_FOUR_WIND_RYUUKYOKU+1) = "三風連打"
+	RuleDescription(RULE_FOUR_WIND_RYUUKYOKU+1) = "鳴きのない１巡目に３人が同じ風牌を捨てたときのルールを設定します"
+	RuleTxt(0, RULE_FOUR_WIND_RYUUKYOKU+1) = "場を続行", "連荘", "親流れ"
 	
-	RuleDescription(RULE_FOUR_RIICHI_RYUUKYOKU+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_FOUR_RIICHI_RYUUKYOKU+1) = "Ｎ／Ａ"
+	RuleName(RULE_FOUR_RIICHI_RYUUKYOKU+1) = "三人立直"
+	RuleDescription(RULE_FOUR_RIICHI_RYUUKYOKU+1) = "３人全員が立直したときのルールを設定します"
+	RuleTxt(0, RULE_FOUR_RIICHI_RYUUKYOKU+1) = "場を続行", "連荘", "親流れ"
 #else
+	RuleName(RULE_FOUR_WIND_RYUUKYOKU+1) = "四風連打"
 	RuleDescription(RULE_FOUR_WIND_RYUUKYOKU+1) = "鳴きのない１巡目に４人が同じ風牌を捨てたときのルールを設定します"
 	RuleTxt(0, RULE_FOUR_WIND_RYUUKYOKU+1) = "連荘", "親流れ", "場を続行"
 	
+	RuleName(RULE_FOUR_RIICHI_RYUUKYOKU+1) = "四人立直"
 	RuleDescription(RULE_FOUR_RIICHI_RYUUKYOKU+1) = "４人全員が立直したときのルールを設定します"
 	RuleTxt(0, RULE_FOUR_RIICHI_RYUUKYOKU+1) = "連荘", "親流れ", "場を続行"
 #endif

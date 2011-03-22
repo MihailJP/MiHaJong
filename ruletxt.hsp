@@ -49,7 +49,11 @@
 	if ((Rule(RULE_MULTIPLE_MAHJONG+1) == 2)||(Rule(RULE_MULTIPLE_MAHJONG+1) == 3)) {
 		chatappend "*** ダブロンあり、"+RuleStat(RULE_SIMULTANEOUS_MAHJONG)+"\n"
 	}
-#ifndef ALLSANMA
+#ifdef ALLSANMA
+	if (Rule(RULE_MULTIPLE_MAHJONG+1) == 5) {
+		chatappend "*** 二家和は流局、"+RuleStat(RULE_TRIPLE_MAHJONG)+"\n"
+	}
+#else
 	if (Rule(RULE_MULTIPLE_MAHJONG+1) == 4) {
 		chatappend "*** トリロンあり、"+RuleStat(RULE_SIMULTANEOUS_MAHJONG)+"\n"
 	} else {
@@ -69,7 +73,10 @@
 		case 1: chatappend "５つ目の槓で流局連荘\n": swbreak
 		case 2: chatappend "５つ目の槓で流局親流れ\n": swbreak
 	swend
-#ifndef ALLSANMA
+#ifdef ALLSANMA
+	chatappend "*** 三風連打は"+RuleStat(RULE_FOUR_WIND_RYUUKYOKU)+"\n"
+	chatappend "*** 三人立直は"+RuleStat(RULE_FOUR_RIICHI_RYUUKYOKU)+"\n"
+#else
 	chatappend "*** 四風連打は"+RuleStat(RULE_FOUR_WIND_RYUUKYOKU)+"\n"
 	chatappend "*** 四人立直は"+RuleStat(RULE_FOUR_RIICHI_RYUUKYOKU)+"\n"
 #endif

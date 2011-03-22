@@ -379,7 +379,33 @@ repeat
 				gosub *redrscreen: break
 			}
 		}
-#ifndef ALLSANMA
+#ifdef ALLSANMA
+		// 三人立直の判定
+		if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 0) {
+#ifdef SANMA4
+			if (((getRichiFlag(GameStat, RICHI_FLAG, 0) != RIICHI_NO)||(playerwind(0, getRound(GameStat)) == PLAYER_NORTH))&&((getRichiFlag(GameStat, RICHI_FLAG, 1) != RIICHI_NO)||(playerwind(1, getRound(GameStat)) == PLAYER_NORTH))&&((getRichiFlag(GameStat, RICHI_FLAG, 2) != RIICHI_NO)||(playerwind(2, getRound(GameStat)) == PLAYER_NORTH))&&((getRichiFlag(GameStat, RICHI_FLAG, 3) != RIICHI_NO)||(playerwind(3, getRound(GameStat)) == PLAYER_NORTH))) {
+#else
+			if ((getRichiFlag(GameStat, RICHI_FLAG, 0)*getRichiFlag(GameStat, RICHI_FLAG, 1)*getRichiFlag(GameStat, RICHI_FLAG, 2)) != 0) {
+#endif
+				hncnKyokuEndType = ENDKYOKU_SUUCHARIICHI: break
+			}
+		}
+		// 三風連打の判定
+		if (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 0) {
+#ifdef SANMA4
+			if (((DiscardPointer(GameStat, 0) == 1)||(playerwind(0, getRound(GameStat)) == PLAYER_NORTH))&&((DiscardPointer(GameStat, 1) == 1)||(playerwind(1, getRound(GameStat)) == PLAYER_NORTH))&&((DiscardPointer(GameStat, 2) == 1)||(playerwind(2, getRound(GameStat)) == PLAYER_NORTH))&&((DiscardPointer(GameStat, 3) == 1)||(playerwind(3, getRound(GameStat)) == PLAYER_NORTH))) {
+				if (((getDiscard(GameStat, DISCARD_TILECODE, 1, 0) == getDiscard(GameStat, DISCARD_TILECODE, 1, 1))||(playerwind(1, getRound(GameStat)) == PLAYER_NORTH))&&((getDiscard(GameStat, DISCARD_TILECODE, 1, 1) == getDiscard(GameStat, DISCARD_TILECODE, 1, 2))||(playerwind(2, getRound(GameStat)) == PLAYER_NORTH))&&((getDiscard(GameStat, DISCARD_TILECODE, 1, 2) == getDiscard(GameStat, DISCARD_TILECODE, 1, 3))||(playerwind(3, getRound(GameStat)) == PLAYER_NORTH))&&((getDiscard(GameStat, DISCARD_TILECODE, 1, 3) == getDiscard(GameStat, DISCARD_TILECODE, 1, 0))||(playerwind(0, getRound(GameStat)) == PLAYER_NORTH))) {
+#else
+			if ((DiscardPointer(GameStat, 0) == 1)&&(DiscardPointer(GameStat, 1) == 1)&&(DiscardPointer(GameStat, 2) == 1)) {
+				if ((getDiscard(GameStat, DISCARD_TILECODE, 1, 0) == getDiscard(GameStat, DISCARD_TILECODE, 1, 1))&&(getDiscard(GameStat, DISCARD_TILECODE, 1, 1) == getDiscard(GameStat, DISCARD_TILECODE, 1, 2))) {
+#endif
+					if ((getDiscard(GameStat, DISCARD_TILECODE, 1, 0) >= TILE_WIND_MIN)&&(getDiscard(GameStat, DISCARD_TILECODE, 1, 0) <= TILE_WIND_MAX)) {
+						hncnKyokuEndType = ENDKYOKU_SUUFONRENDA: break
+					}
+				}
+			}
+		}
+#else
 		// 四人立直の判定
 		if (((getRichiFlag(GameStat, RICHI_FLAG, 0)*getRichiFlag(GameStat, RICHI_FLAG, 1)*getRichiFlag(GameStat, RICHI_FLAG, 2)*getRichiFlag(GameStat, RICHI_FLAG, 3)) != 0)&&(getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 2)) {
 			hncnKyokuEndType = ENDKYOKU_SUUCHARIICHI: break

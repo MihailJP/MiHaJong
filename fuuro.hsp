@@ -406,7 +406,7 @@
 		}
 	}
 	/* Ž–Œãˆ— */
-	setCall kangPlayer, ""
+	repeat NUM_OF_PLAYERS: setCall cnt, "": loop
 	/* Ä•`‰æ */
 	gosub *redrscreen@
 	/* –Â‚«‚ª¬—§‚µ‚½‚Ì‚ÅAˆê”­‚Ìƒtƒ‰ƒO‚ð~‚ë‚· */
@@ -619,7 +619,12 @@
 			haifurecfurikomi GameStat, haiRon, ActivePlayer
 		}
 	}
-#ifndef ALLSANMA
+#ifdef ALLSANMA
+	// “ñ‰Æ˜a‚Ì”»’è
+	if (((haiRon(0)+haiRon(1)+haiRon(2)+haiRon(3)) >= 2)&&(getRule(RULE_MULTIPLE_MAHJONG)==5)) {
+		hncnKyokuEndType = ENDKYOKU_TRIPLERON: return
+	}
+#else
 	// ŽO‰Æ˜a‚Ì”»’è
 	if (((haiRon(0)+haiRon(1)+haiRon(2)+haiRon(3)) >= 3)&&((getRule(RULE_MULTIPLE_MAHJONG)==0)||(getRule(RULE_MULTIPLE_MAHJONG)==2))) {
 		hncnKyokuEndType = ENDKYOKU_TRIPLERON: return

@@ -339,14 +339,22 @@
 	/**************/
 	/* 三家和の時 */
 	/**************/
-#ifndef ALLSANMA
 	if (hncnKyokuEndType == ENDKYOKU_TRIPLERON) {
+#ifdef ALLSANMA
+		statmes "流局(二家和)"
+		await 1300
+		dsplay VOX_SANJIAHU
+		ResultDesc = "二家和"
+		chatappend "*** "+ResultDesc+"\n"
+		hncnMsg = "二家和"
+#else
 		statmes "流局(三家和)"
 		await 1300
 		dsplay VOX_SANJIAHU
 		ResultDesc = "三家和"
 		chatappend "*** "+ResultDesc+"\n"
 		hncnMsg = "三家和"
+#endif
 		gosub *redrscreen: redraw 1: await 3000
 		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
@@ -405,17 +413,23 @@
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 	}
-#endif
 	/**************/
 	/* 四風流局時 */
 	/**************/
-#ifndef ALLSANMA
 	if (hncnKyokuEndType == ENDKYOKU_SUUFONRENDA) {
+#ifdef ALLSANMA
+		statmes "流局(三風連打)"
+		dsplay VOX_SIFENG
+		ResultDesc = "三風連打"
+		chatappend "*** "+ResultDesc+"\n"
+		hncnMsg = "三風連打"
+#else
 		statmes "流局(四風連打)"
 		dsplay VOX_SIFENG
 		ResultDesc = "四風連打"
 		chatappend "*** "+ResultDesc+"\n"
 		hncnMsg = "四風連打"
+#endif
 		gosub *redrscreen: redraw 1: await 3000
 		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
@@ -442,17 +456,23 @@
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 	}
-#endif
 	/**************/
 	/* 四人立直時 */
 	/**************/
-#ifndef ALLSANMA
 	if (hncnKyokuEndType == ENDKYOKU_SUUCHARIICHI) {
+#ifdef ALLSANMA
+		statmes "流局(三家立直)"
+		dsplay VOX_SIJIARICHI
+		ResultDesc = "三家立直"
+		chatappend "*** "+ResultDesc+"\n"
+		hncnMsg = "三家立直"
+#else
 		statmes "流局(四家立直)"
 		dsplay VOX_SIJIARICHI
 		ResultDesc = "四家立直"
 		chatappend "*** "+ResultDesc+"\n"
 		hncnMsg = "四家立直"
+#endif
 		gosub *redrscreen: redraw 1: await 3000
 		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
@@ -463,6 +483,9 @@
 		gosub *redrscreen: redraw 1: await 1500
 		TenpaiCnt = 0
 		repeat NUM_OF_PLAYERS
+#ifdef SANMA4
+			if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
+#endif
 			Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
 			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
 				Shanten = 1 // 和了り放棄時の処理→強制不聴扱い→不聴リーチとして罰符
@@ -477,6 +500,9 @@
 		gosub *redrscreen: await 5000
 
 		repeat NUM_OF_ACTUAL_PLAYERS
+#ifdef SANMA4
+			if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
+#endif
 			// 錯和立直（不聴立直）の者がいた場合
 			Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
 			dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
@@ -484,6 +510,9 @@
 #ifdef SANMAT
 				if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
 					repeat NUM_OF_ACTUAL_PLAYERS
+#ifdef SANMA4
+						if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
+#endif
 						if (cnt == targetPlayer) {
 							hncnPointDelta(cnt) -= 120
 						} else {
@@ -492,6 +521,9 @@
 					loop
 				} else {
 					repeat NUM_OF_ACTUAL_PLAYERS
+#ifdef SANMA4
+						if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
+#endif
 						if (cnt == targetPlayer) {
 							hncnPointDelta(cnt) -= 80
 						} else {
@@ -502,6 +534,9 @@
 #else
 				if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
 					repeat NUM_OF_ACTUAL_PLAYERS
+#ifdef SANMA4
+						if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
+#endif
 						if (cnt == targetPlayer) {
 							hncnPointDelta(cnt) -= 120
 						} else {
@@ -510,6 +545,9 @@
 					loop
 				} else {
 					repeat NUM_OF_ACTUAL_PLAYERS
+#ifdef SANMA4
+						if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
+#endif
 						if (cnt == targetPlayer) {
 							hncnPointDelta(cnt) -= 80
 						} else {
@@ -547,7 +585,6 @@
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 	}
-#endif
 	/**************/
 	/* 流し満貫時 */
 	/**************/

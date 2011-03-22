@@ -177,12 +177,19 @@ return
 			case RULE_LIMITHAND_BONUS:
 				if (Rule(RULE_CHIP+1) == 0) {gosub *config_strikeout}
 				swbreak
+#ifdef ALLSANMA
+			case RULE_SIMULTANEOUS_MAHJONG:
+				if (Rule(RULE_MULTIPLE_MAHJONG+1) != 2) {gosub *config_strikeout}
+				swbreak
+			case RULE_TRIPLE_MAHJONG:
+				if (Rule(RULE_MULTIPLE_MAHJONG+1) != 5) {gosub *config_strikeout}
+				swbreak
+#else
 			case RULE_SIMULTANEOUS_MAHJONG:
 				if (Rule(RULE_MULTIPLE_MAHJONG+1) < 2) {gosub *config_strikeout}
 				swbreak
-#ifndef ALLSANMA
 			case RULE_TRIPLE_MAHJONG:
-				if ((Rule(RULE_MULTIPLE_MAHJONG+1) ! 0)&&(Rule(RULE_MULTIPLE_MAHJONG+1) ! 2)) {gosub *config_strikeout}
+				if ((Rule(RULE_MULTIPLE_MAHJONG+1) != 0)&&(Rule(RULE_MULTIPLE_MAHJONG+1) != 2)) {gosub *config_strikeout}
 				swbreak
 #endif
 			case RULE_ROUND_TO_MANGAN:
