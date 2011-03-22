@@ -2089,4 +2089,8 @@
 	RuleDescription(RULE_THREE_YEARS_ON_STONE+1) = "石の上にも三年の有無と価値を設定します(ダブル立直と海底か河底の複合)"
 	RuleTxt(0, RULE_THREE_YEARS_ON_STONE+1) = "なし", "役満"
 
+	RuleName(RULE_KAKAN_FURITEN+1) = "加槓牌の振聴"
+	RuleDescription(RULE_KAKAN_FURITEN+1) = "加槓した牌を振聴の対象とみなすかを設定します"
+	RuleTxt(0, RULE_KAKAN_FURITEN+1) = "なし", "あり"
+
 return

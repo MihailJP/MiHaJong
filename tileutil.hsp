@@ -280,6 +280,18 @@ return haiTileInfo
 					haiFuriten = 1
 				}
 			loop
+			if ((MeldPointer(GameStat, targetPlayer) > 0)&&(getRuleInt(RULE_KAKAN_FURITEN) == 1)) {
+				repeat MeldPointer(GameStat, targetPlayer), 1
+					if (((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP) >= MELD_QUAD_ADDED_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM) == tmpHai)) {
+						haiFuriten = 1
+					}
+				loop
+			}
+			repeat DiscardPointer(GameStat, targetPlayer), 1
+				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM) == tmpHai) {
+					haiFuriten = 1
+				}
+			loop
 		}
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer, tmpTsumoHai
 	loop

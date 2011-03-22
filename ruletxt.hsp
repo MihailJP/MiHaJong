@@ -105,6 +105,10 @@
 		AddRuleText3 "国士無双は暗槓の搶槓", RuleStat(RULE_ANKAN_CHANKAN)
 #endif
 	}
+	AddRuleText "加槓牌の振聴", RuleStat(RULE_KAKAN_FURITEN)
+#ifdef ALLSANMA
+	AddRuleText "自摸和", RuleStat(RULE_TSUMO_PAYMENT)
+#endif
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText "ドラ", RuleStat(RULE_DORA_INDICATOR)
 	AddRuleText1 "裏ドラ", RuleStat(RULE_URADORA)
