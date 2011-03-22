@@ -99,7 +99,7 @@ return
 				// 明刻子
 				haiSeenCount((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0) += 3
 			} else {
-				if ((getMeld(GameStat, MELD_TILECODE, cnt, tmp)/MELD_TYPE_STEP != MELD_QUAD_CONCEALED)||(getRuleInt(RULE_ANKAN_CONCEAL) == 0)) {
+				if ((getMeld(GameStat, MELD_TILECODE, cnt, tmp)/MELD_TYPE_STEP != MELD_QUAD_CONCEALED)||(getRule(RULE_ANKAN_CONCEAL) == 0)) {
 					// 槓子 (暗槓非開示設定で見えてない暗槓までカウントしないように条件式を細工しておく)
 					haiSeenCount((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0) += 4
 				}
@@ -280,7 +280,7 @@ return haiTileInfo
 					haiFuriten = 1
 				}
 			loop
-			if ((MeldPointer(GameStat, targetPlayer) > 0)&&(getRuleInt(RULE_KAKAN_FURITEN) == 1)) {
+			if ((MeldPointer(GameStat, targetPlayer) > 0)&&(getRule(RULE_KAKAN_FURITEN) == 1)) {
 				repeat MeldPointer(GameStat, targetPlayer), 1
 					if (((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP) >= MELD_QUAD_ADDED_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM) == tmpHai)) {
 						haiFuriten = 1
@@ -355,7 +355,7 @@ return haiDaoPaiable
 		debug "花牌をドラにしました。"
 		if (Mode) {haifurecuradora tmpdora} else {haifurecdora tmpdora}	// 残りの花牌をダブドラとする
 	} else {
-		if (getRuleInt(RULE_NAGATACHO) != 0) {
+		if (getRule(RULE_NAGATACHO) != 0) {
 			// 永田町ルール用
 			tmpDora = getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode)+1
 	#ifdef SANMAX
@@ -384,7 +384,7 @@ return haiDaoPaiable
 				loop
 			}
 		} else {
-			if (getRuleInt(RULE_DORA_INDICATOR) == 2) {
+			if (getRule(RULE_DORA_INDICATOR) == 2) {
 				// 前の牌がドラ（超インフレ用）
 				tmpDora = getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode)-1
 	#ifdef SANMAX
@@ -405,14 +405,14 @@ return haiDaoPaiable
 				}
 	#endif
 			}
-			if ((getRuleInt(RULE_DORA_INDICATOR) == 1)||(getRuleInt(RULE_DORA_INDICATOR) == 2)) {
+			if ((getRule(RULE_DORA_INDICATOR) == 1)||(getRule(RULE_DORA_INDICATOR) == 2)) {
 				// 現物ドラ
 				tmpDora = getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode)
 				incDoraFlag GameStat, Mode, tmpDora // ドラを設定する
 				debug strf("牌コード [%d] をドラにしました。", tmpDora)
 				if (Mode) {haifurecuradora tmpdora} else {haifurecdora tmpdora}
 			}
-			if (getRuleInt(RULE_DORA_INDICATOR) != 1) {
+			if (getRule(RULE_DORA_INDICATOR) != 1) {
 				// ネクストドラ
 				tmpDora = getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode)+1
 	#ifdef SANMAX
@@ -530,7 +530,7 @@ return haiDaoPaiable
 		導火線の位置を計算します。
 */
 #ifdef ALLSANMA
-	if (getRuleInt(RULE_DOUKASEN) != 0) {
+	if (getRule(RULE_DOUKASEN) != 0) {
 		setDoukasen GameStat, ((30-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)-(getRound(GameStat)/4)))*36*2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/36)+30)\3
 #ifdef SANMA4
 		setDoukasen GameStat, ((30-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(0))*36*2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/36)+30)\3
@@ -542,9 +542,9 @@ return haiDaoPaiable
 #endif
 	}
 #else
-	if (getRuleInt(RULE_DOUKASEN) != 0) {
-		if (getRuleInt(RULE_FLOWER_TILES) != 0) {
-			if (getRuleInt(RULE_FLOWER_TILES) == 3) {
+	if (getRule(RULE_DOUKASEN) != 0) {
+		if (getRule(RULE_FLOWER_TILES) != 0) {
+			if (getRule(RULE_FLOWER_TILES) == 3) {
 				setDoukasen GameStat, ((40-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\NUM_OF_PLAYERS))*36*3+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/36)+40)\NUM_OF_PLAYERS
 			} else {
 				setDoukasen GameStat, ((40-((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)-1+(getRound(GameStat)\NUM_OF_PLAYERS))*70*3/2+(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))*2+getDrawPointer(GameStat)-1)/35)+40)\NUM_OF_PLAYERS

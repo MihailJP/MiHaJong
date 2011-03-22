@@ -56,7 +56,7 @@
 	countKangz KangzCount, haiMianziDat: Kangzi = stat
 	countAnKangz AnKangzCount, haiMianziDat: AnKan = stat
 	/* 超四喜 */
-	if (getRuleInt(RULE_CHOUSIXI) != 0) {
+	if (getRule(RULE_CHOUSIXI) != 0) {
 		if ((KangzCount(TILE_EAST_WIND) >= 1)&&(KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_WEST_WIND) >= 1)&&(KangzCount(TILE_NORTH_WIND) >= 1)) {
 			addyakuman tmpYakuInfo, "超四喜", 3
 			delyaku tmpYakuInfo, "大四喜"
@@ -66,7 +66,7 @@
 	tmpyakuCensored = 0 // 超四喜が成立してたら飛ばす
 	tmpyakuCensored += searchyaku(tmpYakuInfo, "超四喜")
 	if ((Kangzi == 4)&&(tmpyakuCensored == 0)) {
-		switch getRuleInt(RULE_SUUKANTSU)
+		switch getRule(RULE_SUUKANTSU)
 			case 0: case 2:
 				addyakuman tmpYakuInfo, "四槓子", 1
 				swbreak
@@ -78,13 +78,13 @@
 		delyaku tmpYakuInfo, "対々和"
 	}
 	/* 三暗槓 */
-	if (getRuleInt(RULE_SANANKAN) != 0) {
+	if (getRule(RULE_SANANKAN) != 0) {
 		if (AnKan == 3) {
 			addyakuman tmpYakuInfo, "三暗槓", 1
 		}
 	}
 	/* 大峡谷 */
-	if (getRuleInt(RULE_GRAND_CANYON) != 0) {
+	if (getRule(RULE_GRAND_CANYON) != 0) {
 		yakuFlag = 0
 		countKez KezCount, haiMianziDat
 		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)||(KezCount(TILE_SUIT_CIRCLES+8) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+8) >= 1)) {yakuFlag = 1}
@@ -94,7 +94,7 @@
 	}
 #ifndef SANMAS
 	/* 雪化粧 */
-	if (getRuleInt(RULE_YUKIGESHOU) != 0) {
+	if (getRule(RULE_YUKIGESHOU) != 0) {
 		if ((KangzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KangzCount(TILE_SUIT_CIRCLES+9) >= 1)&&(KangzCount(TILE_WHITE_DRAGON) >= 1)) {
 			addyakuman tmpYakuInfo, "雪化粧", 1
 			delyaku tmpYakuInfo, "役牌・白"
@@ -102,13 +102,13 @@
 	}
 #endif
 	/* 三色同槓 */
-	if (getRuleInt(RULE_SANSHOKU_DOUKAN) != 0) {
+	if (getRule(RULE_SANSHOKU_DOUKAN) != 0) {
 		yakuFlag = 0
 		repeat TILE_NUMERAL_MAX/TILE_NUMERAL_COLORS
 			if ((KangzCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(KangzCount(cnt+TILE_SUIT_CIRCLES) >= 1)&&(KangzCount(cnt+TILE_SUIT_BAMBOOS) >= 1)) {yakuFlag = 1}
 		loop
 		if (yakuFlag) {
-			switch getRuleInt(RULE_SANSHOKU_DOUKAN)
+			switch getRule(RULE_SANSHOKU_DOUKAN)
 				case 1: addyaku tmpYakuInfo, "三色同槓", 4+getMenzen(GameStat, targetPlayer): swbreak
 				case 2: addyakuman tmpYakuInfo, "三色同槓", 1: swbreak
 			swend
@@ -116,7 +116,7 @@
 		}
 	}
 	/* 超三元 */
-	if (getRuleInt(RULE_CHOUSANGEN) != 0) {
+	if (getRule(RULE_CHOUSANGEN) != 0) {
 		if ((KangzCount(TILE_WHITE_DRAGON) >= 1)&&(KangzCount(TILE_GREEN_DRAGON) >= 1)&&(KangzCount(TILE_RED_DRAGON) >= 1)) {
 			addyakuman tmpYakuInfo, "超三元", 2
 			delyaku tmpYakuInfo, "大三元"
@@ -130,7 +130,7 @@
 	tmpyakuCensored += searchyaku(tmpYakuInfo, "三色同槓")
 	tmpyakuCensored += searchyaku(tmpYakuInfo, "超三元")
 	if ((Kangzi == 3)&&(tmpyakuCensored == 0)) {
-		switch getRuleInt(RULE_SANKANTSU)
+		switch getRule(RULE_SANKANTSU)
 			case 0:
 				addyaku tmpYakuInfo, "三槓子", 2
 				swbreak
@@ -143,26 +143,26 @@
 		swend
 	}
 	/* 二暗槓 */
-	if (getRuleInt(RULE_RYANANKAN) != 0) {
+	if (getRule(RULE_RYANANKAN) != 0) {
 		if (AnKan == 2) {
 			addyaku tmpYakuInfo, "二暗槓", 1
 		}
 	}
 #ifndef SANMAS
 	/* 声東撃西 */
-	if (getRuleInt(RULE_SHENGDONG_JIXI) != 0) {
+	if (getRule(RULE_SHENGDONG_JIXI) != 0) {
 		if ((KangzCount(TILE_EAST_WIND) >= 1)&&(KangzCount(TILE_WEST_WIND) >= 1)) {
 			addyaku tmpYakuInfo, "声東撃西", 6
 		}
 	}
 	/* 走南闖北 */
-	if (getRuleInt(RULE_ZAONAN_CHUANGBEI) != 0) {
+	if (getRule(RULE_ZAONAN_CHUANGBEI) != 0) {
 		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_NORTH_WIND) >= 1)) {
 			addyaku tmpYakuInfo, "走南闖北", 6
 		}
 	}
 	/* 暗中模索 */
-	if (getRuleInt(RULE_ANCHUMOSAKU) != 0) {
+	if (getRule(RULE_ANCHUMOSAKU) != 0) {
 		if ((AnKangzCount(TILE_RED_DRAGON) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)/TILE_SUIT_STEP*TILE_SUIT_STEP = TILE_SUIT_BAMBOOS)&&(TsumoAgari == 1)) {
 			addyaku tmpYakuInfo, "暗中模索", 1
 		}

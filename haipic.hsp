@@ -357,7 +357,7 @@ return
 			// ˆÃžÈ
 			case MELD_QUAD_CONCEALED:
 				showtileblockturned playerRelative(targetPlayer,getPlayer(GameStat))*haiShowMode, tmpxx+tmpxxx, tmpyy+tmpyyy
-				if ((getRuleInt(RULE_ANKAN_CONCEAL) != 0)&&(getHandStat(GameStat, targetPlayer) != 1)) {
+				if ((getRule(RULE_ANKAN_CONCEAL) != 0)&&(getHandStat(GameStat, targetPlayer) != 1)) {
 					showtileblockturned playerRelative(targetPlayer,getPlayer(GameStat))*haiShowMode, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+tmpyyy
 					showtileblockturned playerRelative(targetPlayer,getPlayer(GameStat))*haiShowMode, tmpxx+TILE_WIDTH*2+tmpxxx, tmpyy+tmpyyy
 				} else {
@@ -462,7 +462,7 @@ return
 					if (tmpAnkanAkadora >= 1) {tmpAkaDoraFlagA = 1} else {tmpAkaDoraFlagA = 0}
 					if (tmpAnkanAkadora >= 2) {tmpAkaDoraFlagB = 1} else {tmpAkaDoraFlagB = 0}
 				showtile TILE_BACK_SIDE, tmpxx+tmpxxx, tmpyy+tmpyyy
-				if ((getRuleInt(RULE_ANKAN_CONCEAL) != 0)&&(getHandStat(GameStat, targetPlayer) != 1)) {
+				if ((getRule(RULE_ANKAN_CONCEAL) != 0)&&(getHandStat(GameStat, targetPlayer) != 1)) {
 					showtile TILE_BACK_SIDE, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+tmpyyy
 					showtile TILE_BACK_SIDE, tmpxx+TILE_WIDTH*2+tmpxxx, tmpyy+tmpyyy
 				} else {

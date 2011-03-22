@@ -48,20 +48,20 @@
 	loop
 #endif
 	/* 一色双龍会 */
-	if (getRuleInt(RULE_ISSHOKU_SOURYUU) != 0) {
+	if (getRule(RULE_ISSHOKU_SOURYUU) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 2)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 2)&&(haiMianziDat(0) == TILE_SUIT_CHARACTERS+5)) {yakuFlag = 1}
 		if ((ShunzCount(TILE_SUIT_CIRCLES+1) >= 2)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 2)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+5)) {yakuFlag = 1}
 		if ((ShunzCount(TILE_SUIT_BAMBOOS+1) >= 2)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 2)&&(haiMianziDat(0) == TILE_SUIT_BAMBOOS+5)) {yakuFlag = 1}
 		if (yakuFlag) {
-			if ((getRuleInt(RULE_ISSHOKU_SOURYUU) != 2)||(getMenzen(GameStat, targetPlayer) == 1)) {
+			if ((getRule(RULE_ISSHOKU_SOURYUU) != 2)||(getMenzen(GameStat, targetPlayer) == 1)) {
 				addyakuman tmpYakuInfo, "一色双龍会", 1
 				delyaku tmpYakuInfo, "清一色"
 			}
 		}
 	}
 	/* 一色四順 */
-	if (getRuleInt(RULE_ISSHOKU_SUUJUN) != 0) {
+	if (getRule(RULE_ISSHOKU_SUUJUN) != 0) {
 		yakuFlag = 0
 		repeat TILE_NUMERAL_MAX
 			if (ShunzCount(cnt) == 4) {yakuFlag = 1}
@@ -71,13 +71,13 @@
 		}
 	}
 	/* 一色三順 */
-	if (getRuleInt(RULE_ISSHOKU_SANJUN) != 0) {
+	if (getRule(RULE_ISSHOKU_SANJUN) != 0) {
 		yakuFlag = 0
 		repeat TILE_NUMERAL_MAX
 			if (ShunzCount(cnt) == 3) {yakuFlag = 1}
 		loop
 		if (yakuFlag) {
-			switch getRuleInt(RULE_ISSHOKU_SANJUN)
+			switch getRule(RULE_ISSHOKU_SANJUN)
 				case 1:
 					if (getMenzen(GameStat, targetPlayer) == 1) {
 						addyaku tmpYakuInfo, "一色三順", 2
@@ -114,13 +114,13 @@
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "一色双龍会")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "清海湖")
 		if (tmpyakuCensored == 0) {
-			if (getRuleInt(RULE_RYANPEIKOU) != 0) {
+			if (getRule(RULE_RYANPEIKOU) != 0) {
 				addyaku tmpYakuInfo, "二盃口", 2
 			} else {
 				addyaku tmpYakuInfo, "二盃口", 3
 			}
 			/* 大鏡 */
-			if (getRuleInt(RULE_OHKAGAMI) != 0) {
+			if (getRule(RULE_OHKAGAMI) != 0) {
 				if (haiMianziDat(0) == TILE_SUIT_CIRCLES+1) {
 					addyaku tmpYakuInfo, "大鏡", 1
 				}
@@ -128,7 +128,7 @@
 		}
 	}
 	/* 清盃口 */
-	if (getRuleInt(RULE_CHINPEIKOU) != 0) {
+	if (getRule(RULE_CHINPEIKOU) != 0) {
 		yakuFlag2 = 0
 		repeat 7,1
 			if ((ShunzCount(cnt+TILE_SUIT_CHARACTERS) == 2)&&(ShunzCount(cnt+TILE_SUIT_CIRCLES) == 2)) {yakuFlag2++}
@@ -136,7 +136,7 @@
 			if ((ShunzCount(cnt+TILE_SUIT_CIRCLES) == 2)&&(ShunzCount(cnt+TILE_SUIT_BAMBOOS) == 2)) {yakuFlag2++}
 		loop
 		if ((yakuFlag == 2)&&(yakuFlag2 == 1)&&(getMenzen(GameStat, targetPlayer) == 1)) {
-			switch getRuleInt(RULE_CHINPEIKOU)
+			switch getRule(RULE_CHINPEIKOU)
 				case 1: addyaku tmpYakuInfo, "清盃口", 6: swbreak
 				case 2: addyaku tmpYakuInfo, "清盃口", 5: swbreak
 				case 3: addyaku tmpYakuInfo, "清盃口", 4: swbreak
@@ -145,7 +145,7 @@
 		}
 	}
 	/* 鳴き二盃口 */
-	if (getRuleInt(RULE_EXPOSED_RYANPEIKOU) != 0) {
+	if (getRule(RULE_EXPOSED_RYANPEIKOU) != 0) {
 		if ((yakuFlag == 2)&&(getMenzen(GameStat, targetPlayer) == 0)) {
 			addyaku tmpYakuInfo, "鳴き二盃口", 2
 		}
@@ -168,8 +168,8 @@
 		/* 一気通貫派生役 */
 #ifndef SANMAS
 		/* 東北新幹線 */
-		if ((getRuleInt(RULE_TOHOKU_SHINKANSEN) != 0)&&(EastWind > 0)&&(NorthWind > 0)) {
-			if ((getRuleInt(RULE_TOHOKU_SHINKANSEN) == 1)||(getMenzen(GameStat, targetPlayer) == 1)) {
+		if ((getRule(RULE_TOHOKU_SHINKANSEN) != 0)&&(EastWind > 0)&&(NorthWind > 0)) {
+			if ((getRule(RULE_TOHOKU_SHINKANSEN) == 1)||(getMenzen(GameStat, targetPlayer) == 1)) {
 				addyakuman tmpYakuInfo, "東北新幹線", 1
 				delyaku tmpYakuInfo, "一気通貫"
 				delyaku tmpYakuInfo, "混一色"
@@ -177,7 +177,7 @@
 		}
 #endif
 		/* 一気通貫全帯幺九 */
-		if (getRuleInt(RULE_ITTSUU_CHANTA) != 0) {
+		if (getRule(RULE_ITTSUU_CHANTA) != 0) {
 			gosub *checkIttsuuChanta
 			tmpyakuCensored = 0
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "混一色")
@@ -192,20 +192,20 @@
 			}
 		}
 		/* 五心通貫 */
-		if (getRuleInt(RULE_UUSHINTONKAN) != 0) {
+		if (getRule(RULE_UUSHINTONKAN) != 0) {
 			if ((MachiType == MACHI_KANCHAN)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == (straightColor*TILE_SUIT_STEP+5))) {
 				addyaku tmpYakuInfo, "五心通貫", 1
 			}
 		}
 #ifndef SANMAS
 		/* 竜戯珠 */
-		if (getRuleInt(RULE_LONGXIZHU) != 0) {
+		if (getRule(RULE_LONGXIZHU) != 0) {
 			if ((WestWind > 0)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+1)) {
 				addyaku tmpYakuInfo, "龍戯珠", 2
 			}
 		}
 		/* 金龍戯北斗 */
-		if (getRuleInt(RULE_JINLONG_DOU_BEIDOU) != 0) {
+		if (getRule(RULE_JINLONG_DOU_BEIDOU) != 0) {
 			countKez KezCount, haiMianziDat
 			if ((haiMianziDat(0) == TILE_NORTH_WIND)&&(KezCount(TILE_SUIT_CIRCLES+7) >= 1)) {
 				addyaku tmpYakuInfo, "金龍戯北斗", 2
@@ -220,14 +220,14 @@
 		tmpYakuNameList = "双峰挿雲", "南屏晩鍾", "雷峰夕照", "柳浪聞鶯", "断橋残雪", "蘇堤春暁", "花港観魚", "三譚印月", "曲院風荷", "平湖秋月"
 		countDuiz DuiCount, haiMianziDat
 		repeat length(tmpRuleCodeList)
-			if (getRuleInt(tmpRuleCodeList(cnt)) != 0) {
+			if (getRule(tmpRuleCodeList(cnt)) != 0) {
 				if ((DuiCount(tmpTileCodeList1(cnt)) >= 1)&&(DuiCount(tmpTileCodeList2(cnt)) >= 1)&&(straightColor == tmpStraightColorList(cnt)/TILE_SUIT_STEP)) {
 					addyaku tmpYakuInfo, tmpYakuNameList(cnt), 1+getMenzen(GameStat, targetPlayer)
 				}
 			}
 		loop
 		/* 東の青龍 */
-		if (getRuleInt(RULE_AZURE_DRAGON) != 0) {
+		if (getRule(RULE_AZURE_DRAGON) != 0) {
 			countKez KezCount, haiMianziDat
 			if ((haiMianziDat(0) == TILE_WHITE_DRAGON)&&(KezCount(TILE_EAST_WIND) >= 1)&&(straightColor == TILE_SUIT_CIRCLES/TILE_SUIT_STEP)&&(getMenzen(GameStat, targetPlayer) == 1)) {
 				addyakuman tmpYakuInfo, "東の青龍", 1
@@ -236,14 +236,14 @@
 			}
 		}
 		/* 北の玄武 */
-		if (getRuleInt(RULE_BLACK_TORTOISE) != 0) {
+		if (getRule(RULE_BLACK_TORTOISE) != 0) {
 			if ((haiMianziDat(0) == TILE_SUIT_BAMBOOS+7)&&(KezCount(TILE_NORTH_WIND) >= 1)&&(straightColor == TILE_SUIT_CIRCLES/TILE_SUIT_STEP)&&(getMenzen(GameStat, targetPlayer) == 1)) {
 				addyakuman tmpYakuInfo, "北の玄武", 1
 				delyaku tmpYakuInfo, "一気通貫"
 			}
 		}
 		/* 上越新幹線とき */
-		if (getRuleInt(RULE_JOETSU_TOKI) != 0) {
+		if (getRule(RULE_JOETSU_TOKI) != 0) {
 			if ((KezCount(TILE_NORTH_WIND) >= 1)||(haiMianziDat(0) == TILE_NORTH_WIND)) {
 				if (searchyaku(tmpYakuInfo, "混一色")) {
 					addyaku tmpYakuInfo, "上越新幹線とき", 2
@@ -251,7 +251,7 @@
 			}
 		}
 		/* 上越新幹線あさひ */
-		if (getRuleInt(RULE_JOETSU_ASAHI) != 0) {
+		if (getRule(RULE_JOETSU_ASAHI) != 0) {
 			if (((haiMianziDat(0) == TILE_WHITE_DRAGON)&&(KezCount(TILE_NORTH_WIND) >= 1))||((haiMianziDat(0) == TILE_NORTH_WIND)&&(KezCount(TILE_WHITE_DRAGON) >= 1))) {
 				addyakuman tmpYakuInfo, "上越新幹線あさひ", 1
 				delyaku tmpYakuInfo, "上越新幹線とき"
@@ -260,7 +260,7 @@
 			}
 		}
 		/* 青函連絡船 */
-		if (getRuleInt(RULE_SEIKAN_SHIP) != 0) {
+		if (getRule(RULE_SEIKAN_SHIP) != 0) {
 			countAnKangz AnKangzCount, haiMianziDat
 			if ((AnKangzCount(TILE_GREEN_DRAGON) >= 1)&&(haiMianziDat(0) == TILE_NORTH_WIND)) {
 				addyakuman tmpYakuInfo, "青函連絡船", 1
@@ -271,7 +271,7 @@
 #endif
 	}
 	/* 金門橋 */
-	if (getRuleInt(RULE_GOLDEN_GATE_BRIDGE) != 0) {
+	if (getRule(RULE_GOLDEN_GATE_BRIDGE) != 0) {
 		yakuFlag = 0
 		repeat TILE_NUMERAL_COLORS
 			if ((ShunzCount(cnt*TILE_SUIT_STEP+1) >= 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+3) >= 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+5) >= 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+7) >= 1)) {yakuFlag = 1}
@@ -281,7 +281,7 @@
 		}
 	}
 	/* 凱旋門 */
-	if (getRuleInt(RULE_GAISENMON) != 0) {
+	if (getRule(RULE_GAISENMON) != 0) {
 		repeat TILE_NUMERAL_COLORS
 			yakuFlagCount = 0
 			if ((ShunzCount(cnt*TILE_SUIT_STEP+1) >= 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+4) >= 2)&&(ShunzCount(cnt*TILE_SUIT_STEP+7) >= 1)) {yakuFlagCount += 2}
@@ -290,7 +290,7 @@
 			if ((ShunzCount(cnt*TILE_SUIT_STEP+2) >= 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+5) >= 1)) {yakuFlagCount += 1}
 			if ((ShunzCount(cnt*TILE_SUIT_STEP+3) >= 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+6) >= 1)) {yakuFlagCount += 1}
 			if ((yakuFlagCount == 2)&&((haiMianziDat(0) / TILE_SUIT_STEP) == cnt)) {
-				switch getRuleInt(RULE_GAISENMON)
+				switch getRule(RULE_GAISENMON)
 					case 1:
 						addyakuman tmpYakuInfo, "凱旋門", 1
 					swbreak
@@ -303,7 +303,7 @@
 		loop
 	}
 	/* 長城 */
-	if (getRuleInt(RULE_CHOUJOU) != 0) {
+	if (getRule(RULE_CHOUJOU) != 0) {
 		repeat 3
 			yakuFlagCount = 0
 			if ((ShunzCount(cnt*TILE_SUIT_STEP+1) >= 2)&&(ShunzCount(cnt*TILE_SUIT_STEP+4) >= 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+7) >= 1)) {yakuFlagCount += 2}
@@ -319,7 +319,7 @@
 		loop
 	}
 	/* 青龍在天 */
-	if (getRuleInt(RULE_QINGLONG_ZAITIAN) != 0) {
+	if (getRule(RULE_QINGLONG_ZAITIAN) != 0) {
 		if (getMenzen(GameStat, targetPlayer) == 1) {
 			yakuFlagCount = 0 /* 他力で判定 */
 			yakuFlagCount += searchyaku(tmpYakuInfo, "清一色")
@@ -334,7 +334,7 @@
 		}
 	}
 	/* 鏡同和 */
-	if (getRuleInt(RULE_KYANTONHOH) != 0) {
+	if (getRule(RULE_KYANTONHOH) != 0) {
 		yakuFlag = 0
 		yakuTmpFlag = 0
 		repeat 7, 1
@@ -348,14 +348,14 @@
 		repeat 7, 1
 			if ((ShunzCount(cnt+TILE_SUIT_CIRCLES) >= 1)&&(ShunzCount(cnt+TILE_SUIT_BAMBOOS) >= 1)) {yakuTmpFlag++}
 		loop: if (yakuTmpFlag == 2) {yakuFlag = 1}
-		if ((getRuleInt(RULE_KYANTONHOH) == 2)||(getMenzen(GameStat, targetPlayer) == 1)) {
+		if ((getRule(RULE_KYANTONHOH) == 2)||(getMenzen(GameStat, targetPlayer) == 1)) {
 			if (yakuFlag) {
 				addyaku tmpYakuInfo, "鏡同和", 1+getMenzen(GameStat, targetPlayer)
 			}
 		}
 	}
 	/* 四歩高 */
-	if (getRuleInt(RULE_OKASUUJUN) != 0) {
+	if (getRule(RULE_OKASUUJUN) != 0) {
 		yakuFlag = 0
 		repeat 4,1
 			if ((ShunzCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(ShunzCount(cnt+1+TILE_SUIT_CHARACTERS) >= 1)&&(ShunzCount(cnt+2+TILE_SUIT_CHARACTERS) >= 1)&&(ShunzCount(cnt+3+TILE_SUIT_CHARACTERS) >= 1)) {yakuFlag = 1}
@@ -363,7 +363,7 @@
 			if ((ShunzCount(cnt+TILE_SUIT_BAMBOOS) >= 1)&&(ShunzCount(cnt+1+TILE_SUIT_BAMBOOS) >= 1)&&(ShunzCount(cnt+2+TILE_SUIT_BAMBOOS) >= 1)&&(ShunzCount(cnt+3+TILE_SUIT_BAMBOOS) >= 1)) {yakuFlag = 1}
 		loop
 		if (yakuFlag) {
-			switch getRuleInt(RULE_OKASUUJUN)
+			switch getRule(RULE_OKASUUJUN)
 				case 1:
 					addyakuman tmpYakuInfo, "四歩高", 1
 				swbreak
@@ -374,7 +374,7 @@
 		}
 	}
 	/* 三歩高 */
-	if (getRuleInt(RULE_OKASANJUN) != 0) {
+	if (getRule(RULE_OKASANJUN) != 0) {
 		yakuFlag = 0
 		repeat 5,1
 			if ((ShunzCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(ShunzCount(cnt+1+TILE_SUIT_CHARACTERS) >= 1)&&(ShunzCount(cnt+2+TILE_SUIT_CHARACTERS) >= 1)) {yakuFlag = 1}
@@ -384,7 +384,7 @@
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "四歩高")
 		if ((yakuFlag)&&(tmpyakuCensored == 0)) {
-			switch getRuleInt(RULE_OKASANJUN)
+			switch getRule(RULE_OKASANJUN)
 				case 1:
 					addyaku tmpYakuInfo, "三歩高", 1
 				swbreak
@@ -400,7 +400,7 @@
 		}
 	}
 	/* 山三順 */
-	if (getRuleInt(RULE_YAMASANJUN) != 0) {
+	if (getRule(RULE_YAMASANJUN) != 0) {
 		yakuFlag = 0
 		repeat 3,1
 			if ((ShunzCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(ShunzCount(cnt+2+TILE_SUIT_CHARACTERS) >= 1)&&(ShunzCount(cnt+4+TILE_SUIT_CHARACTERS) >= 1)) {yakuFlag = 1}
@@ -410,7 +410,7 @@
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "金門橋")
 		if ((yakuFlag)&&(tmpyakuCensored == 0)) {
-			switch getRuleInt(RULE_YAMASANJUN)
+			switch getRule(RULE_YAMASANJUN)
 				case 1:
 					addyaku tmpYakuInfo, "清連環套", 1
 				swbreak
@@ -426,7 +426,7 @@
 		}
 	}
 	/* 二色四歩高 */
-	if (getRuleInt(RULE_NISHOKU_OKASUUJUN) != 0) {
+	if (getRule(RULE_NISHOKU_OKASUUJUN) != 0) {
 		yakuFlag = 0
 		sdim parsedat, 8, 42
 		parsedat = "0001","0002","0010","0011","0020","0022","0100","0101","0110","0111","0200","0202","0220","0222","1000","1001","1010","1011","1100","1101","1110","1112","1121","1122","1211","1212","1221","1222","2000","2002","2020","2022","2111","2112","2121","2122","2200","2202","2211","2212","2220","2221"
@@ -444,7 +444,7 @@
 		}
 	}
 	/* 二色三歩高 */
-	if (getRuleInt(RULE_NISHOKU_OKASANJUN) != 0) {
+	if (getRule(RULE_NISHOKU_OKASANJUN) != 0) {
 		yakuFlag = 0
 		repeat 6
 			switch cnt
@@ -470,7 +470,7 @@
 		}
 	}
 	/* 二色山四順 */
-	if (getRuleInt(RULE_NISHOKU_YAMASUUJUN) != 0) {
+	if (getRule(RULE_NISHOKU_YAMASUUJUN) != 0) {
 		yakuFlag = 0
 		sdim parsedat, 8, 42
 		parsedat = "0001","0002","0010","0011","0020","0022","0100","0101","0110","0111","0200","0202","0220","0222","1000","1001","1010","1011","1100","1101","1110","1112","1121","1122","1211","1212","1221","1222","2000","2002","2020","2022","2111","2112","2121","2122","2200","2202","2211","2212","2220","2221"
@@ -484,7 +484,7 @@
 			loop
 		loop
 		if (yakuFlag) {
-			if (getRuleInt(RULE_NISHOKU_YAMASUUJUN) == 2) {
+			if (getRule(RULE_NISHOKU_YAMASUUJUN) == 2) {
 				addyakuman tmpYakuInfo, "大雑連套", 1
 			} else {
 				addyaku tmpYakuInfo, "大雑連套", 5+getMenzen(GameStat, targetPlayer)
@@ -492,7 +492,7 @@
 		}
 	}
 	/* 二色山三順 */
-	if (getRuleInt(RULE_NISHOKU_YAMASANJUN) != 0) {
+	if (getRule(RULE_NISHOKU_YAMASANJUN) != 0) {
 		yakuFlag = 0
 		repeat 6
 			switch cnt
@@ -517,7 +517,7 @@
 	}
 #ifndef SANMAX
 	/* 三色四歩高 */
-	if (getRuleInt(RULE_SANSHOKU_OKASUUJUN) != 0) {
+	if (getRule(RULE_SANSHOKU_OKASUUJUN) != 0) {
 		yakuFlag = 0
 		sdim parsedat, 8, 36
 		parsedat = "0012","0021","0102","0112","0120","0121","0122","0201","0210","0211","0212","0221","1002","1012","1020","1021","1022","1102","1120","1200","1201","1202","1210","1220","2001","2010","2011","2012","2021","2100","2101","2102","2110","2120","2201","2210"
@@ -535,7 +535,7 @@
 		}
 	}
 	/* 三色三歩高 */
-	if (getRuleInt(RULE_SANSHOKU_OKASANJUN) != 0) {
+	if (getRule(RULE_SANSHOKU_OKASANJUN) != 0) {
 		yakuFlag = 0
 		repeat 5,1
 			if ((ShunzCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(ShunzCount(cnt+TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(cnt+TILE_SUIT_BAMBOOS+2) >= 1)) {yakuFlag = 1}
@@ -548,7 +548,7 @@
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "三色四歩高")
 		if ((yakuFlag)&&(tmpyakuCensored == 0)) {
-			switch getRuleInt(RULE_SANSHOKU_OKASANJUN)
+			switch getRule(RULE_SANSHOKU_OKASANJUN)
 				case 1:
 					addyaku tmpYakuInfo, "三色三歩高", 1
 				swbreak
@@ -564,7 +564,7 @@
 		}
 	}
 	/* 三色山四順 */
-	if (getRuleInt(RULE_SANSHOKU_YAMASUUJUN) != 0) {
+	if (getRule(RULE_SANSHOKU_YAMASUUJUN) != 0) {
 		yakuFlag = 0
 		sdim parsedat, 8, 36
 		parsedat = "0012","0021","0102","0112","0120","0121","0122","0201","0210","0211","0212","0221","1002","1012","1020","1021","1022","1102","1120","1200","1201","1202","1210","1220","2001","2010","2011","2012","2021","2100","2101","2102","2110","2120","2201","2210"
@@ -578,7 +578,7 @@
 			loop
 		loop
 		if (yakuFlag) {
-			if (getRuleInt(RULE_SANSHOKU_YAMASUUJUN) == 2) {
+			if (getRule(RULE_SANSHOKU_YAMASUUJUN) == 2) {
 				addyakuman tmpYakuInfo, "大混連套", 1
 			} else {
 				addyaku tmpYakuInfo, "大混連套", 5+getMenzen(GameStat, targetPlayer)
@@ -586,7 +586,7 @@
 		}
 	}
 	/* 三色山三順 */
-	if (getRuleInt(RULE_SANSHOKU_YAMASANJUN) != 0) {
+	if (getRule(RULE_SANSHOKU_YAMASANJUN) != 0) {
 		yakuFlag = 0
 		repeat 3,1
 			if ((ShunzCount(cnt+TILE_SUIT_CHARACTERS) >= 1)&&(ShunzCount(cnt+TILE_SUIT_CIRCLES+2) >= 1)&&(ShunzCount(cnt+TILE_SUIT_BAMBOOS+4) >= 1)) {yakuFlag = 1}
@@ -599,7 +599,7 @@
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "大混連套")
 		if ((yakuFlag)&&(tmpyakuCensored == 0)) {
-			switch getRuleInt(RULE_SANSHOKU_YAMASANJUN)
+			switch getRule(RULE_SANSHOKU_YAMASANJUN)
 				case 1:
 					addyaku tmpYakuInfo, "混連環套", 1
 				swbreak
@@ -615,7 +615,7 @@
 		}
 	}
 	/* 双龍争珠：萬子の順子を使うので三麻では不可能 */
-	if (getRuleInt(RULE_SHANRON_CHONCHUU) != 0) {
+	if (getRule(RULE_SHANRON_CHONCHUU) != 0) {
 		yakuFlag = 0
 		repeat 4
 			if ((ShunzCount(cnt+TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(cnt+TILE_SUIT_CHARACTERS+4) >= 1)&&(ShunzCount(cnt+TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(cnt+TILE_SUIT_BAMBOOS+4) >= 1)) {
@@ -630,7 +630,7 @@
 		}
 	}
 	/* 花龍：萬子の順子を使うので三麻では不可能 */
-	if (getRuleInt(RULE_HUALONG) != 0) {
+	if (getRule(RULE_HUALONG) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+4) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)) {yakuFlag = 1}
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+4) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {yakuFlag = 1}
@@ -639,7 +639,7 @@
 		if ((ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+4) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {yakuFlag = 1}
 		if ((ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+4) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
-			if ((getMenzen(GameStat, targetPlayer) == 1)&&(MachiType == MACHI_TANKI)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) != TILE_WHITE_DRAGON)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) != TILE_GREEN_DRAGON)&&(getRuleInt(RULE_TANRON) != 0)) {
+			if ((getMenzen(GameStat, targetPlayer) == 1)&&(MachiType == MACHI_TANKI)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) != TILE_WHITE_DRAGON)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) != TILE_GREEN_DRAGON)&&(getRule(RULE_TANRON) != 0)) {
 				/* 単龍(門前で単騎待ち) */
 				addyaku tmpYakuInfo, "単龍", 6
 			} else {
@@ -647,7 +647,7 @@
 				addyaku tmpYakuInfo, "三色通貫", 1+getMenzen(GameStat, targetPlayer)
 			}
 			/* 三色通貫全帯幺九 */
-			if (getRuleInt(RULE_HUALONG_CHANTA) != 0) {
+			if (getRule(RULE_HUALONG_CHANTA) != 0) {
 				gosub *checkIttsuuChanta
 				if (tmpyaojiu == 4) {
 					if (JihaiCount == 0) {
@@ -661,7 +661,7 @@
 		}
 	}
 	/* 双龍双亀：萬子の順子を使うので三麻では不可能 */
-	if (getRuleInt(RULE_SHANRON_SHANKUI) != 0) {
+	if (getRule(RULE_SHANRON_SHANKUI) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {
 			if (haiMianziDat(0) == TILE_SUIT_BAMBOOS+3) {
@@ -674,7 +674,7 @@
 		}
 	}
 	/* 双龍争珠(老少副タイプ)：萬子の順子を使うので三麻では不可能 */
-	if (getRuleInt(RULE_SHANRON_CHONCHU_LSF) != 0) {
+	if (getRule(RULE_SHANRON_CHONCHU_LSF) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)) {
 			if (haiMianziDat(0) == TILE_SUIT_CIRCLES+5) {
@@ -687,7 +687,7 @@
 		}
 	}
 	/* 三色双龍会 */
-	if (getRuleInt(RULE_SANSHOKU_SOURYUU) != 0) {
+	if (getRule(RULE_SANSHOKU_SOURYUU) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+5)) {yakuFlag = 1}
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(haiMianziDat(0) == TILE_SUIT_BAMBOOS+5)) {yakuFlag = 1}
@@ -697,7 +697,7 @@
 		if ((ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(haiMianziDat(0) == TILE_SUIT_CHARACTERS+5)) {yakuFlag = 1}
 		tmpyakuCensored = searchyaku(tmpYakuInfo, "双龍争珠 ")
 		if ((yakuFlag)&&(tmpyakuCensored == 0)) {
-			switch getRuleInt(RULE_SANSHOKU_SOURYUU)
+			switch getRule(RULE_SANSHOKU_SOURYUU)
 				case 1:
 					addyaku tmpYakuInfo, "三色双龍会", 1+getMenzen(GameStat, targetPlayer)
 					swbreak
@@ -715,7 +715,7 @@
 		}
 	}
 	/* 双龍戯鳳：萬子の順子を使うので三麻では不可能 */
-	if (getRuleInt(RULE_SHANRON_SHIIFON) != 0) {
+	if (getRule(RULE_SHANRON_SHIIFON) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {
 			if (haiMianziDat(0) == TILE_SUIT_BAMBOOS+1) {
@@ -728,7 +728,7 @@
 		}
 	}
 	/* 双龍包柱：萬子の順子を使うので三麻では不可能 */
-	if (getRuleInt(RULE_SHANRON_PAOCHUU) != 0) {
+	if (getRule(RULE_SHANRON_PAOCHUU) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {
 			if ((haiMianziDat(0) == TILE_SUIT_BAMBOOS+2)||(haiMianziDat(0) == TILE_SUIT_BAMBOOS+4)||(haiMianziDat(0) == TILE_SUIT_BAMBOOS+6)) {
@@ -741,7 +741,7 @@
 		}
 	}
 	/* 双龍戯亀：萬子の順子を使うので三麻では不可能 */
-	if (getRuleInt(RULE_SHANRON_SHIIKUI) != 0) {
+	if (getRule(RULE_SHANRON_SHIIKUI) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {
 			if (haiMianziDat(0) == TILE_SUIT_BAMBOOS+7) {
@@ -755,7 +755,7 @@
 	}
 #endif
 	/* 双龍闘蛇：これは三麻でも可能 */
-	if (getRuleInt(RULE_SHANRON_TOUJA) != 0) {
+	if (getRule(RULE_SHANRON_TOUJA) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)) {
 			if (haiMianziDat(0) == TILE_SUIT_CHARACTERS+1) {
@@ -773,10 +773,10 @@
 	repeat SIZE_OF_MELD_BUFFER-1, 1
 		if (haiMianziDat(cnt)/MELD_TYPE_STEP == MELD_SEQUENCE_EXPOSED_MIDDLE) {yakuFlagCount++}
 	loop
-	if (getRuleInt(RULE_CHII_SANKAN) != 0)&&(yakuFlagCount == 3) {
+	if (getRule(RULE_CHII_SANKAN) != 0)&&(yakuFlagCount == 3) {
 		addyaku tmpYakuInfo, "吃三嵌", 1
 	}
-	if (getRuleInt(RULE_CHII_SUUKAN) != 0)&&(yakuFlagCount == 4) {
+	if (getRule(RULE_CHII_SUUKAN) != 0)&&(yakuFlagCount == 4) {
 		addyaku tmpYakuInfo, "吃四嵌", 2
 	}
 	/* 吃三辺：三麻ではチーできないから不可 */
@@ -789,10 +789,10 @@
 		if (haiMianziDat(cnt) == MELD_SEQUENCE_EXPOSED_UPPER*MELD_TYPE_STEP+TILE_SUIT_CIRCLES+1) {yakuFlagCount++}
 		if (haiMianziDat(cnt) == MELD_SEQUENCE_EXPOSED_UPPER*MELD_TYPE_STEP+TILE_SUIT_BAMBOOS+1) {yakuFlagCount++}
 	loop
-	if (getRuleInt(RULE_CHII_SANPEN) != 0)&&(yakuFlagCount == 3) {
+	if (getRule(RULE_CHII_SANPEN) != 0)&&(yakuFlagCount == 3) {
 		addyaku tmpYakuInfo, "吃三辺", 1
 	}
-	if (getRuleInt(RULE_CHII_SUUPEN) != 0)&&(yakuFlagCount == 4) {
+	if (getRule(RULE_CHII_SUUPEN) != 0)&&(yakuFlagCount == 4) {
 		addyaku tmpYakuInfo, "吃四辺", 2
 	}
 	/* 吃小順：三麻ではチーできないから不可 */
@@ -800,10 +800,10 @@
 		repeat SIZE_OF_MELD_BUFFER-1, 1
 			if ((haiMianziDat(cnt)/MELD_TYPE_STEP == MELD_SEQUENCE_EXPOSED_LOWER)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) != 7)) {yakuFlagCount++}
 		loop
-	if (getRuleInt(RULE_CHII_SHAOSHUN) != 0)&&(yakuFlagCount == 3) {
+	if (getRule(RULE_CHII_SHAOSHUN) != 0)&&(yakuFlagCount == 3) {
 		addyaku tmpYakuInfo, "吃小順", 1
 	}
-	if (getRuleInt(RULE_CHII_SHAOSUUSHUN) != 0)&&(yakuFlagCount == 4) {
+	if (getRule(RULE_CHII_SHAOSUUSHUN) != 0)&&(yakuFlagCount == 4) {
 		addyaku tmpYakuInfo, "吃小四順", 2
 	}
 	/* 吃大順：三麻ではチーできないから不可 */
@@ -811,10 +811,10 @@
 	repeat SIZE_OF_MELD_BUFFER-1, 1
 		if ((haiMianziDat(cnt)/MELD_TYPE_STEP == MELD_SEQUENCE_EXPOSED_UPPER)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) != 1)) {yakuFlagCount++}
 	loop
-	if (getRuleInt(RULE_CHII_TAASHUN) != 0)&&(yakuFlagCount == 3) {
+	if (getRule(RULE_CHII_TAASHUN) != 0)&&(yakuFlagCount == 3) {
 		addyaku tmpYakuInfo, "吃大順", 1
 	}
-	if (getRuleInt(RULE_CHII_TAASUUSHUN) != 0)&&(yakuFlagCount == 4) {
+	if (getRule(RULE_CHII_TAASUUSHUN) != 0)&&(yakuFlagCount == 4) {
 		addyaku tmpYakuInfo, "吃大四順", 2
 	}
 #endif

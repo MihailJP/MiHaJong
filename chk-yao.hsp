@@ -30,13 +30,13 @@
 		if ((haiMianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&(cnt > 0)) {ShuntsuCount++}
 	loop
 	if (tmpyaojiu == 0) {
-		if ((getMenzen(GameStat, targetPlayer) == 1)||(getRuleInt(RULE_KUITAN) != 1)) {
+		if ((getMenzen(GameStat, targetPlayer) == 1)||(getRule(RULE_KUITAN) != 1)) {
 			tmpyakuCensored = 0 // 大車輪が成立してたら飛ばす
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "大車輪")
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "大竹林")
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "大数隣")
 			if (tmpyakuCensored == 0) {
-				if ((getRuleInt(RULE_KUITAN) == 2)&&(getMenzen(GameStat, targetPlayer) == 0)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1}
+				if ((getRule(RULE_KUITAN) == 2)&&(getMenzen(GameStat, targetPlayer) == 0)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1}
 				addyaku tmpYakuInfo, "断幺九", 1
 			}
 		}
@@ -54,9 +54,9 @@
 				// 九連に門清が複合するとか、そういう取り決めはあるけど、
 				// 字一色に混一色がついてくるのは完全にバグ。
 				delyaku tmpYakuInfo, "混一色"
-			} else:if ((getRuleInt(RULE_FOUR_HONORS) != 0)&&(JihaiCount == 4)&&(haiMianziDat(0) < TILE_NUMERAL_MAX)) {
+			} else:if ((getRule(RULE_FOUR_HONORS) != 0)&&(JihaiCount == 4)&&(haiMianziDat(0) < TILE_NUMERAL_MAX)) {
 				addyakuman tmpYakuInfo, "四字刻", 1
-			} else:if (getRuleInt(RULE_HONROUTOU) != 0) {
+			} else:if (getRule(RULE_HONROUTOU) != 0) {
 				addyaku tmpYakuInfo, "混老頭", 3
 			} else {
 				addyaku tmpYakuInfo, "混老頭", 2

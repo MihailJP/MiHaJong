@@ -19,26 +19,26 @@
 			if ((getRound(GameStat)/4) == (haiMianziDat(0)-TILE_WIND_MIN)) {
 				// èÍïóîv
 				addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
-				if (getRuleInt(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
+				if (getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 			}
 			if (playerWind(targetPlayer, getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
 				// é©ïóîv
 				addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
-				if (getRuleInt(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
+				if (getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 			}
-			if (getRuleInt(RULE_KAIMENKAZE) != 0) {
+			if (getRule(RULE_KAIMENKAZE) != 0) {
 				// äJñÂïóîv
 				if (playerWind(getWareme(GameStat), getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
 					addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
-					if (getRuleInt(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
+					if (getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 				}
 			}
 #ifndef SANMAT
-			if (getRuleInt(RULE_URAKAZE) != 0) {
+			if (getRule(RULE_URAKAZE) != 0) {
 				if (playerWind(targetPlayer+2, getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
 					// ó†ïóîv
 					addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
-					if (getRuleInt(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
+					if (getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 				}
 			}
 #endif
@@ -133,7 +133,7 @@
 		if (getMenzen(GameStat, targetPlayer) == 1) {
 			/* ñÂëOÇ≈Ç†ÇÍÇŒÅAñÇ∆ÇµÇƒïΩòaÇ™ê¨óßÇ∑ÇÈ */
 			MachiType == 1
-			if ((TsumoAgari == 0)||(getRuleInt(RULE_TSUMO_PINFU) == 0)) {
+			if ((TsumoAgari == 0)||(getRule(RULE_TSUMO_PINFU) == 0)) {
 				addyaku tmpYakuInfo, "ïΩòa", 1
 				setYakuInfo tmpYakuInfo, YAKUINF_FU, 20
 			} else {
@@ -142,12 +142,12 @@
 		} else {
 			/* ñÂëOÇ≈Ç»ÇØÇÍÇŒÅAÇRÇOïÑÇ∆Ç∑ÇÈ */
 			MachiType == MACHI_RYANMEN
-			if ((getRuleInt(RULE_EXPOSED_PINFU) == 0)||(getRuleInt(RULE_EXPOSED_PINFU) == 2)||(getRuleInt(RULE_EXPOSED_PINFU) == 4)) {
+			if ((getRule(RULE_EXPOSED_PINFU) == 0)||(getRule(RULE_EXPOSED_PINFU) == 2)||(getRule(RULE_EXPOSED_PINFU) == 4)) {
 				setYakuInfo tmpYakuInfo, YAKUINF_FU, 30
 			}
 			/* ãÚÇ¢ïΩÇñÇ…Ç∑ÇÈèÍçá */
-			if ((getRuleInt(RULE_EXPOSED_PINFU) == 2)||(getRuleInt(RULE_EXPOSED_PINFU) == 3)||(getRuleInt(RULE_EXPOSED_PINFU) == 4)||(getRuleInt(RULE_EXPOSED_PINFU) == 5)) {
-				if ((getRuleInt(RULE_EXPOSED_PINFU) == 2)||(getRuleInt(RULE_EXPOSED_PINFU) == 3)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1}
+			if ((getRule(RULE_EXPOSED_PINFU) == 2)||(getRule(RULE_EXPOSED_PINFU) == 3)||(getRule(RULE_EXPOSED_PINFU) == 4)||(getRule(RULE_EXPOSED_PINFU) == 5)) {
+				if ((getRule(RULE_EXPOSED_PINFU) == 2)||(getRule(RULE_EXPOSED_PINFU) == 3)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1}
 				addyaku tmpYakuInfo, "ïΩòa", 1
 			}
 		}

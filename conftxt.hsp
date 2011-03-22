@@ -15,7 +15,7 @@
 
 #deffunc configtxt
 	configinit
-	repeat NUM_OF_RULE_SETTINGS: Rule(cnt+1) = getRuleInt(cnt): loop
+	repeat NUM_OF_RULE_SETTINGS: Rule(cnt+1) = getRule(cnt): loop
 	configtxtdat
 	return
 

@@ -350,7 +350,7 @@
 	
 	dobonFlag = 0
 	if (tmpFlag == -1) {dobonFlag = 1}
-	if ((tmpFlag == 0)&&(getRuleInt(RULE_BUTTOBI_BORDER) == 1)) {dobonFlag = 1}
+	if ((tmpFlag == 0)&&(getRule(RULE_BUTTOBI_BORDER) == 1)) {dobonFlag = 1}
 	return dobonFlag
 #global
 
@@ -364,10 +364,10 @@
 	loop
 	if (Flag == 2) {
 		if (getScore(GameStat, targetPlayer, 0) < 10) {Flag = 0}
-		else:if ((getScore(GameStat, targetPlayer, 0) == 10)&&(getRuleInt(RULE_RIICHI_REQUISITE) == 1)) {Flag = 0}
+		else:if ((getScore(GameStat, targetPlayer, 0) == 10)&&(getRule(RULE_RIICHI_REQUISITE) == 1)) {Flag = 0}
 		else {Flag = 1}
 	}
-	if (getRuleInt(RULE_RIICHI_REQUISITE) == 2) {Flag = 1}
-	if (getRuleInt(RULE_PENALTY_NEGATIVE) != 6) {Flag = 1}
+	if (getRule(RULE_RIICHI_REQUISITE) == 2) {Flag = 1}
+	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {Flag = 1}
 	return Flag
 #global

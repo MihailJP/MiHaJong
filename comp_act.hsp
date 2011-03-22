@@ -71,7 +71,7 @@ return
 			if ((nowTime-startTime) >= COMTHINKTIME) {break}
 		loop
 #endif
-		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRuleInt(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))) {
+		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))) {
 			// ˜a—¹‚ê‚È‚¢‚È‚çƒcƒ‚Ø‚è
 			teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX: return
 		} else {
@@ -81,8 +81,8 @@ return
 	} // ƒcƒ‚˜a—¹‚è
 	// \ŽO•s“ƒ‚È‚ç˜a—¹‚é
 	ShisanBuDa = chkshisanbuda(GameStat, ActivePlayer): ShisiBuDa = chkshisibuda(GameStat, ActivePlayer): await 0
-	if ((ShisanBuDa == 1)&&(getFirstDrawFlag(GameStat, ActivePlayer))&&(getRuleInt(RULE_SHIISAN_PUUTAA) != 0)) {teDahai = -1: return}
-	if ((ShisiBuDa == 1)&&(getFirstDrawFlag(GameStat, ActivePlayer))&&(getRuleInt(RULE_SHIISAN_UUSHII) != 0)) {teDahai = -1: return}
+	if ((ShisanBuDa == 1)&&(getFirstDrawFlag(GameStat, ActivePlayer))&&(getRule(RULE_SHIISAN_PUUTAA) != 0)) {teDahai = -1: return}
+	if ((ShisiBuDa == 1)&&(getFirstDrawFlag(GameStat, ActivePlayer))&&(getRule(RULE_SHIISAN_UUSHII) != 0)) {teDahai = -1: return}
 	await 0: haiDaoPaiable = chkdaopaiability(GameStat, ActivePlayer)
 	if (haiDaoPaiable) {
 		// ‹ãŽí‹ã”v
@@ -109,7 +109,7 @@ return
 	dim MaxScore, NUM_OF_TILES_IN_HAND
 	dim MachihaiTotalTiles, NUM_OF_TILES_IN_HAND
 	dim MachihaiFuritenFlag, NUM_OF_TILES_IN_HAND
-	if ((nowShanten == 0)&&((getMenzen(GameStat, ActivePlayer) == 1)||(getRuleInt(RULE_RIICHI_SHIBARI) != 0))) {
+	if ((nowShanten == 0)&&((getMenzen(GameStat, ActivePlayer) == 1)||(getRule(RULE_RIICHI_SHIBARI) != 0))) {
 		Richiability = 0
 		dim tmpHaiHand, NUM_OF_TILES_IN_HAND
 		repeat NUM_OF_TILES_IN_HAND
@@ -251,7 +251,7 @@ return
 					}
 				}
 			} else {
-				if (getRuleInt(RULE_RIICHI_SHIBARI) != 0) {
+				if (getRule(RULE_RIICHI_SHIBARI) != 0) {
 					teDahai += DAHAI_TYPE_RIICHI
 				}
 			}
@@ -774,7 +774,7 @@ return
 	loop
 #ifdef SANMAX
 	// Œˆ’è‚³‚ê‚½ŽÌ”v‚ª–k‚¾‚Á‚½ê‡AŽÌ‚Ä‚é‘ã‚í‚è‚É”²‚­
-	if ((getRuleInt(RULE_FLOWER_TILES) != 0)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
+	if ((getRule(RULE_FLOWER_TILES) != 0)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
 		if (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer) == TILE_NORTH_WIND) {
 			teDahai += DAHAI_TYPE_FLOWER
 		}
@@ -904,7 +904,7 @@ return
 		haiRon(PassivePlayer) = 1 // o˜a—¹‚è
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
 		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehaiAkaDora
-		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(haiFuriten == 1)||(getDoujunFuriten(GameStat, PassivePlayer) > 0)||((getRuleInt(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) == RIICHI_NO))) {
+		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(haiFuriten == 1)||(getDoujunFuriten(GameStat, PassivePlayer) > 0)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) == RIICHI_NO))) {
 			haiRon(PassivePlayer) = 0
 			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
 			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
@@ -983,7 +983,7 @@ return
 						}
 					loop
 					if (tmpYaojiuTilesCount == 0) {
-						if ((currentShanten == 1)&&(getRuleInt(RULE_KUITAN) == 0)) {
+						if ((currentShanten == 1)&&(getRule(RULE_KUITAN) == 0)) {
 							// ‹ò‚¢’f‚ðƒ|ƒ“’®‚·‚é
 							haiPon(PassivePlayer) = 1
 							return
@@ -1081,7 +1081,7 @@ return
 				}
 			loop
 			if (tmpYaojiuTilesCount == 0) {
-				if ((currentShanten == 1)&&(getRuleInt(RULE_KUITAN) == 0)) {
+				if ((currentShanten == 1)&&(getRule(RULE_KUITAN) == 0)) {
 					// ‹ò‚¢’f‚ð‹h’®‚·‚é
 					haiChi(PassivePlayer) = chosenNaki
 				}

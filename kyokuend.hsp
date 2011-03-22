@@ -52,7 +52,7 @@
 					swbreak
 				swend
 			loop
-			if (getRuleInt(RULE_NAGASHI_MANGAN) != 4) {
+			if (getRule(RULE_NAGASHI_MANGAN) != 4) {
 				if (YaojiuSutehai == DiscardPointer(GameStat, chkP)) {hncnKyokuEndType = ENDKYOKU_NAGASHIMANGAN}
 			}
 		loop
@@ -206,7 +206,7 @@
 		if ((getAgariHouki(GameStat, getRound(GameStat)\NUM_OF_PLAYERS) == 1)||(IsRemotePlayer(getRound(GameStat)\NUM_OF_PLAYERS) == -1)) {
 			Shanten = 1 // 強制不聴扱い
 		}
-		if (((Shanten <= 0)||(getRuleInt(RULE_ROUND_CONTINUATION) == 2))&&(getRuleInt(RULE_ROUND_CONTINUATION) != 1)&&(getRuleInt(RULE_ROUND_CONTINUATION) != 3)) {
+		if (((Shanten <= 0)||(getRule(RULE_ROUND_CONTINUATION) == 2))&&(getRule(RULE_ROUND_CONTINUATION) != 1)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 		} else {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
@@ -215,7 +215,7 @@
 		gosub *redrscreen
 		redraw 1
 		Shanten = countshanten(GameStat, (getRound(GameStat)\NUM_OF_PLAYERS), SHANTEN_ALL)
-		if (((Shanten > 0)&&(getRuleInt(RULE_ROUND_CONTINUATION) != 2))||(getRuleInt(RULE_ROUND_CONTINUATION) == 1)||(getRuleInt(RULE_ROUND_CONTINUATION) == 3)) {incRound GameStat}
+		if (((Shanten > 0)&&(getRule(RULE_ROUND_CONTINUATION) != 2))||(getRule(RULE_ROUND_CONTINUATION) == 1)||(getRule(RULE_ROUND_CONTINUATION) == 3)) {incRound GameStat}
 		incHonba GameStat
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 	}
@@ -231,7 +231,7 @@
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
-		if ((playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST)&&(getRuleInt(RULE_ROUND_CONTINUATION) != 3)) {
+		if ((playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 		} else {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
@@ -240,7 +240,7 @@
 		gosub *redrscreen
 		redraw 1
 		
-		if ((playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST)&&(getRuleInt(RULE_ROUND_CONTINUATION) != 3)) {
+		if ((playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
 			incHonba GameStat
 		} else {
 			setHonba GameStat, 0: incRound GameStat
@@ -279,8 +279,8 @@
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
-		if (getRuleInt(RULE_NINE_TERMINALS) != 2) {
-			if ((getRuleInt(RULE_NINE_TERMINALS) != 1)||(playerWind(ActivePlayer, getRound(GameStat)) == PLAYER_EAST)) {
+		if (getRule(RULE_NINE_TERMINALS) != 2) {
+			if ((getRule(RULE_NINE_TERMINALS) != 1)||(playerWind(ActivePlayer, getRound(GameStat)) == PLAYER_EAST)) {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 			} else {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
@@ -292,9 +292,9 @@
 		gosub *redrscreen
 		redraw 1
 		incHonba GameStat
-		if (getRuleInt(RULE_NINE_TERMINALS) == 2) {incRound GameStat}
-		if (getRuleInt(RULE_NINE_TERMINALS) == 1) {
-			if ((getRuleInt(RULE_NINE_TERMINALS) == 1)&&(playerWind(ActivePlayer, getRound(GameStat)) == PLAYER_EAST)) {
+		if (getRule(RULE_NINE_TERMINALS) == 2) {incRound GameStat}
+		if (getRule(RULE_NINE_TERMINALS) == 1) {
+			if ((getRule(RULE_NINE_TERMINALS) == 1)&&(playerWind(ActivePlayer, getRound(GameStat)) == PLAYER_EAST)) {
 				incRound GameStat
 			}
 		}
@@ -322,7 +322,7 @@
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
-		if (getRuleInt(RULE_FOUR_KONG_RYUUKYOKU) != 1) {
+		if (getRule(RULE_FOUR_KONG_RYUUKYOKU) != 1) {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 		} else {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
@@ -331,7 +331,7 @@
 		gosub *redrscreen
 		redraw 1
 		incHonba GameStat
-		if (getRuleInt(RULE_FOUR_KONG_RYUUKYOKU) == 1) {
+		if (getRule(RULE_FOUR_KONG_RYUUKYOKU) == 1) {
 			incRound GameStat
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
@@ -359,48 +359,48 @@
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
-		if (getRuleInt(RULE_TRIPLE_MAHJONG) == 0) {
+		if (getRule(RULE_TRIPLE_MAHJONG) == 0) {
 			if (playerWind(furikomiPlayer, getRound(GameStat)) != PLAYER_EAST) {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 			} else {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
 			}
 		}
-		if (getRuleInt(RULE_TRIPLE_MAHJONG) == 1) {
+		if (getRule(RULE_TRIPLE_MAHJONG) == 1) {
 			if (playerWind(furikomiPlayer, getRound(GameStat)) == PLAYER_NORTH) {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 			} else {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
 			}
 		}
-		if (getRuleInt(RULE_TRIPLE_MAHJONG) == 2) {
+		if (getRule(RULE_TRIPLE_MAHJONG) == 2) {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 		}
-		if (getRuleInt(RULE_TRIPLE_MAHJONG) == 3) {
+		if (getRule(RULE_TRIPLE_MAHJONG) == 3) {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
 		}
 		dsplay SND_PAGE
 		gosub *redrscreen
 		redraw 1
 		
-		if (getRuleInt(RULE_TRIPLE_MAHJONG) == 0) {
+		if (getRule(RULE_TRIPLE_MAHJONG) == 0) {
 			if (playerWind(furikomiPlayer, getRound(GameStat)) != PLAYER_EAST) {
 				incHonba GameStat
 			} else {
 				incHonba GameStat: incRound GameStat
 			}
 		}
-		if (getRuleInt(RULE_TRIPLE_MAHJONG) == 1) {
+		if (getRule(RULE_TRIPLE_MAHJONG) == 1) {
 			if (playerWind(furikomiPlayer, getRound(GameStat)) == PLAYER_NORTH) {
 				incHonba GameStat
 			} else {
 				incHonba GameStat: incRound GameStat
 			}
 		}
-		if (getRuleInt(RULE_TRIPLE_MAHJONG) == 2) {
+		if (getRule(RULE_TRIPLE_MAHJONG) == 2) {
 			incHonba GameStat
 		}
-		if (getRuleInt(RULE_TRIPLE_MAHJONG) == 3) {
+		if (getRule(RULE_TRIPLE_MAHJONG) == 3) {
 			incHonba GameStat: incRound GameStat
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
@@ -428,7 +428,7 @@
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
-		if (getRuleInt(RULE_FOUR_WIND_RYUUKYOKU) != 1) {
+		if (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 1) {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 		} else {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
@@ -437,7 +437,7 @@
 		gosub *redrscreen
 		redraw 1
 		incHonba GameStat
-		if (getRuleInt(RULE_FOUR_WIND_RYUUKYOKU) == 1) {
+		if (getRule(RULE_FOUR_WIND_RYUUKYOKU) == 1) {
 			incRound GameStat
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
@@ -533,7 +533,7 @@
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
-		if (getRuleInt(RULE_FOUR_RIICHI_RYUUKYOKU) != 1) {
+		if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 1) {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 		} else {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
@@ -542,7 +542,7 @@
 		gosub *redrscreen
 		redraw 1
 		incHonba GameStat
-		if (getRuleInt(RULE_FOUR_RIICHI_RYUUKYOKU) == 1) {
+		if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) == 1) {
 			incRound GameStat
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
@@ -612,14 +612,14 @@
 					// 親
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == chkP) {
-							switch getRuleInt(RULE_NAGASHI_MANGAN)
+							switch getRule(RULE_NAGASHI_MANGAN)
 								case 0: hncnPointDelta(cnt) += 120: swbreak
 								case 1: hncnPointDelta(cnt) += 180: swbreak
 								case 2: hncnPointDelta(cnt) += 240: swbreak
 								case 3: hncnPointDelta(cnt) += 480: swbreak
 							swend
 						} else {
-							switch getRuleInt(RULE_NAGASHI_MANGAN)
+							switch getRule(RULE_NAGASHI_MANGAN)
 								case 0: hncnPointDelta(cnt) -= 60: swbreak
 								case 1: hncnPointDelta(cnt) -= 90: swbreak
 								case 2: hncnPointDelta(cnt) -= 120: swbreak
@@ -631,14 +631,14 @@
 					// 子
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == chkP) {
-							switch getRuleInt(RULE_NAGASHI_MANGAN)
+							switch getRule(RULE_NAGASHI_MANGAN)
 								case 0: hncnPointDelta(cnt) += 80: swbreak
 								case 1: hncnPointDelta(cnt) += 120: swbreak
 								case 2: hncnPointDelta(cnt) += 160: swbreak
 								case 3: hncnPointDelta(cnt) += 320: swbreak
 							swend
 						} else {
-							switch getRuleInt(RULE_NAGASHI_MANGAN)
+							switch getRule(RULE_NAGASHI_MANGAN)
 								case 0: hncnPointDelta(cnt) -= 40: swbreak
 								case 1: hncnPointDelta(cnt) -= 60: swbreak
 								case 2: hncnPointDelta(cnt) -= 80: swbreak
@@ -652,14 +652,14 @@
 					// 親
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == chkP) {
-							switch getRuleInt(RULE_NAGASHI_MANGAN)
+							switch getRule(RULE_NAGASHI_MANGAN)
 								case 0: hncnPointDelta(cnt) += 120: swbreak
 								case 1: hncnPointDelta(cnt) += 180: swbreak
 								case 2: hncnPointDelta(cnt) += 240: swbreak
 								case 3: hncnPointDelta(cnt) += 480: swbreak
 							swend
 						} else {
-							switch getRuleInt(RULE_NAGASHI_MANGAN)
+							switch getRule(RULE_NAGASHI_MANGAN)
 								case 0: hncnPointDelta(cnt) -= 40: swbreak
 								case 1: hncnPointDelta(cnt) -= 60: swbreak
 								case 2: hncnPointDelta(cnt) -= 80: swbreak
@@ -671,7 +671,7 @@
 					// 子
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == chkP) {
-							switch getRuleInt(RULE_NAGASHI_MANGAN)
+							switch getRule(RULE_NAGASHI_MANGAN)
 								case 0: hncnPointDelta(cnt) += 80: swbreak
 								case 1: hncnPointDelta(cnt) += 120: swbreak
 								case 2: hncnPointDelta(cnt) += 160: swbreak
@@ -679,14 +679,14 @@
 							swend
 						} else {
 							if (playerWind(cnt, getRound(GameStat)) == PLAYER_EAST) {
-								switch getRuleInt(RULE_NAGASHI_MANGAN)
+								switch getRule(RULE_NAGASHI_MANGAN)
 									case 0: hncnPointDelta(cnt) -= 40: swbreak
 									case 1: hncnPointDelta(cnt) -= 60: swbreak
 									case 2: hncnPointDelta(cnt) -= 80: swbreak
 									case 3: hncnPointDelta(cnt) -= 160: swbreak
 								swend
 							} else {
-								switch getRuleInt(RULE_NAGASHI_MANGAN)
+								switch getRule(RULE_NAGASHI_MANGAN)
 									case 0: hncnPointDelta(cnt) -= 20: swbreak
 									case 1: hncnPointDelta(cnt) -= 30: swbreak
 									case 2: hncnPointDelta(cnt) -= 40: swbreak
@@ -751,7 +751,7 @@
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
-		if (getRuleInt(RULE_FIFTH_KONG) != 2) {
+		if (getRule(RULE_FIFTH_KONG) != 2) {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 		} else {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
@@ -760,7 +760,7 @@
 		gosub *redrscreen
 		redraw 1
 		incHonba GameStat
-		if (getRuleInt(RULE_FIFTH_KONG) == 2) {
+		if (getRule(RULE_FIFTH_KONG) == 2) {
 			incRound GameStat
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1

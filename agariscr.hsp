@@ -6,7 +6,7 @@
 
 #module
 #include "const.as"
-#define ctype doubleDoraEnabled ((getRuleInt(RULE_DORA_TWICE) == 1)||((getRuleInt(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))))
+#define ctype doubleDoraEnabled ((getRule(RULE_DORA_TWICE) == 1)||((getRule(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))))
 #deffunc agariscrproc var GameStat, var yakuInfo, int TsumoAgari, int agariPlayer, int furikomiPlayer, array PlayerName, array agariPointArray, var ChipAmount, var ResultDesc
 	buffer SCR_AGARI_BUF, 600, 600: color 0, 0, 0: boxf 0, 0, 599, 599
 	gsel 0: redraw 0: gmode gmode_alpha, , , 192
@@ -43,9 +43,9 @@
 	puttehai GameStat, ActivePlayer, agariPlayer, 50, 60, 0
 	putnakihai GameStat, agariPlayer, 460-((4-MeldPointer(GameStat, agariPlayer))*40), 55, 0
 	tmpOffset = 0
-	if ((getMenzen(GameStat, agariPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) > RIICHI_NO)&&(getRuleInt(RULE_URADORA) != 1)) {
+	if ((getMenzen(GameStat, agariPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != 1)) {
 		if (doubleDoraEnabled()) {
-			if (getRuleInt(RULE_FLOWER_TILES) == 3) {tmpOffset = -30}
+			if (getRule(RULE_FLOWER_TILES) == 3) {tmpOffset = -30}
 		}
 	}
 	borderedtxt2a "ドラ", 50+tmpOffset, 104, drawcol(0), drawcol(1), drawcol(2), 1, 18
@@ -76,7 +76,7 @@
 			showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
 		}
 	loop
-	if ((getMenzen(GameStat, agariPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) > RIICHI_NO)&&(getRuleInt(RULE_URADORA) != 1)) {
+	if ((getMenzen(GameStat, agariPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != 1)) {
 		tmpUraFlag = 1
 		if (doubleDoraEnabled()) {
 			pos 235+tmpOffset, 104
@@ -85,7 +85,7 @@
 		}
 		borderedtxt2a "裏", ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 18
 		if (doubleDoraEnabled()) {tmptimes = 6} else {tmptimes = 5}
-		if (getRuleInt(RULE_KANDORA) == 2) {tmptimes -= 4}
+		if (getRule(RULE_KANDORA) == 2) {tmptimes -= 4}
 		repeat tmptimes
 			if (doubleDoraEnabled()) {
 				pos 260+tmpOffset+(cnt*23), 96
@@ -121,7 +121,7 @@
 			}
 		loop
 	}
-	if (getRuleInt(RULE_FLOWER_TILES) != 0) {
+	if (getRule(RULE_FLOWER_TILES) != 0) {
 		if (doubleDoraEnabled()) {
 			tmpOffsetX = 30
 		} else {tmpOffsetX = 0}
@@ -142,10 +142,10 @@
 			}
 		loop
 #else
-		if (getRuleInt(RULE_FLOWER_TILES) == 3) {tmpOffsetX = 0}
+		if (getRule(RULE_FLOWER_TILES) == 3) {tmpOffsetX = 0}
 		borderedtxt2a "花", 375+tmpOffsetX, 104, drawcol(0), drawcol(1), drawcol(2), 1, 18
 		tmpcount = 1
-		switch getRuleInt(RULE_FLOWER_TILES)
+		switch getRule(RULE_FLOWER_TILES)
 			case 3:
 				repeat 8
 					pos 400+(cnt*23), 96
@@ -310,7 +310,7 @@
 		tmptxt = ""+getYakuInfo(yakuInfo, YAKUINF_FU)+"符 "+totalHan+"飜"
 	}
 	borderedtxt2a tmptxt, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 48
-	if (getRuleInt(RULE_LIMITLESS) == 0) {
+	if (getRule(RULE_LIMITLESS) == 0) {
 		// 青天井じゃない場合
 		font fontname, 72, 0: tmptxt=""
 		pos 30, 500
@@ -362,12 +362,12 @@
 	if (getMenzen(GameStat, agariPlayer) == 1) {
 		ChipAmount = getYakuInfo(yakuInfo, YAKUINF_URADORA)+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA) // 裏ドラとアリスドラ
 		if ((getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_DOUBLE_IPPATSU)) {
-			if (getRuleInt(RULE_RIICHI_IPPATSU) != 1) {
+			if (getRule(RULE_RIICHI_IPPATSU) != 1) {
 				ChipAmount++ // 一発祝儀
 			}
 		}
 	}
-	switch getRuleInt(RULE_REDTILE_CHIP)
+	switch getRule(RULE_REDTILE_CHIP)
 		case 0: case 3:
 			if (getMenzen(GameStat, agariPlayer) == 1) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)}
 			swbreak
@@ -378,7 +378,7 @@
 			ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)
 			swbreak
 	swend
-	switch getRuleInt(RULE_BLUE_CHIP)
+	switch getRule(RULE_BLUE_CHIP)
 		case 0:
 			if (getMenzen(GameStat, agariPlayer) == 1) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)}
 			swbreak
@@ -391,12 +391,12 @@
 	swend
 	if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
 		// 役満祝儀
-		switch getRuleInt(RULE_LIMITHAND_BONUS)
+		switch getRule(RULE_LIMITHAND_BONUS)
 			case 0: ChipAmount += 5: swbreak
 			case 1: ChipAmount += 10: swbreak
 		swend
 	}
-	if ((getRuleInt(RULE_CHIP) != 0)&&(ChipAmount > 0)) {
+	if ((getRule(RULE_CHIP) != 0)&&(ChipAmount > 0)) {
 #ifdef SANMAT
 		if (TsumoAgari == 1) {ResultDesc += " [チップ "+ChipAmount+"×２]"}
 		else {ResultDesc += " [チップ "+ChipAmount+"]"}
@@ -410,7 +410,7 @@
 			if (getYakuInfo(yakuInfo, YAKUINF_URADORA) > 0) {tmptxt += "裏ドラ:"+getYakuInfo(yakuInfo, YAKUINF_URADORA)+"枚 "}
 		}
 		if (getYakuInfo(yakuInfo, YAKUINF_AKADORA) > 0) {
-			switch getRuleInt(RULE_REDTILE_CHIP)
+			switch getRule(RULE_REDTILE_CHIP)
 				case 0: case 3:
 					if (getMenzen(GameStat, agariPlayer) == 1) {tmptxt += "赤ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"枚 "}
 					swbreak
@@ -423,7 +423,7 @@
 			swend
 		}
 		if (getYakuInfo(yakuInfo, YAKUINF_AODORA) > 0) {
-			switch getRuleInt(RULE_BLUE_CHIP)
+			switch getRule(RULE_BLUE_CHIP)
 				case 0:
 					if (getMenzen(GameStat, agariPlayer) == 1) {tmptxt += "青ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"枚 "}
 					swbreak
@@ -438,13 +438,13 @@
 		if (getYakuInfo(yakuInfo, YAKUINF_ALICEDORA) > 0) {tmptxt += "アリス:"+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA)+"枚 "}
 		if (getMenzen(GameStat, agariPlayer) == 1) {
 		if ((getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_DOUBLE_IPPATSU)) {
-				if (getRuleInt(RULE_RIICHI_IPPATSU) != 1) {
+				if (getRule(RULE_RIICHI_IPPATSU) != 1) {
 					tmptxt += "一発:1枚 "
 				}
 			}
 		}
 		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= 1000) {
-			switch getRuleInt(RULE_LIMITHAND_BONUS)
+			switch getRule(RULE_LIMITHAND_BONUS)
 				case 0: tmptxt += "役満祝儀:5枚 ": swbreak
 				case 1: tmptxt += "役満祝儀:10枚 ": swbreak
 			swend

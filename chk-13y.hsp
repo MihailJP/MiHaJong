@@ -14,14 +14,14 @@
 	repeat TILE_NONFLOWER_MAX
 		if (haiCount(cnt) >= 2) {ShisanYaoMachiType = 1}
 	loop
-	if (getRuleInt(RULE_LIMITLESS) == 2) {
+	if (getRule(RULE_LIMITLESS) == 2) {
 		setYakuInfo tmpYakuInfo, YAKUINF_FU, 30 // Â“Vˆäƒ‹[ƒ‹‚Ì•„‚ğw’è
 	}
-	if ((getHeavenHandFlag(GameStat))&&(getRuleInt(RULE_DOUBLE_YAKUMAN) == 0)) {
+	if ((getHeavenHandFlag(GameStat))&&(getRule(RULE_DOUBLE_YAKUMAN) == 0)) {
 		addyakuman tmpYakuInfo, "‘m–³‘o", 2
 	} else {
 		// U’®‚Ì‚Í‚P‚R–Ê‘Ò‚¿‚Ìˆµ‚¢‚Æ‚µ‚È‚¢‚æ‚¤‚É•ÏX
-		if ((ShisanYaoMachiType == 2)&&(haiFuriten == 0)&&(getRuleInt(RULE_DOUBLE_YAKUMAN) == 0)) {
+		if ((ShisanYaoMachiType == 2)&&(haiFuriten == 0)&&(getRule(RULE_DOUBLE_YAKUMAN) == 0)) {
 			addyakuman tmpYakuInfo, "‘m–³‘o\O–Ê", 2
 		} else {
 			addyakuman tmpYakuInfo, "‘m–³‘o", 1

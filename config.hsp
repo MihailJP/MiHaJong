@@ -47,18 +47,6 @@
 		p1 : 項目番号
 
 		ルール設定の指定した番号の項目を取得します。
-		文字列型で返されます。
-*/
-	return strmid(RuleConf(RuleID/RULE_IN_LINE), RuleID\RULE_IN_LINE, 1)
-
-#defcfunc getRuleInt int RuleID
-/*
-		val = getRuleInt(p1)
-		ルール設定を取得する
-
-		p1 : 項目番号
-
-		ルール設定の指定した番号の項目を取得します。
 		整数型で返されます。
 */
 	RuleDigit = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
