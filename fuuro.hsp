@@ -393,7 +393,6 @@
 					setdora GameStat, 1 // — ƒhƒ‰‚ğİ’è‚·‚é
 				}
 				haifurecdorap
-				return
 			}
 			/* •ï‚Ì”»’è */
 			checkpao GameStat, PassivePlayer, ActivePlayer

@@ -612,19 +612,11 @@ return
 		}
 		haifurecdora tmpdorap
 	}
-	setdora GameStat, 0 // 表ドラを設定する
-	if (getRule(RULE_URADORA) == 0) {
-		setdora GameStat, 1 // 裏ドラを設定する
-	}
-	haifurecdorap
+	gosub *DoraAdding
 	dsplay SND_MEKURI
 	if ((getRule(RULE_DORA_TWICE) == 1)||((getRule(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
 		setDoraPointer GameStat, getDoraPointer(GameStat) - 2 /*ドラドラ卓*/
-		setdora GameStat, 0 // 表ドラを設定する
-		if (getRule(RULE_URADORA) == 0) {
-			setdora GameStat, 1 // 裏ドラを設定する
-		}
-		haifurecdorap
+		gosub *DoraAdding
 	}
 	
 	ActivePlayer = 0
@@ -634,3 +626,10 @@ return
 	dsplay SND_BELL
 return
 
+*DoraAdding
+	setdora GameStat, 0 // 表ドラを設定する
+	if (getRule(RULE_URADORA) == 0) {
+		setdora GameStat, 1 // 裏ドラを設定する
+	}
+	haifurecdorap
+return
