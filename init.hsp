@@ -104,7 +104,7 @@
 	#define PI M_PI
 
 /* 牌やサイコロの画像を読み込む */
-	gmode gmode_gdi
+	gmode gmode_mem
 	buffer SCR_TILE_PIC: picload "img\\tileset.gif": info "牌の画像を読み込みました。"
 	buffer SCR_TILE_BLOCK, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
 	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X, TILE_BLOCK_SCREEN_Y, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT

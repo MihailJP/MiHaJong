@@ -277,7 +277,7 @@ return
 #deffunc putcenterpanel var GameStat, int watchmodeflag, int bgColorR, int bgColorG, int bgColorB, array hncnturnname
 	haiNokori = getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)
 	/* ‰æ–Ê’†‰›‚É•\¦‚·‚éî•ñ */
-	gmode gmode_gdi
+	gmode gmode_mem
 	/* Œ»İ‰½‹Ç–Ú‚©‚ğ•\¦ */
 	font fontname, 32, 0
 	if ((getRoundLoop(GameStat))\2 == 0) {

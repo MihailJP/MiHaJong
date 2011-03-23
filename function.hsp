@@ -104,7 +104,7 @@ return
 #deffunc showbackground
 	menubgcolor
 	boxf 0, 0, 839, 629
-	gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_gdi
+	gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_mem
 	return
 #global
 
@@ -164,7 +164,7 @@ return
 					gzoom int(1200.0*TextWidthRate), TextSize, SCR_TEXT_RESIZE_BUF, 0, 0, 1200, TextSize, 1
 					gsel tmpscr: pos BorderTextX+BorderOffsetX, BorderTextY+BorderOffsetY: gmode gmode_pixela, 600, TextSize
 					gcopy SCR_TEXT_BUF, 0, 0, 600, TextSize
-					gmode gmode_gdi
+					gmode gmode_mem
 				} else {
 					pos BorderTextX+BorderOffsetX, BorderTextY+BorderOffsetY: print BorderText
 				}
@@ -194,7 +194,7 @@ return
 		}
 		gsel tmpscr: pos BorderTextX, BorderTextY: gmode gmode_pixela, 600, TextSize
 		gcopy SCR_TEXT_BUF, 0, 0, 600, TextSize
-		gmode gmode_gdi
+		gmode gmode_mem
 	} else {
 		color BorderTextR, BorderTextG, BorderTextB: pos BorderTextX, BorderTextY
 		print BorderText

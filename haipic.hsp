@@ -28,9 +28,9 @@
 
 #deffunc showtileblock int haiShowType1, int tmpxx1, int tmpyy1
 	haiShowType = haiShowType1: tmpxx = tmpxx1: tmpyy = tmpyy1
-	origin = SCR_TILE_BLOCK: gmode gmode_gdi: gosub *execute
+	origin = SCR_TILE_BLOCK: gmode gmode_mem: gosub *execute
 	origin = SCR_TILE_SHADE: gmode gmode_alpha, , , TILE_SHADOW: gosub *execute
-	gmode gmode_gdi: return
+	gmode gmode_mem: return
 
 #deffunc showtileshade int haiShowType2, int tmpxx2, int tmpyy2
 	haiShowType = haiShowType2: tmpxx = tmpxx2: tmpyy = tmpyy2
@@ -58,9 +58,9 @@
 
 #deffunc showtileblockturned int haiShowType1, int tmpxx1, int tmpyy1
 	haiShowType = haiShowType1: tmpxx = tmpxx1: tmpyy = tmpyy1
-	origin = SCR_TILE_BLOCK: gmode gmode_gdi: gosub *execute
+	origin = SCR_TILE_BLOCK: gmode gmode_mem: gosub *execute
 	origin = SCR_TILE_SHADE: gmode gmode_alpha, , , TILE_SHADOW: gosub *execute
-	gmode gmode_gdi: return
+	gmode gmode_mem: return
 
 #deffunc showtileshadeturned int haiShowType2, int tmpxx2, int tmpyy2
 	haiShowType = haiShowType2: tmpxx = tmpxx2: tmpyy = tmpyy2
@@ -88,9 +88,9 @@
 
 #deffunc showtileblockrotated int haiShowType1, int tmpxx1, int tmpyy1
 	haiShowType = haiShowType1: tmpxx = tmpxx1: tmpyy = tmpyy1
-	origin = SCR_TILE_BLOCK: gmode gmode_gdi: gosub *execute
+	origin = SCR_TILE_BLOCK: gmode gmode_mem: gosub *execute
 	origin = SCR_TILE_SHADE: gmode gmode_alpha, , , TILE_SHADOW: gosub *execute
-	gmode gmode_gdi: return
+	gmode gmode_mem: return
 
 #deffunc showtileshaderotated int haiShowType2, int tmpxx2, int tmpyy2
 	haiShowType = haiShowType2: tmpxx = tmpxx2: tmpyy = tmpyy2
@@ -124,11 +124,11 @@
 			tmpyy = targetPosY
 			if ((getHandStat(GameStat, targetPlayer) == 0)||(getHandStat(GameStat, targetPlayer) == 3)) {
 				if (playerRelative(targetPlayer,getPlayer(GameStat))*haiShowMode == 1) {
-					gmode gmode_gdi
+					gmode gmode_mem
 					pos tmpxx, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2-3, (TILE_THICKNESS_SIDE-1)*2+TILE_BLOCK_HEIGHT*1, TILE_HEIGHT, TILE_THICKNESS_SIDE
 					gmode gmode_alpha, , , TILE_SHADOW
 					pos tmpxx, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH*2-3, (TILE_THICKNESS_SIDE-1)*2+TILE_BLOCK_HEIGHT*1, TILE_HEIGHT, TILE_THICKNESS_SIDE
-					gmode gmode_gdi
+					gmode gmode_mem
 				}
 			}
 		}
@@ -147,7 +147,7 @@
 		}
 		tmpyy = targetPosY
 		if (getHandStat(GameStat, targetPlayer) == 0) {
-			gmode gmode_gdi
+			gmode gmode_mem
 			switch playerRelative(targetPlayer,getPlayer(GameStat))*haiShowMode
 				case RELATIVE_SELF:
 					pos tmpxx, tmpyy-TILE_THICKNESS: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, 0, TILE_WIDTH, TILE_HEIGHT+TILE_THICKNESS
@@ -157,7 +157,7 @@
 						pos tmpxx, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2-3, (TILE_THICKNESS_SIDE-1)*2+TILE_BLOCK_HEIGHT*1, TILE_HEIGHT, TILE_THICKNESS_SIDE
 						gmode gmode_alpha, , , TILE_SHADOW
 						pos tmpxx, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH*2-3, (TILE_THICKNESS_SIDE-1)*2+TILE_BLOCK_HEIGHT*1, TILE_HEIGHT, TILE_THICKNESS_SIDE
-						gmode gmode_gdi
+						gmode gmode_mem
 					}
 					pos tmpxx+TILE_HEIGHT-1, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, (TILE_THICKNESS_SIDE-1)+TILE_BLOCK_HEIGHT*1, TILE_WIDTH, TILE_THICKNESS_SIDE
 					swbreak
@@ -165,13 +165,13 @@
 					pos tmpxx, tmpyy-TILE_THICKNESS: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, TILE_THICKNESS+TILE_BLOCK_HEIGHT*2, TILE_WIDTH, TILE_HEIGHT+TILE_THICKNESS
 					gmode gmode_alpha, , , TILE_SHADOW
 					pos tmpxx, tmpyy-TILE_THICKNESS: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, TILE_THICKNESS+TILE_BLOCK_HEIGHT*2, TILE_WIDTH, TILE_HEIGHT
-					gmode gmode_gdi
+					gmode gmode_mem
 					swbreak
 				case RELATIVE_KAMICHA:
 					pos tmpxx+TILE_WIDTH-1, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2-3, (TILE_THICKNESS_SIDE-1)*2+TILE_BLOCK_HEIGHT*3, TILE_HEIGHT, TILE_THICKNESS_SIDE
 					gmode gmode_alpha, , , TILE_SHADOW
 					pos tmpxx+TILE_WIDTH-1, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH*2-3, (TILE_THICKNESS_SIDE-1)*2+TILE_BLOCK_HEIGHT*3, TILE_HEIGHT, TILE_THICKNESS_SIDE
-					gmode gmode_gdi
+					gmode gmode_mem
 					pos tmpxx, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, (TILE_THICKNESS_SIDE-1)+TILE_BLOCK_HEIGHT*3, TILE_WIDTH, TILE_THICKNESS_SIDE
 					swbreak
 			swend
@@ -212,14 +212,14 @@
 				if (getHandStat(GameStat, targetPlayer) == 0) {
 					gmode gmode_alpha, , , TILE_SHADOW
 					pos targetPosX+(TILE_WIDTH*tehaiCount)+(TILE_WIDTH*(1-getHeavenHandFlag(GameStat)))/3, targetPosY-tmp: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, 0+TILE_THICKNESS, TILE_WIDTH, TILE_HEIGHT
-					gmode gmode_gdi
+					gmode gmode_mem
 				}
 			} else {
 				showtile tmp2, targetPosX+TILE_WIDTH*cnt, targetPosY-tmp
 				if (getHandStat(GameStat, targetPlayer) == 0) {
 					gmode gmode_alpha, , , TILE_SHADOW
 					pos targetPosX+TILE_WIDTH*cnt, targetPosY-tmp: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, 0+TILE_THICKNESS, TILE_WIDTH, TILE_HEIGHT
-					gmode gmode_gdi
+					gmode gmode_mem
 				}
 			}
 			tehaiCount++
@@ -248,24 +248,24 @@ return
 		}
 		if (RichiCount == 2) {tmpxx += (TILE_HEIGHT-TILE_WIDTH)}
 		if (RichiCount == 1) {
-			gmode gmode_gdi
+			gmode gmode_mem
 			showtileblockrotated playerRelative(targetPlayer,getPlayer(GameStat))*haiShowMode, tmpxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)
 			gmode gmode_alpha, , , 48
 			if (getDiscard(GameStat, DISCARD_THROUGH, cnt, targetPlayer) == 1) {
 				// ÉcÉÇêÿÇËîvÇÃà√ì]ï\é¶
 				showtileshaderotated playerRelative(targetPlayer,getPlayer(GameStat))*haiShowMode, tmpxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)
 			}
-			gmode gmode_gdi
+			gmode gmode_mem
 			RichiCount = 2
 		} else {
-			gmode gmode_gdi
+			gmode gmode_mem
 			showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*haiShowMode, tmpxx, tmpyy
 			gmode gmode_alpha, , , 48
 			if (getDiscard(GameStat, DISCARD_THROUGH, cnt, targetPlayer) == 1) {
 				// ÉcÉÇêÿÇËîvÇÃà√ì]ï\é¶
 				showtileshade playerRelative(targetPlayer,getPlayer(GameStat))*haiShowMode, tmpxx, tmpyy
 			}
-			gmode gmode_gdi
+			gmode gmode_mem
 		}
 		if ((SutehaiCount == 6)||(SutehaiCount == 12)) {RichiCount = 0}
 	loop
@@ -286,22 +286,22 @@ return
 		}
 		if (RichiCount == 2) {tmpxx += (TILE_HEIGHT-TILE_WIDTH)}
 		if (RichiCount == 1) {
-			gmode gmode_gdi
+			gmode gmode_mem
 			showtilerotated getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer)+getDiscard(GameStat, DISCARD_REDTILE, cnt, targetPlayer)*TILE_NONFLOWER_MAX, tmpxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)
 			gmode gmode_alpha, , , 48
 			if (getDiscard(GameStat, DISCARD_THROUGH, cnt, targetPlayer) == 1) {
 				pos tmpxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH): gcopy SCR_TILE_SHADE, TILE_BLOCK_WIDTH*3-3+TILE_THICKNESS, (TILE_HEIGHT-TILE_WIDTH)+TILE_THICKNESS, TILE_HEIGHT, TILE_WIDTH
 			}
-			gmode gmode_gdi
+			gmode gmode_mem
 			RichiCount = 2
 		} else {
-			gmode gmode_gdi
+			gmode gmode_mem
 			showtile getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer)+getDiscard(GameStat, DISCARD_REDTILE, cnt, targetPlayer)*TILE_NONFLOWER_MAX, tmpxx, tmpyy
 			gmode gmode_alpha, , , 48
 			if (getDiscard(GameStat, DISCARD_THROUGH, cnt, targetPlayer) == 1) {
 				pos tmpxx, tmpyy: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH, TILE_THICKNESS, TILE_WIDTH, TILE_HEIGHT
 			}
-			gmode gmode_gdi
+			gmode gmode_mem
 		}
 		if ((SutehaiCount == 6)||(SutehaiCount == 12)) {RichiCount = 0}
 	loop
@@ -405,7 +405,7 @@ return
 		tmpAkaDoraFlag2 += (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x20)/0x20*2
 		tmpAkaDoraFlag3 += (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x40)/0x40*2
 		tmpAkaDoraFlag4 += (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x80)/0x80*2
-		gmode gmode_gdi
+		gmode gmode_mem
 		switch getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP
 			// óºñ ÇÃè¨Ç≥Ç¢ë§Ç©ï”í£ÇÃÇVÇ©ÇÁÇÃãh
 			case MELD_SEQUENCE_EXPOSED_LOWER:
@@ -501,7 +501,7 @@ return
 #module
 #include "const.as"
 #deffunc putsai var GameStat, int targetPosX, int targetPosY, int ShadeX, int ShadeY
-	gmode gmode_gdi
+	gmode gmode_mem
 	pos targetPosX+ShadeX, targetPosY+ShadeY
 	gcopy SCR_DICE_PIC, 0*TILE_DICE_WIDTH, getDice(GameStat, 0, 1)*TILE_DICE_HEIGHT, TILE_DICE_WIDTH, TILE_DICE_HEIGHT
 	pos targetPosX+ShadeX+14, targetPosY+ShadeY
@@ -511,7 +511,7 @@ return
 	gcopy SCR_DICE_SHADE, 0*TILE_DICE_WIDTH, getDice(GameStat, 0, 1)*TILE_DICE_HEIGHT, TILE_DICE_WIDTH, TILE_DICE_HEIGHT
 	pos targetPosX+ShadeX+14, targetPosY+ShadeY
 	gcopy SCR_DICE_SHADE, 0*TILE_DICE_WIDTH, getDice(GameStat, 1, 1)*TILE_DICE_HEIGHT, TILE_DICE_WIDTH, TILE_DICE_HEIGHT
-	gmode gmode_gdi
+	gmode gmode_mem
 	pos targetPosX, targetPosY
 	gcopy SCR_DICE_PIC, (getDice(GameStat, 0, 0)-1)*TILE_DICE_WIDTH, getDice(GameStat, 0, 1)*TILE_DICE_HEIGHT, TILE_DICE_WIDTH, TILE_DICE_HEIGHT
 	pos targetPosX+14, targetPosY
@@ -523,13 +523,13 @@ return
 #module
 #include "const.as"
 #deffunc putrichi int targetPosX, int targetPosY, int ShadeX, int ShadeY
-	gmode gmode_gdi
+	gmode gmode_mem
 	pos targetPosX+ShadeX, targetPosY+ShadeY
 	gcopy SCR_DICE_PIC, 0, TILE_DICE_HEIGHT*2, TILE_RIICHISTICK_LENGTH, TILE_RIICHISTICK_WIDTH
 	gmode gmode_alpha, , , TILE_DICE_SHADOW
 	pos targetPosX+ShadeX, targetPosY+ShadeY
 	gcopy SCR_DICE_SHADE, 0, TILE_DICE_HEIGHT*2, TILE_RIICHISTICK_LENGTH, TILE_RIICHISTICK_WIDTH
-	gmode gmode_gdi
+	gmode gmode_mem
 	pos targetPosX, targetPosY
 	gcopy SCR_DICE_PIC, 0, TILE_DICE_HEIGHT*2, TILE_RIICHISTICK_LENGTH, TILE_RIICHISTICK_WIDTH
 return
@@ -539,13 +539,13 @@ return
 #module
 #include "const.as"
 #deffunc putchichamark var GameStat, int targetPosX, int targetPosY , int ShadeX, int ShadeY
-	gmode gmode_gdi
+	gmode gmode_mem
 	pos targetPosX+ShadeX, targetPosY+ShadeY
 	gcopy SCR_DICE_PIC, 0+(getRound(GameStat)/NUM_OF_PLAYERS)\2*TILE_CHICHAMARK_WIDTH, TILE_DICE_HEIGHT*2+TILE_RIICHISTICK_WIDTH+(getRound(GameStat)/NUM_OF_PLAYERS)/2*TILE_CHICHAMARK_HEIGHT, TILE_CHICHAMARK_WIDTH, TILE_CHICHAMARK_HEIGHT
 	gmode gmode_alpha, , , TILE_DICE_SHADOW
 	pos targetPosX+ShadeX, targetPosY+ShadeY
 	gcopy SCR_DICE_SHADE, 0+(getRound(GameStat)/NUM_OF_PLAYERS)\2*TILE_CHICHAMARK_WIDTH, TILE_DICE_HEIGHT*2+TILE_RIICHISTICK_WIDTH+(getRound(GameStat)/NUM_OF_PLAYERS)/2*TILE_CHICHAMARK_HEIGHT, TILE_CHICHAMARK_WIDTH, TILE_CHICHAMARK_HEIGHT
-	gmode gmode_gdi
+	gmode gmode_mem
 	pos targetPosX, targetPosY
 	gcopy SCR_DICE_PIC, 0+(getRound(GameStat)/NUM_OF_PLAYERS)\2*TILE_CHICHAMARK_WIDTH, TILE_DICE_HEIGHT*2+TILE_RIICHISTICK_WIDTH+(getRound(GameStat)/NUM_OF_PLAYERS)/2*TILE_CHICHAMARK_HEIGHT, TILE_CHICHAMARK_WIDTH, TILE_CHICHAMARK_HEIGHT
 return

@@ -39,7 +39,7 @@
 		}
 	}
 	color drawcol(0),drawcol(1),drawcol(2)
-	gmode gmode_gdi
+	gmode gmode_mem
 	puttehai GameStat, ActivePlayer, agariPlayer, 50, 60, 0
 	putnakihai GameStat, agariPlayer, 460-((4-MeldPointer(GameStat, agariPlayer))*40), 55, 0
 	tmpOffset = 0
