@@ -1,3 +1,6 @@
+/* MiHaJong 専用ロギングツール */
+/* ロギング機能を使うときは最初にビルドしてください */
+
 #packopt name "logger"
 #runtime "hsp3c"
 #include "hspsock.as"

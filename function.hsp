@@ -8,7 +8,7 @@
 #module debuglog
 #include "const.as"
 #deffunc loginit
-#ifdef _debug
+#ifdef LOGGING
 	verbosity_level = "FATAL","ERROR","WARN","INFO","DEBUG","TRACE"
 	verbosity_border = 5
 	sdim filename, 1024
@@ -25,7 +25,7 @@
 return
 
 #deffunc debug_logging str debugmsg, str debugfile, int debugline, int verbosity
-#ifdef _debug
+#ifdef LOGGING
 	if (verbosity > verbosity_border) {return}
 	sdim log, 1024
 	log = strf("%04d-%02d-%02d %02d:%02d:%02d.%03d %-5s (%s:%d) %s\n", gettime(0),gettime(1),gettime(3),gettime(4),gettime(5),gettime(6),gettime(7), verbosity_level(verbosity),debugfile,debugline,debugmsg)
