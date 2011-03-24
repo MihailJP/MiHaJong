@@ -9,7 +9,7 @@
 
 /* コンフィグファイルのパスを設定する(Vista/7用) */
 	/* Vista以降、Program Files以下にファイルを作れないので自分で調整する */
-#ifdef SANMA4
+#ifdef SANMAS
 	configFile = confPath()+"mihassnm.cfg"
 #else
 	#ifdef SANMA4
