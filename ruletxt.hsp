@@ -380,9 +380,13 @@
 	AddRuleText1 "宝紅開花", RuleStat(RULE_BAOHONGKAIHUA)
 	AddRuleText3 "紅白饅頭", RuleStat(RULE_KOHAKU_MANJU)
 	AddRuleText "白鳥", RuleStat(RULE_HAKUCHO)
-	AddRuleText "雪の銀閣", RuleStat(RULE_SNOW_GINKAKU)
 #endif
 	AddRuleText "白一色", RuleStat(RULE_HAKUIISOO)
+#ifndef SANMAS
+	AddRuleText "雪の銀閣", RuleStat(RULE_SNOW_GINKAKU)
+	AddRuleText "北白川", RuleStat(RULE_KITASHIRAKAWA)
+	AddRuleText "お正月", RuleStat(RULE_NEWYEAR)
+#endif
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText1 "二暗槓", RuleStat(RULE_RYANANKAN)
 	AddRuleText3 "三暗槓", RuleStat(RULE_SANANKAN)
@@ -472,13 +476,24 @@
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText "鳥立直", RuleStat(RULE_BIRD_RIICHI)
 	AddRuleText1 "五筒開花", RuleStat(RULE_UUPIN_KAIHOH)
+#ifndef SANMAS
+	AddRuleText2 "中上開花", RuleStat(RULE_CHUNSHAN_KAIHOH)
+#endif
 	AddRuleText2 "頭槓和", RuleStat(RULE_TOUKANHOH)
 	AddRuleText3 "連槓開花", RuleStat(RULE_RENKAN_KAIHOH)
 	AddRuleText "二索槍槓", RuleStat(RULE_RYANZOH_CHANKAN)
 	AddRuleText1 "一筒摸月", RuleStat(RULE_IIPIN_MOYUE)
 	AddRuleText2 "海底撈針", RuleStat(RULE_HAITEI_RAOTSEN)
+#ifdef SANMAS
 	AddRuleText3 "海底撈花", RuleStat(RULE_HAITEI_RAOHWA)
+#else
+	AddRuleText2 "海底撈花", RuleStat(RULE_HAITEI_RAOHWA)
+	AddRuleText3 "発底摸月", RuleStat(RULE_HATSUTEI_MOYUE)
+#endif
 	AddRuleText1 "九筒撈魚", RuleStat(RULE_CHUUPIN_RAOYUI)
+#ifndef SANMAS
+	AddRuleText2 "白底撈魚", RuleStat(RULE_HAKUTEI_RAOYUI)
+#endif
 	AddRuleText2 "泥底撈蟲", RuleStat(RULE_NITEI_RAOCHUN)
 	AddRuleText2 "ラストオーダー麻婆豆腐", RuleStat(RULE_MAABOODOUFU)
 	AddRuleText3 "石の上にも三年", RuleStat(RULE_THREE_YEARS_ON_STONE)

@@ -110,6 +110,15 @@
 				delyaku tmpYakuInfo, "嶺上開花"
 			}
 		}
+#ifndef SANMAS
+		/* 中上開花 */
+		if (getRule(RULE_CHUNSHAN_KAIHOH) != 0) {
+			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_RED_DRAGON) {
+				addyaku tmpYakuInfo, "中上開花", 2
+				delyaku tmpYakuInfo, "嶺上開花"
+			}
+		}
+#endif
 		/* 頭槓和 */
 		if (getRule(RULE_TOUKANHOH) != 0) {
 			if (getKangFlag(GameStat, KANG_TOPFLAG) == 1) {
@@ -147,6 +156,15 @@
 						addyaku tmpYakuInfo, "海底撈花", 1
 					}
 				}
+#ifndef SANMAS
+				/* 発底摸月 */
+				if (getRule(RULE_HATSUTEI_MOYUE) != 0) {
+					if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_GREEN_DRAGON) {
+						addyaku tmpYakuInfo, "発底摸月", 2
+						delyaku tmpYakuInfo, "海底摸月"
+					}
+				}
+#endif
 				/* 海底ツモ　ここまで */
 			} else {
 				/* 河底ロン　ここから */
@@ -162,6 +180,15 @@
 						delyaku tmpYakuInfo, "河底撈魚"
 					}
 				}
+#ifndef SANMAS
+				/* 白底撈魚 */
+				if (getRule(RULE_HAKUTEI_RAOYUI) != 0) {
+					if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_WHITE_DRAGON) {
+						addyaku tmpYakuInfo, "白底撈魚", 2
+						delyaku tmpYakuInfo, "河底撈魚"
+					}
+				}
+#endif
 				/* 河底ロン　ここまで */
 			}
 			/* ツモ・ロン共通の役　ここから */

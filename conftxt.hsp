@@ -2096,4 +2096,49 @@
 	RuleDescription(RULE_KAKAN_FURITEN+1) = "มศตฝ”v๐U’ฎฬ‘ฮÛฦÝศทฉ๐Ý’่ตÜท"
 	RuleTxt(0, RULE_KAKAN_FURITEN+1) = "ศต", " ่"
 
+	RuleName(RULE_KITASHIRAKAWA+1) = "–k”’์"
+#ifdef SANMAS
+	RuleDescription(RULE_KITASHIRAKAWA+1) = "””vO–ลอÝ’่ลซÜน๑"
+	RuleTxt(0, RULE_KITASHIRAKAWA+1) = "m^`"
+#else
+	RuleDescription(RULE_KITASHIRAKAWA+1) = "–k”’์ฬ—L–ณฦฟ’l๐Ý’่ตÜท(–kA”’AZ๕๐qษท้)"
+	RuleTxt(0, RULE_KITASHIRAKAWA+1) = "ศต", "–๐–"
+#endif
+
+	RuleName(RULE_HATSUTEI_MOYUE+1) = "”ญ’๊–ฬ"
+#ifdef SANMAS
+	RuleDescription(RULE_HATSUTEI_MOYUE+1) = "””vO–ลอÝ’่ลซÜน๑"
+	RuleTxt(0, RULE_HATSUTEI_MOYUE+1) = "m^`"
+#else
+	RuleDescription(RULE_HATSUTEI_MOYUE+1) = "”ญ’๊–ฬฬ—L–ณฦฟ’l๐Ý’่ตÜท(C’๊–ฬ๐”ญลa—น้)"
+	RuleTxt(0, RULE_HATSUTEI_MOYUE+1) = "ศต", "Qใส"
+#endif
+
+	RuleName(RULE_HAKUTEI_RAOYUI+1) = "”’’๊"
+#ifdef SANMAS
+	RuleDescription(RULE_HAKUTEI_RAOYUI+1) = "””vO–ลอÝ’่ลซÜน๑"
+	RuleTxt(0, RULE_HAKUTEI_RAOYUI+1) = "m^`"
+#else
+	RuleDescription(RULE_HAKUTEI_RAOYUI+1) = "”’’๊ฬ—L–ณฦฟ’l๐Ý’่ตÜท(อ’๊๐”’ลa—น้)"
+	RuleTxt(0, RULE_HAKUTEI_RAOYUI+1) = "ศต", "Qใส"
+#endif
+
+	RuleName(RULE_CHUNSHAN_KAIHOH+1) = "’ใJิ"
+#ifdef SANMAS
+	RuleDescription(RULE_CHUNSHAN_KAIHOH+1) = "””vO–ลอÝ’่ลซÜน๑"
+	RuleTxt(0, RULE_CHUNSHAN_KAIHOH+1) = "m^`"
+#else
+	RuleDescription(RULE_CHUNSHAN_KAIHOH+1) = "’ใJิฬ—L–ณฦฟ’l๐Ý’่ตÜท(—ไใJิ๐’ลa—น้)"
+	RuleTxt(0, RULE_CHUNSHAN_KAIHOH+1) = "ศต", "Qใส"
+#endif
+
+	RuleName(RULE_NEWYEAR+1) = "จณ"
+#ifdef SANMAS
+	RuleDescription(RULE_NEWYEAR+1) = "””vO–ลอÝ’่ลซÜน๑"
+	RuleTxt(0, RULE_NEWYEAR+1) = "m^`"
+#else
+	RuleDescription(RULE_NEWYEAR+1) = "จณฬ—L–ณฦฟ’l๐Ý’่ตÜท(PฬOF“ฏฦ“ฬq)"
+	RuleTxt(0, RULE_NEWYEAR+1) = "ศต", "–๐–"
+#endif
+
 return
