@@ -7,2138 +7,2138 @@
 /* 設定のテキスト */
 #deffunc configinit
 	#define NUM_OF_RULE_SETTINGS RULES_IN_PAGE*RULE_PAGES
-	dim Rule, NUM_OF_RULE_SETTINGS+1
-	sdim RuleTxt, 128, 17, NUM_OF_RULE_SETTINGS+1
-	sdim RuleDescription, 128, NUM_OF_RULE_SETTINGS+1
-	sdim RuleName, 128, NUM_OF_RULE_SETTINGS+1
+	dim Rule, NUM_OF_RULE_SETTINGS
+	sdim RuleTxt, 128, 17, NUM_OF_RULE_SETTINGS
+	sdim RuleDescription, 128, NUM_OF_RULE_SETTINGS
+	sdim RuleName, 128, NUM_OF_RULE_SETTINGS
 	return
 
 #deffunc configtxt
 	configinit
-	repeat NUM_OF_RULE_SETTINGS: Rule(cnt+1) = getRule(cnt): loop
+	repeat NUM_OF_RULE_SETTINGS: Rule(cnt) = getRule(cnt): loop
 	configtxtdat
 	return
 
 #deffunc configtxtdat
 	
-	RuleName(RULE_GAME_LENGTH+1) = "長さ"
-	RuleDescription(RULE_GAME_LENGTH+1) = "１試合の長さを設定します"
-	RuleTxt(0, RULE_GAME_LENGTH+1) = "半荘戦", "東風戦", "一荘戦", "東北戦", "一局清算", "東々戦", "東南西戦", "東風戦(東場固定)"
+	RuleName(RULE_GAME_LENGTH) = "長さ"
+	RuleDescription(RULE_GAME_LENGTH) = "１試合の長さを設定します"
+	RuleTxt(0, RULE_GAME_LENGTH) = "半荘戦", "東風戦", "一荘戦", "東北戦", "一局清算", "東々戦", "東南西戦", "東風戦(東場固定)"
 	
-	RuleName(RULE_CHIP+1) = "チップ"
-	RuleDescription(RULE_CHIP+1) = "チップは一発、裏、赤(門前のみ)、アリス、役満につきます"
-	RuleTxt(0, RULE_CHIP+1) = "なし", "2000点/枚", "5000点/枚"
+	RuleName(RULE_CHIP) = "チップ"
+	RuleDescription(RULE_CHIP) = "チップは一発、裏、赤(門前のみ)、アリス、役満につきます"
+	RuleTxt(0, RULE_CHIP) = "なし", "2000点/枚", "5000点/枚"
 	
-	RuleName(RULE_YAKITORI+1) = "焼き鳥"
-	RuleDescription(RULE_YAKITORI+1) = "一度も和了れなかった人がトップに支払う点数です"
-	RuleTxt(0, RULE_YAKITORI+1) = "なし", "5000点", "10000点", "チップ１枚", "チップ２枚", "チップ３枚"
+	RuleName(RULE_YAKITORI) = "焼き鳥"
+	RuleDescription(RULE_YAKITORI) = "一度も和了れなかった人がトップに支払う点数です"
+	RuleTxt(0, RULE_YAKITORI) = "なし", "5000点", "10000点", "チップ１枚", "チップ２枚", "チップ３枚"
 	
-	RuleName(RULE_PENALTY_NEGATIVE+1) = "トビ賞"
-	RuleDescription(RULE_PENALTY_NEGATIVE+1) = "誰かの持ち点を０未満にしたときにもらえるボーナスです"
-	RuleTxt(0, RULE_PENALTY_NEGATIVE+1) = "なし", "10000点", "20000点", "チップ１枚", "チップ２枚", "チップ３枚", "ハコ下も続行"
+	RuleName(RULE_PENALTY_NEGATIVE) = "トビ賞"
+	RuleDescription(RULE_PENALTY_NEGATIVE) = "誰かの持ち点を０未満にしたときにもらえるボーナスです"
+	RuleTxt(0, RULE_PENALTY_NEGATIVE) = "なし", "10000点", "20000点", "チップ１枚", "チップ２枚", "チップ３枚", "ハコ下も続行"
 	
-	RuleName(RULE_STARTING_POINT+1) = "配給原点"
-	RuleDescription(RULE_STARTING_POINT+1) = "試合開始時の持ち点を設定します"
+	RuleName(RULE_STARTING_POINT) = "配給原点"
+	RuleDescription(RULE_STARTING_POINT) = "試合開始時の持ち点を設定します"
 	
-	RuleName(RULE_POINT_BASIS+1) = "ウマ"
+	RuleName(RULE_POINT_BASIS) = "ウマ"
 #ifdef SANMAT
-	RuleTxt(0, RULE_STARTING_POINT+1) = "35000点 (オカ15)", "40000点 (オカ無)", "45000点 (オカ-15)", "50000点 (オカ-30)", "25000点 (オカ45)", "30000点 (オカ30)"
+	RuleTxt(0, RULE_STARTING_POINT) = "35000点 (オカ15)", "40000点 (オカ無)", "45000点 (オカ-15)", "50000点 (オカ-30)", "25000点 (オカ45)", "30000点 (オカ30)"
 	
-	RuleDescription(RULE_POINT_BASIS+1) = "順位に応じて増減する点数を設定します(３位から１位に移動)"
-	RuleTxt(0, RULE_POINT_BASIS+1) = "10", "20", "30", "40", "50", "60", "4-8", "5-10", "10-20", "沈みウマ5", "沈みウマ10", "沈みウマ20", "なし", "3", "5", "8"
+	RuleDescription(RULE_POINT_BASIS) = "順位に応じて増減する点数を設定します(３位から１位に移動)"
+	RuleTxt(0, RULE_POINT_BASIS) = "10", "20", "30", "40", "50", "60", "4-8", "5-10", "10-20", "沈みウマ5", "沈みウマ10", "沈みウマ20", "なし", "3", "5", "8"
 #else
-	RuleTxt(0, RULE_STARTING_POINT+1) = "25000点 (オカ20)", "27000点 (オカ12)", "30000点 (オカ無)", "35000点 (オカ-20)", "40000点 (オカ-40)", "20000点 (オカ40)"
+	RuleTxt(0, RULE_STARTING_POINT) = "25000点 (オカ20)", "27000点 (オカ12)", "30000点 (オカ無)", "35000点 (オカ-20)", "40000点 (オカ-40)", "20000点 (オカ40)"
 	
-	RuleDescription(RULE_POINT_BASIS+1) = "順位に応じて増減する点数を設定します"
-	RuleTxt(0, RULE_POINT_BASIS+1) = "5-10", "10-20", "10-30", "20-40", "20-50", "20-60", "7-5-3", "8-3-1", "10-20-30", "沈みウマ5", "沈みウマ10", "沈みウマ20", "なし", "0-3", "0-5", "3-5"
+	RuleDescription(RULE_POINT_BASIS) = "順位に応じて増減する点数を設定します"
+	RuleTxt(0, RULE_POINT_BASIS) = "5-10", "10-20", "10-30", "20-40", "20-50", "20-60", "7-5-3", "8-3-1", "10-20-30", "沈みウマ5", "沈みウマ10", "沈みウマ20", "なし", "0-3", "0-5", "3-5"
 #endif
 	
-	RuleName(RULE_KUIKAE+1) = "喰い替え"
-	RuleDescription(RULE_KUIKAE+1) = "喰い替えをした時の罰則を設定します"
-	RuleTxt(0, RULE_KUIKAE+1) = "和了り放棄", "錯和", "あり"
+	RuleName(RULE_KUIKAE) = "喰い替え"
+	RuleDescription(RULE_KUIKAE) = "喰い替えをした時の罰則を設定します"
+	RuleTxt(0, RULE_KUIKAE) = "和了り放棄", "錯和", "あり"
 #ifndef ALLSANMA
-	RuleTxt(3, RULE_KUIKAE+1) = "和了り放棄(現物のみ)", "錯和(現物のみ)"
+	RuleTxt(3, RULE_KUIKAE) = "和了り放棄(現物のみ)", "錯和(現物のみ)"
 #endif
 	
-	RuleName(RULE_LIMITHAND_BONUS+1) = "役満祝儀"
-	RuleDescription(RULE_LIMITHAND_BONUS+1) = "役満を和了った時にもらえるチップの数を設定します"
-	RuleTxt(0, RULE_LIMITHAND_BONUS+1) = "チップ５枚", "チップ１０枚"
+	RuleName(RULE_LIMITHAND_BONUS) = "役満祝儀"
+	RuleDescription(RULE_LIMITHAND_BONUS) = "役満を和了った時にもらえるチップの数を設定します"
+	RuleTxt(0, RULE_LIMITHAND_BONUS) = "チップ５枚", "チップ１０枚"
 	
-	RuleName(RULE_RYANSHIBA+1) = "二飜縛り"
-	RuleDescription(RULE_RYANSHIBA+1) = "二飜縛りの有無を設定します"
-	RuleTxt(0, RULE_RYANSHIBA+1) = "なし", "５本場以降"
+	RuleName(RULE_RYANSHIBA) = "二飜縛り"
+	RuleDescription(RULE_RYANSHIBA) = "二飜縛りの有無を設定します"
+	RuleTxt(0, RULE_RYANSHIBA) = "なし", "５本場以降"
 	
-	RuleName(RULE_ROUND_CONTINUATION+1) = "連荘条件"
-	RuleDescription(RULE_ROUND_CONTINUATION+1) = "荒牌時の連荘条件を設定します"
-	RuleTxt(0, RULE_ROUND_CONTINUATION+1) = "聴牌連荘", "和了連荘", "不聴連荘", "連荘なし"
+	RuleName(RULE_ROUND_CONTINUATION) = "連荘条件"
+	RuleDescription(RULE_ROUND_CONTINUATION) = "荒牌時の連荘条件を設定します"
+	RuleTxt(0, RULE_ROUND_CONTINUATION) = "聴牌連荘", "和了連荘", "不聴連荘", "連荘なし"
 	
-	RuleName(RULE_MULTIPLE_MAHJONG+1) = "複数和了"
+	RuleName(RULE_MULTIPLE_MAHJONG) = "複数和了"
 #ifdef ALLSANMA
-	RuleDescription(RULE_MULTIPLE_MAHJONG+1) = "二家和のルールを設定します"
-	RuleTxt(0, RULE_MULTIPLE_MAHJONG+1) = "頭ハネ", ">>>", "ダブロン", ">>>", ">>>", "流局"
+	RuleDescription(RULE_MULTIPLE_MAHJONG) = "二家和のルールを設定します"
+	RuleTxt(0, RULE_MULTIPLE_MAHJONG) = "頭ハネ", ">>>", "ダブロン", ">>>", ">>>", "流局"
 #else
-	RuleDescription(RULE_MULTIPLE_MAHJONG+1) = "二家和/三家和のルールを設定します"
-	RuleTxt(0, RULE_MULTIPLE_MAHJONG+1) = "頭ハネ/流局", "頭ハネ", "ダブロン/流局", "ダブロン", "トリロン"
+	RuleDescription(RULE_MULTIPLE_MAHJONG) = "二家和/三家和のルールを設定します"
+	RuleTxt(0, RULE_MULTIPLE_MAHJONG) = "頭ハネ/流局", "頭ハネ", "ダブロン/流局", "ダブロン", "トリロン"
 #endif
 	
-	RuleName(RULE_SIMULTANEOUS_MAHJONG+1) = "同時和了時"
-	RuleDescription(RULE_SIMULTANEOUS_MAHJONG+1) = "複数和了り時の連荘条件を設定します"
-	RuleTxt(0, RULE_SIMULTANEOUS_MAHJONG+1) = "親の和了りで連荘", "親が上家の場合連荘", "親流れ"
-	
-#ifdef ALLSANMA
-	RuleName(RULE_TRIPLE_MAHJONG+1) = "二家和流れ"
-	RuleDescription(RULE_TRIPLE_MAHJONG+1) = "二家和で流れる時の連荘条件を設定します"
-	RuleTxt(0, RULE_TRIPLE_MAHJONG+1) = "子の放銃で連荘", "北家の放銃で連荘", "連荘", "親流れ"
-#else
-	RuleName(RULE_TRIPLE_MAHJONG+1) = "三家和流れ"
-	RuleDescription(RULE_TRIPLE_MAHJONG+1) = "三家和で流れる時の連荘条件を設定します"
-	RuleTxt(0, RULE_TRIPLE_MAHJONG+1) = "子の放銃で連荘", "北家の放銃で連荘", "連荘", "親流れ"
-#endif
-	
-	RuleName(RULE_NINE_TERMINALS+1) = "九種九牌"
-#ifdef SANMAS
-	RuleDescription(RULE_NINE_TERMINALS+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_NINE_TERMINALS+1) = "Ｎ／Ａ"
-#else
-	RuleDescription(RULE_NINE_TERMINALS+1) = "九種九牌のときのルールを設定します"
-	RuleTxt(0, RULE_NINE_TERMINALS+1) = "連荘", "親の九種で連荘", "親流れ", "場を続行"
-#endif
-	
-	RuleName(RULE_FOUR_KONG_RYUUKYOKU+1) = "四開槓"
-	RuleDescription(RULE_FOUR_KONG_RYUUKYOKU+1) = "二人以上で４回槓が行なわれたときのルールを設定します"
-	RuleTxt(0, RULE_FOUR_KONG_RYUUKYOKU+1) = "連荘", "親流れ", "場を続行"
-	
-	RuleName(RULE_FIFTH_KONG+1) = "５回目の槓"
-	RuleDescription(RULE_FIFTH_KONG+1) = "５回目の槓ができるかどうかのルールを設定します"
-	RuleTxt(0, RULE_FIFTH_KONG+1) = "なし", "あり(連荘)", "あり(親流れ)"
+	RuleName(RULE_SIMULTANEOUS_MAHJONG) = "同時和了時"
+	RuleDescription(RULE_SIMULTANEOUS_MAHJONG) = "複数和了り時の連荘条件を設定します"
+	RuleTxt(0, RULE_SIMULTANEOUS_MAHJONG) = "親の和了りで連荘", "親が上家の場合連荘", "親流れ"
 	
 #ifdef ALLSANMA
-	RuleName(RULE_FOUR_WIND_RYUUKYOKU+1) = "三風連打"
-	RuleDescription(RULE_FOUR_WIND_RYUUKYOKU+1) = "鳴きのない１巡目に３人が同じ風牌を捨てたときのルールを設定します"
-	RuleTxt(0, RULE_FOUR_WIND_RYUUKYOKU+1) = "場を続行", "連荘", "親流れ"
-	
-	RuleName(RULE_FOUR_RIICHI_RYUUKYOKU+1) = "三人立直"
-	RuleDescription(RULE_FOUR_RIICHI_RYUUKYOKU+1) = "３人全員が立直したときのルールを設定します"
-	RuleTxt(0, RULE_FOUR_RIICHI_RYUUKYOKU+1) = "場を続行", "連荘", "親流れ"
+	RuleName(RULE_TRIPLE_MAHJONG) = "二家和流れ"
+	RuleDescription(RULE_TRIPLE_MAHJONG) = "二家和で流れる時の連荘条件を設定します"
+	RuleTxt(0, RULE_TRIPLE_MAHJONG) = "子の放銃で連荘", "北家の放銃で連荘", "連荘", "親流れ"
 #else
-	RuleName(RULE_FOUR_WIND_RYUUKYOKU+1) = "四風連打"
-	RuleDescription(RULE_FOUR_WIND_RYUUKYOKU+1) = "鳴きのない１巡目に４人が同じ風牌を捨てたときのルールを設定します"
-	RuleTxt(0, RULE_FOUR_WIND_RYUUKYOKU+1) = "連荘", "親流れ", "場を続行"
+	RuleName(RULE_TRIPLE_MAHJONG) = "三家和流れ"
+	RuleDescription(RULE_TRIPLE_MAHJONG) = "三家和で流れる時の連荘条件を設定します"
+	RuleTxt(0, RULE_TRIPLE_MAHJONG) = "子の放銃で連荘", "北家の放銃で連荘", "連荘", "親流れ"
+#endif
 	
-	RuleName(RULE_FOUR_RIICHI_RYUUKYOKU+1) = "四人立直"
-	RuleDescription(RULE_FOUR_RIICHI_RYUUKYOKU+1) = "４人全員が立直したときのルールを設定します"
-	RuleTxt(0, RULE_FOUR_RIICHI_RYUUKYOKU+1) = "連荘", "親流れ", "場を続行"
+	RuleName(RULE_NINE_TERMINALS) = "九種九牌"
+#ifdef SANMAS
+	RuleDescription(RULE_NINE_TERMINALS) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_NINE_TERMINALS) = "Ｎ／Ａ"
+#else
+	RuleDescription(RULE_NINE_TERMINALS) = "九種九牌のときのルールを設定します"
+	RuleTxt(0, RULE_NINE_TERMINALS) = "連荘", "親の九種で連荘", "親流れ", "場を続行"
+#endif
+	
+	RuleName(RULE_FOUR_KONG_RYUUKYOKU) = "四開槓"
+	RuleDescription(RULE_FOUR_KONG_RYUUKYOKU) = "二人以上で４回槓が行なわれたときのルールを設定します"
+	RuleTxt(0, RULE_FOUR_KONG_RYUUKYOKU) = "連荘", "親流れ", "場を続行"
+	
+	RuleName(RULE_FIFTH_KONG) = "５回目の槓"
+	RuleDescription(RULE_FIFTH_KONG) = "５回目の槓ができるかどうかのルールを設定します"
+	RuleTxt(0, RULE_FIFTH_KONG) = "なし", "あり(連荘)", "あり(親流れ)"
+	
+#ifdef ALLSANMA
+	RuleName(RULE_FOUR_WIND_RYUUKYOKU) = "三風連打"
+	RuleDescription(RULE_FOUR_WIND_RYUUKYOKU) = "鳴きのない１巡目に３人が同じ風牌を捨てたときのルールを設定します"
+	RuleTxt(0, RULE_FOUR_WIND_RYUUKYOKU) = "場を続行", "連荘", "親流れ"
+	
+	RuleName(RULE_FOUR_RIICHI_RYUUKYOKU) = "三人立直"
+	RuleDescription(RULE_FOUR_RIICHI_RYUUKYOKU) = "３人全員が立直したときのルールを設定します"
+	RuleTxt(0, RULE_FOUR_RIICHI_RYUUKYOKU) = "場を続行", "連荘", "親流れ"
+#else
+	RuleName(RULE_FOUR_WIND_RYUUKYOKU) = "四風連打"
+	RuleDescription(RULE_FOUR_WIND_RYUUKYOKU) = "鳴きのない１巡目に４人が同じ風牌を捨てたときのルールを設定します"
+	RuleTxt(0, RULE_FOUR_WIND_RYUUKYOKU) = "連荘", "親流れ", "場を続行"
+	
+	RuleName(RULE_FOUR_RIICHI_RYUUKYOKU) = "四人立直"
+	RuleDescription(RULE_FOUR_RIICHI_RYUUKYOKU) = "４人全員が立直したときのルールを設定します"
+	RuleTxt(0, RULE_FOUR_RIICHI_RYUUKYOKU) = "連荘", "親流れ", "場を続行"
 #endif
 
-	RuleName(RULE_AGARIYAME+1) = "和了り止め"
-	RuleDescription(RULE_AGARIYAME+1) = "オーラスで浮いているトップの親の和了り止めを設定します"
-	RuleTxt(0, RULE_AGARIYAME+1) = "あり", "なし", "あり(聴牌止めあり)"
+	RuleName(RULE_AGARIYAME) = "和了り止め"
+	RuleDescription(RULE_AGARIYAME) = "オーラスで浮いているトップの親の和了り止めを設定します"
+	RuleTxt(0, RULE_AGARIYAME) = "あり", "なし", "あり(聴牌止めあり)"
 	
-	RuleName(RULE_KUITAN+1) = "喰い断"
-	RuleDescription(RULE_KUITAN+1) = "門前でない断幺九を許容するかを設定します"
-	RuleTxt(0, RULE_KUITAN+1) = "あり", "なし", "あり(縛りを満たさない)"
+	RuleName(RULE_KUITAN) = "喰い断"
+	RuleDescription(RULE_KUITAN) = "門前でない断幺九を許容するかを設定します"
+	RuleTxt(0, RULE_KUITAN) = "あり", "なし", "あり(縛りを満たさない)"
 	
-	RuleName(RULE_URADORA+1) = "裏ドラ"
-	RuleDescription(RULE_URADORA+1) = "裏ドラの有無を設定します"
-	RuleTxt(0, RULE_URADORA+1) = "あり", "なし"
+	RuleName(RULE_URADORA) = "裏ドラ"
+	RuleDescription(RULE_URADORA) = "裏ドラの有無を設定します"
+	RuleTxt(0, RULE_URADORA) = "あり", "なし"
 	
-	RuleName(RULE_KANDORA+1) = "槓ドラ"
-	RuleDescription(RULE_KANDORA+1) = "槓ドラの有無を設定します"
-	RuleTxt(0, RULE_KANDORA+1) = "あり", "なし", "あり(槓裏無し)"
+	RuleName(RULE_KANDORA) = "槓ドラ"
+	RuleDescription(RULE_KANDORA) = "槓ドラの有無を設定します"
+	RuleTxt(0, RULE_KANDORA) = "あり", "なし", "あり(槓裏無し)"
 	
-	RuleName(RULE_RED_FIVE+1) = "赤五"
+	RuleName(RULE_RED_FIVE) = "赤五"
 #ifdef SANMAX
-	RuleDescription(RULE_RED_FIVE+1) = "赤ドラの有無を設定します"
-	RuleTxt(0, RULE_RED_FIVE+1) = "２枚", "４枚", "なし"
+	RuleDescription(RULE_RED_FIVE) = "赤ドラの有無を設定します"
+	RuleTxt(0, RULE_RED_FIVE) = "２枚", "４枚", "なし"
 #else
-	RuleDescription(RULE_RED_FIVE+1) = "赤ドラの有無を設定します"
-	RuleTxt(0, RULE_RED_FIVE+1) = "３枚", "４枚", "なし"
+	RuleDescription(RULE_RED_FIVE) = "赤ドラの有無を設定します"
+	RuleTxt(0, RULE_RED_FIVE) = "３枚", "４枚", "なし"
 #endif
 	
-	RuleName(RULE_RED_THREE+1) = "赤三"
-	RuleDescription(RULE_RED_THREE+1) = "赤ドラ(３の牌)の有無を設定します"
-	RuleTxt(0, RULE_RED_THREE+1) = "なし", "筒子", "索子", "筒子と索子"
+	RuleName(RULE_RED_THREE) = "赤三"
+	RuleDescription(RULE_RED_THREE) = "赤ドラ(３の牌)の有無を設定します"
+	RuleTxt(0, RULE_RED_THREE) = "なし", "筒子", "索子", "筒子と索子"
 #ifndef SANMAX
-	RuleTxt(4, RULE_RED_THREE+1) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
+	RuleTxt(4, RULE_RED_THREE) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
 #endif
 	
-	RuleName(RULE_RED_SEVEN+1) = "赤七"
-	RuleDescription(RULE_RED_SEVEN+1) = "赤ドラ(７の牌)の有無を設定します"
-	RuleTxt(0, RULE_RED_SEVEN+1) = "なし", "筒子", "索子", "筒子と索子"
+	RuleName(RULE_RED_SEVEN) = "赤七"
+	RuleDescription(RULE_RED_SEVEN) = "赤ドラ(７の牌)の有無を設定します"
+	RuleTxt(0, RULE_RED_SEVEN) = "なし", "筒子", "索子", "筒子と索子"
 #ifndef SANMAX
-	RuleTxt(4, RULE_RED_SEVEN+1) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
+	RuleTxt(4, RULE_RED_SEVEN) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
 #endif
 	
-	RuleName(RULE_WAREME+1) = "割れ目"
-	RuleDescription(RULE_WAREME+1) = "開門位置の倍付けの有無を設定します"
-	RuleTxt(0, RULE_WAREME+1) = "なし", "あり", "大割れ目"
+	RuleName(RULE_WAREME) = "割れ目"
+	RuleDescription(RULE_WAREME) = "開門位置の倍付けの有無を設定します"
+	RuleTxt(0, RULE_WAREME) = "なし", "あり", "大割れ目"
 	
-	RuleName(RULE_DOUKASEN+1) = "導火線"
-	RuleDescription(RULE_DOUKASEN+1) = "ツモ牌位置の倍付けの有無を設定します"
-	RuleTxt(0, RULE_DOUKASEN+1) = "なし", "あり"
+	RuleName(RULE_DOUKASEN) = "導火線"
+	RuleDescription(RULE_DOUKASEN) = "ツモ牌位置の倍付けの有無を設定します"
+	RuleTxt(0, RULE_DOUKASEN) = "なし", "あり"
 	
-	RuleName(RULE_DORA_TWICE+1) = "ドラドラ卓"
-	RuleDescription(RULE_DORA_TWICE+1) = "最初からドラを２枚めくるかを設定します"
-	RuleTxt(0, RULE_DORA_TWICE+1) = "なし", "あり", "ゾロ目のみ"
+	RuleName(RULE_DORA_TWICE) = "ドラドラ卓"
+	RuleDescription(RULE_DORA_TWICE) = "最初からドラを２枚めくるかを設定します"
+	RuleTxt(0, RULE_DORA_TWICE) = "なし", "あり", "ゾロ目のみ"
 	
-	RuleName(RULE_LIMITLESS+1) = "青天井計算"
-	RuleDescription(RULE_LIMITLESS+1) = "点数計算に満貫などの際限を設けず計算するかを設定します"
-	RuleTxt(0, RULE_LIMITLESS+1) = "なし", "あり(役満は基本2.5M)", "あり(役満は１３飜)"
+	RuleName(RULE_LIMITLESS) = "青天井計算"
+	RuleDescription(RULE_LIMITLESS) = "点数計算に満貫などの際限を設けず計算するかを設定します"
+	RuleTxt(0, RULE_LIMITLESS) = "なし", "あり(役満は基本2.5M)", "あり(役満は１３飜)"
 	
-	RuleName(RULE_NAGATACHO+1) = "永田町ルール"
-	RuleDescription(RULE_NAGATACHO+1) = "サイコロで決まるドラと七索の常設ドラを設定します"
-	RuleTxt(0, RULE_NAGATACHO+1) = "なし", "あり"
+	RuleName(RULE_NAGATACHO) = "永田町ルール"
+	RuleDescription(RULE_NAGATACHO) = "サイコロで決まるドラと七索の常設ドラを設定します"
+	RuleTxt(0, RULE_NAGATACHO) = "なし", "あり"
 	
 #ifdef SANMAX
-	RuleName(RULE_FLOWER_TILES+1) = "抜きドラ"
-	RuleDescription(RULE_FLOWER_TILES+1) = "抜きドラの有無を設定します"
-	RuleTxt(0, RULE_FLOWER_TILES+1) = "なし", "北４枚"
+	RuleName(RULE_FLOWER_TILES) = "抜きドラ"
+	RuleDescription(RULE_FLOWER_TILES) = "抜きドラの有無を設定します"
+	RuleTxt(0, RULE_FLOWER_TILES) = "なし", "北４枚"
 #else
 #ifdef SANMAS
-	RuleName(RULE_FLOWER_TILES+1) = "抜きドラ"
-	RuleDescription(RULE_FLOWER_TILES+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_FLOWER_TILES+1) = "Ｎ／Ａ"
+	RuleName(RULE_FLOWER_TILES) = "抜きドラ"
+	RuleDescription(RULE_FLOWER_TILES) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_FLOWER_TILES) = "Ｎ／Ａ"
 #else
-	RuleName(RULE_FLOWER_TILES+1) = "花牌"
-	RuleDescription(RULE_FLOWER_TILES+1) = "花牌の有無を設定します"
-	RuleTxt(0, RULE_FLOWER_TILES+1) = "なし", "春夏秋冬", "梅蘭菊竹", "８枚"
+	RuleName(RULE_FLOWER_TILES) = "花牌"
+	RuleDescription(RULE_FLOWER_TILES) = "花牌の有無を設定します"
+	RuleTxt(0, RULE_FLOWER_TILES) = "なし", "春夏秋冬", "梅蘭菊竹", "８枚"
 #endif
 #endif
 
-	RuleName(RULE_ALICE+1) = "アリス"
-	RuleDescription(RULE_ALICE+1) = "門前和了りの時に牌をめくって得られる祝儀を設定します"
-	RuleTxt(0, RULE_ALICE+1) = "なし", "あり"
+	RuleName(RULE_ALICE) = "アリス"
+	RuleDescription(RULE_ALICE) = "門前和了りの時に牌をめくって得られる祝儀を設定します"
+	RuleTxt(0, RULE_ALICE) = "なし", "あり"
 	
-	RuleName(RULE_DORA_INDICATOR+1) = "ドラ表示牌"
-	RuleDescription(RULE_DORA_INDICATOR+1) = "ドラ表示牌の意味を設定します"
-	RuleTxt(0, RULE_DORA_INDICATOR+1) = "ネクスト牌", "現物", "前後と現物"
+	RuleName(RULE_DORA_INDICATOR) = "ドラ表示牌"
+	RuleDescription(RULE_DORA_INDICATOR) = "ドラ表示牌の意味を設定します"
+	RuleTxt(0, RULE_DORA_INDICATOR) = "ネクスト牌", "現物", "前後と現物"
 	
-	RuleName(RULE_TSUMO_PINFU+1) = "自摸平和"
-	RuleDescription(RULE_TSUMO_PINFU+1) = "平和と門前清自摸和の複合の有無を設定します"
-	RuleTxt(0, RULE_TSUMO_PINFU+1) = "あり", "なし"
+	RuleName(RULE_TSUMO_PINFU) = "自摸平和"
+	RuleDescription(RULE_TSUMO_PINFU) = "平和と門前清自摸和の複合の有無を設定します"
+	RuleTxt(0, RULE_TSUMO_PINFU) = "あり", "なし"
 	
-	RuleName(RULE_DOUBLE_YAKUMAN+1) = "単一ダブル役満"
+	RuleName(RULE_DOUBLE_YAKUMAN) = "単一ダブル役満"
 #ifdef SANMAS
-	RuleDescription(RULE_DOUBLE_YAKUMAN+1) = "純正九連宝燈・四暗刻単騎聴のダブル役満扱いの有無を設定します"
+	RuleDescription(RULE_DOUBLE_YAKUMAN) = "純正九連宝燈・四暗刻単騎聴のダブル役満扱いの有無を設定します"
 #else
-	RuleDescription(RULE_DOUBLE_YAKUMAN+1) = "国士無双十三面張・純正九連宝燈・四暗刻単騎聴・大四喜のダブル役満扱いの有無を設定します"
+	RuleDescription(RULE_DOUBLE_YAKUMAN) = "国士無双十三面張・純正九連宝燈・四暗刻単騎聴・大四喜のダブル役満扱いの有無を設定します"
 #endif
-	RuleTxt(0, RULE_DOUBLE_YAKUMAN+1) = "あり", "なし"
+	RuleTxt(0, RULE_DOUBLE_YAKUMAN) = "あり", "なし"
 	
-	RuleName(RULE_SEVEN_HONOR_PAIRS+1) = "字一色七対子"
+	RuleName(RULE_SEVEN_HONOR_PAIRS) = "字一色七対子"
 #ifdef SANMAS
-	RuleDescription(RULE_SEVEN_HONOR_PAIRS+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SEVEN_HONOR_PAIRS+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SEVEN_HONOR_PAIRS) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SEVEN_HONOR_PAIRS) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SEVEN_HONOR_PAIRS+1) = "字牌だけの七対子を設定します"
-	RuleTxt(0, RULE_SEVEN_HONOR_PAIRS+1) = "あり", "なし", "ダブル役満"
+	RuleDescription(RULE_SEVEN_HONOR_PAIRS) = "字牌だけの七対子を設定します"
+	RuleTxt(0, RULE_SEVEN_HONOR_PAIRS) = "あり", "なし", "ダブル役満"
 #endif
 	
 #ifdef SANMAS
-	RuleName(RULE_DRAGONLESS_ALL_GREEN+1) = "緑一色"
-	RuleDescription(RULE_DRAGONLESS_ALL_GREEN+1) = "緑一色の飜数を設定します"
-	RuleTxt(0, RULE_DRAGONLESS_ALL_GREEN+1) = "役満", ">>>", "ダブル役満"
+	RuleName(RULE_DRAGONLESS_ALL_GREEN) = "緑一色"
+	RuleDescription(RULE_DRAGONLESS_ALL_GREEN) = "緑一色の飜数を設定します"
+	RuleTxt(0, RULE_DRAGONLESS_ALL_GREEN) = "役満", ">>>", "ダブル役満"
 #else
-	RuleName(RULE_DRAGONLESS_ALL_GREEN+1) = "発無し緑一色"
-	RuleDescription(RULE_DRAGONLESS_ALL_GREEN+1) = "発を使わなくても緑一色となるかを設定します"
-	RuleTxt(0, RULE_DRAGONLESS_ALL_GREEN+1) = "あり", "なし", "ダブル役満"
+	RuleName(RULE_DRAGONLESS_ALL_GREEN) = "発無し緑一色"
+	RuleDescription(RULE_DRAGONLESS_ALL_GREEN) = "発を使わなくても緑一色となるかを設定します"
+	RuleTxt(0, RULE_DRAGONLESS_ALL_GREEN) = "あり", "なし", "ダブル役満"
 #endif
 	
-	RuleName(RULE_RIICHI_IPPATSU+1) = "立直一発"
-	RuleDescription(RULE_RIICHI_IPPATSU+1) = "立直一発の有無を設定します"
-	RuleTxt(0, RULE_RIICHI_IPPATSU+1) = "あり", "なし", "あり(縛りを満たさない)", "チップのみ"
+	RuleName(RULE_RIICHI_IPPATSU) = "立直一発"
+	RuleDescription(RULE_RIICHI_IPPATSU) = "立直一発の有無を設定します"
+	RuleTxt(0, RULE_RIICHI_IPPATSU) = "あり", "なし", "あり(縛りを満たさない)", "チップのみ"
 	
-	RuleName(RULE_SEVEN_PAIRS+1) = "七対子"
-	RuleDescription(RULE_SEVEN_PAIRS+1) = "七対子の飜数を設定します"
-	RuleTxt(0, RULE_SEVEN_PAIRS+1) = "２飜２５符", "１飜５０符"
+	RuleName(RULE_SEVEN_PAIRS) = "七対子"
+	RuleDescription(RULE_SEVEN_PAIRS) = "七対子の飜数を設定します"
+	RuleTxt(0, RULE_SEVEN_PAIRS) = "２飜２５符", "１飜５０符"
 	
-	RuleName(RULE_RIICHI_SHIBARI+1) = "立直縛り"
-	RuleDescription(RULE_RIICHI_SHIBARI+1) = "立直縛りの有無を設定します"
-	RuleTxt(0, RULE_RIICHI_SHIBARI+1) = "なし", "あり"
+	RuleName(RULE_RIICHI_SHIBARI) = "立直縛り"
+	RuleDescription(RULE_RIICHI_SHIBARI) = "立直縛りの有無を設定します"
+	RuleTxt(0, RULE_RIICHI_SHIBARI) = "なし", "あり"
 	
-	RuleName(RULE_EXPOSED_PINFU+1) = "喰い平"
-	RuleDescription(RULE_EXPOSED_PINFU+1) = "鳴いた平和形の符を設定します"
-	RuleTxt(0, RULE_EXPOSED_PINFU+1) = "３０符", "２０符", "１飜30符(縛りを満たさない)", "１飜20符(縛りを満たさない)", "１飜３０符", "１飜２０符"
+	RuleName(RULE_EXPOSED_PINFU) = "喰い平"
+	RuleDescription(RULE_EXPOSED_PINFU) = "鳴いた平和形の符を設定します"
+	RuleTxt(0, RULE_EXPOSED_PINFU) = "３０符", "２０符", "１飜30符(縛りを満たさない)", "１飜20符(縛りを満たさない)", "１飜３０符", "１飜２０符"
 
-	RuleName(RULE_ROUND_TO_MANGAN+1) = "切り上げ満貫"
-	RuleDescription(RULE_ROUND_TO_MANGAN+1) = "三十符四飜、六十符三飜を満貫とみなすかを設定します"
-	RuleTxt(0, RULE_ROUND_TO_MANGAN+1) = "なし", "あり"
+	RuleName(RULE_ROUND_TO_MANGAN) = "切り上げ満貫"
+	RuleDescription(RULE_ROUND_TO_MANGAN) = "三十符四飜、六十符三飜を満貫とみなすかを設定します"
+	RuleTxt(0, RULE_ROUND_TO_MANGAN) = "なし", "あり"
 
-	RuleName(RULE_RED_ONE+1) = "赤一"
-	RuleDescription(RULE_RED_ONE+1) = "赤ドラ(１の牌)の有無を設定します"
-	RuleTxt(0, RULE_RED_ONE+1) = "なし", "筒子", "索子", "筒子と索子", "萬子", "萬子と筒子", "萬子と索子", "全種類"
+	RuleName(RULE_RED_ONE) = "赤一"
+	RuleDescription(RULE_RED_ONE) = "赤ドラ(１の牌)の有無を設定します"
+	RuleTxt(0, RULE_RED_ONE) = "なし", "筒子", "索子", "筒子と索子", "萬子", "萬子と筒子", "萬子と索子", "全種類"
 
-	RuleName(RULE_RED_NINE+1) = "赤九"
-	RuleDescription(RULE_RED_NINE+1) = "赤ドラ(９の牌)の有無を設定します"
-	RuleTxt(0, RULE_RED_NINE+1) = "なし", "筒子", "索子", "筒子と索子", "萬子", "萬子と筒子", "萬子と索子", "全種類"
+	RuleName(RULE_RED_NINE) = "赤九"
+	RuleDescription(RULE_RED_NINE) = "赤ドラ(９の牌)の有無を設定します"
+	RuleTxt(0, RULE_RED_NINE) = "なし", "筒子", "索子", "筒子と索子", "萬子", "萬子と筒子", "萬子と索子", "全種類"
 
-	RuleName(RULE_RED_TWO+1) = "赤二"
-	RuleDescription(RULE_RED_TWO+1) = "赤ドラ(２の牌)の有無を設定します"
-	RuleTxt(0, RULE_RED_TWO+1) = "なし", "筒子", "索子", "筒子と索子"
+	RuleName(RULE_RED_TWO) = "赤二"
+	RuleDescription(RULE_RED_TWO) = "赤ドラ(２の牌)の有無を設定します"
+	RuleTxt(0, RULE_RED_TWO) = "なし", "筒子", "索子", "筒子と索子"
 #ifndef SANMAX
-	RuleTxt(4, RULE_RED_TWO+1) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
+	RuleTxt(4, RULE_RED_TWO) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
 #endif
 
-	RuleName(RULE_RED_FOUR+1) = "赤四"
-	RuleDescription(RULE_RED_FOUR+1) = "赤ドラ(４の牌)の有無を設定します"
-	RuleTxt(0, RULE_RED_FOUR+1) = "なし", "筒子", "索子", "筒子と索子"
+	RuleName(RULE_RED_FOUR) = "赤四"
+	RuleDescription(RULE_RED_FOUR) = "赤ドラ(４の牌)の有無を設定します"
+	RuleTxt(0, RULE_RED_FOUR) = "なし", "筒子", "索子", "筒子と索子"
 #ifndef SANMAX
-	RuleTxt(4, RULE_RED_FOUR+1) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
+	RuleTxt(4, RULE_RED_FOUR) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
 #endif
 
-	RuleName(RULE_RED_SIX+1) = "赤六"
-	RuleDescription(RULE_RED_SIX+1) = "赤ドラ(６の牌)の有無を設定します"
-	RuleTxt(0, RULE_RED_SIX+1) = "なし", "筒子", "索子", "筒子と索子"
+	RuleName(RULE_RED_SIX) = "赤六"
+	RuleDescription(RULE_RED_SIX) = "赤ドラ(６の牌)の有無を設定します"
+	RuleTxt(0, RULE_RED_SIX) = "なし", "筒子", "索子", "筒子と索子"
 #ifndef SANMAX
-	RuleTxt(4, RULE_RED_SIX+1) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
+	RuleTxt(4, RULE_RED_SIX) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
 #endif
 
-	RuleName(RULE_RED_EIGHT+1) = "赤八"
-	RuleDescription(RULE_RED_EIGHT+1) = "赤ドラ(８の牌)の有無を設定します"
-	RuleTxt(0, RULE_RED_EIGHT+1) = "なし", "筒子", "索子", "筒子と索子"
+	RuleName(RULE_RED_EIGHT) = "赤八"
+	RuleDescription(RULE_RED_EIGHT) = "赤ドラ(８の牌)の有無を設定します"
+	RuleTxt(0, RULE_RED_EIGHT) = "なし", "筒子", "索子", "筒子と索子"
 #ifndef SANMAX
-	RuleTxt(4, RULE_RED_EIGHT+1) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
+	RuleTxt(4, RULE_RED_EIGHT) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
 #endif
 
-	RuleName(RULE_OPEN_RIICHI+1) = "オープン立直"
-	RuleDescription(RULE_OPEN_RIICHI+1) = "オープン立直の有無を設定します"
-	RuleTxt(0, RULE_OPEN_RIICHI+1) = "なし", "あり"
+	RuleName(RULE_OPEN_RIICHI) = "オープン立直"
+	RuleDescription(RULE_OPEN_RIICHI) = "オープン立直の有無を設定します"
+	RuleTxt(0, RULE_OPEN_RIICHI) = "なし", "あり"
 
-	RuleName(RULE_DAISHARIN+1) = "大車輪"
-	RuleDescription(RULE_DAISHARIN+1) = "大車輪の有無と価値を設定します(2～8の純正のみ)"
-	RuleTxt(0, RULE_DAISHARIN+1) = "なし", "役満", "ダブル役満"
+	RuleName(RULE_DAISHARIN) = "大車輪"
+	RuleDescription(RULE_DAISHARIN) = "大車輪の有無と価値を設定します(2～8の純正のみ)"
+	RuleTxt(0, RULE_DAISHARIN) = "なし", "役満", "ダブル役満"
 
-	RuleName(RULE_SANRENKOH+1) = "三連刻"
-	RuleDescription(RULE_SANRENKOH+1) = "三連刻の有無と価値を設定します"
-	RuleTxt(0, RULE_SANRENKOH+1) = "なし", "２飜", "３飜"
+	RuleName(RULE_SANRENKOH) = "三連刻"
+	RuleDescription(RULE_SANRENKOH) = "三連刻の有無と価値を設定します"
+	RuleTxt(0, RULE_SANRENKOH) = "なし", "２飜", "３飜"
 
-	RuleName(RULE_SUURENKOH+1) = "四連刻"
-	RuleDescription(RULE_SUURENKOH+1) = "四連刻の有無と価値を設定します"
-	RuleTxt(0, RULE_SUURENKOH+1) = "なし", "役満", "８飜(対々和込み)"
+	RuleName(RULE_SUURENKOH) = "四連刻"
+	RuleDescription(RULE_SUURENKOH) = "四連刻の有無と価値を設定します"
+	RuleTxt(0, RULE_SUURENKOH) = "なし", "役満", "８飜(対々和込み)"
 
-	RuleName(RULE_ISSHOKU_SANJUN+1) = "一色三順"
-	RuleDescription(RULE_ISSHOKU_SANJUN+1) = "一色三順の有無と価値を設定します"
-	RuleTxt(0, RULE_ISSHOKU_SANJUN+1) = "なし", "２飜(門前のみ)", "２飜(喰い下がり有)", "３飜(門前のみ)", "３飜(喰い下がり有)"
+	RuleName(RULE_ISSHOKU_SANJUN) = "一色三順"
+	RuleDescription(RULE_ISSHOKU_SANJUN) = "一色三順の有無と価値を設定します"
+	RuleTxt(0, RULE_ISSHOKU_SANJUN) = "なし", "２飜(門前のみ)", "２飜(喰い下がり有)", "３飜(門前のみ)", "３飜(喰い下がり有)"
 
-	RuleName(RULE_ISSHOKU_SUUJUN+1) = "一色四順"
-	RuleDescription(RULE_ISSHOKU_SUUJUN+1) = "一色四順の有無と価値を設定します"
-	RuleTxt(0, RULE_ISSHOKU_SUUJUN+1) = "なし", "役満"
+	RuleName(RULE_ISSHOKU_SUUJUN) = "一色四順"
+	RuleDescription(RULE_ISSHOKU_SUUJUN) = "一色四順の有無と価値を設定します"
+	RuleTxt(0, RULE_ISSHOKU_SUUJUN) = "なし", "役満"
 
-	RuleName(RULE_RENHOH+1) = "人和"
-	RuleDescription(RULE_RENHOH+1) = "人和の有無と価値を設定します"
-	RuleTxt(0, RULE_RENHOH+1) = "なし", "役満", "倍満", "満貫"
+	RuleName(RULE_RENHOH) = "人和"
+	RuleDescription(RULE_RENHOH) = "人和の有無と価値を設定します"
+	RuleTxt(0, RULE_RENHOH) = "なし", "役満", "倍満", "満貫"
 
-	RuleName(RULE_SHIISAN_PUUTAA+1) = "十三不塔"
+	RuleName(RULE_SHIISAN_PUUTAA) = "十三不塔"
 #ifdef SANMAS
-	RuleDescription(RULE_SHIISAN_PUUTAA+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SHIISAN_PUUTAA+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SHIISAN_PUUTAA) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SHIISAN_PUUTAA) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SHIISAN_PUUTAA+1) = "十三不塔の有無と価値を設定します"
-	RuleTxt(0, RULE_SHIISAN_PUUTAA+1) = "なし", "役満", "満貫"
+	RuleDescription(RULE_SHIISAN_PUUTAA) = "十三不塔の有無と価値を設定します"
+	RuleTxt(0, RULE_SHIISAN_PUUTAA) = "なし", "役満", "満貫"
 #endif
 
-	RuleName(RULE_PAARENCHAN+1) = "八連荘"
-	RuleDescription(RULE_PAARENCHAN+1) = "八連荘の有無と価値を設定します"
-	RuleTxt(0, RULE_PAARENCHAN+1) = "なし", "役満"
+	RuleName(RULE_PAARENCHAN) = "八連荘"
+	RuleDescription(RULE_PAARENCHAN) = "八連荘の有無と価値を設定します"
+	RuleTxt(0, RULE_PAARENCHAN) = "なし", "役満"
 
-	RuleName(RULE_NAGASHI_MANGAN+1) = "流し満貫"
-	RuleDescription(RULE_NAGASHI_MANGAN+1) = "流し満貫の有無と価値を設定します"
-	RuleTxt(0, RULE_NAGASHI_MANGAN+1) = "満貫", "跳満", "倍満", "役満", "なし"
+	RuleName(RULE_NAGASHI_MANGAN) = "流し満貫"
+	RuleDescription(RULE_NAGASHI_MANGAN) = "流し満貫の有無と価値を設定します"
+	RuleTxt(0, RULE_NAGASHI_MANGAN) = "満貫", "跳満", "倍満", "役満", "なし"
 
-	RuleName(RULE_SANSHOKU_DOUKOH+1) = "三色同刻"
-	RuleDescription(RULE_SANSHOKU_DOUKOH+1) = "三色同刻の飜数を設定します"
-	RuleTxt(0, RULE_SANSHOKU_DOUKOH+1) = "２飜", "３飜"
+	RuleName(RULE_SANSHOKU_DOUKOH) = "三色同刻"
+	RuleDescription(RULE_SANSHOKU_DOUKOH) = "三色同刻の飜数を設定します"
+	RuleTxt(0, RULE_SANSHOKU_DOUKOH) = "２飜", "３飜"
 
-	RuleName(RULE_SANKANTSU+1) = "三槓子"
-	RuleDescription(RULE_SANKANTSU+1) = "三槓子の飜数を設定します"
-	RuleTxt(0, RULE_SANKANTSU+1) = "２飜", "３飜", "役満"
+	RuleName(RULE_SANKANTSU) = "三槓子"
+	RuleDescription(RULE_SANKANTSU) = "三槓子の飜数を設定します"
+	RuleTxt(0, RULE_SANKANTSU) = "２飜", "３飜", "役満"
 
-	RuleName(RULE_RYANPEIKOU+1) = "二盃口"
-	RuleDescription(RULE_RYANPEIKOU+1) = "二盃口の飜数を設定します"
-	RuleTxt(0, RULE_RYANPEIKOU+1) = "３飜", "２飜"
+	RuleName(RULE_RYANPEIKOU) = "二盃口"
+	RuleDescription(RULE_RYANPEIKOU) = "二盃口の飜数を設定します"
+	RuleTxt(0, RULE_RYANPEIKOU) = "３飜", "２飜"
 
-	RuleName(RULE_HONROUTOU+1) = "混老頭"
+	RuleName(RULE_HONROUTOU) = "混老頭"
 #ifdef SANMAS
-	RuleDescription(RULE_HONROUTOU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_HONROUTOU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_HONROUTOU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_HONROUTOU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_HONROUTOU+1) = "混老頭の飜数を設定します"
-	RuleTxt(0, RULE_HONROUTOU+1) = "２飜", "３飜"
+	RuleDescription(RULE_HONROUTOU) = "混老頭の飜数を設定します"
+	RuleTxt(0, RULE_HONROUTOU) = "２飜", "３飜"
 #endif
 
-	RuleName(RULE_CHINIISOH+1) = "清一色"
-	RuleDescription(RULE_CHINIISOH+1) = "清一色の飜数を設定します"
-	RuleTxt(0, RULE_CHINIISOH+1) = "６飜", "４飜"
+	RuleName(RULE_CHINIISOH) = "清一色"
+	RuleDescription(RULE_CHINIISOH) = "清一色の飜数を設定します"
+	RuleTxt(0, RULE_CHINIISOH) = "６飜", "４飜"
 
-	RuleName(RULE_SUUKANTSU+1) = "四槓子"
-	RuleDescription(RULE_SUUKANTSU+1) = "四槓子の飜数と包の有無を設定します"
-	RuleTxt(0, RULE_SUUKANTSU+1) = "役満", "ダブル役満", "役満(包あり)", "ダブル役満(包あり)"
+	RuleName(RULE_SUUKANTSU) = "四槓子"
+	RuleDescription(RULE_SUUKANTSU) = "四槓子の飜数と包の有無を設定します"
+	RuleTxt(0, RULE_SUUKANTSU) = "役満", "ダブル役満", "役満(包あり)", "ダブル役満(包あり)"
 
-	RuleName(RULE_TENHOH+1) = "天和"
-	RuleDescription(RULE_TENHOH+1) = "天和の飜数を設定します"
-	RuleTxt(0, RULE_TENHOH+1) = "役満", "ダブル役満"
+	RuleName(RULE_TENHOH) = "天和"
+	RuleDescription(RULE_TENHOH) = "天和の飜数を設定します"
+	RuleTxt(0, RULE_TENHOH) = "役満", "ダブル役満"
 
-	RuleName(RULE_DAICHIKURIN+1) = "大竹林"
-	RuleDescription(RULE_DAICHIKURIN+1) = "大竹林の有無と価値を設定します(大車輪の索子版)"
-	RuleTxt(0, RULE_DAICHIKURIN+1) = "なし", "役満"
+	RuleName(RULE_DAICHIKURIN) = "大竹林"
+	RuleDescription(RULE_DAICHIKURIN) = "大竹林の有無と価値を設定します(大車輪の索子版)"
+	RuleTxt(0, RULE_DAICHIKURIN) = "なし", "役満"
 
-	RuleName(RULE_DAISUURIN+1) = "大数隣"
+	RuleName(RULE_DAISUURIN) = "大数隣"
 #ifdef SANMAX
-	RuleDescription(RULE_DAISUURIN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_DAISUURIN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_DAISUURIN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_DAISUURIN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_DAISUURIN+1) = "大数隣の有無と価値を設定します(大車輪の萬子版)"
-	RuleTxt(0, RULE_DAISUURIN+1) = "なし", "役満"
+	RuleDescription(RULE_DAISUURIN) = "大数隣の有無と価値を設定します(大車輪の萬子版)"
+	RuleTxt(0, RULE_DAISUURIN) = "なし", "役満"
 #endif
 	
-	RuleName(RULE_BENIKUJAKU+1) = "紅孔雀"
+	RuleName(RULE_BENIKUJAKU) = "紅孔雀"
 #ifdef SANMAS
-	RuleDescription(RULE_BENIKUJAKU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_BENIKUJAKU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_BENIKUJAKU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_BENIKUJAKU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_BENIKUJAKU+1) = "紅孔雀の有無と価値を設定します(索子の１５７９と中)"
-	RuleTxt(0, RULE_BENIKUJAKU+1) = "なし", "役満"
+	RuleDescription(RULE_BENIKUJAKU) = "紅孔雀の有無と価値を設定します(索子の１５７９と中)"
+	RuleTxt(0, RULE_BENIKUJAKU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_KOUITTEN+1) = "紅一点"
+	RuleName(RULE_KOUITTEN) = "紅一点"
 #ifdef SANMAS
-	RuleDescription(RULE_KOUITTEN+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_KOUITTEN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KOUITTEN) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_KOUITTEN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KOUITTEN+1) = "紅一点の有無と価値を設定します(索子の２３４６８と中)"
-	RuleTxt(0, RULE_KOUITTEN+1) = "なし", "役満"
+	RuleDescription(RULE_KOUITTEN) = "紅一点の有無と価値を設定します(索子の２３４６８と中)"
+	RuleTxt(0, RULE_KOUITTEN) = "なし", "役満"
 #endif
 
-	RuleName(RULE_RYUUIISOHRIN+1) = "緑一色輪"
-	RuleDescription(RULE_RYUUIISOHRIN+1) = "緑一色輪の有無と価値を設定します(五索が雀頭で残りは索子の２３４６８)"
-	RuleTxt(0, RULE_RYUUIISOHRIN+1) = "なし", "役満"
+	RuleName(RULE_RYUUIISOHRIN) = "緑一色輪"
+	RuleDescription(RULE_RYUUIISOHRIN) = "緑一色輪の有無と価値を設定します(五索が雀頭で残りは索子の２３４６８)"
+	RuleTxt(0, RULE_RYUUIISOHRIN) = "なし", "役満"
 
-	RuleName(RULE_HEIIISOH+1) = "黒一色"
+	RuleName(RULE_HEIIISOH) = "黒一色"
 #ifdef SANMAS
-	RuleDescription(RULE_HEIIISOH+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_HEIIISOH+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_HEIIISOH) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_HEIIISOH) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_HEIIISOH+1) = "黒一色の有無と価値を設定します(筒子の２４８と風牌)"
-	RuleTxt(0, RULE_HEIIISOH+1) = "なし", "役満"
+	RuleDescription(RULE_HEIIISOH) = "黒一色の有無と価値を設定します(筒子の２４８と風牌)"
+	RuleTxt(0, RULE_HEIIISOH) = "なし", "役満"
 #endif
 
-	RuleName(RULE_NO_RED+1) = "断紅和"
-	RuleDescription(RULE_NO_RED+1) = "断紅和の有無と価値を設定します(248筒・23468索・風牌・白・発)"
+	RuleName(RULE_NO_RED) = "断紅和"
+	RuleDescription(RULE_NO_RED) = "断紅和の有無と価値を設定します(248筒・23468索・風牌・白・発)"
 #ifdef SANMAS
-	RuleTxt(0, RULE_NO_RED+1) = "なし", "３飜", "６飜"
+	RuleTxt(0, RULE_NO_RED) = "なし", "３飜", "６飜"
 #else
-	RuleTxt(0, RULE_NO_RED+1) = "なし", "３飜", "混断紅3飜、清断紅6飜"
+	RuleTxt(0, RULE_NO_RED) = "なし", "３飜", "混断紅3飜、清断紅6飜"
 #endif
 
-	RuleName(RULE_KAGA_MILLION+1) = "百万石"
+	RuleName(RULE_KAGA_MILLION) = "百万石"
 #ifdef SANMAX
-	RuleDescription(RULE_KAGA_MILLION+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_KAGA_MILLION+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KAGA_MILLION) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_KAGA_MILLION) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KAGA_MILLION+1) = "百万石の有無と価値を設定します(萬子の清一色で数字の合計が100以上)"
-	RuleTxt(0, RULE_KAGA_MILLION+1) = "なし", "役満", "役満(丁度百でダブル役満)"
+	RuleDescription(RULE_KAGA_MILLION) = "百万石の有無と価値を設定します(萬子の清一色で数字の合計が100以上)"
+	RuleTxt(0, RULE_KAGA_MILLION) = "なし", "役満", "役満(丁度百でダブル役満)"
 #endif
 
-	RuleName(RULE_SHIISAN_UUSHII+1) = "十三無靠"
+	RuleName(RULE_SHIISAN_UUSHII) = "十三無靠"
 #ifdef SANMAS
-	RuleDescription(RULE_SHIISAN_UUSHII+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SHIISAN_UUSHII+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SHIISAN_UUSHII) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SHIISAN_UUSHII) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SHIISAN_UUSHII+1) = "十三無靠の有無と価値を設定します(親の配牌か子の第一ツモで14枚全部が孤立牌)"
-	RuleTxt(0, RULE_SHIISAN_UUSHII+1) = "なし", "役満"
+	RuleDescription(RULE_SHIISAN_UUSHII) = "十三無靠の有無と価値を設定します(親の配牌か子の第一ツモで14枚全部が孤立牌)"
+	RuleTxt(0, RULE_SHIISAN_UUSHII) = "なし", "役満"
 #endif
 
-	RuleName(RULE_STELLAR_UUSHII+1) = "七星無靠"
+	RuleName(RULE_STELLAR_UUSHII) = "七星無靠"
 #ifdef SANMAS
-	RuleDescription(RULE_STELLAR_UUSHII+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_STELLAR_UUSHII+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_STELLAR_UUSHII) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_STELLAR_UUSHII) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_STELLAR_UUSHII+1) = "七星無靠の有無と価値を設定します(字牌7種を1枚ずつと、三色それぞれが別々の筋の浮き牌7枚)"
-	RuleTxt(0, RULE_STELLAR_UUSHII+1) = "なし", "役満"
+	RuleDescription(RULE_STELLAR_UUSHII) = "七星無靠の有無と価値を設定します(字牌7種を1枚ずつと、三色それぞれが別々の筋の浮き牌7枚)"
+	RuleTxt(0, RULE_STELLAR_UUSHII) = "なし", "役満"
 #endif
 
-	RuleName(RULE_BREAKING_PAARENCHAN+1) = "破回八連荘"
-	RuleDescription(RULE_BREAKING_PAARENCHAN+1) = "破回八連荘の有無と価値を設定します(親が八連荘の権利がある時の子の和了り)"
-	RuleTxt(0, RULE_BREAKING_PAARENCHAN+1) = "なし", "役満"
+	RuleName(RULE_BREAKING_PAARENCHAN) = "破回八連荘"
+	RuleDescription(RULE_BREAKING_PAARENCHAN) = "破回八連荘の有無と価値を設定します(親が八連荘の権利がある時の子の和了り)"
+	RuleTxt(0, RULE_BREAKING_PAARENCHAN) = "なし", "役満"
 
-	RuleName(RULE_THREE_OTAKAZE+1) = "客風三刻"
+	RuleName(RULE_THREE_OTAKAZE) = "客風三刻"
 #ifdef SANMAS
-	RuleDescription(RULE_THREE_OTAKAZE+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_THREE_OTAKAZE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_THREE_OTAKAZE) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_THREE_OTAKAZE) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_THREE_OTAKAZE+1) = "客風三刻の有無と価値を設定します(客風牌のみで三面子)"
-	RuleTxt(0, RULE_THREE_OTAKAZE+1) = "なし", "３飜"
+	RuleDescription(RULE_THREE_OTAKAZE) = "客風三刻の有無と価値を設定します(客風牌のみで三面子)"
+	RuleTxt(0, RULE_THREE_OTAKAZE) = "なし", "３飜"
 #endif
 
-	RuleName(RULE_THREE_WINDS+1) = "三風刻"
+	RuleName(RULE_THREE_WINDS) = "三風刻"
 #ifdef SANMAS
-	RuleDescription(RULE_THREE_WINDS+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_THREE_WINDS+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_THREE_WINDS) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_THREE_WINDS) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_THREE_WINDS+1) = "三風刻の有無と価値を設定します(風牌で3刻子、雀頭は風牌以外)"
-	RuleTxt(0, RULE_THREE_WINDS+1) = "なし", "２飜"
+	RuleDescription(RULE_THREE_WINDS) = "三風刻の有無と価値を設定します(風牌で3刻子、雀頭は風牌以外)"
+	RuleTxt(0, RULE_THREE_WINDS) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_FOUR_HONORS+1) = "四字刻"
+	RuleName(RULE_FOUR_HONORS) = "四字刻"
 #ifdef SANMAS
-	RuleDescription(RULE_FOUR_HONORS+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_FOUR_HONORS+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_FOUR_HONORS) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_FOUR_HONORS) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_FOUR_HONORS+1) = "四字刻の有無と価値を設定します(字牌で4面子、数牌で雀頭)"
-	RuleTxt(0, RULE_FOUR_HONORS+1) = "なし", "役満"
+	RuleDescription(RULE_FOUR_HONORS) = "四字刻の有無と価値を設定します(字牌で4面子、数牌で雀頭)"
+	RuleTxt(0, RULE_FOUR_HONORS) = "なし", "役満"
 #endif
 
-	RuleName(RULE_FUUKA_SETSUGETSU+1) = "風花雪月"
+	RuleName(RULE_FUUKA_SETSUGETSU) = "風花雪月"
 #ifdef SANMAS
-	RuleDescription(RULE_FUUKA_SETSUGETSU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_FUUKA_SETSUGETSU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_FUUKA_SETSUGETSU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_FUUKA_SETSUGETSU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_FUUKA_SETSUGETSU+1) = "風花雪月の有無と価値を設定します(翻牌の風牌、五筒、白、一筒の刻子)"
-	RuleTxt(0, RULE_FUUKA_SETSUGETSU+1) = "なし", "役満"
+	RuleDescription(RULE_FUUKA_SETSUGETSU) = "風花雪月の有無と価値を設定します(翻牌の風牌、五筒、白、一筒の刻子)"
+	RuleTxt(0, RULE_FUUKA_SETSUGETSU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_KACHOU_FUUGETSU+1) = "花鳥風月"
+	RuleName(RULE_KACHOU_FUUGETSU) = "花鳥風月"
 #ifdef SANMAS
-	RuleDescription(RULE_KACHOU_FUUGETSU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_KACHOU_FUUGETSU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KACHOU_FUUGETSU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_KACHOU_FUUGETSU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KACHOU_FUUGETSU+1) = "花鳥風月の有無と価値を設定します(五筒、一索、翻牌の風牌、一筒の刻子)"
-	RuleTxt(0, RULE_KACHOU_FUUGETSU+1) = "なし", "役満"
+	RuleDescription(RULE_KACHOU_FUUGETSU) = "花鳥風月の有無と価値を設定します(五筒、一索、翻牌の風牌、一筒の刻子)"
+	RuleTxt(0, RULE_KACHOU_FUUGETSU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_TOHOKU_SHINKANSEN+1) = "東北新幹線"
+	RuleName(RULE_TOHOKU_SHINKANSEN) = "東北新幹線"
 #ifdef SANMAS
-	RuleDescription(RULE_TOHOKU_SHINKANSEN+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_TOHOKU_SHINKANSEN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_TOHOKU_SHINKANSEN) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_TOHOKU_SHINKANSEN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_TOHOKU_SHINKANSEN+1) = "東北新幹線の有無と価値を設定します(東と北と一気通貫)"
-	RuleTxt(0, RULE_TOHOKU_SHINKANSEN+1) = "なし", "役満", "役満(門前のみ)"
+	RuleDescription(RULE_TOHOKU_SHINKANSEN) = "東北新幹線の有無と価値を設定します(東と北と一気通貫)"
+	RuleTxt(0, RULE_TOHOKU_SHINKANSEN) = "なし", "役満", "役満(門前のみ)"
 #endif
 
-	RuleName(RULE_TOHOKU_EXPWY+1) = "東北自動車道"
+	RuleName(RULE_TOHOKU_EXPWY) = "東北自動車道"
 #ifdef SANMAS
-	RuleDescription(RULE_TOHOKU_EXPWY+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_TOHOKU_EXPWY+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_TOHOKU_EXPWY) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_TOHOKU_EXPWY) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_TOHOKU_EXPWY+1) = "東北自動車道の有無と価値を設定します(東、北、二筒、四筒、六筒)"
-	RuleTxt(0, RULE_TOHOKU_EXPWY+1) = "なし", "役満"
+	RuleDescription(RULE_TOHOKU_EXPWY) = "東北自動車道の有無と価値を設定します(東、北、二筒、四筒、六筒)"
+	RuleTxt(0, RULE_TOHOKU_EXPWY) = "なし", "役満"
 #endif
 
-	RuleName(RULE_CIVIL_WAR+1) = "南北戦争"
+	RuleName(RULE_CIVIL_WAR) = "南北戦争"
 #ifdef SANMAS
-	RuleDescription(RULE_CIVIL_WAR+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_CIVIL_WAR+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_CIVIL_WAR) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_CIVIL_WAR) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_CIVIL_WAR+1) = "南北戦争の有無と価値を設定します(東と南の刻子、ある色で1881、別の色で1885)"
-	RuleTxt(0, RULE_CIVIL_WAR+1) = "なし", "役満"
+	RuleDescription(RULE_CIVIL_WAR) = "南北戦争の有無と価値を設定します(東と南の刻子、ある色で1881、別の色で1885)"
+	RuleTxt(0, RULE_CIVIL_WAR) = "なし", "役満"
 #endif
 
-	RuleName(RULE_GOLDEN_GATE_BRIDGE+1) = "金門橋"
-	RuleDescription(RULE_GOLDEN_GATE_BRIDGE+1) = "金門橋の有無と価値を設定します(同色で123345567789の形)"
-	RuleTxt(0, RULE_GOLDEN_GATE_BRIDGE+1) = "なし", "役満"
+	RuleName(RULE_GOLDEN_GATE_BRIDGE) = "金門橋"
+	RuleDescription(RULE_GOLDEN_GATE_BRIDGE) = "金門橋の有無と価値を設定します(同色で123345567789の形)"
+	RuleTxt(0, RULE_GOLDEN_GATE_BRIDGE) = "なし", "役満"
 
-	RuleName(RULE_AO_NO_DOMON+1) = "青洞門"
+	RuleName(RULE_AO_NO_DOMON) = "青洞門"
 #ifdef SANMAS
-	RuleDescription(RULE_AO_NO_DOMON+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_AO_NO_DOMON+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_AO_NO_DOMON) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_AO_NO_DOMON) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_AO_NO_DOMON+1) = "青洞門の有無と価値を設定します(２４８筒と発と風牌)"
-	RuleTxt(0, RULE_AO_NO_DOMON+1) = "なし", "役満"
+	RuleDescription(RULE_AO_NO_DOMON) = "青洞門の有無と価値を設定します(２４８筒と発と風牌)"
+	RuleTxt(0, RULE_AO_NO_DOMON) = "なし", "役満"
 #endif
 
-	RuleName(RULE_UUMENCHII+1) = "五門斉"
+	RuleName(RULE_UUMENCHII) = "五門斉"
 #ifdef SANMAS
-	RuleDescription(RULE_UUMENCHII+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_UUMENCHII+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_UUMENCHII) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_UUMENCHII) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_UUMENCHII+1) = "五門斉の有無と価値を設定します(萬子、筒子、索子、風牌、三元牌を全て使う)"
-	RuleTxt(0, RULE_UUMENCHII+1) = "なし", "２飜"
+	RuleDescription(RULE_UUMENCHII) = "五門斉の有無と価値を設定します(萬子、筒子、索子、風牌、三元牌を全て使う)"
+	RuleTxt(0, RULE_UUMENCHII) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_KAMBURI+1) = "槓振り"
-	RuleDescription(RULE_KAMBURI+1) = "槓振りの有無と価値を設定します(槓した直後の捨て牌でロン)"
-	RuleTxt(0, RULE_KAMBURI+1) = "なし", "１飜"
+	RuleName(RULE_KAMBURI) = "槓振り"
+	RuleDescription(RULE_KAMBURI) = "槓振りの有無と価値を設定します(槓した直後の捨て牌でロン)"
+	RuleTxt(0, RULE_KAMBURI) = "なし", "１飜"
 
-	RuleName(RULE_TOUKANHOH+1) = "頭槓和"
-	RuleDescription(RULE_TOUKANHOH+1) = "頭槓和の有無と価値を設定します(純粋な一巡目に槓をして嶺上開花)"
-	RuleTxt(0, RULE_TOUKANHOH+1) = "なし", "役満"
+	RuleName(RULE_TOUKANHOH) = "頭槓和"
+	RuleDescription(RULE_TOUKANHOH) = "頭槓和の有無と価値を設定します(純粋な一巡目に槓をして嶺上開花)"
+	RuleTxt(0, RULE_TOUKANHOH) = "なし", "役満"
 
-	RuleName(RULE_RENKAN_KAIHOH+1) = "連槓開花"
-	RuleDescription(RULE_RENKAN_KAIHOH+1) = "連槓開花の有無と価値を設定します(立て続けに槓をして嶺上開花)"
-	RuleTxt(0, RULE_RENKAN_KAIHOH+1) = "なし", "２飜"
+	RuleName(RULE_RENKAN_KAIHOH) = "連槓開花"
+	RuleDescription(RULE_RENKAN_KAIHOH) = "連槓開花の有無と価値を設定します(立て続けに槓をして嶺上開花)"
+	RuleTxt(0, RULE_RENKAN_KAIHOH) = "なし", "２飜"
 
-	RuleName(RULE_UUPIN_KAIHOH+1) = "五筒開花"
-	RuleDescription(RULE_UUPIN_KAIHOH+1) = "五筒開花の有無と価値を設定します(五筒で嶺上開花)"
-	RuleTxt(0, RULE_UUPIN_KAIHOH+1) = "なし", "役満", "４飜"
+	RuleName(RULE_UUPIN_KAIHOH) = "五筒開花"
+	RuleDescription(RULE_UUPIN_KAIHOH) = "五筒開花の有無と価値を設定します(五筒で嶺上開花)"
+	RuleTxt(0, RULE_UUPIN_KAIHOH) = "なし", "役満", "４飜"
 
-	RuleName(RULE_RYANZOH_CHANKAN+1) = "二索槍槓"
-	RuleDescription(RULE_RYANZOH_CHANKAN+1) = "二索槍槓の有無と価値を設定します(二索で搶槓)"
-	RuleTxt(0, RULE_RYANZOH_CHANKAN+1) = "なし", "役満", "４飜"
+	RuleName(RULE_RYANZOH_CHANKAN) = "二索槍槓"
+	RuleDescription(RULE_RYANZOH_CHANKAN) = "二索槍槓の有無と価値を設定します(二索で搶槓)"
+	RuleTxt(0, RULE_RYANZOH_CHANKAN) = "なし", "役満", "４飜"
 
-	RuleName(RULE_IIPIN_MOYUE+1) = "一筒摸月"
-	RuleDescription(RULE_IIPIN_MOYUE+1) = "一筒摸月の有無と価値を設定します(一筒で海底摸月)"
-	RuleTxt(0, RULE_IIPIN_MOYUE+1) = "なし", "役満", "４飜"
+	RuleName(RULE_IIPIN_MOYUE) = "一筒摸月"
+	RuleDescription(RULE_IIPIN_MOYUE) = "一筒摸月の有無と価値を設定します(一筒で海底摸月)"
+	RuleTxt(0, RULE_IIPIN_MOYUE) = "なし", "役満", "４飜"
 
-	RuleName(RULE_CHUUPIN_RAOYUI+1) = "九筒撈魚"
-	RuleDescription(RULE_CHUUPIN_RAOYUI+1) = "九筒撈魚の有無と価値を設定します(九筒で河底撈魚)"
-	RuleTxt(0, RULE_CHUUPIN_RAOYUI+1) = "なし", "役満", "４飜"
+	RuleName(RULE_CHUUPIN_RAOYUI) = "九筒撈魚"
+	RuleDescription(RULE_CHUUPIN_RAOYUI) = "九筒撈魚の有無と価値を設定します(九筒で河底撈魚)"
+	RuleTxt(0, RULE_CHUUPIN_RAOYUI) = "なし", "役満", "４飜"
 
-	RuleName(RULE_TSUBAME_GAESHI+1) = "燕返し"
-	RuleDescription(RULE_TSUBAME_GAESHI+1) = "燕返しの有無と価値を設定します(リーチ宣言牌をロン)"
-	RuleTxt(0, RULE_TSUBAME_GAESHI+1) = "なし", "１飜"
+	RuleName(RULE_TSUBAME_GAESHI) = "燕返し"
+	RuleDescription(RULE_TSUBAME_GAESHI) = "燕返しの有無と価値を設定します(リーチ宣言牌をロン)"
+	RuleTxt(0, RULE_TSUBAME_GAESHI) = "なし", "１飜"
 
-	RuleName(RULE_DRAGON_PAIRS+1) = "三元七対子"
+	RuleName(RULE_DRAGON_PAIRS) = "三元七対子"
 #ifdef SANMAS
-	RuleDescription(RULE_DRAGON_PAIRS+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_DRAGON_PAIRS+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_DRAGON_PAIRS) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_DRAGON_PAIRS) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_DRAGON_PAIRS+1) = "三元七対子の有無と価値を設定します(白發中がある七対子：付加役)"
-	RuleTxt(0, RULE_DRAGON_PAIRS+1) = "なし", "１飜"
+	RuleDescription(RULE_DRAGON_PAIRS) = "三元七対子の有無と価値を設定します(白發中がある七対子：付加役)"
+	RuleTxt(0, RULE_DRAGON_PAIRS) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_WIND_PAIRS+1) = "四喜七対子"
+	RuleName(RULE_WIND_PAIRS) = "四喜七対子"
 #ifdef SANMAS
-	RuleDescription(RULE_WIND_PAIRS+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_WIND_PAIRS+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_WIND_PAIRS) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_WIND_PAIRS) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_WIND_PAIRS+1) = "四喜七対子の有無と価値を設定します(東南西北がある七対子：付加役)"
-	RuleTxt(0, RULE_WIND_PAIRS+1) = "なし", "１飜"
+	RuleDescription(RULE_WIND_PAIRS) = "四喜七対子の有無と価値を設定します(東南西北がある七対子：付加役)"
+	RuleTxt(0, RULE_WIND_PAIRS) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_CHINPEIKOU+1) = "清盃口"
-	RuleDescription(RULE_CHINPEIKOU+1) = "清盃口の有無と価値を設定します(同じ数字で二盃口)"
-	RuleTxt(0, RULE_CHINPEIKOU+1) = "なし", "６飜", "５飜", "４飜"
+	RuleName(RULE_CHINPEIKOU) = "清盃口"
+	RuleDescription(RULE_CHINPEIKOU) = "清盃口の有無と価値を設定します(同じ数字で二盃口)"
+	RuleTxt(0, RULE_CHINPEIKOU) = "なし", "６飜", "５飜", "４飜"
 
-	RuleName(RULE_SHANRON_CHONCHUU+1) = "双龍争珠(連六)"
+	RuleName(RULE_SHANRON_CHONCHUU) = "双龍争珠(連六)"
 #ifdef SANMAX
-	RuleDescription(RULE_SHANRON_CHONCHUU+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SHANRON_CHONCHUU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SHANRON_CHONCHUU) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SHANRON_CHONCHUU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SHANRON_CHONCHUU+1) = "双龍争珠の有無と価値を設定します(萬子と索子で6つ続きで同じ数字の順子、筒子の雀頭)"
-	RuleTxt(0, RULE_SHANRON_CHONCHUU+1) = "なし", "役満"
+	RuleDescription(RULE_SHANRON_CHONCHUU) = "双龍争珠の有無と価値を設定します(萬子と索子で6つ続きで同じ数字の順子、筒子の雀頭)"
+	RuleTxt(0, RULE_SHANRON_CHONCHUU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_KYANTONHOH+1) = "鏡同和"
-	RuleDescription(RULE_KYANTONHOH+1) = "鏡同和の有無と価値を設定します(２色それぞれで同じ数字の順子２組)"
-	RuleTxt(0, RULE_KYANTONHOH+1) = "なし", "２飜(門前のみ)", "２飜(喰い下がり有)"
+	RuleName(RULE_KYANTONHOH) = "鏡同和"
+	RuleDescription(RULE_KYANTONHOH) = "鏡同和の有無と価値を設定します(２色それぞれで同じ数字の順子２組)"
+	RuleTxt(0, RULE_KYANTONHOH) = "なし", "２飜(門前のみ)", "２飜(喰い下がり有)"
 
-	RuleName(RULE_RYANDOUKOH+1) = "二同刻"
-	RuleDescription(RULE_RYANDOUKOH+1) = "二同刻の有無と価値を設定します(２色それぞれで同じ数字の刻子２組：対々和が複合)"
-	RuleTxt(0, RULE_RYANDOUKOH+1) = "なし", "２飜"
+	RuleName(RULE_RYANDOUKOH) = "二同刻"
+	RuleDescription(RULE_RYANDOUKOH) = "二同刻の有無と価値を設定します(２色それぞれで同じ数字の刻子２組：対々和が複合)"
+	RuleTxt(0, RULE_RYANDOUKOH) = "なし", "２飜"
 
-	RuleName(RULE_UUSHINTONKAN+1) = "五心通貫"
-	RuleDescription(RULE_UUSHINTONKAN+1) = "五心通貫の有無と価値を設定します(５の嵌張待ちで一気通貫：付加役)"
-	RuleTxt(0, RULE_UUSHINTONKAN+1) = "なし", "１飜"
+	RuleName(RULE_UUSHINTONKAN) = "五心通貫"
+	RuleDescription(RULE_UUSHINTONKAN) = "五心通貫の有無と価値を設定します(５の嵌張待ちで一気通貫：付加役)"
+	RuleTxt(0, RULE_UUSHINTONKAN) = "なし", "１飜"
 
-	RuleName(RULE_ITTSUU_CHANTA+1) = "一気通貫全帯幺九"
-	RuleDescription(RULE_ITTSUU_CHANTA+1) = "一気通貫全帯幺九の有無と価値を設定します(一気通貫以外の１面子と雀頭がチャンタor純チャンになっている)"
+	RuleName(RULE_ITTSUU_CHANTA) = "一気通貫全帯幺九"
+	RuleDescription(RULE_ITTSUU_CHANTA) = "一気通貫全帯幺九の有無と価値を設定します(一気通貫以外の１面子と雀頭がチャンタor純チャンになっている)"
 #ifdef SANMAS
-	RuleTxt(0, RULE_ITTSUU_CHANTA+1) = "なし", "４飜(喰い下がり有)"
+	RuleTxt(0, RULE_ITTSUU_CHANTA) = "なし", "４飜(喰い下がり有)"
 #else
-	RuleTxt(0, RULE_ITTSUU_CHANTA+1) = "なし", "混3飜、純4飜(喰下有)"
+	RuleTxt(0, RULE_ITTSUU_CHANTA) = "なし", "混3飜、純4飜(喰下有)"
 #endif
 
-	RuleName(RULE_HUALONG+1) = "三色通貫"
-	RuleName(RULE_TANRON+1) = "単龍"
+	RuleName(RULE_HUALONG) = "三色通貫"
+	RuleName(RULE_TANRON) = "単龍"
 #ifdef SANMAX
-	RuleDescription(RULE_HUALONG+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_HUALONG+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_HUALONG) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_HUALONG) = "Ｎ／Ａ"
 
-	RuleDescription(RULE_TANRON+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_TANRON+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_TANRON) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_TANRON) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_HUALONG+1) = "三色通貫の有無と価値を設定します(123、456、789を三色で作る)"
-	RuleTxt(0, RULE_HUALONG+1) = "なし", "２飜(喰い下がり有)"
+	RuleDescription(RULE_HUALONG) = "三色通貫の有無と価値を設定します(123、456、789を三色で作る)"
+	RuleTxt(0, RULE_HUALONG) = "なし", "２飜(喰い下がり有)"
 
-	RuleDescription(RULE_TANRON+1) = "単竜の有無と価値を設定します(白発以外の門前単騎待ちで三色通貫)"
-	RuleTxt(0, RULE_TANRON+1) = "なし", "６飜"
+	RuleDescription(RULE_TANRON) = "単竜の有無と価値を設定します(白発以外の門前単騎待ちで三色通貫)"
+	RuleTxt(0, RULE_TANRON) = "なし", "６飜"
 #endif
 
-	RuleName(RULE_SANSHOKU_RENKOH+1) = "三色連刻"
-	RuleDescription(RULE_SANSHOKU_RENKOH+1) = "三色連刻の有無と価値を設定します(三色で連番になっている３つの刻子)"
-	RuleTxt(0, RULE_SANSHOKU_RENKOH+1) = "なし", "２飜"
+	RuleName(RULE_SANSHOKU_RENKOH) = "三色連刻"
+	RuleDescription(RULE_SANSHOKU_RENKOH) = "三色連刻の有無と価値を設定します(三色で連番になっている３つの刻子)"
+	RuleTxt(0, RULE_SANSHOKU_RENKOH) = "なし", "２飜"
 
-	RuleName(RULE_TINSANKOH+1) = "頂三刻"
-	RuleDescription(RULE_TINSANKOH+1) = "頂三刻の有無と価値を設定します(同色で１と５と９の刻子)"
-	RuleTxt(0, RULE_TINSANKOH+1) = "なし", "２飜"
+	RuleName(RULE_TINSANKOH) = "頂三刻"
+	RuleDescription(RULE_TINSANKOH) = "頂三刻の有無と価値を設定します(同色で１と５と９の刻子)"
+	RuleTxt(0, RULE_TINSANKOH) = "なし", "２飜"
 
-	RuleName(RULE_CHAOPAIKOH+1) = "跳牌刻"
-	RuleDescription(RULE_CHAOPAIKOH+1) = "跳牌刻の有無と価値を設定します(同色で一つ飛びの３刻子)"
-	RuleTxt(0, RULE_CHAOPAIKOH+1) = "なし", "２飜"
+	RuleName(RULE_CHAOPAIKOH) = "跳牌刻"
+	RuleDescription(RULE_CHAOPAIKOH) = "跳牌刻の有無と価値を設定します(同色で一つ飛びの３刻子)"
+	RuleTxt(0, RULE_CHAOPAIKOH) = "なし", "２飜"
 
-	RuleName(RULE_CHINPAIKOH+1) = "筋牌刻"
-	RuleDescription(RULE_CHINPAIKOH+1) = "筋牌刻の有無と価値を設定します(同色で同じ筋の３刻子)"
-	RuleTxt(0, RULE_CHINPAIKOH+1) = "なし", "２飜"
+	RuleName(RULE_CHINPAIKOH) = "筋牌刻"
+	RuleDescription(RULE_CHINPAIKOH) = "筋牌刻の有無と価値を設定します(同色で同じ筋の３刻子)"
+	RuleTxt(0, RULE_CHINPAIKOH) = "なし", "２飜"
 
-	RuleName(RULE_SHIIARU_RAOTAI+1) = "十二落抬"
-	RuleDescription(RULE_SHIIARU_RAOTAI+1) = "十二落抬の有無と価値を設定します(４面子をチーポン明槓で作る)"
-	RuleTxt(0, RULE_SHIIARU_RAOTAI+1) = "なし", "１飜", "１飜(ロンのみ)"
+	RuleName(RULE_SHIIARU_RAOTAI) = "十二落抬"
+	RuleDescription(RULE_SHIIARU_RAOTAI) = "十二落抬の有無と価値を設定します(４面子をチーポン明槓で作る)"
+	RuleTxt(0, RULE_SHIIARU_RAOTAI) = "なし", "１飜", "１飜(ロンのみ)"
 
-	RuleName(RULE_KINKEI_DOKURITSU+1) = "金鶏独立"
-	RuleDescription(RULE_KINKEI_DOKURITSU+1) = "金鶏独立の有無と価値を設定します(一索待ちの十二落抬)"
-	RuleTxt(0, RULE_KINKEI_DOKURITSU+1) = "なし", "役満"
+	RuleName(RULE_KINKEI_DOKURITSU) = "金鶏独立"
+	RuleDescription(RULE_KINKEI_DOKURITSU) = "金鶏独立の有無と価値を設定します(一索待ちの十二落抬)"
+	RuleTxt(0, RULE_KINKEI_DOKURITSU) = "なし", "役満"
 
-	RuleName(RULE_KANKOU_NO_YUKI+1) = "独釣寒江雪"
+	RuleName(RULE_KANKOU_NO_YUKI) = "独釣寒江雪"
 #ifdef SANMAS
-	RuleDescription(RULE_KANKOU_NO_YUKI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_KANKOU_NO_YUKI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KANKOU_NO_YUKI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_KANKOU_NO_YUKI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KANKOU_NO_YUKI+1) = "独釣寒江雪の有無と価値を設定します(白待ちの十二落抬)"
-	RuleTxt(0, RULE_KANKOU_NO_YUKI+1) = "なし", "役満"
+	RuleDescription(RULE_KANKOU_NO_YUKI) = "独釣寒江雪の有無と価値を設定します(白待ちの十二落抬)"
+	RuleTxt(0, RULE_KANKOU_NO_YUKI) = "なし", "役満"
 #endif
 
-	RuleName(RULE_SUUCHAOPAIKOH+1) = "四跳牌刻"
-	RuleDescription(RULE_SUUCHAOPAIKOH+1) = "四跳牌刻の有無と価値を設定します(同色で一つ飛びの４刻子)"
-	RuleTxt(0, RULE_SUUCHAOPAIKOH+1) = "なし", "役満"
+	RuleName(RULE_SUUCHAOPAIKOH) = "四跳牌刻"
+	RuleDescription(RULE_SUUCHAOPAIKOH) = "四跳牌刻の有無と価値を設定します(同色で一つ飛びの４刻子)"
+	RuleTxt(0, RULE_SUUCHAOPAIKOH) = "なし", "役満"
 
-	RuleName(RULE_KAIMENKAZE+1) = "開門風"
+	RuleName(RULE_KAIMENKAZE) = "開門風"
 #ifdef SANMAS
-	RuleDescription(RULE_KAIMENKAZE+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_KAIMENKAZE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KAIMENKAZE) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_KAIMENKAZE) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KAIMENKAZE+1) = "開門風の有無と価値を設定します(開門位置の風牌が役牌扱い)"
-	RuleTxt(0, RULE_KAIMENKAZE+1) = "なし", "１飜"
+	RuleDescription(RULE_KAIMENKAZE) = "開門風の有無と価値を設定します(開門位置の風牌が役牌扱い)"
+	RuleTxt(0, RULE_KAIMENKAZE) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_URAKAZE+1) = "裏風"
+	RuleName(RULE_URAKAZE) = "裏風"
 #ifdef SANMAT
-	RuleDescription(RULE_URAKAZE+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_URAKAZE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_URAKAZE) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_URAKAZE) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_URAKAZE+1) = "裏風の有無と価値を設定します(対面の風牌が役牌扱い)"
-	RuleTxt(0, RULE_URAKAZE+1) = "なし", "１飜"
+	RuleDescription(RULE_URAKAZE) = "裏風の有無と価値を設定します(対面の風牌が役牌扱い)"
+	RuleTxt(0, RULE_URAKAZE) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_RYANANKAN+1) = "二暗槓"
-	RuleDescription(RULE_RYANANKAN+1) = "二暗槓の有無と価値を設定します"
-	RuleTxt(0, RULE_RYANANKAN+1) = "なし", "１飜"
+	RuleName(RULE_RYANANKAN) = "二暗槓"
+	RuleDescription(RULE_RYANANKAN) = "二暗槓の有無と価値を設定します"
+	RuleTxt(0, RULE_RYANANKAN) = "なし", "１飜"
 
-	RuleName(RULE_SANANKAN+1) = "三暗槓"
-	RuleDescription(RULE_SANANKAN+1) = "三暗槓の有無と価値を設定します"
-	RuleTxt(0, RULE_SANANKAN+1) = "なし", "役満"
+	RuleName(RULE_SANANKAN) = "三暗槓"
+	RuleDescription(RULE_SANANKAN) = "三暗槓の有無と価値を設定します"
+	RuleTxt(0, RULE_SANANKAN) = "なし", "役満"
 
-	RuleName(RULE_EXPOSED_RYANPEIKOU+1) = "鳴き二盃口"
-	RuleDescription(RULE_EXPOSED_RYANPEIKOU+1) = "鳴き二盃口の有無と価値を設定します"
-	RuleTxt(0, RULE_EXPOSED_RYANPEIKOU+1) = "なし", "２飜"
+	RuleName(RULE_EXPOSED_RYANPEIKOU) = "鳴き二盃口"
+	RuleDescription(RULE_EXPOSED_RYANPEIKOU) = "鳴き二盃口の有無と価値を設定します"
+	RuleTxt(0, RULE_EXPOSED_RYANPEIKOU) = "なし", "２飜"
 
-	RuleName(RULE_TOIPUUTAO+1) = "推不倒"
-	RuleDescription(RULE_TOIPUUTAO+1) = "推不倒の有無と価値を設定します(1234589筒・245689索・白だけで和了る)"
-	RuleTxt(0, RULE_TOIPUUTAO+1) = "なし", "１飜", "４飜", "役満"
+	RuleName(RULE_TOIPUUTAO) = "推不倒"
+	RuleDescription(RULE_TOIPUUTAO) = "推不倒の有無と価値を設定します(1234589筒・245689索・白だけで和了る)"
+	RuleTxt(0, RULE_TOIPUUTAO) = "なし", "１飜", "４飜", "役満"
 
-	RuleName(RULE_PINZU_MILLION+1) = "筒子百万石"
-	RuleDescription(RULE_PINZU_MILLION+1) = "筒子百万石の有無と価値を設定します(筒子の清一色で数字の合計が100以上)"
-	RuleTxt(0, RULE_PINZU_MILLION+1) = "なし", "役満"
+	RuleName(RULE_PINZU_MILLION) = "筒子百万石"
+	RuleDescription(RULE_PINZU_MILLION) = "筒子百万石の有無と価値を設定します(筒子の清一色で数字の合計が100以上)"
+	RuleTxt(0, RULE_PINZU_MILLION) = "なし", "役満"
 
-	RuleName(RULE_CHUEIIMEN+1) = "絶一門"
-	RuleDescription(RULE_CHUEIIMEN+1) = "絶一門の有無と価値を設定します(萬子、筒子、索子のうちどれか一つがない)"
+	RuleName(RULE_CHUEIIMEN) = "絶一門"
+	RuleDescription(RULE_CHUEIIMEN) = "絶一門の有無と価値を設定します(萬子、筒子、索子のうちどれか一つがない)"
 #ifdef SANMAS
-	RuleTxt(0, RULE_CHUEIIMEN+1) = "なし", "１飜"
+	RuleTxt(0, RULE_CHUEIIMEN) = "なし", "１飜"
 #else
-	RuleTxt(0, RULE_CHUEIIMEN+1) = "なし", "１飜", "１飜（字牌不可）"
+	RuleTxt(0, RULE_CHUEIIMEN) = "なし", "１飜", "１飜（字牌不可）"
 #endif
 
-	RuleName(RULE_NISHINAKAJIMA+1) = "西中島南方"
+	RuleName(RULE_NISHINAKAJIMA) = "西中島南方"
 #ifdef SANMAS
-	RuleDescription(RULE_NISHINAKAJIMA+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_NISHINAKAJIMA+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_NISHINAKAJIMA) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_NISHINAKAJIMA) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_NISHINAKAJIMA+1) = "西中島南方の有無と価値を設定します(南場の西家か西場の南家で西、中、南の刻子)"
-	RuleTxt(0, RULE_NISHINAKAJIMA+1) = "なし", "役満"
+	RuleDescription(RULE_NISHINAKAJIMA) = "西中島南方の有無と価値を設定します(南場の西家か西場の南家で西、中、南の刻子)"
+	RuleTxt(0, RULE_NISHINAKAJIMA) = "なし", "役満"
 #endif
 
-	RuleName(RULE_SUMARO+1) = "四馬路"
+	RuleName(RULE_SUMARO) = "四馬路"
 #ifdef SANMAX
-	RuleDescription(RULE_SUMARO+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SUMARO+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SUMARO) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SUMARO) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SUMARO+1) = "四馬路の有無と価値を設定します(満貫以上を和了っている状態で四萬をロン)"
-	RuleTxt(0, RULE_SUMARO+1) = "なし", "１飜"
+	RuleDescription(RULE_SUMARO) = "四馬路の有無と価値を設定します(満貫以上を和了っている状態で四萬をロン)"
+	RuleTxt(0, RULE_SUMARO) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_KINKEI_HOUGYOU+1) = "金鶏報暁"
+	RuleName(RULE_KINKEI_HOUGYOU) = "金鶏報暁"
 #ifdef SANMAS
-	RuleDescription(RULE_KINKEI_HOUGYOU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_KINKEI_HOUGYOU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KINKEI_HOUGYOU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_KINKEI_HOUGYOU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KINKEI_HOUGYOU+1) = "金鶏報暁の有無と価値を設定します(一索、東、中の刻子)"
-	RuleTxt(0, RULE_KINKEI_HOUGYOU+1) = "なし", "３飜"
+	RuleDescription(RULE_KINKEI_HOUGYOU) = "金鶏報暁の有無と価値を設定します(一索、東、中の刻子)"
+	RuleTxt(0, RULE_KINKEI_HOUGYOU) = "なし", "３飜"
 #endif
 
-	RuleName(RULE_GINKEI_HOUSHUN+1) = "銀鶏報春"
+	RuleName(RULE_GINKEI_HOUSHUN) = "銀鶏報春"
 #ifdef ALLSANMA
-	RuleDescription(RULE_GINKEI_HOUSHUN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_GINKEI_HOUSHUN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_GINKEI_HOUSHUN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_GINKEI_HOUSHUN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_GINKEI_HOUSHUN+1) = "銀鶏報春の有無と価値を設定します(一索、東、白の刻子と花牌の春)"
-	RuleTxt(0, RULE_GINKEI_HOUSHUN+1) = "なし", "５飜"
+	RuleDescription(RULE_GINKEI_HOUSHUN) = "銀鶏報春の有無と価値を設定します(一索、東、白の刻子と花牌の春)"
+	RuleTxt(0, RULE_GINKEI_HOUSHUN) = "なし", "５飜"
 #endif
 
-	RuleName(RULE_KOUKEI_HOUGYOU+1) = "紅鶏報暁"
+	RuleName(RULE_KOUKEI_HOUGYOU) = "紅鶏報暁"
 #ifdef SANMAS
-	RuleDescription(RULE_KOUKEI_HOUGYOU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_KOUKEI_HOUGYOU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KOUKEI_HOUGYOU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_KOUKEI_HOUGYOU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KOUKEI_HOUGYOU+1) = "紅鶏報暁の有無と価値を設定します(一索、東、中、白の刻子と一筒の雀頭)"
-	RuleTxt(0, RULE_KOUKEI_HOUGYOU+1) = "なし", "役満"
+	RuleDescription(RULE_KOUKEI_HOUGYOU) = "紅鶏報暁の有無と価値を設定します(一索、東、中、白の刻子と一筒の雀頭)"
+	RuleTxt(0, RULE_KOUKEI_HOUGYOU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_UIKYOU_TOITOI+1) = "茴香ポン(対々)"
-	RuleDescription(RULE_UIKYOU_TOITOI+1) = "茴香ポンの有無と価値を設定します(三色同刻と隣接する数字の刻子)"
-	RuleTxt(0, RULE_UIKYOU_TOITOI+1) = "なし", "６飜", "５飜"
+	RuleName(RULE_UIKYOU_TOITOI) = "茴香ポン(対々)"
+	RuleDescription(RULE_UIKYOU_TOITOI) = "茴香ポンの有無と価値を設定します(三色同刻と隣接する数字の刻子)"
+	RuleTxt(0, RULE_UIKYOU_TOITOI) = "なし", "６飜", "５飜"
 
-	RuleName(RULE_BAXIAN_CHENGFENG+1) = "八仙乗風過海"
+	RuleName(RULE_BAXIAN_CHENGFENG) = "八仙乗風過海"
 #ifdef ALLSANMA
-	RuleDescription(RULE_BAXIAN_CHENGFENG+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_BAXIAN_CHENGFENG+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_BAXIAN_CHENGFENG) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_BAXIAN_CHENGFENG) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_BAXIAN_CHENGFENG+1) = "八仙乗風過海の有無と価値を設定します(８の三色同刻と白の刻子、東か南の雀頭)"
-	RuleTxt(0, RULE_BAXIAN_CHENGFENG+1) = "なし", "役満"
+	RuleDescription(RULE_BAXIAN_CHENGFENG) = "八仙乗風過海の有無と価値を設定します(８の三色同刻と白の刻子、東か南の雀頭)"
+	RuleTxt(0, RULE_BAXIAN_CHENGFENG) = "なし", "役満"
 #endif
 
-	RuleName(RULE_UIKYOU_SHUNTSU+1) = "茴香ポン(非対々)"
-	RuleDescription(RULE_UIKYOU_SHUNTSU+1) = "茴香ポンの有無と価値を設定します(三色同刻と隣接する数字の順子、その順子に隣接する雀頭)"
-	RuleTxt(0, RULE_UIKYOU_SHUNTSU+1) = "なし", "４飜", "３飜"
+	RuleName(RULE_UIKYOU_SHUNTSU) = "茴香ポン(非対々)"
+	RuleDescription(RULE_UIKYOU_SHUNTSU) = "茴香ポンの有無と価値を設定します(三色同刻と隣接する数字の順子、その順子に隣接する雀頭)"
+	RuleTxt(0, RULE_UIKYOU_SHUNTSU) = "なし", "４飜", "３飜"
 
-	RuleName(RULE_BAXIAN_DOU_BEIDOU+1) = "八仙闘北斗"
+	RuleName(RULE_BAXIAN_DOU_BEIDOU) = "八仙闘北斗"
 #ifdef SANMAX
-	RuleDescription(RULE_BAXIAN_DOU_BEIDOU+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_BAXIAN_DOU_BEIDOU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_BAXIAN_DOU_BEIDOU) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_BAXIAN_DOU_BEIDOU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_BAXIAN_DOU_BEIDOU+1) = "八仙闘北斗の有無と価値を設定します(８の三色同刻と七筒の刻子)"
-	RuleTxt(0, RULE_BAXIAN_DOU_BEIDOU+1) = "なし", "役満"
+	RuleDescription(RULE_BAXIAN_DOU_BEIDOU) = "八仙闘北斗の有無と価値を設定します(８の三色同刻と七筒の刻子)"
+	RuleTxt(0, RULE_BAXIAN_DOU_BEIDOU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_BAXIAN_XIFENG+1) = "八仙戯鳳"
-	RuleName(RULE_BAXIAN_XISIFENG+1) = "八仙戯四鳳"
-	RuleName(RULE_BAXIAN_XIJINGUI+1) = "八仙戯金亀"
-	RuleName(RULE_BAXIAN_JUSHOU+1) = "八仙聚首"
+	RuleName(RULE_BAXIAN_XIFENG) = "八仙戯鳳"
+	RuleName(RULE_BAXIAN_XISIFENG) = "八仙戯四鳳"
+	RuleName(RULE_BAXIAN_XIJINGUI) = "八仙戯金亀"
+	RuleName(RULE_BAXIAN_JUSHOU) = "八仙聚首"
 #ifdef ALLSANMA
-	RuleDescription(RULE_BAXIAN_XIFENG+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_BAXIAN_XIFENG+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_BAXIAN_XIFENG) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_BAXIAN_XIFENG) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_BAXIAN_XISIFENG+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_BAXIAN_XISIFENG+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_BAXIAN_XISIFENG) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_BAXIAN_XISIFENG) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_BAXIAN_XIJINGUI+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_BAXIAN_XIJINGUI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_BAXIAN_XIJINGUI) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_BAXIAN_XIJINGUI) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_BAXIAN_JUSHOU+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_BAXIAN_JUSHOU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_BAXIAN_JUSHOU) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_BAXIAN_JUSHOU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_BAXIAN_XIFENG+1) = "八仙戯鳳の有無と価値を設定します(８の三色同刻と西の刻子、一索の雀頭)"
-	RuleTxt(0, RULE_BAXIAN_XIFENG+1) = "なし", "役満"
+	RuleDescription(RULE_BAXIAN_XIFENG) = "八仙戯鳳の有無と価値を設定します(８の三色同刻と西の刻子、一索の雀頭)"
+	RuleTxt(0, RULE_BAXIAN_XIFENG) = "なし", "役満"
 
-	RuleDescription(RULE_BAXIAN_XISIFENG+1) = "八仙戯四鳳の有無と価値を設定します(８の三色同刻と一索の槓子、西の雀頭)"
-	RuleTxt(0, RULE_BAXIAN_XISIFENG+1) = "なし", "役満"
+	RuleDescription(RULE_BAXIAN_XISIFENG) = "八仙戯四鳳の有無と価値を設定します(８の三色同刻と一索の槓子、西の雀頭)"
+	RuleTxt(0, RULE_BAXIAN_XISIFENG) = "なし", "役満"
 
-	RuleDescription(RULE_BAXIAN_XIJINGUI+1) = "八仙戯金亀の有無と価値を設定します(８の三色同刻と西の刻子、七索の雀頭)"
-	RuleTxt(0, RULE_BAXIAN_XIJINGUI+1) = "なし", "役満"
+	RuleDescription(RULE_BAXIAN_XIJINGUI) = "八仙戯金亀の有無と価値を設定します(８の三色同刻と西の刻子、七索の雀頭)"
+	RuleTxt(0, RULE_BAXIAN_XIJINGUI) = "なし", "役満"
 
-	RuleDescription(RULE_BAXIAN_JUSHOU+1) = "八仙聚首の有無と価値を設定します(８の三色同刻と花牌８枚)"
-	RuleTxt(0, RULE_BAXIAN_JUSHOU+1) = "なし", "役満"
+	RuleDescription(RULE_BAXIAN_JUSHOU) = "八仙聚首の有無と価値を設定します(８の三色同刻と花牌８枚)"
+	RuleTxt(0, RULE_BAXIAN_JUSHOU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_CHUUREN_HWATON+1) = "九蓮花燈"
-	RuleDescription(RULE_CHUUREN_HWATON+1) = "九蓮花燈の有無と価値を設定します(清一色でない1112345678999の形)"
-	RuleTxt(0, RULE_CHUUREN_HWATON+1) = "なし", "４飜(門前のみ)", "２飜(門前のみ)"
+	RuleName(RULE_CHUUREN_HWATON) = "九蓮花燈"
+	RuleDescription(RULE_CHUUREN_HWATON) = "九蓮花燈の有無と価値を設定します(清一色でない1112345678999の形)"
+	RuleTxt(0, RULE_CHUUREN_HWATON) = "なし", "４飜(門前のみ)", "２飜(門前のみ)"
 
-	RuleName(RULE_EXPOSED_CHUUREN+1) = "九蓮碧燈"
-	RuleDescription(RULE_EXPOSED_CHUUREN+1) = "九蓮碧燈の有無と価値を設定します(鳴いた清一色で1112345678999の形)"
-	RuleTxt(0, RULE_EXPOSED_CHUUREN+1) = "なし", "３飜"
+	RuleName(RULE_EXPOSED_CHUUREN) = "九蓮碧燈"
+	RuleDescription(RULE_EXPOSED_CHUUREN) = "九蓮碧燈の有無と価値を設定します(鳴いた清一色で1112345678999の形)"
+	RuleTxt(0, RULE_EXPOSED_CHUUREN) = "なし", "３飜"
 
-	RuleName(RULE_OKASANJUN+1) = "三歩高"
-	RuleDescription(RULE_OKASANJUN+1) = "三歩高の有無と価値を設定します(同色で構成する数字が一つずつ異なる３つの順子)"
-	RuleTxt(0, RULE_OKASANJUN+1) = "なし", "１飜", "１飜(門前のみ)", "２飜(喰い下がり有)"
+	RuleName(RULE_OKASANJUN) = "三歩高"
+	RuleDescription(RULE_OKASANJUN) = "三歩高の有無と価値を設定します(同色で構成する数字が一つずつ異なる３つの順子)"
+	RuleTxt(0, RULE_OKASANJUN) = "なし", "１飜", "１飜(門前のみ)", "２飜(喰い下がり有)"
 
-	RuleName(RULE_OKASUUJUN+1) = "四歩高"
-	RuleDescription(RULE_OKASUUJUN+1) = "四歩高の有無と価値を設定します(同色で構成する数字が一つずつ異なる４つの順子)"
-	RuleTxt(0, RULE_OKASUUJUN+1) = "なし", "役満", "ダブル役満"
+	RuleName(RULE_OKASUUJUN) = "四歩高"
+	RuleDescription(RULE_OKASUUJUN) = "四歩高の有無と価値を設定します(同色で構成する数字が一つずつ異なる４つの順子)"
+	RuleTxt(0, RULE_OKASUUJUN) = "なし", "役満", "ダブル役満"
 
-	RuleName(RULE_SANSHOKU_OKASANJUN+1) = "三色三歩高"
+	RuleName(RULE_SANSHOKU_OKASANJUN) = "三色三歩高"
 #ifdef SANMAX
-	RuleDescription(RULE_SANSHOKU_OKASANJUN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SANSHOKU_OKASANJUN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SANSHOKU_OKASANJUN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SANSHOKU_OKASANJUN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SANSHOKU_OKASANJUN+1) = "三色三歩高の有無と価値を設定します(三色で構成する数字が一つずつ異なる３つの順子)"
-	RuleTxt(0, RULE_SANSHOKU_OKASANJUN+1) = "なし", "１飜", "１飜(門前のみ)", "２飜(喰い下がり有)"
+	RuleDescription(RULE_SANSHOKU_OKASANJUN) = "三色三歩高の有無と価値を設定します(三色で構成する数字が一つずつ異なる３つの順子)"
+	RuleTxt(0, RULE_SANSHOKU_OKASANJUN) = "なし", "１飜", "１飜(門前のみ)", "２飜(喰い下がり有)"
 #endif
 
-	RuleName(RULE_YAMASANJUN+1) = "清連環套"
-	RuleDescription(RULE_YAMASANJUN+1) = "清連環套の有無と価値を設定します(同色で構成する数字が二つずつ異なる３つの順子)"
-	RuleTxt(0, RULE_YAMASANJUN+1) = "なし", "１飜", "１飜(門前のみ)", "２飜(喰い下がり有)"
+	RuleName(RULE_YAMASANJUN) = "清連環套"
+	RuleDescription(RULE_YAMASANJUN) = "清連環套の有無と価値を設定します(同色で構成する数字が二つずつ異なる３つの順子)"
+	RuleTxt(0, RULE_YAMASANJUN) = "なし", "１飜", "１飜(門前のみ)", "２飜(喰い下がり有)"
 
-	RuleName(RULE_SANSHOKU_YAMASANJUN+1) = "混連環套"
+	RuleName(RULE_SANSHOKU_YAMASANJUN) = "混連環套"
 #ifdef SANMAX
-	RuleDescription(RULE_SANSHOKU_YAMASANJUN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SANSHOKU_YAMASANJUN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SANSHOKU_YAMASANJUN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SANSHOKU_YAMASANJUN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SANSHOKU_YAMASANJUN+1) = "混連環套の有無と価値を設定します(同色で構成する数字が二つずつ異なる３つの順子)"
-	RuleTxt(0, RULE_SANSHOKU_YAMASANJUN+1) = "なし", "１飜", "１飜(門前のみ)", "２飜(喰い下がり有)"
+	RuleDescription(RULE_SANSHOKU_YAMASANJUN) = "混連環套の有無と価値を設定します(同色で構成する数字が二つずつ異なる３つの順子)"
+	RuleTxt(0, RULE_SANSHOKU_YAMASANJUN) = "なし", "１飜", "１飜(門前のみ)", "２飜(喰い下がり有)"
 #endif
 
-	RuleName(RULE_ANKAN_CONCEAL+1) = "暗槓の伏せ方"
-	RuleDescription(RULE_ANKAN_CONCEAL+1) = "暗槓した牌を開示するかを設定します"
-	RuleTxt(0, RULE_ANKAN_CONCEAL+1) = "開示", "非開示"
+	RuleName(RULE_ANKAN_CONCEAL) = "暗槓の伏せ方"
+	RuleDescription(RULE_ANKAN_CONCEAL) = "暗槓した牌を開示するかを設定します"
+	RuleTxt(0, RULE_ANKAN_CONCEAL) = "開示", "非開示"
 
-	RuleName(RULE_ANKAN_CHANKAN+1) = "暗槓の搶槓"
+	RuleName(RULE_ANKAN_CHANKAN) = "暗槓の搶槓"
 #ifdef SANMAS
-	RuleDescription(RULE_ANKAN_CHANKAN+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_ANKAN_CHANKAN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_ANKAN_CHANKAN) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_ANKAN_CHANKAN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_ANKAN_CHANKAN+1) = "暗槓の牌で国士無双を和了れるかを設定します"
-	RuleTxt(0, RULE_ANKAN_CHANKAN+1) = "あり", "なし"
+	RuleDescription(RULE_ANKAN_CHANKAN) = "暗槓の牌で国士無双を和了れるかを設定します"
+	RuleTxt(0, RULE_ANKAN_CHANKAN) = "あり", "なし"
 #endif
 
-	RuleName(RULE_NISHOKU_OKASANJUN+1) = "二色三歩高"
-	RuleDescription(RULE_NISHOKU_OKASANJUN+1) = "二色三歩高の有無と価値を設定します(二色で構成する数字が一つずつ異なる３つの順子)"
-	RuleTxt(0, RULE_NISHOKU_OKASANJUN+1) = "なし", "１飜(門前のみ)"
+	RuleName(RULE_NISHOKU_OKASANJUN) = "二色三歩高"
+	RuleDescription(RULE_NISHOKU_OKASANJUN) = "二色三歩高の有無と価値を設定します(二色で構成する数字が一つずつ異なる３つの順子)"
+	RuleTxt(0, RULE_NISHOKU_OKASANJUN) = "なし", "１飜(門前のみ)"
 
-	RuleName(RULE_NISHOKU_OKASUUJUN+1) = "二色四歩高"
-	RuleDescription(RULE_NISHOKU_OKASUUJUN+1) = "二色四歩高の有無と価値を設定します(二色で構成する数字が一つずつ異なる４の順子)"
-	RuleTxt(0, RULE_NISHOKU_OKASUUJUN+1) = "なし", "３飜(喰い下がり有)"
+	RuleName(RULE_NISHOKU_OKASUUJUN) = "二色四歩高"
+	RuleDescription(RULE_NISHOKU_OKASUUJUN) = "二色四歩高の有無と価値を設定します(二色で構成する数字が一つずつ異なる４の順子)"
+	RuleTxt(0, RULE_NISHOKU_OKASUUJUN) = "なし", "３飜(喰い下がり有)"
 
-	RuleName(RULE_SANSHOKU_OKASUUJUN+1) = "三色四歩高"
-	RuleDescription(RULE_SANSHOKU_OKASUUJUN+1) = "三色四歩高の有無と価値を設定します(三色で構成する数字が一つずつ異なる４つの順子)"
-	RuleTxt(0, RULE_SANSHOKU_OKASUUJUN+1) = "なし", "３飜(喰い下がり有)"
+	RuleName(RULE_SANSHOKU_OKASUUJUN) = "三色四歩高"
+	RuleDescription(RULE_SANSHOKU_OKASUUJUN) = "三色四歩高の有無と価値を設定します(三色で構成する数字が一つずつ異なる４つの順子)"
+	RuleTxt(0, RULE_SANSHOKU_OKASUUJUN) = "なし", "３飜(喰い下がり有)"
 
-	RuleName(RULE_NISHOKU_YAMASANJUN+1) = "雑連環套"
-	RuleDescription(RULE_NISHOKU_YAMASANJUN+1) = "雑連環套の有無と価値を設定します(二色で構成する数字が二つずつ異なる３つの順子)"
-	RuleTxt(0, RULE_NISHOKU_YAMASANJUN+1) = "なし", "２飜(喰い下がり有)"
+	RuleName(RULE_NISHOKU_YAMASANJUN) = "雑連環套"
+	RuleDescription(RULE_NISHOKU_YAMASANJUN) = "雑連環套の有無と価値を設定します(二色で構成する数字が二つずつ異なる３つの順子)"
+	RuleTxt(0, RULE_NISHOKU_YAMASANJUN) = "なし", "２飜(喰い下がり有)"
 
-	RuleName(RULE_NISHOKU_YAMASUUJUN+1) = "大雑連套"
-	RuleDescription(RULE_NISHOKU_YAMASUUJUN+1) = "大雑連套の有無と価値を設定します(二色で構成する数字が二つずつ異なる４つの順子)"
-	RuleTxt(0, RULE_NISHOKU_YAMASUUJUN+1) = "なし", "６飜(喰い下がり有)", "役満"
+	RuleName(RULE_NISHOKU_YAMASUUJUN) = "大雑連套"
+	RuleDescription(RULE_NISHOKU_YAMASUUJUN) = "大雑連套の有無と価値を設定します(二色で構成する数字が二つずつ異なる４つの順子)"
+	RuleTxt(0, RULE_NISHOKU_YAMASUUJUN) = "なし", "６飜(喰い下がり有)", "役満"
 
-	RuleName(RULE_GOLDEN_LADDER+1) = "金梯"
-	RuleDescription(RULE_GOLDEN_LADDER+1) = "金梯の有無と価値を設定します(四連刻とそれに隣接する数字の雀頭)"
-	RuleTxt(0, RULE_GOLDEN_LADDER+1) = "なし", "ダブル役満"
+	RuleName(RULE_GOLDEN_LADDER) = "金梯"
+	RuleDescription(RULE_GOLDEN_LADDER) = "金梯の有無と価値を設定します(四連刻とそれに隣接する数字の雀頭)"
+	RuleTxt(0, RULE_GOLDEN_LADDER) = "なし", "ダブル役満"
 
-	RuleName(RULE_SANSHOKU_YAMASUUJUN+1) = "大混連套"
+	RuleName(RULE_SANSHOKU_YAMASUUJUN) = "大混連套"
 #ifdef SANMAX
-	RuleDescription(RULE_SANSHOKU_YAMASUUJUN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SANSHOKU_YAMASUUJUN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SANSHOKU_YAMASUUJUN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SANSHOKU_YAMASUUJUN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SANSHOKU_YAMASUUJUN+1) = "大混連套の有無と価値を設定します(三色で構成する数字が二つずつ異なる４つの順子)"
-	RuleTxt(0, RULE_SANSHOKU_YAMASUUJUN+1) = "なし", "６飜(喰い下がり有)", "役満"
+	RuleDescription(RULE_SANSHOKU_YAMASUUJUN) = "大混連套の有無と価値を設定します(三色で構成する数字が二つずつ異なる４つの順子)"
+	RuleTxt(0, RULE_SANSHOKU_YAMASUUJUN) = "なし", "６飜(喰い下がり有)", "役満"
 #endif
 
-	RuleName(RULE_HAKU_POTCHI+1) = "白ポッチ"
+	RuleName(RULE_HAKU_POTCHI) = "白ポッチ"
 #ifdef SANMAS
-	RuleDescription(RULE_HAKU_POTCHI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_HAKU_POTCHI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_HAKU_POTCHI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_HAKU_POTCHI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_HAKU_POTCHI+1) = "白ポッチの有無と意味を設定します"
-	RuleTxt(0, RULE_HAKU_POTCHI+1) = "なし", "１枚(ドラ扱い)"
+	RuleDescription(RULE_HAKU_POTCHI) = "白ポッチの有無と意味を設定します"
+	RuleTxt(0, RULE_HAKU_POTCHI) = "なし", "１枚(ドラ扱い)"
 #endif
 
-	RuleName(RULE_GAISENMON+1) = "凱旋門"
-	RuleDescription(RULE_GAISENMON+1) = "凱旋門の有無と価値を設定します(清一色で六連二組と７の雀頭)"
-	RuleTxt(0, RULE_GAISENMON+1) = "なし", "役満", "ダブル役満"
+	RuleName(RULE_GAISENMON) = "凱旋門"
+	RuleDescription(RULE_GAISENMON) = "凱旋門の有無と価値を設定します(清一色で六連二組と７の雀頭)"
+	RuleTxt(0, RULE_GAISENMON) = "なし", "役満", "ダブル役満"
 
-	RuleName(RULE_CHOUJOU+1) = "長城"
-	RuleDescription(RULE_CHOUJOU+1) = "長城の有無と価値を設定します(清一色で一気通貫と１順子と２か５か８の雀頭)"
-	RuleTxt(0, RULE_CHOUJOU+1) = "なし", "役満"
+	RuleName(RULE_CHOUJOU) = "長城"
+	RuleDescription(RULE_CHOUJOU) = "長城の有無と価値を設定します(清一色で一気通貫と１順子と２か５か８の雀頭)"
+	RuleTxt(0, RULE_CHOUJOU) = "なし", "役満"
 
-	RuleName(RULE_QINGLONG_ZAITIAN+1) = "青龍在天"
-	RuleDescription(RULE_QINGLONG_ZAITIAN+1) = "青龍在天の有無と価値を設定します(門前で清一色・一気通貫・一盃口の複合)"
-	RuleTxt(0, RULE_QINGLONG_ZAITIAN+1) = "なし", "役満(門前のみ)"
+	RuleName(RULE_QINGLONG_ZAITIAN) = "青龍在天"
+	RuleDescription(RULE_QINGLONG_ZAITIAN) = "青龍在天の有無と価値を設定します(門前で清一色・一気通貫・一盃口の複合)"
+	RuleTxt(0, RULE_QINGLONG_ZAITIAN) = "なし", "役満(門前のみ)"
 
-	RuleName(RULE_ODD_TOITOI+1) = "奇数対々和"
-	RuleDescription(RULE_ODD_TOITOI+1) = "奇数対々和の有無と価値を設定します"
-	RuleTxt(0, RULE_ODD_TOITOI+1) = "なし", "４飜"
+	RuleName(RULE_ODD_TOITOI) = "奇数対々和"
+	RuleDescription(RULE_ODD_TOITOI) = "奇数対々和の有無と価値を設定します"
+	RuleTxt(0, RULE_ODD_TOITOI) = "なし", "４飜"
 
-	RuleName(RULE_EVEN_TOITOI+1) = "偶数対々和"
-	RuleDescription(RULE_EVEN_TOITOI+1) = "偶数対々和の有無と価値を設定します"
-	RuleTxt(0, RULE_EVEN_TOITOI+1) = "なし", "５飜"
+	RuleName(RULE_EVEN_TOITOI) = "偶数対々和"
+	RuleDescription(RULE_EVEN_TOITOI) = "偶数対々和の有無と価値を設定します"
+	RuleTxt(0, RULE_EVEN_TOITOI) = "なし", "５飜"
 
-	RuleName(RULE_ODD_PAIRS+1) = "奇数七対子"
-	RuleDescription(RULE_ODD_PAIRS+1) = "奇数七対子の有無と価値を設定します"
-	RuleTxt(0, RULE_ODD_PAIRS+1) = "なし", "１飜(門前のみ)"
+	RuleName(RULE_ODD_PAIRS) = "奇数七対子"
+	RuleDescription(RULE_ODD_PAIRS) = "奇数七対子の有無と価値を設定します"
+	RuleTxt(0, RULE_ODD_PAIRS) = "なし", "１飜(門前のみ)"
 
-	RuleName(RULE_EVEN_PAIRS+1) = "偶数七対子"
-	RuleDescription(RULE_EVEN_PAIRS+1) = "偶数七対子の有無と価値を設定します"
-	RuleTxt(0, RULE_EVEN_PAIRS+1) = "なし", "２飜(門前のみ)"
+	RuleName(RULE_EVEN_PAIRS) = "偶数七対子"
+	RuleDescription(RULE_EVEN_PAIRS) = "偶数七対子の有無と価値を設定します"
+	RuleTxt(0, RULE_EVEN_PAIRS) = "なし", "２飜(門前のみ)"
 
-	RuleName(RULE_LONGXIZHU+1) = "龍戯珠"
+	RuleName(RULE_LONGXIZHU) = "龍戯珠"
 #ifdef SANMAS
-	RuleDescription(RULE_LONGXIZHU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_LONGXIZHU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_LONGXIZHU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_LONGXIZHU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_LONGXIZHU+1) = "龍戯珠の有無と価値を設定します(一気通貫、西の刻子、一筒の雀頭：付加役)"
-	RuleTxt(0, RULE_LONGXIZHU+1) = "なし", "２飜"
+	RuleDescription(RULE_LONGXIZHU) = "龍戯珠の有無と価値を設定します(一気通貫、西の刻子、一筒の雀頭：付加役)"
+	RuleTxt(0, RULE_LONGXIZHU) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_CHUUGEN_CHIKUROKU+1) = "中原逐鹿"
+	RuleName(RULE_CHUUGEN_CHIKUROKU) = "中原逐鹿"
 #ifdef SANMAS
-	RuleDescription(RULE_CHUUGEN_CHIKUROKU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_CHUUGEN_CHIKUROKU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_CHUUGEN_CHIKUROKU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_CHUUGEN_CHIKUROKU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_CHUUGEN_CHIKUROKU+1) = "中原逐鹿の有無と価値を設定します(中、発、七筒、六筒の刻子)"
-	RuleTxt(0, RULE_CHUUGEN_CHIKUROKU+1) = "なし", "役満"
+	RuleDescription(RULE_CHUUGEN_CHIKUROKU) = "中原逐鹿の有無と価値を設定します(中、発、七筒、六筒の刻子)"
+	RuleTxt(0, RULE_CHUUGEN_CHIKUROKU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_NISHOKU_SANRENKOH+1) = "二色三連刻"
-	RuleDescription(RULE_NISHOKU_SANRENKOH+1) = "二色三連刻の有無と価値を設定します(二色で数字の連続した３刻子)"
-	RuleTxt(0, RULE_NISHOKU_SANRENKOH+1) = "なし", "１飜"
+	RuleName(RULE_NISHOKU_SANRENKOH) = "二色三連刻"
+	RuleDescription(RULE_NISHOKU_SANRENKOH) = "二色三連刻の有無と価値を設定します(二色で数字の連続した３刻子)"
+	RuleTxt(0, RULE_NISHOKU_SANRENKOH) = "なし", "１飜"
 
-	RuleName(RULE_NISHOKU_SUURENKOH+1) = "二色四連刻"
-	RuleDescription(RULE_NISHOKU_SUURENKOH+1) = "二色四連刻の有無と価値を設定します(二色で数字の連続したの４刻子)"
-	RuleTxt(0, RULE_NISHOKU_SUURENKOH+1) = "なし", "３飜"
+	RuleName(RULE_NISHOKU_SUURENKOH) = "二色四連刻"
+	RuleDescription(RULE_NISHOKU_SUURENKOH) = "二色四連刻の有無と価値を設定します(二色で数字の連続したの４刻子)"
+	RuleTxt(0, RULE_NISHOKU_SUURENKOH) = "なし", "３飜"
 
-	RuleName(RULE_NISHOKU_CHAOPAIKOH+1) = "二色跳牌刻"
-	RuleDescription(RULE_NISHOKU_CHAOPAIKOH+1) = "二色跳牌刻の有無と価値を設定します(二色で一つ飛びの３刻子)"
-	RuleTxt(0, RULE_NISHOKU_CHAOPAIKOH+1) = "なし", "２飜"
+	RuleName(RULE_NISHOKU_CHAOPAIKOH) = "二色跳牌刻"
+	RuleDescription(RULE_NISHOKU_CHAOPAIKOH) = "二色跳牌刻の有無と価値を設定します(二色で一つ飛びの３刻子)"
+	RuleTxt(0, RULE_NISHOKU_CHAOPAIKOH) = "なし", "２飜"
 
-	RuleName(RULE_NISHOKU_CHINPAIKOH+1) = "二色筋牌刻"
-	RuleDescription(RULE_NISHOKU_CHINPAIKOH+1) = "二色筋牌刻の有無と価値を設定します(二色で同じ筋の３刻子)"
-	RuleTxt(0, RULE_NISHOKU_CHINPAIKOH+1) = "なし", "２飜"
+	RuleName(RULE_NISHOKU_CHINPAIKOH) = "二色筋牌刻"
+	RuleDescription(RULE_NISHOKU_CHINPAIKOH) = "二色筋牌刻の有無と価値を設定します(二色で同じ筋の３刻子)"
+	RuleTxt(0, RULE_NISHOKU_CHINPAIKOH) = "なし", "２飜"
 
-	RuleName(RULE_NISHOKU_TINSANKOH+1) = "二色頂三刻"
-	RuleDescription(RULE_NISHOKU_TINSANKOH+1) = "二色頂三刻の有無と価値を設定します(二色で１と５と９の刻子)"
-	RuleTxt(0, RULE_NISHOKU_TINSANKOH+1) = "なし", "２飜"
+	RuleName(RULE_NISHOKU_TINSANKOH) = "二色頂三刻"
+	RuleDescription(RULE_NISHOKU_TINSANKOH) = "二色頂三刻の有無と価値を設定します(二色で１と５と９の刻子)"
+	RuleTxt(0, RULE_NISHOKU_TINSANKOH) = "なし", "２飜"
 
-	RuleName(RULE_NISHOKU_SUUCHAOPAIKOH+1) = "二色四跳牌刻"
-	RuleDescription(RULE_NISHOKU_SUUCHAOPAIKOH+1) = "二色四跳牌刻の有無と価値を設定します(二色で一つ飛びの４刻子)"
-	RuleTxt(0, RULE_NISHOKU_SUUCHAOPAIKOH+1) = "なし", "３飜"
+	RuleName(RULE_NISHOKU_SUUCHAOPAIKOH) = "二色四跳牌刻"
+	RuleDescription(RULE_NISHOKU_SUUCHAOPAIKOH) = "二色四跳牌刻の有無と価値を設定します(二色で一つ飛びの４刻子)"
+	RuleTxt(0, RULE_NISHOKU_SUUCHAOPAIKOH) = "なし", "３飜"
 
-	RuleName(RULE_SANSHOKU_CHAOPAIKOH+1) = "三色跳牌刻"
-	RuleDescription(RULE_SANSHOKU_CHAOPAIKOH+1) = "三色跳牌刻の有無と価値を設定します(三色で一つ飛びの３刻子)"
-	RuleTxt(0, RULE_SANSHOKU_CHAOPAIKOH+1) = "なし", "２飜"
+	RuleName(RULE_SANSHOKU_CHAOPAIKOH) = "三色跳牌刻"
+	RuleDescription(RULE_SANSHOKU_CHAOPAIKOH) = "三色跳牌刻の有無と価値を設定します(三色で一つ飛びの３刻子)"
+	RuleTxt(0, RULE_SANSHOKU_CHAOPAIKOH) = "なし", "２飜"
 
-	RuleName(RULE_SANSHOKU_CHINPAIKOH+1) = "三色筋牌刻"
-	RuleDescription(RULE_SANSHOKU_CHINPAIKOH+1) = "三色筋牌刻の有無と価値を設定します(三色で同じ筋の３刻子)"
-	RuleTxt(0, RULE_SANSHOKU_CHINPAIKOH+1) = "なし", "２飜"
+	RuleName(RULE_SANSHOKU_CHINPAIKOH) = "三色筋牌刻"
+	RuleDescription(RULE_SANSHOKU_CHINPAIKOH) = "三色筋牌刻の有無と価値を設定します(三色で同じ筋の３刻子)"
+	RuleTxt(0, RULE_SANSHOKU_CHINPAIKOH) = "なし", "２飜"
 
-	RuleName(RULE_SANSHOKU_TINSANKOH+1) = "三色頂三刻"
-	RuleDescription(RULE_SANSHOKU_TINSANKOH+1) = "三色頂三刻の有無と価値を設定します(三色で１と５と９の刻子)"
-	RuleTxt(0, RULE_SANSHOKU_TINSANKOH+1) = "なし", "２飜"
+	RuleName(RULE_SANSHOKU_TINSANKOH) = "三色頂三刻"
+	RuleDescription(RULE_SANSHOKU_TINSANKOH) = "三色頂三刻の有無と価値を設定します(三色で１と５と９の刻子)"
+	RuleTxt(0, RULE_SANSHOKU_TINSANKOH) = "なし", "２飜"
 
-	RuleName(RULE_SANSHOKU_SUURENKOH+1) = "三色四連刻"
-	RuleDescription(RULE_SANSHOKU_SUURENKOH+1) = "三色四連刻の有無と価値を設定します(三色で数字の連続したの４刻子)"
-	RuleTxt(0, RULE_SANSHOKU_SUURENKOH+1) = "なし", "３飜"
+	RuleName(RULE_SANSHOKU_SUURENKOH) = "三色四連刻"
+	RuleDescription(RULE_SANSHOKU_SUURENKOH) = "三色四連刻の有無と価値を設定します(三色で数字の連続したの４刻子)"
+	RuleTxt(0, RULE_SANSHOKU_SUURENKOH) = "なし", "３飜"
 
-	RuleName(RULE_SANSHOKU_SUUCHAOPAIKOH+1) = "三色四跳牌刻"
-	RuleDescription(RULE_SANSHOKU_SUUCHAOPAIKOH+1) = "三色四跳牌刻の有無と価値を設定します(三色で一つ飛びの４刻子)"
-	RuleTxt(0, RULE_SANSHOKU_SUUCHAOPAIKOH+1) = "なし", "３飜"
+	RuleName(RULE_SANSHOKU_SUUCHAOPAIKOH) = "三色四跳牌刻"
+	RuleDescription(RULE_SANSHOKU_SUUCHAOPAIKOH) = "三色四跳牌刻の有無と価値を設定します(三色で一つ飛びの４刻子)"
+	RuleTxt(0, RULE_SANSHOKU_SUUCHAOPAIKOH) = "なし", "３飜"
 
-	RuleName(RULE_GRAND_CANYON+1) = "大峡谷"
-	RuleDescription(RULE_GRAND_CANYON+1) = "大峡谷の有無と価値を設定します(９の槓子３つ、８の刻子と雀頭)"
-	RuleTxt(0, RULE_GRAND_CANYON+1) = "なし", "役満"
+	RuleName(RULE_GRAND_CANYON) = "大峡谷"
+	RuleDescription(RULE_GRAND_CANYON) = "大峡谷の有無と価値を設定します(９の槓子３つ、８の刻子と雀頭)"
+	RuleTxt(0, RULE_GRAND_CANYON) = "なし", "役満"
 
-	RuleName(RULE_NITEI_RAOCHUN+1) = "泥底撈蟲"
-	RuleDescription(RULE_NITEI_RAOCHUN+1) = "泥底撈蟲の有無と価値を設定します(裸単騎で海底か河底和了り)"
-	RuleTxt(0, RULE_NITEI_RAOCHUN+1) = "なし", "１飜"
+	RuleName(RULE_NITEI_RAOCHUN) = "泥底撈蟲"
+	RuleDescription(RULE_NITEI_RAOCHUN) = "泥底撈蟲の有無と価値を設定します(裸単騎で海底か河底和了り)"
+	RuleTxt(0, RULE_NITEI_RAOCHUN) = "なし", "１飜"
 
-	RuleName(RULE_SKY_LADDER+1) = "雲梯"
-	RuleDescription(RULE_SKY_LADDER+1) = "雲梯の有無と価値を設定します(三色で数字の連続したの４刻子とそれに隣接する数字の雀頭)"
-	RuleTxt(0, RULE_SKY_LADDER+1) = "なし", "４飜"
+	RuleName(RULE_SKY_LADDER) = "雲梯"
+	RuleDescription(RULE_SKY_LADDER) = "雲梯の有無と価値を設定します(三色で数字の連続したの４刻子とそれに隣接する数字の雀頭)"
+	RuleTxt(0, RULE_SKY_LADDER) = "なし", "４飜"
 
-	RuleName(RULE_TURTLE_EGG+1) = "金亀孵蛋"
-	RuleDescription(RULE_TURTLE_EGG+1) = "金亀孵蛋の有無と価値を設定します(七索と一筒の刻子)"
-	RuleTxt(0, RULE_TURTLE_EGG+1) = "なし", "２飜"
+	RuleName(RULE_TURTLE_EGG) = "金亀孵蛋"
+	RuleDescription(RULE_TURTLE_EGG) = "金亀孵蛋の有無と価値を設定します(七索と一筒の刻子)"
+	RuleTxt(0, RULE_TURTLE_EGG) = "なし", "２飜"
 
-	RuleName(RULE_SHANRON_SHANKUI+1) = "双龍双亀"
-	RuleName(RULE_SHANRON_CHONCHU_LSF+1) = "双龍争珠(老少副)"
-	RuleName(RULE_SANSHOKU_SOURYUU+1) = "三色双龍会"
+	RuleName(RULE_SHANRON_SHANKUI) = "双龍双亀"
+	RuleName(RULE_SHANRON_CHONCHU_LSF) = "双龍争珠(老少副)"
+	RuleName(RULE_SANSHOKU_SOURYUU) = "三色双龍会"
 #ifdef SANMAX
-	RuleDescription(RULE_SHANRON_SHANKUI+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SHANRON_SHANKUI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SHANRON_SHANKUI) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SHANRON_SHANKUI) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_SHANRON_CHONCHU_LSF+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SHANRON_CHONCHU_LSF+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SHANRON_CHONCHU_LSF) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SHANRON_CHONCHU_LSF) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_SANSHOKU_SOURYUU+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SANSHOKU_SOURYUU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SANSHOKU_SOURYUU) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SANSHOKU_SOURYUU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SHANRON_SHANKUI+1) = "双龍双亀の有無と価値を設定します(萬子と筒子で123789の形、三索の雀頭)"
-	RuleTxt(0, RULE_SHANRON_SHANKUI+1) = "なし", "４飜"
+	RuleDescription(RULE_SHANRON_SHANKUI) = "双龍双亀の有無と価値を設定します(萬子と筒子で123789の形、三索の雀頭)"
+	RuleTxt(0, RULE_SHANRON_SHANKUI) = "なし", "４飜"
 
-	RuleDescription(RULE_SHANRON_CHONCHU_LSF+1) = "双龍争珠の有無と価値を設定します(萬子と索子で123789の形、五筒の雀頭)"
-	RuleTxt(0, RULE_SHANRON_CHONCHU_LSF+1) = "なし", "役満"
+	RuleDescription(RULE_SHANRON_CHONCHU_LSF) = "双龍争珠の有無と価値を設定します(萬子と索子で123789の形、五筒の雀頭)"
+	RuleTxt(0, RULE_SHANRON_CHONCHU_LSF) = "なし", "役満"
 
-	RuleDescription(RULE_SANSHOKU_SOURYUU+1) = "三色双龍会の有無と価値を設定します(二色で123789の形、残りの一色の５の雀頭)"
-	RuleTxt(0, RULE_SANSHOKU_SOURYUU+1) = "なし", "２飜(喰い下がり有)", "６飜(喰い下がり有)", "６飜", "役満"
+	RuleDescription(RULE_SANSHOKU_SOURYUU) = "三色双龍会の有無と価値を設定します(二色で123789の形、残りの一色の５の雀頭)"
+	RuleTxt(0, RULE_SANSHOKU_SOURYUU) = "なし", "２飜(喰い下がり有)", "６飜(喰い下がり有)", "６飜", "役満"
 #endif
 
-	RuleName(RULE_ISSHOKU_SOURYUU+1) = "一色双龍会"
-	RuleDescription(RULE_ISSHOKU_SOURYUU+1) = "一色双龍会の有無と価値を設定します(一色で11223355778899の形)"
-	RuleTxt(0, RULE_ISSHOKU_SOURYUU+1) = "なし", "役満", "役満(門前のみ)"
+	RuleName(RULE_ISSHOKU_SOURYUU) = "一色双龍会"
+	RuleDescription(RULE_ISSHOKU_SOURYUU) = "一色双龍会の有無と価値を設定します(一色で11223355778899の形)"
+	RuleTxt(0, RULE_ISSHOKU_SOURYUU) = "なし", "役満", "役満(門前のみ)"
 
-	RuleName(RULE_SHANRON_SHIIFON+1) = "双龍戯鳳"
-	RuleName(RULE_SHANRON_PAOCHUU+1) = "双龍包柱"
-	RuleName(RULE_SHANRON_SHIIKUI+1) = "双龍戯亀"
+	RuleName(RULE_SHANRON_SHIIFON) = "双龍戯鳳"
+	RuleName(RULE_SHANRON_PAOCHUU) = "双龍包柱"
+	RuleName(RULE_SHANRON_SHIIKUI) = "双龍戯亀"
 #ifdef SANMAX
-	RuleDescription(RULE_SHANRON_SHIIFON+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SHANRON_SHIIFON+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SHANRON_SHIIFON) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SHANRON_SHIIFON) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_SHANRON_PAOCHUU+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SHANRON_PAOCHUU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SHANRON_PAOCHUU) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SHANRON_PAOCHUU) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_SHANRON_SHIIKUI+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SHANRON_SHIIKUI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SHANRON_SHIIKUI) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SHANRON_SHIIKUI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SHANRON_SHIIFON+1) = "双龍戯鳳の有無と価値を設定します(萬子と筒子で123789の形、一索の雀頭)"
-	RuleTxt(0, RULE_SHANRON_SHIIFON+1) = "なし", "４飜"
+	RuleDescription(RULE_SHANRON_SHIIFON) = "双龍戯鳳の有無と価値を設定します(萬子と筒子で123789の形、一索の雀頭)"
+	RuleTxt(0, RULE_SHANRON_SHIIFON) = "なし", "４飜"
 
-	RuleDescription(RULE_SHANRON_PAOCHUU+1) = "双龍包柱の有無と価値を設定します(萬子と筒子で123789の形、二索・四索・六索のどれかの雀頭)"
-	RuleTxt(0, RULE_SHANRON_PAOCHUU+1) = "なし", "４飜"
+	RuleDescription(RULE_SHANRON_PAOCHUU) = "双龍包柱の有無と価値を設定します(萬子と筒子で123789の形、二索・四索・六索のどれかの雀頭)"
+	RuleTxt(0, RULE_SHANRON_PAOCHUU) = "なし", "４飜"
 
-	RuleDescription(RULE_SHANRON_SHIIKUI+1) = "双龍戯亀の有無と価値を設定します(萬子と筒子で123789の形、七索の雀頭)"
-	RuleTxt(0, RULE_SHANRON_SHIIKUI+1) = "なし", "４飜"
+	RuleDescription(RULE_SHANRON_SHIIKUI) = "双龍戯亀の有無と価値を設定します(萬子と筒子で123789の形、七索の雀頭)"
+	RuleTxt(0, RULE_SHANRON_SHIIKUI) = "なし", "４飜"
 #endif
 
-	RuleName(RULE_KYOKUJITSU_TOUSHOU+1) = "旭日東昇"
+	RuleName(RULE_KYOKUJITSU_TOUSHOU) = "旭日東昇"
 #ifdef SANMAS
-	RuleDescription(RULE_KYOKUJITSU_TOUSHOU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_KYOKUJITSU_TOUSHOU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KYOKUJITSU_TOUSHOU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_KYOKUJITSU_TOUSHOU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KYOKUJITSU_TOUSHOU+1) = "旭日東昇の有無と価値を設定します(一筒と東の刻子)"
-	RuleTxt(0, RULE_KYOKUJITSU_TOUSHOU+1) = "なし", "１飜"
+	RuleDescription(RULE_KYOKUJITSU_TOUSHOU) = "旭日東昇の有無と価値を設定します(一筒と東の刻子)"
+	RuleTxt(0, RULE_KYOKUJITSU_TOUSHOU) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_RIIRAO_SHIISHAN+1) = "日落西山"
+	RuleName(RULE_RIIRAO_SHIISHAN) = "日落西山"
 #ifdef SANMAS
-	RuleDescription(RULE_RIIRAO_SHIISHAN+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_RIIRAO_SHIISHAN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_RIIRAO_SHIISHAN) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_RIIRAO_SHIISHAN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_RIIRAO_SHIISHAN+1) = "日落西山の有無と価値を設定します(一筒と西の刻子)"
-	RuleTxt(0, RULE_RIIRAO_SHIISHAN+1) = "なし", "１飜"
+	RuleDescription(RULE_RIIRAO_SHIISHAN) = "日落西山の有無と価値を設定します(一筒と西の刻子)"
+	RuleTxt(0, RULE_RIIRAO_SHIISHAN) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_OTAKAZE_RON+1) = "客来和"
+	RuleName(RULE_OTAKAZE_RON) = "客来和"
 #ifdef SANMAS
-	RuleDescription(RULE_OTAKAZE_RON+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_OTAKAZE_RON+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_OTAKAZE_RON) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_OTAKAZE_RON) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_OTAKAZE_RON+1) = "客来和の有無と価値を設定します(客風牌をロン)"
-	RuleTxt(0, RULE_OTAKAZE_RON+1) = "なし", "１飜"
+	RuleDescription(RULE_OTAKAZE_RON) = "客来和の有無と価値を設定します(客風牌をロン)"
+	RuleTxt(0, RULE_OTAKAZE_RON) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_JINLONG_DOU_BEIDOU+1) = "金龍戯北斗"
+	RuleName(RULE_JINLONG_DOU_BEIDOU) = "金龍戯北斗"
 #ifdef SANMAS
-	RuleDescription(RULE_JINLONG_DOU_BEIDOU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_JINLONG_DOU_BEIDOU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_JINLONG_DOU_BEIDOU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_JINLONG_DOU_BEIDOU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_JINLONG_DOU_BEIDOU+1) = "金龍戯北斗の有無と価値を設定します(一気通貫と七筒の刻子と北の雀頭：付加役)"
-	RuleTxt(0, RULE_JINLONG_DOU_BEIDOU+1) = "なし", "２飜"
+	RuleDescription(RULE_JINLONG_DOU_BEIDOU) = "金龍戯北斗の有無と価値を設定します(一気通貫と七筒の刻子と北の雀頭：付加役)"
+	RuleTxt(0, RULE_JINLONG_DOU_BEIDOU) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_YOUBOU_HOKUTO+1) = "揺望北斗"
+	RuleName(RULE_YOUBOU_HOKUTO) = "揺望北斗"
 #ifdef SANMAS
-	RuleDescription(RULE_YOUBOU_HOKUTO+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_YOUBOU_HOKUTO+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_YOUBOU_HOKUTO) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_YOUBOU_HOKUTO) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_YOUBOU_HOKUTO+1) = "揺望北斗の有無と価値を設定します(二筒、七筒、北の刻子)"
-	RuleTxt(0, RULE_YOUBOU_HOKUTO+1) = "なし", "２飜"
+	RuleDescription(RULE_YOUBOU_HOKUTO) = "揺望北斗の有無と価値を設定します(二筒、七筒、北の刻子)"
+	RuleTxt(0, RULE_YOUBOU_HOKUTO) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_STARLIGHT+1) = "星光燦爛"
-	RuleDescription(RULE_STARLIGHT+1) = "星光燦爛の有無と価値を設定します(七筒の刻子のある清一色：付加役)"
-	RuleTxt(0, RULE_STARLIGHT+1) = "なし", "１飜"
+	RuleName(RULE_STARLIGHT) = "星光燦爛"
+	RuleDescription(RULE_STARLIGHT) = "星光燦爛の有無と価値を設定します(七筒の刻子のある清一色：付加役)"
+	RuleTxt(0, RULE_STARLIGHT) = "なし", "１飜"
 
-	RuleName(RULE_BIG_DIPPER+1) = "北斗七星"
+	RuleName(RULE_BIG_DIPPER) = "北斗七星"
 #ifdef ALLSANMA
-	RuleDescription(RULE_BIG_DIPPER+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_BIG_DIPPER+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_BIG_DIPPER) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_BIG_DIPPER) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_BIG_DIPPER+1) = "北斗七星の有無と価値を設定します(７の三色同刻と北の刻子、白の雀頭)"
-	RuleTxt(0, RULE_BIG_DIPPER+1) = "なし", "役満"
+	RuleDescription(RULE_BIG_DIPPER) = "北斗七星の有無と価値を設定します(７の三色同刻と北の刻子、白の雀頭)"
+	RuleTxt(0, RULE_BIG_DIPPER) = "なし", "役満"
 #endif
 
-	RuleName(RULE_SEISOU_TAIGETSU+1) = "西廂待月"
+	RuleName(RULE_SEISOU_TAIGETSU) = "西廂待月"
 #ifdef SANMAS
-	RuleDescription(RULE_SEISOU_TAIGETSU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SEISOU_TAIGETSU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SEISOU_TAIGETSU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SEISOU_TAIGETSU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SEISOU_TAIGETSU+1) = "西廂待月の有無と価値を設定します(西と白の刻子、一筒の単騎または双ポン待ち和了り)"
-	RuleTxt(0, RULE_SEISOU_TAIGETSU+1) = "なし", "２飜"
+	RuleDescription(RULE_SEISOU_TAIGETSU) = "西廂待月の有無と価値を設定します(西と白の刻子、一筒の単騎または双ポン待ち和了り)"
+	RuleTxt(0, RULE_SEISOU_TAIGETSU) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_UUTAARAN+1) = "武太郎売焼餅"
-	RuleDescription(RULE_UUTAARAN+1) = "武太郎売焼餅の有無と価値を設定します(四面子全てに５があり、雀頭が一筒)"
-	RuleTxt(0, RULE_UUTAARAN+1) = "なし", "３飜(喰い下がり有)"
+	RuleName(RULE_UUTAARAN) = "武太郎売焼餅"
+	RuleDescription(RULE_UUTAARAN) = "武太郎売焼餅の有無と価値を設定します(四面子全てに５があり、雀頭が一筒)"
+	RuleTxt(0, RULE_UUTAARAN) = "なし", "３飜(喰い下がり有)"
 
-	RuleName(RULE_NAMU_HACHIMAN+1) = "南無八幡"
+	RuleName(RULE_NAMU_HACHIMAN) = "南無八幡"
 #ifdef ALLSANMA
-	RuleDescription(RULE_NAMU_HACHIMAN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_NAMU_HACHIMAN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_NAMU_HACHIMAN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_NAMU_HACHIMAN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_NAMU_HACHIMAN+1) = "南無八幡の有無と価値を設定します(南、白、八萬の刻子)"
-	RuleTxt(0, RULE_NAMU_HACHIMAN+1) = "なし", "役満"
+	RuleDescription(RULE_NAMU_HACHIMAN) = "南無八幡の有無と価値を設定します(南、白、八萬の刻子)"
+	RuleTxt(0, RULE_NAMU_HACHIMAN) = "なし", "役満"
 #endif
 
-	RuleName(RULE_SEIKO_JIKKEI+1) = "西湖十景"
+	RuleName(RULE_SEIKO_JIKKEI) = "西湖十景"
 #ifdef SANMAS
-	RuleDescription(RULE_SEIKO_JIKKEI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SEIKO_JIKKEI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SEIKO_JIKKEI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SEIKO_JIKKEI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SEIKO_JIKKEI+1) = "西湖十景の有無と価値を設定します(西の刻子と、足して10になる組み合わせの筒子の２刻子)"
-	RuleTxt(0, RULE_SEIKO_JIKKEI+1) = "なし", "役満"
+	RuleDescription(RULE_SEIKO_JIKKEI) = "西湖十景の有無と価値を設定します(西の刻子と、足して10になる組み合わせの筒子の２刻子)"
+	RuleTxt(0, RULE_SEIKO_JIKKEI) = "なし", "役満"
 #endif
 
-	RuleName(RULE_KOUHAKU_CHIITOI+1) = "紅白七対"
+	RuleName(RULE_KOUHAKU_CHIITOI) = "紅白七対"
 #ifdef SANMAS
-	RuleDescription(RULE_KOUHAKU_CHIITOI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_KOUHAKU_CHIITOI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KOUHAKU_CHIITOI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_KOUHAKU_CHIITOI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KOUHAKU_CHIITOI+1) = "紅白七対の有無と価値を設定します(白と中のある七対子：三元七対子も複合可能)"
-	RuleTxt(0, RULE_KOUHAKU_CHIITOI+1) = "なし", "２飜"
+	RuleDescription(RULE_KOUHAKU_CHIITOI) = "紅白七対の有無と価値を設定します(白と中のある七対子：三元七対子も複合可能)"
+	RuleTxt(0, RULE_KOUHAKU_CHIITOI) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_VOLCANIC_ERRUPTION+1) = "火山爆発(九の刻子)"
+	RuleName(RULE_VOLCANIC_ERRUPTION) = "火山爆発(九の刻子)"
 #ifdef SANMAS
-	RuleDescription(RULE_VOLCANIC_ERRUPTION+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_VOLCANIC_ERRUPTION+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_VOLCANIC_ERRUPTION) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_VOLCANIC_ERRUPTION) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_VOLCANIC_ERRUPTION+1) = "火山爆発の有無と価値を設定します(三索、中、発の刻子と９の刻子)"
-	RuleTxt(0, RULE_VOLCANIC_ERRUPTION+1) = "なし", "役満"
+	RuleDescription(RULE_VOLCANIC_ERRUPTION) = "火山爆発の有無と価値を設定します(三索、中、発の刻子と９の刻子)"
+	RuleTxt(0, RULE_VOLCANIC_ERRUPTION) = "なし", "役満"
 #endif
 
-	RuleName(RULE_TANFON_CHOUYOU+1) = "丹鳳朝陽"
+	RuleName(RULE_TANFON_CHOUYOU) = "丹鳳朝陽"
 #ifdef SANMAS
-	RuleDescription(RULE_TANFON_CHOUYOU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_TANFON_CHOUYOU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_TANFON_CHOUYOU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_TANFON_CHOUYOU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_TANFON_CHOUYOU+1) = "丹鳳朝陽の有無と価値を設定します(中、一筒、一索の刻子)"
-	RuleTxt(0, RULE_TANFON_CHOUYOU+1) = "なし", "役満"
+	RuleDescription(RULE_TANFON_CHOUYOU) = "丹鳳朝陽の有無と価値を設定します(中、一筒、一索の刻子)"
+	RuleTxt(0, RULE_TANFON_CHOUYOU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_HAOUBEN+1) = "覇王鞭"
-	RuleDescription(RULE_HAOUBEN+1) = "覇王鞭の有無と価値を設定します(同じ筋の牌で下から槓子・刻子・対子の順またはその逆)"
-	RuleTxt(0, RULE_HAOUBEN+1) = "なし", "６飜", "６飜(索子のみ)"
+	RuleName(RULE_HAOUBEN) = "覇王鞭"
+	RuleDescription(RULE_HAOUBEN) = "覇王鞭の有無と価値を設定します(同じ筋の牌で下から槓子・刻子・対子の順またはその逆)"
+	RuleTxt(0, RULE_HAOUBEN) = "なし", "６飜", "６飜(索子のみ)"
 
-	RuleName(RULE_RYUUKANCHAN+1) = "劉関張"
-	RuleDescription(RULE_RYUUKANCHAN+1) = "劉関張の有無と価値を設定します(連続する数牌で下から槓子・刻子・対子の順またはその逆)"
-	RuleTxt(0, RULE_RYUUKANCHAN+1) = "なし", "６飜"
+	RuleName(RULE_RYUUKANCHAN) = "劉関張"
+	RuleDescription(RULE_RYUUKANCHAN) = "劉関張の有無と価値を設定します(連続する数牌で下から槓子・刻子・対子の順またはその逆)"
+	RuleTxt(0, RULE_RYUUKANCHAN) = "なし", "６飜"
 
-	RuleName(RULE_OHKAGAMI+1) = "大鏡"
-	RuleDescription(RULE_OHKAGAMI+1) = "大鏡の有無と価値を設定します(一筒雀頭の二盃口：付加役)"
-	RuleTxt(0, RULE_OHKAGAMI+1) = "なし", "１飜"
+	RuleName(RULE_OHKAGAMI) = "大鏡"
+	RuleDescription(RULE_OHKAGAMI) = "大鏡の有無と価値を設定します(一筒雀頭の二盃口：付加役)"
+	RuleTxt(0, RULE_OHKAGAMI) = "なし", "１飜"
 
-	RuleName(RULE_KITA_NO_DAICHI+1) = "北の大地"
+	RuleName(RULE_KITA_NO_DAICHI) = "北の大地"
 #ifdef SANMAS
-	RuleDescription(RULE_KITA_NO_DAICHI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_KITA_NO_DAICHI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KITA_NO_DAICHI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_KITA_NO_DAICHI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KITA_NO_DAICHI+1) = "北の大地の有無と価値を設定します(索子の23468、北、白で七対子)"
-	RuleTxt(0, RULE_KITA_NO_DAICHI+1) = "なし", "役満"
+	RuleDescription(RULE_KITA_NO_DAICHI) = "北の大地の有無と価値を設定します(索子の23468、北、白で七対子)"
+	RuleTxt(0, RULE_KITA_NO_DAICHI) = "なし", "役満"
 #endif
 
-	RuleName(RULE_SHUANGFENG_ZHAYUN+1) = "双峰挿雲"
+	RuleName(RULE_SHUANGFENG_ZHAYUN) = "双峰挿雲"
 #ifdef ALLSANMA
-	RuleDescription(RULE_SHUANGFENG_ZHAYUN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SHUANGFENG_ZHAYUN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SHUANGFENG_ZHAYUN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SHUANGFENG_ZHAYUN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SHUANGFENG_ZHAYUN+1) = "双峰挿雲の有無と価値を設定します(萬子の一気通貫、東と八索で刻子と雀頭：付加役)"
-	RuleTxt(0, RULE_SHUANGFENG_ZHAYUN+1) = "なし", "２飜(喰い下がり有)"
+	RuleDescription(RULE_SHUANGFENG_ZHAYUN) = "双峰挿雲の有無と価値を設定します(萬子の一気通貫、東と八索で刻子と雀頭：付加役)"
+	RuleTxt(0, RULE_SHUANGFENG_ZHAYUN) = "なし", "２飜(喰い下がり有)"
 #endif
 
-	RuleName(RULE_NANBING_WANZHONG+1) = "南屏晩鍾"
+	RuleName(RULE_NANBING_WANZHONG) = "南屏晩鍾"
 #ifdef SANMAS
-	RuleDescription(RULE_NANBING_WANZHONG+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_NANBING_WANZHONG+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_NANBING_WANZHONG) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_NANBING_WANZHONG) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_NANBING_WANZHONG+1) = "南屏晩鍾の有無と価値を設定します(筒子の一気通貫、南と中で刻子と雀頭：付加役)"
-	RuleTxt(0, RULE_NANBING_WANZHONG+1) = "なし", "２飜(喰い下がり有)"
+	RuleDescription(RULE_NANBING_WANZHONG) = "南屏晩鍾の有無と価値を設定します(筒子の一気通貫、南と中で刻子と雀頭：付加役)"
+	RuleTxt(0, RULE_NANBING_WANZHONG) = "なし", "２飜(喰い下がり有)"
 #endif
 
-	RuleName(RULE_LEIFENG_XIZHAO+1) = "雷峰夕照"
+	RuleName(RULE_LEIFENG_XIZHAO) = "雷峰夕照"
 #ifdef SANMAS
-	RuleDescription(RULE_LEIFENG_XIZHAO+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_LEIFENG_XIZHAO+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_LEIFENG_XIZHAO) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_LEIFENG_XIZHAO) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_LEIFENG_XIZHAO+1) = "雷峰夕照の有無と価値を設定します(索子の一気通貫、西と八筒で刻子と雀頭：付加役)"
-	RuleTxt(0, RULE_LEIFENG_XIZHAO+1) = "なし", "２飜(喰い下がり有)"
+	RuleDescription(RULE_LEIFENG_XIZHAO) = "雷峰夕照の有無と価値を設定します(索子の一気通貫、西と八筒で刻子と雀頭：付加役)"
+	RuleTxt(0, RULE_LEIFENG_XIZHAO) = "なし", "２飜(喰い下がり有)"
 #endif
 
-	RuleName(RULE_LIULANG_WENYING+1) = "柳浪聞鶯"
-	RuleName(RULE_DUANQIAO_CANXUE+1) = "断橋残雪"
-	RuleName(RULE_SUDI_CHUNXIAO+1) = "蘇堤春暁"
+	RuleName(RULE_LIULANG_WENYING) = "柳浪聞鶯"
+	RuleName(RULE_DUANQIAO_CANXUE) = "断橋残雪"
+	RuleName(RULE_SUDI_CHUNXIAO) = "蘇堤春暁"
 #ifdef ALLSANMA
-	RuleDescription(RULE_LIULANG_WENYING+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_LIULANG_WENYING+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_LIULANG_WENYING) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_LIULANG_WENYING) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_DUANQIAO_CANXUE+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_DUANQIAO_CANXUE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_DUANQIAO_CANXUE) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_DUANQIAO_CANXUE) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_SUDI_CHUNXIAO+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SUDI_CHUNXIAO+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SUDI_CHUNXIAO) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SUDI_CHUNXIAO) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_LIULANG_WENYING+1) = "柳浪聞鶯の有無と価値を設定します(筒子の一気通貫、北と八萬で刻子と雀頭：付加役)"
-	RuleTxt(0, RULE_LIULANG_WENYING+1) = "なし", "２飜(喰い下がり有)"
+	RuleDescription(RULE_LIULANG_WENYING) = "柳浪聞鶯の有無と価値を設定します(筒子の一気通貫、北と八萬で刻子と雀頭：付加役)"
+	RuleTxt(0, RULE_LIULANG_WENYING) = "なし", "２飜(喰い下がり有)"
 
-	RuleDescription(RULE_DUANQIAO_CANXUE+1) = "断橋残雪の有無と価値を設定します(萬子の一気通貫、白と二索で刻子と雀頭：付加役)"
-	RuleTxt(0, RULE_DUANQIAO_CANXUE+1) = "なし", "２飜(喰い下がり有)"
+	RuleDescription(RULE_DUANQIAO_CANXUE) = "断橋残雪の有無と価値を設定します(萬子の一気通貫、白と二索で刻子と雀頭：付加役)"
+	RuleTxt(0, RULE_DUANQIAO_CANXUE) = "なし", "２飜(喰い下がり有)"
 
-	RuleDescription(RULE_SUDI_CHUNXIAO+1) = "蘇堤春暁の有無と価値を設定します(筒子の一気通貫、発と二萬で刻子と雀頭：付加役)"
-	RuleTxt(0, RULE_SUDI_CHUNXIAO+1) = "なし", "２飜(喰い下がり有)"
+	RuleDescription(RULE_SUDI_CHUNXIAO) = "蘇堤春暁の有無と価値を設定します(筒子の一気通貫、発と二萬で刻子と雀頭：付加役)"
+	RuleTxt(0, RULE_SUDI_CHUNXIAO) = "なし", "２飜(喰い下がり有)"
 #endif
 
-	RuleName(RULE_HUAGANG_GUANYU+1) = "花港観魚"
+	RuleName(RULE_HUAGANG_GUANYU) = "花港観魚"
 #ifdef SANMAS
-	RuleDescription(RULE_HUAGANG_GUANYU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_HUAGANG_GUANYU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_HUAGANG_GUANYU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_HUAGANG_GUANYU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_HUAGANG_GUANYU+1) = "花港観魚の有無と価値を設定します(索子の一気通貫、中と二筒で刻子と雀頭：付加役)"
-	RuleTxt(0, RULE_HUAGANG_GUANYU+1) = "なし", "２飜(喰い下がり有)"
+	RuleDescription(RULE_HUAGANG_GUANYU) = "花港観魚の有無と価値を設定します(索子の一気通貫、中と二筒で刻子と雀頭：付加役)"
+	RuleTxt(0, RULE_HUAGANG_GUANYU) = "なし", "２飜(喰い下がり有)"
 #endif
 
-	RuleName(RULE_SANTAN_YINYUE+1) = "三譚印月"
+	RuleName(RULE_SANTAN_YINYUE) = "三譚印月"
 #ifdef ALLSANMA
-	RuleDescription(RULE_SANTAN_YINYUE+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_SANTAN_YINYUE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SANTAN_YINYUE) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_SANTAN_YINYUE) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SANTAN_YINYUE+1) = "三譚印月の有無と価値を設定します(萬子の一気通貫、白と一萬で刻子と雀頭：付加役)"
-	RuleTxt(0, RULE_SANTAN_YINYUE+1) = "なし", "２飜(喰い下がり有)"
+	RuleDescription(RULE_SANTAN_YINYUE) = "三譚印月の有無と価値を設定します(萬子の一気通貫、白と一萬で刻子と雀頭：付加役)"
+	RuleTxt(0, RULE_SANTAN_YINYUE) = "なし", "２飜(喰い下がり有)"
 #endif
 
-	RuleName(RULE_QUYUAN_FENGHE+1) = "曲院風荷"
+	RuleName(RULE_QUYUAN_FENGHE) = "曲院風荷"
 #ifdef SANMAS
-	RuleDescription(RULE_QUYUAN_FENGHE+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_QUYUAN_FENGHE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_QUYUAN_FENGHE) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_QUYUAN_FENGHE) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_QUYUAN_FENGHE+1) = "曲院風荷の有無と価値を設定します(筒子の一気通貫、発と一筒で刻子と雀頭：付加役)"
-	RuleTxt(0, RULE_QUYUAN_FENGHE+1) = "なし", "２飜(喰い下がり有)"
+	RuleDescription(RULE_QUYUAN_FENGHE) = "曲院風荷の有無と価値を設定します(筒子の一気通貫、発と一筒で刻子と雀頭：付加役)"
+	RuleTxt(0, RULE_QUYUAN_FENGHE) = "なし", "２飜(喰い下がり有)"
 #endif
 
-	RuleName(RULE_PINGHU_QIUYUE+1) = "平湖秋月"
+	RuleName(RULE_PINGHU_QIUYUE) = "平湖秋月"
 #ifdef SANMAS
-	RuleDescription(RULE_PINGHU_QIUYUE+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_PINGHU_QIUYUE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_PINGHU_QIUYUE) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_PINGHU_QIUYUE) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_PINGHU_QIUYUE+1) = "平湖秋月の有無と価値を設定します(索子の一気通貫、中と一索で刻子と雀頭：付加役)"
-	RuleTxt(0, RULE_PINGHU_QIUYUE+1) = "なし", "２飜(喰い下がり有)"
+	RuleDescription(RULE_PINGHU_QIUYUE) = "平湖秋月の有無と価値を設定します(索子の一気通貫、中と一索で刻子と雀頭：付加役)"
+	RuleTxt(0, RULE_PINGHU_QIUYUE) = "なし", "２飜(喰い下がり有)"
 #endif
 
-	RuleName(RULE_SYZYGY+1) = "惑星直列"
-	RuleDescription(RULE_SYZYGY+1) = "惑星直列の有無と価値を設定します(筒子で11233455677899の形)"
-	RuleTxt(0, RULE_SYZYGY+1) = "なし", "役満(門前のみ)"
+	RuleName(RULE_SYZYGY) = "惑星直列"
+	RuleDescription(RULE_SYZYGY) = "惑星直列の有無と価値を設定します(筒子で11233455677899の形)"
+	RuleTxt(0, RULE_SYZYGY) = "なし", "役満(門前のみ)"
 
-	RuleName(RULE_GRAND_CROSS+1) = "愚濫怒苦露酢"
-	RuleDescription(RULE_GRAND_CROSS+1) = "愚濫怒苦露酢の有無と価値を設定します(筒子で12344455666789の形)"
-	RuleTxt(0, RULE_GRAND_CROSS+1) = "なし", "役満(門前のみ)"
+	RuleName(RULE_GRAND_CROSS) = "愚濫怒苦露酢"
+	RuleDescription(RULE_GRAND_CROSS) = "愚濫怒苦露酢の有無と価値を設定します(筒子で12344455666789の形)"
+	RuleTxt(0, RULE_GRAND_CROSS) = "なし", "役満(門前のみ)"
 
-	RuleName(RULE_XIQUE_NAOMEI+1) = "喜鵲閙梅"
+	RuleName(RULE_XIQUE_NAOMEI) = "喜鵲閙梅"
 #ifdef SANMAX
-	RuleDescription(RULE_XIQUE_NAOMEI+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_XIQUE_NAOMEI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_XIQUE_NAOMEI) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_XIQUE_NAOMEI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_XIQUE_NAOMEI+1) = "喜鵲閙梅の有無と価値を設定します(一索と五筒の刻子、123萬と123筒の順子、五索の雀頭)"
-	RuleTxt(0, RULE_XIQUE_NAOMEI+1) = "なし", "６飜"
+	RuleDescription(RULE_XIQUE_NAOMEI) = "喜鵲閙梅の有無と価値を設定します(一索と五筒の刻子、123萬と123筒の順子、五索の雀頭)"
+	RuleTxt(0, RULE_XIQUE_NAOMEI) = "なし", "６飜"
 #endif
 
-	RuleName(RULE_QUEQIAOHUI+1) = "鵲橋会"
-	RuleDescription(RULE_QUEQIAOHUI+1) = "鵲橋会の有無と価値を設定します(一索の刻子と７の刻子二つ)"
-	RuleTxt(0, RULE_QUEQIAOHUI+1) = "なし", "２飜"
+	RuleName(RULE_QUEQIAOHUI) = "鵲橋会"
+	RuleDescription(RULE_QUEQIAOHUI) = "鵲橋会の有無と価値を設定します(一索の刻子と７の刻子二つ)"
+	RuleTxt(0, RULE_QUEQIAOHUI) = "なし", "２飜"
 
-	RuleName(RULE_HUAIISOH+1) = "花一色"
-	RuleDescription(RULE_HUAIISOH+1) = "花一色の有無と価値を設定します(図柄に赤色を含む牌のみでの和了、萬子染めは対象外)"
-	RuleTxt(0, RULE_HUAIISOH+1) = "なし", "１飜"
+	RuleName(RULE_HUAIISOH) = "花一色"
+	RuleDescription(RULE_HUAIISOH) = "花一色の有無と価値を設定します(図柄に赤色を含む牌のみでの和了、萬子染めは対象外)"
+	RuleTxt(0, RULE_HUAIISOH) = "なし", "１飜"
 
-	RuleName(RULE_YIGAN_FENGYUE+1) = "一竿風月"
+	RuleName(RULE_YIGAN_FENGYUE) = "一竿風月"
 #ifdef SANMAS
-	RuleDescription(RULE_YIGAN_FENGYUE+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_YIGAN_FENGYUE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_YIGAN_FENGYUE) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_YIGAN_FENGYUE) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_YIGAN_FENGYUE+1) = "一竿風月の有無と価値を設定します(二索、風牌、一筒の刻子)"
-	RuleTxt(0, RULE_YIGAN_FENGYUE+1) = "なし", "２飜"
+	RuleDescription(RULE_YIGAN_FENGYUE) = "一竿風月の有無と価値を設定します(二索、風牌、一筒の刻子)"
+	RuleTxt(0, RULE_YIGAN_FENGYUE) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_PI+1) = "円周率和"
-	RuleDescription(RULE_PI+1) = "円周率和の有無と価値を設定します(門前清一色で11234555678999の形)"
-	RuleTxt(0, RULE_PI+1) = "なし", "役満(門前のみ)"
+	RuleName(RULE_PI) = "円周率和"
+	RuleDescription(RULE_PI) = "円周率和の有無と価値を設定します(門前清一色で11234555678999の形)"
+	RuleTxt(0, RULE_PI) = "なし", "役満(門前のみ)"
 
-	RuleName(RULE_SQUARE_ROOT_TWO+1) = "√２和"
-	RuleDescription(RULE_SQUARE_ROOT_TWO+1) = "√２和の有無と価値を設定します(門前清一色で1112233344567?の形)"
-	RuleTxt(0, RULE_SQUARE_ROOT_TWO+1) = "なし", "役満(門前のみ)"
+	RuleName(RULE_SQUARE_ROOT_TWO) = "√２和"
+	RuleDescription(RULE_SQUARE_ROOT_TWO) = "√２和の有無と価値を設定します(門前清一色で1112233344567?の形)"
+	RuleTxt(0, RULE_SQUARE_ROOT_TWO) = "なし", "役満(門前のみ)"
 
-	RuleName(RULE_NATURAL_LOGARITHM+1) = "自然対数の底"
-	RuleDescription(RULE_NATURAL_LOGARITHM+1) = "自然対数の底の有無と価値を設定します(門前清一色で122245788889?の形)"
-	RuleTxt(0, RULE_NATURAL_LOGARITHM+1) = "なし", "役満(門前のみ)"
+	RuleName(RULE_NATURAL_LOGARITHM) = "自然対数の底"
+	RuleDescription(RULE_NATURAL_LOGARITHM) = "自然対数の底の有無と価値を設定します(門前清一色で122245788889?の形)"
+	RuleTxt(0, RULE_NATURAL_LOGARITHM) = "なし", "役満(門前のみ)"
 
-	RuleName(RULE_IMAGINARY_NUMBER+1) = "虚数和"
-	RuleDescription(RULE_IMAGINARY_NUMBER+1) = "虚数和の有無と価値を設定します(門前清一色で1235566777789?の形)"
-	RuleTxt(0, RULE_IMAGINARY_NUMBER+1) = "なし", "役満(門前のみ)"
+	RuleName(RULE_IMAGINARY_NUMBER) = "虚数和"
+	RuleDescription(RULE_IMAGINARY_NUMBER) = "虚数和の有無と価値を設定します(門前清一色で1235566777789?の形)"
+	RuleTxt(0, RULE_IMAGINARY_NUMBER) = "なし", "役満(門前のみ)"
 
-	RuleName(RULE_SQUARE_ROOT_TEN+1) = "√１０和"
-	RuleDescription(RULE_SQUARE_ROOT_TEN+1) = "√１０和の有無と価値を設定します(門前清一色で11223366667778の形)"
-	RuleTxt(0, RULE_SQUARE_ROOT_TEN+1) = "なし", "役満(門前のみ)"
+	RuleName(RULE_SQUARE_ROOT_TEN) = "√１０和"
+	RuleDescription(RULE_SQUARE_ROOT_TEN) = "√１０和の有無と価値を設定します(門前清一色で11223366667778の形)"
+	RuleTxt(0, RULE_SQUARE_ROOT_TEN) = "なし", "役満(門前のみ)"
 
-	RuleName(RULE_CHII_SANKAN+1) = "吃三嵌"
-	RuleName(RULE_CHII_SANPEN+1) = "吃三辺"
-	RuleName(RULE_CHII_SHAOSHUN+1) = "吃小順"
-	RuleName(RULE_CHII_TAASHUN+1) = "吃大順"
-	RuleName(RULE_CHII_SUUKAN+1) = "吃四嵌"
-	RuleName(RULE_CHII_SUUPEN+1) = "吃四辺"
-	RuleName(RULE_CHII_SHAOSUUSHUN+1) = "吃小四順"
-	RuleName(RULE_CHII_TAASUUSHUN+1) = "吃大四順"
+	RuleName(RULE_CHII_SANKAN) = "吃三嵌"
+	RuleName(RULE_CHII_SANPEN) = "吃三辺"
+	RuleName(RULE_CHII_SHAOSHUN) = "吃小順"
+	RuleName(RULE_CHII_TAASHUN) = "吃大順"
+	RuleName(RULE_CHII_SUUKAN) = "吃四嵌"
+	RuleName(RULE_CHII_SUUPEN) = "吃四辺"
+	RuleName(RULE_CHII_SHAOSUUSHUN) = "吃小四順"
+	RuleName(RULE_CHII_TAASUUSHUN) = "吃大四順"
 #ifdef ALLSANMA
-	RuleDescription(RULE_CHII_SANKAN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_CHII_SANKAN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_CHII_SANKAN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_CHII_SANKAN) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_CHII_SANPEN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_CHII_SANPEN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_CHII_SANPEN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_CHII_SANPEN) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_CHII_SHAOSHUN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_CHII_SHAOSHUN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_CHII_SHAOSHUN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_CHII_SHAOSHUN) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_CHII_TAASHUN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_CHII_TAASHUN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_CHII_TAASHUN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_CHII_TAASHUN) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_CHII_SUUKAN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_CHII_SUUKAN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_CHII_SUUKAN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_CHII_SUUKAN) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_CHII_SUUPEN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_CHII_SUUPEN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_CHII_SUUPEN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_CHII_SUUPEN) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_CHII_SHAOSUUSHUN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_CHII_SHAOSUUSHUN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_CHII_SHAOSUUSHUN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_CHII_SHAOSUUSHUN) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_CHII_TAASUUSHUN+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_CHII_TAASUUSHUN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_CHII_TAASUUSHUN) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_CHII_TAASUUSHUN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_CHII_SANKAN+1) = "吃三嵌の有無と価値を設定します(嵌塔子を３つチー)"
-	RuleTxt(0, RULE_CHII_SANKAN+1) = "なし", "１飜"
+	RuleDescription(RULE_CHII_SANKAN) = "吃三嵌の有無と価値を設定します(嵌塔子を３つチー)"
+	RuleTxt(0, RULE_CHII_SANKAN) = "なし", "１飜"
 
-	RuleDescription(RULE_CHII_SANPEN+1) = "吃三辺の有無と価値を設定します(辺塔子を３つチー)"
-	RuleTxt(0, RULE_CHII_SANPEN+1) = "なし", "１飜"
+	RuleDescription(RULE_CHII_SANPEN) = "吃三辺の有無と価値を設定します(辺塔子を３つチー)"
+	RuleTxt(0, RULE_CHII_SANPEN) = "なし", "１飜"
 
-	RuleDescription(RULE_CHII_SHAOSHUN+1) = "吃小順の有無と価値を設定します(両面塔子を数字の小さい方で３つチー)"
-	RuleTxt(0, RULE_CHII_SHAOSHUN+1) = "なし", "１飜"
+	RuleDescription(RULE_CHII_SHAOSHUN) = "吃小順の有無と価値を設定します(両面塔子を数字の小さい方で３つチー)"
+	RuleTxt(0, RULE_CHII_SHAOSHUN) = "なし", "１飜"
 
-	RuleDescription(RULE_CHII_TAASHUN+1) = "吃大順の有無と価値を設定します(両面塔子を数字の大きい方で３つチー)"
-	RuleTxt(0, RULE_CHII_TAASHUN+1) = "なし", "１飜"
+	RuleDescription(RULE_CHII_TAASHUN) = "吃大順の有無と価値を設定します(両面塔子を数字の大きい方で３つチー)"
+	RuleTxt(0, RULE_CHII_TAASHUN) = "なし", "１飜"
 
-	RuleDescription(RULE_CHII_SUUKAN+1) = "吃四嵌の有無と価値を設定します(嵌塔子を４つチー)"
-	RuleTxt(0, RULE_CHII_SUUKAN+1) = "なし", "２飜"
+	RuleDescription(RULE_CHII_SUUKAN) = "吃四嵌の有無と価値を設定します(嵌塔子を４つチー)"
+	RuleTxt(0, RULE_CHII_SUUKAN) = "なし", "２飜"
 
-	RuleDescription(RULE_CHII_SUUPEN+1) = "吃四辺の有無と価値を設定します(辺塔子を４つチー)"
-	RuleTxt(0, RULE_CHII_SUUPEN+1) = "なし", "２飜"
+	RuleDescription(RULE_CHII_SUUPEN) = "吃四辺の有無と価値を設定します(辺塔子を４つチー)"
+	RuleTxt(0, RULE_CHII_SUUPEN) = "なし", "２飜"
 
-	RuleDescription(RULE_CHII_SHAOSUUSHUN+1) = "吃小四順の有無と価値を設定します(両面塔子を数字の小さい方で４つチー)"
-	RuleTxt(0, RULE_CHII_SHAOSUUSHUN+1) = "なし", "２飜"
+	RuleDescription(RULE_CHII_SHAOSUUSHUN) = "吃小四順の有無と価値を設定します(両面塔子を数字の小さい方で４つチー)"
+	RuleTxt(0, RULE_CHII_SHAOSUUSHUN) = "なし", "２飜"
 
-	RuleDescription(RULE_CHII_TAASUUSHUN+1) = "吃大四順の有無と価値を設定します(両面塔子を数字の大きい方で４つチー)"
-	RuleTxt(0, RULE_CHII_TAASUUSHUN+1) = "なし", "２飜"
+	RuleDescription(RULE_CHII_TAASUUSHUN) = "吃大四順の有無と価値を設定します(両面塔子を数字の大きい方で４つチー)"
+	RuleTxt(0, RULE_CHII_TAASUUSHUN) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_YUKIGESHOU+1) = "雪化粧"
+	RuleName(RULE_YUKIGESHOU) = "雪化粧"
 #ifdef SANMAS
-	RuleDescription(RULE_YUKIGESHOU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_YUKIGESHOU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_YUKIGESHOU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_YUKIGESHOU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_YUKIGESHOU+1) = "雪化粧の有無と価値を設定します(一筒、九筒、白の槓子)"
-	RuleTxt(0, RULE_YUKIGESHOU+1) = "なし", "役満"
+	RuleDescription(RULE_YUKIGESHOU) = "雪化粧の有無と価値を設定します(一筒、九筒、白の槓子)"
+	RuleTxt(0, RULE_YUKIGESHOU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_SEKIGAN_SEIRYUU+1) = "赤眼青龍"
+	RuleName(RULE_SEKIGAN_SEIRYUU) = "赤眼青龍"
 #ifdef SANMAS
-	RuleDescription(RULE_SEKIGAN_SEIRYUU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SEKIGAN_SEIRYUU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SEKIGAN_SEIRYUU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SEKIGAN_SEIRYUU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SEKIGAN_SEIRYUU+1) = "赤眼青龍の有無と価値を設定します(234筒の順子、二筒・四筒・八筒・(白or東)で刻子と雀頭)"
-	RuleTxt(0, RULE_SEKIGAN_SEIRYUU+1) = "なし", "役満"
+	RuleDescription(RULE_SEKIGAN_SEIRYUU) = "赤眼青龍の有無と価値を設定します(234筒の順子、二筒・四筒・八筒・(白or東)で刻子と雀頭)"
+	RuleTxt(0, RULE_SEKIGAN_SEIRYUU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_AZURE_DRAGON+1) = "東の青龍"
+	RuleName(RULE_AZURE_DRAGON) = "東の青龍"
 #ifdef SANMAS
-	RuleDescription(RULE_AZURE_DRAGON+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_AZURE_DRAGON+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_AZURE_DRAGON) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_AZURE_DRAGON) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_AZURE_DRAGON+1) = "東の青龍の有無と価値を設定します(筒子の一気通貫、東の暗槓、白の雀頭)"
-	RuleTxt(0, RULE_AZURE_DRAGON+1) = "なし", "役満(門前のみ)"
+	RuleDescription(RULE_AZURE_DRAGON) = "東の青龍の有無と価値を設定します(筒子の一気通貫、東の暗槓、白の雀頭)"
+	RuleTxt(0, RULE_AZURE_DRAGON) = "なし", "役満(門前のみ)"
 #endif
 
-	RuleName(RULE_VERMILION_BIRD+1) = "南の朱雀"
+	RuleName(RULE_VERMILION_BIRD) = "南の朱雀"
 #ifdef SANMAS
-	RuleDescription(RULE_VERMILION_BIRD+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_VERMILION_BIRD+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_VERMILION_BIRD) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_VERMILION_BIRD) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_VERMILION_BIRD+1) = "南の朱雀の有無と価値を設定します(一索と南の槓子、５７９索のうち２つの刻子、中の雀頭)"
-	RuleTxt(0, RULE_VERMILION_BIRD+1) = "なし", "役満"
+	RuleDescription(RULE_VERMILION_BIRD) = "南の朱雀の有無と価値を設定します(一索と南の槓子、５７９索のうち２つの刻子、中の雀頭)"
+	RuleTxt(0, RULE_VERMILION_BIRD) = "なし", "役満"
 #endif
 
-	RuleName(RULE_WHITE_TIGER+1) = "西の白虎"
+	RuleName(RULE_WHITE_TIGER) = "西の白虎"
 #ifdef ALLSANMA
-	RuleDescription(RULE_WHITE_TIGER+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_WHITE_TIGER+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_WHITE_TIGER) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_WHITE_TIGER) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_WHITE_TIGER+1) = "西の白虎の有無と価値を設定します(３の三色同刻、西の槓子、白の雀頭)"
-	RuleTxt(0, RULE_WHITE_TIGER+1) = "なし", "役満"
+	RuleDescription(RULE_WHITE_TIGER) = "西の白虎の有無と価値を設定します(３の三色同刻、西の槓子、白の雀頭)"
+	RuleTxt(0, RULE_WHITE_TIGER) = "なし", "役満"
 #endif
 
-	RuleName(RULE_BLACK_TORTOISE+1) = "北の玄武"
+	RuleName(RULE_BLACK_TORTOISE) = "北の玄武"
 #ifdef SANMAS
-	RuleDescription(RULE_BLACK_TORTOISE+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_BLACK_TORTOISE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_BLACK_TORTOISE) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_BLACK_TORTOISE) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_BLACK_TORTOISE+1) = "北の玄武の有無と価値を設定します(筒子の一気通貫、北の暗槓、七索の雀頭)"
-	RuleTxt(0, RULE_BLACK_TORTOISE+1) = "なし", "役満(門前のみ)"
+	RuleDescription(RULE_BLACK_TORTOISE) = "北の玄武の有無と価値を設定します(筒子の一気通貫、北の暗槓、七索の雀頭)"
+	RuleTxt(0, RULE_BLACK_TORTOISE) = "なし", "役満(門前のみ)"
 #endif
 
-	RuleName(RULE_SANBEI_MEIJIU+1) = "三杯美酒敬梅花"
+	RuleName(RULE_SANBEI_MEIJIU) = "三杯美酒敬梅花"
 #ifdef SANMAS
-	RuleDescription(RULE_SANBEI_MEIJIU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SANBEI_MEIJIU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SANBEI_MEIJIU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SANBEI_MEIJIU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SANBEI_MEIJIU+1) = "三杯美酒敬梅花の有無と価値を設定します(中、五筒と９の刻子)"
-	RuleTxt(0, RULE_SANBEI_MEIJIU+1) = "なし", "役満"
+	RuleDescription(RULE_SANBEI_MEIJIU) = "三杯美酒敬梅花の有無と価値を設定します(中、五筒と９の刻子)"
+	RuleTxt(0, RULE_SANBEI_MEIJIU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_SHENGDONG_JIXI+1) = "声東撃西"
+	RuleName(RULE_SHENGDONG_JIXI) = "声東撃西"
 #ifdef SANMAS
-	RuleDescription(RULE_SHENGDONG_JIXI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SHENGDONG_JIXI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SHENGDONG_JIXI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SHENGDONG_JIXI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SHENGDONG_JIXI+1) = "声東撃西の有無と価値を設定します(東と西の槓子)"
-	RuleTxt(0, RULE_SHENGDONG_JIXI+1) = "なし", "６飜"
+	RuleDescription(RULE_SHENGDONG_JIXI) = "声東撃西の有無と価値を設定します(東と西の槓子)"
+	RuleTxt(0, RULE_SHENGDONG_JIXI) = "なし", "６飜"
 #endif
 
-	RuleName(RULE_DONGFENG_YADAO+1) = "東風圧倒西風"
+	RuleName(RULE_DONGFENG_YADAO) = "東風圧倒西風"
 #ifdef SANMAS
-	RuleDescription(RULE_DONGFENG_YADAO+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_DONGFENG_YADAO+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_DONGFENG_YADAO) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_DONGFENG_YADAO) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_DONGFENG_YADAO+1) = "東風圧倒西風の有無と価値を設定します(東の刻子と西の雀頭、または東の槓子と西の刻子)"
-	RuleTxt(0, RULE_DONGFENG_YADAO+1) = "なし", "東刻子2飜、槓子3飜"
+	RuleDescription(RULE_DONGFENG_YADAO) = "東風圧倒西風の有無と価値を設定します(東の刻子と西の雀頭、または東の槓子と西の刻子)"
+	RuleTxt(0, RULE_DONGFENG_YADAO) = "なし", "東刻子2飜、槓子3飜"
 #endif
 
-	RuleName(RULE_ZAONAN_CHUANGBEI+1) = "走南闖北"
+	RuleName(RULE_ZAONAN_CHUANGBEI) = "走南闖北"
 #ifdef SANMAS
-	RuleDescription(RULE_ZAONAN_CHUANGBEI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_ZAONAN_CHUANGBEI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_ZAONAN_CHUANGBEI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_ZAONAN_CHUANGBEI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_ZAONAN_CHUANGBEI+1) = "走南闖北の有無と価値を設定します(南と北の槓子)"
-	RuleTxt(0, RULE_ZAONAN_CHUANGBEI+1) = "なし", "６飜"
+	RuleDescription(RULE_ZAONAN_CHUANGBEI) = "走南闖北の有無と価値を設定します(南と北の槓子)"
+	RuleTxt(0, RULE_ZAONAN_CHUANGBEI) = "なし", "６飜"
 #endif
 
-	RuleName(RULE_TAIKOU_TURTLE+1) = "太公釣金亀"
-	RuleDescription(RULE_TAIKOU_TURTLE+1) = "太公釣金亀の有無と価値を設定します(二索の刻子があって三索単騎で和了る)"
-	RuleTxt(0, RULE_TAIKOU_TURTLE+1) = "なし", "１飜"
+	RuleName(RULE_TAIKOU_TURTLE) = "太公釣金亀"
+	RuleDescription(RULE_TAIKOU_TURTLE) = "太公釣金亀の有無と価値を設定します(二索の刻子があって三索単騎で和了る)"
+	RuleTxt(0, RULE_TAIKOU_TURTLE) = "なし", "１飜"
 
-	RuleName(RULE_HAITEI_RAOTSEN+1) = "海底撈針"
-	RuleDescription(RULE_HAITEI_RAOTSEN+1) = "海底撈針の有無と価値を設定します(一萬を海底ツモ：付加役)"
-	RuleTxt(0, RULE_HAITEI_RAOTSEN+1) = "なし", "１飜"
+	RuleName(RULE_HAITEI_RAOTSEN) = "海底撈針"
+	RuleDescription(RULE_HAITEI_RAOTSEN) = "海底撈針の有無と価値を設定します(一萬を海底ツモ：付加役)"
+	RuleTxt(0, RULE_HAITEI_RAOTSEN) = "なし", "１飜"
 
-	RuleName(RULE_HAITEI_RAOHWA+1) = "海底撈花"
-	RuleDescription(RULE_HAITEI_RAOHWA+1) = "海底撈花の有無と価値を設定します(五筒を海底ツモ：付加役)"
-	RuleTxt(0, RULE_HAITEI_RAOHWA+1) = "なし", "１飜"
+	RuleName(RULE_HAITEI_RAOHWA) = "海底撈花"
+	RuleDescription(RULE_HAITEI_RAOHWA) = "海底撈花の有無と価値を設定します(五筒を海底ツモ：付加役)"
+	RuleTxt(0, RULE_HAITEI_RAOHWA) = "なし", "１飜"
 
-	RuleName(RULE_DORAHOH+1) = "ドラ和"
-	RuleDescription(RULE_DORAHOH+1) = "ドラ和の有無と価値を設定します(ドラで和了する)"
-	RuleTxt(0, RULE_DORAHOH+1) = "なし", "１飜"
+	RuleName(RULE_DORAHOH) = "ドラ和"
+	RuleDescription(RULE_DORAHOH) = "ドラ和の有無と価値を設定します(ドラで和了する)"
+	RuleTxt(0, RULE_DORAHOH) = "なし", "１飜"
 
-	RuleName(RULE_SIMPLIFIED_SCORING+1) = "点数計算"
-	RuleDescription(RULE_SIMPLIFIED_SCORING+1) = "点数を簡略計算するかを設定します"
-	RuleTxt(0, RULE_SIMPLIFIED_SCORING+1) = "正式", "略式"
+	RuleName(RULE_SIMPLIFIED_SCORING) = "点数計算"
+	RuleDescription(RULE_SIMPLIFIED_SCORING) = "点数を簡略計算するかを設定します"
+	RuleTxt(0, RULE_SIMPLIFIED_SCORING) = "正式", "略式"
 
-	RuleName(RULE_SILVER_LADDER+1) = "銀梯"
-	RuleDescription(RULE_SILVER_LADDER+1) = "銀梯の有無と価値を設定します(二色で数字の連続したの４刻子とそれに隣接する数字の雀頭)"
-	RuleTxt(0, RULE_SILVER_LADDER+1) = "なし", "４飜"
+	RuleName(RULE_SILVER_LADDER) = "銀梯"
+	RuleDescription(RULE_SILVER_LADDER) = "銀梯の有無と価値を設定します(二色で数字の連続したの４刻子とそれに隣接する数字の雀頭)"
+	RuleTxt(0, RULE_SILVER_LADDER) = "なし", "４飜"
 
-	RuleName(RULE_SHANRON_TOUJA+1) = "双龍闘蛇"
-	RuleDescription(RULE_SHANRON_TOUJA+1) = "双龍闘蛇の有無と価値を設定します(筒子と索子で123789の形、一萬の雀頭)"
-	RuleTxt(0, RULE_SHANRON_TOUJA+1) = "なし", "４飜"
+	RuleName(RULE_SHANRON_TOUJA) = "双龍闘蛇"
+	RuleDescription(RULE_SHANRON_TOUJA) = "双龍闘蛇の有無と価値を設定します(筒子と索子で123789の形、一萬の雀頭)"
+	RuleTxt(0, RULE_SHANRON_TOUJA) = "なし", "４飜"
 
-	RuleName(RULE_HOUKANSOU+1) = "鳳還巣"
-	RuleDescription(RULE_HOUKANSOU+1) = "鳳還巣の有無と価値を設定します(一索を捨てている状態で一索単騎をツモ和了り)"
-	RuleTxt(0, RULE_HOUKANSOU+1) = "なし", "１飜", "２飜"
+	RuleName(RULE_HOUKANSOU) = "鳳還巣"
+	RuleDescription(RULE_HOUKANSOU) = "鳳還巣の有無と価値を設定します(一索を捨てている状態で一索単騎をツモ和了り)"
+	RuleTxt(0, RULE_HOUKANSOU) = "なし", "１飜", "２飜"
 
-	RuleName(RULE_GEKKANJUN+1) = "月還巡"
-	RuleDescription(RULE_GEKKANJUN+1) = "月還巡の有無と価値を設定します(一筒を捨てている状態で一筒単騎をツモ和了り)"
-	RuleTxt(0, RULE_GEKKANJUN+1) = "なし", "１飜", "２飜"
+	RuleName(RULE_GEKKANJUN) = "月還巡"
+	RuleDescription(RULE_GEKKANJUN) = "月還巡の有無と価値を設定します(一筒を捨てている状態で一筒単騎をツモ和了り)"
+	RuleTxt(0, RULE_GEKKANJUN) = "なし", "１飜", "２飜"
 
-	RuleName(RULE_SHINRIISHOU+1) = "針戻手"
-	RuleDescription(RULE_SHINRIISHOU+1) = "針戻手の有無と価値を設定します(一萬を捨てている状態で一萬単騎をツモ和了り)"
-	RuleTxt(0, RULE_SHINRIISHOU+1) = "なし", "１飜", "２飜"
+	RuleName(RULE_SHINRIISHOU) = "針戻手"
+	RuleDescription(RULE_SHINRIISHOU) = "針戻手の有無と価値を設定します(一萬を捨てている状態で一萬単騎をツモ和了り)"
+	RuleTxt(0, RULE_SHINRIISHOU) = "なし", "１飜", "２飜"
 
-	RuleName(RULE_KINKI_KIKAN+1) = "金亀帰還"
-	RuleDescription(RULE_KINKI_KIKAN+1) = "金亀帰還の有無と価値を設定します(七索を捨てている状態で七索単騎をツモ和了り)"
-	RuleTxt(0, RULE_KINKI_KIKAN+1) = "なし", "１飜", "２飜"
+	RuleName(RULE_KINKI_KIKAN) = "金亀帰還"
+	RuleDescription(RULE_KINKI_KIKAN) = "金亀帰還の有無と価値を設定します(七索を捨てている状態で七索単騎をツモ和了り)"
+	RuleTxt(0, RULE_KINKI_KIKAN) = "なし", "１飜", "２飜"
 
-	RuleName(RULE_HOKUTO_SHOUKAN+1) = "北斗召還"
-	RuleDescription(RULE_HOKUTO_SHOUKAN+1) = "北斗召還の有無と価値を設定します(七筒を捨てている状態で七筒単騎をツモ和了り)"
-	RuleTxt(0, RULE_HOKUTO_SHOUKAN+1) = "なし", "１飜", "２飜"
+	RuleName(RULE_HOKUTO_SHOUKAN) = "北斗召還"
+	RuleDescription(RULE_HOKUTO_SHOUKAN) = "北斗召還の有無と価値を設定します(七筒を捨てている状態で七筒単騎をツモ和了り)"
+	RuleTxt(0, RULE_HOKUTO_SHOUKAN) = "なし", "１飜", "２飜"
 
-	RuleName(RULE_DAIJA_KANKETSU+1) = "大蛇還穴"
+	RuleName(RULE_DAIJA_KANKETSU) = "大蛇還穴"
 #ifdef SANMAX
-	RuleDescription(RULE_DAIJA_KANKETSU+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_DAIJA_KANKETSU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_DAIJA_KANKETSU) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_DAIJA_KANKETSU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_DAIJA_KANKETSU+1) = "大蛇還穴の有無と価値を設定します(七萬を捨てている状態で七萬単騎をツモ和了り)"
-	RuleTxt(0, RULE_DAIJA_KANKETSU+1) = "なし", "１飜", "２飜"
+	RuleDescription(RULE_DAIJA_KANKETSU) = "大蛇還穴の有無と価値を設定します(七萬を捨てている状態で七萬単騎をツモ和了り)"
+	RuleTxt(0, RULE_DAIJA_KANKETSU) = "なし", "１飜", "２飜"
 #endif
 
-	RuleName(RULE_DONGFENGCHUI+1) = "東風吹"
+	RuleName(RULE_DONGFENGCHUI) = "東風吹"
 #ifdef SANMAS
-	RuleDescription(RULE_DONGFENGCHUI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_DONGFENGCHUI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_DONGFENGCHUI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_DONGFENGCHUI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_DONGFENGCHUI+1) = "東風吹の有無と価値を設定します(東を捨てている状態で東単騎をツモ和了り)"
-	RuleTxt(0, RULE_DONGFENGCHUI+1) = "なし", "１飜", "２飜"
+	RuleDescription(RULE_DONGFENGCHUI) = "東風吹の有無と価値を設定します(東を捨てている状態で東単騎をツモ和了り)"
+	RuleTxt(0, RULE_DONGFENGCHUI) = "なし", "１飜", "２飜"
 #endif
 
-	RuleName(RULE_NANFENGCHUI+1) = "南風吹"
+	RuleName(RULE_NANFENGCHUI) = "南風吹"
 #ifdef SANMAS
-	RuleDescription(RULE_NANFENGCHUI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_NANFENGCHUI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_NANFENGCHUI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_NANFENGCHUI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_NANFENGCHUI+1) = "南風吹の有無と価値を設定します(南を捨てている状態で南単騎をツモ和了り)"
-	RuleTxt(0, RULE_NANFENGCHUI+1) = "なし", "１飜", "２飜"
+	RuleDescription(RULE_NANFENGCHUI) = "南風吹の有無と価値を設定します(南を捨てている状態で南単騎をツモ和了り)"
+	RuleTxt(0, RULE_NANFENGCHUI) = "なし", "１飜", "２飜"
 #endif
 
-	RuleName(RULE_XIFENGCHUI+1) = "西風吹"
+	RuleName(RULE_XIFENGCHUI) = "西風吹"
 #ifdef SANMAS
-	RuleDescription(RULE_XIFENGCHUI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_XIFENGCHUI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_XIFENGCHUI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_XIFENGCHUI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_XIFENGCHUI+1) = "西風吹の有無と価値を設定します(西を捨てている状態で西単騎をツモ和了り)"
-	RuleTxt(0, RULE_XIFENGCHUI+1) = "なし", "１飜", "２飜"
+	RuleDescription(RULE_XIFENGCHUI) = "西風吹の有無と価値を設定します(西を捨てている状態で西単騎をツモ和了り)"
+	RuleTxt(0, RULE_XIFENGCHUI) = "なし", "１飜", "２飜"
 #endif
 
-	RuleName(RULE_BEIFENGCHUI+1) = "北風吹"
+	RuleName(RULE_BEIFENGCHUI) = "北風吹"
 #ifdef SANMAS
-	RuleDescription(RULE_BEIFENGCHUI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_BEIFENGCHUI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_BEIFENGCHUI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_BEIFENGCHUI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_BEIFENGCHUI+1) = "北風吹の有無と価値を設定します(北を捨てている状態で北単騎をツモ和了り)"
-	RuleTxt(0, RULE_BEIFENGCHUI+1) = "なし", "１飜", "２飜"
+	RuleDescription(RULE_BEIFENGCHUI) = "北風吹の有無と価値を設定します(北を捨てている状態で北単騎をツモ和了り)"
+	RuleTxt(0, RULE_BEIFENGCHUI) = "なし", "１飜", "２飜"
 #endif
 
-	RuleName(RULE_FOUR_INTO_ONE+1) = "四帰一"
-	RuleDescription(RULE_FOUR_INTO_ONE+1) = "四帰一の有無と価値を設定します(順子と刻子で４枚使い)"
-	RuleTxt(0, RULE_FOUR_INTO_ONE+1) = "なし", "１飜"
+	RuleName(RULE_FOUR_INTO_ONE) = "四帰一"
+	RuleDescription(RULE_FOUR_INTO_ONE) = "四帰一の有無と価値を設定します(順子と刻子で４枚使い)"
+	RuleTxt(0, RULE_FOUR_INTO_ONE) = "なし", "１飜"
 
-	RuleName(RULE_DOUBLE_FOUR_INTO_ONE+1) = "両四帰一"
-	RuleDescription(RULE_DOUBLE_FOUR_INTO_ONE+1) = "両四帰一の有無と価値を設定します(四帰一を二組)"
-	RuleTxt(0, RULE_DOUBLE_FOUR_INTO_ONE+1) = "なし", "２飜", "３飜"
+	RuleName(RULE_DOUBLE_FOUR_INTO_ONE) = "両四帰一"
+	RuleDescription(RULE_DOUBLE_FOUR_INTO_ONE) = "両四帰一の有無と価値を設定します(四帰一を二組)"
+	RuleTxt(0, RULE_DOUBLE_FOUR_INTO_ONE) = "なし", "２飜", "３飜"
 
-	RuleName(RULE_TIGER_FOUR_INTO_ONE+1) = "虎四帰一"
-	RuleDescription(RULE_TIGER_FOUR_INTO_ONE+1) = "虎四帰一の有無と価値を設定します(順子と２刻子で二組の４枚使い)"
-	RuleTxt(0, RULE_TIGER_FOUR_INTO_ONE+1) = "なし", "２飜", "３飜"
+	RuleName(RULE_TIGER_FOUR_INTO_ONE) = "虎四帰一"
+	RuleDescription(RULE_TIGER_FOUR_INTO_ONE) = "虎四帰一の有無と価値を設定します(順子と２刻子で二組の４枚使い)"
+	RuleTxt(0, RULE_TIGER_FOUR_INTO_ONE) = "なし", "２飜", "３飜"
 
-	RuleName(RULE_DRAGON_FOUR_INTO_ONE+1) = "龍四帰一"
-	RuleDescription(RULE_DRAGON_FOUR_INTO_ONE+1) = "龍四帰一の有無と価値を設定します(順子と３刻子で三組の４枚使い)"
-	RuleTxt(0, RULE_DRAGON_FOUR_INTO_ONE+1) = "なし", "役満"
+	RuleName(RULE_DRAGON_FOUR_INTO_ONE) = "龍四帰一"
+	RuleDescription(RULE_DRAGON_FOUR_INTO_ONE) = "龍四帰一の有無と価値を設定します(順子と３刻子で三組の４枚使い)"
+	RuleTxt(0, RULE_DRAGON_FOUR_INTO_ONE) = "なし", "役満"
 
-	RuleName(RULE_FOUR_INTO_THREE+1) = "四帰三"
-	RuleDescription(RULE_FOUR_INTO_THREE+1) = "四帰三の有無と価値を設定します(順子二つと雀頭で４枚使い)"
-	RuleTxt(0, RULE_FOUR_INTO_THREE+1) = "なし", "３飜"
+	RuleName(RULE_FOUR_INTO_THREE) = "四帰三"
+	RuleDescription(RULE_FOUR_INTO_THREE) = "四帰三の有無と価値を設定します(順子二つと雀頭で４枚使い)"
+	RuleTxt(0, RULE_FOUR_INTO_THREE) = "なし", "３飜"
 
-	RuleName(RULE_FOUR_INTO_THREE_ONE+1) = "四帰三一"
-	RuleDescription(RULE_FOUR_INTO_THREE_ONE+1) = "四帰三一の有無と価値を設定します(四帰三と四帰一の複合)"
-	RuleTxt(0, RULE_FOUR_INTO_THREE_ONE+1) = "なし", "４飜"
+	RuleName(RULE_FOUR_INTO_THREE_ONE) = "四帰三一"
+	RuleDescription(RULE_FOUR_INTO_THREE_ONE) = "四帰三一の有無と価値を設定します(四帰三と四帰一の複合)"
+	RuleTxt(0, RULE_FOUR_INTO_THREE_ONE) = "なし", "４飜"
 
-	RuleName(RULE_FOUR_INTO_FOUR+1) = "四帰四"
-	RuleDescription(RULE_FOUR_INTO_FOUR+1) = "四帰四の有無と価値を設定します(順子４つで４枚使い)"
-	RuleTxt(0, RULE_FOUR_INTO_FOUR+1) = "なし", "６飜"
+	RuleName(RULE_FOUR_INTO_FOUR) = "四帰四"
+	RuleDescription(RULE_FOUR_INTO_FOUR) = "四帰四の有無と価値を設定します(順子４つで４枚使い)"
+	RuleTxt(0, RULE_FOUR_INTO_FOUR) = "なし", "６飜"
 
-	RuleName(RULE_DOUBLE_FOUR_INTO_FOUR+1) = "重四帰四"
-	RuleDescription(RULE_DOUBLE_FOUR_INTO_FOUR+1) = "重四帰四の有無と価値を設定します(順子４つで２組の４枚使い)"
-	RuleTxt(0, RULE_DOUBLE_FOUR_INTO_FOUR+1) = "なし", "８飜"
+	RuleName(RULE_DOUBLE_FOUR_INTO_FOUR) = "重四帰四"
+	RuleDescription(RULE_DOUBLE_FOUR_INTO_FOUR) = "重四帰四の有無と価値を設定します(順子４つで２組の４枚使い)"
+	RuleTxt(0, RULE_DOUBLE_FOUR_INTO_FOUR) = "なし", "８飜"
 
-	RuleName(RULE_GREAT_FOUR_INTO_FOUR+1) = "大四帰四"
-	RuleDescription(RULE_GREAT_FOUR_INTO_FOUR+1) = "大四帰四の有無と価値を設定します(四帰四と四帰三の複合)"
-	RuleTxt(0, RULE_GREAT_FOUR_INTO_FOUR+1) = "なし", "役満"
+	RuleName(RULE_GREAT_FOUR_INTO_FOUR) = "大四帰四"
+	RuleDescription(RULE_GREAT_FOUR_INTO_FOUR) = "大四帰四の有無と価値を設定します(四帰四と四帰三の複合)"
+	RuleTxt(0, RULE_GREAT_FOUR_INTO_FOUR) = "なし", "役満"
 
-	RuleName(RULE_ALL_ONE+1) = "全帯一"
-	RuleDescription(RULE_ALL_ONE+1) = "全帯一の有無と価値を設定します(全ての面子と雀頭に数牌の１を含む)"
-	RuleTxt(0, RULE_ALL_ONE+1) = "なし", "４飜", "６飜(喰い下がり有り)"
+	RuleName(RULE_ALL_ONE) = "全帯一"
+	RuleDescription(RULE_ALL_ONE) = "全帯一の有無と価値を設定します(全ての面子と雀頭に数牌の１を含む)"
+	RuleTxt(0, RULE_ALL_ONE) = "なし", "４飜", "６飜(喰い下がり有り)"
 
-	RuleName(RULE_ALL_TWO+1) = "全帯二"
-	RuleDescription(RULE_ALL_TWO+1) = "全帯二の有無と価値を設定します(全ての面子と雀頭に数牌の２を含む)"
-	RuleTxt(0, RULE_ALL_TWO+1) = "なし", "４飜"
+	RuleName(RULE_ALL_TWO) = "全帯二"
+	RuleDescription(RULE_ALL_TWO) = "全帯二の有無と価値を設定します(全ての面子と雀頭に数牌の２を含む)"
+	RuleTxt(0, RULE_ALL_TWO) = "なし", "４飜"
 
-	RuleName(RULE_ALL_THREE+1) = "全帯三"
-	RuleDescription(RULE_ALL_THREE+1) = "全帯三の有無と価値を設定します(全ての面子と雀頭に数牌の３を含む)"
-	RuleTxt(0, RULE_ALL_THREE+1) = "なし", "４飜"
+	RuleName(RULE_ALL_THREE) = "全帯三"
+	RuleDescription(RULE_ALL_THREE) = "全帯三の有無と価値を設定します(全ての面子と雀頭に数牌の３を含む)"
+	RuleTxt(0, RULE_ALL_THREE) = "なし", "４飜"
 
-	RuleName(RULE_ALL_FOUR+1) = "全帯四"
-	RuleDescription(RULE_ALL_FOUR+1) = "全帯四の有無と価値を設定します(全ての面子と雀頭に数牌の４を含む)"
-	RuleTxt(0, RULE_ALL_FOUR+1) = "なし", "４飜"
+	RuleName(RULE_ALL_FOUR) = "全帯四"
+	RuleDescription(RULE_ALL_FOUR) = "全帯四の有無と価値を設定します(全ての面子と雀頭に数牌の４を含む)"
+	RuleTxt(0, RULE_ALL_FOUR) = "なし", "４飜"
 
-	RuleName(RULE_ALL_FIVE+1) = "全帯五"
-	RuleDescription(RULE_ALL_FIVE+1) = "全帯五の有無と価値を設定します(全ての面子と雀頭に数牌の５を含む)"
-	RuleTxt(0, RULE_ALL_FIVE+1) = "なし", "２飜", "３飜(喰い下がり有り)", "４飜", "６飜(喰い下がり有り)"
+	RuleName(RULE_ALL_FIVE) = "全帯五"
+	RuleDescription(RULE_ALL_FIVE) = "全帯五の有無と価値を設定します(全ての面子と雀頭に数牌の５を含む)"
+	RuleTxt(0, RULE_ALL_FIVE) = "なし", "２飜", "３飜(喰い下がり有り)", "４飜", "６飜(喰い下がり有り)"
 
-	RuleName(RULE_ALL_SIX+1) = "全帯六"
-	RuleDescription(RULE_ALL_SIX+1) = "全帯六の有無と価値を設定します(全ての面子と雀頭に数牌の６を含む)"
-	RuleTxt(0, RULE_ALL_SIX+1) = "なし", "４飜"
+	RuleName(RULE_ALL_SIX) = "全帯六"
+	RuleDescription(RULE_ALL_SIX) = "全帯六の有無と価値を設定します(全ての面子と雀頭に数牌の６を含む)"
+	RuleTxt(0, RULE_ALL_SIX) = "なし", "４飜"
 
-	RuleName(RULE_ALL_SEVEN+1) = "全帯七"
-	RuleDescription(RULE_ALL_SEVEN+1) = "全帯七の有無と価値を設定します(全ての面子と雀頭に数牌の７を含む)"
-	RuleTxt(0, RULE_ALL_SEVEN+1) = "なし", "４飜"
+	RuleName(RULE_ALL_SEVEN) = "全帯七"
+	RuleDescription(RULE_ALL_SEVEN) = "全帯七の有無と価値を設定します(全ての面子と雀頭に数牌の７を含む)"
+	RuleTxt(0, RULE_ALL_SEVEN) = "なし", "４飜"
 
-	RuleName(RULE_ALL_EIGHT+1) = "全帯八"
-	RuleDescription(RULE_ALL_EIGHT+1) = "全帯八の有無と価値を設定します(全ての面子と雀頭に数牌の８を含む)"
-	RuleTxt(0, RULE_ALL_EIGHT+1) = "なし", "４飜"
+	RuleName(RULE_ALL_EIGHT) = "全帯八"
+	RuleDescription(RULE_ALL_EIGHT) = "全帯八の有無と価値を設定します(全ての面子と雀頭に数牌の８を含む)"
+	RuleTxt(0, RULE_ALL_EIGHT) = "なし", "４飜"
 
-	RuleName(RULE_ALL_NINE+1) = "全帯九"
-	RuleDescription(RULE_ALL_NINE+1) = "全帯九の有無と価値を設定します(全ての面子と雀頭に数牌の９を含む)"
-	RuleTxt(0, RULE_ALL_NINE+1) = "なし", "４飜", "６飜(喰い下がり有り)"
+	RuleName(RULE_ALL_NINE) = "全帯九"
+	RuleDescription(RULE_ALL_NINE) = "全帯九の有無と価値を設定します(全ての面子と雀頭に数牌の９を含む)"
+	RuleTxt(0, RULE_ALL_NINE) = "なし", "４飜", "６飜(喰い下がり有り)"
 
-	RuleName(RULE_OWN_FLOWER+1) = "本花"
-	RuleName(RULE_FOUR_SEASONS+1) = "春夏秋冬"
-	RuleName(RULE_FOUR_FLOWERS+1) = "四華開嶺"
-	RuleName(RULE_EIGHT_FLOWERS+1) = "八仙過海"
+	RuleName(RULE_OWN_FLOWER) = "本花"
+	RuleName(RULE_FOUR_SEASONS) = "春夏秋冬"
+	RuleName(RULE_FOUR_FLOWERS) = "四華開嶺"
+	RuleName(RULE_EIGHT_FLOWERS) = "八仙過海"
 #ifdef ALLSANMA
-	RuleDescription(RULE_OWN_FLOWER+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_OWN_FLOWER+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_OWN_FLOWER) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_OWN_FLOWER) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_FOUR_SEASONS+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_FOUR_SEASONS+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_FOUR_SEASONS) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_FOUR_SEASONS) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_FOUR_FLOWERS+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_FOUR_FLOWERS+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_FOUR_FLOWERS) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_FOUR_FLOWERS) = "Ｎ／Ａ"
 	
-	RuleDescription(RULE_EIGHT_FLOWERS+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_EIGHT_FLOWERS+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_EIGHT_FLOWERS) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_EIGHT_FLOWERS) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_OWN_FLOWER+1) = "本花の有無と価値を設定します(自分の風と対応する花牌：東家は春と梅、南家は夏と蘭、西家は秋と菊、北家は冬と竹)"
-	RuleTxt(0, RULE_OWN_FLOWER+1) = "なし", "１飜アップ"
+	RuleDescription(RULE_OWN_FLOWER) = "本花の有無と価値を設定します(自分の風と対応する花牌：東家は春と梅、南家は夏と蘭、西家は秋と菊、北家は冬と竹)"
+	RuleTxt(0, RULE_OWN_FLOWER) = "なし", "１飜アップ"
 
-	RuleDescription(RULE_FOUR_SEASONS+1) = "春夏秋冬の有無と価値を設定します(季節牌４枚全てそろえる)"
-	RuleTxt(0, RULE_FOUR_SEASONS+1) = "なし", "２飜アップ", "４飜アップ", "役満"
+	RuleDescription(RULE_FOUR_SEASONS) = "春夏秋冬の有無と価値を設定します(季節牌４枚全てそろえる)"
+	RuleTxt(0, RULE_FOUR_SEASONS) = "なし", "２飜アップ", "４飜アップ", "役満"
 
-	RuleDescription(RULE_FOUR_FLOWERS+1) = "四華開嶺の有無と価値を設定します(草木牌４枚全てそろえる)"
-	RuleTxt(0, RULE_FOUR_FLOWERS+1) = "なし", "２飜アップ", "４飜アップ", "役満"
+	RuleDescription(RULE_FOUR_FLOWERS) = "四華開嶺の有無と価値を設定します(草木牌４枚全てそろえる)"
+	RuleTxt(0, RULE_FOUR_FLOWERS) = "なし", "２飜アップ", "４飜アップ", "役満"
 
-	RuleDescription(RULE_EIGHT_FLOWERS+1) = "八仙過海の有無と価値を設定します(花牌８枚全てそろえる)"
-	RuleTxt(0, RULE_EIGHT_FLOWERS+1) = "なし", "役満"
+	RuleDescription(RULE_EIGHT_FLOWERS) = "八仙過海の有無と価値を設定します(花牌８枚全てそろえる)"
+	RuleTxt(0, RULE_EIGHT_FLOWERS) = "なし", "役満"
 #endif
 
-	RuleName(RULE_DOUBLE_YAKU_WIND_PAIR+1) = "雀頭符の重複"
+	RuleName(RULE_DOUBLE_YAKU_WIND_PAIR) = "雀頭符の重複"
 #ifdef SANMAS
-	RuleDescription(RULE_DOUBLE_YAKU_WIND_PAIR+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_DOUBLE_YAKU_WIND_PAIR+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_DOUBLE_YAKU_WIND_PAIR) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_DOUBLE_YAKU_WIND_PAIR) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_DOUBLE_YAKU_WIND_PAIR+1) = "ダブ風牌など、刻子にすると2飜以上になる役牌の雀頭に与えられる符を設定します"
-	RuleTxt(0, RULE_DOUBLE_YAKU_WIND_PAIR+1) = "あり", "なし"
+	RuleDescription(RULE_DOUBLE_YAKU_WIND_PAIR) = "ダブ風牌など、刻子にすると2飜以上になる役牌の雀頭に与えられる符を設定します"
+	RuleTxt(0, RULE_DOUBLE_YAKU_WIND_PAIR) = "あり", "なし"
 #endif
 
-	RuleName(RULE_TSUMIBOH_RATE+1) = "積み棒"
-	RuleDescription(RULE_TSUMIBOH_RATE+1) = "積み棒のレートを設定します"
+	RuleName(RULE_TSUMIBOH_RATE) = "積み棒"
+	RuleDescription(RULE_TSUMIBOH_RATE) = "積み棒のレートを設定します"
 #ifdef SANMA
-	RuleTxt(0, RULE_TSUMIBOH_RATE+1) = "場200点", "場600点", "場1000点", "なし"
+	RuleTxt(0, RULE_TSUMIBOH_RATE) = "場200点", "場600点", "場1000点", "なし"
 #else
-	RuleTxt(0, RULE_TSUMIBOH_RATE+1) = "場300点", ">>>", "場1500点", "なし"
+	RuleTxt(0, RULE_TSUMIBOH_RATE) = "場300点", ">>>", "場1500点", "なし"
 #endif
 
-	RuleName(RULE_MINKAN_PAO+1) = "大明槓の包"
-	RuleDescription(RULE_MINKAN_PAO+1) = "大明槓したときの嶺上牌で和了りになった場合の処理を設定します"
-	RuleTxt(0, RULE_MINKAN_PAO+1) = "なし", "あり", "あり(連槓含む)", "なし(２飜)", "あり(２飜)", "あり(連槓含む２飜)", "和了者の錯和"
+	RuleName(RULE_MINKAN_PAO) = "大明槓の包"
+	RuleDescription(RULE_MINKAN_PAO) = "大明槓したときの嶺上牌で和了りになった場合の処理を設定します"
+	RuleTxt(0, RULE_MINKAN_PAO) = "なし", "あり", "あり(連槓含む)", "なし(２飜)", "あり(２飜)", "あり(連槓含む２飜)", "和了者の錯和"
 
-	RuleName(RULE_NORMAL_PAO+1) = "大三元・大四喜の包"
+	RuleName(RULE_NORMAL_PAO) = "大三元・大四喜の包"
 #ifdef SANMAS
-	RuleDescription(RULE_NORMAL_PAO+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_NORMAL_PAO+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_NORMAL_PAO) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_NORMAL_PAO) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_NORMAL_PAO+1) = "大三元・大四喜を確定させたプレイヤーの責任払いの有無を設定します"
-	RuleTxt(0, RULE_NORMAL_PAO+1) = "あり", "なし"
+	RuleDescription(RULE_NORMAL_PAO) = "大三元・大四喜を確定させたプレイヤーの責任払いの有無を設定します"
+	RuleTxt(0, RULE_NORMAL_PAO) = "あり", "なし"
 #endif
 
-	RuleName(RULE_REDTILE_CHIP+1) = "赤牌祝儀"
-	RuleDescription(RULE_REDTILE_CHIP+1) = "赤牌に対するチップの有無を設定します"
-	RuleTxt(0, RULE_REDTILE_CHIP+1) = "門前のみ", "立直時のみ", "常時", "門前のみ(非ドラ)", "立直時のみ(非ドラ)", "常時(非ドラ)"
+	RuleName(RULE_REDTILE_CHIP) = "赤牌祝儀"
+	RuleDescription(RULE_REDTILE_CHIP) = "赤牌に対するチップの有無を設定します"
+	RuleTxt(0, RULE_REDTILE_CHIP) = "門前のみ", "立直時のみ", "常時", "門前のみ(非ドラ)", "立直時のみ(非ドラ)", "常時(非ドラ)"
 
-	RuleName(RULE_RED_WEST+1) = "赤西"
+	RuleName(RULE_RED_WEST) = "赤西"
 #ifdef SANMAS
-	RuleDescription(RULE_RED_WEST+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_RED_WEST+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_RED_WEST) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_RED_WEST) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_RED_WEST+1) = "赤ドラ(西風牌)の有無を設定します"
-	RuleTxt(0, RULE_RED_WEST+1) = "なし", "１枚"
+	RuleDescription(RULE_RED_WEST) = "赤ドラ(西風牌)の有無を設定します"
+	RuleTxt(0, RULE_RED_WEST) = "なし", "１枚"
 #endif
 
-	RuleName(RULE_RED_NORTH+1) = "赤北"
+	RuleName(RULE_RED_NORTH) = "赤北"
 #ifdef SANMAS
-	RuleDescription(RULE_RED_NORTH+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_RED_NORTH+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_RED_NORTH) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_RED_NORTH) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_RED_NORTH+1) = "赤ドラ(北風牌)の有無を設定します"
-	RuleTxt(0, RULE_RED_NORTH+1) = "なし", "１枚", "２枚", "３枚", "４枚"
+	RuleDescription(RULE_RED_NORTH) = "赤ドラ(北風牌)の有無を設定します"
+	RuleTxt(0, RULE_RED_NORTH) = "なし", "１枚", "２枚", "３枚", "４枚"
 #endif
 
-	RuleName(RULE_BLUE_TILES+1) = "青ドラ"
-	RuleDescription(RULE_BLUE_TILES+1) = "青ドラの価値を設定します"
-	RuleTxt(0, RULE_BLUE_TILES+1) = "１飜", "２飜", "マイナス１飜", "０飜"
+	RuleName(RULE_BLUE_TILES) = "青ドラ"
+	RuleDescription(RULE_BLUE_TILES) = "青ドラの価値を設定します"
+	RuleTxt(0, RULE_BLUE_TILES) = "１飜", "２飜", "マイナス１飜", "０飜"
 
-	RuleName(RULE_BLUE_ONE+1) = "青一"
-	RuleDescription(RULE_BLUE_ONE+1) = "青ドラ(１の牌)の有無を設定します"
-	RuleTxt(0, RULE_BLUE_ONE+1) = "なし", "筒子", "索子", "筒子と索子", "萬子", "萬子と筒子", "萬子と索子", "全種類"
+	RuleName(RULE_BLUE_ONE) = "青一"
+	RuleDescription(RULE_BLUE_ONE) = "青ドラ(１の牌)の有無を設定します"
+	RuleTxt(0, RULE_BLUE_ONE) = "なし", "筒子", "索子", "筒子と索子", "萬子", "萬子と筒子", "萬子と索子", "全種類"
 
-	RuleName(RULE_BLUE_FIVE+1) = "青五"
-	RuleDescription(RULE_BLUE_FIVE+1) = "青ドラ(５の牌)の有無を設定します"
-	RuleTxt(0, RULE_BLUE_FIVE+1) = "なし", "筒子", "索子", "筒子と索子"
+	RuleName(RULE_BLUE_FIVE) = "青五"
+	RuleDescription(RULE_BLUE_FIVE) = "青ドラ(５の牌)の有無を設定します"
+	RuleTxt(0, RULE_BLUE_FIVE) = "なし", "筒子", "索子", "筒子と索子"
 #ifndef SANMAX
-	RuleTxt(4, RULE_BLUE_FIVE+1) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
+	RuleTxt(4, RULE_BLUE_FIVE) = "萬子", "萬子と筒子", "萬子と索子", "全種類"
 #endif
 
-	RuleName(RULE_BLUE_NINE+1) = "青九"
-	RuleDescription(RULE_BLUE_NINE+1) = "青ドラ(９の牌)の有無を設定します"
-	RuleTxt(0, RULE_BLUE_NINE+1) = "なし", "筒子", "索子", "筒子と索子", "萬子", "萬子と筒子", "萬子と索子", "全種類"
+	RuleName(RULE_BLUE_NINE) = "青九"
+	RuleDescription(RULE_BLUE_NINE) = "青ドラ(９の牌)の有無を設定します"
+	RuleTxt(0, RULE_BLUE_NINE) = "なし", "筒子", "索子", "筒子と索子", "萬子", "萬子と筒子", "萬子と索子", "全種類"
 
-	RuleName(RULE_BLUE_LVFA+1) = "青発"
+	RuleName(RULE_BLUE_LVFA) = "青発"
 #ifdef SANMAS
-	RuleDescription(RULE_BLUE_LVFA+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_BLUE_LVFA+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_BLUE_LVFA) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_BLUE_LVFA) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_BLUE_LVFA+1) = "青ドラ(発)の有無を設定します"
-	RuleTxt(0, RULE_BLUE_LVFA+1) = "なし", "あり"
+	RuleDescription(RULE_BLUE_LVFA) = "青ドラ(発)の有無を設定します"
+	RuleTxt(0, RULE_BLUE_LVFA) = "なし", "あり"
 #endif
 
-	RuleName(RULE_BLUE_CHIP+1) = "青牌祝儀"
-	RuleDescription(RULE_BLUE_CHIP+1) = "青牌に対するチップの有無を設定します"
-	RuleTxt(0, RULE_BLUE_CHIP+1) = "門前のみ", "立直時のみ", "常時", "なし"
+	RuleName(RULE_BLUE_CHIP) = "青牌祝儀"
+	RuleDescription(RULE_BLUE_CHIP) = "青牌に対するチップの有無を設定します"
+	RuleTxt(0, RULE_BLUE_CHIP) = "門前のみ", "立直時のみ", "常時", "なし"
 
-	RuleName(RULE_BUTTOBI_BORDER+1) = "飛びの基準"
-	RuleDescription(RULE_BUTTOBI_BORDER+1) = "丁度０点を飛びとみなすかどうかを設定します"
-	RuleTxt(0, RULE_BUTTOBI_BORDER+1) = "０点未満", "０点以下"
+	RuleName(RULE_BUTTOBI_BORDER) = "飛びの基準"
+	RuleDescription(RULE_BUTTOBI_BORDER) = "丁度０点を飛びとみなすかどうかを設定します"
+	RuleTxt(0, RULE_BUTTOBI_BORDER) = "０点未満", "０点以下"
 
-	RuleName(RULE_RIICHI_REQUISITE+1) = "立直時点棒要件"
-	RuleDescription(RULE_RIICHI_REQUISITE+1) = "立直宣言時に持っていなければならない点数を設定します(飛び無しルールでは無視されます)"
-	RuleTxt(0, RULE_RIICHI_REQUISITE+1) = "1000点以上", "1100点以上", "なし"
+	RuleName(RULE_RIICHI_REQUISITE) = "立直時点棒要件"
+	RuleDescription(RULE_RIICHI_REQUISITE) = "立直宣言時に持っていなければならない点数を設定します(飛び無しルールでは無視されます)"
+	RuleTxt(0, RULE_RIICHI_REQUISITE) = "1000点以上", "1100点以上", "なし"
 
-	RuleName(RULE_SANBAIMAN_BORDER+1) = "三倍満"
-	RuleDescription(RULE_SANBAIMAN_BORDER+1) = "三倍満とする飜数を設定します(場ゾロを含まず)"
-	RuleTxt(0, RULE_SANBAIMAN_BORDER+1) = "１１飜以上", "１０飜以上"
+	RuleName(RULE_SANBAIMAN_BORDER) = "三倍満"
+	RuleDescription(RULE_SANBAIMAN_BORDER) = "三倍満とする飜数を設定します(場ゾロを含まず)"
+	RuleTxt(0, RULE_SANBAIMAN_BORDER) = "１１飜以上", "１０飜以上"
 
-	RuleName(RULE_KAZOE_BORDER+1) = "数え役満"
-	RuleDescription(RULE_KAZOE_BORDER+1) = "数え役満とする飜数を設定します(場ゾロを含まず)"
-	RuleTxt(0, RULE_KAZOE_BORDER+1) = "１３飜以上", "１２飜以上", "なし"
+	RuleName(RULE_KAZOE_BORDER) = "数え役満"
+	RuleDescription(RULE_KAZOE_BORDER) = "数え役満とする飜数を設定します(場ゾロを含まず)"
+	RuleTxt(0, RULE_KAZOE_BORDER) = "１３飜以上", "１２飜以上", "なし"
 
-	RuleName(RULE_HIEN+1) = "飛燕"
-	RuleDescription(RULE_HIEN+1) = "飛燕の有無と価値を設定します(ダブル立直宣言牌をロンする)"
-	RuleTxt(0, RULE_HIEN+1) = "なし", "ダブル役満"
+	RuleName(RULE_HIEN) = "飛燕"
+	RuleDescription(RULE_HIEN) = "飛燕の有無と価値を設定します(ダブル立直宣言牌をロンする)"
+	RuleTxt(0, RULE_HIEN) = "なし", "ダブル役満"
 
-	RuleName(RULE_KISHU550K+1) = "紀州五十五万石"
+	RuleName(RULE_KISHU550K) = "紀州五十五万石"
 #ifdef SANMAX
-	RuleDescription(RULE_KISHU550K+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_KISHU550K+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KISHU550K) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_KISHU550K) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KISHU550K+1) = "紀州五十五万石の有無と価値を設定します(萬子の清一色で数字の合計が55)"
-	RuleTxt(0, RULE_KISHU550K+1) = "なし", "役満"
+	RuleDescription(RULE_KISHU550K) = "紀州五十五万石の有無と価値を設定します(萬子の清一色で数字の合計が55)"
+	RuleTxt(0, RULE_KISHU550K) = "なし", "役満"
 #endif
 
-	RuleName(RULE_JOETSU_ASAHI+1) = "上越新幹線あさひ"
+	RuleName(RULE_JOETSU_ASAHI) = "上越新幹線あさひ"
 #ifdef SANMAS
-	RuleDescription(RULE_JOETSU_ASAHI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_JOETSU_ASAHI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_JOETSU_ASAHI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_JOETSU_ASAHI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_JOETSU_ASAHI+1) = "上越新幹線あさひの有無と価値を設定します(白と北のある一気通貫)"
-	RuleTxt(0, RULE_JOETSU_ASAHI+1) = "なし", "役満"
+	RuleDescription(RULE_JOETSU_ASAHI) = "上越新幹線あさひの有無と価値を設定します(白と北のある一気通貫)"
+	RuleTxt(0, RULE_JOETSU_ASAHI) = "なし", "役満"
 #endif
 
-	RuleName(RULE_JOETSU_TOKI+1) = "上越新幹線とき"
+	RuleName(RULE_JOETSU_TOKI) = "上越新幹線とき"
 #ifdef SANMAS
-	RuleDescription(RULE_JOETSU_TOKI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_JOETSU_TOKI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_JOETSU_TOKI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_JOETSU_TOKI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_JOETSU_TOKI+1) = "上越新幹線ときの有無と価値を設定します(北のある混一色一気通貫:付加役)"
-	RuleTxt(0, RULE_JOETSU_TOKI+1) = "なし", "２飜"
+	RuleDescription(RULE_JOETSU_TOKI) = "上越新幹線ときの有無と価値を設定します(北のある混一色一気通貫:付加役)"
+	RuleTxt(0, RULE_JOETSU_TOKI) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_HAKUITTEN+1) = "白一点"
+	RuleName(RULE_HAKUITTEN) = "白一点"
 #ifdef SANMAS
-	RuleDescription(RULE_HAKUITTEN+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_HAKUITTEN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_HAKUITTEN) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_HAKUITTEN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_HAKUITTEN+1) = "白一点の有無と価値を設定します(筒子の135679と白のみで和了る。白は必須)"
-	RuleTxt(0, RULE_HAKUITTEN+1) = "なし", "５飜(喰い下がり有り)"
+	RuleDescription(RULE_HAKUITTEN) = "白一点の有無と価値を設定します(筒子の135679と白のみで和了る。白は必須)"
+	RuleTxt(0, RULE_HAKUITTEN) = "なし", "５飜(喰い下がり有り)"
 #endif
 
-	RuleName(RULE_XIAOSANFENG+1) = "小三風"
+	RuleName(RULE_XIAOSANFENG) = "小三風"
 #ifdef SANMAS
-	RuleDescription(RULE_XIAOSANFENG+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_XIAOSANFENG+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_XIAOSANFENG) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_XIAOSANFENG) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_XIAOSANFENG+1) = "小三風の有無と価値を設定します(風牌で2つの刻子と1つの雀頭)"
-	RuleTxt(0, RULE_XIAOSANFENG+1) = "なし", "１飜"
+	RuleDescription(RULE_XIAOSANFENG) = "小三風の有無と価値を設定します(風牌で2つの刻子と1つの雀頭)"
+	RuleTxt(0, RULE_XIAOSANFENG) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_MITO350K+1) = "水戸三十五万石"
+	RuleName(RULE_MITO350K) = "水戸三十五万石"
 #ifdef SANMAX
-	RuleDescription(RULE_MITO350K+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_MITO350K+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_MITO350K) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_MITO350K) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_MITO350K+1) = "水戸三十五万石の有無と価値を設定します(萬子の清一色で数字の合計が35以下)"
-	RuleTxt(0, RULE_MITO350K+1) = "なし", "役満"
+	RuleDescription(RULE_MITO350K) = "水戸三十五万石の有無と価値を設定します(萬子の清一色で数字の合計が35以下)"
+	RuleTxt(0, RULE_MITO350K) = "なし", "役満"
 #endif
 
-	RuleName(RULE_SEIKAN_TUNNEL+1) = "青函トンネル"
+	RuleName(RULE_SEIKAN_TUNNEL) = "青函トンネル"
 #ifdef SANMAS
-	RuleDescription(RULE_SEIKAN_TUNNEL+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SEIKAN_TUNNEL+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SEIKAN_TUNNEL) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SEIKAN_TUNNEL) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SEIKAN_TUNNEL+1) = "青函トンネルの有無と価値を設定します(発の槓子、東の明刻、一筒の刻子)"
-	RuleTxt(0, RULE_SEIKAN_TUNNEL+1) = "なし", "役満"
+	RuleDescription(RULE_SEIKAN_TUNNEL) = "青函トンネルの有無と価値を設定します(発の槓子、東の明刻、一筒の刻子)"
+	RuleTxt(0, RULE_SEIKAN_TUNNEL) = "なし", "役満"
 #endif
 
-	RuleName(RULE_SEIKAN_SHIP+1) = "青函連絡船"
+	RuleName(RULE_SEIKAN_SHIP) = "青函連絡船"
 #ifdef SANMAS
-	RuleDescription(RULE_SEIKAN_SHIP+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SEIKAN_SHIP+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SEIKAN_SHIP) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SEIKAN_SHIP) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SEIKAN_SHIP+1) = "青函連絡船の有無と価値を設定します(発の暗槓、北の雀頭、一気通貫)"
-	RuleTxt(0, RULE_SEIKAN_SHIP+1) = "なし", "役満"
+	RuleDescription(RULE_SEIKAN_SHIP) = "青函連絡船の有無と価値を設定します(発の暗槓、北の雀頭、一気通貫)"
+	RuleTxt(0, RULE_SEIKAN_SHIP) = "なし", "役満"
 #endif
 
-	RuleName(RULE_DAISOUGEN+1) = "大草原"
-	RuleDescription(RULE_DAISOUGEN+1) = "大草原の有無と価値を設定します(1と8以外の索子でメンチン)"
-	RuleTxt(0, RULE_DAISOUGEN+1) = "なし", "役満(門前のみ)"
+	RuleName(RULE_DAISOUGEN) = "大草原"
+	RuleDescription(RULE_DAISOUGEN) = "大草原の有無と価値を設定します(1と8以外の索子でメンチン)"
+	RuleTxt(0, RULE_DAISOUGEN) = "なし", "役満(門前のみ)"
 
-	RuleName(RULE_BAOHONGKAIHUA+1) = "宝紅開花"
+	RuleName(RULE_BAOHONGKAIHUA) = "宝紅開花"
 #ifdef SANMAS
-	RuleDescription(RULE_BAOHONGKAIHUA+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_BAOHONGKAIHUA+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_BAOHONGKAIHUA) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_BAOHONGKAIHUA) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_BAOHONGKAIHUA+1) = "宝紅開花の有無と価値を設定します(白と中の刻子と1の三色小同刻)"
-	RuleTxt(0, RULE_BAOHONGKAIHUA+1) = "なし", "役満"
+	RuleDescription(RULE_BAOHONGKAIHUA) = "宝紅開花の有無と価値を設定します(白と中の刻子と1の三色小同刻)"
+	RuleTxt(0, RULE_BAOHONGKAIHUA) = "なし", "役満"
 #endif
 
-	RuleName(RULE_KOHAKU_MANJU+1) = "紅白饅頭"
+	RuleName(RULE_KOHAKU_MANJU) = "紅白饅頭"
 #ifdef SANMAS
-	RuleDescription(RULE_KOHAKU_MANJU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_KOHAKU_MANJU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KOHAKU_MANJU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_KOHAKU_MANJU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KOHAKU_MANJU+1) = "紅白饅頭の有無と価値を設定します(白と中がある萬子の混一色:付加役)"
-	RuleTxt(0, RULE_KOHAKU_MANJU+1) = "なし", "１飜", "２飜"
+	RuleDescription(RULE_KOHAKU_MANJU) = "紅白饅頭の有無と価値を設定します(白と中がある萬子の混一色:付加役)"
+	RuleTxt(0, RULE_KOHAKU_MANJU) = "なし", "１飜", "２飜"
 #endif
 
-	RuleName(RULE_SEKAIICHI+1) = "世界一"
+	RuleName(RULE_SEKAIICHI) = "世界一"
 #ifdef SANMAS
-	RuleDescription(RULE_SEKAIICHI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SEKAIICHI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SEKAIICHI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SEKAIICHI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SEKAIICHI+1) = "世界一の有無と価値を設定します(１の牌と風牌だけで七対子)"
-	RuleTxt(0, RULE_SEKAIICHI+1) = "なし", "役満"
+	RuleDescription(RULE_SEKAIICHI) = "世界一の有無と価値を設定します(１の牌と風牌だけで七対子)"
+	RuleTxt(0, RULE_SEKAIICHI) = "なし", "役満"
 #endif
 
-	RuleName(RULE_EAST_GREEN+1) = "東發つきもの"
+	RuleName(RULE_EAST_GREEN) = "東發つきもの"
 #ifdef SANMAS
-	RuleDescription(RULE_EAST_GREEN+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_EAST_GREEN+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_EAST_GREEN) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_EAST_GREEN) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_EAST_GREEN+1) = "東發つきものの有無と価値を設定します(東と発の刻子:付加役)"
-	RuleTxt(0, RULE_EAST_GREEN+1) = "なし", "１飜"
+	RuleDescription(RULE_EAST_GREEN) = "東發つきものの有無と価値を設定します(東と発の刻子:付加役)"
+	RuleTxt(0, RULE_EAST_GREEN) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_SOUTH_WHITE+1) = "南白つきもの"
+	RuleName(RULE_SOUTH_WHITE) = "南白つきもの"
 #ifdef SANMAS
-	RuleDescription(RULE_SOUTH_WHITE+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SOUTH_WHITE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SOUTH_WHITE) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SOUTH_WHITE) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SOUTH_WHITE+1) = "南白つきものの有無と価値を設定します(南と白の刻子:付加役)"
-	RuleTxt(0, RULE_SOUTH_WHITE+1) = "なし", "１飜"
+	RuleDescription(RULE_SOUTH_WHITE) = "南白つきものの有無と価値を設定します(南と白の刻子:付加役)"
+	RuleTxt(0, RULE_SOUTH_WHITE) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_HUALONG_CHANTA+1) = "三色通貫全帯幺九"
+	RuleName(RULE_HUALONG_CHANTA) = "三色通貫全帯幺九"
 #ifdef SANMAX
-	RuleDescription(RULE_HUALONG_CHANTA+1) = "三人打ちでは設定できません"
-	RuleTxt(0, RULE_HUALONG_CHANTA+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_HUALONG_CHANTA) = "三人打ちでは設定できません"
+	RuleTxt(0, RULE_HUALONG_CHANTA) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_HUALONG_CHANTA+1) = "三色通貫全帯幺九の有無と価値を設定します(三色通貫以外の１面子と雀頭がチャンタor純チャンになっている)"
+	RuleDescription(RULE_HUALONG_CHANTA) = "三色通貫全帯幺九の有無と価値を設定します(三色通貫以外の１面子と雀頭がチャンタor純チャンになっている)"
 #ifdef SANMAS
-	RuleTxt(0, RULE_HUALONG_CHANTA+1) = "なし", "４飜(喰い下がり有り)"
+	RuleTxt(0, RULE_HUALONG_CHANTA) = "なし", "４飜(喰い下がり有り)"
 #else
-	RuleTxt(0, RULE_HUALONG_CHANTA+1) = "なし", "混3飜、純4飜(喰下有)"
+	RuleTxt(0, RULE_HUALONG_CHANTA) = "なし", "混3飜、純4飜(喰下有)"
 #endif
 #endif
 
-	RuleName(RULE_QINGHAIHU+1) = "清海湖"
-	RuleDescription(RULE_QINGHAIHU+1) = "清海湖の有無と価値を設定します(清一色・純全帯幺九・二盃口の複合)"
-	RuleTxt(0, RULE_QINGHAIHU+1) = "なし", "役満"
+	RuleName(RULE_QINGHAIHU) = "清海湖"
+	RuleDescription(RULE_QINGHAIHU) = "清海湖の有無と価値を設定します(清一色・純全帯幺九・二盃口の複合)"
+	RuleTxt(0, RULE_QINGHAIHU) = "なし", "役満"
 
-	RuleName(RULE_TAOYISE+1) = "桃一色"
+	RuleName(RULE_TAOYISE) = "桃一色"
 #ifdef SANMAS
-	RuleDescription(RULE_TAOYISE+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_TAOYISE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_TAOYISE) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_TAOYISE) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_TAOYISE+1) = "桃一色の有無と価値を設定します(赤五筒と中があり、ほかは135679筒のみで和了)"
-	RuleTxt(0, RULE_TAOYISE+1) = "なし", "役満"
+	RuleDescription(RULE_TAOYISE) = "桃一色の有無と価値を設定します(赤五筒と中があり、ほかは135679筒のみで和了)"
+	RuleTxt(0, RULE_TAOYISE) = "なし", "役満"
 #endif
 
-	RuleName(RULE_CHAYISE+1) = "茶一色"
+	RuleName(RULE_CHAYISE) = "茶一色"
 #ifdef SANMAS
-	RuleDescription(RULE_CHAYISE+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_CHAYISE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_CHAYISE) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_CHAYISE) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_CHAYISE+1) = "茶一色の有無と価値を設定します(索子の緑牌と東西南北白発のみで和了)"
-	RuleTxt(0, RULE_CHAYISE+1) = "なし", "２飜"
+	RuleDescription(RULE_CHAYISE) = "茶一色の有無と価値を設定します(索子の緑牌と東西南北白発のみで和了)"
+	RuleTxt(0, RULE_CHAYISE) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_HAKUCHO+1) = "白鳥"
+	RuleName(RULE_HAKUCHO) = "白鳥"
 #ifdef SANMAS
-	RuleDescription(RULE_HAKUCHO+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_HAKUCHO+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_HAKUCHO) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_HAKUCHO) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_HAKUCHO+1) = "白鳥の有無と価値を設定します(白と一索の刻子がある対々和)"
-	RuleTxt(0, RULE_HAKUCHO+1) = "なし", "５飜"
+	RuleDescription(RULE_HAKUCHO) = "白鳥の有無と価値を設定します(白と一索の刻子がある対々和)"
+	RuleTxt(0, RULE_HAKUCHO) = "なし", "５飜"
 #endif
 
-	RuleName(RULE_ANCHUMOSAKU+1) = "暗中模索"
+	RuleName(RULE_ANCHUMOSAKU) = "暗中模索"
 #ifdef SANMAS
-	RuleDescription(RULE_ANCHUMOSAKU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_ANCHUMOSAKU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_ANCHUMOSAKU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_ANCHUMOSAKU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_ANCHUMOSAKU+1) = "暗中模索の有無と価値を設定します(中を暗槓して索子で自摸和)"
-	RuleTxt(0, RULE_ANCHUMOSAKU+1) = "なし", "１飜"
+	RuleDescription(RULE_ANCHUMOSAKU) = "暗中模索の有無と価値を設定します(中を暗槓して索子で自摸和)"
+	RuleTxt(0, RULE_ANCHUMOSAKU) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_KARASU+1) = "カラス"
-	RuleDescription(RULE_KARASU+1) = "カラスの有無と価値を設定します(役なしの嵌張・辺張・単騎和了り)"
-	RuleTxt(0, RULE_KARASU+1) = "なし", "１飜"
+	RuleName(RULE_KARASU) = "カラス"
+	RuleDescription(RULE_KARASU) = "カラスの有無と価値を設定します(役なしの嵌張・辺張・単騎和了り)"
+	RuleTxt(0, RULE_KARASU) = "なし", "１飜"
 
-	RuleName(RULE_KARASU_RIICHI+1) = "カラス立直"
-	RuleDescription(RULE_KARASU_RIICHI+1) = "カラス立直の有無と価値を設定します(立直のみの和了)"
-	RuleTxt(0, RULE_KARASU_RIICHI+1) = "なし", "１飜"
+	RuleName(RULE_KARASU_RIICHI) = "カラス立直"
+	RuleDescription(RULE_KARASU_RIICHI) = "カラス立直の有無と価値を設定します(立直のみの和了)"
+	RuleTxt(0, RULE_KARASU_RIICHI) = "なし", "１飜"
 
-	RuleName(RULE_KEPPAIHOH+1) = "欠牌和"
-	RuleDescription(RULE_KEPPAIHOH+1) = "欠牌和の有無と価値を設定します(嵌張・辺張・単騎のラス牌和了り)"
-	RuleTxt(0, RULE_KEPPAIHOH+1) = "なし", "１飜"
+	RuleName(RULE_KEPPAIHOH) = "欠牌和"
+	RuleDescription(RULE_KEPPAIHOH) = "欠牌和の有無と価値を設定します(嵌張・辺張・単騎のラス牌和了り)"
+	RuleTxt(0, RULE_KEPPAIHOH) = "なし", "１飜"
 
-	RuleName(RULE_KITAMAKURA+1) = "北枕"
+	RuleName(RULE_KITAMAKURA) = "北枕"
 #ifdef SANMAS
-	RuleDescription(RULE_KITAMAKURA+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_KITAMAKURA+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KITAMAKURA) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_KITAMAKURA) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KITAMAKURA+1) = "北枕の有無と価値を設定します(役満・１飜手以外でドラでない北が雀頭)"
-	RuleTxt(0, RULE_KITAMAKURA+1) = "なし", "マイナス１飜"
+	RuleDescription(RULE_KITAMAKURA) = "北枕の有無と価値を設定します(役満・１飜手以外でドラでない北が雀頭)"
+	RuleTxt(0, RULE_KITAMAKURA) = "なし", "マイナス１飜"
 #endif
 
-	RuleName(RULE_JINJI_DUOSHI+1) = "金鶏奪食"
-	RuleDescription(RULE_JINJI_DUOSHI+1) = "金鶏奪食の有無と価値を設定します(欠牌和を搶槓で和了)"
-	RuleTxt(0, RULE_JINJI_DUOSHI+1) = "なし", "１飜"
+	RuleName(RULE_JINJI_DUOSHI) = "金鶏奪食"
+	RuleDescription(RULE_JINJI_DUOSHI) = "金鶏奪食の有無と価値を設定します(欠牌和を搶槓で和了)"
+	RuleTxt(0, RULE_JINJI_DUOSHI) = "なし", "１飜"
 
-	RuleName(RULE_TSUMO_PAYMENT+1) = "自摸和了の点数"
+	RuleName(RULE_TSUMO_PAYMENT) = "自摸和了の点数"
 #ifdef SANMAT
-	RuleDescription(RULE_TSUMO_PAYMENT+1) = "ツモ和了りの点数の負担方法を設定します"
-	RuleTxt(0, RULE_TSUMO_PAYMENT+1) = "完全折半", ">>>", "自摸損", "千点加符", "丸取り", "北家分折半"
+	RuleDescription(RULE_TSUMO_PAYMENT) = "ツモ和了りの点数の負担方法を設定します"
+	RuleTxt(0, RULE_TSUMO_PAYMENT) = "完全折半", ">>>", "自摸損", "千点加符", "丸取り", "北家分折半"
 #else
 #ifdef SANMA4
-	RuleDescription(RULE_TSUMO_PAYMENT+1) = "ツモ和了りの点数の負担方法を設定します"
-	RuleTxt(0, RULE_TSUMO_PAYMENT+1) = "四人打ち準拠", "完全折半", "自摸損", "千点加符", "丸取り", "北家分折半"
+	RuleDescription(RULE_TSUMO_PAYMENT) = "ツモ和了りの点数の負担方法を設定します"
+	RuleTxt(0, RULE_TSUMO_PAYMENT) = "四人打ち準拠", "完全折半", "自摸損", "千点加符", "丸取り", "北家分折半"
 #else
-	RuleDescription(RULE_TSUMO_PAYMENT+1) = "四人打ちでは設定できません"
-	RuleTxt(0, RULE_TSUMO_PAYMENT+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_TSUMO_PAYMENT) = "四人打ちでは設定できません"
+	RuleTxt(0, RULE_TSUMO_PAYMENT) = "Ｎ／Ａ"
 #endif
 #endif
 
-	RuleName(RULE_VOLCANIC_TOITOI+1) = "火山爆発(五索・七索)"
+	RuleName(RULE_VOLCANIC_TOITOI) = "火山爆発(五索・七索)"
 #ifdef SANMAS
-	RuleDescription(RULE_VOLCANIC_TOITOI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_VOLCANIC_TOITOI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_VOLCANIC_TOITOI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_VOLCANIC_TOITOI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_VOLCANIC_TOITOI+1) = "火山爆発の有無と価値を設定します(三索、五索、七索、中、発で対々和)"
-	RuleTxt(0, RULE_VOLCANIC_TOITOI+1) = "なし", "役満"
+	RuleDescription(RULE_VOLCANIC_TOITOI) = "火山爆発の有無と価値を設定します(三索、五索、七索、中、発で対々和)"
+	RuleTxt(0, RULE_VOLCANIC_TOITOI) = "なし", "役満"
 #endif
 
-	RuleName(RULE_MAABOODOUFU+1) = "ラストオーダー麻婆豆腐"
+	RuleName(RULE_MAABOODOUFU) = "ラストオーダー麻婆豆腐"
 #ifdef SANMAS
-	RuleDescription(RULE_MAABOODOUFU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_MAABOODOUFU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_MAABOODOUFU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_MAABOODOUFU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_MAABOODOUFU+1) = "ラストオーダー麻婆豆腐の有無と価値を設定します(海底または河底で白で和了る：付加役)"
-	RuleTxt(0, RULE_MAABOODOUFU+1) = "なし", "１飜"
+	RuleDescription(RULE_MAABOODOUFU) = "ラストオーダー麻婆豆腐の有無と価値を設定します(海底または河底で白で和了る：付加役)"
+	RuleTxt(0, RULE_MAABOODOUFU) = "なし", "１飜"
 #endif
 
-	RuleName(RULE_HAKUIISOO+1) = "白一色"
-	RuleDescription(RULE_HAKUIISOO+1) = "白一色の有無と価値を設定します(８と９と白だけで和了る)"
-	RuleTxt(0, RULE_HAKUIISOO+1) = "なし", "役満"
+	RuleName(RULE_HAKUIISOO) = "白一色"
+	RuleDescription(RULE_HAKUIISOO) = "白一色の有無と価値を設定します(８と９と白だけで和了る)"
+	RuleTxt(0, RULE_HAKUIISOO) = "なし", "役満"
 
-	RuleName(RULE_BIRD_RIICHI+1) = "鳥立直"
-	RuleDescription(RULE_BIRD_RIICHI+1) = "鳥立直の有無と価値を設定します(一索切ってリーチ：付加役)"
-	RuleTxt(0, RULE_BIRD_RIICHI+1) = "なし", "１飜"
+	RuleName(RULE_BIRD_RIICHI) = "鳥立直"
+	RuleDescription(RULE_BIRD_RIICHI) = "鳥立直の有無と価値を設定します(一索切ってリーチ：付加役)"
+	RuleTxt(0, RULE_BIRD_RIICHI) = "なし", "１飜"
 
-	RuleName(RULE_SANSHOKU_DOUKAN+1) = "三色同槓"
-	RuleDescription(RULE_SANSHOKU_DOUKAN+1) = "三色同槓の有無と価値を設定します(三色同刻を全て槓子にする)"
-	RuleTxt(0, RULE_SANSHOKU_DOUKAN+1) = "なし", "５飜(喰い下がり有り)", "役満"
+	RuleName(RULE_SANSHOKU_DOUKAN) = "三色同槓"
+	RuleDescription(RULE_SANSHOKU_DOUKAN) = "三色同槓の有無と価値を設定します(三色同刻を全て槓子にする)"
+	RuleTxt(0, RULE_SANSHOKU_DOUKAN) = "なし", "５飜(喰い下がり有り)", "役満"
 
-	RuleName(RULE_CHOUSANGEN+1) = "超三元"
-	RuleDescription(RULE_CHOUSANGEN+1) = "超三元の有無と価値を設定します(大三元を全て槓子にする)"
-	RuleTxt(0, RULE_CHOUSANGEN+1) = "なし", "ダブル役満"
+	RuleName(RULE_CHOUSANGEN) = "超三元"
+	RuleDescription(RULE_CHOUSANGEN) = "超三元の有無と価値を設定します(大三元を全て槓子にする)"
+	RuleTxt(0, RULE_CHOUSANGEN) = "なし", "ダブル役満"
 
-	RuleName(RULE_CHOUSIXI+1) = "超四喜"
-	RuleDescription(RULE_CHOUSIXI+1) = "超四喜の有無と価値を設定します(大四喜を全て槓子にする)"
-	RuleTxt(0, RULE_CHOUSIXI+1) = "なし", "トリプル役満"
+	RuleName(RULE_CHOUSIXI) = "超四喜"
+	RuleDescription(RULE_CHOUSIXI) = "超四喜の有無と価値を設定します(大四喜を全て槓子にする)"
+	RuleTxt(0, RULE_CHOUSIXI) = "なし", "トリプル役満"
 
-	RuleName(RULE_BLACKJACK+1) = "黒衣騎士"
-	RuleDescription(RULE_BLACKJACK+1) = "黒衣騎士の有無と価値を設定します(数牌の数字の合計が21)"
-	RuleTxt(0, RULE_BLACKJACK+1) = "なし", "２飜"
+	RuleName(RULE_BLACKJACK) = "黒衣騎士"
+	RuleDescription(RULE_BLACKJACK) = "黒衣騎士の有無と価値を設定します(数牌の数字の合計が21)"
+	RuleTxt(0, RULE_BLACKJACK) = "なし", "２飜"
 
-	RuleName(RULE_WHITE_KNIGHT+1) = "白衣騎士"
+	RuleName(RULE_WHITE_KNIGHT) = "白衣騎士"
 #ifdef SANMAS
-	RuleDescription(RULE_WHITE_KNIGHT+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_WHITE_KNIGHT+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_WHITE_KNIGHT) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_WHITE_KNIGHT) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_WHITE_KNIGHT+1) = "白衣騎士の有無と価値を設定します(白の刻子がある黒衣騎士)"
-	RuleTxt(0, RULE_WHITE_KNIGHT+1) = "なし", "役満"
+	RuleDescription(RULE_WHITE_KNIGHT) = "白衣騎士の有無と価値を設定します(白の刻子がある黒衣騎士)"
+	RuleTxt(0, RULE_WHITE_KNIGHT) = "なし", "役満"
 #endif
 
-	RuleName(RULE_SNOW_GINKAKU+1) = "雪の銀閣"
+	RuleName(RULE_SNOW_GINKAKU) = "雪の銀閣"
 #ifdef SANMAS
-	RuleDescription(RULE_SNOW_GINKAKU+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_SNOW_GINKAKU+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_SNOW_GINKAKU) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_SNOW_GINKAKU) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_SNOW_GINKAKU+1) = "雪の銀閣の有無と価値を設定します(東、白、二筒、四筒、八筒で対々和)"
-	RuleTxt(0, RULE_SNOW_GINKAKU+1) = "なし", "役満"
+	RuleDescription(RULE_SNOW_GINKAKU) = "雪の銀閣の有無と価値を設定します(東、白、二筒、四筒、八筒で対々和)"
+	RuleTxt(0, RULE_SNOW_GINKAKU) = "なし", "役満"
 #endif
 
-	RuleName(RULE_SANSHOKU_SHOUDOUKOH+1) = "三色小同刻"
-	RuleDescription(RULE_SANSHOKU_SHOUDOUKOH+1) = "三色小同刻の有無と価値を設定します(三色で同じ数の数牌のうち2つを刻子、残りを雀頭にする)"
-	RuleTxt(0, RULE_SANSHOKU_SHOUDOUKOH+1) = "なし", "１飜"
+	RuleName(RULE_SANSHOKU_SHOUDOUKOH) = "三色小同刻"
+	RuleDescription(RULE_SANSHOKU_SHOUDOUKOH) = "三色小同刻の有無と価値を設定します(三色で同じ数の数牌のうち2つを刻子、残りを雀頭にする)"
+	RuleTxt(0, RULE_SANSHOKU_SHOUDOUKOH) = "なし", "１飜"
 
-	RuleName(RULE_THREE_YEARS_ON_STONE+1) = "石の上にも三年"
-	RuleDescription(RULE_THREE_YEARS_ON_STONE+1) = "石の上にも三年の有無と価値を設定します(ダブル立直と海底か河底の複合)"
-	RuleTxt(0, RULE_THREE_YEARS_ON_STONE+1) = "なし", "役満"
+	RuleName(RULE_THREE_YEARS_ON_STONE) = "石の上にも三年"
+	RuleDescription(RULE_THREE_YEARS_ON_STONE) = "石の上にも三年の有無と価値を設定します(ダブル立直と海底か河底の複合)"
+	RuleTxt(0, RULE_THREE_YEARS_ON_STONE) = "なし", "役満"
 
-	RuleName(RULE_KAKAN_FURITEN+1) = "加槓牌の振聴"
-	RuleDescription(RULE_KAKAN_FURITEN+1) = "加槓した牌を振聴の対象とみなすかを設定します"
-	RuleTxt(0, RULE_KAKAN_FURITEN+1) = "なし", "あり"
+	RuleName(RULE_KAKAN_FURITEN) = "加槓牌の振聴"
+	RuleDescription(RULE_KAKAN_FURITEN) = "加槓した牌を振聴の対象とみなすかを設定します"
+	RuleTxt(0, RULE_KAKAN_FURITEN) = "なし", "あり"
 
-	RuleName(RULE_KITASHIRAKAWA+1) = "北白川"
+	RuleName(RULE_KITASHIRAKAWA) = "北白川"
 #ifdef SANMAS
-	RuleDescription(RULE_KITASHIRAKAWA+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_KITASHIRAKAWA+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_KITASHIRAKAWA) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_KITASHIRAKAWA) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_KITASHIRAKAWA+1) = "北白川の有無と価値を設定します(北、白、六索を刻子にする)"
-	RuleTxt(0, RULE_KITASHIRAKAWA+1) = "なし", "役満"
+	RuleDescription(RULE_KITASHIRAKAWA) = "北白川の有無と価値を設定します(北、白、六索を刻子にする)"
+	RuleTxt(0, RULE_KITASHIRAKAWA) = "なし", "役満"
 #endif
 
-	RuleName(RULE_HATSUTEI_MOYUE+1) = "発底摸月"
+	RuleName(RULE_HATSUTEI_MOYUE) = "発底摸月"
 #ifdef SANMAS
-	RuleDescription(RULE_HATSUTEI_MOYUE+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_HATSUTEI_MOYUE+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_HATSUTEI_MOYUE) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_HATSUTEI_MOYUE) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_HATSUTEI_MOYUE+1) = "発底摸月の有無と価値を設定します(海底摸月を発で和了る)"
-	RuleTxt(0, RULE_HATSUTEI_MOYUE+1) = "なし", "２飜"
+	RuleDescription(RULE_HATSUTEI_MOYUE) = "発底摸月の有無と価値を設定します(海底摸月を発で和了る)"
+	RuleTxt(0, RULE_HATSUTEI_MOYUE) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_HAKUTEI_RAOYUI+1) = "白底撈魚"
+	RuleName(RULE_HAKUTEI_RAOYUI) = "白底撈魚"
 #ifdef SANMAS
-	RuleDescription(RULE_HAKUTEI_RAOYUI+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_HAKUTEI_RAOYUI+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_HAKUTEI_RAOYUI) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_HAKUTEI_RAOYUI) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_HAKUTEI_RAOYUI+1) = "白底撈魚の有無と価値を設定します(河底撈魚を白で和了る)"
-	RuleTxt(0, RULE_HAKUTEI_RAOYUI+1) = "なし", "２飜"
+	RuleDescription(RULE_HAKUTEI_RAOYUI) = "白底撈魚の有無と価値を設定します(河底撈魚を白で和了る)"
+	RuleTxt(0, RULE_HAKUTEI_RAOYUI) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_CHUNSHAN_KAIHOH+1) = "中上開花"
+	RuleName(RULE_CHUNSHAN_KAIHOH) = "中上開花"
 #ifdef SANMAS
-	RuleDescription(RULE_CHUNSHAN_KAIHOH+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_CHUNSHAN_KAIHOH+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_CHUNSHAN_KAIHOH) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_CHUNSHAN_KAIHOH) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_CHUNSHAN_KAIHOH+1) = "中上開花の有無と価値を設定します(嶺上開花を中で和了る)"
-	RuleTxt(0, RULE_CHUNSHAN_KAIHOH+1) = "なし", "２飜"
+	RuleDescription(RULE_CHUNSHAN_KAIHOH) = "中上開花の有無と価値を設定します(嶺上開花を中で和了る)"
+	RuleTxt(0, RULE_CHUNSHAN_KAIHOH) = "なし", "２飜"
 #endif
 
-	RuleName(RULE_NEWYEAR+1) = "お正月"
+	RuleName(RULE_NEWYEAR) = "お正月"
 #ifdef SANMAS
-	RuleDescription(RULE_NEWYEAR+1) = "数牌三麻では設定できません"
-	RuleTxt(0, RULE_NEWYEAR+1) = "Ｎ／Ａ"
+	RuleDescription(RULE_NEWYEAR) = "数牌三麻では設定できません"
+	RuleTxt(0, RULE_NEWYEAR) = "Ｎ／Ａ"
 #else
-	RuleDescription(RULE_NEWYEAR+1) = "お正月の有無と価値を設定します(１の三色同刻と東の刻子)"
-	RuleTxt(0, RULE_NEWYEAR+1) = "なし", "役満"
+	RuleDescription(RULE_NEWYEAR) = "お正月の有無と価値を設定します(１の三色同刻と東の刻子)"
+	RuleTxt(0, RULE_NEWYEAR) = "なし", "役満"
 #endif
 
 return

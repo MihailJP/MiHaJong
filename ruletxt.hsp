@@ -9,22 +9,22 @@
 #define AddRuleText1(%1,%2) chatappend "*** "+(%1): if(((%2)!="Ç†ÇË")&&((%2)!="Ç»Çµ")) {chatappend "ÇÕ"}: chatappend (%2)+"ÅA"
 #define AddRuleText2(%1,%2) chatappend ""+(%1): if(((%2)!="Ç†ÇË")&&((%2)!="Ç»Çµ")) {chatappend "ÇÕ"}: chatappend (%2)+"ÅA"
 #define AddRuleText3(%1,%2) chatappend ""+(%1): if(((%2)!="Ç†ÇË")&&((%2)!="Ç»Çµ")) {chatappend "ÇÕ"}: chatappend (%2)+"\n"
-#define ctype RuleStat(%1) RuleTxt(Rule((%1)+1),(%1)+1)
+#define ctype RuleStat(%1) RuleTxt(Rule(%1),(%1))
 	configtxt
 	/* ÉãÅ[Éãê›íËÇï\é¶Å@Ç±Ç±Ç©ÇÁ */
 	chatappend "*** "+RuleStat(RULE_GAME_LENGTH)+"\n"
 	chatappend "*** îzããå¥ì_"+RuleStat(RULE_STARTING_POINT)+"\n"
-	if ((Rule(RULE_POINT_BASIS+1) < 9)||(Rule(RULE_POINT_BASIS+1) > 11)) {
+	if ((Rule(RULE_POINT_BASIS) < 9)||(Rule(RULE_POINT_BASIS) > 11)) {
 		chatappend "*** ÉEÉ}"+RuleStat(RULE_POINT_BASIS)+"\n"
 	} else {
 		chatappend "*** "+RuleStat(RULE_POINT_BASIS)+"\n"
 	}
-	if (Rule(RULE_PENALTY_NEGATIVE+1) != 6) {
-		if ((Rule(RULE_CHIP+1) != 0)||(Rule(RULE_PENALTY_NEGATIVE+1) < 3)) {
+	if (Rule(RULE_PENALTY_NEGATIVE) != 6) {
+		if ((Rule(RULE_CHIP) != 0)||(Rule(RULE_PENALTY_NEGATIVE) < 3)) {
 			chatappend "*** ÉgÉrè‹"+RuleStat(RULE_PENALTY_NEGATIVE)+"\n"
 		}
 		AddRuleText "îÚÇ—", RuleStat(RULE_BUTTOBI_BORDER)
-		if (Rule(RULE_RIICHI_REQUISITE+1) == 2) {
+		if (Rule(RULE_RIICHI_REQUISITE) == 2) {
 			chatappend "*** éùÇøì_Ç™ë´ÇËÇ»Ç≠ÇƒÇ‡óßíºâ¬î\\n"
 		} else {
 			chatappend "*** óßíºêÈåæéû"+RuleStat(RULE_RIICHI_REQUISITE)+"ïKóv\n"
@@ -32,32 +32,32 @@
 	} else {
 		chatappend "*** ÉnÉRâ∫Ç≈Ç‡ë±çs\n"
 	}
-	if ((Rule(RULE_CHIP+1) != 0)||(Rule(RULE_YAKITORI+1) < 3)) {
+	if ((Rule(RULE_CHIP) != 0)||(Rule(RULE_YAKITORI) < 3)) {
 		chatappend "*** èƒÇ´íπ"+RuleStat(RULE_YAKITORI)+"\n"
 	}
 	AddRuleText "ãÚÇ¢ë÷Ç¶", RuleStat(RULE_KUIKAE)
-	if (Rule(RULE_RYANSHIBA+1) != 0) {chatappend "*** ÇTñ{èÍÇ©ÇÁìÒ„ îõÇË\n"} else {chatappend "*** ìÒ„ îõÇËÇ»Çµ\n"}
+	if (Rule(RULE_RYANSHIBA) != 0) {chatappend "*** ÇTñ{èÍÇ©ÇÁìÒ„ îõÇË\n"} else {chatappend "*** ìÒ„ îõÇËÇ»Çµ\n"}
 	chatappend "*** "+RuleStat(RULE_ROUND_CONTINUATION)+"\n"
-	switch Rule(RULE_AGARIYAME+1)
+	switch Rule(RULE_AGARIYAME)
 		case 0: chatappend "*** ÉIÅ[ÉâÉXÉgÉbÉvêeÇÃòaóπÇËé~ÇﬂÇ†ÇË\n": swbreak
 		case 1: chatappend "*** òaóπÇËé~ÇﬂÇ»Çµ\n": swbreak
 		case 2: chatappend "*** ÉIÅ[ÉâÉXÉgÉbÉvêeÇÃòaóπÇËé~ÇﬂÅEíÆîvé~ÇﬂÇ†ÇË\n": swbreak
 	swend
-	if ((Rule(RULE_MULTIPLE_MAHJONG+1) == 0)||(Rule(RULE_MULTIPLE_MAHJONG+1) == 1)) {
+	if ((Rule(RULE_MULTIPLE_MAHJONG) == 0)||(Rule(RULE_MULTIPLE_MAHJONG) == 1)) {
 		chatappend "*** ìØéûòaóπÇËÇÕì™ÉnÉl\n"
 	}
-	if ((Rule(RULE_MULTIPLE_MAHJONG+1) == 2)||(Rule(RULE_MULTIPLE_MAHJONG+1) == 3)) {
+	if ((Rule(RULE_MULTIPLE_MAHJONG) == 2)||(Rule(RULE_MULTIPLE_MAHJONG) == 3)) {
 		chatappend "*** É_ÉuÉçÉìÇ†ÇËÅA"+RuleStat(RULE_SIMULTANEOUS_MAHJONG)+"\n"
 	}
 #ifdef ALLSANMA
-	if (Rule(RULE_MULTIPLE_MAHJONG+1) == 5) {
+	if (Rule(RULE_MULTIPLE_MAHJONG) == 5) {
 		chatappend "*** ìÒâ∆òaÇÕó¨ã«ÅA"+RuleStat(RULE_TRIPLE_MAHJONG)+"\n"
 	}
 #else
-	if (Rule(RULE_MULTIPLE_MAHJONG+1) == 4) {
+	if (Rule(RULE_MULTIPLE_MAHJONG) == 4) {
 		chatappend "*** ÉgÉäÉçÉìÇ†ÇËÅA"+RuleStat(RULE_SIMULTANEOUS_MAHJONG)+"\n"
 	} else {
-		if ((Rule(RULE_MULTIPLE_MAHJONG+1) == 0)||(Rule(RULE_MULTIPLE_MAHJONG+1) == 2)) {
+		if ((Rule(RULE_MULTIPLE_MAHJONG) == 0)||(Rule(RULE_MULTIPLE_MAHJONG) == 2)) {
 			chatappend "*** éOâ∆òaÇÕó¨ã«ÅA"+RuleStat(RULE_TRIPLE_MAHJONG)+"\n"
 		} else {
 			chatappend "*** éOâ∆òaÇÕó¨ÇÍÇ»Ç¢\n"
@@ -68,7 +68,7 @@
 	chatappend "*** ã„éÌã„îvÇÕ"+RuleStat(RULE_NINE_TERMINALS)+"\n"
 #endif
 	chatappend "*** élû»éUóπÇÕ"+RuleStat(RULE_FOUR_KONG_RYUUKYOKU)+"ÅA"
-	switch Rule(RULE_FIFTH_KONG+1)
+	switch Rule(RULE_FIFTH_KONG)
 		case 0: chatappend "ÇTÇ¬ñ⁄ÇÃû»ÇÕíNÇ‡Ç≈Ç´Ç»Ç¢\n": swbreak
 		case 1: chatappend "ÇTÇ¬ñ⁄ÇÃû»Ç≈ó¨ã«òAëë\n": swbreak
 		case 2: chatappend "ÇTÇ¬ñ⁄ÇÃû»Ç≈ó¨ã«êeó¨ÇÍ\n": swbreak
@@ -85,14 +85,14 @@
 #else
 	chatappend "*** çëémñ≥ëoè\éOñ ÅEèÉê≥ã„òAïÛìïÅEélà√çèíPãRÅEëÂéläÏÇÕ"
 #endif
-	if (Rule(RULE_DOUBLE_YAKUMAN+1) == 0) {chatappend "É_ÉuÉãññû\n"} else {chatappend "ÉVÉìÉOÉãññû\n"}
+	if (Rule(RULE_DOUBLE_YAKUMAN) == 0) {chatappend "É_ÉuÉãññû\n"} else {chatappend "ÉVÉìÉOÉãññû\n"}
 	AddRuleText "êÿÇËè„Ç∞ñûä—", RuleStat(RULE_ROUND_TO_MANGAN)
 	AddRuleText "ì_êîåvéZ", RuleStat(RULE_SIMPLIFIED_SCORING)
 #ifndef SANMAS
 	AddRuleText "êùì™ïÑÇÃèdï°", RuleStat(RULE_DOUBLE_YAKU_WIND_PAIR)
 #endif
 	AddRuleText "êœÇ›ñ_", RuleStat(RULE_TSUMIBOH_RATE)
-	if (Rule(RULE_MINKAN_PAO+1) == 6) {
+	if (Rule(RULE_MINKAN_PAO) == 6) {
 		chatappend "*** ëÂñæû»ÇÃó‰è„äJâ‘ÇÕçˆòa\n"
 	} else {
 		AddRuleText "ëÂñæû»ÇÃïÔ", RuleStat(RULE_MINKAN_PAO)
@@ -103,7 +103,7 @@
 	AddRuleText1 "éOî{ñû", RuleStat(RULE_SANBAIMAN_BORDER)
 	AddRuleText3 "êîÇ¶ññû", RuleStat(RULE_KAZOE_BORDER)
 	AddRuleText "óßíºîõÇË", RuleStat(RULE_RIICHI_SHIBARI)
-	if (Rule(RULE_ANKAN_CONCEAL+1) == 1) {AddRuleText "à√û»", RuleStat(RULE_ANKAN_CONCEAL)}
+	if (Rule(RULE_ANKAN_CONCEAL) == 1) {AddRuleText "à√û»", RuleStat(RULE_ANKAN_CONCEAL)}
 	else {
 #ifdef SANMAS
 		AddRuleText "à√û»", RuleStat(RULE_ANKAN_CONCEAL)
@@ -150,16 +150,16 @@
 	AddRuleText "â‘îv", RuleStat(RULE_FLOWER_TILES)
 #endif
 	chatappend "*** É`ÉbÉv"+RuleStat(RULE_CHIP)+"\n"
-	if (Rule(RULE_CHIP+1) != 0) {chatappend "*** ññûèjãVÇÕ"+RuleStat(RULE_LIMITHAND_BONUS)+"\n"}
+	if (Rule(RULE_CHIP) != 0) {chatappend "*** ññûèjãVÇÕ"+RuleStat(RULE_LIMITHAND_BONUS)+"\n"}
 	AddRuleText1 "ê‘îvÉ`ÉbÉv", RuleStat(RULE_REDTILE_CHIP)
 	AddRuleText3 "ê¬îvÉ`ÉbÉv", RuleStat(RULE_BLUE_CHIP)
-	if (Rule(RULE_WAREME+1) == 2) {
+	if (Rule(RULE_WAREME) == 2) {
 		chatappend "*** ëÂäÑÇÍñ⁄Ç†ÇËÅA"
 	} else {
 		chatappend "*** äÑÇÍñ⁄"+RuleStat(RULE_WAREME)+"ÅA"
 	}
 	AddRuleText3 "ì±âŒê¸", RuleStat(RULE_DOUKASEN)
-	if (Rule(RULE_DORA_TWICE+1) == 2) {
+	if (Rule(RULE_DORA_TWICE) == 2) {
 		chatappend "*** É]Éçñ⁄Ç≈ÉhÉâÉhÉâëÏ\n"
 	} else {
 		chatappend "*** ÉhÉâÉhÉâëÏ"+RuleStat(RULE_DORA_TWICE)+"\n"
@@ -269,7 +269,7 @@
 #endif
 #endif
 #ifndef SANMAX
-	if (Rule(RULE_HUALONG+1) == 0) {
+	if (Rule(RULE_HUALONG) == 0) {
 		AddRuleText "éOêFí ä—", RuleStat(RULE_HUALONG)
 	} else {
 		AddRuleText1 "éOêFí ä—", RuleStat(RULE_HUALONG)
@@ -330,7 +330,7 @@
 #ifndef SANMAS
 	AddRuleText1 "ã‡å{ïÒã≈", RuleStat(RULE_KINKEI_HOUGYOU)
 #ifndef SANMAX
-	if ((Rule(RULE_FLOWER_TILES+1) == 0)||(Rule(RULE_FLOWER_TILES+1) == 2)) {AddRuleText2 "ã‚å{ïÒèt", RuleStat(RULE_GINKEI_HOUSHUN)}
+	if ((Rule(RULE_FLOWER_TILES) == 0)||(Rule(RULE_FLOWER_TILES) == 2)) {AddRuleText2 "ã‚å{ïÒèt", RuleStat(RULE_GINKEI_HOUSHUN)}
 #endif
 	AddRuleText3 "çgå{ïÒã≈", RuleStat(RULE_KOUKEI_HOUGYOU)
 #endif
@@ -344,8 +344,8 @@
 	AddRuleText2 "î™êÂãYñP", RuleStat(RULE_BAXIAN_XIFENG)
 	AddRuleText2 "î™êÂãYélñP", RuleStat(RULE_BAXIAN_XISIFENG)
 	AddRuleText2 "î™êÂãYã‡ãT", RuleStat(RULE_BAXIAN_XIJINGUI)
-	if (Rule(RULE_FLOWER_TILES+1) == 3) {AddRuleText2 "î™êÂì¨ñkìl", RuleStat(RULE_BAXIAN_DOU_BEIDOU)} else {AddRuleText3 "î™êÂì¨ñkìl", RuleStat(RULE_BAXIAN_DOU_BEIDOU)}
-	if (Rule(RULE_FLOWER_TILES+1) == 3) {AddRuleText3 "î™êÂ„⁄éÒ", RuleStat(RULE_BAXIAN_JUSHOU)}
+	if (Rule(RULE_FLOWER_TILES) == 3) {AddRuleText2 "î™êÂì¨ñkìl", RuleStat(RULE_BAXIAN_DOU_BEIDOU)} else {AddRuleText3 "î™êÂì¨ñkìl", RuleStat(RULE_BAXIAN_DOU_BEIDOU)}
+	if (Rule(RULE_FLOWER_TILES) == 3) {AddRuleText3 "î™êÂ„⁄éÒ", RuleStat(RULE_BAXIAN_JUSHOU)}
 #endif
 #endif
 #ifndef SANMAS
