@@ -142,7 +142,7 @@ return
 		pos 50+400*(cnt/(RULES_IN_PAGE/2)), (cnt\(RULES_IN_PAGE/2))*25+75: button gosub ">>", *ruleselbtn
 		if (RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE) == "ÇmÅ^Ç`") {
 			tooltip@ cnt, RuleDescription(cnt+(configPage-1)*RULES_IN_PAGE)
-		} else {
+		} else: if (RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE) != "") {
 			tooltip@ cnt, strf("%sÅièâä˙ê›íËÅF%sÅj", RuleDescription(cnt+(configPage-1)*RULES_IN_PAGE), RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE))
 		}
 	loop
