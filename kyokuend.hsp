@@ -442,7 +442,11 @@
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
+#ifdef ALLSANMA
+		if (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 2) {
+#else
 		if (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 1) {
+#endif
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 		} else {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
@@ -451,7 +455,11 @@
 		gosub *redrscreen
 		redraw 1
 		incHonba GameStat
+#ifdef ALLSANMA
+		if (getRule(RULE_FOUR_WIND_RYUUKYOKU) == 2) {
+#else
 		if (getRule(RULE_FOUR_WIND_RYUUKYOKU) == 1) {
+#endif
 			incRound GameStat
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
@@ -571,7 +579,11 @@
 			setCall cnt, ""
 		loop
 		hncnMsg = ""
+#ifdef ALLSANMA
+		if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 2) {
+#else
 		if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 1) {
+#endif
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 		} else {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
@@ -580,7 +592,11 @@
 		gosub *redrscreen
 		redraw 1
 		incHonba GameStat
+#ifdef ALLSANMA
+		if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) == 2) {
+#else
 		if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) == 1) {
+#endif
 			incRound GameStat
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
