@@ -269,6 +269,12 @@
 			}
 		}
 #endif
+		/* ÉãÅ[ÉgÇQÇSÇU */
+		if (getRule(RULE_ROUTE_246) != 0) {
+			if ((MachiType == MACHI_KANCHAN)&&((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == (straightColor*TILE_SUIT_STEP+2))||(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == (straightColor*TILE_SUIT_STEP+4))||(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == (straightColor*TILE_SUIT_STEP+6)))) {
+				addyaku tmpYakuInfo, "ÉãÅ[ÉgÇQÇSÇU", 1
+			}
+		}
 	}
 	/* ã‡ñÂã¥ */
 	if (getRule(RULE_GOLDEN_GATE_BRIDGE) != 0) {

@@ -76,7 +76,7 @@
 			trace strf("面子を検出 プレイヤー [%d] モード [%d] 面子データ [%d %d %d %d %d]", targetPlayer, AtamaCode\4, haiMianziDat(0), haiMianziDat(1), haiMianziDat(2), haiMianziDat(3), haiMianziDat(4))
 			contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari, tmpRenhuFlag
 			calcbasepoints GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, TsumoAgari, MachiType
-			suityaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, haiFuriten
+			suityaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, haiFuriten, MachiType
 			yaojiuyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer
 			tripletyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, haiFuriten, TsumoAgari, MachiType
 			quadyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, TsumoAgari

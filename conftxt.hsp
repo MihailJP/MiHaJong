@@ -1653,6 +1653,23 @@
 	RuleTxt(0, RULE_NEWYEAR) = "なし", "役満"
 	nonumsanma RULE_SNOW_GINKAKU
 
+	RuleName(RULE_SIMIAN_CHUGE) = "四面楚歌"
+	RuleDescription(RULE_SIMIAN_CHUGE) = "四面楚歌の有無と価値を設定します(同色で４面子、別の色の数牌で単騎待ち)"
+	RuleTxt(0, RULE_SIMIAN_CHUGE) = "なし", "４飜"
+
+	RuleName(RULE_PRIME_NUMBER) = "素数役満"
+	RuleDescription(RULE_PRIME_NUMBER) = "素数役満の有無と価値を設定します(２、３、５、７の牌のみで和了)"
+	RuleTxt(0, RULE_PRIME_NUMBER) = "なし", "役満"
+
+	RuleName(RULE_ALCOHOLISM) = "アル中"
+	RuleDescription(RULE_ALCOHOLISM) = "アル中の有無と価値を設定します(２の三色同刻と中の刻子)"
+	RuleTxt(0, RULE_ALCOHOLISM) = "なし", "役満"
+	nosanma RULE_ALCOHOLISM: nonumsanma RULE_ALCOHOLISM
+
+	RuleName(RULE_ROUTE_246) = "ルート２４６"
+	RuleDescription(RULE_ROUTE_246) = "ルート２４６の有無と価値を設定します(２、４、６のいずれかの待ちで一気通貫)"
+	RuleTxt(0, RULE_ROUTE_246) = "なし", "３飜"
+
 return
 
 #undef noregsanma

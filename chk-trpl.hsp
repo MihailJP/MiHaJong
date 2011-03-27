@@ -1108,5 +1108,36 @@
 		}
 	}
 #endif
+	/* ‘f”–ğ– */
+	if (getRule(RULE_PRIME_NUMBER) != 0) {
+		yakuFlagCount = 0
+		if (DuiCount(TILE_SUIT_CHARACTERS+2) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_CHARACTERS+3) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_CHARACTERS+5) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_CHARACTERS+7) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_CIRCLES+2) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_CIRCLES+3) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_CIRCLES+5) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_CIRCLES+7) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_BAMBOOS+2) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_BAMBOOS+3) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_BAMBOOS+5) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_SUIT_BAMBOOS+7) >= 1) {yakuFlagCount++}
+		if (yakuFlagCount == 5) {
+			addyakuman tmpYakuInfo, "‘f”–ğ–", 1
+			delyaku tmpYakuInfo, "‘ÎX˜a"
+		}
+	}
+#ifndef ALLSANMA
+	/* ƒAƒ‹’† */
+	if (getRule(RULE_ALCOHOLISM) != 0) {
+		if ((DuiCount(TILE_SUIT_CHARACTERS+2) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+2) >= 1)&&(DuiCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
+			addyakuman tmpYakuInfo, "ƒAƒ‹’†", 1
+			delyaku tmpYakuInfo, "‘ÎX˜a"
+			delyaku tmpYakuInfo, "–ğ”vE’†"
+			delyaku tmpYakuInfo, "OF“¯"
+		}
+	}
+#endif
 return
 #global

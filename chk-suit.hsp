@@ -6,7 +6,7 @@
 /* àÍêFånÇ»Ç«ÇÃñ */
 #module
 #include "const.as"
-#deffunc suityaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int haiFuriten
+#deffunc suityaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int haiFuriten, int MachiType
 	trace "àÍêFånÇÃèàóùÇ…ì¸ÇËÇ‹Ç∑ÅB"
 	WanzMian = 0: PinzMian = 0: SouzMian = 0: ZiMian = 0
 #ifdef ALLSANMA
@@ -183,6 +183,16 @@
 #ifndef SANMAS
 				}
 #endif
+			}
+		}
+		/* élñ ë^âÃ */
+		if (getRule(RULE_SIMIAN_CHUGE) != 0) {
+			if (((WanzMian+1) == SIZE_OF_MELD_BUFFER)&&((haiMianziDat(0)/TILE_SUIT_STEP) != (TILE_SUIT_CHARACTERS/TILE_SUIT_STEP))||((PinzMian+1) == SIZE_OF_MELD_BUFFER)&&((haiMianziDat(0)/TILE_SUIT_STEP) != (TILE_SUIT_CIRCLES/TILE_SUIT_STEP))||((SouzMian+1) == SIZE_OF_MELD_BUFFER)&&((haiMianziDat(0)/TILE_SUIT_STEP) != (TILE_SUIT_BAMBOOS/TILE_SUIT_STEP))) {
+				if (ZiMian == 0) {
+					if (MachiType == MACHI_TANKI) {
+						addyaku tmpYakuInfo, "élñ ë^âÃ", 4
+					}
+				}
 			}
 		}
 	}

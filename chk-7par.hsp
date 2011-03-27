@@ -287,5 +287,13 @@
 		}
 	}
 #endif
+	/* ‘f”–ğ– */
+	if (getRule(RULE_PRIME_NUMBER) != 0) {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+7, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+7
+		yakuflagcount = countPairs(haiCount, tmpTileList)
+		if (yakuflagcount >= 7) {
+			addyakuman tmpYakuInfo, "‘f”–ğ–", 1
+		}
+	}
 return
 #global

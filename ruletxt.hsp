@@ -243,12 +243,12 @@
 #endif
 	AddRuleText2 "凱旋門", RuleStat(RULE_GAISENMON)
 	AddRuleText2 "長城", RuleStat(RULE_CHOUJOU)
-#ifdef SANMAS
-	AddRuleText3 "青龍在天", RuleStat(RULE_QINGLONG_ZAITIAN)
-#else
 	AddRuleText2 "青龍在天", RuleStat(RULE_QINGLONG_ZAITIAN)
+#ifndef SANMAS
 	AddRuleText2 "龍戯珠", RuleStat(RULE_LONGXIZHU)
-	AddRuleText3 "金龍戯北斗", RuleStat(RULE_JINLONG_DOU_BEIDOU)
+	AddRuleText2 "金龍戯北斗", RuleStat(RULE_JINLONG_DOU_BEIDOU)
+#endif
+	AddRuleText3 "ルート２４６", RuleStat(RULE_ROUTE_246)
 #ifdef SANMAX
 	AddRuleText1 "南屏晩鍾", RuleStat(RULE_NANBING_WANZHONG)
 	AddRuleText2 "雷峰夕照", RuleStat(RULE_LEIFENG_XIZHAO)
@@ -266,7 +266,6 @@
 	AddRuleText2 "三譚印月", RuleStat(RULE_SANTAN_YINYUE)
 	AddRuleText2 "曲院風荷", RuleStat(RULE_QUYUAN_FENGHE)
 	AddRuleText3 "平湖秋月", RuleStat(RULE_PINGHU_QIUYUE)
-#endif
 #endif
 #ifndef SANMAX
 	if (Rule(RULE_HUALONG) == 0) {
@@ -387,6 +386,9 @@
 	AddRuleText "北白川", RuleStat(RULE_KITASHIRAKAWA)
 	AddRuleText "お正月", RuleStat(RULE_NEWYEAR)
 #endif
+#ifndef ALLSANMA
+	AddRuleText "アル中", RuleStat(RULE_ALCOHOLISM)
+#endif
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText1 "二暗槓", RuleStat(RULE_RYANANKAN)
 	AddRuleText3 "三暗槓", RuleStat(RULE_SANANKAN)
@@ -444,6 +446,8 @@
 #endif
 	AddRuleText "星光燦爛", RuleStat(RULE_STARLIGHT)
 	AddRuleText "武太郎売焼餅", RuleStat(RULE_UUTAARAN)
+	AddRuleText "四面楚歌", RuleStat(RULE_SIMIAN_CHUGE)
+	AddRuleText "素数役満", RuleStat(RULE_PRIME_NUMBER)
 	AddRuleText "推不倒", RuleStat(RULE_TOIPUUTAO)
 #ifndef SANMAS
 	AddRuleText "五門斉", RuleStat(RULE_UUMENCHII)
