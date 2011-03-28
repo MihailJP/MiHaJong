@@ -126,6 +126,13 @@
 				delyaku tmpYakuInfo, "嶺上開花"
 			}
 		}
+		/* サヨナラホームラン */
+		if (getRule(RULE_SAYONARA_HOMERUN) != 0) {
+			if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) == 0) {
+				addyaku tmpYakuInfo, "サヨナラホームラン", 3
+				delyaku tmpYakuInfo, "嶺上開花"
+			}
+		}
 	} else {
 		/* 海底
 		   elseブロックに組み込むことで嶺上と海底が複合するのを防止 */

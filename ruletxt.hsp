@@ -484,7 +484,8 @@
 	AddRuleText2 "中上開花", RuleStat(RULE_CHUNSHAN_KAIHOH)
 #endif
 	AddRuleText2 "頭槓和", RuleStat(RULE_TOUKANHOH)
-	AddRuleText3 "連槓開花", RuleStat(RULE_RENKAN_KAIHOH)
+	AddRuleText2 "連槓開花", RuleStat(RULE_RENKAN_KAIHOH)
+	AddRuleText3 "サヨナラホームラン", RuleStat(RULE_SAYONARA_HOMERUN)
 	AddRuleText "二索槍槓", RuleStat(RULE_RYANZOH_CHANKAN)
 	AddRuleText1 "一筒摸月", RuleStat(RULE_IIPIN_MOYUE)
 	AddRuleText2 "海底撈針", RuleStat(RULE_HAITEI_RAOTSEN)

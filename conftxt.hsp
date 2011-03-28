@@ -1670,6 +1670,10 @@
 	RuleDescription(RULE_ROUTE_246) = "ルート２４６の有無と価値を設定します(２、４、６のいずれかの待ちで一気通貫)"
 	RuleTxt(0, RULE_ROUTE_246) = "なし", "３飜"
 
+	RuleName(RULE_SAYONARA_HOMERUN) = "サヨナラホームラン"
+	RuleDescription(RULE_SAYONARA_HOMERUN) = "サヨナラホームランの有無と価値を設定します(海底の１つ前の牌を槓して嶺上開花)"
+	RuleTxt(0, RULE_SAYONARA_HOMERUN) = "なし", "３飜"
+
 return
 
 #undef noregsanma
