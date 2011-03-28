@@ -380,7 +380,7 @@
 		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, kangPlayer, getWall(GameStat, WALL_REDTILE, getRinshanPointer(GameStat))
 		decRinshanPointer GameStat
 		dsplay@ SND_TSUMO
-		if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) < 10) {
+		if (tilesLeft(GameStat) < 10) {
 			dsplay@ SND_COUNTDOWN
 		}
 		if (Mode==FUURO_ANKAN)||(Mode==FUURO_KAKAN)||(Mode==FUURO_DAIMINKAN) {

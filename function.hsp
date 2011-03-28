@@ -202,16 +202,18 @@ return
 return
 #global
 
+/* プレイヤーの自風がどれか調べる */
 #module
 #include "const.as"
-#defcfunc playerwind int player, int Round
+#defcfunc playerwind int player, int currentRound
 #ifdef SANMAT
-	return ((player+24-(Round-(Round/4)))\NUM_OF_ACTUAL_PLAYERS)
+	return ((player+24-(currentRound-(currentRound/4)))\NUM_OF_ACTUAL_PLAYERS)
 #else
-	return ((player+32-Round)\NUM_OF_ACTUAL_PLAYERS)
+	return ((player+32-currentRound)\NUM_OF_ACTUAL_PLAYERS)
 #endif
 #global
 
+/* あるプレイヤーに対して指定したプレイヤーがどこ(下家、対面、上家)にいるか調べる */
 #module
 #include "const.as"
 #defcfunc playerRelative int targetPlayer, int basePlayer
@@ -220,12 +222,14 @@ return
 	return (NUM_OF_PLAYERS+targetPlayer-basePlayer)\NUM_OF_PLAYERS
 #global
 
+/* あるプレイヤーの(下家、対面、上家)を調べる */
 #module
 #include "const.as"
 #defcfunc RelativePositionOf int targetPlayer, int relative
 	return (targetPlayer+relative)\NUM_OF_PLAYERS
 #global
 
+/* 「東家」「南家」「西家」「北家」の文字列を返す */
 #module
 #include "const.as"
 #defcfunc windName int wind
@@ -236,6 +240,12 @@ return
 		case PLAYER_NORTH: return "北家": swbreak
 		default: return "????": swbreak
 	swend
+#global
+
+/* 王牌を除いた山牌の残り枚数 */
+#module
+#defcfunc tilesLeft var GameStat
+	return (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat))
 #global
 
 /* 順位を計算する */

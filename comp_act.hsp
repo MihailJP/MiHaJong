@@ -687,7 +687,7 @@ return
 			haiMarkingPlayer(cnt) = 1 /* ’N‚©‚ª—§’¼‚µ‚Ä‚¢‚½‚ç~‚è‚éI */
 		}
 		if (MeldPointer(GameStat, cnt) == 1) {
-			if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) < 30) {
+			if (tilesLeft(GameStat) < 30) {
 				/* c‚è‚R‚O–‡–¢–‚Å‚P•›˜I‚ÌÒ‚ª‚¢‚½ê‡‚Í~‚è‚é */
 				haiMarkingPlayer(cnt) = 1
 			}

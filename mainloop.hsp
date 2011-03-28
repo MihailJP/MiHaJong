@@ -242,7 +242,7 @@ repeat
 		setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
 		/* 立直をするときの処理 */
 		if ((teDahai >= DAHAI_TYPE_RIICHI)&&(teDahai < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
-			if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) < NUM_OF_ACTUAL_PLAYERS) {
+			if (tilesLeft(GameStat) < NUM_OF_ACTUAL_PLAYERS) {
 				// 残り４枚未満の時はリーチ無効
 				teDahai -= DAHAI_TYPE_RIICHI-DAHAI_TYPE_NORMAL
 				warn strf("山牌の残数要件を満たしていません。打牌コード [%d] に補正しました。", teDahai)
@@ -254,7 +254,7 @@ repeat
 		}
 		/* オープン立直をするときの処理 */
 		if ((teDahai >= DAHAI_TYPE_OPENRIICHI)&&(teDahai < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
-			if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) < NUM_OF_ACTUAL_PLAYERS) {
+			if (tilesLeft(GameStat) < NUM_OF_ACTUAL_PLAYERS) {
 				// 残り４枚未満の時はリーチ無効
 				teDahai -= DAHAI_TYPE_OPENRIICHI-DAHAI_TYPE_NORMAL
 				warn strf("山牌の残数要件を満たしていません。打牌コード [%d] に補正しました。", teDahai)
@@ -543,7 +543,7 @@ repeat
 		setPreviousMeld GameStat, PREVMELD_TILECODE, -999
 		setPreviousMeld GameStat, PREVMELD_STEPPED, -999
 		dsplay SND_TSUMO
-		if ((getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat)) < 10) {
+		if (tilesLeft(GameStat) < 10) {
 			dsplay SND_COUNTDOWN
 		}
 		// 打牌へ戻る
