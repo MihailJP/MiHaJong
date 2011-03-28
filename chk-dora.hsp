@@ -137,7 +137,7 @@
 		}
 		if ((getRule(RULE_EIGHT_FLOWERS) != 0)&&((getFlowerFlag(GameStat, targetPlayer)&FLOWER_ALL) == FLOWER_ALL)) {
 			if (getRule(RULE_LIMITLESS) == 2) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 13: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -13}
-			else {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1000: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1000}
+			else {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, YAKUVAL_YAKUMAN: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0-(YAKUVAL_YAKUMAN)}
 			addyakuman tmpYakuInfo, "î™êÂâﬂäC", 1
 		} else {
 			if ((getRule(RULE_FOUR_SEASONS) != 0)&&((getFlowerFlag(GameStat, targetPlayer)&FLOWER_ALL_SEASONS) == FLOWER_ALL_SEASONS)) {
@@ -152,7 +152,7 @@
 						swbreak
 					case 3:
 						if (getRule(RULE_LIMITLESS) == 2) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 13: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -13}
-						else {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1000: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1000}
+						else {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, YAKUVAL_YAKUMAN: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0-(YAKUVAL_YAKUMAN)}
 						addyakuman tmpYakuInfo, "ètâƒèHì~", 1
 						swbreak
 				swend
@@ -191,7 +191,7 @@
 						swbreak
 					case 3:
 						if (getRule(RULE_LIMITLESS) == 2) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 13: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -13}
-						else {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1000: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1000}
+						else {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, YAKUVAL_YAKUMAN: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0-(YAKUVAL_YAKUMAN)}
 						addyakuman tmpYakuInfo, "ètâƒèHì~", 1
 						swbreak
 				swend

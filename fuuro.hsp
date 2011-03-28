@@ -275,7 +275,7 @@
 			setMenzen GameStat, PassivePlayer, 0
 			/* ‡q‚ğN‚· */
 			MeldPointerIncrement GameStat, PassivePlayer
-			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, haiChi(PassivePlayer)*1000+(haiCurrentSutehai+1-haiChi(PassivePlayer))
+			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, haiChi(PassivePlayer)*MELD_TYPE_STEP+(haiCurrentSutehai+1-haiChi(PassivePlayer))
 			/* ©“®—”v */
 			lipai GameStat, PassivePlayer
 			/* ƒ`[‚ğéŒ¾ */

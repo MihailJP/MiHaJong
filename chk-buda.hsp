@@ -57,32 +57,15 @@
 	if (getRule(RULE_SHIISAN_PUUTAA) != 0) {
 		ShisanBuDa = chkshisanbuda(GameStat, targetPlayer)
 		if ((ShisanBuDa == 1)&&(ShantenArray(SHANTEN_ORPHANS) >= 0)&&(getFirstDrawFlag(GameStat, targetPlayer) == 1)) {
+			delmod tmpYakuInfo: newmod tmpYakuInfo, yakuStruct
+			setYakuInfo tmpYakuInfo, YAKUINF_FU, 30
 			if (getRule(RULE_SHIISAN_PUUTAA) == 2) {
-				setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 5: setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST, "十三不搭\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  " \n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  ""
-				setYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 0: setYakuInfo tmpYakuInfo, YAKUINF_DORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_URADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 0
-				if (getRule(RULE_LIMITLESS) == 2) {
-					setYakuInfo tmpYakuInfo, YAKUINF_FU, 30: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 5
-					setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  "５飜\n"
-					tmpScore = 30: countdora GameStat, tmpYakuInfo, targetPlayer: aotenScoring tmpYakuInfo, tmpScore
-				} else {
-					setYakuInfo tmpYakuInfo, YAKUINF_FU, 30: tmpScore = 2000
-					setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 5
-					if (getRule(RULE_LIMITLESS) == 1) {
-						tmpScore = 30: setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  "５飜\n"
-						countdora GameStat, tmpYakuInfo, targetPlayer: aotenScoring tmpYakuInfo, tmpScore
-					}
-				}
+				addmangan tmpYakuInfo, "十三不搭", 2
 			} else {
-				if (getRule(RULE_LIMITLESS) == 2) {
-					setYakuInfo tmpYakuInfo, YAKUINF_FU, 30: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 13
-					setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST,  "十三不搭\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  "13飜\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  ""
-					setYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 0: setYakuInfo tmpYakuInfo, YAKUINF_DORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_URADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 0
-					tmpScore = 30: countdora GameStat, tmpYakuInfo, targetPlayer: aotenScoring tmpYakuInfo, tmpScore
-				} else {
-					setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  "十三不搭\n"
-					tmpScore = 8000: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1000
-				}
+				addyakuman tmpYakuInfo, "十三不搭", 1
 			}
+			countdora GameStat, tmpYakuInfo, targetPlayer
+			tmpScore = 30: calculateScore tmpYakuInfo, tmpScore
 		} else {
 			// 条件満たしてない場合、国士無双だったら何もしない。国士でないならチョンボ
 			Shanten = ShantenArray(SHANTEN_ALL)
@@ -107,15 +90,11 @@ return
 	if (getRule(RULE_SHIISAN_UUSHII) != 0) {
 		ShisiBuDa = chkshisibuda(GameStat, targetPlayer)
 		if ((ShisiBuDa == 1)&&(getFirstDrawFlag(GameStat, targetPlayer) == 1)) {
-			if (getRule(RULE_LIMITLESS) == 2) {
-				setYakuInfo tmpYakuInfo, YAKUINF_FU, 30: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 13
-				setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST,  "十三無靠\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST,  "13飜\n": setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  ""
-				setYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 0: setYakuInfo tmpYakuInfo, YAKUINF_DORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_URADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_AKADORA, 0: setYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 0
-				tmpScore = 30: countdora GameStat, tmpYakuInfo, targetPlayer: aotenScoring tmpYakuInfo, tmpScore
-			} else {
-				setYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST,  "十三無靠\n"
-				tmpScore = 8000: setYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1000
-			}
+			delmod tmpYakuInfo: newmod tmpYakuInfo, yakuStruct
+			setYakuInfo tmpYakuInfo, YAKUINF_FU, 30
+			addyakuman tmpYakuInfo, "十三無靠", 1
+			countdora GameStat, tmpYakuInfo, targetPlayer
+			tmpScore = 30: calculateScore tmpYakuInfo, tmpScore
 		} else {
 			// 和了ってない和了ってない
 			Shanten = ShantenArray(SHANTEN_ALL)

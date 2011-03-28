@@ -6,7 +6,7 @@
 /* èÛãµñ */
 #module
 #include "const.as"
-#deffunc contextualyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int MachiType, int FurikomiPlayer, int TsumoAgari, var tmpRenhuFlag
+#deffunc contextualyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int MachiType, int FurikomiPlayer, int TsumoAgari
 	trace "èÛãµñÇÃèàóùÇ…ì¸ÇËÇ‹Ç∑ÅB"
 	/* óßíºån */
 	if (getRichiFlag(GameStat, RICHI_OPENFLAG, targetPlayer) == 1) {
@@ -70,16 +70,11 @@
 					addyakuman tmpYakuInfo, "ínòa", 1
 				} else {
 					if (getRule(RULE_RENHOH) != 0) {
-						if (getRule(RULE_LIMITLESS) != 0) {
-							switch getRule(RULE_RENHOH)
-								case 1: addyaku tmpYakuInfo, "êlòa", 13: swbreak
-								case 2: addyaku tmpYakuInfo, "êlòa", 8: swbreak
-								case 3: addyaku tmpYakuInfo, "êlòa", 5: swbreak
-							swend
-						} else {
-							if (getRule(RULE_RENHOH) == 1) {addyakuman tmpYakuInfo, "êlòa", 1}
-							else {tmpRenHuFlag = 1}
-						}
+						switch getRule(RULE_RENHOH)
+							case 1: addyakuman tmpYakuInfo, "êlòa", 1: swbreak
+							case 2: addmangan tmpYakuInfo, "êlòa", 4: swbreak
+							case 3: addmangan tmpYakuInfo, "êlòa", 2: swbreak
+						swend
 					}
 				}
 			}
