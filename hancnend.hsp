@@ -471,12 +471,14 @@
 			} else {
 				hncnPointScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-400)-5)/10
 			}
-			if (getRule(RULE_CHIP) == 1) {
-				hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*2
-			}
-			if (getRule(RULE_CHIP) == 2) {
-				hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*5
-			}
+			switch getRule(RULE_CHIP)
+				case 1: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)/2: swbreak
+				case 2: hncnPointScore(cnt, 0) += getChip(GameStat, cnt): swbreak
+				case 3: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*2: swbreak
+				case 4: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*3: swbreak
+				case 5: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*5: swbreak
+				case 6: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*10: swbreak
+			swend
 			tmpcnt = cnt
 			repeat NUM_OF_DIGIT_GROUPS-1, 1: hncnPointScore(tmpcnt, cnt) = getScore(GameStat,tmpcnt, cnt): loop
 		}
@@ -500,12 +502,14 @@
 			} else {
 				hncnPointScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-300)-5)/10
 			}
-			if (getRule(RULE_CHIP) == 1) {
-				hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*2
-			}
-			if (getRule(RULE_CHIP) == 2) {
-				hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*5
-			}
+			switch getRule(RULE_CHIP)
+				case 1: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)/2: swbreak
+				case 2: hncnPointScore(cnt, 0) += getChip(GameStat, cnt): swbreak
+				case 3: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*2: swbreak
+				case 4: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*3: swbreak
+				case 5: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*5: swbreak
+				case 6: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*10: swbreak
+			swend
 			tmpcnt = cnt
 			repeat 7, 1: hncnPointScore(tmpcnt, cnt) = getScore(GameStat,tmpcnt, cnt): loop
 		}

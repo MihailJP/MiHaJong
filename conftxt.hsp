@@ -53,7 +53,7 @@
 	
 	RuleName(RULE_CHIP) = "チップ"
 	RuleDescription(RULE_CHIP) = "チップは一発、裏、赤(門前のみ)、アリス、役満につきます"
-	RuleTxt(0, RULE_CHIP) = "なし", "2000点/枚", "5000点/枚"
+	RuleTxt(0, RULE_CHIP) = "なし", "500点/枚", "1000点/枚", "2000点/枚", "3000点/枚", "5000点/枚", "10000点/枚"
 	
 	RuleName(RULE_YAKITORI) = "焼き鳥"
 	RuleDescription(RULE_YAKITORI) = "一度も和了れなかった人がトップに支払う点数です"
