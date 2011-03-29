@@ -96,7 +96,7 @@
 	
 	RuleName(RULE_ROUND_CONTINUATION) = "連荘条件"
 	RuleDescription(RULE_ROUND_CONTINUATION) = "荒牌時の連荘条件を設定します"
-	RuleTxt(0, RULE_ROUND_CONTINUATION) = "聴牌連荘", "和了連荘", "不聴連荘", "連荘なし"
+	RuleTxt(0, RULE_ROUND_CONTINUATION) = "聴牌連荘", "和了連荘", "不聴連荘", "連荘なし", "聴牌連荘(最終場は不聴連荘)", "和了連荘(最終場は聴牌連荘)"
 	
 	RuleName(RULE_MULTIPLE_MAHJONG) = "複数和了"
 #ifdef ALLSANMA

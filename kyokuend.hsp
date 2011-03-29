@@ -206,7 +206,14 @@
 		if ((getAgariHouki(GameStat, getRound(GameStat)\NUM_OF_PLAYERS) == 1)||(IsRemotePlayer(getRound(GameStat)\NUM_OF_PLAYERS) == -1)) {
 			Shanten = 1 // ã≠êßïsíÆàµÇ¢
 		}
-		if (((Shanten <= 0)||(getRule(RULE_ROUND_CONTINUATION) == 2))&&(getRule(RULE_ROUND_CONTINUATION) != 1)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
+		RenchanFlag = 0
+		switch getRule(RULE_ROUND_CONTINUATION)
+			case 0: if (Shanten <= 0) {RenchanFlag = 1}: swbreak
+			case 2: RenchanFlag = 1: swbreak
+			case 4: if ((Shanten <= 0)||((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*16+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}: swbreak
+			case 5: if ((Shanten <= 0)&&((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*16+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}: swbreak
+		swend
+		if (RenchanFlag) {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "òAëë"
 		} else {
 			setCall getRound(GameStat)\NUM_OF_PLAYERS, "êeó¨ÇÍ"
@@ -215,7 +222,7 @@
 		gosub *redrscreen
 		redraw 1
 		Shanten = countshanten(GameStat, (getRound(GameStat)\NUM_OF_PLAYERS), SHANTEN_ALL)
-		if (((Shanten > 0)&&(getRule(RULE_ROUND_CONTINUATION) != 2))||(getRule(RULE_ROUND_CONTINUATION) == 1)||(getRule(RULE_ROUND_CONTINUATION) == 3)) {incRound GameStat}
+		if (RenchanFlag == 0) {incRound GameStat}
 		incHonba GameStat
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 	}
