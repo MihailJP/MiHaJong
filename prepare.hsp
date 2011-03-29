@@ -14,7 +14,6 @@
 	}
 	newmod GameStat, gameStruct
 	setPlayer GameStat, TmpPosition(ClientNumber)
-	sdim TurnName, 8, 16: TurnName = "東一局", "東二局", "東三局", "東四局", "南一局", "南二局", "南三局", "南四局", "西一局", "西二局", "西三局", "西四局", "北一局", "北二局", "北三局", "北四局"
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
 	haifubufinit
 	statmes "" // 情報窓への表示
@@ -220,9 +219,9 @@ return
 		}
 	}
 	if (getHonba(GameStat)) {
-		tmpStatus = ""+TurnName(getRound(GameStat))+getHonba(GameStat)+"本場"
+		tmpStatus = ""+roundName(getRound(GameStat))+getHonba(GameStat)+"本場"
 	} else {
-		tmpStatus = ""+TurnName(getRound(GameStat))
+		tmpStatus = ""+roundName(getRound(GameStat))
 	}
 	chatappend "-------------\n*** "+tmpStatus+"\n"
 	if (WatchModeFlag == 1) {
@@ -265,7 +264,7 @@ return
 		if ((getRoundLoop(GameStat)*16+getRound(GameStat)) == getGameLength(GameStat)) {
 			CenterTitle = "オーラス"
 		} else {
-			CenterTitle = TurnName(getRound(GameStat))
+			CenterTitle = roundName(getRound(GameStat))
 		}
 	}
 #ifdef SANMAX
@@ -512,7 +511,7 @@ return
 	// 通常機能の表示
 	vanish: commonswitch GameStat, WatchModeFlag
 	// 配牌
-	CenterTitle = TurnName(getRound(GameStat))
+	CenterTitle = roundName(getRound(GameStat))
 #ifdef ALLSANMA
 	repeat 36 // ２幢ずつを３回
 #ifdef SANMA4

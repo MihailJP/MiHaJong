@@ -444,10 +444,10 @@ return
 return
 
 /* 配牌をバッファに出力 */
-#deffunc haifuwritebuffer var GameStat, array TurnName, int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag, str ResultDesc, int RoundEndType, int TsumoAgari, array PlayerName
+#deffunc haifuwritebuffer var GameStat, int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag, str ResultDesc, int RoundEndType, int TsumoAgari, array PlayerName
 	notesel haifuBuffer
 	tmpstr = "東南西北"
-	tmptxt = ""+TurnName(OrigTurn)
+	tmptxt = ""+roundName(OrigTurn)
 	if (OrigHonba > 0) {tmptxt += " "+OrigHonba+"本場"}
 	tmptxt += " ドラ："+haifuDora
 	if ((RoundEndType == ENDKYOKU_AGARI)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1)) {tmptxt += "裏ドラ："+haifuUraDora}
@@ -457,7 +457,7 @@ return
 	noteadd "結果："+ResultDesc
 	noteadd ""
 	notesel HThaifuBuffer
-	tmptxt = ""+TurnName(OrigTurn)
+	tmptxt = ""+roundName(OrigTurn)
 	if (OrigHonba > 0) {tmptxt += " "+OrigHonba+"本場"}
 	tmptxt += " ドラ：<span class=\"tile\">"+HThaifuDora+"</span>"
 	if ((RoundEndType == ENDKYOKU_AGARI)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1)) {tmptxt += "裏ドラ：<span class=\"tile\">"+HThaifuUraDora+"</span>"}

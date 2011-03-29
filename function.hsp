@@ -242,6 +242,44 @@ return
 	swend
 #global
 
+/* 「東○局」などの文字列を返す */
+#module
+#include "const.as"
+#defcfunc roundName int roundNum
+	roundNum = ""
+	switch roundNum/NUM_OF_PLAYERS
+		case 0: roundNum += "東": swbreak
+		case 1: roundNum += "南": swbreak
+		case 2: roundNum += "西": swbreak
+		case 3: roundNum += "北": swbreak
+		default: roundNum += "??"
+	swend
+	if ((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7)) {
+		switch getRoundLoop(GameStat)*NUM_OF_ACTUAL_PLAYERS
+			case 0: roundNum += "一局": swbreak
+			case 1: roundNum += "二局": swbreak
+			case 2: roundNum += "三局": swbreak
+			case 3: roundNum += "四局": swbreak
+			case 4: roundNum += "五局": swbreak
+			case 5: roundNum += "六局": swbreak
+			case 6: roundNum += "七局": swbreak
+			case 7: roundNum += "八局": swbreak
+			case 8: roundNum += "九局": swbreak
+			case 9: roundNum += "十局": swbreak
+			default: roundNum += strf("%d局", getRoundLoop(GameStat)*NUM_OF_ACTUAL_PLAYERS+1)
+		swend
+	} else {
+		switch roundNum\NUM_OF_PLAYERS
+			case 0: roundNum += "一局": swbreak
+			case 1: roundNum += "二局": swbreak
+			case 2: roundNum += "三局": swbreak
+			case 3: roundNum += "四局": swbreak
+			default: roundNum += "??局"
+		swend
+	}
+	return roundNum
+#global
+
 /* 牌の名前の文字列を返す */
 #module
 #include "const.as"

@@ -204,7 +204,7 @@ return
 		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_UPPER
 	loop
 	/* 画面中央に表示する情報 */
-	putcenterpanel GameStat, watchmodeflag, bgColorR, bgColorG, bgColorB, turnname
+	putcenterpanel GameStat, watchmodeflag, bgColorR, bgColorG, bgColorB
 	/* 画面中央に表示する情報 */
 	font fontname, 96, 0
 	if (strlen(CenterTitle) > 8) {
@@ -274,7 +274,7 @@ return
 
 #module
 #include "const.as"
-#deffunc putcenterpanel var GameStat, int watchmodeflag, int bgColorR, int bgColorG, int bgColorB, array turnname
+#deffunc putcenterpanel var GameStat, int watchmodeflag, int bgColorR, int bgColorG, int bgColorB
 	/* 画面中央に表示する情報 */
 	gmode gmode_mem
 	/* 現在何局目かを表示 */
@@ -295,7 +295,7 @@ return
 		if (getRound(GameStat)/NUM_OF_PLAYERS == 2) {color 255, 128, 128}
 		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {color 192, 192, 192}
 	}
-	borderedtxt2a TurnName(getRound(GameStat)), 250, 250, ginfo_r, ginfo_g, ginfo_b, 1, 32
+	borderedtxt2a roundName(getRound(GameStat)), 250, 250, ginfo_r, ginfo_g, ginfo_b, 1, 32
 	/* 局の情報を表示 */
 	font fontname, 14, 0
 	color bgColorR*12/8, bgColorG*12/8, bgColorB*12/8: colmode = 0

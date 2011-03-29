@@ -549,7 +549,7 @@ repeat
 		// 打牌へ戻る
 	loop
 #include "kyokuend.hsp"
-	haifuwritebuffer GameStat, TurnName, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType, TsumoAgari, PlayerName
+	haifuwritebuffer GameStat, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType, TsumoAgari, PlayerName
 	await 5000
 	// ハコ割れ終了
 	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {
@@ -586,33 +586,6 @@ repeat
 #endif
 	// 北場終了の場合は帰り東へ
 	if (getRound(GameStat) == 16) {incRoundLoop GameStat: setRound GameStat, 0}
-	// 東々廻しのとき
-	if ((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7)) {
-#ifdef SANMAT
-		if (getRoundLoop(GameStat) == 1) {
-			TurnName = "東四局", "東五局", "東六局"
-		}
-		if (getRoundLoop(GameStat) == 2) {
-			TurnName = "東七局", "東八局", "東九局"
-		}
-		if (getRoundLoop(GameStat) == 3) {
-			TurnName = "東十局", "東11局", "東12局"
-		}
-		if (getRoundLoop(GameStat) >= 4) {
-			TurnName = "東"+(getRoundLoop(GameStat)*3+1)+"局", "東"+(getRoundLoop(GameStat)*3+2)+"局", "東"+(getRoundLoop(GameStat)*3+3)+"局"
-		}
-#else
-		if (getRoundLoop(GameStat) == 1) {
-			TurnName = "東五局", "東六局", "東七局", "東八局"
-		}
-		if (getRoundLoop(GameStat) == 2) {
-			TurnName = "東九局", "東十局", "東11局", "東12局"
-		}
-		if (getRoundLoop(GameStat) >= 3) {
-			TurnName = "東"+(getRoundLoop(GameStat)*4+1)+"局", "東"+(getRoundLoop(GameStat)*4+2)+"局", "東"+(getRoundLoop(GameStat)*4+3)+"局", "東"+(getRoundLoop(GameStat)*4+4)+"局"
-		}
-#endif
-	}
 loop
 // 半荘終了時
 #include "hancnend.hsp"
