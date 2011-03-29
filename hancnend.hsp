@@ -25,7 +25,7 @@
 	repeat NUM_OF_PLAYERS
 		setCall cnt, ""
 	loop
-	CenterTitle = "終了"
+	setCenterTitle "終了"
 	dsplay SND_PAGE: gosub *redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 1) {setCall cnt, "１位"}
@@ -46,7 +46,7 @@
 		repeat NUM_OF_PLAYERS
 			if (Rank(cnt) == 1) {PointDelta(cnt) += getDeposit(GameStat)*10}
 		loop
-		CenterTitle = "供託清算"
+		setCenterTitle "供託清算"
 		gosub *putdelta
 		redraw 1: await 3000
 		pointcalc GameStat, PointDelta
@@ -70,7 +70,7 @@
 					loop
 				}
 			loop
-			CenterTitle = "焼鳥罰符"
+			setCenterTitle "焼鳥罰符"
 			gosub *putdelta
 			redraw 1: await 3000
 			pointcalc GameStat, PointDelta
@@ -94,7 +94,7 @@
 						loop
 					}
 				loop
-				CenterTitle = "焼鳥罰符"
+				setCenterTitle "焼鳥罰符"
 				gosub *putchipdelta
 				redraw 1: await 3000
 				repeat NUM_OF_PLAYERS
@@ -408,7 +408,7 @@
 			swend
 		loop
 #endif
-		CenterTitle = "順位点"
+		setCenterTitle "順位点"
 		gosub *putdelta
 		redraw 1: await 3000
 		pointcalc GameStat, PointDelta
@@ -433,8 +433,8 @@
 			}
 		loop
 		if ((getRule(RULE_STARTING_POINT) == 2)||(getRule(RULE_STARTING_POINT) == 3)) {
-			CenterTitle = "ラスペナ"
-		} else {CenterTitle = "トップ賞"}
+			setCenterTitle "ラスペナ"
+		} else {setCenterTitle "トップ賞"}
 #else
 	if (getRule(RULE_STARTING_POINT) != 2) {
 		repeat NUM_OF_ACTUAL_PLAYERS
@@ -453,8 +453,8 @@
 			}
 		loop
 		if ((getRule(RULE_STARTING_POINT) == 3)||(getRule(RULE_STARTING_POINT) == 4)) {
-			CenterTitle = "ラスペナ"
-		} else {CenterTitle = "トップ賞"}
+			setCenterTitle "ラスペナ"
+		} else {setCenterTitle "トップ賞"}
 #endif
 		gosub *putdelta
 		redraw 1: await 3000
@@ -538,7 +538,7 @@
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (getCall(cnt) == "") {setCall cnt, "０"}
 	loop
-	CenterTitle = "最終成績"
+	setCenterTitle "最終成績"
 	repeat NUM_OF_PLAYERS
 		tmptmprnk = cnt+1
 		repeat NUM_OF_PLAYERS

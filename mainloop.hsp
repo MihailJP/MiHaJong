@@ -88,7 +88,7 @@ repeat
 					if (GameMode == 2) {
 						if (ReceivedMsg == 1023) {
 							setDisconnectFlag GameStat, ActivePlayer, 1
-							CenterTitle = "‰ñüØ’f": gosub *redrscreen
+							setCenterTitle "‰ñüØ’f": gosub *redrscreen
 							gosub *reconnection
 							dialog "ÄÚ‘±‚µ‚Ü‚µ‚½\n‚±‚Ì‰ñ‚Í˜a—¹‚è•úŠü‚É‚È‚è‚Ü‚·\nŸ‚Ì‹Ç‚©‚çQ‰Á‰Â”\‚Å‚·", 0, "‰ñüØ’f"
 							RoundEndType = ENDKYOKU_DISCONNECT

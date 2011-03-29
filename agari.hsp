@@ -138,7 +138,7 @@ repeat NUM_OF_PLAYERS-1
 		tmpDoraPointer = origDoraPointer
 		AlicePointer = tmpDoraPointer-getYakuInfo(YakuInfo, YAKUINF_ALICEDORA)*2-2
 		if ((getMenzen(GameStat, agariPlayer) == 1)&&(getRule(RULE_ALICE) != 0)) {
-			CenterTitle = "ÉAÉäÉXîªíË"
+			setCenterTitle "ÉAÉäÉXîªíË"
 			repeat
 				if (getDoraPointer(GameStat) <= AlicePointer) {break}
 				setDoraPointer GameStat, getDoraPointer(GameStat) - 2
@@ -423,7 +423,7 @@ repeat NUM_OF_PLAYERS-1
 			setDoraPointer GameStat, AlicePointer
 		}
 		
-		CenterTitle = "òaóπì_"
+		setCenterTitle "òaóπì_"
 		gosub *putdelta
 		redraw 1: await 1500
 		pointcalc GameStat, PointDelta
@@ -583,7 +583,7 @@ repeat NUM_OF_PLAYERS-1
 				}
 			}
 
-			CenterTitle = "êœñ_ê¥éZ"
+			setCenterTitle "êœñ_ê¥éZ"
 			gosub *putdelta
 			redraw 1: await 1500
 			pointcalc GameStat, PointDelta
@@ -593,7 +593,7 @@ repeat NUM_OF_PLAYERS-1
 			dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 			PointDelta(agariPlayer, 0) += getDeposit(GameStat)*10
 			
-			CenterTitle = "ãüëıê¥éZ"
+			setCenterTitle "ãüëıê¥éZ"
 			gosub *putdelta
 			redraw 1: await 1500
 			pointcalc GameStat, PointDelta
@@ -613,7 +613,7 @@ repeat NUM_OF_PLAYERS-1
 #endif
 				PointDelta(agariPlayer) = ChipAmount*(NUM_OF_ACTUAL_PLAYERS-1)
 			}
-			CenterTitle = "èjãVê¥éZ"
+			setCenterTitle "èjãVê¥éZ"
 			gosub *putchipdelta
 			redraw 1: await 1500
 			repeat NUM_OF_PLAYERS
@@ -631,7 +631,7 @@ repeat NUM_OF_PLAYERS-1
 				PointDelta(PLAYER_WEST, 0) = 10
 				PointDelta(PLAYER_NORTH, 0) = 10
 				PointDelta(agariPlayer, 0) = -30
-				CenterTitle = "ñkñçî±ïÑ"
+				setCenterTitle "ñkñçî±ïÑ"
 				gosub *putdelta
 				redraw 1: await 1500
 				pointcalc GameStat, PointDelta
@@ -658,41 +658,41 @@ repeat NUM_OF_PLAYERS-1
 		statmes tmpResultDesc
 		await 1500
 		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
-		CenterTitle = "çˆòa"
+		setCenterTitle "çˆòa"
 		// åÎÉçÉìÇ‹ÇΩÇÕåÎÉcÉÇ
 		if ((TsumoAgari == 0)||(TsumoAgari == 1)) {
 			if ((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != 1)&&(getRule(RULE_MINKAN_PAO) == 6)) {
 				// ëÂñæû»ÇÃó‰è„äJâ‘ã÷é~ÉãÅ[ÉãÇÃèÍçá
-				CenterTitle = "ñæû»çˆòa": ResultDesc += "(ëÂñæû»ÇÃó‰è„îvÇ≈ÇÃòaóπÇË)"
+				setCenterTitle "ñæû»çˆòa": ResultDesc += "(ëÂñæû»ÇÃó‰è„îvÇ≈ÇÃòaóπÇË)"
 			}
 			else:if ((getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_NO)&&(getRule(RULE_RIICHI_SHIBARI) != 0)) {
 				// óßíºîõÇËÇ≈óßíºÇµÇƒÇ»Ç¢Ç»ÇÁçˆòa
-				CenterTitle = "ñŸíÆçˆòa": ResultDesc += "(É_É}íÆÇ≈ÇÃòaóπÇË)"
+				setCenterTitle "ñŸíÆçˆòa": ResultDesc += "(É_É}íÆÇ≈ÇÃòaóπÇË)"
 			}
 			else:if ((FuritenFlag == 1)||(getDoujunFuriten(GameStat, agariPlayer) == 1)) {
 				// êUíÆÇ»ÇÃÇ…ÉçÉìÇµÇΩèÍçáÇÕçˆòa
-				CenterTitle = "êUíÆçˆòa": ResultDesc += "(êUíÆÇ≈ÇÃÉçÉìòaóπÇË)"
+				setCenterTitle "êUíÆçˆòa": ResultDesc += "(êUíÆÇ≈ÇÃÉçÉìòaóπÇË)"
 			}
 			else {
 				// òaóπÇËÇ™ê¨óßÇµÇƒÇ¢Ç»Ç¢èÍçáçˆòa
 				Shanten = countshanten(GameStat, agariPlayer, SHANTEN_ALL)
-				if (Shanten >= 0) {CenterTitle = "ïsíÆçˆòa": ResultDesc += "(ê¨óßÇµÇƒÇ¢Ç»Ç¢òaóπÇË)"}
+				if (Shanten >= 0) {setCenterTitle "ïsíÆçˆòa": ResultDesc += "(ê¨óßÇµÇƒÇ¢Ç»Ç¢òaóπÇË)"}
 				else {
 					// ñÇ™Ç»Ç©Ç¡ÇΩèÍçáÇÕçˆòa
 					countyaku GameStat, yakuInfo, agariPlayer, furikomiPlayer, TsumoAgari
-					if (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 0) {CenterTitle = "ñ≥„ çˆòa": ResultDesc += "(ñÇÃÇ»Ç¢òaóπÇË)"}
+					if (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 0) {setCenterTitle "ñ≥„ çˆòa": ResultDesc += "(ñÇÃÇ»Ç¢òaóπÇË)"}
 					else:if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 1)&&(getShibari(GameStat) == 1)) {
 						// ìÒ„ îõÇËÇ≈ÇP„ ÇµÇ©Ç»Ç¢Ç»ÇÁçˆòa
-						CenterTitle = "„ ïsë´çˆòa": ResultDesc += "(àÍ„ ÇµÇ©Ç»Ç¢òaóπÇË)"
+						setCenterTitle "„ ïsë´çˆòa": ResultDesc += "(àÍ„ ÇµÇ©Ç»Ç¢òaóπÇË)"
 					} else:if ((getAgariHouki(GameStat, agariPlayer) == 1)||(IsRemotePlayer(agariPlayer) == -1)) {
 						// òaóπÇËï˙ä¸Ç»ÇÃÇ…òaóπÇÎÇ§Ç∆ÇµÇΩ
-						CenterTitle = "òaóπï˙ä¸çˆòa": ResultDesc += "(òaóπÇËï˙ä¸ìKópíÜ)"
-					} else {CenterTitle = "Å@çˆòaÅ@": ResultDesc += ""}
+						setCenterTitle "òaóπï˙ä¸çˆòa": ResultDesc += "(òaóπÇËï˙ä¸ìKópíÜ)"
+					} else {setCenterTitle "Å@çˆòaÅ@": ResultDesc += ""}
 				}
 			}
 		}
 		// åÎÉçÉìÅAåÎÉcÉÇà»äOÇÃçˆòa
-		if (TsumoAgari == AGARI_KUIKAE) {CenterTitle = "ãÚë÷çˆòa": ResultDesc += "(ãÚÇ¢ë÷Ç¶)"} // ãÚÇ¢ë÷Ç¶ÇÇµÇΩÇ∆Ç´
+		if (TsumoAgari == AGARI_KUIKAE) {setCenterTitle "ãÚë÷çˆòa": ResultDesc += "(ãÚÇ¢ë÷Ç¶)"} // ãÚÇ¢ë÷Ç¶ÇÇµÇΩÇ∆Ç´
 		if (TsumoAgari > 1) {dsplay SND_PAGE} else {dsplay SND_CUOHU}
 		gosub *redrscreen: await 5000
 
@@ -738,7 +738,7 @@ repeat NUM_OF_PLAYERS-1
 			loop
 		}
 #endif
-		CenterTitle = "çˆòaî±ïÑ"
+		setCenterTitle "çˆòaî±ïÑ"
 		gosub *putdelta
 		redraw 1
 		pointcalc GameStat, PointDelta
@@ -775,7 +775,7 @@ swend
 						PointDelta(AgariPlayerPriority) += 100*getRule(RULE_PENALTY_NEGATIVE)
 					}
 				loop
-				CenterTitle = "îÚÇ—î±ïÑ"
+				setCenterTitle "îÚÇ—î±ïÑ"
 				gosub *putdelta
 				redraw 1: await 3000
 				pointcalc GameStat, PointDelta
@@ -795,7 +795,7 @@ swend
 							PointDelta(AgariPlayerPriority) += (getRule(RULE_PENALTY_NEGATIVE)-2)
 						}
 					loop
-					CenterTitle = "îÚÇ—î±ïÑ"
+					setCenterTitle "îÚÇ—î±ïÑ"
 					gosub *putchipdelta
 					redraw 1: await 1500
 					repeat NUM_OF_PLAYERS

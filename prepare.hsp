@@ -34,7 +34,7 @@ return
 			}
 			if ((ClientReceived == 1)&&(ReceivedMsg == 1023)) {
 				setDisconnectFlag GameStat, ActivePlayer, 1
-				CenterTitle = "‰ñüØ’f": gosub *redrscreen
+				setCenterTitle "‰ñüØ’f": gosub *redrscreen
 				gosub *reconnection
 				dialog "ÄÚ‘±‚µ‚Ü‚µ‚½", 0, "‰ñüØ’f"
 				RoundEndType = ENDKYOKU_DISCONNECT
@@ -240,7 +240,7 @@ return
 	}
 	statmes tmpStatus
 	await 100
-	CenterTitle = "" // ‰æ–Ê’†‰›‚É‘å‘‚·‚é•¶š—ñ
+	setCenterTitle "" // ‰æ–Ê’†‰›‚É‘å‘‚·‚é•¶š—ñ
 	initCall // –Â‚«‚È‚Ç
 	if ((getRoundLoop(GameStat))\2 == 0) {
 		if (getRoundLoop(GameStat) == 0) {
@@ -259,12 +259,12 @@ return
 		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {bgColorR = 80: bgColorG = 80: bgColorB = 80}
 	}
 	if ((getRoundLoop(GameStat)*16+getRound(GameStat)) >= (getGameLength(GameStat)+1)) {
-		CenterTitle = "‰„’·í"
+		setCenterTitle "‰„’·í"
 	} else {
 		if ((getRoundLoop(GameStat)*16+getRound(GameStat)) == getGameLength(GameStat)) {
-			CenterTitle = "ƒI[ƒ‰ƒX"
+			setCenterTitle "ƒI[ƒ‰ƒX"
 		} else {
-			CenterTitle = roundName(getRound(GameStat))
+			setCenterTitle roundName(getRound(GameStat))
 		}
 	}
 #ifdef SANMAX
@@ -511,7 +511,7 @@ return
 	// ’Êí‹@”\‚Ì•\¦
 	vanish: commonswitch GameStat, WatchModeFlag
 	// ”z”v
-	CenterTitle = roundName(getRound(GameStat))
+	setCenterTitle roundName(getRound(GameStat))
 #ifdef ALLSANMA
 	repeat 36 // ‚Q›ï‚¸‚Â‚ğ‚R‰ñ
 #ifdef SANMA4
@@ -534,16 +534,16 @@ return
 #endif
 			switch getHonba(GameStat)
 				case 0: /* do nothing */ swbreak
-				case 1: CenterTitle = "‚P–{ê": swbreak
-				case 2: CenterTitle = "‚Q–{ê": swbreak
-				case 3: CenterTitle = "‚R–{ê": swbreak
-				case 4: CenterTitle = "‚S–{ê": swbreak
-				case 5: CenterTitle = "‚T–{ê": swbreak
-				case 6: CenterTitle = "‚U–{ê": swbreak
-				case 7: CenterTitle = "‚V–{ê": swbreak
-				case 8: CenterTitle = "‚W–{ê": swbreak
-				case 9: CenterTitle = "‚X–{ê": swbreak
-				default: CenterTitle = getHonba(GameStat)+"–{ê"
+				case 1: setCenterTitle "‚P–{ê": swbreak
+				case 2: setCenterTitle "‚Q–{ê": swbreak
+				case 3: setCenterTitle "‚R–{ê": swbreak
+				case 4: setCenterTitle "‚S–{ê": swbreak
+				case 5: setCenterTitle "‚T–{ê": swbreak
+				case 6: setCenterTitle "‚U–{ê": swbreak
+				case 7: setCenterTitle "‚V–{ê": swbreak
+				case 8: setCenterTitle "‚W–{ê": swbreak
+				case 9: setCenterTitle "‚X–{ê": swbreak
+				default: setCenterTitle getHonba(GameStat)+"–{ê"
 			swend
 		}
 		if (cnt\4 == 3) {
@@ -552,7 +552,7 @@ return
 			gosub *redrscreen: await 250
 		}
 	loop
-	CenterTitle = ""
+	setCenterTitle ""
 #ifdef ALLSANMA
 	repeat 4 // ‚P–‡‚¸‚Â‚ğ‚P‰ñAe‚Ìƒ`ƒ‡ƒ“ƒ`ƒ‡ƒ“
 #ifdef SANMA4

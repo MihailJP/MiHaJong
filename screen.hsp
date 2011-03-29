@@ -51,14 +51,7 @@ return
 	repeat 1, getPlayer(GameStat)
 		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_UPPER
 	loop
-
-	font fontname, 96, 0
-	if (strlen(CenterTitle) > 8) {
-		borderedtxt3 CenterTitle, 110, 250, 255, 255, 255, 2, 96, 192, 192, 192, 0, 8.0/double(strlen(CenterTitle))
-	} else {
-		borderedtxt2 CenterTitle, 110+24*(8-strlen(CenterTitle)), 250, 255, 255, 255, 2, 96, 192, 192, 192
-	}
-
+	putcentertitle
 	redraw 1
 return
 
@@ -206,15 +199,26 @@ return
 	/* ‰æ–Ê’†‰›‚É•\¦‚·‚éî•ñ */
 	putcenterpanel GameStat, watchmodeflag, bgColorR, bgColorG, bgColorB
 	/* ‰æ–Ê’†‰›‚É•\¦‚·‚éî•ñ */
+	putcentertitle
+	/* Ä•`‰æ‚µ‚Ä–ß‚é */
+	redraw 1
+return
+
+#module
+#deffunc setCenterTitle str centerTitleTxt
+	CenterTitle = centerTitleTxt
+return
+
+#deffunc putCenterTitle
+	if (vartype(CenterTitle) != vartype("str")) {CenterTitle = ""}
 	font fontname, 96, 0
 	if (strlen(CenterTitle) > 8) {
 		borderedtxt3 CenterTitle, 110, 250, 255, 255, 255, 2, 96, 192, 192, 192, 0, 8.0/double(strlen(CenterTitle))
 	} else {
 		borderedtxt2 CenterTitle, 110+24*(8-strlen(CenterTitle)), 250, 255, 255, 255, 2, 96, 192, 192, 192
 	}
-	/* Ä•`‰æ‚µ‚Ä–ß‚é */
-	redraw 1
 return
+#global
 
 #module
 #include "const.as"
