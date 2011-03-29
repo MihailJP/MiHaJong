@@ -7,11 +7,11 @@
 /* タンヤオ、チャンタなどの役 */
 #module
 #include "const.as"
-#deffunc yaojiuyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer
+#deffunc yaojiuyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer
 	trace "断幺・全帯系の処理に入ります。"
 	tmpyaojiu = 0: ShuntsuCount = 0: JihaiCount = 0
 	repeat SIZE_OF_MELD_BUFFER
-		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
+		switch (MianziDat(cnt) \ TILE_CODE_MAXIMUM)
 			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
@@ -24,10 +24,10 @@
 #endif
 			swbreak
 		swend
-		if ((haiMianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 7)&&(cnt > 0)) {
+		if ((MianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&((MianziDat(cnt) \ TILE_SUIT_STEP) == 7)&&(cnt > 0)) {
 			tmpyaojiu++
 		}
-		if ((haiMianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&(cnt > 0)) {ShuntsuCount++}
+		if ((MianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&(cnt > 0)) {ShuntsuCount++}
 	loop
 	if (tmpyaojiu == 0) {
 		if ((getMenzen(GameStat, targetPlayer) == 1)||(getRule(RULE_KUITAN) != 1)) {
@@ -54,7 +54,7 @@
 				// 九連に門清が複合するとか、そういう取り決めはあるけど、
 				// 字一色に混一色がついてくるのは完全にバグ。
 				delyaku tmpYakuInfo, "混一色"
-			} else:if ((getRule(RULE_FOUR_HONORS) != 0)&&(JihaiCount == 4)&&(haiMianziDat(0) < TILE_NUMERAL_MAX)) {
+			} else:if ((getRule(RULE_FOUR_HONORS) != 0)&&(JihaiCount == 4)&&(MianziDat(0) < TILE_NUMERAL_MAX)) {
 				addyakuman tmpYakuInfo, "四字刻", 1
 			} else:if (getRule(RULE_HONROUTOU) != 0) {
 				addyaku tmpYakuInfo, "混老頭", 3

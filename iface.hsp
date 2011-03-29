@@ -8,7 +8,7 @@
 #module
 #include "const.as"
 #deffunc chatinit
-	sdim hncnChatLog, 32768 // チャットのログ
+	sdim ChatLog, 32768 // チャットのログ
 	if (ginfo_dispx >= 1280) {
 		ChatWindowWidth = 440
 	} else : if (ginfo_dispx >= 1152) {
@@ -21,7 +21,7 @@
 	font fontname, 12, 0: objmode 2
 	title "Chat"
 	
-	pos 0, 0: mesbox hncnChatLog, ChatWindowWidth, 610, 0
+	pos 0, 0: mesbox ChatLog, ChatWindowWidth, 610, 0
 	sdim CurrentChatTxt, 256
 	pos 0, 610: input CurrentChatTxt, ChatWindowWidth-20, 20, 120
 	pos ChatWindowWidth-20, 610: objsize 20, 20: button gosub "OK", *chatpost_@
@@ -42,15 +42,15 @@
 	return
 
 #deffunc chatreload
-	gsel SCR_CHAT: objprm 0, hncnChatLog
+	gsel SCR_CHAT: objprm 0, ChatLog
 	sendmsg objinfo(0, 2), 0x00BA: tmplines = stat /* 行数の取得 */
-	sendmsg objinfo(0, 2), 0x00B1, strlen(hncnChatLog), strlen(hncnChatLog) /* カーソル位置修正 */
+	sendmsg objinfo(0, 2), 0x00B1, strlen(ChatLog), strlen(ChatLog) /* カーソル位置修正 */
 	sendmsg objinfo(0, 2), 0x00B6, 0, tmplines /* スクロールさせる */
 	gsel 0
 return
 
 #deffunc chatappend str String
-	hncnChatLog += String: chatreload
+	ChatLog += String: chatreload
 return
 
 #defcfunc getChatTxt
@@ -66,7 +66,7 @@ return
 #module
 #include "const.as"
 #deffunc ifaceinit
-	hncnStatus = ""
+	StatusBoxTxt = ""
 	AutoAgariSwitch = 0 // オート和了のスイッチ
 	AutoPassSwitch = 0 // オートパスのスイッチ
 	TsumogiriSwitch = 0 // 自動ツモ切りのスイッチ
@@ -77,8 +77,8 @@ return
 	return
 
 #deffunc statmes str msgtxt
-	hncnStatus = msgtxt
-	objprm STATBOX, hncnStatus
+	StatusBoxTxt = msgtxt
+	objprm STATBOX, StatusBoxTxt
 	return
 
 #defcfunc AutoAgariFlag
@@ -93,7 +93,7 @@ return
 #deffunc commonswitch var GameStat, int WatchModeFlag
 	font fontname, 12, 0
 	pos 620, 430: objsize 200, 20
-	input hncnStatus: objgray STATBOX, 0
+	input StatusBoxTxt: objgray STATBOX, 0
 	if (WatchModeFlag != 1) {
 		if (getAgariHouki(GameStat, getPlayer(GameStat)) == 0) {
 			pos 620, 460: objsize 100, 20

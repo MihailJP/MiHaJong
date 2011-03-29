@@ -53,10 +53,10 @@ return
 	loop
 
 	font fontname, 96, 0
-	if (strlen(hncnMsg) > 8) {
-		borderedtxt3 hncnMsg, 110, 250, 255, 255, 255, 2, 96, 192, 192, 192, 0, 8.0/double(strlen(hncnMsg))
+	if (strlen(CenterTitle) > 8) {
+		borderedtxt3 CenterTitle, 110, 250, 255, 255, 255, 2, 96, 192, 192, 192, 0, 8.0/double(strlen(CenterTitle))
 	} else {
-		borderedtxt2 hncnMsg, 110+24*(8-strlen(hncnMsg)), 250, 255, 255, 255, 2, 96, 192, 192, 192
+		borderedtxt2 CenterTitle, 110+24*(8-strlen(CenterTitle)), 250, 255, 255, 255, 2, 96, 192, 192, 192
 	}
 
 	redraw 1
@@ -178,7 +178,7 @@ return
 			swend
 		}
 		/* Še‰Æ‚Ìî•ñ‚ğ•\¦ */
-		putplayerinfo GameStat, haiCurrentSutehai, targetPlayer, Activeplayer
+		putplayerinfo GameStat, CurrentSutehai, targetPlayer, Activeplayer
 		/* –Â‚«dŠ|‚¯‚È‚Ç‚ÌƒeƒLƒXƒg•\¦ */
 		putCall cnt
 	loop
@@ -204,13 +204,13 @@ return
 		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_UPPER
 	loop
 	/* ‰æ–Ê’†‰›‚É•\¦‚·‚éî•ñ */
-	putcenterpanel GameStat, watchmodeflag, bgColorR, bgColorG, bgColorB, hncnturnname
+	putcenterpanel GameStat, watchmodeflag, bgColorR, bgColorG, bgColorB, turnname
 	/* ‰æ–Ê’†‰›‚É•\¦‚·‚éî•ñ */
 	font fontname, 96, 0
-	if (strlen(hncnMsg) > 8) {
-		borderedtxt3 hncnMsg, 110, 250, 255, 255, 255, 2, 96, 192, 192, 192, 0, 8.0/double(strlen(hncnMsg))
+	if (strlen(CenterTitle) > 8) {
+		borderedtxt3 CenterTitle, 110, 250, 255, 255, 255, 2, 96, 192, 192, 192, 0, 8.0/double(strlen(CenterTitle))
 	} else {
-		borderedtxt2 hncnMsg, 110+24*(8-strlen(hncnMsg)), 250, 255, 255, 255, 2, 96, 192, 192, 192
+		borderedtxt2 CenterTitle, 110+24*(8-strlen(CenterTitle)), 250, 255, 255, 255, 2, 96, 192, 192, 192
 	}
 	/* Ä•`‰æ‚µ‚Ä–ß‚é */
 	redraw 1
@@ -274,8 +274,8 @@ return
 
 #module
 #include "const.as"
-#deffunc putcenterpanel var GameStat, int watchmodeflag, int bgColorR, int bgColorG, int bgColorB, array hncnturnname
-	haiNokori = tilesLeft(GameStat)
+#deffunc putcenterpanel var GameStat, int watchmodeflag, int bgColorR, int bgColorG, int bgColorB, array turnname
+	TilesLeft = tilesLeft(GameStat)
 	/* ‰æ–Ê’†‰›‚É•\¦‚·‚éî•ñ */
 	gmode gmode_mem
 	/* Œ»İ‰½‹Ç–Ú‚©‚ğ•\¦ */
@@ -296,7 +296,7 @@ return
 		if (getRound(GameStat)/NUM_OF_PLAYERS == 2) {color 255, 128, 128}
 		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {color 192, 192, 192}
 	}
-	borderedtxt2a hncnTurnName(getRound(GameStat)), 250, 250, ginfo_r, ginfo_g, ginfo_b, 1, 32
+	borderedtxt2a TurnName(getRound(GameStat)), 250, 250, ginfo_r, ginfo_g, ginfo_b, 1, 32
 	/* ‹Ç‚Ìî•ñ‚ğ•\¦ */
 	font fontname, 14, 0
 	color bgColorR*12/8, bgColorG*12/8, bgColorB*12/8: colmode = 0
@@ -335,13 +335,13 @@ return
 	/* Ï‚İ–_Ac‚è©–Ì”vA‹Ÿ‘õ“_–_‚Ì”‚ğ•\¦ */
 	font fontname, 16, 0: color 0, 0, 0
 #ifdef ALLSANMA
-	if ((haiNokori < 53)||((haiNokori < 55)&&(((getRule(RULE_DORA_TWICE) != 1)&&((getRule(RULE_DORA_TWICE) != 2)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
+	if ((TilesLeft < 53)||((TilesLeft < 55)&&(((getRule(RULE_DORA_TWICE) != 1)&&((getRule(RULE_DORA_TWICE) != 2)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
 #else
-	if ((haiNokori < 68)||((haiNokori < 70)&&(((getRule(RULE_DORA_TWICE) != 1)&&((getRule(RULE_DORA_TWICE) != 2)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
+	if ((TilesLeft < 68)||((TilesLeft < 70)&&(((getRule(RULE_DORA_TWICE) != 1)&&((getRule(RULE_DORA_TWICE) != 2)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
 #endif
 		if (getHonba(GameStat)) {tmptxt = ""+getHonba(GameStat)+"–{ê"}
 		else {tmptxt = "•½ê"}
-		tmptxt += strf(" c%2d–‡\n", haiNokori)
+		tmptxt += strf(" c%2d–‡\n", TilesLeft)
 		tmptxt += "‹Ÿ‘õ "
 		if (getDeposit(GameStat)) {tmptxt += ""+getDeposit(GameStat)+"000“_"}
 		else {tmptxt += "‚È‚µ"}
@@ -390,7 +390,7 @@ return
 /* Še‰Æ‚Ìî•ñ‚ğ•\¦ */
 #module
 #include "const.as"
-#deffunc putplayerinfo var GameStat, int haiCurrentSutehai, int targetPlayer, int Activeplayer
+#deffunc putplayerinfo var GameStat, int CurrentSutehai, int targetPlayer, int Activeplayer
 	gsel SCR_PLAYER_BUFFER_UPPER+targetPlayer
 	color 0, 0, 0
 	/* b’è‡ˆÊ‚ÌŒvZ */
@@ -435,9 +435,9 @@ return
 						else {
 							/* ’®”v‚µ‚½‚Æ‚« */
 							if (Shanten == 0) {
-								chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, targetPlayer
+								chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, targetPlayer
 								/* U’®‚Ì‚ÍU’®‚Æ•\¦ */
-								if ((haiFuriten == 1)||(getDoujunFuriten(GameStat, targetPlayer) == 1)) {tmptxt += " U’®"}
+								if ((FuritenFlag == 1)||(getDoujunFuriten(GameStat, targetPlayer) == 1)) {tmptxt += " U’®"}
 								else:if (getRichiFlag(GameStat, RICHI_FLAG, getPlayer(GameStat)) > RIICHI_NO) {
 									/* U’®‚¶‚á‚È‚¢‚Æ‚« */
 									tmptxt += " —§’¼"
@@ -452,14 +452,14 @@ return
 						}
 					}
 					/* “|”v‰Â”\‚Èó‘Ô‚Å‚ ‚ê‚Î */
-					haiDaoPaiable = chkdaopaiability(GameStat, targetPlayer)
-					if ((getPlayer(GameStat) == targetPlayer)&&(haiDaoPaiable)&&(getFirstDrawFlag(GameStat, targetPlayer))) {
+					DaoPaiAbilityFlag = chkdaopaiability(GameStat, targetPlayer)
+					if ((getPlayer(GameStat) == targetPlayer)&&(DaoPaiAbilityFlag)&&(getFirstDrawFlag(GameStat, targetPlayer))) {
 						tmptxt += " ‹ãí‹ã”v"
 					}
 					/* ‘åOŒ³‚©‘ålŠì‚ğ•ï‚É‚È‚Á‚Ä‚¢‚éê‡ */
 					if (isGotPao(GameStat, targetPlayer)) {tmptxt += " •ïÓ"}
 					/* ©•ª‚Ìƒcƒ‚”Ô‚Ìê‡Ac‚èŠÔ‚ğ•\¦ */
-//					if ((getPlayer(GameStat) == targetPlayer)&&(haiTimer > 0)) {tmptxt += " ‚ ‚Æ"+haiTimer+"•b"}
+//					if ((getPlayer(GameStat) == targetPlayer)&&(TimeLeft > 0)) {tmptxt += " ‚ ‚Æ"+TimeLeft+"•b"}
 //					else {
 						/* ”²‚«ƒhƒ‰‚ª‚ ‚ê‚Î‚»‚ê‚ğ•\¦ */
 #ifdef SANMAX
@@ -514,19 +514,19 @@ return
 					/* ˜a—¹AƒI[ƒvƒ“—§’¼A‚ ‚é‚¢‚Í—¬‹Ç’®”v‚Ìê‡
 					   ‰½‘Ò‚¿‚Å‚ ‚é‚©•\¦‚·‚é */
 					/* U’®‚Å‚ ‚é‚©‚Ç‚¤‚©A‚Ü‚½A‰½‘Ò‚¿‚Å‚ ‚é‚©‚Ç‚¤‚©‚ğ’²‚×‚é */
-					chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, targetPlayer
+					chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, targetPlayer
 					Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
 					/* ‰½–Ê‘Ò‚¿‚©’²‚×‚é */
-					if ((haiCurrentSutehai > 0)&&(haiCurrentSutehai <= TILE_NONFLOWER_STRICT_MAX)) {
-						if ((haiMachihaiFlag(haiCurrentSutehai) == 1)&&(ActivePlayer != getPlayer(GameStat))) {
-							haiMachihaiCount(haiCurrentSutehai)++
-							haiMachihaiTotal++
+					if ((CurrentSutehai > 0)&&(CurrentSutehai <= TILE_NONFLOWER_STRICT_MAX)) {
+						if ((MachihaiFlag(CurrentSutehai) == 1)&&(ActivePlayer != getPlayer(GameStat))) {
+							MachihaiCount(CurrentSutehai)++
+							MachihaiTotal++
 						}
 					}
 					if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) > 0)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) <= TILE_NONFLOWER_STRICT_MAX)) {
-						if (haiMachihaiFlag(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat))) == 1) {
-							haiMachihaiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)))++
-							haiMachihaiTotal++
+						if (MachihaiFlag(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat))) == 1) {
+							MachihaiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)))++
+							MachihaiTotal++
 						}
 					}
 					/* ˆ— */
@@ -534,35 +534,35 @@ return
 					if (MachiMen == 13) {
 						/* ‘m–³‘o‚P‚R–Ê‘Ò‚¿‚Ìê‡ */
 						tmptxt += " ‘m–³‘o‚P‚R–Ê‘Ò‚¿"
-						if (haiFuriten == 1) {tmptxt += "(U’®)"}
+						if (FuritenFlag == 1) {tmptxt += "(U’®)"}
 					} else {
 						/* ””v‚ÍF•Ê‚Æ‹Ø•Ê‚É‚Ü‚Æ‚ß‚Ä•\¦ */
 						repeat TILE_NUMERAL_COLORS
-							if ((haiMachihaiFlag(cnt*TILE_SUIT_STEP+1) > 0)||(haiMachihaiFlag(cnt*TILE_SUIT_STEP+4) > 0)||(haiMachihaiFlag(cnt*TILE_SUIT_STEP+7) > 0)) {
+							if ((MachihaiFlag(cnt*TILE_SUIT_STEP+1) > 0)||(MachihaiFlag(cnt*TILE_SUIT_STEP+4) > 0)||(MachihaiFlag(cnt*TILE_SUIT_STEP+7) > 0)) {
 								if (tmpChainFlag == 1) {tmptxt += "-"} else {tmptxt += " "}
-								if (haiMachihaiFlag(cnt*TILE_SUIT_STEP+1) > 0) {tmptxt += "ˆê"}
-								if (haiMachihaiFlag(cnt*TILE_SUIT_STEP+4) > 0) {tmptxt += "l"}
-								if (haiMachihaiFlag(cnt*TILE_SUIT_STEP+7) > 0) {tmptxt += "µ"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+1) > 0) {tmptxt += "ˆê"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+4) > 0) {tmptxt += "l"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+7) > 0) {tmptxt += "µ"}
 								if (cnt == TILE_SUIT_CHARACTERS/TILE_SUIT_STEP) {tmptxt += "äİ"}
 								if (cnt == TILE_SUIT_CIRCLES/TILE_SUIT_STEP) {tmptxt += "“›"}
 								if (cnt == TILE_SUIT_BAMBOOS/TILE_SUIT_STEP) {tmptxt += "õ"}
 								tmpChainFlag = 1
 							}
-							if ((haiMachihaiFlag(cnt*TILE_SUIT_STEP+2) > 0)||(haiMachihaiFlag(cnt*TILE_SUIT_STEP+5) > 0)||(haiMachihaiFlag(cnt*TILE_SUIT_STEP+8) > 0)) {
+							if ((MachihaiFlag(cnt*TILE_SUIT_STEP+2) > 0)||(MachihaiFlag(cnt*TILE_SUIT_STEP+5) > 0)||(MachihaiFlag(cnt*TILE_SUIT_STEP+8) > 0)) {
 								if (tmpChainFlag == 1) {tmptxt += "-"} else {tmptxt += " "}
-								if (haiMachihaiFlag(cnt*TILE_SUIT_STEP+2) > 0) {tmptxt += "“ñ"}
-								if (haiMachihaiFlag(cnt*TILE_SUIT_STEP+5) > 0) {tmptxt += "ŒÜ"}
-								if (haiMachihaiFlag(cnt*TILE_SUIT_STEP+8) > 0) {tmptxt += "”ª"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+2) > 0) {tmptxt += "“ñ"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+5) > 0) {tmptxt += "ŒÜ"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+8) > 0) {tmptxt += "”ª"}
 								if (cnt == TILE_SUIT_CHARACTERS/TILE_SUIT_STEP) {tmptxt += "äİ"}
 								if (cnt == TILE_SUIT_CIRCLES/TILE_SUIT_STEP) {tmptxt += "“›"}
 								if (cnt == TILE_SUIT_BAMBOOS/TILE_SUIT_STEP) {tmptxt += "õ"}
 								tmpChainFlag = 1
 							}
-							if ((haiMachihaiFlag(cnt*TILE_SUIT_STEP+3) > 0)||(haiMachihaiFlag(cnt*TILE_SUIT_STEP+6) > 0)||(haiMachihaiFlag(cnt*TILE_SUIT_STEP+9) > 0)) {
+							if ((MachihaiFlag(cnt*TILE_SUIT_STEP+3) > 0)||(MachihaiFlag(cnt*TILE_SUIT_STEP+6) > 0)||(MachihaiFlag(cnt*TILE_SUIT_STEP+9) > 0)) {
 								if (tmpChainFlag == 1) {tmptxt += "-"} else {tmptxt += " "}
-								if (haiMachihaiFlag(cnt*TILE_SUIT_STEP+3) > 0) {tmptxt += "O"}
-								if (haiMachihaiFlag(cnt*TILE_SUIT_STEP+6) > 0) {tmptxt += "˜Z"}
-								if (haiMachihaiFlag(cnt*TILE_SUIT_STEP+9) > 0) {tmptxt += "‹ã"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+3) > 0) {tmptxt += "O"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+6) > 0) {tmptxt += "˜Z"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+9) > 0) {tmptxt += "‹ã"}
 								if (cnt == TILE_SUIT_CHARACTERS/TILE_SUIT_STEP) {tmptxt += "äİ"}
 								if (cnt == TILE_SUIT_CIRCLES/TILE_SUIT_STEP) {tmptxt += "“›"}
 								if (cnt == TILE_SUIT_BAMBOOS/TILE_SUIT_STEP) {tmptxt += "õ"}
@@ -570,21 +570,21 @@ return
 							}
 						loop
 						/* š”v‘Ò‚¿‚Ìê‡ */
-						if ((haiMachihaiFlag(TILE_EAST_WIND) > 0)||(haiMachihaiFlag(TILE_SOUTH_WIND) > 0)||(haiMachihaiFlag(TILE_WEST_WIND) > 0)||(haiMachihaiFlag(TILE_NORTH_WIND) > 0)||(haiMachihaiFlag(TILE_WHITE_DRAGON) > 0)||(haiMachihaiFlag(TILE_GREEN_DRAGON) > 0)||(haiMachihaiFlag(TILE_RED_DRAGON) > 0)) {
+						if ((MachihaiFlag(TILE_EAST_WIND) > 0)||(MachihaiFlag(TILE_SOUTH_WIND) > 0)||(MachihaiFlag(TILE_WEST_WIND) > 0)||(MachihaiFlag(TILE_NORTH_WIND) > 0)||(MachihaiFlag(TILE_WHITE_DRAGON) > 0)||(MachihaiFlag(TILE_GREEN_DRAGON) > 0)||(MachihaiFlag(TILE_RED_DRAGON) > 0)) {
 							if (tmpChainFlag == 1) {tmptxt += "-"} else {tmptxt += " "}
-							if (haiMachihaiFlag(TILE_EAST_WIND) > 0) {tmptxt += "“Œ"}
-							if (haiMachihaiFlag(TILE_SOUTH_WIND) > 0) {tmptxt += "“ì"}
-							if (haiMachihaiFlag(TILE_WEST_WIND) > 0) {tmptxt += "¼"}
-							if (haiMachihaiFlag(TILE_NORTH_WIND) > 0) {tmptxt += "–k"}
-							if (haiMachihaiFlag(TILE_WHITE_DRAGON) > 0) {tmptxt += "”’"}
-							if (haiMachihaiFlag(TILE_GREEN_DRAGON) > 0) {tmptxt += "á¢"}
-							if (haiMachihaiFlag(TILE_RED_DRAGON) > 0) {tmptxt += "’†"}
+							if (MachihaiFlag(TILE_EAST_WIND) > 0) {tmptxt += "“Œ"}
+							if (MachihaiFlag(TILE_SOUTH_WIND) > 0) {tmptxt += "“ì"}
+							if (MachihaiFlag(TILE_WEST_WIND) > 0) {tmptxt += "¼"}
+							if (MachihaiFlag(TILE_NORTH_WIND) > 0) {tmptxt += "–k"}
+							if (MachihaiFlag(TILE_WHITE_DRAGON) > 0) {tmptxt += "”’"}
+							if (MachihaiFlag(TILE_GREEN_DRAGON) > 0) {tmptxt += "á¢"}
+							if (MachihaiFlag(TILE_RED_DRAGON) > 0) {tmptxt += "’†"}
 							tmpChainFlag = 1
 						}
 						/* u`‘Ò‚¿v‚Æ•t‚¯‚é */
 						if (MachiMen > 0) {
 							tmptxt += "‘Ò‚¿"
-							if (haiFuriten == 1) {tmptxt += "(U’®)"}
+							if (FuritenFlag == 1) {tmptxt += "(U’®)"}
 						} else {
 							/* •s’®‚Ìê‡ */
 							tmptxt += " ƒm[ƒeƒ“"
@@ -648,19 +648,19 @@ return
 #module
 #include "const.as"
 #deffunc initCall
-	sdim haiCall, 12, NUM_OF_PLAYERS
+	sdim PlayerDeclaration, 12, NUM_OF_PLAYERS
 return
 
 #deffunc setCall int pnum, str callStr
-	haiCall(pnum) = callStr
+	PlayerDeclaration(pnum) = callStr
 return
 
 #defcfunc getCall int plnum
-	return haiCall(plnum)
+	return PlayerDeclaration(plnum)
 
 #deffunc putCall int player
 	font fontname, 96, 0
-	switch haiCall(player)
+	switch PlayerDeclaration(player)
 		case "ƒŠ[ƒ`":
 			/* ”–Ô */
 			color 255, 192, 192: swbreak
@@ -710,14 +710,14 @@ return
 			/* ‡F */
 			color 128, 32, 192: swbreak
 	swend
-	if (strmid(haiCall(player), 0, 1)  == "+") {color 192, 255, 192}
-	if (strmid(haiCall(player), 0, 1)  == "-") {color 255, 192, 192}
-	if (strmid(haiCall(player), 0, 2)  == "{") {color 192, 255, 192}
-	if (strmid(haiCall(player), 0, 2)  == "|") {color 255, 192, 192}
-	if (strlen(haiCall(player)) > 8) {
-		borderedtxt3a haiCall(player), 110+24*(8-strlen(haiCall(player))), 160, ginfo_r, ginfo_g, ginfo_b, 2, 96, , 8.0/double(strlen(haiCall(player)))
+	if (strmid(PlayerDeclaration(player), 0, 1)  == "+") {color 192, 255, 192}
+	if (strmid(PlayerDeclaration(player), 0, 1)  == "-") {color 255, 192, 192}
+	if (strmid(PlayerDeclaration(player), 0, 2)  == "{") {color 192, 255, 192}
+	if (strmid(PlayerDeclaration(player), 0, 2)  == "|") {color 255, 192, 192}
+	if (strlen(PlayerDeclaration(player)) > 8) {
+		borderedtxt3a PlayerDeclaration(player), 110+24*(8-strlen(PlayerDeclaration(player))), 160, ginfo_r, ginfo_g, ginfo_b, 2, 96, , 8.0/double(strlen(PlayerDeclaration(player)))
 	} else {
-		borderedtxt2a haiCall(player), 110+24*(8-strlen(haiCall(player))), 160, ginfo_r, ginfo_g, ginfo_b, 2, 96
+		borderedtxt2a PlayerDeclaration(player), 110+24*(8-strlen(PlayerDeclaration(player))), 160, ginfo_r, ginfo_g, ginfo_b, 2, 96
 	}
 return
 #global
@@ -792,24 +792,24 @@ return
 	boxf 0, 600, 599, 639
 	/* ‰æ–Ê‰º‚É‘Ò‚¿”v‚È‚Ç‚Ìƒf[ƒ^‚ğ•\¦ */
 	font fontname, 14, 0: color 255, 255, 255
-	if ((haiTimer@player == 0)||(ActivePlayer != getPlayer(GameStat))) {
-		chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, getPlayer(GameStat)
+	if ((TimeLeft@player == 0)||(ActivePlayer != getPlayer(GameStat))) {
+		chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getPlayer(GameStat)
 		Shanten = countshanten(GameStat, getPlayer(GameStat), SHANTEN_ALL)
-		if ((haiCurrentSutehai > 0)&&(haiCurrentSutehai <= TILE_NONFLOWER_STRICT_MAX)) {
-			if ((haiMachihaiFlag(haiCurrentSutehai) == 1)&&(ActivePlayer != getPlayer(GameStat))) {
-				haiMachihaiCount(haiCurrentSutehai)++
-				haiMachihaiTotal++
+		if ((CurrentSutehai > 0)&&(CurrentSutehai <= TILE_NONFLOWER_STRICT_MAX)) {
+			if ((MachihaiFlag(CurrentSutehai) == 1)&&(ActivePlayer != getPlayer(GameStat))) {
+				MachihaiCount(CurrentSutehai)++
+				MachihaiTotal++
 			}
 		}
 		if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) > 0)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) <= TILE_NONFLOWER_STRICT_MAX)) {
-			if (haiMachihaiFlag(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat))) == 1) {
-				haiMachihaiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)))++
-				haiMachihaiTotal++
+			if (MachihaiFlag(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat))) == 1) {
+				MachihaiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)))++
+				MachihaiTotal++
 			}
 		}
 		if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) == 0) {
 			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX-(MeldPointer(GameStat, getPlayer(GameStat))*3), getPlayer(GameStat)) >= TILE_NONFLOWER_MAX) {MachiMen = 0}
-			else:if (haiMachihaiFlag(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX-(MeldPointer(GameStat, getPlayer(GameStat))*3), getPlayer(GameStat))) != 0) {
+			else:if (MachihaiFlag(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX-(MeldPointer(GameStat, getPlayer(GameStat))*3), getPlayer(GameStat))) != 0) {
 				MachiMen = 0
 			}
 		}
@@ -820,29 +820,29 @@ return
 			borderedtxt2b "--–‡", 426, 615, tmpr, tmpg, tmpb, 0, 14
 		} else {
 			pos 426, 601
-			if (haiMachihaiTotal == 0) {color 192, 192, 192}
-			if (haiMachihaiTotal == 1) {color 255, 0, 0}
-			if (haiMachihaiTotal == 2) {color 255, 85, 0}
-			if (haiMachihaiTotal == 3) {color 255, 170, 0}
-			if (haiMachihaiTotal == 4) {color 255, 255, 0}
-			if (haiMachihaiTotal == 5) {color 255, 255, 255}
-			if (haiMachihaiTotal == 6) {color 255, 255, 255}
-			if (haiMachihaiTotal == 7) {color 255, 255, 255}
-			if (haiMachihaiTotal == 8) {color 0, 255, 0}
-			if ((haiMachihaiTotal >= 9)&&(haiMachihaiTotal <= 15)) {color 0, 255-((haiMachihaiTotal-8)*16), ((haiMachihaiTotal-8)*32)}
-			if (haiMachihaiTotal >= 16) {color 0, 128, 255}
+			if (MachihaiTotal == 0) {color 192, 192, 192}
+			if (MachihaiTotal == 1) {color 255, 0, 0}
+			if (MachihaiTotal == 2) {color 255, 85, 0}
+			if (MachihaiTotal == 3) {color 255, 170, 0}
+			if (MachihaiTotal == 4) {color 255, 255, 0}
+			if (MachihaiTotal == 5) {color 255, 255, 255}
+			if (MachihaiTotal == 6) {color 255, 255, 255}
+			if (MachihaiTotal == 7) {color 255, 255, 255}
+			if (MachihaiTotal == 8) {color 0, 255, 0}
+			if ((MachihaiTotal >= 9)&&(MachihaiTotal <= 15)) {color 0, 255-((MachihaiTotal-8)*16), ((MachihaiTotal-8)*32)}
+			if (MachihaiTotal >= 16) {color 0, 128, 255}
 			tmpr=ginfo_r:tmpg=ginfo_g:tmpb=ginfo_b
-			if (haiMachihaiTotal == 0) {borderedtxt2a "ƒ¶×", 426, 601, tmpr, tmpg, tmpb, 0, 14}
-			else:if (haiFuriten == 1) {borderedtxt2a "ÌØÃİ", 426, 601, tmpr, tmpg, tmpb, 0, 14}
+			if (MachihaiTotal == 0) {borderedtxt2a "ƒ¶×", 426, 601, tmpr, tmpg, tmpb, 0, 14}
+			else:if (FuritenFlag == 1) {borderedtxt2a "ÌØÃİ", 426, 601, tmpr, tmpg, tmpb, 0, 14}
 			else {borderedtxt2a "‚ ‚Æ", 426, 601, tmpr, tmpg, tmpb, 0, 14}
-			borderedtxt2a strf("%2d–‡", haiMachihaiTotal), 426, 615, tmpr, tmpg, tmpb, 0, 14
+			borderedtxt2a strf("%2d–‡", MachihaiTotal), 426, 615, tmpr, tmpg, tmpb, 0, 14
 			if (MachiMen > 0) {
 				tmpmachimiancnt = 0
 				repeat TILE_NONFLOWER_STRICT_MAX
-					if (haiMachihaiCount(TILE_NONFLOWER_STRICT_MAX-cnt) >= 0) {
+					if (MachihaiCount(TILE_NONFLOWER_STRICT_MAX-cnt) >= 0) {
 						pos 400-(24*tmpmachimiancnt), 603
 						gzoom 16, 24, SCR_TILE_PIC, ((TILE_NONFLOWER_STRICT_MAX-cnt)\TILE_SUIT_STEP-1)*TILE_WIDTH, (TILE_NONFLOWER_STRICT_MAX-cnt)/TILE_SUIT_STEP*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, 1
-						switch haiMachihaiCount(TILE_NONFLOWER_STRICT_MAX-cnt)
+						switch MachihaiCount(TILE_NONFLOWER_STRICT_MAX-cnt)
 							case 0: borderedtxt2a "0", 416-(24*tmpmachimiancnt), 615, 255, 0, 0, 0, 14: swbreak
 							case 1: borderedtxt2a "1", 416-(24*tmpmachimiancnt), 615, 255, 255, 0, 0, 14: swbreak
 							case 2: borderedtxt2a "2", 416-(24*tmpmachimiancnt), 615, 0, 255, 0, 0, 14: swbreak

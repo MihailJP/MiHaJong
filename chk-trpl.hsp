@@ -6,7 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc countKez array KezCount, array haiMianziDat
+#deffunc countKez array KezCount, array MianziDat
 /*
 		countKez p1, p2
 		刻子の数を数える
@@ -20,8 +20,8 @@
 	trace "刻子・槓子の種類を調べます。"
 	dim KezCount, TILE_NONFLOWER_MAX: Kezi = 0
 	repeat SIZE_OF_MELD_BUFFER
-		if (haiMianziDat(cnt) >= MELD_TRIPLET*MELD_TYPE_STEP) {
-			KezCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)++
+		if (MianziDat(cnt) >= MELD_TRIPLET*MELD_TYPE_STEP) {
+			KezCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++
 			Kezi++
 		}
 	loop
@@ -30,7 +30,7 @@
 
 #module
 #include "const.as"
-#deffunc countAnKez array KezCount, array haiMianziDat
+#deffunc countAnKez array KezCount, array MianziDat
 /*
 		countAnKez p1, p2
 		暗刻子の数を数える
@@ -44,8 +44,8 @@
 	trace "暗刻子・暗槓子の種類を調べます。"
 	dim KezCount, TILE_NONFLOWER_MAX: Kezi = 0
 	repeat SIZE_OF_MELD_BUFFER
-		if (((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_TRIPLET_CONCEALED)||((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED)) {
-			KezCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)++
+		if (((MianziDat(cnt) / MELD_TYPE_STEP) == MELD_TRIPLET_CONCEALED)||((MianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED)) {
+			KezCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++
 			Kezi++
 		}
 	loop
@@ -54,7 +54,7 @@
 
 #module
 #include "const.as"
-#deffunc countDuiz array DuiCount, array haiMianziDat
+#deffunc countDuiz array DuiCount, array MianziDat
 /*
 		countDuiz p1, p2
 		対子・刻子・槓子の数を数える
@@ -66,26 +66,26 @@
 */
 	trace "対子・刻子・槓子の種類を調べます。"
 	dim DuiCount, TILE_NONFLOWER_MAX
-	countKez DuiCount, haiMianziDat
-	DuiCount(haiMianziDat(0) \ TILE_CODE_MAXIMUM)++
+	countKez DuiCount, MianziDat
+	DuiCount(MianziDat(0) \ TILE_CODE_MAXIMUM)++
 	return
 #global
 
 /* 刻子系の役 */
 #module
 #include "const.as"
-#deffunc tripletyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int haiFuriten, int TsumoAgari, int MachiType
+#deffunc tripletyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int FuritenFlag, int TsumoAgari, int MachiType
 	trace "刻子役の処理に入ります。"
-	countKez KezCount, haiMianziDat: Kezi = stat
-	countDuiz DuiCount, haiMianziDat
-	countAnKez AnKezCount, haiMianziDat: AnKe = stat
+	countKez KezCount, MianziDat: Kezi = stat
+	countDuiz DuiCount, MianziDat
+	countAnKez AnKezCount, MianziDat: AnKe = stat
 	WindCnt = 0: DragonCnt = 0
 #ifndef SANMAS
 	repeat SIZE_OF_MELD_BUFFER
-		if (((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {
+		if (((MianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((MianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {
 			if (cnt == 0) {WindCnt += 1} else {WindCnt += 2}
 		}
-		if (((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_DRAGON_MIN)&&((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_DRAGON_MAX)) {
+		if (((MianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_DRAGON_MIN)&&((MianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_DRAGON_MAX)) {
 			if (cnt == 0) {DragonCnt += 1} else {DragonCnt += 2}
 		}
 	loop
@@ -99,7 +99,7 @@
 			// 振聴の時は単騎待ちの扱いとしないように変更
 			// 九連や国士と違って四単の振聴は待ちを変えれば大丈夫なので
 			// あんまり意味無いかも
-			if ((MachiType == MACHI_TANKI)&&(haiFuriten == 0)&&(getRule(RULE_DOUBLE_YAKUMAN) == 0)) {
+			if ((MachiType == MACHI_TANKI)&&(FuritenFlag == 0)&&(getRule(RULE_DOUBLE_YAKUMAN) == 0)) {
 				addyakuman tmpYakuInfo, "四暗刻単騎", 2
 			} else {
 				addyakuman tmpYakuInfo, "四暗刻", 1
@@ -331,7 +331,7 @@
 		}
 	}
 	/* 中国系のおめでたい役 */
-	if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+1)&&(getRule(RULE_KOUKEI_HOUGYOU) != 0)) {
+	if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(MianziDat(0) == TILE_SUIT_CIRCLES+1)&&(getRule(RULE_KOUKEI_HOUGYOU) != 0)) {
 		addyakuman tmpYakuInfo, "紅鶏報暁", 1
 		delyaku tmpYakuInfo, "対々和"
 		delyaku tmpYakuInfo, "絶一門"
@@ -735,7 +735,7 @@
 		if (getRule(RULE_BAXIAN_XISIFENG) != 0) {
 			yakuFlag = 0
 			if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(DuiCount(TILE_WEST_WIND) >= 1)) {yakuFlag += 1}
-			countKangz KangzCount, haiMianziDat
+			countKangz KangzCount, MianziDat
 			if (KangzCount(TILE_SUIT_BAMBOOS+1) >= 1) {yakuFlag += 1}
 			if (yakuFlag == 2) {
 				addyakuman tmpYakuInfo, "八仙戯四鳳", 1
@@ -911,16 +911,16 @@
 #endif
 	/* 覇王鞭 */
 	if (getRule(RULE_HAOUBEN) != 0) {
-		countKangz KangzCount, haiMianziDat
+		countKangz KangzCount, MianziDat
 		yakuFlag = 0
 		repeat TILE_NUMERAL_COLORS
 			if ((getRule(RULE_HAOUBEN) == 2)&&(cnt != TILE_SUIT_BAMBOOS)) {continue}
-			if ((KangzCount(cnt*TILE_SUIT_STEP+1) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+4) >= 1)&&(KangzCount(cnt*TILE_SUIT_STEP+4) == 0)&&(haiMianziDat(0) == cnt*TILE_SUIT_STEP+7)) {yakuFlag = 1}
-			if ((KangzCount(cnt*TILE_SUIT_STEP+2) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+5) >= 1)&&(KangzCount(cnt*TILE_SUIT_STEP+5) == 0)&&(haiMianziDat(0) == cnt*TILE_SUIT_STEP+8)) {yakuFlag = 1}
-			if ((KangzCount(cnt*TILE_SUIT_STEP+3) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+6) >= 1)&&(KangzCount(cnt*TILE_SUIT_STEP+6) == 0)&&(haiMianziDat(0) == cnt*TILE_SUIT_STEP+9)) {yakuFlag = 1}
-			if ((KangzCount(cnt*TILE_SUIT_STEP+7) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+4) >= 1)&&(KangzCount(cnt*TILE_SUIT_STEP+4) == 0)&&(haiMianziDat(0) == cnt*TILE_SUIT_STEP+1)) {yakuFlag = 1}
-			if ((KangzCount(cnt*TILE_SUIT_STEP+8) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+5) >= 1)&&(KangzCount(cnt*TILE_SUIT_STEP+5) == 0)&&(haiMianziDat(0) == cnt*TILE_SUIT_STEP+2)) {yakuFlag = 1}
-			if ((KangzCount(cnt*TILE_SUIT_STEP+9) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+6) >= 1)&&(KangzCount(cnt*TILE_SUIT_STEP+6) == 0)&&(haiMianziDat(0) == cnt*TILE_SUIT_STEP+3)) {yakuFlag = 1}
+			if ((KangzCount(cnt*TILE_SUIT_STEP+1) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+4) >= 1)&&(KangzCount(cnt*TILE_SUIT_STEP+4) == 0)&&(MianziDat(0) == cnt*TILE_SUIT_STEP+7)) {yakuFlag = 1}
+			if ((KangzCount(cnt*TILE_SUIT_STEP+2) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+5) >= 1)&&(KangzCount(cnt*TILE_SUIT_STEP+5) == 0)&&(MianziDat(0) == cnt*TILE_SUIT_STEP+8)) {yakuFlag = 1}
+			if ((KangzCount(cnt*TILE_SUIT_STEP+3) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+6) >= 1)&&(KangzCount(cnt*TILE_SUIT_STEP+6) == 0)&&(MianziDat(0) == cnt*TILE_SUIT_STEP+9)) {yakuFlag = 1}
+			if ((KangzCount(cnt*TILE_SUIT_STEP+7) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+4) >= 1)&&(KangzCount(cnt*TILE_SUIT_STEP+4) == 0)&&(MianziDat(0) == cnt*TILE_SUIT_STEP+1)) {yakuFlag = 1}
+			if ((KangzCount(cnt*TILE_SUIT_STEP+8) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+5) >= 1)&&(KangzCount(cnt*TILE_SUIT_STEP+5) == 0)&&(MianziDat(0) == cnt*TILE_SUIT_STEP+2)) {yakuFlag = 1}
+			if ((KangzCount(cnt*TILE_SUIT_STEP+9) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+6) >= 1)&&(KangzCount(cnt*TILE_SUIT_STEP+6) == 0)&&(MianziDat(0) == cnt*TILE_SUIT_STEP+3)) {yakuFlag = 1}
 		loop
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "覇王鞭", 6
@@ -928,13 +928,13 @@
 	}
 	/* 劉関張 */
 	if (getRule(RULE_RYUUKANCHAN) != 0) {
-		countKangz KangzCount, haiMianziDat
+		countKangz KangzCount, MianziDat
 		yakuFlag = 0
 		repeat 7,1
 			tmpcnt = cnt
 			repeat TILE_NUMERAL_COLORS
-				if ((KangzCount(tmpcnt+cnt*TILE_SUIT_STEP) >= 1)&&(KezCount(tmpcnt+1+cnt*TILE_SUIT_STEP) >= 1)&&(KangzCount(tmpcnt+1+cnt*TILE_SUIT_STEP) == 0)&&(haiMianziDat(0) == tmpcnt+2+cnt*TILE_SUIT_STEP)) {yakuFlag = 1}
-				if ((KangzCount(tmpcnt+2+cnt*TILE_SUIT_STEP) >= 1)&&(KezCount(tmpcnt+1+cnt*TILE_SUIT_STEP) >= 1)&&(KangzCount(tmpcnt+1+cnt*TILE_SUIT_STEP) == 0)&&(haiMianziDat(0) == tmpcnt+cnt*TILE_SUIT_STEP)) {yakuFlag = 1}
+				if ((KangzCount(tmpcnt+cnt*TILE_SUIT_STEP) >= 1)&&(KezCount(tmpcnt+1+cnt*TILE_SUIT_STEP) >= 1)&&(KangzCount(tmpcnt+1+cnt*TILE_SUIT_STEP) == 0)&&(MianziDat(0) == tmpcnt+2+cnt*TILE_SUIT_STEP)) {yakuFlag = 1}
+				if ((KangzCount(tmpcnt+2+cnt*TILE_SUIT_STEP) >= 1)&&(KezCount(tmpcnt+1+cnt*TILE_SUIT_STEP) >= 1)&&(KangzCount(tmpcnt+1+cnt*TILE_SUIT_STEP) == 0)&&(MianziDat(0) == tmpcnt+cnt*TILE_SUIT_STEP)) {yakuFlag = 1}
 			loop
 		loop
 		if (yakuFlag) {
@@ -965,11 +965,11 @@
 	}
 	/* 南の朱雀 */
 	if (getRule(RULE_VERMILION_BIRD) != 0) {
-		countKangz KangzCount, haiMianziDat
+		countKangz KangzCount, MianziDat
 		yakuFlag = 0
-		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+5) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(haiMianziDat(0) == TILE_RED_DRAGON)) {yakuFlag = 1}
-		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+5) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(haiMianziDat(0) == TILE_RED_DRAGON)) {yakuFlag = 1}
-		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(haiMianziDat(0) == TILE_RED_DRAGON)) {yakuFlag = 1}
+		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+5) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(MianziDat(0) == TILE_RED_DRAGON)) {yakuFlag = 1}
+		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+5) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(MianziDat(0) == TILE_RED_DRAGON)) {yakuFlag = 1}
+		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(MianziDat(0) == TILE_RED_DRAGON)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "南の朱雀", 1
 			delyaku tmpYakuInfo, "対々和"
@@ -978,9 +978,9 @@
 	}
 	/* 西の白虎 */
 	if (getRule(RULE_WHITE_TIGER) != 0) {
-		countKangz KangzCount, haiMianziDat
+		countKangz KangzCount, MianziDat
 		yakuFlag = 0
-		if ((KangzCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+3) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+3) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)&&(haiMianziDat(0) == TILE_WHITE_DRAGON)) {yakuFlag = 1}
+		if ((KangzCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+3) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+3) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)&&(MianziDat(0) == TILE_WHITE_DRAGON)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "西の白虎", 1
 			delyaku tmpYakuInfo, "対々和"
@@ -1000,8 +1000,8 @@
 	}
 	/* 東風圧倒西風 */
 	if (getRule(RULE_DONGFENG_YADAO) != 0) {
-		countKangz KangzCount, haiMianziDat
-		if ((KangzCount(TILE_EAST_WIND) == 0)&&(KezCount(TILE_EAST_WIND) >= 1)&&(haiMianziDat(0) == TILE_WEST_WIND)) {
+		countKangz KangzCount, MianziDat
+		if ((KangzCount(TILE_EAST_WIND) == 0)&&(KezCount(TILE_EAST_WIND) >= 1)&&(MianziDat(0) == TILE_WEST_WIND)) {
 			addyaku tmpYakuInfo, "東風圧倒西風", 2
 		}
 		if ((KangzCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_WEST_WIND) >= 1)&&(KangzCount(TILE_WEST_WIND) == 0)) {
@@ -1019,7 +1019,7 @@
 #ifndef SANMAS
 	/* 青函トンネル */
 	if (getRule(RULE_SEIKAN_TUNNEL) != 0) {
-		countKangz KangzCount, haiMianziDat
+		countKangz KangzCount, MianziDat
 		if ((KangzCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(AnKezCount(TILE_EAST_WIND) == 0)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)) {
 			addyakuman tmpYakuInfo, "青函トンネル", 1
 		}

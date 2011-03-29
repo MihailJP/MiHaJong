@@ -11,7 +11,7 @@
 #module COMP
 #include "const.as"
 #define global COMTHINKTIME 600
-#deffunc compthink var GameStat, int Mode, int ActivePlayer, int PassivePlayer, var teDahai, int haiCurrentSutehai, int haiCurrentSutehaiAkadora, array haiRon, array haiMinkan, array haiPon, array haiChi
+#deffunc compthink var GameStat, int Mode, int ActivePlayer, int PassivePlayer, var teDahai, int CurrentSutehai, int CurrentSutehaiAkadora, array RonFlag, array MinkanFlag, array PonFlag, array ChiFlag
 	switch Mode
 		case 0: gosub *compdahaiwork: swbreak
 		case 1: gosub *compnakiwork: swbreak
@@ -20,7 +20,7 @@ return
 
 *compdahaiwork
 	info strf("AI‚Ì‘Å”vˆ—‚É“ü‚è‚Ü‚·BƒvƒŒƒCƒ„[ [%d]", ActivePlayer)
-	countTilesInHand haiCount, GameStat, ActivePlayer
+	countTilesInHand TileCount, GameStat, ActivePlayer
 	/*teDahai = 13: return*/ /* ƒcƒ‚Ø‚è‚¾‚¯‚ğs‚¤(ƒfƒoƒbƒO—p) */
 	startTime = gettime(6)*1000+gettime(7)
 	/* ‚±‚±‚Évlƒ‹[ƒ`ƒ“‚ª“ü‚é */
@@ -58,7 +58,7 @@ return
 			teDahai = DAHAI_TYPE_KAN+TSUMOHAI_INDEX: return
 		}
 	}
-	await 0: countseentiles haiSeenCount, GameStat
+	await 0: countseentiles SeenTiles, GameStat
 	Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 	if (Shanten == -1) {
 		TsumoAgari = 1
@@ -83,8 +83,8 @@ return
 	ShisanBuDa = chkshisanbuda(GameStat, ActivePlayer): ShisiBuDa = chkshisibuda(GameStat, ActivePlayer): await 0
 	if ((ShisanBuDa == 1)&&(getFirstDrawFlag(GameStat, ActivePlayer))&&(getRule(RULE_SHIISAN_PUUTAA) != 0)) {teDahai = -1: return}
 	if ((ShisiBuDa == 1)&&(getFirstDrawFlag(GameStat, ActivePlayer))&&(getRule(RULE_SHIISAN_UUSHII) != 0)) {teDahai = -1: return}
-	await 0: haiDaoPaiable = chkdaopaiability(GameStat, ActivePlayer)
-	if (haiDaoPaiable) {
+	await 0: DaoPaiable = chkdaopaiability(GameStat, ActivePlayer)
+	if (DaoPaiable) {
 		// ‹ãí‹ã”v
 		if (getFirstDrawFlag(GameStat, ActivePlayer)) {
 #ifdef SANMAT
@@ -104,7 +104,7 @@ return
 	Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 	nowShanten = Shanten
 	// ƒŠ[ƒ`‚ğ‚©‚¯‚é‚©‚Ç‚¤‚©
-	dim haiDiscardability, NUM_OF_TILES_IN_HAND
+	dim Discardability, NUM_OF_TILES_IN_HAND
 	dim MinScore, NUM_OF_TILES_IN_HAND
 	dim MaxScore, NUM_OF_TILES_IN_HAND
 	dim MachihaiTotalTiles, NUM_OF_TILES_IN_HAND
@@ -119,38 +119,38 @@ return
 			await 0
 			if (cnt > 0) {
 				if (tmpHaiHand(cnt-1) == tmpHaiHand(cnt)) {
-					haiDiscardability(cnt) = haiDiscardability(cnt-1) // “¯‚¶”v‚ğ‚Q“x’²‚×‚È‚¢
+					Discardability(cnt) = Discardability(cnt-1) // “¯‚¶”v‚ğ‚Q“x’²‚×‚È‚¢
 					continue
 				}
 			}
-			haiTileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
+			TileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
 			tmpHandTileCode = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 			// ‘¶İ‚µ‚È‚¢”v‚Ìê‡
-			if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == 0) {haiDiscardability(cnt) = -9999999: continue}
+			if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == 0) {Discardability(cnt) = -9999999: continue}
 			// Œü’®”‚©‚çA‘å‚Ü‚©‚È•]‰¿’l‚ğZo
 			setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
 			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, 0
 			await 0
-			chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, ActivePlayer
+			chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, ActivePlayer
 			Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 			setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHandTileCode
-			MachihaiTotalTiles(cnt) = haiMachihaiTotal
+			MachihaiTotalTiles(cnt) = MachihaiTotal
 			// ƒ_ƒuƒ‹—§’¼‚É‚È‚é‚Íˆê•”‚Ì”»’è‚ğÈ—ª‚·‚é
 			if (getFirstDrawFlag(GameStat, ActivePlayer) == 0) {
 				// ‘¼‰Æ‚Ìƒvƒ“ƒŠ[‚Ì“–‚½‚è”v‚É‚È‚Á‚Ä‚¢‚éê‡‚ÍÌ‚Ä‚È‚¢(Ì‚Ä‚Ä‚Í‚È‚ç‚È‚¢I)
-				if (getOpenWait(GameStat, tmpHandTileCode) == 1) {haiDiscardability(cnt) = -999999999: continue}
+				if (getOpenWait(GameStat, tmpHandTileCode) == 1) {Discardability(cnt) = -999999999: continue}
 				// ‹ó’®ƒŠ[ƒ`‚ğ”ğ‚¯‚é(ö˜a‚Å‚Í‚È‚¢‚ªA˜a—¹‚ê‚È‚­‚È‚é‚½‚ß)
-				if (haiMachihaiTotal == 0) {haiDiscardability(cnt) = -999999: continue}
+				if (MachihaiTotal == 0) {Discardability(cnt) = -999999: continue}
 				// U’®ƒŠ[ƒ`‚ğ”ğ‚¯‚é(ö˜a‚Å‚Í‚È‚¢‚ªAè•Ï‚í‚è‚Ì‰Â”\«‚ğc‚·)
-				if (haiFuriten == 1) {MachihaiFuritenFlag(cnt) = 1: haiDiscardability(cnt) = -99999: continue}
+				if (FuritenFlag == 1) {MachihaiFuritenFlag(cnt) = 1: Discardability(cnt) = -99999: continue}
 				// ‘Ò‚¿”v‚ªc‚è‚Q–‡ˆÈ‰º‚Ìê‡
-				if (haiMachihaiTotal <= 2) {
-					haiDiscardability(cnt) = -9999: continue
+				if (MachihaiTotal <= 2) {
+					Discardability(cnt) = -9999: continue
 				}
 			}
 			// •s’®—§’¼–h~—p
-			if (Shanten > 0) {haiDiscardability(cnt) = -999999: continue}
+			if (Shanten > 0) {Discardability(cnt) = -999999: continue}
 			Richiability++
 			
 			tmpTileNum = cnt
@@ -164,7 +164,7 @@ return
 				if (nowTime < startTime) {nowTime += 60000}
 				if ((nowTime-startTime) >= COMTHINKTIME) {
 					repeat NUM_OF_TILES_IN_HAND
-						if (haiDiscardability(cnt) > 0) {haiDiscardability(cnt) = 0}
+						if (Discardability(cnt) > 0) {Discardability(cnt) = 0}
 					loop
 					setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer)
 					setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, tmpHandTileCode
@@ -175,8 +175,8 @@ return
 				if (Shanten == -1) {
 					// ‚±‚±‚ÅŒvZ‚³‚ê‚é‚Ì‚Íƒ_ƒ}’®‚Å©–Ì˜a‚Ì‚Æ‚«‚Ì“_”
 					TsumoAgari = 1: await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
-					if (haiDiscardability(tmpTileNum) >= 10000) {haiDiscardability(tmpTileNum) -= 10000}
-					haiDiscardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-haiCount(cnt)-haiSeenCount(cnt))+100000
+					if (Discardability(tmpTileNum) >= 10000) {Discardability(tmpTileNum) -= 10000}
+					Discardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-TileCount(cnt)-SeenTiles(cnt))+100000
 					if (MinScore(tmpTileNum) > (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MinScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
 					if (MaxScore(tmpTileNum) < (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MaxScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
 				}
@@ -192,7 +192,7 @@ return
 		if ((nowTime-startTime) >= COMTHINKTIME) {
 			// ŠÔ‚ª‚©‚©‚é—p‚ÌŠÈ—ª”Å
 			repeat NUM_OF_TILES_IN_HAND
-				if (haiDiscardability(cnt) >= 0) {
+				if (Discardability(cnt) >= 0) {
 					tmpTileNum = cnt
 					MinScore(tmpTileNum) = 0: MaxScore(tmpTileNum) = 0
 					repeat TILE_NONFLOWER_STRICT_MAX+1
@@ -202,7 +202,7 @@ return
 						await 0
 						Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 						if (Shanten == -1) {
-							haiDiscardability(tmpTileNum) += 2000*(4-haiCount(cnt)-haiSeenCount(cnt))+100000
+							Discardability(tmpTileNum) += 2000*(4-TileCount(cnt)-SeenTiles(cnt))+100000
 						}
 						setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getHand(GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer)
 						setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, tmpHandTileCode
@@ -216,7 +216,7 @@ return
 		if (Richiability > 0) {
 			teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 			repeat NUM_OF_TILES_IN_HAND
-				if (haiDiscardability(teDahai) < haiDiscardability(NUM_OF_TILES_IN_HAND-1-cnt)) {
+				if (Discardability(teDahai) < Discardability(NUM_OF_TILES_IN_HAND-1-cnt)) {
 					teDahai = DAHAI_TYPE_NORMAL+NUM_OF_TILES_IN_HAND-1-cnt
 				}
 			loop
@@ -271,7 +271,7 @@ return
 		loop
 		repeat NUM_OF_TILES_IN_HAND
 			if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == 0) {continue}
-			haiTileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
+			TileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
 			tmpnum = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 			repeat NUM_OF_TILES_IN_HAND
 				if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == tmpnum) {
@@ -282,7 +282,7 @@ return
 			repeat NUM_OF_TILES_IN_HAND
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHaiHand(cnt)
 			loop
-			if ((haiTileInfo\128 / 64) == 1) {
+			if ((TileInfo\128 / 64) == 1) {
 				if (Shanten == (nowShanten+2)) {
 					// ’·l‚µ‚Ä‚é‚Ó‚è
 #ifndef NOWAIT
@@ -302,7 +302,7 @@ return
 		repeat NUM_OF_TILES_IN_HAND
 			Kakanability = 0
 			if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == 0) {continue}
-			haiTileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
+			TileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
 			tmpnum = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 			setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
 			Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
@@ -333,7 +333,7 @@ return
 		if (teDahai >= DAHAI_TYPE_KAN) {return}
 	}
 	/* ‚»‚ê‚¼‚ê‚ğÌ‚Ä‚½‚Æ‚«‚Ìè‚Ì•]‰¿‚ğŒvZ‚·‚é */
-	dim haiDiscardability, NUM_OF_TILES_IN_HAND
+	dim Discardability, NUM_OF_TILES_IN_HAND
 	startTime = gettime(6)*1000+gettime(7)
 	Yishanten = 0
 	dim tmpDiscardability, NUM_OF_TILES_IN_HAND
@@ -345,8 +345,8 @@ return
 		if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)/TILE_SUIT_STEP == TILE_SUIT_CIRCLES/TILE_SUIT_STEP) {PinzCount++}
 		if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)/TILE_SUIT_STEP == TILE_SUIT_BAMBOOS/TILE_SUIT_STEP) {SouzCount++}
 		if ((getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)/TILE_SUIT_STEP == TILE_SUIT_HONORS/TILE_SUIT_STEP)||(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)\TILE_SUIT_STEP == 1)||(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)\TILE_SUIT_STEP == 9)) {YaojiuCount++}
-		haiTileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
-		if (((haiTileInfo \ 2) == 1)||((haiTileInfo \ 8 / 4) == 1)) {KeziCount++}
+		TileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
+		if (((TileInfo \ 2) == 1)||((TileInfo \ 8 / 4) == 1)) {KeziCount++}
 	loop
 	repeat MeldPointer(GameStat, ActivePlayer), 1
 		if (getMeld(GameStat, MELD_TILECODE, cnt, ActivePlayer)\TILE_CODE_MAXIMUM/TILE_SUIT_STEP == TILE_SUIT_CHARACTERS/TILE_SUIT_STEP) {WanzCount += 3}
@@ -356,92 +356,92 @@ return
 	loop
 
 	repeat NUM_OF_TILES_IN_HAND
-		haiTileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
+		TileInfo = getpaiinfo(GameStat, ActivePlayer, cnt, 0): await 0
 		tmpHand = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 		// ‘¶İ‚µ‚È‚¢”v‚Ìê‡
-		if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == 0) {haiDiscardability(cnt) = -9999999: continue}
+		if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == 0) {Discardability(cnt) = -9999999: continue}
 		// Œü’®”‚©‚çA‘å‚Ü‚©‚È•]‰¿’l‚ğZo
 		setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
 		Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL): await 0
-		haiDiscardability(cnt) = (6-Shanten)*1000
+		Discardability(cnt) = (6-Shanten)*1000
 		setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHand
-		if (haiTileInfo == 0) {
+		if (TileInfo == 0) {
 			if (tmpHand >= TILE_NUMERAL_MAX) {
-				haiDiscardability(cnt) += 900 // š”v‚Ì•‚‚«”v
+				Discardability(cnt) += 900 // š”v‚Ì•‚‚«”v
 				if (tmpHand >= TILE_DRAGON_MIN) {
-					haiDiscardability(cnt) -= 100 // OŒ³”v‚Ì‚Æ‚«
+					Discardability(cnt) -= 100 // OŒ³”v‚Ì‚Æ‚«
 				}
 				if (tmpHand == TILE_EAST_WIND) {
 					if ((getRound(GameStat)/4 == PLAYER_EAST)||(playerwind(ActivePlayer, getRound(GameStat)) == PLAYER_EAST)) {
-						haiDiscardability(cnt) -= 100 // “Œ‚ª–ğ”v‚Ì‚Æ‚«
+						Discardability(cnt) -= 100 // “Œ‚ª–ğ”v‚Ì‚Æ‚«
 					}
 				}
 				if (tmpHand == TILE_SOUTH_WIND) {
 					if ((getRound(GameStat)/4 == PLAYER_SOUTH)||(playerwind(ActivePlayer, getRound(GameStat)) == PLAYER_SOUTH)) {
-						haiDiscardability(cnt) -= 100 // “ì‚ª–ğ”v‚Ì‚Æ‚«
+						Discardability(cnt) -= 100 // “ì‚ª–ğ”v‚Ì‚Æ‚«
 					}
 				}
 				if (tmpHand == TILE_WEST_WIND) {
 					if ((getRound(GameStat)/4 == PLAYER_WEST)||(playerwind(ActivePlayer, getRound(GameStat)) == PLAYER_WEST)) {
-						haiDiscardability(cnt) -= 100 // ¼‚ª–ğ”v‚Ì‚Æ‚«
+						Discardability(cnt) -= 100 // ¼‚ª–ğ”v‚Ì‚Æ‚«
 					}
 				}
 				if (tmpHand == TILE_NORTH_WIND) {
 					if ((getRound(GameStat)/4 == PLAYER_NORTH)||(playerwind(ActivePlayer, getRound(GameStat)) == PLAYER_NORTH)) {
-						haiDiscardability(cnt) -= 100 // –k‚ª–ğ”v‚Ì‚Æ‚«
+						Discardability(cnt) -= 100 // –k‚ª–ğ”v‚Ì‚Æ‚«
 					}
 				}
 			} else {
-				haiDiscardability(cnt) += 700 // ””v‚Ì•‚‚«”v
+				Discardability(cnt) += 700 // ””v‚Ì•‚‚«”v
 			}
 		}
 		else {
-			if ((haiTileInfo \ 16 / 8) == 1) {haiDiscardability(cnt) += 500} // •Ó’£
+			if ((TileInfo \ 16 / 8) == 1) {Discardability(cnt) += 500} // •Ó’£
 			else {
-				if ((haiTileInfo \ 64 / 32) == 1) {haiDiscardability(cnt) += 300} // ›Æ’£
+				if ((TileInfo \ 64 / 32) == 1) {Discardability(cnt) += 300} // ›Æ’£
 				else {
-					if ((haiTileInfo \ 8 / 4) == 1) {haiDiscardability(cnt) += 100} // ‚»‚¤‚Å‚È‚¯‚ê‚Î‘Îq
+					if ((TileInfo \ 8 / 4) == 1) {Discardability(cnt) += 100} // ‚»‚¤‚Å‚È‚¯‚ê‚Î‘Îq
 				}
 			}
 		}
 		if (getHand(GameStat, HAND_REDTILE, cnt, ActivePlayer) >= 0) {
-			haiDiscardability(cnt) -= 50
+			Discardability(cnt) -= 50
 		}
-		if ((haiTileInfo \ 2) == 1) {
+		if ((TileInfo \ 2) == 1) {
 			// –ğ”v‚ÌˆÃ‚ğØ‚ç‚È‚¢‚æ‚¤‚É‚·‚é
 			if (tmpHand >= TILE_NUMERAL_MAX) {
 				if (tmpHand >= TILE_DRAGON_MIN) {
-					haiDiscardability(cnt) -= 99999 // OŒ³”v‚Ì‚Æ‚«
+					Discardability(cnt) -= 99999 // OŒ³”v‚Ì‚Æ‚«
 				}
 				if (tmpHand == TILE_EAST_WIND) {
 					if ((getRound(GameStat)/4 == PLAYER_EAST)||(playerwind(ActivePlayer, getRound(GameStat)) == PLAYER_EAST)) {
-						haiDiscardability(cnt) -= 99999 // “Œ‚ª–ğ”v‚Ì‚Æ‚«
+						Discardability(cnt) -= 99999 // “Œ‚ª–ğ”v‚Ì‚Æ‚«
 					}
 				}
 				if (tmpHand == TILE_SOUTH_WIND) {
 					if ((getRound(GameStat)/4 == PLAYER_SOUTH)||(playerwind(ActivePlayer, getRound(GameStat)) == PLAYER_SOUTH)) {
-						haiDiscardability(cnt) -= 99999 // “ì‚ª–ğ”v‚Ì‚Æ‚«
+						Discardability(cnt) -= 99999 // “ì‚ª–ğ”v‚Ì‚Æ‚«
 					}
 				}
 				if (tmpHand == TILE_WEST_WIND) {
 					if ((getRound(GameStat)/4 == PLAYER_WEST)||(playerwind(ActivePlayer, getRound(GameStat)) == PLAYER_WEST)) {
-						haiDiscardability(cnt) -= 99999 // ¼‚ª–ğ”v‚Ì‚Æ‚«
+						Discardability(cnt) -= 99999 // ¼‚ª–ğ”v‚Ì‚Æ‚«
 					}
 				}
 				if (tmpHand == TILE_NORTH_WIND) {
 					if ((getRound(GameStat)/4 == PLAYER_NORTH)||(playerwind(ActivePlayer, getRound(GameStat)) == PLAYER_NORTH)) {
-						haiDiscardability(cnt) -= 99999 // –k‚ª–ğ”v‚Ì‚Æ‚«
+						Discardability(cnt) -= 99999 // –k‚ª–ğ”v‚Ì‚Æ‚«
 					}
 				}
 			}
 		}
-		haiDiscardability(cnt) += (haiSeenCount(tmpHand)*10) // ê‚ÉŒ©‚¦‚Ä‚éŒÂ”
-		if (tmpHand >= TILE_NUMERAL_MAX) {haiDiscardability(cnt) += 50}
+		Discardability(cnt) += (SeenTiles(tmpHand)*10) // ê‚ÉŒ©‚¦‚Ä‚éŒÂ”
+		if (tmpHand >= TILE_NUMERAL_MAX) {Discardability(cnt) += 50}
 		else {
-			if ((tmpHand\TILE_SUIT_STEP == 1)||(tmpHand\TILE_SUIT_STEP == 9)) {haiDiscardability(cnt) += 40}
-			if ((tmpHand\TILE_SUIT_STEP == 2)||(tmpHand\TILE_SUIT_STEP == 8)) {haiDiscardability(cnt) += 30}
-			if ((tmpHand\TILE_SUIT_STEP == 3)||(tmpHand\TILE_SUIT_STEP == 7)) {haiDiscardability(cnt) += 20}
-			if ((tmpHand\TILE_SUIT_STEP == 4)||(tmpHand\TILE_SUIT_STEP == 6)) {haiDiscardability(cnt) += 10}
+			if ((tmpHand\TILE_SUIT_STEP == 1)||(tmpHand\TILE_SUIT_STEP == 9)) {Discardability(cnt) += 40}
+			if ((tmpHand\TILE_SUIT_STEP == 2)||(tmpHand\TILE_SUIT_STEP == 8)) {Discardability(cnt) += 30}
+			if ((tmpHand\TILE_SUIT_STEP == 3)||(tmpHand\TILE_SUIT_STEP == 7)) {Discardability(cnt) += 20}
+			if ((tmpHand\TILE_SUIT_STEP == 4)||(tmpHand\TILE_SUIT_STEP == 6)) {Discardability(cnt) += 10}
 		}
 		setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHand
 		if (nowShanten == 2) { // “ñŒü’®‚Å‚àæ“Ç‚İ‚³‚¹‚Ä‚İ‚é
@@ -455,13 +455,13 @@ return
 			repeat TILE_NONFLOWER_STRICT_MAX+1
 				await 0
 				if (cnt\TILE_SUIT_STEP == 0) {continue}
-				if (haiCount(cnt)+haiSeenCount(cnt) == 4) {continue} // ‚S–‡Œ©‚¦‚Ä‚é
-				if ((cnt >= TILE_NUMERAL_MAX)&&(haiCount(cnt)+haiSeenCount(cnt) == 3)) {continue} // š”v‚Ìƒ‰ƒX”v‚Í‚Æ‚è‚ ‚¦‚¸–³‹
+				if (TileCount(cnt)+SeenTiles(cnt) == 4) {continue} // ‚S–‡Œ©‚¦‚Ä‚é
+				if ((cnt >= TILE_NUMERAL_MAX)&&(TileCount(cnt)+SeenTiles(cnt) == 3)) {continue} // š”v‚Ìƒ‰ƒX”v‚Í‚Æ‚è‚ ‚¦‚¸–³‹
 				setHand GameStat, HAND_TILECODE, tmpXTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
 				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 				await 0
 				Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
-				tmpXde = 4-haiCount(cnt)-haiSeenCount(cnt)
+				tmpXde = 4-TileCount(cnt)-SeenTiles(cnt)
 				if (Shanten == 1) { // Ÿ‚Ìƒcƒ‚”v‚ÅˆêŒü’®‚Ìê‡
 					nowTime = gettime(6)*1000+gettime(7)
 					if (nowTime < startTime) {nowTime += 60000}
@@ -482,7 +482,7 @@ return
 						loop
 					} else { // ˆ—‚ª’x‚¢
 						repeat NUM_OF_TILES_IN_HAND
-							tmpDiscardability(tmpXTileNum) = (4-haiCount(cnt)-haiSeenCount(cnt))*tmpXde
+							tmpDiscardability(tmpXTileNum) = (4-TileCount(cnt)-SeenTiles(cnt))*tmpXde
 						loop
 					}
 				}
@@ -515,19 +515,19 @@ return
 	if ((Yishanten)&&((nowTime-startTime) < COMTHINKTIME)) {
 		// ˆêŒü’®‚Ì‚Æ‚«
 		repeat NUM_OF_TILES_IN_HAND
-			haiDiscardability(cnt) += tmpDiscardability(cnt)+100000
+			Discardability(cnt) += tmpDiscardability(cnt)+100000
 		loop
 	}
 	// ƒI[ƒvƒ“—§’¼‚Ì‘Ò‚¿”v‚ğÌ‚Ä‚È‚¢(Ì‚Ä‚Ä‚Í‚È‚ç‚È‚¢I)‚æ‚¤‚É‚·‚é
 	repeat NUM_OF_TILES_IN_HAND
 		if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) < TILE_NONFLOWER_MAX) {
 			if (getOpenWait(GameStat, getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)) == 1) {
-				haiDiscardability(cnt) = -999999999
+				Discardability(cnt) = -999999999
 			}
 		}
 	loop
 	// ‘åOŒ³‚Ì•ï‚É‚È‚é‚æ‚¤‚È”v‚ğÌ‚Ä‚È‚¢‚æ‚¤‚É‚·‚é
-	await 0: countseentiles haiSeenCount, GameStat
+	await 0: countseentiles SeenTiles, GameStat
 	if (nowShanten > 1) {
 		// ƒm[ƒ`ƒƒƒ“ƒX‚©EU’®‚Æ‚È‚é‚©E”’‚ğ–Â‚¢‚Ä‚é‚©E”­‚ğ–Â‚¢‚Ä‚é‚©E’†‚ğ–Â‚¢‚Ä‚é‚©
 		tmpDiscardabilityChkFlag = 0
@@ -551,19 +551,19 @@ return
 				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, tmpchkcnt) \ TILE_CODE_MAXIMUM) == TILE_GREEN_DRAGON)&&(tmpDiscardabilityChkFlag == 5) {tmpDiscardabilityChkFlag += 8}
 				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, tmpchkcnt) \ TILE_CODE_MAXIMUM) == TILE_RED_DRAGON)&&(tmpDiscardabilityChkFlag == 6) {tmpDiscardabilityChkFlag += 8}
 			loop
-			if ((haiSeenCount(TILE_WHITE_DRAGON) >= 2)&&(tmpDiscardabilityChkFlag == 3)) {tmpDiscardabilityChkFlag += 16}
-			if ((haiSeenCount(TILE_GREEN_DRAGON) >= 2)&&(tmpDiscardabilityChkFlag == 5)) {tmpDiscardabilityChkFlag += 16}
-			if ((haiSeenCount(TILE_RED_DRAGON) >= 2)&&(tmpDiscardabilityChkFlag == 6)) {tmpDiscardabilityChkFlag += 16}
+			if ((SeenTiles(TILE_WHITE_DRAGON) >= 2)&&(tmpDiscardabilityChkFlag == 3)) {tmpDiscardabilityChkFlag += 16}
+			if ((SeenTiles(TILE_GREEN_DRAGON) >= 2)&&(tmpDiscardabilityChkFlag == 5)) {tmpDiscardabilityChkFlag += 16}
+			if ((SeenTiles(TILE_RED_DRAGON) >= 2)&&(tmpDiscardabilityChkFlag == 6)) {tmpDiscardabilityChkFlag += 16}
 		loop
 		repeat NUM_OF_TILES_IN_HAND
 			if ((tmpDiscardabilityChkFlag == 3)&&(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == TILE_WHITE_DRAGON)) {
-				haiDiscardability(cnt) = -799999999
+				Discardability(cnt) = -799999999
 			}
 			if ((tmpDiscardabilityChkFlag == 5)&&(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == TILE_GREEN_DRAGON)) {
-				haiDiscardability(cnt) = -799999999
+				Discardability(cnt) = -799999999
 			}
 			if ((tmpDiscardabilityChkFlag == 6)&&(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == TILE_RED_DRAGON)) {
-				haiDiscardability(cnt) = -799999999
+				Discardability(cnt) = -799999999
 			}
 		loop
 	}
@@ -596,23 +596,23 @@ return
 				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, tmpchkcnt) \ TILE_CODE_MAXIMUM) == TILE_WEST_WIND)&&(tmpDiscardabilityChkFlag == 13) {tmpDiscardabilityChkFlag += 16}
 				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, tmpchkcnt) \ TILE_CODE_MAXIMUM) == TILE_NORTH_WIND)&&(tmpDiscardabilityChkFlag == 14) {tmpDiscardabilityChkFlag += 16}
 			loop
-			if ((haiSeenCount(TILE_EAST_WIND) >= 3)&&(tmpDiscardabilityChkFlag == 7)) {tmpDiscardabilityChkFlag += 32}
-			if ((haiSeenCount(TILE_SOUTH_WIND) >= 3)&&(tmpDiscardabilityChkFlag == 11)) {tmpDiscardabilityChkFlag += 32}
-			if ((haiSeenCount(TILE_WEST_WIND) >= 3)&&(tmpDiscardabilityChkFlag == 13)) {tmpDiscardabilityChkFlag += 32}
-			if ((haiSeenCount(TILE_NORTH_WIND) >= 3)&&(tmpDiscardabilityChkFlag == 14)) {tmpDiscardabilityChkFlag += 32}
+			if ((SeenTiles(TILE_EAST_WIND) >= 3)&&(tmpDiscardabilityChkFlag == 7)) {tmpDiscardabilityChkFlag += 32}
+			if ((SeenTiles(TILE_SOUTH_WIND) >= 3)&&(tmpDiscardabilityChkFlag == 11)) {tmpDiscardabilityChkFlag += 32}
+			if ((SeenTiles(TILE_WEST_WIND) >= 3)&&(tmpDiscardabilityChkFlag == 13)) {tmpDiscardabilityChkFlag += 32}
+			if ((SeenTiles(TILE_NORTH_WIND) >= 3)&&(tmpDiscardabilityChkFlag == 14)) {tmpDiscardabilityChkFlag += 32}
 		loop
 		repeat NUM_OF_TILES_IN_HAND
 			if ((tmpDiscardabilityChkFlag == 7)&&(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == TILE_EAST_WIND)) {
-				haiDiscardability(cnt) = -799999999
+				Discardability(cnt) = -799999999
 			}
 			if ((tmpDiscardabilityChkFlag == 11)&&(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == TILE_SOUTH_WIND)) {
-				haiDiscardability(cnt) = -799999999
+				Discardability(cnt) = -799999999
 			}
 			if ((tmpDiscardabilityChkFlag == 13)&&(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == TILE_WEST_WIND)) {
-				haiDiscardability(cnt) = -799999999
+				Discardability(cnt) = -799999999
 			}
 			if ((tmpDiscardabilityChkFlag == 14)&&(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) == TILE_NORTH_WIND)) {
-				haiDiscardability(cnt) = -799999999
+				Discardability(cnt) = -799999999
 			}
 		loop
 	}
@@ -633,21 +633,21 @@ return
 				if ((tmpDiscardabilityChkCount2 > 0)&&(tmpDiscardabilityChkCount3 > 0)) {
 					if (((tmpDiscardabilityChkCount1*1000)/(tmpDiscardabilityChkCount2+tmpDiscardabilityChkCount3)) < 200) {
 						if ((getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) /10) == 0) {
-							haiDiscardability(cnt) = 0
+							Discardability(cnt) = 0
 						}
 					}
 				}
 				if ((tmpDiscardabilityChkCount1 > 0)&&(tmpDiscardabilityChkCount3 > 0)) {
 					if (((tmpDiscardabilityChkCount2*1000)/(tmpDiscardabilityChkCount1+tmpDiscardabilityChkCount3)) < 200) {
 						if ((getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) /10) == 1) {
-							haiDiscardability(cnt) = 0
+							Discardability(cnt) = 0
 						}
 					}
 				}
 				if ((tmpDiscardabilityChkCount1 > 0)&&(tmpDiscardabilityChkCount2 > 0)) {
 					if (((tmpDiscardabilityChkCount3*1000)/(tmpDiscardabilityChkCount1+tmpDiscardabilityChkCount2)) < 200) {
 						if ((getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) /10) == 2) {
-							haiDiscardability(cnt) = 0
+							Discardability(cnt) = 0
 						}
 					}
 				}
@@ -669,7 +669,7 @@ return
 				if (tmpDiscardabilityChkCount2 > 0) {
 					if (((tmpDiscardabilityChkCount1*1000)/(tmpDiscardabilityChkCount2)) > 840) {
 						if (((getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) \TILE_SUIT_STEP) == 1)||((getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) \TILE_SUIT_STEP) == 9)||(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) > 30)) {
-							haiDiscardability(cnt) = 0
+							Discardability(cnt) = 0
 						}
 					}
 				}
@@ -677,19 +677,19 @@ return
 		loop
 	}
 	// Œx‰ú‚·‚éƒvƒŒ[ƒ„[‚ğŒˆ’è‚·‚é
-	dim haiMarkingPlayer, 4
+	dim MarkingPlayer, 4
 	repeat 4
 		if (cnt == ActivePlayer) {continue /* ©•ª©g‚Ìê‡‚Í”ò‚Î‚· */}
 		if (MeldPointer(GameStat, cnt) >= 2) {
-			haiMarkingPlayer(cnt) = 1 /* “ñ–ÊqˆÈã–Â‚¢‚Ä‚¢‚½‚ç~‚è‚é */
+			MarkingPlayer(cnt) = 1 /* “ñ–ÊqˆÈã–Â‚¢‚Ä‚¢‚½‚ç~‚è‚é */
 		}
 		if (getRichiFlag(GameStat, RICHI_FLAG, cnt) > RIICHI_NO) {
-			haiMarkingPlayer(cnt) = 1 /* ’N‚©‚ª—§’¼‚µ‚Ä‚¢‚½‚ç~‚è‚éI */
+			MarkingPlayer(cnt) = 1 /* ’N‚©‚ª—§’¼‚µ‚Ä‚¢‚½‚ç~‚è‚éI */
 		}
 		if (MeldPointer(GameStat, cnt) == 1) {
 			if (tilesLeft(GameStat) < 30) {
 				/* c‚è‚R‚O–‡–¢–‚Å‚P•›˜I‚ÌÒ‚ª‚¢‚½ê‡‚Í~‚è‚é */
-				haiMarkingPlayer(cnt) = 1
+				MarkingPlayer(cnt) = 1
 			}
 		}
 	loop
@@ -711,8 +711,8 @@ return
 			if (Shanten == -1) {
 				// ‚±‚±‚ÅŒvZ‚³‚ê‚é‚Ì‚Íƒ_ƒ}’®‚Å©–Ì˜a‚Ì‚Æ‚«‚Ì“_”
 				TsumoAgari = 1: await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
-				if (haiDiscardability(tmpTileNum) >= 10000) {haiDiscardability(tmpTileNum) -= 10000}
-				haiDiscardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-haiCount(cnt)-haiSeenCount(cnt))+100000
+				if (Discardability(tmpTileNum) >= 10000) {Discardability(tmpTileNum) -= 10000}
+				Discardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-TileCount(cnt)-SeenTiles(cnt))+100000
 				if (MinScore(tmpTileNum) > (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MinScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
 				if (MaxScore(tmpTileNum) < (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MaxScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
 			}
@@ -727,17 +727,17 @@ return
 	loop
 	if (TmpMaxScore >= 3000) {
 		// ‚Æ‚è‚ ‚¦‚¸A’µ–ˆÈã’®”v‚È‚ç‘Sƒcƒbƒp‚·‚é
-		repeat 4: haiMarkingPlayer(cnt) = 0: loop
+		repeat 4: MarkingPlayer(cnt) = 0: loop
 	}
 	// ~‚è‘Å‚¿ƒ‚[ƒh‚Ì‚½‚ß‚Ìˆ—
 	repeat NUM_OF_TILES_IN_HAND: tmphaiindex = cnt
 		repeat 4: tmpchkcnt = cnt
-			if (haiMarkingPlayer(tmpchkcnt) == 0) {break}
+			if (MarkingPlayer(tmpchkcnt) == 0) {break}
 			tmpflag = 0
 			if (tmpflag == 0) {
 				// ‡‚í‚¹‘Å‚¿‚ª‚Å‚«‚é‚È‚ç‡‚í‚¹‘Å‚¿
 				if ((getDiscard(GameStat, DISCARD_TILECODE, DiscardPointer(GameStat, KamichaOf(ActivePlayer)), KamichaOf(ActivePlayer)) \ TILE_CODE_MAXIMUM) == getHand(GameStat, HAND_TILECODE, tmphaiindex, ActivePlayer)) {
-					haiDiscardability(tmphaiindex) += 7000000
+					Discardability(tmphaiindex) += 7000000
 					tmpflag = 1
 				}
 			}
@@ -745,9 +745,9 @@ return
 				if (getHand(GameStat, HAND_TILECODE, tmphaiindex, ActivePlayer) == (getDiscard(GameStat, DISCARD_TILECODE, cnt, tmpchkcnt) \ TILE_CODE_MAXIMUM)) {
 					// Œx‰ú‚µ‚Ä‚¢‚éƒvƒŒ[ƒ„[‚ÌŒ»•¨‚ª‚ ‚ê‚Î—Dæ“I‚É‚»‚ê‚ğÌ‚Ä‚é
 					if (getHand(GameStat, HAND_TILECODE, tmphaiindex, ActivePlayer) < TILE_NUMERAL_MAX) {
-						haiDiscardability(tmphaiindex) += 10000000
+						Discardability(tmphaiindex) += 10000000
 					} else {
-						haiDiscardability(tmphaiindex) += 5000000
+						Discardability(tmphaiindex) += 5000000
 					}
 					tmpflag = 1
 					break
@@ -758,7 +758,7 @@ return
 					if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, tmpchkcnt) \ TILE_CODE_MAXIMUM) < TILE_NUMERAL_MAX) {
 						// ‡‚í‚¹‘Å‚¿‚à–³—‚È‚ç‹Ø”v
 						if (((getDiscard(GameStat, DISCARD_TILECODE, cnt, tmpchkcnt) \ TILE_SUIT_STEP)\3) == ((getHand(GameStat, HAND_TILECODE, tmphaiindex, ActivePlayer) \ TILE_SUIT_STEP)\3)) {
-							haiDiscardability(tmphaiindex) += 1200000
+							Discardability(tmphaiindex) += 1200000
 							break
 						}
 					}
@@ -768,7 +768,7 @@ return
 	loop
 	// Ì”v‚ğŒˆ’è‚·‚é
 	repeat NUM_OF_TILES_IN_HAND
-		if (haiDiscardability(teDahai) < haiDiscardability(NUM_OF_TILES_IN_HAND-1-cnt)) {
+		if (Discardability(teDahai) < Discardability(NUM_OF_TILES_IN_HAND-1-cnt)) {
 			teDahai = SUTEHAI_NORMAL+NUM_OF_TILES_IN_HAND-1-cnt
 		}
 	loop
@@ -797,13 +797,13 @@ return
 		if (nowTime < startTime) {nowTime += 60000}
 		await 0
 		if (cnt\TILE_SUIT_STEP == 0) {continue}
-		if (haiCount(cnt)+haiSeenCount(cnt) == 4) {continue} // ‚S–‡Œ©‚¦‚Ä‚é
-		if ((cnt >= TILE_NUMERAL_MAX)&&(haiCount(cnt)+haiSeenCount(cnt) == 3)) {continue} // š”v‚Ìƒ‰ƒX”v‚Í‚Æ‚è‚ ‚¦‚¸–³‹
+		if (TileCount(cnt)+SeenTiles(cnt) == 4) {continue} // ‚S–‡Œ©‚¦‚Ä‚é
+		if ((cnt >= TILE_NUMERAL_MAX)&&(TileCount(cnt)+SeenTiles(cnt) == 3)) {continue} // š”v‚Ìƒ‰ƒX”v‚Í‚Æ‚è‚ ‚¦‚¸–³‹
 		setHand GameStat, HAND_TILECODE, tmpTileNum, ActivePlayer, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer)
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, cnt
 		await 0
 		Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
-		tmpde = 4-haiCount(cnt)-haiSeenCount(cnt)
+		tmpde = 4-TileCount(cnt)-SeenTiles(cnt)
 		if (Shanten == 0) { // Ÿ‚Ìƒcƒ‚”v‚Å’®”v‚Ìê‡
 			nowTime = gettime(6)*1000+gettime(7)
 			if (nowTime < startTime) {nowTime += 60000}
@@ -818,7 +818,7 @@ return
 				loop
 			} else { // ˆ—‚ª’x‚¢
 				repeat NUM_OF_TILES_IN_HAND
-					tmpDiscardability(tmpTileNum) = (4-haiCount(cnt)-haiSeenCount(cnt))*tmpde
+					tmpDiscardability(tmpTileNum) = (4-TileCount(cnt)-SeenTiles(cnt))*tmpde
 				loop
 			}
 		}
@@ -841,7 +841,7 @@ return
 		if ((nowTime-startTime) >= COMTHINKTIME) {gosub *comp_restore: break}
 		await 0
 		if (cnt\TILE_SUIT_STEP == 0) {continue} // ‘¶İ‚µ‚È‚¢”v
-		if (haiCount(cnt)+haiSeenCount(cnt) == 4) {continue} // ‚S–‡Ø‚ê‚½”v
+		if (TileCount(cnt)+SeenTiles(cnt) == 4) {continue} // ‚S–‡Ø‚ê‚½”v
 		if (nowShanten > 0) {
 			tmpHe = 0: tmpHai = cnt
 			repeat DiscardPointer(GameStat, ActivePlayer), 1
@@ -858,10 +858,10 @@ return
 		if (Shanten == -1) {
 			TsumoAgari = 1: await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
 			if (nowShanten > 0) {
-				tmpDiscardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-haiCount(cnt)-haiSeenCount(cnt))*tmpde
+				tmpDiscardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-TileCount(cnt)-SeenTiles(cnt))*tmpde
 			} else {
-				if (haiDiscardability(tmpTileNum) >= 10000) {haiDiscardability(tmpTileNum) -= 10000}
-				haiDiscardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-haiCount(cnt)-haiSeenCount(cnt))+100000
+				if (Discardability(tmpTileNum) >= 10000) {Discardability(tmpTileNum) -= 10000}
+				Discardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-TileCount(cnt)-SeenTiles(cnt))+100000
 			}
 		}
 		gosub *comp_restore
@@ -876,7 +876,7 @@ return
 /* ‚`‚h‚Ì–Â‚«E‰h˜a */
 *compnakiwork
 	info strf("AI‚Ì•›˜I”»’è‚É“ü‚è‚Ü‚·BƒvƒŒƒCƒ„[ [%d]", PassivePlayer)
-	if (haiCurrentSutehai > TILE_SUIT_FLOWERS) {
+	if (CurrentSutehai > TILE_SUIT_FLOWERS) {
 		/* ‰Ô”v‚Ìê‡‚Í–ß‚é */
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
 		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
@@ -886,26 +886,26 @@ return
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
 	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
 	currentShanten = Shanten
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehai
 
 	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
 	TsumoAgari = 0: await 0: countyaku GameStat, yakuInfo, PassivePlayer, furikomiPlayer, TsumoAgari
 	await 0
-	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, PassivePlayer
+	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, PassivePlayer
 	// ˆÃÈ‚É‘Î‚·‚éÈ‚Ì”»’è‚ÅA‘m’®”v‚Å‚È‚¢ê‡‚Í–ß‚é
 	if ((countshanten(GameStat, PassivePlayer, SHANTEN_ORPHANS) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
 		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
 		return
 	}
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehai
 	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
 	if (Shanten == -1) {
-		haiRon(PassivePlayer) = 1 // o˜a—¹‚è
-		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
-		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehaiAkaDora
-		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(haiFuriten == 1)||(getDoujunFuriten(GameStat, PassivePlayer) > 0)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) == RIICHI_NO))) {
-			haiRon(PassivePlayer) = 0
+		RonFlag(PassivePlayer) = 1 // o˜a—¹‚è
+		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehai
+		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehaiAkaDora
+		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, PassivePlayer) > 0)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) == RIICHI_NO))) {
+			RonFlag(PassivePlayer) = 0
 			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
 			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
 		}
@@ -916,34 +916,34 @@ return
 	if (getKangFlag(GameStat, KANG_CHANKAN) == 1) {return} // È‚Ì”»’è’†‚È‚ç”»’è‘Å‚¿Ø‚è
 	if (getDrawPointer(GameStat) >= (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1))) {return} // ‰Í’ê”v‚È‚ç”»’è‘Å‚¿Ø‚è
 	if (getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) > RIICHI_NO) {return} // ƒŠ[ƒ`‚µ‚Ä‚¢‚é‚È‚ç”»’è‘Å‚¿Ø‚è
-	await 0: countseentiles haiSeenCount, GameStat
-	countTilesInHand haiCount, GameStat, PassivePlayer
+	await 0: countseentiles SeenTiles, GameStat
+	countTilesInHand TileCount, GameStat, PassivePlayer
 	// Ì‚Ä‚ç‚ê‚½”v‚ª–ğ”v‚¾‚Á‚½ê‡
 	YakuhaiPon = 0
-	if (haiCurrentSutehai == TILE_WHITE_DRAGON) {YakuhaiPon = 1}
-	if (haiCurrentSutehai == TILE_GREEN_DRAGON) {YakuhaiPon = 1}
-	if (haiCurrentSutehai == TILE_RED_DRAGON) {YakuhaiPon = 1}
-	if ((haiCurrentSutehai == TILE_EAST_WIND)&&((getRound(GameStat)/4 == 0)||(playerwind(PassivePlayer, getRound(GameStat)) == PLAYER_EAST))) {YakuhaiPon = 1}
-	if ((haiCurrentSutehai == TILE_SOUTH_WIND)&&((getRound(GameStat)/4 == 1)||(playerwind(PassivePlayer, getRound(GameStat)) == PLAYER_SOUTH))) {YakuhaiPon = 1}
-	if ((haiCurrentSutehai == TILE_WEST_WIND)&&((getRound(GameStat)/4 == 2)||(playerwind(PassivePlayer, getRound(GameStat)) == PLAYER_WEST))) {YakuhaiPon = 1}
-	if ((haiCurrentSutehai == TILE_NORTH_WIND)&&((getRound(GameStat)/4 == 3)||(playerwind(PassivePlayer, getRound(GameStat)) == PLAYER_NORTH))) {YakuhaiPon = 1}
+	if (CurrentSutehai == TILE_WHITE_DRAGON) {YakuhaiPon = 1}
+	if (CurrentSutehai == TILE_GREEN_DRAGON) {YakuhaiPon = 1}
+	if (CurrentSutehai == TILE_RED_DRAGON) {YakuhaiPon = 1}
+	if ((CurrentSutehai == TILE_EAST_WIND)&&((getRound(GameStat)/4 == 0)||(playerwind(PassivePlayer, getRound(GameStat)) == PLAYER_EAST))) {YakuhaiPon = 1}
+	if ((CurrentSutehai == TILE_SOUTH_WIND)&&((getRound(GameStat)/4 == 1)||(playerwind(PassivePlayer, getRound(GameStat)) == PLAYER_SOUTH))) {YakuhaiPon = 1}
+	if ((CurrentSutehai == TILE_WEST_WIND)&&((getRound(GameStat)/4 == 2)||(playerwind(PassivePlayer, getRound(GameStat)) == PLAYER_WEST))) {YakuhaiPon = 1}
+	if ((CurrentSutehai == TILE_NORTH_WIND)&&((getRound(GameStat)/4 == 3)||(playerwind(PassivePlayer, getRound(GameStat)) == PLAYER_NORTH))) {YakuhaiPon = 1}
 	// –ğ”v‚ğ–Â‚¢‚½‚çƒtƒ‰ƒO‚ğ—§‚Ä‚é
 	// ƒ|ƒ“‚ª¸”s‚·‚éê‡‚Í‘¼‰Æ‚Ìƒƒ“‚ª‚ ‚é‚©‰Í’ê”v‚Ìê‡
 	// ‚È‚Ì‚Å‚±‚Ì“_‚Åƒtƒ‰ƒO‚ğ—§‚Ä‚Ä‚à“Á‚É–â‘è‚Í‚È‚¢
-	await 0: countseentiles haiSeenCount, GameStat
-	if (haiCount(haiCurrentSutehai) >= 3) {
+	await 0: countseentiles SeenTiles, GameStat
+	if (TileCount(CurrentSutehai) >= 3) {
 		// ‚·‚Å‚ÉÈq‚ğ‚Q‚Â‚Á‚Ä‚¢‚é‚È‚ç‘å–¾È‚³‚¹‚é
 		if (getNumberOfQuads(GameStat, PassivePlayer) >= 2) {
-			haiMinkan(PassivePlayer) = 1
+			MinkanFlag(PassivePlayer) = 1
 			return
 		}
 	}
 	if (currentShanten > 0) { // ‚·‚Å‚Éƒeƒ“ƒp‚Á‚Ä‚½‚ç–Â‚©‚È‚¢
 		if (currentShanten > Shanten) { // —LŒø”v‚Å‚È‚¯‚ê‚Î–Â‚©‚È‚¢
-			if (haiCount(haiCurrentSutehai) >= 2) { // ƒ|ƒ“‚Å‚«‚é‚©‚Ç‚¤‚©‚Ì”»’è
+			if (TileCount(CurrentSutehai) >= 2) { // ƒ|ƒ“‚Å‚«‚é‚©‚Ç‚¤‚©‚Ì”»’è
 				if ((getMenzen(GameStat, PassivePlayer) == 0)||(YakuhaiPon == 1)) {
 					// ‚·‚Å‚É–Â‚¢‚Ä‚¢‚é‚©A–ğ”v‚Ìê‡‚Íƒ|ƒ“ ‘ÎX‘_‚¢‚©ˆêF‘_‚¢‚È‚ç“ñ–Â‚«
-					haiPon(PassivePlayer) = 1
+					PonFlag(PassivePlayer) = 1
 					return
 				} else {
 					tmpYaojiuTilesCount = 0
@@ -957,7 +957,7 @@ return
 								tmpYaojiuTilesCount++
 						swend
 					loop
-					switch haiCurrentSutehai
+					switch CurrentSutehai
 						case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 						case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 						case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
@@ -985,7 +985,7 @@ return
 					if (tmpYaojiuTilesCount == 0) {
 						if ((currentShanten == 1)&&(getRule(RULE_KUITAN) == 0)) {
 							// ‹ò‚¢’f‚ğƒ|ƒ“’®‚·‚é
-							haiPon(PassivePlayer) = 1
+							PonFlag(PassivePlayer) = 1
 							return
 						}
 					}
@@ -995,7 +995,7 @@ return
 	}
 #ifndef ALLSANMA
 	// ƒ`[‚·‚é‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehai
 	dim tmpHaiHand, NUM_OF_TILES_IN_HAND
 	repeat NUM_OF_TILES_IN_HAND
 		tmpHaiHand(cnt) = getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer)
@@ -1003,22 +1003,22 @@ return
 	tmp2Shanten = Shanten
 	chosenNaki = 0
 	repeat 3, 1: chiType = cnt
-		haiTileInfo = getpaiinfo(GameStat, PassivePlayer, cnt, 0): await 0
+		TileInfo = getpaiinfo(GameStat, PassivePlayer, cnt, 0): await 0
 		nakiCount1 = 0: nakiCount2 = 0: nakiCount3 = 0
-		if ((haiCurrentSutehai-chiType) < 0) {
+		if ((CurrentSutehai-chiType) < 0) {
 			continue // ƒoƒO–h~—p
 		}
 		repeat NUM_OF_TILES_IN_HAND
 			await 0
-			if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == haiCurrentSutehai+1-chiType)&&(nakiCount1 < 1)) {
+			if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == CurrentSutehai+1-chiType)&&(nakiCount1 < 1)) {
 				setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, 0
 				nakiCount1++
 			}
-			if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == haiCurrentSutehai+2-chiType)&&(nakiCount2 < 1)) {
+			if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == CurrentSutehai+2-chiType)&&(nakiCount2 < 1)) {
 				setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, 0
 				nakiCount2++
 			}
-			if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == haiCurrentSutehai+3-chiType)&&(nakiCount3 < 1)) {
+			if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == CurrentSutehai+3-chiType)&&(nakiCount3 < 1)) {
 				setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, 0
 				nakiCount3++
 			}
@@ -1027,7 +1027,7 @@ return
 		repeat NUM_OF_TILES_IN_HAND
 			setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, tmpHaiHand(cnt)
 		loop
-		if (haiCurrentSutehai >= TILE_NUMERAL_MAX) {
+		if (CurrentSutehai >= TILE_NUMERAL_MAX) {
 			continue // š”v‚É‡q‚È‚µ
 		}
 		if ((nakiCount1 == 0)||(nakiCount2 == 0)||(nakiCount3 == 0)) {
@@ -1040,7 +1040,7 @@ return
 	if (currentShanten > 0) { // ‚·‚Å‚Éƒeƒ“ƒp‚Á‚Ä‚½‚ç–Â‚©‚È‚¢
 		if (YakuhaiPon == 1) {
 			// ‚·‚Å‚É–ğ”v‚ğ–Â‚¢‚Ä‚¢‚é‚È‚çƒ`[
-			haiChi(PassivePlayer) = chosenNaki
+			ChiFlag(PassivePlayer) = chosenNaki
 		} else {
 			tmpYaojiuTilesCount = 0
 			repeat NUM_OF_TILES_IN_HAND-1
@@ -1054,7 +1054,7 @@ return
 						tmpYaojiuTilesCount++
 				swend
 			loop
-			switch haiCurrentSutehai
+			switch CurrentSutehai
 				case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 				case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 				case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
@@ -1083,7 +1083,7 @@ return
 			if (tmpYaojiuTilesCount == 0) {
 				if ((currentShanten == 1)&&(getRule(RULE_KUITAN) == 0)) {
 					// ‹ò‚¢’f‚ğ‹h’®‚·‚é
-					haiChi(PassivePlayer) = chosenNaki
+					ChiFlag(PassivePlayer) = chosenNaki
 				}
 			}
 		}

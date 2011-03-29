@@ -225,10 +225,10 @@ return
 return
 
 /* 放銃したか否かを牌譜に記録 */
-#deffunc haifurecfurikomi var GameStat, array haiRon, int ActivePlayer
+#deffunc haifurecfurikomi var GameStat, array RonFlag, int ActivePlayer
 	if ((getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_DOUBLE_IPPATSU)) {
 		// 立直宣言牌の場合
-		if ((haiRon(0)+haiRon(1)+haiRon(2)+haiRon(3)) > 0) {
+		if ((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) > 0) {
 			// 立直宣言牌での振り込み
 			haifuP(ActivePlayer*6+4) += "ﾘX "
 			HThaifuP(ActivePlayer*6+4) += "<td>リーチ<br>ウチ</td>"
@@ -239,7 +239,7 @@ return
 		}
 	} else {
 		// それ以外の場合
-		if ((haiRon(0)+haiRon(1)+haiRon(2)+haiRon(3)) > 0) {
+		if ((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) > 0) {
 			// 通常の振り込み
 			haifuP(ActivePlayer*6+4) += "ｳﾁ "
 			HThaifuP(ActivePlayer*6+4) += "<td>ウチ</td>"
@@ -252,14 +252,14 @@ return
 return
 
 /* チーしたことを牌譜に記録 */
-#deffunc haifurecchi int haiCurrentSutehai, int haiCurrentSutehaiAkaDora, int PassivePlayer
-	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, haiCurrentSutehai, haiCurrentSutehaiAkaDora, "ﾁｰ ", "チー"
+#deffunc haifurecchi int CurrentSutehai, int CurrentSutehaiAkaDora, int PassivePlayer
+	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, "ﾁｰ ", "チー"
 return
 
 /* ポンしたことを牌譜に記録 */
-#deffunc haifurecpon int haiCurrentSutehai, int haiCurrentSutehaiAkaDora, int PassivePlayer, int ActivePlayer
+#deffunc haifurecpon int CurrentSutehai, int CurrentSutehaiAkaDora, int PassivePlayer, int ActivePlayer
 	haifuskip haifuP, HThaifuP, PassivePlayer, ActivePlayer
-	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, haiCurrentSutehai, haiCurrentSutehaiAkaDora, "ﾎﾟﾝ", "ポン"
+	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, "ﾎﾟﾝ", "ポン"
 return
 
 /* 自摸和したことを牌譜に記録 */
@@ -268,9 +268,9 @@ return
 return
 
 /* 大明槓したことを牌譜に記録 */
-#deffunc haifurecminkan int haiCurrentSutehai, int haiCurrentSutehaiAkaDora, int PassivePlayer, int ActivePlayer
+#deffunc haifurecminkan int CurrentSutehai, int CurrentSutehaiAkaDora, int PassivePlayer, int ActivePlayer
 	haifuskip haifuP, HThaifuP, PassivePlayer, ActivePlayer
-	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, haiCurrentSutehai, haiCurrentSutehaiAkaDora, "ｶﾝ ", "カン"
+	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, "ｶﾝ ", "カン"
 	haifuP(PassivePlayer*6+3) += "　 "
 	haifuP(PassivePlayer*6+4) += "　 "
 	HThaifuP(PassivePlayer*6+3) += "<td></td>"
@@ -444,24 +444,24 @@ return
 return
 
 /* 配牌をバッファに出力 */
-#deffunc haifuwritebuffer var GameStat, array hncnTurnName, int hncnOrigTurn, int hncnOrigHonba, int tmpUraFlag, int tmpAliceFlag, str ResultDesc, int hncnKyokuEndType, int TsumoAgari, array PlayerName
+#deffunc haifuwritebuffer var GameStat, array TurnName, int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag, str ResultDesc, int RoundEndType, int TsumoAgari, array PlayerName
 	notesel haifuBuffer
 	tmpstr = "東南西北"
-	tmptxt = ""+hncnTurnName(hncnOrigTurn)
-	if (hncnOrigHonba > 0) {tmptxt += " "+hncnOrigHonba+"本場"}
+	tmptxt = ""+TurnName(OrigTurn)
+	if (OrigHonba > 0) {tmptxt += " "+OrigHonba+"本場"}
 	tmptxt += " ドラ："+haifuDora
-	if ((hncnKyokuEndType == ENDKYOKU_AGARI)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1)) {tmptxt += "裏ドラ："+haifuUraDora}
-	if ((hncnKyokuEndType == ENDKYOKU_AGARI)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != 0)) {tmptxt += "アリス："+haifuAliceDoraMax}
+	if ((RoundEndType == ENDKYOKU_AGARI)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1)) {tmptxt += "裏ドラ："+haifuUraDora}
+	if ((RoundEndType == ENDKYOKU_AGARI)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != 0)) {tmptxt += "アリス："+haifuAliceDoraMax}
 	noteadd tmptxt
 	noteadd ""
 	noteadd "結果："+ResultDesc
 	noteadd ""
 	notesel HThaifuBuffer
-	tmptxt = ""+hncnTurnName(hncnOrigTurn)
-	if (hncnOrigHonba > 0) {tmptxt += " "+hncnOrigHonba+"本場"}
+	tmptxt = ""+TurnName(OrigTurn)
+	if (OrigHonba > 0) {tmptxt += " "+OrigHonba+"本場"}
 	tmptxt += " ドラ：<span class=\"tile\">"+HThaifuDora+"</span>"
-	if ((hncnKyokuEndType == ENDKYOKU_AGARI)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1)) {tmptxt += "裏ドラ：<span class=\"tile\">"+HThaifuUraDora+"</span>"}
-	if ((hncnKyokuEndType == ENDKYOKU_AGARI)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != 0)) {tmptxt += "アリス：<span class=\"tile\">"+HThaifuAliceDoraMax+"</span>"}
+	if ((RoundEndType == ENDKYOKU_AGARI)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1)) {tmptxt += "裏ドラ：<span class=\"tile\">"+HThaifuUraDora+"</span>"}
+	if ((RoundEndType == ENDKYOKU_AGARI)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != 0)) {tmptxt += "アリス：<span class=\"tile\">"+HThaifuAliceDoraMax+"</span>"}
 	noteadd "<h2>"+tmptxt+"</h2>"
 	noteadd "<p>結果："+ResultDesc+"</p>"
 	noteadd "<table>"
@@ -472,15 +472,15 @@ return
 	noteadd "<tr>"+tmptxt+"</tr>"
 	noteunsel
 	repeat NUM_OF_ACTUAL_PLAYERS
-		tmpcnt = RelativePositionOf(cnt, hncnOrigTurn\NUM_OF_PLAYERS)
+		tmpcnt = RelativePositionOf(cnt, OrigTurn\NUM_OF_PLAYERS)
 #ifdef SANMAT
-		if (((hncnOrigTurn\NUM_OF_PLAYERS)+cnt) >= NUM_OF_ACTUAL_PLAYERS) {tmpcnt = (tmpcnt+1)\NUM_OF_PLAYERS}
+		if (((OrigTurn\NUM_OF_PLAYERS)+cnt) >= NUM_OF_ACTUAL_PLAYERS) {tmpcnt = (tmpcnt+1)\NUM_OF_PLAYERS}
 #endif
 		// 最終牌姿
 		repeat NUM_OF_TILES_IN_HAND
 			if (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt) > 0) {
 				if (cnt == TSUMOHAI_INDEX) {
-					if ((hncnKyokuEndType == ENDKYOKU_RYUUKYOKU)||(hncnKyokuEndType == ENDKYOKU_AGARI)||(hncnKyokuEndType == ENDKYOKU_CHONBO)) {
+					if ((RoundEndType == ENDKYOKU_RYUUKYOKU)||(RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
 						if (TsumoAgari == 1) {haifuP(tmpcnt*6+5) += " ツモ": HThaifuP(tmpcnt*6+5) += "</span> ツモ<span class=\"tile\">"}
 						else {haifuP(tmpcnt*6+5) += " ロン": HThaifuP(tmpcnt*6+5) += "</span> ロン<span class=\"tile\">"}
 					} else {
@@ -774,7 +774,7 @@ return
 	tmpfilename2 = strf("%04d%02d%02d_%02d%02d", gettime(0), gettime(1), gettime(3), gettime(4), gettime(5))
 	notesave tmpfilename1+"_haifu_"+tmpfilename2+".txt"
 	noteunsel
-	notesel hncnChatLog
+	notesel ChatLog
 	notesave tmpfilename1+"_chatlog_"+tmpfilename2+".txt"
 	noteunsel
 	notesel HThaifuBuffer

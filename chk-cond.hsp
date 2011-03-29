@@ -6,7 +6,7 @@
 /* èÛãµñ */
 #module
 #include "const.as"
-#deffunc contextualyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int MachiType, int FurikomiPlayer, int TsumoAgari
+#deffunc contextualyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType, int FurikomiPlayer, int TsumoAgari
 	trace "èÛãµñÇÃèàóùÇ…ì¸ÇËÇ‹Ç∑ÅB"
 	/* óßíºån */
 	if (getRichiFlag(GameStat, RICHI_OPENFLAG, targetPlayer) == 1) {
@@ -198,7 +198,7 @@
 			if (getRule(RULE_NITEI_RAOCHUN) != 0) {
 				yakuflagcount = 0
 				repeat SIZE_OF_MELD_BUFFER-1, 1
-					if (((haiMianziDat(cnt)/MELD_TYPE_STEP) != MELD_SEQUENCE_CONCEALED)&&((haiMianziDat(cnt)/MELD_TYPE_STEP) != MELD_TRIPLET_CONCEALED)) {
+					if (((MianziDat(cnt)/MELD_TYPE_STEP) != MELD_SEQUENCE_CONCEALED)&&((MianziDat(cnt)/MELD_TYPE_STEP) != MELD_TRIPLET_CONCEALED)) {
 						yakuflagcount++ // ïõòIñ éqÇÃêî à√û»Ç‡Ç†Ç¡ÇƒÇÊÇ¢
 					}
 				loop
@@ -245,9 +245,9 @@
 		}
 		/* ã‡å{íDêH */
 		if (getRule(RULE_JINJI_DUOSHI) != 0) {
-			countseentiles haiSeenCount, GameStat
-			countTilesInHand haiCount, GameStat, targetPlayer
-			if ((haiSeenCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+haiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) >= 4)&&(TsumoAgari == 1))||((haiSeenCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+haiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) > 4)&&(TsumoAgari == 0)) {
+			countseentiles SeenTiles, GameStat
+			countTilesInHand TileCount, GameStat, targetPlayer
+			if ((SeenTiles(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) >= 4)&&(TsumoAgari == 1))||((SeenTiles(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) > 4)&&(TsumoAgari == 0)) {
 				if ((MachiType == MACHI_KANCHAN)||(MachiType == MACHI_PENCHAN)||(MachiType == MACHI_TANKI)) {
 					addyaku tmpYakuInfo, "ã‡å{íDêH", 1
 				}

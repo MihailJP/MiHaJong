@@ -20,12 +20,12 @@
 		statmes "終了 Watch Mode"
 	}
 	vanish: commonswitch GameStat, WatchModeFlag
-	setHonba GameStat, hncnOrigHonba
-	setRound GameStat, hncnOrigTurn
+	setHonba GameStat, OrigHonba
+	setRound GameStat, OrigTurn
 	repeat NUM_OF_PLAYERS
 		setCall cnt, ""
 	loop
-	hncnMsg = "終了"
+	CenterTitle = "終了"
 	dsplay SND_PAGE: gosub *redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 1) {setCall cnt, "１位"}
@@ -42,14 +42,14 @@
 #endif
 	loop: dsplay SND_TYPE: gosub *redrscreen: await 3000
 	if (getDeposit(GameStat)) {
-		dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 		repeat NUM_OF_PLAYERS
-			if (Rank(cnt) == 1) {hncnPointDelta(cnt) += getDeposit(GameStat)*10}
+			if (Rank(cnt) == 1) {PointDelta(cnt) += getDeposit(GameStat)*10}
 		loop
-		hncnMsg = "供託清算"
+		CenterTitle = "供託清算"
 		gosub *putdelta
 		redraw 1: await 3000
-		pointcalc GameStat, hncnPointDelta
+		pointcalc GameStat, PointDelta
 	}
 	setDeposit GameStat, 0
 
@@ -59,21 +59,21 @@
 #else
 		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)+getYakitori(GameStat, 3)) > 0) {
 #endif
-			dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+			dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 			repeat NUM_OF_ACTUAL_PLAYERS
 				if (getYakitori(GameStat, cnt) == 1) {
-					hncnPointDelta(cnt, 0) -= 50*getRule(RULE_YAKITORI)
+					PointDelta(cnt, 0) -= 50*getRule(RULE_YAKITORI)
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (Rank(cnt) == 1) {
-							hncnPointDelta(cnt, 0) += 50*getRule(RULE_YAKITORI)
+							PointDelta(cnt, 0) += 50*getRule(RULE_YAKITORI)
 						}
 					loop
 				}
 			loop
-			hncnMsg = "焼鳥罰符"
+			CenterTitle = "焼鳥罰符"
 			gosub *putdelta
 			redraw 1: await 3000
-			pointcalc GameStat, hncnPointDelta
+			pointcalc GameStat, PointDelta
 		}
 	}
 	if ((getRule(RULE_YAKITORI) == 3)||(getRule(RULE_YAKITORI) == 4)||(getRule(RULE_YAKITORI) == 5)) {
@@ -83,28 +83,28 @@
 #else
 			if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)+getYakitori(GameStat, 3)) > 0) {
 #endif
-				dim hncnPointDelta, NUM_OF_PLAYERS
+				dim PointDelta, NUM_OF_PLAYERS
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (getYakitori(GameStat, cnt) == 1) {
-						hncnPointDelta(cnt) -= (getRule(RULE_YAKITORI)-2)
+						PointDelta(cnt) -= (getRule(RULE_YAKITORI)-2)
 						repeat NUM_OF_ACTUAL_PLAYERS
 							if (Rank(cnt) == 1) {
-								hncnPointDelta(cnt) += (getRule(RULE_YAKITORI)-2)
+								PointDelta(cnt) += (getRule(RULE_YAKITORI)-2)
 							}
 						loop
 					}
 				loop
-				hncnMsg = "焼鳥罰符"
+				CenterTitle = "焼鳥罰符"
 				gosub *putchipdelta
 				redraw 1: await 3000
 				repeat NUM_OF_PLAYERS
-					addChip GameStat, cnt, hncnPointDelta(cnt)
+					addChip GameStat, cnt, PointDelta(cnt)
 				loop
 			}
 		}
 	}
 
-	dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 	if (getRule(RULE_POINT_BASIS) != 12) {
 #ifdef SANMAT
 		PlusCount = 0
@@ -116,113 +116,113 @@
 				/* 順位ウマ */
 				case 13:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 30: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 30: swbreak
+						case 1: PointDelta(cnt,0) += 30: swbreak
+						case 3: PointDelta(cnt,0) -= 30: swbreak
 					swend
 					swbreak
 				case 14:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 50: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 50: swbreak
+						case 1: PointDelta(cnt,0) += 50: swbreak
+						case 3: PointDelta(cnt,0) -= 50: swbreak
 					swend
 					swbreak
 				case 15:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 80: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 80: swbreak
+						case 1: PointDelta(cnt,0) += 80: swbreak
+						case 3: PointDelta(cnt,0) -= 80: swbreak
 					swend
 					swbreak
 				case 0:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 100: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 100: swbreak
+						case 1: PointDelta(cnt,0) += 100: swbreak
+						case 3: PointDelta(cnt,0) -= 100: swbreak
 					swend
 					swbreak
 				case 1:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 200: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 200: swbreak
+						case 1: PointDelta(cnt,0) += 200: swbreak
+						case 3: PointDelta(cnt,0) -= 200: swbreak
 					swend
 					swbreak
 				case 2:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 300: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 300: swbreak
+						case 1: PointDelta(cnt,0) += 300: swbreak
+						case 3: PointDelta(cnt,0) -= 300: swbreak
 					swend
 					swbreak
 				case 3:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 400: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 400: swbreak
+						case 1: PointDelta(cnt,0) += 400: swbreak
+						case 3: PointDelta(cnt,0) -= 400: swbreak
 					swend
 					swbreak
 				case 4:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 500: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 500: swbreak
+						case 1: PointDelta(cnt,0) += 500: swbreak
+						case 3: PointDelta(cnt,0) -= 500: swbreak
 					swend
 					swbreak
 				case 5:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 600: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 600: swbreak
+						case 1: PointDelta(cnt,0) += 600: swbreak
+						case 3: PointDelta(cnt,0) -= 600: swbreak
 					swend
 					swbreak
 				/* 複合ウマ */
 				case 6:
 					switch Rank(cnt)
 						case 1:
-							if (PlusCount < 2) {hncnPointDelta(cnt,0) += 120}
-							else {hncnPointDelta(cnt) += 80}
+							if (PlusCount < 2) {PointDelta(cnt,0) += 120}
+							else {PointDelta(cnt) += 80}
 							swbreak
 						case 2:
-							if (PlusCount < 2) {hncnPointDelta(cnt,0) -= 40}
+							if (PlusCount < 2) {PointDelta(cnt,0) -= 40}
 							swbreak
 						case 3:
-							hncnPointDelta(cnt) -= 80
+							PointDelta(cnt) -= 80
 							swbreak
 					swend
 					swbreak
 				case 7:
 					switch Rank(cnt)
 						case 1:
-							if (PlusCount < 2) {hncnPointDelta(cnt,0) += 150}
-							else {hncnPointDelta(cnt) += 100}
+							if (PlusCount < 2) {PointDelta(cnt,0) += 150}
+							else {PointDelta(cnt) += 100}
 							swbreak
 						case 2:
-							if (PlusCount < 2) {hncnPointDelta(cnt,0) -= 50}
+							if (PlusCount < 2) {PointDelta(cnt,0) -= 50}
 							swbreak
 						case 3:
-							hncnPointDelta(cnt) -= 100
+							PointDelta(cnt) -= 100
 							swbreak
 					swend
 					swbreak
 				case 8:
 					switch Rank(cnt)
 						case 1:
-							if (PlusCount < 2) {hncnPointDelta(cnt,0) += 300}
-							else {hncnPointDelta(cnt) += 200}
+							if (PlusCount < 2) {PointDelta(cnt,0) += 300}
+							else {PointDelta(cnt) += 200}
 							swbreak
 						case 2:
-							if (PlusCount < 2) {hncnPointDelta(cnt,0) -= 100}
+							if (PlusCount < 2) {PointDelta(cnt,0) -= 100}
 							swbreak
 						case 3:
-							hncnPointDelta(cnt) -= 200
+							PointDelta(cnt) -= 200
 							swbreak
 					swend
 					swbreak
 				/* 沈みウマ */
 				case 9:
-					if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 50*(3-PlusCount)}
-					if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 50}
+					if (Rank(cnt) == 1) {PointDelta(cnt,0) += 50*(3-PlusCount)}
+					if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 50}
 					swbreak
 				case 10:
-					if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 100*(3-PlusCount)}
-					if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 100}
+					if (Rank(cnt) == 1) {PointDelta(cnt,0) += 100*(3-PlusCount)}
+					if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 100}
 					swbreak
 				case 11:
-					if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 200*(3-PlusCount)}
-					if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 200}
+					if (Rank(cnt) == 1) {PointDelta(cnt,0) += 200*(3-PlusCount)}
+					if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 200}
 					swbreak
 			swend
 		loop
@@ -236,70 +236,70 @@
 				/* 順位ウマ */
 				case 13:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 30: swbreak
-						case 4: hncnPointDelta(cnt,0) -= 30: swbreak
+						case 1: PointDelta(cnt,0) += 30: swbreak
+						case 4: PointDelta(cnt,0) -= 30: swbreak
 					swend
 					swbreak
 				case 14:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 50: swbreak
-						case 4: hncnPointDelta(cnt,0) -= 50: swbreak
+						case 1: PointDelta(cnt,0) += 50: swbreak
+						case 4: PointDelta(cnt,0) -= 50: swbreak
 					swend
 					swbreak
 				case 15:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 50: swbreak
-						case 2: hncnPointDelta(cnt,0) += 30: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 30: swbreak
-						case 4: hncnPointDelta(cnt,0) -= 50: swbreak
+						case 1: PointDelta(cnt,0) += 50: swbreak
+						case 2: PointDelta(cnt,0) += 30: swbreak
+						case 3: PointDelta(cnt,0) -= 30: swbreak
+						case 4: PointDelta(cnt,0) -= 50: swbreak
 					swend
 					swbreak
 				case 0:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 100: swbreak
-						case 2: hncnPointDelta(cnt,0) += 50: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 50: swbreak
-						case 4: hncnPointDelta(cnt,0) -= 100: swbreak
+						case 1: PointDelta(cnt,0) += 100: swbreak
+						case 2: PointDelta(cnt,0) += 50: swbreak
+						case 3: PointDelta(cnt,0) -= 50: swbreak
+						case 4: PointDelta(cnt,0) -= 100: swbreak
 					swend
 					swbreak
 				case 1:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 200: swbreak
-						case 2: hncnPointDelta(cnt,0) += 100: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 100: swbreak
-						case 4: hncnPointDelta(cnt,0) -= 200: swbreak
+						case 1: PointDelta(cnt,0) += 200: swbreak
+						case 2: PointDelta(cnt,0) += 100: swbreak
+						case 3: PointDelta(cnt,0) -= 100: swbreak
+						case 4: PointDelta(cnt,0) -= 200: swbreak
 					swend
 					swbreak
 				case 2:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 300: swbreak
-						case 2: hncnPointDelta(cnt,0) += 100: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 100: swbreak
-						case 4: hncnPointDelta(cnt,0) -= 300: swbreak
+						case 1: PointDelta(cnt,0) += 300: swbreak
+						case 2: PointDelta(cnt,0) += 100: swbreak
+						case 3: PointDelta(cnt,0) -= 100: swbreak
+						case 4: PointDelta(cnt,0) -= 300: swbreak
 					swend
 					swbreak
 				case 3:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 400: swbreak
-						case 2: hncnPointDelta(cnt,0) += 200: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 200: swbreak
-						case 4: hncnPointDelta(cnt,0) -= 400: swbreak
+						case 1: PointDelta(cnt,0) += 400: swbreak
+						case 2: PointDelta(cnt,0) += 200: swbreak
+						case 3: PointDelta(cnt,0) -= 200: swbreak
+						case 4: PointDelta(cnt,0) -= 400: swbreak
 					swend
 					swbreak
 				case 4:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 500: swbreak
-						case 2: hncnPointDelta(cnt,0) += 200: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 200: swbreak
-						case 4: hncnPointDelta(cnt,0) -= 500: swbreak
+						case 1: PointDelta(cnt,0) += 500: swbreak
+						case 2: PointDelta(cnt,0) += 200: swbreak
+						case 3: PointDelta(cnt,0) -= 200: swbreak
+						case 4: PointDelta(cnt,0) -= 500: swbreak
 					swend
 					swbreak
 				case 5:
 					switch Rank(cnt)
-						case 1: hncnPointDelta(cnt,0) += 600: swbreak
-						case 2: hncnPointDelta(cnt,0) += 200: swbreak
-						case 3: hncnPointDelta(cnt,0) -= 200: swbreak
-						case 4: hncnPointDelta(cnt,0) -= 600: swbreak
+						case 1: PointDelta(cnt,0) += 600: swbreak
+						case 2: PointDelta(cnt,0) += 200: swbreak
+						case 3: PointDelta(cnt,0) -= 200: swbreak
+						case 4: PointDelta(cnt,0) -= 600: swbreak
 					swend
 					swbreak
 				/* 複合ウマ */
@@ -307,28 +307,28 @@
 					switch Rank(cnt)
 						case 1: 
 							switch PlusCount
-								case 1: hncnPointDelta(cnt,0) += 150: swbreak
-								case 3: hncnPointDelta(cnt,0) += 70: swbreak
-								default: hncnPointDelta(cnt,0) += 100: swbreak
+								case 1: PointDelta(cnt,0) += 150: swbreak
+								case 3: PointDelta(cnt,0) += 70: swbreak
+								default: PointDelta(cnt,0) += 100: swbreak
 							swend
 							swbreak
 						case 2: 
 							switch PlusCount
-								case 1: hncnPointDelta(cnt,0) -= 30: swbreak
-								default: hncnPointDelta(cnt,0) += 50: swbreak
+								case 1: PointDelta(cnt,0) -= 30: swbreak
+								default: PointDelta(cnt,0) += 50: swbreak
 							swend
 							swbreak
 						case 3: 
 							switch PlusCount
-								case 3: hncnPointDelta(cnt,0) += 30: swbreak
-								default: hncnPointDelta(cnt,0) -= 50: swbreak
+								case 3: PointDelta(cnt,0) += 30: swbreak
+								default: PointDelta(cnt,0) -= 50: swbreak
 							swend
 							swbreak
 						case 4: 
 							switch PlusCount
-								case 1: hncnPointDelta(cnt,0) -= 70: swbreak
-								case 3: hncnPointDelta(cnt,0) -= 150: swbreak
-								default: hncnPointDelta(cnt,0) -= 100: swbreak
+								case 1: PointDelta(cnt,0) -= 70: swbreak
+								case 3: PointDelta(cnt,0) -= 150: swbreak
+								default: PointDelta(cnt,0) -= 100: swbreak
 							swend
 							swbreak
 					swend
@@ -337,28 +337,28 @@
 					switch Rank(cnt)
 						case 1: 
 							switch PlusCount
-								case 1: hncnPointDelta(cnt,0) += 120: swbreak
-								default: hncnPointDelta(cnt,0) += 80: swbreak
+								case 1: PointDelta(cnt,0) += 120: swbreak
+								default: PointDelta(cnt,0) += 80: swbreak
 							swend
 							swbreak
 						case 2: 
 							switch PlusCount
-								case 1: hncnPointDelta(cnt,0) -= 10: swbreak
-								case 3: hncnPointDelta(cnt,0) += 30: swbreak
-								default: hncnPointDelta(cnt,0) += 40: swbreak
+								case 1: PointDelta(cnt,0) -= 10: swbreak
+								case 3: PointDelta(cnt,0) += 30: swbreak
+								default: PointDelta(cnt,0) += 40: swbreak
 							swend
 							swbreak
 						case 3: 
 							switch PlusCount
-								case 1: hncnPointDelta(cnt,0) -= 30: swbreak
-								case 3: hncnPointDelta(cnt,0) += 10: swbreak
-								default: hncnPointDelta(cnt,0) -= 40: swbreak
+								case 1: PointDelta(cnt,0) -= 30: swbreak
+								case 3: PointDelta(cnt,0) += 10: swbreak
+								default: PointDelta(cnt,0) -= 40: swbreak
 							swend
 							swbreak
 						case 4: 
 							switch PlusCount
-								case 3: hncnPointDelta(cnt,0) -= 120: swbreak
-								default: hncnPointDelta(cnt,0) -= 80: swbreak
+								case 3: PointDelta(cnt,0) -= 120: swbreak
+								default: PointDelta(cnt,0) -= 80: swbreak
 							swend
 							swbreak
 					swend
@@ -367,162 +367,162 @@
 					switch Rank(cnt)
 						case 1: 
 							switch PlusCount
-								case 1: hncnPointDelta(cnt,0) += 600: swbreak
-								case 2: hncnPointDelta(cnt,0) += 400: swbreak
-								case 3: hncnPointDelta(cnt,0) += 300: swbreak
+								case 1: PointDelta(cnt,0) += 600: swbreak
+								case 2: PointDelta(cnt,0) += 400: swbreak
+								case 3: PointDelta(cnt,0) += 300: swbreak
 							swend
 							swbreak
 						case 2: 
 							switch PlusCount
-								case 1: hncnPointDelta(cnt,0) -= 100: swbreak
+								case 1: PointDelta(cnt,0) -= 100: swbreak
 							swend
 							swbreak
 						case 3: 
 							switch PlusCount
-								case 1: hncnPointDelta(cnt,0) -= 200: swbreak
-								case 2: hncnPointDelta(cnt,0) -= 100: swbreak
+								case 1: PointDelta(cnt,0) -= 200: swbreak
+								case 2: PointDelta(cnt,0) -= 100: swbreak
 							swend
 							swbreak
 						case 4: 
 							switch PlusCount
-								case 1: hncnPointDelta(cnt,0) -= 300: swbreak
-								case 2: hncnPointDelta(cnt,0) -= 300: swbreak
-								case 3: hncnPointDelta(cnt,0) -= 300: swbreak
+								case 1: PointDelta(cnt,0) -= 300: swbreak
+								case 2: PointDelta(cnt,0) -= 300: swbreak
+								case 3: PointDelta(cnt,0) -= 300: swbreak
 							swend
 							swbreak
 					swend
 					swbreak
 				/* 沈みウマ */
 				case 9:
-					if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 50*(NUM_OF_PLAYERS-PlusCount)}
-					if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 50}
+					if (Rank(cnt) == 1) {PointDelta(cnt,0) += 50*(NUM_OF_PLAYERS-PlusCount)}
+					if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 50}
 					swbreak
 				case 10:
-					if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 100*(NUM_OF_PLAYERS-PlusCount)}
-					if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 100}
+					if (Rank(cnt) == 1) {PointDelta(cnt,0) += 100*(NUM_OF_PLAYERS-PlusCount)}
+					if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 100}
 					swbreak
 				case 11:
-					if (Rank(cnt) == 1) {hncnPointDelta(cnt,0) += 200*(NUM_OF_PLAYERS-PlusCount)}
-					if (Rank(cnt) > PlusCount) {hncnPointDelta(cnt,0) -= 200}
+					if (Rank(cnt) == 1) {PointDelta(cnt,0) += 200*(NUM_OF_PLAYERS-PlusCount)}
+					if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 200}
 					swbreak
 			swend
 		loop
 #endif
-		hncnMsg = "順位点"
+		CenterTitle = "順位点"
 		gosub *putdelta
 		redraw 1: await 3000
-		pointcalc GameStat, hncnPointDelta
+		pointcalc GameStat, PointDelta
 	}
 	
-	dim hncnPointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 #ifdef SANMAT
 	if (getRule(RULE_STARTING_POINT) != 1) {
 		repeat NUM_OF_ACTUAL_PLAYERS
 			if (Rank(cnt) == 1) {
 				switch getRule(RULE_STARTING_POINT)
-					case 0: hncnPointDelta(cnt) += 150: swbreak
-					case 4: hncnPointDelta(cnt) += 450: swbreak
-					case 5: hncnPointDelta(cnt) += 300: swbreak
+					case 0: PointDelta(cnt) += 150: swbreak
+					case 4: PointDelta(cnt) += 450: swbreak
+					case 5: PointDelta(cnt) += 300: swbreak
 				swend
 			}
 			if (Rank(cnt) == 3) {
 				switch getRule(RULE_STARTING_POINT)
-					case 2: hncnPointDelta(cnt) -= 150: swbreak
-					case 3: hncnPointDelta(cnt) -= 300: swbreak
+					case 2: PointDelta(cnt) -= 150: swbreak
+					case 3: PointDelta(cnt) -= 300: swbreak
 				swend
 			}
 		loop
 		if ((getRule(RULE_STARTING_POINT) == 2)||(getRule(RULE_STARTING_POINT) == 3)) {
-			hncnMsg = "ラスペナ"
-		} else {hncnMsg = "トップ賞"}
+			CenterTitle = "ラスペナ"
+		} else {CenterTitle = "トップ賞"}
 #else
 	if (getRule(RULE_STARTING_POINT) != 2) {
 		repeat NUM_OF_ACTUAL_PLAYERS
 			if (Rank(cnt) == 1) {
 				switch getRule(RULE_STARTING_POINT)
-					case 0: hncnPointDelta(cnt) += 200: swbreak
-					case 1: hncnPointDelta(cnt) += 120: swbreak
-					case 5: hncnPointDelta(cnt) += 400: swbreak
+					case 0: PointDelta(cnt) += 200: swbreak
+					case 1: PointDelta(cnt) += 120: swbreak
+					case 5: PointDelta(cnt) += 400: swbreak
 				swend
 			}
 			if (Rank(cnt) == 4) {
 				switch getRule(RULE_STARTING_POINT)
-					case 3: hncnPointDelta(cnt) -= 200: swbreak
-					case 4: hncnPointDelta(cnt) -= 400: swbreak
+					case 3: PointDelta(cnt) -= 200: swbreak
+					case 4: PointDelta(cnt) -= 400: swbreak
 				swend
 			}
 		loop
 		if ((getRule(RULE_STARTING_POINT) == 3)||(getRule(RULE_STARTING_POINT) == 4)) {
-			hncnMsg = "ラスペナ"
-		} else {hncnMsg = "トップ賞"}
+			CenterTitle = "ラスペナ"
+		} else {CenterTitle = "トップ賞"}
 #endif
 		gosub *putdelta
 		redraw 1: await 3000
-		pointcalc GameStat, hncnPointDelta
+		pointcalc GameStat, PointDelta
 	}
 	
 	/* 最終的なスコアを計算する */
-	dim hncnPointScore, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+	dim FinalScore, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 #ifdef SANMAT
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) > 1) {
 			if ((getScore(GameStat,cnt, 0) >= 400)||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {
-				hncnPointScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-400)+5)/10
+				FinalScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-400)+5)/10
 			} else {
-				hncnPointScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-400)-5)/10
+				FinalScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-400)-5)/10
 			}
 			switch getRule(RULE_CHIP)
-				case 1: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)/2: swbreak
-				case 2: hncnPointScore(cnt, 0) += getChip(GameStat, cnt): swbreak
-				case 3: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*2: swbreak
-				case 4: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*3: swbreak
-				case 5: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*5: swbreak
-				case 6: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*10: swbreak
+				case 1: FinalScore(cnt, 0) += getChip(GameStat, cnt)/2: swbreak
+				case 2: FinalScore(cnt, 0) += getChip(GameStat, cnt): swbreak
+				case 3: FinalScore(cnt, 0) += getChip(GameStat, cnt)*2: swbreak
+				case 4: FinalScore(cnt, 0) += getChip(GameStat, cnt)*3: swbreak
+				case 5: FinalScore(cnt, 0) += getChip(GameStat, cnt)*5: swbreak
+				case 6: FinalScore(cnt, 0) += getChip(GameStat, cnt)*10: swbreak
 			swend
 			tmpcnt = cnt
-			repeat NUM_OF_DIGIT_GROUPS-1, 1: hncnPointScore(tmpcnt, cnt) = getScore(GameStat,tmpcnt, cnt): loop
+			repeat NUM_OF_DIGIT_GROUPS-1, 1: FinalScore(tmpcnt, cnt) = getScore(GameStat,tmpcnt, cnt): loop
 		}
 	loop
 	gosub *scoreflagfix
-	dim hncnPointScoreTmp, NUM_OF_DIGIT_GROUPS
+	dim FinalScoreTmp, NUM_OF_DIGIT_GROUPS
 	repeat NUM_OF_DIGIT_GROUPS
-		hncnPointScoreTmp(cnt) = hncnPointScore(0, cnt)+hncnPointScore(1, cnt)+hncnPointScore(2, cnt)
+		FinalScoreTmp(cnt) = FinalScore(0, cnt)+FinalScore(1, cnt)+FinalScore(2, cnt)
 	loop
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 1) {
 			tmpcnt = cnt
-			repeat NUM_OF_DIGIT_GROUPS: hncnPointScore(tmpcnt, cnt) = 0-hncnPointScoreTmp(cnt): loop
+			repeat NUM_OF_DIGIT_GROUPS: FinalScore(tmpcnt, cnt) = 0-FinalScoreTmp(cnt): loop
 		}
 	loop
 #else
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) > 1) {
 			if ((getScore(GameStat,cnt, 0) >= 300)||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {
-				hncnPointScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-300)+5)/10
+				FinalScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-300)+5)/10
 			} else {
-				hncnPointScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-300)-5)/10
+				FinalScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-300)-5)/10
 			}
 			switch getRule(RULE_CHIP)
-				case 1: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)/2: swbreak
-				case 2: hncnPointScore(cnt, 0) += getChip(GameStat, cnt): swbreak
-				case 3: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*2: swbreak
-				case 4: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*3: swbreak
-				case 5: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*5: swbreak
-				case 6: hncnPointScore(cnt, 0) += getChip(GameStat, cnt)*10: swbreak
+				case 1: FinalScore(cnt, 0) += getChip(GameStat, cnt)/2: swbreak
+				case 2: FinalScore(cnt, 0) += getChip(GameStat, cnt): swbreak
+				case 3: FinalScore(cnt, 0) += getChip(GameStat, cnt)*2: swbreak
+				case 4: FinalScore(cnt, 0) += getChip(GameStat, cnt)*3: swbreak
+				case 5: FinalScore(cnt, 0) += getChip(GameStat, cnt)*5: swbreak
+				case 6: FinalScore(cnt, 0) += getChip(GameStat, cnt)*10: swbreak
 			swend
 			tmpcnt = cnt
-			repeat 7, 1: hncnPointScore(tmpcnt, cnt) = getScore(GameStat,tmpcnt, cnt): loop
+			repeat 7, 1: FinalScore(tmpcnt, cnt) = getScore(GameStat,tmpcnt, cnt): loop
 		}
 	loop
 	gosub *scoreflagfix
-	dim hncnPointScoreTmp, NUM_OF_DIGIT_GROUPS
+	dim FinalScoreTmp, NUM_OF_DIGIT_GROUPS
 	repeat NUM_OF_DIGIT_GROUPS
-		hncnPointScoreTmp(cnt) = hncnPointScore(0, cnt)+hncnPointScore(1, cnt)+hncnPointScore(2, cnt)+hncnPointScore(3, cnt)
+		FinalScoreTmp(cnt) = FinalScore(0, cnt)+FinalScore(1, cnt)+FinalScore(2, cnt)+FinalScore(3, cnt)
 	loop
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 1) {
 			tmpcnt = cnt
-			repeat NUM_OF_DIGIT_GROUPS: hncnPointScore(tmpcnt, cnt) = 0-hncnPointScoreTmp(cnt): loop
+			repeat NUM_OF_DIGIT_GROUPS: FinalScore(tmpcnt, cnt) = 0-FinalScoreTmp(cnt): loop
 		}
 	loop
 #endif
@@ -530,20 +530,20 @@
 	repeat NUM_OF_PLAYERS
 		tmpcnt=cnt
 		repeat NUM_OF_DIGIT_GROUPS-1
-			hncnPointScore(tmpcnt, cnt) += (hncnPointScore(tmpcnt, cnt+1) \ 1000)*100000
-			hncnPointScore(tmpcnt, cnt+1) /= 1000
+			FinalScore(tmpcnt, cnt) += (FinalScore(tmpcnt, cnt+1) \ 1000)*100000
+			FinalScore(tmpcnt, cnt+1) /= 1000
 		loop
 	loop
-	deltatxt hncnPointScore, 1
+	deltatxt FinalScore, 1
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (getCall(cnt) == "") {setCall cnt, "０"}
 	loop
-	hncnMsg = "最終成績"
+	CenterTitle = "最終成績"
 	repeat NUM_OF_PLAYERS
 		tmptmprnk = cnt+1
 		repeat NUM_OF_PLAYERS
 			if (Rank(cnt) == tmptmprnk) {
-				tmpscoretxt = bignumtotext(hncnPointScore, cnt, 1, "+", "-")
+				tmpscoretxt = bignumtotext(FinalScore, cnt, 1, "+", "-")
 				tmptxt += " "+tmpscoretxt+"点"
 				chatappend "*** "+tmptmprnk+"位 "+tmpscoretxt+" "+PlayerName(cnt)+"\n"
 			}

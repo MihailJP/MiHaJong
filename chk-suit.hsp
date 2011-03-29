@@ -6,15 +6,15 @@
 /* àÍêFånÇ»Ç«ÇÃñ */
 #module
 #include "const.as"
-#deffunc suityaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int haiFuriten, int MachiType
+#deffunc suityaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int FuritenFlag, int MachiType
 	trace "àÍêFånÇÃèàóùÇ…ì¸ÇËÇ‹Ç∑ÅB"
 	WanzMian = 0: PinzMian = 0: SouzMian = 0: ZiMian = 0
 #ifdef ALLSANMA
 	WindMian = 0: DragonMian = 0
 #endif
-	Cifr = countMentzNumerals(haiMianziDat)
+	Cifr = countMentzNumerals(MianziDat)
 	repeat SIZE_OF_MELD_BUFFER
-		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM / TILE_SUIT_STEP) * TILE_SUIT_STEP
+		switch (MianziDat(cnt) \ TILE_CODE_MAXIMUM / TILE_SUIT_STEP) * TILE_SUIT_STEP
 			case TILE_SUIT_CHARACTERS: WanzMian++: swbreak
 			case TILE_SUIT_CIRCLES: PinzMian++: swbreak
 			case TILE_SUIT_BAMBOOS: SouzMian++: swbreak
@@ -23,10 +23,10 @@
 #endif
 		swend
 #ifdef ALLSANMA
-		if (((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {
+		if (((MianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((MianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {
 			WindMian++
 		}
-		if (((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_DRAGON_MIN)&&((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_DRAGON_MAX)) {
+		if (((MianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_DRAGON_MIN)&&((MianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_DRAGON_MAX)) {
 			DragonMian++
 		}
 #endif
@@ -52,7 +52,7 @@
 					if (tmpRuleCodeList(cnt) == -1) {ruleEnabled = 1}
 					else: if (tmpRuleCodeList(cnt) != "0") {ruleEnabled = 1}
 					if (ruleEnabled != "0") {
-						countTilesInHand haiCount, GameStat, targetPlayer
+						countTilesInHand TileCount, GameStat, targetPlayer
 						yakuFlag = 0
 						repeat 3
 							if ((tmpYakuNameList == "ëÂé‘ó÷")&&(cnt != TILE_SUIT_CIRCLES/TILE_SUIT_STEP)) {continue}
@@ -61,24 +61,24 @@
 							tmpcnt = cnt
 							subFlag = 0
 							repeat 9, 1
-								if (haiCount(tmpcnt*TILE_SUIT_STEP+cnt) >= (int(strmid(tmpHaishikiList(tmpcnt), cnt-1, 1)))) {subFlag++}
+								if (TileCount(tmpcnt*TILE_SUIT_STEP+cnt) >= (int(strmid(tmpHaishikiList(tmpcnt), cnt-1, 1)))) {subFlag++}
 							loop
 							if (subFlag = 9) {yakuFlag = 1}
 						loop
 						if (yakuFlag) {
 							tmpyakumanRate = 1
 							if (tmpYakuNameList(cnt) == "ã„ò@ïÛìï") {
-								countTilesInHand haiCount2, GameStat, targetPlayer
-								haiCount2(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))--
+								countTilesInHand TileCount2, GameStat, targetPlayer
+								TileCount2(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))--
 								yakuFlag2 = 0
 								repeat 3
-									if ((haiCount(cnt*TILE_SUIT_STEP+1) >= 3)&&(haiCount(cnt*TILE_SUIT_STEP+2) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+3) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+4) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+5) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+6) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+7) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+8) >= 1)&&(haiCount(cnt*TILE_SUIT_STEP+9) >= 3)) {yakuFlag2 = 1}
+									if ((TileCount(cnt*TILE_SUIT_STEP+1) >= 3)&&(TileCount(cnt*TILE_SUIT_STEP+2) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+3) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+4) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+5) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+6) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+7) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+8) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+9) >= 3)) {yakuFlag2 = 1}
 								loop
 								if ((getHeavenHandFlag(GameStat) == 1)&&(getRule(RULE_DOUBLE_YAKUMAN) == 0)) {
 									tmpActualYakuName = "èÉê≥ã„ò@ïÛìï": tmpyakumanRate = 2
 								} else {
 									// êUíÆÇÃéûÇÕèÉê≥àµÇ¢Ç∆ÇµÇ»Ç¢ÇÊÇ§Ç…ïœçX
-									if ((yakuFlag2)&&(haiFuriten == 0)&&(getRule(RULE_DOUBLE_YAKUMAN) == 0)) {
+									if ((yakuFlag2)&&(FuritenFlag == 0)&&(getRule(RULE_DOUBLE_YAKUMAN) == 0)) {
 										tmpActualYakuName = "èÉê≥ã„ò@ïÛìï": tmpyakumanRate = 2
 									} else {
 										tmpActualYakuName = "ã„ò@ïÛìï": tmpyakumanRate = 1
@@ -158,7 +158,7 @@
 				if (PinzMian == SIZE_OF_MELD_BUFFER) {
 					yakuFlag = 0
 					repeat SIZE_OF_MELD_BUFFER-1, 1
-						if ((haiMianziDat(cnt) >= MELD_TRIPLET*MELD_TYPE_STEP)&&((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_SUIT_CIRCLES+7)) {yakuFlag = 1}
+						if ((MianziDat(cnt) >= MELD_TRIPLET*MELD_TYPE_STEP)&&((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_SUIT_CIRCLES+7)) {yakuFlag = 1}
 					loop
 					if (yakuFlag) {
 						addyaku tmpYakuInfo, "êØåıéW‡£", 1
@@ -187,7 +187,7 @@
 		}
 		/* élñ ë^âÃ */
 		if (getRule(RULE_SIMIAN_CHUGE) != 0) {
-			if (((WanzMian+1) == SIZE_OF_MELD_BUFFER)&&((haiMianziDat(0)/TILE_SUIT_STEP) != (TILE_SUIT_CHARACTERS/TILE_SUIT_STEP))||((PinzMian+1) == SIZE_OF_MELD_BUFFER)&&((haiMianziDat(0)/TILE_SUIT_STEP) != (TILE_SUIT_CIRCLES/TILE_SUIT_STEP))||((SouzMian+1) == SIZE_OF_MELD_BUFFER)&&((haiMianziDat(0)/TILE_SUIT_STEP) != (TILE_SUIT_BAMBOOS/TILE_SUIT_STEP))) {
+			if (((WanzMian+1) == SIZE_OF_MELD_BUFFER)&&((MianziDat(0)/TILE_SUIT_STEP) != (TILE_SUIT_CHARACTERS/TILE_SUIT_STEP))||((PinzMian+1) == SIZE_OF_MELD_BUFFER)&&((MianziDat(0)/TILE_SUIT_STEP) != (TILE_SUIT_CIRCLES/TILE_SUIT_STEP))||((SouzMian+1) == SIZE_OF_MELD_BUFFER)&&((MianziDat(0)/TILE_SUIT_STEP) != (TILE_SUIT_BAMBOOS/TILE_SUIT_STEP))) {
 				if (ZiMian == 0) {
 					if (MachiType == MACHI_TANKI) {
 						addyaku tmpYakuInfo, "élñ ë^âÃ", 4

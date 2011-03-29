@@ -18,8 +18,8 @@
 		}
 	}
 	newmod yakuInfo, yakuStruct
-	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, targetPlayer
-	dim haiMianziDat, SIZE_OF_MELD_BUFFER
+	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, targetPlayer
+	dim MianziDat, SIZE_OF_MELD_BUFFER
 	dim ShantenArray, SHANTEN_PAGES
 	repeat SHANTEN_PAGES: ShantenArray(cnt) = countshanten(GameStat, targetPlayer, cnt): loop
 	Shanten = ShantenArray(SHANTEN_ALL)
@@ -30,14 +30,14 @@
 #ifndef SANMAS
 		/* 国士無双 */
 		if (ShantenArray(SHANTEN_ORPHANS) == -1) {
-			contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari
-			shisanyaoyaku GameStat, tmpYakuInfo, targetPlayer, haiFuriten
+			contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari
+			shisanyaoyaku GameStat, tmpYakuInfo, targetPlayer, FuritenFlag
 			countdora GameStat, tmpYakuInfo, targetPlayer
 		}
 		/* 七星無靠 */
 		if (getRule(RULE_STELLAR_UUSHII) != 0) {
 			if (ShantenArray(SHANTEN_STELLAR) == -1) {
-				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari
+				contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari
 				addyakuman tmpYakuInfo, "七星無靠", 1
 				countdora GameStat, tmpYakuInfo, targetPlayer
 			}
@@ -45,7 +45,7 @@
 		/* 南北戦争 */
 		if (getRule(RULE_CIVIL_WAR) != 0) {
 			if (ShantenArray(SHANTEN_CIVILWAR) == -1) {
-				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari
+				contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari
 				addyakuman tmpYakuInfo, "南北戦争", 1
 				countdora GameStat, tmpYakuInfo, targetPlayer
 			}
@@ -54,7 +54,7 @@
 		/* 惑星直列 */
 		if (getRule(RULE_SYZYGY) != 0) {
 			if (ShantenArray(SHANTEN_SYZYGY) == -1) {
-				contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari
+				contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari
 				if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) \ 2) == 0) {
 					addyakuman tmpYakuInfo, "惑星直列", 2
 				} else {
@@ -65,23 +65,23 @@
 		}
 		/* 七対子 */
 		if ((ShantenArray(SHANTEN_PAIRS) == -1)&&(ShantenArray(SHANTEN_REGULAR) != -1)) {
-			contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari
+			contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari
 			qiduiyaku GameStat, tmpYakuInfo, targetPlayer
 			countdora GameStat, tmpYakuInfo, targetPlayer
 		}
 		/* 面子手ここから */
 		AtamaCode = cnt
-		makementsu GameStat, tmpYakuInfo, targetPlayer, Atamacode, haiProcessedTiles, haiMianziDat
-		if (haiProcessedTiles == SIZE_OF_MELD_BUFFER) {
-			trace strf("面子を検出 プレイヤー [%d] モード [%d] 面子データ [%d %d %d %d %d]", targetPlayer, AtamaCode\4, haiMianziDat(0), haiMianziDat(1), haiMianziDat(2), haiMianziDat(3), haiMianziDat(4))
-			contextualyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari
-			calcbasepoints GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, TsumoAgari, MachiType
-			suityaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, haiFuriten, MachiType
-			yaojiuyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer
-			tripletyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, haiFuriten, TsumoAgari, MachiType
-			quadyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, TsumoAgari
-			sequenceyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, MachiType
-			miscyaku GameStat, tmpYakuInfo, haiMianziDat, targetPlayer, TsumoAgari
+		makementsu GameStat, tmpYakuInfo, targetPlayer, Atamacode, ProcessedTiles, MianziDat
+		if (ProcessedTiles == SIZE_OF_MELD_BUFFER) {
+			trace strf("面子を検出 プレイヤー [%d] モード [%d] 面子データ [%d %d %d %d %d]", targetPlayer, AtamaCode\4, MianziDat(0), MianziDat(1), MianziDat(2), MianziDat(3), MianziDat(4))
+			contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType, FurikomiPlayer, TsumoAgari
+			calcbasepoints GameStat, tmpYakuInfo, MianziDat, targetPlayer, TsumoAgari, MachiType
+			suityaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, FuritenFlag, MachiType
+			yaojiuyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer
+			tripletyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, FuritenFlag, TsumoAgari, MachiType
+			quadyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, TsumoAgari
+			sequenceyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
+			miscyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, TsumoAgari
 			setYakuInfo tmpYakuInfo, YAKUINF_FU, ((getYakuInfo(tmpYakuInfo, YAKUINF_FU)+8)/10)*10 // 点パネする
 			countdora GameStat, tmpYakuInfo, targetPlayer
 			posterioryaku GameStat, tmpYakuInfo, targetPlayer, TsumoAgari, MachiType

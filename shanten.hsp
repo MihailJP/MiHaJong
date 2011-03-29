@@ -26,12 +26,12 @@
 		6 : 惑星直列
 */
 	debug strf("向聴数を計算します。プレイヤー [%d]", targetPlayer)
-	countTilesInHand haiCount, GameStat, targetPlayer
+	countTilesInHand TileCount, GameStat, targetPlayer
 	// エラー防止のため、４枚を超える分は無視する
 	repeat TILE_CODE_MAXIMUM
-		if (haiCount(cnt) > 4) {
-			warn strf("牌コード [%d] の数が異常です [%d] 。4枚とみなします。", cnt, haiCount(cnt))
-			haiCount(cnt) = 4
+		if (TileCount(cnt) > 4) {
+			warn strf("牌コード [%d] の数が異常です [%d] 。4枚とみなします。", cnt, TileCount(cnt))
+			TileCount(cnt) = 4
 		}
 	loop
 	
@@ -79,15 +79,15 @@
 	tmpMianzi = 0: tmpTarzi = 0: AtamaFlag = 0
 	// 数牌それぞれの面子の数
 	repeat TILE_NUMERAL_COLORS
-		tmpdat = peek(hncnMianziNumberData, haiCount(cnt*TILE_SUIT_STEP+9)*390625+haiCount(cnt*TILE_SUIT_STEP+8)*78125+haiCount(cnt*TILE_SUIT_STEP+7)*15625+haiCount(cnt*TILE_SUIT_STEP+6)*3125+haiCount(cnt*TILE_SUIT_STEP+5)*625+haiCount(cnt*TILE_SUIT_STEP+4)*125+haiCount(cnt*TILE_SUIT_STEP+3)*25+haiCount(cnt*TILE_SUIT_STEP+2)*5+haiCount(cnt*TILE_SUIT_STEP+1))
+		tmpdat = peek(MianziNumberData, TileCount(cnt*TILE_SUIT_STEP+9)*390625+TileCount(cnt*TILE_SUIT_STEP+8)*78125+TileCount(cnt*TILE_SUIT_STEP+7)*15625+TileCount(cnt*TILE_SUIT_STEP+6)*3125+TileCount(cnt*TILE_SUIT_STEP+5)*625+TileCount(cnt*TILE_SUIT_STEP+4)*125+TileCount(cnt*TILE_SUIT_STEP+3)*25+TileCount(cnt*TILE_SUIT_STEP+2)*5+TileCount(cnt*TILE_SUIT_STEP+1))
 		tmpMianzi += (tmpdat\128/16)
 		tmpTarzi += (tmpdat\16)
 		if (tmpdat/128 == 1) {AtamaFlag = 1}
 	loop
 	// 字牌の面子の数…刻子か対子だけ数えればいいから楽勝！
 	repeat 7
-		if (haiCount(cnt+TILE_SUIT_HONORS+1) == 2) {tmpTarzi++: AtamaFlag = 1}
-		if (haiCount(cnt+TILE_SUIT_HONORS+1) >= 3) {tmpMianzi++}
+		if (TileCount(cnt+TILE_SUIT_HONORS+1) == 2) {tmpTarzi++: AtamaFlag = 1}
+		if (TileCount(cnt+TILE_SUIT_HONORS+1) >= 3) {tmpMianzi++}
 	loop
 	// 鳴き面子や暗槓がある場合
 	tmpMianzi += MeldPointer(GameStat, targetPlayer)
@@ -107,18 +107,18 @@
 
 *calcshanten_chiitoi
 	// 七対子に対する向聴数を求める。
-	countTilesInHand haiCount, GameStat, targetPlayer
+	countTilesInHand TileCount, GameStat, targetPlayer
 	QiduiShanten = 6
 	repeat TILE_NONFLOWER_MAX
 		// 単純に対子の数を調べればよい
 		// ただし、同じ牌４枚を対子２つとして使ってはならない
-		if (haiCount(cnt) >= 2) {
+		if (TileCount(cnt) >= 2) {
 			QiduiShanten--
 		}
 	loop
 	// 暗刻がある場合に聴牌とみなさないようにする
 	repeat TILE_NONFLOWER_MAX
-		if (haiCount(cnt) >= 3) {
+		if (TileCount(cnt) >= 3) {
 			if (QiduiShanten < 1) {QiduiShanten++}
 		}
 	loop
@@ -131,16 +131,16 @@
 
 *calcshanten_kokushi
 	// 国士無双に対する向聴数を求める。
-	countTilesInHand haiCount, GameStat, targetPlayer
+	countTilesInHand TileCount, GameStat, targetPlayer
 	YaojiuPai = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+9, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+9
 	YaojiuPai(6) = TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON, TILE_RED_DRAGON
 	ShisanYaoShanten = 13: AtamaFlag = 0
 	repeat 13
 		// ヤオ九牌１種類につき、１をカウントする。
-		if (haiCount(YaojiuPai(cnt)) >= 2) {
+		if (TileCount(YaojiuPai(cnt)) >= 2) {
 			AtamaFlag = 1 // アタマ候補
 		}
-		if (haiCount(YaojiuPai(cnt)) >= 1) {
+		if (TileCount(YaojiuPai(cnt)) >= 1) {
 			ShisanYaoShanten--
 		}
 	loop
@@ -156,12 +156,12 @@
 *calcshanten_stellar
 	// 特殊：七星不靠の向聴数を求める
 	if (getRule(RULE_STELLAR_UUSHII) != 0) {
-		countTilesInHand haiCount, GameStat, targetPlayer
+		countTilesInHand TileCount, GameStat, targetPlayer
 		QixingShanten == 999
 		QixingZiPai = TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON, TILE_RED_DRAGON
 		TmpQixingZiPaiCount = 0
 		repeat 7
-			if (haiCount(QixingZiPai(cnt)) >= 1) {
+			if (TileCount(QixingZiPai(cnt)) >= 1) {
 				TmpQixingZiPaiCount++
 			}
 		loop
@@ -188,7 +188,7 @@
 			swend
 			TmpQixingShuPaiCount = 0
 			repeat 9
-				if (haiCount(QixingPai(cnt)) >= 1) {
+				if (TileCount(QixingPai(cnt)) >= 1) {
 					if (TmpQixingShuPaiCount < 7) {TmpQixingShuPaiCount++}
 				}
 			loop
@@ -206,11 +206,11 @@
 *calcshanten_civilwar
 	// 特殊：南北戦争の向聴数を求める
 	if (getRule(RULE_CIVIL_WAR) != 0) {
-		countTilesInHand haiCount, GameStat, targetPlayer
+		countTilesInHand TileCount, GameStat, targetPlayer
 		CivilWarShanten = 13
 		// 以下、一枚ずつ調べる
 		repeat 6
-			dim haiCountTmp, TILE_CODE_MAXIMUM: repeat TILE_CODE_MAXIMUM: haiCountTmp(cnt) = haiCount(cnt): loop
+			dim TileCountTmp, TILE_CODE_MAXIMUM: repeat TILE_CODE_MAXIMUM: TileCountTmp(cnt) = TileCount(cnt): loop
 			switch cnt
 				case 0: CivilWarPai = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+1, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+5, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND: swbreak
 				case 1: CivilWarPai = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+1, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+5, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_SOUTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND, TILE_NORTH_WIND: swbreak
@@ -221,9 +221,9 @@
 			swend
 			TmpCivilWarPaiCount = 0
 			repeat NUM_OF_TILES_IN_HAND
-				if (haiCountTmp(CivilWarPai(cnt)) >= 1) {
+				if (TileCountTmp(CivilWarPai(cnt)) >= 1) {
 					TmpCivilWarPaiCount++
-					haiCountTmp(CivilWarPai(cnt))--
+					TileCountTmp(CivilWarPai(cnt))--
 				}
 			loop
 			TmpCivilWarShanten = 13 - TmpCivilWarPaiCount
@@ -240,16 +240,16 @@
 *calcshanten_syzygy
 	// 特殊：惑星直列の向聴数を求める
 	if (getRule(RULE_SYZYGY) != 0) {
-		countTilesInHand haiCount, GameStat, targetPlayer
+		countTilesInHand TileCount, GameStat, targetPlayer
 		SyzygyShanten = 13
 		// 以下、一枚ずつ調べる
-		dim haiCountTmp, TILE_CODE_MAXIMUM: repeat TILE_CODE_MAXIMUM: haiCountTmp(cnt) = haiCount(cnt): loop
+		dim TileCountTmp, TILE_CODE_MAXIMUM: repeat TILE_CODE_MAXIMUM: TileCountTmp(cnt) = TileCount(cnt): loop
 		SyzygyPai = TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+2,TILE_SUIT_CIRCLES+3,TILE_SUIT_CIRCLES+3,TILE_SUIT_CIRCLES+4,TILE_SUIT_CIRCLES+5,TILE_SUIT_CIRCLES+5,TILE_SUIT_CIRCLES+6,TILE_SUIT_CIRCLES+7,TILE_SUIT_CIRCLES+7,TILE_SUIT_CIRCLES+8,TILE_SUIT_CIRCLES+9,TILE_SUIT_CIRCLES+9
 		TmpSyzygyPaiCount = 0
 		repeat NUM_OF_TILES_IN_HAND
-			if (haiCountTmp(SyzygyPai(cnt)) >= 1) {
+			if (TileCountTmp(SyzygyPai(cnt)) >= 1) {
 				TmpSyzygyPaiCount++
-				haiCountTmp(SyzygyPai(cnt))--
+				TileCountTmp(SyzygyPai(cnt))--
 			}
 		loop
 		TmpSyzygyShanten = 13 - TmpSyzygyPaiCount
@@ -521,15 +521,15 @@ QPHfwA1hCXMe94tq+AYHR0lwxsjQzd45LtmDkhlTCWT1YAUZRGv6T+3nv10n3YhpwsA=
 		await 0
 	loop
 	info "面子構成データベースをBASE64デコードしました。"
-	sdim hncnMianziNumberData, 1953126
-	lzmadecompress@ hncnMianziNumberData, 1953125, CompressedMianziBinary, 12476
+	sdim MianziNumberData, 1953126
+	lzmadecompress@ MianziNumberData, 1953125, CompressedMianziBinary, 12476
 	if (stat) {
 		fatal strf("面子構成データベースの圧縮を解除できませんでした。返り値は [%d] です。", stat)
 		stop
 	} else {
 		info "面子構成データベースの圧縮を解除しました。"
 	}
-	//bload "dat\\mentz.dat", hncnMianziNumberData, 1953125
+	//bload "dat\\mentz.dat", MianziNumberData, 1953125
 	return
 #global
 

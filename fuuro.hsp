@@ -7,18 +7,18 @@
 /* 副露の処理 */
 #module
 #include "const.as"
-#deffunc fuuroproc var GameStat, array haiRon, array haiChi, var hncnKyokuEndType, int teDahai, var haiCurrentSutehai, var haiCurrentSutehaiAkaDora, int ActivePlayer, int PassivePlayer, int Mode
+#deffunc fuuroproc var GameStat, array RonFlag, array ChiFlag, var RoundEndType, int teDahai, var CurrentSutehai, var CurrentSutehaiAkaDora, int ActivePlayer, int PassivePlayer, int Mode
 	info strf("副露の処理を開始します。モード [%d]", Mode)
 	switch Mode
 		case FUURO_CHII:
 			kangPlayer = PassivePlayer
 			setMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0 // 赤ドラバグ回避のため
-			haifurecchi haiCurrentSutehai, haiCurrentSutehaiAkaDora, PassivePlayer // 牌譜に記録
+			haifurecchi CurrentSutehai, CurrentSutehaiAkaDora, PassivePlayer // 牌譜に記録
 			swbreak
 		case FUURO_PON:
 			kangPlayer = PassivePlayer
 			setMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0 // 赤ドラバグ回避のため
-			haifurecpon haiCurrentSutehai, haiCurrentSutehaiAkaDora, PassivePlayer, ActivePlayer // 牌譜に記録
+			haifurecpon CurrentSutehai, CurrentSutehaiAkaDora, PassivePlayer, ActivePlayer // 牌譜に記録
 			swbreak
 #ifndef SANMAX
 		case FUURO_FLOWER:
@@ -37,7 +37,7 @@
 			kangPlayer = PassivePlayer
 			setKangFlag GameStat, KANG_FLAG, 1 // 嶺上開花のフラグを立てる
 			setMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0 // 赤ドラバグ回避のため
-			haifurecminkan haiCurrentSutehai, haiCurrentSutehaiAkaDora, PassivePlayer, ActivePlayer // 牌譜に記録
+			haifurecminkan CurrentSutehai, CurrentSutehaiAkaDora, PassivePlayer, ActivePlayer // 牌譜に記録
 			incKangFlag GameStat, KANG_CHAINFLAG // 連続槓の回数を記録
 			if (getFirstDrawFlag(GameStat, kangPlayer) == 1) { setKangFlag GameStat, KANG_TOPFLAG, 1 /* 頭槓和のフラグ */ }
 			swbreak
@@ -51,17 +51,17 @@
 	swend
 	/* カンする牌を設定 */
 	if (Mode != FUURO_PON)&&(Mode != FUURO_CHII)&&(Mode != FUURO_DAIMINKAN) {
-		haiCurrentSutehai = getHand(GameStat, HAND_TILECODE, teDahai\DAHAI_TYPE_STEP, kangPlayer)
-		haiCurrentSutehaiAkaDora = getHand(GameStat, HAND_REDTILE, teDahai\DAHAI_TYPE_STEP, kangPlayer)
+		CurrentSutehai = getHand(GameStat, HAND_TILECODE, teDahai\DAHAI_TYPE_STEP, kangPlayer)
+		CurrentSutehaiAkaDora = getHand(GameStat, HAND_REDTILE, teDahai\DAHAI_TYPE_STEP, kangPlayer)
 	}
 	/* 暗槓・加槓を実行する */
 	nakiCount = 0
 	switch Mode
 		case FUURO_ANKAN: /* 暗槓 */
 			MeldPointerIncrement GameStat, kangPlayer
-			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, kangPlayer), kangPlayer, MELD_QUAD_CONCEALED*MELD_TYPE_STEP+haiCurrentSutehai
+			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, kangPlayer), kangPlayer, MELD_QUAD_CONCEALED*MELD_TYPE_STEP+CurrentSutehai
 			repeat NUM_OF_TILES_IN_HAND
-				if (getHand(GameStat, HAND_TILECODE, cnt, kangPlayer) == haiCurrentSutehai) {
+				if (getHand(GameStat, HAND_TILECODE, cnt, kangPlayer) == CurrentSutehai) {
 					if (nakiCount == 0) {
 						switch getHand(GameStat, HAND_REDTILE, cnt, PassivePlayer)
 							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x08: swbreak
@@ -91,15 +91,15 @@
 					nakiCount++
 				}
 			loop
-			if (nakiCount < 4) {error strf("暗槓するための牌が足りません。牌コード [%d] は [%d] 枚しかありません。", haiCurrentSutehai, nakiCount)}
-			if (nakiCount > 4) {error strf("暗槓するための牌が多すぎます。牌コード [%d] は [%d] 枚あります。", haiCurrentSutehai, nakiCount)}
+			if (nakiCount < 4) {error strf("暗槓するための牌が足りません。牌コード [%d] は [%d] 枚しかありません。", CurrentSutehai, nakiCount)}
+			if (nakiCount > 4) {error strf("暗槓するための牌が多すぎます。牌コード [%d] は [%d] 枚あります。", CurrentSutehai, nakiCount)}
 			swbreak
 		case FUURO_KAKAN: /* 加槓 */
 			repeat MeldPointer(GameStat, kangPlayer), 1
-				if (getMeld(GameStat, MELD_TILECODE, cnt, kangPlayer)\TILE_CODE_MAXIMUM == haiCurrentSutehai) {
+				if (getMeld(GameStat, MELD_TILECODE, cnt, kangPlayer)\TILE_CODE_MAXIMUM == CurrentSutehai) {
 					if ((getMeld(GameStat, MELD_TILECODE, cnt, kangPlayer)/MELD_TYPE_STEP >= MELD_TRIPLET_EXPOSED_MIN)&&(getMeld(GameStat, MELD_TILECODE, cnt, kangPlayer)/MELD_TYPE_STEP <= MELD_TRIPLET_EXPOSED_MAX)) {
 						flagMeld GameStat, MELD_TILECODE, cnt, kangPlayer, (MELD_QUAD_ADDED_LEFT-MELD_TRIPLET_EXPOSED_LEFT)*MELD_TYPE_STEP
-						switch haiCurrentSutehaiAkaDora
+						switch CurrentSutehaiAkaDora
 							case 1: flagMeld GameStat, MELD_REDTILE, cnt, kangPlayer, 0x08: swbreak
 							case 2: flagMeld GameStat, MELD_REDTILE, cnt, kangPlayer, 0x80: swbreak
 						swend
@@ -109,12 +109,12 @@
 			loop
 			setHand GameStat, HAND_TILECODE, teDahai\DAHAI_TYPE_STEP, kangPlayer, 0
 			setHand GameStat, HAND_REDTILE, teDahai\DAHAI_TYPE_STEP, kangPlayer, 0
-			if (nakiCount == 0) {error strf("加槓するための明刻子が見つかりません。牌コード [%d]", haiCurrentSutehai)}
-			if (nakiCount > 1) {error strf("加槓するための明刻子が複数見つかりました。面子データに不整合が発生しています。牌コード [%d]", haiCurrentSutehai)}
+			if (nakiCount == 0) {error strf("加槓するための明刻子が見つかりません。牌コード [%d]", CurrentSutehai)}
+			if (nakiCount > 1) {error strf("加槓するための明刻子が複数見つかりました。面子データに不整合が発生しています。牌コード [%d]", CurrentSutehai)}
 			swbreak
 		case FUURO_DAIMINKAN: /* 大明槓 */
 			repeat NUM_OF_TILES_IN_HAND
-				if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == haiCurrentSutehai)&&(nakiCount < 3)) {
+				if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == CurrentSutehai)&&(nakiCount < 3)) {
 					// 鳴いた牌を純手牌から消去
 					if (nakiCount == 0) {
 						switch getHand(GameStat, HAND_REDTILE, cnt, PassivePlayer)
@@ -139,14 +139,14 @@
 					nakiCount++
 				}
 			loop
-			if (nakiCount < 3) {error strf("明槓するための牌が足りません。牌コード [%d] は [%d] 枚しかありません。", haiCurrentSutehai, nakiCount)}
-			if (nakiCount > 3) {error strf("明槓するための牌が多すぎます。牌コード [%d] は [%d] 枚あります。", haiCurrentSutehai, nakiCount)}
+			if (nakiCount < 3) {error strf("明槓するための牌が足りません。牌コード [%d] は [%d] 枚しかありません。", CurrentSutehai, nakiCount)}
+			if (nakiCount > 3) {error strf("明槓するための牌が多すぎます。牌コード [%d] は [%d] 枚あります。", CurrentSutehai, nakiCount)}
 			/* 門前清フラグを降ろす */
 			setMenzen GameStat, PassivePlayer, 0
 			/* 槓子として晒す */
 			MeldPointerIncrement GameStat, PassivePlayer
-			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, (playerRelative(PassivePlayer, ActivePlayer)+MELD_QUAD)*MELD_TYPE_STEP+haiCurrentSutehai
-			switch haiCurrentSutehaiAkaDora
+			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, (playerRelative(PassivePlayer, ActivePlayer)+MELD_QUAD)*MELD_TYPE_STEP+CurrentSutehai
+			switch CurrentSutehaiAkaDora
 				case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, 0x01: swbreak
 				case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, 0x10: swbreak
 			swend
@@ -169,7 +169,7 @@
 #else
 		case FUURO_FLOWER: /* 花牌 */
 			dsplay@ VOX_FLOWER
-			switch haiCurrentSutehai
+			switch CurrentSutehai
 				case TILE_SPRING: setFlowerFlag GameStat, kangPlayer, FLOWER_SPRING: swbreak
 				case TILE_SUMMER: setFlowerFlag GameStat, kangPlayer, FLOWER_SUMMER: swbreak
 				case TILE_AUTUMN: setFlowerFlag GameStat, kangPlayer, FLOWER_AUTUMN: swbreak
@@ -179,7 +179,7 @@
 				case TILE_CHRYSANTHEMUM: setFlowerFlag GameStat, kangPlayer, FLOWER_CHRYSANTHEMUM: swbreak
 				case TILE_BAMBOO: setFlowerFlag GameStat, kangPlayer, FLOWER_BAMBOO: swbreak
 				default
-					warn strf("牌コード [%d] は花牌ではありません。", haiCurrentSutehai)
+					warn strf("牌コード [%d] は花牌ではありません。", CurrentSutehai)
 			swend
 			setHand GameStat, HAND_TILECODE, teDahai\DAHAI_TYPE_STEP, kangPlayer, 0
 			setHand GameStat, HAND_REDTILE, teDahai\DAHAI_TYPE_STEP, kangPlayer, 0
@@ -195,7 +195,7 @@
 			/* ポンした対子を消去 */
 			nakiCount = 0
 			repeat NUM_OF_TILES_IN_HAND
-				if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == haiCurrentSutehai)&&(nakiCount < 2)) {
+				if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == CurrentSutehai)&&(nakiCount < 2)) {
 					// 鳴いた牌を純手牌から消去
 					if (nakiCount == 0) {
 						switch getHand(GameStat, HAND_REDTILE, cnt, PassivePlayer)
@@ -214,13 +214,13 @@
 					nakiCount++
 				}
 			loop
-			if (nakiCount < 2) {error strf("ポンするための牌が足りません。牌コード [%d] は [%d] 枚しかありません。", haiCurrentSutehai, nakiCount)}
+			if (nakiCount < 2) {error strf("ポンするための牌が足りません。牌コード [%d] は [%d] 枚しかありません。", CurrentSutehai, nakiCount)}
 			/* 門前清フラグを降ろす */
 			setMenzen GameStat, cnt, 0
 			/* 明刻として晒す */
 			MeldPointerIncrement GameStat, cnt
-			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, cnt), cnt, (playerRelative(PassivePlayer, ActivePlayer)+MELD_TRIPLET)*MELD_TYPE_STEP+haiCurrentSutehai
-			switch haiCurrentSutehaiAkaDora
+			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, cnt), cnt, (playerRelative(PassivePlayer, ActivePlayer)+MELD_TRIPLET)*MELD_TYPE_STEP+CurrentSutehai
+			switch CurrentSutehaiAkaDora
 				case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, cnt), cnt, 0x01: swbreak
 				case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, cnt), cnt, 0x10: swbreak
 			swend
@@ -230,7 +230,7 @@
 			dsplay@ VOX_PON
 			setCall PassivePlayer, "ポン"
 			/* 喰い替えの判定に使う変数を設定 */
-			setPreviousMeld GameStat, PREVMELD_TILECODE, haiCurrentSutehai
+			setPreviousMeld GameStat, PREVMELD_TILECODE, CurrentSutehai
 			setPreviousMeld GameStat, PREVMELD_STEPPED, -999
 			/* 包の判定 */
 			checkpao GameStat, PassivePlayer, ActivePlayer
@@ -238,12 +238,12 @@
 #ifndef ALLSANMA
 		case FUURO_CHII: /* チー */
 			/* チーする牌を設定 */
-			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
-			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehaiAkaDora
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehai
+			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehaiAkaDora
 			/* 純手牌から鳴いた塔子を除去 */
 			nakiCount1 = 0: nakiCount2 = 0: nakiCount3 = 0
 			repeat NUM_OF_TILES_IN_HAND, TSUMOHAI_INDEX
-				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == haiCurrentSutehai+1-haiChi(PassivePlayer))&&(nakiCount1 < 1)) {
+				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == CurrentSutehai+1-ChiFlag(PassivePlayer))&&(nakiCount1 < 1)) {
 					switch getHand(GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer)
 						case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x01: swbreak
 						case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x10: swbreak
@@ -252,7 +252,7 @@
 					setHand GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
 					nakiCount1++
 				}
-				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == haiCurrentSutehai+2-haiChi(PassivePlayer))&&(nakiCount2 < 1)) {
+				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == CurrentSutehai+2-ChiFlag(PassivePlayer))&&(nakiCount2 < 1)) {
 					switch getHand(GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer)
 						case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x02: swbreak
 						case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x20: swbreak
@@ -261,7 +261,7 @@
 					setHand GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
 					nakiCount2++
 				}
-				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == haiCurrentSutehai+3-haiChi(PassivePlayer))&&(nakiCount3 < 1)) {
+				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == CurrentSutehai+3-ChiFlag(PassivePlayer))&&(nakiCount3 < 1)) {
 					switch getHand(GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer)
 						case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x04: swbreak
 						case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x40: swbreak
@@ -275,20 +275,20 @@
 			setMenzen GameStat, PassivePlayer, 0
 			/* 順子を晒す */
 			MeldPointerIncrement GameStat, PassivePlayer
-			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, haiChi(PassivePlayer)*MELD_TYPE_STEP+(haiCurrentSutehai+1-haiChi(PassivePlayer))
+			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, ChiFlag(PassivePlayer)*MELD_TYPE_STEP+(CurrentSutehai+1-ChiFlag(PassivePlayer))
 			/* 自動理牌 */
 			lipai GameStat, PassivePlayer
 			/* チーを宣言 */
 			dsplay@ VOX_CHI
 			setCall PassivePlayer, "チー"
 			/* 喰い替え判定用の変数を指定 */
-			setPreviousMeld GameStat, PREVMELD_TILECODE, haiCurrentSutehai
+			setPreviousMeld GameStat, PREVMELD_TILECODE, CurrentSutehai
 			switch getRule(RULE_KUIKAE)
 				case 1: case 2:
-					switch (haiChi(PassivePlayer))
-						case 1: setPreviousMeld GameStat, PREVMELD_STEPPED, haiCurrentSutehai+3: swbreak
+					switch (ChiFlag(PassivePlayer))
+						case 1: setPreviousMeld GameStat, PREVMELD_STEPPED, CurrentSutehai+3: swbreak
 						case 2: setPreviousMeld GameStat, PREVMELD_STEPPED, -999: swbreak
-						case 3: setPreviousMeld GameStat, PREVMELD_STEPPED, haiCurrentSutehai-3: swbreak
+						case 3: setPreviousMeld GameStat, PREVMELD_STEPPED, CurrentSutehai-3: swbreak
 					swend
 					swbreak
 				default:
@@ -332,8 +332,8 @@
 				if (Mode==FUURO_ANKAN) {setKangFlag GameStat, KANG_CHANKAN, 2} else {setKangFlag GameStat, KANG_CHANKAN, 1}
 				gosub *ronhuproc@
 				if (Mode == FUURO_NORTH) {setKangFlag GameStat, KANG_CHANKAN, 0}
-				if ((hncnKyokuEndType = ENDKYOKU_TRIPLERON)||(hncnKyokuEndType = ENDKYOKU_DISCONNECT)) {return 1}
-				if ((haiRon(0)+haiRon(1)+haiRon(2)+haiRon(3)) > 0) {
+				if ((RoundEndType = ENDKYOKU_TRIPLERON)||(RoundEndType = ENDKYOKU_DISCONNECT)) {return 1}
+				if ((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) > 0) {
 					info "搶槓が宣言されました。ループから出ます。"
 					return 1
 				}
@@ -371,10 +371,10 @@
 		if (Mode==FUURO_ANKAN)||(Mode==FUURO_KAKAN)||(Mode==FUURO_DAIMINKAN) {
 			if (getTotalKang(GameStat) >= 4) {
 				debug "5個目の槓なので直ちに流局とし、ループから出ます。"
-				hncnKyokuEndType = ENDKYOKU_UUKAIKAN: return 1
+				RoundEndType = ENDKYOKU_UUKAIKAN: return 1
 			}
 		}
-		if (getDrawPointer(GameStat) >= (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1))) {hncnKyokuEndType = ENDKYOKU_RYUUKYOKU: return 1 /* 荒牌なら終了 */}
+		if (getDrawPointer(GameStat) >= (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1))) {RoundEndType = ENDKYOKU_RYUUKYOKU: return 1 /* 荒牌なら終了 */}
 		/* 嶺上牌を自摸る */
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, kangPlayer, getWall(GameStat, WALL_TILECODE, getRinshanPointer(GameStat))
 		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, kangPlayer, getWall(GameStat, WALL_REDTILE, getRinshanPointer(GameStat))
@@ -460,24 +460,24 @@
 *ronhuproc
 	info "リアクションを問い合わせます。"
 	/* 栄和や鳴き仕掛けをするかどうか問い合わせる */
-	dim haiRon, NUM_OF_PLAYERS: dim haiPon, NUM_OF_PLAYERS: dim haiChi, NUM_OF_PLAYERS: dim haiMinkan, NUM_OF_PLAYERS
+	dim RonFlag, NUM_OF_PLAYERS: dim PonFlag, NUM_OF_PLAYERS: dim ChiFlag, NUM_OF_PLAYERS: dim MinkanFlag, NUM_OF_PLAYERS
 	repeat NUM_OF_PLAYERS
 		if (ActivePlayer != cnt) {
 			PassivePlayer = cnt
 			if (PassivePlayer == getPlayer(GameStat)) {
-				playerinput GameStat, 1, GameMode, isRemotePlayer, ActivePlayer, PassivePlayer, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkaDora, haiRon, haiMinkan, haiPon, haiChi
+				playerinput GameStat, 1, GameMode, isRemotePlayer, ActivePlayer, PassivePlayer, teDahai, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, MinkanFlag, PonFlag, ChiFlag
 			} else {
 				if (IsRemotePlayer(PassivePlayer) == 0) {
 					/* COMが「カンニング」しないように処理 */
 					makesandbox Sandbox, GameStat, PassivePlayer
 					dim reducedRon, NUM_OF_PLAYERS: dim reducedMinkan, NUM_OF_PLAYERS: dim reducedPon, NUM_OF_PLAYERS: dim reducedChi, NUM_OF_PLAYERS
 					/* 処理 */
-					compthink Sandbox, 1, ActivePlayer, PassivePlayer, teDahai, haiCurrentSutehai, haiCurrentSutehaiAkadora, reducedRon, reducedMinkan, reducedPon, reducedChi
+					compthink Sandbox, 1, ActivePlayer, PassivePlayer, teDahai, CurrentSutehai, CurrentSutehaiAkadora, reducedRon, reducedMinkan, reducedPon, reducedChi
 					repeat NUM_OF_PLAYERS
-						if (haiRon(cnt) == 0) {haiRon(cnt) = reducedRon(cnt)}
-						if (haiMinkan(cnt) == 0) {haiMinkan(cnt) = reducedMinkan(cnt)}
-						if (haiPon(cnt) == 0) {haiPon(cnt) = reducedPon(cnt)}
-						if (haiChi(cnt) == 0) {haiChi(cnt) = reducedChi(cnt)}
+						if (RonFlag(cnt) == 0) {RonFlag(cnt) = reducedRon(cnt)}
+						if (MinkanFlag(cnt) == 0) {MinkanFlag(cnt) = reducedMinkan(cnt)}
+						if (PonFlag(cnt) == 0) {PonFlag(cnt) = reducedPon(cnt)}
+						if (ChiFlag(cnt) == 0) {ChiFlag(cnt) = reducedChi(cnt)}
 					loop
 				}
 			}
@@ -489,28 +489,28 @@
 	loop
 	/* 通信対戦時の処理 */
 	if (GameMode != 0) {
-		remotenaki GameStat, GameMode, IsRemotePlayer, PlayerName, haiRon, haiPon, haiMinkan, haiChi, haiCurrentSutehai, haiCurrentSutehaiAkaDora
+		remotenaki GameStat, GameMode, IsRemotePlayer, PlayerName, RonFlag, PonFlag, MinkanFlag, ChiFlag, CurrentSutehai, CurrentSutehaiAkaDora
 	}
 	if (GameMode == 2) {
 		if (ReceivedMsg == 1023) {
-			hncnMsg = "回線切断": gosub *redrscreen
+			CenterTitle = "回線切断": gosub *redrscreen
 			gosub *reconnection
 			dialog "再接続しました\nこの回は和了り放棄になります\n次の局から参加可能です", 0, "回線切断"
-			hncnKyokuEndType = 9
+			RoundEndType = 9
 			return
 		}
 	}
-	trace strf("ロン [%d %d %d %d] カン [%d %d %d %d] ポン [%d %d %d %d] チー [%d %d %d %d]", haiRon(0),haiRon(1),haiRon(2),haiRon(3),haiMinkan(0),haiMinkan(1),haiMinkan(2),haiMinkan(3),haiPon(0),haiPon(1),haiPon(2),haiPon(3),haiChi(0),haiChi(1),haiChi(2),haiChi(3))
+	trace strf("ロン [%d %d %d %d] カン [%d %d %d %d] ポン [%d %d %d %d] チー [%d %d %d %d]", RonFlag(0),RonFlag(1),RonFlag(2),RonFlag(3),MinkanFlag(0),MinkanFlag(1),MinkanFlag(2),MinkanFlag(3),PonFlag(0),PonFlag(1),PonFlag(2),PonFlag(3),ChiFlag(0),ChiFlag(1),ChiFlag(2),ChiFlag(3))
 	/* 和了り放棄の時は宣言を無効にする */
 	repeat NUM_OF_PLAYERS
 		if (getAgariHouki(GameStat, cnt) == 1) {
 			debug strf("プレイヤー [%d] は和了り放棄です。宣言フラグを下ろします。", cnt)
-			haiRon(cnt) = 0: haiPon(cnt) = 0: haiChi(cnt) = 0: haiMinkan(cnt) = 0
+			RonFlag(cnt) = 0: PonFlag(cnt) = 0: ChiFlag(cnt) = 0: MinkanFlag(cnt) = 0
 		}
 	loop
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */
 	repeat NUM_OF_PLAYERS
-		if (haiRon(cnt) == 1) {
+		if (RonFlag(cnt) == 1) {
 			debug strf("プレイヤー [%d] は、栄和を宣言します。", cnt)
 			// 優先権のないロンも表示されるようにする
 			setCall cnt, " ロン "
@@ -519,7 +519,7 @@
 	loop
 	/* 実際にロンできる人を表示 */
 	roncount = 0: repeat NUM_OF_PLAYERS-1
-		if (haiRon(RelativePositionOf(ActivePlayer, cnt+1)) == 1) {
+		if (RonFlag(RelativePositionOf(ActivePlayer, cnt+1)) == 1) {
 			if (roncount == 0) {
 				debug strf("プレイヤー [%d] は、栄和できます。", RelativePositionOf(ActivePlayer, cnt+1))
 				setCall RelativePositionOf(ActivePlayer, cnt+1), "ロン"
@@ -538,13 +538,13 @@
 	/* 実際に栄和を行なう処理 */
 	repeat NUM_OF_PLAYERS-1
 		await 0
-		if (haiRon(RelativePositionOf(ActivePlayer, cnt+1)) == 1) {
+		if (RonFlag(RelativePositionOf(ActivePlayer, cnt+1)) == 1) {
 			/* ウォッチモードの場合は和了った人に視点を向ける */
 			if (WatchModeFlag == 1) {
 				setPlayer GameStat, RelativePositionOf(ActivePlayer, cnt+1)
 			}
 			/* 栄和したことを変数に記録 */
-			hncnKyokuEndType = 1: TsumoAgari = 0
+			RoundEndType = 1: TsumoAgari = 0
 			furikomiPlayer = ActivePlayer
 			agariPlayer = RelativePositionOf(ActivePlayer, cnt+1)
 			/* 八連荘の判定に使う変数 */
@@ -557,21 +557,21 @@
 				}
 			}
 			/* 和了り牌を設定 */
-			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehai
-			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehaiAkaDora
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, CurrentSutehai
+			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, CurrentSutehaiAkaDora
 			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, ActivePlayer, 0, 10: setRichiCounterFlag GameStat, 1}
 			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_DOUBLE_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, ActivePlayer, 0, 10: setRichiCounterFlag GameStat, 2}
 			/* 役や振聴の判定 */
 			countyaku GameStat, yakuInfo, RelativePositionOf(ActivePlayer, cnt+1), furikomiPlayer, TsumoAgari
-			chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, RelativePositionOf(ActivePlayer, cnt+1)
+			chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, RelativePositionOf(ActivePlayer, cnt+1)
 			// 縛りを満たさないか、振聴のとき
-			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(haiFuriten == 1)||(getDoujunFuriten(GameStat, agariPlayer) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_NO))) {
+			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, agariPlayer) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_NO))) {
 				trace "縛りを満たさないか振聴です。次の処理をチョンボ用に切り替えます。"
-				hncnKyokuEndType = ENDKYOKU_CHONBO // チョンボにする
+				RoundEndType = ENDKYOKU_CHONBO // チョンボにする
 			}
 			// ロンをしたことを表示
-			//setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehai
-			//setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehaiAkaDora
+			//setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, CurrentSutehai
+			//setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, CurrentSutehaiAkaDora
 			setCall agariPlayer, "ロン"
 			setHandStat GameStat, agariPlayer, 1
 			/* 立直宣言牌での放銃の場合、立直を無効とし供託点棒を返却する */
@@ -584,8 +584,8 @@
 				setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, ActivePlayer, 0, 10: setRichiCounterFlag GameStat, 2
 			}
 			/* 和了り牌を設定 */
-			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehai
-			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, haiCurrentSutehaiAkaDora
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, CurrentSutehai
+			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, CurrentSutehaiAkaDora
 			/* 栄和のサウンドを鳴らす */
 			if (ActivePlayer == getPlayer(GameStat)) {
 				dsplay VOX_RON_FURIKOMI
@@ -599,7 +599,7 @@
 	loop
 	/* 牌譜に記録 */
 	roncount = 0
-	if ((haiRon(0)+haiRon(1)+haiRon(2)+haiRon(3)) > 0) {
+	if ((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) > 0) {
 		if (getKangFlag(GameStat, KANG_CHANKAN) > 0) {
 #ifdef SANMAX
 			if (teDahai/PassivePlayer == DAHAI_TYPE_FLOWER/PassivePlayer) {
@@ -611,22 +611,22 @@
 			}
 #endif
 		} else {
-			haifurecfurikomi GameStat, haiRon, ActivePlayer
+			haifurecfurikomi GameStat, RonFlag, ActivePlayer
 		}
 	} else {
 		if (getKangFlag(GameStat, KANG_FLAG) == 0) { // 抜き北で牌譜がずれるのを抑止
-			haifurecfurikomi GameStat, haiRon, ActivePlayer
+			haifurecfurikomi GameStat, RonFlag, ActivePlayer
 		}
 	}
 #ifdef ALLSANMA
 	// 二家和の判定
-	if (((haiRon(0)+haiRon(1)+haiRon(2)+haiRon(3)) >= 2)&&(getRule(RULE_MULTIPLE_MAHJONG)==5)) {
-		hncnKyokuEndType = ENDKYOKU_TRIPLERON: return
+	if (((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) >= 2)&&(getRule(RULE_MULTIPLE_MAHJONG)==5)) {
+		RoundEndType = ENDKYOKU_TRIPLERON: return
 	}
 #else
 	// 三家和の判定
-	if (((haiRon(0)+haiRon(1)+haiRon(2)+haiRon(3)) >= 3)&&((getRule(RULE_MULTIPLE_MAHJONG)==0)||(getRule(RULE_MULTIPLE_MAHJONG)==2))) {
-		hncnKyokuEndType = ENDKYOKU_TRIPLERON: return
+	if (((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) >= 3)&&((getRule(RULE_MULTIPLE_MAHJONG)==0)||(getRule(RULE_MULTIPLE_MAHJONG)==2))) {
+		RoundEndType = ENDKYOKU_TRIPLERON: return
 	}
 #endif
 return

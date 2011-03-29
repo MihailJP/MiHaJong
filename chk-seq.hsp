@@ -6,7 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc countShunz array ShunzCount, array haiMianziDat
+#deffunc countShunz array ShunzCount, array MianziDat
 /*
 		countShunz p1, p2
 		èáéqÇÃêîÇêîÇ¶ÇÈ
@@ -19,8 +19,8 @@
 	trace "èáéqÇÃéÌóﬁÇí≤Ç◊Ç‹Ç∑ÅB"
 	dim ShunzCount, TILE_NONFLOWER_MAX
 	repeat SIZE_OF_MELD_BUFFER-1, 1
-		if (haiMianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP) {
-			ShunzCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)++
+		if (MianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP) {
+			ShunzCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++
 		}
 	loop
 	return
@@ -29,14 +29,14 @@
 /* èáéqånÇÃñ */
 #module
 #include "const.as"
-#deffunc sequenceyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int MachiType
+#deffunc sequenceyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	trace "èáéqñÇÃèàóùÇ…ì¸ÇËÇ‹Ç∑ÅB"
-	countShunz ShunzCount, haiMianziDat
+	countShunz ShunzCount, MianziDat
 	DragonW = 0: DragonG = 0: DragonR = 0: Wind = 0
 	EastWind = 0: SouthWind = 0: WestWind = 0: NorthWind = 0
 #ifndef SANMAS
 	repeat SIZE_OF_MELD_BUFFER-1, 1
-		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
+		switch (MianziDat(cnt) \ TILE_CODE_MAXIMUM)
 			case TILE_EAST_WIND: EastWind++: Wind++: swbreak
 			case TILE_SOUTH_WIND: SouthWind++: Wind++: swbreak
 			case TILE_WEST_WIND: WestWind++: Wind++: swbreak
@@ -50,9 +50,9 @@
 	/* àÍêFëoó¥âÔ */
 	if (getRule(RULE_ISSHOKU_SOURYUU) != 0) {
 		yakuFlag = 0
-		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 2)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 2)&&(haiMianziDat(0) == TILE_SUIT_CHARACTERS+5)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_CIRCLES+1) >= 2)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 2)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+5)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_BAMBOOS+1) >= 2)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 2)&&(haiMianziDat(0) == TILE_SUIT_BAMBOOS+5)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 2)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 2)&&(MianziDat(0) == TILE_SUIT_CHARACTERS+5)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_SUIT_CIRCLES+1) >= 2)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 2)&&(MianziDat(0) == TILE_SUIT_CIRCLES+5)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_SUIT_BAMBOOS+1) >= 2)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 2)&&(MianziDat(0) == TILE_SUIT_BAMBOOS+5)) {yakuFlag = 1}
 		if (yakuFlag) {
 			if ((getRule(RULE_ISSHOKU_SOURYUU) != 2)||(getMenzen(GameStat, targetPlayer) == 1)) {
 				addyakuman tmpYakuInfo, "àÍêFëoó¥âÔ", 1
@@ -121,7 +121,7 @@
 			}
 			/* ëÂãæ */
 			if (getRule(RULE_OHKAGAMI) != 0) {
-				if (haiMianziDat(0) == TILE_SUIT_CIRCLES+1) {
+				if (MianziDat(0) == TILE_SUIT_CIRCLES+1) {
 					addyaku tmpYakuInfo, "ëÂãæ", 1
 				}
 			}
@@ -200,14 +200,14 @@
 #ifndef SANMAS
 		/* ó≥ãYéÏ */
 		if (getRule(RULE_LONGXIZHU) != 0) {
-			if ((WestWind > 0)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+1)) {
+			if ((WestWind > 0)&&(MianziDat(0) == TILE_SUIT_CIRCLES+1)) {
 				addyaku tmpYakuInfo, "ó¥ãYéÏ", 2
 			}
 		}
 		/* ã‡ó¥ãYñkìl */
 		if (getRule(RULE_JINLONG_DOU_BEIDOU) != 0) {
-			countKez KezCount, haiMianziDat
-			if ((haiMianziDat(0) == TILE_NORTH_WIND)&&(KezCount(TILE_SUIT_CIRCLES+7) >= 1)) {
+			countKez KezCount, MianziDat
+			if ((MianziDat(0) == TILE_NORTH_WIND)&&(KezCount(TILE_SUIT_CIRCLES+7) >= 1)) {
 				addyaku tmpYakuInfo, "ã‡ó¥ãYñkìl", 2
 			}
 		}
@@ -218,7 +218,7 @@
 		tmpStraightColorList = TILE_SUIT_CHARACTERS, TILE_SUIT_CIRCLES, TILE_SUIT_BAMBOOS, TILE_SUIT_CIRCLES, TILE_SUIT_CHARACTERS, TILE_SUIT_CIRCLES, TILE_SUIT_BAMBOOS, TILE_SUIT_CHARACTERS, TILE_SUIT_CIRCLES, TILE_SUIT_BAMBOOS
 		sdim tmpYakuNameList, 16, length(tmpRuleCodeList)
 		tmpYakuNameList = "ëoïÙë}â_", "ìÏõ†î”èﬂ", "óãïÙó[è∆", "ñˆòQï∑ÈÚ", "ífã¥écê·", "ëhíÁètã≈", "â‘ç`äœãõ", "éOÊùàÛåé", "ã»â@ïóâ◊", "ïΩåŒèHåé"
-		countDuiz DuiCount, haiMianziDat
+		countDuiz DuiCount, MianziDat
 		repeat length(tmpRuleCodeList)
 			if (getRule(tmpRuleCodeList(cnt)) != 0) {
 				if ((DuiCount(tmpTileCodeList1(cnt)) >= 1)&&(DuiCount(tmpTileCodeList2(cnt)) >= 1)&&(straightColor == tmpStraightColorList(cnt)/TILE_SUIT_STEP)) {
@@ -228,8 +228,8 @@
 		loop
 		/* ìåÇÃê¬ó¥ */
 		if (getRule(RULE_AZURE_DRAGON) != 0) {
-			countKez KezCount, haiMianziDat
-			if ((haiMianziDat(0) == TILE_WHITE_DRAGON)&&(KezCount(TILE_EAST_WIND) >= 1)&&(straightColor == TILE_SUIT_CIRCLES/TILE_SUIT_STEP)&&(getMenzen(GameStat, targetPlayer) == 1)) {
+			countKez KezCount, MianziDat
+			if ((MianziDat(0) == TILE_WHITE_DRAGON)&&(KezCount(TILE_EAST_WIND) >= 1)&&(straightColor == TILE_SUIT_CIRCLES/TILE_SUIT_STEP)&&(getMenzen(GameStat, targetPlayer) == 1)) {
 				addyakuman tmpYakuInfo, "ìåÇÃê¬ó¥", 1
 				delyaku tmpYakuInfo, "àÍãCí ä—"
 				delyaku tmpYakuInfo, "ç¨àÍêF"
@@ -237,14 +237,14 @@
 		}
 		/* ñkÇÃå∫ïê */
 		if (getRule(RULE_BLACK_TORTOISE) != 0) {
-			if ((haiMianziDat(0) == TILE_SUIT_BAMBOOS+7)&&(KezCount(TILE_NORTH_WIND) >= 1)&&(straightColor == TILE_SUIT_CIRCLES/TILE_SUIT_STEP)&&(getMenzen(GameStat, targetPlayer) == 1)) {
+			if ((MianziDat(0) == TILE_SUIT_BAMBOOS+7)&&(KezCount(TILE_NORTH_WIND) >= 1)&&(straightColor == TILE_SUIT_CIRCLES/TILE_SUIT_STEP)&&(getMenzen(GameStat, targetPlayer) == 1)) {
 				addyakuman tmpYakuInfo, "ñkÇÃå∫ïê", 1
 				delyaku tmpYakuInfo, "àÍãCí ä—"
 			}
 		}
 		/* è„âzêVä≤ê¸Ç∆Ç´ */
 		if (getRule(RULE_JOETSU_TOKI) != 0) {
-			if ((KezCount(TILE_NORTH_WIND) >= 1)||(haiMianziDat(0) == TILE_NORTH_WIND)) {
+			if ((KezCount(TILE_NORTH_WIND) >= 1)||(MianziDat(0) == TILE_NORTH_WIND)) {
 				if (searchyaku(tmpYakuInfo, "ç¨àÍêF")) {
 					addyaku tmpYakuInfo, "è„âzêVä≤ê¸Ç∆Ç´", 2
 				}
@@ -252,7 +252,7 @@
 		}
 		/* è„âzêVä≤ê¸Ç†Ç≥Ç– */
 		if (getRule(RULE_JOETSU_ASAHI) != 0) {
-			if (((haiMianziDat(0) == TILE_WHITE_DRAGON)&&(KezCount(TILE_NORTH_WIND) >= 1))||((haiMianziDat(0) == TILE_NORTH_WIND)&&(KezCount(TILE_WHITE_DRAGON) >= 1))) {
+			if (((MianziDat(0) == TILE_WHITE_DRAGON)&&(KezCount(TILE_NORTH_WIND) >= 1))||((MianziDat(0) == TILE_NORTH_WIND)&&(KezCount(TILE_WHITE_DRAGON) >= 1))) {
 				addyakuman tmpYakuInfo, "è„âzêVä≤ê¸Ç†Ç≥Ç–", 1
 				delyaku tmpYakuInfo, "è„âzêVä≤ê¸Ç∆Ç´"
 				delyaku tmpYakuInfo, "àÍãCí ä—"
@@ -261,8 +261,8 @@
 		}
 		/* ê¬îüòAóçëD */
 		if (getRule(RULE_SEIKAN_SHIP) != 0) {
-			countAnKangz AnKangzCount, haiMianziDat
-			if ((AnKangzCount(TILE_GREEN_DRAGON) >= 1)&&(haiMianziDat(0) == TILE_NORTH_WIND)) {
+			countAnKangz AnKangzCount, MianziDat
+			if ((AnKangzCount(TILE_GREEN_DRAGON) >= 1)&&(MianziDat(0) == TILE_NORTH_WIND)) {
 				addyakuman tmpYakuInfo, "ê¬îüòAóçëD", 1
 				delyaku tmpYakuInfo, "àÍãCí ä—"
 				delyaku tmpYakuInfo, "ç¨àÍêF"
@@ -295,7 +295,7 @@
 			if ((ShunzCount(cnt*TILE_SUIT_STEP+1) == 0)&&(ShunzCount(cnt*TILE_SUIT_STEP+4) >= 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+7) >= 1)) {yakuFlagCount += 1}
 			if ((ShunzCount(cnt*TILE_SUIT_STEP+2) >= 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+5) >= 1)) {yakuFlagCount += 1}
 			if ((ShunzCount(cnt*TILE_SUIT_STEP+3) >= 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+6) >= 1)) {yakuFlagCount += 1}
-			if ((yakuFlagCount == 2)&&((haiMianziDat(0) / TILE_SUIT_STEP) == cnt)) {
+			if ((yakuFlagCount == 2)&&((MianziDat(0) / TILE_SUIT_STEP) == cnt)) {
 				switch getRule(RULE_GAISENMON)
 					case 1:
 						addyakuman tmpYakuInfo, "äMê˘ñÂ", 1
@@ -317,7 +317,7 @@
 			if ((ShunzCount(cnt*TILE_SUIT_STEP+1) >= 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+4) >= 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+7) >= 2)) {yakuFlagCount += 2}
 			if ((ShunzCount(cnt*TILE_SUIT_STEP+1) == 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+4) == 1)&&(ShunzCount(cnt*TILE_SUIT_STEP+7) == 1)) {yakuFlagCount += 1}
 			if ((ShunzCount(cnt*TILE_SUIT_STEP+2) >= 1)||(ShunzCount(cnt*TILE_SUIT_STEP+3) >= 1)||(ShunzCount(cnt*TILE_SUIT_STEP+5) >= 1)||(ShunzCount(cnt*TILE_SUIT_STEP+6) >= 1)) {yakuFlagCount += 1}
-			if ((yakuFlagCount == 2)&&((haiMianziDat(0) == cnt*TILE_SUIT_STEP+2)||(haiMianziDat(0) == cnt*TILE_SUIT_STEP+5)||(haiMianziDat(0) == cnt*TILE_SUIT_STEP+8))) {
+			if ((yakuFlagCount == 2)&&((MianziDat(0) == cnt*TILE_SUIT_STEP+2)||(MianziDat(0) == cnt*TILE_SUIT_STEP+5)||(MianziDat(0) == cnt*TILE_SUIT_STEP+8))) {
 				addyakuman tmpYakuInfo, "í∑èÈ", 1
 				delyaku tmpYakuInfo, "àÍãCí ä—"
 				delyaku tmpYakuInfo, "ê¥àÍêF"
@@ -625,7 +625,7 @@
 		yakuFlag = 0
 		repeat 4
 			if ((ShunzCount(cnt+TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(cnt+TILE_SUIT_CHARACTERS+4) >= 1)&&(ShunzCount(cnt+TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(cnt+TILE_SUIT_BAMBOOS+4) >= 1)) {
-				if ((haiMianziDat(0) / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES/TILE_SUIT_STEP)) {
+				if ((MianziDat(0) / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES/TILE_SUIT_STEP)) {
 					yakuFlag = 1
 				}
 			}
@@ -670,7 +670,7 @@
 	if (getRule(RULE_SHANRON_SHANKUI) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {
-			if (haiMianziDat(0) == TILE_SUIT_BAMBOOS+3) {
+			if (MianziDat(0) == TILE_SUIT_BAMBOOS+3) {
 				yakuFlag = 1
 			}
 		}
@@ -683,7 +683,7 @@
 	if (getRule(RULE_SHANRON_CHONCHU_LSF) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)) {
-			if (haiMianziDat(0) == TILE_SUIT_CIRCLES+5) {
+			if (MianziDat(0) == TILE_SUIT_CIRCLES+5) {
 				yakuFlag = 1
 			}
 		}
@@ -695,12 +695,12 @@
 	/* éOêFëoó¥âÔ */
 	if (getRule(RULE_SANSHOKU_SOURYUU) != 0) {
 		yakuFlag = 0
-		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+5)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(haiMianziDat(0) == TILE_SUIT_BAMBOOS+5)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(haiMianziDat(0) == TILE_SUIT_BAMBOOS+5)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(haiMianziDat(0) == TILE_SUIT_CHARACTERS+5)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+5)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(haiMianziDat(0) == TILE_SUIT_CHARACTERS+5)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(MianziDat(0) == TILE_SUIT_CIRCLES+5)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(MianziDat(0) == TILE_SUIT_BAMBOOS+5)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(MianziDat(0) == TILE_SUIT_BAMBOOS+5)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(MianziDat(0) == TILE_SUIT_CHARACTERS+5)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(MianziDat(0) == TILE_SUIT_CIRCLES+5)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(MianziDat(0) == TILE_SUIT_CHARACTERS+5)) {yakuFlag = 1}
 		tmpyakuCensored = searchyaku(tmpYakuInfo, "ëoó¥ëàéÏ ")
 		if ((yakuFlag)&&(tmpyakuCensored == 0)) {
 			switch getRule(RULE_SANSHOKU_SOURYUU)
@@ -724,7 +724,7 @@
 	if (getRule(RULE_SHANRON_SHIIFON) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {
-			if (haiMianziDat(0) == TILE_SUIT_BAMBOOS+1) {
+			if (MianziDat(0) == TILE_SUIT_BAMBOOS+1) {
 				yakuFlag = 1
 			}
 		}
@@ -737,7 +737,7 @@
 	if (getRule(RULE_SHANRON_PAOCHUU) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {
-			if ((haiMianziDat(0) == TILE_SUIT_BAMBOOS+2)||(haiMianziDat(0) == TILE_SUIT_BAMBOOS+4)||(haiMianziDat(0) == TILE_SUIT_BAMBOOS+6)) {
+			if ((MianziDat(0) == TILE_SUIT_BAMBOOS+2)||(MianziDat(0) == TILE_SUIT_BAMBOOS+4)||(MianziDat(0) == TILE_SUIT_BAMBOOS+6)) {
 				yakuFlag = 1
 			}
 		}
@@ -750,7 +750,7 @@
 	if (getRule(RULE_SHANRON_SHIIKUI) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {
-			if (haiMianziDat(0) == TILE_SUIT_BAMBOOS+7) {
+			if (MianziDat(0) == TILE_SUIT_BAMBOOS+7) {
 				yakuFlag = 1
 			}
 		}
@@ -764,7 +764,7 @@
 	if (getRule(RULE_SHANRON_TOUJA) != 0) {
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)) {
-			if (haiMianziDat(0) == TILE_SUIT_CHARACTERS+1) {
+			if (MianziDat(0) == TILE_SUIT_CHARACTERS+1) {
 				yakuFlag = 1
 			}
 		}
@@ -777,7 +777,7 @@
 	/* ãhéOõ∆ÅFéOñÉÇ≈ÇÕÉ`Å[Ç≈Ç´Ç»Ç¢Ç©ÇÁïsâ¬ */
 	yakuFlagCount = 0
 	repeat SIZE_OF_MELD_BUFFER-1, 1
-		if (haiMianziDat(cnt)/MELD_TYPE_STEP == MELD_SEQUENCE_EXPOSED_MIDDLE) {yakuFlagCount++}
+		if (MianziDat(cnt)/MELD_TYPE_STEP == MELD_SEQUENCE_EXPOSED_MIDDLE) {yakuFlagCount++}
 	loop
 	if (getRule(RULE_CHII_SANKAN) != 0)&&(yakuFlagCount == 3) {
 		addyaku tmpYakuInfo, "ãhéOõ∆", 1
@@ -788,12 +788,12 @@
 	/* ãhéOï”ÅFéOñÉÇ≈ÇÕÉ`Å[Ç≈Ç´Ç»Ç¢Ç©ÇÁïsâ¬ */
 	yakuFlagCount = 0
 	repeat SIZE_OF_MELD_BUFFER-1, 1
-		if (haiMianziDat(cnt) == MELD_SEQUENCE_EXPOSED_LOWER*MELD_TYPE_STEP+TILE_SUIT_CHARACTERS+7) {yakuFlagCount++}
-		if (haiMianziDat(cnt) == MELD_SEQUENCE_EXPOSED_LOWER*MELD_TYPE_STEP+TILE_SUIT_CIRCLES+7) {yakuFlagCount++}
-		if (haiMianziDat(cnt) == MELD_SEQUENCE_EXPOSED_LOWER*MELD_TYPE_STEP+TILE_SUIT_BAMBOOS+7) {yakuFlagCount++}
-		if (haiMianziDat(cnt) == MELD_SEQUENCE_EXPOSED_UPPER*MELD_TYPE_STEP+TILE_SUIT_CHARACTERS+1) {yakuFlagCount++}
-		if (haiMianziDat(cnt) == MELD_SEQUENCE_EXPOSED_UPPER*MELD_TYPE_STEP+TILE_SUIT_CIRCLES+1) {yakuFlagCount++}
-		if (haiMianziDat(cnt) == MELD_SEQUENCE_EXPOSED_UPPER*MELD_TYPE_STEP+TILE_SUIT_BAMBOOS+1) {yakuFlagCount++}
+		if (MianziDat(cnt) == MELD_SEQUENCE_EXPOSED_LOWER*MELD_TYPE_STEP+TILE_SUIT_CHARACTERS+7) {yakuFlagCount++}
+		if (MianziDat(cnt) == MELD_SEQUENCE_EXPOSED_LOWER*MELD_TYPE_STEP+TILE_SUIT_CIRCLES+7) {yakuFlagCount++}
+		if (MianziDat(cnt) == MELD_SEQUENCE_EXPOSED_LOWER*MELD_TYPE_STEP+TILE_SUIT_BAMBOOS+7) {yakuFlagCount++}
+		if (MianziDat(cnt) == MELD_SEQUENCE_EXPOSED_UPPER*MELD_TYPE_STEP+TILE_SUIT_CHARACTERS+1) {yakuFlagCount++}
+		if (MianziDat(cnt) == MELD_SEQUENCE_EXPOSED_UPPER*MELD_TYPE_STEP+TILE_SUIT_CIRCLES+1) {yakuFlagCount++}
+		if (MianziDat(cnt) == MELD_SEQUENCE_EXPOSED_UPPER*MELD_TYPE_STEP+TILE_SUIT_BAMBOOS+1) {yakuFlagCount++}
 	loop
 	if (getRule(RULE_CHII_SANPEN) != 0)&&(yakuFlagCount == 3) {
 		addyaku tmpYakuInfo, "ãhéOï”", 1
@@ -804,7 +804,7 @@
 	/* ãhè¨èáÅFéOñÉÇ≈ÇÕÉ`Å[Ç≈Ç´Ç»Ç¢Ç©ÇÁïsâ¬ */
 		yakuFlagCount = 0
 		repeat SIZE_OF_MELD_BUFFER-1, 1
-			if ((haiMianziDat(cnt)/MELD_TYPE_STEP == MELD_SEQUENCE_EXPOSED_LOWER)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) != 7)) {yakuFlagCount++}
+			if ((MianziDat(cnt)/MELD_TYPE_STEP == MELD_SEQUENCE_EXPOSED_LOWER)&&((MianziDat(cnt) \ TILE_SUIT_STEP) != 7)) {yakuFlagCount++}
 		loop
 	if (getRule(RULE_CHII_SHAOSHUN) != 0)&&(yakuFlagCount == 3) {
 		addyaku tmpYakuInfo, "ãhè¨èá", 1
@@ -815,7 +815,7 @@
 	/* ãhëÂèáÅFéOñÉÇ≈ÇÕÉ`Å[Ç≈Ç´Ç»Ç¢Ç©ÇÁïsâ¬ */
 	yakuFlagCount = 0
 	repeat SIZE_OF_MELD_BUFFER-1, 1
-		if ((haiMianziDat(cnt)/MELD_TYPE_STEP == MELD_SEQUENCE_EXPOSED_UPPER)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) != 1)) {yakuFlagCount++}
+		if ((MianziDat(cnt)/MELD_TYPE_STEP == MELD_SEQUENCE_EXPOSED_UPPER)&&((MianziDat(cnt) \ TILE_SUIT_STEP) != 1)) {yakuFlagCount++}
 	loop
 	if (getRule(RULE_CHII_TAASHUN) != 0)&&(yakuFlagCount == 3) {
 		addyaku tmpYakuInfo, "ãhëÂèá", 1
@@ -829,7 +829,7 @@ return
 *checkIttsuuChanta
 	tmpyaojiu = 0: JihaiCount = 0
 	repeat SIZE_OF_MELD_BUFFER
-		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
+		switch (MianziDat(cnt) \ TILE_CODE_MAXIMUM)
 #ifndef SANMAS
 			case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
 			case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
@@ -842,7 +842,7 @@ return
 				tmpyaojiu++
 			swbreak
 		swend
-		if ((haiMianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 7)&&(cnt > 0)) {
+		if ((MianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&((MianziDat(cnt) \ TILE_SUIT_STEP) == 7)&&(cnt > 0)) {
 			tmpyaojiu++
 		}
 	loop

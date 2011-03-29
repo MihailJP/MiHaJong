@@ -217,7 +217,7 @@ return
 #module
 #include "const.as"
 #defcfunc playerRelative int targetPlayer, int basePlayer
-	// ((4+targetPlayer-getPlayer(GameStat))\4)*(haiShowMode) の値
+	// ((4+targetPlayer-getPlayer(GameStat))\4)*(TileShowMode) の値
 	// 0…自家 1…下家 2…対面 3…上家
 	return (NUM_OF_PLAYERS+targetPlayer-basePlayer)\NUM_OF_PLAYERS
 #global
@@ -238,6 +238,49 @@ return
 		case PLAYER_SOUTH: return "南家": swbreak
 		case PLAYER_WEST: return "西家": swbreak
 		case PLAYER_NORTH: return "北家": swbreak
+		default: return "????": swbreak
+	swend
+#global
+
+/* 牌の名前の文字列を返す */
+#module
+#include "const.as"
+#defcfunc TileName int tile
+	switch tile
+		case TILE_SUIT_CHARACTERS+1: return "一萬": swbreak
+		case TILE_SUIT_CHARACTERS+2: return "二萬": swbreak
+		case TILE_SUIT_CHARACTERS+3: return "三萬": swbreak
+		case TILE_SUIT_CHARACTERS+4: return "四萬": swbreak
+		case TILE_SUIT_CHARACTERS+5: return "五萬": swbreak
+		case TILE_SUIT_CHARACTERS+6: return "六萬": swbreak
+		case TILE_SUIT_CHARACTERS+7: return "七萬": swbreak
+		case TILE_SUIT_CHARACTERS+8: return "八萬": swbreak
+		case TILE_SUIT_CHARACTERS+9: return "九萬": swbreak
+		case TILE_SUIT_CIRCLES+1: return "一筒": swbreak
+		case TILE_SUIT_CIRCLES+2: return "二筒": swbreak
+		case TILE_SUIT_CIRCLES+3: return "三筒": swbreak
+		case TILE_SUIT_CIRCLES+4: return "四筒": swbreak
+		case TILE_SUIT_CIRCLES+5: return "五筒": swbreak
+		case TILE_SUIT_CIRCLES+6: return "六筒": swbreak
+		case TILE_SUIT_CIRCLES+7: return "七筒": swbreak
+		case TILE_SUIT_CIRCLES+8: return "八筒": swbreak
+		case TILE_SUIT_CIRCLES+9: return "九筒": swbreak
+		case TILE_SUIT_BAMBOOS+1: return "一索": swbreak
+		case TILE_SUIT_BAMBOOS+2: return "二索": swbreak
+		case TILE_SUIT_BAMBOOS+3: return "三索": swbreak
+		case TILE_SUIT_BAMBOOS+4: return "四索": swbreak
+		case TILE_SUIT_BAMBOOS+5: return "五索": swbreak
+		case TILE_SUIT_BAMBOOS+6: return "六索": swbreak
+		case TILE_SUIT_BAMBOOS+7: return "七索": swbreak
+		case TILE_SUIT_BAMBOOS+8: return "八索": swbreak
+		case TILE_SUIT_BAMBOOS+9: return "九索": swbreak
+		case TILE_EAST_WIND   : return "東": swbreak
+		case TILE_SOUTH_WIND  : return "南": swbreak
+		case TILE_WEST_WIND   : return "西": swbreak
+		case TILE_NORTH_WIND  : return "北": swbreak
+		case TILE_WHITE_DRAGON: return "白": swbreak
+		case TILE_GREEN_DRAGON: return "發": swbreak
+		case TILE_RED_DRAGON  : return "中": swbreak
 		default: return "????": swbreak
 	swend
 #global

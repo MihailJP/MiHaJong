@@ -27,9 +27,9 @@
 	Ukihai = 0
 	Duizi = 0
 	repeat NUM_OF_TILES_IN_HAND
-		haiTileInfo = getpaiinfo(GameStat, targetPlayer, cnt, 0)
-		if (haiTileInfo == 0) {Ukihai++}
-		if (haiTileInfo == 4) {Duizi++}
+		TileInfo = getpaiinfo(GameStat, targetPlayer, cnt, 0)
+		if (TileInfo == 0) {Ukihai++}
+		if (TileInfo == 4) {Duizi++}
 	loop
 	if ((Ukihai == 12)&&(Duizi == 2)) {ShisanBuDa = 1}
 	return ShisanBuDa
@@ -42,9 +42,9 @@
 	ShisiBuDa = 0
 	Ukihai = 0
 	repeat NUM_OF_TILES_IN_HAND
-		haiTileInfo = getpaiinfo(GameStat, targetPlayer, cnt, 0)
-		if (haiTileInfo == 0) {Ukihai++}
-		if (haiTileInfo == 4) {Duizi++}
+		TileInfo = getpaiinfo(GameStat, targetPlayer, cnt, 0)
+		if (TileInfo == 0) {Ukihai++}
+		if (TileInfo == 4) {Duizi++}
 	loop
 	if (Ukihai == NUM_OF_TILES_IN_HAND) {ShisiBuDa = 1}
 	return ShisiBuDa

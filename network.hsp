@@ -151,7 +151,7 @@
 /* ê⁄ë±êÊÇÃñ¬Ç´ */
 #module
 #include "const.as"
-#deffunc remotenaki var GameStat, int GameMode, array IsRemotePlayer, array PlayerName, array haiRon, array haiPon, array haiMinkan, array haiChi, int haiCurrentSutehai, int haiCurrentSutehaiAkaDora
+#deffunc remotenaki var GameStat, int GameMode, array IsRemotePlayer, array PlayerName, array RonFlag, array PonFlag, array MinkanFlag, array ChiFlag, int CurrentSutehai, int CurrentSutehaiAkaDora
 
 	if (GameMode == 2) {
 		repeat NUM_OF_ACTUAL_PLAYERS
@@ -161,13 +161,13 @@
 				clientreceive ClientReceived, ReceivedMsg
 				if (ClientReceived) {
 					if (tmp != getPlayer(GameStat)) {
-						if (ReceivedMsg == 0xa1) {haiRon(tmp) = 1}
-						if (ReceivedMsg == 0xa2) {haiPon(tmp) = 1}
-						if (ReceivedMsg == 0xa3) {haiMinkan(tmp) = 1}
+						if (ReceivedMsg == 0xa1) {RonFlag(tmp) = 1}
+						if (ReceivedMsg == 0xa2) {PonFlag(tmp) = 1}
+						if (ReceivedMsg == 0xa3) {MinkanFlag(tmp) = 1}
 #ifndef ALLSANMA
-						if (ReceivedMsg == 0xa4) {haiChi(tmp) = 1}
-						if (ReceivedMsg == 0xa5) {haiChi(tmp) = 2}
-						if (ReceivedMsg == 0xa6) {haiChi(tmp) = 3}
+						if (ReceivedMsg == 0xa4) {ChiFlag(tmp) = 1}
+						if (ReceivedMsg == 0xa5) {ChiFlag(tmp) = 2}
+						if (ReceivedMsg == 0xa6) {ChiFlag(tmp) = 3}
 #endif
 						if (ReceivedMsg == 0xa7) {setDisconnectFlag GameStat, tmp, 1}
 					}
@@ -226,13 +226,13 @@
 #endif
 				repeat NUM_OF_ACTUAL_PLAYERS
 					SendingMsg = 0xa0
-					if (haiRon(cnt) == 1) {SendingMsg = 0xa1}
-					if (haiPon(cnt) == 1) {SendingMsg = 0xa2}
-					if (haiMinkan(cnt) == 1) {SendingMsg = 0xa3}
+					if (RonFlag(cnt) == 1) {SendingMsg = 0xa1}
+					if (PonFlag(cnt) == 1) {SendingMsg = 0xa2}
+					if (MinkanFlag(cnt) == 1) {SendingMsg = 0xa3}
 #ifndef ALLSANMA
-					if (haiChi(cnt) == 1) {SendingMsg = 0xa4}
-					if (haiChi(cnt) == 2) {SendingMsg = 0xa5}
-					if (haiChi(cnt) == 3) {SendingMsg = 0xa6}
+					if (ChiFlag(cnt) == 1) {SendingMsg = 0xa4}
+					if (ChiFlag(cnt) == 2) {SendingMsg = 0xa5}
+					if (ChiFlag(cnt) == 3) {SendingMsg = 0xa6}
 #endif
 					if (getDisconnectFlag(GameStat, cnt) == 1) {SendingMsg = 0xa7}
 					serversend SendingMsg, IsRemotePlayer
@@ -243,9 +243,9 @@
 		loop
 	}
 	repeat NUM_OF_PLAYERS
-		if (haiRon(cnt) == 1) {
-			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, haiCurrentSutehai
-			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, cnt, haiCurrentSutehaiAkaDora
+		if (RonFlag(cnt) == 1) {
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, CurrentSutehai
+			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, cnt, CurrentSutehaiAkaDora
 		}
 	loop
 	return
@@ -258,13 +258,13 @@
 		}
 		ReceivedMsg = 0xa7
 	}
-	if (ReceivedMsg == 0xa1) {haiRon(cnt) = 1}
-	if (ReceivedMsg == 0xa2) {haiPon(cnt) = 1}
-	if (ReceivedMsg == 0xa3) {haiMinkan(cnt) = 1}
+	if (ReceivedMsg == 0xa1) {RonFlag(cnt) = 1}
+	if (ReceivedMsg == 0xa2) {PonFlag(cnt) = 1}
+	if (ReceivedMsg == 0xa3) {MinkanFlag(cnt) = 1}
 #ifndef ALLSANMA
-	if (ReceivedMsg == 0xa4) {haiChi(cnt) = 1}
-	if (ReceivedMsg == 0xa5) {haiChi(cnt) = 2}
-	if (ReceivedMsg == 0xa6) {haiChi(cnt) = 3}
+	if (ReceivedMsg == 0xa4) {ChiFlag(cnt) = 1}
+	if (ReceivedMsg == 0xa5) {ChiFlag(cnt) = 2}
+	if (ReceivedMsg == 0xa6) {ChiFlag(cnt) = 3}
 #endif
 	return
 #global

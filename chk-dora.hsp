@@ -8,7 +8,7 @@
 #module
 #include "const.as"
 #deffunc countdora var GameStat, var tmpYakuInfo, int targetPlayer
-	countTilesInHand haiCount, GameStat, targetPlayer
+	countTilesInHand TileCount, GameStat, targetPlayer
 	/* ƒhƒ‰‚Å˜a—¹‚Á‚½‚ç1ãÊ */
 	if (getRule(RULE_DORAHOH) != 0) {
 		if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) > TILE_MIN)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) <= TILE_NONFLOWER_STRICT_MAX)) {
@@ -19,10 +19,10 @@
 	}
 	// ƒhƒ‰‚ðŒvŽZ‚·‚é
 	repeat TILE_NONFLOWER_MAX
-		addYakuInfo tmpYakuInfo, YAKUINF_DORA, (haiCount(cnt)*getDoraFlag(GameStat, DORA_OMOTE, cnt))
+		addYakuInfo tmpYakuInfo, YAKUINF_DORA, (TileCount(cnt)*getDoraFlag(GameStat, DORA_OMOTE, cnt))
 		if ((getMenzen(GameStat, targetPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != 1)) {
-			addYakuInfo tmpYakuInfo, YAKUINF_DORA, (haiCount(cnt)*getDoraFlag(GameStat, DORA_URA, cnt))
-			addYakuInfo tmpYakuInfo, YAKUINF_URADORA, (haiCount(cnt)*getDoraFlag(GameStat, DORA_URA, cnt))
+			addYakuInfo tmpYakuInfo, YAKUINF_DORA, (TileCount(cnt)*getDoraFlag(GameStat, DORA_URA, cnt))
+			addYakuInfo tmpYakuInfo, YAKUINF_URADORA, (TileCount(cnt)*getDoraFlag(GameStat, DORA_URA, cnt))
 		}
 	loop
 	// –Â‚«–ÊŽq‚Ìƒhƒ‰‚ðŒvŽZ‚·‚é
@@ -100,7 +100,7 @@
 			}
 			tmpDora = getWall(GameStat, WALL_TILECODE, AlicePointer)
 			haifurecalicedora tmpDora
-			if (haiCount(tmpDora) > 0) {
+			if (TileCount(tmpDora) > 0) {
 				addYakuInfo tmpYakuInfo, YAKUINF_ALICEDORA, 1
 			} else {
 				break

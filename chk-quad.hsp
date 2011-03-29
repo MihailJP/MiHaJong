@@ -6,7 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc countKangz array KangzCount, array haiMianziDat
+#deffunc countKangz array KangzCount, array MianziDat
 /*
 		countKangz p1, p2
 		žÈŽq‚Ì”‚ð”‚¦‚é
@@ -21,14 +21,14 @@
 	Kangzi = 0
 	dim KangzCount, TILE_NONFLOWER_MAX
 	repeat SIZE_OF_MELD_BUFFER
-		if (haiMianziDat(cnt) >= MELD_QUAD*MELD_TYPE_STEP) {KangzCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)++}
+		if (MianziDat(cnt) >= MELD_QUAD*MELD_TYPE_STEP) {KangzCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++}
 	loop
 	return Kangzi
 #global
 
 #module
 #include "const.as"
-#deffunc countAnKangz array KangzCount, array haiMianziDat
+#deffunc countAnKangz array KangzCount, array MianziDat
 /*
 		countAnKangz p1, p2
 		ˆÃžÈŽq‚Ì”‚ð”‚¦‚é
@@ -43,7 +43,7 @@
 	Kangzi = 0
 	dim KangzCount, TILE_NONFLOWER_MAX
 	repeat SIZE_OF_MELD_BUFFER
-		if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED) {KangzCount(haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)++}
+		if ((MianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED) {KangzCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++}
 	loop
 	return Kangzi
 #global
@@ -51,10 +51,10 @@
 /* žÈŽqŒn‚Ì–ð */
 #module
 #include "const.as"
-#deffunc quadyaku var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int TsumoAgari
+#deffunc quadyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int TsumoAgari
 	trace "žÈŽq–ð‚Ìˆ—‚É“ü‚è‚Ü‚·B"
-	countKangz KangzCount, haiMianziDat: Kangzi = stat
-	countAnKangz AnKangzCount, haiMianziDat: AnKan = stat
+	countKangz KangzCount, MianziDat: Kangzi = stat
+	countAnKangz AnKangzCount, MianziDat: AnKan = stat
 	/* ’´ŽlŠì */
 	if (getRule(RULE_CHOUSIXI) != 0) {
 		if ((KangzCount(TILE_EAST_WIND) >= 1)&&(KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_WEST_WIND) >= 1)&&(KangzCount(TILE_NORTH_WIND) >= 1)) {
@@ -86,9 +86,9 @@
 	/* ‘å‹¬’J */
 	if (getRule(RULE_GRAND_CANYON) != 0) {
 		yakuFlag = 0
-		countKez KezCount, haiMianziDat
+		countKez KezCount, MianziDat
 		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)||(KezCount(TILE_SUIT_CIRCLES+8) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+8) >= 1)) {yakuFlag = 1}
-		if ((KangzCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(KangzCount(TILE_SUIT_CIRCLES+9) >= 1)&&(KangzCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(yakuFlag == 1)&&(haiMianziDat(0) \ TILE_SUIT_STEP == 8)) {
+		if ((KangzCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(KangzCount(TILE_SUIT_CIRCLES+9) >= 1)&&(KangzCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(yakuFlag == 1)&&(MianziDat(0) \ TILE_SUIT_STEP == 8)) {
 			addyakuman tmpYakuInfo, "‘å‹¬’J", 1
 		}
 	}

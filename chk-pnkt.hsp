@@ -7,35 +7,35 @@
 /* •„‚ðŽZo‚·‚é */
 #module
 #include "const.as"
-#deffunc calcbasepoints var GameStat, var tmpYakuInfo, array haiMianziDat, int targetPlayer, int TsumoAgari, var MachiType
+#deffunc calcbasepoints var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int TsumoAgari, var MachiType
 	trace "•„ŒvŽZ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	/* •›’êc‚Q‚O•„ */
 	setYakuInfo tmpYakuInfo, YAKUINF_FU, 20
 	/* “ª‰Á•„c–ð”v‚Ì‚Ý‚Q•„ */
 #ifndef SANMAS
-	if ((haiMianziDat(0) >= TILE_WIND_MIN)&&(haiMianziDat(0) <= TILE_WIND_MAX)) {
+	if ((MianziDat(0) >= TILE_WIND_MIN)&&(MianziDat(0) <= TILE_WIND_MAX)) {
 		/* •—”v‚ÍðŒ‚É‚æ‚Á‚Ä–ð”v */
 		repeat 1
-			if ((getRound(GameStat)/4) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+			if ((getRound(GameStat)/4) == (MianziDat(0)-TILE_WIND_MIN)) {
 				// ê•—”v
 				addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
 				if (getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 			}
-			if (playerWind(targetPlayer, getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+			if (playerWind(targetPlayer, getRound(GameStat)) == (MianziDat(0)-TILE_WIND_MIN)) {
 				// Ž©•—”v
 				addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
 				if (getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 			}
 			if (getRule(RULE_KAIMENKAZE) != 0) {
 				// ŠJ–å•—”v
-				if (playerWind(getWareme(GameStat), getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+				if (playerWind(getWareme(GameStat), getRound(GameStat)) == (MianziDat(0)-TILE_WIND_MIN)) {
 					addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
 					if (getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 				}
 			}
 #ifndef SANMAT
 			if (getRule(RULE_URAKAZE) != 0) {
-				if (playerWind(targetPlayer+2, getRound(GameStat)) == (haiMianziDat(0)-TILE_WIND_MIN)) {
+				if (playerWind(targetPlayer+2, getRound(GameStat)) == (MianziDat(0)-TILE_WIND_MIN)) {
 					// — •—”v
 					addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
 					if (getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
@@ -44,14 +44,14 @@
 #endif
 		loop
 	}
-	if ((haiMianziDat(0) >= TILE_DRAGON_MIN)&&(haiMianziDat(0) <= TILE_DRAGON_MAX)) {
+	if ((MianziDat(0) >= TILE_DRAGON_MIN)&&(MianziDat(0) <= TILE_DRAGON_MAX)) {
 		/* ŽOŒ³”v‚Íí‚É–ð”v */
 		addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
 	}
 #endif
 	/* –ÊŽq‰Á•„ */
 	repeat SIZE_OF_MELD_BUFFER-1, 1
-		switch (haiMianziDat(cnt) \ TILE_CODE_MAXIMUM)
+		switch (MianziDat(cnt) \ TILE_CODE_MAXIMUM)
 			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9
@@ -60,17 +60,17 @@
 			case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
 #endif
 				/* ˆê‹ãŽš”v‚Ìê‡ */
-				/* –¾Žq */ if (((haiMianziDat(cnt) / MELD_TYPE_STEP) >= MELD_TRIPLET_EXPOSED_MIN)&&((haiMianziDat(cnt) / MELD_TYPE_STEP) <= MELD_TRIPLET_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 4}
-				/* ˆÃŽq */ if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_TRIPLET_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 8}
-				/* –¾žÈŽq */ if (((haiMianziDat(cnt) / MELD_TYPE_STEP) >= MELD_QUAD_EXPOSED_MIN)&&((haiMianziDat(cnt) / MELD_TYPE_STEP) <= MELD_QUAD_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 16}
-				/* ˆÃžÈŽq */ if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 32}
+				/* –¾Žq */ if (((MianziDat(cnt) / MELD_TYPE_STEP) >= MELD_TRIPLET_EXPOSED_MIN)&&((MianziDat(cnt) / MELD_TYPE_STEP) <= MELD_TRIPLET_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 4}
+				/* ˆÃŽq */ if ((MianziDat(cnt) / MELD_TYPE_STEP) == MELD_TRIPLET_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 8}
+				/* –¾žÈŽq */ if (((MianziDat(cnt) / MELD_TYPE_STEP) >= MELD_QUAD_EXPOSED_MIN)&&((MianziDat(cnt) / MELD_TYPE_STEP) <= MELD_QUAD_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 16}
+				/* ˆÃžÈŽq */ if ((MianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 32}
 			swbreak
 			default:
 				/* ’f›ô”v‚Ìê‡ */
-				/* –¾Žq */ if (((haiMianziDat(cnt) / MELD_TYPE_STEP) >= MELD_TRIPLET_EXPOSED_MIN)&&((haiMianziDat(cnt) / MELD_TYPE_STEP) <= MELD_TRIPLET_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 2}
-				/* ˆÃŽq */ if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_TRIPLET_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 4}
-				/* –¾žÈŽq */ if (((haiMianziDat(cnt) / MELD_TYPE_STEP) >= MELD_QUAD_EXPOSED_MIN)&&((haiMianziDat(cnt) / MELD_TYPE_STEP) <= MELD_QUAD_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 8}
-				/* ˆÃžÈŽq */ if ((haiMianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 16}
+				/* –¾Žq */ if (((MianziDat(cnt) / MELD_TYPE_STEP) >= MELD_TRIPLET_EXPOSED_MIN)&&((MianziDat(cnt) / MELD_TYPE_STEP) <= MELD_TRIPLET_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 2}
+				/* ˆÃŽq */ if ((MianziDat(cnt) / MELD_TYPE_STEP) == MELD_TRIPLET_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 4}
+				/* –¾žÈŽq */ if (((MianziDat(cnt) / MELD_TYPE_STEP) >= MELD_QUAD_EXPOSED_MIN)&&((MianziDat(cnt) / MELD_TYPE_STEP) <= MELD_QUAD_EXPOSED_MAX)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 8}
+				/* ˆÃžÈŽq */ if ((MianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 16}
 			swbreak
 		swend
 	loop
@@ -78,26 +78,26 @@
 	if (getYakuInfo(tmpYakuInfo, YAKUINF_FU) == 20) {NoTriplets = 1} else {NoTriplets = 0}
 	LiangMianFlag = 0
 	/* ’®”vŒ`‰Á•„ */
-	if (haiMianziDat(0) == getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) {MachiType = MACHI_TANKI /* ’P‹R‘Ò‚¿ */}
+	if (MianziDat(0) == getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) {MachiType = MACHI_TANKI /* ’P‹R‘Ò‚¿ */}
 	repeat SIZE_OF_MELD_BUFFER-1, 1
-		if (haiMianziDat(cnt) >= MELD_TRIPLET*MELD_TYPE_STEP) {
-			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) {
+		if (MianziDat(cnt) >= MELD_TRIPLET*MELD_TYPE_STEP) {
+			if ((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) {
 				MachiType = MACHI_SHANPON /* ‘oƒ|ƒ“‘Ò‚¿ */
 			}
 		} else {
-			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)-1)) {
+			if ((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)-1)) {
 				MachiType = MACHI_KANCHAN /* ›Æ’£‘Ò‚¿ */
 			}
-			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))) {
-				if ((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 7) {
+			if ((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))) {
+				if ((MianziDat(cnt) \ TILE_SUIT_STEP) == 7) {
 					MachiType = MACHI_PENCHAN /* •Ó’£‘Ò‚¿ */
 				} else {
 					MachiType = MACHI_RYANMEN /* —¼–Ê‘Ò‚¿ */
 					LiangMianFlag = 1
 				}
 			}
-			if ((haiMianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)-2)) {
-				if ((haiMianziDat(cnt) \ TILE_SUIT_STEP) == 1) {
+			if ((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)-2)) {
+				if ((MianziDat(cnt) \ TILE_SUIT_STEP) == 1) {
 					MachiType = MACHI_PENCHAN /* •Ó’£‘Ò‚¿ */
 				} else {
 					MachiType = MACHI_RYANMEN /* —¼–Ê‘Ò‚¿ */

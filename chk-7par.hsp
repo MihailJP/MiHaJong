@@ -6,7 +6,7 @@
 
 /* 指定の対子があるか数える */
 #module
-#defcfunc countPairs array haiCount, array targetTiles
+#defcfunc countPairs array tileCount, array targetTiles
 /*
 		val=countPairs(p1, p2)
 		指定した種類の対子を数える
@@ -19,7 +19,7 @@
 	trace "対子の種類を調べます。"
 	yakuflagcount = 0
 	repeat length(targetTiles)
-		if (haiCount(targetTiles(cnt)) >= 2) {yakuflagcount++}
+		if (tileCount(targetTiles(cnt)) >= 2) {yakuflagcount++}
 	loop
 	return yakuflagcount
 #global
@@ -34,22 +34,22 @@
 	} else {
 		addyaku tmpYakuInfo, "七対子", 2: setYakuInfo tmpYakuInfo, YAKUINF_FU, 25
 	}
-	countTilesInHand haiCount, GameStat, targetPlayer
+	countTilesInHand tileCount, GameStat, targetPlayer
 	dim tmpTileList, 1: repeat 9:tmpTileList(cnt) = TILE_SUIT_CHARACTERS+cnt+1:loop
-	WanzDui = countPairs(haiCount, tmpTileList)
+	WanzDui = countPairs(tileCount, tmpTileList)
 	dim tmpTileList, 1: repeat 9:tmpTileList(cnt) = TILE_SUIT_CIRCLES+cnt+1:loop
-	PinzDui = countPairs(haiCount, tmpTileList)
+	PinzDui = countPairs(tileCount, tmpTileList)
 	dim tmpTileList, 1: repeat 9:tmpTileList(cnt) = TILE_SUIT_BAMBOOS+cnt+1:loop
-	SouzDui = countPairs(haiCount, tmpTileList)
+	SouzDui = countPairs(tileCount, tmpTileList)
 #ifdef SANMAS
 	ZiDui = 0
 	dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+1,TILE_SUIT_CHARACTERS+9,TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+9,TILE_SUIT_BAMBOOS+1,TILE_SUIT_BAMBOOS+9
-	YaojiuDui = countPairs(haiCount, tmpTileList)
+	YaojiuDui = countPairs(tileCount, tmpTileList)
 #else
 	dim tmpTileList, 1: tmpTileList = TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND,TILE_WHITE_DRAGON,TILE_GREEN_DRAGON,TILE_RED_DRAGON
-	ZiDui = countPairs(haiCount, tmpTileList)
+	ZiDui = countPairs(tileCount, tmpTileList)
 	dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+1,TILE_SUIT_CHARACTERS+9,TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+9,TILE_SUIT_BAMBOOS+1,TILE_SUIT_BAMBOOS+9,TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND,TILE_WHITE_DRAGON,TILE_GREEN_DRAGON,TILE_RED_DRAGON
-	YaojiuDui = countPairs(haiCount, tmpTileList)
+	YaojiuDui = countPairs(tileCount, tmpTileList)
 #endif
 	/* 一色系 */
 	if (((WanzDui+ZiDui) == 7)||((PinzDui+ZiDui) == 7)||((SouzDui+ZiDui) == 7)) {
@@ -104,7 +104,7 @@
 	/* 推不倒 */
 	if (getRule(RULE_TOIPUUTAO) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+2,TILE_SUIT_CIRCLES+3,TILE_SUIT_CIRCLES+4,TILE_SUIT_CIRCLES+5,TILE_SUIT_CIRCLES+8,TILE_SUIT_CIRCLES+9,TILE_SUIT_BAMBOOS+2,TILE_SUIT_BAMBOOS+4,TILE_SUIT_BAMBOOS+5,TILE_SUIT_BAMBOOS+6,TILE_SUIT_BAMBOOS+8,TILE_SUIT_BAMBOOS+9,TILE_WHITE_DRAGON
-		yakuflagcount = countPairs(haiCount, tmpTileList)
+		yakuflagcount = countPairs(tileCount, tmpTileList)
 		if (yakuflagcount == 7) {
 			if (getRule(RULE_TOIPUUTAO) == 3) {
 				addyakuman tmpYakuInfo, "推不倒", 1
@@ -120,7 +120,7 @@
 	/* 大草原 */
 	if (getRule(RULE_DAISOUGEN) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9
-		yakuflagcount = countPairs(haiCount, tmpTileList)
+		yakuflagcount = countPairs(tileCount, tmpTileList)
 		if (yakuflagcount == 7) {
 			addyakuman tmpYakuInfo, "大草原", 1
 			delyaku tmpYakuInfo, "清一色"
@@ -130,8 +130,8 @@
 	/* 桃一色 */
 	if (getRule(RULE_TAOYISE) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+9, TILE_RED_DRAGON
-		yakuflagcount = countPairs(haiCount, tmpTileList)
-		countDuiz DuiCount, haiMianziDat
+		yakuflagcount = countPairs(tileCount, tmpTileList)
+		countDuiz DuiCount, MianziDat
 		countRedTilesInHand redCount, GameStat, targetPlayer
 		if ((yakuflagcount == 7)&&(redCount(TILE_SUIT_CIRCLES+5) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
 			addyakuman tmpYakuInfo, "桃一色", 1
@@ -141,7 +141,7 @@
 	/* 茶一色 */
 	if (getRule(RULE_TAOYISE) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
-		yakuflagcount = countPairs(haiCount, tmpTileList)
+		yakuflagcount = countPairs(tileCount, tmpTileList)
 		if (yakuflagcount == 7) {
 			addyakuman tmpYakuInfo, "茶一色", 1
 		}
@@ -149,7 +149,7 @@
 	/* 黒一色 */
 	if (getRule(RULE_HEIIISOH) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+2,TILE_SUIT_CIRCLES+4,TILE_SUIT_CIRCLES+8,TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND
-		yakuflagcount = countPairs(haiCount, tmpTileList)
+		yakuflagcount = countPairs(tileCount, tmpTileList)
 		if (yakuflagcount == 7) {
 			addyakuman tmpYakuInfo, "黒一色", 1
 			delyaku tmpYakuInfo, "混一色"
@@ -160,13 +160,13 @@
 	if (getRule(RULE_NO_RED) != 0) {
 #ifdef SANMAS
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8
-		yakuflagcount = countPairs(haiCount, tmpTileList)
+		yakuflagcount = countPairs(tileCount, tmpTileList)
 		yakuflagcount2 = 0
 #else
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
-		yakuflagcount = countPairs(haiCount, tmpTileList)
+		yakuflagcount = countPairs(tileCount, tmpTileList)
 		dim tmpTileList, 1: tmpTileList = TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND,TILE_WHITE_DRAGON,TILE_GREEN_DRAGON
-		yakuflagcount2 = countPairs(haiCount, tmpTileList)
+		yakuflagcount2 = countPairs(tileCount, tmpTileList)
 #endif
 		tmpyakuCensored = searchyaku(tmpYakuInfo, "黒一色")
 		if ((yakuflagcount == 7)&&(tmpyakuCensored == 0)) {
@@ -195,9 +195,9 @@
 	/* 五門斎 */
 	if (getRule(RULE_UUMENCHII) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND
-		WindDui = countPairs(haiCount, tmpTileList)
+		WindDui = countPairs(tileCount, tmpTileList)
 		dim tmpTileList, 1: tmpTileList = TILE_WHITE_DRAGON,TILE_GREEN_DRAGON,TILE_RED_DRAGON
-		DragonDui = countPairs(haiCount, tmpTileList)
+		DragonDui = countPairs(tileCount, tmpTileList)
 		if ((WanzDui >= 1)&&(PinzDui >= 1)&&(SouzDui >= 1)&&(WindDui >= 1)&&(DragonDui >= 1)) {
 			addyaku tmpYakuInfo, "五門斎", 2
 		}
@@ -207,7 +207,7 @@
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "字一色")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "七福星")
-		if ((haiCount(TILE_WHITE_DRAGON) >= 2)&&(haiCount(TILE_GREEN_DRAGON) >= 2)&&(haiCount(TILE_RED_DRAGON) >= 2)&&(tmpyakuCensored == 0)) {
+		if ((tileCount(TILE_WHITE_DRAGON) >= 2)&&(tileCount(TILE_GREEN_DRAGON) >= 2)&&(tileCount(TILE_RED_DRAGON) >= 2)&&(tmpyakuCensored == 0)) {
 			addyaku tmpYakuInfo, "三元七対子", 1
 		}
 	}
@@ -216,7 +216,7 @@
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "字一色")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "七福星")
-		if ((haiCount(TILE_EAST_WIND) >= 2)&&(haiCount(TILE_SOUTH_WIND) >= 2)&&(haiCount(TILE_WEST_WIND) >= 2)&&(haiCount(TILE_NORTH_WIND) >= 2)&&(tmpyakuCensored == 0)) {
+		if ((tileCount(TILE_EAST_WIND) >= 2)&&(tileCount(TILE_SOUTH_WIND) >= 2)&&(tileCount(TILE_WEST_WIND) >= 2)&&(tileCount(TILE_NORTH_WIND) >= 2)&&(tmpyakuCensored == 0)) {
 			addyaku tmpYakuInfo, "四喜七対子", 1
 		}
 	}
@@ -224,7 +224,7 @@
 	/* 奇数七対子 */
 	if (getRule(RULE_ODD_PAIRS) != 0) {
 		dim tmpTileList, 1: repeat TILE_NUMERAL_COLORS: tmpTileList(cnt*5) = cnt*TILE_SUIT_STEP+1,cnt*TILE_SUIT_STEP+3,cnt*TILE_SUIT_STEP+5,cnt*TILE_SUIT_STEP+7,cnt*TILE_SUIT_STEP+9: loop
-		yakuflagcount = countPairs(haiCount, tmpTileList)
+		yakuflagcount = countPairs(tileCount, tmpTileList)
 		if (yakuFlagCount == 7) {
 			addyaku tmpYakuInfo, "奇数七対子", 1
 		}
@@ -232,7 +232,7 @@
 	/* 偶数七対子 */
 	if (getRule(RULE_EVEN_PAIRS) != 0) {
 		dim tmpTileList, 1: repeat TILE_NUMERAL_COLORS: tmpTileList(cnt*4) = cnt*TILE_SUIT_STEP+2,cnt*TILE_SUIT_STEP+4,cnt*TILE_SUIT_STEP+6,cnt*TILE_SUIT_STEP+8: loop
-		yakuflagcount = countPairs(haiCount, tmpTileList)
+		yakuflagcount = countPairs(tileCount, tmpTileList)
 		if (yakuFlagCount == 7) {
 			addyaku tmpYakuInfo, "偶数七対子", 2
 			if ((getRule(RULE_KUITAN) == 2)&&(getMenzen(GameStat, targetPlayer) == 0)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, -1}
@@ -245,13 +245,13 @@
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "字一色")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "七福星")
-		if ((haiCount(TILE_WHITE_DRAGON) >= 2)&&(haiCount(TILE_RED_DRAGON) >= 2)&&(tmpyakuCensored == 0)) {
+		if ((tileCount(TILE_WHITE_DRAGON) >= 2)&&(tileCount(TILE_RED_DRAGON) >= 2)&&(tmpyakuCensored == 0)) {
 			addyaku tmpYakuInfo, "紅白七対", 2
 		}
 	}
 	/* 北の大地 */
 	if (getRule(RULE_KITA_NO_DAICHI) != 0) {
-		if ((haiCount(TILE_SUIT_BAMBOOS+2) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+3) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+4) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+6) >= 2)&&(haiCount(TILE_SUIT_BAMBOOS+8) >= 2)&&(haiCount(TILE_NORTH_WIND) >= 2)&&(haiCount(TILE_WHITE_DRAGON) >= 2)) {
+		if ((tileCount(TILE_SUIT_BAMBOOS+2) >= 2)&&(tileCount(TILE_SUIT_BAMBOOS+3) >= 2)&&(tileCount(TILE_SUIT_BAMBOOS+4) >= 2)&&(tileCount(TILE_SUIT_BAMBOOS+6) >= 2)&&(tileCount(TILE_SUIT_BAMBOOS+8) >= 2)&&(tileCount(TILE_NORTH_WIND) >= 2)&&(tileCount(TILE_WHITE_DRAGON) >= 2)) {
 			switch getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) /* 何で和了ったかで分岐 */
 				case TILE_NORTH_WIND: /* 北で和了るとダブル役満 */
 					addyakuman tmpYakuInfo, "北の大地", 2
@@ -268,8 +268,8 @@
 	/* 紅白饅頭 */
 	if (getRule(RULE_KOHAKU_MANJU) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+9
-		yakuflagcount = countPairs(haiCount, tmpTileList)
-		if ((haiCount(TILE_WHITE_DRAGON) >= 2)&&(haiCount(TILE_RED_DRAGON) >= 2)&&(yakuflagcount >= 5)) {
+		yakuflagcount = countPairs(tileCount, tmpTileList)
+		if ((tileCount(TILE_WHITE_DRAGON) >= 2)&&(tileCount(TILE_RED_DRAGON) >= 2)&&(yakuflagcount >= 5)) {
 			switch getRule(RULE_KOHAKU_MANJU)
 				case 1: addyaku tmpYakuInfo, "紅白饅頭", 1: swbreak
 				case 2: addyaku tmpYakuInfo, "紅白饅頭", 2: swbreak
@@ -280,7 +280,7 @@
 	/* 世界一 */
 	if (getRule(RULE_SEKAIICHI) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CIRCLES+1, TILE_SUIT_BAMBOOS+1, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND
-		yakuflagcount = countPairs(haiCount, tmpTileList)
+		yakuflagcount = countPairs(tileCount, tmpTileList)
 		if (yakuflagcount >= 7) {
 			addyakuman tmpYakuInfo, "世界一", 1
 			delyaku tmpYakuInfo, "四喜七対子"
@@ -290,7 +290,7 @@
 	/* 素数役満 */
 	if (getRule(RULE_PRIME_NUMBER) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+7, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+7
-		yakuflagcount = countPairs(haiCount, tmpTileList)
+		yakuflagcount = countPairs(tileCount, tmpTileList)
 		if (yakuflagcount >= 7) {
 			addyakuman tmpYakuInfo, "素数役満", 1
 		}

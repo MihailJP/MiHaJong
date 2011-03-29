@@ -68,7 +68,7 @@ return
 /* 場に見えてる個数 */
 #module
 #include "const.as"
-#deffunc countseentiles array haiSeenCount, var GameStat
+#deffunc countseentiles array SeenTiles, var GameStat
 /*
 		countseentiles p1, p2
 		場に見えている牌の数を数える
@@ -78,12 +78,12 @@ return
 
 		それぞれの牌が場に見えている数を数えます。
 */
-	dim haiSeenCount, TILE_CODE_MAXIMUM // 計算する牌
+	dim SeenTiles, TILE_CODE_MAXIMUM // 計算する牌
 	// 捨牌で見えてる枚数
 	repeat NUM_OF_PLAYERS: tmp = cnt
 		if (DiscardPointer(GameStat, tmp) == 0) {continue}
 		repeat DiscardPointer(GameStat, tmp), 1
-			haiSeenCount(getDiscard(GameStat, DISCARD_TILECODE, cnt, tmp))++
+			SeenTiles(getDiscard(GameStat, DISCARD_TILECODE, cnt, tmp))++
 		loop
 	loop
 	// 誰かの副露で見えてる枚数
@@ -92,16 +92,16 @@ return
 		repeat MeldPointer(GameStat, tmp), 1
 			if (getMeld(GameStat, MELD_TILECODE, cnt, tmp) < MELD_TRIPLET*MELD_TYPE_STEP) {
 				// 明順子
-				haiSeenCount((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0)++
-				haiSeenCount((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+1)++
-				haiSeenCount((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+2)++
+				SeenTiles((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0)++
+				SeenTiles((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+1)++
+				SeenTiles((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+2)++
 			} else: if (getMeld(GameStat, MELD_TILECODE, cnt, tmp) < MELD_QUAD*MELD_TYPE_STEP) {
 				// 明刻子
-				haiSeenCount((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0) += 3
+				SeenTiles((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0) += 3
 			} else {
 				if ((getMeld(GameStat, MELD_TILECODE, cnt, tmp)/MELD_TYPE_STEP != MELD_QUAD_CONCEALED)||(getRule(RULE_ANKAN_CONCEAL) == 0)) {
 					// 槓子 (暗槓非開示設定で見えてない暗槓までカウントしないように条件式を細工しておく)
-					haiSeenCount((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0) += 4
+					SeenTiles((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0) += 4
 				}
 			}
 		loop
@@ -109,9 +109,9 @@ return
 	// ドラ表示牌で見えてる枚数
 	repeat 6
 #ifdef ALLSANMA
-		if (getDoraPointer(GameStat) <= (102-getRinshanExtension(GameStat)-cnt*2)) {haiSeenCount(getWall(GameStat, WALL_TILECODE, 102-getRinshanExtension(GameStat)-cnt*2))++}
+		if (getDoraPointer(GameStat) <= (102-getRinshanExtension(GameStat)-cnt*2)) {SeenTiles(getWall(GameStat, WALL_TILECODE, 102-getRinshanExtension(GameStat)-cnt*2))++}
 #else
-		if (getDoraPointer(GameStat) <= (130-cnt*2)) {haiSeenCount(getWall(GameStat, WALL_TILECODE, 130-cnt*2))++}
+		if (getDoraPointer(GameStat) <= (130-cnt*2)) {SeenTiles(getWall(GameStat, WALL_TILECODE, 130-cnt*2))++}
 #endif
 	loop
 return
@@ -119,7 +119,7 @@ return
 
 #module
 #include "const.as"
-#deffunc countTilesInHand array haiCount, var GameStat, int targetPlayer
+#deffunc countTilesInHand array TileCount, var GameStat, int targetPlayer
 /*
 		countTilesInHand p1, p2, p3
 		手牌に存在する牌を種類別にカウントする
@@ -134,7 +134,7 @@ return
 	gosub *doCount
 	return
 
-#deffunc countRedTilesInHand array haiCount, var GameStat, int targetPlayer
+#deffunc countRedTilesInHand array TileCount, var GameStat, int targetPlayer
 /*
 		countRedTilesInHand p1, p2, p3
 		手牌に存在する赤ドラを種類別にカウントする
@@ -150,12 +150,12 @@ return
 	return
 
 *doCount
-	dim haiCount, TILE_CODE_MAXIMUM // 計算する牌
+	dim TileCount, TILE_CODE_MAXIMUM // 計算する牌
 	repeat NUM_OF_TILES_IN_HAND
 		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) != 0) {
 			// 手牌の中の、それぞれの牌の枚数を数える
 			if ((mode == 0)||(getHand(GameStat, HAND_REDTILE, cnt, targetPlayer) == mode)) {
-				haiCount(getHand(GameStat, HAND_TILECODE, cnt, targetPlayer))++
+				TileCount(getHand(GameStat, HAND_TILECODE, cnt, targetPlayer))++
 			}
 		}
 	loop
@@ -164,28 +164,28 @@ return
 		repeat MeldPointer(GameStat, targetPlayer), 1
 			if (getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP >= MELD_TRIPLET) {
 				if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x01) {
-					haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
+					TileCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
 				}
 				if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x02) {
-					haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
+					TileCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
 				}
 				if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x04) {
-					haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
+					TileCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
 				}
 				if (getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP >= MELD_QUAD) {
 					if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x08) {
-						haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
+						TileCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
 					}
 				}
 			} else {
 				if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x01) {
-					haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
+					TileCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM)++
 				}
 				if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x02) {
-					haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM+1)++
+					TileCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM+1)++
 				}
 				if (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x04) {
-					haiCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM+2)++
+					TileCount(getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM+2)++
 				}
 			}
 		loop
@@ -208,88 +208,88 @@ return
 
 		特定のプレイヤーの手牌のうち1枚を調べます。
 */
-	countTilesInHand haiCount, GameStat, targetPlayer
-	haiTileInfo = 0
-	if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) == 0) {haiTileInfo = -999: return -999}
+	countTilesInHand TileCount, GameStat, targetPlayer
+	TileInfo = 0
+	if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) == 0) {TileInfo = -999: return -999}
 	// 暗槓が可能な牌
-	if (haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) == 4) {haiTileInfo |= 64}
+	if (TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) == 4) {TileInfo |= 64}
 	// 暗刻を形成している場合
-	if (haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 3) {haiTileInfo |= 1}
+	if (TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 3) {TileInfo |= 1}
 	// 順子を形成している場合
 	if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) < TILE_NUMERAL_MAX) {
-		if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&(haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)&&(haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+2) >= 1)) {haiTileInfo |= 2}
-		else:if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&(haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)) {haiTileInfo |= 2}
+		if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&(TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)&&(TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+2) >= 1)) {TileInfo |= 2}
+		else:if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&(TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)) {TileInfo |= 2}
 		else:if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) > 1) {
-			if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-2) >= 1)&&(haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)) {haiTileInfo |= 2}
+			if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-2) >= 1)&&(TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)) {TileInfo |= 2}
 		}
 	}
 	// 対子を形成している場合
-	if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 2)&&(haiTileInfo\2 == 0)) {haiTileInfo |= 4}
+	if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 2)&&(TileInfo\2 == 0)) {TileInfo |= 4}
 	// 辺張を形成している場合
 	if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) < TILE_NUMERAL_MAX) {
-		if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&((haiTileInfo \ 4 < 2)||(CheckMode == 1))) {
-			if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP = 1)) {haiTileInfo |= 8}
-			else:if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP = 8)) {haiTileInfo |= 8}
-			else:if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP = 2)) {haiTileInfo |= 8}
-			else:if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP = 9)) {haiTileInfo |= 8}
+		if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&((TileInfo \ 4 < 2)||(CheckMode == 1))) {
+			if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP = 1)) {TileInfo |= 8}
+			else:if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP = 8)) {TileInfo |= 8}
+			else:if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP = 2)) {TileInfo |= 8}
+			else:if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP = 9)) {TileInfo |= 8}
 		}
 	}
 	// 両面塔子を形成している場合
 	if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) < TILE_NUMERAL_MAX) {
-		if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&((haiTileInfo \ 4 < 2)||(CheckMode == 1))) {
-			if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 8)) {haiTileInfo |= 16}
-			else: if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 2)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 9)) {haiTileInfo |= 16}
+		if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&((TileInfo \ 4 < 2)||(CheckMode == 1))) {
+			if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 8)) {TileInfo |= 16}
+			else: if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-1) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 2)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 9)) {TileInfo |= 16}
 		}
 	}
 	// 嵌張を形成している場合
 	if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) < TILE_NUMERAL_MAX) {
-		if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&((haiTileInfo \ 4 < 2)||(CheckMode == 1))) {
-			if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+2) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 9)) {haiTileInfo |= 32}
+		if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)) >= 1)&&((TileInfo \ 4 < 2)||(CheckMode == 1))) {
+			if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)+2) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 9)) {TileInfo |= 32}
 			else: if (getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) > 1) {
-				if ((haiCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-2) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 1)) {haiTileInfo |= 32}
+				if ((TileCount(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer)-2) >= 1)&&(getHand(GameStat, HAND_TILECODE, targetTile, targetPlayer) \ TILE_SUIT_STEP != 1)) {TileInfo |= 32}
 			}
 		}
 	}
-return haiTileInfo
+return TileInfo
 #global
 
 /* 振聴でないかのチェック */
 /* 待ち牌を数える処理も含む */
 #module
 #include "const.as"
-#deffunc chkfuriten var haiFuriten, array haiMachihaiFlag, array haiMachihaiCount, var haiMachihaiTotal, var MachiMen, var GameStat, int targetPlayer
+#deffunc chkfuriten var FuritenFlag, array MachihaiFlag, array MachihaiCount, var MachihaiTotal, var MachiMen, var GameStat, int targetPlayer
 	trace "振聴かどうか・待ち牌を調べます。"
-	countseentiles haiSeenCount, GameStat
-	countTilesInHand haiCountCFTTmp, GameStat, targetPlayer
-	dim haiMachihaiCount, TILE_NONFLOWER_STRICT_MAX+1: haiMachihaiTotal = 0: MachiMen = 0
-	dim haiMachihaiFlag, TILE_NONFLOWER_STRICT_MAX+1
-	haiFuriten = 0
+	countseentiles SeenTiles, GameStat
+	countTilesInHand TileCountCFTTmp, GameStat, targetPlayer
+	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1: MachihaiTotal = 0: MachiMen = 0
+	dim MachihaiFlag, TILE_NONFLOWER_STRICT_MAX+1
+	FuritenFlag = 0
 	tmpTsumoHai = getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)
 	repeat TILE_NONFLOWER_STRICT_MAX,1
-		haiMachihaiCount(cnt) = -1
+		MachihaiCount(cnt) = -1
 		if (cnt\TILE_SUIT_STEP == 0) {continue}
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer, cnt
 		Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
 		if (Shanten == -1) {
-			MachiMen++: haiMachihaiFlag(cnt) = 1
-			haiMachihaiCount(cnt) = (4 - haiSeenCount(cnt) - haiCountCFTTmp(cnt))
-			haiMachihaiTotal += (4 - haiSeenCount(cnt) - haiCountCFTTmp(cnt))
+			MachiMen++: MachihaiFlag(cnt) = 1
+			MachihaiCount(cnt) = (4 - SeenTiles(cnt) - TileCountCFTTmp(cnt))
+			MachihaiTotal += (4 - SeenTiles(cnt) - TileCountCFTTmp(cnt))
 			tmpHai = cnt
 			repeat DiscardPointer(GameStat, targetPlayer), 1
 				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM) == tmpHai) {
-					haiFuriten = 1
+					FuritenFlag = 1
 				}
 			loop
 			if ((MeldPointer(GameStat, targetPlayer) > 0)&&(getRule(RULE_KAKAN_FURITEN) == 1)) {
 				repeat MeldPointer(GameStat, targetPlayer), 1
 					if (((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP) >= MELD_QUAD_ADDED_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM) == tmpHai)) {
-						haiFuriten = 1
+						FuritenFlag = 1
 					}
 				loop
 			}
 			repeat DiscardPointer(GameStat, targetPlayer), 1
 				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer)\TILE_CODE_MAXIMUM) == tmpHai) {
-					haiFuriten = 1
+					FuritenFlag = 1
 				}
 			loop
 		}
@@ -301,9 +301,9 @@ return haiTileInfo
 		if ((cnt != targetPlayer)&&(getRichiFlag(GameStat, RICHI_OPENFLAG, cnt) > 0)) {
 			repeat NUM_OF_TILES_IN_HAND-1
 				if (getHand(GameStat, HAND_TILECODE, cnt, tmpooooo) > 0) {
-					if (haiMachihaiFlag(getHand(GameStat, HAND_TILECODE, cnt, tmpooooo)) == 1) {
-						haiMachihaiCount(getHand(GameStat, HAND_TILECODE, cnt, tmpooooo))--
-						haiMachihaiTotal--
+					if (MachihaiFlag(getHand(GameStat, HAND_TILECODE, cnt, tmpooooo)) == 1) {
+						MachihaiCount(getHand(GameStat, HAND_TILECODE, cnt, tmpooooo))--
+						MachihaiTotal--
 					}
 				}
 			loop
@@ -329,19 +329,19 @@ return
 #module
 #include "const.as"
 #defcfunc chkdaopaiability var GameStat, int targetPlayer
-	haiDaoPaiable = 0
-	countTilesInHand haiCount, GameStat, targetPlayer
+	DaoPaiAbilityFlag = 0
+	countTilesInHand TileCount, GameStat, targetPlayer
 	YaojiuPai = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+9, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+9
 	YaojiuPai(6) = TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON, TILE_RED_DRAGON
 	YaojiuCount = 0: AtamaFlag = 0
 	repeat 13
 		// ヤオ九牌１種類につき、１をカウントする。
-		if (haiCount(YaojiuPai(cnt)) >= 1) {
+		if (TileCount(YaojiuPai(cnt)) >= 1) {
 			YaojiuCount++
 		}
 	loop
-	if (YaojiuCount >= 9) {haiDaoPaiable = 1}
-return haiDaoPaiable
+	if (YaojiuCount >= 9) {DaoPaiAbilityFlag = 1}
+return DaoPaiAbilityFlag
 #global
 
 /* ドラを設定する */
@@ -438,13 +438,13 @@ return haiDaoPaiable
 #defcfunc chkankanability var GameStat, int targetPlayer
 	debug strf("暗槓の可否を判定します。プレイヤー [%d]", targetPlayer)
 	/* 手牌を調べる */
-	countTilesInHand haiCount, GameStat, targetPlayer
+	countTilesInHand TileCount, GameStat, targetPlayer
 	/* 手牌を退避する */
 	dim tmpkanhand, NUM_OF_TILES_IN_HAND
 	repeat NUM_OF_TILES_IN_HAND: tmpkanhand(cnt) = getHand(GameStat, HAND_TILECODE, cnt, targetPlayer): loop
 	/* ツモった牌が４枚揃ってないなら戻る */
 	/* 立直後であり送り槓はできないのでツモった牌だけ調べればよい */
-	if (haiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) < 4) {
+	if (TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) < 4) {
 		debug strf("ツモ牌 [%d] は、4枚揃っていません。", getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
 		return 0
 	}
@@ -485,9 +485,9 @@ return haiDaoPaiable
 	}
 	debug strf("ツモ牌 [%d] は、アタマ候補ではありません。", getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
 	/* 暗槓する前の待ち牌を調べる */
-	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, targetPlayer
+	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, targetPlayer
 	dim tmpchkMachihaiFlag, TILE_NONFLOWER_STRICT_MAX+1
-	repeat TILE_NONFLOWER_STRICT_MAX+1: tmpchkMachihaiFlag(cnt) = haiMachihaiFlag(cnt): loop
+	repeat TILE_NONFLOWER_STRICT_MAX+1: tmpchkMachihaiFlag(cnt) = MachihaiFlag(cnt): loop
 	/* 暗槓したあとの待ち牌を調べる */
 	repeat NUM_OF_TILES_IN_HAND
 		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) {
@@ -496,7 +496,7 @@ return haiDaoPaiable
 	loop
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer, 0
 	MeldPointerIncrement GameStat, targetPlayer
-	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, targetPlayer
+	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, targetPlayer
 	/* 手牌を書き戻す */
 	MeldPointerDecrement GameStat, targetPlayer: repeat NUM_OF_TILES_IN_HAND /* 手牌を書き戻す */
 		setHand GameStat, HAND_TILECODE, cnt, targetPlayer, tmpkanhand(cnt)
@@ -504,7 +504,7 @@ return haiDaoPaiable
 	/* 待ち牌が一致しないなら戻る */
 	MachiHaiDifference = 0
 	repeat TILE_NONFLOWER_STRICT_MAX+1
-		if (tmpchkMachihaiFlag(cnt) != haiMachihaiFlag(cnt)) {
+		if (tmpchkMachihaiFlag(cnt) != MachihaiFlag(cnt)) {
 			MachiHaiDifference = 1
 		}
 	loop

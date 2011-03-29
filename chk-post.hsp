@@ -11,9 +11,9 @@
 	trace "å„âÒÇµîªíËÇÃñÇÃèàóùÇ…ì¸ÇËÇ‹Ç∑ÅB"
 	/* åáîvòa */
 	if (getRule(RULE_KEPPAIHOH) != 0) {
-		countseentiles haiSeenCount, GameStat
-		countTilesInHand haiCount, GameStat, targetPlayer
-		if ((haiSeenCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+haiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) >= 4)&&(TsumoAgari == 1))||((haiSeenCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+haiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) > 4)&&(TsumoAgari == 0)) {
+		countseentiles SeenTiles, GameStat
+		countTilesInHand TileCount, GameStat, targetPlayer
+		if ((SeenTiles(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) >= 4)&&(TsumoAgari == 1))||((SeenTiles(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) > 4)&&(TsumoAgari == 0)) {
 			if ((MachiType == MACHI_KANCHAN)||(MachiType == MACHI_PENCHAN)||(MachiType == MACHI_TANKI)) {
 				if ((searchyaku(tmpYakuInfo, "ùèû»") == 0)&&(searchyaku(tmpYakuInfo, "ã‡å{íDêH") == 0)) {
 					addyaku tmpYakuInfo, "åáîvòa", 1
@@ -44,7 +44,7 @@
 			if (getDoraFlag(GameStat, DORA_OMOTE, TILE_NORTH_WIND) == 0) {
 				if (getDoraFlag(GameStat, DORA_OMOTE, TILE_NORTH_WIND) == 0) {
 					if ((getMenzen(GameStat, targetPlayer) == 0)||(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_NO)||(getRule(RULE_URADORA) == 1)||(getDoraFlag(GameStat, DORA_URA, TILE_NORTH_WIND) == 0)) {
-						if (haiMianziDat(0) == TILE_NORTH_WIND) {
+						if (MianziDat(0) == TILE_NORTH_WIND) {
 							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1
 							addyaku tmpYakuInfo, "ñkñç", -1
 						}

@@ -7,8 +7,8 @@
 #module PLAYER
 #include "const.as"
 /* ƒvƒƒCƒ„[‚Μ‘Ε”v */
-#deffunc playerinput var GameStat, int ProcessMode, int GameMode, array isRemotePlayer, int ActivePlayer, int PassivePlayer, var teDahai, int haiCurrentSutehai, int haiCurrentSutehaiAkaDora, array haiRon, array haiMinkan, array haiPon, array haiChi
-	dim haiMachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // ‹N‰Ζ‚Ε‚ΜƒoƒO–h~—p‚Ι‰Ό‰ϊ‰»
+#deffunc playerinput var GameStat, int ProcessMode, int GameMode, array isRemotePlayer, int ActivePlayer, int PassivePlayer, var teDahai, int CurrentSutehai, int CurrentSutehaiAkaDora, array RonFlag, array MinkanFlag, array PonFlag, array ChiFlag
+	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // ‹N‰Ζ‚Ε‚ΜƒoƒO–h~—p‚Ι‰Ό‰ϊ‰»
 	switch ProcessMode
 		case 0: gosub *playerdahaiwork: swbreak
 		case 1: gosub *playernakiwork: swbreak
@@ -17,13 +17,13 @@ return
 
 *playerdahaiwork
 	ldim tmpLabel, NUM_OF_TILES_IN_HAND-1
-	tmpLabel = *haiSelect01, *haiSelect02, *haiSelect03, *haiSelect04, *haiSelect05, *haiSelect06, *haiSelect07, *haiSelect08, *haiSelect09, *haiSelect10, *haiSelect11, *haiSelect12, *haiSelect13
+	tmpLabel = *SelTile01, *SelTile02, *SelTile03, *SelTile04, *SelTile05, *SelTile06, *SelTile07, *SelTile08, *SelTile09, *SelTile10, *SelTile11, *SelTile12, *SelTile13
 	objidpointer = 0: AgariAbilityFlag = 0
 	font fontname, 12, 0
-	haiSelect = -99 // –Ά“ό—Ν
+	SelectedTile = -99 // –Ά“ό—Ν
 	mode = 0
 	ButtonPos = 0
-	dim haiSelectButtonMask, NUM_OF_TILES_IN_HAND: TsumoAgari = 1
+	dim SelectedTileButtonMask, NUM_OF_TILES_IN_HAND: TsumoAgari = 1
 	Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 	ShantenJustnow = Shanten
 	targetPlayer = ActivePlayer
@@ -45,7 +45,7 @@ return
 	// ƒ[ƒ`γAa—Ή‚θ‚π©“¦‚·‚©‚Η‚¤‚©
 	if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) > RIICHI_NO) {
 		repeat NUM_OF_TILES_IN_HAND-1
-			haiSelectButtonMask(cnt) = 1
+			SelectedTileButtonMask(cnt) = 1
 		loop
 	}
 	ButtonFlag_Richi=0
@@ -61,9 +61,9 @@ return
 			ButtonFlag_Richi=1
 		}
 	}
-	targetPlayer = ActivePlayer: haiDaoPaiable = chkdaopaiability(GameStat, ActivePlayer)
+	targetPlayer = ActivePlayer: DaoPaiAbilityFlag = chkdaopaiability(GameStat, ActivePlayer)
 	ButtonFlag_Kyuushu=0
-	if ((haiDaoPaiable)&&(getFirstDrawFlag(GameStat, ActivePlayer))) {
+	if ((DaoPaiAbilityFlag)&&(getFirstDrawFlag(GameStat, ActivePlayer))) {
 		objsize 50, 30
 		pos 670, 500: button gosub "F2/—¬‹Η", *playerKyushu: tooltip@ stat-STATBOX, "‹γν‹γ”v‚πιΎ‚µA‚±‚Μ‹Η‚π—¬‚µ‚ά‚·"
 		objidpointer++
@@ -77,17 +77,17 @@ return
 		pos 620, 560: button gosub "ƒAƒKƒ", *playerTsumoAgari: tooltip@ stat-STATBOX, "ƒcƒ‚a—Ή‚θ‚π‚µ‚ά‚·"
 		objidpointer++
 		AgariAbilityFlag = 1
-		if (AutoAgariFlag() == 1) {haiSelect = -97}
+		if (AutoAgariFlag() == 1) {SelectedTile = -97}
 	}
 	font fontname, 12, 0
 	KanFlag = 0
-	countTilesInHand haiCount, GameStat, ActivePlayer
+	countTilesInHand TileCount, GameStat, ActivePlayer
 	repeat TILE_NONFLOWER_MAX-1, 1
 		if ((getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
 			// ΓΘ‚Ε‚«‚ικ‡
-			if (haiCount(cnt) == 4) {KanFlag = 1}
+			if (TileCount(cnt) == 4) {KanFlag = 1}
 			// ‰ΑΘ‚Ε‚«‚ικ‡
-			if (haiCount(cnt) == 1) {
+			if (TileCount(cnt) == 1) {
 				tmpnum = cnt
 				repeat MeldPointer(GameStat, ActivePlayer), 1
 					if (getMeld(GameStat, MELD_TILECODE, cnt, ActivePlayer)\TILE_CODE_MAXIMUM == tmpnum) {
@@ -102,7 +102,7 @@ return
 	ButtonFlag_Flower=0
 #ifdef SANMAX
 	if ((getRule(RULE_FLOWER_TILES) != 0)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
-		if ((haiCount(TILE_NORTH_WIND) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
+		if ((TileCount(TILE_NORTH_WIND) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
 			if ((getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO)||(Flowerabilityflag == 1)) {
 				objsize 50, 30
 				pos 720, 500: button gosub "F3/”²–k", *playerFlower: tooltip@ stat-STATBOX, "–k•—”v‚πƒKƒ‚Ζ‚µ‚Δ‚³‚η‚µ‚ά‚·(ƒNƒƒbƒN‚µ‚½‚ ‚Ζ‚Ι”v‚π‘I‘π‚µ‚Δ‚­‚Ύ‚³‚Ά)"
@@ -112,7 +112,7 @@ return
 		}
 	}
 #else
-	if (((haiCount(TILE_SPRING) >= 1)||(haiCount(TILE_SUMMER) >= 1)||(haiCount(TILE_AUTUMN) >= 1)||(haiCount(TILE_WINTER) >= 1)||(haiCount(TILE_PLUM) >= 1)||(haiCount(TILE_ORCHID) >= 1)||(haiCount(TILE_CHRYSANTHEMUM) >= 1)||(haiCount(TILE_BAMBOO) >= 1))&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
+	if (((TileCount(TILE_SPRING) >= 1)||(TileCount(TILE_SUMMER) >= 1)||(TileCount(TILE_AUTUMN) >= 1)||(TileCount(TILE_WINTER) >= 1)||(TileCount(TILE_PLUM) >= 1)||(TileCount(TILE_ORCHID) >= 1)||(TileCount(TILE_CHRYSANTHEMUM) >= 1)||(TileCount(TILE_BAMBOO) >= 1))&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
 		if ((getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO)||(Flowerabilityflag == 1)) {
 			objsize 50, 30
 			pos 720, 500: button gosub "F3/‰Τ”v", *playerFlower: tooltip@ stat-STATBOX, "‰Τ”v‚π‚³‚η‚µ‚ά‚·(ƒNƒƒbƒN‚µ‚½‚ ‚Ζ‚Ι”v‚π‘I‘π‚µ‚Δ‚­‚Ύ‚³‚Ά)"
@@ -130,10 +130,10 @@ return
 			ButtonFlag_Kan=1
 		}
 	}
-	gosub *haiSelectButton
-	countTilesInHand haiCount, GameStat, ActivePlayer
-	tmpClockTime = 0: tmphaiTimer = -999: tmpmode = -999
-	haiTimer = 15: gosub *redrscreen@
+	gosub *SelTileButton
+	countTilesInHand TileCount, GameStat, ActivePlayer
+	tmpClockTime = 0: tmpTimeLeft = -999: tmpmode = -999
+	TimeLeft = 15: gosub *redrscreen@
 	stick clickflag: await 0 // ƒoƒO–h~‚Μ‚½‚ίAƒNƒƒbƒNσ‘Τ‚πκ’Uζ“Ύ‚µ‚ΔΜ‚Δ‚ι
 	StartTurn = gettime(5)*60000+gettime(6)*1000+gettime(7)
 	repeat
@@ -143,13 +143,13 @@ return
 				if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0) {
 					dsplay@ SND_CLICK
 					vanish@: commonswitch GameStat, 0
-					haiSelect = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
+					SelectedTile = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 				}
 			}
 		}
 		TurnTime = gettime(5)*60000+gettime(6)*1000+gettime(7)
 		if (TurnTime < StartTurn) {TurnTime += 3600000}
-		haiTimer = ((15000-(TurnTime - StartTurn))/1000)+1
+		TimeLeft = ((15000-(TurnTime - StartTurn))/1000)+1
 		if (((TurnTime - StartTurn)/1000) != tmpClockTime) {
 			if (TurnTime-StartTurn >= 10000) {
 				dsplay@ SND_CLOCK
@@ -160,10 +160,10 @@ return
 			dim tmpKeyCode, NUM_OF_TILES_IN_HAND-1
 			tmpKeyCode = 49,50,51,52,53,54,55,56,57,48,189,222,220
 			repeat NUM_OF_TILES_IN_HAND-1
-				getkey tmp, tmpKeyCode(cnt): if (tmp==1)&&(haiSelectButtonMask(cnt)==0) {gosub tmpLabel(cnt)}
+				getkey tmp, tmpKeyCode(cnt): if (tmp==1)&&(SelectedTileButtonMask(cnt)==0) {gosub tmpLabel(cnt)}
 			loop
-			getkey tmp, 8: if (tmp==1)&&(haiSelectButtonMask(TSUMOHAI_INDEX)==0) {gosub *haiSelect14}
-			getkey tmp, 27: if (tmp==1)&&(haiSelectButtonMask(TSUMOHAI_INDEX)==0) {gosub *haiSelect14}
+			getkey tmp, 8: if (tmp==1)&&(SelectedTileButtonMask(TSUMOHAI_INDEX)==0) {gosub *SelTile14}
+			getkey tmp, 27: if (tmp==1)&&(SelectedTileButtonMask(TSUMOHAI_INDEX)==0) {gosub *SelTile14}
 			getkey tmp, 112: if (tmp==1)&&(ButtonFlag_Richi==3) {gosub *playerOpenRichi}
 			getkey tmp, 112: if (tmp==0)&&(ButtonFlag_Richi==2) {ButtonFlag_Richi=3}
 			getkey tmp, 112: if (tmp==1)&&(ButtonFlag_Richi==1) {gosub *playerRichi}
@@ -179,7 +179,7 @@ return
 			TurnTime = gettime(5)*60000+gettime(6)*1000+gettime(7)
 			if (TurnTime < StartTurn) {TurnTime += 3600000}
 		}
-		if ((haiTimer != tmphaiTimer)||(tmpmode != mode)) {
+		if ((TimeLeft != tmpTimeLeft)||(tmpmode != mode)) {
 			chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
 			switch mode
 				case 1: tmpStatus = "ƒ[ƒ`‚π‚µ‚ά‚·" :swbreak
@@ -192,24 +192,24 @@ return
 				case 4: tmpStatus = "ƒI[ƒvƒ“ƒ[ƒ`" :swbreak
 				default: tmpStatus = "‚ ‚Θ‚½‚Μ”Τ‚Ε‚·"
 			swend
-			tmpStatus += strf(" ‚ ‚Ζ%2d•b", haiTimer)
+			tmpStatus += strf(" ‚ ‚Ζ%2d•b", TimeLeft)
 			statmes tmpStatus
-			tmphaiTimer = haiTimer
+			tmpTimeLeft = TimeLeft
 			tmpmode = mode
 		}
 		if ((TurnTime-StartTurn >= 15000)) {
 			mode = 0
 			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0) {
-				haiSelect = TSUMOHAI_INDEX
+				SelectedTile = TSUMOHAI_INDEX
 			} else {
-				haiSelect = 0
+				SelectedTile = 0
 			}
 			vanish@: commonswitch GameStat, 0
 		}
-		if (haiSelect >= 0) {
+		if (SelectedTile >= 0) {
 			statmes ""
-			vanish@: commonswitch GameStat, 0: haiTimer = 0: gosub *redrscreen@
-			teDahai = haiSelect
+			vanish@: commonswitch GameStat, 0: TimeLeft = 0: gosub *redrscreen@
+			teDahai = SelectedTile
 			if (mode == 1) {
 				teDahai += DAHAI_TYPE_RIICHI
 				if (GameMode == 1) {serversend teDahai\DAHAI_TYPE_STEP+0x90, IsRemotePlayer}
@@ -221,8 +221,8 @@ return
 				if (GameMode == 2) {clientsend teDahai\DAHAI_TYPE_STEP+0xC0}
 			}
 			if (mode == 2) {
-				countTilesInHand haiCount, GameStat, ActivePlayer
-				if (haiCount(getHand(GameStat, HAND_TILECODE, haiSelect, ActivePlayer)) == 4) {
+				countTilesInHand TileCount, GameStat, ActivePlayer
+				if (TileCount(getHand(GameStat, HAND_TILECODE, SelectedTile, ActivePlayer)) == 4) {
 					teDahai += DAHAI_TYPE_KAN // ΓΘ‚Μ‚Ζ‚«
 					if (GameMode == 1) {serversend teDahai\DAHAI_TYPE_STEP+0x70, IsRemotePlayer}
 					if (GameMode == 2) {clientsend teDahai\DAHAI_TYPE_STEP+0x70}
@@ -250,7 +250,7 @@ return
 			}
 			break
 		}
-		if (haiSelect == -98) {
+		if (SelectedTile == -98) {
 			// —§’Ό‚·‚ικ‡
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
@@ -268,13 +268,13 @@ return
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
 				Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHand
-				if (Shanten > 0) {haiSelectButtonMask(cnt) = 1}
+				if (Shanten > 0) {SelectedTileButtonMask(cnt) = 1}
 			loop
-			gosub *haiSelectButton
-			countTilesInHand haiCount, GameStat, ActivePlayer
-			haiSelect == -99
+			gosub *SelTileButton
+			countTilesInHand TileCount, GameStat, ActivePlayer
+			SelectedTile == -99
 		}
-		if (haiSelect == -93) {
+		if (SelectedTile == -93) {
 			// ƒI[ƒvƒ“—§’Ό‚·‚ικ‡
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
@@ -284,27 +284,27 @@ return
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
 				Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHand
-				if (Shanten > 0) {haiSelectButtonMask(cnt) = 1}
+				if (Shanten > 0) {SelectedTileButtonMask(cnt) = 1}
 			loop
-			gosub *haiSelectButton
-			countTilesInHand haiCount, GameStat, ActivePlayer
-			haiSelect == -99
+			gosub *SelTileButton
+			countTilesInHand TileCount, GameStat, ActivePlayer
+			SelectedTile == -99
 		}
-		if (haiSelect == -96) {
+		if (SelectedTile == -96) {
 			// ΓΘE‰ΑΘ‚·‚ικ‡
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
 			vanish@: commonswitch GameStat, 0: mode = 2: objidpointer = 0
-			countTilesInHand haiCount, GameStat, ActivePlayer
+			countTilesInHand TileCount, GameStat, ActivePlayer
 			repeat NUM_OF_TILES_IN_HAND
-				if (haiCount(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)) < 4) {haiSelectButtonMask(cnt) = 1}
-				if (haiCount(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)) == 1) {
+				if (TileCount(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)) < 4) {SelectedTileButtonMask(cnt) = 1}
+				if (TileCount(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)) == 1) {
 					tmpnum = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 					tmpcnt = cnt
 					repeat MeldPointer(GameStat, ActivePlayer), 1
 						if (getMeld(GameStat, MELD_TILECODE, cnt, ActivePlayer)\TILE_CODE_MAXIMUM == tmpnum) {
 							if ((getMeld(GameStat, MELD_TILECODE, cnt, ActivePlayer)/MELD_TYPE_STEP >= MELD_TRIPLET_EXPOSED_MIN)&&(getMeld(GameStat, MELD_TILECODE, cnt, ActivePlayer)/MELD_TYPE_STEP <= MELD_TRIPLET_EXPOSED_MAX)) {
-								haiSelectButtonMask(tmpcnt) = 0
+								SelectedTileButtonMask(tmpcnt) = 0
 							}
 						}
 					loop
@@ -313,15 +313,15 @@ return
 			// —§’Όγ‚ΜΓΘ‚Μκ‡
 			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) > RIICHI_NO) {
 				repeat NUM_OF_TILES_IN_HAND-1
-					haiSelectButtonMask(cnt) = 1
+					SelectedTileButtonMask(cnt) = 1
 				loop
 			}
-			gosub *haiSelectButton
-			countTilesInHand haiCount, GameStat, ActivePlayer
-			haiSelect == -99
+			gosub *SelTileButton
+			countTilesInHand TileCount, GameStat, ActivePlayer
+			SelectedTile == -99
 		}
-		if (haiSelect == -97) {
-			haiTimer = 0: gosub *redrscreen@
+		if (SelectedTile == -97) {
+			TimeLeft = 0: gosub *redrscreen@
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
 			vanish@: commonswitch GameStat, 0 // ©–Μa
@@ -329,8 +329,8 @@ return
 			if (GameMode == 2) {clientsend 0x6f}
 			teDahai = -1: break
 		}
-		if (haiSelect == -95) {
-			haiTimer = 0: gosub *redrscreen@
+		if (SelectedTile == -95) {
+			TimeLeft = 0: gosub *redrscreen@
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
 			vanish@: commonswitch GameStat, 0 // ‹γν‹γ”v
@@ -338,29 +338,29 @@ return
 			if (GameMode == 2) {clientsend 0x6e}
 			teDahai = -2: break
 		}
-		if (haiSelect == -94) {
+		if (SelectedTile == -94) {
 			// ‰Τ”v‚π”²‚­κ‡
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
 			vanish@: commonswitch GameStat, 0: mode = 3: objidpointer = 0
 #ifdef SANMAX
 			repeat NUM_OF_TILES_IN_HAND
-				if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) != TILE_NORTH_WIND) {haiSelectButtonMask(cnt) = 1}
+				if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) != TILE_NORTH_WIND) {SelectedTileButtonMask(cnt) = 1}
 			loop
 #else
 			repeat NUM_OF_TILES_IN_HAND
-				if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) < TILE_SUIT_FLOWERS) {haiSelectButtonMask(cnt) = 1}
+				if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) < TILE_SUIT_FLOWERS) {SelectedTileButtonMask(cnt) = 1}
 			loop
 #endif
 			// —§’Όγ‚Μκ‡
 			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) > RIICHI_NO) {
 				repeat NUM_OF_TILES_IN_HAND-1
-					haiSelectButtonMask(cnt) = 1
+					SelectedTileButtonMask(cnt) = 1
 				loop
 			}
-			gosub *haiSelectButton
-			countTilesInHand haiCount, GameStat, ActivePlayer
-			haiSelect == -99
+			gosub *SelTileButton
+			countTilesInHand TileCount, GameStat, ActivePlayer
+			SelectedTile == -99
 		}
 		await 0
 	loop
@@ -369,17 +369,17 @@ return
 
 /* ƒvƒƒCƒ„[‚Μ–Β‚« */
 *playernakiwork
-	if (haiCurrentSutehai > TILE_SUIT_FLOWERS) {return /* ‰Τ”v‚Μκ‡‚Ν–ί‚ι */}
+	if (CurrentSutehai > TILE_SUIT_FLOWERS) {return /* ‰Τ”v‚Μκ‡‚Ν–ί‚ι */}
 	if (getAgariHouki(GameStat, getPlayer(GameStat)) == 1) {return /* a—Ή‚θ•ϊό‚Ύ‚Α‚½‚η–ί‚ι */}
 
 	font fontname, 48, 0
-	haiSelect = -99 // –Ά“ό—Ν
+	SelectedTile = -99 // –Ά“ό—Ν
 	playerThru = 1: TsumoAgari = 0: tmpShanten = 999
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehai
 	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL)
 	tmpShanten = Shanten
 	countyaku GameStat, yakuInfo, PassivePlayer, furikomiPlayer, TsumoAgari
-	chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, PassivePlayer
+	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, PassivePlayer
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
 	if ((countshanten(GameStat, PassivePlayer, SHANTEN_ORPHANS) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {
 		// ΓΘ‚Ι‘Ξ‚·‚ιΘ”»’θ‚Μ‚Ζ‚«‚ΕA‘m’®”v‚Ε‚Θ‚Άκ‡‚Ν–ί‚ι
@@ -391,19 +391,19 @@ return
 		objsize 200, 60: AtarihaiFlag = 1
 		pos 620, 560: button gosub "ƒAƒKƒ", *playerRonAgari: tooltip@ stat-STATBOX, "ƒƒ“a—Ή‚θ‚π‚µ‚ά‚·"
 		playerThru = 0
-		if (AutoAgariFlag() == 1) {haiSelect = -89}
+		if (AutoAgariFlag() == 1) {SelectedTile = -89}
 	}
 	font fontname, 12, 0
-	countTilesInHand haiCount, GameStat, PassivePlayer
+	countTilesInHand TileCount, GameStat, PassivePlayer
 	ButtonFlag1=0:ButtonFlag2=0:ButtonFlag3=0:ButtonFlag4=0:ButtonFlag5=0
 	if ((getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) == RIICHI_NO)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(AutoPassFlag() == 0)) {
-		if (haiCount(haiCurrentSutehai) >= 2) {
+		if (TileCount(CurrentSutehai) >= 2) {
 			objsize 50, 30
 			pos 720, 500: button gosub "F3/ƒ|ƒ“", *playerPon: tooltip@ stat-STATBOX, "ƒ|ƒ“‚π‚µ‚ά‚·"
 			playerThru = 0
 			ButtonFlag1=1
 		}
-		if ((haiCount(haiCurrentSutehai) >= 3)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
+		if ((TileCount(CurrentSutehai) >= 3)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
 			objsize 50, 30
 			pos 770, 500: button gosub "F4/ƒJƒ“", *playerMinkan: tooltip@ stat-STATBOX, "‘ε–ΎΘ‚π‚µ‚ά‚·"
 			playerThru = 0
@@ -411,23 +411,23 @@ return
 		}
 #ifndef ALLSANMA
 		// ƒ`[‚Ε‚«‚ιπFγ‰Ζ‚ΜΜ”v‚Ε‚ ‚ι‚±‚ΖA‚©‚ΒA””v‚Ε‚ ‚ι‚±‚Ζ
-		if ((haiCurrentSutehai < TILE_NUMERAL_MAX)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(ActivePlayer == ((PassivePlayer+3)\4))) {
-			if ((haiCount(haiCurrentSutehai+1) >= 1)&&(haiCount(haiCurrentSutehai+2) >= 1)) {
-				objsize 50, 30: tmpChiipai1 = (haiCurrentSutehai\TILE_SUIT_STEP): tmpChiipai2 = (haiCurrentSutehai\TILE_SUIT_STEP)+1: tmpChiipai3 = (haiCurrentSutehai\TILE_SUIT_STEP)+2
+		if ((CurrentSutehai < TILE_NUMERAL_MAX)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(ActivePlayer == ((PassivePlayer+3)\4))) {
+			if ((TileCount(CurrentSutehai+1) >= 1)&&(TileCount(CurrentSutehai+2) >= 1)) {
+				objsize 50, 30: tmpChiipai1 = (CurrentSutehai\TILE_SUIT_STEP): tmpChiipai2 = (CurrentSutehai\TILE_SUIT_STEP)+1: tmpChiipai3 = (CurrentSutehai\TILE_SUIT_STEP)+2
 				pos 620, 530: button gosub "F5/‰Ί‹h", *playerChi1: tooltip@ stat-STATBOX, ""+tmpChiipai1+tmpChiipai2+tmpChiipai3+"‚Μ`‚Εƒ`[‚π‚µ‚ά‚·"
 				playerThru = 0
 				ButtonFlag3=1
 			}
-			if ((haiCount(haiCurrentSutehai-1) >= 1)&&(haiCount(haiCurrentSutehai+1) >= 1)) {
-				objsize 50, 30: tmpChiipai1 = (haiCurrentSutehai\TILE_SUIT_STEP)-1: tmpChiipai2 = (haiCurrentSutehai\TILE_SUIT_STEP): tmpChiipai3 = (haiCurrentSutehai\TILE_SUIT_STEP)+1
+			if ((TileCount(CurrentSutehai-1) >= 1)&&(TileCount(CurrentSutehai+1) >= 1)) {
+				objsize 50, 30: tmpChiipai1 = (CurrentSutehai\TILE_SUIT_STEP)-1: tmpChiipai2 = (CurrentSutehai\TILE_SUIT_STEP): tmpChiipai3 = (CurrentSutehai\TILE_SUIT_STEP)+1
 				pos 670, 530: button gosub "F6/›Ζ‹h", *playerChi2: tooltip@ stat-STATBOX, ""+tmpChiipai1+tmpChiipai2+tmpChiipai3+"‚Μ`‚Εƒ`[‚π‚µ‚ά‚·"
 				playerThru = 0
 				ButtonFlag4=1
 			}
-			if (haiCurrentSutehai > 1) {
+			if (CurrentSutehai > 1) {
 				// κδέ‚ªΨ‚η‚κ‚½‚ΙƒoƒO‚ι‚Μ‚π–h~‚·‚ι‚½‚ί
-				if ((haiCount(haiCurrentSutehai-2) >= 1)&&(haiCount(haiCurrentSutehai-1) >= 1)) {
-					objsize 50, 30: tmpChiipai1 = (haiCurrentSutehai\TILE_SUIT_STEP)-2: tmpChiipai2 = (haiCurrentSutehai\TILE_SUIT_STEP)-1: tmpChiipai3 = (haiCurrentSutehai\TILE_SUIT_STEP)
+				if ((TileCount(CurrentSutehai-2) >= 1)&&(TileCount(CurrentSutehai-1) >= 1)) {
+					objsize 50, 30: tmpChiipai1 = (CurrentSutehai\TILE_SUIT_STEP)-2: tmpChiipai2 = (CurrentSutehai\TILE_SUIT_STEP)-1: tmpChiipai3 = (CurrentSutehai\TILE_SUIT_STEP)
 					pos 720, 530: button gosub "F7/γ‹h", *playerChi3: tooltip@ stat-STATBOX, ""+tmpChiipai1+tmpChiipai2+tmpChiipai3+"‚Μ`‚Εƒ`[‚π‚µ‚ά‚·"
 					playerThru = 0
 					ButtonFlag5=1
@@ -461,12 +461,12 @@ return
 			if (ginfo(2) == 0) {
 				if (clickflag & 512) {
 					dsplay@ SND_CLICK
-					vanish@: commonswitch GameStat, 0: haiSelect = -90
+					vanish@: commonswitch GameStat, 0: SelectedTile = -90
 				}
 			}
 			TurnTime = gettime(5)*60000+gettime(6)*1000+gettime(7)
 			if (TurnTime < StartTurn) {TurnTime += 3600000}
-			haiTimer = ((10000-(TurnTime - StartTurn))/1000)+1
+			TimeLeft = ((10000-(TurnTime - StartTurn))/1000)+1
 			if ((TurnTime-StartTurn >= 10000)) {
 				// ƒGƒ‰[–h~‚Μ‚½‚ίΔζ“Ύ
 				await 100
@@ -480,63 +480,63 @@ return
 				}
 			}
 			if ((TurnTime-StartTurn >= 10000)) {
-				haiSelect = -90: vanish@: commonswitch GameStat, 0
+				SelectedTile = -90: vanish@: commonswitch GameStat, 0
 			}
 //			gosub *redrscreen@
-			if (haiTimer != tmphaiTimer) {
+			if (TimeLeft != tmpTimeLeft) {
 				chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
-				statmes strf("Μ”vu%sv‚Φ‚Μ‘Ξ‰ ‚ ‚Ζ%2d•b", hainametable@(haiCurrentSutehai), haiTimer)
-				tmphaiTimer = haiTimer
+				statmes strf("Μ”vu%sv‚Φ‚Μ‘Ξ‰ ‚ ‚Ζ%2d•b", TileName(CurrentSutehai), TimeLeft)
+				tmpTimeLeft = TimeLeft
 				tmpmode = mode
 			}
 			// –³‹‚·‚ικ‡
-			if (haiSelect == -90) {break}
+			if (SelectedTile == -90) {break}
 			// ƒƒ“‚·‚ικ‡
-			if (haiSelect == -89) {
-				haiRon(getPlayer(GameStat)) = 1
-				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehai
-				setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, haiCurrentSutehaiAkaDora
+			if (SelectedTile == -89) {
+				RonFlag(getPlayer(GameStat)) = 1
+				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehai
+				setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehaiAkaDora
 				break
 			}
 			// ƒ|ƒ“‚·‚ικ‡
-			if (haiSelect == -88) {haiPon(getPlayer(GameStat)) = 1: break}
+			if (SelectedTile == -88) {PonFlag(getPlayer(GameStat)) = 1: break}
 			// ƒ`[‚·‚ικ‡
-			if (haiSelect == -87) {haiChi(getPlayer(GameStat)) = 1: break}
-			if (haiSelect == -86) {haiChi(getPlayer(GameStat)) = 2: break}
-			if (haiSelect == -85) {haiChi(getPlayer(GameStat)) = 3: break}
+			if (SelectedTile == -87) {ChiFlag(getPlayer(GameStat)) = 1: break}
+			if (SelectedTile == -86) {ChiFlag(getPlayer(GameStat)) = 2: break}
+			if (SelectedTile == -85) {ChiFlag(getPlayer(GameStat)) = 3: break}
 			// ‘ε–ΎΘ‚·‚ικ‡
-			if (haiSelect == -84) {haiMinkan(getPlayer(GameStat)) = 1: break}
+			if (SelectedTile == -84) {MinkanFlag(getPlayer(GameStat)) = 1: break}
 			await 0
 		loop
 	}
 	statmes ""
 	vanish@: commonswitch GameStat, 0
-	haiTimer = 0: gosub *redrscreen@
+	TimeLeft = 0: gosub *redrscreen@
 	if (GameMode == 2) {
 		SendingMsg = 0xa0
-		if (haiRon(getPlayer(GameStat)) == 1) {SendingMsg = 0xa1}
-		if (haiPon(getPlayer(GameStat)) == 1) {SendingMsg = 0xa2}
-		if (haiMinkan(getPlayer(GameStat)) == 1) {SendingMsg = 0xa3}
+		if (RonFlag(getPlayer(GameStat)) == 1) {SendingMsg = 0xa1}
+		if (PonFlag(getPlayer(GameStat)) == 1) {SendingMsg = 0xa2}
+		if (MinkanFlag(getPlayer(GameStat)) == 1) {SendingMsg = 0xa3}
 #ifndef ALLSANMA
-		if (haiChi(getPlayer(GameStat)) == 1) {SendingMsg = 0xa4}
-		if (haiChi(getPlayer(GameStat)) == 2) {SendingMsg = 0xa5}
-		if (haiChi(getPlayer(GameStat)) == 3) {SendingMsg = 0xa6}
+		if (ChiFlag(getPlayer(GameStat)) == 1) {SendingMsg = 0xa4}
+		if (ChiFlag(getPlayer(GameStat)) == 2) {SendingMsg = 0xa5}
+		if (ChiFlag(getPlayer(GameStat)) == 3) {SendingMsg = 0xa6}
 #endif
 		clientsend SendingMsg
 	}
 	// a—Ή‚θ”v‚π©“¦‚µ‚½κ‡‚ΝU’®
-	if ((tmpShanten <= -1)&&(haiRon(getPlayer(GameStat)) == 0)) {setDoujunFuriten GameStat, getPlayer(GameStat), 1}
+	if ((tmpShanten <= -1)&&(RonFlag(getPlayer(GameStat)) == 0)) {setDoujunFuriten GameStat, getPlayer(GameStat), 1}
 return
 
 /* ”v‘I‘πƒ{ƒ^ƒ“ */
-*haiSelectButton
+*SelTileButton
 	sdim tmpButtonTxt, 4, NUM_OF_TILES_IN_HAND-1
 	tmpButtonTxt = "‚P","‚Q","‚R","‚S","‚T","‚U","‚V","‚W","‚X","‚O","|","O",""
 	font fontname, 12, 0: objimage -1
 	objsize TILE_WIDTH, 20: tmpxpos = 0
 	repeat NUM_OF_TILES_IN_HAND-1
 		if (getHand(GameStat, HAND_TILECODE, cnt, getPlayer(GameStat)) != 0) {
-			if (haiSelectButtonMask(cnt) == 0) {
+			if (SelectedTileButtonMask(cnt) == 0) {
 				tmpButton = cnt: gosub *makebuttonhint
 				if (buttontxt=="") {buttontxt = tmpButtonTxt(cnt)}
 				pos 125+(tmpxpos*TILE_WIDTH), 604: button gosub buttontxt, tmpLabel(cnt)
@@ -547,10 +547,10 @@ return
 	loop
 	if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) != 0) {
 		pos 125+(tmpxpos*TILE_WIDTH)+((TILE_WIDTH*(1-getHeavenHandFlag(GameStat)))/3), 604
-		if (haiSelectButtonMask(TSUMOHAI_INDEX) == 0) {
+		if (SelectedTileButtonMask(TSUMOHAI_INDEX) == 0) {
 			tmpButton = TSUMOHAI_INDEX: gosub *makebuttonhint
 			if (buttontxt=="") {buttontxt = "BS"}
-			button gosub buttontxt, *haiSelect14
+			button gosub buttontxt, *SelTile14
 			tmpid=stat: gosub *maketooltip@
 		}
 		tmpxpos++
@@ -566,20 +566,20 @@ return
 		setHand GameStat, HAND_TILECODE, tmpButton, getPlayer(GameStat), tmphai02
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat), 0
 //		Shanten = countshanten(GameStat, getPlayer(GameStat), SHANTEN_ALL)
-		chkfuriten haiFuriten, haiMachihaiFlag, haiMachihaiCount, haiMachihaiTotal, MachiMen, GameStat, getPlayer(GameStat)
-		evalFuritenFlag = haiFuriten
+		chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getPlayer(GameStat)
+		evalFuritenFlag = FuritenFlag
 		if (AgariAbilityFlag == 0) {
 			tmpflag = 0
 			repeat TILE_NONFLOWER_STRICT_MAX,1
-				if (haiMachihaiCount(cnt) >= 0) {
+				if (MachihaiCount(cnt) >= 0) {
 					tmpflag = 1
 				}
 			loop
 			if (tmpflag == 1) {
-				buttontxt = "("+haiMachihaiTotal+")"
+				buttontxt = "("+MachihaiTotal+")"
 			}
 		}
-		buttonMachihaiTotal = haiMachihaiTotal
+		buttonMachihaiTotal = MachihaiTotal
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat), tmphai02
 		setHand GameStat, HAND_TILECODE, tmpButton, getPlayer(GameStat), tmphai01
 	}
@@ -589,7 +589,7 @@ return
 *maketooltip@
 	tmpflag = 0
 	repeat TILE_NONFLOWER_STRICT_MAX-1,1
-		if (haiMachihaiCount(cnt) >= 0) {
+		if (MachihaiCount(cnt) >= 0) {
 			tmpflag = 1
 		}
 	loop
@@ -602,8 +602,8 @@ return
 		}
 		tmpttip += ""+MachiMen+"–ε’£"
 		repeat TILE_NONFLOWER_STRICT_MAX-1,1
-			if (haiMachihaiCount(cnt) >= 0) {
-				tmpttip += " "+hainametable@(cnt)+"("+haiMachihaiCount(cnt)+")"
+			if (MachihaiCount(cnt) >= 0) {
+				tmpttip += " "+TileName(cnt)+"("+MachihaiCount(cnt)+")"
 			}
 		loop
 		tmpttip += " ‘Ò‚Ώ"
@@ -613,72 +613,72 @@ return
 return
 
 // ”v‘I‘πƒ{ƒ^ƒ“
-*haiSelect01
-	dsplay@ SND_BUTTON: haiSelect = 0: return
-*haiSelect02
-	dsplay@ SND_BUTTON: haiSelect = 1: return
-*haiSelect03
-	dsplay@ SND_BUTTON: haiSelect = 2: return
-*haiSelect04
-	dsplay@ SND_BUTTON: haiSelect = 3: return
-*haiSelect05
-	dsplay@ SND_BUTTON: haiSelect = 4: return
-*haiSelect06
-	dsplay@ SND_BUTTON: haiSelect = 5: return
-*haiSelect07
-	dsplay@ SND_BUTTON: haiSelect = 6: return
-*haiSelect08
-	dsplay@ SND_BUTTON: haiSelect = 7: return
-*haiSelect09
-	dsplay@ SND_BUTTON: haiSelect = 8: return
-*haiSelect10
-	dsplay@ SND_BUTTON: haiSelect = 9: return
-*haiSelect11
-	dsplay@ SND_BUTTON: haiSelect = 10: return
-*haiSelect12
-	dsplay@ SND_BUTTON: haiSelect = 11: return
-*haiSelect13
-	dsplay@ SND_BUTTON: haiSelect = 12: return
-*haiSelect14
-	dsplay@ SND_BUTTON: haiSelect = TSUMOHAI_INDEX: return
+*SelTile01
+	dsplay@ SND_BUTTON: SelectedTile = 0: return
+*SelTile02
+	dsplay@ SND_BUTTON: SelectedTile = 1: return
+*SelTile03
+	dsplay@ SND_BUTTON: SelectedTile = 2: return
+*SelTile04
+	dsplay@ SND_BUTTON: SelectedTile = 3: return
+*SelTile05
+	dsplay@ SND_BUTTON: SelectedTile = 4: return
+*SelTile06
+	dsplay@ SND_BUTTON: SelectedTile = 5: return
+*SelTile07
+	dsplay@ SND_BUTTON: SelectedTile = 6: return
+*SelTile08
+	dsplay@ SND_BUTTON: SelectedTile = 7: return
+*SelTile09
+	dsplay@ SND_BUTTON: SelectedTile = 8: return
+*SelTile10
+	dsplay@ SND_BUTTON: SelectedTile = 9: return
+*SelTile11
+	dsplay@ SND_BUTTON: SelectedTile = 10: return
+*SelTile12
+	dsplay@ SND_BUTTON: SelectedTile = 11: return
+*SelTile13
+	dsplay@ SND_BUTTON: SelectedTile = 12: return
+*SelTile14
+	dsplay@ SND_BUTTON: SelectedTile = TSUMOHAI_INDEX: return
 
 *playerRichi
-	dsplay@ SND_BUTTON: haiSelect = -98: return
+	dsplay@ SND_BUTTON: SelectedTile = -98: return
 
 *playerTsumoAgari
-	dsplay@ SND_BUTTON: haiSelect = -97: return
+	dsplay@ SND_BUTTON: SelectedTile = -97: return
 
 *playerAnkan
-	dsplay@ SND_BUTTON: haiSelect = -96: return
+	dsplay@ SND_BUTTON: SelectedTile = -96: return
 
 *playerKyushu
-	dsplay@ SND_BUTTON: haiSelect = -95: return
+	dsplay@ SND_BUTTON: SelectedTile = -95: return
 
 *playerFlower
-	dsplay@ SND_BUTTON: haiSelect = -94: return
+	dsplay@ SND_BUTTON: SelectedTile = -94: return
 
 *playerOpenRichi
-	dsplay@ SND_BUTTON: haiSelect = -93: return
+	dsplay@ SND_BUTTON: SelectedTile = -93: return
 
 *playerIgnoreNaki
-	dsplay@ SND_BUTTON: haiSelect = -90: return
+	dsplay@ SND_BUTTON: SelectedTile = -90: return
 
 *playerRonAgari
-	dsplay@ SND_BUTTON: haiSelect = -89: return
+	dsplay@ SND_BUTTON: SelectedTile = -89: return
 
 *playerPon
-	dsplay@ SND_BUTTON: haiSelect = -88: return
+	dsplay@ SND_BUTTON: SelectedTile = -88: return
 
 #ifndef ALLSANMA
 *playerChi1
-	dsplay@ SND_BUTTON: haiSelect = -87: return
+	dsplay@ SND_BUTTON: SelectedTile = -87: return
 *playerChi2
-	dsplay@ SND_BUTTON: haiSelect = -86: return
+	dsplay@ SND_BUTTON: SelectedTile = -86: return
 *playerChi3
-	dsplay@ SND_BUTTON: haiSelect = -85: return
+	dsplay@ SND_BUTTON: SelectedTile = -85: return
 #endif
 
 *playerMinkan
-	dsplay@ SND_BUTTON: haiSelect = -84: return
+	dsplay@ SND_BUTTON: SelectedTile = -84: return
 
 #global
