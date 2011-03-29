@@ -1674,6 +1674,31 @@
 	RuleDescription(RULE_SAYONARA_HOMERUN) = "サヨナラホームランの有無と価値を設定します(海底の１つ前の牌を槓して嶺上開花)"
 	RuleTxt(0, RULE_SAYONARA_HOMERUN) = "なし", "３飜"
 
+	RuleName(RULE_KYUKYUSHA) = "救急車"
+	RuleDescription(RULE_KYUKYUSHA) = "救急車の有無と価値を設定します(９の三色同刻、白の刻子、中の雀頭)"
+	RuleTxt(0, RULE_KYUKYUSHA) = "なし", "役満"
+	nonumsanma RULE_KYUKYUSHA
+
+	RuleName(RULE_TOUNANSHA) = "盗難車"
+	RuleDescription(RULE_TOUNANSHA) = "盗難車の有無と価値を設定します(東、南、西の刻子)"
+	RuleTxt(0, RULE_TOUNANSHA) = "なし", "役満"
+	nonumsanma RULE_TOUNANSHA
+
+	RuleName(RULE_WEST_RED) = "中西君"
+	RuleDescription(RULE_WEST_RED) = "中西君の有無と価値を設定します(中、西の刻子)"
+	RuleTxt(0, RULE_WEST_RED) = "なし", "１飜", "３飜"
+	nonumsanma RULE_WEST_RED
+
+	RuleName(RULE_SEISHUN_KUINASHI) = "青春に悔いなし/あり"
+	RuleDescription(RULE_SEISHUN_KUINASHI) = "青春に悔いなしの有無と価値を設定します(門前で発と中の刻子。鳴くと「青春に悔いあり」と名を変える：役牌が複合)"
+	RuleTxt(0, RULE_SEISHUN_KUINASHI) = "なし", "門前１飜", "門前２飜、副露１飜"
+	nonumsanma RULE_SEISHUN_KUINASHI
+
+	RuleName(RULE_HIGASHIKANTO_EXPWY) = "東関東自動車道"
+	RuleDescription(RULE_HIGASHIKANTO_EXPWY) = "東関東自動車道の有無と価値を設定します(二筒、四筒、六筒、東、西で対々和)"
+	RuleTxt(0, RULE_HIGASHIKANTO_EXPWY) = "なし", "役満"
+	nonumsanma RULE_HIGASHIKANTO_EXPWY
+
 return
 
 #undef noregsanma

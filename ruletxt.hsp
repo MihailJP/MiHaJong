@@ -305,7 +305,8 @@
 	AddRuleText3 "偶数対々和", RuleStat(RULE_EVEN_TOITOI)
 #ifndef SANMAS
 	AddRuleText1 "東發つきもの", RuleStat(RULE_EAST_GREEN)
-	AddRuleText3 "南白つきもの", RuleStat(RULE_SOUTH_WHITE)
+	AddRuleText2 "南白つきもの", RuleStat(RULE_SOUTH_WHITE)
+	AddRuleText3 "中西君", RuleStat(RULE_WEST_RED)
 #endif
 	AddRuleText1 "頂三刻", RuleStat(RULE_TINSANKOH)
 	AddRuleText2 "筋牌刻", RuleStat(RULE_CHINPAIKOH)
@@ -350,7 +351,8 @@
 #ifndef SANMAS
 	AddRuleText1 "風花雪月", RuleStat(RULE_FUUKA_SETSUGETSU)
 	AddRuleText3 "花鳥風月", RuleStat(RULE_KACHOU_FUUGETSU)
-	AddRuleText "東北自動車道", RuleStat(RULE_TOHOKU_EXPWY)
+	AddRuleText1 "東北自動車道", RuleStat(RULE_TOHOKU_EXPWY)
+	AddRuleText3 "東関東自動車道", RuleStat(RULE_HIGASHIKANTO_EXPWY)
 	AddRuleText "西中島南方", RuleStat(RULE_NISHINAKAJIMA)
 	AddRuleText "中原逐鹿", RuleStat(RULE_CHUUGEN_CHIKUROKU)
 #endif
@@ -388,6 +390,15 @@
 #endif
 #ifndef ALLSANMA
 	AddRuleText "アル中", RuleStat(RULE_ALCOHOLISM)
+#endif
+#ifndef SANMAS
+	AddRuleText "救急車", RuleStat(RULE_KYUKYUSHA)
+	AddRuleText "盗難車", RuleStat(RULE_TOUNANSHA)
+	switch Rule(RULE_SEISHUN_KUINASHI)
+		case 0: chatappend "*** 青春に悔いなしはなし\n": swbreak
+		case 1: chatappend "*** 青春に悔いなしは１飜\n": swbreak
+		case 2: chatappend "*** 青春に悔いなしは２飜、青春に悔いありは１飜\n": swbreak
+	swend
 #endif
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText1 "二暗槓", RuleStat(RULE_RYANANKAN)

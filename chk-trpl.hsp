@@ -320,6 +320,16 @@
 			delyaku tmpYakuInfo, "¬ˆêF"
 		}
 	}
+	/* “ŒŠÖ“Œ©“®Ô“¹ */
+	if (getRule(RULE_HIGASHIKANTO_EXPWY) != 0) {
+		yakuFlag = 0
+		if ((DuiCount(TILE_SUIT_CIRCLES+2) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+4) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+6) >= 1)&&(DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_WEST_WIND) >= 1)) {yakuFlag = 1}
+		if (yakuFlag) {
+			addyakuman tmpYakuInfo, "“ŒŠÖ“Œ©“®Ô“¹", 1
+			delyaku tmpYakuInfo, "‘ÎX˜a"
+			delyaku tmpYakuInfo, "¬ˆêF"
+		}
+	}
 	/* ’†‘Œn‚Ì‚¨‚ß‚Å‚½‚¢–ğ */
 	if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(haiMianziDat(0) == TILE_SUIT_CIRCLES+1)&&(getRule(RULE_KOUKEI_HOUGYOU) != 0)) {
 		addyakuman tmpYakuInfo, "gŒ{•ñ‹Å", 1
@@ -1043,6 +1053,15 @@
 			addyaku tmpYakuInfo, "“ì”’‚Â‚«‚à‚Ì", 1
 		}
 	}
+	/* ’†¼ŒN */
+	if (getRule(RULE_WEST_RED) != 0) {
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)) {
+			switch getRule(RULE_WEST_RED)
+				case 1: addyaku tmpYakuInfo, "’†¼ŒN", 1: swbreak
+				case 2: addyaku tmpYakuInfo, "’†¼ŒN", 3: swbreak
+			swend
+		}
+	}
 	/* ”’’¹ */
 	if (getRule(RULE_HAKUCHO) != 0) {
 		if ((Kezi == 4)&&(KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)) {
@@ -1136,6 +1155,45 @@
 			delyaku tmpYakuInfo, "‘ÎX˜a"
 			delyaku tmpYakuInfo, "–ğ”vE’†"
 			delyaku tmpYakuInfo, "OF“¯"
+		}
+	}
+#endif
+#ifndef SANMAS
+	/* ‹~‹}Ô */
+	if (getRule(RULE_KYUKYUSHA) != 0) {
+		if ((KezCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+9) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
+			addyakuman tmpYakuInfo, "‹~‹}Ô", 1
+			delyaku tmpYakuInfo, "‘ÎX˜a"
+			delyaku tmpYakuInfo, "–ğ”vE”’"
+			delyaku tmpYakuInfo, "OF“¯"
+			delyaku tmpYakuInfo, "¬˜V“ª"
+		}
+	}
+	/* ““ïÔ */
+	if (getRule(RULE_TOUNANSHA) != 0) {
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "¬lŠì")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "‘ålŠì")
+		if ((KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_SOUTH_WIND) >= 1)&&(KezCount(TILE_WEST_WIND) >= 1)&&(tmpyakuCensored == 0)) {
+			addyakuman tmpYakuInfo, "““ïÔ", 1
+			delyaku tmpYakuInfo, "O•—"
+		}
+	}
+	/* Ât‚É‰÷‚¢‚È‚µ */
+	if (getRule(RULE_SEISHUN_KUINASHI) != 0) {
+		tmpyakuCensored = 0
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "¬OŒ³")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "‘åOŒ³")
+		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_GREEN_DRAGON) >= 1)&&(tmpyakuCensored == 0)) {
+			switch getRule(RULE_SEISHUN_KUINASHI)
+				case 1:
+					if (getMenzen(GameStat, targetPlayer) == 1) {addyaku tmpYakuInfo, "Ât‚É‰÷‚¢‚È‚µ", 1}
+					swbreak
+				case 2:
+					if (getMenzen(GameStat, targetPlayer) == 1) {addyaku tmpYakuInfo, "Ât‚É‰÷‚¢‚È‚µ", 2}
+					else {addyaku tmpYakuInfo, "Ât‚É‰÷‚¢‚ ‚è", 1}
+					swbreak
+			swend
 		}
 	}
 #endif
