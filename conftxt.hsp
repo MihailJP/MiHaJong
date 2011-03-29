@@ -92,7 +92,7 @@
 	
 	RuleName(RULE_RYANSHIBA) = "“ργΚ”›‚θ"
 	RuleDescription(RULE_RYANSHIBA) = "“ργΚ”›‚θ‚Μ—L–³‚πέ’θ‚µ‚ά‚·"
-	RuleTxt(0, RULE_RYANSHIBA) = "‚Θ‚µ", "‚T–{κΘ~"
+	RuleTxt(0, RULE_RYANSHIBA) = "‚Θ‚µ", "‚T–{κΘ~", "‚S–{κΘ~"
 	
 	RuleName(RULE_ROUND_CONTINUATION) = "A‘‘π"
 	RuleDescription(RULE_ROUND_CONTINUATION) = "r”v‚ΜA‘‘π‚πέ’θ‚µ‚ά‚·"

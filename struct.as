@@ -9,10 +9,10 @@ PlayerScore, playerChip, SumaroFlag, YakitoriFlag, \
 PlayerID, GameLength, GameRound, LoopRound, Honba, Deposit, AgariChain, LastAgariPlayer, \
 Hand, Discard, Meld, MenzenFlag, HandStat, NumberOfQuads, RichiFlag, OpenRichiWait, \
 FirstDrawFlag, DoujunFuriten, AgariHouki, FlowerFlag, NorthFlag, \
-KangFlag, KangNum, haiRichiCounter, \
-haiWareme, haiDoukasen, haiDice1, haiDice2, haiDice1Direction, haiDice2Direction, \
-PaoFlag, Deck, haiDeadTiles, ExtraRinshan, hncnShibari, \
-DoraFlag, haiPointer, haiDoraPointer, haiRinshanPointer, haiTian, \
+KangFlag, KangNum, RichiCounter, \
+WaremePlayer, DoukasenPlayer, Dice1, Dice2, Dice1Direction, Dice2Direction, \
+PaoFlag, Deck, DeadTiles, ExtraRinshan, ShibariFlag, \
+DoraFlag, TilePointer, DoraPointer, RinshanPointer, TianHuFlag, \
 PreviousMeld, ConnectionLost
 
 #include "const.as"
@@ -226,43 +226,43 @@ PreviousMeld, ConnectionLost
 	return KangNum
 
 #modfunc setRichiCounterFlag int value
-	haiRichiCounter = value
+	RichiCounter = value
 	return
 #modcfunc getRichiCounterFlag
-	return haiRichiCounter
+	return RichiCounter
 
 #modfunc calcWareme
 #ifdef ALLSANMA
 	if ((getRule(RULE_WAREME) != 0)||(getRule(RULE_KAIMENKAZE) != 0)) {
-		haiWareme = ((GameRound-(GameRound/4))+24+(haiDice1+haiDice2)-1)\3
+		WaremePlayer = ((GameRound-(GameRound/4))+24+(Dice1+Dice2)-1)\3
 #ifdef SANMA4
-		haiWareme = ((0)+24+(haiDice1+haiDice2)-1)\3
+		WaremePlayer = ((0)+24+(Dice1+Dice2)-1)\3
 		switch (GameRound\NUM_OF_PLAYERS)
 			case 0: tobePlayed = 0, 1, 2: swbreak
 			case 1: tobePlayed = 1, 2, 3: swbreak
 			case 2: tobePlayed = 2, 3, 0: swbreak
 			case 3: tobePlayed = 3, 0, 1: swbreak
 		swend
-		haiWareme = tobePlayed(haiWareme)
+		WaremePlayer = tobePlayed(WaremePlayer)
 #endif
 	}
 #else
 	if ((getRule(RULE_WAREME) != 0)||(getRule(RULE_KAIMENKAZE) != 0)) {
-		haiWareme = ((GameRound\4)+32+(haiDice1+haiDice2)-1)\4
+		WaremePlayer = ((GameRound\4)+32+(Dice1+Dice2)-1)\4
 	}
 #endif
 	return
 #modcfunc getWareme
-	return haiWareme
+	return WaremePlayer
 
 #modfunc setDoukasen int value
-	haiDoukasen = value
+	DoukasenPlayer = value
 	return
 #modcfunc getDoukasen
-	return haiDoukasen
+	return DoukasenPlayer
 
 #modcfunc getShibari
-	return hncnShibari
+	return ShibariFlag
 
 #modfunc setPao int Page, int Yaku, int value
 	PaoFlag(Yaku, Page) = value
@@ -272,26 +272,26 @@ PreviousMeld, ConnectionLost
 
 #modfunc setDice int ID, int Direction, int value
 	switch ID+Direction*2
-		case 0: haiDice1 = value: swbreak
-		case 1: haiDice2 = value: swbreak
-		case 2: haiDice1Direction = value: swbreak
-		case 3: haiDice2Direction = value: swbreak
+		case 0: Dice1 = value: swbreak
+		case 1: Dice2 = value: swbreak
+		case 2: Dice1Direction = value: swbreak
+		case 3: Dice2Direction = value: swbreak
 	swend
 	return
 #modcfunc getDice int ID, int Direction
 	switch ID+Direction*2
-		case 0: return haiDice1: swbreak
-		case 1: return haiDice2: swbreak
-		case 2: return haiDice1Direction: swbreak
-		case 3: return haiDice2Direction: swbreak
+		case 0: return Dice1: swbreak
+		case 1: return Dice2: swbreak
+		case 2: return Dice1Direction: swbreak
+		case 3: return Dice2Direction: swbreak
 	swend
 	return 0x7fffffff
 
 #modfunc addDeadWallLength int value
-	haiDeadTiles += value
+	DeadTiles += value
 	return
 #modcfunc getDeadWallLength
-	return haiDeadTiles
+	return DeadTiles
 
 #modfunc setWall int Page, int Index, int value
 	Deck(Index, Page) = value
@@ -303,29 +303,29 @@ PreviousMeld, ConnectionLost
 	return ExtraRinshan
 
 #modfunc setDrawPointer int value
-	haiPointer = value: return
+	TilePointer = value: return
 #modfunc incDrawPointer
-	haiPointer++: return
+	TilePointer++: return
 #modcfunc getDrawPointer
-	return haiPointer
+	return TilePointer
 
 #modfunc setDoraPointer int value
-	haiDoraPointer = value: return
+	DoraPointer = value: return
 #modcfunc getDoraPointer
-	return haiDoraPointer
+	return DoraPointer
 
 #modfunc setRinshanPointer int value
-	haiRinshanPointer = value: return
+	RinshanPointer = value: return
 #modfunc decRinshanPointer
-	haiRinshanPointer--: return
+	RinshanPointer--: return
 #modcfunc getRinshanPointer
-	return haiRinshanPointer
+	return RinshanPointer
 
 #modfunc setHeavenHandFlag int value
-	haiTian = value
+	TianHuFlag = value
 	return
 #modcfunc getHeavenHandFlag
-	return haiTian
+	return TianHuFlag
 
 #modfunc setPreviousMeld int Page, int value
 	PreviousMeld(Page) = value
@@ -353,10 +353,10 @@ PreviousMeld, ConnectionLost
 /* 局単位での初期化 */
 #modfunc inittable
 	dim ConnectionLost, NUM_OF_PLAYERS // 回線切断による和了り放棄
-	if ((Honba >= 5)&&(getRule(RULE_RYANSHIBA) == 1)) {
-		hncnShibari = 1 //二飜縛り
+	if (((Honba >= 5)&&(getRule(RULE_RYANSHIBA) == 1))||((Honba >= 4)&&(getRule(RULE_RYANSHIBA) == 2))) {
+		ShibariFlag = 1 //二飜縛り
 	} else {
-		hncnShibari = 0
+		ShibariFlag = 0
 	}
 	// 包フラグ（-1…なし、0～3…該当プレイヤー）
 	dim PaoFlag, PAO_YAKU_PAGES, PAO_PLAYER_PAGES
@@ -364,7 +364,7 @@ PreviousMeld, ConnectionLost
 		PaoFlag(cnt\PAO_YAKU_PAGES, cnt/PAO_YAKU_PAGES) = -1
 	loop
 #ifdef ALLSANMA
-	haiDeadTiles = 14 // 王牌の数
+	DeadTiles = 14 // 王牌の数
 	dim Deck, 108, WALL_PAGES // 壁牌の配列
 	if (getRule(RULE_FLOWER_TILES) != 0) {
 		ExtraRinshan = 4
@@ -374,14 +374,14 @@ PreviousMeld, ConnectionLost
 #else
 	if (getRule(RULE_FLOWER_TILES) != 0) {
 		if (getRule(RULE_FLOWER_TILES) == 3) {
-			haiDeadTiles = 22 // 王牌の数(花牌を入れる時は特別に２２枚残しとする)
+			DeadTiles = 22 // 王牌の数(花牌を入れる時は特別に２２枚残しとする)
 			dim Deck, 144, WALL_PAGES // 壁牌の配列
 		} else {
-			haiDeadTiles = 18 // 王牌の数
+			DeadTiles = 18 // 王牌の数
 			dim Deck, 140, WALL_PAGES // 壁牌の配列
 		}
 	} else {
-		haiDeadTiles = 14 // 王牌の数
+		DeadTiles = 14 // 王牌の数
 		dim Deck, 136, WALL_PAGES // 壁牌の配列
 	}
 #endif
@@ -402,28 +402,28 @@ PreviousMeld, ConnectionLost
 #endif
 	dim KangFlag, KANG_PAGES // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
 	KangNum = 0 // 四槓流局、四槓子などの判定に使う
-	haiRichiCounter = 0 // リーチをカウンター(宣言牌をロン)
-	haiWareme = -1 // 割れ目の位置(-1で割れ目なし)
-	haiDoukasen = -1 // 導火線の位置(-1で導火線なし)
-	haiDoraPointer = 999
-	haiDice1 = 0: haiDice2 = 0
-	haiDice1direction = 0: haiDice2direction = 0
-	haiPointer = 0 // ツモ牌のポインタ
+	RichiCounter = 0 // リーチをカウンター(宣言牌をロン)
+	WaremePlayer = -1 // 割れ目の位置(-1で割れ目なし)
+	DoukasenPlayer = -1 // 導火線の位置(-1で導火線なし)
+	DoraPointer = 999
+	Dice1 = 0: Dice2 = 0
+	Dice1direction = 0: Dice2direction = 0
+	TilePointer = 0 // ツモ牌のポインタ
 #ifdef ALLSANMA
-	haiRinshanPointer = 107 // 嶺上牌のポインタ
+	RinshanPointer = 107 // 嶺上牌のポインタ
 #else
 	switch getRule(RULE_FLOWER_TILES) // 嶺上牌のポインタ
 		case 1: case 2:
-			haiRinshanPointer = 139
+			RinshanPointer = 139
 			swbreak
 		case 3:
-			haiRinshanPointer = 143
+			RinshanPointer = 143
 			swbreak
 		default:
-			haiRinshanPointer = 135
+			RinshanPointer = 135
 	swend
 #endif
-	haiTian = 1 // 親の第一打牌がまだ（天和の判定などに使う）
+	TianHuFlag = 1 // 親の第一打牌がまだ（天和の判定などに使う）
 	repeat NUM_OF_PLAYERS: MenzenFlag(cnt) = 1: loop
 	repeat NUM_OF_PLAYERS: FirstDrawFlag(cnt) = 1: loop
 	dim PreviousMeld, PREVMELD_PAGES // 先ほど鳴いた牌（喰い替えの判定に使う）
