@@ -143,7 +143,7 @@ repeat NUM_OF_PLAYERS-1
 				if (getDoraPointer(GameStat) <= AlicePointer) {break}
 				setDoraPointer GameStat, getDoraPointer(GameStat) - 2
 				dsplay SND_MEKURI
-				gosub *redrscreen: await 1200
+				redrscreen: await 1200
 			loop
 			setDoraPointer GameStat, tmpDoraPointer
 			tmpAliceFlag = 1
@@ -694,7 +694,7 @@ repeat NUM_OF_PLAYERS-1
 		// 誤ロン、誤ツモ以外の錯和
 		if (TsumoAgari == AGARI_KUIKAE) {setCenterTitle "喰替錯和": ResultDesc += "(喰い替え)"} // 喰い替えをしたとき
 		if (TsumoAgari > 1) {dsplay SND_PAGE} else {dsplay SND_CUOHU}
-		gosub *redrscreen: await 5000
+		redrscreen: await 5000
 
 		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 #ifdef SANMAT
@@ -746,7 +746,7 @@ repeat NUM_OF_PLAYERS-1
 
 	if (TsumoAgari == 1) {break /* ツモ和了りの時は終了 */}
 	setDeposit GameStat, 0
-	gosub *redrscreen: redraw 1
+	redrscreen: redraw 1
 loop
 RoundEndType = ENDKYOKU_CHONBO-tmpagariflag
 switch getRule(RULE_SIMULTANEOUS_MAHJONG)

@@ -30,7 +30,9 @@ return
 #global
 
 /* Ä•`‰æ(æÎU‚è‚ÌŽž) */
-*redrdice
+#module
+#include "const.as"
+#deffunc redrdice var GameStat, int bgColorR, int bgColorG, int bgColorB
 	repeat NUM_OF_ACTUAL_PLAYERS
 		gsel SCR_PLAYER_BUFFER_UPPER+cnt: gmode gmode_mem
 		if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
@@ -54,9 +56,16 @@ return
 	putcentertitle
 	redraw 1
 return
+#global
 
 /* Ä•`‰æ */
-*redrscreen
+#module
+#include "const.as"
+#deffunc redrscreen
+	doredrscreen GameStat@, GameMode@, WatchModeFlag@, ActivePlayer@, CurrentSutehai@, IsRemotePlayer@, PlayerName@, bgColorR@, bgColorG@, bgColorB@
+return
+
+#deffunc doredrscreen var GameStat, int GameMode, int WatchModeFlag, int ActivePlayer, int CurrentSutehai, array IsRemotePlayer, array PlayerName, int bgColorR, int bgColorG, int bgColorB
 	chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
 	gsel 0: redraw 0
 	color bgColorR/3, bgColorG/3, bgColorB/3
@@ -203,6 +212,7 @@ return
 	/* Ä•`‰æ‚µ‚Ä–ß‚é */
 	redraw 1
 return
+#global
 
 #module
 #deffunc setCenterTitle str centerTitleTxt
@@ -210,6 +220,7 @@ return
 return
 
 #deffunc putCenterTitle
+#include "const.as"
 	if (vartype(CenterTitle) != vartype("str")) {CenterTitle = ""}
 	font fontname, 96, 0
 	if (strlen(CenterTitle) > 8) {

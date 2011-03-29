@@ -34,7 +34,7 @@ return
 			}
 			if ((ClientReceived == 1)&&(ReceivedMsg == 1023)) {
 				setDisconnectFlag GameStat, ActivePlayer, 1
-				setCenterTitle "‰ñüØ’f": gosub *redrscreen
+				setCenterTitle "‰ñüØ’f": redrscreen
 				gosub *reconnection
 				dialog "ÄÚ‘±‚µ‚Ü‚µ‚½", 0, "‰ñüØ’f"
 				RoundEndType = ENDKYOKU_DISCONNECT
@@ -455,12 +455,12 @@ return
 	vanish
 	setDice GameStat, 0, 0, rnd(6)+1: setDice GameStat, 1, 0, rnd(6)+1
 	setDice GameStat, 0, 1, rnd(2): setDice GameStat, 1, 1, rnd(2)
-	gosub *redrscreen: commonswitch GameStat, WatchModeFlag
+	redrscreen: commonswitch GameStat, WatchModeFlag
 	repeat 10 // æÎ‚ğU‚é
 		setDice GameStat, 0, 0, rnd(6)+1: setDice GameStat, 1, 0, rnd(6)+1
 		setDice GameStat, 0, 1, rnd(2): setDice GameStat, 1, 1, rnd(2)
 		dsplay SND_SAIKORO
-		gosub *redrdice: await 80
+		redrdice GameStat, bgColorR, bgColorG, bgColorB: await 80
 	loop
 	dsplay SND_SAIKORO
 	if (GameMode = 2) {
@@ -549,7 +549,7 @@ return
 		if (cnt\4 == 3) {
 			calcdoukasen GameStat
 			dsplay SND_TSUMO
-			gosub *redrscreen: await 250
+			redrscreen: await 250
 		}
 	loop
 	setCenterTitle ""
@@ -570,7 +570,7 @@ return
 		incDrawPointer GameStat
 		calcdoukasen GameStat
 		dsplay SND_TSUMO
-		gosub *redrscreen: await 250
+		redrscreen: await 250
 	loop
 	// ƒhƒ‰‚ğ‚ß‚­‚é
 #ifdef ALLSANMA

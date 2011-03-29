@@ -295,14 +295,14 @@
 *putdelta
 	deltatxt PointDelta, 100
 	dsplay SND_PAGE
-	gosub *redrscreen
+	redrscreen
 	return
 
 /* チップデルタ表示 */
 *putchipdelta
 	deltatxt PointDelta, 1
 	dsplay SND_PAGE
-	gosub *redrscreen
+	redrscreen
 	return
 
 #module

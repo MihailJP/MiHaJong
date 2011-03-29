@@ -133,7 +133,7 @@ return
 	gosub *SelTileButton
 	countTilesInHand TileCount, GameStat, ActivePlayer
 	tmpClockTime = 0: tmpTimeLeft = -999: tmpmode = -999
-	TimeLeft = 15: gosub *redrscreen@
+	TimeLeft = 15: redrscreen
 	stick clickflag: await 0 // ƒoƒO–h~‚Ì‚½‚ßAƒNƒŠƒbƒNó‘Ô‚ğˆê’Uæ“¾‚µ‚ÄÌ‚Ä‚é
 	StartTurn = gettime(5)*60000+gettime(6)*1000+gettime(7)
 	repeat
@@ -172,7 +172,7 @@ return
 			getkey tmp, 115: if (tmp==1)&&(ButtonFlag_Kan==1) {gosub *playerAnkan}
 			getkey tmp, 116: if (tmp==1)&&(AgariAbilityFlag==1) {gosub *playerTsumoAgari}
 		}
-		//gosub *redrscreen@
+		//redrscreen
 		if ((TurnTime-StartTurn >= 15000)) {
 			// ƒGƒ‰[–h~‚Ì‚½‚ßÄæ“¾
 			await 100
@@ -208,7 +208,7 @@ return
 		}
 		if (SelectedTile >= 0) {
 			statmes ""
-			vanish@: commonswitch GameStat, 0: TimeLeft = 0: gosub *redrscreen@
+			vanish@: commonswitch GameStat, 0: TimeLeft = 0: redrscreen
 			teDahai = SelectedTile
 			if (mode == 1) {
 				teDahai += DAHAI_TYPE_RIICHI
@@ -321,7 +321,7 @@ return
 			SelectedTile == -99
 		}
 		if (SelectedTile == -97) {
-			TimeLeft = 0: gosub *redrscreen@
+			TimeLeft = 0: redrscreen
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
 			vanish@: commonswitch GameStat, 0 // ©–Ì˜a
@@ -330,7 +330,7 @@ return
 			teDahai = -1: break
 		}
 		if (SelectedTile == -95) {
-			TimeLeft = 0: gosub *redrscreen@
+			TimeLeft = 0: redrscreen
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
 			vanish@: commonswitch GameStat, 0 // ‹ãí‹ã”v
@@ -482,7 +482,7 @@ return
 			if ((TurnTime-StartTurn >= 10000)) {
 				SelectedTile = -90: vanish@: commonswitch GameStat, 0
 			}
-//			gosub *redrscreen@
+//			redrscreen
 			if (TimeLeft != tmpTimeLeft) {
 				chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
 				statmes strf("Ì”vu%sv‚Ö‚Ì‘Î‰ ‚ ‚Æ%2d•b", TileName(CurrentSutehai), TimeLeft)
@@ -511,7 +511,7 @@ return
 	}
 	statmes ""
 	vanish@: commonswitch GameStat, 0
-	TimeLeft = 0: gosub *redrscreen@
+	TimeLeft = 0: redrscreen
 	if (GameMode == 2) {
 		SendingMsg = 0xa0
 		if (RonFlag(getPlayer(GameStat)) == 1) {SendingMsg = 0xa1}

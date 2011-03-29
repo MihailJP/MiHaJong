@@ -63,7 +63,7 @@ repeat
 			setPlayer GameStat, ActivePlayer
 		}
 		/* Ä•`‰æ */
-		gosub *redrscreen
+		redrscreen
 		/* COM‚ªuƒJƒ“ƒjƒ“ƒOv‚µ‚È‚¢‚æ‚¤‚Éˆ— */
 		makesandbox Sandbox, GameStat, ActivePlayer
 		dim reducedRon, NUM_OF_PLAYERS: dim reducedMinkan, NUM_OF_PLAYERS: dim reducedPon, NUM_OF_PLAYERS: dim reducedChi, NUM_OF_PLAYERS
@@ -88,7 +88,7 @@ repeat
 					if (GameMode == 2) {
 						if (ReceivedMsg == 1023) {
 							setDisconnectFlag GameStat, ActivePlayer, 1
-							setCenterTitle "‰ñüØ’f": gosub *redrscreen
+							setCenterTitle "‰ñüØ’f": redrscreen
 							gosub *reconnection
 							dialog "ÄÚ‘±‚µ‚Ü‚µ‚½\n‚±‚Ì‰ñ‚Í˜a—¹‚è•úŠü‚É‚È‚è‚Ü‚·\nŽŸ‚Ì‹Ç‚©‚çŽQ‰Á‰Â”\‚Å‚·", 0, "‰ñüØ’f"
 							RoundEndType = ENDKYOKU_DISCONNECT
@@ -155,7 +155,7 @@ repeat
 			if (getHeavenHandFlag(GameStat) == 1) {setCall agariPlayer, "ƒƒ“"} //“V˜a‚ÌŽž‚Íƒƒ“‚ÆŒ¾‚¤Šµ‚í‚µ
 			setHandStat GameStat, agariPlayer, 1
 			if (getHeavenHandFlag(GameStat) == 1) {dsplay VOX_RON} else {dsplay VOX_TSUMO}
-			gosub *redrscreen: break
+			redrscreen: break
 		}
 #ifndef SANMAS
 		/* ‹ãŽí‹ã”v‚ªéŒ¾‚³‚ê‚½ê‡ */
@@ -168,7 +168,7 @@ repeat
 					setCall ActivePlayer, "‹ãŽí‹ã”v"
 					setHandStat GameStat, ActivePlayer, 1
 					dsplay VOX_KYUUSHU
-					gosub *redrscreen: break
+					redrscreen: break
 				}
 			}
 			warn strf("‹ãŽí‹ã”v‚Í‚Å‚«‚Ü‚¹‚ñB‘Å”vƒR[ƒh [%d] ‚É•â³‚µ‚Ü‚µ‚½B", teDahai)
@@ -275,7 +275,7 @@ repeat
 		if ((teDahai >= DAHAI_TYPE_OPENRIICHI)&&(teDahai < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
 			setCall ActivePlayer, "ƒŠ[ƒ`"
 			dsplay VOX_RICHI
-			gosub *redrscreen
+			redrscreen
 			await 1000
 			setHandStat GameStat, ActivePlayer, 3
 			if ((getRichiFlag(GameStat, RICHI_OPENFLAG, 0)+getRichiFlag(GameStat, RICHI_OPENFLAG, 1)+getRichiFlag(GameStat, RICHI_OPENFLAG, 2)+getRichiFlag(GameStat, RICHI_OPENFLAG, 3)) == 0) {
@@ -287,7 +287,7 @@ repeat
 		if ((teDahai >= DAHAI_TYPE_RIICHI)&&(teDahai < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
 			setCall ActivePlayer, "ƒŠ[ƒ`"
 			dsplay VOX_RICHI
-			gosub *redrscreen
+			redrscreen
 			await 1000
 			if ((getRichiFlag(GameStat, RICHI_OPENFLAG, 0)+getRichiFlag(GameStat, RICHI_OPENFLAG, 1)+getRichiFlag(GameStat, RICHI_OPENFLAG, 2)+getRichiFlag(GameStat, RICHI_OPENFLAG, 3)) == 0) {
 				if ((getRichiFlag(GameStat, RICHI_FLAG, 0) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 1) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 2) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 3) == RIICHI_NO)) {
@@ -365,7 +365,7 @@ repeat
 		/* ‚±‚Ì‚Æ‚«”v‚ðŽÌ‚Ä‚Ä‚¢‚é‚Í‚¸‚È‚Ì‚ÅAƒoƒO–hŽ~‚Ì‚½‚ß‚Ìˆ— */
 		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
 		/* Ä•`‰æ */
-		gosub *redrscreen
+		redrscreen
 		await 80
 		/* ‰h˜a‚Ìˆ— */
 		gosub *ronhuproc // ‰h˜a‚Ìˆ—
@@ -376,7 +376,7 @@ repeat
 		if (getRule(RULE_FOUR_KONG_RYUUKYOKU) != 2) {
 			if ((getTotalKang(GameStat) == 4)&&(getNumberOfQuads(GameStat, 0) < 4)&&(getNumberOfQuads(GameStat, 1) < 4)&&(getNumberOfQuads(GameStat, 2) < 4)&&(getNumberOfQuads(GameStat, 3) < 4)) {
 				RoundEndType = ENDKYOKU_SUUKAIKAN
-				gosub *redrscreen: break
+				redrscreen: break
 			}
 		}
 #ifdef ALLSANMA
@@ -431,12 +431,12 @@ repeat
 					dsplay SND_CUOHU
 					repeat 2
 						setCall ActivePlayer, "‹ò‘Ö"
-						gosub *redrscreen: await 1500
+						redrscreen: await 1500
 						setCall ActivePlayer, "˜a—¹•úŠü"
-						gosub *redrscreen: await 1500
+						redrscreen: await 1500
 					loop
 					setCall ActivePlayer, ""
-					gosub *redrscreen
+					redrscreen
 					/* ˜a—¹‚è•úŠü‚ÍˆÈ~‹­§ƒcƒ‚Ø‚èA‹­§•s’®ˆµ‚¢‚Æ‚È‚è‚Ü‚· */
 					setAgariHouki GameStat, ActivePlayer, 1
 					if (WatchModeFlag == 0) {statmes "˜a—¹‚è•úŠüF‹­§ƒcƒ‚Ø‚è‚³‚ê‚Ü‚·"}
@@ -449,7 +449,7 @@ repeat
 					RoundEndType = ENDKYOKU_CHONBO: TsumoAgari = AGARI_KUIKAE
 					agariPlayer = ActivePlayer
 					setCall ActivePlayer, "ö˜a"
-					gosub *redrscreen: await 1500
+					redrscreen: await 1500
 					/* ‹Ç‚ð‘Å‚¿Ø‚èA–žŠÑ”±•„‚ÌŽx•¥‚¢‚Éi‚Þ */
 					break
 			swend
@@ -474,12 +474,12 @@ repeat
 				} else {
 					setCall ActivePlayer, "­”v"
 				}
-				gosub *redrscreen: await 1500
+				redrscreen: await 1500
 				setCall ActivePlayer, "˜a—¹•úŠü"
-				gosub *redrscreen: await 1500
+				redrscreen: await 1500
 			loop
 			setCall ActivePlayer, ""
-			gosub *redrscreen
+			redrscreen
 			setAgariHouki GameStat, ActivePlayer, 1
 			if (WatchModeFlag == 0) {statmes "˜a—¹‚è•úŠüF‹­§ƒcƒ‚Ø‚è‚³‚ê‚Ü‚·"}
 			vanish: commonswitch GameStat, WatchModeFlag

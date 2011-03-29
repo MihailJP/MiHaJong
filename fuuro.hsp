@@ -318,7 +318,7 @@
 			setFirstDrawFlag GameStat, cnt, 0
 		loop
 	}
-	gosub *redrscreen@
+	redrscreen
 	if (Mode != FUURO_DAIMINKAN)&&(Mode != FUURO_PON)&&(Mode != FUURO_CHII) {
 		/* 国士無双に限り、暗槓を搶槓可能 */
 		/* 断幺牌の暗槓は搶槓しようがないんですが、面倒なので区別せず処理
@@ -363,7 +363,7 @@
 			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, PassivePlayer
 		}
 	}
-	gosub *redrscreen@
+	redrscreen
 	await 1000
 	if (Mode != FUURO_PON)&&(Mode != FUURO_CHII) {
 		/* 四槓子の聴牌者がいて、５回目の槓があると流局とするルールの場合
@@ -407,7 +407,7 @@
 	/* 事後処理 */
 	repeat NUM_OF_PLAYERS: setCall cnt, "": loop
 	/* 再描画 */
-	gosub *redrscreen@
+	redrscreen
 	/* 鳴きが成立したので、一発のフラグを降ろす */
 	repeat NUM_OF_PLAYERS
 		if (getRichiFlag(GameStat, RICHI_FLAG, cnt) == RIICHI_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, cnt, RIICHI_YES}
@@ -493,7 +493,7 @@
 	}
 	if (GameMode == 2) {
 		if (ReceivedMsg == 1023) {
-			setCenterTitle "回線切断": gosub *redrscreen
+			setCenterTitle "回線切断": redrscreen
 			gosub *reconnection
 			dialog "再接続しました\nこの回は和了り放棄になります\n次の局から参加可能です", 0, "回線切断"
 			RoundEndType = 9
@@ -593,7 +593,7 @@
 				dsplay VOX_RON
 			}
 			/* 画面更新して戻る */
-			gosub *redrscreen
+			redrscreen
 			break
 		}
 	loop
