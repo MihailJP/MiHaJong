@@ -28,6 +28,7 @@
 	repeat NUM_OF_TILES_IN_HAND
 		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 0) {
 			setHand GameStat, HAND_TILECODE, cnt, targetPlayer, 999
+			setHand GameStat, HAND_REDTILE, cnt, targetPlayer, 0
 		}
 	loop
 	repeat NUM_OF_TILES_IN_HAND: tmp1 = cnt
