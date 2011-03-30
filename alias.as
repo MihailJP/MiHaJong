@@ -19,5 +19,9 @@
 #define global ctype KamichaOf(%1) RelativePositionOf(%1, RELATIVE_KAMICHA)
 
 /* sound.hsp */
-#define global bgmload(%1,%2) filename=(%1): bgmid=(%2): gosub *_bgmload
-#define global soundload(%1,%2) filename=(%1): soundid=(%2): gosub *_soundload
+#define global bgmload(%1,%2) filename@=(%1): bgmid@=(%2): gosub *_bgmload@
+#define global soundload(%1,%2) filename@=(%1): soundid@=(%2): gosub *_soundload@
+#define global bgmplay(%1) bgmcode@=(%1): gosub *_bgmplay@
+#define global bgmplay_short(%1) bgmcode@=(%1): gosub *_bgmplay_short@
+#define global bgmplay_norep(%1) bgmcode@=(%1): gosub *_bgmplay_norep@
+#define global bgmstop gosub *_bgmstop@

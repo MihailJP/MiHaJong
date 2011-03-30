@@ -18,7 +18,7 @@
 	vanish
 	info "ゲーム情報を初期化しました。"
 	serverreceive_init
-	bgmcode = MUS_TITLE: gosub *bgmplay	// タイトル曲を流す
+	bgmplay MUS_TITLE	// タイトル曲を流す
 	gosub *selmode	// タイトル画面
 	gosub *chrshuffle	// 親決めの処理
 	gosub *gameinit	// 半荘の初期化処理
@@ -279,7 +279,7 @@ repeat
 			await 1000
 			setHandStat GameStat, ActivePlayer, 3
 			if ((getRichiFlag(GameStat, RICHI_OPENFLAG, 0)+getRichiFlag(GameStat, RICHI_OPENFLAG, 1)+getRichiFlag(GameStat, RICHI_OPENFLAG, 2)+getRichiFlag(GameStat, RICHI_OPENFLAG, 3)) == 0) {
-				bgmcode = MUS_OPENRICHI: gosub *bgmplay_short
+				bgmplay_short MUS_OPENRICHI
 			}
 			setRichiFlag GameStat, RICHI_OPENFLAG, ActivePlayer, 1
 			vanish: commonswitch GameStat, WatchModeFlag
@@ -292,15 +292,15 @@ repeat
 			if ((getRichiFlag(GameStat, RICHI_OPENFLAG, 0)+getRichiFlag(GameStat, RICHI_OPENFLAG, 1)+getRichiFlag(GameStat, RICHI_OPENFLAG, 2)+getRichiFlag(GameStat, RICHI_OPENFLAG, 3)) == 0) {
 				if ((getRichiFlag(GameStat, RICHI_FLAG, 0) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 1) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 2) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 3) == RIICHI_NO)) {
 					if (ActivePlayer == getPlayer(GameStat)) {
-						bgmcode = MUS_RICHI2: gosub *bgmplay_short
+						bgmplay_short MUS_RICHI2
 					} else {
-						bgmcode = MUS_RICHI1: gosub *bgmplay_short
+						bgmplay_short MUS_RICHI1
 					}
 					await 0
 				} else {
 					if (WatchModeFlag == 0) {
 						if (ActivePlayer == getPlayer(GameStat)) {
-							bgmcode = MUS_RICHI3: gosub *bgmplay_short
+							bgmplay_short MUS_RICHI3
 						}
 					}
 					await 0
@@ -549,7 +549,6 @@ repeat
 		// 打牌へ戻る
 	loop
 #include "kyokuend.hsp"
-	haifuwritebuffer GameStat, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType, TsumoAgari, PlayerName
 	await 5000
 	// ハコ割れ終了
 	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {

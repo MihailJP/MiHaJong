@@ -65,7 +65,7 @@
 		ResultDesc = "r”v—¬‹Ç"
 		chatappend "*** "+ResultDesc+"\n"
 		setCenterTitle "—¬‹Ç"
-		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		bgmplay_norep MUS_RYUUKYOKU
 		dsplay SND_PINGJU
 		redrscreen: await 1500
 		TenpaiCnt = 0
@@ -137,7 +137,7 @@
 		loop
 		if ((TenpaiCnt > 0)&&(TenpaiCnt < NUM_OF_ACTUAL_PLAYERS)) {
 			setCenterTitle "•s’®”±•„"
-			gosub *putdelta
+			putdelta PointDelta
 			redraw 1: await 2500
 			pointcalc GameStat, PointDelta
 		}
@@ -192,7 +192,7 @@
 				}
 #endif
 				setCenterTitle "ö˜a”±•„"
-				gosub *putdelta
+				putdelta PointDelta
 				redraw 1: await 2000
 				pointcalc GameStat, PointDelta
 			}
@@ -229,7 +229,9 @@
 	/************/
 	/* ˜a—¹ˆ— */
 	/************/
-	if ((RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {gosub *agariproc}
+	if ((RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
+		agariproc agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, RoundEndType, CurrentSutehaiAkaDora, RonFlag, yakuInfo, GameStat, PlayerName, GameMode, isRemotePlayer, tmpUraFlag, tmpAliceFlag, ResultDesc
+	}
 	/**************/
 	/* ˜a—¹¬—§ */
 	/**************/
@@ -280,7 +282,7 @@
 		await 1500
 		setCenterTitle "—¬‹Ç"
 		dsplay SND_PINGJU
-		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		bgmplay_norep MUS_RYUUKYOKU
 		redrscreen: redraw 1: await 3000
 		repeat NUM_OF_PLAYERS
 			setCall cnt, ""
@@ -322,7 +324,7 @@
 			setCall cnt, ""
 		loop
 		dsplay SND_PINGJU
-		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		bgmplay_norep MUS_RYUUKYOKU
 		setCenterTitle "—¬‹Ç"
 		redrscreen: redraw 1: await 3000
 		repeat NUM_OF_PLAYERS
@@ -367,7 +369,7 @@
 			setCall cnt, ""
 		loop
 		dsplay SND_PINGJU
-		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		bgmplay_norep MUS_RYUUKYOKU
 		setCenterTitle "—¬‹Ç"
 		redrscreen: redraw 1: await 3000
 		repeat NUM_OF_PLAYERS
@@ -442,7 +444,7 @@
 			setCall cnt, ""
 		loop
 		dsplay SND_PINGJU
-		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		bgmplay_norep MUS_RYUUKYOKU
 		setCenterTitle "—¬‹Ç"
 		redrscreen: redraw 1: await 3000
 		repeat NUM_OF_PLAYERS
@@ -493,7 +495,7 @@
 			setCall cnt, ""
 		loop
 		dsplay SND_PINGJU
-		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		bgmplay_norep MUS_RYUUKYOKU
 		setCenterTitle "—¬‹Ç"
 		redrscreen: redraw 1: await 1500
 		TenpaiCnt = 0
@@ -576,7 +578,7 @@
 				}
 #endif
 				setCenterTitle "ö˜a”±•„"
-				gosub *putdelta
+				putdelta PointDelta
 				redraw 1: await 2000
 				pointcalc GameStat, PointDelta
 			}
@@ -615,7 +617,7 @@
 		statmes "—¬‹Ç‚Å‚·"
 		dsplay SND_PINGJU
 		setCenterTitle "—¬‹Ç"
-		bgmcode = MUS_AGARI_MANGAN: gosub *bgmplay_norep
+		bgmplay_norep MUS_AGARI_MANGAN
 		redrscreen: await 1500
 		statmes "—¬‚µ–ŠÑ‚ª¬—§‚µ‚Ü‚µ‚½"
 		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
@@ -766,7 +768,7 @@
 		redraw 1: await 1500
 		
 		setCenterTitle "—¬‚µ–ŠÑ"
-		gosub *putdelta
+		putdelta PointDelta
 		redraw 1: await 1500
 		pointcalc GameStat, PointDelta
 		
@@ -804,7 +806,7 @@
 			setCall cnt, ""
 		loop
 		dsplay SND_PINGJU
-		bgmcode = MUS_RYUUKYOKU: gosub *bgmplay_norep
+		bgmplay_norep MUS_RYUUKYOKU
 		setCenterTitle "—¬‹Ç"
 		redrscreen: redraw 1: await 3000
 		repeat NUM_OF_PLAYERS
@@ -825,3 +827,4 @@
 		}
 		setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 	}
+	haifuwritebuffer GameStat, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType, TsumoAgari, PlayerName

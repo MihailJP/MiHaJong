@@ -121,7 +121,7 @@ return
 	gosub *titlemenu@
 	confselFinished = 1
 	configPage = 0
-	bgmcode = MUS_TITLE: gosub *bgmplay@
+	bgmplay MUS_TITLE
 	return
 *rulenext
 	dsplay@ SND_BUTTON

@@ -9,14 +9,14 @@
 	chatappend "-------------\n*** 終了\n"
 	if (WatchModeFlag == 0) {
 		if (Rank(getPlayer(GameStat)) == 1) {
-			bgmcode = MUS_ENDING: gosub *bgmplay
+			bgmplay MUS_ENDING
 			statmes "終了 あなたがトップです"
 		} else {
-			bgmcode = MUS_ENDING2: gosub *bgmplay
+			bgmplay MUS_ENDING2
 			statmes "終了 あなたは"+Rank(getPlayer(GameStat))+"位でした"
 		}
 	} else {
-		bgmcode = MUS_ENDING2: gosub *bgmplay
+		bgmplay MUS_ENDING2
 		statmes "終了 Watch Mode"
 	}
 	vanish: commonswitch GameStat, WatchModeFlag
@@ -47,7 +47,7 @@
 			if (Rank(cnt) == 1) {PointDelta(cnt) += getDeposit(GameStat)*10}
 		loop
 		setCenterTitle "供託清算"
-		gosub *putdelta
+		putdelta PointDelta
 		redraw 1: await 3000
 		pointcalc GameStat, PointDelta
 	}
@@ -71,7 +71,7 @@
 				}
 			loop
 			setCenterTitle "焼鳥罰符"
-			gosub *putdelta
+			putdelta PointDelta
 			redraw 1: await 3000
 			pointcalc GameStat, PointDelta
 		}
@@ -95,7 +95,7 @@
 					}
 				loop
 				setCenterTitle "焼鳥罰符"
-				gosub *putchipdelta
+				putchipdelta PointDelta
 				redraw 1: await 3000
 				repeat NUM_OF_PLAYERS
 					addChip GameStat, cnt, PointDelta(cnt)
@@ -409,7 +409,7 @@
 		loop
 #endif
 		setCenterTitle "順位点"
-		gosub *putdelta
+		putdelta PointDelta
 		redraw 1: await 3000
 		pointcalc GameStat, PointDelta
 	}
@@ -456,7 +456,7 @@
 			setCenterTitle "ラスペナ"
 		} else {setCenterTitle "トップ賞"}
 #endif
-		gosub *putdelta
+		putdelta PointDelta
 		redraw 1: await 3000
 		pointcalc GameStat, PointDelta
 	}

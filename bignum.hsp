@@ -292,18 +292,24 @@
 #global
 
 /* 持ち点デルタ表示 */
-*putdelta
+#module
+#include "const.as"
+#deffunc putdelta array PointDelta
 	deltatxt PointDelta, 100
-	dsplay SND_PAGE
+	dsplay@ SND_PAGE
 	redrscreen
 	return
+#global
 
 /* チップデルタ表示 */
-*putchipdelta
+#module
+#include "const.as"
+#deffunc putchipdelta array PointDelta
 	deltatxt PointDelta, 1
-	dsplay SND_PAGE
+	dsplay@ SND_PAGE
 	redrscreen
 	return
+#global
 
 #module
 #include "const.as"

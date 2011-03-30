@@ -7,7 +7,8 @@
 #module
 #include "const.as"
 #define ctype doubleDoraEnabled ((getRule(RULE_DORA_TWICE) == 1)||((getRule(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))))
-#deffunc agariscrproc var GameStat, var yakuInfo, int TsumoAgari, int agariPlayer, int furikomiPlayer, array PlayerName, array agariPointArray, var ChipAmount, var ResultDesc
+#deffunc agariscrproc var GameStat, var yakuInfo, int TsumoAgari, int agariPlayer, int furikomiPlayer, \
+array PlayerName, array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	buffer SCR_AGARI_BUF, 600, 600: color 0, 0, 0: boxf 0, 0, 599, 599
 	gsel 0: redraw 0: gmode gmode_alpha, , , 192
 	pos 0, 0: gcopy SCR_AGARI_BUF, 0, 0, 600, 600
@@ -205,25 +206,22 @@
 	redraw 1: redraw 0: await 1000
 	if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 2000) {
 		switch agariBgmSet
-			case 0: bgmcode@ = MUS_AGARI_SELF_1: swbreak
-			case 1: bgmcode@ = MUS_AGARI_FURIKOMI_1: swbreak
-			case 2: bgmcode@ = MUS_AGARI_OTHER_1: swbreak
+			case 0: bgmplay_norep MUS_AGARI_SELF_1: swbreak
+			case 1: bgmplay_norep MUS_AGARI_FURIKOMI_1: swbreak
+			case 2: bgmplay_norep MUS_AGARI_OTHER_1: swbreak
 		swend
-		gosub *bgmplay_norep@
 	} else: if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 8000) {
 		switch agariBgmSet
-			case 0: bgmcode@ = MUS_AGARI_SELF_2: swbreak
-			case 1: bgmcode@ = MUS_AGARI_FURIKOMI_2: swbreak
-			case 2: bgmcode@ = MUS_AGARI_OTHER_2: swbreak
+			case 0: bgmplay_norep MUS_AGARI_SELF_2: swbreak
+			case 1: bgmplay_norep MUS_AGARI_FURIKOMI_2: swbreak
+			case 2: bgmplay_norep MUS_AGARI_OTHER_2: swbreak
 		swend
-		gosub *bgmplay_norep@
 	} else {
 		switch agariBgmSet
-			case 0: bgmcode@ = MUS_AGARI_SELF_3: swbreak
-			case 1: bgmcode@ = MUS_AGARI_FURIKOMI_3: swbreak
-			case 2: bgmcode@ = MUS_AGARI_OTHER_3: swbreak
+			case 0: bgmplay_norep MUS_AGARI_SELF_3: swbreak
+			case 1: bgmplay_norep MUS_AGARI_FURIKOMI_3: swbreak
+			case 2: bgmplay_norep MUS_AGARI_OTHER_3: swbreak
 		swend
-		gosub *bgmplay_norep@
 	}
 	/* ˜a—¹–ð•\Ž¦ */
 	font fontname, 24, 0

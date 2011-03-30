@@ -209,13 +209,13 @@ return
 	// BGMを鳴らす
 	if (((getRoundLoop(GameStat)*16+getRound(GameStat)) == getGameLength(GameStat))&&(getGameLength(GameStat) > 0)) {
 		// オーラスだけ特別
-		bgmcode = MUS_FINAL: gosub *bgmplay
+		bgmplay MUS_FINAL
 	} else {
 		if ((getHonba(GameStat) >= 5)&&(getRule(RULE_RYANSHIBA) == 1)) {
 			// リャンシバ時専用BGM
-			bgmcode = MUS_SHIBARI: gosub *bgmplay
+			bgmplay MUS_SHIBARI
 		} else {
-			bgmcode = getRound(GameStat)\16: gosub *bgmplay
+			bgmplay getRound(GameStat)\16
 		}
 	}
 	if (getHonba(GameStat)) {

@@ -41,15 +41,15 @@
 	return
 
 /* ‚a‚f‚lÄ¶ */
-*bgmplay
+*_bgmplay
 	bgmloopcount=15: bgmloopflag=1: gosub *bgmplay_main
 return
 
-*bgmplay_short
+*_bgmplay_short
 	bgmloopcount=7: bgmloopflag=1: gosub *bgmplay_main
 return
 
-*bgmplay_norep
+*_bgmplay_norep
 	bgmloopcount=0: bgmloopflag=0: gosub *bgmplay_main
 return
 
@@ -80,7 +80,7 @@ return
 	}
 return
 
-*bgmstop
+*_bgmstop
 	dmstop
 return
 
