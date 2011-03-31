@@ -32,7 +32,7 @@
 #packopt type 0
 #cmpopt ppout 1
 #cmpopt optcode 1
-#cmpopt optinfo 1
+#cmpopt optinfo 0
 #cmpopt varname 1
 #runtime "hsp3mt"
 

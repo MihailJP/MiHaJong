@@ -6,9 +6,11 @@
 
 #module
 #include "const.as"
-#deffunc agariproc var agariPlayer, int FurikomiPlayer, int ActivePlayer, int TsumoAgari, int CurrentSutehai, var RoundEndType, \
+#deffunc agariproc int _agariPlayer, int FurikomiPlayer, int ActivePlayer, int TsumoAgari, int CurrentSutehai, int _RoundEndType, \
 int CurrentSutehaiAkaDora, array RonFlag, var yakuInfo, var GameStat, array PlayerName, int GameMode, array isRemotePlayer, \
 var tmpUraFlag, var tmpAliceFlag, var ResultDesc
+	agariPlayer = _agariPlayer
+	RoundEndType = _RoundEndType
 	tmpagariflag = 0
 	FirstAgariPlayer = agariPlayer
 	OyaAgari = -1

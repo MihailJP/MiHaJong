@@ -44,6 +44,8 @@
 #include "init.hsp"
 #include "mainloop.hsp"
 #include "prepare.hsp"
+#include "mouda.hsp"
+#include "kyokuend.hsp"
 #include "function.hsp"
 #include "tileutil.hsp"
 #include "shanten.hsp"

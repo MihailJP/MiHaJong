@@ -84,7 +84,7 @@
 /* Ú‘±æ‚Ì‘Å”v */
 #module
 #include "const.as"
-#deffunc remotedahai var GameStat, int GameMode, array IsRemotePlayer, array PlayerName, var teDahai, int ActivePlayer
+#deffunc remotedahai var GameStat, int GameMode, array IsRemotePlayer, array PlayerName, int ActivePlayer
 	if (GameMode == 2) {
 		repeat
 			chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
@@ -134,18 +134,18 @@
 			await 0
 		loop
 	}
-	if ((ReceivedMsg >= 0x60)&&(ReceivedMsg <= 0x6d)) {teDahai = ReceivedMsg - 0x60 + DAHAI_TYPE_NORMAL}
-	if ((ReceivedMsg >= 0x70)&&(ReceivedMsg <= 0x7d)) {teDahai = ReceivedMsg - 0x70 + DAHAI_TYPE_KAN}
-	if ((ReceivedMsg >= 0x80)&&(ReceivedMsg <= 0x8d)) {teDahai = ReceivedMsg - 0x80 + DAHAI_TYPE_KAKAN}
-	if ((ReceivedMsg >= 0x90)&&(ReceivedMsg <= 0x9d)) {teDahai = ReceivedMsg - 0x90 + DAHAI_TYPE_RIICHI}
-	if ((ReceivedMsg >= 0xc0)&&(ReceivedMsg <= 0xcd)) {teDahai = ReceivedMsg - 0xc0 + DAHAI_TYPE_OPENRIICHI}
+	if ((ReceivedMsg >= 0x60)&&(ReceivedMsg <= 0x6d)) {DiscardTileIndex = ReceivedMsg - 0x60 + DAHAI_TYPE_NORMAL}
+	if ((ReceivedMsg >= 0x70)&&(ReceivedMsg <= 0x7d)) {DiscardTileIndex = ReceivedMsg - 0x70 + DAHAI_TYPE_KAN}
+	if ((ReceivedMsg >= 0x80)&&(ReceivedMsg <= 0x8d)) {DiscardTileIndex = ReceivedMsg - 0x80 + DAHAI_TYPE_KAKAN}
+	if ((ReceivedMsg >= 0x90)&&(ReceivedMsg <= 0x9d)) {DiscardTileIndex = ReceivedMsg - 0x90 + DAHAI_TYPE_RIICHI}
+	if ((ReceivedMsg >= 0xc0)&&(ReceivedMsg <= 0xcd)) {DiscardTileIndex = ReceivedMsg - 0xc0 + DAHAI_TYPE_OPENRIICHI}
 #ifdef SANMAX
-	if ((ReceivedMsg >= 0xd0)&&(ReceivedMsg <= 0xdd)) {teDahai = ReceivedMsg - 0xd0 + DAHAI_TYPE_FLOWER}
+	if ((ReceivedMsg >= 0xd0)&&(ReceivedMsg <= 0xdd)) {DiscardTileIndex = ReceivedMsg - 0xd0 + DAHAI_TYPE_FLOWER}
 #endif
-	if (ReceivedMsg == 0x6e) {teDahai = DAHAI_TYPE_KYUUSHU}
-	if (ReceivedMsg == 0x6f) {teDahai = DAHAI_TYPE_AGARI}
-	if (ReceivedMsg == 0x9f) {teDahai = TSUMOHAI_INDEX + DAHAI_TYPE_NORMAL}
-	return
+	if (ReceivedMsg == 0x6e) {DiscardTileIndex = DAHAI_TYPE_KYUUSHU}
+	if (ReceivedMsg == 0x6f) {DiscardTileIndex = DAHAI_TYPE_AGARI}
+	if (ReceivedMsg == 0x9f) {DiscardTileIndex = TSUMOHAI_INDEX + DAHAI_TYPE_NORMAL}
+	return DiscardTileIndex
 #global
 
 /* Ú‘±æ‚Ì–Â‚« */

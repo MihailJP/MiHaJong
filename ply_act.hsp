@@ -7,15 +7,8 @@
 #module PLAYER
 #include "const.as"
 /* プレイヤーの打牌 */
-#deffunc playerinput var GameStat, int ProcessMode, int GameMode, array isRemotePlayer, int ActivePlayer, int PassivePlayer, var teDahai, int CurrentSutehai, int CurrentSutehaiAkaDora, array RonFlag, array MinkanFlag, array PonFlag, array ChiFlag
+#deffunc playerdahai var GameStat, int GameMode, array isRemotePlayer, int ActivePlayer
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
-	switch ProcessMode
-		case 0: gosub *playerdahaiwork: swbreak
-		case 1: gosub *playernakiwork: swbreak
-	swend
-return
-
-*playerdahaiwork
 	ldim tmpLabel, NUM_OF_TILES_IN_HAND-1
 	tmpLabel = *SelTile01, *SelTile02, *SelTile03, *SelTile04, *SelTile05, *SelTile06, *SelTile07, *SelTile08, *SelTile09, *SelTile10, *SelTile11, *SelTile12, *SelTile13
 	objidpointer = 0: AgariAbilityFlag = 0
@@ -39,7 +32,7 @@ return
 	if ((Shanten >= 0)&&((getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) > RIICHI_NO)||(TsumogiriFlag() == 1))&&(Ankanabilityflag == 0)&&(Flowerabilityflag == 0)) {
 		if (GameMode == 1) {serversend 0x6d, IsRemotePlayer}
 		if (GameMode == 2) {clientsend 0x6d}
-		teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX: return // リーチ後は自動的にツモ切り
+		return DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX // リーチ後は自動的にツモ切り
 	}
 	if (getHeavenHandFlag(GameStat) == 0) {dsplay@ SND_BELL}
 	// リーチ後、和了りを見逃すかどうか
@@ -209,44 +202,44 @@ return
 		if (SelectedTile >= 0) {
 			statmes ""
 			vanish@: commonswitch GameStat, 0: TimeLeft = 0: redrscreen
-			teDahai = SelectedTile
+			DiscardTileIndex = SelectedTile
 			if (mode == 1) {
-				teDahai += DAHAI_TYPE_RIICHI
-				if (GameMode == 1) {serversend teDahai\DAHAI_TYPE_STEP+0x90, IsRemotePlayer}
-				if (GameMode == 2) {clientsend teDahai\DAHAI_TYPE_STEP+0x90}
+				DiscardTileIndex += DAHAI_TYPE_RIICHI
+				if (GameMode == 1) {serversend DiscardTileIndex\DAHAI_TYPE_STEP+0x90, IsRemotePlayer}
+				if (GameMode == 2) {clientsend DiscardTileIndex\DAHAI_TYPE_STEP+0x90}
 			}
 			if (mode == 4) {
-				teDahai += DAHAI_TYPE_OPENRIICHI
-				if (GameMode == 1) {serversend teDahai\DAHAI_TYPE_STEP+0xC0, IsRemotePlayer}
-				if (GameMode == 2) {clientsend teDahai\DAHAI_TYPE_STEP+0xC0}
+				DiscardTileIndex += DAHAI_TYPE_OPENRIICHI
+				if (GameMode == 1) {serversend DiscardTileIndex\DAHAI_TYPE_STEP+0xC0, IsRemotePlayer}
+				if (GameMode == 2) {clientsend DiscardTileIndex\DAHAI_TYPE_STEP+0xC0}
 			}
 			if (mode == 2) {
 				countTilesInHand TileCount, GameStat, ActivePlayer
 				if (TileCount(getHand(GameStat, HAND_TILECODE, SelectedTile, ActivePlayer)) == 4) {
-					teDahai += DAHAI_TYPE_KAN // 暗槓のとき
-					if (GameMode == 1) {serversend teDahai\DAHAI_TYPE_STEP+0x70, IsRemotePlayer}
-					if (GameMode == 2) {clientsend teDahai\DAHAI_TYPE_STEP+0x70}
+					DiscardTileIndex += DAHAI_TYPE_KAN // 暗槓のとき
+					if (GameMode == 1) {serversend DiscardTileIndex\DAHAI_TYPE_STEP+0x70, IsRemotePlayer}
+					if (GameMode == 2) {clientsend DiscardTileIndex\DAHAI_TYPE_STEP+0x70}
 				} else {
-					teDahai += DAHAI_TYPE_KAKAN // 加槓のとき
-					if (GameMode == 1) {serversend teDahai\DAHAI_TYPE_STEP+0x80, IsRemotePlayer}
-					if (GameMode == 2) {clientsend teDahai\DAHAI_TYPE_STEP+0x80}
+					DiscardTileIndex += DAHAI_TYPE_KAKAN // 加槓のとき
+					if (GameMode == 1) {serversend DiscardTileIndex\DAHAI_TYPE_STEP+0x80, IsRemotePlayer}
+					if (GameMode == 2) {clientsend DiscardTileIndex\DAHAI_TYPE_STEP+0x80}
 				}
 			}
 			if (mode == 3) {
 #ifdef SANMAX
-				teDahai += DAHAI_TYPE_FLOWER // 抜き北のとき
-				if (GameMode == 1) {serversend teDahai\DAHAI_TYPE_STEP+0xD0, IsRemotePlayer}
-				if (GameMode == 2) {clientsend teDahai\DAHAI_TYPE_STEP+0xD0}
+				DiscardTileIndex += DAHAI_TYPE_FLOWER // 抜き北のとき
+				if (GameMode == 1) {serversend DiscardTileIndex\DAHAI_TYPE_STEP+0xD0, IsRemotePlayer}
+				if (GameMode == 2) {clientsend DiscardTileIndex\DAHAI_TYPE_STEP+0xD0}
 #else
-				teDahai += DAHAI_TYPE_KAN // 花牌のとき
-				if (GameMode == 1) {serversend teDahai\DAHAI_TYPE_STEP+0x70, IsRemotePlayer}
-				if (GameMode == 2) {clientsend teDahai\DAHAI_TYPE_STEP+0x70}
+				DiscardTileIndex += DAHAI_TYPE_KAN // 花牌のとき
+				if (GameMode == 1) {serversend DiscardTileIndex\DAHAI_TYPE_STEP+0x70, IsRemotePlayer}
+				if (GameMode == 2) {clientsend DiscardTileIndex\DAHAI_TYPE_STEP+0x70}
 #endif
 			}
 			if (mode == 0) {
-				teDahai += DAHAI_TYPE_NORMAL
-				if (GameMode == 1) {serversend teDahai\DAHAI_TYPE_STEP+0x60, IsRemotePlayer}
-				if (GameMode == 2) {clientsend teDahai\DAHAI_TYPE_STEP+0x60}
+				DiscardTileIndex += DAHAI_TYPE_NORMAL
+				if (GameMode == 1) {serversend DiscardTileIndex\DAHAI_TYPE_STEP+0x60, IsRemotePlayer}
+				if (GameMode == 2) {clientsend DiscardTileIndex\DAHAI_TYPE_STEP+0x60}
 			}
 			break
 		}
@@ -327,7 +320,7 @@ return
 			vanish@: commonswitch GameStat, 0 // 自摸和
 			if (GameMode == 1) {serversend 0x6f, IsRemotePlayer}
 			if (GameMode == 2) {clientsend 0x6f}
-			teDahai = -1: break
+			DiscardTileIndex = DAHAI_TYPE_AGARI: break
 		}
 		if (SelectedTile == -95) {
 			TimeLeft = 0: redrscreen
@@ -336,7 +329,7 @@ return
 			vanish@: commonswitch GameStat, 0 // 九種九牌
 			if (GameMode == 1) {serversend 0x6e, IsRemotePlayer}
 			if (GameMode == 2) {clientsend 0x6e}
-			teDahai = -2: break
+			DiscardTileIndex = DAHAI_TYPE_KYUUSHU: break
 		}
 		if (SelectedTile == -94) {
 			// 花牌を抜く場合
@@ -365,10 +358,12 @@ return
 		await 0
 	loop
 	vanish@: commonswitch GameStat, 0
-return
+return DiscardTileIndex
 
 /* プレイヤーの鳴き */
-*playernakiwork
+return
+#deffunc playerfuuro var GameStat, int GameMode, array isRemotePlayer, int ActivePlayer, int PassivePlayer, int CurrentSutehai, int CurrentSutehaiAkaDora, array RonFlag, array MinkanFlag, array PonFlag, array ChiFlag
+	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
 	if (CurrentSutehai > TILE_SUIT_FLOWERS) {return /* 花牌の場合は戻る */}
 	if (getAgariHouki(GameStat, getPlayer(GameStat)) == 1) {return /* 和了り放棄だったら戻る */}
 

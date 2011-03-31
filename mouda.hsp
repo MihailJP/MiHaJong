@@ -1,0 +1,56 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *     [摸打処理ルーチン]
+ *=============================
+ */
+
+#module
+#include "const.as"
+#deffunc tsumoproc var GameStat, int ActivePlayer, int WatchModeFlag, int GameMode, array isRemotePlayer
+	/* COMが「カンニング」しないように処理 */
+	makesandbox Sandbox, GameStat, ActivePlayer
+	/* 打牌を取得する */
+	if (ActivePlayer == getPlayer(GameStat)) {
+		if (getAgariHouki(GameStat, ActivePlayer) == 1) {
+			DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
+		} else {
+			if (WatchModeFlag == 1) {
+				compdahai Sandbox, ActivePlayer: DiscardTileIndex = stat
+			} else {
+				playerdahai GameStat, GameMode, isRemotePlayer, ActivePlayer: DiscardTileIndex = stat
+			}
+		}
+	} else {
+		if ((IsRemotePlayer(ActivePlayer) == -1)||(getAgariHouki(GameStat, ActivePlayer) == 1)) {
+			DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
+		} else {
+			/* ネット対戦時の処理 */
+			if (IsRemotePlayer(ActivePlayer) > 0) {
+				remoteDahai GameStat, GameMode, IsRemotePlayer, PlayerName, ActivePlayer: DiscardTileIndex = stat
+				if (GameMode == 2) {
+					if (ReceivedMsg == 1023) {
+						setDisconnectFlag GameStat, ActivePlayer, 1
+						setCenterTitle "回線切断": redrscreen
+						gosub *reconnection@
+						dialog "再接続しました\nこの回は和了り放棄になります\n次の局から参加可能です", 0, "回線切断"
+						RoundEndType = ENDKYOKU_DISCONNECT
+						return DAHAI_TYPE_DISCONNECT
+					}
+				}
+			} else {
+				compdahai Sandbox, ActivePlayer: DiscardTileIndex = stat
+				if (GameMode == 1) {
+					if (DiscardTileIndex == DAHAI_TYPE_KYUUSHU) {SendingMsg = 0x6e}
+					if (DiscardTileIndex == DAHAI_TYPE_AGARI) {SendingMsg = 0x6f}
+					if ((DiscardTileIndex >= DAHAI_TYPE_NORMAL)&&(DiscardTileIndex <= DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_NORMAL+0x60}
+					if ((DiscardTileIndex >= DAHAI_TYPE_KAN)&&(DiscardTileIndex <= DAHAI_TYPE_KAN+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_KAN+0x70}
+					if ((DiscardTileIndex >= DAHAI_TYPE_KAKAN)&&(DiscardTileIndex <= DAHAI_TYPE_KAKAN+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_KAKAN+0x80}
+					if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex <= DAHAI_TYPE_RIICHI+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_RIICHI+0x90}
+					if ((DiscardTileIndex >= DAHAI_TYPE_OPENRIICHI)&&(DiscardTileIndex <= DAHAI_TYPE_OPENRIICHI+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_OPENRIICHI+0xC0}
+					serversend SendingMsg, IsRemotePlayer
+				}
+			}
+		}
+	}
+	return DiscardTileIndex
+#global

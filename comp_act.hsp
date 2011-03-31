@@ -11,27 +11,20 @@
 #module COMP
 #include "const.as"
 #define global COMTHINKTIME 600
-#deffunc compthink var GameStat, int Mode, int ActivePlayer, int PassivePlayer, var teDahai, int CurrentSutehai, int CurrentSutehaiAkadora, array RonFlag, array MinkanFlag, array PonFlag, array ChiFlag
-	switch Mode
-		case 0: gosub *compdahaiwork: swbreak
-		case 1: gosub *compnakiwork: swbreak
-	swend
-return
-
-*compdahaiwork
+#deffunc compdahai var GameStat, int ActivePlayer
 	info strf("AIの打牌処理に入ります。プレイヤー [%d]", ActivePlayer)
 	countTilesInHand TileCount, GameStat, ActivePlayer
-	/*teDahai = 13: return*/ /* ツモ切りだけを行う(デバッグ用) */
+	/*return TSUMOHAI_INDEX+DAHAI_TYPE_NORMAL*/ /* ツモ切りだけを行う(デバッグ用) */
 	startTime = gettime(6)*1000+gettime(7)
 	/* ここに思考ルーチンが入る */
-	teDahai = TSUMOHAI_INDEX+DAHAI_TYPE_NORMAL // ツモ切り
-	if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) == 0) {teDahai = 0} // 鳴いた直後（多牌しないための処理）
+	DiscardTileIndex = TSUMOHAI_INDEX+DAHAI_TYPE_NORMAL // ツモ切り
+	if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) == 0) {DiscardTileIndex = 0} // 鳴いた直後（多牌しないための処理）
 	else {
 		// 花牌を抜く
 		repeat NUM_OF_TILES_IN_HAND
-			if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) > TILE_SUIT_FLOWERS) {teDahai = cnt+DAHAI_TYPE_KAN: break}
+			if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) > TILE_SUIT_FLOWERS) {DiscardTileIndex = cnt+DAHAI_TYPE_KAN: break}
 		loop
-		if (teDahai >= DAHAI_TYPE_KAN) {
+		if (DiscardTileIndex >= DAHAI_TYPE_KAN) {
 #ifndef NOWAIT
 			repeat // 時間いっぱいまで待つ
 				await 0
@@ -40,7 +33,7 @@ return
 				if ((nowTime-startTime) >= COMTHINKTIME) {break}
 			loop
 #endif
-			return
+			return DiscardTileIndex
 		}
 	}
 	if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer)) {
@@ -55,7 +48,7 @@ return
 				if ((nowTime-startTime) >= COMTHINKTIME) {break}
 			loop
 #endif
-			teDahai = DAHAI_TYPE_KAN+TSUMOHAI_INDEX: return
+			return DAHAI_TYPE_KAN+TSUMOHAI_INDEX
 		}
 	}
 	await 0: countseentiles SeenTiles, GameStat
@@ -73,16 +66,16 @@ return
 #endif
 		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))) {
 			// 和了れないならツモ切り
-			teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX: return
+			return DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 		} else {
 			// 和了れるなら和了る
-			teDahai = DAHAI_TYPE_AGARI: return
+			return DAHAI_TYPE_AGARI
 		}
 	} // ツモ和了り
 	// 十三不塔なら和了る
 	ShisanBuDa = chkshisanbuda(GameStat, ActivePlayer): ShisiBuDa = chkshisibuda(GameStat, ActivePlayer): await 0
-	if ((ShisanBuDa == 1)&&(getFirstDrawFlag(GameStat, ActivePlayer))&&(getRule(RULE_SHIISAN_PUUTAA) != 0)) {teDahai = -1: return}
-	if ((ShisiBuDa == 1)&&(getFirstDrawFlag(GameStat, ActivePlayer))&&(getRule(RULE_SHIISAN_UUSHII) != 0)) {teDahai = -1: return}
+	if ((ShisanBuDa == 1)&&(getFirstDrawFlag(GameStat, ActivePlayer))&&(getRule(RULE_SHIISAN_PUUTAA) != 0)) {return DAHAI_TYPE_AGARI}
+	if ((ShisiBuDa == 1)&&(getFirstDrawFlag(GameStat, ActivePlayer))&&(getRule(RULE_SHIISAN_UUSHII) != 0)) {return DAHAI_TYPE_AGARI}
 	await 0: DaoPaiable = chkdaopaiability(GameStat, ActivePlayer)
 	if (DaoPaiable) {
 		// 九種九牌
@@ -94,13 +87,13 @@ return
 #endif
 				// 国士聴牌は流さない
 				if (Shanten > 0) {
-					teDahai = DAHAI_TYPE_KYUUSHU: return // 流局
+					return DAHAI_TYPE_KYUUSHU // 流局
 				}
 			}
 		}
 	}
 	// リーチの場合は、和了れなければツモ切り
-	if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer)) {teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX: return}
+	if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer)) {return DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX}
 	Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 	nowShanten = Shanten
 	// リーチをかけるかどうか
@@ -214,10 +207,10 @@ return
 			setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHaiHand(cnt)
 		loop
 		if (Richiability > 0) {
-			teDahai = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
+			DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 			repeat NUM_OF_TILES_IN_HAND
-				if (Discardability(teDahai) < Discardability(NUM_OF_TILES_IN_HAND-1-cnt)) {
-					teDahai = DAHAI_TYPE_NORMAL+NUM_OF_TILES_IN_HAND-1-cnt
+				if (Discardability(DiscardTileIndex) < Discardability(NUM_OF_TILES_IN_HAND-1-cnt)) {
+					DiscardTileIndex = DAHAI_TYPE_NORMAL+NUM_OF_TILES_IN_HAND-1-cnt
 				}
 			loop
 			// 長考してるふり
@@ -236,26 +229,26 @@ return
 			// 振聴立直になるような場合は開き直ってプンリー
 			// 誰かが裸単騎しているならプンリー
 			// 但しリーチ縛りならリーチする
-			if (((MaxScore(teDahai) < 14)&&(MinScore(teDahai) < 7))||(getFirstDrawFlag(GameStat, ActivePlayer) == 1)) {
-				if ((MachihaiTotalTiles(teDahai) >= 8)||(MachihaiFuritenFlag(teDahai) == 1)) {
-					if (getMenzen(GameStat, ActivePlayer) == 1) {teDahai += DAHAI_TYPE_OPENRIICHI}
-					else {teDahai += DAHAI_TYPE_RIICHI}
+			if (((MaxScore(DiscardTileIndex) < 14)&&(MinScore(DiscardTileIndex) < 7))||(getFirstDrawFlag(GameStat, ActivePlayer) == 1)) {
+				if ((MachihaiTotalTiles(DiscardTileIndex) >= 8)||(MachihaiFuritenFlag(DiscardTileIndex) == 1)) {
+					if (getMenzen(GameStat, ActivePlayer) == 1) {DiscardTileIndex += DAHAI_TYPE_OPENRIICHI}
+					else {DiscardTileIndex += DAHAI_TYPE_RIICHI}
 				} else {
 					if ((MeldPointer(GameStat, 0) == 4)||(MeldPointer(GameStat, 1) == 4)||(MeldPointer(GameStat, 2) == 4)||(MeldPointer(GameStat, 3) == 4)) {
-						if (MachihaiTotalTiles(teDahai) >= 2) {
-							if (getMenzen(GameStat, ActivePlayer) == 1) {teDahai += DAHAI_TYPE_OPENRIICHI}
-							else {teDahai += DAHAI_TYPE_RIICHI}
+						if (MachihaiTotalTiles(DiscardTileIndex) >= 2) {
+							if (getMenzen(GameStat, ActivePlayer) == 1) {DiscardTileIndex += DAHAI_TYPE_OPENRIICHI}
+							else {DiscardTileIndex += DAHAI_TYPE_RIICHI}
 						}
 					} else {
-						teDahai += DAHAI_TYPE_RIICHI
+						DiscardTileIndex += DAHAI_TYPE_RIICHI
 					}
 				}
 			} else {
 				if (getRule(RULE_RIICHI_SHIBARI) != 0) {
-					teDahai += DAHAI_TYPE_RIICHI
+					DiscardTileIndex += DAHAI_TYPE_RIICHI
 				}
 			}
-			return
+			return DiscardTileIndex
 		}
 	}
 	// チー、ポンした直後に暗槓/加槓できないようにするためのif処理
@@ -293,7 +286,7 @@ return
 						if ((nowTime-startTime) >= COMTHINKTIME) {break}
 					loop
 #endif
-					teDahai = cnt+DAHAI_TYPE_KAN
+					DiscardTileIndex = cnt+DAHAI_TYPE_KAN
 					break
 				}
 			}
@@ -325,12 +318,12 @@ return
 						if ((nowTime-startTime) >= COMTHINKTIME) {break}
 					loop
 #endif
-					teDahai = cnt+DAHAI_TYPE_KAKAN
+					DiscardTileIndex = cnt+DAHAI_TYPE_KAKAN
 					break
 				}
 			}
 		loop
-		if (teDahai >= DAHAI_TYPE_KAN) {return}
+		if (DiscardTileIndex >= DAHAI_TYPE_KAN) {return DiscardTileIndex}
 	}
 	/* それぞれを捨てたときの手の評価を計算する */
 	dim Discardability, NUM_OF_TILES_IN_HAND
@@ -768,15 +761,15 @@ return
 	loop
 	// 捨牌を決定する
 	repeat NUM_OF_TILES_IN_HAND
-		if (Discardability(teDahai) < Discardability(NUM_OF_TILES_IN_HAND-1-cnt)) {
-			teDahai = SUTEHAI_NORMAL+NUM_OF_TILES_IN_HAND-1-cnt
+		if (Discardability(DiscardTileIndex) < Discardability(NUM_OF_TILES_IN_HAND-1-cnt)) {
+			DiscardTileIndex = SUTEHAI_NORMAL+NUM_OF_TILES_IN_HAND-1-cnt
 		}
 	loop
 #ifdef SANMAX
 	// 決定された捨牌が北だった場合、捨てる代わりに抜く
 	if ((getRule(RULE_FLOWER_TILES) != 0)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
-		if (getHand(GameStat, HAND_TILECODE, (teDahai\DAHAI_TYPE_STEP), ActivePlayer) == TILE_NORTH_WIND) {
-			teDahai += DAHAI_TYPE_FLOWER
+		if (getHand(GameStat, HAND_TILECODE, (DiscardTileIndex\DAHAI_TYPE_STEP), ActivePlayer) == TILE_NORTH_WIND) {
+			DiscardTileIndex += DAHAI_TYPE_FLOWER
 		}
 	}
 #endif
@@ -789,7 +782,7 @@ return
 		if ((nowTime-startTime) >= COMTHINKTIME) {break}
 	loop
 #endif
-return
+return DiscardTileIndex
 
 *comp_calculate1
 	repeat TILE_NONFLOWER_STRICT_MAX+1
@@ -874,7 +867,7 @@ return
 	return
 
 /* ＡＩの鳴き・栄和 */
-*compnakiwork
+#deffunc compfuuro var GameStat, int PassivePlayer, int CurrentSutehai, int CurrentSutehaiAkadora, array RonFlag, array MinkanFlag, array PonFlag, array ChiFlag
 	info strf("AIの副露判定に入ります。プレイヤー [%d]", PassivePlayer)
 	if (CurrentSutehai > TILE_SUIT_FLOWERS) {
 		/* 花牌の場合は戻る */

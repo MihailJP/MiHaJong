@@ -465,14 +465,14 @@
 		if (ActivePlayer != cnt) {
 			PassivePlayer = cnt
 			if (PassivePlayer == getPlayer(GameStat)) {
-				playerinput GameStat, 1, GameMode, isRemotePlayer, ActivePlayer, PassivePlayer, teDahai, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, MinkanFlag, PonFlag, ChiFlag
+				playerfuuro GameStat, GameMode, isRemotePlayer, ActivePlayer, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, MinkanFlag, PonFlag, ChiFlag
 			} else {
 				if (IsRemotePlayer(PassivePlayer) == 0) {
 					/* COMが「カンニング」しないように処理 */
 					makesandbox Sandbox, GameStat, PassivePlayer
 					dim reducedRon, NUM_OF_PLAYERS: dim reducedMinkan, NUM_OF_PLAYERS: dim reducedPon, NUM_OF_PLAYERS: dim reducedChi, NUM_OF_PLAYERS
 					/* 処理 */
-					compthink Sandbox, 1, ActivePlayer, PassivePlayer, teDahai, CurrentSutehai, CurrentSutehaiAkadora, reducedRon, reducedMinkan, reducedPon, reducedChi
+					compfuuro Sandbox, PassivePlayer, CurrentSutehai, CurrentSutehaiAkadora, RonFlag, MinkanFlag, PonFlag, ChiFlag
 					repeat NUM_OF_PLAYERS
 						if (RonFlag(cnt) == 0) {RonFlag(cnt) = reducedRon(cnt)}
 						if (MinkanFlag(cnt) == 0) {MinkanFlag(cnt) = reducedMinkan(cnt)}
