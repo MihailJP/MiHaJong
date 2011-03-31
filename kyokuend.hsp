@@ -7,8 +7,7 @@
 #module
 #include "const.as"
 #deffunc endround var GameStat, var GameEnv, int _RoundEndType, int agariPlayer, int FurikomiPlayer, int ActivePlayer, \
-int TsumoAgari, int CurrentSutehai, int CurrentSutehaiAkaDora, array RonFlag, var yakuInfo, \
-int WatchModeFlag
+int TsumoAgari, int CurrentSutehai, int CurrentSutehaiAkaDora, array RonFlag, var yakuInfo, int OrigTurn, int OrigHonba
 	// 局面終了コード
 	// ０…荒牌流局
 	// １…誰かの和了り
@@ -24,9 +23,7 @@ int WatchModeFlag
 	RoundEndType = _RoundEndType
 	info strf("局を終了 終了コード [%d]", RoundEndType)
 	statmes ""
-	vanish@: commonswitch GameStat, WatchModeFlag
-	OrigHonba = getHonba(GameStat)
-	OrigTurn = getRound(GameStat)
+	vanish@: commonswitch GameStat, GameEnv
 	if (RoundEndType == ENDKYOKU_RYUUKYOKU) {
 		repeat NUM_OF_ACTUAL_PLAYERS
 #ifdef SANMA4

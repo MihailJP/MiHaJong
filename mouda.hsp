@@ -6,7 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc tsumoproc var GameStat, var GameEnv, int ActivePlayer, int WatchModeFlag
+#deffunc tsumoproc var GameStat, var GameEnv, int ActivePlayer
 	/* COMが「カンニング」しないように処理 */
 	makesandbox Sandbox, GameStat, ActivePlayer
 	/* 打牌を取得する */
@@ -14,7 +14,7 @@
 		if (getAgariHouki(GameStat, ActivePlayer) == 1) {
 			DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 		} else {
-			if (WatchModeFlag == 1) {
+			if (GetWatchModeFlag(GameEnv) == 1) {
 				compdahai Sandbox, ActivePlayer: DiscardTileIndex = stat
 			} else {
 				playerdahai GameStat, GameEnv, ActivePlayer: DiscardTileIndex = stat

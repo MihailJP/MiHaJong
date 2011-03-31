@@ -90,11 +90,11 @@ return
 #defcfunc TsumogiriFlag
 	return TsumogiriSwitch
 
-#deffunc commonswitch var GameStat, int WatchModeFlag
+#deffunc commonswitch var GameStat, var GameEnv
 	font fontname, 12, 0
 	pos 620, 430: objsize 200, 20
 	input StatusBoxTxt: objgray STATBOX, 0
-	if (WatchModeFlag != 1) {
+	if (GetWatchModeFlag(GameEnv) != 1) {
 		if (getAgariHouki(GameStat, getPlayer(GameStat)) == 0) {
 			pos 620, 460: objsize 100, 20
 			if (AutoAgariSwitch == 1) {
@@ -112,7 +112,7 @@ return
 		button gosub "チャット【切】", *swChat
 	}
 	SwIDChat = stat: tooltip@ SwIDChat-STATBOX, "チャットウィンドウを開きます"
-	if (WatchModeFlag != 1) {
+	if (GetWatchModeFlag(GameEnv) != 1) {
 		if (getAgariHouki(GameStat, getPlayer(GameStat)) == 0) {
 			if (getRichiFlag(GameStat, RICHI_FLAG, getPlayer(GameStat)) == RIICHI_NO) {
 				pos 620, 480: objsize 100, 20

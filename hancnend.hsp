@@ -7,7 +7,7 @@
 /* 半荘終了時の処理 */
 	calcRank Rank, GameStat
 	chatappend "-------------\n*** 終了\n"
-	if (WatchModeFlag == 0) {
+	if (GetWatchModeFlag(GameEnv) == 0) {
 		if (Rank(getPlayer(GameStat)) == 1) {
 			bgmplay MUS_ENDING
 			statmes "終了 あなたがトップです"
@@ -19,7 +19,7 @@
 		bgmplay MUS_ENDING2
 		statmes "終了 Watch Mode"
 	}
-	vanish: commonswitch GameStat, WatchModeFlag
+	vanish: commonswitch GameStat, GameEnv
 	setHonba GameStat, OrigHonba
 	setRound GameStat, OrigTurn
 	repeat NUM_OF_PLAYERS

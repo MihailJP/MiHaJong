@@ -7,7 +7,7 @@
 /* ゲーム開始処理 */
 *startgame
 	/* 変数類の初期化 */
-	WatchModeFlag = 0
+	//WatchModeFlag = 0
 	//sdim PlayerName, 20, NUM_OF_PLAYERS
 	if (vartype(GameStat) == vartype("struct")) {
 		if (varuse(GameStat)) {
@@ -32,7 +32,7 @@ repeat
 	}
 	/* ウォッチモードの時は視点を親に移す */
 	ActivePlayer = -1
-	if (WatchModeFlag == 1) {
+	if (GetWatchModeFlag(GameEnv) == 1) {
 		setPlayer GameStat, getRound(GameStat)\NUM_OF_PLAYERS
 	}
 	/* 破回八連荘の後始末 */
@@ -59,17 +59,17 @@ repeat
 		if (getKangFlag(GameStat, KANG_FLAG) == 0) { setKangFlag GameStat, KANG_CHAINFLAG, 0: setKangFlag GameStat, KANG_TOPFLAG, 0 /* 連続槓の回数と頭槓和フラグをリセット */ }
 		CurrentSutehai = 0
 		/* ウォッチモードの時は視点をツモ番の人に移す */
-		if (WatchModeFlag == 1) {
+		if (GetWatchModeFlag(GameEnv) == 1) {
 			setPlayer GameStat, ActivePlayer
 		}
 		/* 再描画 */
 		redrscreen
 		/* 摸打の処理 */
-		tsumoproc GameStat, GameEnv, ActivePlayer, WatchModeFlag
+		tsumoproc GameStat, GameEnv, ActivePlayer
 		DiscardTileIndex = stat
 		if (DiscardTileIndex == DAHAI_TYPE_DISCONNECT) {break}
 		/* ウェイトを入れる */
-//		if (((ActivePlayer != getPlayer(GameStat))&&(IsRemotePlayer(GameEnv, ActivePlayer) == 0))||(WatchModeFlag == 1)) {
+//		if (((ActivePlayer != getPlayer(GameStat))&&(IsRemotePlayer(GameEnv, ActivePlayer) == 0))||(GetWatchModeFlag(GameEnv) == 1)) {
 //			await 700
 //		} else {
 			await 0
@@ -240,7 +240,7 @@ repeat
 				bgmplay_short MUS_OPENRICHI
 			}
 			setRichiFlag GameStat, RICHI_OPENFLAG, ActivePlayer, 1
-			vanish: commonswitch GameStat, WatchModeFlag
+			vanish: commonswitch GameStat, GameEnv
 		}
 		if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
 			setCall ActivePlayer, "リーチ"
@@ -256,7 +256,7 @@ repeat
 					}
 					await 0
 				} else {
-					if (WatchModeFlag == 0) {
+					if (GetWatchModeFlag(GameEnv) == 0) {
 						if (ActivePlayer == getPlayer(GameStat)) {
 							bgmplay_short MUS_RICHI3
 						}
@@ -264,7 +264,7 @@ repeat
 					await 0
 				}
 			}
-			vanish: commonswitch GameStat, WatchModeFlag
+			vanish: commonswitch GameStat, GameEnv
 		}
 		/* 打牌を記録する */
 		CurrentSutehai = getHand(GameStat, HAND_TILECODE, (DiscardTileIndex\DAHAI_TYPE_STEP), ActivePlayer)
@@ -397,8 +397,8 @@ repeat
 					redrscreen
 					/* 和了り放棄は以降強制ツモ切り、強制不聴扱いとなります */
 					setAgariHouki GameStat, ActivePlayer, 1
-					if (WatchModeFlag == 0) {statmes "和了り放棄：強制ツモ切りされます"}
-					vanish: commonswitch GameStat, WatchModeFlag
+					if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}
+					vanish: commonswitch GameStat, GameEnv
 					swbreak
 				case 1: case 4:
 					/* 直ちに錯和とする設定 */
@@ -439,8 +439,8 @@ repeat
 			setCall ActivePlayer, ""
 			redrscreen
 			setAgariHouki GameStat, ActivePlayer, 1
-			if (WatchModeFlag == 0) {statmes "和了り放棄：強制ツモ切りされます"}
-			vanish: commonswitch GameStat, WatchModeFlag
+			if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}
+			vanish: commonswitch GameStat, GameEnv
 		}
 		await 0
 		/* 荒牌の場合ここで終了する(河底牌は吃ポンできないがロンはできる) */
@@ -506,7 +506,8 @@ repeat
 		}
 		// 打牌へ戻る
 	loop
-	endround GameStat, GameEnv, RoundEndType, agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, yakuInfo, WatchModeFlag
+	OrigHonba = getHonba(GameStat): OrigTurn = getRound(GameStat)
+	endround GameStat, GameEnv, RoundEndType, agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, yakuInfo, OrigTurn, OrigHonba
 	await 5000
 	// ハコ割れ終了
 	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {

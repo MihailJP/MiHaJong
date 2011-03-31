@@ -540,7 +540,7 @@
 		await 0
 		if (RonFlag(RelativePositionOf(ActivePlayer, cnt+1)) == 1) {
 			/* ウォッチモードの場合は和了った人に視点を向ける */
-			if (WatchModeFlag == 1) {
+			if (GetWatchModeFlag(GameEnv) == 1) {
 				setPlayer GameStat, RelativePositionOf(ActivePlayer, cnt+1)
 			}
 			/* 栄和したことを変数に記録 */

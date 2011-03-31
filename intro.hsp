@@ -61,7 +61,7 @@
 	setPlayerName GameEnv, 2, "[c]COM3"
 	setPlayerName GameEnv, 3, "[d]COM4"
 	setGameMode GameEnv, GAMEMODE_STANDALONE
-	WatchModeFlag = 1
+	SetWatchModeFlag GameEnv, 1
 	ServerAddress = ""
 	return
 

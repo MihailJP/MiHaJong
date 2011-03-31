@@ -62,10 +62,10 @@ return
 #module
 #include "const.as"
 #deffunc redrscreen
-	doredrscreen GameStat@, GameEnv@, WatchModeFlag@, ActivePlayer@, CurrentSutehai@, bgColorR@, bgColorG@, bgColorB@
+	doredrscreen GameStat@, GameEnv@, ActivePlayer@, CurrentSutehai@, bgColorR@, bgColorG@, bgColorB@
 return
 
-#deffunc doredrscreen var GameStat, var GameEnv, int WatchModeFlag, int ActivePlayer, int CurrentSutehai, int bgColorR, int bgColorG, int bgColorB
+#deffunc doredrscreen var GameStat, var GameEnv, int ActivePlayer, int CurrentSutehai, int bgColorR, int bgColorG, int bgColorB
 	chatrecv GameStat, GameEnv
 	gsel 0: redraw 0
 	color bgColorR/3, bgColorG/3, bgColorB/3
@@ -206,7 +206,7 @@ return
 		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_UPPER
 	loop
 	/* 画面中央に表示する情報 */
-	putcenterpanel GameStat, watchmodeflag, bgColorR, bgColorG, bgColorB
+	putcenterpanel GameStat, GameEnv, bgColorR, bgColorG, bgColorB
 	/* 画面中央に表示する情報 */
 	putcentertitle
 	/* 再描画して戻る */
@@ -290,7 +290,7 @@ return
 
 #module
 #include "const.as"
-#deffunc putcenterpanel var GameStat, int watchmodeflag, int bgColorR, int bgColorG, int bgColorB
+#deffunc putcenterpanel var GameStat, var GameEnv, int bgColorR, int bgColorG, int bgColorB
 	/* 画面中央に表示する情報 */
 	gmode gmode_mem
 	/* 現在何局目かを表示 */
@@ -317,7 +317,7 @@ return
 	color bgColorR*12/8, bgColorG*12/8, bgColorB*12/8: colmode = 0
 	tmptxt = ""
 	if (getAgariChain(GameStat) >= 7) {
-		if ((WatchModeFlag == 1)||(playerWind(getPlayer(GameStat), getRound(GameStat)) == PLAYER_EAST)) {
+		if ((GetWatchModeFlag(GameEnv) == 1)||(playerWind(getPlayer(GameStat), getRound(GameStat)) == PLAYER_EAST)) {
 			tmptxt = "☆八連荘ﾁｬﾝｽ☆"
 		} else {
 			tmptxt = "！八連荘ﾋﾟﾝﾁ！"
@@ -364,7 +364,7 @@ return
 	} else {
 		/* 配牌中の場合 */
 		tmptxt = "☆ 配牌中 ☆\n"
-		if (WatchModeFlag == 1) {
+		if (GetWatchModeFlag(GameEnv) == 1) {
 			tmptxt += "Watch Mode\n"
 		} else {
 			switch playerWind(getPlayer(GameStat), getRound(GameStat))

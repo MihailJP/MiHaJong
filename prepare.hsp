@@ -224,7 +224,7 @@ return
 		tmpStatus = ""+roundName(getRound(GameStat))
 	}
 	chatappend "-------------\n*** "+tmpStatus+"\n"
-	if (WatchModeFlag == 1) {
+	if (GetWatchModeFlag(GameEnv) == 1) {
 		tmpStatus += " Watch Mode"
 	} else {
 		switch playerWind(getPlayer(GameStat), getRound(GameStat))
@@ -455,7 +455,7 @@ return
 	vanish
 	setDice GameStat, 0, 0, rnd(6)+1: setDice GameStat, 1, 0, rnd(6)+1
 	setDice GameStat, 0, 1, rnd(2): setDice GameStat, 1, 1, rnd(2)
-	redrscreen: commonswitch GameStat, WatchModeFlag
+	redrscreen: commonswitch GameStat, GameEnv
 	repeat 10 // 賽を振る
 		setDice GameStat, 0, 0, rnd(6)+1: setDice GameStat, 1, 0, rnd(6)+1
 		setDice GameStat, 0, 1, rnd(2): setDice GameStat, 1, 1, rnd(2)
@@ -509,7 +509,7 @@ return
 		serversend getDice(GameStat, 1, 0)+0xa8, GameEnv
 	}
 	// 通常機能の表示
-	vanish: commonswitch GameStat, WatchModeFlag
+	vanish: commonswitch GameStat, GameEnv
 	// 配牌
 	setCenterTitle roundName(getRound(GameStat))
 #ifdef ALLSANMA
