@@ -545,7 +545,7 @@
 			if (Rank(cnt) == tmptmprnk) {
 				tmpscoretxt = bignumtotext(FinalScore, cnt, 1, "+", "-")
 				tmptxt += " "+tmpscoretxt+"“_"
-				chatappend "*** "+tmptmprnk+"ˆÊ "+tmpscoretxt+" "+PlayerName(cnt)+"\n"
+				chatappend "*** "+tmptmprnk+"ˆÊ "+tmpscoretxt+" "+getPlayerName(GameEnv, cnt)+"\n"
 			}
 		loop
 	loop

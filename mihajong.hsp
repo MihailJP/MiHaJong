@@ -40,6 +40,7 @@
 #include "const.as"
 #include "alias.as"
 #include "struct.as"
+#include "evstruct.as"
 
 #include "init.hsp"
 #include "mainloop.hsp"

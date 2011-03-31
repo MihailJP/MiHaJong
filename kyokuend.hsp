@@ -6,9 +6,9 @@
 
 #module
 #include "const.as"
-#deffunc endround var GameStat, int _RoundEndType, int agariPlayer, int FurikomiPlayer, int ActivePlayer, \
+#deffunc endround var GameStat, var GameEnv, int _RoundEndType, int agariPlayer, int FurikomiPlayer, int ActivePlayer, \
 int TsumoAgari, int CurrentSutehai, int CurrentSutehaiAkaDora, array RonFlag, var yakuInfo, \
-int GameMode, int WatchModeFlag, array isRemotePlayer, array PlayerName
+int GameMode, int WatchModeFlag, array isRemotePlayer
 	// ã«ñ èIóπÉRÅ[Éh
 	// ÇOÅcçrîvó¨ã«
 	// ÇPÅcíNÇ©ÇÃòaóπÇË
@@ -67,7 +67,7 @@ int GameMode, int WatchModeFlag, array isRemotePlayer, array PlayerName
 	/* òaóπèàóù */
 	/************/
 	if ((RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
-		agariproc agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, RoundEndType, CurrentSutehaiAkaDora, RonFlag, yakuInfo, GameStat, PlayerName, GameMode, isRemotePlayer, tmpUraFlag, tmpAliceFlag, ResultDesc
+		agariproc agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, RoundEndType, CurrentSutehaiAkaDora, RonFlag, yakuInfo, GameStat, GameEnv, GameMode, isRemotePlayer, tmpUraFlag, tmpAliceFlag, ResultDesc
 	}
 	switch RoundEndType
 	/**************/
@@ -836,6 +836,6 @@ int GameMode, int WatchModeFlag, array isRemotePlayer, array PlayerName
 			setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 		swbreak
 	swend
-	haifuwritebuffer GameStat, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType, TsumoAgari, PlayerName
+	haifuwritebuffer GameStat, GameEnv, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType, TsumoAgari
 	return
 #global

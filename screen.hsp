@@ -62,11 +62,11 @@ return
 #module
 #include "const.as"
 #deffunc redrscreen
-	doredrscreen GameStat@, GameMode@, WatchModeFlag@, ActivePlayer@, CurrentSutehai@, IsRemotePlayer@, PlayerName@, bgColorR@, bgColorG@, bgColorB@
+	doredrscreen GameStat@, GameEnv@, GameMode@, WatchModeFlag@, ActivePlayer@, CurrentSutehai@, IsRemotePlayer@, bgColorR@, bgColorG@, bgColorB@
 return
 
-#deffunc doredrscreen var GameStat, int GameMode, int WatchModeFlag, int ActivePlayer, int CurrentSutehai, array IsRemotePlayer, array PlayerName, int bgColorR, int bgColorG, int bgColorB
-	chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
+#deffunc doredrscreen var GameStat, var GameEnv, int GameMode, int WatchModeFlag, int ActivePlayer, int CurrentSutehai, array IsRemotePlayer, int bgColorR, int bgColorG, int bgColorB
+	chatrecv GameStat, GameEnv, GameMode, IsRemotePlayer
 	gsel 0: redraw 0
 	color bgColorR/3, bgColorG/3, bgColorB/3
 	boxf 0, 0, 839, 629
@@ -82,7 +82,7 @@ return
 		color bgColorR, bgColorG, bgColorB
 		boxf 0, 0, 599, 299
 		/* 名前パネル */
-		putnamepanel GameStat, playername, cnt, bgColorR, bgColorG, bgColorB
+		putnamepanel GameStat, GameEnv, cnt, bgColorR, bgColorG, bgColorB
 		/* 捨牌 */
 		if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_TOIMEN) {
 			putsutehai GameStat, 232, 81, cnt, 1
@@ -233,7 +233,7 @@ return
 
 #module
 #include "const.as"
-#deffunc putnamepanel var GameStat, array playername, int targetPlayer, int bgColorR, int bgColorG, int bgColorB
+#deffunc putnamepanel var GameStat, var GameEnv, int targetPlayer, int bgColorR, int bgColorG, int bgColorB
 	/* 名前パネル */
 	color bgColorR*10/8, bgColorG*10/8, bgColorB*10/8
 	font fontname, 14, 0
@@ -282,7 +282,8 @@ return
 		pos 240, 65: tmptxt= strf("            %5d", getScore(GameStat,targetPlayer,0))
 		borderedtxt2a tmptxt, 240, 65, bgColorR*12/8, bgColorG*12/8, bgColorB*12/8, 0, 14
 	}
-	borderedtxt2a strmid(PlayerName(targetPlayer), 0, 12), 240, 65, bgColorR*12/8, bgColorG*12/8, bgColorB*12/8, 0, 14
+	tmpname = getPlayerName(GameEnv, targetPlayer)
+	borderedtxt2a strmid(tmpname, 0, 12), 240, 65, bgColorR*12/8, bgColorG*12/8, bgColorB*12/8, 0, 14
 	color 255, 255, 240: gmode gmode_mem
 	return
 #global

@@ -7,7 +7,7 @@
 #module PLAYER
 #include "const.as"
 /* プレイヤーの打牌 */
-#deffunc playerdahai var GameStat, int GameMode, array isRemotePlayer, int ActivePlayer
+#deffunc playerdahai var GameStat, var GameEnv, int GameMode, array isRemotePlayer, int ActivePlayer
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
 	ldim tmpLabel, NUM_OF_TILES_IN_HAND-1
 	tmpLabel = *SelTile01, *SelTile02, *SelTile03, *SelTile04, *SelTile05, *SelTile06, *SelTile07, *SelTile08, *SelTile09, *SelTile10, *SelTile11, *SelTile12, *SelTile13
@@ -173,7 +173,7 @@
 			if (TurnTime < StartTurn) {TurnTime += 3600000}
 		}
 		if ((TimeLeft != tmpTimeLeft)||(tmpmode != mode)) {
-			chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
+			chatrecv GameStat, GameEnv, GameMode, IsRemotePlayer
 			switch mode
 				case 1: tmpStatus = "リーチをします" :swbreak
 				case 2: tmpStatus = "暗槓または加槓" :swbreak
@@ -361,8 +361,7 @@
 return DiscardTileIndex
 
 /* プレイヤーの鳴き */
-return
-#deffunc playerfuuro var GameStat, int GameMode, array isRemotePlayer, int ActivePlayer, int PassivePlayer, int CurrentSutehai, int CurrentSutehaiAkaDora, array RonFlag, array MinkanFlag, array PonFlag, array ChiFlag
+#deffunc playerfuuro var GameStat, var GameEnv, int GameMode, array isRemotePlayer, int ActivePlayer, int PassivePlayer, int CurrentSutehai, int CurrentSutehaiAkaDora, array RonFlag, array MinkanFlag, array PonFlag, array ChiFlag
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
 	if (CurrentSutehai > TILE_SUIT_FLOWERS) {return /* 花牌の場合は戻る */}
 	if (getAgariHouki(GameStat, getPlayer(GameStat)) == 1) {return /* 和了り放棄だったら戻る */}
@@ -479,7 +478,7 @@ return
 			}
 //			redrscreen
 			if (TimeLeft != tmpTimeLeft) {
-				chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
+				chatrecv GameStat, GameEnv, GameMode, IsRemotePlayer
 				statmes strf("捨牌「%s」への対応 あと%2d秒", TileName(CurrentSutehai), TimeLeft)
 				tmpTimeLeft = TimeLeft
 				tmpmode = mode

@@ -56,10 +56,10 @@
 
 *modesel5
 	dsplay SND_BUTTON
-	PlayerName(0) = "[a]COM1"
-	PlayerName(1) = "[b]COM2"
-	PlayerName(2) = "[c]COM3"
-	PlayerName(3) = "[d]COM4"
+	setPlayerName GameEnv, 0, "[a]COM1"
+	setPlayerName GameEnv, 1, "[b]COM2"
+	setPlayerName GameEnv, 2, "[c]COM3"
+	setPlayerName GameEnv, 3, "[d]COM4"
 	GameMode = 0
 	WatchModeFlag = 1
 	ServerAddress = ""
@@ -68,10 +68,10 @@
 *modesel1
 	dsplay SND_BUTTON
 	gosub *entername
-	PlayerName(0) = "[A]"+InputPlayerName
-	PlayerName(1) = "[b]COM1"
-	PlayerName(2) = "[c]COM2"
-	PlayerName(3) = "[d]COM3"
+	setPlayerName GameEnv, 0, "[A]"+InputPlayerName
+	setPlayerName GameEnv, 1, "[b]COM1"
+	setPlayerName GameEnv, 2, "[c]COM2"
+	setPlayerName GameEnv, 3, "[d]COM3"
 	GameMode = 0
 	ServerAddress = ""
 	return
@@ -79,10 +79,10 @@
 *modesel2
 	dsplay SND_BUTTON
 	gosub *entername
-	PlayerName(0) = "[A]"+InputPlayerName
-	PlayerName(1) = "[b]COM"
-	PlayerName(2) = "[c]COM"
-	PlayerName(3) = "[d]COM"
+	setPlayerName GameEnv, 0, "[A]"+InputPlayerName
+	setPlayerName GameEnv, 1, "[b]COM"
+	setPlayerName GameEnv, 2, "[c]COM"
+	setPlayerName GameEnv, 3, "[d]COM"
 	GameMode = 1
 	ServerAddress = ""
 	sockmake SOCK_GAME+0, PORT_GAME
@@ -111,7 +111,7 @@
 					if (stat == 0) {
 						tmpclientnum = 1
 						gosub *receiveclientname
-						PlayerName(1) = "[B]"+tmpClientName
+						setPlayerName GameEnv, 1, "[B]"+tmpClientName
 						break
 					}
 					await 0
@@ -127,7 +127,7 @@
 						if (stat == 0) {
 							tmpclientnum = 2
 							gosub *receiveclientname
-							PlayerName(2) = "[C]"+tmpClientName
+							setPlayerName GameEnv, 2, "[C]"+tmpClientName
 							break
 						}
 						await 0
@@ -143,7 +143,7 @@
 						if (stat == 0) {
 							tmpclientnum = 3
 							gosub *receiveclientname
-							PlayerName(3) = "[D]"+tmpClientName
+							setPlayerName GameEnv, 3, "[D]"+tmpClientName
 							break
 						}
 						await 0
@@ -160,9 +160,9 @@
 			repeat NUM_OF_ACTUAL_PLAYERS
 				tmpcnt = cnt
 				serversend 0xb8, IsRemotePlayer
-				serversend strlen(PlayerName(tmpcnt)), IsRemotePlayer
-				repeat strlen(PlayerName(tmpcnt))
-					serversend peek(PlayerName(tmpcnt), cnt), IsRemotePlayer
+				serversend strlen(getPlayerName(GameEnv, tmpcnt)), IsRemotePlayer
+				repeat strlen(getPlayerName(GameEnv, tmpcnt))
+					serversend peek(getPlayerName(GameEnv, tmpcnt), cnt), IsRemotePlayer
 				loop
 			loop
 			exportRule RuleConf
@@ -285,7 +285,7 @@ return
 				repeat NUM_OF_ACTUAL_PLAYERS
 					tmpclientnum = 0
 					gosub *receiveclientname
-					PlayerName(cnt) = tmpClientName
+					setPlayerName GameEnv, cnt, tmpClientName
 				loop
 				sdim RuleConf, RULE_IN_LINE+4, length(RuleTxt)
 				repeat RULE_STRING_LINES
@@ -296,10 +296,10 @@ return
 			} else {
 				dialog "サーバーに接続できません\nオフラインモードで開始します", 1, "接続失敗"
 				GameMode = 0
-				PlayerName(0) = "[A]"+InputPlayerName
-				PlayerName(1) = "[b]"
-				PlayerName(2) = "[c]"
-				PlayerName(3) = "[d]"
+				setPlayerName GameEnv, 0, "[A]"+InputPlayerName
+				setPlayerName GameEnv, 1, "[b]"
+				setPlayerName GameEnv, 2, "[c]"
+				setPlayerName GameEnv, 3, "[d]"
 				break
 			}
 		}
@@ -359,7 +359,7 @@ return
 	}
 	repeat NUM_OF_ACTUAL_PLAYERS
 		TmpRemotePlayer(cnt) = IsRemotePlayer(cnt)
-		TmpPlayerName(cnt) = PlayerName(cnt)
+		TmpPlayerName(cnt) = getPlayerName(GameEnv, cnt)
 		TmpPosition(cnt) = cnt
 	loop
 	if (GameMode != 2) {
@@ -402,7 +402,7 @@ return
 //#endif
 	repeat NUM_OF_ACTUAL_PLAYERS
 		IsRemotePlayer(TmpPosition(cnt)) = TmpRemotePlayer(cnt)
-		PlayerName(TmpPosition(cnt)) = TmpPlayerName(cnt)
+		setPlayerName GameEnv, TmpPosition(cnt), TmpPlayerName(cnt)
 	loop
 	tmpPlayer = TmpPosition(ClientNumber)
 	if (GameMode == 2) {

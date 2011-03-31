@@ -7,7 +7,7 @@
 /* 副露の処理 */
 #module
 #include "const.as"
-#deffunc fuuroproc var GameStat, array RonFlag, array ChiFlag, var RoundEndType, int teDahai, var CurrentSutehai, var CurrentSutehaiAkaDora, int ActivePlayer, int PassivePlayer, int Mode
+#deffunc fuuroproc var GameStat, array RonFlag, array ChiFlag, var RoundEndType, int DiscardTileIndex, var CurrentSutehai, var CurrentSutehaiAkaDora, int ActivePlayer, int PassivePlayer, int Mode
 	info strf("副露の処理を開始します。モード [%d]", Mode)
 	switch Mode
 		case FUURO_CHII:
@@ -24,13 +24,13 @@
 		case FUURO_FLOWER:
 			kangPlayer = ActivePlayer
 			setKangFlag GameStat, KANG_FLAG, 1 // 嶺上開花のフラグを立てる
-			haifurecflower GameStat, kangPlayer, teDahai
+			haifurecflower GameStat, kangPlayer, DiscardTileIndex
 			swbreak
 #else
 		case FUURO_NORTH:
 			kangPlayer = ActivePlayer
 			setKangFlag GameStat, KANG_FLAG, 1 // 嶺上開花のフラグを立てる
-			haifurecnorth GameStat, kangPlayer, teDahai
+			haifurecnorth GameStat, kangPlayer, DiscardTileIndex
 			swbreak
 #endif
 		case FUURO_DAIMINKAN:
@@ -45,14 +45,14 @@
 			kangPlayer = ActivePlayer
 			setKangFlag GameStat, KANG_FLAG, 1 // 嶺上開花のフラグを立てる
 			setMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0 // 赤ドラバグ回避のため
-			haifurecankan GameStat, kangPlayer, teDahai // 暗槓を仮に牌譜に記録
+			haifurecankan GameStat, kangPlayer, DiscardTileIndex // 暗槓を仮に牌譜に記録
 			incKangFlag GameStat, KANG_CHAINFLAG // 連続槓の回数を記録
 			if (getFirstDrawFlag(GameStat, kangPlayer) == 1) { setKangFlag GameStat, KANG_TOPFLAG, 1 /* 頭槓和のフラグ */ }
 	swend
 	/* カンする牌を設定 */
 	if (Mode != FUURO_PON)&&(Mode != FUURO_CHII)&&(Mode != FUURO_DAIMINKAN) {
-		CurrentSutehai = getHand(GameStat, HAND_TILECODE, teDahai\DAHAI_TYPE_STEP, kangPlayer)
-		CurrentSutehaiAkaDora = getHand(GameStat, HAND_REDTILE, teDahai\DAHAI_TYPE_STEP, kangPlayer)
+		CurrentSutehai = getHand(GameStat, HAND_TILECODE, DiscardTileIndex\DAHAI_TYPE_STEP, kangPlayer)
+		CurrentSutehaiAkaDora = getHand(GameStat, HAND_REDTILE, DiscardTileIndex\DAHAI_TYPE_STEP, kangPlayer)
 	}
 	/* 暗槓・加槓を実行する */
 	nakiCount = 0
@@ -107,8 +107,8 @@
 					}
 				}
 			loop
-			setHand GameStat, HAND_TILECODE, teDahai\DAHAI_TYPE_STEP, kangPlayer, 0
-			setHand GameStat, HAND_REDTILE, teDahai\DAHAI_TYPE_STEP, kangPlayer, 0
+			setHand GameStat, HAND_TILECODE, DiscardTileIndex\DAHAI_TYPE_STEP, kangPlayer, 0
+			setHand GameStat, HAND_REDTILE, DiscardTileIndex\DAHAI_TYPE_STEP, kangPlayer, 0
 			if (nakiCount == 0) {error strf("加槓するための明刻子が見つかりません。牌コード [%d]", CurrentSutehai)}
 			if (nakiCount > 1) {error strf("加槓するための明刻子が複数見つかりました。面子データに不整合が発生しています。牌コード [%d]", CurrentSutehai)}
 			swbreak
@@ -157,8 +157,8 @@
 		case FUURO_NORTH: /* 三麻抜きドラ */
 			dsplay@ VOX_FLOWER
 			addNorthFlag GameStat, kangPlayer
-			setHand GameStat, HAND_TILECODE, teDahai-DAHAI_TYPE_FLOWER, kangPlayer, 0
-			setHand GameStat, HAND_REDTILE, teDahai-DAHAI_TYPE_FLOWER, kangPlayer, 0
+			setHand GameStat, HAND_TILECODE, DiscardTileIndex-DAHAI_TYPE_FLOWER, kangPlayer, 0
+			setHand GameStat, HAND_REDTILE, DiscardTileIndex-DAHAI_TYPE_FLOWER, kangPlayer, 0
 			setHeavenHandFlag GameStat, 0
 			setCall kangPlayer, "北"
 			lipai GameStat, kangPlayer
@@ -181,8 +181,8 @@
 				default
 					warn strf("牌コード [%d] は花牌ではありません。", CurrentSutehai)
 			swend
-			setHand GameStat, HAND_TILECODE, teDahai\DAHAI_TYPE_STEP, kangPlayer, 0
-			setHand GameStat, HAND_REDTILE, teDahai\DAHAI_TYPE_STEP, kangPlayer, 0
+			setHand GameStat, HAND_TILECODE, DiscardTileIndex\DAHAI_TYPE_STEP, kangPlayer, 0
+			setHand GameStat, HAND_REDTILE, DiscardTileIndex\DAHAI_TYPE_STEP, kangPlayer, 0
 			setHeavenHandFlag GameStat, 0
 			setCall ActivePlayer, "花"
 			lipai GameStat, ActivePlayer
@@ -465,7 +465,7 @@
 		if (ActivePlayer != cnt) {
 			PassivePlayer = cnt
 			if (PassivePlayer == getPlayer(GameStat)) {
-				playerfuuro GameStat, GameMode, isRemotePlayer, ActivePlayer, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, MinkanFlag, PonFlag, ChiFlag
+				playerfuuro GameStat, GameEnv, GameMode, isRemotePlayer, ActivePlayer, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, MinkanFlag, PonFlag, ChiFlag
 			} else {
 				if (IsRemotePlayer(PassivePlayer) == 0) {
 					/* COMが「カンニング」しないように処理 */
@@ -489,7 +489,7 @@
 	loop
 	/* 通信対戦時の処理 */
 	if (GameMode != 0) {
-		remotenaki GameStat, GameMode, IsRemotePlayer, PlayerName, RonFlag, PonFlag, MinkanFlag, ChiFlag, CurrentSutehai, CurrentSutehaiAkaDora
+		remotenaki GameStat, GameEnv, GameMode, IsRemotePlayer, RonFlag, PonFlag, MinkanFlag, ChiFlag, CurrentSutehai, CurrentSutehaiAkaDora
 	}
 	if (GameMode == 2) {
 		if (ReceivedMsg == 1023) {
@@ -602,7 +602,7 @@
 	if ((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) > 0) {
 		if (getKangFlag(GameStat, KANG_CHANKAN) > 0) {
 #ifdef SANMAX
-			if (teDahai/PassivePlayer == DAHAI_TYPE_FLOWER/PassivePlayer) {
+			if (DiscardTileIndex/PassivePlayer == DAHAI_TYPE_FLOWER/PassivePlayer) {
 				haifurecchanpei ActivePlayer
 			} else {
 #endif

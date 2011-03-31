@@ -17,7 +17,7 @@
 			if (WatchModeFlag == 1) {
 				compdahai Sandbox, ActivePlayer: DiscardTileIndex = stat
 			} else {
-				playerdahai GameStat, GameMode, isRemotePlayer, ActivePlayer: DiscardTileIndex = stat
+				playerdahai GameStat, GameEnv, GameMode, isRemotePlayer, ActivePlayer: DiscardTileIndex = stat
 			}
 		}
 	} else {
@@ -26,7 +26,7 @@
 		} else {
 			/* ƒlƒbƒg‘ÎíŽž‚Ìˆ— */
 			if (IsRemotePlayer(ActivePlayer) > 0) {
-				remoteDahai GameStat, GameMode, IsRemotePlayer, PlayerName, ActivePlayer: DiscardTileIndex = stat
+				remoteDahai GameStat, GameEnv, GameMode, IsRemotePlayer, ActivePlayer: DiscardTileIndex = stat
 				if (GameMode == 2) {
 					if (ReceivedMsg == 1023) {
 						setDisconnectFlag GameStat, ActivePlayer, 1

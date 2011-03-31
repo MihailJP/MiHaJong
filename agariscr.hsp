@@ -7,24 +7,26 @@
 #module
 #include "const.as"
 #define ctype doubleDoraEnabled ((getRule(RULE_DORA_TWICE) == 1)||((getRule(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))))
-#deffunc agariscrproc var GameStat, var yakuInfo, int TsumoAgari, int agariPlayer, int furikomiPlayer, \
-array PlayerName, array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
+#deffunc agariscrproc var GameStat, var GameEnv, var yakuInfo, int TsumoAgari, int agariPlayer, int furikomiPlayer, \
+array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	buffer SCR_AGARI_BUF, 600, 600: color 0, 0, 0: boxf 0, 0, 599, 599
 	gsel 0: redraw 0: gmode gmode_alpha, , , 192
 	pos 0, 0: gcopy SCR_AGARI_BUF, 0, 0, 600, 600
 	gmode gmode_mem: pos 10, 8
-	font fontname, 16, 1
-	if (TsumoAgari) {borderedtxt2 "é©ñÃòa "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(PlayerName(agariPlayer), 0, 3),56,10,255,255,255,1,16,192,192,192,1}
-	else {borderedtxt2 "âhòa "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(PlayerName(agariPlayer), 0, 3),56,10,255,255,255,1,16,192,192,192,1}
-	borderedtxt2 strmid(PlayerName(agariPlayer), 3, 16),56,30,255,255,255,1,16,192,192,192,1
+	font fontname, 16, 1: tmpname = getPlayerName(GameEnv, agariPlayer)
+	if (TsumoAgari) {borderedtxt2 "é©ñÃòa "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),56,10,255,255,255,1,16,192,192,192,1}
+	else {borderedtxt2 "âhòa "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),56,10,255,255,255,1,16,192,192,192,1}
+	borderedtxt2 strmid(tmpname, 3, 16),56,30,255,255,255,1,16,192,192,192,1
 	if (TsumoAgari == 0) {
-		borderedtxt2 "ï˙èe "+windName(playerWind(furikomiPlayer, getRound(GameStat)))+strmid(PlayerName(furikomiPlayer), 0, 3),256,10,255,255,255,1,16,192,192,192,1
-		borderedtxt2 strmid(PlayerName(furikomiPlayer), 3, 16),256,30,255,255,255,1,16,192,192,192,1
+		tmpname = getPlayerName(GameEnv, furikomiPlayer)
+		borderedtxt2 "ï˙èe "+windName(playerWind(furikomiPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),256,10,255,255,255,1,16,192,192,192,1
+		borderedtxt2 strmid(tmpname, 3, 16),256,30,255,255,255,1,16,192,192,192,1
 	}
 	if (isPaoAgari(GameStat, agariPlayer)) {
 		TmpPaoPlayer = getPaoPlayer(GameStat, agariPlayer)
-		borderedtxt2 "ïÔê” "+windName(playerWind(TmpPaoPlayer, getRound(GameStat)))+strmid(PlayerName(TmpPaoPlayer), 0, 3),456,10,255,255,255,1,16,192,192,192,1
-		borderedtxt2 strmid(PlayerName(TmpPaoPlayer), 3, 16),456,30,255,255,255,1,16,192,192,192,1
+		tmpname = getPlayerName(GameEnv, TmpPaoPlayer)
+		borderedtxt2 "ïÔê” "+windName(playerWind(TmpPaoPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),456,10,255,255,255,1,16,192,192,192,1
+		borderedtxt2 strmid(tmpname, 3, 16),456,30,255,255,255,1,16,192,192,192,1
 	}
 	if (agariPlayer == getPlayer(GameStat)) {drawcol= 255, 255, 0: agariBgmSet = 0}
 	else {
@@ -202,7 +204,7 @@ array PlayerName, array agariPointArray, var ChipAmount, var ResultDesc, var tmp
 		swend
 #endif
 	}
-	chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
+	chatrecv GameStat, GameEnv, GameMode, IsRemotePlayer
 	redraw 1: redraw 0: await 1000
 	if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 2000) {
 		switch agariBgmSet
@@ -470,7 +472,7 @@ array PlayerName, array agariPointArray, var ChipAmount, var ResultDesc, var tmp
 		else {borderedtxt2a "É`ÉbÉv "+ChipAmount+"ñá", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
 #endif
 	}
-	chatrecv GameStat, GameMode, IsRemotePlayer, PlayerName
+	chatrecv GameStat, GameEnv, GameMode, IsRemotePlayer
 	dsplay@ SND_YAKULST2: redraw 1: await waittime
 	await 3000
 	setYakitori GameStat, agariPlayer, 0 // èƒíπÇâèúÇ∑ÇÈ

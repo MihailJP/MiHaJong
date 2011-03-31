@@ -8,7 +8,7 @@
 *startgame
 	/* •Ï”—Ş‚Ì‰Šú‰» */
 	WatchModeFlag = 0
-	sdim PlayerName, 20, NUM_OF_PLAYERS
+	//sdim PlayerName, 20, NUM_OF_PLAYERS
 	if (vartype(GameStat) == vartype("struct")) {
 		if (varuse(GameStat)) {
 			delmod GameStat
@@ -506,7 +506,7 @@ repeat
 		}
 		// ‘Å”v‚Ö–ß‚é
 	loop
-	endround GameStat, RoundEndType, agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, yakuInfo, GameMode, WatchModeFlag, isRemotePlayer, PlayerName
+	endround GameStat, GameEnv, RoundEndType, agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, yakuInfo, GameMode, WatchModeFlag, isRemotePlayer
 	await 5000
 	// ƒnƒRŠ„‚êI—¹
 	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {
