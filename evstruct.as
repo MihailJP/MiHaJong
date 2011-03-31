@@ -4,7 +4,8 @@
  *=============================
  */
 
-#module envStruct PlayerName, RemotePlayerFlag, GameMode, WatchModeFlag
+#module envStruct PlayerName, RemotePlayerFlag, GameMode, WatchModeFlag, \
+bgColorR, bgColorG, bgColorB
 
 #include "const.as"
 
@@ -23,19 +24,30 @@
 #modfunc setGameMode int Value
 	GameMode = Value
 	return
-#modcfunc GetGameMode int PlayerNum
+#modcfunc GetGameMode
 	return GameMode
 
 #modfunc setWatchModeFlag int Value
 	WatchModeFlag = Value
 	return
-#modcfunc GetWatchModeFlag int PlayerNum
+#modcfunc GetWatchModeFlag
 	return WatchModeFlag
+
+#modfunc SetTableColor int r, int g, int b
+	bgColorR = r: bgColorG = g: bgColorB = b
+	return
+#modcfunc GetTableColorR
+	return bgColorR
+#modcfunc GetTableColorG
+	return bgColorG
+#modcfunc GetTableColorB
+	return bgColorB
 
 #modinit
 	sdim PlayerName, 20, NUM_OF_PLAYERS
 	dim RemotePlayerFlag, NUM_OF_PLAYERS
 	GameMode = -1
 	WatchModeFlag = 0
+	bgColorR = 0: bgColorG = 0: bgColorB = 0
 	return
 #global

@@ -32,7 +32,7 @@ return
 /* çƒï`âÊ(ÊŒêUÇËÇÃéû) */
 #module
 #include "const.as"
-#deffunc redrdice var GameStat, int bgColorR, int bgColorG, int bgColorB
+#deffunc redrdice var GameStat, var GameEnv
 	repeat NUM_OF_ACTUAL_PLAYERS
 		gsel SCR_PLAYER_BUFFER_UPPER+cnt: gmode gmode_mem
 		if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
@@ -40,7 +40,7 @@ return
 		}
 	loop
 	gsel 0: redraw 0
-	color bgColorR, bgColorG, bgColorB
+	color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
 	repeat NUM_OF_ACTUAL_PLAYERS
 		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_LOWER
 	loop
@@ -62,27 +62,27 @@ return
 #module
 #include "const.as"
 #deffunc redrscreen
-	doredrscreen GameStat@, GameEnv@, ActivePlayer@, CurrentSutehai@, bgColorR@, bgColorG@, bgColorB@
+	doredrscreen GameStat@, GameEnv@, ActivePlayer@, CurrentSutehai@
 return
 
-#deffunc doredrscreen var GameStat, var GameEnv, int ActivePlayer, int CurrentSutehai, int bgColorR, int bgColorG, int bgColorB
+#deffunc doredrscreen var GameStat, var GameEnv, int ActivePlayer, int CurrentSutehai
 	chatrecv GameStat, GameEnv
 	gsel 0: redraw 0
-	color bgColorR/3, bgColorG/3, bgColorB/3
+	color GetTableColorR(GameEnv)/3, GetTableColorG(GameEnv)/3, GetTableColorB(GameEnv)/3
 	boxf 0, 0, 839, 629
-	color bgColorR, bgColorG, bgColorB
+	color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
 	boxf 0, 0, 599, 599
 	color 0, 0, 0
 	repeat NUM_OF_ACTUAL_PLAYERS
 		/* âÊñ ÇÃèâä˙âª */
 		buffer SCR_PLAYER_BUFFER_UPPER+cnt, 600, 300
-		color bgColorR, bgColorG, bgColorB
+		color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
 		boxf 0, 0, 599, 299
 		buffer SCR_PLAYER_BUFFER_LOWER+cnt, 600, 300
-		color bgColorR, bgColorG, bgColorB
+		color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
 		boxf 0, 0, 599, 299
 		/* ñºëOÉpÉlÉã */
-		putnamepanel GameStat, GameEnv, cnt, bgColorR, bgColorG, bgColorB
+		putnamepanel GameStat, GameEnv, cnt
 		/* éÃîv */
 		if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_TOIMEN) {
 			putsutehai GameStat, 232, 81, cnt, 1
@@ -185,11 +185,11 @@ return
 		putCall cnt
 	loop
 	/* âÊñ âE */
-	putsidepanel bgColorR, bgColorG, bgColorB
+	putsidepanel GameEnv
 	/* âÊñ â∫Ç…ë“ÇøîvÇ»Ç«ÇÃÉfÅ[É^Çï\é¶ */
-	putlowerpanel GameStat, activeplayer
+	putlowerpanel GameStat, GameEnv, activeplayer
 	/* îwåi */
-	color bgColorR, bgColorG, bgColorB
+	color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
 	boxf 0, 0, 599, 599
 	gmode gmode_pixela: pos 0, 0: gcopy SCR_MAIN_BACKGROUND, 0, 0, 840, 630
 	/* ÉvÉåÉCÉÑÅ[ï ÇÃâÊñ Ç©ÇÁÉÅÉCÉìâÊñ Ç…çáê¨ */
@@ -206,7 +206,7 @@ return
 		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_UPPER
 	loop
 	/* âÊñ íÜâõÇ…ï\é¶Ç∑ÇÈèÓïÒ */
-	putcenterpanel GameStat, GameEnv, bgColorR, bgColorG, bgColorB
+	putcenterpanel GameStat, GameEnv
 	/* âÊñ íÜâõÇ…ï\é¶Ç∑ÇÈèÓïÒ */
 	putcentertitle
 	/* çƒï`âÊÇµÇƒñﬂÇÈ */
@@ -233,13 +233,13 @@ return
 
 #module
 #include "const.as"
-#deffunc putnamepanel var GameStat, var GameEnv, int targetPlayer, int bgColorR, int bgColorG, int bgColorB
+#deffunc putnamepanel var GameStat, var GameEnv, int targetPlayer
 	/* ñºëOÉpÉlÉã */
-	color bgColorR*10/8, bgColorG*10/8, bgColorB*10/8
+	color GetTableColorR(GameEnv)*10/8, GetTableColorG(GameEnv)*10/8, GetTableColorB(GameEnv)*10/8
 	font fontname, 14, 0
 	pos 240, 65: print "___________________"
 	if ((getScore(GameStat,targetPlayer,7)!=0)||(getScore(GameStat,targetPlayer,6)!=0)||(getScore(GameStat,targetPlayer,5)!=0)||(getScore(GameStat,targetPlayer,4)!=0)||(getScore(GameStat,targetPlayer,3)!=0)||(getScore(GameStat,targetPlayer,2)!=0)||(getScore(GameStat,targetPlayer,1)!=0)||(abs(getScore(GameStat,targetPlayer,0))>=10000)){
-		color bgColorR*12/8, bgColorG*12/8, bgColorB*12/8
+		color GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8
 		tmpcnt=targetPlayer: tmpNumName = "â≠íõãûö¥û`èıçaä¿ê≥ç⁄ã…çPà¢ìﬂïs"
 		repeat NUM_OF_DIGIT_GROUPS
 			if (cnt < NUM_OF_DIGIT_GROUPS-2) {
@@ -274,23 +274,23 @@ return
 				if (getScore(GameStat,tmpcnt,0) <= -10000) {pos 240, 65: tmptxt= "             -"+abs(getScore(GameStat,tmpcnt,0)\100000/10000)+abs(getScore(GameStat,tmpcnt,0)\10000/1000)+abs(getScore(GameStat,tmpcnt,0)\1000/100)+"ñú": break}
 			}
 		loop
-		borderedtxt2a tmptxt, 240, 65, bgColorR*12/8, bgColorG*12/8, bgColorB*12/8, 0, 14
+		borderedtxt2a tmptxt, 240, 65, GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8, 0, 14
 	} else {
-		borderedtxt2b "                 00", 240, 65, bgColorR*10/8, bgColorG*10/8, bgColorB*10/8, 0, 14
-		color bgColorR*12/8, bgColorG*12/8, bgColorB*12/8
+		borderedtxt2b "                 00", 240, 65, GetTableColorR(GameEnv)*10/8, GetTableColorG(GameEnv)*10/8, GetTableColorB(GameEnv)*10/8, 0, 14
+		color GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8
 		/* ÉpÉlÉãÇ…éùÇøì_Çï\é¶ */
 		pos 240, 65: tmptxt= strf("            %5d", getScore(GameStat,targetPlayer,0))
-		borderedtxt2a tmptxt, 240, 65, bgColorR*12/8, bgColorG*12/8, bgColorB*12/8, 0, 14
+		borderedtxt2a tmptxt, 240, 65, GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8, 0, 14
 	}
 	tmpname = getPlayerName(GameEnv, targetPlayer)
-	borderedtxt2a strmid(tmpname, 0, 12), 240, 65, bgColorR*12/8, bgColorG*12/8, bgColorB*12/8, 0, 14
+	borderedtxt2a strmid(tmpname, 0, 12), 240, 65, GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8, 0, 14
 	color 255, 255, 240: gmode gmode_mem
 	return
 #global
 
 #module
 #include "const.as"
-#deffunc putcenterpanel var GameStat, var GameEnv, int bgColorR, int bgColorG, int bgColorB
+#deffunc putcenterpanel var GameStat, var GameEnv
 	/* âÊñ íÜâõÇ…ï\é¶Ç∑ÇÈèÓïÒ */
 	gmode gmode_mem
 	/* åªç›âΩã«ñ⁄Ç©Çï\é¶ */
@@ -314,7 +314,7 @@ return
 	borderedtxt2a roundName(getRound(GameStat)), 250, 250, ginfo_r, ginfo_g, ginfo_b, 1, 32
 	/* ã«ÇÃèÓïÒÇï\é¶ */
 	font fontname, 14, 0
-	color bgColorR*12/8, bgColorG*12/8, bgColorB*12/8: colmode = 0
+	color GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8: colmode = 0
 	tmptxt = ""
 	if (getAgariChain(GameStat) >= 7) {
 		if ((GetWatchModeFlag(GameEnv) == 1)||(playerWind(getPlayer(GameStat), getRound(GameStat)) == PLAYER_EAST)) {
@@ -333,7 +333,7 @@ return
 			tmptxt = " Å`ÉIÅ[ÉâÉXÅ` "
 		}
 	} else {
-		color bgColorR*10/8, bgColorG*10/8, bgColorB*10/8: colmode = 1
+		color GetTableColorR(GameEnv)*10/8, GetTableColorG(GameEnv)*10/8, GetTableColorB(GameEnv)*10/8: colmode = 1
 		if (getRule(RULE_GAME_LENGTH) == 0) {tmptxt = "  - ìåìÏêÌ -  "}
 		if (getRule(RULE_GAME_LENGTH) == 1) {tmptxt = "  - ìåïóêÌ -  "}
 		if (getRule(RULE_GAME_LENGTH) == 2) {tmptxt = "  - àÍëëêÌ -  "}
@@ -343,9 +343,9 @@ return
 		if (getRule(RULE_GAME_LENGTH) == 7) {tmptxt = "  - ìåïóêÌ -  "}
 	}
 	if (colmode) {
-		borderedtxt2b tmptxt, 250, 282, bgColorR*10/8, bgColorG*10/8, bgColorB*10/8, 0, 14
+		borderedtxt2b tmptxt, 250, 282, GetTableColorR(GameEnv)*10/8, GetTableColorG(GameEnv)*10/8, GetTableColorB(GameEnv)*10/8, 0, 14
 	} else {
-		borderedtxt2a tmptxt, 250, 282, bgColorR*12/8, bgColorG*12/8, bgColorB*12/8, 0, 14
+		borderedtxt2a tmptxt, 250, 282, GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8, 0, 14
 	}
 	/* êœÇ›ñ_ÅAécÇËé©ñÃîvÅAãüëıì_ñ_ÇÃêîÇï\é¶ */
 	font fontname, 16, 0: color 0, 0, 0
@@ -739,71 +739,71 @@ return
 
 #module
 #include "const.as"
-#deffunc putsidepanel int bgColorR, int bgColorG, int bgColorB
+#deffunc putsidepanel var GameEnv
 	/* âÊñ âE */
-	gsel 0: color bgColorR, bgColorG, bgColorB
+	gsel 0: color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
 	gmode gmode_pixela: pos 590, 0: gcopy SCR_MAIN_LOGO, 0, 0, 240, 120
 	font fontname, 20, 0
 	tmpVersion = "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
-	borderedtxt2a tmpVersion, 600+((24-strlen(tmpVersion))*10), 16, (bgColorR+63+255)/2, (bgColorG+63+255)/2, (bgColorB+63+255)/2, 0, 20
-	showClock bgColorR, bgColorG, bgColorB
+	borderedtxt2a tmpVersion, 600+((24-strlen(tmpVersion))*10), 16, (GetTableColorR(GameEnv)+63+255)/2, (GetTableColorG(GameEnv)+63+255)/2, (GetTableColorB(GameEnv)+63+255)/2, 0, 20
+	showClock GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
 	/*  */
 	buffer SCR_BUTTON_FLAME_BUFFER, 840, 630
 	color 0, 0, 0
 	boxf 0, 0, 839, 629
 	/* âEâ∫ÇÃÉ{É^Éìï\é¶ïîï™ÇÃògê¸ */
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4
 	line 719, 460, 620, 460
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 719, 479: line 620, 479
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 620, 460
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 719, 479: line 620, 479
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 620, 460
 	line 819, 460, 720, 460
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 819, 479: line 820, 479
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 720, 460
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 819, 479: line 820, 479
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 720, 460
 	line 719, 480, 620, 480
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 719, 499: line 620, 499
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 620, 480
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 719, 499: line 620, 499
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 620, 480
 	line 819, 480, 720, 480
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 819, 499: line 720, 499
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 720, 480
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 819, 499: line 720, 499
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 720, 480
 	line 669, 500, 620, 500
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 669, 529: line 620, 529
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 620, 500
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 669, 529: line 620, 529
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 620, 500
 	line 719, 500, 670, 500
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 719, 529: line 670, 529
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 670, 500
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 719, 529: line 670, 529
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 670, 500
 	line 769, 500, 620, 500
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 769, 529: line 720, 529
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 720, 500
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 769, 529: line 720, 529
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 720, 500
 	line 819, 500, 670, 500
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 819, 529: line 770, 529
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 770, 500
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 819, 529: line 770, 529
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 770, 500
 	line 669, 530, 620, 530
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 669, 559: line 620, 559
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 620, 530
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 669, 559: line 620, 559
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 620, 530
 	line 719, 530, 670, 530
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 719, 559: line 670, 559
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 670, 530
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 719, 559: line 670, 559
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 670, 530
 	line 769, 530, 620, 530
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 769, 559: line 720, 559
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 720, 530
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 769, 559: line 720, 559
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 720, 530
 	line 819, 530, 670, 530
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 819, 559: line 770, 559
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 770, 530
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 819, 559: line 770, 559
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 770, 530
 	line 819, 560, 620, 560
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 819, 619: line 620, 619
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 620, 560
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 820, 459, 619, 459
-	color bgColorR*3/4, bgColorG*3/4, bgColorB*3/4: line 820, 620: line 619, 620
-	color bgColorR*5/4, bgColorG*5/4, bgColorB*5/4: line 619, 459
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 819, 619: line 620, 619
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 620, 560
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 820, 459, 619, 459
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 820, 620: line 619, 620
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 619, 459
 	gsel 0: gmode gmode_rgb0alpha, , , 56: pos 0, 0: color 0, 0, 0: gcopy SCR_BUTTON_FLAME_BUFFER, 0, 0, 840, 630
 	return
 #global
 
 #module
 #include "const.as"
-#deffunc putlowerpanel var GameStat, int activeplayer
+#deffunc putlowerpanel var GameStat, var GameEnv, int activeplayer
 	/* âÊñ â∫ÇçïÇ≈ìhÇÈ */
-	color bgColorR/5, bgColorG/5, bgColorB/5
+	color GetTableColorR(GameEnv)/5, GetTableColorG(GameEnv)/5, GetTableColorB(GameEnv)/5
 	boxf 0, 600, 599, 639
 	/* âÊñ â∫Ç…ë“ÇøîvÇ»Ç«ÇÃÉfÅ[É^Çï\é¶ */
 	font fontname, 14, 0: color 255, 255, 255
@@ -949,13 +949,13 @@ return
 #module
 #include "const.as"
 #define PI M_PI
-#deffunc showClock int bgColorR, int bgColorG, int bgColorB
+#deffunc showClock int baseColorR, int baseColorG, int baseColorB
 	/* éûåvÇï\é¶ÇµÇƒÇ›ÇÈ */
 	ClockCenterX = 720: ClockCenterY = 240
 	/* ï∂éöî’Çï\é¶ */
-	color (bgColorR+63+255)/2, (bgColorG+63+255)/2, (bgColorB+63+255)/2: Radius=118
+	color (baseColorR+63+255)/2, (baseColorG+63+255)/2, (baseColorB+63+255)/2: Radius=118
 	circle ClockCenterX-Radius, ClockCenterY-Radius, ClockCenterX+Radius, ClockCenterY+Radius, 0
-	color bgColorR, bgColorG, bgColorB: Radius=116
+	color baseColorR, baseColorG, baseColorB: Radius=116
 	circle ClockCenterX-Radius, ClockCenterY-Radius, ClockCenterX+Radius, ClockCenterY+Radius, 0
 	font fontname, 20, 0: tmpClockStr = "Å•áTáUáVáWáXáYáZá[á\á]XI"
 	ClockMinuteHandLength = 100
@@ -971,9 +971,9 @@ return
 	MoonPhaseCalculation_mpfrac = Answer(0)
 	MoonPhaseCalculation_pphase = Answer(1)
 	MoonCenterX = ClockCenterX: MoonCenterY = ClockCenterY-50: Radius = 35
-	color bgColorR/5, bgColorG/5, bgColorB/5
+	color baseColorR/5, baseColorG/5, baseColorB/5
 	circle MoonCenterX-Radius, MoonCenterY-Radius, MoonCenterX+Radius, MoonCenterY+Radius, 1
-	color bgColorR*2/3, bgColorG*2/3, bgColorB*2/3
+	color baseColorR*2/3, baseColorG*2/3, baseColorB*2/3
 	circle MoonCenterX-Radius, MoonCenterY-Radius, MoonCenterX+Radius, MoonCenterY+Radius, 0
 	repeat Radius*2
 		if (MoonPhaseCalculation_mpfrac < 0.5) {
@@ -982,11 +982,11 @@ return
 			line sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))*(MoonPhaseCalculation_pphase*2.0-1.0)+MoonCenterX, cnt+MoonCenterY-Radius, -sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))+MoonCenterX, cnt+MoonCenterY-Radius
 		}
 	loop
-	color bgColorR, bgColorG, bgColorB
+	color baseColorR, baseColorG, baseColorB
 	circle MoonCenterX-Radius, MoonCenterY-Radius, MoonCenterX+Radius, MoonCenterY+Radius, 0
 	/* çPêØéûÇÃï∂éöî’ */
 	tmpCenterX = ClockCenterX-45: tmpCenterY = ClockCenterY+18: Radius = 40
-	color bgColorR, bgColorG, bgColorB
+	color baseColorR, baseColorG, baseColorB
 	circle tmpCenterX-Radius, tmpCenterY-Radius, tmpCenterX+Radius, tmpCenterY+Radius, 0
 	Radius = 34
 	TimeZone = 9.0 // JST
@@ -1006,7 +1006,7 @@ return
 	SiderealTime += Longitude/15.0*PI*2/24.0
 	font fontname, 10, 0: tmpClockStr = "24ÅEÇQÅEÇSÅEÇUÅEÇWÅE10ÅE12ÅE14ÅE16ÅE18ÅE20ÅE22ÅE"
 	ClockMinuteHandLength = 100
-	color bgColorR*2/3, bgColorG*2/3, bgColorB*2/3
+	color baseColorR*2/3, baseColorG*2/3, baseColorB*2/3
 	repeat 24
 		ClockDestinationX = int(double(tmpCenterX)+double(Radius)*sin(double(2.5*cnt)*PI*2/60))
 		ClockDestinationY = int(double(tmpCenterY)-double(Radius)*cos(double(2.5*cnt)*PI*2/60))
@@ -1014,7 +1014,7 @@ return
 		print strmid(tmpClockStr, cnt*2, 2)
 	loop
 	font fontname, 10, 0: pos tmpCenterX-20+2, tmpCenterY-5-12: print "SIDEREAL"
-	color bgColorR, bgColorG, bgColorB
+	color baseColorR, baseColorG, baseColorB
 	Radius = 30
 	ClockDestinationX = int(double(tmpCenterX)+double(Radius)*sin(SiderealTime))
 	ClockDestinationY = int(double(tmpCenterY)-double(Radius)*cos(SiderealTime))
@@ -1027,7 +1027,7 @@ return
 	SiderealMinute = int((SiderealTime*12.0*60.0/PI)\60)
 	/* ïsíËéûñ@ÇÃï∂éöî’(òaéûåvïóÇÃ) */
 	tmpCenterX = ClockCenterX+45: tmpCenterY = ClockCenterY+18: Radius = 40
-	color bgColorR, bgColorG, bgColorB
+	color baseColorR, baseColorG, baseColorB
 	circle tmpCenterX-Radius, tmpCenterY-Radius, tmpCenterX+Radius, tmpCenterY+Radius, 0
 	Radius = 33
 	sunrise_year = gettime(0): sunrise_month = gettime(1): sunrise_day = gettime(3)
@@ -1046,7 +1046,7 @@ return
 	if (tmpNowMinutes >= tmpSunsetMinutes) {tmpTraditionalTime = 270.0+90.0*double(tmpNowMinutes-tmpSunsetMinutes)/double(1440-tmpSunsetMinutes)}
 	font fontname, 10, 0: tmpClockStr = "éqâNì–âKíCñ§åﬂñ¢ê\ì—ú˙àÂ"
 	ClockMinuteHandLength = 100
-	color bgColorR*2/3, bgColorG*2/3, bgColorB*2/3
+	color baseColorR*2/3, baseColorG*2/3, baseColorB*2/3
 	repeat 12
 		ClockDestinationX = int(double(tmpCenterX)+double(Radius)*sin(double(5.0*cnt)*PI*2/60))
 		ClockDestinationY = int(double(tmpCenterY)-double(Radius)*cos(double(5.0*cnt)*PI*2/60))
@@ -1054,13 +1054,13 @@ return
 		print strmid(tmpClockStr, cnt*2, 2)
 	loop
 	font fontname, 10, 0: pos tmpCenterX-18+0, tmpCenterY-5-9: print "JP TRAD"
-	color bgColorR, bgColorG, bgColorB
+	color baseColorR, baseColorG, baseColorB
 	Radius = 38
 	ClockDestinationX = int(double(tmpCenterX)+double(Radius)*sin(deg2rad(tmpTraditionalTime)))
 	ClockDestinationY = int(double(tmpCenterY)-double(Radius)*cos(deg2rad(tmpTraditionalTime)))
 	line ClockDestinationX, ClockDestinationY, tmpCenterX, tmpCenterY
 	/* ì˙ïtÇ∆ójì˙ */
-	color bgColorR, bgColorG, bgColorB: font fontname, 30, 0
+	color baseColorR, baseColorG, baseColorB: font fontname, 30, 0
 	pos ClockCenterX-15-15-1, ClockCenterY+55: print "Å°"
 	pos ClockCenterX-15-15, ClockCenterY+55-1: print "Å°"
 	pos ClockCenterX-15-15+1, ClockCenterY+55: print "Å°"
@@ -1069,16 +1069,16 @@ return
 	pos ClockCenterX+15-15, ClockCenterY+55-1: print "Å°"
 	pos ClockCenterX+15-15+1, ClockCenterY+55: print "Å°"
 	pos ClockCenterX+15-15, ClockCenterY+55+1: print "Å°"
-	color bgColorR/5, bgColorG/5, bgColorB/5
+	color baseColorR/5, baseColorG/5, baseColorB/5
 	pos ClockCenterX-15-15, ClockCenterY+55: font fontname, 30, 0: print "Å°"
-	color bgColorR, bgColorG, bgColorB: tmpPattern="ì˙åéâŒêÖñÿã‡ìy"
+	color baseColorR, baseColorG, baseColorB: tmpPattern="ì˙åéâŒêÖñÿã‡ìy"
 	pos ClockCenterX-15-12, ClockCenterY+58: font fontname, 24, 0: print strmid(tmpPattern, gettime(2)*2, 2)
-	color bgColorR/5, bgColorG/5, bgColorB/5
+	color baseColorR/5, baseColorG/5, baseColorB/5
 	pos ClockCenterX+15-15, ClockCenterY+55: font fontname, 30, 0: print "Å°"
-	color bgColorR, bgColorG, bgColorB: tmpPattern="Å@ÇPÇQÇRÇSÇTÇUÇVÇWÇX10111213141516171819202122232425262728293031"
+	color baseColorR, baseColorG, baseColorB: tmpPattern="Å@ÇPÇQÇRÇSÇTÇUÇVÇWÇX10111213141516171819202122232425262728293031"
 	pos ClockCenterX+15-12, ClockCenterY+58: font fontname, 24, 0: print strmid(tmpPattern, gettime(3)*2, 2)
 	/* éûåvÇÃêjÇï\é¶ */
-	color (bgColorR+63+255)/2, (bgColorG+63+255)/2, (bgColorB+63+255)/2
+	color (baseColorR+63+255)/2, (baseColorG+63+255)/2, (baseColorB+63+255)/2
 	ClockMinuteHandLength = 105
 	ClockDestinationX = int(double(ClockCenterX)+double(ClockMinuteHandLength)*sin(double(double(gettime(5))+double(gettime(6))/60)*PI*2/60))
 	ClockDestinationY = int(double(ClockCenterY)-double(ClockMinuteHandLength)*cos(double(double(gettime(5))+double(gettime(6))/60)*PI*2/60))
@@ -1093,7 +1093,7 @@ return
 		if (((cnt\5-2)*(cnt\5-2)+(cnt/5-2)*(cnt/5-2)) > 5) {continue}
 		line ClockDestinationX, ClockDestinationY, ClockCenterX+(cnt\5-2), ClockCenterY+(cnt/5-2)
 	loop
-	color bgColorR, bgColorG, bgColorB
+	color baseColorR, baseColorG, baseColorB
 	repeat 81
 		if (((cnt\9-4)*(cnt\9-4)+(cnt/9-4)*(cnt/9-4)) > 18) {continue}
 		pset ClockCenterX+(cnt\9-4), ClockCenterY+(cnt/9-4)

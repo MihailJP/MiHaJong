@@ -243,29 +243,38 @@ return
 	setCenterTitle "" // 画面中央に大書する文字列
 	initCall // 鳴きなど
 	if ((getRoundLoop(GameStat))\2 == 0) {
-		if (getRoundLoop(GameStat) == 0) {
-			if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {bgColorR = 0: bgColorG = 160: bgColorB = 0}
-			if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {bgColorR = 0: bgColorG = 160: bgColorB = 160}
-		} else {
-			if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {bgColorR = 80: bgColorG = 160: bgColorB = 0}
-			if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {bgColorR = 160: bgColorG = 80: bgColorB = 0}
-		}
-		if (getRound(GameStat)/NUM_OF_PLAYERS == 2) {bgColorR = 0: bgColorG = 80: bgColorB = 160}
-		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {bgColorR = 120: bgColorG = 0: bgColorB = 160}
+		switch getRound(GameStat)/NUM_OF_PLAYERS
+			case 0:
+				if (getRoundLoop(GameStat) == 0) {
+					SetTableColor GameEnv,   0, 160,   0
+				} else {
+					SetTableColor GameEnv,  80, 160,   0
+				}
+				swbreak
+			case 1:
+				if (getRoundLoop(GameStat) == 0) {
+					SetTableColor GameEnv,   0, 160, 160
+				} else {
+					SetTableColor GameEnv, 160,  80,   0
+				}
+				swbreak
+			case 2: SetTableColor GameEnv,   0,  80, 160: swbreak
+			case 3: SetTableColor GameEnv, 120,   0, 160: swbreak
+		swend
 	} else {
-		if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {bgColorR = 160: bgColorG = 160: bgColorB = 160}
-		if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {bgColorR = 160: bgColorG = 160: bgColorB = 0}
-		if (getRound(GameStat)/NUM_OF_PLAYERS == 2) {bgColorR = 160: bgColorG = 0: bgColorB = 0}
-		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {bgColorR = 80: bgColorG = 80: bgColorB = 80}
+		switch getRound(GameStat)/NUM_OF_PLAYERS
+			case 0: SetTableColor GameEnv, 160, 160, 160: swbreak
+			case 1: SetTableColor GameEnv, 160, 160,   0: swbreak
+			case 2: SetTableColor GameEnv, 160,   0,   0: swbreak
+			case 3: SetTableColor GameEnv,  80,  80,  80: swbreak
+		swend
 	}
 	if ((getRoundLoop(GameStat)*16+getRound(GameStat)) >= (getGameLength(GameStat)+1)) {
 		setCenterTitle "延長戦"
+	} else: if ((getRoundLoop(GameStat)*16+getRound(GameStat)) == getGameLength(GameStat)) {
+		setCenterTitle "オーラス"
 	} else {
-		if ((getRoundLoop(GameStat)*16+getRound(GameStat)) == getGameLength(GameStat)) {
-			setCenterTitle "オーラス"
-		} else {
-			setCenterTitle roundName(getRound(GameStat))
-		}
+		setCenterTitle roundName(getRound(GameStat))
 	}
 #ifdef SANMAX
 	repeat 1*4, 0: setWall GameStat, WALL_TILECODE, cnt, 1: loop // 萬子
@@ -460,7 +469,7 @@ return
 		setDice GameStat, 0, 0, rnd(6)+1: setDice GameStat, 1, 0, rnd(6)+1
 		setDice GameStat, 0, 1, rnd(2): setDice GameStat, 1, 1, rnd(2)
 		dsplay SND_SAIKORO
-		redrdice GameStat, bgColorR, bgColorG, bgColorB: await 80
+		redrdice GameStat, GameEnv: await 80
 	loop
 	dsplay SND_SAIKORO
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
