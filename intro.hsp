@@ -39,13 +39,11 @@
 	tooltip 3, "コンピューター同士の対戦を観賞します"
 	tooltip 4, "ルールを設定します"
 	tooltip 5, "終了します"
-	//GameMode = -1
 	debug "タイトル画面を準備しました。"
 	return
 
 /* モード選択画面 */
 *selmode
-	//dim IsRemotePlayer, NUM_OF_PLAYERS
 	gosub *titlemenu
 	debug "応答を待ちます。"
 	repeat

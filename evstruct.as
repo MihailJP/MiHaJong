@@ -43,11 +43,15 @@ bgColorR, bgColorG, bgColorB
 #modcfunc GetTableColorB
 	return bgColorB
 
-#modinit
+#modfunc TableEnvInit
 	sdim PlayerName, 20, NUM_OF_PLAYERS
 	dim RemotePlayerFlag, NUM_OF_PLAYERS
-	GameMode = -1
+	GameMode = GAMEMODE_UNAVAILABLE
 	WatchModeFlag = 0
+	return
+
+#modinit
+	TableEnvInit thismod
 	bgColorR = 0: bgColorG = 0: bgColorB = 0
 	return
 #global
