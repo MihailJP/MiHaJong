@@ -415,13 +415,13 @@ return
 			swbreak
 			// ›Æ’£‚©‚ç‚Ì‹h
 			case MELD_SEQUENCE_EXPOSED_MIDDLE:
-				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+1+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+1+tmpAkaDoraFlag2*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
 				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
 				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+2+tmpAkaDoraFlag3*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
 			swbreak
 			// —¼–Ê‚Ì‘å‚«‚¢‘¤‚©•Ó’£‚Ì‚R‚©‚ç‚Ì‹h
 			case MELD_SEQUENCE_EXPOSED_UPPER:
-				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+2+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+2+tmpAkaDoraFlag3*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
 				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
 				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+1+tmpAkaDoraFlag2*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
 			swbreak
