@@ -65,11 +65,11 @@ repeat
 		/* 再描画 */
 		redrscreen
 		/* 摸打の処理 */
-		tsumoproc GameStat, ActivePlayer, WatchModeFlag, GameMode, isRemotePlayer
+		tsumoproc GameStat, GameEnv, ActivePlayer, WatchModeFlag, GameMode
 		DiscardTileIndex = stat
 		if (DiscardTileIndex == DAHAI_TYPE_DISCONNECT) {break}
 		/* ウェイトを入れる */
-//		if (((ActivePlayer != getPlayer(GameStat))&&(IsRemotePlayer(ActivePlayer) == 0))||(WatchModeFlag == 1)) {
+//		if (((ActivePlayer != getPlayer(GameStat))&&(IsRemotePlayer(GameEnv, ActivePlayer) == 0))||(WatchModeFlag == 1)) {
 //			await 700
 //		} else {
 			await 0
@@ -506,7 +506,7 @@ repeat
 		}
 		// 打牌へ戻る
 	loop
-	endround GameStat, GameEnv, RoundEndType, agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, yakuInfo, GameMode, WatchModeFlag, isRemotePlayer
+	endround GameStat, GameEnv, RoundEndType, agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, yakuInfo, GameMode, WatchModeFlag
 	await 5000
 	// ハコ割れ終了
 	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {

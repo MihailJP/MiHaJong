@@ -6,7 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc tsumoproc var GameStat, int ActivePlayer, int WatchModeFlag, int GameMode, array isRemotePlayer
+#deffunc tsumoproc var GameStat, var GameEnv, int ActivePlayer, int WatchModeFlag, int GameMode
 	/* COMが「カンニング」しないように処理 */
 	makesandbox Sandbox, GameStat, ActivePlayer
 	/* 打牌を取得する */
@@ -17,16 +17,16 @@
 			if (WatchModeFlag == 1) {
 				compdahai Sandbox, ActivePlayer: DiscardTileIndex = stat
 			} else {
-				playerdahai GameStat, GameEnv, GameMode, isRemotePlayer, ActivePlayer: DiscardTileIndex = stat
+				playerdahai GameStat, GameEnv, GameMode, ActivePlayer: DiscardTileIndex = stat
 			}
 		}
 	} else {
-		if ((IsRemotePlayer(ActivePlayer) == -1)||(getAgariHouki(GameStat, ActivePlayer) == 1)) {
+		if ((IsRemotePlayer(GameEnv, ActivePlayer) == -1)||(getAgariHouki(GameStat, ActivePlayer) == 1)) {
 			DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 		} else {
 			/* ネット対戦時の処理 */
-			if (IsRemotePlayer(ActivePlayer) > 0) {
-				remoteDahai GameStat, GameEnv, GameMode, IsRemotePlayer, ActivePlayer: DiscardTileIndex = stat
+			if (IsRemotePlayer(GameEnv, ActivePlayer) > 0) {
+				remoteDahai GameStat, GameEnv, GameMode, ActivePlayer: DiscardTileIndex = stat
 				if (GameMode == 2) {
 					if (ReceivedMsg == 1023) {
 						setDisconnectFlag GameStat, ActivePlayer, 1
@@ -47,7 +47,7 @@
 					if ((DiscardTileIndex >= DAHAI_TYPE_KAKAN)&&(DiscardTileIndex <= DAHAI_TYPE_KAKAN+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_KAKAN+0x80}
 					if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex <= DAHAI_TYPE_RIICHI+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_RIICHI+0x90}
 					if ((DiscardTileIndex >= DAHAI_TYPE_OPENRIICHI)&&(DiscardTileIndex <= DAHAI_TYPE_OPENRIICHI+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_OPENRIICHI+0xC0}
-					serversend SendingMsg, IsRemotePlayer
+					serversend SendingMsg, GameEnv
 				}
 			}
 		}

@@ -465,9 +465,9 @@
 		if (ActivePlayer != cnt) {
 			PassivePlayer = cnt
 			if (PassivePlayer == getPlayer(GameStat)) {
-				playerfuuro GameStat, GameEnv, GameMode, isRemotePlayer, ActivePlayer, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, MinkanFlag, PonFlag, ChiFlag
+				playerfuuro GameStat, GameEnv, GameMode, ActivePlayer, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, MinkanFlag, PonFlag, ChiFlag
 			} else {
-				if (IsRemotePlayer(PassivePlayer) == 0) {
+				if (IsRemotePlayer(GameEnv, PassivePlayer) == 0) {
 					/* COMが「カンニング」しないように処理 */
 					makesandbox Sandbox, GameStat, PassivePlayer
 					dim reducedRon, NUM_OF_PLAYERS: dim reducedMinkan, NUM_OF_PLAYERS: dim reducedPon, NUM_OF_PLAYERS: dim reducedChi, NUM_OF_PLAYERS
@@ -489,7 +489,7 @@
 	loop
 	/* 通信対戦時の処理 */
 	if (GameMode != 0) {
-		remotenaki GameStat, GameEnv, GameMode, IsRemotePlayer, RonFlag, PonFlag, MinkanFlag, ChiFlag, CurrentSutehai, CurrentSutehaiAkaDora
+		remotenaki GameStat, GameEnv, GameMode, RonFlag, PonFlag, MinkanFlag, ChiFlag, CurrentSutehai, CurrentSutehaiAkaDora
 	}
 	if (GameMode == 2) {
 		if (ReceivedMsg == 1023) {

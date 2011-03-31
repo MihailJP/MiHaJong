@@ -17,7 +17,7 @@
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
 	haifubufinit
 	statmes "" // 情報窓への表示
-	initializechat GameMode, IsRemotePlayer, ServerAddress, ClientNumber
+	initializechat GameEnv, GameMode, ServerAddress, ClientNumber
 return
 
 /* 卓の初期化 */
@@ -25,7 +25,7 @@ return
 	ifaceinit // 押しボタン類のステータス初期化
 	inittable GameStat
 	// 局の開始で同期する。このとき落ち戻りが可能
-	if (GameMode == 1) {serversend 0xb6, IsRemotePlayer}
+	if (GameMode == 1) {serversend 0xb6, GameEnv}
 	if (GameMode == 2) {
 		repeat
 			clientreceive ClientReceived, ReceivedMsg
@@ -47,7 +47,7 @@ return
 	haifuinit
 	// 場風のデータを送信。とりあえず１６周目の北四局まで対応
 	if (GameMode == 1) {
-		serversend getRoundLoop(GameStat)*16+getRound(GameStat), IsRemotePlayer
+		serversend getRoundLoop(GameStat)*16+getRound(GameStat), GameEnv
 	}
 	if (GameMode == 2) {
 		repeat
@@ -62,7 +62,7 @@ return
 	}
 	// 積み棒のデータを送信。とりあえず２５５本場まで対応
 	if (GameMode == 1) {
-		serversend getHonba(GameStat), IsRemotePlayer
+		serversend getHonba(GameStat), GameEnv
 	}
 	if (GameMode == 2) {
 		repeat
@@ -76,7 +76,7 @@ return
 	}
 	// 供託本数のデータを送信。とりあえず２５５０００点まで対応
 	if (GameMode == 1) {
-		serversend getDeposit(GameStat), IsRemotePlayer
+		serversend getDeposit(GameStat), GameEnv
 	}
 	if (GameMode == 2) {
 		repeat
@@ -90,7 +90,7 @@ return
 	}
 	// 八連荘の判定に使うデータを送信
 	if (GameMode == 1) {
-		serversend (getLastAgariPlayer(GameStat)+1)*16+getAgariChain(GameStat), IsRemotePlayer
+		serversend (getLastAgariPlayer(GameStat)+1)*16+getAgariChain(GameStat), GameEnv
 	}
 	if (GameMode == 2) {
 		repeat
@@ -108,15 +108,15 @@ return
 		repeat NUM_OF_PLAYERS
 			tmp = cnt
 			repeat NUM_OF_DIGIT_GROUPS
-				serversend abs(getScore(GameStat,tmp, cnt)) \ 256, IsRemotePlayer
-				serversend abs(getScore(GameStat,tmp, cnt)) \ 65536 / 256, IsRemotePlayer
-				serversend abs(getScore(GameStat,tmp, cnt)) \ 16777216 / 65536, IsRemotePlayer
-				serversend abs(getScore(GameStat,tmp, cnt)) / 16777216, IsRemotePlayer
+				serversend abs(getScore(GameStat,tmp, cnt)) \ 256, GameEnv
+				serversend abs(getScore(GameStat,tmp, cnt)) \ 65536 / 256, GameEnv
+				serversend abs(getScore(GameStat,tmp, cnt)) \ 16777216 / 65536, GameEnv
+				serversend abs(getScore(GameStat,tmp, cnt)) / 16777216, GameEnv
 			loop
 			if (getScore(GameStat,cnt, 0) < 0) {
-				serversend 0x01, IsRemotePlayer
+				serversend 0x01, GameEnv
 			} else {
-				serversend 0x00, IsRemotePlayer
+				serversend 0x00, GameEnv
 			}
 		loop
 	}
@@ -158,7 +158,7 @@ return
 	}
 	// 焼鳥のデータを送信
 	if (GameMode == 1) {
-		serversend getYakitori(GameStat, 0)*8+getYakitori(GameStat, 1)*4+getYakitori(GameStat, 2)*2+getYakitori(GameStat, 3), IsRemotePlayer
+		serversend getYakitori(GameStat, 0)*8+getYakitori(GameStat, 1)*4+getYakitori(GameStat, 2)*2+getYakitori(GameStat, 3), GameEnv
 	}
 	if (GameMode == 2) {
 		repeat
@@ -175,7 +175,7 @@ return
 	}
 	// チップのデータを送信。一応±１２７まで対応
 	if (GameMode == 1) {
-		repeat NUM_OF_PLAYERS: serversend getChip(GameStat, cnt)+128, IsRemotePlayer: loop
+		repeat NUM_OF_PLAYERS: serversend getChip(GameStat, cnt)+128, GameEnv: loop
 	}
 	if (GameMode == 2) {
 		repeat NUM_OF_PLAYERS: tmp = cnt
@@ -191,7 +191,7 @@ return
 	}
 	// 四馬路解禁フラグを送信
 	if (GameMode == 1) {
-		serversend getSumaroFlag(GameStat, 0)*8+getSumaroFlag(GameStat, 1)*4+getSumaroFlag(GameStat, 2)*2+getSumaroFlag(GameStat, 3), IsRemotePlayer
+		serversend getSumaroFlag(GameStat, 0)*8+getSumaroFlag(GameStat, 1)*4+getSumaroFlag(GameStat, 2)*2+getSumaroFlag(GameStat, 3), GameEnv
 	}
 	if (GameMode == 2) {
 		repeat
@@ -503,10 +503,10 @@ return
 		swend
 #endif
 		repeat tmpNumberOfTiles
-			serversend getWall(GameStat, WALL_TILECODE, cnt)+(getWall(GameStat, WALL_REDTILE, cnt)*TILE_NONFLOWER_MAX)+0x10, IsRemotePlayer
+			serversend getWall(GameStat, WALL_TILECODE, cnt)+(getWall(GameStat, WALL_REDTILE, cnt)*TILE_NONFLOWER_MAX)+0x10, GameEnv
 		loop
-		serversend getDice(GameStat, 0, 0)+0xa8, IsRemotePlayer
-		serversend getDice(GameStat, 1, 0)+0xa8, IsRemotePlayer
+		serversend getDice(GameStat, 0, 0)+0xa8, GameEnv
+		serversend getDice(GameStat, 1, 0)+0xa8, GameEnv
 	}
 	// 通常機能の表示
 	vanish: commonswitch GameStat, WatchModeFlag

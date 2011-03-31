@@ -8,7 +8,7 @@
 #include "const.as"
 #deffunc endround var GameStat, var GameEnv, int _RoundEndType, int agariPlayer, int FurikomiPlayer, int ActivePlayer, \
 int TsumoAgari, int CurrentSutehai, int CurrentSutehaiAkaDora, array RonFlag, var yakuInfo, \
-int GameMode, int WatchModeFlag, array isRemotePlayer
+int GameMode, int WatchModeFlag
 	// 局面終了コード
 	// ０…荒牌流局
 	// １…誰かの和了り
@@ -34,7 +34,7 @@ int GameMode, int WatchModeFlag, array isRemotePlayer
 				continue // 北家は無視
 			}
 #endif
-			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
+			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
 				continue // 和了り放棄時の処理→流し満貫を認めない
 			}
 			chkP = cnt: YaojiuSutehai = 0
@@ -67,7 +67,7 @@ int GameMode, int WatchModeFlag, array isRemotePlayer
 	/* 和了処理 */
 	/************/
 	if ((RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
-		agariproc agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, RoundEndType, CurrentSutehaiAkaDora, RonFlag, yakuInfo, GameStat, GameEnv, GameMode, isRemotePlayer, tmpUraFlag, tmpAliceFlag, ResultDesc
+		agariproc agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, RoundEndType, CurrentSutehaiAkaDora, RonFlag, yakuInfo, GameStat, GameEnv, GameMode, tmpUraFlag, tmpAliceFlag, ResultDesc
 	}
 	switch RoundEndType
 	/**************/
@@ -89,7 +89,7 @@ int GameMode, int WatchModeFlag, array isRemotePlayer
 				}
 #endif
 				Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
-				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
+				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
 					Shanten = 1 // 強制不聴扱い
 				}
 				if (Shanten == 0) {
@@ -125,7 +125,7 @@ int GameMode, int WatchModeFlag, array isRemotePlayer
 				}
 #endif
 				Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
-				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
+				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
 					Shanten = 1 // 強制不聴扱い
 				}
 #ifdef ALLSANMA
@@ -159,7 +159,7 @@ int GameMode, int WatchModeFlag, array isRemotePlayer
 				dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 				// 錯和立直（不聴立直）の者がいた場合
 				Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
-				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
+				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
 					Shanten = 1 // 強制不聴扱い
 				}
 				targetPlayer = cnt
@@ -217,7 +217,7 @@ int GameMode, int WatchModeFlag, array isRemotePlayer
 				setCall cnt, ""
 			loop
 			Shanten = countshanten(GameStat, (getRound(GameStat)\NUM_OF_PLAYERS), SHANTEN_ALL)
-			if ((getAgariHouki(GameStat, getRound(GameStat)\NUM_OF_PLAYERS) == 1)||(IsRemotePlayer(getRound(GameStat)\NUM_OF_PLAYERS) == -1)) {
+			if ((getAgariHouki(GameStat, getRound(GameStat)\NUM_OF_PLAYERS) == 1)||(IsRemotePlayer(GameEnv, getRound(GameStat)\NUM_OF_PLAYERS) == -1)) {
 				Shanten = 1 // 強制不聴扱い
 			}
 			RenchanFlag = 0
@@ -512,7 +512,7 @@ int GameMode, int WatchModeFlag, array isRemotePlayer
 				if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
 #endif
 				Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
-				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
+				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
 					Shanten = 1 // 和了り放棄時の処理→強制不聴扱い→不聴リーチとして罰符
 				}
 				setHandStat GameStat, cnt, 1
@@ -631,7 +631,7 @@ int GameMode, int WatchModeFlag, array isRemotePlayer
 			dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 			ResultDesc = ""
 			repeat NUM_OF_ACTUAL_PLAYERS
-				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(cnt) == -1)) {
+				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
 					continue // 和了り放棄時の処理→流し満貫を認めない
 				}
 				chkP = cnt: YaojiuSutehai = 0

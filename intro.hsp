@@ -45,7 +45,7 @@
 
 /* モード選択画面 */
 *selmode
-	dim IsRemotePlayer, NUM_OF_PLAYERS
+	//dim IsRemotePlayer, NUM_OF_PLAYERS
 	gosub *titlemenu
 	debug "応答を待ちます。"
 	repeat
@@ -95,14 +95,14 @@
 		showbackground
 		CurrentConnection = 1
 		repeat NUM_OF_PLAYERS-1
-			if (IsRemotePlayer(cnt+1) > 0) {CurrentConnection++}
+			if (IsRemotePlayer(GameEnv, cnt+1) > 0) {CurrentConnection++}
 		loop
 		sysscr fontname, "接続を待っています", "Waiting clients.", strf("\n現在の接続人数： %d / %d 人", CurrentConnection, NUM_OF_ACTUAL_PLAYERS)
 		redraw 1
 		sockwait SOCK_GAME+0 // クライアントの接続を待機
 		if (stat == 0) {
-			if (IsRemotePlayer(1) == 0) {
-				IsRemotePlayer(1) = 2
+			if (IsRemotePlayer(GameEnv, 1) == 0) {
+				SetRemotePlayer GameEnv, 1, 2
 				sockputc 2, SOCK_GAME+0
 				sockclose SOCK_GAME+0
 				sockmake SOCK_GAME+1, PORT_GAME+1
@@ -117,8 +117,8 @@
 					await 0
 				loop
 			} else {
-				if (IsRemotePlayer(2) == 0) {
-					IsRemotePlayer(2) = 3
+				if (IsRemotePlayer(GameEnv, 2) == 0) {
+					SetRemotePlayer GameEnv, 2, 3
 					sockputc 3, SOCK_GAME+0
 					sockclose SOCK_GAME+0
 					sockmake SOCK_GAME+2, SOCK_GAME+2
@@ -134,7 +134,7 @@
 					loop
 #ifndef SANMAT
 				} else {
-					IsRemotePlayer(3) = 4
+					setRemotePlayer GameEnv, 3, 4
 					sockputc 4, SOCK_GAME+0
 					sockclose SOCK_GAME+0
 					sockmake SOCK_GAME+3, PORT_GAME+3
@@ -156,21 +156,21 @@
 		await 0
 		if (CurrentConnection == NUM_OF_ACTUAL_PLAYERS) {startflag = 1}
 		if (startflag) {
-			serversend 0xb4, IsRemotePlayer
+			serversend 0xb4, GameEnv
 			repeat NUM_OF_ACTUAL_PLAYERS
 				tmpcnt = cnt
-				serversend 0xb8, IsRemotePlayer
-				serversend strlen(getPlayerName(GameEnv, tmpcnt)), IsRemotePlayer
+				serversend 0xb8, GameEnv
+				serversend strlen(getPlayerName(GameEnv, tmpcnt)), GameEnv
 				repeat strlen(getPlayerName(GameEnv, tmpcnt))
-					serversend peek(getPlayerName(GameEnv, tmpcnt), cnt), IsRemotePlayer
+					serversend peek(getPlayerName(GameEnv, tmpcnt), cnt), GameEnv
 				loop
 			loop
 			exportRule RuleConf
 			repeat RULE_STRING_LINES
 				tmpcnt = cnt
-				serversend 0xb8, IsRemotePlayer
-				serversend strlen(RuleConf(tmpcnt)), IsRemotePlayer
-				repeat strlen(RuleConf(tmpcnt)): serversend peek(RuleConf(tmpcnt), cnt), IsRemotePlayer: loop
+				serversend 0xb8, GameEnv
+				serversend strlen(RuleConf(tmpcnt)), GameEnv
+				repeat strlen(RuleConf(tmpcnt)): serversend peek(RuleConf(tmpcnt), cnt), GameEnv: loop
 			loop
 			break
 		}
@@ -262,7 +262,7 @@ return
 						loop
 						ClientNumber = tmp - 1
 						repeat NUM_OF_ACTUAL_PLAYERS
-							if (cnt != ClientNumber) {IsRemotePlayer(cnt) = 1}
+							if (cnt != ClientNumber) {setRemotePlayer GameEnv, cnt, 1}
 						loop
 						break
 					}
@@ -352,13 +352,13 @@ return
 *chrshuffle
 	if (GameMode == 1) {
 		repeat NUM_OF_PLAYERS
-			if (IsRemotePlayer(cnt) > 1) {
-				sockmake SOCK_CHAT-1+IsRemotePlayer(cnt), PORT_CHAT-1+IsRemotePlayer(cnt)
+			if (IsRemotePlayer(GameEnv, cnt) > 1) {
+				sockmake SOCK_CHAT-1+IsRemotePlayer(GameEnv, cnt), PORT_CHAT-1+IsRemotePlayer(GameEnv, cnt)
 			}
 		loop
 	}
 	repeat NUM_OF_ACTUAL_PLAYERS
-		TmpRemotePlayer(cnt) = IsRemotePlayer(cnt)
+		TmpRemotePlayer(cnt) = IsRemotePlayer(GameEnv, cnt)
 		TmpPlayerName(cnt) = getPlayerName(GameEnv, cnt)
 		TmpPosition(cnt) = cnt
 	loop
@@ -371,7 +371,7 @@ return
 		loop
 		if (GameMode = 1) {
 			repeat NUM_OF_ACTUAL_PLAYERS
-				serversend TmpPosition(cnt), IsRemotePlayer
+				serversend TmpPosition(cnt), GameEnv
 			loop
 		}
 	} else {
@@ -401,14 +401,14 @@ return
 //	BorderText = titleJia(TmpPosition(3)): borderedtxt BorderText, BorderTextX, BorderTextY, 255, 255, 255: await 500
 //#endif
 	repeat NUM_OF_ACTUAL_PLAYERS
-		IsRemotePlayer(TmpPosition(cnt)) = TmpRemotePlayer(cnt)
+		setRemotePlayer GameEnv, TmpPosition(cnt), TmpRemotePlayer(cnt)
 		setPlayerName GameEnv, TmpPosition(cnt), TmpPlayerName(cnt)
 	loop
 	tmpPlayer = TmpPosition(ClientNumber)
 	if (GameMode == 2) {
 		repeat NUM_OF_ACTUAL_PLAYERS
-			if (cnt == tmpPlayer) {IsRemotePlayer(cnt) = 0}
-			else {IsRemotePlayer(cnt) = 1}
+			if (cnt == tmpPlayer) {setRemotePlayer GameEnv, cnt, 0}
+			else {setRemotePlayer GameEnv, cnt, 1}
 		loop
 	}
 	//await 3000

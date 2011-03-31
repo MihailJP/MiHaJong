@@ -7,7 +7,7 @@
 #module
 #include "const.as"
 #deffunc agariproc int _agariPlayer, int FurikomiPlayer, int ActivePlayer, int TsumoAgari, int CurrentSutehai, int _RoundEndType, \
-int CurrentSutehaiAkaDora, array RonFlag, var yakuInfo, var GameStat, var GameEnv, int GameMode, array isRemotePlayer, \
+int CurrentSutehaiAkaDora, array RonFlag, var yakuInfo, var GameStat, var GameEnv, int GameMode, \
 var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 	agariPlayer = _agariPlayer
 	RoundEndType = _RoundEndType
@@ -107,12 +107,12 @@ var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 		/**************/
 		if (RoundEndType == ENDKYOKU_AGARI) {
 			tmpagariflag = 1
-			if ((getAgariHouki(GameStat, agariPlayer) == 1)||(IsRemotePlayer(agariPlayer) == -1)) {
+			if ((getAgariHouki(GameStat, agariPlayer) == 1)||(IsRemotePlayer(GameEnv, agariPlayer) == -1)) {
 				RoundEndType = ENDKYOKU_CHONBO // ˜a—¹‚è•úŠü‚Ìˆ—¨Œëƒƒ“EŒëƒcƒ‚‚Æ‚µ‚Ä”±•„‚Æ‚·‚é
 			}
 		}
 		if (RoundEndType == ENDKYOKU_AGARI) {
-			chatrecv GameStat, GameEnv, GameMode, IsRemotePlayer
+			chatrecv GameStat, GameEnv, GameMode
 			endround_agariproc GameStat, GameEnv, ResultDesc, agariPlayer, FurikomiPlayer, AgariPlayerPriority, TsumoAgari, origDoraPointer, AgariPointRaw, YakuInfo, tmpAliceFlag
 		}
 		/**************/
@@ -769,7 +769,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 				else:if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 1)&&(getShibari(GameStat) == 1)) {
 					// “ñãÊ”›‚è‚Å‚PãÊ‚µ‚©‚È‚¢‚È‚çö˜a
 					setCenterTitle "ãÊ•s‘«ö˜a": ResultDesc += "(ˆêãÊ‚µ‚©‚È‚¢˜a—¹‚è)"
-				} else:if ((getAgariHouki(GameStat, agariPlayer) == 1)||(IsRemotePlayer(agariPlayer) == -1)) {
+				} else:if ((getAgariHouki(GameStat, agariPlayer) == 1)||(IsRemotePlayer(GameEnv, agariPlayer) == -1)) {
 					// ˜a—¹‚è•úŠü‚È‚Ì‚É˜a—¹‚ë‚¤‚Æ‚µ‚½
 					setCenterTitle "˜a—¹•úŠüö˜a": ResultDesc += "(˜a—¹‚è•úŠü“K—p’†)"
 				} else {setCenterTitle "@ö˜a@": ResultDesc += ""}
