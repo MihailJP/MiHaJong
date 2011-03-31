@@ -84,10 +84,10 @@
 /* 接続先の打牌 */
 #module
 #include "const.as"
-#deffunc remotedahai var GameStat, var GameEnv, int GameMode, int ActivePlayer
-	if (GameMode == 2) {
+#deffunc remotedahai var GameStat, var GameEnv, int ActivePlayer
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
-			chatrecv GameStat, GameEnv, GameMode
+			chatrecv GameStat, GameEnv
 			clientreceive ClientReceived, ReceivedMsg
 			if (ClientReceived) {
 				if (ReceivedMsg == 0x9f) {
@@ -101,9 +101,9 @@
 			await 0
 		loop
 	}
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		repeat
-			chatrecv GameStat, GameEnv, GameMode
+			chatrecv GameStat, GameEnv
 			serverreceive ServerReceived, ReceivedMsg
 			if (ServerReceived == (IsRemotePlayer(GameEnv, ActivePlayer)-1)) {
 				// 受信失敗の時
@@ -151,13 +151,13 @@
 /* 接続先の鳴き */
 #module
 #include "const.as"
-#deffunc remotenaki var GameStat, var GameEnv, int GameMode, array RonFlag, array PonFlag, array MinkanFlag, array ChiFlag, int CurrentSutehai, int CurrentSutehaiAkaDora
+#deffunc remotenaki var GameStat, var GameEnv, array RonFlag, array PonFlag, array MinkanFlag, array ChiFlag, int CurrentSutehai, int CurrentSutehaiAkaDora
 
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat NUM_OF_ACTUAL_PLAYERS
 			tmp = cnt
 			repeat
-				chatrecv GameStat, GameEnv, GameMode
+				chatrecv GameStat, GameEnv
 				clientreceive ClientReceived, ReceivedMsg
 				if (ClientReceived) {
 					if (tmp != getPlayer(GameStat)) {
@@ -177,7 +177,7 @@
 			loop
 		loop
 	}
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		Received1 = 0: Received2 = 0: Received3 = 0
 #ifdef SANMAT
 		if ((IsRemotePlayer(GameEnv, 0) != 2)&&(IsRemotePlayer(GameEnv, 1) != 2)&&(IsRemotePlayer(GameEnv, 2) != 2)) {
@@ -199,7 +199,7 @@
 		}
 #endif
 		repeat
-			chatrecv GameStat, GameEnv, GameMode
+			chatrecv GameStat, GameEnv
 			serverreceive ServerReceived, ReceivedMsg
 			if (ServerReceived) {
 				repeat NUM_OF_PLAYERS
@@ -283,8 +283,8 @@
 	loop
 	if (ReconnectionSuccess == 0) {
 		dialog "再接続に失敗しました\nゲームは続行できません", 1, "回線切断"
-		if (GameMode != 0) {sockclose SOCK_GAME+0}
-		if (GameMode == 1) {sockclose SOCK_GAME+1: sockclose SOCK_GAME+2: sockclose SOCK_GAME+3}
+		if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {sockclose SOCK_GAME+0}
+		if (getGameMode(GameEnv) == GAMEMODE_SERVER) {sockclose SOCK_GAME+1: sockclose SOCK_GAME+2: sockclose SOCK_GAME+3}
 		font fontname, 48, 0: objsize 200, 60
 		pos 620, 560: button goto "確認", *startgame
 		stop
@@ -294,10 +294,10 @@ return
 /* チャットバッファ受信 */
 #module
 #include "const.as"
-#deffunc initializechat var GameEnv, int GameMode, var ServerAddress, int ClientNumber
+#deffunc initializechat var GameEnv, var ServerAddress, int ClientNumber
 	chatinit
-	if (GameMode == 0) {gsel SCR_CHAT: objgray 1, 0: objgray 2, 0: gsel 0}
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_STANDALONE) {gsel SCR_CHAT: objgray 1, 0: objgray 2, 0: gsel 0}
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		ChatBuf1 = "": ChatBuf2 = "": ChatBuf3 = ""
 		repeat NUM_OF_PLAYERS
 			if (IsRemotePlayer(GameEnv, cnt) > 1) {tmpClientWaiting(cnt) = 1}
@@ -319,15 +319,15 @@ return
 			}
 		loop
 	}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		sockopen@ SOCK_CHAT+0, ServerAddress, PORT_CHAT+ClientNumber
 		ChatBuf = ""
 	}
 	gsel 0, 1
 	return
 
-#deffunc chatrecv var GameStat, var GameEnv, int GameMode
-	if (GameMode == 1) {
+#deffunc chatrecv var GameStat, var GameEnv
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		repeat NUM_OF_PLAYERS
 			if (IsRemotePlayer(GameEnv, cnt) >= 2) {
 				sockcheck@ SOCK_CHAT-1+IsRemotePlayer(GameEnv, cnt)
@@ -361,7 +361,7 @@ return
 			}
 		loop
 	}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		sockcheck@ SOCK_CHAT+0
 		if (stat == 0) {
 			sdim chattmp, 65536: sockget@ chattmp, 65536, SOCK_CHAT+0
@@ -381,9 +381,9 @@ return
 	}
 return
 
-#deffunc chatpost var GameStat, var GameEnv, int GameMode
+#deffunc chatpost var GameStat, var GameEnv
 	CurrentChatTxt = CurrentChatTxt()
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 	#ifdef SANMAT
 		if ((IsRemotePlayer(GameEnv, 0) == 2)||(IsRemotePlayer(GameEnv, 1) == 2)||(IsRemotePlayer(GameEnv, 2) == 2)) {sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+1}
 		if ((IsRemotePlayer(GameEnv, 0) == 3)||(IsRemotePlayer(GameEnv, 1) == 3)||(IsRemotePlayer(GameEnv, 2) == 3)) {sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+2}
@@ -400,7 +400,7 @@ return
 			if (strmid(tmpcht, 0, 1) == "3") {chatappend getPlayerName(GameEnv, 3)+"("+windName(playerWind(3, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
 		#endif
 	}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+0
 	}
 	clearChatTxt
@@ -409,5 +409,5 @@ return
 
 /* チャット送信 */
 *chatpost_
-	chatpost GameStat, GameEnv, GameMode
+	chatpost GameStat, GameEnv
 return

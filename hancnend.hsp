@@ -551,9 +551,9 @@
 	loop
 	dsplay SND_YAKULST2: redrscreen
 	redraw 1
-	if (GameMode != 0) {sockclose SOCK_GAME+0: sockclose SOCK_CHAT+0: sockclose SOCK_CHAT+1: sockclose SOCK_CHAT+2: sockclose SOCK_CHAT+3}
-	if (GameMode == 1) {sockclose SOCK_GAME+1: sockclose SOCK_GAME+2: sockclose SOCK_GAME+3}
-	if (GameMode != 0) {chatappend "*** 切断しました\n"}
+	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {sockclose SOCK_GAME+0: sockclose SOCK_CHAT+0: sockclose SOCK_CHAT+1: sockclose SOCK_CHAT+2: sockclose SOCK_CHAT+3}
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {sockclose SOCK_GAME+1: sockclose SOCK_GAME+2: sockclose SOCK_GAME+3}
+	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {chatappend "*** 切断しました\n"}
 	gsel SCR_CHAT: objgray 1, 0: objgray 2, 0: gsel 0
 	font fontname, 48, 0: objsize 200, 60
 	pos 620, 560: button goto "確認", *finishbtn: tooltip stat-STATBOX, "タイトル画面に戻ります"

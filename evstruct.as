@@ -4,7 +4,7 @@
  *=============================
  */
 
-#module envStruct PlayerName, RemotePlayerFlag
+#module envStruct PlayerName, RemotePlayerFlag, GameMode
 
 #include "const.as"
 
@@ -20,8 +20,15 @@
 #modcfunc isRemotePlayer int PlayerNum
 	return RemotePlayerFlag(PlayerNum)
 
+#modfunc setGameMode int Value
+	GameMode = Value
+	return
+#modcfunc GetGameMode int PlayerNum
+	return GameMode
+
 #modinit
 	sdim PlayerName, 20, NUM_OF_PLAYERS
 	dim RemotePlayerFlag, NUM_OF_PLAYERS
+	GameMode = -1
 	return
 #global

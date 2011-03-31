@@ -27,7 +27,7 @@
 /* 半荘の進行 */
 repeat
 	info strf("局番号 [%d] を開始しました。", getRound(GameStat))
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		sockput "8\n", SOCK_CHAT+0 // チャットを同期
 	}
 	/* ウォッチモードの時は視点を親に移す */
@@ -65,7 +65,7 @@ repeat
 		/* 再描画 */
 		redrscreen
 		/* 摸打の処理 */
-		tsumoproc GameStat, GameEnv, ActivePlayer, WatchModeFlag, GameMode
+		tsumoproc GameStat, GameEnv, ActivePlayer, WatchModeFlag
 		DiscardTileIndex = stat
 		if (DiscardTileIndex == DAHAI_TYPE_DISCONNECT) {break}
 		/* ウェイトを入れる */
@@ -506,7 +506,7 @@ repeat
 		}
 		// 打牌へ戻る
 	loop
-	endround GameStat, GameEnv, RoundEndType, agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, yakuInfo, GameMode, WatchModeFlag
+	endround GameStat, GameEnv, RoundEndType, agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, yakuInfo, WatchModeFlag
 	await 5000
 	// ハコ割れ終了
 	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {

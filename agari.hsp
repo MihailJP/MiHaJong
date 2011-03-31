@@ -7,7 +7,7 @@
 #module
 #include "const.as"
 #deffunc agariproc int _agariPlayer, int FurikomiPlayer, int ActivePlayer, int TsumoAgari, int CurrentSutehai, int _RoundEndType, \
-int CurrentSutehaiAkaDora, array RonFlag, var yakuInfo, var GameStat, var GameEnv, int GameMode, \
+int CurrentSutehaiAkaDora, array RonFlag, var yakuInfo, var GameStat, var GameEnv, \
 var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 	agariPlayer = _agariPlayer
 	RoundEndType = _RoundEndType
@@ -112,7 +112,7 @@ var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 			}
 		}
 		if (RoundEndType == ENDKYOKU_AGARI) {
-			chatrecv GameStat, GameEnv, GameMode
+			chatrecv GameStat, GameEnv
 			endround_agariproc GameStat, GameEnv, ResultDesc, agariPlayer, FurikomiPlayer, AgariPlayerPriority, TsumoAgari, origDoraPointer, AgariPointRaw, YakuInfo, tmpAliceFlag
 		}
 		/**************/

@@ -62,11 +62,11 @@ return
 #module
 #include "const.as"
 #deffunc redrscreen
-	doredrscreen GameStat@, GameEnv@, GameMode@, WatchModeFlag@, ActivePlayer@, CurrentSutehai@, bgColorR@, bgColorG@, bgColorB@
+	doredrscreen GameStat@, GameEnv@, WatchModeFlag@, ActivePlayer@, CurrentSutehai@, bgColorR@, bgColorG@, bgColorB@
 return
 
-#deffunc doredrscreen var GameStat, var GameEnv, int GameMode, int WatchModeFlag, int ActivePlayer, int CurrentSutehai, int bgColorR, int bgColorG, int bgColorB
-	chatrecv GameStat, GameEnv, GameMode
+#deffunc doredrscreen var GameStat, var GameEnv, int WatchModeFlag, int ActivePlayer, int CurrentSutehai, int bgColorR, int bgColorG, int bgColorB
+	chatrecv GameStat, GameEnv
 	gsel 0: redraw 0
 	color bgColorR/3, bgColorG/3, bgColorB/3
 	boxf 0, 0, 839, 629

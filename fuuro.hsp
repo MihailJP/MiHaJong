@@ -465,7 +465,7 @@
 		if (ActivePlayer != cnt) {
 			PassivePlayer = cnt
 			if (PassivePlayer == getPlayer(GameStat)) {
-				playerfuuro GameStat, GameEnv, GameMode, ActivePlayer, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, MinkanFlag, PonFlag, ChiFlag
+				playerfuuro GameStat, GameEnv, ActivePlayer, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, RonFlag, MinkanFlag, PonFlag, ChiFlag
 			} else {
 				if (IsRemotePlayer(GameEnv, PassivePlayer) == 0) {
 					/* COMが「カンニング」しないように処理 */
@@ -483,15 +483,15 @@
 			}
 		} else {
 			if (cnt == getPlayer(GameStat)) {
-				if (GameMode == 2) {clientsend 0xa0}
+				if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {clientsend 0xa0}
 			}
 		}
 	loop
 	/* 通信対戦時の処理 */
-	if (GameMode != 0) {
-		remotenaki GameStat, GameEnv, GameMode, RonFlag, PonFlag, MinkanFlag, ChiFlag, CurrentSutehai, CurrentSutehaiAkaDora
+	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {
+		remotenaki GameStat, GameEnv, RonFlag, PonFlag, MinkanFlag, ChiFlag, CurrentSutehai, CurrentSutehaiAkaDora
 	}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		if (ReceivedMsg == 1023) {
 			setCenterTitle "回線切断": redrscreen
 			gosub *reconnection

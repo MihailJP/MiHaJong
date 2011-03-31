@@ -17,7 +17,7 @@
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
 	haifubufinit
 	statmes "" // 情報窓への表示
-	initializechat GameEnv, GameMode, ServerAddress, ClientNumber
+	initializechat GameEnv, ServerAddress, ClientNumber
 return
 
 /* 卓の初期化 */
@@ -25,8 +25,8 @@ return
 	ifaceinit // 押しボタン類のステータス初期化
 	inittable GameStat
 	// 局の開始で同期する。このとき落ち戻りが可能
-	if (GameMode == 1) {serversend 0xb6, GameEnv}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {serversend 0xb6, GameEnv}
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
 			clientreceive ClientReceived, ReceivedMsg
 			if ((ClientReceived == 1)&&(ReceivedMsg == 0xb6)) {
@@ -46,10 +46,10 @@ return
 	// 牌譜バッファの初期化
 	haifuinit
 	// 場風のデータを送信。とりあえず１６周目の北四局まで対応
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		serversend getRoundLoop(GameStat)*16+getRound(GameStat), GameEnv
 	}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
 			clientreceive ClientReceived, ReceivedMsg
 			if (ClientReceived == 1) {
@@ -61,10 +61,10 @@ return
 		loop
 	}
 	// 積み棒のデータを送信。とりあえず２５５本場まで対応
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		serversend getHonba(GameStat), GameEnv
 	}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
 			clientreceive ClientReceived, ReceivedMsg
 			if (ClientReceived == 1) {
@@ -75,10 +75,10 @@ return
 		loop
 	}
 	// 供託本数のデータを送信。とりあえず２５５０００点まで対応
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		serversend getDeposit(GameStat), GameEnv
 	}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
 			clientreceive ClientReceived, ReceivedMsg
 			if (ClientReceived == 1) {
@@ -89,10 +89,10 @@ return
 		loop
 	}
 	// 八連荘の判定に使うデータを送信
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		serversend (getLastAgariPlayer(GameStat)+1)*16+getAgariChain(GameStat), GameEnv
 	}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
 			clientreceive ClientReceived, ReceivedMsg
 			if (ClientReceived == 1) {
@@ -104,7 +104,7 @@ return
 		loop
 	}
 	// 持ち点のデータを送信。符号込みで33バイトずつ・スモールエンディアン
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		repeat NUM_OF_PLAYERS
 			tmp = cnt
 			repeat NUM_OF_DIGIT_GROUPS
@@ -120,7 +120,7 @@ return
 			}
 		loop
 	}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat NUM_OF_PLAYERS: tmp = cnt
 			repeat NUM_OF_DIGIT_GROUPS: tmp2 = cnt
 				repeat
@@ -157,10 +157,10 @@ return
 		loop
 	}
 	// 焼鳥のデータを送信
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		serversend getYakitori(GameStat, 0)*8+getYakitori(GameStat, 1)*4+getYakitori(GameStat, 2)*2+getYakitori(GameStat, 3), GameEnv
 	}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
 			clientreceive ClientReceived, ReceivedMsg
 			if (ClientReceived == 1) {
@@ -174,10 +174,10 @@ return
 		loop
 	}
 	// チップのデータを送信。一応±１２７まで対応
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		repeat NUM_OF_PLAYERS: serversend getChip(GameStat, cnt)+128, GameEnv: loop
 	}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat NUM_OF_PLAYERS: tmp = cnt
 			repeat
 				clientreceive ClientReceived, ReceivedMsg
@@ -190,10 +190,10 @@ return
 		loop
 	}
 	// 四馬路解禁フラグを送信
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		serversend getSumaroFlag(GameStat, 0)*8+getSumaroFlag(GameStat, 1)*4+getSumaroFlag(GameStat, 2)*2+getSumaroFlag(GameStat, 3), GameEnv
 	}
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
 			clientreceive ClientReceived, ReceivedMsg
 			if (ClientReceived == 1) {
@@ -391,7 +391,7 @@ return
 	if (getRule(RULE_BLUE_LVFA)) {setWall GameStat, WALL_REDTILE, 131, 2} // 青発
 #endif
 #endif
-	if (GameMode != 2) {
+	if (getGameMode(GameEnv) != GAMEMODE_CLIENT) {
 #ifdef ALLSANMA
 		YamaLength = 108
 #else
@@ -415,7 +415,7 @@ return
 			setWall GameStat, WALL_REDTILE, cnt, tmp
 		loop
 	}
-	if (GameMode == 2) { // クライアントの場合、データを受信
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) { // クライアントの場合、データを受信
 #ifdef ALLSANMA
 			tmpNumberOfTiles = 108
 #else
@@ -463,7 +463,7 @@ return
 		redrdice GameStat, bgColorR, bgColorG, bgColorB: await 80
 	loop
 	dsplay SND_SAIKORO
-	if (GameMode = 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
 			clientreceive ClientReceived, ReceivedMsg
 			if (ClientReceived) {
@@ -487,7 +487,7 @@ return
 		addDeadWallLength GameStat, 2 /* ドラドラ卓なら王牌の数を増やす */
 	}
 	calcWareme GameStat // 割れ目
-	if (GameMode = 1) { // サーバーの場合、牌山のデータを送信
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) { // サーバーの場合、牌山のデータを送信
 #ifdef ALLSANMA
 		tmpNumberOfTiles = 108
 #else

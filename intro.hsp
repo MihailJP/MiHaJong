@@ -39,7 +39,7 @@
 	tooltip 3, "コンピューター同士の対戦を観賞します"
 	tooltip 4, "ルールを設定します"
 	tooltip 5, "終了します"
-	GameMode = -1
+	//GameMode = -1
 	debug "タイトル画面を準備しました。"
 	return
 
@@ -49,7 +49,7 @@
 	gosub *titlemenu
 	debug "応答を待ちます。"
 	repeat
-		if (GameMode >= 0) {vanish: break}
+		if (getGameMode(GameEnv) >= GAMEMODE_STANDALONE) {vanish: break}
 		await 1
 	loop: objmode 2: font fontname, 12, 0
 	return
@@ -60,7 +60,7 @@
 	setPlayerName GameEnv, 1, "[b]COM2"
 	setPlayerName GameEnv, 2, "[c]COM3"
 	setPlayerName GameEnv, 3, "[d]COM4"
-	GameMode = 0
+	setGameMode GameEnv, GAMEMODE_STANDALONE
 	WatchModeFlag = 1
 	ServerAddress = ""
 	return
@@ -72,7 +72,7 @@
 	setPlayerName GameEnv, 1, "[b]COM1"
 	setPlayerName GameEnv, 2, "[c]COM2"
 	setPlayerName GameEnv, 3, "[d]COM3"
-	GameMode = 0
+	setGameMode GameEnv, GAMEMODE_STANDALONE
 	ServerAddress = ""
 	return
 
@@ -83,7 +83,7 @@
 	setPlayerName GameEnv, 1, "[b]COM"
 	setPlayerName GameEnv, 2, "[c]COM"
 	setPlayerName GameEnv, 3, "[d]COM"
-	GameMode = 1
+	setGameMode, GameEnv, GAMEMODE_SERVER
 	ServerAddress = ""
 	sockmake SOCK_GAME+0, PORT_GAME
 	vanish
@@ -230,7 +230,7 @@ return
 	showbackground
 	sysscr fontname, "接続先を入力してね", "Choose server.", "サーバーのIPアドレス、または\nドメイン名を入力してください"
 	redraw 1
-	GameMode = 2: vanish
+	setGameMode, GameEnv, GAMEMODE_CLIENT: vanish
 	ServerAddress = ""
 	objsize 440, 40
 	pos 200, 270: input ServerAddress
@@ -295,7 +295,7 @@ return
 				break
 			} else {
 				dialog "サーバーに接続できません\nオフラインモードで開始します", 1, "接続失敗"
-				GameMode = 0
+				setGameMode GameEnv, GAMEMODE_STANDALONE
 				setPlayerName GameEnv, 0, "[A]"+InputPlayerName
 				setPlayerName GameEnv, 1, "[b]"
 				setPlayerName GameEnv, 2, "[c]"
@@ -350,7 +350,7 @@ return
 return
 
 *chrshuffle
-	if (GameMode == 1) {
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		repeat NUM_OF_PLAYERS
 			if (IsRemotePlayer(GameEnv, cnt) > 1) {
 				sockmake SOCK_CHAT-1+IsRemotePlayer(GameEnv, cnt), PORT_CHAT-1+IsRemotePlayer(GameEnv, cnt)
@@ -362,14 +362,14 @@ return
 		TmpPlayerName(cnt) = getPlayerName(GameEnv, cnt)
 		TmpPosition(cnt) = cnt
 	loop
-	if (GameMode != 2) {
+	if (getGameMode(GameEnv) != GAMEMODE_CLIENT) {
 		repeat 600
 			tmp1 = rnd(NUM_OF_ACTUAL_PLAYERS): tmp2 = rnd(NUM_OF_ACTUAL_PLAYERS)
 			tmp3 = TmpPosition(tmp1)
 			TmpPosition(tmp1) = TmpPosition(tmp2)
 			TmpPosition(tmp2) = tmp3
 		loop
-		if (GameMode = 1) {
+		if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 			repeat NUM_OF_ACTUAL_PLAYERS
 				serversend TmpPosition(cnt), GameEnv
 			loop
@@ -405,7 +405,7 @@ return
 		setPlayerName GameEnv, TmpPosition(cnt), TmpPlayerName(cnt)
 	loop
 	tmpPlayer = TmpPosition(ClientNumber)
-	if (GameMode == 2) {
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat NUM_OF_ACTUAL_PLAYERS
 			if (cnt == tmpPlayer) {setRemotePlayer GameEnv, cnt, 0}
 			else {setRemotePlayer GameEnv, cnt, 1}
