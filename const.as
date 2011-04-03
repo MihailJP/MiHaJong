@@ -8,7 +8,7 @@
 #define VERSION_MAJ 1
 #define VERSION_MED 4
 #define VERSION_MIN 3
-#define VERSION_MIC "dev"
+#define VERSION_MIC ""
 
 /* フォントの指定 */
 /* 必ず等幅日本語フォントを指定すること */

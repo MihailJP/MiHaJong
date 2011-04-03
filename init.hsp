@@ -51,9 +51,9 @@
 	color 0, 0, 0: line 319, 0, 0, 0: line 319, 239: line 0, 239: line 0, 0
 	tmptxt = "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
 	borderedtxt2 tmptxt, 160-(strlen(tmptxt)*4), 130, 255, 255, 255, 0, 16, 192, 192, 192
-	tmptxt = "Copyright (c) 2011 MihailJP"
+	tmptxt = "Copyright (c) 2008-2011 MihailJP"
 	borderedtxt2 tmptxt, 160-(strlen(tmptxt)*4), 160, 255, 255, 255, 0, 16, 192, 192, 192
-	tmptxt = "All rights reserved"
+	tmptxt = "Part of rights reserved"
 	borderedtxt2 tmptxt, 160-(strlen(tmptxt)*4), 180, 255, 255, 255, 0, 16, 192, 192, 192
 	gsel 0, 0: await 0
 

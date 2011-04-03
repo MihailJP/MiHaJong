@@ -13,7 +13,7 @@
 	gmode gmode_pixela: pos 100, 80: gcopy SCR_TITLE_LOGO, 0, 0, 640, 200: gmode gmode_mem
 	font fontname, 28, 0
 	borderedtxt2 "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC, 530, 125, 255, 255, 255, 1, 28, 192, 192, 192
-	tmptxt = "Copyright (c) 2011 MihailJP All rights reserved"
+	tmptxt = "Copyright (c) 2008-2011 MihailJP, Part of rights reserved"
 	borderedtxt2 tmptxt, 825-(strlen(tmptxt)*10), 595, 255, 255, 255, 1, 20, 192, 192, 192
 #ifdef SANMAS
 	borderedtxt2 "êîîvéOñÉ", 130, 100, 255, 255, 255, 1, 28, 192, 192, 192
