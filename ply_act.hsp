@@ -135,7 +135,7 @@
 			if (clickflag & 512) {
 				if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0) {
 					dsplay@ SND_CLICK
-					vanish@: commonswitch GameStat, 0
+					vanish@: commonswitch GameStat, GameEnv
 					SelectedTile = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 				}
 			}
@@ -197,11 +197,11 @@
 			} else {
 				SelectedTile = 0
 			}
-			vanish@: commonswitch GameStat, 0
+			vanish@: commonswitch GameStat, GameEnv
 		}
 		if (SelectedTile >= 0) {
 			statmes ""
-			vanish@: commonswitch GameStat, 0: TimeLeft = 0: redrscreen
+			vanish@: commonswitch GameStat, GameEnv: TimeLeft = 0: redrscreen
 			DiscardTileIndex = SelectedTile
 			if (mode == 1) {
 				DiscardTileIndex += DAHAI_TYPE_RIICHI
@@ -247,7 +247,7 @@
 			// óßíºÇ∑ÇÈèÍçá
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
-			vanish@: commonswitch GameStat, 0: mode = 1: objidpointer = 0
+			vanish@: commonswitch GameStat, GameEnv: mode = 1: objidpointer = 0
 			if (getRule(RULE_OPEN_RIICHI) != 0) {
 				if (getMenzen(GameStat, ActivePlayer) == 1) {
 					objsize 50, 30: font fontname, 12, 0
@@ -271,7 +271,7 @@
 			// ÉIÅ[ÉvÉìóßíºÇ∑ÇÈèÍçá
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
-			vanish@ :commonswitch GameStat, 0 : mode = 4: objidpointer = 0
+			vanish@ :commonswitch GameStat, GameEnv : mode = 4: objidpointer = 0
 			repeat NUM_OF_TILES_IN_HAND
 				tmpHand = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
 				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
@@ -287,7 +287,7 @@
 			// à√û»ÅEâ¡û»Ç∑ÇÈèÍçá
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
-			vanish@: commonswitch GameStat, 0: mode = 2: objidpointer = 0
+			vanish@: commonswitch GameStat, GameEnv: mode = 2: objidpointer = 0
 			countTilesInHand TileCount, GameStat, ActivePlayer
 			repeat NUM_OF_TILES_IN_HAND
 				if (TileCount(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)) < 4) {SelectedTileButtonMask(cnt) = 1}
@@ -317,7 +317,7 @@
 			TimeLeft = 0: redrscreen
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
-			vanish@: commonswitch GameStat, 0 // é©ñÃòa
+			vanish@: commonswitch GameStat, GameEnv // é©ñÃòa
 			if (getGameMode(GameEnv) == GAMEMODE_SERVER) {serversend 0x6f, GameEnv}
 			if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {clientsend 0x6f}
 			DiscardTileIndex = DAHAI_TYPE_AGARI: break
@@ -326,7 +326,7 @@
 			TimeLeft = 0: redrscreen
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
-			vanish@: commonswitch GameStat, 0 // ã„éÌã„îv
+			vanish@: commonswitch GameStat, GameEnv // ã„éÌã„îv
 			if (getGameMode(GameEnv) == GAMEMODE_SERVER) {serversend 0x6e, GameEnv}
 			if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {clientsend 0x6e}
 			DiscardTileIndex = DAHAI_TYPE_KYUUSHU: break
@@ -335,7 +335,7 @@
 			// â‘îvÇî≤Ç≠èÍçá
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
-			vanish@: commonswitch GameStat, 0: mode = 3: objidpointer = 0
+			vanish@: commonswitch GameStat, GameEnv: mode = 3: objidpointer = 0
 #ifdef SANMAX
 			repeat NUM_OF_TILES_IN_HAND
 				if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) != TILE_NORTH_WIND) {SelectedTileButtonMask(cnt) = 1}
@@ -357,7 +357,7 @@
 		}
 		await 0
 	loop
-	vanish@: commonswitch GameStat, 0
+	vanish@: commonswitch GameStat, GameEnv
 return DiscardTileIndex
 
 /* ÉvÉåÉCÉÑÅ[ÇÃñ¬Ç´ */
@@ -455,7 +455,7 @@ return DiscardTileIndex
 			if (ginfo(2) == 0) {
 				if (clickflag & 512) {
 					dsplay@ SND_CLICK
-					vanish@: commonswitch GameStat, 0: SelectedTile = -90
+					vanish@: commonswitch GameStat, GameEnv: SelectedTile = -90
 				}
 			}
 			TurnTime = gettime(5)*60000+gettime(6)*1000+gettime(7)
@@ -474,7 +474,7 @@ return DiscardTileIndex
 				}
 			}
 			if ((TurnTime-StartTurn >= 10000)) {
-				SelectedTile = -90: vanish@: commonswitch GameStat, 0
+				SelectedTile = -90: vanish@: commonswitch GameStat, GameEnv
 			}
 //			redrscreen
 			if (TimeLeft != tmpTimeLeft) {
@@ -504,7 +504,7 @@ return DiscardTileIndex
 		loop
 	}
 	statmes ""
-	vanish@: commonswitch GameStat, 0
+	vanish@: commonswitch GameStat, GameEnv
 	TimeLeft = 0: redrscreen
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		SendingMsg = 0xa0
