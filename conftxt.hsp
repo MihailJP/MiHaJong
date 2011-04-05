@@ -138,6 +138,7 @@
 	RuleName(RULE_FOUR_WIND_RYUUKYOKU) = "三風連打"
 	RuleDescription(RULE_FOUR_WIND_RYUUKYOKU) = "鳴きのない１巡目に３人が同じ風牌を捨てたときのルールを設定します"
 	RuleTxt(0, RULE_FOUR_WIND_RYUUKYOKU) = "場を続行", "連荘", "親流れ"
+	nonumsanma RULE_FOUR_WIND_RYUUKYOKU
 	
 	RuleName(RULE_FOUR_RIICHI_RYUUKYOKU) = "三人立直"
 	RuleDescription(RULE_FOUR_RIICHI_RYUUKYOKU) = "３人全員が立直したときのルールを設定します"
@@ -618,7 +619,7 @@
 	RuleName(RULE_URAKAZE) = "裏風"
 	RuleDescription(RULE_URAKAZE) = "裏風の有無と価値を設定します(対面の風牌が役牌扱い)"
 	RuleTxt(0, RULE_URAKAZE) = "なし", "１飜"
-	noregsanma RULE_URAKAZE
+	noregsanma RULE_URAKAZE: nonumsanma RULE_URAKAZE
 
 	RuleName(RULE_RYANANKAN) = "二暗槓"
 	RuleDescription(RULE_RYANANKAN) = "二暗槓の有無と価値を設定します"
@@ -1631,27 +1632,27 @@
 	RuleName(RULE_KITASHIRAKAWA) = "北白川"
 	RuleDescription(RULE_KITASHIRAKAWA) = "北白川の有無と価値を設定します(北、白、六索を刻子にする)"
 	RuleTxt(0, RULE_KITASHIRAKAWA) = "なし", "役満"
-	nonumsanma RULE_SNOW_GINKAKU
+	nonumsanma RULE_KITASHIRAKAWA
 
 	RuleName(RULE_HATSUTEI_MOYUE) = "発底摸月"
 	RuleDescription(RULE_HATSUTEI_MOYUE) = "発底摸月の有無と価値を設定します(海底摸月を発で和了る)"
 	RuleTxt(0, RULE_HATSUTEI_MOYUE) = "なし", "２飜"
-	nonumsanma RULE_SNOW_GINKAKU
+	nonumsanma RULE_HATSUTEI_MOYUE
 
 	RuleName(RULE_HAKUTEI_RAOYUI) = "白底撈魚"
 	RuleDescription(RULE_HAKUTEI_RAOYUI) = "白底撈魚の有無と価値を設定します(河底撈魚を白で和了る)"
 	RuleTxt(0, RULE_HAKUTEI_RAOYUI) = "なし", "２飜"
-	nonumsanma RULE_SNOW_GINKAKU
+	nonumsanma RULE_HAKUTEI_RAOYUI
 
 	RuleName(RULE_CHUNSHAN_KAIHOH) = "中上開花"
 	RuleDescription(RULE_CHUNSHAN_KAIHOH) = "中上開花の有無と価値を設定します(嶺上開花を中で和了る)"
 	RuleTxt(0, RULE_CHUNSHAN_KAIHOH) = "なし", "２飜"
-	nonumsanma RULE_SNOW_GINKAKU
+	nonumsanma RULE_CHUNSHAN_KAIHOH
 
 	RuleName(RULE_NEWYEAR) = "お正月"
 	RuleDescription(RULE_NEWYEAR) = "お正月の有無と価値を設定します(１の三色同刻と東の刻子)"
 	RuleTxt(0, RULE_NEWYEAR) = "なし", "役満"
-	nonumsanma RULE_SNOW_GINKAKU
+	nonumsanma RULE_NEWYEAR
 
 	RuleName(RULE_SIMIAN_CHUGE) = "四面楚歌"
 	RuleDescription(RULE_SIMIAN_CHUGE) = "四面楚歌の有無と価値を設定します(同色で４面子、別の色の数牌で単騎待ち)"
