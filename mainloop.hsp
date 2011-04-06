@@ -64,7 +64,7 @@ repeat
 		/* 再描画 */
 		redrscreen
 		/* 摸打の処理 */
-		tsumoproc GameStat, GameEnv, ActivePlayer
+		getdahai GameStat, GameEnv, ActivePlayer
 		DiscardTileIndex = stat
 		if (DiscardTileIndex == DAHAI_TYPE_DISCONNECT) {break}
 		/* ウェイトを入れる */

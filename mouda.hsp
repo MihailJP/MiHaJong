@@ -6,7 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc tsumoproc var GameStat, var GameEnv, int ActivePlayer
+#deffunc getdahai var GameStat, var GameEnv, int ActivePlayer
 	/* COMが「カンニング」しないように処理 */
 	makesandbox Sandbox, GameStat, ActivePlayer
 	/* 打牌を取得する */
