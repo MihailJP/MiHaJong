@@ -867,7 +867,7 @@ return DiscardTileIndex
 	return
 
 /* Ç`ÇhÇÃñ¬Ç´ÅEâhòa */
-#deffunc compfuuro var GameStat, int PassivePlayer, array RonFlag, array MinkanFlag, array PonFlag, array ChiFlag
+#deffunc compfuuro var GameStat, int PassivePlayer, array MinkanFlag, array PonFlag, array ChiFlag
 	info strf("AIÇÃïõòIîªíËÇ…ì¸ÇËÇ‹Ç∑ÅBÉvÉåÉCÉÑÅ[ [%d]", PassivePlayer)
 	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > TILE_SUIT_FLOWERS) {
 		/* â‘îvÇÃèÍçáÇÕñﬂÇÈ */
@@ -894,11 +894,11 @@ return DiscardTileIndex
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
 	if (Shanten == -1) {
-		RonFlag(PassivePlayer) = 1 // èoòaóπÇË
+		setDeclarationFlag GameStat, DECLARATIONFLAG_RON, PassivePlayer, 1 // èoòaóπÇË
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, PassivePlayer) > 0)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) == RIICHI_NO))) {
-			RonFlag(PassivePlayer) = 0
+			setDeclarationFlag GameStat, DECLARATIONFLAG_RON, PassivePlayer, 0
 			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
 			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
 		}

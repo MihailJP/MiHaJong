@@ -14,7 +14,7 @@ WaremePlayer, DoukasenPlayer, Dice1, Dice2, Dice1Direction, Dice2Direction, \
 PaoFlag, Deck, DeadTiles, ExtraRinshan, ShibariFlag, \
 DoraFlag, TilePointer, DoraPointer, RinshanPointer, TianHuFlag, \
 PreviousMeld, ConnectionLost, \
-TsumoAgariFlag, CurrentDiscard
+DeclarationFlag, TsumoAgariFlag, CurrentDiscard
 
 #include "const.as"
 
@@ -361,6 +361,14 @@ TsumoAgariFlag, CurrentDiscard
 #modcfunc getTsumoAgariFlag
 	return TsumoAgariFlag
 
+#modfunc setDeclarationFlag int Page, int Player, int value
+	DeclarationFlag(Player, Page) = value
+	return
+#modfunc resetDeclarationFlag
+	dim DeclarationFlag, NUM_OF_PLAYERS, DECLARATIONFLAG_PAGES
+	return
+#modcfunc getDeclarationFlag int Page, int Player
+	return DeclarationFlag(Player, Page)
 
 
 /* ã«íPà Ç≈ÇÃèâä˙âª */
@@ -445,6 +453,7 @@ TsumoAgariFlag, CurrentDiscard
 	dim DoraFlag, TILE_NONFLOWER_MAX, DORA_PAGES // ÉhÉâîªíËÇÃîzóÒ
 	
 	TsumoAgariFlag = 0
+	resetDeclarationFlag thismod
 	dim CurrentDiscard, CURRENTDISCARD_PAGES
 	return
 

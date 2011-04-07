@@ -225,10 +225,10 @@ return
 return
 
 /* 放銃したか否かを牌譜に記録 */
-#deffunc haifurecfurikomi var GameStat, array RonFlag, int ActivePlayer
+#deffunc haifurecfurikomi var GameStat, int ActivePlayer
 	if ((getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_DOUBLE_IPPATSU)) {
 		// 立直宣言牌の場合
-		if ((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) > 0) {
+		if (RonPlayers(GameStat) > 0) {
 			// 立直宣言牌での振り込み
 			haifuP(ActivePlayer*6+4) += "ﾘX "
 			HThaifuP(ActivePlayer*6+4) += "<td>リーチ<br>ウチ</td>"
@@ -239,7 +239,7 @@ return
 		}
 	} else {
 		// それ以外の場合
-		if ((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) > 0) {
+		if (RonPlayers(GameStat) > 0) {
 			// 通常の振り込み
 			haifuP(ActivePlayer*6+4) += "ｳﾁ "
 			HThaifuP(ActivePlayer*6+4) += "<td>ウチ</td>"

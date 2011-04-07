@@ -151,7 +151,7 @@
 /* ê⁄ë±êÊÇÃñ¬Ç´ */
 #module
 #include "const.as"
-#deffunc remotenaki var GameStat, var GameEnv, array RonFlag, array PonFlag, array MinkanFlag, array ChiFlag
+#deffunc remotenaki var GameStat, var GameEnv, array PonFlag, array MinkanFlag, array ChiFlag
 
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat NUM_OF_ACTUAL_PLAYERS
@@ -161,7 +161,7 @@
 				clientreceive ClientReceived, ReceivedMsg
 				if (ClientReceived) {
 					if (tmp != getPlayer(GameStat)) {
-						if (ReceivedMsg == 0xa1) {RonFlag(tmp) = 1}
+						if (ReceivedMsg == 0xa1) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, tmp, 1}
 						if (ReceivedMsg == 0xa2) {PonFlag(tmp) = 1}
 						if (ReceivedMsg == 0xa3) {MinkanFlag(tmp) = 1}
 #ifndef ALLSANMA
@@ -226,7 +226,7 @@
 #endif
 				repeat NUM_OF_ACTUAL_PLAYERS
 					SendingMsg = 0xa0
-					if (RonFlag(cnt) == 1) {SendingMsg = 0xa1}
+					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 1) {SendingMsg = 0xa1}
 					if (PonFlag(cnt) == 1) {SendingMsg = 0xa2}
 					if (MinkanFlag(cnt) == 1) {SendingMsg = 0xa3}
 #ifndef ALLSANMA
@@ -243,7 +243,7 @@
 		loop
 	}
 	repeat NUM_OF_PLAYERS
-		if (RonFlag(cnt) == 1) {
+		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 1) {
 			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, cnt, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 		}
@@ -258,7 +258,7 @@
 		}
 		ReceivedMsg = 0xa7
 	}
-	if (ReceivedMsg == 0xa1) {RonFlag(cnt) = 1}
+	if (ReceivedMsg == 0xa1) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, 1}
 	if (ReceivedMsg == 0xa2) {PonFlag(cnt) = 1}
 	if (ReceivedMsg == 0xa3) {MinkanFlag(cnt) = 1}
 #ifndef ALLSANMA

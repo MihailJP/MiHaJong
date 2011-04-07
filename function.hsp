@@ -398,6 +398,12 @@ return
 	return PaoPlayer
 #global
 
+#module
+#include "const.as"
+#defcfunc RonPlayers var GameStat
+	return getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 3)
+#global
+
 /* Vista/7‚ðŽg‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚© */
 #module
 #defcfunc isVista

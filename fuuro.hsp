@@ -7,7 +7,7 @@
 /* 副露の処理 */
 #module
 #include "const.as"
-#deffunc fuuroproc var GameStat, array RonFlag, array ChiFlag, var RoundEndType, int DiscardTileIndex, int ActivePlayer, int PassivePlayer, int Mode
+#deffunc fuuroproc var GameStat, array ChiFlag, var RoundEndType, int DiscardTileIndex, int ActivePlayer, int PassivePlayer, int Mode
 	info strf("副露の処理を開始します。モード [%d]", Mode)
 	switch Mode
 		case FUURO_CHII:
@@ -333,7 +333,7 @@
 				gosub *ronhuproc@
 				if (Mode == FUURO_NORTH) {setKangFlag GameStat, KANG_CHANKAN, 0}
 				if ((RoundEndType = ENDKYOKU_TRIPLERON)||(RoundEndType = ENDKYOKU_DISCONNECT)) {return 1}
-				if ((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) > 0) {
+				if (RonPlayers(GameStat) > 0) {
 					info "搶槓が宣言されました。ループから出ます。"
 					return 1
 				}
@@ -460,21 +460,22 @@
 *ronhuproc
 	info "リアクションを問い合わせます。"
 	/* 栄和や鳴き仕掛けをするかどうか問い合わせる */
-	dim RonFlag, NUM_OF_PLAYERS: dim PonFlag, NUM_OF_PLAYERS: dim ChiFlag, NUM_OF_PLAYERS: dim MinkanFlag, NUM_OF_PLAYERS
+	resetDeclarationFlag GameStat
+	dim MinkanFlag, NUM_OF_PLAYERS: dim PonFlag, NUM_OF_PLAYERS: dim ChiFlag, NUM_OF_PLAYERS
 	repeat NUM_OF_PLAYERS
 		if (ActivePlayer != cnt) {
 			PassivePlayer = cnt
 			if (PassivePlayer == getPlayer(GameStat)) {
-				playerfuuro GameStat, GameEnv, ActivePlayer, PassivePlayer, RonFlag, MinkanFlag, PonFlag, ChiFlag
+				playerfuuro GameStat, GameEnv, ActivePlayer, PassivePlayer, MinkanFlag, PonFlag, ChiFlag
 			} else {
 				if (IsRemotePlayer(GameEnv, PassivePlayer) == 0) {
 					/* COMが「カンニング」しないように処理 */
 					makesandbox Sandbox, GameStat, PassivePlayer
-					dim reducedRon, NUM_OF_PLAYERS: dim reducedMinkan, NUM_OF_PLAYERS: dim reducedPon, NUM_OF_PLAYERS: dim reducedChi, NUM_OF_PLAYERS
+					dim reducedMinkan, NUM_OF_PLAYERS: dim reducedPon, NUM_OF_PLAYERS: dim reducedChi, NUM_OF_PLAYERS
 					/* 処理 */
-					compfuuro Sandbox, PassivePlayer, RonFlag, MinkanFlag, PonFlag, ChiFlag
+					compfuuro Sandbox, PassivePlayer, MinkanFlag, PonFlag, ChiFlag
 					repeat NUM_OF_PLAYERS
-						if (RonFlag(cnt) == 0) {RonFlag(cnt) = reducedRon(cnt)}
+						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_RON, cnt)}
 						if (MinkanFlag(cnt) == 0) {MinkanFlag(cnt) = reducedMinkan(cnt)}
 						if (PonFlag(cnt) == 0) {PonFlag(cnt) = reducedPon(cnt)}
 						if (ChiFlag(cnt) == 0) {ChiFlag(cnt) = reducedChi(cnt)}
@@ -489,7 +490,7 @@
 	loop
 	/* 通信対戦時の処理 */
 	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {
-		remotenaki GameStat, GameEnv, RonFlag, PonFlag, MinkanFlag, ChiFlag
+		remotenaki GameStat, GameEnv, PonFlag, MinkanFlag, ChiFlag
 	}
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		if (ReceivedMsg == 1023) {
@@ -500,17 +501,17 @@
 			return
 		}
 	}
-	trace strf("ロン [%d %d %d %d] カン [%d %d %d %d] ポン [%d %d %d %d] チー [%d %d %d %d]", RonFlag(0),RonFlag(1),RonFlag(2),RonFlag(3),MinkanFlag(0),MinkanFlag(1),MinkanFlag(2),MinkanFlag(3),PonFlag(0),PonFlag(1),PonFlag(2),PonFlag(3),ChiFlag(0),ChiFlag(1),ChiFlag(2),ChiFlag(3))
+	trace strf("ロン [%d %d %d %d] カン [%d %d %d %d] ポン [%d %d %d %d] チー [%d %d %d %d]", getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 3),MinkanFlag(0),MinkanFlag(1),MinkanFlag(2),MinkanFlag(3),PonFlag(0),PonFlag(1),PonFlag(2),PonFlag(3),ChiFlag(0),ChiFlag(1),ChiFlag(2),ChiFlag(3))
 	/* 和了り放棄の時は宣言を無効にする */
 	repeat NUM_OF_PLAYERS
 		if (getAgariHouki(GameStat, cnt) == 1) {
 			debug strf("プレイヤー [%d] は和了り放棄です。宣言フラグを下ろします。", cnt)
-			RonFlag(cnt) = 0: PonFlag(cnt) = 0: ChiFlag(cnt) = 0: MinkanFlag(cnt) = 0
+			setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, 0: PonFlag(cnt) = 0: ChiFlag(cnt) = 0: MinkanFlag(cnt) = 0
 		}
 	loop
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */
 	repeat NUM_OF_PLAYERS
-		if (RonFlag(cnt) == 1) {
+		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 1) {
 			debug strf("プレイヤー [%d] は、栄和を宣言します。", cnt)
 			// 優先権のないロンも表示されるようにする
 			setCall cnt, " ロン "
@@ -519,7 +520,7 @@
 	loop
 	/* 実際にロンできる人を表示 */
 	roncount = 0: repeat NUM_OF_PLAYERS-1
-		if (RonFlag(RelativePositionOf(ActivePlayer, cnt+1)) == 1) {
+		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, RelativePositionOf(ActivePlayer, cnt+1)) == 1) {
 			if (roncount == 0) {
 				debug strf("プレイヤー [%d] は、栄和できます。", RelativePositionOf(ActivePlayer, cnt+1))
 				setCall RelativePositionOf(ActivePlayer, cnt+1), "ロン"
@@ -538,7 +539,7 @@
 	/* 実際に栄和を行なう処理 */
 	repeat NUM_OF_PLAYERS-1
 		await 0
-		if (RonFlag(RelativePositionOf(ActivePlayer, cnt+1)) == 1) {
+		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, RelativePositionOf(ActivePlayer, cnt+1)) == 1) {
 			/* ウォッチモードの場合は和了った人に視点を向ける */
 			if (GetWatchModeFlag(GameEnv) == 1) {
 				setPlayer GameStat, RelativePositionOf(ActivePlayer, cnt+1)
@@ -599,7 +600,7 @@
 	loop
 	/* 牌譜に記録 */
 	roncount = 0
-	if ((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) > 0) {
+	if (RonPlayers(GameStat) > 0) {
 		if (getKangFlag(GameStat, KANG_CHANKAN) > 0) {
 #ifdef SANMAX
 			if (DiscardTileIndex/PassivePlayer == DAHAI_TYPE_FLOWER/PassivePlayer) {
@@ -611,21 +612,21 @@
 			}
 #endif
 		} else {
-			haifurecfurikomi GameStat, RonFlag, ActivePlayer
+			haifurecfurikomi GameStat, ActivePlayer
 		}
 	} else {
 		if (getKangFlag(GameStat, KANG_FLAG) == 0) { // 抜き北で牌譜がずれるのを抑止
-			haifurecfurikomi GameStat, RonFlag, ActivePlayer
+			haifurecfurikomi GameStat, ActivePlayer
 		}
 	}
 #ifdef ALLSANMA
 	// 二家和の判定
-	if (((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) >= 2)&&(getRule(RULE_MULTIPLE_MAHJONG)==5)) {
+	if ((RonPlayers(GameStat) >= 2)&&(getRule(RULE_MULTIPLE_MAHJONG)==5)) {
 		RoundEndType = ENDKYOKU_TRIPLERON: return
 	}
 #else
 	// 三家和の判定
-	if (((RonFlag(0)+RonFlag(1)+RonFlag(2)+RonFlag(3)) >= 3)&&((getRule(RULE_MULTIPLE_MAHJONG)==0)||(getRule(RULE_MULTIPLE_MAHJONG)==2))) {
+	if ((RonPlayers(GameStat) >= 3)&&((getRule(RULE_MULTIPLE_MAHJONG)==0)||(getRule(RULE_MULTIPLE_MAHJONG)==2))) {
 		RoundEndType = ENDKYOKU_TRIPLERON: return
 	}
 #endif

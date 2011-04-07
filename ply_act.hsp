@@ -361,7 +361,7 @@
 return DiscardTileIndex
 
 /* ÉvÉåÉCÉÑÅ[ÇÃñ¬Ç´ */
-#deffunc playerfuuro var GameStat, var GameEnv, int ActivePlayer, int PassivePlayer, array RonFlag, array MinkanFlag, array PonFlag, array ChiFlag
+#deffunc playerfuuro var GameStat, var GameEnv, int ActivePlayer, int PassivePlayer, array MinkanFlag, array PonFlag, array ChiFlag
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // ãNâ∆Ç≈ÇÃÉoÉOñhé~ópÇ…âºèâä˙âª
 	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > TILE_SUIT_FLOWERS) {return /* â‘îvÇÃèÍçáÇÕñﬂÇÈ */}
 	if (getAgariHouki(GameStat, getPlayer(GameStat)) == 1) {return /* òaóπÇËï˙ä¸ÇæÇ¡ÇΩÇÁñﬂÇÈ */}
@@ -487,7 +487,7 @@ return DiscardTileIndex
 			if (SelectedTile == -90) {break}
 			// ÉçÉìÇ∑ÇÈèÍçá
 			if (SelectedTile == -89) {
-				RonFlag(getPlayer(GameStat)) = 1
+				setDeclarationFlag GameStat, DECLARATIONFLAG_RON, getPlayer(GameStat), 1
 				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 				setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 				break
@@ -508,7 +508,7 @@ return DiscardTileIndex
 	TimeLeft = 0: redrscreen
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		SendingMsg = 0xa0
-		if (RonFlag(getPlayer(GameStat)) == 1) {SendingMsg = 0xa1}
+		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, getPlayer(GameStat)) == 1) {SendingMsg = 0xa1}
 		if (PonFlag(getPlayer(GameStat)) == 1) {SendingMsg = 0xa2}
 		if (MinkanFlag(getPlayer(GameStat)) == 1) {SendingMsg = 0xa3}
 #ifndef ALLSANMA
@@ -519,7 +519,7 @@ return DiscardTileIndex
 		clientsend SendingMsg
 	}
 	// òaóπÇËîvÇå©ì¶ÇµÇΩèÍçáÇÕêUíÆ
-	if ((tmpShanten <= -1)&&(RonFlag(getPlayer(GameStat)) == 0)) {setDoujunFuriten GameStat, getPlayer(GameStat), 1}
+	if ((tmpShanten <= -1)&&(getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, getPlayer(GameStat)) == 0)) {setDoujunFuriten GameStat, getPlayer(GameStat), 1}
 return
 
 /* îvëIëÉ{É^Éì */

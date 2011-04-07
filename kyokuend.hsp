@@ -7,7 +7,7 @@
 #module
 #include "const.as"
 #deffunc endround var GameStat, var GameEnv, int _RoundEndType, int agariPlayer, int FurikomiPlayer, int ActivePlayer, \
-array RonFlag, var yakuInfo, int OrigTurn, int OrigHonba
+var yakuInfo, int OrigTurn, int OrigHonba
 	// ã«ñ èIóπÉRÅ[Éh
 	// ÇOÅcçrîvó¨ã«
 	// ÇPÅcíNÇ©ÇÃòaóπÇË
@@ -64,7 +64,7 @@ array RonFlag, var yakuInfo, int OrigTurn, int OrigHonba
 	/* òaóπèàóù */
 	/************/
 	if ((RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
-		agariproc agariPlayer, FurikomiPlayer, ActivePlayer, RoundEndType, RonFlag, yakuInfo, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc
+		agariproc agariPlayer, FurikomiPlayer, ActivePlayer, RoundEndType, yakuInfo, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc
 	}
 	switch RoundEndType
 	/**************/
