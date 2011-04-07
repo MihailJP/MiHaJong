@@ -7,7 +7,7 @@
 /* 副露の処理 */
 #module
 #include "const.as"
-#deffunc fuuroproc var GameStat, array ChiFlag, var RoundEndType, int DiscardTileIndex, int ActivePlayer, int PassivePlayer, int Mode
+#deffunc fuuroproc var GameStat, var RoundEndType, int DiscardTileIndex, int ActivePlayer, int PassivePlayer, int Mode
 	info strf("副露の処理を開始します。モード [%d]", Mode)
 	switch Mode
 		case FUURO_CHII:
@@ -243,7 +243,7 @@
 			/* 純手牌から鳴いた塔子を除去 */
 			nakiCount1 = 0: nakiCount2 = 0: nakiCount3 = 0
 			repeat NUM_OF_TILES_IN_HAND, TSUMOHAI_INDEX
-				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1-ChiFlag(PassivePlayer))&&(nakiCount1 < 1)) {
+				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1-getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, PassivePlayer))&&(nakiCount1 < 1)) {
 					switch getHand(GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer)
 						case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x01: swbreak
 						case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x10: swbreak
@@ -252,7 +252,7 @@
 					setHand GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
 					nakiCount1++
 				}
-				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+2-ChiFlag(PassivePlayer))&&(nakiCount2 < 1)) {
+				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+2-getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, PassivePlayer))&&(nakiCount2 < 1)) {
 					switch getHand(GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer)
 						case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x02: swbreak
 						case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x20: swbreak
@@ -261,7 +261,7 @@
 					setHand GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
 					nakiCount2++
 				}
-				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+3-ChiFlag(PassivePlayer))&&(nakiCount3 < 1)) {
+				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+3-getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, PassivePlayer))&&(nakiCount3 < 1)) {
 					switch getHand(GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer)
 						case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x04: swbreak
 						case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x40: swbreak
@@ -275,7 +275,7 @@
 			setMenzen GameStat, PassivePlayer, 0
 			/* 順子を晒す */
 			MeldPointerIncrement GameStat, PassivePlayer
-			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, ChiFlag(PassivePlayer)*MELD_TYPE_STEP+(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1-ChiFlag(PassivePlayer))
+			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, PassivePlayer)*MELD_TYPE_STEP+(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1-getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, PassivePlayer))
 			/* 自動理牌 */
 			lipai GameStat, PassivePlayer
 			/* チーを宣言 */
@@ -285,7 +285,7 @@
 			setPreviousMeld GameStat, PREVMELD_TILECODE, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 			switch getRule(RULE_KUIKAE)
 				case 1: case 2:
-					switch (ChiFlag(PassivePlayer))
+					switch (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, PassivePlayer))
 						case 1: setPreviousMeld GameStat, PREVMELD_STEPPED, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+3: swbreak
 						case 2: setPreviousMeld GameStat, PREVMELD_STEPPED, -999: swbreak
 						case 3: setPreviousMeld GameStat, PREVMELD_STEPPED, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)-3: swbreak
@@ -461,24 +461,22 @@
 	info "リアクションを問い合わせます。"
 	/* 栄和や鳴き仕掛けをするかどうか問い合わせる */
 	resetDeclarationFlag GameStat
-	dim ChiFlag, NUM_OF_PLAYERS
 	repeat NUM_OF_PLAYERS
 		if (ActivePlayer != cnt) {
 			PassivePlayer = cnt
 			if (PassivePlayer == getPlayer(GameStat)) {
-				playerfuuro GameStat, GameEnv, ActivePlayer, PassivePlayer, ChiFlag
+				playerfuuro GameStat, GameEnv, ActivePlayer, PassivePlayer
 			} else {
 				if (IsRemotePlayer(GameEnv, PassivePlayer) == 0) {
 					/* COMが「カンニング」しないように処理 */
 					makesandbox Sandbox, GameStat, PassivePlayer
-					dim reducedMinkan, NUM_OF_PLAYERS: dim reducedChi, NUM_OF_PLAYERS
 					/* 処理 */
-					compfuuro Sandbox, PassivePlayer, ChiFlag
+					compfuuro Sandbox, PassivePlayer
 					repeat NUM_OF_PLAYERS
 						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_RON, cnt)}
 						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_MINKAN, cnt)}
 						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_PON, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_PON, cnt)}
-						if (ChiFlag(cnt) == 0) {ChiFlag(cnt) = reducedChi(cnt)}
+						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_CHI, cnt)}
 					loop
 				}
 			}
@@ -490,7 +488,7 @@
 	loop
 	/* 通信対戦時の処理 */
 	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {
-		remotenaki GameStat, GameEnv, ChiFlag
+		remotenaki GameStat, GameEnv
 	}
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		if (ReceivedMsg == 1023) {
@@ -501,13 +499,13 @@
 			return
 		}
 	}
-	trace strf("ロン [%d %d %d %d] カン [%d %d %d %d] ポン [%d %d %d %d] チー [%d %d %d %d]", getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3),ChiFlag(0),ChiFlag(1),ChiFlag(2),ChiFlag(3))
+	trace strf("ロン [%d %d %d %d] カン [%d %d %d %d] ポン [%d %d %d %d] チー [%d %d %d %d]", getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 3))
 	/* 和了り放棄の時は宣言を無効にする */
 	repeat NUM_OF_PLAYERS
 		if (getAgariHouki(GameStat, cnt) == 1) {
 			debug strf("プレイヤー [%d] は和了り放棄です。宣言フラグを下ろします。", cnt)
 			setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, 0: setDeclarationFlag GameStat, DECLARATIONFLAG_PON, cnt, 0
-			ChiFlag(cnt) = 0: setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, cnt, 0
+			setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, cnt, 0: setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, cnt, 0
 		}
 	loop
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */

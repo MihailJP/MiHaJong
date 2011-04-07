@@ -361,7 +361,7 @@
 return DiscardTileIndex
 
 /* プレイヤーの鳴き */
-#deffunc playerfuuro var GameStat, var GameEnv, int ActivePlayer, int PassivePlayer, array ChiFlag
+#deffunc playerfuuro var GameStat, var GameEnv, int ActivePlayer, int PassivePlayer
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
 	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > TILE_SUIT_FLOWERS) {return /* 花牌の場合は戻る */}
 	if (getAgariHouki(GameStat, getPlayer(GameStat)) == 1) {return /* 和了り放棄だったら戻る */}
@@ -495,9 +495,9 @@ return DiscardTileIndex
 			// ポンする場合
 			if (SelectedTile == -88) {setDeclarationFlag GameStat, DECLARATIONFLAG_PON, getPlayer(GameStat), 1: break}
 			// チーする場合
-			if (SelectedTile == -87) {ChiFlag(getPlayer(GameStat)) = 1: break}
-			if (SelectedTile == -86) {ChiFlag(getPlayer(GameStat)) = 2: break}
-			if (SelectedTile == -85) {ChiFlag(getPlayer(GameStat)) = 3: break}
+			if (SelectedTile == -87) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, getPlayer(GameStat), 1: break}
+			if (SelectedTile == -86) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, getPlayer(GameStat), 2: break}
+			if (SelectedTile == -85) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, getPlayer(GameStat), 3: break}
 			// 大明槓する場合
 			if (SelectedTile == -84) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, getPlayer(GameStat), 1: break}
 			await 0
@@ -512,9 +512,9 @@ return DiscardTileIndex
 		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, getPlayer(GameStat)) == 1) {SendingMsg = 0xa2}
 		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, getPlayer(GameStat)) == 1) {SendingMsg = 0xa3}
 #ifndef ALLSANMA
-		if (ChiFlag(getPlayer(GameStat)) == 1) {SendingMsg = 0xa4}
-		if (ChiFlag(getPlayer(GameStat)) == 2) {SendingMsg = 0xa5}
-		if (ChiFlag(getPlayer(GameStat)) == 3) {SendingMsg = 0xa6}
+		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, getPlayer(GameStat)) == 1) {SendingMsg = 0xa4}
+		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, getPlayer(GameStat)) == 2) {SendingMsg = 0xa5}
+		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, getPlayer(GameStat)) == 3) {SendingMsg = 0xa6}
 #endif
 		clientsend SendingMsg
 	}

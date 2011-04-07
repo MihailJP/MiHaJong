@@ -151,7 +151,7 @@
 /* ê⁄ë±êÊÇÃñ¬Ç´ */
 #module
 #include "const.as"
-#deffunc remotenaki var GameStat, var GameEnv, array ChiFlag
+#deffunc remotenaki var GameStat, var GameEnv
 
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat NUM_OF_ACTUAL_PLAYERS
@@ -165,9 +165,9 @@
 						if (ReceivedMsg == 0xa2) {setDeclarationFlag GameStat, DECLARATIONFLAG_PON, tmp, 1}
 						if (ReceivedMsg == 0xa3) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, tmp, 1}
 #ifndef ALLSANMA
-						if (ReceivedMsg == 0xa4) {ChiFlag(tmp) = 1}
-						if (ReceivedMsg == 0xa5) {ChiFlag(tmp) = 2}
-						if (ReceivedMsg == 0xa6) {ChiFlag(tmp) = 3}
+						if (ReceivedMsg == 0xa4) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, tmp, 1}
+						if (ReceivedMsg == 0xa5) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, tmp, 2}
+						if (ReceivedMsg == 0xa6) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, tmp, 3}
 #endif
 						if (ReceivedMsg == 0xa7) {setDisconnectFlag GameStat, tmp, 1}
 					}
@@ -230,9 +230,9 @@
 					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, cnt) == 1) {SendingMsg = 0xa2}
 					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 1) {SendingMsg = 0xa3}
 #ifndef ALLSANMA
-					if (ChiFlag(cnt) == 1) {SendingMsg = 0xa4}
-					if (ChiFlag(cnt) == 2) {SendingMsg = 0xa5}
-					if (ChiFlag(cnt) == 3) {SendingMsg = 0xa6}
+					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, cnt) == 1) {SendingMsg = 0xa4}
+					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, cnt) == 2) {SendingMsg = 0xa5}
+					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, cnt) == 3) {SendingMsg = 0xa6}
 #endif
 					if (getDisconnectFlag(GameStat, cnt) == 1) {SendingMsg = 0xa7}
 					serversend SendingMsg, GameEnv
@@ -262,9 +262,9 @@
 	if (ReceivedMsg == 0xa2) {setDeclarationFlag GameStat, DECLARATIONFLAG_PON, cnt, 1}
 	if (ReceivedMsg == 0xa3) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, cnt, 1}
 #ifndef ALLSANMA
-	if (ReceivedMsg == 0xa4) {ChiFlag(cnt) = 1}
-	if (ReceivedMsg == 0xa5) {ChiFlag(cnt) = 2}
-	if (ReceivedMsg == 0xa6) {ChiFlag(cnt) = 3}
+	if (ReceivedMsg == 0xa4) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, cnt, 1}
+	if (ReceivedMsg == 0xa5) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, cnt, 2}
+	if (ReceivedMsg == 0xa6) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, cnt, 3}
 #endif
 	return
 #global
