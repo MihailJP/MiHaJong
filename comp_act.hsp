@@ -867,7 +867,7 @@ return DiscardTileIndex
 	return
 
 /* ‚`‚h‚Ì–Â‚«E‰h˜a */
-#deffunc compfuuro var GameStat, int PassivePlayer, array MinkanFlag, array ChiFlag
+#deffunc compfuuro var GameStat, int PassivePlayer, array ChiFlag
 	info strf("AI‚Ì•›˜I”»’è‚É“ü‚è‚Ü‚·BƒvƒŒƒCƒ„[ [%d]", PassivePlayer)
 	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > TILE_SUIT_FLOWERS) {
 		/* ‰Ô”v‚Ìê‡‚Í–ß‚é */
@@ -927,7 +927,7 @@ return DiscardTileIndex
 	if (TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) >= 3) {
 		// ‚·‚Å‚ÉžÈŽq‚ð‚Q‚ÂŽ‚Á‚Ä‚¢‚é‚È‚ç‘å–¾žÈ‚³‚¹‚é
 		if (getNumberOfQuads(GameStat, PassivePlayer) >= 2) {
-			MinkanFlag(PassivePlayer) = 1
+			setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, PassivePlayer, 1
 			return
 		}
 	}

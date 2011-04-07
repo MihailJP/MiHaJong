@@ -151,7 +151,7 @@
 /* ê⁄ë±êÊÇÃñ¬Ç´ */
 #module
 #include "const.as"
-#deffunc remotenaki var GameStat, var GameEnv, array MinkanFlag, array ChiFlag
+#deffunc remotenaki var GameStat, var GameEnv, array ChiFlag
 
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat NUM_OF_ACTUAL_PLAYERS
@@ -163,7 +163,7 @@
 					if (tmp != getPlayer(GameStat)) {
 						if (ReceivedMsg == 0xa1) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, tmp, 1}
 						if (ReceivedMsg == 0xa2) {setDeclarationFlag GameStat, DECLARATIONFLAG_PON, tmp, 1}
-						if (ReceivedMsg == 0xa3) {MinkanFlag(tmp) = 1}
+						if (ReceivedMsg == 0xa3) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, tmp, 1}
 #ifndef ALLSANMA
 						if (ReceivedMsg == 0xa4) {ChiFlag(tmp) = 1}
 						if (ReceivedMsg == 0xa5) {ChiFlag(tmp) = 2}
@@ -228,7 +228,7 @@
 					SendingMsg = 0xa0
 					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 1) {SendingMsg = 0xa1}
 					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, cnt) == 1) {SendingMsg = 0xa2}
-					if (MinkanFlag(cnt) == 1) {SendingMsg = 0xa3}
+					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 1) {SendingMsg = 0xa3}
 #ifndef ALLSANMA
 					if (ChiFlag(cnt) == 1) {SendingMsg = 0xa4}
 					if (ChiFlag(cnt) == 2) {SendingMsg = 0xa5}
@@ -260,7 +260,7 @@
 	}
 	if (ReceivedMsg == 0xa1) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, 1}
 	if (ReceivedMsg == 0xa2) {setDeclarationFlag GameStat, DECLARATIONFLAG_PON, cnt, 1}
-	if (ReceivedMsg == 0xa3) {MinkanFlag(cnt) = 1}
+	if (ReceivedMsg == 0xa3) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, cnt, 1}
 #ifndef ALLSANMA
 	if (ReceivedMsg == 0xa4) {ChiFlag(cnt) = 1}
 	if (ReceivedMsg == 0xa5) {ChiFlag(cnt) = 2}

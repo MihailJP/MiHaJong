@@ -446,7 +446,7 @@ repeat
 		if (getDrawPointer(GameStat) == (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1))) {RoundEndType = ENDKYOKU_RYUUKYOKU: break}
 		/* 捨牌をポン、または大明槓する場合の処理 */
 		/* 同じ牌は４枚しかないので、ポンと明槓は同時に起こることがない */
-		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3)+MinkanFlag(0)+MinkanFlag(1)+MinkanFlag(2)+MinkanFlag(3) > 1) {
+		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3) > 1) {
 			error "複数同時のポン・槓が宣言されています。"
 		}
 		repeat NUM_OF_PLAYERS: await 0
@@ -457,7 +457,7 @@ repeat
 				break
 			}
 			/* 明槓の場合 */
-			if ((MinkanFlag(cnt) == 1)&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
+			if ((getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 1)&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
 				PassivePlayer = cnt // 鳴いたプレイヤーを設定
 				fuuroproc GameStat, ChiFlag, RoundEndType, DiscardTileIndex, ActivePlayer, PassivePlayer, FUURO_DAIMINKAN
 				break
@@ -465,7 +465,7 @@ repeat
 		loop
 		/* 鳴きがあった場合、鳴いたプレーヤーに順番を移して戻る */
 		/* 吃とポンが同時に起こった場合、ポンを優先する */
-		if ((getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3)+MinkanFlag(0)+MinkanFlag(1)+MinkanFlag(2)+MinkanFlag(3)) > 0) {
+		if ((getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3)) > 0) {
 			ActivePlayer = PassivePlayer
 			continue
 #ifndef ALLSANMA
