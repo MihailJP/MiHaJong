@@ -25,6 +25,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 	statmes ""
 	vanish@: commonswitch GameStat, GameEnv
 	if (RoundEndType == ENDKYOKU_RYUUKYOKU) {
+		dim NagashiManganFlag, NUM_OF_PLAYERS
 		repeat NUM_OF_ACTUAL_PLAYERS
 #ifdef SANMA4
 			if (playerWind(cnt, getRound(GameStat)) == PLAYER_NORTH) {
@@ -56,7 +57,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 				swend
 			loop
 			if (getRule(RULE_NAGASHI_MANGAN) != 4) {
-				if (YaojiuSutehai == DiscardPointer(GameStat, chkP)) {RoundEndType = ENDKYOKU_NAGASHIMANGAN}
+				if (YaojiuSutehai == DiscardPointer(GameStat, chkP)) {NagashiManganFlag(cnt) = 1: RoundEndType = ENDKYOKU_NAGASHIMANGAN}
 			}
 		loop
 	}
@@ -622,7 +623,19 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			statmes "ó¨ã«Ç≈Ç∑"
 			dsplay@ SND_PINGJU
 			setCenterTitle "ó¨ã«"
-			bgmplay_norep MUS_AGARI_MANGAN
+			if (NagashiManganFlag(getPlayer(GameStat)) == 1) {agariBgmSet = 0} else {agariBgmSet = 1}
+			if (GetWatchModeFlag(GameEnv) == 1) {agariBgmSet = 0}
+			if (getRule(RULE_NAGASHI_MANGAN) == 3) {
+				switch agariBgmSet
+					case 0: bgmplay_norep MUS_AGARI_SELF_3: swbreak
+					case 1: bgmplay_norep MUS_AGARI_FURIKOMI_3: swbreak
+				swend
+			} else {
+				switch agariBgmSet
+					case 0: bgmplay_norep MUS_AGARI_SELF_2: swbreak
+					case 1: bgmplay_norep MUS_AGARI_FURIKOMI_2: swbreak
+				swend
+			}
 			redrscreen: await 1500
 			statmes "ó¨Çµñûä—Ç™ê¨óßÇµÇ‹ÇµÇΩ"
 			dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
