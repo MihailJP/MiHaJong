@@ -97,8 +97,8 @@ repeat
 				}
 			}
 			/* ©–Ì˜a‚µ‚½‚±‚Æ‚ğ•Ï”‚Éİ’è */
-			TsumoAgari = 1
-			countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
+			setTsumoAgariFlag GameStat, 1
+			countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer
 			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))||((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != -1)&&(getRule(RULE_MINKAN_PAO) == 6))) {
 				/* ”›‚è‚ğ–‚½‚µ‚Ä‚¢‚È‚¢ê‡(–ğ‚ª–³‚¢‚È‚Ç)cö˜a‚Æ‚µ‚Ä‹Ç‚ğI—¹‚·‚é */
 				RoundEndType = ENDKYOKU_CHONBO
@@ -106,7 +106,7 @@ repeat
 				/* ”›‚è‚ğ–‚½‚·‚È‚ç˜a—¹‚è‚Æ‚µ‚Ä¬—§ */
 				RoundEndType = ENDKYOKU_AGARI
 			}
-			TsumoAgari = 1
+			setTsumoAgariFlag GameStat, 1
 			agariPlayer = ActivePlayer
 			setCall agariPlayer, "ƒcƒ‚"
 			if (getHeavenHandFlag(GameStat) == 1) {setCall agariPlayer, "ƒƒ“"} //“V˜a‚Ì‚Íƒƒ“‚ÆŒ¾‚¤Šµ‚í‚µ
@@ -403,7 +403,7 @@ repeat
 					/* ’¼‚¿‚Éö˜a‚Æ‚·‚éİ’è */
 					info strf("‹ò‚¢•Ï‚¦‚ğŒŸo‚µ‚Ü‚µ‚½Bƒ`ƒ‡ƒ“ƒ{‚Æ‚µ‚Äˆµ‚¢‚Ü‚·B‘Å”v [%d] –Â‚¢‚½”v [%d]", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getPreviousMeld(GameStat, PREVMELD_TILECODE))
 					dsplay SND_CUOHU
-					RoundEndType = ENDKYOKU_CHONBO: TsumoAgari = AGARI_KUIKAE
+					RoundEndType = ENDKYOKU_CHONBO: setTsumoAgariFlag GameStat, AGARI_KUIKAE
 					agariPlayer = ActivePlayer
 					setCall ActivePlayer, "ö˜a"
 					redrscreen: await 1500
@@ -506,7 +506,7 @@ repeat
 		// ‘Å”v‚Ö–ß‚é
 	loop
 	OrigHonba = getHonba(GameStat): OrigTurn = getRound(GameStat)
-	endround GameStat, GameEnv, RoundEndType, agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, RonFlag, yakuInfo, OrigTurn, OrigHonba
+	endround GameStat, GameEnv, RoundEndType, agariPlayer, FurikomiPlayer, ActivePlayer, RonFlag, yakuInfo, OrigTurn, OrigHonba
 	await 5000
 	// ƒnƒRŠ„‚êI—¹
 	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {

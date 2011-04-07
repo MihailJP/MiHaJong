@@ -6,7 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc agariproc int _agariPlayer, int FurikomiPlayer, int ActivePlayer, int TsumoAgari, int _RoundEndType, \
+#deffunc agariproc int _agariPlayer, int FurikomiPlayer, int ActivePlayer, int _RoundEndType, \
 array RonFlag, var yakuInfo, var GameStat, var GameEnv, \
 var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 	agariPlayer = _agariPlayer
@@ -31,13 +31,13 @@ var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 					swbreak
 			swend
 			if (cnt > 0) {
-				if (TsumoAgari == 0) {
+				if (getTsumoAgariFlag(GameStat) == 0) {
 					RoundEndType = ENDKYOKU_AGARI: agariPlayer++: agariPlayer = agariPlayer \ NUM_OF_PLAYERS
 					if (agariPlayer == furikomiPlayer) {break}
 					if (RonFlag(agariPlayer\NUM_OF_PLAYERS) == 1) {
 						setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 						setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
-						countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer, TsumoAgari
+						countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer
 						chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, agariPlayer\NUM_OF_PLAYERS
 						// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´
 						if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, agariPlayer) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_NO))) {
@@ -48,7 +48,7 @@ var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 					}
 				}
 			}
-			if (TsumoAgari == 1) {break}
+			if (getTsumoAgariFlag(GameStat) == 1) {break}
 		loop
 	}
 	repeat NUM_OF_PLAYERS-1
@@ -63,11 +63,11 @@ var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 		swend
 		if (cnt == 0) {
 			agariPlayer = FirstAgariPlayer
-			if (TsumoAgari == 0) {
+			if (getTsumoAgariFlag(GameStat) == 0) {
 				RoundEndType = ENDKYOKU_AGARI
 				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 				setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
-				countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer, TsumoAgari
+				countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer
 				chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, agariPlayer\NUM_OF_PLAYERS
 				// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´
 				if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, agariPlayer) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_NO))) {
@@ -75,7 +75,7 @@ var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 				}
 			} else {
 				RoundEndType = ENDKYOKU_AGARI
-				countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer, TsumoAgari
+				countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer
 				chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, agariPlayer\NUM_OF_PLAYERS
 				if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))) {
 					RoundEndType = ENDKYOKU_CHONBO // É`ÉáÉìÉ{Ç…Ç∑ÇÈ
@@ -83,13 +83,13 @@ var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 			}
 		}
 		if (cnt > 0) {
-			if (TsumoAgari == 0) {
+			if (getTsumoAgariFlag(GameStat) == 0) {
 				RoundEndType = ENDKYOKU_AGARI: agariPlayer++: agariPlayer = agariPlayer \ NUM_OF_PLAYERS
 				if (agariPlayer == furikomiPlayer) {break}
 				if (RonFlag(agariPlayer\NUM_OF_PLAYERS) == 1) {
 					setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 					setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
-					countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer, TsumoAgari
+					countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer
 					chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, agariPlayer\NUM_OF_PLAYERS
 					// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´
 					if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, agariPlayer) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_NO))) {
@@ -113,16 +113,16 @@ var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 		}
 		if (RoundEndType == ENDKYOKU_AGARI) {
 			chatrecv GameStat, GameEnv
-			endround_agariproc GameStat, GameEnv, ResultDesc, agariPlayer, FurikomiPlayer, AgariPlayerPriority, TsumoAgari, origDoraPointer, AgariPointRaw, YakuInfo, tmpAliceFlag
+			endround_agariproc GameStat, GameEnv, ResultDesc, agariPlayer, FurikomiPlayer, AgariPlayerPriority, origDoraPointer, AgariPointRaw, YakuInfo, tmpAliceFlag
 		}
 		/**************/
 		/* çˆòaî≠ê∂éû */
 		/**************/
 		if (RoundEndType == ENDKYOKU_CHONBO) {
-			endround_chonboproc GameStat, ResultDesc, agariPlayer, TsumoAgari
+			endround_chonboproc GameStat, ResultDesc, agariPlayer
 		}
 
-		if (TsumoAgari == 1) {break /* ÉcÉÇòaóπÇËÇÃéûÇÕèIóπ */}
+		if (getTsumoAgariFlag(GameStat) == 1) {break /* ÉcÉÇòaóπÇËÇÃéûÇÕèIóπ */}
 		setDeposit GameStat, 0
 		redrscreen: redraw 1
 	loop
@@ -190,7 +190,7 @@ var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 #module
 #include "const.as"
 #deffunc endround_agariproc var GameStat, var GameEnv, var ResultDesc, int agariPlayer, int FurikomiPlayer, var AgariPlayerPriority, \
-int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tmpAliceFlag
+int origDoraPointer, array AgariPointRaw, array YakuInfo, var tmpAliceFlag
 	if (AgariPlayerPriority == -1) {AgariPlayerPriority = agariPlayer}
 	if (ResultDesc != "") {ResultDesc += "\n"}
 	tmpResultDesc = ""
@@ -202,7 +202,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 		case PLAYER_NORTH: tmpResultDesc += "ñkâ∆": swbreak
 #endif
 	swend
-	if (TsumoAgari) {
+	if (getTsumoAgariFlag(GameStat)) {
 		tmpResultDesc += "ÇÃÉcÉÇòaóπÇË"
 	} else {
 		switch playerWind(furikomiPlayer, getRound(GameStat))
@@ -238,7 +238,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 		if (playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST) {
 			// êeÇÃòaóπÇË
 			OyaAgari = agariPlayer
-			if (TsumoAgari) {
+			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == agariPlayer) {
 						agaricalc agariPointArray, AgariPointRaw, 6, 0, 0
@@ -265,7 +265,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 			}
 		} else {
 			// éqÇÃòaóπÇË
-			if (TsumoAgari) {
+			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == agariPlayer) {
 						agaricalc agariPointArray, AgariPointRaw, 4, 0, 0
@@ -296,7 +296,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 		if (playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST) {
 			// êeÇÃòaóπÇË
 			OyaAgari = agariPlayer
-			if (TsumoAgari) {
+			if (getTsumoAgariFlag(GameStat)) {
 #ifdef ALLSANMA
 				switch getRule(RULE_TSUMO_PAYMENT)
 #ifdef SANMA4
@@ -356,7 +356,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 			}
 		} else {
 			// éqÇÃòaóπÇË
-			if (TsumoAgari) {
+			if (getTsumoAgariFlag(GameStat)) {
 #ifdef ALLSANMA
 				switch getRule(RULE_TSUMO_PAYMENT)
 #ifdef SANMA4
@@ -501,7 +501,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 			deltadouble PointDelta, getDoukasen(GameStat)
 		}
 	}
-	agariscrproc GameStat, GameEnv, yakuInfo, TsumoAgari, agariPlayer, furikomiPlayer, agariPointArray, ChipAmount, ResultDesc, tmpUraFlag /* òaóπâÊñ  */
+	agariscrproc GameStat, GameEnv, yakuInfo, agariPlayer, furikomiPlayer, agariPointArray, ChipAmount, ResultDesc, tmpUraFlag /* òaóπâÊñ  */
 	if ((getMenzen(GameStat, agariPlayer) == 1)&&(getRule(RULE_ALICE) != 0)) {
 		setDoraPointer GameStat, AlicePointer
 	}
@@ -515,7 +515,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 #ifdef SANMAT
 		if (playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST) {
-			if (TsumoAgari) {
+			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == agariPlayer) {
 						PointDelta(cnt) += (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
@@ -534,7 +534,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 				loop
 			}
 		} else {
-			if (TsumoAgari) {
+			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == agariPlayer) {
 						PointDelta(cnt) += (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
@@ -555,7 +555,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 		}
 #else
 		if (playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST) {
-			if (TsumoAgari) {
+			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == agariPlayer) {
 						PointDelta(cnt) += (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
@@ -574,7 +574,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 				loop
 			}
 		} else {
-			if (TsumoAgari) {
+			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == agariPlayer) {
 						PointDelta(cnt) += (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
@@ -649,7 +649,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 		/* ïÔÇÃèÍçá */
 		if (isPaoAgari(GameStat, agariPlayer)) {
 			PaoPlayer = getPaoPlayer(GameStat, agariPlayer)
-			if (TsumoAgari) {
+			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if ((PaoPlayer != cnt)&&(agariPlayer != cnt)) {
 						PointDelta(agariPlayer) += PointDelta(cnt)
@@ -684,7 +684,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 	
 	if ((ChipAmount > 0)&&(getRule(RULE_CHIP) != 0)) {
 		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-		if (TsumoAgari == 0) {
+		if (getTsumoAgariFlag(GameStat) == 0) {
 			PointDelta(furikomiPlayer) = -ChipAmount
 			PointDelta(agariPlayer) = ChipAmount
 		} else {
@@ -727,7 +727,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 /* çˆòaî≠ê∂éûÇÃèàóù */
 #module
 #include "const.as"
-#deffunc endround_chonboproc var GameStat, var ResultDesc, int agariPlayer, int TsumoAgari
+#deffunc endround_chonboproc var GameStat, var ResultDesc, int agariPlayer
 	if (ResultDesc != "") {ResultDesc += "\n"}
 	tmpResultDesc = ""
 	switch playerWind(agariPlayer, getRound(GameStat))
@@ -745,7 +745,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 	bgmplay_norep MUS_RYUUKYOKU
 	setCenterTitle "çˆòa"
 	// åÎÉçÉìÇ‹ÇΩÇÕåÎÉcÉÇ
-	if ((TsumoAgari == 0)||(TsumoAgari == 1)) {
+	if ((getTsumoAgariFlag(GameStat) == 0)||(getTsumoAgariFlag(GameStat) == 1)) {
 		if ((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != 1)&&(getRule(RULE_MINKAN_PAO) == 6)) {
 			// ëÂñæû»ÇÃó‰è„äJâ‘ã÷é~ÉãÅ[ÉãÇÃèÍçá
 			setCenterTitle "ñæû»çˆòa": ResultDesc += "(ëÂñæû»ÇÃó‰è„îvÇ≈ÇÃòaóπÇË)"
@@ -764,7 +764,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 			if (Shanten >= 0) {setCenterTitle "ïsíÆçˆòa": ResultDesc += "(ê¨óßÇµÇƒÇ¢Ç»Ç¢òaóπÇË)"}
 			else {
 				// ñÇ™Ç»Ç©Ç¡ÇΩèÍçáÇÕçˆòa
-				countyaku GameStat, yakuInfo, agariPlayer, furikomiPlayer, TsumoAgari
+				countyaku GameStat, yakuInfo, agariPlayer, furikomiPlayer
 				if (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 0) {setCenterTitle "ñ≥„ çˆòa": ResultDesc += "(ñÇÃÇ»Ç¢òaóπÇË)"}
 				else:if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 1)&&(getShibari(GameStat) == 1)) {
 					// ìÒ„ îõÇËÇ≈ÇP„ ÇµÇ©Ç»Ç¢Ç»ÇÁçˆòa
@@ -777,8 +777,8 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 		}
 	}
 	// åÎÉçÉìÅAåÎÉcÉÇà»äOÇÃçˆòa
-	if (TsumoAgari == AGARI_KUIKAE) {setCenterTitle "ãÚë÷çˆòa": ResultDesc += "(ãÚÇ¢ë÷Ç¶)"} // ãÚÇ¢ë÷Ç¶ÇÇµÇΩÇ∆Ç´
-	if (TsumoAgari > 1) {dsplay@ SND_PAGE} else {dsplay@ SND_CUOHU}
+	if (getTsumoAgariFlag(GameStat) == AGARI_KUIKAE) {setCenterTitle "ãÚë÷çˆòa": ResultDesc += "(ãÚÇ¢ë÷Ç¶)"} // ãÚÇ¢ë÷Ç¶ÇÇµÇΩÇ∆Ç´
+	if (getTsumoAgariFlag(GameStat) > 1) {dsplay@ SND_PAGE} else {dsplay@ SND_CUOHU}
 	redrscreen: await 5000
 
 	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
@@ -825,7 +825,7 @@ int TsumoAgari, int origDoraPointer, array AgariPointRaw, array YakuInfo, var tm
 #endif
 	setCenterTitle "çˆòaî±ïÑ"
 	putdelta PointDelta
-	redraw 1
+	redraw 1: await 1500
 	pointcalc GameStat, PointDelta
 	return
 #global

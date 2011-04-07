@@ -51,7 +51,7 @@
 /* û»éqånÇÃñ */
 #module
 #include "const.as"
-#deffunc quadyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int TsumoAgari
+#deffunc quadyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer
 	trace "û»éqñÇÃèàóùÇ…ì¸ÇËÇ‹Ç∑ÅB"
 	countKangz KangzCount, MianziDat: Kangzi = stat
 	countAnKangz AnKangzCount, MianziDat: AnKan = stat
@@ -163,7 +163,7 @@
 	}
 	/* à√íÜñÕçı */
 	if (getRule(RULE_ANCHUMOSAKU) != 0) {
-		if ((AnKangzCount(TILE_RED_DRAGON) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)/TILE_SUIT_STEP*TILE_SUIT_STEP = TILE_SUIT_BAMBOOS)&&(TsumoAgari == 1)) {
+		if ((AnKangzCount(TILE_RED_DRAGON) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)/TILE_SUIT_STEP*TILE_SUIT_STEP = TILE_SUIT_BAMBOOS)&&(getTsumoAgariFlag(GameStat) == 1)) {
 			addyaku tmpYakuInfo, "à√íÜñÕçı", 1
 		}
 	}

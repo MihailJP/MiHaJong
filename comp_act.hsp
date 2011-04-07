@@ -54,8 +54,8 @@
 	await 0: countseentiles SeenTiles, GameStat
 	Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 	if (Shanten == -1) {
-		TsumoAgari = 1
-		await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
+		setTsumoAgariFlag GameStat, 1
+		await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer
 #ifndef NOWAIT
 		repeat // 時間いっぱいまで待つ
 			await 0
@@ -167,7 +167,7 @@
 				Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 				if (Shanten == -1) {
 					// ここで計算されるのはダマ聴で自摸和のときの点数
-					TsumoAgari = 1: await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
+					setTsumoAgariFlag GameStat, 1: await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer
 					if (Discardability(tmpTileNum) >= 10000) {Discardability(tmpTileNum) -= 10000}
 					Discardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-TileCount(cnt)-SeenTiles(cnt))+100000
 					if (MinScore(tmpTileNum) > (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MinScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
@@ -703,7 +703,7 @@
 			Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 			if (Shanten == -1) {
 				// ここで計算されるのはダマ聴で自摸和のときの点数
-				TsumoAgari = 1: await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
+				setTsumoAgariFlag GameStat, 1: await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer
 				if (Discardability(tmpTileNum) >= 10000) {Discardability(tmpTileNum) -= 10000}
 				Discardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-TileCount(cnt)-SeenTiles(cnt))+100000
 				if (MinScore(tmpTileNum) > (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MinScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
@@ -849,7 +849,7 @@ return DiscardTileIndex
 		await 0
 		Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 		if (Shanten == -1) {
-			TsumoAgari = 1: await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer, TsumoAgari
+			setTsumoAgariFlag GameStat, 1: await 0: countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer
 			if (nowShanten > 0) {
 				tmpDiscardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-TileCount(cnt)-SeenTiles(cnt))*tmpde
 			} else {
@@ -882,7 +882,7 @@ return DiscardTileIndex
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 
 	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
-	TsumoAgari = 0: await 0: countyaku GameStat, yakuInfo, PassivePlayer, furikomiPlayer, TsumoAgari
+	setTsumoAgariFlag GameStat, 0: await 0: countyaku GameStat, yakuInfo, PassivePlayer, furikomiPlayer
 	await 0
 	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, PassivePlayer
 	// 暗槓に対する搶槓の判定で、国士聴牌でない場合は戻る

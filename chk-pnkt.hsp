@@ -7,7 +7,7 @@
 /* •„‚ğZo‚·‚é */
 #module
 #include "const.as"
-#deffunc calcbasepoints var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int TsumoAgari, var MachiType
+#deffunc calcbasepoints var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, var MachiType
 	trace "•„ŒvZ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	/* •›’êc‚Q‚O•„ */
 	setYakuInfo tmpYakuInfo, YAKUINF_FU, 20
@@ -110,7 +110,7 @@
 	if ((MachiType == MACHI_KANCHAN)||(MachiType == MACHI_PENCHAN)||(MachiType == MACHI_TANKI)) {addYakuInfo tmpYakuInfo, YAKUINF_FU, 2}
 	/* ‘oƒ|ƒ“‘Ò‚¿‚Åƒƒ“‚µ‚½ê‡‚Ì—áŠO */
 	/* –¾‚Æ‚µ‚Äˆµ‚¤‚½‚ß‚ÌŒ¸“_ */
-	if ((MachiType == MACHI_SHANPON)&&(TsumoAgari == 0)) {
+	if ((MachiType == MACHI_SHANPON)&&(getTsumoAgariFlag(GameStat) == 0)) {
 		switch (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
 			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
@@ -133,7 +133,7 @@
 		if (getMenzen(GameStat, targetPlayer) == 1) {
 			/* –å‘O‚Å‚ ‚ê‚ÎA–ğ‚Æ‚µ‚Ä•½˜a‚ª¬—§‚·‚é */
 			MachiType == 1
-			if ((TsumoAgari == 0)||(getRule(RULE_TSUMO_PINFU) == 0)) {
+			if ((getTsumoAgariFlag(GameStat) == 0)||(getRule(RULE_TSUMO_PINFU) == 0)) {
 				addyaku tmpYakuInfo, "•½˜a", 1
 				setYakuInfo tmpYakuInfo, YAKUINF_FU, 20
 			} else {
@@ -153,12 +153,12 @@
 		}
 	} else {
 		/* •½˜a‚Å‚È‚¢ƒcƒ‚˜a—¹‚è‚Í‚Q•„ */
-		if (TsumoAgari == 1) {
+		if (getTsumoAgariFlag(GameStat) == 1) {
 			addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
 		}
 	}
 	/* –å‘O‰Á•„c‚P‚O•„ */
-	if ((getMenzen(GameStat, targetPlayer) == 1)&&(TsumoAgari == 0)) {
+	if ((getMenzen(GameStat, targetPlayer) == 1)&&(getTsumoAgariFlag(GameStat) == 0)) {
 		addYakuInfo tmpYakuInfo, YAKUINF_FU, 10
 	}
 	trace strf("‚±‚Ìè”v‚Í [%d] •„‚Å‚·B", getYakuInfo(tmpYakuInfo, YAKUINF_FU))

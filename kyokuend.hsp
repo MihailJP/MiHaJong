@@ -7,7 +7,7 @@
 #module
 #include "const.as"
 #deffunc endround var GameStat, var GameEnv, int _RoundEndType, int agariPlayer, int FurikomiPlayer, int ActivePlayer, \
-int TsumoAgari, array RonFlag, var yakuInfo, int OrigTurn, int OrigHonba
+array RonFlag, var yakuInfo, int OrigTurn, int OrigHonba
 	// ã«ñ èIóπÉRÅ[Éh
 	// ÇOÅcçrîvó¨ã«
 	// ÇPÅcíNÇ©ÇÃòaóπÇË
@@ -64,7 +64,7 @@ int TsumoAgari, array RonFlag, var yakuInfo, int OrigTurn, int OrigHonba
 	/* òaóπèàóù */
 	/************/
 	if ((RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
-		agariproc agariPlayer, FurikomiPlayer, ActivePlayer, TsumoAgari, RoundEndType, RonFlag, yakuInfo, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc
+		agariproc agariPlayer, FurikomiPlayer, ActivePlayer, RoundEndType, RonFlag, yakuInfo, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc
 	}
 	switch RoundEndType
 	/**************/
@@ -833,6 +833,6 @@ int TsumoAgari, array RonFlag, var yakuInfo, int OrigTurn, int OrigHonba
 			setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 		swbreak
 	swend
-	haifuwritebuffer GameStat, GameEnv, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType, TsumoAgari
+	haifuwritebuffer GameStat, GameEnv, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType
 	return
 #global

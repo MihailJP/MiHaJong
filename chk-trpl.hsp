@@ -74,7 +74,7 @@
 /* 刻子系の役 */
 #module
 #include "const.as"
-#deffunc tripletyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int FuritenFlag, int TsumoAgari, int MachiType
+#deffunc tripletyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int FuritenFlag, int MachiType
 	trace "刻子役の処理に入ります。"
 	countKez KezCount, MianziDat: Kezi = stat
 	countDuiz DuiCount, MianziDat
@@ -90,7 +90,7 @@
 		}
 	loop
 #endif
-	if ((MachiType == MACHI_SHANPON)&&(TsumoAgari == 0)) {AnKe-- /* 双ポン待ちの出和了りでできた刻子は明刻 */}
+	if ((MachiType == MACHI_SHANPON)&&(getTsumoAgariFlag(GameStat) == 0)) {AnKe-- /* 双ポン待ちの出和了りでできた刻子は明刻 */}
 	/* 四暗刻 */
 	if (AnKe == 4) {
 		if ((getHeavenHandFlag(GameStat))&&(getRule(RULE_DOUBLE_YAKUMAN) == 0)) {

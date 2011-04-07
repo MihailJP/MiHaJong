@@ -16,7 +16,7 @@
 	SelectedTile = -99 // –¢“ü—Í
 	mode = 0
 	ButtonPos = 0
-	dim SelectedTileButtonMask, NUM_OF_TILES_IN_HAND: TsumoAgari = 1
+	dim SelectedTileButtonMask, NUM_OF_TILES_IN_HAND: setTsumoAgariFlag GameStat, 1
 	Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
 	ShantenJustnow = Shanten
 	targetPlayer = ActivePlayer
@@ -368,11 +368,11 @@ return DiscardTileIndex
 
 	font fontname, 48, 0
 	SelectedTile = -99 // –¢“ü—Í
-	playerThru = 1: TsumoAgari = 0: tmpShanten = 999
+	playerThru = 1: setTsumoAgariFlag GameStat, 0: tmpShanten = 999
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL)
 	tmpShanten = Shanten
-	countyaku GameStat, yakuInfo, PassivePlayer, furikomiPlayer, TsumoAgari
+	countyaku GameStat, yakuInfo, PassivePlayer, furikomiPlayer
 	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, PassivePlayer
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
 	if ((countshanten(GameStat, PassivePlayer, SHANTEN_ORPHANS) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {

@@ -7,17 +7,17 @@
 #module
 #include "const.as"
 #define ctype doubleDoraEnabled ((getRule(RULE_DORA_TWICE) == 1)||((getRule(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))))
-#deffunc agariscrproc var GameStat, var GameEnv, var yakuInfo, int TsumoAgari, int agariPlayer, int furikomiPlayer, \
+#deffunc agariscrproc var GameStat, var GameEnv, var yakuInfo, int agariPlayer, int furikomiPlayer, \
 array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	buffer SCR_AGARI_BUF, 600, 600: color 0, 0, 0: boxf 0, 0, 599, 599
 	gsel 0: redraw 0: gmode gmode_alpha, , , 192
 	pos 0, 0: gcopy SCR_AGARI_BUF, 0, 0, 600, 600
 	gmode gmode_mem: pos 10, 8
 	font fontname, 16, 1: tmpname = getPlayerName(GameEnv, agariPlayer)
-	if (TsumoAgari) {borderedtxt2 "é©ñÃòa "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),56,10,255,255,255,1,16,192,192,192,1}
+	if (getTsumoAgariFlag(GameStat)) {borderedtxt2 "é©ñÃòa "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),56,10,255,255,255,1,16,192,192,192,1}
 	else {borderedtxt2 "âhòa "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),56,10,255,255,255,1,16,192,192,192,1}
 	borderedtxt2 strmid(tmpname, 3, 16),56,30,255,255,255,1,16,192,192,192,1
-	if (TsumoAgari == 0) {
+	if (getTsumoAgariFlag(GameStat) == 0) {
 		tmpname = getPlayerName(GameEnv, furikomiPlayer)
 		borderedtxt2 "ï˙èe "+windName(playerWind(furikomiPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),256,10,255,255,255,1,16,192,192,192,1
 		borderedtxt2 strmid(tmpname, 3, 16),256,30,255,255,255,1,16,192,192,192,1
@@ -36,7 +36,7 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 			} else:if (furikomiPlayer == getPlayer(GameStat)) {drawcol= 255, 64, 64: agariBgmSet = 1}
 			else {drawcol= 255, 255, 255: agariBgmSet = 2}
 		} else {
-			if (TsumoAgari) {drawcol= 255, 64, 64: agariBgmSet = 1}
+			if (getTsumoAgariFlag(GameStat)) {drawcol= 255, 64, 64: agariBgmSet = 1}
 			else:if (furikomiPlayer == getPlayer(GameStat)) {drawcol= 255, 64, 64: agariBgmSet = 1}
 			else {drawcol= 255, 255, 255: agariBgmSet = 2}
 		}
@@ -300,13 +300,13 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	font fontname, 48, 0: tmptxt = ""
 	if ((agariPointArray(7)>0)||(agariPointArray(6)>0)||(agariPointArray(5)>0)||(agariPointArray(4)>0)) {pos 120, 400} else {pos 120, 440}
 	if (agariPlayer == getPlayer(GameStat)) {
-		if (TsumoAgari) {if (getHeavenHandFlag(GameStat)) {tmptxt= "ìVòa"} else {tmptxt= "é©ñÃòa"}}
+		if (getTsumoAgariFlag(GameStat)) {if (getHeavenHandFlag(GameStat)) {tmptxt= "ìVòa"} else {tmptxt= "é©ñÃòa"}}
 		else {tmptxt= "âhòa"}
 	}
 	else {
 		if (isPao(GameStat, agariPlayer, getPlayer(GameStat))) {
 			tmptxt= "ïÔê”"
-		} else:if (TsumoAgari) {if (getHeavenHandFlag(GameStat)) {tmptxt= "ìVòa"} else {tmptxt= "é©ñÃòa"}}
+		} else:if (getTsumoAgariFlag(GameStat)) {if (getHeavenHandFlag(GameStat)) {tmptxt= "ìVòa"} else {tmptxt= "é©ñÃòa"}}
 		else:if (furikomiPlayer == getPlayer(GameStat)) {tmptxt= "ï˙èe"}
 		else {tmptxt= "âhòa"}
 	}
@@ -407,10 +407,10 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	}
 	if ((getRule(RULE_CHIP) != 0)&&(ChipAmount > 0)) {
 #ifdef SANMAT
-		if (TsumoAgari == 1) {ResultDesc += " [É`ÉbÉv "+ChipAmount+"Å~ÇQ]"}
+		if (getTsumoAgariFlag(GameStat) == 1) {ResultDesc += " [É`ÉbÉv "+ChipAmount+"Å~ÇQ]"}
 		else {ResultDesc += " [É`ÉbÉv "+ChipAmount+"]"}
 #else
-		if (TsumoAgari == 1) {ResultDesc += " [É`ÉbÉv "+ChipAmount+"Å~ÇR]"}
+		if (getTsumoAgariFlag(GameStat) == 1) {ResultDesc += " [É`ÉbÉv "+ChipAmount+"Å~ÇR]"}
 		else {ResultDesc += " [É`ÉbÉv "+ChipAmount+"]"}
 #endif
 		font fontname, 16, 0: tmptxt = ""
@@ -465,10 +465,10 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 		}
 		font fontname, 20, 0
 #ifdef SANMAT
-		if (TsumoAgari == 1) {borderedtxt2a "É`ÉbÉv "+ChipAmount+"Å~ÇQñá", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
+		if (getTsumoAgariFlag(GameStat) == 1) {borderedtxt2a "É`ÉbÉv "+ChipAmount+"Å~ÇQñá", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
 		else {borderedtxt2a "É`ÉbÉv "+ChipAmount+"ñá", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
 #else
-		if (TsumoAgari == 1) {borderedtxt2a "É`ÉbÉv "+ChipAmount+"Å~ÇRñá", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
+		if (getTsumoAgariFlag(GameStat) == 1) {borderedtxt2a "É`ÉbÉv "+ChipAmount+"Å~ÇRñá", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
 		else {borderedtxt2a "É`ÉbÉv "+ChipAmount+"ñá", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
 #endif
 	}

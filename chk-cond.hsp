@@ -6,7 +6,7 @@
 /* èÛãµñ */
 #module
 #include "const.as"
-#deffunc contextualyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType, int FurikomiPlayer, int TsumoAgari
+#deffunc contextualyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType, int FurikomiPlayer
 	trace "èÛãµñÇÃèàóùÇ…ì¸ÇËÇ‹Ç∑ÅB"
 	/* óßíºån */
 	if (getRichiFlag(GameStat, RICHI_OPENFLAG, targetPlayer) == 1) {
@@ -19,7 +19,7 @@
 			if ((getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_DOUBLE)||(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_DOUBLE_IPPATSU)) {
 				addyaku tmpYakuInfo, "É_ÉuÉãäJóßíº", 3
 			}
-			if ((TsumoAgari == 0)&&(getRichiFlag(GameStat, RICHI_FLAG, furikomiPlayer) == RIICHI_NO)) {
+			if ((getTsumoAgariFlag(GameStat) == 0)&&(getRichiFlag(GameStat, RICHI_FLAG, furikomiPlayer) == RIICHI_NO)) {
 				addyaku tmpYakuInfo, "äJóßíºâhòa", 11
 			}
 		}
@@ -66,7 +66,7 @@
 					addyakuman tmpYakuInfo, "ìVòa", 1
 				}
 			} else {
-				if (TsumoAgari == 1) {
+				if (getTsumoAgariFlag(GameStat) == 1) {
 					addyakuman tmpYakuInfo, "ínòa", 1
 				} else {
 					if (getRule(RULE_RENHOH) != 0) {
@@ -81,12 +81,12 @@
 		}
 	}
 	/* ÉcÉÇ */
-	if ((getMenzen(GameStat, targetPlayer) == 1)&&(TsumoAgari == 1)&&(getFirstDrawFlag(GameStat, targetPlayer) == 0)) {
+	if ((getMenzen(GameStat, targetPlayer) == 1)&&(getTsumoAgariFlag(GameStat) == 1)&&(getFirstDrawFlag(GameStat, targetPlayer) == 0)) {
 		// ìVòaÇ‚ínòaÇ∆ÇÕï°çáÇµÇ»Ç¢ÇÊÇ§Ç…ÇµÇƒÇ†ÇÈ
 		addyaku tmpYakuInfo, "ñÂëOê¥é©ñÃòa", 1
 	}
 	/* ó‰è„ÉcÉÇ */
-	if ((getKangFlag(GameStat, KANG_FLAG) == 1)&&(TsumoAgari == 1)) {
+	if ((getKangFlag(GameStat, KANG_FLAG) == 1)&&(getTsumoAgariFlag(GameStat) == 1)) {
 		if ((getKangFlag(GameStat, KANG_CHAINFLAG) >= 2)&&(getRule(RULE_RENKAN_KAIHOH) != 0)) {
 			addyaku tmpYakuInfo, "òAû»äJâ‘", 2
 		} else:if ((getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN) >= 0)&&(getRule(RULE_MINKAN_PAO) >= 3)&&(getRule(RULE_MINKAN_PAO) <= 5)) {
@@ -132,7 +132,7 @@
 		/* äCíÍ
 		   elseÉuÉçÉbÉNÇ…ëgÇ›çûÇﬁÇ±Ç∆Ç≈ó‰è„Ç∆äCíÍÇ™ï°çáÇ∑ÇÈÇÃÇñhé~ */
 		if (tilesLeft(GameStat) == 0) {
-			if (TsumoAgari == 1) {
+			if (getTsumoAgariFlag(GameStat) == 1) {
 				/* äCíÍÉcÉÇÅ@Ç±Ç±Ç©ÇÁ */
 				addyaku tmpYakuInfo, "äCíÍñÃåé", 1
 				/* àÍìõñÃåé */
@@ -247,7 +247,7 @@
 		if (getRule(RULE_JINJI_DUOSHI) != 0) {
 			countseentiles SeenTiles, GameStat
 			countTilesInHand TileCount, GameStat, targetPlayer
-			if ((SeenTiles(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) >= 4)&&(TsumoAgari == 1))||((SeenTiles(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) > 4)&&(TsumoAgari == 0)) {
+			if ((SeenTiles(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) >= 4)&&(getTsumoAgariFlag(GameStat) == 1))||((SeenTiles(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) > 4)&&(getTsumoAgariFlag(GameStat) == 0)) {
 				if ((MachiType == MACHI_KANCHAN)||(MachiType == MACHI_PENCHAN)||(MachiType == MACHI_TANKI)) {
 					addyaku tmpYakuInfo, "ã‡å{íDêH", 1
 				}
@@ -276,7 +276,7 @@
 	}
 	/* élînòH */
 	if (getRule(RULE_SUMARO) != 0) {
-		if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CHARACTERS+4)&&(getSumaroFlag(GameStat, targetPlayer) == 1)&&(TsumoAgari == 0) {
+		if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CHARACTERS+4)&&(getSumaroFlag(GameStat, targetPlayer) == 1)&&(getTsumoAgariFlag(GameStat) == 0) {
 			addyaku tmpYakuInfo, "élînòH", 1
 		}
 	}
@@ -303,7 +303,7 @@
 #endif
 			}
 		loop
-		if ((yakuFlag == 1)&&(TsumoAgari == 0)) {
+		if ((yakuFlag == 1)&&(getTsumoAgariFlag(GameStat) == 0)) {
 			addyaku tmpYakuInfo, "ãqóàòa", 1
 		}
 	}
@@ -319,7 +319,7 @@
 			repeat DiscardPointer(GameStat, targetPlayer), 1
 				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) \ TILE_SUIT_STEP) == tmpTileCodeList(tmpcnt)) {yakuFlag = 1}
 			loop
-			if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == tmpTileCodeList(cnt))&&(yakuFlag == 1)&&(TsumoAgari == 1)&&(MachiType == MACHI_TANKI)) {
+			if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == tmpTileCodeList(cnt))&&(yakuFlag == 1)&&(getTsumoAgariFlag(GameStat) == 1)&&(MachiType == MACHI_TANKI)) {
 				if (getRule(tmpRuleCodeList(cnt)) == 2) {addyaku tmpYakuInfo, tmpYakuNameList(cnt), 2}
 				else {addyaku tmpYakuInfo, tmpYakuNameList(cnt), 1}
 			}

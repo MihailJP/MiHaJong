@@ -444,7 +444,7 @@ return
 return
 
 /* 配牌をバッファに出力 */
-#deffunc haifuwritebuffer var GameStat, var GameEnv, int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag, str ResultDesc, int RoundEndType, int TsumoAgari
+#deffunc haifuwritebuffer var GameStat, var GameEnv, int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag, str ResultDesc, int RoundEndType
 	notesel haifuBuffer
 	tmpstr = "東南西北"
 	tmptxt = ""+roundName(OrigTurn)
@@ -481,7 +481,7 @@ return
 			if (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt) > 0) {
 				if (cnt == TSUMOHAI_INDEX) {
 					if ((RoundEndType == ENDKYOKU_RYUUKYOKU)||(RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
-						if (TsumoAgari == 1) {haifuP(tmpcnt*6+5) += " ツモ": HThaifuP(tmpcnt*6+5) += "</span> ツモ<span class=\"tile\">"}
+						if (getTsumoAgariFlag(GameStat) == 1) {haifuP(tmpcnt*6+5) += " ツモ": HThaifuP(tmpcnt*6+5) += "</span> ツモ<span class=\"tile\">"}
 						else {haifuP(tmpcnt*6+5) += " ロン": HThaifuP(tmpcnt*6+5) += "</span> ロン<span class=\"tile\">"}
 					} else {
 						haifuP(tmpcnt*6+5) += " "

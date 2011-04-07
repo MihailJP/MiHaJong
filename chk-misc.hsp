@@ -70,7 +70,7 @@
 /* その他の役 */
 #module
 #include "const.as"
-#deffunc miscyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int TsumoAgari
+#deffunc miscyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer
 	/* 緑一色 */
 #ifdef SANMAS
 	dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8
@@ -126,8 +126,8 @@
 	loop
 	if (yakuflagcount == 4) {
 		if (getRule(RULE_SHIIARU_RAOTAI) != 0) {
-			if ((getRule(RULE_SHIIARU_RAOTAI) == 1)||(TsumoAgari == 0)) {
-				if (TsumoAgari == 1) {addyaku tmpYakuInfo, "全倒鋪", 1}
+			if ((getRule(RULE_SHIIARU_RAOTAI) == 1)||(getTsumoAgariFlag(GameStat) == 0)) {
+				if (getTsumoAgariFlag(GameStat) == 1) {addyaku tmpYakuInfo, "全倒鋪", 1}
 				else {addyaku tmpYakuInfo, "全求人", 1}
 			}
 		}
