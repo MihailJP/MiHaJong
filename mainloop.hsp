@@ -92,8 +92,8 @@ repeat
 				if (getLastAgariPlayer(GameStat) == ActivePlayer) {
 					incAgariChain GameStat
 				} else {
-					if ((getRule(RULE_BREAKING_PAARENCHAN) != 0)&&(getAgariChain(GameStat) == 7)) {setAgariChain GameStat, -1: setLastAgariPlayer GameStat, agariPlayer}
-					else {setAgariChain GameStat, 1: setLastAgariPlayer GameStat, agariPlayer}
+					if ((getRule(RULE_BREAKING_PAARENCHAN) != 0)&&(getAgariChain(GameStat) == 7)) {setAgariChain GameStat, -1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)}
+					else {setAgariChain GameStat, 1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)}
 				}
 			}
 			/* 自摸和したことを変数に設定 */
@@ -107,10 +107,10 @@ repeat
 				RoundEndType = ENDKYOKU_AGARI
 			}
 			setTsumoAgariFlag GameStat, 1
-			agariPlayer = ActivePlayer
-			setCall agariPlayer, "ツモ"
-			if (getHeavenHandFlag(GameStat) == 1) {setCall agariPlayer, "ロン"} //天和の時はロンと言う慣わし
-			setHandStat GameStat, agariPlayer, 1
+			setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, ActivePlayer
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "ツモ"
+			if (getHeavenHandFlag(GameStat) == 1) {setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "ロン"} //天和の時はロンと言う慣わし
+			setHandStat GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
 			if (getHeavenHandFlag(GameStat) == 1) {dsplay VOX_RON} else {dsplay VOX_TSUMO}
 			redrscreen: break
 		}
@@ -404,7 +404,7 @@ repeat
 					info strf("喰い変えを検出しました。チョンボとして扱います。打牌 [%d] 鳴いた牌 [%d]", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getPreviousMeld(GameStat, PREVMELD_TILECODE))
 					dsplay SND_CUOHU
 					RoundEndType = ENDKYOKU_CHONBO: setTsumoAgariFlag GameStat, AGARI_KUIKAE
-					agariPlayer = ActivePlayer
+					setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, ActivePlayer
 					setCall ActivePlayer, "錯和"
 					redrscreen: await 1500
 					/* 局を打ち切り、満貫罰符の支払いに進む */
@@ -506,7 +506,7 @@ repeat
 		// 打牌へ戻る
 	loop
 	OrigHonba = getHonba(GameStat): OrigTurn = getRound(GameStat)
-	endround GameStat, GameEnv, RoundEndType, agariPlayer, FurikomiPlayer, ActivePlayer, yakuInfo, OrigTurn, OrigHonba
+	endround GameStat, GameEnv, RoundEndType, FurikomiPlayer, ActivePlayer, yakuInfo, OrigTurn, OrigHonba
 	await 5000
 	// ハコ割れ終了
 	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {

@@ -6,7 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc endround var GameStat, var GameEnv, int _RoundEndType, int agariPlayer, int FurikomiPlayer, int ActivePlayer, \
+#deffunc endround var GameStat, var GameEnv, int _RoundEndType, int FurikomiPlayer, int ActivePlayer, \
 var yakuInfo, int OrigTurn, int OrigHonba
 	// ã«ñ èIóπÉRÅ[Éh
 	// ÇOÅcçrîvó¨ã«
@@ -65,7 +65,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 	/* òaóπèàóù */
 	/************/
 	if ((RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
-		agariproc agariPlayer, FurikomiPlayer, ActivePlayer, RoundEndType, yakuInfo, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc
+		agariproc FurikomiPlayer, ActivePlayer, RoundEndType, yakuInfo, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc
 	}
 	switch RoundEndType
 	/**************/
@@ -246,7 +246,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 				setCall cnt, ""
 			loop
 			setCenterTitle ""
-			if ((playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
+			if ((playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "òAëë"
 			} else {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "êeó¨ÇÍ"
@@ -255,7 +255,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			redrscreen
 			redraw 1
 			
-			if ((playerwind(agariPlayer, getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
+			if ((playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
 				incHonba GameStat
 			} else {
 				setHonba GameStat, 0: incRound GameStat

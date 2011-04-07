@@ -7,31 +7,31 @@
 #module
 #include "const.as"
 #define ctype doubleDoraEnabled ((getRule(RULE_DORA_TWICE) == 1)||((getRule(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))))
-#deffunc agariscrproc var GameStat, var GameEnv, var yakuInfo, int agariPlayer, int furikomiPlayer, \
+#deffunc agariscrproc var GameStat, var GameEnv, var yakuInfo, int furikomiPlayer, \
 array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	buffer SCR_AGARI_BUF, 600, 600: color 0, 0, 0: boxf 0, 0, 599, 599
 	gsel 0: redraw 0: gmode gmode_alpha, , , 192
 	pos 0, 0: gcopy SCR_AGARI_BUF, 0, 0, 600, 600
 	gmode gmode_mem: pos 10, 8
-	font fontname, 16, 1: tmpname = getPlayerName(GameEnv, agariPlayer)
-	if (getTsumoAgariFlag(GameStat)) {borderedtxt2 "é©ñÃòa "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),56,10,255,255,255,1,16,192,192,192,1}
-	else {borderedtxt2 "âhòa "+windName(playerWind(agariPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),56,10,255,255,255,1,16,192,192,192,1}
+	font fontname, 16, 1: tmpname = getPlayerName(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
+	if (getTsumoAgariFlag(GameStat)) {borderedtxt2 "é©ñÃòa "+windName(playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)))+strmid(tmpname, 0, 3),56,10,255,255,255,1,16,192,192,192,1}
+	else {borderedtxt2 "âhòa "+windName(playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)))+strmid(tmpname, 0, 3),56,10,255,255,255,1,16,192,192,192,1}
 	borderedtxt2 strmid(tmpname, 3, 16),56,30,255,255,255,1,16,192,192,192,1
 	if (getTsumoAgariFlag(GameStat) == 0) {
 		tmpname = getPlayerName(GameEnv, furikomiPlayer)
 		borderedtxt2 "ï˙èe "+windName(playerWind(furikomiPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),256,10,255,255,255,1,16,192,192,192,1
 		borderedtxt2 strmid(tmpname, 3, 16),256,30,255,255,255,1,16,192,192,192,1
 	}
-	if (isPaoAgari(GameStat, agariPlayer)) {
-		TmpPaoPlayer = getPaoPlayer(GameStat, agariPlayer)
+	if (isPaoAgari(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) {
+		TmpPaoPlayer = getPaoPlayer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 		tmpname = getPlayerName(GameEnv, TmpPaoPlayer)
 		borderedtxt2 "ïÔê” "+windName(playerWind(TmpPaoPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),456,10,255,255,255,1,16,192,192,192,1
 		borderedtxt2 strmid(tmpname, 3, 16),456,30,255,255,255,1,16,192,192,192,1
 	}
-	if (agariPlayer == getPlayer(GameStat)) {drawcol= 255, 255, 0: agariBgmSet = 0}
+	if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == getPlayer(GameStat)) {drawcol= 255, 255, 0: agariBgmSet = 0}
 	else {
-		if (isPaoAgari(GameStat, agariPlayer)) {
-			if (isPao(GameStat, agariPlayer, getPlayer(GameStat))) {
+		if (isPaoAgari(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) {
+			if (isPao(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getPlayer(GameStat))) {
 				drawcol= 255, 64, 64: agariBgmSet = 1
 			} else:if (furikomiPlayer == getPlayer(GameStat)) {drawcol= 255, 64, 64: agariBgmSet = 1}
 			else {drawcol= 255, 255, 255: agariBgmSet = 2}
@@ -43,10 +43,10 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	}
 	color drawcol(0),drawcol(1),drawcol(2)
 	gmode gmode_mem
-	puttehai GameStat, ActivePlayer, agariPlayer, 50, 60, 0
-	putnakihai GameStat, agariPlayer, 460-((4-MeldPointer(GameStat, agariPlayer))*40), 55, 0
+	puttehai GameStat, ActivePlayer, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 50, 60, 0
+	putnakihai GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 460-((4-MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)))*40), 55, 0
 	tmpOffset = 0
-	if ((getMenzen(GameStat, agariPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != 1)) {
+	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > RIICHI_NO)&&(getRule(RULE_URADORA) != 1)) {
 		if (doubleDoraEnabled()) {
 			if (getRule(RULE_FLOWER_TILES) == 3) {tmpOffset = -30}
 		}
@@ -79,7 +79,7 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 			showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
 		}
 	loop
-	if ((getMenzen(GameStat, agariPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != 1)) {
+	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > RIICHI_NO)&&(getRule(RULE_URADORA) != 1)) {
 		tmpUraFlag = 1
 		if (doubleDoraEnabled()) {
 			pos 235+tmpOffset, 104
@@ -132,13 +132,13 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 		borderedtxt2a "ñk", 375+tmpOffsetX, 104, drawcol(0), drawcol(1), drawcol(2), 1, 18
 		repeat 4
 			pos 400+tmpOffsetX+(cnt*23), 96
-			if (getNorthFlag(GameStat, agariPlayer) > cnt) {
+			if (getNorthFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > cnt) {
 				showtileblock 0, ginfo_cx, ginfo_cy
 			} else {
 				showtileblockturned 0, ginfo_cx, ginfo_cy
 			}
 			pos 400+tmpOffsetX+(cnt*23), 96
-			if (getNorthFlag(GameStat, agariPlayer) > cnt) {
+			if (getNorthFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > cnt) {
 				showtile TILE_NORTH_WIND, ginfo_cx, ginfo_cy
 			} else {
 				showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
@@ -152,13 +152,13 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 			case 3:
 				repeat 8
 					pos 400+(cnt*23), 96
-					if ((getFlowerFlag(GameStat, agariPlayer)\(tmpcount*2)/(tmpcount)) == 1) {
+					if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))\(tmpcount*2)/(tmpcount)) == 1) {
 						showtileblock 0, ginfo_cx, ginfo_cy
 					} else {
 						showtileblockturned 0, ginfo_cx, ginfo_cy
 					}
 					pos 400+(cnt*23), 96
-					if ((getFlowerFlag(GameStat, agariPlayer)\(tmpcount*2)/(tmpcount)) == 1) {
+					if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))\(tmpcount*2)/(tmpcount)) == 1) {
 						showtile TILE_FLOWER_MIN+cnt+cnt/4, ginfo_cx, ginfo_cy
 					} else {
 						showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
@@ -169,13 +169,13 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 			case 1:
 				repeat 4
 					pos 400+tmpOffsetX+(cnt*23), 96
-					if ((getFlowerFlag(GameStat, agariPlayer)\(tmpcount*2)/(tmpcount)) == 1) {
+					if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))\(tmpcount*2)/(tmpcount)) == 1) {
 						showtileblock 0, ginfo_cx, ginfo_cy
 					} else {
 						showtileblockturned 0, ginfo_cx, ginfo_cy
 					}
 					pos 400+tmpOffsetX+(cnt*23), 96
-					if ((getFlowerFlag(GameStat, agariPlayer)\(tmpcount*2)/(tmpcount)) == 1) {
+					if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))\(tmpcount*2)/(tmpcount)) == 1) {
 						showtile TILE_SEASON_MIN+cnt, ginfo_cx, ginfo_cy
 					} else {
 						showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
@@ -187,13 +187,13 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 				tmpcount = 16
 				repeat 4
 					pos 400+tmpOffsetX+(cnt*23), 96
-					if ((getFlowerFlag(GameStat, agariPlayer)\(tmpcount*2)/(tmpcount)) == 1) {
+					if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))\(tmpcount*2)/(tmpcount)) == 1) {
 						showtileblock 0, ginfo_cx, ginfo_cy
 					} else {
 						showtileblockturned 0, ginfo_cx, ginfo_cy
 					}
 					pos 400+tmpOffsetX+(cnt*23), 96
-					if ((getFlowerFlag(GameStat, agariPlayer)\(tmpcount*2)/(tmpcount)) == 1) {
+					if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))\(tmpcount*2)/(tmpcount)) == 1) {
 						showtile TILE_PLANT_MIN+cnt, ginfo_cx, ginfo_cy
 					} else {
 						showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
@@ -299,12 +299,12 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	noteunsel
 	font fontname, 48, 0: tmptxt = ""
 	if ((agariPointArray(7)>0)||(agariPointArray(6)>0)||(agariPointArray(5)>0)||(agariPointArray(4)>0)) {pos 120, 400} else {pos 120, 440}
-	if (agariPlayer == getPlayer(GameStat)) {
+	if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == getPlayer(GameStat)) {
 		if (getTsumoAgariFlag(GameStat)) {if (getHeavenHandFlag(GameStat)) {tmptxt= "ìVòa"} else {tmptxt= "é©ñÃòa"}}
 		else {tmptxt= "âhòa"}
 	}
 	else {
-		if (isPao(GameStat, agariPlayer, getPlayer(GameStat))) {
+		if (isPao(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getPlayer(GameStat))) {
 			tmptxt= "ïÔê”"
 		} else:if (getTsumoAgariFlag(GameStat)) {if (getHeavenHandFlag(GameStat)) {tmptxt= "ìVòa"} else {tmptxt= "é©ñÃòa"}}
 		else:if (furikomiPlayer == getPlayer(GameStat)) {tmptxt= "ï˙èe"}
@@ -313,7 +313,7 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	borderedtxt2a tmptxt, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 48
 	font fontname, 48, 0: tmptxt = ""
 	totalHan = getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA)+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA)
-	if ((totalHan >= 5)||(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 2000)) {setSumaroFlag GameStat, agariPlayer, 1 /* ñûä—à»è„òaóπÇ¡ÇΩÇÁélînòHâã÷ */}
+	if ((totalHan >= 5)||(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 2000)) {setSumaroFlag GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1 /* ñûä—à»è„òaóπÇ¡ÇΩÇÁélînòHâã÷ */}
 	if (totalHan < YAKUVAL_YAKUMAN) {
 		if ((agariPointArray(7)>0)||(agariPointArray(6)>0)||(agariPointArray(5)>0)||(agariPointArray(4)>0)) {pos 320, 400} else {pos 320, 440}
 		tmptxt = ""+getYakuInfo(yakuInfo, YAKUINF_FU)+"ïÑ "+totalHan+"„ "
@@ -368,9 +368,9 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 		pos 170, 480: borderedtxt2a strf("%8d", agariPointArray(0)*100), ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 100
 	}
 	ChipAmount = 0
-	if (getMenzen(GameStat, agariPlayer) == 1) {
+	if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1) {
 		ChipAmount = getYakuInfo(yakuInfo, YAKUINF_URADORA)+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA) // ó†ÉhÉâÇ∆ÉAÉäÉXÉhÉâ
-		if ((getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_DOUBLE_IPPATSU)) {
+		if ((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_DOUBLE_IPPATSU)) {
 			if (getRule(RULE_RIICHI_IPPATSU) != 1) {
 				ChipAmount++ // àÍî≠èjãV
 			}
@@ -378,10 +378,10 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	}
 	switch getRule(RULE_REDTILE_CHIP)
 		case 0: case 3:
-			if (getMenzen(GameStat, agariPlayer) == 1) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)}
+			if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)}
 			swbreak
 		case 1: case 4:
-			if (getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) != RIICHI_NO) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)}
+			if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != RIICHI_NO) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)}
 			swbreak
 		case 2: case 5:
 			ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)
@@ -389,10 +389,10 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	swend
 	switch getRule(RULE_BLUE_CHIP)
 		case 0:
-			if (getMenzen(GameStat, agariPlayer) == 1) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)}
+			if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)}
 			swbreak
 		case 1:
-			if (getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) != RIICHI_NO) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)}
+			if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != RIICHI_NO) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)}
 			swbreak
 		case 2:
 			ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)
@@ -415,16 +415,16 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 #endif
 		font fontname, 16, 0: tmptxt = ""
 		pos 90, 582
-		if (getMenzen(GameStat, agariPlayer) == 1) {
+		if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1) {
 			if (getYakuInfo(yakuInfo, YAKUINF_URADORA) > 0) {tmptxt += "ó†ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_URADORA)+"ñá "}
 		}
 		if (getYakuInfo(yakuInfo, YAKUINF_AKADORA) > 0) {
 			switch getRule(RULE_REDTILE_CHIP)
 				case 0: case 3:
-					if (getMenzen(GameStat, agariPlayer) == 1) {tmptxt += "ê‘ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"ñá "}
+					if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1) {tmptxt += "ê‘ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"ñá "}
 					swbreak
 				case 1: case 4:
-					if (getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) != RIICHI_NO) {tmptxt += "ê‘ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"ñá "}
+					if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != RIICHI_NO) {tmptxt += "ê‘ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"ñá "}
 					swbreak
 				case 2: case 5:
 					tmptxt += "ê‘ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"ñá "
@@ -434,10 +434,10 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 		if (getYakuInfo(yakuInfo, YAKUINF_AODORA) > 0) {
 			switch getRule(RULE_BLUE_CHIP)
 				case 0:
-					if (getMenzen(GameStat, agariPlayer) == 1) {tmptxt += "ê¬ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"ñá "}
+					if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1) {tmptxt += "ê¬ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"ñá "}
 					swbreak
 				case 1:
-					if (getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) != RIICHI_NO) {tmptxt += "ê¬ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"ñá "}
+					if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != RIICHI_NO) {tmptxt += "ê¬ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"ñá "}
 					swbreak
 				case 2:
 					tmptxt += "ê¬ÉhÉâ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"ñá "
@@ -445,8 +445,8 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 			swend
 		}
 		if (getYakuInfo(yakuInfo, YAKUINF_ALICEDORA) > 0) {tmptxt += "ÉAÉäÉX:"+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA)+"ñá "}
-		if (getMenzen(GameStat, agariPlayer) == 1) {
-		if ((getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_DOUBLE_IPPATSU)) {
+		if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1) {
+		if ((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_DOUBLE_IPPATSU)) {
 				if (getRule(RULE_RIICHI_IPPATSU) != 1) {
 					tmptxt += "àÍî≠:1ñá "
 				}
@@ -475,6 +475,6 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	chatrecv GameStat, GameEnv
 	dsplay@ SND_YAKULST2: redraw 1: await waittime
 	await 3000
-	setYakitori GameStat, agariPlayer, 0 // èƒíπÇâèúÇ∑ÇÈ
+	setYakitori GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 0 // èƒíπÇâèúÇ∑ÇÈ
 return
 #global

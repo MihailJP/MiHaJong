@@ -546,34 +546,34 @@
 			/* âhòaÇµÇΩÇ±Ç∆ÇïœêîÇ…ãLò^ */
 			RoundEndType = ENDKYOKU_AGARI: setTsumoAgariFlag GameStat, 0
 			furikomiPlayer = ActivePlayer
-			agariPlayer = RelativePositionOf(ActivePlayer, cnt+1)
+			setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, RelativePositionOf(ActivePlayer, cnt+1)
 			/* î™òAëëÇÃîªíËÇ…égÇ§ïœêî */
 			if (getRule(RULE_PAARENCHAN) != 0) {
-				if (getLastAgariPlayer(GameStat) == agariPlayer) {
+				if (getLastAgariPlayer(GameStat) == getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) {
 					incAgariChain GameStat
 				} else {
-					if ((getRule(RULE_BREAKING_PAARENCHAN) != 0)&&(getAgariChain(GameStat) == 7)) {setAgariChain GameStat, -1: setLastAgariPlayer GameStat, agariPlayer}
-					else {setAgariChain GameStat, 1: setLastAgariPlayer GameStat, agariPlayer}
+					if ((getRule(RULE_BREAKING_PAARENCHAN) != 0)&&(getAgariChain(GameStat) == 7)) {setAgariChain GameStat, -1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)}
+					else {setAgariChain GameStat, 1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)}
 				}
 			}
 			/* òaóπÇËîvÇê›íË */
-			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, ActivePlayer, 0, 10: setRichiCounterFlag GameStat, 1}
 			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_DOUBLE_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, ActivePlayer, 0, 10: setRichiCounterFlag GameStat, 2}
 			/* ñÇ‚êUíÆÇÃîªíË */
 			countyaku GameStat, yakuInfo, RelativePositionOf(ActivePlayer, cnt+1), furikomiPlayer
 			chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, RelativePositionOf(ActivePlayer, cnt+1)
 			// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´
-			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, agariPlayer) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, agariPlayer) == RIICHI_NO))) {
+			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO))) {
 				trace "îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©êUíÆÇ≈Ç∑ÅBéüÇÃèàóùÇÉ`ÉáÉìÉ{ópÇ…êÿÇËë÷Ç¶Ç‹Ç∑ÅB"
 				RoundEndType = ENDKYOKU_CHONBO // É`ÉáÉìÉ{Ç…Ç∑ÇÈ
 			}
 			// ÉçÉìÇÇµÇΩÇ±Ç∆Çï\é¶
-			//setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-			//setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
-			setCall agariPlayer, "ÉçÉì"
-			setHandStat GameStat, agariPlayer, 1
+			//setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+			//setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "ÉçÉì"
+			setHandStat GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
 			/* óßíºêÈåæîvÇ≈ÇÃï˙èeÇÃèÍçáÅAóßíºÇñ≥å¯Ç∆Çµãüëıì_ñ_Çï‘ãpÇ∑ÇÈ */
 			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_IPPATSU) {
 				trace "óßíºêÈåæîvÇ≈ÇÃï˙èeÇÃÇΩÇﬂÅAóßíºñ_Çï‘ä“ÇµÇ‹Ç∑ÅB"
@@ -584,8 +584,8 @@
 				setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, ActivePlayer, 0, 10: setRichiCounterFlag GameStat, 2
 			}
 			/* òaóπÇËîvÇê›íË */
-			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 			/* âhòaÇÃÉTÉEÉìÉhÇñ¬ÇÁÇ∑ */
 			if (ActivePlayer == getPlayer(GameStat)) {
 				dsplay VOX_RON_FURIKOMI
