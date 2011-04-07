@@ -43,7 +43,7 @@
 			case TILE_NORTH_WIND: NorthWind++: Wind++: swbreak
 			case TILE_WHITE_DRAGON: DragonW++: swbreak
 			case TILE_GREEN_DRAGON: DragonG++: swbreak
-			case TILE_RED_DRAGO: DragonR++: swbreak
+			case TILE_RED_DRAGON: DragonR++: swbreak
 		swend
 	loop
 #endif
