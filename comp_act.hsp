@@ -867,7 +867,7 @@ return DiscardTileIndex
 	return
 
 /* ‚`‚h‚Ì–Â‚«E‰h˜a */
-#deffunc compfuuro var GameStat, int PassivePlayer, array MinkanFlag, array PonFlag, array ChiFlag
+#deffunc compfuuro var GameStat, int PassivePlayer, array MinkanFlag, array ChiFlag
 	info strf("AI‚Ì•›˜I”»’è‚É“ü‚è‚Ü‚·BƒvƒŒƒCƒ„[ [%d]", PassivePlayer)
 	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > TILE_SUIT_FLOWERS) {
 		/* ‰Ô”v‚Ìê‡‚Í–ß‚é */
@@ -936,7 +936,7 @@ return DiscardTileIndex
 			if (TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) >= 2) { // ƒ|ƒ“‚Å‚«‚é‚©‚Ç‚¤‚©‚Ì”»’è
 				if ((getMenzen(GameStat, PassivePlayer) == 0)||(YakuhaiPon == 1)) {
 					// ‚·‚Å‚É–Â‚¢‚Ä‚¢‚é‚©A–ğ”v‚Ìê‡‚Íƒ|ƒ“ ‘ÎX‘_‚¢‚©ˆêF‘_‚¢‚È‚ç“ñ–Â‚«
-					PonFlag(PassivePlayer) = 1
+					setDeclarationFlag GameStat, DECLARATIONFLAG_PON, PassivePlayer, 1
 					return
 				} else {
 					tmpYaojiuTilesCount = 0
@@ -978,7 +978,7 @@ return DiscardTileIndex
 					if (tmpYaojiuTilesCount == 0) {
 						if ((currentShanten == 1)&&(getRule(RULE_KUITAN) == 0)) {
 							// ‹ò‚¢’f‚ğƒ|ƒ“’®‚·‚é
-							PonFlag(PassivePlayer) = 1
+							setDeclarationFlag GameStat, DECLARATIONFLAG_PON, PassivePlayer, 1
 							return
 						}
 					}
