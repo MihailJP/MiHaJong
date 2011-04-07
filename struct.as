@@ -13,7 +13,8 @@ KangFlag, KangNum, RichiCounter, \
 WaremePlayer, DoukasenPlayer, Dice1, Dice2, Dice1Direction, Dice2Direction, \
 PaoFlag, Deck, DeadTiles, ExtraRinshan, ShibariFlag, \
 DoraFlag, TilePointer, DoraPointer, RinshanPointer, TianHuFlag, \
-PreviousMeld, ConnectionLost
+PreviousMeld, ConnectionLost, \
+CurrentDiscard
 
 #include "const.as"
 
@@ -348,6 +349,12 @@ PreviousMeld, ConnectionLost
 #modcfunc getDoraFlag int Page, int Tile
 	return DoraFlag(Tile, Page)
 
+#modfunc setCurrentDiscard int Page, int value
+	CurrentDiscard(Page) = value
+	return
+#modcfunc getCurrentDiscard int Page
+	return CurrentDiscard(Page)
+
 
 
 /* 局単位での初期化 */
@@ -430,6 +437,8 @@ PreviousMeld, ConnectionLost
 	repeat PREVMELD_PAGES: PreviousMeld(cnt) = -999: loop
 	repeat NUM_OF_PLAYERS: HandStat(cnt) = 0: loop
 	dim DoraFlag, TILE_NONFLOWER_MAX, DORA_PAGES // ドラ判定の配列
+	
+	dim CurrentDiscard, CURRENTDISCARD_PAGES
 	return
 
 /* 初期化ルーチン */

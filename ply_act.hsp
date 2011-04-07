@@ -361,15 +361,15 @@
 return DiscardTileIndex
 
 /* ƒvƒƒCƒ„[‚Μ–Β‚« */
-#deffunc playerfuuro var GameStat, var GameEnv, int ActivePlayer, int PassivePlayer, int CurrentSutehai, int CurrentSutehaiAkaDora, array RonFlag, array MinkanFlag, array PonFlag, array ChiFlag
+#deffunc playerfuuro var GameStat, var GameEnv, int ActivePlayer, int PassivePlayer, array RonFlag, array MinkanFlag, array PonFlag, array ChiFlag
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // ‹N‰Ζ‚Ε‚ΜƒoƒO–h~—p‚Ι‰Ό‰ϊ‰»
-	if (CurrentSutehai > TILE_SUIT_FLOWERS) {return /* ‰Τ”v‚Μκ‡‚Ν–ί‚ι */}
+	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > TILE_SUIT_FLOWERS) {return /* ‰Τ”v‚Μκ‡‚Ν–ί‚ι */}
 	if (getAgariHouki(GameStat, getPlayer(GameStat)) == 1) {return /* a—Ή‚θ•ϊό‚Ύ‚Α‚½‚η–ί‚ι */}
 
 	font fontname, 48, 0
 	SelectedTile = -99 // –Ά“ό—Ν
 	playerThru = 1: TsumoAgari = 0: tmpShanten = 999
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehai
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL)
 	tmpShanten = Shanten
 	countyaku GameStat, yakuInfo, PassivePlayer, furikomiPlayer, TsumoAgari
@@ -391,13 +391,13 @@ return DiscardTileIndex
 	countTilesInHand TileCount, GameStat, PassivePlayer
 	ButtonFlag1=0:ButtonFlag2=0:ButtonFlag3=0:ButtonFlag4=0:ButtonFlag5=0
 	if ((getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) == RIICHI_NO)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(AutoPassFlag() == 0)) {
-		if (TileCount(CurrentSutehai) >= 2) {
+		if (TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) >= 2) {
 			objsize 50, 30
 			pos 720, 500: button gosub "F3/ƒ|ƒ“", *playerPon: tooltip@ stat-STATBOX, "ƒ|ƒ“‚π‚µ‚ά‚·"
 			playerThru = 0
 			ButtonFlag1=1
 		}
-		if ((TileCount(CurrentSutehai) >= 3)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
+		if ((TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) >= 3)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
 			objsize 50, 30
 			pos 770, 500: button gosub "F4/ƒJƒ“", *playerMinkan: tooltip@ stat-STATBOX, "‘ε–ΎΘ‚π‚µ‚ά‚·"
 			playerThru = 0
@@ -405,23 +405,23 @@ return DiscardTileIndex
 		}
 #ifndef ALLSANMA
 		// ƒ`[‚Ε‚«‚ιπFγ‰Ζ‚ΜΜ”v‚Ε‚ ‚ι‚±‚ΖA‚©‚ΒA””v‚Ε‚ ‚ι‚±‚Ζ
-		if ((CurrentSutehai < TILE_NUMERAL_MAX)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(ActivePlayer == ((PassivePlayer+3)\4))) {
-			if ((TileCount(CurrentSutehai+1) >= 1)&&(TileCount(CurrentSutehai+2) >= 1)) {
-				objsize 50, 30: tmpChiipai1 = (CurrentSutehai\TILE_SUIT_STEP): tmpChiipai2 = (CurrentSutehai\TILE_SUIT_STEP)+1: tmpChiipai3 = (CurrentSutehai\TILE_SUIT_STEP)+2
+		if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) < TILE_NUMERAL_MAX)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(ActivePlayer == ((PassivePlayer+3)\4))) {
+			if ((TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1) >= 1)&&(TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+2) >= 1)) {
+				objsize 50, 30: tmpChiipai1 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP): tmpChiipai2 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP)+1: tmpChiipai3 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP)+2
 				pos 620, 530: button gosub "F5/‰Ί‹h", *playerChi1: tooltip@ stat-STATBOX, ""+tmpChiipai1+tmpChiipai2+tmpChiipai3+"‚Μ`‚Εƒ`[‚π‚µ‚ά‚·"
 				playerThru = 0
 				ButtonFlag3=1
 			}
-			if ((TileCount(CurrentSutehai-1) >= 1)&&(TileCount(CurrentSutehai+1) >= 1)) {
-				objsize 50, 30: tmpChiipai1 = (CurrentSutehai\TILE_SUIT_STEP)-1: tmpChiipai2 = (CurrentSutehai\TILE_SUIT_STEP): tmpChiipai3 = (CurrentSutehai\TILE_SUIT_STEP)+1
+			if ((TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)-1) >= 1)&&(TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1) >= 1)) {
+				objsize 50, 30: tmpChiipai1 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP)-1: tmpChiipai2 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP): tmpChiipai3 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP)+1
 				pos 670, 530: button gosub "F6/›Ζ‹h", *playerChi2: tooltip@ stat-STATBOX, ""+tmpChiipai1+tmpChiipai2+tmpChiipai3+"‚Μ`‚Εƒ`[‚π‚µ‚ά‚·"
 				playerThru = 0
 				ButtonFlag4=1
 			}
-			if (CurrentSutehai > 1) {
+			if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > 1) {
 				// κδέ‚ªΨ‚η‚κ‚½‚ΙƒoƒO‚ι‚Μ‚π–h~‚·‚ι‚½‚ί
-				if ((TileCount(CurrentSutehai-2) >= 1)&&(TileCount(CurrentSutehai-1) >= 1)) {
-					objsize 50, 30: tmpChiipai1 = (CurrentSutehai\TILE_SUIT_STEP)-2: tmpChiipai2 = (CurrentSutehai\TILE_SUIT_STEP)-1: tmpChiipai3 = (CurrentSutehai\TILE_SUIT_STEP)
+				if ((TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)-2) >= 1)&&(TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)-1) >= 1)) {
+					objsize 50, 30: tmpChiipai1 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP)-2: tmpChiipai2 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP)-1: tmpChiipai3 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP)
 					pos 720, 530: button gosub "F7/γ‹h", *playerChi3: tooltip@ stat-STATBOX, ""+tmpChiipai1+tmpChiipai2+tmpChiipai3+"‚Μ`‚Εƒ`[‚π‚µ‚ά‚·"
 					playerThru = 0
 					ButtonFlag5=1
@@ -479,7 +479,7 @@ return DiscardTileIndex
 //			redrscreen
 			if (TimeLeft != tmpTimeLeft) {
 				chatrecv GameStat, GameEnv
-				statmes strf("Μ”vu%sv‚Φ‚Μ‘Ξ‰ ‚ ‚Ζ%2d•b", TileName(CurrentSutehai), TimeLeft)
+				statmes strf("Μ”vu%sv‚Φ‚Μ‘Ξ‰ ‚ ‚Ζ%2d•b", TileName(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)), TimeLeft)
 				tmpTimeLeft = TimeLeft
 				tmpmode = mode
 			}
@@ -488,8 +488,8 @@ return DiscardTileIndex
 			// ƒƒ“‚·‚ικ‡
 			if (SelectedTile == -89) {
 				RonFlag(getPlayer(GameStat)) = 1
-				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehai
-				setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, CurrentSutehaiAkaDora
+				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+				setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 				break
 			}
 			// ƒ|ƒ“‚·‚ικ‡

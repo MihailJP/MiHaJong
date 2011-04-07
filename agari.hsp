@@ -6,8 +6,8 @@
 
 #module
 #include "const.as"
-#deffunc agariproc int _agariPlayer, int FurikomiPlayer, int ActivePlayer, int TsumoAgari, int CurrentSutehai, int _RoundEndType, \
-int CurrentSutehaiAkaDora, array RonFlag, var yakuInfo, var GameStat, var GameEnv, \
+#deffunc agariproc int _agariPlayer, int FurikomiPlayer, int ActivePlayer, int TsumoAgari, int _RoundEndType, \
+array RonFlag, var yakuInfo, var GameStat, var GameEnv, \
 var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 	agariPlayer = _agariPlayer
 	RoundEndType = _RoundEndType
@@ -35,8 +35,8 @@ var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 					RoundEndType = ENDKYOKU_AGARI: agariPlayer++: agariPlayer = agariPlayer \ NUM_OF_PLAYERS
 					if (agariPlayer == furikomiPlayer) {break}
 					if (RonFlag(agariPlayer\NUM_OF_PLAYERS) == 1) {
-						setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, CurrentSutehai
-						setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, CurrentSutehaiAkaDora
+						setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+						setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 						countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer, TsumoAgari
 						chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, agariPlayer\NUM_OF_PLAYERS
 						// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´
@@ -65,8 +65,8 @@ var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 			agariPlayer = FirstAgariPlayer
 			if (TsumoAgari == 0) {
 				RoundEndType = ENDKYOKU_AGARI
-				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, CurrentSutehai
-				setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, CurrentSutehaiAkaDora
+				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+				setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 				countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer, TsumoAgari
 				chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, agariPlayer\NUM_OF_PLAYERS
 				// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´
@@ -87,8 +87,8 @@ var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 				RoundEndType = ENDKYOKU_AGARI: agariPlayer++: agariPlayer = agariPlayer \ NUM_OF_PLAYERS
 				if (agariPlayer == furikomiPlayer) {break}
 				if (RonFlag(agariPlayer\NUM_OF_PLAYERS) == 1) {
-					setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, CurrentSutehai
-					setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, CurrentSutehaiAkaDora
+					setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+					setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, agariPlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 					countyaku GameStat, yakuInfo, agariPlayer\NUM_OF_PLAYERS, furikomiPlayer, TsumoAgari
 					chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, agariPlayer\NUM_OF_PLAYERS
 					// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´

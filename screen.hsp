@@ -62,10 +62,10 @@ return
 #module
 #include "const.as"
 #deffunc redrscreen
-	doredrscreen GameStat@, GameEnv@, ActivePlayer@, CurrentSutehai@
+	doredrscreen GameStat@, GameEnv@, ActivePlayer@
 return
 
-#deffunc doredrscreen var GameStat, var GameEnv, int ActivePlayer, int CurrentSutehai
+#deffunc doredrscreen var GameStat, var GameEnv, int ActivePlayer
 	chatrecv GameStat, GameEnv
 	gsel 0: redraw 0
 	color GetTableColorR(GameEnv)/3, GetTableColorG(GameEnv)/3, GetTableColorB(GameEnv)/3
@@ -180,7 +180,7 @@ return
 			swend
 		}
 		/* 各家の情報を表示 */
-		putplayerinfo GameStat, CurrentSutehai, targetPlayer, Activeplayer
+		putplayerinfo GameStat, targetPlayer, Activeplayer
 		/* 鳴き仕掛けなどのテキスト表示 */
 		putCall cnt
 	loop
@@ -405,7 +405,7 @@ return
 /* 各家の情報を表示 */
 #module
 #include "const.as"
-#deffunc putplayerinfo var GameStat, int CurrentSutehai, int targetPlayer, int Activeplayer
+#deffunc putplayerinfo var GameStat, int targetPlayer, int Activeplayer
 	gsel SCR_PLAYER_BUFFER_UPPER+targetPlayer
 	color 0, 0, 0
 	/* 暫定順位の計算 */
@@ -532,9 +532,9 @@ return
 					chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, targetPlayer
 					Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
 					/* 何面待ちか調べる */
-					if ((CurrentSutehai > 0)&&(CurrentSutehai <= TILE_NONFLOWER_STRICT_MAX)) {
-						if ((MachihaiFlag(CurrentSutehai) == 1)&&(ActivePlayer != getPlayer(GameStat))) {
-							MachihaiCount(CurrentSutehai)++
+					if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > 0)&&(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) <= TILE_NONFLOWER_STRICT_MAX)) {
+						if ((MachihaiFlag(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) == 1)&&(ActivePlayer != getPlayer(GameStat))) {
+							MachihaiCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE))++
 							MachihaiTotal++
 						}
 					}
@@ -810,9 +810,9 @@ return
 	if ((TimeLeft@player == 0)||(ActivePlayer != getPlayer(GameStat))) {
 		chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getPlayer(GameStat)
 		Shanten = countshanten(GameStat, getPlayer(GameStat), SHANTEN_ALL)
-		if ((CurrentSutehai > 0)&&(CurrentSutehai <= TILE_NONFLOWER_STRICT_MAX)) {
-			if ((MachihaiFlag(CurrentSutehai) == 1)&&(ActivePlayer != getPlayer(GameStat))) {
-				MachihaiCount(CurrentSutehai)++
+		if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > 0)&&(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) <= TILE_NONFLOWER_STRICT_MAX)) {
+			if ((MachihaiFlag(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) == 1)&&(ActivePlayer != getPlayer(GameStat))) {
+				MachihaiCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE))++
 				MachihaiTotal++
 			}
 		}

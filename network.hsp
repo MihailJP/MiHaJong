@@ -151,7 +151,7 @@
 /* ê⁄ë±êÊÇÃñ¬Ç´ */
 #module
 #include "const.as"
-#deffunc remotenaki var GameStat, var GameEnv, array RonFlag, array PonFlag, array MinkanFlag, array ChiFlag, int CurrentSutehai, int CurrentSutehaiAkaDora
+#deffunc remotenaki var GameStat, var GameEnv, array RonFlag, array PonFlag, array MinkanFlag, array ChiFlag
 
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat NUM_OF_ACTUAL_PLAYERS
@@ -244,8 +244,8 @@
 	}
 	repeat NUM_OF_PLAYERS
 		if (RonFlag(cnt) == 1) {
-			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, CurrentSutehai
-			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, cnt, CurrentSutehaiAkaDora
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, cnt, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 		}
 	loop
 	return

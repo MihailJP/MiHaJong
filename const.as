@@ -7,8 +7,8 @@
 /* バージョン情報 */
 #define VERSION_MAJ 1
 #define VERSION_MED 4
-#define VERSION_MIN 4
-#define VERSION_MIC ""
+#define VERSION_MIN 5
+#define VERSION_MIC "dev"
 
 /* フォントの指定 */
 /* 必ず等幅日本語フォントを指定すること */
@@ -581,6 +581,9 @@
 #enum DORA_OMOTE = 0
 #enum DORA_URA
 #enum DORA_PAGES
+#enum CURRENTDISCARD_TILECODE = 0
+#enum CURRENTDISCARD_REDTILE
+#enum CURRENTDISCARD_PAGES
 
 /* 役解析データ用 */
 #enum YAKUINF_FU = 0

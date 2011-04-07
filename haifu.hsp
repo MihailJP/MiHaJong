@@ -252,14 +252,14 @@ return
 return
 
 /* チーしたことを牌譜に記録 */
-#deffunc haifurecchi int CurrentSutehai, int CurrentSutehaiAkaDora, int PassivePlayer
-	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, "ﾁｰ ", "チー"
+#deffunc haifurecchi var GameStat, int PassivePlayer
+	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE), "ﾁｰ ", "チー"
 return
 
 /* ポンしたことを牌譜に記録 */
-#deffunc haifurecpon int CurrentSutehai, int CurrentSutehaiAkaDora, int PassivePlayer, int ActivePlayer
+#deffunc haifurecpon var GameStat, int PassivePlayer, int ActivePlayer
 	haifuskip haifuP, HThaifuP, PassivePlayer, ActivePlayer
-	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, "ﾎﾟﾝ", "ポン"
+	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE), "ﾎﾟﾝ", "ポン"
 return
 
 /* 自摸和したことを牌譜に記録 */
@@ -268,9 +268,9 @@ return
 return
 
 /* 大明槓したことを牌譜に記録 */
-#deffunc haifurecminkan int CurrentSutehai, int CurrentSutehaiAkaDora, int PassivePlayer, int ActivePlayer
+#deffunc haifurecminkan var GameStat, int PassivePlayer, int ActivePlayer
 	haifuskip haifuP, HThaifuP, PassivePlayer, ActivePlayer
-	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, CurrentSutehai, CurrentSutehaiAkaDora, "ｶﾝ ", "カン"
+	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE), "ｶﾝ ", "カン"
 	haifuP(PassivePlayer*6+3) += "　 "
 	haifuP(PassivePlayer*6+4) += "　 "
 	HThaifuP(PassivePlayer*6+3) += "<td></td>"
