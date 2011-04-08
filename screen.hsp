@@ -62,10 +62,10 @@ return
 #module
 #include "const.as"
 #deffunc redrscreen
-	doredrscreen GameStat@, GameEnv@, ActivePlayer@
+	doredrscreen GameStat@, GameEnv@
 return
 
-#deffunc doredrscreen var GameStat, var GameEnv, int ActivePlayer
+#deffunc doredrscreen var GameStat, var GameEnv
 	chatrecv GameStat, GameEnv
 	gsel 0: redraw 0
 	color GetTableColorR(GameEnv)/3, GetTableColorG(GameEnv)/3, GetTableColorB(GameEnv)/3
@@ -92,7 +92,7 @@ return
 			putsutehai GameStat, 232, 75, cnt, 1
 		}
 		/* 手牌 */
-		puttehai GameStat, ActivePlayer, cnt, 125, 265, 1
+		puttehai GameStat, cnt, 125, 265, 1
 		/* 下家の晒し面子 */
 		if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_SHIMOCHA) {
 			putnakihai GameStat, cnt, 490, 260, 1
@@ -180,14 +180,14 @@ return
 			swend
 		}
 		/* 各家の情報を表示 */
-		putplayerinfo GameStat, targetPlayer, Activeplayer
+		putplayerinfo GameStat, targetPlayer
 		/* 鳴き仕掛けなどのテキスト表示 */
 		putCall cnt
 	loop
 	/* 画面右 */
 	putsidepanel GameEnv
 	/* 画面下に待ち牌などのデータを表示 */
-	putlowerpanel GameStat, GameEnv, activeplayer
+	putlowerpanel GameStat, GameEnv
 	/* 背景 */
 	color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
 	boxf 0, 0, 599, 599
@@ -405,7 +405,7 @@ return
 /* 各家の情報を表示 */
 #module
 #include "const.as"
-#deffunc putplayerinfo var GameStat, int targetPlayer, int Activeplayer
+#deffunc putplayerinfo var GameStat, int targetPlayer
 	gsel SCR_PLAYER_BUFFER_UPPER+targetPlayer
 	color 0, 0, 0
 	/* 暫定順位の計算 */
@@ -413,7 +413,7 @@ return
 	tmpRank = Rank(targetPlayer)
 	/* ツモ番マーカー */
 	/* ツモ番の人はマーカーを表示し、文字を黄色で表示 */
-	if (ActivePlayer == targetPlayer) {tmptxt = "▼"}
+	if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == targetPlayer) {tmptxt = "▼"}
 	else {tmptxt = "　"}
 	/* 自風と暫定順位 */
 	tmptxt += windName(playerWind(targetPlayer, getRound(GameStat)))+" "+tmpRank+"位"
@@ -533,7 +533,7 @@ return
 					Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
 					/* 何面待ちか調べる */
 					if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > 0)&&(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) <= TILE_NONFLOWER_STRICT_MAX)) {
-						if ((MachihaiFlag(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) == 1)&&(ActivePlayer != getPlayer(GameStat))) {
+						if ((MachihaiFlag(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) == 1)&&(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != getPlayer(GameStat))) {
 							MachihaiCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE))++
 							MachihaiTotal++
 						}
@@ -639,13 +639,13 @@ return
 	/* ツモ番の人は黄色、それ以外は白で表示 */
 	/* コネロスは暗転表示 */
 	if (getDisconnectFlag(GameStat, targetPlayer) == 1) {
-		if (ActivePlayer == targetPlayer) {
+		if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == targetPlayer) {
 			color 192, 192, 0
 		} else {
 			color 192, 192, 192
 		}
 	} else {
-		if (ActivePlayer == targetPlayer) {
+		if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == targetPlayer) {
 			color 255, 255, 0
 		} else {
 			color 255, 255, 240
@@ -801,17 +801,17 @@ return
 
 #module
 #include "const.as"
-#deffunc putlowerpanel var GameStat, var GameEnv, int activeplayer
+#deffunc putlowerpanel var GameStat, var GameEnv
 	/* 画面下を黒で塗る */
 	color GetTableColorR(GameEnv)/5, GetTableColorG(GameEnv)/5, GetTableColorB(GameEnv)/5
 	boxf 0, 600, 599, 639
 	/* 画面下に待ち牌などのデータを表示 */
 	font fontname, 14, 0: color 255, 255, 255
-	if ((TimeLeft@player == 0)||(ActivePlayer != getPlayer(GameStat))) {
+	if ((TimeLeft@player == 0)||(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != getPlayer(GameStat))) {
 		chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getPlayer(GameStat)
 		Shanten = countshanten(GameStat, getPlayer(GameStat), SHANTEN_ALL)
 		if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > 0)&&(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) <= TILE_NONFLOWER_STRICT_MAX)) {
-			if ((MachihaiFlag(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) == 1)&&(ActivePlayer != getPlayer(GameStat))) {
+			if ((MachihaiFlag(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) == 1)&&(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != getPlayer(GameStat))) {
 				MachihaiCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE))++
 				MachihaiTotal++
 			}

@@ -6,30 +6,30 @@
 
 #module
 #include "const.as"
-#deffunc getdahai var GameStat, var GameEnv, int ActivePlayer
+#deffunc getdahai var GameStat, var GameEnv
 	/* COMが「カンニング」しないように処理 */
-	makesandbox Sandbox, GameStat, ActivePlayer
+	makesandbox Sandbox, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 	/* 打牌を取得する */
-	if (ActivePlayer == getPlayer(GameStat)) {
-		if (getAgariHouki(GameStat, ActivePlayer) == 1) {
+	if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == getPlayer(GameStat)) {
+		if (getAgariHouki(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1) {
 			DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 		} else {
 			if (GetWatchModeFlag(GameEnv) == 1) {
-				compdahai Sandbox, ActivePlayer: DiscardTileIndex = stat
+				compdahai Sandbox: DiscardTileIndex = stat
 			} else {
-				playerdahai GameStat, GameEnv, ActivePlayer: DiscardTileIndex = stat
+				playerdahai GameStat, GameEnv: DiscardTileIndex = stat
 			}
 		}
 	} else {
-		if ((IsRemotePlayer(GameEnv, ActivePlayer) == -1)||(getAgariHouki(GameStat, ActivePlayer) == 1)) {
+		if ((IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == -1)||(getAgariHouki(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1)) {
 			DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 		} else {
 			/* ネット対戦時の処理 */
-			if (IsRemotePlayer(GameEnv, ActivePlayer) > 0) {
-				remoteDahai GameStat, GameEnv, ActivePlayer: DiscardTileIndex = stat
+			if (IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > 0) {
+				remoteDahai GameStat, GameEnv: DiscardTileIndex = stat
 				if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 					if (ReceivedMsg == 1023) {
-						setDisconnectFlag GameStat, ActivePlayer, 1
+						setDisconnectFlag GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
 						setCenterTitle "回線切断": redrscreen
 						gosub *reconnection@
 						dialog "再接続しました\nこの回は和了り放棄になります\n次の局から参加可能です", 0, "回線切断"
@@ -38,7 +38,7 @@
 					}
 				}
 			} else {
-				compdahai Sandbox, ActivePlayer: DiscardTileIndex = stat
+				compdahai Sandbox: DiscardTileIndex = stat
 				if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 					if (DiscardTileIndex == DAHAI_TYPE_KYUUSHU) {SendingMsg = 0x6e}
 					if (DiscardTileIndex == DAHAI_TYPE_AGARI) {SendingMsg = 0x6f}

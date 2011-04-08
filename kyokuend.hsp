@@ -6,7 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc endround var GameStat, var GameEnv, int _RoundEndType, int ActivePlayer, \
+#deffunc endround var GameStat, var GameEnv, int _RoundEndType, \
 var yakuInfo, int OrigTurn, int OrigHonba
 	// ã«ñ èIóπÉRÅ[Éh
 	// ÇOÅcçrîvó¨ã«
@@ -65,7 +65,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 	/* òaóπèàóù */
 	/************/
 	if ((RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
-		agariproc ActivePlayer, RoundEndType, yakuInfo, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc
+		agariproc RoundEndType, yakuInfo, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc
 	}
 	switch RoundEndType
 	/**************/
@@ -246,7 +246,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 				setCall cnt, ""
 			loop
 			setCenterTitle ""
-			if ((playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
+			if ((playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "òAëë"
 			} else {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "êeó¨ÇÍ"
@@ -255,7 +255,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			redrscreen
 			redraw 1
 			
-			if ((playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
+			if ((playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
 				incHonba GameStat
 			} else {
 				setHonba GameStat, 0: incRound GameStat
@@ -278,7 +278,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 #ifndef SANMAS
 		case ENDKYOKU_KYUUSHUKYUUHAI:
 			statmes "ó¨ã«(ã„éÌã„îv)"
-			switch playerWind(ActivePlayer, getRound(GameStat))
+			switch playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat))
 				case PLAYER_EAST: ResultDesc = "ìåâ∆ÇÃã„éÌã„îv": swbreak
 				case PLAYER_SOUTH: ResultDesc = "ìÏâ∆ÇÃã„éÌã„îv": swbreak
 				case PLAYER_WEST: ResultDesc = "êºâ∆ÇÃã„éÌã„îv": swbreak
@@ -295,7 +295,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			loop
 			setCenterTitle ""
 			if (getRule(RULE_NINE_TERMINALS) != 2) {
-				if ((getRule(RULE_NINE_TERMINALS) != 1)||(playerWind(ActivePlayer, getRound(GameStat)) == PLAYER_EAST)) {
+				if ((getRule(RULE_NINE_TERMINALS) != 1)||(playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST)) {
 					setCall getRound(GameStat)\NUM_OF_PLAYERS, "òAëë"
 				} else {
 					setCall getRound(GameStat)\NUM_OF_PLAYERS, "êeó¨ÇÍ"
@@ -309,7 +309,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			incHonba GameStat
 			if (getRule(RULE_NINE_TERMINALS) == 2) {incRound GameStat}
 			if (getRule(RULE_NINE_TERMINALS) == 1) {
-				if ((getRule(RULE_NINE_TERMINALS) == 1)&&(playerWind(ActivePlayer, getRound(GameStat)) == PLAYER_EAST)) {
+				if ((getRule(RULE_NINE_TERMINALS) == 1)&&(playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST)) {
 					incRound GameStat
 				}
 			}

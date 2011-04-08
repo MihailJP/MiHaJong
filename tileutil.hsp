@@ -627,5 +627,7 @@ return DaoPaiAbilityFlag
 	repeat TILE_NONFLOWER_MAX: setDoraFlag Sandbox, DORA_OMOTE, cnt, getDoraFlag(GameStat, DORA_OMOTE, cnt): loop
 	
 	repeat CURRENTDISCARD_PAGES: setCurrentDiscard Sandbox, cnt, getCurrentDiscard(GameStat, cnt): loop
+	
+	repeat CURRENTPLAYER_PAGES: setCurrentPlayer Sandbox, cnt, getCurrentPlayer(GameStat, cnt): loop
 	return
 #global

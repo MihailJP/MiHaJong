@@ -30,7 +30,7 @@ repeat
 		sockput "8\n", SOCK_CHAT+0 // チャットを同期
 	}
 	/* ウォッチモードの時は視点を親に移す */
-	ActivePlayer = -1
+	setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, -1
 	if (GetWatchModeFlag(GameEnv) == 1) {
 		setPlayer GameStat, getRound(GameStat)\NUM_OF_PLAYERS
 	}
@@ -48,27 +48,27 @@ repeat
 //	repeat 13: setHand GameStat, 0, cnt, (getPlayer(GameStat))\4, tmpTiles(cnt): loop
 	/* 配牌終了時の処理 */
 	repeat NUM_OF_PLAYERS: setHandStat GameStat, cnt, 0:lipai GameStat, cnt: loop
-	ActivePlayer = getRound(GameStat)\NUM_OF_PLAYERS // 最初に親から捨牌を行なう
+	setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, getRound(GameStat)\NUM_OF_PLAYERS // 最初に親から捨牌を行なう
 	info "配牌を完了しました。"
 	/* 摸打ループ */
 	repeat
-		info strf("プレイヤー [%d] のツモ番です。", ActivePlayer)
+		info strf("プレイヤー [%d] のツモ番です。", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 		/* 変数の初期化 */
 		calcdoukasen GameStat // 導火線の位置を更新
 		if (getKangFlag(GameStat, KANG_FLAG) == 0) { setKangFlag GameStat, KANG_CHAINFLAG, 0: setKangFlag GameStat, KANG_TOPFLAG, 0 /* 連続槓の回数と頭槓和フラグをリセット */ }
 		setCurrentDiscard GameStat, CURRENTDISCARD_TILECODE, 0
 		/* ウォッチモードの時は視点をツモ番の人に移す */
 		if (GetWatchModeFlag(GameEnv) == 1) {
-			setPlayer GameStat, ActivePlayer
+			setPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 		}
 		/* 再描画 */
 		redrscreen
 		/* 摸打の処理 */
-		getdahai GameStat, GameEnv, ActivePlayer
+		getdahai GameStat, GameEnv
 		DiscardTileIndex = stat
 		if (DiscardTileIndex == DAHAI_TYPE_DISCONNECT) {break}
 		/* ウェイトを入れる */
-//		if (((ActivePlayer != getPlayer(GameStat))&&(IsRemotePlayer(GameEnv, ActivePlayer) == 0))||(GetWatchModeFlag(GameEnv) == 1)) {
+//		if (((getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != getPlayer(GameStat))&&(IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 0))||(GetWatchModeFlag(GameEnv) == 1)) {
 //			await 700
 //		} else {
 			await 0
@@ -81,25 +81,25 @@ repeat
 		// ＋６０…リーチ
 		// －１…ツモ和了り
 		// －２…九種九牌
-		info strf("プレイヤー [%d] 打牌コード [%d]", ActivePlayer, DiscardTileIndex)
+		info strf("プレイヤー [%d] 打牌コード [%d]", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), DiscardTileIndex)
 		/* 立直していない同順振聴ならその期限のため振聴を解除する */
-		if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO) {setDoujunFuriten GameStat, ActivePlayer, 0}
+		if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO) {setDoujunFuriten GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 0}
 		/* 自摸和の処理 */
 		if (DiscardTileIndex == DAHAI_TYPE_AGARI) {
-			haifurectsumo GameStat, ActivePlayer // 牌譜に記録
+			haifurectsumo GameStat // 牌譜に記録
 			/* 八連荘判定用の変数 */
 			if (getRule(RULE_PAARENCHAN) != 0) {
-				if (getLastAgariPlayer(GameStat) == ActivePlayer) {
+				if (getLastAgariPlayer(GameStat) == getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) {
 					incAgariChain GameStat
 				} else {
-					if ((getRule(RULE_BREAKING_PAARENCHAN) != 0)&&(getAgariChain(GameStat) == 7)) {setAgariChain GameStat, -1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)}
-					else {setAgariChain GameStat, 1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)}
+					if ((getRule(RULE_BREAKING_PAARENCHAN) != 0)&&(getAgariChain(GameStat) == 7)) {setAgariChain GameStat, -1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)}
+					else {setAgariChain GameStat, 1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)}
 				}
 			}
 			/* 自摸和したことを変数に設定 */
 			setTsumoAgariFlag GameStat, 1
-			countyaku GameStat, yakuInfo, ActivePlayer
-			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))||((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != -1)&&(getRule(RULE_MINKAN_PAO) == 6))) {
+			countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
+			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO))||((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != -1)&&(getRule(RULE_MINKAN_PAO) == 6))) {
 				/* 縛りを満たしていない場合(役が無いなど)…錯和として局を終了する */
 				RoundEndType = ENDKYOKU_CHONBO
 			} else {
@@ -107,10 +107,10 @@ repeat
 				RoundEndType = ENDKYOKU_AGARI
 			}
 			setTsumoAgariFlag GameStat, 1
-			setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, ActivePlayer
-			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "ツモ"
-			if (getHeavenHandFlag(GameStat) == 1) {setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "ロン"} //天和の時はロンと言う慣わし
-			setHandStat GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
+			setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), "ツモ"
+			if (getHeavenHandFlag(GameStat) == 1) {setCall getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), "ロン"} //天和の時はロンと言う慣わし
+			setHandStat GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), 1
 			if (getHeavenHandFlag(GameStat) == 1) {dsplay VOX_RON} else {dsplay VOX_TSUMO}
 			redrscreen: break
 		}
@@ -118,12 +118,12 @@ repeat
 		/* 九種九牌が宣言された場合 */
 		if ((DiscardTileIndex == DAHAI_TYPE_KYUUSHU)&&(getRule(RULE_NINE_TERMINALS) != 3)) {
 			DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX // 九種流しができない時はツモ切りとみなす
-			targetPlayer = ActivePlayer: DaoPaiAbilityFlag = chkdaopaiability(GameStat, ActivePlayer)
+			targetPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE): DaoPaiAbilityFlag = chkdaopaiability(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 			if (DaoPaiAbilityFlag) {
-				if (getFirstDrawFlag(GameStat, ActivePlayer)) {
+				if (getFirstDrawFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) {
 					RoundEndType = ENDKYOKU_KYUUSHUKYUUHAI
-					setCall ActivePlayer, "九種九牌"
-					setHandStat GameStat, ActivePlayer, 1
+					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "九種九牌"
+					setHandStat GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
 					dsplay VOX_KYUUSHU
 					redrscreen: break
 				}
@@ -137,18 +137,18 @@ repeat
 #endif
 		/* 打牌を牌譜に記録する */
 		if ((DiscardTileIndex >= DAHAI_TYPE_NORMAL)&&(DiscardTileIndex < DAHAI_TYPE_NORMAL+DAHAI_TYPE_STEP)) {
-			haifurecmota GameStat, ActivePlayer, DiscardTileIndex
+			haifurecmota GameStat, DiscardTileIndex
 		}
 		if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
-			haifurecmota GameStat, ActivePlayer, DiscardTileIndex
+			haifurecmota GameStat, DiscardTileIndex
 		}
 		if ((DiscardTileIndex >= DAHAI_TYPE_OPENRIICHI)&&(DiscardTileIndex < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
-			haifurecmota GameStat, ActivePlayer, DiscardTileIndex
+			haifurecmota GameStat, DiscardTileIndex
 		}
 #ifndef SANMAS
 		/* 花牌を抜いた場合の処理 */
 		if ((DiscardTileIndex >= DAHAI_TYPE_KAN)&&(DiscardTileIndex < DAHAI_TYPE_KAN+DAHAI_TYPE_STEP)) {
-			if (getHand(GameStat, HAND_TILECODE, DiscardTileIndex-DAHAI_TYPE_KAN, ActivePlayer) > TILE_SUIT_FLOWERS) {
+			if (getHand(GameStat, HAND_TILECODE, DiscardTileIndex-DAHAI_TYPE_KAN, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > TILE_SUIT_FLOWERS) {
 				DiscardTileIndex += (DAHAI_TYPE_FLOWER-DAHAI_TYPE_KAN)
 				info strf("花牌の処理に移ります。打牌コード [%d] に補正しました。", DiscardTileIndex)
 			}
@@ -158,17 +158,17 @@ repeat
 		/* このゲームではどんな手でも(国士や大四喜でなくてもいい)
 		   抜き北をロンできるルール */
 		if ((DiscardTileIndex >= DAHAI_TYPE_FLOWER)&&(DiscardTileIndex < DAHAI_TYPE_FLOWER+DAHAI_TYPE_STEP)) {
-			fuuroproc GameStat, RoundEndType, DiscardTileIndex, ActivePlayer, PassivePlayer, FUURO_NORTH
+			fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_NORTH
 			if (stat == 1) {break}
-			continue ActivePlayer
+			continue getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 		}
 #else
 		/* 花牌を抜いたときの処理 */
 		/* このゲームは七搶一がないので花牌でロンされることは無い */
 		if ((DiscardTileIndex >= DAHAI_TYPE_FLOWER)&&(DiscardTileIndex < DAHAI_TYPE_FLOWER+DAHAI_TYPE_STEP)) {
-			fuuroproc GameStat, RoundEndType, DiscardTileIndex, ActivePlayer, PassivePlayer, FUURO_FLOWER
+			fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_FLOWER
 			if (stat == 1) {break}
-			continue ActivePlayer
+			continue getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 		}
 #endif
 #endif
@@ -178,10 +178,10 @@ repeat
 				setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
 				setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
 			}
-			fuuroproc GameStat, RoundEndType, DiscardTileIndex, ActivePlayer, PassivePlayer, FUURO_ANKAN
+			fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_ANKAN
 			if (stat == 1) {break}
 			/* 槓をすると嶺上牌の分自摸が増えるので次の打牌へ */
-			continue ActivePlayer
+			continue getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 		}
 		/* 加槓する時の処理 */
 		if ((DiscardTileIndex >= DAHAI_TYPE_KAKAN)&&(DiscardTileIndex < DAHAI_TYPE_KAKAN+DAHAI_TYPE_KAN)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
@@ -189,10 +189,10 @@ repeat
 				setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
 				setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
 			}
-			fuuroproc GameStat, RoundEndType, DiscardTileIndex, ActivePlayer, PassivePlayer, FUURO_KAKAN
+			fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_KAKAN
 			if (stat == 1) {break}
 			/* 槓をすると嶺上牌の分自摸が増えるので次の打牌へ */
-			continue ActivePlayer
+			continue getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 		}
 		setKangFlag GameStat, KANG_FLAG, 0 // 嶺上開花のフラグを降ろす
 		setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
@@ -203,7 +203,7 @@ repeat
 				// 残り４枚未満の時はリーチ無効
 				DiscardTileIndex -= DAHAI_TYPE_RIICHI-DAHAI_TYPE_NORMAL
 				warn strf("山牌の残数要件を満たしていません。打牌コード [%d] に補正しました。", DiscardTileIndex)
-			} else: if (isRichiReqSatisfied(GameStat, ActivePlayer) == 0) {
+			} else: if (isRichiReqSatisfied(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 0) {
 				// 点棒条件を満たしていない時はリーチ無効
 				DiscardTileIndex -= DAHAI_TYPE_RIICHI-DAHAI_TYPE_NORMAL
 				warn strf("持ち点の要件を満たしていません。打牌コード [%d] に補正しました。", DiscardTileIndex)
@@ -215,7 +215,7 @@ repeat
 				// 残り４枚未満の時はリーチ無効
 				DiscardTileIndex -= DAHAI_TYPE_OPENRIICHI-DAHAI_TYPE_NORMAL
 				warn strf("山牌の残数要件を満たしていません。打牌コード [%d] に補正しました。", DiscardTileIndex)
-			} else: if (isRichiReqSatisfied(GameStat, ActivePlayer) == 0) {
+			} else: if (isRichiReqSatisfied(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 0) {
 				// 点棒条件を満たしていない時はリーチ無効
 				DiscardTileIndex -= DAHAI_TYPE_OPENRIICHI-DAHAI_TYPE_NORMAL
 				warn strf("持ち点の要件を満たしていません。打牌コード [%d] に補正しました。", DiscardTileIndex)
@@ -230,25 +230,25 @@ repeat
 		}
 		/* 立直を宣言する */
 		if ((DiscardTileIndex >= DAHAI_TYPE_OPENRIICHI)&&(DiscardTileIndex < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
-			setCall ActivePlayer, "リーチ"
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "リーチ"
 			dsplay VOX_RICHI
 			redrscreen
 			await 1000
-			setHandStat GameStat, ActivePlayer, 3
+			setHandStat GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 3
 			if ((getRichiFlag(GameStat, RICHI_OPENFLAG, 0)+getRichiFlag(GameStat, RICHI_OPENFLAG, 1)+getRichiFlag(GameStat, RICHI_OPENFLAG, 2)+getRichiFlag(GameStat, RICHI_OPENFLAG, 3)) == 0) {
 				bgmplay_short MUS_OPENRICHI
 			}
-			setRichiFlag GameStat, RICHI_OPENFLAG, ActivePlayer, 1
+			setRichiFlag GameStat, RICHI_OPENFLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
 			vanish: commonswitch GameStat, GameEnv
 		}
 		if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
-			setCall ActivePlayer, "リーチ"
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "リーチ"
 			dsplay VOX_RICHI
 			redrscreen
 			await 1000
 			if ((getRichiFlag(GameStat, RICHI_OPENFLAG, 0)+getRichiFlag(GameStat, RICHI_OPENFLAG, 1)+getRichiFlag(GameStat, RICHI_OPENFLAG, 2)+getRichiFlag(GameStat, RICHI_OPENFLAG, 3)) == 0) {
 				if ((getRichiFlag(GameStat, RICHI_FLAG, 0) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 1) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 2) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 3) == RIICHI_NO)) {
-					if (ActivePlayer == getPlayer(GameStat)) {
+					if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == getPlayer(GameStat)) {
 						bgmplay_short MUS_RICHI2
 					} else {
 						bgmplay_short MUS_RICHI1
@@ -256,7 +256,7 @@ repeat
 					await 0
 				} else {
 					if (GetWatchModeFlag(GameEnv) == 0) {
-						if (ActivePlayer == getPlayer(GameStat)) {
+						if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == getPlayer(GameStat)) {
 							bgmplay_short MUS_RICHI3
 						}
 					}
@@ -266,48 +266,48 @@ repeat
 			vanish: commonswitch GameStat, GameEnv
 		}
 		/* 打牌を記録する */
-		setCurrentDiscard GameStat, CURRENTDISCARD_TILECODE, getHand(GameStat, HAND_TILECODE, (DiscardTileIndex\DAHAI_TYPE_STEP), ActivePlayer)
-		setCurrentDiscard GameStat, CURRENTDISCARD_REDTILE, getHand(GameStat, HAND_REDTILE, (DiscardTileIndex\DAHAI_TYPE_STEP), ActivePlayer)
+		setCurrentDiscard GameStat, CURRENTDISCARD_TILECODE, getHand(GameStat, HAND_TILECODE, (DiscardTileIndex\DAHAI_TYPE_STEP), getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
+		setCurrentDiscard GameStat, CURRENTDISCARD_REDTILE, getHand(GameStat, HAND_REDTILE, (DiscardTileIndex\DAHAI_TYPE_STEP), getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 		if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
 			/* 立直宣言牌の場合 */
-			setDiscard GameStat, DISCARD_TILECODE, DiscardPointer(GameStat, ActivePlayer)+1, ActivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+SUTEHAI_RIICHI
+			setDiscard GameStat, DISCARD_TILECODE, DiscardPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+SUTEHAI_RIICHI
 		} else:if ((DiscardTileIndex >= DAHAI_TYPE_OPENRIICHI)&&(DiscardTileIndex < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
 			/* オープン立直宣言牌の場合 */
-			setDiscard GameStat, DISCARD_TILECODE, DiscardPointer(GameStat, ActivePlayer)+1, ActivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+SUTEHAI_RIICHI
+			setDiscard GameStat, DISCARD_TILECODE, DiscardPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+SUTEHAI_RIICHI
 		} else {
 			/* それ以外の場合 */
-			setDiscard GameStat, DISCARD_TILECODE, DiscardPointer(GameStat, ActivePlayer)+1, ActivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+			setDiscard GameStat, DISCARD_TILECODE, DiscardPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 		}
-		setDiscard GameStat, DISCARD_REDTILE, DiscardPointer(GameStat, ActivePlayer)+1, ActivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
+		setDiscard GameStat, DISCARD_REDTILE, DiscardPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 		if (((DiscardTileIndex\DAHAI_TYPE_STEP) == TSUMOHAI_INDEX)&&(getHeavenHandFlag(GameStat) == 0)) {
-			setDiscard GameStat, DISCARD_THROUGH, DiscardPointer(GameStat, ActivePlayer)+1, ActivePlayer, 1
+			setDiscard GameStat, DISCARD_THROUGH, DiscardPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
 		}
-		DiscardPointerIncrement GameStat, ActivePlayer
-		setHand GameStat, HAND_TILECODE, (DiscardTileIndex\DAHAI_TYPE_STEP), ActivePlayer, 0
+		DiscardPointerIncrement GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
+		setHand GameStat, HAND_TILECODE, (DiscardTileIndex\DAHAI_TYPE_STEP), getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 0
 		/* 一発のフラグを降ろす */
-		if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_YES}
-		if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_DOUBLE_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_DOUBLE}
+		if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), RIICHI_YES}
+		if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_DOUBLE_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), RIICHI_DOUBLE}
 		/* 自動的に理牌を行なう */
-		lipai GameStat, ActivePlayer
+		lipai GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 		// このとき牌を捨てているはず 表示バグ防止のため
 		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
 		/* 立直をした直後の場合、千点を供託し一発のフラグを立てる */
 		if ((DiscardTileIndex >= DAHAI_TYPE_OPENRIICHI)&&(DiscardTileIndex < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
-			setCall ActivePlayer, ""
-			setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_IPPATSU+(getFirstDrawFlag(GameStat, ActivePlayer)*(RIICHI_DOUBLE_IPPATSU-RIICHI_IPPATSU))
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), ""
+			setRichiFlag GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), RIICHI_IPPATSU+(getFirstDrawFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))*(RIICHI_DOUBLE_IPPATSU-RIICHI_IPPATSU))
 			DiscardTileIndex -= DAHAI_TYPE_OPENRIICHI
-			addDeposit GameStat, 1: addScore GameStat, ActivePlayer, 0, -10
-			targetPlayer = ActivePlayer: gosub *chkopenmachi
+			addDeposit GameStat, 1: addScore GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 0, -10
+			targetPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE): gosub *chkopenmachi
 		}
 		if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
-			setCall ActivePlayer, ""
-			setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_IPPATSU+(getFirstDrawFlag(GameStat, ActivePlayer)*(RIICHI_DOUBLE_IPPATSU-RIICHI_IPPATSU))
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), ""
+			setRichiFlag GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), RIICHI_IPPATSU+(getFirstDrawFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))*(RIICHI_DOUBLE_IPPATSU-RIICHI_IPPATSU))
 			DiscardTileIndex -= DAHAI_TYPE_RIICHI
-			addDeposit GameStat, 1: addScore GameStat, ActivePlayer, 0, -10
+			addDeposit GameStat, 1: addScore GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 0, -10
 		}
 		/* 天和や地和のフラグを降ろす */
 		setHeavenHandFlag GameStat, 0
-		setFirstDrawFlag GameStat, ActivePlayer, 0
+		setFirstDrawFlag GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 0
 		/* 打牌するときの音を鳴らす */
 		/* ドラを捨てる時は強打の音にする */
 		if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > TILE_SUIT_FLOWERS) {
@@ -379,7 +379,7 @@ repeat
 		}
 #endif
 		repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop // バグ防止のため
-		if (((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == getPreviousMeld(GameStat, PREVMELD_TILECODE))||(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == getPreviousMeld(GameStat, PREVMELD_STEPPED)))&&(getAgariHouki(GameStat, ActivePlayer) == 0)) {
+		if (((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == getPreviousMeld(GameStat, PREVMELD_TILECODE))||(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == getPreviousMeld(GameStat, PREVMELD_STEPPED)))&&(getAgariHouki(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 0)) {
 			// 喰い替えの場合の処理
 			switch getRule(RULE_KUIKAE)
 				case 0: case 3:
@@ -387,15 +387,15 @@ repeat
 					info strf("喰い変えを検出しました。和了り放棄として扱います。打牌 [%d] 鳴いた牌 [%d]", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getPreviousMeld(GameStat, PREVMELD_TILECODE))
 					dsplay SND_CUOHU
 					repeat 2
-						setCall ActivePlayer, "喰替"
+						setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "喰替"
 						redrscreen: await 1500
-						setCall ActivePlayer, "和了放棄"
+						setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "和了放棄"
 						redrscreen: await 1500
 					loop
-					setCall ActivePlayer, ""
+					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), ""
 					redrscreen
 					/* 和了り放棄は以降強制ツモ切り、強制不聴扱いとなります */
-					setAgariHouki GameStat, ActivePlayer, 1
+					setAgariHouki GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
 					if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}
 					vanish: commonswitch GameStat, GameEnv
 					swbreak
@@ -404,8 +404,8 @@ repeat
 					info strf("喰い変えを検出しました。チョンボとして扱います。打牌 [%d] 鳴いた牌 [%d]", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getPreviousMeld(GameStat, PREVMELD_TILECODE))
 					dsplay SND_CUOHU
 					RoundEndType = ENDKYOKU_CHONBO: setTsumoAgariFlag GameStat, AGARI_KUIKAE
-					setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, ActivePlayer
-					setCall ActivePlayer, "錯和"
+					setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
+					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "錯和"
 					redrscreen: await 1500
 					/* 局を打ち切り、満貫罰符の支払いに進む */
 					break
@@ -414,10 +414,10 @@ repeat
 		/* 多牌や少牌をしていないかのチェック */
 		tmptilecnt = 0
 		repeat NUM_OF_TILES_IN_HAND
-			if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) > 0) {tmptilecnt++}
+			if (getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > 0) {tmptilecnt++}
 		loop
-		tmptilecnt += (MeldPointer(GameStat, ActivePlayer) * 3)
-		if ((tmptilecnt != (NUM_OF_TILES_IN_HAND-1))&&(getAgariHouki(GameStat, ActivePlayer) == 0)) {
+		tmptilecnt += (MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) * 3)
+		if ((tmptilecnt != (NUM_OF_TILES_IN_HAND-1))&&(getAgariHouki(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 0)) {
 //			多牌や少牌の場合の処理(通常起きることはないはずだが…)
 			if (tmptilecnt > (NUM_OF_TILES_IN_HAND-1)) {
 				warn "多牌を検出しました。和了り放棄として扱いますが、摸打の処理で不整合が起きていた可能性があります。"
@@ -427,17 +427,17 @@ repeat
 			dsplay SND_CUOHU
 			repeat 2
 				if (tmptilecnt > (NUM_OF_TILES_IN_HAND-1)) {
-					setCall ActivePlayer, "多牌"
+					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "多牌"
 				} else {
-					setCall ActivePlayer, "少牌"
+					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "少牌"
 				}
 				redrscreen: await 1500
-				setCall ActivePlayer, "和了放棄"
+				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "和了放棄"
 				redrscreen: await 1500
 			loop
-			setCall ActivePlayer, ""
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), ""
 			redrscreen
-			setAgariHouki GameStat, ActivePlayer, 1
+			setAgariHouki GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
 			if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}
 			vanish: commonswitch GameStat, GameEnv
 		}
@@ -453,29 +453,29 @@ repeat
 			/* 捨牌をポンする場合 */
 			if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, cnt) == 1) {
 				PassivePlayer = cnt // 鳴いたプレイヤーを設定
-				fuuroproc GameStat, RoundEndType, DiscardTileIndex, ActivePlayer, PassivePlayer, FUURO_PON
+				fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_PON
 				break
 			}
 			/* 明槓の場合 */
 			if ((getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 1)&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
 				PassivePlayer = cnt // 鳴いたプレイヤーを設定
-				fuuroproc GameStat, RoundEndType, DiscardTileIndex, ActivePlayer, PassivePlayer, FUURO_DAIMINKAN
+				fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_DAIMINKAN
 				break
 			}
 		loop
 		/* 鳴きがあった場合、鳴いたプレーヤーに順番を移して戻る */
 		/* 吃とポンが同時に起こった場合、ポンを優先する */
 		if ((getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3)) > 0) {
-			ActivePlayer = PassivePlayer
+			setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, PassivePlayer
 			continue
 #ifndef ALLSANMA
 		} else {
 			/* 吃の処理 */
 			/* 三人打ちでは吃なし */
-			if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, ShimochaOf(ActivePlayer)) > 0) {
-				PassivePlayer = ShimochaOf(ActivePlayer) // 吃ができるのは上家の捨牌のみ
-				fuuroproc GameStat, RoundEndType, DiscardTileIndex, ActivePlayer, PassivePlayer, FUURO_CHII
-				ActivePlayer = PassivePlayer
+			if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, ShimochaOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) > 0) {
+				PassivePlayer = ShimochaOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) // 吃ができるのは上家の捨牌のみ
+				fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_CHII
+				setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, PassivePlayer
 				continue
 			}
 #endif
@@ -487,16 +487,18 @@ repeat
 		/* 次のプレイヤーが牌を自摸る */
 		incDrawPointer GameStat: setHeavenHandFlag GameStat, 0
 #ifdef SANMAT
-		ActivePlayer++: ActivePlayer = ActivePlayer\NUM_OF_ACTUAL_PLAYERS
+		setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)+1)\NUM_OF_ACTUAL_PLAYERS
 #else
 #ifdef SANMA4
 		/* 北家をスキップ */
-		if (playerWind(ActivePlayer, getRound(GameStat)) == PLAYER_WEST) {ActivePlayer++}
+		if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_WEST) {
+			setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)+1)\NUM_OF_PLAYERS
+		}
 #endif
-		ActivePlayer++: ActivePlayer = ActivePlayer\NUM_OF_PLAYERS
+		setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)+1)\NUM_OF_PLAYERS
 #endif
-		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer, getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
-		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, ActivePlayer, getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
+		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
+		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
 		setPreviousMeld GameStat, PREVMELD_TILECODE, -999
 		setPreviousMeld GameStat, PREVMELD_STEPPED, -999
 		dsplay SND_TSUMO
@@ -506,7 +508,7 @@ repeat
 		// 打牌へ戻る
 	loop
 	OrigHonba = getHonba(GameStat): OrigTurn = getRound(GameStat)
-	endround GameStat, GameEnv, RoundEndType, ActivePlayer, yakuInfo, OrigTurn, OrigHonba
+	endround GameStat, GameEnv, RoundEndType, yakuInfo, OrigTurn, OrigHonba
 	await 5000
 	// ハコ割れ終了
 	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {

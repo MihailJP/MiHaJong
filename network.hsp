@@ -84,16 +84,16 @@
 /* 接続先の打牌 */
 #module
 #include "const.as"
-#deffunc remotedahai var GameStat, var GameEnv, int ActivePlayer
+#deffunc remotedahai var GameStat, var GameEnv
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
 			chatrecv GameStat, GameEnv
 			clientreceive ClientReceived, ReceivedMsg
 			if (ClientReceived) {
 				if (ReceivedMsg == 0x9f) {
-					if (getDisconnectFlag(GameStat, ActivePlayer) == 0) {
-						setDisconnectFlag GameStat, ActivePlayer, 1
-						warn strf("プレイヤー [%d] の回線切断を検知しました。", ActivePlayer)
+					if (getDisconnectFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 0) {
+						setDisconnectFlag GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
+						warn strf("プレイヤー [%d] の回線切断を検知しました。", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 					}
 				}
 				break
@@ -105,7 +105,7 @@
 		repeat
 			chatrecv GameStat, GameEnv
 			serverreceive ServerReceived, ReceivedMsg
-			if (ServerReceived == (IsRemotePlayer(GameEnv, ActivePlayer)-1)) {
+			if (ServerReceived == (IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))-1)) {
 				// 受信失敗の時
 				if (ReceivedMsg == 1023) {
 					repeat NUM_OF_PLAYERS

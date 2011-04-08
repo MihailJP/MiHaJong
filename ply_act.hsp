@@ -7,7 +7,7 @@
 #module PLAYER
 #include "const.as"
 /* プレイヤーの打牌 */
-#deffunc playerdahai var GameStat, var GameEnv, int ActivePlayer
+#deffunc playerdahai var GameStat, var GameEnv
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
 	ldim tmpLabel, NUM_OF_TILES_IN_HAND-1
 	tmpLabel = *SelTile01, *SelTile02, *SelTile03, *SelTile04, *SelTile05, *SelTile06, *SelTile07, *SelTile08, *SelTile09, *SelTile10, *SelTile11, *SelTile12, *SelTile13
@@ -17,36 +17,36 @@
 	mode = 0
 	ButtonPos = 0
 	dim SelectedTileButtonMask, NUM_OF_TILES_IN_HAND: setTsumoAgariFlag GameStat, 1
-	Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
+	Shanten = countshanten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), SHANTEN_ALL)
 	ShantenJustnow = Shanten
-	targetPlayer = ActivePlayer
-	if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) > RIICHI_NO) {
+	targetPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
+	if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > RIICHI_NO) {
 		// 立直後の暗槓の可否を調べる
-		Ankanabilityflag = chkankanability(GameStat, ActivePlayer)
+		Ankanabilityflag = chkankanability(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 	}
 	Flowerabilityflag = 0 // 立直後の花牌フラグ
-	if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) > TILE_SUIT_FLOWERS) {
+	if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > TILE_SUIT_FLOWERS) {
 		Flowerabilityflag = 1
 	}
 	if ((Ukihai == 12)&&(Duizi == 2)) {ShisanBuDa = 1}
-	if ((Shanten >= 0)&&((getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) > RIICHI_NO)||(TsumogiriFlag() == 1))&&(Ankanabilityflag == 0)&&(Flowerabilityflag == 0)) {
+	if ((Shanten >= 0)&&((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > RIICHI_NO)||(TsumogiriFlag() == 1))&&(Ankanabilityflag == 0)&&(Flowerabilityflag == 0)) {
 		if (getGameMode(GameEnv) == GAMEMODE_SERVER) {serversend 0x6d, GameEnv}
 		if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {clientsend 0x6d}
 		return DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX // リーチ後は自動的にツモ切り
 	}
 	if (getHeavenHandFlag(GameStat) == 0) {dsplay@ SND_BELL}
 	// リーチ後、和了りを見逃すかどうか
-	if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) > RIICHI_NO) {
+	if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > RIICHI_NO) {
 		repeat NUM_OF_TILES_IN_HAND-1
 			SelectedTileButtonMask(cnt) = 1
 		loop
 	}
 	ButtonFlag_Richi=0
-	if (isRichiReqSatisfied(GameStat, ActivePlayer)) {
+	if (isRichiReqSatisfied(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) {
 #ifdef ALLSANMA
-		if (((Shanten <= 0)&&((getMenzen(GameStat, ActivePlayer) == 1)||(getRule(RULE_RIICHI_SHIBARI) != 0))&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))&&((getDrawPointer(GameStat)+2) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))) {
+		if (((Shanten <= 0)&&((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1)||(getRule(RULE_RIICHI_SHIBARI) != 0))&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO))&&((getDrawPointer(GameStat)+2) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))) {
 #else
-		if (((Shanten <= 0)&&((getMenzen(GameStat, ActivePlayer) == 1)||(getRule(RULE_RIICHI_SHIBARI) != 0))&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))&&((getDrawPointer(GameStat)+3) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))) {
+		if (((Shanten <= 0)&&((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1)||(getRule(RULE_RIICHI_SHIBARI) != 0))&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO))&&((getDrawPointer(GameStat)+3) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))) {
 #endif
 			objsize 50, 30
 			pos 620, 500: button gosub "F1/立直", *playerRichi: tooltip@ stat-STATBOX, "リーチをします(クリックしたあとに牌を選択してください)"
@@ -54,18 +54,18 @@
 			ButtonFlag_Richi=1
 		}
 	}
-	targetPlayer = ActivePlayer: DaoPaiAbilityFlag = chkdaopaiability(GameStat, ActivePlayer)
+	targetPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE): DaoPaiAbilityFlag = chkdaopaiability(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 	ButtonFlag_Kyuushu=0
-	if ((DaoPaiAbilityFlag)&&(getFirstDrawFlag(GameStat, ActivePlayer))) {
+	if ((DaoPaiAbilityFlag)&&(getFirstDrawFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)))) {
 		objsize 50, 30
 		pos 670, 500: button gosub "F2/流局", *playerKyushu: tooltip@ stat-STATBOX, "九種九牌を宣言し、この局を流します"
 		objidpointer++
 		ButtonFlag_Kyuushu=1
 	}
 	font fontname, 48, 0
-	ShisanBuDa = chkshisanbuda(GameStat, ActivePlayer): ShisiBuDa = chkshisibuda(GameStat, ActivePlayer)
+	ShisanBuDa = chkshisanbuda(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)): ShisiBuDa = chkshisibuda(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 	AtarihaiFlag = 0
-	if (((Shanten <= -1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0))||((ShisanBuDa == 1)&&(getFirstDrawFlag(GameStat, ActivePlayer))&&(getRule(RULE_SHIISAN_PUUTAA) != 0))||((ShisiBuDa == 1)&&(getFirstDrawFlag(GameStat, ActivePlayer))&&(getRule(RULE_SHIISAN_UUSHII) != 0))) {
+	if (((Shanten <= -1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != 0))||((ShisanBuDa == 1)&&(getFirstDrawFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)))&&(getRule(RULE_SHIISAN_PUUTAA) != 0))||((ShisiBuDa == 1)&&(getFirstDrawFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)))&&(getRule(RULE_SHIISAN_UUSHII) != 0))) {
 		objsize 200, 60: AtarihaiFlag = 1
 		pos 620, 560: button gosub "アガリ", *playerTsumoAgari: tooltip@ stat-STATBOX, "ツモ和了りをします"
 		objidpointer++
@@ -74,7 +74,7 @@
 	}
 	font fontname, 12, 0
 	KanFlag = 0
-	countTilesInHand TileCount, GameStat, ActivePlayer
+	countTilesInHand TileCount, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 	repeat TILE_NONFLOWER_MAX-1, 1
 		if ((getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
 			// 暗槓できる場合
@@ -82,9 +82,9 @@
 			// 加槓できる場合
 			if (TileCount(cnt) == 1) {
 				tmpnum = cnt
-				repeat MeldPointer(GameStat, ActivePlayer), 1
-					if (getMeld(GameStat, MELD_TILECODE, cnt, ActivePlayer)\TILE_CODE_MAXIMUM == tmpnum) {
-						if ((getMeld(GameStat, MELD_TILECODE, cnt, ActivePlayer)/MELD_TYPE_STEP >= MELD_TRIPLET_EXPOSED_MIN)&&(getMeld(GameStat, MELD_TILECODE, cnt, ActivePlayer)/MELD_TYPE_STEP <= MELD_TRIPLET_EXPOSED_MAX)) {
+				repeat MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)), 1
+					if (getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))\TILE_CODE_MAXIMUM == tmpnum) {
+						if ((getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))/MELD_TYPE_STEP >= MELD_TRIPLET_EXPOSED_MIN)&&(getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))/MELD_TYPE_STEP <= MELD_TRIPLET_EXPOSED_MAX)) {
 							KanFlag = 1
 						}
 					}
@@ -94,9 +94,9 @@
 	loop
 	ButtonFlag_Flower=0
 #ifdef SANMAX
-	if ((getRule(RULE_FLOWER_TILES) != 0)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
-		if ((TileCount(TILE_NORTH_WIND) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
-			if ((getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO)||(Flowerabilityflag == 1)) {
+	if ((getRule(RULE_FLOWER_TILES) != 0)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != 0)) {
+		if ((TileCount(TILE_NORTH_WIND) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != 0)) {
+			if ((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO)||(Flowerabilityflag == 1)) {
 				objsize 50, 30
 				pos 720, 500: button gosub "F3/抜北", *playerFlower: tooltip@ stat-STATBOX, "北風牌をガリとしてさらします(クリックしたあとに牌を選択してください)"
 				objidpointer++
@@ -105,8 +105,8 @@
 		}
 	}
 #else
-	if (((TileCount(TILE_SPRING) >= 1)||(TileCount(TILE_SUMMER) >= 1)||(TileCount(TILE_AUTUMN) >= 1)||(TileCount(TILE_WINTER) >= 1)||(TileCount(TILE_PLUM) >= 1)||(TileCount(TILE_ORCHID) >= 1)||(TileCount(TILE_CHRYSANTHEMUM) >= 1)||(TileCount(TILE_BAMBOO) >= 1))&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
-		if ((getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO)||(Flowerabilityflag == 1)) {
+	if (((TileCount(TILE_SPRING) >= 1)||(TileCount(TILE_SUMMER) >= 1)||(TileCount(TILE_AUTUMN) >= 1)||(TileCount(TILE_WINTER) >= 1)||(TileCount(TILE_PLUM) >= 1)||(TileCount(TILE_ORCHID) >= 1)||(TileCount(TILE_CHRYSANTHEMUM) >= 1)||(TileCount(TILE_BAMBOO) >= 1))&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != 0)) {
+		if ((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO)||(Flowerabilityflag == 1)) {
 			objsize 50, 30
 			pos 720, 500: button gosub "F3/花牌", *playerFlower: tooltip@ stat-STATBOX, "花牌をさらします(クリックしたあとに牌を選択してください)"
 			objidpointer++
@@ -115,8 +115,8 @@
 	}
 #endif
 	ButtonFlag_Kan=0
-	if ((KanFlag == 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0)) {
-		if ((getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO)||(Ankanabilityflag == 1)) {
+	if ((KanFlag == 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != 0)) {
+		if ((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO)||(Ankanabilityflag == 1)) {
 			objsize 50, 30
 			pos 770, 500: button gosub "F4/カン", *playerAnkan: tooltip@ stat-STATBOX, "暗槓または加槓をします(クリックしたあとに牌を選択してください)"
 			objidpointer++
@@ -124,7 +124,7 @@
 		}
 	}
 	gosub *SelTileButton
-	countTilesInHand TileCount, GameStat, ActivePlayer
+	countTilesInHand TileCount, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 	tmpClockTime = 0: tmpTimeLeft = -999: tmpmode = -999
 	TimeLeft = 15: redrscreen
 	stick clickflag: await 0 // バグ防止のため、クリック状態を一旦取得して捨てる
@@ -133,7 +133,7 @@
 		stick clickflag
 		if ((ginfo(2) == 0)&&(mode == 0)) {
 			if (clickflag & 512) {
-				if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0) {
+				if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != 0) {
 					dsplay@ SND_CLICK
 					vanish@: commonswitch GameStat, GameEnv
 					SelectedTile = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
@@ -192,7 +192,7 @@
 		}
 		if ((TurnTime-StartTurn >= 15000)) {
 			mode = 0
-			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, ActivePlayer) != 0) {
+			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != 0) {
 				SelectedTile = TSUMOHAI_INDEX
 			} else {
 				SelectedTile = 0
@@ -214,8 +214,8 @@
 				if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {clientsend DiscardTileIndex\DAHAI_TYPE_STEP+0xC0}
 			}
 			if (mode == 2) {
-				countTilesInHand TileCount, GameStat, ActivePlayer
-				if (TileCount(getHand(GameStat, HAND_TILECODE, SelectedTile, ActivePlayer)) == 4) {
+				countTilesInHand TileCount, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
+				if (TileCount(getHand(GameStat, HAND_TILECODE, SelectedTile, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) == 4) {
 					DiscardTileIndex += DAHAI_TYPE_KAN // 暗槓のとき
 					if (getGameMode(GameEnv) == GAMEMODE_SERVER) {serversend DiscardTileIndex\DAHAI_TYPE_STEP+0x70, GameEnv}
 					if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {clientsend DiscardTileIndex\DAHAI_TYPE_STEP+0x70}
@@ -249,7 +249,7 @@
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
 			vanish@: commonswitch GameStat, GameEnv: mode = 1: objidpointer = 0
 			if (getRule(RULE_OPEN_RIICHI) != 0) {
-				if (getMenzen(GameStat, ActivePlayer) == 1) {
+				if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1) {
 					objsize 50, 30: font fontname, 12, 0
 					pos 620, 500: button gosub "F1/オープン", *playerOpenRichi: tooltip@ stat-STATBOX, "オープンリーチをします(クリックしたあとに牌を選択してください)"
 					objidpointer++
@@ -257,14 +257,14 @@
 				}
 			}
 			repeat NUM_OF_TILES_IN_HAND
-				tmpHand = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
-				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
-				Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
-				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHand
+				tmpHand = getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
+				setHand GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 0
+				Shanten = countshanten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), SHANTEN_ALL)
+				setHand GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), tmpHand
 				if (Shanten > 0) {SelectedTileButtonMask(cnt) = 1}
 			loop
 			gosub *SelTileButton
-			countTilesInHand TileCount, GameStat, ActivePlayer
+			countTilesInHand TileCount, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 			SelectedTile == -99
 		}
 		if (SelectedTile == -93) {
@@ -273,14 +273,14 @@
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
 			vanish@ :commonswitch GameStat, GameEnv : mode = 4: objidpointer = 0
 			repeat NUM_OF_TILES_IN_HAND
-				tmpHand = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
-				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, 0
-				Shanten = countshanten(GameStat, ActivePlayer, SHANTEN_ALL)
-				setHand GameStat, HAND_TILECODE, cnt, ActivePlayer, tmpHand
+				tmpHand = getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
+				setHand GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 0
+				Shanten = countshanten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), SHANTEN_ALL)
+				setHand GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), tmpHand
 				if (Shanten > 0) {SelectedTileButtonMask(cnt) = 1}
 			loop
 			gosub *SelTileButton
-			countTilesInHand TileCount, GameStat, ActivePlayer
+			countTilesInHand TileCount, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 			SelectedTile == -99
 		}
 		if (SelectedTile == -96) {
@@ -288,15 +288,15 @@
 			ButtonFlag_Richi=0:ButtonFlag_Kyuushu=0:ButtonFlag_Flower=0
 			ButtonFlag_Kan=0:AgariAbilityFlag=0
 			vanish@: commonswitch GameStat, GameEnv: mode = 2: objidpointer = 0
-			countTilesInHand TileCount, GameStat, ActivePlayer
+			countTilesInHand TileCount, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 			repeat NUM_OF_TILES_IN_HAND
-				if (TileCount(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)) < 4) {SelectedTileButtonMask(cnt) = 1}
-				if (TileCount(getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)) == 1) {
-					tmpnum = getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer)
+				if (TileCount(getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) < 4) {SelectedTileButtonMask(cnt) = 1}
+				if (TileCount(getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) == 1) {
+					tmpnum = getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 					tmpcnt = cnt
-					repeat MeldPointer(GameStat, ActivePlayer), 1
-						if (getMeld(GameStat, MELD_TILECODE, cnt, ActivePlayer)\TILE_CODE_MAXIMUM == tmpnum) {
-							if ((getMeld(GameStat, MELD_TILECODE, cnt, ActivePlayer)/MELD_TYPE_STEP >= MELD_TRIPLET_EXPOSED_MIN)&&(getMeld(GameStat, MELD_TILECODE, cnt, ActivePlayer)/MELD_TYPE_STEP <= MELD_TRIPLET_EXPOSED_MAX)) {
+					repeat MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)), 1
+						if (getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))\TILE_CODE_MAXIMUM == tmpnum) {
+							if ((getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))/MELD_TYPE_STEP >= MELD_TRIPLET_EXPOSED_MIN)&&(getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))/MELD_TYPE_STEP <= MELD_TRIPLET_EXPOSED_MAX)) {
 								SelectedTileButtonMask(tmpcnt) = 0
 							}
 						}
@@ -304,13 +304,13 @@
 				}
 			loop
 			// 立直後の暗槓の場合
-			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) > RIICHI_NO) {
+			if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > RIICHI_NO) {
 				repeat NUM_OF_TILES_IN_HAND-1
 					SelectedTileButtonMask(cnt) = 1
 				loop
 			}
 			gosub *SelTileButton
-			countTilesInHand TileCount, GameStat, ActivePlayer
+			countTilesInHand TileCount, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 			SelectedTile == -99
 		}
 		if (SelectedTile == -97) {
@@ -338,21 +338,21 @@
 			vanish@: commonswitch GameStat, GameEnv: mode = 3: objidpointer = 0
 #ifdef SANMAX
 			repeat NUM_OF_TILES_IN_HAND
-				if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) != TILE_NORTH_WIND) {SelectedTileButtonMask(cnt) = 1}
+				if (getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != TILE_NORTH_WIND) {SelectedTileButtonMask(cnt) = 1}
 			loop
 #else
 			repeat NUM_OF_TILES_IN_HAND
-				if (getHand(GameStat, HAND_TILECODE, cnt, ActivePlayer) < TILE_SUIT_FLOWERS) {SelectedTileButtonMask(cnt) = 1}
+				if (getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) < TILE_SUIT_FLOWERS) {SelectedTileButtonMask(cnt) = 1}
 			loop
 #endif
 			// 立直後の場合
-			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) > RIICHI_NO) {
+			if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > RIICHI_NO) {
 				repeat NUM_OF_TILES_IN_HAND-1
 					SelectedTileButtonMask(cnt) = 1
 				loop
 			}
 			gosub *SelTileButton
-			countTilesInHand TileCount, GameStat, ActivePlayer
+			countTilesInHand TileCount, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 			SelectedTile == -99
 		}
 		await 0
@@ -361,7 +361,7 @@
 return DiscardTileIndex
 
 /* プレイヤーの鳴き */
-#deffunc playerfuuro var GameStat, var GameEnv, int ActivePlayer, int PassivePlayer
+#deffunc playerfuuro var GameStat, var GameEnv, int PassivePlayer
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
 	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > TILE_SUIT_FLOWERS) {return /* 花牌の場合は戻る */}
 	if (getAgariHouki(GameStat, getPlayer(GameStat)) == 1) {return /* 和了り放棄だったら戻る */}
@@ -405,7 +405,7 @@ return DiscardTileIndex
 		}
 #ifndef ALLSANMA
 		// チーできる条件：上家の捨牌であること、かつ、数牌であること
-		if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) < TILE_NUMERAL_MAX)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(ActivePlayer == ((PassivePlayer+3)\4))) {
+		if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) < TILE_NUMERAL_MAX)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == ((PassivePlayer+3)\4))) {
 			if ((TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1) >= 1)&&(TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+2) >= 1)) {
 				objsize 50, 30: tmpChiipai1 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP): tmpChiipai2 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP)+1: tmpChiipai3 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP)+2
 				pos 620, 530: button gosub "F5/下吃", *playerChi1: tooltip@ stat-STATBOX, ""+tmpChiipai1+tmpChiipai2+tmpChiipai3+"の形でチーをします"

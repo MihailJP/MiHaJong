@@ -33,7 +33,7 @@ return
 				break
 			}
 			if ((ClientReceived == 1)&&(ReceivedMsg == 1023)) {
-				setDisconnectFlag GameStat, ActivePlayer, 1
+				setDisconnectFlag GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
 				setCenterTitle "‰ñüØ’f": redrscreen
 				gosub *reconnection
 				dialog "ÄÚ‘±‚µ‚Ü‚µ‚½", 0, "‰ñüØ’f"
@@ -627,7 +627,7 @@ return
 		gosub *DoraAdding
 	}
 	
-	ActivePlayer = 0
+	setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, 0
 	haifurechaipai GameStat
 	statmes ""
 	repeat NUM_OF_PLAYERS: lipai GameStat, cnt: loop
