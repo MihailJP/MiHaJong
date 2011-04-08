@@ -6,7 +6,7 @@
 /* 状況役 */
 #module
 #include "const.as"
-#deffunc contextualyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType, int FurikomiPlayer
+#deffunc contextualyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	trace "状況役の処理に入ります。"
 	/* 立直系 */
 	if (getRichiFlag(GameStat, RICHI_OPENFLAG, targetPlayer) == 1) {
@@ -19,7 +19,7 @@
 			if ((getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_DOUBLE)||(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_DOUBLE_IPPATSU)) {
 				addyaku tmpYakuInfo, "ダブル開立直", 3
 			}
-			if ((getTsumoAgariFlag(GameStat) == 0)&&(getRichiFlag(GameStat, RICHI_FLAG, furikomiPlayer) == RIICHI_NO)) {
+			if ((getTsumoAgariFlag(GameStat) == 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) == RIICHI_NO)) {
 				addyaku tmpYakuInfo, "開立直栄和", 11
 			}
 		}

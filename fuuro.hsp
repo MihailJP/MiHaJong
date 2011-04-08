@@ -545,7 +545,7 @@
 			}
 			/* ‰h˜a‚µ‚½‚±‚Æ‚ğ•Ï”‚É‹L˜^ */
 			RoundEndType = ENDKYOKU_AGARI: setTsumoAgariFlag GameStat, 0
-			furikomiPlayer = ActivePlayer
+			setCurrentPlayer GameStat, CURRENTPLAYER_FURIKOMI, ActivePlayer
 			setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, RelativePositionOf(ActivePlayer, cnt+1)
 			/* ”ª˜A‘‘‚Ì”»’è‚Ég‚¤•Ï” */
 			if (getRule(RULE_PAARENCHAN) != 0) {
@@ -562,7 +562,7 @@
 			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, ActivePlayer, 0, 10: setRichiCounterFlag GameStat, 1}
 			if (getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_DOUBLE_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, ActivePlayer, RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, ActivePlayer, 0, 10: setRichiCounterFlag GameStat, 2}
 			/* –ğ‚âU’®‚Ì”»’è */
-			countyaku GameStat, yakuInfo, RelativePositionOf(ActivePlayer, cnt+1), furikomiPlayer
+			countyaku GameStat, yakuInfo, RelativePositionOf(ActivePlayer, cnt+1)
 			chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, RelativePositionOf(ActivePlayer, cnt+1)
 			// ”›‚è‚ğ–‚½‚³‚È‚¢‚©AU’®‚Ì‚Æ‚«
 			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO))) {

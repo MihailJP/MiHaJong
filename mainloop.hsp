@@ -98,7 +98,7 @@ repeat
 			}
 			/* 自摸和したことを変数に設定 */
 			setTsumoAgariFlag GameStat, 1
-			countyaku GameStat, yakuInfo, ActivePlayer, furikomiPlayer
+			countyaku GameStat, yakuInfo, ActivePlayer
 			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, ActivePlayer) == RIICHI_NO))||((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != -1)&&(getRule(RULE_MINKAN_PAO) == 6))) {
 				/* 縛りを満たしていない場合(役が無いなど)…錯和として局を終了する */
 				RoundEndType = ENDKYOKU_CHONBO
@@ -506,7 +506,7 @@ repeat
 		// 打牌へ戻る
 	loop
 	OrigHonba = getHonba(GameStat): OrigTurn = getRound(GameStat)
-	endround GameStat, GameEnv, RoundEndType, FurikomiPlayer, ActivePlayer, yakuInfo, OrigTurn, OrigHonba
+	endround GameStat, GameEnv, RoundEndType, ActivePlayer, yakuInfo, OrigTurn, OrigHonba
 	await 5000
 	// ハコ割れ終了
 	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {

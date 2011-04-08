@@ -7,7 +7,7 @@
 #module
 #include "const.as"
 #define ctype doubleDoraEnabled ((getRule(RULE_DORA_TWICE) == 1)||((getRule(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))))
-#deffunc agariscrproc var GameStat, var GameEnv, var yakuInfo, int furikomiPlayer, \
+#deffunc agariscrproc var GameStat, var GameEnv, var yakuInfo, \
 array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	buffer SCR_AGARI_BUF, 600, 600: color 0, 0, 0: boxf 0, 0, 599, 599
 	gsel 0: redraw 0: gmode gmode_alpha, , , 192
@@ -18,8 +18,8 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	else {borderedtxt2 "âhòa "+windName(playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)))+strmid(tmpname, 0, 3),56,10,255,255,255,1,16,192,192,192,1}
 	borderedtxt2 strmid(tmpname, 3, 16),56,30,255,255,255,1,16,192,192,192,1
 	if (getTsumoAgariFlag(GameStat) == 0) {
-		tmpname = getPlayerName(GameEnv, furikomiPlayer)
-		borderedtxt2 "ï˙èe "+windName(playerWind(furikomiPlayer, getRound(GameStat)))+strmid(tmpname, 0, 3),256,10,255,255,255,1,16,192,192,192,1
+		tmpname = getPlayerName(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI))
+		borderedtxt2 "ï˙èe "+windName(playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)))+strmid(tmpname, 0, 3),256,10,255,255,255,1,16,192,192,192,1
 		borderedtxt2 strmid(tmpname, 3, 16),256,30,255,255,255,1,16,192,192,192,1
 	}
 	if (isPaoAgari(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) {
@@ -33,11 +33,11 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 		if (isPaoAgari(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) {
 			if (isPao(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getPlayer(GameStat))) {
 				drawcol= 255, 64, 64: agariBgmSet = 1
-			} else:if (furikomiPlayer == getPlayer(GameStat)) {drawcol= 255, 64, 64: agariBgmSet = 1}
+			} else:if (getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI) == getPlayer(GameStat)) {drawcol= 255, 64, 64: agariBgmSet = 1}
 			else {drawcol= 255, 255, 255: agariBgmSet = 2}
 		} else {
 			if (getTsumoAgariFlag(GameStat)) {drawcol= 255, 64, 64: agariBgmSet = 1}
-			else:if (furikomiPlayer == getPlayer(GameStat)) {drawcol= 255, 64, 64: agariBgmSet = 1}
+			else:if (getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI) == getPlayer(GameStat)) {drawcol= 255, 64, 64: agariBgmSet = 1}
 			else {drawcol= 255, 255, 255: agariBgmSet = 2}
 		}
 	}
@@ -307,7 +307,7 @@ array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 		if (isPao(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getPlayer(GameStat))) {
 			tmptxt= "ïÔê”"
 		} else:if (getTsumoAgariFlag(GameStat)) {if (getHeavenHandFlag(GameStat)) {tmptxt= "ìVòa"} else {tmptxt= "é©ñÃòa"}}
-		else:if (furikomiPlayer == getPlayer(GameStat)) {tmptxt= "ï˙èe"}
+		else:if (getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI) == getPlayer(GameStat)) {tmptxt= "ï˙èe"}
 		else {tmptxt= "âhòa"}
 	}
 	borderedtxt2a tmptxt, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 48

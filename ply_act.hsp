@@ -372,7 +372,7 @@ return DiscardTileIndex
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL)
 	tmpShanten = Shanten
-	countyaku GameStat, yakuInfo, PassivePlayer, furikomiPlayer
+	countyaku GameStat, yakuInfo, PassivePlayer
 	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, PassivePlayer
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
 	if ((countshanten(GameStat, PassivePlayer, SHANTEN_ORPHANS) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {

@@ -10,7 +10,7 @@
 #module
 #include "const.as"
 #include "hspmath.as"
-#deffunc countyaku var GameStat, var yakuInfo, int targetPlayer, int furikomiPlayer
+#deffunc countyaku var GameStat, var yakuInfo, int targetPlayer
 	debug strf("役判定処理を開始 プレイヤー [%d]", targetPlayer)
 	if (vartype(yakuInfo) == vartype("struct")) {
 		if (varuse(yakuInfo)) {
@@ -30,14 +30,14 @@
 #ifndef SANMAS
 		/* 国士無双 */
 		if (ShantenArray(SHANTEN_ORPHANS) == -1) {
-			contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType, FurikomiPlayer
+			contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
 			shisanyaoyaku GameStat, tmpYakuInfo, targetPlayer, FuritenFlag
 			countdora GameStat, tmpYakuInfo, targetPlayer
 		}
 		/* 七星無靠 */
 		if (getRule(RULE_STELLAR_UUSHII) != 0) {
 			if (ShantenArray(SHANTEN_STELLAR) == -1) {
-				contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType, FurikomiPlayer
+				contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
 				addyakuman tmpYakuInfo, "七星無靠", 1
 				countdora GameStat, tmpYakuInfo, targetPlayer
 			}
@@ -45,7 +45,7 @@
 		/* 南北戦争 */
 		if (getRule(RULE_CIVIL_WAR) != 0) {
 			if (ShantenArray(SHANTEN_CIVILWAR) == -1) {
-				contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType, FurikomiPlayer
+				contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
 				addyakuman tmpYakuInfo, "南北戦争", 1
 				countdora GameStat, tmpYakuInfo, targetPlayer
 			}
@@ -54,7 +54,7 @@
 		/* 惑星直列 */
 		if (getRule(RULE_SYZYGY) != 0) {
 			if (ShantenArray(SHANTEN_SYZYGY) == -1) {
-				contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType, FurikomiPlayer
+				contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
 				if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) \ 2) == 0) {
 					addyakuman tmpYakuInfo, "惑星直列", 2
 				} else {
@@ -65,7 +65,7 @@
 		}
 		/* 七対子 */
 		if ((ShantenArray(SHANTEN_PAIRS) == -1)&&(ShantenArray(SHANTEN_REGULAR) != -1)) {
-			contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType, FurikomiPlayer
+			contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
 			qiduiyaku GameStat, tmpYakuInfo, targetPlayer
 			countdora GameStat, tmpYakuInfo, targetPlayer
 		}
@@ -74,7 +74,7 @@
 		makementsu GameStat, tmpYakuInfo, targetPlayer, Atamacode, ProcessedTiles, MianziDat
 		if (ProcessedTiles == SIZE_OF_MELD_BUFFER) {
 			trace strf("面子を検出 プレイヤー [%d] モード [%d] 面子データ [%d %d %d %d %d]", targetPlayer, AtamaCode\4, MianziDat(0), MianziDat(1), MianziDat(2), MianziDat(3), MianziDat(4))
-			contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType, FurikomiPlayer
+			contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
 			calcbasepoints GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
 			suityaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, FuritenFlag, MachiType
 			yaojiuyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer

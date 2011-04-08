@@ -6,7 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc endround var GameStat, var GameEnv, int _RoundEndType, int FurikomiPlayer, int ActivePlayer, \
+#deffunc endround var GameStat, var GameEnv, int _RoundEndType, int ActivePlayer, \
 var yakuInfo, int OrigTurn, int OrigHonba
 	// 局面終了コード
 	// ０…荒牌流局
@@ -65,7 +65,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 	/* 和了処理 */
 	/************/
 	if ((RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
-		agariproc FurikomiPlayer, ActivePlayer, RoundEndType, yakuInfo, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc
+		agariproc ActivePlayer, RoundEndType, yakuInfo, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc
 	}
 	switch RoundEndType
 	/**************/
@@ -383,14 +383,14 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			loop
 			setCenterTitle ""
 			if (getRule(RULE_TRIPLE_MAHJONG) == 0) {
-				if (playerWind(furikomiPlayer, getRound(GameStat)) != PLAYER_EAST) {
+				if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) != PLAYER_EAST) {
 					setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 				} else {
 					setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
 				}
 			}
 			if (getRule(RULE_TRIPLE_MAHJONG) == 1) {
-				if (playerWind(furikomiPlayer, getRound(GameStat)) == PLAYER_NORTH) {
+				if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) == PLAYER_NORTH) {
 					setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 				} else {
 					setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
@@ -407,14 +407,14 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			redraw 1
 			
 			if (getRule(RULE_TRIPLE_MAHJONG) == 0) {
-				if (playerWind(furikomiPlayer, getRound(GameStat)) != PLAYER_EAST) {
+				if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) != PLAYER_EAST) {
 					incHonba GameStat
 				} else {
 					incHonba GameStat: incRound GameStat
 				}
 			}
 			if (getRule(RULE_TRIPLE_MAHJONG) == 1) {
-				if (playerWind(furikomiPlayer, getRound(GameStat)) == PLAYER_NORTH) {
+				if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) == PLAYER_NORTH) {
 					incHonba GameStat
 				} else {
 					incHonba GameStat: incRound GameStat
