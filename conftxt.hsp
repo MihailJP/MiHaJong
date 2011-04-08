@@ -88,7 +88,7 @@
 	
 	RuleName(RULE_LIMITHAND_BONUS) = "役満祝儀"
 	RuleDescription(RULE_LIMITHAND_BONUS) = "役満を和了った時にもらえるチップの数を設定します"
-	RuleTxt(0, RULE_LIMITHAND_BONUS) = "チップ５枚", "チップ１０枚"
+	RuleTxt(0, RULE_LIMITHAND_BONUS) = "チップ５枚", "チップ１０枚", "ツモ各２枚、ロン３枚", "ツモ各４枚、ロン６枚", "ツモ各４枚、ロン８枚", "ツモ各５枚、ロン１０枚", "２枚オール", "６枚オール"
 	
 	RuleName(RULE_RYANSHIBA) = "二飜縛り"
 	RuleDescription(RULE_RYANSHIBA) = "二飜縛りの有無を設定します"
