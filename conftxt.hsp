@@ -172,10 +172,12 @@
 	RuleName(RULE_RED_FIVE) = "赤五"
 #ifdef SANMAX
 	RuleDescription(RULE_RED_FIVE) = "赤ドラの有無を設定します"
-	RuleTxt(0, RULE_RED_FIVE) = "２枚", "４枚", "なし"
+	RuleTxt(0, RULE_RED_FIVE) = "２枚", ">>>", "４枚", "筒子２枚", ">>>", ">>>", ">>>", ">>>"
+	RuleTxt(8, RULE_RED_FIVE) = "なし", "筒子", "索子"
 #else
 	RuleDescription(RULE_RED_FIVE) = "赤ドラの有無を設定します"
-	RuleTxt(0, RULE_RED_FIVE) = "３枚", "４枚", "なし"
+	RuleTxt(0, RULE_RED_FIVE) = "３枚", "４枚", "６枚", "筒子２枚", ">>>", ">>>", ">>>", ">>>"
+	RuleTxt(8, RULE_RED_FIVE) = "なし", "筒子", "索子", "筒子と索子", "萬子", "萬子と筒子", "萬子と索子"
 #endif
 	
 	RuleName(RULE_RED_THREE) = "赤三"

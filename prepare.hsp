@@ -282,18 +282,14 @@ return
 	repeat 9*4, 2*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+9: loop // “›q
 	repeat 9*4, 11*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+10: loop // υq
 	repeat 7*4, 20*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+11: loop // ”v
-	if (getRule(RULE_RED_FIVE) != 2) {
-		setWall GameStat, WALL_REDTILE, 24, 1 // Τά“›
-		if (getRule(RULE_RED_FIVE) == 1) {setWall GameStat, WALL_REDTILE, 25, 1} // Τά“›
-		setWall GameStat, WALL_REDTILE, 60, 1 // Τάυ
-		if (getRule(RULE_RED_FIVE) == 1) {setWall GameStat, WALL_REDTILE, 61, 1} // Τάυ
-	}
 	if (getRule(RULE_RED_ONE)/4 == 1) {setWall GameStat, WALL_REDTILE, 0, 1} // Τκδέ
 	if (getRule(RULE_RED_NINE)/4 == 1) {setWall GameStat, WALL_REDTILE, 4, 1} // Τ‹γδέ
 	if (getRule(RULE_RED_ONE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 8, 1} // Τκ“›
 	if (getRule(RULE_RED_TWO)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 12, 1} // Τ“ρ“›
 	if (getRule(RULE_RED_THREE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 16, 1} // ΤO“›
 	if (getRule(RULE_RED_FOUR)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 20, 1} // Τl“›
+	if ((getRule(RULE_RED_FIVE) <= 3)||((getRule(RULE_RED_FIVE)&0x1001) == 0x1001)) {setWall GameStat, WALL_REDTILE, 24, 1} // Τά“›
+	if ((getRule(RULE_RED_FIVE) >= 1)&&(getRule(RULE_RED_FIVE) <= 3)) {setWall GameStat, WALL_REDTILE, 25, 1} // Τά“›
 	if (getRule(RULE_RED_SIX)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 28, 1} // ΤZ“›
 	if (getRule(RULE_RED_SEVEN)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 32, 1} // Τµ“›
 	if (getRule(RULE_RED_EIGHT)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 36, 1} // Τ”ª“›
@@ -302,6 +298,8 @@ return
 	if (getRule(RULE_RED_TWO)\2 == 1) {setWall GameStat, WALL_REDTILE, 48, 1} // Τ“ρυ
 	if (getRule(RULE_RED_THREE)\2 == 1) {setWall GameStat, WALL_REDTILE, 52, 1} // ΤOυ
 	if (getRule(RULE_RED_FOUR)\2 == 1) {setWall GameStat, WALL_REDTILE, 56, 1} // Τlυ
+	if ((getRule(RULE_RED_FIVE) <= 2)||((getRule(RULE_RED_FIVE)&0x1010) == 0x1010)) {setWall GameStat, WALL_REDTILE, 60, 1} // Τάυ
+	if (getRule(RULE_RED_FIVE) == 2) {setWall GameStat, WALL_REDTILE, 61, 1} // Τάυ
 	if (getRule(RULE_RED_SIX)\2 == 1) {setWall GameStat, WALL_REDTILE, 64, 1} // ΤZυ
 	if (getRule(RULE_RED_SEVEN)\2 == 1) {setWall GameStat, WALL_REDTILE, 68, 1} // Τµυ
 	if (getRule(RULE_RED_EIGHT)\2 == 1) {setWall GameStat, WALL_REDTILE, 72, 1} // Τ”ªυ
@@ -344,16 +342,12 @@ return
 			swbreak
 	swend
 #endif
-	if (getRule(RULE_RED_FIVE) != 2) {
-		setWall GameStat, WALL_REDTILE, 16, 1 // Τάδέ
-		setWall GameStat, WALL_REDTILE, 52, 1 // Τά“›
-		if (getRule(RULE_RED_FIVE) == 1) {setWall GameStat, WALL_REDTILE, 53, 1} // Τά“›
-		setWall GameStat, WALL_REDTILE, 88, 1 // Τάυ
-	}
 	if (getRule(RULE_RED_ONE)/4 == 1) {setWall GameStat, WALL_REDTILE, 0, 1} // Τκδέ
 	if (getRule(RULE_RED_TWO)/4 == 1) {setWall GameStat, WALL_REDTILE, 4, 1} // Τ“ρδέ
 	if (getRule(RULE_RED_THREE)/4 == 1) {setWall GameStat, WALL_REDTILE, 8, 1} // ΤOδέ
 	if (getRule(RULE_RED_FOUR)/4 == 1) {setWall GameStat, WALL_REDTILE, 12, 1} // Τlδέ
+	if ((getRule(RULE_RED_FIVE) <= 2)||((getRule(RULE_RED_FIVE)&0x1100) == 0x1100)) {setWall GameStat, WALL_REDTILE, 16, 1} // Τάδέ
+	if (getRule(RULE_RED_FIVE) == 2) {setWall GameStat, WALL_REDTILE, 17, 1} // Τάδέ
 	if (getRule(RULE_RED_SIX)/4 == 1) {setWall GameStat, WALL_REDTILE, 20, 1} // ΤZδέ
 	if (getRule(RULE_RED_SEVEN)/4 == 1) {setWall GameStat, WALL_REDTILE, 24, 1} // Τµδέ
 	if (getRule(RULE_RED_EIGHT)/4 == 1) {setWall GameStat, WALL_REDTILE, 28, 1} // Τ”ªδέ
@@ -362,6 +356,8 @@ return
 	if (getRule(RULE_RED_TWO)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 40, 1} // Τ“ρ“›
 	if (getRule(RULE_RED_THREE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 44, 1} // ΤO“›
 	if (getRule(RULE_RED_FOUR)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 48, 1} // Τl“›
+	if ((getRule(RULE_RED_FIVE) <= 3)||((getRule(RULE_RED_FIVE)&0x1001) == 0x1001)) {setWall GameStat, WALL_REDTILE, 52, 1} // Τά“›
+	if ((getRule(RULE_RED_FIVE) >= 1)&&(getRule(RULE_RED_FIVE) <= 3)) {setWall GameStat, WALL_REDTILE, 53, 1} // Τά“›
 	if (getRule(RULE_RED_SIX)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 56, 1} // ΤZ“›
 	if (getRule(RULE_RED_SEVEN)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 60, 1} // Τµ“›
 	if (getRule(RULE_RED_EIGHT)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 76, 1} // Τ”ª“›
@@ -370,6 +366,8 @@ return
 	if (getRule(RULE_RED_TWO)\2 == 1) {setWall GameStat, WALL_REDTILE, 64, 1} // Τ“ρυ
 	if (getRule(RULE_RED_THREE)\2 == 1) {setWall GameStat, WALL_REDTILE, 80, 1} // ΤOυ
 	if (getRule(RULE_RED_FOUR)\2 == 1) {setWall GameStat, WALL_REDTILE, 84, 1} // Τlυ
+	if ((getRule(RULE_RED_FIVE) <= 2)||((getRule(RULE_RED_FIVE)&0x1010) == 0x1010)) {setWall GameStat, WALL_REDTILE, 88, 1} // Τάυ
+	if (getRule(RULE_RED_FIVE) == 2) {setWall GameStat, WALL_REDTILE, 89, 1} // Τάυ
 	if (getRule(RULE_RED_SIX)\2 == 1) {setWall GameStat, WALL_REDTILE, 92, 1} // ΤZυ
 	if (getRule(RULE_RED_SEVEN)\2 == 1) {setWall GameStat, WALL_REDTILE, 96, 1} // Τµυ
 	if (getRule(RULE_RED_EIGHT)\2 == 1) {setWall GameStat, WALL_REDTILE, 100, 1} // Τ”ªυ

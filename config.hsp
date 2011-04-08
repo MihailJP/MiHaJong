@@ -223,7 +223,7 @@ return
 #endif
 			case RULE_REDTILE_CHIP:
 				if (Rule(RULE_CHIP) == 0) {gosub *config_strikeout}
-				else: if ((Rule(RULE_RED_ONE) == 0)&&(Rule(RULE_RED_TWO) == 0)&&(Rule(RULE_RED_THREE) == 0)&&(Rule(RULE_RED_FOUR) == 0)&&(Rule(RULE_RED_FIVE) == 2)&&(Rule(RULE_RED_SIX) == 0)&&(Rule(RULE_RED_SEVEN) == 0)&&(Rule(RULE_RED_EIGHT) == 0)&&(Rule(RULE_RED_NINE) == 0)&&(Rule(RULE_RED_WEST) == 0)&&(Rule(RULE_RED_NORTH) == 0)) {
+				else: if ((Rule(RULE_RED_ONE) == 0)&&(Rule(RULE_RED_TWO) == 0)&&(Rule(RULE_RED_THREE) == 0)&&(Rule(RULE_RED_FOUR) == 0)&&(Rule(RULE_RED_FIVE) == 8)&&(Rule(RULE_RED_SIX) == 0)&&(Rule(RULE_RED_SEVEN) == 0)&&(Rule(RULE_RED_EIGHT) == 0)&&(Rule(RULE_RED_NINE) == 0)&&(Rule(RULE_RED_WEST) == 0)&&(Rule(RULE_RED_NORTH) == 0)) {
 					gosub *config_strikeout
 				}
 				swbreak
@@ -240,7 +240,7 @@ return
 				if (Rule(RULE_PENALTY_NEGATIVE) == 6) {gosub *config_strikeout}
 				swbreak
 			case RULE_TAOYISE:
-				if (Rule(RULE_RED_FIVE) == 2) {gosub *config_strikeout}
+				if (Rule(RULE_RED_FIVE) == 8) {gosub *config_strikeout}
 				swbreak
 		swend
 		if (cnt == 19) {borderedtxt2 "通信対戦時のルール設定はホスト側の設定が適用されます", 100, 590, 255, 255, 255, 1, 20, 192, 192, 192}
