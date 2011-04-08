@@ -116,6 +116,10 @@
 					continue
 				}
 			}
+			// ‹ò‚¢•Ï‚¦‚É‚È‚é”v‚Í”ò‚Î‚·
+			if (getPreviousMeld(GameStat, PREVMELD_TILECODE) == tmpHaiHand(cnt)) {Discardability(cnt) = -999999999: continue}
+			if (getPreviousMeld(GameStat, PREVMELD_STEPPED) == tmpHaiHand(cnt)) {Discardability(cnt) = -999999999: continue}
+			//
 			TileInfo = getpaiinfo(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt, 0): await 0
 			tmpHandTileCode = getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 			// ‘¶İ‚µ‚È‚¢”v‚Ìê‡
