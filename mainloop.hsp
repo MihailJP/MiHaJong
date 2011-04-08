@@ -158,7 +158,7 @@ repeat
 		/* このゲームではどんな手でも(国士や大四喜でなくてもいい)
 		   抜き北をロンできるルール */
 		if ((DiscardTileIndex >= DAHAI_TYPE_FLOWER)&&(DiscardTileIndex < DAHAI_TYPE_FLOWER+DAHAI_TYPE_STEP)) {
-			fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_NORTH
+			fuuroproc GameStat, RoundEndType, DiscardTileIndex, FUURO_NORTH
 			if (stat == 1) {break}
 			continue getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 		}
@@ -166,7 +166,7 @@ repeat
 		/* 花牌を抜いたときの処理 */
 		/* このゲームは七搶一がないので花牌でロンされることは無い */
 		if ((DiscardTileIndex >= DAHAI_TYPE_FLOWER)&&(DiscardTileIndex < DAHAI_TYPE_FLOWER+DAHAI_TYPE_STEP)) {
-			fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_FLOWER
+			fuuroproc GameStat, RoundEndType, DiscardTileIndex, FUURO_FLOWER
 			if (stat == 1) {break}
 			continue getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 		}
@@ -178,7 +178,7 @@ repeat
 				setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
 				setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
 			}
-			fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_ANKAN
+			fuuroproc GameStat, RoundEndType, DiscardTileIndex, FUURO_ANKAN
 			if (stat == 1) {break}
 			/* 槓をすると嶺上牌の分自摸が増えるので次の打牌へ */
 			continue getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
@@ -189,7 +189,7 @@ repeat
 				setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
 				setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
 			}
-			fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_KAKAN
+			fuuroproc GameStat, RoundEndType, DiscardTileIndex, FUURO_KAKAN
 			if (stat == 1) {break}
 			/* 槓をすると嶺上牌の分自摸が増えるので次の打牌へ */
 			continue getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
@@ -452,30 +452,30 @@ repeat
 		repeat NUM_OF_PLAYERS: await 0
 			/* 捨牌をポンする場合 */
 			if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, cnt) == 1) {
-				PassivePlayer = cnt // 鳴いたプレイヤーを設定
-				fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_PON
+				setCurrentPlayer GameStat, CURRENTPLAYER_PASSIVE, cnt // 鳴いたプレイヤーを設定
+				fuuroproc GameStat, RoundEndType, DiscardTileIndex, FUURO_PON
 				break
 			}
 			/* 明槓の場合 */
 			if ((getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 1)&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
-				PassivePlayer = cnt // 鳴いたプレイヤーを設定
-				fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_DAIMINKAN
+				setCurrentPlayer GameStat, CURRENTPLAYER_PASSIVE, cnt // 鳴いたプレイヤーを設定
+				fuuroproc GameStat, RoundEndType, DiscardTileIndex, FUURO_DAIMINKAN
 				break
 			}
 		loop
 		/* 鳴きがあった場合、鳴いたプレーヤーに順番を移して戻る */
 		/* 吃とポンが同時に起こった場合、ポンを優先する */
 		if ((getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3)) > 0) {
-			setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, PassivePlayer
+			setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 			continue
 #ifndef ALLSANMA
 		} else {
 			/* 吃の処理 */
 			/* 三人打ちでは吃なし */
 			if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, ShimochaOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) > 0) {
-				PassivePlayer = ShimochaOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) // 吃ができるのは上家の捨牌のみ
-				fuuroproc GameStat, RoundEndType, DiscardTileIndex, PassivePlayer, FUURO_CHII
-				setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, PassivePlayer
+				setCurrentPlayer GameStat, CURRENTPLAYER_PASSIVE, ShimochaOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) // 吃ができるのは上家の捨牌のみ
+				fuuroproc GameStat, RoundEndType, DiscardTileIndex, FUURO_CHII
+				setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 				continue
 			}
 #endif

@@ -361,7 +361,7 @@
 return DiscardTileIndex
 
 /* プレイヤーの鳴き */
-#deffunc playerfuuro var GameStat, var GameEnv, int PassivePlayer
+#deffunc playerfuuro var GameStat, var GameEnv
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
 	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > TILE_SUIT_FLOWERS) {return /* 花牌の場合は戻る */}
 	if (getAgariHouki(GameStat, getPlayer(GameStat)) == 1) {return /* 和了り放棄だったら戻る */}
@@ -369,13 +369,13 @@ return DiscardTileIndex
 	font fontname, 48, 0
 	SelectedTile = -99 // 未入力
 	playerThru = 1: setTsumoAgariFlag GameStat, 0: tmpShanten = 999
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL)
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+	Shanten = countshanten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), SHANTEN_ALL)
 	tmpShanten = Shanten
-	countyaku GameStat, yakuInfo, PassivePlayer
-	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, PassivePlayer
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
-	if ((countshanten(GameStat, PassivePlayer, SHANTEN_ORPHANS) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {
+	countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
+	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
+	if ((countshanten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), SHANTEN_ORPHANS) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {
 		// 暗槓に対する搶槓判定のときで、国士聴牌でない場合は戻る
 		if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {clientsend 0xa0}
 		return
@@ -388,9 +388,9 @@ return DiscardTileIndex
 		if (AutoAgariFlag() == 1) {SelectedTile = -89}
 	}
 	font fontname, 12, 0
-	countTilesInHand TileCount, GameStat, PassivePlayer
+	countTilesInHand TileCount, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 	ButtonFlag1=0:ButtonFlag2=0:ButtonFlag3=0:ButtonFlag4=0:ButtonFlag5=0
-	if ((getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) == RIICHI_NO)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(AutoPassFlag() == 0)) {
+	if ((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == RIICHI_NO)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(AutoPassFlag() == 0)) {
 		if (TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) >= 2) {
 			objsize 50, 30
 			pos 720, 500: button gosub "F3/ポン", *playerPon: tooltip@ stat-STATBOX, "ポンをします"
@@ -405,7 +405,7 @@ return DiscardTileIndex
 		}
 #ifndef ALLSANMA
 		// チーできる条件：上家の捨牌であること、かつ、数牌であること
-		if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) < TILE_NUMERAL_MAX)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == ((PassivePlayer+3)\4))) {
+		if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) < TILE_NUMERAL_MAX)&&(getKangFlag(GameStat, KANG_CHANKAN) == 0)&&(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == ((getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)+3)\4))) {
 			if ((TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1) >= 1)&&(TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+2) >= 1)) {
 				objsize 50, 30: tmpChiipai1 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP): tmpChiipai2 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP)+1: tmpChiipai3 = (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)\TILE_SUIT_STEP)+2
 				pos 620, 530: button gosub "F5/下吃", *playerChi1: tooltip@ stat-STATBOX, ""+tmpChiipai1+tmpChiipai2+tmpChiipai3+"の形でチーをします"
@@ -488,8 +488,8 @@ return DiscardTileIndex
 			// ロンする場合
 			if (SelectedTile == -89) {
 				setDeclarationFlag GameStat, DECLARATIONFLAG_RON, getPlayer(GameStat), 1
-				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-				setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
+				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+				setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 				break
 			}
 			// ポンする場合

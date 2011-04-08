@@ -14,7 +14,7 @@
 			HThaifuP(ShimochaOf(ActivePlayer)*6+cnt) += "<td></td>"
 		loop
 	}
-	if (playerRelative(ActivePlayer, PassivePlayer) == RELATIVE_KAMICHA) {
+	if (playerRelative(ActivePlayer, PassivePlayer) == RELATIVE_SHIMOCHA) {
 		// 下家からポンした場合
 		repeat 4,1
 			haifuP(ShimochaOf(ActivePlayer)*6+cnt) += "　 "
@@ -252,14 +252,14 @@ return
 return
 
 /* チーしたことを牌譜に記録 */
-#deffunc haifurecchi var GameStat, int PassivePlayer
-	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE), "ﾁｰ ", "チー"
+#deffunc haifurecchi var GameStat
+	haifuwritetsumohai haifuP, HThaifuP, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE), "ﾁｰ ", "チー"
 return
 
 /* ポンしたことを牌譜に記録 */
-#deffunc haifurecpon var GameStat, int PassivePlayer
-	haifuskip haifuP, HThaifuP, PassivePlayer, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE), "ﾎﾟﾝ", "ポン"
+#deffunc haifurecpon var GameStat
+	haifuskip haifuP, HThaifuP, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
+	haifuwritetsumohai haifuP, HThaifuP, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE), "ﾎﾟﾝ", "ポン"
 return
 
 /* 自摸和したことを牌譜に記録 */
@@ -268,15 +268,15 @@ return
 return
 
 /* 大明槓したことを牌譜に記録 */
-#deffunc haifurecminkan var GameStat, int PassivePlayer
-	haifuskip haifuP, HThaifuP, PassivePlayer, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-	haifuwritetsumohai haifuP, HThaifuP, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE), "ｶﾝ ", "カン"
-	haifuP(PassivePlayer*6+3) += "　 "
-	haifuP(PassivePlayer*6+4) += "　 "
-	HThaifuP(PassivePlayer*6+3) += "<td></td>"
-	HThaifuP(PassivePlayer*6+4) += "<td></td>"
+#deffunc haifurecminkan var GameStat
+	haifuskip haifuP, HThaifuP, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
+	haifuwritetsumohai haifuP, HThaifuP, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE), "ｶﾝ ", "カン"
+	haifuP(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)*6+3) += "　 "
+	haifuP(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)*6+4) += "　 "
+	HThaifuP(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)*6+3) += "<td></td>"
+	HThaifuP(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)*6+4) += "<td></td>"
 	// 牌譜の記述上は、嶺上牌の取得は次巡として扱う
-	haifuskipall haifuP, HThaifuP, PassivePlayer
+	haifuskipall haifuP, HThaifuP, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 return
 
 #ifdef SANMAX

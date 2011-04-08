@@ -7,18 +7,18 @@
 /* 副露の処理 */
 #module
 #include "const.as"
-#deffunc fuuroproc var GameStat, var RoundEndType, int DiscardTileIndex, int PassivePlayer, int Mode
+#deffunc fuuroproc var GameStat, var RoundEndType, int DiscardTileIndex, int Mode
 	info strf("副露の処理を開始します。モード [%d]", Mode)
 	switch Mode
 		case FUURO_CHII:
-			kangPlayer = PassivePlayer
+			kangPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 			setMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0 // 赤ドラバグ回避のため
-			haifurecchi GameStat, PassivePlayer // 牌譜に記録
+			haifurecchi GameStat // 牌譜に記録
 			swbreak
 		case FUURO_PON:
-			kangPlayer = PassivePlayer
+			kangPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 			setMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0 // 赤ドラバグ回避のため
-			haifurecpon GameStat, PassivePlayer // 牌譜に記録
+			haifurecpon GameStat // 牌譜に記録
 			swbreak
 #ifndef SANMAX
 		case FUURO_FLOWER:
@@ -34,10 +34,10 @@
 			swbreak
 #endif
 		case FUURO_DAIMINKAN:
-			kangPlayer = PassivePlayer
+			kangPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 			setKangFlag GameStat, KANG_FLAG, 1 // 嶺上開花のフラグを立てる
 			setMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0 // 赤ドラバグ回避のため
-			haifurecminkan GameStat, PassivePlayer // 牌譜に記録
+			haifurecminkan GameStat // 牌譜に記録
 			incKangFlag GameStat, KANG_CHAINFLAG // 連続槓の回数を記録
 			if (getFirstDrawFlag(GameStat, kangPlayer) == 1) { setKangFlag GameStat, KANG_TOPFLAG, 1 /* 頭槓和のフラグ */ }
 			swbreak
@@ -63,27 +63,27 @@
 			repeat NUM_OF_TILES_IN_HAND
 				if (getHand(GameStat, HAND_TILECODE, cnt, kangPlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) {
 					if (nakiCount == 0) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, PassivePlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x08: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x80: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x08: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x80: swbreak
 						swend
 					}
 					if (nakiCount == 1) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, PassivePlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x04: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x40: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x04: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x40: swbreak
 						swend
 					}
 					if (nakiCount == 2) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, PassivePlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x02: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x20: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x02: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x20: swbreak
 						swend
 					}
 					if (nakiCount == 3) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, PassivePlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x01: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x10: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x01: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x10: swbreak
 						swend
 					}
 					setHand GameStat, HAND_TILECODE, cnt, kangPlayer, 0
@@ -114,44 +114,44 @@
 			swbreak
 		case FUURO_DAIMINKAN: /* 大明槓 */
 			repeat NUM_OF_TILES_IN_HAND
-				if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE))&&(nakiCount < 3)) {
+				if ((getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE))&&(nakiCount < 3)) {
 					// 鳴いた牌を純手牌から消去
 					if (nakiCount == 0) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, PassivePlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x02: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x20: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x02: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x20: swbreak
 						swend
 					}
 					if (nakiCount == 1) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, PassivePlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x04: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x40: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x04: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x40: swbreak
 						swend
 					}
 					if (nakiCount == 2) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, PassivePlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x08: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x80: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x08: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x80: swbreak
 						swend
 					}
-					setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, 0
-					setHand GameStat, HAND_REDTILE, cnt, PassivePlayer, 0
+					setHand GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
+					setHand GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 					nakiCount++
 				}
 			loop
 			if (nakiCount < 3) {error strf("明槓するための牌が足りません。牌コード [%d] は [%d] 枚しかありません。", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), nakiCount)}
 			if (nakiCount > 3) {error strf("明槓するための牌が多すぎます。牌コード [%d] は [%d] 枚あります。", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), nakiCount)}
 			/* 門前清フラグを降ろす */
-			setMenzen GameStat, PassivePlayer, 0
+			setMenzen GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 			/* 槓子として晒す */
-			MeldPointerIncrement GameStat, PassivePlayer
-			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, (playerRelative(PassivePlayer, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))+MELD_QUAD)*MELD_TYPE_STEP+getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+			MeldPointerIncrement GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
+			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), (playerRelative(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))+MELD_QUAD)*MELD_TYPE_STEP+getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 			switch getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
-				case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, 0x01: swbreak
-				case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, 0x10: swbreak
+				case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x01: swbreak
+				case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x10: swbreak
 			swend
 			/* 理牌する */
-			lipai GameStat, PassivePlayer
+			lipai GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 			swbreak
 #ifdef SANMAX
 		case FUURO_NORTH: /* 三麻抜きドラ */
@@ -195,22 +195,22 @@
 			/* ポンした対子を消去 */
 			nakiCount = 0
 			repeat NUM_OF_TILES_IN_HAND
-				if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE))&&(nakiCount < 2)) {
+				if ((getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE))&&(nakiCount < 2)) {
 					// 鳴いた牌を純手牌から消去
 					if (nakiCount == 0) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, PassivePlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x02: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x20: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x02: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x20: swbreak
 						swend
 					}
 					if (nakiCount == 1) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, PassivePlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x04: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x40: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x04: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x40: swbreak
 						swend
 					}
-					setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, 0
-					setHand GameStat, HAND_REDTILE, cnt, PassivePlayer, 0
+					setHand GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
+					setHand GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 					nakiCount++
 				}
 			loop
@@ -219,73 +219,73 @@
 			setMenzen GameStat, cnt, 0
 			/* 明刻として晒す */
 			MeldPointerIncrement GameStat, cnt
-			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, cnt), cnt, (playerRelative(PassivePlayer, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))+MELD_TRIPLET)*MELD_TYPE_STEP+getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, cnt), cnt, (playerRelative(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))+MELD_TRIPLET)*MELD_TYPE_STEP+getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 			switch getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 				case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, cnt), cnt, 0x01: swbreak
 				case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, cnt), cnt, 0x10: swbreak
 			swend
 			/* 理牌する */
-			lipai GameStat, PassivePlayer
+			lipai GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 			/* ポンを宣言する */
 			dsplay@ VOX_PON
-			setCall PassivePlayer, "ポン"
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), "ポン"
 			/* 喰い替えの判定に使う変数を設定 */
 			setPreviousMeld GameStat, PREVMELD_TILECODE, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 			setPreviousMeld GameStat, PREVMELD_STEPPED, -999
 			/* 包の判定 */
-			checkpao GameStat, PassivePlayer
+			checkpao GameStat
 			swbreak
 #ifndef ALLSANMA
 		case FUURO_CHII: /* チー */
 			/* チーする牌を設定 */
-			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 			/* 純手牌から鳴いた塔子を除去 */
 			nakiCount1 = 0: nakiCount2 = 0: nakiCount3 = 0
 			repeat NUM_OF_TILES_IN_HAND, TSUMOHAI_INDEX
-				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1-getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, PassivePlayer))&&(nakiCount1 < 1)) {
-					switch getHand(GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer)
-						case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x01: swbreak
-						case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x10: swbreak
+				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1-getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)))&&(nakiCount1 < 1)) {
+					switch getHand(GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+						case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x01: swbreak
+						case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x10: swbreak
 					swend
-					setHand GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
-					setHand GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
+					setHand GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
+					setHand GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 					nakiCount1++
 				}
-				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+2-getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, PassivePlayer))&&(nakiCount2 < 1)) {
-					switch getHand(GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer)
-						case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x02: swbreak
-						case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x20: swbreak
+				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+2-getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)))&&(nakiCount2 < 1)) {
+					switch getHand(GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+						case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x02: swbreak
+						case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x20: swbreak
 					swend
-					setHand GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
-					setHand GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
+					setHand GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
+					setHand GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 					nakiCount2++
 				}
-				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+3-getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, PassivePlayer))&&(nakiCount3 < 1)) {
-					switch getHand(GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer)
-						case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x04: swbreak
-						case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, PassivePlayer)+1, PassivePlayer, 0x40: swbreak
+				if ((getHand(GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+3-getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)))&&(nakiCount3 < 1)) {
+					switch getHand(GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+						case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x04: swbreak
+						case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x40: swbreak
 					swend
-					setHand GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
-					setHand GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), PassivePlayer, 0
+					setHand GameStat, HAND_TILECODE, (cnt\NUM_OF_TILES_IN_HAND), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
+					setHand GameStat, HAND_REDTILE, (cnt\NUM_OF_TILES_IN_HAND), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 					nakiCount3++
 				}
 			loop
 			/* 門前フラグを降ろす */
-			setMenzen GameStat, PassivePlayer, 0
+			setMenzen GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 			/* 順子を晒す */
-			MeldPointerIncrement GameStat, PassivePlayer
-			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, PassivePlayer), PassivePlayer, getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, PassivePlayer)*MELD_TYPE_STEP+(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1-getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, PassivePlayer))
+			MeldPointerIncrement GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
+			setMeld GameStat, MELD_TILECODE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)), getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))*MELD_TYPE_STEP+(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1-getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)))
 			/* 自動理牌 */
-			lipai GameStat, PassivePlayer
+			lipai GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 			/* チーを宣言 */
 			dsplay@ VOX_CHI
-			setCall PassivePlayer, "チー"
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), "チー"
 			/* 喰い替え判定用の変数を指定 */
 			setPreviousMeld GameStat, PREVMELD_TILECODE, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 			switch getRule(RULE_KUIKAE)
 				case 1: case 2:
-					switch (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, PassivePlayer))
+					switch (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)))
 						case 1: setPreviousMeld GameStat, PREVMELD_STEPPED, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+3: swbreak
 						case 2: setPreviousMeld GameStat, PREVMELD_STEPPED, -999: swbreak
 						case 3: setPreviousMeld GameStat, PREVMELD_STEPPED, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)-3: swbreak
@@ -360,7 +360,7 @@
 		/* 大明槓の包判定用 */
 		if ((getRule(RULE_MINKAN_PAO) != 0)&&(getRule(RULE_MINKAN_PAO) != 3)) {
 			setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, PassivePlayer
+			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 		}
 	}
 	redrscreen
@@ -395,7 +395,7 @@
 				haifurecdorap
 			}
 			/* 包の判定 */
-			checkpao GameStat, PassivePlayer
+			checkpao GameStat
 		}
 		/* 槓子をカウントする(四開槓の判定のため) */
 		if (Mode==FUURO_ANKAN)||(Mode==FUURO_KAKAN)||(Mode==FUURO_DAIMINKAN) {
@@ -420,18 +420,18 @@
 /* 包を判定する */
 #module
 #include "const.as"
-#deffunc checkpao var GameStat, int PassivePlayer
+#deffunc checkpao var GameStat
 	// 包の判定 ここから
 	debug "包の条件を判定します。"
 	DragonPons = 0: WindPons = 0: NumOfKangs = 0
-	repeat MeldPointer(GameStat, PassivePlayer), 1
-		if (((getMeld(GameStat, MELD_TILECODE, cnt , PassivePlayer)\TILE_CODE_MAXIMUM) >= TILE_DRAGON_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt , PassivePlayer)\TILE_CODE_MAXIMUM) <= TILE_DRAGON_MAX)) {
+	repeat MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)), 1
+		if (((getMeld(GameStat, MELD_TILECODE, cnt , getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))\TILE_CODE_MAXIMUM) >= TILE_DRAGON_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt , getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))\TILE_CODE_MAXIMUM) <= TILE_DRAGON_MAX)) {
 			DragonPons++
 		}
-		if (((getMeld(GameStat, MELD_TILECODE, cnt , PassivePlayer)\TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt , PassivePlayer)\TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {
+		if (((getMeld(GameStat, MELD_TILECODE, cnt , getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))\TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt , getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))\TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {
 			WindPons++
 		}
-		if ((getMeld(GameStat, MELD_TILECODE, cnt , PassivePlayer)/MELD_TYPE_STEP) >= MELD_QUAD) {
+		if ((getMeld(GameStat, MELD_TILECODE, cnt , getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))/MELD_TYPE_STEP) >= MELD_QUAD) {
 			NumOfKangs++
 		}
 	loop
@@ -439,18 +439,18 @@
 		if ((DragonPons == 3)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN) == -1)) {
 			debug strf("プレイヤー [%d] は、大三元を包になります。", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 			setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN, PassivePlayer
+			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 		}
 		if ((WindPons == 4)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI) == -1)) {
 			debug strf("プレイヤー [%d] は、大四喜を包になります。", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 			setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI, PassivePlayer
+			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 		}
 	}
 	if ((getRule(RULE_SUUKANTSU) >= 2)&&(NumOfKangs == 4)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_SIKANG) == -1)) {
 		debug strf("プレイヤー [%d] は、四槓子を包になります。", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 		setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_SIKANG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-		setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_SIKANG, PassivePlayer
+		setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_SIKANG, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 	}
 	// 包の判定 ここまで
 	return
@@ -463,15 +463,15 @@
 	resetDeclarationFlag GameStat
 	repeat NUM_OF_PLAYERS
 		if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != cnt) {
-			PassivePlayer = cnt
-			if (PassivePlayer == getPlayer(GameStat)) {
-				playerfuuro GameStat, GameEnv, PassivePlayer
+			setCurrentPlayer GameStat, CURRENTPLAYER_PASSIVE, cnt
+			if (getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE) == getPlayer(GameStat)) {
+				playerfuuro GameStat, GameEnv
 			} else {
-				if (IsRemotePlayer(GameEnv, PassivePlayer) == 0) {
+				if (IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == 0) {
 					/* COMが「カンニング」しないように処理 */
-					makesandbox Sandbox, GameStat, PassivePlayer
+					makesandbox Sandbox, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 					/* 処理 */
-					compfuuro Sandbox, PassivePlayer
+					compfuuro Sandbox
 					repeat NUM_OF_PLAYERS
 						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_RON, cnt)}
 						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_MINKAN, cnt)}
@@ -602,7 +602,7 @@
 	if (RonPlayers(GameStat) > 0) {
 		if (getKangFlag(GameStat, KANG_CHANKAN) > 0) {
 #ifdef SANMAX
-			if (DiscardTileIndex/PassivePlayer == DAHAI_TYPE_FLOWER/PassivePlayer) {
+			if (DiscardTileIndex/getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE) == DAHAI_TYPE_FLOWER/getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) {
 				haifurecchanpei GameStat
 			} else {
 #endif

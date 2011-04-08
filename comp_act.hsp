@@ -867,81 +867,81 @@ return DiscardTileIndex
 	return
 
 /* Ç`ÇhÇÃñ¬Ç´ÅEâhòa */
-#deffunc compfuuro var GameStat, int PassivePlayer
-	info strf("AIÇÃïõòIîªíËÇ…ì¸ÇËÇ‹Ç∑ÅBÉvÉåÉCÉÑÅ[ [%d]", PassivePlayer)
+#deffunc compfuuro var GameStat
+	info strf("AIÇÃïõòIîªíËÇ…ì¸ÇËÇ‹Ç∑ÅBÉvÉåÉCÉÑÅ[ [%d]", getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
 	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > TILE_SUIT_FLOWERS) {
 		/* â‘îvÇÃèÍçáÇÕñﬂÇÈ */
-		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
-		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
+		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
+		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 		return
 	}
 
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
-	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
+	Shanten = countshanten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), SHANTEN_ALL): await 0
 	currentShanten = Shanten
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 
-	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
-	setTsumoAgariFlag GameStat, 0: await 0: countyaku GameStat, yakuInfo, PassivePlayer
+	Shanten = countshanten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), SHANTEN_ALL): await 0
+	setTsumoAgariFlag GameStat, 0: await 0: countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 	await 0
-	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, PassivePlayer
+	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 	// à√û»Ç…ëŒÇ∑ÇÈùèû»ÇÃîªíËÇ≈ÅAçëémíÆîvÇ≈Ç»Ç¢èÍçáÇÕñﬂÇÈ
-	if ((countshanten(GameStat, PassivePlayer, SHANTEN_ORPHANS) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {
-		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
-		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
+	if ((countshanten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), SHANTEN_ORPHANS) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 2)) {
+		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
+		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 		return
 	}
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-	Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+	Shanten = countshanten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), SHANTEN_ALL): await 0
 	if (Shanten == -1) {
-		setDeclarationFlag GameStat, DECLARATIONFLAG_RON, PassivePlayer, 1 // èoòaóπÇË
-		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
-		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, PassivePlayer) > 0)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) == RIICHI_NO))) {
-			setDeclarationFlag GameStat, DECLARATIONFLAG_RON, PassivePlayer, 0
-			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
-			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
+		setDeclarationFlag GameStat, DECLARATIONFLAG_RON, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 1 // èoòaóπÇË
+		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
+		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) > 0)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == RIICHI_NO))) {
+			setDeclarationFlag GameStat, DECLARATIONFLAG_RON, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
+			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
+			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 		}
 		return
 	}
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
-	setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, PassivePlayer, 0
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
+	setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 	if (getKangFlag(GameStat, KANG_CHANKAN) == 1) {return} // ùèû»ÇÃîªíËíÜÇ»ÇÁîªíËë≈ÇøêÿÇË
 	if (getDrawPointer(GameStat) >= (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1))) {return} // âÕíÍîvÇ»ÇÁîªíËë≈ÇøêÿÇË
-	if (getRichiFlag(GameStat, RICHI_FLAG, PassivePlayer) > RIICHI_NO) {return} // ÉäÅ[É`ÇµÇƒÇ¢ÇÈÇ»ÇÁîªíËë≈ÇøêÿÇË
+	if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) > RIICHI_NO) {return} // ÉäÅ[É`ÇµÇƒÇ¢ÇÈÇ»ÇÁîªíËë≈ÇøêÿÇË
 	await 0: countseentiles SeenTiles, GameStat
-	countTilesInHand TileCount, GameStat, PassivePlayer
+	countTilesInHand TileCount, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 	// éÃÇƒÇÁÇÍÇΩîvÇ™ñîvÇæÇ¡ÇΩèÍçá
 	YakuhaiPon = 0
 	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == TILE_WHITE_DRAGON) {YakuhaiPon = 1}
 	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == TILE_GREEN_DRAGON) {YakuhaiPon = 1}
 	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == TILE_RED_DRAGON) {YakuhaiPon = 1}
-	if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == TILE_EAST_WIND)&&((getRound(GameStat)/4 == 0)||(playerwind(PassivePlayer, getRound(GameStat)) == PLAYER_EAST))) {YakuhaiPon = 1}
-	if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == TILE_SOUTH_WIND)&&((getRound(GameStat)/4 == 1)||(playerwind(PassivePlayer, getRound(GameStat)) == PLAYER_SOUTH))) {YakuhaiPon = 1}
-	if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == TILE_WEST_WIND)&&((getRound(GameStat)/4 == 2)||(playerwind(PassivePlayer, getRound(GameStat)) == PLAYER_WEST))) {YakuhaiPon = 1}
-	if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == TILE_NORTH_WIND)&&((getRound(GameStat)/4 == 3)||(playerwind(PassivePlayer, getRound(GameStat)) == PLAYER_NORTH))) {YakuhaiPon = 1}
+	if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == TILE_EAST_WIND)&&((getRound(GameStat)/4 == 0)||(playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getRound(GameStat)) == PLAYER_EAST))) {YakuhaiPon = 1}
+	if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == TILE_SOUTH_WIND)&&((getRound(GameStat)/4 == 1)||(playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getRound(GameStat)) == PLAYER_SOUTH))) {YakuhaiPon = 1}
+	if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == TILE_WEST_WIND)&&((getRound(GameStat)/4 == 2)||(playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getRound(GameStat)) == PLAYER_WEST))) {YakuhaiPon = 1}
+	if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == TILE_NORTH_WIND)&&((getRound(GameStat)/4 == 3)||(playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getRound(GameStat)) == PLAYER_NORTH))) {YakuhaiPon = 1}
 	// ñîvÇñ¬Ç¢ÇΩÇÁÉtÉâÉOÇóßÇƒÇÈ
 	// É|ÉìÇ™é∏îsÇ∑ÇÈèÍçáÇÕëºâ∆ÇÃÉçÉìÇ™Ç†ÇÈÇ©âÕíÍîvÇÃèÍçá
 	// Ç»ÇÃÇ≈Ç±ÇÃéûì_Ç≈ÉtÉâÉOÇóßÇƒÇƒÇ‡ì¡Ç…ñ‚ëËÇÕÇ»Ç¢
 	await 0: countseentiles SeenTiles, GameStat
 	if (TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) >= 3) {
 		// Ç∑Ç≈Ç…û»éqÇÇQÇ¬éùÇ¡ÇƒÇ¢ÇÈÇ»ÇÁëÂñæû»Ç≥ÇπÇÈ
-		if (getNumberOfQuads(GameStat, PassivePlayer) >= 2) {
-			setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, PassivePlayer, 1
+		if (getNumberOfQuads(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) >= 2) {
+			setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 1
 			return
 		}
 	}
 	if (currentShanten > 0) { // Ç∑Ç≈Ç…ÉeÉìÉpÇ¡ÇƒÇΩÇÁñ¬Ç©Ç»Ç¢
 		if (currentShanten > Shanten) { // óLå¯îvÇ≈Ç»ÇØÇÍÇŒñ¬Ç©Ç»Ç¢
 			if (TileCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) >= 2) { // É|ÉìÇ≈Ç´ÇÈÇ©Ç«Ç§Ç©ÇÃîªíË
-				if ((getMenzen(GameStat, PassivePlayer) == 0)||(YakuhaiPon == 1)) {
+				if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == 0)||(YakuhaiPon == 1)) {
 					// Ç∑Ç≈Ç…ñ¬Ç¢ÇƒÇ¢ÇÈÇ©ÅAñîvÇÃèÍçáÇÕÉ|Éì ëŒÅXë_Ç¢Ç©àÍêFë_Ç¢Ç»ÇÁìÒñ¬Ç´
-					setDeclarationFlag GameStat, DECLARATIONFLAG_PON, PassivePlayer, 1
+					setDeclarationFlag GameStat, DECLARATIONFLAG_PON, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 1
 					return
 				} else {
 					tmpYaojiuTilesCount = 0
 					repeat NUM_OF_TILES_IN_HAND-1
-						switch getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer)
+						switch getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
 							case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 							case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 							case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
@@ -958,19 +958,19 @@ return DiscardTileIndex
 						case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON
 							tmpYaojiuTilesCount++
 					swend
-					repeat MeldPointer(GameStat, PassivePlayer)
-						if (MeldPointer(GameStat, PassivePlayer) == 0) {break}
-						if ((getMeld(GameStat, MELD_TILECODE, cnt, PassivePlayer) \ TILE_CODE_MAXIMUM) > TILE_NUMERAL_MAX) {
+					repeat MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
+						if (MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == 0) {break}
+						if ((getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) \ TILE_CODE_MAXIMUM) > TILE_NUMERAL_MAX) {
 							tmpYaojiuTilesCount++: continue
 						}
-						if ((getMeld(GameStat, MELD_TILECODE, cnt, PassivePlayer) \ TILE_SUIT_STEP) == 1) {
+						if ((getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) \ TILE_SUIT_STEP) == 1) {
 							tmpYaojiuTilesCount++: continue
 						}
-						if ((getMeld(GameStat, MELD_TILECODE, cnt, PassivePlayer) \ TILE_SUIT_STEP) == 9) {
+						if ((getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) \ TILE_SUIT_STEP) == 9) {
 							tmpYaojiuTilesCount++: continue
 						}
-						if ((getMeld(GameStat, MELD_TILECODE, cnt, PassivePlayer) \ TILE_SUIT_STEP) == 7) {
-							if ((getMeld(GameStat, MELD_TILECODE, cnt, PassivePlayer) / MELD_TYPE_STEP) < MELD_TRIPLET) {
+						if ((getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) \ TILE_SUIT_STEP) == 7) {
+							if ((getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) / MELD_TYPE_STEP) < MELD_TRIPLET) {
 								tmpYaojiuTilesCount++: continue
 							}
 						}
@@ -978,7 +978,7 @@ return DiscardTileIndex
 					if (tmpYaojiuTilesCount == 0) {
 						if ((currentShanten == 1)&&(getRule(RULE_KUITAN) == 0)) {
 							// ãÚÇ¢ífÇÉ|ÉìíÆÇ∑ÇÈ
-							setDeclarationFlag GameStat, DECLARATIONFLAG_PON, PassivePlayer, 1
+							setDeclarationFlag GameStat, DECLARATIONFLAG_PON, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 1
 							return
 						}
 					}
@@ -988,37 +988,37 @@ return DiscardTileIndex
 	}
 #ifndef ALLSANMA
 	// É`Å[Ç∑ÇÈÇ©Ç«Ç§Ç©ÇîªíËÇ∑ÇÈ
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 	dim tmpHaiHand, NUM_OF_TILES_IN_HAND
 	repeat NUM_OF_TILES_IN_HAND
-		tmpHaiHand(cnt) = getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer)
+		tmpHaiHand(cnt) = getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
 	loop
 	tmp2Shanten = Shanten
 	chosenNaki = 0
 	repeat 3, 1: chiType = cnt
-		TileInfo = getpaiinfo(GameStat, PassivePlayer, cnt, 0): await 0
+		TileInfo = getpaiinfo(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), cnt, 0): await 0
 		nakiCount1 = 0: nakiCount2 = 0: nakiCount3 = 0
 		if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)-chiType) < 0) {
 			continue // ÉoÉOñhé~óp
 		}
 		repeat NUM_OF_TILES_IN_HAND
 			await 0
-			if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1-chiType)&&(nakiCount1 < 1)) {
-				setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, 0
+			if ((getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+1-chiType)&&(nakiCount1 < 1)) {
+				setHand GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 				nakiCount1++
 			}
-			if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+2-chiType)&&(nakiCount2 < 1)) {
-				setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, 0
+			if ((getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+2-chiType)&&(nakiCount2 < 1)) {
+				setHand GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 				nakiCount2++
 			}
-			if ((getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+3-chiType)&&(nakiCount3 < 1)) {
-				setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, 0
+			if ((getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+3-chiType)&&(nakiCount3 < 1)) {
+				setHand GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 				nakiCount3++
 			}
 		loop
-		Shanten = countshanten(GameStat, PassivePlayer, SHANTEN_ALL): await 0
+		Shanten = countshanten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), SHANTEN_ALL): await 0
 		repeat NUM_OF_TILES_IN_HAND
-			setHand GameStat, HAND_TILECODE, cnt, PassivePlayer, tmpHaiHand(cnt)
+			setHand GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), tmpHaiHand(cnt)
 		loop
 		if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) >= TILE_NUMERAL_MAX) {
 			continue // éöîvÇ…èáéqÇ»Çµ
@@ -1029,16 +1029,16 @@ return DiscardTileIndex
 		if (currentShanten > (Shanten - 2)) {chosenNaki == cnt}
 	loop
 	Shanten = tmp2Shanten
-	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, PassivePlayer, 0
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0
 	if (currentShanten > 0) { // Ç∑Ç≈Ç…ÉeÉìÉpÇ¡ÇƒÇΩÇÁñ¬Ç©Ç»Ç¢
 		if (YakuhaiPon == 1) {
 			// Ç∑Ç≈Ç…ñîvÇñ¬Ç¢ÇƒÇ¢ÇÈÇ»ÇÁÉ`Å[
-			setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, PassivePlayer, chosenNaki
+			setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), chosenNaki
 		} else {
 			tmpYaojiuTilesCount = 0
 			repeat NUM_OF_TILES_IN_HAND-1
 				await 0
-				switch getHand(GameStat, HAND_TILECODE, cnt, PassivePlayer)
+				switch getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
 					case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 					case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 					case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
@@ -1055,20 +1055,20 @@ return DiscardTileIndex
 				case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON
 					tmpYaojiuTilesCount++
 			swend
-			repeat MeldPointer(GameStat, PassivePlayer), 1
+			repeat MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)), 1
 				await 0
-				if (MeldPointer(GameStat, PassivePlayer) == 0) {break}
-				if ((getMeld(GameStat, MELD_TILECODE, cnt, PassivePlayer) \ TILE_CODE_MAXIMUM) > TILE_NUMERAL_MAX) {
+				if (MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == 0) {break}
+				if ((getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) \ TILE_CODE_MAXIMUM) > TILE_NUMERAL_MAX) {
 					tmpYaojiuTilesCount++: continue
 				}
-				if ((getMeld(GameStat, MELD_TILECODE, cnt, PassivePlayer) \ TILE_SUIT_STEP) == 1) {
+				if ((getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) \ TILE_SUIT_STEP) == 1) {
 					tmpYaojiuTilesCount++: continue
 				}
-				if ((getMeld(GameStat, MELD_TILECODE, cnt, PassivePlayer) \ TILE_SUIT_STEP) == 9) {
+				if ((getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) \ TILE_SUIT_STEP) == 9) {
 					tmpYaojiuTilesCount++: continue
 				}
-				if ((getMeld(GameStat, MELD_TILECODE, cnt, PassivePlayer) \ TILE_SUIT_STEP) == 7) {
-					if ((getMeld(GameStat, MELD_TILECODE, cnt, PassivePlayer) / MELD_TYPE_STEP) < MELD_TRIPLET) {
+				if ((getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) \ TILE_SUIT_STEP) == 7) {
+					if ((getMeld(GameStat, MELD_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) / MELD_TYPE_STEP) < MELD_TRIPLET) {
 						tmpYaojiuTilesCount++: continue
 					}
 				}
@@ -1076,7 +1076,7 @@ return DiscardTileIndex
 			if (tmpYaojiuTilesCount == 0) {
 				if ((currentShanten == 1)&&(getRule(RULE_KUITAN) == 0)) {
 					// ãÚÇ¢ífÇãhíÆÇ∑ÇÈ
-					setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, PassivePlayer, chosenNaki
+					setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), chosenNaki
 				}
 			}
 		}
