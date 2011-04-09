@@ -31,32 +31,8 @@
 				continue // ñkâ∆ÇÕñ≥éã
 			}
 #endif
-			if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
-				continue // òaóπÇËï˙ä¸éûÇÃèàóùÅ®ó¨Çµñûä—ÇîFÇﬂÇ»Ç¢
-			}
-			chkP = cnt: YaojiuSutehai = 0
-			repeat DiscardPointer(GameStat, chkP), 1
-				switch (getDiscard(GameStat, DISCARD_TILECODE, cnt, chkP))
-					case SUTEHAI_NORMAL+TILE_SUIT_CHARACTERS+1: case SUTEHAI_NORMAL+TILE_SUIT_CHARACTERS+9:
-					case SUTEHAI_NORMAL+TILE_SUIT_CIRCLES+1: case SUTEHAI_NORMAL+TILE_SUIT_CIRCLES+9:
-					case SUTEHAI_NORMAL+TILE_SUIT_BAMBOOS+1: case SUTEHAI_NORMAL+TILE_SUIT_BAMBOOS+9:
-					case SUTEHAI_NORMAL+TILE_EAST_WIND: case SUTEHAI_NORMAL+TILE_SOUTH_WIND:
-					case SUTEHAI_NORMAL+TILE_WEST_WIND: case SUTEHAI_NORMAL+TILE_NORTH_WIND:
-					case SUTEHAI_NORMAL+TILE_WHITE_DRAGON: case SUTEHAI_NORMAL+TILE_GREEN_DRAGON:
-					case SUTEHAI_NORMAL+TILE_RED_DRAGON:
-					case SUTEHAI_RIICHI+TILE_SUIT_CHARACTERS+1: case SUTEHAI_RIICHI+TILE_SUIT_CHARACTERS+9:
-					case SUTEHAI_RIICHI+TILE_SUIT_CIRCLES+1: case SUTEHAI_RIICHI+TILE_SUIT_CIRCLES+9:
-					case SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+1: case SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+9:
-					case SUTEHAI_RIICHI+TILE_EAST_WIND: case SUTEHAI_RIICHI+TILE_SOUTH_WIND:
-					case SUTEHAI_RIICHI+TILE_WEST_WIND: case SUTEHAI_RIICHI+TILE_NORTH_WIND:
-					case SUTEHAI_RIICHI+TILE_WHITE_DRAGON: case SUTEHAI_RIICHI+TILE_GREEN_DRAGON:
-					case SUTEHAI_RIICHI+TILE_RED_DRAGON:
-						YaojiuSutehai++
-					swbreak
-				swend
-			loop
 			if (getRule(RULE_NAGASHI_MANGAN) != 4) {
-				if (YaojiuSutehai == DiscardPointer(GameStat, chkP)) {NagashiManganFlag(cnt) = 1: RoundEndType = ENDKYOKU_NAGASHIMANGAN}
+				if (isNagashiMangan(GameStat, GameEnv, cnt)) {NagashiManganFlag(cnt) = 1: RoundEndType = ENDKYOKU_NAGASHIMANGAN}
 			}
 		loop
 	}
@@ -85,11 +61,7 @@
 					continue // ñkâ∆ÇÕñ≥éã
 				}
 #endif
-				Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
-				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
-					Shanten = 1 // ã≠êßïsíÆàµÇ¢
-				}
-				if (Shanten == 0) {
+				if (isTenpai(GameStat, GameEnv, cnt)) {
 					TenpaiCnt++
 					setHandStat GameStat, cnt, 1
 					setCall cnt, "íÆîv"
@@ -121,12 +93,8 @@
 					continue // ñkâ∆ÇÕñ≥éã
 				}
 #endif
-				Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
-				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
-					Shanten = 1 // ã≠êßïsíÆàµÇ¢
-				}
 #ifdef ALLSANMA
-				if (Shanten == 0) {
+				if (isTenpai(GameStat, GameEnv, cnt)) {
 					if (TenpaiCnt == 1) {PointDelta(cnt) += 30}
 					if (TenpaiCnt == 2) {PointDelta(cnt) += 15}
 				} else {
@@ -134,7 +102,7 @@
 					if (TenpaiCnt == 2) {PointDelta(cnt) -= 30}
 				}
 #else
-				if (Shanten == 0) {
+				if (isTenpai(GameStat, GameEnv, cnt)) {
 					if (TenpaiCnt == 1) {PointDelta(cnt) += 30}
 					if (TenpaiCnt == 2) {PointDelta(cnt) += 15}
 					if (TenpaiCnt == 3) {PointDelta(cnt) += 10}
@@ -154,26 +122,18 @@
 			
 			repeat NUM_OF_ACTUAL_PLAYERS
 				// çˆòaóßíºÅiïsíÆóßíºÅjÇÃé“Ç™Ç¢ÇΩèÍçá
-				Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
-				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
-					Shanten = 1 // ã≠êßïsíÆàµÇ¢
-				}
-				if ((Shanten > 0)&&(getRichiFlag(GameStat, RICHI_FLAG, cnt))) {
+				if ((isTenpai(GameStat, GameEnv, cnt) == 0)&&(getRichiFlag(GameStat, RICHI_FLAG, cnt))) {
 					transferChonboPenalty GameStat, cnt
 					await 500
 				}
 			loop
 			
-			Shanten = countshanten(GameStat, (getRound(GameStat)\NUM_OF_PLAYERS), SHANTEN_ALL)
-			if ((getAgariHouki(GameStat, getRound(GameStat)\NUM_OF_PLAYERS) == 1)||(IsRemotePlayer(GameEnv, getRound(GameStat)\NUM_OF_PLAYERS) == -1)) {
-				Shanten = 1 // ã≠êßïsíÆàµÇ¢
-			}
 			RenchanFlag = 0
 			switch getRule(RULE_ROUND_CONTINUATION)
-				case 0: if (Shanten <= 0) {RenchanFlag = 1}: swbreak
+				case 0: if (isTenpai(GameStat, GameEnv, (getRound(GameStat)\NUM_OF_PLAYERS))) {RenchanFlag = 1}: swbreak
 				case 2: RenchanFlag = 1: swbreak
-				case 4: if ((Shanten <= 0)||((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*16+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}: swbreak
-				case 5: if ((Shanten <= 0)&&((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*16+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}: swbreak
+				case 4: if ((isTenpai(GameStat, GameEnv, (getRound(GameStat)\NUM_OF_PLAYERS)))||((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*16+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}: swbreak
+				case 5: if ((isTenpai(GameStat, GameEnv, (getRound(GameStat)\NUM_OF_PLAYERS)))&&((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*16+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}: swbreak
 			swend
 			ryuukyokuProc GameStat, RenchanFlag
 		swbreak
@@ -373,12 +333,8 @@
 #ifdef SANMA4
 				if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
 #endif
-				Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
-				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
-					Shanten = 1 // òaóπÇËï˙ä¸éûÇÃèàóùÅ®ã≠êßïsíÆàµÇ¢Å®ïsíÆÉäÅ[É`Ç∆ÇµÇƒî±ïÑ
-				}
 				setHandStat GameStat, cnt, 1
-				if (Shanten == 0) {
+				if (isTenpai(GameStat, GameEnv, cnt)) {
 					setCall cnt, "íÆîv"
 				} else {
 					setCall cnt, "çˆòa"
@@ -391,11 +347,7 @@
 				if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
 #endif
 				// çˆòaóßíºÅiïsíÆóßíºÅjÇÃé“Ç™Ç¢ÇΩèÍçá
-				Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
-				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
-					Shanten = 1 // ã≠êßïsíÆàµÇ¢
-				}
-				if (Shanten > 0) {
+				if (isTenpai(GameStat, GameEnv, cnt) == 0) {
 					transferChonboPenalty GameStat, cnt
 					await 500
 				}
@@ -432,31 +384,7 @@
 			dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 			ResultDesc = ""
 			repeat NUM_OF_ACTUAL_PLAYERS
-				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
-					continue // òaóπÇËï˙ä¸éûÇÃèàóùÅ®ó¨Çµñûä—ÇîFÇﬂÇ»Ç¢
-				}
-				chkP = cnt: YaojiuSutehai = 0
-				repeat DiscardPointer(GameStat, chkP), 1
-					switch (getDiscard(GameStat, DISCARD_TILECODE, cnt, chkP))
-						case SUTEHAI_NORMAL+TILE_SUIT_CHARACTERS+1: case SUTEHAI_NORMAL+TILE_SUIT_CHARACTERS+9:
-						case SUTEHAI_NORMAL+TILE_SUIT_CIRCLES+1: case SUTEHAI_NORMAL+TILE_SUIT_CIRCLES+9:
-						case SUTEHAI_NORMAL+TILE_SUIT_BAMBOOS+1: case SUTEHAI_NORMAL+TILE_SUIT_BAMBOOS+9:
-						case SUTEHAI_NORMAL+TILE_EAST_WIND: case SUTEHAI_NORMAL+TILE_SOUTH_WIND:
-						case SUTEHAI_NORMAL+TILE_WEST_WIND: case SUTEHAI_NORMAL+TILE_NORTH_WIND:
-						case SUTEHAI_NORMAL+TILE_WHITE_DRAGON: case SUTEHAI_NORMAL+TILE_GREEN_DRAGON:
-						case SUTEHAI_NORMAL+TILE_RED_DRAGON:
-						case SUTEHAI_RIICHI+TILE_SUIT_CHARACTERS+1: case SUTEHAI_RIICHI+TILE_SUIT_CHARACTERS+9:
-						case SUTEHAI_RIICHI+TILE_SUIT_CIRCLES+1: case SUTEHAI_RIICHI+TILE_SUIT_CIRCLES+9:
-						case SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+1: case SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+9:
-						case SUTEHAI_RIICHI+TILE_EAST_WIND: case SUTEHAI_RIICHI+TILE_SOUTH_WIND:
-						case SUTEHAI_RIICHI+TILE_WEST_WIND: case SUTEHAI_RIICHI+TILE_NORTH_WIND:
-						case SUTEHAI_RIICHI+TILE_WHITE_DRAGON: case SUTEHAI_RIICHI+TILE_GREEN_DRAGON:
-						case SUTEHAI_RIICHI+TILE_RED_DRAGON:
-							YaojiuSutehai++
-						swbreak
-					swend
-				loop
-				if (YaojiuSutehai == DiscardPointer(GameStat, chkP)) {
+				if (isNagashiMangan(GameStat, GameEnv, cnt)) {
 					setCall chkP, "ó¨Çµñûä—"
 					switch playerWind(chkP, getRound(GameStat))
 						case PLAYER_EAST:

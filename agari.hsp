@@ -738,22 +738,21 @@ int origDoraPointer, array AgariPointRaw, array YakuInfo, var tmpAliceFlag
 			// U’®‚È‚Ì‚Éƒƒ“‚µ‚½ê‡‚Íö˜a
 			setCenterTitle "U’®ö˜a": ResultDesc += "(U’®‚Å‚Ìƒƒ“˜a—¹‚è)"
 		}
-		else {
+		else:if (isTenpai(GameStat, GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))) {
 			// ˜a—¹‚è‚ª¬—§‚µ‚Ä‚¢‚È‚¢ê‡ö˜a
-			Shanten = countshanten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), SHANTEN_ALL)
-			if (Shanten >= 0) {setCenterTitle "•s’®ö˜a": ResultDesc += "(¬—§‚µ‚Ä‚¢‚È‚¢˜a—¹‚è)"}
-			else {
-				// –ğ‚ª‚È‚©‚Á‚½ê‡‚Íö˜a
-				countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)
-				if (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 0) {setCenterTitle "–³ãÊö˜a": ResultDesc += "(–ğ‚Ì‚È‚¢˜a—¹‚è)"}
-				else:if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 1)&&(getShibari(GameStat) == 1)) {
-					// “ñãÊ”›‚è‚Å‚PãÊ‚µ‚©‚È‚¢‚È‚çö˜a
-					setCenterTitle "ãÊ•s‘«ö˜a": ResultDesc += "(ˆêãÊ‚µ‚©‚È‚¢˜a—¹‚è)"
-				} else:if ((getAgariHouki(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)||(IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == -1)) {
-					// ˜a—¹‚è•úŠü‚È‚Ì‚É˜a—¹‚ë‚¤‚Æ‚µ‚½
-					setCenterTitle "˜a—¹•úŠüö˜a": ResultDesc += "(˜a—¹‚è•úŠü“K—p’†)"
-				} else {setCenterTitle "@ö˜a@": ResultDesc += ""}
-			}
+			setCenterTitle "•s’®ö˜a": ResultDesc += "(¬—§‚µ‚Ä‚¢‚È‚¢˜a—¹‚è)"
+		}
+		else {
+			// –ğ‚ª‚È‚©‚Á‚½ê‡‚Íö˜a
+			countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)
+			if (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 0) {setCenterTitle "–³ãÊö˜a": ResultDesc += "(–ğ‚Ì‚È‚¢˜a—¹‚è)"}
+			else:if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) == 1)&&(getShibari(GameStat) == 1)) {
+				// “ñãÊ”›‚è‚Å‚PãÊ‚µ‚©‚È‚¢‚È‚çö˜a
+				setCenterTitle "ãÊ•s‘«ö˜a": ResultDesc += "(ˆêãÊ‚µ‚©‚È‚¢˜a—¹‚è)"
+			} else:if ((getAgariHouki(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)||(IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == -1)) {
+				// ˜a—¹‚è•úŠü‚È‚Ì‚É˜a—¹‚ë‚¤‚Æ‚µ‚½
+				setCenterTitle "˜a—¹•úŠüö˜a": ResultDesc += "(˜a—¹‚è•úŠü“K—p’†)"
+			} else {setCenterTitle "@ö˜a@": ResultDesc += ""}
 		}
 	}
 	// Œëƒƒ“AŒëƒcƒ‚ˆÈŠO‚Ìö˜a

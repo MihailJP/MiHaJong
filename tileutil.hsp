@@ -564,6 +564,48 @@ return DaoPaiAbilityFlag
 	return
 #global
 
+/* 聴牌かどうか調べる */
+#module
+#include "const.as"
+#defcfunc isTenpai var GameStat, var GameEnv, int targetPlayer
+	Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
+	if ((getAgariHouki(GameStat, targetPlayer) == 1)||(IsRemotePlayer(GameEnv, targetPlayer) == -1)) {
+		Shanten = 1 // 強制不聴扱い
+	}
+	if (Shanten <= 0) {return 1} else {return 0}
+#global
+
+/* 流し満貫かどうか調べる */
+#module
+#include "const.as"
+#defcfunc isNagashiMangan var GameStat, var GameEnv, int targetPlayer
+	if ((getAgariHouki(GameStat, targetPlayer) == 1)||(IsRemotePlayer(GameEnv, targetPlayer) == -1)) {
+		return 0 // 和了り放棄時の処理→流し満貫を認めない
+	}
+	YaojiuSutehai = 0
+	repeat DiscardPointer(GameStat, targetPlayer), 1
+		switch (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer))
+			case SUTEHAI_NORMAL+TILE_SUIT_CHARACTERS+1: case SUTEHAI_NORMAL+TILE_SUIT_CHARACTERS+9:
+			case SUTEHAI_NORMAL+TILE_SUIT_CIRCLES+1: case SUTEHAI_NORMAL+TILE_SUIT_CIRCLES+9:
+			case SUTEHAI_NORMAL+TILE_SUIT_BAMBOOS+1: case SUTEHAI_NORMAL+TILE_SUIT_BAMBOOS+9:
+			case SUTEHAI_NORMAL+TILE_EAST_WIND: case SUTEHAI_NORMAL+TILE_SOUTH_WIND:
+			case SUTEHAI_NORMAL+TILE_WEST_WIND: case SUTEHAI_NORMAL+TILE_NORTH_WIND:
+			case SUTEHAI_NORMAL+TILE_WHITE_DRAGON: case SUTEHAI_NORMAL+TILE_GREEN_DRAGON:
+			case SUTEHAI_NORMAL+TILE_RED_DRAGON:
+			case SUTEHAI_RIICHI+TILE_SUIT_CHARACTERS+1: case SUTEHAI_RIICHI+TILE_SUIT_CHARACTERS+9:
+			case SUTEHAI_RIICHI+TILE_SUIT_CIRCLES+1: case SUTEHAI_RIICHI+TILE_SUIT_CIRCLES+9:
+			case SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+1: case SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+9:
+			case SUTEHAI_RIICHI+TILE_EAST_WIND: case SUTEHAI_RIICHI+TILE_SOUTH_WIND:
+			case SUTEHAI_RIICHI+TILE_WEST_WIND: case SUTEHAI_RIICHI+TILE_NORTH_WIND:
+			case SUTEHAI_RIICHI+TILE_WHITE_DRAGON: case SUTEHAI_RIICHI+TILE_GREEN_DRAGON:
+			case SUTEHAI_RIICHI+TILE_RED_DRAGON:
+				YaojiuSutehai++
+			swbreak
+		swend
+	loop
+	if (YaojiuSutehai == DiscardPointer(GameStat, targetPlayer)) {return 1} else {return 0}
+#global
+
 /* 卓の状態のサンドボックスを作る */
 #module
 #include "const.as"
