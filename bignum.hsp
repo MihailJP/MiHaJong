@@ -374,7 +374,7 @@
 		else {Flag = 1}
 	}
 	if (getRule(RULE_RIICHI_REQUISITE) == 2) {Flag = 1}
-	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {Flag = 1}
+	if (getRule(RULE_BUTTOBI_BORDER) == 2) {Flag = 1}
 	return Flag
 #global
 

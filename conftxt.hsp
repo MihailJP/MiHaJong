@@ -61,7 +61,7 @@
 	
 	RuleName(RULE_PENALTY_NEGATIVE) = "トビ賞"
 	RuleDescription(RULE_PENALTY_NEGATIVE) = "誰かの持ち点を０未満にしたときにもらえるボーナスです"
-	RuleTxt(0, RULE_PENALTY_NEGATIVE) = "なし", "10000点", "20000点", "チップ１枚", "チップ２枚", "チップ３枚", "ハコ下も続行"
+	RuleTxt(0, RULE_PENALTY_NEGATIVE) = "なし", "10000点", "20000点", "チップ１枚", "チップ２枚", "チップ３枚"
 	
 	RuleName(RULE_STARTING_POINT) = "配給原点"
 	RuleDescription(RULE_STARTING_POINT) = "試合開始時の持ち点を設定します"
@@ -1419,9 +1419,9 @@
 	RuleDescription(RULE_BLUE_CHIP) = "青牌に対するチップの有無を設定します"
 	RuleTxt(0, RULE_BLUE_CHIP) = "門前のみ", "立直時のみ", "常時", "なし"
 
-	RuleName(RULE_BUTTOBI_BORDER) = "飛びの基準"
-	RuleDescription(RULE_BUTTOBI_BORDER) = "丁度０点を飛びとみなすかどうかを設定します"
-	RuleTxt(0, RULE_BUTTOBI_BORDER) = "０点未満", "０点以下"
+	RuleName(RULE_BUTTOBI_BORDER) = "トビ"
+	RuleDescription(RULE_BUTTOBI_BORDER) = "誰かの持ち点がなくなった時点で終了するかどうかを設定します"
+	RuleTxt(0, RULE_BUTTOBI_BORDER) = "０点未満", "０点以下", "なし"
 
 	RuleName(RULE_RIICHI_REQUISITE) = "立直時点棒要件"
 	RuleDescription(RULE_RIICHI_REQUISITE) = "立直宣言時に持っていなければならない点数を設定します(飛び無しルールでは無視されます)"

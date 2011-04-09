@@ -511,7 +511,7 @@ repeat
 	endround GameStat, GameEnv, RoundEndType, yakuInfo, OrigTurn, OrigHonba
 	await 5000
 	// ÉnÉRäÑÇÍèIóπ
-	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {
+	if (getRule(RULE_BUTTOBI_BORDER) != 2) {
 		if (isDobon(GameStat,PLAYER_EAST)) {break}
 		if (isDobon(GameStat,PLAYER_SOUTH)) {break}
 		if (isDobon(GameStat,PLAYER_WEST)) {break}

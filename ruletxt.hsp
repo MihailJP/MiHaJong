@@ -19,7 +19,7 @@
 	} else {
 		chatappend "*** "+RuleStat(RULE_POINT_BASIS)+"\n"
 	}
-	if (Rule(RULE_PENALTY_NEGATIVE) != 6) {
+	if (Rule(RULE_BUTTOBI_BORDER) != 2) {
 		if ((Rule(RULE_CHIP) != 0)||(Rule(RULE_PENALTY_NEGATIVE) < 3)) {
 			chatappend "*** ƒgƒrÜ"+RuleStat(RULE_PENALTY_NEGATIVE)+"\n"
 		}
