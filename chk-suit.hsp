@@ -42,10 +42,11 @@
 			}
 			if (getMenzen(GameStat, targetPlayer) == 1) {
 				/* –å´‘O’ñ‚Ì–ğ‚ğ”»’è‚·‚é */
-				tmpRuleCodeList = -1, RULE_DAISHARIN, RULE_DAICHIKURIN, RULE_DAISUURIN, RULE_PI, RULE_SQUARE_ROOT_TWO, RULE_NATURAL_LOGARITHM, RULE_IMAGINARY_NUMBER, RULE_SQUARE_ROOT_TEN, RULE_QINGHAIHU, RULE_QINGHAIHU
-				tmpHaishikiList = "311111113", "022222220", "022222220", "022222220", "211131113", "323211100", "130110141", "111022411", "222004310", "422000222", "222000224"
+				/* ¬—§ğŒ‚ª”v®‚Å•\‹L‚Å‚«‚é‚à‚Ì */
+				tmpRuleCodeList = -1, RULE_DAISHARIN, RULE_DAICHIKURIN, RULE_DAISUURIN, RULE_SHOSHARIN, RULE_SHOCHIKURIN, RULE_SHOSUURIN, RULE_SHOSHARIN, RULE_SHOCHIKURIN, RULE_SHOSUURIN, RULE_PI, RULE_SQUARE_ROOT_TWO, RULE_NATURAL_LOGARITHM, RULE_IMAGINARY_NUMBER, RULE_SQUARE_ROOT_TEN, RULE_QINGHAIHU, RULE_QINGHAIHU
+				tmpHaishikiList = "311111113", "022222220", "022222220", "022222220", "222222200", "222222200", "222222200", "002222222", "002222222", "002222222", "211131113", "323211100", "130110141", "111022411", "222004310", "422000222", "222000224"
 				sdim tmpYakuNameList, 16, length(tmpRuleCodeList)
-				tmpYakuNameList = "‹ã˜@•ó“•", "‘åÔ—Ö", "‘å’|—Ñ", "‘å”—×", "‰~ü—¦˜a", "ã‚Q˜a", "©‘R‘Î”‚Ì’ê", "‹•”˜a", "ã‚P‚O˜a", "´ŠCŒÎ", "´ŠCŒÎ"
+				tmpYakuNameList = "‹ã˜@•ó“•", "‘åÔ—Ö", "‘å’|—Ñ", "‘å”—×", "¬Ô—Ö", "¬’|—Ñ", "¬”—×", "¬Ô—Ö", "¬’|—Ñ", "¬”—×", "‰~ü—¦˜a", "ã‚Q˜a", "©‘R‘Î”‚Ì’ê", "‹•”˜a", "ã‚P‚O˜a", "´ŠCŒÎ", "´ŠCŒÎ"
 				
 				repeat length(tmpRuleCodeList)
 					ruleEnabled = 0
@@ -58,6 +59,9 @@
 							if ((tmpYakuNameList == "‘åÔ—Ö")&&(cnt != TILE_SUIT_CIRCLES/TILE_SUIT_STEP)) {continue}
 							if ((tmpYakuNameList == "‘å’|—Ñ")&&(cnt != TILE_SUIT_BAMBOOS/TILE_SUIT_STEP)) {continue}
 							if ((tmpYakuNameList == "‘å”—×")&&(cnt != TILE_SUIT_CHARACTERS/TILE_SUIT_STEP)) {continue}
+							if ((tmpYakuNameList == "¬Ô—Ö")&&(cnt != TILE_SUIT_CIRCLES/TILE_SUIT_STEP)) {continue}
+							if ((tmpYakuNameList == "¬’|—Ñ")&&(cnt != TILE_SUIT_BAMBOOS/TILE_SUIT_STEP)) {continue}
+							if ((tmpYakuNameList == "¬”—×")&&(cnt != TILE_SUIT_CHARACTERS/TILE_SUIT_STEP)) {continue}
 							tmpcnt = cnt
 							subFlag = 0
 							repeat 9, 1

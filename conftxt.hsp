@@ -1702,6 +1702,20 @@
 	RuleTxt(0, RULE_HIGASHIKANTO_EXPWY) = "なし", "役満"
 	nonumsanma RULE_HIGASHIKANTO_EXPWY
 
+	RuleName(RULE_SHOSHARIN) = "小車輪"
+	RuleDescription(RULE_SHOSHARIN) = "小車輪の有無と価値を設定します(筒子で1～7か3～9のどちらかが2枚ずつ)"
+	RuleTxt(0, RULE_SHOSHARIN) = "なし", "役満"
+
+	RuleName(RULE_SHOCHIKURIN) = "小竹林"
+	RuleDescription(RULE_SHOCHIKURIN) = "小竹林の有無と価値を設定します(小車輪の索子版)"
+	RuleTxt(0, RULE_SHOCHIKURIN) = "なし", "役満"
+
+	RuleName(RULE_SHOSUURIN) = "小数隣"
+	RuleDescription(RULE_SHOSUURIN) = "小数隣の有無と価値を設定します(小車輪の萬子版)"
+	RuleTxt(0, RULE_SHOSUURIN) = "なし", "役満"
+	nosanma RULE_SHOSUURIN
+	
+
 return
 
 #undef noregsanma

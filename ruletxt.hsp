@@ -415,11 +415,16 @@
 	AddRuleText3 "走南闖北", RuleStat(RULE_ZAONAN_CHUANGBEI)
 #endif
 	/* ルール設定を表示　セクション区切り */
-#ifdef SANMAX
-	AddRuleText "大竹林", RuleStat(RULE_DAICHIKURIN)
-#else
 	AddRuleText1 "大竹林", RuleStat(RULE_DAICHIKURIN)
-	AddRuleText3 "大数隣", RuleStat(RULE_DAISUURIN)
+#ifndef SANMAX
+	AddRuleText2 "大数隣", RuleStat(RULE_DAISUURIN)
+#endif
+	AddRuleText2 "小車輪", RuleStat(RULE_SHOSHARIN)
+#ifdef SANMAX
+	AddRuleText3 "小竹林", RuleStat(RULE_SHOCHIKURIN)
+#else
+	AddRuleText2 "小竹林", RuleStat(RULE_SHOCHIKURIN)
+	AddRuleText3 "小数隣", RuleStat(RULE_SHOSUURIN)
 #endif
 #ifdef SANMAS
 	AddRuleText1 "奇数七対子", RuleStat(RULE_ODD_PAIRS)

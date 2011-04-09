@@ -612,11 +612,11 @@
 #module
 #include "const.as"
 #defcfunc BasePoint
-	BasePoint = 300
+	BasePt = 300
 #ifdef SANMAT
-	if ((getRule(RULE_STARTING_POINT) < 4)||(getRule(RULE_STARTING_POINT) > 6)) {BasePoint = 400}
+	if ((getRule(RULE_STARTING_POINT) < 4)||(getRule(RULE_STARTING_POINT) > 6)) {BasePt = 400}
 #endif
-	return BasePoint
+	return BasePt
 #global
 
 #module
