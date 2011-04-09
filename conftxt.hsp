@@ -1714,7 +1714,14 @@
 	RuleDescription(RULE_SHOSUURIN) = "小数隣の有無と価値を設定します(小車輪の萬子版)"
 	RuleTxt(0, RULE_SHOSUURIN) = "なし", "役満"
 	nosanma RULE_SHOSUURIN
-	
+
+	RuleName(RULE_XIAOYUWU) = "小於五"
+	RuleDescription(RULE_XIAOYUWU) = "小於五の有無と価値を設定します(1、2、3、4の数牌のみで和了る)"
+	RuleTxt(0, RULE_XIAOYUWU) = "なし", "６飜"
+
+	RuleName(RULE_DAYUWU) = "大於五"
+	RuleDescription(RULE_DAYUWU) = "大於五の有無と価値を設定します(6、7、8、9の数牌のみで和了る)"
+	RuleTxt(0, RULE_DAYUWU) = "なし", "６飜"
 
 return
 
