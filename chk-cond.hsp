@@ -51,7 +51,7 @@
 					if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) == SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+1) {yakuFlag = 1}
 					if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) == SUTEHAI_RIICHI_TAKEN+TILE_SUIT_BAMBOOS+1) {yakuFlag = 1}
 				loop
-				addyaku tmpYakuInfo, "’¹—§’¼", 1
+				if (yakuFlag) {addyaku tmpYakuInfo, "’¹—§’¼", 1}
 			}
 		}
 	}
