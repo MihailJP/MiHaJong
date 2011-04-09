@@ -494,7 +494,10 @@
 	AddRuleText2 "全帯八", RuleStat(RULE_ALL_EIGHT)
 	AddRuleText3 "全帯九", RuleStat(RULE_ALL_NINE)
 	AddRuleText1 "小於五", RuleStat(RULE_XIAOYUWU)
-	AddRuleText3 "大於五", RuleStat(RULE_DAYUWU)
+	AddRuleText2 "大於五", RuleStat(RULE_DAYUWU)
+	AddRuleText2 "全小", RuleStat(RULE_ALL_SMALL)
+	AddRuleText2 "全中", RuleStat(RULE_ALL_MIDDLE)
+	AddRuleText3 "全大", RuleStat(RULE_ALL_LARGE)
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText "鳥立直", RuleStat(RULE_BIRD_RIICHI)
 	AddRuleText1 "五筒開花", RuleStat(RULE_UUPIN_KAIHOH)
