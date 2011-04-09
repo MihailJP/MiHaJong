@@ -6,8 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc endround var GameStat, var GameEnv, int _RoundEndType, \
-var yakuInfo, int OrigTurn, int OrigHonba
+#deffunc endround var GameStat, var GameEnv, int _RoundEndType, var yakuInfo, int OrigTurn, int OrigHonba
 	// 局面終了コード
 	// ０…荒牌流局
 	// １…誰かの和了り
@@ -210,10 +209,6 @@ var yakuInfo, int OrigTurn, int OrigHonba
 				}
 			loop
 			
-			setCenterTitle ""
-			repeat NUM_OF_PLAYERS
-				setCall cnt, ""
-			loop
 			Shanten = countshanten(GameStat, (getRound(GameStat)\NUM_OF_PLAYERS), SHANTEN_ALL)
 			if ((getAgariHouki(GameStat, getRound(GameStat)\NUM_OF_PLAYERS) == 1)||(IsRemotePlayer(GameEnv, getRound(GameStat)\NUM_OF_PLAYERS) == -1)) {
 				Shanten = 1 // 強制不聴扱い
@@ -225,18 +220,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 				case 4: if ((Shanten <= 0)||((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*16+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}: swbreak
 				case 5: if ((Shanten <= 0)&&((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*16+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}: swbreak
 			swend
-			if (RenchanFlag) {
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
-			} else {
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
-			}
-			dsplay@ SND_PAGE
-			redrscreen
-			redraw 1
-			Shanten = countshanten(GameStat, (getRound(GameStat)\NUM_OF_PLAYERS), SHANTEN_ALL)
-			if (RenchanFlag == 0) {incRound GameStat}
-			incHonba GameStat
-			setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+			ryuukyokuProc GameStat, RenchanFlag
 		swbreak
 	/**************/
 	/* 和了成立時 */
@@ -290,30 +274,16 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			dsplay@ SND_PINGJU
 			bgmplay_norep MUS_RYUUKYOKU
 			redrscreen: redraw 1: await 3000
-			repeat NUM_OF_PLAYERS
-				setCall cnt, ""
-			loop
-			setCenterTitle ""
 			if (getRule(RULE_NINE_TERMINALS) != 2) {
 				if ((getRule(RULE_NINE_TERMINALS) != 1)||(playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST)) {
-					setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
+					RenchanFlag = 1
 				} else {
-					setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
+					RenchanFlag = 0
 				}
 			} else {
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
+				RenchanFlag = 0
 			}
-			dsplay@ SND_PAGE
-			redrscreen
-			redraw 1
-			incHonba GameStat
-			if (getRule(RULE_NINE_TERMINALS) == 2) {incRound GameStat}
-			if (getRule(RULE_NINE_TERMINALS) == 1) {
-				if ((getRule(RULE_NINE_TERMINALS) == 1)&&(playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST)) {
-					incRound GameStat
-				}
-			}
-			setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+			ryuukyokuProc GameStat, RenchanFlag
 		swbreak
 #endif
 	/**************/
@@ -333,23 +303,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			bgmplay_norep MUS_RYUUKYOKU
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 3000
-			repeat NUM_OF_PLAYERS
-				setCall cnt, ""
-			loop
-			setCenterTitle ""
-			if (getRule(RULE_FOUR_KONG_RYUUKYOKU) != 1) {
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
-			} else {
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
-			}
-			dsplay@ SND_PAGE
-			redrscreen
-			redraw 1
-			incHonba GameStat
-			if (getRule(RULE_FOUR_KONG_RYUUKYOKU) == 1) {
-				incRound GameStat
-			}
-			setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+			ryuukyokuProc GameStat, (getRule(RULE_FOUR_KONG_RYUUKYOKU) != 1)
 		swbreak
 	/**************/
 	/* 三家和の時 */
@@ -378,55 +332,30 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			bgmplay_norep MUS_RYUUKYOKU
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 3000
-			repeat NUM_OF_PLAYERS
-				setCall cnt, ""
-			loop
-			setCenterTitle ""
-			if (getRule(RULE_TRIPLE_MAHJONG) == 0) {
-				if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) != PLAYER_EAST) {
-					setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
-				} else {
-					setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
-				}
-			}
-			if (getRule(RULE_TRIPLE_MAHJONG) == 1) {
-				if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) == PLAYER_NORTH) {
-					setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
-				} else {
-					setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
-				}
-			}
-			if (getRule(RULE_TRIPLE_MAHJONG) == 2) {
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
-			}
-			if (getRule(RULE_TRIPLE_MAHJONG) == 3) {
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
-			}
-			dsplay@ SND_PAGE
-			redrscreen
-			redraw 1
-			
-			if (getRule(RULE_TRIPLE_MAHJONG) == 0) {
-				if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) != PLAYER_EAST) {
-					incHonba GameStat
-				} else {
-					incHonba GameStat: incRound GameStat
-				}
-			}
-			if (getRule(RULE_TRIPLE_MAHJONG) == 1) {
-				if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) == PLAYER_NORTH) {
-					incHonba GameStat
-				} else {
-					incHonba GameStat: incRound GameStat
-				}
-			}
-			if (getRule(RULE_TRIPLE_MAHJONG) == 2) {
-				incHonba GameStat
-			}
-			if (getRule(RULE_TRIPLE_MAHJONG) == 3) {
-				incHonba GameStat: incRound GameStat
-			}
-			setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+
+			switch getRule(RULE_TRIPLE_MAHJONG)
+				case 0:
+					if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) != PLAYER_EAST) {
+						RenchanFlag = 1
+					} else {
+						RenchanFlag = 0
+					}
+					swbreak
+				case 1:
+					if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) == PLAYER_NORTH) {
+						RenchanFlag = 1
+					} else {
+						RenchanFlag = 0
+					}
+					swbreak
+				case 2:
+					RenchanFlag = 1
+					swbreak
+				case 3:
+					RenchanFlag = 0
+					swbreak
+			swend
+			ryuukyokuProc GameStat, RenchanFlag
 		swbreak
 	/**************/
 	/* 四風流局時 */
@@ -453,31 +382,11 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			bgmplay_norep MUS_RYUUKYOKU
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 3000
-			repeat NUM_OF_PLAYERS
-				setCall cnt, ""
-			loop
-			setCenterTitle ""
 #ifdef ALLSANMA
-			if (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 2) {
+			ryuukyokuProc GameStat, (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 2)
 #else
-			if (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 1) {
+			ryuukyokuProc GameStat, (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 1)
 #endif
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
-			} else {
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
-			}
-			dsplay@ SND_PAGE
-			redrscreen
-			redraw 1
-			incHonba GameStat
-#ifdef ALLSANMA
-			if (getRule(RULE_FOUR_WIND_RYUUKYOKU) == 2) {
-#else
-			if (getRule(RULE_FOUR_WIND_RYUUKYOKU) == 1) {
-#endif
-				incRound GameStat
-			}
-			setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 		swbreak
 	/**************/
 	/* 四人立直時 */
@@ -590,31 +499,11 @@ var yakuInfo, int OrigTurn, int OrigHonba
 				}
 			loop
 
-			repeat NUM_OF_PLAYERS
-				setCall cnt, ""
-			loop
-			setCenterTitle ""
 #ifdef ALLSANMA
-			if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 2) {
+			ryuukyokuProc GameStat, (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 2)
 #else
-			if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 1) {
+			ryuukyokuProc GameStat, (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 1)
 #endif
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
-			} else {
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
-			}
-			dsplay@ SND_PAGE
-			redrscreen
-			redraw 1
-			incHonba GameStat
-#ifdef ALLSANMA
-			if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) == 2) {
-#else
-			if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) == 1) {
-#endif
-				incRound GameStat
-			}
-			setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 		swbreak
 	/**************/
 	/* 流し満貫時 */
@@ -790,16 +679,7 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			redraw 1: await 1500
 			pointcalc GameStat, PointDelta
 			
-			repeat NUM_OF_PLAYERS
-				setCall cnt, ""
-			loop
-			setCenterTitle ""
-			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
-			dsplay@ SND_PAGE
-			redrscreen
-			redraw 1
-			incHonba GameStat
-			setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+			ryuukyokuProc GameStat, 1
 		swbreak
 	/**************/
 	/* 回線切断時 */
@@ -827,25 +707,32 @@ var yakuInfo, int OrigTurn, int OrigHonba
 			bgmplay_norep MUS_RYUUKYOKU
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 3000
-			repeat NUM_OF_PLAYERS
-				setCall cnt, ""
-			loop
-			setCenterTitle ""
-			if (getRule(RULE_FIFTH_KONG) != 2) {
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
-			} else {
-				setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
-			}
-			dsplay@ SND_PAGE
-			redrscreen
-			redraw 1
-			incHonba GameStat
-			if (getRule(RULE_FIFTH_KONG) == 2) {
-				incRound GameStat
-			}
-			setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+			ryuukyokuProc GameStat, (getRule(RULE_FIFTH_KONG) != 2)
 		swbreak
 	swend
 	haifuwritebuffer GameStat, GameEnv, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType
+	return
+#global
+
+#module
+#include "const.as"
+#deffunc ryuukyokuProc var GameStat, int RenchanFlag
+	repeat NUM_OF_PLAYERS
+		setCall cnt, ""
+	loop
+	setCenterTitle ""
+	if (RenchanFlag) {
+		setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
+	} else {
+		setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
+	}
+	dsplay@ SND_PAGE
+	redrscreen
+	redraw 1
+	incHonba GameStat
+	if (RenchanFlag): else {
+		incRound GameStat
+	}
+	setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
 	return
 #global

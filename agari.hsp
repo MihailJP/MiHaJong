@@ -6,9 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc agariproc int _RoundEndType, \
-var yakuInfo, var GameStat, var GameEnv, \
-var tmpUraFlag, var tmpAliceFlag, var ResultDesc
+#deffunc agariproc int _RoundEndType, var yakuInfo, var GameStat, var GameEnv, var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 	RoundEndType = _RoundEndType
 	tmpagariflag = 0
 	FirstAgariPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)
@@ -455,51 +453,15 @@ int origDoraPointer, array AgariPointRaw, array YakuInfo, var tmpAliceFlag
 	}
 	if (getRule(RULE_WAREME) != 0) {
 		// Š„‚ê–Úƒ‹[ƒ‹
-		if (getWareme(GameStat) == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-			// Š„‚ê–Ú‚Ìl‚ª˜a—¹‚Á‚½‚Æ‚«
-			deltadouble PointDelta, PLAYER_EAST
-			deltadouble PointDelta, PLAYER_SOUTH
-			deltadouble PointDelta, PLAYER_WEST
-#ifndef SANMAT
-			deltadouble PointDelta, PLAYER_NORTH
-#endif
-		} else {
-			// Š„‚ê–Ú‚ÌlˆÈŠO‚ª˜a—¹‚Á‚½‚Æ‚«
-			deltawareme PointDelta, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getWareme(GameStat)
-			deltadouble PointDelta, getWareme(GameStat)
-		}
+		gosub *calculateWareme
 	}
 	if ((getRule(RULE_WAREME) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))) {
 		// ƒTƒCƒRƒ‚ªƒ]ƒ–Ú‚ÌŽž‚Í‚³‚ç‚É”{
-		if (getWareme(GameStat) == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-			// Š„‚ê–Ú‚Ìl‚ª˜a—¹‚Á‚½‚Æ‚«
-			deltadouble PointDelta, PLAYER_EAST
-			deltadouble PointDelta, PLAYER_SOUTH
-			deltadouble PointDelta, PLAYER_WEST
-#ifndef SANMAT
-			deltadouble PointDelta, PLAYER_NORTH
-#endif
-		} else {
-			// Š„‚ê–Ú‚ÌlˆÈŠO‚ª˜a—¹‚Á‚½‚Æ‚«
-			deltawareme PointDelta, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getWareme(GameStat)
-			deltadouble PointDelta, getWareme(GameStat)
-		}
+		gosub *calculateWareme
 	}
 	if (getRule(RULE_DOUKASEN) != 0) {
 		// “±‰Îüƒ‹[ƒ‹
-		if (getDoukasen(GameStat) == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-			// “±‰Îü‚Ìl‚ª˜a—¹‚Á‚½‚Æ‚«
-			deltadouble PointDelta, PLAYER_EAST
-			deltadouble PointDelta, PLAYER_SOUTH
-			deltadouble PointDelta, PLAYER_WEST
-#ifndef SANMAT
-			deltadouble PointDelta, PLAYER_NORTH
-#endif
-		} else {
-			// “±‰Îü‚ÌlˆÈŠO‚ª˜a—¹‚Á‚½‚Æ‚«
-			deltawareme PointDelta, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getDoukasen(GameStat)
-			deltadouble PointDelta, getDoukasen(GameStat)
-		}
+		gosub *calculateDoukasen
 	}
 	agariscrproc GameStat, GameEnv, yakuInfo, agariPointArray, ChipAmount, ResultDesc, tmpUraFlag /* ˜a—¹‰æ–Ê */
 	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)&&(getRule(RULE_ALICE) != 0)) {
@@ -599,52 +561,16 @@ int origDoraPointer, array AgariPointRaw, array YakuInfo, var tmpAliceFlag
 		// Š„‚ê–Ú‚ÅÏ‚Ý–_‚à‚Q”{‚É‚È‚é
 		if (getRule(RULE_WAREME) != 0) {
 			// Š„‚ê–Úƒ‹[ƒ‹
-			if (getWareme(GameStat) == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-				// Š„‚ê–Ú‚Ìl‚ª˜a—¹‚Á‚½‚Æ‚«
-				PointDelta(PLAYER_EAST) += PointDelta(PLAYER_EAST)
-				PointDelta(PLAYER_SOUTH) += PointDelta(PLAYER_SOUTH)
-				PointDelta(PLAYER_WEST) += PointDelta(PLAYER_WEST)
-#ifndef SANMAT
-				PointDelta(PLAYER_NORTH) += PointDelta(PLAYER_NORTH)
-#endif
-			} else {
-				// Š„‚ê–Ú‚ÌlˆÈŠO‚ª˜a—¹‚Á‚½‚Æ‚«
-				PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) -= PointDelta(getWareme(GameStat))
-				PointDelta(getWareme(GameStat)) += PointDelta(getWareme(GameStat))
-			}
+			gosub *calculateWareme
 		}
 		if ((getRule(RULE_WAREME) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))) {
 			// ƒTƒCƒRƒ‚ªƒ]ƒ–Ú‚ÌŽž‚Í‚³‚ç‚É”{
-			if (getWareme(GameStat) == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-				// Š„‚ê–Ú‚Ìl‚ª˜a—¹‚Á‚½‚Æ‚«
-				PointDelta(PLAYER_EAST) += PointDelta(PLAYER_EAST)
-				PointDelta(PLAYER_SOUTH) += PointDelta(PLAYER_SOUTH)
-				PointDelta(PLAYER_WEST) += PointDelta(PLAYER_WEST)
-#ifndef SANMAT
-				PointDelta(PLAYER_NORTH) += PointDelta(PLAYER_NORTH)
-#endif
-			} else {
-				// Š„‚ê–Ú‚ÌlˆÈŠO‚ª˜a—¹‚Á‚½‚Æ‚«
-				PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) -= PointDelta(getWareme(GameStat))
-				PointDelta(getWareme(GameStat)) += PointDelta(getWareme(GameStat))
-			}
+			gosub *calculateWareme
 		}
 		// Š„‚ê–Ú‚ÅÏ‚Ý–_‚à‚Q”{‚É‚È‚é
 		if (getRule(RULE_DOUKASEN) != 0) {
 			// “±‰Îüƒ‹[ƒ‹
-			if (getDoukasen(GameStat) == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-				// Š„‚ê–Ú‚Ìl‚ª˜a—¹‚Á‚½‚Æ‚«
-				PointDelta(PLAYER_EAST) += PointDelta(PLAYER_EAST)
-				PointDelta(PLAYER_SOUTH) += PointDelta(PLAYER_SOUTH)
-				PointDelta(PLAYER_WEST) += PointDelta(PLAYER_WEST)
-#ifndef SANMAT
-				PointDelta(PLAYER_NORTH) += PointDelta(PLAYER_NORTH)
-#endif
-			} else {
-				// “±‰Îü‚ÌlˆÈŠO‚ª˜a—¹‚Á‚½‚Æ‚«
-				PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) -= PointDelta(getDoukasen(GameStat))
-				PointDelta(getDoukasen(GameStat)) += PointDelta(getDoukasen(GameStat))
-			}
+			gosub *calculateDoukasen
 		}
 		/* •ï‚Ìê‡ */
 		if (isPaoAgari(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))) {
@@ -683,27 +609,11 @@ int origDoraPointer, array AgariPointRaw, array YakuInfo, var tmpAliceFlag
 	}
 	
 	if ((ChipAmount > 0)&&(getRule(RULE_CHIP) != 0)) {
-		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-		if (getTsumoAgariFlag(GameStat) == 0) {
-			PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) = -ChipAmount
-			PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) = ChipAmount
-		} else {
-			PointDelta(PLAYER_EAST) = -ChipAmount
-			PointDelta(PLAYER_SOUTH) = -ChipAmount
-			PointDelta(PLAYER_WEST) = -ChipAmount
-#ifndef SANMAT
-			PointDelta(PLAYER_NORTH) = -ChipAmount
-#endif
-			PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) = ChipAmount*(NUM_OF_ACTUAL_PLAYERS-1)
-		}
 		setCenterTitle "j‹V´ŽZ"
-		putchipdelta PointDelta
-		redraw 1: await 1500
-		repeat NUM_OF_PLAYERS
-			addChip GameStat, cnt, PointDelta(cnt)
-		loop
+		gosub *chipTransfer
 	}
 	
+	ChipAmount = 0
 	if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= YAKUVAL_YAKUMAN) {
 		// –ð–žj‹V
 		switch getRule(RULE_LIMITHAND_BONUS)
@@ -718,25 +628,8 @@ int origDoraPointer, array AgariPointRaw, array YakuInfo, var tmpAliceFlag
 		swend
 	}
 	if ((ChipAmount > 0)&&(getRule(RULE_CHIP) != 0)) {
-		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-		if ((getTsumoAgariFlag(GameStat) == 0)&&(getRule(RULE_LIMITHAND_BONUS) <= 5)) {
-			PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) = -ChipAmount
-			PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) = ChipAmount
-		} else {
-			PointDelta(PLAYER_EAST) = -ChipAmount
-			PointDelta(PLAYER_SOUTH) = -ChipAmount
-			PointDelta(PLAYER_WEST) = -ChipAmount
-#ifndef SANMAT
-			PointDelta(PLAYER_NORTH) = -ChipAmount
-#endif
-			PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) = ChipAmount*(NUM_OF_ACTUAL_PLAYERS-1)
-		}
 		setCenterTitle "–ð–žj‹V"
-		putchipdelta PointDelta
-		redraw 1: await 1500
-		repeat NUM_OF_PLAYERS
-			addChip GameStat, cnt, PointDelta(cnt)
-		loop
+		gosub *chipTransfer
 	}
 	/* Žl”n˜H‚ª–k‰Æ‚Ì•úe‚¾‚Á‚½ê‡ */
 #ifndef SANMAT
@@ -756,6 +649,58 @@ int origDoraPointer, array AgariPointRaw, array YakuInfo, var tmpAliceFlag
 		}
 	}
 #endif
+	return
+
+*chipTransfer
+	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+	if ((getTsumoAgariFlag(GameStat) == 0)&&(getRule(RULE_LIMITHAND_BONUS) <= 5)) {
+		PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) = -ChipAmount
+		PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) = ChipAmount
+	} else {
+		PointDelta(PLAYER_EAST) = -ChipAmount
+		PointDelta(PLAYER_SOUTH) = -ChipAmount
+		PointDelta(PLAYER_WEST) = -ChipAmount
+#ifndef SANMAT
+		PointDelta(PLAYER_NORTH) = -ChipAmount
+#endif
+		PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) = ChipAmount*(NUM_OF_ACTUAL_PLAYERS-1)
+	}
+	putchipdelta PointDelta
+	redraw 1: await 1500
+	repeat NUM_OF_PLAYERS
+		addChip GameStat, cnt, PointDelta(cnt)
+	loop
+	return
+
+*doubleAllDelta
+	deltadouble PointDelta, PLAYER_EAST
+	deltadouble PointDelta, PLAYER_SOUTH
+	deltadouble PointDelta, PLAYER_WEST
+#ifndef SANMAT
+	deltadouble PointDelta, PLAYER_NORTH
+#endif
+	return
+
+*calculateWareme
+	if (getWareme(GameStat) == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
+		// Š„‚ê–Ú‚Ìl‚ª˜a—¹‚Á‚½‚Æ‚«
+		gosub *doubleAllDelta
+	} else {
+		// Š„‚ê–Ú‚ÌlˆÈŠO‚ª˜a—¹‚Á‚½‚Æ‚«
+		deltawareme PointDelta, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getWareme(GameStat)
+		deltadouble PointDelta, getWareme(GameStat)
+	}
+	return
+
+*calculateDoukasen
+	if (getDoukasen(GameStat) == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
+		// “±‰Îü‚Ìl‚ª˜a—¹‚Á‚½‚Æ‚«
+		gosub *doubleAllDelta
+	} else {
+		// “±‰Îü‚ÌlˆÈŠO‚ª˜a—¹‚Á‚½‚Æ‚«
+		deltawareme PointDelta, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getDoukasen(GameStat)
+		deltadouble PointDelta, getDoukasen(GameStat)
+	}
 	return
 #global
 
