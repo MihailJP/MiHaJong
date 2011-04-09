@@ -608,3 +608,21 @@
 	}
 	return
 #global
+
+#module
+#include "const.as"
+#defcfunc BasePoint
+	BasePoint = 300
+#ifdef SANMAT
+	if ((getRule(RULE_STARTING_POINT) < 4)||(getRule(RULE_STARTING_POINT) > 6)) {BasePoint = 400}
+#endif
+	return BasePoint
+#global
+
+#module
+#include "const.as"
+#defcfunc isAboveBase var GameStat, int targetPlayer
+	if ((getScore(GameStat,cnt, 0) >= BasePoint())||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {
+		return 1
+	} else {return 0}
+#global

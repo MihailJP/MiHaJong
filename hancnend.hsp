@@ -106,11 +106,11 @@
 
 	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 	if (getRule(RULE_POINT_BASIS) != 12) {
-#ifdef SANMAT
 		PlusCount = 0
 		repeat NUM_OF_ACTUAL_PLAYERS // 沈みウマの計算用に浮いてる人数を数える
-			if ((getScore(GameStat,cnt, 0) >= 400)||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {PlusCount++}
+			if (isAboveBase(GameStat,cnt)) {PlusCount++}
 		loop
+#ifdef SANMAT
 		repeat NUM_OF_ACTUAL_PLAYERS
 			switch getRule(RULE_POINT_BASIS)
 				/* 順位ウマ */
@@ -227,10 +227,6 @@
 			swend
 		loop
 #else
-		PlusCount = 0
-		repeat NUM_OF_ACTUAL_PLAYERS // 沈みウマの計算用に浮いてる人数を数える
-			if ((getScore(GameStat,cnt, 0) >= 300)||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {PlusCount++}
-		loop
 		repeat NUM_OF_ACTUAL_PLAYERS
 			switch getRule(RULE_POINT_BASIS)
 				/* 順位ウマ */
@@ -420,9 +416,10 @@
 		repeat NUM_OF_ACTUAL_PLAYERS
 			if (Rank(cnt) == 1) {
 				switch getRule(RULE_STARTING_POINT)
-					case 0: PointDelta(cnt) += 150: swbreak
-					case 4: PointDelta(cnt) += 450: swbreak
-					case 5: PointDelta(cnt) += 300: swbreak
+					case 0: case 4: PointDelta(cnt) += 150: swbreak
+					case 5: PointDelta(cnt) += 90: swbreak
+					case 7: PointDelta(cnt) += 450: swbreak
+					case 8: PointDelta(cnt) += 300: swbreak
 				swend
 			}
 			if (Rank(cnt) == 3) {
@@ -463,13 +460,12 @@
 	
 	/* 最終的なスコアを計算する */
 	dim FinalScore, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-#ifdef SANMAT
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) > 1) {
-			if ((getScore(GameStat,cnt, 0) >= 400)||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {
-				FinalScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-400)+5)/10
+			if (isAboveBase(GameStat, cnt)) {
+				FinalScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-BasePoint())+5)/10
 			} else {
-				FinalScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-400)-5)/10
+				FinalScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-BasePoint())-5)/10
 			}
 			switch getRule(RULE_CHIP)
 				case 1: FinalScore(cnt, 0) += getChip(GameStat, cnt)/2: swbreak
@@ -486,38 +482,11 @@
 	gosub *scoreflagfix
 	dim FinalScoreTmp, NUM_OF_DIGIT_GROUPS
 	repeat NUM_OF_DIGIT_GROUPS
+#ifdef SANMAT
 		FinalScoreTmp(cnt) = FinalScore(0, cnt)+FinalScore(1, cnt)+FinalScore(2, cnt)
-	loop
-	repeat NUM_OF_ACTUAL_PLAYERS
-		if (Rank(cnt) == 1) {
-			tmpcnt = cnt
-			repeat NUM_OF_DIGIT_GROUPS: FinalScore(tmpcnt, cnt) = 0-FinalScoreTmp(cnt): loop
-		}
-	loop
 #else
-	repeat NUM_OF_ACTUAL_PLAYERS
-		if (Rank(cnt) > 1) {
-			if ((getScore(GameStat,cnt, 0) >= 300)||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {
-				FinalScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-300)+5)/10
-			} else {
-				FinalScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-300)-5)/10
-			}
-			switch getRule(RULE_CHIP)
-				case 1: FinalScore(cnt, 0) += getChip(GameStat, cnt)/2: swbreak
-				case 2: FinalScore(cnt, 0) += getChip(GameStat, cnt): swbreak
-				case 3: FinalScore(cnt, 0) += getChip(GameStat, cnt)*2: swbreak
-				case 4: FinalScore(cnt, 0) += getChip(GameStat, cnt)*3: swbreak
-				case 5: FinalScore(cnt, 0) += getChip(GameStat, cnt)*5: swbreak
-				case 6: FinalScore(cnt, 0) += getChip(GameStat, cnt)*10: swbreak
-			swend
-			tmpcnt = cnt
-			repeat 7, 1: FinalScore(tmpcnt, cnt) = getScore(GameStat,tmpcnt, cnt): loop
-		}
-	loop
-	gosub *scoreflagfix
-	dim FinalScoreTmp, NUM_OF_DIGIT_GROUPS
-	repeat NUM_OF_DIGIT_GROUPS
 		FinalScoreTmp(cnt) = FinalScore(0, cnt)+FinalScore(1, cnt)+FinalScore(2, cnt)+FinalScore(3, cnt)
+#endif
 	loop
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 1) {
@@ -525,7 +494,6 @@
 			repeat NUM_OF_DIGIT_GROUPS: FinalScore(tmpcnt, cnt) = 0-FinalScoreTmp(cnt): loop
 		}
 	loop
-#endif
 	gosub *scoreflagfix
 	repeat NUM_OF_PLAYERS
 		tmpcnt=cnt

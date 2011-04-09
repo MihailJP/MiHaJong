@@ -80,11 +80,7 @@
 	if (DaoPaiable) {
 		// ‹ãŽí‹ã”v
 		if (getFirstDrawFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) {
-#ifdef SANMAT
-			if (((getScore(GameStat,getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > 400)&&(Shanten > 1))||(Shanten > 2)) {
-#else
-			if (((getScore(GameStat,getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > 300)&&(Shanten > 1))||(Shanten > 2)) {
-#endif
+			if (((getScore(GameStat,getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > BasePoint())&&(Shanten > 1))||(Shanten > 2)) {
 				// ‘Žm’®”v‚Í—¬‚³‚È‚¢
 				if (Shanten > 0) {
 					return DAHAI_TYPE_KYUUSHU // —¬‹Ç

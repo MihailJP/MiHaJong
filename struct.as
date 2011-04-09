@@ -477,8 +477,9 @@ CurrentPlayer, DeclarationFlag, TsumoAgariFlag, CurrentDiscard
 			case 1: PlayerScore(cnt,0) = 400: swbreak
 			case 2: PlayerScore(cnt,0) = 450: swbreak
 			case 3: PlayerScore(cnt,0) = 500: swbreak
-			case 4: PlayerScore(cnt,0) = 250: swbreak
-			case 5: PlayerScore(cnt,0) = 300: swbreak
+			case 4: case 7: PlayerScore(cnt,0) = 250: swbreak
+			case 5: PlayerScore(cnt,0) = 270: swbreak
+			case 6: case 8: PlayerScore(cnt,0) = 300: swbreak
 		swend
 	loop
 	switch getRule(RULE_GAME_LENGTH)
