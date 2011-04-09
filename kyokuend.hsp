@@ -406,96 +406,14 @@
 						swbreak
 #endif
 					swend
-#ifdef SANMAT
-					if (playerWind(chkP, getRound(GameStat)) == PLAYER_EAST) {
-						// 親
-						repeat NUM_OF_ACTUAL_PLAYERS
-							if (cnt == chkP) {
-								switch getRule(RULE_NAGASHI_MANGAN)
-									case 0: PointDelta(cnt) += 120: swbreak
-									case 1: PointDelta(cnt) += 180: swbreak
-									case 2: PointDelta(cnt) += 240: swbreak
-									case 3: PointDelta(cnt) += 480: swbreak
-								swend
-							} else {
-								switch getRule(RULE_NAGASHI_MANGAN)
-									case 0: PointDelta(cnt) -= 60: swbreak
-									case 1: PointDelta(cnt) -= 90: swbreak
-									case 2: PointDelta(cnt) -= 120: swbreak
-									case 3: PointDelta(cnt) -= 240: swbreak
-								swend
-							}
-						loop
-					} else {
-						// 子
-						repeat NUM_OF_ACTUAL_PLAYERS
-							if (cnt == chkP) {
-								switch getRule(RULE_NAGASHI_MANGAN)
-									case 0: PointDelta(cnt) += 80: swbreak
-									case 1: PointDelta(cnt) += 120: swbreak
-									case 2: PointDelta(cnt) += 160: swbreak
-									case 3: PointDelta(cnt) += 320: swbreak
-								swend
-							} else {
-								switch getRule(RULE_NAGASHI_MANGAN)
-									case 0: PointDelta(cnt) -= 40: swbreak
-									case 1: PointDelta(cnt) -= 60: swbreak
-									case 2: PointDelta(cnt) -= 80: swbreak
-									case 3: PointDelta(cnt) -= 160: swbreak
-								swend
-							}
-						loop
-					}
-#else
-					if (playerWind(chkP, getRound(GameStat)) == PLAYER_EAST) {
-						// 親
-						repeat NUM_OF_ACTUAL_PLAYERS
-							if (cnt == chkP) {
-								switch getRule(RULE_NAGASHI_MANGAN)
-									case 0: PointDelta(cnt) += 120: swbreak
-									case 1: PointDelta(cnt) += 180: swbreak
-									case 2: PointDelta(cnt) += 240: swbreak
-									case 3: PointDelta(cnt) += 480: swbreak
-								swend
-							} else {
-								switch getRule(RULE_NAGASHI_MANGAN)
-									case 0: PointDelta(cnt) -= 40: swbreak
-									case 1: PointDelta(cnt) -= 60: swbreak
-									case 2: PointDelta(cnt) -= 80: swbreak
-									case 3: PointDelta(cnt) -= 160: swbreak
-								swend
-							}
-						loop
-					} else {
-						// 子
-						repeat NUM_OF_ACTUAL_PLAYERS
-							if (cnt == chkP) {
-								switch getRule(RULE_NAGASHI_MANGAN)
-									case 0: PointDelta(cnt) += 80: swbreak
-									case 1: PointDelta(cnt) += 120: swbreak
-									case 2: PointDelta(cnt) += 160: swbreak
-									case 3: PointDelta(cnt) += 320: swbreak
-								swend
-							} else {
-								if (playerWind(cnt, getRound(GameStat)) == PLAYER_EAST) {
-									switch getRule(RULE_NAGASHI_MANGAN)
-										case 0: PointDelta(cnt) -= 40: swbreak
-										case 1: PointDelta(cnt) -= 60: swbreak
-										case 2: PointDelta(cnt) -= 80: swbreak
-										case 3: PointDelta(cnt) -= 160: swbreak
-									swend
-								} else {
-									switch getRule(RULE_NAGASHI_MANGAN)
-										case 0: PointDelta(cnt) -= 20: swbreak
-										case 1: PointDelta(cnt) -= 30: swbreak
-										case 2: PointDelta(cnt) -= 40: swbreak
-										case 3: PointDelta(cnt) -= 80: swbreak
-									swend
-								}
-							}
-						loop
-					}
-#endif
+					dim AgariPointRaw, NUM_OF_DIGIT_GROUPS
+					switch getRule(RULE_NAGASHI_MANGAN)
+						case 0: AgariPointRaw(0) = 2000: swbreak
+						case 1: AgariPointRaw(0) = 3000: swbreak
+						case 2: AgariPointRaw(0) = 4000: swbreak
+						case 3: AgariPointRaw(0) = 8000: swbreak
+					swend
+					calcAgariPoints GameStat, agariPointArray, AgariPointRaw, PointDelta, chkP
 				}
 			loop
 			ResultDesc += "の流し満貫"
@@ -571,35 +489,12 @@
 #include "const.as"
 #deffunc transferChonboPenalty var GameStat, int targetPlayer
 	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-	if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
-		repeat NUM_OF_ACTUAL_PLAYERS
-			if (cnt == targetPlayer) {
-				PointDelta(cnt) -= 120
-			} else {
-#ifdef SANMAT
-				PointDelta(cnt) += 60
-#else
-				PointDelta(cnt) += 40
-#endif
-			}
-		loop
-	} else {
-		repeat NUM_OF_ACTUAL_PLAYERS
-			if (cnt == targetPlayer) {
-				PointDelta(cnt) -= 80
-			} else {
-#ifdef SANMAT
-				PointDelta(cnt) += 40
-#else
-				if (playerWind(cnt, getRound(GameStat)) == PLAYER_EAST) {
-					PointDelta(cnt) += 40
-				} else {
-					PointDelta(cnt) += 20
-				}
-#endif
-			}
-		loop
-	}
+	dim AgariPointRaw, NUM_OF_DIGIT_GROUPS
+	AgariPointRaw(0) = 2000
+	calcAgariPoints GameStat, agariPointArray, AgariPointRaw, PointDelta, targetPlayer
+	repeat NUM_OF_PLAYERS*NUM_OF_DIGIT_GROUPS
+		PointDelta(cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS) = -PointDelta(cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS)
+	loop
 	setCenterTitle "錯和罰符"
 	putdelta PointDelta
 	redraw 1: await 1500

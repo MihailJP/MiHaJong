@@ -377,3 +377,234 @@
 	if (getRule(RULE_PENALTY_NEGATIVE) != 6) {Flag = 1}
 	return Flag
 #global
+
+#module
+#include "const.as"
+#deffunc calcAgariPoints var GameStat, array agariPointArray, array AgariPointRaw, array PointDelta, int Mode
+	if (Mode == -1) {
+		AgariPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)
+		TsumoAgari = getTsumoAgariFlag(GameStat)
+	} else {
+		AgariPlayer = Mode
+		TsumoAgari = 1
+	}
+	if (isPaoAgari(GameStat, AgariPlayer)) {
+		// ïÔìKópéû
+		if (playerwind(AgariPlayer, getRound(GameStat)) == PLAYER_EAST) {
+			// êeÇÃòaóπÇË
+			if (TsumoAgari) {
+				repeat NUM_OF_ACTUAL_PLAYERS
+					if (cnt == AgariPlayer) {
+						agaricalc agariPointArray, AgariPointRaw, 6, 0, 0
+						deltacalcplus AgariPointRaw, PointDelta, 6, cnt
+					}
+					if (isPao(GameStat, AgariPlayer, cnt)) {
+						deltacalcminus AgariPointRaw, PointDelta, 6, cnt
+					}
+				loop
+			} else {
+				repeat NUM_OF_ACTUAL_PLAYERS
+					if (cnt == AgariPlayer) {
+						agaricalc agariPointArray, AgariPointRaw, 3, 3, 1
+						deltacalcplus AgariPointRaw, PointDelta, 3, cnt
+						deltacalcplus AgariPointRaw, PointDelta, 3, cnt
+					}
+					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {
+						deltacalcminus AgariPointRaw, PointDelta, 3, cnt
+					}
+					if (isPao(GameStat, AgariPlayer, cnt)) {
+						deltacalcminus AgariPointRaw, PointDelta, 3, cnt
+					}
+				loop
+			}
+		} else {
+			// éqÇÃòaóπÇË
+			if (TsumoAgari) {
+				repeat NUM_OF_ACTUAL_PLAYERS
+					if (cnt == AgariPlayer) {
+						agaricalc agariPointArray, AgariPointRaw, 4, 0, 0
+						deltacalcplus AgariPointRaw, PointDelta, 4, cnt
+					}
+					if (isPao(GameStat, AgariPlayer, cnt)) {
+						deltacalcminus AgariPointRaw, PointDelta, 4, cnt
+					}
+				loop
+			} else {
+				repeat NUM_OF_ACTUAL_PLAYERS
+					if (cnt == AgariPlayer) {
+						agaricalc agariPointArray, AgariPointRaw, 2, 2, 1
+						deltacalcplus AgariPointRaw, PointDelta, 2, cnt
+						deltacalcplus AgariPointRaw, PointDelta, 2, cnt
+					}
+					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {
+						deltacalcminus AgariPointRaw, PointDelta, 2, cnt
+					}
+					if (isPao(GameStat, AgariPlayer, cnt)) {
+						deltacalcminus AgariPointRaw, PointDelta, 2, cnt
+					}
+				loop
+			}
+		}
+	} else {
+		// í èÌéû
+		if (playerwind(AgariPlayer, getRound(GameStat)) == PLAYER_EAST) {
+			// êeÇÃòaóπÇË
+			if (TsumoAgari) {
+#ifdef ALLSANMA
+				switch getRule(RULE_TSUMO_PAYMENT)
+#ifdef SANMA4
+					case 0:
+#endif
+#endif
+						repeat NUM_OF_ACTUAL_PLAYERS
+							if (cnt == AgariPlayer) {
+								agaricalc agariPointArray, AgariPointRaw, 2, 2, 2
+								deltacalcplus AgariPointRaw, PointDelta, 2, cnt
+								deltacalcplus AgariPointRaw, PointDelta, 2, cnt
+								deltacalcplus AgariPointRaw, PointDelta, 2, cnt
+							} else {
+								deltacalcminus AgariPointRaw, PointDelta, 2, cnt
+							}
+						loop
+#ifdef ALLSANMA
+#ifdef SANMA4
+						swbreak
+#endif
+					case 2: case 3
+						repeat NUM_OF_ACTUAL_PLAYERS
+							if (cnt == AgariPlayer) {
+								agaricalc agariPointArray, AgariPointRaw, 2, 2, 1
+								deltacalcplus AgariPointRaw, PointDelta, 2, cnt
+								deltacalcplus AgariPointRaw, PointDelta, 2, cnt
+								if (getRule(RULE_TSUMO_PAYMENT) == 3) {PointDelta(cnt, 0) += 20}
+							} else: if (playerwind(cnt, getRound(GameStat)) != PLAYER_NORTH) {
+								deltacalcminus AgariPointRaw, PointDelta, 2, cnt
+								if (getRule(RULE_TSUMO_PAYMENT) == 3) {PointDelta(cnt, 0) -= 10}
+							}
+						loop
+						swbreak
+					default:
+						repeat NUM_OF_ACTUAL_PLAYERS
+							if (cnt == AgariPlayer) {
+								agaricalc agariPointArray, AgariPointRaw, 3, 3, 1
+								deltacalcplus AgariPointRaw, PointDelta, 3, cnt
+								deltacalcplus AgariPointRaw, PointDelta, 3, cnt
+							} else: if (playerwind(cnt, getRound(GameStat)) != PLAYER_NORTH) {
+								deltacalcminus AgariPointRaw, PointDelta, 3, cnt
+							}
+						loop
+						swbreak
+				swend
+#endif
+			} else {
+				repeat NUM_OF_ACTUAL_PLAYERS
+					if (cnt == AgariPlayer) {
+						agaricalc agariPointArray, AgariPointRaw, 6, 0, 0
+						deltacalcplus AgariPointRaw, PointDelta, 6, cnt
+					}
+					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {
+						deltacalcminus AgariPointRaw, PointDelta, 6, cnt
+					}
+				loop
+			}
+		} else {
+			// éqÇÃòaóπÇË
+			if (TsumoAgari) {
+#ifdef ALLSANMA
+				switch getRule(RULE_TSUMO_PAYMENT)
+#ifdef SANMA4
+					case 0:
+#endif
+#endif
+						repeat NUM_OF_ACTUAL_PLAYERS
+							if (cnt == AgariPlayer) {
+								agaricalc agariPointArray, AgariPointRaw, 2, 1, 2
+								deltacalcplus AgariPointRaw, PointDelta, 2, cnt
+								deltacalcplus AgariPointRaw, PointDelta, 1, cnt
+								deltacalcplus AgariPointRaw, PointDelta, 1, cnt
+							} else: if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
+								deltacalcminus AgariPointRaw, PointDelta, 2, cnt
+							} else {
+								deltacalcminus AgariPointRaw, PointDelta, 1, cnt
+							}
+						loop
+#ifdef ALLSANMA
+#ifdef SANMA4
+						swbreak
+					case 1:
+#else
+					case 0:
+#endif
+						repeat NUM_OF_ACTUAL_PLAYERS
+							if (cnt == AgariPlayer) {
+								agaricalc agariPointArray, AgariPointRaw, 2, 2, 1
+								deltacalcplus AgariPointRaw, PointDelta, 2, cnt
+								deltacalcplus AgariPointRaw, PointDelta, 2, cnt
+							} else: if (playerwind(cnt, getRound(GameStat)) != PLAYER_NORTH) {
+								deltacalcminus AgariPointRaw, PointDelta, 2, cnt
+							}
+						loop
+						swbreak
+					case 2: case 3:
+						repeat NUM_OF_ACTUAL_PLAYERS
+							if (cnt == AgariPlayer) {
+								agaricalc agariPointArray, AgariPointRaw, 2, 1, 1
+								deltacalcplus AgariPointRaw, PointDelta, 2, cnt
+								deltacalcplus AgariPointRaw, PointDelta, 1, cnt
+								if (getRule(RULE_TSUMO_PAYMENT) == 3) {PointDelta(cnt, 0) += 20}
+							} else: if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
+								deltacalcminus AgariPointRaw, PointDelta, 2, cnt
+								if (getRule(RULE_TSUMO_PAYMENT) == 3) {PointDelta(cnt, 0) -= 10}
+							} else: if (playerwind(cnt, getRound(GameStat)) != PLAYER_NORTH) {
+								deltacalcminus AgariPointRaw, PointDelta, 1, cnt
+								if (getRule(RULE_TSUMO_PAYMENT) == 3) {PointDelta(cnt, 0) -= 10}
+							}
+						loop
+						swbreak
+					case 4:
+						repeat NUM_OF_ACTUAL_PLAYERS
+							if (cnt == AgariPlayer) {
+								agaricalc2 agariPointArray, AgariPointRaw, 8.0/3.0, 4.0/3.0, 1, 0, 0
+								deltacalcplusd AgariPointRaw, PointDelta, 8.0/3.0, cnt
+								deltacalcplusd AgariPointRaw, PointDelta, 4.0/3.0, cnt
+							} else: if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
+								deltacalcminusd AgariPointRaw, PointDelta, 8.0/3.0, cnt
+							} else: if (playerwind(cnt, getRound(GameStat)) != PLAYER_NORTH) {
+								deltacalcminusd AgariPointRaw, PointDelta, 4.0/3.0, cnt
+							}
+						loop
+						swbreak
+					case 5:
+						repeat NUM_OF_ACTUAL_PLAYERS
+							if (cnt == AgariPlayer) {
+								agaricalc2 agariPointArray, AgariPointRaw, 2, 1, 1, 0.5, 2
+								deltacalcplus AgariPointRaw, PointDelta, 2, cnt
+								deltacalcplus AgariPointRaw, PointDelta, 1, cnt
+								deltacalcplusd AgariPointRaw, PointDelta, 0.5, cnt
+								deltacalcplusd AgariPointRaw, PointDelta, 0.5, cnt
+							} else: if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
+								deltacalcminus AgariPointRaw, PointDelta, 2, cnt
+								deltacalcminusd AgariPointRaw, PointDelta, 0.5, cnt
+							} else: if (playerwind(cnt, getRound(GameStat)) != PLAYER_NORTH) {
+								deltacalcminus AgariPointRaw, PointDelta, 1, cnt
+								deltacalcminusd AgariPointRaw, PointDelta, 0.5, cnt
+							}
+						loop
+						swbreak
+				swend
+#endif
+			} else {
+				repeat NUM_OF_ACTUAL_PLAYERS
+					if (cnt == AgariPlayer) {
+						agaricalc agariPointArray, AgariPointRaw, 4, 0, 0
+						deltacalcplus AgariPointRaw, PointDelta, 4, cnt
+					}
+					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {
+						deltacalcminus AgariPointRaw, PointDelta, 4, cnt
+					}
+				loop
+			}
+		}
+	}
+	return
+#global
