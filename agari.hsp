@@ -761,51 +761,6 @@ int origDoraPointer, array AgariPointRaw, array YakuInfo, var tmpAliceFlag
 	if (getTsumoAgariFlag(GameStat) > 1) {dsplay@ SND_PAGE} else {dsplay@ SND_CUOHU}
 	redrscreen: await 5000
 
-	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-#ifdef SANMAT
-	if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST) {
-		repeat NUM_OF_ACTUAL_PLAYERS
-			if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-				PointDelta(cnt) -= 120
-			} else {
-				PointDelta(cnt) += 60
-			}
-		loop
-	} else {
-		repeat NUM_OF_ACTUAL_PLAYERS
-			if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-				PointDelta(cnt) -= 80
-			} else {
-				PointDelta(cnt) += 40
-			}
-		loop
-	}
-#else
-	if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST) {
-		repeat NUM_OF_PLAYERS
-			if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-				PointDelta(cnt) -= 120
-			} else {
-				PointDelta(cnt) += 40
-			}
-		loop
-	} else {
-		repeat NUM_OF_PLAYERS
-			if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-				PointDelta(cnt) -= 80
-			} else {
-				if (playerWind(cnt, getRound(GameStat)) == PLAYER_EAST) {
-					PointDelta(cnt) += 40
-				} else {
-					PointDelta(cnt) += 20
-				}
-			}
-		loop
-	}
-#endif
-	setCenterTitle "çˆòaî±ïÑ"
-	putdelta PointDelta
-	redraw 1: await 1500
-	pointcalc GameStat, PointDelta
+	transferChonboPenalty GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)
 	return
 #global

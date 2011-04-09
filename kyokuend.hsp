@@ -153,59 +153,14 @@
 			}
 			
 			repeat NUM_OF_ACTUAL_PLAYERS
-				dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 				// çˆòaóßíºÅiïsíÆóßíºÅjÇÃé“Ç™Ç¢ÇΩèÍçá
 				Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
 				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
 					Shanten = 1 // ã≠êßïsíÆàµÇ¢
 				}
-				targetPlayer = cnt
 				if ((Shanten > 0)&&(getRichiFlag(GameStat, RICHI_FLAG, cnt))) {
-#ifdef SANMAT
-					if (playerwind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
-						repeat NUM_OF_ACTUAL_PLAYERS
-							if (cnt == targetPlayer) {
-								PointDelta(cnt) -= 120
-							} else {
-								PointDelta(cnt) += 60
-							}
-						loop
-					} else {
-						repeat NUM_OF_ACTUAL_PLAYERS
-							if (cnt == targetPlayer) {
-								PointDelta(cnt) -= 80
-							} else {
-								PointDelta(cnt) += 40
-							}
-						loop
-					}
-#else
-					if (playerwind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
-						repeat NUM_OF_ACTUAL_PLAYERS
-							if (cnt == targetPlayer) {
-								PointDelta(cnt) -= 120
-							} else {
-								PointDelta(cnt) += 40
-							}
-						loop
-					} else {
-						repeat NUM_OF_ACTUAL_PLAYERS
-							if (cnt == targetPlayer) {
-								PointDelta(cnt) -= 80
-							} else {
-								if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
-									PointDelta(cnt) += 40
-								} else {
-									PointDelta(cnt) += 20
-								}
-							}
-						loop
-					}
-#endif
-					setCenterTitle "çˆòaî±ïÑ"
-					putdelta PointDelta
-					redraw 1: await 2000
-					pointcalc GameStat, PointDelta
+					transferChonboPenalty GameStat, cnt
+					await 500
 				}
 			loop
 			
@@ -437,65 +392,12 @@
 #endif
 				// çˆòaóßíºÅiïsíÆóßíºÅjÇÃé“Ç™Ç¢ÇΩèÍçá
 				Shanten = countshanten(GameStat, cnt, SHANTEN_ALL)
-				dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+				if ((getAgariHouki(GameStat, cnt) == 1)||(IsRemotePlayer(GameEnv, cnt) == -1)) {
+					Shanten = 1 // ã≠êßïsíÆàµÇ¢
+				}
 				if (Shanten > 0) {
-#ifdef SANMAT
-					if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
-						repeat NUM_OF_ACTUAL_PLAYERS
-#ifdef SANMA4
-							if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
-#endif
-							if (cnt == targetPlayer) {
-								PointDelta(cnt) -= 120
-							} else {
-								PointDelta(cnt) += 60
-							}
-						loop
-					} else {
-						repeat NUM_OF_ACTUAL_PLAYERS
-#ifdef SANMA4
-							if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
-#endif
-							if (cnt == targetPlayer) {
-								PointDelta(cnt) -= 80
-							} else {
-								PointDelta(cnt) += 40
-							}
-						loop
-					}
-#else
-					if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
-						repeat NUM_OF_ACTUAL_PLAYERS
-#ifdef SANMA4
-							if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
-#endif
-							if (cnt == targetPlayer) {
-								PointDelta(cnt) -= 120
-							} else {
-								PointDelta(cnt) += 40
-							}
-						loop
-					} else {
-						repeat NUM_OF_ACTUAL_PLAYERS
-#ifdef SANMA4
-							if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
-#endif
-							if (cnt == targetPlayer) {
-								PointDelta(cnt) -= 80
-							} else {
-								if (playerWind(cnt, getRound(GameStat)) == PLAYER_EAST) {
-									PointDelta(cnt) += 40
-								} else {
-									PointDelta(cnt) += 20
-								}
-							}
-						loop
-					}
-#endif
-					setCenterTitle "çˆòaî±ïÑ"
-					putdelta PointDelta
-					redraw 1: await 2000
-					pointcalc GameStat, PointDelta
+					transferChonboPenalty GameStat, cnt
+					await 500
 				}
 			loop
 
@@ -734,5 +636,45 @@
 		incRound GameStat
 	}
 	setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1
+	return
+#global
+
+#module
+#include "const.as"
+#deffunc transferChonboPenalty var GameStat, int targetPlayer
+	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+	if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST) {
+		repeat NUM_OF_ACTUAL_PLAYERS
+			if (cnt == targetPlayer) {
+				PointDelta(cnt) -= 120
+			} else {
+#ifdef SANMAT
+				PointDelta(cnt) += 60
+#else
+				PointDelta(cnt) += 40
+#endif
+			}
+		loop
+	} else {
+		repeat NUM_OF_ACTUAL_PLAYERS
+			if (cnt == targetPlayer) {
+				PointDelta(cnt) -= 80
+			} else {
+#ifdef SANMAT
+				PointDelta(cnt) += 40
+#else
+				if (playerWind(cnt, getRound(GameStat)) == PLAYER_EAST) {
+					PointDelta(cnt) += 40
+				} else {
+					PointDelta(cnt) += 20
+				}
+#endif
+			}
+		loop
+	}
+	setCenterTitle "çˆòaî±ïÑ"
+	putdelta PointDelta
+	redraw 1: await 1500
+	pointcalc GameStat, PointDelta
 	return
 #global
