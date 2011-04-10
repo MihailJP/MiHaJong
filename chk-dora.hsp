@@ -116,6 +116,11 @@
 		if ((getMenzen(GameStat, targetPlayer) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) > RIICHI_NO)&&(getRule(RULE_URADORA) != 1)) {
 			addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_URA, TILE_NORTH_WIND)*getNorthFlag(GameStat, targetPlayer)
 		}
+		if ((getRule(RULE_FOUR_NORTHES) != 0)&&(getNorthFlag(GameStat, targetPlayer) == 4)) {
+			if (getRule(RULE_LIMITLESS) == 2) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 13: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -13}
+			else {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, YAKUVAL_YAKUMAN: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 0-(YAKUVAL_YAKUMAN)}
+			addyakuman tmpYakuInfo, "–kŽl–‡”²‚«", 1
+		}
 #else
 		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SPRING) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_OMOTE, TILE_DORA_FLOWER)+1: addYakuInfo tmpYakuInfo, YAKUINF_FLOWER, 1}
 		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SUMMER) {addYakuInfo tmpYakuInfo, YAKUINF_DORA, getDoraFlag(GameStat, DORA_OMOTE, TILE_DORA_FLOWER)+1: addYakuInfo tmpYakuInfo, YAKUINF_FLOWER, 1}

@@ -608,6 +608,8 @@
 	AddRuleText2 "春夏秋冬", RuleStat(RULE_FOUR_SEASONS)
 	AddRuleText2 "四華開嶺", RuleStat(RULE_FOUR_FLOWERS)
 	AddRuleText3 "八仙過海", RuleStat(RULE_EIGHT_FLOWERS)
+#else
+	AddRuleText "北四枚抜き", RuleStat(RULE_FOUR_NORTHES)
 #endif
 	AddRuleText1 "十三無靠", RuleStat(RULE_SHIISAN_UUSHII)
 	AddRuleText3 "七星無靠", RuleStat(RULE_STELLAR_UUSHII)

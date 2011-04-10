@@ -1739,6 +1739,11 @@
 	RuleDescription(RULE_SOUTH_DAISOUGEN) = "南大草原の有無と価値を設定します(1と8以外の索子と南でメンホン)"
 	RuleTxt(0, RULE_SOUTH_DAISOUGEN) = "なし", "役満(門前のみ)"
 
+	RuleName(RULE_FOUR_NORTHES) = "北四枚抜き"
+	RuleDescription(RULE_FOUR_NORTHES) = "北四枚抜きの有無と価値を設定します(抜きドラの北を4枚抜く)"
+	RuleTxt(0, RULE_FOUR_NORTHES) = "なし", "役満"
+	noyonma RULE_FOUR_NORTHES: nonumsanma RULE_FOUR_NORTHES
+
 return
 
 #undef noregsanma
