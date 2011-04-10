@@ -442,12 +442,14 @@
 	/* ルール設定を表示　セクション区切り */
 #ifdef SANMAS
 	AddRuleText1 "緑一色輪", RuleStat(RULE_RYUUIISOHRIN)
+	AddRuleText3 "大草原", RuleStat(RULE_DAISOUGEN)
 #else
 	AddRuleText1 "紅一点", RuleStat(RULE_KOUITTEN)
 	AddRuleText2 "紅孔雀", RuleStat(RULE_BENIKUJAKU)
 	AddRuleText2 "緑一色輪", RuleStat(RULE_RYUUIISOHRIN)
+	AddRuleText2 "大草原", RuleStat(RULE_DAISOUGEN)
+	AddRuleText3 "南大草原", RuleStat(RULE_SOUTH_DAISOUGEN)
 #endif
-	AddRuleText3 "大草原", RuleStat(RULE_DAISOUGEN)
 #ifdef SANMAS
 	AddRuleText "断紅和", RuleStat(RULE_NO_RED)
 	AddRuleText "花一色", RuleStat(RULE_HUAIISOH)

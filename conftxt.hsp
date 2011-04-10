@@ -1735,6 +1735,10 @@
 	RuleDescription(RULE_ALL_LARGE) = "全大の有無と価値を設定します(7、8、9の数牌のみで和了る)"
 	RuleTxt(0, RULE_ALL_LARGE) = "なし", "６飜"
 
+	RuleName(RULE_SOUTH_DAISOUGEN) = "南大草原"
+	RuleDescription(RULE_SOUTH_DAISOUGEN) = "南大草原の有無と価値を設定します(1と8以外の索子と南でメンホン)"
+	RuleTxt(0, RULE_SOUTH_DAISOUGEN) = "なし", "役満(門前のみ)"
+
 return
 
 #undef noregsanma

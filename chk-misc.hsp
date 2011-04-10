@@ -226,6 +226,19 @@
 			delyaku tmpYakuInfo, "´ˆêF"
 		}
 	}
+	/* “ì‘å‘Œ´ */
+	if (getRule(RULE_SOUTH_DAISOUGEN) != 0) {
+		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9, TILE_SOUTH_WIND
+		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5
+		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
+		dim targetKez,1: targetKez=TILE_SOUTH_WIND
+		dim targetShunz,1: targetShunz=0
+		yakuflagcount2 = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
+		if ((yakuflagcount == 5)&&(yakuflagcount2 == 1)) {
+			addyakuman tmpYakuInfo, "“ì‘å‘Œ´", 1
+			delyaku tmpYakuInfo, "¬ˆêF"
+		}
+	}
 #ifndef SANMAS
 	/* “ˆêF */
 	if (getRule(RULE_TAOYISE) != 0) {
