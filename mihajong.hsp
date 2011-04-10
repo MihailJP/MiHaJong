@@ -58,6 +58,7 @@
 #include "intro.hsp"
 #include "iface.hsp"
 #include "screen.hsp"
+#include "clock.hsp"
 #include "haipic.hsp"
 #include "putwall.hsp"
 #include "comp_act.hsp"
