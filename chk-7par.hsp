@@ -306,5 +306,48 @@
 			addyakuman tmpYakuInfo, "素数役満", 1
 		}
 	}
+	/* 小於五 */
+	if (getRule(RULE_XIAOYUWU) != 0) {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4
+		yakuflagcount = countPairs(tileCount, tmpTileList)
+		if (yakuflagcount >= 7) {
+			addyaku tmpYakuInfo, "小於五", 6
+		}
+	}
+	/* 大於五 */
+	if (getRule(RULE_DAYUWU) != 0) {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+9, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+9
+		yakuflagcount = countPairs(tileCount, tmpTileList)
+		if (yakuflagcount >= 7) {
+			addyaku tmpYakuInfo, "大於五", 6
+		}
+	}
+	/* 全小 */
+	if (getRule(RULE_ALL_SMALL) != 0) {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3
+		yakuflagcount = countPairs(tileCount, tmpTileList)
+		if (yakuflagcount >= 7) {
+			addyaku tmpYakuInfo, "全小", 6
+			delyaku tmpYakuInfo, "小於五"
+		}
+	}
+	/* 全中 */
+	if (getRule(RULE_ALL_MIDDLE) != 0) {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6
+		yakuflagcount = countPairs(tileCount, tmpTileList)
+		if (yakuflagcount >= 7) {
+			addyaku tmpYakuInfo, "全中", 6
+			delyaku tmpYakuInfo, "断幺九"
+		}
+	}
+	/* 全大 */
+	if (getRule(RULE_ALL_LARGE) != 0) {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+7, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+9, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+9
+		yakuflagcount = countPairs(tileCount, tmpTileList)
+		if (yakuflagcount >= 7) {
+			addyaku tmpYakuInfo, "全大", 6
+			delyaku tmpYakuInfo, "大於五"
+		}
+	}
 return
 #global
