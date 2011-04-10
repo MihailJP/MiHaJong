@@ -791,7 +791,6 @@
 			delyaku tmpYakuInfo, "‘å‰—ŒÜ"
 		}
 	}
-return
 	/* •ˆß‹Rm */
 	if (getRule(RULE_BLACKJACK) != 0) {
 		if (countMentzNumerals(MianziDat) == 21) {
@@ -807,4 +806,5 @@ return
 			}
 		}
 	}
+return
 #global
