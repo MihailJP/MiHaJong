@@ -1744,6 +1744,11 @@
 	RuleTxt(0, RULE_FOUR_NORTHES) = "‚Θ‚µ", "–π–"
 	noyonma RULE_FOUR_NORTHES: nonumsanma RULE_FOUR_NORTHES
 
+	RuleName(RULE_CHARACTERS_MAHJONG) = "δέa"
+	RuleDescription(RULE_CHARACTERS_MAHJONG) = "δέa‚Μ—L–³‚Ζ‰Ώ’l‚πέ’θ‚µ‚ά‚·(δέq‚Μ¬κF)"
+	RuleTxt(0, RULE_CHARACTERS_MAHJONG) = "‚Θ‚µ", "–π–(δέq‚Ζ•—”v)", "–π–(δέq‚Ζ”v)"
+	noyonma RULE_CHARACTERS_MAHJONG: nonumsanma RULE_CHARACTERS_MAHJONG
+
 return
 
 #undef noregsanma

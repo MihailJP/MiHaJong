@@ -172,6 +172,16 @@
 #ifndef SANMAS
 		} else {
 			addyaku tmpYakuInfo, "ç¨àÍêF", 2+getMenzen(GameStat, targetPlayer)
+#ifdef SANMAX
+			/* ‰›òa */
+			if (getRule(RULE_CHARACTERS_MAHJONG) != 0) {
+				if (((WanzMian+Zimian) == SIZE_OF_MELD_BUFFER)&&(WanzMian > 0)) {
+					if ((DragonMian == 0)||(getRule(RULE_CHARACTERS_MAHJONG) == 2)) {
+						addyakuman tmpYakuInfo, "‰›òa", 1
+					}
+				}
+			}
+#endif
 		}
 #endif
 	} else {

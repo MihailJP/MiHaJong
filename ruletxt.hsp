@@ -500,6 +500,9 @@
 	AddRuleText2 "全小", RuleStat(RULE_ALL_SMALL)
 	AddRuleText2 "全中", RuleStat(RULE_ALL_MIDDLE)
 	AddRuleText3 "全大", RuleStat(RULE_ALL_LARGE)
+#ifdef SANMAX
+	AddRuleText "萬和", RuleStat(RULE_CHARACTERS_MAHJONG)
+#endif
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText "鳥立直", RuleStat(RULE_BIRD_RIICHI)
 	AddRuleText1 "五筒開花", RuleStat(RULE_UUPIN_KAIHOH)
