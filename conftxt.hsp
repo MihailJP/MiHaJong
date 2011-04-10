@@ -1754,6 +1754,16 @@
 	RuleTxt(0, RULE_SUPERMAN) = "なし", "１飜"
 	nosanma RULE_SUPERMAN
 
+	RuleName(RULE_SANSEKI_TEMPUKU) = "三隻転覆"
+	RuleDescription(RULE_SANSEKI_TEMPUKU) = "三隻転覆の有無と価値を設定します(三人が立直時、立直していない人が自摸和了)"
+	RuleTxt(0, RULE_SANSEKI_TEMPUKU) = "なし", "３飜"
+	nosanma RULE_SANSEKI_TEMPUKU: nosanma RULE_SANSEKI_TEMPUKU
+
+	RuleName(RULE_KISHI_KAISEI) = "起死回生"
+	RuleDescription(RULE_KISHI_KAISEI) = "起死回生の有無と価値を設定します(三人がダブル立直時、黙聴で自摸和了)"
+	RuleTxt(0, RULE_KISHI_KAISEI) = "なし", "役満"
+	nosanma RULE_KISHI_KAISEI: nosanma RULE_KISHI_KAISEI
+
 return
 
 #undef noregsanma

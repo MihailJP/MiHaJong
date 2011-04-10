@@ -508,6 +508,10 @@
 #endif
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText "鳥立直", RuleStat(RULE_BIRD_RIICHI)
+#ifndef ALLSANMA
+	AddRuleText1 "三隻転覆", RuleStat(RULE_SANSEKI_TEMPUKU)
+	AddRuleText3 "起死回生", RuleStat(RULE_KISHI_KAISEI)
+#endif
 	AddRuleText1 "五筒開花", RuleStat(RULE_UUPIN_KAIHOH)
 #ifndef SANMAS
 	AddRuleText2 "中上開花", RuleStat(RULE_CHUNSHAN_KAIHOH)

@@ -85,6 +85,24 @@
 		// “V˜a‚â’n˜a‚Æ‚Í•¡‡‚µ‚È‚¢‚æ‚¤‚É‚µ‚Ä‚ ‚é
 		addyaku tmpYakuInfo, "–å‘O´Ž©–Ì˜a", 1
 	}
+#ifndef ALLSANMA
+	/* ŽOÇ“]•¢ */
+	if (getRule(RULE_SANSEKI_TEMPUKU) != 0) {
+		if (getTsumoAgariFlag(GameStat) == 1) {
+			if ((getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, ShimochaOf(targetPlayer)) != RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, ToimenOf(targetPlayer)) != RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, KamichaOf(targetPlayer)) != RIICHI_NO)) {
+				addyaku tmpYakuInfo, "ŽOÇ“]•¢", 3
+			}
+		}
+	}
+	/* ‹NŽ€‰ñ¶ */
+	if (getRule(RULE_KISHI_KAISEI) != 0) {
+		if ((getMenzen(GameStat, targetPlayer) == 1)&&(getTsumoAgariFlag(GameStat) == 1)) {
+			if ((getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, ShimochaOf(targetPlayer)) >= RIICHI_DOUBLE)&&(getRichiFlag(GameStat, RICHI_FLAG, ToimenOf(targetPlayer)) >= RIICHI_DOUBLE)&&(getRichiFlag(GameStat, RICHI_FLAG, KamichaOf(targetPlayer)) >= RIICHI_DOUBLE)) {
+				addyakuman tmpYakuInfo, "‹NŽ€‰ñ¶", 1
+			}
+		}
+	}
+#endif
 	/* —äãƒcƒ‚ */
 	if ((getKangFlag(GameStat, KANG_FLAG) == 1)&&(getTsumoAgariFlag(GameStat) == 1)) {
 		if ((getKangFlag(GameStat, KANG_CHAINFLAG) >= 2)&&(getRule(RULE_RENKAN_KAIHOH) != 0)) {
