@@ -1749,6 +1749,11 @@
 	RuleTxt(0, RULE_CHARACTERS_MAHJONG) = "なし", "役満(萬子と風牌)", "役満(萬子と字牌)"
 	noyonma RULE_CHARACTERS_MAHJONG: nonumsanma RULE_CHARACTERS_MAHJONG
 
+	RuleName(RULE_SUPERMAN) = "スーパーマン"
+	RuleDescription(RULE_SUPERMAN) = "スーパーマンの有無と価値を設定します(四萬と八萬の刻子、または四萬と八萬の双ポン待ち)"
+	RuleTxt(0, RULE_SUPERMAN) = "なし", "１飜"
+	nosanma RULE_SUPERMAN
+
 return
 
 #undef noregsanma

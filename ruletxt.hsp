@@ -400,6 +400,9 @@
 		case 2: chatappend "*** 青春に悔いなしは２飜、青春に悔いありは１飜\n": swbreak
 	swend
 #endif
+#ifndef SANMAX
+	AddRuleText "スーパーマン", RuleStat(RULE_SUPERMAN)
+#endif
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText1 "二暗槓", RuleStat(RULE_RYANANKAN)
 	AddRuleText3 "三暗槓", RuleStat(RULE_SANANKAN)
