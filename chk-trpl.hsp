@@ -1221,5 +1221,18 @@
 		}
 	}
 #endif
+	/* ó‘óºêî */
+	if (getRule(RULE_RINRYANSHII) != 0) {
+		yakuFlag = 0
+		pattern = "121314151617181923242526272829343536373839454647484956575859676869787989"
+		repeat 36
+			num1 = int(strmid(pattern, cnt*2, 1))
+			num2 = int(strmid(pattern, cnt*2+1, 1))
+			if (((DuiCount(TILE_SUIT_CHARACTERS+num1)+DuiCount(TILE_SUIT_CIRCLES+num1)+DuiCount(TILE_SUIT_BAMBOOS+num1)+DuiCount(TILE_SUIT_CHARACTERS+num2)+DuiCount(TILE_SUIT_CIRCLES+num2)+DuiCount(TILE_SUIT_BAMBOOS+num2)) == SIZE_OF_MELD_BUFFER)) {yakuFlag = 1}
+		loop
+		if (yakuFlag) {
+			addyaku tmpYakuInfo, "ó‘óºêî", 6
+		}
+	}
 return
 #global

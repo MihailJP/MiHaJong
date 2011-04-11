@@ -1793,6 +1793,10 @@
 	RuleTxt(0, RULE_HIGASHI_HANAZONO_RINSHAN) = "ศต", "–๐–"
 	nonumsanma RULE_HIGASHI_HANAZONO_RINSHAN
 
+	RuleName(RULE_RINRYANSHII) = "—ิ—ผ”"
+	RuleDescription(RULE_RINRYANSHII) = "—ิ—ผ”ฬ—L–ณฦฟ’l๐Ý’่ตÜท(2ํ—Þฬ”ฬÝลa—น)"
+	RuleTxt(0, RULE_RINRYANSHII) = "ศต", "Uใส"
+
 return
 
 #undef noregsanma
