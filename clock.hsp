@@ -6,6 +6,15 @@
 
 #include "IMPORTED.hsp"
 
+#uselib "kernel32.dll"
+#func GetSystemTime "GetSystemTime" var
+#module
+#defcfunc getutc int param
+	dim nowtime, 4
+	GetSystemTime@ nowtime
+	return wpeek(nowtime, param*2)
+#global
+
 #module
 #include "hspmath.as"
 #defcfunc julian int year, int month, int day, int hour, int min, int sec, int msec
@@ -35,47 +44,14 @@
 #module
 #include "const.as"
 #define PI M_PI
-#deffunc showClock int baseColorR, int baseColorG, int baseColorB
+#define Kreis(%1=ginfo_cx,%2=ginfo_cy,%3,%4=0) circle (%1)-(%3), (%2)-(%3), (%1)+(%3), (%2)+(%3), (%4)
+#define box(%1=ginfo_cx,%2=ginfo_cy,%3=ginfo_cx,%4=ginfo_cy) line %1, %2, %1, %4: line %1, %4, %3, %4: line %3, %4, %3, %2: line %3, %2, %1, %2
+#deffunc showClock int ClockCenterX, int ClockCenterY, int ClockRadius, int baseColorR, int baseColorG, int baseColorB
 	/* éûåvÇï\é¶ÇµÇƒÇ›ÇÈ */
-	ClockCenterX = 720: ClockCenterY = 240
-	/* ï∂éöî’Çï\é¶ */
-	color (baseColorR+63+255)/2, (baseColorG+63+255)/2, (baseColorB+63+255)/2: Radius=118
-	circle ClockCenterX-Radius, ClockCenterY-Radius, ClockCenterX+Radius, ClockCenterY+Radius, 0
-	color baseColorR, baseColorG, baseColorB: Radius=116
-	circle ClockCenterX-Radius, ClockCenterY-Radius, ClockCenterX+Radius, ClockCenterY+Radius, 0
-	font fontname, 20, 0: tmpClockStr = "Å•áTáUáVáWáXáYáZá[á\á]XI"
-	ClockMinuteHandLength = 100
-	repeat 12
-		ClockDestinationX = int(double(ClockCenterX)+double(ClockMinuteHandLength)*sin(double(cnt*5)*PI*2/60))
-		ClockDestinationY = int(double(ClockCenterY)-double(ClockMinuteHandLength)*cos(double(cnt*5)*PI*2/60))
-		pos ClockDestinationX-10, ClockDestinationY-10
-		print strmid(tmpClockStr, cnt*2, 2)
-	loop
-	/* åéëäÇï\é¶Ç∑ÇÈ */
-	JulianDay = julian(gettime(0), gettime(1), gettime(3), gettime(4), gettime(5), gettime(6), gettime(7))
-	CalcMoonPhase Answer, JulianDay
-	MoonPhaseCalculation_mpfrac = Answer(0)
-	MoonPhaseCalculation_pphase = Answer(1)
-	MoonCenterX = ClockCenterX: MoonCenterY = ClockCenterY-50: Radius = 35
-	color baseColorR/5, baseColorG/5, baseColorB/5
-	circle MoonCenterX-Radius, MoonCenterY-Radius, MoonCenterX+Radius, MoonCenterY+Radius, 1
-	color baseColorR*2/3, baseColorG*2/3, baseColorB*2/3
-	circle MoonCenterX-Radius, MoonCenterY-Radius, MoonCenterX+Radius, MoonCenterY+Radius, 0
-	repeat Radius*2
-		if (MoonPhaseCalculation_mpfrac < 0.5) {
-			line sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))*(1.0-MoonPhaseCalculation_pphase*2.0)+MoonCenterX, cnt+MoonCenterY-Radius, sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))+MoonCenterX, cnt+MoonCenterY-Radius
-		} else {
-			line sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))*(MoonPhaseCalculation_pphase*2.0-1.0)+MoonCenterX, cnt+MoonCenterY-Radius, -sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))+MoonCenterX, cnt+MoonCenterY-Radius
-		}
-	loop
-	color baseColorR, baseColorG, baseColorB
-	circle MoonCenterX-Radius, MoonCenterY-Radius, MoonCenterX+Radius, MoonCenterY+Radius, 0
-	/* çPêØéûÇÃï∂éöî’ */
-	tmpCenterX = ClockCenterX-45: tmpCenterY = ClockCenterY+18: Radius = 40
-	color baseColorR, baseColorG, baseColorB
-	circle tmpCenterX-Radius, tmpCenterY-Radius, tmpCenterX+Radius, tmpCenterY+Radius, 0
-	Radius = 34
-	TimeZone = 9.0 // JST
+	/* éûçèÉpÉâÉÅÅ[É^ÇÃïœä∑Ç»Ç« */
+	LocalDay = julian(gettime(0), gettime(1), gettime(3), gettime(4), gettime(5), gettime(6), gettime(7))
+	JulianDay = julian(getutc(0), getutc(1), getutc(3), getutc(4), getutc(5), getutc(6), getutc(7))
+	TimeZone = (LocalDay-JulianDay)*24.0
 	//Longitude = 127.68911: Latitude = 26.22853 // Naha
 	//Longitude = 130.401716: Latitude = 33.590355 // Fukuoka
 	//Longitude = 132.455293: Latitude = 34.385203 // Hiroshima
@@ -88,35 +64,100 @@
 	//Longitude = 126.977969: Latitude = 37.566535 // Seoul
 	//Longitude = 129.075642: Latitude = 35.179554 // Busan
 	//Longitude = 142.73198: Latitude = 46.961262 // Toyohara (aka Yuzhno-Sakhalinsk)
-	GMST = (0.671262+1.0027379094*(JulianDay-2440000.5-TimeZone/24.0))
-	SiderealTime = (2.0*PI*GMST)\(2.0*PI)
-	SiderealTime += Longitude/15.0*PI*2.0/24.0
-	font fontname, 10, 0: tmpClockStr = "24ÅEÇQÅEÇSÅEÇUÅEÇWÅE10ÅE12ÅE14ÅE16ÅE18ÅE20ÅE22ÅE"
-	ClockMinuteHandLength = 100
-	color baseColorR*2/3, baseColorG*2/3, baseColorB*2/3
+	/* ï∂éöî’Çï\é¶ */
+	gosub *drawmainpanel
+	/* åéëäÇï\é¶Ç∑ÇÈ */
+	gosub *drawmoonpanel
+	/* çPêØéûÇÃï∂éöî’ */
+	gosub *drawsiderealpanel
+	/* ïsíËéûñ@ÇÃï∂éöî’(òaéûåvïóÇÃ) */
+	gosub *drawjapanesepanel
+	/* ì˙ïtÇ∆ójì˙ */
+	gosub *drawdaypanel
+	/* éûåvÇÃêjÇï\é¶ */
+	gosub *drawclockhand
+	return
+
+*drawdial
+	font fontname, fontsize, 0
 	repeat 24
-		ClockDestinationX = int(double(tmpCenterX)+double(Radius)*sin(double(2.5*cnt)*PI*2/60))
-		ClockDestinationY = int(double(tmpCenterY)-double(Radius)*cos(double(2.5*cnt)*PI*2/60))
-		pos ClockDestinationX-5, ClockDestinationY-5
+		ClockDestinationX = int(double(tmpCenterX)+double(DialRadius)*sin(double(2.5*cnt)*PI*2/60))
+		ClockDestinationY = int(double(tmpCenterY)-double(DialRadius)*cos(double(2.5*cnt)*PI*2/60))
+		pos ClockDestinationX-fontsize/2, ClockDestinationY-fontsize/2
 		print strmid(tmpClockStr, cnt*2, 2)
 	loop
-	font fontname, 10, 0: pos tmpCenterX-20+2, tmpCenterY-5-12: print "SIDEREAL"
+	return
+
+*drawmainpanel
+	color (baseColorR+63+255)/2, (baseColorG+63+255)/2, (baseColorB+63+255)/2: Radius=ClockRadius
+	Kreis ClockCenterX, ClockCenterY, Radius, 0
+	color baseColorR, baseColorG, baseColorB: Radius=ClockRadius-2
+	Kreis ClockCenterX, ClockCenterY, Radius, 0
+	fontsize = int(double(ClockRadius)/5.9): tmpClockStr = "Å•  áT  áU  áV  áW  áX  áY  áZ  á[  á\  á]  XI  "
+	DialRadius = ClockRadius-2-(fontsize)*2/3: tmpCenterX = ClockCenterX: tmpCenterY = ClockCenterY
+	gosub *drawdial
+	return
+
+*drawmoonpanel
+	CalcMoonPhase Answer, JulianDay
+	mpfrac = Answer(0)
+	pphase = Answer(1)
+	MoonCenterX = ClockCenterX: MoonCenterY = ClockCenterY-ClockRadius*17/40: Radius = ClockRadius*3/10
+	color baseColorR/5, baseColorG/5, baseColorB/5
+	Kreis MoonCenterX, MoonCenterY, Radius, 1
+	color baseColorR*2/3, baseColorG*2/3, baseColorB*2/3
+	Kreis MoonCenterX, MoonCenterY, Radius, 0
+	repeat Radius*2
+		if (mpfrac < 0.5) {
+			line sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))*(1.0-pphase*2.0)+MoonCenterX, cnt+MoonCenterY-Radius, sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))+MoonCenterX, cnt+MoonCenterY-Radius
+		} else {
+			line sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))*(pphase*2.0-1.0)+MoonCenterX, cnt+MoonCenterY-Radius, -sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))+MoonCenterX, cnt+MoonCenterY-Radius
+		}
+	loop
 	color baseColorR, baseColorG, baseColorB
-	Radius = 30
-	ClockDestinationX = int(double(tmpCenterX)+double(Radius)*sin(SiderealTime))
-	ClockDestinationY = int(double(tmpCenterY)-double(Radius)*cos(SiderealTime))
-	line ClockDestinationX, ClockDestinationY, tmpCenterX, tmpCenterY
-	Radius = 38
-	ClockDestinationX = int(double(tmpCenterX)+double(Radius)*sin(SiderealTime*24.0))
-	ClockDestinationY = int(double(tmpCenterY)-double(Radius)*cos(SiderealTime*24.0))
-	line ClockDestinationX, ClockDestinationY, tmpCenterX, tmpCenterY
+	Kreis MoonCenterX, MoonCenterY, Radius, 0
+	return
+
+*drawsiderealpanel
+	tmpCenterX = ClockCenterX-ClockRadius*3/8: tmpCenterY = ClockCenterY+ClockRadius*3/20: PanelRadius = ClockRadius/3
+	color baseColorR, baseColorG, baseColorB
+	Kreis tmpCenterX, tmpCenterY, PanelRadius, 0
+	GMST = (0.671262+1.0027379094*(JulianDay-2440000.5))
+	SiderealTime = (2.0*PI*GMST)\(2.0*PI)
+	SiderealTime += Longitude/15.0*PI*2.0/24.0
+	fontsize = ClockRadius*17/200: tmpClockStr = "24ÅEÇQÅEÇSÅEÇUÅEÇWÅE10ÅE12ÅE14ÅE16ÅE18ÅE20ÅE22ÅE"
+	color baseColorR*2/3, baseColorG*2/3, baseColorB*2/3: DialRadius = PanelRadius-(fontsize)*3/4
+	gosub *drawdial
+	pos tmpCenterX-fontsize*8/4, tmpCenterY-fontsize/2-ClockRadius/10: print "SIDEREAL"
+	color baseColorR, baseColorG, baseColorB
+
+	ClockHandLength = PanelRadius*3/4
+	ClockDestinationX = int(double(tmpCenterX)+double(ClockHandLength)*sin(SiderealTime))
+	ClockDestinationY = int(double(tmpCenterY)-double(ClockHandLength)*cos(SiderealTime))
+	ClockOriginX = tmpCenterX
+	ClockOriginY = tmpCenterY
+	HandThickness = (ClockRadius*5/400)/2*2+1
+	HandAcuteness = 1
+	gosub *drawhand
+
+	ClockHandLength = PanelRadius*39/40
+	ClockDestinationX = int(double(tmpCenterX)+double(ClockHandLength)*sin(SiderealTime*24.0))
+	ClockDestinationY = int(double(tmpCenterY)-double(ClockHandLength)*cos(SiderealTime*24.0))
+	gosub *drawhand
+
+	color baseColorR*2/3, baseColorG*2/3, baseColorB*2/3
+	PinRadius = PanelRadius/16/2*2+1
+	PinCenterX = TmpCenterX: PinCenterY = TmpCenterY
+	gosub *drawpin
+
 	SiderealHour = int((SiderealTime*12.0/PI)\24)
 	SiderealMinute = int((SiderealTime*12.0*60.0/PI)\60)
-	/* ïsíËéûñ@ÇÃï∂éöî’(òaéûåvïóÇÃ) */
-	tmpCenterX = ClockCenterX+45: tmpCenterY = ClockCenterY+18: Radius = 40
+	return
+
+*drawjapanesepanel
+	tmpCenterX = ClockCenterX+ClockRadius*3/8: tmpCenterY = ClockCenterY+ClockRadius*3/20: PanelRadius = ClockRadius/3
 	color baseColorR, baseColorG, baseColorB
-	circle tmpCenterX-Radius, tmpCenterY-Radius, tmpCenterX+Radius, tmpCenterY+Radius, 0
-	Radius = 33
+	Kreis tmpCenterX, tmpCenterY, PanelRadius, 0
 	sunrise_year = gettime(0): sunrise_month = gettime(1): sunrise_day = gettime(3)
 	sunrise_lon = Longitude: sunrise_lat = Latitude
 	sunrise_altit = -0.833: sunrise_TZ = TimeZone: sunrise_isdst = 0
@@ -131,59 +172,103 @@
 		tmpTraditionalTime = 90.0+180.0*double(tmpNowMinutes-tmpSunriseMinutes)/double(tmpSunsetMinutes-tmpSunriseMinutes)
 	}
 	if (tmpNowMinutes >= tmpSunsetMinutes) {tmpTraditionalTime = 270.0+90.0*double(tmpNowMinutes-tmpSunsetMinutes)/double(1440-tmpSunsetMinutes)}
-	font fontname, 10, 0: tmpClockStr = "éqâNì–âKíCñ§åﬂñ¢ê\ì—ú˙àÂ"
-	ClockMinuteHandLength = 100
+
+	fontsize = ClockRadius*17/200: tmpClockStr = "éqÅEâNÅEì–ÅEâKÅEíCÅEñ§ÅEåﬂÅEñ¢ÅEê\ÅEì—ÅEú˙ÅEàÂÅE"
+	color baseColorR*2/3, baseColorG*2/3, baseColorB*2/3: DialRadius = PanelRadius-(fontsize)*3/4
+	gosub *drawdial
+	font fontname, fontsize, 0
+	pos tmpCenterX-fontsize*8/4, tmpCenterY-fontsize/2-ClockRadius/10: print "TEMPORAL"
+	color baseColorR, baseColorG, baseColorB
+
+	ClockHandLength = PanelRadius*39/40
+	ClockDestinationX = int(double(tmpCenterX)+double(ClockHandLength)*sin(deg2rad(tmpTraditionalTime)))
+	ClockDestinationY = int(double(tmpCenterY)-double(ClockHandLength)*cos(deg2rad(tmpTraditionalTime)))
+	ClockOriginX = tmpCenterX
+	ClockOriginY = tmpCenterY
+	HandThickness = (ClockRadius*5/400)/2*2+1
+	HandAcuteness = 1
+	gosub *drawhand
+
 	color baseColorR*2/3, baseColorG*2/3, baseColorB*2/3
-	repeat 12
-		ClockDestinationX = int(double(tmpCenterX)+double(Radius)*sin(double(5.0*cnt)*PI*2/60))
-		ClockDestinationY = int(double(tmpCenterY)-double(Radius)*cos(double(5.0*cnt)*PI*2/60))
-		pos ClockDestinationX-5, ClockDestinationY-5
-		print strmid(tmpClockStr, cnt*2, 2)
-	loop
-	font fontname, 10, 0: pos tmpCenterX-20+0, tmpCenterY-5-12: print "JAPANESE"
-	color baseColorR, baseColorG, baseColorB
-	Radius = 38
-	ClockDestinationX = int(double(tmpCenterX)+double(Radius)*sin(deg2rad(tmpTraditionalTime)))
-	ClockDestinationY = int(double(tmpCenterY)-double(Radius)*cos(deg2rad(tmpTraditionalTime)))
-	line ClockDestinationX, ClockDestinationY, tmpCenterX, tmpCenterY
-	/* ì˙ïtÇ∆ójì˙ */
-	color baseColorR, baseColorG, baseColorB: font fontname, 30, 0
-	pos ClockCenterX-15-15-1, ClockCenterY+55: print "Å°"
-	pos ClockCenterX-15-15, ClockCenterY+55-1: print "Å°"
-	pos ClockCenterX-15-15+1, ClockCenterY+55: print "Å°"
-	pos ClockCenterX-15-15, ClockCenterY+55+1: print "Å°"
-	pos ClockCenterX+15-15-1, ClockCenterY+55: print "Å°"
-	pos ClockCenterX+15-15, ClockCenterY+55-1: print "Å°"
-	pos ClockCenterX+15-15+1, ClockCenterY+55: print "Å°"
-	pos ClockCenterX+15-15, ClockCenterY+55+1: print "Å°"
-	color baseColorR/5, baseColorG/5, baseColorB/5
-	pos ClockCenterX-15-15, ClockCenterY+55: font fontname, 30, 0: print "Å°"
-	color baseColorR, baseColorG, baseColorB: tmpPattern="ì˙åéâŒêÖñÿã‡ìy"
-	pos ClockCenterX-15-12, ClockCenterY+58: font fontname, 24, 0: print strmid(tmpPattern, gettime(2)*2, 2)
-	color baseColorR/5, baseColorG/5, baseColorB/5
-	pos ClockCenterX+15-15, ClockCenterY+55: font fontname, 30, 0: print "Å°"
-	color baseColorR, baseColorG, baseColorB: tmpPattern="Å@ÇPÇQÇRÇSÇTÇUÇVÇWÇX10111213141516171819202122232425262728293031"
-	pos ClockCenterX+15-12, ClockCenterY+58: font fontname, 24, 0: print strmid(tmpPattern, gettime(3)*2, 2)
-	/* éûåvÇÃêjÇï\é¶ */
+	PinRadius = PanelRadius/16/2*2+1
+	PinCenterX = TmpCenterX: PinCenterY = TmpCenterY
+	gosub *drawpin
+	return
+
+*drawdaypanel
+	fontsize = ClockRadius*5/24
+	font fontname, fontsize, 0
+
+	PanelCenterX = ClockCenterX-ClockRadius/2
+	PanelCenterY = ClockCenterY-ClockRadius*4/10
+	gosub *drawpanelwindow
+	tmpPattern="ì˙åéâŒêÖñÿã‡ìy"
+	print strmid(tmpPattern, gettime(2)*2, 2)
+
+	PanelCenterX = ClockCenterX+ClockRadius/2
+	PanelCenterY = ClockCenterY-ClockRadius*4/10
+	gosub *drawpanelwindow
+	tmpPattern="Å@ÇPÇQÇRÇSÇTÇUÇVÇWÇX10111213141516171819202122232425262728293031"
+	print strmid(tmpPattern, gettime(3)*2, 2)
+
+	PanelCenterX = ClockCenterX-ClockRadius/7
+	PanelCenterY = ClockCenterY+ClockRadius*15/24
+	gosub *drawpanelwindow
+	tmpPattern="çbâ≥ï∏íöïËå»çMêhêp·°"
+	print strmid(tmpPattern, int(LocalDay-2400000.5)\10*2, 2)
+
+	PanelCenterX = ClockCenterX+ClockRadius/7
+	PanelCenterY = ClockCenterY+ClockRadius*15/24
+	gosub *drawpanelwindow
+	tmpPattern="ì–âKíCñ§åﬂñ¢ê\ì—ú˙àÂéqâN"
+	print strmid(tmpPattern, int(LocalDay-2400000.5)\12*2, 2)
+
+	return
+
+*drawclockhand
 	color (baseColorR+63+255)/2, (baseColorG+63+255)/2, (baseColorB+63+255)/2
-	ClockMinuteHandLength = 105
-	ClockDestinationX = int(double(ClockCenterX)+double(ClockMinuteHandLength)*sin(double(double(gettime(5))+double(gettime(6))/60)*PI*2/60))
-	ClockDestinationY = int(double(ClockCenterY)-double(ClockMinuteHandLength)*cos(double(double(gettime(5))+double(gettime(6))/60)*PI*2/60))
-	repeat 25
-		if (((cnt\5-2)*(cnt\5-2)+(cnt/5-2)*(cnt/5-2)) > 5) {continue}
-		line ClockDestinationX, ClockDestinationY, ClockCenterX+(cnt\5-2), ClockCenterY+(cnt/5-2)
-	loop
-	ClockMinuteHandLength = 85
-	ClockDestinationX = int(double(ClockCenterX)+double(ClockMinuteHandLength)*sin(double(double(gettime(4))+double(gettime(5))/60)*PI*2/12))
-	ClockDestinationY = int(double(ClockCenterY)-double(ClockMinuteHandLength)*cos(double(double(gettime(4))+double(gettime(5))/60)*PI*2/12))
-	repeat 25
-		if (((cnt\5-2)*(cnt\5-2)+(cnt/5-2)*(cnt/5-2)) > 5) {continue}
-		line ClockDestinationX, ClockDestinationY, ClockCenterX+(cnt\5-2), ClockCenterY+(cnt/5-2)
-	loop
+
+	ClockHandLength = ClockRadius*19/20
+	ClockDestinationX = int(double(ClockCenterX)+double(ClockHandLength)*sin(double(double(gettime(5))+double(gettime(6))/60)*PI*2/60))
+	ClockDestinationY = int(double(ClockCenterY)-double(ClockHandLength)*cos(double(double(gettime(5))+double(gettime(6))/60)*PI*2/60))
+	ClockOriginX = int(double(ClockCenterX)-double(ClockHandLength/5)*sin(double(double(gettime(5))+double(gettime(6))/60)*PI*2/60))
+	ClockOriginY = int(double(ClockCenterY)+double(ClockHandLength/5)*cos(double(double(gettime(5))+double(gettime(6))/60)*PI*2/60))
+	HandThickness = (ClockRadius*17/400)/2*2+1
+	HandAcuteness = HandThickness/2+1
+	gosub *drawhand
+
+	ClockHandLength = ClockRadius*3/4
+	ClockDestinationX = int(double(ClockCenterX)+double(ClockHandLength)*sin(double(double(gettime(4))+double(gettime(5))/60)*PI*2/12))
+	ClockDestinationY = int(double(ClockCenterY)-double(ClockHandLength)*cos(double(double(gettime(4))+double(gettime(5))/60)*PI*2/12))
+	ClockOriginX = int(double(ClockCenterX)-double(ClockHandLength/4)*sin(double(double(gettime(4))+double(gettime(5))/60)*PI*2/12))
+	ClockOriginY = int(double(ClockCenterY)+double(ClockHandLength/4)*cos(double(double(gettime(4))+double(gettime(5))/60)*PI*2/12))
+	gosub *drawhand
+
 	color baseColorR, baseColorG, baseColorB
-	repeat 81
-		if (((cnt\9-4)*(cnt\9-4)+(cnt/9-4)*(cnt/9-4)) > 18) {continue}
-		pset ClockCenterX+(cnt\9-4), ClockCenterY+(cnt/9-4)
+	PinRadius = ClockRadius/10/2*2+1
+	PinCenterX = ClockCenterX: PinCenterY = ClockCenterY
+	gosub *drawpin
+	return
+
+*drawhand
+	repeat HandThickness*HandThickness
+		if (((cnt\HandThickness-HandThickness/2)*(cnt\HandThickness-HandThickness/2)+(cnt/HandThickness-HandThickness/2)*(cnt/HandThickness-HandThickness/2)) > HandThickness) {continue}
+		line ClockDestinationX+(cnt\HandThickness-HandThickness/2)*HandAcuteness/HandThickness, ClockDestinationY+(cnt/HandThickness-HandThickness/2)*HandAcuteness/HandThickness, ClockOriginX+(cnt\HandThickness-HandThickness/2), ClockOriginY+(cnt/HandThickness-HandThickness/2)
 	loop
+	return
+
+*drawpin
+	repeat PinRadius*PinRadius
+		if (((cnt\PinRadius-PinRadius/2)*(cnt\PinRadius-PinRadius/2)+(cnt/PinRadius-PinRadius/2)*(cnt/PinRadius-PinRadius/2)) > PinRadius*2) {continue}
+		pset PinCenterX+(cnt\PinRadius-PinRadius/2), PinCenterY+(cnt/PinRadius-PinRadius/2)
+	loop
+	return
+
+*drawpanelwindow
+	color baseColorR/5, baseColorG/5, baseColorB/5
+	boxf PanelCenterX-(fontsize/2+2), PanelCenterY-(fontsize/2+2), PanelCenterX+(fontsize/2+2), PanelCenterY+(fontsize/2+2)
+	color baseColorR, baseColorG, baseColorB
+	box PanelCenterX-(fontsize/2+2), PanelCenterY-(fontsize/2+2), PanelCenterX+(fontsize/2+2), PanelCenterY+(fontsize/2+2)
+	pos PanelCenterX-fontsize/2, PanelCenterY-fontsize/2
 	return
 #global

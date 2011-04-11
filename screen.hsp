@@ -865,7 +865,7 @@ return
 	font fontname, 20, 0
 	tmpVersion = "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
 	borderedtxt2a tmpVersion, 600+((24-strlen(tmpVersion))*10), 16, (GetTableColorR(GameEnv)+63+255)/2, (GetTableColorG(GameEnv)+63+255)/2, (GetTableColorB(GameEnv)+63+255)/2, 0, 20
-	showClock GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
+	showClock 720, 240, 118, GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
 	/*  */
 	buffer SCR_BUTTON_FLAME_BUFFER, 840, 630
 	color 0, 0, 0
