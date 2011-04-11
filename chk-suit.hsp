@@ -161,9 +161,8 @@
 			if (getRule(RULE_STARLIGHT) != 0) {
 				if (PinzMian == SIZE_OF_MELD_BUFFER) {
 					yakuFlag = 0
-					repeat SIZE_OF_MELD_BUFFER-1, 1
-						if ((MianziDat(cnt) >= MELD_TRIPLET*MELD_TYPE_STEP)&&((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == TILE_SUIT_CIRCLES+7)) {yakuFlag = 1}
-					loop
+					countKez KezCount, MianziDat
+					if (KezCount(TILE_SUIT_CIRCLES+7) >= 1) {yakuFlag = 1}
 					if (yakuFlag) {
 						addyaku tmpYakuInfo, "星光燦爛", 1
 					}
@@ -179,6 +178,22 @@
 					if ((DragonMian == 0)||(getRule(RULE_CHARACTERS_MAHJONG) == 2)) {
 						addyakuman tmpYakuInfo, "萬和", 1
 					}
+				}
+			}
+#endif
+#ifndef SANMAS
+			/* 東京オリンピック */
+			if (getRule(RULE_TOKYO_OLYMPIC_MONOCHROME) != 0) {
+				yakuFlag = 0
+				dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+5
+				dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5
+				yakuFlag = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
+				dim targetKez,1: targetKez=TILE_EAST_WIND
+				dim targetShunz,1: targetShunz=0
+				yakuFlag2 = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
+				if (yakuFlag*yakuFlag2) {
+					addyakuman tmpYakuInfo, "東京オリンピック", 1
+					delyaku tmpYakuInfo, "混一色"
 				}
 			}
 #endif
@@ -215,6 +230,22 @@
 	if (getRule(RULE_UUMENCHII) != 0) {
 		if ((WanzMian == 1)&&(PinzMian == 1)&&(SouzMian == 1)&&(WindMian == 1)&&(DragonMian == 1)) {
 			addyaku tmpYakuInfo, "五門斎", 2
+		}
+	}
+	/* 東京オリンピック */
+	if (getRule(RULE_TOKYO_OLYMPIC_POLYCHROME) != 0) {
+		if ((WanzMian == 1)&&(PinzMian == 1)&&(SouzMian == 1)&&(WindMian == 1)&&(DragonMian == 1)) {
+			yakuFlag = 0
+			countKez KezCount, MianziDat
+			if (KezCount(TILE_EAST_WIND) >= 1) {
+				if (((getRound(GameStat)/4) == PLAYER_EAST)&&(playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST)) {
+					yakuFlag = 1
+				}
+			}
+			if (yakuFlag) {
+				addyakuman tmpYakuInfo, "東京オリンピック ", 1
+				delyaku tmpYakuInfo, "五門斎"
+			}
 		}
 	}
 #endif

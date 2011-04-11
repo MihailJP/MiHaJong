@@ -1773,6 +1773,16 @@
 	RuleDescription(RULE_CHOUIPPATSU) = "超一発の有無と価値を設定します(下家から立直一発を和了る)"
 	RuleTxt(0, RULE_CHOUIPPATSU) = "なし", "２飜"
 
+	RuleName(RULE_TOKYO_OLYMPIC_MONOCHROME) = "東京五輪(混一色)"
+	RuleDescription(RULE_TOKYO_OLYMPIC_MONOCHROME) = "東京オリンピックの有無と価値を設定します(東と五筒がある混一色)"
+	RuleTxt(0, RULE_TOKYO_OLYMPIC_MONOCHROME) = "なし", "役満"
+	nonumsanma RULE_TOKYO_OLYMPIC_MONOCHROME
+
+	RuleName(RULE_TOKYO_OLYMPIC_POLYCHROME) = "東京五輪(五門斉)"
+	RuleDescription(RULE_TOKYO_OLYMPIC_POLYCHROME) = "東京オリンピックの有無と価値を設定します(ダブ東の刻子がある五門斉)"
+	RuleTxt(0, RULE_TOKYO_OLYMPIC_POLYCHROME) = "なし", "役満"
+	nonumsanma RULE_TOKYO_OLYMPIC_POLYCHROME
+
 return
 
 #undef noregsanma

@@ -595,6 +595,8 @@
 	AddRuleText3 "白衣騎士", RuleStat(RULE_WHITE_KNIGHT)
 	AddRuleText1 "青函トンネル", RuleStat(RULE_SEIKAN_TUNNEL)
 	AddRuleText3 "青函連絡船", RuleStat(RULE_SEIKAN_SHIP)
+	AddRuleText1 "東京オリンピックは、混一色型", RuleStat(RULE_TOKYO_OLYMPIC_MONOCHROME)
+	AddRuleText3 "五門斉型", RuleStat(RULE_TOKYO_OLYMPIC_POLYCHROME)
 #endif
 	AddRuleText1 "カラス", RuleStat(RULE_KARASU)
 	AddRuleText3 "カラス立直", RuleStat(RULE_KARASU_RIICHI)
