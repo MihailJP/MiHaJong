@@ -10,22 +10,31 @@
 #deffunc yaojiuyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer
 	trace "断幺・全帯系の処理に入ります。"
 	tmpyaojiu = 0: ShuntsuCount = 0: JihaiCount = 0
+	OneCount = 0: NineCount = 0
 	repeat SIZE_OF_MELD_BUFFER
 		switch (MianziDat(cnt) \ TILE_CODE_MAXIMUM)
+#ifndef SANMAS
+			case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
+			case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
+				JihaiCount++
+				/* FALLTHRU */
+#endif
 			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
 				tmpyaojiu++
 			swbreak
-#ifndef SANMAS
-			case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
-			case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON:
-				tmpyaojiu++: JihaiCount++
-#endif
+		swend
+		switch (MianziDat(cnt) \ TILE_CODE_MAXIMUM)
+			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CIRCLES+1: case TILE_SUIT_BAMBOOS+1:
+				OneCount++
+			swbreak
+			case TILE_SUIT_CHARACTERS+9: case TILE_SUIT_CIRCLES+9: case TILE_SUIT_BAMBOOS+9:
+				NineCount++
 			swbreak
 		swend
 		if ((MianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&((MianziDat(cnt) \ TILE_SUIT_STEP) == 7)&&(cnt > 0)) {
-			tmpyaojiu++
+			tmpyaojiu++: NineCount++
 		}
 		if ((MianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP)&&(cnt > 0)) {ShuntsuCount++}
 	loop
@@ -72,6 +81,12 @@
 #ifndef SANMAS
 			} else {
 				addyaku tmpYakuInfo, "混全帯幺九", 1+getMenzen(GameStat, targetPlayer)
+				if (getRule(RULE_HENCHANTAIYAO) != 0) {
+					if ((OneCount == 0)||(NineCount == 0)) {
+						addyaku tmpYakuInfo, "偏全帯幺九", 2+getMenzen(GameStat, targetPlayer)
+						delyaku tmpYakuInfo, "混全帯幺九"
+					}
+				}
 			}
 #endif
 		}

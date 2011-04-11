@@ -1757,12 +1757,17 @@
 	RuleName(RULE_SANSEKI_TEMPUKU) = "三隻転覆"
 	RuleDescription(RULE_SANSEKI_TEMPUKU) = "三隻転覆の有無と価値を設定します(三人が立直時、立直していない人が自摸和了)"
 	RuleTxt(0, RULE_SANSEKI_TEMPUKU) = "なし", "３飜"
-	nosanma RULE_SANSEKI_TEMPUKU: nosanma RULE_SANSEKI_TEMPUKU
+	nosanma RULE_SANSEKI_TEMPUKU: nonumsanma RULE_SANSEKI_TEMPUKU
 
 	RuleName(RULE_KISHI_KAISEI) = "起死回生"
 	RuleDescription(RULE_KISHI_KAISEI) = "起死回生の有無と価値を設定します(三人がダブル立直時、黙聴で自摸和了)"
 	RuleTxt(0, RULE_KISHI_KAISEI) = "なし", "役満"
-	nosanma RULE_KISHI_KAISEI: nosanma RULE_KISHI_KAISEI
+	nosanma RULE_KISHI_KAISEI: nonumsanma RULE_KISHI_KAISEI
+
+	RuleName(RULE_HENCHANTAIYAO) = "偏全帯幺九"
+	RuleDescription(RULE_HENCHANTAIYAO) = "偏全帯幺九の有無と価値を設定します(一か九のどちらかがない全帯幺九)"
+	RuleTxt(0, RULE_HENCHANTAIYAO) = "なし", "３飜(喰い下がり有り)"
+	nonumsanma RULE_HENCHANTAIYAO
 
 return
 

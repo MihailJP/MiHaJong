@@ -489,7 +489,10 @@
 	AddRuleText2 "√１０和", RuleStat(RULE_SQUARE_ROOT_TEN)
 	AddRuleText2 "自然対数の底", RuleStat(RULE_NATURAL_LOGARITHM)
 	AddRuleText3 "虚数和", RuleStat(RULE_IMAGINARY_NUMBER)
-	AddRuleText1 "全帯一", RuleStat(RULE_ALL_ONE)
+#ifndef SANMAS
+	AddRuleText "偏全帯幺九", RuleStat(RULE_HENCHANTAIYAO)
+#endif
+	AddRuleText2 "全帯一", RuleStat(RULE_ALL_ONE)
 	AddRuleText2 "全帯二", RuleStat(RULE_ALL_TWO)
 	AddRuleText2 "全帯三", RuleStat(RULE_ALL_THREE)
 	AddRuleText2 "全帯四", RuleStat(RULE_ALL_FOUR)
