@@ -169,6 +169,16 @@
 				delyaku tmpYakuInfo, "嶺上開花"
 			}
 		}
+#ifndef SANMAS
+		/* 東花園 */
+		if (getRule(RULE_HIGASHI_HANAZONO_TRIPLETS) != 0) {
+			countKangz KangzCount, MianziDat
+			if (((getRound(GameStat)/4) == PLAYER_EAST)&&(playerWind(targetPlayer, getRound(GameStat)) == PLAYER_EAST)&&(KangzCount(TILE_EAST_WIND) >= 1)) {
+				addyakuman tmpYakuInfo, "東花園", 1
+				delyaku tmpYakuInfo, "嶺上開花"
+			}
+		}
+#endif
 	} else {
 		/* 海底
 		   elseブロックに組み込むことで嶺上と海底が複合するのを防止 */

@@ -1783,6 +1783,16 @@
 	RuleTxt(0, RULE_TOKYO_OLYMPIC_POLYCHROME) = "なし", "役満"
 	nonumsanma RULE_TOKYO_OLYMPIC_POLYCHROME
 
+	RuleName(RULE_HIGASHI_HANAZONO_TRIPLETS) = "東花園(刻子)"
+	RuleDescription(RULE_HIGASHI_HANAZONO_TRIPLETS) = "東花園の有無と価値を設定します(東、8、7の刻子)"
+	RuleTxt(0, RULE_HIGASHI_HANAZONO_TRIPLETS) = "なし", "役満"
+	nonumsanma RULE_HIGASHI_HANAZONO_TRIPLETS
+
+	RuleName(RULE_HIGASHI_HANAZONO_RINSHAN) = "東花園(嶺上開花)"
+	RuleDescription(RULE_HIGASHI_HANAZONO_RINSHAN) = "東花園の有無と価値を設定します(ダブ東を槓して嶺上開花)"
+	RuleTxt(0, RULE_HIGASHI_HANAZONO_RINSHAN) = "なし", "役満"
+	nonumsanma RULE_HIGASHI_HANAZONO_RINSHAN
+
 return
 
 #undef noregsanma
