@@ -38,8 +38,31 @@
 	/* àÍî≠ */
 	if ((getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_DOUBLE_IPPATSU)) {
 		if ((getRule(RULE_RIICHI_IPPATSU) != 1)&&(getRule(RULE_RIICHI_IPPATSU) != 3)) {
-			addyaku tmpYakuInfo, "àÍî≠", 1
-			if (getRule(RULE_RIICHI_IPPATSU) == 2) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1}
+			yakuFlag = 0
+			if (getRule(RULE_CHOUIPPATSU) != 0){
+				if (getTsumoAgariFlag(GameStat) == 0) {
+					if (getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI) == shimochaOf(targetPlayer)) {
+						yakuFlag = 1
+					}
+#ifdef SANMAT
+					if ((getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI) == 0)&&(targetPlayer == 2)) {
+						yakuFlag = 1
+					}
+#endif
+#ifdef SANMA4
+					if ((getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI) == toimenOf(targetPlayer))&&(playerWind(targetPlayer, getRound(GameStat)) == PLAYER_WEST)) {
+						yakuFlag = 1
+					}
+#endif
+				}
+			}
+			if (yakuFlag) {
+				addyaku tmpYakuInfo, "í¥àÍî≠", 2
+				if (getRule(RULE_RIICHI_IPPATSU) == 2) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -2: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 2}
+			} else {
+				addyaku tmpYakuInfo, "àÍî≠", 1
+				if (getRule(RULE_RIICHI_IPPATSU) == 2) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1}
+			}
 		}
 	}
 	/* íπÉäÅ[É` */

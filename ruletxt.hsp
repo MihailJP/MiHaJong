@@ -511,6 +511,7 @@
 #endif
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText "鳥立直", RuleStat(RULE_BIRD_RIICHI)
+	AddRuleText "超一発", RuleStat(RULE_CHOUIPPATSU)
 #ifndef ALLSANMA
 	AddRuleText1 "三隻転覆", RuleStat(RULE_SANSEKI_TEMPUKU)
 	AddRuleText3 "起死回生", RuleStat(RULE_KISHI_KAISEI)

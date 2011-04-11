@@ -1769,6 +1769,10 @@
 	RuleTxt(0, RULE_HENCHANTAIYAO) = "ศต", "Rใส(๒ขบช่—L่)"
 	nonumsanma RULE_HENCHANTAIYAO
 
+	RuleName(RULE_CHOUIPPATSU) = "’ด๊”ญ"
+	RuleDescription(RULE_CHOUIPPATSU) = "’ด๊”ญฬ—L–ณฦฟ’l๐Ý’่ตÜท(บฦฉ็—ง’ผ๊”ญ๐a—น้)"
+	RuleTxt(0, RULE_CHOUIPPATSU) = "ศต", "Qใส"
+
 return
 
 #undef noregsanma
