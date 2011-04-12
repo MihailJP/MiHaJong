@@ -6,6 +6,127 @@
 
 #module
 #include "const.as"
+#deffunc checkroundabort var GameStat, var GameEnv
+	/* 四開槓なら流す */
+	if (getRule(RULE_FOUR_KONG_RYUUKYOKU) != 2) {
+		if ((getTotalKang(GameStat) == 4)&&(getNumberOfQuads(GameStat, 0) < 4)&&(getNumberOfQuads(GameStat, 1) < 4)&&(getNumberOfQuads(GameStat, 2) < 4)&&(getNumberOfQuads(GameStat, 3) < 4)) {
+			RoundEndType = ENDKYOKU_SUUKAIKAN
+			redrscreen: return RoundEndType
+		}
+	}
+#ifdef ALLSANMA
+	// 三人立直の判定
+	if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 0) {
+#ifdef SANMA4
+		if (((getRichiFlag(GameStat, RICHI_FLAG, 0) != RIICHI_NO)||(playerwind(0, getRound(GameStat)) == PLAYER_NORTH))&&((getRichiFlag(GameStat, RICHI_FLAG, 1) != RIICHI_NO)||(playerwind(1, getRound(GameStat)) == PLAYER_NORTH))&&((getRichiFlag(GameStat, RICHI_FLAG, 2) != RIICHI_NO)||(playerwind(2, getRound(GameStat)) == PLAYER_NORTH))&&((getRichiFlag(GameStat, RICHI_FLAG, 3) != RIICHI_NO)||(playerwind(3, getRound(GameStat)) == PLAYER_NORTH))) {
+#else
+		if ((getRichiFlag(GameStat, RICHI_FLAG, 0)*getRichiFlag(GameStat, RICHI_FLAG, 1)*getRichiFlag(GameStat, RICHI_FLAG, 2)) != 0) {
+#endif
+			RoundEndType = ENDKYOKU_SUUCHARIICHI: return RoundEndType
+		}
+	}
+	// 三風連打の判定
+	if (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 0) {
+#ifdef SANMA4
+		if (((DiscardPointer(GameStat, 0) == 1)||(playerwind(0, getRound(GameStat)) == PLAYER_NORTH))&&((DiscardPointer(GameStat, 1) == 1)||(playerwind(1, getRound(GameStat)) == PLAYER_NORTH))&&((DiscardPointer(GameStat, 2) == 1)||(playerwind(2, getRound(GameStat)) == PLAYER_NORTH))&&((DiscardPointer(GameStat, 3) == 1)||(playerwind(3, getRound(GameStat)) == PLAYER_NORTH))) {
+			if (((getDiscard(GameStat, DISCARD_TILECODE, 1, 0) == getDiscard(GameStat, DISCARD_TILECODE, 1, 1))||(playerwind(1, getRound(GameStat)) == PLAYER_NORTH))&&((getDiscard(GameStat, DISCARD_TILECODE, 1, 1) == getDiscard(GameStat, DISCARD_TILECODE, 1, 2))||(playerwind(2, getRound(GameStat)) == PLAYER_NORTH))&&((getDiscard(GameStat, DISCARD_TILECODE, 1, 2) == getDiscard(GameStat, DISCARD_TILECODE, 1, 3))||(playerwind(3, getRound(GameStat)) == PLAYER_NORTH))&&((getDiscard(GameStat, DISCARD_TILECODE, 1, 3) == getDiscard(GameStat, DISCARD_TILECODE, 1, 0))||(playerwind(0, getRound(GameStat)) == PLAYER_NORTH))) {
+#else
+		if ((DiscardPointer(GameStat, 0) == 1)&&(DiscardPointer(GameStat, 1) == 1)&&(DiscardPointer(GameStat, 2) == 1)) {
+			if ((getDiscard(GameStat, DISCARD_TILECODE, 1, 0) == getDiscard(GameStat, DISCARD_TILECODE, 1, 1))&&(getDiscard(GameStat, DISCARD_TILECODE, 1, 1) == getDiscard(GameStat, DISCARD_TILECODE, 1, 2))) {
+#endif
+				if ((getDiscard(GameStat, DISCARD_TILECODE, 1, 0) >= TILE_WIND_MIN)&&(getDiscard(GameStat, DISCARD_TILECODE, 1, 0) <= TILE_WIND_MAX)) {
+					RoundEndType = ENDKYOKU_SUUFONRENDA: return RoundEndType
+				}
+			}
+		}
+	}
+#else
+	// 四人立直の判定
+	if (((getRichiFlag(GameStat, RICHI_FLAG, 0)*getRichiFlag(GameStat, RICHI_FLAG, 1)*getRichiFlag(GameStat, RICHI_FLAG, 2)*getRichiFlag(GameStat, RICHI_FLAG, 3)) != 0)&&(getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 2)) {
+		RoundEndType = ENDKYOKU_SUUCHARIICHI: return RoundEndType
+	}
+	// 四風連打の判定
+	if (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 2) {
+		if ((DiscardPointer(GameStat, 0) == 1)&&(DiscardPointer(GameStat, 1) == 1)&&(DiscardPointer(GameStat, 2) == 1)&&(DiscardPointer(GameStat, 3) == 1)) {
+			if ((getDiscard(GameStat, DISCARD_TILECODE, 1, 0) == getDiscard(GameStat, DISCARD_TILECODE, 1, 1))&&(getDiscard(GameStat, DISCARD_TILECODE, 1, 1) == getDiscard(GameStat, DISCARD_TILECODE, 1, 2))&&(getDiscard(GameStat, DISCARD_TILECODE, 1, 2) == getDiscard(GameStat, DISCARD_TILECODE, 1, 3))) {
+				if ((getDiscard(GameStat, DISCARD_TILECODE, 1, 0) >= TILE_WIND_MIN)&&(getDiscard(GameStat, DISCARD_TILECODE, 1, 0) <= TILE_WIND_MAX)) {
+					RoundEndType = ENDKYOKU_SUUFONRENDA: return RoundEndType
+				}
+			}
+		}
+	}
+#endif
+	repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop // バグ防止のため
+	if (((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == getPreviousMeld(GameStat, PREVMELD_TILECODE))||(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == getPreviousMeld(GameStat, PREVMELD_STEPPED)))&&(getAgariHouki(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 0)) {
+		// 喰い替えの場合の処理
+		switch getRule(RULE_KUIKAE)
+			case 0: case 3:
+				/* 和了り放棄とする設定 */
+				info strf("喰い変えを検出しました。和了り放棄として扱います。打牌 [%d] 鳴いた牌 [%d]", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getPreviousMeld(GameStat, PREVMELD_TILECODE))
+				dsplay@ SND_CUOHU
+				repeat 2
+					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "喰替"
+					redrscreen: await 1500
+					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "和了放棄"
+					redrscreen: await 1500
+				loop
+				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), ""
+				redrscreen
+				/* 和了り放棄は以降強制ツモ切り、強制不聴扱いとなります */
+				setAgariHouki GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
+				if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}
+				vanish@: commonswitch GameStat, GameEnv
+				swbreak
+			case 1: case 4:
+				/* 直ちに錯和とする設定 */
+				info strf("喰い変えを検出しました。チョンボとして扱います。打牌 [%d] 鳴いた牌 [%d]", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getPreviousMeld(GameStat, PREVMELD_TILECODE))
+				dsplay@ SND_CUOHU
+				RoundEndType = ENDKYOKU_CHONBO: setTsumoAgariFlag GameStat, AGARI_KUIKAE
+				setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
+				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "錯和"
+				redrscreen: await 1500
+				/* 局を打ち切り、満貫罰符の支払いに進む */
+				return RoundEndType
+		swend
+	}
+	/* 多牌や少牌をしていないかのチェック */
+	tmptilecnt = 0
+	repeat NUM_OF_TILES_IN_HAND
+		if (getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > 0) {tmptilecnt++}
+	loop
+	tmptilecnt += (MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) * 3)
+	if ((tmptilecnt != (NUM_OF_TILES_IN_HAND-1))&&(getAgariHouki(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 0)) {
+//			多牌や少牌の場合の処理(通常起きることはないはずだが…)
+		if (tmptilecnt > (NUM_OF_TILES_IN_HAND-1)) {
+			warn "多牌を検出しました。和了り放棄として扱いますが、摸打の処理で不整合が起きていた可能性があります。"
+		} else {
+			warn "少牌を検出しました。和了り放棄として扱いますが、摸打の処理で不整合が起きていた可能性があります。"
+		}
+		dsplay@ SND_CUOHU
+		repeat 2
+			if (tmptilecnt > (NUM_OF_TILES_IN_HAND-1)) {
+				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "多牌"
+			} else {
+				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "少牌"
+			}
+			redrscreen: await 1500
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "和了放棄"
+			redrscreen: await 1500
+		loop
+		setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), ""
+		redrscreen
+		setAgariHouki GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
+		if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}
+		vanish@: commonswitch GameStat, GameEnv
+	}
+	await 0
+	/* 荒牌の場合ここで終了する(河底牌は吃ポンできないがロンはできる) */
+	if (getDrawPointer(GameStat) == (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1))) {RoundEndType = ENDKYOKU_RYUUKYOKU: return RoundEndType}
+	return -1
+#global
+
+#module
+#include "const.as"
 #deffunc endround var GameStat, var GameEnv, int _RoundEndType, var yakuInfo, int OrigTurn, int OrigHonba
 	// 局面終了コード
 	// ０…荒牌流局
