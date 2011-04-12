@@ -265,7 +265,7 @@
 			}
 			/* 石の上にも三年 */
 			if (getRule(RULE_THREE_YEARS_ON_STONE) != 0) {
-				if ((getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_YES)||(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_IPPATSU)) {
+				if ((getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_DOUBLE)||(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_DOUBLE_IPPATSU)) {
 					addyakuman tmpYakuInfo, "石の上にも三年", 1
 					delyaku tmpYakuInfo, "ダブル立直"
 					delyaku tmpYakuInfo, "ダブル開立直"
