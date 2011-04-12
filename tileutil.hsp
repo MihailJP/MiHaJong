@@ -314,7 +314,9 @@ return
 #global
 
 /* オープン立直の待ち牌 */
-*chkopenmachi
+#module
+#include "const.as"
+#deffunc chkopenmachi var GameStat, int targetPlayer
 	repeat TILE_NONFLOWER_STRICT_MAX+1
 		if (cnt\TILE_SUIT_STEP == 0) {continue}
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer, cnt
@@ -325,6 +327,7 @@ return
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer, 0
 	loop
 return
+#global
 
 /* 九種九牌流しが可能かどうかのチェック */
 #module
