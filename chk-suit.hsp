@@ -9,9 +9,7 @@
 #deffunc suityaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int FuritenFlag, int MachiType
 	trace "ˆêFŒn‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	WanzMian = 0: PinzMian = 0: SouzMian = 0: ZiMian = 0
-#ifdef ALLSANMA
 	WindMian = 0: DragonMian = 0
-#endif
 	Cifr = countMentzNumerals(MianziDat)
 	repeat SIZE_OF_MELD_BUFFER
 		switch (MianziDat(cnt) \ TILE_CODE_MAXIMUM / TILE_SUIT_STEP) * TILE_SUIT_STEP
@@ -22,14 +20,12 @@
 			case TILE_SUIT_HONORS: ZiMian++: swbreak
 #endif
 		swend
-#ifdef ALLSANMA
 		if (((MianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((MianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {
 			WindMian++
 		}
 		if (((MianziDat(cnt) \ TILE_CODE_MAXIMUM) >= TILE_DRAGON_MIN)&&((MianziDat(cnt) \ TILE_CODE_MAXIMUM) <= TILE_DRAGON_MAX)) {
 			DragonMian++
 		}
-#endif
 	loop
 	if (((WanzMian+Zimian) == SIZE_OF_MELD_BUFFER)||((PinzMian+Zimian) == SIZE_OF_MELD_BUFFER)||((SouzMian+Zimian) == SIZE_OF_MELD_BUFFER)) {
 #ifndef SANMAS
