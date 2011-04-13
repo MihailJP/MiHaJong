@@ -375,6 +375,7 @@ CurrentPlayer, DeclarationFlag, TsumoAgariFlag, CurrentDiscard
 	return
 #modfunc resetCurrentPlayer
 	dim CurrentPlayer, CURRENTPLAYER_PAGES
+	repeat CURRENTPLAYER_PAGES: CurrentPlayer(cnt) = -1: loop
 	return
 #modcfunc getCurrentPlayer int Page
 	return CurrentPlayer(Page)

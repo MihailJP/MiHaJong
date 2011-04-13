@@ -625,7 +625,7 @@ return
 		gosub *DoraAdding
 	}
 	
-	setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, 0
+	//setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, 0
 	haifurechaipai GameStat
 	statmes ""
 	repeat NUM_OF_PLAYERS: lipai GameStat, cnt: loop

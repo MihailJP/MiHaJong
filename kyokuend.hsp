@@ -161,7 +161,7 @@
 	/* òaóπèàóù */
 	/************/
 	if ((RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
-		agariproc RoundEndType, yakuInfo, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc
+		agariproc RoundEndType, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc
 	}
 	switch RoundEndType
 	/**************/

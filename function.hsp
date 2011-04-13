@@ -109,7 +109,7 @@ return
 		default: roundNameTxt += "??"
 	swend
 	if ((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7)) {
-		switch getRoundLoop(GameStat)*NUM_OF_ACTUAL_PLAYERS+roundNum\NUM_OF_PLAYERS
+		switch getRoundLoop(GameStat@)*NUM_OF_ACTUAL_PLAYERS+roundNum\NUM_OF_PLAYERS
 			case 0: roundNameTxt += "àÍã«": swbreak
 			case 1: roundNameTxt += "ìÒã«": swbreak
 			case 2: roundNameTxt += "éOã«": swbreak
@@ -120,7 +120,7 @@ return
 			case 7: roundNameTxt += "î™ã«": swbreak
 			case 8: roundNameTxt += "ã„ã«": swbreak
 			case 9: roundNameTxt += "è\ã«": swbreak
-			default: roundNameTxt += strf("%dã«", getRoundLoop(GameStat)*NUM_OF_ACTUAL_PLAYERS+1)
+			default: roundNameTxt += strf("%dã«", getRoundLoop(GameStat@)*NUM_OF_ACTUAL_PLAYERS+1)
 		swend
 	} else {
 		switch roundNum\NUM_OF_PLAYERS

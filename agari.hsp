@@ -6,7 +6,7 @@
 
 #module
 #include "const.as"
-#deffunc agariproc int _RoundEndType, var yakuInfo, var GameStat, var GameEnv, var tmpUraFlag, var tmpAliceFlag, var ResultDesc
+#deffunc agariproc int _RoundEndType, var GameStat, var GameEnv, var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 	RoundEndType = _RoundEndType
 	tmpagariflag = 0
 	FirstAgariPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)
@@ -16,39 +16,38 @@
 	tmpAliceFlag = 0
 	AgariPlayerPriority = -1
 	origDoraPointer = getDoraPointer(GameStat)
-	exportYakuPoint yakuInfo, AgariPointRaw
-	if ((RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
-		repeat NUM_OF_PLAYERS-1
-			switch getRule(RULE_MULTIPLE_MAHJONG)
-				case 0: case 1:
-					if (cnt > 0) {break}
-					swbreak
-				case 2: case 3:
-					if (cnt > 1) {break}
-					swbreak
-			swend
-			if (cnt > 0) {
-				if (getTsumoAgariFlag(GameStat) == 0) {
-					RoundEndType = ENDKYOKU_AGARI
-					setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, (getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)+1) \ NUM_OF_PLAYERS
-					if (getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI) == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {break}
-					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS) == 1) {
-						setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-						setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
-						countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS
-						chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS
-						// 縛りを満たさないか、振聴のとき
-						if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_NO))) {
-							RoundEndType = ENDKYOKU_CHONBO // チョンボにする
-						}
-					} else {
-						continue cnt
+
+	repeat NUM_OF_PLAYERS-1
+		switch getRule(RULE_MULTIPLE_MAHJONG)
+			case 0: case 1:
+				if (cnt > 0) {break}
+				swbreak
+			case 2: case 3:
+				if (cnt > 1) {break}
+				swbreak
+		swend
+		if (cnt > 0) {
+			if (getTsumoAgariFlag(GameStat) == 0) {
+				RoundEndType = ENDKYOKU_AGARI
+				setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, (getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)+1) \ NUM_OF_PLAYERS
+				if (getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI) == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {break}
+				if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS) == 1) {
+					setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
+					setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
+					countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS
+					chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS
+					// 縛りを満たさないか、振聴のとき
+					if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_NO))) {
+						RoundEndType = ENDKYOKU_CHONBO // チョンボにする
 					}
+				} else {
+					continue cnt
 				}
 			}
-			if (getTsumoAgariFlag(GameStat) == 1) {break}
-		loop
-	}
+		}
+		if (getTsumoAgariFlag(GameStat) == 1) {break}
+	loop
+
 	repeat NUM_OF_PLAYERS-1
 		setDoraPointer GameStat, origDoraPointer
 		switch getRule(RULE_MULTIPLE_MAHJONG)
@@ -93,7 +92,6 @@
 					if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_NO))) {
 						RoundEndType = ENDKYOKU_CHONBO // チョンボにする
 					}
-					exportYakuPoint yakuInfo, AgariPointRaw
 				} else {
 					continue cnt
 				}
@@ -111,7 +109,7 @@
 		}
 		if (RoundEndType == ENDKYOKU_AGARI) {
 			chatrecv GameStat, GameEnv
-			endround_agariproc GameStat, GameEnv, ResultDesc, AgariPlayerPriority, origDoraPointer, AgariPointRaw, YakuInfo, tmpAliceFlag
+			endround_agariproc GameStat, GameEnv, ResultDesc, AgariPlayerPriority, origDoraPointer, YakuInfo, tmpAliceFlag
 		}
 		/**************/
 		/* 錯和発生時 */
@@ -187,8 +185,8 @@
 /* 和了成立時の処理 */
 #module
 #include "const.as"
-#deffunc endround_agariproc var GameStat, var GameEnv, var ResultDesc, var AgariPlayerPriority, \
-int origDoraPointer, array AgariPointRaw, array YakuInfo, var tmpAliceFlag
+#deffunc endround_agariproc var GameStat, var GameEnv, var ResultDesc, var AgariPlayerPriority, int origDoraPointer, array YakuInfo, var tmpAliceFlag
+	exportYakuPoint yakuInfo, AgariPointRaw
 	if (AgariPlayerPriority == -1) {AgariPlayerPriority = getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)}
 	if (ResultDesc != "") {ResultDesc += "\n"}
 	tmpResultDesc = ""

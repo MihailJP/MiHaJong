@@ -57,7 +57,7 @@
 
 #module
 #include "const.as"
-#deffunc procdahai var GameStat, var GameEnv, var DiscardTileIndex, var yakuInfo
+#deffunc procdahai var GameStat, var GameEnv, var DiscardTileIndex
 	// ‘Å”vƒR[ƒh
 	// ‚O`‚P‚Qc‚»‚ê‚¼‚ê‚ÌŽè”v
 	// ‚P‚Rcƒcƒ‚Ø‚èi‰½–ÊŽq–Â‚¢‚Ä‚¢‚Ä‚à‚±‚Ì”Ô†‚ÅŒÅ’èj
@@ -143,14 +143,14 @@
 	/* ‚±‚ÌƒQ[ƒ€‚Å‚Í‚Ç‚ñ‚ÈŽè‚Å‚à(‘Žm‚â‘åŽlŠì‚Å‚È‚­‚Ä‚à‚¢‚¢)
 	   ”²‚«–k‚ðƒƒ“‚Å‚«‚éƒ‹[ƒ‹ */
 	if ((DiscardTileIndex >= DAHAI_TYPE_FLOWER)&&(DiscardTileIndex < DAHAI_TYPE_FLOWER+DAHAI_TYPE_STEP)) {
-		fuuroproc GameStat, RoundEndType, DiscardTileIndex, FUURO_NORTH
+		fuuroproc GameStat, GameEnv, RoundEndType, DiscardTileIndex, FUURO_NORTH
 		if (stat == 1) {return RoundEndType} else {return -2}
 	}
 #else
 	/* ‰Ô”v‚ð”²‚¢‚½‚Æ‚«‚Ìˆ— */
 	/* ‚±‚ÌƒQ[ƒ€‚ÍŽµˆê‚ª‚È‚¢‚Ì‚Å‰Ô”v‚Åƒƒ“‚³‚ê‚é‚±‚Æ‚Í–³‚¢ */
 	if ((DiscardTileIndex >= DAHAI_TYPE_FLOWER)&&(DiscardTileIndex < DAHAI_TYPE_FLOWER+DAHAI_TYPE_STEP)) {
-		fuuroproc GameStat, RoundEndType, DiscardTileIndex, FUURO_FLOWER
+		fuuroproc GameStat, GameEnv, RoundEndType, DiscardTileIndex, FUURO_FLOWER
 		if (stat == 1) {return RoundEndType} else {return -2}
 	}
 #endif
@@ -161,7 +161,7 @@
 			setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
 			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
 		}
-		fuuroproc GameStat, RoundEndType, DiscardTileIndex, FUURO_ANKAN
+		fuuroproc GameStat, GameEnv, RoundEndType, DiscardTileIndex, FUURO_ANKAN
 		/* žÈ‚ð‚·‚é‚Æ—äã”v‚Ì•ªŽ©–Ì‚ª‘‚¦‚é‚Ì‚ÅŽŸ‚Ì‘Å”v‚Ö */
 		if (stat == 1) {return RoundEndType} else {return -2}
 	}
@@ -171,7 +171,7 @@
 			setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
 			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
 		}
-		fuuroproc GameStat, RoundEndType, DiscardTileIndex, FUURO_KAKAN
+		fuuroproc GameStat, GameEnv, RoundEndType, DiscardTileIndex, FUURO_KAKAN
 		/* žÈ‚ð‚·‚é‚Æ—äã”v‚Ì•ªŽ©–Ì‚ª‘‚¦‚é‚Ì‚ÅŽŸ‚Ì‘Å”v‚Ö */
 		if (stat == 1) {return RoundEndType} else {return -2}
 	}

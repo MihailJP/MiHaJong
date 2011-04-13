@@ -7,7 +7,7 @@
 /* 副露の処理 */
 #module
 #include "const.as"
-#deffunc fuuroproc var GameStat, var RoundEndType, int DiscardTileIndex, int Mode
+#deffunc fuuroproc var GameStat, var GameEnv, var RoundEndType, int DiscardTileIndex, int Mode
 	info strf("副露の処理を開始します。モード [%d]", Mode)
 	switch Mode
 		case FUURO_CHII:
@@ -330,7 +330,7 @@
 			if (Mode == FUURO_KAKAN)||(Mode == FUURO_NORTH)||((getRule(RULE_ANKAN_CONCEAL) == 0)&&(getRule(RULE_ANKAN_CHANKAN) == 0)) {
 				debug "搶槓の判定をします。"
 				if (Mode==FUURO_ANKAN) {setKangFlag GameStat, KANG_CHANKAN, 2} else {setKangFlag GameStat, KANG_CHANKAN, 1}
-				gosub *ronhuproc@
+				ronhuproc GameStat, GameEnv
 				if (Mode == FUURO_NORTH) {setKangFlag GameStat, KANG_CHANKAN, 0}
 				if ((RoundEndType = ENDKYOKU_TRIPLERON)||(RoundEndType = ENDKYOKU_DISCONNECT)) {return 1}
 				if (RonPlayers(GameStat) > 0) {
@@ -457,7 +457,10 @@
 #global
 
 /* 栄和のときの処理 */
-*ronhuproc
+#module
+#include "const.as"
+#deffunc ronhuproc var GameStat, var GameEnv
+	RoundEndType = -1
 	info "リアクションを問い合わせます。"
 	/* 栄和や鳴き仕掛けをするかどうか問い合わせる */
 	resetDeclarationFlag GameStat
@@ -493,10 +496,10 @@
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		if (ReceivedMsg == 1023) {
 			setCenterTitle "回線切断": redrscreen
-			gosub *reconnection
+			gosub *reconnection@
 			dialog "再接続しました\nこの回は和了り放棄になります\n次の局から参加可能です", 0, "回線切断"
-			RoundEndType = 9
-			return
+			RoundEndType = ENDKYOKU_DISCONNECT
+			return RoundEndType
 		}
 	}
 	trace strf("ロン [%d %d %d %d] カン [%d %d %d %d] ポン [%d %d %d %d] チー [%d %d %d %d]", getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 3))
@@ -588,9 +591,9 @@
 			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 			/* 栄和のサウンドを鳴らす */
 			if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == getPlayer(GameStat)) {
-				dsplay VOX_RON_FURIKOMI
+				dsplay@ VOX_RON_FURIKOMI
 			} else {
-				dsplay VOX_RON
+				dsplay@ VOX_RON
 			}
 			/* 画面更新して戻る */
 			redrscreen
@@ -621,12 +624,56 @@
 #ifdef ALLSANMA
 	// 二家和の判定
 	if ((RonPlayers(GameStat) >= 2)&&(getRule(RULE_MULTIPLE_MAHJONG)==5)) {
-		RoundEndType = ENDKYOKU_TRIPLERON: return
+		RoundEndType = ENDKYOKU_TRIPLERON: return RoundEndType
 	}
 #else
 	// 三家和の判定
 	if ((RonPlayers(GameStat) >= 3)&&((getRule(RULE_MULTIPLE_MAHJONG)==0)||(getRule(RULE_MULTIPLE_MAHJONG)==2))) {
-		RoundEndType = ENDKYOKU_TRIPLERON: return
+		RoundEndType = ENDKYOKU_TRIPLERON: return RoundEndType
 	}
 #endif
-return
+return RoundEndType
+#global
+
+#module
+#include "const.as"
+#deffunc executeFuuro var GameStat, int DiscardTileIndex
+	/* 捨牌をポン、または大明槓する場合の処理 */
+	/* 同じ牌は４枚しかないので、ポンと明槓は同時に起こることがない */
+	if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3) > 1) {
+		error "複数同時のポン・槓が宣言されています。"
+	}
+	repeat NUM_OF_PLAYERS: await 0
+		/* 捨牌をポンする場合 */
+		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, cnt) == 1) {
+			setCurrentPlayer GameStat, CURRENTPLAYER_PASSIVE, cnt // 鳴いたプレイヤーを設定
+			fuuroproc GameStat, GameEnv, RoundEndType, DiscardTileIndex, FUURO_PON
+			break
+		}
+		/* 明槓の場合 */
+		if ((getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 1)&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
+			setCurrentPlayer GameStat, CURRENTPLAYER_PASSIVE, cnt // 鳴いたプレイヤーを設定
+			fuuroproc GameStat, GameEnv, RoundEndType, DiscardTileIndex, FUURO_DAIMINKAN
+			break
+		}
+	loop
+	/* 吃とポンが同時に起こった場合、ポンを優先する */
+	if ((getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3)) > 0) {
+		setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
+		return 1
+#ifndef ALLSANMA
+	} else {
+		/* 吃の処理 */
+		/* 三人打ちでは吃なし */
+		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, ShimochaOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) > 0) {
+			setCurrentPlayer GameStat, CURRENTPLAYER_PASSIVE, ShimochaOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) // 吃ができるのは上家の捨牌のみ
+			fuuroproc GameStat, GameEnv, RoundEndType, DiscardTileIndex, FUURO_CHII
+			setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
+			return 1
+		}
+#endif
+	}
+	/* バグ防止のアレ */
+	repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
+	return 0
+#global
