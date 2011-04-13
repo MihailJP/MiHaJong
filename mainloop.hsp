@@ -94,62 +94,15 @@ repeat
 		/* ウェイトを入れる */
 		await 100
 		/* 次のプレイヤーが牌を自摸る */
-		incDrawPointer GameStat: setHeavenHandFlag GameStat, 0
-#ifdef SANMAT
-		setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)+1)\NUM_OF_ACTUAL_PLAYERS
-#else
-#ifdef SANMA4
-		/* 北家をスキップ */
-		if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_WEST) {
-			setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)+1)\NUM_OF_PLAYERS
-		}
-#endif
-		setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)+1)\NUM_OF_PLAYERS
-#endif
-		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
-		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
-		setPreviousMeld GameStat, PREVMELD_TILECODE, -999
-		setPreviousMeld GameStat, PREVMELD_STEPPED, -999
-		dsplay SND_TSUMO
-		if (tilesLeft(GameStat) < 10) {
-			dsplay SND_COUNTDOWN
-		}
+		tsumoproc GameStat
 		// 打牌へ戻る
 	loop
 	OrigHonba = getHonba(GameStat): OrigTurn = getRound(GameStat)
 	endround GameStat, GameEnv, RoundEndType, OrigTurn, OrigHonba
 	await 5000
-	// ハコ割れ終了
-	if (getRule(RULE_BUTTOBI_BORDER) != 2) {
-		if (isDobon(GameStat,PLAYER_EAST)) {break}
-		if (isDobon(GameStat,PLAYER_SOUTH)) {break}
-		if (isDobon(GameStat,PLAYER_WEST)) {break}
-#ifndef SANMAT
-		if (isDobon(GameStat,PLAYER_NORTH)) {break}
-#endif
-	}
-	// 和了り止め
-	if (getRule(RULE_AGARIYAME) != 1) {
-		if (((getRound(GameStat)+(getRoundLoop(GameStat)*16)) == getGameLength(GameStat))&&((OrigTurn+(getRoundLoop(GameStat)*16)) == getGameLength(GameStat))&&((RoundEndType == ENDKYOKU_AGARI)||(getRule(RULE_AGARIYAME) == 2))) {
-			calcRank Rank, GameStat
-			if ((Rank(getRound(GameStat)\NUM_OF_PLAYERS) == 1)&&(getScore(GameStat,getRound(GameStat)\NUM_OF_PLAYERS) >= BasePoint())) {break}
-		}
-	}
-#ifdef SANMAT
-	if (getRound(GameStat)\NUM_OF_PLAYERS == 3) {incRound GameStat}
-#endif
-	// 東北廻しのとき
-	if ((getRound(GameStat) == 4)&&(getRule(RULE_GAME_LENGTH) == 3)) {setRound GameStat, 12}
-	// 東々廻しのとき
-	if ((getRound(GameStat) == 4)&&((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7))) {setRound GameStat, 16}
-	// 通常の半荘終了時（トップが３００００点未満だと西入サドンデス）
-#ifdef SANMAT
-	if ((((getRound(GameStat)+(getRoundLoop(GameStat)*16)) >= (getGameLength(GameStat)+1)))&&((getScore(GameStat,0) >= BasePoint())||(getScore(GameStat,1) >= BasePoint())||(getScore(GameStat,2) >= BasePoint()))) {break}
-#else
-	if ((((getRound(GameStat)+(getRoundLoop(GameStat)*16)) >= (getGameLength(GameStat)+1)))&&((getScore(GameStat,0) >= BasePoint())||(getScore(GameStat,1) >= BasePoint())||(getScore(GameStat,2) >= BasePoint())||(getScore(GameStat,3) >= BasePoint()))) {break}
-#endif
-	// 北場終了の場合は帰り東へ
-	if (getRound(GameStat) == 16) {incRoundLoop GameStat: setRound GameStat, 0}
+	// 半荘終了判定
+	nextRound GameStat
+	if (stat) {break}
 loop
 // 半荘終了時
 #include "hancnend.hsp"

@@ -306,3 +306,30 @@
 	redrscreen
 	return -1
 #global
+
+#module
+#include "const.as"
+#deffunc tsumoproc var GameStat
+	/* 次のプレイヤーが牌を自摸る */
+	incDrawPointer GameStat: setHeavenHandFlag GameStat, 0
+#ifdef SANMAT
+	setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)+1)\NUM_OF_ACTUAL_PLAYERS
+#else
+#ifdef SANMA4
+	/* 北家をスキップ */
+	if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_WEST) {
+		setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)+1)\NUM_OF_PLAYERS
+	}
+#endif
+	setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)+1)\NUM_OF_PLAYERS
+#endif
+	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
+	setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
+	setPreviousMeld GameStat, PREVMELD_TILECODE, -999
+	setPreviousMeld GameStat, PREVMELD_STEPPED, -999
+	dsplay@ SND_TSUMO
+	if (tilesLeft(GameStat) < 10) {
+		dsplay@ SND_COUNTDOWN
+	}
+	return
+#global

@@ -625,3 +625,40 @@
 	pointcalc GameStat, PointDelta
 	return
 #global
+
+#module
+#include "const.as"
+#deffunc nextRound var GameStat
+	// ハコ割れ終了
+	if (getRule(RULE_BUTTOBI_BORDER) != 2) {
+		if (isDobon(GameStat,PLAYER_EAST)) {return 1}
+		if (isDobon(GameStat,PLAYER_SOUTH)) {return 1}
+		if (isDobon(GameStat,PLAYER_WEST)) {return 1}
+#ifndef SANMAT
+		if (isDobon(GameStat,PLAYER_NORTH)) {return 1}
+#endif
+	}
+	// 和了り止め
+	if (getRule(RULE_AGARIYAME) != 1) {
+		if (((getRound(GameStat)+(getRoundLoop(GameStat)*16)) == getGameLength(GameStat))&&((OrigTurn+(getRoundLoop(GameStat)*16)) == getGameLength(GameStat))&&((RoundEndType == ENDKYOKU_AGARI)||(getRule(RULE_AGARIYAME) == 2))) {
+			calcRank Rank, GameStat
+			if ((Rank(getRound(GameStat)\NUM_OF_PLAYERS) == 1)&&(getScore(GameStat,getRound(GameStat)\NUM_OF_PLAYERS) >= BasePoint())) {return 1}
+		}
+	}
+#ifdef SANMAT
+	if (getRound(GameStat)\NUM_OF_PLAYERS == 3) {incRound GameStat}
+#endif
+	// 東北廻しのとき
+	if ((getRound(GameStat) == 4)&&(getRule(RULE_GAME_LENGTH) == 3)) {setRound GameStat, 12}
+	// 東々廻しのとき
+	if ((getRound(GameStat) == 4)&&((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7))) {setRound GameStat, 16}
+	// 通常の半荘終了時（トップが３００００点未満だと西入サドンデス）
+#ifdef SANMAT
+	if ((((getRound(GameStat)+(getRoundLoop(GameStat)*16)) >= (getGameLength(GameStat)+1)))&&((getScore(GameStat,0) >= BasePoint())||(getScore(GameStat,1) >= BasePoint())||(getScore(GameStat,2) >= BasePoint()))) {return 1}
+#else
+	if ((((getRound(GameStat)+(getRoundLoop(GameStat)*16)) >= (getGameLength(GameStat)+1)))&&((getScore(GameStat,0) >= BasePoint())||(getScore(GameStat,1) >= BasePoint())||(getScore(GameStat,2) >= BasePoint())||(getScore(GameStat,3) >= BasePoint()))) {return 1}
+#endif
+	// 北場終了の場合は帰り東へ
+	if (getRound(GameStat) == 16) {incRoundLoop GameStat: setRound GameStat, 0}
+	return 0
+#global
