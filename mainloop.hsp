@@ -45,6 +45,7 @@ repeat
 //	repeat 13: setHand GameStat, 0, cnt, (getPlayer(GameStat)+1)\4, tmpTiles(cnt): loop
 //	setHand GameStat, 0, 0, (getPlayer(GameStat))\4, 27
 //	tmpTiles = 12,12,12,13,14,15,16,17,17,17,36,36,36
+//	tmpTiles = 31,31,31,32,32,32,33,33,33,34,34,34,35
 //	repeat 13: setHand GameStat, 0, cnt, (getPlayer(GameStat))\4, tmpTiles(cnt): loop
 	/* ”z”vI—¹Žž‚Ìˆ— */
 	repeat NUM_OF_PLAYERS: setHandStat GameStat, cnt, 0:lipai GameStat, cnt: loop
@@ -73,7 +74,7 @@ repeat
 //		} else {
 			await 0
 //		}
-		procdahai GameStat, GameEnv, DiscardTileIndex
+		procdahai GameStat, GameEnv, DiscardTileIndex, yakuInfo
 		if (stat >= 0) {RoundEndType = stat: break}
 		if (stat == -2) {continue getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)}
 		await 80
