@@ -127,7 +127,7 @@
 
 #module
 #include "const.as"
-#deffunc endround var GameStat, var GameEnv, int _RoundEndType, var yakuInfo, int OrigTurn, int OrigHonba
+#deffunc endround var GameStat, var GameEnv, int _RoundEndType, int OrigTurn, int OrigHonba
 	// ã«ñ èIóπÉRÅ[Éh
 	// ÇOÅcçrîvó¨ã«
 	// ÇPÅcíNÇ©ÇÃòaóπÇË
