@@ -1234,5 +1234,15 @@
 			addyaku tmpYakuInfo, "琳両数", 6
 		}
 	}
+	/* ムスカ大佐 */
+	if (getRule(RULE_COLONEL_MUSKA) != 0) {
+		yakuFlag = 0
+		repeat TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS
+			if ((KezCount((cnt/(TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS))*TILE_SUIT_STEP+6) >= 1)&&(KezCount((cnt\(TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS)/TILE_NUMERAL_COLORS)*TILE_SUIT_STEP+4) >= 1)&&(KezCount((cnt\TILE_NUMERAL_COLORS)*TILE_SUIT_STEP+3) >= 1)) {yakuFlag = 1}
+		loop
+		if ((yakuFlag == 1)&&(MachiType == MACHI_KANCHAN)) {
+			addyaku tmpYakuInfo, "ムスカ大佐", 13
+		}
+	}
 return
 #global

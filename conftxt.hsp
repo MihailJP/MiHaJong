@@ -1826,6 +1826,10 @@
 	RuleDescription(RULE_UNIV_NAGOYA) = "名大役満の有無と価値を設定します(5と8の暗槓、順子2組がある門前両面待ち和了)"
 	RuleTxt(0, RULE_UNIV_NAGOYA) = "なし", "役満"
 
+	RuleName(RULE_COLONEL_MUSKA) = "ムスカ大佐"
+	RuleDescription(RULE_COLONEL_MUSKA) = "ムスカ大佐の有無と価値を設定します(6、4、3の刻子がある嵌張待ち和了)"
+	RuleTxt(0, RULE_COLONEL_MUSKA) = "なし", "３飜"
+
 return
 
 #undef noregsanma
