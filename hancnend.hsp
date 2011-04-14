@@ -5,6 +5,9 @@
  */
 
 /* 半荘終了時の処理 */
+#module FINIS
+#include "const.as"
+#deffunc endgame var GameStat, var GameEnv, int origTurn, int origHonba
 	calcRank Rank, GameStat
 	chatappend "-------------\n*** 終了\n"
 	if (GetWatchModeFlag(GameEnv) == 0) {
@@ -19,28 +22,28 @@
 		bgmplay MUS_ENDING2
 		statmes "終了 Watch Mode"
 	}
-	vanish: commonswitch GameStat, GameEnv
+	vanish@: commonswitch GameStat, GameEnv
 	setHonba GameStat, OrigHonba
 	setRound GameStat, OrigTurn
 	repeat NUM_OF_PLAYERS
 		setCall cnt, ""
 	loop
 	setCenterTitle "終了"
-	dsplay SND_PAGE: redrscreen: await 500
+	dsplay@ SND_PAGE: redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 1) {setCall cnt, "１位"}
-	loop: dsplay SND_TYPE: redrscreen: await 500
+	loop: dsplay@ SND_TYPE: redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 2) {setCall cnt, "２位"}
-	loop: dsplay SND_TYPE: redrscreen: await 500
+	loop: dsplay@ SND_TYPE: redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 3) {setCall cnt, "３位"}
 #ifndef SANMAT
-	loop: dsplay SND_TYPE: redrscreen: await 500
+	loop: dsplay@ SND_TYPE: redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 4) {setCall cnt, "４位"}
 #endif
-	loop: dsplay SND_TYPE: redrscreen: await 3000
+	loop: dsplay@ SND_TYPE: redrscreen: await 3000
 	if (getDeposit(GameStat)) {
 		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 		repeat NUM_OF_PLAYERS
@@ -479,7 +482,7 @@
 			repeat NUM_OF_DIGIT_GROUPS-1, 1: FinalScore(tmpcnt, cnt) = getScore(GameStat,tmpcnt, cnt): loop
 		}
 	loop
-	gosub *scoreflagfix
+	scoreflagfix FinalScore
 	dim FinalScoreTmp, NUM_OF_DIGIT_GROUPS
 	repeat NUM_OF_DIGIT_GROUPS
 #ifdef SANMAT
@@ -494,7 +497,7 @@
 			repeat NUM_OF_DIGIT_GROUPS: FinalScore(tmpcnt, cnt) = 0-FinalScoreTmp(cnt): loop
 		}
 	loop
-	gosub *scoreflagfix
+	scoreflagfix FinalScore
 	repeat NUM_OF_PLAYERS
 		tmpcnt=cnt
 		repeat NUM_OF_DIGIT_GROUPS-1
@@ -517,22 +520,21 @@
 			}
 		loop
 	loop
-	dsplay SND_YAKULST2: redrscreen
+	dsplay@ SND_YAKULST2: redrscreen
 	redraw 1
-	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {sockclose SOCK_GAME+0: sockclose SOCK_CHAT+0: sockclose SOCK_CHAT+1: sockclose SOCK_CHAT+2: sockclose SOCK_CHAT+3}
-	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {sockclose SOCK_GAME+1: sockclose SOCK_GAME+2: sockclose SOCK_GAME+3}
+	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {sockclose@ SOCK_GAME+0: sockclose@ SOCK_CHAT+0: sockclose@ SOCK_CHAT+1: sockclose@ SOCK_CHAT+2: sockclose@ SOCK_CHAT+3}
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {sockclose@ SOCK_GAME+1: sockclose@ SOCK_GAME+2: sockclose@ SOCK_GAME+3}
 	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {chatappend "*** 切断しました\n"}
 	gsel SCR_CHAT: objgray 1, 0: objgray 2, 0: gsel 0
 	font fontname, 48, 0: objsize 200, 60
-	pos 620, 560: button goto "確認", *finishbtn: tooltip stat-STATBOX, "タイトル画面に戻ります"
+	pos 620, 560: button gosub "確認", *finishbtn@: tooltip@ stat-STATBOX, "タイトル画面に戻ります"
 	haifusave
-	repeat
-		redrscreen
-		await 1000
-	loop
+	return
+#global
 
 *finishbtn
-	dsplay SND_BUTTON
+	dsplay@ SND_BUTTON
 	closingchat : chatwnd 0
 	await 10
-	goto *startgame
+	buttonPressed = 1
+	return

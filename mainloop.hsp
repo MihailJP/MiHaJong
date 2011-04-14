@@ -47,6 +47,8 @@ repeat
 //	tmpTiles = 12,12,12,13,14,15,16,17,17,17,36,36,36
 //	tmpTiles = 31,31,31,32,32,32,33,33,33,34,34,34,35
 //	repeat 13: setHand GameStat, 0, cnt, (getPlayer(GameStat))\4, tmpTiles(cnt): loop
+//	tmpTiles =  2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+//	repeat 13: setHand GameStat, 1, cnt, (getPlayer(GameStat))\4, tmpTiles(cnt): loop
 	/* 配牌終了時の処理 */
 	repeat NUM_OF_PLAYERS: setHandStat GameStat, cnt, 0:lipai GameStat, cnt: loop
 	setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, getRound(GameStat)\NUM_OF_PLAYERS // 最初に親から捨牌を行なう
@@ -105,5 +107,11 @@ repeat
 	if (stat) {break}
 loop
 // 半荘終了時
-#include "hancnend.hsp"
-stop
+endgame GameStat, GameEnv, origTurn, origHonba
+buttonPressed = 0
+repeat
+	redrscreen
+	await 1000
+	if (buttonPressed) {break}
+loop
+goto *startgame

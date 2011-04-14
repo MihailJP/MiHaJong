@@ -47,6 +47,7 @@
 #include "prepare.hsp"
 #include "mouda.hsp"
 #include "kyokuend.hsp"
+#include "hancnend.hsp"
 #include "function.hsp"
 #include "tileutil.hsp"
 #include "shanten.hsp"

@@ -63,27 +63,27 @@
 			repeat NUM_OF_TILES_IN_HAND
 				if (getHand(GameStat, HAND_TILECODE, cnt, kangPlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) {
 					if (nakiCount == 0) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x08: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x80: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, kangPlayer)
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x08: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x80: swbreak
 						swend
 					}
 					if (nakiCount == 1) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x04: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x40: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, kangPlayer)
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x04: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x40: swbreak
 						swend
 					}
 					if (nakiCount == 2) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x02: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x20: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, kangPlayer)
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x02: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x20: swbreak
 						swend
 					}
 					if (nakiCount == 3) {
-						switch getHand(GameStat, HAND_REDTILE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x01: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))+1, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0x10: swbreak
+						switch getHand(GameStat, HAND_REDTILE, cnt, kangPlayer)
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x01: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x10: swbreak
 						swend
 					}
 					setHand GameStat, HAND_TILECODE, cnt, kangPlayer, 0

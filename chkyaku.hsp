@@ -157,6 +157,7 @@ return
 #include "const.as"
 #include "hspmath.as"
 #deffunc calculateScore var tmpYakuInfo, array tmpScore
+	if (getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE) <= 0) {tmpScore(0) = 0: return}
 	if (getRule(RULE_LIMITLESS) == 0) {
 		// ’Êíƒ‹[ƒ‹
 		tmpTotalHan = getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)
@@ -169,12 +170,12 @@ return
 			tmpScore(0) = 3000
 		} else: if ((tmpTotalMangan < 6)&&((tmpXTotalHan < 10)||((tmpXTotalHan < 11)&&(getRule(RULE_SANBAIMAN_BORDER) == 0)))) {
 			tmpScore(0) = 4000
-		} else: if ((tmpTotalMangan < 8)&&((tmpXTotalHan < 12)||((tmpXTotalHan < 13)&&(getRule(RULE_KAZOE_BORDER) == 0))||((tmpXTotalHan < YAKUVAL_YAKUMAN)&&(getRule(RULE_KAZOE_BORDER) == 2)))) {
+		} else: if ((tmpTotalMangan < 8)&&((tmpXTotalHan < 12)||((tmpXTotalHan < 13)&&(getRule(RULE_KAZOE_BORDER) == 0))||((tmpXTotalHan < (YAKUVAL_YAKUMAN-YAKUVAL_MINUS_LIMIT))&&(getRule(RULE_KAZOE_BORDER) == 2)))) {
 			tmpScore(0) = 6000
 		} else {
 			tmpScore(0) = 8000
 			if (tmpTotalHan >= (YAKUVAL_YAKUMAN-YAKUVAL_MINUS_LIMIT)) {
-				tmpScore(0) = (tmpTotalHan/YAKUVAL_YAKUMAN)*8000
+				tmpScore(0) = ((tmpTotalHan+YAKUVAL_MINUS_LIMIT)/YAKUVAL_YAKUMAN)*8000
 			}
 		}
 	} else {
@@ -190,7 +191,7 @@ return
 			tmpScore(0) = 937500
 		} else:if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)) >= YAKUVAL_MANGAN) {
 			tmpScore(0) = 625000
-		} else:if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)) <= 0) {
+		} else:if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) <= 0) {
 			tmpScore(0) = int(ceil(double(getYakuInfo(tmpYakuInfo, YAKUINF_FU))*powf(2, (getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA))+2)))
 		} else {
 			tmpScore(0) = getYakuInfo(tmpYakuInfo, YAKUINF_FU)*4
@@ -202,6 +203,7 @@ return
 			loop
 		}
 	}
+	trace strf("ŒvŽZŒ‹‰Ê‚Í [%08d %08d %08d %08d %08d %08d %08d %08d]", tmpScore(7), tmpScore(6), tmpScore(5), tmpScore(4), tmpScore(3), tmpScore(2), tmpScore(1), tmpScore(0))
 	return
 #global
 
