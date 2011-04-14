@@ -1797,6 +1797,35 @@
 	RuleDescription(RULE_RINRYANSHII) = "琳両数の有無と価値を設定します(2種類の数字のみで和了)"
 	RuleTxt(0, RULE_RINRYANSHII) = "なし", "６飜"
 
+	RuleName(RULE_UNIV_TOKYO) = "東大役満"
+	RuleDescription(RULE_UNIV_TOKYO) = "東大役満の有無と価値を設定します(東の暗槓、順子3組がある門前両面待ち和了)"
+	RuleTxt(0, RULE_UNIV_TOKYO) = "なし", "役満"
+	nonumsanma RULE_UNIV_TOKYO
+
+	RuleName(RULE_UNIV_HOKKAIDO) = "北大役満"
+	RuleDescription(RULE_UNIV_HOKKAIDO) = "北大役満の有無と価値を設定します(北の暗槓、順子3組がある門前両面待ち和了)"
+	RuleTxt(0, RULE_UNIV_HOKKAIDO) = "なし", "役満"
+	nonumsanma RULE_UNIV_HOKKAIDO
+
+	RuleName(RULE_UNIV_CHUO) = "中大役満"
+	RuleDescription(RULE_UNIV_CHUO) = "中大役満の有無と価値を設定します(中の暗槓、順子3組がある門前両面待ち和了)"
+	RuleTxt(0, RULE_UNIV_CHUO) = "なし", "役満"
+	nonumsanma RULE_UNIV_CHUO
+
+	RuleName(RULE_UNIV_HAKUOH) = "白皇学園"
+	RuleDescription(RULE_UNIV_HAKUOH) = "白皇学園の有無と価値を設定します(白の暗槓、順子3組がある門前両面待ち和了)"
+	RuleTxt(0, RULE_UNIV_HAKUOH) = "なし", "役満"
+	nonumsanma RULE_UNIV_HAKUOH
+
+	RuleName(RULE_UNIV_TOHOKU) = "東北大役満"
+	RuleDescription(RULE_UNIV_TOHOKU) = "東北大役満の有無と価値を設定します(東と北の暗槓、順子2組がある門前両面待ち和了)"
+	RuleTxt(0, RULE_UNIV_TOHOKU) = "なし", "役満"
+	nonumsanma RULE_UNIV_TOHOKU
+
+	RuleName(RULE_UNIV_NAGOYA) = "名大役満"
+	RuleDescription(RULE_UNIV_NAGOYA) = "名大役満の有無と価値を設定します(5と8の暗槓、順子2組がある門前両面待ち和了)"
+	RuleTxt(0, RULE_UNIV_NAGOYA) = "なし", "役満"
+
 return
 
 #undef noregsanma

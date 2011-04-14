@@ -81,7 +81,7 @@
 			tripletyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, FuritenFlag, MachiType
 			quadyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer
 			sequenceyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
-			miscyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer
+			miscyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
 			setYakuInfo tmpYakuInfo, YAKUINF_FU, ((getYakuInfo(tmpYakuInfo, YAKUINF_FU)+8)/10)*10 // “_ƒpƒl‚·‚é
 			countdora GameStat, tmpYakuInfo, targetPlayer
 			posterioryaku GameStat, tmpYakuInfo, targetPlayer, MachiType

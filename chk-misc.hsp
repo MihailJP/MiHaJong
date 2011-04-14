@@ -70,7 +70,7 @@
 /* ‚»‚Ì‘¼‚Ì–ð */
 #module
 #include "const.as"
-#deffunc miscyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer
+#deffunc miscyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	/* —ÎˆêF */
 #ifdef SANMAS
 	dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8
@@ -804,6 +804,42 @@
 			if (countMentzNumerals(MianziDat) == 21) {
 				addyakuman tmpYakuInfo, "”’ˆß‹RŽm", 1
 			}
+		}
+	}
+#ifndef SANMAS
+	/* “Œ‘åŒn */
+	tmpRuleCodeList = RULE_UNIV_TOKYO, RULE_UNIV_HOKKAIDO, RULE_UNIV_CHUO, RULE_UNIV_HAKUOH
+	tmpTileCodeList = TILE_EAST_WIND, TILE_NORTH_WIND, TILE_RED_DRAGON, TILE_WHITE_DRAGON
+	sdim tmpYakuNameList, 16, length(tmpRuleCodeList)
+	tmpYakuNameList =  "“Œ‘å–ð–ž", "–k‘å–ð–ž", "’†‘å–ð–ž", "”’cŠw‰€"
+	countKez KezCount, MianziDat: NumOfKez = stat // Žq‚ÆžÈŽq‚Ì”‚ð”‚¦‚é
+	countAnKangz KangzCount, MianziDat
+	repeat 4
+		if (getRule(tmpRuleCodeList(cnt)) != 0) {
+			if ((KangzCount(tmpTileCodeList(cnt)) >= 1)&&(MachiType == MACHI_RYANMEN)&&(NumOfKez == 1)&&(getMenzen(GameStat, targetPlayer) == 1)) {
+				addyakuman tmpYakuInfo, tmpYakuNameList(cnt), 1
+			}
+		}
+	loop
+	/* “Œ–k‘å */
+	if (getRule(RULE_UNIV_TOHOKU) != 0) {
+		countKez KezCount, MianziDat: NumOfKez = stat // Žq‚ÆžÈŽq‚Ì”‚ð”‚¦‚é
+		countAnKangz KangzCount, MianziDat
+		if ((KangzCount(TILE_EAST_WIND) >= 1)&&(KangzCount(TILE_NORTH_WIND) >= 1)&&(MachiType == MACHI_RYANMEN)&&(NumOfKez == 2)&&(getMenzen(GameStat, targetPlayer) == 1)) {
+			addyakuman tmpYakuInfo, "“Œ–k‘å–ð–ž", 1
+		}
+	}
+#endif
+	/* –¼‘å–ð–ž */
+	if (getRule(RULE_UNIV_NAGOYA) != 0) {
+		countKez KezCount, MianziDat: NumOfKez = stat // Žq‚ÆžÈŽq‚Ì”‚ð”‚¦‚é
+		countAnKangz KangzCount, MianziDat
+		yakuFlag = 0
+		repeat TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS
+			if ((KangzCount((cnt/TILE_NUMERAL_COLORS)*TILE_SUIT_STEP+5) >= 1)&&(KangzCount((cnt\TILE_NUMERAL_COLORS)*TILE_SUIT_STEP+8) >= 1)) {yakuFlag = 1}
+		loop
+		if ((yakuFlag == 1)&&(MachiType == MACHI_RYANMEN)&&(NumOfKez == 2)&&(getMenzen(GameStat, targetPlayer) == 1)) {
+			addyakuman tmpYakuInfo, "–¼‘å–ð–ž", 1
 		}
 	}
 return

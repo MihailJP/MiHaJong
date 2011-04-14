@@ -132,7 +132,7 @@
 	if ((NoTriplets == 1)&&(LiangMianFlag == 1)) {
 		if (getMenzen(GameStat, targetPlayer) == 1) {
 			/* ñÂëOÇ≈Ç†ÇÍÇŒÅAñÇ∆ÇµÇƒïΩòaÇ™ê¨óßÇ∑ÇÈ */
-			MachiType == 1
+			MachiType = MACHI_RYANMEN
 			if ((getTsumoAgariFlag(GameStat) == 0)||(getRule(RULE_TSUMO_PINFU) == 0)) {
 				addyaku tmpYakuInfo, "ïΩòa", 1
 				setYakuInfo tmpYakuInfo, YAKUINF_FU, 20
@@ -141,7 +141,7 @@
 			}
 		} else {
 			/* ñÂëOÇ≈Ç»ÇØÇÍÇŒÅAÇRÇOïÑÇ∆Ç∑ÇÈ */
-			MachiType == MACHI_RYANMEN
+			MachiType = MACHI_RYANMEN
 			if ((getRule(RULE_EXPOSED_PINFU) == 0)||(getRule(RULE_EXPOSED_PINFU) == 2)||(getRule(RULE_EXPOSED_PINFU) == 4)) {
 				setYakuInfo tmpYakuInfo, YAKUINF_FU, 30
 			}

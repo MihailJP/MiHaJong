@@ -600,6 +600,14 @@
 	AddRuleText3 "五門斉型", RuleStat(RULE_TOKYO_OLYMPIC_POLYCHROME)
 	AddRuleText1 "東花園は、刻子型", RuleStat(RULE_HIGASHI_HANAZONO_TRIPLETS)
 	AddRuleText3 "嶺上型", RuleStat(RULE_HIGASHI_HANAZONO_RINSHAN)
+	AddRuleText1 "東大役満", RuleStat(RULE_UNIV_TOKYO)
+	AddRuleText2 "北大役満", RuleStat(RULE_UNIV_HOKKAIDO)
+	AddRuleText2 "中大役満", RuleStat(RULE_UNIV_CHUO)
+	AddRuleText2 "白皇学園", RuleStat(RULE_UNIV_HAKUOH)
+	AddRuleText2 "東北大役満", RuleStat(RULE_UNIV_TOHOKU)
+	AddRuleText3 "名大役満", RuleStat(RULE_UNIV_NAGOYA)
+#else
+	AddRuleText "名大役満", RuleStat(RULE_UNIV_NAGOYA)
 #endif
 	AddRuleText1 "カラス", RuleStat(RULE_KARASU)
 	AddRuleText3 "カラス立直", RuleStat(RULE_KARASU_RIICHI)
