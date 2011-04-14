@@ -1830,6 +1830,11 @@
 	RuleDescription(RULE_COLONEL_MUSKA) = "ムスカ大佐の有無と価値を設定します(6、4、3の刻子がある嵌張待ち和了)"
 	RuleTxt(0, RULE_COLONEL_MUSKA) = "なし", "３飜"
 
+	RuleName(RULE_HATSUNE_MIKU) = "初音ミク"
+	RuleDescription(RULE_HATSUNE_MIKU) = "初音ミクの有無と価値を設定します(発、3、9の刻子)"
+	RuleTxt(0, RULE_HATSUNE_MIKU) = "なし", "２飜"
+	nonumsanma RULE_HATSUNE_MIKU
+
 return
 
 #undef noregsanma

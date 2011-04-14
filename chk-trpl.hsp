@@ -1244,5 +1244,15 @@
 			addyaku tmpYakuInfo, "ムスカ大佐", 13
 		}
 	}
+	/* 初音ミク */
+	if (getRule(RULE_HATSUNE_MIKU) != 0) {
+		yakuFlag = 0
+		repeat TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS
+			if ((KezCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount((cnt/TILE_NUMERAL_COLORS)*TILE_SUIT_STEP+3) >= 1)&&(KezCount((cnt\TILE_NUMERAL_COLORS)*TILE_SUIT_STEP+9) >= 1)) {yakuFlag = 1}
+		loop
+		if (yakuFlag) {
+			addyaku tmpYakuInfo, "初音ミク", 2
+		}
+	}
 return
 #global
