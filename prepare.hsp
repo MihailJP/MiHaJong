@@ -516,7 +516,7 @@ return
 		serversend getDice(GameStat, 1, 0)+0xa8, GameEnv
 	}
 	// 通常機能の表示
-	vanish: commonswitch GameStat, GameEnv
+	vanish2@
 	// 配牌
 	setCenterTitle roundName(getRound(GameStat))
 #ifdef ALLSANMA

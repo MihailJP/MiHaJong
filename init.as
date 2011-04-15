@@ -37,6 +37,7 @@
 #runtime "hsp3mt"
 
 #define WITH_MT19937AR
+#define WITH_ADVANCEDCONTROL
 
 /* Šg’£‹@”\‚Ì“o˜^ */
 #include "p2b.as"
@@ -46,8 +47,9 @@
 #include "obj.hsp"
 #include "l_tooltips.as"
 #define tooltip(%1,%2) AddToolTips (%1)+1,%2
-#define vanish clrobj:SetToolTips
 #define global STATBOX 1
+#define vanish clrobj:SetToolTips
+#define vanish2 clrobj 4+1+STATBOX
 #ifdef WITH_MT19937AR
 	#undef rnd
 	#undef randomize
@@ -63,6 +65,16 @@
 #endif
 #include "hspmath.as"
 #include "hsplzmax.as"
+#undef charlower
+#undef charupper
+#ifdef WITH_ADVANCEDCONTROL
+	#include "mod_customizebutton.hsp"
+#else
+	#define global ColorButton(%1, %2, %3=0x80000000, %4=0x80000000) button %1, %2
+	#define global _bc_text(%1, %2) objprm %1, %2
+	#define global _bc_color(%1, %2, %3) /**/
+#endif
+#include "user32.as"
 
 #ifdef NOWAIT
 	#undef await

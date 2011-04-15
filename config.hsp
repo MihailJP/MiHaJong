@@ -99,6 +99,7 @@ return
 	dsplay@ SND_BUTTON
 	configtxt
 	configPage = 1
+	gosub *confbuttons
 	repeat
 		switch configPage
 			case 0: break: swbreak
@@ -134,23 +135,31 @@ return
 	if(configPage > 1) {configPage--}
 	return
 
-*selcatpage
+*confbuttons
 	gsel 0
 	vanish@: font fontname, 16, 0
 	objsize 40, 20
 	repeat RULES_IN_PAGE
-		pos 50+400*(cnt/(RULES_IN_PAGE/2)), (cnt\(RULES_IN_PAGE/2))*25+75: button gosub ">>", *ruleselbtn
-		if (RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE) == "Ｎ／Ａ") {
-			tooltip@ cnt, RuleDescription(cnt+(configPage-1)*RULES_IN_PAGE)
-		} else: if (RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE) != "") {
-			tooltip@ cnt, strf("%s（初期設定：%s）", RuleDescription(cnt+(configPage-1)*RULES_IN_PAGE), RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE))
-		}
+		pos 50+400*(cnt/(RULES_IN_PAGE/2)), (cnt\(RULES_IN_PAGE/2))*25+75: colorbutton gosub ">>", *ruleselbtn, -1, 0xffffff
+		if (cnt == 0) {ConfBtnBegin = stat}
 	loop
 	objsize 70, 20
-	pos 650, 575: button gosub "Back", *ruleback: tooltip@ RULES_IN_PAGE, "前のページに移動します"
-	pos 730, 575: button gosub "Next", *rulenext: tooltip@ RULES_IN_PAGE+1, "次のページに移動します"
-	pos 650, 600: button gosub "Reset", *rulereset: tooltip@ RULES_IN_PAGE+2, "出荷時設定に戻します"
-	pos 730, 600: button gosub "Finish", *rulewrite: tooltip@ RULES_IN_PAGE+3, "設定を保存し、タイトルに戻ります"
+	pos 650, 575: colorbutton gosub "Back", *ruleback, -1, 0xffffff: tooltip@ RULES_IN_PAGE, "前のページに移動します"
+	pos 730, 575: colorbutton gosub "Next", *rulenext, -1, 0xffffff: tooltip@ RULES_IN_PAGE+1, "次のページに移動します"
+	pos 650, 600: colorbutton gosub "Reset", *rulereset, -1, 0xffffff: tooltip@ RULES_IN_PAGE+2, "出荷時設定に戻します"
+	pos 730, 600: colorbutton gosub "Finish", *rulewrite, -1, 0xffffff: tooltip@ RULES_IN_PAGE+3, "設定を保存し、タイトルに戻ります"
+	return
+
+*selcatpage
+	gsel 0
+	font fontname, 16, 0
+	repeat RULES_IN_PAGE
+		if (RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE) == "Ｎ／Ａ") {
+			tooltip@ (cnt+ConfBtnBegin-STATBOX), RuleDescription(cnt+(configPage-1)*RULES_IN_PAGE)
+		} else: if (RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE) != "") {
+			tooltip@ (cnt+ConfBtnBegin-STATBOX), strf("%s（初期設定：%s）", RuleDescription(cnt+(configPage-1)*RULES_IN_PAGE), RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE))
+		}
+	loop
 	confselFinished = 0
 	gosub *config_redraw
 	repeat

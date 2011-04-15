@@ -527,7 +527,7 @@
 	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {chatappend "*** 切断しました\n"}
 	gsel SCR_CHAT: objgray 1, 0: objgray 2, 0: gsel 0
 	font fontname, 48, 0: objsize 200, 60
-	pos 620, 560: button gosub "確認", *finishbtn@: tooltip@ stat-STATBOX, "タイトル画面に戻ります"
+	pos 620, 560: colorbutton gosub "確認", *finishbtn@, -1, 0xffffff: tooltip@ stat-STATBOX, "タイトル画面に戻ります"
 	haifusave
 	return
 #global

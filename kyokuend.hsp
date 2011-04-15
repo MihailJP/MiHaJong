@@ -75,7 +75,7 @@
 				/* 和了り放棄は以降強制ツモ切り、強制不聴扱いとなります */
 				setAgariHouki GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
 				if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}
-				vanish@: commonswitch GameStat, GameEnv
+				vanish2@
 				swbreak
 			case 1: case 4:
 				/* 直ちに錯和とする設定 */
@@ -117,7 +117,7 @@
 		redrscreen
 		setAgariHouki GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
 		if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}
-		vanish@: commonswitch GameStat, GameEnv
+		vanish2@
 	}
 	await 0
 	/* 荒牌の場合ここで終了する(河底牌は吃ポンできないがロンはできる) */
@@ -143,7 +143,7 @@
 	RoundEndType = _RoundEndType
 	info strf("局を終了 終了コード [%d]", RoundEndType)
 	statmes ""
-	vanish@: commonswitch GameStat, GameEnv
+	vanish2@
 	if (RoundEndType == ENDKYOKU_RYUUKYOKU) {
 		dim NagashiManganFlag, NUM_OF_PLAYERS
 		repeat NUM_OF_ACTUAL_PLAYERS

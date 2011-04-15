@@ -79,6 +79,7 @@ return
 #deffunc statmes str msgtxt
 	StatusBoxTxt = msgtxt
 	objprm STATBOX, StatusBoxTxt
+	await 0
 	return
 
 #defcfunc AutoAgariFlag
@@ -91,93 +92,175 @@ return
 	return TsumogiriSwitch
 
 #deffunc commonswitch var GameStat, var GameEnv
+	TxtBoxPainted = 0
 	font fontname, 12, 0
 	pos 620, 430: objsize 200, 20
-	input StatusBoxTxt: objgray STATBOX, 0
-	if (GetWatchModeFlag(GameEnv) != 1) {
-		if (getAgariHouki(GameStat, getPlayer(GameStat)) == 0) {
-			pos 620, 460: objsize 100, 20
-			if (AutoAgariSwitch == 1) {
-				button gosub "オート和了【入】", *swAutoAgari
-			} else {
-				button gosub "オート和了【切】", *swAutoAgari
-			}
-			SwIDAutoAGARI = stat: tooltip@ SwIDAutoAGARI-STATBOX, "オンにすると当たり牌が出たか自摸ったときに自動的に和了します"
+	input StatusBoxTxt
+	hStBox = objinfo(STATBOX, 2)
+	SetWindowLong hStBox, -16, 0x50010081: objgray STATBOX, 0
+#ifdef WITH_ADVANCEDCONTROL@
+	oncmd gosub *txtboxcolor, 0x0138
+	CreateSolidBrush ((170+(GetTableColorB(GameEnv)/3))<<16 | (170+(GetTableColorG(GameEnv)/3))<<8 | (170+(GetTableColorR(GameEnv)/3)))
+	hBrush = stat
+#endif
+	pos 620, 460: objsize 100, 20
+	if ((GetWatchModeFlag(GameEnv) != 1)&&(getAgariHouki(GameStat, getPlayer(GameStat)) == 0)) {
+		SwAutoAGARIenabled = 1
+		if (AutoAgariSwitch == 1) {
+			colorbutton gosub "オート和了【入】", *swAutoAgari, -1, 0xffff00
+		} else {
+			colorbutton gosub "オート和了【切】", *swAutoAgari, -1, 0xffffff
 		}
+		SwIDAutoAGARI = stat
+	} else {
+		SwAutoAGARIenabled = 0
+		colorbutton gosub "オート和了【×】", *swAutoAgari, -1, 0xff0000
+		SwIDAutoAGARI = stat: objgray SwIDAutoAGARI, 0
 	}
+	tooltip@ SwIDAutoAGARI-STATBOX, "オンにすると当たり牌が出たか自摸ったときに自動的に和了します"
+	
 	pos 720, 460: objsize 100, 20
 	if (ChatSwitch == 1) {
-		button gosub "チャット【入】", *swChat
+		colorbutton gosub "チャット【入】", *swChat, -1, 0xffff00
 	} else {
-		button gosub "チャット【切】", *swChat
+		colorbutton gosub "チャット【切】", *swChat, -1, 0xffffff
 	}
 	SwIDChat = stat: tooltip@ SwIDChat-STATBOX, "チャットウィンドウを開きます"
-	if (GetWatchModeFlag(GameEnv) != 1) {
-		if (getAgariHouki(GameStat, getPlayer(GameStat)) == 0) {
-			if (getRichiFlag(GameStat, RICHI_FLAG, getPlayer(GameStat)) == RIICHI_NO) {
-				pos 620, 480: objsize 100, 20
-				if (AutoPassSwitch == 1) {
-					button gosub "オートパス【入】", *swAutoPass
-				} else {
-					button gosub "オートパス【切】", *swAutoPass
-				}
-				SwIDAutoPass = stat: tooltip@ SwIDAutoPass-STATBOX, "オンにすると他家の捨て牌を無視します"
-				pos 720, 480: objsize 100, 20
-				if (TsumogiriSwitch == 1) {
-					button gosub "ツモ切り【入】", *swTsumogiri
-				} else {
-					button gosub "ツモ切り【切】", *swTsumogiri
-				}
-				SwIDTsumogiri = stat: tooltip@ SwIDTsumogiri-STATBOX, "オンにすると自動的にツモ切りをします"
-			} else {
-				AutoPassSwitch = 0: TsumogiriSwitch = 0
-			}
-		} else {AutoAgariSwitch = 0: AutoPassSwitch = 0: TsumogiriSwitch = 0}
+	if ((GetWatchModeFlag(GameEnv) != 1)&&(getAgariHouki(GameStat, getPlayer(GameStat)) == 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getPlayer(GameStat)) == RIICHI_NO)) {
+		AutoPassSwitchEnabled = 1
+		pos 620, 480: objsize 100, 20
+		if (AutoPassSwitch == 1) {
+			colorbutton gosub "オートパス【入】", *swAutoPass, -1, 0xffff00
+		} else {
+			colorbutton gosub "オートパス【切】", *swAutoPass, -1, 0xffffff
+		}
+		SwIDAutoPass = stat: tooltip@ SwIDAutoPass-STATBOX, "オンにすると他家の捨て牌を無視します"
+		pos 720, 480: objsize 100, 20
+		if (TsumogiriSwitch == 1) {
+			colorbutton gosub "ツモ切り【入】", *swTsumogiri, -1, 0xffff00
+		} else {
+			colorbutton gosub "ツモ切り【切】", *swTsumogiri, -1, 0xffffff
+		}
+		SwIDTsumogiri = stat: tooltip@ SwIDTsumogiri-STATBOX, "オンにすると自動的にツモ切りをします"
+	} else {
+		AutoPassSwitchEnabled = 0
+		AutoPassSwitch = 0: TsumogiriSwitch = 0
+		pos 620, 480: objsize 100, 20
+		colorbutton gosub "オートパス【×】", *swAutoPass, -1, 0xff0000
+		SwIDAutoPass = stat: tooltip@ SwIDAutoPass-STATBOX, "オンにすると他家の捨て牌を無視します"
+		objgray SwIDAutoPass
+		pos 720, 480: objsize 100, 20
+		colorbutton gosub "ツモ切り【×】", *swTsumogiri, -1, 0xff0000
+		SwIDTsumogiri = stat: tooltip@ SwIDTsumogiri-STATBOX, "オンにすると自動的にツモ切りをします"
+		objgray SwIDTsumogiri
+	}
+	if (getAgariHouki(GameStat, getPlayer(GameStat)) == 1) {AutoAgariSwitch = 0}
+#ifdef WITH_ADVANCEDCONTROL@
+	repeat
+		if (TxtBoxPainted) {break}
+		await 0
+	loop
+#endif
+	return
+
+#ifdef WITH_ADVANCEDCONTROL@
+*txtboxcolor
+	if (lparam == hStBox) {
+		SetTextColor wparam, 0xffffff
+		SetBkMode wparam, 1
+		TxtBoxPainted = 1
+		return hBrush
+	}
+	return
+#endif
+
+*stAutoAgari
+	if (SwAutoAGARIenabled) {
+		if (AutoAgariSwitch) {
+			_bc_text SwIDAutoAGARI, "オート和了【入】"
+			_bc_color SwIDAutoAGARI, , 0xffff00
+		} else {
+			_bc_text SwIDAutoAGARI, "オート和了【切】"
+			_bc_color SwIDAutoAGARI, , 0xffffff
+		}
+		objgray SwIDAutoAGARI, 1
+	} else {
+		_bc_text SwIDAutoAGARI, "オート和了【×】"
+		_bc_color SwIDAutoAGARI, , 0xff0000
+		objgray SwIDAutoAGARI, 0
+	}
+	return
+
+*stAutoPass
+	if (AutoPassSwitchEnabled) {
+		if (AutoPassSwitch) {
+			_bc_text SwIDAutoPass, "オートパス【入】"
+			_bc_color SwIDAutoPass, , 0xffff00
+		} else {
+			_bc_text SwIDAutoPass, "オートパス【切】"
+			_bc_color SwIDAutoPass, , 0xffffff
+		}
+		objgray SwIDAutoPass, 1
+	} else {
+		_bc_text SwIDAutoPass, "オートパス【×】"
+		_bc_color SwIDAutoPass, , 0xff0000
+		objgray SwIDAutoPass, 0
+	}
+	return
+
+*stTsumogiri
+	if (AutoPassSwitchEnabled) {
+		if (TsumogiriSwitch) {
+			_bc_text SwIDTsumogiri, "ツモ切り【入】"
+			_bc_color SwIDTsumogiri, , 0xffff00
+		} else {
+			_bc_text SwIDTsumogiri, "ツモ切り【切】"
+			_bc_color SwIDTsumogiri, , 0xffffff
+		}
+		objgray SwIDTsumogiri, 1
+	} else {
+		_bc_text SwIDTsumogiri, "ツモ切り【×】"
+		_bc_color SwIDTsumogiri, , 0xff0000
+		objgray SwIDTsumogiri, 0
+	}
+	return
+
+*stChat
+	if (ChatSwitch) {
+		_bc_text SwIDChat, "チャット【入】"
+		_bc_color SwIDChat, , 0xffff00
+	} else {
+		_bc_text SwIDChat, "チャット【切】"
+		_bc_color SwIDChat, , 0xffffff
 	}
 	return
 
 *swAutoAgari
 	dsplay@ SND_CLICK
-	if (AutoAgariSwitch == 0) {
-		objprm SwIDAutoAGARI, "オート和了【入】"
-		AutoAgariSwitch = 1
-	} else {
-		objprm SwIDAutoAGARI, "オート和了【切】"
-		AutoAgariSwitch = 0
-	}
+	AutoAgariSwitch = 1-AutoAgariSwitch
+	gosub *stAutoAgari
+	await 0
 	return
 
 *swAutoPass
 	dsplay@ SND_CLICK
-	if (AutoPassSwitch == 0) {
-		objprm SwIDAutoPass, "オートパス【入】"
-		AutoPassSwitch = 1
-	} else {
-		objprm SwIDAutoPass, "オートパス【切】"
-		AutoPassSwitch = 0
-	}
+	AutoPassSwitch = 1-AutoPassSwitch
+	gosub *stAutoPass
+	await 0
 	return
 
 *swTsumogiri
 	dsplay@ SND_CLICK
-	if (TsumogiriSwitch == 0) {
-		objprm SwIDTsumogiri, "ツモ切り【入】"
-		TsumogiriSwitch = 1
-	} else {
-		objprm SwIDTsumogiri, "ツモ切り【切】"
-		TsumogiriSwitch = 0
-	}
+	TsumogiriSwitch = 1-TsumogiriSwitch
+	gosub *stTsumogiri
+	await 0
 	return
 
 *swChat
 	dsplay@ SND_CLICK
-	if (ChatSwitch == 0) {
-		objprm SwIDChat, "チャット【入】"
-		ChatSwitch = 1
-	} else {
-		objprm SwIDChat, "チャット【切】"
-		ChatSwitch = 0
-	}
+	ChatSwitch = 1-ChatSwitch
+	gosub *stChat
 	chatwnd ChatSwitch
+	await 0
 	return
 #global

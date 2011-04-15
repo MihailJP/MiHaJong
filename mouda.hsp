@@ -220,7 +220,7 @@
 			bgmplay_short MUS_OPENRICHI
 		}
 		setRichiFlag GameStat, RICHI_OPENFLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
-		vanish@: commonswitch GameStat, GameEnv
+		vanish2@
 	}
 	if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
 		setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "ƒŠ[ƒ`"
@@ -244,7 +244,7 @@
 				await 0
 			}
 		}
-		vanish@: commonswitch GameStat, GameEnv
+		vanish2@
 	}
 	/* ‘Å”v‚ð‹L˜^‚·‚é */
 	setCurrentDiscard GameStat, CURRENTDISCARD_TILECODE, getHand(GameStat, HAND_TILECODE, (DiscardTileIndex\DAHAI_TYPE_STEP), getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))

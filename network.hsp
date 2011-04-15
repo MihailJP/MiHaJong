@@ -286,7 +286,7 @@
 		if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {sockclose SOCK_GAME+0}
 		if (getGameMode(GameEnv) == GAMEMODE_SERVER) {sockclose SOCK_GAME+1: sockclose SOCK_GAME+2: sockclose SOCK_GAME+3}
 		font fontname, 48, 0: objsize 200, 60
-		pos 620, 560: button goto "確認", *startgame
+		pos 620, 560: colorbutton goto "確認", *startgame, -1, 0xffffff
 		stop
 	}
 return

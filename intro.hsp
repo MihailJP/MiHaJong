@@ -27,12 +27,12 @@
 	redraw 1
 	objsize 200, 30
 	objmode 2: font fontname, 24, 0
-	pos 100, 410: button gosub "Offline Start", *modesel1
-	pos 320, 410: button gosub "Server Start", *modesel2
-	pos 540, 410: button gosub "Client Start", *modesel3
-	pos 100, 460: button gosub "Watch Mode", *modesel5
-	pos 320, 460: button gosub "Config", *selcat
-	pos 540, 460: button goto "Quit", *modesel4
+	pos 100, 410: colorbutton gosub "Offline Start", *modesel1, -1, 0xffffff
+	pos 320, 410: colorbutton gosub "Server Start", *modesel2, -1, 0xffffff
+	pos 540, 410: colorbutton gosub "Client Start", *modesel3, -1, 0xffffff
+	pos 100, 460: colorbutton gosub "Watch Mode", *modesel5, -1, 0xffffff
+	pos 320, 460: colorbutton gosub "Config", *selcat, -1, 0xffffff
+	pos 540, 460: colorbutton goto "Quit", *modesel4, -1, 0xffffff
 	tooltip 0, "コンピューターとの対戦を開始します"
 	tooltip 1, "通信対戦用の卓を準備します"
 	tooltip 2, "通信対戦用の卓に接続します"
@@ -86,7 +86,7 @@
 	sockmake SOCK_GAME+0, PORT_GAME
 	vanish
 	objsize 440, 40
-	pos 200, 270: button gosub "この面子で開始する", *modesel2s
+	pos 200, 270: colorbutton gosub "この面子で開始する", *modesel2s, -1, 0xffffff
 	startflag = 0
 	repeat
 		redraw 0
@@ -232,7 +232,17 @@ return
 	ServerAddress = ""
 	objsize 440, 40
 	pos 200, 270: input ServerAddress
-	pos 200, 320: button gosub "Connect", *modesel3c
+	
+#ifdef WITH_ADVANCEDCONTROL
+	hStId = stat
+	menubgcolor
+	hStBox = objinfo(hStId, 2)
+	oncmd gosub *txtboxcolor, 0x0133
+	CreateSolidBrush ((ginfo_b)<<16 | (ginfo_g)<<8 | (ginfo_r))
+	hBrush = stat
+#endif
+	
+	pos 200, 320: colorbutton gosub "Connect", *modesel3c, -1, 0xffffff
 	ServerSelected = 0
 	repeat
 		if (ServerSelected) {
@@ -324,7 +334,17 @@ return
 	InputPlayerName = ""
 	objsize 440, 40
 	pos 200, 270: input InputPlayerName
-	pos 200, 320: button gosub "Enter", *nameentered
+	
+#ifdef WITH_ADVANCEDCONTROL
+	hStId = stat
+	menubgcolor
+	hStBox = objinfo(hStId, 2)
+	oncmd gosub *txtboxcolor, 0x0133
+	CreateSolidBrush ((ginfo_b)<<16 | (ginfo_g)<<8 | (ginfo_r))
+	hBrush = stat
+#endif
+	
+	pos 200, 320: colorbutton gosub "Enter", *nameentered, -1, 0xffffff
 	nameenteredflag = 0
 	repeat
 		if (strlen(InputPlayerName) > 16) {
@@ -411,6 +431,16 @@ return
 	}
 	//await 3000
 	return
+
+#ifdef WITH_ADVANCEDCONTROL
+*txtboxcolor
+	if (lparam == hStBox) {
+		SetTextColor wparam, 0xffffff
+		SetBkMode wparam, 1
+		return hBrush
+	}
+	return
+#endif
 
 #module
 #deffunc sysscr str fontname, str txt1, str txt2, str txt3
