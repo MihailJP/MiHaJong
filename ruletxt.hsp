@@ -405,7 +405,12 @@
 #endif
 	AddRuleText "琳両数", RuleStat(RULE_RINRYANSHII)
 	AddRuleText "ムスカ大佐", RuleStat(RULE_COLONEL_MUSKA)
+#ifndef SANMAS
 	AddRuleText "初音ミク", RuleStat(RULE_HATSUNE_MIKU)
+	AddRuleText "鏡音リン", RuleStat(RULE_KAGAMINE_RIN)
+	AddRuleText "鏡音レン", RuleStat(RULE_KAGAMINE_LEN)
+	AddRuleText "鏡音リンレン", RuleStat(RULE_KAGAMINE_RINLEN)
+#endif
 	/* ルール設定を表示　セクション区切り */
 	AddRuleText1 "二暗槓", RuleStat(RULE_RYANANKAN)
 	AddRuleText3 "三暗槓", RuleStat(RULE_SANANKAN)

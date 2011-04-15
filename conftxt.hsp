@@ -1835,6 +1835,21 @@
 	RuleTxt(0, RULE_HATSUNE_MIKU) = "なし", "２飜"
 	nonumsanma RULE_HATSUNE_MIKU
 
+	RuleName(RULE_KAGAMINE_RIN) = "鏡音リン"
+	RuleDescription(RULE_KAGAMINE_RIN) = "鏡音リンの有無と価値を設定します(白と筒子のみで対々和、付加役)"
+	RuleTxt(0, RULE_KAGAMINE_RIN) = "なし", "２飜"
+	nonumsanma RULE_KAGAMINE_RIN
+
+	RuleName(RULE_KAGAMINE_LEN) = "鏡音レン"
+	RuleDescription(RULE_KAGAMINE_LEN) = "鏡音レンの有無と価値を設定します(白の刻子と三連刻、付加役)"
+	RuleTxt(0, RULE_KAGAMINE_LEN) = "なし", "２飜"
+	nonumsanma RULE_KAGAMINE_LEN
+
+	RuleName(RULE_KAGAMINE_RINLEN) = "鏡音リンレン"
+	RuleDescription(RULE_KAGAMINE_RINLEN) = "鏡音リンレンの有無と価値を設定します(白の刻子と筒子の混一色三連刻)"
+	RuleTxt(0, RULE_KAGAMINE_RINLEN) = "なし", "役満"
+	nonumsanma RULE_KAGAMINE_RINLEN
+
 return
 
 #undef noregsanma

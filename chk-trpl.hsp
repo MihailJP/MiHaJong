@@ -157,6 +157,18 @@
 			}
 		}
 	}
+	/* 鏡音レン */
+	if (getRule(RULE_KAGAMINE_LEN) != 0) {
+		if (searchyaku(tmpYakuInfo, "鏡音リンレン") == 0) {
+			yakuFlag = 0
+			repeat TILE_NUMERAL_MAX
+				if ((KezCount(cnt) >= 1)&&(KezCount(cnt+1) >= 1)&&(KezCount(cnt+2) >= 1)) {yakuFlag = 1}
+			loop
+			if ((KezCount(TILE_WHITE_DRAGON) >= 1)&&(yakuFlag == 1)) {
+				addyaku tmpYakuInfo, "鏡音レン", 2
+			}
+		}
+	}
 	/* 三色同刻 */
 	yakuFlag = 0
 	repeat TILE_NUMERAL_MAX/TILE_NUMERAL_COLORS
@@ -212,6 +224,7 @@
 	if ((Kezi == 4)&&(WindCnt < 8)&&(AnKe < 4)&&(SiLianKeFlag == 0)) { // 大四喜や四暗刻とは複合させないようにする
 		tmpyakuCensored = 0 // 清老頭が成立してたら飛ばす 混老頭とは複合させる
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "清老頭")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "鏡音リンレン")
 		if (tmpyakuCensored == 0) {
 			addyaku tmpYakuInfo, "対々和", 2
 		}
@@ -250,7 +263,7 @@
 		}
 	loop
 	// 大三元が成立している場合、三元牌でさらに役がつかないようにする
-	if ((KezCount(TILE_WHITE_DRAGON) >= 1)&&(DragonCnt < 6)) {
+	if ((KezCount(TILE_WHITE_DRAGON) >= 1)&&(DragonCnt < 6)&&(searchyaku(tmpYakuInfo, "鏡音リンレン") == 0)) {
 		addyaku tmpYakuInfo, "役牌・白", 1
 	}
 	if ((KezCount(TILE_GREEN_DRAGON) >= 1)&&(DragonCnt < 6)) {

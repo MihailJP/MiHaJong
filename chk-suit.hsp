@@ -192,6 +192,28 @@
 					delyaku tmpYakuInfo, "¬ˆêF"
 				}
 			}
+			/* ‹¾‰¹ƒŠƒ“ƒŒƒ“ */
+			if (getRule(RULE_KAGAMINE_RINLEN) != 0) {
+				countKez KezCount, MianziDat: NumOfKez = stat
+				yakuFlag = 0
+				repeat TILE_NUMERAL_MAX
+					if ((KezCount(cnt) >= 1)&&(KezCount(cnt+1) >= 1)&&(KezCount(cnt+2) >= 1)) {yakuFlag = 1}
+				loop
+				if ((KezCount(TILE_WHITE_DRAGON) >= 1)&&(yakuFlag == 1)&&(PinzMian == (SIZE_OF_MELD_BUFFER - 1))) {
+					addyakuman tmpYakuInfo, "‹¾‰¹ƒŠƒ“ƒŒƒ“", 1
+					delyaku tmpYakuInfo, "¬ˆêF"
+				}
+			}
+			/* ‹¾‰¹ƒŠƒ“ */
+			if (getRule(RULE_KAGAMINE_RIN) != 0) {
+				if (searchyaku(tmpYakuInfo, "‹¾‰¹ƒŠƒ“ƒŒƒ“") == 0) {
+					countKez KezCount, MianziDat: NumOfKez = stat
+					countDuiz DuiCount, MianziDat
+					if ((DuiCount(TILE_WHITE_DRAGON) >= 1)&&(PinzMian == (SIZE_OF_MELD_BUFFER - 1))) {
+						addyaku tmpYakuInfo, "‹¾‰¹ƒŠƒ“", 2
+					}
+				}
+			}
 #endif
 		}
 #endif
