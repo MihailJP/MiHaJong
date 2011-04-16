@@ -438,7 +438,7 @@
 
 	RuleName(RULE_STELLAR_UUSHII) = "七星無靠"
 	RuleDescription(RULE_STELLAR_UUSHII) = "七星無靠の有無と価値を設定します(字牌7種を1枚ずつと、三色それぞれが別々の筋の浮き牌7枚)"
-	RuleTxt(0, RULE_STELLAR_UUSHII) = "なし", "役満"
+	RuleTxt(0, RULE_STELLAR_UUSHII) = "なし", "役満", "満貫"
 	nonumsanma RULE_STELLAR_UUSHII
 
 	RuleName(RULE_BREAKING_PAARENCHAN) = "破回八連荘"

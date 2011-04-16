@@ -38,7 +38,11 @@
 		if (getRule(RULE_STELLAR_UUSHII) != 0) {
 			if (ShantenArray(SHANTEN_STELLAR) == -1) {
 				contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
-				addyakuman tmpYakuInfo, "éµêØñ≥Ëœ", 1
+				if (getRule(RULE_STELLAR_UUSHII) == 2) {
+					addmangan tmpYakuInfo, "éµêØñ≥Ëœ", 2
+				} else {
+					addyakuman tmpYakuInfo, "éµêØñ≥Ëœ", 1
+				}
 				countdora GameStat, tmpYakuInfo, targetPlayer
 			}
 		}
