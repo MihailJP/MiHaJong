@@ -158,6 +158,8 @@ return
 			tooltip@ (cnt+ConfBtnBegin-STATBOX), RuleDescription(cnt+(configPage-1)*RULES_IN_PAGE)
 		} else: if (RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE) != "") {
 			tooltip@ (cnt+ConfBtnBegin-STATBOX), strf("%sÅièâä˙ê›íËÅF%sÅj", RuleDescription(cnt+(configPage-1)*RULES_IN_PAGE), RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE))
+		} else {
+			tooltip@ (cnt+ConfBtnBegin-STATBOX), ""
 		}
 	loop
 	confselFinished = 0
