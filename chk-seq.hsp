@@ -26,12 +26,36 @@
 	return
 #global
 
+#module
+#include "const.as"
+#deffunc countAnShunz array ShunzCount, array MianziDat
+/*
+		countAnShunz p1, p2
+		暗順子の数を数える
+
+		p1 : 結果を格納する配列
+		p2 : 面子構成を格納した配列
+
+		手牌に存在する暗順子を数え、種類別に格納します。
+		また、statには見つかった暗順子の数が格納されます。
+*/
+	trace "暗順子の種類を調べます。"
+	dim ShunzCount, TILE_NONFLOWER_MAX
+	repeat SIZE_OF_MELD_BUFFER-1, 1
+		if ((MianziDat(cnt) / MELD_TYPE_STEP) == MELD_SEQUENCE_CONCEALED) {
+			ShunzCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++
+		}
+	loop
+	return
+#global
+
 /* 順子系の役 */
 #module
 #include "const.as"
 #deffunc sequenceyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	trace "順子役の処理に入ります。"
 	countShunz ShunzCount, MianziDat
+	countAnShunz AnShunzCount, MianziDat
 	DragonW = 0: DragonG = 0: DragonR = 0: Wind = 0
 	EastWind = 0: SouthWind = 0: WestWind = 0: NorthWind = 0
 #ifndef SANMAS
@@ -273,6 +297,12 @@
 		if (getRule(RULE_ROUTE_246) != 0) {
 			if ((MachiType == MACHI_KANCHAN)&&((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == (straightColor*TILE_SUIT_STEP+2))||(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == (straightColor*TILE_SUIT_STEP+4))||(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == (straightColor*TILE_SUIT_STEP+6)))) {
 				addyaku tmpYakuInfo, "ルート２４６", 1
+			}
+		}
+		/* 九龍城落地 */
+		if (getRule(RULE_GAULUNGSING_LOKDEI) != 0) {
+			if (((ShunzCount(straightColor*TILE_SUIT_STEP+1)-AnShunzCount(straightColor*TILE_SUIT_STEP+1)) >= 1)&&((ShunzCount(straightColor*TILE_SUIT_STEP+4)-AnShunzCount(straightColor*TILE_SUIT_STEP+4)) >= 1)&&((ShunzCount(straightColor*TILE_SUIT_STEP+7)-AnShunzCount(straightColor*TILE_SUIT_STEP+7)) >= 1)) {
+				addyaku tmpYakuInfo, "九龍城落地", 2
 			}
 		}
 	}

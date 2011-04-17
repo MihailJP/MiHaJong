@@ -1850,6 +1850,10 @@
 	RuleTxt(0, RULE_KAGAMINE_RINLEN) = "なし", "役満"
 	nonumsanma RULE_KAGAMINE_RINLEN
 
+	RuleName(RULE_GAULUNGSING_LOKDEI) = "九龍城落地"
+	RuleDescription(RULE_GAULUNGSING_LOKDEI) = "九龍城落地の有無と価値を設定します(一気通貫の3順子を全てチー、付加役)"
+	RuleTxt(0, RULE_GAULUNGSING_LOKDEI) = "なし", "２飜"
+
 return
 
 #undef noregsanma

@@ -248,7 +248,8 @@
 	AddRuleText2 "—´‹YŽì", RuleStat(RULE_LONGXIZHU)
 	AddRuleText2 "‹à—´‹Y–k“l", RuleStat(RULE_JINLONG_DOU_BEIDOU)
 #endif
-	AddRuleText3 "ƒ‹[ƒg‚Q‚S‚U", RuleStat(RULE_ROUTE_246)
+	AddRuleText2 "ƒ‹[ƒg‚Q‚S‚U", RuleStat(RULE_ROUTE_246)
+	AddRuleText3 "‹ã—´é—Ž’n", RuleStat(RULE_GAULUNGSING_LOKDEI)
 #ifdef SANMAX
 	AddRuleText1 "“ì› ”Óß", RuleStat(RULE_NANBING_WANZHONG)
 	AddRuleText2 "—‹•ô—[Æ", RuleStat(RULE_LEIFENG_XIZHAO)
