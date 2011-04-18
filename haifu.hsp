@@ -74,7 +74,7 @@ return
 #deffunc haifubufinit
 
 	/* ”v‚Ì–¼‘Oƒf[ƒ^ */
-	tilecodelabel = "Hˆê“ñŽOŽlŒÜ˜ZŽµ”ª‹ãH‡@‡A‡B‡C‡D‡E‡F‡G‡HH‚P‚Q‚R‚S‚T‚U‚V‚W‚XH“Œ“ì¼–k”’á¢’†HHHˆë“óŽQãæŒÞ—¤Ž½ŽJ‹èH‡J‡K‡L‡M‡N‡O‡P‡Q‡RH‡T‡U‡V‡W‡X‡Y‡Z‡[‡\H‚d‚r‚v‚m‚o‚e‚bHHH1]2]3]4]5]6]7]8]9]H1)2)3)4)5)6)7)8)9)H1}2}3}4}5}6}7}8}9}HE>S>W>N>P>F>C>HHHt‰ÄH“~•S”~—–‹e’|H"
+	tilecodelabel = "Hˆê“ñŽOŽlŒÜ˜ZŽµ”ª‹ãH‡@‡A‡B‡C‡D‡E‡F‡G‡HH‚P‚Q‚R‚S‚T‚U‚V‚W‚XH“Œ“ì¼–k”’á¢’†HHHˆë“óŽQãæŒÞ—¤Ž½ŽJ‹èH‡J‡K‡L‡M‡N‡O‡P‡Q‡RH‡T‡U‡V‡W‡X‡Y‡Z‡[‡\H‚d‚r‚v‚m‚o‚e‚bHHHb‰³•¸’š•èŒÈMhpH‚¢‚ë‚Í‚É‚Ù‚Ö‚Æ‚¿‚èHú@úAúBúCúDúEúFúGúHH‚…‚“‚—‚Ž‚‚†‚ƒHHHt‰ÄH“~•S”~—–‹e’|H"
 	HTtilecodelabel1 = " qwertyuio zxcvbnm,. asdfghjkl 1234567   qwertyuio zxcvbnm,. asdfghjkl 1234567   qwertyuio zxcvbnm,. asdfghjkl 1234567   -^\\[5@;:]"
 	HTtilecodelabel2 = " QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   -^\\[%@;:]"
 
