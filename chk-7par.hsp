@@ -89,13 +89,13 @@
 		}
 	}
 	/* 一九字牌系 */
-	if ((ZiDui+YaojiuDui) == 0) {
+	if (YaojiuDui == 0) {
 		if (getMenzen(GameStat, targetPlayer) == 1) { // バグ対策？
 			addyaku tmpYakuInfo, "断幺九", 1
 		}
 	}
 #ifndef SANMAS
-	if ((ZiDui+YaojiuDui) == 7) {
+	if (YaojiuDui == 7) {
 		if ((ZiDui == 7)&&(getRule(RULE_SEVEN_HONOR_PAIRS) != 1)) {
 			if (getRule(RULE_SEVEN_HONOR_PAIRS) == 0) {
 				addyakuman tmpYakuInfo, "字一色", 1
