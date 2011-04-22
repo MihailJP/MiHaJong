@@ -81,7 +81,7 @@
 	setPlayerName GameEnv, 1, "[b]COM"
 	setPlayerName GameEnv, 2, "[c]COM"
 	setPlayerName GameEnv, 3, "[d]COM"
-	setGameMode, GameEnv, GAMEMODE_SERVER
+	setGameMode GameEnv, GAMEMODE_SERVER
 	ServerAddress = ""
 	sockmake SOCK_GAME+0, PORT_GAME
 	vanish
@@ -228,7 +228,7 @@ return
 	showbackground
 	sysscr fontname, "接続先を入力してね", "Choose server.", "サーバーのIPアドレス、または\nドメイン名を入力してください"
 	redraw 1
-	setGameMode, GameEnv, GAMEMODE_CLIENT: vanish
+	setGameMode GameEnv, GAMEMODE_CLIENT: vanish
 	ServerAddress = ""
 	objsize 440, 40
 	pos 200, 270: input ServerAddress

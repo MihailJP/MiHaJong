@@ -1,11 +1,11 @@
-_FILEVERSION=1.4.6.192
-_PRODUCTVERSION=1.4.6.192
+_FILEVERSION=1.4.6.194
+_PRODUCTVERSION=1.4.6.194
 Comments=êîîvéOñÉMiHaJong
 CompanyName=MihailJP
 FileDescription=êîîvéOñÉMiHaJong
-FileVersion=1.4.6bis
+FileVersion=1.4.6ter
 InternalName=mihassnm
 LegalCopyright=Copyright (c) 2008-2011 MihailJP, Part of rights reserved.
 OriginalFilename=mihassnm.exe
 ProductName=MiHaJong
-ProductVersion=1.4.6bis
+ProductVersion=1.4.6ter
