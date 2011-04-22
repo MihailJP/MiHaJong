@@ -158,9 +158,10 @@
 			repeat NUM_OF_ACTUAL_PLAYERS
 				tmpcnt = cnt
 				serversend 0xb8, GameEnv
-				serversend strlen(getPlayerName(GameEnv, tmpcnt)), GameEnv
-				repeat strlen(getPlayerName(GameEnv, tmpcnt))
-					serversend peek(getPlayerName(GameEnv, tmpcnt), cnt), GameEnv
+				tmpPlayerName = getPlayerName(GameEnv, tmpcnt)
+				serversend strlen(tmpPlayerName), GameEnv
+				repeat strlen(tmpPlayerName)
+					serversend peek(tmpPlayerName, cnt), GameEnv
 				loop
 			loop
 			exportRule RuleConf
