@@ -273,6 +273,18 @@
 		addyaku tmpYakuInfo, "役牌・中", 1
 		nmflag3 = 1
 	}
+	/* 新沼けんじ */
+	if (getRule(RULE_NIINUMA_KENJI) != 0) {
+		if (KezCount(TILE_SUIT_BAMBOOS+1) >= 1) {
+			addyaku tmpYakuInfo, "新沼けんじ", 1
+		}
+	}
+	/* 陣太鼓 */
+	if (getRule(RULE_JINDAIKO) != 0) {
+		if (KezCount(TILE_SUIT_CIRCLES+1) >= 1) {
+			addyaku tmpYakuInfo, "陣太鼓", 1
+		}
+	}
 	/* 小三風 */
 	if (getRule(RULE_XIAOSANFENG) != 0) {
 		if (WindCnt == 5) {

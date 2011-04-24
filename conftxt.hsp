@@ -1854,6 +1854,14 @@
 	RuleDescription(RULE_GAULUNGSING_LOKDEI) = "九龍城落地の有無と価値を設定します(一気通貫の3順子を全てチー、付加役)"
 	RuleTxt(0, RULE_GAULUNGSING_LOKDEI) = "なし", "２飜"
 
+	RuleName(RULE_NIINUMA_KENJI) = "新沼けんじ"
+	RuleDescription(RULE_NIINUMA_KENJI) = "新沼けんじの有無と価値を設定します(一索の刻子)"
+	RuleTxt(0, RULE_NIINUMA_KENJI) = "なし", "１飜"
+
+	RuleName(RULE_JINDAIKO) = "陣太鼓"
+	RuleDescription(RULE_JINDAIKO) = "陣太鼓の有無と価値を設定します(一筒の刻子)"
+	RuleTxt(0, RULE_JINDAIKO) = "なし", "１飜"
+
 return
 
 #undef noregsanma
