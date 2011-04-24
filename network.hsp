@@ -295,7 +295,7 @@ return
 #module
 #include "const.as"
 #deffunc initializechat var GameEnv, var ServerAddress, int ClientNumber
-	chatinit
+	chatinit: rulewndinit
 	if (getGameMode(GameEnv) == GAMEMODE_STANDALONE) {gsel SCR_CHAT: objgray 1, 0: objgray 2, 0: gsel 0}
 	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 		ChatBuf1 = "": ChatBuf2 = "": ChatBuf3 = ""
