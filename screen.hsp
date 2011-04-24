@@ -999,7 +999,7 @@ return
 		if (DiffPosCode==1) {pos 470, 601}
 		switch cnt
 			case RELATIVE_SHIMOCHA: tmpposname = "â∫â∆": swbreak
-			case RELATIVE_TOIMEN: tmpposname = "ëŒñ : swbreak
+			case RELATIVE_TOIMEN: tmpposname = "ëŒñ ": swbreak
 			case RELATIVE_KAMICHA: tmpposname = "è„â∆": swbreak
 		swend
 		DiffPosCode++
