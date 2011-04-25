@@ -21,7 +21,10 @@
 	Kangzi = 0
 	dim KangzCount, TILE_NONFLOWER_MAX
 	repeat SIZE_OF_MELD_BUFFER
-		if (MianziDat(cnt) >= MELD_QUAD*MELD_TYPE_STEP) {KangzCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++}
+		if (MianziDat(cnt) >= MELD_QUAD*MELD_TYPE_STEP) {
+			KangzCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++
+			Kangzi++
+		}
 	loop
 	return Kangzi
 #global
@@ -43,7 +46,10 @@
 	Kangzi = 0
 	dim KangzCount, TILE_NONFLOWER_MAX
 	repeat SIZE_OF_MELD_BUFFER
-		if ((MianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED) {KangzCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++}
+		if ((MianziDat(cnt) / MELD_TYPE_STEP) == MELD_QUAD_CONCEALED) {
+			KangzCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++
+			Kangzi++
+		}
 	loop
 	return Kangzi
 #global
