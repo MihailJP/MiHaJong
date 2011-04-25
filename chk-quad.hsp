@@ -168,5 +168,11 @@
 		}
 	}
 #endif
+	/* íÔ */
+	if (getRule(RULE_TANK) != 0) {
+		if (KangzCount(TILE_SUIT_BAMBOOS+7) >= 1) {
+			addyaku tmpYakuInfo, "íÔ", 1
+		}
+	}
 return
 #global

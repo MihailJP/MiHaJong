@@ -11,5 +11,4 @@
 			RuleList += strf("%s: %s%s", RuleName(cnt), RuleTxt(Rule(cnt), cnt), "\n")
 		}
 	loop
-#if 0
 return

@@ -1279,5 +1279,18 @@
 			addyaku tmpYakuInfo, "‰‰¹ƒ~ƒN", 2
 		}
 	}
+	/* ”’‰Ô */
+	if (getRule(RULE_BAIHUA) != 0) {
+		if ((KezCount(TILE_SUIT_CIRCLES+5) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)) {
+			addyaku tmpYakuInfo, "”’‰Ô", 1
+		}
+	}
+	/* Œ‚ŒÛœ±‘‚ */
+	if (getRule(RULE_JIGU_ECAO) != 0) {
+		if ((KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)) {
+			addyaku tmpYakuInfo, "Œ‚ŒÛœ±‘‚", 2
+			delyaku tmpYakuInfo, "–ğ”vE”’"
+		}
+	}
 return
 #global

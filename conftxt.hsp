@@ -1862,6 +1862,18 @@
 	RuleDescription(RULE_JINDAIKO) = "陣太鼓の有無と価値を設定します(一筒の刻子)"
 	RuleTxt(0, RULE_JINDAIKO) = "なし", "１飜"
 
+	RuleName(RULE_TANK) = "戦車"
+	RuleDescription(RULE_TANK) = "戦車の有無と価値を設定します(七索の槓子)"
+	RuleTxt(0, RULE_TANK) = "なし", "１飜"
+
+	RuleName(RULE_BAIHUA) = "白花"
+	RuleDescription(RULE_BAIHUA) = "白花の有無と価値を設定します(五筒と白の刻子：付加役)"
+	RuleTxt(0, RULE_BAIHUA) = "なし", "１飜"
+
+	RuleName(RULE_JIGU_ECAO) = "撃鼓愕曹"
+	RuleDescription(RULE_JIGU_ECAO) = "撃鼓愕曹の有無と価値を設定します(一筒、二索と白の刻子)"
+	RuleTxt(0, RULE_JIGU_ECAO) = "なし", "２飜"
+
 return
 
 #undef noregsanma
