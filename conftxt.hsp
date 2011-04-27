@@ -1600,10 +1600,12 @@
 	RuleName(RULE_CHOUSANGEN) = "超三元"
 	RuleDescription(RULE_CHOUSANGEN) = "超三元の有無と価値を設定します(大三元を全て槓子にする)"
 	RuleTxt(0, RULE_CHOUSANGEN) = "なし", "ダブル役満"
+	nonumsanma RULE_CHOUSANGEN
 
 	RuleName(RULE_CHOUSIXI) = "超四喜"
 	RuleDescription(RULE_CHOUSIXI) = "超四喜の有無と価値を設定します(大四喜を全て槓子にする)"
 	RuleTxt(0, RULE_CHOUSIXI) = "なし", "トリプル役満"
+	nonumsanma RULE_CHOUSIXI
 
 	RuleName(RULE_BLACKJACK) = "黒衣騎士"
 	RuleDescription(RULE_BLACKJACK) = "黒衣騎士の有無と価値を設定します(数牌の数字の合計が21)"
@@ -1853,6 +1855,7 @@
 	RuleName(RULE_GAULUNGSING_LOKDEI) = "九龍城落地"
 	RuleDescription(RULE_GAULUNGSING_LOKDEI) = "九龍城落地の有無と価値を設定します(一気通貫の3順子を全てチー、付加役)"
 	RuleTxt(0, RULE_GAULUNGSING_LOKDEI) = "なし", "２飜"
+	nosanma RULE_GAULUNGSING_LOKDEI: nonumsanma RULE_GAULUNGSING_LOKDEI
 
 	RuleName(RULE_NIINUMA_KENJI) = "新沼けんじ"
 	RuleDescription(RULE_NIINUMA_KENJI) = "新沼けんじの有無と価値を設定します(一索の刻子)"
