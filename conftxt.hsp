@@ -1877,6 +1877,11 @@
 	RuleDescription(RULE_JIGU_ECAO) = "撃鼓愕曹の有無と価値を設定します(一筒、二索と白の刻子)"
 	RuleTxt(0, RULE_JIGU_ECAO) = "なし", "２飜"
 
+	RuleName(RULE_GOLDRUSH) = "ゴールドラッシュ"
+	RuleDescription(RULE_GOLDRUSH) = "ゴールドラッシュの有無と価値を設定します(発がある筒子の混一色)"
+	RuleTxt(0, RULE_GOLDRUSH) = "なし", "２飜", "２飜(西も必要)", "役満", "役満(西も必要)"
+	nonumsanma RULE_GOLDRUSH
+
 return
 
 #undef noregsanma

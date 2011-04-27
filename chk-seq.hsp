@@ -292,6 +292,24 @@
 				delyaku tmpYakuInfo, "混一色"
 			}
 		}
+		/* ゴールドラッシュ */
+		if (getRule(RULE_GOLDRUSH) != 0) {
+			countDuiz DuiCount, MianziDat
+			if ((DuiCount(TILE_GREEN_DRAGON) >= 1)&&(straightColor == TILE_SUIT_CIRCLES/TILE_SUIT_STEP)&&(searchyaku(tmpYakuInfo, "混一色") != 0)) {
+				if ((getRule(RULE_GOLDRUSH) == 1)||(getRule(RULE_GOLDRUSH) == 3)||(DuiCount(TILE_NORTH_WIND) >= 1)) {
+					switch (getRule(RULE_GOLDRUSH))
+						case 1: case 2:
+							addyaku tmpYakuInfo, "ゴールドラッシュ", 2
+							swbreak
+						case 3: case 4:
+							addyakuman tmpYakuInfo, "ゴールドラッシュ", 1
+							delyaku tmpYakuInfo, "一気通貫"
+							delyaku tmpYakuInfo, "混一色"
+							swbreak
+					swend
+				}
+			}
+		}
 #endif
 		/* ルート２４６ */
 		if (getRule(RULE_ROUTE_246) != 0) {
@@ -299,12 +317,14 @@
 				addyaku tmpYakuInfo, "ルート２４６", 1
 			}
 		}
+#ifndef ALLSANMA
 		/* 九龍城落地 */
 		if (getRule(RULE_GAULUNGSING_LOKDEI) != 0) {
 			if (((ShunzCount(straightColor*TILE_SUIT_STEP+1)-AnShunzCount(straightColor*TILE_SUIT_STEP+1)) >= 1)&&((ShunzCount(straightColor*TILE_SUIT_STEP+4)-AnShunzCount(straightColor*TILE_SUIT_STEP+4)) >= 1)&&((ShunzCount(straightColor*TILE_SUIT_STEP+7)-AnShunzCount(straightColor*TILE_SUIT_STEP+7)) >= 1)) {
 				addyaku tmpYakuInfo, "九龍城落地", 2
 			}
 		}
+#endif
 	}
 	/* 金門橋 */
 	if (getRule(RULE_GOLDEN_GATE_BRIDGE) != 0) {
