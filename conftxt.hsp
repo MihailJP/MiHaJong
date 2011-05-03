@@ -1891,6 +1891,11 @@
 	RuleTxt(0, RULE_MIYAKONOSEIHOKU) = "なし", "役満"
 	nonumsanma RULE_MIYAKONOSEIHOKU
 
+	RuleName(RULE_TOKYO) = "東京二十三区"
+	RuleDescription(RULE_TOKYO) = "東京二十三区の有無と価値を設定します(東、2、3、9の刻子、混一色ならダブル役満)"
+	RuleTxt(0, RULE_TOKYO) = "なし", "役満"
+	nonumsanma RULE_TOKYO
+
 return
 
 #undef noregsanma

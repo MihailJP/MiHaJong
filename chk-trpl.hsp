@@ -1280,6 +1280,28 @@
 			delyaku tmpYakuInfo, "対々和"
 		}
 	}
+	/* 東京二十三区 */
+	if (getRule(RULE_TOKYO) != 0) {
+		yakuFlag = 0:yakuFlag2 = 0
+		repeat TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS
+			if ((KezCount((cnt/(TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS))*TILE_SUIT_STEP+2) >= 1)&&(KezCount((cnt\(TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS)/TILE_NUMERAL_COLORS)*TILE_SUIT_STEP+3) >= 1)&&(KezCount((cnt\TILE_NUMERAL_COLORS)*TILE_SUIT_STEP+9) >= 1)) {yakuFlag = 1}
+		loop
+		repeat 9, 1
+			tmpcnt = cnt
+			repeat TILE_NUMERAL_COLORS
+				if ((KezCount(cnt*TILE_SUIT_STEP+2) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+3) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+9) >= 1)&&(MianziDat(0) == cnt*TILE_SUIT_STEP+1)) {yakuFlag2 = 1}
+				if ((KezCount(cnt*TILE_SUIT_STEP+2) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+3) >= 1)&&(KezCount(cnt*TILE_SUIT_STEP+9) >= 1)&&(MianziDat(0) == TILE_SUIT_HONORS+1)) {yakuFlag2 = 1}
+			loop
+		loop
+		if ((yakuFlag == 1)&&(KezCount(TILE_EAST_WIND) >= 1)) {
+			if (yakuFlag2) {
+				addyakuman tmpYakuInfo, "東京二十三区", 2
+			} else {
+				addyakuman tmpYakuInfo, "東京二十三区", 1
+			}
+			delyaku tmpYakuInfo, "対々和"
+		}
+	}
 	/* 初音ミク */
 	if (getRule(RULE_HATSUNE_MIKU) != 0) {
 		yakuFlag = 0
