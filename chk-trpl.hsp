@@ -1266,7 +1266,18 @@
 			if ((KezCount((cnt/(TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS))*TILE_SUIT_STEP+6) >= 1)&&(KezCount((cnt\(TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS)/TILE_NUMERAL_COLORS)*TILE_SUIT_STEP+4) >= 1)&&(KezCount((cnt\TILE_NUMERAL_COLORS)*TILE_SUIT_STEP+3) >= 1)) {yakuFlag = 1}
 		loop
 		if ((yakuFlag == 1)&&(MachiType == MACHI_KANCHAN)) {
-			addyaku tmpYakuInfo, "ムスカ大佐", 13
+			addyakuman tmpYakuInfo, "ムスカ大佐", 1
+		}
+	}
+	/* 都の西北 */
+	if (getRule(RULE_MIYAKONOSEIHOKU) != 0) {
+		yakuFlag = 0
+		repeat TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS
+			if ((DuiCount((cnt/(TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS))*TILE_SUIT_STEP+3) >= 1)&&(DuiCount((cnt\(TILE_NUMERAL_COLORS*TILE_NUMERAL_COLORS)/TILE_NUMERAL_COLORS)*TILE_SUIT_STEP+8) >= 1)&&(DuiCount((cnt\TILE_NUMERAL_COLORS)*TILE_SUIT_STEP+5) >= 1)) {yakuFlag = 1}
+		loop
+		if ((yakuFlag == 1)&&(DuiCount(TILE_WEST_WIND) >= 1)&&(DuiCount(TILE_NORTH_WIND) >= 1)) {
+			addyakuman tmpYakuInfo, "都の西北", 1
+			delyaku tmpYakuInfo, "対々和"
 		}
 	}
 	/* 初音ミク */

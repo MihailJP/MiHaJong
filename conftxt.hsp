@@ -1882,6 +1882,15 @@
 	RuleTxt(0, RULE_GOLDRUSH) = "なし", "２飜", "２飜(西も必要)", "役満", "役満(西も必要)"
 	nonumsanma RULE_GOLDRUSH
 
+	RuleName(RULE_FULLMOON) = "フルムーン"
+	RuleDescription(RULE_FULLMOON) = "フルムーンの有無と価値を設定します(清一色で数字の合計が88)"
+	RuleTxt(0, RULE_FULLMOON) = "なし", "役満"
+
+	RuleName(RULE_MIYAKONOSEIHOKU) = "都の西北"
+	RuleDescription(RULE_MIYAKONOSEIHOKU) = "都の西北の有無と価値を設定します(3、8、5、西、北で対々和)"
+	RuleTxt(0, RULE_MIYAKONOSEIHOKU) = "なし", "役満"
+	nonumsanma RULE_MIYAKONOSEIHOKU
+
 return
 
 #undef noregsanma

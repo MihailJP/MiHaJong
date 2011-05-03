@@ -153,6 +153,14 @@
 				}
 			}
 #endif
+			/* フルムーン */
+			if (getRule(RULE_FULLMOON) != 0) {
+				if (Cifr == 88) {
+					addyakuman tmpYakuInfo, "フルムーン", 1
+					// 成立したら清一色の成立を解除する(青天井ルール用)
+					delyaku tmpYakuInfo, "清一色"
+				}
+			}
 			/* 星光燦爛 */
 			if (getRule(RULE_STARLIGHT) != 0) {
 				if (PinzMian == SIZE_OF_MELD_BUFFER) {
