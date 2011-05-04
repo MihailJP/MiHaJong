@@ -4,42 +4,7 @@
  *=============================
  */
 
-#include "IMPORTED.hsp"
-
-#uselib "kernel32.dll"
-#func GetSystemTime "GetSystemTime" var
-#module
-#defcfunc getutc int param
-	dim nowtime, 4
-	GetSystemTime@ nowtime
-	return wpeek(nowtime, param*2)
-#global
-
-#module
-#include "hspmath.as"
-#defcfunc julian int year, int month, int day, int hour, int min, int sec, int msec
-/*
-		val=julian(p1, p2, p3, p4, p5, p6, p7)
-		ユリウス日を計算する
-
-		p1 : 年
-		p2 : 月
-		p3 : 日
-		p4 : 時
-		p5 : 分
-		p6 : 秒
-		p7 : ミリ秒
-
-		指定した日時のユリウス日を求めます。
-*/
-	if (month < 3) {
-		JulianDay = floor(365.25*double(year-1))+floor(double(year-1)/400)-floor(double(year-1)/100)+floor(30.59*(double(month)+10))+double(day)-678912+2400000.5
-	} else {
-		JulianDay = floor(365.25*double(year))+floor(double(year)/400)-floor(double(year)/100)+floor(30.59*(double(month)-2))+double(day)-678912+2400000.5
-	}
-	JulianDay += double(hour)/24+double(min)/24/60+double(sec)/24/3600+double(msec)/24/3600/1000
-	return JulianDay
-#global
+#include "astro.hsp"
 
 #module
 #include "const.as"
