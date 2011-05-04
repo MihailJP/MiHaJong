@@ -8,6 +8,7 @@
 /* License: Public Domain */
 /* http://search.cpan.org/~brett/Astro-MoonPhase/MoonPhase.pm */
 
+#ifndef CalcMoonPhase
 #module
 
 #include "hspmath.as"
@@ -174,6 +175,7 @@
 	return
 
 #global
+#endif
 /* à⁄êAÇ±Ç±Ç‹Ç≈ */
 
 
@@ -208,6 +210,7 @@
 */
 /* http://search.cpan.org/~rkhill/Astro-Sunrise-0.91/Sunrise.pm */
 
+#ifndef sunrise
 #module
 
 #include "hspmath.as"
@@ -567,3 +570,4 @@ sub days_since_2000_Jan_0 {
    return ;convert_hour($h1,$h2,$TZ, $isdst)
 
 #global
+#endif

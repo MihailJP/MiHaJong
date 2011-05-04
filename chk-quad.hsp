@@ -54,6 +54,8 @@
 	return Kangzi
 #global
 
+#include "astro.hsp"
+
 /* ÈqŒn‚Ì–ğ */
 #module
 #include "const.as"
@@ -182,6 +184,16 @@
 	if (getRule(RULE_TANK) != 0) {
 		if (KangzCount(TILE_SUIT_BAMBOOS+7) >= 1) {
 			addyaku tmpYakuInfo, "íÔ", 1
+		}
+	}
+	/* ‹S‚ÍŠO */
+	if (getRule(RULE_SETSUBUN) != 0) {
+		if (KangzCount(TILE_SUIT_CIRCLES+9) >= 1) {
+			TZ = julian(gettime(0), gettime(1), gettime(3), gettime(4), gettime(5), gettime(6), gettime(7)) - julian(getutc(0), getutc(1), getutc(3), getutc(4), getutc(5), getutc(6), getutc(7))
+			/* —‚“ú‚ª—§t‚Å‚ ‚é‚©‚ğ”»’è‚·‚éBƒ^ƒCƒ€ƒ][ƒ“‚Í©“®”F¯‚·‚é */
+			if ((sun_ecliptic(julian(gettime(0), gettime(1), gettime(3), 0, 0, 0, 0) + TZ + 1.0) <= 315.0)&&(sun_ecliptic(julian(gettime(0), gettime(1), gettime(3), 0, 0, 0, 0) + TZ + 2.0) > 315.0)) {
+				addyaku tmpYakuInfo, "‹S‚ÍŠO", 1
+			}
 		}
 	}
 return

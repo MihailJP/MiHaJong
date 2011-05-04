@@ -1896,6 +1896,10 @@
 	RuleTxt(0, RULE_TOKYO) = "なし", "役満"
 	nonumsanma RULE_TOKYO
 
+	RuleName(RULE_SETSUBUN) = "鬼は外"
+	RuleDescription(RULE_SETSUBUN) = "鬼は外の有無と価値を設定します(九筒の槓子、節分の日限定)"
+	RuleTxt(0, RULE_SETSUBUN) = "なし", "１飜"
+
 return
 
 #undef noregsanma
