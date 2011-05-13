@@ -1226,7 +1226,7 @@
 	/* スーパーマン */
 	if (getRule(RULE_SUPERMAN) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_CHARACTERS+4) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+4) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_SUIT_CHARACTERS+4) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+8) >= 1)) {yakuFlag = 1}
 		if ((KezCount(TILE_SUIT_CHARACTERS+4) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CHARACTERS+4)&&(MianziDat(0) == TILE_SUIT_CHARACTERS+8)) {yakuFlag = 1}
 		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CHARACTERS+8)&&(MianziDat(0) == TILE_SUIT_CHARACTERS+4)) {yakuFlag = 1}
 		if (yakuFlag) {
