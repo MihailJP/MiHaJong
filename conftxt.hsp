@@ -1900,6 +1900,15 @@
 	RuleDescription(RULE_SETSUBUN) = "鬼は外の有無と価値を設定します(九筒の槓子、節分の日限定)"
 	RuleTxt(0, RULE_SETSUBUN) = "なし", "１飜"
 
+	RuleName(RULE_SANADACOIN) = "真田六文銭"
+	RuleDescription(RULE_SANADACOIN) = "真田六文銭の有無と価値を設定します(六筒の槓子)"
+	RuleTxt(0, RULE_SANADACOIN) = "なし", "１飜"
+
+	RuleName(RULE_THREE_ARROWS) = "三矢の誓い"
+	RuleDescription(RULE_THREE_ARROWS) = "三矢の誓いの有無と価値を設定します(三索の槓子)"
+	RuleTxt(0, RULE_THREE_ARROWS) = "なし", "１飜"
+
+
 return
 
 #undef noregsanma

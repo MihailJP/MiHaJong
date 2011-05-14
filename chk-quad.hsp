@@ -186,6 +186,18 @@
 			addyaku tmpYakuInfo, "íŽÔ", 1
 		}
 	}
+	/* ^“c˜Z•¶‘K */
+	if (getRule(RULE_SANADACOIN) != 0) {
+		if (KangzCount(TILE_SUIT_CIRCLES+6) >= 1) {
+			addyaku tmpYakuInfo, "^“c˜Z•¶‘K", 1
+		}
+	}
+	/* ŽO–î‚Ì¾‚¢ */
+	if (getRule(RULE_THREE_ARROWS) != 0) {
+		if (KangzCount(TILE_SUIT_BAMBOOS+3) >= 1) {
+			addyaku tmpYakuInfo, "ŽO–î‚Ì¾‚¢", 1
+		}
+	}
 	/* ‹S‚ÍŠO */
 	if (getRule(RULE_SETSUBUN) != 0) {
 		if (KangzCount(TILE_SUIT_CIRCLES+9) >= 1) {
