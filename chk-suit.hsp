@@ -275,5 +275,19 @@
 		}
 	}
 #endif
+#ifndef SANMAX
+	/* 未成年 */
+	if (getRule(RULE_MINORAGE) != 0) {
+		if (Cifr == 19) {
+			addyakuman tmpYakuInfo, "未成年", 1
+		}
+	}
+	/* 成人式 */
+	if (getRule(RULE_COMINGOFAGE) != 0) {
+		if (Cifr == 20) {
+			addyakuman tmpYakuInfo, "成人式", 1
+		}
+	}
+#endif
 return
 #global
