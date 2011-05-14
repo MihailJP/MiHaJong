@@ -1915,11 +1915,11 @@
 
 	RuleName(RULE_MINORAGE) = "未成年"
 	RuleDescription(RULE_MINORAGE) = "未成年の有無と価値を設定します(字牌を含まず数字の合計が19)"
-	RuleTxt(0, RULE_MINORAGE) = "なし", "役満"
+	RuleTxt(0, RULE_MINORAGE) = "なし", "３飜", "６飜"
 
 	RuleName(RULE_COMINGOFAGE) = "成人式"
 	RuleDescription(RULE_COMINGOFAGE) = "成人式の有無と価値を設定します(字牌を含まず数字の合計が20)"
-	RuleTxt(0, RULE_COMINGOFAGE) = "なし", "役満"
+	RuleTxt(0, RULE_COMINGOFAGE) = "なし", "３飜", "役満"
 
 
 return
