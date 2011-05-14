@@ -276,6 +276,7 @@
 #enum RULE_KAGAMINE_RIN
 #enum RULE_KAGAMINE_LEN
 #enum RULE_KAGAMINE_RINLEN
+#enum RULE_777
 
 /* ƒfƒŠƒ~ƒ^ */
 #enum END_OF_SECTION

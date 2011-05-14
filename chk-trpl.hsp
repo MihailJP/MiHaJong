@@ -1325,5 +1325,16 @@
 			delyaku tmpYakuInfo, "役牌・白"
 		}
 	}
+	/* ビックボーナス */
+	if (getRule(RULE_777) != 0) {
+		yakuFlag = 0
+		if ((KezCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+7) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(searchyaku(tmpYakuInfo, "北斗七星") == 0)) {
+			if (getRule(RULE_777) == 2) {
+				addyakuman tmpYakuInfo, "ビックボーナス", 1
+			} else {
+				addyaku tmpYakuInfo, "ビックボーナス", 2
+			}
+		}
+	}
 return
 #global

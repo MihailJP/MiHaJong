@@ -1908,6 +1908,11 @@
 	RuleDescription(RULE_THREE_ARROWS) = "三矢の誓いの有無と価値を設定します(三索の槓子)"
 	RuleTxt(0, RULE_THREE_ARROWS) = "なし", "１飜"
 
+	RuleName(RULE_777) = "ビックボーナス"
+	RuleDescription(RULE_777) = "ビックボーナスの有無と価値を設定します(７の三色同刻)"
+	RuleTxt(0, RULE_777) = "なし", "２飜", "役満"
+	nonumsanma RULE_777
+
 
 return
 
