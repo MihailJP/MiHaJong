@@ -6,7 +6,7 @@
 
 #module gameStruct \
 PlayerScore, playerChip, SumaroFlag, YakitoriFlag, \
-PlayerID, GameLength, GameRound, LoopRound, Honba, Deposit, AgariChain, LastAgariPlayer, \
+PlayerID, GameLength, GameRound, LoopRound, Honba, TurnRound, Deposit, AgariChain, LastAgariPlayer, \
 Hand, Discard, Meld, MenzenFlag, HandStat, NumberOfQuads, RichiFlag, OpenRichiWait, \
 FirstDrawFlag, DoujunFuriten, AgariHouki, FlowerFlag, NorthFlag, \
 KangFlag, KangNum, RichiCounter, \
@@ -82,6 +82,13 @@ CurrentPlayer, DeclarationFlag, TsumoAgariFlag, CurrentDiscard
 	Honba++: return
 #modcfunc getHonba
 	return Honba
+
+#modfunc setTurn int value
+	TurnRound = value: return
+#modfunc incTurn
+	TurnRound++: return
+#modcfunc getTurn
+	return TurnRound
 
 #modfunc setDeposit int value
 	Deposit = value: return
@@ -432,6 +439,7 @@ CurrentPlayer, DeclarationFlag, TsumoAgariFlag, CurrentDiscard
 	dim NorthFlag, NUM_OF_PLAYERS // 晒している北風牌を格納するフラグ
 #endif
 	dim KangFlag, KANG_PAGES // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
+	TurnRound = 0 // 現在の巡目
 	KangNum = 0 // 四槓流局、四槓子などの判定に使う
 	RichiCounter = 0 // リーチをカウンター(宣言牌をロン)
 	WaremePlayer = -1 // 割れ目の位置(-1で割れ目なし)

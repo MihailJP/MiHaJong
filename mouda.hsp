@@ -323,6 +323,10 @@
 #endif
 	setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)+1)\NUM_OF_PLAYERS
 #endif
+	/* “Œ‰Æ‚Ì‡”Ô‚ª‰ñ‚Á‚Ä‚«‚½‚çŸ‚Ì„–Ú‚Æ‚È‚é */
+	if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST) {
+		incTurn GameStat
+	}
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
 	setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
 	setPreviousMeld GameStat, PREVMELD_TILECODE, -999

@@ -627,6 +627,7 @@ return DaoPaiAbilityFlag
 	setRound Sandbox, getRound(GameStat)
 	setRoundLoop Sandbox, getRoundLoop(GameStat)
 	setHonba Sandbox, getHonba(GameStat)
+	setTurn Sandbox, getTurn(GameStat)
 	setDeposit Sandbox, getDeposit(GameStat)
 	setAgariChain Sandbox, getAgariChain(GameStat)
 	setLastAgariPlayer Sandbox, getLastAgariPlayer(GameStat)

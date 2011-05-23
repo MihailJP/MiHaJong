@@ -659,6 +659,10 @@ return RoundEndType
 	loop
 	/* 吃とポンが同時に起こった場合、ポンを優先する */
 	if ((getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3)) > 0) {
+		/* ポンや槓の時はツモ順を飛ばしたとみなして数え、北家→東家をまたいだ場合は次の巡目として扱う */
+		if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getRound(GameStat)) < playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat))) {
+			incTurn GameStat
+		}
 		setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 		return 1
 #ifndef ALLSANMA
@@ -666,6 +670,10 @@ return RoundEndType
 		/* 吃の処理 */
 		/* 三人打ちでは吃なし */
 		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, ShimochaOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) > 0) {
+			/* ポンや槓の時はツモ順を飛ばしたとみなして数え、北家→東家をまたいだ場合は次の巡目として扱う */
+			if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getRound(GameStat)) < playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat))) {
+				incTurn GameStat
+			}
 			setCurrentPlayer GameStat, CURRENTPLAYER_PASSIVE, ShimochaOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) // 吃ができるのは上家の捨牌のみ
 			fuuroproc GameStat, GameEnv, RoundEndType, DiscardTileIndex, FUURO_CHII
 			setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)

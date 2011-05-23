@@ -53,6 +53,7 @@
 		repeat NUM_OF_PLAYERS: setHandStat GameStat, cnt, 0:lipai GameStat, cnt: loop
 		setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, getRound(GameStat)\NUM_OF_PLAYERS // 最初に親から捨牌を行なう
 		info "配牌を完了しました。"
+		setTurn GameStat, 1 // 配牌が終わったら1巡目
 		/* 摸打ループ */
 		repeat
 			info strf("プレイヤー [%d] のツモ番です。", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
