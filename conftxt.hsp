@@ -1946,6 +1946,15 @@
 	RuleDescription(RULE_SAPPORO1) = "サッポロ一番の有無と価値を設定します(3、8、6の刻子があって東一局の最初の和了)"
 	RuleTxt(0, RULE_SAPPORO1) = "なし", "役満"
 
+	RuleName(RULE_GOLDDRAGON) = "金龍天和"
+	RuleDescription(RULE_GOLDDRAGON) = "金龍天和の有無と価値を設定します(3巡目までに筒子で和了)"
+	RuleTxt(0, RULE_GOLDDRAGON) = "なし", "１飜"
+
+	RuleName(RULE_WHIRLWIND) = "旋風栄和"
+	RuleDescription(RULE_WHIRLWIND) = "旋風栄和の有無と価値を設定します(3巡目までに風牌で和了)"
+	RuleTxt(0, RULE_WHIRLWIND) = "なし", "役満"
+	nonumsanma RULE_WHIRLWIND
+
 
 return
 

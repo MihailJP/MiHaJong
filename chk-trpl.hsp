@@ -1407,6 +1407,7 @@
 			addyaku tmpYakuInfo, "阪神", 1
 		}
 	}
+#ifndef SANMAS
 	/* 神戸 */
 	if (getRule(RULE_KOBE) != 0) {
 		yakuFlagCount = 0
@@ -1415,6 +1416,7 @@
 			addyaku tmpYakuInfo, "神戸", 1
 		}
 	}
+#endif
 	/* サッポロ一番 */
 	if (getRule(RULE_SAPPORO1) != 0) {
 		yakuFlagCount = 0

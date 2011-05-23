@@ -368,7 +368,7 @@
 		if (getRule(tmpRuleCodeList(cnt)) != 0) {
 			yakuFlag = 0: tmpcnt = cnt
 			repeat DiscardPointer(GameStat, targetPlayer), 1
-				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) \ TILE_SUIT_STEP) == tmpTileCodeList(tmpcnt)) {yakuFlag = 1}
+				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) \ SUTEHAI_TYPE_STEP) == tmpTileCodeList(tmpcnt)) {yakuFlag = 1}
 			loop
 			if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == tmpTileCodeList(cnt))&&(yakuFlag == 1)&&(getTsumoAgariFlag(GameStat) == 1)&&(MachiType == MACHI_TANKI)) {
 				if (getRule(tmpRuleCodeList(cnt)) == 2) {addyaku tmpYakuInfo, tmpYakuNameList(cnt), 2}
@@ -376,5 +376,17 @@
 			}
 		}
 	loop
+	/* ‹à—´“V˜a */
+	if (getRule(RULE_GOLDDRAGON) != 0) {
+		if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES / TILE_SUIT_STEP))&&(getTurn(GameStat) <= 3) {
+			addyaku tmpYakuInfo, "‹à—´“V˜a", 1
+		}
+	}
+	/* ù•—‰h˜a */
+	if (getRule(RULE_WHIRLWIND) != 0) {
+		if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) >= TILE_WIND_MIN)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) <= TILE_WIND_MAX)&&(getTurn(GameStat) <= 3) {
+			addyakuman tmpYakuInfo, "ù•—‰h˜a", 1
+		}
+	}
 return
 #global
