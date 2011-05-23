@@ -1921,6 +1921,14 @@
 	RuleDescription(RULE_COMINGOFAGE) = "成人式の有無と価値を設定します(字牌を含まず数字の合計が20)"
 	RuleTxt(0, RULE_COMINGOFAGE) = "なし", "３飜", "役満"
 
+	RuleName(RULE_CHRISTMAS) = "クリスマス"
+	RuleDescription(RULE_CHRISTMAS) = "クリスマスの有無と価値を設定します(ある色で1と2、別の色で2と5の刻子。雀頭が七索ならダブル役満、12月25日の和了はさらに+役満)"
+	RuleTxt(0, RULE_CHRISTMAS) = "なし", "役満"
+
+	RuleName(RULE_NEWYEAR_DREAM) = "一富士二鷹三茄子"
+	RuleDescription(RULE_NEWYEAR_DREAM) = "一富士二鷹三茄子の有無と価値を設定します(三索、一索、八筒の順に鳴く、1月1日か2日の和了はダブル役満)"
+	RuleTxt(0, RULE_NEWYEAR_DREAM) = "なし", "役満"
+
 
 return
 

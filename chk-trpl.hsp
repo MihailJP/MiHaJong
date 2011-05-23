@@ -1336,5 +1336,53 @@
 			}
 		}
 	}
+	/* クリスマス */
+	if (getRule(RULE_CHRISTMAS) != 0) {
+		yakuFlag = 0
+		repeat 6
+			switch cnt
+				case 0: tmpsuit1 = TILE_SUIT_CHARACTERS: tmpsuit2 = TILE_SUIT_CIRCLES: swbreak
+				case 1: tmpsuit1 = TILE_SUIT_CHARACTERS: tmpsuit2 = TILE_SUIT_BAMBOOS: swbreak
+				case 2: tmpsuit1 = TILE_SUIT_CIRCLES: tmpsuit2 = TILE_SUIT_CHARACTERS: swbreak
+				case 3: tmpsuit1 = TILE_SUIT_CIRCLES: tmpsuit2 = TILE_SUIT_BAMBOOS: swbreak
+				case 4: tmpsuit1 = TILE_SUIT_BAMBOOS: tmpsuit2 = TILE_SUIT_CHARACTERS: swbreak
+				case 5: tmpsuit1 = TILE_SUIT_BAMBOOS: tmpsuit2 = TILE_SUIT_CIRCLES: swbreak
+			swend
+			if ((KezCount(1+tmpsuit1) >= 1)&&(KezCount(2+tmpsuit1) >= 1)&&(KezCount(2+tmpsuit2) >= 1)&&(KezCount(5+tmpsuit2) >= 1)) {yakuFlag = 1}
+		loop
+		if (yakuFlag) {
+			if ((gettime(1) == 12)&&(gettime(3) == 25)) {
+				if (MianziDat(0) == TILE_SUIT_BAMBOOS+7) {
+					addyakuman tmpYakuInfo, "純正クリスマス", 3
+				} else {
+					addyakuman tmpYakuInfo, "クリスマス", 2
+				}
+			} else {
+				if (MianziDat(0) == TILE_SUIT_BAMBOOS+7) {
+					addyakuman tmpYakuInfo, "純正クリスマス", 2
+				} else {
+					addyakuman tmpYakuInfo, "クリスマス", 1
+				}
+			}
+			delyaku tmpYakuInfo, "対々和"
+		}
+	}
+	/* 一富士二鷹三茄子 */
+	if (getRule(RULE_NEWYEAR_DREAM) != 0) {
+		yakuFlag = 0
+#define ctype OpenMeld(%1) (getMeld(GameStat, MELD_TILECODE, %1, targetPlayer) \ MELD_TYPE_STEP)
+#define ctype IsKez(%1) ((getMeld(GameStat, MELD_TILECODE, %1, targetPlayer) / MELD_TYPE_STEP) >= MELD_TRIPLET)
+		if (OpenMeld(0) >= 3) {
+			if ((OpenMeld(1) == TILE_SUIT_BAMBOOS+3)&&(IsKez(1))&&(OpenMeld(2) == TILE_SUIT_BAMBOOS+1)&&(IsKez(2))&&(OpenMeld(3) == TILE_SUIT_CIRCLE+8)&&(IsKez(3))) {
+				if ((gettime(1) == 1)&&((gettime(3) == 1)||(gettime(3) == 2))) {
+					addyakuman tmpYakuInfo, "純正一富士二鷹三茄子", 2
+				} else {
+					addyakuman tmpYakuInfo, "一富士二鷹三茄子", 1
+				}
+			}
+		}
+#undef OpenMeld
+#undef IsKez
+	}
 return
 #global
