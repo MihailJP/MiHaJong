@@ -279,6 +279,10 @@
 #enum RULE_777
 #enum RULE_CHRISTMAS
 #enum RULE_NEWYEAR_DREAM
+#enum RULE_MUSASHIMARU
+#enum RULE_HANSHIN
+#enum RULE_KOBE
+#enum RULE_SAPPORO1
 
 /* ƒfƒŠƒ~ƒ^ */
 #enum END_OF_SECTION

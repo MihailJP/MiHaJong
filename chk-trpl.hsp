@@ -1384,5 +1384,46 @@
 #undef OpenMeld
 #undef IsKez
 	}
+	/* 武蔵丸 */
+	if (getRule(RULE_MUSASHIMARU) != 0) {
+		if ((KezCount(TILE_SUIT_CIRCLES+6) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+3) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+4) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&((MianziDat(0)\MELD_TYPE_STEP) == (TILE_SUIT_CIRCLES\MELD_TYPE_STEP))) {
+			addyakuman tmpYakuInfo, "純正武蔵丸", 2
+		} else {
+			yakuFlagCount = 0
+			if ((KezCount(TILE_SUIT_CHARACTERS+6) >= 1)||(KezCount(TILE_SUIT_CIRCLES+6) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+6) >= 1)) {yakuFlagCount++}
+			if ((KezCount(TILE_SUIT_CHARACTERS+3) >= 1)||(KezCount(TILE_SUIT_CIRCLES+3) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)) {yakuFlagCount++}
+			if ((KezCount(TILE_SUIT_CHARACTERS+4) >= 1)||(KezCount(TILE_SUIT_CIRCLES+4) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+4) >= 1)) {yakuFlagCount++}
+			if ((yakuFlagCount >= 3)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)) {
+				addyakuman tmpYakuInfo, "武蔵丸", 1
+			}
+		}
+	}
+	/* 阪神 */
+	if (getRule(RULE_HANSHIN) != 0) {
+		yakuFlagCount = 0
+		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)||(KezCount(TILE_SUIT_CIRCLES+8) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+8) >= 1)) {yakuFlagCount++}
+		if ((KezCount(TILE_SUIT_CHARACTERS+4) >= 1)||(KezCount(TILE_SUIT_CIRCLES+4) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+4) >= 1)) {yakuFlagCount++}
+		if (yakuFlagCount >= 2) {
+			addyaku tmpYakuInfo, "阪神", 1
+		}
+	}
+	/* 神戸 */
+	if (getRule(RULE_KOBE) != 0) {
+		yakuFlagCount = 0
+		if ((KezCount(TILE_SUIT_CHARACTERS+5) >= 1)||(KezCount(TILE_SUIT_CIRCLES+5) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+5) >= 1)) {yakuFlagCount++}
+		if ((yakuFlagCount >= 1)&&(KezCount(TILE_NORTH_WIND) >= 1)) {
+			addyaku tmpYakuInfo, "神戸", 1
+		}
+	}
+	/* サッポロ一番 */
+	if (getRule(RULE_SAPPORO1) != 0) {
+		yakuFlagCount = 0
+		if ((KezCount(TILE_SUIT_CHARACTERS+3) >= 1)||(KezCount(TILE_SUIT_CIRCLES+3) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)) {yakuFlagCount++}
+		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)||(KezCount(TILE_SUIT_CIRCLES+8) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+8) >= 1)) {yakuFlagCount++}
+		if ((KezCount(TILE_SUIT_CHARACTERS+6) >= 1)||(KezCount(TILE_SUIT_CIRCLES+6) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+6) >= 1)) {yakuFlagCount++}
+		if ((yakuFlagCount >= 3)&&(getRound(GameStat) == 0)&&(getRoundLoop(GameStat) == 0)&&(getHonba(GameStat) == 0)) {
+			addyakuman tmpYakuInfo, "サッポロ一番", 1
+		}
+	}
 return
 #global

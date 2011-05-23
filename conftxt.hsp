@@ -1929,6 +1929,23 @@
 	RuleDescription(RULE_NEWYEAR_DREAM) = "一富士二鷹三茄子の有無と価値を設定します(三索、一索、八筒の順に鳴く、1月1日か2日の和了はダブル役満)"
 	RuleTxt(0, RULE_NEWYEAR_DREAM) = "なし", "役満"
 
+	RuleName(RULE_MUSASHIMARU) = "武蔵丸"
+	RuleDescription(RULE_MUSASHIMARU) = "武蔵丸の有無と価値を設定します(一筒の刻子と任意の色の6、3、4の刻子、清一色ならダブル役満)"
+	RuleTxt(0, RULE_MUSASHIMARU) = "なし", "役満"
+
+	RuleName(RULE_HANSHIN) = "阪神"
+	RuleDescription(RULE_HANSHIN) = "阪神の有無と価値を設定します(8と4の刻子)"
+	RuleTxt(0, RULE_HANSHIN) = "なし", "１飜"
+
+	RuleName(RULE_KOBE) = "神戸"
+	RuleDescription(RULE_KOBE) = "神戸の有無と価値を設定します(5と北の刻子)"
+	RuleTxt(0, RULE_KOBE) = "なし", "１飜"
+	nonumsanma RULE_KOBE
+
+	RuleName(RULE_SAPPORO1) = "サッポロ一番"
+	RuleDescription(RULE_SAPPORO1) = "サッポロ一番の有無と価値を設定します(3、8、6の刻子があって東一局の最初の和了)"
+	RuleTxt(0, RULE_SAPPORO1) = "なし", "役満"
+
 
 return
 
