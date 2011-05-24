@@ -1974,6 +1974,21 @@
 	RuleTxt(0, RULE_SMAP) = "なし", "１飜"
 	nosanma RULE_AQRS
 
+	RuleName(RULE_MONSTER_HUNTER) = "モンスターハンター"
+	RuleDescription(RULE_MONSTER_HUNTER) = "モンスターハンターの有無と価値を設定します(風牌の刻子がある6巡以内の和了)"
+	RuleTxt(0, RULE_MONSTER_HUNTER) = "なし", "役満"
+	nonumsanma RULE_MONSTER_HUNTER
+
+	RuleName(RULE_FUYUSONA) = "冬のソナタ"
+	RuleDescription(RULE_FUYUSONA) = "冬のソナタの有無と価値を設定します(北雀頭で三色同順、全帯幺、中の複合)"
+	RuleTxt(0, RULE_FUYUSONA) = "なし", "役満"
+	nosanma RULE_FUYUSONA: nonumsanma RULE_FUYUSONA
+
+	RuleName(RULE_FUYUSONA2) = "冬のソナタ２"
+	RuleDescription(RULE_FUYUSONA2) = "冬のソナタ２の有無と価値を設定します(123か789の順子2色、2の刻子、残りは北と中)"
+	RuleTxt(0, RULE_FUYUSONA2) = "なし", "役満"
+	nonumsanma RULE_FUYUSONA2
+
 
 return
 

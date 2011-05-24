@@ -1469,5 +1469,18 @@
 		}
 	}
 #endif
+#ifndef SANMAS
+	/* モンスターハンター */
+	if (getRule(RULE_MONSTER_HUNTER) != 0) {
+		yakuFlag = 0
+		if (KezCount(TILE_EAST_WIND) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_SOUTH_WIND) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_WEST_WIND) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_NORTH_WIND) >= 1) {yakuFlag = 1}
+		if ((yakuFlag)&&(getTurn(GameStat) <= 6)) {
+			addyakuman tmpYakuInfo, "モンスターハンター", 1
+		}
+	}
+#endif
 return
 #global
