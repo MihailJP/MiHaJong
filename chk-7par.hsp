@@ -149,7 +149,6 @@
 	if (getRule(RULE_TAOYISE) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+9, TILE_RED_DRAGON
 		yakuflagcount = countPairs(tileCount, tmpTileList)
-		countDuiz DuiCount, MianziDat
 		countRedTilesInHand redCount, GameStat, targetPlayer
 		if ((yakuflagcount == 7)&&(redCount(TILE_SUIT_CIRCLES+5) >= 1)&&(tileCount(TILE_RED_DRAGON) >= 2)) {
 			addyakuman tmpYakuInfo, "“ˆêF", 1
