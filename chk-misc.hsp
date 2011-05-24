@@ -863,11 +863,11 @@
 	/* “~‚Ìƒ\ƒiƒ^‚Q */
 	if (getRule(RULE_FUYUSONA2) != 0) {
 		countKez KezCount, MianziDat
-		countDui DuiCount, MianziDat
+		countDuiz DuiCount, MianziDat
 		countShunz ShunzCount, MianziDat
 		yakuFlag = 0
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)) {yakuFlag = 1}
 		if ((ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)) {yakuFlag = 1}
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {yakuFlag = 1}
 		if ((ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)) {yakuFlag = 1}
