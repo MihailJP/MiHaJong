@@ -285,6 +285,7 @@
 #enum RULE_SAPPORO1
 #enum RULE_PCRSWT
 #enum RULE_AQRS
+#enum RULE_SMAP
 
 /* ƒfƒŠƒ~ƒ^ */
 #enum END_OF_SECTION

@@ -1969,6 +1969,11 @@
 	RuleTxt(0, RULE_AQRS) = "ศต", "Pใส"
 	nonumsanma RULE_AQRS
 
+	RuleName(RULE_SMAP) = "rl`o"
+	RuleDescription(RULE_SMAP) = "rl`oฬ—L–ณฦฟ’l๐Ý’่ตÜท(lไÝ๐|“)"
+	RuleTxt(0, RULE_SMAP) = "ศต", "Pใส"
+	nosanma RULE_AQRS
+
 
 return
 

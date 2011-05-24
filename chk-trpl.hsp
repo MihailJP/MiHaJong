@@ -1450,5 +1450,24 @@
 		}
 	}
 #endif
+#ifndef SANMAT
+	/* ‚r‚l‚`‚o */
+	if (getRule(RULE_PCRSWT) != 0) {
+		yakuFlag = 0
+		repeat getMeld(GameStat, MELD_TILECODE, 0, targetPlayer), 1
+			if ((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) \ MELD_TYPE_STEP) == (TILE_SUIT_CHARACTERS+4)) {
+				if (((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) / MELD_TYPE_STEP) >= MELD_SEQUENCE_EXPOSED_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) / MELD_TYPE_STEP) <= MELD_SEQUENCE_EXPOSED_MAX)) {
+					yakuFlag = 1
+				}
+				if ((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) / MELD_TYPE_STEP) >= MELD_QUAD_ADDED_MIN) {
+					yakuFlag = 1
+				}
+			}
+		loop
+		if (yakuFlag) {
+			addyaku tmpYakuInfo, "‚r‚l‚`‚o", 1
+		}
+	}
+#endif
 return
 #global
