@@ -1427,5 +1427,28 @@
 			addyakuman tmpYakuInfo, "サッポロ一番", 1
 		}
 	}
+#ifndef SANMAS
+	/* ポカリスエット */
+	if (getRule(RULE_PCRSWT) != 0) {
+		yakuFlag = 0
+		if (KezCount(TILE_SUIT_CIRCLES+2) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_SUIT_CIRCLES+4) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_SUIT_CIRCLES+8) >= 1) {yakuFlag = 1}
+		if ((KezCount(TILE_GREEN_DRAGON) >= 1)&&(yakuFlag)) {
+			addyaku tmpYakuInfo, "ポカリスエット", 1
+		}
+	}
+	/* アクエリアス */
+	if (getRule(RULE_AQRS) != 0) {
+		yakuFlag = 0
+		if (KezCount(TILE_SUIT_CIRCLES+1) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_SUIT_CIRCLES+3) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_SUIT_CIRCLES+5) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_SUIT_CIRCLES+9) >= 1) {yakuFlag = 1}
+		if ((KezCount(TILE_GREEN_DRAGON) >= 1)&&(yakuFlag)) {
+			addyaku tmpYakuInfo, "アクエリアス", 1
+		}
+	}
+#endif
 return
 #global

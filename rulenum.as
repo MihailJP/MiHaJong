@@ -283,6 +283,8 @@
 #enum RULE_HANSHIN
 #enum RULE_KOBE
 #enum RULE_SAPPORO1
+#enum RULE_PCRSWT
+#enum RULE_AQRS
 
 /* デリミタ */
 #enum END_OF_SECTION
@@ -431,6 +433,7 @@
 #enum RULE_BEIFENGCHUI
 #enum RULE_GOLDDRAGON
 #enum RULE_WHIRLWIND
+#enum RULE_BOLT_FROM_THE_BLUE
 
 /* デリミタ */
 #enum END_OF_SECTION

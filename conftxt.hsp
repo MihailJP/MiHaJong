@@ -1955,6 +1955,20 @@
 	RuleTxt(0, RULE_WHIRLWIND) = "なし", "役満"
 	nonumsanma RULE_WHIRLWIND
 
+	RuleName(RULE_BOLT_FROM_THE_BLUE) = "青天の霹靂"
+	RuleDescription(RULE_BOLT_FROM_THE_BLUE) = "青天の霹靂の有無と価値を設定します(誰も立直・副露・暗槓していない状態で4巡目以内に和了)"
+	RuleTxt(0, RULE_BOLT_FROM_THE_BLUE) = "なし", "４飜"
+
+	RuleName(RULE_PCRSWT) = "ポカリスエット"
+	RuleDescription(RULE_PCRSWT) = "ポカリスエットの有無と価値を設定します(248筒のどれかと発の刻子)"
+	RuleTxt(0, RULE_PCRSWT) = "なし", "１飜"
+	nonumsanma RULE_PCRSWT
+
+	RuleName(RULE_AQRS) = "アクエリアス"
+	RuleDescription(RULE_AQRS) = "アクエリアスの有無と価値を設定します(1359筒のどれかと発の刻子)"
+	RuleTxt(0, RULE_AQRS) = "なし", "１飜"
+	nonumsanma RULE_AQRS
+
 
 return
 
