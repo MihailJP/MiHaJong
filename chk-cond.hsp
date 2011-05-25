@@ -396,7 +396,7 @@
 	if (getRule(RULE_BOLT_FROM_THE_BLUE) != 0) {
 		yakuFlagCount = 0
 		repeat NUM_OF_PLAYERS
-			if (getMeld(GameStat, MELD_TILECODE, 0, cnt) == 0)&&(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_NO) {
+			if (getMeld(GameStat, MELD_TILECODE, 0, cnt) == 0)&&(getRichiFlag(GameStat, RICHI_FLAG, cnt) == RIICHI_NO) {
 				yakuFlagCount++
 			}
 		loop
