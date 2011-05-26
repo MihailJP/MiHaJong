@@ -632,7 +632,14 @@ return DaoPaiAbilityFlag
 	setAgariChain Sandbox, getAgariChain(GameStat)
 	setLastAgariPlayer Sandbox, getLastAgariPlayer(GameStat)
 	
-	repeat NUM_OF_TILES_IN_HAND*HAND_PAGES: setHand Sandbox, cnt/NUM_OF_TILES_IN_HAND, cnt\NUM_OF_TILES_IN_HAND, targetPlayer, getHand(GameStat, cnt/NUM_OF_TILES_IN_HAND, cnt\NUM_OF_TILES_IN_HAND, targetPlayer): loop
+	repeat NUM_OF_PLAYERS
+		if ((getRichiFlag(GameStat, RICHI_OPENFLAG, cnt) == 1)||(cnt == targetPlayer)) {
+			tmpPlayer = cnt
+			repeat NUM_OF_TILES_IN_HAND*HAND_PAGES
+				setHand Sandbox, cnt/NUM_OF_TILES_IN_HAND, cnt\NUM_OF_TILES_IN_HAND, tmpPlayer, getHand(GameStat, cnt/NUM_OF_TILES_IN_HAND, cnt\NUM_OF_TILES_IN_HAND, tmpPlayer)
+			loop
+		}
+	loop
 	repeat SIZE_OF_DISCARD_BUFFER*DISCARD_PAGES*NUM_OF_PLAYERS: setDiscard Sandbox, cnt\(DISCARD_PAGES*SIZE_OF_DISCARD_BUFFER)/SIZE_OF_DISCARD_BUFFER, cnt\SIZE_OF_DISCARD_BUFFER, cnt/(DISCARD_PAGES*SIZE_OF_DISCARD_BUFFER), getDiscard(GameStat, cnt\(DISCARD_PAGES*SIZE_OF_DISCARD_BUFFER)/SIZE_OF_DISCARD_BUFFER, cnt\SIZE_OF_DISCARD_BUFFER, cnt/(DISCARD_PAGES*SIZE_OF_DISCARD_BUFFER)): loop
 	repeat SIZE_OF_MELD_BUFFER*MELD_PAGES*NUM_OF_PLAYERS: setMeld Sandbox, cnt\(SIZE_OF_MELD_BUFFER*MELD_PAGES)/SIZE_OF_MELD_BUFFER, cnt\SIZE_OF_MELD_BUFFER, cnt/(SIZE_OF_MELD_BUFFER*MELD_PAGES), getMeld(GameStat, cnt\(SIZE_OF_MELD_BUFFER*MELD_PAGES)/SIZE_OF_MELD_BUFFER, cnt\SIZE_OF_MELD_BUFFER, cnt/(SIZE_OF_MELD_BUFFER*MELD_PAGES)): loop
 	repeat NUM_OF_PLAYERS: setMenzen Sandbox, cnt, getMenzen(GameStat, cnt): loop
