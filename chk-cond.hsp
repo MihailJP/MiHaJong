@@ -279,7 +279,7 @@
 		}
 	}
 	/* ÈU‚è */
-	if ((getKangFlag(GameStat, KANG_CHAINFLAG) >= 1)&&(getRule(RULE_KAMBURI) != 0)&&(getKangFlag(GameStat, KANG_CHANKAN) == 1)) {
+	if ((getKangFlag(GameStat, KANG_CHAINFLAG) >= 1)&&(getRule(RULE_KAMBURI) != 0)&&(getTsumoAgariFlag(GameStat) == 0)) {
 		addyaku tmpYakuInfo, "ÈU‚è", 1
 	}
 	/* È */
