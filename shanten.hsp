@@ -25,7 +25,9 @@
 		5 : 南北戦争
 		6 : 惑星直列
 */
+#ifdef LOGGING_SHANTEN
 	debug strf("向聴数を計算します。プレイヤー [%d]", targetPlayer)
+#endif
 	countTilesInHand TileCount, GameStat, targetPlayer
 	// エラー防止のため、４枚を超える分は無視する
 	repeat TILE_CODE_MAXIMUM
@@ -102,7 +104,9 @@
 		// そうでないとき
 		MianziShanten = 8 - (tmpMianzi*2) - tmpTarzi
 	}
+#ifdef LOGGING_SHANTEN
 	trace strf("面子手に対する向聴数は [%d] です。", MianziShanten)
+#endif
 	return
 
 *calcshanten_chiitoi
@@ -126,7 +130,9 @@
 	if (MeldPointer(GameStat, targetPlayer) > 0) {
 		QiduiShanten = 999
 	}
+#ifdef LOGGING_SHANTEN
 	trace strf("七対子に対する向聴数は [%d] です。", QiduiShanten)
+#endif
 	return
 
 *calcshanten_kokushi
@@ -150,7 +156,9 @@
 	if (MeldPointer(GameStat, targetPlayer) > 0) {
 		ShisanYaoShanten = 999
 	}
+#ifdef LOGGING_SHANTEN
 	trace strf("国士無双に対する向聴数は [%d] です。", ShisanYaoShanten)
+#endif
 	return
 
 *calcshanten_stellar
@@ -199,7 +207,9 @@
 			}
 			if (TmpQixingShanten < QixingShanten) {QixingShanten = TmpQixingShanten}
 		loop
+#ifdef LOGGING_SHANTEN
 		trace strf("七星不靠に対する向聴数は [%d] です。", QixingShanten)
+#endif
 	}
 	return
 
@@ -233,7 +243,9 @@
 				CivilWarShanten = 999
 			}
 		loop
+#ifdef LOGGING_SHANTEN
 		trace strf("南北戦争に対する向聴数は [%d] です。", CivilWarShanten)
+#endif
 	}
 	return
 
@@ -258,7 +270,9 @@
 		if (MeldPointer(GameStat, targetPlayer) > 0) {
 			SyzygyShanten = 999
 		}
+#ifdef LOGGING_SHANTEN
 		trace strf("惑星直列に対する向聴数は [%d] です。", SyzygyShanten)
+#endif
 	}
 	return
 

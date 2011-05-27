@@ -14,6 +14,7 @@
 //#define global NOWAIT
 /* このコメントを外すとロギングを有効にする(デバッグ専用) */
 //#define global LOGGING
+//#define global LOGGING_SHANTEN
 
 /*
  * コンパイルに別途必要なもの
