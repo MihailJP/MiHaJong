@@ -19,7 +19,7 @@
 			if ((getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_DOUBLE)||(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_DOUBLE_IPPATSU)) {
 				addyaku tmpYakuInfo, "ƒ_ƒuƒ‹ŠJ—§’¼", 3
 			}
-			if (getTsumoAgariFlag(GameStat) == 0) {
+			if (getTsumoAgariFlag(GameStat) == 0)&&(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI) >= 0) {
 				if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) == RIICHI_NO) {
 					addyaku tmpYakuInfo, "ŠJ—§’¼‰h˜a", 11
 				}

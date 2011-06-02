@@ -40,6 +40,7 @@
 		gosub *tableinit
 		/* デバッグ用のコード(バグ検証のときを除いてコメントアウトしておくこと！) */
 //		tmpTiles = 04,05,06,08,08,12,13,14,14,15,16,26,28
+//		tmpTiles = 03,04,05,06,07,08,15,16,24,24,25,26,27
 //		repeat 13: setHand GameStat, 0, cnt, (getPlayer(GameStat)+3)\4, tmpTiles(cnt): loop
 //		tmpTiles = 04,04,06,07,08,16,17,18,26,26,27,28,28
 //		repeat 13: setHand GameStat, 0, cnt, (getPlayer(GameStat)+1)\4, tmpTiles(cnt): loop
