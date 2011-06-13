@@ -40,11 +40,11 @@
 #ifndef SANMAS
 	/* ñkñç */
 	if (getRule(RULE_KITAMAKURA) != 0) {
-		if (((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) >= 2)&&((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) < YAKUVAL_YAKUMAN)) {
-			if (getDoraFlag(GameStat, DORA_OMOTE, TILE_NORTH_WIND) == 0) {
-				if (getDoraFlag(GameStat, DORA_OMOTE, TILE_NORTH_WIND) == 0) {
-					if ((getMenzen(GameStat, targetPlayer) == 0)||(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_NO)||(getRule(RULE_URADORA) == 1)||(getDoraFlag(GameStat, DORA_URA, TILE_NORTH_WIND) == 0)) {
-						if (MianziDat(0) == TILE_NORTH_WIND) {
+		if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) >= 2) { /* 2„ à»è„Ç†ÇÈÇ©ÅH */
+			if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) < YAKUVAL_YAKUMAN) { /* ññûñ¢ñûÇ©ÅH */
+				if (getDoraFlag(GameStat, DORA_OMOTE, TILE_NORTH_WIND) == 0) { /* ñkÇÕÉhÉâÇ≈ÇÕÇ»Ç¢Ç©ÅH */
+					if ((getMenzen(GameStat, targetPlayer) == 0)||(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_NO)||(getRule(RULE_URADORA) == 1)||(getDoraFlag(GameStat, DORA_URA, TILE_NORTH_WIND) == 0)) { /* ñkÇÕó†ÉhÉâÇ≈ÇÕÇ»Ç¢Ç©ÅH */
+						if (MianziDat(0) == TILE_NORTH_WIND) { /* êùì™Ç™ñkÇ©ÅH */
 							addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1
 							addyaku tmpYakuInfo, "ñkñç", -1
 						}
