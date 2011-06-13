@@ -58,6 +58,8 @@
 //		repeat 5: setMeld GameStat, 0, cnt, (getPlayer(GameStat))\4, tmpFuuro(cnt): loop
 //		tmpTiles = 01,09,11,19,21,29,31,32,33,34,35,36,37
 //		repeat 13: setHand GameStat, 0, cnt, (getPlayer(GameStat))\4, tmpTiles(cnt): loop
+//		tmpTiles = 03,04,05,13,14,15,23,24,25,27,28,34,34
+//		repeat 13: setHand GameStat, 0, cnt, (getPlayer(GameStat))\4, tmpTiles(cnt): loop
 		/* 配牌終了時の処理 */
 		repeat NUM_OF_PLAYERS: setHandStat GameStat, cnt, 0:lipai GameStat, cnt: loop
 		setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, getRound(GameStat)\NUM_OF_PLAYERS // 最初に親から捨牌を行なう

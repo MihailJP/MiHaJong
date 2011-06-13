@@ -7,7 +7,7 @@
 /* Œã‰ñ‚µ”»’è‚Ì–ğ */
 #module
 #include "const.as"
-#deffunc posterioryaku var GameStat, var tmpYakuInfo, int targetPlayer, int MachiType
+#deffunc posterioryaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	trace "Œã‰ñ‚µ”»’è‚Ì–ğ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	/* Œ‡”v˜a */
 	if (getRule(RULE_KEPPAIHOH) != 0) {
