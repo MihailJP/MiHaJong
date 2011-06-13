@@ -25,9 +25,15 @@
 		Ankanabilityflag = chkankanability(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 	}
 	Flowerabilityflag = 0 // —§’¼Œã‚Ì‰Ô”vƒtƒ‰ƒO
+#ifndef SANMAX
 	if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > TILE_SUIT_FLOWERS) {
 		Flowerabilityflag = 1
 	}
+#else
+	if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == TILE_NORTH_WIND)&&(getRule(RULE_FLOWER_TILES) != 0)) {
+		Flowerabilityflag = 1
+	}
+#endif
 	if ((Ukihai == 12)&&(Duizi == 2)) {ShisanBuDa = 1}
 	if ((Shanten >= 0)&&((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > RIICHI_NO)||(TsumogiriFlag() == 1))&&(Ankanabilityflag == 0)&&(Flowerabilityflag == 0)) {
 		if (getGameMode(GameEnv) == GAMEMODE_SERVER) {serversend 0x6d, GameEnv}
