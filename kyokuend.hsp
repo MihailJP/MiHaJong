@@ -506,8 +506,8 @@
 			ResultDesc = ""
 			repeat NUM_OF_ACTUAL_PLAYERS
 				if (isNagashiMangan(GameStat, GameEnv, cnt)) {
-					setCall chkP, "ó¨Çµñûä—"
-					switch playerWind(chkP, getRound(GameStat))
+					setCall cnt, "ó¨Çµñûä—"
+					switch playerWind(cnt, getRound(GameStat))
 						case PLAYER_EAST:
 							if (ResultDesc != "") {ResultDesc += "ÅA"}
 							ResultDesc += "ìåâ∆"
@@ -534,7 +534,7 @@
 						case 2: AgariPointRaw(0) = 4000: swbreak
 						case 3: AgariPointRaw(0) = 8000: swbreak
 					swend
-					calcAgariPoints GameStat, agariPointArray, AgariPointRaw, PointDelta, chkP
+					calcAgariPoints GameStat, agariPointArray, AgariPointRaw, PointDelta, cnt
 				}
 			loop
 			ResultDesc += "ÇÃó¨Çµñûä—"
