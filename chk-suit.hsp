@@ -278,7 +278,7 @@
 #ifndef SANMAX
 	/* 未成年 */
 	if (getRule(RULE_MINORAGE) != 0) {
-		if (Cifr == 19) {
+		if ((Cifr == 19)&&(ZiMian == 0)) {
 			switch getRule(RULE_MINORAGE)
 				case 1: addyaku tmpYakuInfo, "未成年", 3: swbreak
 				case 2: addyaku tmpYakuInfo, "未成年", 6: swbreak
@@ -287,10 +287,10 @@
 	}
 	/* 成人式 */
 	if (getRule(RULE_COMINGOFAGE) != 0) {
-		if (Cifr == 20) {
+		if ((Cifr == 20)&&(ZiMian == 0)) {
 			switch getRule(RULE_COMINGOFAGE)
-				case 1: addyaku tmpYakuInfo, "未成年", 3: swbreak
-				case 2: addyakuman tmpYakuInfo, "未成年", 1: swbreak
+				case 1: addyaku tmpYakuInfo, "成人式", 3: swbreak
+				case 2: addyakuman tmpYakuInfo, "成人式", 1: swbreak
 			swend
 		}
 	}
