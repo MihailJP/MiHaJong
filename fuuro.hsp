@@ -330,6 +330,7 @@
 			if (Mode == FUURO_KAKAN)||(Mode == FUURO_NORTH)||((getRule(RULE_ANKAN_CONCEAL) == 0)&&(getRule(RULE_ANKAN_CHANKAN) == 0)) {
 				debug "žÈ‚Ì”»’è‚ð‚µ‚Ü‚·B"
 				if (Mode==FUURO_ANKAN) {setKangFlag GameStat, KANG_CHANKAN, 2} else {setKangFlag GameStat, KANG_CHANKAN, 1}
+				if (Mode == FUURO_NORTH) {setKangFlag GameStat, KANG_CHANKAN, 3}
 				ronhuproc GameStat, GameEnv: RoundEndType = stat
 				if (Mode == FUURO_NORTH) {setKangFlag GameStat, KANG_CHANKAN, 0}
 				if ((RoundEndType = ENDKYOKU_TRIPLERON)||(RoundEndType = ENDKYOKU_DISCONNECT)) {return 1}
@@ -605,7 +606,7 @@
 	if (RonPlayers(GameStat) > 0) {
 		if (getKangFlag(GameStat, KANG_CHANKAN) > 0) {
 #ifdef SANMAX
-			if (DiscardTileIndex/getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE) == DAHAI_TYPE_FLOWER/getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) {
+			if (getKangFlag(GameStat, KANG_CHANKAN) == 3) {
 				haifurecchanpei GameStat
 			} else {
 #endif
