@@ -1878,7 +1878,7 @@
 	RuleTxt(0, RULE_JIGU_ECAO) = "なし", "２飜"
 
 	RuleName(RULE_GOLDRUSH) = "ゴールドラッシュ"
-	RuleDescription(RULE_GOLDRUSH) = "ゴールドラッシュの有無と価値を設定します(発がある筒子の混一色)"
+	RuleDescription(RULE_GOLDRUSH) = "ゴールドラッシュの有無と価値を設定します(発がある筒子の混一色一気通貫)"
 	RuleTxt(0, RULE_GOLDRUSH) = "なし", "２飜", "２飜(西も必要)", "役満", "役満(西も必要)"
 	nonumsanma RULE_GOLDRUSH
 
@@ -1972,7 +1972,7 @@
 	RuleName(RULE_SMAP) = "ＳＭＡＰ"
 	RuleDescription(RULE_SMAP) = "ＳＭＡＰの有無と価値を設定します(四萬をポン)"
 	RuleTxt(0, RULE_SMAP) = "なし", "１飜"
-	nosanma RULE_AQRS
+	nosanma RULE_SMAP
 
 	RuleName(RULE_MONSTER_HUNTER) = "モンスターハンター"
 	RuleDescription(RULE_MONSTER_HUNTER) = "モンスターハンターの有無と価値を設定します(風牌の刻子がある6巡以内の和了)"
