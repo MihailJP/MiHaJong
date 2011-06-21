@@ -296,7 +296,7 @@
 		if (getRule(RULE_GOLDRUSH) != 0) {
 			countDuiz DuiCount, MianziDat
 			if ((DuiCount(TILE_GREEN_DRAGON) >= 1)&&(straightColor == TILE_SUIT_CIRCLES/TILE_SUIT_STEP)&&(searchyaku(tmpYakuInfo, "混一色") != 0)) {
-				if ((getRule(RULE_GOLDRUSH) == 1)||(getRule(RULE_GOLDRUSH) == 3)||(DuiCount(TILE_NORTH_WIND) >= 1)) {
+				if ((getRule(RULE_GOLDRUSH) == 1)||(getRule(RULE_GOLDRUSH) == 3)||(DuiCount(TILE_WEST_WIND) >= 1)) {
 					switch (getRule(RULE_GOLDRUSH))
 						case 1: case 2:
 							addyaku tmpYakuInfo, "ゴールドラッシュ", 2
