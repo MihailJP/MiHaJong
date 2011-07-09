@@ -14,9 +14,16 @@
 		if (Rank(getPlayer(GameStat)) == 1) {
 			bgmplay MUS_ENDING
 			statmes "終了 あなたがトップです"
+#ifdef SANMAT
+		} else: if (Rank(getPlayer(GameStat)) == 3) {
+#else
+		} else: if (Rank(getPlayer(GameStat)) == 4) {
+#endif
+			bgmplay MUS_ENDING3
+			statmes "終了 あなたはラスです"
 		} else {
 			bgmplay MUS_ENDING2
-			statmes "終了 あなたは"+Rank(getPlayer(GameStat))+"位でした"
+			statmes "終了 あなたは"+Rank(getPlayer(GameStat))+"位です"
 		}
 	} else {
 		bgmplay MUS_ENDING2

@@ -256,6 +256,9 @@ return
 			case RULE_CHOUIPPATSU:
 				if ((Rule(RULE_RIICHI_IPPATSU) == 1)||(Rule(RULE_RIICHI_IPPATSU) == 3)) {gosub *config_strikeout}
 				swbreak
+			case RULE_SUDDEN_DEATH_LENGTH:
+				if (Rule(RULE_SUDDEN_DEATH_TYPE) == 2) {gosub *config_strikeout}
+				swbreak
 		swend
 		if (cnt == 19) {borderedtxt2 "通信対戦時のルール設定はホスト側の設定が適用されます", 100, 590, 255, 255, 255, 1, 20, 192, 192, 192}
 	loop

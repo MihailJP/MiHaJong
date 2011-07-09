@@ -106,6 +106,9 @@ return
 		case 1: roundNameTxt += "“ì": swbreak
 		case 2: roundNameTxt += "¼": swbreak
 		case 3: roundNameTxt += "–k": swbreak
+		case 4: roundNameTxt += "”’": swbreak
+		case 5: roundNameTxt += "”­": swbreak
+		case 6: roundNameTxt += "’†": swbreak
 		default: roundNameTxt += "??"
 	swend
 	if ((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7)) {
@@ -132,6 +135,14 @@ return
 		swend
 	}
 	return roundNameTxt
+#global
+
+/* ˆêü‚·‚é‚Ü‚Å‚É•K—v‚Èê‚Ì” */
+#module
+#include "const.as"
+#defcfunc roundLoopRate
+	if (getRule(RULE_SUDDEN_DEATH_TYPE) == 1) {return 28}
+	else {return 16}
 #global
 
 /* ”v‚Ì–¼‘O‚Ì•¶š—ñ‚ğ•Ô‚· */

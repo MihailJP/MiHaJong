@@ -47,7 +47,7 @@ return
 	haifuinit
 	// 場風のデータを送信。とりあえず１６周目の北四局まで対応
 	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
-		serversend getRoundLoop(GameStat)*16+getRound(GameStat), GameEnv
+		serversend getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat), GameEnv
 	}
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
@@ -207,7 +207,7 @@ return
 		loop
 	}
 	// BGMを鳴らす
-	if (((getRoundLoop(GameStat)*16+getRound(GameStat)) == getGameLength(GameStat))&&(getGameLength(GameStat) > 0)) {
+	if (((getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat)) == getGameLength(GameStat))&&(getGameLength(GameStat) > 0)) {
 		// オーラスだけ特別
 		bgmplay MUS_FINAL
 	} else {
@@ -269,9 +269,14 @@ return
 			case 3: SetTableColor GameEnv,  80,  80,  80: swbreak
 		swend
 	}
-	if ((getRoundLoop(GameStat)*16+getRound(GameStat)) >= (getGameLength(GameStat)+1)) {
+	switch getRound(GameStat)/NUM_OF_PLAYERS
+			case 4: SetTableColor GameEnv, 120, 120, 160: swbreak
+			case 5: SetTableColor GameEnv, 120, 160, 120: swbreak
+			case 6: SetTableColor GameEnv, 160, 120, 120: swbreak
+	swend
+	if ((getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat)) >= (getGameLength(GameStat)+1)) {
 		setCenterTitle "延長戦"
-	} else: if ((getRoundLoop(GameStat)*16+getRound(GameStat)) == getGameLength(GameStat)) {
+	} else: if ((getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat)) == getGameLength(GameStat)) {
 		setCenterTitle "オーラス"
 	} else {
 		setCenterTitle roundName(getRound(GameStat))

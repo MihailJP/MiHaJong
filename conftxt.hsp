@@ -1989,6 +1989,14 @@
 	RuleTxt(0, RULE_FUYUSONA2) = "‚È‚µ", "–ð–ž"
 	nonumsanma RULE_FUYUSONA2
 
+	RuleName(RULE_SUDDEN_DEATH_TYPE) = "‰„’·í"
+	RuleDescription(RULE_SUDDEN_DEATH_TYPE) = "‰„’·í‚Ì—L–³‚Æ•û–@‚ðÝ’è‚µ‚Ü‚·"
+	RuleTxt(0, RULE_SUDDEN_DEATH_TYPE) = "•Ô‚è“Œ", "”’“ü", "‚È‚µ"
+
+	RuleName(RULE_SUDDEN_DEATH_LENGTH) = "‰„’·í"
+	RuleDescription(RULE_SUDDEN_DEATH_LENGTH) = "‰„’·í‚Ì’·‚³‚ðÝ’è‚µ‚Ü‚·"
+	RuleTxt(0, RULE_SUDDEN_DEATH_LENGTH) = "–³§ŒÀ", "1ê‚Ì‚Ý"
+
 
 return
 

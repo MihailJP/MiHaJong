@@ -125,22 +125,9 @@
 /* ‚a‚f‚l‚ğ“Ç‚İ‚İ */
 /* (Ä¶‚É‚Í DirectMusic‚ğg—p) */
 	dim bgmmode, 64 // BGM‚Ìƒ‚[ƒh‚ğŠi”[
-	bgmload "bgm1", 0
-	bgmload "bgm2", 1
-	bgmload "bgm3", 2
-	bgmload "bgm4", 3
-	bgmload "bgm5", 4
-	bgmload "bgm6", 5
-	bgmload "bgm7", 6
-	bgmload "bgm8", 7
-	bgmload "bgm9", 8
-	bgmload "bgm10", 9
-	bgmload "bgm11", 10
-	bgmload "bgm12", 11
-	bgmload "bgm13", 12
-	bgmload "bgm14", 13
-	bgmload "bgm15", 14
-	bgmload "bgm16", 15
+	repeat BGM_ROUNDS
+		bgmload strf("bgm%d", cnt+1), cnt
+	loop
 
 /* ‚a‚f‚l‚ğ“Ç‚İ‚İi‘±‚«j */
 	bgmload "richi1", MUS_RICHI1 // ‘¼‰ÆƒŠ[ƒ`
@@ -162,6 +149,7 @@
 	bgmload "title", MUS_TITLE
 	bgmload "ending", MUS_ENDING
 	bgmload "ending2", MUS_ENDING2
+	bgmload "ending3", MUS_ENDING3
 
 /* Œø‰Ê‰¹“Ç‚İ‚İ(DirectSoundg—p) */
 	soundload "sound\\dahai1.wav", SND_DAHAI1
