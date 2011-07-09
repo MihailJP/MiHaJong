@@ -660,7 +660,19 @@
 		if (((getScore(GameStat,0) >= BasePoint())||(getScore(GameStat,1) >= BasePoint())||(getScore(GameStat,2) >= BasePoint())||(getScore(GameStat,3) >= BasePoint()))) {return 1}
 #endif
 		// 延長戦なし設定
-		if (getRule(RULE_SUDDEN_DEATH_TYPE) == 2) {return 1}
+		if (getRule(RULE_SUDDEN_DEATH_LENGTH) == 2) {return 1}
+	}
+	// 延長戦の長さに制限がある場合
+	if ((getRound(GameStat) == 4)&&((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7))) {
+		// 東々廻しのとき
+		if (((getRound(GameStat)+(getRoundLoop(GameStat)*roundLoopRate())) >= (getGameLength(GameStat)+roundLoopRate()))) {
+			return 1
+		}
+	} else {
+		// それ以外のとき
+		if (((getRound(GameStat)+(getRoundLoop(GameStat)*roundLoopRate())) >= (getGameLength(GameStat)+5))) {
+			return 1
+		}
 	}
 	// 北場終了の場合は帰り東へ
 	if (getRound(GameStat) == roundLoopRate()) {

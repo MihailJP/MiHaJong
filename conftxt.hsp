@@ -1989,13 +1989,13 @@
 	RuleTxt(0, RULE_FUYUSONA2) = "なし", "役満"
 	nonumsanma RULE_FUYUSONA2
 
-	RuleName(RULE_SUDDEN_DEATH_TYPE) = "延長戦"
-	RuleDescription(RULE_SUDDEN_DEATH_TYPE) = "延長戦の有無と方法を設定します"
-	RuleTxt(0, RULE_SUDDEN_DEATH_TYPE) = "返り東", "白入", "なし"
+	RuleName(RULE_SUDDEN_DEATH_TYPE) = "北場の次"
+	RuleDescription(RULE_SUDDEN_DEATH_TYPE) = "北四局を越えて延長戦が行われる場合の処置を設定します"
+	RuleTxt(0, RULE_SUDDEN_DEATH_TYPE) = "返り東", "白入"
 
-	RuleName(RULE_SUDDEN_DEATH_LENGTH) = "延長戦"
-	RuleDescription(RULE_SUDDEN_DEATH_LENGTH) = "延長戦の長さを設定します"
-	RuleTxt(0, RULE_SUDDEN_DEATH_LENGTH) = "無制限", "1場のみ"
+	RuleName(RULE_SUDDEN_DEATH_LENGTH) = "延長戦の制限"
+	RuleDescription(RULE_SUDDEN_DEATH_LENGTH) = "延長戦の有無と長さを設定します"
+	RuleTxt(0, RULE_SUDDEN_DEATH_LENGTH) = "無制限", "4局まで", "なし"
 
 
 return
