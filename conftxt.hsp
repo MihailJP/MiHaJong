@@ -2002,6 +2002,19 @@
 	RuleTxt(0, RULE_ALL_GREEN_WITH_WHITE) = "なし", "２飜", "役満"
 	nonumsanma RULE_ALL_GREEN_WITH_WHITE
 
+	RuleName(RULE_ASAHIKAWA_RAAMEN) = "旭川ラーメン"
+	RuleDescription(RULE_ASAHIKAWA_RAAMEN) = "旭川ラーメンの有無と価値を設定します(1筒・3索・9索・北の刻子)"
+	RuleTxt(0, RULE_ASAHIKAWA_RAAMEN) = "なし", "役満"
+	nonumsanma RULE_ASAHIKAWA_RAAMEN
+
+	RuleName(RULE_AKAIISOH) = "赤一色"
+	RuleDescription(RULE_AKAIISOH) = "赤一色の有無と価値を設定します(135679筒・1579索のみの和了)"
+	RuleTxt(0, RULE_AKAIISOH) = "なし", "２飜"
+
+	RuleName(RULE_OTAKAZE_XIAOSANFENG) = "客風小三風"
+	RuleDescription(RULE_OTAKAZE_XIAOSANFENG) = "客風小三風の有無と価値を設定します(客風牌だけで小三風)"
+	RuleTxt(0, RULE_OTAKAZE_XIAOSANFENG) = "なし", "２飜"
+
 
 return
 

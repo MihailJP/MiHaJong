@@ -233,9 +233,9 @@
 	/* 役牌 */
 	nmflag1 = 0: nmflag2 = 0: nmflag3 = 0
 	jikazeflag = 0: bakazeflag = 0
-	repeat TILE_WIND_MAX-TILE_WIND_MIN+1
+	repeat WindMax()
 		// 大四喜の時は風牌でさらに役がつかないようにする
-		if ((KezCount(cnt+TILE_WIND_MIN) >= 1)&&(WindCnt < 8)) {
+		if ((KezCount(Wind2Tile(cnt)) >= 1)&&(WindCnt < 8)) {
 			if ((getRound(GameStat)/4) == cnt) {
 				addyaku tmpYakuInfo, "役牌・場風", 1
 				if (cnt == 1) {nmflag1 = 1}
@@ -299,12 +299,38 @@
 	}
 	/* 客風三刻 */
 	if (getRule(RULE_THREE_OTAKAZE) != 0) {
-		tmpyakuCensored = 0 // メチャメチャ強引な実装…
-		tmpyakuCensored += searchyaku(tmpYakuInfo, "役牌・場風")
-		tmpyakuCensored += searchyaku(tmpYakuInfo, "役牌・自風")
-		if ((WindCnt == 6)&&(tmpyakuCensored == 0)) {
+		yakuFlag = 1
+		repeat WindMax()
+			if (KezCount(Wind2Tile(cnt)) >= 1) {
+				if ((getRound(GameStat)/4) == cnt) {yakuFlag = 0}
+				if (playerWind(targetPlayer, getRound(GameStat)) == cnt) {yakuFlag = 0}
+				if (getRule(RULE_KAIMENKAZE) != 0) {yakuFlag = 0}
+#ifndef SANMAT
+				if (getRule(RULE_URAKAZE) != 0) {yakuFlag = 0}
+#endif
+			}
+		loop
+		if ((WindCnt == 6)&&(yakuFlag == 1)) {
 			addyaku tmpYakuInfo, "客風三刻", 3
 			delyaku tmpYakuInfo, "三風刻"
+		}
+	}
+	/* 客風小三刻 */
+	if (getRule(RULE_OTAKAZE_XIAOSANFENG) != 0) {
+		yakuFlag = 1
+		repeat WindMax()
+			if (DuiCount(Wind2Tile(cnt)) >= 1) {
+				if ((getRound(GameStat)/4) == cnt) {yakuFlag = 0}
+				if (playerWind(targetPlayer, getRound(GameStat)) == cnt) {yakuFlag = 0}
+				if (getRule(RULE_KAIMENKAZE) != 0) {yakuFlag = 0}
+#ifndef SANMAT
+				if (getRule(RULE_URAKAZE) != 0) {yakuFlag = 0}
+#endif
+			}
+		loop
+		if ((WindCnt == 5)&&(yakuFlag == 1)) {
+			addyaku tmpYakuInfo, "客風三刻", 2
+			delyaku tmpYakuInfo, "小三風"
 		}
 	}
 	/* 西中島南方 */
@@ -1479,6 +1505,13 @@
 		if (KezCount(TILE_NORTH_WIND) >= 1) {yakuFlag = 1}
 		if ((yakuFlag)&&(getTurn(GameStat) <= 6)) {
 			addyakuman tmpYakuInfo, "モンスターハンター", 1
+		}
+	}
+	/* 旭川ラーメン */
+	if (getRule(RULE_ASAHIKAWA_RAAMEN) != 0) {
+		if ((KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(KezCount(TILE_NORTH_WIND) >= 1)) {
+			addyakuman tmpYakuInfo, "旭川ラーメン", 1
+			delyaku tmpYakuInfo, "対々和"
 		}
 	}
 #endif

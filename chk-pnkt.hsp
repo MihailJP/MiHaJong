@@ -13,37 +13,37 @@
 	setYakuInfo tmpYakuInfo, YAKUINF_FU, 20
 	/* “ª‰Á•„c–ð”v‚Ì‚Ý‚Q•„ */
 #ifndef SANMAS
-	if ((MianziDat(0) >= TILE_WIND_MIN)&&(MianziDat(0) <= TILE_WIND_MAX)) {
-		/* •—”v‚ÍðŒ‚É‚æ‚Á‚Ä–ð”v */
-		repeat 1
-			if ((getRound(GameStat)/4) == (MianziDat(0)-TILE_WIND_MIN)) {
+	/* •—”v‚ÍðŒ‚É‚æ‚Á‚Ä–ð”v */
+	repeat WindMax()
+		if (MianziDat(0) == Wind2Tile(cnt)) {
+			if ((getRound(GameStat)/4) == cnt) {
 				// ê•—”v
 				addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
 				if (getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 			}
-			if (playerWind(targetPlayer, getRound(GameStat)) == (MianziDat(0)-TILE_WIND_MIN)) {
+			if (playerWind(targetPlayer, getRound(GameStat)) == cnt) {
 				// Ž©•—”v
 				addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
 				if (getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 			}
 			if (getRule(RULE_KAIMENKAZE) != 0) {
 				// ŠJ–å•—”v
-				if (playerWind(getWareme(GameStat), getRound(GameStat)) == (MianziDat(0)-TILE_WIND_MIN)) {
+				if (playerWind(getWareme(GameStat), getRound(GameStat)) == cnt) {
 					addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
 					if (getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 				}
 			}
 #ifndef SANMAT
 			if (getRule(RULE_URAKAZE) != 0) {
-				if (playerWind(targetPlayer+2, getRound(GameStat)) == (MianziDat(0)-TILE_WIND_MIN)) {
+				if (playerWind(targetPlayer+2, getRound(GameStat)) == cnt) {
 					// — •—”v
 					addYakuInfo tmpYakuInfo, YAKUINF_FU, 2
 					if (getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) {break}
 				}
 			}
 #endif
-		loop
-	}
+		}
+	loop
 	if ((MianziDat(0) >= TILE_DRAGON_MIN)&&(MianziDat(0) <= TILE_DRAGON_MAX)) {
 		/* ŽOŒ³”v‚Íí‚É–ð”v */
 		addYakuInfo tmpYakuInfo, YAKUINF_FU, 2

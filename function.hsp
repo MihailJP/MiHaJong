@@ -269,6 +269,24 @@ return
 	return getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 3)
 #global
 
+/* èÍïóîvÇÃÉäÉXÉg */
+#module
+#include "const.as"
+#defcfunc WindMax
+	return 7
+
+#defcfunc Wind2Tile int wind
+	switch wind
+		case 0: return TILE_EAST_WIND: swbreak
+		case 1: return TILE_SOUTH_WIND: swbreak
+		case 2: return TILE_WEST_WIND: swbreak
+		case 3: return TILE_NORTH_WIND: swbreak
+		case 4: return TILE_WHITE_DRAGON: swbreak
+		case 5: return TILE_GREEN_DRAGON: swbreak
+		case 6: return TILE_RED_DRAGON: swbreak
+	swend
+#global
+
 /* Vista/7ÇégÇ¡ÇƒÇ¢ÇÈÇ©Ç«Ç§Ç© */
 #module
 #defcfunc isVista
