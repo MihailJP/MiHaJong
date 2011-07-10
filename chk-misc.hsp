@@ -198,6 +198,25 @@
 			delyaku tmpYakuInfo, "混一色"
 		}
 	}
+	/* 白有り緑一色 */
+	if (getRule(RULE_ALL_GREEN_WITH_WHITE) != 0) {
+		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_WHITE_DRAGON
+		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
+		dim targetKez,1: targetKez=TILE_WHITE_DRAGON
+		dim targetShunz,1: targetShunz=0
+		yakuflagcount += countSpecMentz(MianziDat, targetKez, targetShunz, 0)
+		if (yakuflagcount == 6) {
+			switch getRule(RULE_ALL_GREEN_WITH_WHITE)
+				case 1: addyaku tmpYakuInfo, "清二色", 2: swbreak
+				case 2:
+					addyakuman tmpYakuInfo, "白有り緑一色", 1
+					// 成立したら混一色の成立を解除する(青天井ルール用)
+					delyaku tmpYakuInfo, "混一色"
+				swbreak
+			swend
+		}
+	}
 #endif
 	/* 緑一色輪 */
 	if (getRule(RULE_RYUUIISOHRIN) != 0) {
