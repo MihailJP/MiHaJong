@@ -2015,6 +2015,10 @@
 	RuleDescription(RULE_OTAKAZE_XIAOSANFENG) = "客風小三風の有無と価値を設定します(客風牌だけで小三風)"
 	RuleTxt(0, RULE_OTAKAZE_XIAOSANFENG) = "なし", "２飜"
 
+	RuleName(RULE_SAIGOU_NANSHUU) = "西郷南州"
+	RuleDescription(RULE_SAIGOU_NANSHUU) = "西郷南州の有無と価値を設定します(西と南を刻子にした混一色対々和:付加役)"
+	RuleTxt(0, RULE_SAIGOU_NANSHUU) = "なし", "２飜"
+
 
 return
 

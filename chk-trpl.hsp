@@ -221,7 +221,7 @@
 	}
 #endif
 	/* ‘ÎX˜a */
-	if ((Kezi == 4)&&(WindCnt < 8)&&(AnKe < 4)&&(SiLianKeFlag == 0)) { // ‘ålŠì‚âlˆÃ‚Æ‚Í•¡‡‚³‚¹‚È‚¢‚æ‚¤‚É‚·‚é
+	if ((Kezi == SIZE_OF_MELD_BUFFER-1)&&(WindCnt < 8)&&(AnKe < 4)&&(SiLianKeFlag == 0)) { // ‘ålŠì‚âlˆÃ‚Æ‚Í•¡‡‚³‚¹‚È‚¢‚æ‚¤‚É‚·‚é
 		tmpyakuCensored = 0 // ´˜V“ª‚ª¬—§‚µ‚Ä‚½‚ç”ò‚Î‚· ¬˜V“ª‚Æ‚Í•¡‡‚³‚¹‚é
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "´˜V“ª")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "‹¾‰¹ƒŠƒ“ƒŒƒ“")
@@ -1115,7 +1115,7 @@
 	}
 	/* ”’’¹ */
 	if (getRule(RULE_HAKUCHO) != 0) {
-		if ((Kezi == 4)&&(KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)) {
+		if ((Kezi == SIZE_OF_MELD_BUFFER-1)&&(KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)) {
 			tmpyakuCensored = 0
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "gŒ{•ñ‹Å")
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "‹âŒ{•ñt")

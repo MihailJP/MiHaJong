@@ -200,6 +200,13 @@
 					delyaku tmpYakuInfo, "¬ˆêF"
 				}
 			}
+			/* ¼‹½“ìB */
+			if (getRule(RULE_SAIGOU_NANSHUU) != 0) {
+				countKez KezCount, MianziDat: NumOfKez = stat
+				if ((KezCount(TILE_SOUTH_WIND) >= 1)&&(KezCount(TILE_WEST_WIND) >= 1)&&(NumOfKez == SIZE_OF_MELD_BUFFER-1)) {
+					addyaku tmpYakuInfo, "¼‹½“ìB", 2
+				}
+			}
 			/* ‹¾‰¹ƒŠƒ“ƒŒƒ“ */
 			if (getRule(RULE_KAGAMINE_RINLEN) != 0) {
 				countKez KezCount, MianziDat: NumOfKez = stat
