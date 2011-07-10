@@ -1515,5 +1515,12 @@
 		}
 	}
 #endif
+	/* 東方妖々夢 */
+	if (getRule(RULE_PERFECT_CHERRY_BLOSSOM) != 0) {
+		if ((KezCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+1) >= 1)) {
+			addyakuman tmpYakuInfo, "東方妖々夢", 1
+			delyaku tmpYakuInfo, "三色同刻"
+		}
+	}
 return
 #global
