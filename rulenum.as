@@ -313,6 +313,7 @@
 #enum RULE_SHENGDONG_JIXI
 #enum RULE_ZAONAN_CHUANGBEI
 #enum RULE_SETSUBUN
+#enum RULE_SOUKA
 
 /* デリミタ(半ページ送り) */
 #enum END_OF_SECTION

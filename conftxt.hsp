@@ -2019,6 +2019,10 @@
 	RuleDescription(RULE_SAIGOU_NANSHUU) = "西郷南州の有無と価値を設定します(西と南を刻子にした混一色対々和:付加役)"
 	RuleTxt(0, RULE_SAIGOU_NANSHUU) = "なし", "２飜"
 
+	RuleName(RULE_SOUKA) = "草加"
+	RuleDescription(RULE_SOUKA) = "草加の有無と価値を設定します(索子の加槓)"
+	RuleTxt(0, RULE_SOUKA) = "なし", "１飜"
+
 
 return
 

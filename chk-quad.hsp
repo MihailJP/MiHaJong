@@ -54,6 +54,30 @@
 	return Kangzi
 #global
 
+#module
+#include "const.as"
+#deffunc countKaKangz array KangzCount, array MianziDat
+/*
+		countKaKangz p1, p2
+		‰ÁÈ‚Ì”‚ğ”‚¦‚é
+
+		p1 : Œ‹‰Ê‚ğŠi”[‚·‚é”z—ñ
+		p2 : –Êq\¬‚ğŠi”[‚µ‚½”z—ñ
+
+		è”v‚É‘¶İ‚·‚é‰ÁÈ‚ğ”‚¦Aí—Ş•Ê‚ÉŠi”[‚µ‚Ü‚·B
+*/
+	trace "‰ÁÈ‚Ìí—Ş‚ğ’²‚×‚Ü‚·B"
+	Kangzi = 0
+	dim KangzCount, TILE_NONFLOWER_MAX
+	repeat SIZE_OF_MELD_BUFFER
+		if (MianziDat(cnt) >= MELD_QUAD_ADDED_MIN*MELD_TYPE_STEP) {
+			KangzCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++
+			Kangzi++
+		}
+	loop
+	return
+#global
+
 #include "astro.hsp"
 
 /* ÈqŒn‚Ì–ğ */
@@ -63,6 +87,7 @@
 	trace "Èq–ğ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	countKangz KangzCount, MianziDat: Kangzi = stat
 	countAnKangz AnKangzCount, MianziDat: AnKan = stat
+	countKaKangz KaKangzCount, MianziDat
 #ifndef SANMAS
 	/* ’´lŠì */
 	if (getRule(RULE_CHOUSIXI) != 0) {
@@ -207,6 +232,15 @@
 				addyaku tmpYakuInfo, "‹S‚ÍŠO", 1
 			}
 		}
+	}
+	/* ‘‰Á */
+	if (getRule(RULE_SOUKA) != 0) {
+		repeat 9, 1
+			if (KaKangzCount(TILE_SUIT_BAMBOOS+cnt) >= 1) {
+				addyaku tmpYakuInfo, "‘‰Á", 1
+				break
+			}
+		loop
 	}
 return
 #global
