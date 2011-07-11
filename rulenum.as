@@ -399,6 +399,7 @@
 #enum RULE_ALL_SMALL
 #enum RULE_ALL_MIDDLE
 #enum RULE_ALL_LARGE
+#enum RULE_HIGH_TANYAO
 #enum RULE_CHARACTERS_MAHJONG
 
 /* ƒfƒŠƒ~ƒ^ */

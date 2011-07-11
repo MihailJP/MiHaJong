@@ -2055,6 +2055,10 @@
 	RuleTxt(0, RULE_CHENIISOH) = "ศต", "Wใส(๒ขบช่—L่)"
 	nosanma RULE_CHENIISOH
 
+	RuleName(RULE_HIGH_TANYAO) = "ใ’f๔ใ"
+	RuleDescription(RULE_HIGH_TANYAO) = "ใ’f๔ใฬ—L–ณฦฟ’l๐Ý’่ตÜท(3`7ฬ”vพฏลa—น)"
+	RuleTxt(0, RULE_HIGH_TANYAO) = "ศต", "Qใส"
+
 
 return
 
