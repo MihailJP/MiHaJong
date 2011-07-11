@@ -44,6 +44,7 @@
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "‘åÔ—Ö")
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "‘å’|—Ñ")
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "‘å”—×")
+			tmpyakuCensored += searchyaku(tmpYakuInfo, "òˆêF")
 			if (tmpyakuCensored == 0) {
 				if ((getRule(RULE_KUITAN) == 2)&&(getMenzen(GameStat, targetPlayer) == 0)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1}
 				addyaku tmpYakuInfo, "’f›ô‹ã", 1

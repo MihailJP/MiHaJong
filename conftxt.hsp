@@ -2050,6 +2050,10 @@
 	RuleDescription(RULE_WINDOWS7) = "Windows7の有無と価値を設定します(7の刻子があって別色の7で和了)"
 	RuleTxt(0, RULE_WINDOWS7) = "なし", "１飜"
 
+	RuleName(RULE_CHENIISOH) = "橙一色"
+	RuleDescription(RULE_CHENIISOH) = "橙一色の有無と価値を設定します(萬子の断幺清一色)"
+	RuleTxt(0, RULE_CHENIISOH) = "なし", "８飜(喰い下がり有り)"
+
 
 return
 

@@ -172,6 +172,21 @@
 					}
 				}
 			}
+			/* 橙一色 */
+			if (getRule(RULE_CHENIISOH) != 0) {
+				if (searchyaku(tmpYakuInfo, "大数隣") == 0) {
+					if (WanzMian == SIZE_OF_MELD_BUFFER) {
+						yakuFlag = 0
+						dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+9
+						dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+7
+						yakuFlag = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
+						if (yakuFlag == 0) {
+							addyaku tmpYakuInfo, "橙一色", 7+getMenzen(GameStat, targetPlayer)
+							delyaku tmpYakuInfo, "清一色"
+						}
+					}
+				}
+			}
 #ifndef SANMAS
 		} else {
 			addyaku tmpYakuInfo, "混一色", 2+getMenzen(GameStat, targetPlayer)
