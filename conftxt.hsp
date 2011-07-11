@@ -2046,6 +2046,10 @@
 	RuleDescription(RULE_WINDOWS31) = "Windows3.1の有無と価値を設定します(3と1だけで和了)"
 	RuleTxt(0, RULE_WINDOWS31) = "なし", "役満"
 
+	RuleName(RULE_WINDOWS7) = "Windows7"
+	RuleDescription(RULE_WINDOWS7) = "Windows7の有無と価値を設定します(7の刻子があって別色の7で和了)"
+	RuleTxt(0, RULE_WINDOWS7) = "なし", "１飜"
+
 
 return
 

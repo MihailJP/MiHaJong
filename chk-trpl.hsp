@@ -1553,5 +1553,18 @@
 			delyaku tmpYakuInfo, "—Ô—¼”"
 		}
 	}
+	/* Windows7 */
+	if (getRule(RULE_WINDOWS7) != 0) {
+		yakuFlag = 0
+		if ((KezCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+7) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_BAMBOOS+7) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_SUIT_CIRCLES+7) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CHARACTERS+7) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_SUIT_CIRCLES+7) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_BAMBOOS+7) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CHARACTERS+7) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+7) >= 1)) {yakuFlag = 1}
+		if (yakuFlag) {
+			addyaku tmpYakuInfo, "Windows7", 1
+		}
+	}
 return
 #global
