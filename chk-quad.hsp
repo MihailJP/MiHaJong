@@ -200,7 +200,7 @@
 	}
 	/* à√íÜñÕçı */
 	if (getRule(RULE_ANCHUMOSAKU) != 0) {
-		if ((AnKangzCount(TILE_RED_DRAGON) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)/TILE_SUIT_STEP*TILE_SUIT_STEP = TILE_SUIT_BAMBOOS)&&(getTsumoAgariFlag(GameStat) == 1)) {
+		if ((AnKangzCount(TILE_RED_DRAGON) >= 1)&&(TsumoTile(GameStat, targetPlayer)/TILE_SUIT_STEP*TILE_SUIT_STEP = TILE_SUIT_BAMBOOS)&&(getTsumoAgariFlag(GameStat) == 1)) {
 			addyaku tmpYakuInfo, "à√íÜñÕçı", 1
 		}
 	}

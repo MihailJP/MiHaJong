@@ -13,7 +13,7 @@
 	if (getRule(RULE_KEPPAIHOH) != 0) {
 		countseentiles SeenTiles, GameStat
 		countTilesInHand TileCount, GameStat, targetPlayer
-		if ((SeenTiles(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) >= 4)&&(getTsumoAgariFlag(GameStat) == 1))||((SeenTiles(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) > 4)&&(getTsumoAgariFlag(GameStat) == 0)) {
+		if ((SeenTiles(TsumoTile(GameStat, targetPlayer))+TileCount(TsumoTile(GameStat, targetPlayer)) >= 4)&&(getTsumoAgariFlag(GameStat) == 1))||((SeenTiles(TsumoTile(GameStat, targetPlayer))+TileCount(TsumoTile(GameStat, targetPlayer)) > 4)&&(getTsumoAgariFlag(GameStat) == 0)) {
 			if ((MachiType == MACHI_KANCHAN)||(MachiType == MACHI_PENCHAN)||(MachiType == MACHI_TANKI)) {
 				if ((searchyaku(tmpYakuInfo, "ùèû»") == 0)&&(searchyaku(tmpYakuInfo, "ã‡å{íDêH") == 0)) {
 					addyaku tmpYakuInfo, "åáîvòa", 1

@@ -137,7 +137,7 @@
 	// Žè”v‚Ì˜g‚ð•\Ž¦
 	tehaiCount = 0
 	repeat NUM_OF_TILES_IN_HAND
-		if (cnt == TSUMOHAI_INDEX)&&((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == 0)||((getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != targetPlayer)&&(getHeavenHandFlag(GameStat) != 1)&&(TileShowMode != 0))) {
+		if (cnt == TSUMOHAI_INDEX)&&((TsumoTile(GameStat, targetPlayer) == 0)||((getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != targetPlayer)&&(getHeavenHandFlag(GameStat) != 1)&&(TileShowMode != 0))) {
 			break
 		}
 		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 0) {continue}
@@ -199,7 +199,7 @@
 			tmp = TILE_THICKNESS
 		} else {tmp = 0}
 		repeat NUM_OF_TILES_IN_HAND
-			if (cnt == TSUMOHAI_INDEX)&&((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == 0)||((getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != targetPlayer)&&(getHeavenHandFlag(GameStat) != 1)&&(TileShowMode != 0))) {
+			if (cnt == TSUMOHAI_INDEX)&&((TsumoTile(GameStat, targetPlayer) == 0)||((getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != targetPlayer)&&(getHeavenHandFlag(GameStat) != 1)&&(TileShowMode != 0))) {
 				break
 			}
 			if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 0) {tmp2 = 0: continue}

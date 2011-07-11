@@ -217,7 +217,7 @@
 		}
 		/* ŒÜS’ÊŠÑ */
 		if (getRule(RULE_UUSHINTONKAN) != 0) {
-			if ((MachiType == MACHI_KANCHAN)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == (straightColor*TILE_SUIT_STEP+5))) {
+			if ((MachiType == MACHI_KANCHAN)&&(TsumoTile(GameStat, targetPlayer) == (straightColor*TILE_SUIT_STEP+5))) {
 				addyaku tmpYakuInfo, "ŒÜS’ÊŠÑ", 1
 			}
 		}
@@ -313,7 +313,7 @@
 #endif
 		/* ƒ‹[ƒg‚Q‚S‚U */
 		if (getRule(RULE_ROUTE_246) != 0) {
-			if ((MachiType == MACHI_KANCHAN)&&((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == (straightColor*TILE_SUIT_STEP+2))||(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == (straightColor*TILE_SUIT_STEP+4))||(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == (straightColor*TILE_SUIT_STEP+6)))) {
+			if ((MachiType == MACHI_KANCHAN)&&((TsumoTile(GameStat, targetPlayer) == (straightColor*TILE_SUIT_STEP+2))||(TsumoTile(GameStat, targetPlayer) == (straightColor*TILE_SUIT_STEP+4))||(TsumoTile(GameStat, targetPlayer) == (straightColor*TILE_SUIT_STEP+6)))) {
 				addyaku tmpYakuInfo, "ƒ‹[ƒg‚Q‚S‚U", 1
 			}
 		}
@@ -695,7 +695,7 @@
 		if ((ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+4) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {yakuFlag = 1}
 		if ((ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+4) >= 1)&&(ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
-			if ((getMenzen(GameStat, targetPlayer) == 1)&&(MachiType == MACHI_TANKI)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) != TILE_WHITE_DRAGON)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) != TILE_GREEN_DRAGON)&&(getRule(RULE_TANRON) != 0)) {
+			if ((getMenzen(GameStat, targetPlayer) == 1)&&(MachiType == MACHI_TANKI)&&(TsumoTile(GameStat, targetPlayer) != TILE_WHITE_DRAGON)&&(TsumoTile(GameStat, targetPlayer) != TILE_GREEN_DRAGON)&&(getRule(RULE_TANRON) != 0)) {
 				/* ’P—´(–å‘O‚Å’P‹R‘Ò‚¿) */
 				addyaku tmpYakuInfo, "’P—´", 6
 			} else {

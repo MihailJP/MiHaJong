@@ -133,7 +133,7 @@
 		}
 		// ã‡å{ì∆óßÅcàÍçıë“Çø
 		if (getRule(RULE_KINKEI_DOKURITSU) != 0) {
-			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_BAMBOOS+1) {
+			if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_BAMBOOS+1) {
 				addyakuman tmpYakuInfo, "ã‡å{ì∆óß", 1
 				delyaku tmpYakuInfo, "ëSì|ï›"
 				delyaku tmpYakuInfo, "ëSãÅêl"
@@ -142,7 +142,7 @@
 #ifndef SANMAS
 		// ì∆íﬁä¶ç]ê·Åcîíë“Çø
 		if (getRule(RULE_KINKEI_DOKURITSU) != 0) {
-			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_WHITE_DRAGON) {
+			if (TsumoTile(GameStat, targetPlayer) == TILE_WHITE_DRAGON) {
 				addyakuman tmpYakuInfo, "ì∆íﬁä¶ç]ê·", 1
 				delyaku tmpYakuInfo, "ëSì|ï›"
 				delyaku tmpYakuInfo, "ëSãÅêl"
@@ -681,7 +681,7 @@
 		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+7
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 1)
 		if ((yakuflagcount == 4)&&(MianziDat(0) == TILE_SUIT_CIRCLES+5)&&(getMenzen(GameStat, targetPlayer) == 1)) {
-			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CIRCLES+5) {
+			if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+5) {
 				addyakuman tmpYakuInfo, "ãóîì{ãÍòIê|", 2
 			} else {
 				addyakuman tmpYakuInfo, "ãóîì{ãÍòIê|", 1

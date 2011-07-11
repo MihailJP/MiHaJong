@@ -25,3 +25,6 @@
 #define global bgmplay_short(%1) bgmcode@=(%1): gosub *_bgmplay_short@
 #define global bgmplay_norep(%1) bgmcode@=(%1): gosub *_bgmplay_norep@
 #define global bgmstop gosub *_bgmstop@
+
+/* struct.as */
+#define global ctype TsumoTile(%1,%2) getHand(%1, HAND_TILECODE, TSUMOHAI_INDEX, %2)

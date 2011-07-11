@@ -139,7 +139,7 @@
 		}
 		/* ŒÜ“›ŠJ‰Ô */
 		if (getRule(RULE_UUPIN_KAIHOH) != 0) {
-			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CIRCLES+5) {
+			if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+5) {
 				if (getRule(RULE_UUPIN_KAIHOH) == 1) {
 					addyakuman tmpYakuInfo, "ŒÜ“›ŠJ‰Ô", 1
 				} else {
@@ -151,7 +151,7 @@
 #ifndef SANMAS
 		/* ’†ãŠJ‰Ô */
 		if (getRule(RULE_CHUNSHAN_KAIHOH) != 0) {
-			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_RED_DRAGON) {
+			if (TsumoTile(GameStat, targetPlayer) == TILE_RED_DRAGON) {
 				addyaku tmpYakuInfo, "’†ãŠJ‰Ô", 2
 				delyaku tmpYakuInfo, "—äãŠJ‰Ô"
 			}
@@ -190,7 +190,7 @@
 				addyaku tmpYakuInfo, "ŠC’ê–ÌŒŽ", 1
 				/* ˆê“›–ÌŒŽ */
 				if (getRule(RULE_IIPIN_MOYUE) != 0) {
-					if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CIRCLES+1) {
+					if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+1) {
 						if (getRule(RULE_IIPIN_MOYUE) == 1) {
 							addyakuman tmpYakuInfo, "ˆê“›–ÌŒŽ", 1
 						} else {
@@ -201,20 +201,20 @@
 				}
 				/* ŠC’êj */
 				if (getRule(RULE_HAITEI_RAOTSEN) != 0) {
-					if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CHARACTERS+1) {
+					if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CHARACTERS+1) {
 						addyaku tmpYakuInfo, "ŠC’êj", 1
 					}
 				}
 				/* ŠC’ê‰Ô */
 				if (getRule(RULE_HAITEI_RAOHWA) != 0) {
-					if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CIRCLES+5) {
+					if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+5) {
 						addyaku tmpYakuInfo, "ŠC’ê‰Ô", 1
 					}
 				}
 #ifndef SANMAS
 				/* ”­’ê–ÌŒŽ */
 				if (getRule(RULE_HATSUTEI_MOYUE) != 0) {
-					if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_GREEN_DRAGON) {
+					if (TsumoTile(GameStat, targetPlayer) == TILE_GREEN_DRAGON) {
 						addyaku tmpYakuInfo, "”­’ê–ÌŒŽ", 2
 						delyaku tmpYakuInfo, "ŠC’ê–ÌŒŽ"
 					}
@@ -226,7 +226,7 @@
 				addyaku tmpYakuInfo, "‰Í’ê‹›", 1
 				/* ‹ã“›‹› */
 				if (getRule(RULE_CHUUPIN_RAOYUI) != 0) {
-					if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CIRCLES+9) {
+					if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+9) {
 						if (getRule(RULE_CHUUPIN_RAOYUI) == 1) {
 							addyakuman tmpYakuInfo, "‹ã“›‹›", 1
 						} else {
@@ -238,7 +238,7 @@
 #ifndef SANMAS
 				/* ”’’ê‹› */
 				if (getRule(RULE_HAKUTEI_RAOYUI) != 0) {
-					if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_WHITE_DRAGON) {
+					if (TsumoTile(GameStat, targetPlayer) == TILE_WHITE_DRAGON) {
 						addyaku tmpYakuInfo, "”’’ê‹›", 2
 						delyaku tmpYakuInfo, "‰Í’ê‹›"
 					}
@@ -261,7 +261,7 @@
 			}
 			/* ƒ‰ƒXƒgƒI[ƒ_[–ƒ”k“¤•… */
 			if (getRule(RULE_MAABOODOUFU) != 0) {
-				if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_WHITE_DRAGON) {
+				if (TsumoTile(GameStat, targetPlayer) == TILE_WHITE_DRAGON) {
 					addyakuman tmpYakuInfo, "ƒ‰ƒXƒgƒI[ƒ_[–ƒ”k“¤•…", 1
 				}
 			}
@@ -287,7 +287,7 @@
 		addyaku tmpYakuInfo, "žÈ", 1
 		/* “ñõžÈ */
 		if (getRule(RULE_RYANZOH_CHANKAN) != 0) {
-			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_BAMBOOS+2) {
+			if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_BAMBOOS+2) {
 				if (getRule(RULE_RYANZOH_CHANKAN) == 1) {
 					addyakuman tmpYakuInfo, "“ñõžÈ", 1
 				} else {
@@ -300,7 +300,7 @@
 		if (getRule(RULE_JINJI_DUOSHI) != 0) {
 			countseentiles SeenTiles, GameStat
 			countTilesInHand TileCount, GameStat, targetPlayer
-			if ((SeenTiles(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) >= 4)&&(getTsumoAgariFlag(GameStat) == 1))||((SeenTiles(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))+TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) > 4)&&(getTsumoAgariFlag(GameStat) == 0)) {
+			if ((SeenTiles(TsumoTile(GameStat, targetPlayer))+TileCount(TsumoTile(GameStat, targetPlayer)) >= 4)&&(getTsumoAgariFlag(GameStat) == 1))||((SeenTiles(TsumoTile(GameStat, targetPlayer))+TileCount(TsumoTile(GameStat, targetPlayer)) > 4)&&(getTsumoAgariFlag(GameStat) == 0)) {
 				if ((MachiType == MACHI_KANCHAN)||(MachiType == MACHI_PENCHAN)||(MachiType == MACHI_TANKI)) {
 					addyaku tmpYakuInfo, "‹àŒ{’DH", 1
 				}
@@ -329,7 +329,7 @@
 	}
 	/* Žl”n˜H */
 	if (getRule(RULE_SUMARO) != 0) {
-		if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CHARACTERS+4)&&(getSumaroFlag(GameStat, targetPlayer) == 1)&&(getTsumoAgariFlag(GameStat) == 0) {
+		if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CHARACTERS+4)&&(getSumaroFlag(GameStat, targetPlayer) == 1)&&(getTsumoAgariFlag(GameStat) == 0) {
 			addyaku tmpYakuInfo, "Žl”n˜H", 1
 		}
 	}
@@ -337,9 +337,9 @@
 	/* ‹q—ˆ˜a */
 	if (getRule(RULE_OTAKAZE_RON) != 0) {
 		yakuFlag = 0
-		if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) >= TILE_WIND_MIN)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) <= TILE_WIND_MAX)) {yakuFlag = 1}
+		if ((TsumoTile(GameStat, targetPlayer) >= TILE_WIND_MIN)&&(TsumoTile(GameStat, targetPlayer) <= TILE_WIND_MAX)) {yakuFlag = 1}
 		repeat TILE_WIND_MAX-TILE_WIND_MIN+1
-			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == cnt+TILE_WIND_MIN) {
+			if (TsumoTile(GameStat, targetPlayer) == cnt+TILE_WIND_MIN) {
 				if ((getRound(GameStat)/4) == cnt) {yakuFlag = 0}
 				if (playerWind(targetPlayer, getRound(GameStat)) == cnt) {
 					yakuFlag = 0
@@ -372,7 +372,7 @@
 			repeat DiscardPointer(GameStat, targetPlayer), 1
 				if ((getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) \ SUTEHAI_TYPE_STEP) == tmpTileCodeList(tmpcnt)) {yakuFlag = 1}
 			loop
-			if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == tmpTileCodeList(cnt))&&(yakuFlag == 1)&&(getTsumoAgariFlag(GameStat) == 1)&&(MachiType == MACHI_TANKI)) {
+			if ((TsumoTile(GameStat, targetPlayer) == tmpTileCodeList(cnt))&&(yakuFlag == 1)&&(getTsumoAgariFlag(GameStat) == 1)&&(MachiType == MACHI_TANKI)) {
 				if (getRule(tmpRuleCodeList(cnt)) == 2) {addyaku tmpYakuInfo, tmpYakuNameList(cnt), 2}
 				else {addyaku tmpYakuInfo, tmpYakuNameList(cnt), 1}
 			}
@@ -380,14 +380,14 @@
 	loop
 	/* ‹à—´“V˜a */
 	if (getRule(RULE_GOLDDRAGON) != 0) {
-		if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES / TILE_SUIT_STEP))&&(getTurn(GameStat) <= 3) {
+		if ((TsumoTile(GameStat, targetPlayer) / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES / TILE_SUIT_STEP))&&(getTurn(GameStat) <= 3) {
 			addyaku tmpYakuInfo, "‹à—´“V˜a", 1
 		}
 	}
 #ifndef SANMAS
 	/* ù•—‰h˜a */
 	if (getRule(RULE_WHIRLWIND) != 0) {
-		if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) >= TILE_WIND_MIN)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) <= TILE_WIND_MAX)&&(getTurn(GameStat) <= 3) {
+		if (TsumoTile(GameStat, targetPlayer) >= TILE_WIND_MIN)&&(TsumoTile(GameStat, targetPlayer) <= TILE_WIND_MAX)&&(getTurn(GameStat) <= 3) {
 			addyakuman tmpYakuInfo, "ù•—‰h˜a", 1
 		}
 	}

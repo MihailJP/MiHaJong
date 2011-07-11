@@ -20,11 +20,11 @@
 */
 	debug strf("理牌を行います。プレイヤー [%d]", targetPlayer)
 	lipaiTsumo = 0
-	if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) > 0) {
+	if (TsumoTile(GameStat, targetPlayer) > 0) {
 		lipaiTsumo = 1
-		trace strf("ツモ牌を待避します。牌コード [%d]", getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
+		trace strf("ツモ牌を待避します。牌コード [%d]", TsumoTile(GameStat, targetPlayer))
 	}
-	trace strf("理牌前の手牌 [%02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d]", getHand(GameStat, HAND_TILECODE, 0, targetPlayer), getHand(GameStat, HAND_TILECODE, 1, targetPlayer), getHand(GameStat, HAND_TILECODE, 2, targetPlayer), getHand(GameStat, HAND_TILECODE, 3, targetPlayer), getHand(GameStat, HAND_TILECODE, 4, targetPlayer), getHand(GameStat, HAND_TILECODE, 5, targetPlayer), getHand(GameStat, HAND_TILECODE, 6, targetPlayer), getHand(GameStat, HAND_TILECODE, 7, targetPlayer), getHand(GameStat, HAND_TILECODE, 8, targetPlayer), getHand(GameStat, HAND_TILECODE, 9, targetPlayer), getHand(GameStat, HAND_TILECODE, 10, targetPlayer), getHand(GameStat, HAND_TILECODE, 11, targetPlayer), getHand(GameStat, HAND_TILECODE, 12, targetPlayer), getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
+	trace strf("理牌前の手牌 [%02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d]", getHand(GameStat, HAND_TILECODE, 0, targetPlayer), getHand(GameStat, HAND_TILECODE, 1, targetPlayer), getHand(GameStat, HAND_TILECODE, 2, targetPlayer), getHand(GameStat, HAND_TILECODE, 3, targetPlayer), getHand(GameStat, HAND_TILECODE, 4, targetPlayer), getHand(GameStat, HAND_TILECODE, 5, targetPlayer), getHand(GameStat, HAND_TILECODE, 6, targetPlayer), getHand(GameStat, HAND_TILECODE, 7, targetPlayer), getHand(GameStat, HAND_TILECODE, 8, targetPlayer), getHand(GameStat, HAND_TILECODE, 9, targetPlayer), getHand(GameStat, HAND_TILECODE, 10, targetPlayer), getHand(GameStat, HAND_TILECODE, 11, targetPlayer), getHand(GameStat, HAND_TILECODE, 12, targetPlayer), TsumoTile(GameStat, targetPlayer))
 	repeat NUM_OF_TILES_IN_HAND
 		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 0) {
 			setHand GameStat, HAND_TILECODE, cnt, targetPlayer, 999
@@ -59,7 +59,7 @@
 			setHand GameStat, HAND_TILECODE, cnt, targetPlayer, 0
 		}
 	loop
-	trace strf("理牌後の手牌 [%02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d]", getHand(GameStat, HAND_TILECODE, 0, targetPlayer), getHand(GameStat, HAND_TILECODE, 1, targetPlayer), getHand(GameStat, HAND_TILECODE, 2, targetPlayer), getHand(GameStat, HAND_TILECODE, 3, targetPlayer), getHand(GameStat, HAND_TILECODE, 4, targetPlayer), getHand(GameStat, HAND_TILECODE, 5, targetPlayer), getHand(GameStat, HAND_TILECODE, 6, targetPlayer), getHand(GameStat, HAND_TILECODE, 7, targetPlayer), getHand(GameStat, HAND_TILECODE, 8, targetPlayer), getHand(GameStat, HAND_TILECODE, 9, targetPlayer), getHand(GameStat, HAND_TILECODE, 10, targetPlayer), getHand(GameStat, HAND_TILECODE, 11, targetPlayer), getHand(GameStat, HAND_TILECODE, 12, targetPlayer), getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
+	trace strf("理牌後の手牌 [%02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d]", getHand(GameStat, HAND_TILECODE, 0, targetPlayer), getHand(GameStat, HAND_TILECODE, 1, targetPlayer), getHand(GameStat, HAND_TILECODE, 2, targetPlayer), getHand(GameStat, HAND_TILECODE, 3, targetPlayer), getHand(GameStat, HAND_TILECODE, 4, targetPlayer), getHand(GameStat, HAND_TILECODE, 5, targetPlayer), getHand(GameStat, HAND_TILECODE, 6, targetPlayer), getHand(GameStat, HAND_TILECODE, 7, targetPlayer), getHand(GameStat, HAND_TILECODE, 8, targetPlayer), getHand(GameStat, HAND_TILECODE, 9, targetPlayer), getHand(GameStat, HAND_TILECODE, 10, targetPlayer), getHand(GameStat, HAND_TILECODE, 11, targetPlayer), getHand(GameStat, HAND_TILECODE, 12, targetPlayer), TsumoTile(GameStat, targetPlayer))
 	if (lipaiTsumo == 0) {
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer, 0
 	}
@@ -265,7 +265,7 @@ return TileInfo
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1: MachihaiTotal = 0: MachiMen = 0
 	dim MachihaiFlag, TILE_NONFLOWER_STRICT_MAX+1
 	FuritenFlag = 0
-	tmpTsumoHai = getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)
+	tmpTsumoHai = TsumoTile(GameStat, targetPlayer)
 	repeat TILE_NONFLOWER_STRICT_MAX,1
 		MachihaiCount(cnt) = -1
 		if (cnt\TILE_SUIT_STEP == 0) {continue}
@@ -448,21 +448,21 @@ return DaoPaiAbilityFlag
 	repeat NUM_OF_TILES_IN_HAND: tmpkanhand(cnt) = getHand(GameStat, HAND_TILECODE, cnt, targetPlayer): loop
 	/* ツモった牌が４枚揃ってないなら戻る */
 	/* 立直後であり送り槓はできないのでツモった牌だけ調べればよい */
-	if (TileCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) < 4) {
-		debug strf("ツモ牌 [%d] は、4枚揃っていません。", getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
+	if (TileCount(TsumoTile(GameStat, targetPlayer)) < 4) {
+		debug strf("ツモ牌 [%d] は、4枚揃っていません。", TsumoTile(GameStat, targetPlayer))
 		return 0
 	}
-	debug strf("ツモ牌 [%d] は、手牌に合わせて4枚あります。", getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
+	debug strf("ツモ牌 [%d] は、手牌に合わせて4枚あります。", TsumoTile(GameStat, targetPlayer))
 	/* 字牌なら戻る */
-	if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) > TILE_NUMERAL_MAX)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) <= TILE_NONFLOWER_STRICT_MAX)) {
-		debug strf("ツモ牌 [%d] は字牌です。", getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
+	if ((TsumoTile(GameStat, targetPlayer) > TILE_NUMERAL_MAX)&&(TsumoTile(GameStat, targetPlayer) <= TILE_NONFLOWER_STRICT_MAX)) {
+		debug strf("ツモ牌 [%d] は字牌です。", TsumoTile(GameStat, targetPlayer))
 		return 1
 	}
-	debug strf("ツモ牌 [%d] は数牌です。", getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
+	debug strf("ツモ牌 [%d] は数牌です。", TsumoTile(GameStat, targetPlayer))
 	/* ツモった牌が雀頭になりうるなら戻る */
 	tmptakencount = 0
 	repeat NUM_OF_TILES_IN_HAND-1
-		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) {
+		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == TsumoTile(GameStat, targetPlayer)) {
 			setHand GameStat, HAND_TILECODE, cnt, targetPlayer, 0: tmptakencount++
 		}
 		if (tmptakencount == 2) {break}
@@ -484,17 +484,17 @@ return DaoPaiAbilityFlag
 		setHand GameStat, HAND_TILECODE, cnt, targetPlayer, tmpkanhand(cnt)
 	loop
 	if (Shanten == 1) {
-		debug strf("ツモ牌 [%d] は、アタマ候補です。", getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
+		debug strf("ツモ牌 [%d] は、アタマ候補です。", TsumoTile(GameStat, targetPlayer))
 		return 0
 	}
-	debug strf("ツモ牌 [%d] は、アタマ候補ではありません。", getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
+	debug strf("ツモ牌 [%d] は、アタマ候補ではありません。", TsumoTile(GameStat, targetPlayer))
 	/* 暗槓する前の待ち牌を調べる */
 	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, targetPlayer
 	dim tmpchkMachihaiFlag, TILE_NONFLOWER_STRICT_MAX+1
 	repeat TILE_NONFLOWER_STRICT_MAX+1: tmpchkMachihaiFlag(cnt) = MachihaiFlag(cnt): loop
 	/* 暗槓したあとの待ち牌を調べる */
 	repeat NUM_OF_TILES_IN_HAND
-		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) {
+		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == TsumoTile(GameStat, targetPlayer)) {
 			setHand GameStat, HAND_TILECODE, cnt, targetPlayer, 0: tmptakencount++
 		}
 	loop

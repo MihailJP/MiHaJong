@@ -11,8 +11,8 @@
 	countTilesInHand TileCount, GameStat, targetPlayer
 	/* ƒhƒ‰‚Å˜a—¹‚Á‚½‚ç1ãÊ */
 	if (getRule(RULE_DORAHOH) != 0) {
-		if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) > TILE_MIN)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) <= TILE_NONFLOWER_STRICT_MAX)) {
-			if ((getDoraFlag(GameStat, DORA_OMOTE, getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) > 0)||(getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, targetPlayer) != 0)) {
+		if ((TsumoTile(GameStat, targetPlayer) > TILE_MIN)&&(TsumoTile(GameStat, targetPlayer) <= TILE_NONFLOWER_STRICT_MAX)) {
+			if ((getDoraFlag(GameStat, DORA_OMOTE, TsumoTile(GameStat, targetPlayer)) > 0)||(getHand(GameStat, HAND_REDTILE, TSUMOHAI_INDEX, targetPlayer) != 0)) {
 				addyaku tmpYakuInfo, "“ºèt˜a", 1
 			}
 		}

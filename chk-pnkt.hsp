@@ -78,17 +78,17 @@
 	if (getYakuInfo(tmpYakuInfo, YAKUINF_FU) == 20) {NoTriplets = 1} else {NoTriplets = 0}
 	LiangMianFlag = 0
 	/* íÆîvå`â¡ïÑ */
-	if (MianziDat(0) == getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) {MachiType = MACHI_TANKI /* íPãRë“Çø */}
+	if (MianziDat(0) == TsumoTile(GameStat, targetPlayer)) {MachiType = MACHI_TANKI /* íPãRë“Çø */}
 	repeat SIZE_OF_MELD_BUFFER-1, 1
 		if (MianziDat(cnt) >= MELD_TRIPLET*MELD_TYPE_STEP) {
-			if ((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)) {
+			if ((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == TsumoTile(GameStat, targetPlayer)) {
 				MachiType = MACHI_SHANPON /* ëoÉ|Éìë“Çø */
 			}
 		} else {
-			if ((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)-1)) {
+			if ((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == (TsumoTile(GameStat, targetPlayer)-1)) {
 				MachiType = MACHI_KANCHAN /* õ∆í£ë“Çø */
 			}
-			if ((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))) {
+			if ((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == (TsumoTile(GameStat, targetPlayer))) {
 				if ((MianziDat(cnt) \ TILE_SUIT_STEP) == 7) {
 					MachiType = MACHI_PENCHAN /* ï”í£ë“Çø */
 				} else {
@@ -96,7 +96,7 @@
 					LiangMianFlag = 1
 				}
 			}
-			if ((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer)-2)) {
+			if ((MianziDat(cnt) \ TILE_CODE_MAXIMUM) == (TsumoTile(GameStat, targetPlayer)-2)) {
 				if ((MianziDat(cnt) \ TILE_SUIT_STEP) == 1) {
 					MachiType = MACHI_PENCHAN /* ï”í£ë“Çø */
 				} else {
@@ -111,7 +111,7 @@
 	/* ëoÉ|Éìë“ÇøÇ≈ÉçÉìÇµÇΩèÍçáÇÃó·äO */
 	/* ñæçèÇ∆ÇµÇƒàµÇ§ÇΩÇﬂÇÃå∏ì_ */
 	if ((MachiType == MACHI_SHANPON)&&(getTsumoAgariFlag(GameStat) == 0)) {
-		switch (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))
+		switch (TsumoTile(GameStat, targetPlayer))
 			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
 			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
 			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9

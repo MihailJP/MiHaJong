@@ -912,7 +912,7 @@
 	/* ¼›ù‘ÒŒ */
 	if (getRule(RULE_SEISOU_TAIGETSU) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+1) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CIRCLES+1)) {yakuFlag = 1}
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+1) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "¼›ù‘ÒŒ", 2
 		}
@@ -1063,7 +1063,7 @@
 	/* ‘¾Œö’Ş‹à‹T */
 	if (getRule(RULE_TAIKOU_TURTLE) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_BAMBOOS+3)&&(MachiType == MACHI_TANKI)) {
+		if ((KezCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_BAMBOOS+3)&&(MachiType == MACHI_TANKI)) {
 			addyaku tmpYakuInfo, "‘¾Œö’Ş‹à‹T", 1
 		}
 	}
@@ -1253,8 +1253,8 @@
 	if (getRule(RULE_SUPERMAN) != 0) {
 		yakuFlag = 0
 		if ((KezCount(TILE_SUIT_CHARACTERS+4) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+8) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_CHARACTERS+4) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CHARACTERS+4)&&(MianziDat(0) == TILE_SUIT_CHARACTERS+8)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_SUIT_CHARACTERS+8)&&(MianziDat(0) == TILE_SUIT_CHARACTERS+4)) {yakuFlag = 1}
+		if ((KezCount(TILE_SUIT_CHARACTERS+4) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CHARACTERS+4)&&(MianziDat(0) == TILE_SUIT_CHARACTERS+8)) {yakuFlag = 1}
+		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CHARACTERS+8)&&(MianziDat(0) == TILE_SUIT_CHARACTERS+4)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "ƒX[ƒp[ƒ}ƒ“", 1
 		}
@@ -1525,7 +1525,7 @@
 #ifndef ALLSANMA
 	/* “Œ•ûg˜O–² */
 	if (getRule(RULE_PERFECT_CHERRY_BLOSSOM) != 0) {
-		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+6) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_EAST_WIND) >= 1)) {
+		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+6) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_EAST_WIND) >= 1)) {
 			addyaku tmpYakuInfo, "“Œ•ûg˜O–²", 1
 		}
 	}

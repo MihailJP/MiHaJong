@@ -69,7 +69,7 @@
 							tmpyakumanRate = 1
 							if (tmpYakuNameList(cnt) == "‹ã˜@•ó“•") {
 								countTilesInHand TileCount2, GameStat, targetPlayer
-								TileCount2(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer))--
+								TileCount2(TsumoTile(GameStat, targetPlayer))--
 								yakuFlag2 = 0
 								repeat 3
 									if ((TileCount(cnt*TILE_SUIT_STEP+1) >= 3)&&(TileCount(cnt*TILE_SUIT_STEP+2) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+3) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+4) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+5) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+6) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+7) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+8) >= 1)&&(TileCount(cnt*TILE_SUIT_STEP+9) >= 3)) {yakuFlag2 = 1}
