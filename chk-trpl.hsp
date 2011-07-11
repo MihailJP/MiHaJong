@@ -1546,5 +1546,12 @@
 			delyaku tmpYakuInfo, "ëŒÅXòa"
 		}
 	}
+	/* Windows3.1 */
+	if (getRule(RULE_WINDOWS31) != 0) {
+		if (((DuiCount(TILE_SUIT_CHARACTERS+3)+DuiCount(TILE_SUIT_CIRCLES+3)+DuiCount(TILE_SUIT_BAMBOOS+3)+DuiCount(TILE_SUIT_CHARACTERS+1)+DuiCount(TILE_SUIT_CIRCLES+1)+DuiCount(TILE_SUIT_BAMBOOS+1)) == SIZE_OF_MELD_BUFFER)) {
+			addyakuman tmpYakuInfo, "Windows3.1", 1
+			delyaku tmpYakuInfo, "ó‘óºêî"
+		}
+	}
 return
 #global

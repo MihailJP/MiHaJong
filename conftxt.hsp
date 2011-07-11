@@ -2042,6 +2042,10 @@
 	RuleDescription(RULE_WINDOWS98) = "Windows98の有無と価値を設定します(9の三色同刻、8の刻子と雀頭)"
 	RuleTxt(0, RULE_WINDOWS98) = "なし", "役満"
 
+	RuleName(RULE_WINDOWS31) = "Windows3.1"
+	RuleDescription(RULE_WINDOWS31) = "Windows3.1の有無と価値を設定します(3と1だけで和了)"
+	RuleTxt(0, RULE_WINDOWS31) = "なし", "役満"
+
 
 return
 

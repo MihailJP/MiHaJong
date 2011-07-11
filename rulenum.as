@@ -296,6 +296,7 @@
 #enum RULE_TOUHOU_KOUROUMU
 #enum RULE_WINDOWS95
 #enum RULE_WINDOWS98
+#enum RULE_WINDOWS31
 
 /* ƒfƒŠƒ~ƒ^ */
 #enum END_OF_SECTION
