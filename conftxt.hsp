@@ -2034,6 +2034,14 @@
 	RuleTxt(0, RULE_TOUHOU_KOUROUMU) = "なし", "１飜"
 	nosanma RULE_TOUHOU_KOUROUMU: nonumsanma RULE_TOUHOU_KOUROUMU
 
+	RuleName(RULE_WINDOWS95) = "Windows95"
+	RuleDescription(RULE_WINDOWS95) = "Windows95の有無と価値を設定します(9の三色同刻、5の刻子と雀頭)"
+	RuleTxt(0, RULE_WINDOWS95) = "なし", "役満"
+
+	RuleName(RULE_WINDOWS98) = "Windows98"
+	RuleDescription(RULE_WINDOWS98) = "Windows98の有無と価値を設定します(9の三色同刻、8の刻子と雀頭)"
+	RuleTxt(0, RULE_WINDOWS98) = "なし", "役満"
+
 
 return
 
