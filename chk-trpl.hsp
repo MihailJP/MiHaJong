@@ -1522,5 +1522,13 @@
 			delyaku tmpYakuInfo, "OF“¯"
 		}
 	}
+#ifndef ALLSANMA
+	/* “Œ•ûg˜O–² */
+	if (getRule(RULE_PERFECT_CHERRY_BLOSSOM) != 0) {
+		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+6) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, targetPlayer) == TILE_EAST_WIND) >= 1)) {
+			addyaku tmpYakuInfo, "“Œ•ûg˜O–²", 1
+		}
+	}
+#endif
 return
 #global

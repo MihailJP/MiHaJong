@@ -2029,6 +2029,11 @@
 	RuleDescription(RULE_PERFECT_CHERRY_BLOSSOM) = "東方妖々夢の有無と価値を設定します(１の三色同刻)"
 	RuleTxt(0, RULE_PERFECT_CHERRY_BLOSSOM) = "なし", "役満"
 
+	RuleName(RULE_TOUHOU_KOUROUMU) = "東方紅楼夢"
+	RuleDescription(RULE_TOUHOU_KOUROUMU) = "東方紅楼夢の有無と価値を設定します(中と六萬の刻子があって東で和了)"
+	RuleTxt(0, RULE_TOUHOU_KOUROUMU) = "なし", "１飜"
+	nosanma RULE_TOUHOU_KOUROUMU: nonumsanma RULE_TOUHOU_KOUROUMU
+
 
 return
 
