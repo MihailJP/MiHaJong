@@ -162,6 +162,25 @@
 			}
 		}
 	}
+#ifndef SANMAS
+	/* 白有り緑一色 */
+	if (getRule(RULE_ALL_GREEN_WITH_WHITE) != 0) {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_WHITE_DRAGON
+		yakuflagcount = countPairs(tileCount, tmpTileList)
+		dim tmpTileList, 1: tmpTileList = TILE_WHITE_DRAGON
+		yakuflagcount += countPairs(tileCount, tmpTileList)
+		if (yakuflagcount == 8) {
+			switch getRule(RULE_ALL_GREEN_WITH_WHITE)
+				case 1: addyaku tmpYakuInfo, "清二色", 2: swbreak
+				case 2:
+					addyakuman tmpYakuInfo, "白有り緑一色", 1
+					// 成立したら混一色の成立を解除する(青天井ルール用)
+					delyaku tmpYakuInfo, "混一色"
+				swbreak
+			swend
+		}
+	}
+#endif
 	/* 大草原 */
 	if (getRule(RULE_DAISOUGEN) != 0) {
 		dim tmpTileList, 1: tmpTileList = TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9
@@ -254,6 +273,16 @@
 		yakuflagcount2 = countPairs(tileCount, tmpTileList)
 		if ((yakuflagcount == 7)&&(yakuflagcount2 < 7)) {
 			addyaku tmpYakuInfo, "花一色", 1
+		}
+	}
+	/* 赤一色 */
+	if (getRule(RULE_AKAIISOH) != 0) {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9
+		yakuflagcount = countPairs(tileCount, tmpTileList)
+		if (yakuflagcount == 7) {
+			addyaku tmpYakuInfo, "赤一色", 2
+			delyaku tmpYakuInfo, "花一色"
+			delyaku tmpYakuInfo, "絶一門"
 		}
 	}
 #ifndef SANMAS
