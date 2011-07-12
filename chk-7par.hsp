@@ -24,6 +24,25 @@
 	return yakuflagcount
 #global
 
+/* 数字の合計を数える(七対子版) */
+#module
+#include "const.as"
+#defcfunc countTileNumerals array tileCount
+/*
+		val=countTileNumerals(p1)
+		数字の合計を数える
+
+		p1 : 手牌にある種類別の牌数の配列
+
+		手牌にある数牌の数字の合計を返します。
+*/
+	Cifr = 0
+	repeat TILE_NUMERAL_MAX-1, 1
+		Cifr += tileCount(cnt) * (cnt \ TILE_SUIT_STEP)
+	loop
+	return Cifr
+#global
+
 /* 七対子 */
 #module
 #include "const.as"
@@ -51,6 +70,7 @@
 	dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+1,TILE_SUIT_CHARACTERS+9,TILE_SUIT_CIRCLES+1,TILE_SUIT_CIRCLES+9,TILE_SUIT_BAMBOOS+1,TILE_SUIT_BAMBOOS+9,TILE_EAST_WIND,TILE_SOUTH_WIND,TILE_WEST_WIND,TILE_NORTH_WIND,TILE_WHITE_DRAGON,TILE_GREEN_DRAGON,TILE_RED_DRAGON
 	YaojiuDui = countPairs(tileCount, tmpTileList)
 #endif
+	Cifr = countTileNumerals(tileCount)
 	/* 一色系 */
 	if (((WanzDui+ZiDui) == 7)||((PinzDui+ZiDui) == 7)||((SouzDui+ZiDui) == 7)) {
 #ifndef SANMAS
@@ -62,6 +82,18 @@
 				addyaku tmpYakuInfo, "清一色", 5+getMenzen(GameStat, targetPlayer)
 			}
 			/* 大車輪は面子手用のファイルで処理 */
+#ifndef SANMAX
+			/* 水戸三十五万石 */
+			if (getRule(RULE_MITO350K) != 0) {
+				if (WanzDui == 7) {
+					if (Cifr <= 35) {
+						addyakuman tmpYakuInfo, "水戸三十五万石", 1
+						// 成立したら清一色の成立を解除する(青天井ルール用)
+						delyaku tmpYakuInfo, "清一色"
+					}
+				}
+			}
+#endif
 #ifndef SANMAS
 		} else {
 			addyaku tmpYakuInfo, "混一色", 2+getMenzen(GameStat, targetPlayer)
@@ -369,6 +401,20 @@
 		if (yakuflagcount >= 7) {
 			addyaku tmpYakuInfo, "全大", 6
 			delyaku tmpYakuInfo, "大於五"
+		}
+	}
+	/* 橙一色 */
+	/*
+		七対子の橙一色は４枚使いを認めない限りは２２３３４４５５６６７７８８の形のみ
+		これは大数隣と同じ形であり、橙一色のみ採用の場合でも面子手として扱われる
+	*/
+	/* 上級断幺九 */
+	if (getRule(RULE_HIGH_TANYAO) != 0) {
+		dim tmpTileList, 1: tmpTileList = TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+7
+		yakuflagcount = countPairs(tileCount, tmpTileList)
+		if (yakuflagcount >= 7) {
+			addyaku tmpYakuInfo, "上級断幺九", 2
+			delyaku tmpYakuInfo, "断幺九"
 		}
 	}
 	/* 金一色 */
