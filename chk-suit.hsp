@@ -244,6 +244,15 @@
 					}
 				}
 			}
+			/* –|–ž”T•àŽè’n */
+			if (getRule(RULE_HONMANOPOTECHI) != 0) {
+				if (PinzMian == SIZE_OF_MELD_BUFFER) {
+					countDuiz DuiCount, MianziDat
+					if (DuiCount(TILE_GREEN_DRAGON) >= 1) {
+						addyaku tmpYakuInfo, "–|–ž”T•àŽè’n", 1
+					}
+				}
+			}
 #endif
 		}
 #endif

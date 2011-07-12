@@ -72,6 +72,12 @@
 					delyaku tmpYakuInfo, "¬ˆêF"
 				}
 			}
+			/* –|–ž”T•àŽè’n */
+			if (getRule(RULE_HONMANOPOTECHI) != 0) {
+				if (tileCount(TILE_GREEN_DRAGON) >= 2) {
+					addyaku tmpYakuInfo, "–|–ž”T•àŽè’n", 1
+				}
+			}
 		}
 #endif
 	} else {

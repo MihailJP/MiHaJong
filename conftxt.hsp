@@ -2059,6 +2059,11 @@
 	RuleDescription(RULE_HIGH_TANYAO) = "上級断幺九の有無と価値を設定します(3～7の牌だけで和了)"
 	RuleTxt(0, RULE_HIGH_TANYAO) = "なし", "２飜"
 
+	RuleName(RULE_HONMANOPOTECHI) = "翻満乃歩手地"
+	RuleDescription(RULE_HONMANOPOTECHI) = "翻満乃歩手地の有無と価値を設定します(発を含んだ筒子混一:付加役)"
+	RuleTxt(0, RULE_HONMANOPOTECHI) = "なし", "１飜"
+	nosanma RULE_HONMANOPOTECHI
+
 
 return
 
