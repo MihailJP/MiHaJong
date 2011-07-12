@@ -2064,6 +2064,10 @@
 	RuleTxt(0, RULE_HONMANOPOTECHI) = "なし", "１飜"
 	nosanma RULE_HONMANOPOTECHI
 
+	RuleName(RULE_ALLMONEY) = "金一色"
+	RuleDescription(RULE_ALLMONEY) = "金一色の有無と価値を設定します(一萬と筒子のみで和了)"
+	RuleTxt(0, RULE_ALLMONEY) = "なし", "４飜"
+
 
 return
 
