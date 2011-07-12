@@ -7,6 +7,9 @@
 /* 後回し判定の役 */
 #module
 #include "const.as"
+
+#define ctype currentHan(%1) (getYakuInfo(%1, YAKUINF_HAN_BASE)+getYakuInfo(%1, YAKUINF_HAN_BONUS)+getYakuInfo(%1, YAKUINF_DORA)+getYakuInfo(%1, YAKUINF_ALICEDORA))
+
 #deffunc posterioryaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	trace "後回し判定の役の処理に入ります。"
 	/* 欠牌和 */
@@ -21,9 +24,37 @@
 			}
 		}
 	}
+	/*
+		全体の飜数に制限のあるもの
+	*/
+#ifndef ALLSANMA
+	/* アリス・マーガトロイド */
+	if (getRule(RULE_ALICE_MARGATROID) != 0) {
+		countKez KezCount, MianziDat: countDuiz DuiCount, MianziDat
+		countAnKez AnKezCount, MianziDat: AnKe = stat
+		if (getTsumoAgariFlag(GameStat) == 1) {
+			if (AnKe < 3) {
+				if ((DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_WHITE_DRAGON)+DuiCount(TILE_GREEN_DRAGON)+DuiCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+7) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+7) >= 1)) {
+					/*	制限事項
+						固定満貫役、固定跳満役が成立している場合、
+						この役は成立しません */
+					if (currentHan(tmpYakuInfo) <= 7) {
+						addmangan tmpYakuInfo, "アリス・マーガトロイド", 4
+						delyaku tmpYakuInfo, "対々和"
+						delyaku tmpYakuInfo, "三色同刻"
+						delyaku tmpYakuInfo, "五門斎"
+					}
+				}
+			}
+		}
+	}
+#endif
+	/*
+		カラス系
+	*/
 	/* カラス */
 	if (getRule(RULE_KARASU) != 0) {
-		if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) <= 0) {
+		if (currentHan(tmpYakuInfo) <= 0) {
 			if ((MachiType == MACHI_KANCHAN)||(MachiType == MACHI_PENCHAN)||(MachiType == MACHI_TANKI)) {
 				addyaku tmpYakuInfo, "カラス", 1
 			}
@@ -31,7 +62,7 @@
 	}
 	/* カラス立直 */
 	if (getRule(RULE_KARASU_RIICHI) != 0) {
-		if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) == 1) {
+		if (currentHan(tmpYakuInfo) == 1) {
 			if (searchyaku(tmpYakuInfo, "立直")) {
 				addyaku tmpYakuInfo, "カラス立直", 1
 			}
@@ -40,8 +71,8 @@
 #ifndef SANMAS
 	/* 北枕 */
 	if (getRule(RULE_KITAMAKURA) != 0) {
-		if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) >= 2) { /* 2飜以上あるか？ */
-			if ((getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(tmpYakuInfo, YAKUINF_DORA)+getYakuInfo(tmpYakuInfo, YAKUINF_ALICEDORA)) < YAKUVAL_YAKUMAN) { /* 役満未満か？ */
+		if (currentHan(tmpYakuInfo) >= 2) { /* 2飜以上あるか？ */
+			if (currentHan(tmpYakuInfo) < YAKUVAL_YAKUMAN) { /* 役満未満か？ */
 				if (getDoraFlag(GameStat, DORA_OMOTE, TILE_NORTH_WIND) == 0) { /* 北はドラではないか？ */
 					if ((getMenzen(GameStat, targetPlayer) == 0)||(getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) == RIICHI_NO)||(getRule(RULE_URADORA) == 1)||(getDoraFlag(GameStat, DORA_URA, TILE_NORTH_WIND) == 0)) { /* 北は裏ドラではないか？ */
 						if (MianziDat(0) == TILE_NORTH_WIND) { /* 雀頭が北か？ */
@@ -55,4 +86,6 @@
 	}
 #endif
 return
+
+#undef currentHan
 #global

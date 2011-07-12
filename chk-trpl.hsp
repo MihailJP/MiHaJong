@@ -1566,5 +1566,45 @@
 			addyaku tmpYakuInfo, "Windows7", 1
 		}
 	}
+#ifndef SANMAS
+	/* “Œ•û•—_˜^ */
+	if (getRule(RULE_MOUNTAIN_OF_FAITH) != 0) {
+		yakuFlag = 0
+		if (KezCount(TILE_SUIT_CHARACTERS+6)+KezCount(TILE_SUIT_CIRCLES+6)+KezCount(TILE_SUIT_BAMBOOS+6) >= 1) {yakuFlag += 1}
+		if (KezCount(TILE_SUIT_CHARACTERS+7)+KezCount(TILE_SUIT_CIRCLES+7)+KezCount(TILE_SUIT_BAMBOOS+7) >= 1) {yakuFlag += 1}
+		if (KezCount(TILE_EAST_WIND)+KezCount(TILE_SOUTH_WIND)+KezCount(TILE_WEST_WIND)+KezCount(TILE_NORTH_WIND) >= 1) {yakuFlag += 1}
+		if ((yakuFlag == 3)&&(TsumoTile(GameStat, targetPlayer) == TILE_EAST_WIND)) {
+			addyakuman tmpYakuInfo, "“Œ•û•—_˜^", 1
+		}
+	}
+#ifndef SANMAX
+	/* ”—í—ì–² */
+	if (getRule(RULE_HAKUREI_REIMU) != 0) {
+		if ((DuiCount(TILE_SUIT_CHARACTERS+8) >= 1)&&(DuiCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+1) >= 1)) {
+			addyakuman tmpYakuInfo, "”—í—ì–²", 1
+			delyaku tmpYakuInfo, "‘ÎX˜a"
+			delyaku tmpYakuInfo, "âˆê–å"
+		}
+	}
+	/* –¶‰J–‚—¹ */
+	if (getRule(RULE_KIRISAME_MARISA) != 0) {
+		if ((DuiCount(TILE_NORTH_WIND) >= 1)&&(DuiCount(TILE_SOUTH_WIND) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+8) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_SUIT_CHARACTERS+3) >= 1)) {
+			addyakuman tmpYakuInfo, "–¶‰J–‚—¹", 1
+			delyaku tmpYakuInfo, "‘ÎX˜a"
+			delyaku tmpYakuInfo, "âˆê–å"
+		}
+	}
+#endif
+	/* \˜Z–éç–é */
+	if (getRule(RULE_IZAYOI_SAKUYA) != 0) {
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+8) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
+			if (MachiType == MACHI_SHANPON) {
+				addyakuman tmpYakuInfo, "\˜Z–éç–é", 1
+				delyaku tmpYakuInfo, "‘ÎX˜a"
+				delyaku tmpYakuInfo, "¬ˆêF"
+			}
+		}
+	}
+#endif
 return
 #global

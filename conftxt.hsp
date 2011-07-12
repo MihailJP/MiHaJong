@@ -2068,6 +2068,31 @@
 	RuleDescription(RULE_ALLMONEY) = "金一色の有無と価値を設定します(一萬と筒子のみで和了)"
 	RuleTxt(0, RULE_ALLMONEY) = "なし", "４飜"
 
+	RuleName(RULE_MOUNTAIN_OF_FAITH) = "東方風神録"
+	RuleDescription(RULE_MOUNTAIN_OF_FAITH) = "東方風神録の有無と価値を設定します(風牌、7、6の刻子があり東で和了)"
+	RuleTxt(0, RULE_MOUNTAIN_OF_FAITH) = "なし", "役満"
+	nonumsanma RULE_MOUNTAIN_OF_FAITH
+
+	RuleName(RULE_HAKUREI_REIMU) = "博麗霊夢"
+	RuleDescription(RULE_HAKUREI_REIMU) = "博麗霊夢の有無と価値を設定します(八萬、九萬、白、東、一筒で対々和)"
+	RuleTxt(0, RULE_HAKUREI_REIMU) = "なし", "役満"
+	nosanma RULE_HAKUREI_REIMU: nonumsanma RULE_HAKUREI_REIMU
+
+	RuleName(RULE_KIRISAME_MARISA) = "霧雨魔理沙"
+	RuleDescription(RULE_KIRISAME_MARISA) = "霧雨魔理沙の有無と価値を設定します(北、南、八筒、白、三萬で対々和)"
+	RuleTxt(0, RULE_KIRISAME_MARISA) = "なし", "役満"
+	nosanma RULE_KIRISAME_MARISA: nonumsanma RULE_KIRISAME_MARISA
+
+	RuleName(RULE_ALICE_MARGATROID) = "アリス・マーガトロイド"
+	RuleDescription(RULE_ALICE_MARGATROID) = "アリス・マーガトロイドの有無と価値を設定します(東、三元牌、7の三色同刻でツモ和了り対々和、明刻子が2つ以上あること)"
+	RuleTxt(0, RULE_ALICE_MARGATROID) = "なし", "倍満"
+	nosanma RULE_ALICE_MARGATROID: nonumsanma RULE_ALICE_MARGATROID
+
+	RuleName(RULE_IZAYOI_SAKUYA) = "十六夜咲夜"
+	RuleDescription(RULE_IZAYOI_SAKUYA) = "十六夜咲夜の有無と価値を設定します(西、三索、九索、八索の刻子、中雀頭の双ポン待ち和了)"
+	RuleTxt(0, RULE_IZAYOI_SAKUYA) = "なし", "役満"
+	nonumsanma RULE_IZAYOI_SAKUYA
+
 
 return
 
