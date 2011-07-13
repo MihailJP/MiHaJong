@@ -71,7 +71,14 @@ return
 /* ê›íËÇÃÉeÉLÉXÉg */
 #include "conftxt.hsp"
 
-#include "ruletxt.hsp"
+#deffunc chatshowrule var RuleList
+	configtxt
+	repeat NUM_OF_RULES
+		if ((RuleName(cnt) != "")&&(RuleTxt(0, cnt) != "ÇmÅ^Ç`")) {
+			RuleList += strf("%s: %s%s", RuleName(cnt), RuleTxt(Rule(cnt), cnt), "\n")
+		}
+	loop
+return
 
 #deffunc saveRule
 	tmpDigit = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
