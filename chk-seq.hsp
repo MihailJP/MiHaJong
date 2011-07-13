@@ -325,6 +325,17 @@
 			}
 		}
 #endif
+#ifndef SANMAS
+		/* –kŠC“¹VŠ²ü */
+		if (getRule(RULE_HOKKAIDO_SHINKANSEN) != 0) {
+			countAnKangz AnKangzCount, MianziDat
+			if ((AnKangzCount(TILE_WHITE_DRAGON) >= 1)&&(MianziDat(0) == TILE_NORTH_WIND)) {
+				addyakuman tmpYakuInfo, "–kŠC“¹VŠ²ü", 1
+				delyaku tmpYakuInfo, "ˆê‹C’ÊŠÑ"
+				delyaku tmpYakuInfo, "¬ˆêF"
+			}
+		}
+#endif
 	}
 	/* ‹à–å‹´ */
 	if (getRule(RULE_GOLDEN_GATE_BRIDGE) != 0) {

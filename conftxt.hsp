@@ -2107,6 +2107,11 @@
 	RuleDescription(RULE_MEILING) = "美鈴の有無と価値を設定します(二索で栄和)"
 	RuleTxt(0, RULE_MEILING) = "なし", "１飜"
 
+	RuleName(RULE_HOKKAIDO_SHINKANSEN) = "北海道新幹線"
+	RuleDescription(RULE_HOKKAIDO_SHINKANSEN) = "北海道新幹線の有無と価値を設定します(白を暗槓、北を雀頭にした一気通貫)"
+	RuleTxt(0, RULE_HOKKAIDO_SHINKANSEN) = "なし", "役満"
+	nonumsanma RULE_HOKKAIDO_SHINKANSEN
+
 
 return
 
