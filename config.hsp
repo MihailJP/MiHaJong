@@ -306,13 +306,24 @@ return
 
 *ruleselbtn
 	tmpBtnCode=stat
-	repeat 1
-		tmpRuleNum = (configPage-1)*RULES_IN_PAGE+tmpBtnCode-1
-		dsplay@ SND_CLICK
-		Rule(tmpRuleNum)++
-		if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == ">>>") {continue 0}
-		if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == "") {Rule(tmpRuleNum) == 0}
-	loop
+	dsplay@ SND_CLICK
+	getkey KeyFlag, 16
+	if (KeyFlag) {
+		repeat 1
+			tmpRuleNum = (configPage-1)*RULES_IN_PAGE+tmpBtnCode-1
+			Rule(tmpRuleNum)--
+			if (Rule(tmpRuleNum) < 0) {Rule(tmpRuleNum) = length(RuleTxt)-1}
+			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == ">>>") {continue 0}
+			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == "") {continue 0}
+		loop
+	} else {
+		repeat 1
+			tmpRuleNum = (configPage-1)*RULES_IN_PAGE+tmpBtnCode-1
+			Rule(tmpRuleNum)++
+			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == ">>>") {continue 0}
+			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == "") {Rule(tmpRuleNum) == 0}
+		loop
+	}
 	gosub *config_redraw
 	return
 #global
