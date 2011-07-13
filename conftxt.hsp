@@ -2103,6 +2103,10 @@
 	RuleTxt(0, RULE_JUNSEI_SEINANSENSOU) = "ศต", "–๐–"
 	nonumsanma RULE_JUNSEI_SEINANSENSOU
 
+	RuleName(RULE_MEILING) = "”ü—้"
+	RuleDescription(RULE_MEILING) = "”ü—้ฬ—L–ณฦฟ’l๐Ý’่ตÜท(“๑๕ลha)"
+	RuleTxt(0, RULE_MEILING) = "ศต", "Pใส"
+
 
 return
 

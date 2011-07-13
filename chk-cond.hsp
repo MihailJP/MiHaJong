@@ -333,6 +333,12 @@
 			addyaku tmpYakuInfo, "Žl”n˜H", 1
 		}
 	}
+	/* ”ü—é */
+	if (getRule(RULE_MEILING) != 0) {
+		if ((TsumoTile(GameStat, targetPlayer) == TILE_SUIT_BAMBOOS+2)&&(getTsumoAgariFlag(GameStat) == 0)) {
+			addyaku tmpYakuInfo, "”ü—é", 1
+		}
+	}
 #ifndef SANMAS
 	/* ‹q—ˆ˜a */
 	if (getRule(RULE_OTAKAZE_RON) != 0) {

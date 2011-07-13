@@ -461,6 +461,7 @@
 #enum RULE_GOLDDRAGON
 #enum RULE_WHIRLWIND
 #enum RULE_BOLT_FROM_THE_BLUE
+#enum RULE_MEILING
 
 /* ƒfƒŠƒ~ƒ^ */
 #enum END_OF_SECTION
