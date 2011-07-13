@@ -2098,6 +2098,11 @@
 	RuleTxt(0, RULE_SEINANSENSOU) = "なし", "２飜"
 	nonumsanma RULE_SEINANSENSOU
 
+	RuleName(RULE_JUNSEI_SEINANSENSOU) = "純正西南戦争"
+	RuleDescription(RULE_JUNSEI_SEINANSENSOU) = "純正西南戦争の有無と価値を設定します(西、南の刻子、9の三色小同刻)"
+	RuleTxt(0, RULE_JUNSEI_SEINANSENSOU) = "なし", "役満"
+	nonumsanma RULE_JUNSEI_SEINANSENSOU
+
 
 return
 

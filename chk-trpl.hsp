@@ -1611,6 +1611,12 @@
 			addyaku tmpYakuInfo, "¼“ìí‘ˆ", 2
 		}
 	}
+	/* ƒ³¼“ìí‘ˆ */
+	if (getRule(RULE_JUNSEI_SEINANSENSOU) != 0) {
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SOUTH_WIND) >= 1)&&(DuiCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+9) >= 1)&&(DuiCount(TILE_SUIT_BAMBOOS+9) >= 1)) {
+			addyakuman tmpYakuInfo, "ƒ³¼“ìí‘ˆ", 1
+		}
+	}
 #endif
 return
 #global
