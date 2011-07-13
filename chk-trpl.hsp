@@ -1605,6 +1605,12 @@
 			}
 		}
 	}
+	/* ¼“ìí‘ˆ */
+	if (getRule(RULE_SEINANSENSOU) != 0) {
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SOUTH_WIND) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)) {
+			addyaku tmpYakuInfo, "¼“ìí‘ˆ", 2
+		}
+	}
 #endif
 return
 #global
