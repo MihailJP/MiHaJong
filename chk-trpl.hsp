@@ -180,6 +180,15 @@
 		} else {
 			addyaku tmpYakuInfo, "三色同刻", 2
 		}
+#ifndef SANMAS
+		/* 四色同刻 */
+		if (getRule(RULE_YONSHOKU_DOUKOH) != 0) {
+			if (KezCount(TILE_WHITE_DRAGON) >= 1) {
+				addyakuman tmpYakuInfo, "四色同刻", 1
+				delyaku tmpYakuInfo, "三色同刻"
+			}
+		}
+#endif
 	}
 	/* 三色小同刻 */
 	if (getRule(RULE_SANSHOKU_SHOUDOUKOH) != 0) {

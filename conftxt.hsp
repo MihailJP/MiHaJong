@@ -2122,6 +2122,11 @@
 	RuleTxt(0, RULE_KYUSHU_SHINKANSEN) = "なし", "役満"
 	nonumsanma RULE_KYUSHU_SHINKANSEN
 
+	RuleName(RULE_YONSHOKU_DOUKOH) = "四色同刻"
+	RuleDescription(RULE_YONSHOKU_DOUKOH) = "四色同刻の有無と価値を設定します(白の刻子がある三色同刻)"
+	RuleTxt(0, RULE_YONSHOKU_DOUKOH) = "なし", "役満"
+	nonumsanma RULE_YONSHOKU_DOUKOH
+
 
 return
 
