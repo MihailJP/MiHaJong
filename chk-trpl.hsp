@@ -1617,6 +1617,17 @@
 			addyakuman tmpYakuInfo, "純正西南戦争", 1
 		}
 	}
+	/* 九州新幹線 */
+	if (getRule(RULE_KYUSHU_SHINKANSEN) != 0) {
+		if ((KezCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+9) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)) {
+			if (DuiCount(TILE_EAST_WIND)+DuiCount(TILE_SOUTH_WIND)+DuiCount(TILE_WEST_WIND)+DuiCount(TILE_NORTH_WIND) >= 1) {
+				if (DuiCount(TILE_WHITE_DRAGON)+DuiCount(TILE_GREEN_DRAGON)+DuiCount(TILE_RED_DRAGON) >= 1) {
+					addyakuman tmpYakuInfo, "九州新幹線", 1
+					delyaku tmpYakuInfo, "三色同刻"
+				}
+			}
+		}
+	}
 #endif
 return
 #global
