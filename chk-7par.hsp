@@ -457,5 +457,17 @@
 			delyaku tmpYakuInfo, "絶一門"
 		}
 	}
+	/* 三色同対 */
+	if (getRule(RULE_SANSHOKU_DOUTOI) != 0) {
+		yakuFlag = 0
+		repeat 9, 1
+			if ((tileCount(TILE_SUIT_CHARACTERS+cnt) >= 2)&&(tileCount(TILE_SUIT_CIRCLES+cnt) >= 2)&&(tileCount(TILE_SUIT_BAMBOOS+cnt) >= 2)) {
+				yakuFlag = 1
+			}
+		loop
+		if (yakuFlag) {
+			addyaku tmpYakuInfo, "三色同対", 1
+		}
+	}
 return
 #global

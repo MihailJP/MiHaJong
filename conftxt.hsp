@@ -2131,6 +2131,10 @@
 	RuleDescription(RULE_KOFUKU_GEKIJOH) = "鼓腹撃壌の有無と価値を設定します(平和を一筒で和了)"
 	RuleTxt(0, RULE_KOFUKU_GEKIJOH) = "なし", "２飜"
 
+	RuleName(RULE_SANSHOKU_DOUTOI) = "三色同対"
+	RuleDescription(RULE_SANSHOKU_DOUTOI) = "三色同対の有無と価値を設定します(同一数字の対子3種を含む七対子:付加役)"
+	RuleTxt(0, RULE_SANSHOKU_DOUTOI) = "なし", "１飜"
+
 
 return
 
