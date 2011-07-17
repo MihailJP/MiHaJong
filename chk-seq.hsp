@@ -266,6 +266,18 @@
 				delyaku tmpYakuInfo, "一気通貫"
 			}
 		}
+		/* 秋田新幹線 */
+		if (getRule(RULE_AKITA_SHINKANSEN) != 0) {
+			if (KezCount(TILE_NORTH_WIND) >= 1) {
+				if (searchyaku(tmpYakuInfo, "混一色")) {
+					if (TsumoTile(GameStat, targetPlayer) == straightColor*TILE_SUIT_STEP+5) {
+						addyakuman tmpYakuInfo, "秋田新幹線", 1
+						delyaku tmpYakuInfo, "一気通貫"
+						delyaku tmpYakuInfo, "混一色"
+					}
+				}
+			}
+		}
 		/* 上越新幹線とき */
 		if (getRule(RULE_JOETSU_TOKI) != 0) {
 			if ((KezCount(TILE_NORTH_WIND) >= 1)||(MianziDat(0) == TILE_NORTH_WIND)) {

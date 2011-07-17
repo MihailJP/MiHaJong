@@ -2112,6 +2112,11 @@
 	RuleTxt(0, RULE_HOKKAIDO_SHINKANSEN) = "なし", "役満"
 	nonumsanma RULE_HOKKAIDO_SHINKANSEN
 
+	RuleName(RULE_AKITA_SHINKANSEN) = "秋田新幹線"
+	RuleDescription(RULE_AKITA_SHINKANSEN) = "秋田新幹線の有無と価値を設定します(北の刻子がある5待ちの混一色一気通貫)"
+	RuleTxt(0, RULE_AKITA_SHINKANSEN) = "なし", "役満"
+	nonumsanma RULE_AKITA_SHINKANSEN
+
 
 return
 
