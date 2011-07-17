@@ -149,6 +149,13 @@
 			if ((getRule(RULE_EXPOSED_PINFU) == 2)||(getRule(RULE_EXPOSED_PINFU) == 3)||(getRule(RULE_EXPOSED_PINFU) == 4)||(getRule(RULE_EXPOSED_PINFU) == 5)) {
 				if ((getRule(RULE_EXPOSED_PINFU) == 2)||(getRule(RULE_EXPOSED_PINFU) == 3)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, 1}
 				addyaku tmpYakuInfo, "ïΩòa", 1
+				/* å€ï†åÇèÎ */
+				if (getRule(RULE_KOFUKU_GEKIJOH) != 0) {
+					if (TsumoTile(GameStat, targetPlayer) == straightColor*TILE_SUIT_STEP+5) {
+						addyaku tmpYakuInfo, "å€ï†åÇèÎ", 2
+						delyaku tmpYakuInfo, "ïΩòa"
+					}
+				}
 			}
 		}
 	} else {

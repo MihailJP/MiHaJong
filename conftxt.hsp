@@ -2127,6 +2127,10 @@
 	RuleTxt(0, RULE_YONSHOKU_DOUKOH) = "ศต", "–๐–"
 	nonumsanma RULE_YONSHOKU_DOUKOH
 
+	RuleName(RULE_KOFUKU_GEKIJOH) = "Û• ๋"
+	RuleDescription(RULE_KOFUKU_GEKIJOH) = "Û• ๋ฬ—L–ณฦฟ’l๐Ý’่ตÜท(•ฝa๐๊“ลa—น)"
+	RuleTxt(0, RULE_KOFUKU_GEKIJOH) = "ศต", "Qใส"
+
 
 return
 
