@@ -859,7 +859,9 @@
 		if (yakuFlagCount == SIZE_OF_MELD_BUFFER) {
 			addyaku tmpYakuInfo, "ãÙêîëŒÅXòa", 5
 			delyaku tmpYakuInfo, "ëŒÅXòa"
-			if ((getRule(RULE_KUITAN) == 2)&&(getMenzen(GameStat, targetPlayer) == 0)) {addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, -1}
+			if ((getRule(RULE_KUITAN) == 2)&&(getMenzen(GameStat, targetPlayer) == 0)) {
+				addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, 1: addYakuInfo tmpYakuInfo, YAKUINF_HAN_BONUS, -1
+			}
 			delyaku tmpYakuInfo, "ífõÙã„"
 		}
 	}

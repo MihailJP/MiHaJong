@@ -347,20 +347,22 @@ return
 	tmpYakuVal = getYakuInfo(tmpYakuInfo, YAKUINF_YAKUVALLIST)
 	targetLine = notesearch(tmpYakuName, tmpyakuDelete)
 	if (targetLine >= 0) {
-		notesel tmpYakuName: noteget tmpValXX, targetLine: noteunsel
+		notesel tmpYakuVal: noteget tmpValXX, targetLine: noteunsel
 		tmpDeleteHan = 0
-		switch tmpValXX
-			case "ÇX„ ": tmpDeleteHan++ /* FALLTHRU */
-			case "ÇW„ ": tmpDeleteHan++ /* FALLTHRU */
-			case "ÇV„ ": tmpDeleteHan++ /* FALLTHRU */
-			case "ÇU„ ": tmpDeleteHan++ /* FALLTHRU */
-			case "ÇT„ ": tmpDeleteHan++ /* FALLTHRU */
-			case "ÇS„ ": tmpDeleteHan++ /* FALLTHRU */
-			case "ÇR„ ": tmpDeleteHan++ /* FALLTHRU */
-			case "ÇQ„ ": tmpDeleteHan++ /* FALLTHRU */
-			case "ÇP„ ": tmpDeleteHan++: swbreak
+		tmpValXXX = strmid(tmpValXX, 0, 2)
+		switch tmpValXXX
+			case "ÇX": tmpDeleteHan++ /* FALLTHRU */
+			case "ÇW": tmpDeleteHan++ /* FALLTHRU */
+			case "ÇV": tmpDeleteHan++ /* FALLTHRU */
+			case "ÇU": tmpDeleteHan++ /* FALLTHRU */
+			case "ÇT": tmpDeleteHan++ /* FALLTHRU */
+			case "ÇS": tmpDeleteHan++ /* FALLTHRU */
+			case "ÇR": tmpDeleteHan++ /* FALLTHRU */
+			case "ÇQ": tmpDeleteHan++ /* FALLTHRU */
+			case "ÇP": tmpDeleteHan++: swbreak
+			case "ÇO": /* do nothing */: swbreak
 			default:
-			tmpDeleteHan = int(strmid(tmpValXX, 0, 2))
+			tmpDeleteHan = int(tmpValXXX)
 		swend
 		notesel tmpYakuName: notedel targetLine: noteunsel
 		notesel tmpYakuVal: notedel targetLine: noteunsel
