@@ -237,7 +237,7 @@ return
 	tmpDigit = "‚O‚P‚Q‚R‚S‚T‚U‚V‚W‚X"
 	addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, yakuVal
 	addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKULIST, yakuName+"\n"
-	if (yakuVal < 10) {addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST, strmid(tmpDigit, yakuVal*2, 2)+"ãÊ\n"}
+	if ((yakuVal >= 0)&&(yakuVal < 10)) {addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST, strmid(tmpDigit, yakuVal*2, 2)+"ãÊ\n"}
 	else {addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUVALLIST, ""+yakuVal+"ãÊ\n"}
 	trace strf("–ð‚ð’Ç‰Á [%s] A [%d] ãÊA—ÝŒv [%d]",yakuName, yakuVal, getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE))
 	return
