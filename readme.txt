@@ -50,11 +50,10 @@
 	・メール： mihailjp@gmail.com
 	・Twitter： @MihailJP
 	
-	　また、バグレポートや要望はTracのシステムでも受け付けています。
-	http://trac.assembla.com/mihajong/ から「New Ticket」を選択し、報告したい
-	内容を記入します。
-	　また、最新の開発版は次のSubversionリポジトリで公開されています。
-	http://subversion.assembla.com/svn/mihajong/trunk/
+	　また、バグレポートや要望は開発室(Wiki)でも受け付けています。
+	http://www14.atwiki.jp/mihajong/
+	　また、最新の開発版はGitHubのリポジトリで公開されています。
+	https://github.com/MihailJP/MiHaJong/
 
 
 ■ 既知の問題点
