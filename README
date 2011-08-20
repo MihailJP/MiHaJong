@@ -1,0 +1,26 @@
+MiHaJong - Japanese Mahjong with a lot of local rules implemented
+Copyright (c) 2008-2011 MihailJP, Part of rights reserved
+
+Run on Windows XP/Vista/7 with Direct X 9+
+
+Build-time requirements are:
+- Hot Soup Processor (http://hsp.tv/)
+- p2b.dll (http://www.geocities.jp/anachronism128/)
+- hmm.dll (http://hsp.tv/make/tool3.html)
+- hsplzmax.dll (http://www.vector.co.jp/soft/winnt/prog/se489215.html)
+- l_tooltips.as (http://lhsp.s206.xrea.com/hsp_object6.html)
+- mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
+- Let's HSPIC! (http://lhsp.s206.xrea.com/works/hsp.html)
+- Resource Hacker (http://www.angusj.com/resourcehacker/)
+- UPX (http://upx.sourceforge.net/)
+
+See readme.txt for more (written in Japanese)
+See playing.txt for how to play (written in Japanese)
+See license.txt for license text (mainly written in Japanese)
+history.txt describes each release.
+
+logger.hsp is not a part of the software, but useful for debugging.
+The debug log feature is available only when logger.hsp is successfully built.
+(Don't forget turning off this feature when in release build)
+
+** We use Japanese language in this project **
