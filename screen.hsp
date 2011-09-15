@@ -1003,10 +1003,11 @@ return
 			case RELATIVE_KAMICHA: pos 10, 601: tmpposname = "ã‰Æ": swbreak
 		swend
 #endif
-		tmpcnt = cnt: tmpdiff = 0.0
+		tmpcnt = cnt: tmpdiff = 0.0: tmppow = "1"
 		repeat NUM_OF_DIGIT_GROUPS
-			tmpdiff += double((getScore(GameStat,getPlayer(GameStat), cnt) - getScore(GameStat,(getPlayer(GameStat)+tmpcnt)\NUM_OF_PLAYERS, cnt)))*powf(10,8*cnt)
+			tmpdiff += double(getScore(GameStat,getPlayer(GameStat), cnt) - getScore(GameStat,(getPlayer(GameStat)+tmpcnt)\NUM_OF_PLAYERS, cnt))*double(tmppow)
 			if (cnt==0) {tmpdiff *= 100.0}
+			tmppow += "00000000"
 		loop
 		if (tmpdiff > 48000.0)&&(getRule(RULE_LIMITLESS) == 0) {
 			color 0, 128, 255
