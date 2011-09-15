@@ -68,12 +68,12 @@
 ■ MihailJPの開発環境
 
 	・OS：Windows 7 Home Premium 32bit (Service Pack 1)
-	・物理メモリ：OS認識3GB、搭載4GB
-	・CPU：Intel Core i5 750 2.67GHz
-	・開発言語：Hot Soup Processor ver3.2
+	・物理メモリ：2GB
+	・CPU：Intel Core2 Duo E8200 2.66GHz
+	・開発言語：Hot Soup Processor ver3.3
 	・画像編集ツール：GIMP 2.6
 	・テキストエディタ：Mery
-	・Subversionクライアント：Tortoise SVN と Cygwin SVN の併用
+	・Gitクライアント：Cygwin GIT の併用
 
 
 ■ ビルドに別途必要なもの
