@@ -34,7 +34,7 @@
 		countAnKez AnKezCount, MianziDat: AnKe = stat
 		if (getTsumoAgariFlag(GameStat) == 1) {
 			if (AnKe < 3) {
-				if ((DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_WHITE_DRAGON)+DuiCount(TILE_GREEN_DRAGON)+DuiCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+7) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+7) >= 1)) {
+				if ((DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_WHITE_DRAGON)+DuiCount(TILE_GREEN_DRAGON)+DuiCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_CHARACTER_SEVEN) >= 1)&&(KezCount(TILE_CIRCLE_SEVEN) >= 1)&&(KezCount(TILE_BAMBOO_SEVEN) >= 1)) {
 					/*	§ŒÀ–€
 						ŒÅ’è–ŠÑ–ğAŒÅ’è’µ––ğ‚ª¬—§‚µ‚Ä‚¢‚éê‡A
 						‚±‚Ì–ğ‚Í¬—§‚µ‚Ü‚¹‚ñ */

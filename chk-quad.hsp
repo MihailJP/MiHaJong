@@ -122,15 +122,15 @@
 	if (getRule(RULE_GRAND_CANYON) != 0) {
 		yakuFlag = 0
 		countKez KezCount, MianziDat
-		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)||(KezCount(TILE_SUIT_CIRCLES+8) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+8) >= 1)) {yakuFlag = 1}
-		if ((KangzCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(KangzCount(TILE_SUIT_CIRCLES+9) >= 1)&&(KangzCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(yakuFlag == 1)&&(MianziDat(0) \ TILE_SUIT_STEP == 8)) {
+		if ((KezCount(TILE_CHARACTER_EIGHT) >= 1)||(KezCount(TILE_CIRCLE_EIGHT) >= 1)||(KezCount(TILE_BAMBOO_EIGHT) >= 1)) {yakuFlag = 1}
+		if ((KangzCount(TILE_CHARACTER_NINE) >= 1)&&(KangzCount(TILE_CIRCLE_NINE) >= 1)&&(KangzCount(TILE_BAMBOO_NINE) >= 1)&&(yakuFlag == 1)&&(MianziDat(0) \ TILE_SUIT_STEP == 8)) {
 			addyakuman tmpYakuInfo, "‘å‹¬’J", 1
 		}
 	}
 #ifndef SANMAS
 	/* á‰»Ï */
 	if (getRule(RULE_YUKIGESHOU) != 0) {
-		if ((KangzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KangzCount(TILE_SUIT_CIRCLES+9) >= 1)&&(KangzCount(TILE_WHITE_DRAGON) >= 1)) {
+		if ((KangzCount(TILE_CIRCLE_ONE) >= 1)&&(KangzCount(TILE_CIRCLE_NINE) >= 1)&&(KangzCount(TILE_WHITE_DRAGON) >= 1)) {
 			addyakuman tmpYakuInfo, "á‰»Ï", 1
 			delyaku tmpYakuInfo, "–ğ”vE”’"
 		}
@@ -207,25 +207,25 @@
 #endif
 	/* íÔ */
 	if (getRule(RULE_TANK) != 0) {
-		if (KangzCount(TILE_SUIT_BAMBOOS+7) >= 1) {
+		if (KangzCount(TILE_BAMBOO_SEVEN) >= 1) {
 			addyaku tmpYakuInfo, "íÔ", 1
 		}
 	}
 	/* ^“c˜Z•¶‘K */
 	if (getRule(RULE_SANADACOIN) != 0) {
-		if (KangzCount(TILE_SUIT_CIRCLES+6) >= 1) {
+		if (KangzCount(TILE_CIRCLE_SIX) >= 1) {
 			addyaku tmpYakuInfo, "^“c˜Z•¶‘K", 1
 		}
 	}
 	/* O–î‚Ì¾‚¢ */
 	if (getRule(RULE_THREE_ARROWS) != 0) {
-		if (KangzCount(TILE_SUIT_BAMBOOS+3) >= 1) {
+		if (KangzCount(TILE_BAMBOO_THREE) >= 1) {
 			addyaku tmpYakuInfo, "O–î‚Ì¾‚¢", 1
 		}
 	}
 	/* ‹S‚ÍŠO */
 	if (getRule(RULE_SETSUBUN) != 0) {
-		if (KangzCount(TILE_SUIT_CIRCLES+9) >= 1) {
+		if (KangzCount(TILE_CIRCLE_NINE) >= 1) {
 			TZ = julian(gettime(0), gettime(1), gettime(3), gettime(4), gettime(5), gettime(6), gettime(7)) - julian(getutc(0), getutc(1), getutc(3), getutc(4), getutc(5), getutc(6), getutc(7))
 			/* —‚“ú‚ª—§t‚Å‚ ‚é‚©‚ğ”»’è‚·‚éBƒ^ƒCƒ€ƒ][ƒ“‚Í©“®”F¯‚·‚é */
 			if ((sun_ecliptic(julian(gettime(0), gettime(1), gettime(3), 0, 0, 0, 0) + TZ + 1.0) <= 315.0)&&(sun_ecliptic(julian(gettime(0), gettime(1), gettime(3), 0, 0, 0, 0) + TZ + 2.0) > 315.0)) {

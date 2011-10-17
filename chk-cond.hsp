@@ -139,7 +139,7 @@
 		}
 		/* ŒÜ“›ŠJ‰Ô */
 		if (getRule(RULE_UUPIN_KAIHOH) != 0) {
-			if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+5) {
+			if (TsumoTile(GameStat, targetPlayer) == TILE_CIRCLE_FIVE) {
 				if (getRule(RULE_UUPIN_KAIHOH) == 1) {
 					addyakuman tmpYakuInfo, "ŒÜ“›ŠJ‰Ô", 1
 				} else {
@@ -190,7 +190,7 @@
 				addyaku tmpYakuInfo, "ŠC’ê–ÌŒ", 1
 				/* ˆê“›–ÌŒ */
 				if (getRule(RULE_IIPIN_MOYUE) != 0) {
-					if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+1) {
+					if (TsumoTile(GameStat, targetPlayer) == TILE_CIRCLE_ONE) {
 						if (getRule(RULE_IIPIN_MOYUE) == 1) {
 							addyakuman tmpYakuInfo, "ˆê“›–ÌŒ", 1
 						} else {
@@ -201,13 +201,13 @@
 				}
 				/* ŠC’êj */
 				if (getRule(RULE_HAITEI_RAOTSEN) != 0) {
-					if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CHARACTERS+1) {
+					if (TsumoTile(GameStat, targetPlayer) == TILE_CHARACTER_ONE) {
 						addyaku tmpYakuInfo, "ŠC’êj", 1
 					}
 				}
 				/* ŠC’ê‰Ô */
 				if (getRule(RULE_HAITEI_RAOHWA) != 0) {
-					if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+5) {
+					if (TsumoTile(GameStat, targetPlayer) == TILE_CIRCLE_FIVE) {
 						addyaku tmpYakuInfo, "ŠC’ê‰Ô", 1
 					}
 				}
@@ -226,7 +226,7 @@
 				addyaku tmpYakuInfo, "‰Í’ê‹›", 1
 				/* ‹ã“›‹› */
 				if (getRule(RULE_CHUUPIN_RAOYUI) != 0) {
-					if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+9) {
+					if (TsumoTile(GameStat, targetPlayer) == TILE_CIRCLE_NINE) {
 						if (getRule(RULE_CHUUPIN_RAOYUI) == 1) {
 							addyakuman tmpYakuInfo, "‹ã“›‹›", 1
 						} else {
@@ -287,7 +287,7 @@
 		addyaku tmpYakuInfo, "È", 1
 		/* “ñõÈ */
 		if (getRule(RULE_RYANZOH_CHANKAN) != 0) {
-			if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_BAMBOOS+2) {
+			if (TsumoTile(GameStat, targetPlayer) == TILE_BAMBOO_TWO) {
 				if (getRule(RULE_RYANZOH_CHANKAN) == 1) {
 					addyakuman tmpYakuInfo, "“ñõÈ", 1
 				} else {
@@ -329,13 +329,13 @@
 	}
 	/* l”n˜H */
 	if (getRule(RULE_SUMARO) != 0) {
-		if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CHARACTERS+4)&&(getSumaroFlag(GameStat, targetPlayer) == 1)&&(getTsumoAgariFlag(GameStat) == 0) {
+		if (TsumoTile(GameStat, targetPlayer) == TILE_CHARACTER_FOUR)&&(getSumaroFlag(GameStat, targetPlayer) == 1)&&(getTsumoAgariFlag(GameStat) == 0) {
 			addyaku tmpYakuInfo, "l”n˜H", 1
 		}
 	}
 	/* ”ü—é */
 	if (getRule(RULE_MEILING) != 0) {
-		if ((TsumoTile(GameStat, targetPlayer) == TILE_SUIT_BAMBOOS+2)&&(getTsumoAgariFlag(GameStat) == 0)) {
+		if ((TsumoTile(GameStat, targetPlayer) == TILE_BAMBOO_TWO)&&(getTsumoAgariFlag(GameStat) == 0)) {
 			addyaku tmpYakuInfo, "”ü—é", 1
 		}
 	}
@@ -369,7 +369,7 @@
 #endif
 	/* –PŠÒ‘ƒŒn—ñ‚Ì–ğ */
 	tmpRuleCodeList = RULE_HOUKANSOU, RULE_GEKKANJUN, RULE_SHINRIISHOU, RULE_KINKI_KIKAN, RULE_HOKUTO_SHOUKAN, RULE_DAIJA_KANKETSU, RULE_DONGFENGCHUI, RULE_NANFENGCHUI, RULE_XIFENGCHUI, RULE_BEIFENGCHUI
-	tmpTileCodeList = TILE_SUIT_BAMBOOS+1, TILE_SUIT_CIRCLES+1, TILE_SUIT_CHARACTERS+1, TILE_SUIT_BAMBOOS+7, TILE_SUIT_CIRCLES+7, TILE_SUIT_CHARACTERS+7, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND
+	tmpTileCodeList = TILE_BAMBOO_ONE, TILE_CIRCLE_ONE, TILE_CHARACTER_ONE, TILE_BAMBOO_SEVEN, TILE_CIRCLE_SEVEN, TILE_CHARACTER_SEVEN, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND
 	sdim tmpYakuNameList, 16, length(tmpRuleCodeList)
 	tmpYakuNameList = "–PŠÒ‘ƒ", "ŒŠÒ„", "j–ßè", "‹à‹T‹AŠÒ", "–k“l¢ŠÒ", "‘åÖŠÒŒŠ", "“Œ•—", "“ì•—", "¼•—", "–k•—"
 	repeat length(tmpRuleCodeList)

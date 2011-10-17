@@ -19,17 +19,17 @@
 				JihaiCount++
 				/* FALLTHRU */
 #endif
-			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
-			case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
-			case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
+			case TILE_CHARACTER_ONE: case TILE_CHARACTER_NINE:
+			case TILE_CIRCLE_ONE: case TILE_CIRCLE_NINE:
+			case TILE_BAMBOO_ONE: case TILE_BAMBOO_NINE:
 				tmpyaojiu++
 			swbreak
 		swend
 		switch (MianziDat(cnt) \ TILE_CODE_MAXIMUM)
-			case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CIRCLES+1: case TILE_SUIT_BAMBOOS+1:
+			case TILE_CHARACTER_ONE: case TILE_CIRCLE_ONE: case TILE_BAMBOO_ONE:
 				OneCount++
 			swbreak
-			case TILE_SUIT_CHARACTERS+9: case TILE_SUIT_CIRCLES+9: case TILE_SUIT_BAMBOOS+9:
+			case TILE_CHARACTER_NINE: case TILE_CIRCLE_NINE: case TILE_BAMBOO_NINE:
 				NineCount++
 			swbreak
 		swend

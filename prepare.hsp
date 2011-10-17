@@ -592,7 +592,7 @@ return
 #endif
 	if (getRule(RULE_NAGATACHO) != 0) {
 		// 永田町ルール
-		tmpDora == TILE_SUIT_BAMBOOS+7: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora // 七索は常にドラ
+		tmpDora == TILE_BAMBOO_SEVEN: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora // 七索は常にドラ
 		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) <= 8) { // 2～8はその数牌がドラ　三麻では萬子がないので別処理
 #ifndef SANMAX
 			tmpDora == (getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+TILE_SUIT_CHARACTERS: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
@@ -601,9 +601,9 @@ return
 			tmpDora == (getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+TILE_SUIT_BAMBOOS: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
 		}
 		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) == 9) { // 9はそのまま9がドラ
-			tmpDora == TILE_SUIT_CHARACTERS+9: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_SUIT_CIRCLES+9: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_SUIT_BAMBOOS+9: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_CHARACTER_NINE: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_CIRCLE_NINE: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_BAMBOO_NINE: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
 		}
 		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) == 10) { // 10は三元牌がドラ
 			tmpDora == TILE_WHITE_DRAGON: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
@@ -611,9 +611,9 @@ return
 			tmpDora == TILE_RED_DRAGON: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
 		}
 		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) == 11) { // 11は数牌の1がドラ
-			tmpDora == TILE_SUIT_CHARACTERS+1: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_SUIT_CIRCLES+1: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_SUIT_BAMBOOS+1: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_CHARACTER_ONE: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_CIRCLE_ONE: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
+			tmpDora == TILE_BAMBOO_ONE: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
 		}
 		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) == 12) { // 12は風牌全てドラ
 			tmpDora == TILE_EAST_WIND: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora

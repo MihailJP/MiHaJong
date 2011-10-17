@@ -942,18 +942,18 @@ return DiscardTileIndex
 					tmpYaojiuTilesCount = 0
 					repeat NUM_OF_TILES_IN_HAND-1
 						switch getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
-							case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
-							case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
-							case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
+							case TILE_CHARACTER_ONE: case TILE_CHARACTER_NINE:
+							case TILE_CIRCLE_ONE: case TILE_CIRCLE_NINE:
+							case TILE_BAMBOO_ONE: case TILE_BAMBOO_NINE:
 							case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
 							case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON
 								tmpYaojiuTilesCount++
 						swend
 					loop
 					switch getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-						case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
-						case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
-						case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
+						case TILE_CHARACTER_ONE: case TILE_CHARACTER_NINE:
+						case TILE_CIRCLE_ONE: case TILE_CIRCLE_NINE:
+						case TILE_BAMBOO_ONE: case TILE_BAMBOO_NINE:
 						case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
 						case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON
 							tmpYaojiuTilesCount++
@@ -1039,18 +1039,18 @@ return DiscardTileIndex
 			repeat NUM_OF_TILES_IN_HAND-1
 				await 0
 				switch getHand(GameStat, HAND_TILECODE, cnt, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))
-					case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
-					case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
-					case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
+					case TILE_CHARACTER_ONE: case TILE_CHARACTER_NINE:
+					case TILE_CIRCLE_ONE: case TILE_CIRCLE_NINE:
+					case TILE_BAMBOO_ONE: case TILE_BAMBOO_NINE:
 					case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
 					case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON
 						tmpYaojiuTilesCount++
 				swend
 			loop
 			switch getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-				case TILE_SUIT_CHARACTERS+1: case TILE_SUIT_CHARACTERS+9:
-				case TILE_SUIT_CIRCLES+1: case TILE_SUIT_CIRCLES+9:
-				case TILE_SUIT_BAMBOOS+1: case TILE_SUIT_BAMBOOS+9:
+				case TILE_CHARACTER_ONE: case TILE_CHARACTER_NINE:
+				case TILE_CIRCLE_ONE: case TILE_CIRCLE_NINE:
+				case TILE_BAMBOO_ONE: case TILE_BAMBOO_NINE:
 				case TILE_EAST_WIND: case TILE_SOUTH_WIND: case TILE_WEST_WIND: case TILE_NORTH_WIND:
 				case TILE_WHITE_DRAGON: case TILE_GREEN_DRAGON: case TILE_RED_DRAGON
 					tmpYaojiuTilesCount++

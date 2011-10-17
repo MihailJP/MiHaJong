@@ -73,13 +73,13 @@
 #deffunc miscyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	/* óŒàÍêF */
 #ifdef SANMAS
-	dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8
-	dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+	dim targetKez,1: targetKez=TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_SIX, TILE_BAMBOO_EIGHT
+	dim targetShunz,1: targetShunz=TILE_BAMBOO_TWO
 	yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 	verdflag = 0
 #else
-	dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_GREEN_DRAGON
-	dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+	dim targetKez,1: targetKez=TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_SIX, TILE_BAMBOO_EIGHT, TILE_GREEN_DRAGON
+	dim targetShunz,1: targetShunz=TILE_BAMBOO_TWO
 	yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 	dim targetKez,1: targetKez=TILE_GREEN_DRAGON
 	dim targetShunz,1: targetShunz=0
@@ -133,7 +133,7 @@
 		}
 		// ã‡å{ì∆óßÅcàÍçıë“Çø
 		if (getRule(RULE_KINKEI_DOKURITSU) != 0) {
-			if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_BAMBOOS+1) {
+			if (TsumoTile(GameStat, targetPlayer) == TILE_BAMBOO_ONE) {
 				addyakuman tmpYakuInfo, "ã‡å{ì∆óß", 1
 				delyaku tmpYakuInfo, "ëSì|ï›"
 				delyaku tmpYakuInfo, "ëSãÅêl"
@@ -152,8 +152,8 @@
 	}
 	/* êÑïsì| */
 	if (getRule(RULE_TOIPUUTAO) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+9, TILE_WHITE_DRAGON
-		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_BAMBOOS+4
+		dim targetKez,1: targetKez=TILE_CIRCLE_ONE, TILE_CIRCLE_TWO, TILE_CIRCLE_THREE, TILE_CIRCLE_FOUR, TILE_CIRCLE_FIVE, TILE_CIRCLE_EIGHT, TILE_CIRCLE_NINE, TILE_BAMBOO_TWO, TILE_BAMBOO_FOUR, TILE_BAMBOO_FIVE, TILE_BAMBOO_SIX, TILE_BAMBOO_EIGHT, TILE_BAMBOO_NINE, TILE_WHITE_DRAGON
+		dim targetShunz,1: targetShunz=TILE_CIRCLE_ONE, TILE_CIRCLE_TWO, TILE_CIRCLE_THREE, TILE_BAMBOO_FOUR
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 			switch getRule(RULE_TOIPUUTAO)
@@ -172,7 +172,7 @@
 #ifndef SANMAS
 	/* çgçEêù */
 	if (getRule(RULE_BENIKUJAKU) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9, TILE_RED_DRAGON
+		dim targetKez,1: targetKez=TILE_BAMBOO_ONE, TILE_BAMBOO_FIVE, TILE_BAMBOO_SEVEN, TILE_BAMBOO_NINE, TILE_RED_DRAGON
 		dim targetShunz,1: targetShunz=0
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		dim targetKez,1: targetKez=TILE_RED_DRAGON
@@ -186,8 +186,8 @@
 	}
 	/* ‰›óŒëpíÜàÍì_çg */
 	if (getRule(RULE_KOUITTEN) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_RED_DRAGON
-		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+		dim targetKez,1: targetKez=TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_SIX, TILE_BAMBOO_EIGHT, TILE_RED_DRAGON
+		dim targetShunz,1: targetShunz=TILE_BAMBOO_TWO
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		dim targetKez,1: targetKez=TILE_RED_DRAGON
 		dim targetShunz,1: targetShunz=0
@@ -200,8 +200,8 @@
 	}
 	/* îíóLÇËóŒàÍêF */
 	if (getRule(RULE_ALL_GREEN_WITH_WHITE) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_WHITE_DRAGON
-		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+		dim targetKez,1: targetKez=TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_SIX, TILE_BAMBOO_EIGHT, TILE_WHITE_DRAGON
+		dim targetShunz,1: targetShunz=TILE_BAMBOO_TWO
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		dim targetKez,1: targetKez=TILE_WHITE_DRAGON
 		dim targetShunz,1: targetShunz=0
@@ -221,9 +221,9 @@
 	/* óŒàÍêFó÷ */
 	if (getRule(RULE_RYUUIISOHRIN) != 0) {
 		yakuflagcount = 0
-		if (MianziDat(0) == TILE_SUIT_BAMBOOS+5) {yakuflagcount = 2}
-		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8
-		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+		if (MianziDat(0) == TILE_BAMBOO_FIVE) {yakuflagcount = 2}
+		dim targetKez,1: targetKez=TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_SIX, TILE_BAMBOO_EIGHT
+		dim targetShunz,1: targetShunz=TILE_BAMBOO_TWO
 		yakuflagcount += countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if (yakuflagcount == 6) {
 			addyakuman tmpYakuInfo, "óŒàÍêFó÷", 1
@@ -237,8 +237,8 @@
 	}
 	/* ëÂëêå¥ */
 	if (getRule(RULE_DAISOUGEN) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9
-		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5
+		dim targetKez,1: targetKez=TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_FIVE, TILE_BAMBOO_SIX, TILE_BAMBOO_SEVEN, TILE_BAMBOO_NINE
+		dim targetShunz,1: targetShunz=TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_FIVE
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if (yakuflagcount == 5) {
 			addyakuman tmpYakuInfo, "ëÂëêå¥", 1
@@ -247,8 +247,8 @@
 	}
 	/* ìÏëÂëêå¥ */
 	if (getRule(RULE_SOUTH_DAISOUGEN) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9, TILE_SOUTH_WIND
-		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5
+		dim targetKez,1: targetKez=TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_FIVE, TILE_BAMBOO_SIX, TILE_BAMBOO_SEVEN, TILE_BAMBOO_NINE, TILE_SOUTH_WIND
+		dim targetShunz,1: targetShunz=TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_FIVE
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		dim targetKez,1: targetKez=TILE_SOUTH_WIND
 		dim targetShunz,1: targetShunz=0
@@ -261,20 +261,20 @@
 #ifndef SANMAS
 	/* ìçàÍêF */
 	if (getRule(RULE_TAOYISE) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+9, TILE_RED_DRAGON
-		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+5
+		dim targetKez,1: targetKez=TILE_CIRCLE_ONE, TILE_CIRCLE_THREE, TILE_CIRCLE_FIVE, TILE_CIRCLE_SIX, TILE_CIRCLE_SEVEN, TILE_CIRCLE_NINE, TILE_RED_DRAGON
+		dim targetShunz,1: targetShunz=TILE_CIRCLE_FIVE
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		countDuiz DuiCount, MianziDat
 		countRedTilesInHand redCount, GameStat, targetPlayer
-		if ((yakuflagcount == SIZE_OF_MELD_BUFFER)&&(redCount(TILE_SUIT_CIRCLES+5) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
+		if ((yakuflagcount == SIZE_OF_MELD_BUFFER)&&(redCount(TILE_CIRCLE_FIVE) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
 			addyakuman tmpYakuInfo, "ìçàÍêF", 1
 			delyaku tmpYakuInfo, "ç¨àÍêF"
 		}
 	}
 	/* íÉàÍêF */
 	if (getRule(RULE_CHAYISE) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
-		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+		dim targetKez,1: targetKez=TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_SIX, TILE_BAMBOO_EIGHT, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
+		dim targetShunz,1: targetShunz=TILE_BAMBOO_TWO
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "óŒàÍêF")
@@ -285,7 +285,7 @@
 	}
 	/* çïàÍêF */
 	if (getRule(RULE_HEIIISOH) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND
+		dim targetKez,1: targetKez=TILE_CIRCLE_TWO, TILE_CIRCLE_FOUR, TILE_CIRCLE_EIGHT, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND
 		dim targetShunz,1: targetShunz=0
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
@@ -296,7 +296,7 @@
 	}
 	/* ê¬ì¥ñÂ */
 	if (getRule(RULE_AO_NO_DOMON) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_GREEN_DRAGON
+		dim targetKez,1: targetKez=TILE_CIRCLE_TWO, TILE_CIRCLE_FOUR, TILE_CIRCLE_EIGHT, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_GREEN_DRAGON
 		dim targetShunz,1: targetShunz=0
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND
@@ -311,14 +311,14 @@
 	/* ífçgòa */
 	if (getRule(RULE_NO_RED) != 0) {
 #ifdef SANMAS
-		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8
-		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+		dim targetKez,1: targetKez=TILE_CIRCLE_TWO, TILE_CIRCLE_FOUR, TILE_CIRCLE_EIGHT, TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_SIX, TILE_BAMBOO_EIGHT
+		dim targetShunz,1: targetShunz=TILE_BAMBOO_TWO
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		yakuflagcount2 = 0
 		tmpyakuCensored = 0
 #else
-		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+8, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
-		dim targetShunz,1: targetShunz=TILE_SUIT_BAMBOOS+2
+		dim targetKez,1: targetKez=TILE_CIRCLE_TWO, TILE_CIRCLE_FOUR, TILE_CIRCLE_EIGHT, TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_SIX, TILE_BAMBOO_EIGHT, TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
+		dim targetShunz,1: targetShunz=TILE_BAMBOO_TWO
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON
 		dim targetShunz,1: targetShunz=0
@@ -353,8 +353,8 @@
 #ifndef SANMAS
 	/* îíàÍì_ */
 	if (getRule(RULE_HAKUITTEN) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+9, TILE_WHITE_DRAGON
-		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+5
+		dim targetKez,1: targetKez=TILE_CIRCLE_ONE, TILE_CIRCLE_THREE, TILE_CIRCLE_FIVE, TILE_CIRCLE_SIX, TILE_CIRCLE_SEVEN, TILE_CIRCLE_NINE, TILE_WHITE_DRAGON
+		dim targetShunz,1: targetShunz=TILE_CIRCLE_FIVE
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		dim targetKez,1: targetKez=TILE_WHITE_DRAGON
 		dim targetShunz,1: targetShunz=0
@@ -369,8 +369,8 @@
 		yakuFlag = 0
 		countDuiz DuiCount, MianziDat
 		if ((DuiCount(TILE_RED_DRAGON) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)) {yakuFlag = 1}
-		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+9
-		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7
+		dim targetKez,1: targetKez=TILE_CHARACTER_ONE, TILE_CHARACTER_TWO, TILE_CHARACTER_THREE, TILE_CHARACTER_FOUR, TILE_CHARACTER_FIVE, TILE_CHARACTER_SIX, TILE_CHARACTER_SEVEN, TILE_CHARACTER_EIGHT, TILE_CHARACTER_NINE
+		dim targetShunz,1: targetShunz=TILE_CHARACTER_ONE, TILE_CHARACTER_TWO, TILE_CHARACTER_THREE, TILE_CHARACTER_FOUR, TILE_CHARACTER_FIVE, TILE_CHARACTER_SIX, TILE_CHARACTER_SEVEN
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if ((yakuFlag == 1)&&(yakuflagcount >= 3)) {
 			switch getRule(RULE_KOHAKU_MANJU)
@@ -597,11 +597,11 @@
 	if (getRule(RULE_CHUUREN_HWATON) != 0) {
 		countTilesInHand TileCount, GameStat, targetPlayer
 		yakuflagcount = 0
-		if ((TileCount(TILE_SUIT_CHARACTERS+1)+TileCount(TILE_SUIT_CIRCLES+1)+TileCount(TILE_SUIT_BAMBOOS+1)) >= 3) {yakuflagcount++}
+		if ((TileCount(TILE_CHARACTER_ONE)+TileCount(TILE_CIRCLE_ONE)+TileCount(TILE_BAMBOO_ONE)) >= 3) {yakuflagcount++}
 		repeat 7,2
 			if ((TileCount(TILE_SUIT_CHARACTERS+cnt)+TileCount(TILE_SUIT_CIRCLES+cnt)+TileCount(TILE_SUIT_BAMBOOS+cnt)) >= 1) {yakuflagcount++}
 		loop
-		if ((TileCount(TILE_SUIT_CHARACTERS+9)+TileCount(TILE_SUIT_CIRCLES+9)+TileCount(TILE_SUIT_BAMBOOS+9)) >= 3) {yakuflagcount++}
+		if ((TileCount(TILE_CHARACTER_NINE)+TileCount(TILE_CIRCLE_NINE)+TileCount(TILE_BAMBOO_NINE)) >= 3) {yakuflagcount++}
 		tmpyakuCensored = 0
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "èÉê≥ã„ò@ïÛìï")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "ã„ò@ïÛìï")
@@ -668,20 +668,20 @@
 	}
 	/* ïêëæòYîÑèƒñ› */
 	if (getRule(RULE_UUTAARAN) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+5, TILE_SUIT_CIRCLES+5, TILE_SUIT_BAMBOOS+5
-		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5
+		dim targetKez,1: targetKez=TILE_CHARACTER_FIVE, TILE_CIRCLE_FIVE, TILE_BAMBOO_FIVE
+		dim targetShunz,1: targetShunz=TILE_CHARACTER_THREE, TILE_CHARACTER_FOUR, TILE_CHARACTER_FIVE, TILE_CIRCLE_THREE, TILE_CIRCLE_FOUR, TILE_CIRCLE_FIVE, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_FIVE
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 1)
-		if ((yakuflagcount == 4)&&(MianziDat(0) == TILE_SUIT_CIRCLES+1)) {
+		if ((yakuflagcount == 4)&&(MianziDat(0) == TILE_CIRCLE_ONE)) {
 			addyaku tmpYakuInfo, "ïêëæòYîÑèƒñ›", 2+getMenzen(GameStat, targetPlayer)
 		}
 	}
 	/* ãóîì{ãÍòIê| */
 	if (getRule(RULE_GRAND_CROSS) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+6
-		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+7
+		dim targetKez,1: targetKez=TILE_CIRCLE_FOUR, TILE_CIRCLE_SIX
+		dim targetShunz,1: targetShunz=TILE_CIRCLE_ONE, TILE_CIRCLE_SEVEN
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 1)
-		if ((yakuflagcount == 4)&&(MianziDat(0) == TILE_SUIT_CIRCLES+5)&&(getMenzen(GameStat, targetPlayer) == 1)) {
-			if (TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+5) {
+		if ((yakuflagcount == 4)&&(MianziDat(0) == TILE_CIRCLE_FIVE)&&(getMenzen(GameStat, targetPlayer) == 1)) {
+			if (TsumoTile(GameStat, targetPlayer) == TILE_CIRCLE_FIVE) {
 				addyakuman tmpYakuInfo, "ãóîì{ãÍòIê|", 2
 			} else {
 				addyakuman tmpYakuInfo, "ãóîì{ãÍòIê|", 1
@@ -691,20 +691,20 @@
 	}
 	/* äÏÍFË~î~ */
 	if (getRule(RULE_XIQUE_NAOMEI) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+5, TILE_SUIT_BAMBOOS+1
-		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CIRCLES+1
+		dim targetKez,1: targetKez=TILE_CIRCLE_FIVE, TILE_BAMBOO_ONE
+		dim targetShunz,1: targetShunz=TILE_CHARACTER_ONE, TILE_CIRCLE_ONE
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 1)
-		if ((yakuflagcount == 4)&&(MianziDat(0) == TILE_SUIT_BAMBOOS+5)) {
+		if ((yakuflagcount == 4)&&(MianziDat(0) == TILE_BAMBOO_FIVE)) {
 			addyaku tmpYakuInfo, "äÏÍFË~î~", 6
 		}
 	}
 	/* â‘àÍêF */
 	if (getRule(RULE_HUAIISOH) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+9, TILE_RED_DRAGON, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9
-		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CIRCLES+5
+		dim targetKez,1: targetKez=TILE_CHARACTER_ONE, TILE_CHARACTER_TWO, TILE_CHARACTER_THREE, TILE_CHARACTER_FOUR, TILE_CHARACTER_FIVE, TILE_CHARACTER_SIX, TILE_CHARACTER_SEVEN, TILE_CHARACTER_EIGHT, TILE_CHARACTER_NINE, TILE_RED_DRAGON, TILE_CIRCLE_ONE, TILE_CIRCLE_THREE, TILE_CIRCLE_FIVE, TILE_CIRCLE_SIX, TILE_CIRCLE_SEVEN, TILE_CIRCLE_NINE, TILE_BAMBOO_ONE, TILE_BAMBOO_FIVE, TILE_BAMBOO_SEVEN, TILE_BAMBOO_NINE
+		dim targetShunz,1: targetShunz=TILE_CHARACTER_ONE, TILE_CHARACTER_TWO, TILE_CHARACTER_THREE, TILE_CHARACTER_FOUR, TILE_CHARACTER_FIVE, TILE_CHARACTER_SIX, TILE_CHARACTER_SEVEN, TILE_CIRCLE_FIVE
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
-		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+9, TILE_RED_DRAGON
-		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7
+		dim targetKez,1: targetKez=TILE_CHARACTER_ONE, TILE_CHARACTER_TWO, TILE_CHARACTER_THREE, TILE_CHARACTER_FOUR, TILE_CHARACTER_FIVE, TILE_CHARACTER_SIX, TILE_CHARACTER_SEVEN, TILE_CHARACTER_EIGHT, TILE_CHARACTER_NINE, TILE_RED_DRAGON
+		dim targetShunz,1: targetShunz=TILE_CHARACTER_ONE, TILE_CHARACTER_TWO, TILE_CHARACTER_THREE, TILE_CHARACTER_FOUR, TILE_CHARACTER_FIVE, TILE_CHARACTER_SIX, TILE_CHARACTER_SEVEN
 		yakuflagcount2 = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if ((yakuflagcount == SIZE_OF_MELD_BUFFER)&&(yakuflagcount2 < SIZE_OF_MELD_BUFFER)) {
 			addyaku tmpYakuInfo, "â‘àÍêF", 1
@@ -712,8 +712,8 @@
 	}
 	/* ê‘àÍêF */
 	if (getRule(RULE_AKAIISOH) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+9
-		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+5
+		dim targetKez,1: targetKez=TILE_CIRCLE_ONE, TILE_CIRCLE_THREE, TILE_CIRCLE_FIVE, TILE_CIRCLE_SIX, TILE_CIRCLE_SEVEN, TILE_CIRCLE_NINE, TILE_BAMBOO_ONE, TILE_BAMBOO_FIVE, TILE_BAMBOO_SEVEN, TILE_BAMBOO_NINE
+		dim targetShunz,1: targetShunz=TILE_CIRCLE_FIVE
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 			addyaku tmpYakuInfo, "ê‘àÍêF", 2
@@ -724,8 +724,8 @@
 #ifndef SANMAS
 	/* ê‘ä·ê¬ó¥ */
 	if (getRule(RULE_SEKIGAN_SEIRYUU) != 0) {
-		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_WHITE_DRAGON, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+8
-		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+2
+		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_WHITE_DRAGON, TILE_CIRCLE_TWO, TILE_CIRCLE_FOUR, TILE_CIRCLE_EIGHT
+		dim targetShunz,1: targetShunz=TILE_CIRCLE_TWO
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		dim targetKez,1: targetKez=TILE_EAST_WIND, TILE_WHITE_DRAGON
 		dim targetShunz,1: targetShunz=0
@@ -775,8 +775,8 @@
 	loop
 	/* è¨âóå‹ */
 	if (getRule(RULE_XIAOYUWU) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4
-		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+2
+		dim targetKez,1: targetKez=TILE_CHARACTER_ONE, TILE_CHARACTER_TWO, TILE_CHARACTER_THREE, TILE_CHARACTER_FOUR, TILE_CIRCLE_ONE, TILE_CIRCLE_TWO, TILE_CIRCLE_THREE, TILE_CIRCLE_FOUR, TILE_BAMBOO_ONE, TILE_BAMBOO_TWO, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR
+		dim targetShunz,1: targetShunz=TILE_CHARACTER_ONE, TILE_CHARACTER_TWO, TILE_CIRCLE_ONE, TILE_CIRCLE_TWO, TILE_BAMBOO_ONE, TILE_BAMBOO_TWO
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 			addyaku tmpYakuInfo, "è¨âóå‹", 6
@@ -784,8 +784,8 @@
 	}
 	/* ëÂâóå‹ */
 	if (getRule(RULE_DAYUWU) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+9, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+9
-		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+7
+		dim targetKez,1: targetKez=TILE_CHARACTER_SIX, TILE_CHARACTER_SEVEN, TILE_CHARACTER_EIGHT, TILE_CHARACTER_NINE, TILE_CIRCLE_SIX, TILE_CIRCLE_SEVEN, TILE_CIRCLE_EIGHT, TILE_CIRCLE_NINE, TILE_BAMBOO_SIX, TILE_BAMBOO_SEVEN, TILE_BAMBOO_EIGHT, TILE_BAMBOO_NINE
+		dim targetShunz,1: targetShunz=TILE_CHARACTER_SIX, TILE_CHARACTER_SEVEN, TILE_CIRCLE_SIX, TILE_CIRCLE_SEVEN, TILE_BAMBOO_SIX, TILE_BAMBOO_SEVEN
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 			addyaku tmpYakuInfo, "ëÂâóå‹", 6
@@ -793,8 +793,8 @@
 	}
 	/* ëSè¨ */
 	if (getRule(RULE_ALL_SMALL) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CHARACTERS+2, TILE_SUIT_CHARACTERS+3, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_BAMBOOS+1, TILE_SUIT_BAMBOOS+2, TILE_SUIT_BAMBOOS+3
-		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CIRCLES+1, TILE_SUIT_BAMBOOS+1
+		dim targetKez,1: targetKez=TILE_CHARACTER_ONE, TILE_CHARACTER_TWO, TILE_CHARACTER_THREE, TILE_CIRCLE_ONE, TILE_CIRCLE_TWO, TILE_CIRCLE_THREE, TILE_BAMBOO_ONE, TILE_BAMBOO_TWO, TILE_BAMBOO_THREE
+		dim targetShunz,1: targetShunz=TILE_CHARACTER_ONE, TILE_CIRCLE_ONE, TILE_BAMBOO_ONE
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 			addyaku tmpYakuInfo, "ëSè¨", 6
@@ -803,8 +803,8 @@
 	}
 	/* ëSíÜ */
 	if (getRule(RULE_ALL_MIDDLE) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6
-		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+4, TILE_SUIT_CIRCLES+4, TILE_SUIT_BAMBOOS+4
+		dim targetKez,1: targetKez=TILE_CHARACTER_FOUR, TILE_CHARACTER_FIVE, TILE_CHARACTER_SIX, TILE_CIRCLE_FOUR, TILE_CIRCLE_FIVE, TILE_CIRCLE_SIX, TILE_BAMBOO_FOUR, TILE_BAMBOO_FIVE, TILE_BAMBOO_SIX
+		dim targetShunz,1: targetShunz=TILE_CHARACTER_FOUR, TILE_CIRCLE_FOUR, TILE_BAMBOO_FOUR
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 			addyaku tmpYakuInfo, "ëSíÜ", 6
@@ -813,8 +813,8 @@
 	}
 	/* ëSëÂ */
 	if (getRule(RULE_ALL_LARGE) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+7, TILE_SUIT_CHARACTERS+8, TILE_SUIT_CHARACTERS+9, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+9, TILE_SUIT_BAMBOOS+7, TILE_SUIT_BAMBOOS+8, TILE_SUIT_BAMBOOS+9
-		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+7, TILE_SUIT_CIRCLES+7, TILE_SUIT_BAMBOOS+7
+		dim targetKez,1: targetKez=TILE_CHARACTER_SEVEN, TILE_CHARACTER_EIGHT, TILE_CHARACTER_NINE, TILE_CIRCLE_SEVEN, TILE_CIRCLE_EIGHT, TILE_CIRCLE_NINE, TILE_BAMBOO_SEVEN, TILE_BAMBOO_EIGHT, TILE_BAMBOO_NINE
+		dim targetShunz,1: targetShunz=TILE_CHARACTER_SEVEN, TILE_CIRCLE_SEVEN, TILE_BAMBOO_SEVEN
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 			addyaku tmpYakuInfo, "ëSëÂ", 6
@@ -879,10 +879,10 @@
 		countKez KezCount, MianziDat
 		countShunz ShunzCount, MianziDat
 		yakuFlag = 0
-		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)) {
+		if ((ShunzCount(TILE_CHARACTER_ONE) >= 1)&&(ShunzCount(TILE_CIRCLE_ONE) >= 1)&&(ShunzCount(TILE_BAMBOO_ONE) >= 1)) {
 			yakuFlag = 1
 		}
-		if ((ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)) {
+		if ((ShunzCount(TILE_CHARACTER_SEVEN) >= 1)&&(ShunzCount(TILE_CIRCLE_SEVEN) >= 1)&&(ShunzCount(TILE_BAMBOO_SEVEN) >= 1)) {
 			yakuFlag = 1
 		}
 		if ((yakuFlag == 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(MianziDat(0) == TILE_NORTH_WIND)) {
@@ -896,21 +896,21 @@
 		countDuiz DuiCount, MianziDat
 		countShunz ShunzCount, MianziDat
 		yakuFlag = 0
-		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_CIRCLES+1) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+1) >= 1)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)) {yakuFlag = 1}
-		if ((ShunzCount(TILE_SUIT_CIRCLES+7) >= 1)&&(ShunzCount(TILE_SUIT_BAMBOOS+7) >= 1)) {yakuFlag = 1}
-		if ((yakuFlag == 1)&&((KezCount(TILE_SUIT_CHARACTERS+2)+KezCount(TILE_SUIT_CIRCLES+2)+KezCount(TILE_SUIT_BAMBOOS+2)) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)&&(DuiCount(TILE_NORTH_WIND) >= 1)) {
+		if ((ShunzCount(TILE_CHARACTER_ONE) >= 1)&&(ShunzCount(TILE_CIRCLE_ONE) >= 1)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_CHARACTER_ONE) >= 1)&&(ShunzCount(TILE_BAMBOO_ONE) >= 1)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_CIRCLE_ONE) >= 1)&&(ShunzCount(TILE_BAMBOO_ONE) >= 1)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_CHARACTER_SEVEN) >= 1)&&(ShunzCount(TILE_CIRCLE_SEVEN) >= 1)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_CHARACTER_SEVEN) >= 1)&&(ShunzCount(TILE_BAMBOO_SEVEN) >= 1)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_CIRCLE_SEVEN) >= 1)&&(ShunzCount(TILE_BAMBOO_SEVEN) >= 1)) {yakuFlag = 1}
+		if ((yakuFlag == 1)&&((KezCount(TILE_CHARACTER_TWO)+KezCount(TILE_CIRCLE_TWO)+KezCount(TILE_BAMBOO_TWO)) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)&&(DuiCount(TILE_NORTH_WIND) >= 1)) {
 			addyakuman tmpYakuInfo, "ì~ÇÃÉ\ÉiÉ^ÇQ", 1
 		}
 	}
 #endif
 	/* è„ãâífõÙã„ */
 	if (getRule(RULE_HIGH_TANYAO) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CHARACTERS+6, TILE_SUIT_CHARACTERS+7, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5, TILE_SUIT_BAMBOOS+6, TILE_SUIT_BAMBOOS+7
-		dim targetShunz,1: targetShunz=TILE_SUIT_CHARACTERS+3, TILE_SUIT_CHARACTERS+4, TILE_SUIT_CHARACTERS+5, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_BAMBOOS+3, TILE_SUIT_BAMBOOS+4, TILE_SUIT_BAMBOOS+5
+		dim targetKez,1: targetKez=TILE_CHARACTER_THREE, TILE_CHARACTER_FOUR, TILE_CHARACTER_FIVE, TILE_CHARACTER_SIX, TILE_CHARACTER_SEVEN, TILE_CIRCLE_THREE, TILE_CIRCLE_FOUR, TILE_CIRCLE_FIVE, TILE_CIRCLE_SIX, TILE_CIRCLE_SEVEN, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_FIVE, TILE_BAMBOO_SIX, TILE_BAMBOO_SEVEN
+		dim targetShunz,1: targetShunz=TILE_CHARACTER_THREE, TILE_CHARACTER_FOUR, TILE_CHARACTER_FIVE, TILE_CIRCLE_THREE, TILE_CIRCLE_FOUR, TILE_CIRCLE_FIVE, TILE_BAMBOO_THREE, TILE_BAMBOO_FOUR, TILE_BAMBOO_FIVE
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if (yakuflagcount == SIZE_OF_MELD_BUFFER) {
 			addyaku tmpYakuInfo, "è„ãâífõÙã„", 2
@@ -919,10 +919,10 @@
 	}
 	/* ã‡àÍêF */
 	if (getRule(RULE_ALLMONEY) != 0) {
-		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+1, TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7, TILE_SUIT_CIRCLES+8, TILE_SUIT_CIRCLES+9
-		dim targetShunz,1: targetShunz=TILE_SUIT_CIRCLES+1, TILE_SUIT_CIRCLES+2, TILE_SUIT_CIRCLES+3, TILE_SUIT_CIRCLES+4, TILE_SUIT_CIRCLES+5, TILE_SUIT_CIRCLES+6, TILE_SUIT_CIRCLES+7
+		dim targetKez,1: targetKez=TILE_CHARACTER_ONE, TILE_CIRCLE_ONE, TILE_CIRCLE_TWO, TILE_CIRCLE_THREE, TILE_CIRCLE_FOUR, TILE_CIRCLE_FIVE, TILE_CIRCLE_SIX, TILE_CIRCLE_SEVEN, TILE_CIRCLE_EIGHT, TILE_CIRCLE_NINE
+		dim targetShunz,1: targetShunz=TILE_CIRCLE_ONE, TILE_CIRCLE_TWO, TILE_CIRCLE_THREE, TILE_CIRCLE_FOUR, TILE_CIRCLE_FIVE, TILE_CIRCLE_SIX, TILE_CIRCLE_SEVEN
 		yakuflagcount = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
-		dim targetKez,1: targetKez=TILE_SUIT_CHARACTERS+1
+		dim targetKez,1: targetKez=TILE_CHARACTER_ONE
 		dim targetShunz,1: targetShunz=0
 		yakuflagcount2 = countSpecMentz(MianziDat, targetKez, targetShunz, 0)
 		if ((yakuflagcount == SIZE_OF_MELD_BUFFER)&&(yakuflagcount2 == 1)) {

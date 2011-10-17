@@ -232,7 +232,7 @@
 		}
 		/* 千年虫 */
 		if (getRule(RULE_Y2KBUG) != 0) {
-			if ((KezCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(KezCount(TILE_SOUTH_WIND) == 0)) {
+			if ((KezCount(TILE_CHARACTER_NINE) >= 1)&&(KezCount(TILE_SOUTH_WIND) == 0)) {
 				addyakuman tmpYakuInfo, "千年虫", 2
 				delyaku tmpYakuInfo, "混老頭"
 				yakuPrevention=1
@@ -252,7 +252,7 @@
 		/* 大四喜の上位ローカル役 ここから */
 		/* 弾葯 */
 		if (getRule(RULE_DAN_YAKU) != 0) {
-			if (DuiCount(TILE_SUIT_CHARACTERS+9) >= 1) {
+			if (DuiCount(TILE_CHARACTER_NINE) >= 1) {
 				addyakuman tmpYakuInfo, "弾葯", 3
 				delyaku tmpYakuInfo, "混老頭"
 				yakuPrevention=1
@@ -334,13 +334,13 @@
 	}
 	/* 新沼けんじ */
 	if (getRule(RULE_NIINUMA_KENJI) != 0) {
-		if (KezCount(TILE_SUIT_BAMBOOS+1) >= 1) {
+		if (KezCount(TILE_BAMBOO_ONE) >= 1) {
 			addyaku tmpYakuInfo, "新沼けんじ", 1
 		}
 	}
 	/* 陣太鼓 */
 	if (getRule(RULE_JINDAIKO) != 0) {
-		if (KezCount(TILE_SUIT_CIRCLES+1) >= 1) {
+		if (KezCount(TILE_CIRCLE_ONE) >= 1) {
 			addyaku tmpYakuInfo, "陣太鼓", 1
 		}
 	}
@@ -401,7 +401,7 @@
 	/* 雪月花 */
 	if (getRule(RULE_SETSUGETSUKA) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+5) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)&&(KezCount(TILE_CIRCLE_FIVE) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			if (getRule(RULE_SETSUGETSUKA) == 2) {
 				addyaku tmpYakuInfo, "雪月花", 3
@@ -416,7 +416,7 @@
 	/* 風花雪月 */
 	if (getRule(RULE_FUUKA_SETSUGETSU) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+5) >= 1)&&((jikazeflag > 0)||(bakazeflag > 0))) {yakuFlag = 1}
+		if ((KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)&&(KezCount(TILE_CIRCLE_FIVE) >= 1)&&((jikazeflag > 0)||(bakazeflag > 0))) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "風花雪月", 1
 			delyaku tmpYakuInfo, "雪月花"
@@ -428,7 +428,7 @@
 	/* 花鳥風月 */
 	if (getRule(RULE_KACHOU_FUUGETSU) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_CIRCLES+5) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&((jikazeflag > 0)||(bakazeflag > 0))) {yakuFlag = 1}
+		if ((KezCount(TILE_CIRCLE_FIVE) >= 1)&&(KezCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)&&((jikazeflag > 0)||(bakazeflag > 0))) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "花鳥風月", 1
 			delyaku tmpYakuInfo, "対々和"
@@ -439,7 +439,7 @@
 	/* 東北自動車道 */
 	if (getRule(RULE_TOHOKU_EXPWY) != 0) {
 		yakuFlag = 0
-		if ((DuiCount(TILE_SUIT_CIRCLES+2) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+4) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+6) >= 1)&&(DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_NORTH_WIND) >= 1)) {yakuFlag = 1}
+		if ((DuiCount(TILE_CIRCLE_TWO) >= 1)&&(DuiCount(TILE_CIRCLE_FOUR) >= 1)&&(DuiCount(TILE_CIRCLE_SIX) >= 1)&&(DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_NORTH_WIND) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "東北自動車道", 1
 			delyaku tmpYakuInfo, "対々和"
@@ -449,7 +449,7 @@
 	/* 東関東自動車道 */
 	if (getRule(RULE_HIGASHIKANTO_EXPWY) != 0) {
 		yakuFlag = 0
-		if ((DuiCount(TILE_SUIT_CIRCLES+2) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+4) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+6) >= 1)&&(DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_WEST_WIND) >= 1)) {yakuFlag = 1}
+		if ((DuiCount(TILE_CIRCLE_TWO) >= 1)&&(DuiCount(TILE_CIRCLE_FOUR) >= 1)&&(DuiCount(TILE_CIRCLE_SIX) >= 1)&&(DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_WEST_WIND) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "東関東自動車道", 1
 			delyaku tmpYakuInfo, "対々和"
@@ -457,18 +457,18 @@
 		}
 	}
 	/* 中国系のおめでたい役 */
-	if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(MianziDat(0) == TILE_SUIT_CIRCLES+1)&&(getRule(RULE_KOUKEI_HOUGYOU) != 0)) {
+	if ((KezCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(MianziDat(0) == TILE_CIRCLE_ONE)&&(getRule(RULE_KOUKEI_HOUGYOU) != 0)) {
 		addyakuman tmpYakuInfo, "紅鶏報暁", 1
 		delyaku tmpYakuInfo, "対々和"
 		delyaku tmpYakuInfo, "絶一門"
 		delyaku tmpYakuInfo, "役牌・白"
 		delyaku tmpYakuInfo, "役牌・中"
 	} else {
-		if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(getRule(RULE_KINKEI_HOUGYOU) != 0)) {
+		if ((KezCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(getRule(RULE_KINKEI_HOUGYOU) != 0)) {
 			addyaku tmpYakuInfo, "金鶏報暁", 3
 			delyaku tmpYakuInfo, "役牌・中"
 		} else {
-			if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&((getFlowerFlag(GameStat, targetPlayer)&FLOWER_SPRING) == FLOWER_SPRING)&&(getRule(RULE_GINKEI_HOUSHUN) != 0)) {
+			if ((KezCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&((getFlowerFlag(GameStat, targetPlayer)&FLOWER_SPRING) == FLOWER_SPRING)&&(getRule(RULE_GINKEI_HOUSHUN) != 0)) {
 				addyaku tmpYakuInfo, "銀鶏報春", 5
 				delyaku tmpYakuInfo, "役牌・白"
 			}
@@ -783,12 +783,12 @@
 	/* 三色頂三刻 */
 	if (getRule(RULE_SANSHOKU_TINSANKOH) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+5) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+5) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+9) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+5) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+5) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+9) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+5) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+9) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+5) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+9) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_CHARACTER_ONE) >= 1)&&(KezCount(TILE_CIRCLE_FIVE) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_CHARACTER_ONE) >= 1)&&(KezCount(TILE_BAMBOO_FIVE) >= 1)&&(KezCount(TILE_CIRCLE_NINE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_CIRCLE_ONE) >= 1)&&(KezCount(TILE_CHARACTER_FIVE) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_CIRCLE_ONE) >= 1)&&(KezCount(TILE_CIRCLE_FIVE) >= 1)&&(KezCount(TILE_CHARACTER_NINE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_CHARACTER_FIVE) >= 1)&&(KezCount(TILE_CIRCLE_NINE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_CIRCLE_FIVE) >= 1)&&(KezCount(TILE_CHARACTER_NINE) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "三色頂三刻", 2
 		}
@@ -835,7 +835,7 @@
 	}
 #ifndef SANMAX
 #ifndef SANMAS
-	if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+8) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+8) >= 1)) {
+	if ((KezCount(TILE_CHARACTER_EIGHT) >= 1)&&(KezCount(TILE_CIRCLE_EIGHT) >= 1)&&(KezCount(TILE_BAMBOO_EIGHT) >= 1)) {
 		/* 八仙乗風過海 */
 		if (getRule(RULE_BAXIAN_CHENGFENG) != 0) {
 			yakuFlag = 0
@@ -850,7 +850,7 @@
 		/* 八仙戯鳳 */
 		if (getRule(RULE_BAXIAN_XIFENG) != 0) {
 			yakuFlag = 0
-			if ((KezCount(TILE_WEST_WIND) >= 1)&&(DuiCount(TILE_SUIT_BAMBOOS+1) >= 1)) {yakuFlag = 1}
+			if ((KezCount(TILE_WEST_WIND) >= 1)&&(DuiCount(TILE_BAMBOO_ONE) >= 1)) {yakuFlag = 1}
 			if (yakuFlag) {
 				addyakuman tmpYakuInfo, "八仙戯鳳", 1
 				delyaku tmpYakuInfo, "対々和"
@@ -860,9 +860,9 @@
 		/* 八仙戯四鳳 */
 		if (getRule(RULE_BAXIAN_XISIFENG) != 0) {
 			yakuFlag = 0
-			if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(DuiCount(TILE_WEST_WIND) >= 1)) {yakuFlag += 1}
+			if ((KezCount(TILE_BAMBOO_ONE) >= 1)&&(DuiCount(TILE_WEST_WIND) >= 1)) {yakuFlag += 1}
 			countKangz KangzCount, MianziDat
-			if (KangzCount(TILE_SUIT_BAMBOOS+1) >= 1) {yakuFlag += 1}
+			if (KangzCount(TILE_BAMBOO_ONE) >= 1) {yakuFlag += 1}
 			if (yakuFlag == 2) {
 				addyakuman tmpYakuInfo, "八仙戯四鳳", 1
 				delyaku tmpYakuInfo, "対々和"
@@ -872,7 +872,7 @@
 		/* 八仙戯金亀 */
 		if (getRule(RULE_BAXIAN_XIJINGUI) != 0) {
 			yakuFlag = 0
-			if ((KezCount(TILE_WEST_WIND) >= 1)&&(DuiCount(TILE_SUIT_BAMBOOS+7) >= 1)) {yakuFlag = 1}
+			if ((KezCount(TILE_WEST_WIND) >= 1)&&(DuiCount(TILE_BAMBOO_SEVEN) >= 1)) {yakuFlag = 1}
 			if (yakuFlag) {
 				addyakuman tmpYakuInfo, "八仙戯金亀", 1
 				delyaku tmpYakuInfo, "対々和"
@@ -883,7 +883,7 @@
 		/* 八仙闘北斗 */
 		if (getRule(RULE_BAXIAN_DOU_BEIDOU) != 0) {
 			yakuFlag = 0
-			if ((KezCount(TILE_SUIT_CIRCLES+7) >= 1)) {yakuFlag = 1}
+			if ((KezCount(TILE_CIRCLE_SEVEN) >= 1)) {yakuFlag = 1}
 			if (yakuFlag) {
 				addyakuman tmpYakuInfo, "八仙闘北斗", 1
 				delyaku tmpYakuInfo, "対々和"
@@ -935,7 +935,7 @@
 	/* 中原逐鹿 */
 	if (getRule(RULE_CHUUGEN_CHIKUROKU) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+7) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+6) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_CIRCLE_SEVEN) >= 1)&&(KezCount(TILE_CIRCLE_SIX) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "中原逐鹿", 1
 			delyaku tmpYakuInfo, "対々和"
@@ -948,7 +948,7 @@
 	/* 金亀孵蛋 */
 	if (getRule(RULE_TURTLE_EGG) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_SEVEN) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "金亀孵蛋", 2
 		}
@@ -957,7 +957,7 @@
 	/* 旭日東昇 */
 	if (getRule(RULE_KYOKUJITSU_TOUSHOU) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_CIRCLE_ONE) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "旭日東昇", 1
 		}
@@ -965,7 +965,7 @@
 	/* 日落西山 */
 	if (getRule(RULE_RIIRAO_SHIISHAN) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_WEST_WIND) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_CIRCLE_ONE) >= 1)&&(KezCount(TILE_WEST_WIND) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "日落西山", 1
 		}
@@ -973,7 +973,7 @@
 	/* 揺望北斗 */
 	if (getRule(RULE_YOUBOU_HOKUTO) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_CIRCLES+2) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+7) >= 1)&&(KezCount(TILE_NORTH_WIND) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_CIRCLE_TWO) >= 1)&&(KezCount(TILE_CIRCLE_SEVEN) >= 1)&&(KezCount(TILE_NORTH_WIND) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "揺望北斗", 2
 		}
@@ -981,7 +981,7 @@
 	/* 北斗七星 */
 	if (getRule(RULE_BIG_DIPPER) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+17) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(KezCount(TILE_NORTH_WIND) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_CHARACTER_SEVEN) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+17) >= 1)&&(KezCount(TILE_BAMBOO_SEVEN) >= 1)&&(KezCount(TILE_NORTH_WIND) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "北斗七星", 1
 		}
@@ -989,7 +989,7 @@
 	/* 西廂待月 */
 	if (getRule(RULE_SEISOU_TAIGETSU) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+1) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+1)) {yakuFlag = 1}
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_CIRCLE_ONE) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_CIRCLE_ONE)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "西廂待月", 2
 		}
@@ -997,7 +997,7 @@
 	/* 南無八幡 */
 	if (getRule(RULE_NAMU_HACHIMAN) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SOUTH_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+8) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_SOUTH_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_CHARACTER_EIGHT) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "南無八幡", 1
 			delyaku tmpYakuInfo, "役牌・白"
@@ -1006,10 +1006,10 @@
 	/* 西湖十景 */
 	if (getRule(RULE_SEIKO_JIKKEI) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+9) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+2) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+8) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+3) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+7) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+4) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+6) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)&&(KezCount(TILE_CIRCLE_NINE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_CIRCLE_TWO) >= 1)&&(KezCount(TILE_CIRCLE_EIGHT) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_CIRCLE_THREE) >= 1)&&(KezCount(TILE_CIRCLE_SEVEN) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_CIRCLE_FOUR) >= 1)&&(KezCount(TILE_CIRCLE_SIX) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "西湖十景", 1
 		}
@@ -1017,9 +1017,9 @@
 	/* 火山爆発 */
 	if (getRule(RULE_VOLCANIC_ERRUPTION) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_BAMBOOS+3) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+9) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_BAMBOOS+3) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+9) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_BAMBOOS+3) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_THREE) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_CHARACTER_NINE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_THREE) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_CIRCLE_NINE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_THREE) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "火山爆発", 1
 			delyaku tmpYakuInfo, "対々和"
@@ -1030,7 +1030,7 @@
 	/* 丹鳳朝陽 */
 	if (getRule(RULE_TANFON_CHOUYOU) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "丹鳳朝陽", 1
 			delyaku tmpYakuInfo, "役牌・中"
@@ -1072,9 +1072,9 @@
 	/* 鵲橋会 */
 	if (getRule(RULE_QUEQIAOHUI) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+7) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(KezCount(27) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+7) >= 1)&&(KezCount(27) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_CHARACTER_SEVEN) >= 1)&&(KezCount(TILE_CIRCLE_SEVEN) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_CHARACTER_SEVEN) >= 1)&&(KezCount(27) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_CIRCLE_SEVEN) >= 1)&&(KezCount(27) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "鵲橋会", 2
 		}
@@ -1083,10 +1083,10 @@
 	/* 一竿風月 */
 	if (getRule(RULE_HUAIISOH) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(KezCount(TILE_SOUTH_WIND) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(KezCount(TILE_NORTH_WIND) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_TWO) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_TWO) >= 1)&&(KezCount(TILE_SOUTH_WIND) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_TWO) >= 1)&&(KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_TWO) >= 1)&&(KezCount(TILE_NORTH_WIND) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "一竿風月", 2
 		}
@@ -1095,9 +1095,9 @@
 	if (getRule(RULE_VERMILION_BIRD) != 0) {
 		countKangz KangzCount, MianziDat
 		yakuFlag = 0
-		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+5) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(MianziDat(0) == TILE_RED_DRAGON)) {yakuFlag = 1}
-		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+5) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(MianziDat(0) == TILE_RED_DRAGON)) {yakuFlag = 1}
-		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(MianziDat(0) == TILE_RED_DRAGON)) {yakuFlag = 1}
+		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_BAMBOO_FIVE) >= 1)&&(KezCount(TILE_BAMBOO_SEVEN) >= 1)&&(MianziDat(0) == TILE_RED_DRAGON)) {yakuFlag = 1}
+		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_BAMBOO_FIVE) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)&&(MianziDat(0) == TILE_RED_DRAGON)) {yakuFlag = 1}
+		if ((KangzCount(TILE_SOUTH_WIND) >= 1)&&(KangzCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_BAMBOO_SEVEN) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)&&(MianziDat(0) == TILE_RED_DRAGON)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "南の朱雀", 1
 			delyaku tmpYakuInfo, "対々和"
@@ -1108,7 +1108,7 @@
 	if (getRule(RULE_WHITE_TIGER) != 0) {
 		countKangz KangzCount, MianziDat
 		yakuFlag = 0
-		if ((KangzCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+3) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+3) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)&&(MianziDat(0) == TILE_WHITE_DRAGON)) {yakuFlag = 1}
+		if ((KangzCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_CHARACTER_THREE) >= 1)&&(KezCount(TILE_CIRCLE_THREE) >= 1)&&(KezCount(TILE_BAMBOO_THREE) >= 1)&&(MianziDat(0) == TILE_WHITE_DRAGON)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "西の白虎", 1
 			delyaku tmpYakuInfo, "対々和"
@@ -1118,9 +1118,9 @@
 	/* 三杯美酒敬梅花 */
 	if (getRule(RULE_SANBEI_MEIJIU) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+5) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+9) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+5) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+9) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+5) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_CIRCLE_FIVE) >= 1)&&(KezCount(TILE_CHARACTER_NINE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_CIRCLE_FIVE) >= 1)&&(KezCount(TILE_CIRCLE_NINE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_CIRCLE_FIVE) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "三杯美酒敬梅花", 1
 			delyaku tmpYakuInfo, "役牌・中"
@@ -1140,7 +1140,7 @@
 	/* 太公釣金亀 */
 	if (getRule(RULE_TAIKOU_TURTLE) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_BAMBOOS+3)&&(MachiType == MACHI_TANKI)) {
+		if ((KezCount(TILE_BAMBOO_TWO) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_BAMBOO_THREE)&&(MachiType == MACHI_TANKI)) {
 			addyaku tmpYakuInfo, "太公釣金亀", 1
 		}
 	}
@@ -1148,14 +1148,14 @@
 	/* 青函トンネル */
 	if (getRule(RULE_SEIKAN_TUNNEL) != 0) {
 		countKangz KangzCount, MianziDat
-		if ((KangzCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(AnKezCount(TILE_EAST_WIND) == 0)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)) {
+		if ((KangzCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)&&(AnKezCount(TILE_EAST_WIND) == 0)&&(KezCount(TILE_CIRCLE_ONE) >= 1)) {
 			addyakuman tmpYakuInfo, "青函トンネル", 1
 		}
 	}
 	/* 宝紅開花 */
 	if (getRule(RULE_BAOHONGKAIHUA) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+1) >= 1)&&(DuiCount(TILE_SUIT_BAMBOOS+1) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_CHARACTER_ONE) >= 1)&&(DuiCount(TILE_CIRCLE_ONE) >= 1)&&(DuiCount(TILE_BAMBOO_ONE) >= 1)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "宝紅開花", 1
 			delyaku tmpYakuInfo, "対々和"
@@ -1192,7 +1192,7 @@
 	}
 	/* 白鳥 */
 	if (getRule(RULE_HAKUCHO) != 0) {
-		if ((Kezi == SIZE_OF_MELD_BUFFER-1)&&(KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)) {
+		if ((Kezi == SIZE_OF_MELD_BUFFER-1)&&(KezCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)) {
 			tmpyakuCensored = 0
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "紅鶏報暁")
 			tmpyakuCensored += searchyaku(tmpYakuInfo, "銀鶏報春")
@@ -1206,7 +1206,7 @@
 	}
 	/* 火山爆発(五索と七索) */
 	if (getRule(RULE_VOLCANIC_TOITOI) != 0) {
-		if ((DuiCount(TILE_SUIT_BAMBOOS+3) >= 1)&&(DuiCount(TILE_SUIT_BAMBOOS+5) >= 1)&&(DuiCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(DuiCount(TILE_GREEN_DRAGON) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
+		if ((DuiCount(TILE_BAMBOO_THREE) >= 1)&&(DuiCount(TILE_BAMBOO_FIVE) >= 1)&&(DuiCount(TILE_BAMBOO_SEVEN) >= 1)&&(DuiCount(TILE_GREEN_DRAGON) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
 			addyakuman tmpYakuInfo, "白鳥", 5
 			delyaku tmpYakuInfo, "対々和"
 			delyaku tmpYakuInfo, "役牌・中"
@@ -1218,12 +1218,12 @@
 	/* 白一色 */
 	if (getRule(RULE_HAKUIISOO) != 0) {
 		yakuFlagCount = 0
-		if (DuiCount(TILE_SUIT_CHARACTERS+8) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_CHARACTERS+9) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_CIRCLES+8) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_CIRCLES+9) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_BAMBOOS+8) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_BAMBOOS+9) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_CHARACTER_EIGHT) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_CHARACTER_NINE) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_CIRCLE_EIGHT) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_CIRCLE_NINE) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_BAMBOO_EIGHT) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_BAMBOO_NINE) >= 1) {yakuFlagCount++}
 		if (DuiCount(TILE_WHITE_DRAGON) >= 1) {yakuFlagCount++}
 		if (yakuFlagCount == 5) {
 			addyakuman tmpYakuInfo, "白一色", 1
@@ -1232,7 +1232,7 @@
 #ifndef SANMAS
 	/* 雪の銀閣 */
 	if (getRule(RULE_SNOW_GINKAKU) != 0) {
-		if ((DuiCount(TILE_SUIT_CIRCLES+2) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+4) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+8) >= 1)&&(DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)) {
+		if ((DuiCount(TILE_CIRCLE_TWO) >= 1)&&(DuiCount(TILE_CIRCLE_FOUR) >= 1)&&(DuiCount(TILE_CIRCLE_EIGHT) >= 1)&&(DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)) {
 			addyakuman tmpYakuInfo, "雪の銀閣", 1
 			delyaku tmpYakuInfo, "対々和"
 			delyaku tmpYakuInfo, "役牌・白"
@@ -1241,14 +1241,14 @@
 	}
 	/* 北白川 */
 	if (getRule(RULE_KITASHIRAKAWA) != 0) {
-		if ((KezCount(TILE_NORTH_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+6) >= 1)) {
+		if ((KezCount(TILE_NORTH_WIND) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_BAMBOO_SIX) >= 1)) {
 			addyakuman tmpYakuInfo, "北白川", 1
 			delyaku tmpYakuInfo, "役牌・白"
 		}
 	}
 	/* お正月 */
 	if (getRule(RULE_NEWYEAR) != 0) {
-		if ((KezCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+1) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)) {
+		if ((KezCount(TILE_CHARACTER_ONE) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)&&(KezCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_EAST_WIND) >= 1)) {
 			addyakuman tmpYakuInfo, "お正月", 1
 			delyaku tmpYakuInfo, "対々和"
 			delyaku tmpYakuInfo, "三色同刻"
@@ -1258,18 +1258,18 @@
 	/* 素数役満 */
 	if (getRule(RULE_PRIME_NUMBER) != 0) {
 		yakuFlagCount = 0
-		if (DuiCount(TILE_SUIT_CHARACTERS+2) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_CHARACTERS+3) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_CHARACTERS+5) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_CHARACTERS+7) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_CIRCLES+2) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_CIRCLES+3) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_CIRCLES+5) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_CIRCLES+7) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_BAMBOOS+2) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_BAMBOOS+3) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_BAMBOOS+5) >= 1) {yakuFlagCount++}
-		if (DuiCount(TILE_SUIT_BAMBOOS+7) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_CHARACTER_TWO) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_CHARACTER_THREE) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_CHARACTER_FIVE) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_CHARACTER_SEVEN) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_CIRCLE_TWO) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_CIRCLE_THREE) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_CIRCLE_FIVE) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_CIRCLE_SEVEN) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_BAMBOO_TWO) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_BAMBOO_THREE) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_BAMBOO_FIVE) >= 1) {yakuFlagCount++}
+		if (DuiCount(TILE_BAMBOO_SEVEN) >= 1) {yakuFlagCount++}
 		if (yakuFlagCount == 5) {
 			addyakuman tmpYakuInfo, "素数役満", 1
 			delyaku tmpYakuInfo, "対々和"
@@ -1278,7 +1278,7 @@
 #ifndef ALLSANMA
 	/* アル中 */
 	if (getRule(RULE_ALCOHOLISM) != 0) {
-		if ((DuiCount(TILE_SUIT_CHARACTERS+2) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+2) >= 1)&&(DuiCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
+		if ((DuiCount(TILE_CHARACTER_TWO) >= 1)&&(DuiCount(TILE_CIRCLE_TWO) >= 1)&&(DuiCount(TILE_BAMBOO_TWO) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
 			addyakuman tmpYakuInfo, "アル中", 1
 			delyaku tmpYakuInfo, "対々和"
 			delyaku tmpYakuInfo, "役牌・中"
@@ -1289,7 +1289,7 @@
 #ifndef SANMAS
 	/* 救急車 */
 	if (getRule(RULE_KYUKYUSHA) != 0) {
-		if ((KezCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+9) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
+		if ((KezCount(TILE_CHARACTER_NINE) >= 1)&&(KezCount(TILE_CIRCLE_NINE) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
 			addyakuman tmpYakuInfo, "救急車", 1
 			delyaku tmpYakuInfo, "対々和"
 			delyaku tmpYakuInfo, "役牌・白"
@@ -1329,9 +1329,9 @@
 	/* スーパーマン */
 	if (getRule(RULE_SUPERMAN) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_CHARACTERS+4) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+8) >= 1)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_CHARACTERS+4) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CHARACTERS+4)&&(MianziDat(0) == TILE_SUIT_CHARACTERS+8)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CHARACTERS+8)&&(MianziDat(0) == TILE_SUIT_CHARACTERS+4)) {yakuFlag = 1}
+		if ((KezCount(TILE_CHARACTER_FOUR) >= 1)&&(KezCount(TILE_CHARACTER_EIGHT) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_CHARACTER_FOUR) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_CHARACTER_FOUR)&&(MianziDat(0) == TILE_CHARACTER_EIGHT)) {yakuFlag = 1}
+		if ((KezCount(TILE_CHARACTER_EIGHT) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_CHARACTER_EIGHT)&&(MianziDat(0) == TILE_CHARACTER_FOUR)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "スーパーマン", 1
 		}
@@ -1342,8 +1342,8 @@
 	if (getRule(RULE_HIGASHI_HANAZONO_TRIPLETS) != 0) {
 		yakuFlagCount = 0
 		if (KezCount(TILE_EAST_WIND) >= 1) {yakuFlagCount++}
-		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)||(KezCount(TILE_SUIT_CIRCLES+8) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+8) >= 1)) {yakuFlagCount++}
-		if ((KezCount(TILE_SUIT_CHARACTERS+7) >= 1)||(KezCount(TILE_SUIT_CIRCLES+7) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+7) >= 1)) {yakuFlagCount++}
+		if ((KezCount(TILE_CHARACTER_EIGHT) >= 1)||(KezCount(TILE_CIRCLE_EIGHT) >= 1)||(KezCount(TILE_BAMBOO_EIGHT) >= 1)) {yakuFlagCount++}
+		if ((KezCount(TILE_CHARACTER_SEVEN) >= 1)||(KezCount(TILE_CIRCLE_SEVEN) >= 1)||(KezCount(TILE_BAMBOO_SEVEN) >= 1)) {yakuFlagCount++}
 		if (yakuFlagCount == 3) {
 			addyakuman tmpYakuInfo, "東花園", 1
 		}
@@ -1417,13 +1417,13 @@
 	}
 	/* 白花 */
 	if (getRule(RULE_BAIHUA) != 0) {
-		if ((KezCount(TILE_SUIT_CIRCLES+5) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)) {
+		if ((KezCount(TILE_CIRCLE_FIVE) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)) {
 			addyaku tmpYakuInfo, "白花", 1
 		}
 	}
 	/* 撃鼓愕曹 */
 	if (getRule(RULE_JIGU_ECAO) != 0) {
-		if ((KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+2) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)) {
+		if ((KezCount(TILE_CIRCLE_ONE) >= 1)&&(KezCount(TILE_BAMBOO_TWO) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)) {
 			addyaku tmpYakuInfo, "撃鼓愕曹", 2
 			delyaku tmpYakuInfo, "役牌・白"
 		}
@@ -1431,7 +1431,7 @@
 	/* ビックボーナス */
 	if (getRule(RULE_777) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+7) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(searchyaku(tmpYakuInfo, "北斗七星") == 0)) {
+		if ((KezCount(TILE_CHARACTER_SEVEN) >= 1)&&(KezCount(TILE_CIRCLE_SEVEN) >= 1)&&(KezCount(TILE_BAMBOO_SEVEN) >= 1)&&(searchyaku(tmpYakuInfo, "北斗七星") == 0)) {
 			if (getRule(RULE_777) == 2) {
 				addyakuman tmpYakuInfo, "ビックボーナス", 1
 			} else {
@@ -1455,13 +1455,13 @@
 		loop
 		if (yakuFlag) {
 			if ((gettime(1) == 12)&&(gettime(3) == 25)) {
-				if (MianziDat(0) == TILE_SUIT_BAMBOOS+7) {
+				if (MianziDat(0) == TILE_BAMBOO_SEVEN) {
 					addyakuman tmpYakuInfo, "純正クリスマス", 3
 				} else {
 					addyakuman tmpYakuInfo, "クリスマス", 2
 				}
 			} else {
-				if (MianziDat(0) == TILE_SUIT_BAMBOOS+7) {
+				if (MianziDat(0) == TILE_BAMBOO_SEVEN) {
 					addyakuman tmpYakuInfo, "純正クリスマス", 2
 				} else {
 					addyakuman tmpYakuInfo, "クリスマス", 1
@@ -1476,7 +1476,7 @@
 #define ctype OpenMeld(%1) (getMeld(GameStat, MELD_TILECODE, %1, targetPlayer) \ MELD_TYPE_STEP)
 #define ctype IsKez(%1) ((getMeld(GameStat, MELD_TILECODE, %1, targetPlayer) / MELD_TYPE_STEP) >= MELD_TRIPLET)
 		if (OpenMeld(0) >= 3) {
-			if ((OpenMeld(1) == TILE_SUIT_BAMBOOS+3)&&(IsKez(1))&&(OpenMeld(2) == TILE_SUIT_BAMBOOS+1)&&(IsKez(2))&&(OpenMeld(3) == TILE_SUIT_CIRCLE+8)&&(IsKez(3))) {
+			if ((OpenMeld(1) == TILE_BAMBOO_THREE)&&(IsKez(1))&&(OpenMeld(2) == TILE_BAMBOO_ONE)&&(IsKez(2))&&(OpenMeld(3) == TILE_SUIT_CIRCLE+8)&&(IsKez(3))) {
 				if ((gettime(1) == 1)&&((gettime(3) == 1)||(gettime(3) == 2))) {
 					addyakuman tmpYakuInfo, "純正一富士二鷹三茄子", 2
 				} else {
@@ -1489,14 +1489,14 @@
 	}
 	/* 武蔵丸 */
 	if (getRule(RULE_MUSASHIMARU) != 0) {
-		if ((KezCount(TILE_SUIT_CIRCLES+6) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+3) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+4) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&((MianziDat(0)\MELD_TYPE_STEP) == (TILE_SUIT_CIRCLES\MELD_TYPE_STEP))) {
+		if ((KezCount(TILE_CIRCLE_SIX) >= 1)&&(KezCount(TILE_CIRCLE_THREE) >= 1)&&(KezCount(TILE_CIRCLE_FOUR) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)&&((MianziDat(0)\MELD_TYPE_STEP) == (TILE_SUIT_CIRCLES\MELD_TYPE_STEP))) {
 			addyakuman tmpYakuInfo, "純正武蔵丸", 2
 		} else {
 			yakuFlagCount = 0
-			if ((KezCount(TILE_SUIT_CHARACTERS+6) >= 1)||(KezCount(TILE_SUIT_CIRCLES+6) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+6) >= 1)) {yakuFlagCount++}
-			if ((KezCount(TILE_SUIT_CHARACTERS+3) >= 1)||(KezCount(TILE_SUIT_CIRCLES+3) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)) {yakuFlagCount++}
-			if ((KezCount(TILE_SUIT_CHARACTERS+4) >= 1)||(KezCount(TILE_SUIT_CIRCLES+4) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+4) >= 1)) {yakuFlagCount++}
-			if ((yakuFlagCount >= 3)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)) {
+			if ((KezCount(TILE_CHARACTER_SIX) >= 1)||(KezCount(TILE_CIRCLE_SIX) >= 1)||(KezCount(TILE_BAMBOO_SIX) >= 1)) {yakuFlagCount++}
+			if ((KezCount(TILE_CHARACTER_THREE) >= 1)||(KezCount(TILE_CIRCLE_THREE) >= 1)||(KezCount(TILE_BAMBOO_THREE) >= 1)) {yakuFlagCount++}
+			if ((KezCount(TILE_CHARACTER_FOUR) >= 1)||(KezCount(TILE_CIRCLE_FOUR) >= 1)||(KezCount(TILE_BAMBOO_FOUR) >= 1)) {yakuFlagCount++}
+			if ((yakuFlagCount >= 3)&&(KezCount(TILE_CIRCLE_ONE) >= 1)) {
 				addyakuman tmpYakuInfo, "武蔵丸", 1
 			}
 		}
@@ -1504,8 +1504,8 @@
 	/* 阪神 */
 	if (getRule(RULE_HANSHIN) != 0) {
 		yakuFlagCount = 0
-		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)||(KezCount(TILE_SUIT_CIRCLES+8) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+8) >= 1)) {yakuFlagCount++}
-		if ((KezCount(TILE_SUIT_CHARACTERS+4) >= 1)||(KezCount(TILE_SUIT_CIRCLES+4) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+4) >= 1)) {yakuFlagCount++}
+		if ((KezCount(TILE_CHARACTER_EIGHT) >= 1)||(KezCount(TILE_CIRCLE_EIGHT) >= 1)||(KezCount(TILE_BAMBOO_EIGHT) >= 1)) {yakuFlagCount++}
+		if ((KezCount(TILE_CHARACTER_FOUR) >= 1)||(KezCount(TILE_CIRCLE_FOUR) >= 1)||(KezCount(TILE_BAMBOO_FOUR) >= 1)) {yakuFlagCount++}
 		if (yakuFlagCount >= 2) {
 			addyaku tmpYakuInfo, "阪神", 1
 		}
@@ -1514,7 +1514,7 @@
 	/* 神戸 */
 	if (getRule(RULE_KOBE) != 0) {
 		yakuFlagCount = 0
-		if ((KezCount(TILE_SUIT_CHARACTERS+5) >= 1)||(KezCount(TILE_SUIT_CIRCLES+5) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+5) >= 1)) {yakuFlagCount++}
+		if ((KezCount(TILE_CHARACTER_FIVE) >= 1)||(KezCount(TILE_CIRCLE_FIVE) >= 1)||(KezCount(TILE_BAMBOO_FIVE) >= 1)) {yakuFlagCount++}
 		if ((yakuFlagCount >= 1)&&(KezCount(TILE_NORTH_WIND) >= 1)) {
 			addyaku tmpYakuInfo, "神戸", 1
 		}
@@ -1523,9 +1523,9 @@
 	/* サッポロ一番 */
 	if (getRule(RULE_SAPPORO1) != 0) {
 		yakuFlagCount = 0
-		if ((KezCount(TILE_SUIT_CHARACTERS+3) >= 1)||(KezCount(TILE_SUIT_CIRCLES+3) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)) {yakuFlagCount++}
-		if ((KezCount(TILE_SUIT_CHARACTERS+8) >= 1)||(KezCount(TILE_SUIT_CIRCLES+8) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+8) >= 1)) {yakuFlagCount++}
-		if ((KezCount(TILE_SUIT_CHARACTERS+6) >= 1)||(KezCount(TILE_SUIT_CIRCLES+6) >= 1)||(KezCount(TILE_SUIT_BAMBOOS+6) >= 1)) {yakuFlagCount++}
+		if ((KezCount(TILE_CHARACTER_THREE) >= 1)||(KezCount(TILE_CIRCLE_THREE) >= 1)||(KezCount(TILE_BAMBOO_THREE) >= 1)) {yakuFlagCount++}
+		if ((KezCount(TILE_CHARACTER_EIGHT) >= 1)||(KezCount(TILE_CIRCLE_EIGHT) >= 1)||(KezCount(TILE_BAMBOO_EIGHT) >= 1)) {yakuFlagCount++}
+		if ((KezCount(TILE_CHARACTER_SIX) >= 1)||(KezCount(TILE_CIRCLE_SIX) >= 1)||(KezCount(TILE_BAMBOO_SIX) >= 1)) {yakuFlagCount++}
 		if ((yakuFlagCount >= 3)&&(getRound(GameStat) == 0)&&(getRoundLoop(GameStat) == 0)&&(getHonba(GameStat) == 0)) {
 			addyakuman tmpYakuInfo, "サッポロ一番", 1
 		}
@@ -1534,9 +1534,9 @@
 	/* ポカリスエット */
 	if (getRule(RULE_PCRSWT) != 0) {
 		yakuFlag = 0
-		if (KezCount(TILE_SUIT_CIRCLES+2) >= 1) {yakuFlag = 1}
-		if (KezCount(TILE_SUIT_CIRCLES+4) >= 1) {yakuFlag = 1}
-		if (KezCount(TILE_SUIT_CIRCLES+8) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_CIRCLE_TWO) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_CIRCLE_FOUR) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_CIRCLE_EIGHT) >= 1) {yakuFlag = 1}
 		if ((KezCount(TILE_GREEN_DRAGON) >= 1)&&(yakuFlag)) {
 			addyaku tmpYakuInfo, "ポカリスエット", 1
 		}
@@ -1544,10 +1544,10 @@
 	/* アクエリアス */
 	if (getRule(RULE_AQRS) != 0) {
 		yakuFlag = 0
-		if (KezCount(TILE_SUIT_CIRCLES+1) >= 1) {yakuFlag = 1}
-		if (KezCount(TILE_SUIT_CIRCLES+3) >= 1) {yakuFlag = 1}
-		if (KezCount(TILE_SUIT_CIRCLES+5) >= 1) {yakuFlag = 1}
-		if (KezCount(TILE_SUIT_CIRCLES+9) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_CIRCLE_ONE) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_CIRCLE_THREE) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_CIRCLE_FIVE) >= 1) {yakuFlag = 1}
+		if (KezCount(TILE_CIRCLE_NINE) >= 1) {yakuFlag = 1}
 		if ((KezCount(TILE_GREEN_DRAGON) >= 1)&&(yakuFlag)) {
 			addyaku tmpYakuInfo, "アクエリアス", 1
 		}
@@ -1558,7 +1558,7 @@
 	if (getRule(RULE_SMAP) != 0) {
 		yakuFlag = 0
 		repeat getMeld(GameStat, MELD_TILECODE, 0, targetPlayer), 1
-			if ((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) \ MELD_TYPE_STEP) == (TILE_SUIT_CHARACTERS+4)) {
+			if ((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) \ MELD_TYPE_STEP) == (TILE_CHARACTER_FOUR)) {
 				if (((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) / MELD_TYPE_STEP) >= MELD_TRIPLET_EXPOSED_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer) / MELD_TYPE_STEP) <= MELD_TRIPLET_EXPOSED_MAX)) {
 					yakuFlag = 1
 				}
@@ -1586,7 +1586,7 @@
 	}
 	/* 旭川ラーメン */
 	if (getRule(RULE_ASAHIKAWA_RAAMEN) != 0) {
-		if ((KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(KezCount(TILE_NORTH_WIND) >= 1)) {
+		if ((KezCount(TILE_CIRCLE_ONE) >= 1)&&(KezCount(TILE_BAMBOO_THREE) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)&&(KezCount(TILE_NORTH_WIND) >= 1)) {
 			addyakuman tmpYakuInfo, "旭川ラーメン", 1
 			delyaku tmpYakuInfo, "対々和"
 		}
@@ -1594,7 +1594,7 @@
 #endif
 	/* 東方妖々夢 */
 	if (getRule(RULE_PERFECT_CHERRY_BLOSSOM) != 0) {
-		if ((KezCount(TILE_SUIT_CHARACTERS+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+1) >= 1)) {
+		if ((KezCount(TILE_CHARACTER_ONE) >= 1)&&(KezCount(TILE_CIRCLE_ONE) >= 1)&&(KezCount(TILE_BAMBOO_ONE) >= 1)) {
 			addyakuman tmpYakuInfo, "東方妖々夢", 1
 			delyaku tmpYakuInfo, "三色同刻"
 		}
@@ -1602,14 +1602,14 @@
 #ifndef ALLSANMA
 	/* 東方紅楼夢 */
 	if (getRule(RULE_TOUHOU_KOUROUMU) != 0) {
-		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CHARACTERS+6) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_EAST_WIND)) {
+		if ((KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_CHARACTER_SIX) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_EAST_WIND)) {
 			addyaku tmpYakuInfo, "東方紅楼夢", 1
 		}
 	}
 #endif
 	/* Windows95 */
 	if (getRule(RULE_WINDOWS95) != 0) {
-		if ((KezCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+9) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(DuiCount(TILE_SUIT_CHARACTERS+5)+DuiCount(TILE_SUIT_CIRCLES+5)+DuiCount(TILE_SUIT_BAMBOOS+5) >= 2)) {
+		if ((KezCount(TILE_CHARACTER_NINE) >= 1)&&(KezCount(TILE_CIRCLE_NINE) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)&&(DuiCount(TILE_CHARACTER_FIVE)+DuiCount(TILE_CIRCLE_FIVE)+DuiCount(TILE_BAMBOO_FIVE) >= 2)) {
 			addyakuman tmpYakuInfo, "Windows95", 1
 			delyaku tmpYakuInfo, "三色同刻"
 			delyaku tmpYakuInfo, "対々和"
@@ -1617,7 +1617,7 @@
 	}
 	/* Windows98 */
 	if (getRule(RULE_WINDOWS98) != 0) {
-		if ((KezCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+9) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(DuiCount(TILE_SUIT_CHARACTERS+8)+DuiCount(TILE_SUIT_CIRCLES+8)+DuiCount(TILE_SUIT_BAMBOOS+8) >= 2)) {
+		if ((KezCount(TILE_CHARACTER_NINE) >= 1)&&(KezCount(TILE_CIRCLE_NINE) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)&&(DuiCount(TILE_CHARACTER_EIGHT)+DuiCount(TILE_CIRCLE_EIGHT)+DuiCount(TILE_BAMBOO_EIGHT) >= 2)) {
 			addyakuman tmpYakuInfo, "Windows98", 1
 			delyaku tmpYakuInfo, "三色同刻"
 			delyaku tmpYakuInfo, "対々和"
@@ -1625,7 +1625,7 @@
 	}
 	/* Windows3.1 */
 	if (getRule(RULE_WINDOWS31) != 0) {
-		if (((DuiCount(TILE_SUIT_CHARACTERS+3)+DuiCount(TILE_SUIT_CIRCLES+3)+DuiCount(TILE_SUIT_BAMBOOS+3)+DuiCount(TILE_SUIT_CHARACTERS+1)+DuiCount(TILE_SUIT_CIRCLES+1)+DuiCount(TILE_SUIT_BAMBOOS+1)) == SIZE_OF_MELD_BUFFER)) {
+		if (((DuiCount(TILE_CHARACTER_THREE)+DuiCount(TILE_CIRCLE_THREE)+DuiCount(TILE_BAMBOO_THREE)+DuiCount(TILE_CHARACTER_ONE)+DuiCount(TILE_CIRCLE_ONE)+DuiCount(TILE_BAMBOO_ONE)) == SIZE_OF_MELD_BUFFER)) {
 			addyakuman tmpYakuInfo, "Windows3.1", 1
 			delyaku tmpYakuInfo, "琳両数"
 		}
@@ -1633,12 +1633,12 @@
 	/* Windows7 */
 	if (getRule(RULE_WINDOWS7) != 0) {
 		yakuFlag = 0
-		if ((KezCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+7)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_CHARACTERS+7) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_BAMBOOS+7)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_CIRCLES+7) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CHARACTERS+7)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_CIRCLES+7) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_BAMBOOS+7)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CHARACTERS+7)) {yakuFlag = 1}
-		if ((KezCount(TILE_SUIT_BAMBOOS+7) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_SUIT_CIRCLES+7)) {yakuFlag = 1}
+		if ((KezCount(TILE_CHARACTER_SEVEN) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_CIRCLE_SEVEN)) {yakuFlag = 1}
+		if ((KezCount(TILE_CHARACTER_SEVEN) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_BAMBOO_SEVEN)) {yakuFlag = 1}
+		if ((KezCount(TILE_CIRCLE_SEVEN) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_CHARACTER_SEVEN)) {yakuFlag = 1}
+		if ((KezCount(TILE_CIRCLE_SEVEN) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_BAMBOO_SEVEN)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_SEVEN) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_CHARACTER_SEVEN)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_SEVEN) >= 1)&&(TsumoTile(GameStat, targetPlayer) == TILE_CIRCLE_SEVEN)) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyaku tmpYakuInfo, "Windows7", 1
 		}
@@ -1647,8 +1647,8 @@
 	/* 東方風神録 */
 	if (getRule(RULE_MOUNTAIN_OF_FAITH) != 0) {
 		yakuFlag = 0
-		if (KezCount(TILE_SUIT_CHARACTERS+6)+KezCount(TILE_SUIT_CIRCLES+6)+KezCount(TILE_SUIT_BAMBOOS+6) >= 1) {yakuFlag += 1}
-		if (KezCount(TILE_SUIT_CHARACTERS+7)+KezCount(TILE_SUIT_CIRCLES+7)+KezCount(TILE_SUIT_BAMBOOS+7) >= 1) {yakuFlag += 1}
+		if (KezCount(TILE_CHARACTER_SIX)+KezCount(TILE_CIRCLE_SIX)+KezCount(TILE_BAMBOO_SIX) >= 1) {yakuFlag += 1}
+		if (KezCount(TILE_CHARACTER_SEVEN)+KezCount(TILE_CIRCLE_SEVEN)+KezCount(TILE_BAMBOO_SEVEN) >= 1) {yakuFlag += 1}
 		if (KezCount(TILE_EAST_WIND)+KezCount(TILE_SOUTH_WIND)+KezCount(TILE_WEST_WIND)+KezCount(TILE_NORTH_WIND) >= 1) {yakuFlag += 1}
 		if ((yakuFlag == 3)&&(TsumoTile(GameStat, targetPlayer) == TILE_EAST_WIND)) {
 			addyakuman tmpYakuInfo, "東方風神録", 1
@@ -1657,7 +1657,7 @@
 #ifndef SANMAX
 	/* 博麗霊夢 */
 	if (getRule(RULE_HAKUREI_REIMU) != 0) {
-		if ((DuiCount(TILE_SUIT_CHARACTERS+8) >= 1)&&(DuiCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+1) >= 1)) {
+		if ((DuiCount(TILE_CHARACTER_EIGHT) >= 1)&&(DuiCount(TILE_CHARACTER_NINE) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_EAST_WIND) >= 1)&&(DuiCount(TILE_CIRCLE_ONE) >= 1)) {
 			addyakuman tmpYakuInfo, "博麗霊夢", 1
 			delyaku tmpYakuInfo, "対々和"
 			delyaku tmpYakuInfo, "絶一門"
@@ -1665,7 +1665,7 @@
 	}
 	/* 霧雨魔理沙 */
 	if (getRule(RULE_KIRISAME_MARISA) != 0) {
-		if ((DuiCount(TILE_NORTH_WIND) >= 1)&&(DuiCount(TILE_SOUTH_WIND) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+8) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_SUIT_CHARACTERS+3) >= 1)) {
+		if ((DuiCount(TILE_NORTH_WIND) >= 1)&&(DuiCount(TILE_SOUTH_WIND) >= 1)&&(DuiCount(TILE_CIRCLE_EIGHT) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_CHARACTER_THREE) >= 1)) {
 			addyakuman tmpYakuInfo, "霧雨魔理沙", 1
 			delyaku tmpYakuInfo, "対々和"
 			delyaku tmpYakuInfo, "絶一門"
@@ -1674,7 +1674,7 @@
 #endif
 	/* 十六夜咲夜 */
 	if (getRule(RULE_IZAYOI_SAKUYA) != 0) {
-		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+8) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_BAMBOO_THREE) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)&&(KezCount(TILE_BAMBOO_EIGHT) >= 1)&&(DuiCount(TILE_RED_DRAGON) >= 1)) {
 			if (MachiType == MACHI_SHANPON) {
 				addyakuman tmpYakuInfo, "十六夜咲夜", 1
 				delyaku tmpYakuInfo, "対々和"
@@ -1684,19 +1684,19 @@
 	}
 	/* 西南戦争 */
 	if (getRule(RULE_SEINANSENSOU) != 0) {
-		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SOUTH_WIND) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+3) >= 1)) {
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SOUTH_WIND) >= 1)&&(KezCount(TILE_BAMBOO_THREE) >= 1)) {
 			addyaku tmpYakuInfo, "西南戦争", 2
 		}
 	}
 	/* 純正西南戦争 */
 	if (getRule(RULE_JUNSEI_SEINANSENSOU) != 0) {
-		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SOUTH_WIND) >= 1)&&(DuiCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(DuiCount(TILE_SUIT_CIRCLES+9) >= 1)&&(DuiCount(TILE_SUIT_BAMBOOS+9) >= 1)) {
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_SOUTH_WIND) >= 1)&&(DuiCount(TILE_CHARACTER_NINE) >= 1)&&(DuiCount(TILE_CIRCLE_NINE) >= 1)&&(DuiCount(TILE_BAMBOO_NINE) >= 1)) {
 			addyakuman tmpYakuInfo, "純正西南戦争", 1
 		}
 	}
 	/* 九州新幹線 */
 	if (getRule(RULE_KYUSHU_SHINKANSEN) != 0) {
-		if ((KezCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+9) >= 1)&&(KezCount(TILE_SUIT_BAMBOOS+9) >= 1)) {
+		if ((KezCount(TILE_CHARACTER_NINE) >= 1)&&(KezCount(TILE_CIRCLE_NINE) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)) {
 			if (DuiCount(TILE_EAST_WIND)+DuiCount(TILE_SOUTH_WIND)+DuiCount(TILE_WEST_WIND)+DuiCount(TILE_NORTH_WIND) >= 1) {
 				if (DuiCount(TILE_WHITE_DRAGON)+DuiCount(TILE_GREEN_DRAGON)+DuiCount(TILE_RED_DRAGON) >= 1) {
 					addyakuman tmpYakuInfo, "九州新幹線", 1
