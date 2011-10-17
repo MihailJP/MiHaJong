@@ -212,7 +212,28 @@
 	}
 	/* 小四喜 */
 	if (WindCnt == 7) {
-		addyakuman tmpYakuInfo, "小四喜", 1
+		yakuPrevention=0
+		/* 小四喜の上位ローカル役 ここから */
+		/* 天虎 */
+		if (getRule(RULE_HEAVEN_TIGER) != 0) {
+			if (KezCount(TILE_WHITE_DRAGON) >= 1) {
+				addyakuman tmpYakuInfo, "天虎", 3
+				delyakuman tmpYakuInfo, "字一色"
+				yakuPrevention=1
+			}
+		}
+		/* 大怪湖 */
+		if (getRule(RULE_DAIKAIKO) != 0) {
+			if (KezCount(TILE_WHITE_DRAGON) >= 1) {
+				addyakuman tmpYakuInfo, "大怪湖", 3
+				delyakuman tmpYakuInfo, "字一色"
+				yakuPrevention=1
+			}
+		}
+		/* 小四喜の上位ローカル役 ここまで */
+		if (yakuPrevention == 0) {
+			addyakuman tmpYakuInfo, "小四喜", 1
+		}
 		// 四喜和が成立したら混一色の成立を解除する(青天井ルール用)
 		// 字一色は複合してよい
 		delyaku tmpYakuInfo, "混一色"
@@ -272,10 +293,10 @@
 		}
 	loop
 	// 大三元が成立している場合、三元牌でさらに役がつかないようにする
-	if ((KezCount(TILE_WHITE_DRAGON) >= 1)&&(DragonCnt < 6)&&(searchyaku(tmpYakuInfo, "鏡音リンレン") == 0)) {
+	if ((KezCount(TILE_WHITE_DRAGON) >= 1)&&(DragonCnt < 6)&&(searchyaku(tmpYakuInfo, "鏡音リンレン") == 0)&&(searchyaku(tmpYakuInfo, "大怪湖") == 0)) {
 		addyaku tmpYakuInfo, "役牌・白", 1
 	}
-	if ((KezCount(TILE_GREEN_DRAGON) >= 1)&&(DragonCnt < 6)) {
+	if ((KezCount(TILE_GREEN_DRAGON) >= 1)&&(DragonCnt < 6)&&(searchyaku(tmpYakuInfo, "天虎") == 0)) {
 		addyaku tmpYakuInfo, "役牌・發", 1
 	}
 	if ((KezCount(TILE_RED_DRAGON) >= 1)&&(DragonCnt < 6)) {

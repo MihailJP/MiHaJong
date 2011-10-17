@@ -2145,6 +2145,16 @@
 	RuleTxt(0, RULE_SETSUGETSUKA) = "なし", "２飜", "３飜"
 	nonumsanma RULE_SETSUGETSUKA
 
+	RuleName(RULE_HEAVEN_TIGER) = "天虎"
+	RuleDescription(RULE_HEAVEN_TIGER) = "天虎の有無と価値を設定します(発の刻子がある小四喜)"
+	RuleTxt(0, RULE_HEAVEN_TIGER) = "なし", "トリプル役満"
+	nonumsanma RULE_HEAVEN_TIGER
+
+	RuleName(RULE_DAIKAIKO) = "大怪湖"
+	RuleDescription(RULE_DAIKAIKO) = "大怪湖の有無と価値を設定します(白の刻子がある小四喜)"
+	RuleTxt(0, RULE_DAIKAIKO) = "なし", "トリプル役満"
+	nonumsanma RULE_DAIKAIKO
+
 
 return
 
