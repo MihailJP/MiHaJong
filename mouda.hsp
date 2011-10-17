@@ -213,20 +213,18 @@
 	if ((DiscardTileIndex >= DAHAI_TYPE_OPENRIICHI)&&(DiscardTileIndex < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
 		setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "リーチ"
 		dsplay@ VOX_RICHI
-		redrscreen
-		await 1000
-		setHandStat GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 3
 		if ((getRichiFlag(GameStat, RICHI_OPENFLAG, 0)+getRichiFlag(GameStat, RICHI_OPENFLAG, 1)+getRichiFlag(GameStat, RICHI_OPENFLAG, 2)+getRichiFlag(GameStat, RICHI_OPENFLAG, 3)) == 0) {
 			bgmplay_short MUS_OPENRICHI
 		}
+		redrscreen
+		await 1000
+		setHandStat GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 3
 		setRichiFlag GameStat, RICHI_OPENFLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
 		vanish2@
 	}
 	if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
 		setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "リーチ"
 		dsplay@ VOX_RICHI
-		redrscreen
-		await 1000
 		if ((getRichiFlag(GameStat, RICHI_OPENFLAG, 0)+getRichiFlag(GameStat, RICHI_OPENFLAG, 1)+getRichiFlag(GameStat, RICHI_OPENFLAG, 2)+getRichiFlag(GameStat, RICHI_OPENFLAG, 3)) == 0) {
 			if ((getRichiFlag(GameStat, RICHI_FLAG, 0) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 1) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 2) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 3) == RIICHI_NO)) {
 				if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == getPlayer(GameStat)) {
@@ -244,6 +242,8 @@
 				await 0
 			}
 		}
+		redrscreen
+		await 1000
 		vanish2@
 	}
 	/* 打牌を記録する */
