@@ -2165,6 +2165,11 @@
 	RuleTxt(0, RULE_DAN_YAKU) = "なし", "トリプル役満"
 	nonumsanma RULE_DAN_YAKU
 
+	RuleName(RULE_CACTUS) = "仙人掌"
+	RuleDescription(RULE_CACTUS) = "仙人掌の有無と価値を設定します(中雀頭の大四喜)"
+	RuleTxt(0, RULE_CACTUS) = "なし", "４倍役満"
+	nonumsanma RULE_CACTUS
+
 
 return
 

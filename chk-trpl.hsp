@@ -258,6 +258,14 @@
 				yakuPrevention=1
 			}
 		}
+		/* 仙人掌 */
+		if (getRule(RULE_CACTUS) != 0) {
+			if (DuiCount(TILE_RED_DRAGON) >= 1) {
+				addyakuman tmpYakuInfo, "仙人掌", 4
+				delyakuman tmpYakuInfo, "字一色"
+				yakuPrevention=1
+			}
+		}
 		/* 大四喜の上位ローカル役 ここまで */
 		if (yakuPrevention == 0) {
 			if (getRule(RULE_DOUBLE_YAKUMAN) == 0) {
