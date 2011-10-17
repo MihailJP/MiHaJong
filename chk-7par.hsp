@@ -469,5 +469,17 @@
 			addyaku tmpYakuInfo, "éOêFìØëŒ", 1
 		}
 	}
+#ifndef SANMAS
+	/* ãté‘ó÷ */
+	if (getRule(RULE_SANSHOKU_DOUTOI) != 0) {
+		yakuflagcount = 0
+		repeat (TILE_DRAGON_MAX-TILE_DRAGON_MIN+1)+(TILE_WIND_MAX-TILE_WIND_MIN+1), TILE_WIND_MIN
+			if (tileCount(cnt) >= 2) {yakuflagcount += 1}
+		loop
+		if ((tileCount(TILE_SUIT_CIRCLES+1) >= 2)&&(tileCount(TILE_SUIT_CIRCLES+9) >= 2)&&(yakuflagcount == 5)) {
+			addyaku tmpYakuInfo, "ãté‘ó÷", 1
+		}
+	}
+#endif
 return
 #global
