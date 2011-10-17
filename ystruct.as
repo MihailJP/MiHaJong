@@ -6,7 +6,7 @@
 
 #module yakuStruct BasePoints, CoreHan, BonusHan, \
 DoraQuantity, UraDoraQuantity, AkaDoraQuantity, AoDoraQuantity, AliceDora, FlowerQuantity, \
-AgariPoints, yakuNameList, yakuValList, yakumanNameList
+AgariPoints, yakuNameList, yakuValList, yakumanNameList, yakumanValList
 #include "const.as"
 #modinit
 	BasePoints = 20
@@ -22,6 +22,7 @@ AgariPoints, yakuNameList, yakuValList, yakumanNameList
 	yakuNameList = ""
 	yakuValList = ""
 	yakumanNameList = ""
+	yakumanValList = ""
 	return
 #modfunc exportYakuPoint array exportArray
 	dim exportArray, NUM_OF_DIGIT_GROUPS
@@ -46,6 +47,7 @@ AgariPoints, yakuNameList, yakuValList, yakumanNameList
 		case YAKUINF_YAKULIST: yakuNameList = value: swbreak
 		case YAKUINF_YAKUVALLIST: yakuValList = value: swbreak
 		case YAKUINF_YAKUMANLIST: yakumanNameList = value: swbreak
+		case YAKUINF_YAKUMANVALLIST: yakumanValList = value: swbreak
 	swend
 	return
 #modfunc addYakuInfo int Index, int value
@@ -67,6 +69,7 @@ AgariPoints, yakuNameList, yakuValList, yakumanNameList
 		case YAKUINF_YAKULIST: yakuNameList += value: swbreak
 		case YAKUINF_YAKUVALLIST: yakuValList += value: swbreak
 		case YAKUINF_YAKUMANLIST: yakumanNameList += value: swbreak
+		case YAKUINF_YAKUMANVALLIST: yakumanValList += value: swbreak
 	swend
 	return
 #modcfunc getYakuInfo int Index
@@ -83,6 +86,7 @@ AgariPoints, yakuNameList, yakuValList, yakumanNameList
 		case YAKUINF_YAKULIST: return yakuNameList: swbreak
 		case YAKUINF_YAKUVALLIST: return yakuValList: swbreak
 		case YAKUINF_YAKUMANLIST: return yakumanNameList: swbreak
+		case YAKUINF_YAKUMANVALLIST: return yakumanValList: swbreak
 		default: return AgariPoints(Index-YAKUINF_POINTS): swbreak
 	swend
 	return 0x7fffffff

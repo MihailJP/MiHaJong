@@ -285,6 +285,7 @@ return
 	} else {
 		addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, yakuVal*YAKUVAL_YAKUMAN
 		addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST, yakuName+"\n"
+		addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANVALLIST, ""+(yakuVal*YAKUVAL_YAKUMAN)+"\n"
 		trace strf("役を追加 [%s] 、 [%d] 倍役満、累計 [%d]",yakuName, yakuVal, getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE))
 	}
 	return
@@ -326,7 +327,8 @@ return
 *doaddmangan
 	addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, yakuVal*YAKUVAL_HALFMANGAN
 	addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANLIST, yakuName+"\n"
-	trace strf("役を追加 [%s] 、 [%d] /2 倍満貫、累計 [%d]",yakuName, yakuVal, getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE))
+	addYakuInfoTxt tmpYakuInfo, YAKUINF_YAKUMANVALLIST, ""+(yakuVal*YAKUVAL_HALFMANGAN)+"\n"
+	trace strf("役を追加 [%s] 、 [%.1f] 倍満貫、累計 [%d]",yakuName, double(yakuVal)/2.0, getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE))
 	return
 #global
 
@@ -370,6 +372,36 @@ return
 		setYakuInfoTxt tmpyakuInfo, YAKUINF_YAKUVALLIST, tmpYakuVal
 		addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -tmpDeleteHan
 		trace strf("役を削除 [%s] 、 [%d] 飜、累計 [%d]",tmpyakuDelete, tmpDeleteHan, getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE))
+	}
+	return
+#global
+
+
+/* 役満の成立を解除 */
+#module
+#include "const.as"
+#deffunc delyakuman var tmpYakuInfo, str tmpyakuDelete
+/*
+		delyakuman p1, p2
+		役満の成立を取り消す
+
+		p1 : 役情報を格納した構造体
+		p2 : 削除したい役の名前
+
+		成立している役満のリストから指定した役を削除します。
+*/
+	tmpYakuName = getYakuInfo(tmpYakuInfo, YAKUINF_YAKUMANLIST)
+	tmpYakuVal = getYakuInfo(tmpYakuInfo, YAKUINF_YAKUMANVALLIST)
+	targetLine = notesearch(tmpYakuName, tmpyakuDelete)
+	if (targetLine >= 0) {
+		notesel tmpYakuVal: noteget tmpValXX, targetLine: noteunsel
+		tmpDeleteHan = int(tmpValXX)
+		notesel tmpYakuName: notedel targetLine: noteunsel
+		notesel tmpYakuVal: notedel targetLine: noteunsel
+		setYakuInfoTxt tmpyakuInfo, YAKUINF_YAKUMANLIST, tmpYakuName
+		setYakuInfoTxt tmpyakuInfo, YAKUINF_YAKUMANVALLIST, tmpYakuVal
+		addYakuInfo tmpYakuInfo, YAKUINF_HAN_BASE, -tmpDeleteHan*YAKUVAL_HALFMANGAN
+		trace strf("役を削除 [%s] 、 [%.1f] 倍満貫、累計 [%d]",tmpyakuDelete, double(tmpDeleteHan)/2.0, getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE))
 	}
 	return
 #global
