@@ -348,12 +348,28 @@
 			addyakuman tmpYakuInfo, "¼’†“‡“ì•û", 1
 		}
 	}
+	/* áŒ‰Ô */
+	if (getRule(RULE_SETSUGETSUKA) != 0) {
+		yakuFlag = 0
+		if ((KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+5) >= 1)) {yakuFlag = 1}
+		if (yakuFlag) {
+			if (getRule(RULE_SETSUGETSUKA) == 2) {
+				addyaku tmpYakuInfo, "áŒ‰Ô", 3
+			} else {
+				addyaku tmpYakuInfo, "áŒ‰Ô", 2
+			}
+			delyaku tmpYakuInfo, "‘ÎX˜a"
+			delyaku tmpYakuInfo, "–ğ”vEê•—"
+			delyaku tmpYakuInfo, "–ğ”vE©•—"
+		}
+	}
 	/* •—‰ÔáŒ */
 	if (getRule(RULE_FUUKA_SETSUGETSU) != 0) {
 		yakuFlag = 0
 		if ((KezCount(TILE_WHITE_DRAGON) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+1) >= 1)&&(KezCount(TILE_SUIT_CIRCLES+5) >= 1)&&((jikazeflag > 0)||(bakazeflag > 0))) {yakuFlag = 1}
 		if (yakuFlag) {
 			addyakuman tmpYakuInfo, "•—‰ÔáŒ", 1
+			delyaku tmpYakuInfo, "áŒ‰Ô"
 			delyaku tmpYakuInfo, "‘ÎX˜a"
 			delyaku tmpYakuInfo, "–ğ”vEê•—"
 			delyaku tmpYakuInfo, "–ğ”vE©•—"

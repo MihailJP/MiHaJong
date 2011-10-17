@@ -2140,6 +2140,11 @@
 	RuleTxt(0, RULE_GYAKUSHARIN) = "なし", "４飜"
 	nonumsanma RULE_GYAKUSHARIN
 
+	RuleName(RULE_SETSUGETSUKA) = "雪月花"
+	RuleDescription(RULE_SETSUGETSUKA) = "雪月花の有無と価値を設定します(白、一筒、五筒の刻子)"
+	RuleTxt(0, RULE_SETSUGETSUKA) = "なし", "２飜", "３飜"
+	nonumsanma RULE_SETSUGETSUKA
+
 
 return
 
