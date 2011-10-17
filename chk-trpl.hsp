@@ -248,10 +248,23 @@
 	}
 	/* 大四喜 */
 	if (WindCnt == 8) {
-		if (getRule(RULE_DOUBLE_YAKUMAN) == 0) {
-			addyakuman tmpYakuInfo, "大四喜", 2
-		} else {
-			addyakuman tmpYakuInfo, "大四喜", 1
+		yakuPrevention=0
+		/* 大四喜の上位ローカル役 ここから */
+		/* 弾葯 */
+		if (getRule(RULE_DAN_YAKU) != 0) {
+			if (DuiCount(TILE_SUIT_CHARACTERS+9) >= 1) {
+				addyakuman tmpYakuInfo, "弾葯", 3
+				delyaku tmpYakuInfo, "混老頭"
+				yakuPrevention=1
+			}
+		}
+		/* 大四喜の上位ローカル役 ここまで */
+		if (yakuPrevention == 0) {
+			if (getRule(RULE_DOUBLE_YAKUMAN) == 0) {
+				addyakuman tmpYakuInfo, "大四喜", 2
+			} else {
+				addyakuman tmpYakuInfo, "大四喜", 1
+			}
 		}
 		// 四喜和が成立したら混一色の成立を解除する(青天井ルール用)
 		// 字一色は複合してよい

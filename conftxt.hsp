@@ -2160,6 +2160,11 @@
 	RuleTxt(0, RULE_Y2KBUG) = "なし", "ダブル役満"
 	nonumsanma RULE_Y2KBUG
 
+	RuleName(RULE_DAN_YAKU) = "弾葯"
+	RuleDescription(RULE_DAN_YAKU) = "弾葯の有無と価値を設定します(九萬雀頭の大四喜)"
+	RuleTxt(0, RULE_DAN_YAKU) = "なし", "トリプル役満"
+	nonumsanma RULE_DAN_YAKU
+
 
 return
 
