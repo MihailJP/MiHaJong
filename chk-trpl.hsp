@@ -230,6 +230,14 @@
 				yakuPrevention=1
 			}
 		}
+		/* 千年虫 */
+		if (getRule(RULE_Y2KBUG) != 0) {
+			if ((KezCount(TILE_SUIT_CHARACTERS+9) >= 1)&&(KezCount(TILE_SOUTH_WIND) == 0)) {
+				addyakuman tmpYakuInfo, "千年虫", 2
+				delyaku tmpYakuInfo, "混老頭"
+				yakuPrevention=1
+			}
+		}
 		/* 小四喜の上位ローカル役 ここまで */
 		if (yakuPrevention == 0) {
 			addyakuman tmpYakuInfo, "小四喜", 1

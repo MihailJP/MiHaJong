@@ -2155,6 +2155,11 @@
 	RuleTxt(0, RULE_DAIKAIKO) = "なし", "トリプル役満"
 	nonumsanma RULE_DAIKAIKO
 
+	RuleName(RULE_Y2KBUG) = "千年虫"
+	RuleDescription(RULE_Y2KBUG) = "千年虫の有無と価値を設定します(九萬の刻子がある南雀頭の小四喜)"
+	RuleTxt(0, RULE_Y2KBUG) = "なし", "ダブル役満"
+	nonumsanma RULE_Y2KBUG
+
 
 return
 
