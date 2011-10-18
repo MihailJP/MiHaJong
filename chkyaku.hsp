@@ -72,6 +72,38 @@
 					countdora GameStat, tmpYakuInfo, targetPlayer
 				}
 			}
+			/* 全不靠 */
+			if (getRule(RULE_QUANBUKAO) != 0) {
+				if ((ShantenArray(RULE_QUANBUKAO) == -1)&&(ShantenArray(SHANTEN_STELLAR) >= -1)) {
+					contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
+					switch getRule(RULE_STELLAR_UUSHII)
+						case 1:
+							addyaku tmpYakuInfo, "全不靠", 3
+							setYakuInfo tmpYakuInfo, YAKUINF_FU, 30
+							swbreak
+						case 2:
+							addyaku tmpYakuInfo, "全不靠", 3
+							setYakuInfo tmpYakuInfo, YAKUINF_FU, 40
+							swbreak
+						case 3:
+							addyaku tmpYakuInfo, "全不靠", 4
+							setYakuInfo tmpYakuInfo, YAKUINF_FU, 40
+							swbreak
+						case 4:
+							addmangan tmpYakuInfo, "全不靠", 2
+							swbreak
+						case 5:
+							addyakuman tmpYakuInfo, "全不靠", 1
+							swbreak
+					swend
+					if (getRule(RULE_STELLAR_UUSHII) == 2) {
+						addmangan tmpYakuInfo, "七星無靠", 2
+					} else {
+						addyakuman tmpYakuInfo, "七星無靠", 1
+					}
+					countdora GameStat, tmpYakuInfo, targetPlayer
+				}
+			}
 			/* 七対子 */
 			if ((ShantenArray(SHANTEN_PAIRS) == -1)&&(ShantenArray(SHANTEN_REGULAR) != -1)) {
 				contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType

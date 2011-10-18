@@ -24,6 +24,7 @@
 		4 : Žµ¯•sèÏ
 		5 : “ì–kí‘ˆ
 		6 : ˜f¯’¼—ñ
+		7 : ‘S•sèÏ
 */
 #ifdef LOGGING_SHANTEN
 	debug strf("Œü’®”‚ðŒvŽZ‚µ‚Ü‚·BƒvƒŒƒCƒ„[ [%d]", targetPlayer)
@@ -42,25 +43,37 @@
 			gosub *calcshanten_regular: return MianziShanten: swbreak
 		case SHANTEN_PAIRS:
 			gosub *calcshanten_chiitoi: return QiduiShanten: swbreak
+#ifndef SANMAS
 		case SHANTEN_ORPHANS:
 			gosub *calcshanten_kokushi: return ShisanYaoShanten: swbreak
 		case SHANTEN_STELLAR:
 			gosub *calcshanten_stellar: return QixingShanten: swbreak
 		case SHANTEN_CIVILWAR:
 			gosub *calcshanten_civilwar: return CivilWarShanten: swbreak
+#endif
 		case SHANTEN_SYZYGY:
 			gosub *calcshanten_syzygy: return SyzygyShanten: swbreak
+#ifndef SANMAS
+		case SHANTEN_QUANBUKAO:
+			gosub *calcshanten_quanbukao: return QuanbukaoShanten: swbreak
+#endif
 		default:
 			gosub *calcshanten_regular
 			gosub *calcshanten_chiitoi
+#ifndef SANMAS
 			gosub *calcshanten_kokushi
 			gosub *calcshanten_stellar
 			gosub *calcshanten_civilwar
+#endif
 			gosub *calcshanten_syzygy
+#ifndef SANMAS
+			gosub *calcshanten_quanbukao
+#endif
 			// ‚±‚ÌŒ‹‰Ê‚Ì‚¤‚¿AÅ‚à­‚È‚¢’l‚ª‘S‘Ì‚ÌŒü’®”‚Æ‚È‚é
-			// ‚O‚È‚ç‚Î’®”vA|‚P‚È‚ç‚Î˜a—¹‚Á‚Ä‚¢‚é
+			// ‚O‚È‚ç‚Î’®”vA]‚P‚È‚ç‚Î˜a—¹‚Á‚Ä‚¢‚é
 			Shanten = MianziShanten
 			if (Shanten > QiduiShanten) {Shanten = QiduiShanten}
+#ifndef SANMAS
 			if (Shanten > ShisanYaoShanten) {Shanten = ShisanYaoShanten}
 			if (getRule(RULE_STELLAR_UUSHII) != 0) {
 				if (Shanten > QixingShanten) {Shanten = QixingShanten}
@@ -68,9 +81,15 @@
 			if (getRule(RULE_CIVIL_WAR) != 0) {
 				if (Shanten > CivilWarShanten) {Shanten = CivilWarShanten}
 			}
+#endif
 			if (getRule(RULE_SYZYGY) != 0) {
 				if (Shanten > SyzygyShanten) {Shanten = SyzygyShanten}
 			}
+#ifndef SANMAS
+			if (getRule(RULE_QUANBUKAO) != 0) {
+				if (Shanten > QuanbukaoShanten) {Shanten = QuanbukaoShanten}
+			}
+#endif
 			return Shanten
 			swbreak
 	swend
@@ -135,6 +154,7 @@
 #endif
 	return
 
+#ifndef SANMAS
 *calcshanten_kokushi
 	// ‘Žm–³‘o‚É‘Î‚·‚éŒü’®”‚ð‹‚ß‚éB
 	countTilesInHand TileCount, GameStat, targetPlayer
@@ -165,7 +185,7 @@
 	// “ÁŽêFŽµ¯•sèÏ‚ÌŒü’®”‚ð‹‚ß‚é
 	if (getRule(RULE_STELLAR_UUSHII) != 0) {
 		countTilesInHand TileCount, GameStat, targetPlayer
-		QixingShanten == 999
+		QixingShanten = 999
 		QixingZiPai = TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON, TILE_RED_DRAGON
 		TmpQixingZiPaiCount = 0
 		repeat 7
@@ -248,6 +268,7 @@
 #endif
 	}
 	return
+#endif
 
 *calcshanten_syzygy
 	// “ÁŽêF˜f¯’¼—ñ‚ÌŒü’®”‚ð‹‚ß‚é
@@ -275,6 +296,60 @@
 #endif
 	}
 	return
+
+#ifndef SANMAS
+*calcshanten_quanbukao
+	// “ÁŽêF‘S•sèÏ‚ÌŒü’®”‚ð‹‚ß‚é
+	if (getRule(RULE_QUANBUKAO) != 0) {
+		countTilesInHand TileCount, GameStat, targetPlayer
+		QuanbukaoShanten = 999
+		QixingZiPai = TILE_EAST_WIND, TILE_SOUTH_WIND, TILE_WEST_WIND, TILE_NORTH_WIND, TILE_WHITE_DRAGON, TILE_GREEN_DRAGON, TILE_RED_DRAGON
+		TmpQixingZiPaiCount = 0
+		repeat 7
+			if (TileCount(QixingZiPai(cnt)) >= 1) {
+				TmpQixingZiPaiCount++
+			}
+		loop
+		repeat 6
+			switch cnt
+				case 0:
+					QixingPai = TILE_CHARACTER_ONE, TILE_CHARACTER_FOUR, TILE_CHARACTER_SEVEN, TILE_CIRCLE_TWO, TILE_CIRCLE_FIVE, TILE_CIRCLE_EIGHT, TILE_BAMBOO_THREE, TILE_BAMBOO_SIX, TILE_BAMBOO_NINE
+				swbreak
+				case 1:
+					QixingPai = TILE_CHARACTER_ONE, TILE_CHARACTER_FOUR, TILE_CHARACTER_SEVEN, TILE_CIRCLE_THREE, TILE_CIRCLE_SIX, TILE_CIRCLE_NINE, TILE_BAMBOO_TWO, TILE_BAMBOO_FIVE, TILE_BAMBOO_EIGHT
+				swbreak
+				case 2:
+					QixingPai = TILE_CHARACTER_TWO, TILE_CHARACTER_FIVE, TILE_CHARACTER_EIGHT, TILE_CIRCLE_ONE, TILE_CIRCLE_FOUR, TILE_CIRCLE_SEVEN, TILE_BAMBOO_THREE, TILE_BAMBOO_SIX, TILE_BAMBOO_NINE
+				swbreak
+				case 3:
+					QixingPai = TILE_CHARACTER_TWO, TILE_CHARACTER_FIVE, TILE_CHARACTER_EIGHT, TILE_CIRCLE_THREE, TILE_CIRCLE_SIX, TILE_CIRCLE_NINE, TILE_BAMBOO_ONE, TILE_BAMBOO_FOUR, TILE_BAMBOO_SEVEN
+				swbreak
+				case 4:
+					QixingPai = TILE_CHARACTER_THREE, TILE_CHARACTER_SIX, TILE_CHARACTER_NINE, TILE_CIRCLE_ONE, TILE_CIRCLE_FOUR, TILE_CIRCLE_SEVEN, TILE_BAMBOO_TWO, TILE_BAMBOO_FIVE, TILE_BAMBOO_EIGHT
+				swbreak
+				case 5:
+					QixingPai = TILE_CHARACTER_THREE, TILE_CHARACTER_SIX, TILE_CHARACTER_NINE, TILE_CIRCLE_TWO, TILE_CIRCLE_FIVE, TILE_CIRCLE_EIGHT, TILE_BAMBOO_ONE, TILE_BAMBOO_FOUR, TILE_BAMBOO_SEVEN
+				swbreak
+			swend
+			TmpQixingShuPaiCount = 0
+			repeat 9
+				if (TileCount(QixingPai(cnt)) >= 1) {
+					TmpQixingShuPaiCount++
+				}
+			loop
+			TmpQuanbukaoShanten = 13 - TmpQixingZiPaiCount - TmpQixingShuPaiCount
+			// –Â‚«–ÊŽq‚âˆÃžÈ‚ª‚ ‚éê‡‚Í•s‰Â”\
+			if (MeldPointer(GameStat, targetPlayer) > 0) {
+				TmpQuanbukaoShanten = 999
+			}
+			if (TmpQuanbukaoShanten < QuanbukaoShanten) {QuanbukaoShanten = TmpQuanbukaoShanten}
+		loop
+#ifdef LOGGING_SHANTEN
+		trace strf("‘S•sèÏ‚É‘Î‚·‚éŒü’®”‚Í [%d] ‚Å‚·B", QuanbukaoShanten)
+#endif
+	}
+	return
+#endif
 
 // s”Ô†‚ª‚¨‚©‚µ‚­‚È‚é‚Ì‚ÅÅŒã‚ÉˆÚ“®
 #deffunc shantenInit

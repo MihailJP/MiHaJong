@@ -2170,6 +2170,11 @@
 	RuleTxt(0, RULE_CACTUS) = "なし", "４倍役満"
 	nonumsanma RULE_CACTUS
 
+	RuleName(RULE_QUANBUKAO) = "全不靠"
+	RuleDescription(RULE_QUANBUKAO) = "全不靠の有無と価値を設定します(三色それぞれ別々の筋の数牌と字牌から1枚ずつ計14枚揃える)"
+	RuleTxt(0, RULE_QUANBUKAO) = "なし", "３飜３０符", "３飜４０符", "４飜４０符", "満貫", "役満"
+	nonumsanma RULE_QUANBUKAO
+
 
 return
 
