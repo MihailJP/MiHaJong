@@ -47,8 +47,8 @@
 				repeat length(tmpRuleCodeList)
 					ruleEnabled = 0
 					if (tmpRuleCodeList(cnt) == -1) {ruleEnabled = 1}
-					else: if (tmpRuleCodeList(cnt) != "0") {ruleEnabled = 1}
-					if (ruleEnabled != "0") {
+					else: if (tmpRuleCodeList(cnt) != 0) {ruleEnabled = 1}
+					if (ruleEnabled != 0) {
 						countTilesInHand TileCount, GameStat, targetPlayer
 						yakuFlag = 0
 						repeat 3
