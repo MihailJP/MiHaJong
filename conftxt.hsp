@@ -2175,6 +2175,11 @@
 	RuleTxt(0, RULE_QUANBUKAO) = "なし", "３飜３０符", "３飜４０符", "４飜４０符", "満貫", "役満"
 	nonumsanma RULE_QUANBUKAO
 
+	RuleName(RULE_ARA) = "阿拉"
+	RuleDescription(RULE_ARA) = "阿拉の有無と価値を設定します(九萬、南、發、中の刻子、白の雀頭)"
+	RuleTxt(0, RULE_ARA) = "なし", "役満"
+	nonumsanma RULE_ARA
+
 
 return
 

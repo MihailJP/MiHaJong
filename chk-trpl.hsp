@@ -1705,6 +1705,15 @@
 			}
 		}
 	}
+	/* ˆ¢f */
+	if (getRule(RULE_ARA) != 0) {
+		if ((KezCount(TILE_CHARACTER_NINE) >= 1)&&(KezCount(TILE_SOUTH_WIND) >= 1)&&(KezCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(DuiCount(TILE_WHITE_DRAGON) >= 1)) {
+			addyakuman tmpYakuInfo, "ˆ¢f", 1
+			delyaku tmpYakuInfo, "¬OŒ³"
+			delyaku tmpYakuInfo, "‘ÎX˜a"
+			delyaku tmpYakuInfo, "¬˜V“ª"
+		}
+	}
 #endif
 return
 #global
