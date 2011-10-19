@@ -91,12 +91,17 @@
 								} else {
 									tmpActualYakuName = "大車輪": tmpyakumanRate = 1
 								}
-								delyaku tmpYakuInfo, "平和"
 							}
 							else {tmpActualYakuName = tmpYakuNameList(cnt)}
-							addyakuman tmpYakuInfo, tmpActualYakuName, tmpyakumanRate
 							// 成立したら清一色の成立を解除する(青天井ルール用)
 							delyaku tmpYakuInfo, "清一色"
+							// 下位役の成立も解除する(青天井ルール用)
+							switch tmpActualYakuName
+								case "大車輪": case "大竹林": case "大数隣":
+								case "小車輪": case "小竹林": case "小数隣":
+									delyaku tmpYakuInfo, "平和"
+							swend
+							addyakuman tmpYakuInfo, tmpActualYakuName, tmpyakumanRate
 						}
 					}
 				loop

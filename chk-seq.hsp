@@ -135,6 +135,9 @@
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "‘åÔ—Ö")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "‘å’|—Ñ")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "‘å”—×")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "¬Ô—Ö")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "¬’|—Ñ")
+		tmpyakuCensored += searchyaku(tmpYakuInfo, "¬”—×")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "ˆêF‘o—´‰ï")
 		tmpyakuCensored += searchyaku(tmpYakuInfo, "´ŠCŒÎ")
 		if (tmpyakuCensored == 0) {
