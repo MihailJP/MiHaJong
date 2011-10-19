@@ -480,6 +480,26 @@
 			addyaku tmpYakuInfo, "‹tÔ—Ö", 4
 		}
 	}
+	/* ‹t’|—Ñ */
+	if (getRule(RULE_GYAKUCHIKURIN) != 0) {
+		yakuflagcount = 0
+		repeat (TILE_DRAGON_MAX-TILE_DRAGON_MIN+1)+(TILE_WIND_MAX-TILE_WIND_MIN+1), TILE_WIND_MIN
+			if (tileCount(cnt) >= 2) {yakuflagcount += 1}
+		loop
+		if ((tileCount(TILE_BAMBOO_ONE) >= 2)&&(tileCount(TILE_BAMBOO_NINE) >= 2)&&(yakuflagcount == 5)) {
+			addyaku tmpYakuInfo, "‹t’|—Ñ", 4
+		}
+	}
+	/* ‹t”—× */
+	if (getRule(RULE_GYAKUSUURIN) != 0) {
+		yakuflagcount = 0
+		repeat (TILE_DRAGON_MAX-TILE_DRAGON_MIN+1)+(TILE_WIND_MAX-TILE_WIND_MIN+1), TILE_WIND_MIN
+			if (tileCount(cnt) >= 2) {yakuflagcount += 1}
+		loop
+		if ((tileCount(TILE_CHARACTER_ONE) >= 2)&&(tileCount(TILE_CHARACTER_NINE) >= 2)&&(yakuflagcount == 5)) {
+			addyaku tmpYakuInfo, "‹t”—×", 4
+		}
+	}
 #endif
 	/* ’†Ô—Ö */
 	if (getRule(RULE_CHUUSHARIN) != 0) {

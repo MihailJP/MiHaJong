@@ -2203,6 +2203,16 @@
 	RuleTxt(0, RULE_CHUUSUURIN) = "‚Θ‚µ", "–π–(–ε‘O‚Μ‚έ)"
 	nosanma RULE_CHUUSUURIN
 
+	RuleName(RULE_GYAKUCHIKURIN) = "‹t’|—Ρ"
+	RuleDescription(RULE_GYAKUCHIKURIN) = "‹t’|—Ρ‚Μ—L–³‚Ζ‰Ώ’l‚πέ’θ‚µ‚ά‚·(κυA‹γυ‚Μ‚ ‚ι¬V“ªµ‘Ξq:•t‰Α–π)"
+	RuleTxt(0, RULE_GYAKUCHIKURIN) = "‚Θ‚µ", "‚SγΚ"
+	nonumsanma RULE_GYAKUCHIKURIN
+
+	RuleName(RULE_GYAKUSUURIN) = "‹t”—Χ"
+	RuleDescription(RULE_GYAKUSUURIN) = "‹t”—Χ‚Μ—L–³‚Ζ‰Ώ’l‚πέ’θ‚µ‚ά‚·(κδέA‹γδέ‚Μ‚ ‚ι¬V“ªµ‘Ξq:•t‰Α–π)"
+	RuleTxt(0, RULE_GYAKUSUURIN) = "‚Θ‚µ", "‚SγΚ"
+	nonumsanma RULE_GYAKUSUURIN
+
 return
 
 #undef noregsanma
