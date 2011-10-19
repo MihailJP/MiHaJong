@@ -471,7 +471,7 @@
 	}
 #ifndef SANMAS
 	/* ‹tÔ—Ö */
-	if (getRule(RULE_SANSHOKU_DOUTOI) != 0) {
+	if (getRule(RULE_GYAKUSHARIN) != 0) {
 		yakuflagcount = 0
 		repeat (TILE_DRAGON_MAX-TILE_DRAGON_MIN+1)+(TILE_WIND_MAX-TILE_WIND_MIN+1), TILE_WIND_MIN
 			if (tileCount(cnt) >= 2) {yakuflagcount += 1}
