@@ -2190,6 +2190,18 @@
 	RuleTxt(0, RULE_SUIKOUGETSU) = "なし", "トリプル役満"
 	nonumsanma RULE_SUIKOUGETSU
 
+	RuleName(RULE_CHUUSHARIN) = "中車輪"
+	RuleDescription(RULE_CHUUSHARIN) = "中車輪の有無と価値を設定します(筒子の連なった七対子に空きが一つある形)"
+	RuleTxt(0, RULE_CHUUSHARIN) = "なし", "役満(門前のみ)"
+
+	RuleName(RULE_CHUUCHIKURIN) = "中竹林"
+	RuleDescription(RULE_CHUUCHIKURIN) = "中竹林の有無と価値を設定します(索子の連なった七対子に空きが一つある形)"
+	RuleTxt(0, RULE_CHUUCHIKURIN) = "なし", "役満(門前のみ)"
+
+	RuleName(RULE_CHUUSUURIN) = "中数隣"
+	RuleDescription(RULE_CHUUSUURIN) = "中数隣の有無と価値を設定します(萬子の連なった七対子に空きが一つある形)"
+	RuleTxt(0, RULE_CHUUSUURIN) = "なし", "役満(門前のみ)"
+	nosanma RULE_CHUUSUURIN
 
 return
 
