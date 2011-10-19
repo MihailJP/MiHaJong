@@ -2185,6 +2185,11 @@
 	RuleTxt(0, RULE_KAIBAKABEN) = "なし", "トリプル役満"
 	nonumsanma RULE_KAIBAKABEN
 
+	RuleName(RULE_SUIKOUGETSU) = "酔江月"
+	RuleDescription(RULE_SUIKOUGETSU) = "酔江月の有無と価値を設定します(東の刻子、北の雀頭がある字一色大三元)"
+	RuleTxt(0, RULE_SUIKOUGETSU) = "なし", "トリプル役満"
+	nonumsanma RULE_SUIKOUGETSU
+
 
 return
 
