@@ -1714,6 +1714,15 @@
 			delyaku tmpYakuInfo, "混老頭"
 		}
 	}
+	/* 快馬加鞭 */
+	if (getRule(RULE_KAIBAKABEN) != 0) {
+		if ((KezCount(TILE_WEST_WIND) >= 1)&&(KezCount(TILE_GREEN_DRAGON) >= 1)&&(KezCount(TILE_RED_DRAGON) >= 1)&&(KezCount(TILE_WHITE_DRAGON) >= 1)&&(DuiCount(TILE_NORTH_WIND) >= 1)) {
+			addyakuman tmpYakuInfo, "快馬加鞭", 3
+			delyakuman tmpYakuInfo, "大三元"
+			delyakuman tmpYakuInfo, "字一色"
+			delyaku tmpYakuInfo, "対々和"
+		}
+	}
 #endif
 return
 #global

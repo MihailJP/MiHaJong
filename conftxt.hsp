@@ -2180,6 +2180,11 @@
 	RuleTxt(0, RULE_ARA) = "なし", "役満"
 	nonumsanma RULE_ARA
 
+	RuleName(RULE_KAIBAKABEN) = "快馬加鞭"
+	RuleDescription(RULE_KAIBAKABEN) = "快馬加鞭の有無と価値を設定します(西の刻子、北の雀頭がある字一色大三元)"
+	RuleTxt(0, RULE_KAIBAKABEN) = "なし", "トリプル役満"
+	nonumsanma RULE_KAIBAKABEN
+
 
 return
 
