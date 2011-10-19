@@ -477,7 +477,7 @@
 			if (tileCount(cnt) >= 2) {yakuflagcount += 1}
 		loop
 		if ((tileCount(TILE_CIRCLE_ONE) >= 2)&&(tileCount(TILE_CIRCLE_NINE) >= 2)&&(yakuflagcount == 5)) {
-			addyaku tmpYakuInfo, "ãté‘ó÷", 1
+			addyaku tmpYakuInfo, "ãté‘ó÷", 4
 		}
 	}
 #endif
