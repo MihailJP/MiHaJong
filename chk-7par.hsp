@@ -506,8 +506,8 @@
 		yakuflag = 0
 		if ((tileCount(TILE_CIRCLE_ONE) >= 2)&&(tileCount(TILE_CIRCLE_TWO) >= 2)&&(tileCount(TILE_CIRCLE_FOUR) >= 2)&&(tileCount(TILE_CIRCLE_FIVE) >= 2)&&(tileCount(TILE_CIRCLE_SIX) >= 2)&&(tileCount(TILE_CIRCLE_SEVEN) >= 2)&&(tileCount(TILE_CIRCLE_EIGHT) >= 2)) {yakuflag = 1}
 		if ((tileCount(TILE_CIRCLE_ONE) >= 2)&&(tileCount(TILE_CIRCLE_TWO) >= 2)&&(tileCount(TILE_CIRCLE_THREE) >= 2)&&(tileCount(TILE_CIRCLE_FOUR) >= 2)&&(tileCount(TILE_CIRCLE_FIVE) >= 2)&&(tileCount(TILE_CIRCLE_SEVEN) >= 2)&&(tileCount(TILE_CIRCLE_EIGHT) >= 2)) {yakuflag = 1}
-		if (tileCount(TILE_CIRCLE_TWO) >= 2)&&(tileCount(TILE_CIRCLE_THREE) >= 2)&&(tileCount(TILE_CIRCLE_FIVE) >= 2)&&(tileCount(TILE_CIRCLE_SIX) >= 2)&&(tileCount(TILE_CIRCLE_SEVEN) >= 2)&&(tileCount(TILE_CIRCLE_EIGHT) >= 2)&&(tileCount(TILE_CIRCLE_NINE) >= 2)) {yakuflag = 1}
-		if (tileCount(TILE_CIRCLE_TWO) >= 2)&&(tileCount(TILE_CIRCLE_THREE) >= 2)&&(tileCount(TILE_CIRCLE_FOUR) >= 2)&&(tileCount(TILE_CIRCLE_FIVE) >= 2)&&(tileCount(TILE_CIRCLE_SIX) >= 2)&&(tileCount(TILE_CIRCLE_EIGHT) >= 2)&&(tileCount(TILE_CIRCLE_NINE) >= 2)) {yakuflag = 1}
+		if ((tileCount(TILE_CIRCLE_TWO) >= 2)&&(tileCount(TILE_CIRCLE_THREE) >= 2)&&(tileCount(TILE_CIRCLE_FIVE) >= 2)&&(tileCount(TILE_CIRCLE_SIX) >= 2)&&(tileCount(TILE_CIRCLE_SEVEN) >= 2)&&(tileCount(TILE_CIRCLE_EIGHT) >= 2)&&(tileCount(TILE_CIRCLE_NINE) >= 2)) {yakuflag = 1}
+		if ((tileCount(TILE_CIRCLE_TWO) >= 2)&&(tileCount(TILE_CIRCLE_THREE) >= 2)&&(tileCount(TILE_CIRCLE_FOUR) >= 2)&&(tileCount(TILE_CIRCLE_FIVE) >= 2)&&(tileCount(TILE_CIRCLE_SIX) >= 2)&&(tileCount(TILE_CIRCLE_EIGHT) >= 2)&&(tileCount(TILE_CIRCLE_NINE) >= 2)) {yakuflag = 1}
 		if (yakuflag) {
 			addyakuman tmpYakuInfo, "’†Ô—Ö", 1
 		}
@@ -517,8 +517,8 @@
 		yakuflag = 0
 		if ((tileCount(TILE_BAMBOO_ONE) >= 2)&&(tileCount(TILE_BAMBOO_TWO) >= 2)&&(tileCount(TILE_BAMBOO_FOUR) >= 2)&&(tileCount(TILE_BAMBOO_FIVE) >= 2)&&(tileCount(TILE_BAMBOO_SIX) >= 2)&&(tileCount(TILE_BAMBOO_SEVEN) >= 2)&&(tileCount(TILE_BAMBOO_EIGHT) >= 2)) {yakuflag = 1}
 		if ((tileCount(TILE_BAMBOO_ONE) >= 2)&&(tileCount(TILE_BAMBOO_TWO) >= 2)&&(tileCount(TILE_BAMBOO_THREE) >= 2)&&(tileCount(TILE_BAMBOO_FOUR) >= 2)&&(tileCount(TILE_BAMBOO_FIVE) >= 2)&&(tileCount(TILE_BAMBOO_SEVEN) >= 2)&&(tileCount(TILE_BAMBOO_EIGHT) >= 2)) {yakuflag = 1}
-		if (tileCount(TILE_BAMBOO_TWO) >= 2)&&(tileCount(TILE_BAMBOO_THREE) >= 2)&&(tileCount(TILE_BAMBOO_FIVE) >= 2)&&(tileCount(TILE_BAMBOO_SIX) >= 2)&&(tileCount(TILE_BAMBOO_SEVEN) >= 2)&&(tileCount(TILE_BAMBOO_EIGHT) >= 2)&&(tileCount(TILE_BAMBOO_NINE) >= 2)) {yakuflag = 1}
-		if (tileCount(TILE_BAMBOO_TWO) >= 2)&&(tileCount(TILE_BAMBOO_THREE) >= 2)&&(tileCount(TILE_BAMBOO_FOUR) >= 2)&&(tileCount(TILE_BAMBOO_FIVE) >= 2)&&(tileCount(TILE_BAMBOO_SIX) >= 2)&&(tileCount(TILE_BAMBOO_EIGHT) >= 2)&&(tileCount(TILE_BAMBOO_NINE) >= 2)) {yakuflag = 1}
+		if ((tileCount(TILE_BAMBOO_TWO) >= 2)&&(tileCount(TILE_BAMBOO_THREE) >= 2)&&(tileCount(TILE_BAMBOO_FIVE) >= 2)&&(tileCount(TILE_BAMBOO_SIX) >= 2)&&(tileCount(TILE_BAMBOO_SEVEN) >= 2)&&(tileCount(TILE_BAMBOO_EIGHT) >= 2)&&(tileCount(TILE_BAMBOO_NINE) >= 2)) {yakuflag = 1}
+		if ((tileCount(TILE_BAMBOO_TWO) >= 2)&&(tileCount(TILE_BAMBOO_THREE) >= 2)&&(tileCount(TILE_BAMBOO_FOUR) >= 2)&&(tileCount(TILE_BAMBOO_FIVE) >= 2)&&(tileCount(TILE_BAMBOO_SIX) >= 2)&&(tileCount(TILE_BAMBOO_EIGHT) >= 2)&&(tileCount(TILE_BAMBOO_NINE) >= 2)) {yakuflag = 1}
 		if (yakuflag) {
 			addyakuman tmpYakuInfo, "’†’|—Ñ", 1
 		}
@@ -529,8 +529,8 @@
 		yakuflag = 0
 		if ((tileCount(TILE_CHARACTER_ONE) >= 2)&&(tileCount(TILE_CHARACTER_TWO) >= 2)&&(tileCount(TILE_CHARACTER_FOUR) >= 2)&&(tileCount(TILE_CHARACTER_FIVE) >= 2)&&(tileCount(TILE_CHARACTER_SIX) >= 2)&&(tileCount(TILE_CHARACTER_SEVEN) >= 2)&&(tileCount(TILE_CHARACTER_EIGHT) >= 2)) {yakuflag = 1}
 		if ((tileCount(TILE_CHARACTER_ONE) >= 2)&&(tileCount(TILE_CHARACTER_TWO) >= 2)&&(tileCount(TILE_CHARACTER_THREE) >= 2)&&(tileCount(TILE_CHARACTER_FOUR) >= 2)&&(tileCount(TILE_CHARACTER_FIVE) >= 2)&&(tileCount(TILE_CHARACTER_SEVEN) >= 2)&&(tileCount(TILE_CHARACTER_EIGHT) >= 2)) {yakuflag = 1}
-		if (tileCount(TILE_CHARACTER_TWO) >= 2)&&(tileCount(TILE_CHARACTER_THREE) >= 2)&&(tileCount(TILE_CHARACTER_FIVE) >= 2)&&(tileCount(TILE_CHARACTER_SIX) >= 2)&&(tileCount(TILE_CHARACTER_SEVEN) >= 2)&&(tileCount(TILE_CHARACTER_EIGHT) >= 2)&&(tileCount(TILE_CHARACTER_NINE) >= 2)) {yakuflag = 1}
-		if (tileCount(TILE_CHARACTER_TWO) >= 2)&&(tileCount(TILE_CHARACTER_THREE) >= 2)&&(tileCount(TILE_CHARACTER_FOUR) >= 2)&&(tileCount(TILE_CHARACTER_FIVE) >= 2)&&(tileCount(TILE_CHARACTER_SIX) >= 2)&&(tileCount(TILE_CHARACTER_EIGHT) >= 2)&&(tileCount(TILE_CHARACTER_NINE) >= 2)) {yakuflag = 1}
+		if ((tileCount(TILE_CHARACTER_TWO) >= 2)&&(tileCount(TILE_CHARACTER_THREE) >= 2)&&(tileCount(TILE_CHARACTER_FIVE) >= 2)&&(tileCount(TILE_CHARACTER_SIX) >= 2)&&(tileCount(TILE_CHARACTER_SEVEN) >= 2)&&(tileCount(TILE_CHARACTER_EIGHT) >= 2)&&(tileCount(TILE_CHARACTER_NINE) >= 2)) {yakuflag = 1}
+		if ((tileCount(TILE_CHARACTER_TWO) >= 2)&&(tileCount(TILE_CHARACTER_THREE) >= 2)&&(tileCount(TILE_CHARACTER_FOUR) >= 2)&&(tileCount(TILE_CHARACTER_FIVE) >= 2)&&(tileCount(TILE_CHARACTER_SIX) >= 2)&&(tileCount(TILE_CHARACTER_EIGHT) >= 2)&&(tileCount(TILE_CHARACTER_NINE) >= 2)) {yakuflag = 1}
 		if (yakuflag) {
 			addyakuman tmpYakuInfo, "’†”—×", 1
 		}
