@@ -66,8 +66,20 @@ double TextWidthRate_
 	gosub *doputtext
 return
 
+*setfnt
+	if (vartype(LastFont) != vartype("str")) {sdim LastFont,32,2}
+	if (length(LastFont) < ginfo_sel) {LastFont(ginfo_sel) = ""}
+	if (length(LastTextSize) < ginfo_sel) {LastTextSize(ginfo_sel) = 0}
+	if (length(LastStyle) < ginfo_sel) {LastStyle(ginfo_sel) = 0}
+	if ((LastFont(ginfo_sel) != fontname)||(LastTextSize(ginfo_sel) != TextSize)||(LastStyle(ginfo_sel) != Style)) {
+		font fontname, TextSize, Style
+		LastTextSize(ginfo_sel) = TextSize
+		LastStyle(ginfo_sel) = Style
+	}
+return
+
 *doputtext
-	if (TextSize) {font fontname, TextSize, Style}
+	if (TextSize) {gosub *setfnt}
 	color 0, 0, 0
 	repeat BorderThickness*2+1
 		BorderOffsetY = cnt-BorderThickness
@@ -78,7 +90,7 @@ return
 					tmpscr = ginfo_sel
 					buffer SCR_TEXT_RESIZE_BUF, 1200, TextSize: gsel SCR_TEXT_RESIZE_BUF
 					color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
-					color 255, 255, 255: pos 0, 0: font fontname, TextSize, Style: print BorderText
+					color 255, 255, 255: pos 0, 0: gosub *setfnt: print BorderText
 					buffer SCR_TEXT_BUF, 1200, TextSize: gsel SCR_TEXT_BUF
 					color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
 					color 255, 255, 255: pos 600, 0
@@ -97,18 +109,16 @@ return
 		if (TextWidthRate != 1.0) {
 			buffer SCR_TEXT_RESIZE_BUF, 1200, TextSize: gsel SCR_TEXT_RESIZE_BUF
 			color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
-			color 255, 255, 255: pos 0, 0: font fontname, TextSize, Style: print BorderText
+			color 255, 255, 255: pos 0, 0: gosub *setfnt: print BorderText
 		}
 		buffer SCR_TEXT_BUF, 1200, TextSize: gsel SCR_TEXT_BUF
 		color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
-		repeat TextSize
-			ColorSlideDividend = (cnt\(TextSize/2))*(cnt\(TextSize/2))
-			ColorSlideDivisor = (TextSize/2)*(TextSize/2)
-			color BorderTextR-(BorderTextR-GradR)*ColorSlideDividend/ColorSlideDivisor, BorderTextG-(BorderTextG-GradG)*ColorSlideDividend/ColorSlideDivisor, BorderTextB-(BorderTextB-GradB)*ColorSlideDividend/ColorSlideDivisor
-			line 599, cnt, 0, cnt
-		loop
+		BorderTextCol = ((BorderTextR&0xff)<<16)|((BorderTextG&0xff)<<8)|(BorderTextB&0xff)
+		GradCol = ((GradR&0xff)<<16)|((GradG&0xff)<<8)|(GradB&0xff)
+		gradf 0, 0, 599, TextSize/2, 1, BorderTextCol, GradCol
+		gradf 0, TextSize/2, 599, TextSize, 1, BorderTextCol, GradCol
 		if (TextWidthRate == 1.0) {
-			color 255, 255, 255: pos 600, 0: font fontname, TextSize, Style: print BorderText
+			color 255, 255, 255: pos 600, 0: gosub *setfnt: print BorderText
 		} else {
 			color 255, 255, 255: pos 600, 0
 			gzoom int(1200.0*TextWidthRate), TextSize, SCR_TEXT_RESIZE_BUF, 0, 0, 1200, TextSize, 1
