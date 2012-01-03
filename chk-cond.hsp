@@ -73,8 +73,8 @@
 			if (getRichiFlag(GameStat, RICHI_FLAG, targetPlayer) != RIICHI_NO) {
 				yakuFlag = 0
 				repeat DiscardPointer(GameStat, targetPlayer), 1
-					if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) == SUTEHAI_RIICHI+TILE_SUIT_BAMBOOS+1) {yakuFlag = 1}
-					if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) == SUTEHAI_RIICHI_TAKEN+TILE_SUIT_BAMBOOS+1) {yakuFlag = 1}
+					if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) == SUTEHAI_RIICHI+TILE_BAMBOO_ONE) {yakuFlag = 1}
+					if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) == SUTEHAI_RIICHI_TAKEN+TILE_BAMBOO_ONE) {yakuFlag = 1}
 				loop
 				if (yakuFlag) {addyaku tmpYakuInfo, "’¹—§’¼", 1}
 			}
