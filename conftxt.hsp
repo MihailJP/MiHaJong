@@ -2222,6 +2222,14 @@
 	RuleTxt(0, RULE_NAKAMEGURO) = "なし", "役満"
 	nonumsanma RULE_NAKAMEGURO
 
+	RuleName(RULE_FENGZIKE) = "鳳子刻"
+	RuleDescription(RULE_FENGZIKE) = "鳳子刻の有無と価値を設定します(同色で111456999の形)"
+	RuleTxt(0, RULE_FENGZIKE) = "なし", "１飜"
+
+	RuleName(RULE_LONGZIKE) = "竜子刻"
+	RuleDescription(RULE_LONGZIKE) = "竜子刻の有無と価値を設定します(同色で123555789の形)"
+	RuleTxt(0, RULE_LONGZIKE) = "なし", "１飜"
+
 return
 
 #undef noregsanma

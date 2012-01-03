@@ -930,5 +930,29 @@
 			delyaku tmpYakuInfo, "絶一門"
 		}
 	}
+	/* 鳳子刻 */
+	if (getRule(RULE_FENGZIKE) != 0) {
+		countKez KezCount, MianziDat
+		countShunz ShunzCount, MianziDat
+		yakuFlag = 0
+		if ((KezCount(TILE_CHARACTER_ONE) >= 1)&&(ShunzCount(TILE_CHARACTER_FOUR) >= 1)&&(KezCount(TILE_CHARACTER_NINE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_CIRCLE_ONE) >= 1)&&(ShunzCount(TILE_CIRCLE_FOUR) >= 1)&&(KezCount(TILE_CIRCLE_NINE) >= 1)) {yakuFlag = 1}
+		if ((KezCount(TILE_BAMBOO_ONE) >= 1)&&(ShunzCount(TILE_BAMBOO_FOUR) >= 1)&&(KezCount(TILE_BAMBOO_NINE) >= 1)) {yakuFlag = 1}
+		if (yakuFlag) {
+			addyaku tmpYakuInfo, "鳳子刻", 1
+		}
+	}
+	/* 竜子刻 */
+	if (getRule(RULE_LONGZIKE) != 0) {
+		countKez KezCount, MianziDat
+		countShunz ShunzCount, MianziDat
+		yakuFlag = 0
+		if ((ShunzCount(TILE_CHARACTER_ONE) >= 1)&&(KezCount(TILE_CHARACTER_FIVE) >= 1)&&(ShunzCount(TILE_CHARACTER_SEVEN) >= 1)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_CIRCLE_ONE) >= 1)&&(KezCount(TILE_CIRCLE_FIVE) >= 1)&&(ShunzCount(TILE_CIRCLE_SEVEN) >= 1)) {yakuFlag = 1}
+		if ((ShunzCount(TILE_BAMBOO_ONE) >= 1)&&(KezCount(TILE_BAMBOO_FIVE) >= 1)&&(ShunzCount(TILE_BAMBOO_SEVEN) >= 1)) {yakuFlag = 1}
+		if (yakuFlag) {
+			addyaku tmpYakuInfo, "竜子刻", 1
+		}
+	}
 return
 #global
