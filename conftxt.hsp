@@ -2213,6 +2213,10 @@
 	RuleTxt(0, RULE_GYAKUSUURIN) = "ศต", "Sใส"
 	nonumsanma RULE_GYAKUSUURIN
 
+	RuleName(RULE_NEKOMASSHIGURA) = "”LÜมตฎ็"
+	RuleDescription(RULE_NEKOMASSHIGURA) = "”LÜมตฎ็ฬ—L–ณฦฟ’l๐Ý’่ตÜท(O๕ฬฦ’ฃ‘าฟลa—น้)"
+	RuleTxt(0, RULE_NEKOMASSHIGURA) = "ศต", "Pใส"
+
 return
 
 #undef noregsanma
