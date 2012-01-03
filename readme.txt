@@ -1,6 +1,6 @@
 ==============================================================================
 ÅyMiHaJongÅz          Japanese Mahjong with a lot of local rules implemented
-                   Copyright (c) 2008-2011 MihailJP, Part of rights reserved
+                   Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 ==============================================================================
 
 Å° ÇÕÇ∂ÇﬂÇ…

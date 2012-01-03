@@ -1,6 +1,6 @@
 ==============================================================================
 【MiHaJong】          Japanese Mahjong with a lot of local rules implemented
-ライセンス         Copyright (c) 2008-2011 MihailJP, Part of rights reserved
+ライセンス         Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 ==============================================================================
 
 ■ ライセンスについて
@@ -12,7 +12,7 @@
 	た素材などの利用条件は後述してあります。
 
 	--------------------------------(キリトリ)--------------------------------
-	Copyright (c) 2008-2011 MihailJP, Part of rights reserved.
+	Copyright (c) 2008-2012 MihailJP, Part of rights reserved.
 
 	　ソースコード形式かバイナリ形式か、変更するかしないかを問わず、以下の条件
 	を満たす場合に限り、再頒布および使用が許可されます。

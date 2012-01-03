@@ -1,11 +1,11 @@
-_FILEVERSION=1.5.0.0
-_PRODUCTVERSION=1.5.0.0
+_FILEVERSION=1.5.1.0
+_PRODUCTVERSION=1.5.1.0
 Comments=四人打ち麻雀MiHaJong
 CompanyName=MihailJP
 FileDescription=四人打ち麻雀MiHaJong
-FileVersion=1.5.0
+FileVersion=1.5.1
 InternalName=mihajong
-LegalCopyright=Copyright (c) 2008-2011 MihailJP, Part of rights reserved.
+LegalCopyright=Copyright (c) 2008-2012 MihailJP, Part of rights reserved.
 OriginalFilename=mihajong.exe
 ProductName=MiHaJong
-ProductVersion=1.5.0
+ProductVersion=1.5.1
