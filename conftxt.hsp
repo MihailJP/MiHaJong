@@ -2217,6 +2217,11 @@
 	RuleDescription(RULE_NEKOMASSHIGURA) = "猫まっしぐらの有無と価値を設定します(三索の嵌張待ちで和了る)"
 	RuleTxt(0, RULE_NEKOMASSHIGURA) = "なし", "１飜"
 
+	RuleName(RULE_NAKAMEGURO) = "中目黒"
+	RuleDescription(RULE_NAKAMEGURO) = "中目黒の有無と価値を設定します(中・二四八筒・風牌の対々和)"
+	RuleTxt(0, RULE_NAKAMEGURO) = "なし", "役満"
+	nonumsanma RULE_NAKAMEGURO
+
 return
 
 #undef noregsanma

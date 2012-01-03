@@ -1732,6 +1732,14 @@
 			delyaku tmpYakuInfo, "‘ÎX˜a"
 		}
 	}
+	/* ’†–Ú• */
+	if (getRule(RULE_NAKAMEGURO) != 0) {
+		if ((DuiCount(TILE_RED_DRAGON) >= 1)&&(DuiCount(TILE_CIRCLE_TWO) >= 1)&&(DuiCount(TILE_CIRCLE_FOUR) >= 1)&&(DuiCount(TILE_CIRCLE_EIGHT) >= 1)&&((DuiCount(TILE_EAST_WIND)+DuiCount(TILE_SOUTH_WIND)+DuiCount(TILE_WEST_WIND)+DuiCount(TILE_NORTH_WIND)) >= 1)) {
+			addyakuman tmpYakuInfo, "’†–Ú•", 1
+			delyakuman tmpYakuInfo, "¬ˆêF"
+			delyaku tmpYakuInfo, "‘ÎX˜a"
+		}
+	}
 #endif
 return
 #global
