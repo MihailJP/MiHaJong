@@ -11,4 +11,16 @@
 #undef SANMA
 #undef SANMA4
 
+;#makeopt icon_rsrc "icons\\mihassnm-p16.ico"
+;#makeopt icon_rsrc "icons\\mihassnm-p24.ico"
+;#makeopt icon_rsrc "icons\\mihassnm-p32.ico"
+;#makeopt icon_rsrc "icons\\mihassnm-p48.ico"
+;#makeopt icon_rsrc "icons\\mihassnm-f16.ico"
+;#makeopt icon_rsrc "icons\\mihassnm-f24.ico"
+;#makeopt icon_rsrc "icons\\mihassnm-f32.ico"
+;#makeopt icon_rsrc "icons\\mihassnm-f48.ico"
+;#makeopt icon_rsrc "icons\\mihassnm-f64.ico"
+;#makeopt icon_rsrc "icons\\mihassnm-f128.ico"
+;#makeopt icon_rsrc "icons\\mihassnm-f256.ico"
+
 #include "mjmain.hsp"

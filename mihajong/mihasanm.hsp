@@ -10,4 +10,16 @@
 #define global SANMAX
 #define global ALLSANMA
 
+;#makeopt icon_rsrc "icons\\mihasanm-p16.ico"
+;#makeopt icon_rsrc "icons\\mihasanm-p24.ico"
+;#makeopt icon_rsrc "icons\\mihasanm-p32.ico"
+;#makeopt icon_rsrc "icons\\mihasanm-p48.ico"
+;#makeopt icon_rsrc "icons\\mihasanm-f16.ico"
+;#makeopt icon_rsrc "icons\\mihasanm-f24.ico"
+;#makeopt icon_rsrc "icons\\mihasanm-f32.ico"
+;#makeopt icon_rsrc "icons\\mihasanm-f48.ico"
+;#makeopt icon_rsrc "icons\\mihasanm-f64.ico"
+;#makeopt icon_rsrc "icons\\mihasanm-f128.ico"
+;#makeopt icon_rsrc "icons\\mihasanm-f256.ico"
+
 #include "mjmain.hsp"
