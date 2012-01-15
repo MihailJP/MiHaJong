@@ -1,0 +1,7 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *=============================
+ */
+
+#define global SANMA4
+#include "mjmain.hsp"
