@@ -3,72 +3,18 @@
  *=============================
  */
 
-/* 三人打ちverをコンパイルする場合はコメントを外す */
-//#define global SANMA
-/* 四人三麻は以下のコメントを外す */
-//#define global SANMA4
-/* 数牌三麻は以下のコメントを外す */
-//#define global SANMAS
+#packopt name "mihajong"
 
-/* このコメントを外すとできる限り高速に動作する(デバッグ専用！) */
-//#define global NOWAIT
-/* このコメントを外すとロギングを有効にする(デバッグ専用) */
-//#define global LOGGING
-//#define global LOGGING_SHANTEN
+;#makeopt icon_rsrc "icons\\mihajong-p16.ico"
+;#makeopt icon_rsrc "icons\\mihajong-p24.ico"
+;#makeopt icon_rsrc "icons\\mihajong-p32.ico"
+;#makeopt icon_rsrc "icons\\mihajong-p48.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f16.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f24.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f32.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f48.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f64.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f128.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f256.ico"
 
-/*
- * コンパイルに別途必要なもの
- *
- * p2b.dll
- * http://www.geocities.jp/anachronism128/
- *
- * hmm.dll
- * http://hsp.tv/make/tool3.html
- *
- * hsplzmax.dll
- * http://www.vector.co.jp/soft/winnt/prog/se489215.html
- *
- * l_tooltips.as
- * http://lhsp.s206.xrea.com/hsp_object6.html
- *
- * mod_customizebutton.hsp
- * http://hspdev-wiki.net/?Module/mod_customizebutton_v2
- */
-
-/*
- * 内容は他のファイルに記載しているので、
- * それらの内容を読み込み、結合する
- */
-
-#include "init.as"
-#include "const.as"
-#include "alias.as"
-#include "struct.as"
-#include "evstruct.as"
-
-#include "init.hsp"
-#include "mainloop.hsp"
-#include "prepare.hsp"
-#include "mouda.hsp"
-#include "kyokuend.hsp"
-#include "hancnend.hsp"
-#include "function.hsp"
-#include "tileutil.hsp"
-#include "shanten.hsp"
-#include "chkyaku.hsp"
-#include "bignum.hsp"
-#include "fuuro.hsp"
-#include "sound.hsp"
-#include "config.hsp"
-#include "intro.hsp"
-#include "iface.hsp"
-#include "screen.hsp"
-#include "clock.hsp"
-#include "haipic.hsp"
-#include "putwall.hsp"
-#include "comp_act.hsp"
-#include "ply_act.hsp"
-#include "network.hsp"
-#include "haifu.hsp"
-#include "agari.hsp"
-#include "agariscr.hsp"
+#include "mjmain.hsp"

@@ -5,29 +5,6 @@
  */
 
 /* コンパイル時のオプション */
-#ifdef SANMAS
-#packopt name "mihassnm"
-#define global ALLSANMA
-#define global SANMAT
-#undef SANMA
-#undef SANMA4
-#else
-	#ifdef SANMA4
-	#packopt name "mihaysnm"
-	#define global SANMAX
-	#define global ALLSANMA
-	#undef SANMA
-	#else
-		#ifdef SANMA
-		#packopt name "mihasanm"
-		#define global SANMAT
-		#define global SANMAX
-		#define global ALLSANMA
-		#else
-		#packopt name "mihajong"
-		#endif
-	#endif
-#endif
 #packopt hide 1
 #packopt type 0
 #cmpopt ppout 1

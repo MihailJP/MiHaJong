@@ -1,0 +1,25 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *=============================
+ */
+
+#define global SANMA4
+
+#packopt name "mihaysnm"
+#define global SANMAX
+#define global ALLSANMA
+#undef SANMA
+
+;#makeopt icon_rsrc "icons\\mihaysnm-p16.ico"
+;#makeopt icon_rsrc "icons\\mihaysnm-p24.ico"
+;#makeopt icon_rsrc "icons\\mihaysnm-p32.ico"
+;#makeopt icon_rsrc "icons\\mihaysnm-p48.ico"
+;#makeopt icon_rsrc "icons\\mihaysnm-f16.ico"
+;#makeopt icon_rsrc "icons\\mihaysnm-f24.ico"
+;#makeopt icon_rsrc "icons\\mihaysnm-f32.ico"
+;#makeopt icon_rsrc "icons\\mihaysnm-f48.ico"
+;#makeopt icon_rsrc "icons\\mihaysnm-f64.ico"
+;#makeopt icon_rsrc "icons\\mihaysnm-f128.ico"
+;#makeopt icon_rsrc "icons\\mihaysnm-f256.ico"
+
+#include "mjmain.hsp"
