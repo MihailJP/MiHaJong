@@ -4,4 +4,10 @@
  */
 
 #define global SANMA
+
+#packopt name "mihasanm"
+#define global SANMAT
+#define global SANMAX
+#define global ALLSANMA
+
 #include "mjmain.hsp"

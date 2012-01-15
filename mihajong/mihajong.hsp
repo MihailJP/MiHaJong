@@ -3,4 +3,6 @@
  *=============================
  */
 
+#packopt name "mihajong"
+
 #include "mjmain.hsp"
