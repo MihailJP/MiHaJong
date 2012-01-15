@@ -84,9 +84,7 @@
 	・hsplzmax.dll (http://www.vector.co.jp/soft/winnt/prog/se489215.html)
 	・l_tooltips.as (http://lhsp.s206.xrea.com/hsp_object6.html)
 	・mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
-	・Let's HSPIC! (http://lhsp.s206.xrea.com/works/hsp.html)
-	・Resource Hacker 日本語版 (http://www.angusj.com/resourcehacker/)
-	・UPX (http://upx.sourceforge.net/)
+	・cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
 
 
 ■ ライセンスについて
