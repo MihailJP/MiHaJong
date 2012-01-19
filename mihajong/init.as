@@ -15,6 +15,7 @@
 
 #define WITH_MT19937AR
 #define WITH_ADVANCEDCONTROL
+#define WITH_CONFTXT_CACHE
 
 /* Šg’£‹@”\‚Ì“o˜^ */
 #include "p2b.as"

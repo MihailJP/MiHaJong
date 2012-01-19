@@ -47,6 +47,7 @@
 #enum SCR_MAIN_BACKGROUND
 #enum SCR_SPLASH_WINDOW
 #enum SCR_SPLASH_BUF
+#enum SCR_CONF_ITEM_CACHE
 
 /* 通信ポート番号 */
 #ifdef SANMAS

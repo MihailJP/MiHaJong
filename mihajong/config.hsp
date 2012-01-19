@@ -187,6 +187,7 @@ return
 	borderedtxt2 "Rule configuration.", 500, 18, 255, 255, 255, 1, 24, 192, 192, 192
 	borderedtxt2 strf("%2d/%2d頁 %s", configPage, RULE_PAGES, PageCaption(configPage-1)), 500, 48, 255, 255, 255, 1, 18, 192, 192, 192
 	font fontname, 20, 0
+	gosub *loadcache
 	repeat RULES_IN_PAGE
 		tmpcol = 255, 255, 255, 192, 192, 192
 		gosub *config_showruletext
@@ -273,19 +274,53 @@ return
 		swend
 		if (cnt == 19) {borderedtxt2 "通信対戦時のルール設定はホスト側の設定が適用されます", 100, 590, 255, 255, 255, 1, 20, 192, 192, 192}
 	loop
+	gosub *savecache
 	redraw 1
 	return
 
-*config_showruletext
-	BorderTextX = 100+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
-	tmptxt = RuleName(cnt+(configPage-1)*RULES_IN_PAGE)
-	if (strlen(tmptxt) > 8) {
-		borderedtxt3 tmptxt, BorderTextX, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5), , 8.0/double(strlen(tmptxt))
-	} else {
-		repeat strlen(tmptxt)/2
-			borderedtxt2 strmid(tmptxt, cnt*2, 2), BorderTextX+(60/(strlen(tmptxt)/2-1))*cnt, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5)
-		loop
+*loadcache
+#ifdef SCR_CONF_ITEM_CACHE@
+	if (TxtCached == 0) {buffer SCR_CONF_ITEM_CACHE, 82*2*RULE_PAGES, 25 * (RULES_IN_PAGE/2): gsel 0}
+	if ((TxtCached & (1<<(configPage - 1))) != 0) {
+		gmode gmode_mem
+		pos 99, 72
+		gcopy SCR_CONF_ITEM_CACHE, 164*configPage, 0, 82, 25 * (RULES_IN_PAGE/2)
+		pos 499, 72
+		gcopy SCR_CONF_ITEM_CACHE, 164*configPage+82, 0, 82, 25 * (RULES_IN_PAGE/2)
 	}
+#endif
+	return
+
+*savecache
+#ifdef SCR_CONF_ITEM_CACHE@
+	if ((TxtCached & (1<<(configPage - 1))) == 0) {
+		gsel SCR_CONF_ITEM_CACHE: gmode gmode_mem
+		pos 164*configPage, 0
+		gcopy 0,  99, 72, 82, 25 * (RULES_IN_PAGE/2)
+		pos 164*configPage+82, 0
+		gcopy 0, 499, 72, 82, 25 * (RULES_IN_PAGE/2)
+		gsel 0
+		TxtCached |= 1<<(configPage - 1)
+	}
+#endif
+	return
+
+*config_showruletext
+#ifdef SCR_CONF_ITEM_CACHE@
+	if ((TxtCached & (1<<(configPage - 1))) == 0) {
+#endif
+		BorderTextX = 100+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
+		tmptxt = RuleName(cnt+(configPage-1)*RULES_IN_PAGE)
+		if (strlen(tmptxt) > 8) {
+			borderedtxt3 tmptxt, BorderTextX, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5), , 8.0/double(strlen(tmptxt))
+		} else {
+			repeat strlen(tmptxt)/2
+				borderedtxt2 strmid(tmptxt, cnt*2, 2), BorderTextX+(60/(strlen(tmptxt)/2-1))*cnt, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5)
+			loop
+		}
+#ifdef SCR_CONF_ITEM_CACHE@
+	}
+#endif
 	BorderTextX = 180+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
 	borderedtxt2 ":", BorderTextX, BorderTextY, tmpcol(0), tmpcol(1), tmpcol(2), 1, 20, tmpcol(3), tmpcol(4), tmpcol(5)
 	BorderTextX = 190+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
