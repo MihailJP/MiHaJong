@@ -555,7 +555,7 @@ return
 				case 7: setCenterTitle "‚V–{ê": swbreak
 				case 8: setCenterTitle "‚W–{ê": swbreak
 				case 9: setCenterTitle "‚X–{ê": swbreak
-				default: setCenterTitle getHonba(GameStat)+"–{ê"
+				default: setCenterTitle ""+getHonba(GameStat)+"–{ê"
 			swend
 		}
 		if (cnt\4 == 3) {
