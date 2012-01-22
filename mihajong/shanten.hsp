@@ -369,6 +369,7 @@
 	}
 	sdim CompressedMianziBinary, CompressedSize+128
 	bload "data\\mentz.dat.lzma", CompressedMianziBinary, CompressedSize
+	info "面子構成データベースを読み込みました。"
 	sdim MianziNumberData, 1953126
 	lzmadecompress@ MianziNumberData, 1953125, CompressedMianziBinary, CompressedSize
 	if (stat) {
