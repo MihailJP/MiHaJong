@@ -11,13 +11,13 @@ copy mihajong\history.txt release\mihajong
 copy mihajong\playing.txt release\mihajong
 mkdir release\mihajong\bgm
 rem mkdir release\mihajong\dat
-rem copy work\dat\*.* release\mihajong\dat
+rem copy mihajong\dat\*.* release\mihajong\dat
 mkdir release\mihajong\haifu
-copy work\haifu\haifu.css release\mihajong\haifu
+copy mihajong\haifu\haifu.css release\mihajong\haifu
 mkdir release\mihajong\img
-copy work\img\*.* release\mihajong\img
+copy mihajong\img\*.* release\mihajong\img
 mkdir mihajong\sound
-copy work\sound\*.* release\mihajong\sound
+copy mihajong\sound\*.* release\mihajong\sound
 call archive_source.bat
 copy source.zip release\mihajong
 del /q mihajong.zip
