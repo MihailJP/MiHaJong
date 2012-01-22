@@ -89,7 +89,7 @@
 /* 終了時に音源をクリンナップするための処理 */
 	onexit *cleanup
 #ifndef _debug
-	onerror goto *errordlg
+	onerror goto *errorproc
 #endif
 
 /* 面子構成データベースの読み込み */

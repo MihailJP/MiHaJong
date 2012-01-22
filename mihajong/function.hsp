@@ -336,7 +336,7 @@ return
 #global
 
 /* エラーがあったときに安全に終了させるための処理 */
-*errordlg
+*errorproc
 	error strf("内部エラー [%d] が発生しました。", wparam)
 	errordlg "内部エラー "+wparam+" が発生しました。"
 	/* FALLTHRU */
