@@ -365,7 +365,7 @@
 	if (CompressedSize == -1) {
 		errordlg "面子構成データベースが見つかりませんでした。", "404"
 		fatal "面子構成データベース(data\\mentz.dat.lzma)が見つかりませんでした。"
-		goto *cleanup
+		goto *cleanup@
 	}
 	sdim CompressedMianziBinary, CompressedSize+128
 	bload "data\\mentz.dat.lzma", CompressedMianziBinary, CompressedSize
@@ -374,7 +374,7 @@
 	if (stat) {
 		errordlg "面子構成データベースの圧縮を解除できませんでした。ファイルが壊れている虞があります。", "LZMA Error"
 		fatal strf("面子構成データベースの圧縮を解除できませんでした。返り値は [%d] です。", stat)
-		goto *cleanup
+		goto *cleanup@
 	} else {
 		info "面子構成データベースの圧縮を解除しました。"
 	}
@@ -382,7 +382,7 @@
 	if (hash != "2d107e8885add7e01fec65fa6906337abae9f76cfb6fc2e898cafe17aa7b51c1") {
 		errordlg "面子構成データベースのハッシュ値が一致しませんでした。ファイルが壊れている虞があります。\n返り値は [%d] です。", "Hash mismatch"
 		fatal strf("面子構成データベースのハッシュ値が一致しませんでした。SHA-256 ハッシュ値は [%s] で、 [%s] と異なります。", hash, "2d107e8885add7e01fec65fa6906337abae9f76cfb6fc2e898cafe17aa7b51c1")
-		goto *cleanup
+		goto *cleanup@
 	} else {
 		info "SHA-256 ハッシュ値の照合に成功しました。"
 	}

@@ -323,7 +323,7 @@ return
 
 *modesel4
 	dsplay SND_BUTTON
-	goto *cleanup
+	goto *cleanup@
 
 /* –¼‘O‚Ì“ü—Í */
 *entername
