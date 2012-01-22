@@ -28,16 +28,16 @@
 #define global STATBOX 1
 #define vanish clrobj:SetToolTips
 #define vanish2 clrobj 4+1+STATBOX
+#include "hspda.as"
 #ifdef WITH_MT19937AR
 	#undef rnd
 	#undef randomize
 	#module redef
 	#defcfunc rnd int p1
-	#include "hspda.as"
-		z=0: rndf_geti z, p1
+		z=0: rndf_geti@ z, p1
 		return z
 	#deffunc randomize
-		rndf_int -1
+		rndf_int@ -1
 		return
 	#global
 #endif
