@@ -4,6 +4,7 @@
  */
 
 #define global SANMAS
+#define global GAMETYPE 0x00000008
 
 #packopt name "mihassnm"
 #define global ALLSANMA

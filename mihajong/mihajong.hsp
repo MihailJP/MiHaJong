@@ -3,6 +3,8 @@
  *=============================
  */
 
+#define global GAMETYPE 0x00000001
+
 #packopt name "mihajong"
 
 ;#makeopt icon_rsrc "icons\\mihajong-p16.ico"

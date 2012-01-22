@@ -4,6 +4,7 @@
  */
 
 #define global SANMA4
+#define global GAMETYPE 0x00000004
 
 #packopt name "mihaysnm"
 #define global SANMAX

@@ -4,6 +4,7 @@
  */
 
 #define global SANMA
+#define global GAMETYPE 0x00000002
 
 #packopt name "mihasanm"
 #define global SANMAT
