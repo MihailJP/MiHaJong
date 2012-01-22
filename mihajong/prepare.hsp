@@ -215,7 +215,7 @@ return
 			// ƒŠƒƒƒ“ƒVƒoê—pBGM
 			bgmplay MUS_SHIBARI
 		} else {
-			bgmplay getRound(GameStat)\16
+			bgmplay getRound(GameStat)
 		}
 	}
 	if (getHonba(GameStat)) {
