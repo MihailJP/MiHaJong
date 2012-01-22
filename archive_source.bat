@@ -4,6 +4,7 @@ del /q release\source\*.*
 
 mkdir release
 mkdir release\source
+del /q mihajong\_*.hsp
 copy mihajong\*.hsp release\source
 copy mihajong\*.as release\source
 mkdir release\source\icons
