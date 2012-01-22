@@ -43,6 +43,7 @@
 #endif
 #include "hspmath.as"
 #include "hsplzmax.as"
+#include "hspcksum.as"
 #undef charlower
 #undef charupper
 #ifdef WITH_ADVANCEDCONTROL

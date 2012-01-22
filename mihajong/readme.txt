@@ -82,6 +82,7 @@
 	・p2b.dll (http://www.geocities.jp/anachronism128/)
 	・hmm.dll (http://hsp.tv/make/tool3.html)
 	・hsplzmax.dll (http://www.vector.co.jp/soft/winnt/prog/se489215.html)
+	・hspcksum.dll (https://github.com/MihailJP/HSPCkSum/downloads)
 	・l_tooltips.as (http://lhsp.s206.xrea.com/hsp_object6.html)
 	・mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
 	・cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
