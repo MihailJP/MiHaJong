@@ -74,7 +74,7 @@
 			}
 			/* ‘S•sèÏ */
 			if (getRule(RULE_QUANBUKAO) != 0) {
-				if ((ShantenArray(RULE_QUANBUKAO) == -1)&&(ShantenArray(SHANTEN_STELLAR) >= -1)) {
+				if ((ShantenArray(SHANTEN_QUANBUKAO) == -1)&&(ShantenArray(SHANTEN_STELLAR) >= -1)) {
 					contextualyaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
 					switch getRule(RULE_STELLAR_UUSHII)
 						case 1:
