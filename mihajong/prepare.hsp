@@ -215,7 +215,7 @@ return
 			// リャンシバ時専用BGM
 			bgmplay MUS_SHIBARI
 		} else {
-			bgmplay getRound(GameStat)\16
+			bgmplay getRound(GameStat)
 		}
 	}
 	if (getHonba(GameStat)) {
@@ -555,7 +555,7 @@ return
 				case 7: setCenterTitle "７本場": swbreak
 				case 8: setCenterTitle "８本場": swbreak
 				case 9: setCenterTitle "９本場": swbreak
-				default: setCenterTitle getHonba(GameStat)+"本場"
+				default: setCenterTitle ""+getHonba(GameStat)+"本場"
 			swend
 		}
 		if (cnt\4 == 3) {

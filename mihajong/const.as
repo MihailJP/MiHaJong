@@ -7,8 +7,8 @@
 /* バージョン情報 */
 #define VERSION_MAJ 1
 #define VERSION_MED 5
-#define VERSION_MIN 1
-#define VERSION_MIC "dev"
+#define VERSION_MIN 2
+#define VERSION_MIC ""
 
 /* フォントの指定 */
 /* 必ず等幅日本語フォントを指定すること */
