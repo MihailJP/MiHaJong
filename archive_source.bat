@@ -1,6 +1,4 @@
-del /q release\source\icons\*.*
-rmdir release\source\icons
-del /q release\source\*.*
+rmdir /s /q release\source
 
 mkdir release
 mkdir release\source

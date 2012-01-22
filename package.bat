@@ -1,14 +1,4 @@
-del /q release\mihajong\bgm\*.*
-rmdir release\mihajong\bgm
-del /q release\mihajong\dat\*.*
-rmdir release\mihajong\dat
-del /q release\mihajong\haifu\*.*
-rmdir release\mihajong\haifu
-del /q release\mihajong\img\*.*
-rmdir release\mihajong\img
-del /q release\mihajong\sound\*.*
-rmdir release\mihajong\sound
-del /q release\mihajong\*.*
+rmdir /s /q release
 
 mkdir release
 mkdir release\mihajong
