@@ -55,7 +55,7 @@
 	sdim worktxt, 144, 64
 	repeat notemax
 		noteget linetxt, cnt
-		csvstr linetxt
+		csvstr@ linetxt
 		currentRuleID = int(worktxt(0))
 		if (int(worktxt(2)) & GAMETYPE) {
 			RuleName(currentRuleID) = worktxt(9)
