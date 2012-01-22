@@ -282,7 +282,7 @@
 		await 1000
 	loop
 	if (ReconnectionSuccess == 0) {
-		dialog "再接続に失敗しました\nゲームは続行できません", 1, "回線切断"
+		errordlg "再接続に失敗しました\nゲームは続行できません", "回線切断"
 		if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {sockclose SOCK_GAME+0}
 		if (getGameMode(GameEnv) == GAMEMODE_SERVER) {sockclose SOCK_GAME+1: sockclose SOCK_GAME+2: sockclose SOCK_GAME+3}
 		font fontname, 48, 0: objsize 200, 60

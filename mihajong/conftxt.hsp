@@ -49,6 +49,13 @@
 
 #deffunc configtxtdat
 	
+	exist "data\\confitem.csv"
+	if (strsize == -1) {
+		errordlg "コンフィグアイテムのリストが見つかりませんでした。", "404"
+		fatal "コンフィグアイテムのリスト(data\\confitem.csv)が見つかりませんでした。"
+		goto *cleanup
+	}
+	
 	notesel csv
 	noteload "data\\confitem.csv": info "コンフィグアイテムを読み込みました。"
 	

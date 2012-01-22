@@ -287,6 +287,15 @@ return
 	swend
 #global
 
+/* エラーダイアログ */
+#module
+#uselib "user32.dll"
+#func MessageBoxA "MessageBoxA" int,sptr,sptr,int
+#deffunc errordlg str message, str titletxt
+	MessageBoxA hwnd,message,titletxt,0x10
+	return
+#global
+
 /* Vista/7を使っているかどうか */
 #module
 #defcfunc isVista
@@ -329,7 +338,7 @@ return
 /* エラーがあったときに安全に終了させるための処理 */
 *errordlg
 	error strf("内部エラー [%d] が発生しました。", wparam)
-	dialog "内部エラー "+wparam+" が発生しました。", 1
+	errordlg "内部エラー "+wparam+" が発生しました。"
 	/* FALLTHRU */
 
 /* 終了処理 */
