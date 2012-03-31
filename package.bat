@@ -16,7 +16,7 @@ mkdir release\mihajong\haifu
 copy mihajong\haifu\haifu.css release\mihajong\haifu
 mkdir release\mihajong\img
 copy mihajong\img\*.* release\mihajong\img
-mkdir mihajong\sound
+mkdir release\mihajong\sound
 copy mihajong\sound\*.* release\mihajong\sound
 call archive_source.bat
 copy source.zip release\mihajong
