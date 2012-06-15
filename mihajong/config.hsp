@@ -187,100 +187,106 @@ return
 	borderedtxt2 "Rule configuration.", 500, 18, 255, 255, 255, 1, 24, 192, 192, 192
 	borderedtxt2 strf("%2d/%2d頁 %s", configPage, RULE_PAGES, PageCaption(configPage-1)), 500, 48, 255, 255, 255, 1, 18, 192, 192, 192
 	font fontname, 20, 0
-	gosub *loadcache
-	repeat RULES_IN_PAGE
-		tmpcol = 255, 255, 255, 192, 192, 192
-		gosub *config_showruletext
-		if (RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE) == "Ｎ／Ａ") {gosub *config_strikeout}
-		switch (cnt+(configPage-1)*RULES_IN_PAGE)
-			case RULE_LIMITHAND_BONUS:
-				if (Rule(RULE_CHIP) == 0) {gosub *config_strikeout}
-				swbreak
+	repeat
+		gosub *loadcache
+		repeat RULES_IN_PAGE
+			tmpcol = 255, 255, 255, 192, 192, 192
+			gosub *config_showruletext
+			if (RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE) == "Ｎ／Ａ") {gosub *config_strikeout}
+			switch (cnt+(configPage-1)*RULES_IN_PAGE)
+				case RULE_LIMITHAND_BONUS:
+					if (Rule(RULE_CHIP) == 0) {gosub *config_strikeout}
+					swbreak
 #ifdef ALLSANMA
-			case RULE_SIMULTANEOUS_MAHJONG:
-				if (Rule(RULE_MULTIPLE_MAHJONG) != 2) {gosub *config_strikeout}
-				swbreak
-			case RULE_TRIPLE_MAHJONG:
-				if (Rule(RULE_MULTIPLE_MAHJONG) != 5) {gosub *config_strikeout}
-				swbreak
+				case RULE_SIMULTANEOUS_MAHJONG:
+					if (Rule(RULE_MULTIPLE_MAHJONG) != 2) {gosub *config_strikeout}
+					swbreak
+				case RULE_TRIPLE_MAHJONG:
+					if (Rule(RULE_MULTIPLE_MAHJONG) != 5) {gosub *config_strikeout}
+					swbreak
 #else
-			case RULE_SIMULTANEOUS_MAHJONG:
-				if (Rule(RULE_MULTIPLE_MAHJONG) < 2) {gosub *config_strikeout}
-				swbreak
-			case RULE_TRIPLE_MAHJONG:
-				if ((Rule(RULE_MULTIPLE_MAHJONG) != 0)&&(Rule(RULE_MULTIPLE_MAHJONG) != 2)) {gosub *config_strikeout}
-				swbreak
+				case RULE_SIMULTANEOUS_MAHJONG:
+					if (Rule(RULE_MULTIPLE_MAHJONG) < 2) {gosub *config_strikeout}
+					swbreak
+				case RULE_TRIPLE_MAHJONG:
+					if ((Rule(RULE_MULTIPLE_MAHJONG) != 0)&&(Rule(RULE_MULTIPLE_MAHJONG) != 2)) {gosub *config_strikeout}
+					swbreak
 #endif
-			case RULE_ROUND_TO_MANGAN:
-			case RULE_SANBAIMAN_BORDER:
-			case RULE_KAZOE_BORDER:
-				if (Rule(RULE_LIMITLESS) > 0) {gosub *config_strikeout}
-				swbreak
+				case RULE_ROUND_TO_MANGAN:
+				case RULE_SANBAIMAN_BORDER:
+				case RULE_KAZOE_BORDER:
+					if (Rule(RULE_LIMITLESS) > 0) {gosub *config_strikeout}
+					swbreak
 #ifndef SANMAX
-			case RULE_TANRON:
-				if (Rule(RULE_HUALONG) == 0) {gosub *config_strikeout}
-				swbreak
+				case RULE_TANRON:
+					if (Rule(RULE_HUALONG) == 0) {gosub *config_strikeout}
+					swbreak
 #endif
-			case RULE_ANKAN_CHANKAN:
-				if (Rule(RULE_ANKAN_CONCEAL) == 1) {gosub *config_strikeout}
-				swbreak
+				case RULE_ANKAN_CHANKAN:
+					if (Rule(RULE_ANKAN_CONCEAL) == 1) {gosub *config_strikeout}
+					swbreak
 #ifndef ALLSANMA
-			case RULE_OWN_FLOWER:
-				if (Rule(RULE_FLOWER_TILES) == 0) {gosub *config_strikeout}
-				swbreak
-			case RULE_GINKEI_HOUSHUN:
-			case RULE_FOUR_SEASONS:
-				if ((Rule(RULE_FLOWER_TILES) == 0)||(Rule(RULE_FLOWER_TILES) == 2)) {gosub *config_strikeout}
-				swbreak
-			case RULE_FOUR_FLOWERS:
-				if ((Rule(RULE_FLOWER_TILES) == 0)||(Rule(RULE_FLOWER_TILES) == 1)) {gosub *config_strikeout}
-				swbreak
-			case RULE_BAXIAN_JUSHOU:
-			case RULE_EIGHT_FLOWERS:
-				if (Rule(RULE_FLOWER_TILES) != 3) {gosub *config_strikeout}
-				swbreak
+				case RULE_OWN_FLOWER:
+					if (Rule(RULE_FLOWER_TILES) == 0) {gosub *config_strikeout}
+					swbreak
+				case RULE_GINKEI_HOUSHUN:
+				case RULE_FOUR_SEASONS:
+					if ((Rule(RULE_FLOWER_TILES) == 0)||(Rule(RULE_FLOWER_TILES) == 2)) {gosub *config_strikeout}
+					swbreak
+				case RULE_FOUR_FLOWERS:
+					if ((Rule(RULE_FLOWER_TILES) == 0)||(Rule(RULE_FLOWER_TILES) == 1)) {gosub *config_strikeout}
+					swbreak
+				case RULE_BAXIAN_JUSHOU:
+				case RULE_EIGHT_FLOWERS:
+					if (Rule(RULE_FLOWER_TILES) != 3) {gosub *config_strikeout}
+					swbreak
 #endif
-			case RULE_REDTILE_CHIP:
-				if (Rule(RULE_CHIP) == 0) {gosub *config_strikeout}
-				else: if ((Rule(RULE_RED_ONE) == 0)&&(Rule(RULE_RED_TWO) == 0)&&(Rule(RULE_RED_THREE) == 0)&&(Rule(RULE_RED_FOUR) == 0)&&(Rule(RULE_RED_FIVE) == 8)&&(Rule(RULE_RED_SIX) == 0)&&(Rule(RULE_RED_SEVEN) == 0)&&(Rule(RULE_RED_EIGHT) == 0)&&(Rule(RULE_RED_NINE) == 0)&&(Rule(RULE_RED_WEST) == 0)&&(Rule(RULE_RED_NORTH) == 0)) {
-					gosub *config_strikeout
-				}
-				swbreak
-			case RULE_BLUE_CHIP:
-				if (Rule(RULE_CHIP) == 0) {gosub *config_strikeout}
-				/* FALLTHRU */
-			case RULE_BLUE_TILES:
-				if ((Rule(RULE_BLUE_ONE) == 0)&&(Rule(RULE_BLUE_FIVE) == 0)&&(Rule(RULE_BLUE_NINE) == 0)&&(Rule(RULE_BLUE_LVFA) == 0)) {
-					gosub *config_strikeout
-				}
-				swbreak
-			case RULE_PENALTY_NEGATIVE:
-			case RULE_RIICHI_REQUISITE:
-				if (Rule(RULE_BUTTOBI_BORDER) == 2) {gosub *config_strikeout}
-				swbreak
-			case RULE_TAOYISE:
-				if (Rule(RULE_RED_FIVE) == 8) {gosub *config_strikeout}
-				swbreak
-			case RULE_CHOUIPPATSU:
-				if ((Rule(RULE_RIICHI_IPPATSU) == 1)||(Rule(RULE_RIICHI_IPPATSU) == 3)) {gosub *config_strikeout}
-				swbreak
-			case RULE_SUDDEN_DEATH_TYPE:
-				if (Rule(RULE_SUDDEN_DEATH_LENGTH) == 2) {gosub *config_strikeout}
-				swbreak
-			case RULE_THREE_OTAKAZE:
-			case RULE_OTAKAZE_XIAOSANFENG:
-				if (Rule(RULE_URAKAZE) == 1) {gosub *config_strikeout}
-				swbreak
-		swend
-		if (cnt == 19) {borderedtxt2 "通信対戦時のルール設定はホスト側の設定が適用されます", 100, 590, 255, 255, 255, 1, 20, 192, 192, 192}
+				case RULE_REDTILE_CHIP:
+					if (Rule(RULE_CHIP) == 0) {gosub *config_strikeout}
+					else: if ((Rule(RULE_RED_ONE) == 0)&&(Rule(RULE_RED_TWO) == 0)&&(Rule(RULE_RED_THREE) == 0)&&(Rule(RULE_RED_FOUR) == 0)&&(Rule(RULE_RED_FIVE) == 8)&&(Rule(RULE_RED_SIX) == 0)&&(Rule(RULE_RED_SEVEN) == 0)&&(Rule(RULE_RED_EIGHT) == 0)&&(Rule(RULE_RED_NINE) == 0)&&(Rule(RULE_RED_WEST) == 0)&&(Rule(RULE_RED_NORTH) == 0)) {
+						gosub *config_strikeout
+					}
+					swbreak
+				case RULE_BLUE_CHIP:
+					if (Rule(RULE_CHIP) == 0) {gosub *config_strikeout}
+					/* FALLTHRU */
+				case RULE_BLUE_TILES:
+					if ((Rule(RULE_BLUE_ONE) == 0)&&(Rule(RULE_BLUE_FIVE) == 0)&&(Rule(RULE_BLUE_NINE) == 0)&&(Rule(RULE_BLUE_LVFA) == 0)) {
+						gosub *config_strikeout
+					}
+					swbreak
+				case RULE_PENALTY_NEGATIVE:
+				case RULE_RIICHI_REQUISITE:
+					if (Rule(RULE_BUTTOBI_BORDER) == 2) {gosub *config_strikeout}
+					swbreak
+				case RULE_TAOYISE:
+					if (Rule(RULE_RED_FIVE) == 8) {gosub *config_strikeout}
+					swbreak
+				case RULE_CHOUIPPATSU:
+					if ((Rule(RULE_RIICHI_IPPATSU) == 1)||(Rule(RULE_RIICHI_IPPATSU) == 3)) {gosub *config_strikeout}
+					swbreak
+				case RULE_SUDDEN_DEATH_TYPE:
+					if (Rule(RULE_SUDDEN_DEATH_LENGTH) == 2) {gosub *config_strikeout}
+					swbreak
+				case RULE_THREE_OTAKAZE:
+				case RULE_OTAKAZE_XIAOSANFENG:
+					if (Rule(RULE_URAKAZE) == 1) {gosub *config_strikeout}
+					swbreak
+			swend
+			if (cnt == 19) {borderedtxt2 "通信対戦時のルール設定はホスト側の設定が適用されます", 100, 590, 255, 255, 255, 1, 20, 192, 192, 192}
+		loop
+		if ((TxtCached & (1<<(configPage - 1))) == 0) {
+			gosub *savecache
+		} else {
+			break
+		}
 	loop
-	gosub *savecache
 	redraw 1
 	return
 
 *loadcache
 #ifdef SCR_CONF_ITEM_CACHE@
-	if (TxtCached == 0) {buffer SCR_CONF_ITEM_CACHE, 82*2*RULE_PAGES, 25 * (RULES_IN_PAGE/2): gsel 0}
+	if (TxtCached == 0) {buffer SCR_CONF_ITEM_CACHE, 82*2*(RULE_PAGES+1), 25 * (RULES_IN_PAGE/2): gsel 0}
 	if ((TxtCached & (1<<(configPage - 1))) != 0) {
 		gmode gmode_mem
 		pos 99, 72
@@ -307,7 +313,7 @@ return
 
 *config_showruletext
 #ifdef SCR_CONF_ITEM_CACHE@
-	if ((TxtCached & (1<<(configPage - 1))) == 0) {
+	if (((TxtCached & (1<<(configPage - 1))) == 0)||(ForceDraw == 1)) {
 #endif
 		BorderTextX = 100+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
 		tmptxt = RuleName(cnt+(configPage-1)*RULES_IN_PAGE)
@@ -333,10 +339,22 @@ return
 	return
 
 *config_strikeout
-	tmpcol = 192, 192, 192, 128, 128, 128
-	gosub *config_showruletext
-	BorderTextX = 100+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
-	borderedtxt2 "―――――――――――――――", BorderTextX, BorderTextY, 255, 255, 255, 1, 20, 192, 192, 192
+#ifdef SCR_CONF_ITEM_CACHE@
+	if ((TxtCached & (1<<(configPage - 1))) != 0) {
+#endif
+		tmpcol = 192, 192, 192, 128, 128, 128
+#ifdef SCR_CONF_ITEM_CACHE@
+		ForceDraw = 1
+#endif
+		gosub *config_showruletext
+#ifdef SCR_CONF_ITEM_CACHE@
+		ForceDraw = 0
+#endif
+		BorderTextX = 100+400*(cnt/(RULES_IN_PAGE/2)): BorderTextY = 75+25*(cnt\(RULES_IN_PAGE/2))
+		borderedtxt2 "―――――――――――――――", BorderTextX, BorderTextY, 255, 255, 255, 1, 20, 192, 192, 192
+#ifdef SCR_CONF_ITEM_CACHE@
+	}
+#endif
 	return
 
 *ruleselbtn
