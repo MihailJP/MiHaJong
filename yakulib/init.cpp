@@ -1,0 +1,10 @@
+#include "init.h"
+
+// 設定したルールに基づいて役インスタンスを初期化する
+__declspec(dllexport) std::vector<Yaku>* initYaku() {
+	static std::vector<Yaku> yakuCatalog; // 初期化する
+	/*
+	 * ここにコンストラクタを並べる
+	 */
+	return &yakuCatalog;
+}
