@@ -4,7 +4,6 @@
 #include <list>
 #include "ykclass.h"
 
-void createYakuCatalog(std::list<Yaku> yakuCatalog);
-__declspec(dllexport) void* initYaku();
+__declspec(dllexport) std::list<Yaku>* initYaku();
 
 #endif
