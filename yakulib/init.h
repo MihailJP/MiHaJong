@@ -1,9 +1,10 @@
 #ifndef INIT_H
 #define INIT_H
 
-#include <vector>
+#include <list>
 #include "ykclass.h"
 
-__declspec(dllexport) std::vector<Yaku>* initYaku();
+void createYakuCatalog(std::list<Yaku> yakuCatalog);
+__declspec(dllexport) void* initYaku();
 
 #endif
