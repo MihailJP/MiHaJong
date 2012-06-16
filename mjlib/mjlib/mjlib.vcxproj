@@ -76,11 +76,39 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="init.cpp" />
+    <ClCompile Include="lzma\Alloc.c" />
+    <ClCompile Include="lzma\LzFind.c" />
+    <ClCompile Include="lzma\LzFindMt.c" />
+    <ClCompile Include="lzma\LzmaDec.c" />
+    <ClCompile Include="lzma\LzmaLib.c" />
+    <ClCompile Include="lzma\Sha256.c" />
+    <ClCompile Include="lzma\Threads.c" />
     <ClCompile Include="mjlib.cpp" />
+    <ClCompile Include="mnzdat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="except.h" />
+    <ClInclude Include="gametbl.h" />
     <ClInclude Include="init.h" />
+    <ClInclude Include="lzma\Alloc.h" />
+    <ClInclude Include="lzma\LzFind.h" />
+    <ClInclude Include="lzma\LzFindMt.h" />
+    <ClInclude Include="lzma\LzHash.h" />
+    <ClInclude Include="lzma\LzmaDec.h" />
+    <ClInclude Include="lzma\LzmaLib.h" />
+    <ClInclude Include="lzma\RotateDefs.h" />
+    <ClInclude Include="lzma\Sha256.h" />
+    <ClInclude Include="lzma\Threads.h" />
+    <ClInclude Include="lzma\Types.h" />
+    <ClInclude Include="mjlib.h" />
+    <ClInclude Include="mnzdat.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="ruletbl.h" />
+    <ClInclude Include="tilecode.h" />
     <ClInclude Include="ykclass.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="mjlib.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

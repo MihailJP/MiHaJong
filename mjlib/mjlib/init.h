@@ -4,6 +4,7 @@
 #include <list>
 #include "ykclass.h"
 
-__declspec(dllexport) std::list<Yaku>* initYaku();
+using namespace std;
+__declspec(dllexport) list<Yaku>* initYaku();
 
 #endif

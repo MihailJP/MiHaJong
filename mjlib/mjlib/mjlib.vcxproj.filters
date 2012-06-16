@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="LZMA">
+      <UniqueIdentifier>{cd9321f6-a546-487a-a553-e780e63334f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LZMA\ヘッダー ファイル">
+      <UniqueIdentifier>{378d515f-480d-4172-8461-72e8e95172f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LZMA\ソース ファイル">
+      <UniqueIdentifier>{b5ebce8c-f087-4055-8254-b9102fdef396}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mjlib.cpp">
@@ -20,6 +29,30 @@
     </ClCompile>
     <ClCompile Include="init.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="mnzdat.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\Alloc.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\LzFind.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\LzFindMt.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\LzmaDec.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\LzmaLib.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\Threads.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\Sha256.c">
+      <Filter>LZMA\ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -29,5 +62,61 @@
     <ClInclude Include="init.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="gametbl.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ruletbl.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="mjlib.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="tilecode.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="mnzdat.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lzma\Alloc.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lzma\Types.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lzma\LzFind.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lzma\LzFindMt.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lzma\LzHash.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lzma\LzmaDec.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lzma\LzmaLib.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lzma\Threads.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="except.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lzma\Sha256.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lzma\RotateDefs.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="mjlib.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
