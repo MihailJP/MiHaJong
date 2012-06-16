@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A1E77779-D7A8-4C1C-9D52-53586D6AA58A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>yakulib</RootNamespace>
+    <RootNamespace>mjlib</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,7 +76,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="init.cpp" />
-    <ClCompile Include="yakulib.cpp" />
+    <ClCompile Include="mjlib.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="init.h" />
