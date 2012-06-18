@@ -67,7 +67,7 @@ public:
 			o << " ????? "; break;
 		}
 		// ログメッセージ
-		o << this->messageTxt << ends;
+		o << this->messageTxt.c_str() << flush;
 		return string(o.str());
 	}
 };
