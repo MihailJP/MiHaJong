@@ -18,13 +18,19 @@ DWORD Logger::LoggerThread(LPVOID lp) { // ロギング実行用スレッド
 	while (1) {
 		/* 待機 */
 		WaitForSingleObject(hEvent, INFINITE);
-		/* キューからpopする */
-		EnterCriticalSection(&cs);
-		LogMsg currentLogMsg = LogMsg(msgQueue[0]);
-		msgQueue.pop_front();
-		LeaveCriticalSection(&cs);
-		/* 処理（仮実装） */
-		*logStream << currentLogMsg.toString() << endl;
+		while (1) {
+			/* キューからpopする */
+			EnterCriticalSection(&cs);
+			if (msgQueue.empty()) { // キューが空だったら抜ける
+				LeaveCriticalSection(&cs); // ちゃんと返してあげましょうね
+				break;
+			}
+			LogMsg currentLogMsg = LogMsg(msgQueue[0]);
+			msgQueue.pop_front();
+			LeaveCriticalSection(&cs);
+			/* メッセージを書き出す */
+			*logStream << currentLogMsg.toString() << endl;
+		}
 	}
 }
 
