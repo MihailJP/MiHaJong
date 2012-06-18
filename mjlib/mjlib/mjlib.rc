@@ -2,6 +2,14 @@
 // Copyright (C) 2006-2012
 // http://www.resedit.net
 
+#ifndef WINDOWS_LEAN_AND_MEAN
+#define WINDOWS_LEAN_AND_MEAN
+#endif
+
+#ifndef WINDOWS_EXTRA_LEAN
+#define WINDOWS_EXTRA_LEAN
+#endif
+
 #include <windows.h>
 #include <commctrl.h>
 #include <richedit.h>

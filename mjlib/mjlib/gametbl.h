@@ -1,13 +1,100 @@
 #ifndef GAMETBL_H
 #define GAMETBL_H
 
-class GameTable {
+#include <array>
+#include <cstdint>
+#include "tilecode.h"
+
+// 青天ルール対策
+// 一応21不可思議まで表現可能……
+
+#define DIGIT_GROUPS 8
+
+class LargeNum {
+private:
+	std::array<int32_t, DIGIT_GROUPS> digitGroup;
+	void fix() { // 正規形に直す
+		for (int i = 0; i < (DIGIT_GROUPS - 1); i++) {
+			if ((this->digitGroup[i] > 99999999)||(this->digitGroup[i] < -99999999)) {
+				this->digitGroup[i + 1] += this->digitGroup[i] / 100000000;
+				this->digitGroup[i] %= 100000000;
+			}
+		}
+	}
 public:
-	int PlayerScore;
-	int playerChip;
-	int SumaroFlag;
-	int YakitoriFlag;
-	int PlayerID;
+	LargeNum() { // ±21不可思議まで表現可能な数のクラス
+		this->digitGroup.fill(0);
+	}
+	LargeNum(int val) { // ±21不可思議まで表現可能な数のクラス
+		this->digitGroup.fill(0);
+		this->digitGroup[0] = (val % 100000000);
+		this->digitGroup[1] = (val / 100000000);
+	}
+	/* ここから演算子をオーバーロード */
+	LargeNum operator+(const LargeNum& addend) {
+		LargeNum ans;
+		for (int i = 0; i < DIGIT_GROUPS; i++)
+			ans.digitGroup[i] = digitGroup[i] + addend.digitGroup[i];
+		ans.fix();
+		return ans;
+	}
+	LargeNum operator+(const int32_t addend) {
+		LargeNum ans;
+		ans.digitGroup[0] = digitGroup[0] + addend;
+		for (int i = 1; i < DIGIT_GROUPS; i++)
+			ans.digitGroup[i] = digitGroup[i];
+		ans.fix();
+		return ans;
+	}
+	LargeNum operator-(const LargeNum& subtrahend) {
+		LargeNum ans;
+		for (int i = 0; i < DIGIT_GROUPS; i++)
+			ans.digitGroup[i] = digitGroup[i] - subtrahend.digitGroup[i];
+		ans.fix();
+		return ans;
+	}
+	LargeNum operator-(const int32_t subtrahend) {
+		LargeNum ans;
+		ans.digitGroup[0] = digitGroup[0] - subtrahend;
+		for (int i = 1; i < DIGIT_GROUPS; i++)
+			ans.digitGroup[i] = digitGroup[i];
+		ans.fix();
+		return ans;
+	}
+	LargeNum operator*(const int32_t multiplier) { // めんどくさいので32bit整数倍だけ……
+		LargeNum ans = LargeNum();
+		for (int i = 0; i < DIGIT_GROUPS; i++) {
+			int64_t tmpdigit = digitGroup[i] * multiplier;
+			ans.digitGroup[i] = (int32_t)(tmpdigit % 100000000L);
+			if ((i == (DIGIT_GROUPS - 1))
+				&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN)))
+				throw std::overflow_error("オーバーフローしました");
+			ans.digitGroup[i + 1] = (int32_t)(tmpdigit / 100000000L);
+		}
+		ans.fix();
+		return ans;
+	}
+};
+
+#define PLAYERS 4
+#define NUM_OF_TILES_IN_HAND 14
+
+typedef uint8_t PLAYER_ID; // プレイヤー番号
+typedef std::array<int, PLAYERS> INT_EACH_PLAYER;
+typedef std::array<LargeNum, PLAYERS> LARGENUM_EACH_PLAYER;
+
+enum handTilePage { tlCode, redTile };
+
+typedef std::array<tileCode, NUM_OF_TILES_IN_HAND> HAND_TILES;
+typedef std::array<HAND_TILES, PLAYERS> HAND_EACH_PLAYER;
+
+class GameTable { // 卓の情報を格納するためのクラス
+public:
+	LARGENUM_EACH_PLAYER PlayerScore;
+	INT_EACH_PLAYER playerChip;
+	INT_EACH_PLAYER SumaroFlag;
+	INT_EACH_PLAYER YakitoriFlag;
+	PLAYER_ID PlayerID;
 	int GameLength;
 	int GameRound;
 	int LoopRound;
@@ -16,7 +103,7 @@ public:
 	int Deposit;
 	int AgariChain;
 	int LastAgariPlayer;
-	int Hand;
+	std::array<HAND_EACH_PLAYER, 2> Hand;
 	int Discard;
 	int Meld;
 	int MenzenFlag;
@@ -57,6 +144,6 @@ public:
 	// Constructor
 	GameTable() {
 	}
-}
+};
 
 #endif

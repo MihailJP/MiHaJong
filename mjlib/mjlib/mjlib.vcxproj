@@ -75,7 +75,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="func.cpp" />
     <ClCompile Include="init.cpp" />
+    <ClCompile Include="logging.cpp" />
     <ClCompile Include="lzma\Alloc.c" />
     <ClCompile Include="lzma\LzFind.c" />
     <ClCompile Include="lzma\LzFindMt.c" />
@@ -88,8 +90,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="except.h" />
+    <ClInclude Include="func.h" />
     <ClInclude Include="gametbl.h" />
     <ClInclude Include="init.h" />
+    <ClInclude Include="logging.h" />
     <ClInclude Include="lzma\Alloc.h" />
     <ClInclude Include="lzma\LzFind.h" />
     <ClInclude Include="lzma\LzFindMt.h" />

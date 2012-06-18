@@ -1,6 +1,9 @@
 #include "mnzdat.h"
 
 using namespace std;
+using std::min;
+
+/* 面子データ初期化 */
 
 static uint8_t* mentsuAnalysisDat = NULL;
 
@@ -68,6 +71,72 @@ void verifyMentsuAnalysisDat(size_t bufSize) {
 	}
 }
 
-__declspec(dllexport) void initMentsuAnalysisDat() {
+__declspec(dllexport) void initMentsuAnalysisDat() { // 面子データ初期化
 	verifyMentsuAnalysisDat(decompressMentsuAnalysisDat());
+}
+
+/* 向聴数を計算する */
+
+SHANTEN calcShanten(GameTable gameStat, PLAYER_ID playerID, shantenType mode)
+{ // 向聴数を計算する
+	/* 数牌それぞれの面子の数を数える */
+	TileCount tileCount = countTilesInHand(gameStat, playerID);
+
+	/* mode別分岐 */
+	switch (mode) {
+	case shantenRegular:
+		/* あとで書く */
+		break;
+	case shantenPairs:
+		/* あとで書く */
+		break;
+	case shantenOrphans:
+		/* あとで書く */
+		break;
+	case shantenStellar:
+		/* あとで書く */
+		break;
+	case shantenCivilWar:
+		/* あとで書く */
+		break;
+	case shantenSyzygy:
+		/* あとで書く */
+		break;
+	case shantenQuanbukao:
+		/* あとで書く */
+		break;
+	default:
+		/* 全部求めて一番和了に近いやつを返す */
+		/* あとで書く */
+		break;
+	}
+	return 0; //未完成
+}
+
+SHANTEN calcShantenRegular(GameTable gameStat, PLAYER_ID playerID, TileCount tileCount)
+{ // 面子手の向聴数を求める
+	SHANTEN shanten = 8; // 全く揃ってないてんでバラバラだったら面子手に対して8向聴（七対子に対してなら6向聴になる）
+
+	// 数牌
+	int mianzi = 0; int tarzi = 0; int atama = 0; // 面子塔子雀頭の数
+	for (int suit = 0; suit < TILE_NUMERAL_COLORS; suit++) {
+		unsigned int statcode = 0; unsigned int qDigit = 1;
+		for (int i = 1; i <= 9; i++) {
+			statcode += min(tileCount.count[suit * TILE_SUIT_STEP + i], 4) * qDigit;
+			qDigit *= 5;
+		}
+		uint8_t tmpdat = mentsuAnalysisDat[statcode];
+		mianzi += (tmpdat & 0x70) >> 4;
+		tarzi += tmpdat & 0x0f;
+		if (tmpdat & 0x80) atama = 1;
+	}
+
+	// 字牌
+	for (int i = 1; i <= 7; i++) {
+		if (tileCount.count[TILE_SUIT_HONORS + i] == 2) {tarzi++; atama = 1;}
+		if (tileCount.count[TILE_SUIT_HONORS + i] >= 3) {mianzi++;}
+	}
+
+	// 未完成
+	return shanten;
 }
