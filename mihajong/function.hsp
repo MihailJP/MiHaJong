@@ -6,30 +6,33 @@
 
 /* デバッグログ */
 #module debuglog
+
+#uselib "mjlib.dll"
+#func _initlog_ "?initLogger@logger@@YAHXZ"
+#func _trace_msg_ "?trace_msg@logger@@YAXPBD@Z" str
+#func _debug_msg_ "?debug_msg@logger@@YAXPBD@Z" str
+#func _info_msg_ "?info_msg@logger@@YAXPBD@Z" str
+#func _warn_msg_ "?warn_msg@logger@@YAXPBD@Z" str
+#func _error_msg_ "?error_msg@logger@@YAXPBD@Z" str
+#func _fatal_msg_ "?fatal_msg@logger@@YAXPBD@Z" str
+
 #include "const.as"
 #deffunc loginit
 #ifdef LOGGING
-	verbosity_level = "FATAL","ERROR","WARN","INFO","DEBUG","TRACE"
-	verbosity_border = 5
-	sdim filename, 1024
-	gsel 0
-	logdir = confPath()
-	if (logdir == "") {logdir = "."}
-	filename = logdir+"\\debug.log"
-	exec "logger.exe "+PORT_LOGGER+"/"+filename
-	repeat 1
-		sockopen@ SOCK_LOGGER,"127.0.0.1",PORT_LOGGER
-		if (stat) {await 0: continue 0}
-	loop
+	_initlog_
 #endif
 return
 
 #deffunc debug_logging str debugmsg, str debugfile, int debugline, int verbosity
 #ifdef LOGGING
-	if (verbosity > verbosity_border) {return}
-	sdim log, 1024
-	log = strf("%04d-%02d-%02d %02d:%02d:%02d.%03d %-5s (%s:%d) %s\n", gettime(0),gettime(1),gettime(3),gettime(4),gettime(5),gettime(6),gettime(7), verbosity_level(verbosity),debugfile,debugline,debugmsg)
-	sockputb@ log, 0, strlen(log), SOCK_LOGGER
+	switch (verbosity)
+		case 5: _trace_msg_ strf("(%s:%d) %s", debugfile, debugline, debugmsg): swbreak
+		case 4: _debug_msg_ strf("(%s:%d) %s", debugfile, debugline, debugmsg): swbreak
+		case 3: _info_msg_ strf("(%s:%d) %s", debugfile, debugline, debugmsg): swbreak
+		case 2: _warn_msg_ strf("(%s:%d) %s", debugfile, debugline, debugmsg): swbreak
+		case 1: _error_msg_ strf("(%s:%d) %s", debugfile, debugline, debugmsg): swbreak
+		case 0: _fatal_msg_ strf("(%s:%d) %s", debugfile, debugline, debugmsg): swbreak
+	swend
 #endif
 return
 #global
