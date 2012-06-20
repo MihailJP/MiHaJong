@@ -27,8 +27,12 @@ size_t decompressMentsuAnalysisDat() {
 		(SizeT *)&size, (const uint8_t *)compressedMentsuDat, 5);
 	if (result != SZ_OK) {
 		ostringstream o;
-		o << "LZMAストリームのデコードに失敗しました。エラーコード: " << result;
+		o << "LZMAストリームのデコードに失敗しました。ファイルが壊れている虞があります。エラーコード: " << result;
+		fatal(o.str());
 		throw decompress_failure(o.str(), result);
+	}
+	else {
+		info("LZMAストリームをデコードしました。");
 	}
 	return uncompressedSize;
 }
@@ -63,11 +67,16 @@ void verifyMentsuAnalysisDat(size_t bufSize) {
 	if (mdUnmatch) {
 		ostringstream o;
 		o << "面子構成データベースのSHA256ハッシュ値が一致しませんでした。";
+		o << "ファイルが壊れている虞があります。";
 		o << "期待されるハッシュ値: " << bytesToHexString(MDVEC(expectedDigest[0], expectedDigest[31])) << " ";
 		o << "実際のハッシュ値: " << bytesToHexString(MDVEC(actualDigest[0], actualDigest[31]));
+		fatal(o.str());
 		throw hash_mismatch(o.str(),
 			MDVEC(expectedDigest[0], expectedDigest[31]),
 			MDVEC(actualDigest[0], actualDigest[31]));
+	}
+	else {
+		info("面子構成データベースのSHA256ハッシュ値の照合に成功しました。");
 	}
 }
 

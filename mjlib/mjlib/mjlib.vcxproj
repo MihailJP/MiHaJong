@@ -76,6 +76,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="func.cpp" />
+    <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="init.cpp" />
     <ClCompile Include="logging.cpp" />
     <ClCompile Include="lzma\Alloc.c" />
@@ -87,6 +88,7 @@
     <ClCompile Include="lzma\Threads.c" />
     <ClCompile Include="mjlib.cpp" />
     <ClCompile Include="mnzdat.cpp" />
+    <ClCompile Include="ruletbl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="except.h" />

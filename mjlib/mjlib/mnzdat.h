@@ -15,6 +15,7 @@
 #include "gametbl.h"
 #include "tilecode.h"
 #include "func.h"
+#include "logging.h"
 
 void LoadFileInResource(int name, int type, DWORD& size, const char*& data);
 size_t decompressMentsuAnalysisDat();

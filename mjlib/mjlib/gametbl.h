@@ -31,14 +31,14 @@ public:
 		this->digitGroup[1] = (val / 100000000);
 	}
 	/* ここから演算子をオーバーロード */
-	LargeNum operator+(const LargeNum& addend) {
+	const LargeNum operator+(const LargeNum& addend) {
 		LargeNum ans;
 		for (int i = 0; i < DIGIT_GROUPS; i++)
 			ans.digitGroup[i] = digitGroup[i] + addend.digitGroup[i];
 		ans.fix();
 		return ans;
 	}
-	LargeNum operator+(const int32_t addend) {
+	const LargeNum operator+(const int32_t addend) {
 		LargeNum ans;
 		ans.digitGroup[0] = digitGroup[0] + addend;
 		for (int i = 1; i < DIGIT_GROUPS; i++)
@@ -46,14 +46,25 @@ public:
 		ans.fix();
 		return ans;
 	}
-	LargeNum operator-(const LargeNum& subtrahend) {
+	LargeNum& operator+=(const LargeNum& addend) {
+		for (int i = 0; i < DIGIT_GROUPS; i++)
+			digitGroup[i] += addend.digitGroup[i];
+		fix();
+		return *this;
+	}
+	LargeNum& operator+=(const int32_t addend) {
+		digitGroup[0] += addend;
+		fix();
+		return *this;
+	}
+	const LargeNum operator-(const LargeNum& subtrahend) {
 		LargeNum ans;
 		for (int i = 0; i < DIGIT_GROUPS; i++)
 			ans.digitGroup[i] = digitGroup[i] - subtrahend.digitGroup[i];
 		ans.fix();
 		return ans;
 	}
-	LargeNum operator-(const int32_t subtrahend) {
+	const LargeNum operator-(const int32_t subtrahend) {
 		LargeNum ans;
 		ans.digitGroup[0] = digitGroup[0] - subtrahend;
 		for (int i = 1; i < DIGIT_GROUPS; i++)
@@ -61,7 +72,7 @@ public:
 		ans.fix();
 		return ans;
 	}
-	LargeNum operator*(const int32_t multiplier) { // めんどくさいので32bit整数倍だけ……
+	const LargeNum operator*(const int32_t multiplier) { // めんどくさいので32bit整数倍だけ……
 		LargeNum ans = LargeNum();
 		for (int i = 0; i < DIGIT_GROUPS; i++) {
 			int64_t tmpdigit = digitGroup[i] * multiplier;
@@ -74,12 +85,19 @@ public:
 		ans.fix();
 		return ans;
 	}
+	const int32_t& operator[] (const int i) const { // const 配列アクセス……
+		return digitGroup[i];
+	}
+	int32_t& operator[] (const int i) { // non-const 配列アクセス……
+		return digitGroup[i];
+	}
 };
 
 #define PLAYERS 4
 #define NUM_OF_TILES_IN_HAND 14
+#define SIZE_OF_DISCARD_BUFFER 33
 
-typedef uint8_t PLAYER_ID; // プレイヤー番号
+typedef int8_t PLAYER_ID; // プレイヤー番号
 typedef std::array<int, PLAYERS> INT_EACH_PLAYER;
 typedef std::array<LargeNum, PLAYERS> LARGENUM_EACH_PLAYER;
 
@@ -87,6 +105,26 @@ enum handTilePage { tlCode, redTile };
 
 typedef std::array<tileCode, NUM_OF_TILES_IN_HAND> HAND_TILES;
 typedef std::array<HAND_TILES, PLAYERS> HAND_EACH_PLAYER;
+
+#define SUTEHAI_TYPE_STEP 200
+enum discardStat {
+	discardNormal,
+	discardTaken,
+	discardRiichi,
+	discardRiichiTaken,
+};
+struct discardTile {
+	tileCode tcode;
+	discardStat dstat;
+};
+enum discardTilePage { dTileCode, dRedTile, dThrough };
+
+typedef std::array<discardTile, SIZE_OF_DISCARD_BUFFER> DISCARD_BUF;
+typedef std::array<DISCARD_BUF, PLAYERS> DISCARD_EACH_PLAYER;
+
+enum meldTilePage { mTileCode, mRedTile };
+
+
 
 class GameTable { // 卓の情報を格納するためのクラス
 public:
@@ -104,7 +142,8 @@ public:
 	int AgariChain;
 	int LastAgariPlayer;
 	std::array<HAND_EACH_PLAYER, 2> Hand;
-	int Discard;
+	std::array<DISCARD_EACH_PLAYER, 3> Discard;
+	INT_EACH_PLAYER DiscardPointer;
 	int Meld;
 	int MenzenFlag;
 	int HandStat;
