@@ -8,7 +8,11 @@
 #module
 #include "const.as"
 
-#deffunc storeRule array RuleTxt
+#uselib "mjlib.dll"
+#func _storeRule "?storeRule@@YAXPAPBD@Z" var
+#func _exportRule "?exportRule@@YAXPAPAD@Z" var
+
+#deffunc storeRule array RuleText
 /*
 		storeRule p1
 		ルール設定文字列を代入する
@@ -17,14 +21,13 @@
 
 		モジュール内に保持されているルール設定の項目を置き換えます。
 */
-	sdim RuleConf, RULE_IN_LINE+4, length(RuleTxt)
-	repeat length(RuleConf)
-		RuleConf(cnt) = RuleTxt(cnt)
-	loop
-	info "設定がロードされました。"
+	sdim RuleConf, RULE_IN_LINE+4, length(RuleText)
+	dim RulePtr, length(RuleConf)
+	repeat length(RuleConf): RuleConf(cnt) = RuleText(cnt): RulePtr(cnt) = varptr(RuleConf(cnt)): loop
+	_storeRule RulePtr
 	return
 
-#deffunc exportRule array RuleTxt
+#deffunc exportRule array RuleText
 /*
 		exportRule p1
 		ルール設定文字列を取得する
@@ -33,26 +36,11 @@
 
 		モジュール内に保持されているルール設定の項目を取得します。
 */
-	sdim RuleTxt, RULE_IN_LINE+4, length(RuleConf)
-	repeat length(RuleTxt)
-		RuleTxt(cnt) = RuleConf(cnt)
-	loop
+	sdim RuleText, RULE_IN_LINE+4, length(RuleConf)
+	dim RulePtr, length(RuleText)
+	repeat length(RuleText): RuleText(cnt) = RuleConf(cnt): RulePtr(cnt) = varptr(RuleText(cnt)): loop
+	_exportRule RulePtr
 	return
-
-#defcfunc getRule int RuleID
-/*
-		val = getRule(p1)
-		ルール設定を取得する
-
-		p1 : 項目番号
-
-		ルール設定の指定した番号の項目を取得します。
-		整数型で返されます。
-*/
-	RuleDigit = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	ans = instr(RuleDigit, , strmid(RuleConf(RuleID/RULE_IN_LINE), RuleID\RULE_IN_LINE, 1))
-	if (ans < 0) {ans = 0}
-	return ans
 #global
 
 /* 設定画面 */

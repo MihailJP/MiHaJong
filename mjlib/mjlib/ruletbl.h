@@ -502,5 +502,6 @@ enum RuleCode {
 };
 
 __declspec(dllexport) int getRule(int RuleID);
+inline uint8_t getRule(RuleCode RuleID);
 
 #endif

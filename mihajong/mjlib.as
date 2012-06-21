@@ -5,6 +5,7 @@
  */
 
 #uselib "mjlib.dll"
+
 /* ロギングツール */
 /*
 #func global _initlog_ "?initLogger@logger@@YAHXZ"
@@ -15,3 +16,10 @@
 #func global _error_msg_ "?error_msg@logger@@YAXPBD@Z" str
 #func global _fatal_msg_ "?fatal_msg@logger@@YAXPBD@Z" str
 */
+
+/* ルールコンフィグ */
+/*
+#func global _storeRule "?storeRule@@YAXPAPAD@Z" var
+#func global _exportRule "?exportRule@@YAXPAPAD@Z" var
+*/
+#cfunc global getRule "?getRule@@YAHH@Z" int
