@@ -2,6 +2,8 @@
 
 static GameTable GameStat;
 
+inline bool itob(int a) {return (a == 0) ? false : true;}
+
 extern "C" {
 
 	__declspec(dllexport) GameTable* initTable() {
@@ -12,39 +14,39 @@ extern "C" {
 	/* HSPからのアクセサ */
 
 	__declspec(dllexport) void setScore(GameTable* gameStat, int Player, int Digit, int value) {
-		gameStat->PlayerScore[Player][Digit] = value; return;
+		gameStat->Player[Player].PlayerScore[Digit] = value; return;
 	}
 	__declspec(dllexport) void addScore(GameTable* gameStat, int Player, int Digit, int value) {
-		gameStat->PlayerScore[Player][Digit] += value; return;
+		gameStat->Player[Player].PlayerScore[Digit] += value; return;
 	}
 	__declspec(dllexport) int getScore(GameTable* gameStat, int Player, int Digit) {
-		return gameStat->PlayerScore[Player][Digit];
+		return gameStat->Player[Player].PlayerScore[Digit];
 	}
 	/* exportScore */
 	/* importScore */
 
 	__declspec(dllexport) void setChip(GameTable* gameStat, int Player, int value) {
-		gameStat->playerChip[Player] = value; return;
+		gameStat->Player[Player].playerChip = value; return;
 	}
 	__declspec(dllexport) void addChip(GameTable* gameStat, int Player, int value) {
-		gameStat->playerChip[Player] += value; return;
+		gameStat->Player[Player].playerChip += value; return;
 	}
 	__declspec(dllexport) int getChip(GameTable* gameStat, int Player, int value) {
-		return gameStat->playerChip[Player];
+		return gameStat->Player[Player].playerChip;
 	}
 
 	__declspec(dllexport) void setSumaroFlag(GameTable* gameStat, int Player, int value) {
-		gameStat->SumaroFlag[Player] = value; return;
+		gameStat->Player[Player].SumaroFlag = itob(value); return;
 	}
 	__declspec(dllexport) int getSumaroFlag(GameTable* gameStat, int Player) {
-		return gameStat->SumaroFlag[Player];
+		return gameStat->Player[Player].SumaroFlag;
 	}
 
 	__declspec(dllexport) void setYakitori(GameTable* gameStat, int Player, int value) {
-		gameStat->YakitoriFlag[Player] = value; return;
+		gameStat->Player[Player].YakitoriFlag = itob(value); return;
 	}
 	__declspec(dllexport) int getYakitori(GameTable* gameStat, int Player) {
-		return gameStat->YakitoriFlag[Player];
+		return gameStat->Player[Player].YakitoriFlag;
 	}
 
 	__declspec(dllexport) void setPlayer(GameTable* gameStat, int value) {
@@ -126,80 +128,147 @@ extern "C" {
 	}
 
 	__declspec(dllexport) void setHand(GameTable* gameStat, int Page, int Index, int Player, int value) {
-		gameStat->Hand[Page][Player][Index] = (tileCode)value;
+		gameStat->Player[Player].Hand[Page][Index] = (tileCode)value;
 		return;
 	}
 	__declspec(dllexport) int getHand(GameTable* gameStat, int Page, int Index, int Player) {
-		return gameStat->Hand[Page][Player][Index];
+		return gameStat->Player[Player].Hand[Page][Index];
 	}
 
 	__declspec(dllexport) void setDiscard(GameTable* gameStat, int Page, int Index, int Player, int value) {
-		gameStat->Discard[Page][Player][Index].dstat = (discardStat)(value / SUTEHAI_TYPE_STEP);
-		gameStat->Discard[Page][Player][Index].tcode = (tileCode)(value % SUTEHAI_TYPE_STEP);
+		gameStat->Player[Player].Discard[Page][Index].dstat = (discardStat)(value / SUTEHAI_TYPE_STEP);
+		gameStat->Player[Player].Discard[Page][Index].tcode = (tileCode)(value % SUTEHAI_TYPE_STEP);
 		return;
 	}
 	__declspec(dllexport) int getDiscard(GameTable* gameStat, int Page, int Index, int Player) {
-		return gameStat->Discard[Page][Player][Index].dstat * SUTEHAI_TYPE_STEP
-			+ gameStat->Discard[Page][Player][Index].tcode;
+		return gameStat->Player[Player].Discard[Page][Index].dstat * SUTEHAI_TYPE_STEP
+			+ gameStat->Player[Player].Discard[Page][Index].tcode;
 	}
 	__declspec(dllexport) int DiscardPointer(GameTable* gameStat, int Player) {
-		return gameStat->DiscardPointer[Player];
+		return gameStat->Player[Player].DiscardPointer;
 	}
 	__declspec(dllexport) void DiscardPointerIncrement(GameTable* gameStat, int Player) {
-		gameStat->DiscardPointer[Player]++;
+		gameStat->Player[Player].DiscardPointer++;
 		return;
 	}
 	__declspec(dllexport) void flagDiscard(GameTable* gameStat, int Index, int Player, int value) {
-		gameStat->Discard[dTileCode][Player][Index].dstat = (discardStat)
-			(gameStat->Discard[dTileCode][Player][Index].dstat + value / SUTEHAI_TYPE_STEP);
+		gameStat->Player[Player].Discard[dTileCode][Index].dstat = (discardStat)
+			(gameStat->Player[Player].Discard[dTileCode][Index].dstat + value / SUTEHAI_TYPE_STEP);
 		return;
 	}
 
+	__declspec(dllexport) void setMeld(GameTable* gameStat, int Page, int Index, int Player, int value) {
+		gameStat->Player[Player].Meld[Page][Index].tcode = (tileCode)(value % MELD_TYPE_STEP);
+		gameStat->Player[Player].Meld[Page][Index].mstat = (meldStat)(value / MELD_TYPE_STEP);
+		return;
+	}
+	__declspec(dllexport) int getMeld(GameTable* gameStat, int Page, int Index, int Player) {
+		return gameStat->Player[Player].Meld[Page][Index].mstat * MELD_TYPE_STEP
+			+ gameStat->Player[Player].Meld[Page][Index].tcode;
+	}
+	__declspec(dllexport) int MeldPointer(GameTable* gameStat, int Player) {
+		return gameStat->Player[Player].MeldPointer;
+	}
+	__declspec(dllexport) void MeldPointerIncrement(GameTable* gameStat, int Player) {
+		gameStat->Player[Player].MeldPointer++;
+		return;
+	}
+	__declspec(dllexport) void MeldPointerDecrement(GameTable* gameStat, int Player) {
+		gameStat->Player[Player].MeldPointer--;
+		return;
+	}
+	__declspec(dllexport) void flagMeld(GameTable* gameStat, int Page, int Index, int Player, int value) {
+		gameStat->Player[Player].Meld[Page][Index].mstat = (meldStat)(
+			gameStat->Player[Player].Meld[Page][Index].mstat + value / MELD_TYPE_STEP);
+		return;
+	}
+
+	__declspec(dllexport) void setMenzen(GameTable* gameStat, int Player, int value) {
+		gameStat->Player[Player].MenzenFlagAb = value;
+		if (value == 0) gameStat->Player[Player].MenzenFlag = false;
+		else if (value == 1) gameStat->Player[Player].MenzenFlag = true;
+		return;
+	}
+	__declspec(dllexport) int getMenzen(GameTable* gameStat, int Player) {
+		return gameStat->Player[Player].MenzenFlagAb;
+	}
+
+	__declspec(dllexport) void setHandStat(GameTable* gameStat, int Player, int value) {
+		gameStat->Player[Player].HandStat = value;
+		return;
+	}
+	__declspec(dllexport) int getHandStat(GameTable* gameStat, int Player) {
+		return gameStat->Player[Player].HandStat;
+	}
+
+	__declspec(dllexport) void setNumberOfQuads(GameTable* gameStat, int Player, int value) {
+		gameStat->Player[Player].NumberOfQuads = value;
+		return;
+	}
+	__declspec(dllexport) void incNumberOfQuads(GameTable* gameStat, int Player) {
+		gameStat->Player[Player].NumberOfQuads++;
+		return;
+	}
+	__declspec(dllexport) int getNumberOfQuads(GameTable* gameStat, int Player) {
+		return gameStat->Player[Player].NumberOfQuads;
+	}
+
+	__declspec(dllexport) void setRichiFlag(GameTable* gameStat, int Page, int Player, int value) {
+		switch (Page) {
+		case 0:
+			switch (value) {
+			case 0:
+				gameStat->Player[Player].RichiFlag.RichiFlag = false;
+				gameStat->Player[Player].RichiFlag.IppatsuFlag = false;
+				gameStat->Player[Player].RichiFlag.DoubleFlag = false;
+				break;
+			case 1:
+				gameStat->Player[Player].RichiFlag.RichiFlag = true;
+				gameStat->Player[Player].RichiFlag.IppatsuFlag = false;
+				gameStat->Player[Player].RichiFlag.DoubleFlag = false;
+				break;
+			case 2:
+				gameStat->Player[Player].RichiFlag.RichiFlag = true;
+				gameStat->Player[Player].RichiFlag.IppatsuFlag = true;
+				gameStat->Player[Player].RichiFlag.DoubleFlag = false;
+				break;
+			case 3:
+				gameStat->Player[Player].RichiFlag.RichiFlag = true;
+				gameStat->Player[Player].RichiFlag.IppatsuFlag = false;
+				gameStat->Player[Player].RichiFlag.DoubleFlag = true;
+				break;
+			case 4:
+				gameStat->Player[Player].RichiFlag.RichiFlag = true;
+				gameStat->Player[Player].RichiFlag.IppatsuFlag = true;
+				gameStat->Player[Player].RichiFlag.DoubleFlag = true;
+				break;
+			default:
+				throw(std::domain_error("setRichiFlag(): 正しくない値が指定されました"));
+			}
+			break;
+		case 1:
+			gameStat->Player[Player].RichiFlag.OpenFlag = itob(value);
+			break;
+		default:
+			throw(std::domain_error("setRichiFlag(): 正しくないページが指定されました"));
+		}
+	}
+	__declspec(dllexport) int getRichiFlag(GameTable* gameStat, int Page, int Player) {
+		switch (Page) {
+		case 0:
+			return gameStat->Player[Player].RichiFlag.RichiFlag ?
+				1 +
+				(gameStat->Player[Player].RichiFlag.IppatsuFlag ? 1 : 0) +
+				(gameStat->Player[Player].RichiFlag.DoubleFlag ? 2 : 0)
+				: 0;
+		case 1:
+			return gameStat->Player[Player].RichiFlag.OpenFlag ? 1 : 0;
+		default:
+			throw(std::domain_error("getRichiFlag(): 正しくないページが指定されました"));
+		}
+	}
+
 /*
-__declspec(dllexport) void setMeld(GameTable* gameStat, int Page, int Index, int Player, int value) {
-	gameStat->Meld(Index, Player, Page) = value
-	return
-__declspec(dllexport) int getMeld(GameTable* gameStat, int Page, int Index, int Player) {
-	return gameStat->Meld(Index, Player, Page)
-__declspec(dllexport) int MeldPointer(GameTable* gameStat, int Player) {
-	return gameStat->Meld(0, Player, MELD_TILECODE)
-__declspec(dllexport) void MeldPointerIncrement(GameTable* gameStat, int Player) {
-	gameStat->Meld(0, Player, MELD_TILECODE)++
-	return
-__declspec(dllexport) void MeldPointerDecrement(GameTable* gameStat, int Player) {
-	gameStat->Meld(0, Player, MELD_TILECODE)--
-	return
-__declspec(dllexport) void flagMeld(GameTable* gameStat, int Page, int Index, int Player, int value) {
-	gameStat->Meld(Index, Player, Page) += value
-	return
-
-__declspec(dllexport) void setMenzen(GameTable* gameStat, int Player, int value) {
-	MenzenFlag[Player] = value
-	return
-__declspec(dllexport) int getMenzen(GameTable* gameStat, int Player) {
-	return MenzenFlag[Player]
-
-__declspec(dllexport) void setHandStat(GameTable* gameStat, int Player, int value) {
-	HandStat[Player] = value
-	return
-__declspec(dllexport) int getHandStat(GameTable* gameStat, int Player) {
-	return HandStat[Player]
-
-__declspec(dllexport) void setNumberOfQuads(GameTable* gameStat, int Player, int value) {
-	NumberOfQuads[Player] = value
-	return
-__declspec(dllexport) void incNumberOfQuads(GameTable* gameStat, int Player) {
-	NumberOfQuads[Player]++
-	return
-__declspec(dllexport) int getNumberOfQuads(GameTable* gameStat, int Player) {
-	return NumberOfQuads[Player]
-
-__declspec(dllexport) void setRichiFlag(GameTable* gameStat, int Page, int Player, int value) {
-	RichiFlag(Player, Page) = value
-	return
-__declspec(dllexport) int getRichiFlag(GameTable* gameStat, int Page, int Player) {
-	return RichiFlag(Player, Page)
-
 __declspec(dllexport) void setOpenWait(GameTable* gameStat, int Tile, int value) {
 	OpenRichiWait(Tile) = value
 	return

@@ -3,6 +3,8 @@
 
 #include <array>
 #include <cstdint>
+#include <exception>
+#include <stdexcept>
 #include "tilecode.h"
 
 // 青天ルール対策
@@ -99,7 +101,6 @@ public:
 
 typedef int8_t PLAYER_ID; // プレイヤー番号
 typedef std::array<int, PLAYERS> INT_EACH_PLAYER;
-typedef std::array<LargeNum, PLAYERS> LARGENUM_EACH_PLAYER;
 
 enum handTilePage { tlCode, redTile };
 
@@ -122,16 +123,60 @@ enum discardTilePage { dTileCode, dRedTile, dThrough };
 typedef std::array<discardTile, SIZE_OF_DISCARD_BUFFER> DISCARD_BUF;
 typedef std::array<DISCARD_BUF, PLAYERS> DISCARD_EACH_PLAYER;
 
+#define SIZE_OF_MELD_BUFFER 5
+#define MELD_TYPE_STEP 1000
 enum meldTilePage { mTileCode, mRedTile };
+enum meldStat {
+	meldSequenceConcealed,      // 手の内の順子
+	meldSequenceExposedLower,   // 小さい方をチー
+	meldSequenceExposedMiddle,  // 嵌張をチー
+	meldSequenceExposedUpper,   // 大きい方をチー
+	meldTripletConcealed,       // 暗刻
+	meldTripletExposedLeft,     // 上家からポン
+	meldTripletExposedCenter,   // 対面からポン
+	meldTripletExposedRight,    // 下家からポン
+	meldQuadConcealed,          // 暗槓
+	meldQuadExposedLeft,        // 上家から明槓
+	meldQuadExposedCenter,      // 対面から明槓
+	meldQuadExposedRight,       // 下家から明槓
+	meldQuadAddedLeft,          // 上家からポンの後カン
+	meldQuadAddedCenter,        // 対面からポンの後カン
+	meldQuadAddedRight          // 下家からポンの後カン
+};
+struct meldCode {
+	tileCode tcode;
+	meldStat mstat;
+};
+typedef std::array<meldCode, SIZE_OF_MELD_BUFFER> MELD_BUF;
+typedef std::array<MELD_BUF, PLAYERS> MELD_EACH_PLAYER;
 
+struct RichiStat { // 立直フラグを格納
+	bool RichiFlag;
+	bool IppatsuFlag;
+	bool DoubleFlag;
+	bool OpenFlag;
+};
 
+struct PlayerTable { // プレイヤーの状態を格納
+	LargeNum PlayerScore;
+	int playerChip; // チップの収支
+	bool SumaroFlag; // 四馬路解禁フラグ
+	bool YakitoriFlag; // 焼き鳥フラグ
+	std::array<HAND_TILES, 2> Hand; // 手牌の配列
+	std::array<DISCARD_BUF, 3> Discard; // 捨牌の配列
+	uint8_t DiscardPointer;
+	std::array<MELD_BUF, 2> Meld; // 鳴き面子を格納
+	uint8_t MeldPointer;
+	bool MenzenFlag; // 門前フラグ
+	int MenzenFlagAb;
+	int8_t HandStat; // 手牌の状態（立てる・見せる・伏せる）
+	int8_t NumberOfQuads; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
+	RichiStat RichiFlag; // リーチしているかどうか
+};
 
 class GameTable { // 卓の情報を格納するためのクラス
 public:
-	LARGENUM_EACH_PLAYER PlayerScore;
-	INT_EACH_PLAYER playerChip;
-	INT_EACH_PLAYER SumaroFlag;
-	INT_EACH_PLAYER YakitoriFlag;
+	std::array<PlayerTable, PLAYERS> Player;
 	PLAYER_ID PlayerID;
 	int GameLength;
 	int GameRound;
@@ -141,13 +186,6 @@ public:
 	int Deposit;
 	int AgariChain;
 	int LastAgariPlayer;
-	std::array<HAND_EACH_PLAYER, 2> Hand;
-	std::array<DISCARD_EACH_PLAYER, 3> Discard;
-	INT_EACH_PLAYER DiscardPointer;
-	int Meld;
-	int MenzenFlag;
-	int HandStat;
-	int NumberOfQuads;
 	int RichiFlag;
 	int OpenRichiWait;
 	int FirstDrawFlag;
