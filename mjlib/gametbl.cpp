@@ -268,73 +268,95 @@ extern "C" {
 		}
 	}
 
+	__declspec(dllexport) void setOpenWait(GameTable* gameStat, int Tile, int value) {
+		gameStat->OpenRichiWait[Tile] = itob(value);
+		return;
+	}
+	__declspec(dllexport) int getOpenWait(GameTable* gameStat, int Tile) {
+		return gameStat->OpenRichiWait[Tile] ? 1 : 0;
+	}
+
+	__declspec(dllexport) void setFirstDrawFlag(GameTable* gameStat, int Player, int value) {
+		gameStat->Player[Player].FirstDrawFlag = itob(value);
+		return;
+	}
+	__declspec(dllexport) int getFirstDrawFlag(GameTable* gameStat, int Player) {
+		return gameStat->Player[Player].FirstDrawFlag ? 1 : 0;
+	}
+
+	__declspec(dllexport) void setDoujunFuriten(GameTable* gameStat, int Player, int value) {
+		gameStat->Player[Player].DoujunFuriten = itob(value);
+		return;
+	}
+	__declspec(dllexport) int getDoujunFuriten(GameTable* gameStat, int Player) {
+		return gameStat->Player[Player].DoujunFuriten ? 1 : 0;
+	}
+
+	__declspec(dllexport) void setAgariHouki(GameTable* gameStat, int Player, int value) {
+		gameStat->Player[Player].AgariHouki = itob(value);
+		return;
+	}
+	__declspec(dllexport) int getAgariHouki(GameTable* gameStat, int Player) {
+		return gameStat->Player[Player].AgariHouki ? 1 : 0;
+	}
+
+	__declspec(dllexport) void putFlowerFlag(GameTable* gameStat, int Player, int value) {
+		gameStat->Player[Player].FlowerFlag = value;
+		return;
+	}
+	__declspec(dllexport) void setFlowerFlag(GameTable* gameStat, int Player, int value) {
+		gameStat->Player[Player].FlowerFlag |= value;
+		return;
+	}
+	__declspec(dllexport) int getFlowerFlag(GameTable* gameStat, int Player) {
+		return gameStat->Player[Player].FlowerFlag;
+	}
+
+	__declspec(dllexport) void setNorthFlag(GameTable* gameStat, int Player, int value) {
+		gameStat->Player[Player].NorthFlag = value;
+		return;
+	}
+	__declspec(dllexport) void addNorthFlag(GameTable* gameStat, int Player) {
+		gameStat->Player[Player].NorthFlag++;
+		return;
+	}
+	__declspec(dllexport) int getNorthFlag(GameTable* gameStat, int Player) {
+		return gameStat->Player[Player].NorthFlag;
+	}
+
+	__declspec(dllexport) void setKangFlag(GameTable* gameStat, int Page, int value) {
+		gameStat->KangFlag[Page] = value;
+		return;
+	}
+	__declspec(dllexport) void incKangFlag(GameTable* gameStat, int Page) {
+		gameStat->KangFlag[Page]++;
+		return;
+	}
+	__declspec(dllexport) int getKangFlag(GameTable* gameStat, int Page) {
+		return gameStat->KangFlag[Page];
+	}
+
+	__declspec(dllexport) void setTotalKang(GameTable* gameStat, int value) {
+		gameStat->KangNum = value;
+		return;
+	}
+	__declspec(dllexport) void incTotalKang(GameTable* gameStat) {
+		gameStat->KangNum++;
+		return;
+	}
+	__declspec(dllexport) int getTotalKang(GameTable* gameStat) {
+		return gameStat->KangNum;
+	}
+
+	__declspec(dllexport) void setRichiCounterFlag(GameTable* gameStat, int value) {
+		gameStat->RichiCounter = value;
+		return;
+	}
+	__declspec(dllexport) int getRichiCounterFlag(GameTable* gameStat) {
+		return gameStat->RichiCounter;
+	}
+
 /*
-__declspec(dllexport) void setOpenWait(GameTable* gameStat, int Tile, int value) {
-	OpenRichiWait(Tile) = value
-	return
-__declspec(dllexport) int getOpenWait(GameTable* gameStat, int Tile) {
-	return OpenRichiWait(Tile)
-
-__declspec(dllexport) void setFirstDrawFlag(GameTable* gameStat, int Player, int value) {
-	FirstDrawFlag[Player] = value
-	return
-__declspec(dllexport) int getFirstDrawFlag(GameTable* gameStat, int Player) {
-	return FirstDrawFlag[Player]
-
-__declspec(dllexport) void setDoujunFuriten(GameTable* gameStat, int Player, int value) {
-	DoujunFuriten[Player] = value
-	return
-__declspec(dllexport) int getDoujunFuriten(GameTable* gameStat, int Player) {
-	return DoujunFuriten[Player]
-
-__declspec(dllexport) void setAgariHouki(GameTable* gameStat, int Player, int value) {
-	AgariHouki[Player] = value
-	return
-__declspec(dllexport) int getAgariHouki(GameTable* gameStat, int Player) {
-	return AgariHouki[Player]
-
-__declspec(dllexport) void putFlowerFlag(GameTable* gameStat, int Player, int value) {
-	FlowerFlag[Player] = value
-	return
-__declspec(dllexport) void setFlowerFlag(GameTable* gameStat, int Player, int value) {
-	FlowerFlag[Player] |= value
-	return
-__declspec(dllexport) int getFlowerFlag(GameTable* gameStat, int Player) {
-	return FlowerFlag[Player]
-
-__declspec(dllexport) void setNorthFlag(GameTable* gameStat, int Player, int value) {
-	NorthFlag[Player] = value
-	return
-__declspec(dllexport) void addNorthFlag(GameTable* gameStat, int Player) {
-	NorthFlag[Player]++
-	return
-__declspec(dllexport) int getNorthFlag(GameTable* gameStat, int Player) {
-	return NorthFlag[Player]
-
-__declspec(dllexport) void setKangFlag(GameTable* gameStat, int Page, int value) {
-	KangFlag(Page) = value
-	return
-__declspec(dllexport) void incKangFlag(GameTable* gameStat, int Page) {
-	KangFlag(Page)++
-	return
-__declspec(dllexport) int getKangFlag(GameTable* gameStat, int Page) {
-	return KangFlag(Page)
-
-__declspec(dllexport) void setTotalKang(GameTable* gameStat, int value) {
-	KangNum = value
-	return
-__declspec(dllexport) void incTotalKang
-	KangNum++
-	return
-__declspec(dllexport) int getTotalKang
-	return KangNum
-
-__declspec(dllexport) void setRichiCounterFlag(GameTable* gameStat, int value) {
-	RichiCounter = value
-	return
-__declspec(dllexport) int getRichiCounterFlag
-	return RichiCounter
-
 __declspec(dllexport) void calcWareme
 #ifdef ALLSANMA
 	if ((getRule(RULE_WAREME) != 0)||(getRule(RULE_KAIMENKAZE) != 0)) {

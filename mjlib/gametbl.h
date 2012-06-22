@@ -157,6 +157,9 @@ struct RichiStat { // 立直フラグを格納
 	bool OpenFlag;
 };
 
+#define KANG_PAGES 4
+enum kangFlagPage {kfFlag, kfChainFlag, kfTopFlag, kfChankan};
+
 struct PlayerTable { // プレイヤーの状態を格納
 	LargeNum PlayerScore;
 	int playerChip; // チップの収支
@@ -172,9 +175,14 @@ struct PlayerTable { // プレイヤーの状態を格納
 	int8_t HandStat; // 手牌の状態（立てる・見せる・伏せる）
 	int8_t NumberOfQuads; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
 	RichiStat RichiFlag; // リーチしているかどうか
+	bool FirstDrawFlag; // １巡目である（地和、ダブル立直の判定に使う）
+	bool DoujunFuriten; // 同順振聴である
+	bool AgariHouki; // 和了り放棄の罰則中かどうか
+	uint8_t FlowerFlag; // 晒している花牌を格納するフラグ
+	uint8_t NorthFlag; // 晒している北風牌を格納するフラグ
 };
 
-class GameTable { // 卓の情報を格納するためのクラス
+struct GameTable { // 卓の情報を格納する
 public:
 	std::array<PlayerTable, PLAYERS> Player;
 	PLAYER_ID PlayerID;
@@ -182,22 +190,16 @@ public:
 	int GameRound;
 	int LoopRound;
 	int Honba;
-	int TurnRound;
 	int Deposit;
 	int AgariChain;
 	int LastAgariPlayer;
-	int RichiFlag;
-	int OpenRichiWait;
-	int FirstDrawFlag;
-	int DoujunFuriten;
-	int AgariHouki;
-	int FlowerFlag;
-	int NorthFlag;
-	int KangFlag;
-	int KangNum;
-	int RichiCounter;
-	int WaremePlayer;
-	int DoukasenPlayer;
+	std::array<bool, TILE_NONFLOWER_MAX> OpenRichiWait; // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
+	std::array<uint8_t, KANG_PAGES> KangFlag; // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
+	uint8_t TurnRound; // 現在の巡目
+	uint8_t KangNum; // 四槓流局、四槓子などの判定に使う
+	bool RichiCounter; // リーチをカウンター(宣言牌をロン)
+	PLAYER_ID WaremePlayer; // 割れ目の位置(-1で割れ目なし)
+	PLAYER_ID DoukasenPlayer; // 導火線の位置(-1で導火線なし)
 	int Dice1;
 	int Dice2;
 	int Dice1Direction;
@@ -219,8 +221,8 @@ public:
 	int TsumoAgariFlag;
 	int CurrentDiscard;
 	// Constructor
-	GameTable() {
-	}
+	/*GameTable() {
+	}*/
 };
 
 #endif
