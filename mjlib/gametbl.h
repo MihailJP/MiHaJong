@@ -6,6 +6,7 @@
 #include <exception>
 #include <stdexcept>
 #include "tilecode.h"
+#include "ruletbl.h"
 
 // 青天ルール対策
 // 一応21不可思議まで表現可能……
@@ -95,6 +96,11 @@ public:
 	}
 };
 
+enum gameTypeID {
+	Yonma = 0x01, Sanma = 0x02, Sanma4 = 0x04, SanmaS = 0x08,
+	AllSanma = 0x0e, SanmaT = 0x0a, SanmaX = 0x06
+};
+
 #define PLAYERS 4
 #define NUM_OF_TILES_IN_HAND 14
 #define SIZE_OF_DISCARD_BUFFER 33
@@ -160,6 +166,11 @@ struct RichiStat { // 立直フラグを格納
 #define KANG_PAGES 4
 enum kangFlagPage {kfFlag, kfChainFlag, kfTopFlag, kfChankan};
 
+#define PAO_YAKU_PAGES 4
+enum paoYakuPage {pyDaisangen, pyDaisixi, pySikang, pyMinkan};
+#define PAO_PLAYER_PAGES 2
+enum paoPlayerPage {ppPao, ppAgari};
+
 struct PlayerTable { // プレイヤーの状態を格納
 	LargeNum PlayerScore;
 	int playerChip; // チップの収支
@@ -183,7 +194,7 @@ struct PlayerTable { // プレイヤーの状態を格納
 };
 
 struct GameTable { // 卓の情報を格納する
-public:
+	int gameType;
 	std::array<PlayerTable, PLAYERS> Player;
 	PLAYER_ID PlayerID;
 	int GameLength;
@@ -200,15 +211,15 @@ public:
 	bool RichiCounter; // リーチをカウンター(宣言牌をロン)
 	PLAYER_ID WaremePlayer; // 割れ目の位置(-1で割れ目なし)
 	PLAYER_ID DoukasenPlayer; // 導火線の位置(-1で導火線なし)
-	int Dice1;
-	int Dice2;
-	int Dice1Direction;
-	int Dice2Direction;
-	int PaoFlag;
+	uint8_t Dice1;
+	uint8_t Dice2;
+	bool Dice1Direction;
+	bool Dice2Direction;
+	std::array< std::array<PLAYER_ID, PAO_PLAYER_PAGES >, PAO_YAKU_PAGES> PaoFlag; // 包フラグ（-1…なし、0～3…該当プレイヤー）
 	int Deck;
 	int DeadTiles;
 	int ExtraRinshan;
-	int ShibariFlag;
+	bool ShibariFlag; //二飜縛り
 	int DoraFlag;
 	int TilePointer;
 	int DoraPointer;
@@ -220,9 +231,6 @@ public:
 	int DeclarationFlag;
 	int TsumoAgariFlag;
 	int CurrentDiscard;
-	// Constructor
-	/*GameTable() {
-	}*/
 };
 
 #endif

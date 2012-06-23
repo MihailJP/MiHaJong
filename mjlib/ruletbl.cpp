@@ -30,6 +30,6 @@ __declspec(dllexport) void exportRule(char** ruleTxt) { // C++→HSP ルール設定転
 __declspec(dllexport) int getRule(int RuleID) { // ルール設定を取得する
 	return (int)Rules[RuleID];
 }
-inline uint8_t getRule(RuleCode RuleID) { // ルール設定を取得する
-	return Rules[RuleID];
+extern "C" inline uint8_t getRule(RuleCode RuleID) { // ルール設定を取得する
+	return Rules[(int)RuleID];
 }

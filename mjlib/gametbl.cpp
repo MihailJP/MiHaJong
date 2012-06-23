@@ -3,11 +3,15 @@
 static GameTable GameStat;
 
 inline bool itob(int a) {return (a == 0) ? false : true;}
+inline bool chkGameType(GameTable* gameStat, gameTypeID gameType) {
+	return itob((gameStat->gameType) & gameType);
+};
 
 extern "C" {
 
-	__declspec(dllexport) GameTable* initTable() {
+	__declspec(dllexport) GameTable* initTable(int gameType) {
 		GameStat = GameTable();
+		GameStat.gameType = gameType;
 		return &GameStat;
 	}
 
@@ -349,53 +353,60 @@ extern "C" {
 	}
 
 	__declspec(dllexport) void setRichiCounterFlag(GameTable* gameStat, int value) {
-		gameStat->RichiCounter = value;
+		gameStat->RichiCounter = itob(value);
 		return;
 	}
 	__declspec(dllexport) int getRichiCounterFlag(GameTable* gameStat) {
 		return gameStat->RichiCounter;
 	}
 
+	__declspec(dllexport) void calcWareme(GameTable* gameStat) {
+		if (chkGameType(gameStat, AllSanma)) {
+			if ((getRule(RULE_WAREME) != 0)||(getRule(RULE_KAIMENKAZE) != 0)) {
+				gameStat->WaremePlayer = ((gameStat->GameRound-(gameStat->GameRound/4))+24
+					+(gameStat->Dice1+gameStat->Dice2)-1) % 3;
+				if (chkGameType(gameStat, Sanma4)) {
+					gameStat->WaremePlayer = ((0)+24+(gameStat->Dice1+gameStat->Dice2)-1) % 3;
+					std::array<PLAYER_ID, 3> tobePlayed = {
+						(gameStat->GameRound % PLAYERS),
+						((gameStat->GameRound + 1) % PLAYERS),
+						((gameStat->GameRound + 2) % PLAYERS)
+					};
+					gameStat->WaremePlayer = tobePlayed[gameStat->WaremePlayer];
+				}
+			}
+		} else {
+			if ((getRule(RULE_WAREME) != 0)||(getRule(RULE_KAIMENKAZE) != 0)) {
+				gameStat->WaremePlayer = ((gameStat->GameRound % 4)+32+(gameStat->Dice1+gameStat->Dice2)-1) % 4;
+			}
+		}
+		return;
+	}
+	__declspec(dllexport) int getWareme(GameTable* gameStat) {
+		return gameStat->WaremePlayer;
+	}
+
+	__declspec(dllexport) void setDoukasen(GameTable* gameStat, int value) {
+		gameStat->DoukasenPlayer = value;
+		return;
+	}
+	__declspec(dllexport) int getDoukasen(GameTable* gameStat) {
+		return gameStat->DoukasenPlayer;
+	}
+
+	__declspec(dllexport) int getShibari(GameTable* gameStat) {
+		return (int)gameStat->ShibariFlag;
+	}
+
+	__declspec(dllexport) void setPao(GameTable* gameStat, int Page, int Yaku, int value) {
+		gameStat->PaoFlag[Page][Yaku] = value;
+		return;
+	}
+	__declspec(dllexport) int getPao(GameTable* gameStat, int Page, int Yaku) {
+		return gameStat->PaoFlag[Page][Yaku];
+	}
+
 /*
-__declspec(dllexport) void calcWareme
-#ifdef ALLSANMA
-	if ((getRule(RULE_WAREME) != 0)||(getRule(RULE_KAIMENKAZE) != 0)) {
-		WaremePlayer = ((GameRound-(GameRound/4))+24+(Dice1+Dice2)-1)\3
-#ifdef SANMA4
-		WaremePlayer = ((0)+24+(Dice1+Dice2)-1)\3
-		switch (GameRound\NUM_OF_PLAYERS)
-			case 0: tobePlayed = 0, 1, 2: swbreak
-			case 1: tobePlayed = 1, 2, 3: swbreak
-			case 2: tobePlayed = 2, 3, 0: swbreak
-			case 3: tobePlayed = 3, 0, 1: swbreak
-		swend
-		WaremePlayer = tobePlayed(WaremePlayer)
-#endif
-	}
-#else
-	if ((getRule(RULE_WAREME) != 0)||(getRule(RULE_KAIMENKAZE) != 0)) {
-		WaremePlayer = ((GameRound\4)+32+(Dice1+Dice2)-1)\4
-	}
-#endif
-	return
-__declspec(dllexport) int getWareme
-	return WaremePlayer
-
-__declspec(dllexport) void setDoukasen(GameTable* gameStat, int value) {
-	DoukasenPlayer = value
-	return
-__declspec(dllexport) int getDoukasen
-	return DoukasenPlayer
-
-__declspec(dllexport) int getShibari
-	return ShibariFlag
-
-__declspec(dllexport) void setPao(GameTable* gameStat, int Page, int Yaku, int value) {
-	PaoFlag(Yaku, Page) = value
-	return
-__declspec(dllexport) int getPao(GameTable* gameStat, int Page, int Yaku) {
-	return PaoFlag(Yaku, Page)
-
 __declspec(dllexport) void setDice(GameTable* gameStat, int ID, int Direction, int value) {
 	switch ID+Direction*2
 		case 0: Dice1 = value: swbreak

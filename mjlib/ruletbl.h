@@ -501,7 +501,9 @@ enum RuleCode {
 	RULE_GRAND_CROSS,
 };
 
+extern array<uint8_t, RULESIZE> Rules;
+
 __declspec(dllexport) int getRule(int RuleID);
-inline uint8_t getRule(RuleCode RuleID);
+extern "C" inline uint8_t getRule(RuleCode RuleID);
 
 #endif
