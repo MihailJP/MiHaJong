@@ -150,7 +150,6 @@ typedef std::array<DISCARD_BUF, PLAYERS> DISCARD_EACH_PLAYER;
 
 #define SIZE_OF_MELD_BUFFER 5
 #define MELD_TYPE_STEP 1000
-enum meldTilePage { mTileCode, mRedTile };
 enum meldStat {
 	meldSequenceConcealed,      // 手の内の順子
 	meldSequenceExposedLower,   // 小さい方をチー
@@ -169,11 +168,10 @@ enum meldStat {
 	meldQuadAddedRight          // 下家からポンの後カン
 };
 struct meldCode {
-	tileCode tcode;
+	TILE tcode;
 	meldStat mstat;
 };
 typedef std::array<meldCode, SIZE_OF_MELD_BUFFER> MELD_BUF;
-typedef std::array<MELD_BUF, PLAYERS> MELD_EACH_PLAYER;
 
 // -------------------------------------------------------------------------
 
@@ -186,15 +184,16 @@ struct RichiStat { // 立直フラグを格納
 
 // -------------------------------------------------------------------------
 
-#define KANG_PAGES 4
-enum kangFlagPage {kfFlag, kfChainFlag, kfTopFlag, kfChankan};
+struct KANGSTAT { uint8_t kangFlag, chainFlag, topFlag, chankanFlag; };
 
 // -------------------------------------------------------------------------
 
 #define PAO_YAKU_PAGES 4
 enum paoYakuPage {pyDaisangen, pyDaisixi, pySikang, pyMinkan};
-#define PAO_PLAYER_PAGES 2
-enum paoPlayerPage {ppPao, ppAgari};
+
+struct PAOSTAT { PLAYER_ID paoPlayer, agariPlayer; };
+typedef std::array<PAOSTAT, PAO_YAKU_PAGES> paoStatBook;
+
 
 // -------------------------------------------------------------------------
 
@@ -207,7 +206,7 @@ union DeckBuf {
 
 // -------------------------------------------------------------------------
 
-enum prevMeldPage {pmTileCode, pmStepped};
+struct prevMeldBook { tileCode Discard, Stepped; };
 
 // -------------------------------------------------------------------------
 
@@ -224,7 +223,7 @@ struct PlayerTable { // プレイヤーの状態を格納
 	std::array<HAND_TILES, 2> Hand; // 手牌の配列
 	std::array<DISCARD_BUF, 3> Discard; // 捨牌の配列
 	uint8_t DiscardPointer;
-	std::array<MELD_BUF, 2> Meld; // 鳴き面子を格納
+	MELD_BUF Meld; // 鳴き面子を格納
 	uint8_t MeldPointer;
 	bool MenzenFlag; // 門前フラグ
 	int MenzenFlagAb;
@@ -253,7 +252,7 @@ struct GameTable { // 卓の情報を格納する
 	int AgariChain;
 	int LastAgariPlayer;
 	std::array<bool, TILE_NONFLOWER_MAX> OpenRichiWait; // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
-	std::array<uint8_t, KANG_PAGES> KangFlag; // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
+	KANGSTAT KangFlag; // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
 	uint8_t TurnRound; // 現在の巡目
 	uint8_t KangNum; // 四槓流局、四槓子などの判定に使う
 	bool RichiCounter; // リーチをカウンター(宣言牌をロン)
@@ -263,7 +262,7 @@ struct GameTable { // 卓の情報を格納する
 	uint8_t Dice2;
 	bool Dice1Direction;
 	bool Dice2Direction;
-	std::array< std::array<PLAYER_ID, PAO_PLAYER_PAGES >, PAO_YAKU_PAGES> PaoFlag; // 包フラグ（-1…なし、0～3…該当プレイヤー）
+	paoStatBook PaoFlag; // 包フラグ（-1…なし、0～3…該当プレイヤー）
 	DeckBuf Deck; // 壁牌の配列
 	uint8_t DeadTiles; // 王牌の数
 	uint8_t ExtraRinshan; // 追加の嶺上牌の数
@@ -273,7 +272,7 @@ struct GameTable { // 卓の情報を格納する
 	uint16_t DoraPointer;
 	uint8_t RinshanPointer; // 嶺上牌のポインタ
 	bool TianHuFlag; // 親の第一打牌がまだ（天和の判定などに使う）
-	std::array<tileCode, 2> PreviousMeld; // 先ほど鳴いた牌（喰い替えの判定に使う）
+	prevMeldBook PreviousMeld; // 先ほど鳴いた牌（喰い替えの判定に使う）
 	int CurrentPlayer;
 	int DeclarationFlag;
 	bool TsumoAgariFlag; // ツモアガリ？

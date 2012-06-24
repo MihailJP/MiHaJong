@@ -196,13 +196,30 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setMeld(GameTable* gameStat, int Page, int Index, int Player, int value) {
-		gameStat->Player[Player].Meld[Page][Index].tcode = (tileCode)(value % MELD_TYPE_STEP);
-		gameStat->Player[Player].Meld[Page][Index].mstat = (meldStat)(value / MELD_TYPE_STEP);
+		switch (Page) {
+		case 0:
+			gameStat->Player[Player].Meld[Index].tcode.tile = (tileCode)(value % MELD_TYPE_STEP);
+			gameStat->Player[Player].Meld[Index].mstat = (meldStat)(value / MELD_TYPE_STEP);
+			break;
+		case 1:
+			gameStat->Player[Player].Meld[Index].tcode.red = (uint8_t)value;
+			break;
+		default:
+			throw(std::domain_error("setMeld(): ページが違います"));
+			break;
+		}
 		return;
 	}
 	__declspec(dllexport) int getMeld(GameTable* gameStat, int Page, int Index, int Player) {
-		return gameStat->Player[Player].Meld[Page][Index].mstat * MELD_TYPE_STEP
-			+ gameStat->Player[Player].Meld[Page][Index].tcode;
+		switch (Page) {
+		case 0:
+			return gameStat->Player[Player].Meld[Index].mstat * MELD_TYPE_STEP
+				+ gameStat->Player[Player].Meld[Index].tcode.tile;
+		case 1:
+			return (int)gameStat->Player[Player].Meld[Index].tcode.red;
+		default:
+			throw(std::domain_error("getMeld(): ページが違います"));
+		}
 	}
 	__declspec(dllexport) int MeldPointer(GameTable* gameStat, int Player) {
 		return gameStat->Player[Player].MeldPointer;
@@ -216,8 +233,15 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) void flagMeld(GameTable* gameStat, int Page, int Index, int Player, int value) {
-		gameStat->Player[Player].Meld[Page][Index].mstat = (meldStat)(
-			gameStat->Player[Player].Meld[Page][Index].mstat + value / MELD_TYPE_STEP);
+		switch (Page) {
+		case 0:
+			gameStat->Player[Player].Meld[Index].mstat = (meldStat)(
+				gameStat->Player[Player].Meld[Index].mstat + value / MELD_TYPE_STEP);
+			break;
+		default:
+			throw(std::domain_error("flagMeld(): ページが違います"));
+			break;
+		}
 		return;
 	}
 
@@ -385,15 +409,33 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setKangFlag(GameTable* gameStat, int Page, int value) {
-		gameStat->KangFlag[Page] = value;
+		switch (Page) {
+			case 0: gameStat->KangFlag.kangFlag = (uint8_t)value; break;
+			case 1: gameStat->KangFlag.chainFlag = (uint8_t)value; break;
+			case 2: gameStat->KangFlag.topFlag = (uint8_t)value; break;
+			case 3: gameStat->KangFlag.chankanFlag = (uint8_t)value; break;
+			default: throw(std::domain_error("setKangFlag(): ページが違います")); break;
+		}
 		return;
 	}
 	__declspec(dllexport) void incKangFlag(GameTable* gameStat, int Page) {
-		gameStat->KangFlag[Page]++;
+		switch (Page) {
+			case 0: gameStat->KangFlag.kangFlag++; break;
+			case 1: gameStat->KangFlag.chainFlag++; break;
+			case 2: gameStat->KangFlag.topFlag++; break;
+			case 3: gameStat->KangFlag.chankanFlag++; break;
+			default: throw(std::domain_error("incKangFlag(): ページが違います")); break;
+		}
 		return;
 	}
 	__declspec(dllexport) int getKangFlag(GameTable* gameStat, int Page) {
-		return gameStat->KangFlag[Page];
+		switch (Page) {
+			case 0: return (int)gameStat->KangFlag.kangFlag;
+			case 1: return (int)gameStat->KangFlag.chainFlag;
+			case 2: return (int)gameStat->KangFlag.topFlag;
+			case 3: return (int)gameStat->KangFlag.chankanFlag;
+			default: throw(std::domain_error("getKangFlag(): ページが違います"));
+		}
 	}
 
 	// ---------------------------------------------------------------------
@@ -467,11 +509,19 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setPao(GameTable* gameStat, int Page, int Yaku, int value) {
-		gameStat->PaoFlag[Page][Yaku] = value;
+		switch (Page) {
+			case 0: gameStat->PaoFlag[Yaku].paoPlayer = (PLAYER_ID)value; break;
+			case 1: gameStat->PaoFlag[Yaku].agariPlayer = (PLAYER_ID)value; break;
+			default: throw(std::domain_error("setPao(): ページが違います")); break;
+		}
 		return;
 	}
 	__declspec(dllexport) int getPao(GameTable* gameStat, int Page, int Yaku) {
-		return gameStat->PaoFlag[Page][Yaku];
+		switch (Page) {
+			case 0: return (int)gameStat->PaoFlag[Yaku].paoPlayer;
+			case 1: return (int)gameStat->PaoFlag[Yaku].agariPlayer;
+			default: throw(std::domain_error("getPao(): ページが違います"));
+		}
 	}
 
 	// ---------------------------------------------------------------------
@@ -586,7 +636,7 @@ extern "C" {
 			}
 			break;
 		default:
-			throw(std::domain_error("setWall(): ページが違います"));
+			throw(std::domain_error("getWall(): ページが違います"));
 			break;
 		}
 	}
@@ -643,11 +693,19 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setPreviousMeld(GameTable* gameStat, int Page, int value) {
-		gameStat->PreviousMeld[Page] = (tileCode)value;
+		switch (Page) {
+			case 0: gameStat->PreviousMeld.Discard = (tileCode) value; break;
+			case 1: gameStat->PreviousMeld.Stepped = (tileCode) value; break;
+			default: throw(std::domain_error("setPreviousMeld(): ページが違います")); break;
+		}
 		return;
 	}
 	__declspec(dllexport) int getPreviousMeld(GameTable* gameStat, int Page) {
-		return gameStat->PreviousMeld[Page];
+		switch (Page) {
+			case 0: return (int)gameStat->PreviousMeld.Discard;
+			case 1: return (int)gameStat->PreviousMeld.Stepped;
+			default: throw(std::domain_error("getPreviousMeld(): ページが違います")); break;
+		}
 	}
 
 	// ---------------------------------------------------------------------
@@ -682,7 +740,7 @@ extern "C" {
 		switch (Page) {
 			case 0: return (int)gameStat->DoraFlag.Omote[Tile];
 			case 1: return (int)gameStat->DoraFlag.Ura[Tile];
-			default: throw(std::domain_error("setDoraFlag(): ページが違います"));
+			default: throw(std::domain_error("getDoraFlag(): ページが違います"));
 		}
 	}
 
@@ -709,7 +767,7 @@ extern "C" {
 		case 1:
 			return (int)gameStat->CurrentDiscard.red;
 		default:
-			throw(std::domain_error("setCurrentDiscard(): ページが違います"));
+			throw(std::domain_error("getCurrentDiscard(): ページが違います"));
 		}
 	}
 
