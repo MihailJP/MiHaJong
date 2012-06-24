@@ -119,14 +119,10 @@ struct TILE { // 赤ドラデータを含めた牌のデータ
 #define SIZE_OF_DISCARD_BUFFER 33
 
 typedef int8_t PLAYER_ID; // プレイヤー番号
-typedef std::array<int, PLAYERS> INT_EACH_PLAYER;
 
 // -------------------------------------------------------------------------
 
-enum handTilePage { tlCode, redTile };
-
-typedef std::array<tileCode, NUM_OF_TILES_IN_HAND> HAND_TILES;
-typedef std::array<HAND_TILES, PLAYERS> HAND_EACH_PLAYER;
+typedef std::array<TILE, NUM_OF_TILES_IN_HAND> HAND_TILES;
 
 // -------------------------------------------------------------------------
 
@@ -138,13 +134,11 @@ enum discardStat {
 	discardRiichiTaken,
 };
 struct discardTile {
-	tileCode tcode;
+	TILE tcode;
 	discardStat dstat;
+	bool isDiscardThrough; // ツモ切りフラグ
 };
-enum discardTilePage { dTileCode, dRedTile, dThrough };
-
 typedef std::array<discardTile, SIZE_OF_DISCARD_BUFFER> DISCARD_BUF;
-typedef std::array<DISCARD_BUF, PLAYERS> DISCARD_EACH_PLAYER;
 
 // -------------------------------------------------------------------------
 
@@ -220,8 +214,8 @@ struct PlayerTable { // プレイヤーの状態を格納
 	int playerChip; // チップの収支
 	bool SumaroFlag; // 四馬路解禁フラグ
 	bool YakitoriFlag; // 焼き鳥フラグ
-	std::array<HAND_TILES, 2> Hand; // 手牌の配列
-	std::array<DISCARD_BUF, 3> Discard; // 捨牌の配列
+	HAND_TILES Hand; // 手牌の配列
+	DISCARD_BUF Discard; // 捨牌の配列
 	uint8_t DiscardPointer;
 	MELD_BUF Meld; // 鳴き面子を格納
 	uint8_t MeldPointer;

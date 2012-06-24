@@ -162,23 +162,63 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setHand(GameTable* gameStat, int Page, int Index, int Player, int value) {
-		gameStat->Player[Player].Hand[Page][Index] = (tileCode)value;
+		switch (Page) {
+		case 0:
+			gameStat->Player[Player].Hand[Index].tile = (tileCode)value;
+			break;
+		case 1:
+			gameStat->Player[Player].Hand[Index].red = (uint8_t)value;
+			break;
+		default:
+			throw(std::domain_error("setHand(): ページが違います"));
+			break;
+		}
 		return;
 	}
 	__declspec(dllexport) int getHand(GameTable* gameStat, int Page, int Index, int Player) {
-		return gameStat->Player[Player].Hand[Page][Index];
+		switch (Page) {
+		case 0:
+			return (int)gameStat->Player[Player].Hand[Index].tile;
+		case 1:
+			return (int)gameStat->Player[Player].Hand[Index].red;
+		default:
+			throw(std::domain_error("setHand(): ページが違います"));
+		}
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setDiscard(GameTable* gameStat, int Page, int Index, int Player, int value) {
-		gameStat->Player[Player].Discard[Page][Index].dstat = (discardStat)(value / SUTEHAI_TYPE_STEP);
-		gameStat->Player[Player].Discard[Page][Index].tcode = (tileCode)(value % SUTEHAI_TYPE_STEP);
+		switch (Page) {
+		case 0:
+			gameStat->Player[Player].Discard[Index].dstat = (discardStat)(value / SUTEHAI_TYPE_STEP);
+			gameStat->Player[Player].Discard[Index].tcode.tile = (tileCode)(value % SUTEHAI_TYPE_STEP);
+			break;
+		case 1:
+			gameStat->Player[Player].Discard[Index].tcode.red = (uint8_t)value;
+			break;
+		case 2:
+			gameStat->Player[Player].Discard[Index].isDiscardThrough = (bool)value;
+			break;
+		default:
+			throw(std::domain_error("setDiscard(): ページが違います"));
+			break;
+		}
 		return;
 	}
 	__declspec(dllexport) int getDiscard(GameTable* gameStat, int Page, int Index, int Player) {
-		return gameStat->Player[Player].Discard[Page][Index].dstat * SUTEHAI_TYPE_STEP
-			+ gameStat->Player[Player].Discard[Page][Index].tcode;
+		switch (Page) {
+		case 0:
+			return gameStat->Player[Player].Discard[Index].dstat * SUTEHAI_TYPE_STEP
+				+ gameStat->Player[Player].Discard[Index].tcode.tile;
+		case 1:
+			return (int)gameStat->Player[Player].Discard[Index].tcode.red;
+		case 2:
+			return gameStat->Player[Player].Discard[Index].isDiscardThrough ? 1 : 0;
+		default:
+			throw(std::domain_error("getDiscard(): ページが違います"));
+			break;
+		}
 	}
 	__declspec(dllexport) int DiscardPointer(GameTable* gameStat, int Player) {
 		return gameStat->Player[Player].DiscardPointer;
@@ -188,8 +228,8 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) void flagDiscard(GameTable* gameStat, int Index, int Player, int value) {
-		gameStat->Player[Player].Discard[dTileCode][Index].dstat = (discardStat)
-			(gameStat->Player[Player].Discard[dTileCode][Index].dstat + value / SUTEHAI_TYPE_STEP);
+		gameStat->Player[Player].Discard[Index].dstat = (discardStat)
+			(gameStat->Player[Player].Discard[Index].dstat + value / SUTEHAI_TYPE_STEP);
 		return;
 	}
 
