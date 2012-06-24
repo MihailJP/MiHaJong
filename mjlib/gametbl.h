@@ -8,12 +8,14 @@
 #include "tilecode.h"
 #include "ruletbl.h"
 
+// -------------------------------------------------------------------------
+
 // 青天ルール対策
 // 一応21不可思議まで表現可能……
 
 #define DIGIT_GROUPS 8
 
-class LargeNum {
+class LargeNum { // ±21不可思議まで表現可能な数のクラス
 private:
 	std::array<int32_t, DIGIT_GROUPS> digitGroup;
 	void fix() { // 正規形に直す
@@ -96,10 +98,21 @@ public:
 	}
 };
 
-enum gameTypeID {
+// -------------------------------------------------------------------------
+
+enum gameTypeID { // 卓の種類(四麻、三麻)指定用
 	Yonma = 0x01, Sanma = 0x02, Sanma4 = 0x04, SanmaS = 0x08,
 	AllSanma = 0x0e, SanmaT = 0x0a, SanmaX = 0x06
 };
+
+// -------------------------------------------------------------------------
+
+struct TILE { // 赤ドラデータを含めた牌のデータ
+	tileCode tile;
+	uint8_t red;
+};
+
+// -------------------------------------------------------------------------
 
 #define PLAYERS 4
 #define NUM_OF_TILES_IN_HAND 14
@@ -108,10 +121,14 @@ enum gameTypeID {
 typedef int8_t PLAYER_ID; // プレイヤー番号
 typedef std::array<int, PLAYERS> INT_EACH_PLAYER;
 
+// -------------------------------------------------------------------------
+
 enum handTilePage { tlCode, redTile };
 
 typedef std::array<tileCode, NUM_OF_TILES_IN_HAND> HAND_TILES;
 typedef std::array<HAND_TILES, PLAYERS> HAND_EACH_PLAYER;
+
+// -------------------------------------------------------------------------
 
 #define SUTEHAI_TYPE_STEP 200
 enum discardStat {
@@ -128,6 +145,8 @@ enum discardTilePage { dTileCode, dRedTile, dThrough };
 
 typedef std::array<discardTile, SIZE_OF_DISCARD_BUFFER> DISCARD_BUF;
 typedef std::array<DISCARD_BUF, PLAYERS> DISCARD_EACH_PLAYER;
+
+// -------------------------------------------------------------------------
 
 #define SIZE_OF_MELD_BUFFER 5
 #define MELD_TYPE_STEP 1000
@@ -156,6 +175,8 @@ struct meldCode {
 typedef std::array<meldCode, SIZE_OF_MELD_BUFFER> MELD_BUF;
 typedef std::array<MELD_BUF, PLAYERS> MELD_EACH_PLAYER;
 
+// -------------------------------------------------------------------------
+
 struct RichiStat { // 立直フラグを格納
 	bool RichiFlag;
 	bool IppatsuFlag;
@@ -163,13 +184,37 @@ struct RichiStat { // 立直フラグを格納
 	bool OpenFlag;
 };
 
+// -------------------------------------------------------------------------
+
 #define KANG_PAGES 4
 enum kangFlagPage {kfFlag, kfChainFlag, kfTopFlag, kfChankan};
+
+// -------------------------------------------------------------------------
 
 #define PAO_YAKU_PAGES 4
 enum paoYakuPage {pyDaisangen, pyDaisixi, pySikang, pyMinkan};
 #define PAO_PLAYER_PAGES 2
 enum paoPlayerPage {ppPao, ppAgari};
+
+// -------------------------------------------------------------------------
+
+union DeckBuf {
+	std::array<TILE, 144> deck144; // 四人打ち・花牌8枚
+	std::array<TILE, 140> deck140; // 四人打ち・花牌4枚
+	std::array<TILE, 136> deck136; // 四人打ち・花牌なし
+	std::array<TILE, 108> deck108; // 三人打ち
+};
+
+// -------------------------------------------------------------------------
+
+enum prevMeldPage {pmTileCode, pmStepped};
+
+// -------------------------------------------------------------------------
+
+typedef std::array<uint8_t, TILE_NONFLOWER_MAX> DORASTAT;
+struct doraStatBook { DORASTAT Omote, Ura; };
+
+// -------------------------------------------------------------------------
 
 struct PlayerTable { // プレイヤーの状態を格納
 	LargeNum PlayerScore;
@@ -191,10 +236,13 @@ struct PlayerTable { // プレイヤーの状態を格納
 	bool AgariHouki; // 和了り放棄の罰則中かどうか
 	uint8_t FlowerFlag; // 晒している花牌を格納するフラグ
 	uint8_t NorthFlag; // 晒している北風牌を格納するフラグ
+	bool ConnectionLost;
 };
 
+// -------------------------------------------------------------------------
+
 struct GameTable { // 卓の情報を格納する
-	int gameType;
+	gameTypeID gameType;
 	std::array<PlayerTable, PLAYERS> Player;
 	PLAYER_ID PlayerID;
 	int GameLength;
@@ -216,21 +264,21 @@ struct GameTable { // 卓の情報を格納する
 	bool Dice1Direction;
 	bool Dice2Direction;
 	std::array< std::array<PLAYER_ID, PAO_PLAYER_PAGES >, PAO_YAKU_PAGES> PaoFlag; // 包フラグ（-1…なし、0～3…該当プレイヤー）
-	int Deck;
-	int DeadTiles;
-	int ExtraRinshan;
+	DeckBuf Deck; // 壁牌の配列
+	uint8_t DeadTiles; // 王牌の数
+	uint8_t ExtraRinshan; // 追加の嶺上牌の数
 	bool ShibariFlag; //二飜縛り
-	int DoraFlag;
-	int TilePointer;
-	int DoraPointer;
-	int RinshanPointer;
-	int TianHuFlag;
-	int PreviousMeld;
-	int ConnectionLost;
+	doraStatBook DoraFlag; // ドラ判定の配列
+	uint8_t TilePointer; // ツモ牌のポインタ
+	uint16_t DoraPointer;
+	uint8_t RinshanPointer; // 嶺上牌のポインタ
+	bool TianHuFlag; // 親の第一打牌がまだ（天和の判定などに使う）
+	std::array<tileCode, 2> PreviousMeld; // 先ほど鳴いた牌（喰い替えの判定に使う）
 	int CurrentPlayer;
 	int DeclarationFlag;
-	int TsumoAgariFlag;
-	int CurrentDiscard;
+	bool TsumoAgariFlag; // ツモアガリ？
+	int16_t AgariSpecialStat; // 今のところ食い変えでチョンボになる場合だけ使ってる？
+	TILE CurrentDiscard;
 };
 
 #endif
