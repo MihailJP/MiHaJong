@@ -883,7 +883,101 @@ extern "C" {
 	 * ---------------------------------------------------------------------
 	 */
 
-	__declspec(dllexport) GameTable* initTable(int gameType) { // 半荘単位の初期化処理
+	__declspec(dllexport) void inittable(GameTable* gameStat) { /* 局単位での初期化 */
+		gameStat->ShibariFlag = //二飜縛り
+			((gameStat->Honba >= 5)&&(getRule(RULE_RYANSHIBA) == 1)) ||
+			((gameStat->Honba >= 4)&&(getRule(RULE_RYANSHIBA) == 2));
+
+		for each (PAOSTAT k in gameStat->PaoFlag) // 包フラグ（-1…なし、0～3…該当プレイヤー）
+			k.agariPlayer = k.paoPlayer = -1;
+
+		if (chkGameType(gameStat, AllSanma)) {
+			gameStat->DeadTiles = 14; // 王牌の数
+			gameStat->ExtraRinshan = (getRule(RULE_FLOWER_TILES) != 0) ? 4 : 0;
+		} else {
+			switch (getRule(RULE_FLOWER_TILES)) {
+			case 0:
+				gameStat->DeadTiles = 14; // 王牌の数
+				break;
+			case 3:
+				gameStat->DeadTiles = 22; // 王牌の数(花牌を入れる時は特別に２２枚残しとする)
+				break;
+			default:
+				gameStat->DeadTiles = 18; // 王牌の数
+				break;
+			}
+		}
+
+		gameStat->OpenRichiWait.fill(false); // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
+		gameStat->KangFlag.kangFlag = gameStat->KangFlag.chainFlag = // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
+			gameStat->KangFlag.topFlag = gameStat->KangFlag.chankanFlag = 0;
+		gameStat->TurnRound =  // 現在の巡目
+			gameStat->KangNum = 0; // 四槓流局、四槓子などの判定に使う
+		gameStat->RichiCounter = false; // リーチをカウンター(宣言牌をロン)
+		gameStat->WaremePlayer = // 割れ目の位置(-1で割れ目なし)
+			gameStat->DoukasenPlayer = -1; // 導火線の位置(-1で導火線なし)
+		gameStat->DoraPointer = 999;
+		gameStat->Dice1 = gameStat->Dice2 = 0;
+		gameStat->Dice1Direction = gameStat->Dice2Direction = false;
+		gameStat->TilePointer = 0;
+
+		if (chkGameType(gameStat, AllSanma)) {
+			gameStat->RinshanPointer = 107;
+		} else {
+			switch (getRule(RULE_FLOWER_TILES)) {
+			case 0: noflower:
+				gameStat->RinshanPointer = 135;
+				break;
+			case 1: case 2:
+				gameStat->RinshanPointer = 139;
+				break;
+			case 3:
+				gameStat->RinshanPointer = 143;
+				break;
+			default:
+				error("RULE_FLOWER_TILES異常。花牌無しルールとみなして処理します。");
+				goto noflower; // 設定異常時のフォールバック。敢えてgotoを使う。
+			}
+		}
+
+		gameStat->TianHuFlag = true; // 親の第一打牌がまだ（天和の判定などに使う）
+		gameStat->PreviousMeld.Discard = // 先ほど鳴いた牌（喰い替えの判定に使う）
+			gameStat->PreviousMeld.Stepped = (tileCode)-999;
+		gameStat->DoraFlag.Omote.fill(0); // ドラ判定の配列
+		gameStat->DoraFlag.Ura.fill(0); // ドラ判定の配列
+		gameStat->TsumoAgariFlag = false;
+		resetDeclarationFlag(gameStat);
+		gameStat->CurrentDiscard.tile = NoTile;
+		gameStat->CurrentDiscard.red = 0;
+		resetCurrentPlayer(gameStat);
+
+		for each (PlayerTable pl in gameStat->Player) {
+			pl.ConnectionLost = false; // 回線切断による和了り放棄
+			for each (TILE k in pl.Hand) {
+				k.tile = NoTile; k.red = 0; // 手牌の配列(４人分)
+			}
+			for each (discardTile k in pl.Discard) { // 捨牌の配列(４人分)
+				k.tcode.tile = NoTile; k.tcode.red;
+				k.dstat = discardNormal; k.isDiscardThrough = false;
+			}
+			pl.MenzenFlag = true; // 門前フラグ
+			pl.HandStat = 0; // 手牌の状態（立てる・見せる・伏せる）
+			for each (meldCode k in pl.Meld) { // 鳴き面子を格納
+				k.tcode.tile = NoTile; k.tcode.red = 0;
+				k.mstat = (meldStat)0;
+			}
+			pl.NumberOfQuads = 0; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
+			pl.RichiFlag.RichiFlag = pl.RichiFlag.IppatsuFlag = // リーチしているかどうか
+				pl.RichiFlag.DoubleFlag = pl.RichiFlag.OpenFlag = false;
+			pl.FirstDrawFlag = true; // １巡目である（地和、ダブル立直の判定に使う）
+			pl.DoujunFuriten = // 同順振聴である
+				pl.AgariHouki = false; // 和了り放棄の罰則中かどうか
+			pl.FlowerFlag = // 晒している花牌を格納するフラグ
+				pl.NorthFlag = 0; // 晒している北風牌を格納するフラグ
+		}
+	}
+
+	__declspec(dllexport) GameTable* startTable(int gameType) { // 半荘単位の初期化処理
 		GameStat = GameTable();
 		GameStat.gameType = (gameTypeID)gameType;
 
@@ -977,6 +1071,8 @@ extern "C" {
 			GameStat.Player[i].YakitoriFlag = (getRule(RULE_YAKITORI) != 0);
 			GameStat.Player[i].playerChip = 0;
 		}
+
+		inittable(&GameStat); // 局ごとの初期化も行う
 
 		return &GameStat;
 	}
