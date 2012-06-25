@@ -7,12 +7,7 @@
 /* 半荘の初期化 */
 *gameinit
 	closingchat
-	if (vartype(GameStat) == vartype("struct")) {
-		if (varuse(GameStat)) {
-			delmod GameStat
-		}
-	}
-	newmod GameStat, gameStruct
+	GameStat = initializeGameTable(GAMETYPE)
 	setPlayer GameStat, TmpPosition(ClientNumber)
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
 	haifubufinit

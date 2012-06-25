@@ -8,12 +8,7 @@
 *startgame
 	/* •Ï”—Ş‚Ì‰Šú‰» */
 	TableEnvInit GameEnv
-	if (vartype(GameStat) == vartype("struct")) {
-		if (varuse(GameStat)) {
-			delmod GameStat
-		}
-	}
-	newmod GameStat, gameStruct
+	GameStat = initializeGameTable(GAMETYPE)
 	vanish
 	info "ƒQ[ƒ€î•ñ‚ğ‰Šú‰»‚µ‚Ü‚µ‚½B"
 	serverreceive_init

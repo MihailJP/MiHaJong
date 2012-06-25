@@ -613,12 +613,7 @@ return DaoPaiAbilityFlag
 #module
 #include "const.as"
 #deffunc makesandbox var Sandbox, var GameStat, int targetPlayer
-	if (vartype(Sandbox) == vartype("struct")) {
-		if (varuse(Sandbox)) {
-			delmod Sandbox
-		}
-	}
-	newmod Sandbox, gameStruct
+	Sandbox = initializeSandbox(GAMETYPE)
 	repeat NUM_OF_PLAYERS*NUM_OF_DIGIT_GROUPS: setScore Sandbox, cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS, getScore(GameStat, cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS): loop
 	repeat NUM_OF_PLAYERS: setChip Sandbox, cnt, getChip(GameStat, cnt): loop
 	repeat NUM_OF_PLAYERS: setSumaroFlag Sandbox, cnt, getSumaroFlag(GameStat, cnt): loop
