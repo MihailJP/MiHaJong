@@ -8,12 +8,6 @@ inline bool chkGameType(GameTable* gameStat, gameTypeID gameType) {
 
 extern "C" {
 
-	__declspec(dllexport) GameTable* initTable(int gameType) {
-		GameStat = GameTable();
-		GameStat.gameType = (gameTypeID)gameType;
-		return &GameStat;
-	}
-
 	/* ---------------------------------------------------------------------
 	 *
 	 *  HSPからのアクセサ
@@ -823,25 +817,170 @@ extern "C" {
 
 	// ---------------------------------------------------------------------
 
-/*
-__declspec(dllexport) void setDeclarationFlag(GameTable* gameStat, int Page, int Player, int value) {
-	DeclarationFlag(Player, Page) = value
-	return
-__declspec(dllexport) void resetDeclarationFlag
-	dim DeclarationFlag, NUM_OF_PLAYERS, DECLARATIONFLAG_PAGES
-	return
-__declspec(dllexport) int getDeclarationFlag(GameTable* gameStat, int Page, int Player) {
-	return DeclarationFlag(Player, Page)
+	__declspec(dllexport) void setDeclarationFlag(GameTable* gameStat, int Page, int Player, int value) {
+		switch(Page) {
+			case 0: gameStat->Player[Player].DeclarationFlag.Ron = value; break;
+			case 1: gameStat->Player[Player].DeclarationFlag.Pon = value; break;
+			case 2: gameStat->Player[Player].DeclarationFlag.Chi = (int8_t)value; break;
+			case 3: gameStat->Player[Player].DeclarationFlag.Kan = value; break;
+			default: throw(std::domain_error("setDeclarationFlag(): ページが違います")); break;
+		}
+		return;
+	}
+	__declspec(dllexport) void resetDeclarationFlag(GameTable* gameStat) {
+		for (int pl = 0; pl < PLAYERS; pl++) {
+			gameStat->Player[pl].DeclarationFlag.Ron =
+				gameStat->Player[pl].DeclarationFlag.Pon =
+				gameStat->Player[pl].DeclarationFlag.Kan = false;
+			gameStat->Player[pl].DeclarationFlag.Chi = 0;
+		}
+		return;
+	}
+	__declspec(dllexport) int getDeclarationFlag(GameTable* gameStat, int Page, int Player) {
+		switch(Page) {
+			case 0: return gameStat->Player[Player].DeclarationFlag.Ron ? 1 : 0;
+			case 1: return gameStat->Player[Player].DeclarationFlag.Pon ? 1 : 0;
+			case 2: return (int)gameStat->Player[Player].DeclarationFlag.Chi;
+			case 3: return gameStat->Player[Player].DeclarationFlag.Kan ? 1 : 0;
+			default: throw(std::domain_error("getDeclarationFlag(): ページが違います"));
+		}
+	}
 
-__declspec(dllexport) void setCurrentPlayer(GameTable* gameStat, int Page, int value) {
-	CurrentPlayer(Page) = value
-	return
-__declspec(dllexport) void resetCurrentPlayer
-	dim CurrentPlayer, CURRENTPLAYER_PAGES
-	repeat CURRENTPLAYER_PAGES: CurrentPlayer(cnt) = -1: loop
-	return
-__declspec(dllexport) int getCurrentPlayer(GameTable* gameStat, int Page) {
-	return CurrentPlayer(Page)
-*/
+	// ---------------------------------------------------------------------
+
+	__declspec(dllexport) void setCurrentPlayer(GameTable* gameStat, int Page, int value) {
+		switch (Page) {
+			case 0: gameStat->CurrentPlayer.Active = (PLAYER_ID)value; break;
+			case 1: gameStat->CurrentPlayer.Passive = (PLAYER_ID)value; break;
+			case 2: gameStat->CurrentPlayer.Agari = (PLAYER_ID)value; break;
+			case 3: gameStat->CurrentPlayer.Furikomi = (PLAYER_ID)value; break;
+			default: throw(std::domain_error("setCurrentPlayer(): ページが違います")); break;
+		}
+		return;
+	}
+	__declspec(dllexport) void resetCurrentPlayer(GameTable* gameStat) {
+		gameStat->CurrentPlayer.Active =
+			gameStat->CurrentPlayer.Passive =
+			gameStat->CurrentPlayer.Agari =
+			gameStat->CurrentPlayer.Furikomi =
+			(PLAYER_ID)-1;
+		return;
+	}
+	__declspec(dllexport) int getCurrentPlayer(GameTable* gameStat, int Page) {
+		switch (Page) {
+			case 0: return (int)gameStat->CurrentPlayer.Active;
+			case 1: return (int)gameStat->CurrentPlayer.Passive;
+			case 2: return (int)gameStat->CurrentPlayer.Agari;
+			case 3: return (int)gameStat->CurrentPlayer.Furikomi;
+			default: throw(std::domain_error("getCurrentPlayer(): ページが違います"));
+		}
+	}
+
+	/* ---------------------------------------------------------------------
+	 *
+	 *  初期化処理
+	 *
+	 * ---------------------------------------------------------------------
+	 */
+
+	__declspec(dllexport) GameTable* initTable(int gameType) { // 半荘単位の初期化処理
+		GameStat = GameTable();
+		GameStat.gameType = (gameTypeID)gameType;
+
+		for (int i = 0; i < PLAYERS; i++) {
+			if (i < ACTUAL_PLAYERS) {
+				if (chkGameType(&GameStat, SanmaT)) {
+					switch (getRule(RULE_STARTING_POINT)) {
+					case 0: snmdflt:
+						GameStat.Player[i].PlayerScore = LargeNum(350);
+						break;
+					case 1:
+						GameStat.Player[i].PlayerScore = LargeNum(400);
+						break;
+					case 2:
+						GameStat.Player[i].PlayerScore = LargeNum(450);
+						break;
+					case 3:
+						GameStat.Player[i].PlayerScore = LargeNum(500);
+						break;
+					case 4: case 7:
+						GameStat.Player[i].PlayerScore = LargeNum(250);
+						break;
+					case 5:
+						GameStat.Player[i].PlayerScore = LargeNum(270);
+						break;
+					case 6: case 8:
+						GameStat.Player[i].PlayerScore = LargeNum(300);
+						break;
+					default:
+						error("RULE_STARTING_POINT異常。持ち点を25000として処理します。");
+						goto snmdflt; // フォールバック用。敢えてgotoを使います
+					}
+				} else {
+					switch (getRule(RULE_STARTING_POINT)) {
+					case 0: dflt:
+						GameStat.Player[i].PlayerScore = LargeNum(250);
+						break;
+					case 1:
+						GameStat.Player[i].PlayerScore = LargeNum(270);
+						break;
+					case 2:
+						GameStat.Player[i].PlayerScore = LargeNum(300);
+						break;
+					case 3:
+						GameStat.Player[i].PlayerScore = LargeNum(350);
+						break;
+					case 4:
+						GameStat.Player[i].PlayerScore = LargeNum(400);
+						break;
+					case 5:
+						GameStat.Player[i].PlayerScore = LargeNum(200);
+						break;
+					default:
+						error("RULE_STARTING_POINT異常。持ち点を25000として処理します。");
+						goto dflt; // フォールバック用。敢えてgotoを使います
+					}
+				}
+			} else {
+				GameStat.Player[i].PlayerScore = LargeNum(0);
+			}
+		}
+
+		switch (getRule(RULE_GAME_LENGTH)) {
+		case 0: hanchan:
+			GameStat.GameLength = chkGameType(&GameStat, SanmaT) ? 6 : 7;
+			break;
+		case 1: case 7:
+			GameStat.GameLength = chkGameType(&GameStat, SanmaT) ? 2 : 3;
+			break;
+		case 2: case 3:
+			GameStat.GameLength = chkGameType(&GameStat, SanmaT) ? 14 : 15;
+			break;
+		case 4:
+			GameStat.GameLength = 0;
+			break;
+		case 5:
+			GameStat.GameLength = chkGameType(&GameStat, SanmaT) ? 18 : 19;
+			break;
+		case 6:
+			GameStat.GameLength = chkGameType(&GameStat, SanmaT) ? 10 : 11;
+			break;
+		default:
+			error("RULE_GAME_LENGTH異常値。半荘戦とみなします。");
+			goto hanchan; // ここは敢えてgotoを使う
+		}
+		GameStat.GameRound = GameStat.Honba = GameStat.PlayerID =
+			GameStat.Deposit = GameStat.LoopRound = GameStat.AgariChain = 0;
+		GameStat.LastAgariPlayer = -1;
+		for (int i = 0; i < PLAYERS; i++) {
+			GameStat.Player[i].SumaroFlag = false;
+			GameStat.Player[i].YakitoriFlag = (getRule(RULE_YAKITORI) != 0);
+			GameStat.Player[i].playerChip = 0;
+		}
+
+		return &GameStat;
+	}
+
+	// ---------------------------------------------------------------------
 
 }

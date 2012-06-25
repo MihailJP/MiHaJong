@@ -115,6 +115,7 @@ struct TILE { // 赤ドラデータを含めた牌のデータ
 // -------------------------------------------------------------------------
 
 #define PLAYERS 4
+#define ACTUAL_PLAYERS (chkGameType(&GameStat, SanmaT) ? 3 : 4)
 #define NUM_OF_TILES_IN_HAND 14
 #define SIZE_OF_DISCARD_BUFFER 33
 
@@ -209,6 +210,17 @@ struct doraStatBook { DORASTAT Omote, Ura; };
 
 // -------------------------------------------------------------------------
 
+struct DECLFLAG {
+	bool Ron, Kan, Pon;
+	int8_t Chi;
+};
+
+// -------------------------------------------------------------------------
+
+struct CURRPLAYER { PLAYER_ID Active, Passive, Agari, Furikomi; };
+
+// -------------------------------------------------------------------------
+
 struct PlayerTable { // プレイヤーの状態を格納
 	LargeNum PlayerScore;
 	int playerChip; // チップの収支
@@ -230,6 +242,7 @@ struct PlayerTable { // プレイヤーの状態を格納
 	uint8_t FlowerFlag; // 晒している花牌を格納するフラグ
 	uint8_t NorthFlag; // 晒している北風牌を格納するフラグ
 	bool ConnectionLost;
+	DECLFLAG DeclarationFlag; // 鳴きの宣言
 };
 
 // -------------------------------------------------------------------------
@@ -267,11 +280,16 @@ struct GameTable { // 卓の情報を格納する
 	uint8_t RinshanPointer; // 嶺上牌のポインタ
 	bool TianHuFlag; // 親の第一打牌がまだ（天和の判定などに使う）
 	prevMeldBook PreviousMeld; // 先ほど鳴いた牌（喰い替えの判定に使う）
-	int CurrentPlayer;
-	int DeclarationFlag;
+	CURRPLAYER CurrentPlayer;
 	bool TsumoAgariFlag; // ツモアガリ？
 	int16_t AgariSpecialStat; // 今のところ食い変えでチョンボになる場合だけ使ってる？
 	TILE CurrentDiscard;
 };
+
+// -------------------------------------------------------------------------
+
+extern GameTable GameStat;
+
+inline bool chkGameType(GameTable* gameStat, gameTypeID gameType);
 
 #endif
