@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <exception>
 #include <stdexcept>
+#include <algorithm>
 #include "tilecode.h"
 #include "ruletbl.h"
 
@@ -18,6 +19,7 @@
 class LargeNum { // ±21不可思議まで表現可能な数のクラス
 private:
 	std::array<int32_t, DIGIT_GROUPS> digitGroup;
+	unsigned int firstArg; // 互換用。
 	void fix() { // 正規形に直す
 		for (int i = 0; i < (DIGIT_GROUPS - 1); i++) {
 			if ((this->digitGroup[i] > 99999999)||(this->digitGroup[i] < -99999999)) {
@@ -34,7 +36,15 @@ public:
 		this->digitGroup.fill(0);
 		this->digitGroup[0] = (val % 100000000);
 		this->digitGroup[1] = (val / 100000000);
+		this->firstArg = 100000000u;
 	}
+	LargeNum(int val, unsigned int fArg) { // ±21不可思議まで表現可能な数のクラス
+		this->digitGroup.fill(0);
+		this->digitGroup[0] = (val % 100000000);
+		this->digitGroup[1] = (val / 100000000);
+		this->firstArg = fArg;
+	}
+	unsigned int getFirstArg() {return this->firstArg;}
 	/* ここから演算子をオーバーロード */
 	const LargeNum operator+(const LargeNum& addend) {
 		LargeNum ans;

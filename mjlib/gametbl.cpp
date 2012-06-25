@@ -1,6 +1,6 @@
 #include "gametbl.h"
 
-static GameTable GameStat;
+static GameTable GameStat, StatSandBox;
 
 inline bool chkGameType(GameTable* gameStat, gameTypeID gameType) {
 	return ((gameStat->gameType) & gameType);
@@ -24,8 +24,24 @@ extern "C" {
 	__declspec(dllexport) int getScore(GameTable* gameStat, int Player, int Digit) {
 		return gameStat->Player[Player].PlayerScore[Digit];
 	}
-	/* exportScore */
-	/* importScore */
+	__declspec(dllexport) void exportScore(GameTable* gameStat, int** exportArray) {
+		for (int j = 0; j < DIGIT_GROUPS; j++) {
+			for (int i = 0; i < PLAYERS; i++) {
+				(*exportArray)[j * PLAYERS + i] =
+					gameStat->Player[i].PlayerScore[j] /
+					(j ? 1 : (100000000u / gameStat->Player[i].PlayerScore.getFirstArg()));
+			}
+		}
+	}
+	__declspec(dllexport) void importScore(GameTable* gameStat, int** importArray) {
+		for (int j = 0; j < DIGIT_GROUPS; j++) {
+			for (int i = 0; i < PLAYERS; i++) {
+				gameStat->Player[i].PlayerScore[j] =
+					(*importArray)[j * PLAYERS + i] /
+					(j ? 1 : (100000000u / gameStat->Player[i].PlayerScore.getFirstArg()));
+			}
+		}
+	}
 
 	// ---------------------------------------------------------------------
 
@@ -888,8 +904,9 @@ extern "C" {
 			((gameStat->Honba >= 5)&&(getRule(RULE_RYANSHIBA) == 1)) ||
 			((gameStat->Honba >= 4)&&(getRule(RULE_RYANSHIBA) == 2));
 
-		for each (PAOSTAT k in gameStat->PaoFlag) // 包フラグ（-1…なし、0～3…該当プレイヤー）
-			k.agariPlayer = k.paoPlayer = -1;
+		std::for_each(gameStat->PaoFlag.begin(), gameStat->PaoFlag.end(), [](PAOSTAT k) {
+			k.agariPlayer = k.paoPlayer = -1; // 包フラグ（-1…なし、0～3…該当プレイヤー）
+		});
 
 		if (chkGameType(gameStat, AllSanma)) {
 			gameStat->DeadTiles = 14; // 王牌の数
@@ -951,21 +968,23 @@ extern "C" {
 		gameStat->CurrentDiscard.red = 0;
 		resetCurrentPlayer(gameStat);
 
-		for each (PlayerTable pl in gameStat->Player) {
+		std::for_each(gameStat->Player.begin(), gameStat->Player.end(), [](PlayerTable pl) {
 			pl.ConnectionLost = false; // 回線切断による和了り放棄
-			for each (TILE k in pl.Hand) {
+			std::for_each(pl.Hand.begin(), pl.Hand.end(), [](TILE k) {
 				k.tile = NoTile; k.red = 0; // 手牌の配列(４人分)
-			}
-			for each (discardTile k in pl.Discard) { // 捨牌の配列(４人分)
+			});
+			std::for_each(pl.Discard.begin(), pl.Discard.end(), [](discardTile k) {
+				// 捨牌の配列(４人分)
 				k.tcode.tile = NoTile; k.tcode.red;
 				k.dstat = discardNormal; k.isDiscardThrough = false;
-			}
+			});
 			pl.MenzenFlag = true; // 門前フラグ
 			pl.HandStat = 0; // 手牌の状態（立てる・見せる・伏せる）
-			for each (meldCode k in pl.Meld) { // 鳴き面子を格納
+			std::for_each(pl.Meld.begin(), pl.Meld.end(), [](meldCode k) {
+				// 鳴き面子を格納
 				k.tcode.tile = NoTile; k.tcode.red = 0;
 				k.mstat = (meldStat)0;
-			}
+			});
 			pl.NumberOfQuads = 0; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
 			pl.RichiFlag.RichiFlag = pl.RichiFlag.IppatsuFlag = // リーチしているかどうか
 				pl.RichiFlag.DoubleFlag = pl.RichiFlag.OpenFlag = false;
@@ -974,37 +993,38 @@ extern "C" {
 				pl.AgariHouki = false; // 和了り放棄の罰則中かどうか
 			pl.FlowerFlag = // 晒している花牌を格納するフラグ
 				pl.NorthFlag = 0; // 晒している北風牌を格納するフラグ
-		}
+		});
 	}
 
-	__declspec(dllexport) GameTable* startTable(int gameType) { // 半荘単位の初期化処理
-		GameStat = GameTable();
-		GameStat.gameType = (gameTypeID)gameType;
+	void doInitializeGameTable(GameTable* gameStat, int gameType) { // 半荘単位の初期化処理
+		/* 内部処理用でエクスポートしない */
+		*gameStat = GameTable();
+		gameStat->gameType = (gameTypeID)gameType;
 
 		for (int i = 0; i < PLAYERS; i++) {
 			if (i < ACTUAL_PLAYERS) {
 				if (chkGameType(&GameStat, SanmaT)) {
 					switch (getRule(RULE_STARTING_POINT)) {
 					case 0: snmdflt:
-						GameStat.Player[i].PlayerScore = LargeNum(350);
+						gameStat->Player[i].PlayerScore = LargeNum(35000, 1000000u);
 						break;
 					case 1:
-						GameStat.Player[i].PlayerScore = LargeNum(400);
+						gameStat->Player[i].PlayerScore = LargeNum(40000, 1000000u);
 						break;
 					case 2:
-						GameStat.Player[i].PlayerScore = LargeNum(450);
+						gameStat->Player[i].PlayerScore = LargeNum(45000, 1000000u);
 						break;
 					case 3:
-						GameStat.Player[i].PlayerScore = LargeNum(500);
+						gameStat->Player[i].PlayerScore = LargeNum(50000, 1000000u);
 						break;
 					case 4: case 7:
-						GameStat.Player[i].PlayerScore = LargeNum(250);
+						gameStat->Player[i].PlayerScore = LargeNum(25000, 1000000u);
 						break;
 					case 5:
-						GameStat.Player[i].PlayerScore = LargeNum(270);
+						gameStat->Player[i].PlayerScore = LargeNum(27000, 1000000u);
 						break;
 					case 6: case 8:
-						GameStat.Player[i].PlayerScore = LargeNum(300);
+						gameStat->Player[i].PlayerScore = LargeNum(30000, 1000000u);
 						break;
 					default:
 						error("RULE_STARTING_POINT異常。持ち点を25000として処理します。");
@@ -1013,22 +1033,22 @@ extern "C" {
 				} else {
 					switch (getRule(RULE_STARTING_POINT)) {
 					case 0: dflt:
-						GameStat.Player[i].PlayerScore = LargeNum(250);
+						gameStat->Player[i].PlayerScore = LargeNum(25000, 1000000u);
 						break;
 					case 1:
-						GameStat.Player[i].PlayerScore = LargeNum(270);
+						gameStat->Player[i].PlayerScore = LargeNum(27000, 1000000u);
 						break;
 					case 2:
-						GameStat.Player[i].PlayerScore = LargeNum(300);
+						gameStat->Player[i].PlayerScore = LargeNum(30000, 1000000u);
 						break;
 					case 3:
-						GameStat.Player[i].PlayerScore = LargeNum(350);
+						gameStat->Player[i].PlayerScore = LargeNum(35000, 1000000u);
 						break;
 					case 4:
-						GameStat.Player[i].PlayerScore = LargeNum(400);
+						gameStat->Player[i].PlayerScore = LargeNum(40000, 1000000u);
 						break;
 					case 5:
-						GameStat.Player[i].PlayerScore = LargeNum(200);
+						gameStat->Player[i].PlayerScore = LargeNum(20000, 1000000u);
 						break;
 					default:
 						error("RULE_STARTING_POINT異常。持ち点を25000として処理します。");
@@ -1036,45 +1056,53 @@ extern "C" {
 					}
 				}
 			} else {
-				GameStat.Player[i].PlayerScore = LargeNum(0);
+				gameStat->Player[i].PlayerScore = LargeNum(0);
 			}
 		}
 
 		switch (getRule(RULE_GAME_LENGTH)) {
 		case 0: hanchan:
-			GameStat.GameLength = chkGameType(&GameStat, SanmaT) ? 6 : 7;
+			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 6 : 7;
 			break;
 		case 1: case 7:
-			GameStat.GameLength = chkGameType(&GameStat, SanmaT) ? 2 : 3;
+			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 2 : 3;
 			break;
 		case 2: case 3:
-			GameStat.GameLength = chkGameType(&GameStat, SanmaT) ? 14 : 15;
+			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 14 : 15;
 			break;
 		case 4:
-			GameStat.GameLength = 0;
+			gameStat->GameLength = 0;
 			break;
 		case 5:
-			GameStat.GameLength = chkGameType(&GameStat, SanmaT) ? 18 : 19;
+			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 18 : 19;
 			break;
 		case 6:
-			GameStat.GameLength = chkGameType(&GameStat, SanmaT) ? 10 : 11;
+			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 10 : 11;
 			break;
 		default:
 			error("RULE_GAME_LENGTH異常値。半荘戦とみなします。");
 			goto hanchan; // ここは敢えてgotoを使う
 		}
-		GameStat.GameRound = GameStat.Honba = GameStat.PlayerID =
-			GameStat.Deposit = GameStat.LoopRound = GameStat.AgariChain = 0;
-		GameStat.LastAgariPlayer = -1;
+		gameStat->GameRound = gameStat->Honba = gameStat->PlayerID =
+			gameStat->Deposit = gameStat->LoopRound = gameStat->AgariChain = 0;
+		gameStat->LastAgariPlayer = -1;
 		for (int i = 0; i < PLAYERS; i++) {
-			GameStat.Player[i].SumaroFlag = false;
-			GameStat.Player[i].YakitoriFlag = (getRule(RULE_YAKITORI) != 0);
-			GameStat.Player[i].playerChip = 0;
+			gameStat->Player[i].SumaroFlag = false;
+			gameStat->Player[i].YakitoriFlag = (getRule(RULE_YAKITORI) != 0);
+			gameStat->Player[i].playerChip = 0;
 		}
 
-		inittable(&GameStat); // 局ごとの初期化も行う
+		inittable(gameStat); // 局ごとの初期化も行う
+	}
 
+	__declspec(dllexport) GameTable* initializeGameTable(int gameType) { // 半荘単位の初期化処理
+		doInitializeGameTable(&GameStat, gameType);
 		return &GameStat;
+	}
+
+	__declspec(dllexport) GameTable* initializeSandbox(int gameType) { /* 卓の状態のサンドボックスを作る */
+		doInitializeGameTable(&StatSandBox, gameType);
+		return &StatSandBox;
 	}
 
 	// ---------------------------------------------------------------------
