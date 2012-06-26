@@ -6,6 +6,7 @@
 /* ó‹µ–ğ */
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc contextualyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	trace "ó‹µ–ğ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	/* —§’¼Œn */

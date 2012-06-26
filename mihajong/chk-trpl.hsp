@@ -74,6 +74,7 @@
 /* qŒn‚Ì–ğ */
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc tripletyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int FuritenFlag, int MachiType
 	trace "q–ğ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	countKez KezCount, MianziDat: Kezi = stat

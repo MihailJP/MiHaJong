@@ -83,6 +83,7 @@
 /* ÈqŒn‚Ì–ğ */
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc quadyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer
 	trace "Èq–ğ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	countKangz KangzCount, MianziDat: Kangzi = stat

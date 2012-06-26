@@ -6,6 +6,7 @@
 
 #module
 #include "const.as"
+#include "struct.as"
 /* •Ç”v‚ð•\Ž¦‚·‚é */
 #deffunc putyama var GameStat, int targetPosX, int targetPosY, int targetPlayer, int trueTargetPlayer
 #ifdef ALLSANMA

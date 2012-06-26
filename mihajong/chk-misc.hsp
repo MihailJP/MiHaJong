@@ -70,6 +70,7 @@
 /* ‚»‚Ì‘¼‚Ì–ğ */
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc miscyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	/* —ÎˆêF */
 #ifdef SANMAS

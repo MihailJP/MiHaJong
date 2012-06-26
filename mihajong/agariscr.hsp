@@ -6,6 +6,7 @@
 
 #module
 #include "const.as"
+#include "struct.as"
 #define ctype doubleDoraEnabled ((getRule(RULE_DORA_TWICE) == 1)||((getRule(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))))
 #deffunc agariscrproc var GameStat, var GameEnv, var yakuInfo, array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	buffer SCR_AGARI_BUF, 600, 600: color 0, 0, 0: boxf 0, 0, 599, 599

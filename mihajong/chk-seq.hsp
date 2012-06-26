@@ -52,6 +52,7 @@
 /* ‡qŒn‚Ì–ğ */
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc sequenceyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	trace "‡q–ğ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	countShunz ShunzCount, MianziDat

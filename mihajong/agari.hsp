@@ -6,6 +6,7 @@
 
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc agariproc int _RoundEndType, var GameStat, var GameEnv, var tmpUraFlag, var tmpAliceFlag, var ResultDesc
 	RoundEndType = _RoundEndType
 	tmpagariflag = 0
@@ -185,6 +186,7 @@
 /* ˜a—¹¬—§‚Ìˆ— */
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc endround_agariproc var GameStat, var GameEnv, var ResultDesc, var AgariPlayerPriority, int origDoraPointer, array YakuInfo, var tmpAliceFlag
 	exportYakuPoint yakuInfo, AgariPointRaw
 	if (AgariPlayerPriority == -1) {AgariPlayerPriority = getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)}
@@ -490,6 +492,7 @@
 /* ö˜a”­¶‚Ìˆ— */
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc endround_chonboproc var GameStat, var GameEnv, var ResultDesc
 	if (ResultDesc != "") {ResultDesc += "\n"}
 	tmpResultDesc = ""

@@ -6,6 +6,7 @@
 
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc checkroundabort var GameStat, var GameEnv
 	/* 四開槓なら流す */
 	if (getRule(RULE_FOUR_KONG_RYUUKYOKU) != 2) {
@@ -127,6 +128,7 @@
 
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc endround var GameStat, var GameEnv, int _RoundEndType, int OrigTurn, int OrigHonba
 	// 局面終了コード
 	// ０…荒牌流局
@@ -585,6 +587,7 @@
 
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc ryuukyokuProc var GameStat, int RenchanFlag
 	repeat NUM_OF_PLAYERS
 		setCall cnt, ""
@@ -608,6 +611,7 @@
 
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc transferChonboPenalty var GameStat, int targetPlayer
 	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 	dim AgariPointRaw, NUM_OF_DIGIT_GROUPS
@@ -628,6 +632,7 @@
 
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc nextRound var GameStat
 	// ハコ割れ終了
 	if (getRule(RULE_BUTTOBI_BORDER) != 2) {

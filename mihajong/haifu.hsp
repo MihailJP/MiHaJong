@@ -67,6 +67,7 @@ return
 
 #module haifu
 #include "const.as"
+#include "struct.as"
 
 #define COLUMNS 40
 

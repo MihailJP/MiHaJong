@@ -7,6 +7,7 @@
 /* Œã‰ñ‚µ”»’è‚Ì–ð */
 #module
 #include "const.as"
+#include "struct.as"
 
 #define ctype currentHan(%1) (getYakuInfo(%1, YAKUINF_HAN_BASE)+getYakuInfo(%1, YAKUINF_HAN_BONUS)+getYakuInfo(%1, YAKUINF_DORA)+getYakuInfo(%1, YAKUINF_ALICEDORA))
 

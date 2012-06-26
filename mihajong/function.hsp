@@ -102,6 +102,7 @@ return
 /* 「東○局」などの文字列を返す */
 #module
 #include "const.as"
+#include "struct.as"
 #defcfunc roundName int roundNum
 	roundNameTxt = ""
 	switch roundNum/NUM_OF_PLAYERS
@@ -193,6 +194,7 @@ return
 
 /* 王牌を除いた山牌の残り枚数 */
 #module
+#include "struct.as"
 #defcfunc tilesLeft var GameStat
 	return (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat))
 #global
@@ -200,6 +202,7 @@ return
 /* 順位を計算する */
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc calcRank array Rank, var GameStat
 	dim Rank, NUM_OF_PLAYERS
 	repeat NUM_OF_ACTUAL_PLAYERS
@@ -220,6 +223,7 @@ return
 /* 包かどうかの判定 */
 #module
 #include "const.as"
+#include "struct.as"
 #defcfunc isPao var GameStat, int agariPlayer, int paoPlayer
 	paoFlag = 0
 	repeat PAO_YAKU_PAGES
@@ -232,6 +236,7 @@ return
 
 #module
 #include "const.as"
+#include "struct.as"
 #defcfunc isPaoAgari var GameStat, int agariPlayer
 	paoFlag = 0
 	repeat PAO_YAKU_PAGES
@@ -244,6 +249,7 @@ return
 
 #module
 #include "const.as"
+#include "struct.as"
 #defcfunc isGotPao var GameStat, int paoPlayer
 	paoFlag = 0
 	repeat PAO_YAKU_PAGES

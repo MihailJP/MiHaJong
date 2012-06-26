@@ -9,6 +9,7 @@
 /* 役を判定する */
 #module
 #include "const.as"
+#include "struct.as"
 #include "hspmath.as"
 #deffunc countyaku var GameStat, var yakuInfo, int targetPlayer
 	debug strf("役判定処理を開始 プレイヤー [%d]", targetPlayer)

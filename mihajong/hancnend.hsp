@@ -7,6 +7,7 @@
 /* ”¼‘‘I—¹‚Ìˆ— */
 #module FINIS
 #include "const.as"
+#include "struct.as"
 #deffunc endgame var GameStat, var GameEnv, int origTurn, int origHonba
 	calcRank Rank, GameStat
 	chatappend "-------------\n*** I—¹\n"

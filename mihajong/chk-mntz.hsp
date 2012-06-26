@@ -41,6 +41,7 @@ int count
 /* –Êq‚É•ª‰ğ‚·‚é */
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc makementsu var GameStat, var tmpYakuInfo, int targetPlayer, int Atamacode, var ProcessedTiles, array MianziDat
 	dim MianziDat, SIZE_OF_MELD_BUFFER // ”z—ñ‚ğ‰Šú‰»‚·‚é
 	countTilesInHand CountForMentsu, GameStat, targetPlayer
