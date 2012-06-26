@@ -2,6 +2,8 @@
 
 /* 簡易ロギングツール */
 
+//#define SYNCMODE
+
 using namespace std;
 
 static Logger* logger = NULL;
@@ -11,6 +13,9 @@ static CRITICAL_SECTION cs;
 static HANDLE hEvent;
 static ostream* logStream = &cout;
 static ofstream logFile;
+#ifdef SYNCMODE
+static HANDLE hWriteFinishEvent;
+#endif
 
 static deque<LogMsg> msgQueue;
 
@@ -23,6 +28,9 @@ DWORD Logger::LoggerThread(LPVOID lp) { // ロギング実行用スレッド
 			EnterCriticalSection(&cs);
 			if (msgQueue.empty()) { // キューが空だったら抜ける
 				LeaveCriticalSection(&cs); // ちゃんと返してあげましょうね
+#ifdef SYNCMODE
+				SetEvent(hWriteFinishEvent);
+#endif
 				break;
 			}
 			LogMsg currentLogMsg = LogMsg(msgQueue[0]);
@@ -39,6 +47,9 @@ void Logger::enqueue(LogMsg msgdat) { // キューにpushする
 	msgQueue.push_back(LogMsg(msgdat));
 	LeaveCriticalSection(&cs);
 	SetEvent(hEvent);
+#ifdef SYNCMODE
+	WaitForSingleObject(hWriteFinishEvent, INFINITE);
+#endif
 }
 
 extern "C" {
@@ -55,6 +66,9 @@ __declspec(dllexport) void initLogger(const char* fname) {
 		logStream = &cout;
 	}
 	hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+#ifdef SYNCMODE
+	hWriteFinishEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+#endif
 	InitializeCriticalSection(&cs);
 	hThread = CreateThread(NULL, 0, Logger::LoggerThread, (LPVOID)logger,
 		CREATE_SUSPENDED, &threadID);
