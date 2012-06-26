@@ -9,8 +9,9 @@
 #func setScore "setScore" int, int, int, int
 #func addScore "addScore" int, int, int, int
 #cfunc getScore "getScore" int, int, int
-#func exportScore "exportScore" int, var
+#func _exportScore "exportScore" int, var
 #func importScore "importScore" int, var
+#define exportScore(%1,%2) dim %2, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS: _exportScore %1, %2
 
 #func setChip "setChip" int, int, int
 #func addChip "addChip" int, int, int

@@ -6,6 +6,7 @@
 #include <exception>
 #include <stdexcept>
 #include <algorithm>
+#include <cassert>
 #include "tilecode.h"
 #include "ruletbl.h"
 
@@ -202,12 +203,7 @@ typedef std::array<PAOSTAT, PAO_YAKU_PAGES> paoStatBook;
 
 // -------------------------------------------------------------------------
 
-union DeckBuf {
-	std::array<TILE, 144> deck144; // 四人打ち・花牌8枚
-	std::array<TILE, 140> deck140; // 四人打ち・花牌4枚
-	std::array<TILE, 136> deck136; // 四人打ち・花牌なし
-	std::array<TILE, 108> deck108; // 三人打ち
-};
+typedef std::array<TILE, 144> DeckBuf; // 最初はunionでやろうと思ったけどおかしくなるのでやめた
 
 // -------------------------------------------------------------------------
 
@@ -299,7 +295,8 @@ struct GameTable { // 卓の情報を格納する
 // -------------------------------------------------------------------------
 
 extern GameTable GameStat;
-
 inline bool chkGameType(GameTable* gameStat, gameTypeID gameType);
+
+// -------------------------------------------------------------------------
 
 #endif

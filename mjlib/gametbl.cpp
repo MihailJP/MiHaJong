@@ -3,6 +3,7 @@
 static GameTable GameStat, StatSandBox;
 
 inline bool chkGameType(GameTable* gameStat, gameTypeID gameType) {
+	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 	return ((gameStat->gameType) & gameType);
 };
 
@@ -16,28 +17,36 @@ extern "C" {
 	 */
 
 	__declspec(dllexport) void setScore(GameTable* gameStat, int Player, int Digit, int value) {
-		gameStat->Player[Player].PlayerScore[Digit] = value; return;
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
+		gameStat->Player[Player].PlayerScore[Digit] = value *
+			(Digit ? 1 : (100000000u / gameStat->Player[Player].PlayerScore.getFirstArg())); return;
 	}
 	__declspec(dllexport) void addScore(GameTable* gameStat, int Player, int Digit, int value) {
-		gameStat->Player[Player].PlayerScore[Digit] += value; return;
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
+		gameStat->Player[Player].PlayerScore[Digit] += value *
+			(Digit ? 1 : (100000000u / gameStat->Player[Player].PlayerScore.getFirstArg())); return;
 	}
 	__declspec(dllexport) int getScore(GameTable* gameStat, int Player, int Digit) {
-		return gameStat->Player[Player].PlayerScore[Digit];
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
+		return gameStat->Player[Player].PlayerScore[Digit] /
+			(Digit ? 1 : (100000000u / gameStat->Player[Player].PlayerScore.getFirstArg()));
 	}
-	__declspec(dllexport) void exportScore(GameTable* gameStat, int** exportArray) {
+	__declspec(dllexport) void exportScore(GameTable* gameStat, int* exportArray) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		for (int j = 0; j < DIGIT_GROUPS; j++) {
 			for (int i = 0; i < PLAYERS; i++) {
-				(*exportArray)[j * PLAYERS + i] =
+				*(exportArray + j * PLAYERS + i) =
 					gameStat->Player[i].PlayerScore[j] /
 					(j ? 1 : (100000000u / gameStat->Player[i].PlayerScore.getFirstArg()));
 			}
 		}
 	}
-	__declspec(dllexport) void importScore(GameTable* gameStat, int** importArray) {
+	__declspec(dllexport) void importScore(GameTable* gameStat, int* importArray) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		for (int j = 0; j < DIGIT_GROUPS; j++) {
 			for (int i = 0; i < PLAYERS; i++) {
 				gameStat->Player[i].PlayerScore[j] =
-					(*importArray)[j * PLAYERS + i] /
+					*(importArray + j * PLAYERS + i) *
 					(j ? 1 : (100000000u / gameStat->Player[i].PlayerScore.getFirstArg()));
 			}
 		}
@@ -46,132 +55,163 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setChip(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].playerChip = value; return;
 	}
 	__declspec(dllexport) void addChip(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].playerChip += value; return;
 	}
 	__declspec(dllexport) int getChip(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].playerChip;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setSumaroFlag(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].SumaroFlag = value; return;
 	}
 	__declspec(dllexport) int getSumaroFlag(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].SumaroFlag;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setYakitori(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].YakitoriFlag = value; return;
 	}
 	__declspec(dllexport) int getYakitori(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].YakitoriFlag;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setPlayer(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->PlayerID = value; return;
 	}
 	__declspec(dllexport) int getPlayer(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->PlayerID;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) int getGameLength(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->GameLength;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setRound(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->GameRound = value; return;
 	}
 	__declspec(dllexport) void incRound(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->GameRound++; return;
 	}
 	__declspec(dllexport) int getRound(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->GameRound;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setRoundLoop(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->LoopRound = value; return;
 	}
 	__declspec(dllexport) void incRoundLoop(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->LoopRound++; return;
 	}
 	__declspec(dllexport) int getRoundLoop(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->LoopRound;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setHonba(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Honba = value; return;
 	}
 	__declspec(dllexport) void incHonba(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Honba++; return;
 	}
 	__declspec(dllexport) int getHonba(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Honba;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setTurn(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->TurnRound = value; return;
 	}
 	__declspec(dllexport) void incTurn(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->TurnRound++; return;
 	}
 	__declspec(dllexport) int getTurn(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->TurnRound;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setDeposit(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Deposit = value; return;
 	}
 	__declspec(dllexport) void addDeposit(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Deposit += value; return;
 	}
 	__declspec(dllexport) int getDeposit(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Deposit;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setAgariChain(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->AgariChain = value; return;
 	}
 	__declspec(dllexport) void incAgariChain(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->AgariChain++; return;
 	}
 	__declspec(dllexport) int getAgariChain(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->AgariChain;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setLastAgariPlayer(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->LastAgariPlayer = value; return;
 	}
 	__declspec(dllexport) int getLastAgariPlayer(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->LastAgariPlayer;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setHand(GameTable* gameStat, int Page, int Index, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
 			gameStat->Player[Player].Hand[Index].tile = (tileCode)value;
@@ -186,6 +226,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getHand(GameTable* gameStat, int Page, int Index, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
 			return (int)gameStat->Player[Player].Hand[Index].tile;
@@ -199,6 +240,7 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setDiscard(GameTable* gameStat, int Page, int Index, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
 			gameStat->Player[Player].Discard[Index].dstat = (discardStat)(value / SUTEHAI_TYPE_STEP);
@@ -217,6 +259,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getDiscard(GameTable* gameStat, int Page, int Index, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
 			return gameStat->Player[Player].Discard[Index].dstat * SUTEHAI_TYPE_STEP
@@ -231,13 +274,16 @@ extern "C" {
 		}
 	}
 	__declspec(dllexport) int DiscardPointer(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].DiscardPointer;
 	}
 	__declspec(dllexport) void DiscardPointerIncrement(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].DiscardPointer++;
 		return;
 	}
 	__declspec(dllexport) void flagDiscard(GameTable* gameStat, int Index, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].Discard[Index].dstat = (discardStat)
 			(gameStat->Player[Player].Discard[Index].dstat + value / SUTEHAI_TYPE_STEP);
 		return;
@@ -246,6 +292,7 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setMeld(GameTable* gameStat, int Page, int Index, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
 			gameStat->Player[Player].Meld[Index].tcode.tile = (tileCode)(value % MELD_TYPE_STEP);
@@ -261,6 +308,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getMeld(GameTable* gameStat, int Page, int Index, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
 			return gameStat->Player[Player].Meld[Index].mstat * MELD_TYPE_STEP
@@ -272,21 +320,28 @@ extern "C" {
 		}
 	}
 	__declspec(dllexport) int MeldPointer(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].MeldPointer;
 	}
 	__declspec(dllexport) void MeldPointerIncrement(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].MeldPointer++;
 		return;
 	}
 	__declspec(dllexport) void MeldPointerDecrement(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].MeldPointer--;
 		return;
 	}
 	__declspec(dllexport) void flagMeld(GameTable* gameStat, int Page, int Index, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
 			gameStat->Player[Player].Meld[Index].mstat = (meldStat)(
 				gameStat->Player[Player].Meld[Index].mstat + value / MELD_TYPE_STEP);
+			break;
+		case 1:
+			gameStat->Player[Player].Meld[Index].tcode.red += (uint8_t)value;
 			break;
 		default:
 			throw(std::domain_error("flagMeld(): ページが違います"));
@@ -298,42 +353,50 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setMenzen(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].MenzenFlagAb = value;
 		if (value == 0) gameStat->Player[Player].MenzenFlag = false;
 		else if (value == 1) gameStat->Player[Player].MenzenFlag = true;
 		return;
 	}
 	__declspec(dllexport) int getMenzen(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].MenzenFlagAb;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setHandStat(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].HandStat = value;
 		return;
 	}
 	__declspec(dllexport) int getHandStat(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].HandStat;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setNumberOfQuads(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].NumberOfQuads = value;
 		return;
 	}
 	__declspec(dllexport) void incNumberOfQuads(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].NumberOfQuads++;
 		return;
 	}
 	__declspec(dllexport) int getNumberOfQuads(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].NumberOfQuads;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setRichiFlag(GameTable* gameStat, int Page, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
 			switch (value) {
@@ -374,6 +437,7 @@ extern "C" {
 		}
 	}
 	__declspec(dllexport) int getRichiFlag(GameTable* gameStat, int Page, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
 			return gameStat->Player[Player].RichiFlag.RichiFlag ?
@@ -391,74 +455,89 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setOpenWait(GameTable* gameStat, int Tile, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->OpenRichiWait[Tile] = value;
 		return;
 	}
 	__declspec(dllexport) int getOpenWait(GameTable* gameStat, int Tile) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->OpenRichiWait[Tile] ? 1 : 0;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setFirstDrawFlag(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].FirstDrawFlag = value;
 		return;
 	}
 	__declspec(dllexport) int getFirstDrawFlag(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].FirstDrawFlag ? 1 : 0;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setDoujunFuriten(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].DoujunFuriten = value;
 		return;
 	}
 	__declspec(dllexport) int getDoujunFuriten(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].DoujunFuriten ? 1 : 0;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setAgariHouki(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].AgariHouki = value;
 		return;
 	}
 	__declspec(dllexport) int getAgariHouki(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].AgariHouki ? 1 : 0;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void putFlowerFlag(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].FlowerFlag = value;
 		return;
 	}
 	__declspec(dllexport) void setFlowerFlag(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].FlowerFlag |= value;
 		return;
 	}
 	__declspec(dllexport) int getFlowerFlag(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].FlowerFlag;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setNorthFlag(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].NorthFlag = value;
 		return;
 	}
 	__declspec(dllexport) void addNorthFlag(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].NorthFlag++;
 		return;
 	}
 	__declspec(dllexport) int getNorthFlag(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].NorthFlag;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setKangFlag(GameTable* gameStat, int Page, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 			case 0: gameStat->KangFlag.kangFlag = (uint8_t)value; break;
 			case 1: gameStat->KangFlag.chainFlag = (uint8_t)value; break;
@@ -469,6 +548,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) void incKangFlag(GameTable* gameStat, int Page) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 			case 0: gameStat->KangFlag.kangFlag++; break;
 			case 1: gameStat->KangFlag.chainFlag++; break;
@@ -479,6 +559,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getKangFlag(GameTable* gameStat, int Page) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 			case 0: return (int)gameStat->KangFlag.kangFlag;
 			case 1: return (int)gameStat->KangFlag.chainFlag;
@@ -491,30 +572,36 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setTotalKang(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->KangNum = value;
 		return;
 	}
 	__declspec(dllexport) void incTotalKang(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->KangNum++;
 		return;
 	}
 	__declspec(dllexport) int getTotalKang(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->KangNum;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setRichiCounterFlag(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->RichiCounter = value;
 		return;
 	}
 	__declspec(dllexport) int getRichiCounterFlag(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->RichiCounter;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void calcWareme(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		if (chkGameType(gameStat, AllSanma)) {
 			if ((getRule(RULE_WAREME) != 0)||(getRule(RULE_KAIMENKAZE) != 0)) {
 				gameStat->WaremePlayer = ((gameStat->GameRound-(gameStat->GameRound/4))+24
@@ -537,28 +624,33 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getWareme(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->WaremePlayer;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setDoukasen(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->DoukasenPlayer = value;
 		return;
 	}
 	__declspec(dllexport) int getDoukasen(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->DoukasenPlayer;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) int getShibari(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return (int)gameStat->ShibariFlag;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setPao(GameTable* gameStat, int Page, int Yaku, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 			case 0: gameStat->PaoFlag[Yaku].paoPlayer = (PLAYER_ID)value; break;
 			case 1: gameStat->PaoFlag[Yaku].agariPlayer = (PLAYER_ID)value; break;
@@ -567,6 +659,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getPao(GameTable* gameStat, int Page, int Yaku) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 			case 0: return (int)gameStat->PaoFlag[Yaku].paoPlayer;
 			case 1: return (int)gameStat->PaoFlag[Yaku].agariPlayer;
@@ -577,6 +670,7 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setDice(GameTable* gameStat, int ID, int Direction, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (ID+Direction*2) {
 			case 0: gameStat->Dice1 = value; break;
 			case 1: gameStat->Dice2 = value; break;
@@ -586,6 +680,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getDice(GameTable* gameStat, int ID, int Direction) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (ID+Direction*2) {
 			case 0: return gameStat->Dice1; break;
 			case 1: return gameStat->Dice2; break;
@@ -598,50 +693,25 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void addDeadWallLength(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->DeadTiles += value;
 		return;
 	}
 	__declspec(dllexport) int getDeadWallLength(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->DeadTiles;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setWall(GameTable* gameStat, int Page, int Index, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
-			if (chkGameType(gameStat, Yonma)) {
-				switch (getRule(RULE_FLOWER_TILES)) {
-				case 3:
-					gameStat->Deck.deck144[Index].tile = (tileCode)value;
-					break;
-				case 0:
-					gameStat->Deck.deck136[Index].tile = (tileCode)value;
-					break;
-				default:
-					gameStat->Deck.deck140[Index].tile = (tileCode)value;
-					break;
-				}
-			} else {
-				gameStat->Deck.deck108[Index].tile = (tileCode)value;
-			}
+			gameStat->Deck[Index].tile = (tileCode)value;
 			break;
 		case 1:
-			if (chkGameType(gameStat, Yonma)) {
-				switch (getRule(RULE_FLOWER_TILES)) {
-				case 3:
-					gameStat->Deck.deck144[Index].red = (uint8_t)value;
-					break;
-				case 0:
-					gameStat->Deck.deck136[Index].red = (uint8_t)value;
-					break;
-				default:
-					gameStat->Deck.deck140[Index].red = (uint8_t)value;
-					break;
-				}
-			} else {
-				gameStat->Deck.deck108[Index].red = (uint8_t)value;
-			}
+			gameStat->Deck[Index].red = (uint8_t)value;
 			break;
 		default:
 			throw(std::domain_error("setWall(): ページが違います"));
@@ -650,40 +720,13 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getWall(GameTable* gameStat, int Page, int Index) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
-			if (chkGameType(gameStat, Yonma)) {
-				switch (getRule(RULE_FLOWER_TILES)) {
-				case 3:
-					return (int)gameStat->Deck.deck144[Index].tile;
-					break;
-				case 0:
-					return (int)gameStat->Deck.deck136[Index].tile;
-					break;
-				default:
-					return (int)gameStat->Deck.deck140[Index].tile;
-					break;
-				}
-			} else {
-				return (int)gameStat->Deck.deck108[Index].tile;
-			}
+			return (int)gameStat->Deck[Index].tile;
 			break;
 		case 1:
-			if (chkGameType(gameStat, Yonma)) {
-				switch (getRule(RULE_FLOWER_TILES)) {
-				case 3:
-					return (int)gameStat->Deck.deck144[Index].red;
-					break;
-				case 0:
-					return (int)gameStat->Deck.deck136[Index].red;
-					break;
-				default:
-					return (int)gameStat->Deck.deck140[Index].red;
-					break;
-				}
-			} else {
-				return (int)gameStat->Deck.deck108[Index].red;
-			}
+			return (int)gameStat->Deck[Index].red;
 			break;
 		default:
 			throw(std::domain_error("getWall(): ページが違います"));
@@ -694,55 +737,67 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) int getRinshanExtension(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->ExtraRinshan;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setDrawPointer(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->TilePointer = value; return;
 	}
 	__declspec(dllexport) void incDrawPointer(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->TilePointer++; return;
 	}
 	__declspec(dllexport) int getDrawPointer(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->TilePointer;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setDoraPointer(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->DoraPointer = value; return;
 	}
 	__declspec(dllexport) int getDoraPointer(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->DoraPointer;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setRinshanPointer(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->RinshanPointer = value; return;
 	}
 	__declspec(dllexport) void decRinshanPointer(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->RinshanPointer--; return;
 	}
 	__declspec(dllexport) int getRinshanPointer(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->RinshanPointer;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setHeavenHandFlag(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->TianHuFlag = value;
 		return;
 	}
 	__declspec(dllexport) int getHeavenHandFlag(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->TianHuFlag ? 1: 0;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setPreviousMeld(GameTable* gameStat, int Page, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 			case 0: gameStat->PreviousMeld.Discard = (tileCode) value; break;
 			case 1: gameStat->PreviousMeld.Stepped = (tileCode) value; break;
@@ -751,6 +806,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getPreviousMeld(GameTable* gameStat, int Page) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 			case 0: return (int)gameStat->PreviousMeld.Discard;
 			case 1: return (int)gameStat->PreviousMeld.Stepped;
@@ -761,16 +817,19 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setDisconnectFlag(GameTable* gameStat, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].ConnectionLost = value;
 		return;
 	}
 	__declspec(dllexport) int getDisconnectFlag(GameTable* gameStat, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].ConnectionLost ? 1 : 0;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setDoraFlag(GameTable* gameStat, int Page, int Tile, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 			case 0: gameStat->DoraFlag.Omote[Tile] = value; break;
 			case 1: gameStat->DoraFlag.Ura[Tile] = value; break;
@@ -779,6 +838,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) void incDoraFlag(GameTable* gameStat, int Page, int Tile) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 			case 0: gameStat->DoraFlag.Omote[Tile]++; break;
 			case 1: gameStat->DoraFlag.Ura[Tile]++; break;
@@ -787,6 +847,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getDoraFlag(GameTable* gameStat, int Page, int Tile) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 			case 0: return (int)gameStat->DoraFlag.Omote[Tile];
 			case 1: return (int)gameStat->DoraFlag.Ura[Tile];
@@ -797,6 +858,7 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setCurrentDiscard(GameTable* gameStat, int Page, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
 			gameStat->CurrentDiscard.tile = (tileCode)value;
@@ -811,6 +873,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getCurrentDiscard(GameTable* gameStat, int Page) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
 			return (int)gameStat->CurrentDiscard.tile;
@@ -824,16 +887,19 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setTsumoAgariFlag(GameTable* gameStat, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->TsumoAgariFlag = gameStat->AgariSpecialStat = value;
 		return;
 	}
 	__declspec(dllexport) int getTsumoAgariFlag(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->AgariSpecialStat;
 	}
 
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setDeclarationFlag(GameTable* gameStat, int Page, int Player, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch(Page) {
 			case 0: gameStat->Player[Player].DeclarationFlag.Ron = value; break;
 			case 1: gameStat->Player[Player].DeclarationFlag.Pon = value; break;
@@ -844,6 +910,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) void resetDeclarationFlag(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		for (int pl = 0; pl < PLAYERS; pl++) {
 			gameStat->Player[pl].DeclarationFlag.Ron =
 				gameStat->Player[pl].DeclarationFlag.Pon =
@@ -853,6 +920,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getDeclarationFlag(GameTable* gameStat, int Page, int Player) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch(Page) {
 			case 0: return gameStat->Player[Player].DeclarationFlag.Ron ? 1 : 0;
 			case 1: return gameStat->Player[Player].DeclarationFlag.Pon ? 1 : 0;
@@ -865,6 +933,7 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 	__declspec(dllexport) void setCurrentPlayer(GameTable* gameStat, int Page, int value) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 			case 0: gameStat->CurrentPlayer.Active = (PLAYER_ID)value; break;
 			case 1: gameStat->CurrentPlayer.Passive = (PLAYER_ID)value; break;
@@ -875,6 +944,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) void resetCurrentPlayer(GameTable* gameStat) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->CurrentPlayer.Active =
 			gameStat->CurrentPlayer.Passive =
 			gameStat->CurrentPlayer.Agari =
@@ -883,6 +953,7 @@ extern "C" {
 		return;
 	}
 	__declspec(dllexport) int getCurrentPlayer(GameTable* gameStat, int Page) {
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 			case 0: return (int)gameStat->CurrentPlayer.Active;
 			case 1: return (int)gameStat->CurrentPlayer.Passive;
@@ -900,12 +971,17 @@ extern "C" {
 	 */
 
 	__declspec(dllexport) void inittable(GameTable* gameStat) { /* 局単位での初期化 */
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->ShibariFlag = //二飜縛り
 			((gameStat->Honba >= 5)&&(getRule(RULE_RYANSHIBA) == 1)) ||
 			((gameStat->Honba >= 4)&&(getRule(RULE_RYANSHIBA) == 2));
 
-		std::for_each(gameStat->PaoFlag.begin(), gameStat->PaoFlag.end(), [](PAOSTAT k) {
+		std::for_each(gameStat->PaoFlag.begin(), gameStat->PaoFlag.end(), [](PAOSTAT& k) {
 			k.agariPlayer = k.paoPlayer = -1; // 包フラグ（-1…なし、0～3…該当プレイヤー）
+		});
+
+		std::for_each(gameStat->Deck.begin(), gameStat->Deck.end(), [](TILE& k) {
+			k.tile = NoTile; k.red = (uint8_t)0; // ちゃんと初期化してあげましょうね
 		});
 
 		if (chkGameType(gameStat, AllSanma)) {
@@ -968,19 +1044,21 @@ extern "C" {
 		gameStat->CurrentDiscard.red = 0;
 		resetCurrentPlayer(gameStat);
 
-		std::for_each(gameStat->Player.begin(), gameStat->Player.end(), [](PlayerTable pl) {
+		std::for_each(gameStat->Player.begin(), gameStat->Player.end(), [](PlayerTable& pl) {
 			pl.ConnectionLost = false; // 回線切断による和了り放棄
-			std::for_each(pl.Hand.begin(), pl.Hand.end(), [](TILE k) {
+			std::for_each(pl.Hand.begin(), pl.Hand.end(), [](TILE& k) {
 				k.tile = NoTile; k.red = 0; // 手牌の配列(４人分)
 			});
-			std::for_each(pl.Discard.begin(), pl.Discard.end(), [](discardTile k) {
+			pl.DiscardPointer = 0; // ちゃんとリセットしてあげましょうね
+			std::for_each(pl.Discard.begin(), pl.Discard.end(), [](discardTile& k) {
 				// 捨牌の配列(４人分)
-				k.tcode.tile = NoTile; k.tcode.red;
+				k.tcode.tile = NoTile; k.tcode.red = 0;
 				k.dstat = discardNormal; k.isDiscardThrough = false;
 			});
 			pl.MenzenFlag = true; // 門前フラグ
 			pl.HandStat = 0; // 手牌の状態（立てる・見せる・伏せる）
-			std::for_each(pl.Meld.begin(), pl.Meld.end(), [](meldCode k) {
+			pl.MeldPointer = 0; // 最初変な数字が入ってたりするんで……
+			std::for_each(pl.Meld.begin(), pl.Meld.end(), [](meldCode& k) {
 				// 鳴き面子を格納
 				k.tcode.tile = NoTile; k.tcode.red = 0;
 				k.mstat = (meldStat)0;
@@ -994,9 +1072,11 @@ extern "C" {
 			pl.FlowerFlag = // 晒している花牌を格納するフラグ
 				pl.NorthFlag = 0; // 晒している北風牌を格納するフラグ
 		});
+		assert(gameStat->Player[0].DiscardPointer == 0); // 初期化できてるかチェック（デバッグ用）
 	}
 
 	void doInitializeGameTable(GameTable* gameStat, int gameType) { // 半荘単位の初期化処理
+		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		/* 内部処理用でエクスポートしない */
 		*gameStat = GameTable();
 		gameStat->gameType = (gameTypeID)gameType;

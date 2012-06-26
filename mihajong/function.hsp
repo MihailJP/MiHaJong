@@ -274,6 +274,7 @@ return
 
 #module
 #include "const.as"
+#include "struct.as"
 #defcfunc RonPlayers var GameStat
 	return getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 3)
 #global

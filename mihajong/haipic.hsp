@@ -232,6 +232,7 @@ return
 /* Ì”v‚ğ•\¦‚·‚é */
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc putsutehai var GameStat, int targetPosX, int targetPosY, int targetPlayer, int TileShowMode
 	SutehaiCount = 0
 	RichiCount = 0
@@ -312,6 +313,7 @@ return
 /* •›˜I–ÊqiˆÃÈ‚ğŠÜ‚Şj‚ğ•\¦‚·‚é */
 #module
 #include "const.as"
+#include "struct.as"
 #deffunc putnakihai var GameStat, int targetPlayer, int targetPosX, int targetPosY, int TileShowMode
 	tmpxx = targetPosX: tmpyy = targetPosY
 	// ”v‚Ì˜g‚ğ•\¦
