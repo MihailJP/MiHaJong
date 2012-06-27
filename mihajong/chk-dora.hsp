@@ -6,8 +6,8 @@
 
 /* ƒhƒ‰‚ğ”‚¦‚é */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc countdora var GameStat, var tmpYakuInfo, int targetPlayer
 	countTilesInHand TileCount, GameStat, targetPlayer
 	/* ƒhƒ‰‚Å˜a—¹‚Á‚½‚ç1ãÊ */

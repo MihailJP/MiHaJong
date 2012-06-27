@@ -5,8 +5,8 @@
  */
 /* ˆêFŒn‚È‚Ç‚Ì–ğ */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc suityaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int FuritenFlag, int MachiType
 	trace "ˆêFŒn‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	WanzMian = 0: PinzMian = 0: SouzMian = 0: ZiMian = 0

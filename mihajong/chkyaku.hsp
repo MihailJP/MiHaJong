@@ -4,12 +4,12 @@
  *=============================
  */
 
-#include "ystruct.as"
+#include "ystruct.hsp"
 
 /* 役を判定する */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #include "hspmath.as"
 #deffunc countyaku var GameStat, var yakuInfo, int targetPlayer
 	debug strf("役判定処理を開始 プレイヤー [%d]", targetPlayer)
@@ -200,7 +200,7 @@ return
 
 /* 青天井ルールの点数計算処理 */
 #module
-#include "const.as"
+#include "const.hsp"
 #include "hspmath.as"
 #deffunc calculateScore var tmpYakuInfo, array tmpScore
 	if (getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE) <= 0) {tmpScore(0) = 0: return}
@@ -255,7 +255,7 @@ return
 
 /* 役を成立させる */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc addyaku var tmpYakuInfo, str yakuName, int yakuVal
 /*
 		addyaku p1, p2, p3
@@ -277,7 +277,7 @@ return
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc addquan var tmpYakuInfo, str yakuName, int yakuVal
 /*
 		addquan p1, p2, p3
@@ -301,7 +301,7 @@ return
 
 /* 役満を成立させる */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc addyakuman var tmpYakuInfo, str yakuName, int yakuVal
 /*
 		addyakuman p1, p2, p3
@@ -326,7 +326,7 @@ return
 
 /* 満貫を成立させる */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc addmangan var tmpYakuInfo, str yakuName, int yakuVal
 /*
 		addmangan p1, p2, p3
@@ -367,7 +367,7 @@ return
 
 /* 役の成立を解除 */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc delyaku var tmpYakuInfo, str tmpyakuDelete
 /*
 		delyaku p1, p2
@@ -412,7 +412,7 @@ return
 
 /* 役満の成立を解除 */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc delyakuman var tmpYakuInfo, str tmpyakuDelete
 /*
 		delyakuman p1, p2
@@ -441,7 +441,7 @@ return
 
 /* 役が成立しているかを判定 */
 #module
-#include "const.as"
+#include "const.hsp"
 #defcfunc searchyaku var tmpYakuInfo, str tmpCheckingYaku
 /*
 		val=searchyaku(p1, p2)

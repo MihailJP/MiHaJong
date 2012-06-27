@@ -6,8 +6,8 @@
 
 /* タンヤオ、チャンタなどの役 */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc yaojiuyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer
 	trace "断幺・全帯系の処理に入ります。"
 	tmpyaojiu = 0: ShuntsuCount = 0: JihaiCount = 0

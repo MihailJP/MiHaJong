@@ -5,7 +5,7 @@
  */
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc haifuskip array haifuP, array HThaifuP, int PassivePlayer, int ActivePlayer
 	if (playerRelative(ActivePlayer, PassivePlayer) == RELATIVE_TOIMEN) {
 		// ëŒñ Ç©ÇÁÉ|ÉìÇµÇΩèÍçá
@@ -27,7 +27,7 @@ return
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #defcfunc haifudoraClass int Akadora
 	switch Akadora
 		case 1:
@@ -41,7 +41,7 @@ return ""
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc haifuwritetsumohai array haifuP, array HThaifuP, int ActivePlayer, int Tile, int Akadora, str PText, str HTText
 	haifuP(ActivePlayer*6+1) += strmid(tilecodelabel@haifu, (Tile+Akadora*TILE_NONFLOWER_MAX)*2, 2)+" "
 	haifuP(ActivePlayer*6+2) += PText
@@ -52,7 +52,7 @@ return
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc haifuskipall array haifuP, array HThaifuP, int PassivePlayer
 	repeat 4,1
 		haifuP(ShimochaOf(PassivePlayer)*6+cnt) += "Å@ "
@@ -66,8 +66,8 @@ return
 #global
 
 #module haifu
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 
 #define COLUMNS 40
 

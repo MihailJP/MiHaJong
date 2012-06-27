@@ -6,8 +6,8 @@
 
 /* Œü’®”‚ÌŒvZ */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #defcfunc countshanten var GameStat, int targetPlayer, int Mode
 /*
 		val=countshanten(p1, p2, p3)

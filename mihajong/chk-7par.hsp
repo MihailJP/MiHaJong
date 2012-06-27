@@ -26,7 +26,7 @@
 
 /* 数字の合計を数える(七対子版) */
 #module
-#include "const.as"
+#include "const.hsp"
 #defcfunc countTileNumerals array tileCount
 /*
 		val=countTileNumerals(p1)
@@ -45,8 +45,8 @@
 
 /* 七対子 */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc qiduiyaku var GameStat, var tmpYakuInfo, int targetPlayer
 	trace "七対子の処理に入ります。"
 	if (getRule(RULE_SEVEN_PAIRS) == 1) {

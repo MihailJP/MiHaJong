@@ -5,8 +5,8 @@
  */
 
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc getdahai var GameStat, var GameEnv
 	/* COMが「カンニング」しないように処理 */
 	makesandbox Sandbox, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
@@ -57,8 +57,8 @@
 #global
 
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc procdahai var GameStat, var GameEnv, var DiscardTileIndex
 	// 打牌コード
 	// ０～１２…それぞれの手牌
@@ -310,8 +310,8 @@
 #global
 
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc tsumoproc var GameStat
 	/* 次のプレイヤーが牌を自摸る */
 	incDrawPointer GameStat: setHeavenHandFlag GameStat, 0

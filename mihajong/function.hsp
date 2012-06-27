@@ -16,7 +16,7 @@
 #func _error_msg_ "?error_msg@logger@@YAXPBD@Z" str
 #func _fatal_msg_ "?fatal_msg@logger@@YAXPBD@Z" str
 
-#include "const.as"
+#include "const.hsp"
 #deffunc loginit
 #ifdef LOGGING
 	_initlog_
@@ -61,7 +61,7 @@ return
 
 /* 「東家」「南家」「西家」「北家」の文字列を返す */
 #module
-#include "const.as"
+#include "const.hsp"
 #defcfunc windName int wind
 	switch wind
 		case PLAYER_EAST: return "東家": swbreak
@@ -74,8 +74,8 @@ return
 
 /* 「東○局」などの文字列を返す */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #defcfunc roundName int roundNum
 	roundNameTxt = ""
 	switch roundNum/NUM_OF_PLAYERS
@@ -116,7 +116,7 @@ return
 
 /* 牌の名前の文字列を返す */
 #module
-#include "const.as"
+#include "const.hsp"
 #defcfunc TileName int tile
 	switch tile
 		case TILE_CHARACTER_ONE: return "一萬": swbreak
@@ -159,7 +159,7 @@ return
 
 /* 場風牌のリスト */
 #module
-#include "const.as"
+#include "const.hsp"
 #defcfunc WindMax
 	return 7
 

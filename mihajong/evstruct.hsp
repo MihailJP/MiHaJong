@@ -7,7 +7,7 @@
 #module envStruct PlayerName, RemotePlayerFlag, GameMode, WatchModeFlag, \
 bgColorR, bgColorG, bgColorB
 
-#include "const.as"
+#include "const.hsp"
 
 #modfunc setPlayerName int PlayerNum, str NameStr
 	PlayerName(PlayerNum) = NameStr

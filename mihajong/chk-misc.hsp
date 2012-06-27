@@ -34,7 +34,7 @@
 
 /* ”š‚Ì‡Œv‚ğ”‚¦‚é */
 #module
-#include "const.as"
+#include "const.hsp"
 #defcfunc countMentzNumerals array MianziDat
 /*
 		val=countMentzNumerals(p1)
@@ -69,8 +69,8 @@
 
 /* ‚»‚Ì‘¼‚Ì–ğ */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc miscyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	/* —ÎˆêF */
 #ifdef SANMAS

@@ -5,7 +5,7 @@
  */
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc countKez array KezCount, array MianziDat
 /*
 		countKez p1, p2
@@ -29,7 +29,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc countAnKez array KezCount, array MianziDat
 /*
 		countAnKez p1, p2
@@ -53,7 +53,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc countDuiz array DuiCount, array MianziDat
 /*
 		countDuiz p1, p2
@@ -73,8 +73,8 @@
 
 /* qŒn‚Ì–ğ */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc tripletyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int FuritenFlag, int MachiType
 	trace "q–ğ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	countKez KezCount, MianziDat: Kezi = stat

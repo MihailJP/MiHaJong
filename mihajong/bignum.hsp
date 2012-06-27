@@ -5,7 +5,7 @@
  */
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc bignum_duplicate array target, array orig, int arg
 	dim target, NUM_OF_DIGIT_GROUPS
 	if (length2(orig) == 0) {repeat NUM_OF_DIGIT_GROUPS: target(cnt) = orig(cnt):loop}
@@ -14,7 +14,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc bignum_transcribe array orig, array target, int arg
 	if (length2(target) == 0) {repeat NUM_OF_DIGIT_GROUPS: target(cnt) = orig(cnt):loop}
 	else {repeat NUM_OF_DIGIT_GROUPS: target(arg, cnt) = orig(cnt):loop}
@@ -22,7 +22,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #defcfunc bignum_flag array bignum_, int arg
 	bignum_duplicate bignum, bignum_, arg
 	
@@ -35,7 +35,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc bignum_fix array bignum_, int arg, int FirstArgLimit
 	bignum_duplicate bignum, bignum_, arg
 
@@ -62,7 +62,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc bignum_add array augend, array addend, int arg, int FirstArgLimit
 	bignum_duplicate augend_, augend, arg
 	repeat NUM_OF_DIGIT_GROUPS: augend_(cnt) += addend(cnt): loop
@@ -72,7 +72,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc bignum_multiply array multiplicand, int multiplier, int arg, int FirstArgLimit
 	bignum_duplicate multiplicand_, multiplicand, arg
 	repeat NUM_OF_DIGIT_GROUPS: multiplicand_(cnt) *= multiplier: loop
@@ -91,7 +91,7 @@
 
 /* 青天井対応の点棒処理 */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc agaricalc array agariPointArray, array AgariPointRaw, int agariBairitsu, int agariBairitsu2, int agariCount
 	dim agariPointArray, NUM_OF_DIGIT_GROUPS
 	
@@ -107,7 +107,7 @@
 	return
 #global
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc agaricalc2 array agariPointArray, array AgariPointRaw, double agariBairitsu, double agariBairitsu2, int agariCount, double agariBairitsu3, int agariCount2
 	dim agariPointArray, NUM_OF_DIGIT_GROUPS
 	
@@ -130,7 +130,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc deltacalcplus array AgariPointRaw, array PointDelta, int agariBairitsu, int targetPlayer
 	dim addend, NUM_OF_DIGIT_GROUPS
 	addend(0) = (AgariPointRaw(0)*agariBairitsu+99)/100
@@ -140,7 +140,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc deltacalcminus array AgariPointRaw, array PointDelta, int agariBairitsu, int targetPlayer
 	dim subtrahend, NUM_OF_DIGIT_GROUPS
 	subtrahend(0) = (AgariPointRaw(0)*agariBairitsu+99)/100
@@ -150,7 +150,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc deltacalcplusd array AgariPointRaw, array PointDelta, double agariBairitsu, int targetPlayer
 	dim addend, NUM_OF_DIGIT_GROUPS
 	addend(0) = int(double(AgariPointRaw(0))*agariBairitsu+99)/100
@@ -160,7 +160,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc deltacalcminusd array AgariPointRaw, array PointDelta, double agariBairitsu, int targetPlayer
 	dim subtrahend, NUM_OF_DIGIT_GROUPS
 	subtrahend(0) = int(double(AgariPointRaw(0))*agariBairitsu+99)/100
@@ -183,8 +183,8 @@
 #global
 
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc pointcalc var GameStat, array PointDelta
 	exportScore GameStat, tmpScoreArray
 	dim Point, NUM_OF_DIGIT_GROUPS
@@ -201,7 +201,7 @@
 
 /* 最終スコアの符号 */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc scoreflagfix array FinalScore
 	repeat NUM_OF_PLAYERS
 		bignum_fix FinalScore, cnt, 100000
@@ -217,7 +217,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc deltatxt array rawPointDelta, int FirstValRate
 	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 	if (length2(rawPointDelta) = 0) {
@@ -297,7 +297,7 @@
 
 /* 持ち点デルタ表示 */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc putdelta array PointDelta
 	deltatxt PointDelta, 100
 	dsplay@ SND_PAGE
@@ -307,7 +307,7 @@
 
 /* チップデルタ表示 */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc putchipdelta array PointDelta
 	deltatxt PointDelta, 1
 	dsplay@ SND_PAGE
@@ -316,7 +316,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #defcfunc bignumtotext array rawPoint, int tmpcnt, int FirstValRate, str PlusSign, str MinusSign
 	dim Point, NUM_OF_DIGIT_GROUPS
 	if (length2(rawPoint) = 0) {
@@ -353,8 +353,8 @@
 #global
 
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #defcfunc isDobon var GameStat, int targetPlayer
 	exportScore GameStat, tmpArray
 	tmpFlag = bignum_flag(tmpArray, targetPlayer)
@@ -366,8 +366,8 @@
 #global
 
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #defcfunc isRichiReqSatisfied var GameStat, int targetPlayer
 	Flag = 2
 	repeat NUM_OF_DIGIT_GROUPS-1,1
@@ -385,8 +385,8 @@
 #global
 
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc calcAgariPoints var GameStat, array agariPointArray, array AgariPointRaw, array PointDelta, int Mode
 	if (Mode == -1) {
 		AgariPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)
@@ -617,7 +617,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #defcfunc BasePoint
 	BasePt = 300
 #ifdef SANMAT
@@ -627,8 +627,8 @@
 #global
 
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #defcfunc isAboveBase var GameStat, int targetPlayer
 	if ((getScore(GameStat,cnt, 0) >= BasePoint())||(getScore(GameStat,cnt, 1) > 0)||(getScore(GameStat,cnt, 2) > 0)||(getScore(GameStat,cnt, 3) > 0)||(getScore(GameStat,cnt, 4) > 0)||(getScore(GameStat,cnt, 5) > 0)||(getScore(GameStat,cnt, 6) > 0)||(getScore(GameStat,cnt, 7) > 0)) {
 		return 1

@@ -6,7 +6,7 @@
 
 /* メニュー画面の背景を表示 */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc menubgcolor
 #ifdef SANMAS
 	color 64, 0, 64
@@ -31,7 +31,7 @@
 
 /* 縁取りテキスト */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc borderedtxt str BorderText, int BorderTextX, int BorderTextY, int BorderTextR, int BorderTextG, int BorderTextB
 /*
 		borderedtxt p1, p2, p3, p4, p5, p6
@@ -135,7 +135,7 @@ return
 
 /* バッファから合成 */
 #module
-#include "const.as"
+#include "const.hsp"
 #define PI 3.1415926535897932384626433832795
 #deffunc tablesynthesis int targetPlayer, int Zijia, int targetScreen
 	switch playerRelative(targetPlayer,Zijia)
@@ -160,8 +160,8 @@ return
 
 /* 再描画(賽振りの時) */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc redrdice var GameStat, var GameEnv
 	repeat NUM_OF_ACTUAL_PLAYERS
 		gsel SCR_PLAYER_BUFFER_UPPER+cnt: gmode gmode_mem
@@ -190,8 +190,8 @@ return
 
 /* 再描画 */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc redrscreen
 	doredrscreen GameStat@, GameEnv@
 return
@@ -351,7 +351,7 @@ return
 return
 
 #deffunc putCenterTitle
-#include "const.as"
+#include "const.hsp"
 	if (vartype(CenterTitle) != vartype("str")) {CenterTitle = ""}
 	font fontname, 96, 0
 	if (strlen(CenterTitle) > 8) {
@@ -363,8 +363,8 @@ return
 #global
 
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc putnamepanel var GameStat, var GameEnv, int targetPlayer
 	/* 名前パネル */
 	color GetTableColorR(GameEnv)*10/8, GetTableColorG(GameEnv)*10/8, GetTableColorB(GameEnv)*10/8
@@ -421,8 +421,8 @@ return
 #global
 
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc putcenterpanel var GameStat, var GameEnv
 	/* 画面中央に表示する情報 */
 	gmode gmode_mem
@@ -529,8 +529,8 @@ return
 
 /* 各家の情報を表示 */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc putplayerinfo var GameStat, int targetPlayer
 	gsel SCR_PLAYER_BUFFER_UPPER+targetPlayer
 	color 0, 0, 0
@@ -787,7 +787,7 @@ return
 
 /* 鳴き仕掛けなどのテキスト表示 */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc initCall
 	sdim PlayerDeclaration, 12, NUM_OF_PLAYERS
 return
@@ -864,7 +864,7 @@ return
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc putsidepanel var GameEnv
 	/* 画面右 */
 	gsel 0: color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
@@ -926,8 +926,8 @@ return
 #global
 
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc putlowerpanel var GameStat, var GameEnv
 	/* 画面下を黒で塗る */
 	color GetTableColorR(GameEnv)/5, GetTableColorG(GameEnv)/5, GetTableColorB(GameEnv)/5

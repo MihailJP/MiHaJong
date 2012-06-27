@@ -7,7 +7,7 @@
 #module yakuStruct BasePoints, CoreHan, BonusHan, \
 DoraQuantity, UraDoraQuantity, AkaDoraQuantity, AoDoraQuantity, AliceDora, FlowerQuantity, \
 AgariPoints, yakuNameList, yakuValList, yakumanNameList, yakumanValList
-#include "const.as"
+#include "const.hsp"
 #modinit
 	BasePoints = 20
 	CoreHan = 0

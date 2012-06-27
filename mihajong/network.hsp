@@ -6,7 +6,7 @@
 
 /* サーバーからメッセージを送信する */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc serversend int SendingMsg, var GameEnv
 	repeat NUM_OF_ACTUAL_PLAYERS-1
 #ifdef SANMAT
@@ -24,7 +24,7 @@
 
 /* サーバーがメッセージを受信 */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc serverreceive_init
 	ServerCheckRotation = 1, 2, 3
 	return
@@ -56,7 +56,7 @@
 
 /* サーバーにメッセージを送る */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc clientsend int SendingMsg
 	sockputc@ SendingMsg, 0+SOCK_GAME
 	if (stat) {error strf("データの送信に失敗しました。ステータスコード [%d]", stat)}
@@ -66,7 +66,7 @@
 
 /* サーバーのメッセージを受信する */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc clientreceive var ClientReceived, var ReceivedMsg
 	ClientReceived = 0
 	ReceivedMsg = 1023
@@ -83,8 +83,8 @@
 
 /* 接続先の打牌 */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc remotedahai var GameStat, var GameEnv
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
@@ -151,8 +151,8 @@
 
 /* 接続先の鳴き */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc remotenaki var GameStat, var GameEnv
 
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
@@ -295,8 +295,8 @@ return
 
 /* チャットバッファ受信 */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc initializechat var GameEnv, var ServerAddress, int ClientNumber
 	chatinit: rulewndinit
 	if (getGameMode(GameEnv) == GAMEMODE_STANDALONE) {gsel SCR_CHAT: objgray 1, 0: objgray 2, 0: gsel 0}

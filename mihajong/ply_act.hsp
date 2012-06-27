@@ -5,8 +5,8 @@
  */
 
 #module PLAYER
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 /* プレイヤーの打牌 */
 #deffunc playerdahai var GameStat, var GameEnv
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化

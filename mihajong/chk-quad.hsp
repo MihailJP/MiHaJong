@@ -5,7 +5,7 @@
  */
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc countKangz array KangzCount, array MianziDat
 /*
 		countKangz p1, p2
@@ -30,7 +30,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc countAnKangz array KangzCount, array MianziDat
 /*
 		countAnKangz p1, p2
@@ -55,7 +55,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc countKaKangz array KangzCount, array MianziDat
 /*
 		countKaKangz p1, p2
@@ -82,8 +82,8 @@
 
 /* ÈqŒn‚Ì–ğ */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc quadyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer
 	trace "Èq–ğ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	countKangz KangzCount, MianziDat: Kangzi = stat

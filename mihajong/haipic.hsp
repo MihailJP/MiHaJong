@@ -8,7 +8,7 @@
 // 0…自家 1…下家 2…対面 3…上家
 
 #module
-#include "const.as"
+#include "const.hsp"
 *execute
 	switch TileShowType
 		case RELATIVE_SELF:
@@ -38,7 +38,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 *execute
 	switch TileShowType
 		case RELATIVE_SELF:
@@ -68,7 +68,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 *execute
 	switch TileShowType
 		case RELATIVE_SELF:
@@ -98,14 +98,14 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc showtile int tileid, int tmpxx, int tmpyy
 	pos tmpxx, tmpyy: gcopy SCR_TILE_PIC, (tileid\TILE_SUIT_STEP-1)*TILE_WIDTH, tileid\TILE_CODE_MAXIMUM/TILE_SUIT_STEP*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT
 	return
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc showtilerotated int tileid, int tmpxx, int tmpyy
 	pos tmpxx, tmpyy: gcopy SCR_TILE_PIC, tileid\TILE_CODE_MAXIMUM/TILE_SUIT_STEP*TILE_HEIGHT+TILE_WIDTH*9, (9-tileid\TILE_SUIT_STEP)*TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH
 	return
@@ -113,8 +113,8 @@
 
 /* 手牌を表示する */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc puttehai var GameStat, int targetPlayer, int targetPosX, int targetPosY, int TileShowMode
 	// 下家の自摸牌の枠を表示(Ｚオーダーの関係上先行表示)
 	tehaiCount = 0
@@ -231,8 +231,8 @@ return
 
 /* 捨牌を表示する */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc putsutehai var GameStat, int targetPosX, int targetPosY, int targetPlayer, int TileShowMode
 	SutehaiCount = 0
 	RichiCount = 0
@@ -312,8 +312,8 @@ return
 
 /* 副露面子（暗槓を含む）を表示する */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc putnakihai var GameStat, int targetPlayer, int targetPosX, int targetPosY, int TileShowMode
 	tmpxx = targetPosX: tmpyy = targetPosY
 	// 牌の枠を表示
@@ -502,8 +502,8 @@ return
 
 /* 賽を表示する */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc putsai var GameStat, int targetPosX, int targetPosY, int ShadeX, int ShadeY
 	gmode gmode_mem
 	pos targetPosX+ShadeX, targetPosY+ShadeY
@@ -525,7 +525,7 @@ return
 
 /* リー棒を表示する */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc putrichi int targetPosX, int targetPosY, int ShadeX, int ShadeY
 	gmode gmode_mem
 	pos targetPosX+ShadeX, targetPosY+ShadeY
@@ -541,8 +541,8 @@ return
 
 /* 起家マークを表示する */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc putchichamark var GameStat, int targetPosX, int targetPosY , int ShadeX, int ShadeY
 	gmode gmode_mem
 	pos targetPosX+ShadeX, targetPosY+ShadeY

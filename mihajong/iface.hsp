@@ -6,7 +6,7 @@
 
 /* チャットウィンドウ関聯 */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc chatinit
 	sdim ChatLog, 32768 // チャットのログ
 	if (ginfo_dispx >= 1280) {
@@ -74,7 +74,7 @@ return
 
 /* ルール確認ウィンドウ関聯 */
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc rulewndinit
 	sdim RuleList, 32768 // ルールテキスト
 	if (ginfo_dispx >= 1280) {
@@ -99,8 +99,8 @@ return
 
 /* 共通スイッチの表示 */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc ifaceinit
 	StatusBoxTxt = ""
 	AutoAgariSwitch = 0 // オート和了のスイッチ

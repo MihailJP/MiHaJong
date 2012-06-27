@@ -7,15 +7,15 @@
 #ifdef SANMAS
 /* 数牌三麻用のダミー */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #defcfunc chkshisanbuda var GameStat, int targetPlayer
 	return 0 // dummy
 #global
 
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #defcfunc chkshisibuda var GameStat, int targetPlayer
 	return 0 // dummy
 #global
@@ -23,8 +23,8 @@
 #else
 /* 十三不塔の判定 */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #defcfunc chkshisanbuda var GameStat, int targetPlayer
 	ShisanBuDa = 0
 	Ukihai = 0
@@ -40,8 +40,8 @@
 
 /* 十四不塔の判定 */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #defcfunc chkshisibuda var GameStat, int targetPlayer
 	ShisiBuDa = 0
 	Ukihai = 0
@@ -56,8 +56,8 @@
 
 /* 十三不塔 */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc shisanbudayaku var GameStat, var tmpYakuInfo, int targetPlayer, array tmpScore, array ShantenArray
 	if (getRule(RULE_SHIISAN_PUUTAA) != 0) {
 		ShisanBuDa = chkshisanbuda(GameStat, targetPlayer)
@@ -90,8 +90,8 @@ return
 
 /* 十四不塔 */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc shisibudayaku var GameStat, var tmpYakuInfo, int targetPlayer, array tmpScore, array ShantenArray
 	if (getRule(RULE_SHIISAN_UUSHII) != 0) {
 		ShisiBuDa = chkshisibuda(GameStat, targetPlayer)

@@ -5,7 +5,7 @@
  */
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc countShunz array ShunzCount, array MianziDat
 /*
 		countShunz p1, p2
@@ -27,7 +27,7 @@
 #global
 
 #module
-#include "const.as"
+#include "const.hsp"
 #deffunc countAnShunz array ShunzCount, array MianziDat
 /*
 		countAnShunz p1, p2
@@ -51,8 +51,8 @@
 
 /* ‡qŒn‚Ì–ğ */
 #module
-#include "const.as"
-#include "struct.as"
+#include "const.hsp"
+#include "struct.hsp"
 #deffunc sequenceyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	trace "‡q–ğ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	countShunz ShunzCount, MianziDat
