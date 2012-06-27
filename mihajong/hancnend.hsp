@@ -7,7 +7,7 @@
 /* ”¼‘‘I—¹‚Ìˆ— */
 #module FINIS
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc endgame var GameStat, var GameEnv, int origTurn, int origHonba
 	calcRank Rank, GameStat
 	chatappend "-------------\n*** I—¹\n"

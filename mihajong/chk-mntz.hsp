@@ -41,7 +41,7 @@ int count
 /* –Êq‚É•ª‰ğ‚·‚é */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc makementsu var GameStat, var tmpYakuInfo, int targetPlayer, int Atamacode, var ProcessedTiles, array MianziDat
 	dim MianziDat, SIZE_OF_MELD_BUFFER // ”z—ñ‚ğ‰Šú‰»‚·‚é
 	countTilesInHand CountForMentsu, GameStat, targetPlayer

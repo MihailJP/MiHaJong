@@ -114,7 +114,7 @@
 /* 手牌を表示する */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc puttehai var GameStat, int targetPlayer, int targetPosX, int targetPosY, int TileShowMode
 	// 下家の自摸牌の枠を表示(Ｚオーダーの関係上先行表示)
 	tehaiCount = 0
@@ -232,7 +232,7 @@ return
 /* 捨牌を表示する */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc putsutehai var GameStat, int targetPosX, int targetPosY, int targetPlayer, int TileShowMode
 	SutehaiCount = 0
 	RichiCount = 0
@@ -313,7 +313,7 @@ return
 /* 副露面子（暗槓を含む）を表示する */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc putnakihai var GameStat, int targetPlayer, int targetPosX, int targetPosY, int TileShowMode
 	tmpxx = targetPosX: tmpyy = targetPosY
 	// 牌の枠を表示
@@ -503,7 +503,7 @@ return
 /* 賽を表示する */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc putsai var GameStat, int targetPosX, int targetPosY, int ShadeX, int ShadeY
 	gmode gmode_mem
 	pos targetPosX+ShadeX, targetPosY+ShadeY
@@ -542,7 +542,7 @@ return
 /* 起家マークを表示する */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc putchichamark var GameStat, int targetPosX, int targetPosY , int ShadeX, int ShadeY
 	gmode gmode_mem
 	pos targetPosX+ShadeX, targetPosY+ShadeY

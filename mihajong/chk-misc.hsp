@@ -70,7 +70,7 @@
 /* ‚»‚Ì‘¼‚Ì–ğ */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc miscyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	/* —ÎˆêF */
 #ifdef SANMAS

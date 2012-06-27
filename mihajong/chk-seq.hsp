@@ -52,7 +52,7 @@
 /* ‡qŒn‚Ì–ğ */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc sequenceyaku var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, int MachiType
 	trace "‡q–ğ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	countShunz ShunzCount, MianziDat

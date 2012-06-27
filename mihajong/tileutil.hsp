@@ -7,7 +7,7 @@
 /* 理牌する */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc lipai var GameStat, int targetPlayer
 /*
 		lipai p1, p2
@@ -70,7 +70,7 @@ return
 /* 場に見えてる個数 */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc countseentiles array SeenTiles, var GameStat
 /*
 		countseentiles p1, p2
@@ -122,7 +122,7 @@ return
 
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc countTilesInHand array TileCount, var GameStat, int targetPlayer
 /*
 		countTilesInHand p1, p2, p3
@@ -200,7 +200,7 @@ return
 /* 手牌のうちある１枚に注目する */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #defcfunc getpaiinfo var GameStat, int targetPlayer, int targetTile, int CheckMode
 /*
 		val=getpaiinfo(p1, p2, p3, p4)
@@ -262,7 +262,7 @@ return TileInfo
 /* 待ち牌を数える処理も含む */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc chkfuriten var FuritenFlag, array MachihaiFlag, array MachihaiCount, var MachihaiTotal, var MachiMen, var GameStat, int targetPlayer
 	trace "振聴かどうか・待ち牌を調べます。"
 	countseentiles SeenTiles, GameStat
@@ -321,7 +321,7 @@ return
 /* オープン立直の待ち牌 */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc chkopenmachi var GameStat, int targetPlayer
 	repeat TILE_NONFLOWER_STRICT_MAX+1
 		if (cnt\TILE_SUIT_STEP == 0) {continue}
@@ -338,7 +338,7 @@ return
 /* 九種九牌流しが可能かどうかのチェック */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #defcfunc chkdaopaiability var GameStat, int targetPlayer
 	DaoPaiAbilityFlag = 0
 	countTilesInHand TileCount, GameStat, targetPlayer
@@ -358,7 +358,7 @@ return DaoPaiAbilityFlag
 /* ドラを設定する */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc setdora var GameStat, int Mode
 	debug strf("ドラの追加 ポインタ [%d] 牌コード [%d] モード [%d]", getDoraPointer(GameStat), getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode), Mode)
 	if (getWall(GameStat, WALL_TILECODE, getDoraPointer(GameStat)+Mode) > TILE_SUIT_FLOWERS) {
@@ -447,7 +447,7 @@ return DaoPaiAbilityFlag
 /* 立直後の暗槓の可否 */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #defcfunc chkankanability var GameStat, int targetPlayer
 	debug strf("暗槓の可否を判定します。プレイヤー [%d]", targetPlayer)
 	/* 手牌を調べる */
@@ -533,7 +533,7 @@ return DaoPaiAbilityFlag
 /* 導火線の位置を調べる */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc calcdoukasen var GameStat
 /*
 		calcdoukasen p1
@@ -580,7 +580,7 @@ return DaoPaiAbilityFlag
 /* 聴牌かどうか調べる */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #defcfunc isTenpai var GameStat, var GameEnv, int targetPlayer
 	Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
 	if ((getAgariHouki(GameStat, targetPlayer) == 1)||(IsRemotePlayer(GameEnv, targetPlayer) == -1)) {
@@ -592,7 +592,7 @@ return DaoPaiAbilityFlag
 /* 流し満貫かどうか調べる */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #defcfunc isNagashiMangan var GameStat, var GameEnv, int targetPlayer
 	if ((getAgariHouki(GameStat, targetPlayer) == 1)||(IsRemotePlayer(GameEnv, targetPlayer) == -1)) {
 		return 0 // 和了り放棄時の処理→流し満貫を認めない
@@ -624,7 +624,7 @@ return DaoPaiAbilityFlag
 /* 卓の状態のサンドボックスを作る */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc makesandbox var Sandbox, var GameStat, int targetPlayer
 	Sandbox = initializeSandbox(GAMETYPE)
 	repeat NUM_OF_PLAYERS*NUM_OF_DIGIT_GROUPS: setScore Sandbox, cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS, getScore(GameStat, cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS): loop

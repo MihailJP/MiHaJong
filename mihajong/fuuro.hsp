@@ -7,7 +7,7 @@
 /* 副露の処理 */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc fuuroproc var GameStat, var GameEnv, var RoundEndType, int DiscardTileIndex, int Mode
 	info strf("副露の処理を開始します。モード [%d]", Mode)
 	switch Mode
@@ -422,7 +422,7 @@
 /* 包を判定する */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc checkpao var GameStat
 	// 包の判定 ここから
 	debug "包の条件を判定します。"
@@ -462,7 +462,7 @@
 /* 栄和のときの処理 */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc ronhuproc var GameStat, var GameEnv
 	RoundEndType = -1
 	info "リアクションを問い合わせます。"
@@ -641,7 +641,7 @@ return RoundEndType
 
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc executeFuuro var GameStat, int DiscardTileIndex
 	/* 捨牌をポン、または大明槓する場合の処理 */
 	/* 同じ牌は４枚しかないので、ポンと明槓は同時に起こることがない */

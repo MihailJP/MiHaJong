@@ -75,7 +75,7 @@ return
 /* u“Œ›‹Çv‚È‚Ç‚Ì•¶š—ñ‚ğ•Ô‚· */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #defcfunc roundName int roundNum
 	roundNameTxt = ""
 	switch roundNum/NUM_OF_PLAYERS

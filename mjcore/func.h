@@ -45,8 +45,8 @@ __declspec(dllexport) inline int roundLoopRate();
 
 __declspec(dllexport) inline int tilesLeft(GameTable* gameStat);
 
-PlayerRankList calcRanc(GameTable* gameStat);
-__declspec(dllexport) void calcRanc(int* Rank, GameTable* gameStat);
+PlayerRankList calcRank(GameTable* gameStat);
+__declspec(dllexport) void calcRank(int* Rank, GameTable* gameStat);
 
 bool isPao(GameTable* gameStat, PLAYER_ID agariPlayer, PLAYER_ID paoPlayer);
 __declspec(dllexport) int isPao(GameTable* gameStat, int agariPlayer, int paoPlayer);

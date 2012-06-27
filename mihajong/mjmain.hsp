@@ -39,7 +39,6 @@
 #include "appinit.hsp"
 #include "const.hsp"
 #include "alias.hsp"
-#include "struct.hsp"
 #include "evstruct.hsp"
 
 #include "init.hsp"

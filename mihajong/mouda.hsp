@@ -6,7 +6,7 @@
 
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc getdahai var GameStat, var GameEnv
 	/* COMが「カンニング」しないように処理 */
 	makesandbox Sandbox, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
@@ -58,7 +58,7 @@
 
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc procdahai var GameStat, var GameEnv, var DiscardTileIndex
 	// 打牌コード
 	// ０～１２…それぞれの手牌
@@ -311,7 +311,7 @@
 
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc tsumoproc var GameStat
 	/* 次のプレイヤーが牌を自摸る */
 	incDrawPointer GameStat: setHeavenHandFlag GameStat, 0

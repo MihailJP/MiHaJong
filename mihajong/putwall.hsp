@@ -6,7 +6,7 @@
 
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 /* •Ç”v‚ð•\Ž¦‚·‚é */
 #deffunc putyama var GameStat, int targetPosX, int targetPosY, int targetPlayer, int trueTargetPlayer
 #ifdef ALLSANMA

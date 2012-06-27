@@ -84,7 +84,7 @@
 /* 接続先の打牌 */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc remotedahai var GameStat, var GameEnv
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
@@ -152,7 +152,7 @@
 /* 接続先の鳴き */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc remotenaki var GameStat, var GameEnv
 
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
@@ -296,7 +296,7 @@ return
 /* チャットバッファ受信 */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc initializechat var GameEnv, var ServerAddress, int ClientNumber
 	chatinit: rulewndinit
 	if (getGameMode(GameEnv) == GAMEMODE_STANDALONE) {gsel SCR_CHAT: objgray 1, 0: objgray 2, 0: gsel 0}

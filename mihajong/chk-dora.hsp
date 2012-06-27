@@ -7,7 +7,7 @@
 /* ƒhƒ‰‚ğ”‚¦‚é */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc countdora var GameStat, var tmpYakuInfo, int targetPlayer
 	countTilesInHand TileCount, GameStat, targetPlayer
 	/* ƒhƒ‰‚Å˜a—¹‚Á‚½‚ç1ãÊ */

@@ -7,7 +7,7 @@
 /* ‘m–³‘o */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc shisanyaoyaku var GameStat, var tmpYakuInfo, int targetPlayer, int FuritenFlag
 	trace "‘m–³‘o‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	countTilesInHand TileCount, GameStat, targetPlayer

@@ -55,7 +55,7 @@ __declspec(dllexport) inline int tilesLeft(GameTable* gameStat) {
 }
 
 /* ‡ˆÊ‚ğŒvZ‚·‚é */
-PlayerRankList calcRanc(GameTable* gameStat) {
+PlayerRankList calcRank(GameTable* gameStat) {
 	PlayerRankList rankList;
 	rankList.fill(0);
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
@@ -67,8 +67,8 @@ PlayerRankList calcRanc(GameTable* gameStat) {
 	}
 	return rankList;
 }
-__declspec(dllexport) void calcRanc(int* Rank, GameTable* gameStat) {
-	const PlayerRankList rankList = calcRanc(gameStat);
+__declspec(dllexport) void calcRank(int* Rank, GameTable* gameStat) {
+	const PlayerRankList rankList = calcRank(gameStat);
 	assert(rankList[0] > 0); assert(rankList[1] > 0);
 	for (int i = 0; i < PLAYERS; i++) *(Rank + i) = rankList[i];
 }

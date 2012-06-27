@@ -67,7 +67,7 @@ return
 
 #module haifu
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 
 #define COLUMNS 40
 

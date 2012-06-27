@@ -7,7 +7,7 @@
 /* •„‚ğZo‚·‚é */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc calcbasepoints var GameStat, var tmpYakuInfo, array MianziDat, int targetPlayer, var MachiType
 	trace "•„ŒvZ‚Ìˆ—‚É“ü‚è‚Ü‚·B"
 	/* •›’êc‚Q‚O•„ */

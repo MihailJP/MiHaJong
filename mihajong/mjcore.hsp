@@ -8,31 +8,36 @@
 
 /* ロギングツール */
 /*
-#func global _initlog_ "?initLogger@logger@@YAHXZ"
-#func global _trace_msg_ "?trace_msg@logger@@YAXPBD@Z" str
-#func global _debug_msg_ "?debug_msg@logger@@YAXPBD@Z" str
-#func global _info_msg_ "?info_msg@logger@@YAXPBD@Z" str
-#func global _warn_msg_ "?warn_msg@logger@@YAXPBD@Z" str
-#func global _error_msg_ "?error_msg@logger@@YAXPBD@Z" str
-#func global _fatal_msg_ "?fatal_msg@logger@@YAXPBD@Z" str
+#func _initlog_ "?initLogger@logger@@YAHXZ"
+#func _trace_msg_ "?trace_msg@logger@@YAXPBD@Z" str
+#func _debug_msg_ "?debug_msg@logger@@YAXPBD@Z" str
+#func _info_msg_ "?info_msg@logger@@YAXPBD@Z" str
+#func _warn_msg_ "?warn_msg@logger@@YAXPBD@Z" str
+#func _error_msg_ "?error_msg@logger@@YAXPBD@Z" str
+#func _fatal_msg_ "?fatal_msg@logger@@YAXPBD@Z" str
 */
 
 /* ルールコンフィグ */
 /*
-#func global _storeRule "?storeRule@@YAXPAPAD@Z" var
-#func global _exportRule "?exportRule@@YAXPAPAD@Z" var
+#func _storeRule "?storeRule@@YAXPAPAD@Z" var
+#func _exportRule "?exportRule@@YAXPAPAD@Z" var
 */
-#cfunc global getRule "?getRule@@YAHH@Z" int
+#cfunc getRule "?getRule@@YAHH@Z" int
 
 /* func.hspからの移植 */
-#cfunc global playerwind "?playerwind@@YAHHH@Z" int, int
-#cfunc global playerRelative "?playerRelative@@YAHHH@Z" int, int
-#cfunc global RelativePositionOf "?RelativePositionOf@@YAHHH@Z" int, int
-#cfunc global roundLoopRate "?roundLoopRate@@YAHXZ"
-#cfunc global tilesLeft "?tilesLeft@@YAHPAUGameTable@@@Z" int
-#func global calcRanc "?calcRanc@@YAXPAHPAUGameTable@@@Z" var, int
-#cfunc global isPao "?isPao@@YAHPAUGameTable@@HH@Z" int, int, int
-#cfunc global isPaoAgari "?isPaoAgari@@YAHPAUGameTable@@H@Z" int, int
-#cfunc global isGotPao "?isGotPao@@YAHPAUGameTable@@H@Z" int, int
-#cfunc global getPaoPlayer "?getPaoPlayer@@YAHPAUGameTable@@H@Z" int, int
-#cfunc global RonPlayers "?RonPlayers@@YAHPAUGameTable@@@Z" int
+#cfunc playerwind "?playerwind@@YAHHH@Z" int, int
+#cfunc playerRelative "?playerRelative@@YAHHH@Z" int, int
+#cfunc RelativePositionOf "?RelativePositionOf@@YAHHH@Z" int, int
+#cfunc roundLoopRate "?roundLoopRate@@YAHXZ"
+#cfunc tilesLeft "?tilesLeft@@YAHPAUGameTable@@@Z" int
+#func calcRank "?calcRanc@@YAXPAHPAUGameTable@@@Z" var, int
+#cfunc isPao "?isPao@@YAHPAUGameTable@@HH@Z" int, int, int
+#cfunc isPaoAgari "?isPaoAgari@@YAHPAUGameTable@@H@Z" int, int
+#cfunc isGotPao "?isGotPao@@YAHPAUGameTable@@H@Z" int, int
+#cfunc getPaoPlayer "?getPaoPlayer@@YAHPAUGameTable@@H@Z" int, int
+#cfunc RonPlayers "?RonPlayers@@YAHPAUGameTable@@@Z" int
+
+/* ------------------------------------------------------------------------ */
+
+/*  卓情報へのアクセサ  */
+#include "struct.hsp"

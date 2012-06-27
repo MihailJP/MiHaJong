@@ -10,7 +10,7 @@
 /* ‚`‚h‚Ì‘Å”v */
 #module COMP
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #define global COMTHINKTIME 600
 #deffunc compdahai var GameStat
 	info strf("AI‚Ì‘Å”vˆ—‚É“ü‚è‚Ü‚·BƒvƒŒƒCƒ„[ [%d]", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))

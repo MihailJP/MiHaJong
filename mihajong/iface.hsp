@@ -100,7 +100,7 @@ return
 /* 共通スイッチの表示 */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc ifaceinit
 	StatusBoxTxt = ""
 	AutoAgariSwitch = 0 // オート和了のスイッチ

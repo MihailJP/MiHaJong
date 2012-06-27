@@ -161,7 +161,7 @@ return
 /* Ä•`‰æ(æÎU‚è‚Ì) */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc redrdice var GameStat, var GameEnv
 	repeat NUM_OF_ACTUAL_PLAYERS
 		gsel SCR_PLAYER_BUFFER_UPPER+cnt: gmode gmode_mem
@@ -191,7 +191,7 @@ return
 /* Ä•`‰æ */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc redrscreen
 	doredrscreen GameStat@, GameEnv@
 return
@@ -364,7 +364,7 @@ return
 
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc putnamepanel var GameStat, var GameEnv, int targetPlayer
 	/* –¼‘Oƒpƒlƒ‹ */
 	color GetTableColorR(GameEnv)*10/8, GetTableColorG(GameEnv)*10/8, GetTableColorB(GameEnv)*10/8
@@ -422,7 +422,7 @@ return
 
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc putcenterpanel var GameStat, var GameEnv
 	/* ‰æ–Ê’†‰›‚É•\¦‚·‚éî•ñ */
 	gmode gmode_mem
@@ -530,7 +530,7 @@ return
 /* Še‰Æ‚Ìî•ñ‚ğ•\¦ */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc putplayerinfo var GameStat, int targetPlayer
 	gsel SCR_PLAYER_BUFFER_UPPER+targetPlayer
 	color 0, 0, 0
@@ -927,7 +927,7 @@ return
 
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #deffunc putlowerpanel var GameStat, var GameEnv
 	/* ‰æ–Ê‰º‚ğ•‚Å“h‚é */
 	color GetTableColorR(GameEnv)/5, GetTableColorG(GameEnv)/5, GetTableColorB(GameEnv)/5

@@ -7,7 +7,7 @@
 /* Œü’®”‚ÌŒvZ */
 #module
 #include "const.hsp"
-#include "struct.hsp"
+#include "mjcore.hsp"
 #defcfunc countshanten var GameStat, int targetPlayer, int Mode
 /*
 		val=countshanten(p1, p2, p3)
