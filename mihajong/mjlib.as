@@ -23,3 +23,16 @@
 #func global _exportRule "?exportRule@@YAXPAPAD@Z" var
 */
 #cfunc global getRule "?getRule@@YAHH@Z" int
+
+/* func.hspÇ©ÇÁÇÃà⁄êA */
+#cfunc global playerwind "?playerwind@@YAHHH@Z" int, int
+#cfunc global playerRelative "?playerRelative@@YAHHH@Z" int, int
+#cfunc global RelativePositionOf "?RelativePositionOf@@YAHHH@Z" int, int
+#cfunc global roundLoopRate "?roundLoopRate@@YAHXZ"
+#cfunc global tilesLeft "?tilesLeft@@YAHPAUGameTable@@@Z" int
+#func global calcRanc "?calcRanc@@YAXPAHPAUGameTable@@@Z" var, int
+#cfunc global isPao "?isPao@@YAHPAUGameTable@@HH@Z" int, int, int
+#cfunc global isPaoAgari "?isPaoAgari@@YAHPAUGameTable@@H@Z" int, int
+#cfunc global isGotPao "?isGotPao@@YAHPAUGameTable@@H@Z" int, int
+#cfunc global getPaoPlayer "?getPaoPlayer@@YAHPAUGameTable@@H@Z" int, int
+#cfunc global RonPlayers "?RonPlayers@@YAHPAUGameTable@@@Z" int

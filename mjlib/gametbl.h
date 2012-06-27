@@ -2,6 +2,7 @@
 #define GAMETBL_H
 
 #include <array>
+#include <bitset>
 #include <cstdint>
 #include <exception>
 #include <stdexcept>
@@ -28,6 +29,14 @@ private:
 				this->digitGroup[i] %= 100000000;
 			}
 		}
+	}
+	signed int compare(const LargeNum& cmp) { // 比較用
+		signed int ans = 0;
+		for (int i = DIGIT_GROUPS - 1; i >= 0; i--) {
+			if (this->digitGroup[i] > cmp.digitGroup[i]) {ans = 1; break;}
+			else if (this->digitGroup[i] < cmp.digitGroup[i]) {ans = -1; break;}
+		}
+		return ans;
 	}
 public:
 	LargeNum() { // ±21不可思議まで表現可能な数のクラス
@@ -101,6 +110,12 @@ public:
 		ans.fix();
 		return ans;
 	}
+	const bool operator==(const LargeNum& cmp) { return (this->compare(cmp) == 0); }
+	const bool operator!=(const LargeNum& cmp) { return (this->compare(cmp) != 0); }
+	const bool operator<(const LargeNum& cmp) { return (this->compare(cmp) < 0); }
+	const bool operator>(const LargeNum& cmp) { return (this->compare(cmp) > 0); }
+	const bool operator<=(const LargeNum& cmp) { return (this->compare(cmp) <= 0); }
+	const bool operator>=(const LargeNum& cmp) { return (this->compare(cmp) >= 0); }
 	const int32_t& operator[] (const int i) const { // const 配列アクセス……
 		return digitGroup[i];
 	}
@@ -181,12 +196,11 @@ typedef std::array<meldCode, SIZE_OF_MELD_BUFFER> MELD_BUF;
 
 // -------------------------------------------------------------------------
 
-struct RichiStat { // 立直フラグを格納
-	bool RichiFlag;
-	bool IppatsuFlag;
-	bool DoubleFlag;
-	bool OpenFlag;
+enum RICHI_STAT_BITS { // 立直フラグを格納
+	RichiFlag, IppatsuFlag, DoubleFlag, OpenFlag,
+	RichiStatBits
 };
+typedef std::bitset<RichiStatBits> RichiStat;
 
 // -------------------------------------------------------------------------
 

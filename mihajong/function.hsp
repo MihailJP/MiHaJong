@@ -59,33 +59,6 @@ return
 	return ans
 #global
 
-/* プレイヤーの自風がどれか調べる */
-#module
-#include "const.as"
-#defcfunc playerwind int player, int currentRound
-#ifdef SANMAT
-	return ((player+24-(currentRound-(currentRound/4)))\NUM_OF_ACTUAL_PLAYERS)
-#else
-	return ((player+32-currentRound)\NUM_OF_ACTUAL_PLAYERS)
-#endif
-#global
-
-/* あるプレイヤーに対して指定したプレイヤーがどこ(下家、対面、上家)にいるか調べる */
-#module
-#include "const.as"
-#defcfunc playerRelative int targetPlayer, int basePlayer
-	// ((4+targetPlayer-getPlayer(GameStat))\4)*(TileShowMode) の値
-	// 0…自家 1…下家 2…対面 3…上家
-	return (NUM_OF_PLAYERS+targetPlayer-basePlayer)\NUM_OF_PLAYERS
-#global
-
-/* あるプレイヤーの(下家、対面、上家)を調べる */
-#module
-#include "const.as"
-#defcfunc RelativePositionOf int targetPlayer, int relative
-	return (targetPlayer+relative)\NUM_OF_PLAYERS
-#global
-
 /* 「東家」「南家」「西家」「北家」の文字列を返す */
 #module
 #include "const.as"
@@ -141,14 +114,6 @@ return
 	return roundNameTxt
 #global
 
-/* 一周するまでに必要な場の数 */
-#module
-#include "const.as"
-#defcfunc roundLoopRate
-	if (getRule(RULE_SUDDEN_DEATH_TYPE) == 1) {return 28}
-	else {return 16}
-#global
-
 /* 牌の名前の文字列を返す */
 #module
 #include "const.as"
@@ -190,93 +155,6 @@ return
 		case TILE_RED_DRAGON  : return "中": swbreak
 		default: return "????": swbreak
 	swend
-#global
-
-/* 王牌を除いた山牌の残り枚数 */
-#module
-#include "struct.as"
-#defcfunc tilesLeft var GameStat
-	return (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1) - getDrawPointer(GameStat))
-#global
-
-/* 順位を計算する */
-#module
-#include "const.as"
-#include "struct.as"
-#deffunc calcRank array Rank, var GameStat
-	dim Rank, NUM_OF_PLAYERS
-	repeat NUM_OF_ACTUAL_PLAYERS
-		Rank(cnt) = 1
-		tmpcnt = cnt
-		repeat NUM_OF_ACTUAL_PLAYERS
-			tmpcntt = cnt
-			repeat NUM_OF_DIGIT_GROUPS
-				if (getScore(GameStat,tmpcntt,NUM_OF_DIGIT_GROUPS-1-cnt) > getScore(GameStat,tmpcnt,NUM_OF_DIGIT_GROUPS-1-cnt)) {Rank(tmpcnt)++: break}
-				if (getScore(GameStat,tmpcntt,NUM_OF_DIGIT_GROUPS-1-cnt) < getScore(GameStat,tmpcnt,NUM_OF_DIGIT_GROUPS-1-cnt)) {break}
-				if ((cnt == NUM_OF_DIGIT_GROUPS-1)&&(tmpcnt > tmpcntt)) {Rank(tmpcnt)++}
-			loop
-		loop
-	loop
-	return
-#global
-
-/* 包かどうかの判定 */
-#module
-#include "const.as"
-#include "struct.as"
-#defcfunc isPao var GameStat, int agariPlayer, int paoPlayer
-	paoFlag = 0
-	repeat PAO_YAKU_PAGES
-		if ((paoPlayer == getPao(GameStat, PAO_PLAYER_PAO, cnt))&&(getPao(GameStat, PAO_PLAYER_AGARI, cnt) == agariPlayer)) {
-			paoFlag = 1
-		}
-	loop
-	return paoFlag
-#global
-
-#module
-#include "const.as"
-#include "struct.as"
-#defcfunc isPaoAgari var GameStat, int agariPlayer
-	paoFlag = 0
-	repeat PAO_YAKU_PAGES
-		if (getPao(GameStat, PAO_PLAYER_AGARI, cnt) == agariPlayer) {
-			paoFlag = 1
-		}
-	loop
-	return paoFlag
-#global
-
-#module
-#include "const.as"
-#include "struct.as"
-#defcfunc isGotPao var GameStat, int paoPlayer
-	paoFlag = 0
-	repeat PAO_YAKU_PAGES
-		if (paoPlayer == getPao(GameStat, PAO_PLAYER_PAO, cnt)) {
-			paoFlag = 1
-		}
-	loop
-	return paoFlag
-#global
-
-#module
-#include "const.as"
-#defcfunc getPaoPlayer var GameStat, int agariPlayer
-	PaoPlayer = -1
-	repeat PAO_YAKU_PAGES
-		if ((getPao(GameStat, PAO_PLAYER_PAO, cnt) >= 0)&&(getPao(GameStat, PAO_PLAYER_AGARI, cnt) == agariPlayer)) {
-			PaoPlayer = getPao(GameStat, PAO_PLAYER_PAO, cnt)
-		}
-	loop
-	return PaoPlayer
-#global
-
-#module
-#include "const.as"
-#include "struct.as"
-#defcfunc RonPlayers var GameStat
-	return getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 3)
 #global
 
 /* 場風牌のリスト */

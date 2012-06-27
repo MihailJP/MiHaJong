@@ -1,6 +1,6 @@
 #include "gametbl.h"
 
-static GameTable GameStat, StatSandBox;
+GameTable GameStat, StatSandBox;
 
 inline bool chkGameType(GameTable* gameStat, gameTypeID gameType) {
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
@@ -401,36 +401,36 @@ extern "C" {
 		case 0:
 			switch (value) {
 			case 0:
-				gameStat->Player[Player].RichiFlag.RichiFlag = false;
-				gameStat->Player[Player].RichiFlag.IppatsuFlag = false;
-				gameStat->Player[Player].RichiFlag.DoubleFlag = false;
+				gameStat->Player[Player].RichiFlag.reset(RichiFlag);
+				gameStat->Player[Player].RichiFlag.reset(IppatsuFlag);
+				gameStat->Player[Player].RichiFlag.reset(DoubleFlag);
 				break;
 			case 1:
-				gameStat->Player[Player].RichiFlag.RichiFlag = true;
-				gameStat->Player[Player].RichiFlag.IppatsuFlag = false;
-				gameStat->Player[Player].RichiFlag.DoubleFlag = false;
+				gameStat->Player[Player].RichiFlag.set(RichiFlag);
+				gameStat->Player[Player].RichiFlag.reset(IppatsuFlag);
+				gameStat->Player[Player].RichiFlag.reset(DoubleFlag);
 				break;
 			case 2:
-				gameStat->Player[Player].RichiFlag.RichiFlag = true;
-				gameStat->Player[Player].RichiFlag.IppatsuFlag = true;
-				gameStat->Player[Player].RichiFlag.DoubleFlag = false;
+				gameStat->Player[Player].RichiFlag.set(RichiFlag);
+				gameStat->Player[Player].RichiFlag.set(IppatsuFlag);
+				gameStat->Player[Player].RichiFlag.reset(DoubleFlag);
 				break;
 			case 3:
-				gameStat->Player[Player].RichiFlag.RichiFlag = true;
-				gameStat->Player[Player].RichiFlag.IppatsuFlag = false;
-				gameStat->Player[Player].RichiFlag.DoubleFlag = true;
+				gameStat->Player[Player].RichiFlag.set(RichiFlag);
+				gameStat->Player[Player].RichiFlag.reset(IppatsuFlag);
+				gameStat->Player[Player].RichiFlag.set(DoubleFlag);
 				break;
 			case 4:
-				gameStat->Player[Player].RichiFlag.RichiFlag = true;
-				gameStat->Player[Player].RichiFlag.IppatsuFlag = true;
-				gameStat->Player[Player].RichiFlag.DoubleFlag = true;
+				gameStat->Player[Player].RichiFlag.set(RichiFlag);
+				gameStat->Player[Player].RichiFlag.set(IppatsuFlag);
+				gameStat->Player[Player].RichiFlag.set(DoubleFlag);
 				break;
 			default:
 				throw(std::domain_error("setRichiFlag(): 正しくない値が指定されました"));
 			}
 			break;
 		case 1:
-			gameStat->Player[Player].RichiFlag.OpenFlag = value;
+			gameStat->Player[Player].RichiFlag.set(OpenFlag, value);
 			break;
 		default:
 			throw(std::domain_error("setRichiFlag(): 正しくないページが指定されました"));
@@ -440,13 +440,13 @@ extern "C" {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
-			return gameStat->Player[Player].RichiFlag.RichiFlag ?
+			return gameStat->Player[Player].RichiFlag[RichiFlag] ?
 				1 +
-				(gameStat->Player[Player].RichiFlag.IppatsuFlag ? 1 : 0) +
-				(gameStat->Player[Player].RichiFlag.DoubleFlag ? 2 : 0)
+				(gameStat->Player[Player].RichiFlag[IppatsuFlag] ? 1 : 0) +
+				(gameStat->Player[Player].RichiFlag[DoubleFlag] ? 2 : 0)
 				: 0;
 		case 1:
-			return gameStat->Player[Player].RichiFlag.OpenFlag ? 1 : 0;
+			return gameStat->Player[Player].RichiFlag[OpenFlag] ? 1 : 0;
 		default:
 			throw(std::domain_error("getRichiFlag(): 正しくないページが指定されました"));
 		}
@@ -1064,8 +1064,7 @@ extern "C" {
 				k.mstat = (meldStat)0;
 			});
 			pl.NumberOfQuads = 0; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
-			pl.RichiFlag.RichiFlag = pl.RichiFlag.IppatsuFlag = // リーチしているかどうか
-				pl.RichiFlag.DoubleFlag = pl.RichiFlag.OpenFlag = false;
+			pl.RichiFlag.reset(); // リーチしているかどうか
 			pl.FirstDrawFlag = true; // １巡目である（地和、ダブル立直の判定に使う）
 			pl.DoujunFuriten = // 同順振聴である
 				pl.AgariHouki = false; // 和了り放棄の罰則中かどうか
