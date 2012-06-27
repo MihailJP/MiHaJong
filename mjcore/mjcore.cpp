@@ -1,4 +1,4 @@
-#include "mjlib.h"
+#include "mjcore.h"
 
 static RULETBL ruleList;
 

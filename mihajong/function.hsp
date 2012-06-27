@@ -7,7 +7,7 @@
 /* デバッグログ */
 #module debuglog
 
-#uselib "mjlib.dll"
+#uselib "mjcore.dll"
 #func _initlog_ "?initLogger@logger@@YAHXZ"
 #func _trace_msg_ "?trace_msg@logger@@YAXPBD@Z" str
 #func _debug_msg_ "?debug_msg@logger@@YAXPBD@Z" str

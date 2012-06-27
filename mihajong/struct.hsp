@@ -5,7 +5,7 @@
  */
 
 /* メンバにアクセスするためのAPI */
-#uselib "mjlib.dll"
+#uselib "mjcore.dll"
 #func setScore "setScore" int, int, int, int
 #func addScore "addScore" int, int, int, int
 #cfunc getScore "getScore" int, int, int

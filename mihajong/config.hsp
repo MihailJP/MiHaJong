@@ -8,7 +8,7 @@
 #module
 #include "const.hsp"
 
-#uselib "mjlib.dll"
+#uselib "mjcore.dll"
 #func _storeRule "?storeRule@@YAXPAPBD@Z" var
 #func _exportRule "?exportRule@@YAXPAPAD@Z" var
 

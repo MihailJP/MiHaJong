@@ -18,7 +18,7 @@
 #define WITH_CONFTXT_CACHE
 
 /* Šg’£‹@”\‚Ì“o˜^ */
-#include "mjlib.hsp"
+#include "mjcore.hsp"
 #include "p2b.as"
 #include "hmm.as"
 #include "hspsock.as"

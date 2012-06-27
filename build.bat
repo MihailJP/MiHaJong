@@ -1,5 +1,5 @@
 set HSPPATH="C:\Program Files\hsp321"
-cd mjlib
+cd mjcore
 call build.bat
 cd ..\mihajong
 call build.bat

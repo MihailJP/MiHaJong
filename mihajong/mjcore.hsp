@@ -4,7 +4,7 @@
  *=============================
  */
 
-#uselib "mjlib.dll"
+#uselib "mjcore.dll"
 
 /* ƒƒMƒ“ƒOƒc[ƒ‹ */
 /*

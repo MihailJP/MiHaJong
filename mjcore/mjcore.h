@@ -1,5 +1,5 @@
-#ifndef MJLIB_H
-#define MJLIB_H
+#ifndef MJCORE_H
+#define MJCORE_H
 
 #include "ruletbl.h"
 
