@@ -19,17 +19,17 @@ extern "C" {
 	__declspec(dllexport) void setScore(GameTable* gameStat, int Player, int Digit, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].PlayerScore[Digit] = value *
-			(Digit ? 1 : (100000000u / gameStat->Player[Player].PlayerScore.getFirstArg())); return;
+			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.getFirstArg())); return;
 	}
 	__declspec(dllexport) void addScore(GameTable* gameStat, int Player, int Digit, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].PlayerScore[Digit] += value *
-			(Digit ? 1 : (100000000u / gameStat->Player[Player].PlayerScore.getFirstArg())); return;
+			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.getFirstArg())); return;
 	}
 	__declspec(dllexport) int getScore(GameTable* gameStat, int Player, int Digit) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].PlayerScore[Digit] /
-			(Digit ? 1 : (100000000u / gameStat->Player[Player].PlayerScore.getFirstArg()));
+			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.getFirstArg()));
 	}
 	__declspec(dllexport) void exportScore(GameTable* gameStat, int* exportArray) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
@@ -37,7 +37,7 @@ extern "C" {
 			for (int i = 0; i < PLAYERS; i++) {
 				*(exportArray + j * PLAYERS + i) =
 					gameStat->Player[i].PlayerScore[j] /
-					(j ? 1 : (100000000u / gameStat->Player[i].PlayerScore.getFirstArg()));
+					(j ? 1 : (signed int)(100000000u / gameStat->Player[i].PlayerScore.getFirstArg()));
 			}
 		}
 	}
@@ -47,7 +47,7 @@ extern "C" {
 			for (int i = 0; i < PLAYERS; i++) {
 				gameStat->Player[i].PlayerScore[j] =
 					*(importArray + j * PLAYERS + i) *
-					(j ? 1 : (100000000u / gameStat->Player[i].PlayerScore.getFirstArg()));
+					(j ? 1 : (signed int)(100000000u / gameStat->Player[i].PlayerScore.getFirstArg()));
 			}
 		}
 	}
@@ -354,14 +354,12 @@ extern "C" {
 
 	__declspec(dllexport) void setMenzen(GameTable* gameStat, int Player, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		gameStat->Player[Player].MenzenFlagAb = value;
-		if (value == 0) gameStat->Player[Player].MenzenFlag = false;
-		else if (value == 1) gameStat->Player[Player].MenzenFlag = true;
+		gameStat->Player[Player].MenzenFlag = value;
 		return;
 	}
 	__declspec(dllexport) int getMenzen(GameTable* gameStat, int Player) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		return gameStat->Player[Player].MenzenFlagAb;
+		return gameStat->Player[Player].MenzenFlag ? 1 : 0;
 	}
 
 	// ---------------------------------------------------------------------
@@ -1039,6 +1037,7 @@ extern "C" {
 		gameStat->DoraFlag.Omote.fill(0); // ドラ判定の配列
 		gameStat->DoraFlag.Ura.fill(0); // ドラ判定の配列
 		gameStat->TsumoAgariFlag = false;
+		gameStat->AgariSpecialStat = 0;
 		resetDeclarationFlag(gameStat);
 		gameStat->CurrentDiscard.tile = NoTile;
 		gameStat->CurrentDiscard.red = 0;
@@ -1179,9 +1178,103 @@ extern "C" {
 		return &GameStat;
 	}
 
-	__declspec(dllexport) GameTable* initializeSandbox(int gameType) { /* 卓の状態のサンドボックスを作る */
-		doInitializeGameTable(&StatSandBox, gameType);
-		return &StatSandBox;
+	// ---------------------------------------------------------------------
+
+	__declspec(dllexport) void makesandBox(int* Sandbox, GameTable* gameStat, int targetPlayer) {
+		/* 卓の状態のサンドボックスを作る */
+		GameTable* sandbox = &StatSandBox;
+		doInitializeGameTable(sandbox, gameStat->gameType);
+		for (int p = 0; p < PLAYERS; p++) {
+			sandbox->Player[p].PlayerScore = LargeNum(gameStat->Player[p].PlayerScore);
+			sandbox->Player[p].playerChip = gameStat->Player[p].playerChip;
+			sandbox->Player[p].SumaroFlag = gameStat->Player[p].SumaroFlag;
+			sandbox->Player[p].YakitoriFlag = gameStat->Player[p].YakitoriFlag;
+			if ((gameStat->Player[p].RichiFlag[OpenFlag])||(p == targetPlayer)) {
+				for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+					sandbox->Player[p].Hand[i].tile = gameStat->Player[p].Hand[i].tile;
+					sandbox->Player[p].Hand[i].red = gameStat->Player[p].Hand[i].red;
+				}
+			}
+			sandbox->Player[p].RichiFlag = gameStat->Player[p].RichiFlag;
+			for (int i = 0; i < SIZE_OF_DISCARD_BUFFER; i++) {
+				sandbox->Player[p].Discard[i].isDiscardThrough = gameStat->Player[p].Discard[i].isDiscardThrough;
+				sandbox->Player[p].Discard[i].dstat = gameStat->Player[p].Discard[i].dstat;
+				sandbox->Player[p].Discard[i].tcode.tile = gameStat->Player[p].Discard[i].tcode.tile;
+				sandbox->Player[p].Discard[i].tcode.red = gameStat->Player[p].Discard[i].tcode.red;
+			}
+			sandbox->Player[p].DiscardPointer = gameStat->Player[p].DiscardPointer;
+			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
+				sandbox->Player[p].Meld[i].mstat = gameStat->Player[p].Meld[i].mstat;
+				sandbox->Player[p].Meld[i].tcode.tile = gameStat->Player[p].Meld[i].tcode.tile;
+				sandbox->Player[p].Meld[i].tcode.red = gameStat->Player[p].Meld[i].tcode.red;
+			}
+			sandbox->Player[p].MenzenFlag = gameStat->Player[p].MenzenFlag;
+			sandbox->Player[p].NumberOfQuads = gameStat->Player[p].NumberOfQuads;
+			sandbox->Player[p].RichiFlag = RichiStat(gameStat->Player[p].RichiFlag);
+			sandbox->Player[p].FirstDrawFlag = gameStat->Player[p].FirstDrawFlag;
+			sandbox->Player[p].DoujunFuriten = gameStat->Player[p].DoujunFuriten;
+			sandbox->Player[p].AgariHouki = gameStat->Player[p].AgariHouki;
+			sandbox->Player[p].FlowerFlag = gameStat->Player[p].FlowerFlag;
+			sandbox->Player[p].NorthFlag = gameStat->Player[p].NorthFlag;
+			sandbox->Player[p].ConnectionLost = gameStat->Player[p].ConnectionLost;
+		}
+		sandbox->PlayerID = gameStat->PlayerID;
+		sandbox->GameRound = gameStat->GameRound;
+		sandbox->LoopRound = gameStat->LoopRound;
+		sandbox->Honba = gameStat->Honba;
+		sandbox->TurnRound = gameStat->TurnRound;
+		sandbox->Deposit = gameStat->Deposit;
+		sandbox->AgariChain = gameStat->AgariChain;
+		sandbox->LastAgariPlayer = gameStat->LastAgariPlayer;
+		for (int i = 0; i < TILE_NONFLOWER_MAX; i++)
+			sandbox->OpenRichiWait[i] = gameStat->OpenRichiWait[i];
+		sandbox->KangFlag.kangFlag = gameStat->KangFlag.kangFlag;
+		sandbox->KangFlag.chainFlag = gameStat->KangFlag.chainFlag;
+		sandbox->KangFlag.topFlag = gameStat->KangFlag.topFlag;
+		sandbox->KangFlag.chankanFlag = gameStat->KangFlag.chankanFlag;
+		sandbox->KangNum = gameStat->KangNum;
+		sandbox->RichiCounter = gameStat->RichiCounter;
+		sandbox->DoukasenPlayer = gameStat->DoukasenPlayer;
+		for (int i = 0; i < PAO_YAKU_PAGES; i++) {
+			sandbox->PaoFlag[i].paoPlayer = gameStat->PaoFlag[i].paoPlayer;
+			sandbox->PaoFlag[i].agariPlayer = gameStat->PaoFlag[i].agariPlayer;
+		}
+		sandbox->Dice1 = gameStat->Dice1;
+		sandbox->Dice2 = gameStat->Dice2;
+		sandbox->Dice1Direction = gameStat->Dice1Direction;
+		sandbox->Dice2Direction = gameStat->Dice2Direction;
+		for (int i = 0; i < 6; i++) {
+			if (chkGameType(gameStat, AllSanma)) {
+				if (gameStat->DoraPointer <= (102 - gameStat->ExtraRinshan - i * 2))
+					sandbox->Deck[102 - gameStat->ExtraRinshan - i * 2].tile =
+					gameStat->Deck[102 - gameStat->ExtraRinshan - i * 2].tile;
+			} else {
+				if (gameStat->DoraPointer <= (130 - i * 2))
+					sandbox->Deck[130 - i * 2].tile = gameStat->Deck[130 - i * 2].tile;
+			}
+		}
+		sandbox->TilePointer = gameStat->TilePointer;
+		sandbox->DoraPointer = gameStat->DoraPointer;
+		sandbox->RinshanPointer = gameStat->RinshanPointer;
+		sandbox->TianHuFlag = gameStat->TianHuFlag;
+		sandbox->PreviousMeld.Discard = gameStat->PreviousMeld.Discard;
+		sandbox->PreviousMeld.Stepped = gameStat->PreviousMeld.Stepped;
+		sandbox->Deposit = gameStat->Deposit;
+		sandbox->Deposit = gameStat->Deposit;
+		sandbox->Deposit = gameStat->Deposit;
+		sandbox->Deposit = gameStat->Deposit;
+		for (int i = 0; i < TILE_NONFLOWER_MAX; i++) {
+			sandbox->DoraFlag.Omote = gameStat->DoraFlag.Omote;
+			sandbox->DoraFlag.Ura = gameStat->DoraFlag.Ura;
+		}
+		sandbox->CurrentDiscard.tile = gameStat->CurrentDiscard.tile;
+		sandbox->CurrentDiscard.red = gameStat->CurrentDiscard.red;
+		sandbox->CurrentPlayer.Active = gameStat->CurrentPlayer.Active;
+		sandbox->CurrentPlayer.Passive = gameStat->CurrentPlayer.Passive;
+		sandbox->CurrentPlayer.Agari = gameStat->CurrentPlayer.Agari;
+		sandbox->CurrentPlayer.Furikomi = gameStat->CurrentPlayer.Furikomi;
+
+		*Sandbox = (int)sandbox;
 	}
 
 	// ---------------------------------------------------------------------

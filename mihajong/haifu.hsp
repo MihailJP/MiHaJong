@@ -6,6 +6,7 @@
 
 #module
 #include "const.hsp"
+#include "mjcore.hsp"
 #deffunc haifuskip array haifuP, array HThaifuP, int PassivePlayer, int ActivePlayer
 	if (playerRelative(ActivePlayer, PassivePlayer) == RELATIVE_TOIMEN) {
 		// ëŒñ Ç©ÇÁÉ|ÉìÇµÇΩèÍçá
@@ -53,6 +54,7 @@ return
 
 #module
 #include "const.hsp"
+#include "mjcore.hsp"
 #deffunc haifuskipall array haifuP, array HThaifuP, int PassivePlayer
 	repeat 4,1
 		haifuP(ShimochaOf(PassivePlayer)*6+cnt) += "Å@ "

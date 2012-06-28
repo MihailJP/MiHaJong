@@ -252,7 +252,6 @@ struct PlayerTable { // プレイヤーの状態を格納
 	MELD_BUF Meld; // 鳴き面子を格納
 	uint8_t MeldPointer;
 	bool MenzenFlag; // 門前フラグ
-	int MenzenFlagAb;
 	int8_t HandStat; // 手牌の状態（立てる・見せる・伏せる）
 	int8_t NumberOfQuads; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
 	RichiStat RichiFlag; // リーチしているかどうか

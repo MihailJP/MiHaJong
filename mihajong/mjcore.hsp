@@ -30,7 +30,8 @@
 #cfunc RelativePositionOf "?RelativePositionOf@@YAHHH@Z" int, int
 #cfunc roundLoopRate "?roundLoopRate@@YAHXZ"
 #cfunc tilesLeft "?tilesLeft@@YAHPAUGameTable@@@Z" int
-#func calcRank "?calcRanc@@YAXPAHPAUGameTable@@@Z" var, int
+#func _calcRank "?calcRank@@YAXPAHPAUGameTable@@@Z" var, int
+#define calcRank(%1,%2) dim %1, NUM_OF_PLAYERS: _calcRank %1, %2
 #cfunc isPao "?isPao@@YAHPAUGameTable@@HH@Z" int, int, int
 #cfunc isPaoAgari "?isPaoAgari@@YAHPAUGameTable@@H@Z" int, int
 #cfunc isGotPao "?isGotPao@@YAHPAUGameTable@@H@Z" int, int

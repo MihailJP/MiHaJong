@@ -8,20 +8,17 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
-		LoggerDebug|Win32 = LoggerDebug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A1E77779-D7A8-4C1C-9D52-53586D6AA58A}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A1E77779-D7A8-4C1C-9D52-53586D6AA58A}.Debug|Win32.Build.0 = Debug|Win32
-		{A1E77779-D7A8-4C1C-9D52-53586D6AA58A}.LoggerDebug|Win32.ActiveCfg = Debug|Win32
 		{A1E77779-D7A8-4C1C-9D52-53586D6AA58A}.Release|Win32.ActiveCfg = Release|Win32
 		{A1E77779-D7A8-4C1C-9D52-53586D6AA58A}.Release|Win32.Build.0 = Release|Win32
-		{4081A07D-A03F-4E9A-AEF9-2D8E303311A9}.Debug|Win32.ActiveCfg = Release|Win32
-		{4081A07D-A03F-4E9A-AEF9-2D8E303311A9}.Debug|Win32.Build.0 = Release|Win32
-		{4081A07D-A03F-4E9A-AEF9-2D8E303311A9}.LoggerDebug|Win32.ActiveCfg = Debug|Win32
-		{4081A07D-A03F-4E9A-AEF9-2D8E303311A9}.LoggerDebug|Win32.Build.0 = Debug|Win32
+		{4081A07D-A03F-4E9A-AEF9-2D8E303311A9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4081A07D-A03F-4E9A-AEF9-2D8E303311A9}.Debug|Win32.Build.0 = Debug|Win32
 		{4081A07D-A03F-4E9A-AEF9-2D8E303311A9}.Release|Win32.ActiveCfg = Release|Win32
+		{4081A07D-A03F-4E9A-AEF9-2D8E303311A9}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -201,6 +201,7 @@ return
 /* 青天井ルールの点数計算処理 */
 #module
 #include "const.hsp"
+#include "mjcore.hsp"
 #include "hspmath.as"
 #deffunc calculateScore var tmpYakuInfo, array tmpScore
 	if (getYakuInfo(tmpYakuInfo, YAKUINF_HAN_BASE) <= 0) {tmpScore(0) = 0: return}

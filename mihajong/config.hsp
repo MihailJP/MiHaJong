@@ -7,6 +7,7 @@
 /* ÉãÅ[Éãê›íË */
 #module
 #include "const.hsp"
+#include "mjcore.hsp"
 
 #uselib "mjcore.dll"
 #func _storeRule "?storeRule@@YAXPAPBD@Z" var
@@ -50,6 +51,7 @@ return
 
 #module config
 #include "const.hsp"
+#include "mjcore.hsp"
 
 #deffunc setconffile str argFileName
 	configFile = argFileName

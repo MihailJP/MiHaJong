@@ -180,4 +180,6 @@
 
 /* 初期化ルーチン */
 #cfunc initializeGameTable "initializeGameTable" int
-#cfunc initializeSandbox "initializeSandbox" int
+
+/* 卓の状態のサンドボックスを作る */
+#func makesandbox "makesandBox" var, int, int

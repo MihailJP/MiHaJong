@@ -136,6 +136,7 @@ return
 /* バッファから合成 */
 #module
 #include "const.hsp"
+#include "mjcore.hsp"
 #define PI 3.1415926535897932384626433832795
 #deffunc tablesynthesis int targetPlayer, int Zijia, int targetScreen
 	switch playerRelative(targetPlayer,Zijia)
