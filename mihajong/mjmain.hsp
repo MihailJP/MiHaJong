@@ -49,7 +49,6 @@
 #include "hancnend.hsp"
 #include "function.hsp"
 #include "tileutil.hsp"
-#include "shanten.hsp"
 #include "chkyaku.hsp"
 #include "bignum.hsp"
 #include "fuuro.hsp"

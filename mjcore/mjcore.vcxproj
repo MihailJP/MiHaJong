@@ -135,6 +135,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="except.cpp" />
     <ClCompile Include="func.cpp" />
     <ClCompile Include="gametbl.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="ruletbl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dllmain.h" />
     <ClInclude Include="except.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="gametbl.h" />

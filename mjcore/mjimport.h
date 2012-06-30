@@ -6,5 +6,8 @@
 #include "func.h"
 #include "gametbl.h"
 #include "largenum.h"
+#include "mnzdat.h"
+#include "ruletbl.h"
+#include "tilecode.h"
 
 #endif

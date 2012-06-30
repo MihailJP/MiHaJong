@@ -2,8 +2,11 @@
 #define MNZDAT_H
 
 #include <windows.h>
+#ifndef IMPORT_MJCORE
 #include <cstdio>
+#endif
 #include <cstdint>
+#ifndef IMPORT_MJCORE
 #include <cstdlib>
 #include <sstream>
 #include <string>
@@ -12,19 +15,26 @@
 #include "lzma/LzmaLib.h"
 #include "lzma/Sha256.h"
 #include "except.h"
+#endif
+#include "mjexport.h"
 #include "gametbl.h"
 #include "tilecode.h"
 #include "func.h"
+#ifndef IMPORT_MJCORE
 #include "logging.h"
+#include "dllmain.h"
+#endif
 
 #define SHANTEN_IMPOSSIBLE 999
 
+#ifndef IMPORT_MJCORE
 void LoadFileInResource(int name, int type, DWORD& size, const char*& data);
 size_t decompressMentsuAnalysisDat();
 void calcSHA256(uint8_t* digest, const uint8_t* buf, size_t bufSize);
 std::string bytesToHexString(std::vector<std::uint8_t> byteStr);
 void verifyMentsuAnalysisDat(size_t bufSize);
 __declspec(dllexport) void initMentsuAnalysisDat();
+#endif
 
 typedef int SHANTEN; // 向聴数のためのデータ型（0=聴牌、-1=和了、999=無効）
 enum shantenType { // getShantenに渡すスイッチ用
@@ -38,9 +48,15 @@ enum shantenType { // getShantenに渡すスイッチ用
 	shantenQuanbukao // 全不靠
 };
 
-SHANTEN calcShanten(GameTable* gameStat, PLAYER_ID playerID, shantenType mode);
+MJCORE SHANTEN calcShanten(GameTable* gameStat, PLAYER_ID playerID, shantenType mode);
+#ifndef IMPORT_MJCORE
+__declspec(dllexport) int calcShanten(GameTable* gameStat, int playerID, int mode);
 SHANTEN calcShantenRegular(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
 SHANTEN calcShantenChiitoi(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
 SHANTEN calcShantenKokushi(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
+SHANTEN calcShantenStellar(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount, bool qixing);
+SHANTEN calcShantenCivilWar(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
+SHANTEN calcShantenSyzygy(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
+#endif
 
 #endif

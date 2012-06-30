@@ -43,6 +43,10 @@
 #cfunc WindMax "?WindMax@@YAHXZ"
 #cfunc Wind2Tile "?Wind2Tile@@YAHH@Z" int
 
+/* shanten.hspからの移植 */
+#func shantenInit "?initMentsuAnalysisDat@@YAXXZ"
+#cfunc countshanten "?calcShanten@@YAHPAUGameTable@@HH@Z" var, int, int
+
 /* ------------------------------------------------------------------------ */
 
 /*  卓情報へのアクセサ  */
