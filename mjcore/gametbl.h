@@ -1,13 +1,12 @@
 #ifndef GAMETBL_H
 #define GAMETBL_H
 
-#include <array>
-#include <bitset>
 #include <cstdint>
 #include <exception>
 #include <stdexcept>
 #include <algorithm>
 #include <cassert>
+#include <type_traits>
 #include "mjexport.h"
 #include "tilecode.h"
 #include "ruletbl.h"
@@ -26,6 +25,9 @@ EXPORT_STRUCT TILE { // 赤ドラデータを含めた牌のデータ
 	tileCode tile;
 	uint8_t red;
 };
+#ifndef IMPORT_MJCORE
+static_assert(std::is_pod<TILE>::value, "Non-POD data type detected");
+#endif
 
 // -------------------------------------------------------------------------
 
@@ -40,8 +42,7 @@ typedef int8_t PLAYER_ID; // プレイヤー番号
 
 // -------------------------------------------------------------------------
 
-INSTANTIATE std::array<TILE, NUM_OF_TILES_IN_HAND>;
-typedef std::array<TILE, NUM_OF_TILES_IN_HAND> HAND_TILES;
+typedef TILE HAND_TILES[NUM_OF_TILES_IN_HAND];
 
 // -------------------------------------------------------------------------
 
@@ -57,8 +58,10 @@ EXPORT_STRUCT discardTile {
 	discardStat dstat;
 	bool isDiscardThrough; // ツモ切りフラグ
 };
-INSTANTIATE std::array<discardTile, SIZE_OF_DISCARD_BUFFER>;
-typedef std::array<discardTile, SIZE_OF_DISCARD_BUFFER> DISCARD_BUF;
+typedef discardTile DISCARD_BUF[SIZE_OF_DISCARD_BUFFER];
+#ifndef IMPORT_MJCORE
+static_assert(std::is_pod<discardTile>::value, "Non-POD data type detected");
+#endif
 
 // -------------------------------------------------------------------------
 
@@ -85,21 +88,24 @@ EXPORT_STRUCT meldCode {
 	TILE tcode;
 	meldStat mstat;
 };
-INSTANTIATE std::array<meldCode, SIZE_OF_MELD_BUFFER>;
-typedef std::array<meldCode, SIZE_OF_MELD_BUFFER> MELD_BUF;
+typedef meldCode MELD_BUF[SIZE_OF_MELD_BUFFER];
+#ifndef IMPORT_MJCORE
+static_assert(std::is_pod<discardTile>::value, "Non-POD data type detected");
+#endif
 
 // -------------------------------------------------------------------------
 
-enum RICHI_STAT_BITS { // 立直フラグを格納
-	RichiFlag, IppatsuFlag, DoubleFlag, OpenFlag,
-	RichiStatBits
-};
-INSTANTIATE std::bitset<RichiStatBits>;
-typedef std::bitset<RichiStatBits> RichiStat;
+EXPORT_STRUCT RichiStat {bool RichiFlag, IppatsuFlag, DoubleFlag, OpenFlag;};
+#ifndef IMPORT_MJCORE
+static_assert(std::is_pod<RichiStat>::value, "Non-POD data type detected");
+#endif
 
 // -------------------------------------------------------------------------
 
 EXPORT_STRUCT KANGSTAT { uint8_t kangFlag, chainFlag, topFlag, chankanFlag; };
+#ifndef IMPORT_MJCORE
+static_assert(std::is_pod<KANGSTAT>::value, "Non-POD data type detected");
+#endif
 
 // -------------------------------------------------------------------------
 
@@ -107,24 +113,31 @@ EXPORT_STRUCT KANGSTAT { uint8_t kangFlag, chainFlag, topFlag, chankanFlag; };
 enum paoYakuPage {pyDaisangen, pyDaisixi, pySikang, pyMinkan};
 
 EXPORT_STRUCT PAOSTAT { PLAYER_ID paoPlayer, agariPlayer; };
-INSTANTIATE std::array<PAOSTAT, PAO_YAKU_PAGES>;
-typedef std::array<PAOSTAT, PAO_YAKU_PAGES> paoStatBook;
+typedef PAOSTAT paoStatBook[PAO_YAKU_PAGES];
+#ifndef IMPORT_MJCORE
+static_assert(std::is_pod<PAOSTAT>::value, "Non-POD data type detected");
+#endif
 
 
 // -------------------------------------------------------------------------
 
-INSTANTIATE std::array<TILE, 144>;
-typedef std::array<TILE, 144> DeckBuf; // 最初はunionでやろうと思ったけどおかしくなるのでやめた
+#define SIZE_OF_DECKBUF 144
+typedef TILE DeckBuf[SIZE_OF_DECKBUF]; // 最初はunionでやろうと思ったけどおかしくなるのでやめた
 
 // -------------------------------------------------------------------------
 
 EXPORT_STRUCT prevMeldBook { tileCode Discard, Stepped; };
+#ifndef IMPORT_MJCORE
+static_assert(std::is_pod<prevMeldBook>::value, "Non-POD data type detected");
+#endif
 
 // -------------------------------------------------------------------------
 
-INSTANTIATE std::array<uint8_t, TILE_NONFLOWER_MAX>;
-typedef std::array<uint8_t, TILE_NONFLOWER_MAX> DORASTAT;
+typedef uint8_t DORASTAT[TILE_NONFLOWER_MAX];
 EXPORT_STRUCT doraStatBook { DORASTAT Omote, Ura; };
+#ifndef IMPORT_MJCORE
+static_assert(std::is_pod<doraStatBook>::value, "Non-POD data type detected");
+#endif
 
 // -------------------------------------------------------------------------
 
@@ -132,10 +145,16 @@ EXPORT_STRUCT DECLFLAG {
 	bool Ron, Kan, Pon;
 	int8_t Chi;
 };
+#ifndef IMPORT_MJCORE
+static_assert(std::is_pod<DECLFLAG>::value, "Non-POD data type detected");
+#endif
 
 // -------------------------------------------------------------------------
 
 EXPORT_STRUCT CURRPLAYER { PLAYER_ID Active, Passive, Agari, Furikomi; };
+#ifndef IMPORT_MJCORE
+static_assert(std::is_pod<CURRPLAYER>::value, "Non-POD data type detected");
+#endif
 
 // -------------------------------------------------------------------------
 
@@ -161,12 +180,15 @@ EXPORT_STRUCT PlayerTable { // プレイヤーの状態を格納
 	bool ConnectionLost;
 	DECLFLAG DeclarationFlag; // 鳴きの宣言
 };
+#ifndef IMPORT_MJCORE
+static_assert(std::is_pod<PlayerTable>::value, "Non-POD data type detected");
+#endif
 
 // -------------------------------------------------------------------------
 
 EXPORT_STRUCT GameTable { // 卓の情報を格納する
 	gameTypeID gameType;
-	std::array<PlayerTable, PLAYERS> Player;
+	PlayerTable Player[PLAYERS];
 	PLAYER_ID PlayerID;
 	int GameLength;
 	int GameRound;
@@ -175,7 +197,7 @@ EXPORT_STRUCT GameTable { // 卓の情報を格納する
 	int Deposit;
 	int AgariChain;
 	int LastAgariPlayer;
-	std::array<bool, TILE_NONFLOWER_MAX> OpenRichiWait; // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
+	bool OpenRichiWait[TILE_NONFLOWER_MAX]; // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
 	KANGSTAT KangFlag; // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
 	uint8_t TurnRound; // 現在の巡目
 	uint8_t KangNum; // 四槓流局、四槓子などの判定に使う
@@ -202,6 +224,9 @@ EXPORT_STRUCT GameTable { // 卓の情報を格納する
 	int16_t AgariSpecialStat; // 今のところ食い変えでチョンボになる場合だけ使ってる？
 	TILE CurrentDiscard;
 };
+#ifndef IMPORT_MJCORE
+static_assert(std::is_pod<GameTable>::value, "Non-POD data type detected");
+#endif
 
 // -------------------------------------------------------------------------
 

@@ -5,8 +5,6 @@
 
 #define DIGIT_GROUPS 8
 
-/* private関数 */
-
 void LargeNum::fix() { // 正規形に直す
 	for (int i = 0; i < (DIGIT_GROUPS - 1); i++) {
 		if ((this->digitGroup[i] > 99999999)||(this->digitGroup[i] < -99999999)) {
@@ -25,24 +23,23 @@ signed int LargeNum::compare(const LargeNum& cmp) { // 比較用
 	return ans;
 }
 
-/* コンストラクタ */
-LargeNum::LargeNum() { // ±21不可思議まで表現可能な数のクラス
-	this->digitGroup.fill(0);
+std::unique_ptr<LargeNum> LargeNum::fromInt(int val) {
+	std::unique_ptr<LargeNum> num(new LargeNum);
+	for (int i = 0; i < DIGIT_GROUPS; i++) num->digitGroup[i] = 0;
+	num->digitGroup[0] = (val % 100000000);
+	num->digitGroup[1] = (val / 100000000);
+	num->firstArg = 100000000u;
+	return num;
 }
-LargeNum::LargeNum(int val) { // ±21不可思議まで表現可能な数のクラス
-	this->digitGroup.fill(0);
-	this->digitGroup[0] = (val % 100000000);
-	this->digitGroup[1] = (val / 100000000);
-	this->firstArg = 100000000u;
-}
-LargeNum::LargeNum(int val, unsigned int fArg) { // ±21不可思議まで表現可能な数のクラス
-	this->digitGroup.fill(0);
-	this->digitGroup[0] = (val % 100000000);
-	this->digitGroup[1] = (val / 100000000);
-	this->firstArg = fArg;
+std::unique_ptr<LargeNum> LargeNum::fromInt(int val, unsigned int fArg) {
+	std::unique_ptr<LargeNum> num(new LargeNum);
+	for (int i = 0; i < DIGIT_GROUPS; i++) num->digitGroup[i] = 0;
+	num->digitGroup[0] = (val % 100000000);
+	num->digitGroup[1] = (val / 100000000);
+	num->firstArg = fArg;
+	return num;
 }
 
-/* public関数 */
 unsigned int LargeNum::getFirstArg() {return this->firstArg;}
 
 /* ここから演算子をオーバーロード */
@@ -106,9 +103,3 @@ const bool LargeNum::operator<(const LargeNum& cmp) { return (this->compare(cmp)
 const bool LargeNum::operator>(const LargeNum& cmp) { return (this->compare(cmp) > 0); }
 const bool LargeNum::operator<=(const LargeNum& cmp) { return (this->compare(cmp) <= 0); }
 const bool LargeNum::operator>=(const LargeNum& cmp) { return (this->compare(cmp) >= 0); }
-const int32_t& LargeNum::operator[] (const int i) const { // const 配列アクセス……
-	return digitGroup[i];
-}
-int32_t& LargeNum::operator[] (const int i) { // non-const 配列アクセス……
-	return digitGroup[i];
-}

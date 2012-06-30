@@ -9,8 +9,6 @@
 #define MJCEXTERN
 #endif /* IMPORT_MJCORE */
 
-#define EXPORT_CLASS MJCEXTERN class MJCORE
 #define EXPORT_STRUCT MJCEXTERN struct MJCORE
-#define INSTANTIATE MJCEXTERN template class MJCORE
 
 #endif /* MJEXPORT_H */

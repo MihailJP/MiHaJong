@@ -18,17 +18,17 @@ extern "C" {
 
 	__declspec(dllexport) void setScore(GameTable* gameStat, int Player, int Digit, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		gameStat->Player[Player].PlayerScore[Digit] = value *
+		gameStat->Player[Player].PlayerScore.digitGroup[Digit] = value *
 			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.getFirstArg())); return;
 	}
 	__declspec(dllexport) void addScore(GameTable* gameStat, int Player, int Digit, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		gameStat->Player[Player].PlayerScore[Digit] += value *
+		gameStat->Player[Player].PlayerScore.digitGroup[Digit] += value *
 			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.getFirstArg())); return;
 	}
 	__declspec(dllexport) int getScore(GameTable* gameStat, int Player, int Digit) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		return gameStat->Player[Player].PlayerScore[Digit] /
+		return gameStat->Player[Player].PlayerScore.digitGroup[Digit] /
 			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.getFirstArg()));
 	}
 	__declspec(dllexport) void exportScore(GameTable* gameStat, int* exportArray) {
@@ -36,7 +36,7 @@ extern "C" {
 		for (int j = 0; j < DIGIT_GROUPS; j++) {
 			for (int i = 0; i < PLAYERS; i++) {
 				*(exportArray + j * PLAYERS + i) =
-					gameStat->Player[i].PlayerScore[j] /
+					gameStat->Player[i].PlayerScore.digitGroup[j] /
 					(j ? 1 : (signed int)(100000000u / gameStat->Player[i].PlayerScore.getFirstArg()));
 			}
 		}
@@ -45,7 +45,7 @@ extern "C" {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		for (int j = 0; j < DIGIT_GROUPS; j++) {
 			for (int i = 0; i < PLAYERS; i++) {
-				gameStat->Player[i].PlayerScore[j] =
+				gameStat->Player[i].PlayerScore.digitGroup[j] =
 					*(importArray + j * PLAYERS + i) *
 					(j ? 1 : (signed int)(100000000u / gameStat->Player[i].PlayerScore.getFirstArg()));
 			}
@@ -399,36 +399,36 @@ extern "C" {
 		case 0:
 			switch (value) {
 			case 0:
-				gameStat->Player[Player].RichiFlag.reset(RichiFlag);
-				gameStat->Player[Player].RichiFlag.reset(IppatsuFlag);
-				gameStat->Player[Player].RichiFlag.reset(DoubleFlag);
+				gameStat->Player[Player].RichiFlag.RichiFlag = false;
+				gameStat->Player[Player].RichiFlag.IppatsuFlag = false;
+				gameStat->Player[Player].RichiFlag.DoubleFlag = false;
 				break;
 			case 1:
-				gameStat->Player[Player].RichiFlag.set(RichiFlag);
-				gameStat->Player[Player].RichiFlag.reset(IppatsuFlag);
-				gameStat->Player[Player].RichiFlag.reset(DoubleFlag);
+				gameStat->Player[Player].RichiFlag.RichiFlag = true;
+				gameStat->Player[Player].RichiFlag.IppatsuFlag = false;
+				gameStat->Player[Player].RichiFlag.DoubleFlag = false;
 				break;
 			case 2:
-				gameStat->Player[Player].RichiFlag.set(RichiFlag);
-				gameStat->Player[Player].RichiFlag.set(IppatsuFlag);
-				gameStat->Player[Player].RichiFlag.reset(DoubleFlag);
+				gameStat->Player[Player].RichiFlag.RichiFlag = true;
+				gameStat->Player[Player].RichiFlag.IppatsuFlag = true;
+				gameStat->Player[Player].RichiFlag.DoubleFlag = false;
 				break;
 			case 3:
-				gameStat->Player[Player].RichiFlag.set(RichiFlag);
-				gameStat->Player[Player].RichiFlag.reset(IppatsuFlag);
-				gameStat->Player[Player].RichiFlag.set(DoubleFlag);
+				gameStat->Player[Player].RichiFlag.RichiFlag = true;
+				gameStat->Player[Player].RichiFlag.IppatsuFlag = false;
+				gameStat->Player[Player].RichiFlag.DoubleFlag = true;
 				break;
 			case 4:
-				gameStat->Player[Player].RichiFlag.set(RichiFlag);
-				gameStat->Player[Player].RichiFlag.set(IppatsuFlag);
-				gameStat->Player[Player].RichiFlag.set(DoubleFlag);
+				gameStat->Player[Player].RichiFlag.RichiFlag = true;
+				gameStat->Player[Player].RichiFlag.IppatsuFlag = true;
+				gameStat->Player[Player].RichiFlag.DoubleFlag = true;
 				break;
 			default:
 				throw(std::domain_error("setRichiFlag(): 正しくない値が指定されました"));
 			}
 			break;
 		case 1:
-			gameStat->Player[Player].RichiFlag.set(OpenFlag, value);
+			gameStat->Player[Player].RichiFlag.OpenFlag = value;
 			break;
 		default:
 			throw(std::domain_error("setRichiFlag(): 正しくないページが指定されました"));
@@ -438,13 +438,13 @@ extern "C" {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
-			return gameStat->Player[Player].RichiFlag[RichiFlag] ?
+			return gameStat->Player[Player].RichiFlag.RichiFlag ?
 				1 +
-				(gameStat->Player[Player].RichiFlag[IppatsuFlag] ? 1 : 0) +
-				(gameStat->Player[Player].RichiFlag[DoubleFlag] ? 2 : 0)
+				(gameStat->Player[Player].RichiFlag.IppatsuFlag ? 1 : 0) +
+				(gameStat->Player[Player].RichiFlag.DoubleFlag ? 2 : 0)
 				: 0;
 		case 1:
-			return gameStat->Player[Player].RichiFlag[OpenFlag] ? 1 : 0;
+			return gameStat->Player[Player].RichiFlag.OpenFlag ? 1 : 0;
 		default:
 			throw(std::domain_error("getRichiFlag(): 正しくないページが指定されました"));
 		}
@@ -974,13 +974,13 @@ extern "C" {
 			((gameStat->Honba >= 5)&&(getRule(RULE_RYANSHIBA) == 1)) ||
 			((gameStat->Honba >= 4)&&(getRule(RULE_RYANSHIBA) == 2));
 
-		std::for_each(gameStat->PaoFlag.begin(), gameStat->PaoFlag.end(), [](PAOSTAT& k) {
-			k.agariPlayer = k.paoPlayer = -1; // 包フラグ（-1…なし、0～3…該当プレイヤー）
-		});
+		for (int i = 0; i < PAO_YAKU_PAGES; i++) // 包フラグ（-1…なし、0～3…該当プレイヤー）
+			gameStat->PaoFlag[i].agariPlayer = gameStat->PaoFlag[i].paoPlayer = -1;
 
-		std::for_each(gameStat->Deck.begin(), gameStat->Deck.end(), [](TILE& k) {
-			k.tile = NoTile; k.red = (uint8_t)0; // ちゃんと初期化してあげましょうね
-		});
+		for (int i = 0; i < SIZE_OF_DECKBUF; i++) { // ちゃんと初期化してあげましょうね
+			gameStat->Deck[i].tile = NoTile;
+			gameStat->Deck[i].red = (uint8_t)0;
+		}
 
 		if (chkGameType(gameStat, AllSanma)) {
 			gameStat->DeadTiles = 14; // 王牌の数
@@ -999,7 +999,8 @@ extern "C" {
 			}
 		}
 
-		gameStat->OpenRichiWait.fill(false); // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
+		for (int i = 0; i < TILE_NONFLOWER_MAX; i++) // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
+			gameStat->OpenRichiWait[i] = false;
 		gameStat->KangFlag.kangFlag = gameStat->KangFlag.chainFlag = // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
 			gameStat->KangFlag.topFlag = gameStat->KangFlag.chankanFlag = 0;
 		gameStat->TurnRound =  // 現在の巡目
@@ -1034,8 +1035,8 @@ extern "C" {
 		gameStat->TianHuFlag = true; // 親の第一打牌がまだ（天和の判定などに使う）
 		gameStat->PreviousMeld.Discard = // 先ほど鳴いた牌（喰い替えの判定に使う）
 			gameStat->PreviousMeld.Stepped = (tileCode)-999;
-		gameStat->DoraFlag.Omote.fill(0); // ドラ判定の配列
-		gameStat->DoraFlag.Ura.fill(0); // ドラ判定の配列
+		for (int i = 0; i < TILE_NONFLOWER_MAX; i++) // ドラ判定の配列
+			gameStat->DoraFlag.Omote[i] = gameStat->DoraFlag.Ura[i] = 0;
 		gameStat->TsumoAgariFlag = false;
 		gameStat->AgariSpecialStat = 0;
 		resetDeclarationFlag(gameStat);
@@ -1043,33 +1044,40 @@ extern "C" {
 		gameStat->CurrentDiscard.red = 0;
 		resetCurrentPlayer(gameStat);
 
-		std::for_each(gameStat->Player.begin(), gameStat->Player.end(), [](PlayerTable& pl) {
-			pl.ConnectionLost = false; // 回線切断による和了り放棄
-			std::for_each(pl.Hand.begin(), pl.Hand.end(), [](TILE& k) {
-				k.tile = NoTile; k.red = 0; // 手牌の配列(４人分)
-			});
-			pl.DiscardPointer = 0; // ちゃんとリセットしてあげましょうね
-			std::for_each(pl.Discard.begin(), pl.Discard.end(), [](discardTile& k) {
+		for (int pl = 0; pl < PLAYERS; pl++) {
+			gameStat->Player[pl].ConnectionLost = false; // 回線切断による和了り放棄
+			for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) { // 手牌の配列(４人分)
+				gameStat->Player[pl].Hand[i].tile = NoTile;
+				gameStat->Player[pl].Hand[i].red = 0;
+			}
+			gameStat->Player[pl].DiscardPointer = 0; // ちゃんとリセットしてあげましょうね
+			for (int i = 0; i < SIZE_OF_DISCARD_BUFFER; i++) {
 				// 捨牌の配列(４人分)
-				k.tcode.tile = NoTile; k.tcode.red = 0;
-				k.dstat = discardNormal; k.isDiscardThrough = false;
-			});
-			pl.MenzenFlag = true; // 門前フラグ
-			pl.HandStat = 0; // 手牌の状態（立てる・見せる・伏せる）
-			pl.MeldPointer = 0; // 最初変な数字が入ってたりするんで……
-			std::for_each(pl.Meld.begin(), pl.Meld.end(), [](meldCode& k) {
+				gameStat->Player[pl].Discard[i].tcode.tile = NoTile;
+				gameStat->Player[pl].Discard[i].tcode.red = 0;
+				gameStat->Player[pl].Discard[i].dstat = discardNormal;
+				gameStat->Player[pl].Discard[i].isDiscardThrough = false;
+			}
+			gameStat->Player[pl].MenzenFlag = true; // 門前フラグ
+			gameStat->Player[pl].HandStat = 0; // 手牌の状態（立てる・見せる・伏せる）
+			gameStat->Player[pl].MeldPointer = 0; // 最初変な数字が入ってたりするんで……
+			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
 				// 鳴き面子を格納
-				k.tcode.tile = NoTile; k.tcode.red = 0;
-				k.mstat = (meldStat)0;
-			});
-			pl.NumberOfQuads = 0; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
-			pl.RichiFlag.reset(); // リーチしているかどうか
-			pl.FirstDrawFlag = true; // １巡目である（地和、ダブル立直の判定に使う）
-			pl.DoujunFuriten = // 同順振聴である
-				pl.AgariHouki = false; // 和了り放棄の罰則中かどうか
-			pl.FlowerFlag = // 晒している花牌を格納するフラグ
-				pl.NorthFlag = 0; // 晒している北風牌を格納するフラグ
-		});
+				gameStat->Player[pl].Meld[i].tcode.tile = NoTile;
+				gameStat->Player[pl].Meld[i].tcode.red = 0;
+				gameStat->Player[pl].Meld[i].mstat = (meldStat)0;
+			}
+			gameStat->Player[pl].NumberOfQuads = 0; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
+			gameStat->Player[pl].RichiFlag.RichiFlag = // リーチしているかどうか
+				gameStat->Player[pl].RichiFlag.IppatsuFlag =
+				gameStat->Player[pl].RichiFlag.DoubleFlag =
+				gameStat->Player[pl].RichiFlag.OpenFlag = false;
+			gameStat->Player[pl].FirstDrawFlag = true; // １巡目である（地和、ダブル立直の判定に使う）
+			gameStat->Player[pl].DoujunFuriten = // 同順振聴である
+				gameStat->Player[pl].AgariHouki = false; // 和了り放棄の罰則中かどうか
+			gameStat->Player[pl].FlowerFlag = // 晒している花牌を格納するフラグ
+				gameStat->Player[pl].NorthFlag = 0; // 晒している北風牌を格納するフラグ
+		}
 		assert(gameStat->Player[0].DiscardPointer == 0); // 初期化できてるかチェック（デバッグ用）
 	}
 
@@ -1084,25 +1092,32 @@ extern "C" {
 				if (chkGameType(&GameStat, SanmaT)) {
 					switch (getRule(RULE_STARTING_POINT)) {
 					case 0: snmdflt:
-						gameStat->Player[i].PlayerScore = LargeNum(35000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(35000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 35000);
 						break;
 					case 1:
-						gameStat->Player[i].PlayerScore = LargeNum(40000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(40000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 40000);
 						break;
 					case 2:
-						gameStat->Player[i].PlayerScore = LargeNum(45000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(45000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 45000);
 						break;
 					case 3:
-						gameStat->Player[i].PlayerScore = LargeNum(50000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(50000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 50000);
 						break;
 					case 4: case 7:
-						gameStat->Player[i].PlayerScore = LargeNum(25000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(25000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 25000);
 						break;
 					case 5:
-						gameStat->Player[i].PlayerScore = LargeNum(27000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(27000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 27000);
 						break;
 					case 6: case 8:
-						gameStat->Player[i].PlayerScore = LargeNum(30000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(30000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 30000);
 						break;
 					default:
 						error("RULE_STARTING_POINT異常。持ち点を25000として処理します。");
@@ -1111,22 +1126,28 @@ extern "C" {
 				} else {
 					switch (getRule(RULE_STARTING_POINT)) {
 					case 0: dflt:
-						gameStat->Player[i].PlayerScore = LargeNum(25000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(25000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 25000);
 						break;
 					case 1:
-						gameStat->Player[i].PlayerScore = LargeNum(27000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(27000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 27000);
 						break;
 					case 2:
-						gameStat->Player[i].PlayerScore = LargeNum(30000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(30000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 30000);
 						break;
 					case 3:
-						gameStat->Player[i].PlayerScore = LargeNum(35000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(35000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 35000);
 						break;
 					case 4:
-						gameStat->Player[i].PlayerScore = LargeNum(40000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(40000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 40000);
 						break;
 					case 5:
-						gameStat->Player[i].PlayerScore = LargeNum(20000, 1000000u);
+						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(20000, 1000000u).get();
+						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 20000);
 						break;
 					default:
 						error("RULE_STARTING_POINT異常。持ち点を25000として処理します。");
@@ -1134,7 +1155,7 @@ extern "C" {
 					}
 				}
 			} else {
-				gameStat->Player[i].PlayerScore = LargeNum(0);
+				gameStat->Player[i].PlayerScore = *LargeNum::fromInt(0, 1000000u).get();
 			}
 		}
 
@@ -1189,7 +1210,7 @@ extern "C" {
 			sandbox->Player[p].playerChip = gameStat->Player[p].playerChip;
 			sandbox->Player[p].SumaroFlag = gameStat->Player[p].SumaroFlag;
 			sandbox->Player[p].YakitoriFlag = gameStat->Player[p].YakitoriFlag;
-			if ((gameStat->Player[p].RichiFlag[OpenFlag])||(p == targetPlayer)) {
+			if ((gameStat->Player[p].RichiFlag.OpenFlag)||(p == targetPlayer)) {
 				for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
 					sandbox->Player[p].Hand[i].tile = gameStat->Player[p].Hand[i].tile;
 					sandbox->Player[p].Hand[i].red = gameStat->Player[p].Hand[i].red;
@@ -1264,8 +1285,8 @@ extern "C" {
 		sandbox->Deposit = gameStat->Deposit;
 		sandbox->Deposit = gameStat->Deposit;
 		for (int i = 0; i < TILE_NONFLOWER_MAX; i++) {
-			sandbox->DoraFlag.Omote = gameStat->DoraFlag.Omote;
-			sandbox->DoraFlag.Ura = gameStat->DoraFlag.Ura;
+			sandbox->DoraFlag.Omote[i] = gameStat->DoraFlag.Omote[i];
+			sandbox->DoraFlag.Ura[i] = gameStat->DoraFlag.Ura[i];
 		}
 		sandbox->CurrentDiscard.tile = gameStat->CurrentDiscard.tile;
 		sandbox->CurrentDiscard.red = gameStat->CurrentDiscard.red;
