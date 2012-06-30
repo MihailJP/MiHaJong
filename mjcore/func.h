@@ -13,10 +13,17 @@
 typedef std::array<uint8_t, TILE_CODE_MAXIMUM> tileCountTbl;
 
 class TileCount { // è”v‚É‚ ‚éí—Ş•Ê‚Ì”v‚Ì”
-public:
+private:
 	tileCountTbl count;
+public:
 	TileCount() {
 		this->count.fill(0);
+	}
+	const uint8_t& operator[] (const int i) const {
+		return count[i];
+	}
+	uint8_t& operator[] (const int i) {
+		return count[i];
 	}
 };
 
@@ -29,7 +36,7 @@ typedef std::array<PLAYER_RANK, PLAYERS> PlayerRankList;
 
 // -------------------------------------------------------------------------
 
-TileCount countTilesInHand(GameTable gameStat, PLAYER_ID playerID);
+TileCount countTilesInHand(GameTable* gameStat, PLAYER_ID playerID);
 
 /* -------------------------------------------------------------------------
  *  function.hsp ‚©‚çˆÚA

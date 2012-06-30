@@ -86,7 +86,7 @@ __declspec(dllexport) void initMentsuAnalysisDat() { // 面子データ初期化
 
 /* 向聴数を計算する */
 
-SHANTEN calcShanten(GameTable gameStat, PLAYER_ID playerID, shantenType mode)
+SHANTEN calcShanten(GameTable* gameStat, PLAYER_ID playerID, shantenType mode)
 { // 向聴数を計算する
 	/* 数牌それぞれの面子の数を数える */
 	TileCount tileCount = countTilesInHand(gameStat, playerID);
@@ -94,14 +94,11 @@ SHANTEN calcShanten(GameTable gameStat, PLAYER_ID playerID, shantenType mode)
 	/* mode別分岐 */
 	switch (mode) {
 	case shantenRegular:
-		/* あとで書く */
-		break;
+		return calcShantenRegular(gameStat, playerID, tileCount);
 	case shantenPairs:
-		/* あとで書く */
-		break;
+		return calcShantenChiitoi(gameStat, playerID, tileCount);
 	case shantenOrphans:
-		/* あとで書く */
-		break;
+		return calcShantenKokushi(gameStat, playerID, tileCount);
 	case shantenStellar:
 		/* あとで書く */
 		break;
@@ -122,30 +119,82 @@ SHANTEN calcShanten(GameTable gameStat, PLAYER_ID playerID, shantenType mode)
 	return 0; //未完成
 }
 
-SHANTEN calcShantenRegular(GameTable gameStat, PLAYER_ID playerID, TileCount tileCount)
+SHANTEN calcShantenRegular(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount)
 { // 面子手の向聴数を求める
 	SHANTEN shanten = 8; // 全く揃ってないてんでバラバラだったら面子手に対して8向聴（七対子に対してなら6向聴になる）
 
 	// 数牌
-	int mianzi = 0; int tarzi = 0; int atama = 0; // 面子塔子雀頭の数
+	int mianzi = 0; int tarzi = 0; bool atama = false; // 面子塔子雀頭の数
 	for (int suit = 0; suit < TILE_NUMERAL_COLORS; suit++) {
 		unsigned int statcode = 0; unsigned int qDigit = 1;
 		for (int i = 1; i <= 9; i++) {
-			statcode += min(tileCount.count[suit * TILE_SUIT_STEP + i], 4) * qDigit;
+			statcode += min(tileCount[suit * TILE_SUIT_STEP + i], 4) * qDigit;
 			qDigit *= 5;
 		}
 		uint8_t tmpdat = mentsuAnalysisDat[statcode];
 		mianzi += (tmpdat & 0x70) >> 4;
 		tarzi += tmpdat & 0x0f;
-		if (tmpdat & 0x80) atama = 1;
+		if (tmpdat & 0x80) atama = true;
 	}
 
 	// 字牌
 	for (int i = 1; i <= 7; i++) {
-		if (tileCount.count[TILE_SUIT_HONORS + i] == 2) {tarzi++; atama = 1;}
-		if (tileCount.count[TILE_SUIT_HONORS + i] >= 3) {mianzi++;}
+		if (tileCount[TILE_SUIT_HONORS + i] == 2) {tarzi++; atama = 1;}
+		if (tileCount[TILE_SUIT_HONORS + i] >= 3) {mianzi++;}
 	}
 
-	// 未完成
+	// 鳴き面子や暗槓がある場合
+	mianzi += gameStat->Player[playerID].MeldPointer;
+	
+	int mianziCount = 0;
+	if (mianzi + tarzi > 4) {
+		// 面子多多のとき
+		shanten = 8 - (mianzi * 2) - (4 - mianzi);
+		// 面子多多でも、頭がある時は頭も数える
+		if (atama) shanten -= 1;
+	} else {
+		// そうでないとき
+		shanten = 8 - (mianzi * 2) - tarzi;
+	}
+
 	return shanten;
 }
+
+SHANTEN calcShantenChiitoi(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount)
+{ // 七対子に対する向聴数を求める。
+	SHANTEN shanten = 6;
+	for (int i = 0; i < TILE_NONFLOWER_MAX; i++)
+		// 単純に対子の数を調べればよい
+		// ただし、同じ牌４枚を対子２つとして使ってはならない
+		if (tileCount[i] >= 2) shanten--;
+	// 暗刻がある場合に聴牌とみなさないようにする
+	for (int i = 0; i < TILE_NONFLOWER_MAX; i++)
+		if ((tileCount[i] >= 3)&&(shanten < 1)) shanten++;
+	// 鳴き面子や暗槓がある場合は七対子は不可能
+	if (gameStat->Player[playerID].MeldPointer > 0) shanten = SHANTEN_IMPOSSIBLE;
+
+	return shanten;
+}
+
+SHANTEN calcShantenKokushi(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount)
+{ // 国士無双に対する向聴数を求める。
+	if (chkGameType(gameStat, SanmaS)) return SHANTEN_IMPOSSIBLE; // 数牌三麻では不可能
+
+	tileCode YaojiuPai[13] = {
+		CharacterOne, CharacterNine, CircleOne, CircleNine, BambooOne, BambooNine,
+		EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
+	};
+	SHANTEN shanten = 13; bool atama = false;
+	for (int i = 0; i < 13; i++) {
+		// ヤオ九牌１種類につき、１をカウントする。
+		if (tileCount[YaojiuPai[i]] >= 2) atama = true; // アタマ候補
+		if (tileCount[YaojiuPai[i]] >= 1) shanten--;
+	}
+	/* 雀頭がある場合 */
+	if (atama) shanten--;
+	// 鳴き面子や暗槓がある場合は国士無双も不可能
+	if (gameStat->Player[playerID].MeldPointer > 0) shanten = SHANTEN_IMPOSSIBLE;
+
+	return shanten;
+}
+

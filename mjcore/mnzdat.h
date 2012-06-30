@@ -17,6 +17,8 @@
 #include "func.h"
 #include "logging.h"
 
+#define SHANTEN_IMPOSSIBLE 999
+
 void LoadFileInResource(int name, int type, DWORD& size, const char*& data);
 size_t decompressMentsuAnalysisDat();
 void calcSHA256(uint8_t* digest, const uint8_t* buf, size_t bufSize);
@@ -36,7 +38,9 @@ enum shantenType { // getShantenに渡すスイッチ用
 	shantenQuanbukao // 全不靠
 };
 
-SHANTEN calcShanten(GameTable gameStat, PLAYER_ID playerID, shantenType mode);
-SHANTEN calcShantenRegular(GameTable gameStat, PLAYER_ID playerID, TileCount tileCount);
+SHANTEN calcShanten(GameTable* gameStat, PLAYER_ID playerID, shantenType mode);
+SHANTEN calcShantenRegular(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
+SHANTEN calcShantenChiitoi(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
+SHANTEN calcShantenKokushi(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
 
 #endif
