@@ -1,8 +1,9 @@
 #include "ruletbl.h"
 
+using namespace std;
+
 static char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
 static array<uint8_t, RULESIZE> Rules;
-using namespace std;
 
 void parseRule() { // ルール設定を数値に変換
 	debug("ルール設定を数値配列に変換します。");
@@ -30,6 +31,6 @@ __declspec(dllexport) void exportRule(char** ruleTxt) { // C++→HSP ルール設定転
 __declspec(dllexport) int getRule(int RuleID) { // ルール設定を取得する
 	return (int)Rules[RuleID];
 }
-extern "C" inline uint8_t getRule(RuleCode RuleID) { // ルール設定を取得する
+extern "C" inline MJCORE uint8_t getRule(RuleCode RuleID) { // ルール設定を取得する
 	return Rules[(int)RuleID];
 }

@@ -2,17 +2,20 @@
 #define RULETBL_H
 
 #include <cstdint>
+#ifndef IMPORT_MJCORE
 #include <array>
 #include <string>
 #include <cstdlib>
 #include "logging.h"
-
-using namespace std;
+#endif
+#include "mjexport.h"
 
 #define RULESIZE 640U
 #define RULES_IN_PAGE 40U
 #define RULE_IN_LINE 80U
-typedef array<int8_t, RULESIZE> RULETBL;
+#ifndef IMPORT_MJCORE
+typedef std::array<int8_t, RULESIZE> RULETBL;
+#endif
 
 enum RuleCode {
 	/* äÓñ{ÇÃÉãÅ[Éãê›íË */
@@ -501,9 +504,11 @@ enum RuleCode {
 	RULE_GRAND_CROSS,
 };
 
-extern array<uint8_t, RULESIZE> Rules;
+#ifndef IMPORT_MJCORE
+extern std::array<uint8_t, RULESIZE> Rules;
 
 __declspec(dllexport) int getRule(int RuleID);
-extern "C" inline uint8_t getRule(RuleCode RuleID);
+#endif
+extern "C" inline MJCORE uint8_t getRule(RuleCode RuleID);
 
 #endif
