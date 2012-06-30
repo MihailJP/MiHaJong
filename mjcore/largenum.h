@@ -3,13 +3,15 @@
 
 #include <array>
 #include <cstdint>
+#include "mjexport.h"
 
 // 青天ルール対策
 // 一応21不可思議まで表現可能……
 
 #define DIGIT_GROUPS 8
+INSTANTIATE std::array<int32_t, DIGIT_GROUPS>;
 
-class LargeNum { // ±21不可思議まで表現可能な数のクラス
+EXPORT_CLASS LargeNum { // ±21不可思議まで表現可能な数のクラス
 private:
 	std::array<int32_t, DIGIT_GROUPS> digitGroup;
 	unsigned int firstArg; // 互換用。

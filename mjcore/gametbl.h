@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <cassert>
+#include "mjexport.h"
 #include "tilecode.h"
 #include "ruletbl.h"
 #include "largenum.h"
@@ -21,7 +22,7 @@ enum gameTypeID { // 卓の種類(四麻、三麻)指定用
 
 // -------------------------------------------------------------------------
 
-struct TILE { // 赤ドラデータを含めた牌のデータ
+EXPORT_STRUCT TILE { // 赤ドラデータを含めた牌のデータ
 	tileCode tile;
 	uint8_t red;
 };
@@ -29,7 +30,9 @@ struct TILE { // 赤ドラデータを含めた牌のデータ
 // -------------------------------------------------------------------------
 
 #define PLAYERS 4
+#ifndef IMPORT_MJCORE
 #define ACTUAL_PLAYERS (chkGameType(&GameStat, SanmaT) ? 3 : 4)
+#endif
 #define NUM_OF_TILES_IN_HAND 14
 #define SIZE_OF_DISCARD_BUFFER 33
 
@@ -37,6 +40,7 @@ typedef int8_t PLAYER_ID; // プレイヤー番号
 
 // -------------------------------------------------------------------------
 
+INSTANTIATE std::array<TILE, NUM_OF_TILES_IN_HAND>;
 typedef std::array<TILE, NUM_OF_TILES_IN_HAND> HAND_TILES;
 
 // -------------------------------------------------------------------------
@@ -48,11 +52,12 @@ enum discardStat {
 	discardRiichi,
 	discardRiichiTaken,
 };
-struct discardTile {
+EXPORT_STRUCT discardTile {
 	TILE tcode;
 	discardStat dstat;
 	bool isDiscardThrough; // ツモ切りフラグ
 };
+INSTANTIATE std::array<discardTile, SIZE_OF_DISCARD_BUFFER>;
 typedef std::array<discardTile, SIZE_OF_DISCARD_BUFFER> DISCARD_BUF;
 
 // -------------------------------------------------------------------------
@@ -76,10 +81,11 @@ enum meldStat {
 	meldQuadAddedCenter,        // 対面からポンの後カン
 	meldQuadAddedRight          // 下家からポンの後カン
 };
-struct meldCode {
+EXPORT_STRUCT meldCode {
 	TILE tcode;
 	meldStat mstat;
 };
+INSTANTIATE std::array<meldCode, SIZE_OF_MELD_BUFFER>;
 typedef std::array<meldCode, SIZE_OF_MELD_BUFFER> MELD_BUF;
 
 // -------------------------------------------------------------------------
@@ -88,48 +94,52 @@ enum RICHI_STAT_BITS { // 立直フラグを格納
 	RichiFlag, IppatsuFlag, DoubleFlag, OpenFlag,
 	RichiStatBits
 };
+INSTANTIATE std::bitset<RichiStatBits>;
 typedef std::bitset<RichiStatBits> RichiStat;
 
 // -------------------------------------------------------------------------
 
-struct KANGSTAT { uint8_t kangFlag, chainFlag, topFlag, chankanFlag; };
+EXPORT_STRUCT KANGSTAT { uint8_t kangFlag, chainFlag, topFlag, chankanFlag; };
 
 // -------------------------------------------------------------------------
 
 #define PAO_YAKU_PAGES 4
 enum paoYakuPage {pyDaisangen, pyDaisixi, pySikang, pyMinkan};
 
-struct PAOSTAT { PLAYER_ID paoPlayer, agariPlayer; };
+EXPORT_STRUCT PAOSTAT { PLAYER_ID paoPlayer, agariPlayer; };
+INSTANTIATE std::array<PAOSTAT, PAO_YAKU_PAGES>;
 typedef std::array<PAOSTAT, PAO_YAKU_PAGES> paoStatBook;
 
 
 // -------------------------------------------------------------------------
 
+INSTANTIATE std::array<TILE, 144>;
 typedef std::array<TILE, 144> DeckBuf; // 最初はunionでやろうと思ったけどおかしくなるのでやめた
 
 // -------------------------------------------------------------------------
 
-struct prevMeldBook { tileCode Discard, Stepped; };
+EXPORT_STRUCT prevMeldBook { tileCode Discard, Stepped; };
 
 // -------------------------------------------------------------------------
 
+INSTANTIATE std::array<uint8_t, TILE_NONFLOWER_MAX>;
 typedef std::array<uint8_t, TILE_NONFLOWER_MAX> DORASTAT;
-struct doraStatBook { DORASTAT Omote, Ura; };
+EXPORT_STRUCT doraStatBook { DORASTAT Omote, Ura; };
 
 // -------------------------------------------------------------------------
 
-struct DECLFLAG {
+EXPORT_STRUCT DECLFLAG {
 	bool Ron, Kan, Pon;
 	int8_t Chi;
 };
 
 // -------------------------------------------------------------------------
 
-struct CURRPLAYER { PLAYER_ID Active, Passive, Agari, Furikomi; };
+EXPORT_STRUCT CURRPLAYER { PLAYER_ID Active, Passive, Agari, Furikomi; };
 
 // -------------------------------------------------------------------------
 
-struct PlayerTable { // プレイヤーの状態を格納
+EXPORT_STRUCT PlayerTable { // プレイヤーの状態を格納
 	LargeNum PlayerScore;
 	int playerChip; // チップの収支
 	bool SumaroFlag; // 四馬路解禁フラグ
@@ -154,7 +164,7 @@ struct PlayerTable { // プレイヤーの状態を格納
 
 // -------------------------------------------------------------------------
 
-struct GameTable { // 卓の情報を格納する
+EXPORT_STRUCT GameTable { // 卓の情報を格納する
 	gameTypeID gameType;
 	std::array<PlayerTable, PLAYERS> Player;
 	PLAYER_ID PlayerID;
@@ -195,8 +205,10 @@ struct GameTable { // 卓の情報を格納する
 
 // -------------------------------------------------------------------------
 
+#ifndef IMPORT_MJCORE
 extern GameTable GameStat;
 inline bool chkGameType(GameTable* gameStat, gameTypeID gameType);
+#endif
 
 // -------------------------------------------------------------------------
 

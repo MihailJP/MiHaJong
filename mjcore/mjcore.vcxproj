@@ -135,6 +135,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="except.cpp" />
     <ClCompile Include="func.cpp" />
     <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="init.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="lzma\Threads.h" />
     <ClInclude Include="lzma\Types.h" />
     <ClInclude Include="mjcore.h" />
+    <ClInclude Include="mjexport.h" />
     <ClInclude Include="mnzdat.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ruletbl.h" />

@@ -1,5 +1,17 @@
 #include "func.h"
 
+TileCount::TileCount() {
+	this->count.fill(0);
+}
+const uint8_t& TileCount::operator[] (const int i) const {
+	return count[i];
+}
+uint8_t& TileCount::operator[] (const int i) {
+	return count[i];
+}
+
+// -------------------------------------------------------------------------
+
 TileCount countTilesInHand(GameTable* gameStat, PLAYER_ID playerID) {
 	// 手牌に存在する牌を種類別にカウントする（鳴き面子・暗槓は除く）
 	TileCount count = TileCount(); tileCode tmpTC;

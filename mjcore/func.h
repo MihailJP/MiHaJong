@@ -3,29 +3,29 @@
 
 #include <array>
 #include <cstdint>
+#ifndef IMPORT_MJCORE
 #include <memory>
 #include <exception>
 #include <stdexcept>
 #include <cstring>
 #include <sstream>
+#endif
+#include "mjexport.h"
 #include "gametbl.h"
 
+#ifndef IMPORT_MJCORE
+template class std::array<uint8_t, TILE_CODE_MAXIMUM>;
 typedef std::array<uint8_t, TILE_CODE_MAXIMUM> tileCountTbl;
 
 class TileCount { // éËîvÇ…Ç†ÇÈéÌóﬁï ÇÃîvÇÃêî
 private:
 	tileCountTbl count;
 public:
-	TileCount() {
-		this->count.fill(0);
-	}
-	const uint8_t& operator[] (const int i) const {
-		return count[i];
-	}
-	uint8_t& operator[] (const int i) {
-		return count[i];
-	}
+	TileCount();
+	const uint8_t& operator[] (const int i) const;
+	uint8_t& operator[] (const int i);
 };
+#endif
 
 // -------------------------------------------------------------------------
 
@@ -36,13 +36,16 @@ typedef std::array<PLAYER_RANK, PLAYERS> PlayerRankList;
 
 // -------------------------------------------------------------------------
 
+#ifndef IMPORT_MJCORE
 TileCount countTilesInHand(GameTable* gameStat, PLAYER_ID playerID);
+#endif
 
 /* -------------------------------------------------------------------------
  *  function.hsp Ç©ÇÁà⁄êA
  * -------------------------------------------------------------------------
  */
 
+#ifndef IMPORT_MJCORE
 seatAbsolute inline playerwind(GameTable* gameStat, PLAYER_ID player, PLAYER_ID currentRound);
 __declspec(dllexport) inline int playerwind(int player, int currentRound);
 
@@ -85,5 +88,7 @@ __declspec(dllexport) void TileName(char* str, int tile);
 __declspec(dllexport) inline int WindMax();
 tileCode inline Wind2Tile(uint8_t wind);
 __declspec(dllexport) int Wind2Tile(int wind);
+
+#endif
 
 #endif
