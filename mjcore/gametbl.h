@@ -2,11 +2,13 @@
 #define GAMETBL_H
 
 #include <cstdint>
+#ifndef IMPORT_MJCORE
 #include <exception>
 #include <stdexcept>
 #include <algorithm>
 #include <cassert>
 #include <type_traits>
+#endif
 #include "mjexport.h"
 #include "tilecode.h"
 #include "ruletbl.h"
