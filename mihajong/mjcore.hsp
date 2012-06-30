@@ -37,6 +37,11 @@
 #cfunc isGotPao "?isGotPao@@YAHPAUGameTable@@H@Z" int, int
 #cfunc getPaoPlayer "?getPaoPlayer@@YAHPAUGameTable@@H@Z" int, int
 #cfunc RonPlayers "?RonPlayers@@YAHPAUGameTable@@@Z" int
+#func _windName "?windName@@YAXPADH@Z" var, int
+#func _roundName "?roundName@@YAXPADH@Z" var, int
+#func _TileName "?TileName@@YAXPADH@Z" var, int
+#cfunc WindMax "?WindMax@@YAHXZ"
+#cfunc Wind2Tile "?Wind2Tile@@YAHH@Z" int
 
 /* ------------------------------------------------------------------------ */
 

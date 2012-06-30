@@ -59,120 +59,20 @@ return
 	return ans
 #global
 
-/* 「東家」「南家」「西家」「北家」の文字列を返す */
-#module
-#include "const.hsp"
-#defcfunc windName int wind
-	switch wind
-		case PLAYER_EAST: return "東家": swbreak
-		case PLAYER_SOUTH: return "南家": swbreak
-		case PLAYER_WEST: return "西家": swbreak
-		case PLAYER_NORTH: return "北家": swbreak
-		default: return "????": swbreak
-	swend
-#global
-
-/* 「東○局」などの文字列を返す */
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+
+/* 「東家」「南家」「西家」「北家」の文字列を返す */
+#defcfunc windName int wind
+	sdim tmpstr, 8: _windName tmpstr, wind: return tmpstr
+
+/* 「東○局」などの文字列を返す */
 #defcfunc roundName int roundNum
-	roundNameTxt = ""
-	switch roundNum/NUM_OF_PLAYERS
-		case 0: roundNameTxt += "東": swbreak
-		case 1: roundNameTxt += "南": swbreak
-		case 2: roundNameTxt += "西": swbreak
-		case 3: roundNameTxt += "北": swbreak
-		case 4: roundNameTxt += "白": swbreak
-		case 5: roundNameTxt += "発": swbreak
-		case 6: roundNameTxt += "中": swbreak
-		default: roundNameTxt += "??"
-	swend
-	if ((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7)) {
-		switch getRoundLoop(GameStat@)*NUM_OF_ACTUAL_PLAYERS+roundNum\NUM_OF_PLAYERS
-			case 0: roundNameTxt += "一局": swbreak
-			case 1: roundNameTxt += "二局": swbreak
-			case 2: roundNameTxt += "三局": swbreak
-			case 3: roundNameTxt += "四局": swbreak
-			case 4: roundNameTxt += "五局": swbreak
-			case 5: roundNameTxt += "六局": swbreak
-			case 6: roundNameTxt += "七局": swbreak
-			case 7: roundNameTxt += "八局": swbreak
-			case 8: roundNameTxt += "九局": swbreak
-			case 9: roundNameTxt += "十局": swbreak
-			default: roundNameTxt += strf("%d局", getRoundLoop(GameStat@)*NUM_OF_ACTUAL_PLAYERS+roundNum\NUM_OF_PLAYERS+1)
-		swend
-	} else {
-		switch roundNum\NUM_OF_PLAYERS
-			case 0: roundNameTxt += "一局": swbreak
-			case 1: roundNameTxt += "二局": swbreak
-			case 2: roundNameTxt += "三局": swbreak
-			case 3: roundNameTxt += "四局": swbreak
-			default: roundNameTxt += "??局"
-		swend
-	}
-	return roundNameTxt
-#global
+	sdim tmpstr, 16: _roundName tmpstr, roundNum: return tmpstr
 
-/* 牌の名前の文字列を返す */
-#module
-#include "const.hsp"
 #defcfunc TileName int tile
-	switch tile
-		case TILE_CHARACTER_ONE: return "一萬": swbreak
-		case TILE_CHARACTER_TWO: return "二萬": swbreak
-		case TILE_CHARACTER_THREE: return "三萬": swbreak
-		case TILE_CHARACTER_FOUR: return "四萬": swbreak
-		case TILE_CHARACTER_FIVE: return "五萬": swbreak
-		case TILE_CHARACTER_SIX: return "六萬": swbreak
-		case TILE_CHARACTER_SEVEN: return "七萬": swbreak
-		case TILE_CHARACTER_EIGHT: return "八萬": swbreak
-		case TILE_CHARACTER_NINE: return "九萬": swbreak
-		case TILE_CIRCLE_ONE: return "一筒": swbreak
-		case TILE_CIRCLE_TWO: return "二筒": swbreak
-		case TILE_CIRCLE_THREE: return "三筒": swbreak
-		case TILE_CIRCLE_FOUR: return "四筒": swbreak
-		case TILE_CIRCLE_FIVE: return "五筒": swbreak
-		case TILE_CIRCLE_SIX: return "六筒": swbreak
-		case TILE_CIRCLE_SEVEN: return "七筒": swbreak
-		case TILE_CIRCLE_EIGHT: return "八筒": swbreak
-		case TILE_CIRCLE_NINE: return "九筒": swbreak
-		case TILE_BAMBOO_ONE: return "一索": swbreak
-		case TILE_BAMBOO_TWO: return "二索": swbreak
-		case TILE_BAMBOO_THREE: return "三索": swbreak
-		case TILE_BAMBOO_FOUR: return "四索": swbreak
-		case TILE_BAMBOO_FIVE: return "五索": swbreak
-		case TILE_BAMBOO_SIX: return "六索": swbreak
-		case TILE_BAMBOO_SEVEN: return "七索": swbreak
-		case TILE_BAMBOO_EIGHT: return "八索": swbreak
-		case TILE_BAMBOO_NINE: return "九索": swbreak
-		case TILE_EAST_WIND   : return "東": swbreak
-		case TILE_SOUTH_WIND  : return "南": swbreak
-		case TILE_WEST_WIND   : return "西": swbreak
-		case TILE_NORTH_WIND  : return "北": swbreak
-		case TILE_WHITE_DRAGON: return "白": swbreak
-		case TILE_GREEN_DRAGON: return "發": swbreak
-		case TILE_RED_DRAGON  : return "中": swbreak
-		default: return "????": swbreak
-	swend
-#global
-
-/* 場風牌のリスト */
-#module
-#include "const.hsp"
-#defcfunc WindMax
-	return 7
-
-#defcfunc Wind2Tile int wind
-	switch wind
-		case 0: return TILE_EAST_WIND: swbreak
-		case 1: return TILE_SOUTH_WIND: swbreak
-		case 2: return TILE_WEST_WIND: swbreak
-		case 3: return TILE_NORTH_WIND: swbreak
-		case 4: return TILE_WHITE_DRAGON: swbreak
-		case 5: return TILE_GREEN_DRAGON: swbreak
-		case 6: return TILE_RED_DRAGON: swbreak
-	swend
+	sdim tmpstr, 16: _TileName tmpstr, tile: return tmpstr
 #global
 
 /* エラーダイアログ */

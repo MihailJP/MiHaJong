@@ -4,6 +4,10 @@
 #include <array>
 #include <cstdint>
 #include <memory>
+#include <exception>
+#include <stdexcept>
+#include <cstring>
+#include <sstream>
 #include "gametbl.h"
 
 typedef std::array<uint8_t, TILE_CODE_MAXIMUM> tileCountTbl;
@@ -61,5 +65,18 @@ PLAYER_ID getPaoPlayer(GameTable* gameStat, PLAYER_ID agariPlayer);
 __declspec(dllexport) int getPaoPlayer(GameTable* gameStat, int agariPlayer);
 
 __declspec(dllexport) int RonPlayers(GameTable* gameStat);
+
+std::string inline windName(seatAbsolute wind);
+__declspec(dllexport) void windName(char* str, int wind);
+
+std::string inline roundName(int roundNum, GameTable* gameStat);
+__declspec(dllexport) void roundName(char* str, int roundNum);
+
+std::string inline TileName(tileCode tile);
+__declspec(dllexport) void TileName(char* str, int tile);
+
+__declspec(dllexport) inline int WindMax();
+tileCode inline Wind2Tile(uint8_t wind);
+__declspec(dllexport) int Wind2Tile(int wind);
 
 #endif
