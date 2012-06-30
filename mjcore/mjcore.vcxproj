@@ -138,6 +138,7 @@
     <ClCompile Include="func.cpp" />
     <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="init.cpp" />
+    <ClCompile Include="largenum.cpp" />
     <ClCompile Include="logging.cpp" />
     <ClCompile Include="lzma\Alloc.c" />
     <ClCompile Include="lzma\LzFind.c" />
@@ -155,6 +156,7 @@
     <ClInclude Include="func.h" />
     <ClInclude Include="gametbl.h" />
     <ClInclude Include="init.h" />
+    <ClInclude Include="largenum.h" />
     <ClInclude Include="logging.h" />
     <ClInclude Include="lzma\Alloc.h" />
     <ClInclude Include="lzma\LzFind.h" />
