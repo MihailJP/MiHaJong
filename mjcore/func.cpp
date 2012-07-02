@@ -153,7 +153,7 @@ std::string inline windName(seatAbsolute wind) {
 		case sWest: return std::string("西家");
 		case sNorth: return std::string("北家");
 		default:
-			throw std::domain_error("windName(): 異常な引数です");
+			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
 	}
 }
 __declspec(dllexport) void windName(char* str, int wind) {
@@ -171,7 +171,8 @@ std::string inline roundName(int roundNum, GameTable* gameStat) {
 		case 4: roundNameTxt << "白"; break;
 		case 5: roundNameTxt << "発"; break;
 		case 6: roundNameTxt << "中"; break;
-		default: throw std::domain_error("roundName(): 異常な引数です。場風を解析できません。");
+		default: 
+			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です。場風を解析できません。");
 	}
 	if ((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7)) {
 		switch (int k = (gameStat->LoopRound * ACTUAL_PLAYERS + roundNum % PLAYERS)) {
@@ -193,7 +194,7 @@ std::string inline roundName(int roundNum, GameTable* gameStat) {
 			case 1: roundNameTxt << "二局"; break;
 			case 2: roundNameTxt << "三局"; break;
 			case 3: roundNameTxt << "四局"; break;
-			default: throw std::domain_error("roundName(): 異常な引数です。同一場の5局目以降です。");
+			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です。同一場の5局目以降です。");
 		}
 	}
 	return std::string(roundNameTxt.str());
@@ -239,7 +240,7 @@ std::string inline TileName(tileCode tile) {
 		case WhiteDragon:    return std::string("白");
 		case GreenDragon:    return std::string("發");
 		case RedDragon:      return std::string("中");
-		default: throw std::domain_error("TileName(): 異常な引数です");
+		default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
 	}
 }
 __declspec(dllexport) void TileName(char* str, int tile) {
@@ -257,7 +258,7 @@ tileCode inline Wind2Tile(uint8_t wind) {
 		case 4: return WhiteDragon;
 		case 5: return GreenDragon;
 		case 6: return RedDragon;
-		default: throw std::domain_error("Wind2Tile(): 異常な引数です");
+		default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
 	}
 }
 __declspec(dllexport) int Wind2Tile(int wind) {

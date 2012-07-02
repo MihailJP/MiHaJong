@@ -91,7 +91,7 @@ const LargeNum LargeNum::operator*(const int32_t multiplier) { // めんどくさいの
 		ans.digitGroup[i] = (int32_t)(tmpdigit % 100000000L);
 		if ((i == (DIGIT_GROUPS - 1))
 			&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN)))
-			throw std::overflow_error("オーバーフローしました");
+			Raise(EXCEPTION_MJCORE_OVERFLOW, "オーバーフローしました");
 		ans.digitGroup[i + 1] = (int32_t)(tmpdigit / 100000000L);
 	}
 	ans.fix();

@@ -12,6 +12,7 @@
 #endif
 #include "mjexport.h"
 #include "gametbl.h"
+#include "except.h"
 
 #ifdef MJCORE_EXPORTS
 template class std::array<uint8_t, TILE_CODE_MAXIMUM>;

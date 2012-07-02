@@ -95,7 +95,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="except.cpp" />
     <ClCompile Include="func.cpp" />
     <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="init.cpp" />

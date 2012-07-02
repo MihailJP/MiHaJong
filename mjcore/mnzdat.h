@@ -11,11 +11,12 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
+#include <vector>
 #include "resource.h"
 #include "lzma/LzmaLib.h"
 #include "lzma/Sha256.h"
-#include "except.h"
 #endif
+#include "except.h"
 #include "mjexport.h"
 #include "gametbl.h"
 #include "tilecode.h"

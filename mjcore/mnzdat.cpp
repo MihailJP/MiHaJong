@@ -32,12 +32,10 @@ size_t decompressMentsuAnalysisDat() {
 		(const uint8_t *)(compressedMentsuDat+13),
 		(SizeT *)&size, (const uint8_t *)compressedMentsuDat, 5);
 	if (result != SZ_OK) {
-		ostringstream o, os;
-		o << "LZMAストリームのデコードに失敗しました。ファイルが壊れている虞があります。";
-		fatal(o.str());
-		os << "エラーコード: " << result;
-		info(os.str()); o << endl << os; os.str("");
-		throw decompress_failure(o.str(), result);
+		ostringstream o;
+		o << "LZMAストリームのデコードに失敗しました。ファイルが壊れている虞があります。" <<
+			"エラーコード: " << result;
+		Raise(EXCEPTION_MJCORE_DECOMPRESSION_FAILURE, o.str().c_str());
 	}
 	else {
 		info("LZMAストリームをデコードしました。");
@@ -73,17 +71,14 @@ void verifyMentsuAnalysisDat(size_t bufSize) {
 		if (expectedDigest[i] != actualDigest[i]) mdUnmatch = true;
 	}
 	if (mdUnmatch) {
-		ostringstream o, os;
-		o << "面子構成データベースのSHA256ハッシュ値が一致しませんでした。";
-		o << "ファイルが壊れている虞があります。";
-		fatal(o.str());
-		os << "期待されるハッシュ値: " << bytesToHexString(MDVEC(expectedDigest[0], expectedDigest[31]));
-		info(os.str()); o << endl << os; os.str("");
-		os << "実際のハッシュ値: " << bytesToHexString(MDVEC(actualDigest[0], actualDigest[31]));
-		info(os.str()); o << endl << os; os.str("");
-		throw hash_mismatch(o.str(),
-			MDVEC(expectedDigest[0], expectedDigest[31]),
-			MDVEC(actualDigest[0], actualDigest[31]));
+		ostringstream o;
+		o << "面子構成データベースのSHA256ハッシュ値が一致しませんでした。" <<
+			"ファイルが壊れている虞があります。" << endl <<
+			"期待されるハッシュ値: " <<
+			bytesToHexString(vector<uint8_t>(expectedDigest[0], expectedDigest[31])) <<
+			"実際のハッシュ値: " <<
+			bytesToHexString(vector<uint8_t>(actualDigest[0], actualDigest[31]));
+		Raise(EXCEPTION_MJCORE_HASH_MISMATCH, o.str().c_str());
 	}
 	else {
 		info("面子構成データベースのSHA256ハッシュ値の照合に成功しました。");
@@ -94,15 +89,22 @@ __declspec(dllexport) void initMentsuAnalysisDat() { // 面子データ初期化
 	try {
 		verifyMentsuAnalysisDat(decompressMentsuAnalysisDat());
 	}
-	catch (decompress_failure& e) {
-		MessageBox(NULL, (LPCSTR)e.what(), (LPCSTR)"LZMA decompression error",
-			MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
-		terminate();
-	}
-	catch (hash_mismatch& e) {
-		MessageBox(NULL, (LPCSTR)e.what(), (LPCSTR)"SHA256 verification error",
-			MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
-		terminate();
+	catch (_EXCEPTION_POINTERS* e) {
+		ErrorInfo *errStat = NULL;
+		switch (e->ExceptionRecord->ExceptionCode) {
+		case EXCEPTION_MJCORE_DECOMPRESSION_FAILURE:
+			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
+			MessageBox(NULL, errStat->msg, (LPCSTR)"LZMA decompression error",
+				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
+			terminate();
+		case EXCEPTION_MJCORE_HASH_MISMATCH:
+			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
+			MessageBox(NULL, errStat->msg, (LPCSTR)"SHA256 verification error",
+				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
+			terminate();
+		default:
+			throw;
+		}
 	}
 }
 

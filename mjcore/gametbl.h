@@ -3,8 +3,6 @@
 
 #include <cstdint>
 #ifdef MJCORE_EXPORTS
-#include <exception>
-#include <stdexcept>
 #include <algorithm>
 #include <cassert>
 #include <type_traits>
@@ -13,6 +11,7 @@
 #include "tilecode.h"
 #include "ruletbl.h"
 #include "largenum.h"
+#include "except.h"
 
 // -------------------------------------------------------------------------
 

@@ -1,10 +1,10 @@
 #ifndef LARGENUM_H
 #define LARGENUM_H
 
-#include <array>
 #include <cstdint>
 #include <memory>
 #include "mjexport.h"
+#include "except.h"
 
 // 青天ルール対策
 // 一応21不可思議まで表現可能……

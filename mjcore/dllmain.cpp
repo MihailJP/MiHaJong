@@ -1,6 +1,8 @@
 #include "dllmain.h"
 
 HINSTANCE dllInst;
+ErrorInfo errorInfo;
+const ULONG_PTR errorInfoPtr[1] = {(ULONG_PTR)(&errorInfo)};
 
 void translateException(unsigned int code, _EXCEPTION_POINTERS* ep) {
 	throw ep;

@@ -2,51 +2,38 @@
 #define EXCEPT_H
 
 #ifdef MJCORE_EXPORTS
-#include <cstdint>
-#include <vector>
-#include <cstring>
-#include <cstdlib>
-#include <type_traits>
+#define WINDOWS_LEAN_AND_MEAN
+#define WINDOWS_EXTRA_MEAN
+#include <Windows.h>
+#include <string.h>
 #endif
 #include "mjexport.h"
 
-/*
- *  std::exception はPODじゃないのでDLLで使うには不適当である。
- *  C++だとthrowで何投げようが構わないので、別にPODな例外クラスを作ってしまいましょう。
- */
-
-/*MJCoreException MJCoreException::raise(const char* msg) {
-	char tmpmsg[1024]; memset(tmpmsg, 0, 1024); strcpy_s(tmpmsg, 1023, msg);
-	MJCoreException ex;
-	memset(ex.msg, 0, 1024); strcpy_s(ex.msg, 1023, msg);
-	return ex;
-}*/
-
-class decompress_failure : public std::runtime_error {
-protected:
-	int errc;
-public:
-	explicit decompress_failure(const std::string& _Message); // 圧縮データの伸長失敗時にスローする例外
-	explicit decompress_failure(const char* _Message); // 圧縮データの伸長失敗時にスローする例外
-	explicit decompress_failure(const std::string& _Message, int errcode);// 圧縮データの伸長失敗時にスローする例外
-	explicit decompress_failure(const char* _Message, int errcode);// 圧縮データの伸長失敗時にスローする例外
-	int errorCode(); // 発生したエラーコード
+#define STRINGBUF 1024u
+EXPORT_STRUCT ErrorInfo {
+	char msg[STRINGBUF];
+	char file[STRINGBUF];
+	int line;
+	char func[STRINGBUF];
 };
 
-template class std::vector<uint8_t>;
-typedef std::vector<uint8_t> MDVEC;
-class hash_mismatch : public std::runtime_error {
-protected:
-	MDVEC expected, actual;
-public:
-	explicit hash_mismatch(const std::string& _Message); // メッセージダイジェスト不一致時にスローする例外
-	explicit hash_mismatch(const char* _Message); // メッセージダイジェスト不一致時にスローする例外
-	explicit hash_mismatch(const std::string& _Message,
-		MDVEC expected, MDVEC actual); // メッセージダイジェスト不一致時にスローする例外
-	explicit hash_mismatch(const char* _Message,
-		MDVEC expected, MDVEC actual); // メッセージダイジェスト不一致時にスローする例外
-	MDVEC expectedHash(); // 期待されるハッシュ値
-	MDVEC actualHash(); // 実際のハッシュ値
-};
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<ErrorInfo>::value, "ErrorInfo is not POD");
+#endif
+
+#ifdef MJCORE_EXPORTS
+extern ErrorInfo errorInfo;
+extern const ULONG_PTR errorInfoPtr[1];
+#define Raise(exceptionCode,message) strcpy_s(errorInfo.msg, STRINGBUF, message); \
+	strcpy_s(errorInfo.file, STRINGBUF, __FILE__); errorInfo.line = __LINE__; \
+	strcpy_s(errorInfo.func, STRINGBUF, __FUNCTION__);  \
+	RaiseException(exceptionCode, EXCEPTION_NONCONTINUABLE, 1, errorInfoPtr)
+#endif
+
+#define EXCEPTION_MJCORE 0xc8000000
+#define EXCEPTION_MJCORE_INVALID_ARGUMENT 0xc800005
+#define EXCEPTION_MJCORE_OVERFLOW 0xc800011
+#define EXCEPTION_MJCORE_DECOMPRESSION_FAILURE 0xc800101
+#define EXCEPTION_MJCORE_HASH_MISMATCH 0xc800102
 
 #endif
