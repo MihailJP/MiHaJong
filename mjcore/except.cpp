@@ -1,5 +1,16 @@
 #include "except.h"
 
+/*
+ *  std::exception はPODじゃないのでDLLで使うには不適当である。
+ *  C++だとthrowで何投げようが構わないので、別にPODな例外クラスを作ってしまいましょう。
+ */
+
+
+
+
+
+
+
 /* decompress_failure */
 decompress_failure::decompress_failure(const std::string& _Message)
 	: std::runtime_error(_Message)

@@ -2,11 +2,11 @@
 #define MNZDAT_H
 
 #include <windows.h>
-#ifndef IMPORT_MJCORE
+#ifdef MJCORE_EXPORTS
 #include <cstdio>
 #endif
 #include <cstdint>
-#ifndef IMPORT_MJCORE
+#ifdef MJCORE_EXPORTS
 #include <cstdlib>
 #include <sstream>
 #include <string>
@@ -20,14 +20,14 @@
 #include "gametbl.h"
 #include "tilecode.h"
 #include "func.h"
-#ifndef IMPORT_MJCORE
+#ifdef MJCORE_EXPORTS
 #include "logging.h"
 #include "dllmain.h"
 #endif
 
 #define SHANTEN_IMPOSSIBLE 999
 
-#ifndef IMPORT_MJCORE
+#ifdef MJCORE_EXPORTS
 void LoadFileInResource(int name, int type, DWORD& size, const char*& data);
 size_t decompressMentsuAnalysisDat();
 void calcSHA256(uint8_t* digest, const uint8_t* buf, size_t bufSize);
@@ -49,7 +49,7 @@ enum shantenType { // getShantenに渡すスイッチ用
 };
 
 MJCORE SHANTEN calcShanten(GameTable* gameStat, PLAYER_ID playerID, shantenType mode);
-#ifndef IMPORT_MJCORE
+#ifdef MJCORE_EXPORTS
 __declspec(dllexport) int calcShanten(GameTable* gameStat, int playerID, int mode);
 SHANTEN calcShantenRegular(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
 SHANTEN calcShantenChiitoi(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);

@@ -5,10 +5,6 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="LoggerDebug|Win32">
-      <Configuration>LoggerDebug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -25,11 +21,6 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LoggerDebug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -42,17 +33,11 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='LoggerDebug|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LoggerDebug|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -64,36 +49,10 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKULIB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MJCORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>
       </MultiProcessorCompilation>
-      <ExceptionHandling>SyncCThrow</ExceptionHandling>
-      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <CompileAsManaged>false</CompileAsManaged>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ShowProgress>NotSet</ShowProgress>
-      <GenerateMapFile>false</GenerateMapFile>
-      <MapFileName>
-      </MapFileName>
-      <MapExports>false</MapExports>
-    </Link>
-    <ResourceCompile>
-      <Culture>0x0411</Culture>
-    </ResourceCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='LoggerDebug|Win32'">
-    <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKULIB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MultiProcessorCompilation>
-      </MultiProcessorCompilation>
-      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <ExceptionHandling>Async</ExceptionHandling>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CompileAsManaged>false</CompileAsManaged>
     </ClCompile>
@@ -118,7 +77,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKULIB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MJCORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -152,6 +111,7 @@
     <ClCompile Include="mjcore.cpp" />
     <ClCompile Include="mnzdat.cpp" />
     <ClCompile Include="ruletbl.cpp" />
+    <ClCompile Include="tileutil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dllmain.h" />
@@ -177,6 +137,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="ruletbl.h" />
     <ClInclude Include="tilecode.h" />
+    <ClInclude Include="tileutil.h" />
     <ClInclude Include="ykclass.h" />
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,7 @@
 #define GAMETBL_H
 
 #include <cstdint>
-#ifndef IMPORT_MJCORE
+#ifdef MJCORE_EXPORTS
 #include <exception>
 #include <stdexcept>
 #include <algorithm>
@@ -27,14 +27,14 @@ EXPORT_STRUCT TILE { // Ôƒhƒ‰ƒf[ƒ^‚ğŠÜ‚ß‚½”v‚Ìƒf[ƒ^
 	tileCode tile;
 	uint8_t red;
 };
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<TILE>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<TILE>::value, "TILE is not POD");
 #endif
 
 // -------------------------------------------------------------------------
 
 #define PLAYERS 4
-#ifndef IMPORT_MJCORE
+#ifdef MJCORE_EXPORTS
 #define ACTUAL_PLAYERS (chkGameType(&GameStat, SanmaT) ? 3 : 4)
 #endif
 #define NUM_OF_TILES_IN_HAND 14
@@ -61,8 +61,8 @@ EXPORT_STRUCT discardTile {
 	bool isDiscardThrough; // ƒcƒ‚Ø‚èƒtƒ‰ƒO
 };
 typedef discardTile DISCARD_BUF[SIZE_OF_DISCARD_BUFFER];
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<discardTile>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<discardTile>::value, "discardTile is not POD");
 #endif
 
 // -------------------------------------------------------------------------
@@ -91,22 +91,22 @@ EXPORT_STRUCT meldCode {
 	meldStat mstat;
 };
 typedef meldCode MELD_BUF[SIZE_OF_MELD_BUFFER];
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<discardTile>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<meldCode>::value, "meldCode is not POD");
 #endif
 
 // -------------------------------------------------------------------------
 
 EXPORT_STRUCT RichiStat {bool RichiFlag, IppatsuFlag, DoubleFlag, OpenFlag;};
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<RichiStat>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<RichiStat>::value, "RichiStat is not POD");
 #endif
 
 // -------------------------------------------------------------------------
 
 EXPORT_STRUCT KANGSTAT { uint8_t kangFlag, chainFlag, topFlag, chankanFlag; };
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<KANGSTAT>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<KANGSTAT>::value, "KANGSTAT is not POD");
 #endif
 
 // -------------------------------------------------------------------------
@@ -116,8 +116,8 @@ enum paoYakuPage {pyDaisangen, pyDaisixi, pySikang, pyMinkan};
 
 EXPORT_STRUCT PAOSTAT { PLAYER_ID paoPlayer, agariPlayer; };
 typedef PAOSTAT paoStatBook[PAO_YAKU_PAGES];
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<PAOSTAT>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<PAOSTAT>::value, "PAOSTAT is not POD");
 #endif
 
 
@@ -129,16 +129,16 @@ typedef TILE DeckBuf[SIZE_OF_DECKBUF]; // Å‰‚Íunion‚Å‚â‚ë‚¤‚Æv‚Á‚½‚¯‚Ç‚¨‚©‚µ‚
 // -------------------------------------------------------------------------
 
 EXPORT_STRUCT prevMeldBook { tileCode Discard, Stepped; };
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<prevMeldBook>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<prevMeldBook>::value, "prevMeldBook is not POD");
 #endif
 
 // -------------------------------------------------------------------------
 
 typedef uint8_t DORASTAT[TILE_NONFLOWER_MAX];
 EXPORT_STRUCT doraStatBook { DORASTAT Omote, Ura; };
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<doraStatBook>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<doraStatBook>::value, "doraStatBook is not POD");
 #endif
 
 // -------------------------------------------------------------------------
@@ -147,15 +147,15 @@ EXPORT_STRUCT DECLFLAG {
 	bool Ron, Kan, Pon;
 	int8_t Chi;
 };
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<DECLFLAG>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<DECLFLAG>::value, "DECLFLAG is not POD");
 #endif
 
 // -------------------------------------------------------------------------
 
 EXPORT_STRUCT CURRPLAYER { PLAYER_ID Active, Passive, Agari, Furikomi; };
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<CURRPLAYER>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<CURRPLAYER>::value, "CURRPLAYER is not POD");
 #endif
 
 // -------------------------------------------------------------------------
@@ -182,8 +182,8 @@ EXPORT_STRUCT PlayerTable { // ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ğŠi”[
 	bool ConnectionLost;
 	DECLFLAG DeclarationFlag; // –Â‚«‚ÌéŒ¾
 };
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<PlayerTable>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<PlayerTable>::value, "PlayerTable is not POD");
 #endif
 
 // -------------------------------------------------------------------------
@@ -199,7 +199,7 @@ EXPORT_STRUCT GameTable { // ‘ì‚Ìî•ñ‚ğŠi”[‚·‚é
 	int Deposit;
 	int AgariChain;
 	int LastAgariPlayer;
-	bool OpenRichiWait[TILE_NONFLOWER_MAX]; // ƒvƒ“ƒŠ[‚Ì‘Ò‚¿”v(‚b‚n‚l‚ÉˆÓ}“I‚È•úe‚ğ‹N‚±‚³‚¹‚È‚¢‚½‚ß‚Ég—p)
+	FlagByTile OpenRichiWait; // ƒvƒ“ƒŠ[‚Ì‘Ò‚¿”v(‚b‚n‚l‚ÉˆÓ}“I‚È•úe‚ğ‹N‚±‚³‚¹‚È‚¢‚½‚ß‚Ég—p)
 	KANGSTAT KangFlag; // —äãŠJ‰ÔG˜AŠJ‰Ô‚ÆÈU‚èG“ªÈ˜aGÈ‚Ì”»’è‚Ég‚¤
 	uint8_t TurnRound; // Œ»İ‚Ì„–Ú
 	uint8_t KangNum; // lÈ—¬‹ÇAlÈq‚È‚Ç‚Ì”»’è‚Ég‚¤
@@ -226,13 +226,13 @@ EXPORT_STRUCT GameTable { // ‘ì‚Ìî•ñ‚ğŠi”[‚·‚é
 	int16_t AgariSpecialStat; // ¡‚Ì‚Æ‚±‚ëH‚¢•Ï‚¦‚Åƒ`ƒ‡ƒ“ƒ{‚É‚È‚éê‡‚¾‚¯g‚Á‚Ä‚éH
 	TILE CurrentDiscard;
 };
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<GameTable>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 #endif
 
 // -------------------------------------------------------------------------
 
-#ifndef IMPORT_MJCORE
+#ifdef MJCORE_EXPORTS
 extern GameTable GameStat;
 inline bool chkGameType(GameTable* gameStat, gameTypeID gameType);
 #endif

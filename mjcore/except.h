@@ -1,10 +1,26 @@
 #ifndef EXCEPT_H
 #define EXCEPT_H
 
-#include <exception>
-#include <stdexcept>
+#ifdef MJCORE_EXPORTS
 #include <cstdint>
 #include <vector>
+#include <cstring>
+#include <cstdlib>
+#include <type_traits>
+#endif
+#include "mjexport.h"
+
+/*
+ *  std::exception はPODじゃないのでDLLで使うには不適当である。
+ *  C++だとthrowで何投げようが構わないので、別にPODな例外クラスを作ってしまいましょう。
+ */
+
+/*MJCoreException MJCoreException::raise(const char* msg) {
+	char tmpmsg[1024]; memset(tmpmsg, 0, 1024); strcpy_s(tmpmsg, 1023, msg);
+	MJCoreException ex;
+	memset(ex.msg, 0, 1024); strcpy_s(ex.msg, 1023, msg);
+	return ex;
+}*/
 
 class decompress_failure : public std::runtime_error {
 protected:

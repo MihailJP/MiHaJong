@@ -2,6 +2,13 @@
 #define TILECODE_H
 
 #include <cstdint>
+#ifdef MJCORE_EXPORTS
+#include <type_traits>
+#include <exception>
+#include <stdexcept>
+#include "logging.h"
+#endif
+#include "mjexport.h"
 
 // 牌の種類
 #define TILE_CODE_MAXIMUM 200
@@ -66,5 +73,45 @@ enum tileCode { // 牌のコード
 	Chrysanthemum,
 	Bamboo
 };
+
+// -------------------------------------------------------------------------
+
+template <class T> struct InfoByTile { // 牌ごとに指定した型による情報(テンプレート)
+	T val[TILE_NONFLOWER_MAX];
+	const T& operator[](const tileCode tile) const {
+		if ((tile >= NoTile)&&(tile < TILE_NONFLOWER_MAX)) {
+			return val[tile];
+		}
+		else {
+			error("InfoByTile::operator[] の引数が範囲外です");
+			throw std::domain_error("Subscript out of range");
+		}
+	}
+	const T& operator[](const int tile) const {
+		return InfoByTile::operator[]((tileCode)tile);
+	}
+	T& operator[](const tileCode tile) {
+		if ((tile >= NoTile)&&(tile < TILE_NONFLOWER_MAX)) {
+			return val[tile];
+		}
+		else {
+			error("InfoByTile::operator[] の引数が範囲外です");
+			throw std::domain_error("Subscript out of range");
+		}
+	}
+	T& operator[](const int tile) {
+		return InfoByTile::operator[]((tileCode)tile);
+	}
+};
+
+template struct MJCORE InfoByTile<bool>;
+typedef InfoByTile<bool> FlagByTile;
+
+template struct MJCORE InfoByTile<int8_t>;
+typedef InfoByTile<int8_t> Int8ByTile;
+
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<InfoByTile<int8_t> >::value, "Non-POD data type detected");
+#endif
 
 #endif

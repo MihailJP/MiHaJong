@@ -34,8 +34,8 @@ EXPORT_STRUCT LargeNum { // ±21不可思議まで表現可能な数のクラス
 	const bool operator<=(const LargeNum& cmp);
 	const bool operator>=(const LargeNum& cmp);
 };
-#ifndef IMPORT_MJCORE
-static_assert(std::is_pod<LargeNum>::value, "Non-POD data type detected");
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<LargeNum>::value, "LargeNum is not POD");
 #endif
 
 #endif

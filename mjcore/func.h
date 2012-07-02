@@ -3,7 +3,7 @@
 
 #include <array>
 #include <cstdint>
-#ifndef IMPORT_MJCORE
+#ifdef MJCORE_EXPORTS
 #include <memory>
 #include <exception>
 #include <stdexcept>
@@ -13,7 +13,7 @@
 #include "mjexport.h"
 #include "gametbl.h"
 
-#ifndef IMPORT_MJCORE
+#ifdef MJCORE_EXPORTS
 template class std::array<uint8_t, TILE_CODE_MAXIMUM>;
 typedef std::array<uint8_t, TILE_CODE_MAXIMUM> tileCountTbl;
 
@@ -36,7 +36,7 @@ typedef std::array<PLAYER_RANK, PLAYERS> PlayerRankList;
 
 // -------------------------------------------------------------------------
 
-#ifndef IMPORT_MJCORE
+#ifdef MJCORE_EXPORTS
 TileCount countTilesInHand(GameTable* gameStat, PLAYER_ID playerID);
 #endif
 
@@ -45,7 +45,7 @@ TileCount countTilesInHand(GameTable* gameStat, PLAYER_ID playerID);
  * -------------------------------------------------------------------------
  */
 
-#ifndef IMPORT_MJCORE
+#ifdef MJCORE_EXPORTS
 seatAbsolute inline playerwind(GameTable* gameStat, PLAYER_ID player, PLAYER_ID currentRound);
 __declspec(dllexport) inline int playerwind(int player, int currentRound);
 

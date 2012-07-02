@@ -1,13 +1,13 @@
 #ifndef MJEXPORT_H
 #define MJEXPORT_H
 
-#ifdef IMPORT_MJCORE
-#define MJCORE __declspec(dllimport)
-#define MJCEXTERN extern
-#else
+#ifdef MJCORE_EXPORTS
 #define MJCORE __declspec(dllexport)
 #define MJCEXTERN
-#endif /* IMPORT_MJCORE */
+#else
+#define MJCORE __declspec(dllimport)
+#define MJCEXTERN extern
+#endif /* MJCORE_EXPORTS */
 
 #define EXPORT_STRUCT MJCEXTERN struct MJCORE
 
