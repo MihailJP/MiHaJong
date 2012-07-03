@@ -3,7 +3,7 @@
 using namespace std;
 
 static char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
-static array<uint8_t, RULESIZE> Rules;
+static uint8_t Rules[RULESIZE];
 
 void parseRule() { // ルール設定を数値に変換
 	debug("ルール設定を数値配列に変換します。");

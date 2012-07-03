@@ -23,24 +23,22 @@ signed int LargeNum::compare(const LargeNum& cmp) { // 比較用
 	return ans;
 }
 
-std::unique_ptr<LargeNum> LargeNum::fromInt(int val) {
-	std::unique_ptr<LargeNum> num(new LargeNum);
-	for (int i = 0; i < DIGIT_GROUPS; i++) num->digitGroup[i] = 0;
-	num->digitGroup[0] = (val % 100000000);
-	num->digitGroup[1] = (val / 100000000);
-	num->firstArg = 100000000u;
+LargeNum LargeNum::fromInt(int val) {
+	LargeNum num;
+	for (int i = 0; i < DIGIT_GROUPS; i++) num.digitGroup[i] = 0;
+	num.digitGroup[0] = (val % 100000000);
+	num.digitGroup[1] = (val / 100000000);
+	num.firstArg = 100000000u;
 	return num;
 }
-std::unique_ptr<LargeNum> LargeNum::fromInt(int val, unsigned int fArg) {
-	std::unique_ptr<LargeNum> num(new LargeNum);
-	for (int i = 0; i < DIGIT_GROUPS; i++) num->digitGroup[i] = 0;
-	num->digitGroup[0] = (val % 100000000);
-	num->digitGroup[1] = (val / 100000000);
-	num->firstArg = fArg;
+LargeNum LargeNum::fromInt(int val, unsigned int fArg) {
+	LargeNum num;
+	for (int i = 0; i < DIGIT_GROUPS; i++) num.digitGroup[i] = 0;
+	num.digitGroup[0] = (val % 100000000);
+	num.digitGroup[1] = (val / 100000000);
+	num.firstArg = fArg;
 	return num;
 }
-
-unsigned int LargeNum::getFirstArg() {return this->firstArg;}
 
 /* ここから演算子をオーバーロード */
 const LargeNum LargeNum::operator+(const LargeNum& addend) {

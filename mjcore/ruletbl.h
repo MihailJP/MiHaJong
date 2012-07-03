@@ -3,7 +3,6 @@
 
 #include <cstdint>
 #ifdef MJCORE_EXPORTS
-#include <array>
 #include <string>
 #include <cstdlib>
 #include "logging.h"
@@ -14,10 +13,10 @@
 #define RULES_IN_PAGE 40U
 #define RULE_IN_LINE 80U
 #ifdef MJCORE_EXPORTS
-typedef std::array<int8_t, RULESIZE> RULETBL;
+typedef int8_t RULETBL[RULESIZE];
 #endif
 
-enum RuleCode {
+enum RuleCode : uint16_t {
 	/* äÓñ{ÇÃÉãÅ[Éãê›íË */
 	RULE_GAME_LENGTH = 0,
 	RULE_SUDDEN_DEATH_LENGTH,
@@ -505,7 +504,7 @@ enum RuleCode {
 };
 
 #ifdef MJCORE_EXPORTS
-extern std::array<uint8_t, RULESIZE> Rules;
+extern uint8_t Rules[RULESIZE];
 
 __declspec(dllexport) int getRule(int RuleID);
 #endif

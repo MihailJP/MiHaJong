@@ -15,7 +15,7 @@
 
 // -------------------------------------------------------------------------
 
-enum gameTypeID { // 卓の種類(四麻、三麻)指定用
+enum gameTypeID : uint8_t { // 卓の種類(四麻、三麻)指定用
 	Yonma = 0x01, Sanma = 0x02, Sanma4 = 0x04, SanmaS = 0x08,
 	AllSanma = 0x0e, SanmaT = 0x0a, SanmaX = 0x06
 };
@@ -41,6 +41,40 @@ static_assert(std::is_pod<TILE>::value, "TILE is not POD");
 
 typedef int8_t PLAYER_ID; // プレイヤー番号
 
+template <class T> struct InfoByPlayer { // プレイヤーごとに指定した型による情報(テンプレート)
+	T val[PLAYERS];
+	const T& operator[](const PLAYER_ID playerID) const {
+		if ((playerID >= 0)&&(playerID < PLAYERS)) {
+			return val[playerID];
+		}
+#ifdef MJCORE_EXPORTS
+		else {
+			std::ostringstream o;
+			o << "InfoByPlayer:添字が範囲外です (" << (int)playerID << ")";
+			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
+		}
+#endif
+	}
+	const T& operator[](const int playerID) const {
+		return InfoByPlayer::operator[]((PLAYER_ID)playerID);
+	}
+	T& operator[](const PLAYER_ID playerID) {
+		if ((playerID >= 0)&&(playerID < PLAYERS)) {
+			return val[playerID];
+		}
+#ifdef MJCORE_EXPORTS
+		else {
+			std::ostringstream o;
+			o << "InfoByPlayer:添字が範囲外です (" << (int)playerID << ")";
+			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
+		}
+#endif
+	}
+	T& operator[](const int playerID) {
+		return InfoByPlayer::operator[]((PLAYER_ID)playerID);
+	}
+};
+
 // -------------------------------------------------------------------------
 
 typedef TILE HAND_TILES[NUM_OF_TILES_IN_HAND];
@@ -48,7 +82,7 @@ typedef TILE HAND_TILES[NUM_OF_TILES_IN_HAND];
 // -------------------------------------------------------------------------
 
 #define SUTEHAI_TYPE_STEP 200
-enum discardStat {
+enum discardStat : uint8_t {
 	discardNormal,
 	discardTaken,
 	discardRiichi,
@@ -68,7 +102,7 @@ static_assert(std::is_pod<discardTile>::value, "discardTile is not POD");
 
 #define SIZE_OF_MELD_BUFFER 5
 #define MELD_TYPE_STEP 1000
-enum meldStat {
+enum meldStat : uint8_t {
 	meldSequenceConcealed,      // 手の内の順子
 	meldSequenceExposedLower,   // 小さい方をチー
 	meldSequenceExposedMiddle,  // 嵌張をチー
@@ -83,7 +117,7 @@ enum meldStat {
 	meldQuadExposedRight,       // 下家から明槓
 	meldQuadAddedLeft,          // 上家からポンの後カン
 	meldQuadAddedCenter,        // 対面からポンの後カン
-	meldQuadAddedRight          // 下家からポンの後カン
+	meldQuadAddedRight,         // 下家からポンの後カン
 };
 EXPORT_STRUCT meldCode {
 	TILE tcode;
@@ -111,7 +145,7 @@ static_assert(std::is_pod<KANGSTAT>::value, "KANGSTAT is not POD");
 // -------------------------------------------------------------------------
 
 #define PAO_YAKU_PAGES 4
-enum paoYakuPage {pyDaisangen, pyDaisixi, pySikang, pyMinkan};
+enum paoYakuPage : uint8_t {pyDaisangen, pyDaisixi, pySikang, pyMinkan};
 
 EXPORT_STRUCT PAOSTAT { PLAYER_ID paoPlayer, agariPlayer; };
 typedef PAOSTAT paoStatBook[PAO_YAKU_PAGES];
@@ -187,9 +221,11 @@ static_assert(std::is_pod<PlayerTable>::value, "PlayerTable is not POD");
 
 // -------------------------------------------------------------------------
 
+EXPORT_TEMPLATE_STRUCT InfoByPlayer<PlayerTable>;
+typedef InfoByPlayer<PlayerTable> StatusByPlayer;
 EXPORT_STRUCT GameTable { // 卓の情報を格納する
 	gameTypeID gameType;
-	PlayerTable Player[PLAYERS];
+	StatusByPlayer Player;
 	PLAYER_ID PlayerID;
 	int GameLength;
 	int GameRound;

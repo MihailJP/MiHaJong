@@ -16,9 +16,8 @@ EXPORT_STRUCT LargeNum { // ±21不可思議まで表現可能な数のクラス
 	unsigned int firstArg; // 互換用。
 	void fix();
 	signed int compare(const LargeNum& cmp);
-	static std::unique_ptr<LargeNum> fromInt(int val);
-	static std::unique_ptr<LargeNum> fromInt(int val, unsigned int fArg);
-	unsigned int getFirstArg();
+	static LargeNum fromInt(int val);
+	static LargeNum fromInt(int val, unsigned int fArg);
 	/* ここから演算子をオーバーロード */
 	const LargeNum operator+(const LargeNum& addend);
 	const LargeNum operator+(const int32_t addend);

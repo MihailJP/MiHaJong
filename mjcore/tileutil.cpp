@@ -17,7 +17,7 @@ void lipai(GameTable* gameStat, PLAYER_ID targetPlayer) {
 	/* ソートの準備として牌のない枠を処理 */
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
 		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) {
-			gameStat->Player[targetPlayer].Hand[i].tile = (tileCode)999;
+			gameStat->Player[targetPlayer].Hand[i].tile = TilePad;
 			gameStat->Player[targetPlayer].Hand[i].red = 0;
 		}
 	}
@@ -49,7 +49,7 @@ void lipai(GameTable* gameStat, PLAYER_ID targetPlayer) {
 
 	/* 空欄だったところは元に戻してあげましょう */
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
-		if (gameStat->Player[targetPlayer].Hand[i].tile == (tileCode)999) {
+		if (gameStat->Player[targetPlayer].Hand[i].tile == TilePad) {
 			gameStat->Player[targetPlayer].Hand[i].tile = NoTile;
 			gameStat->Player[targetPlayer].Hand[i].red = 0;
 		}
@@ -72,54 +72,71 @@ __declspec(dllexport) void lipai(GameTable* gameStat, int targetPlayer) {
 
 /* 場に見えてる個数 */
 /* あとで書く */
-MJCORE void countseentiles(Int8ByTile* seenTiles, GameTable* gameStat) {
+MJCORE Int8ByTile countseentiles(GameTable* gameStat) {
 	// 場に見えている牌の数を数える
+	std::ostringstream o; // エラーメッセージ用
 
-	
+	Int8ByTile seenTiles; // 計算する牌
+	memset(&seenTiles, 0, sizeof(seenTiles)); // まずは、初期化
+
+	// 捨牌で見えてる枚数
+	for (int i = 0; i < PLAYERS; i++) {
+		if (gameStat->Player[i].DiscardPointer == 0) continue;
+		for (int j = 1; j <= gameStat->Player[i].DiscardPointer; j++)
+			seenTiles[gameStat->Player[i].Meld[j].tcode.tile]++;
+	}
+
+	// 誰かの副露で見えてる枚数
+	for (int i = 0; i < PLAYERS; i++) {
+		if (gameStat->Player[i].MeldPointer == 0) continue;
+		for (int j = 1; j <= gameStat->Player[i].MeldPointer; j++) {
+			switch (gameStat->Player[i].Meld[j].mstat) {
+			case meldSequenceExposedLower:
+			case meldSequenceExposedMiddle:
+			case meldSequenceExposedUpper:
+				// 明順子(チー)
+				// まず、正しいコードになっているかを確認する(デバッグ時)
+				assert(gameStat->Player[i].Meld[j].tcode.tile % TILE_SUIT_STEP <= 7);
+				assert(gameStat->Player[i].Meld[j].tcode.tile % TILE_SUIT_STEP > 0);
+				assert(gameStat->Player[i].Meld[j].tcode.tile < TILE_SUIT_HONORS);
+				// カウントアップ
+				for (int k = gameStat->Player[i].Meld[j].tcode.tile;
+					k <= gameStat->Player[i].Meld[j].tcode.tile + 2; k++)
+					seenTiles[gameStat->Player[i].Meld[j].tcode.tile]++;
+				// ここまで
+				break;
+			case meldTripletExposedLeft:
+			case meldTripletExposedCenter:
+			case meldTripletExposedRight:
+				// 明刻子(ポン)
+				seenTiles[gameStat->Player[i].Meld[j].tcode.tile] += 3;
+				break;
+			case meldQuadConcealed:
+				// 暗槓
+				if (getRule(RULE_ANKAN_CONCEAL) != 0) break; // 暗槓非開示ルールだったらカウントしない
+				/* FALLTHRU */
+			case meldQuadExposedLeft:   case meldQuadAddedLeft:
+			case meldQuadExposedCenter: case meldQuadAddedCenter:
+			case meldQuadExposedRight:  case meldQuadAddedRight:
+				// 明槓
+				seenTiles[gameStat->Player[i].Meld[j].tcode.tile] += 4;
+				break;
+			default:
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "副露データに暗順子、暗刻子、または不明な種類の面子が検出されました");
+			}
+		}
+	}
+
+	// ドラ表示牌で見えてる枚数
+	if (chkGameType(gameStat, AllSanma)) {
+		// あとで書く
+	} else {
+		// あとで書く
+	}
+
+	return seenTiles;
 }
 #if 0
-/* 場に見えてる個数 */
-#module
-#include "const.hsp"
-#include "mjcore.hsp"
-#deffunc countseentiles array SeenTiles, var GameStat
-/*
-		countseentiles p1, p2
-		場に見えている牌の数を数える
-
-		p1 : 結果を格納する配列
-		p2 : 卓の状況を格納した構造体
-
-		それぞれの牌が場に見えている数を数えます。
-*/
-	dim SeenTiles, TILE_CODE_MAXIMUM // 計算する牌
-	// 捨牌で見えてる枚数
-	repeat NUM_OF_PLAYERS: tmp = cnt
-		if (DiscardPointer(GameStat, tmp) == 0) {continue}
-		repeat DiscardPointer(GameStat, tmp), 1
-			SeenTiles(getDiscard(GameStat, DISCARD_TILECODE, cnt, tmp))++
-		loop
-	loop
-	// 誰かの副露で見えてる枚数
-	repeat NUM_OF_PLAYERS: tmp = cnt
-		if (MeldPointer(GameStat, tmp) == 0) {continue}
-		repeat MeldPointer(GameStat, tmp), 1
-			if (getMeld(GameStat, MELD_TILECODE, cnt, tmp) < MELD_TRIPLET*MELD_TYPE_STEP) {
-				// 明順子
-				SeenTiles((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0)++
-				SeenTiles((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+1)++
-				SeenTiles((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+2)++
-			} else: if (getMeld(GameStat, MELD_TILECODE, cnt, tmp) < MELD_QUAD*MELD_TYPE_STEP) {
-				// 明刻子
-				SeenTiles((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0) += 3
-			} else {
-				if ((getMeld(GameStat, MELD_TILECODE, cnt, tmp)/MELD_TYPE_STEP != MELD_QUAD_CONCEALED)||(getRule(RULE_ANKAN_CONCEAL) == 0)) {
-					// 槓子 (暗槓非開示設定で見えてない暗槓までカウントしないように条件式を細工しておく)
-					SeenTiles((getMeld(GameStat, MELD_TILECODE, cnt, tmp)\TILE_CODE_MAXIMUM)+0) += 4
-				}
-			}
-		loop
-	loop
 	// ドラ表示牌で見えてる枚数
 	repeat 6
 #ifdef ALLSANMA
@@ -257,12 +274,12 @@ MJCORE bool chkAnkanAbility(GameTable* gameStat, PLAYER_ID targetPlayer) {
 	/* 立直後であり送り槓はできないのでツモった牌だけ調べればよい */
 	if (tlCount[gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile] < 4) {
 		o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
-			gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
+			(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
 			"] は、4枚揃っていません。"; debug(o.str());
 		return false;
 	} else {
 		o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
-			gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
+			(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
 			"] は、手牌に合わせて4枚あります。"; debug(o.str());
 	}
 
@@ -271,19 +288,19 @@ MJCORE bool chkAnkanAbility(GameTable* gameStat, PLAYER_ID targetPlayer) {
 	case EastWind: case SouthWind: case WestWind: case NorthWind:
 	case WhiteDragon: case GreenDragon: case RedDragon:
 		o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
-			gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
+			(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
 			"] は字牌です。"; debug(o.str());
 		return true;
 	case Spring: case Summer: case Autumn: case Winter:
 	case Plum: case Orchid: case Chrysanthemum: case Bamboo:
 		/* 花牌を槓？　ご冗談を */
 		o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
-			gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
+			(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
 			"] は花牌です。"; debug(o.str());
 		return false;
 	default:
 		o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
-			gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
+			(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
 			"] は数牌です。"; debug(o.str());
 		break;
 	}
@@ -314,12 +331,12 @@ MJCORE bool chkAnkanAbility(GameTable* gameStat, PLAYER_ID targetPlayer) {
 	memcpy(gameStat->Player[targetPlayer].Hand, tmpHand, sizeof(HAND_TILES)); /* 手牌を書き戻す */
 	if (shanten == 1) {
 		o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
-			gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
+			(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
 			"] は、アタマ候補です。"; debug(o.str());
 		return false;
 	} else {
 		o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
-			gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
+			(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
 			"] は、アタマ候補ではありません。"; debug(o.str());
 	}
 

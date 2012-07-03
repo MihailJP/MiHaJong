@@ -19,17 +19,17 @@ extern "C" {
 	__declspec(dllexport) void setScore(GameTable* gameStat, int Player, int Digit, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].PlayerScore.digitGroup[Digit] = value *
-			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.getFirstArg())); return;
+			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.firstArg)); return;
 	}
 	__declspec(dllexport) void addScore(GameTable* gameStat, int Player, int Digit, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->Player[Player].PlayerScore.digitGroup[Digit] += value *
-			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.getFirstArg())); return;
+			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.firstArg)); return;
 	}
 	__declspec(dllexport) int getScore(GameTable* gameStat, int Player, int Digit) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		return gameStat->Player[Player].PlayerScore.digitGroup[Digit] /
-			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.getFirstArg()));
+			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.firstArg));
 	}
 	__declspec(dllexport) void exportScore(GameTable* gameStat, int* exportArray) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
@@ -37,7 +37,7 @@ extern "C" {
 			for (int i = 0; i < PLAYERS; i++) {
 				*(exportArray + j * PLAYERS + i) =
 					gameStat->Player[i].PlayerScore.digitGroup[j] /
-					(j ? 1 : (signed int)(100000000u / gameStat->Player[i].PlayerScore.getFirstArg()));
+					(j ? 1 : (signed int)(100000000u / gameStat->Player[i].PlayerScore.firstArg));
 			}
 		}
 	}
@@ -47,7 +47,7 @@ extern "C" {
 			for (int i = 0; i < PLAYERS; i++) {
 				gameStat->Player[i].PlayerScore.digitGroup[j] =
 					*(importArray + j * PLAYERS + i) *
-					(j ? 1 : (signed int)(100000000u / gameStat->Player[i].PlayerScore.getFirstArg()));
+					(j ? 1 : (signed int)(100000000u / gameStat->Player[i].PlayerScore.firstArg));
 			}
 		}
 	}
@@ -269,7 +269,7 @@ extern "C" {
 		case 2:
 			return gameStat->Player[Player].Discard[Index].isDiscardThrough ? 1 : 0;
 		default:
-			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 			break;
 		}
 	}
@@ -302,7 +302,7 @@ extern "C" {
 			gameStat->Player[Player].Meld[Index].tcode.red = (uint8_t)value;
 			break;
 		default:
-			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 			break;
 		}
 		return;
@@ -316,7 +316,7 @@ extern "C" {
 		case 1:
 			return (int)gameStat->Player[Player].Meld[Index].tcode.red;
 		default:
-			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 		}
 	}
 	__declspec(dllexport) int MeldPointer(GameTable* gameStat, int Player) {
@@ -344,7 +344,7 @@ extern "C" {
 			gameStat->Player[Player].Meld[Index].tcode.red += (uint8_t)value;
 			break;
 		default:
-			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 			break;
 		}
 		return;
@@ -424,14 +424,14 @@ extern "C" {
 				gameStat->Player[Player].RichiFlag.DoubleFlag = true;
 				break;
 			default:
-				Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "正しくない値が指定されました");
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "正しくない値が指定されました");
 			}
 			break;
 		case 1:
 			gameStat->Player[Player].RichiFlag.OpenFlag = value;
 			break;
 		default:
-			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "正しくないページが指定されました");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "正しくないページが指定されました");
 		}
 	}
 	__declspec(dllexport) int getRichiFlag(GameTable* gameStat, int Page, int Player) {
@@ -446,7 +446,7 @@ extern "C" {
 		case 1:
 			return gameStat->Player[Player].RichiFlag.OpenFlag ? 1 : 0;
 		default:
-			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "正しくないページが指定されました");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "正しくないページが指定されました");
 		}
 	}
 
@@ -541,7 +541,7 @@ extern "C" {
 			case 1: gameStat->KangFlag.chainFlag = (uint8_t)value; break;
 			case 2: gameStat->KangFlag.topFlag = (uint8_t)value; break;
 			case 3: gameStat->KangFlag.chankanFlag = (uint8_t)value; break;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
 		}
 		return;
 	}
@@ -552,7 +552,7 @@ extern "C" {
 			case 1: gameStat->KangFlag.chainFlag++; break;
 			case 2: gameStat->KangFlag.topFlag++; break;
 			case 3: gameStat->KangFlag.chankanFlag++; break;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
 		}
 		return;
 	}
@@ -563,7 +563,7 @@ extern "C" {
 			case 1: return (int)gameStat->KangFlag.chainFlag;
 			case 2: return (int)gameStat->KangFlag.topFlag;
 			case 3: return (int)gameStat->KangFlag.chankanFlag;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 		}
 	}
 
@@ -606,7 +606,7 @@ extern "C" {
 					+(gameStat->Dice1+gameStat->Dice2)-1) % 3;
 				if (chkGameType(gameStat, Sanma4)) {
 					gameStat->WaremePlayer = ((0)+24+(gameStat->Dice1+gameStat->Dice2)-1) % 3;
-					std::array<PLAYER_ID, 3> tobePlayed = {
+					PLAYER_ID tobePlayed[] = {
 						(gameStat->GameRound % PLAYERS),
 						((gameStat->GameRound + 1) % PLAYERS),
 						((gameStat->GameRound + 2) % PLAYERS)
@@ -652,7 +652,7 @@ extern "C" {
 		switch (Page) {
 			case 0: gameStat->PaoFlag[Yaku].paoPlayer = (PLAYER_ID)value; break;
 			case 1: gameStat->PaoFlag[Yaku].agariPlayer = (PLAYER_ID)value; break;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
 		}
 		return;
 	}
@@ -661,7 +661,7 @@ extern "C" {
 		switch (Page) {
 			case 0: return (int)gameStat->PaoFlag[Yaku].paoPlayer;
 			case 1: return (int)gameStat->PaoFlag[Yaku].agariPlayer;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 		}
 	}
 
@@ -712,7 +712,7 @@ extern "C" {
 			gameStat->Deck[Index].red = (uint8_t)value;
 			break;
 		default:
-			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 			break;
 		}
 		return;
@@ -727,7 +727,7 @@ extern "C" {
 			return (int)gameStat->Deck[Index].red;
 			break;
 		default:
-			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 			break;
 		}
 	}
@@ -799,7 +799,7 @@ extern "C" {
 		switch (Page) {
 			case 0: gameStat->PreviousMeld.Discard = (tileCode) value; break;
 			case 1: gameStat->PreviousMeld.Stepped = (tileCode) value; break;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
 		}
 		return;
 	}
@@ -808,7 +808,7 @@ extern "C" {
 		switch (Page) {
 			case 0: return (int)gameStat->PreviousMeld.Discard;
 			case 1: return (int)gameStat->PreviousMeld.Stepped;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
 		}
 	}
 
@@ -831,7 +831,7 @@ extern "C" {
 		switch (Page) {
 			case 0: gameStat->DoraFlag.Omote[Tile] = value; break;
 			case 1: gameStat->DoraFlag.Ura[Tile] = value; break;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
 		}
 		return;
 	}
@@ -840,7 +840,7 @@ extern "C" {
 		switch (Page) {
 			case 0: gameStat->DoraFlag.Omote[Tile]++; break;
 			case 1: gameStat->DoraFlag.Ura[Tile]++; break;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
 		}
 		return;
 	}
@@ -849,7 +849,7 @@ extern "C" {
 		switch (Page) {
 			case 0: return (int)gameStat->DoraFlag.Omote[Tile];
 			case 1: return (int)gameStat->DoraFlag.Ura[Tile];
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 		}
 	}
 
@@ -865,7 +865,7 @@ extern "C" {
 			gameStat->CurrentDiscard.red = (uint8_t)value;
 			break;
 		default:
-			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 			break;
 		}
 		return;
@@ -878,7 +878,7 @@ extern "C" {
 		case 1:
 			return (int)gameStat->CurrentDiscard.red;
 		default:
-			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 		}
 	}
 
@@ -903,7 +903,7 @@ extern "C" {
 			case 1: gameStat->Player[Player].DeclarationFlag.Pon = value; break;
 			case 2: gameStat->Player[Player].DeclarationFlag.Chi = (int8_t)value; break;
 			case 3: gameStat->Player[Player].DeclarationFlag.Kan = value; break;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
 		}
 		return;
 	}
@@ -924,7 +924,7 @@ extern "C" {
 			case 1: return gameStat->Player[Player].DeclarationFlag.Pon ? 1 : 0;
 			case 2: return (int)gameStat->Player[Player].DeclarationFlag.Chi;
 			case 3: return gameStat->Player[Player].DeclarationFlag.Kan ? 1 : 0;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 		}
 	}
 
@@ -937,7 +937,7 @@ extern "C" {
 			case 1: gameStat->CurrentPlayer.Passive = (PLAYER_ID)value; break;
 			case 2: gameStat->CurrentPlayer.Agari = (PLAYER_ID)value; break;
 			case 3: gameStat->CurrentPlayer.Furikomi = (PLAYER_ID)value; break;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
 		}
 		return;
 	}
@@ -957,7 +957,7 @@ extern "C" {
 			case 1: return (int)gameStat->CurrentPlayer.Passive;
 			case 2: return (int)gameStat->CurrentPlayer.Agari;
 			case 3: return (int)gameStat->CurrentPlayer.Furikomi;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 		}
 	}
 
@@ -1092,31 +1092,31 @@ extern "C" {
 				if (chkGameType(&GameStat, SanmaT)) {
 					switch (getRule(RULE_STARTING_POINT)) {
 					case 0: snmdflt:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(35000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(35000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 35000);
 						break;
 					case 1:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(40000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(40000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 40000);
 						break;
 					case 2:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(45000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(45000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 45000);
 						break;
 					case 3:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(50000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(50000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 50000);
 						break;
 					case 4: case 7:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(25000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(25000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 25000);
 						break;
 					case 5:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(27000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(27000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 27000);
 						break;
 					case 6: case 8:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(30000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(30000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 30000);
 						break;
 					default:
@@ -1126,27 +1126,27 @@ extern "C" {
 				} else {
 					switch (getRule(RULE_STARTING_POINT)) {
 					case 0: dflt:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(25000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(25000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 25000);
 						break;
 					case 1:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(27000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(27000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 27000);
 						break;
 					case 2:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(30000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(30000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 30000);
 						break;
 					case 3:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(35000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(35000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 35000);
 						break;
 					case 4:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(40000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(40000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 40000);
 						break;
 					case 5:
-						gameStat->Player[i].PlayerScore = *LargeNum::fromInt(20000, 1000000u).get();
+						gameStat->Player[i].PlayerScore = LargeNum::fromInt(20000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 20000);
 						break;
 					default:
@@ -1155,7 +1155,7 @@ extern "C" {
 					}
 				}
 			} else {
-				gameStat->Player[i].PlayerScore = *LargeNum::fromInt(0, 1000000u).get();
+				gameStat->Player[i].PlayerScore = LargeNum::fromInt(0, 1000000u);
 			}
 		}
 

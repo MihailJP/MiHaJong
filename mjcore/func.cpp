@@ -1,17 +1,5 @@
 #include "func.h"
 
-TileCount::TileCount() {
-	this->count.fill(0);
-}
-const uint8_t& TileCount::operator[] (const int i) const {
-	return count[i];
-}
-uint8_t& TileCount::operator[] (const int i) {
-	return count[i];
-}
-
-// -------------------------------------------------------------------------
-
 TileCount countTilesInHand(GameTable* gameStat, PLAYER_ID playerID) {
 	// 手牌に存在する牌を種類別にカウントする（鳴き面子・暗槓は除く）
 	TileCount count = TileCount(); tileCode tmpTC;
@@ -69,7 +57,7 @@ __declspec(dllexport) inline int tilesLeft(GameTable* gameStat) {
 /* 順位を計算する */
 PlayerRankList calcRank(GameTable* gameStat) {
 	PlayerRankList rankList;
-	rankList.fill(0);
+	memset(&rankList, 0, sizeof(rankList));
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		rankList[i] = 1;
 		for (int j = 0; j < ACTUAL_PLAYERS; j++) {
@@ -153,7 +141,7 @@ std::string inline windName(seatAbsolute wind) {
 		case sWest: return std::string("西家");
 		case sNorth: return std::string("北家");
 		default:
-			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
 	}
 }
 __declspec(dllexport) void windName(char* str, int wind) {
@@ -172,7 +160,7 @@ std::string inline roundName(int roundNum, GameTable* gameStat) {
 		case 5: roundNameTxt << "発"; break;
 		case 6: roundNameTxt << "中"; break;
 		default: 
-			Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です。場風を解析できません。");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です。場風を解析できません。");
 	}
 	if ((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7)) {
 		switch (int k = (gameStat->LoopRound * ACTUAL_PLAYERS + roundNum % PLAYERS)) {
@@ -194,7 +182,7 @@ std::string inline roundName(int roundNum, GameTable* gameStat) {
 			case 1: roundNameTxt << "二局"; break;
 			case 2: roundNameTxt << "三局"; break;
 			case 3: roundNameTxt << "四局"; break;
-			default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です。同一場の5局目以降です。");
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です。同一場の5局目以降です。");
 		}
 	}
 	return std::string(roundNameTxt.str());
@@ -240,7 +228,7 @@ std::string inline TileName(tileCode tile) {
 		case WhiteDragon:    return std::string("白");
 		case GreenDragon:    return std::string("發");
 		case RedDragon:      return std::string("中");
-		default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
+		default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
 	}
 }
 __declspec(dllexport) void TileName(char* str, int tile) {
@@ -258,7 +246,7 @@ tileCode inline Wind2Tile(uint8_t wind) {
 		case 4: return WhiteDragon;
 		case 5: return GreenDragon;
 		case 6: return RedDragon;
-		default: Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
+		default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
 	}
 }
 __declspec(dllexport) int Wind2Tile(int wind) {

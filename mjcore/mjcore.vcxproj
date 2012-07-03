@@ -64,6 +64,7 @@
       <MapFileName>
       </MapFileName>
       <MapExports>false</MapExports>
+      <AdditionalDependencies>DbgHelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>

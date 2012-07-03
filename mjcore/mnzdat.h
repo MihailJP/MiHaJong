@@ -38,7 +38,7 @@ __declspec(dllexport) void initMentsuAnalysisDat();
 #endif
 
 typedef int SHANTEN; // 向聴数のためのデータ型（0=聴牌、-1=和了、999=無効）
-enum shantenType { // getShantenに渡すスイッチ用
+enum shantenType : uint8_t { // getShantenに渡すスイッチ用
 	shantenAll, // すべて求める
 	shantenRegular, // 普通の和了形のみ
 	shantenPairs, // 七対子

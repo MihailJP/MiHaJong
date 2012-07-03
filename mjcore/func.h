@@ -1,12 +1,9 @@
 #ifndef FUNC_H
 #define FUNC_H
 
-#include <array>
 #include <cstdint>
 #ifdef MJCORE_EXPORTS
 #include <memory>
-#include <exception>
-#include <stdexcept>
 #include <cstring>
 #include <sstream>
 #endif
@@ -15,25 +12,21 @@
 #include "except.h"
 
 #ifdef MJCORE_EXPORTS
-template class std::array<uint8_t, TILE_CODE_MAXIMUM>;
-typedef std::array<uint8_t, TILE_CODE_MAXIMUM> tileCountTbl;
+typedef uint8_t tileCountTbl[TILE_CODE_MAXIMUM];
 
-class TileCount { // éËîvÇ…Ç†ÇÈéÌóﬁï ÇÃîvÇÃêî
-private:
-	tileCountTbl count;
-public:
-	TileCount();
-	const uint8_t& operator[] (const int i) const;
-	uint8_t& operator[] (const int i);
-};
+typedef InfoByTile<uint8_t> TileCount;
 #endif
 
 // -------------------------------------------------------------------------
 
-enum seatAbsolute { sEast, sSouth, sWest, sNorth };
-enum seatRelative { sSelf, sRight, sOpposite, sLeft };
+enum seatAbsolute : uint8_t { sEast, sSouth, sWest, sNorth };
+enum seatRelative : uint8_t { sSelf, sRight, sOpposite, sLeft };
 typedef uint8_t PLAYER_RANK;
-typedef std::array<PLAYER_RANK, PLAYERS> PlayerRankList;
+EXPORT_TEMPLATE_STRUCT InfoByPlayer<PLAYER_RANK>;
+typedef InfoByPlayer<PLAYER_RANK> PlayerRankList;
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<PlayerRankList>::value, "PlayerRankList is not POD");
+#endif
 
 // -------------------------------------------------------------------------
 

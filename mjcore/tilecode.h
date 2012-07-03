@@ -4,11 +4,10 @@
 #include <cstdint>
 #ifdef MJCORE_EXPORTS
 #include <type_traits>
-#include <exception>
-#include <stdexcept>
 #include "logging.h"
 #endif
 #include "mjexport.h"
+#include "except.h"
 
 // ”v‚Μν—ή
 #define TILE_CODE_MAXIMUM 200
@@ -23,7 +22,7 @@
 #define TILE_SUIT_FLOWERS (TILE_SUIT_STEP * 12)
 #define TILE_FLOWER_MAX (TILE_SUIT_FLOWERS + TILE_SUIT_STEP)
 
-enum tileCode { // ”v‚ΜƒR[ƒh
+enum tileCode : uint8_t { // ”v‚ΜƒR[ƒh
 	NoTile = 0,
 	/* δέq */
 	CharacterOne = TILE_SUIT_CHARACTERS + 1,
@@ -71,7 +70,9 @@ enum tileCode { // ”v‚ΜƒR[ƒh
 	Plum = TILE_SUIT_FLOWERS + 6,
 	Orchid,
 	Chrysanthemum,
-	Bamboo
+	Bamboo,
+	/* “Ακ */
+	TilePad = UCHAR_MAX,
 };
 
 // -------------------------------------------------------------------------
@@ -82,10 +83,13 @@ template <class T> struct InfoByTile { // ”v‚²‚Ζ‚Ιw’θ‚µ‚½^‚Ι‚ζ‚ιξ•ρ(ƒeƒ“ƒvƒ
 		if ((tile >= NoTile)&&(tile < TILE_NONFLOWER_MAX)) {
 			return val[tile];
 		}
+#ifdef MJCORE_EXPORTS
 		else {
-			error("InfoByTile::operator[] ‚Μψ”‚ª”ΝΝO‚Ε‚·");
-			throw std::domain_error("Subscript out of range");
+			std::ostringstream o;
+			o << "InfoByTile:“Y‚ª”ΝΝO‚Ε‚· (" << (int)tile << ")";
+			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 		}
+#endif
 	}
 	const T& operator[](const int tile) const {
 		return InfoByTile::operator[]((tileCode)tile);
@@ -94,20 +98,23 @@ template <class T> struct InfoByTile { // ”v‚²‚Ζ‚Ιw’θ‚µ‚½^‚Ι‚ζ‚ιξ•ρ(ƒeƒ“ƒvƒ
 		if ((tile >= NoTile)&&(tile < TILE_NONFLOWER_MAX)) {
 			return val[tile];
 		}
+#ifdef MJCORE_EXPORTS
 		else {
-			error("InfoByTile::operator[] ‚Μψ”‚ª”ΝΝO‚Ε‚·");
-			throw std::domain_error("Subscript out of range");
+			std::ostringstream o;
+			o << "InfoByTile:“Y‚ª”ΝΝO‚Ε‚· (" << (int)tile << ")";
+			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 		}
+#endif
 	}
 	T& operator[](const int tile) {
 		return InfoByTile::operator[]((tileCode)tile);
 	}
 };
 
-template struct MJCORE InfoByTile<bool>;
+EXPORT_TEMPLATE_STRUCT InfoByTile<bool>;
 typedef InfoByTile<bool> FlagByTile;
 
-template struct MJCORE InfoByTile<int8_t>;
+EXPORT_TEMPLATE_STRUCT InfoByTile<int8_t>;
 typedef InfoByTile<int8_t> Int8ByTile;
 
 #ifdef MJCORE_EXPORTS
