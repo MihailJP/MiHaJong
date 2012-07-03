@@ -28,7 +28,7 @@
 	trace strf("óùîvëOÇÃéËîv [%02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d %02d]", getHand(GameStat, HAND_TILECODE, 0, targetPlayer), getHand(GameStat, HAND_TILECODE, 1, targetPlayer), getHand(GameStat, HAND_TILECODE, 2, targetPlayer), getHand(GameStat, HAND_TILECODE, 3, targetPlayer), getHand(GameStat, HAND_TILECODE, 4, targetPlayer), getHand(GameStat, HAND_TILECODE, 5, targetPlayer), getHand(GameStat, HAND_TILECODE, 6, targetPlayer), getHand(GameStat, HAND_TILECODE, 7, targetPlayer), getHand(GameStat, HAND_TILECODE, 8, targetPlayer), getHand(GameStat, HAND_TILECODE, 9, targetPlayer), getHand(GameStat, HAND_TILECODE, 10, targetPlayer), getHand(GameStat, HAND_TILECODE, 11, targetPlayer), getHand(GameStat, HAND_TILECODE, 12, targetPlayer), TsumoTile(GameStat, targetPlayer))
 	repeat NUM_OF_TILES_IN_HAND
 		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 0) {
-			setHand GameStat, HAND_TILECODE, cnt, targetPlayer, 999
+			setHand GameStat, HAND_TILECODE, cnt, targetPlayer, 255
 			setHand GameStat, HAND_REDTILE, cnt, targetPlayer, 0
 		}
 	loop
@@ -56,7 +56,7 @@
 		loop
 	loop
 	repeat NUM_OF_TILES_IN_HAND
-		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 999) {
+		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 255) {
 			setHand GameStat, HAND_TILECODE, cnt, targetPlayer, 0
 		}
 	loop
