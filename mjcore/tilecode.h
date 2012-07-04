@@ -72,6 +72,7 @@ enum tileCode : uint8_t { // îvÇÃÉRÅ[Éh
 	Chrysanthemum,
 	Bamboo,
 	/* ì¡éÍ */
+	Flower = 38,
 	TilePad = UCHAR_MAX,
 };
 
@@ -80,9 +81,10 @@ enum tileCode : uint8_t { // îvÇÃÉRÅ[Éh
 template <class T> struct InfoByTile { // îvÇ≤Ç∆Ç…éwíËÇµÇΩå^Ç…ÇÊÇÈèÓïÒ(ÉeÉìÉvÉåÅ[Ég)
 	T val[TILE_NONFLOWER_MAX];
 	const T& operator[](const tileCode tile) const {
-		if ((tile >= NoTile)&&(tile < TILE_NONFLOWER_MAX)) {
+		if ((tile >= NoTile)&&(tile < TILE_NONFLOWER_MAX))
 			return val[tile];
-		}
+		else if (((tile >= Spring)&&(tile <= Winter)) ||
+			((tile >= Plum)&&(tile <= Bamboo))) return val[Flower];
 		else {
 #ifdef MJCORE_EXPORTS
 			std::ostringstream o;
@@ -96,9 +98,10 @@ template <class T> struct InfoByTile { // îvÇ≤Ç∆Ç…éwíËÇµÇΩå^Ç…ÇÊÇÈèÓïÒ(ÉeÉìÉvÉåÅ
 		return InfoByTile::operator[]((tileCode)tile);
 	}
 	T& operator[](const tileCode tile) {
-		if ((tile >= NoTile)&&(tile < TILE_NONFLOWER_MAX)) {
+		if ((tile >= NoTile)&&(tile < TILE_NONFLOWER_MAX))
 			return val[tile];
-		}
+		else if (((tile >= Spring)&&(tile <= Winter)) ||
+			((tile >= Plum)&&(tile <= Bamboo))) return val[Flower];
 		else {
 #ifdef MJCORE_EXPORTS
 			std::ostringstream o;
