@@ -1050,7 +1050,7 @@ extern "C" {
 
 		gameStat->TianHuFlag = true; // 親の第一打牌がまだ（天和の判定などに使う）
 		gameStat->PreviousMeld.Discard = // 先ほど鳴いた牌（喰い替えの判定に使う）
-			gameStat->PreviousMeld.Stepped = (tileCode)-999;
+			gameStat->PreviousMeld.Stepped = NoTile;
 		for (int i = 0; i < TILE_NONFLOWER_MAX; i++) // ドラ判定の配列
 			gameStat->DoraFlag.Omote[i] = gameStat->DoraFlag.Ura[i] = 0;
 		gameStat->TsumoAgariFlag = false;

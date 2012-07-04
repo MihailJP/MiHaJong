@@ -232,7 +232,7 @@
 			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), "É|Éì"
 			/* ãÚÇ¢ë÷Ç¶ÇÃîªíËÇ…égÇ§ïœêîÇê›íË */
 			setPreviousMeld GameStat, PREVMELD_TILECODE, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-			setPreviousMeld GameStat, PREVMELD_STEPPED, -999
+			setPreviousMeld GameStat, PREVMELD_STEPPED, 0
 			/* ïÔÇÃîªíË */
 			checkpao GameStat
 			swbreak
@@ -288,12 +288,12 @@
 				case 1: case 2:
 					switch (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)))
 						case 1: setPreviousMeld GameStat, PREVMELD_STEPPED, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)+3: swbreak
-						case 2: setPreviousMeld GameStat, PREVMELD_STEPPED, -999: swbreak
+						case 2: setPreviousMeld GameStat, PREVMELD_STEPPED, 0: swbreak
 						case 3: setPreviousMeld GameStat, PREVMELD_STEPPED, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)-3: swbreak
 					swend
 					swbreak
 				default:
-					setPreviousMeld GameStat, PREVMELD_STEPPED, -999
+					setPreviousMeld GameStat, PREVMELD_STEPPED, 0
 			swend
 			swbreak
 #endif
