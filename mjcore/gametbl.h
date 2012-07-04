@@ -47,13 +47,14 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した型による情報
 		if ((playerID >= 0)&&(playerID < PLAYERS)) {
 			return val[playerID];
 		}
-#ifdef MJCORE_EXPORTS
 		else {
+#ifdef MJCORE_EXPORTS
 			std::ostringstream o;
 			o << "InfoByPlayer:添字が範囲外です (" << (int)playerID << ")";
-			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
-		}
+			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
+			terminate();
+		}
 	}
 	const T& operator[](const int playerID) const {
 		return InfoByPlayer::operator[]((PLAYER_ID)playerID);
@@ -62,13 +63,14 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した型による情報
 		if ((playerID >= 0)&&(playerID < PLAYERS)) {
 			return val[playerID];
 		}
-#ifdef MJCORE_EXPORTS
 		else {
+#ifdef MJCORE_EXPORTS
 			std::ostringstream o;
 			o << "InfoByPlayer:添字が範囲外です (" << (int)playerID << ")";
-			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
-		}
+			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
+			terminate();
+		}
 	}
 	T& operator[](const int playerID) {
 		return InfoByPlayer::operator[]((PLAYER_ID)playerID);
@@ -269,7 +271,7 @@ static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 
 #ifdef MJCORE_EXPORTS
 extern GameTable GameStat;
-inline bool chkGameType(GameTable* gameStat, gameTypeID gameType);
+inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType);
 #endif
 
 // -------------------------------------------------------------------------

@@ -1,10 +1,10 @@
 #include "func.h"
 
-TileCount countTilesInHand(GameTable* gameStat, PLAYER_ID playerID) {
+TileCount countTilesInHand(const GameTable* const gameStat, PLAYER_ID playerID) {
 	// 手牌に存在する牌を種類別にカウントする（鳴き面子・暗槓は除く）
 	TileCount count = TileCount(); tileCode tmpTC;
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
-		if ((tmpTC = tileCode(gameStat->Player[playerID].Hand[i].tile)) != tileCode::NoTile)
+		if ((tmpTC = tileCode(gameStat->Player[playerID].Hand[i].tile)) != NoTile)
 			count[tmpTC]++;
 	}
 	return TileCount(count);
@@ -16,7 +16,7 @@ TileCount countTilesInHand(GameTable* gameStat, PLAYER_ID playerID) {
  */
 
 /* プレイヤーの自風がどれか調べる */
-seatAbsolute inline playerwind(GameTable* gameStat, PLAYER_ID player, PLAYER_ID currentRound) {
+seatAbsolute inline playerwind(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID currentRound) {
 	if (chkGameType(gameStat, SanmaT))
 		return (seatAbsolute)((player + 24 - (currentRound - ( currentRound / 4))) % 3);
 	else return (seatAbsolute)((player + 32 - currentRound) % 4);
@@ -48,33 +48,33 @@ __declspec(dllexport) inline int roundLoopRate() {
 }
 
 /* 王牌を除いた山牌の残り枚数 */
-__declspec(dllexport) inline int tilesLeft(GameTable* gameStat) {
+__declspec(dllexport) inline int tilesLeft(const GameTable* const gameStat) {
 	return ((int)gameStat->RinshanPointer -
 		((int)gameStat->DeadTiles - 1) -
 		(int)gameStat->TilePointer);
 }
 
 /* 順位を計算する */
-PlayerRankList calcRank(GameTable* gameStat) {
+PlayerRankList calcRank(const GameTable* const gameStat) {
 	PlayerRankList rankList;
 	memset(&rankList, 0, sizeof(rankList));
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		rankList[i] = 1;
 		for (int j = 0; j < ACTUAL_PLAYERS; j++) {
-			if (gameStat->Player[j].PlayerScore > gameStat->Player[i].PlayerScore)
+			if ((LargeNum)gameStat->Player[j].PlayerScore > gameStat->Player[i].PlayerScore)
 				rankList[i]++;
 		}
 	}
 	return rankList;
 }
-__declspec(dllexport) void calcRank(int* Rank, GameTable* gameStat) {
+__declspec(dllexport) void calcRank(int* Rank, const GameTable* const gameStat) {
 	const PlayerRankList rankList = calcRank(gameStat);
 	assert(rankList[0] > 0); assert(rankList[1] > 0);
 	for (int i = 0; i < PLAYERS; i++) *(Rank + i) = rankList[i];
 }
 
 /* 包かどうかの判定 */
-bool isPao(GameTable* gameStat, PLAYER_ID agariPlayer, PLAYER_ID paoPlayer) {
+bool isPao(const GameTable* const gameStat, PLAYER_ID agariPlayer, PLAYER_ID paoPlayer) {
 	bool paoFlag = false;
 	for (int i = 0; i < PAO_YAKU_PAGES; i++) {
 		if ((paoPlayer == gameStat->PaoFlag[i].paoPlayer) &&
@@ -83,11 +83,11 @@ bool isPao(GameTable* gameStat, PLAYER_ID agariPlayer, PLAYER_ID paoPlayer) {
 	}
 	return paoFlag;
 }
-__declspec(dllexport) int isPao(GameTable* gameStat, int agariPlayer, int paoPlayer) {
+__declspec(dllexport) int isPao(const GameTable* const gameStat, int agariPlayer, int paoPlayer) {
 	return (int)isPao(gameStat, (PLAYER_ID)agariPlayer, (PLAYER_ID)paoPlayer);
 }
 
-bool isPaoAgari(GameTable* gameStat, PLAYER_ID agariPlayer) {
+bool isPaoAgari(const GameTable* const gameStat, PLAYER_ID agariPlayer) {
 	bool paoFlag = false;
 	for (int i = 0; i < PAO_YAKU_PAGES; i++) {
 		if (agariPlayer == gameStat->PaoFlag[i].agariPlayer)
@@ -95,11 +95,11 @@ bool isPaoAgari(GameTable* gameStat, PLAYER_ID agariPlayer) {
 	}
 	return paoFlag;
 }
-__declspec(dllexport) int isPaoAgari(GameTable* gameStat, int agariPlayer) {
+__declspec(dllexport) int isPaoAgari(const GameTable* const gameStat, int agariPlayer) {
 	return (int)isPaoAgari(gameStat, (PLAYER_ID)agariPlayer);
 }
 
-bool isGotPao(GameTable* gameStat, PLAYER_ID paoPlayer) {
+bool isGotPao(const GameTable* const gameStat, PLAYER_ID paoPlayer) {
 	bool paoFlag = false;
 	for (int i = 0; i < PAO_YAKU_PAGES; i++) {
 		if (paoPlayer == gameStat->PaoFlag[i].paoPlayer)
@@ -107,11 +107,11 @@ bool isGotPao(GameTable* gameStat, PLAYER_ID paoPlayer) {
 	}
 	return paoFlag;
 }
-__declspec(dllexport) int isGotPao(GameTable* gameStat, int paoPlayer) {
+__declspec(dllexport) int isGotPao(const GameTable* const gameStat, int paoPlayer) {
 	return (int)isGotPao(gameStat, (PLAYER_ID)paoPlayer);
 }
 
-PLAYER_ID getPaoPlayer(GameTable* gameStat, PLAYER_ID agariPlayer) {
+PLAYER_ID getPaoPlayer(const GameTable* const gameStat, PLAYER_ID agariPlayer) {
 	PLAYER_ID paoPlayer = -1;
 	for (int i = 0; i < PAO_YAKU_PAGES; i++) {
 		if ((gameStat->PaoFlag[i].paoPlayer >= 0) &&
@@ -120,12 +120,12 @@ PLAYER_ID getPaoPlayer(GameTable* gameStat, PLAYER_ID agariPlayer) {
 	}
 	return paoPlayer;
 }
-__declspec(dllexport) int getPaoPlayer(GameTable* gameStat, int agariPlayer) {
+__declspec(dllexport) int getPaoPlayer(const GameTable* const gameStat, int agariPlayer) {
 	return (int)getPaoPlayer(gameStat, (PLAYER_ID)agariPlayer);
 }
 
 /* ロンしたプレイヤーの数 */
-__declspec(dllexport) int RonPlayers(GameTable* gameStat) {
+__declspec(dllexport) int RonPlayers(const GameTable* const gameStat) {
 	int qualified = 0;
 	for (int i = 0; i < PLAYERS; i++)
 		if (gameStat->Player[i].DeclarationFlag.Ron)
@@ -142,6 +142,7 @@ std::string inline windName(seatAbsolute wind) {
 		case sNorth: return std::string("北家");
 		default:
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
+			return std::string("????"); break;
 	}
 }
 __declspec(dllexport) void windName(char* str, int wind) {
@@ -149,7 +150,7 @@ __declspec(dllexport) void windName(char* str, int wind) {
 }
 
 /* 「東○局」などの文字列を返す */
-std::string inline roundName(int roundNum, GameTable* gameStat) {
+std::string inline roundName(int roundNum, const GameTable* const gameStat) {
 	std::ostringstream roundNameTxt; roundNameTxt.str("");
 	switch (roundNum / PLAYERS) {
 		case 0: roundNameTxt << "東"; break;
@@ -161,6 +162,7 @@ std::string inline roundName(int roundNum, GameTable* gameStat) {
 		case 6: roundNameTxt << "中"; break;
 		default: 
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です。場風を解析できません。");
+			roundNameTxt << "??";
 	}
 	if ((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7)) {
 		switch (int k = (gameStat->LoopRound * ACTUAL_PLAYERS + roundNum % PLAYERS)) {
@@ -182,7 +184,9 @@ std::string inline roundName(int roundNum, GameTable* gameStat) {
 			case 1: roundNameTxt << "二局"; break;
 			case 2: roundNameTxt << "三局"; break;
 			case 3: roundNameTxt << "四局"; break;
-			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です。同一場の5局目以降です。");
+			default:
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です。同一場の5局目以降です。");
+				roundNameTxt << "??局"; break;
 		}
 	}
 	return std::string(roundNameTxt.str());
@@ -228,7 +232,9 @@ std::string inline TileName(tileCode tile) {
 		case WhiteDragon:    return std::string("白");
 		case GreenDragon:    return std::string("發");
 		case RedDragon:      return std::string("中");
-		default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
+		default:
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
+			return std::string("????");
 	}
 }
 __declspec(dllexport) void TileName(char* str, int tile) {
@@ -246,7 +252,9 @@ tileCode inline Wind2Tile(uint8_t wind) {
 		case 4: return WhiteDragon;
 		case 5: return GreenDragon;
 		case 6: return RedDragon;
-		default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
+		default:
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
+			return NoTile;
 	}
 }
 __declspec(dllexport) int Wind2Tile(int wind) {

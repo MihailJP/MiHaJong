@@ -29,14 +29,14 @@
 #cfunc playerRelative "?playerRelative@@YAHHH@Z" int, int
 #cfunc RelativePositionOf "?RelativePositionOf@@YAHHH@Z" int, int
 #cfunc roundLoopRate "?roundLoopRate@@YAHXZ"
-#cfunc tilesLeft "?tilesLeft@@YAHPAUGameTable@@@Z" int
-#func _calcRank "?calcRank@@YAXPAHPAUGameTable@@@Z" var, int
+#cfunc tilesLeft "?tilesLeft@@YAHQBUGameTable@@@Z" int
+#func _calcRank "?calcRank@@YAXPAHQBUGameTable@@@Z" var, int
 #define calcRank(%1,%2) dim %1, NUM_OF_PLAYERS: _calcRank %1, %2
-#cfunc isPao "?isPao@@YAHPAUGameTable@@HH@Z" int, int, int
-#cfunc isPaoAgari "?isPaoAgari@@YAHPAUGameTable@@H@Z" int, int
-#cfunc isGotPao "?isGotPao@@YAHPAUGameTable@@H@Z" int, int
-#cfunc getPaoPlayer "?getPaoPlayer@@YAHPAUGameTable@@H@Z" int, int
-#cfunc RonPlayers "?RonPlayers@@YAHPAUGameTable@@@Z" int
+#cfunc isPao "?isPao@@YAHQBUGameTable@@HH@Z" int, int, int
+#cfunc isPaoAgari "?isPaoAgari@@YAHQBUGameTable@@H@Z" int, int
+#cfunc isGotPao "?isGotPao@@YAHQBUGameTable@@H@Z" int, int
+#cfunc getPaoPlayer "?getPaoPlayer@@YAHQBUGameTable@@H@Z" int, int
+#cfunc RonPlayers "?RonPlayers@@YAHQBUGameTable@@@Z" int
 #func _windName "?windName@@YAXPADH@Z" var, int
 #func _roundName "?roundName@@YAXPADH@Z" var, int
 #func _TileName "?TileName@@YAXPADH@Z" var, int
@@ -45,7 +45,7 @@
 
 /* shanten.hspÇ©ÇÁÇÃà⁄êA */
 #func shantenInit "?initMentsuAnalysisDat@@YAXXZ"
-#cfunc countshanten "?calcShanten@@YAHPAUGameTable@@HH@Z" int, int, int
+#cfunc countshanten "?calcShanten@@YAHQBUGameTable@@HH@Z" int, int, int
 
 /* ------------------------------------------------------------------------ */
 

@@ -40,11 +40,11 @@ static_assert(std::is_pod<MachihaiInfo>::value, "MachihaiInfo is not POD");
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
-void lipai(GameTable* gameStat, PLAYER_ID targetPlayer);
-__declspec(dllexport) void lipai(GameTable* gameStat, int targetPlayer);
+void lipai(GameTable* const gameStat, PLAYER_ID targetPlayer);
+__declspec(dllexport) void lipai(GameTable* const gameStat, int targetPlayer);
 
-void chkOpenMachi(GameTable* gameStat, PLAYER_ID targetPlayer);
-__declspec(dllexport) void chkOpenMachi(GameTable* gameStat, int targetPlayer);
+void chkOpenMachi(GameTable* const gameStat, PLAYER_ID targetPlayer);
+__declspec(dllexport) void chkOpenMachi(GameTable* const gameStat, int targetPlayer);
 #endif
 
 #endif

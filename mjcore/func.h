@@ -31,7 +31,7 @@ static_assert(std::is_pod<PlayerRankList>::value, "PlayerRankList is not POD");
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
-TileCount countTilesInHand(GameTable* gameStat, PLAYER_ID playerID);
+TileCount countTilesInHand(const GameTable* const gameStat, PLAYER_ID playerID);
 #endif
 
 /* -------------------------------------------------------------------------
@@ -40,7 +40,7 @@ TileCount countTilesInHand(GameTable* gameStat, PLAYER_ID playerID);
  */
 
 #ifdef MJCORE_EXPORTS
-seatAbsolute inline playerwind(GameTable* gameStat, PLAYER_ID player, PLAYER_ID currentRound);
+seatAbsolute inline playerwind(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID currentRound);
 __declspec(dllexport) inline int playerwind(int player, int currentRound);
 
 seatRelative inline playerRelative(PLAYER_ID targetPlayer, PLAYER_ID basePlayer);
@@ -51,29 +51,29 @@ __declspec(dllexport) inline int RelativePositionOf(int targetPlayer, int relati
 
 __declspec(dllexport) inline int roundLoopRate();
 
-__declspec(dllexport) inline int tilesLeft(GameTable* gameStat);
+__declspec(dllexport) inline int tilesLeft(const GameTable* const gameStat);
 
-PlayerRankList calcRank(GameTable* gameStat);
-__declspec(dllexport) void calcRank(int* Rank, GameTable* gameStat);
+PlayerRankList calcRank(const GameTable* const gameStat);
+__declspec(dllexport) void calcRank(int* Rank, const GameTable* const gameStat);
 
-bool isPao(GameTable* gameStat, PLAYER_ID agariPlayer, PLAYER_ID paoPlayer);
-__declspec(dllexport) int isPao(GameTable* gameStat, int agariPlayer, int paoPlayer);
+bool isPao(const GameTable* const gameStat, PLAYER_ID agariPlayer, PLAYER_ID paoPlayer);
+__declspec(dllexport) int isPao(const GameTable* const gameStat, int agariPlayer, int paoPlayer);
 
-bool isPaoAgari(GameTable* gameStat, PLAYER_ID agariPlayer);
-__declspec(dllexport) int isPaoAgari(GameTable* gameStat, int agariPlayer);
+bool isPaoAgari(const GameTable* const gameStat, PLAYER_ID agariPlayer);
+__declspec(dllexport) int isPaoAgari(const GameTable* const gameStat, int agariPlayer);
 
-bool isGotPao(GameTable* gameStat, PLAYER_ID paoPlayer);
-__declspec(dllexport) int isGotPao(GameTable* gameStat, int paoPlayer);
+bool isGotPao(const GameTable* const gameStat, PLAYER_ID paoPlayer);
+__declspec(dllexport) int isGotPao(const GameTable* const gameStat, int paoPlayer);
 
-PLAYER_ID getPaoPlayer(GameTable* gameStat, PLAYER_ID agariPlayer);
-__declspec(dllexport) int getPaoPlayer(GameTable* gameStat, int agariPlayer);
+PLAYER_ID getPaoPlayer(const GameTable* const gameStat, PLAYER_ID agariPlayer);
+__declspec(dllexport) int getPaoPlayer(const GameTable* const gameStat, int agariPlayer);
 
-__declspec(dllexport) int RonPlayers(GameTable* gameStat);
+__declspec(dllexport) int RonPlayers(const GameTable* const gameStat);
 
 std::string inline windName(seatAbsolute wind);
 __declspec(dllexport) void windName(char* str, int wind);
 
-std::string inline roundName(int roundNum, GameTable* gameStat);
+std::string inline roundName(int roundNum, const GameTable* const gameStat);
 __declspec(dllexport) void roundName(char* str, int roundNum);
 
 std::string inline TileName(tileCode tile);

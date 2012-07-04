@@ -83,13 +83,14 @@ template <class T> struct InfoByTile { // ”v‚²‚Æ‚ÉŽw’è‚µ‚½Œ^‚É‚æ‚éî•ñ(ƒeƒ“ƒvƒŒ
 		if ((tile >= NoTile)&&(tile < TILE_NONFLOWER_MAX)) {
 			return val[tile];
 		}
-#ifdef MJCORE_EXPORTS
 		else {
+#ifdef MJCORE_EXPORTS
 			std::ostringstream o;
 			o << "InfoByTile:“YŽš‚ª”ÍˆÍŠO‚Å‚· (" << (int)tile << ")";
 			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
-		}
 #endif
+			return val[NoTile];
+		}
 	}
 	const T& operator[](const int tile) const {
 		return InfoByTile::operator[]((tileCode)tile);
@@ -98,13 +99,14 @@ template <class T> struct InfoByTile { // ”v‚²‚Æ‚ÉŽw’è‚µ‚½Œ^‚É‚æ‚éî•ñ(ƒeƒ“ƒvƒŒ
 		if ((tile >= NoTile)&&(tile < TILE_NONFLOWER_MAX)) {
 			return val[tile];
 		}
-#ifdef MJCORE_EXPORTS
 		else {
+#ifdef MJCORE_EXPORTS
 			std::ostringstream o;
 			o << "InfoByTile:“YŽš‚ª”ÍˆÍŠO‚Å‚· (" << (int)tile << ")";
 			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
-		}
 #endif
+			return val[NoTile];
+		}
 	}
 	T& operator[](const int tile) {
 		return InfoByTile::operator[]((tileCode)tile);

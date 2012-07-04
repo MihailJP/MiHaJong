@@ -49,15 +49,15 @@ enum shantenType : uint8_t { // getShantenに渡すスイッチ用
 	shantenQuanbukao // 全不靠
 };
 
-MJCORE SHANTEN calcShanten(GameTable* gameStat, PLAYER_ID playerID, shantenType mode);
+MJCORE SHANTEN calcShanten(const GameTable* const gameStat, PLAYER_ID playerID, shantenType mode);
 #ifdef MJCORE_EXPORTS
-__declspec(dllexport) int calcShanten(GameTable* gameStat, int playerID, int mode);
-SHANTEN calcShantenRegular(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
-SHANTEN calcShantenChiitoi(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
-SHANTEN calcShantenKokushi(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
-SHANTEN calcShantenStellar(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount, bool qixing);
-SHANTEN calcShantenCivilWar(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
-SHANTEN calcShantenSyzygy(GameTable* gameStat, PLAYER_ID playerID, TileCount& tileCount);
+__declspec(dllexport) int calcShanten(const GameTable* const gameStat, int playerID, int mode);
+SHANTEN calcShantenRegular(const GameTable* const gameStat, PLAYER_ID playerID, TileCount& tileCount);
+SHANTEN calcShantenChiitoi(const GameTable* const gameStat, PLAYER_ID playerID, TileCount& tileCount);
+SHANTEN calcShantenKokushi(const GameTable* const gameStat, PLAYER_ID playerID, TileCount& tileCount);
+SHANTEN calcShantenStellar(const GameTable* const gameStat, PLAYER_ID playerID, TileCount& tileCount, bool qixing);
+SHANTEN calcShantenCivilWar(const GameTable* const gameStat, PLAYER_ID playerID, TileCount& tileCount);
+SHANTEN calcShantenSyzygy(const GameTable* const gameStat, PLAYER_ID playerID, TileCount& tileCount);
 #endif
 
 #endif

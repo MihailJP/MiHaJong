@@ -1,7 +1,7 @@
 #include "tileutil.h"
 
 /* 理牌する */
-void lipai(GameTable* gameStat, PLAYER_ID targetPlayer) {
+void lipai(GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	// 理牌する
 
 	std::ostringstream o;
@@ -65,14 +65,14 @@ void lipai(GameTable* gameStat, PLAYER_ID targetPlayer) {
 	/* 理牌完了！ */
 	return;
 }
-__declspec(dllexport) void lipai(GameTable* gameStat, int targetPlayer) {
+__declspec(dllexport) void lipai(GameTable* const gameStat, int targetPlayer) {
 	// 理牌する(HSP互換用)
 	lipai(gameStat, (PLAYER_ID)targetPlayer);
 }
 
 /* 場に見えてる個数 */
 /* あとで書く */
-MJCORE Int8ByTile countseentiles(GameTable* gameStat) {
+MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 	// 場に見えている牌の数を数える
 	std::ostringstream o; // エラーメッセージ用
 
@@ -155,7 +155,7 @@ return
 
 /* 振聴でないかのチェック・待ち牌を数える処理も含む */
 /* あとで書く */
-std::unique_ptr<MachihaiInfo> chkFuriten(GameTable* gameStat, PLAYER_ID targetPlayer) {
+std::unique_ptr<MachihaiInfo> chkFuriten(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	std::unique_ptr<MachihaiInfo> machihaiInfo(new MachihaiInfo);
 	trace("振聴かどうか・待ち牌を調べます。");
 	/* countseentiles呼び出し */
@@ -219,13 +219,13 @@ return
 #endif
 
 /* オープン立直の待ち牌 */
-void chkOpenMachi(GameTable* gameStat, PLAYER_ID targetPlayer) {
+void chkOpenMachi(GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	// オープンリーチの待ち牌情報を更新する
 	assert(gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile == NoTile);
 	for (int i = 0; i < TILE_NONFLOWER_MAX; i++) {
 		/* 変な牌で計算しないようにしましょう */
 		if (i % TILE_SUIT_STEP == 0) continue;
-		if (i % TILE_SUIT_STEP > tileCode::RedDragon) continue;
+		if (i % TILE_SUIT_STEP > RedDragon) continue;
 		/* まずは、ある牌をツモったと仮定します */
 		gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile = (tileCode)i;
 		/* もしそれが和了になっていたら、フラグをセットしましょう */
@@ -239,7 +239,7 @@ void chkOpenMachi(GameTable* gameStat, PLAYER_ID targetPlayer) {
 	/* これで処理が終わりました。戻りましょう */
 	return;
 }
-__declspec(dllexport) void chkOpenMachi(GameTable* gameStat, int targetPlayer) {
+__declspec(dllexport) void chkOpenMachi(GameTable* const gameStat, int targetPlayer) {
 	// オープンリーチの待ち牌情報を更新する(HSP互換用)
 	chkOpenMachi(gameStat, (PLAYER_ID)targetPlayer);
 }
@@ -248,7 +248,7 @@ __declspec(dllexport) void chkOpenMachi(GameTable* gameStat, int targetPlayer) {
 /* あとで書く。牌譜への記録命令とかあるし…… */
 
 /* 立直後の暗槓の可否 */
-MJCORE bool chkAnkanAbility(GameTable* gameStat, PLAYER_ID targetPlayer) {
+MJCORE bool chkAnkanAbility(GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	// リーチ後の暗槓ができるかどうかを判定する
 
 	/*
