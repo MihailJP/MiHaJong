@@ -270,7 +270,7 @@ static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
-extern GameTable GameStat;
+extern GameTable GameStat, StatSandBox;
 inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType);
 #endif
 

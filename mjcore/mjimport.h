@@ -10,5 +10,6 @@
 #include "mnzdat.h"
 #include "ruletbl.h"
 #include "tilecode.h"
+#include "tileutil.h"
 
 #endif

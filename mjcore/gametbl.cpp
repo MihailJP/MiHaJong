@@ -3,7 +3,6 @@
 GameTable GameStat, StatSandBox;
 
 inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType) {
-	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 	return ((gameStat->gameType) & gameType);
 };
 
@@ -31,7 +30,7 @@ extern "C" {
 		return gameStat->Player[Player].PlayerScore.digitGroup[Digit] /
 			(Digit ? 1 : (signed int)(100000000u / gameStat->Player[Player].PlayerScore.firstArg));
 	}
-	__declspec(dllexport) void exportScore(const GameTable* const gameStat, int* exportArray) {
+	__declspec(dllexport) void exportScore(const GameTable* const gameStat, int* const exportArray) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		for (int j = 0; j < DIGIT_GROUPS; j++) {
 			for (int i = 0; i < PLAYERS; i++) {
@@ -41,7 +40,7 @@ extern "C" {
 			}
 		}
 	}
-	__declspec(dllexport) void importScore(GameTable* const gameStat, int* importArray) {
+	__declspec(dllexport) void importScore(GameTable* const gameStat, const int* const importArray) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		for (int j = 0; j < DIGIT_GROUPS; j++) {
 			for (int i = 0; i < PLAYERS; i++) {
@@ -1100,7 +1099,7 @@ extern "C" {
 	void doInitializeGameTable(GameTable* const gameStat, int gameType) { // 半荘単位の初期化処理
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		/* 内部処理用でエクスポートしない */
-		*gameStat = GameTable();
+		memset(gameStat, 0, sizeof(GameTable));
 		gameStat->gameType = (gameTypeID)gameType;
 
 		for (int i = 0; i < PLAYERS; i++) {
@@ -1217,7 +1216,7 @@ extern "C" {
 
 	// ---------------------------------------------------------------------
 
-	__declspec(dllexport) void makesandBox(int* Sandbox, const GameTable* const gameStat, int targetPlayer) {
+	__declspec(dllexport) void makesandBox(int* const Sandbox, const GameTable* const gameStat, int targetPlayer) {
 		/* 卓の状態のサンドボックスを作る */
 		GameTable* const sandbox = &StatSandBox;
 		doInitializeGameTable(sandbox, gameStat->gameType);
@@ -1247,7 +1246,10 @@ extern "C" {
 			}
 			sandbox->Player[p].MenzenFlag = gameStat->Player[p].MenzenFlag;
 			sandbox->Player[p].NumberOfQuads = gameStat->Player[p].NumberOfQuads;
-			sandbox->Player[p].RichiFlag = RichiStat(gameStat->Player[p].RichiFlag);
+			sandbox->Player[p].RichiFlag.RichiFlag = gameStat->Player[p].RichiFlag.RichiFlag;
+			sandbox->Player[p].RichiFlag.IppatsuFlag = gameStat->Player[p].RichiFlag.IppatsuFlag;
+			sandbox->Player[p].RichiFlag.DoubleFlag = gameStat->Player[p].RichiFlag.DoubleFlag;
+			sandbox->Player[p].RichiFlag.OpenFlag = gameStat->Player[p].RichiFlag.OpenFlag;
 			sandbox->Player[p].FirstDrawFlag = gameStat->Player[p].FirstDrawFlag;
 			sandbox->Player[p].DoujunFuriten = gameStat->Player[p].DoujunFuriten;
 			sandbox->Player[p].AgariHouki = gameStat->Player[p].AgariHouki;

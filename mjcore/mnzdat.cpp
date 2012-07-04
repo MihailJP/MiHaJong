@@ -113,7 +113,7 @@ __declspec(dllexport) void initMentsuAnalysisDat() { // 面子データ初期化
 MJCORE SHANTEN calcShanten(const GameTable* const gameStat, PLAYER_ID playerID, shantenType mode)
 { // 向聴数を計算する
 	/* 数牌それぞれの面子の数を数える */
-	TileCount tileCount = countTilesInHand(gameStat, playerID);
+	Int8ByTile tileCount = countTilesInHand(gameStat, playerID);
 
 	/* mode別分岐 */
 	switch (mode) {
@@ -146,10 +146,11 @@ MJCORE SHANTEN calcShanten(const GameTable* const gameStat, PLAYER_ID playerID, 
 }
 __declspec(dllexport) int calcShanten(const GameTable* const gameStat, int playerID, int mode)
 {
+	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 	return (int)calcShanten(gameStat, (PLAYER_ID)playerID, (shantenType)mode);
 }
 
-SHANTEN calcShantenRegular(const GameTable* const gameStat, PLAYER_ID playerID, TileCount& tileCount)
+SHANTEN calcShantenRegular(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
 { // 面子手の向聴数を求める
 	SHANTEN shanten = 8; // 全く揃ってないてんでバラバラだったら面子手に対して8向聴（七対子に対してなら6向聴になる）
 
@@ -190,7 +191,7 @@ SHANTEN calcShantenRegular(const GameTable* const gameStat, PLAYER_ID playerID, 
 	return shanten;
 }
 
-SHANTEN calcShantenChiitoi(const GameTable* const gameStat, PLAYER_ID playerID, TileCount& tileCount)
+SHANTEN calcShantenChiitoi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
 { // 七対子に対する向聴数を求める。
 	SHANTEN shanten = 6;
 	for (int i = 0; i < TILE_NONFLOWER_MAX; i++)
@@ -206,7 +207,7 @@ SHANTEN calcShantenChiitoi(const GameTable* const gameStat, PLAYER_ID playerID, 
 	return shanten;
 }
 
-SHANTEN calcShantenKokushi(const GameTable* const gameStat, PLAYER_ID playerID, TileCount& tileCount)
+SHANTEN calcShantenKokushi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
 { // 国士無双に対する向聴数を求める。
 	if (chkGameType(gameStat, SanmaS)) return SHANTEN_IMPOSSIBLE; // 数牌三麻では不可能
 
@@ -228,7 +229,7 @@ SHANTEN calcShantenKokushi(const GameTable* const gameStat, PLAYER_ID playerID, 
 	return shanten;
 }
 
-SHANTEN calcShantenStellar(const GameTable* const gameStat, PLAYER_ID playerID, TileCount& tileCount, bool qixing)
+SHANTEN calcShantenStellar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount, bool qixing)
 { // 特殊：七星不靠/全不靠の向聴数を求める
 	if ((getRule(RULE_STELLAR_UUSHII) == 0)&&(qixing)) return SHANTEN_IMPOSSIBLE;
 	else if ((getRule(RULE_QUANBUKAO) == 0)&&(!qixing)) return SHANTEN_IMPOSSIBLE;
@@ -289,14 +290,14 @@ SHANTEN calcShantenStellar(const GameTable* const gameStat, PLAYER_ID playerID, 
 	return shanten;
 }
 
-SHANTEN calcShantenCivilWar(const GameTable* const gameStat, PLAYER_ID playerID, TileCount& tileCount)
+SHANTEN calcShantenCivilWar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
 { // 特殊：南北戦争の向聴数を求める
 	if (getRule(RULE_CIVIL_WAR) == 0) return SHANTEN_IMPOSSIBLE;
 
 	SHANTEN shanten = 13;
 	// 以下、一枚ずつ調べる
 	for (int i = 0; i < 6; i++) {
-		TileCount tileCountTmp;
+		Int8ByTile tileCountTmp;
 		for (int j = 0; j < TILE_CODE_MAXIMUM; j++) tileCountTmp[j] = tileCount[j];
 		tileCode CivilWarPai[NUM_OF_TILES_IN_HAND] = {
 			NoTile, NoTile, NoTile, NoTile,
@@ -342,12 +343,12 @@ SHANTEN calcShantenCivilWar(const GameTable* const gameStat, PLAYER_ID playerID,
 	return shanten;
 }
 
-SHANTEN calcShantenSyzygy(const GameTable* const gameStat, PLAYER_ID playerID, TileCount& tileCount)
+SHANTEN calcShantenSyzygy(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
 { // 特殊：惑星直列の向聴数を求める
 	if (getRule(RULE_SYZYGY) == 0) return SHANTEN_IMPOSSIBLE;
 
 	// 以下、一枚ずつ調べる
-	TileCount tileCountTmp;
+	Int8ByTile tileCountTmp;
 	for (int i = 0; i < TILE_CODE_MAXIMUM; i++) tileCountTmp[i] = tileCount[i];
 	tileCode syzygyPai[NUM_OF_TILES_IN_HAND] = {
 		CircleOne, CircleOne, CircleTwo,

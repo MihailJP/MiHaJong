@@ -11,12 +11,6 @@
 #include "gametbl.h"
 #include "except.h"
 
-#ifdef MJCORE_EXPORTS
-typedef uint8_t tileCountTbl[TILE_CODE_MAXIMUM];
-
-typedef InfoByTile<uint8_t> TileCount;
-#endif
-
 // -------------------------------------------------------------------------
 
 enum seatAbsolute : uint8_t { sEast, sSouth, sWest, sNorth };
@@ -29,15 +23,6 @@ static_assert(std::is_pod<PlayerRankList>::value, "PlayerRankList is not POD");
 #endif
 
 // -------------------------------------------------------------------------
-
-#ifdef MJCORE_EXPORTS
-TileCount countTilesInHand(const GameTable* const gameStat, PLAYER_ID playerID);
-#endif
-
-/* -------------------------------------------------------------------------
- *  function.hsp Ç©ÇÁà⁄êA
- * -------------------------------------------------------------------------
- */
 
 #ifdef MJCORE_EXPORTS
 seatAbsolute inline playerwind(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID currentRound);

@@ -1,20 +1,5 @@
 #include "func.h"
 
-TileCount countTilesInHand(const GameTable* const gameStat, PLAYER_ID playerID) {
-	// 手牌に存在する牌を種類別にカウントする（鳴き面子・暗槓は除く）
-	TileCount count = TileCount(); tileCode tmpTC;
-	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
-		if ((tmpTC = tileCode(gameStat->Player[playerID].Hand[i].tile)) != NoTile)
-			count[tmpTC]++;
-	}
-	return TileCount(count);
-}
-
-/* -------------------------------------------------------------------------
- *  function.hsp から移植
- * -------------------------------------------------------------------------
- */
-
 /* プレイヤーの自風がどれか調べる */
 seatAbsolute inline playerwind(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID currentRound) {
 	if (chkGameType(gameStat, SanmaT))
@@ -67,7 +52,7 @@ PlayerRankList calcRank(const GameTable* const gameStat) {
 	}
 	return rankList;
 }
-__declspec(dllexport) void calcRank(int* Rank, const GameTable* const gameStat) {
+__declspec(dllexport) void calcRank(int* const Rank, const GameTable* const gameStat) {
 	const PlayerRankList rankList = calcRank(gameStat);
 	assert(rankList[0] > 0); assert(rankList[1] > 0);
 	for (int i = 0; i < PLAYERS; i++) *(Rank + i) = rankList[i];

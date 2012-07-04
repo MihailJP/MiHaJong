@@ -332,8 +332,8 @@
 	}
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getWall(GameStat, WALL_TILECODE, getDrawPointer(GameStat))
 	setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
-	setPreviousMeld GameStat, PREVMELD_TILECODE, -999
-	setPreviousMeld GameStat, PREVMELD_STEPPED, -999
+	setPreviousMeld GameStat, PREVMELD_TILECODE, 0
+	setPreviousMeld GameStat, PREVMELD_STEPPED, 0
 	dsplay@ SND_TSUMO
 	if (tilesLeft(GameStat) < 10) {
 		dsplay@ SND_COUNTDOWN

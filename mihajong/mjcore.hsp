@@ -43,6 +43,19 @@
 #cfunc WindMax "?WindMax@@YAHXZ"
 #cfunc Wind2Tile "?Wind2Tile@@YAHH@Z" int
 
+/* tileutil.hspÇ©ÇÁÇÃà⁄êA */
+#func lipai "?lipai@@YAXQAUGameTable@@H@Z" int, int
+#func _countseentiles "?countseentiles@@YAXQAHQBUGameTable@@@Z" var, int
+#define countseentiles(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countseentiles %1, %2
+#func _countTilesInHand "?countTilesInHand@@YAXQAHQBUGameTable@@H@Z" var, int, int
+#define countTilesInHand(%1,%2,%3) dim %1, TILE_NONFLOWER_MAX: _countTilesInHand %1, %2, %3
+#func _countRedTilesInHand "?countRedTilesInHand@@YAXQAHQBUGameTable@@H@Z" var, int, int
+#define countRedTilesInHand(%1,%2,%3) dim %1, TILE_NONFLOWER_MAX: _countRedTilesInHand %1, %2, %3
+#func _chkfuriten "?chkFuriten@@YAXQAH0000QBUGameTable@@H@Z" var, var, var, var, var, int, int
+#define chkfuriten(%1,%2,%3,%4,%5,%6,%7) dim %2, TILE_NONFLOWER_MAX: dim %3, TILE_NONFLOWER_MAX: _chkfuriten %1, %2, %3, %4, %5, %6, %7
+#func chkopenmachi "?chkOpenMachi@@YAXQAUGameTable@@H@Z" int, int
+#cfunc chkankanability "?chkAnkanAbility@@YAHQBUGameTable@@H@Z" int, int
+
 /* shanten.hspÇ©ÇÁÇÃà⁄êA */
 #func shantenInit "?initMentsuAnalysisDat@@YAXXZ"
 #cfunc countshanten "?calcShanten@@YAHQBUGameTable@@HH@Z" int, int, int
