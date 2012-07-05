@@ -151,52 +151,6 @@ namespace haifu { // ”v•ˆ‹L˜^—p‚ÌƒR[ƒh
 			}
 		}
 
-		void recordKanOrFlower(
-			const GameTable* const gameStat, int DiscardTileIndex,
-			HaifuStreams* haifuP, HaifuStreams* HThaifuP
-			) {
-				if ((gameStat->TianHuFlag)||((DiscardTileIndex % 20) != (NUM_OF_TILES_IN_HAND - 1))) {
-					// e‚Ì‚P„–Ú‚Ìê‡‚©Aƒcƒ‚‚Á‚Ä‚«‚½”vˆÈŠO‚ğƒJƒ“‚µ‚½ê‡
-					if (gameStat->TianHuFlag) {
-						recordBlank_Table(
-							&haifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
-							&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo);
-						recordBlank_Table(
-							&haifuP->streamDat[gameStat->CurrentPlayer.Active].tsumolabel,
-							&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].tsumolabel);
-						recordTile_Table(
-							&haifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
-							&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
-							gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex % 20]);
-						haifukanflag = true;
-					} else if (gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NUM_OF_TILES_IN_HAND - 1].tile ==
-						gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex % 20].tile) {
-							// ƒcƒ‚‚Á‚Ä‚«‚½”v‚Æ“¯‚¶‚¾‚Á‚½
-							recordTile_Table(
-								&haifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
-								&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
-								gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex % 20]);
-							haifukanflag = false;
-					} else {
-						haifuwritetsumohai(
-							haifuP, HThaifuP, gameStat->CurrentPlayer.Active,
-							gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NUM_OF_TILES_IN_HAND - 1],
-							"@ ", "");
-						recordTile_Table(
-							&haifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
-							&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
-							gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex % 20]);
-						haifukanflag = true;
-					}
-				} else {
-					recordTile_Table(
-						&haifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
-						&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
-						gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex % 20]);
-					haifukanflag = false;
-				}
-		}
-
 	}
 
 	/* ˆê”¼‘‘•ª‚Ì”v•ˆƒoƒbƒtƒ@‚ğ‰Šú‰» */
@@ -407,70 +361,118 @@ namespace haifu { // ”v•ˆ‹L˜^—p‚ÌƒR[ƒh
 	}
 
 	namespace tools {
-		/* g–kh‚ğ”v•ˆ‚É‹L˜^ */
-		void inline recordChanKan(const GameTable* const gameStat, std::string pTxt, std::string hTxt) {
-			if (haifukanflag) {
-				// e‚Ì‚P„–Ú‚Ìê‡‚©Aƒcƒ‚‚Á‚Ä‚«‚½”vˆÈŠO‚ğƒJƒ“‚µ‚½ê‡
-				haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << pTxt;
-				HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << hTxt;
-			} else {
-				haifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel << pTxt;
-				HThaifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel << hTxt;
+		namespace kan_sub {
+			void recordKanOrFlower(
+				const GameTable* const gameStat, int DiscardTileIndex,
+				HaifuStreams* haifuP, HaifuStreams* HThaifuP
+				) {
+					if ((gameStat->TianHuFlag)||((DiscardTileIndex % 20) != (NUM_OF_TILES_IN_HAND - 1))) {
+						// e‚Ì‚P„–Ú‚Ìê‡‚©Aƒcƒ‚‚Á‚Ä‚«‚½”vˆÈŠO‚ğƒJƒ“‚µ‚½ê‡
+						if (gameStat->TianHuFlag) {
+							recordBlank_Table(
+								&haifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
+								&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo);
+							recordBlank_Table(
+								&haifuP->streamDat[gameStat->CurrentPlayer.Active].tsumolabel,
+								&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].tsumolabel);
+							recordTile_Table(
+								&haifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
+								&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
+								gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex % 20]);
+							haifukanflag = true;
+						} else if (gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NUM_OF_TILES_IN_HAND - 1].tile ==
+							gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex % 20].tile) {
+								// ƒcƒ‚‚Á‚Ä‚«‚½”v‚Æ“¯‚¶‚¾‚Á‚½
+								recordTile_Table(
+									&haifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
+									&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
+									gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex % 20]);
+								haifukanflag = false;
+						} else {
+							haifuwritetsumohai(
+								haifuP, HThaifuP, gameStat->CurrentPlayer.Active,
+								gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NUM_OF_TILES_IN_HAND - 1],
+								"@ ", "");
+							recordTile_Table(
+								&haifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
+								&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
+								gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex % 20]);
+							haifukanflag = true;
+						}
+					} else {
+						recordTile_Table(
+							&haifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
+							&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
+							gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex % 20]);
+						haifukanflag = false;
+					}
 			}
-		}
-		/* ”²‚«–k‚ª¬Œ÷‚µ‚½ê‡‚Ì”v•ˆˆ— */
-		void inline recordKan(const GameTable* const gameStat, std::string pTxt, std::string hTxt) {
-			if (haifukanflag == 1) {
-				// e‚Ì‚P„–Ú‚Ìê‡‚©Aƒcƒ‚‚Á‚Ä‚«‚½”vˆÈŠO‚ğƒJƒ“‚µ‚½ê‡
-				haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << pTxt;
-				HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << hTxt;
-			} else {
-				haifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel << pTxt;
-				HThaifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel << hTxt;
-				tools::recordBlank_Table(
-					&haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehai,
-					&HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehai);
-				tools::recordBlank_Table(
-					&haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel,
-					&HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel);
+			/* g–kh‚ğ”v•ˆ‚É‹L˜^ */
+			void inline recordChanKan(const GameTable* const gameStat, std::string pTxt, std::string hTxt) {
+				if (haifukanflag) {
+					// e‚Ì‚P„–Ú‚Ìê‡‚©Aƒcƒ‚‚Á‚Ä‚«‚½”vˆÈŠO‚ğƒJƒ“‚µ‚½ê‡
+					haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << pTxt;
+					HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << hTxt;
+				} else {
+					haifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel << pTxt;
+					HThaifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel << hTxt;
+				}
 			}
+			/* ”²‚«–k‚ª¬Œ÷‚µ‚½ê‡‚Ì”v•ˆˆ— */
+			void inline recordKan(const GameTable* const gameStat, std::string pTxt, std::string hTxt) {
+				if (haifukanflag == 1) {
+					// e‚Ì‚P„–Ú‚Ìê‡‚©Aƒcƒ‚‚Á‚Ä‚«‚½”vˆÈŠO‚ğƒJƒ“‚µ‚½ê‡
+					haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << pTxt;
+					HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << hTxt;
+				} else {
+					haifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel << pTxt;
+					HThaifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel << hTxt;
+					recordBlank_Table(
+						&haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehai,
+						&HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehai);
+					recordBlank_Table(
+						&haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel,
+						&HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel);
+				}
 		
-			// ”v•ˆ‚Ì‹Lqã‚ÍA—äã”v‚Ìæ“¾‚ÍŸ„‚Æ‚µ‚Äˆµ‚¤
-			tools::haifuskipall(&haifuP, &HThaifuP, gameStat->CurrentPlayer.Active);
+				// ”v•ˆ‚Ì‹Lqã‚ÍA—äã”v‚Ìæ“¾‚ÍŸ„‚Æ‚µ‚Äˆµ‚¤
+				haifuskipall(&haifuP, &HThaifuP, gameStat->CurrentPlayer.Active);
+			}
 		}
 	}
 
 	/* ”²‚«–k‚ğ”v•ˆ‚É‹L˜^ */
 	__declspec(dllexport) void haifurecnorth(const GameTable* const gameStat, int DiscardTileIndex) {
-		tools::recordKanOrFlower(gameStat, DiscardTileIndex, &haifuP, &HThaifuP);
+		tools::kan_sub::recordKanOrFlower(gameStat, DiscardTileIndex, &haifuP, &HThaifuP);
 	}
 	/* g–kh‚ğ”v•ˆ‚É‹L˜^ */
 	__declspec(dllexport) void haifurecchanpei(const GameTable* const gameStat) {
-		tools::recordChanKan(gameStat, "”²X", "<td>”²<br>ƒEƒ`</td>");
+		tools::kan_sub::recordChanKan(gameStat, "”²X", "<td>”²<br>ƒEƒ`</td>");
 	}
 	/* ”²‚«–k‚ª¬Œ÷‚µ‚½ê‡‚Ì”v•ˆˆ— */
 	__declspec(dllexport) void haifurecnorthproc(const GameTable* const gameStat) {
-		tools::recordKan(gameStat, "”² ", "<td>”²</td>");
+		tools::kan_sub::recordKan(gameStat, "”² ", "<td>”²</td>");
 	}
 
 	/* ˆÃÈ‚È‚¢‚µ‰ÁÈ‚ğ”v•ˆ‚É‹L˜^ */
 	__declspec(dllexport) void haifurecankan(const GameTable* const gameStat, int DiscardTileIndex) {
-		tools::recordKanOrFlower(gameStat, DiscardTileIndex, &haifuP, &HThaifuP);
+		tools::kan_sub::recordKanOrFlower(gameStat, DiscardTileIndex, &haifuP, &HThaifuP);
 	}
 	/* È‚ğ”v•ˆ‚É‹L˜^ */
 	__declspec(dllexport) void haifurecchankan(const GameTable* const gameStat) {
-		tools::recordChanKan(gameStat, "¶İX", "<td>ƒJƒ“<br>ƒEƒ`</td>");
+		tools::kan_sub::recordChanKan(gameStat, "¶İX", "<td>ƒJƒ“<br>ƒEƒ`</td>");
 	}
 	/* ƒJƒ“‚ª¬Œ÷‚µ‚½ê‡‚Ì”v•ˆˆ— */
 	__declspec(dllexport) void haifureckanproc(const GameTable* const gameStat) {
-		tools::recordKan(gameStat, "¶İ ", "<td>ƒJƒ“</td>");
+		tools::kan_sub::recordKan(gameStat, "¶İ ", "<td>ƒJƒ“</td>");
 	}
 
 	/* ‰Ô”v‚ğ”v•ˆ‚É‹L˜^ */
 	__declspec(dllexport) void haifurecflower(const GameTable* const gameStat, int DiscardTileIndex) {
-		tools::recordKanOrFlower(gameStat, DiscardTileIndex, &haifuP, &HThaifuP);
-		tools::recordKan(gameStat, "‰Ô ", "<td>‰Ô</td>");
+		tools::kan_sub::recordKanOrFlower(gameStat, DiscardTileIndex, &haifuP, &HThaifuP);
+		tools::kan_sub::recordKan(gameStat, "‰Ô ", "<td>‰Ô</td>");
 	}
+
 #if 0
 
 /* ”z”v‚ğƒoƒbƒtƒ@‚Éo—Í */
