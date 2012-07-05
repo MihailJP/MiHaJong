@@ -1,16 +1,14 @@
 #include "ruletbl.h"
 
-using namespace std;
-
 static char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
 static uint8_t Rules[RULESIZE];
 
 void parseRule() { // ルール設定を数値に変換
 	debug("ルール設定を数値配列に変換します。");
 	for (int i = 0; i < RULESIZE; i++) {
-		string::size_type idx = string("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ").find(
+		std::string::size_type idx = std::string("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ").find(
 			ruleConf[i / RULE_IN_LINE][i % RULE_IN_LINE] );
-		Rules[i] = ((idx == string::npos) ? 0 : (uint8_t)idx);
+		Rules[i] = ((idx == std::string::npos) ? 0 : (uint8_t)idx);
 	}
 }
 

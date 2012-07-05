@@ -1,6 +1,5 @@
 #include "mnzdat.h"
 
-using namespace std;
 using std::min;
 
 /* 面子データ初期化 */
@@ -32,7 +31,7 @@ size_t decompressMentsuAnalysisDat() {
 		(const uint8_t *)(compressedMentsuDat+13),
 		(SizeT *)&size, (const uint8_t *)compressedMentsuDat, 5);
 	if (result != SZ_OK) {
-		ostringstream o;
+		std::ostringstream o;
 		o << "LZMAストリームのデコードに失敗しました。ファイルが壊れている虞があります。" <<
 			"エラーコード: " << result;
 		Raise(EXCEPTION_MJCORE_DECOMPRESSION_FAILURE, o.str().c_str());
@@ -50,10 +49,10 @@ void calcSHA256(uint8_t* digest, const uint8_t* buf, size_t bufSize) {
 	Sha256_Final(&p, digest);
 }
 
-string bytesToHexString(vector<uint8_t> byteStr) {
-	string hx = string();
-	ostringstream o;
-	o.setf(ios::right); o.fill('0'); o.width(2);
+std::string bytesToHexString(std::vector<uint8_t> byteStr) {
+	std::string hx = std::string();
+	std::ostringstream o;
+	o.setf(std::ios::right); o.fill('0'); o.width(2);
 	for (unsigned int i = 0; i < byteStr.size(); i++) o << byteStr[i];
 	return o.str();
 }
@@ -71,13 +70,13 @@ void verifyMentsuAnalysisDat(size_t bufSize) {
 		if (expectedDigest[i] != actualDigest[i]) mdUnmatch = true;
 	}
 	if (mdUnmatch) {
-		ostringstream o;
+		std::ostringstream o;
 		o << "面子構成データベースのSHA256ハッシュ値が一致しませんでした。" <<
-			"ファイルが壊れている虞があります。" << endl <<
+			"ファイルが壊れている虞があります。" << std::endl <<
 			"期待されるハッシュ値: " <<
-			bytesToHexString(vector<uint8_t>(expectedDigest[0], expectedDigest[31])) <<
+			bytesToHexString(std::vector<uint8_t>(expectedDigest[0], expectedDigest[31])) <<
 			"実際のハッシュ値: " <<
-			bytesToHexString(vector<uint8_t>(actualDigest[0], actualDigest[31]));
+			bytesToHexString(std::vector<uint8_t>(actualDigest[0], actualDigest[31]));
 		Raise(EXCEPTION_MJCORE_HASH_MISMATCH, o.str().c_str());
 	}
 	else {
