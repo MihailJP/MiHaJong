@@ -18,7 +18,7 @@ void lipai(GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
 		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) {
 			gameStat->Player[targetPlayer].Hand[i].tile = TilePad;
-			gameStat->Player[targetPlayer].Hand[i].red = 0;
+			gameStat->Player[targetPlayer].Hand[i].red = Normal;
 		}
 	}
 
@@ -51,7 +51,7 @@ void lipai(GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
 		if (gameStat->Player[targetPlayer].Hand[i].tile == TilePad) {
 			gameStat->Player[targetPlayer].Hand[i].tile = NoTile;
-			gameStat->Player[targetPlayer].Hand[i].red = 0;
+			gameStat->Player[targetPlayer].Hand[i].red = Normal;
 		}
 	}
 
@@ -96,20 +96,20 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 			case meldSequenceExposedUpper:
 				// 明順子(チー)
 				// まず、正しいコードになっているかを確認する(デバッグ時)
-				assert(gameStat->Player[i].Meld[j].tcode.tile % TILE_SUIT_STEP <= 7);
-				assert(gameStat->Player[i].Meld[j].tcode.tile % TILE_SUIT_STEP > 0);
-				assert(gameStat->Player[i].Meld[j].tcode.tile < TILE_SUIT_HONORS);
+				assert(gameStat->Player[i].Meld[j].tile % TILE_SUIT_STEP <= 7);
+				assert(gameStat->Player[i].Meld[j].tile % TILE_SUIT_STEP > 0);
+				assert(gameStat->Player[i].Meld[j].tile < TILE_SUIT_HONORS);
 				// カウントアップ
-				for (int k = gameStat->Player[i].Meld[j].tcode.tile;
-					k <= gameStat->Player[i].Meld[j].tcode.tile + 2; k++)
-					seenTiles[gameStat->Player[i].Meld[j].tcode.tile]++;
+				for (int k = gameStat->Player[i].Meld[j].tile;
+					k <= gameStat->Player[i].Meld[j].tile + 2; k++)
+					seenTiles[gameStat->Player[i].Meld[j].tile]++;
 				// ここまで
 				break;
 			case meldTripletExposedLeft:
 			case meldTripletExposedCenter:
 			case meldTripletExposedRight:
 				// 明刻子(ポン)
-				seenTiles[gameStat->Player[i].Meld[j].tcode.tile] += 3;
+				seenTiles[gameStat->Player[i].Meld[j].tile] += 3;
 				break;
 			case meldQuadConcealed:
 				// 暗槓
@@ -119,7 +119,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 			case meldQuadExposedCenter: case meldQuadAddedCenter:
 			case meldQuadExposedRight:  case meldQuadAddedRight:
 				// 明槓
-				seenTiles[gameStat->Player[i].Meld[j].tcode.tile] += 4;
+				seenTiles[gameStat->Player[i].Meld[j].tile] += 4;
 				break;
 			default:
 				RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "副露データに暗順子、暗刻子、または不明な種類の面子が検出されました");
@@ -178,30 +178,30 @@ MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PLAYER_ID
 		case meldSequenceExposedLower: case meldSequenceExposedMiddle:
 		case meldSequenceExposedUpper:
 			// 順子の時
-			if (gameStat->Player[playerID].Meld[i].tcode.red & (0x01 << (4 * (doraCol - 1))))
-				count[gameStat->Player[playerID].Meld[i].tcode.tile]++;
-			if (gameStat->Player[playerID].Meld[i].tcode.red & (0x02 << (4 * (doraCol - 1))))
-				count[gameStat->Player[playerID].Meld[i].tcode.tile + 1]++;
-			if (gameStat->Player[playerID].Meld[i].tcode.red & (0x04 << (4 * (doraCol - 1))))
-				count[gameStat->Player[playerID].Meld[i].tcode.tile + 2]++;
+			if (gameStat->Player[playerID].Meld[i].red[0] == doraCol)
+				count[gameStat->Player[playerID].Meld[i].tile]++;
+			if (gameStat->Player[playerID].Meld[i].red[1] == doraCol)
+				count[gameStat->Player[playerID].Meld[i].tile + 1]++;
+			if (gameStat->Player[playerID].Meld[i].red[2] == doraCol)
+				count[gameStat->Player[playerID].Meld[i].tile + 2]++;
 			break;
 		case meldQuadExposedLeft: case meldQuadAddedLeft:
 		case meldQuadExposedCenter: case meldQuadAddedCenter:
 		case meldQuadExposedRight: case meldQuadAddedRight:
 		case meldQuadConcealed: // 暗槓も数えてあげましょう……
 			// 槓子の時
-			if (gameStat->Player[playerID].Meld[i].tcode.red & (0x08 << (4 * (doraCol - 1))))
-				count[gameStat->Player[playerID].Meld[i].tcode.tile]++;
+			if (gameStat->Player[playerID].Meld[i].red[3] == doraCol)
+				count[gameStat->Player[playerID].Meld[i].tile]++;
 			/* FALLTHRU */
 		case meldTripletExposedLeft: case meldTripletExposedCenter:
 		case meldTripletExposedRight:
 			// 刻子の時(槓子も含む)
-			if (gameStat->Player[playerID].Meld[i].tcode.red & (0x01 << (4 * (doraCol - 1))))
-				count[gameStat->Player[playerID].Meld[i].tcode.tile]++;
-			if (gameStat->Player[playerID].Meld[i].tcode.red & (0x02 << (4 * (doraCol - 1))))
-				count[gameStat->Player[playerID].Meld[i].tcode.tile]++;
-			if (gameStat->Player[playerID].Meld[i].tcode.red & (0x04 << (4 * (doraCol - 1))))
-				count[gameStat->Player[playerID].Meld[i].tcode.tile]++;
+			if (gameStat->Player[playerID].Meld[i].red[0] == doraCol)
+				count[gameStat->Player[playerID].Meld[i].tile]++;
+			if (gameStat->Player[playerID].Meld[i].red[1] == doraCol)
+				count[gameStat->Player[playerID].Meld[i].tile]++;
+			if (gameStat->Player[playerID].Meld[i].red[2] == doraCol)
+				count[gameStat->Player[playerID].Meld[i].tile]++;
 			break;
 		default:
 			// 異常データ
@@ -245,7 +245,7 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PLAYER_ID target
 				for (int j = 1; j <= tmpGameStat.Player[targetPlayer].MeldPointer; j++) {
 					switch (tmpGameStat.Player[targetPlayer].Meld[j].mstat) {
 					case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight: // 加槓で、なおかつ
-						if (tmpGameStat.Player[targetPlayer].Meld[j].tcode.tile == i) // 同じ種類の捨て牌が見つかったら
+						if (tmpGameStat.Player[targetPlayer].Meld[j].tile == i) // 同じ種類の捨て牌が見つかったら
 							machihaiInfo.FuritenFlag = true; // フリテンと判断します
 						break;
 					}
@@ -420,7 +420,7 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 			}
 		}
 		assert(tmpTakenCount == 4); // デバッグ用：ちょうど4枚だったか確認
-		tmpGameStat.Player[targetPlayer].Meld[++ tmpGameStat.Player[targetPlayer].MeldPointer].tcode.tile =
+		tmpGameStat.Player[targetPlayer].Meld[++ tmpGameStat.Player[targetPlayer].MeldPointer].tile =
 			gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile; /* ツモった牌を */
 		tmpGameStat.Player[targetPlayer].Meld[tmpGameStat.Player[targetPlayer].MeldPointer].mstat =
 			meldQuadConcealed; /* 暗槓したとみなす */

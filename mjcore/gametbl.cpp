@@ -216,7 +216,7 @@ extern "C" {
 			gameStat->Player[Player].Hand[Index].tile = (tileCode)value;
 			break;
 		case 1:
-			gameStat->Player[Player].Hand[Index].red = (uint8_t)value;
+			gameStat->Player[Player].Hand[Index].red = (doraCol)value;
 			break;
 		default:
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
@@ -247,7 +247,7 @@ extern "C" {
 			gameStat->Player[Player].Discard[Index].tcode.tile = (tileCode)(value % SUTEHAI_TYPE_STEP);
 			break;
 		case 1:
-			gameStat->Player[Player].Discard[Index].tcode.red = (uint8_t)value;
+			gameStat->Player[Player].Discard[Index].tcode.red = (doraCol)value;
 			break;
 		case 2:
 			gameStat->Player[Player].Discard[Index].isDiscardThrough = (bool)value;
@@ -295,11 +295,15 @@ extern "C" {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
 		case 0:
-			gameStat->Player[Player].Meld[Index].tcode.tile = (tileCode)(value % MELD_TYPE_STEP);
+			gameStat->Player[Player].Meld[Index].tile = (tileCode)(value % MELD_TYPE_STEP);
 			gameStat->Player[Player].Meld[Index].mstat = (meldStat)(value / MELD_TYPE_STEP);
 			break;
 		case 1:
-			gameStat->Player[Player].Meld[Index].tcode.red = (uint8_t)value;
+			for (int i = 0; i < 8; i++) {
+				if (value & (1 << i))
+					gameStat->Player[Player].Meld[Index].red[i % 4] = (doraCol)(i / 4 + 1);
+				else gameStat->Player[Player].Meld[Index].red[i % 4] = Normal;
+			}
 			break;
 		default:
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
@@ -309,12 +313,16 @@ extern "C" {
 	}
 	__declspec(dllexport) int getMeld(const GameTable* const gameStat, int Page, int Index, int Player) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
+		int tmp = 0;
 		switch (Page) {
 		case 0:
 			return gameStat->Player[Player].Meld[Index].mstat * MELD_TYPE_STEP
-				+ gameStat->Player[Player].Meld[Index].tcode.tile;
+				+ gameStat->Player[Player].Meld[Index].tile;
 		case 1:
-			return (int)gameStat->Player[Player].Meld[Index].tcode.red;
+			for (int i = 0; i < 8; i++)
+				if (gameStat->Player[Player].Meld[Index].red[i % 4] == (doraCol)(i / 4 + 1))
+					tmp |= (1 << i);
+			return tmp;
 		default:
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 			return 0;
@@ -342,7 +350,9 @@ extern "C" {
 				gameStat->Player[Player].Meld[Index].mstat + value / MELD_TYPE_STEP);
 			break;
 		case 1:
-			gameStat->Player[Player].Meld[Index].tcode.red += (uint8_t)value;
+			for (int i = 0; i < 8; i++)
+				if (value & (1 << i))
+					gameStat->Player[Player].Meld[Index].red[i % 4] = (doraCol)(i / 4 + 1);
 			break;
 		default:
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
@@ -717,7 +727,7 @@ extern "C" {
 			gameStat->Deck[Index].tile = (tileCode)value;
 			break;
 		case 1:
-			gameStat->Deck[Index].red = (uint8_t)value;
+			gameStat->Deck[Index].red = (doraCol)value;
 			break;
 		default:
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
@@ -872,7 +882,7 @@ extern "C" {
 			gameStat->CurrentDiscard.tile = (tileCode)value;
 			break;
 		case 1:
-			gameStat->CurrentDiscard.red = (uint8_t)value;
+			gameStat->CurrentDiscard.red = (doraCol)value;
 			break;
 		default:
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
@@ -994,7 +1004,7 @@ extern "C" {
 
 		for (int i = 0; i < SIZE_OF_DECKBUF; i++) { // ちゃんと初期化してあげましょうね
 			gameStat->Deck[i].tile = NoTile;
-			gameStat->Deck[i].red = (uint8_t)0;
+			gameStat->Deck[i].red = Normal;
 		}
 
 		if (chkGameType(gameStat, AllSanma)) {
@@ -1056,20 +1066,20 @@ extern "C" {
 		gameStat->AgariSpecialStat = 0;
 		resetDeclarationFlag(gameStat);
 		gameStat->CurrentDiscard.tile = NoTile;
-		gameStat->CurrentDiscard.red = 0;
+		gameStat->CurrentDiscard.red = Normal;
 		resetCurrentPlayer(gameStat);
 
 		for (int pl = 0; pl < PLAYERS; pl++) {
 			gameStat->Player[pl].ConnectionLost = false; // 回線切断による和了り放棄
 			for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) { // 手牌の配列(４人分)
 				gameStat->Player[pl].Hand[i].tile = NoTile;
-				gameStat->Player[pl].Hand[i].red = 0;
+				gameStat->Player[pl].Hand[i].red = Normal;
 			}
 			gameStat->Player[pl].DiscardPointer = 0; // ちゃんとリセットしてあげましょうね
 			for (int i = 0; i < SIZE_OF_DISCARD_BUFFER; i++) {
 				// 捨牌の配列(４人分)
 				gameStat->Player[pl].Discard[i].tcode.tile = NoTile;
-				gameStat->Player[pl].Discard[i].tcode.red = 0;
+				gameStat->Player[pl].Discard[i].tcode.red = Normal;
 				gameStat->Player[pl].Discard[i].dstat = discardNormal;
 				gameStat->Player[pl].Discard[i].isDiscardThrough = false;
 			}
@@ -1078,8 +1088,8 @@ extern "C" {
 			gameStat->Player[pl].MeldPointer = 0; // 最初変な数字が入ってたりするんで……
 			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
 				// 鳴き面子を格納
-				gameStat->Player[pl].Meld[i].tcode.tile = NoTile;
-				gameStat->Player[pl].Meld[i].tcode.red = 0;
+				gameStat->Player[pl].Meld[i].tile = NoTile;
+				for (int j = 0; j < 4; j++) gameStat->Player[pl].Meld[i].red[j] = Normal;
 				gameStat->Player[pl].Meld[i].mstat = (meldStat)0;
 			}
 			gameStat->Player[pl].NumberOfQuads = 0; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
@@ -1241,8 +1251,9 @@ extern "C" {
 			sandbox->Player[p].DiscardPointer = gameStat->Player[p].DiscardPointer;
 			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
 				sandbox->Player[p].Meld[i].mstat = gameStat->Player[p].Meld[i].mstat;
-				sandbox->Player[p].Meld[i].tcode.tile = gameStat->Player[p].Meld[i].tcode.tile;
-				sandbox->Player[p].Meld[i].tcode.red = gameStat->Player[p].Meld[i].tcode.red;
+				sandbox->Player[p].Meld[i].tile = gameStat->Player[p].Meld[i].tile;
+				for (int j = 0; j < 4; j++)
+					sandbox->Player[p].Meld[i].red[j] = gameStat->Player[p].Meld[i].red[j];
 			}
 			sandbox->Player[p].MenzenFlag = gameStat->Player[p].MenzenFlag;
 			sandbox->Player[p].NumberOfQuads = gameStat->Player[p].NumberOfQuads;

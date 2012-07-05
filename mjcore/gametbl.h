@@ -22,9 +22,10 @@ enum gameTypeID : uint8_t { // 卓の種類(四麻、三麻)指定用
 
 // -------------------------------------------------------------------------
 
+enum doraCol : uint8_t { Normal, AkaDora, AoDora };
 EXPORT_STRUCT TILE { // 赤ドラデータを含めた牌のデータ
 	tileCode tile;
-	uint8_t red;
+	doraCol red;
 };
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<TILE>::value, "TILE is not POD");
@@ -122,7 +123,8 @@ enum meldStat : uint8_t {
 	meldQuadAddedRight,         // 下家からポンの後カン
 };
 EXPORT_STRUCT meldCode {
-	TILE tcode;
+	tileCode tile;
+	doraCol red[4];
 	meldStat mstat;
 };
 typedef meldCode MELD_BUF[SIZE_OF_MELD_BUFFER];
