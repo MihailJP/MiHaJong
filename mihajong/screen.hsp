@@ -866,6 +866,7 @@ return
 
 #module
 #include "const.hsp"
+#include "mjcore.hsp"
 #deffunc putsidepanel var GameEnv
 	/* ‰æ–Ê‰E */
 	gsel 0: color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)

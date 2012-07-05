@@ -58,7 +58,7 @@
 	gsel 0, 0: await 0
 
 /* ‘ì‚ÌŠÂ‹«‚ğ‰Šú‰» */
-	newmod GameEnv, envStruct
+	TableEnvInitAll: GameEnv = 0
 
 /* İ’èƒtƒ@ƒCƒ‹“Ç‚İ‚İ */
 	setconffile configFile

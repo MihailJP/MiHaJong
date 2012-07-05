@@ -60,6 +60,22 @@
 #func shantenInit "?initMentsuAnalysisDat@@YAXXZ"
 #cfunc countshanten "?calcShanten@@YAHQBUGameTable@@HH@Z" int, int, int
 
+/* envstruct.hspからの移植 */
+#func setPlayerName "?setPlayerName@EnvTable@@SAXPAXHQBD@Z" int, int, str
+//#func _getPlayerName "?getPlayerName@EnvTable@@SAXPAXHQADH@Z" nullptr, int, var, int
+#func setRemotePlayer "?setRemotePlayer@EnvTable@@SAXPAXHH@Z" int, int, int
+#cfunc isRemotePlayer "?isRemotePlayer@EnvTable@@SAHPAXH@Z" int, int
+#func setGameMode "?setGameMode@EnvTable@@SAXPAXH@Z" int, int
+#cfunc GetGameMode "?getGameMode@EnvTable@@SAHPAX@Z" int
+#func setWatchModeFlag "?setWatchModeFlag@EnvTable@@SAXPAXH@Z" int, int
+#cfunc GetWatchModeFlag "?getWatchModeFlag@EnvTable@@SAHPAX@Z" int
+#func SetTableColor "?setTableColor@EnvTable@@SAXPAXHHH@Z" int, int, int, int
+#cfunc GetTableColorR "?getTableColorR@EnvTable@@SAHPAX@Z" int
+#cfunc GetTableColorG "?getTableColorG@EnvTable@@SAHPAX@Z" int
+#cfunc GetTableColorB "?getTableColorB@EnvTable@@SAHPAX@Z" int
+#func TableEnvInit "?TableEnvInit@EnvTable@@SAXPAX@Z" int
+#func TableEnvInitAll "?TableEnvInitAll@EnvTable@@SAXPAX@Z" nullptr
+
 /* ------------------------------------------------------------------------ */
 
 /*  卓情報へのアクセサ  */

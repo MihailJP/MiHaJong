@@ -97,6 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="envtbl.cpp" />
     <ClCompile Include="func.cpp" />
     <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="haifu.cpp" />
@@ -117,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dllmain.h" />
+    <ClInclude Include="envtbl.h" />
     <ClInclude Include="except.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="gametbl.h" />
