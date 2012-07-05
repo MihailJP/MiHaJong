@@ -197,6 +197,17 @@ static_assert(std::is_pod<CURRPLAYER>::value, "CURRPLAYER is not POD");
 
 // -------------------------------------------------------------------------
 
+EXPORT_STRUCT FLOWERS { // 花牌フラグ用
+	bool Spring, Summer, Autumn, Winter,
+		Plum, Orchid, Chrys, Bamboo;
+	/* Chrysanthemum は綴りが長いので省略…… */
+};
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<FLOWERS>::value, "FLOWERS is not POD");
+#endif
+
+// -------------------------------------------------------------------------
+
 EXPORT_STRUCT PlayerTable { // プレイヤーの状態を格納
 	LargeNum PlayerScore;
 	int playerChip; // チップの収支
@@ -214,7 +225,7 @@ EXPORT_STRUCT PlayerTable { // プレイヤーの状態を格納
 	bool FirstDrawFlag; // １巡目である（地和、ダブル立直の判定に使う）
 	bool DoujunFuriten; // 同順振聴である
 	bool AgariHouki; // 和了り放棄の罰則中かどうか
-	uint8_t FlowerFlag; // 晒している花牌を格納するフラグ
+	FLOWERS FlowerFlag; // 晒している花牌を格納するフラグ
 	uint8_t NorthFlag; // 晒している北風牌を格納するフラグ
 	bool ConnectionLost;
 	DECLFLAG DeclarationFlag; // 鳴きの宣言
@@ -237,7 +248,7 @@ EXPORT_STRUCT GameTable { // 卓の情報を格納する
 	int Honba;
 	int Deposit;
 	int AgariChain;
-	int LastAgariPlayer;
+	PLAYER_ID LastAgariPlayer;
 	FlagByTile OpenRichiWait; // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
 	KANGSTAT KangFlag; // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
 	uint8_t TurnRound; // 現在の巡目

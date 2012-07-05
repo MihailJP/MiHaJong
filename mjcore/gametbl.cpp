@@ -200,11 +200,11 @@ extern "C" {
 
 	__declspec(dllexport) void setLastAgariPlayer(GameTable* const gameStat, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		gameStat->LastAgariPlayer = value; return;
+		gameStat->LastAgariPlayer = (PLAYER_ID)value; return;
 	}
 	__declspec(dllexport) int getLastAgariPlayer(const GameTable* const gameStat) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		return gameStat->LastAgariPlayer;
+		return (int)gameStat->LastAgariPlayer;
 	}
 
 	// ---------------------------------------------------------------------
@@ -514,17 +514,40 @@ extern "C" {
 
 	__declspec(dllexport) void putFlowerFlag(GameTable* const gameStat, int Player, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		gameStat->Player[Player].FlowerFlag = value;
+		gameStat->Player[Player].FlowerFlag.Spring = value & 0x01;
+		gameStat->Player[Player].FlowerFlag.Summer = value & 0x02;
+		gameStat->Player[Player].FlowerFlag.Autumn = value & 0x04;
+		gameStat->Player[Player].FlowerFlag.Winter = value & 0x08;
+		gameStat->Player[Player].FlowerFlag.Plum   = value & 0x10;
+		gameStat->Player[Player].FlowerFlag.Orchid = value & 0x20;
+		gameStat->Player[Player].FlowerFlag.Chrys  = value & 0x40;
+		gameStat->Player[Player].FlowerFlag.Bamboo = value & 0x80;
 		return;
 	}
 	__declspec(dllexport) void setFlowerFlag(GameTable* const gameStat, int Player, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		gameStat->Player[Player].FlowerFlag |= value;
+		gameStat->Player[Player].FlowerFlag.Spring |= (bool)(value & 0x01);
+		gameStat->Player[Player].FlowerFlag.Summer |= (bool)(value & 0x02);
+		gameStat->Player[Player].FlowerFlag.Autumn |= (bool)(value & 0x04);
+		gameStat->Player[Player].FlowerFlag.Winter |= (bool)(value & 0x08);
+		gameStat->Player[Player].FlowerFlag.Plum   |= (bool)(value & 0x10);
+		gameStat->Player[Player].FlowerFlag.Orchid |= (bool)(value & 0x20);
+		gameStat->Player[Player].FlowerFlag.Chrys  |= (bool)(value & 0x40);
+		gameStat->Player[Player].FlowerFlag.Bamboo |= (bool)(value & 0x80);
 		return;
 	}
 	__declspec(dllexport) int getFlowerFlag(const GameTable* const gameStat, int Player) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		return gameStat->Player[Player].FlowerFlag;
+		int ans = 0;
+		ans |= gameStat->Player[Player].FlowerFlag.Spring ? 0x01 : 0;
+		ans |= gameStat->Player[Player].FlowerFlag.Summer ? 0x02 : 0;
+		ans |= gameStat->Player[Player].FlowerFlag.Autumn ? 0x04 : 0;
+		ans |= gameStat->Player[Player].FlowerFlag.Winter ? 0x08 : 0;
+		ans |= gameStat->Player[Player].FlowerFlag.Plum   ? 0x10 : 0;
+		ans |= gameStat->Player[Player].FlowerFlag.Orchid ? 0x20 : 0;
+		ans |= gameStat->Player[Player].FlowerFlag.Chrys  ? 0x40 : 0;
+		ans |= gameStat->Player[Player].FlowerFlag.Bamboo ? 0x80 : 0;
+		return ans;
 	}
 
 	// ---------------------------------------------------------------------
@@ -1100,8 +1123,15 @@ extern "C" {
 			gameStat->Player[pl].FirstDrawFlag = true; // １巡目である（地和、ダブル立直の判定に使う）
 			gameStat->Player[pl].DoujunFuriten = // 同順振聴である
 				gameStat->Player[pl].AgariHouki = false; // 和了り放棄の罰則中かどうか
-			gameStat->Player[pl].FlowerFlag = // 晒している花牌を格納するフラグ
-				gameStat->Player[pl].NorthFlag = 0; // 晒している北風牌を格納するフラグ
+			gameStat->Player[pl].FlowerFlag.Spring = // 晒している花牌を格納するフラグ
+				gameStat->Player[pl].FlowerFlag.Summer =
+				gameStat->Player[pl].FlowerFlag.Autumn =
+				gameStat->Player[pl].FlowerFlag.Winter =
+				gameStat->Player[pl].FlowerFlag.Plum =
+				gameStat->Player[pl].FlowerFlag.Orchid =
+				gameStat->Player[pl].FlowerFlag.Chrys =
+				gameStat->Player[pl].FlowerFlag.Bamboo = false;
+			gameStat->Player[pl].NorthFlag = 0; // 晒している北風牌を格納するフラグ
 		}
 		assert(gameStat->Player[0].DiscardPointer == 0); // 初期化できてるかチェック（デバッグ用）
 	}
