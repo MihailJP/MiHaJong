@@ -23,6 +23,30 @@ signed int LargeNum::compare(const LargeNum& cmp) { // ”äŠr—p
 	return ans;
 }
 
+std::string LargeNum::bignumtotext(std::string plusSign, std::string minusSign) const {
+	static const std::string unitname[] = {
+		"", "–œ", "‰­","’›", 
+		"‹ž", "š´", "ž`", "õ",
+		"a", "ŠÀ", "³", "Ú",
+		"‹É", "P‰Í¹", "ˆ¢‘m‹_", "“ß—R‘¼",
+	};
+	std::ostringstream o;
+	// •„†
+	if ((LargeNum)*this == fromInt(0, this->firstArg)) return "0";
+	else if ((LargeNum)*this < fromInt(0, this->firstArg)) o << minusSign;
+	else if ((LargeNum)*this > fromInt(0, this->firstArg)) o << plusSign;
+	// o—Í
+	if (this->digitGroup[7] / 100000000)
+		o << abs(this->digitGroup[7] / 100000000) << "•s‰ÂŽv‹c";
+	for (int i = 7; i >= 0; i--) {
+		if (this->digitGroup[i] % 100000000 / 10000)
+			o << abs(this->digitGroup[i] % 100000000 / 10000) << unitname[i * 2 + 1];
+		if (this->digitGroup[i] % 10000)
+			o << abs(this->digitGroup[i] % 10000) << unitname[i * 2];
+	}
+	return o.str();
+}
+
 LargeNum LargeNum::fromInt(int val) {
 	LargeNum num;
 	for (int i = 0; i < DIGIT_GROUPS; i++) num.digitGroup[i] = 0;

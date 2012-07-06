@@ -1,13 +1,13 @@
 #include "func.h"
 
 /* プレイヤーの自風がどれか調べる */
-seatAbsolute inline playerwind(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID currentRound) {
+seatAbsolute inline playerwind(const GameTable* const gameStat, PLAYER_ID player, int currentRound) {
 	if (chkGameType(gameStat, SanmaT))
 		return (seatAbsolute)((player + 24 - (currentRound - ( currentRound / 4))) % 3);
 	else return (seatAbsolute)((player + 32 - currentRound) % 4);
 }
 __declspec(dllexport) inline int playerwind(int player, int currentRound) {
-	return (int)playerwind(&GameStat, (PLAYER_ID)player, (PLAYER_ID)currentRound);
+	return (int)playerwind(&GameStat, (PLAYER_ID)player, (int)currentRound);
 }
 
 /* あるプレイヤーに対して指定したプレイヤーがどこ(下家、対面、上家)にいるか調べる */

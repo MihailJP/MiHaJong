@@ -32,6 +32,8 @@ namespace haifu { // 牌譜記録用のコード
 		using ::playerRelative; using ::RelativePositionOf;
 		using haifu::haifukanflag;
 
+		static const unsigned int cols = 40u;
+
 		void haifuskip(
 			HaifuStreams* haifuP, HaifuStreams* HThaifuP,
 			PLAYER_ID PassivePlayer, PLAYER_ID ActivePlayer
@@ -86,11 +88,29 @@ namespace haifu { // 牌譜記録用のコード
 			*h << HTtilecodelabel1.substr((int)tmpDora, 1);
 		}
 
-		void recordTile_Inline(std::ostringstream* const p, std::ostringstream* const h, TILE tlCode) {
-			*p << tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * 2, 2);
+		void recordTile_Inline(std::ostringstream* const p, std::ostringstream* const h, TILE tlCode, bool rotate) {
+			*p << (rotate ? "[" : "") <<
+				tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * 2, 2) <<
+				(rotate ? "]" : "");
 			if (tlCode.red) *h << "<span" << haifudoraClass(tlCode.red) << ">";
-			*h << HTtilecodelabel1.substr((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX, 1);
+			*h << (rotate ? HTtilecodelabel2 : HTtilecodelabel1).substr(
+				(int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX, 1);
 			if (tlCode.red) *h << "</span>";
+		}
+		void recordTile_Inline(std::ostringstream* const p, std::ostringstream* const h, TILE tlCode, doraCol kakanCol) {
+			*p << "[" <<
+				tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * 2, 2) <<
+				tilecodelabel.substr(((int)tlCode.tile + (int)kakanCol * TILE_NONFLOWER_MAX) * 2, 2) <<
+				"]";
+			*h << "<table class=\"kakan\"><tr><td>";
+				if (kakanCol) *h << "<span" << haifudoraClass(kakanCol) << ">";
+				*h << HTtilecodelabel2.substr((int)tlCode.tile + (int)kakanCol * TILE_NONFLOWER_MAX, 1);
+				if (kakanCol) *h << "</span>";
+			*h << "</span>";
+				if (tlCode.red) *h << "<span" << haifudoraClass(tlCode.red) << ">";
+				*h << HTtilecodelabel2.substr((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX, 1);
+				if (tlCode.red) *h << "</span>";
+			*h << "</tr></td></table>";
 		}
 		void recordTile_Table(std::ostringstream* const p, std::ostringstream* const h, TILE tlCode) {
 			*p << tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * 2, 2) << " ";
@@ -209,7 +229,8 @@ namespace haifu { // 牌譜記録用のコード
 					tools::recordTile_Inline(
 						&haifuP.streamDat[p].haipai,
 						&HThaifuP.streamDat[p].haipai,
-						gameStat->Player[p].Hand[i]
+						gameStat->Player[p].Hand[i],
+						false
 					);
 				}
 			}
@@ -473,313 +494,312 @@ namespace haifu { // 牌譜記録用のコード
 		tools::kan_sub::recordKan(gameStat, "花 ", "<td>花</td>");
 	}
 
-#if 0
+	namespace tools {
+		namespace hfwriter {
+			void hfWriteHead(const GameTable* const gameStat,
+				int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
+				std::string ResultDesc, EndType RoundEndType) {
+					haifuBuffer << ::roundName(OrigTurn, gameStat);
+					if (OrigHonba > 0) haifuBuffer << " " << OrigHonba << "本場";
+					haifuBuffer << " ドラ：" << haifuP.dora.str();
+					if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1))
+						haifuBuffer << "裏ドラ：" << haifuP.uraDora.str();
+					if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != 0))
+						haifuBuffer << "アリス：" << haifuP.aliceDoraMax.str();
+					haifuBuffer << std::endl << std::endl <<
+						"結果：" << ResultDesc << std::endl << std::endl;
 
-/* 配牌をバッファに出力 */
-#deffunc haifuwritebuffer var GameStat, var GameEnv, int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag, str ResultDesc, int RoundEndType
-	notesel haifuBuffer
-	tmpstr = "東南西北"
-	tmptxt = ""+roundName(OrigTurn)
-	if (OrigHonba > 0) {tmptxt += " "+OrigHonba+"本場"}
-	tmptxt += " ドラ："+haifuDora
-	if ((RoundEndType == ENDKYOKU_AGARI)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1)) {tmptxt += "裏ドラ："+haifuUraDora}
-	if ((RoundEndType == ENDKYOKU_AGARI)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != 0)) {tmptxt += "アリス："+haifuAliceDoraMax}
-	noteadd tmptxt
-	noteadd ""
-	noteadd "結果："+ResultDesc
-	noteadd ""
-	notesel HThaifuBuffer
-	tmptxt = ""+roundName(OrigTurn)
-	if (OrigHonba > 0) {tmptxt += " "+OrigHonba+"本場"}
-	tmptxt += " ドラ：<span class=\"tile\">"+HThaifuDora+"</span>"
-	if ((RoundEndType == ENDKYOKU_AGARI)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1)) {tmptxt += "裏ドラ：<span class=\"tile\">"+HThaifuUraDora+"</span>"}
-	if ((RoundEndType == ENDKYOKU_AGARI)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != 0)) {tmptxt += "アリス：<span class=\"tile\">"+HThaifuAliceDoraMax+"</span>"}
-	noteadd "<h2>"+tmptxt+"</h2>"
-	noteadd "<p>結果："+ResultDesc+"</p>"
-	noteadd "<table>"
-	tmptxt = ""
-	repeat COLUMNS
-		tmptxt += "<td width="+(100.0/double(COLUMNS))+"%></td>"
-	loop
-	noteadd "<tr>"+tmptxt+"</tr>"
-	noteunsel
-	repeat NUM_OF_ACTUAL_PLAYERS
-		tmpcnt = RelativePositionOf(cnt, OrigTurn\NUM_OF_PLAYERS)
-#ifdef SANMAT
-		if (((OrigTurn\NUM_OF_PLAYERS)+cnt) >= NUM_OF_ACTUAL_PLAYERS) {tmpcnt = (tmpcnt+1)\NUM_OF_PLAYERS}
-#endif
-		// 最終牌姿
-		repeat NUM_OF_TILES_IN_HAND
-			if (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt) > 0) {
-				if (cnt == TSUMOHAI_INDEX) {
-					if ((RoundEndType == ENDKYOKU_RYUUKYOKU)||(RoundEndType == ENDKYOKU_AGARI)||(RoundEndType == ENDKYOKU_CHONBO)) {
-						if (getTsumoAgariFlag(GameStat) == 1) {haifuP(tmpcnt*6+5) += " ツモ": HThaifuP(tmpcnt*6+5) += "</span> ツモ<span class=\"tile\">"}
-						else {haifuP(tmpcnt*6+5) += " ロン": HThaifuP(tmpcnt*6+5) += "</span> ロン<span class=\"tile\">"}
-					} else {
-						haifuP(tmpcnt*6+5) += " "
+					HThaifuBuffer << "<h2>" << ::roundName(OrigTurn, gameStat);
+					if (OrigHonba > 0) HThaifuBuffer << " " << OrigHonba <<"本場";
+					haifuBuffer << " ドラ：<span class=\"tile\">" <<
+						HThaifuP.dora.str() << "</span>";
+					if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1))
+						haifuBuffer << "裏ドラ：<span class=\"tile\">" <<
+						haifuP.uraDora.str() << "</span>";
+					if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != 0))
+						haifuBuffer << "アリス：<span class=\"tile\">" <<
+						haifuP.aliceDoraMax.str() << "</span>";
+					HThaifuBuffer << "</h2>" << std::endl <<
+						"<p>結果：" << ResultDesc << "</p>" << std::endl <<
+						"<table>" << std::endl << "<tr>";
+					for (unsigned int i = 0u; i < cols; i++)
+						HThaifuBuffer << "<td width=" << (100.0/((double)cols)) << "%></td>";
+					HThaifuBuffer << "</tr>" << std::endl;
+			}
+
+			namespace finalformWriter {
+				// 最終牌姿
+				void hfFinalForm(const GameTable* const gameStat, PLAYER_ID player, EndType RoundEndType) {
+					// 最終牌姿(純手牌のみ)
+					for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+						if (gameStat->Player[player].Hand[i].tile != NoTile) {
+							if (i == NUM_OF_TILES_IN_HAND - 1) {
+								if ((RoundEndType == Ryuukyoku)||(RoundEndType == Agari)||(RoundEndType == Chonbo)) {
+									if (gameStat->TsumoAgariFlag) {
+										haifuP.streamDat[player].final << " ツモ";
+										HThaifuP.streamDat[player].final << "</span> ツモ<span class=\"tile\">";
+									} else {
+										haifuP.streamDat[player].final << " ロン";
+										HThaifuP.streamDat[player].final << "</span> ロン<span class=\"tile\">";
+									}
+								}
+								else haifuP.streamDat[player].final << " ";
+							}
+							recordTile_Inline(
+								&haifuP.streamDat[player].final, &HThaifuP.streamDat[player].final,
+								gameStat->Player[player].Hand[i], false);
+						}
 					}
 				}
-				haifuP(tmpcnt*6+5) += strmid(tilecodelabel, (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt)+(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)*TILE_NONFLOWER_MAX))*2, 2)
-				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(tmpcnt*6+5) += "<span"+haifudoraClass(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt))+">"}
-				HThaifuP(tmpcnt*6+5) += strmid(HTtilecodelabel1, (getHand(GameStat, HAND_TILECODE, cnt, tmpcnt)+(getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)*TILE_NONFLOWER_MAX)), 1)
-				if (getHand(GameStat, HAND_REDTILE, cnt, tmpcnt)) {HThaifuP(tmpcnt*6+5) += "</span>"}
+				void hfFlower(const GameTable* const gameStat, PLAYER_ID player) {
+					if (gameStat->Player[player].FlowerFlag.Spring ||
+						gameStat->Player[player].FlowerFlag.Summer ||
+						gameStat->Player[player].FlowerFlag.Autumn ||
+						gameStat->Player[player].FlowerFlag.Winter) {
+							haifuP.streamDat[player].final << " ";
+							HThaifuP.streamDat[player].final << "</span> <span class=\"tile\">";
+							if (gameStat->Player[player].FlowerFlag.Spring) {
+								haifuP.streamDat[player].final << "春";
+								HThaifuP.streamDat[player].final << "@";
+							}
+							if (gameStat->Player[player].FlowerFlag.Summer) {
+								haifuP.streamDat[player].final << "夏";
+								HThaifuP.streamDat[player].final << ";";
+							}
+							if (gameStat->Player[player].FlowerFlag.Autumn) {
+								haifuP.streamDat[player].final << "秋";
+								HThaifuP.streamDat[player].final << ":";
+							}
+							if (gameStat->Player[player].FlowerFlag.Winter) {
+								haifuP.streamDat[player].final << "冬";
+								HThaifuP.streamDat[player].final << "]";
+							}
+					}
+					if (gameStat->Player[player].FlowerFlag.Plum ||
+						gameStat->Player[player].FlowerFlag.Orchid ||
+						gameStat->Player[player].FlowerFlag.Chrys ||
+						gameStat->Player[player].FlowerFlag.Bamboo) {
+							haifuP.streamDat[player].final << " ";
+							HThaifuP.streamDat[player].final << "</span> <span class=\"tile\">";
+							if (gameStat->Player[player].FlowerFlag.Plum) {
+								haifuP.streamDat[player].final << "梅";
+								HThaifuP.streamDat[player].final << "-";
+							}
+							if (gameStat->Player[player].FlowerFlag.Orchid) {
+								haifuP.streamDat[player].final << "蘭";
+								HThaifuP.streamDat[player].final << "^";
+							}
+							if (gameStat->Player[player].FlowerFlag.Chrys) {
+								haifuP.streamDat[player].final << "菊";
+								HThaifuP.streamDat[player].final << "[";
+							}
+							if (gameStat->Player[player].FlowerFlag.Bamboo) {
+								haifuP.streamDat[player].final << "竹";
+								HThaifuP.streamDat[player].final << "\\";
+							}
+					}
+				}
+
+				namespace MeldWriter {
+					void hfChii(PLAYER_ID player, meldCode meld) {
+						// チー
+						haifuP.streamDat[player].final << " ＜チー";
+						HThaifuP.streamDat[player].final << "</span> チー<span class=\"tile\">";
+						TILE meldTile[3];
+						switch (meld.mstat) {
+						case meldSequenceExposedLower:
+							meldTile[0].tile = meld.tile; meldTile[0].red = meld.red[0];
+							meldTile[1].tile = tileCode(meld.tile + 1); meldTile[1].red = meld.red[1];
+							meldTile[2].tile = tileCode(meld.tile + 2); meldTile[2].red = meld.red[2];
+							break;
+						case meldSequenceExposedMiddle:
+							meldTile[1].tile = meld.tile; meldTile[1].red = meld.red[0];
+							meldTile[0].tile = tileCode(meld.tile + 1); meldTile[0].red = meld.red[1];
+							meldTile[2].tile = tileCode(meld.tile + 2); meldTile[2].red = meld.red[2];
+						case meldSequenceExposedUpper:
+							meldTile[1].tile = meld.tile; meldTile[1].red = meld.red[0];
+							meldTile[2].tile = tileCode(meld.tile + 1); meldTile[2].red = meld.red[1];
+							meldTile[0].tile = tileCode(meld.tile + 2); meldTile[0].red = meld.red[2];
+						}
+						for (int i = 0; i < 3; i++) {
+							recordTile_Inline(
+								&haifuP.streamDat[player].final,
+								&HThaifuP.streamDat[player].final,
+								meldTile[i], i == 0);
+						}
+					}
+					inline void hfPon1(PLAYER_ID player, meldCode meld) {
+						TILE meldTile = {meld.tile, meld.red[0]};
+						recordTile_Inline(
+							&haifuP.streamDat[player].final,
+							&HThaifuP.streamDat[player].final,
+							meldTile, 
+							((meld.mstat == meldQuadAddedLeft) ||
+							(meld.mstat == meldQuadAddedCenter) ||
+							(meld.mstat == meldQuadAddedRight)) ?
+							meld.red[3] : true);
+					}
+					void hfPon(PLAYER_ID player, meldCode meld) {
+						int tiles, interrupt;
+						switch (meld.mstat) {
+						case meldTripletExposedLeft: case meldQuadExposedLeft:
+							haifuP.streamDat[player].final << " ＜"; interrupt = 1; break;
+						case meldTripletExposedCenter: case meldQuadExposedCenter:
+							haifuP.streamDat[player].final << " ∧"; interrupt = 2; break;
+						case meldTripletExposedRight: case meldQuadExposedRight:
+							haifuP.streamDat[player].final << " ＞"; interrupt = 8; break;
+						case meldQuadConcealed:
+							haifuP.streamDat[player].final << " ◇"; interrupt = 8; break;
+						}
+						switch (meld.mstat) {
+						case meldTripletExposedLeft: case meldTripletExposedCenter:
+						case meldTripletExposedRight:
+							tiles = 3;
+							haifuP.streamDat[player].final << "ポン";
+							HThaifuP.streamDat[player].final << "</span> ポン<span class=\"tile\">";
+							break;
+						case meldQuadExposedLeft: case meldQuadExposedCenter:
+						case meldQuadExposedRight: case meldQuadConcealed:
+							tiles = 4;
+							haifuP.streamDat[player].final << "カン";
+							HThaifuP.streamDat[player].final << "</span> カン<span class=\"tile\">";
+							break;
+						case meldQuadAddedLeft: case meldQuadAddedCenter:
+						case meldQuadAddedRight:
+							tiles = 3;
+							haifuP.streamDat[player].final << "▽カン";
+							HThaifuP.streamDat[player].final << "</span> カン<span class=\"tile\">";
+							break;
+						}
+						for (int i = (meld.mstat == meldQuadConcealed ? 0 : 1); i < tiles; i++) {
+							if (i == interrupt) hfPon1(player, meld);
+							TILE meldTile = {meld.tile, meld.red[i]};
+							recordTile_Inline(
+								&haifuP.streamDat[player].final,
+								&HThaifuP.streamDat[player].final,
+								meldTile, false);
+						}
+						if (interrupt == 8) hfPon1(player, meld);
+					}
+				}
+
+				void hfExposedMeld(const GameTable* const gameStat, PLAYER_ID player) {
+					for (int i = 1; i <= gameStat->Player[player].MeldPointer; i++) {
+						switch (gameStat->Player[player].Meld[i].mstat) {
+						case meldSequenceExposedLower: case meldSequenceExposedMiddle:
+						case meldSequenceExposedUpper:
+							MeldWriter::hfChii(player, gameStat->Player[player].Meld[i]);
+							break;
+						case meldTripletExposedLeft: case meldQuadExposedLeft: case meldQuadAddedLeft:
+						case meldTripletExposedCenter: case meldQuadExposedCenter: case meldQuadAddedCenter:
+						case meldTripletExposedRight: case meldQuadExposedRight: case meldQuadAddedRight:
+						case meldQuadConcealed:
+							MeldWriter::hfPon(player, gameStat->Player[player].Meld[i]);
+							break;
+						}
+					}
+				}
+
+				void hfScoreWriteOut(const GameTable* const gameStat, PLAYER_ID player, seatAbsolute wind) {
+					// 点数の変動
+					std::ostringstream o;
+					o << origPoint[player].bignumtotext("", "△");
+					if (origPoint[player] != gameStat->Player[player].PlayerScore) // 点数が一致しないなら
+						o << " → " <<
+							gameStat->Player[player].PlayerScore.bignumtotext("", "△") << " (" <<
+							((LargeNum)gameStat->Player[player].PlayerScore -
+							origPoint[player]).bignumtotext("+", "-") <<
+							")";
+					if (getRule(RULE_CHIP) != 0) // チップありの時
+						o << " チップ: " <<
+							((gameStat->Player[player].playerChip >= 0) ? "+" : "") <<
+							(int)gameStat->Player[player].playerChip;
+
+					//chatappend "*** "+getPlayerName(GameEnv, tmpcnt)+"("+windName(cnt)+") "+haifutmpscore+"\n"
+					
+					// 出力
+					haifuBuffer << windName(wind) << " " <<
+						EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
+						o.str() << std::endl;
+					HThaifuBuffer << "<tr><td colspan=" << cols << " class=\"player\">" <<
+						windName(wind) << " " <<
+						EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
+						o.str() << "</td></tr>" << std::endl;
+				}
+
+				void hfWriteOut(const GameTable* const gameStat, PLAYER_ID player) {
+					haifuBuffer << "配牌：" << haifuP.streamDat[player].haipai.str() <<
+						std::endl << std::endl;
+					HThaifuBuffer << "<tr><td class=\"label\">配牌</td><td colspan=" << (cols - 1) <<
+						"><span class=\"tile\">" << HThaifuP.streamDat[player].haipai.str() <<
+						"</span></td></tr>" << std::endl << std::endl;
+					if (!gameStat->TianHuFlag) { // 天和(または親の十三不塔や九種九牌)の場合は省略
+						haifuBuffer <<
+							"自摸：" << haifuP.streamDat[player].tsumo.str() << std::endl <<
+							"　　　" << haifuP.streamDat[player].tsumolabel.str() << std::endl <<
+							"打牌：" << haifuP.streamDat[player].sutehai.str() << std::endl <<
+							"　　　" << haifuP.streamDat[player].sutehailabel.str() << std::endl <<
+							"牌姿：" << haifuP.streamDat[player].final.str() << std::endl <<
+							std::endl;
+						HThaifuBuffer <<
+							"<tr class=\"tile\"><td class=\"label\" rowspan=2>自摸</td>" <<
+							HThaifuP.streamDat[player].tsumo.str() << "</tr>" << std::endl <<
+							"<tr class=\"notice\">" <<
+							HThaifuP.streamDat[player].tsumolabel.str() << "</tr>" << std::endl <<
+							"<tr class=\"tile\"><td class=\"label\" rowspan=2>打牌</td>" <<
+							HThaifuP.streamDat[player].sutehai.str() << "</tr>" << std::endl <<
+							"<tr class=\"notice\">" <<
+							HThaifuP.streamDat[player].sutehailabel.str() << "</tr>" << std::endl <<
+							"<tr><td class=\"label\">牌姿</td><td colspan=" << (cols - 1) <<
+							" class=\"hand\"><span class=\"tile\">" <<
+							HThaifuP.streamDat[player].final.str() << "</span></td></tr>" << std::endl <<
+							std::endl;
+					}
+				}
 			}
-		loop
-		if (getFlowerFlag(GameStat, tmpcnt)&FLOWER_ALL_SEASONS) {haifuP(tmpcnt*6+5) += " ": HThaifuP(tmpcnt*6+5) += "</span> <span class=\"tile\">"}
-		if (getFlowerFlag(GameStat, tmpcnt)&FLOWER_SPRING) {haifuP(tmpcnt*6+5) += "春": HThaifuP(tmpcnt*6+5) += "@"}
-		if (getFlowerFlag(GameStat, tmpcnt)&FLOWER_SUMMER) {haifuP(tmpcnt*6+5) += "夏": HThaifuP(tmpcnt*6+5) += ";"}
-		if (getFlowerFlag(GameStat, tmpcnt)&FLOWER_AUTUMN) {haifuP(tmpcnt*6+5) += "秋": HThaifuP(tmpcnt*6+5) += ":"}
-		if (getFlowerFlag(GameStat, tmpcnt)&FLOWER_WINTER) {haifuP(tmpcnt*6+5) += "冬": HThaifuP(tmpcnt*6+5) += "]"}
-		if (getFlowerFlag(GameStat, tmpcnt)&FLOWER_ALL_FLOWERS) {haifuP(tmpcnt*6+5) += " ": HThaifuP(tmpcnt*6+5) += "</span> <span class=\"tile\">"}
-		if (getFlowerFlag(GameStat, tmpcnt)&FLOWER_PLUM) {haifuP(tmpcnt*6+5) += "梅": HThaifuP(tmpcnt*6+5) += "-"}
-		if (getFlowerFlag(GameStat, tmpcnt)&FLOWER_ORCHID) {haifuP(tmpcnt*6+5) += "蘭": HThaifuP(tmpcnt*6+5) += "^"}
-		if (getFlowerFlag(GameStat, tmpcnt)&FLOWER_CHRYSANTHEMUM) {haifuP(tmpcnt*6+5) += "菊": HThaifuP(tmpcnt*6+5) += "["}
-		if (getFlowerFlag(GameStat, tmpcnt)&FLOWER_BAMBOO) {haifuP(tmpcnt*6+5) += "竹": HThaifuP(tmpcnt*6+5) += "\\"}
-		repeat MeldPointer(GameStat, tmpcnt), 1
-			tmpAkaDoraFlag1 = (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x01)/0x01
-			tmpAkaDoraFlag2 = (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x02)/0x02
-			tmpAkaDoraFlag3 = (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x04)/0x04
-			tmpAkaDoraFlag4 = (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x08)/0x08
-			tmpAkaDoraFlag1 += (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x10)/0x10*2
-			tmpAkaDoraFlag2 += (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x20)/0x20*2
-			tmpAkaDoraFlag3 += (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x40)/0x40*2
-			tmpAkaDoraFlag4 += (getMeld(GameStat, MELD_REDTILE, cnt, tmpcnt)&0x80)/0x80*2
-			#define HT_NakiMianzi(%1,%2,%3)  if (%2) {HThaifuP(tmpcnt*6+5) += "<span"+haifudoraClass(%2)+">"}: HThaifuP(tmpcnt*6+5) += strmid((%3), (%1)+((%2)*TILE_NONFLOWER_MAX), 1): if (%2) {HThaifuP(tmpcnt*6+5) += "</span>"}
-			switch (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)/MELD_TYPE_STEP)
-				/* 明順子 */
-				case MELD_SEQUENCE_EXPOSED_LOWER:
-					haifuP(tmpcnt*6+5) += " ＜チー"
-					haifuP(tmpcnt*6+5) += "["+strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)+"]"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM+1)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM+2)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)
-					HThaifuP(tmpcnt*6+5) += "</span> チー<span class=\"tile\">"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel2
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM+1), tmpAkaDoraFlag2, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM+2), tmpAkaDoraFlag3, HTtilecodelabel1
-					swbreak
-				case MELD_SEQUENCE_EXPOSED_MIDDLE:
-					haifuP(tmpcnt*6+5) += " ＜チー"
-					haifuP(tmpcnt*6+5) += "["+strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM+1)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)+"]"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM+2)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)
-					HThaifuP(tmpcnt*6+5) += "</span> チー<span class=\"tile\">"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM+1), tmpAkaDoraFlag2, HTtilecodelabel2
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM+2), tmpAkaDoraFlag3, HTtilecodelabel1
-					swbreak
-				case MELD_SEQUENCE_EXPOSED_UPPER:
-					haifuP(tmpcnt*6+5) += " ＜チー"
-					haifuP(tmpcnt*6+5) += "["+strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM+2)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)+"]"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM+1)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)
-					HThaifuP(tmpcnt*6+5) += "</span> チー<span class=\"tile\">"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM+2), tmpAkaDoraFlag3, HTtilecodelabel2
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM+1), tmpAkaDoraFlag2, HTtilecodelabel1
-					swbreak
-				/* 明刻子 */
-				case MELD_TRIPLET_EXPOSED_LEFT:
-					haifuP(tmpcnt*6+5) += " ＜ポン"
-					haifuP(tmpcnt*6+5) += "["+strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)+"]"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)
-					HThaifuP(tmpcnt*6+5) += "</span> ポン<span class=\"tile\">"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel2
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag2, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag3, HTtilecodelabel1
-					swbreak
-				case MELD_TRIPLET_EXPOSED_CENTER:
-					haifuP(tmpcnt*6+5) += " ∧ポン"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += "["+strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)+"]"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)
-					HThaifuP(tmpcnt*6+5) += "</span> ポン<span class=\"tile\">"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag2, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel2
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag3, HTtilecodelabel1
-					swbreak
-				case MELD_TRIPLET_EXPOSED_RIGHT:
-					haifuP(tmpcnt*6+5) += " ＞ポン"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += "["+strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)+"]"
-					HThaifuP(tmpcnt*6+5) += "</span> ポン<span class=\"tile\">"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag2, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag3, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel2
-					swbreak
-				/* 暗槓子 */
-				case MELD_QUAD_CONCEALED:
-					haifuP(tmpcnt*6+5) += " ◇カン"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag4*TILE_NONFLOWER_MAX))*2, 2)
-					HThaifuP(tmpcnt*6+5) += "</span> カン<span class=\"tile\">"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag2, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag3, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag4, HTtilecodelabel1
-					swbreak
-				/* 大明槓 */
-				case MELD_QUAD_EXPOSED_LEFT:
-					haifuP(tmpcnt*6+5) += " ＜カン"
-					haifuP(tmpcnt*6+5) += "["+strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)+"]"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag4*TILE_NONFLOWER_MAX))*2, 2)
-					HThaifuP(tmpcnt*6+5) += "</span> カン<span class=\"tile\">"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel2
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag2, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag3, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag4, HTtilecodelabel1
-					swbreak
-				case MELD_QUAD_EXPOSED_CENTER:
-					haifuP(tmpcnt*6+5) += " ∧カン"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += "["+strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)+"]"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag4*TILE_NONFLOWER_MAX))*2, 2)
-					HThaifuP(tmpcnt*6+5) += "</span> カン<span class=\"tile\">"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag2, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel2
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag3, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag4, HTtilecodelabel1
-					swbreak
-				case MELD_QUAD_EXPOSED_RIGHT:
-					haifuP(tmpcnt*6+5) += " ＞カン"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag4*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += "["+strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)+"]"
-					HThaifuP(tmpcnt*6+5) += "</span> カン<span class=\"tile\">"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag2, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag3, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag4, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel2
-					swbreak
-				/* 加槓 */
-				case MELD_QUAD_ADDED_LEFT:
-					haifuP(tmpcnt*6+5) += " ＜▽カン"
-					haifuP(tmpcnt*6+5) += "["+strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag4*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)+"]"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)
-					HThaifuP(tmpcnt*6+5) += "</span> カン<span class=\"tile\">"
-					HThaifuP(tmpcnt*6+5) += "<table class=\"kakan\"><tr><td>"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag4, HTtilecodelabel2
-					HThaifuP(tmpcnt*6+5) += "<br>"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel2
-					HThaifuP(tmpcnt*6+5) += "</tr></td></table>"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag2, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag3, HTtilecodelabel1
-					swbreak
-				case MELD_QUAD_ADDED_CENTER:
-					haifuP(tmpcnt*6+5) += " ∧▽カン"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += "["+strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag4*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)+"]"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)
-					HThaifuP(tmpcnt*6+5) += "</span> カン<span class=\"tile\">"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag2, HTtilecodelabel1
-					HThaifuP(tmpcnt*6+5) += "<table class=\"kakan\"><tr><td>"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag4, HTtilecodelabel2
-					HThaifuP(tmpcnt*6+5) += "<br>"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel2
-					HThaifuP(tmpcnt*6+5) += "</tr></td></table>"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag3, HTtilecodelabel1
-					swbreak
-				case MELD_QUAD_ADDED_RIGHT:
-					haifuP(tmpcnt*6+5) += " ＞▽カン"
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag2*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag3*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += "["+strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag4*TILE_NONFLOWER_MAX))*2, 2)
-					haifuP(tmpcnt*6+5) += strmid(tilecodelabel, ((getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM)+(tmpAkaDoraFlag1*TILE_NONFLOWER_MAX))*2, 2)+"]"
-					HThaifuP(tmpcnt*6+5) += "</span> カン<span class=\"tile\">"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag2, HTtilecodelabel1
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag3, HTtilecodelabel1
-					HThaifuP(tmpcnt*6+5) += "<table class=\"kakan\"><tr><td>"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag4, HTtilecodelabel2
-					HThaifuP(tmpcnt*6+5) += "<br>"
-					HT_NakiMianzi (getMeld(GameStat, MELD_TILECODE, cnt, tmpcnt)\TILE_CODE_MAXIMUM), tmpAkaDoraFlag1, HTtilecodelabel2
-					HThaifuP(tmpcnt*6+5) += "</tr></td></table>"
-					swbreak
-			swend
-		loop
-		// 点棒状況
-		haifutmpscore = ""
-			tmpscoretxt = bignumtotext(origPoint, tmpcnt, 100, "", "△")
-			haifutmpscore += tmpscoretxt
-			
-		if (origPoint(tmpcnt) != getScore(GameStat,tmpcnt)) {
-			haifutmpscore += " → "
-			exportScore GameStat, scoreArray
-			tmpscoretxt = bignumtotext(scoreArray, tmpcnt, 100, "", "△")
-			if (tmpscoretxt == "") {tmpscoretxt += "0"}
-			haifutmpscore += tmpscoretxt
 
-			dim diffPoint, NUM_OF_DIGIT_GROUPS
-			repeat NUM_OF_DIGIT_GROUPS
-				diffPoint(cnt) = getScore(GameStat,tmpcnt, cnt)-origPoint(tmpcnt, cnt)
-			loop
-			diffflagfix diffPoint
-
-			tmpscoretxt = bignumtotext(diffPoint, 0, 100, "+", "-")
-
-			haifutmpscore += " ("+(tmpscoretxt)+")"
-		}
-		if (getRule(RULE_CHIP) != 0) {
-			if (getChip(GameStat, tmpcnt) >= 0) {haifutmpscore += " チップ: +"+getChip(GameStat, tmpcnt)}
-			else {haifutmpscore += " チップ: "+getChip(GameStat, tmpcnt)}
-		}
-		chatappend "*** "+getPlayerName(GameEnv, tmpcnt)+"("+windName(cnt)+") "+haifutmpscore+"\n"
-
-		noteadd windName(cnt)+" "+getPlayerName(GameEnv, tmpcnt)+" "+haifutmpscore
-		notesel HThaifuBuffer
-		noteadd "<tr><td colspan="+COLUMNS+" class=\"player\">"+windName(cnt)+" "+getPlayerName(GameEnv, tmpcnt)+" "+haifutmpscore+"</td></tr>"
-		noteunsel
-#ifdef SANMA4
-		if (cnt < 3) {
-#endif
-			noteadd "配牌："+haifuP(tmpcnt*6)
-			notesel HThaifuBuffer
-			noteadd "<tr><td class=\"label\">配牌</td><td colspan="+(COLUMNS-1)+"><span class=\"tile\">"+HThaifuP(tmpcnt*6)+"</span></td></tr>"
-			noteunsel
-#ifdef SANMA4
-		}
-#endif
-		noteadd ""
-#ifdef SANMA4
-		if (cnt < 3) {
-#endif
-			if (getHeavenHandFlag(GameStat) == 0) {
-				// 天和(または親の十三不塔や九種九牌)の場合は省略
-				noteadd "自摸："+haifuP(tmpcnt*6+1)
-				noteadd "　　　"+haifuP(tmpcnt*6+2)
-				noteadd "打牌："+haifuP(tmpcnt*6+3)
-				noteadd "　　　"+haifuP(tmpcnt*6+4)
-				noteadd "牌姿："+haifuP(tmpcnt*6+5)
-				noteadd ""
-				notesel HThaifuBuffer
-				noteadd "<tr class=\"tile\"><td class=\"label\" rowspan=2>自摸</td>"+HThaifuP(tmpcnt*6+1)+"</tr>"
-				noteadd "<tr class=\"notice\">"+HThaifuP(tmpcnt*6+2)+"</tr>"
-				noteadd "<tr class=\"tile\"><td class=\"label\" rowspan=2>打牌</td>"+HThaifuP(tmpcnt*6+3)+"</tr>"
-				noteadd "<tr class=\"notice\">"+HThaifuP(tmpcnt*6+4)+"</tr>"
-				noteadd "<tr><td class=\"label\">牌姿</td><td colspan="+(COLUMNS-1)+" class=\"hand\"><span class=\"tile\">"+HThaifuP(tmpcnt*6+5)+"</span></td></tr>"
-				noteunsel
+			void hfWriteFinalForms(const GameTable* const gameStat, int OrigTurn, EndType RoundEndType) {
+				for (int i = 0; i < ACTUAL_PLAYERS; i++) {
+					PLAYER_ID k = RelativePositionOf(i, OrigTurn % PLAYERS);
+					if (chkGameType(gameStat, SanmaT))
+						if (((OrigTurn % PLAYERS) + i) >= ACTUAL_PLAYERS)
+							k = (k + 1) % PLAYERS;
+					// 副露面子を出力する
+					finalformWriter::hfFinalForm(gameStat, k, RoundEndType);
+					finalformWriter::hfFlower(gameStat, k);
+					// 点棒状況を書き出す
+					finalformWriter::hfScoreWriteOut(gameStat, k, (seatAbsolute)i);
+					// 色々書き出し
+					if ((!chkGameType(gameStat, Sanma4))||(i < 3))
+						finalformWriter::hfWriteOut(gameStat, k);
+					else haifuBuffer << std::endl;
+				}
 			}
-#ifdef SANMA4
+
+			void hfWriteBottom() {
+				haifuBuffer <<
+					"------------------------------------------------------------------------------" <<
+					std::endl << std::endl;
+				HThaifuBuffer << "</table>" << std::endl << "<hr>" << std::endl;
+			}
+
 		}
-#endif
-	loop
-	noteadd "------------------------------------------------------------------------------"
-	noteadd ""
-	noteunsel
-	notesel HThaifuBuffer
-	noteadd "</table>"
-	noteadd "<hr>"
-	noteunsel
-return
+	}
+
+	/* 配牌をバッファに出力 */
+	__declspec(dllexport) void haifuwritebuffer(
+		const GameTable* const gameStat, void *,
+		int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
+		const char* ResultDesc, EndType RoundEndType
+		) { /* 配牌をバッファに出力 */
+			tools::hfwriter::hfWriteHead(
+				gameStat, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag,
+				ResultDesc, RoundEndType);
+			tools::hfwriter::hfWriteFinalForms(
+				gameStat, OrigTurn, RoundEndType);
+			tools::hfwriter::hfWriteBottom();
+	}
+#if 0
 
 /* 配牌を保存 */
 #deffunc haifusave

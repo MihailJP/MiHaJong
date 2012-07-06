@@ -25,7 +25,7 @@ static_assert(std::is_pod<PlayerRankList>::value, "PlayerRankList is not POD");
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
-seatAbsolute inline playerwind(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID currentRound);
+seatAbsolute inline playerwind(const GameTable* const gameStat, PLAYER_ID player, int currentRound);
 __declspec(dllexport) inline int playerwind(int player, int currentRound);
 
 seatRelative inline playerRelative(PLAYER_ID targetPlayer, PLAYER_ID basePlayer);
