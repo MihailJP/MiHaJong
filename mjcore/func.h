@@ -6,6 +6,9 @@
 #include <memory>
 #include <cstring>
 #include <sstream>
+#include <Windows.h>
+#include <Shlwapi.h>
+#include <direct.h>
 #endif
 #include "mjexport.h"
 #include "gametbl.h"
@@ -56,17 +59,24 @@ __declspec(dllexport) int getPaoPlayer(const GameTable* const gameStat, int agar
 __declspec(dllexport) int RonPlayers(const GameTable* const gameStat);
 
 std::string inline windName(seatAbsolute wind);
-__declspec(dllexport) void windName(char* str, int wind);
+__declspec(dllexport) void windName(char* str, int bufsz, int wind);
 
 std::string inline roundName(int roundNum, const GameTable* const gameStat);
-__declspec(dllexport) void roundName(char* str, int roundNum);
+__declspec(dllexport) void roundName(char* str, int bufsz, int roundNum);
 
 std::string inline TileName(tileCode tile);
-__declspec(dllexport) void TileName(char* str, int tile);
+__declspec(dllexport) void TileName(char* str, int bufsz, int tile);
 
 __declspec(dllexport) inline int WindMax();
 tileCode inline Wind2Tile(uint8_t wind);
 __declspec(dllexport) int Wind2Tile(int wind);
+
+namespace confpath {
+	bool isVista();
+
+	std::string confPath();
+	__declspec(dllexport) void confPath(char* path, int bufsz);
+}
 
 #endif
 

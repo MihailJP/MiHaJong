@@ -130,8 +130,8 @@ std::string inline windName(seatAbsolute wind) {
 			return std::string("????"); break;
 	}
 }
-__declspec(dllexport) void windName(char* str, int wind) {
-	std::strcpy(str, windName((seatAbsolute)wind).c_str());
+__declspec(dllexport) void windName(char* str, int bufsz, int wind) {
+	strcpy_s(str, bufsz, windName((seatAbsolute)wind).c_str());
 }
 
 /* 「東○局」などの文字列を返す */
@@ -176,8 +176,8 @@ std::string inline roundName(int roundNum, const GameTable* const gameStat) {
 	}
 	return std::string(roundNameTxt.str());
 }
-__declspec(dllexport) void roundName(char* str, int roundNum) {
-	std::strcpy(str, roundName(roundNum, &GameStat).c_str());
+__declspec(dllexport) void roundName(char* str, int bufsz, int roundNum) {
+	strcpy_s(str, bufsz, roundName(roundNum, &GameStat).c_str());
 }
 
 /* 牌の名前の文字列を返す */
@@ -222,8 +222,8 @@ std::string inline TileName(tileCode tile) {
 			return std::string("????");
 	}
 }
-__declspec(dllexport) void TileName(char* str, int tile) {
-	std::strcpy(str, TileName((tileCode)tile).c_str());
+__declspec(dllexport) void TileName(char* str, int bufsz, int tile) {
+	strcpy_s(str, bufsz, TileName((tileCode)tile).c_str());
 }
 
 /* 場風牌のリスト */
@@ -244,4 +244,49 @@ tileCode inline Wind2Tile(uint8_t wind) {
 }
 __declspec(dllexport) int Wind2Tile(int wind) {
 	return Wind2Tile((uint8_t)wind);
+}
+
+namespace confpath {
+	using std::string;
+
+	/* Vista/7を使っているかどうか */
+	bool isVista() {
+		OSVERSIONINFO versionInfo;
+		versionInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+		if (GetVersionEx(&versionInfo) == 0) return false;
+		return ((versionInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)&&(versionInfo.dwMajorVersion >= 6));
+	}
+
+	/* コンフィグのパスを自動設定 */
+	/* Vista以降でRoamingに準備できていなければ作る */
+	string confPath() {
+		string configpath = "";
+		if (isVista()) {
+			char* cur = new char[1024];
+			GetCurrentDirectory(1024, cur);
+			char* progfiles = new char[1024];
+			char* appdata = new char[1024];
+			size_t* sz = new size_t;
+			getenv_s(sz, progfiles, 1024, "ProgramFiles");
+			getenv_s(sz, appdata, 1024, "APPDATA");
+
+			if (strstr(cur, progfiles) == cur) {
+				if (PathIsDirectory(((string)appdata + (string)"\\MiHaJong").c_str()) == FALSE)
+					_mkdir(((string)appdata + (string)"\\MiHaJong").c_str());
+				if (PathIsDirectory(((string)appdata + (string)"\\MiHaJong\\haifu").c_str()) == FALSE)
+					_mkdir(((string)appdata + (string)"\\MiHaJong\\haifu").c_str());
+				CopyFile(".\\haifu\\haifu.css",
+					((string)appdata + (string)"\\MiHaJong\\haifu\\haifu.css").c_str(),
+					TRUE);
+				configpath = (string)appdata + (string)"\\MiHaJong\\";
+			}
+			
+			delete[] cur; delete[] appdata; delete[] progfiles; delete sz;
+		}
+		return configpath;
+	}
+	__declspec(dllexport) void confPath(char* path, int bufsz) {
+		strcpy_s(path, bufsz, confPath().c_str());
+	}
+
 }

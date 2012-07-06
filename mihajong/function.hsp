@@ -60,19 +60,18 @@ return
 #global
 
 #module
-#include "const.hsp"
 #include "mjcore.hsp"
 
 /* 「東家」「南家」「西家」「北家」の文字列を返す */
 #defcfunc windName int wind
-	sdim tmpstr, 8: _windName tmpstr, wind: return tmpstr
+	sdim tmpstr, 8: _windName tmpstr, 8, wind: return tmpstr
 
 /* 「東○局」などの文字列を返す */
 #defcfunc roundName int roundNum
-	sdim tmpstr, 16: _roundName tmpstr, roundNum: return tmpstr
+	sdim tmpstr, 16: _roundName tmpstr, 16, roundNum: return tmpstr
 
 #defcfunc TileName int tile
-	sdim tmpstr, 16: _TileName tmpstr, tile: return tmpstr
+	sdim tmpstr, 16: _TileName tmpstr, 16, tile: return tmpstr
 #global
 
 /* エラーダイアログ */
@@ -84,43 +83,12 @@ return
 	return
 #global
 
-/* Vista/7を使っているかどうか */
 #module
-#defcfunc isVista
-	wver = sysinfo(0)
-	/* sysinfo(0)で帰ってくる情報
-		XP    … ver5.2
-		Vista … ver6.0
-		7     … ver6.1
-	*/
-	if (instr(wver, 0, "WindowsNT ver6") >= 0) {
-		return 1
-	}
-	return 0
-#global
-
+#include "mjcore.hsp"
 /* コンフィグのパスを自動設定 */
 /* Vista以降でRoamingに準備できていなければ作る */
-#module
 #defcfunc confPath
-	configpath = ""
-	if (isVista()) {
-		currentPath = dir_cur
-		if (instr(currentPath, 0, dirinfo(0x10026)) >= 0) {
-			appdataPath = dirinfo(0x1001a)
-			chdir appdataPath
-			dirlist dir_roaming,"*",5
-			if (notesearch(dir_roaming, "MiHaJong") == -1) {
-				mkdir "MiHaJong"
-				chdir "MiHaJong"
-				mkdir "haifu"
-				bcopy currentPath+"\\haifu\\haifu.css", appdataPath+"\\MiHaJong\\haifu\\haifu.css"
-			}
-			configpath = appdataPath+"\\MiHaJong\\"
-			chdir currentPath
-		}
-	}
-	return configpath
+	sdim configpath, 1024: _confPath configpath, 1024: return configpath
 #global
 
 /* エラーがあったときに安全に終了させるための処理 */
