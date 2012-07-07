@@ -312,6 +312,11 @@ namespace haifu { // 牌譜記録用のコード
 				gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NUM_OF_TILES_IN_HAND - 1],
 				"　 ", "");
 		}
+		// 捨てた牌を記録
+		tools::recordTile_Table(
+			&haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehai,
+			&HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehai,
+			gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex % 20]);
 	}
 
 	/* 放銃したか否かを牌譜に記録 */
@@ -511,13 +516,13 @@ namespace haifu { // 牌譜記録用のコード
 
 					HThaifuBuffer << "<h2>" << ::roundName(OrigTurn, gameStat);
 					if (OrigHonba > 0) HThaifuBuffer << " " << OrigHonba <<"本場";
-					haifuBuffer << " ドラ：<span class=\"tile\">" <<
+					HThaifuBuffer << " ドラ：<span class=\"tile\">" <<
 						HThaifuP.dora.str() << "</span>";
 					if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1))
-						haifuBuffer << "裏ドラ：<span class=\"tile\">" <<
+						HThaifuBuffer << "裏ドラ：<span class=\"tile\">" <<
 						haifuP.uraDora.str() << "</span>";
 					if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != 0))
-						haifuBuffer << "アリス：<span class=\"tile\">" <<
+						HThaifuBuffer << "アリス：<span class=\"tile\">" <<
 						haifuP.aliceDoraMax.str() << "</span>";
 					HThaifuBuffer << "</h2>" << std::endl <<
 						"<p>結果：" << ResultDesc << "</p>" << std::endl <<
@@ -703,7 +708,7 @@ namespace haifu { // 牌譜記録用のコード
 				void hfScoreWriteOut(const GameTable* const gameStat, PLAYER_ID player, seatAbsolute wind) {
 					// 点数の変動
 					std::ostringstream o;
-					o << origPoint[player].bignumtotext("", "△");
+					o << " " << origPoint[player].bignumtotext("", "△");
 					if (origPoint[player] != gameStat->Player[player].PlayerScore) // 点数が一致しないなら
 						o << " → " <<
 							gameStat->Player[player].PlayerScore.bignumtotext("", "△") << " (" <<
@@ -767,6 +772,7 @@ namespace haifu { // 牌譜記録用のコード
 					// 副露面子を出力する
 					finalformWriter::hfFinalForm(gameStat, k, RoundEndType);
 					finalformWriter::hfFlower(gameStat, k);
+					finalformWriter::hfExposedMeld(gameStat, k);
 					// 点棒状況を書き出す
 					finalformWriter::hfScoreWriteOut(gameStat, k, (seatAbsolute)i);
 					// 色々書き出し
@@ -799,41 +805,39 @@ namespace haifu { // 牌譜記録用のコード
 				gameStat, OrigTurn, RoundEndType);
 			tools::hfwriter::hfWriteBottom();
 	}
-#if 0
 
-/* 配牌を保存 */
-#deffunc haifusave
-	configPath = confPath()
-	if (configPath != "") {configPath += "\\"}
-	notesel HThaifuBuffer
-	noteadd "</body>"
-	noteadd "</html>"
-	noteunsel
-	notesel haifuBuffer
-#ifdef SANMAS
-	tmpfilename1 = configPath+"haifu\\mihassnm_"+VERSION_MAJ+"_"+VERSION_MED+"_"+VERSION_MIN+""+VERSION_MIC
-#else
-	#ifdef SANMA4
-		tmpfilename1 = configPath+"haifu\\mihaysnm_"+VERSION_MAJ+"_"+VERSION_MED+"_"+VERSION_MIN+""+VERSION_MIC
-	#else
-		#ifdef SANMA
-			tmpfilename1 = configPath+"haifu\\mihasanm_"+VERSION_MAJ+"_"+VERSION_MED+"_"+VERSION_MIN+""+VERSION_MIC
-		#else
-			tmpfilename1 = configPath+"haifu\\mihajong_"+VERSION_MAJ+"_"+VERSION_MED+"_"+VERSION_MIN+""+VERSION_MIC
-		#endif
-	#endif
-#endif
-	tmpfilename2 = strf("%04d%02d%02d_%02d%02d", gettime(0), gettime(1), gettime(3), gettime(4), gettime(5))
-	notesave tmpfilename1+"_haifu_"+tmpfilename2+".txt"
-	noteunsel
-	notesel ChatLog
-	notesave tmpfilename1+"_chatlog_"+tmpfilename2+".txt"
-	noteunsel
-	notesel HThaifuBuffer
-	notesave tmpfilename1+"_haifu_"+tmpfilename2+".htm"
-	noteunsel
-return
+	/* 牌譜を保存 */
+	void haifusave(const GameTable* const gameStat) {
+		std::string configPath = confpath::confPath();
+		HThaifuBuffer << "</body>" << std::endl << "</html>" << std::endl; // Finalize HTML
+		std::ostringstream filename1, filename2;
+		filename1 << configPath << "haifu\\";
+		switch (gameStat->gameType) {
+			case Yonma: filename1 << "mihajong"; break;
+			case Sanma: filename1 << "mihasanm"; break;
+			case Sanma4: filename1 << "mihaysnm"; break;
+			case SanmaS: filename1 << "mihassnm"; break;
+		}
+		filename1 << "_" << "DEVEL";
 
-#global
-#endif
+		SYSTEMTIME ltime; GetLocalTime(&ltime);
+		filename2 << std::setw(4) << std::setfill('0') << ltime.wYear;
+		filename2 << std::setw(2) << std::setfill('0') << ltime.wMonth;
+		filename2 << std::setw(2) << std::setfill('0') << ltime.wDay << "_";
+		filename2 << std::setw(2) << std::setfill('0') << ltime.wHour;
+		filename2 << std::setw(2) << std::setfill('0') << ltime.wMinute;
+
+		std::ofstream fileout;
+		fileout.open((filename1.str() + std::string("_haifu_") +
+			filename2.str() + std::string(".txt")).c_str());
+		fileout << haifuBuffer.str(); fileout.close();
+		/* チャットログは未実装です */
+		fileout.open((filename1.str() + std::string("_haifu_") +
+			filename2.str() + std::string(".htm")).c_str());
+		fileout << HThaifuBuffer.str(); fileout.close();
+	}
+	__declspec(dllexport) void haifusave() {
+		haifusave(&GameStat);
+	}
+
 }

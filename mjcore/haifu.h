@@ -2,7 +2,10 @@
 #define HAIFU_H
 
 #include <sstream>
+#include <fstream>
+#include <iomanip>
 #include <string>
+#include <Windows.h>
 #include "gametbl.h"
 #include "largenum.h"
 #include "func.h"
@@ -71,6 +74,9 @@ namespace haifu {
 		const GameTable* const gameStat, void *,
 		int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
 		const char* ResultDesc, int RoundEndType);
+
+	void haifusave(const GameTable* const gameStat);
+	__declspec(dllexport) void haifusave();
 }
 
 #endif

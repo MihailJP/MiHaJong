@@ -60,6 +60,5 @@
 #include "comp_act.hsp"
 #include "ply_act.hsp"
 #include "network.hsp"
-#include "haifu.hsp"
 #include "agari.hsp"
 #include "agariscr.hsp"
