@@ -640,20 +640,15 @@ extern "C" {
 		if (chkGameType(gameStat, AllSanma)) {
 			if ((getRule(RULE_WAREME) != 0)||(getRule(RULE_KAIMENKAZE) != 0)) {
 				gameStat->WaremePlayer = ((gameStat->GameRound-(gameStat->GameRound/4))+24
-					+(gameStat->Dice1+gameStat->Dice2)-1) % 3;
+					+diceSum(gameStat)-1) % 3;
 				if (chkGameType(gameStat, Sanma4)) {
-					gameStat->WaremePlayer = ((0)+24+(gameStat->Dice1+gameStat->Dice2)-1) % 3;
-					PLAYER_ID tobePlayed[] = {
-						(gameStat->GameRound % PLAYERS),
-						((gameStat->GameRound + 1) % PLAYERS),
-						((gameStat->GameRound + 2) % PLAYERS)
-					};
-					gameStat->WaremePlayer = tobePlayed[gameStat->WaremePlayer];
+					gameStat->WaremePlayer =
+						tobePlayed(gameStat, (24+diceSum(gameStat)-1) % 3);
 				}
 			}
 		} else {
 			if ((getRule(RULE_WAREME) != 0)||(getRule(RULE_KAIMENKAZE) != 0)) {
-				gameStat->WaremePlayer = ((gameStat->GameRound % 4)+32+(gameStat->Dice1+gameStat->Dice2)-1) % 4;
+				gameStat->WaremePlayer = ((gameStat->GameRound % 4)+32+diceSum(gameStat)-1) % 4;
 			}
 		}
 		return;
@@ -709,20 +704,20 @@ extern "C" {
 	__declspec(dllexport) void setDice(GameTable* const gameStat, int ID, int Direction, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (ID+Direction*2) {
-			case 0: gameStat->Dice1 = value; break;
-			case 1: gameStat->Dice2 = value; break;
-			case 2: gameStat->Dice1Direction = value; break;
-			case 3: gameStat->Dice2Direction = value; break;
+			case 0: gameStat->Dice[0].Number = value; break;
+			case 1: gameStat->Dice[1].Number = value; break;
+			case 2: gameStat->Dice[0].Direction = value; break;
+			case 3: gameStat->Dice[1].Direction = value; break;
 		}
 		return;
 	}
 	__declspec(dllexport) int getDice(const GameTable* const gameStat, int ID, int Direction) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (ID+Direction*2) {
-			case 0: return gameStat->Dice1; break;
-			case 1: return gameStat->Dice2; break;
-			case 2: return gameStat->Dice1Direction ? 1 : 0; break;
-			case 3: return gameStat->Dice2Direction ? 1 : 0; break;
+			case 0: return gameStat->Dice[0].Number; break;
+			case 1: return gameStat->Dice[1].Number; break;
+			case 2: return gameStat->Dice[0].Direction ? 1 : 0; break;
+			case 3: return gameStat->Dice[1].Direction ? 1 : 0; break;
 			default:
 				Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "正しくない値が指定されました");
 				return 0;
@@ -1057,8 +1052,8 @@ extern "C" {
 		gameStat->WaremePlayer = // 割れ目の位置(-1で割れ目なし)
 			gameStat->DoukasenPlayer = -1; // 導火線の位置(-1で導火線なし)
 		gameStat->DoraPointer = 999;
-		gameStat->Dice1 = gameStat->Dice2 = 0;
-		gameStat->Dice1Direction = gameStat->Dice2Direction = false;
+		gameStat->Dice[0].Number = gameStat->Dice[1].Number = 0;
+		gameStat->Dice[0].Direction = gameStat->Dice[1].Direction = false;
 		gameStat->TilePointer = 0;
 
 		if (chkGameType(gameStat, AllSanma)) {
@@ -1319,10 +1314,10 @@ extern "C" {
 			sandbox->PaoFlag[i].paoPlayer = gameStat->PaoFlag[i].paoPlayer;
 			sandbox->PaoFlag[i].agariPlayer = gameStat->PaoFlag[i].agariPlayer;
 		}
-		sandbox->Dice1 = gameStat->Dice1;
-		sandbox->Dice2 = gameStat->Dice2;
-		sandbox->Dice1Direction = gameStat->Dice1Direction;
-		sandbox->Dice2Direction = gameStat->Dice2Direction;
+		sandbox->Dice[0].Number = gameStat->Dice[0].Number;
+		sandbox->Dice[1].Number = gameStat->Dice[1].Number;
+		sandbox->Dice[0].Direction = gameStat->Dice[0].Direction;
+		sandbox->Dice[1].Direction = gameStat->Dice[1].Direction;
 		for (int i = 0; i < 6; i++) {
 			if (chkGameType(gameStat, AllSanma)) {
 				if (gameStat->DoraPointer <= (102 - gameStat->ExtraRinshan - i * 2))

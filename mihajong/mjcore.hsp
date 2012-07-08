@@ -55,7 +55,11 @@
 #func _chkfuriten "?chkFuriten@@YAXQAH0000QBUGameTable@@H@Z" var, var, var, var, var, int, int
 #define chkfuriten(%1,%2,%3,%4,%5,%6,%7) dim %2, TILE_NONFLOWER_MAX: dim %3, TILE_NONFLOWER_MAX: _chkfuriten %1, %2, %3, %4, %5, %6, %7
 #func chkopenmachi "?chkOpenMachi@@YAXQAUGameTable@@H@Z" int, int
+#cfunc chkdaopaiability "?chkdaopaiability@@YAHQBUGameTable@@H@Z" int, int
 #cfunc chkankanability "?chkAnkanAbility@@YAHQBUGameTable@@H@Z" int, int
+#func calcdoukasen "?calcdoukasen@@YAXQAUGameTable@@@Z" int
+#cfunc isTenpai "?isTenpai@@YAHQBUGameTable@@PAXH@Z" int, var, int
+#cfunc isNagashiMangan "?isNagashiMangan@@YAHQBUGameTable@@PAXH@Z" int, var, int
 
 /* shanten.hspÇ©ÇÁÇÃà⁄êA */
 #func shantenInit "?initMentsuAnalysisDat@@YAXXZ"

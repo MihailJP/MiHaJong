@@ -14,6 +14,7 @@
 #include "gametbl.h"
 #include "mnzdat.h"
 #include "func.h"
+#include "envtbl.h"
 #ifdef MJCORE_EXPORTS
 #include "logging.h"
 #endif
@@ -41,6 +42,12 @@ static_assert(std::is_pod<MachihaiInfo>::value, "MachihaiInfo is not POD");
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
+PLAYER_ID* tobePlayed(const GameTable* const gameStat);
+PLAYER_ID tobePlayed(const GameTable* const gameStat, int id);
+
+tileCode* Honor_Major_Tiles();
+tileCode Honor_Major_Tiles(int code);
+
 void lipai(GameTable* const gameStat, PLAYER_ID targetPlayer);
 __declspec(dllexport) void lipai(GameTable* const gameStat, int targetPlayer);
 #endif
@@ -71,9 +78,22 @@ void chkOpenMachi(GameTable* const gameStat, PLAYER_ID targetPlayer);
 __declspec(dllexport) void chkOpenMachi(GameTable* const gameStat, int targetPlayer);
 #endif
 
+MJCORE bool chkdaopaiability(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+#ifdef MJCORE_EXPORTS
+__declspec(dllexport) int chkdaopaiability(const GameTable* const gameStat, int targetPlayer);
+#endif
+
 MJCORE bool chkAnkanAbility(const GameTable* const gameStat, PLAYER_ID targetPlayer);
 #ifdef MJCORE_EXPORTS
 __declspec(dllexport) int chkAnkanAbility(const GameTable* const gameStat, int targetPlayer);
+
+__declspec(dllexport) void calcdoukasen(GameTable* const gameStat);
+
+bool isTenpai(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+__declspec(dllexport) int isTenpai(const GameTable* const gameStat, void *, int targetPlayer);
+
+bool isNagashiMangan(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+__declspec(dllexport) int isNagashiMangan(const GameTable* const gameStat, void *, int targetPlayer);
 #endif
 
 #endif

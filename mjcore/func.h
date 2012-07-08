@@ -28,6 +28,8 @@ static_assert(std::is_pod<PlayerRankList>::value, "PlayerRankList is not POD");
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
+extern "C" inline uint8_t diceSum(const GameTable* const gameStat);
+
 seatAbsolute inline playerwind(const GameTable* const gameStat, PLAYER_ID player, int currentRound);
 __declspec(dllexport) inline int playerwind(int player, int currentRound);
 

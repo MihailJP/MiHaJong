@@ -208,6 +208,16 @@ static_assert(std::is_pod<FLOWERS>::value, "FLOWERS is not POD");
 
 // -------------------------------------------------------------------------
 
+EXPORT_STRUCT DICE { // サイコロ
+	uint8_t Number;
+	bool Direction;
+};
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<DICE>::value, "DICE is not POD");
+#endif
+
+// -------------------------------------------------------------------------
+
 EXPORT_STRUCT PlayerTable { // プレイヤーの状態を格納
 	LargeNum PlayerScore;
 	int playerChip; // チップの収支
@@ -256,10 +266,7 @@ EXPORT_STRUCT GameTable { // 卓の情報を格納する
 	bool RichiCounter; // リーチをカウンター(宣言牌をロン)
 	PLAYER_ID WaremePlayer; // 割れ目の位置(-1で割れ目なし)
 	PLAYER_ID DoukasenPlayer; // 導火線の位置(-1で導火線なし)
-	uint8_t Dice1;
-	uint8_t Dice2;
-	bool Dice1Direction;
-	bool Dice2Direction;
+	DICE Dice[2]; // サイコロ
 	paoStatBook PaoFlag; // 包フラグ（-1…なし、0～3…該当プレイヤー）
 	DeckBuf Deck; // 壁牌の配列
 	uint8_t DeadTiles; // 王牌の数
@@ -283,6 +290,11 @@ static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
+/* 先行宣言 */
+extern "C" inline uint8_t diceSum(const GameTable* const gameStat);
+PLAYER_ID tobePlayed(const GameTable* const gameStat, int id);
+
+/* gametbl.cpp */
 extern GameTable GameStat, StatSandBox;
 inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType);
 #endif

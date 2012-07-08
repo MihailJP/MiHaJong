@@ -1,5 +1,10 @@
 #include "func.h"
 
+/* サイコロの出目を取得 */
+extern "C" inline uint8_t diceSum(const GameTable* const gameStat) {
+	return (gameStat->Dice[0].Number + gameStat->Dice[1].Number);
+}
+
 /* プレイヤーの自風がどれか調べる */
 seatAbsolute inline playerwind(const GameTable* const gameStat, PLAYER_ID player, int currentRound) {
 	if (chkGameType(gameStat, SanmaT))

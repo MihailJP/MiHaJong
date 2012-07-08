@@ -19,7 +19,7 @@ __declspec(dllexport) void EnvTable::setRemotePlayer(void *, int PlayerNum, int 
 	Instantiate()->PlayerDat[PlayerNum].RemotePlayerFlag = Value;
 }
 __declspec(dllexport) int EnvTable::isRemotePlayer(void *, int PlayerNum) {
-	return Instantiate()->PlayerDat[PlayerNum].RemotePlayerFlag ? 1 : 0;
+	return (int)Instantiate()->PlayerDat[PlayerNum].RemotePlayerFlag;
 }
 
 __declspec(dllexport) void EnvTable::setGameMode(void *, int Value) {

@@ -15,7 +15,7 @@ private: // singleton
 	class PlayerLabel {
 	public:
 		std::string PlayerName;
-		bool RemotePlayerFlag;
+		int8_t RemotePlayerFlag;
 	};
 	enum ClientType : int32_t {
 		Unavailable = (-1),

@@ -1,5 +1,35 @@
 #include "tileutil.h"
 
+/* ŽllŽO–ƒ—p */
+PLAYER_ID* tobePlayed(const GameTable* const gameStat) {
+	static PLAYER_ID tp[] = {
+		(gameStat->GameRound % PLAYERS),
+		((gameStat->GameRound + 1) % PLAYERS),
+		((gameStat->GameRound + 2) % PLAYERS)
+	};
+	if (chkGameType(gameStat, Sanma4)) return tp;
+	else return NULL;
+}
+PLAYER_ID tobePlayed(const GameTable* const gameStat, int id) {
+	assert((id >= 0)&&(id < 13));
+	PLAYER_ID *tp = tobePlayed(gameStat);
+	return tp[id];
+}
+
+/* ˆê‹ãŽš”v‚ÌƒR[ƒhˆê—— */
+tileCode* Honor_Major_Tiles() {
+	static const tileCode YaojiuPai[] = {
+		CharacterOne, CharacterNine, CircleOne, CircleNine, BambooOne, BambooNine,
+		EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
+	};
+	return (tileCode*)&YaojiuPai;
+}
+tileCode Honor_Major_Tiles(int code) {
+	assert((code >= 0)&&(code < 13));
+	static const tileCode* YaojiuPai = Honor_Major_Tiles();
+	return YaojiuPai[code];
+}
+
 /* —”v‚·‚é */
 void lipai(GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	// —”v‚·‚é
@@ -315,7 +345,17 @@ __declspec(dllexport) void chkOpenMachi(GameTable* const gameStat, int targetPla
 }
 
 /* ‹ãŽí‹ã”v—¬‚µ‚ª‰Â”\‚©‚Ç‚¤‚©‚Ìƒ`ƒFƒbƒN */
-/* ‚ ‚Æ‚Å */
+MJCORE bool chkdaopaiability(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+	Int8ByTile TileCount = countTilesInHand(gameStat, targetPlayer);
+	int YaojiuCount = 0; bool AtamaFlag = false;
+	for (int i = 0; i < 13; i++) // ƒ„ƒI‹ã”v‚PŽí—Þ‚É‚Â‚«A‚P‚ðƒJƒEƒ“ƒg‚·‚éB
+		if (TileCount[Honor_Major_Tiles(i)] >= 1) YaojiuCount++;
+	return (YaojiuCount >= 9);
+}
+__declspec(dllexport) int chkdaopaiability(const GameTable* const gameStat, int targetPlayer) {
+	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
+	return chkdaopaiability(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
+}
 
 /* ƒhƒ‰‚ðÝ’è‚·‚é */
 /* ‚ ‚Æ‚Å‘‚­B”v•ˆ‚Ö‚Ì‹L˜^–½—ß‚Æ‚©‚ ‚é‚µcc */
@@ -475,4 +515,90 @@ MJCORE bool chkAnkanAbility(const GameTable* const gameStat, PLAYER_ID targetPla
 __declspec(dllexport) int chkAnkanAbility(const GameTable* const gameStat, int targetPlayer) {
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 	return chkAnkanAbility(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
+}
+
+/* “±‰Îü‚ÌˆÊ’u‚ð’²‚×‚é */
+__declspec(dllexport) void calcdoukasen(GameTable* const gameStat) {
+	/* “±‰Îü‚ÌˆÊ’u‚ðŒvŽZ‚·‚é */
+	if (getRule(RULE_DOUKASEN) != 0) {
+		if (chkGameType(gameStat, Sanma4)) {
+			PLAYER_ID* tmpDoukasen = new PLAYER_ID(
+				((30 - ((diceSum(gameStat) - 1) * 36 * 2 + 
+				diceSum(gameStat) * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3);
+			gameStat->DoukasenPlayer = tobePlayed(gameStat, *tmpDoukasen);
+			delete tmpDoukasen;
+		} else if (chkGameType(gameStat, SanmaT)) {
+			gameStat->DoukasenPlayer =
+				((30 - ((diceSum(gameStat) - 1 +
+				(gameStat->GameRound - (gameStat->GameRound / 4))) * 36 * 2 +
+				diceSum(gameStat) * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3;
+		} else {
+			int* tmp;
+			switch (getRule(RULE_FLOWER_TILES)) {
+			case 3:
+				gameStat->DoukasenPlayer =
+					((40 - ((diceSum(gameStat) - 1 +
+					(gameStat->GameRound % PLAYERS)) * 36 * 3 + 
+					diceSum(gameStat) * 2 + gameStat->TilePointer - 1) / 36) + 40)
+					% PLAYERS;
+				break;
+			case 0:
+				gameStat->DoukasenPlayer =
+					((40 - ((diceSum(gameStat) - 1 +
+					(gameStat->GameRound % PLAYERS)) * 34 * 3 +
+					diceSum(gameStat) * 2 + gameStat->TilePointer - 1) / 34) + 40)
+					% PLAYERS;
+				break;
+			default:
+				gameStat->DoukasenPlayer =
+					((40 - ((diceSum(gameStat) - 1 +
+					(gameStat->GameRound % PLAYERS)) * 70 * 3 / 2 +
+					diceSum(gameStat) * 2 + gameStat->TilePointer - 1) / 35) + 40)
+					% PLAYERS;
+				tmp = new int(
+					((diceSum(gameStat) - 1 + (gameStat->GameRound % PLAYERS)) * 70 * 3 / 2 +
+					diceSum(gameStat) * 2 + gameStat->TilePointer - 1) % 70
+					);
+				if (*tmp == (((diceSum(gameStat) + gameStat->GameRound) % 2) * 35))
+					gameStat->DoukasenPlayer = (40 + gameStat->DoukasenPlayer + 1) % PLAYERS;
+				delete tmp;
+			}
+		}
+	}
+}
+
+/* ’®”v‚©‚Ç‚¤‚©’²‚×‚é */
+bool isTenpai(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+	auto Shanten = calcShanten(gameStat, targetPlayer, shantenAll);
+	if (gameStat->Player[targetPlayer].AgariHouki) Shanten = 1; // ƒAƒKƒŠ•úŠü‚È‚ç‹­§•s’®
+	if (EnvTable::Instantiate()->PlayerDat[targetPlayer].RemotePlayerFlag == -1)
+		return false;
+	return (Shanten <= 0);
+}
+__declspec(dllexport) int isTenpai(const GameTable* const gameStat, void *, int targetPlayer) {
+	return isTenpai(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
+}
+
+/* —¬‚µ–žŠÑ‚©‚Ç‚¤‚©’²‚×‚é */
+bool isNagashiMangan(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+	if (gameStat->Player[targetPlayer].AgariHouki) return false; // ˜a—¹‚è•úŠüŽž‚Ìˆ—¨—¬‚µ–žŠÑ‚ð”F‚ß‚È‚¢
+	if (EnvTable::Instantiate()->PlayerDat[targetPlayer].RemotePlayerFlag == -1)
+		return false;
+	int YaojiuSutehai = 0;
+	for (int i = 1; i <= gameStat->Player[targetPlayer].DiscardPointer; i++) {
+		// –Â‚©‚ê‚½”v‚¾‚Á‚½‚ç–³Ž‹
+		if (gameStat->Player[targetPlayer].Discard[i].dstat == discardTaken) continue;
+		if (gameStat->Player[targetPlayer].Discard[i].dstat == discardRiichiTaken) continue;
+		// –Â‚©‚ê‚Ä‚¢‚È‚¢”v
+		for (int j = 0; j < 13; j++) {
+			if (gameStat->Player[targetPlayer].Discard[i].tcode.tile == Honor_Major_Tiles(j)) {
+				YaojiuSutehai++; break;
+			}
+		}
+	}
+	// ‘S•”ŠY“–‚·‚é”v‚¾‚Á‚½‚çtrue
+	return (YaojiuSutehai == gameStat->Player[targetPlayer].DiscardPointer);
+}
+__declspec(dllexport) int isNagashiMangan(const GameTable* const gameStat, void *, int targetPlayer) {
+	return isNagashiMangan(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
 }
