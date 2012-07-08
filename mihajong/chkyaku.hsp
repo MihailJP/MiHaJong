@@ -303,6 +303,7 @@ return
 /* –ğ–‚ğ¬—§‚³‚¹‚é */
 #module
 #include "const.hsp"
+#include "mjcore.hsp"
 #deffunc addyakuman var tmpYakuInfo, str yakuName, int yakuVal
 /*
 		addyakuman p1, p2, p3
@@ -328,6 +329,7 @@ return
 /* –ŠÑ‚ğ¬—§‚³‚¹‚é */
 #module
 #include "const.hsp"
+#include "mjcore.hsp"
 #deffunc addmangan var tmpYakuInfo, str yakuName, int yakuVal
 /*
 		addmangan p1, p2, p3
