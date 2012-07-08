@@ -248,7 +248,79 @@ __declspec(dllexport) void countRedTilesInHand(int* const tileCount, const GameT
 
 
 /* 手牌のうちある１枚に注目する */
-/* あとで書く */
+MJCORE TileStatus gettilestatus(
+	const GameTable* const gameStat, PLAYER_ID targetPlayer, int targetTile, bool CheckMode)
+{
+	const tileCode* const theTile = &gameStat->Player[targetPlayer].Hand[targetTile].tile;
+
+	TileStatus tlStat; memset(&tlStat, 0, sizeof(tlStat)); // 初期化
+	if (*theTile == NoTile) return tlStat; // なかったら戻る
+
+	tlStat.isExistent = true; // ここにたどり着いたら、それは存在する牌です
+	auto tlCount = countTilesInHand(gameStat, targetPlayer); // 牌を数えろ、話はそれからだ
+
+	if (tlCount[*theTile] == 4) tlStat.canFormQuad = true; // 暗槓が可能な牌
+	if (tlCount[*theTile] >= 3) tlStat.formsTriplet = true; // 暗刻を形成している場合
+	
+	if (*theTile < TILE_SUIT_HONORS) { // 順子を形成している場合
+		if ((tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) + 1] >= 1)&&(tlCount[int(*theTile) + 2] >= 1))
+			tlStat.formsSequence = true;
+		else if ((tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) + 1] >= 1)&&(tlCount[int(*theTile) - 1] >= 1))
+			tlStat.formsSequence = true;
+		else if ((*theTile > 1)&&(tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) - 2] >= 1)&&(tlCount[int(*theTile) - 1] >= 1))
+			tlStat.formsSequence = true;
+	}
+
+	if ((tlCount[*theTile] >= 2)&&(!tlStat.formsTriplet)) tlStat.formsPair = true; // 対子を形成している場合
+
+	if (*theTile < TILE_SUIT_HONORS) { // 辺張を形成している場合
+		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
+			if ((tlCount[int(*theTile) + 1] >= 1)&&(*theTile % TILE_SUIT_STEP == 1))
+				tlStat.seqSingleSideWait = true;
+			else if ((tlCount[int(*theTile) + 1] >= 1)&&(*theTile % TILE_SUIT_STEP == 8))
+				tlStat.seqSingleSideWait = true;
+			else if ((tlCount[int(*theTile) - 1] >= 1)&&(*theTile % TILE_SUIT_STEP == 2))
+				tlStat.seqSingleSideWait = true;
+			else if ((tlCount[int(*theTile) - 1] >= 1)&&(*theTile % TILE_SUIT_STEP == 9))
+				tlStat.seqSingleSideWait = true;
+		}
+	}
+	
+	if (*theTile < TILE_SUIT_HONORS) { // 両面塔子を形成している場合
+		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
+			if ((tlCount[int(*theTile) + 1] >= 1)&&(*theTile % TILE_SUIT_STEP != 1)&&
+				(*theTile % TILE_SUIT_STEP != 8)) tlStat.seqDoubleSideWait = true;
+			else if ((tlCount[int(*theTile) - 1] >= 1)&&(*theTile % TILE_SUIT_STEP != 2)&&
+				(*theTile % TILE_SUIT_STEP != 9)) tlStat.seqDoubleSideWait = true;
+		}
+	}
+	
+	if (*theTile < TILE_SUIT_HONORS) { // 嵌張を形成している場合
+		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
+			if ((tlCount[int(*theTile) + 2] >= 1)&&(*theTile % TILE_SUIT_STEP != 9))
+				tlStat.seqMidWait = true;
+			else if ((*theTile > 1)&&(tlCount[int(*theTile) - 2] >= 1)&&(*theTile % TILE_SUIT_STEP != 1))
+				tlStat.seqMidWait = true;
+		}
+	}
+
+	return tlStat;
+}
+__declspec(dllexport) int gettilestatus(
+	const GameTable* const gameStat, int targetPlayer, int targetTile, int CheckMode)
+{
+	auto ans = gettilestatus(gameStat, (PLAYER_ID)targetPlayer, targetTile, (bool)CheckMode);
+	return
+		(ans.isExistent ?
+		(ans.canFormQuad ? 0x40 : 0) +
+		(ans.seqMidWait ? 0x20 : 0) +
+		(ans.seqDoubleSideWait ? 0x10 : 0) +
+		(ans.seqSingleSideWait ? 0x08 : 0) +
+		(ans.formsPair ? 0x04 : 0) +
+		(ans.formsSequence ? 0x02 : 0) +
+		(ans.formsTriplet ? 0x01 : 0)
+		: -999);
+}
 
 /* 振聴でないかのチェック・待ち牌を数える処理も含む */
 MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
@@ -358,7 +430,76 @@ __declspec(dllexport) int chkdaopaiability(const GameTable* const gameStat, int 
 }
 
 /* ドラを設定する */
-/* あとで書く。牌譜への記録命令とかあるし…… */
+namespace setdora_tools {
+	tileCode getNextOf(const GameTable* const gameStat, tileCode tc) { // ネクスト牌
+		tileCode ans = (tileCode)((int)tc + 1);
+		if ((chkGameType(gameStat, SanmaX))&&(ans == CharacterTwo)) ans = CharacterNine;
+		else if (ans == (tileCode)10) ans = CharacterOne;
+		else if (ans == (tileCode)20) ans = CircleOne;
+		else if (ans == (tileCode)30) ans = BambooOne;
+		else if (ans == (tileCode)35) ans = EastWind;
+		else if (ans == (tileCode)38) ans = WhiteDragon;
+		return ans;
+	}
+
+	tileCode getPrevOf(const GameTable* const gameStat, tileCode tc) { // 前の牌
+		tileCode ans = (tileCode)((int)tc - 1);
+		if ((chkGameType(gameStat, SanmaX))&&(ans == CharacterEight)) ans = CharacterOne;
+		else if (ans == (tileCode)0) ans = CharacterNine;
+		else if (ans == (tileCode)10) ans = CircleNine;
+		else if (ans == (tileCode)20) ans = BambooNine;
+		else if (ans == (tileCode)30) ans = NorthWind;
+		else if (ans == (tileCode)34) ans = RedDragon;
+		return ans;
+	}
+
+	void addDora(GameTable* const gameStat, tileCode tc, int Mode) {
+		for (int i = ((getRule(RULE_NAGATACHO) != 0) ? tc % 10 : tc);
+			i <= (((getRule(RULE_NAGATACHO) != 0) && (tc < TILE_SUIT_HONORS)) ? TILE_SUIT_HONORS : tc);
+			i += 10) {
+				std::ostringstream o;
+				if (Mode) gameStat->DoraFlag.Ura[i]++;	// ドラを設定する
+				else gameStat->DoraFlag.Omote[i]++;	// ドラを設定する
+				o << "牌コード [" << (int)tc << "] をドラにしました。";
+				debug(o.str().c_str());
+				if (Mode) haifu::haifurecuradora((tileCode)i);
+				else haifu::haifurecdora((tileCode)i);
+		}
+	}
+}
+
+__declspec(dllexport) void setdora(GameTable* const gameStat, int Mode) {
+	std::ostringstream o;
+	o << "ドラの追加 ポインタ [" << gameStat->DoraPointer <<
+		"] 牌コード [" << (int)gameStat->Deck[gameStat->DoraPointer + Mode].tile <<
+		"] モード [" << Mode << "]";
+	debug(o.str().c_str());
+	if (gameStat->Deck[gameStat->DoraPointer + Mode].tile > TILE_SUIT_FLOWERS) {
+		// 花牌がドラ表示牌になったとき
+		setdora_tools::addDora(gameStat, Flower, Mode);
+	} else {
+		if (getRule(RULE_DORA_INDICATOR) == 2) {
+			// 前の牌がドラ（超インフレ用）
+			if ((gameStat->Deck[gameStat->DoraPointer + Mode].tile >= 10) ||
+				(!chkGameType(gameStat, SanmaX)))
+					setdora_tools::addDora(gameStat,
+						setdora_tools::getPrevOf(gameStat, gameStat->Deck[gameStat->DoraPointer + Mode].tile),
+						Mode);
+		}
+		if ((getRule(RULE_DORA_INDICATOR) == 1)||(getRule(RULE_DORA_INDICATOR) == 2)) {
+			// 現物ドラ
+			setdora_tools::addDora(gameStat,
+				gameStat->Deck[gameStat->DoraPointer + Mode].tile,
+				Mode);
+		}
+		if (getRule(RULE_DORA_INDICATOR) != 1) {
+			// ネクストドラ
+			setdora_tools::addDora(gameStat,
+				setdora_tools::getNextOf(gameStat, gameStat->Deck[gameStat->DoraPointer + Mode].tile),
+				Mode);
+		}
+	}
+}
 
 /* 立直後の暗槓の可否 */
 namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理

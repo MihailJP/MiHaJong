@@ -15,6 +15,7 @@
 #include "mnzdat.h"
 #include "func.h"
 #include "envtbl.h"
+#include "haifu.h"
 #ifdef MJCORE_EXPORTS
 #include "logging.h"
 #endif
@@ -37,6 +38,15 @@ EXPORT_STRUCT MachihaiInfo { // ë“ÇøîvÇ∆Ç©ÇÃèÓïÒÇäiî[(chkFuritenä÷êîóp)
 };
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<MachihaiInfo>::value, "MachihaiInfo is not POD");
+#endif
+
+EXPORT_STRUCT TileStatus { // gettilestatusóp
+	bool isExistent, canFormQuad,
+		seqMidWait, seqDoubleSideWait, seqSingleSideWait,
+		formsPair, formsSequence, formsTriplet;
+};
+#ifdef MJCORE_EXPORTS
+static_assert(std::is_pod<TileStatus>::value, "TileStatus is not POD");
 #endif
 
 // -------------------------------------------------------------------------
@@ -67,6 +77,13 @@ MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PLAYER_ID
 __declspec(dllexport) void countRedTilesInHand(int* const tileCount, const GameTable* const gameStat, int playerID);
 #endif
 
+MJCORE TileStatus gettilestatus(
+	const GameTable* const gameStat, PLAYER_ID targetPlayer, int targetTile, bool CheckMode);
+#ifdef MJCORE_EXPORTS
+__declspec(dllexport) int gettilestatus(
+	const GameTable* const gameStat, int targetPlayer, int targetTile, int CheckMode);
+#endif
+
 MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PLAYER_ID targetPlayer);
 #ifdef MJCORE_EXPORTS
 __declspec(dllexport) void chkFuriten(
@@ -81,6 +98,8 @@ __declspec(dllexport) void chkOpenMachi(GameTable* const gameStat, int targetPla
 MJCORE bool chkdaopaiability(const GameTable* const gameStat, PLAYER_ID targetPlayer);
 #ifdef MJCORE_EXPORTS
 __declspec(dllexport) int chkdaopaiability(const GameTable* const gameStat, int targetPlayer);
+
+__declspec(dllexport) void setdora(GameTable* const gameStat, int Mode);
 #endif
 
 MJCORE bool chkAnkanAbility(const GameTable* const gameStat, PLAYER_ID targetPlayer);
