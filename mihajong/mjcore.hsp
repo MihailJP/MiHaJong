@@ -93,7 +93,20 @@
 #func haifuwritebuffer "?haifuwritebuffer@haifu@@YAXQBUGameTable@@PAXHHHHPBDW4EndType@@@Z" int, var, int, int, int, int, str, int
 #func haifusave "?haifusave@haifu@@YAXXZ"
 
-/* envstruct.hspÇ©ÇÁÇÃà⁄êA */
+/* ystruct.hspÇ©ÇÁÇÃà⁄êA */
+#cfunc _YAKUSTAT_getSize "?getSize@YAKUSTAT@yaku@@SAHXZ"
+#func _YAKUSTAT_Init "?Init@YAKUSTAT@yaku@@SAXQAU12@@Z" var
+#define initYakuInfo(%1) sdim %1, _YAKUSTAT_getSize(): _YAKUSTAT_Init %1
+#func _exportYakuPoint "?exportYakuPoint@YAKUSTAT@yaku@@SAXQBU12@QAH@Z" var, var
+#define exportYakuPoint(%1,%2) dim %2, NUM_OF_DIGIT_GROUPS: _exportYakuPoint %1, %2
+#func setYakuInfo "?setYakuInfo@YAKUSTAT@yaku@@SAXQAU12@HH@Z" var, int, int
+#func setYakuInfoTxt "?setYakuInfo@YAKUSTAT@yaku@@SAXQAU12@HQBD@Z" var, int, str
+#func addYakuInfo "?addYakuInfo@YAKUSTAT@yaku@@SAXQAU12@HH@Z" var, int, int
+#func addYakuInfoTxt "?addYakuInfo@YAKUSTAT@yaku@@SAXQAU12@HQBD@Z" var, int, str
+//#cfunc _getYakuInfo "?getYakuInfo@YAKUSTAT@yaku@@SAHQBU12@H@Z" var, int
+//#func _getYakuInfoTxt "?getYakuInfo@YAKUSTAT@yaku@@SAXQBU12@HQADH@Z" var, int, var, int
+
+/* evstruct.hspÇ©ÇÁÇÃà⁄êA */
 #func setPlayerName "?setPlayerName@EnvTable@@SAXPAXHQBD@Z" int, int, str
 //#func _getPlayerName "?getPlayerName@EnvTable@@SAXPAXHQADH@Z" nullptr, int, var, int
 #func setRemotePlayer "?setRemotePlayer@EnvTable@@SAXPAXHH@Z" int, int, int

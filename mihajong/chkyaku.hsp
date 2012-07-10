@@ -13,12 +13,7 @@
 #include "hspmath.as"
 #deffunc countyaku var GameStat, var yakuInfo, int targetPlayer
 	debug strf("–ð”»’èˆ—‚ðŠJŽn ƒvƒŒƒCƒ„[ [%d]", targetPlayer)
-	if (vartype(yakuInfo) == vartype("struct")) {
-		if (varuse(yakuInfo)) {
-			delmod yakuInfo
-		}
-	}
-	newmod yakuInfo, yakuStruct
+	initYakuInfo yakuInfo
 	chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, targetPlayer
 	dim MianziDat, SIZE_OF_MELD_BUFFER
 	dim ShantenArray, SHANTEN_PAGES
@@ -31,7 +26,7 @@
 	repeat 160
 		dim tmpScore, NUM_OF_DIGIT_GROUPS
 		//if ((cnt \ 8) == 7) {await 0}
-		newmod tmpYakuInfo, yakuStruct
+		initYakuInfo tmpYakuInfo
 		if (cnt == 0) {
 #ifndef SANMAS
 			/* ‘Žm–³‘o */
@@ -129,7 +124,6 @@
 			countdora GameStat, tmpYakuInfo, targetPlayer
 			posterioryaku GameStat, tmpYakuInfo, MianziDat, targetPlayer, MachiType
 		} else: if (cnt > 0) {
-			delmod tmpYakuInfo
 			continue
 		}
 		tmpScore(0) = getYakuInfo(tmpYakuInfo, YAKUINF_FU)
@@ -192,7 +186,6 @@
 			setYakuInfoTxt yakuInfo, YAKUINF_YAKUVALLIST, getYakuInfo(tmpYakuInfo, YAKUINF_YAKUVALLIST)
 			setYakuInfoTxt yakuInfo, YAKUINF_YAKUMANLIST, getYakuInfo(tmpYakuInfo, YAKUINF_YAKUMANLIST)
 		}
-		delmod tmpYakuInfo
 		if (ShantenArray(SHANTEN_REGULAR) != -1) {break /* –ÊŽqŽè‚Ì˜a—¹‚è‚¶‚á‚È‚¢‚È‚ç”»’è‚Í1‰ñ‚Å‚¢‚¢ */}
 	loop
 return

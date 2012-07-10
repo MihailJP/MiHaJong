@@ -62,7 +62,7 @@
 	if (getRule(RULE_SHIISAN_PUUTAA) != 0) {
 		ShisanBuDa = chkshisanbuda(GameStat, targetPlayer)
 		if ((ShisanBuDa == 1)&&(ShantenArray(SHANTEN_ORPHANS) >= 0)&&(getFirstDrawFlag(GameStat, targetPlayer) == 1)) {
-			delmod tmpYakuInfo: newmod tmpYakuInfo, yakuStruct
+			initYakuInfo tmpYakuInfo
 			setYakuInfo tmpYakuInfo, YAKUINF_FU, 30
 			if (getRule(RULE_SHIISAN_PUUTAA) == 2) {
 				addmangan tmpYakuInfo, "十三不搭", 2
@@ -96,7 +96,7 @@ return
 	if (getRule(RULE_SHIISAN_UUSHII) != 0) {
 		ShisiBuDa = chkshisibuda(GameStat, targetPlayer)
 		if ((ShisiBuDa == 1)&&(getFirstDrawFlag(GameStat, targetPlayer) == 1)) {
-			delmod tmpYakuInfo: newmod tmpYakuInfo, yakuStruct
+			initYakuInfo tmpYakuInfo
 			setYakuInfo tmpYakuInfo, YAKUINF_FU, 30
 			addyakuman tmpYakuInfo, "十三無靠", 1
 			countdora GameStat, tmpYakuInfo, targetPlayer
