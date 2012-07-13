@@ -3,7 +3,10 @@
 
 #include <cstring>
 #include <type_traits>
+#include <cstdio>
 #include "largenum.h"
+#include "gametbl.h"
+#include "tileutil.h"
 
 namespace yaku {
 	EXPORT_STRUCT YAKUSTAT {
@@ -21,6 +24,9 @@ namespace yaku {
 		char yakuValList[1024];
 		char yakumanNameList[1024];
 		char yakumanValList[1024];
+		// -----------------------------------------------------------------
+		MELD_BUF MianziDat; // 面子に分解したデータ
+		// -----------------------------------------------------------------
 		static int getSize(); // 構造体のサイズを返す
 		static void Init(YAKUSTAT* const myInstance); // インスタンスを初期化する
 		static void exportYakuPoint(const YAKUSTAT* const myInstance, int* const exportArray);
@@ -34,6 +40,35 @@ namespace yaku {
 #ifdef MJCORE_EXPORTS
 	static_assert(std::is_pod<YAKUSTAT>::value, "YAKUSTAT is not POD");
 #endif
+
+	// ---------------------------------------------------------------------
+
+	enum ParseOrder : uint8_t {
+		Ke_Shun, Shun_Ke, Ke_Shun_Rev, Shun_Ke_Rev
+	};
+	struct ParseMode {
+		tileCode AtamaCode;
+		ParseOrder Order;
+	};
+
+#ifdef MJCORE_EXPORTS
+	static_assert(std::is_pod<ParseMode>::value, "ParseMode is not POD");
+#endif
+
+	// ---------------------------------------------------------------------
+
+	namespace mentsuParser { // 面子パーサ
+		bool makementsu_shuntsu(Int8ByTile& countForMentsu, MELD_BUF MianziDat,
+			int* const ProcessedMelds, tileCode tile); /* 順子の処理 */
+		void makementsu_koutsu(Int8ByTile& countForMentsu, MELD_BUF MianziDat,
+			int* const ProcessedMelds, tileCode tile); /* 刻子の処理 */
+
+		void makementsu(const GameTable* const gameStat,
+			PLAYER_ID targetPlayer, ParseMode AtamaCode,
+			int* const ProcessedMelds, MELD_BUF MianziDat); /* 面子に分解する */
+		__declspec(dllexport) void makementsu(const GameTable* const gameStat,
+			int targetPlayer, int AtamaCode, int* const ProcessedMelds, void* const MianziDat);
+	}
 }
 
 #endif

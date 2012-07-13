@@ -468,8 +468,6 @@ return
 #endif
 /* µ‘Îq‚Ì”»’è */
 #include "chk-7par.hsp"
-/* è”v‚ğ–Êq‚É•ª‰ğ */
-#include "chk-mntz.hsp"
 /* •„ŒvZA•½˜a */
 #include "chk-pnkt.hsp"
 /* ó‹µ–ğ */

@@ -13,7 +13,7 @@ namespace yaku {
 			myInstance->DoraQuantity = myInstance->UraDoraQuantity =
 			myInstance->AkaDoraQuantity = myInstance->AoDoraQuantity =
 			myInstance->AliceDora = myInstance->FlowerQuantity = 0;
-		myInstance->AgariPoints.fromInt(0);
+		myInstance->AgariPoints = LargeNum::fromInt(0);
 		memset(myInstance->yakuNameList, 0, 1024);
 		memset(myInstance->yakuValList, 0, 1024);
 		memset(myInstance->yakumanNameList, 0, 1024);
@@ -118,6 +118,104 @@ namespace yaku {
 			default:
 				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
 				memset(targetStr, 0, bufSize);
+		}
+	}
+
+	// ---------------------------------------------------------------------
+
+	namespace mentsuParser { // 面子パーサ
+
+		/* 順子の処理 */
+		bool makementsu_shuntsu(Int8ByTile& countForMentsu, MELD_BUF MianziDat,
+			int* const ProcessedMelds, tileCode tile)
+		{ /* 順子の処理 */
+			if ((countForMentsu[tile] >= 1)&&
+				(countForMentsu[tile+1] >= 1)&&
+				(countForMentsu[tile+2] >= 1)) {
+					MianziDat[*ProcessedMelds].mstat = meldSequenceConcealed;
+					MianziDat[(*ProcessedMelds)++].tile = tile;
+					--countForMentsu[tile]; --countForMentsu[tile+1];
+					--countForMentsu[tile+2];
+					return true;
+			}
+			return false;
+		}
+
+		/* 刻子の処理 */
+		void makementsu_koutsu(Int8ByTile& countForMentsu, MELD_BUF MianziDat,
+			int* const ProcessedMelds, tileCode tile)
+		{ /* 刻子の処理 */
+			if (countForMentsu[tile] >= 3) {
+				MianziDat[*ProcessedMelds].mstat = meldTripletConcealed;
+				MianziDat[(*ProcessedMelds)++].tile = tile;
+				countForMentsu[tile] -= 3;
+			}
+			return;
+		}
+
+		/* 面子に分解する */
+		void makementsu(const GameTable* const gameStat,
+			PLAYER_ID targetPlayer, ParseMode AtamaCode,
+			int* const ProcessedMelds, MELD_BUF MianziDat)
+		{ /* 面子に分解する */
+			memset(MianziDat, 0, sizeof(MELD_BUF)); // 初期化
+			auto countForMentsu = countTilesInHand(gameStat, targetPlayer);
+			*ProcessedMelds = 0;
+
+			// 雀頭となり得ない牌なら戻る
+			if (countForMentsu[AtamaCode.AtamaCode] < 2) return;
+			MianziDat[0].tile = AtamaCode.AtamaCode; (*ProcessedMelds)++;
+			countForMentsu[AtamaCode.AtamaCode] -= 2;
+
+			// 順子(順子優先正順モードの時)
+			if (AtamaCode.Order == Shun_Ke)
+				for (int i = 1; i < TILE_SUIT_HONORS; i++)
+					if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, (tileCode)i))
+						--i;
+			// 順子(順子優先逆順モードの時)
+			if (AtamaCode.Order == Shun_Ke_Rev)
+				for (int i = TILE_SUIT_HONORS - 1; i > 0; i--)
+					if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, (tileCode)i))
+						++i;
+
+			// 暗刻(正順モードの時)
+			if ((AtamaCode.Order == Ke_Shun)||(AtamaCode.Order == Shun_Ke))
+				for (int i = 1; i < TILE_NONFLOWER_MAX; i++)
+					makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, (tileCode)i);
+			// 暗刻(逆順モードの時)
+			if ((AtamaCode.Order == Ke_Shun_Rev)||(AtamaCode.Order == Shun_Ke_Rev))
+				for (int i = TILE_NONFLOWER_MAX - 1; i > 0; i--)
+					makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, (tileCode)i);
+
+			// 順子(暗刻優先正順モードの時)
+			if (AtamaCode.Order == Ke_Shun)
+				for (int i = 1; i < TILE_SUIT_HONORS; i++)
+					if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, (tileCode)i))
+						--i;
+			// 順子(暗刻優先逆順モードの時)
+			if (AtamaCode.Order == Ke_Shun_Rev)
+				for (int i = TILE_SUIT_HONORS - 1; i > 0; i--)
+					if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, (tileCode)i))
+						++i;
+
+			// 鳴いた面子、暗槓
+			for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
+				MianziDat[*ProcessedMelds].mstat = gameStat->Player[targetPlayer].Meld[i].mstat;
+				MianziDat[*ProcessedMelds].tile = gameStat->Player[targetPlayer].Meld[i].tile;
+				/*for (int j = 0; j < 4; j++)
+					MianziDat[*ProcessedMelds].red[j] = gameStat->Player[targetPlayer].Meld[i].red[j];*/
+				++(*ProcessedMelds);
+			}
+		}
+		__declspec(dllexport) void makementsu(const GameTable* const gameStat, void *,
+			int targetPlayer, int AtamaCode, int* const ProcessedMelds, int* const MianziDat)
+		{
+			ParseMode pMode; MELD_BUF mnzDat;
+			pMode.AtamaCode = tileCode(AtamaCode/4);
+			pMode.Order = ParseOrder(AtamaCode%4);
+			makementsu(gameStat, (PLAYER_ID)targetPlayer, pMode, ProcessedMelds, mnzDat);
+			for (int i = 0; i < 5; i++)
+				MianziDat[i] = (int)mnzDat[i].tile + (int)mnzDat[i].mstat * MELD_TYPE_STEP;
 		}
 	}
 }
