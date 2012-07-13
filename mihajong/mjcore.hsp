@@ -131,12 +131,18 @@
 #cfunc countTileNumerals "?countTileNumerals@countingFacility@yaku@@YAHQBH@Z" var
 
 /* chk-trpl.hspÇ©ÇÁÇÃà⁄êA */
-#func _countKez "?countKez@countingFacility@yaku@@YAHQAHQBUmeldCode@@@Z" var, var
+#func _countKez "?countKez@countingFacility@yaku@@YAHQAHQBH@Z" var, var
 #define countKez(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countKez %1, %2
-#func _countAnKez "?countAnKez@countingFacility@yaku@@YAHQAHQBUmeldCode@@@Z" var, var
+#func _countAnKez "?countAnKez@countingFacility@yaku@@YAHQAHQBH@Z" var, var
 #define countAnKez(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countAnKez %1, %2
-#func _countDuiz "?countDuiz@countingFacility@yaku@@YAXQAHQBUmeldCode@@@Z" var, var
+#func _countDuiz "?countDuiz@countingFacility@yaku@@YAXQAHQBH@Z" var, var
 #define countDuiz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countDuiz %1, %2
+
+/* chk-seq.hspÇ©ÇÁÇÃà⁄êA */
+#func _countShunz "?countShunz@countingFacility@yaku@@YAXQAHQBH@Z" var, var
+#define countShunz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countShunz %1, %2
+#func _countAnShunz "?countAnShunz@countingFacility@yaku@@YAXQAHQBH@Z" var, var
+#define countAnShunz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countAnShunz %1, %2
 
 /* ------------------------------------------------------------------------ */
 

@@ -68,6 +68,8 @@ namespace yaku {
 			int* const ProcessedMelds, MELD_BUF MianziDat); /* –ÊŽq‚É•ª‰ð‚·‚é */
 		__declspec(dllexport) void makementsu(const GameTable* const gameStat,
 			int targetPlayer, int AtamaCode, int* const ProcessedMelds, void* const MianziDat);
+
+		void inline ReadAgainMentsu(MELD_BUF target, const int* const source); /* ‹t•ÏŠ· */
 	}
 
 	// ---------------------------------------------------------------------
@@ -81,11 +83,16 @@ namespace yaku {
 		__declspec(dllexport) int countTileNumerals(const int* const tileCount);
 
 		Int8ByTile countKez(const MELD_BUF MianziDat, int* const Kezi);
-		__declspec(dllexport) int countKez(int* const KezCount, const MELD_BUF MianziDat);
+		__declspec(dllexport) int countKez(int* const KezCount, const int* const MianziDat);
 		Int8ByTile countAnKez(const MELD_BUF MianziDat, int* const Kezi);
-		__declspec(dllexport) int countAnKez(int* const KezCount, const MELD_BUF MianziDat);
+		__declspec(dllexport) int countAnKez(int* const KezCount, const int* const MianziDat);
 		Int8ByTile countDuiz(const MELD_BUF MianziDat);
-		__declspec(dllexport) void countDuiz(int* const DuiCount, const MELD_BUF MianziDat);
+		__declspec(dllexport) void countDuiz(int* const DuiCount, const int* const MianziDat);
+
+		Int8ByTile countShunz(const MELD_BUF MianziDat);
+		__declspec(dllexport) void countShunz(int* const ShunzCount, const int* const MianziDat);
+		Int8ByTile countAnShunz(const MELD_BUF MianziDat);
+		__declspec(dllexport) void countAnShunz(int* const ShunzCount, const int* const MianziDat);
 	}
 }
 

@@ -4,51 +4,6 @@
  *=============================
  */
 
-#module
-#include "const.hsp"
-#deffunc countShunz array ShunzCount, array MianziDat
-/*
-		countShunz p1, p2
-		順子の数を数える
-
-		p1 : 結果を格納する配列
-		p2 : 面子構成を格納した配列
-
-		手牌に存在する順子を数え、種類別に格納します。
-*/
-	trace "順子の種類を調べます。"
-	dim ShunzCount, TILE_NONFLOWER_MAX
-	repeat SIZE_OF_MELD_BUFFER-1, 1
-		if (MianziDat(cnt) < MELD_TRIPLET*MELD_TYPE_STEP) {
-			ShunzCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++
-		}
-	loop
-	return
-#global
-
-#module
-#include "const.hsp"
-#deffunc countAnShunz array ShunzCount, array MianziDat
-/*
-		countAnShunz p1, p2
-		暗順子の数を数える
-
-		p1 : 結果を格納する配列
-		p2 : 面子構成を格納した配列
-
-		手牌に存在する暗順子を数え、種類別に格納します。
-		また、statには見つかった暗順子の数が格納されます。
-*/
-	trace "暗順子の種類を調べます。"
-	dim ShunzCount, TILE_NONFLOWER_MAX
-	repeat SIZE_OF_MELD_BUFFER-1, 1
-		if ((MianziDat(cnt) / MELD_TYPE_STEP) == MELD_SEQUENCE_CONCEALED) {
-			ShunzCount(MianziDat(cnt) \ TILE_CODE_MAXIMUM)++
-		}
-	loop
-	return
-#global
-
 /* 順子系の役 */
 #module
 #include "const.hsp"
