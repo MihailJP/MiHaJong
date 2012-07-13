@@ -126,6 +126,10 @@
 #func _makementsu "?makementsu@mentsuParser@yaku@@YAXQBUGameTable@@PAXHHQAH2@Z" int, nullptr, int, int, var, var
 #define makementsu(%1,%2,%3,%4,%5,%6) %5 = 0: dim %6, SIZE_OF_MELD_BUFFER: _makementsu %1, %3, %4, %5, %6
 
+/* chk-7par.hspからの移植 */
+//#cfunc _countPairs "?countPairs@countingFacility@yaku@@YAHQBH0H@Z" var, var, int
+#cfunc countTileNumerals "?countTileNumerals@countingFacility@yaku@@YAHQBH@Z" var
+
 /* ------------------------------------------------------------------------ */
 
 /*  卓情報へのアクセサ  */

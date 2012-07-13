@@ -69,6 +69,18 @@ namespace yaku {
 		__declspec(dllexport) void makementsu(const GameTable* const gameStat,
 			int targetPlayer, int AtamaCode, int* const ProcessedMelds, void* const MianziDat);
 	}
+
+	// ---------------------------------------------------------------------
+
+	namespace countingFacility {
+		/* w’è‚Ì‘Îq‚ª‚ ‚é‚©”‚¦‚é */
+		int countPairs(
+			const Int8ByTile tileCount, const tileCode* const targetTiles, int numOfTiles);
+		__declspec(dllexport) int countPairs(
+			const int* const tileCount, const int* const targetTiles, int numOfTiles);
+		int countTileNumerals(const Int8ByTile tileCount);
+		__declspec(dllexport) int countTileNumerals(const int* const tileCount);
+	}
 }
 
 #endif

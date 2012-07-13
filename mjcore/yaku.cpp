@@ -218,4 +218,45 @@ namespace yaku {
 				MianziDat[i] = (int)mnzDat[i].tile + (int)mnzDat[i].mstat * MELD_TYPE_STEP;
 		}
 	}
+
+	// ---------------------------------------------------------------------
+
+	namespace countingFacility {
+		/* 指定の対子があるか数える */
+		int countPairs(
+			const Int8ByTile tileCount, const tileCode* const targetTiles, int numOfTiles)
+		{
+			// 指定した種類の対子を数える
+			trace("対子の種類を調べます。");
+			int yakuflagcount = 0;
+			for (int i = 0; i < numOfTiles; i++)
+				if (tileCount[targetTiles[i]] >= 2) yakuflagcount++;
+			return yakuflagcount;
+		}
+		__declspec(dllexport) int countPairs(
+			const int* const tileCount, const int* const targetTiles, int numOfTiles)
+		{
+			Int8ByTile tlCount; tileCode* tlCode = new tileCode[numOfTiles];
+			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) tlCount[i] = tileCount[i];
+			for (int i = 0; i < numOfTiles; i++) tlCode[i] = (tileCode)(targetTiles[i]);
+			int ans = countPairs(tlCount, tlCode, numOfTiles);
+			delete[] tlCode;
+			return ans;
+		}
+
+		/* 数字の合計を数える(七対子版) */
+		int countTileNumerals(const Int8ByTile tileCount) {
+			/* 数字の合計を数える */
+			int Cifr = 0;
+			for (int i = 1; i < (TILE_SUIT_HONORS - 1); i++)
+				Cifr += tileCount[i] * (i % TILE_SUIT_STEP);
+			return Cifr;
+		}
+		__declspec(dllexport) int countTileNumerals(const int* const tileCount) {
+			Int8ByTile tlCount;
+			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) tlCount[i] = tileCount[i];
+			int ans = countTileNumerals(tlCount);
+			return ans;
+		}
+	}
 }

@@ -4,43 +4,11 @@
  *=============================
  */
 
-/* 指定の対子があるか数える */
 #module
+#uselib "mjcore.dll"
+#cfunc _countPairs "?countPairs@countingFacility@yaku@@YAHQBH0H@Z" var, var, int
 #defcfunc countPairs array tileCount, array targetTiles
-/*
-		val=countPairs(p1, p2)
-		指定した種類の対子を数える
-
-		p1 : 手牌にある種類別の牌数の配列
-		p2 : 探したい牌の配列
-
-		指定した種類のうち何種類の対子があるかを返します。
-*/
-	trace "対子の種類を調べます。"
-	yakuflagcount = 0
-	repeat length(targetTiles)
-		if (tileCount(targetTiles(cnt)) >= 2) {yakuflagcount++}
-	loop
-	return yakuflagcount
-#global
-
-/* 数字の合計を数える(七対子版) */
-#module
-#include "const.hsp"
-#defcfunc countTileNumerals array tileCount
-/*
-		val=countTileNumerals(p1)
-		数字の合計を数える
-
-		p1 : 手牌にある種類別の牌数の配列
-
-		手牌にある数牌の数字の合計を返します。
-*/
-	Cifr = 0
-	repeat TILE_NUMERAL_MAX-1, 1
-		Cifr += tileCount(cnt) * (cnt \ TILE_SUIT_STEP)
-	loop
-	return Cifr
+	return _countPairs(tileCount, targetTiles, length(targetTiles))
 #global
 
 /* 七対子 */
