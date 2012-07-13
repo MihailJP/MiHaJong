@@ -144,6 +144,14 @@
 #func _countAnShunz "?countAnShunz@countingFacility@yaku@@YAXQAHQBH@Z" var, var
 #define countAnShunz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countAnShunz %1, %2
 
+/* chk-quad.hspからの移植 */
+#func _countKangz "?countKangz@countingFacility@yaku@@YAHQAHQBH@Z" var, var
+#define countKangz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countKangz %1, %2
+#func _countAnKangz "?countAnKangz@countingFacility@yaku@@YAHQAHQBH@Z" var, var
+#define countAnKangz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countAnKangz %1, %2
+#func _countKaKangz "?countKaKangz@countingFacility@yaku@@YAHQAHQBH@Z" var, var
+#define countKaKangz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countKaKangz %1, %2
+
 /* ------------------------------------------------------------------------ */
 
 /*  卓情報へのアクセサ  */

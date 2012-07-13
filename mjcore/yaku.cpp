@@ -269,18 +269,28 @@ namespace yaku {
 	
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+		/* 計数用関数 */
+		Int8ByTile countByMelds(
+			const MELD_BUF MianziDat, int* const hits,
+			std::function<bool (meldStat)> f)
+		{ // 計数ルーチン
+			Int8ByTile hitCount; memset(&hitCount, 0, sizeof(hitCount));
+			if (hits != NULL) *hits = 0;
+			for (int i = 1; i < SIZE_OF_MELD_BUFFER; i++) {
+				if (f(MianziDat[i].mstat)) {
+					++(hitCount[MianziDat[i].tile]);
+					if (hits != NULL) ++(*hits);
+				}
+			}
+			return hitCount;
+		}
+
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 		/* 刻子の数を数える */
 		Int8ByTile countKez(const MELD_BUF MianziDat, int* const Kezi) { /* 刻子の数を数える */
 			trace("刻子・槓子の種類を調べます。");
-			Int8ByTile KezCount; memset(&KezCount, 0, sizeof(KezCount));
-			if (Kezi != NULL) *Kezi = 0;
-			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
-				if (MianziDat[i].mstat >= meldTripletConcealed) {
-					++(KezCount[MianziDat[i].tile]);
-					if (Kezi != NULL) ++(*Kezi);
-				}
-			}
-			return KezCount;
+			return countByMelds(MianziDat, Kezi, [](meldStat x){return x >= meldTripletConcealed;});
 		}
 		__declspec(dllexport) int countKez(int* const KezCount, const int* const MianziDat) {
 			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
@@ -292,15 +302,7 @@ namespace yaku {
 		/* 暗刻子の数を数える */
 		Int8ByTile countAnKez(const MELD_BUF MianziDat, int* const Kezi) { /* 暗刻子の数を数える */
 			trace("暗刻子・暗槓子の種類を調べます。");
-			Int8ByTile KezCount; memset(&KezCount, 0, sizeof(KezCount));
-			if (Kezi != NULL) *Kezi = 0;
-			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
-				if ((MianziDat[i].mstat == meldTripletConcealed)||(MianziDat[i].mstat == meldQuadConcealed)) {
-					++(KezCount[MianziDat[i].tile]);
-					if (Kezi != NULL) ++(*Kezi);
-				}
-			}
-			return KezCount;
+			return countByMelds(MianziDat, Kezi, [](meldStat x){return ((x == meldTripletConcealed)||(x == meldQuadConcealed));});
 		}
 		__declspec(dllexport) int countAnKez(int* const KezCount, const int* const MianziDat) {
 			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
@@ -327,11 +329,7 @@ namespace yaku {
 		/* 順子の数を数える */
 		Int8ByTile countShunz(const MELD_BUF MianziDat) { /* 順子の数を数える */
 			trace("順子の種類を調べます。");
-			Int8ByTile ShunzCount; memset(&ShunzCount, 0, sizeof(ShunzCount));
-			for (int i = 1; i < SIZE_OF_MELD_BUFFER; i++)
-				if (MianziDat[i].mstat < meldTripletConcealed)
-					++(ShunzCount[MianziDat[i].tile]);
-			return ShunzCount;
+			return countByMelds(MianziDat, NULL, [](meldStat x){return x < meldTripletConcealed;});
 		}
 		__declspec(dllexport) void countShunz(int* const ShunzCount, const int* const MianziDat) {
 			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
@@ -342,16 +340,51 @@ namespace yaku {
 		/* 暗順子の数を数える */
 		Int8ByTile countAnShunz(const MELD_BUF MianziDat) { /* 暗順子の数を数える */
 			trace("暗順子の種類を調べます。");
-			Int8ByTile ShunzCount; memset(&ShunzCount, 0, sizeof(ShunzCount));
-			for (int i = 1; i < SIZE_OF_MELD_BUFFER; i++)
-				if (MianziDat[i].mstat == meldSequenceConcealed)
-					++(ShunzCount[MianziDat[i].tile]);
-			return ShunzCount;
+			return countByMelds(MianziDat, NULL, [](meldStat x){return x == meldSequenceConcealed;});
 		}
 		__declspec(dllexport) void countAnShunz(int* const ShunzCount, const int* const MianziDat) {
 			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
 			auto szCount = countAnShunz(mnzDat);
 			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) ShunzCount[i] = szCount[i];
 		}
+
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+		/* 槓子の数を数える */
+		Int8ByTile countKangz(const MELD_BUF MianziDat, int* const Kangzi) { /* 槓子の数を数える */
+			trace("槓子の種類を調べます。");
+			return countByMelds(MianziDat, Kangzi, [](meldStat x){return x >= meldQuadConcealed;});
+		}
+		__declspec(dllexport) int countKangz(int* const KangzCount, const int* const MianziDat) {
+			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
+			int Kangzi; auto kzCount = countKangz(mnzDat, &Kangzi);
+			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) KangzCount[i] = kzCount[i];
+			return Kangzi;
+		}
+
+		/* 暗槓子の数を数える */
+		Int8ByTile countAnKangz(const MELD_BUF MianziDat, int* const Kangzi) { /* 暗槓子の数を数える */
+			trace("暗槓子の種類を調べます。");
+			return countByMelds(MianziDat, Kangzi, [](meldStat x){return x == meldQuadConcealed;});
+		}
+		__declspec(dllexport) int countAnKangz(int* const KangzCount, const int* const MianziDat) {
+			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
+			int Kangzi; auto kzCount = countAnKangz(mnzDat, &Kangzi);
+			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) KangzCount[i] = kzCount[i];
+			return Kangzi;
+		}
+
+		/* 加槓の数を数える */
+		Int8ByTile countKaKangz(const MELD_BUF MianziDat, int* const Kangzi) { /* 加槓の数を数える */
+			trace("加槓の種類を調べます。");
+			return countByMelds(MianziDat, Kangzi, [](meldStat x){return x >= meldQuadAddedLeft;});
+		}
+		__declspec(dllexport) int countKaKangz(int* const KangzCount, const int* const MianziDat) {
+			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
+			int Kangzi; auto kzCount = countKaKangz(mnzDat, &Kangzi);
+			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) KangzCount[i] = kzCount[i];
+			return Kangzi;
+		}
+
 	}
 }

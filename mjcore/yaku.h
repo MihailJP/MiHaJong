@@ -3,7 +3,7 @@
 
 #include <cstring>
 #include <type_traits>
-#include <cstdio>
+#include <functional>
 #include "largenum.h"
 #include "gametbl.h"
 #include "tileutil.h"
@@ -82,6 +82,10 @@ namespace yaku {
 		int countTileNumerals(const Int8ByTile tileCount);
 		__declspec(dllexport) int countTileNumerals(const int* const tileCount);
 
+		Int8ByTile countByMelds(
+			const MELD_BUF MianziDat, int* const hits,
+			std::function<bool (meldStat)> f);
+
 		Int8ByTile countKez(const MELD_BUF MianziDat, int* const Kezi);
 		__declspec(dllexport) int countKez(int* const KezCount, const int* const MianziDat);
 		Int8ByTile countAnKez(const MELD_BUF MianziDat, int* const Kezi);
@@ -93,6 +97,14 @@ namespace yaku {
 		__declspec(dllexport) void countShunz(int* const ShunzCount, const int* const MianziDat);
 		Int8ByTile countAnShunz(const MELD_BUF MianziDat);
 		__declspec(dllexport) void countAnShunz(int* const ShunzCount, const int* const MianziDat);
+
+		Int8ByTile countKangz(const MELD_BUF MianziDat, int* const Kangzi);
+		__declspec(dllexport) int countKangz(int* const KangzCount, const int* const MianziDat);
+		Int8ByTile countAnKangz(const MELD_BUF MianziDat, int* const Kangzi);
+		__declspec(dllexport) int countAnKangz(int* const KangzCount, const int* const MianziDat);
+		Int8ByTile countKaKangz(const MELD_BUF MianziDat, int* const Kangzi);
+		__declspec(dllexport) int countKaKangz(int* const KangzCount, const int* const MianziDat);
+
 	}
 }
 
