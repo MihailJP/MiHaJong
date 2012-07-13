@@ -214,7 +214,7 @@ namespace yaku {
 			pMode.AtamaCode = tileCode(AtamaCode/4);
 			pMode.Order = ParseOrder(AtamaCode%4);
 			makementsu(gameStat, (PLAYER_ID)targetPlayer, pMode, ProcessedMelds, mnzDat);
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++)
 				MianziDat[i] = (int)mnzDat[i].tile + (int)mnzDat[i].mstat * MELD_TYPE_STEP;
 		}
 	}
@@ -257,6 +257,58 @@ namespace yaku {
 			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) tlCount[i] = tileCount[i];
 			int ans = countTileNumerals(tlCount);
 			return ans;
+		}
+	
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+		/* 刻子の数を数える */
+		Int8ByTile countKez(const MELD_BUF MianziDat, int* const Kezi) { /* 刻子の数を数える */
+			trace("刻子・槓子の種類を調べます。");
+			Int8ByTile KezCount; memset(&KezCount, 0, sizeof(KezCount));
+			if (Kezi != NULL) *Kezi = 0;
+			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
+				if (MianziDat[i].mstat >= meldTripletConcealed) {
+					++(KezCount[MianziDat[i].tile]);
+					if (Kezi != NULL) ++(*Kezi);
+				}
+			}
+			return KezCount;
+		}
+		__declspec(dllexport) int countKez(int* const KezCount, const MELD_BUF MianziDat) {
+			int Kezi; auto kzCount = countKez(MianziDat, &Kezi);
+			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) KezCount[i] = kzCount[i];
+			return Kezi;
+		}
+
+		/* 暗刻子の数を数える */
+		Int8ByTile countAnKez(const MELD_BUF MianziDat, int* const Kezi) { /* 暗刻子の数を数える */
+			trace("暗刻子・暗槓子の種類を調べます。");
+			Int8ByTile KezCount; memset(&KezCount, 0, sizeof(KezCount));
+			if (Kezi != NULL) *Kezi = 0;
+			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
+				if ((MianziDat[i].mstat == meldTripletConcealed)||(MianziDat[i].mstat == meldQuadConcealed)) {
+					++(KezCount[MianziDat[i].tile]);
+					if (Kezi != NULL) ++(*Kezi);
+				}
+			}
+			return KezCount;
+		}
+		__declspec(dllexport) int countAnKez(int* const KezCount, const MELD_BUF MianziDat) {
+			int Kezi; auto kzCount = countAnKez(MianziDat, &Kezi);
+			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) KezCount[i] = kzCount[i];
+			return Kezi;
+		}
+
+		/* 対子・刻子・槓子の数を数える */
+		Int8ByTile countDuiz(const MELD_BUF MianziDat) { /* 対子・刻子・槓子の数を数える */
+			trace("対子・刻子・槓子の種類を調べます。");
+			auto DuiCount = countKez(MianziDat, NULL);
+			++(DuiCount[MianziDat[0].tile]);
+			return DuiCount;
+		}
+		__declspec(dllexport) void countDuiz(int* const DuiCount, const MELD_BUF MianziDat) {
+			auto kzCount = countDuiz(MianziDat);
+			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) DuiCount[i] = kzCount[i];
 		}
 	}
 }

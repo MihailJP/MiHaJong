@@ -6,6 +6,8 @@
 
 /* 指定の刻子・順子があるか数える */
 #module
+#include "const.hsp"
+#include "mjcore.hsp"
 #defcfunc countSpecMentz array MianziDat, array targetKez, array targetShunz, int Mode
 /*
 		val=countSpecMentz(p1, p2, p3, p4)

@@ -73,13 +73,19 @@ namespace yaku {
 	// ---------------------------------------------------------------------
 
 	namespace countingFacility {
-		/* éwíËÇÃëŒéqÇ™Ç†ÇÈÇ©êîÇ¶ÇÈ */
 		int countPairs(
 			const Int8ByTile tileCount, const tileCode* const targetTiles, int numOfTiles);
 		__declspec(dllexport) int countPairs(
 			const int* const tileCount, const int* const targetTiles, int numOfTiles);
 		int countTileNumerals(const Int8ByTile tileCount);
 		__declspec(dllexport) int countTileNumerals(const int* const tileCount);
+
+		Int8ByTile countKez(const MELD_BUF MianziDat, int* const Kezi);
+		__declspec(dllexport) int countKez(int* const KezCount, const MELD_BUF MianziDat);
+		Int8ByTile countAnKez(const MELD_BUF MianziDat, int* const Kezi);
+		__declspec(dllexport) int countAnKez(int* const KezCount, const MELD_BUF MianziDat);
+		Int8ByTile countDuiz(const MELD_BUF MianziDat);
+		__declspec(dllexport) void countDuiz(int* const DuiCount, const MELD_BUF MianziDat);
 	}
 }
 

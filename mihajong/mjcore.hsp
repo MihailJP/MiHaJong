@@ -130,6 +130,14 @@
 //#cfunc _countPairs "?countPairs@countingFacility@yaku@@YAHQBH0H@Z" var, var, int
 #cfunc countTileNumerals "?countTileNumerals@countingFacility@yaku@@YAHQBH@Z" var
 
+/* chk-trpl.hspからの移植 */
+#func _countKez "?countKez@countingFacility@yaku@@YAHQAHQBUmeldCode@@@Z" var, var
+#define countKez(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countKez %1, %2
+#func _countAnKez "?countAnKez@countingFacility@yaku@@YAHQAHQBUmeldCode@@@Z" var, var
+#define countAnKez(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countAnKez %1, %2
+#func _countDuiz "?countDuiz@countingFacility@yaku@@YAXQAHQBUmeldCode@@@Z" var, var
+#define countDuiz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countDuiz %1, %2
+
 /* ------------------------------------------------------------------------ */
 
 /*  卓情報へのアクセサ  */
