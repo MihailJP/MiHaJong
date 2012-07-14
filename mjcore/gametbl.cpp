@@ -1280,6 +1280,7 @@ extern "C" {
 				for (int j = 0; j < 4; j++)
 					sandbox->Player[p].Meld[i].red[j] = gameStat->Player[p].Meld[i].red[j];
 			}
+			sandbox->Player[p].MeldPointer = gameStat->Player[p].MeldPointer;
 			sandbox->Player[p].MenzenFlag = gameStat->Player[p].MenzenFlag;
 			sandbox->Player[p].NumberOfQuads = gameStat->Player[p].NumberOfQuads;
 			sandbox->Player[p].RichiFlag.RichiFlag = gameStat->Player[p].RichiFlag.RichiFlag;
