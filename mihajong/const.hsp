@@ -4,10 +4,12 @@
  *=============================
  */
 
+#include "..\\mjcore\\version.h"
+
 /* バージョン情報 */
-#define VERSION_MAJ 1
-#define VERSION_MED 5
-#define VERSION_MIN 3
+#define VERSION_MAJ MIHAJONG_MAJOR_VER
+#define VERSION_MED MIHAJONG_MINOR_VER
+#define VERSION_MIN MIHAJONG_PATCH_VER
 #define VERSION_MIC ""
 
 /* フォントの指定 */

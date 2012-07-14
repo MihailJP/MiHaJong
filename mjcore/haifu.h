@@ -10,6 +10,7 @@
 #include "largenum.h"
 #include "func.h"
 #include "envtbl.h"
+#include "version.h"
 
 // 今のところここでしか使ってないから仮置き。
 // 移植が進んで別のところでも使うようなら移動します

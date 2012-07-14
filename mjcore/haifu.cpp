@@ -183,7 +183,7 @@ namespace haifu { // 牌譜記録用のコード
 			case Sanma:  headerTxt << "三人打ち"; break;
 			case Yonma:  headerTxt << "四人打ち"; break;
 		}
-		headerTxt << "牌譜データ Ver. " << "???";
+		headerTxt << "牌譜データ Ver. " << MIHAJONG_VER;
 
 		/* プレーンテキスト牌譜 */
 		haifuBuffer.str("");
@@ -818,7 +818,8 @@ namespace haifu { // 牌譜記録用のコード
 			case Sanma4: filename1 << "mihaysnm"; break;
 			case SanmaS: filename1 << "mihassnm"; break;
 		}
-		filename1 << "_" << "DEVEL";
+		filename1 << "_" << MIHAJONG_MAJOR_VER << "_" <<
+			MIHAJONG_MINOR_VER << "_" << MIHAJONG_PATCH_VER;
 
 		SYSTEMTIME ltime; GetLocalTime(&ltime);
 		filename2 << std::setw(4) << std::setfill('0') << ltime.wYear;
