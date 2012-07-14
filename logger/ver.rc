@@ -6,13 +6,8 @@
 #include <commctrl.h>
 #include <richedit.h>
 #include "resource.h"
-#include "version.h"
+#include "../mjcore/version.h"
 
-
-
-
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-IDR_LZMA_STREA1    LZMA_STREAM    "mentz.dat.lzma"
 
 
 
@@ -21,7 +16,7 @@ IDR_LZMA_STREA1    LZMA_STREAM    "mentz.dat.lzma"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     MJCORE_MAJOR_VER,MJCORE_MINOR_VER,MJCORE_PATCH_VER,0
+    FILEVERSION     LOGGER_MAJOR_VER,LOGGER_MINOR_VER,LOGGER_PATCH_VER,0
     PRODUCTVERSION  MIHAJONG_MAJOR_VER,MIHAJONG_MINOR_VER,MIHAJONG_PATCH_VER,0
     FILEOS          VOS_NT_WINDOWS32
     FILETYPE        VFT_DLL
@@ -39,12 +34,12 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Comments", ""
             VALUE "CompanyName", ""
-            VALUE "FileDescription", "MiHaJong core module"
-            VALUE "FileVersion", MJCORE_VER
-            VALUE "InternalName", "mjcore"
-            VALUE "LegalCopyright", "Copyright (c) 2008-2012 MihailJP Part of rights reserved.\nLZMA SDK by Igor Pavlov, under public domain."
+            VALUE "FileDescription", "MiHaJong logger"
+            VALUE "FileVersion", LOGGER_VER
+            VALUE "InternalName", "logger"
+            VALUE "LegalCopyright", "Copyright (c) 2008-2012 MihailJP Part of rights reserved."
             VALUE "LegalTrademarks", ""
-            VALUE "OriginalFilename", "mjcore.dll"
+            VALUE "OriginalFilename", "logger.dll"
             VALUE "PrivateBuild", ""
             VALUE "ProductName", "MiHaJong"
             VALUE "ProductVersion", MIHAJONG_VER
