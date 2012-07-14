@@ -10,8 +10,8 @@ copy mihajong\license.txt release\mihajong
 copy mihajong\history.txt release\mihajong
 copy mihajong\playing.txt release\mihajong
 mkdir release\mihajong\bgm
-rem mkdir release\mihajong\dat
-rem copy mihajong\dat\*.* release\mihajong\dat
+mkdir release\mihajong\data
+copy mihajong\data\*.* release\mihajong\data
 mkdir release\mihajong\haifu
 copy mihajong\haifu\haifu.css release\mihajong\haifu
 mkdir release\mihajong\img
