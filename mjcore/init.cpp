@@ -6,5 +6,9 @@ __declspec(dllexport) std::list<Yaku>* initYaku() {
 	/*
 	 * ここにコンストラクタを並べる
 	 */
+	yakuCatalog.push_back(Yaku( // テスト用のダミーの役
+		"ダミー", 1, 0,
+		[](){return true;}
+	));
 	return &yakuCatalog;
 }
