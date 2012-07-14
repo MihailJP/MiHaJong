@@ -277,7 +277,7 @@ namespace yaku {
 			Int8ByTile hitCount; memset(&hitCount, 0, sizeof(hitCount));
 			if (hits != NULL) *hits = 0;
 			for (int i = 1; i < SIZE_OF_MELD_BUFFER; i++) {
-				if (f(MianziDat[i].mstat)) {
+				if (f(MianziDat[i].mstat)&&(MianziDat[i].tile != NoTile)) {
 					++(hitCount[MianziDat[i].tile]);
 					if (hits != NULL) ++(*hits);
 				}
@@ -386,5 +386,68 @@ namespace yaku {
 			return Kangzi;
 		}
 
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+		/* 指定の刻子・順子があるか数える */
+		int countSpecMentz(const MELD_BUF MianziDat, const tileCode* const targetKez, int numOfKez,
+			const tileCode* const targetShunz, int numOfShunz, bool Mode)
+		{ // 指定した種類の面子を数える
+			int kz = 0; int sz = 0;
+			auto DuiCount = Mode ? countKez(MianziDat, NULL) : countDuiz(MianziDat);
+			auto ShunzCount = countShunz(MianziDat);
+			int yakuflagcount = 0;
+			for (int i = 0; i < numOfKez; i++) {
+				if (targetKez[i] == NoTile) continue;
+				if (DuiCount[targetKez[i]] >= 1) ++yakuflagcount;
+			}
+			for (int i = 0; i < numOfShunz; i++) {
+				if (targetShunz[i] == NoTile) continue;
+				if (ShunzCount[targetShunz[i]] >= 1) ++yakuflagcount;
+			}
+			return yakuflagcount;
+		}
+		__declspec(dllexport) int countSpecMentz(const int* const MianziDat,
+			int* const targetKez, int numOfKez, int* const targetShunz, int numOfShunz, int Mode)
+		{
+			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
+			tileCode* tKez = new tileCode[numOfKez];
+			tileCode* tShunz = new tileCode[numOfShunz];
+			for (int i = 0; i < numOfKez; i++) tKez[i] = (tileCode)(targetKez[i] % MELD_TYPE_STEP);
+			for (int i = 0; i < numOfShunz; i++) tShunz[i] = (tileCode)(targetShunz[i] % MELD_TYPE_STEP);
+			int ans = countSpecMentz(mnzDat, tKez, numOfKez, tShunz, numOfShunz, (bool)Mode);
+			delete[] tKez, tShunz;
+			return ans;
+		}
+
+		/* 数字の合計を数える */
+		int countMentzNumerals(const MELD_BUF MianziDat) { /* 数字の合計を数える */
+			int Cifr = 0;
+			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
+				if (MianziDat[i].tile % TILE_CODE_MAXIMUM < TILE_SUIT_HONORS) {
+					if (i == 0) { // 雀頭
+						Cifr += (MianziDat[0].tile % TILE_SUIT_STEP) * 2;
+					} else { // 面子
+						switch (MianziDat[i].mstat) {
+						case meldSequenceConcealed: case meldSequenceExposedLower:
+						case meldSequenceExposedMiddle: case meldSequenceExposedUpper:
+							Cifr += (((MianziDat[i].tile % TILE_SUIT_STEP)+1) * 3); // 順子
+							break;
+						case meldTripletConcealed: case meldTripletExposedLeft:
+						case meldTripletExposedCenter: case meldTripletExposedRight:
+							Cifr += ((MianziDat[i].tile % TILE_SUIT_STEP) * 3); // 刻子
+							break;
+						default:
+							Cifr += ((MianziDat[i].tile % TILE_SUIT_STEP) * 4); // 槓子
+							break;
+						}
+					}
+				}
+			}
+			return Cifr;
+		}
+		__declspec(dllexport) int countMentzNumerals(const int* const MianziDat) {
+			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
+			return countMentzNumerals(mnzDat);
+		}
 	}
 }

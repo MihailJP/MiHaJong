@@ -6,67 +6,10 @@
 
 /* 指定の刻子・順子があるか数える */
 #module
-#include "const.hsp"
-#include "mjcore.hsp"
+#uselib "mjcore.dll"
+#cfunc _countSpecMentz "?countSpecMentz@countingFacility@yaku@@YAHQBHQAHH1HH@Z" var, var, int, var, int, int
 #defcfunc countSpecMentz array MianziDat, array targetKez, array targetShunz, int Mode
-/*
-		val=countSpecMentz(p1, p2, p3, p4)
-		指定した種類の面子を数える
-
-		p1 : 面子構成を格納した配列
-		p2 : 探したい刻子の配列
-		p3 : 探したい順子の配列
-		p4 : モード(0なら雀頭も数える)
-
-		指定した種類のうち何種類の刻子・順子があるかを返します。
-*/
-	if (Mode == 0) {countDuiz DuiCount, MianziDat} else {countKez DuiCount, MianziDat}
-	countShunz ShunzCount, MianziDat
-	yakuflagcount = 0
-	repeat length(targetKez)
-		if (targetKez(cnt)==0) {continue}
-		if (DuiCount(targetKez(cnt)) >= 1) {yakuflagcount++}
-	loop
-	repeat length(targetShunz)
-		if (targetShunz(cnt)==0) {continue}
-		if (ShunzCount(targetShunz(cnt)) >= 1) {yakuflagcount++}
-	loop
-	return yakuflagcount
-#global
-
-/* 数字の合計を数える */
-#module
-#include "const.hsp"
-#defcfunc countMentzNumerals array MianziDat
-/*
-		val=countMentzNumerals(p1)
-		数字の合計を数える
-
-		p1 : 面子構成を格納した配列
-
-		面子にある数牌の数字の合計を返します。
-*/
-	Cifr = 0
-	repeat SIZE_OF_MELD_BUFFER
-		if (MianziDat(cnt) \ TILE_CODE_MAXIMUM < TILE_NUMERAL_MAX) {
-			if (cnt == 0) {
-				Cifr += (MianziDat(0) \ TILE_SUIT_STEP) * 2
-			} else {
-				switch (MianziDat(cnt) / MELD_TYPE_STEP)
-					case MELD_SEQUENCE_CONCEALED: case MELD_SEQUENCE_EXPOSED_LOWER: case MELD_SEQUENCE_EXPOSED_MIDDLE: case MELD_SEQUENCE_EXPOSED_UPPER:
-						Cifr += (((MianziDat(cnt) \ TILE_SUIT_STEP)+1) * 3)
-					swbreak
-					case MELD_TRIPLET_CONCEALED: case MELD_TRIPLET_EXPOSED_LEFT: case MELD_TRIPLET_EXPOSED_CENTER: case MELD_TRIPLET_EXPOSED_RIGHT:
-						Cifr += ((MianziDat(cnt) \ TILE_SUIT_STEP) * 3)
-					swbreak
-					default:
-						Cifr += ((MianziDat(cnt) \ TILE_SUIT_STEP) * 4)
-					swbreak
-				swend
-			}
-		}
-	loop
-	return Cifr
+	return _countSpecMentz(MianziDat, targetKez, length(targetKez), targetShunz, length(targetShunz), Mode)
 #global
 
 /* その他の役 */

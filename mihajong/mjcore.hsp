@@ -152,6 +152,10 @@
 #func _countKaKangz "?countKaKangz@countingFacility@yaku@@YAHQAHQBH@Z" var, var
 #define countKaKangz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countKaKangz %1, %2
 
+/* chk-misc.hspからの移植 */
+//#cfunc _countSpecMentz "?countSpecMentz@countingFacility@yaku@@YAHQBHQAHH1HH@Z" var, var, int, var, int, int
+#cfunc countMentzNumerals "?countMentzNumerals@countingFacility@yaku@@YAHQBH@Z" var
+
 /* ------------------------------------------------------------------------ */
 
 /*  卓情報へのアクセサ  */

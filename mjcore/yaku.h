@@ -105,6 +105,12 @@ namespace yaku {
 		Int8ByTile countKaKangz(const MELD_BUF MianziDat, int* const Kangzi);
 		__declspec(dllexport) int countKaKangz(int* const KangzCount, const int* const MianziDat);
 
+		int countSpecMentz(const MELD_BUF MianziDat, const tileCode* const targetKez, int numOfKez,
+			const tileCode* const targetShunz, int numOfShunz, bool Mode);
+		__declspec(dllexport) int countSpecMentz(const int* const MianziDat,
+			int* const targetKez, int numOfKez, int* const targetShunz, int numOfShunz, int Mode);
+		int countMentzNumerals(const MELD_BUF MianziDat);
+		__declspec(dllexport) int countMentzNumerals(const int* const MianziDat);
 	}
 }
 
