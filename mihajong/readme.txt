@@ -60,7 +60,6 @@
 
 	・OSの設定で左右のボタンを入れ替えているとマウスボタンで正常に打牌できない。
 	・ポン聴または吃聴の直後、画面下の待ち牌表示に変なものが表示される。
-	・永田町ルールをONにしているとドラ表示牌の読み方の設定が反映されない。
 	・たまにCOMが喰い変えをする。
 	・上家が親のときサイコロの上に文字が表示される。
 
@@ -68,12 +67,12 @@
 ■ MihailJPの開発環境
 
 	・OS：Windows 7 Home Premium 32bit (Service Pack 1)
-	・物理メモリ：2GB
-	・CPU：Intel Core2 Duo E8200 2.66GHz
-	・開発言語：Hot Soup Processor ver3.3
+	・物理メモリ：4GB（3.2GB使用可能）
+	・CPU：Intel Core i5 750 2.67GHz
+	・開発環境：Hot Soup Processor ver3.3、Visual C++ 2010 Express
 	・画像編集ツール：GIMP 2.6
-	・テキストエディタ：Mery
-	・Gitクライアント：Cygwin GIT の併用
+	・テキストエディタ：Mery、Notepad++、サクラエディタ
+	・Gitクライアント：Cygwin GIT
 
 
 ■ ビルドに別途必要なもの
