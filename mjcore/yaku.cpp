@@ -394,10 +394,8 @@ namespace yaku {
 		CRITICAL_SECTION CalculatorThread::cs;
 		int CalculatorThread::runningThreads = 0;
 
-		int CalculatorThread::getRunningThreads() { // 動いているスレッドの数
-			int threads;
-			EnterCriticalSection(&cs); threads = runningThreads; LeaveCriticalSection(&cs);
-			return threads;
+		int CalculatorThread::numOfRunningThreads() { // 動いているスレッドの数
+			return runningThreads;
 		}
 
 		DWORD WINAPI CalculatorThread::calculate
@@ -407,6 +405,13 @@ namespace yaku {
 			/* ここに処理を書く */
 			EnterCriticalSection(&cs); --runningThreads; LeaveCriticalSection(&cs); // スレッド数デクリメント
 			return S_OK;
+		}
+
+		CalculatorThread::CalculatorThread() {
+			InitializeCriticalSection(&cs);
+		}
+		CalculatorThread::~CalculatorThread() {
+			DeleteCriticalSection(&cs);
 		}
 
 		// 役が成立しているか判定する
@@ -427,6 +432,7 @@ namespace yaku {
 				return yakuInfo;
 			}
 			// 和了っているなら
+			CalculatorThread* calculator = new CalculatorThread; // インスタンスの準備
 			if (shanten[shantenRegular] == -1) {
 				// 一般形の和了
 			} else {
@@ -434,7 +440,13 @@ namespace yaku {
 				MENTSU_ANALYSIS analysis; memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
 				memcpy(analysis.shanten, shanten, sizeof(shanten));
 				analysis.player = targetPlayer;
+				CalculatorParam calcprm; memset(&calcprm, 0, sizeof(CalculatorParam));
+				calcprm.gameStat = gameStat; calcprm.instance = calculator;
+				memcpy(&calcprm.analysis, &analysis, sizeof(MENTSU_ANALYSIS));
+				CalculatorThread::calculator(&calcprm);
+				while (CalculatorThread::numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
 			}
+			delete calculator; // 用事が済んだら片づけましょう
 			return yakuInfo;
 		}
 		__declspec(dllexport) void countyaku(const GameTable* const gameStat,

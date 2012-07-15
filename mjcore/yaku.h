@@ -135,8 +135,10 @@ namespace yaku {
 		class CalculatorThread {
 		public:
 			static DWORD WINAPI calculator(LPVOID lpParam);
-			static int getRunningThreads(); // 動いているスレッドの数
+			static int numOfRunningThreads(); // 動いているスレッドの数
 			static const int threadLimit = 4; // 同時に起動する最大のスレッド数
+			CalculatorThread(); // デフォルトコンストラクタ
+			~CalculatorThread(); // デフォルトデストラクタ
 		private:
 			static int runningThreads;
 			static CRITICAL_SECTION cs;
@@ -146,7 +148,7 @@ namespace yaku {
 		struct CalculatorParam {
 			ParseMode pMode;
 			CalculatorThread* instance;
-			GameTable* gameStat;
+			const GameTable* gameStat;
 			MENTSU_ANALYSIS analysis;
 		};
 #ifdef MJCORE_EXPORTS
