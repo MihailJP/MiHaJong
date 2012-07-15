@@ -16,4 +16,9 @@
 #define LOGGER_PATCH_VER 0
 #define LOGGER_VER "1.6.0"
 
+#define ASTRO_MAJOR_VER 1
+#define ASTRO_MINOR_VER 6
+#define ASTRO_PATCH_VER 1
+#define ASTRO_VER "1.6.1"
+
 #endif
