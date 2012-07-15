@@ -79,6 +79,7 @@
     <ClCompile Include="ecllong.c" />
     <ClCompile Include="julian.c" />
     <ClCompile Include="mphase.c" />
+    <ClCompile Include="sunrise.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="astro.h" />

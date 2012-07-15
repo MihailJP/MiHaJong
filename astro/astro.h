@@ -41,6 +41,11 @@ struct MoonPhase
 	double SunAng; /* the angular size of Sun in degrees */
 };
 
+struct SUN_RISE_SET
+{
+	double hour_rise_ut, hour_set_ut;
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -56,6 +61,10 @@ extern "C" {
 	/* mphase.c */
 	EXPORT struct MoonPhase calc_moon_phase (double);
 	EXPORT void calc_moon_phase_hsp (double*, double);
+
+	/* sunrise.c */
+	EXPORT struct RISE_SET_HOUR sunrise (int, int, int, double, double, double, int, double);
+	EXPORT void sunrise_hsp (char*, int, int, int, int, double, int, double, double, double);
 
 #ifdef __cplusplus
 }
