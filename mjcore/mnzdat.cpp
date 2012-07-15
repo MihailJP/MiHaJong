@@ -233,7 +233,7 @@ SHANTEN calcShantenStellar(const GameTable* const gameStat, PLAYER_ID playerID, 
 	if ((getRule(RULE_STELLAR_UUSHII) == 0)&&(qixing)) return SHANTEN_IMPOSSIBLE;
 	else if ((getRule(RULE_QUANBUKAO) == 0)&&(!qixing)) return SHANTEN_IMPOSSIBLE;
 
-	SHANTEN shanten = 999;
+	SHANTEN shanten = SHANTEN_IMPOSSIBLE;
 	tileCode QixingZiPai[7] = {
 		EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
 	};

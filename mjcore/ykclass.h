@@ -4,11 +4,15 @@
 #include <string>
 #include <functional>
 #include <cstdint>
+#include "gametbl.h"
 
 namespace yaku {
 	namespace yakuCalculator {
 
-		typedef std::function<bool ()> YAKUFUNC;
+		struct MENTSU_ANALYSIS;
+
+		typedef std::function<bool
+			(const GameTable* const, const MENTSU_ANALYSIS* const)> YAKUFUNC;
 
 		enum hanUnit : uint8_t {Han, Mangan, Yakuman};
 		class Yaku {
@@ -28,7 +32,10 @@ namespace yaku {
 			YAKUFUNC yakuProc; // –ð‚Ì”»’è•û–@
 			Yaku() {} // Default constructor
 		public:
-			bool checkYaku() {return this->yakuProc();} // –ð‚ð”»’è‚·‚é
+			bool checkYaku(const GameTable* const gameStat, const MENTSU_ANALYSIS* const mentsu) {
+				 // –ð‚ð”»’è‚·‚é
+				return this->yakuProc(gameStat, mentsu);
+			}
 			std::string getName() {return this->yakuName;} // –ð‚Ì–¼‘O‚ðŽæ“¾‚·‚é
 			// Constructor
 			Yaku(std::string name, YAKU_HAN han, YAKU_HAN icHan, YAKUFUNC f) {

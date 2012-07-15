@@ -376,7 +376,9 @@ namespace yaku {
 			 */
 			YakuCatalog::Instantiate()->catalog.push_back(Yaku( // テスト用のダミーの役
 				"ダミー", Yaku::YAKU_HAN(1, Han), Yaku::YAKU_HAN(),
-				[](){return true;}
+				[](const GameTable* const, const MENTSU_ANALYSIS* const) {
+					return true;
+				}
 			));
 			info("役カタログの構築を完了しました。");
 		}
@@ -388,13 +390,19 @@ namespace yaku {
 			debug(o.str().c_str());
 			// 初期化
 			YAKUSTAT yakuInfo; YAKUSTAT::Init(&yakuInfo);
+			// シャンテン数をチェック
+			SHANTEN shanten[SHANTEN_PAGES];
+			for (int i = 0; i < SHANTEN_PAGES; i++)
+				shanten[i] = calcShanten(gameStat, targetPlayer, (shantenType)i);
 			// 和了ってるか判定
-			if (calcShanten(gameStat, targetPlayer, shantenAll) > -1) {
+			if (shanten[shantenAll] > -1) {
 				trace("和了っていないので抜けます");
 				return yakuInfo;
 			}
+			//
+
 			// 和了っているなら
-			if (calcShanten(gameStat, targetPlayer, shantenRegular) == -1) {
+			if (shanten[shantenRegular] == -1) {
 				// 一般形の和了
 			} else {
 				// 七対子、国士無双、その他特殊な和了

@@ -115,6 +115,7 @@ namespace yaku {
 		__declspec(dllexport) void init();
 
 		struct MENTSU_ANALYSIS { // 面子解析結果
+			SHANTEN shanten[SHANTEN_PAGES];
 			MELD_BUF MianziDat; // 面子パース結果
 			Int8ByTile KeziCount; // 刻子・槓子の数
 			Int8ByTile AnKeziCount; // 暗刻・暗槓の数

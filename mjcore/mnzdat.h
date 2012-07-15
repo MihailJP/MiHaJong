@@ -26,7 +26,7 @@
 #include "dllmain.h"
 #endif
 
-#define SHANTEN_IMPOSSIBLE 999
+#define SHANTEN_IMPOSSIBLE SCHAR_MAX
 
 #ifdef MJCORE_EXPORTS
 MJCORE Int8ByTile countTilesInHand(const GameTable* const gameStat, PLAYER_ID playerID); // External
@@ -39,7 +39,7 @@ void verifyMentsuAnalysisDat(size_t bufSize);
 __declspec(dllexport) void initMentsuAnalysisDat();
 #endif
 
-typedef int SHANTEN; // 向聴数のためのデータ型（0=聴牌、-1=和了、999=無効）
+typedef int8_t SHANTEN; // 向聴数のためのデータ型（0=聴牌、-1=和了、999=無効）
 enum shantenType : uint8_t { // getShantenに渡すスイッチ用
 	shantenAll, // すべて求める
 	shantenRegular, // 普通の和了形のみ
@@ -50,6 +50,7 @@ enum shantenType : uint8_t { // getShantenに渡すスイッチ用
 	shantenSyzygy, // 惑星直列
 	shantenQuanbukao // 全不靠
 };
+#define SHANTEN_PAGES 8
 
 MJCORE SHANTEN calcShanten(const GameTable* const gameStat, PLAYER_ID playerID, shantenType mode);
 #ifdef MJCORE_EXPORTS
