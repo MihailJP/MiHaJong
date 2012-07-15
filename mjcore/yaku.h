@@ -4,12 +4,15 @@
 #include <cstring>
 #include <type_traits>
 #include <functional>
+#include <list>
 #include "largenum.h"
 #include "gametbl.h"
 #include "tileutil.h"
+#include "ykclass.h"
 
 namespace yaku {
 	EXPORT_STRUCT YAKUSTAT {
+		bool isValid; // 和了っているかどうか
 		int BasePoints; // 符
 		int CoreHan; // 翻
 		int BonusHan; // 翻（縛りを満たさない）
@@ -66,8 +69,8 @@ namespace yaku {
 		void makementsu(const GameTable* const gameStat,
 			PLAYER_ID targetPlayer, ParseMode AtamaCode,
 			int* const ProcessedMelds, MELD_BUF MianziDat); /* 面子に分解する */
-		__declspec(dllexport) void makementsu(const GameTable* const gameStat,
-			int targetPlayer, int AtamaCode, int* const ProcessedMelds, void* const MianziDat);
+		__declspec(dllexport) void makementsu(const GameTable* const gameStat, void *,
+			int targetPlayer, int AtamaCode, int* const ProcessedMelds, int* const MianziDat);
 
 		void inline ReadAgainMentsu(MELD_BUF target, const int* const source); /* 逆変換 */
 	}
@@ -111,6 +114,42 @@ namespace yaku {
 			int* const targetKez, int numOfKez, int* const targetShunz, int numOfShunz, int Mode);
 		int countMentzNumerals(const MELD_BUF MianziDat);
 		__declspec(dllexport) int countMentzNumerals(const int* const MianziDat);
+	}
+
+	// ---------------------------------------------------------------------
+
+	namespace yakuCalculator {
+
+		class YakuCatalog { // 役の一覧 [singleton]
+		private:
+			YakuCatalog() {}
+			YakuCatalog(const YakuCatalog&);
+			YakuCatalog& operator= (const YakuCatalog&);
+		public:
+			static YakuCatalog* Instantiate(); // Singleton instance accessor
+			std::list<Yaku> catalog;
+		};
+
+		__declspec(dllexport) void init();
+
+		struct MENTSU_ANALYSIS { // 面子解析結果
+			MELD_BUF MianziDat; // 面子パース結果
+			Int8ByTile KeziCount; // 刻子・槓子の数
+			Int8ByTile AnKeziCount; // 暗刻・暗槓の数
+			Int8ByTile DuiziCount; // 対子・刻子・槓子の数
+			Int8ByTile ShunziCount; // 順子の数
+			Int8ByTile AnShunziCount; // 鳴いていない順子の数
+			Int8ByTile KangziCount; // 槓子の数
+			Int8ByTile AnKangziCount; // 暗槓の数
+			Int8ByTile KaKangziCount; // 加槓の数
+		};
+#ifdef MJCORE_EXPORTS
+		static_assert(std::is_pod<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not POD");
+#endif
+
+		YAKUSTAT countyaku(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+		__declspec(dllexport) void countyaku(const GameTable* const gameStat,
+			YAKUSTAT* const yakuInfo, int targetPlayer);
 	}
 }
 

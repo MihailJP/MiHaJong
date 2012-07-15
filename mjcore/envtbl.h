@@ -8,8 +8,8 @@
 class EnvTable { // 卓には直接関係ないデータ [singleton]
 private: // singleton
 	EnvTable(){}
-	EnvTable(const EnvTable& eTbl);
-	EnvTable& operator=(const EnvTable& eTbl);
+	EnvTable(const EnvTable&);
+	EnvTable& operator=(const EnvTable&);
 
 	// 内部クラスとかを定義する
 	class PlayerLabel {

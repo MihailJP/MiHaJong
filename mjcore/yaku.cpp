@@ -8,6 +8,7 @@ namespace yaku {
 
 	/* 既存のインスタンスを初期化する */
 	void YAKUSTAT::Init(YAKUSTAT* const myInstance) {
+		myInstance->isValid = false;
 		myInstance->BasePoints = 20;
 		myInstance->CoreHan = myInstance->BonusHan =
 			myInstance->DoraQuantity = myInstance->UraDoraQuantity =
@@ -449,5 +450,54 @@ namespace yaku {
 			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
 			return countMentzNumerals(mnzDat);
 		}
+	}
+
+	// ---------------------------------------------------------------------
+
+	namespace yakuCalculator {
+		
+		YakuCatalog* YakuCatalog::Instantiate() {
+			// Singleton instance accessor
+			static YakuCatalog instance;
+			return &instance;
+		}
+
+		// 設定したルールに基づいて役インスタンスを初期化する
+		__declspec(dllexport) void init() {
+			/*
+			 * ここにコンストラクタを並べる
+			 */
+			YakuCatalog::Instantiate()->catalog.push_back(Yaku( // テスト用のダミーの役
+				"ダミー", Yaku::YAKU_HAN(1, Han), Yaku::YAKU_HAN(),
+				[](){return true;}
+			));
+		}
+
+		YAKUSTAT countyaku(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+			// 役判定
+			std::ostringstream o;
+			o << "役判定処理を開始 プレイヤー [" << (int)targetPlayer << "]";
+			debug(o.str().c_str());
+			// 初期化
+			YAKUSTAT yakuInfo; YAKUSTAT::Init(&yakuInfo);
+			// 和了ってるか判定
+			if (calcShanten(gameStat, targetPlayer, shantenAll) > -1) {
+				trace("和了っていないので抜けます");
+				return yakuInfo;
+			}
+			// 和了っているなら
+			if (calcShanten(gameStat, targetPlayer, shantenRegular) == -1) {
+				// 一般形の和了
+			} else {
+				// 七対子、国士無双、その他特殊な和了
+			}
+			return yakuInfo;
+		}
+		__declspec(dllexport) void countyaku(const GameTable* const gameStat,
+			YAKUSTAT* const yakuInfo, int targetPlayer)
+		{
+			*yakuInfo = countyaku(gameStat, (PLAYER_ID)targetPlayer);
+		}
+
 	}
 }
