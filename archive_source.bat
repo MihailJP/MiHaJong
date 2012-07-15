@@ -23,6 +23,13 @@ copy logger\*.rc release\source\logger
 copy logger\*.vcxproj release\source\logger
 copy logger\*.vcxproj.filters release\source\logger
 
+mkdir release\source\astro
+copy astro\*.c release\source\astro
+copy astro\*.h release\source\astro
+copy astro\*.rc release\source\astro
+copy astro\*.vcxproj release\source\astro
+copy astro\*.vcxproj.filters release\source\astro
+
 del /q source.zip
 cd release
 "C:\Program Files\7-zip\7z.exe" a -mx=9 ..\source.zip source
