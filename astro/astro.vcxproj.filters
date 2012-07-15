@@ -18,5 +18,13 @@
     <ClCompile Include="mphase.c">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="julian.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="astro.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

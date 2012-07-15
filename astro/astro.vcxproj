@@ -75,7 +75,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="julian.c" />
     <ClCompile Include="mphase.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="astro.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
