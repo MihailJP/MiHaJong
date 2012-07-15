@@ -64,8 +64,8 @@
 #cfunc isNagashiMangan "?isNagashiMangan@@YAHQBUGameTable@@PAXH@Z" int, var, int
 
 /* shanten.hsp‚©‚ç‚ÌˆÚA */
-#func shantenInit "?initMentsuAnalysisDat@@YAXXZ"
-#cfunc countshanten "?calcShanten@@YAHQBUGameTable@@HH@Z" int, int, int
+#func shantenInit "?initMentsuAnalysisDat@ShantenAnalyzer@@SAXXZ"
+#cfunc countshanten "?calcShanten@ShantenAnalyzer@@SAHQBUGameTable@@HH@Z" int, int, int
 
 /* haifu.hsp‚©‚ç‚ÌˆÚA */
 #func haifubufinit "?haifubufinit@haifu@@YAXXZ"

@@ -113,7 +113,7 @@
     <ClCompile Include="lzma\Sha256.c" />
     <ClCompile Include="lzma\Threads.c" />
     <ClCompile Include="mjcore.cpp" />
-    <ClCompile Include="mnzdat.cpp" />
+    <ClCompile Include="shanten.cpp" />
     <ClCompile Include="ruletbl.cpp" />
     <ClCompile Include="tileutil.cpp" />
     <ClCompile Include="yaku.cpp" />
@@ -140,7 +140,7 @@
     <ClInclude Include="lzma\Types.h" />
     <ClInclude Include="mjcore.h" />
     <ClInclude Include="mjexport.h" />
-    <ClInclude Include="mnzdat.h" />
+    <ClInclude Include="shanten.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ruletbl.h" />
     <ClInclude Include="tilecode.h" />

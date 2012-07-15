@@ -30,7 +30,7 @@
     <ClCompile Include="init.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="mnzdat.cpp">
+    <ClCompile Include="shanten.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="lzma\Alloc.c">
@@ -122,7 +122,7 @@
     <ClInclude Include="func.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="mnzdat.h">
+    <ClInclude Include="shanten.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="init.h">
