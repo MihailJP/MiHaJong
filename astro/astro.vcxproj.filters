@@ -21,6 +21,9 @@
     <ClCompile Include="julian.c">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="ecllong.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="astro.h">

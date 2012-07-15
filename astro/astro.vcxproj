@@ -75,6 +75,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ecllong.c" />
     <ClCompile Include="julian.c" />
     <ClCompile Include="mphase.c" />
   </ItemGroup>
