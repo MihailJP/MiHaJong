@@ -112,7 +112,7 @@
 		}
 	}
 #else
-	if (((TileCount(TILE_SPRING) >= 1)||(TileCount(TILE_SUMMER) >= 1)||(TileCount(TILE_AUTUMN) >= 1)||(TileCount(TILE_WINTER) >= 1)||(TileCount(TILE_PLUM) >= 1)||(TileCount(TILE_ORCHID) >= 1)||(TileCount(TILE_CHRYSANTHEMUM) >= 1)||(TileCount(TILE_BAMBOO) >= 1))&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != 0)) {
+	if ((TileCount(TILE_DORA_FLOWER) >= 1)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != 0)) {
 		if ((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO)||(Flowerabilityflag == 1)) {
 			objsize 50, 30
 			pos 720, 500: colorbutton gosub "F3/‰Ô”v", *playerFlower, -1, 0xffddff: tooltip@ stat-STATBOX, "‰Ô”v‚ð‚³‚ç‚µ‚Ü‚·(ƒNƒŠƒbƒN‚µ‚½‚ ‚Æ‚É”v‚ð‘I‘ð‚µ‚Ä‚­‚¾‚³‚¢)"
