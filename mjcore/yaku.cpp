@@ -383,6 +383,33 @@ namespace yaku {
 			info("役カタログの構築を完了しました。");
 		}
 
+		// 計算を実行(マルチスレッドで……大丈夫かなぁ)
+		DWORD WINAPI CalculatorThread::calculator(LPVOID lpParam) {
+			return ((CalculatorParam*)lpParam)->instance->calculate(
+				((CalculatorParam*)lpParam)->gameStat,
+				&(((CalculatorParam*)lpParam)->analysis),
+				&(((CalculatorParam*)lpParam)->pMode));
+		}
+
+		CRITICAL_SECTION CalculatorThread::cs;
+		int CalculatorThread::runningThreads = 0;
+
+		int CalculatorThread::getRunningThreads() { // 動いているスレッドの数
+			int threads;
+			EnterCriticalSection(&cs); threads = runningThreads; LeaveCriticalSection(&cs);
+			return threads;
+		}
+
+		DWORD WINAPI CalculatorThread::calculate
+			(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, const ParseMode* const pMode)
+		{
+			EnterCriticalSection(&cs); ++runningThreads; LeaveCriticalSection(&cs); // スレッド数インクリメント
+			/* ここに処理を書く */
+			EnterCriticalSection(&cs); --runningThreads; LeaveCriticalSection(&cs); // スレッド数デクリメント
+			return S_OK;
+		}
+
+		// 役が成立しているか判定する
 		YAKUSTAT countyaku(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 			// 役判定
 			std::ostringstream o;
@@ -399,13 +426,14 @@ namespace yaku {
 				trace("和了っていないので抜けます");
 				return yakuInfo;
 			}
-			//
-
 			// 和了っているなら
 			if (shanten[shantenRegular] == -1) {
 				// 一般形の和了
 			} else {
 				// 七対子、国士無双、その他特殊な和了
+				MENTSU_ANALYSIS analysis; memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
+				memcpy(analysis.shanten, shanten, sizeof(shanten));
+				analysis.player = targetPlayer;
 			}
 			return yakuInfo;
 		}

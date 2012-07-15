@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <functional>
 #include <list>
+#include <Windows.h>
 #include "largenum.h"
 #include "gametbl.h"
 #include "tileutil.h"
@@ -115,6 +116,7 @@ namespace yaku {
 		__declspec(dllexport) void init();
 
 		struct MENTSU_ANALYSIS { // 面子解析結果
+			PLAYER_ID player;
 			SHANTEN shanten[SHANTEN_PAGES];
 			MELD_BUF MianziDat; // 面子パース結果
 			Int8ByTile KeziCount; // 刻子・槓子の数
@@ -128,6 +130,27 @@ namespace yaku {
 		};
 #ifdef MJCORE_EXPORTS
 		static_assert(std::is_pod<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not POD");
+#endif
+
+		class CalculatorThread {
+		public:
+			static DWORD WINAPI calculator(LPVOID lpParam);
+			static int getRunningThreads(); // 動いているスレッドの数
+			static const int threadLimit = 4; // 同時に起動する最大のスレッド数
+		private:
+			static int runningThreads;
+			static CRITICAL_SECTION cs;
+			DWORD WINAPI calculate(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, const ParseMode* const pMode);
+		};
+
+		struct CalculatorParam {
+			ParseMode pMode;
+			CalculatorThread* instance;
+			GameTable* gameStat;
+			MENTSU_ANALYSIS analysis;
+		};
+#ifdef MJCORE_EXPORTS
+		static_assert(std::is_pod<CalculatorParam>::value, "CalculatorParam is not POD");
 #endif
 
 		YAKUSTAT countyaku(const GameTable* const gameStat, PLAYER_ID targetPlayer);
