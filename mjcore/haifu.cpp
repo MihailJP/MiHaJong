@@ -635,26 +635,29 @@ namespace haifu { // 牌譜記録用のコード
 					}
 					inline void hfPon1(PLAYER_ID player, meldCode meld) {
 						TILE meldTile = {meld.tile, meld.red[0]};
-						recordTile_Inline(
+						if ((meld.mstat == meldQuadAddedLeft) ||
+							(meld.mstat == meldQuadAddedCenter) ||
+							(meld.mstat == meldQuadAddedRight))
+								recordTile_Inline(
+									&haifuP.streamDat[player].final,
+									&HThaifuP.streamDat[player].final,
+									meldTile, meld.red[3]);
+						else recordTile_Inline(
 							&haifuP.streamDat[player].final,
 							&HThaifuP.streamDat[player].final,
-							meldTile, 
-							((meld.mstat == meldQuadAddedLeft) ||
-							(meld.mstat == meldQuadAddedCenter) ||
-							(meld.mstat == meldQuadAddedRight)) ?
-							meld.red[3] : true);
+							meldTile, true);
 					}
 					void hfPon(PLAYER_ID player, meldCode meld) {
 						int tiles, interrupt;
 						switch (meld.mstat) {
-						case meldTripletExposedLeft: case meldQuadExposedLeft:
+						case meldTripletExposedLeft: case meldQuadExposedLeft: case meldQuadAddedLeft:
 							haifuP.streamDat[player].final << " ＜"; interrupt = 1; break;
-						case meldTripletExposedCenter: case meldQuadExposedCenter:
+						case meldTripletExposedCenter: case meldQuadExposedCenter: case meldQuadAddedCenter:
 							haifuP.streamDat[player].final << " ∧"; interrupt = 2; break;
-						case meldTripletExposedRight: case meldQuadExposedRight:
+						case meldTripletExposedRight: case meldQuadExposedRight: case meldQuadAddedRight:
 							haifuP.streamDat[player].final << " ＞"; interrupt = 8; break;
 						case meldQuadConcealed:
-							haifuP.streamDat[player].final << " ◇"; interrupt = 8; break;
+							haifuP.streamDat[player].final << " ◇"; interrupt = 7; break;
 						}
 						switch (meld.mstat) {
 						case meldTripletExposedLeft: case meldTripletExposedCenter:
