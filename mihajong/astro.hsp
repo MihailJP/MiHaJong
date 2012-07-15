@@ -4,8 +4,6 @@
  *=============================
  */
 
-#include "IMPORTED.hsp"
-
 #uselib "kernel32.dll"
 #ifndef GetSystemTime
 #func GetSystemTime@ "GetSystemTime" var
@@ -17,46 +15,30 @@
 	dim nowtime, 4
 	GetSystemTime@ nowtime
 	return wpeek(nowtime, param*2)
-#global
-#endif
 
-#ifndef julian
-#module
-#include "hspmath.as"
+#uselib "astro.dll"
+#func _julian "time_to_julian_hsp" var, int, int, int, int, int, int, int
+#func _sun_ecliptic "sun_ecliptic_longitude_hsp" var, double
+#func _CalcMoonPhase "calc_moon_phase_hsp" var, double
+#func _sunrise "sunrise_hsp" var, int, int, int, int, double, int, double, double, double
+
 #defcfunc julian int year, int month, int day, int hour, int min, int sec, int msec
-/*
-		val=julian(p1, p2, p3, p4, p5, p6, p7)
-		ユリウス日を計算する
+	dbl_ans = 0.0
+	_julian dbl_ans, year, month, day, hour, min, sec, msec
+	return dbl_ans
 
-		p1 : 年
-		p2 : 月
-		p3 : 日
-		p4 : 時
-		p5 : 分
-		p6 : 秒
-		p7 : ミリ秒
-
-		指定した日時のユリウス日を求めます。
-*/
-	if (month < 3) {
-		JulianDay = floor(365.25*double(year-1))+floor(double(year-1)/400)-floor(double(year-1)/100)+floor(30.59*(double(month)+10))+double(day)-678912+2400000.5
-	} else {
-		JulianDay = floor(365.25*double(year))+floor(double(year)/400)-floor(double(year)/100)+floor(30.59*(double(month)-2))+double(day)-678912+2400000.5
-	}
-	JulianDay += double(hour)/24+double(min)/24/60+double(sec)/24/3600+double(msec)/24/3600/1000
-	return JulianDay
-#global
-#endif
-
-#ifndef sun_ecliptic
-#module
-#include "hspmath.as"
 #defcfunc sun_ecliptic double jd
-	// 太陽黄経を計算する
-	T = (jd - 2451545.0) / 36525.0
-	omega = deg2rad(282.9400)
-	M = deg2rad(357.5256+35999.049*T)
-	lambda = omega+M+(6191.2*T + 6893.0*sin(M) + 72.0*sin(2.0*M))/1296000.0*2.0*M_PI
-	return rad2deg(lambda)\360.0
+	dbl_ans = 0.0
+	_sun_ecliptic dbl_ans, jd
+	return dbl_ans
+
+#deffunc CalcMoonPhase array Answer, double pdate
+	ddim Answer, 7
+	_CalcMoonPhase Answer, pdate
+	return
+
+#deffunc sunrise array Answer, int year, int month, int day, double TZ, int isdst, double lon, double lat, double altit
+	sdim Answer, 4, 4
+	_sunrise Answer, 4, year, month, day, TZ, isdst, lon, lat, altit
 #global
 #endif

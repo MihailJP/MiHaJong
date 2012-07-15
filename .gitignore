@@ -27,5 +27,8 @@ mjcore/test/
 mjcore/mjcore.sdf
 mjcore/mjcore.suo
 mjcore/mjcore.opensdf
+astro/Debug/
+astro/Release/
+astro/ipch/
 release
 *.zip
