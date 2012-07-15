@@ -208,24 +208,6 @@ namespace yaku {
 				++(*ProcessedMelds);
 			}
 		}
-		__declspec(dllexport) void makementsu(const GameTable* const gameStat, void *,
-			int targetPlayer, int AtamaCode, int* const ProcessedMelds, int* const MianziDat)
-		{
-			ParseMode pMode; MELD_BUF mnzDat;
-			pMode.AtamaCode = tileCode(AtamaCode/4);
-			pMode.Order = ParseOrder(AtamaCode%4);
-			makementsu(gameStat, (PLAYER_ID)targetPlayer, pMode, ProcessedMelds, mnzDat);
-			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++)
-				MianziDat[i] = (int)mnzDat[i].tile + (int)mnzDat[i].mstat * MELD_TYPE_STEP;
-		}
-
-		/* 逆変換 */
-		void inline ReadAgainMentsu(MELD_BUF target, const int* const source) { /* 逆変換 */
-			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
-				target[i].tile = (tileCode)(source[i] % MELD_TYPE_STEP);
-				target[i].mstat = (meldStat)(source[i] / MELD_TYPE_STEP);
-			}
-		}
 	}
 
 	// ---------------------------------------------------------------------
@@ -242,16 +224,6 @@ namespace yaku {
 				if (tileCount[targetTiles[i]] >= 2) yakuflagcount++;
 			return yakuflagcount;
 		}
-		__declspec(dllexport) int countPairs(
-			const int* const tileCount, const int* const targetTiles, int numOfTiles)
-		{
-			Int8ByTile tlCount; tileCode* tlCode = new tileCode[numOfTiles];
-			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) tlCount[i] = tileCount[i];
-			for (int i = 0; i < numOfTiles; i++) tlCode[i] = (tileCode)(targetTiles[i]);
-			int ans = countPairs(tlCount, tlCode, numOfTiles);
-			delete[] tlCode;
-			return ans;
-		}
 
 		/* 数字の合計を数える(七対子版) */
 		int countTileNumerals(const Int8ByTile tileCount) {
@@ -260,12 +232,6 @@ namespace yaku {
 			for (int i = 1; i < (TILE_SUIT_HONORS - 1); i++)
 				Cifr += tileCount[i] * (i % TILE_SUIT_STEP);
 			return Cifr;
-		}
-		__declspec(dllexport) int countTileNumerals(const int* const tileCount) {
-			Int8ByTile tlCount;
-			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) tlCount[i] = tileCount[i];
-			int ans = countTileNumerals(tlCount);
-			return ans;
 		}
 	
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -293,23 +259,11 @@ namespace yaku {
 			trace("刻子・槓子の種類を調べます。");
 			return countByMelds(MianziDat, Kezi, [](meldStat x){return x >= meldTripletConcealed;});
 		}
-		__declspec(dllexport) int countKez(int* const KezCount, const int* const MianziDat) {
-			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
-			int Kezi; auto kzCount = countKez(mnzDat, &Kezi);
-			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) KezCount[i] = kzCount[i];
-			return Kezi;
-		}
 
 		/* 暗刻子の数を数える */
 		Int8ByTile countAnKez(const MELD_BUF MianziDat, int* const Kezi) { /* 暗刻子の数を数える */
 			trace("暗刻子・暗槓子の種類を調べます。");
 			return countByMelds(MianziDat, Kezi, [](meldStat x){return ((x == meldTripletConcealed)||(x == meldQuadConcealed));});
-		}
-		__declspec(dllexport) int countAnKez(int* const KezCount, const int* const MianziDat) {
-			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
-			int Kezi; auto kzCount = countAnKez(mnzDat, &Kezi);
-			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) KezCount[i] = kzCount[i];
-			return Kezi;
 		}
 
 		/* 対子・刻子・槓子の数を数える */
@@ -319,11 +273,6 @@ namespace yaku {
 			++(DuiCount[MianziDat[0].tile]);
 			return DuiCount;
 		}
-		__declspec(dllexport) void countDuiz(int* const DuiCount, const int* const MianziDat) {
-			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
-			auto dCount = countDuiz(mnzDat);
-			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) DuiCount[i] = dCount[i];
-		}
 
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -332,21 +281,11 @@ namespace yaku {
 			trace("順子の種類を調べます。");
 			return countByMelds(MianziDat, NULL, [](meldStat x){return x < meldTripletConcealed;});
 		}
-		__declspec(dllexport) void countShunz(int* const ShunzCount, const int* const MianziDat) {
-			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
-			auto szCount = countShunz(mnzDat);
-			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) ShunzCount[i] = szCount[i];
-		}
 
 		/* 暗順子の数を数える */
 		Int8ByTile countAnShunz(const MELD_BUF MianziDat) { /* 暗順子の数を数える */
 			trace("暗順子の種類を調べます。");
 			return countByMelds(MianziDat, NULL, [](meldStat x){return x == meldSequenceConcealed;});
-		}
-		__declspec(dllexport) void countAnShunz(int* const ShunzCount, const int* const MianziDat) {
-			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
-			auto szCount = countAnShunz(mnzDat);
-			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) ShunzCount[i] = szCount[i];
 		}
 
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -356,35 +295,17 @@ namespace yaku {
 			trace("槓子の種類を調べます。");
 			return countByMelds(MianziDat, Kangzi, [](meldStat x){return x >= meldQuadConcealed;});
 		}
-		__declspec(dllexport) int countKangz(int* const KangzCount, const int* const MianziDat) {
-			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
-			int Kangzi; auto kzCount = countKangz(mnzDat, &Kangzi);
-			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) KangzCount[i] = kzCount[i];
-			return Kangzi;
-		}
 
 		/* 暗槓子の数を数える */
 		Int8ByTile countAnKangz(const MELD_BUF MianziDat, int* const Kangzi) { /* 暗槓子の数を数える */
 			trace("暗槓子の種類を調べます。");
 			return countByMelds(MianziDat, Kangzi, [](meldStat x){return x == meldQuadConcealed;});
 		}
-		__declspec(dllexport) int countAnKangz(int* const KangzCount, const int* const MianziDat) {
-			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
-			int Kangzi; auto kzCount = countAnKangz(mnzDat, &Kangzi);
-			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) KangzCount[i] = kzCount[i];
-			return Kangzi;
-		}
 
 		/* 加槓の数を数える */
 		Int8ByTile countKaKangz(const MELD_BUF MianziDat, int* const Kangzi) { /* 加槓の数を数える */
 			trace("加槓の種類を調べます。");
 			return countByMelds(MianziDat, Kangzi, [](meldStat x){return x >= meldQuadAddedLeft;});
-		}
-		__declspec(dllexport) int countKaKangz(int* const KangzCount, const int* const MianziDat) {
-			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
-			int Kangzi; auto kzCount = countKaKangz(mnzDat, &Kangzi);
-			for (int i = 0; i < TILE_NONFLOWER_MAX; i++) KangzCount[i] = kzCount[i];
-			return Kangzi;
 		}
 
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -406,18 +327,6 @@ namespace yaku {
 				if (ShunzCount[targetShunz[i]] >= 1) ++yakuflagcount;
 			}
 			return yakuflagcount;
-		}
-		__declspec(dllexport) int countSpecMentz(const int* const MianziDat,
-			int* const targetKez, int numOfKez, int* const targetShunz, int numOfShunz, int Mode)
-		{
-			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
-			tileCode* tKez = new tileCode[numOfKez];
-			tileCode* tShunz = new tileCode[numOfShunz];
-			for (int i = 0; i < numOfKez; i++) tKez[i] = (tileCode)(targetKez[i] % MELD_TYPE_STEP);
-			for (int i = 0; i < numOfShunz; i++) tShunz[i] = (tileCode)(targetShunz[i] % MELD_TYPE_STEP);
-			int ans = countSpecMentz(mnzDat, tKez, numOfKez, tShunz, numOfShunz, (bool)Mode);
-			delete[] tKez, tShunz;
-			return ans;
 		}
 
 		/* 数字の合計を数える */
@@ -446,10 +355,6 @@ namespace yaku {
 			}
 			return Cifr;
 		}
-		__declspec(dllexport) int countMentzNumerals(const int* const MianziDat) {
-			MELD_BUF mnzDat; mentsuParser::ReadAgainMentsu(mnzDat, MianziDat);
-			return countMentzNumerals(mnzDat);
-		}
 	}
 
 	// ---------------------------------------------------------------------
@@ -464,6 +369,8 @@ namespace yaku {
 
 		// 設定したルールに基づいて役インスタンスを初期化する
 		__declspec(dllexport) void init() {
+			YakuCatalog::Instantiate()->catalog.clear(); // リセット
+			info("役カタログをリセットしました。");
 			/*
 			 * ここにコンストラクタを並べる
 			 */
@@ -471,6 +378,7 @@ namespace yaku {
 				"ダミー", Yaku::YAKU_HAN(1, Han), Yaku::YAKU_HAN(),
 				[](){return true;}
 			));
+			info("役カタログの構築を完了しました。");
 		}
 
 		YAKUSTAT countyaku(const GameTable* const gameStat, PLAYER_ID targetPlayer) {

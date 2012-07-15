@@ -122,39 +122,9 @@
 #func TableEnvInit "?TableEnvInit@EnvTable@@SAXPAX@Z" int
 #func TableEnvInitAll "?TableEnvInitAll@EnvTable@@SAXPAX@Z" nullptr
 
-/* chk-mntz.hsp‚©‚ç‚ÌˆÚA */
-#func _makementsu "?makementsu@mentsuParser@yaku@@YAXQBUGameTable@@PAXHHQAH2@Z" int, nullptr, int, int, var, var
-#define makementsu(%1,%2,%3,%4,%5,%6) %5 = 0: dim %6, SIZE_OF_MELD_BUFFER: _makementsu %1, %3, %4, %5, %6
-
-/* chk-7par.hsp‚©‚ç‚ÌˆÚA */
-//#cfunc _countPairs "?countPairs@countingFacility@yaku@@YAHQBH0H@Z" var, var, int
-#cfunc countTileNumerals "?countTileNumerals@countingFacility@yaku@@YAHQBH@Z" var
-
-/* chk-trpl.hsp‚©‚ç‚ÌˆÚA */
-#func _countKez "?countKez@countingFacility@yaku@@YAHQAHQBH@Z" var, var
-#define countKez(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countKez %1, %2
-#func _countAnKez "?countAnKez@countingFacility@yaku@@YAHQAHQBH@Z" var, var
-#define countAnKez(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countAnKez %1, %2
-#func _countDuiz "?countDuiz@countingFacility@yaku@@YAXQAHQBH@Z" var, var
-#define countDuiz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countDuiz %1, %2
-
-/* chk-seq.hsp‚©‚ç‚ÌˆÚA */
-#func _countShunz "?countShunz@countingFacility@yaku@@YAXQAHQBH@Z" var, var
-#define countShunz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countShunz %1, %2
-#func _countAnShunz "?countAnShunz@countingFacility@yaku@@YAXQAHQBH@Z" var, var
-#define countAnShunz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countAnShunz %1, %2
-
-/* chk-quad.hsp‚©‚ç‚ÌˆÚA */
-#func _countKangz "?countKangz@countingFacility@yaku@@YAHQAHQBH@Z" var, var
-#define countKangz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countKangz %1, %2
-#func _countAnKangz "?countAnKangz@countingFacility@yaku@@YAHQAHQBH@Z" var, var
-#define countAnKangz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countAnKangz %1, %2
-#func _countKaKangz "?countKaKangz@countingFacility@yaku@@YAHQAHQBH@Z" var, var
-#define countKaKangz(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countKaKangz %1, %2
-
-/* chk-misc.hsp‚©‚ç‚ÌˆÚA */
-//#cfunc _countSpecMentz "?countSpecMentz@countingFacility@yaku@@YAHQBHQAHH1HH@Z" var, var, int, var, int, int
-#cfunc countMentzNumerals "?countMentzNumerals@countingFacility@yaku@@YAHQBH@Z" var
+/* chkyaku.hsp‚©‚ç‚ÌˆÚA */
+#func initYakuCatalog "?init@yakuCalculator@yaku@@YAXXZ"
+#func countyaku "?countyaku@yakuCalculator@yaku@@YAXQBUGameTable@@QAUYAKUSTAT@2@H@Z" int, var, int
 
 /* ------------------------------------------------------------------------ */
 

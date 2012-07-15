@@ -42,7 +42,6 @@
 #include "kyokuend.hsp"
 #include "hancnend.hsp"
 #include "function.hsp"
-#include "chkyaku.hsp"
 #include "bignum.hsp"
 #include "fuuro.hsp"
 #include "sound.hsp"
