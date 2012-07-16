@@ -385,6 +385,7 @@ namespace yaku {
 
 		// 計算を実行(マルチスレッドで……大丈夫かなぁ)
 		DWORD WINAPI CalculatorThread::calculator(LPVOID lpParam) {
+			incThreadCount();
 			return ((CalculatorParam*)lpParam)->instance->calculate(
 				((CalculatorParam*)lpParam)->gameStat,
 				&(((CalculatorParam*)lpParam)->analysis),
@@ -398,12 +399,18 @@ namespace yaku {
 			return runningThreads;
 		}
 
+		void CalculatorThread::incThreadCount() {
+			EnterCriticalSection(&cs); ++runningThreads; LeaveCriticalSection(&cs); // スレッド数インクリメント
+		}
+		void CalculatorThread::decThreadCount() {
+			EnterCriticalSection(&cs); --runningThreads; LeaveCriticalSection(&cs); // スレッド数デクリメント
+		}
+
 		DWORD WINAPI CalculatorThread::calculate
 			(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, const ParseMode* const pMode)
 		{
-			EnterCriticalSection(&cs); ++runningThreads; LeaveCriticalSection(&cs); // スレッド数インクリメント
 			/* ここに処理を書く */
-			EnterCriticalSection(&cs); --runningThreads; LeaveCriticalSection(&cs); // スレッド数デクリメント
+			decThreadCount(); // スレッド数デクリメント
 			return S_OK;
 		}
 
@@ -412,6 +419,61 @@ namespace yaku {
 		}
 		CalculatorThread::~CalculatorThread() {
 			DeleteCriticalSection(&cs);
+		}
+		
+		void analysisNonLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
+			SHANTEN* const shanten, YAKUSTAT* const yakuInfo)
+		{
+			CalculatorThread* calculator = new CalculatorThread; // インスタンスの準備
+			// 変数を用意
+			MENTSU_ANALYSIS analysis;
+			memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
+			memcpy(analysis.shanten, shanten, sizeof(SHANTEN[SHANTEN_PAGES]));
+			analysis.player = targetPlayer;
+			// 計算ルーチンに渡すパラメータの準備
+			CalculatorParam* calcprm = new CalculatorParam; memset(calcprm, 0, sizeof(CalculatorParam));
+			calcprm->gameStat = gameStat; calcprm->instance = calculator;
+			memcpy(&calcprm->analysis, &analysis, sizeof(MENTSU_ANALYSIS));
+			YAKUSTAT::Init(&calcprm->result);
+			// 計算を実行
+			CalculatorThread::calculator(&calcprm);
+			while (CalculatorThread::numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
+			// 高点法の処理
+			memcpy(yakuInfo, &calcprm->result, sizeof(YAKUSTAT));
+			delete calcprm; delete calculator; // 用事が済んだら片づけましょう
+		}
+		void analysisLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
+			SHANTEN* const shanten, YAKUSTAT* const yakuInfo)
+		{
+			CalculatorThread* calculator = new CalculatorThread; // インスタンスの準備
+			// 変数を用意
+			MENTSU_ANALYSIS analysis;
+			memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
+			memcpy(analysis.shanten, shanten, sizeof(SHANTEN[SHANTEN_PAGES]));
+			analysis.player = targetPlayer;
+			// 計算ルーチンに渡すパラメータの準備
+			CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
+			for (int i = 0; i < 160; i++) {
+				calcprm[i].gameStat = gameStat; calcprm[i].instance = calculator;
+				calcprm[i].pMode.AtamaCode = (tileCode)(i / 4);
+				calcprm[i].pMode.Order = (ParseOrder)(i % 4);
+				memcpy(&calcprm[i].analysis, &analysis, sizeof(MENTSU_ANALYSIS));
+				YAKUSTAT::Init(&calcprm[i].result);
+			}
+			// 計算を実行
+			for (int i = 4; i < 160; i++) { // 0～3はNoTileなのでやらなくていい
+				while (CalculatorThread::numOfRunningThreads() >= CalculatorThread::threadLimit)
+					Sleep(0); // スレッド数制限のチェック
+				CalculatorThread::calculator(&(calcprm[i]));
+			}
+			while (CalculatorThread::numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
+			// 高点法の処理
+			for (int i = 4; i < 160; i++) {
+				if (yakuInfo->AgariPoints < calcprm[i].result.AgariPoints)
+					memcpy(yakuInfo, &calcprm[i].result, sizeof(YAKUSTAT));
+			}
+			// 用事が済んだら片づけましょう
+			delete[] calcprm; delete calculator;
 		}
 
 		// 役が成立しているか判定する
@@ -432,21 +494,10 @@ namespace yaku {
 				return yakuInfo;
 			}
 			// 和了っているなら
-			CalculatorThread* calculator = new CalculatorThread; // インスタンスの準備
-			if (shanten[shantenRegular] == -1) {
-				// 一般形の和了
-			} else {
-				// 七対子、国士無双、その他特殊な和了
-				MENTSU_ANALYSIS analysis; memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
-				memcpy(analysis.shanten, shanten, sizeof(shanten));
-				analysis.player = targetPlayer;
-				CalculatorParam calcprm; memset(&calcprm, 0, sizeof(CalculatorParam));
-				calcprm.gameStat = gameStat; calcprm.instance = calculator;
-				memcpy(&calcprm.analysis, &analysis, sizeof(MENTSU_ANALYSIS));
-				CalculatorThread::calculator(&calcprm);
-				while (CalculatorThread::numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
-			}
-			delete calculator; // 用事が済んだら片づけましょう
+			if (shanten[shantenRegular] == -1) // 一般形の和了
+				analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);
+			else // 七対子、国士無双、その他特殊な和了
+				analysisLoop(gameStat, targetPlayer, shanten, &yakuInfo);
 			return yakuInfo;
 		}
 		__declspec(dllexport) void countyaku(const GameTable* const gameStat,

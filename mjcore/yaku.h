@@ -140,6 +140,8 @@ namespace yaku {
 			CalculatorThread(); // デフォルトコンストラクタ
 			~CalculatorThread(); // デフォルトデストラクタ
 		private:
+			static void incThreadCount();
+			static void decThreadCount();
 			static int runningThreads;
 			static CRITICAL_SECTION cs;
 			DWORD WINAPI calculate(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, const ParseMode* const pMode);
@@ -150,6 +152,7 @@ namespace yaku {
 			CalculatorThread* instance;
 			const GameTable* gameStat;
 			MENTSU_ANALYSIS analysis;
+			YAKUSTAT result;
 		};
 #ifdef MJCORE_EXPORTS
 		static_assert(std::is_pod<CalculatorParam>::value, "CalculatorParam is not POD");
