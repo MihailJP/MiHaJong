@@ -68,30 +68,30 @@
 #cfunc countshanten "?calcShanten@ShantenAnalyzer@@SAHQBUGameTable@@HH@Z" int, int, int
 
 /* haifu.hspÇ©ÇÁÇÃà⁄êA */
-#func haifubufinit "?haifubufinit@haifu@@YAXXZ"
-#func haifuinit "?haifuinit@haifu@@YAXXZ"
-#func haifurechaipai "?haifurechaipai@haifu@@YAXQBUGameTable@@@Z" int
-#func haifurecdora "?haifurecdora@haifu@@YAXH@Z" int
-#func haifurecuradora "?haifurecuradora@haifu@@YAXH@Z" int
-#func haifurecalicedora "?haifurecalicedora@haifu@@YAXH@Z" int
-#func haifualicedoraupd "?haifualicedoraupd@haifu@@YAXXZ"
-#func haifuresetalicedora "?haifuresetalicedora@haifu@@YAXXZ"
-#func haifurecdorap "?haifurecdorap@haifu@@YAXXZ"
-#func haifurecmota "?haifurecmota@haifu@@YAXQBUGameTable@@H@Z" int, int
-#func haifurecfurikomi "?haifurecfurikomi@haifu@@YAXQBUGameTable@@@Z" int
-#func haifurecchi "?haifurecchi@haifu@@YAXQBUGameTable@@@Z" int
-#func haifurecpon "?haifurecpon@haifu@@YAXQBUGameTable@@@Z" int
-#func haifurectsumo "?haifurectsumo@haifu@@YAXQBUGameTable@@@Z" int
-#func haifurecminkan "?haifurecminkan@haifu@@YAXQBUGameTable@@@Z" int
-#func haifurecnorth "?haifurecnorth@haifu@@YAXQBUGameTable@@H@Z" int, int
-#func haifurecchanpei "?haifurecchanpei@haifu@@YAXQBUGameTable@@@Z" int
-#func haifurecnorthproc "?haifurecnorth@haifu@@YAXQBUGameTable@@H@Z" int
-#func haifurecankan "?haifurecankan@haifu@@YAXQBUGameTable@@H@Z" int, int
-#func haifurecchankan "?haifurecchankan@haifu@@YAXQBUGameTable@@@Z" int
-#func haifureckanproc "?haifureckanproc@haifu@@YAXQBUGameTable@@@Z" int
-#func haifurecflower "?haifurecflower@haifu@@YAXQBUGameTable@@H@Z" int, int
-#func haifuwritebuffer "?haifuwritebuffer@haifu@@YAXQBUGameTable@@PAXHHHHPBDW4EndType@@@Z" int, var, int, int, int, int, str, int
-#func haifusave "?haifusave@haifu@@YAXXZ"
+#func haifubufinit "?haifubufinit@haifu@@SAXXZ"
+#func haifuinit "?haifuinit@haifu@@SAXXZ"
+#func haifurechaipai "?haifurechaipai@haifu@@SAXQBUGameTable@@@Z" int
+#func haifurecdora "?haifurecdora@haifu@@SAXH@Z" int
+#func haifurecuradora "?haifurecuradora@haifu@@SAXH@Z" int
+#func haifurecalicedora "?haifurecalicedora@haifu@@SAXH@Z" int
+#func haifualicedoraupd "?haifualicedoraupd@haifu@@SAXXZ"
+#func haifuresetalicedora "?haifuresetalicedora@haifu@@SAXXZ"
+#func haifurecdorap "?haifurecdorap@haifu@@SAXXZ"
+#func haifurecmota "?haifurecmota@haifu@@SAXQBUGameTable@@H@Z" int, int
+#func haifurecfurikomi "?haifurecfurikomi@haifu@@SAXQBUGameTable@@@Z" int
+#func haifurecchi "?haifurecchi@haifu@@SAXQBUGameTable@@@Z" int
+#func haifurecpon "?haifurecpon@haifu@@SAXQBUGameTable@@@Z" int
+#func haifurectsumo "?haifurectsumo@haifu@@SAXQBUGameTable@@@Z" int
+#func haifurecminkan "?haifurecminkan@haifu@@SAXQBUGameTable@@@Z" int
+#func haifurecnorth "?haifurecnorth@haifu@@SAXQBUGameTable@@H@Z" int, int
+#func haifurecchanpei "?haifurecchanpei@haifu@@SAXQBUGameTable@@@Z" int
+#func haifurecnorthproc "?haifurecnorth@haifu@@SAXQBUGameTable@@H@Z" int
+#func haifurecankan "?haifurecankan@haifu@@SAXQBUGameTable@@H@Z" int, int
+#func haifurecchankan "?haifurecchankan@haifu@@SAXQBUGameTable@@@Z" int
+#func haifureckanproc "?haifureckanproc@haifu@@SAXQBUGameTable@@@Z" int
+#func haifurecflower "?haifurecflower@haifu@@SAXQBUGameTable@@H@Z" int, int
+#func haifuwritebuffer "?haifuwritebuffer@haifu@@SAXQBUGameTable@@PAXHHHHPBDW4EndType@@@Z" int, var, int, int, int, int, str, int
+#func haifusave "?haifusave@haifu@@SAXXZ"
 
 /* ystruct.hspÇ©ÇÁÇÃà⁄êA */
 #cfunc _YAKUSTAT_getSize "?getSize@YAKUSTAT@yaku@@SAHXZ"
