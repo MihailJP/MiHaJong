@@ -392,6 +392,7 @@ namespace yaku {
 				&(((CalculatorParam*)lpParam)->pMode));
 		}
 
+		/* 動いているスレッド数の管理用 */
 		CRITICAL_SECTION CalculatorThread::cs;
 		int CalculatorThread::runningThreads = 0;
 
@@ -406,14 +407,32 @@ namespace yaku {
 			EnterCriticalSection(&cs); --runningThreads; LeaveCriticalSection(&cs); // スレッド数デクリメント
 		}
 
+		/* 計算ルーチン */
 		DWORD WINAPI CalculatorThread::calculate
 			(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, const ParseMode* const pMode)
 		{
-			/* ここに処理を書く */
-			decThreadCount(); // スレッド数デクリメント
+			/* 面子解析処理 */
+			if (analysis->shanten[shantenRegular] == -1) {
+				int NumOfMelds = 0;
+				mentsuParser::makementsu(gameStat, analysis->player, *pMode, &NumOfMelds, analysis->MianziDat);
+				if (NumOfMelds < SIZE_OF_MELD_BUFFER) { // 条件を満たしてないなら抜けます
+					decThreadCount(); return S_OK;
+				}
+				analysis->DuiziCount = countingFacility::countDuiz(analysis->MianziDat);
+				analysis->KeziCount = countingFacility::countKez(analysis->MianziDat, NULL);
+				analysis->AnKeziCount = countingFacility::countAnKez(analysis->MianziDat, NULL);
+				analysis->ShunziCount = countingFacility::countShunz(analysis->MianziDat);
+				analysis->AnShunziCount = countingFacility::countAnShunz(analysis->MianziDat);
+				analysis->KangziCount = countingFacility::countKangz(analysis->MianziDat, NULL);
+				analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, NULL);
+				analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, NULL);
+			}
+			/* 終了処理 */
+			decThreadCount(); // 終わったらスレッド数デクリメント
 			return S_OK;
 		}
 
+		/* コンストラクタとデストラクタ */
 		CalculatorThread::CalculatorThread() {
 			InitializeCriticalSection(&cs);
 		}
@@ -421,6 +440,7 @@ namespace yaku {
 			DeleteCriticalSection(&cs);
 		}
 		
+		/* 引数の準備とか */
 		void analysisNonLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
 			SHANTEN* const shanten, YAKUSTAT* const yakuInfo)
 		{
