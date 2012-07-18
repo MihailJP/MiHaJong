@@ -375,7 +375,7 @@ namespace yaku {
 			 * ここにコンストラクタを並べる
 			 */
 			YakuCatalog::Instantiate()->catalog.push_back(Yaku( // テスト用のダミーの役
-				"ダミー", Yaku::YAKU_HAN(1, Han), Yaku::YAKU_HAN(),
+				"ダミー", Yaku::YAKU_HAN::HAN(1, Han), Yaku::YAKU_HAN::HAN(),
 				[](const GameTable* const, const MENTSU_ANALYSIS* const) {
 					return true;
 				}
@@ -427,6 +427,14 @@ namespace yaku {
 				analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, NULL);
 				analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, NULL);
 			}
+			/* 処理ループ */
+			std::map<std::string, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
+			std::for_each(YakuCatalog::Instantiate()->catalog.begin(), // 役カタログの最初から
+				YakuCatalog::Instantiate()->catalog.end(), // カタログの末尾まで
+				[&yakuHan, gameStat, analysis](Yaku& yaku) { // 役ごとに判定処理
+					if (yaku.checkYaku(gameStat, analysis)) // 成立条件を満たしていたら
+						yakuHan[yaku.getName()] = yaku.getHan(); // 飜数を記録
+			});
 			/* 終了処理 */
 			decThreadCount(); // 終わったらスレッド数デクリメント
 			return S_OK;

@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <functional>
 #include <list>
+#include <map>
 #include <Windows.h>
 #include "largenum.h"
 #include "gametbl.h"

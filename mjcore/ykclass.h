@@ -19,15 +19,23 @@ namespace yaku {
 		public:
 			class YAKU_HAN {
 			public:
-				YAKU_HAN() { han = 0; unit = Han; }
-				YAKU_HAN(int8_t h, hanUnit u) { han = h; unit = u; }
-			private:
-				int8_t han; // ”’l
-				hanUnit unit; // ’PˆÊ
+				class HAN { // –|
+				public:
+					HAN() { han = 0; unit = Han; }
+					HAN(int8_t h) { han = h; unit = Han; }
+					HAN(int8_t h, hanUnit u) { han = h; unit = u; }
+				private:
+					int8_t han; // ”’l
+					hanUnit unit; // ’PˆÊ
+				};
+				HAN coreHan; // ”›‚è‚ð–ž‚½‚·–|
+				HAN bonusHan; // ”›‚è‚ð–ž‚½‚³‚È‚¢–|
+				YAKU_HAN() {coreHan = HAN(); bonusHan = HAN();}
+				YAKU_HAN(HAN han) {coreHan = han; bonusHan = HAN();}
+				YAKU_HAN(HAN han, HAN bonus) {coreHan = han; bonusHan = bonus;}
 			};
 		private:
-			YAKU_HAN yakuHan; // ”›‚è‚ð–ž‚½‚·–|
-			YAKU_HAN incompleteHan; // ”›‚è‚ð–ž‚½‚³‚È‚¢–|
+			YAKU_HAN han;
 			std::string yakuName; // –ð‚Ì–¼‘Oi•¶Žš—ñj
 			YAKUFUNC yakuProc; // –ð‚Ì”»’è•û–@
 			Yaku() {} // Default constructor
@@ -37,12 +45,12 @@ namespace yaku {
 				return this->yakuProc(gameStat, mentsu);
 			}
 			std::string getName() {return this->yakuName;} // –ð‚Ì–¼‘O‚ðŽæ“¾‚·‚é
+			YAKU_HAN getHan() {return han;}
 			// Constructor
-			Yaku(std::string name, YAKU_HAN han, YAKU_HAN icHan, YAKUFUNC f) {
-				this->yakuName = std::string(name.begin(), name.end());
-				this->yakuHan = han;
-				this->incompleteHan = icHan;
-				this->yakuProc = YAKUFUNC(f);
+			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan, YAKUFUNC f) {
+				yakuName = std::string(name.begin(), name.end());
+				han = YAKU_HAN(cHan, bHan);
+				yakuProc = YAKUFUNC(f);
 			}
 		};
 
