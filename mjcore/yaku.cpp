@@ -55,7 +55,7 @@ __declspec(dllexport) void yaku::yakuCalculator::init() {
 
 // 計算を実行(マルチスレッドで……大丈夫かなぁ)
 DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) {
-	incThreadCount();
+	((CalculatorParam*)lpParam)->instance->incThreadCount();
 	return ((CalculatorParam*)lpParam)->instance->calculate(
 		((CalculatorParam*)lpParam)->gameStat,
 		&(((CalculatorParam*)lpParam)->analysis),
@@ -64,18 +64,134 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) 
 }
 
 /* 動いているスレッド数の管理用 */
-CRITICAL_SECTION yaku::yakuCalculator::CalculatorThread::cs;
-int yaku::yakuCalculator::CalculatorThread::runningThreads = 0;
-
 int yaku::yakuCalculator::CalculatorThread::numOfRunningThreads() { // 動いているスレッドの数
-	return runningThreads;
+	return this->runningThreads;
 }
 
 void yaku::yakuCalculator::CalculatorThread::incThreadCount() {
-	EnterCriticalSection(&cs); ++runningThreads; LeaveCriticalSection(&cs); // スレッド数インクリメント
+	EnterCriticalSection(&this->cs); ++this->runningThreads; LeaveCriticalSection(&this->cs); // スレッド数インクリメント
 }
 void yaku::yakuCalculator::CalculatorThread::decThreadCount() {
-	EnterCriticalSection(&cs); --runningThreads; LeaveCriticalSection(&cs); // スレッド数デクリメント
+	EnterCriticalSection(&this->cs); --this->runningThreads; LeaveCriticalSection(&this->cs); // スレッド数デクリメント
+}
+
+/* 符を計算する */
+void yaku::yakuCalculator::CalculatorThread::calcbasepoints
+	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis)
+{
+	trace("符計算の処理に入ります。");
+	int fu = 20; // 副底２０符
+
+	/* 雀頭加符(役牌のみ２符) */
+	switch (analysis->MianziDat[0].tile) { /* 風牌は条件によって役牌 */
+	case EastWind: case SouthWind: case WestWind: case NorthWind:
+		if (analysis->MianziDat[0].tile ==
+			Wind2Tile((uint8_t)(gameStat->GameRound / 4))) // 場風牌
+			fu += 2;
+		if (analysis->MianziDat[0].tile ==
+			playerwind(gameStat, analysis->player, gameStat->GameRound)) // 自風牌
+			fu += 2;
+		if ((getRule(RULE_KAIMENKAZE) != 0) && (analysis->MianziDat[0].tile == // 開門風牌
+			playerwind(gameStat, gameStat->WaremePlayer, gameStat->GameRound)))
+			fu += 2;
+		if ((getRule(RULE_URAKAZE) != 0) && (analysis->MianziDat[0].tile == // 裏風牌
+			playerwind(gameStat, analysis->player + 2, gameStat->GameRound)))
+			fu += 2;
+		if ((getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) && (fu > 22)) fu = 22; // ダブ風雀頭を2符と見なすルールの場合
+		break;
+	case WhiteDragon: case GreenDragon: case RedDragon: /* 三元牌は常に役牌 */
+		fu += 2;
+		break;
+	}
+
+	/* 面子加符 */
+	for (int i = 1; i < SIZE_OF_MELD_BUFFER; i++) {
+		switch (analysis->MianziDat[i].mstat) {
+		case meldTripletExposedLeft: case meldTripletExposedCenter: case meldTripletExposedRight:
+			fu += isYaojiu(analysis->MianziDat[i].tile) ? 4 : 2; /* 明刻子 */
+			break;
+		case meldTripletConcealed:
+			fu += isYaojiu(analysis->MianziDat[i].tile) ? 8 : 4; /* 暗刻子 */
+			break;
+		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight:
+		case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight:
+			fu += isYaojiu(analysis->MianziDat[i].tile) ? 16 : 8; /* 明槓子 */
+			break;
+		case meldQuadConcealed:
+			fu += isYaojiu(analysis->MianziDat[i].tile) ? 32 : 16; /* 暗槓子 */
+			break;
+		}
+	}
+	/* 役牌が雀頭ではなく、刻子や槓子がない場合、フラグを立てる */
+	bool NoTriplets = (fu == 20); bool LiangMianFlag = false;
+
+	/* 聴牌形加符 */
+	analysis->Machi = machiInvalid; // 初期化
+	const tileCode* tsumoTile = &(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND].tile); // shorthand
+	if (analysis->MianziDat[0].tile == *tsumoTile) analysis->Machi = machiTanki; // 単騎待ち
+	for (int i = 1; i < SIZE_OF_MELD_BUFFER; i++) { // 待ちの種類を調べる……
+		switch (analysis->MianziDat[i].mstat) {
+		case meldSequenceConcealed: case meldSequenceExposedLower:
+		case meldSequenceExposedMiddle: case meldSequenceExposedUpper: /* 順子 */
+			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 1)) analysis->Machi = machiKanchan;
+			if (analysis->MianziDat[i].tile == *tsumoTile) {
+				if (analysis->MianziDat[i].tile % TILE_SUIT_STEP == 7) analysis->Machi = machiPenchan; // 辺張待ち
+				else {analysis->Machi = machiRyanmen; LiangMianFlag = true;} // 両面待ち
+			}
+			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 2)) {
+				if (analysis->MianziDat[i].tile % TILE_SUIT_STEP == 1) analysis->Machi = machiPenchan; // 辺張待ち
+				else {analysis->Machi = machiRyanmen; LiangMianFlag = true;} // 両面待ち
+			}
+			break;
+		default: /* それ以外 */
+			if (analysis->MianziDat[i].tile == *tsumoTile) analysis->Machi = machiShanpon; // 双ポン待ち
+			break;
+		}
+	}
+	/* 嵌張、辺張、単騎は＋２符「不利な待ちには２点付く」 */
+	switch (analysis->Machi) {
+	case machiKanchan: case machiPenchan: case machiTanki:
+		fu += 2; break;
+	}
+	/* 双ポン待ちでロンした場合の例外：明刻として扱うための減点 */
+	if ((analysis->Machi == machiShanpon)&&(!gameStat->TsumoAgariFlag))
+		fu -= isYaojiu(*tsumoTile) ? 4 : 2;
+
+	/* 平和が成立しうる場合 */
+	analysis->isPinfu = false; // 念の為
+	if (NoTriplets && LiangMianFlag) {
+		if (gameStat->Player[analysis->player].MenzenFlag) {
+			/* 門前であれば、役として平和が成立する */
+			analysis->Machi = machiRyanmen; // 強制両面扱い
+			if ((!(gameStat->TsumoAgariFlag) || (getRule(RULE_TSUMO_PINFU) == 0))) { // ツモピンありか、出和了の場合
+				analysis->isPinfu = true; fu = 20;
+			} else {
+				fu += 2; // ツモ符
+			}
+		} else {
+			analysis->Machi = machiRyanmen; // 強制両面扱い
+			switch (getRule(RULE_EXPOSED_PINFU)) {
+			case 0:
+				fu = 30; break; /* 門前でなければ、３０符とする */
+			case 2: case 4:
+				fu = 30;
+				/* FALLTHRU */
+			case 3: case 5: /* 喰い平を役にする場合 */
+				analysis->isPinfu = true;
+				break;
+			}
+		}
+	} else if (gameStat->TsumoAgariFlag) {
+		fu += 2; /* 平和でないツモ和了りは２符 */
+	}
+
+	/* 門前加符(１０符) */
+	if ((gameStat->Player[analysis->player].MenzenFlag) && (!(gameStat->TsumoAgariFlag)))
+		fu += 10;
+
+	/* 終了処理 */
+	std::ostringstream o; o << "この手牌は [" << fu << "] 符です。"; trace(o.str().c_str());
+	analysis->BasePoint = (uint8_t)fu;
 }
 
 /* 計算ルーチン */
@@ -88,8 +204,9 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		int NumOfMelds = 0;
 		mentsuParser::makementsu(gameStat, analysis->player, *pMode, &NumOfMelds, analysis->MianziDat);
 		if (NumOfMelds < SIZE_OF_MELD_BUFFER) { // 条件を満たしてないなら抜けます
-			decThreadCount(); return S_OK;
+			this->decThreadCount(); return S_OK;
 		}
+		calcbasepoints(gameStat, analysis); // 符を計算する
 		analysis->DuiziCount = countingFacility::countDuiz(analysis->MianziDat);
 		analysis->KeziCount = countingFacility::countKez(analysis->MianziDat, NULL);
 		analysis->AnKeziCount = countingFacility::countAnKez(analysis->MianziDat, NULL);
@@ -99,8 +216,6 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, NULL);
 		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, NULL);
 	}
-	/* 符を計算する */
-	/* 未実装 */
 	/* 役判定ループ */
 	std::map<std::string, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
 	std::set<std::string> suppression; // 無効化する役
@@ -146,7 +261,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 
 /* コンストラクタとデストラクタ */
 yaku::yakuCalculator::CalculatorThread::CalculatorThread() {
-	InitializeCriticalSection(&cs);
+	InitializeCriticalSection(&cs); runningThreads = 0;
 }
 yaku::yakuCalculator::CalculatorThread::~CalculatorThread() {
 	DeleteCriticalSection(&cs);
@@ -169,7 +284,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	YAKUSTAT::Init(&calcprm->result);
 	// 計算を実行
 	CalculatorThread::calculator(&calcprm);
-	while (CalculatorThread::numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
+	while (calculator->numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
 	// 高点法の処理
 	memcpy(yakuInfo, &calcprm->result, sizeof(YAKUSTAT));
 	delete calcprm; delete calculator; // 用事が済んだら片づけましょう
@@ -194,11 +309,11 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	}
 	// 計算を実行
 	for (int i = 4; i < 160; i++) { // 0～3はNoTileなのでやらなくていい
-		while (CalculatorThread::numOfRunningThreads() >= CalculatorThread::threadLimit)
+		while (calculator->numOfRunningThreads() >= CalculatorThread::threadLimit)
 			Sleep(0); // スレッド数制限のチェック
 		CalculatorThread::calculator(&(calcprm[i]));
 	}
-	while (CalculatorThread::numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
+	while (calculator->numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
 	// 高点法の処理
 	for (int i = 4; i < 160; i++) {
 		if (yakuInfo->AgariPoints < calcprm[i].result.AgariPoints)

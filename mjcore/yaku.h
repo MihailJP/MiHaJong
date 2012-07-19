@@ -125,10 +125,21 @@ public:
 			std::list<Yaku> catalog;
 		};
 
+		enum MachiType : uint8_t { // 街の種類
+			machiInvalid, // 無効
+			machiRyanmen, // 両面
+			machiKanchan, // 嵌張
+			machiPenchan, // 辺張
+			machiShanpon, // 双ポン
+			machiTanki    // 単騎
+		};
 		struct MENTSU_ANALYSIS { // 面子解析結果
 			PLAYER_ID player;
 			SHANTEN shanten[SHANTEN_PAGES];
 			MELD_BUF MianziDat; // 面子パース結果
+			uint8_t BasePoint; // 符
+			MachiType Machi; // 待ちの種類
+			bool isPinfu; // 平和になってるかどうか
 			Int8ByTile KeziCount; // 刻子・槓子の数
 			Int8ByTile AnKeziCount; // 暗刻・暗槓の数
 			Int8ByTile DuiziCount; // 対子・刻子・槓子の数
@@ -147,15 +158,16 @@ public:
 		class CalculatorThread {
 		public:
 			static DWORD WINAPI calculator(LPVOID lpParam);
-			static int numOfRunningThreads(); // 動いているスレッドの数
+			int numOfRunningThreads(); // 動いているスレッドの数
 			static const int threadLimit = 4; // 同時に起動する最大のスレッド数
 			CalculatorThread(); // デフォルトコンストラクタ
 			~CalculatorThread(); // デフォルトデストラクタ
 		private:
-			static void incThreadCount();
-			static void decThreadCount();
-			static int runningThreads;
-			static CRITICAL_SECTION cs;
+			void incThreadCount();
+			void decThreadCount();
+			int runningThreads;
+			CRITICAL_SECTION cs;
+			static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
 			DWORD WINAPI calculate(
 				const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
 				const ParseMode* const pMode, YAKUSTAT* const result);
