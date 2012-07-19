@@ -29,6 +29,13 @@ tileCode Honor_Major_Tiles(int code) {
 	static const tileCode* YaojiuPai = Honor_Major_Tiles();
 	return YaojiuPai[code];
 }
+/* ˆê‹ãŽš”v‚©‚Ç‚¤‚©’²‚×‚é */
+bool isYaojiu(tileCode code) {
+	bool ans = false;
+	for (int i = 0; i < 13; i++)
+		if (code == Honor_Major_Tiles(i)) ans = true;
+	return ans;
+}
 
 /* —”v‚·‚é */
 void lipai(GameTable* const gameStat, PLAYER_ID targetPlayer) {
@@ -731,11 +738,7 @@ bool isNagashiMangan(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 		if (gameStat->Player[targetPlayer].Discard[i].dstat == discardTaken) continue;
 		if (gameStat->Player[targetPlayer].Discard[i].dstat == discardRiichiTaken) continue;
 		// –Â‚©‚ê‚Ä‚¢‚È‚¢”v
-		for (int j = 0; j < 13; j++) {
-			if (gameStat->Player[targetPlayer].Discard[i].tcode.tile == Honor_Major_Tiles(j)) {
-				YaojiuSutehai++; break;
-			}
-		}
+		if (isYaojiu(gameStat->Player[targetPlayer].Discard[i].tcode.tile)) YaojiuSutehai++;
 	}
 	// ‘S•”ŠY“–‚·‚é”v‚¾‚Á‚½‚çtrue
 	return (YaojiuSutehai == gameStat->Player[targetPlayer].DiscardPointer);

@@ -57,6 +57,7 @@ PLAYER_ID tobePlayed(const GameTable* const gameStat, int id);
 
 tileCode* Honor_Major_Tiles();
 tileCode Honor_Major_Tiles(int code);
+bool isYaojiu(tileCode code);
 
 void lipai(GameTable* const gameStat, PLAYER_ID targetPlayer);
 __declspec(dllexport) void lipai(GameTable* const gameStat, int targetPlayer);
