@@ -116,7 +116,9 @@
     <ClCompile Include="ruletbl.cpp" />
     <ClCompile Include="tileutil.cpp" />
     <ClCompile Include="yaku.cpp" />
+    <ClCompile Include="yakurslt.cpp" />
     <ClCompile Include="ykclass.cpp" />
+    <ClCompile Include="yk_tools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dllmain.h" />
