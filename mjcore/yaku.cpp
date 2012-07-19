@@ -429,14 +429,19 @@ namespace yaku {
 			}
 			/* 役判定ループ */
 			std::map<std::string, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
+			std::set<std::string> suppression; // 無効化する役
 			std::for_each(YakuCatalog::Instantiate()->catalog.begin(), // 役カタログの最初から
 				YakuCatalog::Instantiate()->catalog.end(), // カタログの末尾まで
-				[&yakuHan, gameStat, analysis](Yaku& yaku) { // 役ごとに判定処理
-					if (yaku.checkYaku(gameStat, analysis)) // 成立条件を満たしていたら
+				[&yakuHan, gameStat, analysis, &suppression](Yaku& yaku) -> void { // 役ごとに判定処理
+					if (yaku.checkYaku(gameStat, analysis)) { // 成立条件を満たしていたら
 						yakuHan[yaku.getName()] = yaku.getHan(); // 飜数を記録
+						suppression.insert(yaku.getSuppression().begin(), yaku.getSuppression().end()); // 下位役のリストを結合
+					}
 			});
 			/* 下位役を除去する */
-			/* 未実装 */
+			std::for_each(suppression.begin(), suppression.end(), [&yakuHan](std::string yaku) {
+				yakuHan.erase(yaku);
+			});
 			/* 翻を合計する */
 			int totalHan, totalMangan, totalBonusHan, totalBonusMangan;
 			totalHan = totalMangan = totalBonusHan = totalBonusMangan = 0;

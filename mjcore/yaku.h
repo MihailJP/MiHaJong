@@ -6,6 +6,7 @@
 #include <functional>
 #include <list>
 #include <map>
+#include <set>
 #include <Windows.h>
 #include "largenum.h"
 #include "gametbl.h"
