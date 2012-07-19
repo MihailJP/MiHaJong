@@ -427,13 +427,35 @@ namespace yaku {
 				analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, NULL);
 				analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, NULL);
 			}
-			/* 処理ループ */
+			/* 役判定ループ */
 			std::map<std::string, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
 			std::for_each(YakuCatalog::Instantiate()->catalog.begin(), // 役カタログの最初から
 				YakuCatalog::Instantiate()->catalog.end(), // カタログの末尾まで
 				[&yakuHan, gameStat, analysis](Yaku& yaku) { // 役ごとに判定処理
 					if (yaku.checkYaku(gameStat, analysis)) // 成立条件を満たしていたら
 						yakuHan[yaku.getName()] = yaku.getHan(); // 飜数を記録
+			});
+			/* 下位役を除去する */
+			/* 未実装 */
+			/* 翻を合計する */
+			int totalHan, totalMangan, totalBonusHan, totalBonusMangan;
+			totalHan = totalMangan = totalBonusHan = totalBonusMangan = 0;
+			std::for_each(yakuHan.begin(), yakuHan.end(),
+				[&totalHan, &totalMangan, &totalBonusHan, &totalBonusMangan](std::pair<std::string, Yaku::YAKU_HAN> yHan) {
+					switch (yHan.second.coreHan.getUnit()) {
+						case Han: totalHan += yHan.second.coreHan.getHan(); break;
+						case Mangan: totalMangan += yHan.second.coreHan.getHan(); break;
+						case Yakuman: totalMangan += yHan.second.coreHan.getHan() * 4; break;
+						default:
+							RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
+					}
+					switch (yHan.second.bonusHan.getUnit()) {
+						case Han: totalBonusHan += yHan.second.bonusHan.getHan(); break;
+						case Mangan: totalBonusMangan += yHan.second.bonusHan.getHan(); break;
+						case Yakuman: totalBonusMangan += yHan.second.bonusHan.getHan() * 4; break;
+						default:
+							RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
+					}
 			});
 			/* 終了処理 */
 			decThreadCount(); // 終わったらスレッド数デクリメント

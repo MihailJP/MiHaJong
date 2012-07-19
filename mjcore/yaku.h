@@ -11,6 +11,7 @@
 #include "gametbl.h"
 #include "tileutil.h"
 #include "ykclass.h"
+#include "except.h"
 
 namespace yaku {
 	EXPORT_STRUCT YAKUSTAT {

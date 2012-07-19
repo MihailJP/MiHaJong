@@ -24,6 +24,8 @@ namespace yaku {
 					HAN() { han = 0; unit = Han; }
 					HAN(int8_t h) { han = h; unit = Han; }
 					HAN(int8_t h, hanUnit u) { han = h; unit = u; }
+					int8_t getHan() {return this->han;}
+					hanUnit getUnit() {return this->unit;}
 				private:
 					int8_t han; // ”’l
 					hanUnit unit; // ’PˆÊ
