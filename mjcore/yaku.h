@@ -112,7 +112,7 @@ private:
 public:
 	class yakuCalculator {
 	private:
-		enum hanUnit : uint8_t {Han, Mangan, Yakuman};
+		enum hanUnit : uint8_t {Han, SemiMangan, Yakuman};
 		class Yaku;
 
 		class YakuCatalog { // ñÇÃàÍóó [singleton]
@@ -156,7 +156,9 @@ public:
 			static void decThreadCount();
 			static int runningThreads;
 			static CRITICAL_SECTION cs;
-			DWORD WINAPI calculate(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, const ParseMode* const pMode);
+			DWORD WINAPI calculate(
+				const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
+				const ParseMode* const pMode, YAKUSTAT* const result);
 		};
 
 		struct CalculatorParam {
@@ -181,6 +183,9 @@ public:
 					HAN(int8_t h, hanUnit u);
 					int8_t getHan();
 					hanUnit getUnit();
+					static const HAN
+						yv_1han, yv_2han, yv_3han, yv_4han, yv_5han, yv_6han, yv_7han, yv_8han, 
+						yv_mangan, yv_haneman, yv_baiman, yv_3baiman, yv_yakuman, yv_double_yakuman;
 				private:
 					int8_t han; // êîíl
 					hanUnit unit; // íPà 

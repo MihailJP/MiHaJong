@@ -1,5 +1,36 @@
 #include "yaku.h"
 
+/* 定数を定義 */
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(1, Han);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_2han =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(2, Han);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_3han =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(3, Han);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_4han =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(4, Han);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_5han =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(5, Han);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_6han =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(6, Han);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_7han =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(7, Han);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_8han =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(8, Han);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_mangan =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(2, SemiMangan);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_haneman =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(3, SemiMangan);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_baiman =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(4, SemiMangan);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_3baiman =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(6, SemiMangan);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(1, Yakuman);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(2, Yakuman);
+
+/* シングルトン インスタンス アクセサ */
 yaku::yakuCalculator::YakuCatalog* yaku::yakuCalculator::YakuCatalog::Instantiate() {
 	// Singleton instance accessor
 	static YakuCatalog instance;
@@ -28,7 +59,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) 
 	return ((CalculatorParam*)lpParam)->instance->calculate(
 		((CalculatorParam*)lpParam)->gameStat,
 		&(((CalculatorParam*)lpParam)->analysis),
-		&(((CalculatorParam*)lpParam)->pMode));
+		&(((CalculatorParam*)lpParam)->pMode),
+		&(((CalculatorParam*)lpParam)->result));
 }
 
 /* 動いているスレッド数の管理用 */
@@ -48,7 +80,8 @@ void yaku::yakuCalculator::CalculatorThread::decThreadCount() {
 
 /* 計算ルーチン */
 DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
-	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, const ParseMode* const pMode)
+	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
+	const ParseMode* const pMode, YAKUSTAT* const result)
 {
 	/* 面子解析処理 */
 	if (analysis->shanten[shantenRegular] == -1) {
@@ -66,6 +99,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, NULL);
 		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, NULL);
 	}
+	/* 符を計算する */
+	/* 未実装 */
 	/* 役判定ループ */
 	std::map<std::string, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
 	std::set<std::string> suppression; // 無効化する役
@@ -82,25 +117,28 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		yakuHan.erase(yaku);
 	});
 	/* 翻を合計する */
-	int totalHan, totalMangan, totalBonusHan, totalBonusMangan;
-	totalHan = totalMangan = totalBonusHan = totalBonusMangan = 0;
+	int totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan;
+	totalHan = totalSemiMangan = totalBonusHan = totalBonusSemiMangan = 0;
 	std::for_each(yakuHan.begin(), yakuHan.end(),
-		[&totalHan, &totalMangan, &totalBonusHan, &totalBonusMangan](std::pair<std::string, Yaku::YAKU_HAN> yHan) {
+		[&totalHan, &totalSemiMangan, &totalBonusHan, &totalBonusSemiMangan](std::pair<std::string, Yaku::YAKU_HAN> yHan) {
 			switch (yHan.second.coreHan.getUnit()) {
 				case yaku::yakuCalculator::hanUnit::Han: totalHan += yHan.second.coreHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::Mangan: totalMangan += yHan.second.coreHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::Yakuman: totalMangan += yHan.second.coreHan.getHan() * 4; break;
+				case yaku::yakuCalculator::hanUnit::SemiMangan: totalSemiMangan += yHan.second.coreHan.getHan(); break;
+				case yaku::yakuCalculator::hanUnit::Yakuman: totalSemiMangan += yHan.second.coreHan.getHan() * 8; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
 			}
 			switch (yHan.second.bonusHan.getUnit()) {
 				case yaku::yakuCalculator::hanUnit::Han: totalBonusHan += yHan.second.bonusHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::Mangan: totalBonusMangan += yHan.second.bonusHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::Yakuman: totalBonusMangan += yHan.second.bonusHan.getHan() * 4; break;
+				case yaku::yakuCalculator::hanUnit::SemiMangan: totalBonusSemiMangan += yHan.second.bonusHan.getHan(); break;
+				case yaku::yakuCalculator::hanUnit::Yakuman: totalBonusSemiMangan += yHan.second.bonusHan.getHan() * 8; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
 			}
 	});
+	/* 飜数を計算した結果を書き込む */
+	result->CoreHan = totalHan; result->CoreSemiMangan = totalSemiMangan;
+	result->BonusHan = totalBonusHan; result->BonusSemiMangan = totalBonusSemiMangan;
 	/* 終了処理 */
 	decThreadCount(); // 終わったらスレッド数デクリメント
 	return S_OK;
