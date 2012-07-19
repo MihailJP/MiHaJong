@@ -116,6 +116,7 @@
     <ClCompile Include="ruletbl.cpp" />
     <ClCompile Include="tileutil.cpp" />
     <ClCompile Include="yaku.cpp" />
+    <ClCompile Include="ykclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dllmain.h" />
@@ -145,7 +146,6 @@
     <ClInclude Include="tileutil.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="yaku.h" />
-    <ClInclude Include="ykclass.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mjcore.rc" />

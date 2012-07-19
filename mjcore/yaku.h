@@ -11,10 +11,10 @@
 #include "largenum.h"
 #include "gametbl.h"
 #include "tileutil.h"
-#include "ykclass.h"
 #include "except.h"
 
-namespace yaku {
+class yaku {
+public:
 	EXPORT_STRUCT YAKUSTAT {
 		bool isValid; // 和了っているかどうか
 		int BasePoints; // 符
@@ -50,6 +50,7 @@ namespace yaku {
 
 	// ---------------------------------------------------------------------
 
+private:
 	enum ParseOrder : uint8_t {
 		Ke_Shun, Shun_Ke, Ke_Shun_Rev, Shun_Ke_Rev
 	};
@@ -64,47 +65,53 @@ namespace yaku {
 
 	// ---------------------------------------------------------------------
 
-	namespace mentsuParser { // 面子パーサ
-		bool makementsu_shuntsu(Int8ByTile& countForMentsu, MELD_BUF MianziDat,
+	class mentsuParser { // 面子パーサ
+	private:
+		static bool makementsu_shuntsu(Int8ByTile& countForMentsu, MELD_BUF MianziDat,
 			int* const ProcessedMelds, tileCode tile); /* 順子の処理 */
-		void makementsu_koutsu(Int8ByTile& countForMentsu, MELD_BUF MianziDat,
+		static void makementsu_koutsu(Int8ByTile& countForMentsu, MELD_BUF MianziDat,
 			int* const ProcessedMelds, tileCode tile); /* 刻子の処理 */
-
-		void makementsu(const GameTable* const gameStat,
+	public:
+		static void makementsu(const GameTable* const gameStat,
 			PLAYER_ID targetPlayer, ParseMode AtamaCode,
 			int* const ProcessedMelds, MELD_BUF MianziDat); /* 面子に分解する */
-	}
+	};
 
 	// ---------------------------------------------------------------------
 
-	namespace countingFacility {
-		int countPairs(
-			const Int8ByTile tileCount, const tileCode* const targetTiles, int numOfTiles);
-		int countTileNumerals(const Int8ByTile tileCount);
-
-		Int8ByTile countByMelds(
+	class countingFacility {
+	private:
+		static Int8ByTile countByMelds(
 			const MELD_BUF MianziDat, int* const hits,
 			std::function<bool (meldStat)> f);
+	public:
+		static int countPairs(
+			const Int8ByTile tileCount, const tileCode* const targetTiles, int numOfTiles);
+		static int countTileNumerals(const Int8ByTile tileCount);
 
-		Int8ByTile countKez(const MELD_BUF MianziDat, int* const Kezi);
-		Int8ByTile countAnKez(const MELD_BUF MianziDat, int* const Kezi);
-		Int8ByTile countDuiz(const MELD_BUF MianziDat);
+		static Int8ByTile countKez(const MELD_BUF MianziDat, int* const Kezi);
+		static Int8ByTile countAnKez(const MELD_BUF MianziDat, int* const Kezi);
+		static Int8ByTile countDuiz(const MELD_BUF MianziDat);
 
-		Int8ByTile countShunz(const MELD_BUF MianziDat);
-		Int8ByTile countAnShunz(const MELD_BUF MianziDat);
+		static Int8ByTile countShunz(const MELD_BUF MianziDat);
+		static Int8ByTile countAnShunz(const MELD_BUF MianziDat);
 
-		Int8ByTile countKangz(const MELD_BUF MianziDat, int* const Kangzi);
-		Int8ByTile countAnKangz(const MELD_BUF MianziDat, int* const Kangzi);
-		Int8ByTile countKaKangz(const MELD_BUF MianziDat, int* const Kangzi);
+		static Int8ByTile countKangz(const MELD_BUF MianziDat, int* const Kangzi);
+		static Int8ByTile countAnKangz(const MELD_BUF MianziDat, int* const Kangzi);
+		static Int8ByTile countKaKangz(const MELD_BUF MianziDat, int* const Kangzi);
 
-		int countSpecMentz(const MELD_BUF MianziDat, const tileCode* const targetKez, int numOfKez,
+		static int countSpecMentz(const MELD_BUF MianziDat, const tileCode* const targetKez, int numOfKez,
 			const tileCode* const targetShunz, int numOfShunz, bool Mode);
-		int countMentzNumerals(const MELD_BUF MianziDat);
-	}
+		static int countMentzNumerals(const MELD_BUF MianziDat);
+	};
 
 	// ---------------------------------------------------------------------
 
-	namespace yakuCalculator {
+public:
+	class yakuCalculator {
+	private:
+		enum hanUnit : uint8_t {Han, Mangan, Yakuman};
+		class Yaku;
 
 		class YakuCatalog { // 役の一覧 [singleton]
 		private:
@@ -115,8 +122,6 @@ namespace yaku {
 			static YakuCatalog* Instantiate(); // Singleton instance accessor
 			std::list<Yaku> catalog;
 		};
-
-		__declspec(dllexport) void init();
 
 		struct MENTSU_ANALYSIS { // 面子解析結果
 			PLAYER_ID player;
@@ -134,6 +139,8 @@ namespace yaku {
 #ifdef MJCORE_EXPORTS
 		static_assert(std::is_pod<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not POD");
 #endif
+		typedef std::function<bool
+			(const GameTable* const, const MENTSU_ANALYSIS* const)> YAKUFUNC;
 
 		class CalculatorThread {
 		public:
@@ -161,10 +168,79 @@ namespace yaku {
 		static_assert(std::is_pod<CalculatorParam>::value, "CalculatorParam is not POD");
 #endif
 
-		YAKUSTAT countyaku(const GameTable* const gameStat, PLAYER_ID targetPlayer);
-		__declspec(dllexport) void countyaku(const GameTable* const gameStat,
-			YAKUSTAT* const yakuInfo, int targetPlayer);
-	}
-}
+		class Yaku {
+		public:
+			class YAKU_HAN {
+			public:
+				class HAN { // 翻
+				public:
+					HAN();
+					HAN(int8_t h);
+					HAN(int8_t h, hanUnit u);
+					int8_t getHan();
+					hanUnit getUnit();
+				private:
+					int8_t han; // 数値
+					hanUnit unit; // 単位
+				};
+				HAN coreHan; // 縛りを満たす翻
+				HAN bonusHan; // 縛りを満たさない翻
+				YAKU_HAN();
+				YAKU_HAN(HAN han);
+				YAKU_HAN(HAN han, HAN bonus);
+			};
+		private:
+			YAKU_HAN han;
+			std::string yakuName; // 役の名前（文字列）
+			YAKUFUNC yakuProc; // 役の判定方法
+			std::set<std::string> suppressionList; // 下位役のリスト
+			Yaku() {} // Default constructor
+		public:
+			bool checkYaku(const GameTable* const gameStat, const MENTSU_ANALYSIS* const mentsu);
+			std::string getName(); // 役の名前を取得する
+			YAKU_HAN getHan();
+			std::set<std::string> getSuppression();
+			// Constructor
+			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan, YAKUFUNC f);
+			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+				std::string yk1, YAKUFUNC f);
+			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+				std::string yk1, std::string yk2, YAKUFUNC f);
+			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+				std::string yk1, std::string yk2, std::string yk3, YAKUFUNC f);
+			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+				std::string yk1, std::string yk2, std::string yk3, std::string yk4, YAKUFUNC f);
+			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+				std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5, YAKUFUNC f);
+			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+				std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
+				std::string yk6, YAKUFUNC f);
+			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+				std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
+				std::string yk6, std::string yk7, YAKUFUNC f);
+			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+				std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
+				std::string yk6, std::string yk7, std::string yk8, YAKUFUNC f);
+			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+				std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
+				std::string yk6, std::string yk7, std::string yk8, std::string yk9, YAKUFUNC f);
+			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+				std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
+				std::string yk6, std::string yk7, std::string yk8, std::string yk9, std::string yk10,
+				YAKUFUNC f);
+		};
 
+		static void analysisNonLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
+			SHANTEN* const shanten, YAKUSTAT* const yakuInfo);
+		static void analysisLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
+			SHANTEN* const shanten, YAKUSTAT* const yakuInfo);
+
+	public:
+		static __declspec(dllexport) void init();
+
+		static YAKUSTAT countyaku(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+		static __declspec(dllexport) void countyaku(const GameTable* const gameStat,
+			YAKUSTAT* const yakuInfo, int targetPlayer);
+	};
+};
 #endif
