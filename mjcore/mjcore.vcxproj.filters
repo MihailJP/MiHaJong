@@ -22,6 +22,12 @@
     <Filter Include="LZMA\ソース ファイル">
       <UniqueIdentifier>{b5ebce8c-f087-4055-8254-b9102fdef396}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\yaku">
+      <UniqueIdentifier>{c0c621df-89bb-4093-8748-6c1fdf7f143c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\yaku">
+      <UniqueIdentifier>{146e2973-e275-427d-a818-aa073037e6b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mjcore.cpp">
@@ -84,17 +90,20 @@
     <ClCompile Include="envtbl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="yaku.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="yaku\yaku.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
     </ClCompile>
-    <ClCompile Include="ykclass.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="yaku\ykclass.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
     </ClCompile>
-    <ClCompile Include="yakurslt.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="yaku\yakurslt.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
     </ClCompile>
-    <ClCompile Include="yk_tools.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="yaku\yk_tools.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,11 +182,14 @@
     <ClInclude Include="envtbl.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="yaku.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="version.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="yaku\yaku.h">
+      <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
+    <ClInclude Include="yaku\catalog.h">
+      <Filter>ヘッダー ファイル\yaku</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

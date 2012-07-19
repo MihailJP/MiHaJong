@@ -8,18 +8,20 @@
 #include <map>
 #include <set>
 #include <Windows.h>
-#include "largenum.h"
-#include "gametbl.h"
-#include "tileutil.h"
-#include "except.h"
+#include "../largenum.h"
+#include "../gametbl.h"
+#include "../tileutil.h"
+#include "../except.h"
 
 class yaku {
 public:
 	EXPORT_STRUCT YAKUSTAT {
+		static const int SemiMangan = 12500; // 半満貫
+		static const int LimitMinus = 100; // マイナス翻の下限
 		bool isValid; // 和了っているかどうか
 		int BasePoints; // 符
-		int CoreHan; // 翻
-		int BonusHan; // 翻（縛りを満たさない）
+		int CoreHan, CoreSemiMangan; // 翻
+		int BonusHan, BonusSemiMangan; // 翻（縛りを満たさない）
 		int DoraQuantity; // ドラの数
 		int UraDoraQuantity; // 裏ドラの数
 		int AkaDoraQuantity; // 赤ドラの数
@@ -110,7 +112,7 @@ private:
 public:
 	class yakuCalculator {
 	private:
-		enum hanUnit : uint8_t {Han, Mangan, Yakuman};
+		enum hanUnit : uint8_t {Han, SemiMangan, Yakuman};
 		class Yaku;
 
 		class YakuCatalog { // 役の一覧 [singleton]
@@ -123,10 +125,21 @@ public:
 			std::list<Yaku> catalog;
 		};
 
+		enum MachiType : uint8_t { // 街の種類
+			machiInvalid, // 無効
+			machiRyanmen, // 両面
+			machiKanchan, // 嵌張
+			machiPenchan, // 辺張
+			machiShanpon, // 双ポン
+			machiTanki    // 単騎
+		};
 		struct MENTSU_ANALYSIS { // 面子解析結果
 			PLAYER_ID player;
 			SHANTEN shanten[SHANTEN_PAGES];
 			MELD_BUF MianziDat; // 面子パース結果
+			uint8_t BasePoint; // 符
+			MachiType Machi; // 待ちの種類
+			bool isPinfu; // 平和になってるかどうか
 			Int8ByTile KeziCount; // 刻子・槓子の数
 			Int8ByTile AnKeziCount; // 暗刻・暗槓の数
 			Int8ByTile DuiziCount; // 対子・刻子・槓子の数
@@ -145,16 +158,19 @@ public:
 		class CalculatorThread {
 		public:
 			static DWORD WINAPI calculator(LPVOID lpParam);
-			static int numOfRunningThreads(); // 動いているスレッドの数
+			int numOfRunningThreads(); // 動いているスレッドの数
 			static const int threadLimit = 4; // 同時に起動する最大のスレッド数
 			CalculatorThread(); // デフォルトコンストラクタ
 			~CalculatorThread(); // デフォルトデストラクタ
 		private:
-			static void incThreadCount();
-			static void decThreadCount();
-			static int runningThreads;
-			static CRITICAL_SECTION cs;
-			DWORD WINAPI calculate(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, const ParseMode* const pMode);
+			void incThreadCount();
+			void decThreadCount();
+			int runningThreads;
+			CRITICAL_SECTION cs;
+			static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
+			DWORD WINAPI calculate(
+				const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
+				const ParseMode* const pMode, YAKUSTAT* const result);
 		};
 
 		struct CalculatorParam {
@@ -179,6 +195,9 @@ public:
 					HAN(int8_t h, hanUnit u);
 					int8_t getHan();
 					hanUnit getUnit();
+					static const HAN
+						yv_1han, yv_2han, yv_3han, yv_4han, yv_5han, yv_6han, yv_7han, yv_8han, 
+						yv_mangan, yv_haneman, yv_baiman, yv_3baiman, yv_yakuman, yv_double_yakuman;
 				private:
 					int8_t han; // 数値
 					hanUnit unit; // 単位
