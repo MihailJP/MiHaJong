@@ -96,6 +96,9 @@
     <ClCompile Include="yaku\yk_tools.cpp">
       <Filter>ソース ファイル\yaku</Filter>
     </ClCompile>
+    <ClCompile Include="yaku\catalog.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">
@@ -177,6 +180,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="yaku\yaku.h">
+      <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
+    <ClInclude Include="yaku\catalog.h">
       <Filter>ヘッダー ファイル\yaku</Filter>
     </ClInclude>
   </ItemGroup>
