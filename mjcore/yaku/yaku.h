@@ -8,10 +8,10 @@
 #include <map>
 #include <set>
 #include <Windows.h>
-#include "largenum.h"
-#include "gametbl.h"
-#include "tileutil.h"
-#include "except.h"
+#include "../largenum.h"
+#include "../gametbl.h"
+#include "../tileutil.h"
+#include "../except.h"
 
 class yaku {
 public:

@@ -115,10 +115,10 @@
     <ClCompile Include="mnzdat.cpp" />
     <ClCompile Include="ruletbl.cpp" />
     <ClCompile Include="tileutil.cpp" />
-    <ClCompile Include="yaku.cpp" />
-    <ClCompile Include="yakurslt.cpp" />
-    <ClCompile Include="ykclass.cpp" />
-    <ClCompile Include="yk_tools.cpp" />
+    <ClCompile Include="yaku\yaku.cpp" />
+    <ClCompile Include="yaku\yakurslt.cpp" />
+    <ClCompile Include="yaku\ykclass.cpp" />
+    <ClCompile Include="yaku\yk_tools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dllmain.h" />
@@ -147,7 +147,7 @@
     <ClInclude Include="tilecode.h" />
     <ClInclude Include="tileutil.h" />
     <ClInclude Include="version.h" />
-    <ClInclude Include="yaku.h" />
+    <ClInclude Include="yaku\yaku.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mjcore.rc" />
