@@ -30,54 +30,134 @@ enum EndType : int { // 局の終了理由
 	Uukaikan,        // 五回目の槓で流局した場合(誰かが四槓子聴牌の場合のみ)
 };
 
-// 牌譜関係のコードはそれ用の名前空間に分けておきましょうか。
-namespace haifu {
-	__declspec(dllexport) void haifubufinit();
-	__declspec(dllexport) void haifuinit();
+// 牌譜関係のコードはクラスに隔離しておきましょうか。
+class haifu {
+private:
+	/* 雀牌の名前データ */
+	static const std::string tilecodelabel, HTtilecodelabel1, HTtilecodelabel2;
 
-	__declspec(dllexport) void haifurechaipai(const GameTable* const gameStat);
+	static InfoByPlayer<LargeNum> origPoint;
+	static std::ostringstream haifuBuffer, HThaifuBuffer;
+	static bool haifukanflag;
 
-	void haifurecdora(tileCode tmpDora);
-	__declspec(dllexport) void haifurecdora(int tmpDora);
+	class PlayerStream {
+	public:
+		static std::ostringstream haipai, tsumo, tsumolabel, sutehai, sutehailabel, final;
+	};
+	class HaifuStreams {
+	public:
+		static InfoByPlayer<PlayerStream> streamDat;
+		static std::ostringstream dora, uraDora, aliceDora, aliceDoraMax, resultDesc;
+	};
+	static HaifuStreams haifuP, HThaifuP;
 
-	void haifurecuradora(tileCode tmpDora);
-	__declspec(dllexport) void haifurecuradora(int tmpDora);
+	class tools {
+	public:
+		static const unsigned int cols = 40u;
 
-	void haifurecalicedora(tileCode tmpDora);
-	__declspec(dllexport) void haifurecalicedora(int tmpDora);
+		static void haifuskip(
+			HaifuStreams* haifuP, HaifuStreams* HThaifuP,
+			PLAYER_ID PassivePlayer, PLAYER_ID ActivePlayer
+			);
+		static std::string haifudoraClass(doraCol Akadora);
+		static void recordDoraStream(std::ostringstream* const p, std::ostringstream* const h, tileCode tmpDora);
+		static void recordTile_Inline(std::ostringstream* const p, std::ostringstream* const h, TILE tlCode, bool rotate);
+		static void recordTile_Inline(std::ostringstream* const p, std::ostringstream* const h, TILE tlCode, doraCol kakanCol);
+		static void recordTile_Table(std::ostringstream* const p, std::ostringstream* const h, TILE tlCode);
+		static void recordBlank_Table(std::ostringstream* const p, std::ostringstream* const h);
+		static void haifuwritetsumohai(
+			HaifuStreams* haifuP, HaifuStreams* HThaifuP,
+			PLAYER_ID ActivePlayer, TILE tlCode,
+			std::string PText, std::string HTText
+			);
+		static void haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, PLAYER_ID PassivePlayer);
 
-	__declspec(dllexport) void haifualicedoraupd();
+		class kan_sub {
+		public:
+			static void recordKanOrFlower(
+				const GameTable* const gameStat, int DiscardTileIndex,
+				HaifuStreams* haifuP, HaifuStreams* HThaifuP
+				);
+			static void inline recordChanKan(const GameTable* const gameStat, std::string pTxt, std::string hTxt);
+			static void inline recordKan(const GameTable* const gameStat, std::string pTxt, std::string hTxt);
+		};
 
-	__declspec(dllexport) void haifuresetalicedora();
+		class hfwriter {
+		private:
+			class finalformWriter {
+			private:
+				class MeldWriter {
+				public:
+					static void hfChii(PLAYER_ID player, meldCode meld);
+					static inline void hfPon1(PLAYER_ID player, meldCode meld);
+					static void hfPon(PLAYER_ID player, meldCode meld);
+				};
+			public:
+				static void hfFinalForm(const GameTable* const gameStat, PLAYER_ID player, EndType RoundEndType);
+				static void hfFlower(const GameTable* const gameStat, PLAYER_ID player);
+				static void hfExposedMeld(const GameTable* const gameStat, PLAYER_ID player);
+			};
 
-	__declspec(dllexport) void haifurecdorap();
+			static void hfScoreWriteOut(const GameTable* const gameStat, PLAYER_ID player, seatAbsolute wind);
+			static void hfWriteOut(const GameTable* const gameStat, PLAYER_ID player);
 
-	__declspec(dllexport) void haifurecmota(const GameTable* const gameStat, int DiscardTileIndex);
+		public:
+			static void hfWriteHead(const GameTable* const gameStat,
+				int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
+				std::string ResultDesc, EndType RoundEndType);
 
-	__declspec(dllexport) void haifurecfurikomi(const GameTable* const gameStat);
+			static void hfWriteFinalForms(const GameTable* const gameStat, int OrigTurn, EndType RoundEndType);
+			static void hfWriteBottom();
+		};
+	};
 
-	__declspec(dllexport) void haifurecchi(const GameTable* const gameStat);
-	__declspec(dllexport) void haifurecpon(const GameTable* const gameStat);
-	__declspec(dllexport) void haifurectsumo(const GameTable* const gameStat);
-	__declspec(dllexport) void haifurecminkan(const GameTable* const gameStat);
+public:
+	static __declspec(dllexport) void haifubufinit();
+	static __declspec(dllexport) void haifuinit();
 
-	__declspec(dllexport) void haifurecnorth(const GameTable* const gameStat, int DiscardTileIndex);
-	__declspec(dllexport) void haifurecchanpei(const GameTable* const gameStat);
-	__declspec(dllexport) void haifurecnorthproc(const GameTable* const gameStat);
+	static __declspec(dllexport) void haifurechaipai(const GameTable* const gameStat);
 
-	__declspec(dllexport) void haifurecankan(const GameTable* const gameStat, int DiscardTileIndex);
-	__declspec(dllexport) void haifurecchankan(const GameTable* const gameStat);
-	__declspec(dllexport) void haifureckanproc(const GameTable* const gameStat);
+	static void haifurecdora(tileCode tmpDora);
+	static __declspec(dllexport) void haifurecdora(int tmpDora);
 
-	__declspec(dllexport) void haifurecflower(const GameTable* const gameStat, int DiscardTileIndex);
+	static void haifurecuradora(tileCode tmpDora);
+	static __declspec(dllexport) void haifurecuradora(int tmpDora);
 
-	__declspec(dllexport) void haifuwritebuffer(
+	static void haifurecalicedora(tileCode tmpDora);
+	static __declspec(dllexport) void haifurecalicedora(int tmpDora);
+
+	static __declspec(dllexport) void haifualicedoraupd();
+
+	static __declspec(dllexport) void haifuresetalicedora();
+
+	static __declspec(dllexport) void haifurecdorap();
+
+	static __declspec(dllexport) void haifurecmota(const GameTable* const gameStat, int DiscardTileIndex);
+
+	static __declspec(dllexport) void haifurecfurikomi(const GameTable* const gameStat);
+
+	static __declspec(dllexport) void haifurecchi(const GameTable* const gameStat);
+	static __declspec(dllexport) void haifurecpon(const GameTable* const gameStat);
+	static __declspec(dllexport) void haifurectsumo(const GameTable* const gameStat);
+	static __declspec(dllexport) void haifurecminkan(const GameTable* const gameStat);
+
+	static __declspec(dllexport) void haifurecnorth(const GameTable* const gameStat, int DiscardTileIndex);
+	static __declspec(dllexport) void haifurecchanpei(const GameTable* const gameStat);
+	static __declspec(dllexport) void haifurecnorthproc(const GameTable* const gameStat);
+
+	static __declspec(dllexport) void haifurecankan(const GameTable* const gameStat, int DiscardTileIndex);
+	static __declspec(dllexport) void haifurecchankan(const GameTable* const gameStat);
+	static __declspec(dllexport) void haifureckanproc(const GameTable* const gameStat);
+
+	static __declspec(dllexport) void haifurecflower(const GameTable* const gameStat, int DiscardTileIndex);
+
+	static __declspec(dllexport) void haifuwritebuffer(
 		const GameTable* const gameStat, void *,
 		int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
-		const char* ResultDesc, int RoundEndType);
+		const char* ResultDesc, EndType RoundEndType);
 
-	void haifusave(const GameTable* const gameStat);
-	__declspec(dllexport) void haifusave();
-}
+	static void haifusave(const GameTable* const gameStat);
+	static __declspec(dllexport) void haifusave();
+};
 
 #endif

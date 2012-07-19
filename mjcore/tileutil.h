@@ -12,7 +12,7 @@
 #include <cstdint>
 #include "mjexport.h"
 #include "gametbl.h"
-#include "mnzdat.h"
+#include "shanten.h"
 #include "func.h"
 #include "envtbl.h"
 #include "haifu.h"

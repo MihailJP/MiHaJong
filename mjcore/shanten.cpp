@@ -1,10 +1,10 @@
-#include "mnzdat.h"
+#include "shanten.h"
 
 using std::min;
 
 /* 面子データ初期化 */
 
-static uint8_t* mentsuAnalysisDat = NULL;
+uint8_t* ShantenAnalyzer::mentsuAnalysisDat = NULL;
 
 void LoadFileInResource(int name, int type, DWORD& size, const uint8_t*& data) {
 	HRSRC rc = ::FindResource(dllInst, MAKEINTRESOURCE(name), MAKEINTRESOURCE(type));
@@ -16,7 +16,7 @@ void LoadFileInResource(int name, int type, DWORD& size, const uint8_t*& data) {
 	data = static_cast<const uint8_t*>(::LockResource(rcData));
 }
 
-size_t decompressMentsuAnalysisDat() {
+size_t ShantenAnalyzer::decompressMentsuAnalysisDat() {
 	DWORD size = 0; size_t uncompressedSize;
 	const uint8_t* compressedBuf = NULL;
 	int result;
@@ -42,14 +42,14 @@ size_t decompressMentsuAnalysisDat() {
 	return uncompressedSize;
 }
 
-void calcSHA256(uint8_t* digest, const uint8_t* buf, size_t bufSize) {
+void ShantenAnalyzer::calcSHA256(uint8_t* digest, const uint8_t* buf, size_t bufSize) {
 	CSha256 p;
 	Sha256_Init(&p);
 	Sha256_Update(&p, buf, bufSize);
 	Sha256_Final(&p, digest);
 }
 
-std::string bytesToHexString(std::vector<uint8_t> byteStr) {
+std::string ShantenAnalyzer::bytesToHexString(std::vector<uint8_t> byteStr) {
 	std::string hx = std::string();
 	std::ostringstream o;
 	o.setf(std::ios::right); o.fill('0'); o.width(2);
@@ -57,7 +57,7 @@ std::string bytesToHexString(std::vector<uint8_t> byteStr) {
 	return o.str();
 }
 
-void verifyMentsuAnalysisDat(size_t bufSize) {
+void ShantenAnalyzer::verifyMentsuAnalysisDat(size_t bufSize) {
 	uint8_t expectedDigest[] = {
 		0x2d, 0x10, 0x7e, 0x88, 0x85, 0xad, 0xd7, 0xe0,
 		0x1f, 0xec, 0x65, 0xfa, 0x69, 0x06, 0x33, 0x7a,
@@ -84,7 +84,7 @@ void verifyMentsuAnalysisDat(size_t bufSize) {
 	}
 }
 
-__declspec(dllexport) void initMentsuAnalysisDat() { // 面子データ初期化
+__declspec(dllexport) void ShantenAnalyzer::initMentsuAnalysisDat() { // 面子データ初期化
 	try {
 		verifyMentsuAnalysisDat(decompressMentsuAnalysisDat());
 	}
@@ -109,7 +109,7 @@ __declspec(dllexport) void initMentsuAnalysisDat() { // 面子データ初期化
 
 /* 向聴数を計算する */
 
-MJCORE SHANTEN calcShanten(const GameTable* const gameStat, PLAYER_ID playerID, shantenType mode)
+MJCORE SHANTEN ShantenAnalyzer::calcShanten(const GameTable* const gameStat, PLAYER_ID playerID, shantenType mode)
 { // 向聴数を計算する
 	/* 数牌それぞれの面子の数を数える */
 	Int8ByTile tileCount = countTilesInHand(gameStat, playerID);
@@ -143,13 +143,13 @@ MJCORE SHANTEN calcShanten(const GameTable* const gameStat, PLAYER_ID playerID, 
 		return shanten;
 	}
 }
-__declspec(dllexport) int calcShanten(const GameTable* const gameStat, int playerID, int mode)
+__declspec(dllexport) int ShantenAnalyzer::calcShanten(const GameTable* const gameStat, int playerID, int mode)
 {
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 	return (int)calcShanten(gameStat, (PLAYER_ID)playerID, (shantenType)mode);
 }
 
-SHANTEN calcShantenRegular(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+SHANTEN ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
 { // 面子手の向聴数を求める
 	SHANTEN shanten = 8; // 全く揃ってないてんでバラバラだったら面子手に対して8向聴（七対子に対してなら6向聴になる）
 
@@ -190,7 +190,7 @@ SHANTEN calcShantenRegular(const GameTable* const gameStat, PLAYER_ID playerID, 
 	return shanten;
 }
 
-SHANTEN calcShantenChiitoi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+SHANTEN ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
 { // 七対子に対する向聴数を求める。
 	SHANTEN shanten = 6;
 	for (int i = 0; i < TILE_NONFLOWER_MAX; i++)
@@ -206,7 +206,7 @@ SHANTEN calcShantenChiitoi(const GameTable* const gameStat, PLAYER_ID playerID, 
 	return shanten;
 }
 
-SHANTEN calcShantenKokushi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+SHANTEN ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
 { // 国士無双に対する向聴数を求める。
 	if (chkGameType(gameStat, SanmaS)) return SHANTEN_IMPOSSIBLE; // 数牌三麻では不可能
 
@@ -228,7 +228,7 @@ SHANTEN calcShantenKokushi(const GameTable* const gameStat, PLAYER_ID playerID, 
 	return shanten;
 }
 
-SHANTEN calcShantenStellar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount, bool qixing)
+SHANTEN ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount, bool qixing)
 { // 特殊：七星不靠/全不靠の向聴数を求める
 	if ((getRule(RULE_STELLAR_UUSHII) == 0)&&(qixing)) return SHANTEN_IMPOSSIBLE;
 	else if ((getRule(RULE_QUANBUKAO) == 0)&&(!qixing)) return SHANTEN_IMPOSSIBLE;
@@ -289,7 +289,7 @@ SHANTEN calcShantenStellar(const GameTable* const gameStat, PLAYER_ID playerID, 
 	return shanten;
 }
 
-SHANTEN calcShantenCivilWar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+SHANTEN ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
 { // 特殊：南北戦争の向聴数を求める
 	if (getRule(RULE_CIVIL_WAR) == 0) return SHANTEN_IMPOSSIBLE;
 
@@ -342,7 +342,7 @@ SHANTEN calcShantenCivilWar(const GameTable* const gameStat, PLAYER_ID playerID,
 	return shanten;
 }
 
-SHANTEN calcShantenSyzygy(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+SHANTEN ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
 { // 特殊：惑星直列の向聴数を求める
 	if (getRule(RULE_SYZYGY) == 0) return SHANTEN_IMPOSSIBLE;
 

@@ -7,8 +7,8 @@
 #include "func.h"
 #include "gametbl.h"
 #include "largenum.h"
-#include "mnzdat.h"
 #include "ruletbl.h"
+#include "shanten.h"
 #include "tilecode.h"
 #include "tileutil.h"
 
