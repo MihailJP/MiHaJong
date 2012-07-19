@@ -116,10 +116,12 @@ public:
 		class Yaku;
 
 		class YakuCatalog { // –ð‚Ìˆê—— [singleton]
+			friend yaku::yakuCalculator;
 		private:
 			YakuCatalog() {}
 			YakuCatalog(const YakuCatalog&);
 			YakuCatalog& operator= (const YakuCatalog&);
+			class catalogInit;
 		public:
 			static YakuCatalog* Instantiate(); // Singleton instance accessor
 			std::list<Yaku> catalog;

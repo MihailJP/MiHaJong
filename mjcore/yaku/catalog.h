@@ -3,4 +3,11 @@
 
 #include "yaku.h"
 
+class yaku::yakuCalculator::YakuCatalog::catalogInit {
+	friend yaku::yakuCalculator;
+	friend yaku::yakuCalculator::YakuCatalog;
+private:
+	static void yakulst_pinhu();
+};
+
 #endif

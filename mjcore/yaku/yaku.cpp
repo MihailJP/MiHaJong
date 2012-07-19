@@ -30,13 +30,6 @@ const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU
 const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman =
 	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(2, Yakuman);
 
-/* シングルトン インスタンス アクセサ */
-yaku::yakuCalculator::YakuCatalog* yaku::yakuCalculator::YakuCatalog::Instantiate() {
-	// Singleton instance accessor
-	static YakuCatalog instance;
-	return &instance;
-}
-
 // 計算を実行(マルチスレッドで……大丈夫かなぁ)
 DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) {
 	((CalculatorParam*)lpParam)->instance->incThreadCount();
