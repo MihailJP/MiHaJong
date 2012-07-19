@@ -9,7 +9,8 @@ int yaku::YAKUSTAT::getSize() {
 void yaku::YAKUSTAT::Init(YAKUSTAT* const myInstance) {
 	myInstance->isValid = false;
 	myInstance->BasePoints = 20;
-	myInstance->CoreHan = myInstance->BonusHan =
+	myInstance->CoreHan = myInstance->CoreSemiMangan =
+		myInstance->BonusHan = myInstance->BonusSemiMangan =
 		myInstance->DoraQuantity = myInstance->UraDoraQuantity =
 		myInstance->AkaDoraQuantity = myInstance->AoDoraQuantity =
 		myInstance->AliceDora = myInstance->FlowerQuantity = 0;
@@ -31,8 +32,14 @@ void yaku::YAKUSTAT::exportYakuPoint(const YAKUSTAT* const myInstance, int* cons
 void yaku::YAKUSTAT::setYakuInfo(YAKUSTAT* const myInstance, int index, int value) {
 	switch (index) {
 		case 0: myInstance->BasePoints = value; break;
-		case 1: myInstance->CoreHan = value; break;
-		case 2: myInstance->BonusHan = value; break;
+		case 1:
+			myInstance->CoreHan = (value + LimitMinus) % SemiMangan - LimitMinus;
+			myInstance->CoreSemiMangan = (value + LimitMinus) / SemiMangan - LimitMinus;
+			break;
+		case 2:
+			myInstance->BonusHan = (value + LimitMinus) % SemiMangan - LimitMinus;
+			myInstance->BonusSemiMangan = (value + LimitMinus) / SemiMangan - LimitMinus;
+			break;
 		case 3: myInstance->DoraQuantity = value; break;
 		case 4: myInstance->UraDoraQuantity = value; break;
 		case 5: myInstance->AkaDoraQuantity = value; break;
@@ -61,8 +68,14 @@ void yaku::YAKUSTAT::setYakuInfo(YAKUSTAT* const myInstance, int index, const ch
 void yaku::YAKUSTAT::addYakuInfo(YAKUSTAT* const myInstance, int index, int value) {
 	switch (index) {
 		case 0: myInstance->BasePoints += value; break;
-		case 1: myInstance->CoreHan += value; break;
-		case 2: myInstance->BonusHan += value; break;
+		case 1:
+			myInstance->CoreHan += (value + LimitMinus) % SemiMangan - LimitMinus;
+			myInstance->CoreSemiMangan += (value + LimitMinus) / SemiMangan - LimitMinus;
+			break;
+		case 2:
+			myInstance->BonusHan += (value + LimitMinus) % SemiMangan - LimitMinus;
+			myInstance->BonusSemiMangan += (value + LimitMinus) / SemiMangan - LimitMinus;
+			break;
 		case 3: myInstance->DoraQuantity += value; break;
 		case 4: myInstance->UraDoraQuantity += value; break;
 		case 5: myInstance->AkaDoraQuantity += value; break;
@@ -91,8 +104,8 @@ void yaku::YAKUSTAT::addYakuInfo(YAKUSTAT* const myInstance, int index, const ch
 int yaku::YAKUSTAT::getYakuInfo(const YAKUSTAT* const myInstance, int index) {
 	switch (index) {
 		case 0: return myInstance->BasePoints;
-		case 1: return myInstance->CoreHan;
-		case 2: return myInstance->BonusHan;
+		case 1: return myInstance->CoreHan + myInstance->CoreSemiMangan * SemiMangan;
+		case 2: return myInstance->BonusHan + myInstance->BonusSemiMangan * SemiMangan;
 		case 3: return myInstance->DoraQuantity;
 		case 4: return myInstance->UraDoraQuantity;
 		case 5: return myInstance->AkaDoraQuantity;

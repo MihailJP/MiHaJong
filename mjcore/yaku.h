@@ -16,10 +16,12 @@
 class yaku {
 public:
 	EXPORT_STRUCT YAKUSTAT {
+		static const int SemiMangan = 12500; // 半満貫
+		static const int LimitMinus = 100; // マイナス翻の下限
 		bool isValid; // 和了っているかどうか
 		int BasePoints; // 符
-		int CoreHan; // 翻
-		int BonusHan; // 翻（縛りを満たさない）
+		int CoreHan, CoreSemiMangan; // 翻
+		int BonusHan, BonusSemiMangan; // 翻（縛りを満たさない）
 		int DoraQuantity; // ドラの数
 		int UraDoraQuantity; // 裏ドラの数
 		int AkaDoraQuantity; // 赤ドラの数
