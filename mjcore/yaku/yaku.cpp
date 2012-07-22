@@ -1,34 +1,5 @@
 #include "yaku.h"
-
-/* 定数を定義 */
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(1, Han);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_2han =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(2, Han);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_3han =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(3, Han);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_4han =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(4, Han);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_5han =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(5, Han);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_6han =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(6, Han);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_7han =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(7, Han);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_8han =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(8, Han);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_mangan =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(2, SemiMangan);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_haneman =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(3, SemiMangan);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_baiman =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(4, SemiMangan);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_3baiman =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(6, SemiMangan);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(1, Yakuman);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(2, Yakuman);
+#include "yvalue.h"
 
 /* シングルトン インスタンス アクセサ */
 yaku::yakuCalculator::YakuCatalog* yaku::yakuCalculator::YakuCatalog::Instantiate() {
@@ -207,7 +178,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		YakuCatalog::Instantiate()->catalog.end(), // カタログの末尾まで
 		[&yakuHan, gameStat, analysis, &suppression](Yaku& yaku) -> void { // 役ごとに判定処理
 			if (yaku.checkYaku(gameStat, analysis)) { // 成立条件を満たしていたら
-				yakuHan[yaku.getName()] = yaku.getHan(); // 飜数を記録
+				yakuHan[yaku.getName()] = yaku.getHan(gameStat, analysis); // 飜数を記録
 				suppression.insert(yaku.getSuppression().begin(), yaku.getSuppression().end()); // 下位役のリストを結合
 			}
 	});
