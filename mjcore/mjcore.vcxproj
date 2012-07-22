@@ -150,6 +150,7 @@
     <ClInclude Include="version.h" />
     <ClInclude Include="yaku\catalog.h" />
     <ClInclude Include="yaku\yaku.h" />
+    <ClInclude Include="yaku\yvalue.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mjcore.rc" />

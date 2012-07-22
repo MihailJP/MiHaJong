@@ -185,6 +185,9 @@
     <ClInclude Include="yaku\catalog.h">
       <Filter>ヘッダー ファイル\yaku</Filter>
     </ClInclude>
+    <ClInclude Include="yaku\yvalue.h">
+      <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mjcore.rc">
