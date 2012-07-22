@@ -14,7 +14,17 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 {
 	/* ƒ^ƒ“ƒ„ƒI */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		"’f›ô‹ã", yaku::yakuCalculator::Yaku::yval_1han,
+		"’f›ô‹ã", (getRule(RULE_KUITAN) == 2) ? /* –å‘O‚È‚ç”›‚è‚ð–ž‚½‚µA‹ò‚¢’f‚Í”›‚è‚ð–ž‚½‚³‚È‚¢ƒ‹[ƒ‹ */
+		yaku::yakuCalculator::Yaku::HANFUNC(
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* analysis) {
+				return gameStat->Player[analysis->player].MenzenFlag ?
+					yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han,
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null) :
+					yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han);
+			}) :
+			((getRule(RULE_KUITAN) == 1) ? (yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen : // ‹ò‚¢’f‚È‚µ
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han), // ‹ò‚¢’f‚ ‚è
 		[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[shantenRegular] == -1)
 				return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles(), 13, YaojiuShunCode, 13, false) == 0);
