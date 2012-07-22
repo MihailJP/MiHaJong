@@ -3,7 +3,7 @@
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_pinhu()
 {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		"•½˜a", Yaku::YAKU_HAN::HAN::yv_1han, Yaku::YAKU_HAN::HAN(),
+		"•½˜a", Yyaku::yakuCalculator::Yaku::yval_1han /* –å‘O‚Å‚ ‚é‚©‚Ç‚¤‚©‚Ì”»’è‚ÍŠù‚És‚È‚Á‚Ä‚¢‚é‚Ì‚Å•s—v */,
 		[](const GameTable* const, const MENTSU_ANALYSIS* const analysis) {
 			return analysis->isPinfu;
 		}
