@@ -2,6 +2,7 @@
 #define YAKU_H
 
 #include <cstdint>
+#include <string>
 #include <type_traits>
 #include <functional>
 #include <list>
