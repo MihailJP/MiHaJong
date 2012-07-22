@@ -1,4 +1,4 @@
-#include "yaku.h"
+#include "yakurslt.h"
 
 /* 構造体のサイズを返す */
 int yaku::YAKUSTAT::getSize() {
