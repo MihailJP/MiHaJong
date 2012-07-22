@@ -105,6 +105,9 @@
     <ClCompile Include="yaku\catalog\pinhu.cpp">
       <Filter>ソース ファイル\yaku\catalog</Filter>
     </ClCompile>
+    <ClCompile Include="yaku\catalog\yaojiu.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">

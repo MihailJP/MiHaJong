@@ -9,8 +9,9 @@ yaku::yakuCalculator::YakuCatalog* yaku::yakuCalculator::YakuCatalog::Instantiat
 
 // 設定したルールに基づいて役インスタンスを初期化する
 void yaku::yakuCalculator::init() {
-	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.clear(); // リセット
+	YakuCatalog::Instantiate()->catalog.clear(); // リセット
 	info("役カタログをリセットしました。");
-	yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_pinhu();
+	YakuCatalog::catalogInit::yakulst_pinhu();
+	YakuCatalog::catalogInit::yakulst_yaojiu();
 	info("役カタログの構築を完了しました。");
 }

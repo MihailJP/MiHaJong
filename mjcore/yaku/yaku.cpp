@@ -225,6 +225,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
 	memcpy(analysis.shanten, shanten, sizeof(SHANTEN[SHANTEN_PAGES]));
 	analysis.player = targetPlayer;
+	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam; memset(calcprm, 0, sizeof(CalculatorParam));
 	calcprm->gameStat = gameStat; calcprm->instance = calculator;
@@ -246,6 +247,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
 	memcpy(analysis.shanten, shanten, sizeof(SHANTEN[SHANTEN_PAGES]));
 	analysis.player = targetPlayer;
+	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
 	for (int i = 0; i < 160; i++) {

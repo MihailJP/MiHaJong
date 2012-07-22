@@ -55,6 +55,7 @@ private:
 		Int8ByTile KangziCount; // Èq‚Ì”
 		Int8ByTile AnKangziCount; // ˆÃÈ‚Ì”
 		Int8ByTile KaKangziCount; // ‰ÁÈ‚Ì”
+		Int8ByTile TileCount; // ”v‚Ì”
 	};
 #ifdef MJCORE_EXPORTS
 	static_assert(std::is_pod<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not POD");
