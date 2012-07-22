@@ -267,7 +267,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	memcpy(&calcprm->analysis, &analysis, sizeof(MENTSU_ANALYSIS));
 	YAKUSTAT::Init(&calcprm->result);
 	// 計算を実行
-	CalculatorThread::calculator(&calcprm);
+	CalculatorThread::calculator(calcprm);
 	while (calculator->numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
 	// 高点法の処理
 	memcpy(yakuInfo, &calcprm->result, sizeof(YAKUSTAT));
