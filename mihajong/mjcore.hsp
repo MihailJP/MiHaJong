@@ -123,8 +123,8 @@
 #func TableEnvInitAll "?TableEnvInitAll@EnvTable@@SAXPAX@Z" nullptr
 
 /* chkyaku.hspÇ©ÇÁÇÃà⁄êA */
-#func initYakuCatalog "?init@yakuCalculator@yaku@@YAXXZ"
-#func countyaku "?countyaku@yakuCalculator@yaku@@YAXQBUGameTable@@QAUYAKUSTAT@2@H@Z" int, var, int
+#func initYakuCatalog "?init@yakuCalculator@yaku@@SAXXZ"
+#func countyaku "?countyaku@yakuCalculator@yaku@@SAXQBUGameTable@@QAUYAKUSTAT@2@H@Z" int, var, int
 
 /* ------------------------------------------------------------------------ */
 

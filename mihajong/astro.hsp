@@ -40,5 +40,6 @@
 #deffunc sunrise array Answer, int year, int month, int day, double TZ, int isdst, double lon, double lat, double altit
 	sdim Answer, 4, 4
 	_sunrise Answer, 4, year, month, day, TZ, isdst, lon, lat, altit
+	return
 #global
 #endif
