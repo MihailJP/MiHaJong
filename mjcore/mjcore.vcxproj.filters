@@ -28,6 +28,9 @@
     <Filter Include="ヘッダー ファイル\yaku">
       <UniqueIdentifier>{146e2973-e275-427d-a818-aa073037e6b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\yaku\catalog">
+      <UniqueIdentifier>{3a8419f7-f9b5-4bd7-9adb-a351378bdffa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mjcore.cpp">
@@ -98,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="yaku\catalog.cpp">
       <Filter>ソース ファイル\yaku</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\shisanbd.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

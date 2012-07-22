@@ -260,6 +260,10 @@ public:
 		static YAKUSTAT countyaku(const GameTable* const gameStat, PLAYER_ID targetPlayer);
 		static __declspec(dllexport) void countyaku(const GameTable* const gameStat,
 			YAKUSTAT* const yakuInfo, int targetPlayer);
+		static bool chkShisanBuDa(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+		static __declspec(dllexport) int chkShisanBuDa(const GameTable* const gameStat, int targetPlayer);
+		static bool chkShisiBuDa(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+		static __declspec(dllexport) int chkShisiBuDa(const GameTable* const gameStat, int targetPlayer);
 	};
 };
 #endif
