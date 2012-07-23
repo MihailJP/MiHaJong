@@ -28,4 +28,54 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 					((/* 13–Ê‘Ò‚¿‚©”»’è‚·‚é */0)||(gameStat->TianHuFlag))); // 13–Ê‘Ò‚¿‚©“V˜a‚É‚È‚Á‚Ä‚¢‚é
 			}
 		));
+	/* µ¯–³èÏ */
+	if (getRule(RULE_STELLAR_UUSHII) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"µ¯–³èÏ", (getRule(RULE_STELLAR_UUSHII) == 2) ?
+			yaku::yakuCalculator::Yaku::yval_baiman_menzen : yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"‘S•sèÏ",
+			[](const GameTable* const, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->shanten[shantenStellar] == -1);
+			}
+		));
+	/* “ì–kí‘ˆ */
+	if (getRule(RULE_CIVIL_WAR) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"“ì–kí‘ˆ", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			[](const GameTable* const, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->shanten[shantenCivilWar] == -1);
+			}
+		));
+	/* ˜f¯’¼—ñ */
+	if (getRule(RULE_SYZYGY) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"˜f¯’¼—ñ", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			[](const GameTable* const, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->shanten[shantenSyzygy] == -1);
+			}
+		));
+	/* ‘S•sèÏ */
+	if (getRule(RULE_QUANBUKAO) != 0) {
+		const yaku::yakuCalculator::Yaku::MenzenHan* qbk_han = NULL;
+		switch (getRule(RULE_QUANBUKAO)) {
+		case 1: case 2:
+			qbk_han = &yaku::yakuCalculator::Yaku::yval_3han_menzen;
+			break;
+		case 3:
+			qbk_han = &yaku::yakuCalculator::Yaku::yval_4han_menzen;
+			break;
+		case 4:
+			qbk_han = &yaku::yakuCalculator::Yaku::yval_mangan_menzen;
+			break;
+		case 5:
+			qbk_han = &yaku::yakuCalculator::Yaku::yval_yakuman_menzen;
+			break;
+		}
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘S•sèÏ", *qbk_han,
+			[](const GameTable* const, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->shanten[shantenQuanbukao] == -1);
+			}
+		));
+	}
 }
