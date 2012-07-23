@@ -53,10 +53,16 @@ int yaku::yakuCalculator::CalculatorThread::numOfRunningThreads() { // “®‚¢‚Ä‚¢‚
 }
 
 void yaku::yakuCalculator::CalculatorThread::incThreadCount() {
-	EnterCriticalSection(&this->cs); ++this->runningThreads; LeaveCriticalSection(&this->cs); // ƒXƒŒƒbƒh”ƒCƒ“ƒNƒŠƒƒ“ƒg
+	trace("incThreadCount()");
+	while (TryEnterCriticalSection(&this->cs) == 0) Sleep(0);
+	++this->runningThreads; // ƒXƒŒƒbƒh”ƒCƒ“ƒNƒŠƒƒ“ƒg
+	LeaveCriticalSection(&this->cs);
 }
 void yaku::yakuCalculator::CalculatorThread::decThreadCount() {
-	EnterCriticalSection(&this->cs); --this->runningThreads; LeaveCriticalSection(&this->cs); // ƒXƒŒƒbƒh”ƒfƒNƒŠƒƒ“ƒg
+	trace("decThreadCount()");
+	while (TryEnterCriticalSection(&this->cs) == 0) Sleep(0);
+	--this->runningThreads; // ƒXƒŒƒbƒh”ƒfƒNƒŠƒƒ“ƒg
+	LeaveCriticalSection(&this->cs);
 }
 
 /* •„‚ğŒvZ‚·‚é */
@@ -208,7 +214,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		[&yakuHan, gameStat, analysis, &suppression](Yaku& yaku) -> void { // –ğ‚²‚Æ‚É”»’èˆ—
 			if (yaku.checkYaku(gameStat, analysis)) { // ¬—§ğŒ‚ğ–‚½‚µ‚Ä‚¢‚½‚ç
 				yakuHan[yaku.getName()] = yaku.getHan(); // ãÊ”‚ğ‹L˜^
-				suppression.insert(yaku.getSuppression().begin(), yaku.getSuppression().end()); // ‰ºˆÊ–ğ‚ÌƒŠƒXƒg‚ğŒ‹‡
+				std::set<std::string> sup = yaku.getSuppression();
+				suppression.insert(sup.begin(), sup.end()); // ‰ºˆÊ–ğ‚ÌƒŠƒXƒg‚ğŒ‹‡
 			}
 	});
 	/* ‰ºˆÊ–ğ‚ğœ‹‚·‚é */
@@ -248,6 +255,10 @@ yaku::yakuCalculator::CalculatorThread::CalculatorThread() {
 	InitializeCriticalSection(&cs); runningThreads = 0;
 }
 yaku::yakuCalculator::CalculatorThread::~CalculatorThread() {
+	while (runningThreads) {
+		while (runningThreads) Sleep(0);
+		Sleep(0);
+	}
 	DeleteCriticalSection(&cs);
 }
 		
@@ -255,6 +266,7 @@ yaku::yakuCalculator::CalculatorThread::~CalculatorThread() {
 void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
 	SHANTEN* const shanten, YAKUSTAT* const yakuInfo)
 {
+	trace("AnalysisNonLoop()");
 	CalculatorThread* calculator = new CalculatorThread; // ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì€”õ
 	// •Ï”‚ğ—pˆÓ
 	MENTSU_ANALYSIS analysis;
@@ -267,15 +279,19 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	memcpy(&calcprm->analysis, &analysis, sizeof(MENTSU_ANALYSIS));
 	YAKUSTAT::Init(&calcprm->result);
 	// ŒvZ‚ğÀs
-	CalculatorThread::calculator(calcprm);
+	DWORD ThreadID;
+	HANDLE Thread = CreateThread(NULL, 0, CalculatorThread::calculator, (LPVOID)calcprm, 0, &ThreadID);
+	Sleep(0);
 	while (calculator->numOfRunningThreads() > 0) Sleep(0); // “¯Šú(ŠÈ—ª‚ÈÀ‘•)
 	// ‚“_–@‚Ìˆ—
 	memcpy(yakuInfo, &calcprm->result, sizeof(YAKUSTAT));
+	assert(calculator->numOfRunningThreads() == 0);
 	delete calcprm; delete calculator; // —p–‚ªÏ‚ñ‚¾‚ç•Ğ‚Ã‚¯‚Ü‚µ‚å‚¤
 }
 void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
 	SHANTEN* const shanten, YAKUSTAT* const yakuInfo)
 {
+	trace("AnalysisLoop()");
 	CalculatorThread* calculator = new CalculatorThread; // ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì€”õ
 	// •Ï”‚ğ—pˆÓ
 	MENTSU_ANALYSIS analysis;
@@ -284,7 +300,9 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	analysis.player = targetPlayer;
 	// ŒvZƒ‹[ƒ`ƒ“‚É“n‚·ƒpƒ‰ƒ[ƒ^‚Ì€”õ
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
+	DWORD ThreadID[160]; HANDLE Thread[160];
 	for (int i = 0; i < 160; i++) {
+		calcprm[i].instance = calculator;
 		calcprm[i].gameStat = gameStat; calcprm[i].instance = calculator;
 		calcprm[i].pMode.AtamaCode = (tileCode)(i / 4);
 		calcprm[i].pMode.Order = (ParseOrder)(i % 4);
@@ -295,7 +313,8 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	for (int i = 4; i < 160; i++) { // 0`3‚ÍNoTile‚È‚Ì‚Å‚â‚ç‚È‚­‚Ä‚¢‚¢
 		while (calculator->numOfRunningThreads() >= CalculatorThread::threadLimit)
 			Sleep(0); // ƒXƒŒƒbƒh”§ŒÀ‚Ìƒ`ƒFƒbƒN
-		CalculatorThread::calculator(&(calcprm[i]));
+		Thread[i] = CreateThread(NULL, 0, CalculatorThread::calculator, (LPVOID)(&(calcprm[i])), 0, &(ThreadID[i]));
+		Sleep(0);
 	}
 	while (calculator->numOfRunningThreads() > 0) Sleep(0); // “¯Šú(ŠÈ—ª‚ÈÀ‘•)
 	// ‚“_–@‚Ìˆ—
@@ -304,6 +323,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 			memcpy(yakuInfo, &calcprm[i].result, sizeof(YAKUSTAT));
 	}
 	// —p–‚ªÏ‚ñ‚¾‚ç•Ğ‚Ã‚¯‚Ü‚µ‚å‚¤
+	assert(calculator->numOfRunningThreads() == 0);
 	delete[] calcprm; delete calculator;
 }
 
