@@ -118,6 +118,7 @@
     <ClCompile Include="yaku\catalog.cpp" />
     <ClCompile Include="yaku\catalog\pinhu.cpp" />
     <ClCompile Include="yaku\catalog\yaojiu.cpp" />
+    <ClCompile Include="yaku\catalog\shisanbd.cpp" />
     <ClCompile Include="yaku\yaku.cpp" />
     <ClCompile Include="yaku\yakurslt.cpp" />
     <ClCompile Include="yaku\ykclass.cpp" />

@@ -69,6 +69,8 @@ private:
 		static DWORD WINAPI calculator(LPVOID lpParam);
 		int numOfRunningThreads(); // 動いているスレッドの数
 		static const int threadLimit = 4; // 同時に起動する最大のスレッド数
+		int numOfStartedThreads(); // 開始したスレッドの数
+		void sync(int threads); // スレッドを同期する
 		CalculatorThread(); // デフォルトコンストラクタ
 		~CalculatorThread(); // デフォルトデストラクタ
 	private:
@@ -76,6 +78,7 @@ private:
 		void decThreadCount();
 		int runningThreads;
 		CRITICAL_SECTION cs;
+		int startedThreads;
 		static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
 		DWORD WINAPI calculate(
 			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
@@ -203,6 +206,10 @@ public:
 	static YAKUSTAT countyaku(const GameTable* const gameStat, PLAYER_ID targetPlayer);
 	static __declspec(dllexport) void countyaku(const GameTable* const gameStat,
 		YAKUSTAT* const yakuInfo, int targetPlayer);
+	static bool chkShisanBuDa(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+	static __declspec(dllexport) int chkShisanBuDa(const GameTable* const gameStat, int targetPlayer);
+	static bool chkShisiBuDa(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+	static __declspec(dllexport) int chkShisiBuDa(const GameTable* const gameStat, int targetPlayer);
 };
 
 #endif

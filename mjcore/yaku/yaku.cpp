@@ -15,12 +15,24 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) 
 int yaku::yakuCalculator::CalculatorThread::numOfRunningThreads() { // 動いているスレッドの数
 	return this->runningThreads;
 }
+int yaku::yakuCalculator::CalculatorThread::numOfStartedThreads() { // 開始したスレッドの数
+	return this->startedThreads;
+}
+void yaku::yakuCalculator::CalculatorThread::sync(int threads) { // スレッドを同期
+	while (this->startedThreads < threads) Sleep(0); // 規定数のスレッドが開始するのを待ってから
+	while (this->runningThreads > 0) Sleep(0); // 終了するのを待つ
+}
 
 void yaku::yakuCalculator::CalculatorThread::incThreadCount() {
-	EnterCriticalSection(&this->cs); ++this->runningThreads; LeaveCriticalSection(&this->cs); // スレッド数インクリメント
+	while (TryEnterCriticalSection(&this->cs) == 0) Sleep(0);
+	++this->runningThreads; // スレッド数インクリメント
+	++this->startedThreads;
+	LeaveCriticalSection(&this->cs);
 }
 void yaku::yakuCalculator::CalculatorThread::decThreadCount() {
-	EnterCriticalSection(&this->cs); --this->runningThreads; LeaveCriticalSection(&this->cs); // スレッド数デクリメント
+	while (TryEnterCriticalSection(&this->cs) == 0) Sleep(0);
+	--this->runningThreads; // スレッド数デクリメント
+	LeaveCriticalSection(&this->cs);
 }
 
 /* 符を計算する */
@@ -172,7 +184,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		[&yakuHan, gameStat, analysis, &suppression](Yaku& yaku) -> void { // 役ごとに判定処理
 			if (yaku.checkYaku(gameStat, analysis)) { // 成立条件を満たしていたら
 				yakuHan[yaku.getName()] = yaku.getHan(gameStat, analysis); // 飜数を記録
-				suppression.insert(yaku.getSuppression().begin(), yaku.getSuppression().end()); // 下位役のリストを結合
+				std::set<std::string> sup = yaku.getSuppression();
+				suppression.insert(sup.begin(), sup.end()); // 下位役のリストを結合
 			}
 	});
 	/* 下位役を除去する */
@@ -209,9 +222,10 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 
 /* コンストラクタとデストラクタ */
 yaku::yakuCalculator::CalculatorThread::CalculatorThread() {
-	InitializeCriticalSection(&cs); runningThreads = 0;
+	InitializeCriticalSection(&cs); runningThreads = startedThreads = 0;
 }
 yaku::yakuCalculator::CalculatorThread::~CalculatorThread() {
+	/* 終了するときは必ず同期してから行うこと！！ */
 	DeleteCriticalSection(&cs);
 }
 		
@@ -232,10 +246,13 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	memcpy(&calcprm->analysis, &analysis, sizeof(MENTSU_ANALYSIS));
 	YAKUSTAT::Init(&calcprm->result);
 	// 計算を実行
-	CalculatorThread::calculator(&calcprm);
-	while (calculator->numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
+	DWORD ThreadID;
+	HANDLE Thread = CreateThread(NULL, 0, CalculatorThread::calculator, (LPVOID)calcprm, 0, &ThreadID);
+	calculator->sync(1); // 同期(簡略な実装)
 	// 高点法の処理
 	memcpy(yakuInfo, &calcprm->result, sizeof(YAKUSTAT));
+	assert(calculator->numOfStartedThreads() == 1);
+	assert(calculator->numOfRunningThreads() == 0);
 	delete calcprm; delete calculator; // 用事が済んだら片づけましょう
 }
 void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
@@ -250,7 +267,9 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
+	DWORD ThreadID[160]; HANDLE Thread[160];
 	for (int i = 0; i < 160; i++) {
+		calcprm[i].instance = calculator;
 		calcprm[i].gameStat = gameStat; calcprm[i].instance = calculator;
 		calcprm[i].pMode.AtamaCode = (tileCode)(i / 4);
 		calcprm[i].pMode.Order = (ParseOrder)(i % 4);
@@ -261,15 +280,18 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	for (int i = 4; i < 160; i++) { // 0～3はNoTileなのでやらなくていい
 		while (calculator->numOfRunningThreads() >= CalculatorThread::threadLimit)
 			Sleep(0); // スレッド数制限のチェック
-		CalculatorThread::calculator(&(calcprm[i]));
+		Thread[i] = CreateThread(NULL, 0, CalculatorThread::calculator, (LPVOID)(&(calcprm[i])), 0, &(ThreadID[i]));
+		Sleep(0);
 	}
-	while (calculator->numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
+	calculator->sync(156); // 同期(簡略な実装)
 	// 高点法の処理
 	for (int i = 4; i < 160; i++) {
 		if (yakuInfo->AgariPoints < calcprm[i].result.AgariPoints)
 			memcpy(yakuInfo, &calcprm[i].result, sizeof(YAKUSTAT));
 	}
 	// 用事が済んだら片づけましょう
+	assert(calculator->numOfStartedThreads() == 156);
+	assert(calculator->numOfRunningThreads() == 0);
 	delete[] calcprm; delete calculator;
 }
 
@@ -292,9 +314,9 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 	}
 	// 和了っているなら
 	if (shanten[shantenRegular] == -1) // 一般形の和了
-		analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);
-	else // 七対子、国士無双、その他特殊な和了
 		analysisLoop(gameStat, targetPlayer, shanten, &yakuInfo);
+	else // 七対子、国士無双、その他特殊な和了
+		analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);
 	return yakuInfo;
 }
 __declspec(dllexport) void yaku::yakuCalculator::countyaku(const GameTable* const gameStat,

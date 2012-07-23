@@ -29,7 +29,7 @@
       <UniqueIdentifier>{146e2973-e275-427d-a818-aa073037e6b3}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\yaku\catalog">
-      <UniqueIdentifier>{3e44a7fc-aa53-4217-9a28-063e062fb25d}</UniqueIdentifier>
+      <UniqueIdentifier>{3a8419f7-f9b5-4bd7-9adb-a351378bdffa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +106,9 @@
       <Filter>ソース ファイル\yaku\catalog</Filter>
     </ClCompile>
     <ClCompile Include="yaku\catalog\yaojiu.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\shisanbd.cpp">
       <Filter>ソース ファイル\yaku\catalog</Filter>
     </ClCompile>
   </ItemGroup>

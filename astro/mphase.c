@@ -44,7 +44,7 @@ double kepler (double m, double ecc)
 	do {
 		delta = 0.0 + e - ecc * sin(e) - M;
 		e -= delta / (1.0 - ecc * cos(e));
-	} while (fabs(delta) > DBL_EPSILON);
+	} while (fabs(delta) > 1e-6);
 	return e;
 }
 
