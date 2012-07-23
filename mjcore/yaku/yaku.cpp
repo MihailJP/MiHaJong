@@ -51,11 +51,19 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) 
 int yaku::yakuCalculator::CalculatorThread::numOfRunningThreads() { // 動いているスレッドの数
 	return this->runningThreads;
 }
+int yaku::yakuCalculator::CalculatorThread::numOfStartedThreads() { // 開始したスレッドの数
+	return this->startedThreads;
+}
+void yaku::yakuCalculator::CalculatorThread::sync(int threads) { // スレッドを同期
+	while (this->startedThreads < threads) Sleep(0); // 規定数のスレッドが開始するのを待ってから
+	while (this->runningThreads > 0) Sleep(0); // 終了するのを待つ
+}
 
 void yaku::yakuCalculator::CalculatorThread::incThreadCount() {
 	trace("incThreadCount()");
 	while (TryEnterCriticalSection(&this->cs) == 0) Sleep(0);
 	++this->runningThreads; // スレッド数インクリメント
+	++this->startedThreads;
 	LeaveCriticalSection(&this->cs);
 }
 void yaku::yakuCalculator::CalculatorThread::decThreadCount() {
@@ -252,13 +260,10 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 
 /* コンストラクタとデストラクタ */
 yaku::yakuCalculator::CalculatorThread::CalculatorThread() {
-	InitializeCriticalSection(&cs); runningThreads = 0;
+	InitializeCriticalSection(&cs); runningThreads = startedThreads = 0;
 }
 yaku::yakuCalculator::CalculatorThread::~CalculatorThread() {
-	while (runningThreads) {
-		while (runningThreads) Sleep(0);
-		Sleep(0);
-	}
+	/* 終了するときは必ず同期してから行うこと！！ */
 	DeleteCriticalSection(&cs);
 }
 		
@@ -281,10 +286,10 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	// 計算を実行
 	DWORD ThreadID;
 	HANDLE Thread = CreateThread(NULL, 0, CalculatorThread::calculator, (LPVOID)calcprm, 0, &ThreadID);
-	Sleep(0);
-	while (calculator->numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
+	calculator->sync(1); // 同期(簡略な実装)
 	// 高点法の処理
 	memcpy(yakuInfo, &calcprm->result, sizeof(YAKUSTAT));
+	assert(calculator->numOfStartedThreads() == 1);
 	assert(calculator->numOfRunningThreads() == 0);
 	delete calcprm; delete calculator; // 用事が済んだら片づけましょう
 }
@@ -316,13 +321,14 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 		Thread[i] = CreateThread(NULL, 0, CalculatorThread::calculator, (LPVOID)(&(calcprm[i])), 0, &(ThreadID[i]));
 		Sleep(0);
 	}
-	while (calculator->numOfRunningThreads() > 0) Sleep(0); // 同期(簡略な実装)
+	calculator->sync(156); // 同期(簡略な実装)
 	// 高点法の処理
 	for (int i = 4; i < 160; i++) {
 		if (yakuInfo->AgariPoints < calcprm[i].result.AgariPoints)
 			memcpy(yakuInfo, &calcprm[i].result, sizeof(YAKUSTAT));
 	}
 	// 用事が済んだら片づけましょう
+	assert(calculator->numOfStartedThreads() == 156);
 	assert(calculator->numOfRunningThreads() == 0);
 	delete[] calcprm; delete calculator;
 }
