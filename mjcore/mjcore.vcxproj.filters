@@ -194,6 +194,15 @@
     <ClInclude Include="yaku\yvalue.h">
       <Filter>ヘッダー ファイル\yaku</Filter>
     </ClInclude>
+    <ClInclude Include="yaku\ykclass.h">
+      <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
+    <ClInclude Include="yaku\yakurslt.h">
+      <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
+    <ClInclude Include="yaku\yk_tools.h">
+      <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mjcore.rc">

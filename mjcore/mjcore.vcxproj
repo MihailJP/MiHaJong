@@ -152,6 +152,9 @@
     <ClInclude Include="yaku\catalog.h" />
     <ClInclude Include="yaku\yaku.h" />
     <ClInclude Include="yaku\yvalue.h" />
+    <ClInclude Include="yaku\yakurslt.h" />
+    <ClInclude Include="yaku\ykclass.h" />
+    <ClInclude Include="yaku\yk_tools.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mjcore.rc" />
