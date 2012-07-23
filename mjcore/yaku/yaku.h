@@ -199,7 +199,7 @@ public:
 					int8_t getHan();
 					hanUnit getUnit();
 					static const HAN
-						yv_1han, yv_2han, yv_3han, yv_4han, yv_5han, yv_6han, yv_7han, yv_8han, 
+						yv_null, yv_1han, yv_2han, yv_3han, yv_4han, yv_5han, yv_6han, yv_7han, yv_8han, 
 						yv_mangan, yv_haneman, yv_baiman, yv_3baiman, yv_yakuman, yv_double_yakuman;
 				private:
 					int8_t han; // 数値
@@ -211,8 +211,47 @@ public:
 				YAKU_HAN(HAN han);
 				YAKU_HAN(HAN han, HAN bonus);
 			};
+		public:
+			/*typedef std::function<YAKU_HAN
+				(const GameTable* const, const MENTSU_ANALYSIS* const)> HANFUNC;*/
+			class HANFUNC {
+			protected:
+				YAKU_HAN base_Han;
+			public:
+				virtual YAKU_HAN operator() (const GameTable* const, const MENTSU_ANALYSIS* const);
+				HANFUNC ();
+				HANFUNC (YAKU_HAN bHan);
+				HANFUNC (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan);
+			};
+			class FixedHan : public HANFUNC {
+			public:
+				YAKU_HAN operator() (const GameTable* const, const MENTSU_ANALYSIS* const);
+				FixedHan () : HANFUNC () {}
+				FixedHan (YAKU_HAN bHan) : HANFUNC (bHan) {}
+				FixedHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan) : HANFUNC (cHan, dHan) {}
+			};
+			class MenzenHan : public HANFUNC {
+			public:
+				YAKU_HAN operator() (const GameTable* const, const MENTSU_ANALYSIS* const);
+				MenzenHan () : HANFUNC () {}
+				MenzenHan (YAKU_HAN bHan) : HANFUNC (bHan) {}
+				MenzenHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan) : HANFUNC (cHan, dHan) {}
+			};
+			class KuisagariHan : public HANFUNC {
+			public:
+				YAKU_HAN operator() (const GameTable* const, const MENTSU_ANALYSIS* const);
+				KuisagariHan () : HANFUNC () {}
+				KuisagariHan (YAKU_HAN bHan) : HANFUNC (bHan) {}
+				KuisagariHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan) : HANFUNC (cHan, dHan) {}
+			};
+			static const FixedHan yval_none, yval_1han, yval_2han, yval_3han, yval_4han, yval_5han, yval_6han,
+				yval_mangan, yval_baiman, yval_yakuman, yval_double_yakuman;
+			static const MenzenHan yval_1han_menzen, yval_2han_menzen, yval_3han_menzen,
+				yval_4han_menzen, yval_5han_menzen, yval_6han_menzen;
+			static const KuisagariHan yval_1han_kuisagari, yval_2han_kuisagari, yval_3han_kuisagari,
+				yval_4han_kuisagari, yval_5han_kuisagari, yval_6han_kuisagari;
 		private:
-			YAKU_HAN han;
+			HANFUNC han;
 			std::string yakuName; // 役の名前（文字列）
 			YAKUFUNC yakuProc; // 役の判定方法
 			std::set<std::string> suppressionList; // 下位役のリスト
@@ -220,33 +259,34 @@ public:
 		public:
 			bool checkYaku(const GameTable* const gameStat, const MENTSU_ANALYSIS* const mentsu);
 			std::string getName(); // 役の名前を取得する
-			YAKU_HAN getHan();
+			HANFUNC getHan();
+			YAKU_HAN getHan(const GameTable* const gameStat, const MENTSU_ANALYSIS* const mentsu);
 			std::set<std::string> getSuppression();
 			// Constructor
-			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan, YAKUFUNC f);
-			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+			Yaku(std::string name, HANFUNC hanVal, YAKUFUNC f);
+			Yaku(std::string name, HANFUNC hanVal,
 				std::string yk1, YAKUFUNC f);
-			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+			Yaku(std::string name, HANFUNC hanVal,
 				std::string yk1, std::string yk2, YAKUFUNC f);
-			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+			Yaku(std::string name, HANFUNC hanVal,
 				std::string yk1, std::string yk2, std::string yk3, YAKUFUNC f);
-			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+			Yaku(std::string name, HANFUNC hanVal,
 				std::string yk1, std::string yk2, std::string yk3, std::string yk4, YAKUFUNC f);
-			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+			Yaku(std::string name, HANFUNC hanVal,
 				std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5, YAKUFUNC f);
-			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+			Yaku(std::string name, HANFUNC hanVal,
 				std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
 				std::string yk6, YAKUFUNC f);
-			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+			Yaku(std::string name, HANFUNC hanVal,
 				std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
 				std::string yk6, std::string yk7, YAKUFUNC f);
-			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+			Yaku(std::string name, HANFUNC hanVal,
 				std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
 				std::string yk6, std::string yk7, std::string yk8, YAKUFUNC f);
-			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+			Yaku(std::string name, HANFUNC hanVal,
 				std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
 				std::string yk6, std::string yk7, std::string yk8, std::string yk9, YAKUFUNC f);
-			Yaku(std::string name, YAKU_HAN::HAN cHan, YAKU_HAN::HAN bHan,
+			Yaku(std::string name, HANFUNC hanVal,
 				std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
 				std::string yk6, std::string yk7, std::string yk8, std::string yk9, std::string yk10,
 				YAKUFUNC f);
@@ -269,4 +309,5 @@ public:
 		static __declspec(dllexport) int chkShisiBuDa(const GameTable* const gameStat, int targetPlayer);
 	};
 };
+
 #endif
