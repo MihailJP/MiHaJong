@@ -326,9 +326,9 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 	}
 	// ˜a—¹‚Á‚Ä‚¢‚é‚È‚ç
 	if (shanten[shantenRegular] == -1) // ˆê”ÊŒ`‚Ì˜a—¹
-		analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);
-	else // µ‘ÎqA‘m–³‘oA‚»‚Ì‘¼“Áê‚È˜a—¹
 		analysisLoop(gameStat, targetPlayer, shanten, &yakuInfo);
+	else // µ‘ÎqA‘m–³‘oA‚»‚Ì‘¼“Áê‚È˜a—¹
+		analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);
 	return yakuInfo;
 }
 __declspec(dllexport) void yaku::yakuCalculator::countyaku(const GameTable* const gameStat,
