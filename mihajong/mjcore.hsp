@@ -126,6 +126,10 @@
 #func initYakuCatalog "?init@yakuCalculator@yaku@@SAXXZ"
 #func countyaku "?countyaku@yakuCalculator@yaku@@SAXQBUGameTable@@QAUYAKUSTAT@2@H@Z" int, var, int
 
+/* chk-buda.hspからの移植 */
+#cfunc chkshisanbuda "?chkShisanBuDa@yakuCalculator@yaku@@SAHQBUGameTable@@H@Z" int, int
+#cfunc chkshisibuda "?chkShisiBuDa@yakuCalculator@yaku@@SAHQBUGameTable@@H@Z" int, int
+
 /* ------------------------------------------------------------------------ */
 
 /*  卓情報へのアクセサ  */
