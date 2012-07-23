@@ -150,7 +150,8 @@ private:
 		static const FixedHan yval_none, yval_1han, yval_2han, yval_3han, yval_4han, yval_5han, yval_6han,
 			yval_mangan, yval_baiman, yval_yakuman, yval_double_yakuman;
 		static const MenzenHan yval_1han_menzen, yval_2han_menzen, yval_3han_menzen,
-			yval_4han_menzen, yval_5han_menzen, yval_6han_menzen;
+			yval_4han_menzen, yval_5han_menzen, yval_6han_menzen,
+			yval_mangan_menzen, yval_baiman_menzen, yval_yakuman_menzen, yval_double_yakuman_menzen;
 		static const KuisagariHan yval_1han_kuisagari, yval_2han_kuisagari, yval_3han_kuisagari,
 			yval_4han_kuisagari, yval_5han_kuisagari, yval_6han_kuisagari;
 	private:
