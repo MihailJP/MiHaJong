@@ -88,6 +88,19 @@ const yaku::yakuCalculator::Yaku::MenzenHan yaku::yakuCalculator::Yaku::yval_6ha
 	yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_6han,
 	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null);
 
+const yaku::yakuCalculator::Yaku::MenzenHan yaku::yakuCalculator::Yaku::yval_mangan_menzen =
+	yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_mangan,
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null);
+const yaku::yakuCalculator::Yaku::MenzenHan yaku::yakuCalculator::Yaku::yval_baiman_menzen =
+	yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_baiman,
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null);
+const yaku::yakuCalculator::Yaku::MenzenHan yaku::yakuCalculator::Yaku::yval_yakuman_menzen =
+	yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman,
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null);
+const yaku::yakuCalculator::Yaku::MenzenHan yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen =
+	yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman,
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null);
+
 const yaku::yakuCalculator::Yaku::KuisagariHan yaku::yakuCalculator::Yaku::yval_1han_kuisagari =
 	yaku::yakuCalculator::Yaku::KuisagariHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han,
 	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null);
