@@ -60,14 +60,12 @@ void yaku::yakuCalculator::CalculatorThread::sync(int threads) { // スレッドを同
 }
 
 void yaku::yakuCalculator::CalculatorThread::incThreadCount() {
-	trace("incThreadCount()");
 	while (TryEnterCriticalSection(&this->cs) == 0) Sleep(0);
 	++this->runningThreads; // スレッド数インクリメント
 	++this->startedThreads;
 	LeaveCriticalSection(&this->cs);
 }
 void yaku::yakuCalculator::CalculatorThread::decThreadCount() {
-	trace("decThreadCount()");
 	while (TryEnterCriticalSection(&this->cs) == 0) Sleep(0);
 	--this->runningThreads; // スレッド数デクリメント
 	LeaveCriticalSection(&this->cs);
@@ -271,7 +269,6 @@ yaku::yakuCalculator::CalculatorThread::~CalculatorThread() {
 void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
 	SHANTEN* const shanten, YAKUSTAT* const yakuInfo)
 {
-	trace("AnalysisNonLoop()");
 	CalculatorThread* calculator = new CalculatorThread; // インスタンスの準備
 	// 変数を用意
 	MENTSU_ANALYSIS analysis;
@@ -296,7 +293,6 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
 	SHANTEN* const shanten, YAKUSTAT* const yakuInfo)
 {
-	trace("AnalysisLoop()");
 	CalculatorThread* calculator = new CalculatorThread; // インスタンスの準備
 	// 変数を用意
 	MENTSU_ANALYSIS analysis;
