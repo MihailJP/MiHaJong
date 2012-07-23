@@ -2,46 +2,70 @@
 using std::max;
 
 yaku::yakuCalculator::Yaku::HANFUNC::HANFUNC() {
-	base_Han = YAKU_HAN();
+	hFunc = [](const GameTable* const, const MENTSU_ANALYSIS* const) {return yaku::yakuCalculator::Yaku::YAKU_HAN();};
 }
-yaku::yakuCalculator::Yaku::HANFUNC::HANFUNC(YAKU_HAN bHan) {
-	base_Han = bHan;
-}
-yaku::yakuCalculator::Yaku::HANFUNC::HANFUNC(YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan) {
-	base_Han = YAKU_HAN(cHan, dHan);
+yaku::yakuCalculator::Yaku::HANFUNC::HANFUNC(std::function<yaku::yakuCalculator::Yaku::YAKU_HAN (const GameTable* const, const MENTSU_ANALYSIS* const)> f) {
+	hFunc = f;
 }
 
 yaku::yakuCalculator::Yaku::YAKU_HAN yaku::yakuCalculator::Yaku::HANFUNC::operator()
-	(const GameTable* const, const MENTSU_ANALYSIS* const)
+	(const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis)
 {
-	return this->base_Han;
+	return this->hFunc(gameStat, analysis);
 }
-yaku::yakuCalculator::Yaku::YAKU_HAN yaku::yakuCalculator::Yaku::FixedHan::operator()
-	(const GameTable* const, const MENTSU_ANALYSIS* const)
+
+yaku::yakuCalculator::Yaku::FixedHan::FixedHan(YAKU_HAN bHan)
 {
-	return this->base_Han;
+	hFunc = [=](const GameTable* const, const MENTSU_ANALYSIS* const) {return bHan;};
 }
-yaku::yakuCalculator::Yaku::YAKU_HAN yaku::yakuCalculator::Yaku::MenzenHan::operator()
-	(const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysisDat)
+yaku::yakuCalculator::Yaku::FixedHan::FixedHan(YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan)
 {
-	return gameStat->Player[analysisDat->player].MenzenFlag ? this->base_Han :
-		yaku::yakuCalculator::Yaku::YAKU_HAN();
+	hFunc = [=](const GameTable* const, const MENTSU_ANALYSIS* const) {return yaku::yakuCalculator::Yaku::YAKU_HAN(cHan, dHan);};
 }
-yaku::yakuCalculator::Yaku::YAKU_HAN yaku::yakuCalculator::Yaku::KuisagariHan::operator()
-	(const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysisDat)
+
+yaku::yakuCalculator::Yaku::MenzenHan::MenzenHan(YAKU_HAN bHan)
 {
-	return gameStat->Player[analysisDat->player].MenzenFlag ? this->base_Han :
-		yaku::yakuCalculator::Yaku::YAKU_HAN(
-			yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(max(this->base_Han.coreHan.getHan() - 1, 0), this->base_Han.coreHan.getUnit()),
-			yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(max(this->base_Han.bonusHan.getHan() - 1, 0), this->base_Han.bonusHan.getUnit())
-		);
+	hFunc = [=](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysisDat) {
+		return gameStat->Player[analysisDat->player].MenzenFlag ? bHan : yaku::yakuCalculator::Yaku::YAKU_HAN();
+	};
 }
+yaku::yakuCalculator::Yaku::MenzenHan::MenzenHan(YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan)
+{
+	hFunc = [=](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysisDat) {
+		return gameStat->Player[analysisDat->player].MenzenFlag ?
+			yaku::yakuCalculator::Yaku::YAKU_HAN(cHan, dHan) : yaku::yakuCalculator::Yaku::YAKU_HAN();
+	};
+}
+
+yaku::yakuCalculator::Yaku::KuisagariHan::KuisagariHan(YAKU_HAN bHan)
+{
+	hFunc = [=](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysisDat) {
+		return gameStat->Player[analysisDat->player].MenzenFlag ? bHan :
+			yaku::yakuCalculator::Yaku::YAKU_HAN(
+			yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(max(bHan.coreHan.getHan() - 1, 0), bHan.coreHan.getUnit()),
+			yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(max(bHan.bonusHan.getHan() - 1, 0), bHan.bonusHan.getUnit())
+			);
+	};
+}
+yaku::yakuCalculator::Yaku::KuisagariHan::KuisagariHan(YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan)
+{
+	hFunc = [=](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysisDat) {
+		return gameStat->Player[analysisDat->player].MenzenFlag ? yaku::yakuCalculator::Yaku::YAKU_HAN(cHan, dHan) :
+			yaku::yakuCalculator::Yaku::YAKU_HAN(
+			yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(max(cHan.getHan() - 1, 0), cHan.getUnit()),
+			yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(max(dHan.getHan() - 1, 0), dHan.getUnit())
+			);
+	};
+}
+
+
+// -------------------------------------------------------------------------
 
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN() { han = 0; unit = Han; }
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h) { han = h; unit = Han; }
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h, hanUnit u) { han = h; unit = u; }
-int8_t yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getHan() {return this->han;}
-yaku::yakuCalculator::hanUnit yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getUnit() {return this->unit;}
+int8_t yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getHan() const {return this->han;}
+yaku::yakuCalculator::hanUnit yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getUnit() const {return this->unit;}
 
 yaku::yakuCalculator::Yaku::YAKU_HAN::YAKU_HAN() {coreHan = HAN(); bonusHan = HAN();}
 yaku::yakuCalculator::Yaku::YAKU_HAN::YAKU_HAN(HAN han) {coreHan = han; bonusHan = HAN();}

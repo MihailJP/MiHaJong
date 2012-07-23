@@ -101,8 +101,8 @@ private:
 				HAN();
 				HAN(int8_t h);
 				HAN(int8_t h, hanUnit u);
-				int8_t getHan();
-				hanUnit getUnit();
+				int8_t getHan() const;
+				hanUnit getUnit() const;
 				static const HAN
 					yv_null, yv_1han, yv_2han, yv_3han, yv_4han, yv_5han, yv_6han, yv_7han, yv_8han, 
 					yv_mangan, yv_haneman, yv_baiman, yv_3baiman, yv_yakuman, yv_double_yakuman;
@@ -117,37 +117,31 @@ private:
 			YAKU_HAN(HAN han, HAN bonus);
 		};
 	public:
-		/*typedef std::function<YAKU_HAN
-			(const GameTable* const, const MENTSU_ANALYSIS* const)> HANFUNC;*/
 		class HANFUNC {
 		protected:
-			YAKU_HAN base_Han;
+			std::function<YAKU_HAN (const GameTable* const, const MENTSU_ANALYSIS* const)> hFunc;
 		public:
-			virtual YAKU_HAN operator() (const GameTable* const, const MENTSU_ANALYSIS* const);
+			YAKU_HAN operator() (const GameTable* const, const MENTSU_ANALYSIS* const);
 			HANFUNC ();
-			HANFUNC (YAKU_HAN bHan);
-			HANFUNC (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan);
+			HANFUNC (std::function<YAKU_HAN (const GameTable* const, const MENTSU_ANALYSIS* const)>);
 		};
 		class FixedHan : public HANFUNC {
 		public:
-			YAKU_HAN operator() (const GameTable* const, const MENTSU_ANALYSIS* const);
 			FixedHan () : HANFUNC () {}
-			FixedHan (YAKU_HAN bHan) : HANFUNC (bHan) {}
-			FixedHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan) : HANFUNC (cHan, dHan) {}
+			FixedHan (YAKU_HAN bHan);
+			FixedHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan);
 		};
 		class MenzenHan : public HANFUNC {
 		public:
-			YAKU_HAN operator() (const GameTable* const, const MENTSU_ANALYSIS* const);
 			MenzenHan () : HANFUNC () {}
-			MenzenHan (YAKU_HAN bHan) : HANFUNC (bHan) {}
-			MenzenHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan) : HANFUNC (cHan, dHan) {}
+			MenzenHan (YAKU_HAN bHan);
+			MenzenHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan);
 		};
 		class KuisagariHan : public HANFUNC {
 		public:
-			YAKU_HAN operator() (const GameTable* const, const MENTSU_ANALYSIS* const);
 			KuisagariHan () : HANFUNC () {}
-			KuisagariHan (YAKU_HAN bHan) : HANFUNC (bHan) {}
-			KuisagariHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan) : HANFUNC (cHan, dHan) {}
+			KuisagariHan (YAKU_HAN bHan);
+			KuisagariHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan);
 		};
 		static const FixedHan yval_none, yval_1han, yval_2han, yval_3han, yval_4han, yval_5han, yval_6han,
 			yval_mangan, yval_baiman, yval_yakuman, yval_double_yakuman;
