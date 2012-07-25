@@ -9,6 +9,7 @@ class yaku::yakuCalculator::YakuCatalog::catalogInit {
 private:
 	static void yakulst_contextual();
 	static void yakulst_pinhu();
+	static void yakulst_irregular();
 	static void yakulst_yaojiu();
 };
 
