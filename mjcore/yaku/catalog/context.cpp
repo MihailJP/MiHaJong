@@ -156,4 +156,102 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				(gameStat->TsumoAgariFlag)); // ツモアガリ
 		}
 	));
+	/* 三隻転覆 */
+	/* 起死回生 */
+	/* リンシャンツモ */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		"嶺上開花", yaku::yakuCalculator::Yaku::yval_1han,
+		[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+				(gameStat->KangFlag.kangFlag) && // 槓をした直後である
+				(gameStat->TsumoAgariFlag)); // ツモアガリ
+		}
+	));
+	/* 明槓開花 */
+	if ((getRule(RULE_MINKAN_PAO) >= 3) && (getRule(RULE_MINKAN_PAO) <= 5))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"明槓開花", yaku::yakuCalculator::Yaku::yval_2han,
+			"嶺上開花",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->KangFlag.kangFlag) && // 槓をした直後である
+					(gameStat->TsumoAgariFlag) && // ツモアガリ
+					(gameStat->PaoFlag[pyMinkan].paoPlayer >= 0)); // 明槓の直後
+			}
+		));
+	/* 連槓開花 */
+	if (getRule(RULE_RENKAN_KAIHOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"連槓開花", yaku::yakuCalculator::Yaku::yval_2han,
+			"嶺上開花",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->KangFlag.kangFlag) && // 槓をした直後である
+					(gameStat->TsumoAgariFlag) && // ツモアガリ
+					(gameStat->KangFlag.chainFlag >= 2)); // 連続で槓した直後
+			}
+		));
+	/* 五筒開花 */
+	if (getRule(RULE_UUPIN_KAIHOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"五筒開花", (getRule(RULE_UUPIN_KAIHOH) == 1) ?
+			yaku::yakuCalculator::Yaku::yval_yakuman : yaku::yakuCalculator::Yaku::yval_4han,
+			"嶺上開花",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->KangFlag.kangFlag) && // 槓をした直後である
+					(gameStat->TsumoAgariFlag) && // ツモアガリ
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile == CircleFive)); // 和了牌が五筒
+			}
+		));
+	/* 中上開花 */
+	if (getRule(RULE_CHUNSHAN_KAIHOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"中上開花", yaku::yakuCalculator::Yaku::yval_2han,
+			"嶺上開花",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->KangFlag.kangFlag) && // 槓をした直後である
+					(gameStat->TsumoAgariFlag) && // ツモアガリ
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile == RedDragon)); // 和了牌が中
+			}
+		));
+	/* 頭槓和 */
+	if (getRule(RULE_CHUNSHAN_KAIHOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"頭槓和", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"嶺上開花",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->KangFlag.kangFlag) && // 槓をした直後である
+					(gameStat->TsumoAgariFlag) && // ツモアガリ
+					(gameStat->KangFlag.topFlag)); // 頭槓和フラグが立っている
+			}
+		));
+	/* サヨナラホームラン */
+	if (getRule(RULE_SAYONARA_HOMERUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"サヨナラホームラン", yaku::yakuCalculator::Yaku::yval_3han,
+			"嶺上開花",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->KangFlag.kangFlag) && // 槓をした直後である
+					(gameStat->TsumoAgariFlag) && // ツモアガリ
+					(tilesLeft(gameStat) == 0)); // 王牌を除いた残り山牌が0
+			}
+		));
+	/* 東花園 */
+	if (getRule(RULE_HIGASHI_HANAZONO_TRIPLETS) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"東花園", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"嶺上開花",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->KangFlag.kangFlag) && // 槓をした直後である
+					(gameStat->TsumoAgariFlag) && // ツモアガリ
+					(gameStat->GameRound / 4 == 0) && // 東場
+					(playerwind(gameStat, analysis->player, gameStat->GameRound) == sEast) && // 東家
+					(analysis->KangziCount[EastWind] >= 1)); // 東の槓子がある
+			}
+		));
 }
