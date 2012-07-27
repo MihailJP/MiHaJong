@@ -106,4 +106,54 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			else return false;
 		}
 	));
+	/* 天和 */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		"天和", (getRule(RULE_TENHOH) != 0) ?
+		yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen : // 天和がダブル役満のルールか
+		yaku::yakuCalculator::Yaku::yval_yakuman_menzen, // 普通に役満になるか
+		"門前清自摸和",
+		[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+				(playerwind(gameStat, analysis->player, gameStat->GameRound) == sEast) && // 親である(東家として決め打ち……)
+				(gameStat->Player[analysis->player].FirstDrawFlag)); // 天和・地和フラグが立っている
+		}
+	));
+	/* 地和 */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		"地和", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+		"門前清自摸和",
+		[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+				(playerwind(gameStat, analysis->player, gameStat->GameRound) != sEast) && // 親である(東家として決め打ち……)
+				(gameStat->Player[analysis->player].FirstDrawFlag) && // 天和・地和フラグが立っている
+				(gameStat->TsumoAgariFlag)); // ツモアガリ
+		}
+	));
+	/* ２位じゃ駄目なんですか？ */
+	if (getRule(RULE_RENHOH) != 0) {
+		yaku::yakuCalculator::Yaku::MenzenHan renhoh_han;
+		switch (getRule(RULE_RENHOH)) {
+			case 1: renhoh_han = yaku::yakuCalculator::Yaku::yval_yakuman_menzen; break; // 役満
+			case 2: renhoh_han = yaku::yakuCalculator::Yaku::yval_baiman_menzen; break; // 倍満
+			case 3: renhoh_han = yaku::yakuCalculator::Yaku::yval_mangan_menzen; break; // 満貫
+		}
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"人和", renhoh_han, "門前清自摸和",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(playerwind(gameStat, analysis->player, gameStat->GameRound) != sEast) && // 親である(東家として決め打ち……)
+					(gameStat->Player[analysis->player].FirstDrawFlag) && // 天和・地和フラグが立っている
+					(!gameStat->TsumoAgariFlag)); // ロンアガリ
+			}
+		));
+	}
+	/* ツモ */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		"門前清自摸和", yaku::yakuCalculator::Yaku::yval_1han_menzen,
+		[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+				(gameStat->Player[analysis->player].MenzenFlag) && // 門前である
+				(gameStat->TsumoAgariFlag)); // ツモアガリ
+		}
+	));
 }
