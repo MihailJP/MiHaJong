@@ -587,4 +587,44 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				return yakuFlag;
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* –PŠÒ‘ƒŒn—ñ‚Ì–ğ */
+	{
+		const int Rules = 10;
+		const RuleCode tmpRuleCodeList[Rules] = {
+			RULE_HOUKANSOU, RULE_GEKKANJUN, RULE_SHINRIISHOU, RULE_KINKI_KIKAN, RULE_HOKUTO_SHOUKAN,
+			RULE_DAIJA_KANKETSU, RULE_DONGFENGCHUI, RULE_NANFENGCHUI, RULE_XIFENGCHUI, RULE_BEIFENGCHUI,
+		};
+		const tileCode tmpTileCodeList[Rules] = {
+			BambooOne, CircleOne, CharacterOne, BambooSeven, CircleSeven,
+			CharacterSeven, EastWind, SouthWind, WestWind, NorthWind,
+		};
+		const char tmpYakuNameList[Rules][16] = {
+			"–PŠÒ‘ƒ", "ŒŠÒ„", "j–ßè", "‹à‹T‹AŠÒ", "–k“l¢ŠÒ",
+			"‘åÖŠÒŒŠ", "“Œ•—", "“ì•—", "¼•—", "–k•—",
+		};
+		for (int i = 0; i < Rules; i++) {
+			if (getRule(tmpRuleCodeList[i]) != 0) {
+				tileCode tc = tmpTileCodeList[i];
+				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+					tmpYakuNameList[i], (getRule(tmpRuleCodeList[i]) == 2) ?
+					yaku::yakuCalculator::Yaku::yval_2han : yaku::yakuCalculator::Yaku::yval_1han,
+					[tc](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+						bool yakuFlag = false;
+						for (int i = 0; i < gameStat->Player[analysis->player].DiscardPointer; i++) {
+							if (gameStat->Player[analysis->player].Discard[i].tcode.tile == tc) {
+								yakuFlag = true; break; // Œ»•¨ƒtƒŠƒeƒ“‚Å‚ ‚é
+							}
+						}
+						return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚Ìè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+							(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile == tc) && // ˜a—¹”v
+							(gameStat->TsumoAgariFlag) && (yakuFlag) && // ƒtƒŠƒeƒ“ƒcƒ‚
+							(analysis->Machi == yaku::yakuCalculator::machiTanki)); // ’P‹R‘Ò‚¿‚Å‚ ‚é
+					}
+				));
+			}
+		}
+	}
 }
