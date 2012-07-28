@@ -295,6 +295,9 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	result->CoreHan = totalHan; result->CoreSemiMangan = totalSemiMangan;
 	result->BonusHan = totalBonusHan; result->BonusSemiMangan = totalBonusSemiMangan;
 	/* TODO: ドラの数を数える */
+	/* TODO: 簡略ルール(全部30符) */
+	/* TODO: 十三不塔 */
+	/* TODO: 切り上げ満貫 */
 	/* 点数を計算する */
 	calculateScore(result);
 	/* 終了処理 */
@@ -321,6 +324,8 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
 	memcpy(analysis.shanten, shanten, sizeof(SHANTEN[SHANTEN_PAGES]));
 	analysis.player = targetPlayer;
+	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
+	analysis.SeenTiles = countseentiles(gameStat);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam; memset(calcprm, 0, sizeof(CalculatorParam));
 	calcprm->gameStat = gameStat; calcprm->instance = calculator;
@@ -345,6 +350,8 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
 	memcpy(analysis.shanten, shanten, sizeof(SHANTEN[SHANTEN_PAGES]));
 	analysis.player = targetPlayer;
+	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
+	analysis.SeenTiles = countseentiles(gameStat);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
 	DWORD ThreadID[160]; HANDLE Thread[160];
