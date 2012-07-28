@@ -31,23 +31,23 @@ public:
 class yaku::countingFacility {
 private:
 	static Int8ByTile countByMelds(
-		const MELD_BUF MianziDat, int* const hits,
+		const MELD_BUF MianziDat, uint8_t* const hits,
 		std::function<bool (meldStat)> f);
 public:
 	static int countPairs(
 		const Int8ByTile tileCount, const tileCode* const targetTiles, int numOfTiles);
 	static int countTileNumerals(const Int8ByTile tileCount);
 
-	static Int8ByTile countKez(const MELD_BUF MianziDat, int* const Kezi);
-	static Int8ByTile countAnKez(const MELD_BUF MianziDat, int* const Kezi);
+	static Int8ByTile countKez(const MELD_BUF MianziDat, uint8_t* const Kezi);
+	static Int8ByTile countAnKez(const MELD_BUF MianziDat, uint8_t* const Kezi);
 	static Int8ByTile countDuiz(const MELD_BUF MianziDat);
 
-	static Int8ByTile countShunz(const MELD_BUF MianziDat);
-	static Int8ByTile countAnShunz(const MELD_BUF MianziDat);
+	static Int8ByTile countShunz(const MELD_BUF MianziDat, uint8_t* const Shunzi);
+	static Int8ByTile countAnShunz(const MELD_BUF MianziDat, uint8_t* const Shunzi);
 
-	static Int8ByTile countKangz(const MELD_BUF MianziDat, int* const Kangzi);
-	static Int8ByTile countAnKangz(const MELD_BUF MianziDat, int* const Kangzi);
-	static Int8ByTile countKaKangz(const MELD_BUF MianziDat, int* const Kangzi);
+	static Int8ByTile countKangz(const MELD_BUF MianziDat, uint8_t* const Kangzi);
+	static Int8ByTile countAnKangz(const MELD_BUF MianziDat, uint8_t* const Kangzi);
+	static Int8ByTile countKaKangz(const MELD_BUF MianziDat, uint8_t* const Kangzi);
 
 	static int countSpecMentz(const MELD_BUF MianziDat, const tileCode* const targetKez, int numOfKez,
 		const tileCode* const targetShunz, int numOfShunz, bool Mode);

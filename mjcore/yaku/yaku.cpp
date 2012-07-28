@@ -233,13 +233,13 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		}
 		calcbasepoints(gameStat, analysis); // •„‚ðŒvŽZ‚·‚é
 		analysis->DuiziCount = countingFacility::countDuiz(analysis->MianziDat);
-		analysis->KeziCount = countingFacility::countKez(analysis->MianziDat, NULL);
-		analysis->AnKeziCount = countingFacility::countAnKez(analysis->MianziDat, NULL);
-		analysis->ShunziCount = countingFacility::countShunz(analysis->MianziDat);
-		analysis->AnShunziCount = countingFacility::countAnShunz(analysis->MianziDat);
-		analysis->KangziCount = countingFacility::countKangz(analysis->MianziDat, NULL);
-		analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, NULL);
-		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, NULL);
+		analysis->KeziCount = countingFacility::countKez(analysis->MianziDat, &analysis->TotalKezi);
+		analysis->AnKeziCount = countingFacility::countAnKez(analysis->MianziDat, &analysis->TotalAnKezi);
+		analysis->ShunziCount = countingFacility::countShunz(analysis->MianziDat, &analysis->TotalShunzi);
+		analysis->AnShunziCount = countingFacility::countAnShunz(analysis->MianziDat, &analysis->TotalAnShunzi);
+		analysis->KangziCount = countingFacility::countKangz(analysis->MianziDat, &analysis->TotalKangzi);
+		analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, &analysis->TotalAnKangzi);
+		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, &analysis->TotalKaKangzi);
 	} else {
 		if (analysis->shanten[shantenPairs] == -1) { // Žµ‘ÎŽq
 			if (getRule(RULE_SEVEN_PAIRS) == 1) analysis->BasePoint = 50; // 1–|50•„

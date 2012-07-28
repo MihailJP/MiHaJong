@@ -56,6 +56,13 @@ private:
 		Int8ByTile KangziCount; // 槓子の数
 		Int8ByTile AnKangziCount; // 暗槓の数
 		Int8ByTile KaKangziCount; // 加槓の数
+		uint8_t TotalKezi; // 刻子槓子合計
+		uint8_t TotalAnKezi; // 暗刻暗槓合計
+		uint8_t TotalShunzi; // 順子合計
+		uint8_t TotalAnShunzi; // 暗順子合計
+		uint8_t TotalKangzi; // 槓子合計
+		uint8_t TotalAnKangzi; // 暗槓合計
+		uint8_t TotalKaKangzi; // 加槓合計
 	};
 #ifdef MJCORE_EXPORTS
 	static_assert(std::is_pod<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not POD");
