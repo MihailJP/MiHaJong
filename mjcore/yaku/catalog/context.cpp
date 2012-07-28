@@ -534,7 +534,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			"燕返し",
 			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
-					(gameStat->RichiCounter == 2)); // フラグが立っている
+					(gameStat->DoubleRichiCounter)); // フラグが立っている
 			}
 		));
 
