@@ -625,12 +625,13 @@ extern "C" {
 
 	__declspec(dllexport) void setRichiCounterFlag(GameTable* const gameStat, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		gameStat->RichiCounter = value;
+		gameStat->RichiCounter = (value > 0);
+		gameStat->DoubleRichiCounter = (value == 2);
 		return;
 	}
 	__declspec(dllexport) int getRichiCounterFlag(const GameTable* const gameStat) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		return gameStat->RichiCounter;
+		return (gameStat->DoubleRichiCounter ? 2 : (gameStat->RichiCounter ? 1 : 0));
 	}
 
 	// ---------------------------------------------------------------------
@@ -1048,7 +1049,8 @@ extern "C" {
 			gameStat->KangFlag.topFlag = gameStat->KangFlag.chankanFlag = 0;
 		gameStat->TurnRound =  // 現在の巡目
 			gameStat->KangNum = 0; // 四槓流局、四槓子などの判定に使う
-		gameStat->RichiCounter = false; // リーチをカウンター(宣言牌をロン)
+		gameStat->RichiCounter =
+			gameStat->DoubleRichiCounter = false; // リーチをカウンター(宣言牌をロン)
 		gameStat->WaremePlayer = // 割れ目の位置(-1で割れ目なし)
 			gameStat->DoukasenPlayer = -1; // 導火線の位置(-1で導火線なし)
 		gameStat->DoraPointer = 999;
@@ -1310,6 +1312,7 @@ extern "C" {
 		sandbox->KangFlag.chankanFlag = gameStat->KangFlag.chankanFlag;
 		sandbox->KangNum = gameStat->KangNum;
 		sandbox->RichiCounter = gameStat->RichiCounter;
+		sandbox->DoubleRichiCounter = gameStat->DoubleRichiCounter;
 		sandbox->DoukasenPlayer = gameStat->DoukasenPlayer;
 		for (int i = 0; i < PAO_YAKU_PAGES; i++) {
 			sandbox->PaoFlag[i].paoPlayer = gameStat->PaoFlag[i].paoPlayer;
