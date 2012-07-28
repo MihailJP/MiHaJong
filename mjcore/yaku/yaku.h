@@ -8,6 +8,8 @@
 #include <list>
 #include <map>
 #include <set>
+#include <sstream>
+#include <iomanip>
 #include <Windows.h>
 #include "ykclass.h"
 #include "yk_tools.h"
@@ -15,6 +17,7 @@
 #include "../gametbl.h"
 #include "../tileutil.h"
 #include "../except.h"
+#include "../logging.h"
 
 class yaku::yakuCalculator {
 private:
@@ -195,6 +198,9 @@ private:
 			std::string yk6, std::string yk7, std::string yk8, std::string yk9, std::string yk10,
 			YAKUFUNC f);
 	};
+
+	static void doubling(yaku::YAKUSTAT* const yStat);
+	static void calculateScore(yaku::YAKUSTAT* const yStat);
 
 	static void analysisNonLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
 		SHANTEN* const shanten, YAKUSTAT* const yakuInfo);
