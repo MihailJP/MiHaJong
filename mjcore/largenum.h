@@ -20,6 +20,7 @@ EXPORT_STRUCT LargeNum { // ±21不可思議まで表現可能な数のクラス
 	std::string bignumtotext(std::string plusSign, std::string minusSign) const;
 	static LargeNum fromInt(int val);
 	static LargeNum fromInt(int val, unsigned int fArg);
+	void ceilHundred();
 	/* ここから演算子をオーバーロード */
 	const LargeNum operator+(const LargeNum& addend);
 	const LargeNum operator+(const int32_t addend);
@@ -28,6 +29,9 @@ EXPORT_STRUCT LargeNum { // ±21不可思議まで表現可能な数のクラス
 	const LargeNum operator-(const LargeNum& subtrahend);
 	const LargeNum operator-(const int32_t subtrahend);
 	const LargeNum operator*(const int32_t multiplier);
+	LargeNum& operator*=(const int32_t multiplier);
+	const LargeNum operator/(const int32_t divisor);
+	LargeNum& operator/=(const int32_t divisor);
 	const bool operator==(const LargeNum& cmp);
 	const bool operator!=(const LargeNum& cmp);
 	const bool operator<(const LargeNum& cmp);
