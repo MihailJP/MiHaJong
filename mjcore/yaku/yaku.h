@@ -59,6 +59,7 @@ private:
 		Int8ByTile KangziCount; // 槓子の数
 		Int8ByTile AnKangziCount; // 暗槓の数
 		Int8ByTile KaKangziCount; // 加槓の数
+		Int8ByTile SeenTiles; // 見えている牌
 		Int8ByTile TileCount; // 牌の数
 		uint8_t TotalKezi; // 刻子槓子合計
 		uint8_t TotalAnKezi; // 暗刻暗槓合計
