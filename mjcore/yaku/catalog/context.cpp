@@ -515,4 +515,26 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(gameStat->AgariChain == -1)); // ふざけた和了を頭ハネ(じゃなくてもいいけど)！
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* 燕返し(立直宣言牌でロンすると役が付く) */
+	if (getRule(RULE_TSUBAME_GAESHI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"燕返し", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->RichiCounter)); // フラグが立っている
+			}
+		));
+	/* 飛燕(ダブリー宣言牌でロンすると役が付く) */
+	if (getRule(RULE_TSUBAME_GAESHI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"飛燕", yaku::yakuCalculator::Yaku::yval_double_yakuman,
+			"燕返し",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->RichiCounter == 2)); // フラグが立っている
+			}
+		));
 }
