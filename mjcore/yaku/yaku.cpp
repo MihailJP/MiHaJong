@@ -240,7 +240,21 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		analysis->KangziCount = countingFacility::countKangz(analysis->MianziDat, NULL);
 		analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, NULL);
 		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, NULL);
-	} /* TODO: チートイとかの符 */
+	} else {
+		if (analysis->shanten[shantenPairs] == -1) { // 七対子
+			if (getRule(RULE_SEVEN_PAIRS) == 1) analysis->BasePoint = 50; // 1翻50符
+			else analysis->BasePoint = 25; // 2翻25符
+		}
+		else if (analysis->shanten[shantenOrphans] == -1) analysis->BasePoint = 30; // 国士は役満なのでこれは青天ルール用
+		else if ((analysis->shanten[shantenQuanbukao] == -1)&&(analysis->shanten[shantenStellar] > -1)) {
+			switch (getRule(RULE_QUANBUKAO)) {
+			case 1:
+				analysis->BasePoint = 30; break;
+			case 2: case 3:
+				analysis->BasePoint = 40; break;
+			}
+		}
+	}
 	/* 役判定ループ */
 	std::map<std::string, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
 	std::set<std::string> suppression; // 無効化する役
