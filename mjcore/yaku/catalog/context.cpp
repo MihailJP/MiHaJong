@@ -528,13 +528,63 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			}
 		));
 	/* ”ò‰(ƒ_ƒuƒŠ[éŒ¾”v‚Åƒƒ“‚·‚é‚Æ–ð‚ª•t‚­) */
-	if (getRule(RULE_TSUBAME_GAESHI) != 0)
+	if (getRule(RULE_HIEN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"”ò‰", yaku::yakuCalculator::Yaku::yval_double_yakuman,
 			"‰•Ô‚µ",
 			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
 					(gameStat->RichiCounter == 2)); // ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é
+			}
+		));
+
+	// ---------------------------------------------------------------------
+
+	/* Žl”n˜H */
+	if (getRule(RULE_SUMARO) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"Žl”n˜H", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile == CharacterFour) && // ˜a—¹”v‚ªŽläÝ
+					(!gameStat->TsumoAgariFlag) && // ƒƒ“ƒAƒKƒŠ
+					(gameStat->Player[analysis->player].SumaroFlag)); // ‰ð‹Öƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é
+			}
+		));
+	/* ”ü—é */
+	if (getRule(RULE_MEILING) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"”ü—é", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile == BambooTwo) && // ˜a—¹”v‚ª“ñõ
+					(!gameStat->TsumoAgariFlag)); // ƒƒ“ƒAƒKƒŠ
+			}
+		));
+	/* ‹q—ˆ˜a(ƒIƒ^•—‚Ìo˜a—¹) */
+	if (getRule(RULE_OTAKAZE_RON) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹q—ˆ˜a", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag;
+				switch (tileCode tc = gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile) {
+				case EastWind: case SouthWind: case WestWind: case NorthWind: // •—”v‚¾‚Á‚½
+					yakuFlag = (!gameStat->TsumoAgariFlag); // ‰¼‚Éƒtƒ‰ƒOÝ’è
+					if (tc == Wind2Tile((uint8_t)playerwind(gameStat, analysis->player, gameStat->GameRound))) // Ž©•—‚¾‚Á‚½
+						yakuFlag = false;
+					if (tc == Wind2Tile(gameStat->GameRound / 4)) // ê•—‚¾‚Á‚½
+							yakuFlag = false;
+					if ((getRule(RULE_KAIMENKAZE) != 0) &&
+						(tc == Wind2Tile((uint8_t)playerwind(gameStat, gameStat->WaremePlayer, gameStat->GameRound)))) // ŠJ–å•—‚¾‚Á‚½
+							yakuFlag = false;
+					if ((getRule(RULE_URAKAZE) != 0) &&
+						(tc == Wind2Tile((uint8_t)playerwind(gameStat, RelativePositionOf(analysis->player, sOpposite), gameStat->GameRound)))) // — •—‚¾‚Á‚½
+							yakuFlag = false;
+					break;
+				default: // •—”v‚¶‚á‚È‚©‚Á‚½
+					yakuFlag = false; break;
+				}
+				return yakuFlag;
 			}
 		));
 }
