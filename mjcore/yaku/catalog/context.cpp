@@ -488,4 +488,31 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					);
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* 八連荘 */
+	if (getRule(RULE_PAARENCHAN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"八連荘", yaku::yakuCalculator::Yaku::HANFUNC( [](const GameTable* const, const MENTSU_ANALYSIS* const) {
+				return yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
+			}), // 移植時仕様変更：八連荘自体が縛りを満たさないようにする
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->AgariChain == 8)); // 和了ったのが連続8回目
+			}
+		));
+	/* 八連殺し(パーレンブレイカー) */
+	if (getRule(RULE_BREAKING_PAARENCHAN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"破回八連荘", yaku::yakuCalculator::Yaku::HANFUNC( [](const GameTable* const, const MENTSU_ANALYSIS* const) {
+				return yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
+			}), // いいぜ、てめえがこの局で八連荘を和了れるっていうなら
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // まずはその
+					(gameStat->AgariChain == -1)); // ふざけた和了を頭ハネ(じゃなくてもいいけど)！
+			}
+		));
 }
