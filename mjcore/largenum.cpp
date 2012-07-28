@@ -63,6 +63,12 @@ LargeNum LargeNum::fromInt(int val, unsigned int fArg) {
 	num.firstArg = fArg;
 	return num;
 }
+void LargeNum::ceilHundred() { // 100点単位に切り上げ
+	if (this->digitGroup[0] % 100 != 0) {
+		this->digitGroup[0] += 100 - this->digitGroup[0] % 100;
+		this->fix();
+	}
+}
 
 /* ここから演算子をオーバーロード */
 const LargeNum LargeNum::operator+(const LargeNum& addend) {
@@ -118,6 +124,42 @@ const LargeNum LargeNum::operator*(const int32_t multiplier) { // めんどくさいの
 	}
 	ans.fix();
 	return ans;
+}
+LargeNum& LargeNum::operator*=(const int32_t multiplier) {
+	for (int i = 0; i < DIGIT_GROUPS; i++) {
+		int64_t tmpdigit = digitGroup[i] * multiplier;
+		digitGroup[i] = (int32_t)(tmpdigit % 100000000L);
+		if ((i == (DIGIT_GROUPS - 1))
+			&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN)))
+			Raise(EXCEPTION_MJCORE_OVERFLOW, "オーバーフローしました");
+		digitGroup[i + 1] = (int32_t)(tmpdigit / 100000000L);
+	}
+	fix();
+	return *this;
+}
+const LargeNum LargeNum::operator/(const int32_t divisor) {
+	LargeNum ans = LargeNum();
+	int64_t tmpdigit[DIGIT_GROUPS];
+	for (int i = 0; i < DIGIT_GROUPS; i++) tmpdigit[i] = digitGroup[i];
+	for (int i = DIGIT_GROUPS - 1; i >= 0; i--) {
+		if (i > 0) tmpdigit[i - 1] += (tmpdigit[i] % (int64_t)divisor) * 100000000L;
+		tmpdigit[i] /= (int64_t)divisor;
+	}
+	for (int i = 0; i < DIGIT_GROUPS; i++) ans.digitGroup[i] = tmpdigit[i];
+	ans.fix();
+	return ans;
+}
+LargeNum& LargeNum::operator/=(const int32_t divisor) {
+	LargeNum ans = LargeNum();
+	int64_t tmpdigit[DIGIT_GROUPS];
+	for (int i = 0; i < DIGIT_GROUPS; i++) tmpdigit[i] = digitGroup[i];
+	for (int i = DIGIT_GROUPS - 1; i >= 0; i--) {
+		if (i > 0) tmpdigit[i - 1] += (tmpdigit[i] % (int64_t)divisor) * 100000000L;
+		tmpdigit[i] /= (int64_t)divisor;
+	}
+	for (int i = 0; i < DIGIT_GROUPS; i++) digitGroup[i] = tmpdigit[i];
+	fix();
+	return *this;
 }
 const bool LargeNum::operator==(const LargeNum& cmp) { return (this->compare(cmp) == 0); }
 const bool LargeNum::operator!=(const LargeNum& cmp) { return (this->compare(cmp) != 0); }

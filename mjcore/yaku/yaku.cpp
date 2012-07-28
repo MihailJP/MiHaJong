@@ -42,6 +42,64 @@ void yaku::yakuCalculator::CalculatorThread::decThreadCount() {
 	LeaveCriticalSection(&this->cs);
 }
 
+/* 翻を計算する */
+void yaku::yakuCalculator::doubling(yaku::YAKUSTAT* const yStat) {
+	int totalHan = yStat->CoreHan + yStat->BonusHan; // 合計翻
+	yStat->AgariPoints = LargeNum::fromInt(yStat->BasePoints); // 原点
+	if (totalHan >= -2) {
+		for (int i = 0; i < (totalHan + 2); i++) yStat->AgariPoints *= 2;
+	} else {
+		for (int i = 0; i < (totalHan + 2); i++) yStat->AgariPoints /= 2;
+	}
+	if (yStat->AgariPoints <= LargeNum::fromInt(0)) yStat->AgariPoints = LargeNum::fromInt(1); // 最低1点にはなるようにする
+}
+
+/* 符と翻から点数を計算する */
+void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
+	/* 縛りを満たしてなかったら0を返す
+	   点数が0ならコア部分で錯和と判断される……はず */
+	if ((yStat->CoreHan <= 0)&&(yStat->CoreSemiMangan <= 0)) {
+		yStat->AgariPoints = LargeNum::fromInt(0);
+		return;
+	}
+
+	int totalHan = yStat->CoreHan + yStat->BonusHan; // 合計翻
+	int totalSemiMangan = yStat->CoreSemiMangan + yStat->CoreSemiMangan; // 満貫の半分単位
+
+	if (getRule(RULE_LIMITLESS) == 0) { // 通常ルールの場合
+		if ((totalHan < 6) && (totalSemiMangan < 3)) { // 満貫以下
+			doubling(yStat); // 計算を実行
+			if (yStat->AgariPoints > LargeNum::fromInt(2000)) yStat->AgariPoints = LargeNum::fromInt(2000); // 満貫
+		}
+		else if ((totalHan < 8) && (totalSemiMangan < 4)) yStat->AgariPoints = LargeNum::fromInt(3000); // 跳満
+		else if (((totalHan < 10) || ((totalHan == 10) && (getRule(RULE_SANBAIMAN_BORDER) == 0))) &&
+			(totalSemiMangan < 6)) yStat->AgariPoints = LargeNum::fromInt(4000); // 倍満
+		else if (((totalHan < 12) || ((totalHan == 12) && (getRule(RULE_KAZOE_BORDER) == 0))) &&
+			(totalSemiMangan < 8)) yStat->AgariPoints = LargeNum::fromInt(6000); // 三倍満
+		else if ((totalSemiMangan < 8) && (getRule(RULE_KAZOE_BORDER) == 2))
+			yStat->AgariPoints = LargeNum::fromInt(6000); // 三倍満
+		else if (totalSemiMangan < 16) yStat->AgariPoints = LargeNum::fromInt(8000); // 役満 or 数え
+		else yStat->AgariPoints = LargeNum::fromInt(8000 * (totalSemiMangan / 8)); // ダブル役満以上
+	} else { // 青天井ルールの場合
+		if (totalSemiMangan >= 8) yStat->AgariPoints = LargeNum::fromInt(2500000); // 役満を固定点にするルール
+		else if (totalSemiMangan >= 6) yStat->AgariPoints = LargeNum::fromInt(1875000);
+		else if (totalSemiMangan >= 4) yStat->AgariPoints = LargeNum::fromInt(1250000);
+		else if (totalSemiMangan >= 3) yStat->AgariPoints = LargeNum::fromInt(937500);
+		else if (totalSemiMangan >= 2) yStat->AgariPoints = LargeNum::fromInt(625000);
+		else doubling(yStat); // 計算する
+	}
+
+	{ // トレース用
+		std::ostringstream o;
+		o << "計算結果は [";
+		for (int i = DIGIT_GROUPS - 1; i >= 0; i--)
+			o << std::setw(4) << std::dec << std::setfill('0') << yStat->AgariPoints.digitGroup[i] / 10000 <<
+			" " << yStat->AgariPoints.digitGroup[i] % 10000 << (i ? " " : "");
+		o << "]";
+		trace(o.str().c_str());
+	}
+}
+
 /* 符を計算する */
 void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis)
@@ -175,13 +233,27 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		}
 		calcbasepoints(gameStat, analysis); // 符を計算する
 		analysis->DuiziCount = countingFacility::countDuiz(analysis->MianziDat);
-		analysis->KeziCount = countingFacility::countKez(analysis->MianziDat, NULL);
-		analysis->AnKeziCount = countingFacility::countAnKez(analysis->MianziDat, NULL);
-		analysis->ShunziCount = countingFacility::countShunz(analysis->MianziDat);
-		analysis->AnShunziCount = countingFacility::countAnShunz(analysis->MianziDat);
-		analysis->KangziCount = countingFacility::countKangz(analysis->MianziDat, NULL);
-		analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, NULL);
-		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, NULL);
+		analysis->KeziCount = countingFacility::countKez(analysis->MianziDat, &analysis->TotalKezi);
+		analysis->AnKeziCount = countingFacility::countAnKez(analysis->MianziDat, &analysis->TotalAnKezi);
+		analysis->ShunziCount = countingFacility::countShunz(analysis->MianziDat, &analysis->TotalShunzi);
+		analysis->AnShunziCount = countingFacility::countAnShunz(analysis->MianziDat, &analysis->TotalAnShunzi);
+		analysis->KangziCount = countingFacility::countKangz(analysis->MianziDat, &analysis->TotalKangzi);
+		analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, &analysis->TotalAnKangzi);
+		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, &analysis->TotalKaKangzi);
+	} else {
+		if (analysis->shanten[shantenPairs] == -1) { // 七対子
+			if (getRule(RULE_SEVEN_PAIRS) == 1) analysis->BasePoint = 50; // 1翻50符
+			else analysis->BasePoint = 25; // 2翻25符
+		}
+		else if (analysis->shanten[shantenOrphans] == -1) analysis->BasePoint = 30; // 国士は役満なのでこれは青天ルール用
+		else if ((analysis->shanten[shantenQuanbukao] == -1)&&(analysis->shanten[shantenStellar] > -1)) {
+			switch (getRule(RULE_QUANBUKAO)) {
+			case 1:
+				analysis->BasePoint = 30; break;
+			case 2: case 3:
+				analysis->BasePoint = 40; break;
+			}
+		}
 	}
 	/* 役判定ループ */
 	std::map<std::string, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
@@ -222,6 +294,12 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	/* 飜数を計算した結果を書き込む */
 	result->CoreHan = totalHan; result->CoreSemiMangan = totalSemiMangan;
 	result->BonusHan = totalBonusHan; result->BonusSemiMangan = totalBonusSemiMangan;
+	/* TODO: ドラの数を数える */
+	/* TODO: 簡略ルール(全部30符) */
+	/* TODO: 十三不塔 */
+	/* TODO: 切り上げ満貫 */
+	/* 点数を計算する */
+	calculateScore(result);
 	/* 終了処理 */
 	decThreadCount(); // 終わったらスレッド数デクリメント
 	return S_OK;
@@ -246,6 +324,8 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
 	memcpy(analysis.shanten, shanten, sizeof(SHANTEN[SHANTEN_PAGES]));
 	analysis.player = targetPlayer;
+	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
+	analysis.SeenTiles = countseentiles(gameStat);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam; memset(calcprm, 0, sizeof(CalculatorParam));
 	calcprm->gameStat = gameStat; calcprm->instance = calculator;
@@ -270,6 +350,8 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
 	memcpy(analysis.shanten, shanten, sizeof(SHANTEN[SHANTEN_PAGES]));
 	analysis.player = targetPlayer;
+	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
+	analysis.SeenTiles = countseentiles(gameStat);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
 	DWORD ThreadID[160]; HANDLE Thread[160];

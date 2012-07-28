@@ -7,6 +7,8 @@
 #include <list>
 #include <map>
 #include <set>
+#include <sstream>
+#include <iomanip>
 #include <Windows.h>
 #include "ykclass.h"
 #include "yk_tools.h"
@@ -14,6 +16,7 @@
 #include "../gametbl.h"
 #include "../tileutil.h"
 #include "../except.h"
+#include "../logging.h"
 
 class yaku::yakuCalculator {
 private:
@@ -53,6 +56,15 @@ private:
 		Int8ByTile KangziCount; // 槓子の数
 		Int8ByTile AnKangziCount; // 暗槓の数
 		Int8ByTile KaKangziCount; // 加槓の数
+		Int8ByTile SeenTiles; // 見えている牌
+		Int8ByTile TileCount; // 牌の数
+		uint8_t TotalKezi; // 刻子槓子合計
+		uint8_t TotalAnKezi; // 暗刻暗槓合計
+		uint8_t TotalShunzi; // 順子合計
+		uint8_t TotalAnShunzi; // 暗順子合計
+		uint8_t TotalKangzi; // 槓子合計
+		uint8_t TotalAnKangzi; // 暗槓合計
+		uint8_t TotalKaKangzi; // 加槓合計
 	};
 #ifdef MJCORE_EXPORTS
 	static_assert(std::is_pod<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not POD");
@@ -191,6 +203,9 @@ private:
 			std::string yk6, std::string yk7, std::string yk8, std::string yk9, std::string yk10,
 			YAKUFUNC f);
 	};
+
+	static void doubling(yaku::YAKUSTAT* const yStat);
+	static void calculateScore(yaku::YAKUSTAT* const yStat);
 
 	static void analysisNonLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
 		SHANTEN* const shanten, YAKUSTAT* const yakuInfo);
