@@ -264,6 +264,7 @@ EXPORT_STRUCT GameTable { // 卓の情報を格納する
 	uint8_t TurnRound; // 現在の巡目
 	uint8_t KangNum; // 四槓流局、四槓子などの判定に使う
 	bool RichiCounter; // リーチをカウンター(宣言牌をロン)
+	bool DoubleRichiCounter; // ダブルリーチをカウンター(宣言牌をロン)
 	PLAYER_ID WaremePlayer; // 割れ目の位置(-1で割れ目なし)
 	PLAYER_ID DoukasenPlayer; // 導火線の位置(-1で導火線なし)
 	DICE Dice[2]; // サイコロ

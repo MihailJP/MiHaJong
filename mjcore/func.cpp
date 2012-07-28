@@ -53,6 +53,8 @@ PlayerRankList calcRank(const GameTable* const gameStat) {
 		for (int j = 0; j < ACTUAL_PLAYERS; j++) {
 			if ((LargeNum)gameStat->Player[j].PlayerScore > gameStat->Player[i].PlayerScore)
 				rankList[i]++;
+			if (((LargeNum)gameStat->Player[j].PlayerScore == gameStat->Player[i].PlayerScore) &&
+				(i > j)) rankList[i]++; // “¯’…‚Ìê‡‚Í‹N‰Æ‚É‹ß‚¢‘¤‚ªãˆÊ
 		}
 	}
 	return rankList;
