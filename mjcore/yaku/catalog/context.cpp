@@ -123,6 +123,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			else return false;
 		}
 	));
+
+	// ---------------------------------------------------------------------
+
 	/* “V˜a */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"“V˜a", (getRule(RULE_TENHOH) != 0) ?
@@ -173,6 +176,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				(gameStat->TsumoAgariFlag)); // ƒcƒ‚ƒAƒKƒŠ
 		}
 	));
+
+	// ---------------------------------------------------------------------
+
 	/* ŽOÇ“]•¢ */
 	if (getRule(RULE_SANSEKI_TEMPUKU) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -201,6 +207,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					);
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
 	/* ƒŠƒ“ƒVƒƒƒ“ƒcƒ‚ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"—äãŠJ‰Ô", yaku::yakuCalculator::Yaku::yval_1han,
@@ -297,6 +306,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(analysis->KangziCount[EastWind] >= 1)); // “Œ‚ÌžÈŽq‚ª‚ ‚é
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
 	/* ŠC’êƒcƒ‚ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"ŠC’ê–ÌŒŽ", yaku::yakuCalculator::Yaku::yval_1han,
@@ -428,6 +440,52 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(!gameStat->KangFlag.kangFlag) && // žÈ‚ð‚µ‚½’¼Œã‚Å‚Í‚È‚¢
 					(tilesLeft(gameStat) == 0) && // ƒnƒCƒeƒC‚Å‚ ‚é
 					(gameStat->Player[analysis->player].RichiFlag.DoubleFlag)); // ƒ_ƒuƒ‹—§’¼‚µ‚Ä‚¢‚é
+			}
+		));
+
+	// ---------------------------------------------------------------------
+
+	/* žÈU‚è */
+	if (getRule(RULE_KAMBURI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"žÈU‚è", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+					(gameStat->KangFlag.chainFlag >= 1) && // žÈ‚ð‚µ‚½’¼Œã‚Å‚ ‚é
+					(!gameStat->TsumoAgariFlag)); // ƒƒ“ƒAƒKƒŠ
+			}
+		));
+	/* ‘„žÈ‚Í³Šm‚É‚Í–Ø•Î‚Å‚Í‚È‚­Žè•Î */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		"žÈ", yaku::yakuCalculator::Yaku::yval_1han,
+		[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+			return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+				(gameStat->KangFlag.chankanFlag)); // ‘„žÈƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é
+		}
+	));
+	/* “ñõžÈ */
+	if (getRule(RULE_RYANZOH_CHANKAN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"“ñõžÈ",  (getRule(RULE_RYANZOH_CHANKAN) == 1) ?
+			yaku::yakuCalculator::Yaku::yval_yakuman : yaku::yakuCalculator::Yaku::yval_4han,
+			"žÈ",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+					(gameStat->KangFlag.chankanFlag) && // ‘„žÈƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile == BambooTwo)); // ˜a—¹”v‚ª“ñõ
+			}
+		));
+	/* ‹àŒ{’DH */
+	if (getRule(RULE_JINJI_DUOSHI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹àŒ{’DH", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+					(gameStat->KangFlag.chankanFlag) && // ‘„žÈƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é
+					((analysis->SeenTiles[gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile] +
+					analysis->TileCount[gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile]) >=
+					(gameStat->TsumoAgariFlag ? 4 : 5)) // ƒ‰ƒX”v‚©‚Ç‚¤‚©”»’è
+					);
 			}
 		));
 }

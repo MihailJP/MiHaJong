@@ -344,10 +344,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	memcpy(analysis.shanten, shanten, sizeof(SHANTEN[SHANTEN_PAGES]));
 	analysis.player = targetPlayer;
 	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
-<<<<<<< HEAD
-=======
 	analysis.SeenTiles = countseentiles(gameStat);
->>>>>>> yakuport
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
 	DWORD ThreadID[160]; HANDLE Thread[160];
