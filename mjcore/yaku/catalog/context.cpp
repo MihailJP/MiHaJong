@@ -19,29 +19,46 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				(gameStat->Player[analysis->player].RichiFlag.DoubleFlag)); // ダブル立直フラグが立っている
 		}
 	));
-	/* プンリー */
-	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		"オープン立直", yaku::yakuCalculator::Yaku::yval_2han_menzen,
-		"立直",
-		[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
-			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
-				(gameStat->Player[analysis->player].RichiFlag.RichiFlag) && // 立直している
-				(gameStat->Player[analysis->player].RichiFlag.OpenFlag)); // オープン立直フラグが立っている
-		}
-	));
-	/* ダブプン */
-	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		"ダブル開立直", yaku::yakuCalculator::Yaku::yval_3han_menzen,
-		"立直", "ダブル立直", "オープン立直",
-		[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
-			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
-				(gameStat->Player[analysis->player].RichiFlag.RichiFlag) && // 立直している
-				(gameStat->Player[analysis->player].RichiFlag.DoubleFlag) && // ダブル立直フラグが立っている
-				(gameStat->Player[analysis->player].RichiFlag.OpenFlag)); // オープン立直フラグが立っている
-		}
-	));
-	/* プンリー放銃 */
-	/* あとで */
+	if (getRule(RULE_OPEN_RIICHI) != 0) {
+		/* プンリー */
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"オープン立直", yaku::yakuCalculator::Yaku::yval_2han_menzen,
+			"立直",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->Player[analysis->player].RichiFlag.RichiFlag) && // 立直している
+					(gameStat->Player[analysis->player].RichiFlag.OpenFlag)); // オープン立直フラグが立っている
+			}
+		));
+		/* ダブプン */
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ダブル開立直", yaku::yakuCalculator::Yaku::yval_3han_menzen,
+			"立直", "ダブル立直", "オープン立直",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->Player[analysis->player].RichiFlag.RichiFlag) && // 立直している
+					(gameStat->Player[analysis->player].RichiFlag.DoubleFlag) && // ダブル立直フラグが立っている
+					(gameStat->Player[analysis->player].RichiFlag.OpenFlag)); // オープン立直フラグが立っている
+			}
+		));
+		/* プンリー放銃 */
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"開立直栄和", yaku::yakuCalculator::Yaku::HANFUNC( [](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) {
+				return (gameStat->Player[analysis->player].MenzenFlag) ?
+					yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(11, yaku::yakuCalculator::hanUnit::Han),
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null) :
+					yaku::yakuCalculator::Yaku::YAKU_HAN();
+			}),
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->Player[analysis->player].RichiFlag.RichiFlag) && // 立直している
+					(gameStat->Player[analysis->player].RichiFlag.OpenFlag) && // オープン立直フラグが立っている
+					(!gameStat->TsumoAgariFlag) && // ロン
+					(gameStat->CurrentPlayer.Furikomi >= 0) &&
+					(!gameStat->Player[gameStat->CurrentPlayer.Furikomi].RichiFlag.RichiFlag)); // 非リーチ者からの和了
+			}
+		));
+	}
 	/* 一発(方言では即ともいう) */
 	if ((getRule(RULE_RIICHI_IPPATSU) != 1)&&(getRule(RULE_RIICHI_IPPATSU) != 3)) { // 一発が役にならないルールを除外
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -157,7 +174,33 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		}
 	));
 	/* 三隻転覆 */
+	if (getRule(RULE_SANSEKI_TEMPUKU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"三隻転覆", yaku::yakuCalculator::Yaku::yval_3han,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->TsumoAgariFlag) && // ツモアガリ
+					(!gameStat->Player[analysis->player].RichiFlag.RichiFlag) && // 自分はリーチしていない
+					(gameStat->Player[RelativePositionOf(analysis->player, sRight)].RichiFlag.RichiFlag) &&
+					(gameStat->Player[RelativePositionOf(analysis->player, sOpposite)].RichiFlag.RichiFlag) &&
+					(gameStat->Player[RelativePositionOf(analysis->player, sLeft)].RichiFlag.RichiFlag) // 他家全員立直
+					);
+			}
+		));
 	/* 起死回生 */
+	if (getRule(RULE_KISHI_KAISEI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"起死回生", yaku::yakuCalculator::Yaku::yval_yakuman,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(gameStat->TsumoAgariFlag) && // ツモアガリ
+					(!gameStat->Player[analysis->player].RichiFlag.RichiFlag) && // 自分はリーチしていない
+					(gameStat->Player[RelativePositionOf(analysis->player, sRight)].RichiFlag.DoubleFlag) &&
+					(gameStat->Player[RelativePositionOf(analysis->player, sOpposite)].RichiFlag.DoubleFlag) &&
+					(gameStat->Player[RelativePositionOf(analysis->player, sLeft)].RichiFlag.DoubleFlag) // 他家全員ダブリー(!)
+					);
+			}
+		));
 	/* リンシャンツモ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"嶺上開花", yaku::yakuCalculator::Yaku::yval_1han,
@@ -350,6 +393,41 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(!gameStat->TsumoAgariFlag) && // ロンアガリ
 					(tilesLeft(gameStat) == 0) && // ハイテイである
 					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile == WhiteDragon)); // 和了牌が白
+			}
+		));
+	/* 泥底撈蟲 */
+	if (getRule(RULE_NITEI_RAOCHUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"泥底撈蟲", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(!gameStat->KangFlag.kangFlag) && // 槓をした直後ではない
+					(tilesLeft(gameStat) == 0) && // ハイテイである
+					((analysis->TotalAnShunzi + analysis->TotalAnKezi - analysis->TotalAnKangzi) == 0)); // 裸単騎である
+			}
+		));
+	/* ラストオーダー麻婆豆腐 */
+	if (getRule(RULE_MAABOODOUFU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ラストオーダー麻婆豆腐", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"白底撈魚",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(!gameStat->KangFlag.kangFlag) && // 槓をした直後ではない
+					(tilesLeft(gameStat) == 0) && // ハイテイである
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile == WhiteDragon)); // 和了牌が白
+			}
+		));
+	/* 石の上にも三年 */
+	if (getRule(RULE_THREE_YEARS_ON_STONE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"石の上にも三年", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"ダブル立直", "ダブル開立直", "海底摸月", "河底撈魚",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(!gameStat->KangFlag.kangFlag) && // 槓をした直後ではない
+					(tilesLeft(gameStat) == 0) && // ハイテイである
+					(gameStat->Player[analysis->player].RichiFlag.DoubleFlag)); // ダブル立直している
 			}
 		));
 }
