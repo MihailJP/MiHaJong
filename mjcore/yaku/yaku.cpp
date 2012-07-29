@@ -237,7 +237,7 @@ void yaku::yakuCalculator::CalculatorThread::countDora
 	const bool uradoraEnabled = ((getRule(RULE_URADORA) != 1) && // 裏ドラありのルールで、
 		(gameStat->Player[analysis->player].MenzenFlag) && // 門前であり、
 		(gameStat->Player[analysis->player].RichiFlag.RichiFlag)); // 立直をかけているなら
-	int omote = 0; int ura = 0;
+	int omote = 0; int ura = 0; int red = 0; int blue = 0;
 	/* ドラを計算する */
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
 		if (gameStat->Player[analysis->player].Hand[i].tile == NoTile) continue;
@@ -267,8 +267,24 @@ void yaku::yakuCalculator::CalculatorThread::countDora
 			break;
 		}
 	}
-	/* TODO: 純手配の赤ドラ・青ドラ */
-	/* TODO: 副露面子赤ドラ・青ドラ */
+	/* 赤ドラ・青ドラ */
+	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+		if (gameStat->Player[analysis->player].Hand[i].tile == NoTile) continue;
+		else if (gameStat->Player[analysis->player].Hand[i].tile >= TILE_NONFLOWER_MAX) continue;
+		switch (gameStat->Player[analysis->player].Hand[i].red) {
+			case AkaDora: ++red; break;
+			case AoDora: ++blue; break;
+		}
+	}
+	for (int i = 1; i < gameStat->Player[analysis->player].MeldPointer; i++) {
+		auto k = &gameStat->Player[analysis->player].Meld[i];
+		for (int j = 0; j < (k->mstat >= meldQuadConcealed ? 4 : 3); j++) {
+			switch (gameStat->Player[analysis->player].Meld[i].red[j]) {
+				case AkaDora: ++red; break;
+				case AoDora: ++blue; break;
+			}
+		}
+	}
 	/* TODO: 花牌・三麻のガリ */
 	/* TODO: アリスドラ */
 	/* 計数結果を反映 */
@@ -279,6 +295,30 @@ void yaku::yakuCalculator::CalculatorThread::countDora
 	if (ura) {
 		result->DoraQuantity += ura; result->BonusHan += ura; result->UraDoraQuantity += ura;
 		doraText(result, "裏ドラ", ura);
+	}
+	if (red) {
+		if (getRule(RULE_REDTILE_CHIP) < 3) {
+			result->DoraQuantity += red; result->BonusHan += red;
+		}
+		result->AkaDoraQuantity += red;
+		doraText(result, "赤ドラ", red);
+	}
+	if (blue) {
+		result->AoDoraQuantity += blue;
+		switch (getRule(RULE_BLUE_TILES)) {
+		case 0:
+			result->DoraQuantity += blue; result->BonusHan += blue;
+			doraText(result, "青ドラ", blue);
+			break;
+		case 1:
+			result->DoraQuantity += blue * 2; result->BonusHan += blue * 2;
+			doraText(result, "青ドラ 2x", blue);
+			break;
+		case 2:
+			result->DoraQuantity -= blue; result->BonusHan -= blue;
+			doraText(result, "青ドラ -", blue);
+			break;
+		}
 	}
 }
 
