@@ -234,15 +234,38 @@ void yaku::yakuCalculator::CalculatorThread::doraText
 void yaku::yakuCalculator::CalculatorThread::countDora
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result)
 {
+	const bool uradoraEnabled = ((getRule(RULE_URADORA) != 1) && // 裏ドラありのルールで、
+		(gameStat->Player[analysis->player].MenzenFlag) && // 門前であり、
+		(gameStat->Player[analysis->player].RichiFlag.RichiFlag)); // 立直をかけているなら
 	int omote = 0; int ura = 0;
 	/* ドラを計算する */
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
 		if (gameStat->Player[analysis->player].Hand[i].tile == NoTile) continue;
 		omote += gameStat->DoraFlag.Omote[gameStat->Player[analysis->player].Hand[i].tile];
-		if ((getRule(RULE_URADORA) != 1) && // 裏ドラありのルールで、
-			(gameStat->Player[analysis->player].MenzenFlag) && // 門前であり、
-			(gameStat->Player[analysis->player].RichiFlag.RichiFlag) ) // 立直をかけているなら
-				ura += gameStat->DoraFlag.Ura[gameStat->Player[analysis->player].Hand[i].tile]; // 裏ドラ適用
+		if (uradoraEnabled) // 裏ドラ適用
+			ura += gameStat->DoraFlag.Ura[gameStat->Player[analysis->player].Hand[i].tile];
+	}
+	/* 鳴き面子のドラを数える */
+	for (int i = 1; i < gameStat->Player[analysis->player].MeldPointer; i++) {
+		auto k = &gameStat->Player[analysis->player].Meld[i];
+		switch (k->mstat) {
+		case meldSequenceExposedLower: case meldSequenceExposedMiddle: case meldSequenceExposedUpper: // 順子
+			omote += gameStat->DoraFlag.Omote[k->tile] + gameStat->DoraFlag.Omote[k->tile + 1] +
+				gameStat->DoraFlag.Omote[k->tile + 2];
+			if (uradoraEnabled)
+				ura += gameStat->DoraFlag.Ura[k->tile] + gameStat->DoraFlag.Ura[k->tile + 1] +
+				gameStat->DoraFlag.Ura[k->tile + 2];
+			break;
+		case meldTripletExposedLeft: case meldTripletExposedCenter: case meldTripletExposedRight: // 刻子
+			omote += gameStat->DoraFlag.Omote[k->tile] * 3;
+			if (uradoraEnabled) ura += gameStat->DoraFlag.Ura[k->tile] * 3;
+			break;
+		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight: // 槓子
+		case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight: case meldQuadConcealed:
+			omote += gameStat->DoraFlag.Omote[k->tile] * 4;
+			if (uradoraEnabled) ura += gameStat->DoraFlag.Ura[k->tile] * 4;
+			break;
+		}
 	}
 	/* TODO: 純手配の赤ドラ・青ドラ */
 	/* TODO: 副露面子赤ドラ・青ドラ */
