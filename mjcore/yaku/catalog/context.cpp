@@ -630,4 +630,57 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			}
 		}
 	}
+
+	// ---------------------------------------------------------------------
+
+	/* ‹à—´“V˜a */
+	if (getRule(RULE_GOLDDRAGON) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹à—´“V˜a", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile >= CircleOne) && // ˜a—¹”v‚ª“›Žq
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile <= CircleNine) &&
+					(gameStat->TurnRound <= 3)); // 3„–ÚˆÈ“à
+			}
+		));
+	/* ù•—‰h˜a */
+	if (getRule(RULE_WHIRLWIND) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ù•—‰h˜a", yaku::yakuCalculator::Yaku::yval_yakuman,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile >= EastWind) && // ˜a—¹”v‚ª•—”v
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile <= NorthWind) &&
+					(gameStat->TurnRound <= 3)); // 3„–ÚˆÈ“à
+			}
+		));
+	/* Â“V‚ÌèÆèÌ */
+	if (getRule(RULE_BOLT_FROM_THE_BLUE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"Â“V‚ÌèÆèÌ", yaku::yakuCalculator::Yaku::yval_4han,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+					(!gameStat->Player[0].RichiFlag.RichiFlag) && // ’N‚àƒŠ[ƒ`‚µ‚Ä‚¢‚È‚¢
+					(!gameStat->Player[1].RichiFlag.RichiFlag) &&
+					(!gameStat->Player[2].RichiFlag.RichiFlag) &&
+					(!gameStat->Player[3].RichiFlag.RichiFlag) &&
+					(gameStat->Player[0].DiscardPointer == 0) && // ’N‚à–Â‚¢‚Ä‚¢‚È‚¢
+					(gameStat->Player[1].DiscardPointer == 0) &&
+					(gameStat->Player[2].DiscardPointer == 0) &&
+					(gameStat->Player[3].DiscardPointer == 0) &&
+					(gameStat->TurnRound <= 4)); // 4„–ÚˆÈ“à
+			}
+		));
+	/* ”L‚Ü‚Á‚µ‚®‚ç */
+	if (getRule(RULE_GOLDDRAGON) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"”L‚Ü‚Á‚µ‚®‚ç", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenRegular] == -1) && // –ÊŽqŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile == BambooThree) && // ˜a—¹”v‚ªŽOõ
+					(analysis->Machi == yaku::yakuCalculator::machiKanchan)); // ›Æ’£‘Ò‚¿
+			}
+		));
+
 }
