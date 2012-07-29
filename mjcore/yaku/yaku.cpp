@@ -237,7 +237,7 @@ void yaku::yakuCalculator::CalculatorThread::countDora
 	const bool uradoraEnabled = ((getRule(RULE_URADORA) != 1) && // 裏ドラありのルールで、
 		(gameStat->Player[analysis->player].MenzenFlag) && // 門前であり、
 		(gameStat->Player[analysis->player].RichiFlag.RichiFlag)); // 立直をかけているなら
-	int omote = 0; int ura = 0; int red = 0; int blue = 0;
+	int omote = 0; int ura = 0; int red = 0; int blue = 0; int alice = 0;
 	/* ドラを計算する */
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
 		if (gameStat->Player[analysis->player].Hand[i].tile == NoTile) continue;
@@ -285,26 +285,36 @@ void yaku::yakuCalculator::CalculatorThread::countDora
 			}
 		}
 	}
+	/* アリスドラ */
+	if ((getRule(RULE_ALICE) != 0) && (gameStat->Player[analysis->player].MenzenFlag)) {
+		// アリスありルールで門前でないと駄目
+		auto AlicePointer = gameStat->DoraPointer;
+		// 牌譜記録ルーチンはスレッドセーフじゃなかったはずなので別の場所でやる
+		while (AlicePointer <= gameStat->TilePointer) {
+			AlicePointer -= 2;
+			if (analysis->TileCount[gameStat->Deck[AlicePointer].tile] > 0) ++alice;
+			else break;
+		}
+	}
 	/* TODO: 花牌・三麻のガリ */
-	/* TODO: アリスドラ */
 	/* 計数結果を反映 */
 	if (omote) {
 		result->DoraQuantity += omote; result->BonusHan += omote;
 		doraText(result, "ドラ", omote);
 	}
 	if (ura) {
-		result->DoraQuantity += ura; result->BonusHan += ura; result->UraDoraQuantity += ura;
+		result->DoraQuantity += ura; result->BonusHan += ura; result->UraDoraQuantity = ura;
 		doraText(result, "裏ドラ", ura);
 	}
 	if (red) {
 		if (getRule(RULE_REDTILE_CHIP) < 3) {
 			result->DoraQuantity += red; result->BonusHan += red;
 		}
-		result->AkaDoraQuantity += red;
+		result->AkaDoraQuantity = red;
 		doraText(result, "赤ドラ", red);
 	}
 	if (blue) {
-		result->AoDoraQuantity += blue;
+		result->AoDoraQuantity = blue;
 		switch (getRule(RULE_BLUE_TILES)) {
 		case 0:
 			result->DoraQuantity += blue; result->BonusHan += blue;
@@ -319,6 +329,10 @@ void yaku::yakuCalculator::CalculatorThread::countDora
 			doraText(result, "青ドラ -", blue);
 			break;
 		}
+	}
+	if (alice) {
+		result->AliceDora = alice;
+		doraText(result, "アリス祝儀", alice);
 	}
 }
 
