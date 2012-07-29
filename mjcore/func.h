@@ -73,6 +73,8 @@ __declspec(dllexport) inline int WindMax();
 tileCode inline Wind2Tile(uint8_t wind);
 __declspec(dllexport) int Wind2Tile(int wind);
 
+std::string intstr(int val);
+
 namespace confpath {
 	bool isVista();
 

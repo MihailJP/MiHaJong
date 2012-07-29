@@ -294,6 +294,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	std::for_each(yakuHan.begin(), yakuHan.end(),
 		[&totalHan, &totalSemiMangan, &totalBonusHan, &totalBonusSemiMangan, &result]
 		(std::pair<std::string, Yaku::YAKU_HAN> yHan) {
+			/* TODO: ê¬ìVà‰ÉãÅ[ÉãÇ…ëŒâûÇ≥ÇπÇÈ */
 			switch (yHan.second.coreHan.getUnit()) {
 				case yaku::yakuCalculator::hanUnit::Han: totalHan += yHan.second.coreHan.getHan(); break;
 				case yaku::yakuCalculator::hanUnit::SemiMangan: totalSemiMangan += yHan.second.coreHan.getHan(); break;
@@ -318,16 +319,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 			{ /* ïÅí ÇÃñÇÃéû */
 				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
 				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
-				const char* hanstr = "ÇO\0ÇP\0ÇQ\0ÇR\0ÇS\0ÇT\0ÇU\0ÇV\0ÇW\0ÇX\0";
-				if ((yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan() <= 9) &&
-					(yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan() >= 0))
-						strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
-						&(hanstr[(yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()) * 3]));
-				else {
-					char hstr[8]; sprintf_s(hstr, "%d",
-						(int)(yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()));
-					strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, hstr);
-				}
+				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
+					intstr(yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()).c_str());
 				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "„ \n");
 			}
 			else if ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) ||
