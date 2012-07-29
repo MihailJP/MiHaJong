@@ -10,6 +10,7 @@
 EXPORT_STRUCT yaku::YAKUSTAT {
 	static const int SemiMangan = 12500; // 半満貫
 	static const int LimitMinus = 100; // マイナス翻の下限
+	static const unsigned int nameBufSize = 1024; // 名前バッファのサイズ
 	bool isValid; // 和了っているかどうか
 	int BasePoints; // 符
 	int CoreHan, CoreSemiMangan; // 翻
@@ -21,10 +22,10 @@ EXPORT_STRUCT yaku::YAKUSTAT {
 	int AliceDora; // アリスドラの数
 	int FlowerQuantity; // 花牌の数
 	LargeNum AgariPoints; // 合計和了点
-	char yakuNameList[1024];
-	char yakuValList[1024];
-	char yakumanNameList[1024];
-	char yakumanValList[1024];
+	char yakuNameList[nameBufSize];
+	char yakuValList[nameBufSize];
+	char yakumanNameList[nameBufSize];
+	char yakumanValList[nameBufSize];
 	// -----------------------------------------------------------------
 	MELD_BUF MianziDat; // 面子に分解したデータ
 	// -----------------------------------------------------------------

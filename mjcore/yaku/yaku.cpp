@@ -219,6 +219,23 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	analysis->BasePoint = (uint8_t)fu;
 }
 
+/* ドラ計数 */
+void yaku::yakuCalculator::CalculatorThread::countDora
+	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result)
+{
+	int omote = 0; int ura = 0;
+	/* ドラを計算する */
+	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+		if (gameStat->Player[analysis->player].Hand[i].tile == NoTile) continue;
+		omote += gameStat->DoraFlag.Omote[gameStat->Player[analysis->player].Hand[i].tile];
+		if ((getRule(RULE_URADORA) != 1) && // 裏ドラありのルールで、
+			(gameStat->Player[analysis->player].MenzenFlag) && // 門前であり、
+			(gameStat->Player[analysis->player].RichiFlag.RichiFlag) ) // 立直をかけているなら
+				ura += gameStat->DoraFlag.Ura[gameStat->Player[analysis->player].Hand[i].tile]; // 裏ドラ適用
+	}
+
+}
+
 /* 計算ルーチン */
 DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
@@ -275,7 +292,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	int totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan;
 	totalHan = totalSemiMangan = totalBonusHan = totalBonusSemiMangan = 0;
 	std::for_each(yakuHan.begin(), yakuHan.end(),
-		[&totalHan, &totalSemiMangan, &totalBonusHan, &totalBonusSemiMangan](std::pair<std::string, Yaku::YAKU_HAN> yHan) {
+		[&totalHan, &totalSemiMangan, &totalBonusHan, &totalBonusSemiMangan, &result]
+		(std::pair<std::string, Yaku::YAKU_HAN> yHan) {
 			switch (yHan.second.coreHan.getUnit()) {
 				case yaku::yakuCalculator::hanUnit::Han: totalHan += yHan.second.coreHan.getHan(); break;
 				case yaku::yakuCalculator::hanUnit::SemiMangan: totalSemiMangan += yHan.second.coreHan.getHan(); break;
@@ -290,11 +308,51 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
 			}
+			/* 役の名前を書き込む */
+			if ((yHan.second.coreHan.getUnit() != yHan.second.bonusHan.getUnit()) &&
+				(yHan.second.coreHan.getHan() * yHan.second.bonusHan.getHan() != 0))
+			{ /* 単位が混在！ */
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が混在しています");
+			}
+			else if (yHan.second.coreHan.getUnit() == yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Han)
+			{ /* 普通の役の時 */
+				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
+				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
+				const char* hanstr = "０\0１\0２\0３\0４\0５\0６\0７\0８\0９\0";
+				if ((yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan() <= 9) &&
+					(yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan() >= 0))
+						strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
+						&(hanstr[(yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()) * 3]));
+				else {
+					char hstr[8]; sprintf_s(hstr, "%d",
+						(int)(yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()));
+					strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, hstr);
+				}
+				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "飜\n");
+			}
+			else if ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) ||
+				(yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan))
+			{ /* 満貫 */
+				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
+				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\n");
+				char hstr[16]; sprintf_s(hstr, "%d\n",
+					(int)((yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
+				strcat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
+			}
+			else
+			{ /* 役満 */
+				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
+				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\n");
+				char hstr[16]; sprintf_s(hstr, "%d\n",
+					(int)((yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
+				strcat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
+			}
 	});
 	/* 飜数を計算した結果を書き込む */
 	result->CoreHan = totalHan; result->CoreSemiMangan = totalSemiMangan;
 	result->BonusHan = totalBonusHan; result->BonusSemiMangan = totalBonusSemiMangan;
-	/* TODO: ドラの数を数える */
+	/* ドラの数を数える */
+	countDora(gameStat, analysis, result);
 	/* 簡略ルール(全部30符)の場合 */
 	if (getRule(RULE_SIMPLIFIED_SCORING) != 0) {
 		trace("簡略計算ルールのため30符として扱います。");
