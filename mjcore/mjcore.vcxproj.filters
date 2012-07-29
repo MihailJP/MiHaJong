@@ -117,6 +117,9 @@
     <ClCompile Include="yaku\catalog\irreg.cpp">
       <Filter>ソース ファイル\yaku\catalog</Filter>
     </ClCompile>
+    <ClCompile Include="yaku\catalog\sequence.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">

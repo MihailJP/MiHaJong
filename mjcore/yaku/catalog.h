@@ -11,6 +11,7 @@ private:
 	static void yakulst_pinhu();
 	static void yakulst_irregular();
 	static void yakulst_yaojiu();
+	static void yakulst_sequence();
 };
 
 #endif

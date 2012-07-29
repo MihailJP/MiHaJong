@@ -13,6 +13,11 @@ void yaku::yakuCalculator::init() {
 	info("役カタログをリセットしました。");
 	YakuCatalog::catalogInit::yakulst_contextual();
 	YakuCatalog::catalogInit::yakulst_pinhu();
+	/* TODO: 染め系の役 */
 	YakuCatalog::catalogInit::yakulst_yaojiu();
+	/* TODO: 刻子系の役 */
+	/* TODO: 槓子系の役 */
+	YakuCatalog::catalogInit::yakulst_sequence();
+	/* TODO: その他の役 */
 	info("役カタログの構築を完了しました。");
 }
