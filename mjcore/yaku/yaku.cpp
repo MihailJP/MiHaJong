@@ -295,11 +295,19 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	result->CoreHan = totalHan; result->CoreSemiMangan = totalSemiMangan;
 	result->BonusHan = totalBonusHan; result->BonusSemiMangan = totalBonusSemiMangan;
 	/* TODO: ドラの数を数える */
-	/* TODO: 簡略ルール(全部30符) */
+	/* 簡略ルール(全部30符)の場合 */
+	if (getRule(RULE_SIMPLIFIED_SCORING) != 0) {
+		trace("簡略計算ルールのため30符として扱います。");
+		result->BasePoints = 30;
+	}
 	/* TODO: 十三不塔 */
-	/* TODO: 切り上げ満貫 */
 	/* 点数を計算する */
 	calculateScore(result);
+	/* 切り上げ満貫の処理 */
+	if ((getRule(RULE_ROUND_TO_MANGAN) == 1) && // 切り上げ満貫ルールがONで
+		(getRule(RULE_LIMITLESS) == 0) && // 青天井ルールでない場合
+		(result->AgariPoints == LargeNum::fromInt(1920))) // 子の7700・親の11600なら
+			result->AgariPoints = LargeNum::fromInt(2000); // 満貫にする
 	/* 終了処理 */
 	decThreadCount(); // 終わったらスレッド数デクリメント
 	return S_OK;
