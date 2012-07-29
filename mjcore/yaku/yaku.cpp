@@ -238,6 +238,7 @@ void yaku::yakuCalculator::CalculatorThread::countDora
 		(gameStat->Player[analysis->player].MenzenFlag) && // –å‘O‚Å‚ ‚èA
 		(gameStat->Player[analysis->player].RichiFlag.RichiFlag)); // —§’¼‚ð‚©‚¯‚Ä‚¢‚é‚È‚ç
 	int omote = 0; int ura = 0; int red = 0; int blue = 0; int alice = 0;
+	int flower = 0; int north = 0;
 	/* ƒhƒ‰‚ðŒvŽZ‚·‚é */
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
 		if (gameStat->Player[analysis->player].Hand[i].tile == NoTile) continue;
@@ -296,7 +297,27 @@ void yaku::yakuCalculator::CalculatorThread::countDora
 			else break;
 		}
 	}
-	/* TODO: ‰Ô”vEŽO–ƒ‚ÌƒKƒŠ */
+	/* ‰Ô”vEŽO–ƒ‚ÌƒKƒŠ */
+	if (getRule(RULE_FLOWER_TILES) != 0) {
+		if (chkGameType(gameStat, AllSanma)) {
+			north = gameStat->Player[analysis->player].NorthFlag;
+			omote += north * (gameStat->DoraFlag.Omote[NorthWind] + 1);
+			if (uradoraEnabled) ura += north * gameStat->DoraFlag.Ura[NorthWind];
+			result->FlowerQuantity = north;
+		} else {
+			if (gameStat->Player[analysis->player].FlowerFlag.Spring) ++flower;
+			if (gameStat->Player[analysis->player].FlowerFlag.Summer) ++flower;
+			if (gameStat->Player[analysis->player].FlowerFlag.Autumn) ++flower;
+			if (gameStat->Player[analysis->player].FlowerFlag.Winter) ++flower;
+			if (gameStat->Player[analysis->player].FlowerFlag.Plum) ++flower;
+			if (gameStat->Player[analysis->player].FlowerFlag.Orchid) ++flower;
+			if (gameStat->Player[analysis->player].FlowerFlag.Chrys) ++flower;
+			if (gameStat->Player[analysis->player].FlowerFlag.Bamboo) ++flower;
+			omote += flower * (gameStat->DoraFlag.Omote[Flower] + 1);
+			if (uradoraEnabled) ura += flower * gameStat->DoraFlag.Ura[Flower];
+			result->FlowerQuantity = flower;
+		}
+	}
 	/* Œv”Œ‹‰Ê‚ð”½‰f */
 	if (omote) {
 		result->DoraQuantity += omote; result->BonusHan += omote;
