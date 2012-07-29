@@ -172,8 +172,7 @@ static_assert(std::is_pod<prevMeldBook>::value, "prevMeldBook is not POD");
 
 // -------------------------------------------------------------------------
 
-typedef uint8_t DORASTAT[TILE_NONFLOWER_MAX];
-EXPORT_STRUCT doraStatBook { DORASTAT Omote, Ura; };
+EXPORT_STRUCT doraStatBook { UInt8ByTile Omote, Ura; };
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<doraStatBook>::value, "doraStatBook is not POD");
 #endif

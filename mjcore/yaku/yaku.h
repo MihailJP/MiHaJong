@@ -50,6 +50,7 @@ private:
 		MELD_BUF MianziDat; // 面子パース結果
 		uint8_t BasePoint; // 符
 		MachiType Machi; // 待ちの種類
+		MachihaiInfo MachiInfo; // 待ち牌の数とか
 		bool isPinfu; // 平和になってるかどうか
 		Int8ByTile KeziCount; // 刻子・槓子の数
 		Int8ByTile AnKeziCount; // 暗刻・暗槓の数
@@ -94,6 +95,8 @@ private:
 		DWORD WINAPI calculate(
 			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
 			const ParseMode* const pMode, YAKUSTAT* const result);
+		static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result);
+		static void doraText(YAKUSTAT* const result, const char* const label, int quantity);
 	};
 
 	struct CalculatorParam {
