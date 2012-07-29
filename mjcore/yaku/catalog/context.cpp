@@ -485,9 +485,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					((analysis->SeenTiles[gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile] +
 					analysis->TileCount[gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile]) >=
 					(gameStat->TsumoAgariFlag ? 4 : 5)) && // ƒ‰ƒX”v‚©‚Ç‚¤‚©”»’è
-					((analysis->Machi == yaku::yakuCalculator::machiKanchan) || // ›Æ’£‚©
-					(analysis->Machi == yaku::yakuCalculator::machiPenchan) || // •Ó’£‚©
-					(analysis->Machi == yaku::yakuCalculator::machiTanki)) // ’P‹R‘Ò‚¿‚Å‚ ‚é
+					(analysis->MachiInfo.MachiMen == 1) // 1–Ê‘Ò‚¿‚Å‚ ‚é
 					);
 			}
 		));
