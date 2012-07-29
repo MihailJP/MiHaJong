@@ -253,6 +253,15 @@ __declspec(dllexport) int Wind2Tile(int wind) {
 	return Wind2Tile((uint8_t)wind);
 }
 
+/* ”ñ•‰®”1Œ…‚È‚ç‘SŠpE‚»‚êˆÈŠO‚Í”¼Šp */
+std::string intstr(int val) {
+	const char* hanstr = "‚O\0‚P\0‚Q\0‚R\0‚S\0‚T\0‚U\0‚V\0‚W\0‚X\0";
+	std::ostringstream o;
+	if ((val <= 9) && (val >= 0)) o << &(hanstr[val * 3]);
+	else o << val;
+	return o.str();
+}
+
 namespace confpath {
 	using std::string;
 

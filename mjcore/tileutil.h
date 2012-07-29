@@ -30,9 +30,10 @@ EXPORT_STRUCT MachihaiTileInfo {
 static_assert(std::is_pod<MachihaiTileInfo>::value, "MachihaiTileInfo is not POD");
 #endif
 
+EXPORT_TEMPLATE_STRUCT InfoByTile<MachihaiTileInfo>;
 EXPORT_STRUCT MachihaiInfo { // 待ち牌とかの情報を格納(chkFuriten関数用)
 	bool FuritenFlag; // フリテンかどうかのフラグ
-	MachihaiTileInfo Machihai[TILE_NONFLOWER_MAX]; // 待ち牌情報
+	InfoByTile<MachihaiTileInfo> Machihai; // 待ち牌情報
 	int8_t MachihaiTotal; // 待ち牌の合計枚数
 	int8_t MachiMen; // 何面待ち？
 };
