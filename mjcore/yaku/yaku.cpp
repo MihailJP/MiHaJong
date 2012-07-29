@@ -506,6 +506,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	analysis.player = targetPlayer;
 	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
 	analysis.SeenTiles = countseentiles(gameStat);
+	analysis.MachiInfo = chkFuriten(gameStat, targetPlayer);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam; memset(calcprm, 0, sizeof(CalculatorParam));
 	calcprm->gameStat = gameStat; calcprm->instance = calculator;
@@ -532,6 +533,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	analysis.player = targetPlayer;
 	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
 	analysis.SeenTiles = countseentiles(gameStat);
+	analysis.MachiInfo = chkFuriten(gameStat, targetPlayer);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
 	DWORD ThreadID[160]; HANDLE Thread[160];

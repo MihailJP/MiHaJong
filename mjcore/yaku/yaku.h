@@ -47,6 +47,7 @@ private:
 		MELD_BUF MianziDat; // 面子パース結果
 		uint8_t BasePoint; // 符
 		MachiType Machi; // 待ちの種類
+		MachihaiInfo MachiInfo; // 待ち牌の数とか
 		bool isPinfu; // 平和になってるかどうか
 		Int8ByTile KeziCount; // 刻子・槓子の数
 		Int8ByTile AnKeziCount; // 暗刻・暗槓の数
