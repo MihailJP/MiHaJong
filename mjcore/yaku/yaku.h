@@ -92,6 +92,7 @@ private:
 			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
 			const ParseMode* const pMode, YAKUSTAT* const result);
 		static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result);
+		static void doraText(YAKUSTAT* const result, const char* const label, int quantity);
 	};
 
 	struct CalculatorParam {

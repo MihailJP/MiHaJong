@@ -219,6 +219,17 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	analysis->BasePoint = (uint8_t)fu;
 }
 
+/* ドラの数・テキスト */
+void yaku::yakuCalculator::CalculatorThread::doraText
+	(YAKUSTAT* const result, const char* const label, int quantity)
+{
+	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, label);
+	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, " ");
+	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, intstr(quantity).c_str());
+	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
+	strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\n");
+}
+
 /* ドラ計数 */
 void yaku::yakuCalculator::CalculatorThread::countDora
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result)
@@ -233,7 +244,19 @@ void yaku::yakuCalculator::CalculatorThread::countDora
 			(gameStat->Player[analysis->player].RichiFlag.RichiFlag) ) // 立直をかけているなら
 				ura += gameStat->DoraFlag.Ura[gameStat->Player[analysis->player].Hand[i].tile]; // 裏ドラ適用
 	}
-
+	/* TODO: 純手配の赤ドラ・青ドラ */
+	/* TODO: 副露面子赤ドラ・青ドラ */
+	/* TODO: 花牌・三麻のガリ */
+	/* TODO: アリスドラ */
+	/* 計数結果を反映 */
+	if (omote) {
+		result->DoraQuantity += omote; result->BonusHan += omote;
+		doraText(result, "ドラ", omote);
+	}
+	if (ura) {
+		result->DoraQuantity += ura; result->BonusHan += ura; result->UraDoraQuantity += ura;
+		doraText(result, "裏ドラ", ura);
+	}
 }
 
 /* 計算ルーチン */
