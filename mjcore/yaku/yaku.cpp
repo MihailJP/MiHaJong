@@ -405,6 +405,12 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 				suppression.insert(sup.begin(), sup.end()); // ‰ºˆÊ–ğ‚ÌƒŠƒXƒg‚ğŒ‹‡
 			}
 	});
+	/* À‚Í¬—§‚µ‚Ä‚¢‚È‚¢–ğ‚ğœ‹‚·‚é */
+	for (auto k = yakuHan.begin(); k != yakuHan.end(); ) {
+		if ((k->second.coreHan.getHan() == 0) && (k->second.bonusHan.getHan() == 0)) // À‚Í¬—§‚µ‚Ä‚È‚¢–ğ
+			yakuHan.erase(k++); // ”‚É”‚¦‚È‚¢
+		else ++k;
+	}
 	/* ‰ºˆÊ–ğ‚ğœ‹‚·‚é */
 	std::for_each(suppression.begin(), suppression.end(), [&yakuHan](std::string yaku) {
 		yakuHan.erase(yaku);
