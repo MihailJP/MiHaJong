@@ -10,6 +10,7 @@
 #include <set>
 #include <sstream>
 #include <iomanip>
+#include <array>
 #include <Windows.h>
 #include "ykclass.h"
 #include "yk_tools.h"
