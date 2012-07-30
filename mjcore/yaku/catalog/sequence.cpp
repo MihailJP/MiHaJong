@@ -577,62 +577,6 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	/* 四歩高 */
-	if (getRule(RULE_OKASUUJUN) != 0)
-		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"四歩高", (getRule(RULE_OKASUUJUN) == 1) ?
-			yaku::yakuCalculator::Yaku::yval_yakuman : yaku::yakuCalculator::Yaku::yval_double_yakuman,
-			"三歩高",
-			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
-				bool yakuFlag = false;
-				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
-					for (int k = 1; k <= (7-3); k++)
-						if ((analysis->ShunziCount[i + k] >= 1) &&
-							(analysis->ShunziCount[i + k + 1] >= 1) &&
-							(analysis->ShunziCount[i + k + 2] >= 1) &&
-							(analysis->ShunziCount[i + k + 3] >= 1)) yakuFlag = true;
-				}
-				return yakuFlag;
-			}
-		));
-	/* 三歩高 */
-	if (getRule(RULE_OKASANJUN) != 0)
-		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"三歩高", (getRule(RULE_OKASANJUN) == 1) ?
-			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han :
-			((getRule(RULE_OKASANJUN) == 2) ?
-			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen :
-			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_2han_kuisagari),
-			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
-				bool yakuFlag = false;
-				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
-					for (int k = 1; k <= (7-2); k++)
-						if ((analysis->ShunziCount[i + k] >= 1) &&
-							(analysis->ShunziCount[i + k + 1] >= 1) &&
-							(analysis->ShunziCount[i + k + 2] >= 1)) yakuFlag = true;
-				}
-				return yakuFlag;
-			}
-		));
-	/* 山三順 */
-	if (getRule(RULE_YAMASANJUN) != 0)
-		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"清連環套", (getRule(RULE_YAMASANJUN) == 1) ?
-			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han :
-			((getRule(RULE_YAMASANJUN) == 2) ?
-			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen :
-			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_2han_kuisagari),
-			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
-				bool yakuFlag = false;
-				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
-					for (int k = 1; k <= (7-4); k++)
-						if ((analysis->ShunziCount[i + k] >= 1) &&
-							(analysis->ShunziCount[i + k + 2] >= 1) &&
-							(analysis->ShunziCount[i + k + 4] >= 1)) yakuFlag = true;
-				}
-				return yakuFlag;
-			}
-		));
-	/* 二色四歩高 */
 	auto puukao =
 		[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis,
 		const char* const parsedat, int pdsize, int fldsize, int step, bool suupuukao) -> bool {
@@ -647,6 +591,46 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 			return yakuFlag;
 		};
+	const std::array<char[8], 3> parsedat_monochrome4 = {
+		"0000","1111","2222",
+	};
+	const std::array<char[4], 3> parsedat_monochrome3 = {
+		"000","111","222",
+	};
+	if (getRule(RULE_OKASUUJUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"四歩高", (getRule(RULE_OKASUUJUN) == 1) ?
+			yaku::yakuCalculator::Yaku::yval_yakuman : yaku::yakuCalculator::Yaku::yval_double_yakuman,
+			"三歩高",
+			[puukao, parsedat_monochrome4](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return puukao(gameStat, analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 1, true);
+			}
+		));
+	/* 三歩高 */
+	if (getRule(RULE_OKASANJUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"三歩高", (getRule(RULE_OKASANJUN) == 1) ?
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han :
+			((getRule(RULE_OKASANJUN) == 2) ?
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen :
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_2han_kuisagari),
+			[puukao, parsedat_monochrome3](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return puukao(gameStat, analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 1, false);
+			}
+		));
+	/* 山三順 */
+	if (getRule(RULE_YAMASANJUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"清連環套", (getRule(RULE_YAMASANJUN) == 1) ?
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han :
+			((getRule(RULE_YAMASANJUN) == 2) ?
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen :
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_2han_kuisagari),
+			[puukao, parsedat_monochrome4](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return puukao(gameStat, analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 2, true);
+			}
+		));
+	/* 二色四歩高 */
 	const std::array<char[8], 42> parsedat_bichrome4 = {
 		"0001","0002","0010","0011","0020","0022","0100",
 		"0101","0110","0111","0200","0202","0220","0222",
