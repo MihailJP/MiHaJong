@@ -155,6 +155,20 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				}
 			}
 		};
+	auto ittsuu_monotonic =
+		[ikki_tsuukan](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis,
+		bool* const yakuFlag, int* const yakuCol) -> void {
+			int samecol;
+			ikki_tsuukan(gameStat, analysis, yakuFlag, yakuCol);
+			if (!(*yakuFlag)) return;
+			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
+				if ((analysis->MianziDat[i].tile / TILE_SUIT_STEP) ==
+					(*yakuCol / TILE_SUIT_STEP)) ++samecol;
+				else if ((analysis->MianziDat[i].tile / TILE_SUIT_STEP) ==
+					(TILE_SUIT_HONORS / TILE_SUIT_STEP)) ++samecol;
+			}
+			*yakuFlag = (samecol == SIZE_OF_MELD_BUFFER); // 一色になっているかどうか
+		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"一気通貫",yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
 			[ikki_tsuukan](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -319,6 +333,142 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 					(analysis->KeziCount[NorthWind] >= 1) && // 北の刻子があり
 					(analysis->MianziDat[0].tile == BambooSeven) && // アタマが七索で
 					(yakuCol == TILE_SUIT_CIRCLES) ); // イッツー部分が筒子
+			}
+		));
+	/* 秋田新幹線 */
+	if (getRule(RULE_AKITA_SHINKANSEN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"秋田新幹線", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"一気通貫", "混一色",
+			[ikki_tsuukan](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; int yakuCol;
+				ikki_tsuukan(gameStat, analysis, &yakuFlag, &yakuCol);
+				return (yakuFlag && // 一気通貫が成立していて
+					(analysis->KeziCount[NorthWind] >= 1) && // 北の刻子があり
+					((analysis->MianziDat[0].tile / TILE_SUIT_STEP) == (yakuCol / TILE_SUIT_STEP)) && // 一色になっていて
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND].tile == (yakuCol + 5)) // 和了牌が5
+					);
+			}
+		));
+	/* 上越新幹線とき */
+	if (getRule(RULE_JOETSU_TOKI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"上越新幹線とき", yaku::yakuCalculator::Yaku::yval_2han,
+			[ittsuu_monotonic](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; int yakuCol;
+				ittsuu_monotonic(gameStat, analysis, &yakuFlag, &yakuCol);
+				return (yakuFlag && // 一気通貫かつ一色で
+					(analysis->DuiziCount[NorthWind] >= 1) // 北の刻子または雀頭がある
+					);
+			}
+		));
+	/* 上越新幹線あさひ */
+	if (getRule(RULE_JOETSU_ASAHI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"上越新幹線あさひ", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"上越新幹線とき", "一気通貫", "混一色",
+			[ikki_tsuukan](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; ikki_tsuukan(gameStat, analysis, &yakuFlag, NULL);
+				return (yakuFlag && // 一気通貫が成立していて
+					(analysis->DuiziCount[NorthWind] >= 1) && // 北と
+					(analysis->DuiziCount[WhiteDragon] >= 1) // 白が刻子と雀頭として存在
+					);
+			}
+		));
+	/* 青函連絡船 */
+	if (getRule(RULE_SEIKAN_SHIP) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"青函連絡船", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"一気通貫", "混一色",
+			[ikki_tsuukan](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; ikki_tsuukan(gameStat, analysis, &yakuFlag, NULL);
+				return (yakuFlag && // 一気通貫が成立していて
+					(analysis->MianziDat[0].tile == NorthWind) && // 北が雀頭で
+					(analysis->AnKangziCount[GreenDragon] >= 1) // 發の暗槓がある
+					);
+			}
+		));
+	/* ゴールドラッシュ */
+	if (getRule(RULE_GOLDRUSH) != 0) {
+		auto goldrush1 =
+			[ittsuu_monotonic](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; int yakuCol;
+				ittsuu_monotonic(gameStat, analysis, &yakuFlag, &yakuCol);
+				return (yakuFlag && // 一気通貫かつ一色で
+					(yakuCol == TILE_SUIT_CIRCLES) && // 筒子のイッツーで
+					(analysis->DuiziCount[GreenDragon] >= 1) // 發の刻子か雀頭がある
+					);
+			};
+		auto goldrush2 =
+			[goldrush1](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (goldrush1(gameStat, analysis) && // goldrush1の条件を満たし
+					(analysis->DuiziCount[WestWind] >= 1) // 西の刻子か雀頭がある
+					);
+			};
+		switch (getRule(RULE_GOLDRUSH)) {
+		case 1:
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"ゴールドラッシュ", yaku::yakuCalculator::Yaku::yval_2han,
+				goldrush1
+			)); break;
+		case 2:
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"ゴールドラッシュ", yaku::yakuCalculator::Yaku::yval_2han,
+				goldrush2
+			)); break;
+		case 3:
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"ゴールドラッシュ", yaku::yakuCalculator::Yaku::yval_yakuman,
+				"一気通貫", "混一色",
+				goldrush1
+			)); break;
+		case 4:
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"ゴールドラッシュ", yaku::yakuCalculator::Yaku::yval_yakuman,
+				"一気通貫", "混一色",
+				goldrush2
+			)); break;
+		}
+	}
+	/* ルート２４６ */
+	if (getRule(RULE_ROUTE_246) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ルート２４６", yaku::yakuCalculator::Yaku::yval_1han,
+			[ikki_tsuukan](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; int yakuCol = 0;
+				ikki_tsuukan(gameStat, analysis, &yakuFlag, &yakuCol);
+				return (yakuFlag && // 一気通貫が成立していて
+					(analysis->Machi == yaku::yakuCalculator::machiKanchan) && // 嵌張待ちで
+					((gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile == yakuCol + 2) || // 2か
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile == yakuCol + 4) || // 4か
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile == yakuCol + 6)) // 6で和了
+					);
+			}
+		));
+	/* 九龍城落地 */
+	if (getRule(RULE_GAULUNGSING_LOKDEI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"九龍城落地", yaku::yakuCalculator::Yaku::yval_2han,
+			[ikki_tsuukan](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; int yakuCol = 0;
+				ikki_tsuukan(gameStat, analysis, &yakuFlag, &yakuCol);
+				return (yakuFlag && // 一気通貫が成立していて
+					(analysis->ShunziCount[yakuCol + 1] - analysis->AnShunziCount[yakuCol + 1] >= 1) &&
+					(analysis->ShunziCount[yakuCol + 4] - analysis->AnShunziCount[yakuCol + 4] >= 1) &&
+					(analysis->ShunziCount[yakuCol + 7] - analysis->AnShunziCount[yakuCol + 7] >= 1) // 一気通貫の牌は全部チー
+					);
+			}
+		));
+	/* 北海道新幹線 */
+	if (getRule(RULE_HOKKAIDO_SHINKANSEN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"北海道新幹線", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"一気通貫", "混一色",
+			[ikki_tsuukan](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; ikki_tsuukan(gameStat, analysis, &yakuFlag, NULL);
+				return (yakuFlag && // 一気通貫が成立していて
+					(analysis->AnKangziCount[WhiteDragon] >= 1) && // 白の暗槓があって
+					(analysis->MianziDat[0].tile == NorthWind) ); // 雀頭が北
 			}
 		));
 }
