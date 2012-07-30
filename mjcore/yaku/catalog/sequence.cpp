@@ -478,6 +478,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	if (getRule(RULE_GOLDEN_GATE_BRIDGE) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"金門橋", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"清連環套",
 			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
@@ -571,6 +572,62 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 							(analysis->ShunziCount[(i + TILE_SUIT_HONORS) % TILE_SUIT_HONORS + k] >= 1))
 								++yakuTmpFlag;
 					if (yakuTmpFlag == 2) yakuFlag = true;
+				}
+				return yakuFlag;
+			}
+		));
+	/* 四歩高 */
+	if (getRule(RULE_OKASUUJUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"四歩高", (getRule(RULE_OKASUUJUN) == 1) ?
+			yaku::yakuCalculator::Yaku::yval_yakuman : yaku::yakuCalculator::Yaku::yval_double_yakuman,
+			"三歩高",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
+					for (int k = 1; k <= (7-3); k++)
+						if ((analysis->ShunziCount[i + k] >= 1) &&
+							(analysis->ShunziCount[i + k + 1] >= 1) &&
+							(analysis->ShunziCount[i + k + 2] >= 1) &&
+							(analysis->ShunziCount[i + k + 3] >= 1)) yakuFlag = true;
+				}
+				return yakuFlag;
+			}
+		));
+	/* 三歩高 */
+	if (getRule(RULE_OKASANJUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"三歩高", (getRule(RULE_OKASANJUN) == 1) ?
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han :
+			((getRule(RULE_OKASANJUN) == 2) ?
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen :
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_2han_kuisagari),
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
+					for (int k = 1; k <= (7-2); k++)
+						if ((analysis->ShunziCount[i + k] >= 1) &&
+							(analysis->ShunziCount[i + k + 1] >= 1) &&
+							(analysis->ShunziCount[i + k + 2] >= 1)) yakuFlag = true;
+				}
+				return yakuFlag;
+			}
+		));
+	/* 山三順 */
+	if (getRule(RULE_YAMASANJUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"清連環套", (getRule(RULE_YAMASANJUN) == 1) ?
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han :
+			((getRule(RULE_YAMASANJUN) == 2) ?
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen :
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_2han_kuisagari),
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
+					for (int k = 1; k <= (7-4); k++)
+						if ((analysis->ShunziCount[i + k] >= 1) &&
+							(analysis->ShunziCount[i + k + 2] >= 1) &&
+							(analysis->ShunziCount[i + k + 4] >= 1)) yakuFlag = true;
 				}
 				return yakuFlag;
 			}
