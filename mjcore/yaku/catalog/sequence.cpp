@@ -732,4 +732,21 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return puukao(gameStat, analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 2, false);
 			}
 		));
+	/* ‘o—´‘ˆŽì */
+	if (getRule(RULE_SHANRON_CHONCHUU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘o—´‘ˆŽì",  yaku::yakuCalculator::Yaku::yval_yakuman,
+			"‹¾“¯˜a",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 1; i <= 4; i++)
+					if ((analysis->ShunziCount[TILE_SUIT_CHARACTERS + i] >= 1) &&
+						(analysis->ShunziCount[TILE_SUIT_CHARACTERS + i + 3] >= 1) &&
+						(analysis->ShunziCount[TILE_SUIT_BAMBOOS + i] >= 1) &&
+						(analysis->ShunziCount[TILE_SUIT_BAMBOOS + i + 3] >= 1) &&
+						((analysis->MianziDat[0].tile / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES / TILE_SUIT_STEP)))
+							yakuFlag = true;
+				return yakuFlag;
+			}
+		));
 }
