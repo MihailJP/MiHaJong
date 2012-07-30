@@ -471,4 +471,108 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 					(analysis->MianziDat[0].tile == NorthWind) ); // “ª‚ª–k
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* ƒS[ƒ‹ƒfƒ“ƒQ[ƒgƒuƒŠƒbƒW */
+	if (getRule(RULE_GOLDEN_GATE_BRIDGE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹à–å‹´", yaku::yakuCalculator::Yaku::yval_yakuman,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+					if ((analysis->ShunziCount[i + 1] >= 1) &&
+						(analysis->ShunziCount[i + 3] >= 1) &&
+						(analysis->ShunziCount[i + 5] >= 1) &&
+						(analysis->ShunziCount[i + 7] >= 1)) yakuFlag = true;
+				return yakuFlag;
+			}
+		));
+	/* Arc de Triomphe */
+	if (getRule(RULE_GAISENMON) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ŠMù–å", getRule(RULE_GAISENMON) == 1 ?
+			yaku::yakuCalculator::Yaku::yval_yakuman : yaku::yakuCalculator::Yaku::yval_double_yakuman,
+			"´ˆêF",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
+					int yakuFlagCount = 0;
+					if ((analysis->ShunziCount[i + 1] >= 1) && (analysis->ShunziCount[i + 4] >= 1)) ++yakuFlag;
+					if ((analysis->ShunziCount[i + 2] >= 1) && (analysis->ShunziCount[i + 5] >= 1)) ++yakuFlag;
+					if ((analysis->ShunziCount[i + 3] >= 1) && (analysis->ShunziCount[i + 6] >= 1)) ++yakuFlag;
+					if ((analysis->ShunziCount[i + 4] >= 1) && (analysis->ShunziCount[i + 7] >= 1)) ++yakuFlag;
+					if (yakuFlagCount == 2) yakuFlag = true;
+				}
+				return yakuFlag;
+			}
+		));
+	/* ’·é */
+	if (getRule(RULE_CHOUJOU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"’·é", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"ˆê‹C’ÊŠÑ", "´ˆêF",
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
+					int yakuFlagCount = 0;
+					if ((analysis->ShunziCount[i + 1] >= 2) &&
+						(analysis->ShunziCount[i + 4] >= 1) &&
+						(analysis->ShunziCount[i + 7] >= 1)) yakuFlagCount += 2;
+					if ((analysis->ShunziCount[i + 1] >= 1) &&
+						(analysis->ShunziCount[i + 4] >= 2) &&
+						(analysis->ShunziCount[i + 7] >= 1)) yakuFlagCount += 2;
+					if ((analysis->ShunziCount[i + 1] >= 1) &&
+						(analysis->ShunziCount[i + 4] >= 1) &&
+						(analysis->ShunziCount[i + 7] >= 2)) yakuFlagCount += 2;
+					if ((analysis->ShunziCount[i + 1] == 1) &&
+						(analysis->ShunziCount[i + 4] == 1) &&
+						(analysis->ShunziCount[i + 7] == 1)) yakuFlagCount += 1;
+					if ((analysis->ShunziCount[i + 2] >= 1) ||
+						(analysis->ShunziCount[i + 3] >= 1) ||
+						(analysis->ShunziCount[i + 5] >= 1) ||
+						(analysis->ShunziCount[i + 6] >= 1)) yakuFlagCount += 1;
+					if ((yakuFlagCount == 2) &&
+						((analysis->MianziDat[0].tile == i + 2) ||
+						(analysis->MianziDat[0].tile == i + 5) ||
+						(analysis->MianziDat[0].tile == i + 8))) yakuFlag = true;
+				}
+				return yakuFlag;
+			}
+		));
+	/* Â—´Ý“V */
+	if (getRule(RULE_QINGLONG_ZAITIAN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"Â—´Ý“V", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"ˆê‹C’ÊŠÑ", "´ˆêF", "ˆê”uŒû",
+			[ikki_tsuukan](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; int yakuCol;
+				ikki_tsuukan(gameStat, analysis, &yakuFlag, &yakuCol);
+				return (yakuFlag && // ˆê‹C’ÊŠÑ‚Å
+					((analysis->MianziDat[0].tile / TILE_SUIT_STEP) == (yakuCol / TILE_SUIT_STEP)) && // ˆêF‚Å
+					((analysis->ShunziCount[yakuCol + 1] >= 2) ||
+					(analysis->ShunziCount[yakuCol + 4] >= 2) ||
+					(analysis->ShunziCount[yakuCol + 7] >= 2)) // ˆê”uŒû‚É‚È‚Á‚Ä‚¢‚é
+					);
+			}
+		));
+	/* ‹¾“¯˜a */
+	if (getRule(RULE_KYANTONHOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹¾“¯˜a", (getRule(RULE_KYANTONHOH) == 1) ?
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_2han_menzen :
+			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
+			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < (TILE_SUIT_HONORS * 2); i += TILE_SUIT_STEP * 2) {
+					int yakuTmpFlag = 0;
+					for (int k = 1; k <= 7; k++)
+						if ((analysis->ShunziCount[i % TILE_SUIT_HONORS + k] >= 1) &&
+							(analysis->ShunziCount[(i + TILE_SUIT_HONORS) % TILE_SUIT_HONORS + k] >= 1))
+								++yakuTmpFlag;
+					if (yakuTmpFlag == 2) yakuFlag = true;
+				}
+				return yakuFlag;
+			}
+		));
 }
