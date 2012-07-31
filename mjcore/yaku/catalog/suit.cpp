@@ -60,6 +60,64 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				return (chkHaishiki(analysis, "311111113")) && (!analysis->MachiInfo.FuritenFlag);
 			}
 		));
+	/* –^Â‚¢Žq */
+	if (getRule(RULE_DAISHARIN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘åŽÔ—Ö", (getRule(RULE_DAISHARIN) == 2) ?
+			yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen : yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a", "’f›ô‹ã",
+			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (chkHaishiki(analysis, "022222220") && (analysis->TileCount[CircleFive] >= 2));
+			}
+		));
+	/* ‘å’|—Ñ */
+	if (getRule(RULE_DAICHIKURIN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘å’|—Ñ", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a", "’f›ô‹ã",
+			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (chkHaishiki(analysis, "022222220") && (analysis->TileCount[BambooFive] >= 2));
+			}
+		));
+	/* ‘å”—× */
+	if (getRule(RULE_DAISUURIN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘å”—×", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a", "’f›ô‹ã",
+			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (chkHaishiki(analysis, "022222220") && (analysis->TileCount[CharacterFive] >= 2));
+			}
+		));
+	/* ¬ŽÔ—Ö */
+	if (getRule(RULE_SHOSHARIN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"¬ŽÔ—Ö", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a", "’f›ô‹ã",
+			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->TileCount[CircleFive] >= 2) &&
+					(chkHaishiki(analysis, "222222200") || chkHaishiki(analysis, "002222222")));
+			}
+		));
+	/* ¬’|—Ñ */
+	if (getRule(RULE_SHOCHIKURIN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"¬’|—Ñ", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a", "’f›ô‹ã",
+			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->TileCount[BambooFive] >= 2) &&
+					(chkHaishiki(analysis, "222222200") || chkHaishiki(analysis, "002222222")));
+			}
+		));
+	/* ¬”—× */
+	if (getRule(RULE_SHOSUURIN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"¬”—×", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a", "’f›ô‹ã",
+			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->TileCount[CharacterFive] >= 2) &&
+					(chkHaishiki(analysis, "222222200") || chkHaishiki(analysis, "002222222")));
+			}
+		));
 	/* TODO: ‚»‚Ì‘¼‚Ìƒ`ƒ“ƒCƒc‚ÌãˆÊ–ð */
 	/* ƒzƒ“ƒCƒc */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
