@@ -193,43 +193,45 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	/* 一気通貫全帯幺九 */
-	if (getRule(RULE_ITTSUU_CHANTA) != 0) {
-		auto ittsuu_chanta_counting =
-			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis,
-			int* const yaojiu, int* const zipai) -> void {
-				*yaojiu = *zipai = 0;
-				for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
-					switch (analysis->MianziDat[i].tile) {
-					case EastWind: case SouthWind: case WestWind: case NorthWind:
-					case WhiteDragon: case GreenDragon: case RedDragon:
-						++*zipai;
-						/* FALLTHRU */
-					case CharacterOne: case CharacterNine: case CircleOne: case CircleNine:
-					case BambooOne: case BambooNine:
-						++*yaojiu; break;
-					case CharacterSeven: case CircleSeven: case BambooSeven:
-						if ((i > 0) && (analysis->MianziDat[i].mstat < meldTripletConcealed))
-							++*yaojiu;
-						break;
-					}
+	auto ittsuu_chanta_counting =
+		[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis,
+		int* const yaojiu, int* const zipai) -> void {
+			*yaojiu = *zipai = 0;
+			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
+				switch (analysis->MianziDat[i].tile) {
+				case EastWind: case SouthWind: case WestWind: case NorthWind:
+				case WhiteDragon: case GreenDragon: case RedDragon:
+					++*zipai;
+					/* FALLTHRU */
+				case CharacterOne: case CharacterNine: case CircleOne: case CircleNine:
+				case BambooOne: case BambooNine:
+					++*yaojiu; break;
+				case CharacterSeven: case CircleSeven: case BambooSeven:
+					if ((i > 0) && (analysis->MianziDat[i].mstat < meldTripletConcealed))
+						++*yaojiu;
+					break;
 				}
-			};
+			}
+		};
+	if (getRule(RULE_ITTSUU_CHANTA) != 0) {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"一気通貫全帯幺九", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
 			"一気通貫",
-			[ittsuu_chanta_counting](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
-				int yaojiu, zipai;
+			[ikki_tsuukan, ittsuu_chanta_counting](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				int yaojiu, zipai; bool yakuFlag = false;
+				ikki_tsuukan(gameStat, analysis, &yakuFlag, NULL);
 				ittsuu_chanta_counting(gameStat, analysis, &yaojiu, &zipai);
-				return ((yaojiu == 4) && (zipai > 0));
+				return ((yakuFlag) && (yaojiu == 4) && (zipai > 0));
 			}
 		));
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"純一気通貫全帯幺九", yaku::yakuCalculator::Yaku::yval_4han_kuisagari,
 			"一気通貫",
-			[ittsuu_chanta_counting](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
-				int yaojiu, zipai;
+			[ikki_tsuukan, ittsuu_chanta_counting](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				int yaojiu, zipai; bool yakuFlag = false;
+				ikki_tsuukan(gameStat, analysis, &yakuFlag, NULL);
 				ittsuu_chanta_counting(gameStat, analysis, &yaojiu, &zipai);
-				return ((yaojiu == 4) && (zipai == 0));
+				return ((yakuFlag) && (yaojiu == 4) && (zipai == 0));
 			}
 		));
 	}
@@ -576,6 +578,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return yakuFlag;
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
 	/* 四歩高 */
 	auto puukao =
 		[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis,
@@ -723,7 +728,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	/* 三色山三順 */
 	if (getRule(RULE_NISHOKU_YAMASANJUN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"混連環套",  (getRule(RULE_NISHOKU_YAMASANJUN) == 1) ?
+			"混連環套", (getRule(RULE_NISHOKU_YAMASANJUN) == 1) ?
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han :
 			((getRule(RULE_NISHOKU_YAMASANJUN) == 2) ?
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen :
@@ -732,10 +737,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return puukao(gameStat, analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 2, false);
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
 	/* 双龍争珠 */
 	if (getRule(RULE_SHANRON_CHONCHUU) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"双龍争珠",  yaku::yakuCalculator::Yaku::yval_yakuman,
+			"双龍争珠", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"鏡同和",
 			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
@@ -749,4 +757,58 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return yakuFlag;
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* 花龍 */
+	auto sanshoku_tsuukan =
+		[parsedat_trichrome3](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+			bool yakuFlag = false;
+			for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); k++)
+				if ((analysis->ShunziCount[(int)((&*k)[0] - '0') * TILE_SUIT_STEP + 1] >= 1) &&
+					(analysis->ShunziCount[(int)((&*k)[1] - '0') * TILE_SUIT_STEP + 4] >= 1) &&
+					(analysis->ShunziCount[(int)((&*k)[2] - '0') * TILE_SUIT_STEP + 7] >= 1))
+						yakuFlag = true;
+			return yakuFlag;
+		};
+
+	if (getRule(RULE_HUALONG) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"三色通貫", yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
+			sanshoku_tsuukan
+		));
+	/* 単龍 */
+	if (getRule(RULE_TANRON) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"単龍", yaku::yakuCalculator::Yaku::yval_6han_menzen,
+			"三色通貫",
+			[sanshoku_tsuukan](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (sanshoku_tsuukan(gameStat, analysis) && // 三色通貫で
+					(gameStat->Player[analysis->player].MenzenFlag) && // 門前で
+					(analysis->Machi == yaku::yakuCalculator::machiTanki) && // 単騎待ちで
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile != WhiteDragon) && // 白待ちでなく
+					(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile != GreenDragon) ); // 發待ちでない
+			}
+		));
+	/* 三色通貫全帯幺九 */
+	if (getRule(RULE_HUALONG_CHANTA) != 0) {
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"三色通貫全帯幺九", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+			"三色通貫",
+			[sanshoku_tsuukan, ittsuu_chanta_counting](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				int yaojiu, zipai; bool yakuFlag = sanshoku_tsuukan(gameStat, analysis);
+				ittsuu_chanta_counting(gameStat, analysis, &yaojiu, &zipai);
+				return ((yakuFlag) && (yaojiu == 4) && (zipai > 0));
+			}
+		));
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"純三色通貫全帯幺九", yaku::yakuCalculator::Yaku::yval_4han_kuisagari,
+			"三色通貫",
+			[sanshoku_tsuukan, ittsuu_chanta_counting](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				int yaojiu, zipai; bool yakuFlag = sanshoku_tsuukan(gameStat, analysis);
+				ittsuu_chanta_counting(gameStat, analysis, &yaojiu, &zipai);
+				return ((yakuFlag) && (yaojiu == 4) && (zipai == 0));
+			}
+		));
+	}
 }
