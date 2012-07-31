@@ -811,4 +811,93 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	}
+
+	// ---------------------------------------------------------------------
+
+	/* ‘o—´‘o‹T */
+	auto ShuangLong =
+		[](const MENTSU_ANALYSIS* const analysis, int suit1, int suit2, tileCode head) -> bool {
+			return ((analysis->ShunziCount[suit1 + 1] >= 1) &&
+				(analysis->ShunziCount[suit1 + 7] >= 1) &&
+				(analysis->ShunziCount[suit2 + 1] >= 1) &&
+				(analysis->ShunziCount[suit2 + 7] >= 1) &&
+				(analysis->MianziDat[0].tile == head));
+		};
+
+	if (getRule(RULE_SHANRON_SHANKUI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘o—´‘o‹T", yaku::yakuCalculator::Yaku::yval_4han,
+			"‹¾“¯˜a",
+			[ShuangLong](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ShuangLong(analysis, TILE_SUIT_CHARACTERS, TILE_SUIT_CIRCLES, BambooThree);
+			}
+		));
+	/* ‘o—´‘ˆŽì(˜V­•›ƒ^ƒCƒv) */
+	if (getRule(RULE_SHANRON_CHONCHU_LSF) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘o—´‘ˆŽì ", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"‹¾“¯˜a", "ŽOF‘o—´‰ï",
+			[ShuangLong](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ShuangLong(analysis, TILE_SUIT_CHARACTERS, TILE_SUIT_BAMBOOS, CircleFive);
+			}
+		));
+	/* ŽOF‘o—´‰ï */
+	if (getRule(RULE_SANSHOKU_SOURYUU) != 0) {
+		yaku::yakuCalculator::Yaku::HANFUNC han;
+		switch (getRule(RULE_SANSHOKU_SOURYUU)) {
+			case 1: han = yaku::yakuCalculator::Yaku::yval_2han_kuisagari; break;
+			case 2: han = yaku::yakuCalculator::Yaku::yval_6han_kuisagari; break;
+			case 3: han = yaku::yakuCalculator::Yaku::yval_6han; break;
+			case 4: han = yaku::yakuCalculator::Yaku::yval_yakuman; break;
+		}
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ŽOF‘o—´‰ï", han,
+			"‹¾“¯˜a",
+			[ShuangLong, parsedat_trichrome3](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); k++)
+					if (ShuangLong(analysis, (int)((&*k)[0] - '0') * TILE_SUIT_STEP,
+						(int)((&*k)[1] - '0') * TILE_SUIT_STEP,
+						(tileCode)((int)((&*k)[1] - '0') * TILE_SUIT_STEP + 5))) return true;
+				return false;
+			}
+		));
+	}
+	/* ‘o—´‹Y–P */
+	if (getRule(RULE_SHANRON_SHIIFON) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘o—´‹Y–P", yaku::yakuCalculator::Yaku::yval_4han,
+			"‹¾“¯˜a",
+			[ShuangLong](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ShuangLong(analysis, TILE_SUIT_CHARACTERS, TILE_SUIT_CIRCLES, BambooOne);
+			}
+		));
+	/* ‘o—´•ï’Œ */
+	if (getRule(RULE_SHANRON_PAOCHUU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘o—´•ï’Œ", yaku::yakuCalculator::Yaku::yval_4han,
+			"‹¾“¯˜a",
+			[ShuangLong](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (ShuangLong(analysis, TILE_SUIT_CHARACTERS, TILE_SUIT_CIRCLES, BambooTwo) ||
+					ShuangLong(analysis, TILE_SUIT_CHARACTERS, TILE_SUIT_CIRCLES, BambooFour) ||
+					ShuangLong(analysis, TILE_SUIT_CHARACTERS, TILE_SUIT_CIRCLES, BambooSix));
+			}
+		));
+	/* ‘o—´‹Y‹T */
+	if (getRule(RULE_SHANRON_SHIIKUI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘o—´‹Y‹T", yaku::yakuCalculator::Yaku::yval_4han,
+			"‹¾“¯˜a",
+			[ShuangLong](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ShuangLong(analysis, TILE_SUIT_CHARACTERS, TILE_SUIT_CIRCLES, BambooSeven);
+			}
+		));
+	/* ‘o—´“¬ŽÖ */
+	if (getRule(RULE_SHANRON_TOUJA) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘o—´‹Y‹T", yaku::yakuCalculator::Yaku::yval_4han,
+			"‹¾“¯˜a",
+			[ShuangLong](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ShuangLong(analysis, TILE_SUIT_CIRCLES, TILE_SUIT_BAMBOOS, CharacterOne);
+			}
+		));
 }
