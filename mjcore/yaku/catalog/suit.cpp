@@ -17,7 +17,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"´ˆêF", (getRule(RULE_CHINIISOH) != 0) ?
 		yaku::yakuCalculator::Yaku::yval_4han_kuisagari : yaku::yakuCalculator::Yaku::yval_6han_kuisagari,
-		"¬ˆêF",
+		"¬ˆêF", "ƒˆê‹C’ÊŠÑ‘S‘Ñ›ô‹ã",
 		[isshoku](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
 			return isshoku(analysis, true);
 		}
@@ -92,7 +92,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	if (getRule(RULE_SHOSHARIN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"¬ŽÔ—Ö", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
-			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a", "’f›ô‹ã",
+			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a",
 			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->TileCount[CircleFive] >= 2) &&
 					(chkHaishiki(analysis, "222222200") || chkHaishiki(analysis, "002222222")));
@@ -102,7 +102,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	if (getRule(RULE_SHOCHIKURIN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"¬’|—Ñ", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
-			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a", "’f›ô‹ã",
+			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a",
 			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->TileCount[BambooFive] >= 2) &&
 					(chkHaishiki(analysis, "222222200") || chkHaishiki(analysis, "002222222")));
@@ -112,16 +112,62 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	if (getRule(RULE_SHOSUURIN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"¬”—×", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
-			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a", "’f›ô‹ã",
+			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a",
 			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->TileCount[CharacterFive] >= 2) &&
 					(chkHaishiki(analysis, "222222200") || chkHaishiki(analysis, "002222222")));
+			}
+		));
+	/* ‰~Žü—¦˜a (3.)14159265358979 */
+	if (getRule(RULE_PI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‰~Žü—¦˜a", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"´ˆêF",
+			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return chkHaishiki(analysis, "211131113");
+			}
+		));
+	/* ã‚Q˜a 1.4142135623730 */
+	if (getRule(RULE_SQUARE_ROOT_TWO) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ã‚Q˜a", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"´ˆêF",
+			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return chkHaishiki(analysis, "323211100");
+			}
+		));
+	/* Ž©‘R‘Î”‚Ì’ê 2.7182818284590 */
+	if (getRule(RULE_NATURAL_LOGARITHM) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"Ž©‘R‘Î”‚Ì’ê", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"´ˆêF",
+			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return chkHaishiki(analysis, "230110141");
+			}
+		));
+	/* ‹•”˜a (0.)207879576350761 */
+	if (getRule(RULE_IMAGINARY_NUMBER) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹•”˜a", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"´ˆêF",
+			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return chkHaishiki(analysis, "111022411");
+			}
+		));
+	/* ã‚P‚O˜a 3.16227766016837 */
+	if (getRule(RULE_SQUARE_ROOT_TEN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ã‚P‚O˜a", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"´ˆêF",
+			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return chkHaishiki(analysis, "222004310");
 			}
 		));
 	/* TODO: ‚»‚Ì‘¼‚Ìƒ`ƒ“ƒCƒc‚ÌãˆÊ–ð */
 	/* ƒzƒ“ƒCƒc */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"¬ˆêF", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+		"ˆê‹C’ÊŠÑ‘S‘Ñ›ô‹ã",
 		[isshoku](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
 			return isshoku(analysis, false);
 		}
