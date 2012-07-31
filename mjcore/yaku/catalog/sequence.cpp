@@ -900,4 +900,117 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return ShuangLong(analysis, TILE_SUIT_CIRCLES, TILE_SUIT_BAMBOOS, CharacterOne);
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* ‹hŽO›Æ */
+	auto kanchanCount =
+		[](const MENTSU_ANALYSIS* const analysis) -> int {
+			int count = 0;
+			for (int i = 1; i <= SIZE_OF_MELD_BUFFER; i++)
+				if (analysis->MianziDat[i].mstat == meldSequenceExposedMiddle) ++count;
+			return count;
+		};
+	if (getRule(RULE_CHII_SANKAN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹hŽO›Æ", yaku::yakuCalculator::Yaku::yval_1han,
+			[kanchanCount](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (kanchanCount(analysis) == 3);
+			}
+		));
+	/* ‹hŽl›Æ */
+	if (getRule(RULE_CHII_SUUKAN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹hŽl›Æ", yaku::yakuCalculator::Yaku::yval_2han,
+			[kanchanCount](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (kanchanCount(analysis) == 4);
+			}
+		));
+	/* ‹hŽO•Ó */
+	auto penchanCount =
+		[](const MENTSU_ANALYSIS* const analysis) -> int {
+			int count = 0;
+			for (int i = 1; i <= SIZE_OF_MELD_BUFFER; i++) {
+				for (int j = 0; j < TILE_SUIT_HONORS; j += TILE_SUIT_STEP) {
+					if ((analysis->MianziDat[i].mstat == meldSequenceExposedLower) &&
+						(analysis->MianziDat[i].tile == TILE_SUIT_STEP + 7)) ++count;
+					if ((analysis->MianziDat[i].mstat == meldSequenceExposedUpper) &&
+						(analysis->MianziDat[i].tile == TILE_SUIT_STEP + 1)) ++count;
+				}
+			}
+			return count;
+		};
+	if (getRule(RULE_CHII_SANPEN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹hŽO•Ó", yaku::yakuCalculator::Yaku::yval_1han,
+			[penchanCount](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (penchanCount(analysis) == 3);
+			}
+		));
+	/* ‹hŽl•Ó */
+	if (getRule(RULE_CHII_SUUPEN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹hŽl•Ó", yaku::yakuCalculator::Yaku::yval_2han,
+			[penchanCount](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (penchanCount(analysis) == 4);
+			}
+		));
+	/* ‹h¬‡ */
+	auto xiaoShunCount =
+		[](const MENTSU_ANALYSIS* const analysis) -> int {
+			int count = 0;
+			for (int i = 1; i <= SIZE_OF_MELD_BUFFER; i++) {
+				if (analysis->MianziDat[i].mstat == meldSequenceExposedLower) {
+					++count;
+					for (int j = 0; j < TILE_SUIT_HONORS; j += TILE_SUIT_STEP) {
+						if (analysis->MianziDat[i].tile == TILE_SUIT_STEP + 7) --count;
+					}
+				}
+			}
+			return count;
+		};
+	if (getRule(RULE_CHII_SHAOSHUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹h¬‡", yaku::yakuCalculator::Yaku::yval_1han,
+			[xiaoShunCount](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (xiaoShunCount(analysis) == 3);
+			}
+		));
+	/* ‹h¬Žl‡ */
+	if (getRule(RULE_CHII_SHAOSUUSHUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹h¬Žl‡", yaku::yakuCalculator::Yaku::yval_2han,
+			[xiaoShunCount](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (xiaoShunCount(analysis) == 4);
+			}
+		));
+	/* ‹h‘å‡ */
+	auto daShunCount =
+		[](const MENTSU_ANALYSIS* const analysis) -> int {
+			int count = 0;
+			for (int i = 1; i <= SIZE_OF_MELD_BUFFER; i++) {
+				if (analysis->MianziDat[i].mstat == meldSequenceExposedUpper) {
+					++count;
+					for (int j = 0; j < TILE_SUIT_HONORS; j += TILE_SUIT_STEP) {
+						if (analysis->MianziDat[i].tile == TILE_SUIT_STEP + 1) --count;
+					}
+				}
+			}
+			return count;
+		};
+	if (getRule(RULE_CHII_TAASHUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹h‘å‡", yaku::yakuCalculator::Yaku::yval_1han,
+			[daShunCount](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (daShunCount(analysis) == 3);
+			}
+		));
+	/* ‹h‘åŽl‡ */
+	if (getRule(RULE_CHII_TAASUUSHUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹h‘åŽl‡", yaku::yakuCalculator::Yaku::yval_2han,
+			[daShunCount](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (daShunCount(analysis) == 4);
+			}
+		));
 }
