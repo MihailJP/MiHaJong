@@ -10,6 +10,7 @@ private:
 	static void yakulst_contextual();
 	static void yakulst_pinhu();
 	static void yakulst_irregular();
+	static void yakulst_suit();
 	static void yakulst_yaojiu();
 	static void yakulst_sequence();
 };
