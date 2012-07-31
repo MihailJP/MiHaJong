@@ -163,6 +163,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				return chkHaishiki(analysis, "222004310");
 			}
 		));
+	/* ´ŠCŒÎ */
+	if (getRule(RULE_QINGHAIHU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"´ŠCŒÎ", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+			"´ˆêF", "ƒ‘S‘Ñ›ô‹ã", "“ñ”uŒû", "•½˜a",
+			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((chkHaishiki(analysis, "422000222") || chkHaishiki(analysis, "222000224")));
+			}
+		));
 	/* TODO: ‚»‚Ì‘¼‚Ìƒ`ƒ“ƒCƒc‚ÌãˆÊ–ð */
 	/* ƒzƒ“ƒCƒc */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
