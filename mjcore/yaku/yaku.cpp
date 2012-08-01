@@ -399,8 +399,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	std::for_each(YakuCatalog::Instantiate()->catalog.begin(), // 役カタログの最初から
 		YakuCatalog::Instantiate()->catalog.end(), // カタログの末尾まで
 		[&yakuHan, gameStat, analysis, &suppression](Yaku& yaku) -> void { // 役ごとに判定処理
-			if (yaku.checkYaku(gameStat, analysis)) { // 成立条件を満たしていたら
-				yakuHan[yaku.getName()] = yaku.getHan(gameStat, analysis); // 飜数を記録
+			if (yaku.checkYaku(analysis)) { // 成立条件を満たしていたら
+				yakuHan[yaku.getName()] = yaku.getHan(analysis); // 飜数を記録
 				std::set<std::string> sup = yaku.getSuppression();
 				suppression.insert(sup.begin(), sup.end()); // 下位役のリストを結合
 			}
@@ -513,6 +513,11 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
 	analysis.SeenTiles = countseentiles(gameStat);
 	analysis.MachiInfo = chkFuriten(gameStat, targetPlayer);
+	analysis.GameStat = gameStat;
+	analysis.PlayerStat = &(gameStat->Player[targetPlayer]);
+	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1]);
+	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
+	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam; memset(calcprm, 0, sizeof(CalculatorParam));
 	calcprm->gameStat = gameStat; calcprm->instance = calculator;
@@ -540,6 +545,11 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
 	analysis.SeenTiles = countseentiles(gameStat);
 	analysis.MachiInfo = chkFuriten(gameStat, targetPlayer);
+	analysis.GameStat = gameStat;
+	analysis.PlayerStat = &(gameStat->Player[targetPlayer]);
+	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1]);
+	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
+	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
 	DWORD ThreadID[160]; HANDLE Thread[160];
