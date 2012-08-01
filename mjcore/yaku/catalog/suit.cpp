@@ -22,6 +22,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			return isshoku(analysis, true);
 		}
 	));
+
+	// ---------------------------------------------------------------------
+
 	/* ˜a—¹‚Á‚½‚ç€‚Ê */
 	auto chkHaishiki =
 		[](const MENTSU_ANALYSIS* const analysis, const char* const haishiki) -> bool {
@@ -127,6 +130,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				return chkHaishiki(analysis, "211131113");
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
 	/* ã‚Q˜a 1.4142135623730 */
 	if (getRule(RULE_SQUARE_ROOT_TWO) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -163,6 +169,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				return chkHaishiki(analysis, "222004310");
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
 	/* ´ŠCŒÎ */
 	if (getRule(RULE_QINGHAIHU) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -208,7 +217,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				return chuusharin(analysis, TILE_SUIT_CHARACTERS);
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
 	/* TODO: ‚»‚Ì‘¼‚Ìƒ`ƒ“ƒCƒc‚ÌãˆÊ–ğ */
+
+	// ---------------------------------------------------------------------
+
 	/* ƒzƒ“ƒCƒc */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"¬ˆêF", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
