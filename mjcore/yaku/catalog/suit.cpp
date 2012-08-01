@@ -336,4 +336,81 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			return isshoku(analysis, false);
 		}
 	));
+
+	// ---------------------------------------------------------------------
+
+	/* 三麻の萬子ホンイツ */
+	if ((getRule(RULE_CHARACTERS_MAHJONG) != 0) && chkGameType(&GameStat, SanmaT))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"萬和", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"混一色", "混老頭",
+			[isshoku](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (isshoku(analysis, false) &&
+					((analysis->TileCount[CharacterOne] >= 1)||(analysis->TileCount[CharacterNine] >= 1)));
+			}
+		));
+	/* 東京オリンピック(ホンイツ) */
+	if (getRule(RULE_TOKYO_OLYMPIC_MONOCHROME) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"東京オリンピック", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"混一色",
+			[isshoku](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (isshoku(analysis, false) &&
+					((analysis->TileCount[CircleFive] >= 1)||(analysis->TileCount[EastWind] >= 1)));
+			}
+		));
+	/* 西郷南州 */
+	if (getRule(RULE_SAIGOU_NANSHUU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"西郷南州", yaku::yakuCalculator::Yaku::yval_2han,
+			[isshoku](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (isshoku(analysis, false) &&
+					(analysis->KeziCount[SouthWind] >= 1) &&
+					(analysis->KeziCount[WestWind] >= 1) &&
+					(analysis->TotalKezi == SIZE_OF_MELD_BUFFER - 1));
+			}
+		));
+	/* 鏡音リンレン */
+	if (getRule(RULE_KAGAMINE_RINLEN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"鏡音リンレン", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"混一色", "鏡音リン", "鏡音レン", "三連刻", "対々和",
+			[isshoku](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 1; i < TILE_SUIT_HONORS; i++)
+					if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[i + 1] >= 1) && (analysis->KeziCount[i + 2] >= 1))
+						yakuFlag = true;
+				return (isshoku(analysis, false) && yakuFlag &&
+					(analysis->KeziCount[WhiteDragon] >= 1) &&
+					(analysis->KeziCount[WestWind] >= 1) &&
+					((analysis->MianziDat[0].tile / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES / TILE_SUIT_STEP)));
+			}
+		));
+	/* 鏡音リン */
+	if (getRule(RULE_KAGAMINE_RIN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"鏡音リン", yaku::yakuCalculator::Yaku::yval_2han,
+			[isshoku](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				int PinMian = 0;
+				for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++)
+					if ((analysis->MianziDat[i].tile / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES / TILE_SUIT_STEP))
+						++PinMian;
+				return (isshoku(analysis, false) &&
+					(analysis->DuiziCount[WhiteDragon] >= 1));
+			}
+		));
+	/* 翻満乃歩手地 */
+	if (getRule(RULE_HONMANOPOTECHI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"翻満乃歩手地", yaku::yakuCalculator::Yaku::yval_1han,
+			[isshoku](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				int PinMian = 0;
+				for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++)
+					if ((analysis->MianziDat[i].tile / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES / TILE_SUIT_STEP))
+						++PinMian;
+				return (isshoku(analysis, false) &&
+					(PinMian == SIZE_OF_MELD_BUFFER - 1) &&
+					(analysis->DuiziCount[GreenDragon] >= 1));
+			}
+		));
 }
