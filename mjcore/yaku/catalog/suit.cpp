@@ -86,7 +86,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	if (getRule(RULE_DAISUURIN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"‘å”—×", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
-			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a", "’f›ô‹ã",
+			"´ˆêF", "“ñ”uŒû", "Žµ‘ÎŽq", "•½˜a", "’f›ô‹ã", "žòˆêF",
 			[chkHaishiki](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (chkHaishiki(analysis, "022222220") && (analysis->TileCount[CharacterFive] >= 2));
 			}
@@ -220,7 +220,111 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 
 	// ---------------------------------------------------------------------
 
-	/* TODO: ‚»‚Ì‘¼‚Ìƒ`ƒ“ƒCƒc‚ÌãˆÊ–ð */
+	/* •S–œÎ */
+	auto chiffre =
+		[](const MENTSU_ANALYSIS* const analysis) -> int {
+			return (analysis->shanten[shantenRegular] == -1) ?
+				yaku::countingFacility::countMentzNumerals(analysis->MianziDat) :
+				yaku::countingFacility::countTileNumerals(analysis->TileCount);
+		};
+	if (getRule(RULE_KAGA_MILLION) != 0) {
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"•S–œÎ", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"´ˆêF",
+			[isshoku, chiffre](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (isshoku(analysis, true) && (chiffre(analysis) > 100) &&
+					((gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile / TILE_SUIT_STEP) ==
+					(TILE_SUIT_CHARACTERS / TILE_SUIT_STEP)));
+			}
+		));
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‰Á‰ê•S–œÎ", (getRule(RULE_KAGA_MILLION) == 2) ?
+			yaku::yakuCalculator::Yaku::yval_yakuman : yaku::yakuCalculator::Yaku::yval_double_yakuman,
+			"´ˆêF",
+			[isshoku, chiffre](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (isshoku(analysis, true) && (chiffre(analysis) == 100) &&
+					((gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile / TILE_SUIT_STEP) ==
+					(TILE_SUIT_CHARACTERS / TILE_SUIT_STEP)));
+			}
+		));
+	}
+	/* “›Žq•S–œÎ */
+	if (getRule(RULE_PINZU_MILLION) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"“›Žq•S–œÎ", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"´ˆêF",
+			[isshoku, chiffre](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (isshoku(analysis, true) && (chiffre(analysis) >= 100) &&
+					((gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile / TILE_SUIT_STEP) ==
+					(TILE_SUIT_CIRCLES / TILE_SUIT_STEP)));
+			}
+		));
+	/* ‹IBŒÜ\ŒÜ–œÎ */
+	if (getRule(RULE_KISHU550K) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹IBŒÜ\ŒÜ–œÎ", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"´ˆêF",
+			[isshoku, chiffre](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (isshoku(analysis, true) && (chiffre(analysis) == 55) &&
+					((gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile / TILE_SUIT_STEP) ==
+					(TILE_SUIT_CHARACTERS / TILE_SUIT_STEP)));
+			}
+		));
+	/* …ŒËŽO\ŒÜ–œÎ */
+	if (getRule(RULE_MITO350K) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"…ŒËŽO\ŒÜ–œÎ", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"´ˆêF",
+			[isshoku, chiffre](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (isshoku(analysis, true) && (chiffre(analysis) <= 35) &&
+					((gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile / TILE_SUIT_STEP) ==
+					(TILE_SUIT_CHARACTERS / TILE_SUIT_STEP)));
+			}
+		));
+	/* ƒtƒ‹ƒ€[ƒ“ */
+	if (getRule(RULE_FULLMOON) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ƒtƒ‹ƒ€[ƒ“", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"´ˆêF",
+			[isshoku, chiffre](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (isshoku(analysis, true) && (chiffre(analysis) == 88));
+			}
+		));
+
+	// ---------------------------------------------------------------------
+
+	/* ¯ŒõŽWà£ */
+	if (getRule(RULE_STARLIGHT) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"¯ŒõŽWà£", yaku::yakuCalculator::Yaku::yval_1han,
+			[isshoku](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (isshoku(analysis, true) && (analysis->KeziCount[CircleSeven]));
+			}
+		));
+	/* žòˆêF */
+	if (getRule(RULE_CHENIISOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"žòˆêF", yaku::yakuCalculator::Yaku::KuisagariHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_8han),
+			"´ˆêF", "’f›ô‹ã",
+			[isshoku](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				if (analysis->shanten[shantenRegular] == -1) {
+					int yakuFlagCount = 0;
+					const tileCode targetKezi[] = {CharacterOne, CharacterNine,};
+					const tileCode targetShunzi[] = {CharacterOne, CharacterSeven,};
+					if (yaku::countingFacility::countSpecMentz(analysis->MianziDat, targetKezi, 2, targetShunzi, 2, false) == 0)
+						yakuFlag = true;
+				} else if (analysis->shanten[shantenPairs] == -1) {
+					int yakuFlagCount = 0;
+					const tileCode targetDuizi[] = {CharacterOne, CharacterNine,};
+					if (yaku::countingFacility::countPairs(analysis->TileCount, targetDuizi, 2) == 0)
+						yakuFlag = true;
+				}
+				return (isshoku(analysis, true) && (yakuFlag) &&
+					((gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND - 1].tile / TILE_SUIT_STEP) ==
+					(TILE_SUIT_CHARACTERS / TILE_SUIT_STEP)));
+			}
+		));
 
 	// ---------------------------------------------------------------------
 
