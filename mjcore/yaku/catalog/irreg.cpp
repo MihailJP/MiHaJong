@@ -6,7 +6,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"µ‘Îq", (getRule(RULE_SEVEN_PAIRS) == 1) ? /* 1–|50•„‚Ìƒ‹[ƒ‹‚Æ2–|25•„‚Ìƒ‹[ƒ‹‚ª‚ ‚éB•„‚Í‚±‚±‚Å‚Íİ’è‚Å‚«‚È‚¢‚Å‚·cc */
 		yaku::yakuCalculator::Yaku::yval_1han_menzen : yaku::yakuCalculator::Yaku::yval_2han_menzen,
-		[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenPairs] == -1)&&(analysis->shanten[shantenRegular] >= 0));
 		}
 	));
@@ -14,7 +14,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"‘m–³‘o", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 		"\O•s“ƒ",
-		[](const GameTable* const, const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->shanten[shantenOrphans] == -1);
 		}
 	));
@@ -22,10 +22,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"‘m–³‘o\O–Ê", yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen,
 			"‘m–³‘o", "\O•s“ƒ",
-			[](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[shantenOrphans] == -1) && // ‘m–³‘o‚É‚È‚Á‚Ä‚¢‚ÄA
 					(/* ƒtƒŠƒeƒ“‚©‚Ç‚¤‚©”»’è‚·‚é */0) && // ƒtƒŠƒeƒ“‚Å‚Í‚È‚­‚ÄA
-					((/* 13–Ê‘Ò‚¿‚©”»’è‚·‚é */0)||(gameStat->TianHuFlag))); // 13–Ê‘Ò‚¿‚©“V˜a‚É‚È‚Á‚Ä‚¢‚é
+					((/* 13–Ê‘Ò‚¿‚©”»’è‚·‚é */0)||(analysis->GameStat->TianHuFlag))); // 13–Ê‘Ò‚¿‚©“V˜a‚É‚È‚Á‚Ä‚¢‚é
 			}
 		));
 	/* µ¯–³èÏ */
@@ -34,7 +34,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			"µ¯–³èÏ", (getRule(RULE_STELLAR_UUSHII) == 2) ?
 			yaku::yakuCalculator::Yaku::yval_baiman_menzen : yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 			"‘S•sèÏ",
-			[](const GameTable* const, const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->shanten[shantenStellar] == -1);
 			}
 		));
@@ -42,7 +42,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	if (getRule(RULE_CIVIL_WAR) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"“ì–kí‘ˆ", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
-			[](const GameTable* const, const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->shanten[shantenCivilWar] == -1);
 			}
 		));
@@ -50,7 +50,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	if (getRule(RULE_SYZYGY) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"˜f¯’¼—ñ", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
-			[](const GameTable* const, const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->shanten[shantenSyzygy] == -1);
 			}
 		));
@@ -73,7 +73,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		}
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"‘S•sèÏ", *qbk_han,
-			[](const GameTable* const, const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->shanten[shantenQuanbukao] == -1);
 			}
 		));

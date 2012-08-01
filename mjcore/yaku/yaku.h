@@ -70,12 +70,16 @@ private:
 		uint8_t TotalKangzi; // 槓子合計
 		uint8_t TotalAnKangzi; // 暗槓合計
 		uint8_t TotalKaKangzi; // 加槓合計
+		const GameTable* GameStat; // 卓情報へのポインタ
+		const PlayerTable* PlayerStat; // プレイヤー情報へのポインタ
+		const TILE* TsumoHai; // 和了牌へのポインタ
+		const bool* MenzenFlag; // 門前かどうかのフラグ
+		const bool* TsumoAgariFlag; // ツモアガリどうかのフラグ
 	};
 #ifdef MJCORE_EXPORTS
 	static_assert(std::is_pod<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not POD");
 #endif
-	typedef std::function<bool
-		(const GameTable* const, const MENTSU_ANALYSIS* const)> YAKUFUNC;
+	typedef std::function<bool (const MENTSU_ANALYSIS* const)> YAKUFUNC;
 
 	class CalculatorThread {
 	public:
@@ -138,11 +142,11 @@ private:
 	public:
 		class HANFUNC {
 		protected:
-			std::function<YAKU_HAN (const GameTable* const, const MENTSU_ANALYSIS* const)> hFunc;
+			std::function<YAKU_HAN (const MENTSU_ANALYSIS* const)> hFunc;
 		public:
-			YAKU_HAN operator() (const GameTable* const, const MENTSU_ANALYSIS* const);
+			YAKU_HAN operator() (const MENTSU_ANALYSIS* const);
 			HANFUNC ();
-			HANFUNC (std::function<YAKU_HAN (const GameTable* const, const MENTSU_ANALYSIS* const)>);
+			HANFUNC (std::function<YAKU_HAN (const MENTSU_ANALYSIS* const)>);
 		};
 		class FixedHan : public HANFUNC {
 		public:
@@ -176,10 +180,10 @@ private:
 		std::set<std::string> suppressionList; // 下位役のリスト
 		Yaku() {} // Default constructor
 	public:
-		bool checkYaku(const GameTable* const gameStat, const MENTSU_ANALYSIS* const mentsu);
+		bool checkYaku(const MENTSU_ANALYSIS* const mentsu);
 		std::string getName(); // 役の名前を取得する
 		HANFUNC getHan();
-		YAKU_HAN getHan(const GameTable* const gameStat, const MENTSU_ANALYSIS* const mentsu);
+		YAKU_HAN getHan(const MENTSU_ANALYSIS* const mentsu);
 		std::set<std::string> getSuppression();
 		// Constructor
 		Yaku(std::string name, HANFUNC hanVal, YAKUFUNC f);
