@@ -413,4 +413,51 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 					(analysis->DuiziCount[GreenDragon] >= 1));
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* âˆê–å */
+	auto chueiimen =
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			bool flag[TILE_SUIT_HONORS / TILE_SUIT_STEP] = {false};
+			for (int k = 1; k < TILE_SUIT_HONORS; k++)
+				if (analysis->TileCount[k] > 0) flag[k] = true;
+			return (
+				(flag[TILE_SUIT_CHARACTERS / TILE_SUIT_STEP] && flag[TILE_SUIT_CIRCLES / TILE_SUIT_STEP] && !flag[TILE_SUIT_BAMBOOS / TILE_SUIT_STEP]) ||
+				(flag[TILE_SUIT_CHARACTERS / TILE_SUIT_STEP] && !flag[TILE_SUIT_CIRCLES / TILE_SUIT_STEP] && flag[TILE_SUIT_BAMBOOS / TILE_SUIT_STEP]) ||
+				(!flag[TILE_SUIT_CHARACTERS / TILE_SUIT_STEP] && flag[TILE_SUIT_CIRCLES / TILE_SUIT_STEP] && flag[TILE_SUIT_BAMBOOS / TILE_SUIT_STEP])
+				);
+		};
+	std::function<bool(const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis)> chueiimen1 =
+		[chueiimen](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+			return chueiimen(analysis);
+		};
+	std::function<bool(const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis)> chueiimen2 =
+		[chueiimen](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (chueiimen(analysis) &&
+				(analysis->TileCount[EastWind] + analysis->TileCount[SouthWind] + analysis->TileCount[WestWind] +
+				analysis->TileCount[NorthWind] + analysis->TileCount[WhiteDragon] + analysis->TileCount[GreenDragon] +
+				analysis->TileCount[RedDragon] == 0));
+		};
+	if (getRule(RULE_CHUEIIMEN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"âˆê–å", yaku::yakuCalculator::Yaku::yval_1han_menzen,
+			(getRule(RULE_CHUEIIMEN) != 2) ? chueiimen1 : chueiimen2
+		));
+	/* Žl–Ê‘^‰Ì */
+	if (getRule(RULE_SIMIAN_CHUGE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"Žl–Ê‘^‰Ì", yaku::yakuCalculator::Yaku::yval_4han,
+			"âˆê–å",
+			[chueiimen2](const GameTable* const gameStat, const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (chueiimen2(NULL, analysis) &&
+					(analysis->shanten[shantenRegular] == -1) &&
+					((analysis->MianziDat[1].tile / TILE_SUIT_STEP) ==
+					(analysis->MianziDat[2].tile / TILE_SUIT_STEP) ==
+					(analysis->MianziDat[3].tile / TILE_SUIT_STEP) ==
+					(analysis->MianziDat[4].tile / TILE_SUIT_STEP)) &&
+					(analysis->Machi == yaku::yakuCalculator::machiTanki)
+					);
+			}
+		));
 }
