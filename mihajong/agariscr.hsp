@@ -226,7 +226,7 @@
 		swend
 	}
 	/* ˜a—¹–ð•\Ž¦ */
-	tmpTotalHan = getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA)+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA)
+	tmpTotalHan = getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)
 	tmpXTotalHan = (tmpTotalHan+YAKUVAL_MINUS_LIMIT)\YAKUVAL_HALFMANGAN-YAKUVAL_MINUS_LIMIT
 	tmpTotalMangan = (tmpTotalHan+YAKUVAL_MINUS_LIMIT)/YAKUVAL_HALFMANGAN
 	agariScreenMode = 0
@@ -314,7 +314,7 @@
 	}
 	borderedtxt2a tmptxt, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 48
 	font fontname, 48, 0: tmptxt = ""
-	totalHan = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA)+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA)+YAKUVAL_MINUS_LIMIT)\YAKUVAL_HALFMANGAN-YAKUVAL_MINUS_LIMIT
+	totalHan = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+YAKUVAL_MINUS_LIMIT)\YAKUVAL_HALFMANGAN-YAKUVAL_MINUS_LIMIT
 	if ((totalHan >= 5)||(getYakuInfo(yakuInfo, YAKUINF_POINTS+0) >= 2000)) {setSumaroFlag GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), 1 /* –žŠÑˆÈã˜a—¹‚Á‚½‚çŽl”n˜H‰ð‹Ö */}
 	if (agariScreenMode == 0) {
 		if ((agariPointArray(7)>0)||(agariPointArray(6)>0)||(agariPointArray(5)>0)||(agariPointArray(4)>0)) {pos 320, 400} else {pos 320, 440}
