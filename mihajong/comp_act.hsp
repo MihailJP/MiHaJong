@@ -171,8 +171,8 @@
 					setTsumoAgariFlag GameStat, 1: await 0: countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 					if (Discardability(tmpTileNum) >= 10000) {Discardability(tmpTileNum) -= 10000}
 					Discardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-TileCount(cnt)-SeenTiles(cnt))+100000
-					if (MinScore(tmpTileNum) > (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MinScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
-					if (MaxScore(tmpTileNum) < (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MaxScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
+					if (MinScore(tmpTileNum) > (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS))) {MinScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS))}
+					if (MaxScore(tmpTileNum) < (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS))) {MaxScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS))}
 				}
 				setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getHand(GameStat, HAND_TILECODE, tmpTileNum, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 				setHand GameStat, HAND_TILECODE, tmpTileNum, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), tmpHandTileCode
@@ -707,8 +707,8 @@
 				setTsumoAgariFlag GameStat, 1: await 0: countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 				if (Discardability(tmpTileNum) >= 10000) {Discardability(tmpTileNum) -= 10000}
 				Discardability(tmpTileNum) += getYakuInfo(yakuInfo, YAKUINF_POINTS+0)*(4-TileCount(cnt)-SeenTiles(cnt))+100000
-				if (MinScore(tmpTileNum) > (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MinScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
-				if (MaxScore(tmpTileNum) < (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))) {MaxScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)+getYakuInfo(yakuInfo, YAKUINF_DORA))}
+				if (MinScore(tmpTileNum) > (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS))) {MinScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS))}
+				if (MaxScore(tmpTileNum) < (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS))) {MaxScore(tmpTileNum) = (getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS))}
 			}
 			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getHand(GameStat, HAND_TILECODE, tmpTileNum, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 			setHand GameStat, HAND_TILECODE, tmpTileNum, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), tmpHandTileCode
