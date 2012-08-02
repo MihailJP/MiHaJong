@@ -226,8 +226,13 @@ void yaku::yakuCalculator::CalculatorThread::doraText
 	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, label);
 	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, " ");
 	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, intstr(quantity).c_str());
+#ifdef WIN32
+	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+	strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+#else
 	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
 	strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\n");
+#endif
 }
 
 /* ドラ計数 */
@@ -442,28 +447,48 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 			{ /* 単位が混在！ */
 				RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が混在しています");
 			}
-			else if (yHan.second.coreHan.getUnit() == yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Han)
+			else if ( ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::Han) || (yHan.second.coreHan.getHan() == 0)) &&
+				((yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Han) || (yHan.second.bonusHan.getHan() == 0)))
 			{ /* 普通の役の時 */
 				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
+#ifdef WIN32
+				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+#else
 				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
+#endif
 				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
 					intstr(yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()).c_str());
+#ifdef WIN32
+				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "飜\r\n");
+#else
 				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "飜\n");
+#endif
 			}
-			else if ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) ||
-				(yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan))
+			else if ( ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) || (yHan.second.coreHan.getHan() == 0)) &&
+				((yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) || (yHan.second.bonusHan.getHan() == 0)))
 			{ /* 満貫 */
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
+#ifdef WIN32
+				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+				char hstr[16]; sprintf_s(hstr, "%d\r\n",
+#else
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\n");
 				char hstr[16]; sprintf_s(hstr, "%d\n",
+#endif
 					(int)((yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
 				strcat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
 			}
-			else
+			else if ( ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::Yakuman) || (yHan.second.coreHan.getHan() == 0)) &&
+				((yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Yakuman) || (yHan.second.bonusHan.getHan() == 0)))
 			{ /* 役満 */
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
+#ifdef WIN32
+				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+				char hstr[16]; sprintf_s(hstr, "%d\r\n",
+#else
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\n");
 				char hstr[16]; sprintf_s(hstr, "%d\n",
+#endif
 					(int)((yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
 				strcat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
 			}
@@ -471,6 +496,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	/* 飜数を計算した結果を書き込む */
 	result->CoreHan = totalHan; result->CoreSemiMangan = totalSemiMangan;
 	result->BonusHan = totalBonusHan; result->BonusSemiMangan = totalBonusSemiMangan;
+	if (analysis->BasePoint == 25) result->BasePoints = 25; // チートイの25符はそのまま
+	else result->BasePoints = analysis->BasePoint + ((10 - analysis->BasePoint % 10) % 10); // 符ハネして反映
 	/* ドラの数を数える */
 	countDora(gameStat, analysis, result);
 	/* 簡略ルール(全部30符)の場合 */
