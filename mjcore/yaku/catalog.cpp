@@ -9,7 +9,7 @@ __declspec(dllexport) void yaku::yakuCalculator::init() {
 	 */
 	YakuCatalog::Instantiate()->catalog.push_back(Yaku( // テスト用のダミーの役
 		"ダミー", yaku::yakuCalculator::Yaku::yval_1han,
-		[](const GameTable* const, const MENTSU_ANALYSIS* const) {
+		[](const MENTSU_ANALYSIS* const) {
 			return true;
 		}
 	));
