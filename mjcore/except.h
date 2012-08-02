@@ -28,17 +28,17 @@ void StackTraceToArray();
 #ifdef MJCORE_EXPORTS
 extern ErrorInfo errorInfo;
 extern const ULONG_PTR errorInfoPtr[1];
-#define setStruct(message) \
+#define setStruct(message) {\
 	strcpy_s(errorInfo.msg, STRINGBUF, message); \
 	strcpy_s(errorInfo.file, STRINGBUF, __FILE__); errorInfo.line = __LINE__; \
 	strcpy_s(errorInfo.func, STRINGBUF, __FUNCTION__); \
-	StackTraceToArray()
-#define Raise(exceptionCode,message) fatal(message); \
+	StackTraceToArray();}
+#define Raise(exceptionCode,message) {fatal(message); \
 	setStruct(message); \
-	RaiseException(exceptionCode, EXCEPTION_NONCONTINUABLE, 1, errorInfoPtr)
-#define RaiseTolerant(exceptionCode,message) error(message); \
+	RaiseException(exceptionCode, EXCEPTION_NONCONTINUABLE, 1, errorInfoPtr);}
+#define RaiseTolerant(exceptionCode,message) {error(message); \
 	setStruct(message); \
-	RaiseException(exceptionCode, 0, 1, errorInfoPtr)
+	RaiseException(exceptionCode, 0, 1, errorInfoPtr);}
 #endif
 
 
