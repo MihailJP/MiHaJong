@@ -116,24 +116,34 @@ const LargeNum LargeNum::operator*(const int32_t multiplier) { // めんどくさいの
 	LargeNum ans = LargeNum();
 	for (int i = 0; i < DIGIT_GROUPS; i++) {
 		int64_t tmpdigit = digitGroup[i] * multiplier;
-		ans.digitGroup[i] = (int32_t)(tmpdigit % 100000000L);
 		if ((i == (DIGIT_GROUPS - 1))
-			&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN)))
-			Raise(EXCEPTION_MJCORE_OVERFLOW, "オーバーフローしました");
-		ans.digitGroup[i + 1] = (int32_t)(tmpdigit / 100000000L);
+			&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN))) {
+				Raise(EXCEPTION_MJCORE_OVERFLOW, "オーバーフローしました");
+		}
+		else if (i == (DIGIT_GROUPS - 1)) ans.digitGroup[i] += (int32_t)tmpdigit;
+		else {
+			ans.digitGroup[i] += (int32_t)(tmpdigit % 100000000L);
+			ans.digitGroup[i + 1] += (int32_t)(tmpdigit / 100000000L);
+		}
 	}
 	ans.fix();
 	return ans;
 }
 LargeNum& LargeNum::operator*=(const int32_t multiplier) {
+	LargeNum ans = LargeNum();
 	for (int i = 0; i < DIGIT_GROUPS; i++) {
 		int64_t tmpdigit = digitGroup[i] * multiplier;
-		digitGroup[i] = (int32_t)(tmpdigit % 100000000L);
 		if ((i == (DIGIT_GROUPS - 1))
-			&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN)))
-			Raise(EXCEPTION_MJCORE_OVERFLOW, "オーバーフローしました");
-		digitGroup[i + 1] = (int32_t)(tmpdigit / 100000000L);
+			&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN))) {
+				Raise(EXCEPTION_MJCORE_OVERFLOW, "オーバーフローしました");
+		}
+		else if (i == (DIGIT_GROUPS - 1)) ans.digitGroup[i] += (int32_t)tmpdigit;
+		else {
+			ans.digitGroup[i] += (int32_t)(tmpdigit % 100000000L);
+			ans.digitGroup[i + 1] += (int32_t)(tmpdigit / 100000000L);
+		}
 	}
+	for (int i = 0; i < DIGIT_GROUPS; i++) digitGroup[i] = ans.digitGroup[i];
 	fix();
 	return *this;
 }
