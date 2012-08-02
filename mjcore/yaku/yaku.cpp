@@ -447,7 +447,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 			{ /* ’PˆÊ‚ª¬ÝI */
 				RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "’PˆÊ‚ª¬Ý‚µ‚Ä‚¢‚Ü‚·");
 			}
-			else if (yHan.second.coreHan.getUnit() == yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Han)
+			else if ( ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::Han) || (yHan.second.coreHan.getHan() == 0)) &&
+				((yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Han) || (yHan.second.bonusHan.getHan() == 0)))
 			{ /* •’Ê‚Ì–ð‚ÌŽž */
 				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
 #ifdef WIN32
@@ -463,8 +464,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "ãÊ\n");
 #endif
 			}
-			else if ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) ||
-				(yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan))
+			else if ( ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) || (yHan.second.coreHan.getHan() == 0)) &&
+				((yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) || (yHan.second.bonusHan.getHan() == 0)))
 			{ /* –žŠÑ */
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
 #ifdef WIN32
@@ -477,7 +478,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 					(int)((yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
 				strcat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
 			}
-			else
+			else if ( ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::Yakuman) || (yHan.second.coreHan.getHan() == 0)) &&
+				((yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Yakuman) || (yHan.second.bonusHan.getHan() == 0)))
 			{ /* –ð–ž */
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
 #ifdef WIN32
