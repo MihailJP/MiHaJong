@@ -496,4 +496,30 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 					);
 			}
 		));
+	/* 未成年 */
+	if (getRule(RULE_MINORAGE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"未成年", (getRule(RULE_MINORAGE) == 2) ? 
+			yaku::yakuCalculator::Yaku::yval_6han : yaku::yakuCalculator::Yaku::yval_3han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++)
+					if (analysis->MianziDat[i].tile >= TILE_SUIT_HONORS)
+						return false;
+				return ((analysis->shanten[shantenRegular] == -1) &&
+					(yaku::countingFacility::countMentzNumerals(analysis->MianziDat) < 20));
+			}
+		));
+	/* 成人式 */
+	if (getRule(RULE_COMINGOFAGE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"成人式", (getRule(RULE_COMINGOFAGE) == 2) ? 
+			yaku::yakuCalculator::Yaku::yval_yakuman : yaku::yakuCalculator::Yaku::yval_3han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++)
+					if (analysis->MianziDat[i].tile >= TILE_SUIT_HONORS)
+						return false;
+				return ((analysis->shanten[shantenRegular] == -1) &&
+					(yaku::countingFacility::countMentzNumerals(analysis->MianziDat) == 20));
+			}
+		));
 }
