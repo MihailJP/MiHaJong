@@ -401,73 +401,78 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	/* 役判定ループ */
 	std::map<std::string, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
 	std::set<std::string> suppression; // 無効化する役
+	std::vector<std::string> yakuOrd; // 順序保存用
 	std::for_each(YakuCatalog::Instantiate()->catalog.begin(), // 役カタログの最初から
 		YakuCatalog::Instantiate()->catalog.end(), // カタログの末尾まで
-		[&yakuHan, gameStat, analysis, &suppression](Yaku& yaku) -> void { // 役ごとに判定処理
+		[&yakuHan, gameStat, analysis, &suppression, &yakuOrd](Yaku& yaku) -> void { // 役ごとに判定処理
 			if (yaku.checkYaku(analysis)) { // 成立条件を満たしていたら
 				yakuHan[yaku.getName()] = yaku.getHan(analysis); // 飜数を記録
+				yakuOrd.push_back(yaku.getName()); // 順序も記録しておく
 				std::set<std::string> sup = yaku.getSuppression();
 				suppression.insert(sup.begin(), sup.end()); // 下位役のリストを結合
 			}
 	});
 	/* 実は成立していない役を除去する */
-	for (auto k = yakuHan.begin(); k != yakuHan.end(); ) {
-		if ((k->second.coreHan.getHan() == 0) && (k->second.bonusHan.getHan() == 0)) // 実は成立してない役
-			yakuHan.erase(k++); // 数に数えない
+	for (auto k = yakuOrd.begin(); k != yakuOrd.end(); ) {
+		if ((yakuHan[*k].coreHan.getHan() == 0) && (yakuHan[*k].bonusHan.getHan() == 0)) // 実は成立してない役
+			yakuOrd.erase(k++); // 数に数えない
 		else ++k;
 	}
 	/* 下位役を除去する */
-	std::for_each(suppression.begin(), suppression.end(), [&yakuHan](std::string yaku) {
-		yakuHan.erase(yaku);
+	std::for_each(suppression.begin(), suppression.end(), [&yakuOrd](std::string yaku) {
+		for (auto k = yakuOrd.begin(); k != yakuOrd.end(); ) {
+			if (*k == yaku) yakuOrd.erase(k++);
+			else ++k;
+		}
 	});
 	/* 翻を合計する */
 	int totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan;
 	totalHan = totalSemiMangan = totalBonusHan = totalBonusSemiMangan = 0;
-	std::for_each(yakuHan.begin(), yakuHan.end(),
-		[&totalHan, &totalSemiMangan, &totalBonusHan, &totalBonusSemiMangan, &result]
-		(std::pair<std::string, Yaku::YAKU_HAN> yHan) {
+	std::for_each(yakuOrd.begin(), yakuOrd.end(),
+		[&totalHan, &totalSemiMangan, &totalBonusHan, &totalBonusSemiMangan, &result, &yakuHan]
+		(std::string yName) {
 			/* TODO: 青天井ルールに対応させる */
-			switch (yHan.second.coreHan.getUnit()) {
-				case yaku::yakuCalculator::hanUnit::Han: totalHan += yHan.second.coreHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::SemiMangan: totalSemiMangan += yHan.second.coreHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::Yakuman: totalSemiMangan += yHan.second.coreHan.getHan() * 8; break;
+			switch (yakuHan[yName].coreHan.getUnit()) {
+				case yaku::yakuCalculator::hanUnit::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
+				case yaku::yakuCalculator::hanUnit::SemiMangan: totalSemiMangan += yakuHan[yName].coreHan.getHan(); break;
+				case yaku::yakuCalculator::hanUnit::Yakuman: totalSemiMangan += yakuHan[yName].coreHan.getHan() * 8; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
 			}
-			switch (yHan.second.bonusHan.getUnit()) {
-				case yaku::yakuCalculator::hanUnit::Han: totalBonusHan += yHan.second.bonusHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::SemiMangan: totalBonusSemiMangan += yHan.second.bonusHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::Yakuman: totalBonusSemiMangan += yHan.second.bonusHan.getHan() * 8; break;
+			switch (yakuHan[yName].bonusHan.getUnit()) {
+				case yaku::yakuCalculator::hanUnit::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
+				case yaku::yakuCalculator::hanUnit::SemiMangan: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan(); break;
+				case yaku::yakuCalculator::hanUnit::Yakuman: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan() * 8; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
 			}
 			/* 役の名前を書き込む */
-			if ((yHan.second.coreHan.getUnit() != yHan.second.bonusHan.getUnit()) &&
-				(yHan.second.coreHan.getHan() * yHan.second.bonusHan.getHan() != 0))
+			if ((yakuHan[yName].coreHan.getUnit() != yakuHan[yName].bonusHan.getUnit()) &&
+				(yakuHan[yName].coreHan.getHan() * yakuHan[yName].bonusHan.getHan() != 0))
 			{ /* 単位が混在！ */
 				RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が混在しています");
 			}
-			else if ( ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::Han) || (yHan.second.coreHan.getHan() == 0)) &&
-				((yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Han) || (yHan.second.bonusHan.getHan() == 0)))
+			else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::hanUnit::Han) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+				((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Han) || (yakuHan[yName].bonusHan.getHan() == 0)))
 			{ /* 普通の役の時 */
-				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
+				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 #ifdef WIN32
 				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
 #else
 				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
 #endif
 				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
-					intstr(yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()).c_str());
+					intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str());
 #ifdef WIN32
 				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "飜\r\n");
 #else
 				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "飜\n");
 #endif
 			}
-			else if ( ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) || (yHan.second.coreHan.getHan() == 0)) &&
-				((yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) || (yHan.second.bonusHan.getHan() == 0)))
+			else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+				((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) || (yakuHan[yName].bonusHan.getHan() == 0)))
 			{ /* 満貫 */
-				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
+				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 #ifdef WIN32
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
 				char hstr[16]; sprintf_s(hstr, "%d\r\n",
@@ -475,13 +480,13 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\n");
 				char hstr[16]; sprintf_s(hstr, "%d\n",
 #endif
-					(int)((yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
+					(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
 				strcat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
 			}
-			else if ( ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::Yakuman) || (yHan.second.coreHan.getHan() == 0)) &&
-				((yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Yakuman) || (yHan.second.bonusHan.getHan() == 0)))
+			else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::hanUnit::Yakuman) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+				((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Yakuman) || (yakuHan[yName].bonusHan.getHan() == 0)))
 			{ /* 役満 */
-				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
+				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 #ifdef WIN32
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
 				char hstr[16]; sprintf_s(hstr, "%d\r\n",
@@ -489,7 +494,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\n");
 				char hstr[16]; sprintf_s(hstr, "%d\n",
 #endif
-					(int)((yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
+					(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
 				strcat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
 			}
 	});
