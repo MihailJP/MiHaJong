@@ -496,6 +496,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	/* 飜数を計算した結果を書き込む */
 	result->CoreHan = totalHan; result->CoreSemiMangan = totalSemiMangan;
 	result->BonusHan = totalBonusHan; result->BonusSemiMangan = totalBonusSemiMangan;
+	if (analysis->BasePoint == 25) result->BasePoints = 25; // チートイの25符はそのまま
+	else result->BasePoints = analysis->BasePoint + ((10 - analysis->BasePoint % 10) % 10); // 符ハネして反映
 	/* ドラの数を数える */
 	countDora(gameStat, analysis, result);
 	/* 簡略ルール(全部30符)の場合 */
