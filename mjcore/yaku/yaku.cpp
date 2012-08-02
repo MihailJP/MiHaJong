@@ -226,8 +226,13 @@ void yaku::yakuCalculator::CalculatorThread::doraText
 	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, label);
 	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, " ");
 	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, intstr(quantity).c_str());
+#ifdef WIN32
+	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+	strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+#else
 	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
 	strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\n");
+#endif
 }
 
 /* ƒhƒ‰Œv” */
@@ -445,25 +450,43 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 			else if (yHan.second.coreHan.getUnit() == yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Han)
 			{ /* •’Ê‚Ì–ð‚ÌŽž */
 				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
+#ifdef WIN32
+				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+#else
 				strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
+#endif
 				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
 					intstr(yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()).c_str());
+#ifdef WIN32
+				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "ãÊ\r\n");
+#else
 				strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "ãÊ\n");
+#endif
 			}
 			else if ((yHan.second.coreHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) ||
 				(yHan.second.bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan))
 			{ /* –žŠÑ */
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
+#ifdef WIN32
+				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+				char hstr[16]; sprintf_s(hstr, "%d\r\n",
+#else
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\n");
 				char hstr[16]; sprintf_s(hstr, "%d\n",
+#endif
 					(int)((yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
 				strcat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
 			}
 			else
 			{ /* –ð–ž */
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yHan.first.c_str());
+#ifdef WIN32
+				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+				char hstr[16]; sprintf_s(hstr, "%d\r\n",
+#else
 				strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\n");
 				char hstr[16]; sprintf_s(hstr, "%d\n",
+#endif
 					(int)((yHan.second.coreHan.getHan() + yHan.second.bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
 				strcat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
 			}
