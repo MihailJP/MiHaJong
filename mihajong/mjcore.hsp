@@ -124,7 +124,8 @@
 
 /* chkyaku.hsp‚©‚ç‚ÌˆÚA */
 #func initYakuCatalog "?init@yakuCalculator@yaku@@SAXXZ"
-#func countyaku "?countyaku@yakuCalculator@yaku@@SAXQBUGameTable@@QAUYAKUSTAT@2@H@Z" int, var, int
+#func _countyaku "?countyaku@yakuCalculator@yaku@@SAXQBUGameTable@@QAUYAKUSTAT@2@H@Z" int, var, int
+#define countyaku(%1,%2,%3) sdim %2, _YAKUSTAT_getSize(): _countyaku %1,%2,%3
 
 /* chk-buda.hsp‚©‚ç‚ÌˆÚA */
 #cfunc chkshisanbuda "?chkShisanBuDa@yakuCalculator@yaku@@SAHQBUGameTable@@H@Z" int, int
