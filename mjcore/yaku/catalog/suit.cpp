@@ -460,4 +460,40 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 					);
 			}
 		));
+	/* 五門斎 */
+	auto uumenchii =
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			int mnzCount[TILE_SUIT_HONORS / TILE_SUIT_STEP + 2] = {0};
+			bool yakuFlag = true;
+			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
+				if (analysis->MianziDat[i].tile < TILE_SUIT_HONORS)
+					++mnzCount[analysis->MianziDat[i].tile / TILE_SUIT_STEP];
+				else switch (analysis->MianziDat[i].tile) {
+				case EastWind: case SouthWind: case WestWind: case NorthWind:
+					++mnzCount[TILE_SUIT_HONORS / TILE_SUIT_STEP]; break;
+				case WhiteDragon: case GreenDragon: case RedDragon:
+					++mnzCount[TILE_SUIT_HONORS / TILE_SUIT_STEP + 1]; break;
+				}
+			}
+			for (int i = 0; i < (TILE_SUIT_HONORS / TILE_SUIT_STEP + 2); i++)
+				if (mnzCount[i] != 1) yakuFlag = false;
+			return yakuFlag;
+		};
+	if (getRule(RULE_UUMENCHII) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"五門斎", yaku::yakuCalculator::Yaku::yval_2han,
+			uumenchii
+		));
+	/* 東京オリンピック */
+	if (getRule(RULE_TOKYO_OLYMPIC_POLYCHROME) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"東京オリンピック ", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"五門斎",
+			[uumenchii](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (uumenchii(analysis) &&
+					(analysis->GameStat->GameRound / 4 == sEast) &&
+					(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound))
+					);
+			}
+		));
 }
