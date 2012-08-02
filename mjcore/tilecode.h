@@ -122,6 +122,9 @@ typedef InfoByTile<bool> FlagByTile;
 EXPORT_TEMPLATE_STRUCT InfoByTile<int8_t>;
 typedef InfoByTile<int8_t> Int8ByTile;
 
+EXPORT_TEMPLATE_STRUCT InfoByTile<uint8_t>;
+typedef InfoByTile<uint8_t> UInt8ByTile;
+
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<InfoByTile<int8_t> >::value, "Non-POD data type detected");
 #endif
