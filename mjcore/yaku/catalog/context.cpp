@@ -62,14 +62,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* 一発(方言では即ともいう) */
 	if ((getRule(RULE_RIICHI_IPPATSU) != 1)&&(getRule(RULE_RIICHI_IPPATSU) != 3)) { // 一発が役にならないルールを除外
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"一発",
-			(getRule(RULE_RIICHI_IPPATSU) == 2) ? /* 一発は縛りを満たさない(リャンシバでリー即のみの和了を認めない)ルール */
-				yaku::yakuCalculator::Yaku::HANFUNC( [](const MENTSU_ANALYSIS* const analysis) {
-					return (*analysis->MenzenFlag) ?
-						yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
-						yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han) :
-						yaku::yakuCalculator::Yaku::YAKU_HAN();
-			}) : yaku::yakuCalculator::Yaku::yval_1han_menzen, // リー即のみでも和了って良いルール
+			"一発", (getRule(RULE_RIICHI_IPPATSU) == 2) ?
+			yaku::yakuCalculator::Yaku::yval_1han_menzen_dependent : /* 一発は縛りを満たさない(リャンシバでリー即のみの和了を認めない)ルール */
+			yaku::yakuCalculator::Yaku::yval_1han_menzen, // リー即のみでも和了って良いルール
 			/* 必ず立直と複合する */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
@@ -80,14 +75,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		/* 超一発(リーチ一発を下家から和了る) */
 		if (getRule(RULE_CHOUIPPATSU) != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				"超一発",
-				(getRule(RULE_RIICHI_IPPATSU) == 2) ? /* 一発は縛りを満たさない(リャンシバでリー即のみの和了を認めない)ルール */
-					yaku::yakuCalculator::Yaku::HANFUNC( [](const MENTSU_ANALYSIS* const analysis) {
-						return (*analysis->MenzenFlag) ?
-							yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
-							yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_2han) :
-							yaku::yakuCalculator::Yaku::YAKU_HAN();
-					}) : yaku::yakuCalculator::Yaku::yval_2han_menzen, // リー即のみでも和了って良いルール
+				"超一発", (getRule(RULE_RIICHI_IPPATSU) == 2) ?
+				yaku::yakuCalculator::Yaku::yval_2han_menzen_dependent : /* 一発は縛りを満たさない(リャンシバでリー即のみの和了を認めない)ルール */
+				yaku::yakuCalculator::Yaku::yval_2han_menzen, // リー即のみでも和了って良いルール
 				"一発", /* 必ず立直と複合する */
 				[](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
@@ -495,10 +485,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* 八連荘 */
 	if (getRule(RULE_PAARENCHAN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"八連荘", yaku::yakuCalculator::Yaku::HANFUNC( [](const MENTSU_ANALYSIS* const) {
-				return yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
-			}), // 移植時仕様変更：八連荘自体が縛りを満たさないようにする
+			"八連荘", yaku::yakuCalculator::Yaku::yval_yakuman_dependent, // 移植時仕様変更：八連荘自体が縛りを満たさないようにする
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->AgariChain == 8)); // 和了ったのが連続8回目
@@ -507,10 +494,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* 八連殺し(パーレンブレイカー) */
 	if (getRule(RULE_BREAKING_PAARENCHAN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"破回八連荘", yaku::yakuCalculator::Yaku::HANFUNC( [](const MENTSU_ANALYSIS* const) {
-				return yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
-			}), // いいぜ、てめえがこの局で八連荘を和了れるっていうなら
+			"破回八連荘", yaku::yakuCalculator::Yaku::yval_yakuman_dependent, // いいぜ、てめえがこの局で八連荘を和了れるっていうなら
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // まずはその
 					(analysis->GameStat->AgariChain == -1)); // ふざけた和了を頭ハネ(じゃなくてもいいけど)！

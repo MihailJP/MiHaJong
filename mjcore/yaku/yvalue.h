@@ -120,5 +120,27 @@ const yaku::yakuCalculator::Yaku::KuisagariHan yaku::yakuCalculator::Yaku::yval_
 	yaku::yakuCalculator::Yaku::KuisagariHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_6han,
 	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null);
 
+const yaku::yakuCalculator::Yaku::FixedHan yaku::yakuCalculator::Yaku::yval_1han_dependent =
+	yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han);
+const yaku::yakuCalculator::Yaku::FixedHan yaku::yakuCalculator::Yaku::yval_2han_dependent =
+	yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_2han);
+const yaku::yakuCalculator::Yaku::FixedHan yaku::yakuCalculator::Yaku::yval_4han_dependent =
+	yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_4han);
+const yaku::yakuCalculator::Yaku::FixedHan yaku::yakuCalculator::Yaku::yval_yakuman_dependent =
+	yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
+
+const yaku::yakuCalculator::Yaku::MenzenHan yaku::yakuCalculator::Yaku::yval_1han_menzen_dependent =
+	yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han);
+const yaku::yakuCalculator::Yaku::MenzenHan yaku::yakuCalculator::Yaku::yval_2han_menzen_dependent =
+	yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_2han);
+const yaku::yakuCalculator::Yaku::MenzenHan yaku::yakuCalculator::Yaku::yval_yakuman_menzen_dependent =
+	yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
 
 #endif
