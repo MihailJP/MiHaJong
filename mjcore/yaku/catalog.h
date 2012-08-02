@@ -13,6 +13,7 @@ private:
 	static void yakulst_suit();
 	static void yakulst_yaojiu();
 	static void yakulst_sequence();
+	static void yakulst_dora();
 };
 
 #endif

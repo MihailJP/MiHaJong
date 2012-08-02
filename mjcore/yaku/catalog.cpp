@@ -19,5 +19,6 @@ void yaku::yakuCalculator::init() {
 	/* TODO: 槓子系の役 */
 	YakuCatalog::catalogInit::yakulst_sequence();
 	/* TODO: その他の役 */
+	YakuCatalog::catalogInit::yakulst_dora();
 	info("役カタログの構築を完了しました。");
 }

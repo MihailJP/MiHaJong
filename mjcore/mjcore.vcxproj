@@ -117,6 +117,7 @@
     <ClCompile Include="tileutil.cpp" />
     <ClCompile Include="yaku\catalog.cpp" />
     <ClCompile Include="yaku\catalog\context.cpp" />
+    <ClCompile Include="yaku\catalog\dora.cpp" />
     <ClCompile Include="yaku\catalog\irreg.cpp" />
     <ClCompile Include="yaku\catalog\pinhu.cpp" />
     <ClCompile Include="yaku\catalog\sequence.cpp" />
