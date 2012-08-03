@@ -12,6 +12,7 @@ private:
 	static void yakulst_irregular();
 	static void yakulst_suit();
 	static void yakulst_yaojiu();
+	static void yakulst_triplet_1();
 	static void yakulst_sequence();
 	static void yakulst_dora();
 };
