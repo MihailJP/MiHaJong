@@ -105,4 +105,51 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				return ((analysis->KeziCount[WhiteDragon] >= 1) && sanrenkoh(analysis));
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* レアな方の三色 */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		"三色同刻", (getRule(RULE_SANSHOKU_DOUKOH) != 0) ?
+		yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_2han,
+		"三色小同刻",
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			bool yakuFlag = false;
+			for (int i = 1; i <= 9; i++)
+				if ((analysis->KeziCount[i + TILE_SUIT_CHARACTERS] >= 1) &&
+					(analysis->KeziCount[i + TILE_SUIT_CIRCLES] >= 1) &&
+					(analysis->KeziCount[i + TILE_SUIT_BAMBOOS] >= 1))
+					yakuFlag = true;
+			return yakuFlag;
+		}
+	));
+	/* 四色同刻（えっ */
+	if (getRule(RULE_YONSHOKU_DOUKOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"四色同刻", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"三色同刻", "三色小同刻", "対々和",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 1; i <= 9; i++)
+					if ((analysis->KeziCount[i + TILE_SUIT_CHARACTERS] >= 1) &&
+						(analysis->KeziCount[i + TILE_SUIT_CIRCLES] >= 1) &&
+						(analysis->KeziCount[i + TILE_SUIT_BAMBOOS] >= 1) &&
+						(analysis->KeziCount[WhiteDragon] >= 1))
+						yakuFlag = true;
+				return yakuFlag;
+			}
+		));
+	/* 三色小同刻 */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		"三色小同刻", yaku::yakuCalculator::Yaku::yval_1han,
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			bool yakuFlag = false;
+			for (int i = 1; i <= 9; i++)
+				if ((analysis->DuiziCount[i + TILE_SUIT_CHARACTERS] >= 1) &&
+					(analysis->DuiziCount[i + TILE_SUIT_CIRCLES] >= 1) &&
+					(analysis->DuiziCount[i + TILE_SUIT_BAMBOOS] >= 1))
+					yakuFlag = true;
+			return yakuFlag;
+		}
+	));
 }
