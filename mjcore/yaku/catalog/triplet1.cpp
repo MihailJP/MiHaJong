@@ -152,4 +152,100 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			return yakuFlag;
 		}
 	));
+
+	// ---------------------------------------------------------------------
+
+	/* 三元和・四喜和判定用 */
+	auto WindCnt =
+		[](const MENTSU_ANALYSIS* const analysis) -> int {
+			return analysis->DuiziCount[EastWind] + analysis->KeziCount[EastWind] +
+				 analysis->DuiziCount[SouthWind] + analysis->KeziCount[SouthWind] +
+				  analysis->DuiziCount[WestWind] + analysis->KeziCount[WestWind] +
+				  analysis->DuiziCount[NorthWind] + analysis->KeziCount[NorthWind];
+		};
+	auto DragonCnt =
+		[](const MENTSU_ANALYSIS* const analysis) -> int {
+			return analysis->DuiziCount[WhiteDragon] + analysis->KeziCount[WhiteDragon] +
+				 analysis->DuiziCount[GreenDragon] + analysis->KeziCount[GreenDragon] +
+				  analysis->DuiziCount[RedDragon] + analysis->KeziCount[RedDragon];
+		};
+	/* 小三元 */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		"小三元", yaku::yakuCalculator::Yaku::yval_2han,
+		/* 役牌2つは必ず複合する */
+		[DragonCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (DragonCnt(analysis) == 5);
+		}
+	));
+	/* 大三元 */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		"大三元", yaku::yakuCalculator::Yaku::yval_yakuman,
+		"役牌・白", "役牌・發", "役牌・中",
+		[DragonCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (DragonCnt(analysis) == 6);
+		}
+	));
+	/* 小四喜 */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		"小四喜", yaku::yakuCalculator::Yaku::yval_yakuman,
+		"混一色",
+		[WindCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (WindCnt(analysis) == 7);
+		}
+	));
+	/* 天虎 */
+	if (getRule(RULE_HEAVEN_TIGER) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"天虎", yaku::yakuCalculator::Yaku::yval_triple_yakuman,
+			"混一色", "小四喜", "字一色",
+			[WindCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((WindCnt(analysis) == 7)&&(analysis->KeziCount[GreenDragon] >= 1));
+			}
+		));
+	/* 大怪湖 */
+	if (getRule(RULE_DAIKAIKO) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"大怪湖", yaku::yakuCalculator::Yaku::yval_triple_yakuman,
+			"混一色", "小四喜", "字一色",
+			[WindCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((WindCnt(analysis) == 7)&&(analysis->KeziCount[WhiteDragon] >= 1));
+			}
+		));
+	/* 千年虫 */
+	if (getRule(RULE_Y2KBUG) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"千年虫", yaku::yakuCalculator::Yaku::yval_double_yakuman,
+			"混一色", "小四喜", "混老頭",
+			[WindCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((WindCnt(analysis) == 7)&&
+					(analysis->KeziCount[CharacterNine] >= 1)&&(analysis->KeziCount[SouthWind] == 1));
+			}
+		));
+	/* 大四喜 */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		"大四喜", (getRule(RULE_DOUBLE_YAKUMAN) == 0) ?
+		yaku::yakuCalculator::Yaku::yval_double_yakuman : yaku::yakuCalculator::Yaku::yval_yakuman,
+		"混一色", "役牌・場風", "役牌・自風", "役牌・開門風", "役牌・裏風",
+		[WindCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (WindCnt(analysis) == 8);
+		}
+	));
+	/* 弾葯 */
+	if (getRule(RULE_DAN_YAKU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"弾葯", yaku::yakuCalculator::Yaku::yval_triple_yakuman,
+			"混一色", "大四喜", "混老頭",
+			[WindCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((WindCnt(analysis) == 8)&&(analysis->DuiziCount[CharacterNine] >= 1));
+			}
+		));
+	/* 仙人掌 */
+	if (getRule(RULE_CACTUS) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"仙人掌", yaku::yakuCalculator::Yaku::yval_quad_yakuman,
+			"混一色", "大四喜", "字一色",
+			[WindCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((WindCnt(analysis) == 8)&&(analysis->DuiziCount[RedDragon] >= 1));
+			}
+		));
 }
