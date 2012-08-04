@@ -627,6 +627,21 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 		analysisLoop(gameStat, targetPlayer, shanten, &yakuInfo);
 	else // Žµ‘ÎŽqA‘Žm–³‘oA‚»‚Ì‘¼“ÁŽê‚È˜a—¹
 		analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);
+	/* ƒAƒŠƒXƒhƒ‰‚Ì”v•ˆ‹L˜^ */
+	if ((getRule(RULE_ALICE) != 0) && (gameStat->Player[targetPlayer].MenzenFlag)) {
+		uint16_t AlicePointer = gameStat->DoraPointer;
+		auto tiles = countTilesInHand(gameStat, targetPlayer);
+		haifu::haifuresetalicedora();
+		while (1) {
+			AlicePointer -= 2;
+			if (AlicePointer <= gameStat->TilePointer) {
+				AlicePointer += 2; break;
+			}
+			haifu::haifurecalicedora(gameStat->Deck[AlicePointer].tile);
+			if (tiles[gameStat->Deck[AlicePointer].tile] <= 0) break;
+		}
+	}
+	/* ‚¨‚í‚è */
 	return yakuInfo;
 }
 __declspec(dllexport) void yaku::yakuCalculator::countyaku(const GameTable* const gameStat,
