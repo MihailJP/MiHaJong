@@ -80,13 +80,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"金梯", yaku::yakuCalculator::Yaku::yval_double_yakuman,
 			"清一色", "対々和",
-			[wulianke, parsedat_monochrome5](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[wulianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return wulianke(analysis, (const char*)&parsedat_monochrome5[0], 3, 8, 1);
 			}
 		));
 	/* 四連刻 */
 	auto suurenkoh =
-		[lianke, parsedat_monochrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return lianke(analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 1, true);
 		};
 	if (getRule(RULE_SUURENKOH) == 1)
@@ -103,7 +103,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		));
 	/* 三連刻 */
 	auto sanrenkoh =
-		[lianke, parsedat_monochrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return lianke(analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 1, false);
 		};
 	if (getRule(RULE_SANRENKOH) != 0)
@@ -301,7 +301,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		kaimenkaze =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->KeziCount[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
-					analysis->GameStat->WaremePlayer, analysis->GameStat->GameRound)))] >= 1);
+					analysis->GameStat->WaremePlayer, analysis->GameStat->GameRound))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"役牌・開門風", yaku::yakuCalculator::Yaku::yval_1han,
@@ -317,7 +317,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		urakaze =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->KeziCount[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
-					RelativePositionOf(analysis->player, sOpposite), analysis->GameStat->GameRound)))] >= 1);
+					RelativePositionOf(analysis->player, sOpposite), analysis->GameStat->GameRound))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"役牌・裏風", yaku::yakuCalculator::Yaku::yval_1han,
@@ -503,7 +503,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			"紅鶏報暁", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和", "混一色", "絶一門", "役牌・白", "役牌・中", "金鶏報暁", "銀鶏報春",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->analysis->MianziDat[0].tile == CircleOne) &&
+				return ((analysis->MianziDat[0].tile == CircleOne) &&
 					(analysis->KeziCount[BambooOne] >= 1) &&
 					(analysis->KeziCount[EastWind] >= 1) &&
 					(analysis->KeziCount[WhiteDragon] >= 1) &&
@@ -539,7 +539,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四跳牌刻", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和", "跳牌刻",
-			[lianke, parsedat_monochrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 2, true);
 			}
 		));
@@ -547,7 +547,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (getRule(RULE_CHAOPAIKOH) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"跳牌刻", yaku::yakuCalculator::Yaku::yval_2han,
-			[lianke, parsedat_monochrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 2, false);
 			}
 		));
@@ -555,7 +555,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (getRule(RULE_CHINPAIKOH) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"筋牌刻", yaku::yakuCalculator::Yaku::yval_2han,
-			[lianke, parsedat_monochrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 3, false);
 			}
 		));
@@ -563,7 +563,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (getRule(RULE_TINSANKOH) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"頂三刻", yaku::yakuCalculator::Yaku::yval_2han,
-			[lianke, parsedat_monochrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 4, false);
 			}
 		));
@@ -575,7 +575,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"銀梯", yaku::yakuCalculator::Yaku::yval_4han,
 			"二色四連刻", "二色三連刻", "対々和",
-			[wulianke, parsedat_bichrome5](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[wulianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return wulianke(analysis, (const char*)&parsedat_bichrome5[0], 90, 8, 1);
 			}
 		));
@@ -584,7 +584,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色四連刻", yaku::yakuCalculator::Yaku::yval_3han,
 			"二色三連刻", "対々和",
-			[lianke, parsedat_bichrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_bichrome4[0], 42, 8, 1, true);
 			}
 		));
@@ -592,7 +592,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (getRule(RULE_SILVER_LADDER) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色三連刻", yaku::yakuCalculator::Yaku::yval_1han,
-			[lianke, parsedat_bichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_bichrome3[0], 18, 4, 1, false);
 			}
 		));
@@ -601,7 +601,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色四跳牌刻", yaku::yakuCalculator::Yaku::yval_3han,
 			"二色跳牌刻", "対々和",
-			[lianke, parsedat_bichrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_bichrome4[0], 42, 8, 2, true);
 			}
 		));
@@ -609,15 +609,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (getRule(RULE_NISHOKU_CHAOPAIKOH) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色跳牌刻", yaku::yakuCalculator::Yaku::yval_2han,
-			[lianke, parsedat_bichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_bichrome3[0], 18, 4, 2, false);
 			}
 		));
 	/* 二色筋牌刻 */
-	if (getRule(ULE_NISHOKU_CHINPAIKOH) != 0)
+	if (getRule(RULE_NISHOKU_CHINPAIKOH) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色筋牌刻", yaku::yakuCalculator::Yaku::yval_2han,
-			[lianke, parsedat_bichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_bichrome3[0], 18, 4, 3, false);
 			}
 		));
@@ -625,7 +625,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (getRule(RULE_NISHOKU_TINSANKOH) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色頂三刻", yaku::yakuCalculator::Yaku::yval_2han,
-			[lianke, parsedat_bichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_bichrome3[0], 18, 4, 4, false);
 			}
 		));
@@ -637,7 +637,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"雲梯", yaku::yakuCalculator::Yaku::yval_4han,
 			"三色四連刻", "三色連刻", "対々和",
-			[wulianke, parsedat_trichrome5](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[wulianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return wulianke(analysis, (const char*)&parsedat_trichrome5[0], 150, 8, 1);
 			}
 		));
@@ -646,7 +646,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色四連刻", yaku::yakuCalculator::Yaku::yval_3han,
 			"三色連刻", "対々和",
-			[lianke, parsedat_trichrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_trichrome4[0], 36, 8, 1, true);
 			}
 		));
@@ -654,7 +654,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (getRule(RULE_SANSHOKU_RENKOH) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色連刻", yaku::yakuCalculator::Yaku::yval_2han,
-			[lianke, parsedat_trichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 1, false);
 			}
 		));
@@ -663,7 +663,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色四跳牌刻", yaku::yakuCalculator::Yaku::yval_3han,
 			"三色跳牌刻", "対々和",
-			[lianke, parsedat_trichrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_trichrome4[0], 36, 8, 2, true);
 			}
 		));
@@ -671,7 +671,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (getRule(RULE_SANSHOKU_CHAOPAIKOH) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色跳牌刻", yaku::yakuCalculator::Yaku::yval_2han,
-			[lianke, parsedat_trichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 2, false);
 			}
 		));
@@ -679,7 +679,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (getRule(RULE_SANSHOKU_CHINPAIKOH) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色筋牌刻", yaku::yakuCalculator::Yaku::yval_2han,
-			[lianke, parsedat_trichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 3, false);
 			}
 		));
@@ -687,7 +687,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (getRule(RULE_SANSHOKU_TINSANKOH) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色頂三刻", yaku::yakuCalculator::Yaku::yval_2han,
-			[lianke, parsedat_trichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 4, false);
 			}
 		));

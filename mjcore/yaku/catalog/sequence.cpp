@@ -605,7 +605,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			"四歩高", (getRule(RULE_OKASUUJUN) == 1) ?
 			yaku::yakuCalculator::Yaku::yval_yakuman : yaku::yakuCalculator::Yaku::yval_double_yakuman,
 			"三歩高",
-			[puukao, parsedat_monochrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 1, true);
 			}
 		));
@@ -617,7 +617,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			((getRule(RULE_OKASANJUN) == 2) ?
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen :
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_2han_kuisagari),
-			[puukao, parsedat_monochrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 1, false);
 			}
 		));
@@ -629,7 +629,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			((getRule(RULE_YAMASANJUN) == 2) ?
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen :
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_2han_kuisagari),
-			[puukao, parsedat_monochrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 2, true);
 			}
 		));
@@ -638,7 +638,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色四歩高", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
 			"二色三歩高",
-			[puukao, parsedat_bichrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_bichrome4[0], 42, 8, 1, true);
 			}
 		));
@@ -646,7 +646,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	if (getRule(RULE_NISHOKU_OKASANJUN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色三歩高", yaku::yakuCalculator::Yaku::yval_1han,
-			[puukao, parsedat_bichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_bichrome3[0], 18, 4, 1, false);
 			}
 		));
@@ -655,7 +655,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"大雑連套", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
 			"雑連環套",
-			[puukao, parsedat_bichrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_bichrome4[0], 42, 8, 2, true);
 			}
 		));
@@ -663,7 +663,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	if (getRule(RULE_NISHOKU_YAMASANJUN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"雑連環套", yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
-			[puukao, parsedat_bichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_bichrome3[0], 18, 4, 2, false);
 			}
 		));
@@ -672,7 +672,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色四歩高", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
 			"三色三歩高",
-			[puukao, parsedat_trichrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_trichrome4[0], 36, 8, 1, true);
 			}
 		));
@@ -684,7 +684,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			((getRule(RULE_SANSHOKU_OKASANJUN) == 2) ?
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen :
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_2han_kuisagari),
-			[puukao, parsedat_trichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 1, false);
 			}
 		));
@@ -695,7 +695,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_yakuman :
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_6han_kuisagari,
 			"混連環套",
-			[puukao, parsedat_trichrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_trichrome4[0], 36, 8, 2, true);
 			}
 		));
@@ -707,7 +707,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			((getRule(RULE_NISHOKU_YAMASANJUN) == 2) ?
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen :
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_2han_kuisagari),
-			[puukao, parsedat_trichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 2, false);
 			}
 		));
@@ -736,7 +736,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 
 	/* 花龍 */
 	auto sanshoku_tsuukan =
-		[parsedat_trichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			bool yakuFlag = false;
 			for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); k++)
 				if ((analysis->ShunziCount[(int)((&*k)[0] - '0') * TILE_SUIT_STEP + 1] >= 1) &&
@@ -827,7 +827,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色双龍会", han,
 			"鏡同和",
-			[ShuangLong, parsedat_trichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[ShuangLong](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); k++)
 					if (ShuangLong(analysis, (int)((&*k)[0] - '0') * TILE_SUIT_STEP,
 						(int)((&*k)[1] - '0') * TILE_SUIT_STEP,
