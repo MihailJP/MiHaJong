@@ -579,4 +579,56 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				return yakuFlag;
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* 二色五連刻 */
+	const std::array<char[8], 90> parsedat_bichrome5 = {
+		"00001","00002","00010","00011","00020","00022","00100","00101","00110","00111",
+		"00200","00202","00220","00222","01000","01001","01010","01011","01100","01101",
+		"01110","01111","02000","02002","02020","02022","02200","02202","02220","02222",
+		"10000","10001","10010","10011","10100","10101","10110","10111","11000","11001",
+		"11010","11011","11100","11101","11110","11112","11121","11122","11211","11212",
+		"11221","11222","12111","12112","12121","12122","12211","12212","12221","12222",
+		"20000","20002","20020","20022","20200","20202","20220","20222","21111","21112",
+		"21121","21122","21211","21212","21221","21222","22000","22002","22020","22022",
+		"22111","22112","22121","22122","22200","22202","22211","22212","22220","22221",
+	};
+	auto wulianke =
+		[](const MENTSU_ANALYSIS* const analysis,
+		const char* const parsedat, int pdsize, int fldsize, int step) -> bool {
+			bool yakuFlag = false;
+			for (int i = 0; i < pdsize; i++) {
+				for (int k = 1; k <= (9 - step * 4); k++)
+					if ((analysis->DuiziCount[(int)(parsedat[i * fldsize + 0] - '0') * TILE_SUIT_STEP + step * k] >= 1) &&
+						(analysis->KeziCount[(int)(parsedat[i * fldsize + 1] - '0') * TILE_SUIT_STEP + step * k] >= 1) &&
+						(analysis->KeziCount[(int)(parsedat[i * fldsize + 2] - '0') * TILE_SUIT_STEP + step * k] >= 1) &&
+						(analysis->KeziCount[(int)(parsedat[i * fldsize + 3] - '0') * TILE_SUIT_STEP + step * k] >= 1) &&
+						(analysis->DuiziCount[(int)(parsedat[i * fldsize + 4] - '0') * TILE_SUIT_STEP + step * k] >= 1) )
+						yakuFlag = true;
+			}
+			return yakuFlag;
+		};
+	auto lianke =
+		[](const MENTSU_ANALYSIS* const analysis,
+		const char* const parsedat, int pdsize, int fldsize, int step, bool suurnkoh) -> bool {
+			bool yakuFlag = false;
+			for (int i = 0; i < pdsize; i++) {
+				for (int k = 1; k <= (9 - step * (suurnkoh ? 3 : 2)); k++)
+					if ((analysis->KeziCount[(int)(parsedat[i * fldsize + 0] - '0') * TILE_SUIT_STEP + step * k] >= 1) &&
+						(analysis->KeziCount[(int)(parsedat[i * fldsize + 1] - '0') * TILE_SUIT_STEP + step * k] >= 1) &&
+						(analysis->KeziCount[(int)(parsedat[i * fldsize + 2] - '0') * TILE_SUIT_STEP + step * k] >= 1) &&
+						(suurnkoh&&(analysis->KeziCount[(int)(parsedat[i * fldsize + 3] - '0') * TILE_SUIT_STEP + step * k] >= 1)) )
+						yakuFlag = true;
+			}
+			return yakuFlag;
+		};
+	if (getRule(RULE_SILVER_LADDER) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"銀梯", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+			"二色四連刻", "二色三連刻", "対々和",
+			[wulianke, parsedat_bichrome5](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return wulianke(analysis, (const char*)&parsedat_bichrome5[0], 90, 8, 1);
+			}
+		));
 }
