@@ -265,7 +265,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* –ð”v */
 	auto bakaze =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return (analysis->KeziCount[Wind2Tile(analysis->GameRound / 4)] >= 1);
+			return (analysis->KeziCount[Wind2Tile(analysis->GameStat->GameRound / 4)] >= 1);
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"–ð”vEê•—", yaku::yakuCalculator::Yaku::yval_1han,
@@ -372,7 +372,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* ‹q•—ŽO */
 	if (getRule(RULE_THREE_OTAKAZE) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"‹q•—ŽO", yaku::yakuCalculator::Yaku::yval_3an,
+			"‹q•—ŽO", yaku::yakuCalculator::Yaku::yval_3han,
 			"ŽO•—",
 			[WindCnt, bakaze, jikaze, kaimenkaze, urakaze]
 			(const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -386,7 +386,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* ‹q•—¬ŽO */
 	if (getRule(RULE_OTAKAZE_XIAOSANFENG) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"‹q•—¬ŽO", yaku::yakuCalculator::Yaku::yval_3an,
+			"‹q•—¬ŽO", yaku::yakuCalculator::Yaku::yval_2han,
 			"¬ŽO",
 			[WindCnt, bakaze, jikaze, kaimenkaze, urakaze]
 			(const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -395,6 +395,64 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 					(!jikaze(analysis)) &&
 					(!kaimenkaze(analysis)) &&
 					(!urakaze(analysis)));
+			}
+		));
+
+	// ---------------------------------------------------------------------
+
+	/* ¼’†“‡“ì•û */
+	if (getRule(RULE_NISHINAKAJIMA) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"¼’†“‡“ì•û", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"–ð”vEê•—", "–ð”vEŽ©•—", "–ð”vE’†",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				if ((analysis->GameStat->GameRound / 4 == sWest) &&
+					(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) == sSouth))
+					yakuFlag = true;
+				if ((analysis->GameStat->GameRound / 4 == sSouth) &&
+					(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) == sWest))
+					yakuFlag = true;
+				return ((analysis->KeziCount[SouthWind] >= 1) &&
+					(analysis->KeziCount[WestWind] >= 1) &&
+					(analysis->KeziCount[RedDragon] >= 1) &&
+					(yakuFlag));
+			}
+		));
+	/* áŒŽ‰Ô */
+	if (getRule(RULE_SETSUGETSUKA) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"áŒŽ‰Ô", (getRule(RULE_SETSUGETSUKA) == 2) ?
+			yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_2han,
+			"–ð”vE”’",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[WhiteDragon] >= 1) &&
+					(analysis->KeziCount[CircleOne] >= 1) &&
+					(analysis->KeziCount[CircleFive] >= 1));
+			}
+		));
+	/* •—‰ÔáŒŽ */
+	if (getRule(RULE_FUUKA_SETSUGETSU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"•—‰ÔáŒŽ", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"áŒŽ‰Ô", "‘ÎX˜a", "–ð”vEê•—", "–ð”vEŽ©•—",
+			[bakaze, jikaze](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[WhiteDragon] >= 1) &&
+					(analysis->KeziCount[CircleOne] >= 1) &&
+					(analysis->KeziCount[CircleFive] >= 1) &&
+					(bakaze(analysis) || jikaze(analysis)));
+			}
+		));
+	/* ‰Ô’¹•—ŒŽ */
+	if (getRule(RULE_KACHOU_FUUGETSU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‰Ô’¹•—ŒŽ", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"áŒŽ‰Ô", "‘ÎX˜a", "–ð”vEê•—", "–ð”vEŽ©•—",
+			[bakaze, jikaze](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[BambooOne] >= 1) &&
+					(analysis->KeziCount[CircleOne] >= 1) &&
+					(analysis->KeziCount[CircleFive] >= 1) &&
+					(bakaze(analysis) || jikaze(analysis)));
 			}
 		));
 }
