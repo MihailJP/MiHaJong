@@ -5,6 +5,9 @@ extern const std::array<char[4], 3> parsedat_monochrome3;
 extern const std::array<char[8], 90> parsedat_bichrome5;
 extern const std::array<char[8], 42> parsedat_bichrome4;
 extern const std::array<char[4], 18> parsedat_bichrome3;
+extern const std::array<char[8], 150> parsedat_trichrome5;
+extern const std::array<char[8], 36> parsedat_trichrome4;
+extern const std::array<char[4], 6> parsedat_trichrome3;
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 四暗刻 */
@@ -624,6 +627,68 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			"二色頂三刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[lianke, parsedat_bichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return lianke(analysis, (const char*)&parsedat_bichrome3[0], 18, 4, 4, false);
+			}
+		));
+
+	// ---------------------------------------------------------------------
+
+	/* 三色五連刻 */
+	if (getRule(RULE_SKY_LADDER) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"雲梯", yaku::yakuCalculator::Yaku::yval_4han,
+			"三色四連刻", "三色連刻", "対々和",
+			[wulianke, parsedat_trichrome5](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return wulianke(analysis, (const char*)&parsedat_trichrome5[0], 150, 8, 1);
+			}
+		));
+	/* 三色四連刻 */
+	if (getRule(RULE_SANSHOKU_SUURENKOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"三色四連刻", yaku::yakuCalculator::Yaku::yval_3han,
+			"三色連刻", "対々和",
+			[lianke, parsedat_trichrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return lianke(analysis, (const char*)&parsedat_trichrome4[0], 36, 8, 1, true);
+			}
+		));
+	/* 三色連刻 */
+	if (getRule(RULE_SANSHOKU_RENKOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"三色連刻", yaku::yakuCalculator::Yaku::yval_2han,
+			[lianke, parsedat_trichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 1, false);
+			}
+		));
+	/* 三色四跳牌刻 */
+	if (getRule(RULE_SANSHOKU_SUUCHAOPAIKOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"三色四跳牌刻", yaku::yakuCalculator::Yaku::yval_3han,
+			"三色跳牌刻", "対々和",
+			[lianke, parsedat_trichrome4](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return lianke(analysis, (const char*)&parsedat_trichrome4[0], 36, 8, 2, true);
+			}
+		));
+	/* 三色跳牌刻 */
+	if (getRule(RULE_SANSHOKU_CHAOPAIKOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"三色跳牌刻", yaku::yakuCalculator::Yaku::yval_2han,
+			[lianke, parsedat_trichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 2, false);
+			}
+		));
+	/* 三色筋牌刻 */
+	if (getRule(RULE_SANSHOKU_CHINPAIKOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"三色筋牌刻", yaku::yakuCalculator::Yaku::yval_2han,
+			[lianke, parsedat_trichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 3, false);
+			}
+		));
+	/* 三色頂三刻 */
+	if (getRule(RULE_SANSHOKU_TINSANKOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"三色頂三刻", yaku::yakuCalculator::Yaku::yval_2han,
+			[lianke, parsedat_trichrome3](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 4, false);
 			}
 		));
 }
