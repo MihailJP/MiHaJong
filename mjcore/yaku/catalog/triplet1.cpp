@@ -455,4 +455,64 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 					(bakaze(analysis) || jikaze(analysis)));
 			}
 		));
+	/* “Œ–kŽ©“®ŽÔ“¹ */
+	if (getRule(RULE_TOHOKU_EXPWY) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"“Œ–kŽ©“®ŽÔ“¹", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"‘ÎX˜a", "¬ˆêF",
+			[bakaze, jikaze](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->DuiziCount[CircleTwo] >= 1) &&
+					(analysis->DuiziCount[CircleFour] >= 1) &&
+					(analysis->DuiziCount[CircleSix] >= 1) &&
+					(analysis->DuiziCount[EastWind] >= 1) &&
+					(analysis->DuiziCount[NorthWind] >= 1));
+			}
+		));
+	/* “ŒŠÖ“ŒŽ©“®ŽÔ“¹ */
+	if (getRule(RULE_HIGASHIKANTO_EXPWY) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"“ŒŠÖ“ŒŽ©“®ŽÔ“¹", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"‘ÎX˜a", "¬ˆêF",
+			[bakaze, jikaze](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->DuiziCount[CircleTwo] >= 1) &&
+					(analysis->DuiziCount[CircleFour] >= 1) &&
+					(analysis->DuiziCount[CircleSix] >= 1) &&
+					(analysis->DuiziCount[EastWind] >= 1) &&
+					(analysis->DuiziCount[WestWind] >= 1));
+			}
+		));
+	/* ’†‘Œn‚Ì‚¨‚ß‚Å‚½‚¢–ð */
+	if (getRule(RULE_KOUKEI_HOUGYOU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"gŒ{•ñ‹Å", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"‘ÎX˜a", "¬ˆêF", "âˆê–å", "–ð”vE”’", "–ð”vE’†", "‹àŒ{•ñ‹Å", "‹âŒ{•ñt",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->analysis->MianziDat[0].tile == CircleOne) &&
+					(analysis->KeziCount[BambooOne] >= 1) &&
+					(analysis->KeziCount[EastWind] >= 1) &&
+					(analysis->KeziCount[WhiteDragon] >= 1) &&
+					(analysis->KeziCount[RedDragon] >= 1));
+			}
+		));
+	if (getRule(RULE_KINKEI_HOUGYOU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹àŒ{•ñ‹Å", yaku::yakuCalculator::Yaku::yval_3han,
+			"–ð”vE’†",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[BambooOne] >= 1) &&
+					(analysis->KeziCount[EastWind] >= 1) &&
+					(analysis->KeziCount[RedDragon] >= 1));
+			}
+		));
+	if (getRule(RULE_GINKEI_HOUSHUN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹âŒ{•ñt", yaku::yakuCalculator::Yaku::yval_5han,
+			"–ð”vE”’",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[BambooOne] >= 1) &&
+					(analysis->KeziCount[EastWind] >= 1) &&
+					(analysis->KeziCount[WhiteDragon] >= 1) &&
+					(analysis->PlayerStat->FlowerFlag.Spring));
+			}
+		));
 }
