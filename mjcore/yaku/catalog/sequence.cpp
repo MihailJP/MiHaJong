@@ -1,5 +1,12 @@
 #include "../catalog.h"
 
+extern const std::array<char[8], 3> parsedat_monochrome4;
+extern const std::array<char[4], 3> parsedat_monochrome3;
+extern const std::array<char[8], 42> parsedat_bichrome4;
+extern const std::array<char[4], 18> parsedat_bichrome3;
+extern const std::array<char[8], 36> parsedat_trichrome4;
+extern const std::array<char[4], 6> parsedat_trichrome3;
+
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	/* 一色双龍会 */
 	if (getRule(RULE_ISSHOKU_SOURYUU) != 0)
@@ -593,12 +600,6 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 			return yakuFlag;
 		};
-	const std::array<char[8], 3> parsedat_monochrome4 = {
-		"0000","1111","2222",
-	};
-	const std::array<char[4], 3> parsedat_monochrome3 = {
-		"000","111","222",
-	};
 	if (getRule(RULE_OKASUUJUN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四歩高", (getRule(RULE_OKASUUJUN) == 1) ?
@@ -633,19 +634,6 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	/* 二色四歩高 */
-	const std::array<char[8], 42> parsedat_bichrome4 = {
-		"0001","0002","0010","0011","0020","0022","0100",
-		"0101","0110","0111","0200","0202","0220","0222",
-		"1000","1001","1010","1011","1100","1101","1110",
-		"1112","1121","1122","1211","1212","1221","1222",
-		"2000","2002","2020","2022","2111","2112","2121",
-		"2122","2200","2202","2211","2212","2220","2221",
-	};
-	const std::array<char[4], 18> parsedat_bichrome3 = {
-		"001","002","010","011","020","022",
-		"100","101","110","112","121","122",
-		"200","202","211","212","220","221",
-	};
 	if (getRule(RULE_NISHOKU_OKASUUJUN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色四歩高", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
@@ -680,17 +668,6 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	/* 三色四歩高 */
-	const std::array<char[8], 36> parsedat_trichrome4 = {
-		"0012","0021","0102","0112","0120","0121",
-		"0122","0201","0210","0211","0212","0221",
-		"1002","1012","1020","1021","1022","1102",
-		"1120","1200","1201","1202","1210","1220",
-		"2001","2010","2011","2012","2021","2100",
-		"2101","2102","2110","2120","2201","2210",
-	};
-	const std::array<char[4], 6> parsedat_trichrome3 = {
-		"012","021","102","120","201","210",
-	};
 	if (getRule(RULE_SANSHOKU_OKASUUJUN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色四歩高", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,

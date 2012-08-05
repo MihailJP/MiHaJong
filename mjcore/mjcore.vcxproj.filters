@@ -102,6 +102,9 @@
     <ClCompile Include="yaku\catalog.cpp">
       <Filter>ソース ファイル\yaku</Filter>
     </ClCompile>
+    <ClCompile Include="yaku\suittbl.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
+    </ClCompile>
     <ClCompile Include="yaku\catalog\pinhu.cpp">
       <Filter>ソース ファイル\yaku\catalog</Filter>
     </ClCompile>
