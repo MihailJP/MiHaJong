@@ -308,4 +308,23 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			return (analysis->KeziCount[RedDragon] >= 1);
 		}
 	));
+
+	// ---------------------------------------------------------------------
+
+	/* VÀ‚¯‚ñ‚¶ */
+	if (getRule(RULE_NIINUMA_KENJI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"VÀ‚¯‚ñ‚¶", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[BambooOne] >= 1);
+			}
+		));
+	/* w‘¾ŒÛ */
+	if (getRule(RULE_JINDAIKO) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"w‘¾ŒÛ", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[CircleOne] >= 1);
+			}
+		));
 }
