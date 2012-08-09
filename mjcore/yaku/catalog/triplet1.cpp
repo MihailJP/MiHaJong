@@ -691,4 +691,27 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 4, false);
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	if (getRule(RULE_RYANDOUKOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"“ñ“¯", yaku::yakuCalculator::Yaku::yval_2han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				const int suit[3][2] = {
+					{TILE_SUIT_CHARACTERS, TILE_SUIT_CIRCLES},
+					{TILE_SUIT_CHARACTERS, TILE_SUIT_BAMBOOS},
+					{TILE_SUIT_CIRCLES, TILE_SUIT_BAMBOOS},
+				};
+				for (int k = 0; k < 3; k++) {
+					int j = 0;
+					for (int i = 1; i <= 9; i++)
+						if ((analysis->KeziCount[i + suit[k][0]] >= 1) &&
+							(analysis->KeziCount[i + suit[k][1]] >= 1)) ++j;
+					if (j == 2) yakuFlag = true;
+				}
+				return yakuFlag;
+			}
+		));
 }
