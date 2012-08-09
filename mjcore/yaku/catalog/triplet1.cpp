@@ -714,4 +714,25 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				return yakuFlag;
 			}
 		));
+	if (getRule(RULE_UIKYOU_TOITOI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"茴香ポン", (getRule(RULE_UIKYOU_TOITOI) == 2) ?
+			yaku::yakuCalculator::Yaku::yval_5han : yaku::yakuCalculator::Yaku::yval_6han,
+			"三色同刻", "対々和",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 1; i <= 9; i++)
+					if ((analysis->KeziCount[i + TILE_SUIT_CHARACTERS] >= 1) &&
+						(analysis->KeziCount[i + TILE_SUIT_CIRCLES] >= 1) &&
+						(analysis->KeziCount[i + TILE_SUIT_BAMBOOS] >= 1))
+						if ((analysis->KeziCount[i + TILE_SUIT_CHARACTERS + 1] >= 1) ||
+							(analysis->KeziCount[i + TILE_SUIT_CIRCLES + 1] >= 1) ||
+							(analysis->KeziCount[i + TILE_SUIT_BAMBOOS + 1] >= 1) ||
+							(analysis->KeziCount[i + TILE_SUIT_CHARACTERS - 1] >= 1) ||
+							(analysis->KeziCount[i + TILE_SUIT_CIRCLES - 1] >= 1) ||
+							(analysis->KeziCount[i + TILE_SUIT_BAMBOOS - 1] >= 1))
+							yakuFlag = true;
+				return yakuFlag;
+			}
+		));
 }
