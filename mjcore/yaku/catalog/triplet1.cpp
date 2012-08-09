@@ -694,6 +694,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 
 	// ---------------------------------------------------------------------
 
+	/* “ñ“¯ */
 	if (getRule(RULE_RYANDOUKOH) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"“ñ“¯", yaku::yakuCalculator::Yaku::yval_2han,
@@ -714,6 +715,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				return yakuFlag;
 			}
 		));
+	/* ä ƒ|ƒ“ */
 	if (getRule(RULE_UIKYOU_TOITOI) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"ä ƒ|ƒ“", (getRule(RULE_UIKYOU_TOITOI) == 2) ?
@@ -733,6 +735,89 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 							(analysis->KeziCount[i + TILE_SUIT_BAMBOOS - 1] >= 1))
 							yakuFlag = true;
 				return yakuFlag;
+			}
+		));
+
+	// ---------------------------------------------------------------------
+
+	/* ”ªåæ•—‰ßŠC */
+	if (getRule(RULE_BAXIAN_CHENGFENG) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"”ªåæ•—‰ßŠC", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"‘ÎX˜a", "ŽOF“¯",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[CharacterEight] >= 1) &&
+					(analysis->KeziCount[CircleEight] >= 1) &&
+					(analysis->KeziCount[BambooEight] >= 1) &&
+					(analysis->KeziCount[WhiteDragon] >= 1) &&
+					((analysis->KeziCount[EastWind] >= 1) ||
+					(analysis->KeziCount[SouthWind] >= 1)) );
+			}
+		));
+	/* ”ªå‹Y–P */
+	if (getRule(RULE_BAXIAN_XIFENG) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"”ªå‹Y–P", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"‘ÎX˜a", "ŽOF“¯",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[CharacterEight] >= 1) &&
+					(analysis->KeziCount[CircleEight] >= 1) &&
+					(analysis->KeziCount[BambooEight] >= 1) &&
+					(analysis->KeziCount[BambooOne] >= 1) &&
+					(analysis->KeziCount[WestWind] >= 1) );
+			}
+		));
+	/* ”ªå‹YŽl–P */
+	if (getRule(RULE_BAXIAN_XISIFENG) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"”ªå‹YŽl–P", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"‘ÎX˜a", "ŽOF“¯", "”ªå‹Y–P",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[CharacterEight] >= 1) &&
+					(analysis->KeziCount[CircleEight] >= 1) &&
+					(analysis->KeziCount[BambooEight] >= 1) &&
+					(analysis->KangziCount[BambooOne] >= 1) &&
+					(analysis->KeziCount[WestWind] >= 1) );
+			}
+		));
+	/* ”ªå‹Y‹à‹T */
+	if (getRule(RULE_BAXIAN_XIJINGUI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"”ªå‹Y‹à‹T", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"‘ÎX˜a", "ŽOF“¯", "ä ƒ|ƒ“",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[CharacterEight] >= 1) &&
+					(analysis->KeziCount[CircleEight] >= 1) &&
+					(analysis->KeziCount[BambooEight] >= 1) &&
+					(analysis->KeziCount[BambooSeven] >= 1) &&
+					(analysis->KeziCount[WestWind] >= 1) );
+			}
+		));
+	/* ”ªå“¬–k“l */
+	if (getRule(RULE_BAXIAN_DOU_BEIDOU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"”ªå“¬–k“l", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"‘ÎX˜a", "ŽOF“¯", "ä ƒ|ƒ“",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[CharacterEight] >= 1) &&
+					(analysis->KeziCount[CircleEight] >= 1) &&
+					(analysis->KeziCount[BambooEight] >= 1) &&
+					(analysis->KeziCount[CircleSeven] >= 1) );
+			}
+		));
+	/* ”ªåãÚŽñ */
+	if (getRule(RULE_BAXIAN_JUSHOU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"”ªåãÚŽñ", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"‘ÎX˜a", "ŽOF“¯", "”ªå‰ßŠC",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[CharacterEight] >= 1) &&
+					(analysis->KeziCount[CircleEight] >= 1) &&
+					(analysis->KeziCount[BambooEight] >= 1) &&
+					analysis->PlayerStat->FlowerFlag.Spring && analysis->PlayerStat->FlowerFlag.Summer &&
+					analysis->PlayerStat->FlowerFlag.Autumn && analysis->PlayerStat->FlowerFlag.Winter &&
+					analysis->PlayerStat->FlowerFlag.Plum && analysis->PlayerStat->FlowerFlag.Orchid &&
+					analysis->PlayerStat->FlowerFlag.Chrys && analysis->PlayerStat->FlowerFlag.Bamboo );
 			}
 		));
 }
