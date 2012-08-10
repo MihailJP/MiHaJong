@@ -150,46 +150,52 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 
 	// ---------------------------------------------------------------------
 
+	auto haouben =
+		[](const MENTSU_ANALYSIS* const analysis, tileCode tc, int step) -> bool {
+			if ((analysis->KangziCount[tc] >= 1) &&
+				(analysis->KeziCount[tc + step] >= 1) &&
+				(analysis->KangziCount[tc + step] == 0) &&
+				(analysis->MianziDat[0].tile == (tileCode)(tc + step * 2)) )
+				return true;
+			if ((analysis->KangziCount[tc + step * 2] >= 1) &&
+				(analysis->KeziCount[tc + step] >= 1) &&
+				(analysis->KangziCount[tc + step] == 0) &&
+				(analysis->MianziDat[0].tile == tc) )
+				return true;
+			return false;
+		};
+
 	/* ”e‰¤•Ú */
 	if (getRule(RULE_HAOUBEN) == 1)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"”e‰¤•Ú", yaku::yakuCalculator::Yaku::yval_6han,
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[haouben](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
-					for (int k = 1; k <= 3; k++) {
-						if ((analysis->KangziCount[i + k] >= 1) &&
-							(analysis->KeziCount[i + k + 3] >= 1) &&
-							(analysis->KangziCount[i + k + 3] == 0) &&
-							(analysis->MianziDat[0].tile == (tileCode)(i + k + 6)) )
-							yakuFlag = true;
-						if ((analysis->KangziCount[i + k + 6] >= 1) &&
-							(analysis->KeziCount[i + k + 3] >= 1) &&
-							(analysis->KangziCount[i + k + 3] == 0) &&
-							(analysis->MianziDat[0].tile == (tileCode)(i + k)) )
-							yakuFlag = true;
-					}
-				}
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+					for (int k = 1; k <= 3; k++)
+						yakuFlag = yakuFlag || haouben(analysis, (tileCode)(i + k), 3);
 				return yakuFlag;
 			}
 		));
 	else if (getRule(RULE_HAOUBEN) == 2)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"”e‰¤•Ú", yaku::yakuCalculator::Yaku::yval_6han,
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[haouben](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int k = 1; k <= 3; k++) {
-					if ((analysis->KangziCount[TILE_SUIT_BAMBOOS + k] >= 1) &&
-						(analysis->KeziCount[TILE_SUIT_BAMBOOS + k + 3] >= 1) &&
-						(analysis->KangziCount[TILE_SUIT_BAMBOOS + k + 3] == 0) &&
-						(analysis->MianziDat[0].tile == (tileCode)(TILE_SUIT_BAMBOOS + k + 6)) )
-						yakuFlag = true;
-					if ((analysis->KangziCount[TILE_SUIT_BAMBOOS + k + 6] >= 1) &&
-						(analysis->KeziCount[TILE_SUIT_BAMBOOS + k + 3] >= 1) &&
-						(analysis->KangziCount[TILE_SUIT_BAMBOOS + k + 3] == 0) &&
-						(analysis->MianziDat[0].tile == (tileCode)(TILE_SUIT_BAMBOOS + k)) )
-						yakuFlag = true;
-				}
+				for (int k = 1; k <= 3; k++)
+					yakuFlag = yakuFlag || haouben(analysis, (tileCode)(TILE_SUIT_BAMBOOS + k), 3);
+				return yakuFlag;
+			}
+		));
+	/* —«ŠÖ’£ */
+	if (getRule(RULE_RYUUKANCHAN) == 2)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"—«ŠÖ’£", yaku::yakuCalculator::Yaku::yval_6han,
+			[haouben](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+					for (int k = 1; k <= 7; k++)
+						yakuFlag = yakuFlag || haouben(analysis, (tileCode)(i + k), 1);
 				return yakuFlag;
 			}
 		));
