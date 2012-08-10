@@ -147,4 +147,50 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 					(analysis->KeziCount[CircleOne] >= 1) );
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* ”e‰¤•Ú */
+	if (getRule(RULE_HAOUBEN) == 1)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"”e‰¤•Ú", yaku::yakuCalculator::Yaku::yval_6han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
+					for (int k = 1; k <= 3; k++) {
+						if ((analysis->KangziCount[i + k] >= 1) &&
+							(analysis->KeziCount[i + k + 3] >= 1) &&
+							(analysis->KangziCount[i + k + 3] == 0) &&
+							(analysis->MianziDat[0].tile == (tileCode)(i + k + 6)) )
+							yakuFlag = true;
+						if ((analysis->KangziCount[i + k + 6] >= 1) &&
+							(analysis->KeziCount[i + k + 3] >= 1) &&
+							(analysis->KangziCount[i + k + 3] == 0) &&
+							(analysis->MianziDat[0].tile == (tileCode)(i + k)) )
+							yakuFlag = true;
+					}
+				}
+				return yakuFlag;
+			}
+		));
+	else if (getRule(RULE_HAOUBEN) == 2)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"”e‰¤•Ú", yaku::yakuCalculator::Yaku::yval_6han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int k = 1; k <= 3; k++) {
+					if ((analysis->KangziCount[TILE_SUIT_BAMBOOS + k] >= 1) &&
+						(analysis->KeziCount[TILE_SUIT_BAMBOOS + k + 3] >= 1) &&
+						(analysis->KangziCount[TILE_SUIT_BAMBOOS + k + 3] == 0) &&
+						(analysis->MianziDat[0].tile == (tileCode)(TILE_SUIT_BAMBOOS + k + 6)) )
+						yakuFlag = true;
+					if ((analysis->KangziCount[TILE_SUIT_BAMBOOS + k + 6] >= 1) &&
+						(analysis->KeziCount[TILE_SUIT_BAMBOOS + k + 3] >= 1) &&
+						(analysis->KangziCount[TILE_SUIT_BAMBOOS + k + 3] == 0) &&
+						(analysis->MianziDat[0].tile == (tileCode)(TILE_SUIT_BAMBOOS + k)) )
+						yakuFlag = true;
+				}
+				return yakuFlag;
+			}
+		));
 }
