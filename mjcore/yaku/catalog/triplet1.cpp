@@ -189,7 +189,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* ¬ŽOŒ³ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"¬ŽOŒ³", yaku::yakuCalculator::Yaku::yval_2han,
-		/* –ð”v2‚Â‚Í•K‚¸•¡‡‚·‚é */
+		"Ât‚É‰÷‚¢‚È‚µ", "Ât‚É‰÷‚¢‚ ‚è", /* –ð”v2‚Â‚Í•K‚¸•¡‡‚·‚é */
 		[DragonCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (DragonCnt(analysis) == 5);
 		}
@@ -197,7 +197,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* ‘åŽOŒ³ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"‘åŽOŒ³", yaku::yakuCalculator::Yaku::yval_yakuman,
-		"–ð”vE”’", "–ð”vEá¢", "–ð”vE’†",
+		"–ð”vE”’", "–ð”vEá¢", "–ð”vE’†", "Ât‚É‰÷‚¢‚È‚µ", "Ât‚É‰÷‚¢‚ ‚è",
 		[DragonCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (DragonCnt(analysis) == 6);
 		}
