@@ -1,5 +1,7 @@
 #include "../catalog.h"
 
+extern const std::array<char[4], 6> parsedat_trichrome3;
+
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	/* 奇数対々和 */
 	if (getRule(RULE_ODD_TOITOI) != 0)
@@ -81,6 +83,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	if (getRule(RULE_BIG_DIPPER) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"北斗七星", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"ビックボーナス", "三色同刻",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->KeziCount[CharacterSeven] >= 1) &&
 					(analysis->KeziCount[CircleSeven] >= 1) &&
@@ -584,8 +587,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			}
 		));
 	/* 東京二十三区 */
+	if (getRule(RULE_TOKYO) != 0) {
 #include "isshoku.h" /* やぶれかぶれ。行儀の悪いinclude */
-	if (getRule(RULE_TOKYO) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"東京二十三区",  yaku::yakuCalculator::Yaku::HANFUNC(
 			[isshoku](const MENTSU_ANALYSIS* const analysis) {
@@ -600,4 +603,107 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 					(analysis->KeziCount[EastWind] >= 1);
 			}
 		));
+	}
+	/* 初音ミク */
+	auto anysuit2 =
+		[](const MENTSU_ANALYSIS* const analysis, int val1, int val2, bool noDui) -> bool {
+			const Int8ByTile* count = noDui ? &analysis->KeziCount : &analysis->DuiziCount;
+			bool yakuFlag = false;
+			for (int suit1 = 0; suit1 < TILE_SUIT_HONORS; suit1+= TILE_SUIT_STEP)
+				for (int suit2 = 0; suit2 < TILE_SUIT_HONORS; suit2 += TILE_SUIT_STEP)
+					if (((*count)[suit1 + val1] >= 1) && ((*count)[suit2 + val2] >= 1))
+						yakuFlag = true;
+			return yakuFlag;
+		};
+	if (getRule(RULE_HATSUNE_MIKU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"初音ミク", yaku::yakuCalculator::Yaku::yval_2han,
+			[anysuit2](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return anysuit2(analysis, 3, 9, true) && (analysis->KeziCount[GreenDragon] >= 1);
+			}
+		));
+	/* 白花 */
+	if (getRule(RULE_BAIHUA) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"白花", yaku::yakuCalculator::Yaku::yval_1han,
+			/* 別途白で1飜 */
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[CircleFive] >= 1) &&
+					(analysis->KeziCount[WhiteDragon] >= 1);
+			}
+		));
+	/* 撃鼓愕曹 */
+	if (getRule(RULE_JIGU_ECAO) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"撃鼓愕曹", yaku::yakuCalculator::Yaku::yval_2han,
+			"役牌・白",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[CircleOne] >= 1) &&
+					(analysis->KeziCount[CircleTwo] >= 1) &&
+					(analysis->KeziCount[WhiteDragon] >= 1);
+			}
+		));
+	/* ビックボーナス */
+	if (getRule(RULE_777) != 0) {
+		auto yaku777 =
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[CharacterSeven] >= 1) &&
+					(analysis->KeziCount[CircleSeven] >= 1) &&
+					(analysis->KeziCount[BambooSeven] >= 1);
+			};
+		if (getRule(RULE_777) == 2)
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"ビックボーナス", yaku::yakuCalculator::Yaku::yval_yakuman,
+				"三色同刻",
+				yaku777
+			));
+		else
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"ビックボーナス", yaku::yakuCalculator::Yaku::yval_2han,
+				yaku777
+			));
+	}
+	/* クリスマス */
+	if (getRule(RULE_CHRISTMAS) != 0) {
+		auto chris =
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				for (int i = 0; i < 6; i++)
+					if ((analysis->KeziCount[(&parsedat_trichrome3[0][0])[i * 4 + 0] + 1] >= 1) &&
+						(analysis->KeziCount[(&parsedat_trichrome3[0][0])[i * 4 + 0] + 2] >= 1) &&
+						(analysis->KeziCount[(&parsedat_trichrome3[0][0])[i * 4 + 1] + 2] >= 1) &&
+						(analysis->KeziCount[(&parsedat_trichrome3[0][0])[i * 4 + 1] + 5] >= 1))
+						return true;
+				return false;
+			};
+		auto chrisday = 
+			[]() -> bool {
+				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
+				return (nowTime.wMonth == 12) && (nowTime.wDay == 25);
+			};
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"クリスマス", yaku::yakuCalculator::Yaku::HANFUNC(
+			[chrisday](const MENTSU_ANALYSIS* const analysis) {
+				return yaku::yakuCalculator::Yaku::YAKU_HAN(
+					(chrisday()) ?
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman :
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
+			}),
+			"対々和",
+			chris
+		));
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"純正クリスマス", yaku::yakuCalculator::Yaku::HANFUNC(
+			[chrisday](const MENTSU_ANALYSIS* const analysis) {
+				return yaku::yakuCalculator::Yaku::YAKU_HAN(
+					(chrisday()) ?
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_triple_yakuman :
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman);
+			}),
+			"対々和", "クリスマス",
+			[chris](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return chris(analysis) &&
+					(analysis->MianziDat[0].tile == BambooSeven);
+			}
+		));
+	}
 }
