@@ -23,8 +23,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		auto allgrean =
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight, GreenDragon};
-				const tileCode shunzi[] = {BambooTwo};
-				return chktiles(analysis, kezi, 6, shunzi, 1, false);
+				return chktiles(analysis, kezi, 6, kezi, 1, false);
 			};
 		if (getRule(RULE_DRAGONLESS_ALL_GREEN) != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -118,13 +117,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			"âˆê–å",
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
-					CircleOne, CircleTwo, CircleThree, CircleFour, CircleFive, CircleEight, CircleNine,
-					BambooTwo, BambooFour, BambooFive, BambooSix, BambooEight, BambooNine, WhiteDragon,
+					CircleOne, CircleTwo, CircleThree, BambooFour, CircleFour, CircleFive, CircleEight,
+					CircleNine, BambooTwo, BambooFive, BambooSix, BambooEight, BambooNine, WhiteDragon,
 				};
-				const tileCode shunzi[] = {
-					CircleOne, CircleTwo, CircleThree, BambooFour,
-				};
-				return chktiles(analysis, kezi, 14, shunzi, 4, false);
+				return chktiles(analysis, kezi, 14, kezi, 4, false);
 			}
 		));
 	}
@@ -149,10 +145,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				const tileCode kezi[] = {
 					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight, RedDragon,
 				};
-				const tileCode shunzi[] = {
-					BambooTwo,
-				};
-				return chktiles(analysis, kezi, 6, shunzi, 1, false) &&
+				return chktiles(analysis, kezi, 6, kezi, 1, false) &&
 					(analysis->TileCount[RedDragon] > 0);
 			}
 		));
@@ -163,10 +156,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				const tileCode kezi[] = {
 					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight, WhiteDragon,
 				};
-				const tileCode shunzi[] = {
-					BambooTwo,
-				};
-				return chktiles(analysis, kezi, 6, shunzi, 1, false) &&
+				return chktiles(analysis, kezi, 6, kezi, 1, false) &&
 					(analysis->TileCount[WhiteDragon] > 0);
 			};
 		if (getRule(RULE_ALL_GREEN_WITH_WHITE) == 1)
@@ -188,10 +178,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				const tileCode kezi[] = {
 					BambooTwo, BambooThree, BambooFour, BambooFive, BambooSix, BambooEight,
 				};
-				const tileCode shunzi[] = {
-					BambooTwo,
-				};
-				return chktiles(analysis, kezi, 6, shunzi, 1, false) &&
+				return chktiles(analysis, kezi, 6, kezi, 1, false) &&
 					(analysis->MianziDat[0].tile == BambooFive);
 			};
 		if (chkGameType(&GameStat, SanmaS))
@@ -216,10 +203,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					BambooTwo, BambooThree, BambooFour, BambooFive,
 					BambooSix, BambooSeven, BambooNine,
 				};
-				const tileCode shunzi[] = {
-					BambooTwo, BambooThree, BambooFour, BambooFive,
-				};
-				return chktiles(analysis, kezi, 7, shunzi, 4, false);
+				return chktiles(analysis, kezi, 7, kezi, 4, false);
 			}
 		));
 	/* “ì‘å‘Œ´ */
@@ -232,10 +216,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					BambooTwo, BambooThree, BambooFour, BambooFive,
 					BambooSix, BambooSeven, BambooNine, SouthWind,
 				};
-				const tileCode shunzi[] = {
-					BambooTwo, BambooThree, BambooFour, BambooFive,
-				};
-				return chktiles(analysis, kezi, 7, shunzi, 4, false) &&
+				return chktiles(analysis, kezi, 7, kezi, 4, false) &&
 					(analysis->TileCount[SouthWind] > 0);
 			}
 		));
@@ -246,13 +227,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			"¬ˆêF",
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
-					CircleOne, CircleThree, CircleFive, CircleSix,
+					CircleFive, CircleOne, CircleThree, CircleSix,
 					CircleSeven, CircleNine, RedDragon,
 				};
-				const tileCode shunzi[] = {
-					CircleFive,
-				};
-				return chktiles(analysis, kezi, 7, shunzi, 1, false) &&
+				return chktiles(analysis, kezi, 7, kezi, 1, false) &&
 					((countRedTilesInHand(analysis->GameStat, analysis->player, AkaDora))[CircleFive] > 0) &&
 					(analysis->KeziCount[RedDragon] == 0);
 			}
@@ -268,10 +246,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					EastWind, SouthWind, WestWind, NorthWind,
 					WhiteDragon, GreenDragon,
 				};
-				const tileCode shunzi[] = {
-					BambooTwo,
-				};
-				return chktiles(analysis, kezi, 11, shunzi, 1, false);
+				return chktiles(analysis, kezi, 11, kezi, 1, false);
 			}
 		));
 	/* •ˆêF */
@@ -295,17 +270,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[shantenRegular] == -1) {
 					const tileCode kezi[] = {
+						EastWind, SouthWind, WestWind, NorthWind,
 						CircleTwo, CircleFour, CircleEight,
-						EastWind, SouthWind, WestWind, NorthWind,
 						GreenDragon,
-					};
-					const tileCode wind[] = {
-						EastWind, SouthWind, WestWind, NorthWind,
 					};
 					return (yaku::countingFacility::countSpecMentz
 						(analysis->MianziDat, kezi, 8, NULL, 0, false) == SIZE_OF_MELD_BUFFER) &&
 						(yaku::countingFacility::countSpecMentz
-						(analysis->MianziDat, wind, 4, NULL, 0, false) == 1);
+						(analysis->MianziDat, kezi, 4, NULL, 0, false) == 1);
 				}
 				else return false;
 			}
@@ -315,22 +287,20 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		auto hontanhon =
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
-					CircleTwo, CircleFour, CircleEight,
 					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
+					CircleTwo, CircleFour, CircleEight,
 					EastWind, SouthWind, WestWind, NorthWind,
 					WhiteDragon, GreenDragon,
 				};
-				const tileCode shunzi[] = { BambooTwo, };
-				return chktiles(analysis, kezi, 14, shunzi, 1, false);
+				return chktiles(analysis, kezi, 14, kezi, 1, false);
 			};
 		auto chintanhon =
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
-					CircleTwo, CircleFour, CircleEight,
 					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
+					CircleTwo, CircleFour, CircleEight,
 				};
-				const tileCode shunzi[] = { BambooTwo, };
-				return chktiles(analysis, kezi, 8, shunzi, 1, false);
+				return chktiles(analysis, kezi, 8, kezi, 1, false);
 			};
 		if (getRule(RULE_NO_RED) == 2) {
 			if (!chkGameType(&GameStat, SanmaS))
