@@ -411,7 +411,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	if (getRule(RULE_SNOW_GINKAKU) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"á‚Ì‹âŠt", yaku::yakuCalculator::Yaku::yval_yakuman,
-			"‘ÎX˜a", "–ð”vE”’", "¬ˆêF",
+			"‘ÎX˜a", "–ð”vE”’", "¬ˆêF", "’fg˜a", "¬’fg",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->DuiziCount[CircleTwo] >= 1) &&
 					(analysis->DuiziCount[CircleFour] >= 1) &&

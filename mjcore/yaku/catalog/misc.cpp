@@ -29,7 +29,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		if (getRule(RULE_DRAGONLESS_ALL_GREEN) != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"—ÎˆêF", yaku::yakuCalculator::Yaku::yval_yakuman,
-				"¬ˆêF",
+				"¬ˆêF", "’ƒˆêF", "’fg˜a", "¬’fg",
 				[allgrean](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return allgrean(analysis) && (analysis->TileCount[GreenDragon] > 0);
 				}
@@ -37,19 +37,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		else if (chkGameType(&GameStat, SanmaS))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"—ÎˆêF", yaku::yakuCalculator::Yaku::yval_yakuman,
-				"¬ˆêF", "´ˆêF",
+				"¬ˆêF", "´ˆêF", "’ƒˆêF", "’fg˜a", "´’fg",
 				allgrean
 			));
 		else // á¢‚È‚µ‚Å‚à—Ç‚¢ƒ‹[ƒ‹
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"—ÎˆêF", yaku::yakuCalculator::Yaku::yval_yakuman,
-				"¬ˆêF", // ´ˆêF‚Í•¡‡‰Â
+				"¬ˆêF", "’ƒˆêF", "’fg˜a", "´’fg", "¬’fg", // ´ˆêF‚Í•¡‡‰Â
 				allgrean
 			));
 		if (getRule(RULE_DRAGONLESS_ALL_GREEN) == 2) // á¢‚È‚µ‚ªƒ_ƒuƒ‹–ð–ž‚É‚È‚éƒ‹[ƒ‹
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				chkGameType(&GameStat, SanmaS) ? "´—ÎˆêF" : "—ÎˆêF", yaku::yakuCalculator::Yaku::yval_double_yakuman,
-				"´ˆêF",
+				"´ˆêF", "’ƒˆêF", "’fg˜a", "´’fg",
 				[allgrean](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return allgrean(analysis) && (analysis->TileCount[GreenDragon] == 0);
 				}
@@ -237,6 +237,133 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				};
 				return chktiles(analysis, kezi, 7, shunzi, 4, false) &&
 					(analysis->TileCount[SouthWind] > 0);
+			}
+		));
+	/* “ˆêF */
+	if (getRule(RULE_TAOYISE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"“ˆêF", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"¬ˆêF",
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CircleOne, CircleThree, CircleFive, CircleSix,
+					CircleSeven, CircleNine, RedDragon,
+				};
+				const tileCode shunzi[] = {
+					CircleFive,
+				};
+				return chktiles(analysis, kezi, 7, shunzi, 1, false) &&
+					((countRedTilesInHand(analysis->GameStat, analysis->player, AkaDora))[CircleFive] > 0) &&
+					(analysis->KeziCount[RedDragon] == 0);
+			}
+		));
+	/* ’ƒˆêF */
+	if (getRule(RULE_CHAYISE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"’ƒˆêF", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"¬ˆêF",
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
+					EastWind, SouthWind, WestWind, NorthWind,
+					WhiteDragon, GreenDragon,
+				};
+				const tileCode shunzi[] = {
+					BambooTwo,
+				};
+				return chktiles(analysis, kezi, 11, shunzi, 1, false);
+			}
+		));
+	/* •ˆêF */
+	if (getRule(RULE_HEIIISOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"•ˆêF", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"¬ˆêF", "‘ÎX˜a", "Â“´–å", "’fg˜a", "¬’fg",
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CircleTwo, CircleFour, CircleEight,
+					EastWind, SouthWind, WestWind, NorthWind,
+				};
+				return chktiles(analysis, kezi, 7, NULL, 0, false);
+			}
+		));
+	/* Â“´–å */
+	if (getRule(RULE_AO_NO_DOMON) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"Â“´–å", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"¬ˆêF", "‘ÎX˜a", "’fg˜a", "¬’fg",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				if (analysis->shanten[shantenRegular] == -1) {
+					const tileCode kezi[] = {
+						CircleTwo, CircleFour, CircleEight,
+						EastWind, SouthWind, WestWind, NorthWind,
+						GreenDragon,
+					};
+					const tileCode wind[] = {
+						EastWind, SouthWind, WestWind, NorthWind,
+					};
+					return (yaku::countingFacility::countSpecMentz
+						(analysis->MianziDat, kezi, 8, NULL, 0, false) == SIZE_OF_MELD_BUFFER) &&
+						(yaku::countingFacility::countSpecMentz
+						(analysis->MianziDat, wind, 4, NULL, 0, false) == 1);
+				}
+				else return false;
+			}
+		));
+	/* ’fg˜a */
+	if (getRule(RULE_NO_RED) != 0) {
+		auto hontanhon =
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CircleTwo, CircleFour, CircleEight,
+					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
+					EastWind, SouthWind, WestWind, NorthWind,
+					WhiteDragon, GreenDragon,
+				};
+				const tileCode shunzi[] = { BambooTwo, };
+				return chktiles(analysis, kezi, 14, shunzi, 1, false);
+			};
+		auto chintanhon =
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CircleTwo, CircleFour, CircleEight,
+					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
+				};
+				const tileCode shunzi[] = { BambooTwo, };
+				return chktiles(analysis, kezi, 8, shunzi, 1, false);
+			};
+		if (getRule(RULE_NO_RED) == 2) {
+			if (!chkGameType(&GameStat, SanmaS))
+				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+					"¬’fg", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+					hontanhon
+				));
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				chkGameType(&GameStat, SanmaS) ? "´’fg" : "’fg˜a", yaku::yakuCalculator::Yaku::yval_6han_kuisagari,
+				"¬’fg",
+				chintanhon
+			));
+		} else {
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"’fg˜a", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+				hontanhon
+			));
+		}
+	}
+	/* g”’é\“ª */
+	if (getRule(RULE_KOHAKU_MANJU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"g”’é\“ª", (getRule(RULE_KOHAKU_MANJU) == 2) ?
+			yaku::yakuCalculator::Yaku::yval_2han : yaku::yakuCalculator::Yaku::yval_1han,
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CharacterOne, CharacterTwo, CharacterThree, CharacterFour,
+					CharacterFive, CharacterSix, CharacterSeven, CharacterEight,
+					CharacterNine, WhiteDragon, RedDragon,
+				};
+				return chktiles(analysis, kezi, 11, kezi, 7, false) &&
+					(analysis->TileCount[WhiteDragon] > 0) &&
+					(analysis->TileCount[RedDragon] > 0);
 			}
 		));
 }
