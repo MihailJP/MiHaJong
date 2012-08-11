@@ -28,7 +28,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	if (getRule(RULE_ISSHOKU_SUUJUN) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"ˆêFŽl‡", yaku::yakuCalculator::Yaku::yval_yakuman,
-			"ˆêFŽO‡", "ˆê”uŒû", "“ñ”uŒû", "–Â‚«“ñ”uŒû",
+			"ˆêFŽO‡", "ˆê”uŒû", "“ñ”uŒû", "–Â‚«“ñ”uŒû", "dŽl‹AŽl", "Žl‹AŽl",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int i = 1; i < TILE_SUIT_HONORS; i++)

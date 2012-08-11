@@ -336,4 +336,105 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					(analysis->TileCount[RedDragon] > 0);
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	// Žl‹AŽl—‚Ý‚Ål‚¦‚ç‚ê‚éƒpƒ^[ƒ“‚Æ”vŽ®•\‹L
+	// 123 123 123 123: ”vŽ®44440 ©‚±‚ê‚ÍˆêFŽl‡
+	// 123 123 123 234: ”vŽ®34410
+	// 123 123 123 345: ”vŽ®33411
+	// 123 123 234 234: ”vŽ®24420
+	// 123 123 234 345: ”vŽ®23421
+	// 123 123 345 345: ”vŽ®22422
+	// 123 234 234 234: ”vŽ®14430
+	// 123 234 234 345: ”vŽ®13431
+	// 123 234 345 345: ”vŽ®12432
+	// 123 345 345 345: ”vŽ®11433
+
+	/* ‘åŽl‹AŽl */
+	if (getRule(RULE_GREAT_FOUR_INTO_FOUR) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘åŽl‹AŽl", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"dŽl‹AŽl", "Žl‹AŽl",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				for (int i = 1; i < TILE_SUIT_HONORS; i++) {
+					// 123 123 234 234: ”vŽ®24420
+					if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+1] >= 2) &&
+						((analysis->MianziDat[0].tile == (tileCode)i) ||
+						(analysis->MianziDat[0].tile == (tileCode)(i + 3))))
+						return true;
+					// 123 123 234 345: ”vŽ®23421
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+1] >= 1) &&
+						(analysis->ShunziCount[i+2] >= 1) &&
+						((analysis->MianziDat[0].tile == (tileCode)i) ||
+						(analysis->MianziDat[0].tile == (tileCode)(i + 3))))
+						return true;
+					// 123 123 345 345: ”vŽ®22422
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+2] >= 2) &&
+						((analysis->MianziDat[0].tile == (tileCode)i) ||
+						(analysis->MianziDat[0].tile == (tileCode)(i + 1)) ||
+						(analysis->MianziDat[0].tile == (tileCode)(i + 3)) ||
+						(analysis->MianziDat[0].tile == (tileCode)(i + 4))))
+						return true;
+					// 123 234 345 345: ”vŽ®12432
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[i+1] >= 1) &&
+						(analysis->ShunziCount[i+2] >= 2) &&
+						((analysis->MianziDat[0].tile == (tileCode)i) ||
+						(analysis->MianziDat[0].tile == (tileCode)(i + 3))))
+						return true;
+				}
+				return false;
+			}
+		));
+	/* dŽl‹AŽl */
+	if (getRule(RULE_DOUBLE_FOUR_INTO_FOUR) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"dŽl‹AŽl", yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_8han),
+			"Žl‹AŽl",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				for (int i = 1; i < TILE_SUIT_HONORS; i++) {
+					// 123 123 123 234: ”vŽ®34410
+					if ((analysis->ShunziCount[i] >= 3) && (analysis->ShunziCount[i+1] >= 1))
+						return true;
+					// 123 123 234 234: ”vŽ®24420
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+1] >= 2))
+						return true;
+					// 123 234 234 234: ”vŽ®14430
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[i+1] >= 3))
+						return true;
+				}
+				return false;
+			}
+		));
+	/* Žl‹AŽl */
+	if (getRule(RULE_FOUR_INTO_FOUR) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"Žl‹AŽl", yaku::yakuCalculator::Yaku::yval_6han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				for (int i = 1; i < TILE_SUIT_HONORS; i++) {
+					// 123 123 123 345: ”vŽ®33411
+					if ((analysis->ShunziCount[i] >= 3) && (analysis->ShunziCount[i+2] >= 1))
+						return true;
+					// 123 123 234 345: ”vŽ®23421
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+1] >= 1) &&
+						(analysis->ShunziCount[i+2] >= 1))
+						return true;
+					// 123 123 345 345: ”vŽ®22422
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+2] >= 2))
+						return true;
+					// 123 234 234 345: ”vŽ®13431
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[i+1] >= 2) &&
+						(analysis->ShunziCount[i+2] >= 1))
+						return true;
+					// 123 234 345 345: ”vŽ®12432
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[i+1] >= 1) &&
+						(analysis->ShunziCount[i+2] >= 2))
+						return true;
+					// 123 345 345 345: ”vŽ®11433
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[i+2] >= 3))
+						return true;
+				}
+				return false;
+			}
+		));
 }
