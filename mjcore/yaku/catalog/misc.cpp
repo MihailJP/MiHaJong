@@ -15,6 +15,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					== NUM_OF_TILES_IN_HAND / 2);
 			else return false;
 		};
+
+	// ---------------------------------------------------------------------
+
 	/* —ÎˆêF */
 	{
 		auto allgrean =
@@ -53,6 +56,53 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				"´ˆêF",
 				[allgrean, withdragon](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return allgrean(analysis) && (!withdragon(analysis));
+				}
+			));
+	}
+
+	// ---------------------------------------------------------------------
+
+	/* —‡’P‹R‚PãÊ‚Æ‚¢‚¤ƒ[ƒJƒ‹–ð */
+	{
+		auto chkHadakaTanki =
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				int count = 0;
+				for (int i = 1; i < SIZE_OF_MELD_BUFFER; i++)
+					if ((analysis->MianziDat[i].mstat != meldSequenceConcealed) &&
+						(analysis->MianziDat[i].mstat != meldTripletConcealed) &&
+						(analysis->MianziDat[i].mstat != meldQuadConcealed)) ++count;
+				return (count == SIZE_OF_MELD_BUFFER - 1);
+			};
+		if (getRule(RULE_SHIIARU_RAOTAI) != 0) {
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"‘S“|•Ý", yaku::yakuCalculator::Yaku::yval_1han,
+				[chkHadakaTanki](const MENTSU_ANALYSIS* const analysis) -> bool {
+					return chkHadakaTanki(analysis) && analysis->GameStat->TsumoAgariFlag;
+				}
+			));
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"‘S‹l", yaku::yakuCalculator::Yaku::yval_1han,
+				[chkHadakaTanki](const MENTSU_ANALYSIS* const analysis) -> bool {
+					return chkHadakaTanki(analysis) && (!analysis->GameStat->TsumoAgariFlag);
+				}
+			));
+		}
+		// ‹àŒ{“Æ—§cˆêõ‘Ò‚¿
+		if (getRule(RULE_KINKEI_DOKURITSU) != 0)
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"‹àŒ{“Æ—§", yaku::yakuCalculator::Yaku::yval_yakuman,
+				"‘S“|•Ý", "‘S‹l",
+				[chkHadakaTanki](const MENTSU_ANALYSIS* const analysis) -> bool {
+					return chkHadakaTanki(analysis) && (analysis->TsumoHai->tile == BambooOne);
+				}
+			));
+		// “Æ’ÞŠ¦]ác”’‘Ò‚¿
+		if (getRule(RULE_KANKOU_NO_YUKI) != 0)
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"“Æ’ÞŠ¦]á", yaku::yakuCalculator::Yaku::yval_yakuman,
+				"‘S“|•Ý", "‘S‹l",
+				[chkHadakaTanki](const MENTSU_ANALYSIS* const analysis) -> bool {
+					return chkHadakaTanki(analysis) && (analysis->TsumoHai->tile == WhiteDragon);
 				}
 			));
 	}
