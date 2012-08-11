@@ -769,7 +769,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 							i > 7 ? 3 * (10 - i) : (i < 3 ? i * 3 : 9),
 							false);
 					};
-				yaku::yakuCalculator::Yaku::HANFUNC han;
+				yaku::yakuCalculator::Yaku::HANFUNC han = yaku::yakuCalculator::Yaku::yval_4han;
 				switch (i) {
 				case 5:
 					switch (getRule(ruleCodeList[i])) {
@@ -778,11 +778,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 						case 3: han = yaku::yakuCalculator::Yaku::yval_4han; break;
 						case 4: han = yaku::yakuCalculator::Yaku::yval_6han_kuisagari; break;
 					}
-					goto four_five_six; // ‚±‚±‚ÍŠ¸‚¦‚Ägoto‚ðŽg‚¤
-				case 4: case 6:
-					han = yaku::yakuCalculator::Yaku::yval_4han;
 					/* FALLTHRU */
-				four_five_six:
+				case 4: case 6:
 					yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 						nameList[i], han, "’f›ô‹ã", f));
 					break;
@@ -796,7 +793,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					break;
 				default:
 					yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-						nameList[i], yaku::yakuCalculator::Yaku::yval_4han, f));
+						nameList[i], han, f));
 					break;
 				}
 			}
