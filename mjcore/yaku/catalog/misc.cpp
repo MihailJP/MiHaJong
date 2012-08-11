@@ -355,7 +355,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	if (getRule(RULE_GREAT_FOUR_INTO_FOUR) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"大四帰四", yaku::yakuCalculator::Yaku::yval_yakuman,
-			"重四帰四", "四帰四", "四帰三一", "四帰三",
+			"重四帰四", "四帰四", "四帰三一", "四帰三", "龍四帰一", "虎四帰一", "両四帰一", "四帰一",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 1; i < TILE_SUIT_HONORS; i++) {
 					// 123 123 234 234: 牌式24420
@@ -390,7 +390,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	if (getRule(RULE_DOUBLE_FOUR_INTO_FOUR) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"重四帰四", yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_8han),
-			"四帰四", "四帰三一", "四帰三",
+			"四帰四", "四帰三一", "四帰三", "龍四帰一", "虎四帰一", "両四帰一", "四帰一",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 1; i < TILE_SUIT_HONORS; i++) {
 					// 123 123 123 234: 牌式34410
@@ -467,7 +467,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		if (getRule(RULE_FOUR_INTO_THREE_ONE) != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"四帰三一", yaku::yakuCalculator::Yaku::yval_4han,
-				"四帰三",
+				"四帰三", "四帰一",
 				[suukuisan](const MENTSU_ANALYSIS* const analysis) -> bool {
 					bool yakuFlag = false;
 					for (int i = 1; i < TILE_SUIT_HONORS; i++)
@@ -482,7 +482,78 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		if (getRule(RULE_FOUR_INTO_THREE) != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"四帰三", yaku::yakuCalculator::Yaku::yval_3han,
+				"四帰一",
 				suukuisan
+			));
+	}
+
+	// ---------------------------------------------------------------------
+
+	/* 龍四帰一 */
+	if (getRule(RULE_DRAGON_FOUR_INTO_ONE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"龍四帰一", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"三連刻", "虎四帰一", "両四帰一", "四帰一",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 1; i < TILE_SUIT_HONORS; i++)
+					if ((analysis->ShunziCount[i] >= 1) &&
+						(analysis->KeziCount[i] >= 1) &&
+						(analysis->KeziCount[i+1] >= 1) &&
+						(analysis->KeziCount[i+2] >= 1)) yakuFlag = true;
+				return yakuFlag;
+			}
+		));
+	/* 虎四帰一 */
+	if (getRule(RULE_TIGER_FOUR_INTO_ONE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"虎四帰一", (getRule(RULE_TIGER_FOUR_INTO_ONE) == 2) ?
+			yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_2han,
+			"両四帰一", "四帰一",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 1; i < TILE_SUIT_HONORS; i++) {
+					if (analysis->ShunziCount[i] >= 1) {
+						if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[i+1] >= 1)) yakuFlag = true;
+						else if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[i+2] >= 1)) yakuFlag = true;
+						else if ((analysis->KeziCount[i+1] >= 1) && (analysis->KeziCount[i+2] >= 1)) yakuFlag = true;
+					}
+				}
+				return yakuFlag;
+			}
+		));
+	{
+		auto suukuiyii =
+			[](const MENTSU_ANALYSIS* const analysis) -> int {
+				int count = 0;
+				for (int i = 1; i < TILE_SUIT_HONORS; i++) {
+					if (analysis->ShunziCount[i] >= 1) {
+						if (analysis->KeziCount[i] >= 1) ++count;
+						else if (analysis->KeziCount[i+1] >= 1) ++count;
+						else if (analysis->KeziCount[i+2] >= 1) ++count;
+					}
+				}
+				return ++count;
+			};
+		/* 両四帰一 */
+		if (getRule(RULE_DOUBLE_FOUR_INTO_ONE) != 0)
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"両四帰一", (getRule(RULE_DOUBLE_FOUR_INTO_ONE) == 2) ?
+				yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_2han,
+				"四帰一",
+				[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
+					bool yakuFlag = false;
+					return (suukuiyii(analysis) == 2);
+				}
+			));
+		/* 四帰一 */
+		if (getRule(RULE_DOUBLE_FOUR_INTO_ONE) != 0)
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"四帰一", yaku::yakuCalculator::Yaku::yval_1han,
+				[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
+					bool yakuFlag = false;
+					return (suukuiyii(analysis) == 1);
+				}
 			));
 	}
 }
