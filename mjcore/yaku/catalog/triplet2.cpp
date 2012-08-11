@@ -706,4 +706,147 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			}
 		));
 	}
+	/* 一富士二鷹三茄子 */
+	if (getRule(RULE_NEWYEAR_DREAM) != 0) {
+		auto isnewyeardays = 
+			[]() -> bool {
+				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
+				return (nowTime.wMonth == 1) && (nowTime.wDay <= 2);
+			};
+		auto newyrdrm =
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				if (analysis->PlayerStat->MeldPointer >= 3)
+					return ((analysis->PlayerStat->Meld[1].mstat > meldTripletConcealed) &&
+						(analysis->PlayerStat->Meld[1].tile == BambooThree) &&
+						(analysis->PlayerStat->Meld[2].mstat > meldTripletConcealed) &&
+						(analysis->PlayerStat->Meld[2].tile == BambooOne) &&
+						(analysis->PlayerStat->Meld[3].mstat > meldTripletConcealed) &&
+						(analysis->PlayerStat->Meld[3].tile == CircleEight));
+				else return false;
+			};
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"一富士二鷹三茄子", yaku::yakuCalculator::Yaku::yval_yakuman,
+			newyrdrm
+		));
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"純正一富士二鷹三茄子", yaku::yakuCalculator::Yaku::yval_double_yakuman,
+			"一富士二鷹三茄子",
+			[newyrdrm, isnewyeardays](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return newyrdrm(analysis) && isnewyeardays();
+			}
+		));
+	}
+	/* 武蔵丸 */
+	if (getRule(RULE_MUSASHIMARU) != 0) {
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"武蔵丸", yaku::yakuCalculator::Yaku::yval_yakuman,
+			[anysuit3](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return anysuit3(analysis, 6, 3, 4, true) &&
+					(analysis->KeziCount[CircleOne] >= 1);
+			}
+		));
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"純正武蔵丸", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"武蔵丸",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[CircleSix] >= 1) &&
+					(analysis->KeziCount[CircleThree] >= 1) &&
+					(analysis->KeziCount[CircleFour] >= 1) &&
+					(analysis->KeziCount[CircleOne] >= 1) &&
+					(analysis->MianziDat[0].tile / TILE_SUIT_STEP == TILE_SUIT_CIRCLES / TILE_SUIT_STEP);
+			}
+		));
+	}
+	/* 阪神 */
+	if (getRule(RULE_HANSHIN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"阪神", yaku::yakuCalculator::Yaku::yval_1han,
+			[anysuit2](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return anysuit2(analysis, 8, 4, true);
+			}
+		));
+	/* 神戸 */
+	if (getRule(RULE_KOBE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"神戸", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[CharacterFive] >= 1) ||
+					(analysis->KeziCount[CircleFive] >= 1) ||
+					(analysis->KeziCount[BambooFive] >= 1)) &&
+					(analysis->KeziCount[NorthWind] >= 1);
+			}
+		));
+	/* サッポロ一番 */
+	if (getRule(RULE_SAPPORO1) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"サッポロ一番", yaku::yakuCalculator::Yaku::yval_yakuman,
+			[anysuit3](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return anysuit3(analysis, 3, 8, 6, true) &&
+					(analysis->GameStat->GameRound == 0) && // 東一局であって
+					(analysis->GameStat->LoopRound == 0) && // 返り東場でもなくて
+					(analysis->GameStat->Honba == 0); // 平場の時
+			}
+		));
+	/* ポカリスエット */
+	if (getRule(RULE_PCRSWT) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ポカリスエット", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[CircleTwo] >= 1) ||
+					(analysis->KeziCount[CircleFour] >= 1) ||
+					(analysis->KeziCount[CircleSix] >= 1) ||
+					(analysis->KeziCount[CircleEight] >= 1)) &&
+					(analysis->KeziCount[GreenDragon] >= 1);
+			}
+		));
+	/* アクエリアス */
+	if (getRule(RULE_AQRS) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"アクエリアス", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[CircleOne] >= 1) ||
+					(analysis->KeziCount[CircleThree] >= 1) ||
+					(analysis->KeziCount[CircleFive] >= 1) ||
+					(analysis->KeziCount[CircleSeven] >= 1) ||
+					(analysis->KeziCount[CircleNine] >= 1)) &&
+					(analysis->KeziCount[GreenDragon] >= 1);
+			}
+		));
+	/* ＳＭＡＰ */
+	if (getRule(RULE_SMAP) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ＳＭＡＰ", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[CharacterFour] +
+					analysis->KeziCount[CircleFour] +
+					analysis->KeziCount[BambooFour] -
+					analysis->AnKeziCount[CharacterFour] -
+					analysis->AnKeziCount[CircleFour] -
+					analysis->AnKeziCount[BambooFour] >= 1));
+			}
+		));
+	/* モンスターハンター */
+	if (getRule(RULE_MONSTER_HUNTER) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"モンスターハンター", yaku::yakuCalculator::Yaku::yval_yakuman,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[EastWind] >= 1) ||
+					(analysis->KeziCount[SouthWind] >= 1) ||
+					(analysis->KeziCount[WestWind] >= 1) ||
+					(analysis->KeziCount[NorthWind] >= 1)) &&
+					(analysis->GameStat->TurnRound <= 6);
+			}
+		));
+	/* 旭川ラーメン */
+	if (getRule(RULE_ASAHIKAWA_RAAMEN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"旭川ラーメン", yaku::yakuCalculator::Yaku::yval_yakuman,
+			"対々和",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->KeziCount[CircleOne] >= 1) &&
+					(analysis->KeziCount[BambooThree] >= 1) &&
+					(analysis->KeziCount[BambooNine] >= 1) &&
+					(analysis->KeziCount[NorthWind] >= 1));
+			}
+		));
 }
