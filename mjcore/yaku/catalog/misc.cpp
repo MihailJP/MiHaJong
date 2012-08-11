@@ -355,7 +355,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	if (getRule(RULE_GREAT_FOUR_INTO_FOUR) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"大四帰四", yaku::yakuCalculator::Yaku::yval_yakuman,
-			"重四帰四", "四帰四",
+			"重四帰四", "四帰四", "四帰三一", "四帰三",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 1; i < TILE_SUIT_HONORS; i++) {
 					// 123 123 234 234: 牌式24420
@@ -390,7 +390,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	if (getRule(RULE_DOUBLE_FOUR_INTO_FOUR) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"重四帰四", yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_8han),
-			"四帰四",
+			"四帰四", "四帰三一", "四帰三",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 1; i < TILE_SUIT_HONORS; i++) {
 					// 123 123 123 234: 牌式34410
@@ -437,4 +437,52 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return false;
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	{
+		auto suukuisan =
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				for (int i = 1; i < TILE_SUIT_HONORS; i++) {
+					if (analysis->MianziDat[0].tile == (tileCode)i) {
+						if (analysis->ShunziCount[i] >= 2)
+							return true;
+						else if (i < 1) continue;
+						else if ((analysis->ShunziCount[i-1] >= 1) && (analysis->ShunziCount[i] >= 1))
+							return true;
+						else if (analysis->ShunziCount[i-1] >= 2)
+							return true;
+						else if (i < 2) continue;
+						else if ((analysis->ShunziCount[i-2] >= 1) && (analysis->ShunziCount[i] >= 1))
+							return true;
+						else if ((analysis->ShunziCount[i-2] >= 1) && (analysis->ShunziCount[i-1] >= 1))
+							return true;
+						else if (analysis->ShunziCount[i-2] >= 2)
+							return true;
+					}
+				}
+				return false;
+			};
+		/* 四帰三一 */
+		if (getRule(RULE_FOUR_INTO_THREE_ONE) != 0)
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"四帰三一", yaku::yakuCalculator::Yaku::yval_4han,
+				"四帰三",
+				[suukuisan](const MENTSU_ANALYSIS* const analysis) -> bool {
+					bool yakuFlag = false;
+					for (int i = 1; i < TILE_SUIT_HONORS; i++)
+						if ((analysis->ShunziCount[i] >= 1) &&
+							((analysis->KeziCount[i] >= 1) ||
+							(analysis->KeziCount[i+1] >= 1) ||
+							(analysis->KeziCount[i+2] >= 1))) yakuFlag = true;
+					return suukuisan(analysis) && yakuFlag;
+				}
+			));
+		/* 四帰三 */
+		if (getRule(RULE_FOUR_INTO_THREE) != 0)
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"四帰三", yaku::yakuCalculator::Yaku::yval_3han,
+				suukuisan
+			));
+	}
 }
