@@ -737,4 +737,69 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					analysis->DuiziCount[CircleEight] >= 3));
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* 満園花 */
+	{
+		RuleCode ruleCodeList[10] = { (RuleCode)0,
+			RULE_ALL_ONE, RULE_ALL_TWO, RULE_ALL_THREE, RULE_ALL_FOUR, RULE_ALL_FIVE,
+			RULE_ALL_SIX, RULE_ALL_SEVEN, RULE_ALL_EIGHT, RULE_ALL_NINE};
+		const char nameList[10][16] = { "",
+			"全帯一", "全帯二", "全帯三", "全帯四", "全帯五", "全帯六", "全帯七", "全帯八", "全帯九"};
+		for (int i = 1; i <= 9; i++) {
+			if (getRule(ruleCodeList[i]) != 0) {
+				auto f =
+					[chktiles, i](const MENTSU_ANALYSIS* const analysis) -> bool {
+						const tileCode kezi[] = {
+							(tileCode)(i+TILE_SUIT_CHARACTERS),
+							(tileCode)(i+TILE_SUIT_CIRCLES),
+							(tileCode)(i+TILE_SUIT_BAMBOOS),
+						};
+						const tileCode shunzi[] = {
+							(tileCode)(i+TILE_SUIT_CHARACTERS), (tileCode)(i+TILE_SUIT_CIRCLES),
+							(tileCode)(i+TILE_SUIT_BAMBOOS),
+							(tileCode)(i+TILE_SUIT_CHARACTERS-1), (tileCode)(i+TILE_SUIT_CIRCLES-1),
+							(tileCode)(i+TILE_SUIT_BAMBOOS-1),
+							(tileCode)(i+TILE_SUIT_CHARACTERS-2), (tileCode)(i+TILE_SUIT_CIRCLES-2),
+							(tileCode)(i+TILE_SUIT_BAMBOOS-2),
+						};
+						return chktiles(analysis, kezi, 3,
+							&shunzi[i <= 7 ? 0 : 3 * (i - 7)],
+							i > 7 ? 3 * (10 - i) : (i < 3 ? i * 3 : 9),
+							false);
+					};
+				yaku::yakuCalculator::Yaku::HANFUNC han;
+				switch (i) {
+				case 5:
+					switch (getRule(ruleCodeList[i])) {
+						case 1: han = yaku::yakuCalculator::Yaku::yval_2han; break;
+						case 2: han = yaku::yakuCalculator::Yaku::yval_3han_kuisagari; break;
+						case 3: han = yaku::yakuCalculator::Yaku::yval_4han; break;
+						case 4: han = yaku::yakuCalculator::Yaku::yval_6han_kuisagari; break;
+					}
+					goto four_five_six; // ここは敢えてgotoを使う
+				case 4: case 6:
+					han = yaku::yakuCalculator::Yaku::yval_4han;
+					/* FALLTHRU */
+				four_five_six:
+					yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+						nameList[i], han, "断幺九", f));
+					break;
+				case 1: case 9:
+					switch (getRule(ruleCodeList[i])) {
+						case 1: han = yaku::yakuCalculator::Yaku::yval_4han; break;
+						case 2: han = yaku::yakuCalculator::Yaku::yval_6han_kuisagari; break;
+					}
+					yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+						nameList[i], han, "純全帯幺九", f));
+					break;
+				default:
+					yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+						nameList[i], yaku::yakuCalculator::Yaku::yval_4han, f));
+					break;
+				}
+			}
+		}
+	}
 }
