@@ -32,7 +32,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"‹ã˜@•ó“•", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
-		"´ˆêF",
+		"´ˆêF", "‹ã˜@‰Ô“•",
 		[chkHaishiki](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return chkHaishiki(analysis, "311111113");
 		}
@@ -40,7 +40,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	if (getRule(RULE_DOUBLE_YAKUMAN) == 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"ƒ³‹ã˜@•ó“•", yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen,
-			"‹ã˜@•ó“•", "´ˆêF",
+			"‹ã˜@•ó“•", "´ˆêF", "‹ã˜@‰Ô“•",
 			[chkHaishiki](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				const tileCode* tsumoTile = &(analysis->TsumoHai->tile);

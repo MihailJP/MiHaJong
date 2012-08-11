@@ -547,7 +547,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				}
 			));
 		/* 四帰一 */
-		if (getRule(RULE_DOUBLE_FOUR_INTO_ONE) != 0)
+		if (getRule(RULE_FOUR_INTO_ONE) != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"四帰一", yaku::yakuCalculator::Yaku::yval_1han,
 				[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -556,4 +556,53 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				}
 			));
 	}
+
+	// ---------------------------------------------------------------------
+
+	/* 九蓮花燈 */
+	if (getRule(RULE_CHUUREN_HWATON) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"九蓮花燈", (getRule(RULE_CHUUREN_HWATON) == 2) ?
+			yaku::yakuCalculator::Yaku::yval_2han : yaku::yakuCalculator::Yaku::yval_4han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				int count = 0;
+				for (int i = 1; i <= 9; i++)
+					if (analysis->TileCount[TILE_SUIT_CHARACTERS + i] +
+						analysis->TileCount[TILE_SUIT_CIRCLES + i] +
+						analysis->TileCount[TILE_SUIT_BAMBOOS + i] >=
+						(((i == 1)||(i == 9)) ? 3 : 1) )
+						++count;
+				return (count == 9);
+			}
+		));
+	/* 鳴き九連宝燈 */
+	if (getRule(RULE_EXPOSED_CHUUREN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"九蓮碧燈", yaku::yakuCalculator::Yaku::yval_3han,
+			/* 鳴きチンイツが複合し倍満以上が確定 */
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				Int8ByTile tiles = analysis->TileCount; bool yakuFlag = false;
+				// 鳴き面子も計算 槓子は無視
+				for (int i = 1; i < SIZE_OF_MELD_BUFFER; i++) {
+					switch (analysis->MianziDat[i].mstat) {
+					case meldSequenceExposedLower: case meldSequenceExposedMiddle:
+					case meldSequenceExposedUpper:
+						++tiles[analysis->MianziDat[i].tile];
+						++tiles[analysis->MianziDat[i].tile + 1];
+						++tiles[analysis->MianziDat[i].tile + 2];
+						break;
+					case meldTripletExposedLeft: case meldTripletExposedCenter:
+					case meldTripletExposedRight:
+						tiles[analysis->MianziDat[i].tile] += 3;
+						break;
+					}
+				}
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+					if ((tiles[i + 1] >= 3) && (tiles[i + 2] >= 1) && (tiles[i + 3] >= 1) &&
+						(tiles[i + 4] >= 1) && (tiles[i + 5] >= 1) && (tiles[i + 6] >= 1) &&
+						(tiles[i + 7] >= 1) && (tiles[i + 8] >= 1) && (tiles[i + 9] >= 3))
+						yakuFlag = true;
+				return yakuFlag && (!(*analysis->MenzenFlag));
+			}
+		));
 }
