@@ -15,6 +15,7 @@ private:
 	static void yakulst_triplet_1();
 	static void yakulst_triplet_2();
 	static void yakulst_sequence();
+	static void yakulst_misc();
 	static void yakulst_dora();
 };
 

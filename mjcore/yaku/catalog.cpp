@@ -19,7 +19,7 @@ void yaku::yakuCalculator::init() {
 	YakuCatalog::catalogInit::yakulst_triplet_2();
 	/* TODO: 槓子系の役 */
 	YakuCatalog::catalogInit::yakulst_sequence();
-	/* TODO: その他の役 */
+	YakuCatalog::catalogInit::yakulst_misc();
 	YakuCatalog::catalogInit::yakulst_dora();
 	info("役カタログの構築を完了しました。");
 }
