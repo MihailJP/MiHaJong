@@ -636,4 +636,105 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return yakuFlag;
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* •‘¾˜Y”„Ä–Ý */
+	if (getRule(RULE_UUTAARAN) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"•‘¾˜Y”„Ä–Ý", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CharacterFive, CircleFive, BambooFive, CircleOne,
+				};
+				const tileCode shunzi[] = {
+					CharacterThree, CharacterFour, CharacterFive,
+					CircleThree, CircleFour, CircleFive,
+					BambooThree, BambooFour, BambooFive,
+				};
+				return chktiles(analysis, kezi, 4, shunzi, 9, false) &&
+					(analysis->MianziDat[0].tile == CircleOne);
+			}
+		));
+	/* ‹ð—”“{‹ê˜I| */
+	if (getRule(RULE_GRAND_CROSS) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹ð—”“{‹ê˜I|", yaku::yakuCalculator::Yaku::HANFUNC(
+			[](const MENTSU_ANALYSIS* const analysis) {
+				return yaku::yakuCalculator::Yaku::YAKU_HAN(
+					(analysis->TsumoHai->tile == CircleFive) ?
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman :
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
+			}),
+			"´ˆêF",
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CircleFour, CircleFive, CircleSix,
+				};
+				const tileCode shunzi[] = {
+					CircleOne, CircleSeven,
+				};
+				return chktiles(analysis, kezi, 3, shunzi, 2, false) &&
+					(analysis->MianziDat[0].tile == CircleFive) &&
+					(*analysis->MenzenFlag);
+			}
+		));
+	/* ŠìêFè~”~ */
+	if (getRule(RULE_XIQUE_NAOMEI) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ŠìêFè~”~", yaku::yakuCalculator::Yaku::yval_6han,
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CircleFive, BambooOne, BambooFive,
+				};
+				const tileCode shunzi[] = {
+					CharacterOne, CircleOne,
+				};
+				return chktiles(analysis, kezi, 3, shunzi, 2, false) &&
+					(analysis->MianziDat[0].tile == BambooFive);
+			}
+		));
+	/* ‰ÔˆêF */
+	if (getRule(RULE_HUAIISOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‰ÔˆêF", yaku::yakuCalculator::Yaku::yval_1han,
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CharacterOne, CharacterTwo, CharacterThree, CharacterFour, CharacterFive,
+					CharacterSix, CharacterSeven, CharacterEight, CharacterNine, RedDragon,
+					CircleOne, CircleThree, CircleFive, CircleSix, CircleSeven,
+					CircleNine, BambooOne, BambooFive, BambooSeven, BambooNine,
+				};
+				const tileCode shunzi[] = {
+					CharacterOne, CharacterTwo, CharacterThree, CharacterFour, CharacterFive,
+					CharacterSix, CharacterSeven, CircleFive,
+				};
+				return (chktiles(analysis, kezi, 20, shunzi, 8, false)) &&
+					(!chktiles(analysis, kezi, 10, shunzi, 7, false));
+			}
+		));
+	/* ÔˆêF */
+	if (getRule(RULE_AKAIISOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ÔˆêF", yaku::yakuCalculator::Yaku::yval_2han,
+			"‰ÔˆêF", "âˆê–å",
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CircleFive, CircleOne, CircleThree, CircleSix, CircleSeven,
+					CircleNine, BambooOne, BambooFive, BambooSeven, BambooNine,
+				};
+				return chktiles(analysis, kezi, 10, kezi, 1, false);
+			}
+		));
+	/* ÔŠáÂ—´ */
+	if (getRule(RULE_SEKIGAN_SEIRYUU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ÔŠáÂ—´", yaku::yakuCalculator::Yaku::yval_yakuman,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->ShunziCount[CircleTwo] == 1) &&
+					(analysis->KeziCount[WhiteDragon] + analysis->KeziCount[EastWind] == 1) &&
+					(analysis->DuiziCount[CircleTwo] + analysis->DuiziCount[CircleFour] +
+					analysis->DuiziCount[CircleEight] >= 3));
+			}
+		));
 }
