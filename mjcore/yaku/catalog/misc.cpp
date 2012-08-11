@@ -605,4 +605,35 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return yakuFlag && (!(*analysis->MenzenFlag));
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* 茴香ポン(非対々) */
+	if (getRule(RULE_UIKYOU_SHUNTSU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"茴香ポン ", // 対々形と区別するために後ろにスペースを入れる
+			(getRule(RULE_UIKYOU_SHUNTSU) == 2) ?
+			yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_4han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 1; i <= 9; i++) {
+					if ((analysis->KeziCount[TILE_SUIT_CHARACTERS + i] >= 1) &&
+						(analysis->KeziCount[TILE_SUIT_CIRCLES + i] >= 1) &&
+						(analysis->KeziCount[TILE_SUIT_BAMBOOS + i] >= 1)) {
+							if (i <= 5)
+								for (int k = 0; k < TILE_SUIT_HONORS; k += TILE_SUIT_STEP)
+									if ((analysis->ShunziCount[k + i + 1] >= 1) &&
+										(analysis->MianziDat[0].tile == k + i + 4))
+										yakuFlag = true;
+							/* ここにはelseをつけてはだめ */
+							if (i >= 5)
+								for (int k = 0; k < TILE_SUIT_HONORS; k += TILE_SUIT_STEP)
+									if ((analysis->ShunziCount[k + i - 3] >= 1) &&
+										(analysis->MianziDat[0].tile == k + i - 4))
+										yakuFlag = true;
+					}
+				}
+				return yakuFlag;
+			}
+		));
 }
