@@ -799,4 +799,77 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		}
 	}
+
+	// ---------------------------------------------------------------------
+
+	/* 小於五 */
+	if (getRule(RULE_XIAOYUWU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"小於五", yaku::yakuCalculator::Yaku::yval_6han,
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CharacterOne, CircleOne, BambooOne,
+					CharacterTwo, CircleTwo, BambooTwo,
+					CharacterThree, CircleThree, BambooThree,
+					CharacterFour, CircleFour, BambooFour,
+				};
+				return chktiles(analysis, kezi, 12, kezi, 6, false);
+			}
+		));
+	/* 大於五 */
+	if (getRule(RULE_DAYUWU) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"大於五", yaku::yakuCalculator::Yaku::yval_6han,
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CharacterSix, CircleSix, BambooSix,
+					CharacterSeven, CircleSeven, BambooSeven,
+					CharacterEight, CircleEight, BambooEight,
+					CharacterNine, CircleNine, BambooNine,
+				};
+				return chktiles(analysis, kezi, 12, kezi, 6, false);
+			}
+		));
+	/* 全小 */
+	if (getRule(RULE_ALL_SMALL) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"全小", yaku::yakuCalculator::Yaku::yval_6han,
+			"小於五",
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CharacterOne, CircleOne, BambooOne,
+					CharacterTwo, CircleTwo, BambooTwo,
+					CharacterThree, CircleThree, BambooThree,
+				};
+				return chktiles(analysis, kezi, 9, kezi, 3, false);
+			}
+		));
+	/* 全中 */
+	if (getRule(RULE_ALL_MIDDLE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"全中", yaku::yakuCalculator::Yaku::yval_6han,
+			"断幺九",
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CharacterFour, CircleFour, BambooFour,
+					CharacterFive, CircleFive, BambooFive,
+					CharacterSix, CircleSix, BambooSix,
+				};
+				return chktiles(analysis, kezi, 9, kezi, 3, false);
+			}
+		));
+	/* 全大 */
+	if (getRule(RULE_ALL_LARGE) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"全大", yaku::yakuCalculator::Yaku::yval_6han,
+			"大於五",
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const tileCode kezi[] = {
+					CharacterSeven, CircleSeven, BambooSeven,
+					CharacterEight, CircleEight, BambooEight,
+					CharacterNine, CircleNine, BambooNine,
+				};
+				return chktiles(analysis, kezi, 9, kezi, 3, false);
+			}
+		));
 }
