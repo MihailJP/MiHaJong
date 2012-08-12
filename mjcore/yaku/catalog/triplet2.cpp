@@ -385,28 +385,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 					(analysis->DuiziCount[RedDragon] >= 1));
 			}
 		));
-	/* ”’ˆêF */
-	auto chk_duidui_qidui =
-	[](const MENTSU_ANALYSIS* const analysis, const tileCode* const tcList, int listSize) -> bool {
-		if (analysis->shanten[shantenRegular] == -1)
-			return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, tcList, listSize, NULL, 0, false) ==
-			SIZE_OF_MELD_BUFFER);
-		else if (analysis->shanten[shantenPairs] == -1)
-			return (yaku::countingFacility::countPairs(analysis->TileCount, tcList, listSize) ==
-			NUM_OF_TILES_IN_HAND / 2);
-		else return false;
-	};
-	if (getRule(RULE_HAKUIISOO) != 0)
-		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"”’ˆêF", yaku::yakuCalculator::Yaku::yval_yakuman,
-			[chk_duidui_qidui](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const tileCode tcList[] = {
-					CharacterEight, CharacterNine, CircleEight, CircleNine,
-					BambooEight, BambooNine, WhiteDragon,
-				};
-				return chk_duidui_qidui(analysis, tcList, 7);
-			}
-		));
+	/* ”’ˆêF‚Ì’è‹`ˆ—‚Ímisc.cpp‚ÉˆÚ“®‚µ‚Ü‚µ‚½ */
+
 	/* á‚Ì‹âŠt */
 	if (getRule(RULE_SNOW_GINKAKU) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -431,20 +411,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 					(analysis->KeziCount[BambooSix] >= 1));
 			}
 		));
-	/* ‘f”–ð–ž */
-	if (getRule(RULE_PRIME_NUMBER) != 0)
-		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"‘f”–ð–ž", yaku::yakuCalculator::Yaku::yval_yakuman,
-			"‘ÎX˜a",
-			[chk_duidui_qidui](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const tileCode tcList[] = {
-					CharacterTwo, CharacterThree, CharacterFive, CharacterSeven,
-					CircleTwo, CircleThree, CircleFive, CircleSeven,
-					BambooTwo, BambooThree, BambooFive, BambooSeven,
-				};
-				return chk_duidui_qidui(analysis, tcList, 12);
-			}
-		));
+	/* ‘f”–ð–ž‚Ì’è‹`ˆ—‚Ímisc.cpp‚ÉˆÚ“®‚µ‚Ü‚µ‚½ */
+
 	/* ƒAƒ‹’† */
 	if (getRule(RULE_ALCOHOLISM) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(

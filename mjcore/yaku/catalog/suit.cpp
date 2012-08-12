@@ -295,6 +295,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"žòˆêF", yaku::yakuCalculator::Yaku::KuisagariHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_8han),
 			"´ˆêF", "’f›ô‹ã",
+			/*
+				Žµ‘ÎŽq‚ÌžòˆêF‚Í‚S–‡Žg‚¢‚ð”F‚ß‚È‚¢ŒÀ‚è‚Í‚Q‚Q‚R‚R‚S‚S‚T‚T‚U‚U‚V‚V‚W‚W‚ÌŒ`‚Ì‚Ý
+				‚±‚ê‚Í‘å”—×‚Æ“¯‚¶Œ`‚Å‚ ‚èAžòˆêF‚Ì‚ÝÌ—p‚Ìê‡‚Å‚à–ÊŽqŽè‚Æ‚µ‚Äˆµ‚í‚ê‚é
+			*/
 			[isshoku](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				if (analysis->shanten[shantenRegular] == -1) {
@@ -394,12 +398,20 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			"–|–ž”T•àŽè’n", yaku::yakuCalculator::Yaku::yval_1han,
 			[isshoku](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int PinMian = 0;
-				for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++)
-					if ((analysis->MianziDat[i].tile / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES / TILE_SUIT_STEP))
-						++PinMian;
-				return (isshoku(analysis, false) &&
-					(PinMian == SIZE_OF_MELD_BUFFER - 1) &&
-					(analysis->DuiziCount[GreenDragon] >= 1));
+				if (analysis->shanten[shantenRegular] == -1) {
+					for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++)
+						if ((analysis->MianziDat[i].tile / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES / TILE_SUIT_STEP))
+							++PinMian;
+					return (isshoku(analysis, false) &&
+						(PinMian == SIZE_OF_MELD_BUFFER - 1) &&
+						(analysis->DuiziCount[GreenDragon] >= 1));
+				} else if (analysis->shanten[shantenPairs] == -1) {
+					for (int i = (int)CircleOne; i <= (int)CircleNine; i++)
+						PinMian += analysis->TileCount[i];
+					return (isshoku(analysis, false) &&
+						(PinMian == NUM_OF_TILES_IN_HAND - 2) &&
+						(analysis->TileCount[GreenDragon] >= 2));
+				} else return false;
 			}
 		));
 
@@ -409,8 +421,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	auto chueiimen =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			bool flag[TILE_SUIT_HONORS / TILE_SUIT_STEP] = {false};
-			for (int k = 1; k < TILE_SUIT_HONORS; k++)
-				if (analysis->TileCount[k] > 0) flag[k] = true;
+			if (analysis->shanten[shantenRegular] == -1) {
+				for (int k = 0; k < SIZE_OF_MELD_BUFFER; k++)
+					if (analysis->MianziDat[k].tile < TILE_SUIT_HONORS)
+						flag[analysis->MianziDat[k].tile / TILE_SUIT_STEP] = true;
+			} else if (analysis->shanten[shantenPairs] == -1) {
+				for (int k = 1; k < TILE_SUIT_HONORS; k++)
+					if (analysis->TileCount[k] > 0) flag[k] = true;
+			}
 			return (
 				(flag[TILE_SUIT_CHARACTERS / TILE_SUIT_STEP] && flag[TILE_SUIT_CIRCLES / TILE_SUIT_STEP] && !flag[TILE_SUIT_BAMBOOS / TILE_SUIT_STEP]) ||
 				(flag[TILE_SUIT_CHARACTERS / TILE_SUIT_STEP] && !flag[TILE_SUIT_CIRCLES / TILE_SUIT_STEP] && flag[TILE_SUIT_BAMBOOS / TILE_SUIT_STEP]) ||
@@ -454,18 +472,24 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			int mnzCount[TILE_SUIT_HONORS / TILE_SUIT_STEP + 2] = {0};
 			bool yakuFlag = true;
-			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
-				if (analysis->MianziDat[i].tile < TILE_SUIT_HONORS)
-					++mnzCount[analysis->MianziDat[i].tile / TILE_SUIT_STEP];
-				else switch (analysis->MianziDat[i].tile) {
-				case EastWind: case SouthWind: case WestWind: case NorthWind:
-					++mnzCount[TILE_SUIT_HONORS / TILE_SUIT_STEP]; break;
-				case WhiteDragon: case GreenDragon: case RedDragon:
-					++mnzCount[TILE_SUIT_HONORS / TILE_SUIT_STEP + 1]; break;
+			{
+				tileCode tc;
+				if (analysis->shanten[shantenRegular] == -1)
+				for (int i = 0; i < ((analysis->shanten[shantenRegular] == -1) ?
+					SIZE_OF_MELD_BUFFER : NUM_OF_TILES_IN_HAND); i++) {
+						if (analysis->shanten[shantenRegular] == -1) tc = analysis->MianziDat[i].tile;
+						else if (analysis->shanten[shantenPairs] == -1) tc = analysis->PlayerStat->Hand[i].tile;
+						if (tc < TILE_SUIT_HONORS) ++mnzCount[tc / TILE_SUIT_STEP];
+						else switch (tc) {
+						case EastWind: case SouthWind: case WestWind: case NorthWind:
+							++mnzCount[TILE_SUIT_HONORS / TILE_SUIT_STEP]; break;
+						case WhiteDragon: case GreenDragon: case RedDragon:
+							++mnzCount[TILE_SUIT_HONORS / TILE_SUIT_STEP + 1]; break;
+						}
 				}
 			}
 			for (int i = 0; i < (TILE_SUIT_HONORS / TILE_SUIT_STEP + 2); i++)
-				if (mnzCount[i] != 1) yakuFlag = false;
+				if (mnzCount[i] == 0) yakuFlag = false;
 			return yakuFlag;
 		};
 	if (getRule(RULE_UUMENCHII) != 0)
