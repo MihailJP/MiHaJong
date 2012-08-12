@@ -9,7 +9,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			if (analysis->shanten[shantenRegular] == -1)
 				return (yaku::countingFacility::countSpecMentz
 					(analysis->MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, noDui)
-					== SIZE_OF_MELD_BUFFER);
+					== SIZE_OF_MELD_BUFFER - (noDui ? 0 : 1));
 			else if (analysis->shanten[shantenPairs] == -1)
 				return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez, numOfKez)
 					== NUM_OF_TILES_IN_HAND / 2);
@@ -176,9 +176,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		auto allgreen_five =
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
-					BambooTwo, BambooThree, BambooFour, BambooFive, BambooSix, BambooEight,
+					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
 				};
-				return chktiles(analysis, kezi, 6, kezi, 1, false) &&
+				return chktiles(analysis, kezi, 5, kezi, 1, true) &&
 					(analysis->MianziDat[0].tile == BambooFive);
 			};
 		if (chkGameType(&GameStat, SanmaS))
@@ -645,14 +645,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			"•‘¾˜Y”„Ä–Ý", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
-					CharacterFive, CircleFive, BambooFive, CircleOne,
+					CharacterFive, CircleFive, BambooFive,
 				};
 				const tileCode shunzi[] = {
 					CharacterThree, CharacterFour, CharacterFive,
 					CircleThree, CircleFour, CircleFive,
 					BambooThree, BambooFour, BambooFive,
 				};
-				return chktiles(analysis, kezi, 4, shunzi, 9, false) &&
+				return chktiles(analysis, kezi, 3, shunzi, 9, true) &&
 					(analysis->MianziDat[0].tile == CircleOne);
 			}
 		));
@@ -669,12 +669,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			"´ˆêF",
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
-					CircleFour, CircleFive, CircleSix,
+					CircleFour, CircleSix,
 				};
 				const tileCode shunzi[] = {
 					CircleOne, CircleSeven,
 				};
-				return chktiles(analysis, kezi, 3, shunzi, 2, false) &&
+				return chktiles(analysis, kezi, 2, shunzi, 2, true) &&
 					(analysis->MianziDat[0].tile == CircleFive) &&
 					(*analysis->MenzenFlag);
 			}
@@ -685,12 +685,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			"ŠìêFè~”~", yaku::yakuCalculator::Yaku::yval_6han,
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
-					CircleFive, BambooOne, BambooFive,
+					CircleFive, BambooOne,
 				};
 				const tileCode shunzi[] = {
 					CharacterOne, CircleOne,
 				};
-				return chktiles(analysis, kezi, 3, shunzi, 2, false) &&
+				return chktiles(analysis, kezi, 2, shunzi, 2, true) &&
 					(analysis->MianziDat[0].tile == BambooFive);
 			}
 		));
