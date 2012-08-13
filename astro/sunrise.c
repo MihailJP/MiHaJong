@@ -303,10 +303,6 @@ struct SUN_RISE_SET sun_rise_set (double d, double lon, double lat, double altit
 	return ans;
 }
 
-struct RISE_SET_HOUR
-{
-	int hour_rise, min_rise, hour_set, min_set;
-};
 struct RISE_SET_HOUR convert_hour (double hour_rise_ut, double hour_set_ut, double TZ, int isdst)
 {
 	/*
