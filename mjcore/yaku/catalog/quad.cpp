@@ -1,4 +1,5 @@
 #include "../catalog.h"
+#include "../../../astro/astro.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 	/* 超四喜 */
@@ -156,8 +157,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"鬼は外", yaku::yakuCalculator::Yaku::yval_1han,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				/* TODO: 翌日が立春か判定する */
-				return (analysis->KangziCount[CircleNine] >= 1);
+				TIME_ZONE_INFORMATION Zeitzone; SYSTEMTIME Zeit; // 宣言。こんな変数名付ける私は厨二病かもしれない
+				GetTimeZoneInformation(&Zeitzone); // タイムゾーンを取得する
+				GetLocalTime(&Zeit); // WINAPIを使ってローカル時刻を取得
+				SYSTEMTIME HeuteMitternacht = {Zeit.wYear, Zeit.wMonth, Zeit.wDayOfWeek, Zeit.wDay, 0, 0, 0, 0}; // 当日0時のSYSTEMTIME
+				double JulianischeDatum = systime_to_julian(&HeuteMitternacht) - ((double)Zeitzone.Bias / 1440.0); // ローカル時間で当日0時のユリウス日
+				return /* 翌日が立春か判定する。立春とは太陽が黄経315度の子午線を通過する日である。 */
+					(sun_ecliptic_longitude(JulianischeDatum + 1.0) <= 315.0) &&
+					(sun_ecliptic_longitude(JulianischeDatum + 2.0) >= 315.0) &&
+					(analysis->KangziCount[CircleNine] >= 1); /* 手牌自体は九筒の槓子だけが条件 */
 			}
 		));
 	/* 草加 */
