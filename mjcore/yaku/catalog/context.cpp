@@ -448,6 +448,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* 槍槓は正確には木偏ではなく手偏 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"搶槓", yaku::yakuCalculator::Yaku::yval_1han,
+		"欠牌和",
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(analysis->GameStat->KangFlag.chankanFlag)); // 槍槓フラグが立っている
@@ -469,6 +470,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (getRule(RULE_JINJI_DUOSHI) != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"金鶏奪食", yaku::yakuCalculator::Yaku::yval_1han,
+			"欠牌和",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.chankanFlag) && // 槍槓フラグが立っている
@@ -665,4 +667,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			}
 		));
 
+	// ---------------------------------------------------------------------
+
+	/* 欠牌和(元々はchk-post.hspに書いてたけど後回しにする必要なんてなかった) */
+	if (getRule(RULE_KEPPAIHOH) != 0)
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"欠牌和", yaku::yakuCalculator::Yaku::yval_1han,
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag =
+					*analysis->TsumoAgariFlag ? // ツモアガリだったら、
+					(analysis->SeenTiles[analysis->TsumoHai->tile] + // 見えてる牌と
+					analysis->TileCount[analysis->TsumoHai->tile] >= 4) // 手の内の牌を足して4枚
+					: // ロンだったら、
+					(analysis->SeenTiles[analysis->TsumoHai->tile] + // 見えてる牌と
+					analysis->TileCount[analysis->TsumoHai->tile] > 4); // 手の内の牌を足して4枚
+				return (yakuFlag && // 条件を満たしていて、
+					(analysis->MachiInfo.MachiMen == 1)); // 1面待ち(移植時変更：ノベ単とかでは成立しないようにした)
+			}
+		));
 }
