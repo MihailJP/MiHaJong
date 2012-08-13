@@ -30,7 +30,7 @@
 
 #include <Windows.h>
 
-struct MoonPhase
+struct MOONPHASE
 {
 	double MoonPhase; /* the terminator phase angle as a percentage of a full circle (i.e., 0 to 1) */
 	double MoonIllum; /* the illuminated fraction of the Moon's disc */
@@ -46,6 +46,11 @@ struct SUN_RISE_SET
 	double hour_rise_ut, hour_set_ut;
 };
 
+struct RISE_SET_HOUR
+{
+	int hour_rise, min_rise, hour_set, min_set;
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -59,7 +64,7 @@ extern "C" {
 	EXPORT void sun_ecliptic_longitude_hsp (double*, double);
 
 	/* mphase.c */
-	EXPORT struct MoonPhase calc_moon_phase (double);
+	EXPORT struct MOONPHASE calc_moon_phase (double);
 	EXPORT void calc_moon_phase_hsp (double*, double);
 
 	/* sunrise.c */

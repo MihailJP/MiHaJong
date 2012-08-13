@@ -9,6 +9,7 @@
 #include <set>
 #include <sstream>
 #include <iomanip>
+#include <vector>
 #include <Windows.h>
 #include "ykclass.h"
 #include "yk_tools.h"
@@ -124,7 +125,8 @@ private:
 				hanUnit getUnit() const;
 				static const HAN
 					yv_null, yv_1han, yv_2han, yv_3han, yv_4han, yv_5han, yv_6han, yv_7han, yv_8han, 
-					yv_mangan, yv_haneman, yv_baiman, yv_3baiman, yv_yakuman, yv_double_yakuman;
+					yv_mangan, yv_haneman, yv_baiman, yv_3baiman, yv_yakuman, yv_double_yakuman,
+					yv_triple_yakuman, yv_quad_yakuman;
 			private:
 				int8_t han; // êîíl
 				hanUnit unit; // íPà 
@@ -163,10 +165,13 @@ private:
 			KuisagariHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan);
 		};
 		static const FixedHan yval_none, yval_1han, yval_2han, yval_3han, yval_4han, yval_5han, yval_6han,
-			yval_mangan, yval_baiman, yval_yakuman, yval_double_yakuman;
+			yval_mangan, yval_baiman, yval_yakuman, yval_double_yakuman,
+			yval_triple_yakuman, yval_quad_yakuman,
+			yval_1han_dependent, yval_2han_dependent, yval_4han_dependent, yval_yakuman_dependent;
 		static const MenzenHan yval_1han_menzen, yval_2han_menzen, yval_3han_menzen,
 			yval_4han_menzen, yval_5han_menzen, yval_6han_menzen,
-			yval_mangan_menzen, yval_baiman_menzen, yval_yakuman_menzen, yval_double_yakuman_menzen;
+			yval_mangan_menzen, yval_baiman_menzen, yval_yakuman_menzen, yval_double_yakuman_menzen,
+			yval_1han_menzen_dependent, yval_2han_menzen_dependent, yval_yakuman_menzen_dependent;
 		static const KuisagariHan yval_1han_kuisagari, yval_2han_kuisagari, yval_3han_kuisagari,
 			yval_4han_kuisagari, yval_5han_kuisagari, yval_6han_kuisagari;
 	private:
