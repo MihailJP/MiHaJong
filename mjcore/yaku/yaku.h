@@ -102,7 +102,6 @@ private:
 			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
 			const ParseMode* const pMode, YAKUSTAT* const result);
 		static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result);
-		static void doraText(YAKUSTAT* const result, const char* const label, int quantity);
 	};
 
 	struct CalculatorParam {
@@ -227,6 +226,9 @@ private:
 		SHANTEN* const shanten, YAKUSTAT* const yakuInfo);
 	static void analysisLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
 		SHANTEN* const shanten, YAKUSTAT* const yakuInfo);
+
+	static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
+		YAKUSTAT* const result, PLAYER_ID targetPlayer);
 
 public:
 	static __declspec(dllexport) void init();
