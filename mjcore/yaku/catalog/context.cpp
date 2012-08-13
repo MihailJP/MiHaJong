@@ -448,7 +448,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* 槍槓は正確には木偏ではなく手偏 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"搶槓", yaku::yakuCalculator::Yaku::yval_1han,
-		"欠牌和",
+		"欠牌和", "槓振り" /* 槓振りは本来下位役ではないが下位役判定のシステムを使って複合しないようにする */,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(analysis->GameStat->KangFlag.chankanFlag)); // 槍槓フラグが立っている
