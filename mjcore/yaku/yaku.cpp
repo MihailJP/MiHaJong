@@ -642,7 +642,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 				trace("十三不塔です！！");
 				yakuInfo.isValid = true; yakuInfo.BasePoints = 30;
 				yakuInfo.CoreSemiMangan = (getRule(RULE_SHIISAN_PUUTAA) == 2) ? 2 : 8;
-				yakuInfo.AgariPoints = LargeNum::fromInt(yakuInfo.CoreSemiMangan * 1000);
+				calculateScore(&yakuInfo);
 				strcpy_s(yakuInfo.yakumanNameList, YAKUSTAT::nameBufSize,
 #ifdef WIN32
 					"十三不搭\r\n");
@@ -656,7 +656,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 				trace("十四不塔です！！");
 				yakuInfo.isValid = true; yakuInfo.BasePoints = 30;
 				yakuInfo.CoreSemiMangan = 8;
-				yakuInfo.AgariPoints = LargeNum::fromInt(8000);
+				calculateScore(&yakuInfo);
 				strcpy_s(yakuInfo.yakumanNameList, YAKUSTAT::nameBufSize,
 #ifdef WIN32
 					"十三無靠\r\n");
