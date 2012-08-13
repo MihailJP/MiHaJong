@@ -48,9 +48,9 @@ double kepler (double m, double ecc)
 	return e;
 }
 
-EXPORT struct MoonPhase calc_moon_phase (double pdate)
+EXPORT struct MOONPHASE calc_moon_phase (double pdate)
 { /* Calculate the moon phase of given day */
-	struct MoonPhase answer;
+	struct MOONPHASE answer;
 	double Day, N, M, Ec, Lambdasun, ml, MM, MN, Ev, Ae, A3, MmP,
 		mEc, A4, lP, V, lPP, NP, y, x, Lambdamoon, BetaM,
 		MoonAge, MoonPhase,
@@ -161,7 +161,7 @@ EXPORT struct MoonPhase calc_moon_phase (double pdate)
 
 EXPORT void calc_moon_phase_hsp (double* Answer, double pdate)
 { /* Calculate the moon phase of given day (HSP interface) */
-	struct MoonPhase mp = calc_moon_phase(pdate);
+	struct MOONPHASE mp = calc_moon_phase(pdate);
 	Answer[0] = mp.MoonIllum;
 	Answer[1] = mp.MoonPhase;
 	Answer[2] = mp.MoonAge;
