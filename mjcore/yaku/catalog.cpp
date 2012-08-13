@@ -17,7 +17,7 @@ void yaku::yakuCalculator::init() {
 	YakuCatalog::catalogInit::yakulst_yaojiu();
 	YakuCatalog::catalogInit::yakulst_triplet_1();
 	YakuCatalog::catalogInit::yakulst_triplet_2();
-	/* TODO: žÈŽqŒn‚Ì–ð */
+	YakuCatalog::catalogInit::yakulst_quad();
 	YakuCatalog::catalogInit::yakulst_sequence();
 	YakuCatalog::catalogInit::yakulst_misc();
 	YakuCatalog::catalogInit::yakulst_dora();

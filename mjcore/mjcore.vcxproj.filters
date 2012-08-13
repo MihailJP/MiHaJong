@@ -141,6 +141,9 @@
     <ClCompile Include="yaku\catalog\misc.cpp">
       <Filter>ソース ファイル\yaku\catalog</Filter>
     </ClCompile>
+    <ClCompile Include="yaku\catalog\quad.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">
