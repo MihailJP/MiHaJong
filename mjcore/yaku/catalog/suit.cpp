@@ -176,7 +176,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			return ((chkHaishiki(analysis, "202222220") || chkHaishiki(analysis, "222022220") ||
 				chkHaishiki(analysis, "222202220") || chkHaishiki(analysis, "222222020") ||
 				chkHaishiki(analysis, "022222202") || chkHaishiki(analysis, "022220222") ||
-				chkHaishiki(analysis, "022202222") || chkHaishiki(analysis, "020222222")) &&
+				chkHaishiki(analysis, "022202222") || chkHaishiki(analysis, "020222222") ||
+				chkHaishiki(analysis, "220222220") || chkHaishiki(analysis, "222220220") ||
+				chkHaishiki(analysis, "022022222") || chkHaishiki(analysis, "022222022")) &&
 				((analysis->TileCount[suit + 4] >= 2) || (analysis->TileCount[suit + 5] >= 2))
 				);
 		};
