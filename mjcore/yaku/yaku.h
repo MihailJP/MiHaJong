@@ -82,28 +82,7 @@ private:
 #endif
 	typedef std::function<bool (const MENTSU_ANALYSIS* const)> YAKUFUNC;
 
-	class CalculatorThread {
-	public:
-		static DWORD WINAPI calculator(LPVOID lpParam);
-		int numOfRunningThreads(); // 動いているスレッドの数
-		static const int threadLimit = 4; // 同時に起動する最大のスレッド数
-		int numOfStartedThreads(); // 開始したスレッドの数
-		void sync(int threads); // スレッドを同期する
-		CalculatorThread(); // デフォルトコンストラクタ
-		~CalculatorThread(); // デフォルトデストラクタ
-	private:
-		void incThreadCount();
-		void decThreadCount();
-		int runningThreads;
-		CRITICAL_SECTION cs;
-		int startedThreads;
-		static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
-		DWORD WINAPI calculate(
-			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
-			const ParseMode* const pMode, YAKUSTAT* const result);
-		static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result);
-	};
-
+	class CalculatorThread; // 宣言だけ
 	struct CalculatorParam {
 		ParseMode pMode;
 		CalculatorThread* instance;
@@ -217,6 +196,35 @@ private:
 			std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
 			std::string yk6, std::string yk7, std::string yk8, std::string yk9, std::string yk10,
 			YAKUFUNC f);
+	};
+
+	class CalculatorThread {
+	public:
+		static DWORD WINAPI calculator(LPVOID lpParam);
+		int numOfRunningThreads(); // 動いているスレッドの数
+		static const int threadLimit = 4; // 同時に起動する最大のスレッド数
+		int numOfStartedThreads(); // 開始したスレッドの数
+		void sync(int threads); // スレッドを同期する
+		CalculatorThread(); // デフォルトコンストラクタ
+		~CalculatorThread(); // デフォルトデストラクタ
+	private:
+		void incThreadCount();
+		void decThreadCount();
+		int runningThreads;
+		CRITICAL_SECTION cs;
+		int startedThreads;
+		static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
+		DWORD WINAPI calculate(
+			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
+			const ParseMode* const pMode, YAKUSTAT* const result);
+		static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result);
+		static void checkPostponedYaku(
+			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result,
+			std::map<std::string, Yaku::YAKU_HAN> &yakuHan, std::set<std::string> &suppression,
+			std::vector<std::string> &yakuOrd);
+		static void hanSummation(
+			int& totalHan, int& totalSemiMangan, int& totalBonusHan, int& totalBonusSemiMangan,
+			std::map<std::string, Yaku::YAKU_HAN> &yakuHan, std::vector<std::string> &yakuOrd, YAKUSTAT* const result);
 	};
 
 	static void doubling(yaku::YAKUSTAT* const yStat);

@@ -121,6 +121,7 @@
     <ClCompile Include="yaku\catalog\irreg.cpp" />
     <ClCompile Include="yaku\catalog\misc.cpp" />
     <ClCompile Include="yaku\catalog\pinhu.cpp" />
+    <ClCompile Include="yaku\catalog\post.cpp" />
     <ClCompile Include="yaku\catalog\quad.cpp" />
     <ClCompile Include="yaku\catalog\sequence.cpp" />
     <ClCompile Include="yaku\catalog\suit.cpp" />
