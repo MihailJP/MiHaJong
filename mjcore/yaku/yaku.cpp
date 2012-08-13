@@ -442,20 +442,48 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	std::for_each(yakuOrd.begin(), yakuOrd.end(),
 		[&totalHan, &totalSemiMangan, &totalBonusHan, &totalBonusSemiMangan, &result, &yakuHan]
 		(std::string yName) {
-			/* TODO: 青天井ルールに対応させる */
-			switch (yakuHan[yName].coreHan.getUnit()) {
-				case yaku::yakuCalculator::hanUnit::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::SemiMangan: totalSemiMangan += yakuHan[yName].coreHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::Yakuman: totalSemiMangan += yakuHan[yName].coreHan.getHan() * 8; break;
-				default:
-					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
-			}
-			switch (yakuHan[yName].bonusHan.getUnit()) {
-				case yaku::yakuCalculator::hanUnit::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::SemiMangan: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::Yakuman: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan() * 8; break;
-				default:
-					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
+			if (getRule(RULE_LIMITLESS) == 2) { /* 青点ルールで役満を13飜扱いとする場合 */
+				switch (yakuHan[yName].coreHan.getUnit()) {
+					case yaku::yakuCalculator::hanUnit::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
+					case yaku::yakuCalculator::hanUnit::SemiMangan:
+						switch (yakuHan[yName].coreHan.getHan()) {
+							case 2: totalHan += 5; break;   case 3: totalHan += 6; break;
+							case 4: totalHan += 8; break;   case 6: totalHan += 11; break;
+							case 8: totalHan += 13; break;  case 16: totalHan += 26; break;
+						}
+						break;
+					case yaku::yakuCalculator::hanUnit::Yakuman: totalHan += yakuHan[yName].coreHan.getHan() * 13; break;
+					default:
+						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
+				}
+				switch (yakuHan[yName].bonusHan.getUnit()) {
+					case yaku::yakuCalculator::hanUnit::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
+					case yaku::yakuCalculator::hanUnit::SemiMangan:
+						switch (yakuHan[yName].bonusHan.getHan()) {
+							case 2: totalBonusHan += 5; break;   case 3: totalBonusHan += 6; break;
+							case 4: totalBonusHan += 8; break;   case 6: totalBonusHan += 11; break;
+							case 8: totalBonusHan += 13; break;  case 16: totalBonusHan += 26; break;
+						}
+						break;
+					case yaku::yakuCalculator::hanUnit::Yakuman: totalBonusHan += yakuHan[yName].bonusHan.getHan() * 13; break;
+					default:
+						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
+				}
+			} else { /* 通常の翻計算 */
+				switch (yakuHan[yName].coreHan.getUnit()) {
+					case yaku::yakuCalculator::hanUnit::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
+					case yaku::yakuCalculator::hanUnit::SemiMangan: totalSemiMangan += yakuHan[yName].coreHan.getHan(); break;
+					case yaku::yakuCalculator::hanUnit::Yakuman: totalSemiMangan += yakuHan[yName].coreHan.getHan() * 8; break;
+					default:
+						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
+				}
+				switch (yakuHan[yName].bonusHan.getUnit()) {
+					case yaku::yakuCalculator::hanUnit::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
+					case yaku::yakuCalculator::hanUnit::SemiMangan: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan(); break;
+					case yaku::yakuCalculator::hanUnit::Yakuman: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan() * 8; break;
+					default:
+						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
+				}
 			}
 			/* 役の名前を書き込む */
 			if ((yakuHan[yName].coreHan.getUnit() != yakuHan[yName].bonusHan.getUnit()) &&
@@ -641,13 +669,23 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 			if (chkShisanBuDa(gameStat, targetPlayer)) { // 十三不塔になってる
 				trace("十三不塔です！！");
 				yakuInfo.isValid = true; yakuInfo.BasePoints = 30;
-				yakuInfo.CoreSemiMangan = (getRule(RULE_SHIISAN_PUUTAA) == 2) ? 2 : 8;
+				if (getRule(RULE_LIMITLESS) == 2) 
+					yakuInfo.CoreHan = (getRule(RULE_SHIISAN_PUUTAA) == 2) ? 5 : 13;
+				else yakuInfo.CoreSemiMangan = (getRule(RULE_SHIISAN_PUUTAA) == 2) ? 2 : 8;
 				calculateScore(&yakuInfo);
-				strcpy_s(yakuInfo.yakumanNameList, YAKUSTAT::nameBufSize,
+				strcpy_s((getRule(RULE_LIMITLESS) == 2) ? yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
+					YAKUSTAT::nameBufSize,
 #ifdef WIN32
 					"十三不搭\r\n");
 #else
 					"十三不搭\n");
+#endif
+				if (getRule(RULE_LIMITLESS) == 2)
+					strcpy_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
+#ifdef WIN32
+						(getRule(RULE_SHIISAN_PUUTAA) == 2) ? "５飜\r\n" : "13飜\r\n");
+#else
+						(getRule(RULE_SHIISAN_PUUTAA) == 2) ? "５飜\n" : "13飜\n");
 #endif
 				countDora(gameStat, NULL, &yakuInfo, targetPlayer); // ドラは数えてあげましょうね
 			}
@@ -655,13 +693,22 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 			else if (chkShisiBuDa(gameStat, targetPlayer)) { // 十四不塔になってる
 				trace("十四不塔です！！");
 				yakuInfo.isValid = true; yakuInfo.BasePoints = 30;
-				yakuInfo.CoreSemiMangan = 8;
+				if (getRule(RULE_LIMITLESS) == 2) yakuInfo.CoreHan = 13;
+				else yakuInfo.CoreSemiMangan = 8;
 				calculateScore(&yakuInfo);
-				strcpy_s(yakuInfo.yakumanNameList, YAKUSTAT::nameBufSize,
+				strcpy_s((getRule(RULE_LIMITLESS) == 2) ? yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
+					YAKUSTAT::nameBufSize,
 #ifdef WIN32
 					"十三無靠\r\n");
 #else
 					"十三無靠\n");
+#endif
+				if (getRule(RULE_LIMITLESS) == 2)
+					strcpy_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
+#ifdef WIN32
+						"13飜\r\n");
+#else
+						"13飜\n");
 #endif
 				countDora(gameStat, NULL, &yakuInfo, targetPlayer); // ドラを数えるのです
 			}
