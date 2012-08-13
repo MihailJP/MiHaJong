@@ -219,41 +219,39 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	analysis->BasePoint = (uint8_t)fu;
 }
 
-/* ドラの数・テキスト */
-void yaku::yakuCalculator::CalculatorThread::doraText
-	(YAKUSTAT* const result, const char* const label, int quantity)
-{
-	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, label);
-	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, " ");
-	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, intstr(quantity).c_str());
-#ifdef WIN32
-	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
-	strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\r\n");
-#else
-	strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
-	strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\n");
-#endif
-}
-
 /* ドラ計数 */
-void yaku::yakuCalculator::CalculatorThread::countDora
-	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result)
+void yaku::yakuCalculator::countDora
+	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
+	YAKUSTAT* const result, PLAYER_ID targetPlayer)
 {
+	auto doraText =
+		[](YAKUSTAT* const result, const char* const label, int quantity) {
+			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, label);
+			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, " ");
+			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, intstr(quantity).c_str());
+#ifdef WIN32
+			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+#else
+			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
+			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\n");
+#endif
+		};
 	const bool uradoraEnabled = ((getRule(RULE_URADORA) != 1) && // 裏ドラありのルールで、
-		(gameStat->Player[analysis->player].MenzenFlag) && // 門前であり、
-		(gameStat->Player[analysis->player].RichiFlag.RichiFlag)); // 立直をかけているなら
+		(gameStat->Player[targetPlayer].MenzenFlag) && // 門前であり、
+		(gameStat->Player[targetPlayer].RichiFlag.RichiFlag)); // 立直をかけているなら
 	int omote = 0; int ura = 0; int red = 0; int blue = 0; int alice = 0;
 	int flower = 0; int north = 0;
 	/* ドラを計算する */
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
-		if (gameStat->Player[analysis->player].Hand[i].tile == NoTile) continue;
-		omote += gameStat->DoraFlag.Omote[gameStat->Player[analysis->player].Hand[i].tile];
+		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) continue;
+		omote += gameStat->DoraFlag.Omote[gameStat->Player[targetPlayer].Hand[i].tile];
 		if (uradoraEnabled) // 裏ドラ適用
-			ura += gameStat->DoraFlag.Ura[gameStat->Player[analysis->player].Hand[i].tile];
+			ura += gameStat->DoraFlag.Ura[gameStat->Player[targetPlayer].Hand[i].tile];
 	}
 	/* 鳴き面子のドラを数える */
-	for (int i = 1; i < gameStat->Player[analysis->player].MeldPointer; i++) {
-		auto k = &gameStat->Player[analysis->player].Meld[i];
+	for (int i = 1; i < gameStat->Player[targetPlayer].MeldPointer; i++) {
+		auto k = &gameStat->Player[targetPlayer].Meld[i];
 		switch (k->mstat) {
 		case meldSequenceExposedLower: case meldSequenceExposedMiddle: case meldSequenceExposedUpper: // 順子
 			omote += gameStat->DoraFlag.Omote[k->tile] + gameStat->DoraFlag.Omote[k->tile + 1] +
@@ -275,49 +273,55 @@ void yaku::yakuCalculator::CalculatorThread::countDora
 	}
 	/* 赤ドラ・青ドラ */
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
-		if (gameStat->Player[analysis->player].Hand[i].tile == NoTile) continue;
-		else if (gameStat->Player[analysis->player].Hand[i].tile >= TILE_NONFLOWER_MAX) continue;
-		switch (gameStat->Player[analysis->player].Hand[i].red) {
+		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) continue;
+		else if (gameStat->Player[targetPlayer].Hand[i].tile >= TILE_NONFLOWER_MAX) continue;
+		switch (gameStat->Player[targetPlayer].Hand[i].red) {
 			case AkaDora: ++red; break;
 			case AoDora: ++blue; break;
 		}
 	}
-	for (int i = 1; i < gameStat->Player[analysis->player].MeldPointer; i++) {
-		auto k = &gameStat->Player[analysis->player].Meld[i];
+	for (int i = 1; i < gameStat->Player[targetPlayer].MeldPointer; i++) {
+		auto k = &gameStat->Player[targetPlayer].Meld[i];
 		for (int j = 0; j < (k->mstat >= meldQuadConcealed ? 4 : 3); j++) {
-			switch (gameStat->Player[analysis->player].Meld[i].red[j]) {
+			switch (gameStat->Player[targetPlayer].Meld[i].red[j]) {
 				case AkaDora: ++red; break;
 				case AoDora: ++blue; break;
 			}
 		}
 	}
 	/* アリスドラ */
-	if ((getRule(RULE_ALICE) != 0) && (gameStat->Player[analysis->player].MenzenFlag)) {
+	if ((getRule(RULE_ALICE) != 0) && (gameStat->Player[targetPlayer].MenzenFlag)) {
 		// アリスありルールで門前でないと駄目
 		auto AlicePointer = gameStat->DoraPointer;
 		// 牌譜記録ルーチンはスレッドセーフじゃなかったはずなので別の場所でやる
 		while (AlicePointer <= gameStat->TilePointer) {
 			AlicePointer -= 2;
-			if (analysis->TileCount[gameStat->Deck[AlicePointer].tile] > 0) ++alice;
-			else break;
+			if (analysis != NULL) {
+				if (analysis->TileCount[gameStat->Deck[AlicePointer].tile] > 0) ++alice;
+				else break;
+			} else {
+				Int8ByTile tiles = countTilesInHand(gameStat, targetPlayer);
+				if (tiles[gameStat->Deck[AlicePointer].tile] > 0) ++alice;
+				else break;
+			}
 		}
 	}
 	/* 花牌・三麻のガリ */
 	if (getRule(RULE_FLOWER_TILES) != 0) {
 		if (chkGameType(gameStat, AllSanma)) {
-			north = gameStat->Player[analysis->player].NorthFlag;
+			north = gameStat->Player[targetPlayer].NorthFlag;
 			omote += north * (gameStat->DoraFlag.Omote[NorthWind] + 1);
 			if (uradoraEnabled) ura += north * gameStat->DoraFlag.Ura[NorthWind];
 			result->FlowerQuantity = north;
 		} else {
-			if (gameStat->Player[analysis->player].FlowerFlag.Spring) ++flower;
-			if (gameStat->Player[analysis->player].FlowerFlag.Summer) ++flower;
-			if (gameStat->Player[analysis->player].FlowerFlag.Autumn) ++flower;
-			if (gameStat->Player[analysis->player].FlowerFlag.Winter) ++flower;
-			if (gameStat->Player[analysis->player].FlowerFlag.Plum) ++flower;
-			if (gameStat->Player[analysis->player].FlowerFlag.Orchid) ++flower;
-			if (gameStat->Player[analysis->player].FlowerFlag.Chrys) ++flower;
-			if (gameStat->Player[analysis->player].FlowerFlag.Bamboo) ++flower;
+			if (gameStat->Player[targetPlayer].FlowerFlag.Spring) ++flower;
+			if (gameStat->Player[targetPlayer].FlowerFlag.Summer) ++flower;
+			if (gameStat->Player[targetPlayer].FlowerFlag.Autumn) ++flower;
+			if (gameStat->Player[targetPlayer].FlowerFlag.Winter) ++flower;
+			if (gameStat->Player[targetPlayer].FlowerFlag.Plum) ++flower;
+			if (gameStat->Player[targetPlayer].FlowerFlag.Orchid) ++flower;
+			if (gameStat->Player[targetPlayer].FlowerFlag.Chrys) ++flower;
+			if (gameStat->Player[targetPlayer].FlowerFlag.Bamboo) ++flower;
 			omote += flower * (gameStat->DoraFlag.Omote[Flower] + 1);
 			if (uradoraEnabled) ura += flower * gameStat->DoraFlag.Ura[Flower];
 			result->FlowerQuantity = flower;
@@ -360,6 +364,13 @@ void yaku::yakuCalculator::CalculatorThread::countDora
 		result->AliceDora = alice;
 		doraText(result, "アリス祝儀", alice);
 	}
+}
+
+/* ドラ計数 */
+void yaku::yakuCalculator::CalculatorThread::countDora
+	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result)
+{
+	yaku::yakuCalculator::countDora(gameStat, analysis, result, analysis->player);
 }
 
 /* 計算ルーチン */
@@ -510,7 +521,6 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		trace("簡略計算ルールのため30符として扱います。");
 		result->BasePoints = 30;
 	}
-	/* TODO: 十三不塔 */
 	/* 点数を計算する */
 	calculateScore(result);
 	/* 切り上げ満貫の処理 */
@@ -624,8 +634,38 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 	SHANTEN shanten[SHANTEN_PAGES];
 	for (int i = 0; i < SHANTEN_PAGES; i++)
 		shanten[i] = calcShanten(gameStat, targetPlayer, (shantenType)i);
-	// 和了ってるか判定
+	// 和了ってるか判定(和了ってなかった場合十三不塔か判定する)
 	if (shanten[shantenAll] > -1) {
+		/* 十三不塔 */
+		if (gameStat->Player[targetPlayer].FirstDrawFlag) { // 鳴きがなくて一巡目の時だけ判定する
+			if (chkShisanBuDa(gameStat, targetPlayer)) { // 十三不塔になってる
+				trace("十三不塔です！！");
+				yakuInfo.isValid = true; yakuInfo.BasePoints = 30;
+				yakuInfo.CoreSemiMangan = (getRule(RULE_SHIISAN_PUUTAA) == 2) ? 2 : 8;
+				yakuInfo.AgariPoints = LargeNum::fromInt(yakuInfo.CoreSemiMangan * 1000);
+				strcpy_s(yakuInfo.yakumanNameList, YAKUSTAT::nameBufSize,
+#ifdef WIN32
+					"十三不搭\r\n");
+#else
+					"十三不搭\n");
+#endif
+				countDora(gameStat, NULL, &yakuInfo, targetPlayer); // ドラは数えてあげましょうね
+			}
+			/* 十四不塔 */
+			else if (chkShisiBuDa(gameStat, targetPlayer)) { // 十四不塔になってる
+				trace("十四不塔です！！");
+				yakuInfo.isValid = true; yakuInfo.BasePoints = 30;
+				yakuInfo.CoreSemiMangan = 8;
+				yakuInfo.AgariPoints = LargeNum::fromInt(8000);
+				strcpy_s(yakuInfo.yakumanNameList, YAKUSTAT::nameBufSize,
+#ifdef WIN32
+					"十三無靠\r\n");
+#else
+					"十三無靠\n");
+#endif
+				countDora(gameStat, NULL, &yakuInfo, targetPlayer); // ドラを数えるのです
+			}
+		}
 		trace("和了っていないので抜けます");
 		return yakuInfo;
 	}
