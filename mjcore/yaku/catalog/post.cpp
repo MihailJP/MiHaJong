@@ -30,4 +30,31 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 				suppression.insert("五門斎");
 		}
 	}
+
+	// ---------------------------------------------------------------------
+
+	/* カラス */
+	if (getRule(RULE_KARASU) != 0) {
+		if (((analysis->Machi == yaku::yakuCalculator::machiKanchan) ||
+			(analysis->Machi == yaku::yakuCalculator::machiPenchan) ||
+			(analysis->Machi == yaku::yakuCalculator::machiTanki)) &&
+			(! analysis->PlayerStat->RichiFlag.RichiFlag) &&
+			(totalHan <= 0) && (totalSemiMangan == 0)) {
+				const char* name = "カラス";
+				yakuHan[name] = yaku::yakuCalculator::Yaku::yval_1han(analysis);
+				yakuOrd.push_back(name);
+		}
+	}
+	/* カラス立直 */
+	if (getRule(RULE_KARASU_RIICHI) != 0) {
+		if (((analysis->Machi == yaku::yakuCalculator::machiKanchan) ||
+			(analysis->Machi == yaku::yakuCalculator::machiPenchan) ||
+			(analysis->Machi == yaku::yakuCalculator::machiTanki)) &&
+			(analysis->PlayerStat->RichiFlag.RichiFlag) &&
+			(totalHan == 1) && (totalSemiMangan == 0)) {
+				const char* name = "カラス立直";
+				yakuHan[name] = yaku::yakuCalculator::Yaku::yval_1han(analysis);
+				yakuOrd.push_back(name);
+		}
+	}
 }
