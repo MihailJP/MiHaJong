@@ -124,7 +124,7 @@ private:
 		protected:
 			std::function<YAKU_HAN (const MENTSU_ANALYSIS* const)> hFunc;
 		public:
-			YAKU_HAN operator() (const MENTSU_ANALYSIS* const);
+			YAKU_HAN operator() (const MENTSU_ANALYSIS* const) const;
 			HANFUNC ();
 			HANFUNC (std::function<YAKU_HAN (const MENTSU_ANALYSIS* const)>);
 		};
