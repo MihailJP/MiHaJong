@@ -376,43 +376,43 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 		std::string yName = *yNameIter;
 		if (getRule(RULE_LIMITLESS) == 2) { /* 青点ルールで役満を13飜扱いとする場合 */
 			switch (yakuHan[yName].coreHan.getUnit()) {
-				case yaku::yakuCalculator::hanUnit::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::SemiMangan:
+				case yaku::yakuCalculator::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
+				case yaku::yakuCalculator::SemiMangan:
 					switch (yakuHan[yName].coreHan.getHan()) {
 						case 2: totalHan += 5; break;   case 3: totalHan += 6; break;
 						case 4: totalHan += 8; break;   case 6: totalHan += 11; break;
 						case 8: totalHan += 13; break;  case 16: totalHan += 26; break;
 					}
 					break;
-				case yaku::yakuCalculator::hanUnit::Yakuman: totalHan += yakuHan[yName].coreHan.getHan() * 13; break;
+				case yaku::yakuCalculator::Yakuman: totalHan += yakuHan[yName].coreHan.getHan() * 13; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
 			}
 			switch (yakuHan[yName].bonusHan.getUnit()) {
-				case yaku::yakuCalculator::hanUnit::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::SemiMangan:
+				case yaku::yakuCalculator::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
+				case yaku::yakuCalculator::SemiMangan:
 					switch (yakuHan[yName].bonusHan.getHan()) {
 						case 2: totalBonusHan += 5; break;   case 3: totalBonusHan += 6; break;
 						case 4: totalBonusHan += 8; break;   case 6: totalBonusHan += 11; break;
 						case 8: totalBonusHan += 13; break;  case 16: totalBonusHan += 26; break;
 					}
 					break;
-				case yaku::yakuCalculator::hanUnit::Yakuman: totalBonusHan += yakuHan[yName].bonusHan.getHan() * 13; break;
+				case yaku::yakuCalculator::Yakuman: totalBonusHan += yakuHan[yName].bonusHan.getHan() * 13; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
 			}
 		} else { /* 通常の翻計算 */
 			switch (yakuHan[yName].coreHan.getUnit()) {
-				case yaku::yakuCalculator::hanUnit::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::SemiMangan: totalSemiMangan += yakuHan[yName].coreHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::Yakuman: totalSemiMangan += yakuHan[yName].coreHan.getHan() * 8; break;
+				case yaku::yakuCalculator::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
+				case yaku::yakuCalculator::SemiMangan: totalSemiMangan += yakuHan[yName].coreHan.getHan(); break;
+				case yaku::yakuCalculator::Yakuman: totalSemiMangan += yakuHan[yName].coreHan.getHan() * 8; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
 			}
 			switch (yakuHan[yName].bonusHan.getUnit()) {
-				case yaku::yakuCalculator::hanUnit::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::SemiMangan: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan(); break;
-				case yaku::yakuCalculator::hanUnit::Yakuman: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan() * 8; break;
+				case yaku::yakuCalculator::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
+				case yaku::yakuCalculator::SemiMangan: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan(); break;
+				case yaku::yakuCalculator::Yakuman: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan() * 8; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
 			}
@@ -424,8 +424,8 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 		{ /* 単位が混在！ */
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が混在しています");
 		}
-		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::hanUnit::Han) || (yakuHan[yName].coreHan.getHan() == 0)) &&
-			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Han) || (yakuHan[yName].bonusHan.getHan() == 0)))
+		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 普通の役の時 */
 			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 #ifdef WIN32
@@ -441,8 +441,8 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "飜\n");
 #endif
 		}
-		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) || (yakuHan[yName].coreHan.getHan() == 0)) &&
-			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::SemiMangan) || (yakuHan[yName].bonusHan.getHan() == 0)))
+		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 満貫 */
 			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 #ifdef WIN32
@@ -455,8 +455,8 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
 			strcat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
 		}
-		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::hanUnit::Yakuman) || (yakuHan[yName].coreHan.getHan() == 0)) &&
-			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::hanUnit::Yakuman) || (yakuHan[yName].bonusHan.getHan() == 0)))
+		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 役満 */
 			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 #ifdef WIN32
