@@ -102,6 +102,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="aiscript.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="envtbl.cpp" />
     <ClCompile Include="func.cpp" />
@@ -141,6 +142,7 @@
     <ClCompile Include="yaku\yk_tools.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="aiscript.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="envtbl.h" />
     <ClInclude Include="except.h" />

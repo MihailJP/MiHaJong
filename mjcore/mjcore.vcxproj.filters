@@ -153,6 +153,9 @@
     <ClCompile Include="yaku\catalog\post.cpp">
       <Filter>ソース ファイル\yaku\catalog</Filter>
     </ClCompile>
+    <ClCompile Include="aiscript.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">
@@ -253,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="yaku\catalog\isshoku.h">
       <Filter>ヘッダー ファイル\yaku\catalog</Filter>
+    </ClInclude>
+    <ClInclude Include="aiscript.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
