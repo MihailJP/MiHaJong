@@ -103,6 +103,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="aiscript.cpp" />
+    <ClCompile Include="discard.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="envtbl.cpp" />
     <ClCompile Include="func.cpp" />
@@ -143,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aiscript.h" />
+    <ClInclude Include="discard.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="envtbl.h" />
     <ClInclude Include="except.h" />
