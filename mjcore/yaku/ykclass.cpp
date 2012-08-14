@@ -9,7 +9,7 @@ yaku::yakuCalculator::Yaku::HANFUNC::HANFUNC(std::function<yaku::yakuCalculator:
 }
 
 yaku::yakuCalculator::Yaku::YAKU_HAN yaku::yakuCalculator::Yaku::HANFUNC::operator()
-	(const MENTSU_ANALYSIS* const analysis)
+	(const MENTSU_ANALYSIS* const analysis) const
 {
 	return this->hFunc(analysis);
 }
