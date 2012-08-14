@@ -31,6 +31,9 @@
     <Filter Include="ソース ファイル\yaku\catalog">
       <UniqueIdentifier>{3a8419f7-f9b5-4bd7-9adb-a351378bdffa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\yaku\catalog">
+      <UniqueIdentifier>{96668902-b2ce-4a26-9801-c47e380c5f39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mjcore.cpp">
@@ -102,7 +105,46 @@
     <ClCompile Include="yaku\catalog.cpp">
       <Filter>ソース ファイル\yaku</Filter>
     </ClCompile>
+    <ClCompile Include="yaku\suittbl.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\pinhu.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\yaojiu.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
     <ClCompile Include="yaku\catalog\shisanbd.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\context.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\irreg.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\sequence.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\suit.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\dora.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\triplet1.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\triplet2.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\misc.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\quad.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="yaku\catalog\post.cpp">
       <Filter>ソース ファイル\yaku\catalog</Filter>
     </ClCompile>
   </ItemGroup>
@@ -202,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="yaku\yk_tools.h">
       <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
+    <ClInclude Include="yaku\catalog\isshoku.h">
+      <Filter>ヘッダー ファイル\yaku\catalog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

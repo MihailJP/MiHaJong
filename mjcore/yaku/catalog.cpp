@@ -1,18 +1,25 @@
 #include "catalog.h"
 
-// 設定したルールに基づいて役インスタンスを初期化する
-__declspec(dllexport) void yaku::yakuCalculator::init() {
-	YakuCatalog::Instantiate()->catalog.clear(); // リセット
-	info("役カタログをリセットしました。");
-	/*
-	 * ここにコンストラクタを並べる
-	 */
-	YakuCatalog::Instantiate()->catalog.push_back(Yaku( // テスト用のダミーの役
-		"ダミー", yaku::yakuCalculator::Yaku::yval_1han,
-		[](const MENTSU_ANALYSIS* const) {
-			return true;
-		}
-	));
-	info("役カタログの構築を完了しました。");
+/* シングルトン インスタンス アクセサ */
+yaku::yakuCalculator::YakuCatalog* yaku::yakuCalculator::YakuCatalog::Instantiate() {
+	// Singleton instance accessor
+	static YakuCatalog instance;
+	return &instance;
 }
 
+// 設定したルールに基づいて役インスタンスを初期化する
+void yaku::yakuCalculator::init() {
+	YakuCatalog::Instantiate()->catalog.clear(); // リセット
+	info("役カタログをリセットしました。");
+	YakuCatalog::catalogInit::yakulst_contextual();
+	YakuCatalog::catalogInit::yakulst_pinhu();
+	YakuCatalog::catalogInit::yakulst_suit();
+	YakuCatalog::catalogInit::yakulst_yaojiu();
+	YakuCatalog::catalogInit::yakulst_triplet_1();
+	YakuCatalog::catalogInit::yakulst_triplet_2();
+	YakuCatalog::catalogInit::yakulst_quad();
+	YakuCatalog::catalogInit::yakulst_sequence();
+	YakuCatalog::catalogInit::yakulst_misc();
+	YakuCatalog::catalogInit::yakulst_dora();
+	info("役カタログの構築を完了しました。");
+}
