@@ -20,6 +20,7 @@
 #include "../tileutil.h"
 #include "../except.h"
 #include "../logging.h"
+#include "../shanten.h"
 
 class yaku::yakuCalculator {
 private:

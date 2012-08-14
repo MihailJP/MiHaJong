@@ -26,6 +26,8 @@
 #include "dllmain.h"
 #endif
 
+#define SHANTEN_PAGES 8
+
 void LoadFileInResource(int name, int type, DWORD& size, const char*& data);
 typedef int8_t SHANTEN; // 向聴数のためのデータ型（0=聴牌、-1=和了、127=無効）
 

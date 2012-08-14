@@ -6,7 +6,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"“ºèt˜a", yaku::yakuCalculator::Yaku::yval_1han,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
 					((analysis->GameStat->DoraFlag.Omote[analysis->TsumoHai->tile] > 0) || // ƒcƒ‚”v‚ª•\ƒhƒ‰‚É‚È‚Á‚Ä‚¢‚é(— ƒhƒ‰‚Í‘ÎÛŠO)
 					(analysis->TsumoHai->red != Normal))); // Ôƒhƒ‰‚©Âƒhƒ‰‚É‚È‚Á‚Ä‚¢‚é
 			}
@@ -16,7 +16,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"–kŽl–‡”²‚«", yaku::yakuCalculator::Yaku::yval_yakuman_dependent,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
 					(analysis->PlayerStat->NorthFlag == 4)); // –k4–‡
 			}
 		));
@@ -26,7 +26,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			"”ªå‰ßŠC", yaku::yakuCalculator::Yaku::yval_yakuman_dependent,
 			"t‰ÄH“~", "Žl‰ØŠJ—ä", "–{‰Ô‹Gß”v", "–{‰Ô‘–Ø”v",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
 					(analysis->PlayerStat->FlowerFlag.Spring) && (analysis->PlayerStat->FlowerFlag.Summer) &&
 					(analysis->PlayerStat->FlowerFlag.Autumn) && (analysis->PlayerStat->FlowerFlag.Winter) &&
 					(analysis->PlayerStat->FlowerFlag.Plum) && (analysis->PlayerStat->FlowerFlag.Orchid) &&
@@ -42,7 +42,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			yaku::yakuCalculator::Yaku::yval_yakuman_dependent,
 			"–{‰Ô‹Gß”v",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
 					(analysis->PlayerStat->FlowerFlag.Spring) && (analysis->PlayerStat->FlowerFlag.Summer) &&
 					(analysis->PlayerStat->FlowerFlag.Autumn) && (analysis->PlayerStat->FlowerFlag.Winter));
 			}
@@ -56,7 +56,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			yaku::yakuCalculator::Yaku::yval_yakuman_dependent,
 			"–{‰Ô‘–Ø”v",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
 					(analysis->PlayerStat->FlowerFlag.Plum) && (analysis->PlayerStat->FlowerFlag.Orchid) &&
 					(analysis->PlayerStat->FlowerFlag.Chrys) && (analysis->PlayerStat->FlowerFlag.Bamboo));
 			}
@@ -66,7 +66,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"–{‰Ô‹Gß”v", yaku::yakuCalculator::Yaku::yval_1han_dependent,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				if (analysis->shanten[shantenAll] != -1) return false; // ˜a—¹‚Á‚Ä‚È‚¢‚È‚ç–ß‚é
+				if (analysis->shanten[ShantenAnalyzer::shantenAll] != -1) return false; // ˜a—¹‚Á‚Ä‚È‚¢‚È‚ç–ß‚é
 				switch (playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound)) {
 					case sEast: return analysis->PlayerStat->FlowerFlag.Spring;
 					case sSouth: return analysis->PlayerStat->FlowerFlag.Summer;
@@ -81,7 +81,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"–{‰Ô‘–Ø”v", yaku::yakuCalculator::Yaku::yval_1han_dependent,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				if (analysis->shanten[shantenAll] != -1) return false; // ˜a—¹‚Á‚Ä‚È‚¢‚È‚ç–ß‚é
+				if (analysis->shanten[ShantenAnalyzer::shantenAll] != -1) return false; // ˜a—¹‚Á‚Ä‚È‚¢‚È‚ç–ß‚é
 				switch (playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound)) {
 					case sEast: return analysis->PlayerStat->FlowerFlag.Plum;
 					case sSouth: return analysis->PlayerStat->FlowerFlag.Orchid;

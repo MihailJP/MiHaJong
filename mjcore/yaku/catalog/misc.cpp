@@ -6,11 +6,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	auto chktiles = // –ÊqèEµ‘ÎqŒ“—p‚Ì”»’èŠÖ”ƒIƒuƒWƒFƒNƒg
 		[](const MENTSU_ANALYSIS* const analysis, const tileCode* const targetKez, int numOfKez,
 		const tileCode* const targetShunz, int numOfShunz, bool noDui) -> bool {
-			if (analysis->shanten[shantenRegular] == -1)
+			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
 				return (yaku::countingFacility::countSpecMentz
 					(analysis->MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, noDui)
 					== SIZE_OF_MELD_BUFFER - (noDui ? 0 : 1));
-			else if (analysis->shanten[shantenPairs] == -1)
+			else if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1)
 				return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez, numOfKez)
 					== NUM_OF_TILES_IN_HAND / 2);
 			else return false;
@@ -227,9 +227,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			"¬ˆêF",
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				if ((analysis->shanten[shantenRegular] == -1) && (analysis->KeziCount[RedDragon] >= 1))
+				if ((analysis->shanten[ShantenAnalyzer::shantenRegular] == -1) && (analysis->KeziCount[RedDragon] >= 1))
 					yakuFlag = true;
-				else if ((analysis->shanten[shantenPairs] == -1) && (analysis->TileCount[RedDragon] >= 2))
+				else if ((analysis->shanten[ShantenAnalyzer::shantenPairs] == -1) && (analysis->TileCount[RedDragon] >= 2))
 					yakuFlag = true;
 				const tileCode kezi[] = {
 					CircleFive, CircleOne, CircleThree, CircleSix,
@@ -273,7 +273,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			"Â“´–å", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"¬ˆêF", "‘ÎX˜a", "’fg˜a", "¬’fg",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				if (analysis->shanten[shantenRegular] == -1) {
+				if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1) {
 					const tileCode kezi[] = {
 						EastWind, SouthWind, WestWind, NorthWind,
 						CircleTwo, CircleFour, CircleEight,
@@ -912,9 +912,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"•ˆß‹Rm", yaku::yakuCalculator::Yaku::yval_2han,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				if (analysis->shanten[shantenRegular] == -1)
+				if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
 					return yaku::countingFacility::countMentzNumerals(analysis->MianziDat) == 21;
-				else if (analysis->shanten[shantenPairs] == -1)
+				else if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1)
 					return yaku::countingFacility::countTileNumerals(analysis->TileCount) == 21;
 				else return false;
 			}

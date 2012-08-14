@@ -6,7 +6,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	std::map<std::string, Yaku::YAKU_HAN> &yakuHan, std::set<std::string> &suppression,
 	std::vector<std::string> &yakuOrd)
 {
-	if (analysis->shanten[shantenAll] >= 0) return; // 和了ってないなら戻る(一応……)
+	if (analysis->shanten[ShantenAnalyzer::shantenAll] >= 0) return; // 和了ってないなら戻る(一応……)
 
 	// ---------------------------------------------------------------------
 

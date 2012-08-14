@@ -478,7 +478,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	const ParseMode* const pMode, YAKUSTAT* const result)
 {
 	/* 面子解析処理 */
-	if (analysis->shanten[shantenRegular] == -1) {
+	if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1) {
 		int NumOfMelds = 0;
 		mentsuParser::makementsu(gameStat, analysis->player, *pMode, &NumOfMelds, analysis->MianziDat);
 		if (NumOfMelds < SIZE_OF_MELD_BUFFER) { // 条件を満たしてないなら抜けます
@@ -494,12 +494,12 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, &analysis->TotalAnKangzi);
 		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, &analysis->TotalKaKangzi);
 	} else {
-		if (analysis->shanten[shantenPairs] == -1) { // 七対子
+		if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1) { // 七対子
 			if (getRule(RULE_SEVEN_PAIRS) == 1) analysis->BasePoint = 50; // 1翻50符
 			else analysis->BasePoint = 25; // 2翻25符
 		}
-		else if (analysis->shanten[shantenOrphans] == -1) analysis->BasePoint = 30; // 国士は役満なのでこれは青天ルール用
-		else if ((analysis->shanten[shantenQuanbukao] == -1)&&(analysis->shanten[shantenStellar] > -1)) {
+		else if (analysis->shanten[ShantenAnalyzer::shantenOrphans] == -1) analysis->BasePoint = 30; // 国士は役満なのでこれは青天ルール用
+		else if ((analysis->shanten[ShantenAnalyzer::shantenQuanbukao] == -1)&&(analysis->shanten[ShantenAnalyzer::shantenStellar] > -1)) {
 			switch (getRule(RULE_QUANBUKAO)) {
 			case 1:
 				analysis->BasePoint = 30; break;
@@ -664,9 +664,9 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 	// シャンテン数をチェック
 	SHANTEN shanten[SHANTEN_PAGES];
 	for (int i = 0; i < SHANTEN_PAGES; i++)
-		shanten[i] = calcShanten(gameStat, targetPlayer, (shantenType)i);
+		shanten[i] = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, (ShantenAnalyzer::shantenType)i);
 	// 和了ってるか判定(和了ってなかった場合十三不塔か判定する)
-	if (shanten[shantenAll] > -1) {
+	if (shanten[ShantenAnalyzer::shantenAll] > -1) {
 		/* 十三不塔 */
 		if (gameStat->Player[targetPlayer].FirstDrawFlag) { // 鳴きがなくて一巡目の時だけ判定する
 			if (chkShisanBuDa(gameStat, targetPlayer)) { // 十三不塔になってる
@@ -720,7 +720,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 		return yakuInfo;
 	}
 	// 和了っているなら
-	if (shanten[shantenRegular] == -1) // 一般形の和了
+	if (shanten[ShantenAnalyzer::shantenRegular] == -1) // 一般形の和了
 		analysisLoop(gameStat, targetPlayer, shanten, &yakuInfo);
 	else // 七対子、国士無双、その他特殊な和了
 		analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);
