@@ -6,6 +6,10 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	std::map<std::string, Yaku::YAKU_HAN> &yakuHan, std::set<std::string> &suppression,
 	std::vector<std::string> &yakuOrd)
 {
+	if (analysis->shanten[shantenAll] >= 0) return; // 和了ってないなら戻る(一応……)
+
+	// ---------------------------------------------------------------------
+
 	int totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan;
 	hanSummation(totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan, yakuHan, yakuOrd, NULL);
 
@@ -54,6 +58,25 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 			(totalHan == 1) && (totalSemiMangan == 0)) {
 				const char* name = "カラス立直";
 				yakuHan[name] = yaku::yakuCalculator::Yaku::yval_1han(analysis);
+				yakuOrd.push_back(name);
+		}
+	}
+
+	// ---------------------------------------------------------------------
+
+	/* 北枕 */
+	if (getRule(RULE_KITAMAKURA) != 0) {
+		if ((totalHan >= 2) && /* 2飜以上あるか？ */
+			(totalSemiMangan == 0) && /* 役満未満か？ */
+			(analysis->GameStat->DoraFlag.Omote[NorthWind] == 0) && /* 北はドラではないか？ */
+			((!*analysis->MenzenFlag) || (!analysis->PlayerStat->RichiFlag.RichiFlag) ||
+			(getRule(RULE_URADORA) == 1) ||
+			(analysis->GameStat->DoraFlag.Ura[NorthWind] == 0)) && /* 北は裏ドラではないか？ */
+			(analysis->MianziDat[0].tile == NorthWind)) { /* 雀頭が北か？ */
+				const char* name = "北枕";
+				yakuHan[name] = yaku::yakuCalculator::Yaku::YAKU_HAN(
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(-1));
 				yakuOrd.push_back(name);
 		}
 	}
