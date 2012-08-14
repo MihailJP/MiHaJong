@@ -24,6 +24,7 @@ signed int LargeNum::compare(const LargeNum& cmp) { // ”äŠr—p
 }
 
 std::string LargeNum::bignumtotext(std::string plusSign, std::string minusSign) const {
+	// •¶š—ñ•\Œ»‚É’¼‚·
 	static const std::string unitname[] = {
 		"", "–œ", "‰­","’›", 
 		"‹", "š´", "`", "õ",
@@ -45,6 +46,15 @@ std::string LargeNum::bignumtotext(std::string plusSign, std::string minusSign) 
 			o << abs(this->digitGroup[i] % 10000) << unitname[i * 2];
 	}
 	return o.str();
+}
+
+double LargeNum::bignumtodbl() const {
+	// •‚“®¬”“_Œ^‚É’¼‚·
+	double ans = 0.0;
+	for (int i = 7; i >= 0; i--) {
+		ans *= 1e8; ans += this->digitGroup[i];
+	}
+	return ans;
 }
 
 LargeNum LargeNum::fromInt(int val) {

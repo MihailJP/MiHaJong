@@ -18,6 +18,7 @@ EXPORT_STRUCT LargeNum { // ±21不可思議まで表現可能な数のクラス
 	void fix();
 	signed int compare(const LargeNum& cmp);
 	std::string bignumtotext(std::string plusSign, std::string minusSign) const;
+	double bignumtodbl() const;
 	static LargeNum fromInt(int val);
 	static LargeNum fromInt(int val, unsigned int fArg);
 	void ceilHundred();

@@ -30,5 +30,7 @@ mjcore/mjcore.opensdf
 astro/Debug/
 astro/Release/
 astro/ipch/
+mjcore/lua/*.lib
+mjcore/lua/include
 release
 *.zip
