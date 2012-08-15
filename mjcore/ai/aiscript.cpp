@@ -108,11 +108,26 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 			if (!flag) {
 				warn("1番目の返り値が数値ではありません。通常の打牌とみなします。");
 				discard.type = DiscardTileNum::Normal; // fallback
+			} else if ((discard.type < DiscardTileNum::Normal) || (discard.type > DiscardTileNum::Disconnect)) {
+				warn("1番目の返り値が正しくありません。通常の打牌とみなします。");
+				discard.type = DiscardTileNum::Normal; // fallback
 			}
-			discard.id = lua_tointegerx(lsMJCore, -1, &flag);
-			if (!flag) {
-				warn("2番目の返り値が数値ではありません。ツモ切りとみなします。");
-				discard.id = NUM_OF_TILES_IN_HAND - 1; // fallback
+			if ((discard.type == DiscardTileNum::Agari) || (discard.type == DiscardTileNum::Kyuushu) ||
+				(discard.type == DiscardTileNum::Disconnect)) { // 番号指定が不要な場合
+					discard.id = NUM_OF_TILES_IN_HAND - 1; // 2番めの返り値は無視
+			} else {
+				int i = lua_tointegerx(lsMJCore, -1, &flag);
+				if (!flag) {
+					warn("2番目の返り値が数値ではありません。ツモ切りとみなします。");
+					discard.id = NUM_OF_TILES_IN_HAND - 1; // fallback
+				} else if ((i >= 1)&&(i <= NUM_OF_TILES_IN_HAND)) {
+					discard.id = i - 1; // オリジンを1にする仕様……
+				} else if ((i <= -1)&&(i >= -NUM_OF_TILES_IN_HAND)) { // マイナスを指定した場合の処理
+					discard.id = NUM_OF_TILES_IN_HAND + i;
+				} else {
+					warn("2番目の返り値が範囲外です。ツモ切りとみなします。");
+					discard.id = NUM_OF_TILES_IN_HAND - 1; // fallback
+				}
 			}
 			lua_pop(lsMJCore, 2);
 			return discard;
