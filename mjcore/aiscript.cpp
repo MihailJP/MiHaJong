@@ -1,11 +1,33 @@
 #include "aiscript.h"
 
-lua_State* aiscript::lsMJCore;
+lua_State* aiscript::lsMJCore = NULL;
+bool aiscript::scriptLoaded = false;
+const DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NUM_OF_TILES_IN_HAND - 1};
+
+const char* const aiscript::fncname_discard = "determine_discard"; // 捨牌決定用関数の名前
 
 void aiscript::initscript() {
 	// Lua初期化 (仮)
 	lsMJCore = luaL_newstate();
 	luaopen_base(lsMJCore); // baseライブラリだけは開いておきましょう
+	const char* filename = ".\\ai\\ai.lua"; /* ファイル名は仮 */
+	if (int errcode = luaL_loadfile(lsMJCore, filename)) { /* ファイルを読み込み。成功したら0を返す */
+		/* 読み込み失敗した時の処理 */
+		std::ostringstream o;
+		o << "スクリプトファイル [" << filename << "] の読み込みに失敗しました。";
+		switch (errcode) {
+			case LUA_ERRFILE: o << "ファイルが開けません。"; break;
+			case LUA_ERRSYNTAX: o << "構文が正しくありません。"; break;
+			case LUA_ERRMEM: o << "メモリの割当に失敗しました。"; break;
+			case LUA_ERRGCMM: o << "ガーベジコレクション実行中のエラーです。"; break;
+		}
+		error(o.str().c_str());
+	} else {
+		std::ostringstream o;
+		o << "スクリプトファイル [" << filename << "] を読み込みました。";
+		info(o.str().c_str());
+		scriptLoaded = true;
+	}
 }
 
 void aiscript::GameStatToLuaTable(lua_State *L, const GameTable* const gameStat) {
@@ -18,6 +40,56 @@ void aiscript::GameStatToLuaTable(lua_State *L, const GameTable* const gameStat)
 	lua_setfield(L, -2, "Player");
 
 	debug("C++構造体→Luaテーブル変換終了");
+}
+
+DiscardTileNum aiscript::compdahai(const GameTable* const gameStat) {
+	std::ostringstream o;
+	o << "AIの打牌処理に入ります。プレイヤー [" << gameStat->CurrentPlayer.Active << "]";
+	info(o.str().c_str());
+	if (scriptLoaded) { /* 正しく読み込まれているなら */
+		try { /* determine_discard があればよし、なかったら例外処理 */
+			lua_getglobal(lsMJCore, fncname_discard);
+		} catch (...) { /* determine_discard がなかったらエラーになるので例外処理をする */
+			std::ostringstream o;
+			o << "グローバルシンボル [" << fncname_discard << "] の取得に失敗しました"; error(o.str().c_str());
+			info("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。");
+			scriptLoaded = false; return DiscardThrough;
+		}
+		GameStatToLuaTable(lsMJCore, gameStat);
+		if (int errcode = lua_pcall(lsMJCore, 1, 2, 0)) {
+			/* 実行失敗！ */
+			std::ostringstream o;
+			switch (errcode) {
+			case LUA_ERRRUN:
+				o << "スクリプトの実行時エラー [";
+				break;
+			case LUA_ERRMEM: o << "メモリの割当に失敗しました。"; break;
+			case LUA_ERRERR: o << "メッセージハンドラ実行中のエラーです。"; break;
+			case LUA_ERRGCMM: o << "ガーベジコレクション実行中のエラーです。"; break;
+			}
+			error(o.str().c_str());
+			warn("関数呼び出しに失敗したため、ツモ切りとみなします");
+			return DiscardThrough;
+		} else {
+			/* 実行完了 */
+			DiscardTileNum discard; int flag;
+			discard.type = (DiscardTileNum::discardType)lua_tointegerx(lsMJCore, -2, &flag);
+			if (!flag) {
+				warn("1番目の返り値が数値ではありません。通常の打牌とみなします。");
+				discard.type = DiscardTileNum::Normal; // fallback
+			}
+			discard.id = lua_tointegerx(lsMJCore, -1, &flag);
+			if (!flag) {
+				warn("2番目の返り値が数値ではありません。ツモ切りとみなします。");
+				discard.id = NUM_OF_TILES_IN_HAND - 1; // fallback
+			}
+			lua_pop(lsMJCore, 2);
+			return discard;
+		}
+	} else {
+		warn("スクリプトがロードされていないか、使用できないため、ツモ切りとみなします");
+		return DiscardThrough; // スクリプトは使用不能
+	}
 }
 
 inline void aiscript::table::TableAdd(lua_State *L, std::string key, lua_Integer val) {

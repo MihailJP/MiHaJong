@@ -5,14 +5,19 @@
 #include <sstream>
 #include "gametbl.h"
 #include "logging.h"
+#include "discard.h"
 
 class aiscript {
 private:
-	static lua_State *lsMJCore;
+	static const char* const fncname_discard;
+	static lua_State* lsMJCore;
+	static bool scriptLoaded;
 	class table;
+	static const DiscardTileNum DiscardThrough;
 public:
 	static void initscript();
 	static void GameStatToLuaTable(lua_State *L, const GameTable* const gameStat);
+	static DiscardTileNum compdahai(const GameTable* const gameStat);
 };
 
 class aiscript::table {
