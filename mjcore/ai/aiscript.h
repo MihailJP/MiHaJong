@@ -3,9 +3,9 @@
 
 #include <lua.hpp>
 #include <sstream>
-#include "gametbl.h"
-#include "logging.h"
-#include "discard.h"
+#include "../gametbl.h"
+#include "../logging.h"
+#include "../discard.h"
 
 class aiscript {
 private:

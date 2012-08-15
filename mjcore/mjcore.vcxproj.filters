@@ -34,6 +34,12 @@
     <Filter Include="ヘッダー ファイル\yaku\catalog">
       <UniqueIdentifier>{96668902-b2ce-4a26-9801-c47e380c5f39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\ai">
+      <UniqueIdentifier>{092a85c1-700c-41c1-a0c6-26b1799b5ccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ai">
+      <UniqueIdentifier>{b7ca120c-5fa2-4b8c-91e3-a79f698f4207}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mjcore.cpp">
@@ -147,11 +153,11 @@
     <ClCompile Include="yaku\catalog\post.cpp">
       <Filter>ソース ファイル\yaku\catalog</Filter>
     </ClCompile>
-    <ClCompile Include="aiscript.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="discard.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\aiscript.cpp">
+      <Filter>ソース ファイル\ai</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,11 +260,11 @@
     <ClInclude Include="yaku\catalog\isshoku.h">
       <Filter>ヘッダー ファイル\yaku\catalog</Filter>
     </ClInclude>
-    <ClInclude Include="aiscript.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="discard.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\aiscript.h">
+      <Filter>ヘッダー ファイル\ai</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
