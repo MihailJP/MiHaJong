@@ -5,13 +5,23 @@ bool aiscript::scriptLoaded = false;
 const DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NUM_OF_TILES_IN_HAND - 1};
 
 const char* const aiscript::fncname_discard = "determine_discard"; // 捨牌決定用関数の名前
+const char* const aiscript::fncname_call = "determine_call"; // 鳴き決定用関数の名前
 
 __declspec(dllexport) void aiscript::initscript() {
 	// Lua初期化 (仮)
 	lsMJCore = luaL_newstate();
 	luaopen_base(lsMJCore); // baseライブラリだけは開いておきましょう
+	inittbl(lsMJCore);
 	const char* filename = ".\\ai\\ai.lua"; /* ファイル名は仮 */
-	if (int errcode = luaL_loadfile(lsMJCore, filename)) { /* ファイルを読み込み。成功したら0を返す */
+	readfile(lsMJCore, filename); /* ファイルを読み込み */
+}
+
+void aiscript::inittbl(lua_State* const L) {
+	// mihajongテーブルの構築
+}
+
+void aiscript::readfile(lua_State* const L, const char* const filename) {
+	if (int errcode = luaL_loadfile(L, filename)) { /* ファイルを読み込み。成功したら0を返す */
 		/* 読み込み失敗した時の処理 */
 		std::ostringstream o;
 		o << "スクリプトファイル [" << filename << "] の読み込みに失敗しました。";
@@ -26,13 +36,13 @@ __declspec(dllexport) void aiscript::initscript() {
 		std::ostringstream o;
 		o << "スクリプトファイル [" << filename << "] を読み込みました。";
 		info(o.str().c_str());
-		if (int errcode = lua_pcall(lsMJCore, 0, LUA_MULTRET, 0)) {
+		if (int errcode = lua_pcall(L, 0, LUA_MULTRET, 0)) {
 			/* 実行失敗！ */
 			std::ostringstream o;
 			switch (errcode) {
 			case LUA_ERRRUN:
 				o << "スクリプトの実行時エラー [" <<
-					lua_tostring(lsMJCore, -1) /* エラーメッセージ */ <<
+					lua_tostring(L, -1) /* エラーメッセージ */ <<
 					"]";
 				lua_pop(lsMJCore, 1);
 				break;

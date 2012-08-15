@@ -10,10 +10,13 @@
 class aiscript {
 private:
 	static const char* const fncname_discard;
+	static const char* const fncname_call;
 	static lua_State* lsMJCore;
 	static bool scriptLoaded;
 	class table;
 	static const DiscardTileNum DiscardThrough;
+	static void inittbl(lua_State* const L);
+	static void readfile(lua_State* const L, const char* const filename);
 public:
 	__declspec(dllexport) static void initscript();
 	static void GameStatToLuaTable(lua_State *L, const GameTable* const gameStat);
