@@ -14,6 +14,7 @@
 	statmes "" // 情報窓への表示
 	initializechat GameEnv, ServerAddress, ClientNumber
 	initYakuCatalog // 役カタログの初期化
+	initscript // AIの初期化
 return
 
 /* 卓の初期化 */

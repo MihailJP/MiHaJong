@@ -12,6 +12,7 @@
 #include "const.hsp"
 #include "mjcore.hsp"
 #define global COMTHINKTIME 600
+#if 0
 #deffunc compdahai var GameStat
 	info strf("AIの打牌処理に入ります。プレイヤー [%d]", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 	countTilesInHand TileCount, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
@@ -866,7 +867,7 @@ return DiscardTileIndex
 	setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getHand(GameStat, HAND_TILECODE, tmpTileNum2, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 	setHand GameStat, HAND_TILECODE, tmpTileNum2, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), tmpTile2
 	return
-
+#endif
 /* ＡＩの鳴き・栄和 */
 #deffunc compfuuro var GameStat
 	info strf("AIの副露判定に入ります。プレイヤー [%d]", getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))

@@ -6,7 +6,7 @@ const DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NUM_OF_
 
 const char* const aiscript::fncname_discard = "determine_discard"; // 捨牌決定用関数の名前
 
-void aiscript::initscript() {
+__declspec(dllexport) void aiscript::initscript() {
 	// Lua初期化 (仮)
 	lsMJCore = luaL_newstate();
 	luaopen_base(lsMJCore); // baseライブラリだけは開いておきましょう
@@ -26,7 +26,26 @@ void aiscript::initscript() {
 		std::ostringstream o;
 		o << "スクリプトファイル [" << filename << "] を読み込みました。";
 		info(o.str().c_str());
-		scriptLoaded = true;
+		if (int errcode = lua_pcall(lsMJCore, 0, LUA_MULTRET, 0)) {
+			/* 実行失敗！ */
+			std::ostringstream o;
+			switch (errcode) {
+			case LUA_ERRRUN:
+				o << "スクリプトの実行時エラー [" <<
+					lua_tostring(lsMJCore, -1) /* エラーメッセージ */ <<
+					"]";
+				lua_pop(lsMJCore, 1);
+				break;
+			case LUA_ERRMEM: o << "メモリの割当に失敗しました。"; break;
+			case LUA_ERRERR: o << "メッセージハンドラ実行中のエラーです。"; break;
+			case LUA_ERRGCMM: o << "ガーベジコレクション実行中のエラーです。"; break;
+			}
+			error(o.str().c_str());
+		} else {
+			/* 実行完了 */
+			info("スクリプトの実行に成功しました");
+			scriptLoaded = true;
+		}
 	}
 }
 
@@ -42,9 +61,12 @@ void aiscript::GameStatToLuaTable(lua_State *L, const GameTable* const gameStat)
 	debug("C++構造体→Luaテーブル変換終了");
 }
 
-DiscardTileNum aiscript::compdahai(const GameTable* const gameStat) {
+__declspec(dllexport) int aiscript::compdahai(const GameTable* const gameStat) {
+	return determine_discard(gameStat).toSingleInt();
+}
+DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 	std::ostringstream o;
-	o << "AIの打牌処理に入ります。プレイヤー [" << gameStat->CurrentPlayer.Active << "]";
+	o << "AIの打牌処理に入ります。プレイヤー [" << (int)gameStat->CurrentPlayer.Active << "]";
 	info(o.str().c_str());
 	if (scriptLoaded) { /* 正しく読み込まれているなら */
 		try { /* determine_discard があればよし、なかったら例外処理 */
@@ -61,7 +83,10 @@ DiscardTileNum aiscript::compdahai(const GameTable* const gameStat) {
 			std::ostringstream o;
 			switch (errcode) {
 			case LUA_ERRRUN:
-				o << "スクリプトの実行時エラー [";
+				o << "スクリプトの実行時エラー [" <<
+					lua_tostring(lsMJCore, -1) /* エラーメッセージ */ <<
+					"]";
+				lua_pop(lsMJCore, 1);
 				break;
 			case LUA_ERRMEM: o << "メモリの割当に失敗しました。"; break;
 			case LUA_ERRERR: o << "メッセージハンドラ実行中のエラーです。"; break;
