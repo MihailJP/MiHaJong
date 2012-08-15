@@ -11,13 +11,9 @@ __declspec(dllexport) void aiscript::initscript() {
 	// Lua初期化 (仮)
 	lsMJCore = luaL_newstate();
 	luaopen_base(lsMJCore); // baseライブラリだけは開いておきましょう
-	inittbl(lsMJCore);
+	table::functable::inittable(lsMJCore);
 	const char* filename = ".\\ai\\ai.lua"; /* ファイル名は仮 */
 	readfile(lsMJCore, filename); /* ファイルを読み込み */
-}
-
-void aiscript::inittbl(lua_State* const L) {
-	// mihajongテーブルの構築
 }
 
 void aiscript::readfile(lua_State* const L, const char* const filename) {
@@ -59,13 +55,13 @@ void aiscript::readfile(lua_State* const L, const char* const filename) {
 	}
 }
 
-void aiscript::GameStatToLuaTable(lua_State *L, const GameTable* const gameStat) {
+void aiscript::GameStatToLuaTable(lua_State* const L, const GameTable* const gameStat) {
 	debug("C++構造体→Luaテーブル変換開始");
 	lua_newtable(L); // main table
 
 	lua_newtable(L); // table of player table
 	for (int p = 0; p < PLAYERS; p++)
-		table::PlayerTbl(L, &gameStat->Player[p], (PLAYER_ID)p);
+		table::playertable::PlayerTbl(L, &gameStat->Player[p], (PLAYER_ID)p);
 	lua_setfield(L, -2, "Player");
 
 	debug("C++構造体→Luaテーブル変換終了");
@@ -127,40 +123,28 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 	}
 }
 
-inline void aiscript::table::TableAdd(lua_State *L, std::string key, lua_Integer val) {
-	lua_pushnumber(L, val);
-	lua_setfield(L, -2, key.c_str());
-}
-inline void aiscript::table::TableAdd(lua_State *L, std::string key, lua_Number val) {
-	lua_pushnumber(L, val);
-	lua_setfield(L, -2, key.c_str());
-}
-inline void aiscript::table::TableAdd(lua_State *L, std::string key, bool val) {
-	lua_pushboolean(L, val);
-	lua_setfield(L, -2, key.c_str());
-}
-inline void aiscript::table::TableAdd(lua_State *L, std::string key, const TILE val) {
+inline void aiscript::table::TableAdd(lua_State* const L, const char* const key, const TILE val) {
 	lua_newtable(L);
 	TableAdd(L, "tile", (lua_Integer)val.tile);
 	TableAdd(L, "red", (lua_Integer)val.red);
-	lua_setfield(L, -2, key.c_str());
+	lua_setfield(L, -2, key);
 }
-inline void aiscript::table::TableAdd(lua_State *L, std::string key, const meldCode val) {
+inline void aiscript::table::TableAdd(lua_State* const L, const char* const key, const meldCode val) {
 	lua_newtable(L);
 	TableAdd(L, "tile", (lua_Integer)val.tile);
 	{
 		lua_newtable(L);
 		for (int i = 0; i < 4; i++) {
 			std::ostringstream o; o << i;
-			TableAdd(L, o.str(), (lua_Integer)val.red[i]);
+			TableAdd(L, o.str().c_str(), (lua_Integer)val.red[i]);
 		}
 		lua_setfield(L, -2, "red");
 	}
 	TableAdd(L, "mstat", (lua_Integer)val.mstat);
-	lua_setfield(L, -2, key.c_str());
+	lua_setfield(L, -2, key);
 }
 
-inline void aiscript::table::PlayerTbl(lua_State *L, const PlayerTable* const plStat, PLAYER_ID player) {
+inline void aiscript::table::playertable::PlayerTbl(lua_State* const L, const PlayerTable* const plStat, PLAYER_ID player) {
 	lua_newtable(L); // player table
 	TableAdd(L, "PlayerScore", plStat->PlayerScore.bignumtodbl());
 	TableAdd(L, "PlayerChip", plStat->playerChip);
@@ -187,31 +171,31 @@ inline void aiscript::table::PlayerTbl(lua_State *L, const PlayerTable* const pl
 	lua_setfield(L, -2, o.str().c_str());
 }
 
-inline void aiscript::table::pltable::PlayerHand(lua_State *L, const HAND_TILES* const plHand) {
+inline void aiscript::table::playertable::pltable::PlayerHand(lua_State* const L, const HAND_TILES* const plHand) {
 	lua_newtable(L);
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
 		std::ostringstream o; o << (i + 1);
-		TableAdd(L, o.str(), plHand[i]);
+		TableAdd(L, o.str().c_str(), plHand[i]);
 	}
 	lua_setfield(L, -2, "Hand");
 }
-inline void aiscript::table::pltable::PlayerDiscard(lua_State *L, const DISCARD_BUF* const plDiscard, uint8_t DiscardPointer) {
+inline void aiscript::table::playertable::pltable::PlayerDiscard(lua_State* const L, const DISCARD_BUF* const plDiscard, uint8_t DiscardPointer) {
 	lua_newtable(L);
 	for (uint8_t i = 1; i <= DiscardPointer; i++) {
 		std::ostringstream o; o << (int)i;
-		TableAdd(L, o.str(), plDiscard[i]);
+		TableAdd(L, o.str().c_str(), plDiscard[i]);
 	}
 	lua_setfield(L, -2, "Discard");
 }
-inline void aiscript::table::pltable::PlayerMeld(lua_State *L, const MELD_BUF* const plMeld, uint8_t MeldPointer) {
+inline void aiscript::table::playertable::pltable::PlayerMeld(lua_State* const L, const MELD_BUF* const plMeld, uint8_t MeldPointer) {
 	lua_newtable(L);
 	for (uint8_t i = 1; i <= MeldPointer; i++) {
 		std::ostringstream o; o << (int)i;
-		TableAdd(L, o.str(), plMeld[i]);
+		TableAdd(L, o.str().c_str(), plMeld[i]);
 	}
 	lua_setfield(L, -2, "Meld");
 }
-inline void aiscript::table::pltable::PlayerRichiStat(lua_State *L, const RichiStat* const plstat) {
+inline void aiscript::table::playertable::pltable::PlayerRichiStat(lua_State* const L, const RichiStat* const plstat) {
 	lua_newtable(L);
 	TableAdd(L, "RichiFlag", plstat->RichiFlag);
 	TableAdd(L, "IppatsuFlag", plstat->IppatsuFlag);
@@ -219,7 +203,7 @@ inline void aiscript::table::pltable::PlayerRichiStat(lua_State *L, const RichiS
 	TableAdd(L, "OpenFlag", plstat->OpenFlag);
 	lua_setfield(L, -2, "RichiFlag");
 }
-inline void aiscript::table::pltable::PlayerFlower(lua_State *L, const FLOWERS* const plstat) {
+inline void aiscript::table::playertable::pltable::PlayerFlower(lua_State* const L, const FLOWERS* const plstat) {
 	lua_newtable(L);
 	TableAdd(L, "Spring", plstat->Spring);
 	TableAdd(L, "Summer", plstat->Summer);
@@ -231,7 +215,7 @@ inline void aiscript::table::pltable::PlayerFlower(lua_State *L, const FLOWERS* 
 	TableAdd(L, "Bamboo", plstat->Bamboo);
 	lua_setfield(L, -2, "FlowerFlag");
 }
-inline void aiscript::table::pltable::PlayerDeclFlag(lua_State *L, const DECLFLAG* const plstat) {
+inline void aiscript::table::playertable::pltable::PlayerDeclFlag(lua_State* const L, const DECLFLAG* const plstat) {
 	lua_newtable(L);
 	TableAdd(L, "Ron", plstat->Ron);
 	TableAdd(L, "Kan", plstat->Kan);

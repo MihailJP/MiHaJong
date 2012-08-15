@@ -159,6 +159,9 @@
     <ClCompile Include="ai\aiscript.cpp">
       <Filter>ソース ファイル\ai</Filter>
     </ClCompile>
+    <ClCompile Include="ai\functbl.cpp">
+      <Filter>ソース ファイル\ai</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">
@@ -264,6 +267,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="ai\aiscript.h">
+      <Filter>ヘッダー ファイル\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\functbl.h">
+      <Filter>ヘッダー ファイル\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\class.h">
       <Filter>ヘッダー ファイル\ai</Filter>
     </ClInclude>
   </ItemGroup>
