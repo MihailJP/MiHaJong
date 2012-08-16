@@ -15,13 +15,6 @@
 
 // -------------------------------------------------------------------------
 
-enum gameTypeID : uint8_t { // 卓の種類(四麻、三麻)指定用
-	Yonma = 0x01, Sanma = 0x02, Sanma4 = 0x04, SanmaS = 0x08,
-	AllSanma = 0x0e, SanmaT = 0x0a, SanmaX = 0x06
-};
-
-// -------------------------------------------------------------------------
-
 enum doraCol : uint8_t { Normal, AkaDora, AoDora };
 EXPORT_STRUCT TILE { // 赤ドラデータを含めた牌のデータ
 	tileCode tile;

@@ -511,6 +511,11 @@ enum RuleCode : uint16_t {
 
 #ifdef MJCORE_EXPORTS
 
+enum gameTypeID : uint8_t { // 卓の種類(四麻、三麻)指定用
+	Yonma = 0x01, Sanma = 0x02, Sanma4 = 0x04, SanmaS = 0x08,
+	AllSanma = 0x0e, SanmaT = 0x0a, SanmaX = 0x06
+};
+
 class RuleData {
 private:
 	static char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
@@ -522,6 +527,9 @@ public:
 	__declspec(dllexport) static void configinit();
 	__declspec(dllexport) static void storeRule(const char** ruleTxt);
 	__declspec(dllexport) static void exportRule(char** ruleTxt);
+	__declspec(dllexport) static void getRuleName(char* const txt, int bufsize, int RuleID);
+	__declspec(dllexport) static void getRuleDescription(char* const txt, int bufsize, int RuleID);
+	__declspec(dllexport) static void getRuleTxt(char* const txt, int bufsize, int RuleID, int index);
 	static uint8_t getRule(RuleCode RuleID);
 	static uint8_t getRule(std::string RuleTag);
 };
