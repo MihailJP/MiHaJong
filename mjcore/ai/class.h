@@ -31,6 +31,15 @@ private:
 	static inline void TableAdd(lua_State* const L, const char* const key, bool val) {
 		lua_pushboolean(L, val); lua_setfield(L, -2, key);
 	}
+	static inline void TableAdd(lua_State* const L, lua_Integer key, lua_Integer val) {
+		lua_pushnumber(L, key); lua_pushnumber(L, val); lua_settable(L, -3);
+	}
+	static inline void TableAdd(lua_State* const L, lua_Integer key, lua_Number val) {
+		lua_pushnumber(L, key); lua_pushnumber(L, val); lua_settable(L, -3);
+	}
+	static inline void TableAdd(lua_State* const L, lua_Integer key, bool val) {
+		lua_pushnumber(L, key); lua_pushboolean(L, val); lua_settable(L, -3);
+	}
 	static inline void TableAdd(lua_State* const L, const char* const, const TILE val);
 	static inline void TableAdd(lua_State* const L, const char* const, const meldCode val);
 public:
