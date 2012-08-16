@@ -162,6 +162,9 @@
     <ClCompile Include="ai\functbl.cpp">
       <Filter>ソース ファイル\ai</Filter>
     </ClCompile>
+    <ClCompile Include="readrsrc.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">
@@ -274,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="ai\class.h">
       <Filter>ヘッダー ファイル\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="readrsrc.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

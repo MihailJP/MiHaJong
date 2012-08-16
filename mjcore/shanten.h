@@ -23,7 +23,7 @@
 #include "func.h"
 #ifdef MJCORE_EXPORTS
 #include "logging.h"
-#include "dllmain.h"
+#include "readrsrc.h"
 #endif
 
 #define SHANTEN_PAGES 8
