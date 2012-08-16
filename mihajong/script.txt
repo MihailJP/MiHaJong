@@ -23,19 +23,17 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 	ければなりません。定義されていない場合、そのスクリプトを無効とみなしツモ切
 	りを行います。
 
-	▼ determine_discard (gametbl)
+	▼ determine_discard (gametbl) (新仕様未対応)
 
 		　この関数は引数を1つ取り、2つの値を返します。引数 gametbl は、卓の情
-		報を格納したテーブルです。
+		報を示すテーブルで、軽量ユーザーデータとメソッドが格納されています。
 		　1番目の返り値は、捨て牌の付帯情報(暗槓する、リーチする……)を表す番
 		号です。これについては、後述する mihajong.DiscardType を参照してくださ
 		い。
 		　2番目の返り値は、手牌の番号を表すインデックスで、1から14で指定します。
 		14を指定すると、ツモ切りしたことになります(副露してもこれは変わりませ
-		ん)。また、-1から-14で指定することもでき、この場合は-1が14(ツモ切り)、
-		-2が13、(中略)-14が1とみなされます(配列のインデックスを指定するときと
-		同じです)。存在しない牌のインデックスを指定した場合、多牌でアガリ放棄
-		となります。
+		ん)。存在しない牌のインデックスを指定した場合、多牌でアガリ放棄となり
+		ます。
 		　なお、1番目の返り値に mihajong.DiscardType.Agari か mihajong.
 		DiscardType.Kyuushu を指定した場合捨牌が不要ですので、この場合は2番目
 		の返り値を nil にしてもかまいません。
@@ -49,6 +47,96 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 ■ determine_discard、determine_call の引数について
 
 	　あとでテーブルの説明を書く
+
+	▼ gametbl.addr (未実装)
+
+		　卓情報のアドレスを示す軽量ユーザーデータです。
+
+
+	▼ gametbl:evaluate(引数仕様未定) (未実装)
+
+		　符、飜、点数、縛りを満たすか否かを求める　詳細未定
+
+	▼ gametbl:getdeckleft() (未実装)
+
+		　山牌の残り枚数を返します。
+
+
+	▼ gametbl:getdorainfo(引数仕様未定) (未実装)
+
+		　ドラを調べる　詳細未定
+
+	▼ gametbl:getdoukasenplayer() (未実装)
+
+		　導火線(自摸牌の位置)にあたるプレイヤーの番号を1～4(三人打ちの場合は1
+		～3)の数値で返します。
+
+
+	▼ gametbl:gethand() (未実装)
+
+		　自分の手牌をテーブルで返します。1～14のインデックスを持ちますが、自
+		摸牌のインデックスは常に14となります。このため、門前でないときは
+		sparse な配列になることがあります。存在する牌の位置には牌の情報を格納
+		したサブテーブルが入り、牌が存在しない位置はnilとなります。
+
+		● tile フィールド
+
+			　牌の種類を表す番号が入ります。
+
+		● red フィールド
+
+			　赤ドラかどうかを示す番号が入ります。
+
+
+	▼ gametbl:getmeld(引数仕様未定) (未実装)
+
+		　副露面子を取得する(他家の情報も取得可能)　詳細未定
+
+	▼ gametbl:getopenwait(引数仕様未定) (未実装)
+
+		　オープンリーチの待ち牌情報を取得する　詳細未定
+
+	▼ gametbl:getownwind(引数仕様未定) (未実装)
+
+		　自風を求める　詳細未定
+
+	▼ gametbl:getseentiles(引数仕様未定) (未実装)
+
+		　見えている牌を数える　詳細未定
+
+	▼ gametbl:getshanten(引数仕様未定) (未実装)
+
+		　シャンテン数を求める　詳細未定
+
+	▼ gametbl:getwaremewind() (未実装)
+
+		　割れ目(開門の位置)にあたるプレイヤーの番号を1～4(三人打ちの場合は1～
+		3)の数値で返します。
+
+
+	▼ gametbl:getyakuhaiwind(引数仕様未定) (未実装)
+
+		　風牌が役牌になっているか調べる　詳細未定
+
+	▼ gametbl:isfirstdraw(引数仕様未定) (未実装)
+
+		　鳴きのない第1ツモ(親については配牌直後)かどうか調べる　詳細未定
+
+	▼ gametbl:iskyuushu(引数仕様未定) (未実装)
+
+		　九種九牌になっているかどうか調べる　詳細未定
+
+	▼ gametbl:ismenzen(引数仕様未定) (未実装)
+
+		　門前かどうか調べる　詳細未定
+
+	▼ gametbl:isshisanbuda(引数仕様未定) (未実装)
+
+		　十三不塔になっているか調べる　詳細未定
+
+	▼ gametbl:isshisibuda(引数仕様未定) (未実装)
+
+		　十三無靠(十四不塔)になっているか調べる　詳細未定
 
 
 ■ mihajongテーブル
@@ -78,6 +166,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		※2 和了れない状況で mihajong.DiscardType.Agari を指定した場合、チョン
 		　　ボになります。
 
+
 	▼ mihajong.Call (未実装)
 
 		　チー、ポンといった鳴きの種類を表す数値を格納したテーブルです。これら
@@ -94,6 +183,14 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 		※1 和了れない状況で mihajong.Call.Ron を指定した場合、チョンボになり
 		　　ます。
+
+
+	▼ mihajong.MeldType (未実装)
+
+		　明刻、暗槓といった鳴き面子の種類を表す数値を格納したテーブルです。こ
+		のテーブルには、以下のフィールドが格納されています。
+
+		・to be written...
 
 
 	▼ mihajong.Tile (未実装)
@@ -121,21 +218,10 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　　　　　　　同義で、ChrysはChrysanthemumと同義です。
 
 
-	▼ mihajong.evaluate(引数仕様未定) (未実装)
+	▼ mihajong.gametbl (未実装)
 
-		　符、飜、点数、縛りを満たすか否かを求める　詳細未定
-
-	▼ mihajong.shanten(引数仕様未定) (未実装)
-
-		　シャンテン数を求める　詳細未定
-
-	▼ mihajong.getdoukasenplayer(引数仕様未定) (未実装)
-
-		　導火線にあたるプレイヤーを調べる　詳細未定
-
-	▼ mihajong.getyakuhaiwind(引数仕様未定) (未実装)
-
-		　風牌が役牌になっているか調べる　詳細未定
+		　determine_discard、determine_call の引数として渡されるテーブルのプロ
+		トタイプです。詳細は前述しています。
 
 
 ■ 見出しレベル１
