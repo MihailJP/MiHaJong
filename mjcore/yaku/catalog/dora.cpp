@@ -2,7 +2,7 @@
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 	/* ƒhƒ‰‚Å˜a—¹‚Á‚½‚ç1ãÊ */
-	if (getRule(RULE_DORAHOH) != 0)
+	if (RuleData::getRule("dorahoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"“ºèt˜a", yaku::yakuCalculator::Yaku::yval_1han,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -12,7 +12,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 		));
 	/* –kŽl–‡”²‚« */
-	if (getRule(RULE_FOUR_NORTHES) != 0)
+	if (RuleData::getRule("four_northes") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"–kŽl–‡”²‚«", yaku::yakuCalculator::Yaku::yval_yakuman_dependent,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -21,7 +21,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 		));
 	/* ”ªå‰ßŠC */
-	if (getRule(RULE_EIGHT_FLOWERS) != 0)
+	if (RuleData::getRule("eight_flowers") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"”ªå‰ßŠC", yaku::yakuCalculator::Yaku::yval_yakuman_dependent,
 			"t‰ÄH“~", "Žl‰ØŠJ—ä", "–{‰Ô‹Gß”v", "–{‰Ô‘–Ø”v",
@@ -34,11 +34,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 		));
 	/* t‰ÄH“~ */
-	if (getRule(RULE_FOUR_SEASONS) != 0)
+	if (RuleData::getRule("four_seasons") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"t‰ÄH“~", (getRule(RULE_FOUR_SEASONS) == 1) ?
+			"t‰ÄH“~", (RuleData::getRule("four_seasons") == 1) ?
 			yaku::yakuCalculator::Yaku::yval_2han_dependent :
-			(getRule(RULE_FOUR_SEASONS) == 2) ? yaku::yakuCalculator::Yaku::yval_4han_dependent :
+			(RuleData::getRule("four_seasons") == 2) ? yaku::yakuCalculator::Yaku::yval_4han_dependent :
 			yaku::yakuCalculator::Yaku::yval_yakuman_dependent,
 			"–{‰Ô‹Gß”v",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -48,11 +48,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 		));
 	/* Žl‰ØŠJ—ä */
-	if (getRule(RULE_FOUR_FLOWERS) != 0)
+	if (RuleData::getRule("four_flowers") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"Žl‰ØŠJ—ä", (getRule(RULE_FOUR_FLOWERS) == 1) ?
+			"Žl‰ØŠJ—ä", (RuleData::getRule("four_flowers") == 1) ?
 			yaku::yakuCalculator::Yaku::yval_2han_dependent :
-			(getRule(RULE_FOUR_FLOWERS) == 2) ? yaku::yakuCalculator::Yaku::yval_4han_dependent :
+			(RuleData::getRule("four_flowers") == 2) ? yaku::yakuCalculator::Yaku::yval_4han_dependent :
 			yaku::yakuCalculator::Yaku::yval_yakuman_dependent,
 			"–{‰Ô‘–Ø”v",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -62,7 +62,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 		));
 	/* –{‰Ô */
-	if (getRule(RULE_OWN_FLOWER) != 0) {
+	if (RuleData::getRule("own_flower") != 0) {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"–{‰Ô‹Gß”v", yaku::yakuCalculator::Yaku::yval_1han_dependent,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {

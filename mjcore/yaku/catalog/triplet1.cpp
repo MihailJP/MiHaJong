@@ -21,7 +21,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		}
 	));
 	/* 四暗刻単騎 */
-	if (getRule(RULE_DOUBLE_YAKUMAN) == 0)
+	if (RuleData::getRule("double_yakuman") == 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四暗刻単騎", yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen,
 			"四暗刻", "対々和", "三暗刻",
@@ -76,7 +76,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 			return yakuFlag;
 		};
-	if (getRule(RULE_GOLDEN_LADDER) != 0)
+	if (RuleData::getRule("golden_ladder") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"金梯", yaku::yakuCalculator::Yaku::yval_double_yakuman,
 			"清一色", "対々和",
@@ -89,13 +89,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return lianke(analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 1, true);
 		};
-	if (getRule(RULE_SUURENKOH) == 1)
+	if (RuleData::getRule("suurenkoh") == 1)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四連刻", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"金梯", "対々和",
 			suurenkoh
 		));
-	else if (getRule(RULE_SUURENKOH) == 2)
+	else if (RuleData::getRule("suurenkoh") == 2)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四連刻", yaku::yakuCalculator::Yaku::yval_6han /* 対々和込み8飜 */,
 			"金梯",
@@ -106,15 +106,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return lianke(analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 1, false);
 		};
-	if (getRule(RULE_SANRENKOH) != 0)
+	if (RuleData::getRule("sanrenkoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"三連刻", (getRule(RULE_SANRENKOH) == 2) ?
+			"三連刻", (RuleData::getRule("sanrenkoh") == 2) ?
 			yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_2han,
 			"金梯", "四連刻",
 			sanrenkoh
 		));
 	/* 鏡音レン */
-	if (getRule(RULE_KAGAMINE_LEN) != 0)
+	if (RuleData::getRule("kagamine_len") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"鏡音レン", yaku::yakuCalculator::Yaku::yval_2han,
 			/* 三連刻に追加する役 */
@@ -127,7 +127,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 
 	/* レアな方の三色 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		"三色同刻", (getRule(RULE_SANSHOKU_DOUKOH) != 0) ?
+		"三色同刻", (RuleData::getRule("sanshoku_doukoh") != 0) ?
 		yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_2han,
 		"三色小同刻",
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -141,7 +141,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		}
 	));
 	/* 四色同刻（えっ */
-	if (getRule(RULE_YONSHOKU_DOUKOH) != 0)
+	if (RuleData::getRule("yonshoku_doukoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四色同刻", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"三色同刻", "三色小同刻", "対々和",
@@ -211,7 +211,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		}
 	));
 	/* 天虎 */
-	if (getRule(RULE_HEAVEN_TIGER) != 0)
+	if (RuleData::getRule("heaven_tiger") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"天虎", yaku::yakuCalculator::Yaku::yval_triple_yakuman,
 			"混一色", "小四喜", "字一色", "役牌・發", "盗難車",
@@ -220,7 +220,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 大怪湖 */
-	if (getRule(RULE_DAIKAIKO) != 0)
+	if (RuleData::getRule("daikaiko") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"大怪湖", yaku::yakuCalculator::Yaku::yval_triple_yakuman,
 			"混一色", "小四喜", "字一色", "役牌・白", "盗難車",
@@ -229,7 +229,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 千年虫 */
-	if (getRule(RULE_Y2KBUG) != 0)
+	if (RuleData::getRule("y2kbug") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"千年虫", yaku::yakuCalculator::Yaku::yval_double_yakuman,
 			"混一色", "小四喜", "混老頭", "盗難車",
@@ -240,7 +240,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		));
 	/* 大四喜 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		"大四喜", (getRule(RULE_DOUBLE_YAKUMAN) == 0) ?
+		"大四喜", (RuleData::getRule("double_yakuman") == 0) ?
 		yaku::yakuCalculator::Yaku::yval_double_yakuman : yaku::yakuCalculator::Yaku::yval_yakuman,
 		"混一色", "対々和", "役牌・場風", "役牌・自風", "役牌・開門風", "役牌・裏風", "盗難車",
 		[WindCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -248,7 +248,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		}
 	));
 	/* 弾葯 */
-	if (getRule(RULE_DAN_YAKU) != 0)
+	if (RuleData::getRule("dan_yaku") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"弾葯", yaku::yakuCalculator::Yaku::yval_triple_yakuman,
 			"混一色", "対々和", "役牌・場風", "役牌・自風", "役牌・開門風", "役牌・裏風", "大四喜", "混老頭", "盗難車",
@@ -257,7 +257,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 仙人掌 */
-	if (getRule(RULE_CACTUS) != 0)
+	if (RuleData::getRule("cactus") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"仙人掌", yaku::yakuCalculator::Yaku::yval_quad_yakuman,
 			"混一色", "対々和", "役牌・場風", "役牌・自風", "役牌・開門風", "役牌・裏風", "大四喜", "字一色", "盗難車",
@@ -297,7 +297,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		jikaze
 	));
 	YAKUFUNC kaimenkaze, urakaze;
-	if (getRule(RULE_KAIMENKAZE) != 0) {
+	if (RuleData::getRule("kaimenkaze") != 0) {
 		kaimenkaze =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->KeziCount[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
@@ -313,7 +313,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				return false;
 			};
 	}
-	if (getRule(RULE_URAKAZE) != 0) {
+	if (RuleData::getRule("urakaze") != 0) {
 		urakaze =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->KeziCount[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
@@ -351,7 +351,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	// ---------------------------------------------------------------------
 
 	/* 新沼けんじ */
-	if (getRule(RULE_NIINUMA_KENJI) != 0)
+	if (RuleData::getRule("niinuma_kenji") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"新沼けんじ", yaku::yakuCalculator::Yaku::yval_1han,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -359,7 +359,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 陣太鼓 */
-	if (getRule(RULE_JINDAIKO) != 0)
+	if (RuleData::getRule("jindaiko") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"陣太鼓", yaku::yakuCalculator::Yaku::yval_1han,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -370,7 +370,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	// ---------------------------------------------------------------------
 
 	/* 小三風 */
-	if (getRule(RULE_XIAOSANFENG) != 0)
+	if (RuleData::getRule("xiaosanfeng") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"小三風", yaku::yakuCalculator::Yaku::yval_1han,
 			[WindCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -378,7 +378,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 三風刻 */
-	if (getRule(RULE_THREE_WINDS) != 0)
+	if (RuleData::getRule("three_winds") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三風刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[WindCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -386,7 +386,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 客風三刻 */
-	if (getRule(RULE_THREE_OTAKAZE) != 0)
+	if (RuleData::getRule("three_otakaze") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"客風三刻", yaku::yakuCalculator::Yaku::yval_3han,
 			"三風刻",
@@ -400,7 +400,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 客風小三刻 */
-	if (getRule(RULE_OTAKAZE_XIAOSANFENG) != 0)
+	if (RuleData::getRule("otakaze_xiaosanfeng") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"客風小三刻", yaku::yakuCalculator::Yaku::yval_2han,
 			"小三刻",
@@ -417,7 +417,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	// ---------------------------------------------------------------------
 
 	/* 西中島南方 */
-	if (getRule(RULE_NISHINAKAJIMA) != 0)
+	if (RuleData::getRule("nishinakajima") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"西中島南方", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"役牌・場風", "役牌・自風", "役牌・中",
@@ -436,9 +436,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 雪月花 */
-	if (getRule(RULE_SETSUGETSUKA) != 0)
+	if (RuleData::getRule("setsugetsuka") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"雪月花", (getRule(RULE_SETSUGETSUKA) == 2) ?
+			"雪月花", (RuleData::getRule("setsugetsuka") == 2) ?
 			yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_2han,
 			"役牌・白",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -448,7 +448,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 風花雪月 */
-	if (getRule(RULE_FUUKA_SETSUGETSU) != 0)
+	if (RuleData::getRule("fuuka_setsugetsu") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"風花雪月", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"雪月花", "対々和", "役牌・場風", "役牌・自風",
@@ -460,7 +460,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 花鳥風月 */
-	if (getRule(RULE_KACHOU_FUUGETSU) != 0)
+	if (RuleData::getRule("kachou_fuugetsu") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"花鳥風月", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"雪月花", "対々和", "役牌・場風", "役牌・自風",
@@ -472,7 +472,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 東北自動車道 */
-	if (getRule(RULE_TOHOKU_EXPWY) != 0)
+	if (RuleData::getRule("tohoku_expwy") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"東北自動車道", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和", "混一色",
@@ -485,7 +485,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 東関東自動車道 */
-	if (getRule(RULE_HIGASHIKANTO_EXPWY) != 0)
+	if (RuleData::getRule("higashikanto_expwy") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"東関東自動車道", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和", "混一色",
@@ -498,7 +498,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 中国系のおめでたい役 */
-	if (getRule(RULE_KOUKEI_HOUGYOU) != 0)
+	if (RuleData::getRule("koukei_hougyou") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"紅鶏報暁", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和", "混一色", "絶一門", "役牌・白", "役牌・中", "金鶏報暁", "銀鶏報春", "白鳥",
@@ -510,7 +510,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 					(analysis->KeziCount[RedDragon] >= 1));
 			}
 		));
-	if (getRule(RULE_KINKEI_HOUGYOU) != 0)
+	if (RuleData::getRule("kinkei_hougyou") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"金鶏報暁", yaku::yakuCalculator::Yaku::yval_3han,
 			"役牌・中",
@@ -520,7 +520,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 					(analysis->KeziCount[RedDragon] >= 1));
 			}
 		));
-	if (getRule(RULE_GINKEI_HOUSHUN) != 0)
+	if (RuleData::getRule("ginkei_houshun") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"銀鶏報春", yaku::yakuCalculator::Yaku::yval_5han,
 			"役牌・白", "白鳥",
@@ -535,7 +535,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	// ---------------------------------------------------------------------
 
 	/* 四跳牌刻 */
-	if (getRule(RULE_SUUCHAOPAIKOH) != 0)
+	if (RuleData::getRule("suuchaopaikoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四跳牌刻", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和", "跳牌刻",
@@ -544,7 +544,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 跳牌刻 */
-	if (getRule(RULE_CHAOPAIKOH) != 0)
+	if (RuleData::getRule("chaopaikoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"跳牌刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -552,7 +552,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 筋牌刻 */
-	if (getRule(RULE_CHINPAIKOH) != 0)
+	if (RuleData::getRule("chinpaikoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"筋牌刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -560,7 +560,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 頂三刻 */
-	if (getRule(RULE_TINSANKOH) != 0)
+	if (RuleData::getRule("tinsankoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"頂三刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -571,7 +571,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	// ---------------------------------------------------------------------
 
 	/* 二色五連刻 */
-	if (getRule(RULE_SILVER_LADDER) != 0)
+	if (RuleData::getRule("silver_ladder") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"銀梯", yaku::yakuCalculator::Yaku::yval_4han,
 			"二色四連刻", "二色三連刻", "対々和",
@@ -580,7 +580,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 二色四連刻 */
-	if (getRule(RULE_NISHOKU_SANRENKOH) != 0)
+	if (RuleData::getRule("nishoku_sanrenkoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色四連刻", yaku::yakuCalculator::Yaku::yval_3han,
 			"二色三連刻", "対々和",
@@ -589,7 +589,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 二色三連刻 */
-	if (getRule(RULE_SILVER_LADDER) != 0)
+	if (RuleData::getRule("silver_ladder") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色三連刻", yaku::yakuCalculator::Yaku::yval_1han,
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -597,7 +597,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 二色四跳牌刻 */
-	if (getRule(RULE_NISHOKU_SUUCHAOPAIKOH) != 0)
+	if (RuleData::getRule("nishoku_suuchaopaikoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色四跳牌刻", yaku::yakuCalculator::Yaku::yval_3han,
 			"二色跳牌刻", "対々和",
@@ -606,7 +606,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 二色跳牌刻 */
-	if (getRule(RULE_NISHOKU_CHAOPAIKOH) != 0)
+	if (RuleData::getRule("nishoku_chaopaikoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色跳牌刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -614,7 +614,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 二色筋牌刻 */
-	if (getRule(RULE_NISHOKU_CHINPAIKOH) != 0)
+	if (RuleData::getRule("nishoku_chinpaikoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色筋牌刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -622,7 +622,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 二色頂三刻 */
-	if (getRule(RULE_NISHOKU_TINSANKOH) != 0)
+	if (RuleData::getRule("nishoku_tinsankoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二色頂三刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -633,7 +633,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	// ---------------------------------------------------------------------
 
 	/* 三色五連刻 */
-	if (getRule(RULE_SKY_LADDER) != 0)
+	if (RuleData::getRule("sky_ladder") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"雲梯", yaku::yakuCalculator::Yaku::yval_4han,
 			"三色四連刻", "三色連刻", "対々和",
@@ -642,7 +642,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 三色四連刻 */
-	if (getRule(RULE_SANSHOKU_SUURENKOH) != 0)
+	if (RuleData::getRule("sanshoku_suurenkoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色四連刻", yaku::yakuCalculator::Yaku::yval_3han,
 			"三色連刻", "対々和",
@@ -651,7 +651,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 三色連刻 */
-	if (getRule(RULE_SANSHOKU_RENKOH) != 0)
+	if (RuleData::getRule("sanshoku_renkoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色連刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -659,7 +659,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 三色四跳牌刻 */
-	if (getRule(RULE_SANSHOKU_SUUCHAOPAIKOH) != 0)
+	if (RuleData::getRule("sanshoku_suuchaopaikoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色四跳牌刻", yaku::yakuCalculator::Yaku::yval_3han,
 			"三色跳牌刻", "対々和",
@@ -668,7 +668,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 三色跳牌刻 */
-	if (getRule(RULE_SANSHOKU_CHAOPAIKOH) != 0)
+	if (RuleData::getRule("sanshoku_chaopaikoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色跳牌刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -676,7 +676,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 三色筋牌刻 */
-	if (getRule(RULE_SANSHOKU_CHINPAIKOH) != 0)
+	if (RuleData::getRule("sanshoku_chinpaikoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色筋牌刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -684,7 +684,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 三色頂三刻 */
-	if (getRule(RULE_SANSHOKU_TINSANKOH) != 0)
+	if (RuleData::getRule("sanshoku_tinsankoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三色頂三刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -695,7 +695,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	// ---------------------------------------------------------------------
 
 	/* 二同刻 */
-	if (getRule(RULE_RYANDOUKOH) != 0)
+	if (RuleData::getRule("ryandoukoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"二同刻", yaku::yakuCalculator::Yaku::yval_2han,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -716,9 +716,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 茴香ポン */
-	if (getRule(RULE_UIKYOU_TOITOI) != 0)
+	if (RuleData::getRule("uikyou_toitoi") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"茴香ポン", (getRule(RULE_UIKYOU_TOITOI) == 2) ?
+			"茴香ポン", (RuleData::getRule("uikyou_toitoi") == 2) ?
 			yaku::yakuCalculator::Yaku::yval_5han : yaku::yakuCalculator::Yaku::yval_6han,
 			"三色同刻", "対々和",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -741,7 +741,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	// ---------------------------------------------------------------------
 
 	/* 八仙乗風過海 */
-	if (getRule(RULE_BAXIAN_CHENGFENG) != 0)
+	if (RuleData::getRule("baxian_chengfeng") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"八仙乗風過海", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和", "三色同刻",
@@ -755,7 +755,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 八仙戯鳳 */
-	if (getRule(RULE_BAXIAN_XIFENG) != 0)
+	if (RuleData::getRule("baxian_xifeng") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"八仙戯鳳", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和", "三色同刻",
@@ -768,7 +768,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 八仙戯四鳳 */
-	if (getRule(RULE_BAXIAN_XISIFENG) != 0)
+	if (RuleData::getRule("baxian_xisifeng") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"八仙戯四鳳", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和", "三色同刻", "八仙戯鳳",
@@ -781,7 +781,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 八仙戯金亀 */
-	if (getRule(RULE_BAXIAN_XIJINGUI) != 0)
+	if (RuleData::getRule("baxian_xijingui") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"八仙戯金亀", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和", "三色同刻", "茴香ポン",
@@ -794,7 +794,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 八仙闘北斗 */
-	if (getRule(RULE_BAXIAN_DOU_BEIDOU) != 0)
+	if (RuleData::getRule("baxian_dou_beidou") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"八仙闘北斗", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和", "三色同刻", "茴香ポン",
@@ -806,7 +806,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 		));
 	/* 八仙聚首 */
-	if (getRule(RULE_BAXIAN_JUSHOU) != 0)
+	if (RuleData::getRule("baxian_jushou") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"八仙聚首", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和", "三色同刻", "八仙過海",

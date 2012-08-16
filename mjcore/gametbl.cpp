@@ -639,7 +639,7 @@ extern "C" {
 	__declspec(dllexport) void calcWareme(GameTable* const gameStat) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		if (chkGameType(gameStat, AllSanma)) {
-			if ((getRule(RULE_WAREME) != 0)||(getRule(RULE_KAIMENKAZE) != 0)) {
+			if ((RuleData::getRule("wareme") != 0)||(RuleData::getRule("kaimenkaze") != 0)) {
 				gameStat->WaremePlayer = ((gameStat->GameRound-(gameStat->GameRound/4))+24
 					+diceSum(gameStat)-1) % 3;
 				if (chkGameType(gameStat, Sanma4)) {
@@ -648,7 +648,7 @@ extern "C" {
 				}
 			}
 		} else {
-			if ((getRule(RULE_WAREME) != 0)||(getRule(RULE_KAIMENKAZE) != 0)) {
+			if ((RuleData::getRule("wareme") != 0)||(RuleData::getRule("kaimenkaze") != 0)) {
 				gameStat->WaremePlayer = ((gameStat->GameRound % 4)+32+diceSum(gameStat)-1) % 4;
 			}
 		}
@@ -1015,8 +1015,8 @@ extern "C" {
 	__declspec(dllexport) void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->ShibariFlag = //二飜縛り
-			((gameStat->Honba >= 5)&&(getRule(RULE_RYANSHIBA) == 1)) ||
-			((gameStat->Honba >= 4)&&(getRule(RULE_RYANSHIBA) == 2));
+			((gameStat->Honba >= 5)&&(RuleData::getRule("ryanshiba") == 1)) ||
+			((gameStat->Honba >= 4)&&(RuleData::getRule("ryanshiba") == 2));
 
 		for (int i = 0; i < PAO_YAKU_PAGES; i++) // 包フラグ（-1…なし、0～3…該当プレイヤー）
 			gameStat->PaoFlag[i].agariPlayer = gameStat->PaoFlag[i].paoPlayer = -1;
@@ -1028,9 +1028,9 @@ extern "C" {
 
 		if (chkGameType(gameStat, AllSanma)) {
 			gameStat->DeadTiles = 14; // 王牌の数
-			gameStat->ExtraRinshan = (getRule(RULE_FLOWER_TILES) != 0) ? 4 : 0;
+			gameStat->ExtraRinshan = (RuleData::getRule("flower_tiles") != 0) ? 4 : 0;
 		} else {
-			switch (getRule(RULE_FLOWER_TILES)) {
+			switch (RuleData::getRule("flower_tiles")) {
 			case 0:
 				gameStat->DeadTiles = 14; // 王牌の数
 				break;
@@ -1061,7 +1061,7 @@ extern "C" {
 		if (chkGameType(gameStat, AllSanma)) {
 			gameStat->RinshanPointer = 107;
 		} else {
-			switch (getRule(RULE_FLOWER_TILES)) {
+			switch (RuleData::getRule("flower_tiles")) {
 			case 0: noflower:
 				gameStat->RinshanPointer = 135;
 				break;
@@ -1072,7 +1072,7 @@ extern "C" {
 				gameStat->RinshanPointer = 143;
 				break;
 			default:
-				error("RULE_FLOWER_TILES異常。花牌無しルールとみなして処理します。");
+				error("flower_tiles異常。花牌無しルールとみなして処理します。");
 				goto noflower; // 設定異常時のフォールバック。敢えてgotoを使う。
 			}
 		}
@@ -1142,7 +1142,7 @@ extern "C" {
 		for (int i = 0; i < PLAYERS; i++) {
 			if (i < ACTUAL_PLAYERS) {
 				if (chkGameType(&GameStat, SanmaT)) {
-					switch (getRule(RULE_STARTING_POINT)) {
+					switch (RuleData::getRule("starting_point")) {
 					case 0: snmdflt:
 						gameStat->Player[i].PlayerScore = LargeNum::fromInt(35000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 35000);
@@ -1172,11 +1172,11 @@ extern "C" {
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 30000);
 						break;
 					default:
-						error("RULE_STARTING_POINT異常。持ち点を25000として処理します。");
+						error("starting_point異常。持ち点を25000として処理します。");
 						goto snmdflt; // フォールバック用。敢えてgotoを使います
 					}
 				} else {
-					switch (getRule(RULE_STARTING_POINT)) {
+					switch (RuleData::getRule("starting_point")) {
 					case 0: dflt:
 						gameStat->Player[i].PlayerScore = LargeNum::fromInt(25000, 1000000u);
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 25000);
@@ -1202,7 +1202,7 @@ extern "C" {
 						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 20000);
 						break;
 					default:
-						error("RULE_STARTING_POINT異常。持ち点を25000として処理します。");
+						error("starting_point異常。持ち点を25000として処理します。");
 						goto dflt; // フォールバック用。敢えてgotoを使います
 					}
 				}
@@ -1211,7 +1211,7 @@ extern "C" {
 			}
 		}
 
-		switch (getRule(RULE_GAME_LENGTH)) {
+		switch (RuleData::getRule("game_length")) {
 		case 0: hanchan:
 			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 6 : 7;
 			break;
@@ -1231,7 +1231,7 @@ extern "C" {
 			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 10 : 11;
 			break;
 		default:
-			error("RULE_GAME_LENGTH異常値。半荘戦とみなします。");
+			error("game_length異常値。半荘戦とみなします。");
 			goto hanchan; // ここは敢えてgotoを使う
 		}
 		gameStat->GameRound = gameStat->Honba = gameStat->PlayerID =
@@ -1239,7 +1239,7 @@ extern "C" {
 		gameStat->LastAgariPlayer = -1;
 		for (int i = 0; i < PLAYERS; i++) {
 			gameStat->Player[i].SumaroFlag = false;
-			gameStat->Player[i].YakitoriFlag = (getRule(RULE_YAKITORI) != 0);
+			gameStat->Player[i].YakitoriFlag = (RuleData::getRule("yakitori") != 0);
 			gameStat->Player[i].playerChip = 0;
 		}
 

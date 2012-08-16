@@ -59,17 +59,17 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 	int totalHan = yStat->CoreHan + yStat->BonusHan; // 合計翻
 	int totalSemiMangan = yStat->CoreSemiMangan + yStat->CoreSemiMangan; // 満貫の半分単位
 
-	if (getRule(RULE_LIMITLESS) == 0) { // 通常ルールの場合
+	if (RuleData::getRule("limitless") == 0) { // 通常ルールの場合
 		if ((totalHan < 6) && (totalSemiMangan < 3)) { // 満貫以下
 			doubling(yStat); // 計算を実行
 			if (yStat->AgariPoints > LargeNum::fromInt(2000)) yStat->AgariPoints = LargeNum::fromInt(2000); // 満貫
 		}
 		else if ((totalHan < 8) && (totalSemiMangan < 4)) yStat->AgariPoints = LargeNum::fromInt(3000); // 跳満
-		else if (((totalHan < 10) || ((totalHan == 10) && (getRule(RULE_SANBAIMAN_BORDER) == 0))) &&
+		else if (((totalHan < 10) || ((totalHan == 10) && (RuleData::getRule("sanbaiman_border") == 0))) &&
 			(totalSemiMangan < 6)) yStat->AgariPoints = LargeNum::fromInt(4000); // 倍満
-		else if (((totalHan < 12) || ((totalHan == 12) && (getRule(RULE_KAZOE_BORDER) == 0))) &&
+		else if (((totalHan < 12) || ((totalHan == 12) && (RuleData::getRule("kazoe_border") == 0))) &&
 			(totalSemiMangan < 8)) yStat->AgariPoints = LargeNum::fromInt(6000); // 三倍満
-		else if ((totalSemiMangan < 8) && (getRule(RULE_KAZOE_BORDER) == 2))
+		else if ((totalSemiMangan < 8) && (RuleData::getRule("kazoe_border") == 2))
 			yStat->AgariPoints = LargeNum::fromInt(6000); // 三倍満
 		else if (totalSemiMangan < 16) yStat->AgariPoints = LargeNum::fromInt(8000); // 役満 or 数え
 		else yStat->AgariPoints = LargeNum::fromInt(8000 * (totalSemiMangan / 8)); // ダブル役満以上
@@ -109,13 +109,13 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 		if (analysis->MianziDat[0].tile ==
 			playerwind(gameStat, analysis->player, gameStat->GameRound)) // 自風牌
 			fu += 2;
-		if ((getRule(RULE_KAIMENKAZE) != 0) && (analysis->MianziDat[0].tile == // 開門風牌
+		if ((RuleData::getRule("kaimenkaze") != 0) && (analysis->MianziDat[0].tile == // 開門風牌
 			playerwind(gameStat, gameStat->WaremePlayer, gameStat->GameRound)))
 			fu += 2;
-		if ((getRule(RULE_URAKAZE) != 0) && (analysis->MianziDat[0].tile == // 裏風牌
+		if ((RuleData::getRule("urakaze") != 0) && (analysis->MianziDat[0].tile == // 裏風牌
 			playerwind(gameStat, analysis->player + 2, gameStat->GameRound)))
 			fu += 2;
-		if ((getRule(RULE_DOUBLE_YAKU_WIND_PAIR) == 1) && (fu > 22)) fu = 22; // ダブ風雀頭を2符と見なすルールの場合
+		if ((RuleData::getRule("double_yaku_wind_pair") == 1) && (fu > 22)) fu = 22; // ダブ風雀頭を2符と見なすルールの場合
 		break;
 	case WhiteDragon: case GreenDragon: case RedDragon: /* 三元牌は常に役牌 */
 		fu += 2;
@@ -181,14 +181,14 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 		if (gameStat->Player[analysis->player].MenzenFlag) {
 			/* 門前であれば、役として平和が成立する */
 			analysis->Machi = machiRyanmen; // 強制両面扱い
-			if ((!(gameStat->TsumoAgariFlag) || (getRule(RULE_TSUMO_PINFU) == 0))) { // ツモピンありか、出和了の場合
+			if ((!(gameStat->TsumoAgariFlag) || (RuleData::getRule("tsumo_pinfu") == 0))) { // ツモピンありか、出和了の場合
 				analysis->isPinfu = true; fu = 20;
 			} else {
 				fu += 2; // ツモ符
 			}
 		} else {
 			analysis->Machi = machiRyanmen; // 強制両面扱い
-			switch (getRule(RULE_EXPOSED_PINFU)) {
+			switch (RuleData::getRule("exposed_pinfu")) {
 			case 0:
 				fu = 30; break; /* 門前でなければ、３０符とする */
 			case 2: case 4:
@@ -230,7 +230,7 @@ void yaku::yakuCalculator::countDora
 			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\n");
 #endif
 		};
-	const bool uradoraEnabled = ((getRule(RULE_URADORA) != 1) && // 裏ドラありのルールで、
+	const bool uradoraEnabled = ((RuleData::getRule("uradora") != 1) && // 裏ドラありのルールで、
 		(gameStat->Player[targetPlayer].MenzenFlag) && // 門前であり、
 		(gameStat->Player[targetPlayer].RichiFlag.RichiFlag)); // 立直をかけているなら
 	int omote = 0; int ura = 0; int red = 0; int blue = 0; int alice = 0;
@@ -283,7 +283,7 @@ void yaku::yakuCalculator::countDora
 		}
 	}
 	/* アリスドラ */
-	if ((getRule(RULE_ALICE) != 0) && (gameStat->Player[targetPlayer].MenzenFlag)) {
+	if ((RuleData::getRule("alice") != 0) && (gameStat->Player[targetPlayer].MenzenFlag)) {
 		// アリスありルールで門前でないと駄目
 		auto AlicePointer = gameStat->DoraPointer;
 		// 牌譜記録ルーチンはスレッドセーフじゃなかったはずなので別の場所でやる
@@ -300,7 +300,7 @@ void yaku::yakuCalculator::countDora
 		}
 	}
 	/* 花牌・三麻のガリ */
-	if (getRule(RULE_FLOWER_TILES) != 0) {
+	if (RuleData::getRule("flower_tiles") != 0) {
 		if (chkGameType(gameStat, AllSanma)) {
 			north = gameStat->Player[targetPlayer].NorthFlag;
 			omote += north * (gameStat->DoraFlag.Omote[NorthWind] + 1);
@@ -330,7 +330,7 @@ void yaku::yakuCalculator::countDora
 		doraText(result, "裏ドラ", ura);
 	}
 	if (red) {
-		if (getRule(RULE_REDTILE_CHIP) < 3) {
+		if (RuleData::getRule("redtile_chip") < 3) {
 			result->DoraQuantity += red; result->BonusHan += red;
 		}
 		result->AkaDoraQuantity = red;
@@ -338,7 +338,7 @@ void yaku::yakuCalculator::countDora
 	}
 	if (blue) {
 		result->AoDoraQuantity = blue;
-		switch (getRule(RULE_BLUE_TILES)) {
+		switch (RuleData::getRule("blue_tiles")) {
 		case 0:
 			result->DoraQuantity += blue; result->BonusHan += blue;
 			doraText(result, "青ドラ", blue);
@@ -374,7 +374,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 	totalHan = totalSemiMangan = totalBonusHan = totalBonusSemiMangan = 0; // こっちで初期化してあげよう
 	for (auto yNameIter = yakuOrd.begin(); yNameIter != yakuOrd.end(); yNameIter++) {
 		std::string yName = *yNameIter;
-		if (getRule(RULE_LIMITLESS) == 2) { /* 青点ルールで役満を13飜扱いとする場合 */
+		if (RuleData::getRule("limitless") == 2) { /* 青点ルールで役満を13飜扱いとする場合 */
 			switch (yakuHan[yName].coreHan.getUnit()) {
 				case yaku::yakuCalculator::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
 				case yaku::yakuCalculator::SemiMangan:
@@ -495,12 +495,12 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, &analysis->TotalKaKangzi);
 	} else {
 		if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1) { // 七対子
-			if (getRule(RULE_SEVEN_PAIRS) == 1) analysis->BasePoint = 50; // 1翻50符
+			if (RuleData::getRule("seven_pairs") == 1) analysis->BasePoint = 50; // 1翻50符
 			else analysis->BasePoint = 25; // 2翻25符
 		}
 		else if (analysis->shanten[ShantenAnalyzer::shantenOrphans] == -1) analysis->BasePoint = 30; // 国士は役満なのでこれは青天ルール用
 		else if ((analysis->shanten[ShantenAnalyzer::shantenQuanbukao] == -1)&&(analysis->shanten[ShantenAnalyzer::shantenStellar] > -1)) {
-			switch (getRule(RULE_QUANBUKAO)) {
+			switch (RuleData::getRule("quanbukao")) {
 			case 1:
 				analysis->BasePoint = 30; break;
 			case 2: case 3:
@@ -548,15 +548,15 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	/* ドラの数を数える */
 	countDora(gameStat, analysis, result);
 	/* 簡略ルール(全部30符)の場合 */
-	if (getRule(RULE_SIMPLIFIED_SCORING) != 0) {
+	if (RuleData::getRule("simplified_scoring") != 0) {
 		trace("簡略計算ルールのため30符として扱います。");
 		result->BasePoints = 30;
 	}
 	/* 点数を計算する */
 	calculateScore(result);
 	/* 切り上げ満貫の処理 */
-	if ((getRule(RULE_ROUND_TO_MANGAN) == 1) && // 切り上げ満貫ルールがONで
-		(getRule(RULE_LIMITLESS) == 0) && // 青天井ルールでない場合
+	if ((RuleData::getRule("round_to_mangan") == 1) && // 切り上げ満貫ルールがONで
+		(RuleData::getRule("limitless") == 0) && // 青天井ルールでない場合
 		(result->AgariPoints == LargeNum::fromInt(1920))) // 子の7700・親の11600なら
 			result->AgariPoints = LargeNum::fromInt(2000); // 満貫にする
 	/* 終了処理 */
@@ -672,23 +672,23 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 			if (chkShisanBuDa(gameStat, targetPlayer)) { // 十三不塔になってる
 				trace("十三不塔です！！");
 				yakuInfo.isValid = true; yakuInfo.BasePoints = 30;
-				if (getRule(RULE_LIMITLESS) == 2) 
-					yakuInfo.CoreHan = (getRule(RULE_SHIISAN_PUUTAA) == 2) ? 5 : 13;
-				else yakuInfo.CoreSemiMangan = (getRule(RULE_SHIISAN_PUUTAA) == 2) ? 2 : 8;
+				if (RuleData::getRule("limitless") == 2) 
+					yakuInfo.CoreHan = (RuleData::getRule("shiisan_puutaa") == 2) ? 5 : 13;
+				else yakuInfo.CoreSemiMangan = (RuleData::getRule("shiisan_puutaa") == 2) ? 2 : 8;
 				calculateScore(&yakuInfo);
-				strcpy_s((getRule(RULE_LIMITLESS) == 2) ? yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
+				strcpy_s((RuleData::getRule("limitless") == 2) ? yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
 					YAKUSTAT::nameBufSize,
 #ifdef WIN32
 					"十三不搭\r\n");
 #else
 					"十三不搭\n");
 #endif
-				if (getRule(RULE_LIMITLESS) == 2)
+				if (RuleData::getRule("limitless") == 2)
 					strcpy_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
 #ifdef WIN32
-						(getRule(RULE_SHIISAN_PUUTAA) == 2) ? "５飜\r\n" : "13飜\r\n");
+						(RuleData::getRule("shiisan_puutaa") == 2) ? "５飜\r\n" : "13飜\r\n");
 #else
-						(getRule(RULE_SHIISAN_PUUTAA) == 2) ? "５飜\n" : "13飜\n");
+						(RuleData::getRule("shiisan_puutaa") == 2) ? "５飜\n" : "13飜\n");
 #endif
 				countDora(gameStat, NULL, &yakuInfo, targetPlayer); // ドラは数えてあげましょうね
 			}
@@ -696,17 +696,17 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 			else if (chkShisiBuDa(gameStat, targetPlayer)) { // 十四不塔になってる
 				trace("十四不塔です！！");
 				yakuInfo.isValid = true; yakuInfo.BasePoints = 30;
-				if (getRule(RULE_LIMITLESS) == 2) yakuInfo.CoreHan = 13;
+				if (RuleData::getRule("limitless") == 2) yakuInfo.CoreHan = 13;
 				else yakuInfo.CoreSemiMangan = 8;
 				calculateScore(&yakuInfo);
-				strcpy_s((getRule(RULE_LIMITLESS) == 2) ? yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
+				strcpy_s((RuleData::getRule("limitless") == 2) ? yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
 					YAKUSTAT::nameBufSize,
 #ifdef WIN32
 					"十三無靠\r\n");
 #else
 					"十三無靠\n");
 #endif
-				if (getRule(RULE_LIMITLESS) == 2)
+				if (RuleData::getRule("limitless") == 2)
 					strcpy_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
 #ifdef WIN32
 						"13飜\r\n");
@@ -725,7 +725,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 	else // 七対子、国士無双、その他特殊な和了
 		analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);
 	/* アリスドラの牌譜記録 */
-	if ((getRule(RULE_ALICE) != 0) && (gameStat->Player[targetPlayer].MenzenFlag)) {
+	if ((RuleData::getRule("alice") != 0) && (gameStat->Player[targetPlayer].MenzenFlag)) {
 		uint16_t AlicePointer = gameStat->DoraPointer;
 		auto tiles = countTilesInHand(gameStat, targetPlayer);
 		haifu::haifuresetalicedora();

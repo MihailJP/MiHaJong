@@ -16,7 +16,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	// ---------------------------------------------------------------------
 
 	/* アリス・マーガトロイド */
-	if (getRule(RULE_ALICE_MARGATROID) != 0) {
+	if (RuleData::getRule("alice_margatroid") != 0) {
 		/*	制限事項
 			固定満貫役、固定跳満役が成立している場合、この役は成立しません */
 		if ((analysis->TotalAnKezi < 3) && (analysis->DuiziCount[EastWind] >= 1) &&
@@ -38,7 +38,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	// ---------------------------------------------------------------------
 
 	/* カラス */
-	if (getRule(RULE_KARASU) != 0) {
+	if (RuleData::getRule("karasu") != 0) {
 		if (((analysis->Machi == yaku::yakuCalculator::machiKanchan) ||
 			(analysis->Machi == yaku::yakuCalculator::machiPenchan) ||
 			(analysis->Machi == yaku::yakuCalculator::machiTanki)) &&
@@ -50,7 +50,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 		}
 	}
 	/* カラス立直 */
-	if (getRule(RULE_KARASU_RIICHI) != 0) {
+	if (RuleData::getRule("karasu_riichi") != 0) {
 		if (((analysis->Machi == yaku::yakuCalculator::machiKanchan) ||
 			(analysis->Machi == yaku::yakuCalculator::machiPenchan) ||
 			(analysis->Machi == yaku::yakuCalculator::machiTanki)) &&
@@ -65,12 +65,12 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	// ---------------------------------------------------------------------
 
 	/* 北枕 */
-	if (getRule(RULE_KITAMAKURA) != 0) {
+	if (RuleData::getRule("kitamakura") != 0) {
 		if ((totalHan >= 2) && /* 2飜以上あるか？ */
 			(totalSemiMangan == 0) && /* 役満未満か？ */
 			(analysis->GameStat->DoraFlag.Omote[NorthWind] == 0) && /* 北はドラではないか？ */
 			((!*analysis->MenzenFlag) || (!analysis->PlayerStat->RichiFlag.RichiFlag) ||
-			(getRule(RULE_URADORA) == 1) ||
+			(RuleData::getRule("uradora") == 1) ||
 			(analysis->GameStat->DoraFlag.Ura[NorthWind] == 0)) && /* 北は裏ドラではないか？ */
 			(analysis->MianziDat[0].tile == NorthWind)) { /* 雀頭が北か？ */
 				const char* name = "北枕";

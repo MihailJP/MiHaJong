@@ -25,7 +25,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				const tileCode kezi[] = {BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight, GreenDragon};
 				return chktiles(analysis, kezi, 6, kezi, 1, false);
 			};
-		if (getRule(RULE_DRAGONLESS_ALL_GREEN) != 0)
+		if (RuleData::getRule("dragonless_all_green") != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"緑一色", yaku::yakuCalculator::Yaku::yval_yakuman,
 				"混一色", "茶一色", "断紅和", "混断紅",
@@ -45,7 +45,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				"混一色", "茶一色", "断紅和", "清断紅", "混断紅", // 清一色は複合可
 				allgrean
 			));
-		if (getRule(RULE_DRAGONLESS_ALL_GREEN) == 2) // 發なしがダブル役満になるルール
+		if (RuleData::getRule("dragonless_all_green") == 2) // 發なしがダブル役満になるルール
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				chkGameType(&GameStat, SanmaS) ? "清緑一色" : "緑一色", yaku::yakuCalculator::Yaku::yval_double_yakuman,
 				"清一色", "茶一色", "断紅和", "清断紅",
@@ -68,7 +68,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 						(analysis->MianziDat[i].mstat != meldQuadConcealed)) ++count;
 				return (count == SIZE_OF_MELD_BUFFER - 1);
 			};
-		if (getRule(RULE_SHIIARU_RAOTAI) != 0) {
+		if (RuleData::getRule("shiiaru_raotai") != 0) {
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"全倒鋪", yaku::yakuCalculator::Yaku::yval_1han,
 				[chkHadakaTanki](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -83,7 +83,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			));
 		}
 		// 金鶏独立…一索待ち
-		if (getRule(RULE_KINKEI_DOKURITSU) != 0)
+		if (RuleData::getRule("kinkei_dokuritsu") != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"金鶏独立", yaku::yakuCalculator::Yaku::yval_yakuman,
 				"全倒鋪", "全求人",
@@ -92,7 +92,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				}
 			));
 		// 独釣寒江雪…白待ち
-		if (getRule(RULE_KANKOU_NO_YUKI) != 0)
+		if (RuleData::getRule("kankou_no_yuki") != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"独釣寒江雪", yaku::yakuCalculator::Yaku::yval_yakuman,
 				"全倒鋪", "全求人",
@@ -105,9 +105,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	// ---------------------------------------------------------------------
 
 	/* 推不倒 */
-	if (getRule(RULE_TOIPUUTAO) != 0) {
+	if (RuleData::getRule("toipuutao") != 0) {
 		yaku::yakuCalculator::Yaku::HANFUNC han;
-		switch (getRule(RULE_TOIPUUTAO)) {
+		switch (RuleData::getRule("toipuutao")) {
 			case 1: han = yaku::yakuCalculator::Yaku::yval_1han; break;
 			case 2: han = yaku::yakuCalculator::Yaku::yval_4han; break;
 			case 3: han = yaku::yakuCalculator::Yaku::yval_yakuman; break;
@@ -125,7 +125,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		));
 	}
 	/* 紅孔雀 */
-	if (getRule(RULE_BENIKUJAKU) != 0)
+	if (RuleData::getRule("benikujaku") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"紅孔雀", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"混一色", "対々和",
@@ -137,7 +137,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 萬緑叢中一点紅 */
-	if (getRule(RULE_KOUITTEN) != 0)
+	if (RuleData::getRule("kouitten") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"紅一点", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"混一色",
@@ -150,7 +150,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 白有り緑一色 */
-	if (getRule(RULE_ALL_GREEN_WITH_WHITE) != 0) {
+	if (RuleData::getRule("all_green_with_white") != 0) {
 		auto allgreen_white =
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
@@ -159,12 +159,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return chktiles(analysis, kezi, 6, kezi, 1, false) &&
 					(analysis->TileCount[WhiteDragon] > 0);
 			};
-		if (getRule(RULE_ALL_GREEN_WITH_WHITE) == 1)
+		if (RuleData::getRule("all_green_with_white") == 1)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"清二色", yaku::yakuCalculator::Yaku::yval_2han,
 				allgreen_white
 			));
-		else if (getRule(RULE_ALL_GREEN_WITH_WHITE) == 2)
+		else if (RuleData::getRule("all_green_with_white") == 2)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"白有り緑一色", yaku::yakuCalculator::Yaku::yval_yakuman,
 				"混一色",
@@ -172,7 +172,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			));
 	}
 	/* 緑一色輪 */
-	if (getRule(RULE_RYUUIISOHRIN) != 0) {
+	if (RuleData::getRule("ryuuiisohrin") != 0) {
 		auto allgreen_five =
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
@@ -194,7 +194,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			));
 	}
 	/* 大草原 */
-	if (getRule(RULE_DAISOUGEN) != 0)
+	if (RuleData::getRule("daisougen") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"大草原", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"清一色",
@@ -207,7 +207,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 南大草原 */
-	if (getRule(RULE_SOUTH_DAISOUGEN) != 0)
+	if (RuleData::getRule("south_daisougen") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"南大草原", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"混一色",
@@ -221,7 +221,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 桃一色 */
-	if (getRule(RULE_TAOYISE) != 0)
+	if (RuleData::getRule("taoyise") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"桃一色", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"混一色",
@@ -241,7 +241,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 茶一色 */
-	if (getRule(RULE_CHAYISE) != 0)
+	if (RuleData::getRule("chayise") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"茶一色", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"混一色",
@@ -255,7 +255,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 黒一色 */
-	if (getRule(RULE_HEIIISOH) != 0)
+	if (RuleData::getRule("heiiisoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"黒一色", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"混一色", "対々和", "青洞門", "断紅和", "混断紅",
@@ -268,7 +268,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 青洞門 */
-	if (getRule(RULE_AO_NO_DOMON) != 0)
+	if (RuleData::getRule("ao_no_domon") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"青洞門", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"混一色", "対々和", "断紅和", "混断紅",
@@ -288,7 +288,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 断紅和 */
-	if (getRule(RULE_NO_RED) != 0) {
+	if (RuleData::getRule("no_red") != 0) {
 		auto hontanhon =
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
@@ -307,7 +307,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				};
 				return chktiles(analysis, kezi, 8, kezi, 1, false);
 			};
-		if (getRule(RULE_NO_RED) == 2) {
+		if (RuleData::getRule("no_red") == 2) {
 			if (!chkGameType(&GameStat, SanmaS))
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 					"混断紅", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
@@ -326,9 +326,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		}
 	}
 	/* 紅白饅頭 */
-	if (getRule(RULE_KOHAKU_MANJU) != 0)
+	if (RuleData::getRule("kohaku_manju") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"紅白饅頭", (getRule(RULE_KOHAKU_MANJU) == 2) ?
+			"紅白饅頭", (RuleData::getRule("kohaku_manju") == 2) ?
 			yaku::yakuCalculator::Yaku::yval_2han : yaku::yakuCalculator::Yaku::yval_1han,
 			"紅白七対",
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -343,7 +343,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 素数役満 (triplet2.cppより移動) */
-	if (getRule(RULE_PRIME_NUMBER) != 0)
+	if (RuleData::getRule("prime_number") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"素数役満", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"対々和",
@@ -357,7 +357,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 白一色 (triplet2.cppより移動) */
-	if (getRule(RULE_HAKUIISOO) != 0)
+	if (RuleData::getRule("hakuiisoo") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"白一色", yaku::yakuCalculator::Yaku::yval_yakuman,
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -384,7 +384,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	// 123 345 345 345: 牌式11433
 
 	/* 大四帰四 */
-	if (getRule(RULE_GREAT_FOUR_INTO_FOUR) != 0)
+	if (RuleData::getRule("great_four_into_four") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"大四帰四", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"重四帰四", "四帰四", "四帰三一", "四帰三", "龍四帰一", "虎四帰一", "両四帰一", "四帰一",
@@ -419,7 +419,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 重四帰四 */
-	if (getRule(RULE_DOUBLE_FOUR_INTO_FOUR) != 0)
+	if (RuleData::getRule("double_four_into_four") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"重四帰四", yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_8han),
 			"四帰四", "四帰三一", "四帰三", "龍四帰一", "虎四帰一", "両四帰一", "四帰一",
@@ -439,7 +439,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 四帰四 */
-	if (getRule(RULE_FOUR_INTO_FOUR) != 0)
+	if (RuleData::getRule("four_into_four") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四帰四", yaku::yakuCalculator::Yaku::yval_6han,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -496,7 +496,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return false;
 			};
 		/* 四帰三一 */
-		if (getRule(RULE_FOUR_INTO_THREE_ONE) != 0)
+		if (RuleData::getRule("four_into_three_one") != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"四帰三一", yaku::yakuCalculator::Yaku::yval_4han,
 				"四帰三", "四帰一",
@@ -511,7 +511,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				}
 			));
 		/* 四帰三 */
-		if (getRule(RULE_FOUR_INTO_THREE) != 0)
+		if (RuleData::getRule("four_into_three") != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"四帰三", yaku::yakuCalculator::Yaku::yval_3han,
 				"四帰一",
@@ -522,7 +522,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	// ---------------------------------------------------------------------
 
 	/* 龍四帰一 */
-	if (getRule(RULE_DRAGON_FOUR_INTO_ONE) != 0)
+	if (RuleData::getRule("dragon_four_into_one") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"龍四帰一", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"三連刻", "虎四帰一", "両四帰一", "四帰一",
@@ -537,9 +537,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 虎四帰一 */
-	if (getRule(RULE_TIGER_FOUR_INTO_ONE) != 0)
+	if (RuleData::getRule("tiger_four_into_one") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"虎四帰一", (getRule(RULE_TIGER_FOUR_INTO_ONE) == 2) ?
+			"虎四帰一", (RuleData::getRule("tiger_four_into_one") == 2) ?
 			yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_2han,
 			"両四帰一", "四帰一",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -568,9 +568,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return ++count;
 			};
 		/* 両四帰一 */
-		if (getRule(RULE_DOUBLE_FOUR_INTO_ONE) != 0)
+		if (RuleData::getRule("double_four_into_one") != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				"両四帰一", (getRule(RULE_DOUBLE_FOUR_INTO_ONE) == 2) ?
+				"両四帰一", (RuleData::getRule("double_four_into_one") == 2) ?
 				yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_2han,
 				"四帰一",
 				[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -579,7 +579,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				}
 			));
 		/* 四帰一 */
-		if (getRule(RULE_FOUR_INTO_ONE) != 0)
+		if (RuleData::getRule("four_into_one") != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"四帰一", yaku::yakuCalculator::Yaku::yval_1han,
 				[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -592,9 +592,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	// ---------------------------------------------------------------------
 
 	/* 九蓮花燈 */
-	if (getRule(RULE_CHUUREN_HWATON) != 0)
+	if (RuleData::getRule("chuuren_hwaton") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"九蓮花燈", (getRule(RULE_CHUUREN_HWATON) == 2) ?
+			"九蓮花燈", (RuleData::getRule("chuuren_hwaton") == 2) ?
 			yaku::yakuCalculator::Yaku::yval_2han : yaku::yakuCalculator::Yaku::yval_4han,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int count = 0;
@@ -608,7 +608,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 鳴き九連宝燈 */
-	if (getRule(RULE_EXPOSED_CHUUREN) != 0)
+	if (RuleData::getRule("exposed_chuuren") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"九蓮碧燈", yaku::yakuCalculator::Yaku::yval_3han,
 			/* 鳴きチンイツが複合し倍満以上が確定 */
@@ -641,10 +641,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	// ---------------------------------------------------------------------
 
 	/* 茴香ポン(非対々) */
-	if (getRule(RULE_UIKYOU_SHUNTSU) != 0)
+	if (RuleData::getRule("uikyou_shuntsu") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"茴香ポン ", // 対々形と区別するために後ろにスペースを入れる
-			(getRule(RULE_UIKYOU_SHUNTSU) == 2) ?
+			(RuleData::getRule("uikyou_shuntsu") == 2) ?
 			yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_4han,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
@@ -672,7 +672,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	// ---------------------------------------------------------------------
 
 	/* 武太郎売焼餅 */
-	if (getRule(RULE_UUTAARAN) != 0)
+	if (RuleData::getRule("uutaaran") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"武太郎売焼餅", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -689,7 +689,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 愚濫怒苦露酢 */
-	if (getRule(RULE_GRAND_CROSS) != 0)
+	if (RuleData::getRule("grand_cross") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"愚濫怒苦露酢", yaku::yakuCalculator::Yaku::HANFUNC(
 			[](const MENTSU_ANALYSIS* const analysis) {
@@ -712,7 +712,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 喜鵲閙梅 */
-	if (getRule(RULE_XIQUE_NAOMEI) != 0)
+	if (RuleData::getRule("xique_naomei") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"喜鵲閙梅", yaku::yakuCalculator::Yaku::yval_6han,
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -727,7 +727,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 花一色 */
-	if (getRule(RULE_HUAIISOH) != 0)
+	if (RuleData::getRule("huaiisoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"花一色", yaku::yakuCalculator::Yaku::yval_1han,
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -746,7 +746,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 赤一色 */
-	if (getRule(RULE_AKAIISOH) != 0)
+	if (RuleData::getRule("akaiisoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"赤一色", yaku::yakuCalculator::Yaku::yval_2han,
 			"花一色", "絶一門",
@@ -759,7 +759,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 赤眼青龍 */
-	if (getRule(RULE_SEKIGAN_SEIRYUU) != 0)
+	if (RuleData::getRule("sekigan_seiryuu") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"赤眼青龍", yaku::yakuCalculator::Yaku::yval_yakuman,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -774,13 +774,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 
 	/* 満園花 */
 	{
-		RuleCode ruleCodeList[10] = { (RuleCode)0,
-			RULE_ALL_ONE, RULE_ALL_TWO, RULE_ALL_THREE, RULE_ALL_FOUR, RULE_ALL_FIVE,
-			RULE_ALL_SIX, RULE_ALL_SEVEN, RULE_ALL_EIGHT, RULE_ALL_NINE};
+		const char ruleCodeList[10][16] = { "",
+			"all_one", "all_two", "all_three", "all_four", "all_five",
+			"all_six", "all_seven", "all_eight", "all_nine"};
 		const char nameList[10][16] = { "",
 			"全帯一", "全帯二", "全帯三", "全帯四", "全帯五", "全帯六", "全帯七", "全帯八", "全帯九"};
 		for (int i = 1; i <= 9; i++) {
-			if (getRule(ruleCodeList[i]) != 0) {
+			if (RuleData::getRule(ruleCodeList[i]) != 0) {
 				auto f =
 					[chktiles, i](const MENTSU_ANALYSIS* const analysis) -> bool {
 						const tileCode kezi[] = {
@@ -804,7 +804,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				yaku::yakuCalculator::Yaku::HANFUNC han = yaku::yakuCalculator::Yaku::yval_4han;
 				switch (i) {
 				case 5:
-					switch (getRule(ruleCodeList[i])) {
+					switch (RuleData::getRule(ruleCodeList[i])) {
 						case 1: han = yaku::yakuCalculator::Yaku::yval_2han; break;
 						case 2: han = yaku::yakuCalculator::Yaku::yval_3han_kuisagari; break;
 						case 3: han = yaku::yakuCalculator::Yaku::yval_4han; break;
@@ -816,7 +816,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 						nameList[i], han, "断幺九", f));
 					break;
 				case 1: case 9:
-					switch (getRule(ruleCodeList[i])) {
+					switch (RuleData::getRule(ruleCodeList[i])) {
 						case 1: han = yaku::yakuCalculator::Yaku::yval_4han; break;
 						case 2: han = yaku::yakuCalculator::Yaku::yval_6han_kuisagari; break;
 					}
@@ -835,7 +835,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	// ---------------------------------------------------------------------
 
 	/* 小於五 */
-	if (getRule(RULE_XIAOYUWU) != 0)
+	if (RuleData::getRule("xiaoyuwu") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"小於五", yaku::yakuCalculator::Yaku::yval_6han,
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -849,7 +849,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 大於五 */
-	if (getRule(RULE_DAYUWU) != 0)
+	if (RuleData::getRule("dayuwu") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"大於五", yaku::yakuCalculator::Yaku::yval_6han,
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -863,7 +863,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 全小 */
-	if (getRule(RULE_ALL_SMALL) != 0)
+	if (RuleData::getRule("all_small") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"全小", yaku::yakuCalculator::Yaku::yval_6han,
 			"小於五",
@@ -877,7 +877,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 全中 */
-	if (getRule(RULE_ALL_MIDDLE) != 0)
+	if (RuleData::getRule("all_middle") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"全中", yaku::yakuCalculator::Yaku::yval_6han,
 			"断幺九", "上級断幺九",
@@ -891,7 +891,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 全大 */
-	if (getRule(RULE_ALL_LARGE) != 0)
+	if (RuleData::getRule("all_large") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"全大", yaku::yakuCalculator::Yaku::yval_6han,
 			"大於五",
@@ -908,7 +908,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	// ---------------------------------------------------------------------
 
 	/* 黒衣騎士 */
-	if (getRule(RULE_BLACKJACK) != 0)
+	if (RuleData::getRule("blackjack") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"黒衣騎士", yaku::yakuCalculator::Yaku::yval_2han,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -920,7 +920,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 白衣騎士 */
-	if (getRule(RULE_WHITE_KNIGHT) != 0)
+	if (RuleData::getRule("white_knight") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"白衣騎士", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"黒衣騎士",
@@ -936,12 +936,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	/* 東大系 */
 	{
 		const int rules = 4;
-		const RuleCode ruleCodeList[rules] = {RULE_UNIV_TOKYO, RULE_UNIV_HOKKAIDO, RULE_UNIV_CHUO, RULE_UNIV_HAKUOH};
+		const char ruleCodeList[rules][16] = {"univ_tokyo", "univ_hokkaido", "univ_chuo", "univ_hakuoh"};
 		const tileCode tileCodeList[rules] = {EastWind, NorthWind, RedDragon, WhiteDragon};
 		const char yakuNameList[rules][16] = {"東大役満", "北大役満", "中大役満", "白皇学園"};
 		for (int i = 0; i < rules; i++) {
 			const tileCode targetTile = tileCodeList[i];
-			if (getRule(ruleCodeList[i]) != 0)
+			if (RuleData::getRule(ruleCodeList[i]) != 0)
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 					yakuNameList[i], yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 					[targetTile](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -953,7 +953,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		}
 	}
 	/* 東北大 */
-	if (getRule(RULE_UNIV_TOHOKU) != 0)
+	if (RuleData::getRule("univ_tohoku") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"東北大役満", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -964,7 +964,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 名大役満 */
-	if (getRule(RULE_UNIV_NAGOYA) != 0)
+	if (RuleData::getRule("univ_nagoya") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"名大役満", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -983,7 +983,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	// ---------------------------------------------------------------------
 
 	/* 冬のソナタ */
-	if (getRule(RULE_FUYUSONA) != 0)
+	if (RuleData::getRule("fuyusona") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"冬のソナタ", yaku::yakuCalculator::Yaku::yval_yakuman,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -999,7 +999,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 冬のソナタ２ */
-	if (getRule(RULE_FUYUSONA) != 0)
+	if (RuleData::getRule("fuyusona") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"冬のソナタ２", yaku::yakuCalculator::Yaku::yval_yakuman,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -1020,7 +1020,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	// ---------------------------------------------------------------------
 
 	/* 上級断幺九 */
-	if (getRule(RULE_HIGH_TANYAO) != 0)
+	if (RuleData::getRule("high_tanyao") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"上級断幺九", yaku::yakuCalculator::Yaku::yval_2han,
 			"断幺九",
@@ -1036,7 +1036,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 金一色 */
-	if (getRule(RULE_ALLMONEY) != 0)
+	if (RuleData::getRule("allmoney") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"金一色", yaku::yakuCalculator::Yaku::yval_4han,
 			"絶一門",
@@ -1050,7 +1050,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 鳳子刻 */
-	if (getRule(RULE_FENGZIKE) != 0)
+	if (RuleData::getRule("fengzike") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"鳳子刻", yaku::yakuCalculator::Yaku::yval_1han,
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -1062,7 +1062,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 竜子刻 */
-	if (getRule(RULE_LONGZIKE) != 0)
+	if (RuleData::getRule("longzike") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"竜子刻", yaku::yakuCalculator::Yaku::yval_1han,
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {

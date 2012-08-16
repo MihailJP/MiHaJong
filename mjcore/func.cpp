@@ -33,7 +33,7 @@ __declspec(dllexport) inline int RelativePositionOf(int targetPlayer, int relati
 
 /* 一周するまでに必要な場の数 */
 __declspec(dllexport) inline int roundLoopRate() {
-	if (getRule(RULE_SUDDEN_DEATH_TYPE) == 1) return 28;
+	if (RuleData::getRule("sudden_death_type") == 1) return 28;
 	else return 16;
 }
 
@@ -156,7 +156,7 @@ std::string inline roundName(int roundNum, const GameTable* const gameStat) {
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です。場風を解析できません。");
 			roundNameTxt << "??";
 	}
-	if ((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7)) {
+	if ((RuleData::getRule("game_length") == 5)||(RuleData::getRule("game_length") == 7)) {
 		switch (int k = (gameStat->LoopRound * ACTUAL_PLAYERS + roundNum % PLAYERS)) {
 			case 0: roundNameTxt << "一局"; break;
 			case 1: roundNameTxt << "二局"; break;

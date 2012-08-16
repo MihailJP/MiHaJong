@@ -51,9 +51,6 @@ uint8_t RuleData::getRule(RuleCode RuleID) { // ルール設定を取得する
 __declspec(dllexport) int getRule(int RuleID) { // ルール設定を取得する
 	return (int)RuleData::getRule((RuleCode)RuleID);
 }
-extern "C" inline MJCORE uint8_t getRule(RuleCode RuleID) { // ルール設定を取得する
-	return RuleData::getRule(RuleID);
-}
 
 __declspec(dllexport) void RuleData::getRuleName(char* const txt, int bufsize, int RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル

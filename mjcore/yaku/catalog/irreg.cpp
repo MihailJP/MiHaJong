@@ -8,7 +8,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			return ((analysis->shanten[ShantenAnalyzer::shantenPairs] == -1)&&(analysis->shanten[ShantenAnalyzer::shantenRegular] >= 0));
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		"Žµ‘ÎŽq", (getRule(RULE_SEVEN_PAIRS) == 1) ? /* 1–|50•„‚Ìƒ‹[ƒ‹‚Æ2–|25•„‚Ìƒ‹[ƒ‹‚ª‚ ‚éB•„‚Í‚±‚±‚Å‚ÍÝ’è‚Å‚«‚È‚¢‚Å‚·cc */
+		"Žµ‘ÎŽq", (RuleData::getRule("seven_pairs") == 1) ? /* 1–|50•„‚Ìƒ‹[ƒ‹‚Æ2–|25•„‚Ìƒ‹[ƒ‹‚ª‚ ‚éB•„‚Í‚±‚±‚Å‚ÍÝ’è‚Å‚«‚È‚¢‚Å‚·cc */
 		yaku::yakuCalculator::Yaku::yval_1han_menzen : yaku::yakuCalculator::Yaku::yval_2han_menzen,
 		isQiDui
 	));
@@ -23,7 +23,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	// ---------------------------------------------------------------------
 
 	/* ƒc[ƒC[ƒ\[ */
-	if (getRule(RULE_SEVEN_HONOR_PAIRS) != 0)
+	if (RuleData::getRule("seven_honor_pairs") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"Žµ•Ÿ¯", yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen,
 			"¬˜V“ª", "¬ˆêF", "ŽOŒ³Žµ‘ÎŽq", "ŽlŠìŽµ‘ÎŽq", "g”’Žµ‘Î",
@@ -34,7 +34,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			}
 		));
 	/* ŽOŒ³Žµ‘ÎŽq */
-	if (getRule(RULE_DRAGON_PAIRS) != 0)
+	if (RuleData::getRule("dragon_pairs") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"ŽOŒ³Žµ‘ÎŽq", yaku::yakuCalculator::Yaku::yval_1han_menzen,
 			[isQiDui](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -45,7 +45,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			}
 		));
 	/* ŽlŠìŽµ‘ÎŽq */
-	if (getRule(RULE_WIND_PAIRS) != 0)
+	if (RuleData::getRule("wind_pairs") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"ŽlŠìŽµ‘ÎŽq", yaku::yakuCalculator::Yaku::yval_1han_menzen,
 			[isQiDui](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -57,7 +57,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			}
 		));
 	/* Šï”Žµ‘ÎŽq */
-	if (getRule(RULE_ODD_PAIRS) != 0)
+	if (RuleData::getRule("odd_pairs") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"Šï”Žµ‘ÎŽq", yaku::yakuCalculator::Yaku::yval_1han_menzen,
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -70,7 +70,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			}
 		));
 	/* ‹ô”Žµ‘ÎŽq */
-	if (getRule(RULE_EVEN_PAIRS) != 0)
+	if (RuleData::getRule("even_pairs") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"‹ô”Žµ‘ÎŽq", yaku::yakuCalculator::Yaku::yval_2han_menzen,
 			"’f›ô‹ã",
@@ -87,7 +87,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	// ---------------------------------------------------------------------
 
 	/* g”’Žµ‘Î */
-	if (getRule(RULE_KOUHAKU_CHIITOI) != 0)
+	if (RuleData::getRule("kouhaku_chiitoi") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"g”’Žµ‘Î", yaku::yakuCalculator::Yaku::yval_2han_menzen,
 			[isQiDui](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -97,7 +97,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			}
 		));
 	/* –k‚Ì‘å’n */
-	if (getRule(RULE_KITA_NO_DAICHI) != 0)
+	if (RuleData::getRule("kita_no_daichi") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"–k‚Ì‘å’n", yaku::yakuCalculator::Yaku::HANFUNC(
 			[](const MENTSU_ANALYSIS* const analysis) -> yaku::yakuCalculator::Yaku::YAKU_HAN {
@@ -120,7 +120,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			}
 		));
 	/* ¢ŠEˆê */
-	if (getRule(RULE_SEKAIICHI) != 0)
+	if (RuleData::getRule("sekaiichi") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"¢ŠEˆê", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 			"ŽlŠìŽµ‘ÎŽq", "¬˜V“ª",
@@ -136,7 +136,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	// ---------------------------------------------------------------------
 
 	/* ŽOF“¯‘Î */
-	if (getRule(RULE_SANSHOKU_DOUTOI) != 0)
+	if (RuleData::getRule("sanshoku_doutoi") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"ŽOF“¯‘Î", yaku::yakuCalculator::Yaku::yval_1han_menzen,
 			[isQiDui](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -167,7 +167,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 					(count == 5);
 			};
 		/* ‹tŽÔ—Ö */
-		if (getRule(RULE_GYAKUSHARIN) != 0)
+		if (RuleData::getRule("gyakusharin") != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"‹tŽÔ—Ö", yaku::yakuCalculator::Yaku::yval_4han_menzen,
 				[gyakusharin](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -175,7 +175,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 				}
 			));
 		/* ‹t’|—Ñ */
-		if (getRule(RULE_GYAKUCHIKURIN) != 0)
+		if (RuleData::getRule("gyakuchikurin") != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"‹t’|—Ñ", yaku::yakuCalculator::Yaku::yval_4han_menzen,
 				[gyakusharin](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -183,7 +183,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 				}
 			));
 		/* ‹t”—× */
-		if (getRule(RULE_GYAKUSUURIN) != 0)
+		if (RuleData::getRule("gyakusuurin") != 0)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"‹t”—×", yaku::yakuCalculator::Yaku::yval_4han_menzen,
 				[gyakusharin](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -202,7 +202,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			return (analysis->shanten[ShantenAnalyzer::shantenOrphans] == -1);
 		}
 	));
-	if (getRule(RULE_DOUBLE_YAKUMAN) == 0) /* ‘Žm13–Ê‘Ò‚¿iƒ_ƒuƒ‹–ð–žj */
+	if (RuleData::getRule("double_yakuman") == 0) /* ‘Žm13–Ê‘Ò‚¿iƒ_ƒuƒ‹–ð–žj */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"‘Žm–³‘o\ŽO–Ê", yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen,
 			"‘Žm–³‘o", "\ŽO•s“ƒ",
@@ -213,9 +213,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			}
 		));
 	/* Žµ¯–³èÏ */
-	if (getRule(RULE_STELLAR_UUSHII) != 0)
+	if (RuleData::getRule("stellar_uushii") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"Žµ¯–³èÏ", (getRule(RULE_STELLAR_UUSHII) == 2) ?
+			"Žµ¯–³èÏ", (RuleData::getRule("stellar_uushii") == 2) ?
 			yaku::yakuCalculator::Yaku::yval_baiman_menzen : yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 			"‘S•sèÏ",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -223,7 +223,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			}
 		));
 	/* “ì–kí‘ˆ */
-	if (getRule(RULE_CIVIL_WAR) != 0)
+	if (RuleData::getRule("civil_war") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"“ì–kí‘ˆ", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -231,7 +231,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			}
 		));
 	/* ˜f¯’¼—ñ */
-	if (getRule(RULE_SYZYGY) != 0)
+	if (RuleData::getRule("syzygy") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"˜f¯’¼—ñ", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -239,9 +239,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			}
 		));
 	/* ‘S•sèÏ */
-	if (getRule(RULE_QUANBUKAO) != 0) {
+	if (RuleData::getRule("quanbukao") != 0) {
 		const yaku::yakuCalculator::Yaku::MenzenHan* qbk_han = NULL;
-		switch (getRule(RULE_QUANBUKAO)) {
+		switch (RuleData::getRule("quanbukao")) {
 		case 1: case 2:
 			qbk_han = &yaku::yakuCalculator::Yaku::yval_3han_menzen;
 			break;
