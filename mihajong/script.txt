@@ -57,6 +57,13 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 		　符、飜、点数、縛りを満たすか否かを求める　詳細未定
 
+
+	▼ gametbl:getactiveplayer() (未実装)
+
+		　現在のツモ番のプレイヤー番号を1～4(三人打ちの場合は1～3)の数値で返し
+		ます。
+
+
 	▼ gametbl:getdeckleft() (未実装)
 
 		　山牌の残り枚数を返します。
@@ -65,6 +72,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 	▼ gametbl:getdorainfo(引数仕様未定) (未実装)
 
 		　ドラを調べる　詳細未定
+
 
 	▼ gametbl:getdoukasenplayer() (未実装)
 
@@ -78,6 +86,9 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		摸牌のインデックスは常に14となります。このため、門前でないときは
 		sparse な配列になることがあります。存在する牌の位置には牌の情報を格納
 		したサブテーブルが入り、牌が存在しない位置はnilとなります。
+		　親の配牌時は自摸牌に関係なく理牌された状態で1～14に牌のデータが格納
+		されています。また、鳴いた直後の捨牌についてはインデックス14がnilと
+		なっています。
 
 		● tile フィールド
 
@@ -100,6 +111,19 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 		　自風を求める　詳細未定
 
+	▼ gametbl:getprevailingwind(引数仕様未定) (未実装)
+
+		　場風を求める　詳細未定
+
+	▼ gametbl:getpreviousdiscard() (未実装)
+
+		　この関数は返り値が2つあります。鳴いた直後の捨牌である場合、直前に鳴
+		いた牌の種類を表す番号を返します。1番目の返り値は鳴いた牌の現物を表す
+		番号で、2番めは(チーの直後である場合のみ)筋食い変えになるような牌の番
+		号です。この関数は、食い変えにならないようにするための判定に使用できま
+		す。該当する牌がなければ、nilが返ります。
+
+
 	▼ gametbl:getseentiles(引数仕様未定) (未実装)
 
 		　見えている牌を数える　詳細未定
@@ -118,25 +142,34 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 		　風牌が役牌になっているか調べる　詳細未定
 
-	▼ gametbl:isfirstdraw(引数仕様未定) (未実装)
 
-		　鳴きのない第1ツモ(親については配牌直後)かどうか調べる　詳細未定
+	▼ gametbl:isfirstdraw() (未実装)
 
-	▼ gametbl:iskyuushu(引数仕様未定) (未実装)
+		　鳴きのない第1ツモ(親については配牌直後)であればtrueを、そうでなけれ
+		ばfalseを返します。
 
-		　九種九牌になっているかどうか調べる　詳細未定
 
-	▼ gametbl:ismenzen(引数仕様未定) (未実装)
+	▼ gametbl:iskyuushu() (未実装)
 
-		　門前かどうか調べる　詳細未定
+		　九種九牌の条件を満たしていればtrueを、そうでなければfalseを返します。
+		但し、九種九牌で流せないルールの時はnilを返します。
 
-	▼ gametbl:isshisanbuda(引数仕様未定) (未実装)
 
-		　十三不塔になっているか調べる　詳細未定
+	▼ gametbl:ismenzen() (未実装)
 
-	▼ gametbl:isshisibuda(引数仕様未定) (未実装)
+		　門前であればtrueを、そうでなければfalseを返します。
 
-		　十三無靠(十四不塔)になっているか調べる　詳細未定
+
+	▼ gametbl:isshisanbuda() (未実装)
+
+		　十三不塔になっていればtrueを、そうでなければfalseを返します。但し、
+		十三不塔なしのルールの時はnilを返します。
+
+
+	▼ gametbl:isshisibuda() (未実装)
+
+		　十三無靠(十四不塔)になっていればtrueを、そうでなければfalseを返しま
+		す。但し、十三無靠(十四不塔)なしのルールの時はnilを返します。
 
 
 ■ mihajongテーブル
