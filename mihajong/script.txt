@@ -80,6 +80,11 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		～3)の数値で返します。
 
 
+	▼ gametbl:getflower(引数仕様未定) (未実装)
+
+		　花牌、または三麻の抜きドラの情報を取得(他家の情報も取得可能)　詳細未
+		定
+
 	▼ gametbl:gethand() (未実装)
 
 		　自分の手牌をテーブルで返します。1～14のインデックスを持ちますが、自
@@ -131,6 +136,10 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 	▼ gametbl:getshanten(引数仕様未定) (未実装)
 
 		　シャンテン数を求める　詳細未定
+
+	▼ gametbl:gettileinfo(引数仕様未定) (未実装)
+
+		　手牌の中のある牌についての情報　詳細未定
 
 	▼ gametbl:getwaremewind() (未実装)
 
