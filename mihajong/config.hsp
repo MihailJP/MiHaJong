@@ -10,8 +10,8 @@
 #include "mjcore.hsp"
 
 #uselib "mjcore.dll"
-#func _storeRule "?storeRule@@YAXPAPBD@Z" var
-#func _exportRule "?exportRule@@YAXPAPAD@Z" var
+#func _storeRule "?storeRule@RuleData@@SAXPAPBD@Z" var
+#func _exportRule "?exportRule@RuleData@@SAXPAPAD@Z" var
 
 #deffunc storeRule array RuleText
 /*
@@ -57,9 +57,6 @@ return
 	configFile = argFileName
 	info "設定ファイルは "+configFile+" です。"
 	return
-
-/* 設定のテキスト */
-#include "conftxt.hsp"
 
 #deffunc chatshowrule var RuleList
 	configtxt

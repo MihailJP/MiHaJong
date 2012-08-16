@@ -1,9 +1,16 @@
 #include "ruletbl.h"
 
-static char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
-static uint8_t Rules[RULESIZE];
+char RuleData::ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
+uint8_t RuleData::Rules[RULESIZE];
+std::vector<std::vector<std::string> > RuleData::confdat;
 
-void parseRule() { // ƒ‹[ƒ‹İ’è‚ğ”’l‚É•ÏŠ·
+__declspec(dllexport) void RuleData::configinit() { // ƒRƒ“ƒtƒBƒO—pCSV‚ğ“Ç‚İ‚Ş
+	DWORD size = 0; const uint8_t* csv = NULL;
+	LoadFileInResource(IDR_CSV_TABL1, CSV_TABLE, size, csv);
+	CSVReader::parsecsv(confdat, reinterpret_cast<const char*>(csv));
+}
+
+void RuleData::parseRule() { // ƒ‹[ƒ‹İ’è‚ğ”’l‚É•ÏŠ·
 	debug("ƒ‹[ƒ‹İ’è‚ğ”’l”z—ñ‚É•ÏŠ·‚µ‚Ü‚·B");
 	for (int i = 0; i < RULESIZE; i++) {
 		std::string::size_type idx = std::string("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ").find(
@@ -12,7 +19,7 @@ void parseRule() { // ƒ‹[ƒ‹İ’è‚ğ”’l‚É•ÏŠ·
 	}
 }
 
-__declspec(dllexport) void storeRule(const char** ruleTxt) { // HSP¨C++ ƒ‹[ƒ‹İ’è“]‘—
+__declspec(dllexport) void RuleData::storeRule(const char** ruleTxt) { // HSP¨C++ ƒ‹[ƒ‹İ’è“]‘—
 	debug("HSP¨C++ ƒ‹[ƒ‹“]‘—");
 	for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++)
 		memcpy(ruleConf[i], ruleTxt[i], RULE_IN_LINE);
@@ -20,15 +27,18 @@ __declspec(dllexport) void storeRule(const char** ruleTxt) { // HSP¨C++ ƒ‹[ƒ‹
 	info("İ’è‚ªƒ[ƒh‚³‚ê‚Ü‚µ‚½B");
 }
 
-__declspec(dllexport) void exportRule(char** ruleTxt) { // C++¨HSP ƒ‹[ƒ‹İ’è“]‘—
+__declspec(dllexport) void RuleData::exportRule(char** ruleTxt) { // C++¨HSP ƒ‹[ƒ‹İ’è“]‘—
 	debug("C++¨HSP ƒ‹[ƒ‹“]‘—");
 	for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++)
 		memcpy(ruleTxt[i], ruleConf[i], RULE_IN_LINE);
 }
 
+uint8_t RuleData::getRule(RuleCode RuleID) { // ƒ‹[ƒ‹İ’è‚ğæ“¾‚·‚é
+	return Rules[RuleID];
+}
 __declspec(dllexport) int getRule(int RuleID) { // ƒ‹[ƒ‹İ’è‚ğæ“¾‚·‚é
-	return (int)Rules[RuleID];
+	return (int)RuleData::getRule((RuleCode)RuleID);
 }
 extern "C" inline MJCORE uint8_t getRule(RuleCode RuleID) { // ƒ‹[ƒ‹İ’è‚ğæ“¾‚·‚é
-	return Rules[(int)RuleID];
+	return RuleData::getRule(RuleID);
 }

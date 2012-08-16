@@ -5,7 +5,11 @@
 #ifdef MJCORE_EXPORTS
 #include <string>
 #include <cstdlib>
+#include <vector>
 #include "logging.h"
+#include "resource.h"
+#include "readrsrc.h"
+#include "csv2arry.h"
 #endif
 #include "mjexport.h"
 
@@ -505,6 +509,19 @@ enum RuleCode : uint16_t {
 
 #ifdef MJCORE_EXPORTS
 extern uint8_t Rules[RULESIZE];
+
+class RuleData {
+private:
+	static char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
+	static uint8_t Rules[RULESIZE];
+	static std::vector<std::vector<std::string> > confdat;
+	static void parseRule();
+public:
+	__declspec(dllexport) static void configinit();
+	__declspec(dllexport) static void storeRule(const char** ruleTxt);
+	__declspec(dllexport) static void exportRule(char** ruleTxt);
+	static uint8_t getRule(RuleCode RuleID);
+};
 
 __declspec(dllexport) int getRule(int RuleID);
 #endif
