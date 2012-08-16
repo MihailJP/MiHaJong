@@ -6,6 +6,8 @@
 #include <string>
 #include <cstdlib>
 #include <vector>
+#include <map>
+#include <array>
 #include "logging.h"
 #include "resource.h"
 #include "readrsrc.h"
@@ -17,7 +19,7 @@
 #define RULES_IN_PAGE 40U
 #define RULE_IN_LINE 80U
 #ifdef MJCORE_EXPORTS
-typedef int8_t RULETBL[RULESIZE];
+typedef std::map<std::string, int8_t> RULETBL;
 #endif
 
 enum RuleCode : uint16_t {
@@ -508,12 +510,12 @@ enum RuleCode : uint16_t {
 };
 
 #ifdef MJCORE_EXPORTS
-extern uint8_t Rules[RULESIZE];
 
 class RuleData {
 private:
 	static char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
-	static uint8_t Rules[RULESIZE];
+	static RULETBL Rules;
+	static std::array<std::string, RULESIZE> nametbl;
 	static std::vector<std::vector<std::string> > confdat;
 	static void parseRule();
 public:
@@ -521,6 +523,7 @@ public:
 	__declspec(dllexport) static void storeRule(const char** ruleTxt);
 	__declspec(dllexport) static void exportRule(char** ruleTxt);
 	static uint8_t getRule(RuleCode RuleID);
+	static uint8_t getRule(std::string RuleTag);
 };
 
 __declspec(dllexport) int getRule(int RuleID);

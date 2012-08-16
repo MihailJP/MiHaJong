@@ -120,7 +120,6 @@
     <ClCompile Include="lzma\LzmaLib.c" />
     <ClCompile Include="lzma\Sha256.c" />
     <ClCompile Include="lzma\Threads.c" />
-    <ClCompile Include="mjcore.cpp" />
     <ClCompile Include="readrsrc.cpp" />
     <ClCompile Include="shanten.cpp" />
     <ClCompile Include="ruletbl.cpp" />
@@ -169,7 +168,6 @@
     <ClInclude Include="lzma\Sha256.h" />
     <ClInclude Include="lzma\Threads.h" />
     <ClInclude Include="lzma\Types.h" />
-    <ClInclude Include="mjcore.h" />
     <ClInclude Include="mjexport.h" />
     <ClInclude Include="readrsrc.h" />
     <ClInclude Include="shanten.h" />

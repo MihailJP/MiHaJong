@@ -1,21 +1,31 @@
 #include "ruletbl.h"
 
+struct GameTable;
+enum gameTypeID;
+extern GameTable GameStat;
+inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType);
+
 char RuleData::ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
-uint8_t RuleData::Rules[RULESIZE];
+RULETBL RuleData::Rules;
+std::array<std::string, RULESIZE> RuleData::nametbl;
 std::vector<std::vector<std::string> > RuleData::confdat;
 
 __declspec(dllexport) void RuleData::configinit() { // コンフィグ用CSVを読み込む
 	DWORD size = 0; const uint8_t* csv = NULL;
 	LoadFileInResource(IDR_CSV_TABL1, CSV_TABLE, size, csv);
 	CSVReader::parsecsv(confdat, reinterpret_cast<const char*>(csv));
+
+	for (auto k = confdat.begin(); k != confdat.end(); k++) // 名前テーブル
+		nametbl[std::atoi((*k)[0].c_str())] = (*k)[8];
 }
 
 void RuleData::parseRule() { // ルール設定を数値に変換
-	debug("ルール設定を数値配列に変換します。");
+	debug("ルール設定を連想配列に変換します。");
 	for (int i = 0; i < RULESIZE; i++) {
 		std::string::size_type idx = std::string("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ").find(
 			ruleConf[i / RULE_IN_LINE][i % RULE_IN_LINE] );
-		Rules[i] = ((idx == std::string::npos) ? 0 : (uint8_t)idx);
+		if (!(nametbl[i].empty()))
+			Rules[nametbl[i]] = ((idx == std::string::npos) ? 0 : (uint8_t)idx);
 	}
 }
 
@@ -33,8 +43,11 @@ __declspec(dllexport) void RuleData::exportRule(char** ruleTxt) { // C++→HSP ル
 		memcpy(ruleTxt[i], ruleConf[i], RULE_IN_LINE);
 }
 
+uint8_t RuleData::getRule(std::string RuleTag) { // ルール設定を取得する
+	return Rules[RuleTag];
+}
 uint8_t RuleData::getRule(RuleCode RuleID) { // ルール設定を取得する
-	return Rules[RuleID];
+	return Rules[nametbl[RuleID]];
 }
 __declspec(dllexport) int getRule(int RuleID) { // ルール設定を取得する
 	return (int)RuleData::getRule((RuleCode)RuleID);
