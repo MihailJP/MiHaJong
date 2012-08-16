@@ -96,6 +96,48 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　　ます。
 
 
+	▼ mihajong.Tile (未実装)
+
+		　一索、五筒といった牌の種類を表す数値を格納したテーブルです。このテー
+		ブルには、以下のフィールドが格納されています。
+
+		・Character …… 萬子を表すサブテーブルです。
+		　　　　　　　　 この中には、OneからNineまでの定数があります。数字の1
+		　　　　　　　　 から9も使用できます。
+		・Circle …… 筒子を表すサブテーブルです。
+		　　　　　　　この中には、OneからNineまでの定数があります。数字の1から
+		　　　　　　　9も使用できます。
+		・Bamboo …… 索子を表すサブテーブルです。
+		　　　　　　　この中には、OneからNineまでの定数があります。数字の1から
+		　　　　　　　9も使用できます。
+		・Wind …… 風牌を表すサブテーブルです。
+		　　　　　　この中には、East、South、West、Northという定数があります。
+		・Dragon …… 三元牌を表すサブテーブルです。
+		　　　　　　　この中には、White、Green、Redという定数があります。
+		・Flower …… 花牌を表すサブテーブルです。
+		　　　　　　　この中には、季節牌を表すSpring、Summer、Autumn、Fall、
+		　　　　　　　Winter、および草木牌を表すPlum、Orchid、Chrysanthemum、
+		　　　　　　　Chrys、Bambooという定数があります。なお、FallはAutumnと
+		　　　　　　　同義で、ChrysはChrysanthemumと同義です。
+
+
+	▼ mihajong.evaluate(引数仕様未定) (未実装)
+
+		　符、飜、点数、縛りを満たすか否かを求める　詳細未定
+
+	▼ mihajong.shanten(引数仕様未定) (未実装)
+
+		　シャンテン数を求める　詳細未定
+
+	▼ mihajong.getdoukasenplayer(引数仕様未定) (未実装)
+
+		　導火線にあたるプレイヤーを調べる　詳細未定
+
+	▼ mihajong.getyakuhaiwind(引数仕様未定) (未実装)
+
+		　風牌が役牌になっているか調べる　詳細未定
+
+
 ■ 見出しレベル１
 
 	▼ 見出しレベル２
