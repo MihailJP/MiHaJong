@@ -42,14 +42,11 @@ __declspec(dllexport) void RuleData::exportRule(char** ruleTxt) { // C++→HSP ル
 		memcpy(ruleTxt[i], ruleConf[i], RULE_IN_LINE);
 }
 
-uint8_t RuleData::getRule(std::string RuleTag) { // ルール設定を取得する
-	return Rules[RuleTag];
-}
-uint8_t RuleData::getRule(RuleCode RuleID) { // ルール設定を取得する
+uint8_t RuleData::getRule(int RuleID) { // ルール設定を取得する
 	return Rules[nametbl[RuleID]];
 }
 __declspec(dllexport) int getRule(int RuleID) { // ルール設定を取得する
-	return (int)RuleData::getRule((RuleCode)RuleID);
+	return (int)RuleData::getRule(RuleID);
 }
 
 __declspec(dllexport) void RuleData::getRuleName(char* const txt, int bufsize, int RuleID) {
