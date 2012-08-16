@@ -13,6 +13,7 @@
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 IDR_LZMA_STREA1    LZMA_STREAM    "data\\mentz.dat.lzma"
+IDR_CSV_TABL1      CSV_TABLE      "data\\confitem.csv"
 
 
 
