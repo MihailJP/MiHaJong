@@ -165,6 +165,9 @@
     <ClCompile Include="readrsrc.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="csv2arry.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">
@@ -279,6 +282,9 @@
       <Filter>ヘッダー ファイル\ai</Filter>
     </ClInclude>
     <ClInclude Include="readrsrc.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="csv2arry.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
