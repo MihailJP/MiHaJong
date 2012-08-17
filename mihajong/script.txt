@@ -25,8 +25,10 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 	▼ determine_discard (gametbl) (新仕様未対応)
 
-		　この関数は引数を1つ取り、2つの値を返します。引数 gametbl は、卓の情
-		報を示すテーブルで、軽量ユーザーデータとメソッドが格納されています。
+		　ツモ番になるごとに、(山から1枚自摸った状態で)この関数が呼ばれます。
+		この関数は引数を1つ取り、2つの値を返します。
+		　引数 gametbl は、卓の情報を示すテーブルで、軽量ユーザーデータとメ
+		ソッドが格納されています。
 		　1番目の返り値は、捨て牌の付帯情報(暗槓する、リーチする……)を表す番
 		号です。これについては、後述する mihajong.DiscardType を参照してくださ
 		い。
@@ -53,6 +55,11 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　卓情報のアドレスを示す軽量ユーザーデータです。
 
 
+	▼ gametbl.rule (未実装)
+
+		　ルール設定のアドレスを示す軽量ユーザーデータです。
+
+
 	▼ gametbl:evaluate(引数仕様未定) (未実装)
 
 		　符、飜、点数、縛りを満たすか否かを求める　詳細未定
@@ -66,7 +73,32 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 	▼ gametbl:getdeckleft() (未実装)
 
-		　山牌の残り枚数を返します。
+		　山牌の残り枚数を返します(王牌は数えません)。
+
+
+	▼ gametbl:getdiscard() (未実装)
+
+		　捨牌をテーブルで返します。このテーブルには、次のフィールドがあります。
+
+		● tile フィールド
+
+			　牌の種類を表す番号が入ります。
+
+		● red フィールド
+
+			　赤ドラかどうかを示す番号が入ります。
+
+		● through フィールド
+
+			　ツモ切りした牌であればtrueが、そうでなければfalseが入ります。
+
+		● riichi フィールド
+
+			　リーチ宣言牌であればtrueが、そうでなければfalseが入ります。
+
+		● taken フィールド
+
+			　鳴かれた牌であればtrueが、そうでなければfalseが入ります。
 
 
 	▼ gametbl:getdorainfo(引数仕様未定) (未実装)
@@ -123,10 +155,16 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 	▼ gametbl:getpreviousdiscard() (未実装)
 
 		　この関数は返り値が2つあります。鳴いた直後の捨牌である場合、直前に鳴
-		いた牌の種類を表す番号を返します。1番目の返り値は鳴いた牌の現物を表す
-		番号で、2番めは(チーの直後である場合のみ)筋食い変えになるような牌の番
-		号です。この関数は、食い変えにならないようにするための判定に使用できま
-		す。該当する牌がなければ、nilが返ります。
+		いた牌の種類を表す番号を返します。この関数は、食い変えにならないように
+		するための判定に使用できます。
+		　1番目の返り値は鳴いた牌の現物を表す番号で、2番めは(チーの直後である
+		場合のみ)筋食い変えになるような牌の番号です。
+		　該当する牌がなければ、nilが返ります。
+
+
+	▼ gametbl:getrule(引数仕様未定) (未実装)
+
+		　ルールを取得する　詳細未定
 
 
 	▼ gametbl:getseentiles(引数仕様未定) (未実装)
@@ -164,9 +202,25 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		但し、九種九牌で流せないルールの時はnilを返します。
 
 
-	▼ gametbl:ismenzen() (未実装)
+	▼ gametbl:ismenzen(player) (未実装)
 
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合、
+		自身の状態を調べます。
 		　門前であればtrueを、そうでなければfalseを返します。
+
+
+	▼ gametbl:isopenriichideclared(player) (未実装)
+
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合、
+		自身の状態を調べます。
+		　オープン立直しているならtrueを、そうでなければfalseを返します。
+
+
+	▼ gametbl:isriichideclared(player) (未実装)
+
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合、
+		自身の状態を調べます。
+		　立直しているならtrueを、そうでなければfalseを返します。
 
 
 	▼ gametbl:isshisanbuda() (未実装)
