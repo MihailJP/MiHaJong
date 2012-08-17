@@ -64,3 +64,19 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 	lua_setfield(L, -2, "Flower");
 	lua_setfield(L, -2, "Tile");
 }
+
+inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const L) {
+	lua_newtable(L);
+	/* ここにメソッドを書く */
+	lua_pushcfunction(L, gametbl_getrule); lua_setfield(L, -2, "getrule");
+	/* メソッド定義ここまで */
+	lua_setfield(L, -2, "gametbl");
+}
+
+int aiscript::table::functable::gametbl::gametbl_getrule(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 2) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	const char* fieldname = lua_tostring(L, 2);
+	lua_pushinteger(L, (int)RuleData::getRule(fieldname));
+	return 1;
+}
