@@ -55,11 +55,6 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　卓情報のアドレスを示す軽量ユーザーデータです。
 
 
-	▼ gametbl.rule (未実装)
-
-		　ルール設定のアドレスを示す軽量ユーザーデータです。
-
-
 	▼ gametbl:evaluate(引数仕様未定) (未実装)
 
 		　符、飜、点数、縛りを満たすか否かを求める　詳細未定
@@ -162,9 +157,9 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　該当する牌がなければ、nilが返ります。
 
 
-	▼ gametbl:getrule(引数仕様未定) (未実装)
+	▼ gametbl:getrule(ruletag)
 
-		　ルールを取得する　詳細未定
+		　ルールを取得する　あとで書く
 
 
 	▼ gametbl:getseentiles(引数仕様未定) (未実装)
