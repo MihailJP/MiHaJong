@@ -104,6 +104,7 @@
   <ItemGroup>
     <ClCompile Include="ai\aiscript.cpp" />
     <ClCompile Include="ai\functbl.cpp" />
+    <ClCompile Include="csv2arry.cpp" />
     <ClCompile Include="discard.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="envtbl.cpp" />
@@ -119,7 +120,7 @@
     <ClCompile Include="lzma\LzmaLib.c" />
     <ClCompile Include="lzma\Sha256.c" />
     <ClCompile Include="lzma\Threads.c" />
-    <ClCompile Include="mjcore.cpp" />
+    <ClCompile Include="readrsrc.cpp" />
     <ClCompile Include="shanten.cpp" />
     <ClCompile Include="ruletbl.cpp" />
     <ClCompile Include="tileutil.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="ai\aiscript.h" />
     <ClInclude Include="ai\class.h" />
     <ClInclude Include="ai\functbl.h" />
+    <ClInclude Include="csv2arry.h" />
     <ClInclude Include="discard.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="envtbl.h" />
@@ -166,8 +168,8 @@
     <ClInclude Include="lzma\Sha256.h" />
     <ClInclude Include="lzma\Threads.h" />
     <ClInclude Include="lzma\Types.h" />
-    <ClInclude Include="mjcore.h" />
     <ClInclude Include="mjexport.h" />
+    <ClInclude Include="readrsrc.h" />
     <ClInclude Include="shanten.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ruletbl.h" />

@@ -6,16 +6,6 @@ using std::min;
 
 uint8_t* ShantenAnalyzer::mentsuAnalysisDat = NULL;
 
-void LoadFileInResource(int name, int type, DWORD& size, const uint8_t*& data) {
-	HRSRC rc = ::FindResource(dllInst, MAKEINTRESOURCE(name), MAKEINTRESOURCE(type));
-	assert(rc != NULL);
-	HGLOBAL rcData = ::LoadResource(dllInst, rc);
-	assert(rcData != NULL);
-	size = ::SizeofResource(dllInst, rc);
-	assert(size != 0);
-	data = static_cast<const uint8_t*>(::LockResource(rcData));
-}
-
 size_t ShantenAnalyzer::decompressMentsuAnalysisDat() {
 	DWORD size = 0; size_t uncompressedSize;
 	const uint8_t* compressedBuf = NULL;
@@ -230,8 +220,8 @@ SHANTEN ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, PLA
 
 SHANTEN ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount, bool qixing)
 { // 特殊：七星不靠/全不靠の向聴数を求める
-	if ((getRule(RULE_STELLAR_UUSHII) == 0)&&(qixing)) return SHANTEN_IMPOSSIBLE;
-	else if ((getRule(RULE_QUANBUKAO) == 0)&&(!qixing)) return SHANTEN_IMPOSSIBLE;
+	if ((RuleData::getRule("stellar_uushii") == 0)&&(qixing)) return SHANTEN_IMPOSSIBLE;
+	else if ((RuleData::getRule("quanbukao") == 0)&&(!qixing)) return SHANTEN_IMPOSSIBLE;
 
 	SHANTEN shanten = SHANTEN_IMPOSSIBLE;
 	tileCode QixingZiPai[7] = {
@@ -291,7 +281,7 @@ SHANTEN ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PLA
 
 SHANTEN ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
 { // 特殊：南北戦争の向聴数を求める
-	if (getRule(RULE_CIVIL_WAR) == 0) return SHANTEN_IMPOSSIBLE;
+	if (RuleData::getRule("civil_war") == 0) return SHANTEN_IMPOSSIBLE;
 
 	SHANTEN shanten = 13;
 	// 以下、一枚ずつ調べる
@@ -344,7 +334,7 @@ SHANTEN ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, PL
 
 SHANTEN ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
 { // 特殊：惑星直列の向聴数を求める
-	if (getRule(RULE_SYZYGY) == 0) return SHANTEN_IMPOSSIBLE;
+	if (RuleData::getRule("syzygy") == 0) return SHANTEN_IMPOSSIBLE;
 
 	// 以下、一枚ずつ調べる
 	Int8ByTile tileCountTmp;

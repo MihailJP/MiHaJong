@@ -14,7 +14,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 {
 	/* タンヤオ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		"断幺九", (getRule(RULE_KUITAN) == 2) ? /* 門前なら縛りを満たし、喰い断は縛りを満たさないルール */
+		"断幺九", (RuleData::getRule("kuitan") == 2) ? /* 門前なら縛りを満たし、喰い断は縛りを満たさないルール */
 		yaku::yakuCalculator::Yaku::HANFUNC(
 			[](const MENTSU_ANALYSIS* const analysis) {
 				return *analysis->MenzenFlag ?
@@ -23,7 +23,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 					yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
 					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han);
 			}) :
-			((getRule(RULE_KUITAN) == 1) ? (yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen : // 喰い断なし
+			((RuleData::getRule("kuitan") == 1) ? (yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen : // 喰い断なし
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han), // 喰い断あり
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
@@ -42,7 +42,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 			else return false;
 		}
 	));
-	if (getRule(RULE_HENCHANTAIYAO) != 0)
+	if (RuleData::getRule("henchantaiyao") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"偏全帯幺九", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
 			"混全帯幺九",
@@ -63,7 +63,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 			else return false;
 		}
 	));
-	if (getRule(RULE_HENCHANTAIYAO) != 0)
+	if (RuleData::getRule("henchantaiyao") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"純偏全帯幺九", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
 			"純全帯幺九", "偏全帯幺九",
@@ -76,7 +76,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		));
 	/* ホンロー */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		"混老頭", (getRule(RULE_HONROUTOU) != 0) ? yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_2han,
+		"混老頭", (RuleData::getRule("honroutou") != 0) ? yaku::yakuCalculator::Yaku::yval_3han : yaku::yakuCalculator::Yaku::yval_2han,
 		"混全帯幺九",
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
@@ -108,7 +108,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 			else return false;
 		}
 	));
-	if (getRule(RULE_FOUR_HONORS) != 0)
+	if (RuleData::getRule("four_honors") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四字刻", yaku::yakuCalculator::Yaku::yval_yakuman,
 			"混全帯幺九", "純全帯幺九", "混老頭", "混一色", "茶一色",

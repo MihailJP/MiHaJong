@@ -19,10 +19,11 @@
 
 /* ルールコンフィグ */
 /*
-#func _storeRule "?storeRule@@YAXPAPAD@Z" var
-#func _exportRule "?exportRule@@YAXPAPAD@Z" var
+#func _storeRule "?storeRule@RuleData@@SAXPAPBD@Z" var
+#func _exportRule "?exportRule@RuleData@@SAXPAPAD@Z" var
 */
 #cfunc getRule "?getRule@@YAHH@Z" int
+#func configinit "?configinit@RuleData@@SAXXZ"
 
 /* func.hspからの移植 */
 #cfunc playerwind "?playerwind@@YAHHH@Z" int, int

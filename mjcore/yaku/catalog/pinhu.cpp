@@ -8,7 +8,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_pinhu()
 			return analysis->isPinfu;
 		}
 	));
-	if (getRule(RULE_KOFUKU_GEKIJOH) != 0)
+	if (RuleData::getRule("kofuku_gekijoh") != 0)
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"鼓腹撃壌", yaku::yakuCalculator::Yaku::yval_2han /* 門前であるかどうかの判定は既に行なっているので不要 */,
 			"平和",

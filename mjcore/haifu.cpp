@@ -500,9 +500,9 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 		haifuBuffer << ::roundName(OrigTurn, gameStat);
 		if (OrigHonba > 0) haifuBuffer << " " << OrigHonba << "本場";
 		haifuBuffer << " ドラ：" << haifuP.dora.str();
-		if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1))
+		if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(RuleData::getRule("uradora") != 1))
 			haifuBuffer << "裏ドラ：" << haifuP.uraDora.str();
-		if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != 0))
+		if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(RuleData::getRule("alice") != 0))
 			haifuBuffer << "アリス：" << haifuP.aliceDoraMax.str();
 		haifuBuffer << std::endl << std::endl <<
 			"結果：" << ResultDesc << std::endl << std::endl;
@@ -511,10 +511,10 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 		if (OrigHonba > 0) HThaifuBuffer << " " << OrigHonba <<"本場";
 		HThaifuBuffer << " ドラ：<span class=\"tile\">" <<
 			HThaifuP.dora.str() << "</span>";
-		if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(getRule(RULE_URADORA) != 1))
+		if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(RuleData::getRule("uradora") != 1))
 			HThaifuBuffer << "裏ドラ：<span class=\"tile\">" <<
 			haifuP.uraDora.str() << "</span>";
-		if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(getRule(RULE_ALICE) != 0))
+		if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(RuleData::getRule("alice") != 0))
 			HThaifuBuffer << "アリス：<span class=\"tile\">" <<
 			haifuP.aliceDoraMax.str() << "</span>";
 		HThaifuBuffer << "</h2>" << std::endl <<
@@ -708,7 +708,7 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, PL
 			((LargeNum)gameStat->Player[player].PlayerScore -
 			origPoint[player]).bignumtotext("+", "-") <<
 			")";
-	if (getRule(RULE_CHIP) != 0) // チップありの時
+	if (RuleData::getRule("chip") != 0) // チップありの時
 		o << " チップ: " <<
 			((gameStat->Player[player].playerChip >= 0) ? "+" : "") <<
 			(int)gameStat->Player[player].playerChip;
