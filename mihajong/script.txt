@@ -263,7 +263,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　　ボになります。
 
 
-	▼ mihajong.Call (未実装)
+	▼ mihajong.Call
 
 		　チー、ポンといった鳴きの種類を表す数値を格納したテーブルです。これら
 		は、determine_call 関数の戻り値として、「return mihajong.Call.Ron」の
@@ -289,7 +289,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		・to be written...
 
 
-	▼ mihajong.Tile (未実装)
+	▼ mihajong.Tile
 
 		　一索、五筒といった牌の種類を表す数値を格納したテーブルです。このテー
 		ブルには、以下のフィールドが格納されています。
