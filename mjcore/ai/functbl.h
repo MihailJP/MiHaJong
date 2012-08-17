@@ -13,6 +13,7 @@ private:
 	static const char* tblname;
 	static inline void discardTileCode(lua_State* const L);
 	static inline void meldCallCode(lua_State* const L);
+	static inline void tileCode(lua_State* const L);
 public:
 	static void inittable(lua_State* const L);
 };
