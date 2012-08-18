@@ -74,7 +74,11 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_newtable(L);
 	lua_pushlightuserdata(L, NULL); lua_setfield(L, -2, "addr"); // pointer to C++ struct
 	/* ここにメソッドを書く */
+	lua_pushcfunction(L, gametbl_getactiveplayer); lua_setfield(L, -2, "getactiveplayer");
+	lua_pushcfunction(L, gametbl_getdeckleft); lua_setfield(L, -2, "getdeckleft");
+	lua_pushcfunction(L, gametbl_getdoukasen); lua_setfield(L, -2, "getdoukasen");
 	lua_pushcfunction(L, gametbl_getrule); lua_setfield(L, -2, "getrule");
+	lua_pushcfunction(L, gametbl_getwareme); lua_setfield(L, -2, "getwareme");
 	/* メソッド定義ここまで */
 	lua_setfield(L, -2, "gametbl");
 }
@@ -89,7 +93,7 @@ GameTable* aiscript::table::functable::gametbl::getGameStatAddr(lua_State* const
 int aiscript::table::functable::gametbl::gametbl_getactiveplayer(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
-	lua_pushinteger(L, (int)getGameStatAddr(L)->CurrentPlayer.Active);
+	lua_pushinteger(L, (int)getGameStatAddr(L)->CurrentPlayer.Active + 1);
 	return 1;
 }
 
@@ -101,11 +105,31 @@ int aiscript::table::functable::gametbl::gametbl_getdeckleft(lua_State* const L)
 	return 1;
 }
 
+/* 導火線 */
+int aiscript::table::functable::gametbl::gametbl_getdoukasen(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	if (getGameStatAddr(L)->DoukasenPlayer == -1)
+		lua_pushnil(L); // 導火線なしの時はnil
+	else lua_pushinteger(L, (int)getGameStatAddr(L)->DoukasenPlayer + 1);
+	return 1;
+}
+
 /* ルール番号取得 */
 int aiscript::table::functable::gametbl::gametbl_getrule(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 2) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	const char* fieldname = lua_tostring(L, 2);
 	lua_pushinteger(L, (int)RuleData::getRule(fieldname));
+	return 1;
+}
+
+/* 割れ目 */
+int aiscript::table::functable::gametbl::gametbl_getwareme(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	if (getGameStatAddr(L)->WaremePlayer == -1)
+		lua_pushnil(L); // 割れ目なしの時はnil
+	else lua_pushinteger(L, (int)getGameStatAddr(L)->WaremePlayer + 1);
 	return 1;
 }

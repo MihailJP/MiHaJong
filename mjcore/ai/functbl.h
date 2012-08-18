@@ -25,7 +25,9 @@ private:
 	static GameTable* getGameStatAddr(lua_State* const L);
 	static int gametbl_getactiveplayer(lua_State* const L);
 	static int gametbl_getdeckleft(lua_State* const L);
+	static int gametbl_getdoukasen(lua_State* const L);
 	static int gametbl_getrule(lua_State* const L);
+	static int gametbl_getwareme(lua_State* const L);
 public:
 	static inline void makeprototype(lua_State* const L);
 };
