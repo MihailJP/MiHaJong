@@ -101,10 +101,10 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　ドラを調べる　詳細未定
 
 
-	▼ gametbl:getdoukasenplayer() (未実装)
+	▼ gametbl:getdoukasen()
 
 		　導火線(自摸牌の位置)にあたるプレイヤーの番号を1～4(三人打ちの場合は1
-		～3)の数値で返します。
+		～3)の数値で返します。導火線なしの時はnilを返します。
 
 
 	▼ gametbl:getflower(引数仕様未定) (未実装)
@@ -174,10 +174,10 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 		　手牌の中のある牌についての情報　詳細未定
 
-	▼ gametbl:getwaremewind() (未実装)
+	▼ gametbl:getwareme()
 
 		　割れ目(開門の位置)にあたるプレイヤーの番号を1～4(三人打ちの場合は1～
-		3)の数値で返します。
+		3)の数値で返します。割れ目なしの時はnilを返します。
 
 
 	▼ gametbl:getyakuhaiwind(引数仕様未定) (未実装)
