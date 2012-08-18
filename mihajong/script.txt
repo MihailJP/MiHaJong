@@ -76,7 +76,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　山牌の残り枚数を返します(王牌は数えません)。
 
 
-	▼ gametbl:getdiscard()、gametbl:getdiscard(playerid)
+	▼ gametbl:getdiscard([playerid])
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
 		自身)捨牌をテーブルで返します。このテーブルはそれぞれの捨牌の情報がサ
@@ -119,7 +119,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　花牌、または三麻の抜きドラの情報を取得(他家の情報も取得可能)　詳細未
 		定
 
-	▼ gametbl:gethand()、gametbl:gethand(playerid)
+	▼ gametbl:gethand([playerid])
 
 		　自分の(playeridを指定した場合は指定したプレイヤー、但し他家を指定す
 		る場合はオープン立直している場合に限る)手牌をテーブルで返します。この
@@ -140,7 +140,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 			　赤ドラかどうかを示す番号が入ります。
 
 
-	▼ gametbl:getmeld()、gametbl:getmeld(playerid) (未実装)
+	▼ gametbl:getmeld([playerid]) (未実装)
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
 		自身)の鳴き面子を格納したテーブルで返します。このテーブルは鳴いた回数
@@ -212,46 +212,46 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　風牌が役牌になっているか調べる　詳細未定
 
 
-	▼ gametbl:isfirstdraw() (未実装)
+	▼ gametbl:isfirstdraw()
 
 		　鳴きのない第1ツモ(親については配牌直後)であればtrueを、そうでなけれ
 		ばfalseを返します。
 
 
-	▼ gametbl:iskyuushu() (未実装)
+	▼ gametbl:iskyuushu()
 
 		　九種九牌の条件を満たしていればtrueを、そうでなければfalseを返します。
 		但し、九種九牌で流せないルールの時はnilを返します。
 
 
-	▼ gametbl:ismenzen(player) (未実装)
+	▼ gametbl:ismenzen([player])
 
-		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合、
-		自身の状態を調べます。
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
 		　門前であればtrueを、そうでなければfalseを返します。
 
 
-	▼ gametbl:isopenriichideclared(player) (未実装)
+	▼ gametbl:isopenriichideclared([player])
 
-		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合、
-		自身の状態を調べます。
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
 		　オープン立直しているならtrueを、そうでなければfalseを返します。
 
 
-	▼ gametbl:isriichideclared(player) (未実装)
+	▼ gametbl:isriichideclared([player])
 
-		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合、
-		自身の状態を調べます。
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
 		　立直しているならtrueを、そうでなければfalseを返します。
 
 
-	▼ gametbl:isshisanbuda() (未実装)
+	▼ gametbl:isshisanbuda()
 
 		　十三不塔になっていればtrueを、そうでなければfalseを返します。但し、
 		十三不塔なしのルールの時はnilを返します。
 
 
-	▼ gametbl:isshisibuda() (未実装)
+	▼ gametbl:isshisibuda()
 
 		　十三無靠(十四不塔)になっていればtrueを、そうでなければfalseを返しま
 		す。但し、十三無靠(十四不塔)なしのルールの時はnilを返します。
