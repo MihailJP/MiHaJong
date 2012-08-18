@@ -76,7 +76,9 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	/* ここにメソッドを書く */
 	lua_pushcfunction(L, gametbl_getactiveplayer); lua_setfield(L, -2, "getactiveplayer");
 	lua_pushcfunction(L, gametbl_getdeckleft); lua_setfield(L, -2, "getdeckleft");
+	lua_pushcfunction(L, gametbl_getdiscard); lua_setfield(L, -2, "getdiscard");
 	lua_pushcfunction(L, gametbl_getdoukasen); lua_setfield(L, -2, "getdoukasen");
+	lua_pushcfunction(L, gametbl_gethand); lua_setfield(L, -2, "gethand");
 	lua_pushcfunction(L, gametbl_getrule); lua_setfield(L, -2, "getrule");
 	lua_pushcfunction(L, gametbl_getwareme); lua_setfield(L, -2, "getwareme");
 	/* メソッド定義ここまで */
@@ -87,6 +89,14 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 GameTable* aiscript::table::functable::gametbl::getGameStatAddr(lua_State* const L) {
 	lua_getfield(L, 1, "addr"); GameTable* addr = (GameTable*)lua_touserdata(L, -1); lua_pop(L, 1);
 	return addr;
+}
+
+/* プレイヤー番号を取得（暗黙の引数） */
+PLAYER_ID aiscript::table::functable::gametbl::getPlayerID(lua_State* const L, int index) {
+	PLAYER_ID player; int n = lua_gettop(L);
+	if ((n >= index)&&(!lua_isnil(L, index))) player = lua_tointeger(L, index);
+	else {lua_getfield(L, 1, "playerid"); player = lua_tointeger(L, -1); lua_pop(L, 1);}
+	return player;
 }
 
 /* ツモ番のプレイヤー番号 */
@@ -105,6 +115,28 @@ int aiscript::table::functable::gametbl::gametbl_getdeckleft(lua_State* const L)
 	return 1;
 }
 
+/* 捨牌テーブル */
+int aiscript::table::functable::gametbl::gametbl_getdiscard(lua_State* const L) {
+	int n = lua_gettop(L);
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	PLAYER_ID player = getPlayerID(L, 2);
+	lua_newtable(L); // 戻り値を格納するテーブル
+	for (uint8_t i = 1; i <= gameStat->Player[player].DiscardPointer; i++) {
+		lua_pushnumber(L, i);
+		lua_newtable(L);
+		TableAdd(L, "tile", (int)gameStat->Player[player].Discard[i].tcode.tile);
+		TableAdd(L, "red", (int)gameStat->Player[player].Discard[i].tcode.red);
+		TableAdd(L, "through", gameStat->Player[player].Discard[i].isDiscardThrough);
+		TableAdd(L, "riichi", (gameStat->Player[player].Discard[i].dstat == discardRiichi) ||
+			(gameStat->Player[player].Discard[i].dstat == discardRiichiTaken));
+		TableAdd(L, "taken", (gameStat->Player[player].Discard[i].dstat == discardTaken) ||
+			(gameStat->Player[player].Discard[i].dstat == discardRiichiTaken));
+		lua_settable(L, -3);
+	}
+	return 1;
+}
+
 /* 導火線 */
 int aiscript::table::functable::gametbl::gametbl_getdoukasen(lua_State* const L) {
 	int n = lua_gettop(L);
@@ -114,6 +146,36 @@ int aiscript::table::functable::gametbl::gametbl_getdoukasen(lua_State* const L)
 	else lua_pushinteger(L, (int)getGameStatAddr(L)->DoukasenPlayer + 1);
 	return 1;
 }
+
+/* 純手牌テーブル */
+int aiscript::table::functable::gametbl::gametbl_gethand(lua_State* const L) {
+	int n = lua_gettop(L);
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	PLAYER_ID player = getPlayerID(L, 2);
+	lua_newtable(L); // 戻り値を格納するテーブル
+	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+		if (gameStat->Player[player].Hand[i].tile != NoTile) {
+			/* 牌があったらサプテーブルに変換、なかったらnilのまま放置 */
+			lua_pushnumber(L, i + 1);
+			lua_newtable(L);
+			TableAdd(L, "tile", (int)gameStat->Player[player].Hand[i].tile);
+			TableAdd(L, "red", (int)gameStat->Player[player].Hand[i].red);
+			lua_settable(L, -3);
+		}
+	}
+	return 1;
+}
+
+/* 副露面子 */
+/*inline void aiscript::table::playertable::pltable::PlayerMeld(lua_State* const L, const MELD_BUF* const plMeld, uint8_t MeldPointer) {
+	lua_newtable(L);
+	for (uint8_t i = 1; i <= MeldPointer; i++) {
+		std::ostringstream o; o << (int)i;
+		TableAdd(L, o.str().c_str(), plMeld[i]);
+	}
+	lua_setfield(L, -2, "Meld");
+}*/
 
 /* ルール番号取得 */
 int aiscript::table::functable::gametbl::gametbl_getrule(lua_State* const L) {
