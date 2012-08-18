@@ -81,6 +81,13 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, gametbl_gethand); lua_setfield(L, -2, "gethand");
 	lua_pushcfunction(L, gametbl_getrule); lua_setfield(L, -2, "getrule");
 	lua_pushcfunction(L, gametbl_getwareme); lua_setfield(L, -2, "getwareme");
+	lua_pushcfunction(L, gametbl_isfirstdraw); lua_setfield(L, -2, "isfirstdraw");
+	lua_pushcfunction(L, gametbl_iskyuushu); lua_setfield(L, -2, "iskyuushu");
+	lua_pushcfunction(L, gametbl_ismenzen); lua_setfield(L, -2, "ismenzen");
+	lua_pushcfunction(L, gametbl_isopenriichideclared); lua_setfield(L, -2, "isopenriichideclared");
+	lua_pushcfunction(L, gametbl_isriichideclared); lua_setfield(L, -2, "isriichideclared");
+	lua_pushcfunction(L, gametbl_isshisanbuda); lua_setfield(L, -2, "isshisanbuda");
+	lua_pushcfunction(L, gametbl_isshisibuda); lua_setfield(L, -2, "isshisibuda");
 	/* メソッド定義ここまで */
 	lua_setfield(L, -2, "gametbl");
 }
@@ -91,10 +98,10 @@ GameTable* aiscript::table::functable::gametbl::getGameStatAddr(lua_State* const
 	return addr;
 }
 
-/* プレイヤー番号を取得（暗黙の引数） */
+/* プレイヤー番号を取得 */
 PLAYER_ID aiscript::table::functable::gametbl::getPlayerID(lua_State* const L, int index) {
 	PLAYER_ID player; int n = lua_gettop(L);
-	if ((n >= index)&&(!lua_isnil(L, index))) player = lua_tointeger(L, index);
+	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) player = lua_tointeger(L, index);
 	else {lua_getfield(L, 1, "playerid"); player = lua_tointeger(L, -1); lua_pop(L, 1);}
 	return player;
 }
@@ -193,5 +200,67 @@ int aiscript::table::functable::gametbl::gametbl_getwareme(lua_State* const L) {
 	if (getGameStatAddr(L)->WaremePlayer == -1)
 		lua_pushnil(L); // 割れ目なしの時はnil
 	else lua_pushinteger(L, (int)getGameStatAddr(L)->WaremePlayer + 1);
+	return 1;
+}
+
+/* 第一自摸か？ */
+int aiscript::table::functable::gametbl::gametbl_isfirstdraw(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].FirstDrawFlag);
+	return 1;
+}
+
+/* 九種九牌？ */
+int aiscript::table::functable::gametbl::gametbl_iskyuushu(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	if (RuleData::getRule("nine_terminals") == 3) lua_pushnil(L);
+	else lua_pushboolean(L, chkdaopaiability(getGameStatAddr(L), getPlayerID(L, 0)));
+	return 1;
+}
+
+/* 門前？ */
+int aiscript::table::functable::gametbl::gametbl_ismenzen(lua_State* const L) {
+	int n = lua_gettop(L);
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	PLAYER_ID player = getPlayerID(L, 2);
+	lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].MenzenFlag);
+	return 1;
+}
+
+/* オープン立直している？ */
+int aiscript::table::functable::gametbl::gametbl_isopenriichideclared(lua_State* const L) {
+	int n = lua_gettop(L);
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	PLAYER_ID player = getPlayerID(L, 2);
+	lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].RichiFlag.OpenFlag);
+	return 1;
+}
+
+/* 立直している？ */
+int aiscript::table::functable::gametbl::gametbl_isriichideclared(lua_State* const L) {
+	int n = lua_gettop(L);
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	PLAYER_ID player = getPlayerID(L, 2);
+	lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].RichiFlag.RichiFlag);
+	return 1;
+}
+
+/* 十三不塔？ */
+int aiscript::table::functable::gametbl::gametbl_isshisanbuda(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	if (RuleData::getRule("shiisan_puutaa") == 0) lua_pushnil(L);
+	else lua_pushboolean(L, yaku::yakuCalculator::chkShisanBuDa(getGameStatAddr(L), getPlayerID(L, 0)));
+	return 1;
+}
+
+/* 十三無靠？ */
+int aiscript::table::functable::gametbl::gametbl_isshisibuda(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	if (RuleData::getRule("shiisan_uushii") == 0) lua_pushnil(L);
+	else lua_pushboolean(L, yaku::yakuCalculator::chkShisiBuDa(getGameStatAddr(L), getPlayerID(L, 0)));
 	return 1;
 }
