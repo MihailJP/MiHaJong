@@ -1,23 +1,24 @@
 #include "aiscript.h"
 
-lua_State* aiscript::lsMJCore = NULL;
-bool aiscript::scriptLoaded = false;
 const DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NUM_OF_TILES_IN_HAND - 1};
 
+aiscript::ScriptStates aiscript::status[PLAYERS] = {{NULL, false}};
 const char* const aiscript::fncname_discard = "determine_discard"; // 捨牌決定用関数の名前
 const char* const aiscript::fncname_call = "determine_call"; // 鳴き決定用関数の名前
 
 __declspec(dllexport) void aiscript::initscript() {
 	// Lua初期化 (仮)
-	lsMJCore = luaL_newstate();
-	luaopen_base(lsMJCore); // baseライブラリだけは開いておきましょう
-	table::functable::inittable(lsMJCore);
-	const char* filename = ".\\ai\\ai.lua"; /* ファイル名は仮 */
-	readfile(lsMJCore, filename); /* ファイルを読み込み */
+	for (int i = 0; i < PLAYERS; i++) {
+		status[i].state = luaL_newstate();
+		luaopen_base(status[i].state); // baseライブラリだけは開いておきましょう
+		table::functable::inittable(status[i].state);
+		const char* filename = ".\\ai\\ai.lua"; /* ファイル名は仮 */
+		readfile(&status[i], filename); /* ファイルを読み込み */
+	}
 }
 
-void aiscript::readfile(lua_State* const L, const char* const filename) {
-	if (int errcode = luaL_loadfile(L, filename)) { /* ファイルを読み込み。成功したら0を返す */
+void aiscript::readfile(aiscript::ScriptStates* const L, const char* const filename) {
+	if (int errcode = luaL_loadfile(L->state, filename)) { /* ファイルを読み込み。成功したら0を返す */
 		/* 読み込み失敗した時の処理 */
 		std::ostringstream o;
 		o << "スクリプトファイル [" << filename << "] の読み込みに失敗しました。";
@@ -32,15 +33,15 @@ void aiscript::readfile(lua_State* const L, const char* const filename) {
 		std::ostringstream o;
 		o << "スクリプトファイル [" << filename << "] を読み込みました。";
 		info(o.str().c_str());
-		if (int errcode = lua_pcall(L, 0, LUA_MULTRET, 0)) {
+		if (int errcode = lua_pcall(L->state, 0, LUA_MULTRET, 0)) {
 			/* 実行失敗！ */
 			std::ostringstream o;
 			switch (errcode) {
 			case LUA_ERRRUN:
 				o << "スクリプトの実行時エラー [" <<
-					lua_tostring(L, -1) /* エラーメッセージ */ <<
+					lua_tostring(L->state, -1) /* エラーメッセージ */ <<
 					"]";
-				lua_pop(lsMJCore, 1);
+				lua_pop(L->state, 1);
 				break;
 			case LUA_ERRMEM: o << "メモリの割当に失敗しました。"; break;
 			case LUA_ERRERR: o << "メッセージハンドラ実行中のエラーです。"; break;
@@ -50,7 +51,7 @@ void aiscript::readfile(lua_State* const L, const char* const filename) {
 		} else {
 			/* 実行完了 */
 			info("スクリプトの実行に成功しました");
-			scriptLoaded = true;
+			L->scriptLoaded = true;
 		}
 	}
 }
@@ -74,25 +75,25 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 	std::ostringstream o;
 	o << "AIの打牌処理に入ります。プレイヤー [" << (int)gameStat->CurrentPlayer.Active << "]";
 	info(o.str().c_str());
-	if (scriptLoaded) { /* 正しく読み込まれているなら */
+	if (status[gameStat->CurrentPlayer.Active].scriptLoaded) { /* 正しく読み込まれているなら */
 		try { /* determine_discard があればよし、なかったら例外処理 */
-			lua_getglobal(lsMJCore, fncname_discard);
+			lua_getglobal(status[gameStat->CurrentPlayer.Active].state, fncname_discard);
 		} catch (...) { /* determine_discard がなかったらエラーになるので例外処理をする */
 			std::ostringstream o;
 			o << "グローバルシンボル [" << fncname_discard << "] の取得に失敗しました"; error(o.str().c_str());
 			info("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。");
-			scriptLoaded = false; return DiscardThrough;
+			status[gameStat->CurrentPlayer.Active].scriptLoaded = false; return DiscardThrough;
 		}
-		GameStatToLuaTable(lsMJCore, gameStat);
-		if (int errcode = lua_pcall(lsMJCore, 1, 2, 0)) {
+		GameStatToLuaTable(status[gameStat->CurrentPlayer.Active].state, gameStat);
+		if (int errcode = lua_pcall(status[gameStat->CurrentPlayer.Active].state, 1, 2, 0)) {
 			/* 実行失敗！ */
 			std::ostringstream o;
 			switch (errcode) {
 			case LUA_ERRRUN:
 				o << "スクリプトの実行時エラー [" <<
-					lua_tostring(lsMJCore, -1) /* エラーメッセージ */ <<
+					lua_tostring(status[gameStat->CurrentPlayer.Active].state, -1) /* エラーメッセージ */ <<
 					"]";
-				lua_pop(lsMJCore, 1);
+				lua_pop(status[gameStat->CurrentPlayer.Active].state, 1);
 				break;
 			case LUA_ERRMEM: o << "メモリの割当に失敗しました。"; break;
 			case LUA_ERRERR: o << "メッセージハンドラ実行中のエラーです。"; break;
@@ -104,7 +105,7 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 		} else {
 			/* 実行完了 */
 			DiscardTileNum discard; int flag;
-			discard.type = (DiscardTileNum::discardType)lua_tointegerx(lsMJCore, -2, &flag);
+			discard.type = (DiscardTileNum::discardType)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
 			if (!flag) {
 				warn("1番目の返り値が数値ではありません。通常の打牌とみなします。");
 				discard.type = DiscardTileNum::Normal; // fallback
@@ -116,7 +117,7 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 				(discard.type == DiscardTileNum::Disconnect)) { // 番号指定が不要な場合
 					discard.id = NUM_OF_TILES_IN_HAND - 1; // 2番めの返り値は無視
 			} else {
-				int i = lua_tointegerx(lsMJCore, -1, &flag);
+				int i = lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -1, &flag);
 				if (!flag) {
 					warn("2番目の返り値が数値ではありません。ツモ切りとみなします。");
 					discard.id = NUM_OF_TILES_IN_HAND - 1; // fallback
@@ -129,7 +130,7 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 					discard.id = NUM_OF_TILES_IN_HAND - 1; // fallback
 				}
 			}
-			lua_pop(lsMJCore, 2);
+			lua_pop(status[gameStat->CurrentPlayer.Active].state, 2);
 			return discard;
 		}
 	} else {

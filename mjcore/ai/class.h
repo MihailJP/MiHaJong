@@ -3,21 +3,27 @@
 
 #include <lua.hpp>
 #include "../discard.h"
+#include "../gametbl.h"
 
 class aiscript {
 private:
+	struct ScriptStates;
 	static const char* const fncname_discard;
 	static const char* const fncname_call;
-	static lua_State* lsMJCore;
-	static bool scriptLoaded;
+	static ScriptStates status[PLAYERS];
 	class table;
 	static const DiscardTileNum DiscardThrough;
-	static void readfile(lua_State* const L, const char* const filename);
+	static void readfile(aiscript::ScriptStates* const L, const char* const filename);
 public:
 	__declspec(dllexport) static void initscript();
 	static void GameStatToLuaTable(lua_State* const L, const GameTable* const gameStat);
 	__declspec(dllexport) static int compdahai(const GameTable* const gameStat);
 	static DiscardTileNum determine_discard(const GameTable* const gameStat);
+};
+
+struct aiscript::ScriptStates {
+	lua_State* state;
+	bool scriptLoaded;
 };
 
 class aiscript::table {
