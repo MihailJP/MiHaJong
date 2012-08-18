@@ -50,7 +50,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 	　あとでテーブルの説明を書く
 
-	▼ gametbl.addr (未実装)
+	▼ gametbl.addr
 
 		　卓情報のアドレスを示す軽量ユーザーデータです。
 
@@ -60,13 +60,13 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　符、飜、点数、縛りを満たすか否かを求める　詳細未定
 
 
-	▼ gametbl:getactiveplayer() (未実装)
+	▼ gametbl:getactiveplayer()
 
 		　現在のツモ番のプレイヤー番号を1～4(三人打ちの場合は1～3)の数値で返し
 		ます。
 
 
-	▼ gametbl:getdeckleft() (未実装)
+	▼ gametbl:getdeckleft()
 
 		　山牌の残り枚数を返します(王牌は数えません)。
 
