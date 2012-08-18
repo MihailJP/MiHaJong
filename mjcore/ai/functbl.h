@@ -3,6 +3,7 @@
 
 #include <lua.hpp>
 #include "class.h"
+#include "../func.h"
 
 enum MeldCallID {
 	meldNone, meldRon, meldKan, meldPon, meldChiiLower, meldChiiMiddle, meldChiiUpper
@@ -21,6 +22,9 @@ public:
 
 class aiscript::table::functable::gametbl {
 private:
+	static GameTable* getGameStatAddr(lua_State* const L);
+	static int gametbl_getactiveplayer(lua_State* const L);
+	static int gametbl_getdeckleft(lua_State* const L);
 	static int gametbl_getrule(lua_State* const L);
 public:
 	static inline void makeprototype(lua_State* const L);

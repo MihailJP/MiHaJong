@@ -9,6 +9,8 @@ void aiscript::table::functable::inittable(lua_State* const L) {
 	tileCode(L); // subtable 'Tile'
 	lua_setglobal(L, tblname); // global table
 }
+
+/* 捨牌番号の付帯情報 */
 inline void aiscript::table::functable::discardTileCode(lua_State* const L) {
 	lua_newtable(L);
 	TableAdd(L, "Normal", (int)DiscardTileNum::Normal);
@@ -21,6 +23,8 @@ inline void aiscript::table::functable::discardTileCode(lua_State* const L) {
 	TableAdd(L, "Kyuushu", (int)DiscardTileNum::Kyuushu);
 	lua_setfield(L, -2, "DiscardType");
 }
+
+/* 鳴きの種別コード */
 inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 	lua_newtable(L);
 	TableAdd(L, "None", meldNone);
@@ -35,6 +39,7 @@ inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 	lua_setfield(L, -2, "DiscardType");
 }
 
+/* 牌の番号 */
 inline void aiscript::table::functable::tileCode(lua_State* const L) {
 	const char suitname[3][16] = {"Character","Circle","Bamboo",};
 	const char numeral[9][8] = {"One","Two","Three","Four","Five","Six","Seven","Eight","Nine",};
@@ -67,12 +72,36 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 
 inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const L) {
 	lua_newtable(L);
+	lua_pushlightuserdata(L, NULL); lua_setfield(L, -2, "addr"); // pointer to C++ struct
 	/* ここにメソッドを書く */
 	lua_pushcfunction(L, gametbl_getrule); lua_setfield(L, -2, "getrule");
 	/* メソッド定義ここまで */
 	lua_setfield(L, -2, "gametbl");
 }
 
+/* gameStatのアドレスを取得（暗黙の引数） */
+GameTable* aiscript::table::functable::gametbl::getGameStatAddr(lua_State* const L) {
+	lua_getfield(L, 1, "addr"); GameTable* addr = (GameTable*)lua_touserdata(L, -1); lua_pop(L, 1);
+	return addr;
+}
+
+/* ツモ番のプレイヤー番号 */
+int aiscript::table::functable::gametbl::gametbl_getactiveplayer(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	lua_pushinteger(L, (int)getGameStatAddr(L)->CurrentPlayer.Active);
+	return 1;
+}
+
+/* 山牌の残り枚数 */
+int aiscript::table::functable::gametbl::gametbl_getdeckleft(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	lua_pushinteger(L, tilesLeft(getGameStatAddr(L)));
+	return 1;
+}
+
+/* ルール番号取得 */
 int aiscript::table::functable::gametbl::gametbl_getrule(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 2) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
