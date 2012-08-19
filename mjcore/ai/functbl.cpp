@@ -7,7 +7,20 @@ void aiscript::table::functable::inittable(lua_State* const L) {
 	discardTileCode(L); // subtable 'DiscardType'
 	meldCallCode(L); // subtable 'Call'
 	tileCode(L); // subtable 'Tile'
+	lockTable(L); // mark as read-only
 	lua_setglobal(L, tblname); // global table
+}
+
+int aiscript::table::functable::tableLockedErr(lua_State* const L) { // ロックされたテーブルを書き換えようとした時
+	return luaL_error(L, "Attempt to modify a read-only table");
+}
+
+void aiscript::table::functable::lockTable(lua_State* const L) { // テーブルをロックする
+	lua_newtable(L); // メタテーブルの用意
+	lua_pushcfunction(L, tableLockedErr); lua_setfield(L, -2, "__newindex"); // 書き換え禁止用
+	lua_insert(L, -2); lua_setfield(L, -2, "__index"); // 本来のテーブル
+	lua_newtable(L); lua_insert(L, -2); // プロキシテーブル
+	lua_setmetatable(L, -2); // メタテーブル設定
 }
 
 /* 捨牌番号の付帯情報 */
@@ -21,7 +34,7 @@ inline void aiscript::table::functable::discardTileCode(lua_State* const L) {
 	TableAdd(L, "OpenRiichi", (int)DiscardTileNum::OpenRiichi);
 	TableAdd(L, "Agari", (int)DiscardTileNum::Agari);
 	TableAdd(L, "Kyuushu", (int)DiscardTileNum::Kyuushu);
-	lua_setfield(L, -2, "DiscardType");
+	lockTable(L); lua_setfield(L, -2, "DiscardType");
 }
 
 /* 鳴きの種別コード */
@@ -35,8 +48,8 @@ inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 	TableAdd(L, "Lower", meldChiiLower);
 	TableAdd(L, "Middle", meldChiiMiddle);
 	TableAdd(L, "Upper", meldChiiUpper);
-	lua_setfield(L, -2, "Chii");
-	lua_setfield(L, -2, "DiscardType");
+	lockTable(L); lua_setfield(L, -2, "Chii");
+	lockTable(L); lua_setfield(L, -2, "DiscardType");
 }
 
 /* 牌の番号 */
@@ -50,24 +63,24 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 			TableAdd(L, numeral[num - 1], suit + num);
 			TableAdd(L, num, suit + num);
 		}
-		lua_setfield(L, -2, suitname[suit / TILE_SUIT_HONORS]);
+		lockTable(L); lua_setfield(L, -2, suitname[suit / TILE_SUIT_HONORS]);
 	}
 	lua_newtable(L);
 	TableAdd(L, "East", (int)EastWind); TableAdd(L, "South", (int)SouthWind);
 	TableAdd(L, "West", (int)WestWind); TableAdd(L, "North", (int)NorthWind);
-	lua_setfield(L, -2, "Wind");
+	lockTable(L); lua_setfield(L, -2, "Wind");
 	lua_newtable(L);
 	TableAdd(L, "White", (int)WhiteDragon); TableAdd(L, "Green", (int)GreenDragon);
 	TableAdd(L, "Red", (int)RedDragon);
-	lua_setfield(L, -2, "Dragon");
+	lockTable(L); lua_setfield(L, -2, "Dragon");
 	lua_newtable(L);
 	TableAdd(L, "Spring", (int)Spring); TableAdd(L, "Summer", (int)Summer);
 	TableAdd(L, "Autumn", (int)Autumn); TableAdd(L, "Winter", (int)Winter);
 	TableAdd(L, "Plum", (int)Plum); TableAdd(L, "Orchid", (int)Orchid);
 	TableAdd(L, "Chrysanthemum", (int)Chrysanthemum); TableAdd(L, "Bamboo", (int)Bamboo);
 	TableAdd(L, "Fall", (int)Autumn); TableAdd(L, "Chrys", (int)Chrysanthemum);
-	lua_setfield(L, -2, "Flower");
-	lua_setfield(L, -2, "Tile");
+	lockTable(L); lua_setfield(L, -2, "Flower");
+	lockTable(L); lua_setfield(L, -2, "Tile");
 }
 
 inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const L) {
@@ -89,7 +102,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, gametbl_isshisanbuda); lua_setfield(L, -2, "isshisanbuda");
 	lua_pushcfunction(L, gametbl_isshisibuda); lua_setfield(L, -2, "isshisibuda");
 	/* メソッド定義ここまで */
-	lua_setfield(L, -2, "gametbl");
+	lockTable(L); lua_setfield(L, -2, "gametbl");
 }
 
 /* gameStatのアドレスを取得（暗黙の引数） */

@@ -14,6 +14,8 @@ enum MeldCallID {
 class aiscript::table::functable {
 private:
 	static const char* tblname;
+	static int tableLockedErr(lua_State* const L);
+	static void lockTable(lua_State* const L);
 	static inline void discardTileCode(lua_State* const L);
 	static inline void meldCallCode(lua_State* const L);
 	static inline void tileCode(lua_State* const L);
