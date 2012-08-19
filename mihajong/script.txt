@@ -83,6 +83,11 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　山牌の残り枚数を返します(王牌は数えません)。
 
 
+	▼ gametbl:getdeposit()
+
+		　現在の供託点棒の数を返します。
+
+
 	▼ gametbl:getdiscard([playerid])
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
@@ -197,6 +202,11 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		自身)の順位を返します。
 
 
+	▼ gametbl:getround() (未実装)
+
+		　現在の局番号　あとで書く
+
+
 	▼ gametbl:getrule(ruletag)
 
 		　ルールを取得する　あとで書く
@@ -226,6 +236,11 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 		　手牌の中のある牌について、安牌かどうか判断するための情報　詳細未定
 
+	▼ gametbl:gettsumibou()
+
+		　現在の積み棒の数を返します。
+
+
 	▼ gametbl:getwareme()
 
 		　割れ目(開門の位置)にあたるプレイヤーの番号を1～4(三人打ちの場合は1～
@@ -249,7 +264,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		ばfalseを返します。
 
 
-	▼ gametbl:isippatsu([player]) (未実装)
+	▼ gametbl:isippatsu([player])
 
 		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
 		たは省略された場合は、自身の状態を調べます。
@@ -310,6 +325,14 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 
 	▼ gametbl:isyakitori([player])
+
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　指定したプレイヤーが焼き鳥ならtrueを、そうでなければfalseを返します。
+		但し、焼き鳥なしのルールの時はnilを返します。
+
+
+	▼ gametbl:isyakitori()
 
 		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
 		たは省略された場合は、自身の状態を調べます。
