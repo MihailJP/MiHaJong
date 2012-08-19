@@ -29,19 +29,25 @@ private:
 	static GameTable* getGameStatAddr(lua_State* const L);
 	static PLAYER_ID getPlayerID(lua_State* const L, int index);
 	static int gametbl_getactiveplayer(lua_State* const L);
+	static int gametbl_getchip(lua_State* const L);
 	static int gametbl_getdeckleft(lua_State* const L);
 	static int gametbl_getdiscard(lua_State* const L);
 	static int gametbl_getdoukasen(lua_State* const L);
 	static int gametbl_gethand(lua_State* const L);
+	static int gametbl_getrank(lua_State* const L);
 	static int gametbl_getrule(lua_State* const L);
+	static int gametbl_getscore(lua_State* const L);
 	static int gametbl_getwareme(lua_State* const L);
 	static int gametbl_isfirstdraw(lua_State* const L);
+	static int gametbl_isippatsu(lua_State* const L);
 	static int gametbl_iskyuushu(lua_State* const L);
 	static int gametbl_ismenzen(lua_State* const L);
 	static int gametbl_isopenriichideclared(lua_State* const L);
 	static int gametbl_isriichideclared(lua_State* const L);
 	static int gametbl_isshisanbuda(lua_State* const L);
 	static int gametbl_isshisibuda(lua_State* const L);
+	static int gametbl_issumaroallowed(lua_State* const L);
+	static int gametbl_isyakitori(lua_State* const L);
 public:
 	static inline void makeprototype(lua_State* const L);
 };
