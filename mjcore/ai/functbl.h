@@ -31,6 +31,7 @@ private:
 	static int gametbl_getactiveplayer(lua_State* const L);
 	static int gametbl_getchip(lua_State* const L);
 	static int gametbl_getdeckleft(lua_State* const L);
+	static int gametbl_getdeposit(lua_State* const L);
 	static int gametbl_getdiscard(lua_State* const L);
 	static int gametbl_getdoukasen(lua_State* const L);
 	static int gametbl_gethand(lua_State* const L);
@@ -38,6 +39,7 @@ private:
 	static int gametbl_getrule(lua_State* const L);
 	static int gametbl_getscore(lua_State* const L);
 	static int gametbl_getwareme(lua_State* const L);
+	static int gametbl_gettsumibou(lua_State* const L);
 	static int gametbl_isfirstdraw(lua_State* const L);
 	static int gametbl_isippatsu(lua_State* const L);
 	static int gametbl_iskyuushu(lua_State* const L);

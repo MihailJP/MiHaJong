@@ -90,12 +90,14 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, gametbl_getactiveplayer); lua_setfield(L, -2, "getactiveplayer");
 	lua_pushcfunction(L, gametbl_getchip); lua_setfield(L, -2, "getchip");
 	lua_pushcfunction(L, gametbl_getdeckleft); lua_setfield(L, -2, "getdeckleft");
+	lua_pushcfunction(L, gametbl_getdeposit); lua_setfield(L, -2, "getdeposit");
 	lua_pushcfunction(L, gametbl_getdiscard); lua_setfield(L, -2, "getdiscard");
 	lua_pushcfunction(L, gametbl_getdoukasen); lua_setfield(L, -2, "getdoukasen");
 	lua_pushcfunction(L, gametbl_gethand); lua_setfield(L, -2, "gethand");
 	lua_pushcfunction(L, gametbl_getrank); lua_setfield(L, -2, "getrank");
 	lua_pushcfunction(L, gametbl_getrule); lua_setfield(L, -2, "getrule");
 	lua_pushcfunction(L, gametbl_getscore); lua_setfield(L, -2, "getscore");
+	lua_pushcfunction(L, gametbl_gettsumibou); lua_setfield(L, -2, "gettsumibou");
 	lua_pushcfunction(L, gametbl_getwareme); lua_setfield(L, -2, "getwareme");
 	lua_pushcfunction(L, gametbl_isfirstdraw); lua_setfield(L, -2, "isfirstdraw");
 	lua_pushcfunction(L, gametbl_isippatsu); lua_setfield(L, -2, "isippatsu");
@@ -149,6 +151,14 @@ int aiscript::table::functable::gametbl::gametbl_getdeckleft(lua_State* const L)
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	lua_pushinteger(L, tilesLeft(getGameStatAddr(L)));
+	return 1;
+}
+
+/* 供託点棒の数 */
+int aiscript::table::functable::gametbl::gametbl_getdeposit(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	lua_pushinteger(L, getGameStatAddr(L)->Deposit);
 	return 1;
 }
 
@@ -240,6 +250,14 @@ int aiscript::table::functable::gametbl::gametbl_getscore(lua_State* const L) {
 	GameTable* gameStat = getGameStatAddr(L);
 	PLAYER_ID player = getPlayerID(L, 2);
 	lua_pushnumber(L, gameStat->Player[player].PlayerScore.bignumtodbl()); // 持ち点をdoubleにしてスタックに積む
+	return 1;
+}
+
+/* 積み棒 */
+int aiscript::table::functable::gametbl::gametbl_gettsumibou(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	lua_pushinteger(L, getGameStatAddr(L)->Honba);
 	return 1;
 }
 
