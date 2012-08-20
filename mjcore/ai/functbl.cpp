@@ -95,6 +95,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, gametbl_getdorainfo); lua_setfield(L, -2, "getdorainfo");
 	lua_pushcfunction(L, gametbl_getdoukasen); lua_setfield(L, -2, "getdoukasen");
 	lua_pushcfunction(L, gametbl_gethand); lua_setfield(L, -2, "gethand");
+	lua_pushcfunction(L, gametbl_getopenwait); lua_setfield(L, -2, "getopenwait");
 	lua_pushcfunction(L, gametbl_getrank); lua_setfield(L, -2, "getrank");
 	lua_pushcfunction(L, gametbl_getrule); lua_setfield(L, -2, "getrule");
 	lua_pushcfunction(L, gametbl_getscore); lua_setfield(L, -2, "getscore");
@@ -259,6 +260,15 @@ int aiscript::table::functable::gametbl::gametbl_gethand(lua_State* const L) {
 	}
 	lua_setfield(L, -2, "Meld");
 }*/
+
+/* オープンリーチの待ち牌情報 */
+int aiscript::table::functable::gametbl::gametbl_getopenwait(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	pushTileTable(L, gameStat->OpenRichiWait);
+	return 1;
+}
 
 /* 順位取得 */
 int aiscript::table::functable::gametbl::gametbl_getrank(lua_State* const L) {
