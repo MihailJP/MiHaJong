@@ -92,6 +92,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, gametbl_getdeckleft); lua_setfield(L, -2, "getdeckleft");
 	lua_pushcfunction(L, gametbl_getdeposit); lua_setfield(L, -2, "getdeposit");
 	lua_pushcfunction(L, gametbl_getdiscard); lua_setfield(L, -2, "getdiscard");
+	lua_pushcfunction(L, gametbl_getdorainfo); lua_setfield(L, -2, "getdorainfo");
 	lua_pushcfunction(L, gametbl_getdoukasen); lua_setfield(L, -2, "getdoukasen");
 	lua_pushcfunction(L, gametbl_gethand); lua_setfield(L, -2, "gethand");
 	lua_pushcfunction(L, gametbl_getrank); lua_setfield(L, -2, "getrank");
@@ -125,6 +126,32 @@ PLAYER_ID aiscript::table::functable::gametbl::getPlayerID(lua_State* const L, i
 	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) player = lua_tointeger(L, index);
 	else {lua_getfield(L, 1, "playerid"); player = lua_tointeger(L, -1); lua_pop(L, 1);}
 	return player - 1;
+}
+
+/* 牌の種類ごとの表をスタックに積む */
+const std::array<tileCode, 35> aiscript::table::functable::gametbl::validTiles = {
+	CharacterOne, CharacterTwo, CharacterThree, CharacterFour, CharacterFive,
+	CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
+	CircleOne, CircleTwo, CircleThree, CircleFour, CircleFive,
+	CircleSix, CircleSeven, CircleEight, CircleNine,
+	BambooOne, BambooTwo, BambooThree, BambooFour, BambooFive,
+	BambooSix, BambooSeven, BambooEight, BambooNine,
+	EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon,
+};
+void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, Int8ByTile& tptr) {
+	lua_newtable(L); // テーブル
+	for (auto k = validTiles.begin(); k != validTiles.end(); k++)
+		TableAdd(L, (int)*k, (int)(tptr[*k]));
+}
+void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, UInt8ByTile& tptr) {
+	lua_newtable(L); // テーブル
+	for (auto k = validTiles.begin(); k != validTiles.end(); k++)
+		TableAdd(L, (int)*k, (int)(tptr[*k]));
+}
+void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, FlagByTile& tptr) {
+	lua_newtable(L); // テーブル
+	for (auto k = validTiles.begin(); k != validTiles.end(); k++)
+		TableAdd(L, (int)*k, tptr[*k]);
 }
 
 /* ツモ番のプレイヤー番号 */
@@ -181,6 +208,15 @@ int aiscript::table::functable::gametbl::gametbl_getdiscard(lua_State* const L) 
 			(gameStat->Player[player].Discard[i].dstat == discardRiichiTaken));
 		lua_settable(L, -3);
 	}
+	return 1;
+}
+
+/* ドラ情報の配列 */
+int aiscript::table::functable::gametbl::gametbl_getdorainfo(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	pushTileTable(L, gameStat->DoraFlag.Omote);
 	return 1;
 }
 

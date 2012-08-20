@@ -26,13 +26,18 @@ public:
 
 class aiscript::table::functable::gametbl {
 private:
+	static const std::array<::tileCode, 35> validTiles;
 	static GameTable* getGameStatAddr(lua_State* const L);
 	static PLAYER_ID getPlayerID(lua_State* const L, int index);
+	static void pushTileTable(lua_State* const L, Int8ByTile& tptr);
+	static void pushTileTable(lua_State* const L, UInt8ByTile& tptr);
+	static void pushTileTable(lua_State* const L, FlagByTile& tptr);
 	static int gametbl_getactiveplayer(lua_State* const L);
 	static int gametbl_getchip(lua_State* const L);
 	static int gametbl_getdeckleft(lua_State* const L);
 	static int gametbl_getdeposit(lua_State* const L);
 	static int gametbl_getdiscard(lua_State* const L);
+	static int gametbl_getdorainfo(lua_State* const L);
 	static int gametbl_getdoukasen(lua_State* const L);
 	static int gametbl_gethand(lua_State* const L);
 	static int gametbl_getrank(lua_State* const L);
