@@ -48,6 +48,7 @@ private:
 	static int gametbl_getscore(lua_State* const L);
 	static int gametbl_getwareme(lua_State* const L);
 	static int gametbl_gettsumibou(lua_State* const L);
+	static int gametbl_gettilecontext(lua_State* const L);
 	static int gametbl_isfinalround(lua_State* const L);
 	static int gametbl_isfirstdraw(lua_State* const L);
 	static int gametbl_isippatsu(lua_State* const L);

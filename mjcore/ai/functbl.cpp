@@ -101,6 +101,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, gametbl_getround); lua_setfield(L, -2, "getround");
 	lua_pushcfunction(L, gametbl_getrule); lua_setfield(L, -2, "getrule");
 	lua_pushcfunction(L, gametbl_getscore); lua_setfield(L, -2, "getscore");
+	lua_pushcfunction(L, gametbl_gettilecontext); lua_setfield(L, -2, "gettilecontext");
 	lua_pushcfunction(L, gametbl_gettsumibou); lua_setfield(L, -2, "gettsumibou");
 	lua_pushcfunction(L, gametbl_getwareme); lua_setfield(L, -2, "getwareme");
 	lua_pushcfunction(L, gametbl_isfinalround); lua_setfield(L, -2, "isfinalround");
@@ -323,6 +324,32 @@ int aiscript::table::functable::gametbl::gametbl_getscore(lua_State* const L) {
 	GameTable* gameStat = getGameStatAddr(L);
 	PLAYER_ID player = getPlayerID(L, 2);
 	lua_pushnumber(L, gameStat->Player[player].PlayerScore.bignumtodbl()); // 持ち点をdoubleにしてスタックに積む
+	return 1;
+}
+
+/* 牌についての情報 */
+int aiscript::table::functable::gametbl::gametbl_gettilecontext(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	PLAYER_ID player = getPlayerID(L, 2);
+	lua_newtable(L); // 戻り値を格納するテーブル
+	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+		lua_pushnumber(L, i + 1);
+		lua_newtable(L);
+		TileStatus tileStat = gettilestatus(gameStat, player, i, false);
+		TableAdd(L, "isexistent", tileStat.isExistent);
+		if (tileStat.isExistent) {
+			TableAdd(L, "formstriplet", tileStat.formsTriplet);
+			TableAdd(L, "formssequence", tileStat.formsSequence);
+			TableAdd(L, "canformquad", tileStat.canFormQuad);
+			TableAdd(L, "formspair", tileStat.formsPair);
+			TableAdd(L, "formsryanmen", tileStat.seqDoubleSideWait);
+			TableAdd(L, "formskanchan", tileStat.seqMidWait);
+			TableAdd(L, "formspenchan", tileStat.seqSingleSideWait);
+		}
+		lua_settable(L, -3);
+	}
 	return 1;
 }
 
