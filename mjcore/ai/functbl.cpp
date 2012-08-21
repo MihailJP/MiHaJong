@@ -97,6 +97,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, gametbl_gethand); lua_setfield(L, -2, "gethand");
 	lua_pushcfunction(L, gametbl_getopenwait); lua_setfield(L, -2, "getopenwait");
 	lua_pushcfunction(L, gametbl_getrank); lua_setfield(L, -2, "getrank");
+	lua_pushcfunction(L, gametbl_getround); lua_setfield(L, -2, "getround");
 	lua_pushcfunction(L, gametbl_getrule); lua_setfield(L, -2, "getrule");
 	lua_pushcfunction(L, gametbl_getscore); lua_setfield(L, -2, "getscore");
 	lua_pushcfunction(L, gametbl_gettsumibou); lua_setfield(L, -2, "gettsumibou");
@@ -277,6 +278,19 @@ int aiscript::table::functable::gametbl::gametbl_getrank(lua_State* const L) {
 	GameTable* gameStat = getGameStatAddr(L);
 	PLAYER_ID player = getPlayerID(L, 2);
 	lua_pushinteger(L, calcRank(gameStat)[player]); // 順位をスタックに積む
+	return 1;
+}
+
+/* 現在の局番号 */
+int aiscript::table::functable::gametbl::gametbl_getround(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	if ((RuleData::getRule("game_length") == 5) || (RuleData::getRule("game_length") == 7))
+		// 東場しかないルール
+		lua_pushinteger(L, gameStat->LoopRound * 4 + gameStat->GameRound + 1);
+	else // 普通のルール
+		lua_pushinteger(L, gameStat->LoopRound * roundLoopRate() + gameStat->GameRound + 1);
 	return 1;
 }
 

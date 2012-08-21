@@ -42,6 +42,7 @@ private:
 	static int gametbl_gethand(lua_State* const L);
 	static int gametbl_getopenwait(lua_State* const L);
 	static int gametbl_getrank(lua_State* const L);
+	static int gametbl_getround(lua_State* const L);
 	static int gametbl_getrule(lua_State* const L);
 	static int gametbl_getscore(lua_State* const L);
 	static int gametbl_getwareme(lua_State* const L);
