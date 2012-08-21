@@ -96,6 +96,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, gametbl_getdoukasen); lua_setfield(L, -2, "getdoukasen");
 	lua_pushcfunction(L, gametbl_gethand); lua_setfield(L, -2, "gethand");
 	lua_pushcfunction(L, gametbl_getopenwait); lua_setfield(L, -2, "getopenwait");
+	lua_pushcfunction(L, gametbl_getpreviousdiscard); lua_setfield(L, -2, "getpreviousdiscard");
 	lua_pushcfunction(L, gametbl_getrank); lua_setfield(L, -2, "getrank");
 	lua_pushcfunction(L, gametbl_getround); lua_setfield(L, -2, "getround");
 	lua_pushcfunction(L, gametbl_getrule); lua_setfield(L, -2, "getrule");
@@ -271,6 +272,16 @@ int aiscript::table::functable::gametbl::gametbl_getopenwait(lua_State* const L)
 	GameTable* gameStat = getGameStatAddr(L);
 	pushTileTable(L, gameStat->OpenRichiWait);
 	return 1;
+}
+
+/* ’¼‘O‚ÌÌ”vî•ñ(H‚¢•Ï‚¦–h~—p) */
+int aiscript::table::functable::gametbl::gametbl_getpreviousdiscard(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "ˆø”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	if (gameStat->PreviousMeld.Discard != NoTile) lua_pushinteger(L, gameStat->PreviousMeld.Discard); else lua_pushnil(L);
+	if (gameStat->PreviousMeld.Stepped != NoTile) lua_pushinteger(L, gameStat->PreviousMeld.Stepped); else lua_pushnil(L);
+	return 2;
 }
 
 /* ‡ˆÊæ“¾ */
