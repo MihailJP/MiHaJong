@@ -249,7 +249,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 		　見えている牌を数える　詳細未定
 
-	▼ gametbl:getshanten([tiletbl]) (未実装)
+	▼ gametbl:getshanten([tiletbl])
 
 		　現在の向聴数を返します。gametbl:gethand()形式の引数を指定した場合、
 		その手牌の向聴数を計算します。
