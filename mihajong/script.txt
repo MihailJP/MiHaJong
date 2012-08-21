@@ -222,9 +222,14 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		自身)の順位を返します。
 
 
-	▼ gametbl:getround() (未実装)
+	▼ gametbl:getround()
 
-		　現在の局番号　あとで書く
+		　現在の局番号を返します。これは、東1局を1とし、東2局を2、以下同様にし
+		て北4局が16となり、返り東1局が17(白入ありのルールでは白1局が17、以下同
+		様にして中4局が28、返り東1局が29)とした通し番号です。なお、三人打ちで
+		は4、8、12(以下同様)が欠番となります(四麻・三麻問わず南1局は5になると
+		いうこと)。東場のみを行うルールの場合、東5局は5、東6局は6……のように、
+		「東n局」のnの部分がそのまま返されます。
 
 
 	▼ gametbl:getrule(ruletag)
@@ -272,7 +277,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　風牌が役牌になっているか調べる　詳細未定
 
 
-	▼ gametbl:isfinalround() (未実装)
+	▼ gametbl:isfinalround()
 
 		　オーラスまたは延長戦(半荘戦であれば西入以降)であればtrueを、そうでな
 		ければfalseを返します。
@@ -312,7 +317,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　オープン立直しているならtrueを、そうでなければfalseを返します。
 
 
-	▼ gametbl:ispenultimateround() (未実装)
+	▼ gametbl:ispenultimateround()
 
 		　ラス前(半荘戦であれば南3局、東風戦であれば東3局)であればtrueを、そう
 		でなければfalseを返します。
