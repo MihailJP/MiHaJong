@@ -206,7 +206,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 		　場風を求める　詳細未定
 
-	▼ gametbl:getpreviousdiscard() (未実装)
+	▼ gametbl:getpreviousdiscard()
 
 		　この関数は返り値が2つあります。鳴いた直後の捨牌である場合、直前に鳴
 		いた牌の種類を表す番号を返します。この関数は、食い変えにならないように
@@ -249,17 +249,113 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 		　見えている牌を数える　詳細未定
 
-	▼ gametbl:getshanten(引数仕様未定) (未実装)
+	▼ gametbl:getshanten([tiletbl]) (未実装)
 
-		　シャンテン数を求める　詳細未定
+		　現在の向聴数を返します。gametbl:gethand()形式の引数を指定した場合、
+		その手牌の向聴数を計算します。
+		　聴牌になっている場合は0となり、和了っている場合は-1が返されます。
 
-	▼ gametbl:gettileinfo(引数仕様未定) (未実装)
 
-		　手牌の中のある牌についての情報　詳細未定
+	▼ gametbl:gettilecontext()
 
-	▼ gametbl:gettilerisk(引数仕様未定) (未実装)
+		　手牌の中のある牌について、面子を構成しているかどうか判断するための情
+		報を格納したテーブルを返します。インデックスは gametbl:gethand() の返
+		り値と同様で、次のフィールドを持つサブテーブルが格納されています。
 
-		　手牌の中のある牌について、安牌かどうか判断するための情報　詳細未定
+		● isexistent フィールド
+
+			　そのインデックスの牌が存在すればtrue、そうでなければfalseが格納
+			されます。
+
+		● formstriplet フィールド
+
+			　刻子をなしている牌ならtrue、そうでなければfalseが格納されます。
+
+		● formssequence フィールド
+
+			　順子をなしている牌ならtrue、そうでなければfalseが格納されます。
+
+		● canformquad フィールド
+
+			　手の内に4枚あるならtrue、そうでなければfalseが格納されます。
+
+		● formspair フィールド
+
+			　対子をなしている牌ならtrue、そうでなければfalseが格納されます。
+
+		● formsryanmen フィールド
+
+			　両面搭子をなしている牌ならtrue、そうでなければfalseが格納されま
+			す。
+
+		● formskanchan フィールド
+
+			　嵌搭子をなしている牌ならtrue、そうでなければfalseが格納されます。
+
+		● formspenchan フィールド
+
+			　辺搭子をなしている牌ならtrue、そうでなければfalseが格納されます。
+
+
+	▼ gametbl:gettilerisk() (未実装)
+
+		　手牌の中のそれぞれの牌について、安牌かどうか判断するための情報を格納
+		したテーブル返します。インデックスは gametbl:gethand() の返り値と同様
+		で、次のフィールドを持つサブテーブルが格納されています。
+
+		● issameasprevious フィールド
+
+			　合わせ打ちになる牌ならtrue、そうでなければfalseが格納されます。
+
+		● isdora フィールド
+
+			　ドラの現物ならtrue、そうでなければfalseが格納されます。
+
+		● isdorasuji フィールド
+
+			　ドラ筋にあたる牌ならtrue、そうでなければfalseが格納されます。
+
+		● isdorasoba フィールド
+
+			　ドラそば(＝ドラの跨ぎ筋)の牌ならtrue、そうでなければfalseが格納
+			されます。
+
+		● isnochance フィールド
+
+			　ノーチャンスの牌ならtrue、そうでなければfalseが格納されます。
+
+		● isonechance フィールド
+
+			　ワンチャンスの牌ならtrue、そうでなければfalseが格納されます。
+
+		● isaida4ken フィールド
+
+			　間4ケンの牌ならtrue、そうでなければfalseが格納されます。
+
+		● isneverdiscarded フィールド
+
+			　生牌ならtrue、そうでなければfalseが格納されます。
+
+		● isseenfour フィールド
+
+			　場に4枚見えているならtrue、そうでなければfalseが格納されます。
+
+		● kamicha/toimen/shimocha フィールド
+
+			　上家、対面、下家に対し通りそうかどうかを判断する材料を提供します。
+			これはサブテーブルであり、次のようなブール値のフィールドを持ってい
+			ます。
+			　なお、三人打ちで存在しないプレイヤーの位置についてはフィールド自
+			体がありません(空テーブルではなくnilとなります)。
+
+			・isgembutsu……現物かどうか
+			・issuji……表筋かどうか
+			・isurasuji……裏筋かどうか
+			・ismatagisuji……跨ぎ筋かどうか
+			・issenkisuji……疝気筋かどうか
+			・isnamakurasuji……鈍筋(なまくらすじ)かどうか
+			・isnakasuji……中筋かどうか
+
 
 	▼ gametbl:gettsumibou()
 
@@ -448,6 +544,15 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 		　determine_discard、determine_call の引数として渡されるテーブルのプロ
 		トタイプです。詳細は前述しています。
+
+
+■ ephemeralテーブル (未実装)
+
+	　これは空のテーブルで、AI作者が望むものを何でも格納することができます。こ
+	れらは、毎局開始時にリセットされます。プレイヤーごとに別々のLua環境が用意
+	されているので、混線することはありません。
+	　半荘中ずっと保持したい情報は、ephemeralテーブルの「外の」グローバル環境
+	に保持します。
 
 
 ■ 見出しレベル１
