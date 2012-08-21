@@ -47,11 +47,13 @@ private:
 	static int gametbl_getscore(lua_State* const L);
 	static int gametbl_getwareme(lua_State* const L);
 	static int gametbl_gettsumibou(lua_State* const L);
+	static int gametbl_isfinalround(lua_State* const L);
 	static int gametbl_isfirstdraw(lua_State* const L);
 	static int gametbl_isippatsu(lua_State* const L);
 	static int gametbl_iskyuushu(lua_State* const L);
 	static int gametbl_ismenzen(lua_State* const L);
 	static int gametbl_isopenriichideclared(lua_State* const L);
+	static int gametbl_ispenultimateround(lua_State* const L);
 	static int gametbl_isriichideclared(lua_State* const L);
 	static int gametbl_isshisanbuda(lua_State* const L);
 	static int gametbl_isshisibuda(lua_State* const L);

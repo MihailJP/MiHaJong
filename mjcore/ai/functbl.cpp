@@ -102,11 +102,13 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, gametbl_getscore); lua_setfield(L, -2, "getscore");
 	lua_pushcfunction(L, gametbl_gettsumibou); lua_setfield(L, -2, "gettsumibou");
 	lua_pushcfunction(L, gametbl_getwareme); lua_setfield(L, -2, "getwareme");
+	lua_pushcfunction(L, gametbl_isfinalround); lua_setfield(L, -2, "isfinalround");
 	lua_pushcfunction(L, gametbl_isfirstdraw); lua_setfield(L, -2, "isfirstdraw");
 	lua_pushcfunction(L, gametbl_isippatsu); lua_setfield(L, -2, "isippatsu");
 	lua_pushcfunction(L, gametbl_iskyuushu); lua_setfield(L, -2, "iskyuushu");
 	lua_pushcfunction(L, gametbl_ismenzen); lua_setfield(L, -2, "ismenzen");
 	lua_pushcfunction(L, gametbl_isopenriichideclared); lua_setfield(L, -2, "isopenriichideclared");
+	lua_pushcfunction(L, gametbl_ispenultimateround); lua_setfield(L, -2, "ispenultimateround");
 	lua_pushcfunction(L, gametbl_isriichideclared); lua_setfield(L, -2, "isriichideclared");
 	lua_pushcfunction(L, gametbl_isshisanbuda); lua_setfield(L, -2, "isshisanbuda");
 	lua_pushcfunction(L, gametbl_isshisibuda); lua_setfield(L, -2, "isshisibuda");
@@ -331,6 +333,15 @@ int aiscript::table::functable::gametbl::gametbl_getwareme(lua_State* const L) {
 	return 1;
 }
 
+/* オーラスか？ */
+int aiscript::table::functable::gametbl::gametbl_isfinalround(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	const GameTable* gameStat = getGameStatAddr(L);
+	lua_pushboolean(L, (gameStat->LoopRound * 16 + gameStat->GameRound) >= gameStat->GameLength);
+	return 1;
+}
+
 /* 第一自摸か？ */
 int aiscript::table::functable::gametbl::gametbl_isfirstdraw(lua_State* const L) {
 	int n = lua_gettop(L);
@@ -373,6 +384,15 @@ int aiscript::table::functable::gametbl::gametbl_isopenriichideclared(lua_State*
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	PLAYER_ID player = getPlayerID(L, 2);
 	lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].RichiFlag.OpenFlag);
+	return 1;
+}
+
+/* ラス前か？ */
+int aiscript::table::functable::gametbl::gametbl_ispenultimateround(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	const GameTable* gameStat = getGameStatAddr(L);
+	lua_pushboolean(L, (gameStat->LoopRound * 16 + gameStat->GameRound) == (gameStat->GameLength - 1));
 	return 1;
 }
 
