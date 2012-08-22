@@ -6,6 +6,7 @@
 #include "../func.h"
 #include "../tileutil.h"
 #include "../yaku/yaku.h"
+#include "../shanten.h"
 
 enum MeldCallID {
 	meldNone, meldRon, meldKan, meldPon, meldChiiLower, meldChiiMiddle, meldChiiUpper
@@ -32,6 +33,7 @@ private:
 	static void pushTileTable(lua_State* const L, Int8ByTile& tptr);
 	static void pushTileTable(lua_State* const L, UInt8ByTile& tptr);
 	static void pushTileTable(lua_State* const L, FlagByTile& tptr);
+	static void setHand(lua_State* const L, GameTable* const tmpGameStat, int index);
 	static int gametbl_getactiveplayer(lua_State* const L);
 	static int gametbl_getchip(lua_State* const L);
 	static int gametbl_getdeckleft(lua_State* const L);
@@ -45,6 +47,7 @@ private:
 	static int gametbl_getrank(lua_State* const L);
 	static int gametbl_getround(lua_State* const L);
 	static int gametbl_getrule(lua_State* const L);
+	static int gametbl_getshanten(lua_State* const L);
 	static int gametbl_getscore(lua_State* const L);
 	static int gametbl_getwareme(lua_State* const L);
 	static int gametbl_gettsumibou(lua_State* const L);

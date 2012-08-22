@@ -101,6 +101,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, gametbl_getround); lua_setfield(L, -2, "getround");
 	lua_pushcfunction(L, gametbl_getrule); lua_setfield(L, -2, "getrule");
 	lua_pushcfunction(L, gametbl_getscore); lua_setfield(L, -2, "getscore");
+	lua_pushcfunction(L, gametbl_getshanten); lua_setfield(L, -2, "getshanten");
 	lua_pushcfunction(L, gametbl_gettilecontext); lua_setfield(L, -2, "gettilecontext");
 	lua_pushcfunction(L, gametbl_gettsumibou); lua_setfield(L, -2, "gettsumibou");
 	lua_pushcfunction(L, gametbl_getwareme); lua_setfield(L, -2, "getwareme");
@@ -158,6 +159,29 @@ void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, Flag
 	lua_newtable(L); // テーブル
 	for (auto k = validTiles.begin(); k != validTiles.end(); k++)
 		TableAdd(L, (int)*k, tptr[*k]);
+}
+
+/* プレイヤー番号を取得 */
+void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable* const tmpGameStat, int index) {
+	int n = lua_gettop(L);
+	lua_getfield(L, 1, "playerid"); PLAYER_ID player = lua_tointeger(L, -1); lua_pop(L, 1);
+	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) { // 牌姿を指定した場合
+		for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+			lua_pushnumber(L, i + 1); lua_gettable(L, n);
+			if (lua_isnil(L, -1)) { // そこに牌はなかった
+				tmpGameStat->Player[player].Hand[i].tile = NoTile;
+				tmpGameStat->Player[player].Hand[i].red = Normal;
+			} else if (lua_istable(L, -1)) { // 牌があった
+				lua_pushstring(L, "tile"); lua_gettable(L, -2);
+				tmpGameStat->Player[player].Hand[i].tile = (::tileCode)lua_tointeger(L, -1);
+				lua_pop(L, -1);
+				lua_pushstring(L, "red"); lua_gettable(L, -2);
+				tmpGameStat->Player[player].Hand[i].red = (doraCol)lua_tointeger(L, -1);
+				lua_pop(L, -1);
+			} // 変なことになっていたら無視
+			lua_pop(L, 1);
+		}
+	}
 }
 
 /* ツモ番のプレイヤー番号 */
@@ -324,6 +348,17 @@ int aiscript::table::functable::gametbl::gametbl_getscore(lua_State* const L) {
 	GameTable* gameStat = getGameStatAddr(L);
 	PLAYER_ID player = getPlayerID(L, 2);
 	lua_pushnumber(L, gameStat->Player[player].PlayerScore.bignumtodbl()); // 持ち点をdoubleにしてスタックに積む
+	return 1;
+}
+
+/* 向聴数を取得 */
+int aiscript::table::functable::gametbl::gametbl_getshanten(lua_State* const L) {
+	int n = lua_gettop(L);
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
+	PLAYER_ID player = getPlayerID(L, 0);
+	setHand(L, &tmpGameStat, 2);
+	lua_pushinteger(L, ShantenAnalyzer::calcShanten(&tmpGameStat, player, ShantenAnalyzer::shantenAll));
 	return 1;
 }
 
