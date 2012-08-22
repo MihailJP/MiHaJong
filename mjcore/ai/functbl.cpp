@@ -79,6 +79,7 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 	TableAdd(L, "Plum", (int)Plum); TableAdd(L, "Orchid", (int)Orchid);
 	TableAdd(L, "Chrysanthemum", (int)Chrysanthemum); TableAdd(L, "Bamboo", (int)Bamboo);
 	TableAdd(L, "Fall", (int)Autumn); TableAdd(L, "Chrys", (int)Chrysanthemum);
+	TableAdd(L, "Flower", (int)Flower);
 	lockTable(L); lua_setfield(L, -2, "Flower");
 	lockTable(L); lua_setfield(L, -2, "Tile");
 }
@@ -144,6 +145,7 @@ const std::array<tileCode, 35> aiscript::table::functable::gametbl::validTiles =
 	BambooOne, BambooTwo, BambooThree, BambooFour, BambooFive,
 	BambooSix, BambooSeven, BambooEight, BambooNine,
 	EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon,
+	Flower,
 };
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, Int8ByTile& tptr) {
 	lua_newtable(L); // ÉeÅ[ÉuÉã
