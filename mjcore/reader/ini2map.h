@@ -7,7 +7,8 @@
 
 class INIParser {
 public:
-	typedef std::map<std::string, std::map<std::string, std::string> > IniMapMap;
+	typedef std::map<std::string, std::string> RECORD;
+	typedef std::map<std::string, RECORD> IniMapMap;
 	static void parseini(IniMapMap&, const char*);
 };
 

@@ -12,7 +12,7 @@ void CSVReader::parsecsv (CsvVecVec& arr, const char* csv) {
 	arr.clear(); // リセット
 	std::string tmpstr; // 作業用文字列
 	char tmpletter[2] = {0, 0};
-	std::vector<std::string> record; // レコードデータ
+	RECORD record; // レコードデータ
 	bool firstchr = true; bool quoted = false; bool iscomment = false; // フラグ
 	for (const char* ptr = csv; *ptr != '\0'; ptr++) { // ポインタのforとか使ったことあれへん……
 		if (*ptr == '\r') continue; // just ignore a CR
@@ -24,7 +24,7 @@ void CSVReader::parsecsv (CsvVecVec& arr, const char* csv) {
 			firstchr = true; iscomment = false;
 			continue;
 		}
-		else if ((*ptr == '#') && (!quoted) && (!firstchr)) { // beginning of a comment
+		else if ((*ptr == '#') && (!quoted) && (firstchr)) { // beginning of a comment
 			firstchr = false; iscomment = true; continue; // mark as a comment
 		}
 		else if (!iscomment) {

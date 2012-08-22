@@ -7,7 +7,8 @@
 
 class CSVReader {
 public:
-	typedef std::vector<std::vector<std::string> > CsvVecVec;
+	typedef std::vector<std::string> RECORD;
+	typedef std::vector<RECORD> CsvVecVec;
 	static void parsecsv (CsvVecVec&, const char* csv);
 };
 
