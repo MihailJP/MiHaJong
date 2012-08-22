@@ -195,10 +195,10 @@ void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, Flag
 		TableAdd(L, (int)*k, tptr[*k]);
 }
 
-/* ƒvƒŒƒCƒ„[”Ô†‚ğæ“¾ */
+/* è”v‚ğæ“¾ */
 void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable* const tmpGameStat, int index) {
 	int n = lua_gettop(L);
-	lua_getfield(L, 1, "playerid"); PLAYER_ID player = lua_tointeger(L, -1); lua_pop(L, 1);
+	PLAYER_ID player = getPlayerID(L, 0);
 	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) { // ”vp‚ğw’è‚µ‚½ê‡
 		for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
 			lua_pushnumber(L, i + 1); lua_gettable(L, n);
@@ -397,7 +397,7 @@ int aiscript::table::functable::gametbl::luafunc::getseentiles(lua_State* const 
 /* Œü’®”‚ğæ“¾ */
 int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L) {
 	int n = lua_gettop(L);
-	if ((n < 1)||(n > 2)) {lua_pushstring(L, "ˆø”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ"); lua_error(L);}
+	if (n != 1) {lua_pushstring(L, "ˆø”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ"); lua_error(L);}
 	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
 	PLAYER_ID player = getPlayerID(L, 0);
 	setHand(L, &tmpGameStat, 2);
@@ -408,7 +408,7 @@ int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L)
 /* ”v‚É‚Â‚¢‚Ä‚Ìî•ñ */
 int aiscript::table::functable::gametbl::luafunc::gettilecontext(lua_State* const L) {
 	int n = lua_gettop(L);
-	if (n != 1) {lua_pushstring(L, "ˆø”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ"); lua_error(L);}
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "ˆø”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
 	PLAYER_ID player = getPlayerID(L, 2);
 	lua_newtable(L); // –ß‚è’l‚ğŠi”[‚·‚éƒe[ƒuƒ‹
