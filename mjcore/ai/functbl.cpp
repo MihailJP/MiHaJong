@@ -6,6 +6,7 @@ void aiscript::table::functable::inittable(lua_State* const L) {
 	lua_newtable(L); // table 'mihajong'
 	discardTileCode(L); // subtable 'DiscardType'
 	meldCallCode(L); // subtable 'Call'
+	meldTypeCode(L); // subtable 'MeldType'
 	tileCode(L); // subtable 'Tile'
 	lockTable(L); // mark as read-only
 	lua_setglobal(L, tblname); // global table
@@ -50,6 +51,35 @@ inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 	TableAdd(L, "Upper", meldChiiUpper);
 	lockTable(L); lua_setfield(L, -2, "Chii");
 	lockTable(L); lua_setfield(L, -2, "DiscardType");
+}
+
+/* ñ¬Ç´ÇÃéÌï ÉRÅ[Éh */
+inline void aiscript::table::functable::meldTypeCode(lua_State* const L) {
+	lua_newtable(L); // MeldType
+	lua_newtable(L); // Sequence
+	TableAdd(L, "Lower", (int)meldSequenceExposedLower);
+	TableAdd(L, "Middle", (int)meldSequenceExposedMiddle);
+	TableAdd(L, "Upper", (int)meldSequenceExposedUpper);
+	lockTable(L); lua_setfield(L, -2, "Sequence");
+	lua_newtable(L); // Triplet
+	TableAdd(L, "Kamicha", (int)meldTripletExposedLeft);
+	TableAdd(L, "Toimen", (int)meldTripletExposedCenter);
+	TableAdd(L, "Shimocha", (int)meldTripletExposedRight);
+	lockTable(L); lua_setfield(L, -2, "Triplet");
+	lua_newtable(L); // Quad
+	TableAdd(L, "Concealed", (int)meldQuadConcealed);
+	lua_newtable(L); // Exposed
+	TableAdd(L, "Kamicha", (int)meldQuadExposedLeft);
+	TableAdd(L, "Toimen", (int)meldQuadExposedCenter);
+	TableAdd(L, "Shimocha", (int)meldQuadExposedRight);
+	lockTable(L); lua_setfield(L, -2, "Exposed");
+	lua_newtable(L); // Added
+	TableAdd(L, "Kamicha", (int)meldQuadAddedLeft);
+	TableAdd(L, "Toimen", (int)meldQuadAddedCenter);
+	TableAdd(L, "Shimocha", (int)meldQuadAddedRight);
+	lockTable(L); lua_setfield(L, -2, "Added");
+	lockTable(L); lua_setfield(L, -2, "Quad");
+	lockTable(L); lua_setfield(L, -2, "MeldType");
 }
 
 /* îvÇÃî‘çÜ */

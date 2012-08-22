@@ -19,6 +19,7 @@ private:
 	static void lockTable(lua_State* const L);
 	static inline void discardTileCode(lua_State* const L);
 	static inline void meldCallCode(lua_State* const L);
+	static inline void meldTypeCode(lua_State* const L);
 	static inline void tileCode(lua_State* const L);
 	class gametbl;
 public:
