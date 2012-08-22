@@ -120,6 +120,7 @@
     <ClCompile Include="lzma\Sha256.c" />
     <ClCompile Include="lzma\Threads.c" />
     <ClCompile Include="reader\csv2arry.cpp" />
+    <ClCompile Include="reader\ini2map.cpp" />
     <ClCompile Include="reader\readrsrc.cpp" />
     <ClCompile Include="shanten.cpp" />
     <ClCompile Include="ruletbl.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="lzma\Types.h" />
     <ClInclude Include="mjexport.h" />
     <ClInclude Include="reader\csv2arry.h" />
+    <ClInclude Include="reader\ini2map.h" />
     <ClInclude Include="reader\readrsrc.h" />
     <ClInclude Include="shanten.h" />
     <ClInclude Include="resource.h" />

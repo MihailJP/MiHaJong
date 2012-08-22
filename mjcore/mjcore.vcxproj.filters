@@ -171,6 +171,9 @@
     <ClCompile Include="reader\readrsrc.cpp">
       <Filter>ソース ファイル\reader</Filter>
     </ClCompile>
+    <ClCompile Include="reader\ini2map.cpp">
+      <Filter>ソース ファイル\reader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">
@@ -285,6 +288,9 @@
       <Filter>ヘッダー ファイル\reader</Filter>
     </ClInclude>
     <ClInclude Include="reader\readrsrc.h">
+      <Filter>ヘッダー ファイル\reader</Filter>
+    </ClInclude>
+    <ClInclude Include="reader\ini2map.h">
       <Filter>ヘッダー ファイル\reader</Filter>
     </ClInclude>
   </ItemGroup>
