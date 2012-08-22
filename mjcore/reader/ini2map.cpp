@@ -1,4 +1,4 @@
 #include "ini2map.h"
 
-void INIParser::parseini(std::map<std::string, std::map<std::string, std::string> >& inimap, const char* ini) {
+void INIParser::parseini(IniMapMap& inimap, const char* ini) {
 }

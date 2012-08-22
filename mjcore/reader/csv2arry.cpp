@@ -1,6 +1,6 @@
 #include "csv2arry.h"
 
-void CSVReader::parsecsv (std::vector<std::vector<std::string> > & arr, const char* csv) {
+void CSVReader::parsecsv (CsvVecVec& arr, const char* csv) {
 	/*
 	 *  CSVをパースして配列の配列オブジェクトに代入する
 	 *

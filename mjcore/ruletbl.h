@@ -34,7 +34,7 @@ private:
 	static char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
 	static RULETBL Rules;
 	static std::array<std::string, RULESIZE> nametbl;
-	static std::vector<std::vector<std::string> > confdat;
+	static CSVReader::CsvVecVec confdat;
 	static void parseRule();
 public:
 	__declspec(dllexport) static void configinit();
