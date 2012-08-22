@@ -12,6 +12,7 @@
 #include "resource.h"
 #include "reader/readrsrc.h"
 #include "reader/csv2arry.h"
+#include "reader/ini2map.h"
 #endif
 #include "mjexport.h"
 
@@ -35,7 +36,10 @@ private:
 	static RULETBL Rules;
 	static std::array<std::string, RULESIZE> nametbl;
 	static CSVReader::CsvVecVec confdat;
+	static INIParser::IniMapMap confdict;
 	static void parseRule();
+	static void configinit_csv();
+	static void configinit_ini();
 public:
 	__declspec(dllexport) static void configinit();
 	__declspec(dllexport) static void storeRule(const char** ruleTxt);
@@ -43,6 +47,7 @@ public:
 	__declspec(dllexport) static void getRuleName(char* const txt, int bufsize, int RuleID);
 	__declspec(dllexport) static void getRuleDescription(char* const txt, int bufsize, int RuleID);
 	__declspec(dllexport) static void getRuleTxt(char* const txt, int bufsize, int RuleID, int index);
+	static std::string getRuleItemTag(int RuleID, int index);
 	inline static uint8_t getRule(std::string RuleTag) {return Rules[RuleTag];}
 	static uint8_t getRule(int RuleID);
 };
