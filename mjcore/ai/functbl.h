@@ -56,10 +56,12 @@ public:
 	static int getround(lua_State* const L);
 	static int getrule(lua_State* const L);
 	static int getscore(lua_State* const L);
+	static int getseentiles(lua_State* const L);
 	static int getshanten(lua_State* const L);
-	static int getwareme(lua_State* const L);
-	static int gettsumibou(lua_State* const L);
 	static int gettilecontext(lua_State* const L);
+	static int gettilesinhand(lua_State* const L);
+	static int gettsumibou(lua_State* const L);
+	static int getwareme(lua_State* const L);
 	static int isfinalround(lua_State* const L);
 	static int isfirstdraw(lua_State* const L);
 	static int isippatsu(lua_State* const L);

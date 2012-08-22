@@ -132,8 +132,10 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::getround); lua_setfield(L, -2, "getround");
 	lua_pushcfunction(L, luafunc::getrule); lua_setfield(L, -2, "getrule");
 	lua_pushcfunction(L, luafunc::getscore); lua_setfield(L, -2, "getscore");
+	lua_pushcfunction(L, luafunc::getseentiles); lua_setfield(L, -2, "getseentiles");
 	lua_pushcfunction(L, luafunc::getshanten); lua_setfield(L, -2, "getshanten");
 	lua_pushcfunction(L, luafunc::gettilecontext); lua_setfield(L, -2, "gettilecontext");
+	lua_pushcfunction(L, luafunc::gettilesinhand); lua_setfield(L, -2, "gettilesinhand");
 	lua_pushcfunction(L, luafunc::gettsumibou); lua_setfield(L, -2, "gettsumibou");
 	lua_pushcfunction(L, luafunc::getwareme); lua_setfield(L, -2, "getwareme");
 	lua_pushcfunction(L, luafunc::isfinalround); lua_setfield(L, -2, "isfinalround");
@@ -383,6 +385,15 @@ int aiscript::table::functable::gametbl::luafunc::getscore(lua_State* const L) {
 	return 1;
 }
 
+/* Œ©‚¦‚Ä‚¢‚é”v‚Ì”‚Ì”z—ñ */
+int aiscript::table::functable::gametbl::luafunc::getseentiles(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "ˆø”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	pushTileTable(L, countseentiles(gameStat));
+	return 1;
+}
+
 /* Œü’®”‚ğæ“¾ */
 int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L) {
 	int n = lua_gettop(L);
@@ -417,6 +428,16 @@ int aiscript::table::functable::gametbl::luafunc::gettilecontext(lua_State* cons
 		}
 		lua_settable(L, -3);
 	}
+	return 1;
+}
+
+/* è”v‚É‚Á‚Ä‚¢‚é–‡”‚Ì”z—ñ */
+int aiscript::table::functable::gametbl::luafunc::gettilesinhand(lua_State* const L) {
+	int n = lua_gettop(L);
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "ˆø”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	PLAYER_ID player = getPlayerID(L, 2);
+	pushTileTable(L, countTilesInHand(gameStat, player));
 	return 1;
 }
 
