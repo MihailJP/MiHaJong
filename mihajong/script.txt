@@ -139,10 +139,11 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		～3)の数値で返します。導火線なしの時はnilを返します。
 
 
-	▼ gametbl:getflower(引数仕様未定) (未実装)
+	▼ gametbl:getflower([playerid]) (未実装)
 
-		　花牌、または三麻の抜きドラの情報を取得(他家の情報も取得可能)　詳細未
-		定
+		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
+		自身)の花牌、または三麻の抜きドラの数を返します。
+
 
 	▼ gametbl:gethand([playerid])
 
@@ -198,13 +199,18 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		す。
 
 
-	▼ gametbl:getownwind(引数仕様未定) (未実装)
+	▼ gametbl:getownwind() (未実装)
 
-		　自風を求める　詳細未定
+		　自風牌を返します。返り値は mihajong.Tile.Wind テーブルの定数のどれか
+		です。
 
-	▼ gametbl:getprevailingwind(引数仕様未定) (未実装)
 
-		　場風を求める　詳細未定
+	▼ gametbl:getprevailingwind() (未実装)
+
+		　場風牌を返します。返り値は mihajong.Tile.Wind テーブルの定数のどれか
+		です(白入ありのルールでは mihajong.Tile.Dragon テーブルの値になること
+		もあります)。
+
 
 	▼ gametbl:getpreviousdiscard()
 
@@ -245,9 +251,14 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		大きい点数の場合、正確な値が取得できない場合があります。
 
 
-	▼ gametbl:getseentiles(引数仕様未定) (未実装)
+	▼ gametbl:getseentiles() (未実装)
 
-		　見えている牌を数える　詳細未定
+		　牌の種類ごとに場に見えている枚数を格納したテーブルを返します。この
+		テーブルのキーは mihajong.Tile に定義された数値です。
+
+		　注意！　この関数で返されるテーブルはキーが飛び飛びの数値になっていま
+		す。
+
 
 	▼ gametbl:getshanten([tiletbl])
 
@@ -368,9 +379,11 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		3)の数値で返します。割れ目なしの時はnilを返します。
 
 
-	▼ gametbl:getyakuhaiwind(引数仕様未定) (未実装)
+	▼ gametbl:getyakuhaiwind() (未実装)
 
-		　風牌が役牌になっているか調べる　詳細未定
+		　それぞれの風牌について役牌になっているかどうかを格納したテーブルを返
+		します。これはEast、South、West、Northのフィールドをもち、その牌が役牌
+		になっていればtrueが、そうでなければfalseが設定されています。
 
 
 	▼ gametbl:isfinalround()
@@ -488,6 +501,9 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		※2 和了れない状況で mihajong.DiscardType.Agari を指定した場合、チョン
 		　　ボになります。
 
+		　なおこの他に切断されたリモートプレイヤーが返すを特殊なコードも内部的
+		には存在しますが、このスクリプト仕様からそれは省かれています。
+
 
 	▼ mihajong.Call
 
@@ -507,12 +523,28 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　　ます。
 
 
-	▼ mihajong.MeldType (未実装)
+	▼ mihajong.MeldType
 
 		　明刻、暗槓といった鳴き面子の種類を表す数値を格納したテーブルです。こ
 		のテーブルには、以下のフィールドが格納されています。
 
-		・to be written...
+		・Sequence.Lower …… 両面の小さい側、または辺張の7のチー。
+		・Sequence.Middle …… 嵌張の7のチー。
+		・Sequence.Upper …… 両面の大きい側、または辺張の3のチー。
+		・Triplet.Kamicha …… 上家からのポン。
+		・Triplet.Toimen …… 対面からのポン。
+		・Triplet.Shimocha …… 下家からのポン。
+		・Quad.Concealed …… 暗槓。
+		・Quad.Exposed.Kamicha …… 上家からの大明槓。
+		・Quad.Exposed.Toimen …… 対面からの大明槓。
+		・Quad.Exposed.Shimocha …… 下家からの大明槓。
+		・Quad.Added.Kamicha …… 上家からのポンへの加槓。
+		・Quad.Added.Toimen …… 対面からのポンへの加槓。
+		・Quad.Added.Shimocha …… 下家からのポンへの加槓。
+
+		　なお、暗順子、暗刻子を表すコードも内部的には存在しますが、役判定処理
+		にのみ使われており、AIインターフェイスに出てくることはありません。その
+		ため、このスクリプト仕様からもそれらのコードは省かれています。
 
 
 	▼ mihajong.Tile
@@ -538,6 +570,9 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　　　　　　　Winter、および草木牌を表すPlum、Orchid、Chrysanthemum、
 		　　　　　　　Chrys、Bambooという定数があります。なお、FallはAutumnと
 		　　　　　　　同義で、ChrysはChrysanthemumと同義です。
+		　　　　　　　この他にFlowerという定数がありますが、gametbl:
+		　　　　　　　getdorainfo() などの返り値テーブルのインデックスに使用し、
+		　　　　　　　手牌データには現れません。
 
 
 	▼ mihajong.gametbl (未実装)
