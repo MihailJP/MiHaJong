@@ -251,7 +251,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		大きい点数の場合、正確な値が取得できない場合があります。
 
 
-	▼ gametbl:getseentiles() (未実装)
+	▼ gametbl:getseentiles()
 
 		　牌の種類ごとに場に見えている枚数を格納したテーブルを返します。この
 		テーブルのキーは mihajong.Tile に定義された数値です。
@@ -367,6 +367,14 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 			・isnamakurasuji……鈍筋(なまくらすじ)かどうか
 			・isnakasuji……中筋かどうか
 
+
+	▼ gametbl:gettilesinhand()
+
+		　牌の種類ごとに手牌に持っている枚数を格納したテーブルを返します。この
+		テーブルのキーは mihajong.Tile に定義された数値です。
+
+		　注意！　この関数で返されるテーブルはキーが飛び飛びの数値になっていま
+		す。
 
 	▼ gametbl:gettsumibou()
 
