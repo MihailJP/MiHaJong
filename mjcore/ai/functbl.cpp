@@ -118,36 +118,36 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_newtable(L);
 	lua_pushlightuserdata(L, NULL); lua_setfield(L, -2, "addr"); // pointer to C++ struct
 	/* ここにメソッドを書く */
-	lua_pushcfunction(L, gametbl_getactiveplayer); lua_setfield(L, -2, "getactiveplayer");
-	lua_pushcfunction(L, gametbl_getchip); lua_setfield(L, -2, "getchip");
-	lua_pushcfunction(L, gametbl_getdeckleft); lua_setfield(L, -2, "getdeckleft");
-	lua_pushcfunction(L, gametbl_getdeposit); lua_setfield(L, -2, "getdeposit");
-	lua_pushcfunction(L, gametbl_getdiscard); lua_setfield(L, -2, "getdiscard");
-	lua_pushcfunction(L, gametbl_getdorainfo); lua_setfield(L, -2, "getdorainfo");
-	lua_pushcfunction(L, gametbl_getdoukasen); lua_setfield(L, -2, "getdoukasen");
-	lua_pushcfunction(L, gametbl_gethand); lua_setfield(L, -2, "gethand");
-	lua_pushcfunction(L, gametbl_getopenwait); lua_setfield(L, -2, "getopenwait");
-	lua_pushcfunction(L, gametbl_getpreviousdiscard); lua_setfield(L, -2, "getpreviousdiscard");
-	lua_pushcfunction(L, gametbl_getrank); lua_setfield(L, -2, "getrank");
-	lua_pushcfunction(L, gametbl_getround); lua_setfield(L, -2, "getround");
-	lua_pushcfunction(L, gametbl_getrule); lua_setfield(L, -2, "getrule");
-	lua_pushcfunction(L, gametbl_getscore); lua_setfield(L, -2, "getscore");
-	lua_pushcfunction(L, gametbl_getshanten); lua_setfield(L, -2, "getshanten");
-	lua_pushcfunction(L, gametbl_gettilecontext); lua_setfield(L, -2, "gettilecontext");
-	lua_pushcfunction(L, gametbl_gettsumibou); lua_setfield(L, -2, "gettsumibou");
-	lua_pushcfunction(L, gametbl_getwareme); lua_setfield(L, -2, "getwareme");
-	lua_pushcfunction(L, gametbl_isfinalround); lua_setfield(L, -2, "isfinalround");
-	lua_pushcfunction(L, gametbl_isfirstdraw); lua_setfield(L, -2, "isfirstdraw");
-	lua_pushcfunction(L, gametbl_isippatsu); lua_setfield(L, -2, "isippatsu");
-	lua_pushcfunction(L, gametbl_iskyuushu); lua_setfield(L, -2, "iskyuushu");
-	lua_pushcfunction(L, gametbl_ismenzen); lua_setfield(L, -2, "ismenzen");
-	lua_pushcfunction(L, gametbl_isopenriichideclared); lua_setfield(L, -2, "isopenriichideclared");
-	lua_pushcfunction(L, gametbl_ispenultimateround); lua_setfield(L, -2, "ispenultimateround");
-	lua_pushcfunction(L, gametbl_isriichideclared); lua_setfield(L, -2, "isriichideclared");
-	lua_pushcfunction(L, gametbl_isshisanbuda); lua_setfield(L, -2, "isshisanbuda");
-	lua_pushcfunction(L, gametbl_isshisibuda); lua_setfield(L, -2, "isshisibuda");
-	lua_pushcfunction(L, gametbl_issumaroallowed); lua_setfield(L, -2, "issumaroallowed");
-	lua_pushcfunction(L, gametbl_isyakitori); lua_setfield(L, -2, "isyakitori");
+	lua_pushcfunction(L, luafunc::getactiveplayer); lua_setfield(L, -2, "getactiveplayer");
+	lua_pushcfunction(L, luafunc::getchip); lua_setfield(L, -2, "getchip");
+	lua_pushcfunction(L, luafunc::getdeckleft); lua_setfield(L, -2, "getdeckleft");
+	lua_pushcfunction(L, luafunc::getdeposit); lua_setfield(L, -2, "getdeposit");
+	lua_pushcfunction(L, luafunc::getdiscard); lua_setfield(L, -2, "getdiscard");
+	lua_pushcfunction(L, luafunc::getdorainfo); lua_setfield(L, -2, "getdorainfo");
+	lua_pushcfunction(L, luafunc::getdoukasen); lua_setfield(L, -2, "getdoukasen");
+	lua_pushcfunction(L, luafunc::gethand); lua_setfield(L, -2, "gethand");
+	lua_pushcfunction(L, luafunc::getopenwait); lua_setfield(L, -2, "getopenwait");
+	lua_pushcfunction(L, luafunc::getpreviousdiscard); lua_setfield(L, -2, "getpreviousdiscard");
+	lua_pushcfunction(L, luafunc::getrank); lua_setfield(L, -2, "getrank");
+	lua_pushcfunction(L, luafunc::getround); lua_setfield(L, -2, "getround");
+	lua_pushcfunction(L, luafunc::getrule); lua_setfield(L, -2, "getrule");
+	lua_pushcfunction(L, luafunc::getscore); lua_setfield(L, -2, "getscore");
+	lua_pushcfunction(L, luafunc::getshanten); lua_setfield(L, -2, "getshanten");
+	lua_pushcfunction(L, luafunc::gettilecontext); lua_setfield(L, -2, "gettilecontext");
+	lua_pushcfunction(L, luafunc::gettsumibou); lua_setfield(L, -2, "gettsumibou");
+	lua_pushcfunction(L, luafunc::getwareme); lua_setfield(L, -2, "getwareme");
+	lua_pushcfunction(L, luafunc::isfinalround); lua_setfield(L, -2, "isfinalround");
+	lua_pushcfunction(L, luafunc::isfirstdraw); lua_setfield(L, -2, "isfirstdraw");
+	lua_pushcfunction(L, luafunc::isippatsu); lua_setfield(L, -2, "isippatsu");
+	lua_pushcfunction(L, luafunc::iskyuushu); lua_setfield(L, -2, "iskyuushu");
+	lua_pushcfunction(L, luafunc::ismenzen); lua_setfield(L, -2, "ismenzen");
+	lua_pushcfunction(L, luafunc::isopenriichideclared); lua_setfield(L, -2, "isopenriichideclared");
+	lua_pushcfunction(L, luafunc::ispenultimateround); lua_setfield(L, -2, "ispenultimateround");
+	lua_pushcfunction(L, luafunc::isriichideclared); lua_setfield(L, -2, "isriichideclared");
+	lua_pushcfunction(L, luafunc::isshisanbuda); lua_setfield(L, -2, "isshisanbuda");
+	lua_pushcfunction(L, luafunc::isshisibuda); lua_setfield(L, -2, "isshisibuda");
+	lua_pushcfunction(L, luafunc::issumaroallowed); lua_setfield(L, -2, "issumaroallowed");
+	lua_pushcfunction(L, luafunc::isyakitori); lua_setfield(L, -2, "isyakitori");
 	/* メソッド定義ここまで */
 	lockTable(L); lua_setfield(L, -2, "gametbl");
 }
@@ -217,7 +217,7 @@ void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable*
 }
 
 /* ツモ番のプレイヤー番号 */
-int aiscript::table::functable::gametbl::gametbl_getactiveplayer(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getactiveplayer(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	lua_pushinteger(L, (int)getGameStatAddr(L)->CurrentPlayer.Active + 1);
@@ -225,7 +225,7 @@ int aiscript::table::functable::gametbl::gametbl_getactiveplayer(lua_State* cons
 }
 
 /* チップ取得 */
-int aiscript::table::functable::gametbl::gametbl_getchip(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getchip(lua_State* const L) {
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
@@ -236,7 +236,7 @@ int aiscript::table::functable::gametbl::gametbl_getchip(lua_State* const L) {
 }
 
 /* 山牌の残り枚数 */
-int aiscript::table::functable::gametbl::gametbl_getdeckleft(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getdeckleft(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	lua_pushinteger(L, tilesLeft(getGameStatAddr(L)));
@@ -244,7 +244,7 @@ int aiscript::table::functable::gametbl::gametbl_getdeckleft(lua_State* const L)
 }
 
 /* 供託点棒の数 */
-int aiscript::table::functable::gametbl::gametbl_getdeposit(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getdeposit(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	lua_pushinteger(L, getGameStatAddr(L)->Deposit);
@@ -252,7 +252,7 @@ int aiscript::table::functable::gametbl::gametbl_getdeposit(lua_State* const L) 
 }
 
 /* 捨牌テーブル */
-int aiscript::table::functable::gametbl::gametbl_getdiscard(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getdiscard(lua_State* const L) {
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
@@ -274,7 +274,7 @@ int aiscript::table::functable::gametbl::gametbl_getdiscard(lua_State* const L) 
 }
 
 /* ドラ情報の配列 */
-int aiscript::table::functable::gametbl::gametbl_getdorainfo(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getdorainfo(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
@@ -283,7 +283,7 @@ int aiscript::table::functable::gametbl::gametbl_getdorainfo(lua_State* const L)
 }
 
 /* 導火線 */
-int aiscript::table::functable::gametbl::gametbl_getdoukasen(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getdoukasen(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	if (getGameStatAddr(L)->DoukasenPlayer == -1)
@@ -293,7 +293,7 @@ int aiscript::table::functable::gametbl::gametbl_getdoukasen(lua_State* const L)
 }
 
 /* 純手牌テーブル */
-int aiscript::table::functable::gametbl::gametbl_gethand(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::gethand(lua_State* const L) {
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
@@ -323,7 +323,7 @@ int aiscript::table::functable::gametbl::gametbl_gethand(lua_State* const L) {
 }*/
 
 /* オープンリーチの待ち牌情報 */
-int aiscript::table::functable::gametbl::gametbl_getopenwait(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getopenwait(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
@@ -332,7 +332,7 @@ int aiscript::table::functable::gametbl::gametbl_getopenwait(lua_State* const L)
 }
 
 /* 直前の捨牌情報(食い変え防止用) */
-int aiscript::table::functable::gametbl::gametbl_getpreviousdiscard(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getpreviousdiscard(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
@@ -342,7 +342,7 @@ int aiscript::table::functable::gametbl::gametbl_getpreviousdiscard(lua_State* c
 }
 
 /* 順位取得 */
-int aiscript::table::functable::gametbl::gametbl_getrank(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getrank(lua_State* const L) {
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
@@ -352,7 +352,7 @@ int aiscript::table::functable::gametbl::gametbl_getrank(lua_State* const L) {
 }
 
 /* 現在の局番号 */
-int aiscript::table::functable::gametbl::gametbl_getround(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getround(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
@@ -365,7 +365,7 @@ int aiscript::table::functable::gametbl::gametbl_getround(lua_State* const L) {
 }
 
 /* ルール番号取得 */
-int aiscript::table::functable::gametbl::gametbl_getrule(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getrule(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 2) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	const char* fieldname = lua_tostring(L, 2);
@@ -374,7 +374,7 @@ int aiscript::table::functable::gametbl::gametbl_getrule(lua_State* const L) {
 }
 
 /* 持ち点取得 */
-int aiscript::table::functable::gametbl::gametbl_getscore(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getscore(lua_State* const L) {
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
@@ -384,7 +384,7 @@ int aiscript::table::functable::gametbl::gametbl_getscore(lua_State* const L) {
 }
 
 /* 向聴数を取得 */
-int aiscript::table::functable::gametbl::gametbl_getshanten(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L) {
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
@@ -395,7 +395,7 @@ int aiscript::table::functable::gametbl::gametbl_getshanten(lua_State* const L) 
 }
 
 /* 牌についての情報 */
-int aiscript::table::functable::gametbl::gametbl_gettilecontext(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::gettilecontext(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
@@ -421,7 +421,7 @@ int aiscript::table::functable::gametbl::gametbl_gettilecontext(lua_State* const
 }
 
 /* 積み棒 */
-int aiscript::table::functable::gametbl::gametbl_gettsumibou(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::gettsumibou(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	lua_pushinteger(L, getGameStatAddr(L)->Honba);
@@ -429,7 +429,7 @@ int aiscript::table::functable::gametbl::gametbl_gettsumibou(lua_State* const L)
 }
 
 /* 割れ目 */
-int aiscript::table::functable::gametbl::gametbl_getwareme(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::getwareme(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	if (getGameStatAddr(L)->WaremePlayer == -1)
@@ -439,7 +439,7 @@ int aiscript::table::functable::gametbl::gametbl_getwareme(lua_State* const L) {
 }
 
 /* オーラスか？ */
-int aiscript::table::functable::gametbl::gametbl_isfinalround(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::isfinalround(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	const GameTable* gameStat = getGameStatAddr(L);
@@ -448,7 +448,7 @@ int aiscript::table::functable::gametbl::gametbl_isfinalround(lua_State* const L
 }
 
 /* 第一自摸か？ */
-int aiscript::table::functable::gametbl::gametbl_isfirstdraw(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::isfirstdraw(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].FirstDrawFlag);
@@ -456,7 +456,7 @@ int aiscript::table::functable::gametbl::gametbl_isfirstdraw(lua_State* const L)
 }
 
 /* 一発圏内？ */
-int aiscript::table::functable::gametbl::gametbl_isippatsu(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::isippatsu(lua_State* const L) {
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	PLAYER_ID player = getPlayerID(L, 2);
@@ -466,7 +466,7 @@ int aiscript::table::functable::gametbl::gametbl_isippatsu(lua_State* const L) {
 }
 
 /* 九種九牌？ */
-int aiscript::table::functable::gametbl::gametbl_iskyuushu(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::iskyuushu(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	if (RuleData::getRule("nine_terminals") == 3) lua_pushnil(L);
@@ -475,7 +475,7 @@ int aiscript::table::functable::gametbl::gametbl_iskyuushu(lua_State* const L) {
 }
 
 /* 門前？ */
-int aiscript::table::functable::gametbl::gametbl_ismenzen(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::ismenzen(lua_State* const L) {
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	PLAYER_ID player = getPlayerID(L, 2);
@@ -484,7 +484,7 @@ int aiscript::table::functable::gametbl::gametbl_ismenzen(lua_State* const L) {
 }
 
 /* オープン立直している？ */
-int aiscript::table::functable::gametbl::gametbl_isopenriichideclared(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::isopenriichideclared(lua_State* const L) {
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	PLAYER_ID player = getPlayerID(L, 2);
@@ -493,7 +493,7 @@ int aiscript::table::functable::gametbl::gametbl_isopenriichideclared(lua_State*
 }
 
 /* ラス前か？ */
-int aiscript::table::functable::gametbl::gametbl_ispenultimateround(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::ispenultimateround(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	const GameTable* gameStat = getGameStatAddr(L);
@@ -502,7 +502,7 @@ int aiscript::table::functable::gametbl::gametbl_ispenultimateround(lua_State* c
 }
 
 /* 立直している？ */
-int aiscript::table::functable::gametbl::gametbl_isriichideclared(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::isriichideclared(lua_State* const L) {
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	PLAYER_ID player = getPlayerID(L, 2);
@@ -511,7 +511,7 @@ int aiscript::table::functable::gametbl::gametbl_isriichideclared(lua_State* con
 }
 
 /* 十三不塔？ */
-int aiscript::table::functable::gametbl::gametbl_isshisanbuda(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::isshisanbuda(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	if (RuleData::getRule("shiisan_puutaa") == 0) lua_pushnil(L);
@@ -520,7 +520,7 @@ int aiscript::table::functable::gametbl::gametbl_isshisanbuda(lua_State* const L
 }
 
 /* 十三無靠？ */
-int aiscript::table::functable::gametbl::gametbl_isshisibuda(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::isshisibuda(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	if (RuleData::getRule("shiisan_uushii") == 0) lua_pushnil(L);
@@ -529,7 +529,7 @@ int aiscript::table::functable::gametbl::gametbl_isshisibuda(lua_State* const L)
 }
 
 /* 四馬路解禁？ */
-int aiscript::table::functable::gametbl::gametbl_issumaroallowed(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::issumaroallowed(lua_State* const L) {
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	PLAYER_ID player = getPlayerID(L, 2);
@@ -539,7 +539,7 @@ int aiscript::table::functable::gametbl::gametbl_issumaroallowed(lua_State* cons
 }
 
 /* 焼き鳥？ */
-int aiscript::table::functable::gametbl::gametbl_isyakitori(lua_State* const L) {
+int aiscript::table::functable::gametbl::luafunc::isyakitori(lua_State* const L) {
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	PLAYER_ID player = getPlayerID(L, 2);

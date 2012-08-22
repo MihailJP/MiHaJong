@@ -35,38 +35,43 @@ private:
 	static void pushTileTable(lua_State* const L, UInt8ByTile& tptr);
 	static void pushTileTable(lua_State* const L, FlagByTile& tptr);
 	static void setHand(lua_State* const L, GameTable* const tmpGameStat, int index);
-	static int gametbl_getactiveplayer(lua_State* const L);
-	static int gametbl_getchip(lua_State* const L);
-	static int gametbl_getdeckleft(lua_State* const L);
-	static int gametbl_getdeposit(lua_State* const L);
-	static int gametbl_getdiscard(lua_State* const L);
-	static int gametbl_getdorainfo(lua_State* const L);
-	static int gametbl_getdoukasen(lua_State* const L);
-	static int gametbl_gethand(lua_State* const L);
-	static int gametbl_getopenwait(lua_State* const L);
-	static int gametbl_getpreviousdiscard(lua_State* const L);
-	static int gametbl_getrank(lua_State* const L);
-	static int gametbl_getround(lua_State* const L);
-	static int gametbl_getrule(lua_State* const L);
-	static int gametbl_getshanten(lua_State* const L);
-	static int gametbl_getscore(lua_State* const L);
-	static int gametbl_getwareme(lua_State* const L);
-	static int gametbl_gettsumibou(lua_State* const L);
-	static int gametbl_gettilecontext(lua_State* const L);
-	static int gametbl_isfinalround(lua_State* const L);
-	static int gametbl_isfirstdraw(lua_State* const L);
-	static int gametbl_isippatsu(lua_State* const L);
-	static int gametbl_iskyuushu(lua_State* const L);
-	static int gametbl_ismenzen(lua_State* const L);
-	static int gametbl_isopenriichideclared(lua_State* const L);
-	static int gametbl_ispenultimateround(lua_State* const L);
-	static int gametbl_isriichideclared(lua_State* const L);
-	static int gametbl_isshisanbuda(lua_State* const L);
-	static int gametbl_isshisibuda(lua_State* const L);
-	static int gametbl_issumaroallowed(lua_State* const L);
-	static int gametbl_isyakitori(lua_State* const L);
+	class luafunc;
 public:
 	static inline void makeprototype(lua_State* const L);
+};
+
+class aiscript::table::functable::gametbl::luafunc {
+public:
+	static int getactiveplayer(lua_State* const L);
+	static int getchip(lua_State* const L);
+	static int getdeckleft(lua_State* const L);
+	static int getdeposit(lua_State* const L);
+	static int getdiscard(lua_State* const L);
+	static int getdorainfo(lua_State* const L);
+	static int getdoukasen(lua_State* const L);
+	static int gethand(lua_State* const L);
+	static int getopenwait(lua_State* const L);
+	static int getpreviousdiscard(lua_State* const L);
+	static int getrank(lua_State* const L);
+	static int getround(lua_State* const L);
+	static int getrule(lua_State* const L);
+	static int getscore(lua_State* const L);
+	static int getshanten(lua_State* const L);
+	static int getwareme(lua_State* const L);
+	static int gettsumibou(lua_State* const L);
+	static int gettilecontext(lua_State* const L);
+	static int isfinalround(lua_State* const L);
+	static int isfirstdraw(lua_State* const L);
+	static int isippatsu(lua_State* const L);
+	static int iskyuushu(lua_State* const L);
+	static int ismenzen(lua_State* const L);
+	static int isopenriichideclared(lua_State* const L);
+	static int ispenultimateround(lua_State* const L);
+	static int isriichideclared(lua_State* const L);
+	static int isshisanbuda(lua_State* const L);
+	static int isshisibuda(lua_State* const L);
+	static int issumaroallowed(lua_State* const L);
+	static int isyakitori(lua_State* const L);
 };
 
 #endif
