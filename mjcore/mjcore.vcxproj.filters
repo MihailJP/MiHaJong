@@ -40,6 +40,12 @@
     <Filter Include="ソース ファイル\ai">
       <UniqueIdentifier>{b7ca120c-5fa2-4b8c-91e3-a79f698f4207}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\reader">
+      <UniqueIdentifier>{e01f1a96-ad3c-4827-bb5d-54f007e86b93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\reader">
+      <UniqueIdentifier>{59fd9a29-e230-4765-93b1-b631d763ed04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="shanten.cpp">
@@ -159,11 +165,14 @@
     <ClCompile Include="ai\functbl.cpp">
       <Filter>ソース ファイル\ai</Filter>
     </ClCompile>
-    <ClCompile Include="readrsrc.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="reader\csv2arry.cpp">
+      <Filter>ソース ファイル\reader</Filter>
     </ClCompile>
-    <ClCompile Include="csv2arry.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="reader\readrsrc.cpp">
+      <Filter>ソース ファイル\reader</Filter>
+    </ClCompile>
+    <ClCompile Include="reader\ini2map.cpp">
+      <Filter>ソース ファイル\reader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -275,11 +284,14 @@
     <ClInclude Include="ai\class.h">
       <Filter>ヘッダー ファイル\ai</Filter>
     </ClInclude>
-    <ClInclude Include="readrsrc.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="reader\csv2arry.h">
+      <Filter>ヘッダー ファイル\reader</Filter>
     </ClInclude>
-    <ClInclude Include="csv2arry.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="reader\readrsrc.h">
+      <Filter>ヘッダー ファイル\reader</Filter>
+    </ClInclude>
+    <ClInclude Include="reader\ini2map.h">
+      <Filter>ヘッダー ファイル\reader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

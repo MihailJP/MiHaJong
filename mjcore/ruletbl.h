@@ -10,8 +10,8 @@
 #include <array>
 #include "logging.h"
 #include "resource.h"
-#include "readrsrc.h"
-#include "csv2arry.h"
+#include "reader/readrsrc.h"
+#include "reader/csv2arry.h"
 #endif
 #include "mjexport.h"
 
@@ -34,7 +34,7 @@ private:
 	static char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
 	static RULETBL Rules;
 	static std::array<std::string, RULESIZE> nametbl;
-	static std::vector<std::vector<std::string> > confdat;
+	static CSVReader::CsvVecVec confdat;
 	static void parseRule();
 public:
 	__declspec(dllexport) static void configinit();

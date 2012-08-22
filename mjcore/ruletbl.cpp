@@ -7,7 +7,7 @@ inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType);
 char RuleData::ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
 RULETBL RuleData::Rules;
 std::array<std::string, RULESIZE> RuleData::nametbl;
-std::vector<std::vector<std::string> > RuleData::confdat;
+CSVReader::CsvVecVec RuleData::confdat;
 
 __declspec(dllexport) void RuleData::configinit() { // コンフィグ用CSVを読み込む
 	DWORD size = 0; const uint8_t* csv = NULL;
