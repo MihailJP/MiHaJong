@@ -44,12 +44,12 @@ void INIParser::parseini(IniMapMap& inimap, const char* ini) {
 		else if ((*ptr == ']') && (issectionname)) { // end of a section name
 			firstchr = false; iscomment = true; continue; // ignore until newline encountered
 		}
-		else if (!iscomment) {
-			if ((*ptr == '=') && (!issectionname) && (isrecordentity)) { // delimiter
-				isrecordentity = true; recordname = tmpstr; tmpstr.clear();
+		else if ((!iscomment) && (started)) {
+			if ((*ptr == '=') && (!issectionname) && (!isrecordentity)) { // delimiter
+				isrecordentity = true; recordname = tmpstr; tmpstr.clear(); firstchr = false;
 			}
 			else { // data
-				tmpletter[0] = *ptr; tmpstr += tmpletter;
+				tmpletter[0] = *ptr; tmpstr += tmpletter; firstchr = false;
 			}
 		}
 	}
@@ -58,8 +58,5 @@ void INIParser::parseini(IniMapMap& inimap, const char* ini) {
 	}
 	if (!section.empty()) {
 		inimap.insert(IniMapMap::value_type(currentsection, section)); section.clear();
-		if (issectionname) { // End of the section declaration, without an NL
-			inimap.insert(IniMapMap::value_type(tmpstr, section)); section.clear();
-		}
 	}
 }
