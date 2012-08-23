@@ -746,3 +746,19 @@ __declspec(dllexport) void yaku::yakuCalculator::countyaku(const GameTable* cons
 {
 	*yakuInfo = countyaku(gameStat, (PLAYER_ID)targetPlayer);
 }
+
+/* 縛りを満たしているか調べる */
+bool yaku::yakuCalculator::checkShibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat) {
+	if ((yakuStat->CoreHan >= 2) || (yakuStat->CoreSemiMangan >= 1))
+		return true; // 2翻以上あったら縛りを満たす
+	else if ((yakuStat->CoreHan == 1) && (RuleData::getRule("ryanshiba") == 0))
+		return true; // リャンシバなしのルールの場合で1翻
+	else if ((yakuStat->CoreHan == 1) && (gameStat->Honba < 5) && (RuleData::getRule("ryanshiba") == 1))
+		return true; // 5本場からリャンシバだが4本場までで1翻
+	else if ((yakuStat->CoreHan == 1) && (gameStat->Honba < 4) && (RuleData::getRule("ryanshiba") == 2))
+		return true; // 4本場からリャンシバだが3本場までで1翻
+	else return false; // 縛りを満たしていない場合
+}
+__declspec(dllexport) int yaku::yakuCalculator::check_shibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat) {
+	return checkShibari(gameStat, yakuStat) ? 1 : 0;
+}

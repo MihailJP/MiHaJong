@@ -118,6 +118,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_newtable(L);
 	lua_pushlightuserdata(L, NULL); lua_setfield(L, -2, "addr"); // pointer to C++ struct
 	/* ここにメソッドを書く */
+	lua_pushcfunction(L, luafunc::evaluate); lua_setfield(L, -2, "evaluate");
 	lua_pushcfunction(L, luafunc::getactiveplayer); lua_setfield(L, -2, "getactiveplayer");
 	lua_pushcfunction(L, luafunc::getchip); lua_setfield(L, -2, "getchip");
 	lua_pushcfunction(L, luafunc::getdeckleft); lua_setfield(L, -2, "getdeckleft");
@@ -216,6 +217,27 @@ void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable*
 			lua_pop(L, 1);
 		}
 	}
+}
+
+/* 手を評価する */
+int aiscript::table::functable::gametbl::luafunc::evaluate(lua_State* const L) {
+	int n = lua_gettop(L);
+	if ((n < 2)||(n > 3)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
+	tmpGameStat.TsumoAgariFlag = lua_toboolean(L, 2);
+	PLAYER_ID player = getPlayerID(L, 0);
+	setHand(L, &tmpGameStat, 3);
+	yaku::YAKUSTAT evaluation = yaku::yakuCalculator::countyaku(gameStat, player);
+	lua_newtable(L); // 返り値を格納
+	TableAdd(L, "ismahjong", evaluation.isValid); // あがっていればtrue
+	if (evaluation.isValid) {
+		TableAdd(L, "isvalid", yaku::yakuCalculator::checkShibari(gameStat, &evaluation)); // 縛りを満たしているか
+		TableAdd(L, "fu", evaluation.BasePoints); // 符
+		TableAdd(L, "han", evaluation.CoreHan + evaluation.BonusHan); // 飜
+		TableAdd(L, "mangan", (double)(evaluation.CoreSemiMangan + evaluation.BonusSemiMangan) / 2.0); // 満貫
+		TableAdd(L, "points", evaluation.AgariPoints.bignumtodbl()); // 点数
+	}
+	return 1;
 }
 
 /* ツモ番のプレイヤー番号 */
@@ -397,7 +419,7 @@ int aiscript::table::functable::gametbl::luafunc::getseentiles(lua_State* const 
 /* 向聴数を取得 */
 int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L) {
 	int n = lua_gettop(L);
-	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
 	PLAYER_ID player = getPlayerID(L, 0);
 	setHand(L, &tmpGameStat, 2);

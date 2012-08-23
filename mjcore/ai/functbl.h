@@ -42,6 +42,7 @@ public:
 
 class aiscript::table::functable::gametbl::luafunc {
 public:
+	static int evaluate(lua_State* const L);
 	static int getactiveplayer(lua_State* const L);
 	static int getchip(lua_State* const L);
 	static int getdeckleft(lua_State* const L);

@@ -249,6 +249,8 @@ public:
 	static __declspec(dllexport) int chkShisanBuDa(const GameTable* const gameStat, int targetPlayer);
 	static bool chkShisiBuDa(const GameTable* const gameStat, PLAYER_ID targetPlayer);
 	static __declspec(dllexport) int chkShisiBuDa(const GameTable* const gameStat, int targetPlayer);
+	static bool checkShibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat);
+	static __declspec(dllexport) int check_shibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat);
 };
 
 #endif
