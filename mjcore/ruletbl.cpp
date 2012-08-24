@@ -60,12 +60,12 @@ bool RuleData::chkRule(std::string RuleTag, std::string Expectation) { // ルール
 	return getRuleItemTag(RuleTag, Rules[RuleTag]) == Expectation;
 }
 bool RuleData::chkRuleApplied(std::string RuleTag) { // ルール設定
-	return (!chkRule(RuleTag, "no"));
+	return (!chkRule(RuleTag, "no")) && (!chkRule(RuleTag, "N/A")) && (!chkRule(RuleTag, "continue"));
 }
-uint8_t RuleData::getRule(int RuleID) { // ルール設定を取得する
+uint8_t RuleData::getRule(int RuleID) { // ルール設定を取得する[OBSOLETE]
 	return Rules[nametbl[RuleID]];
 }
-__declspec(dllexport) int getRule(int RuleID) { // ルール設定を取得する
+__declspec(dllexport) int getRule(int RuleID) { // ルール設定を取得する[OBSOLETE]
 	return (int)RuleData::getRule(RuleID);
 }
 

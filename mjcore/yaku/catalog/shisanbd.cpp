@@ -2,7 +2,7 @@
 
 bool yaku::yakuCalculator::chkShisanBuDa(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	// 十三不塔かどうか判定する
-	if (RuleData::getRule("shiisan_puutaa") == 0) return false; // そんなルールあるとでも思った？ 残念！さy(ry
+	if (!RuleData::chkRuleApplied("shiisan_puutaa")) return false; // そんなルールあるとでも思った？ 残念！さy(ry
 	if (gameStat->Player[targetPlayer].FirstDrawFlag) // 鳴きがなくて一巡目であることが必須条件
 		return ((ShantenAnalyzer::calcShanten(gameStat, targetPlayer, ShantenAnalyzer::shantenRegular) == 7) &&
 		// 対一般形7向聴とは、対子または塔子が1つだけある状態で、面子がない状態
@@ -15,7 +15,7 @@ __declspec(dllexport) int yaku::yakuCalculator::chkShisanBuDa(const GameTable* c
 
 bool yaku::yakuCalculator::chkShisiBuDa(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	// 十四不塔かどうか判定する
-	if (RuleData::getRule("shiisan_uushii") == 0) return false; // そんなルールあるとでも思った？ 残念！さy(ry
+	if (!RuleData::chkRuleApplied("shiisan_uushii")) return false; // そんなルールあるとでも思った？ 残念！さy(ry
 	if (gameStat->Player[targetPlayer].FirstDrawFlag) // 鳴きがなくて一巡目であることが必須条件
 		return (ShantenAnalyzer::calcShanten(gameStat, targetPlayer, ShantenAnalyzer::shantenRegular) == 8); // 対一般形8向聴とは、対子も塔子もない状態
 	else return false;

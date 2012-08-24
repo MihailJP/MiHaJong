@@ -7,6 +7,7 @@ class yaku::yakuCalculator::YakuCatalog::catalogInit {
 	friend yaku::yakuCalculator;
 	friend yaku::yakuCalculator::YakuCatalog;
 private:
+	static yaku::yakuCalculator::Yaku::HANFUNC get_yaku_han(const std::string& RuleTag);
 	static void yakulst_contextual();
 	static void yakulst_pinhu();
 	static void yakulst_irregular();

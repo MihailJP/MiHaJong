@@ -150,7 +150,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 				break;
 			case meldQuadConcealed:
 				// 暗槓
-				if (RuleData::getRule("ankan_conceal") != 0) break; // 暗槓非開示ルールだったらカウントしない
+				if (RuleData::chkRule("ankan_conceal", "closed")) break; // 暗槓非開示ルールだったらカウントしない
 				/* FALLTHRU */
 			case meldQuadExposedLeft:   case meldQuadAddedLeft:
 			case meldQuadExposedCenter: case meldQuadAddedCenter:
@@ -350,7 +350,7 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PLAYER_ID target
 				if (tmpGameStat.Player[targetPlayer].Discard[j].tcode.tile == i) // 同じ種類の捨て牌が見つかったら
 					machihaiInfo.FuritenFlag = true; // フリテンと判断します
 			}
-			if (RuleData::getRule("kakan_furiten") == 1) { // 加槓の牌をフリテンとみなすルールなら
+			if (RuleData::chkRuleApplied("kakan_furiten")) { // 加槓の牌をフリテンとみなすルールなら
 				for (int j = 1; j <= tmpGameStat.Player[targetPlayer].MeldPointer; j++) {
 					switch (tmpGameStat.Player[targetPlayer].Meld[j].mstat) {
 					case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight: // 加槓で、なおかつ
@@ -461,8 +461,8 @@ namespace setdora_tools {
 	}
 
 	void addDora(GameTable* const gameStat, tileCode tc, int Mode) {
-		for (int i = ((RuleData::getRule("nagatacho") != 0) ? tc % 10 : tc);
-			i <= (((RuleData::getRule("nagatacho") != 0) && (tc < TILE_SUIT_HONORS)) ? TILE_SUIT_HONORS : tc);
+		for (int i = (RuleData::chkRuleApplied("nagatacho") ? tc % 10 : tc);
+			i <= ((RuleData::chkRuleApplied("nagatacho") && (tc < TILE_SUIT_HONORS)) ? TILE_SUIT_HONORS : tc);
 			i += 10) {
 				std::ostringstream o;
 				if (Mode) gameStat->DoraFlag.Ura[i]++;	// ドラを設定する
@@ -485,7 +485,7 @@ __declspec(dllexport) void setdora(GameTable* const gameStat, int Mode) {
 		// 花牌がドラ表示牌になったとき
 		setdora_tools::addDora(gameStat, Flower, Mode);
 	} else {
-		if (RuleData::getRule("dora_indicator") == 2) {
+		if (RuleData::chkRule("dora_indicator", "dora_around_indicator")) {
 			// 前の牌がドラ（超インフレ用）
 			if ((gameStat->Deck[gameStat->DoraPointer + Mode].tile >= 10) ||
 				(!chkGameType(gameStat, SanmaX)))
@@ -493,13 +493,13 @@ __declspec(dllexport) void setdora(GameTable* const gameStat, int Mode) {
 						setdora_tools::getPrevOf(gameStat, gameStat->Deck[gameStat->DoraPointer + Mode].tile),
 						Mode);
 		}
-		if ((RuleData::getRule("dora_indicator") == 1)||(RuleData::getRule("dora_indicator") == 2)) {
+		if ((RuleData::chkRule("dora_indicator", "dora_indicator_itself"))||(RuleData::chkRule("dora_indicator", "dora_around_indicator"))) {
 			// 現物ドラ
 			setdora_tools::addDora(gameStat,
 				gameStat->Deck[gameStat->DoraPointer + Mode].tile,
 				Mode);
 		}
-		if (RuleData::getRule("dora_indicator") != 1) {
+		if (!RuleData::chkRule("dora_indicator", "dora_indicator_itself")) {
 			// ネクストドラ
 			setdora_tools::addDora(gameStat,
 				setdora_tools::getNextOf(gameStat, gameStat->Deck[gameStat->DoraPointer + Mode].tile),
@@ -668,7 +668,7 @@ __declspec(dllexport) int chkAnkanAbility(const GameTable* const gameStat, int t
 /* 導火線の位置を調べる */
 __declspec(dllexport) void calcdoukasen(GameTable* const gameStat) {
 	/* 導火線の位置を計算する */
-	if (RuleData::getRule("doukasen") != 0) {
+	if (RuleData::chkRuleApplied("doukasen")) {
 		if (chkGameType(gameStat, Sanma4)) {
 			PLAYER_ID* tmpDoukasen = new PLAYER_ID(
 				((30 - ((diceSum(gameStat) - 1) * 36 * 2 + 
@@ -682,22 +682,19 @@ __declspec(dllexport) void calcdoukasen(GameTable* const gameStat) {
 				diceSum(gameStat) * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3;
 		} else {
 			int* tmp;
-			switch (RuleData::getRule("flower_tiles")) {
-			case 3:
+			if (RuleData::chkRule("flower_tiles", "8tiles"))
 				gameStat->DoukasenPlayer =
 					((40 - ((diceSum(gameStat) - 1 +
 					(gameStat->GameRound % PLAYERS)) * 36 * 3 + 
 					diceSum(gameStat) * 2 + gameStat->TilePointer - 1) / 36) + 40)
 					% PLAYERS;
-				break;
-			case 0:
+			else if (RuleData::chkRule("flower_tiles", "no"))
 				gameStat->DoukasenPlayer =
 					((40 - ((diceSum(gameStat) - 1 +
 					(gameStat->GameRound % PLAYERS)) * 34 * 3 +
 					diceSum(gameStat) * 2 + gameStat->TilePointer - 1) / 34) + 40)
 					% PLAYERS;
-				break;
-			default:
+			else {
 				gameStat->DoukasenPlayer =
 					((40 - ((diceSum(gameStat) - 1 +
 					(gameStat->GameRound % PLAYERS)) * 70 * 3 / 2 +

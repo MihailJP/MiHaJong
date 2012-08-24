@@ -639,7 +639,7 @@ extern "C" {
 	__declspec(dllexport) void calcWareme(GameTable* const gameStat) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		if (chkGameType(gameStat, AllSanma)) {
-			if ((RuleData::getRule("wareme") != 0)||(RuleData::getRule("kaimenkaze") != 0)) {
+			if (RuleData::chkRuleApplied("wareme") || RuleData::chkRuleApplied("kaimenkaze")) {
 				gameStat->WaremePlayer = ((gameStat->GameRound-(gameStat->GameRound/4))+24
 					+diceSum(gameStat)-1) % 3;
 				if (chkGameType(gameStat, Sanma4)) {
@@ -648,7 +648,7 @@ extern "C" {
 				}
 			}
 		} else {
-			if ((RuleData::getRule("wareme") != 0)||(RuleData::getRule("kaimenkaze") != 0)) {
+			if (RuleData::chkRuleApplied("wareme") || RuleData::chkRuleApplied("kaimenkaze")) {
 				gameStat->WaremePlayer = ((gameStat->GameRound % 4)+32+diceSum(gameStat)-1) % 4;
 			}
 		}
@@ -1015,8 +1015,8 @@ extern "C" {
 	__declspec(dllexport) void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		gameStat->ShibariFlag = //二飜縛り
-			((gameStat->Honba >= 5)&&(RuleData::getRule("ryanshiba") == 1)) ||
-			((gameStat->Honba >= 4)&&(RuleData::getRule("ryanshiba") == 2));
+			((gameStat->Honba >= 5)&&(RuleData::chkRule("ryanshiba", "from_5honba"))) ||
+			((gameStat->Honba >= 4)&&(RuleData::chkRule("ryanshiba", "from_4honba")));
 
 		for (int i = 0; i < PAO_YAKU_PAGES; i++) // 包フラグ（-1…なし、0～3…該当プレイヤー）
 			gameStat->PaoFlag[i].agariPlayer = gameStat->PaoFlag[i].paoPlayer = -1;
@@ -1028,19 +1028,11 @@ extern "C" {
 
 		if (chkGameType(gameStat, AllSanma)) {
 			gameStat->DeadTiles = 14; // 王牌の数
-			gameStat->ExtraRinshan = (RuleData::getRule("flower_tiles") != 0) ? 4 : 0;
+			gameStat->ExtraRinshan = RuleData::chkRuleApplied("flower_tiles") ? 4 : 0;
 		} else {
-			switch (RuleData::getRule("flower_tiles")) {
-			case 0:
-				gameStat->DeadTiles = 14; // 王牌の数
-				break;
-			case 3:
-				gameStat->DeadTiles = 22; // 王牌の数(花牌を入れる時は特別に２２枚残しとする)
-				break;
-			default:
-				gameStat->DeadTiles = 18; // 王牌の数
-				break;
-			}
+			if (RuleData::chkRule("flower_tiles", "no")) gameStat->DeadTiles = 14; // 王牌の数
+			else if (RuleData::chkRule("flower_tiles", "8tiles")) gameStat->DeadTiles = 22; // 王牌の数(花牌を入れる時は特別に２２枚残しとする)
+			else gameStat->DeadTiles = 18; // 王牌の数
 		}
 
 		for (int i = 0; i < TILE_NONFLOWER_MAX; i++) // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
@@ -1061,19 +1053,13 @@ extern "C" {
 		if (chkGameType(gameStat, AllSanma)) {
 			gameStat->RinshanPointer = 107;
 		} else {
-			switch (RuleData::getRule("flower_tiles")) {
-			case 0: noflower:
-				gameStat->RinshanPointer = 135;
-				break;
-			case 1: case 2:
+			if (RuleData::chkRule("flower_tiles", "no")) gameStat->RinshanPointer = 135;
+			else if ((RuleData::chkRule("flower_tiles", "seasons")) || (RuleData::chkRule("flower_tiles", "flowers")))
 				gameStat->RinshanPointer = 139;
-				break;
-			case 3:
-				gameStat->RinshanPointer = 143;
-				break;
-			default:
+			else if (RuleData::chkRule("flower_tiles", "8tiles")) gameStat->RinshanPointer = 143;
+			else {
 				error("flower_tiles異常。花牌無しルールとみなして処理します。");
-				goto noflower; // 設定異常時のフォールバック。敢えてgotoを使う。
+				gameStat->RinshanPointer = 135; // 設定異常時のフォールバック
 			}
 		}
 
@@ -1141,105 +1127,37 @@ extern "C" {
 
 		for (int i = 0; i < PLAYERS; i++) {
 			if (i < ACTUAL_PLAYERS) {
-				if (chkGameType(&GameStat, SanmaT)) {
-					switch (RuleData::getRule("starting_point")) {
-					case 0: snmdflt:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(35000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 35000);
-						break;
-					case 1:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(40000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 40000);
-						break;
-					case 2:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(45000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 45000);
-						break;
-					case 3:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(50000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 50000);
-						break;
-					case 4: case 7:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(25000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 25000);
-						break;
-					case 5:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(27000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 27000);
-						break;
-					case 6: case 8:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(30000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 30000);
-						break;
-					default:
-						error("starting_point異常。持ち点を25000として処理します。");
-						goto snmdflt; // フォールバック用。敢えてgotoを使います
-					}
-				} else {
-					switch (RuleData::getRule("starting_point")) {
-					case 0: dflt:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(25000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 25000);
-						break;
-					case 1:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(27000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 27000);
-						break;
-					case 2:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(30000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 30000);
-						break;
-					case 3:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(35000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 35000);
-						break;
-					case 4:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(40000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 40000);
-						break;
-					case 5:
-						gameStat->Player[i].PlayerScore = LargeNum::fromInt(20000, 1000000u);
-						assert(gameStat->Player[i].PlayerScore.digitGroup[0] == 20000);
-						break;
-					default:
-						error("starting_point異常。持ち点を25000として処理します。");
-						goto dflt; // フォールバック用。敢えてgotoを使います
-					}
-				}
+				gameStat->Player[i].PlayerScore =
+					LargeNum::fromInt(std::atoi(RuleData::chkRule("starting_point").c_str()));
 			} else {
 				gameStat->Player[i].PlayerScore = LargeNum::fromInt(0, 1000000u);
 			}
 		}
 
-		switch (RuleData::getRule("game_length")) {
-		case 0: hanchan:
+		if (RuleData::chkRule("game_length", "east_south_game"))
 			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 6 : 7;
-			break;
-		case 1: case 7:
+		else if (RuleData::chkRule("game_length", "east_wind_game") ||
+			RuleData::chkRule("game_length", "east_only_game"))
 			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 2 : 3;
-			break;
-		case 2: case 3:
+		else if (RuleData::chkRule("game_length", "full_round_game") ||
+			RuleData::chkRule("game_length", "east_north_game"))
 			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 14 : 15;
-			break;
-		case 4:
+		else if (RuleData::chkRule("game_length", "single_round_game"))
 			gameStat->GameLength = 0;
-			break;
-		case 5:
+		else if (RuleData::chkRule("game_length", "twice_east_game"))
 			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 18 : 19;
-			break;
-		case 6:
+		else if (RuleData::chkRule("game_length", "east_south_west_game"))
 			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 10 : 11;
-			break;
-		default:
+		else {
 			error("game_length異常値。半荘戦とみなします。");
-			goto hanchan; // ここは敢えてgotoを使う
+			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 6 : 7;
 		}
 		gameStat->GameRound = gameStat->Honba = gameStat->PlayerID =
 			gameStat->Deposit = gameStat->LoopRound = gameStat->AgariChain = 0;
 		gameStat->LastAgariPlayer = -1;
 		for (int i = 0; i < PLAYERS; i++) {
 			gameStat->Player[i].SumaroFlag = false;
-			gameStat->Player[i].YakitoriFlag = (RuleData::getRule("yakitori") != 0);
+			gameStat->Player[i].YakitoriFlag = RuleData::chkRuleApplied("yakitori");
 			gameStat->Player[i].playerChip = 0;
 		}
 
