@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <array>
+#include <functional>
 #include "logging.h"
 #include "resource.h"
 #include "reader/readrsrc.h"
@@ -40,6 +41,7 @@ private:
 	static void parseRule();
 	static void configinit_csv();
 	static void configinit_ini();
+	static std::string getRuleItemTag(std::function<bool(const CSVReader::RECORD&)> RuleF, int index);
 public:
 	__declspec(dllexport) static void configinit();
 	__declspec(dllexport) static void storeRule(const char** ruleTxt);
@@ -48,6 +50,10 @@ public:
 	__declspec(dllexport) static void getRuleDescription(char* const txt, int bufsize, int RuleID);
 	__declspec(dllexport) static void getRuleTxt(char* const txt, int bufsize, int RuleID, int index);
 	static std::string getRuleItemTag(int RuleID, int index);
+	static std::string getRuleItemTag(std::string RuleTag, int index);
+	static std::string chkRule(std::string RuleTag);
+	static bool chkRule(std::string RuleTag, std::string Expectation);
+	static bool chkRuleApplied(std::string RuleTag);
 	inline static uint8_t getRule(std::string RuleTag) {return Rules[RuleTag];}
 	static uint8_t getRule(int RuleID);
 };

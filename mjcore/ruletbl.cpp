@@ -53,6 +53,15 @@ __declspec(dllexport) void RuleData::exportRule(char** ruleTxt) { // C++→HSP ル
 		memcpy(ruleTxt[i], ruleConf[i], RULE_IN_LINE);
 }
 
+std::string RuleData::chkRule(std::string RuleTag) { // ルール設定タグを取得する
+	return getRuleItemTag(RuleTag, Rules[RuleTag]);
+}
+bool RuleData::chkRule(std::string RuleTag, std::string Expectation) { // ルール設定
+	return getRuleItemTag(RuleTag, Rules[RuleTag]) == Expectation;
+}
+bool RuleData::chkRuleApplied(std::string RuleTag) { // ルール設定
+	return (!chkRule(RuleTag, "no"));
+}
 uint8_t RuleData::getRule(int RuleID) { // ルール設定を取得する
 	return Rules[nametbl[RuleID]];
 }
@@ -87,9 +96,9 @@ __declspec(dllexport) void RuleData::getRuleDescription(char* const txt, int buf
 	strcpy_s(txt, bufsize, "");
 }
 
-std::string RuleData::getRuleItemTag(int RuleID, int index) {
+std::string RuleData::getRuleItemTag(std::function<bool(const CSVReader::RECORD&)> RuleF, int index) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
-		if (std::atoi((*k)[0].c_str()) != RuleID) continue;
+		if (RuleF(*k)) continue;
 		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str()))) {
 			if ((*k).size() > (unsigned int)(11 + index))
 				return std::string((*k)[11 + index]);
@@ -100,6 +109,16 @@ std::string RuleData::getRuleItemTag(int RuleID, int index) {
 		}
 	}
 	return std::string("");
+}
+std::string RuleData::getRuleItemTag(int RuleID, int index) {
+	return getRuleItemTag(
+		[RuleID](const CSVReader::RECORD& k){return std::atoi(k[0].c_str()) != RuleID;},
+		index);
+}
+std::string RuleData::getRuleItemTag(std::string RuleTag, int index) {
+	return getRuleItemTag(
+		[RuleTag](const CSVReader::RECORD& k){return k[8] != RuleTag;},
+		index);
 }
 
 __declspec(dllexport) void RuleData::getRuleTxt(char* const txt, int bufsize, int RuleID, int index) {
