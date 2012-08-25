@@ -11,7 +11,7 @@ __declspec(dllexport) void aiscript::initscript() {
 	for (int i = 0; i < PLAYERS; i++) {
 		status[i].state = luaL_newstate();
 		luaopen_base(status[i].state); // baseライブラリだけは開いておきましょう
-		table::functable::inittable(status[i].state);
+		table::functable::inittable(status[i].state, i);
 		const char* filename = ".\\ai\\ai.lua"; /* ファイル名は仮 */
 		readfile(&status[i], filename); /* ファイルを読み込み */
 	}
@@ -57,15 +57,15 @@ void aiscript::readfile(aiscript::ScriptStates* const L, const char* const filen
 }
 
 void aiscript::GameStatToLuaTable(lua_State* const L, const GameTable* const gameStat) {
-	debug("C++構造体→Luaテーブル変換開始");
-	lua_newtable(L); // main table
-
-	lua_newtable(L); // table of player table
-	for (int p = 0; p < PLAYERS; p++)
-		table::playertable::PlayerTbl(L, &gameStat->Player[p], (PLAYER_ID)p);
-	lua_setfield(L, -2, "Player");
-
-	debug("C++構造体→Luaテーブル変換終了");
+	lua_getglobal(L, table::functable::getTblName()); // get 'mihajong' table
+	lua_getfield(L, -1, table::functable::getGTblName()); // get 'gametbl' table
+	lua_remove(L, -2); // content of 'mihajong' table is no longer needed
+	lua_getmetatable(L, -1); // get metatable
+	lua_getfield(L, -1, "__index"); // get '__index' metamethod (table)
+	lua_pushlightuserdata(L, (void *)gameStat); // gameStat pointer
+	lua_setfield(L, -2, "addr"); // set 'addr' field
+	lua_setfield(L, -2, "__index"); // update '__index' metamethod (table)
+	lua_setmetatable(L, -2); // update metatable
 }
 
 __declspec(dllexport) int aiscript::compdahai(const GameTable* const gameStat) {
@@ -139,6 +139,7 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 	}
 }
 
+#if 0
 inline void aiscript::table::TableAdd(lua_State* const L, const char* const key, const TILE val) {
 	lua_newtable(L);
 	TableAdd(L, "tile", (lua_Integer)val.tile);
@@ -239,3 +240,4 @@ inline void aiscript::table::playertable::pltable::PlayerDeclFlag(lua_State* con
 	TableAdd(L, "Chi", plstat->Chi);
 	lua_setfield(L, -2, "DeclarationFlag");
 }
+#endif

@@ -23,11 +23,14 @@ private:
 	static inline void tileCode(lua_State* const L);
 	class gametbl;
 public:
-	static void inittable(lua_State* const L);
+	static inline const char* getGTblName();
+	static inline const char* getTblName() {return tblname;}
+	static void inittable(lua_State* const L, int playerID);
 };
 
 class aiscript::table::functable::gametbl {
 private:
+	static const char* tblname;
 	static const std::array<::tileCode, 35> validTiles;
 	static GameTable* getGameStatAddr(lua_State* const L);
 	static PLAYER_ID getPlayerID(lua_State* const L, int index);
@@ -37,8 +40,11 @@ private:
 	static void setHand(lua_State* const L, GameTable* const tmpGameStat, int index);
 	class luafunc;
 public:
-	static inline void makeprototype(lua_State* const L);
+	static inline const char* getTblName() {return tblname;}
+	static inline void makeprototype(lua_State* const L, int playerID);
 };
+
+inline const char* aiscript::table::functable::getGTblName() {return gametbl::getTblName();}
 
 class aiscript::table::functable::gametbl::luafunc {
 public:

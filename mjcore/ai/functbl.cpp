@@ -1,13 +1,15 @@
 #include "functbl.h"
 
 const char* aiscript::table::functable::tblname = "mihajong"; // table name
+const char* aiscript::table::functable::gametbl::tblname = "gametbl"; // table name
 
-void aiscript::table::functable::inittable(lua_State* const L) {
+void aiscript::table::functable::inittable(lua_State* const L, int playerID) {
 	lua_newtable(L); // table 'mihajong'
 	discardTileCode(L); // subtable 'DiscardType'
 	meldCallCode(L); // subtable 'Call'
 	meldTypeCode(L); // subtable 'MeldType'
 	tileCode(L); // subtable 'Tile'
+	gametbl::makeprototype(L, playerID); // subtable 'gametbl' (prototype)
 	lockTable(L); // mark as read-only
 	lua_setglobal(L, tblname); // global table
 }
@@ -50,7 +52,7 @@ inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 	TableAdd(L, "Middle", meldChiiMiddle);
 	TableAdd(L, "Upper", meldChiiUpper);
 	lockTable(L); lua_setfield(L, -2, "Chii");
-	lockTable(L); lua_setfield(L, -2, "DiscardType");
+	lockTable(L); lua_setfield(L, -2, "Call");
 }
 
 /* 鳴きの種別コード */
@@ -114,9 +116,10 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 	lockTable(L); lua_setfield(L, -2, "Tile");
 }
 
-inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const L) {
+inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const L, int playerID) {
 	lua_newtable(L);
 	lua_pushlightuserdata(L, NULL); lua_setfield(L, -2, "addr"); // pointer to C++ struct
+	lua_pushinteger(L, playerID + 1); lua_setfield(L, -2, "playerid"); // Player ID
 	/* ここにメソッドを書く */
 	lua_pushcfunction(L, luafunc::evaluate); lua_setfield(L, -2, "evaluate");
 	lua_pushcfunction(L, luafunc::getactiveplayer); lua_setfield(L, -2, "getactiveplayer");
@@ -152,7 +155,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::issumaroallowed); lua_setfield(L, -2, "issumaroallowed");
 	lua_pushcfunction(L, luafunc::isyakitori); lua_setfield(L, -2, "isyakitori");
 	/* メソッド定義ここまで */
-	lockTable(L); lua_setfield(L, -2, "gametbl");
+	lockTable(L); lua_setfield(L, -2, tblname);
 }
 
 /* gameStatのアドレスを取得（暗黙の引数） */
