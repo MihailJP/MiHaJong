@@ -106,6 +106,13 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		ます。
 
 
+	▼ gametbl:getbakaze()
+
+		　場風牌を返します。返り値は mihajong.Tile.Wind テーブルの定数のどれか
+		です(白入ありのルールでは mihajong.Tile.Dragon テーブルの値になること
+		もあります)。
+
+
 	▼ gametbl:getchip([player])
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
@@ -201,6 +208,12 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 			　赤ドラかどうかを示す番号が入ります。
 
 
+	▼ gametbl:getjikaze()
+
+		　自風牌を返します。返り値は mihajong.Tile.Wind テーブルの定数のどれか
+		です。
+
+
 	▼ gametbl:getmeld([playerid])
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
@@ -233,19 +246,6 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 		　注意！　この関数で返されるテーブルはキーが飛び飛びの数値になっていま
 		す。
-
-
-	▼ gametbl:getownwind() (未実装)
-
-		　自風牌を返します。返り値は mihajong.Tile.Wind テーブルの定数のどれか
-		です。
-
-
-	▼ gametbl:getprevailingwind() (未実装)
-
-		　場風牌を返します。返り値は mihajong.Tile.Wind テーブルの定数のどれか
-		です(白入ありのルールでは mihajong.Tile.Dragon テーブルの値になること
-		もあります)。
 
 
 	▼ gametbl:getpreviousdiscard()
@@ -423,7 +423,14 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		3)の数値で返します。割れ目なしの時はnilを返します。
 
 
-	▼ gametbl:getyakuhaiwind() (未実装)
+	▼ gametbl:isankanallowed()
+
+		　リーチ後に暗槓出来る状態ならtrueを、そうでなければfalseを返します。
+		　なお、この関数はリーチしていない状態でも使用できますが、その場合は意
+		味をなしません。
+
+
+	▼ gametbl:getyakuhaiwind()
 
 		　それぞれの風牌について役牌になっているかどうかを格納したテーブルを返
 		します。これはEast、South、West、Northのフィールドをもち、その牌が役牌
@@ -503,14 +510,6 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 
 	▼ gametbl:isyakitori([player])
-
-		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
-		たは省略された場合は、自身の状態を調べます。
-		　指定したプレイヤーが焼き鳥ならtrueを、そうでなければfalseを返します。
-		但し、焼き鳥なしのルールの時はnilを返します。
-
-
-	▼ gametbl:isyakitori()
 
 		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
 		たは省略された場合は、自身の状態を調べます。
@@ -625,7 +624,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		トタイプです。詳細は前述しています。
 
 
-■ ephemeralテーブル (未実装)
+■ ephemeralテーブル
 
 	　これは空のテーブルで、AI作者が望むものを何でも格納することができます。こ
 	れらは、毎局開始時にリセットされます。プレイヤーごとに別々のLua環境が用意
