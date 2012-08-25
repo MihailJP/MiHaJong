@@ -23,7 +23,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 	ければなりません。定義されていない場合、そのスクリプトを無効とみなしツモ切
 	りを行います。
 
-	▼ determine_discard (gametbl) (新仕様未対応)
+	▼ determine_discard(gametbl)
 
 		　ツモ番になるごとに、(山から1枚自摸った状態で)この関数が呼ばれます。
 		この関数は引数を1つ取り、2つの値を返します。
@@ -55,7 +55,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　卓情報のアドレスを示す軽量ユーザーデータです。
 
 
-	▼ gametbl.playerid (未実装)
+	▼ gametbl.playerid
 
 		　自分自身を表すプレイヤー番号です。
 
@@ -174,7 +174,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		～3)の数値で返します。導火線なしの時はnilを返します。
 
 
-	▼ gametbl:getflower([playerid]) (未実装)
+	▼ gametbl:getflower([playerid])
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
 		自身)の花牌、または三麻の抜きドラの数を返します。
@@ -201,7 +201,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 			　赤ドラかどうかを示す番号が入ります。
 
 
-	▼ gametbl:getmeld([playerid]) (未実装)
+	▼ gametbl:getmeld([playerid])
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
 		自身)の鳴き面子を格納したテーブルで返します。このテーブルは鳴いた回数
@@ -214,9 +214,10 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 			　牌の種類を表す番号が入ります。ただし明順子(チー)の場合、一番数字
 			の低い牌が入ります。
 
-		● red フィールド(詳細未定)
+		● red フィールド
 
-			　赤ドラかどうかを示す番号が入ります。
+			　それぞれの牌について赤ドラかどうかを示す番号を格納した配列が入り
+			ます。
 
 		● type フィールド
 
@@ -275,7 +276,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 	▼ gametbl:getrule(ruletag)
 
-		　ルールを取得する　あとで書く
+		　ruletagで指定された文字列に対応するルール設定を返します。
 
 
 	▼ gametbl:getscore([player])
@@ -618,7 +619,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　　　　　　　手牌データには現れません。
 
 
-	▼ mihajong.gametbl (未実装)
+	▼ mihajong.gametbl
 
 		　determine_discard、determine_call の引数として渡されるテーブルのプロ
 		トタイプです。詳細は前述しています。
@@ -631,35 +632,6 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 	されているので、混線することはありません。
 	　半荘中ずっと保持したい情報は、ephemeralテーブルの「外の」グローバル環境
 	に保持します。
-
-
-■ 見出しレベル１
-
-	▼ 見出しレベル２
-
-		　ここに本文を書きます。
-
-
-	▼ 見出しレベル２
-
-		　ここに本文を書きます。
-
-		● 見出しレベル３
-
-			　ここに本文を書きます。
-
-		● 見出しレベル３
-
-			　ここに本文を書きます。
-
-
-■ 見出しレベル１
-
-	　ここに本文を書きます。
-
-	▼ 見出しレベル２
-
-		　ここに本文を書きます。
 
 
 ==============================================================================
