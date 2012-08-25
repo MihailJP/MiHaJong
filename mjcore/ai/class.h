@@ -20,6 +20,7 @@ public:
 	static void GameStatToLuaTable(lua_State* const L, const GameTable* const gameStat);
 	__declspec(dllexport) static int compdahai(const GameTable* const gameStat);
 	static DiscardTileNum determine_discard(const GameTable* const gameStat);
+	__declspec(dllexport) static void compfuuro(GameTable* const gameStat);
 };
 
 struct aiscript::ScriptStates {
