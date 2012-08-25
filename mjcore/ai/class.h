@@ -8,8 +8,8 @@
 class aiscript {
 private:
 	struct ScriptStates;
-	static const char* const fncname_discard;
-	static const char* const fncname_call;
+	static const char fncname_discard[8];
+	static const char fncname_call[3][12];
 	static ScriptStates status[PLAYERS];
 	class table;
 	static const DiscardTileNum DiscardThrough;

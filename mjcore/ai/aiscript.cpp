@@ -3,8 +3,8 @@
 const DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NUM_OF_TILES_IN_HAND - 1};
 
 aiscript::ScriptStates aiscript::status[PLAYERS] = {{NULL, false}};
-const char* const aiscript::fncname_discard = "ontsumo"; // 捨牌決定用関数の名前
-const char* const aiscript::fncname_call = "ondiscard"; // 鳴き決定用関数の名前
+const char aiscript::fncname_discard[8] = "ontsumo"; // 捨牌決定用関数の名前
+const char aiscript::fncname_call[3][12] = {"ondiscard", "onkakan", "onankan",}; // 鳴き決定用関数の名前
 
 __declspec(dllexport) void aiscript::initscript() {
 	// Lua初期化 (仮)
@@ -158,12 +158,19 @@ __declspec(dllexport) void aiscript::compfuuro(GameTable* const gameStat) {
 		gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Ron = false;
 	if (status[gameStat->CurrentPlayer.Active].scriptLoaded) { /* 正しく読み込まれているなら */
 		try { /* determine_discard があればよし、なかったら例外処理 */
-			lua_getglobal(status[gameStat->CurrentPlayer.Active].state, fncname_call);
+			lua_getglobal(status[gameStat->CurrentPlayer.Active].state, fncname_call[gameStat->KangFlag.chankanFlag]);
 		} catch (...) { /* determine_discard がなかったらエラーになるので例外処理をする */
-			std::ostringstream o;
-			o << "グローバルシンボル [" << fncname_discard << "] の取得に失敗しました"; error(o.str().c_str());
-			info("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。");
-			status[gameStat->CurrentPlayer.Active].scriptLoaded = false; return;
+			if (gameStat->KangFlag.chankanFlag) {
+				std::ostringstream o;
+				o << "グローバルシンボル [" << fncname_call[0] << "] の取得に失敗しました"; error(o.str().c_str());
+				info("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。");
+				status[gameStat->CurrentPlayer.Active].scriptLoaded = false; return;
+			} else {
+				std::ostringstream o;
+				o << "グローバルシンボル [" << fncname_call[gameStat->KangFlag.chankanFlag] <<
+					"] の取得に失敗しました。無視します。";
+				warn(o.str().c_str()); return;
+			}
 		}
 		GameStatToLuaTable(status[gameStat->CurrentPlayer.Active].state, gameStat);
 		if (int errcode = lua_pcall(status[gameStat->CurrentPlayer.Active].state, 1, 2, 0)) {
