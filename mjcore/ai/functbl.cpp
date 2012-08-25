@@ -129,6 +129,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::getdiscard); lua_setfield(L, -2, "getdiscard");
 	lua_pushcfunction(L, luafunc::getdorainfo); lua_setfield(L, -2, "getdorainfo");
 	lua_pushcfunction(L, luafunc::getdoukasen); lua_setfield(L, -2, "getdoukasen");
+	lua_pushcfunction(L, luafunc::getflower); lua_setfield(L, -2, "getflower");
 	lua_pushcfunction(L, luafunc::gethand); lua_setfield(L, -2, "gethand");
 	lua_pushcfunction(L, luafunc::getopenwait); lua_setfield(L, -2, "getopenwait");
 	lua_pushcfunction(L, luafunc::getpreviousdiscard); lua_setfield(L, -2, "getpreviousdiscard");
@@ -316,6 +317,29 @@ int aiscript::table::functable::gametbl::luafunc::getdoukasen(lua_State* const L
 	if (getGameStatAddr(L)->DoukasenPlayer == -1)
 		lua_pushnil(L); // “±‰Îü‚È‚µ‚Ì‚Ínil
 	else lua_pushinteger(L, (int)getGameStatAddr(L)->DoukasenPlayer + 1);
+	return 1;
+}
+
+/* ‰Ô”v‚Ì” */
+int aiscript::table::functable::gametbl::luafunc::getflower(lua_State* const L) {
+	int n = lua_gettop(L);
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "ˆø”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	PLAYER_ID player = getPlayerID(L, 2);
+	if (chkGameType(gameStat, Yonma)) { // l–ƒ‚Í‰Ô”v
+		int k = 0;
+		if (gameStat->Player[player].FlowerFlag.Spring) ++k;
+		if (gameStat->Player[player].FlowerFlag.Summer) ++k;
+		if (gameStat->Player[player].FlowerFlag.Autumn) ++k;
+		if (gameStat->Player[player].FlowerFlag.Winter) ++k;
+		if (gameStat->Player[player].FlowerFlag.Plum) ++k;
+		if (gameStat->Player[player].FlowerFlag.Orchid) ++k;
+		if (gameStat->Player[player].FlowerFlag.Chrys) ++k;
+		if (gameStat->Player[player].FlowerFlag.Bamboo) ++k;
+		lua_pushinteger(L, k);
+	} else { // O–ƒ‚Í”²‚«–k
+		lua_pushinteger(L, (int)gameStat->Player[player].NorthFlag);
+	}
 	return 1;
 }
 

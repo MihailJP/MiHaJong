@@ -56,6 +56,7 @@ public:
 	static int getdiscard(lua_State* const L);
 	static int getdorainfo(lua_State* const L);
 	static int getdoukasen(lua_State* const L);
+	static int getflower(lua_State* const L);
 	static int gethand(lua_State* const L);
 	static int getopenwait(lua_State* const L);
 	static int getpreviousdiscard(lua_State* const L);
