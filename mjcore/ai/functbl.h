@@ -74,6 +74,7 @@ public:
 	static int gettsumibou(lua_State* const L);
 	static int getwareme(lua_State* const L);
 	static int getyakuhaiwind(lua_State* const L);
+	static int isankanallowed(lua_State* const L);
 	static int isfinalround(lua_State* const L);
 	static int isfirstdraw(lua_State* const L);
 	static int isippatsu(lua_State* const L);
