@@ -58,6 +58,7 @@ public:
 	static int getdoukasen(lua_State* const L);
 	static int getflower(lua_State* const L);
 	static int gethand(lua_State* const L);
+	static int getmeld(lua_State* const L);
 	static int getopenwait(lua_State* const L);
 	static int getpreviousdiscard(lua_State* const L);
 	static int getrank(lua_State* const L);

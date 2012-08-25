@@ -131,6 +131,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::getdoukasen); lua_setfield(L, -2, "getdoukasen");
 	lua_pushcfunction(L, luafunc::getflower); lua_setfield(L, -2, "getflower");
 	lua_pushcfunction(L, luafunc::gethand); lua_setfield(L, -2, "gethand");
+	lua_pushcfunction(L, luafunc::getmeld); lua_setfield(L, -2, "getmeld");
 	lua_pushcfunction(L, luafunc::getopenwait); lua_setfield(L, -2, "getopenwait");
 	lua_pushcfunction(L, luafunc::getpreviousdiscard); lua_setfield(L, -2, "getpreviousdiscard");
 	lua_pushcfunction(L, luafunc::getrank); lua_setfield(L, -2, "getrank");
@@ -364,14 +365,24 @@ int aiscript::table::functable::gametbl::luafunc::gethand(lua_State* const L) {
 }
 
 /* 副露面子 */
-/*inline void aiscript::table::playertable::pltable::PlayerMeld(lua_State* const L, const MELD_BUF* const plMeld, uint8_t MeldPointer) {
-	lua_newtable(L);
-	for (uint8_t i = 1; i <= MeldPointer; i++) {
-		std::ostringstream o; o << (int)i;
-		TableAdd(L, o.str().c_str(), plMeld[i]);
+int aiscript::table::functable::gametbl::luafunc::getmeld(lua_State* const L) {
+	int n = lua_gettop(L);
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	PLAYER_ID player = getPlayerID(L, 2);
+	lua_newtable(L); // 戻り値を格納するテーブル
+	for (uint8_t i = 1; i <= gameStat->Player[player].MeldPointer; i++) {
+		lua_pushinteger(L, i); lua_newtable(L);
+		TableAdd(L, "tile", (int)gameStat->Player[player].Meld[i].tile);
+		lua_newtable(L);
+		for (int k = 0; k < (gameStat->Player[player].Meld[i].mstat >= meldQuadConcealed ? 4 : 3); k++)
+			TableAdd(L, k + 1, (int)gameStat->Player[player].Meld[i].red[k]);
+		lua_setfield(L, -2, "red");
+		TableAdd(L, "type", (int)gameStat->Player[player].Meld[i].mstat);
+		lua_settable(L, -3);
 	}
-	lua_setfield(L, -2, "Meld");
-}*/
+	return 1;
+}
 
 /* オープンリーチの待ち牌情報 */
 int aiscript::table::functable::gametbl::luafunc::getopenwait(lua_State* const L) {
