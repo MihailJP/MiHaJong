@@ -23,7 +23,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 	ければなりません。定義されていない場合、そのスクリプトを無効とみなしツモ切
 	りを行います。
 
-	▼ determine_discard(gametbl)
+	▼ ontsumo(gametbl)
 
 		　ツモ番になるごとに、(山から1枚自摸った状態で)この関数が呼ばれます。
 		この関数は引数を1つ取り、2つの値を返します。
@@ -41,14 +41,53 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		の返り値を nil にしてもかまいません。
 
 
-	▼ determine_call (gametbl) (未実装)
+	▼ ondiscard(gametbl)
 
-		　あとで書く
+		　誰かの打牌があるごとに、この関数が呼ばれます。この関数は引数を1つ取
+		り、1つの値を返します。
+		　引数 gametbl は、卓の情報を示すテーブルで、軽量ユーザーデータとメ
+		ソッドが格納されています。
+		　返り値は鳴きの種類を表す番号です。これについては、後述する mihajong.
+		Call を参照してください。
 
 
-■ determine_discard、determine_call の引数について
+■ MiHaJong本体から呼び出されるその他の関数
 
-	　あとでテーブルの説明を書く
+	　MiHaJongで使用するLuaスクリプトでは、前述した必須の関数のほか、次の関数
+	が呼ばれることがあります。定義されていない場合、何もしなかったものとみなさ
+	れます（スクリプト自体が無効とみなされたりはしません）。
+
+	▼ onkakan(gametbl)
+
+		　誰かの加槓があると、この関数が呼ばれます。引数・返り値は ondiscard
+		と同様です。この関数は、槍槓を和了るために定義されています。
+
+	▼ onankan(gametbl)
+
+		　誰かの暗槓があると、この関数が呼ばれます。引数・返り値は ondiscard
+		と同様です。この関数は、国士無双を槍槓で和了るために定義されています。
+
+
+■ 予約されている名前
+
+	　MiHaJongで使用するLuaスクリプトでは、グローバル環境における次の名前が将
+	来の拡張のために予約されています。
+
+	・ name
+	・ init
+	・ onhaipaistart
+	・ onhaipaiend
+	・ onmyagari
+	・ onfurikomi
+	・ onothersagari
+	・ onryuukyoku
+	・ onendgame
+
+
+■ ontsumo、ondiscard の引数について
+
+	　ontsumo()やondiscard()の引数には、卓の状態が渡されます。引数は1つのテー
+	ブルで、次のフィールド、メソッドが含まれています。
 
 	▼ gametbl.addr
 
