@@ -50,6 +50,7 @@ class aiscript::table::functable::gametbl::luafunc {
 public:
 	static int evaluate(lua_State* const L);
 	static int getactiveplayer(lua_State* const L);
+	static int getbakaze(lua_State* const L);
 	static int getchip(lua_State* const L);
 	static int getdeckleft(lua_State* const L);
 	static int getdeposit(lua_State* const L);
@@ -58,6 +59,7 @@ public:
 	static int getdoukasen(lua_State* const L);
 	static int getflower(lua_State* const L);
 	static int gethand(lua_State* const L);
+	static int getjikaze(lua_State* const L);
 	static int getmeld(lua_State* const L);
 	static int getopenwait(lua_State* const L);
 	static int getpreviousdiscard(lua_State* const L);

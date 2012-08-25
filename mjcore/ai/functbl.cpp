@@ -123,6 +123,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	/* ここにメソッドを書く */
 	lua_pushcfunction(L, luafunc::evaluate); lua_setfield(L, -2, "evaluate");
 	lua_pushcfunction(L, luafunc::getactiveplayer); lua_setfield(L, -2, "getactiveplayer");
+	lua_pushcfunction(L, luafunc::getbakaze); lua_setfield(L, -2, "getbakaze");
 	lua_pushcfunction(L, luafunc::getchip); lua_setfield(L, -2, "getchip");
 	lua_pushcfunction(L, luafunc::getdeckleft); lua_setfield(L, -2, "getdeckleft");
 	lua_pushcfunction(L, luafunc::getdeposit); lua_setfield(L, -2, "getdeposit");
@@ -131,6 +132,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::getdoukasen); lua_setfield(L, -2, "getdoukasen");
 	lua_pushcfunction(L, luafunc::getflower); lua_setfield(L, -2, "getflower");
 	lua_pushcfunction(L, luafunc::gethand); lua_setfield(L, -2, "gethand");
+	lua_pushcfunction(L, luafunc::getjikaze); lua_setfield(L, -2, "getjikaze");
 	lua_pushcfunction(L, luafunc::getmeld); lua_setfield(L, -2, "getmeld");
 	lua_pushcfunction(L, luafunc::getopenwait); lua_setfield(L, -2, "getopenwait");
 	lua_pushcfunction(L, luafunc::getpreviousdiscard); lua_setfield(L, -2, "getpreviousdiscard");
@@ -253,6 +255,16 @@ int aiscript::table::functable::gametbl::luafunc::getactiveplayer(lua_State* con
 	return 1;
 }
 
+/* 場風牌 */
+int aiscript::table::functable::gametbl::luafunc::getbakaze(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	PLAYER_ID player = getPlayerID(L, 0);
+	lua_pushinteger(L, (int)Wind2Tile((uint8_t)(gameStat->GameRound / 4)));
+	return 1;
+}
+
 /* チップ取得 */
 int aiscript::table::functable::gametbl::luafunc::getchip(lua_State* const L) {
 	int n = lua_gettop(L);
@@ -361,6 +373,16 @@ int aiscript::table::functable::gametbl::luafunc::gethand(lua_State* const L) {
 			lua_settable(L, -3);
 		}
 	}
+	return 1;
+}
+
+/* 場風牌 */
+int aiscript::table::functable::gametbl::luafunc::getjikaze(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L);
+	PLAYER_ID player = getPlayerID(L, 0);
+	lua_pushinteger(L, (int)Wind2Tile((uint8_t)playerwind(gameStat, player, gameStat->GameRound)));
 	return 1;
 }
 
