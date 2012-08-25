@@ -19,6 +19,7 @@ return
 
 /* 卓の初期化 */
 *tableinit
+	initephemeral // AIのephemeralテーブルを初期化
 	ifaceinit // 押しボタン類のステータス初期化
 	inittable GameStat
 	// 局の開始で同期する。このとき落ち戻りが可能

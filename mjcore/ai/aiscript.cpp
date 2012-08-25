@@ -17,6 +17,14 @@ __declspec(dllexport) void aiscript::initscript() {
 	}
 }
 
+__declspec(dllexport) void aiscript::initephemeral() {
+	// ephemeralテーブル初期化
+	for (int i = 0; i < PLAYERS; i++) {
+		lua_newtable(status[i].state);
+		lua_setglobal(status[i].state, "ephemeral");
+	}
+}
+
 void aiscript::readfile(aiscript::ScriptStates* const L, const char* const filename) {
 	if (int errcode = luaL_loadfile(L->state, filename)) { /* ファイルを読み込み。成功したら0を返す */
 		/* 読み込み失敗した時の処理 */
