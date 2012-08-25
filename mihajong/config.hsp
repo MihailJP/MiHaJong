@@ -10,8 +10,23 @@
 #include "mjcore.hsp"
 
 #uselib "mjcore.dll"
-#func _storeRule "?storeRule@@YAXPAPBD@Z" var
-#func _exportRule "?exportRule@@YAXPAPAD@Z" var
+#func _storeRule "?storeRule@RuleData@@SAXPAPBD@Z" var
+#func _exportRule "?exportRule@RuleData@@SAXPAPAD@Z" var
+
+#func _RuleName "?getRuleName@RuleData@@SAXQADHH@Z" var, int, int
+#func _RuleDescription "?getRuleDescription@RuleData@@SAXQADHH@Z" var, int, int
+#func _RuleTxt "?getRuleTxt@RuleData@@SAXQADHHH@Z" var, int, int, int
+
+#defcfunc RuleName int RuleNum
+	sdim tmptxt, 128: _RuleName tmptxt, 128, RuleNum
+	return tmptxt
+#defcfunc RuleDescription int RuleNum
+	sdim tmptxt, 128: _RuleDescription tmptxt, 128, RuleNum
+	return tmptxt
+#defcfunc RuleTxt int index, int RuleNum
+	sdim tmptxt, 128: _RuleTxt tmptxt, 128, RuleNum, index
+	return tmptxt
+
 
 #deffunc storeRule array RuleText
 /*
@@ -58,11 +73,7 @@ return
 	info "設定ファイルは "+configFile+" です。"
 	return
 
-/* 設定のテキスト */
-#include "conftxt.hsp"
-
 #deffunc chatshowrule var RuleList
-	configtxt
 	repeat NUM_OF_RULES
 		if ((RuleName(cnt) != "")&&(RuleTxt(0, cnt) != "Ｎ／Ａ")) {
 			RuleList += strf("%s: %s%s", RuleName(cnt), RuleTxt(Rule(cnt), cnt), "\n")
@@ -91,10 +102,15 @@ return
 	return
 
 #deffunc selcat_
+#define NUM_OF_RULE_SETTINGS RULES_IN_PAGE*RULE_PAGES
+#define NUM_OF_RULE_STATS 17
+
+	dim Rule, NUM_OF_RULE_SETTINGS
+	repeat NUM_OF_RULE_SETTINGS: Rule(cnt) = getRule(cnt): loop
+
 	sdim PageCaption, 32, RULE_PAGES
 	PageCaption = "基本のルール設定", "ドラとインフレルール設定", "基本の役設定", "順子役の設定①", "順子役の設定②", "刻子役の設定①", "刻子役の設定②", "刻子役の設定③", "刻子役の設定④", "槓子役・七対子系の役設定", "全体手役の設定①", "全体手役の設定②", "状況役の設定①", "状況役の設定②", "その他の役設定①", "その他の役設定②"
 	dsplay@ SND_BUTTON
-	configtxt
 	configPage = 1
 	gosub *confbuttons
 	repeat

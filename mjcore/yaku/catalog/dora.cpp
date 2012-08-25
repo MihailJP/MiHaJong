@@ -2,9 +2,9 @@
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 	/* ƒhƒ‰‚Å˜a—¹‚Á‚½‚ç1ãÊ */
-	if (getRule(RULE_DORAHOH) != 0)
+	if (RuleData::chkRuleApplied("dorahoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"“ºèt˜a", yaku::yakuCalculator::Yaku::yval_1han,
+			"“ºèt˜a", get_yaku_han("dorahoh"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
 					((analysis->GameStat->DoraFlag.Omote[analysis->TsumoHai->tile] > 0) || // ƒcƒ‚”v‚ª•\ƒhƒ‰‚É‚È‚Á‚Ä‚¢‚é(— ƒhƒ‰‚Í‘ÎÛŠO)
@@ -12,18 +12,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 		));
 	/* –kŽl–‡”²‚« */
-	if (getRule(RULE_FOUR_NORTHES) != 0)
+	if (RuleData::chkRuleApplied("four_northes"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"–kŽl–‡”²‚«", yaku::yakuCalculator::Yaku::yval_yakuman_dependent,
+			"–kŽl–‡”²‚«", get_yaku_han("four_northes"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
 					(analysis->PlayerStat->NorthFlag == 4)); // –k4–‡
 			}
 		));
 	/* ”ªå‰ßŠC */
-	if (getRule(RULE_EIGHT_FLOWERS) != 0)
+	if (RuleData::chkRuleApplied("eight_flowers"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"”ªå‰ßŠC", yaku::yakuCalculator::Yaku::yval_yakuman_dependent,
+			"”ªå‰ßŠC", get_yaku_han("eight_flowers"),
 			"t‰ÄH“~", "Žl‰ØŠJ—ä", "–{‰Ô‹Gß”v", "–{‰Ô‘–Ø”v",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
@@ -34,12 +34,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 		));
 	/* t‰ÄH“~ */
-	if (getRule(RULE_FOUR_SEASONS) != 0)
+	if (RuleData::chkRuleApplied("four_seasons"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"t‰ÄH“~", (getRule(RULE_FOUR_SEASONS) == 1) ?
-			yaku::yakuCalculator::Yaku::yval_2han_dependent :
-			(getRule(RULE_FOUR_SEASONS) == 2) ? yaku::yakuCalculator::Yaku::yval_4han_dependent :
-			yaku::yakuCalculator::Yaku::yval_yakuman_dependent,
+			"t‰ÄH“~", get_yaku_han("four_seasons"),
 			"–{‰Ô‹Gß”v",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
@@ -48,12 +45,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 		));
 	/* Žl‰ØŠJ—ä */
-	if (getRule(RULE_FOUR_FLOWERS) != 0)
+	if (RuleData::chkRuleApplied("four_flowers"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"Žl‰ØŠJ—ä", (getRule(RULE_FOUR_FLOWERS) == 1) ?
-			yaku::yakuCalculator::Yaku::yval_2han_dependent :
-			(getRule(RULE_FOUR_FLOWERS) == 2) ? yaku::yakuCalculator::Yaku::yval_4han_dependent :
-			yaku::yakuCalculator::Yaku::yval_yakuman_dependent,
+			"Žl‰ØŠJ—ä", get_yaku_han("four_flowers"),
 			"–{‰Ô‘–Ø”v",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // ‰½‚©‚ÌŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
@@ -62,9 +56,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 		));
 	/* –{‰Ô */
-	if (getRule(RULE_OWN_FLOWER) != 0) {
+	if (RuleData::chkRuleApplied("own_flower")) {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"–{‰Ô‹Gß”v", yaku::yakuCalculator::Yaku::yval_1han_dependent,
+			"–{‰Ô‹Gß”v", get_yaku_han("own_flower"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[ShantenAnalyzer::shantenAll] != -1) return false; // ˜a—¹‚Á‚Ä‚È‚¢‚È‚ç–ß‚é
 				switch (playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound)) {
@@ -79,7 +73,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 		));
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"–{‰Ô‘–Ø”v", yaku::yakuCalculator::Yaku::yval_1han_dependent,
+			"–{‰Ô‘–Ø”v", get_yaku_han("own_flower"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[ShantenAnalyzer::shantenAll] != -1) return false; // ˜a—¹‚Á‚Ä‚È‚¢‚È‚ç–ß‚é
 				switch (playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound)) {

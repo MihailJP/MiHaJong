@@ -11,6 +11,7 @@
 #include "func.h"
 #include "envtbl.h"
 #include "version.h"
+#include "discard.h"
 
 // 今のところここでしか使ってないから仮置き。
 // 移植が進んで別のところでも使うようなら移動します
@@ -75,7 +76,7 @@ private:
 		class kan_sub {
 		public:
 			static void recordKanOrFlower(
-				const GameTable* const gameStat, int DiscardTileIndex,
+				const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 				HaifuStreams* haifuP, HaifuStreams* HThaifuP
 				);
 			static void inline recordChanKan(const GameTable* const gameStat, std::string pTxt, std::string hTxt);
@@ -133,6 +134,7 @@ public:
 	static __declspec(dllexport) void haifurecdorap();
 
 	static __declspec(dllexport) void haifurecmota(const GameTable* const gameStat, int DiscardTileIndex);
+	static void haifurecmota(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);
 
 	static __declspec(dllexport) void haifurecfurikomi(const GameTable* const gameStat);
 
@@ -142,14 +144,17 @@ public:
 	static __declspec(dllexport) void haifurecminkan(const GameTable* const gameStat);
 
 	static __declspec(dllexport) void haifurecnorth(const GameTable* const gameStat, int DiscardTileIndex);
+	static void haifurecnorth(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);
 	static __declspec(dllexport) void haifurecchanpei(const GameTable* const gameStat);
 	static __declspec(dllexport) void haifurecnorthproc(const GameTable* const gameStat);
 
 	static __declspec(dllexport) void haifurecankan(const GameTable* const gameStat, int DiscardTileIndex);
+	static void haifurecankan(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);
 	static __declspec(dllexport) void haifurecchankan(const GameTable* const gameStat);
 	static __declspec(dllexport) void haifureckanproc(const GameTable* const gameStat);
 
 	static __declspec(dllexport) void haifurecflower(const GameTable* const gameStat, int DiscardTileIndex);
+	static void haifurecflower(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);
 
 	static __declspec(dllexport) void haifuwritebuffer(
 		const GameTable* const gameStat, void *,

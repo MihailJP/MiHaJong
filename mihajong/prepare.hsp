@@ -14,10 +14,12 @@
 	statmes "" // 情報窓への表示
 	initializechat GameEnv, ServerAddress, ClientNumber
 	initYakuCatalog // 役カタログの初期化
+	initscript // AIの初期化
 return
 
 /* 卓の初期化 */
 *tableinit
+	initephemeral // AIのephemeralテーブルを初期化
 	ifaceinit // 押しボタン類のステータス初期化
 	inittable GameStat
 	// 局の開始で同期する。このとき落ち戻りが可能

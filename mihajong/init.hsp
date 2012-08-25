@@ -67,10 +67,11 @@
 	if (strsize == -1) {
 		info "設定ファイルが見つかりません。デフォルトの設定を使用します。"
 		// デフォルトのコンフィグデータを作成
-		configinit: configtxtdat
+		configinit
 		saveRule
 	} else {
 		// 設定ファイル読み込み
+		configinit
 		notesel RawConfDat
 		noteload configFile
 		info "設定ファイルを読み込みました。"
