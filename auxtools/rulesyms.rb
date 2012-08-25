@@ -14,9 +14,10 @@ end
 
 require "csv"
 csvdat = CSV.read("../mjcore/data/confitem.csv", encoding: "SJIS")
+target = open("../mihajong/rulesyms.txt", mode_enc = "wb")
 
 for row in csvdat
-	print "y", row[8], "z", row[9], gametype(row[1]), "\n"
-	print "\t", row[10], "\n"
-	print "\tÝ’è’l: ", row[11..-1].keep_if{|s| s}.delete_if{|s| s == ">>>"}.join(", "), "\n\n"
+	target.print "y", row[8], "z", row[9], gametype(row[1]), "\r\n"
+	target.print "\t", row[10], "\r\n"
+	target.print "\tÝ’è’l: ", row[11..-1].keep_if{|s| s}.delete_if{|s| s == ">>>"}.join(", "), "\r\n\r\n"
 end
