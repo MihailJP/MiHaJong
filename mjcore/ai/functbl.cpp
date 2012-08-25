@@ -254,7 +254,7 @@ int aiscript::table::functable::gametbl::luafunc::getchip(lua_State* const L) {
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
 	PLAYER_ID player = getPlayerID(L, 2);
-	if (RuleData::getRule("chip") == 0) lua_pushnil(L); // チップ無しルールならnil
+	if (RuleData::chkRuleApplied("chip")) lua_pushnil(L); // チップ無しルールならnil
 	else lua_pushinteger(L, gameStat->Player[player].playerChip); // チップの収支をスタックに積む
 	return 1;
 }
@@ -380,7 +380,7 @@ int aiscript::table::functable::gametbl::luafunc::getround(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	GameTable* gameStat = getGameStatAddr(L);
-	if ((RuleData::getRule("game_length") == 5) || (RuleData::getRule("game_length") == 7))
+	if (RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game"))
 		// 東場しかないルール
 		lua_pushinteger(L, gameStat->LoopRound * 4 + gameStat->GameRound + 1);
 	else // 普通のルール
@@ -388,12 +388,12 @@ int aiscript::table::functable::gametbl::luafunc::getround(lua_State* const L) {
 	return 1;
 }
 
-/* ルール番号取得 */
+/* ルール設定取得 */
 int aiscript::table::functable::gametbl::luafunc::getrule(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 2) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	const char* fieldname = lua_tostring(L, 2);
-	lua_pushinteger(L, (int)RuleData::getRule(fieldname));
+	lua_pushstring(L, RuleData::chkRule(fieldname).c_str());
 	return 1;
 }
 
@@ -503,7 +503,7 @@ int aiscript::table::functable::gametbl::luafunc::isippatsu(lua_State* const L) 
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	PLAYER_ID player = getPlayerID(L, 2);
-	if (RuleData::getRule("riichi_ippatsu") == 1) lua_pushnil(L);
+	if (RuleData::chkRuleApplied("riichi_ippatsu")) lua_pushnil(L);
 	else lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].RichiFlag.IppatsuFlag);
 	return 1;
 }
@@ -512,7 +512,7 @@ int aiscript::table::functable::gametbl::luafunc::isippatsu(lua_State* const L) 
 int aiscript::table::functable::gametbl::luafunc::iskyuushu(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
-	if (RuleData::getRule("nine_terminals") == 3) lua_pushnil(L);
+	if (RuleData::chkRuleApplied("nine_terminals")) lua_pushnil(L);
 	else lua_pushboolean(L, chkdaopaiability(getGameStatAddr(L), getPlayerID(L, 0)));
 	return 1;
 }
@@ -557,7 +557,7 @@ int aiscript::table::functable::gametbl::luafunc::isriichideclared(lua_State* co
 int aiscript::table::functable::gametbl::luafunc::isshisanbuda(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
-	if (RuleData::getRule("shiisan_puutaa") == 0) lua_pushnil(L);
+	if (RuleData::chkRuleApplied("shiisan_puutaa")) lua_pushnil(L);
 	else lua_pushboolean(L, yaku::yakuCalculator::chkShisanBuDa(getGameStatAddr(L), getPlayerID(L, 0)));
 	return 1;
 }
@@ -566,7 +566,7 @@ int aiscript::table::functable::gametbl::luafunc::isshisanbuda(lua_State* const 
 int aiscript::table::functable::gametbl::luafunc::isshisibuda(lua_State* const L) {
 	int n = lua_gettop(L);
 	if (n != 1) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
-	if (RuleData::getRule("shiisan_uushii") == 0) lua_pushnil(L);
+	if (RuleData::chkRuleApplied("shiisan_uushii")) lua_pushnil(L);
 	else lua_pushboolean(L, yaku::yakuCalculator::chkShisiBuDa(getGameStatAddr(L), getPlayerID(L, 0)));
 	return 1;
 }
@@ -576,7 +576,7 @@ int aiscript::table::functable::gametbl::luafunc::issumaroallowed(lua_State* con
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	PLAYER_ID player = getPlayerID(L, 2);
-	if (RuleData::getRule("sumaro") == 0) lua_pushnil(L);
+	if (RuleData::chkRuleApplied("sumaro")) lua_pushnil(L);
 	else lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].SumaroFlag);
 	return 1;
 }
@@ -586,7 +586,7 @@ int aiscript::table::functable::gametbl::luafunc::isyakitori(lua_State* const L)
 	int n = lua_gettop(L);
 	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
 	PLAYER_ID player = getPlayerID(L, 2);
-	if (RuleData::getRule("yakitori") == 0) lua_pushnil(L);
+	if (RuleData::chkRuleApplied("yakitori")) lua_pushnil(L);
 	else lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].YakitoriFlag);
 	return 1;
 }

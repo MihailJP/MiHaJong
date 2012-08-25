@@ -8,9 +8,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_pinhu()
 			return analysis->isPinfu;
 		}
 	));
-	if (RuleData::getRule("kofuku_gekijoh") != 0)
+	if (RuleData::chkRuleApplied("kofuku_gekijoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"鼓腹撃壌", yaku::yakuCalculator::Yaku::yval_2han /* 門前であるかどうかの判定は既に行なっているので不要 */,
+			"鼓腹撃壌", get_yaku_han("kofuku_gekijoh") /* 門前であるかどうかの判定は既に行なっているので不要 */,
 			"平和",
 			[](const MENTSU_ANALYSIS* const analysis) {
 				return (analysis->isPinfu &&
