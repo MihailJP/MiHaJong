@@ -11,14 +11,12 @@ Build-time requirements are:
 - l_tooltips.as (http://lhsp.s206.xrea.com/hsp_object6.html)
 - mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
 - cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
+- Visual C++ (because of compiler-specific DLL export name)
+- Lua static link library
 
 See readme.txt for more (written in Japanese)
 See playing.txt for how to play (written in Japanese)
 See license.txt for license text (mainly written in Japanese)
 history.txt describes each release.
-
-logger.hsp is not a part of the software, but useful for debugging.
-The debug log feature is available only when logger.hsp is successfully built.
-(Don't forget turning off this feature when in release build)
 
 ** We use Japanese language in this project **
