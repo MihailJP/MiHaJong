@@ -287,10 +287,7 @@ namespace confpath {
 			getenv_s(sz, appdata, 1024, "APPDATA");
 
 			if (strstr(cur, progfiles) == cur) {
-				if (PathIsDirectory(((string)appdata + (string)"\\MiHaJong").c_str()) == FALSE)
-					_mkdir(((string)appdata + (string)"\\MiHaJong").c_str());
-				if (PathIsDirectory(((string)appdata + (string)"\\MiHaJong\\haifu").c_str()) == FALSE)
-					_mkdir(((string)appdata + (string)"\\MiHaJong\\haifu").c_str());
+				MakeSureDirectoryPathExists(((string)appdata + (string)"\\MiHaJong\\haifu\\").c_str());
 				CopyFile(".\\haifu\\haifu.css",
 					((string)appdata + (string)"\\MiHaJong\\haifu\\haifu.css").c_str(),
 					TRUE);
