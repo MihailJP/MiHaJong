@@ -174,7 +174,7 @@
     <ClCompile Include="reader\ini2map.cpp">
       <Filter>ソース ファイル\reader</Filter>
     </ClCompile>
-    <ClCompile Include="ai\search.cpp">
+    <ClCompile Include="ai\filesel.cpp">
       <Filter>ソース ファイル\ai</Filter>
     </ClCompile>
   </ItemGroup>
@@ -296,7 +296,7 @@
     <ClInclude Include="reader\ini2map.h">
       <Filter>ヘッダー ファイル\reader</Filter>
     </ClInclude>
-    <ClInclude Include="ai\search.h">
+    <ClInclude Include="ai\filesel.h">
       <Filter>ヘッダー ファイル\ai</Filter>
     </ClInclude>
   </ItemGroup>

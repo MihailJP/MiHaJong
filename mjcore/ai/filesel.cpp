@@ -1,4 +1,4 @@
-#include "search.h"
+#include "filesel.h"
 
 std::set<std::string> aiscript::FileSelector::files; // AIのスクリプトファイル一覧をフルパスで格納
 

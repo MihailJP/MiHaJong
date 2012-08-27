@@ -1,5 +1,5 @@
-#ifndef SEARCH_H
-#define SEARCH_H
+#ifndef FILESEL_H
+#define FILESEL_H
 
 #include <string>
 #include <set>
