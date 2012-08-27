@@ -12,6 +12,7 @@ private:
 	static const char fncname_call[3][12];
 	static ScriptStates status[PLAYERS];
 	class table;
+	class FileSelector;
 	static const DiscardTileNum DiscardThrough;
 	static void readfile(aiscript::ScriptStates* const L, const char* const filename);
 public:
