@@ -177,6 +177,9 @@
     <ClCompile Include="ai\filesel.cpp">
       <Filter>ソース ファイル\ai</Filter>
     </ClCompile>
+    <ClCompile Include="random.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">
@@ -298,6 +301,9 @@
     </ClInclude>
     <ClInclude Include="ai\filesel.h">
       <Filter>ヘッダー ファイル\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="random.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

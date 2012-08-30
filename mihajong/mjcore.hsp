@@ -25,6 +25,12 @@
 #cfunc getRule "?getRule@@YAHH@Z" int
 #func configinit "?configinit@RuleData@@SAXXZ"
 
+/* —”ü‚è */
+#undef randomize
+#undef rnd
+#func randomize "?init@RndNum@@SAXXZ"
+#cfunc rnd "?rnd@RndNum@@SAII@Z" int
+
 /* func.hsp‚©‚ç‚ÌˆÚA */
 #cfunc playerwind "?playerwind@@YAHHH@Z" int, int
 #cfunc playerRelative "?playerRelative@@YAHHH@Z" int, int
