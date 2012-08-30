@@ -1,6 +1,6 @@
 #include "filesel.h"
 
-std::set<std::string> aiscript::FileSelector::files; // AIのスクリプトファイル一覧をフルパスで格納
+std::vector<std::string> aiscript::FileSelector::files; // AIのスクリプトファイル一覧をフルパスで格納
 
 /* ファイルリスト走査 */
 void aiscript::FileSelector::filelist() {
@@ -18,8 +18,13 @@ void aiscript::FileSelector::filelist() {
 	}
 	do { // 検索
 		std::ostringstream o; o << "検出: " << finddat.cFileName; info(o.str().c_str());
-		files.insert(scriptPath + std::string("\\") + std::string(finddat.cFileName));
+		files.push_back(scriptPath + std::string("\\") + std::string(finddat.cFileName));
 	} while (FindNextFile(h, &finddat));
 	/* 検索完了！ */
 	FindClose(h);
+}
+
+/* ファイルをランダムに選択 */
+std::string aiscript::FileSelector::randomfile() {
+	return files[RndNum::rnd(files.size())];
 }
