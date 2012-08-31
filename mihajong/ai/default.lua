@@ -38,4 +38,23 @@ function ontsumo (gametbl) -- AIの打牌処理
 			return mihajong.DiscardType.Ankan, 14 -- 暗槓する
 		end
 	end
+	
+	-- 和了れるなら和了る
+	local SeenTiles = gametbl:getseentiles() -- 見えている牌を数える
+	local Shanten = gametbl:getshanten() -- 向聴
+	if Shanten == -1 then -- 和了になっているなら
+		local result = gametbl:evaluate(true) -- この手を評価
+		if result.isvalid then --和了れるなら
+			return mihajong.DiscardType.Agari, nil -- 和了る
+--[[
+		else -- 和了れないなら
+			return mihajong.DiscardType.Normal, 14 -- ツモ切り
+--]]
+		end
+	end
+	
+	-- 十三不塔なら和了る
+	if gametbl:isfirstdraw() and (gametbl:isshisanbuda() or gametbl:isshisibuda()) then
+		return mihajong.DiscardType.Agari, nil
+	end
 end
