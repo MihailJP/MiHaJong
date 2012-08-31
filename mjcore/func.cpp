@@ -269,6 +269,14 @@ __declspec(dllexport) int BasePointHSP() {
 	return BasePoint() / 100;
 }
 
+/* •‚‚¢‚Ä‚¢‚é‚©”»’è‚·‚éŠÖ” */
+bool isAboveBase(const GameTable* const gameStat, PLAYER_ID player) {
+	return gameStat->Player[player].PlayerScore >= LargeNum::fromInt(BasePoint());
+}
+__declspec(dllexport) int isAboveBase(const GameTable* const gameStat, int player) {
+	return isAboveBase(gameStat, (PLAYER_ID)gameStat) ? 1 : 0;
+}
+
 /* ”ñ•‰®”1Œ…‚È‚ç‘SŠpE‚»‚êˆÈŠO‚Í”¼Šp */
 std::string intstr(int val) {
 	const char* hanstr = "‚O\0‚P\0‚Q\0‚R\0‚S\0‚T\0‚U\0‚V\0‚W\0‚X\0";
