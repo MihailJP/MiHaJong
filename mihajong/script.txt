@@ -462,18 +462,18 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		3)の数値で返します。割れ目なしの時はnilを返します。
 
 
-	▼ gametbl:isankanallowed()
-
-		　リーチ後に暗槓出来る状態ならtrueを、そうでなければfalseを返します。
-		　なお、この関数はリーチしていない状態でも使用できますが、その場合は意
-		味をなしません。
-
-
 	▼ gametbl:getyakuhaiwind()
 
 		　それぞれの風牌について役牌になっているかどうかを格納したテーブルを返
 		します。これはEast、South、West、Northのフィールドをもち、その牌が役牌
 		になっていればtrueが、そうでなければfalseが設定されています。
+
+
+	▼ gametbl:isankanallowed()
+
+		　リーチ後に暗槓出来る状態ならtrueを、そうでなければfalseを返します。
+		　なお、この関数はリーチしていない状態でも使用できますが、その場合は意
+		味をなしません。
 
 
 	▼ gametbl:isfinalround()
