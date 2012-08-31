@@ -51,6 +51,7 @@ public:
 	static int evaluate(lua_State* const L);
 	static int getactiveplayer(lua_State* const L);
 	static int getbakaze(lua_State* const L);
+	static int getbasepoint(lua_State* const L);
 	static int getchip(lua_State* const L);
 	static int getdeckleft(lua_State* const L);
 	static int getdeposit(lua_State* const L);
@@ -74,6 +75,7 @@ public:
 	static int gettsumibou(lua_State* const L);
 	static int getwareme(lua_State* const L);
 	static int getyakuhaiwind(lua_State* const L);
+	static int isabovebase(lua_State* const L);
 	static int isankanallowed(lua_State* const L);
 	static int isfinalround(lua_State* const L);
 	static int isfirstdraw(lua_State* const L);

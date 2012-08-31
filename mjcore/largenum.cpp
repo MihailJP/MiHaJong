@@ -14,7 +14,7 @@ void LargeNum::fix() { // ³‹KŒ`‚É’¼‚·
 	}
 }
 
-signed int LargeNum::compare(const LargeNum& cmp) { // ”äŠr—p
+signed int LargeNum::compare(const LargeNum& cmp) const { // ”äŠr—p
 	signed int ans = 0;
 	for (int i = DIGIT_GROUPS - 1; i >= 0; i--) {
 		if (this->digitGroup[i] > cmp.digitGroup[i]) {ans = 1; break;}
@@ -181,9 +181,9 @@ LargeNum& LargeNum::operator/=(const int32_t divisor) {
 	fix();
 	return *this;
 }
-const bool LargeNum::operator==(const LargeNum& cmp) { return (this->compare(cmp) == 0); }
-const bool LargeNum::operator!=(const LargeNum& cmp) { return (this->compare(cmp) != 0); }
-const bool LargeNum::operator<(const LargeNum& cmp) { return (this->compare(cmp) < 0); }
-const bool LargeNum::operator>(const LargeNum& cmp) { return (this->compare(cmp) > 0); }
-const bool LargeNum::operator<=(const LargeNum& cmp) { return (this->compare(cmp) <= 0); }
-const bool LargeNum::operator>=(const LargeNum& cmp) { return (this->compare(cmp) >= 0); }
+const bool LargeNum::operator==(const LargeNum& cmp) const { return (this->compare(cmp) == 0); }
+const bool LargeNum::operator!=(const LargeNum& cmp) const { return (this->compare(cmp) != 0); }
+const bool LargeNum::operator<(const LargeNum& cmp) const { return (this->compare(cmp) < 0); }
+const bool LargeNum::operator>(const LargeNum& cmp) const { return (this->compare(cmp) > 0); }
+const bool LargeNum::operator<=(const LargeNum& cmp) const { return (this->compare(cmp) <= 0); }
+const bool LargeNum::operator>=(const LargeNum& cmp) const { return (this->compare(cmp) >= 0); }
