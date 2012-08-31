@@ -73,6 +73,9 @@ __declspec(dllexport) inline int WindMax();
 tileCode inline Wind2Tile(uint8_t wind);
 __declspec(dllexport) int Wind2Tile(int wind);
 
+int BasePoint();
+__declspec(dllexport) int BasePointHSP();
+
 std::string intstr(int val);
 
 namespace confpath {
