@@ -104,6 +104,7 @@
   <ItemGroup>
     <ClCompile Include="ai\aiscript.cpp" />
     <ClCompile Include="ai\functbl.cpp" />
+    <ClCompile Include="ai\filesel.cpp" />
     <ClCompile Include="discard.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="envtbl.cpp" />
@@ -119,6 +120,7 @@
     <ClCompile Include="lzma\LzmaLib.c" />
     <ClCompile Include="lzma\Sha256.c" />
     <ClCompile Include="lzma\Threads.c" />
+    <ClCompile Include="random.cpp" />
     <ClCompile Include="reader\csv2arry.cpp" />
     <ClCompile Include="reader\ini2map.cpp" />
     <ClCompile Include="reader\readrsrc.cpp" />
@@ -149,6 +151,7 @@
     <ClInclude Include="ai\aiscript.h" />
     <ClInclude Include="ai\class.h" />
     <ClInclude Include="ai\functbl.h" />
+    <ClInclude Include="ai\filesel.h" />
     <ClInclude Include="discard.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="envtbl.h" />
@@ -169,6 +172,7 @@
     <ClInclude Include="lzma\Threads.h" />
     <ClInclude Include="lzma\Types.h" />
     <ClInclude Include="mjexport.h" />
+    <ClInclude Include="random.h" />
     <ClInclude Include="reader\csv2arry.h" />
     <ClInclude Include="reader\ini2map.h" />
     <ClInclude Include="reader\readrsrc.h" />

@@ -7,13 +7,13 @@ const char aiscript::fncname_discard[8] = "ontsumo"; // 捨牌決定用関数の名前
 const char aiscript::fncname_call[3][12] = {"ondiscard", "onkakan", "onankan",}; // 鳴き決定用関数の名前
 
 __declspec(dllexport) void aiscript::initscript() {
+	FileSelector::filelist();
 	// Lua初期化 (仮)
 	for (int i = 0; i < PLAYERS; i++) {
 		status[i].state = luaL_newstate();
 		luaopen_base(status[i].state); // baseライブラリだけは開いておきましょう
 		table::functable::inittable(status[i].state, i);
-		const char* filename = ".\\ai\\ai.lua"; /* ファイル名は仮 */
-		readfile(&status[i], filename); /* ファイルを読み込み */
+		readfile(&status[i], FileSelector::randomfile().c_str()); /* ファイルを読み込み */
 	}
 }
 
