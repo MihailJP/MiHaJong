@@ -124,6 +124,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::evaluate); lua_setfield(L, -2, "evaluate");
 	lua_pushcfunction(L, luafunc::getactiveplayer); lua_setfield(L, -2, "getactiveplayer");
 	lua_pushcfunction(L, luafunc::getbakaze); lua_setfield(L, -2, "getbakaze");
+	lua_pushcfunction(L, luafunc::getbasepoint); lua_setfield(L, -2, "getbasepoint");
 	lua_pushcfunction(L, luafunc::getchip); lua_setfield(L, -2, "getchip");
 	lua_pushcfunction(L, luafunc::getdeckleft); lua_setfield(L, -2, "getdeckleft");
 	lua_pushcfunction(L, luafunc::getdeposit); lua_setfield(L, -2, "getdeposit");
@@ -264,6 +265,15 @@ int aiscript::table::functable::gametbl::luafunc::getbakaze(lua_State* const L) 
 	GameTable* gameStat = getGameStatAddr(L);
 	PLAYER_ID player = getPlayerID(L, 0);
 	lua_pushinteger(L, (int)Wind2Tile((uint8_t)(gameStat->GameRound / 4)));
+	return 1;
+}
+
+/* Œ´“_(•Ô‚µ“_) */
+int aiscript::table::functable::gametbl::luafunc::getbasepoint(lua_State* const L) {
+	int n = lua_gettop(L);
+	if (n != 1) {lua_pushstring(L, "ˆø”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ"); lua_error(L);}
+	GameTable* gameStat = getGameStatAddr(L); // dummy
+	lua_pushinteger(L, BasePoint());
 	return 1;
 }
 
@@ -568,6 +578,16 @@ int aiscript::table::functable::gametbl::luafunc::getyakuhaiwind(lua_State* cons
 			flag = true;
 		TableAdd(L, windname[i], flag); // Œ‹‰Ê‚ğŠi”[
 	}
+	return 1;
+}
+
+/* •‚‚¢‚Ä‚¢‚é‚©H */
+int aiscript::table::functable::gametbl::luafunc::isabovebase(lua_State* const L) {
+	int n = lua_gettop(L);
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "ˆø”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ"); lua_error(L);}
+	const GameTable* gameStat = getGameStatAddr(L);
+	PLAYER_ID player = getPlayerID(L, 2);
+	lua_pushboolean(L, isAboveBase(gameStat, player));
 	return 1;
 }
 

@@ -152,7 +152,12 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		もあります)。
 
 
-	▼ gametbl:getchip([player])
+	▼ gametbl:getbasepoint()
+
+		　原点(返し点)を返します。
+
+
+	▼ gametbl:getchip([playerid])
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
 		自身)のチップの収支を返します。但し、チップ無しのルールの場合はnilを返
@@ -297,7 +302,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　該当する牌がなければ、nilが返ります。
 
 
-	▼ gametbl:getrank([player])
+	▼ gametbl:getrank([playerid])
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
 		自身)の順位を返します。
@@ -318,7 +323,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　ruletagで指定された文字列に対応するルール設定を返します。
 
 
-	▼ gametbl:getscore([player])
+	▼ gametbl:getscore([playerid])
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
 		自身)の持ち点を返します。
@@ -467,6 +472,14 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　それぞれの風牌について役牌になっているかどうかを格納したテーブルを返
 		します。これはEast、South、West、Northのフィールドをもち、その牌が役牌
 		になっていればtrueが、そうでなければfalseが設定されています。
+
+
+	▼ gametbl:isabovebase([player])
+
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　浮いている(持ち点が返し点以上)ならtrueを、そうでなければfalseを返し
+		ます。
 
 
 	▼ gametbl:isankanallowed()
