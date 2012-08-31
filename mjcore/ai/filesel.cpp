@@ -5,6 +5,7 @@ std::vector<std::string> aiscript::FileSelector::files; // AI‚ÌƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ
 /* ƒtƒ@ƒCƒ‹ƒŠƒXƒg‘–¸ */
 void aiscript::FileSelector::filelist() {
 	std::string confPath = confpath::confPath();
+	if (confPath.empty()) confPath = ".";
 	std::string scriptPath = confPath + std::string("\\ai");
 	std::string scriptFiles = scriptPath + std::string("\\*.lua");
 	files.clear();
