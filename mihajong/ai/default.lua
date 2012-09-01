@@ -57,4 +57,17 @@ function ontsumo (gametbl) -- AIの打牌処理
 	if gametbl:isfirstdraw() and (gametbl:isshisanbuda() or gametbl:isshisibuda()) then
 		return mihajong.DiscardType.Agari, nil
 	end
+	
+	-- 九種九牌になっているか
+	if gametbl:isfirstdraw() and gametbl:iskyuushu() then
+		if Shanten > 2 then return mihajong.DiscardType.Kyuushu, nil
+		elseif Shanten == 2 and gametbl:getscore() < gametbl:getbasepoint() then
+			return mihajong.DiscardType.Kyuushu, nil
+		end
+	end
+	
+	-- リーチの場合は、和了れなければツモ切り
+	if gametbl:isriichideclared() then -- リーチしていたら
+		return mihajong.DiscardType.Normal, 14
+	end
 end
