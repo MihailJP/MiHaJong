@@ -70,4 +70,31 @@ function ontsumo (gametbl) -- AIの打牌処理
 	if gametbl:isriichideclared() then -- リーチしていたら
 		return mihajong.DiscardType.Normal, 14
 	end
+	
+	-- リーチをかけるかどうか
+	do
+		local Discardability = {}
+		local MinScore = {}
+		local MaxScore = {}
+		local MachihaiTotalTiles = {}
+		local MachihaiFuritenFlag = {}
+		if Shanten == 0 and (gametbl:ismenzen() or (gametbl:getrule("riichi_shibari") == "yes")) then
+			-- リーチできる条件を満たしている場合
+			local Richiability = 0
+			local tmpHaiHand = gametbl:gethand()
+			local t1, t2 = gametbl:getpreviousdiscard()
+			for k = 1, 14 do
+				if not tmpHaiHand[k] then
+					-- 存在しない牌の場合
+				elseif (k > 1) and tmpHaiHand[k - 1].tile == tmpHaiHand[k] then
+					-- 同じ牌を２度調べない
+					Discardability[k] = Discardability[k - 1]
+				elseif (tmpHaiHand[k].tile == t1) or (tmpHaiHand[k].tile == t2) then
+					-- 喰い変えになる牌は飛ばす
+				else
+					
+				end
+			end
+		end
+	end
 end
