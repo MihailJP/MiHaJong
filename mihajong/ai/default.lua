@@ -73,7 +73,8 @@ function ontsumo (gametbl) -- AIの打牌処理
 	
 	-- リーチをかけるかどうか
 	do
-		local Discardability = {}
+		local do_not_discard = {} -- 移植時追加、捨ててはいけない牌(食い変えの牌、プンリーの待ち牌)の識別用
+		local Discardability = {} -- どれを捨てるかの指標を格納する
 		local MinScore = {}
 		local MaxScore = {}
 		local MachihaiTotalTiles = {}
@@ -85,14 +86,42 @@ function ontsumo (gametbl) -- AIの打牌処理
 			local t1, t2 = gametbl:getpreviousdiscard()
 			for k = 1, 14 do
 				if not tmpHaiHand[k] then
-					-- 存在しない牌の場合
+					do_not_discard[k] = true -- 存在しない牌の場合
 				elseif (k > 1) and tmpHaiHand[k - 1].tile == tmpHaiHand[k] then
 					-- 同じ牌を２度調べない
 					Discardability[k] = Discardability[k - 1]
+					do_not_discard[k] = do_not_discard[k - 1]
 				elseif (tmpHaiHand[k].tile == t1) or (tmpHaiHand[k].tile == t2) then
-					-- 喰い変えになる牌は飛ばす
+					do_not_discard[k] = true -- 喰い変えになる牌は飛ばす
 				else
-					
+					-- 向聴数から、大まかな評価値を算出
+					tmpHypothetHand = tmpHaiHand
+					tmpHypothetHand[k], tmpHypothetHand[14] = tmpHypothetHand[14], nil
+					local tenpaistat = gametbl:gettenpaistat(tmpHypothetHand)
+					-- chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
+					local Shanten = gametbl:getshanten(tmpHypothetHand)
+					MachihaiTotalTiles[k] = tenpaistat.total
+					-- ダブル立直になる時は一部の判定を省略する
+					local cont = true
+					if not gametbl:isfirstdraw() then
+						if gametbl:getopenwait()[tmpHaiHand[k].tile] then
+							-- 他家のプンリーの当たり牌になっている場合は捨てない(捨ててはならない！)
+							do_not_discard[k], cont = true, false
+						elseif tenpaistat.total == 0 then
+							-- 空聴リーチを避ける(錯和ではないが、和了れなくなるため)
+							Discardability[k], cont = -999999, false
+						elseif tenpaistat.isfuriten then
+							-- 振聴リーチを避ける(錯和ではないが、手変わりの可能性を残す)
+							MachihaiFuritenFlag[k], Discardability[k], cont = true, -99999, false
+						elseif tenpaistat.total <= 2 then
+							-- 待ち牌が残り２枚以下の場合
+							Discardability[k], cont = -9999, false
+						end
+					end
+					if Shanten > 0 then -- 不聴立直防止用
+						Discardability[k], cont = -999999, false
+					end
+					Richiability = Richiability + 1
 				end
 			end
 		end
