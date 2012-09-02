@@ -1,6 +1,20 @@
 -- MiHaJong 1.7.0以降用 デフォルトAI
 -- 先読みＡＩなのでたまに時間がかかる場合があります
 
+validtiles = {
+	mihajong.Tile.Character[1], mihajong.Tile.Character[5], mihajong.Tile.Character[6],
+	mihajong.Tile.Character[4], mihajong.Tile.Character[5], mihajong.Tile.Character[6],
+	mihajong.Tile.Character[7], mihajong.Tile.Character[8], mihajong.Tile.Character[9],
+	mihajong.Tile.Circle[1], mihajong.Tile.Circle[5], mihajong.Tile.Circle[6],
+	mihajong.Tile.Circle[4], mihajong.Tile.Circle[5], mihajong.Tile.Circle[6],
+	mihajong.Tile.Circle[7], mihajong.Tile.Circle[8], mihajong.Tile.Circle[9],
+	mihajong.Tile.Bamboo[1], mihajong.Tile.Bamboo[5], mihajong.Tile.Bamboo[6],
+	mihajong.Tile.Bamboo[4], mihajong.Tile.Bamboo[5], mihajong.Tile.Bamboo[6],
+	mihajong.Tile.Bamboo[7], mihajong.Tile.Bamboo[8], mihajong.Tile.Bamboo[9],
+	mihajong.Tile.Wind.East, mihajong.Tile.Wind.South, mihajong.Tile.Wind.West, mihajong.Tile.Wind.North,
+	mihajong.Tile.Dragon.White, mihajong.Tile.Dragon.Green, mihajong.Tile.Dragon.Red,
+}
+
 function isflower (tile) -- 花牌かどうか判定
 	if tile then -- nilだったらエラーになるのでそれを防止
 		if     tile.tile == mihajong.Tile.Flower.Spring then return true
@@ -14,6 +28,13 @@ function isflower (tile) -- 花牌かどうか判定
 		else return false end
 	else return false
 	end
+end
+
+function someone_hadakatanki (gametbl)
+	for k = 1, 4 do
+		if gametbl:getmeld(k) and (#(gametbl:getmeld(k)) == 4) then return true end
+	end
+	return false
 end
 
 ---[=======[
@@ -56,159 +77,124 @@ function ontsumo (gametbl) -- ＡＩの打牌
 	end
 	-- リーチの場合は、和了れなければツモ切り
 	if gametbl:isriichideclared() then return mihajong.DiscardType.Normal, 14 end
---[====[ 書き換え完了ここまで
-	targetPlayer = ActivePlayer: await 0: gosub *countshanten
-	nowShanten = Shanten
+
+	local evaluation = {
+		"do_not_discard", {};
+		"haiDiscardability", {}; "MinScore", {}; "MaxScore", {};
+		"MachihaiTotalTiles", {}; "MachihaiFuritenFlag", {};
+	}
+	
+	do
+		local flag, ev, dahaiType, teDahai = riichi_decision(gametbl, evaluation)
+		if flag then return dahaiType, teDahai end
+		evaluation = ev
+	end
+end
+
+function riichi_decision (gametbl, evaluation)
+	local nowShanten = gametbl:getshanten()
+	local haiCount, haiSeenCount = gametbl:gettilesinhand(), gametbl:getseentiles()
 	-- リーチをかけるかどうか
-	dim haiDiscardability, 14
-	dim MinScore, 14
-	dim MaxScore, 14
-	dim MachihaiTotalTiles, 14
-	dim MachihaiFuritenFlag, 14
-	if ((nowShanten == 0)&&((haiMenzen(ActivePlayer) == 1)||(strmid(RuleConf, 39, 1) != "0"))) then
-		Richiability = 0
-		dim tmpHaiHand, 14
-		repeat 14
-			tmpHaiHand(cnt) = haiHand(cnt, ActivePlayer)
-		loop
-		repeat 14
-			await 0
-			if (cnt > 0) then
-				if (tmpHaiHand(cnt-1) == tmpHaiHand(cnt)) then
-					haiDiscardability(cnt) = haiDiscardability(cnt-1) -- 同じ牌を２度調べない
-					continue
+	local ev = evaluation
+	if (nowShanten == 0) and (gametbl:ismenzen() or (gametbl:getrule("riichi_shibari") ~= "no")) then
+		local Richiability = 0
+		local tmpHaiHand = gametbl:gethand()
+		for cnt = 1, 14 do repeat -- workaround: continueの代わり
+			if (cnt > 0) and tmpHaiHand[cnt-1] then
+				if tmpHaiHand[cnt-1].tile == tmpHaiHand[cnt].tile then
+					ev.do_not_discard[cnt] = ev.do_not_discard[cnt-1]
+					ev.haiDiscardability[cnt] = ev.haiDiscardability[cnt-1] -- 同じ牌を２度調べない
+					break
 				end
 			end
-			targetPlayer = ActivePlayer: targetTile = cnt: await 0: gosub *getpaiinfo
-			tmpHandTileCode = haiHand(cnt, ActivePlayer)
+			local tilecontext = gametbl:gettilecontext()[cnt]
+			local tmpHandTileCode = tmpHaiHand[cnt]
 			-- 存在しない牌の場合
-			if (haiHand(cnt, ActivePlayer) == 0) then haiDiscardability(cnt) = -9999999: continue end
+			if not gametbl:gethand()[cnt] then ev.do_not_discard[cnt], ev.haiDiscardability[cnt] = true, -9999999; break end
 			-- 向聴数から、大まかな評価値を算出
-			haiHand(cnt, ActivePlayer) = haiHand(13, ActivePlayer)
-			haiHand(13, ActivePlayer) = 0
-			targetPlayer = ActivePlayer: await 0: gosub *chkfuriten
-			targetPlayer = ActivePlayer: await 0: gosub *countshanten
-			haiHand(13, ActivePlayer) = haiHand(cnt, ActivePlayer)
-			haiHand(cnt, ActivePlayer) = tmpHandTileCode
-			MachihaiTotalTiles(cnt) = haiMachihaiTotal
+			local haiHand = tmpHaiHand
+			haiHand[cnt], haiHand[14] = haiHand[14], nil
+			local tStat = gametbl:gettenpaistat(haiHand)
+			local Shanten = gametbl:getshanten(haiHand)
+			ev.MachihaiTotalTiles[cnt] = tStat.total
 			-- ダブル立直になる時は一部の判定を省略する
-			if (haiDiHeable(ActivePlayer) == 0) then
+			if not gametbl:isfirstdraw() then
 				-- 他家のプンリーの当たり牌になっている場合は捨てない(捨ててはならない！)
-				if (haiOpenRichiMachihai(tmpHandTileCode) == 1) then haiDiscardability(cnt) = -999999999: continue end
+				if gametbl:getopenwait()[tmpHandTileCode] then ev.do_not_discard[cnt], ev.haiDiscardability[cnt] = true, -999999999; break
 				-- 空聴リーチを避ける(錯和ではないが、和了れなくなるため)
-				if (haiMachihaiTotal == 0) then haiDiscardability(cnt) = -999999: continue end
+				elseif tStat.total == 0 then ev.haiDiscardability[cnt] = -999999; break
 				-- 振聴リーチを避ける(錯和ではないが、手変わりの可能性を残す)
-				if (haiFuriten == 1) then MachihaiFuritenFlag(cnt) = 1: haiDiscardability(cnt) = -99999: continue end
+				elseif tStat.isfuriten == 1 then ev.MachihaiFuritenFlag[cnt], ev.haiDiscardability[cnt] = true, -99999; break
 				-- 待ち牌が残り２枚以下の場合
-				if (haiMachihaiTotal <= 2) then
-					haiDiscardability(cnt) = -9999: continue
+				elseif tStat.total <= 2 then
+					haiDiscardability[cnt] = -9999; break
 				end
 			end
 			-- 不聴立直防止用
-			if (Shanten > 0) then haiDiscardability(cnt) = -999999: continue end
-			Richiability++
-			
-			tmpTileNum = cnt
-			MinScore(cnt) = 999999999
-			MaxScore(cnt) = -999999999
-			repeat 38
-				if (cnt\10 == 0) then continue end
-				haiHand(tmpTileNum, ActivePlayer) = haiHand(13, ActivePlayer)
-				haiHand(13, ActivePlayer) = cnt
-				nowTime = gettime(6)*1000+gettime(7)
-				if (nowTime < startTime) then nowTime += 60000 end
-				if ((nowTime-startTime) >= COMTHINKTIME) then
-					repeat 14
-						if (haiDiscardability(cnt) > 0) then haiDiscardability(cnt) = 0 end
-					loop
-					haiHand(13, ActivePlayer) = haiHand(tmpTileNum, ActivePlayer)
-					haiHand(tmpTileNum, ActivePlayer) = tmpHandTileCode
-					break
-				end
-				await 0: gosub *countshanten
-				if (Shanten == -1) then
+			if Shanten > 0 then haiDiscardability[cnt] = -999999; break end
+			Richiability = Richiability + 1
+
+			local tmpTileNum = cnt
+			ev.MinScore[cnt], ev.MaxScore[cnt] = 999999999, -999999999
+			for i, tilecode in ipairs(validtiles) do
+				local haiHand = tmpHaiHand
+				haiHand[cnt], haiHand[14] = haiHand[14], tilecode
+				-- ここで時間チェックをしていた
+				if (gametbl:getshanten(haiHand) == -1) then
 					-- ここで計算されるのはダマ聴で自摸和のときの点数
-					TsumoAgari = 1: await 0: gosub *countyaku
-					if (haiDiscardability(tmpTileNum) >= 10000) then haiDiscardability(tmpTileNum) -= 10000 end
-					haiDiscardability(tmpTileNum) += haiScore*(4-haiCount(cnt)-haiSeenCount(cnt))+100000
-					if (MinScore(tmpTileNum) > (haiHan+haiBonusHan+haiDoraQuantity)) then MinScore(tmpTileNum) = (haiHan+haiBonusHan+haiDoraQuantity) end
-					if (MaxScore(tmpTileNum) < (haiHan+haiBonusHan+haiDoraQuantity)) then MaxScore(tmpTileNum) = (haiHan+haiBonusHan+haiDoraQuantity) end
+					local stat = gametbl:evaluate(true, haiHand)
+					if ev.haiDiscardability[tmpTileNum] >= 10000 then ev.haiDiscardability[tmpTileNum] = ev.haiDiscardability[tmpTileNum] - 10000 end
+					ev.haiDiscardability[tmpTileNum] = ev.haiDiscardability[tmpTileNum] + stat.points*(4-haiCount[tilecode]-haiSeenCount[tilecode])+100000
+					if ev.MinScore[tmpTileNum] > stat.han then ev.MinScore[tmpTileNum] = stat.han end
+					if ev.MaxScore[tmpTileNum] < stat.han then ev.MaxScore[tmpTileNum] = stat.han end
 				end
-				haiHand(13, ActivePlayer) = haiHand(tmpTileNum, ActivePlayer)
-				haiHand(tmpTileNum, ActivePlayer) = tmpHandTileCode
-				if (MinScore(tmpTileNum) == 999999999) then MinScore(tmpTileNum) = 0 end
-				if (MaxScore(tmpTileNum) ==-999999999) then MaxScore(tmpTileNum) = 0 end
-			loop
-		loop
-		repeat 14
-			haiHand(cnt, ActivePlayer) = tmpHaiHand(cnt)
-		loop
-		if ((nowTime-startTime) >= COMTHINKTIME) then
-			-- 時間がかかる時用の簡略版
-			repeat 14
-				if (haiDiscardability(cnt) >= 0) then
-					tmpTileNum = cnt
-					MinScore(tmpTileNum) = 0: MaxScore(tmpTileNum) = 0
-					repeat 38
-						if (cnt\10 == 0) then continue end
-						haiHand(tmpTileNum, ActivePlayer) = haiHand(13, ActivePlayer)
-						haiHand(13, ActivePlayer) = cnt
-						await 0: gosub *countshanten
-						if (Shanten == -1) then
-							haiDiscardability(tmpTileNum) += 2000*(4-haiCount(cnt)-haiSeenCount(cnt))+100000
-						end
-						haiHand(13, ActivePlayer) = haiHand(tmpTileNum, ActivePlayer)
-						haiHand(tmpTileNum, ActivePlayer) = tmpHandTileCode
-					loop
-				end
-			loop
-		end
-		repeat 14
-			haiHand(cnt, ActivePlayer) = tmpHaiHand(cnt)
-		loop
-		if (Richiability > 0) then
-			teDahai = 13
-			repeat 14
-				if (haiDiscardability(teDahai) < haiDiscardability(13-cnt)) then
-					teDahai = 13-cnt
-				end
-			loop
-			-- 長考してるふり
-			repeat
-				await 0
-				nowTime = gettime(6)*1000+gettime(7)
-				if (nowTime < startTime) then nowTime += 60000 end
-				if ((nowTime-startTime) >= COMTHINKTIME) then break end
-			loop
-			-- 役満聴牌の場合、ダマ聴でも数え役満の場合、
-			-- 跳満以上が確定の場合は立直しない
-			-- 但しダブル立直になる時はリーチする
-			-- 待ちが８枚以上あるならプンリー
-			-- 振聴立直になるような場合は開き直ってプンリー
-			-- 誰かが裸単騎しているならプンリー
-			-- 但しリーチ縛りならリーチする
-			if (((MaxScore(teDahai) < 14)&&(MinScore(teDahai) < 7))||(haiDiHeable(ActivePlayer) == 1)) then
-				if ((MachihaiTotalTiles(teDahai) >= 8)||(MachihaiFuritenFlag(teDahai) == 1)) then
-					if (haiMenzen(ActivePlayer) == 1) then teDahai += 100 end
-					else teDahai += 60 end
-				end else
-					if ((haiNakiMianziDat(0, 0) == 4)||(haiNakiMianziDat(0, 1) == 4)||(haiNakiMianziDat(0, 2) == 4)||(haiNakiMianziDat(0, 3) == 4)) then
-						if (MachihaiTotalTiles(teDahai) >= 2) then
-							if (haiMenzen(ActivePlayer) == 1) then teDahai += 100 end
-							else teDahai += 60 end
-						end
-					end else
-						teDahai += 60
-					end
-				end
-			end else
-				if (strmid(RuleConf, 39, 1) != "0") then
-					teDahai += 60
+				if ev.MinScore[tmpTileNum] == 999999999 then ev.MinScore[tmpTileNum] = 0 end
+				if ev.MaxScore[tmpTileNum] ==-999999999 then Mev.axScore[tmpTileNum] = 0 end
+			end
+		until true end
+		-- 時間がかかる時用の簡略版がここにあった
+
+		local haiHand = gametbl:gethand()
+		if Richiability > 0 then
+			local dahaiType, teDahai = mihajong.DiscardType.Normal, 14
+			for cnt = 14, 1, -1 do
+				if ev.haiDiscardability[teDahai] < ev.haiDiscardability[cnt] then
+					teDahai = cnt
 				end
 			end
-			return
+			-- ここで長考してるふりをしていた
+			--[[
+				役満聴牌の場合、ダマ聴でも数え役満の場合、
+				跳満以上が確定の場合は立直しない
+				但しダブル立直になる時はリーチする
+				待ちが８枚以上あるならプンリー
+				振聴立直になるような場合は開き直ってプンリー
+				誰かが裸単騎しているならプンリー
+				但しリーチ縛りならリーチする
+			]]
+			if ((ev.MaxScore[teDahai] < 14) and (ev.MinScore[teDahai] < 7)) or gametbl:isfirstdraw() then
+				if (ev.MachihaiTotalTiles[teDahai] >= 8) or ev.MachihaiFuritenFlag[teDahai] then
+					if gametbl:ismenzen() then dahaiType = mihajong.DiscardType.OpenRiichi
+					else dahaiType = mihajong.DiscardType.Riichi end
+				elseif someone_hadakatanki(gametbl) then
+					if (ev.MachihaiTotalTiles[teDahai] >= 2) then
+						if gametbl:ismenzen() then dahaiType = mihajong.DiscardType.OpenRiichi
+						else dahaiType = mihajong.DiscardType.Riichi end
+					end
+				else
+					dahaiType = mihajong.DiscardType.Riichi
+				end
+			elseif gametbl:getrule("riichi_shibari") ~= "no" then
+				dahaiType = mihajong.DiscardType.Riichi
+			end
+			if dahaiType ~= mihajong.DiscardType.Normal then
+				return true, ev, dahaiType, teDahai
+			else return false, ev end
 		end
 	end
+	return false, ev
+
+--[====[ 書き換え完了ここまで
 	-- チー、ポンした直後に暗槓/加槓できないようにするためのif処理
 	-- チー、ポンした直後はツモ牌がない状態なので、それを利用する
 	-- カンをした直後はツモ牌が嶺上牌になっている
