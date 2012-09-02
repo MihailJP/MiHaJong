@@ -37,6 +37,7 @@ private:
 	static void pushTileTable(lua_State* const L, Int8ByTile& tptr);
 	static void pushTileTable(lua_State* const L, UInt8ByTile& tptr);
 	static void pushTileTable(lua_State* const L, FlagByTile& tptr);
+	static void pushTileTable(lua_State* const L, InfoByTile<MachihaiTileInfo>& tptr);
 	static void setHand(lua_State* const L, GameTable* const tmpGameStat, int index);
 	class luafunc;
 public:
@@ -70,6 +71,7 @@ public:
 	static int getscore(lua_State* const L);
 	static int getseentiles(lua_State* const L);
 	static int getshanten(lua_State* const L);
+	static int gettenpaistat(lua_State* const L);
 	static int gettilecontext(lua_State* const L);
 	static int gettilesinhand(lua_State* const L);
 	static int gettsumibou(lua_State* const L);

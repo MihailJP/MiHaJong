@@ -143,6 +143,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::getscore); lua_setfield(L, -2, "getscore");
 	lua_pushcfunction(L, luafunc::getseentiles); lua_setfield(L, -2, "getseentiles");
 	lua_pushcfunction(L, luafunc::getshanten); lua_setfield(L, -2, "getshanten");
+	lua_pushcfunction(L, luafunc::gettenpaistat); lua_setfield(L, -2, "gettenpaistat");
 	lua_pushcfunction(L, luafunc::gettilecontext); lua_setfield(L, -2, "gettilecontext");
 	lua_pushcfunction(L, luafunc::gettilesinhand); lua_setfield(L, -2, "gettilesinhand");
 	lua_pushcfunction(L, luafunc::gettsumibou); lua_setfield(L, -2, "gettsumibou");
@@ -204,6 +205,16 @@ void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, Flag
 	lua_newtable(L); // テーブル
 	for (auto k = validTiles.begin(); k != validTiles.end(); k++)
 		TableAdd(L, (int)*k, tptr[*k]);
+}
+void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, InfoByTile<MachihaiTileInfo>& tptr) {
+	lua_newtable(L); // テーブル
+	for (auto k = validTiles.begin(); k != validTiles.end(); k++) {
+		lua_pushinteger(L, (int)*k);
+		lua_newtable(L);
+		TableAdd(L, "flag", tptr[*k].MachihaiFlag);
+		if (tptr[*k].MachihaiFlag) TableAdd(L, "count", tptr[*k].MachihaiCount);
+		lua_settable(L, -3);
+	}
 }
 
 /* 手牌を取得 */
@@ -496,6 +507,22 @@ int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L)
 	PLAYER_ID player = getPlayerID(L, 0);
 	setHand(L, &tmpGameStat, 2);
 	lua_pushinteger(L, ShantenAnalyzer::calcShanten(&tmpGameStat, player, ShantenAnalyzer::shantenAll));
+	return 1;
+}
+
+/* 聴牌に関する情報 */
+int aiscript::table::functable::gametbl::luafunc::gettenpaistat(lua_State* const L) {
+	int n = lua_gettop(L);
+	if ((n < 1)||(n > 2)) {lua_pushstring(L, "引数が正しくありません"); lua_error(L);}
+	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
+	PLAYER_ID player = getPlayerID(L, 0);
+	setHand(L, &tmpGameStat, 2); MachihaiInfo status = chkFuriten(&tmpGameStat, player);
+	// ---------------------------------------------------------------------
+	lua_newtable(L);
+	TableAdd(L, "isfuriten", status.FuritenFlag);
+	TableAdd(L, "total", (int)status.MachihaiTotal);
+	TableAdd(L, "kinds", (int)status.MachiMen);
+	pushTileTable(L, status.Machihai); lua_setfield(L, -2, "bytile");
 	return 1;
 }
 
