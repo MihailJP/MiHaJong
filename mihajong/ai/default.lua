@@ -30,6 +30,14 @@ validtiles = {
 	mihajong.Tile.Dragon.White, mihajong.Tile.Dragon.Green, mihajong.Tile.Dragon.Red,
 }
 
+yaojiutiles = {
+	mihajong.Tile.Character[1], mihajong.Tile.Character[9],
+	mihajong.Tile.Circle[1], mihajong.Tile.Circle[9],
+	mihajong.Tile.Bamboo[1], mihajong.Tile.Bamboo[9],
+	mihajong.Tile.Wind.East, mihajong.Tile.Wind.South, mihajong.Tile.Wind.West, mihajong.Tile.Wind.North,
+	mihajong.Tile.Dragon.White, mihajong.Tile.Dragon.Green, mihajong.Tile.Dragon.Red,
+}
+
 function isflower (tile) -- 花牌かどうか判定
 	if tile then -- nilだったらエラーになるのでそれを防止
 		for k, v in pairs(mihajong.Tile.Flower) do
@@ -87,16 +95,9 @@ function ontsumo (gametbl) -- ＡＩの打牌
 	-- リーチの場合は、和了れなければツモ切り
 	if gametbl:isriichideclared() then return mihajong.DiscardType.Normal, 14 end
 
-	local evaluation = {
-		"do_not_discard", {};
-		"haiDiscardability", {}; "MinScore", {}; "MaxScore", {};
-		"MachihaiTotalTiles", {}; "MachihaiFuritenFlag", {};
-	}
-
 	do
-		local flag, ev, dahaiType, teDahai = riichi_decision(gametbl, evaluation)
+		local flag, dahaiType, teDahai = riichi_decision(gametbl)
 		if flag then return dahaiType, teDahai end
-		evaluation = ev
 	end
 	do
 		local flag, dahaiType, teDahai = ankan_decision(gametbl)
@@ -104,11 +105,15 @@ function ontsumo (gametbl) -- ＡＩの打牌
 	end
 end
 
-function riichi_decision (gametbl, evaluation)
+function riichi_decision (gametbl)
 	local nowShanten = gametbl:getshanten()
 	local haiCount, haiSeenCount = gametbl:gettilesinhand(), gametbl:getseentiles()
 	-- リーチをかけるかどうか
-	local ev = evaluation
+	local ev = {
+		"do_not_discard", {};
+		"haiDiscardability", {}; "MinScore", {}; "MaxScore", {};
+		"MachihaiTotalTiles", {}; "MachihaiFuritenFlag", {};
+	}
 	if (nowShanten == 0) and (gametbl:ismenzen() or (gametbl:getrule("riichi_shibari") ~= "no")) then
 		local Richiability = 0
 		local tmpHaiHand = gametbl:gethand()
@@ -201,11 +206,11 @@ function riichi_decision (gametbl, evaluation)
 				dahaiType = mihajong.DiscardType.Riichi
 			end
 			if dahaiType ~= mihajong.DiscardType.Normal then
-				return true, ev, dahaiType, teDahai
-			else return false, ev end
+				return true, dahaiType, teDahai
+			else return false end
 		end
 	end
-	return false, ev
+	return false
 end
 
 function ankan_decision (gametbl)
@@ -263,36 +268,62 @@ function ankan_decision (gametbl)
 		until true end
 		return false
 	end
+end
+
+function discard_decision (gametbl)
+	local haiDiscardability = {}
+	local Yishanten = 0
+	local tmpDiscardability = {}
+	local haiHand = gametbl:gethand()
+	local haiNakiMianziDat = gametbl:getmeld()
+	local tilect = gametbl:gettilecontext()
+
+	-- それぞれを捨てたときの手の評価を計算する
+	local WanzCount, PinzCount, SouzCount, YaojiuCount, KeziCount = 0, 0, 0, 0, 0
+	local 
+	for cnt = 1, 14 do
+		for k, v in ipairs(mihajong.Tile.Character) do
+			if haiHand[cnt] == v then WanzCount = WanzCount + 1 end
+		end
+		for k, v in ipairs(mihajong.Tile.Circle) do
+			if haiHand[cnt] == v then PinzCount = PinzCount + 1 end
+		end
+		for k, v in ipairs(mihajong.Tile.Bamboo) do
+			if haiHand[cnt] == v then SouzCount = SouzCount + 1 end
+		end
+		for k, v in ipairs(yaojiutiles) do
+			if haiHand[cnt] == v then YaojiuCount = YaojiuCount + 1 end
+		end
+		if tilect[cnt].formstriplet or tilect[cnt].canformquad then KeziCount = KeziCount + 1 end
+	end
+	for cnt = 1, #haiNakiMianziDat do
+		for k, v in ipairs(mihajong.Tile.Character) do
+			if haiNakiMianziDat[cnt].tile == v then WanzCount = WanzCount + 3 end
+		end
+		for k, v in ipairs(mihajong.Tile.Circle) do
+			if haiNakiMianziDat[cnt].tile == v then PinzCount = PinzCount + 3 end
+		end
+		for k, v in ipairs(mihajong.Tile.Bamboo) do
+			if haiNakiMianziDat[cnt].tile == v then SouzCount = SouzCount + 3 end
+		end
+		do
+			local flag = true
+			for k, v in ipairs(mihajong.MeldType.Sequence) do
+				if haiNakiMianziDat[cnt].type == v then flag = false end
+			end
+			if flag then KeziCount = KeziCount + 3 end
+		end
+	end
+	--[=[ 1.3.1の時点ですでに没になってたらしい……
+	if (WanzCount >= 8) then ephemeral.haiAimingYise = 1 end -- 一色手を狙ってみよう！
+	if (PinzCount >= 8) then ephemeral.haiAimingYise = 2 end
+	if (SouzCount >= 8) then ephemeral.haiAimingYise = 3 end
+	if (KeziCount >= 6) then
+		ephemeral.haiAimingDuidui = true -- どうやら対子場のようだ
+	end
+	--]=]
+
 --[====[ 書き換え完了ここまで
-	--[[ それぞれを捨てたときの手の評価を計算する ]]
-	dim haiDiscardability, 14
-	startTime = gettime(6)*1000+gettime(7)
-	Yishanten = 0
-	dim tmpDiscardability, 14
-
-	WanzCount = 0: PinzCount = 0: SouzCount = 0
-	YaojiuCount = 0: KeziCount = 0
-	repeat 14
-		if (haiHand(cnt, ActivePlayer)/10 == 0) then WanzCount++ end
-		if (haiHand(cnt, ActivePlayer)/10 == 1) then PinzCount++ end
-		if (haiHand(cnt, ActivePlayer)/10 == 2) then SouzCount++ end
-		if ((haiHand(cnt, ActivePlayer)/10 == 3)||(haiHand(cnt, ActivePlayer)\10 == 1)||(haiHand(cnt, ActivePlayer)\10 == 9)) then YaojiuCount++ end
-		targetTile = cnt: await 0: gosub *getpaiinfo
-		if (((haiTileInfo \ 2) == 1)||((haiTileInfo \ 8 / 4) == 1)) then KeziCount++ end
-	loop
-	repeat haiNakiMianziDat(0, ActivePlayer), 1
-		if (haiNakiMianziDat(cnt, ActivePlayer)\100/10 == 0) then WanzCount += 3 end
-		if (haiNakiMianziDat(cnt, ActivePlayer)\100/10 == 1) then PinzCount += 3 end
-		if (haiNakiMianziDat(cnt, ActivePlayer)\100/10 == 2) then SouzCount += 3 end
-		if (haiNakiMianziDat(cnt, ActivePlayer)/1000 >= 4) then KeziCount += 3 end
-	loop
---	if (WanzCount >= 8) then haiAimingYise(ActivePlayer) = 1 end -- 一色手を狙ってみよう！
---	if (PinzCount >= 8) then haiAimingYise(ActivePlayer) = 2 end
---	if (SouzCount >= 8) then haiAimingYise(ActivePlayer) = 3 end
---	if (KeziCount >= 6) then
---		haiAimingDuidui(ActivePlayer) = 1 -- どうやら対子場のようだ
---	end
-
 	repeat 14
 		targetPlayer = ActivePlayer: targetTile = cnt: await 0: gosub *getpaiinfo
 		tmpHand = haiHand(cnt, ActivePlayer)
