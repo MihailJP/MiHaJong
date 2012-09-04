@@ -1,6 +1,21 @@
 -- MiHaJong 1.7.0以降用 デフォルトAI
 -- 先読みＡＩなのでたまに時間がかかる場合があります
 
+function clone (t) -- deep-copy a table
+	if type(t) ~= "table" then return t end
+	local meta = getmetatable(t)
+	local target = {}
+	for k, v in pairs(t) do
+		if type(v) == "table" then
+			target[k] = clone(v)
+		else
+			target[k] = v
+		end
+	end
+	setmetatable(target, meta)
+	return target
+end
+
 validtiles = {
 	mihajong.Tile.Character[1], mihajong.Tile.Character[5], mihajong.Tile.Character[6],
 	mihajong.Tile.Character[4], mihajong.Tile.Character[5], mihajong.Tile.Character[6],
@@ -17,17 +32,11 @@ validtiles = {
 
 function isflower (tile) -- 花牌かどうか判定
 	if tile then -- nilだったらエラーになるのでそれを防止
-		if     tile.tile == mihajong.Tile.Flower.Spring then return true
-		elseif tile.tile == mihajong.Tile.Flower.Summer then return true
-		elseif tile.tile == mihajong.Tile.Flower.Autumn then return true
-		elseif tile.tile == mihajong.Tile.Flower.Winter then return true
-		elseif tile.tile == mihajong.Tile.Flower.Plum   then return true
-		elseif tile.tile == mihajong.Tile.Flower.Orchid then return true
-		elseif tile.tile == mihajong.Tile.Flower.Chrys  then return true
-		elseif tile.tile == mihajong.Tile.Flower.Bamboo then return true
-		else return false end
-	else return false
+		for k, v in pairs(mihajong.Tile.Flower) do
+			if tile.tile == v then return true end
+		end
 	end
+	return false
 end
 
 function someone_hadakatanki (gametbl)
@@ -83,11 +92,15 @@ function ontsumo (gametbl) -- ＡＩの打牌
 		"haiDiscardability", {}; "MinScore", {}; "MaxScore", {};
 		"MachihaiTotalTiles", {}; "MachihaiFuritenFlag", {};
 	}
-	
+
 	do
 		local flag, ev, dahaiType, teDahai = riichi_decision(gametbl, evaluation)
 		if flag then return dahaiType, teDahai end
 		evaluation = ev
+	end
+	do
+		local flag, dahaiType, teDahai = ankan_decision(gametbl)
+		if flag then return dahaiType, teDahai end
 	end
 end
 
@@ -112,7 +125,7 @@ function riichi_decision (gametbl, evaluation)
 			-- 存在しない牌の場合
 			if not gametbl:gethand()[cnt] then ev.do_not_discard[cnt], ev.haiDiscardability[cnt] = true, -9999999; break end
 			-- 向聴数から、大まかな評価値を算出
-			local haiHand = tmpHaiHand
+			local haiHand = clone(tmpHaiHand)
 			haiHand[cnt], haiHand[14] = haiHand[14], nil
 			local tStat = gametbl:gettenpaistat(haiHand)
 			local Shanten = gametbl:getshanten(haiHand)
@@ -137,7 +150,7 @@ function riichi_decision (gametbl, evaluation)
 			local tmpTileNum = cnt
 			ev.MinScore[cnt], ev.MaxScore[cnt] = 999999999, -999999999
 			for i, tilecode in ipairs(validtiles) do
-				local haiHand = tmpHaiHand
+				local haiHand = clone(tmpHaiHand)
 				haiHand[cnt], haiHand[14] = haiHand[14], tilecode
 				-- ここで時間チェックをしていた
 				if (gametbl:getshanten(haiHand) == -1) then
@@ -193,78 +206,64 @@ function riichi_decision (gametbl, evaluation)
 		end
 	end
 	return false, ev
+end
 
---[====[ 書き換え完了ここまで
-	-- チー、ポンした直後に暗槓/加槓できないようにするためのif処理
-	-- チー、ポンした直後はツモ牌がない状態なので、それを利用する
-	-- カンをした直後はツモ牌が嶺上牌になっている
-	-- カンをしたあと、続けて暗槓をすることはかまわない
-	if (haiHand(13, ActivePlayer) != 0) then
-		await 0
-		--[[ 暗槓するかどうか ]]
-		dim tmpHaiHand, 14
-		repeat 14
-			tmpHaiHand(cnt) = haiHand(cnt, ActivePlayer)
-		loop
-		repeat 14
-			if (haiHand(cnt, ActivePlayer) == 0) then continue end
-			targetPlayer = ActivePlayer: targetTile = cnt: await 0: gosub *getpaiinfo
-			tmpnum = haiHand(cnt, ActivePlayer)
-			repeat 14
-				if (haiHand(cnt, ActivePlayer) == tmpnum) then
-					haiHand(cnt, ActivePlayer) = 0
+function ankan_decision (gametbl)
+	local nowShanten = gametbl:getshanten()
+	local haiHand = gametbl:gethand()
+	--[[
+		チー、ポンした直後に暗槓/加槓できないようにするためのif処理
+		チー、ポンした直後はツモ牌がない状態なので、それを利用する
+		カンをした直後はツモ牌が嶺上牌になっている
+		カンをしたあと、続けて暗槓をすることはかまわない
+	]]
+	if haiHand[14] then
+		-- 暗槓するかどうか
+		local tmpHaiHand = gametbl:gethand()
+		local tilect = gametbl:gettilecontext()
+		for cnt = 1, 14 do repeat
+			if not haiHand[cnt] then break end -- continueの代わり
+			local tmpnum = haiHand[cnt].tile
+			for k = 1, 14 do
+				if haiHand[cnt] and (haiHand[cnt].tile == tmpnum) then
+					haiHand[cnt] = nil
 				end
-			loop
-			targetPlayer = ActivePlayer: await 0: gosub *countshanten
-			repeat 14
-				haiHand(cnt, ActivePlayer) = tmpHaiHand(cnt)
-			loop
-			if ((haiTileInfo\128 / 64) == 1) then
+			end
+			local Shanten = gametbl:getshanten(haiHand)
+			haiHand = clone(tmpHaiHand)
+			if tilect[cnt].canformquad then
 				if (Shanten == (nowShanten+2)) then
-					-- 長考してるふり
-					repeat
-						await 0
-						nowTime = gettime(6)*1000+gettime(7)
-						if (nowTime < startTime) then nowTime += 60000 end
-						if ((nowTime-startTime) >= COMTHINKTIME) then break end
-					loop
-					teDahai = cnt+20
-					break
+					-- ここで長考してるふりをしていた
+					return true, mihajong.DiscardType.Ankan, cnt
 				end
 			end
-		loop
+		until true end
 		--[[ 加槓するかどうか ]]
-		repeat 14
-			Kakanability = 0
-			if (haiHand(cnt, ActivePlayer) == 0) then continue end
-			targetPlayer = ActivePlayer: targetTile = cnt: await 0: gosub *getpaiinfo
-			tmpnum = haiHand(cnt, ActivePlayer)
-			haiHand(cnt, ActivePlayer) = 0
-			targetPlayer = ActivePlayer: await 0: gosub *countshanten
-			repeat 14
-				haiHand(cnt, ActivePlayer) = tmpHaiHand(cnt)
-			loop
-			repeat haiNakiMianziDat(0, ActivePlayer), 1
-				if (haiNakiMianziDat(cnt, ActivePlayer)\100 == tmpnum) then
-					if ((haiNakiMianziDat(cnt, ActivePlayer)/1000 >= 5)&&(haiNakiMianziDat(cnt, ActivePlayer)/1000 <= 7)) then Kakanability = 1 end
-				end
-			loop
-			if (Kakanability == 1) then
-				if (Shanten == nowShanten) then
-					-- 長考してるふり
-					repeat
-						await 0
-						nowTime = gettime(6)*1000+gettime(7)
-						if (nowTime < startTime) then nowTime += 60000 end
-						if ((nowTime-startTime) >= COMTHINKTIME) then break end
-					loop
-					teDahai = cnt+40
-					break
+		for cnt = 1, 14 do repeat
+			local Kakanability = false
+			if not haiHand[cnt] then break end -- continueの代わり
+			local tmpnum = haiHand[cnt].tile
+			haiHand[cnt] = nil
+			local Shanten = gametbl:getshanten(haiHand)
+			haiHand = clone(tmpHaiHand)
+			local haiNakiMianziDat = gametbl:getmeld()
+			for k = 1, #haiNakiMianziDat do
+				if haiNakiMianziDat[k].tile == tmpnum then
+					for nomen, val in pairs(mihajong.MeldType.Triplet) do
+						if haiNakiMianziDat[k].type == val then Kakanability = true end
+					end
 				end
 			end
-		loop
-		if (teDahai >= 20) then return end
+			if Kakanability then
+				if Shanten == nowShanten then
+					-- ここで長考してるふりをしていた
+					return true, mihajong.DiscardType.Kakan, cnt
+				end
+			end
+		until true end
+		return false
 	end
+--[====[ 書き換え完了ここまで
 	--[[ それぞれを捨てたときの手の評価を計算する ]]
 	dim haiDiscardability, 14
 	startTime = gettime(6)*1000+gettime(7)
