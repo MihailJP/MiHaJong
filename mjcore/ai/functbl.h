@@ -39,6 +39,7 @@ private:
 	static void pushTileTable(lua_State* const L, FlagByTile& tptr);
 	static void pushTileTable(lua_State* const L, InfoByTile<MachihaiTileInfo>& tptr);
 	static void setHand(lua_State* const L, GameTable* const tmpGameStat, int index);
+	static int chkargnum(lua_State* const L, int argmin, int argmax);
 	class luafunc;
 public:
 	static inline const char* getTblName() {return tblname;}
