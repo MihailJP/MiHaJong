@@ -185,7 +185,9 @@ function riichi_decision (gametbl)
 	-- リーチをかけるかどうか
 	local ev = {
 		"do_not_discard", {};
-		"haiDiscardability", {}; "MinScore", {}; "MaxScore", {};
+		"haiDiscardability", {0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,};
+		"MinScore", {0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,};
+		"MaxScore", {0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,};
 		"MachihaiTotalTiles", {}; "MachihaiFuritenFlag", {};
 	}
 	if (nowShanten == 0) and (gametbl:ismenzen() or (gametbl:getrule("riichi_shibari") ~= "no")) then
@@ -342,11 +344,60 @@ function ankan_decision (gametbl)
 	end
 end
 
+function evaluate_hand (gametbl, cnt, tp, hand, haiDiscardability, tmpde) -- 再帰処理
+	local origShanten = gametbl:getshanten()
+	local tmpDiscardability = {0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,}
+	local nowShanten = gametbl:getshanten(hand)
+	local haiHand = clone(hand)
+	local tmpTileNum = cnt
+	local haiCount, haiSeenCount = gametbl:gettilesinhand(), gametbl:getseentiles()
+	for k, v in validtiles do repeat
+		-- 時間がかかったらここで切り上げていた
+		if origShanten > 1 then
+			if ishonor({"tile", v}) and (haiCount[v] + haiSeenCount[v] == 3) then break end -- 字牌のラス牌はとりあえず無視
+		end
+		if origShanten > 0 then -- 本来は既にテンパイしているときには行なっていなかった処理
+			if haiCount[v] + haiSeenCount[v] == 4 then break end -- ４枚切れた牌
+			local tmpHe, haiSutehai = false, gametbl:getdiscard()
+			for idx = 1, #haiSutehai do -- 振聴になる牌を避ける
+				if haiSutehai[idx].tile == v then tmpHe = true; break end
+			end
+			if tmpHe then tmpDiscardability[tp] = 0; break end
+		end
+		haiHand[tp], haiHand[14] = clone(haiHand[14]), {"tile", v; "red", 0}
+		local Shanten = gametbl:getshanten(haiHand)
+		if Shanten == -1 then
+			local stat = gametbl:evaluate(true, haiHand)
+			if haiDiscardability[tmpTileNum] >= 10000 then
+				tmpDiscardability[tp] = tmpDiscardability[tp] - 10000
+			end
+			tmpDiscardability[tp] = tmpDiscardability[tp] +
+				stat.points * (4 - haiCount[v] - haiSeenCount[v]) + tmpde
+		elseif Shanten == (nowShanten - 1) then
+			local tmpde = (4 - haiCount[v] - haiSeenCount[v])
+			-- 時間がかかったらここで切り上げていた
+			for i = 1, 14 do repeat
+				-- 時間がかかったらここで切り上げていた
+				if i > 1 then
+					if haiHand[i] and (haiHand[i].tile == haiHand[i - 1].tile) then
+						tmpDiscardability[i] = tmpDiscardability[i - 1]
+						break -- 同じ牌を２度調べない
+					end
+				end
+				local td = evaluate_hand(gametbl, cnt, tp, haiHand, haiDiscardability, tmpde)
+				for j = 1, 14 do tmpDiscardability[i] = tmpDiscardability[i] + td[j] end
+			until true end
+			-- 処理が遅い時はここで別処理をしていた
+		end
+		haiHand = clone(hand)
+		-- 時間がかかったらここで切り上げていた
+	until true end
+	return tmpDiscardability
+end
+
 function discard_decision (gametbl)
 	local do_not_discard = {}
-	local haiDiscardability = {}
-	local Yishanten = 0
-	local tmpDiscardability = {}
+	local haiDiscardability = {0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,}
 	local haiHand = gametbl:gethand()
 	local haiNakiMianziDat = gametbl:getmeld()
 	local tilect = gametbl:gettilecontext()
@@ -474,205 +525,18 @@ function discard_decision (gametbl)
 			end
 		end
 --]=]
---[====[ 書き換え完了ここまで
-		if (nowShanten == 2) then -- 二向聴でも先読みさせてみる
-			Yishanten = 1
-			tmpXTileNum = cnt
-			if (tmpXTileNum > 0) then
-				if (haiHand(tmpXTileNum, ActivePlayer) == haiHand(tmpXTileNum-1, ActivePlayer)) then
-					continue -- 同じ牌を２度調べない
-				end
-			end
-			repeat 38
-				await 0
-				if (cnt\10 == 0) then continue end
-				if (haiCount(cnt)+haiSeenCount(cnt) == 4) then continue end -- ４枚見えてる
-				if ((cnt >= 30)&&(haiCount(cnt)+haiSeenCount(cnt) == 3)) then continue end -- 字牌のラス牌はとりあえず無視
-				haiHand(tmpXTileNum, ActivePlayer) = haiHand(13, ActivePlayer)
-				haiHand(13, ActivePlayer) = cnt
-				await 0: gosub *countshanten
-				tmpXde = 4-haiCount(cnt)-haiSeenCount(cnt)
-				if (Shanten == 1) then -- 次のツモ牌で一向聴の場合
-					nowTime = gettime(6)*1000+gettime(7)
-					if (nowTime < startTime) then nowTime += 60000 end
-					if ((nowTime-startTime) < COMTHINKTIME) then
-						repeat 14
-							nowTime = gettime(6)*1000+gettime(7)
-							tmpTileNum = cnt
-							tmpTile2a = haiHand(cnt, ActivePlayer)
-							if (tmpTileNum > 0) then
-								if (haiHand(tmpTileNum, ActivePlayer) == haiHand(tmpTileNum-1, ActivePlayer)) then
-									continue -- 同じ牌を２度調べない
-								end
-							end
-							repeat 38
-								nowTime = gettime(6)*1000+gettime(7)
-								await 0
-								if (cnt\10 == 0) then continue end
-								if (haiCount(cnt)+haiSeenCount(cnt) == 4) then continue end -- ４枚見えてる
-								if ((cnt >= 30)&&(haiCount(cnt)+haiSeenCount(cnt) == 3)) then continue end -- 字牌のラス牌はとりあえず無視
-								haiHand(tmpTileNum, ActivePlayer) = haiHand(13, ActivePlayer)
-								haiHand(13, ActivePlayer) = cnt
-								await 0: gosub *countshanten
-								tmpde = 4-haiCount(cnt)-haiSeenCount(cnt)
-								if (Shanten == 0) then -- 次のツモ牌で聴牌の場合
-									nowTime = gettime(6)*1000+gettime(7)
-									if (nowTime < startTime) then nowTime += 60000 end
-									if ((nowTime-startTime) < COMTHINKTIME) then
-										repeat 14
-											nowTime = gettime(6)*1000+gettime(7)
-											if (nowTime < startTime) then nowTime += 60000 end
-											if ((nowTime-startTime) >= COMTHINKTIME) then break end
-											tmpTile2 = haiHand(cnt, ActivePlayer)
-											tmpTileNum2 = cnt
-											repeat 38
-												nowTime = gettime(6)*1000+gettime(7)
-												await 0
-												if (cnt\10 == 0) then continue end -- 存在しない牌
-												if (haiCount(cnt)+haiSeenCount(cnt) == 4) then continue end -- ４枚切れた牌
-												tmpHe = 0: tmpHai = cnt
-												repeat haiSutehai(0, targetPlayer), 1
-													if (haiSutehai(cnt, targetPlayer) == tmpHai) then
-														tmpHe = 1: break
-													end
-												loop
-												if (tmpHe == 1) then tmpDiscardability == 0: break end -- 振聴になる牌を避ける
-												haiHand(tmpTileNum2, ActivePlayer) = haiHand(13, ActivePlayer)
-												haiHand(13, ActivePlayer) = cnt
-												await 0: gosub *countshanten
-												if (Shanten == -1) then
-													TsumoAgari = 1: await 0: gosub *countyaku
-													tmpDiscardability(tmpTileNum) += haiScore*(4-haiCount(cnt)-haiSeenCount(cnt))*tmpde
-												end
-												haiHand(13, ActivePlayer) = haiHand(tmpTileNum2, ActivePlayer)
-												haiHand(tmpTileNum2, ActivePlayer) = tmpTile2
-											loop
-										loop
-									end else -- 処理が遅い時
-										repeat 14
-											tmpDiscardability(tmpTileNum) = (4-haiCount(cnt)-haiSeenCount(cnt))*tmpde
-										loop
-									end
-								end
-								haiHand(13, ActivePlayer) = haiHand(tmpTileNum, ActivePlayer)
-								haiHand(tmpTileNum, ActivePlayer) = tmpTile2a
-								nowTime = gettime(6)*1000+gettime(7)
-								if (nowTime < startTime) then nowTime += 60000 end
-								if ((nowTime-startTime) < COMTHINKTIME) then break end
-							loop
-							nowTime = gettime(6)*1000+gettime(7)
-							if (nowTime < startTime) then nowTime += 60000 end
-							if ((nowTime-startTime) < COMTHINKTIME) then break end
-						loop
-					end else -- 処理が遅い時
-						repeat 14
-							tmpDiscardability(tmpXTileNum) = (4-haiCount(cnt)-haiSeenCount(cnt))*tmpXde
-						loop
-					end
-				end
-				haiHand(13, ActivePlayer) = haiHand(tmpXTileNum, ActivePlayer)
-				haiHand(tmpXTileNum, ActivePlayer) = tmpHand
-				nowTime = gettime(6)*1000+gettime(7)
-				if (nowTime < startTime) then nowTime += 60000 end
-				if ((nowTime-startTime) < COMTHINKTIME) then break end
-			loop
+		if nowShanten == 2 then -- 二向聴でも先読みさせてみる
+			local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 0) -- 先読み判定
+			for i = 1, 14 do haiDiscardability[i] = haiDiscardability[i] + tmpDiscardability[i] + 100000 end
+		elseif nowShanten == 1 then -- 一向聴のとき
+			local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 0) -- 先読み判定
+			for i = 1, 14 do haiDiscardability[i] = haiDiscardability[i] + tmpDiscardability[i] + 100000 end
+		elseif nowShanten == 0 then -- 聴牌したとき
+			local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 100000) -- 先読み判定
+			for i = 1, 14 do haiDiscardability[i] = haiDiscardability[i] + tmpDiscardability[i] end
 		end
-		if (nowShanten == 1) then -- 一向聴のとき
-			Yishanten = 1
-			tmpTileNum = cnt
-			if (tmpTileNum > 0) then
-				if (haiHand(tmpTileNum, ActivePlayer) == haiHand(tmpTileNum-1, ActivePlayer)) then
-					continue -- 同じ牌を２度調べない
-				end
-			end
-			repeat 38
-				await 0
-				if (cnt\10 == 0) then continue end
-				if (haiCount(cnt)+haiSeenCount(cnt) == 4) then continue end -- ４枚見えてる
-				if ((cnt >= 30)&&(haiCount(cnt)+haiSeenCount(cnt) == 3)) then continue end -- 字牌のラス牌はとりあえず無視
-				haiHand(tmpTileNum, ActivePlayer) = haiHand(13, ActivePlayer)
-				haiHand(13, ActivePlayer) = cnt
-				await 0: gosub *countshanten
-				tmpde = 4-haiCount(cnt)-haiSeenCount(cnt)
-				if (Shanten == 0) then -- 次のツモ牌で聴牌の場合
-					nowTime = gettime(6)*1000+gettime(7)
-					if (nowTime < startTime) then nowTime += 60000 end
-					if ((nowTime-startTime) < COMTHINKTIME) then
-						repeat 14
-							nowTime = gettime(6)*1000+gettime(7)
-							if (nowTime < startTime) then nowTime += 60000 end
-							if ((nowTime-startTime) >= COMTHINKTIME) then break end
-							tmpTile2 = haiHand(cnt, ActivePlayer)
-							tmpTileNum2 = cnt
-							repeat 38
-								nowTime = gettime(6)*1000+gettime(7)
-								if (nowTime < startTime) then nowTime += 60000 end
-								if ((nowTime-startTime) >= COMTHINKTIME) then break end
-								await 0
-								if (cnt\10 == 0) then continue end -- 存在しない牌
-								if (haiCount(cnt)+haiSeenCount(cnt) == 4) then continue end -- ４枚切れた牌
-								tmpHe = 0: tmpHai = cnt
-								repeat haiSutehai(0, targetPlayer), 1
-									if (haiSutehai(cnt, targetPlayer) == tmpHai) then
-										tmpHe = 1: break
-									end
-								loop
-								if (tmpHe == 1) then tmpDiscardability == 0: break end -- 振聴になる牌を避ける
-								haiHand(tmpTileNum2, ActivePlayer) = haiHand(13, ActivePlayer)
-								haiHand(13, ActivePlayer) = cnt
-								await 0: gosub *countshanten
-								if (Shanten == -1) then
-									TsumoAgari = 1: await 0: gosub *countyaku
-									tmpDiscardability(tmpTileNum) += haiScore*(4-haiCount(cnt)-haiSeenCount(cnt))*tmpde
-								end
-								haiHand(13, ActivePlayer) = haiHand(tmpTileNum2, ActivePlayer)
-								haiHand(tmpTileNum2, ActivePlayer) = tmpTile2
-							loop
-						loop
-					end else -- 処理が遅い時
-						repeat 14
-							tmpDiscardability(tmpTileNum) = (4-haiCount(cnt)-haiSeenCount(cnt))*tmpde
-						loop
-					end
-				end
-				haiHand(13, ActivePlayer) = haiHand(tmpTileNum, ActivePlayer)
-				haiHand(tmpTileNum, ActivePlayer) = tmpHand
-				nowTime = gettime(6)*1000+gettime(7)
-				if (nowTime < startTime) then nowTime += 60000 end
-				if ((nowTime-startTime) < COMTHINKTIME) then break end
-			loop
-		end
-		if (nowShanten == 0) then -- 聴牌したとき
-			tmpTileNum = cnt
-			repeat 38
-				nowTime = gettime(6)*1000+gettime(7)
-				if (nowTime < startTime) then nowTime += 60000 end
-				if ((nowTime-startTime) >= COMTHINKTIME) then break end
-				if (cnt\10 == 0) then continue end
-				haiHand(tmpTileNum, ActivePlayer) = haiHand(13, ActivePlayer)
-				haiHand(13, ActivePlayer) = cnt
-				await 0: gosub *countshanten
-				if (Shanten == -1) then
-					TsumoAgari = 1: await 0: gosub *countyaku
-					if (haiDiscardability(tmpTileNum) >= 10000) then haiDiscardability(tmpTileNum) -= 10000 end
-					haiDiscardability(tmpTileNum) += haiScore*(4-haiCount(cnt)-haiSeenCount(cnt))+100000
-				end
-				haiHand(13, ActivePlayer) = haiHand(tmpTileNum, ActivePlayer)
-				haiHand(tmpTileNum, ActivePlayer) = tmpHand
-				nowTime = gettime(6)*1000+gettime(7)
-				if (nowTime < startTime) then nowTime += 60000 end
-				if ((nowTime-startTime) < COMTHINKTIME) then break end
-			loop
-		end
-	loop
-	nowTime = gettime(6)*1000+gettime(7)
-	if (nowTime < startTime) then nowTime += 60000 end
-	if ((Yishanten)&&((nowTime-startTime) < COMTHINKTIME)) then
-		-- 一向聴のとき
-		repeat 14
-			haiDiscardability(cnt) += tmpDiscardability(cnt)+100000
-		loop
 	end
+--[====[ 書き換え完了ここまで
 	-- オープン立直の待ち牌を捨てない(捨ててはならない！)ようにする
 	repeat 14
 		if (haiHand(cnt, ActivePlayer) < 40) then
