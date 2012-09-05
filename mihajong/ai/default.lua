@@ -406,7 +406,6 @@ function discard_decision (gametbl)
 
 	-- それぞれを捨てたときの手の評価を計算する
 	local WanzCount, PinzCount, SouzCount, YaojiuCount, KeziCount = 0, 0, 0, 0, 0
-	local 
 	for cnt = 1, 14 do
 		if ischaracter(haiHand[cnt]) then WanzCount = WanzCount + 1 end
 		if iscircle(haiHand[cnt]) then PinzCount = PinzCount + 1 end
@@ -536,105 +535,107 @@ function discard_decision (gametbl)
 			for i = 1, 14 do haiDiscardability[i] = haiDiscardability[i] + tmpDiscardability[i] end
 		end
 	end
---[====[ 書き換え完了ここまで
-	-- オープン立直の待ち牌を捨てない(捨ててはならない！)ようにする
-	repeat 14
-		if (haiHand(cnt, ActivePlayer) < 40) then
-			if (haiOpenRichiMachihai(haiHand(cnt, ActivePlayer)) == 1) then
-				haiDiscardability(cnt) = -999999999
+
+	do -- オープン立直の待ち牌を捨てない(捨ててはならない！)ようにする
+		haiHand[cnt] = clone(tmpHand)
+		local haiOpenRichiMachihai = gametbl:getopenwait()
+		for cnt = 1, 14 do
+			if haiHand[cnt] and not isflower(haiHand[cnt]) then
+				if haiOpenRichiMachihai[haiHand[cnt].tile] then
+					do_not_discard[cnt], haiDiscardability[cnt] = true, -999999999
+				end
 			end
 		end
-	loop
-	-- 大三元の包になるような牌を捨てないようにする
-	await 0: gosub *countseentiles
-	if (nowShanten > 1) then
-		-- ノーチャンスか・振聴となるか・白を鳴いてるか・発を鳴いてるか・中を鳴いてるか
-		tmpDiscardabilityChkFlag = 0
-		repeat 4: tmpchkcnt = 0
-			if (tmpchkcnt == hncnZijia) then continue end
-			if (haiNakiMianziDat(0, tmpchkcnt) == 0) then continue end
-			repeat haiNakiMianziDat(0, tmpchkcnt)
-				if ((haiNakiMianziDat(cnt, tmpchkcnt) \ 100) == 35) then
-					tmpDiscardabilityChkFlag += 4
-				end
-				if ((haiNakiMianziDat(cnt, tmpchkcnt) \ 100) == 36) then
-					tmpDiscardabilityChkFlag += 2
-				end
-				if ((haiNakiMianziDat(cnt, tmpchkcnt) \ 100) == 37) then
-					tmpDiscardabilityChkFlag += 1
-				end
-			loop
-			if (haiSutehai(0, tmpchkcnt) == 0) then continue end
-			repeat haiSutehai(0, tmpchkcnt), 1
-				if ((haiSutehai(cnt, tmpchkcnt) \ 100) == 35)&&(tmpDiscardabilityChkFlag == 3) then tmpDiscardabilityChkFlag += 8 end
-				if ((haiSutehai(cnt, tmpchkcnt) \ 100) == 36)&&(tmpDiscardabilityChkFlag == 5) then tmpDiscardabilityChkFlag += 8 end
-				if ((haiSutehai(cnt, tmpchkcnt) \ 100) == 37)&&(tmpDiscardabilityChkFlag == 6) then tmpDiscardabilityChkFlag += 8 end
-			loop
-			if ((haiSeenCount(35) >= 2)&&(tmpDiscardabilityChkFlag == 3)) then tmpDiscardabilityChkFlag += 16 end
-			if ((haiSeenCount(36) >= 2)&&(tmpDiscardabilityChkFlag == 5)) then tmpDiscardabilityChkFlag += 16 end
-			if ((haiSeenCount(37) >= 2)&&(tmpDiscardabilityChkFlag == 6)) then tmpDiscardabilityChkFlag += 16 end
-		loop
-		repeat 14
-			if ((tmpDiscardabilityChkFlag == 3)&&(haiHand(cnt, ActivePlayer) == 35)) then
-				haiDiscardability(cnt) = -799999999
-			end
-			if ((tmpDiscardabilityChkFlag == 5)&&(haiHand(cnt, ActivePlayer) == 36)) then
-				haiDiscardability(cnt) = -799999999
-			end
-			if ((tmpDiscardabilityChkFlag == 6)&&(haiHand(cnt, ActivePlayer) == 37)) then
-				haiDiscardability(cnt) = -799999999
-			end
-		loop
 	end
+
+	-- 大三元の包になるような牌を捨てないようにする
+	if nowShanten > 1 then
+		-- ノーチャンスか・振聴となるか・白を鳴いてるか・発を鳴いてるか・中を鳴いてるか
+		local tmpDiscardabilityChkFlag = 0
+		for tmpchkcnt = 1, 4 do repeat
+			if tmpchkcnt == gametbl.playerid then break end
+			local haiNakiMianziDat = gametbl:getmeld(tmpchkcnt)
+			for cnt = 1, #haiNakiMianziDat do
+				if haiNakiMianziDat[cnt].tile == mihajong.Tile.Dragon.White then
+					tmpDiscardabilityChkFlag = tmpDiscardabilityChkFlag + 4
+				elseif haiNakiMianziDat[cnt].tile == mihajong.Tile.Dragon.Green then
+					tmpDiscardabilityChkFlag = tmpDiscardabilityChkFlag + 2
+				elseif haiNakiMianziDat[cnt].tile == mihajong.Tile.Dragon.Red then
+					tmpDiscardabilityChkFlag = tmpDiscardabilityChkFlag + 1
+				end
+			end
+			local haiSutehai = gametbl:getdiscard(tmpchkcnt)
+			for cnt = 1, #haiSutehai do
+				if ((haiSutehai[cnt] == mihajong.Tile.Dragon.White) and (tmpDiscardabilityChkFlag == 3)) or
+					((haiSutehai[cnt] == mihajong.Tile.Dragon.Green) and (tmpDiscardabilityChkFlag == 5)) or
+					((haiSutehai[cnt] == mihajong.Tile.Dragon.Red)   and (tmpDiscardabilityChkFlag == 6)) then
+					tmpDiscardabilityChkFlag = tmpDiscardabilityChkFlag + 8; break
+				end
+			end
+			if ((haiSeenCount[mihajong.Tile.Dragon.White] >= 2) and (tmpDiscardabilityChkFlag == 3)) or
+				((haiSeenCount[mihajong.Tile.Dragon.Green] >= 2) and (tmpDiscardabilityChkFlag == 5)) or
+				((haiSeenCount[mihajong.Tile.Dragon.Red  ] >= 2) and (tmpDiscardabilityChkFlag == 6)) then
+				tmpDiscardabilityChkFlag = tmpDiscardabilityChkFlag + 16
+			end
+		until true end
+		for cnt = 1, 14 do
+			if haiHand[cnt] then
+				if ((tmpDiscardabilityChkFlag == 3) and (haiHand[cnt].tile == mihajong.Tile.Dragon.White)) or
+					((tmpDiscardabilityChkFlag == 5) and (haiHand[cnt].tile == mihajong.Tile.Dragon.Green)) or
+					((tmpDiscardabilityChkFlag == 6) and (haiHand[cnt].tile == mihajong.Tile.Dragon.Red)) then
+					haiDiscardability[cnt] = -799999999
+				end
+			end
+		end
+	end
+
 	-- 大四喜の包になるような牌を捨てないようにする
-	if (nowShanten > 1) then
+	if nowShanten > 1 then
 		-- ノーチャンスか・振聴となるか・東を鳴いてるか
 		-- ・南を鳴いてるか・西を鳴いてるか・北を鳴いてるか
-		tmpDiscardabilityChkFlag = 0
-		repeat 4: tmpchkcnt = 0
-			if (tmpchkcnt == hncnZijia) then continue end
-			if (haiNakiMianziDat(0, tmpchkcnt) == 0) then continue end
-			repeat haiNakiMianziDat(0, tmpchkcnt)
-				if ((haiNakiMianziDat(cnt, tmpchkcnt) \ 100) == 31) then
-					tmpDiscardabilityChkFlag += 8
+		local tmpDiscardabilityChkFlag = 0
+		for tmpchkcnt = 1, 4 do repeat
+			if tmpchkcnt == gametbl.playerid then break end
+			local haiNakiMianziDat = gametbl:getmeld(tmpchkcnt)
+			for cnt = 1, #haiNakiMianziDat do
+				if haiNakiMianziDat[cnt].tile == mihajong.Tile.Wind.East then
+					tmpDiscardabilityChkFlag = tmpDiscardabilityChkFlag + 8
+				elseif haiNakiMianziDat[cnt].tile == mihajong.Tile.Wind.South then
+					tmpDiscardabilityChkFlag = tmpDiscardabilityChkFlag + 4
+				elseif haiNakiMianziDat[cnt].tile == mihajong.Tile.Wind.West then
+					tmpDiscardabilityChkFlag = tmpDiscardabilityChkFlag + 2
+				elseif haiNakiMianziDat[cnt].tile == mihajong.Tile.Wind.North then
+					tmpDiscardabilityChkFlag = tmpDiscardabilityChkFlag + 1
 				end
-				if ((haiNakiMianziDat(cnt, tmpchkcnt) \ 100) == 32) then
-					tmpDiscardabilityChkFlag += 4
+			end
+			local haiSutehai = gametbl:getdiscard(tmpchkcnt)
+			for cnt = 1, #haiSutehai do
+				if ((haiSutehai[cnt] == mihajong.Tile.Wind.East ) and (tmpDiscardabilityChkFlag ==  7)) or
+					((haiSutehai[cnt] == mihajong.Tile.Wind.South) and (tmpDiscardabilityChkFlag == 11)) or
+					((haiSutehai[cnt] == mihajong.Tile.Wind.West ) and (tmpDiscardabilityChkFlag == 13)) or
+					((haiSutehai[cnt] == mihajong.Tile.Wind.North) and (tmpDiscardabilityChkFlag == 14)) then
+					tmpDiscardabilityChkFlag = tmpDiscardabilityChkFlag + 16; break
 				end
-				if ((haiNakiMianziDat(cnt, tmpchkcnt) \ 100) == 33) then
-					tmpDiscardabilityChkFlag += 2
+			end
+			if ((haiSeenCount[mihajong.Tile.Wind.East ] >= 3) and (tmpDiscardabilityChkFlag ==  7)) or
+				((haiSeenCount[mihajong.Tile.Wind.South] >= 3) and (tmpDiscardabilityChkFlag == 11)) or
+				((haiSeenCount[mihajong.Tile.Wind.West ] >= 3) and (tmpDiscardabilityChkFlag == 13)) or
+				((haiSeenCount[mihajong.Tile.Wind.North] >= 3) and (tmpDiscardabilityChkFlag == 14)) then
+				tmpDiscardabilityChkFlag = tmpDiscardabilityChkFlag + 32
+			end
+		until true end
+		for cnt = 1, 14 do
+			if haiHand[cnt] then
+				if ((tmpDiscardabilityChkFlag == 7) and (haiHand[cnt].tile == mihajong.Tile.Wind.East)) or
+					((tmpDiscardabilityChkFlag == 11) and (haiHand[cnt].tile == mihajong.Tile.Wind.South)) or
+					((tmpDiscardabilityChkFlag == 13) and (haiHand[cnt].tile == mihajong.Tile.Wind.West)) or
+					((tmpDiscardabilityChkFlag == 14) and (haiHand[cnt].tile == mihajong.Tile.Wind.North)) then
+					haiDiscardability[cnt] = -799999999
 				end
-				if ((haiNakiMianziDat(cnt, tmpchkcnt) \ 100) == 34) then
-					tmpDiscardabilityChkFlag += 1
-				end
-			loop
-			if (haiSutehai(0, tmpchkcnt) == 0) then continue end
-			repeat haiSutehai(0, tmpchkcnt), 1
-				if ((haiSutehai(cnt, tmpchkcnt) \ 100) == 31)&&(tmpDiscardabilityChkFlag == 7) then tmpDiscardabilityChkFlag += 16 end
-				if ((haiSutehai(cnt, tmpchkcnt) \ 100) == 32)&&(tmpDiscardabilityChkFlag == 11) then tmpDiscardabilityChkFlag += 16 end
-				if ((haiSutehai(cnt, tmpchkcnt) \ 100) == 33)&&(tmpDiscardabilityChkFlag == 13) then tmpDiscardabilityChkFlag += 16 end
-				if ((haiSutehai(cnt, tmpchkcnt) \ 100) == 34)&&(tmpDiscardabilityChkFlag == 14) then tmpDiscardabilityChkFlag += 16 end
-			loop
-			if ((haiSeenCount(31) >= 3)&&(tmpDiscardabilityChkFlag == 7)) then tmpDiscardabilityChkFlag += 32 end
-			if ((haiSeenCount(32) >= 3)&&(tmpDiscardabilityChkFlag == 11)) then tmpDiscardabilityChkFlag += 32 end
-			if ((haiSeenCount(33) >= 3)&&(tmpDiscardabilityChkFlag == 13)) then tmpDiscardabilityChkFlag += 32 end
-			if ((haiSeenCount(34) >= 3)&&(tmpDiscardabilityChkFlag == 14)) then tmpDiscardabilityChkFlag += 32 end
-		loop
-		repeat 14
-			if ((tmpDiscardabilityChkFlag == 7)&&(haiHand(cnt, ActivePlayer) == 31)) then
-				haiDiscardability(cnt) = -799999999
 			end
-			if ((tmpDiscardabilityChkFlag == 11)&&(haiHand(cnt, ActivePlayer) == 32)) then
-				haiDiscardability(cnt) = -799999999
-			end
-			if ((tmpDiscardabilityChkFlag == 13)&&(haiHand(cnt, ActivePlayer) == 33)) then
-				haiDiscardability(cnt) = -799999999
-			end
-			if ((tmpDiscardabilityChkFlag == 14)&&(haiHand(cnt, ActivePlayer) == 34)) then
-				haiDiscardability(cnt) = -799999999
-			end
-		loop
+		end
 	end
+--[====[ 書き換え完了ここまで
 	-- 一色手を警戒する
 	if (nowShanten > 1) then
 		repeat 4: tmpchkcnt = 0
