@@ -548,8 +548,7 @@ function discard_decision (gametbl)
 		end
 	end
 
-	-- 大三元の包になるような牌を捨てないようにする
-	if nowShanten > 1 then
+	if nowShanten > 1 then -- 大三元の包になるような牌を捨てないようにする
 		-- ノーチャンスか・振聴となるか・白を鳴いてるか・発を鳴いてるか・中を鳴いてるか
 		local tmpDiscardabilityChkFlag = 0
 		for tmpchkcnt = 1, 4 do repeat
@@ -589,8 +588,7 @@ function discard_decision (gametbl)
 		end
 	end
 
-	-- 大四喜の包になるような牌を捨てないようにする
-	if nowShanten > 1 then
+	if nowShanten > 1 then -- 大四喜の包になるような牌を捨てないようにする
 		-- ノーチャンスか・振聴となるか・東を鳴いてるか
 		-- ・南を鳴いてるか・西を鳴いてるか・北を鳴いてるか
 		local tmpDiscardabilityChkFlag = 0
@@ -636,8 +634,7 @@ function discard_decision (gametbl)
 		end
 	end
 
-	-- 一色手を警戒する
-	if nowShanten > 1 then
+	if nowShanten > 1 then -- 一色手を警戒する
 		for tmpchkcnt = 1, 4 do repeat
 			if tmpchkcnt == gametbl.playerid then break end
 			local tmpDiscardabilityChkCount = {0, 0, 0}
@@ -668,8 +665,7 @@ function discard_decision (gametbl)
 		until true end
 	end
 
-	-- 国士無双を警戒する
-	if nowShanten > 1 then
+	if nowShanten > 1 then -- 国士無双を警戒する
 		for tmpchkcnt = 1, 4 do repeat
 			if tmpchkcnt == gametbl.playerid then break end
 			local tmpDiscardabilityChkCount = {0, 0}
@@ -694,59 +690,58 @@ function discard_decision (gametbl)
 		until true end
 	end
 
---[====[ 書き換え完了ここまで
 	-- 警戒するプレーヤーを決定する
-	dim haiMarkingPlayer, 4
-	repeat 4
-		if (cnt == ActivePlayer) then continue --[[ 自分自身の場合は飛ばす ]] end
-		if (haiNakiMianziDat(0, cnt) >= 2) then
-			haiMarkingPlayer(cnt) = 1 --[[ 二面子以上鳴いていたら降りる ]]
+	local haiMarkingPlayer = {false, false, false, false}
+	for cnt = 1, 4 do repeat
+		if tmpchkcnt == gametbl.playerid then break end -- 自分自身の場合は飛ばす
+		local haiNakiMianziDat = gametbl:getmeld(cnt)
+		if #haiNakiMianziDat >= 2 then
+			haiMarkingPlayer[cnt] = true -- 二面子以上鳴いていたら降りる
 		end
-		if (haiRichi(cnt) > 0) then
-			haiMarkingPlayer(cnt) = 1 --[[ 誰かが立直していたら降りる！ ]]
+		if gametbl:isriichideclared(cnt) then
+			haiMarkingPlayer[cnt] = true -- 誰かが立直していたら降りる！
 		end
-		if (haiNakiMianziDat(0, cnt) == 1) then
-			if ((haiRinshanPointer - (haiDeadTiles-1) - haiPointer) < 30) then
-				--[[ 残り３０枚未満で１副露の者がいた場合は降りる ]]
-				haiMarkingPlayer(cnt) = 1
-			end
+		if #haiNakiMianziDat == 1 and gametbl:getdeckleft() < 30 then -- 残り３０枚未満で１副露の者がいた場合は降りる
+			haiMarkingPlayer[cnt] = true
 		end
-	loop
+	until true end
+
 	-- オリるかどうかの判定…和了り手の得点を調べる
-	TmpMinScore = 999999999
-	TmpMaxScore = -999999999
-	repeat 14
-		if (haiHand(cnt, ActivePlayer) == 0) then continue end
-		tmpTileCodeNum = haiHand(cnt, ActivePlayer)
-		tmpTileNum = cnt
-		MinScore(cnt) = 999999999
-		MaxScore(cnt) = -999999999
-		repeat 38
-			if (cnt\10 == 0) then continue end
-			haiHand(tmpTileNum, ActivePlayer) = haiHand(13, ActivePlayer)
-			haiHand(13, ActivePlayer) = cnt
-			await 0: gosub *countshanten
-			if (Shanten == -1) then
+	local TmpMinScore, TmpMaxScore, MinScore, MaxScore = 999999999, -999999999, {}, {}
+	local haiCount, haiSeenCount = gametbl:gettilesinhand(), gametbl:getseentiles()
+	for tmpTileNum = 1, 14 do repeat
+		MinScore[cnt], MaxScore[cnt] = 0, 0
+		if haiHand[tmpTileNum] then
+			MinScore[cnt], MaxScore[cnt] = 0, 0; break
+		end
+		tmpTileCodeNum = clone(haiHand[tmpTileNum])
+		MinScore[cnt], MaxScore[cnt] = 999999999, -999999999
+		for k, cnt in ipairs(validtiles) do
+			haiHand[tmpTileNum], haiHand[14] = clone(haiHand[14]), {"tile", cnt; "red", 0}
+			if (gametbl:getshanten(haiHand) == -1) then
 				-- ここで計算されるのはダマ聴で自摸和のときの点数
-				TsumoAgari = 1: await 0: gosub *countyaku
-				if (haiDiscardability(tmpTileNum) >= 10000) then haiDiscardability(tmpTileNum) -= 10000 end
-				haiDiscardability(tmpTileNum) += haiScore*(4-haiCount(cnt)-haiSeenCount(cnt))+100000
-				if (MinScore(tmpTileNum) > (haiHan+haiBonusHan+haiDoraQuantity)) then MinScore(tmpTileNum) = (haiHan+haiBonusHan+haiDoraQuantity) end
-				if (MaxScore(tmpTileNum) < (haiHan+haiBonusHan+haiDoraQuantity)) then MaxScore(tmpTileNum) = (haiHan+haiBonusHan+haiDoraQuantity) end
+				local stat = gametbl:evaluate(true, haiHand)
+				if haiDiscardability[tmpTileNum] >= 10000 then
+					haiDiscardability[tmpTileNum] = haiDiscardability[tmpTileNum] - 10000
+				end
+				haiDiscardability[tmpTileNum] = haiDiscardability[tmpTileNum] +
+					gametbl.points * (4 - haiCount[cnt] - haiSeenCount[cnt]) + 100000
+				if MinScore[tmpTileNum] > stat.han then MinScore[tmpTileNum] = stat.han end
+				if MaxScore[tmpTileNum] < stat.han then MaxScore[tmpTileNum] = stat.han end
 			end
-			haiHand(13, ActivePlayer) = haiHand(tmpTileNum, ActivePlayer)
-			haiHand(tmpTileNum, ActivePlayer) = tmpHandTileCode
-			if (MinScore(tmpTileNum) == 999999999) then MinScore(tmpTileNum) = 0 end
-			if (MaxScore(tmpTileNum) ==-999999999) then MaxScore(tmpTileNum) = 0 end
-		loop
-		haiHand(cnt, ActivePlayer) = tmpTileCodeNum
-		if (MinScore(tmpTileNum) < TmpMinScore) then TmpMinScore = MinScore(tmpTileNum) end
-		if (MaxScore(tmpTileNum) > TmpMinScore) then TmpMaxScore = MaxScore(tmpTileNum) end
-	loop
-	if (TmpMaxScore >= 3000) then
-		-- とりあえず、跳満以上聴牌なら全ツッパする
-		repeat 4: haiMarkingPlayer(cnt) = 0: loop
+			haiHand[14], haiHand[tmpTileNum] = clone(haiHand[tmpTileNum]), clone(tmpTileCodeNum)
+			if MinScore[tmpTileNum] == 999999999 then MinScore[tmpTileNum] = 0 end
+			if MaxScore[tmpTileNum] ==-999999999 then MaxScore[tmpTileNum] = 0 end
+		end
+		haiHand[tmpTileNum] = clone(tmpTileCodeNum)
+		if MinScore[tmpTileNum] < TmpMinScore then TmpMinScore = MinScore[tmpTileNum] end
+		if MaxScore[tmpTileNum] > TmpMinScore then TmpMaxScore = MaxScore[tmpTileNum] end
+	until true end
+	if TmpMaxScore >= 6 then -- とりあえず、跳満以上聴牌なら全ツッパする
+		haiMarkingPlayer = {false, false, false, false}
 	end
+
+--[====[ 書き換え完了ここまで
 	-- 降り打ちモードのための処理
 	repeat 14: tmphaiindex = cnt
 		repeat 4: tmpchkcnt = cnt
