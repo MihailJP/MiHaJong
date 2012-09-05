@@ -635,67 +635,66 @@ function discard_decision (gametbl)
 			end
 		end
 	end
---[====[ 書き換え完了ここまで
+
 	-- 一色手を警戒する
-	if (nowShanten > 1) then
-		repeat 4: tmpchkcnt = 0
-			if (tmpchkcnt == hncnZijia) then continue end
-			tmpDiscardabilityChkCount1 = 0
-			tmpDiscardabilityChkCount2 = 0
-			tmpDiscardabilityChkCount3 = 0
-			if (haiSutehai(0, tmpchkcnt) == 0) then continue end
-			repeat haiSutehai(0, tmpchkcnt), 1
-				if ((haiSutehai(cnt, tmpchkcnt) \ 100 / 10) == 0) then tmpDiscardabilityChkCount1++ end
-				if ((haiSutehai(cnt, tmpchkcnt) \ 100 / 10) == 1) then tmpDiscardabilityChkCount2++ end
-				if ((haiSutehai(cnt, tmpchkcnt) \ 100 / 10) == 2) then tmpDiscardabilityChkCount3++ end
-			loop
-			repeat 14
-				if ((tmpDiscardabilityChkCount2 > 0)&&(tmpDiscardabilityChkCount3 > 0)) then
-					if (((tmpDiscardabilityChkCount1*1000)/(tmpDiscardabilityChkCount2+tmpDiscardabilityChkCount3)) < 200) then
-						if ((haiHand(cnt, ActivePlayer) /10) == 0) then
-							haiDiscardability(cnt) = 0
-						end
+	if nowShanten > 1 then
+		for tmpchkcnt = 1, 4 do repeat
+			if tmpchkcnt == gametbl.playerid then break end
+			local tmpDiscardabilityChkCount = {0, 0, 0}
+			local haiSutehai = gametbl:getdiscard(tmpchkcnt)
+			for cnt = 1, #haiSutehai do
+				if ischaracter(haiSutehai[cnt]) then tmpDiscardabilityChkCount[1] = tmpDiscardabilityChkCount[1] + 1
+				elseif iscircle(haiSutehai[cnt]) then tmpDiscardabilityChkCount[2] = tmpDiscardabilityChkCount[2] + 1
+				elseif isbamboo(haiSutehai[cnt]) then tmpDiscardabilityChkCount[3] = tmpDiscardabilityChkCount[3] + 1
+				end
+			end
+			for cnt = 1, 14 do
+				if (tmpDiscardabilityChkCount[2] > 0) and (tmpDiscardabilityChkCount[3] > 0) then
+					if (tmpDiscardabilityChkCount[1] / (tmpDiscardabilityChkCount[2] + tmpDiscardabilityChkCount[3])) < 0.2 then
+						if haiHand[cnt] and ischaracter(haiHand[cnt]) then haiDiscardability[cnt] = 0 end
 					end
 				end
-				if ((tmpDiscardabilityChkCount1 > 0)&&(tmpDiscardabilityChkCount3 > 0)) then
-					if (((tmpDiscardabilityChkCount2*1000)/(tmpDiscardabilityChkCount1+tmpDiscardabilityChkCount3)) < 200) then
-						if ((haiHand(cnt, ActivePlayer) /10) == 1) then
-							haiDiscardability(cnt) = 0
-						end
+				if (tmpDiscardabilityChkCount[1] > 0) and (tmpDiscardabilityChkCount[3] > 0) then
+					if (tmpDiscardabilityChkCount[2] / (tmpDiscardabilityChkCount[1] + tmpDiscardabilityChkCount[3])) < 0.2 then
+						if haiHand[cnt] and iscircle(haiHand[cnt]) then haiDiscardability[cnt] = 0 end
 					end
 				end
-				if ((tmpDiscardabilityChkCount1 > 0)&&(tmpDiscardabilityChkCount2 > 0)) then
-					if (((tmpDiscardabilityChkCount3*1000)/(tmpDiscardabilityChkCount1+tmpDiscardabilityChkCount2)) < 200) then
-						if ((haiHand(cnt, ActivePlayer) /10) == 2) then
-							haiDiscardability(cnt) = 0
-						end
+				if (tmpDiscardabilityChkCount[1] > 0) and (tmpDiscardabilityChkCount[2] > 0) then
+					if (tmpDiscardabilityChkCount[3] / (tmpDiscardabilityChkCount[1] + tmpDiscardabilityChkCount[2])) < 0.2 then
+						if haiHand[cnt] and isbamboo(haiHand[cnt]) then haiDiscardability[cnt] = 0 end
 					end
 				end
-			loop
-		loop
+			end
+		until true end
 	end
+
 	-- 国士無双を警戒する
-	if (nowShanten > 1) then
-		repeat 4: tmpchkcnt = 0
-			tmpDiscardabilityChkCount1 = 0
-			tmpDiscardabilityChkCount2 = 0
-			if (tmpchkcnt == hncnZijia) then continue end
-			if (haiSutehai(0, tmpchkcnt) == 0) then continue end
-			repeat haiSutehai(0, tmpchkcnt), 1
-				if (((haiSutehai(cnt, tmpchkcnt) \ 100 / 10) < 3)&&((haiSutehai(cnt, tmpchkcnt) \ 10) > 1)&&((haiSutehai(cnt, tmpchkcnt) \ 10) < 9)) then tmpDiscardabilityChkCount1++ end
-				tmpDiscardabilityChkCount2++
-			loop
-			repeat 14
-				if (tmpDiscardabilityChkCount2 > 0) then
-					if (((tmpDiscardabilityChkCount1*1000)/(tmpDiscardabilityChkCount2)) > 840) then
-						if (((haiHand(cnt, ActivePlayer) \10) == 1)||((haiHand(cnt, ActivePlayer) \10) == 9)||(haiHand(cnt, ActivePlayer) > 30)) then
-							haiDiscardability(cnt) = 0
+	if nowShanten > 1 then
+		for tmpchkcnt = 1, 4 do repeat
+			if tmpchkcnt == gametbl.playerid then break end
+			local tmpDiscardabilityChkCount = {0, 0}
+			local haiSutehai = gametbl:getdiscard(tmpchkcnt)
+			for cnt = 1, #haiSutehai do
+				if not isflower(haiSutehai[cnt]) then
+					if not isyaojiu(haiSutehai[cnt]) then
+						tmpDiscardabilityChkCount[1] = tmpDiscardabilityChkCount[1] + 1
+					end
+					tmpDiscardabilityChkCount[2] = tmpDiscardabilityChkCount[2] + 1
+				end
+			end
+			for cnt = 1, 14 do
+				if tmpDiscardabilityChkCount[2] > 0 then
+					if (tmpDiscardabilityChkCount[1] / tmpDiscardabilityChkCount[2]) > 0.84 then
+						if haiHand[cnt] and isyaojiu(haiHand[cnt]) then
+							haiDiscardability[cnt] = 0
 						end
 					end
 				end
-			loop
-		loop
+			end
+		until true end
 	end
+
+--[====[ 書き換え完了ここまで
 	-- 警戒するプレーヤーを決定する
 	dim haiMarkingPlayer, 4
 	repeat 4
