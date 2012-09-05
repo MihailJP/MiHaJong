@@ -54,6 +54,80 @@ function someone_hadakatanki (gametbl)
 	return false
 end
 
+function isukihai (tilect_cnt) -- 浮き牌だったらtrue
+	return tilect_cnt.isexistent and not (
+		tilect_cnt.formstriplet or tilect_cnt.formssequence or tilect_cnt.canformquad or
+				tilect_cnt.formspair or tilect_cnt.formsryanmen or
+				tilect_cnt.formskanchan or tilect_cnt.formspenchan
+	)
+end
+
+function ischaracter (tile) -- 萬子かどうか判定する
+	for k, v in ipairs(mihajong.Tile.Character) do
+		if tile and (tile.tile == v) then return true end
+	end
+	return false
+end
+function iscircle (tile) -- 筒子かどうか判定する
+	for k, v in ipairs(mihajong.Tile.Circle) do
+		if tile and (tile.tile == v) then return true end
+	end
+	return false
+end
+function isbamboo (tile) -- 索子かどうか判定する
+	for k, v in ipairs(mihajong.Tile.Bamboo) do
+		if tile and (tile.tile == v) then return true end
+	end
+	return false
+end
+function isyaojiu (tile) -- 么九牌かどうか
+	for k, v in ipairs(yaojiutiles) do
+		if tile and (tile.tile == v) then return true end
+	end
+	return false
+end
+function iswind (tile) -- 風牌かどうか
+	for k, v in pairs(mihajong.Tile.Wind) do
+		if tile and (tile.tile == v) then return true end
+	end
+	return false
+end
+function isdragon (tile) -- 三元牌かどうか
+	for k, v in pairs(mihajong.Tile.Dragon) do
+		if tile and (tile.tile == v) then return true end
+	end
+	return false
+end
+function ishonor (tile) -- 字牌かどうか
+	return iswind(tile) or isdragon(tile)
+end
+
+function issequence (meld) -- 順子かどうか
+	for k, v in pairs(mihajong.MeldType.Sequence) do
+		if meld.type == v then return true end
+	end
+	return false
+end
+function istriplet (meld) -- 刻子かどうか
+	for k, v in pairs(mihajong.MeldType.Triplet) do
+		if meld.type == v then return true end
+	end
+	return false
+end
+
+function gettilenumeral (tile) -- 牌の数字(１～９)を取得する
+	for k, v in ipairs(mihajong.Tile.Character) do
+		if tile and (tile.tile == v) then return tonumber(k) end
+	end
+	for k, v in ipairs(mihajong.Tile.Circle) do
+		if tile and (tile.tile == v) then return tonumber(k) end
+	end
+	for k, v in ipairs(mihajong.Tile.Bamboo) do
+		if tile and (tile.tile == v) then return tonumber(k) end
+	end
+	return nil
+end
+
 ---[=======[
 function ontsumo (gametbl) -- ＡＩの打牌
 	local haiHand = gametbl:gethand()
@@ -131,7 +205,7 @@ function riichi_decision (gametbl)
 			if not gametbl:gethand()[cnt] then ev.do_not_discard[cnt], ev.haiDiscardability[cnt] = true, -9999999; break end
 			-- 向聴数から、大まかな評価値を算出
 			local haiHand = clone(tmpHaiHand)
-			haiHand[cnt], haiHand[14] = haiHand[14], nil
+			haiHand[cnt], haiHand[14] = clone(haiHand[14]), nil
 			local tStat = gametbl:gettenpaistat(haiHand)
 			local Shanten = gametbl:getshanten(haiHand)
 			ev.MachihaiTotalTiles[cnt] = tStat.total
@@ -156,7 +230,7 @@ function riichi_decision (gametbl)
 			ev.MinScore[cnt], ev.MaxScore[cnt] = 999999999, -999999999
 			for i, tilecode in ipairs(validtiles) do
 				local haiHand = clone(tmpHaiHand)
-				haiHand[cnt], haiHand[14] = haiHand[14], tilecode
+				haiHand[cnt], haiHand[14] = clone(haiHand[14]), {"tile", tilecode; "red", 0}
 				-- ここで時間チェックをしていた
 				if (gametbl:getshanten(haiHand) == -1) then
 					-- ここで計算されるのはダマ聴で自摸和のときの点数
@@ -167,7 +241,7 @@ function riichi_decision (gametbl)
 					if ev.MaxScore[tmpTileNum] < stat.han then ev.MaxScore[tmpTileNum] = stat.han end
 				end
 				if ev.MinScore[tmpTileNum] == 999999999 then ev.MinScore[tmpTileNum] = 0 end
-				if ev.MaxScore[tmpTileNum] ==-999999999 then Mev.axScore[tmpTileNum] = 0 end
+				if ev.MaxScore[tmpTileNum] ==-999999999 then ev.MaxScore[tmpTileNum] = 0 end
 			end
 		until true end
 		-- 時間がかかる時用の簡略版がここにあった
@@ -176,7 +250,7 @@ function riichi_decision (gametbl)
 		if Richiability > 0 then
 			local dahaiType, teDahai = mihajong.DiscardType.Normal, 14
 			for cnt = 14, 1, -1 do
-				if ev.haiDiscardability[teDahai] < ev.haiDiscardability[cnt] then
+				if (not ev.do_not_discard[cnt]) and (ev.haiDiscardability[teDahai] < ev.haiDiscardability[cnt]) then
 					teDahai = cnt
 				end
 			end
@@ -243,7 +317,7 @@ function ankan_decision (gametbl)
 				end
 			end
 		until true end
-		--[[ 加槓するかどうか ]]
+		-- 加槓するかどうか
 		for cnt = 1, 14 do repeat
 			local Kakanability = false
 			if not haiHand[cnt] then break end -- continueの代わり
@@ -254,9 +328,7 @@ function ankan_decision (gametbl)
 			local haiNakiMianziDat = gametbl:getmeld()
 			for k = 1, #haiNakiMianziDat do
 				if haiNakiMianziDat[k].tile == tmpnum then
-					for nomen, val in pairs(mihajong.MeldType.Triplet) do
-						if haiNakiMianziDat[k].type == val then Kakanability = true end
-					end
+					if istriplet(haiNakiMianziDat[k]) then Kakanability = true end
 				end
 			end
 			if Kakanability then
@@ -271,48 +343,31 @@ function ankan_decision (gametbl)
 end
 
 function discard_decision (gametbl)
+	local do_not_discard = {}
 	local haiDiscardability = {}
 	local Yishanten = 0
 	local tmpDiscardability = {}
 	local haiHand = gametbl:gethand()
 	local haiNakiMianziDat = gametbl:getmeld()
 	local tilect = gametbl:gettilecontext()
+	local haiSeenCount = gametbl:getseentiles()
+	local nowShanten = gametbl:getshanten()
 
 	-- それぞれを捨てたときの手の評価を計算する
 	local WanzCount, PinzCount, SouzCount, YaojiuCount, KeziCount = 0, 0, 0, 0, 0
 	local 
 	for cnt = 1, 14 do
-		for k, v in ipairs(mihajong.Tile.Character) do
-			if haiHand[cnt] == v then WanzCount = WanzCount + 1 end
-		end
-		for k, v in ipairs(mihajong.Tile.Circle) do
-			if haiHand[cnt] == v then PinzCount = PinzCount + 1 end
-		end
-		for k, v in ipairs(mihajong.Tile.Bamboo) do
-			if haiHand[cnt] == v then SouzCount = SouzCount + 1 end
-		end
-		for k, v in ipairs(yaojiutiles) do
-			if haiHand[cnt] == v then YaojiuCount = YaojiuCount + 1 end
-		end
+		if ischaracter(haiHand[cnt]) then WanzCount = WanzCount + 1 end
+		if iscircle(haiHand[cnt]) then PinzCount = PinzCount + 1 end
+		if isbamboo(haiHand[cnt]) then SouzCount = SouzCount + 1 end
+		if isyaojiu(haiHand[cnt]) then YaojiuCount = YaojiuCount + 1 end
 		if tilect[cnt].formstriplet or tilect[cnt].canformquad then KeziCount = KeziCount + 1 end
 	end
 	for cnt = 1, #haiNakiMianziDat do
-		for k, v in ipairs(mihajong.Tile.Character) do
-			if haiNakiMianziDat[cnt].tile == v then WanzCount = WanzCount + 3 end
-		end
-		for k, v in ipairs(mihajong.Tile.Circle) do
-			if haiNakiMianziDat[cnt].tile == v then PinzCount = PinzCount + 3 end
-		end
-		for k, v in ipairs(mihajong.Tile.Bamboo) do
-			if haiNakiMianziDat[cnt].tile == v then SouzCount = SouzCount + 3 end
-		end
-		do
-			local flag = true
-			for k, v in ipairs(mihajong.MeldType.Sequence) do
-				if haiNakiMianziDat[cnt].type == v then flag = false end
-			end
-			if flag then KeziCount = KeziCount + 3 end
-		end
+		if ischaracter(haiNakiMianziDat[cnt]) then WanzCount = WanzCount + 3 end
+		if iscircle(haiNakiMianziDat[cnt]) then PinzCount = PinzCount + 3 end
+		if isbamboo(haiNakiMianziDat[cnt]) then SouzCount = SouzCount + 3 end
+		if not issequence(haiNakiMianziDat[cnt]) then KeziCount = KeziCount + 3 end
 	end
 	--[=[ 1.3.1の時点ですでに没になってたらしい……
 	if (WanzCount >= 8) then ephemeral.haiAimingYise = 1 end -- 一色手を狙ってみよう！
@@ -323,126 +378,103 @@ function discard_decision (gametbl)
 	end
 	--]=]
 
---[====[ 書き換え完了ここまで
-	repeat 14
-		targetPlayer = ActivePlayer: targetTile = cnt: await 0: gosub *getpaiinfo
-		tmpHand = haiHand(cnt, ActivePlayer)
+	for cnt = 1, 14 do repeat
+		local tmpHand = clone(haiHand[cnt])
+		local numeral = gettilenumeral(tmpHand)
 		-- 存在しない牌の場合
-		if (haiHand(cnt, ActivePlayer) == 0) then haiDiscardability(cnt) = -9999999: continue end
+		if not haiHand[cnt] then
+			do_not_discard[cnt], haiDiscardability[cnt] = true, -9999999
+			break
+		end
 		-- 向聴数から、大まかな評価値を算出
-		haiHand(cnt, ActivePlayer) = 0
-		targetPlayer = ActivePlayer: await 0: gosub *countshanten
-		haiDiscardability(cnt) = (6-Shanten)*1000
-		haiHand(cnt, ActivePlayer) = tmpHand
-		if (haiTileInfo == 0) then
-			if (tmpHand >= 30) then
-				haiDiscardability(cnt) += 900 -- 字牌の浮き牌
-				if (tmpHand >= 35) then
-					haiDiscardability(cnt) -= 100 -- 三元牌のとき
+		haiHand[cnt] = nil
+		local Shanten = gametbl:getshanten(haiHand)
+		haiDiscardability[cnt] = (6-Shanten)*1000
+		haiHand[cnt] = clone(tmpHand)
+		if isukihai(tilect[cnt]) then
+			if ishonor(tmpHand) then
+				local yakuhailist = gametbl:getyakuhaiwind()
+				haiDiscardability[cnt] = haiDiscardability[cnt] + 900 -- 字牌の浮き牌
+				if isdragon(tmpHand) then
+					haiDiscardability[cnt] = haiDiscardability[cnt] - 100 -- 三元牌のとき
 				end
-				if (tmpHand == 31) then
-					if ((hncnTurn/4 == 0)||((ActivePlayer+32-hncnTurn)\4 == 0)) then
-						haiDiscardability(cnt) -= 100 -- 東が役牌のとき
+				for nom, tile in pairs(mihajong.Tile.Wind) do
+					if (tmpHand.tile == tile) and yakuhailist[nom] then
+						haiDiscardability[cnt] = haiDiscardability[cnt] - 100 -- 風牌が役牌のとき
 					end
 				end
-				if (tmpHand == 32) then
-					if ((hncnTurn/4 == 1)||((ActivePlayer+32-hncnTurn)\4 == 1)) then
-						haiDiscardability(cnt) -= 100 -- 南が役牌のとき
-					end
-				end
-				if (tmpHand == 33) then
-					if ((hncnTurn/4 == 2)||((ActivePlayer+32-hncnTurn)\4 == 2)) then
-						haiDiscardability(cnt) -= 100 -- 西が役牌のとき
-					end
-				end
-				if (tmpHand == 34) then
-					if ((hncnTurn/4 == 3)||((ActivePlayer+32-hncnTurn)\4 == 3)) then
-						haiDiscardability(cnt) -= 100 -- 北が役牌のとき
-					end
-				end
-			end else
-				haiDiscardability(cnt) += 700 -- 数牌の浮き牌
-			end
-		end
-		else
-			if ((haiTileInfo \ 16 / 8) == 1) then haiDiscardability(cnt) += 500 end -- 辺張
 			else
-				if ((haiTileInfo \ 64 / 32) == 1) then haiDiscardability(cnt) += 300 end -- 嵌張
-				else
-					if (haiAimingDuidui(ActivePlayer)) then
-						if ((haiTileInfo \ 32 / 16) == 1) then haiDiscardability(cnt) += 100 end -- 対子場の時は両面
-					end else
-						if ((haiTileInfo \ 8 / 4) == 1) then haiDiscardability(cnt) += 100 end -- そうでなければ対子
-					end
-				end
+				haiDiscardability[cnt] = haiDiscardability[cnt] + 700 -- 数牌の浮き牌
 			end
-		end
-		if (haiHandAkadora(cnt, ActivePlayer) >= 0) then
-			haiDiscardability(cnt) -= 50
-		end
-		if ((haiTileInfo \ 2) == 1) then
-			-- 役牌の暗刻を切らないようにする
-			if (tmpHand >= 30) then
-				if (tmpHand >= 35) then
-					haiDiscardability(cnt) -= 99999 -- 三元牌のとき
-				end
-				if (tmpHand == 31) then
-					if ((hncnTurn/4 == 0)||((ActivePlayer+32-hncnTurn)\4 == 0)) then
-						haiDiscardability(cnt) -= 99999 -- 東が役牌のとき
-					end
-				end
-				if (tmpHand == 32) then
-					if ((hncnTurn/4 == 1)||((ActivePlayer+32-hncnTurn)\4 == 1)) then
-						haiDiscardability(cnt) -= 99999 -- 南が役牌のとき
-					end
-				end
-				if (tmpHand == 33) then
-					if ((hncnTurn/4 == 2)||((ActivePlayer+32-hncnTurn)\4 == 2)) then
-						haiDiscardability(cnt) -= 99999 -- 西が役牌のとき
-					end
-				end
-				if (tmpHand == 34) then
-					if ((hncnTurn/4 == 3)||((ActivePlayer+32-hncnTurn)\4 == 3)) then
-						haiDiscardability(cnt) -= 99999 -- 北が役牌のとき
-					end
-				end
-			end
-		end
-		haiDiscardability(cnt) += (haiSeenCount(tmpHand)*10) -- 場に見えてる個数
-		if (tmpHand >= 30) then haiDiscardability(cnt) += 50 end
 		else
-			if ((tmpHand\10 == 1)||(tmpHand\10 == 9)) then haiDiscardability(cnt) += 40 end
-			if ((tmpHand\10 == 2)||(tmpHand\10 == 8)) then haiDiscardability(cnt) += 30 end
-			if ((tmpHand\10 == 3)||(tmpHand\10 == 7)) then haiDiscardability(cnt) += 20 end
-			if ((tmpHand\10 == 4)||(tmpHand\10 == 6)) then haiDiscardability(cnt) += 10 end
+			if     tilect[cnt].formspenchan then haiDiscardability[cnt] = haiDiscardability[cnt] + 500 -- 辺張
+			elseif tilect[cnt].formskanchan then haiDiscardability[cnt] = haiDiscardability[cnt] + 300 -- 嵌張
+			elseif ephemeral.haiAimingDuidui and tilect[cnt].formsryanmen then haiDiscardability[cnt] = haiDiscardability[cnt] + 100 -- 対子場の時は両面
+			elseif tilect[cnt].formspair then haiDiscardability[cnt] = haiDiscardability[cnt] + 100 -- そうでなければ対子
+			end
 		end
-		haiHand(cnt, ActivePlayer) = tmpHand
-#if 0 --[[ いろいろあったんで、やめた ]]
-		if (nowShanten >= 2) then
-			-- 染めてみようかな？？
-			if ((WanzCount >= 11)&&((tmpHand/10 == 1)||(tmpHand/10 == 2))) then haiDiscardability(cnt) += 10000 end
-			if ((PinzCount >= 11)&&((tmpHand/10 == 0)||(tmpHand/10 == 2))) then haiDiscardability(cnt) += 10000 end
-			if ((SouzCount >= 11)&&((tmpHand/10 == 0)||(tmpHand/10 == 1))) then haiDiscardability(cnt) += 10000 end
-			if ((WanzCount >= 10)&&((tmpHand/10 == 1)||(tmpHand/10 == 2))) then haiDiscardability(cnt) += 10000 end
-			if ((PinzCount >= 10)&&((tmpHand/10 == 0)||(tmpHand/10 == 2))) then haiDiscardability(cnt) += 10000 end
-			if ((SouzCount >= 10)&&((tmpHand/10 == 0)||(tmpHand/10 == 1))) then haiDiscardability(cnt) += 10000 end
-			if ((WanzCount >= 8)&&((tmpHand/10 == 1)||(tmpHand/10 == 2))) then haiDiscardability(cnt) += 10000 end
-			if ((PinzCount >= 8)&&((tmpHand/10 == 0)||(tmpHand/10 == 2))) then haiDiscardability(cnt) += 10000 end
-			if ((SouzCount >= 8)&&((tmpHand/10 == 0)||(tmpHand/10 == 1))) then haiDiscardability(cnt) += 10000 end
+		if haiHand[cnt].red ~= 0 then
+			haiDiscardability[cnt] = haiDiscardability[cnt] - 50 -- 赤ドラの時
 		end
-		if (nowShanten == 1) then
-			if ((WanzCount >= 12)&&((tmpHand/10 == 1)||(tmpHand/10 == 2))) then haiDiscardability(cnt) += 20000 end
-			if ((PinzCount >= 12)&&((tmpHand/10 == 0)||(tmpHand/10 == 2))) then haiDiscardability(cnt) += 20000 end
-			if ((SouzCount >= 12)&&((tmpHand/10 == 0)||(tmpHand/10 == 1))) then haiDiscardability(cnt) += 20000 end
-			if ((WanzCount >= 10)&&((tmpHand/10 == 1)||(tmpHand/10 == 2))) then haiDiscardability(cnt) += 10000 end
-			if ((PinzCount >= 10)&&((tmpHand/10 == 0)||(tmpHand/10 == 2))) then haiDiscardability(cnt) += 10000 end
-			if ((SouzCount >= 10)&&((tmpHand/10 == 0)||(tmpHand/10 == 1))) then haiDiscardability(cnt) += 10000 end
+		if tilect[cnt].formstriplet then
+			-- 役牌の暗刻を切らないようにする
+			if ishonor(tmpHand) then
+				if isdragon(tmpHand) then
+					haiDiscardability[cnt] = haiDiscardability[cnt] - 99999 -- 三元牌のとき
+				end
+				for nom, tile in pairs(mihajong.Tile.Wind) do
+					if (tmpHand.tile == tile) and yakuhailist[nom] then
+						haiDiscardability[cnt] = haiDiscardability[cnt] - 99999 -- 風牌が役牌のとき
+					end
+				end
+			end
 		end
-		if (nowShanten >= 1) then
-			-- やっぱタンヤオ狙いでしょっ！
-			if ((YaojiuCount <= 3)&&((tmpHand/10 == 3)||(tmpHand\10 == 1)||(tmpHand\10 == 9))) then haiDiscardability(cnt) += 30000 end
+		haiDiscardability[cnt] = haiDiscardability[cnt] + haiSeenCount[tmpHand.tile] * 10 -- 場に見えてる個数
+		if ishonor(tmpHand) then haiDiscardability[cnt] = haiDiscardability[cnt] + 50
+		elseif (numeral == 1) or (numeral == 9) then haiDiscardability[cnt] = haiDiscardability[cnt] + 40
+		elseif (numeral == 2) or (numeral == 8) then haiDiscardability[cnt] = haiDiscardability[cnt] + 30
+		elseif (numeral == 3) or (numeral == 7) then haiDiscardability[cnt] = haiDiscardability[cnt] + 20
+		elseif (numeral == 4) or (numeral == 6) then haiDiscardability[cnt] = haiDiscardability[cnt] + 10
 		end
-#endif
+		haiHand[cnt] = clone(tmpHand)
+--[=[ いろいろあったんで、やめた
+		if (nowShanten >= 2) then -- 染めてみようかな？？
+			if iscircle(tmpHand) or isbamboo(tmpHand) then
+				if WanzCount >= 11 then haiDiscardability[cnt] = haiDiscardability[cnt] + 10000 end
+				if WanzCount >= 10 then haiDiscardability[cnt] = haiDiscardability[cnt] + 10000 end
+				if WanzCount >=  8 then haiDiscardability[cnt] = haiDiscardability[cnt] + 10000 end
+			end
+			if ischaracter(tmpHand) or isbamboo(tmpHand) then
+				if PinzCount >= 11 then haiDiscardability[cnt] = haiDiscardability[cnt] + 10000 end
+				if PinzCount >= 10 then haiDiscardability[cnt] = haiDiscardability[cnt] + 10000 end
+				if PinzCount >=  8 then haiDiscardability[cnt] = haiDiscardability[cnt] + 10000 end
+			end
+			if ischaracter(tmpHand) or iscircle(tmpHand) then
+				if SouzCount >= 11 then haiDiscardability[cnt] = haiDiscardability[cnt] + 10000 end
+				if SouzCount >= 10 then haiDiscardability[cnt] = haiDiscardability[cnt] + 10000 end
+				if SouzCount >=  8 then haiDiscardability[cnt] = haiDiscardability[cnt] + 10000 end
+			end
+		elseif (nowShanten == 1) then
+			if iscircle(tmpHand) or isbamboo(tmpHand) then
+				if WanzCount >= 12 then haiDiscardability[cnt] = haiDiscardability[cnt] + 20000 end
+				if WanzCount >= 10 then haiDiscardability[cnt] = haiDiscardability[cnt] + 10000 end
+			end
+			if ischaracter(tmpHand) or isbamboo(tmpHand) then
+				if PinzCount >= 12 then haiDiscardability[cnt] = haiDiscardability[cnt] + 20000 end
+				if PinzCount >= 10 then haiDiscardability[cnt] = haiDiscardability[cnt] + 10000 end
+			end
+			if ischaracter(tmpHand) or iscircle(tmpHand) then
+				if SouzCount >= 12 then haiDiscardability[cnt] = haiDiscardability[cnt] + 20000 end
+				if SouzCount >= 10 then haiDiscardability[cnt] = haiDiscardability[cnt] + 10000 end
+			end
+		end
+		if (nowShanten >= 1) then -- やっぱタンヤオ狙いでしょっ！
+			if (YaojiuCount <= 3) and isyaojiu(tmpHand) then
+				haiDiscardability[cnt] = haiDiscardability[cnt] + 30000
+			end
+		end
+--]=]
+--[====[ 書き換え完了ここまで
 		if (nowShanten == 2) then -- 二向聴でも先読みさせてみる
 			Yishanten = 1
 			tmpXTileNum = cnt
