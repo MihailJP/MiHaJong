@@ -180,6 +180,9 @@
     <ClCompile Include="random.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="ai\riskchk.cpp">
+      <Filter>ソース ファイル\ai</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">

@@ -535,6 +535,30 @@ int aiscript::table::functable::gametbl::luafunc::gettilecontext(lua_State* cons
 	return 1;
 }
 
+/* ˆÀ”v‚©‚Ç‚¤‚©”»’f‚·‚éè‚ª‚©‚è */
+int aiscript::table::functable::gametbl::luafunc::gettilerisk(lua_State* const L) {
+	int n = chkargnum(L, 1, 1);
+	GameTable* gameStat = getGameStatAddr(L);
+	PLAYER_ID player = getPlayerID(L, 0);
+	lua_newtable(L); // –ß‚è’l‚ğŠi”[‚·‚éƒe[ƒuƒ‹
+	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+		if (gameStat->Player[player].Hand[i].tile != NoTile) {
+			lua_pushnumber(L, i + 1);
+			lua_newtable(L);
+			TableAdd(L, "issameasprevious", riskchk::issameasprevious(gameStat, player, i));
+			TableAdd(L, "isdora", riskchk::isdora(gameStat, player, i));
+			TableAdd(L, "isdorasuji", riskchk::isdorasuji(gameStat, player, i));
+			TableAdd(L, "isdorasoba", riskchk::isdorasoba(gameStat, player, i));
+			TableAdd(L, "isnochance", riskchk::isnochance(gameStat, player, i));
+			TableAdd(L, "isonechance", riskchk::isonechance(gameStat, player, i));
+			TableAdd(L, "isneverdiscarded", riskchk::isneverdiscarded(gameStat, player, i));
+			TableAdd(L, "isseenfour", riskchk::isseenfour(gameStat, player, i));
+			lua_settable(L, -3);
+		}
+	}
+	return 1;
+}
+
 /* è”v‚É‚Á‚Ä‚¢‚é–‡”‚Ì”z—ñ */
 int aiscript::table::functable::gametbl::luafunc::gettilesinhand(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);

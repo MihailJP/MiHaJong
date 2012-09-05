@@ -446,10 +446,6 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 			　ワンチャンスの牌ならtrue、そうでなければfalseが格納されます。
 
-		● isaida4ken フィールド
-
-			　間4ケンの牌ならtrue、そうでなければfalseが格納されます。
-
 		● isneverdiscarded フィールド
 
 			　生牌ならtrue、そうでなければfalseが格納されます。
@@ -469,6 +465,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 			・isgembutsu……現物かどうか
 			・issuji……表筋かどうか
 			・isurasuji……裏筋かどうか
+			・isaida4ken……間4ケンかどうか
 			・ismatagisuji……跨ぎ筋かどうか
 			・issenkisuji……疝気筋かどうか
 			・isnamakurasuji……鈍筋(なまくらすじ)かどうか
