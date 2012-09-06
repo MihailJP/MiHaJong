@@ -55,6 +55,15 @@ inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 	lockTable(L); lua_setfield(L, -2, "Call");
 }
 
+/* ドラの色コード */
+inline void aiscript::table::functable::doraColorCode(lua_State* const L) {
+	lua_newtable(L);
+	TableAdd(L, "Normal", Normal);
+	TableAdd(L, "Red", AkaDora);
+	TableAdd(L, "Blue", AoDora);
+	lockTable(L); lua_setfield(L, -2, "DoraColor");
+}
+
 /* 鳴きの種別コード */
 inline void aiscript::table::functable::meldTypeCode(lua_State* const L) {
 	lua_newtable(L); // MeldType

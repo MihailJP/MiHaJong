@@ -708,6 +708,16 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　　　　　　　手牌データには現れません。
 
 
+	▼ mihajong.DoraColor
+
+		　赤ドラかどうかを表す数値を格納したテーブルです。このテーブルには、以
+		下のフィールドが格納されています。
+
+		・Normal …… 黒牌。赤ドラや青ドラではない牌です。
+		・Red …… 赤牌。赤ドラともいいます。
+		・Blue …… 青牌。青ドラありのルールにのみ現れます。
+
+
 	▼ mihajong.gametbl
 
 		　determine_discard、determine_call の引数として渡されるテーブルのプロ

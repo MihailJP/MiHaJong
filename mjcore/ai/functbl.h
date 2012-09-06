@@ -18,6 +18,7 @@ private:
 	static int tableLockedErr(lua_State* const L);
 	static void lockTable(lua_State* const L);
 	static inline void discardTileCode(lua_State* const L);
+	static inline void doraColorCode(lua_State* const L);
 	static inline void meldCallCode(lua_State* const L);
 	static inline void meldTypeCode(lua_State* const L);
 	static inline void tileCode(lua_State* const L);
