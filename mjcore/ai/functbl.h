@@ -39,6 +39,7 @@ private:
 	static void pushTileTable(lua_State* const L, FlagByTile& tptr);
 	static void pushTileTable(lua_State* const L, InfoByTile<MachihaiTileInfo>& tptr);
 	static void setHand(lua_State* const L, GameTable* const tmpGameStat, int index);
+	static int chkargnum(lua_State* const L, int argmin, int argmax);
 	class luafunc;
 public:
 	static inline const char* getTblName() {return tblname;}
@@ -48,6 +49,8 @@ public:
 inline const char* aiscript::table::functable::getGTblName() {return gametbl::getTblName();}
 
 class aiscript::table::functable::gametbl::luafunc {
+private:
+	class riskchk;
 public:
 	static int evaluate(lua_State* const L);
 	static int getactiveplayer(lua_State* const L);
@@ -73,6 +76,7 @@ public:
 	static int getshanten(lua_State* const L);
 	static int gettenpaistat(lua_State* const L);
 	static int gettilecontext(lua_State* const L);
+	static int gettilerisk(lua_State* const L);
 	static int gettilesinhand(lua_State* const L);
 	static int gettsumibou(lua_State* const L);
 	static int getwareme(lua_State* const L);
@@ -91,6 +95,26 @@ public:
 	static int isshisibuda(lua_State* const L);
 	static int issumaroallowed(lua_State* const L);
 	static int isyakitori(lua_State* const L);
+};
+
+class aiscript::table::functable::gametbl::luafunc::riskchk {
+public:
+	static bool issameasprevious(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isdora(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isdorasuji(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isdorasoba(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isnochance(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isonechance(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isneverdiscarded(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isseenfour(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isgembutsu(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool issuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool isurasuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool isaida4ken(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool ismatagisuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool issenkisuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool isnamakurasuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool isnakasuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
 };
 
 #endif
