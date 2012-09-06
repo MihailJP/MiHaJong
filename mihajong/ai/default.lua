@@ -128,6 +128,12 @@ function gettilenumeral (tile) -- 牌の数字(１～９)を取得する
 	return nil
 end
 
+local player_rel = { -- プレイヤー番号
+	"shimocha", (gametbl.playerid + 0) % 4 + 1;
+	"toimen",   (gametbl.playerid + 1) % 4 + 1;
+	"kamicha",  (gametbl.playerid + 2) % 4 + 1;
+}
+
 ---[=======[
 function ontsumo (gametbl) -- ＡＩの打牌
 	local haiHand = gametbl:gethand()
@@ -741,44 +747,43 @@ function discard_decision (gametbl)
 		haiMarkingPlayer = {false, false, false, false}
 	end
 
---[====[ 書き換え完了ここまで
-	-- 降り打ちモードのための処理
-	repeat 14: tmphaiindex = cnt
-		repeat 4: tmpchkcnt = cnt
-			if (haiMarkingPlayer(tmpchkcnt) == 0) then break end
-			tmpflag = 0
-			if (tmpflag == 0) then
-				-- 合わせ打ちができるなら合わせ打ち
-				if ((haiSutehai(haiSutehai(0, (ActivePlayer+3)\4), (ActivePlayer+3)\4) \ 100) == haiHand(tmphaiindex, ActivePlayer)) then
-					haiDiscardability(tmphaiindex) += 7000000
-					tmpflag = 1
-				end
-			end
-			repeat haiSutehai(0, tmpchkcnt), 1
-				if (haiHand(tmphaiindex, ActivePlayer) == (haiSutehai(cnt, tmpchkcnt) \ 100)) then
-					-- 警戒しているプレーヤーの現物があれば優先的にそれを捨てる
-					if (haiHand(tmphaiindex, ActivePlayer) < 30) then
-						haiDiscardability(tmphaiindex) += 10000000
-					end else
-						haiDiscardability(tmphaiindex) += 5000000
+	do
+		local riskinfo = gametbl:gettilerisk()
+		for tmphaiindex = 1, 14 do -- 降り打ちモードのための処理
+			for plkey, tmpchkcnt in pairs(player_rel) do
+				local done = false
+				repeat
+					if haiMarkingPlayer[tmpchkcnt] then break end
+					if not riskinfo[tmphaiindex] then break end
+					local tmpflag = false
+					-- 合わせ打ちができるなら合わせ打ち
+					if riskinfo[tmphaiindex].issameasprevious then
+						haiDiscardability[tmphaiindex] = haiDiscardability[tmphaiindex] + 7000000
+						tmpflag = true
 					end
-					tmpflag = 1
-					break
-				end
-			loop
-			if (tmpflag == 0) then
-				repeat haiSutehai(0, tmpchkcnt), 1
-					if ((haiSutehai(cnt, tmpchkcnt) \ 100) < 30) then
-						-- 合わせ打ちも無理なら筋牌
-						if (((haiSutehai(cnt, tmpchkcnt) \ 10)\3) == ((haiHand(tmphaiindex, ActivePlayer) \ 10)\3)) then
-							haiDiscardability(tmphaiindex) += 1200000
-							break
+					if riskinfo[tmphaiindex][plkey].isgembutsu then
+						-- 警戒しているプレーヤーの現物があれば優先的にそれを捨てる
+						if not ishonor(haiHand[tmphaiindex]) then
+							haiDiscardability[tmphaiindex] = haiDiscardability[tmphaiindex] + 10000000
+						else
+							haiDiscardability[tmphaiindex] = haiDiscardability[tmphaiindex] + 5000000
+						end
+						tmpflag = true
+						done = true; break
+					end
+					if not tmpflag then -- 合わせ打ちも無理なら筋牌
+						if riskinfo[tmphaiindex][plkey].issuji then
+							haiDiscardability[tmphaiindex] = haiDiscardability[tmphaiindex] + 1200000
+							done = true; break
 						end
 					end
-				loop
+				until true
+				if done then break end
 			end
-		loop
-	loop
+		end
+	end
+
+--[====[ 書き換え完了ここまで
 	-- 捨牌を決定する
 	repeat 14
 		if (haiDiscardability(teDahai) < haiDiscardability(13-cnt)) then
