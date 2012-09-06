@@ -724,6 +724,38 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		トタイプです。詳細は前述しています。
 
 
+	▼ mihajong.random
+
+		　MiHaJongのLuaインタプリタではmathライブラリがオープンされていないの
+		で、乱数が必要な場合は mihajong.random() 関数を使います。C++11の
+		<random>ライブラリで実装されていて、Lua標準ライブラリの math.random
+		(これはC言語のrand()です)よりも高品位な乱数が得られます。
+		　この関数は本物の乱数ではなくあくまで擬似乱数ですが、MiHaJongのシステ
+		ム側で乱数の種は予測不能な値に設定されます。
+		　なお、この関数は引数の与え方によって異なる挙動を示します。
+
+		● mihajong.random()、mihajong.random(nil)、mihajong.random(nil, nil)
+
+			　mihajong.random を引数なしで呼び出した場合、半開区間 [0, 1) の連
+			続一様乱数を返します。
+
+		● mihajong.random(n)、mihajong.random(n, nil)
+
+			　mihajong.random を1つの整数の引数で呼び出した場合、閉区間 (1, n)
+			の離散一様乱数を返します(返り値は整数になります)。たとえば n == 6
+			の場合、サイコロを1つ振るのと同じになります。
+
+		● mihajong.random(mean, var)
+
+			　mihajong.random を2つの引数で呼び出した場合で、2つ目の引数が正の
+			場合、平均 μ == mean、分散 σ^2 == var の正規乱数を返します。
+
+		● mihajong.random(n, -faces)
+
+			　mihajong.random を2つの引数で呼び出した場合で、2つ目の引数が負の
+			場合、|faces| 面のサイコロを n 個振った出目の合計を返します。
+
+
 ■ ephemeralテーブル
 
 	　これは空のテーブルで、AI作者が望むものを何でも格納することができます。こ

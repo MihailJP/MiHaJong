@@ -10,6 +10,7 @@ void aiscript::table::functable::inittable(lua_State* const L, int playerID) {
 	meldTypeCode(L); // subtable 'MeldType'
 	tileCode(L); // subtable 'Tile'
 	gametbl::makeprototype(L, playerID); // subtable 'gametbl' (prototype)
+	lua_pushcfunction(L, random); lua_setfield(L, -2, "random"); // function 'random'
 	lockTable(L); // mark as read-only
 	lua_setglobal(L, tblname); // global table
 }
@@ -58,9 +59,9 @@ inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 /* ドラの色コード */
 inline void aiscript::table::functable::doraColorCode(lua_State* const L) {
 	lua_newtable(L);
-	TableAdd(L, "Normal", Normal);
-	TableAdd(L, "Red", AkaDora);
-	TableAdd(L, "Blue", AoDora);
+	TableAdd(L, "Normal", (int)Normal);
+	TableAdd(L, "Red", (int)AkaDora);
+	TableAdd(L, "Blue", (int)AoDora);
 	lockTable(L); lua_setfield(L, -2, "DoraColor");
 }
 
@@ -124,6 +125,56 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 	lockTable(L); lua_setfield(L, -2, "Flower");
 	lockTable(L); lua_setfield(L, -2, "Tile");
 }
+
+/* 引数の数を数える */
+int aiscript::table::functable::chkargnum(lua_State* const L, int argmin, int argmax) {
+	int n = lua_gettop(L);
+	if ((n < argmin)||(n > argmax)) {luaL_error(L, "Invalid number of argument");}
+	return n;
+}
+
+/* 乱数を返す */
+int aiscript::table::functable::random(lua_State* const L) {
+	int n = chkargnum(L, 0, 2);
+	switch (n) {
+	case 0:
+		lua_pushnumber(L, RndNum::rnd()); break; // 連続一様乱数
+	case 1:
+		if (lua_isnil(L, 1)) {
+			lua_pushnumber(L, RndNum::rnd()); break; // 連続一様乱数
+		} else if (lua_isnumber(L, 1)) { // 離散一様乱数
+			int i = lua_tointeger(L, 1);
+			if (i >= 1) lua_pushinteger(L, RndNum::rnd(i - 1) + 1);
+			else lua_pushnil(L);
+		} else {lua_pushnil(L);}
+		break;
+	case 2:
+		if ((lua_isnil(L, 1)) && (lua_isnil(L, 2))) {
+			lua_pushnumber(L, RndNum::rnd()); break; // 連続一様乱数
+		} else if ((lua_isnumber(L, 1)) && (lua_isnil(L, 2))) { // 離散一様乱数
+			int i = lua_tointeger(L, 1);
+			if (i >= 1) lua_pushinteger(L, RndNum::rnd(i - 1) + 1);
+			else lua_pushnil(L);
+		} else if ((lua_isnumber(L, 1)) && (lua_isnumber(L, 2))) {
+			lua_Number arg1 = lua_tonumber(L, 1);
+			lua_Number arg2 = lua_tonumber(L, 2);
+			if (arg2 > 0) { // 正規乱数
+				lua_pushnumber(L, RndNum::rnd(arg1, arg2));
+			} else if ((arg1 >= 1) && (arg2 <= -1)) { // nDm形式乱数
+				lua_Integer ans = 0;
+				for (int i = 0; i < (int)arg1; i++)
+					ans += RndNum::rnd((unsigned int)(-arg2) - 1u);
+				lua_pushinteger(L, ans + (int)arg1);
+			} else lua_pushnil(L);
+		} else {lua_pushnil(L);}
+		break;
+	default:
+		lua_pushnil(L); break; // このコードは実行されないはずである
+	}
+	return 1;
+}
+
+// -------------------------------------------------------------------------
 
 inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const L, int playerID) {
 	lua_newtable(L);
@@ -249,13 +300,6 @@ void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable*
 			lua_pop(L, 1);
 		}
 	}
-}
-
-/* 引数の数を数える */
-int aiscript::table::functable::gametbl::chkargnum(lua_State* const L, int argmin, int argmax) {
-	int n = lua_gettop(L);
-	if ((n < argmin)||(n > argmax)) {luaL_error(L, "Invalid number of argument");}
-	return n;
 }
 
 /* 手を評価する */
