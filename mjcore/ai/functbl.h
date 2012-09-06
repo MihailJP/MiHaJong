@@ -7,6 +7,7 @@
 #include "../tileutil.h"
 #include "../yaku/yaku.h"
 #include "../shanten.h"
+#include "../random.h"
 
 enum MeldCallID {
 	meldNone, meldRon, meldKan, meldPon, meldChiiLower, meldChiiMiddle, meldChiiUpper
@@ -17,10 +18,13 @@ private:
 	static const char* tblname;
 	static int tableLockedErr(lua_State* const L);
 	static void lockTable(lua_State* const L);
+	static int random(lua_State* const L);
 	static inline void discardTileCode(lua_State* const L);
+	static inline void doraColorCode(lua_State* const L);
 	static inline void meldCallCode(lua_State* const L);
 	static inline void meldTypeCode(lua_State* const L);
 	static inline void tileCode(lua_State* const L);
+	static int chkargnum(lua_State* const L, int argmin, int argmax);
 	class gametbl;
 public:
 	static inline const char* getGTblName();
@@ -39,7 +43,6 @@ private:
 	static void pushTileTable(lua_State* const L, FlagByTile& tptr);
 	static void pushTileTable(lua_State* const L, InfoByTile<MachihaiTileInfo>& tptr);
 	static void setHand(lua_State* const L, GameTable* const tmpGameStat, int index);
-	static int chkargnum(lua_State* const L, int argmin, int argmax);
 	class luafunc;
 public:
 	static inline const char* getTblName() {return tblname;}
@@ -57,6 +60,7 @@ public:
 	static int getbakaze(lua_State* const L);
 	static int getbasepoint(lua_State* const L);
 	static int getchip(lua_State* const L);
+	static int getcurrentdiscard(lua_State* const L);
 	static int getdeckleft(lua_State* const L);
 	static int getdeposit(lua_State* const L);
 	static int getdiscard(lua_State* const L);

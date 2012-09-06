@@ -27,6 +27,12 @@ __declspec(dllexport) void RndNum::frnd(double* const ans) {
 	*ans = distrib(engine);
 }
 
+/* 正規分布乱数 */
+double RndNum::rnd(double mean, double var) {
+	std::normal_distribution<double> distrib(mean, std::sqrt(var));
+	return distrib(engine);
+}
+
 /* サイコロ */
 __declspec(dllexport) unsigned int RndNum::dice() {
 	std::uniform_int_distribution<int> distrib(1, 6);
