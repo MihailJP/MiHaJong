@@ -807,22 +807,29 @@ function discard_decision (gametbl)
 	return dahaiType, teDahai
 end
 
---[=======[ 書き換え完了ここまで
---[[ ＡＩの鳴き・栄和 ]]
-*compnaki
-	--[[haiHand(13, PassivePlayer) = 0: haiHandAkaDora(13, PassivePlayer) = 0: return]] --[[ 何もせず戻る(デバッグ用) ]]
-	if (haiCurrentSutehai > 70) then
-		--[[ 花牌の場合は戻る ]]
-		haiHand(13, PassivePlayer) = 0
-		haiHandAkaDora(13, PassivePlayer) = 0
-		return
+function ondiscard (gametbl)
+	return decide_call(gametbl, 0)
+end
+function onkakan (gametbl)
+	return decide_call(gametbl, 1)
+end
+function onankan (gametbl)
+	return decide_call(gametbl, 2)
+end
+
+function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
+	local haiHand = gametbl:gethand()
+	local haiCurrentSutehai = gametbl:getcurrentdiscard()
+
+	if isflower(haiCurrentSutehai) then -- 花牌の場合は戻る
+		return mihajong.Call.None
 	end
 
-	haiHand(13, PassivePlayer) = 0
-	targetPlayer = PassivePlayer: await 0: gosub *countshanten
-	currentShanten = Shanten
-	haiHand(13, PassivePlayer) = haiCurrentSutehai
+	haiHand[14] = nil
+	local currentShanten = gametbl:getshanten(haiHand)
+	haiHand[14] = clone(haiCurrentSutehai)
 
+--[=======[ 書き換え完了ここまで
 	targetPlayer = PassivePlayer: await 0: gosub *countshanten
 	TsumoAgari = 0: targetPlayer = PassivePlayer: await 0: gosub *countyaku
 	targetPlayer = PassivePlayer: await 0: gosub *chkFuriten
@@ -1021,3 +1028,4 @@ end
 #endif
 return
 ]=======]
+end
