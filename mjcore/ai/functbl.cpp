@@ -145,6 +145,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::getshanten); lua_setfield(L, -2, "getshanten");
 	lua_pushcfunction(L, luafunc::gettenpaistat); lua_setfield(L, -2, "gettenpaistat");
 	lua_pushcfunction(L, luafunc::gettilecontext); lua_setfield(L, -2, "gettilecontext");
+	lua_pushcfunction(L, luafunc::gettilerisk); lua_setfield(L, -2, "gettilerisk");
 	lua_pushcfunction(L, luafunc::gettilesinhand); lua_setfield(L, -2, "gettilesinhand");
 	lua_pushcfunction(L, luafunc::gettsumibou); lua_setfield(L, -2, "gettsumibou");
 	lua_pushcfunction(L, luafunc::getwareme); lua_setfield(L, -2, "getwareme");
@@ -553,6 +554,26 @@ int aiscript::table::functable::gametbl::luafunc::gettilerisk(lua_State* const L
 			TableAdd(L, "isonechance", riskchk::isonechance(gameStat, player, i));
 			TableAdd(L, "isneverdiscarded", riskchk::isneverdiscarded(gameStat, player, i));
 			TableAdd(L, "isseenfour", riskchk::isseenfour(gameStat, player, i));
+			{
+				static const char tblname[3][16] = {"kamicha", "toimen", "shimocha",};
+				const PLAYER_ID targetP[3] = {
+					RelativePositionOf(player, sLeft),
+					RelativePositionOf(player, sOpposite),
+					RelativePositionOf(player, sRight),
+				};
+				for (int k = 0; k < 3; k++) {
+					lua_newtable(L);
+					bool ipsum = riskchk::isgembutsu(gameStat, player, targetP[k], i);
+					TableAdd(L, "isgembutsu", ipsum);
+					TableAdd(L, "issuji", ipsum ? false : riskchk::issuji(gameStat, player, targetP[k], i));
+					TableAdd(L, "isurasuji", ipsum ? false : riskchk::isurasuji(gameStat, player, targetP[k], i));
+					TableAdd(L, "ismatagisuji", ipsum ? false : riskchk::ismatagisuji(gameStat, player, targetP[k], i));
+					TableAdd(L, "issenkisuji", ipsum ? false : riskchk::issenkisuji(gameStat, player, targetP[k], i));
+					TableAdd(L, "isnamakurasuji", ipsum ? false : riskchk::isnamakurasuji(gameStat, player, targetP[k], i));
+					TableAdd(L, "isnakasuji", ipsum ? false : riskchk::isnakasuji(gameStat, player, targetP[k], i));
+					lua_setfield(L, -2, tblname[k]);
+				}
+			}
 			lua_settable(L, -3);
 		}
 	}

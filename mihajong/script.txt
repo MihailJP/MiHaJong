@@ -415,7 +415,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 			　辺搭子をなしている牌ならtrue、そうでなければfalseが格納されます。
 
 
-	▼ gametbl:gettilerisk() (未実装)
+	▼ gametbl:gettilerisk()
 
 		　手牌の中のそれぞれの牌について、安牌かどうか判断するための情報を格納
 		したテーブル返します。インデックスは gametbl:gethand() の返り値と同様

@@ -107,6 +107,14 @@ public:
 	static bool isonechance(const GameTable* const gameStat, PLAYER_ID player, int index);
 	static bool isneverdiscarded(const GameTable* const gameStat, PLAYER_ID player, int index);
 	static bool isseenfour(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isgembutsu(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool issuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool isurasuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool isaida4ken(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool ismatagisuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool issenkisuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool isnamakurasuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool isnakasuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
 };
 
 #endif
