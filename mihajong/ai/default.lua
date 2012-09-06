@@ -134,7 +134,6 @@ local player_rel = { -- プレイヤー番号
 	"kamicha",  (gametbl.playerid + 2) % 4 + 1;
 }
 
----[=======[
 function ontsumo (gametbl) -- ＡＩの打牌
 	local haiHand = gametbl:gethand()
 	local dahaiType, teDahai = mihajong.DiscardType.Normal, 14 -- ツモ切り
@@ -163,8 +162,8 @@ function ontsumo (gametbl) -- ＡＩの打牌
 		end
 	end -- ツモ和了り
 	-- 十三不塔なら和了る
-	if gametbl:isshisanbuda() and gametbl:isfirstdraw() and (gametbl:getrule("shiisan_puutaa") ~= "no") return mihajong.DiscardType.Agari end
-	if gametbl:isshisibuda() and gametbl:isfirstdraw() and (gametbl:getrule("shiisan_uushii") ~= "no") return mihajong.DiscardType.Agari end
+	if gametbl:isshisanbuda() and gametbl:isfirstdraw() and (gametbl:getrule("shiisan_puutaa") ~= "no") then return mihajong.DiscardType.Agari end
+	if gametbl:isshisibuda() and gametbl:isfirstdraw() and (gametbl:getrule("shiisan_uushii") ~= "no") then return mihajong.DiscardType.Agari end
 	if gametbl:iskyuushu() and gametbl:isfirstdraw() then
 		-- 九種九牌(浮きの2向聴、沈みの3向聴は流す)
 		if (gametbl:isabovebase() and (gametbl:getshanten() > 1)) or (gametbl:getshanten() > 2) then
@@ -182,6 +181,10 @@ function ontsumo (gametbl) -- ＡＩの打牌
 	do
 		local flag, dahaiType, teDahai = ankan_decision(gametbl)
 		if flag then return dahaiType, teDahai end
+	end
+	do
+		local dahaiType, teDahai = discard_decision(gametbl)
+		return dahaiType, teDahai
 	end
 end
 
@@ -540,7 +543,7 @@ function discard_decision (gametbl)
 			local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 100000) -- 先読み判定
 			for i = 1, 14 do haiDiscardability[i] = haiDiscardability[i] + tmpDiscardability[i] end
 		end
-	end
+	until true end
 
 	do -- オープン立直の待ち牌を捨てない(捨ててはならない！)ようにする
 		haiHand[cnt] = clone(tmpHand)
@@ -783,33 +786,28 @@ function discard_decision (gametbl)
 		end
 	end
 
---[====[ 書き換え完了ここまで
 	-- 捨牌を決定する
-	repeat 14
-		if (haiDiscardability(teDahai) < haiDiscardability(13-cnt)) then
-			teDahai = 13-cnt
-		end
-	loop
-#ifdef SANMAX
-	-- 決定された捨牌が北だった場合、捨てる代わりに抜く
-	if ((strmid(RuleConf, 30, 1) != "0")&&(haiHand(13, ActivePlayer) != 0)) then
-		if (haiHand((teDahai\20), ActivePlayer) == 34) then
-			teDahai += 80
+	local dahaiType, teDahai = mihajong.DiscardType.Normal, 14
+	for cnt = 14, 1, -1 do
+		if not do_not_discard[cnt] then
+			if haiDiscardability[teDahai] < haiDiscardability[cnt] then
+				teDahai = cnt
+			end
 		end
 	end
-#endif
-	-- 長考してるふり
-	repeat
-		await 0
-		nowTime = gettime(6)*1000+gettime(7)
-		if (nowTime < startTime) then nowTime += 60000 end
-		if ((nowTime-startTime) >= COMTHINKTIME) then break end
-	loop
-return
---]====]
+
+	-- 決定された捨牌が北だった場合、捨てる代わりに抜く(三麻)
+	if (gametbl:getrule("flower_tiles") == "four_norths") and haiHand[14] then
+		if haiHand[teDahai].tile == mihajong.Tile.Wind.North then
+			dahaiType = mihajong.DiscardType.Flower
+		end
+	end
+
+	-- 長考してるふりをここでしていた
+	return dahaiType, teDahai
 end
---]=======]
---[=======[
+
+--[=======[ 書き換え完了ここまで
 --[[ ＡＩの鳴き・栄和 ]]
 *compnaki
 	--[[haiHand(13, PassivePlayer) = 0: haiHandAkaDora(13, PassivePlayer) = 0: return]] --[[ 何もせず戻る(デバッグ用) ]]
