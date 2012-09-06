@@ -164,6 +164,20 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		します。
 
 
+	▼ gametbl:getcurrentdiscard()
+
+		　現在の捨牌を表すテーブルで返します。ontsumo()関数内では意味を持ちま
+		せん。このテーブルは次のフィールドをもちます。
+
+		● tile フィールド
+
+			　牌の種類を表す番号が入ります。
+
+		● red フィールド
+
+			　赤ドラかどうかを示す番号が入ります。
+
+
 	▼ gametbl:getdeckleft()
 
 		　山牌の残り枚数を返します(王牌は数えません)。

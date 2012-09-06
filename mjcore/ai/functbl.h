@@ -57,6 +57,7 @@ public:
 	static int getbakaze(lua_State* const L);
 	static int getbasepoint(lua_State* const L);
 	static int getchip(lua_State* const L);
+	static int getcurrentdiscard(lua_State* const L);
 	static int getdeckleft(lua_State* const L);
 	static int getdeposit(lua_State* const L);
 	static int getdiscard(lua_State* const L);

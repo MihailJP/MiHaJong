@@ -126,6 +126,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::getbakaze); lua_setfield(L, -2, "getbakaze");
 	lua_pushcfunction(L, luafunc::getbasepoint); lua_setfield(L, -2, "getbasepoint");
 	lua_pushcfunction(L, luafunc::getchip); lua_setfield(L, -2, "getchip");
+	lua_pushcfunction(L, luafunc::getcurrentdiscard); lua_setfield(L, -2, "getcurrentdiscard");
 	lua_pushcfunction(L, luafunc::getdeckleft); lua_setfield(L, -2, "getdeckleft");
 	lua_pushcfunction(L, luafunc::getdeposit); lua_setfield(L, -2, "getdeposit");
 	lua_pushcfunction(L, luafunc::getdiscard); lua_setfield(L, -2, "getdiscard");
@@ -299,6 +300,16 @@ int aiscript::table::functable::gametbl::luafunc::getchip(lua_State* const L) {
 	PLAYER_ID player = getPlayerID(L, 2);
 	if (RuleData::chkRuleApplied("chip")) lua_pushnil(L); // チップ無しルールならnil
 	else lua_pushinteger(L, gameStat->Player[player].playerChip); // チップの収支をスタックに積む
+	return 1;
+}
+
+/* 現在の捨牌 */
+int aiscript::table::functable::gametbl::luafunc::getcurrentdiscard(lua_State* const L) {
+	int n = chkargnum(L, 1, 1);
+	GameTable* gameStat = getGameStatAddr(L);
+	lua_newtable(L); // 戻り値を格納するテーブル
+	TableAdd(L, "tile", (int)gameStat->CurrentDiscard.tile);
+	TableAdd(L, "red", (int)gameStat->CurrentDiscard.red);
 	return 1;
 }
 
