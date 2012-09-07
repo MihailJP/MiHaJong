@@ -829,34 +829,33 @@ function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
 	local currentShanten = gametbl:getshanten(haiHand)
 	haiHand[14] = clone(haiCurrentSutehai)
 
---[=======[ 書き換え完了ここまで
-	targetPlayer = PassivePlayer: await 0: gosub *countshanten
-	TsumoAgari = 0: targetPlayer = PassivePlayer: await 0: gosub *countyaku
-	targetPlayer = PassivePlayer: await 0: gosub *chkFuriten
+	local Shanten = gametbl:getshanten(haiHand)
+	local yakustat = gametbl:evaluate(false, haiHand)
+	local tenpaistat = gametbl:gettenpaistat(haiHand)
 	-- 暗槓に対する搶槓の判定で、国士聴牌でない場合は戻る
-	if ((ShisanyaoShanten != 0)&&(ChanKanFlag == 2)) then
-		haiHand(13, PassivePlayer) = 0
-		haiHandAkaDora(13, PassivePlayer) = 0
-		return
+	if (ChanKanFlag == 2) and (gametbl:getshanten(haiHand, mihajong.AgariType.Orphans) ~= 0) then
+		return mihajong.Call.None
 	end
-	haiHand(13, PassivePlayer) = haiCurrentSutehai
-	targetPlayer = PassivePlayer: await 0: gosub *countshanten
-	if (Shanten == -1) then
-		haiRon(PassivePlayer) = 1 -- 出和了り
-		haiHand(13, PassivePlayer) = haiCurrentSutehai
-		haiHandAkaDora(13, PassivePlayer) = haiCurrentSutehaiAkaDora
-		if ((haiHan <= hncnShibari)||(haiFuriten == 1)||(haiDoujunFuriten(PassivePlayer))||((strmid(RuleConf, 39, 1) != "0")&&(haiRichi(PassivePlayer) == 0))) then
-			haiRon(PassivePlayer) = 0
-			haiHand(13, PassivePlayer) = 0
-			haiHandAkaDora(13, PassivePlayer) = 0
+
+	if Shanten == -1 then
+		local haiRon = true -- 出和了り
+		if (not yakustat.isvalid) or -- 縛りを満たしていないか
+				tenpaistat.isfuriten or -- 現物フリテンか
+				gametbl:isdoujunfuriten() or -- 同巡内フリテンか
+				((gametbl:getrule("riichi_shibari") ~= "no") and gametbl:isriichideclared()) then -- 立直縛りの場合でリーチしてないなら
+					haiRon = false -- チョンボになるから和がらないようにする
 		end
-		return
+		if haiRon then
+			return mihajong.Call.Ron
+		else
+			return mihajong.Call.None
+		end
 	end
-	haiHand(13, PassivePlayer) = 0
-	haiHandAkaDora(13, PassivePlayer) = 0
-	if (ChanKanFlag == 1) then return end -- 搶槓の判定中なら判定打ち切り
-	if (haiPointer >= (haiRinshanPointer - (haiDeadTiles-1))) then return end -- 河底牌なら判定打ち切り
-	if (haiRichi(PassivePlayer) > 0) then return end -- リーチしているなら判定打ち切り
+	if ChanKanFlag == 1 then return mihajong.Call.None end -- 搶槓の判定中なら判定打ち切り
+	if gametbl:getdeckleft() == 0 then return mihajong.Call.None end -- 河底牌なら判定打ち切り
+	if gametbl:isriichideclared() then return mihajong.Call.None end -- リーチしているなら判定打ち切り
+
+	--[=======[ 書き換え完了ここまで
 	await 0: gosub *countseentiles
 	dim haiCount, 80 -- 計算する牌
 	repeat 14
