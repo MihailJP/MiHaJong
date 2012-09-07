@@ -9,6 +9,7 @@ void aiscript::table::functable::inittable(lua_State* const L, int playerID) {
 	meldCallCode(L); // subtable 'Call'
 	meldTypeCode(L); // subtable 'MeldType'
 	tileCode(L); // subtable 'Tile'
+	agariTypeCode(L); // subtable 'AgariType'
 	gametbl::makeprototype(L, playerID); // subtable 'gametbl' (prototype)
 	lua_pushcfunction(L, random); lua_setfield(L, -2, "random"); // function 'random'
 	lockTable(L); // mark as read-only
@@ -224,4 +225,18 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::isyakitori); lua_setfield(L, -2, "isyakitori");
 	/* メソッド定義ここまで */
 	lockTable(L); lua_setfield(L, -2, tblname);
+}
+
+/* 鳴きの種別コード */
+inline void aiscript::table::functable::agariTypeCode(lua_State* const L) {
+	lua_newtable(L); // AgariType
+	TableAdd(L, "All", (int)ShantenAnalyzer::shantenAll);
+	TableAdd(L, "Regular", (int)ShantenAnalyzer::shantenRegular);
+	TableAdd(L, "Pairs", (int)ShantenAnalyzer::shantenPairs);
+	TableAdd(L, "Orphans", (int)ShantenAnalyzer::shantenOrphans);
+	TableAdd(L, "Stellar", (int)ShantenAnalyzer::shantenStellar);
+	TableAdd(L, "CivilWar", (int)ShantenAnalyzer::shantenCivilWar);
+	TableAdd(L, "Syzygy", (int)ShantenAnalyzer::shantenSyzygy);
+	TableAdd(L, "Quanbukao", (int)ShantenAnalyzer::shantenQuanbukao);
+	lockTable(L); lua_setfield(L, -2, "AgariType");
 }

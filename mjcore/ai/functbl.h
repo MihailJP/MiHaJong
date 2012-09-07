@@ -24,6 +24,7 @@ private:
 	static inline void meldCallCode(lua_State* const L);
 	static inline void meldTypeCode(lua_State* const L);
 	static inline void tileCode(lua_State* const L);
+	static inline void agariTypeCode(lua_State* const L);
 	static int chkargnum(lua_State* const L, int argmin, int argmax);
 	class gametbl;
 public:

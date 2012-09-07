@@ -324,11 +324,15 @@ int aiscript::table::functable::gametbl::luafunc::getseentiles(lua_State* const 
 
 /* Œü’®”‚ðŽæ“¾ */
 int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L) {
-	int n = chkargnum(L, 1, 2);
+	int n = chkargnum(L, 1, 3);
 	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
 	PLAYER_ID player = getPlayerID(L, 0);
 	setHand(L, &tmpGameStat, 2);
-	lua_pushinteger(L, ShantenAnalyzer::calcShanten(&tmpGameStat, player, ShantenAnalyzer::shantenAll));
+	ShantenAnalyzer::shantenType type = ShantenAnalyzer::shantenAll;
+	if ((n >= 3) && (lua_isnumber(L, 3))) type = (ShantenAnalyzer::shantenType)lua_tointeger(L, 3);
+	SHANTEN s = ShantenAnalyzer::calcShanten(&tmpGameStat, player, type);
+	if (s == ShantenAnalyzer::SHANTEN_IMPOSSIBLE) lua_pushnil(L);
+	else lua_pushinteger(L, ShantenAnalyzer::calcShanten(&tmpGameStat, player, type));
 	return 1;
 }
 
