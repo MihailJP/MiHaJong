@@ -24,6 +24,7 @@ private:
 	static inline void meldCallCode(lua_State* const L);
 	static inline void meldTypeCode(lua_State* const L);
 	static inline void tileCode(lua_State* const L);
+	static inline void agariTypeCode(lua_State* const L);
 	static int chkargnum(lua_State* const L, int argmin, int argmax);
 	class gametbl;
 public:
@@ -87,6 +88,7 @@ public:
 	static int getyakuhaiwind(lua_State* const L);
 	static int isabovebase(lua_State* const L);
 	static int isankanallowed(lua_State* const L);
+	static int isdoujunfuriten(lua_State* const L);
 	static int isfinalround(lua_State* const L);
 	static int isfirstdraw(lua_State* const L);
 	static int isippatsu(lua_State* const L);

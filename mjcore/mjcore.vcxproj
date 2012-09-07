@@ -105,6 +105,7 @@
     <ClCompile Include="ai\aiscript.cpp" />
     <ClCompile Include="ai\functbl.cpp" />
     <ClCompile Include="ai\filesel.cpp" />
+    <ClCompile Include="ai\gftbl.cpp" />
     <ClCompile Include="ai\riskchk.cpp" />
     <ClCompile Include="discard.cpp" />
     <ClCompile Include="dllmain.cpp" />
