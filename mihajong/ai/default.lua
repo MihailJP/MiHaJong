@@ -128,11 +128,26 @@ function gettilenumeral (tile) -- 牌の数字(１～９)を取得する
 	return nil
 end
 
-local player_rel = { -- プレイヤー番号
+player_rel = { -- プレイヤー番号
 	"shimocha", (gametbl.playerid + 0) % 4 + 1;
 	"toimen",   (gametbl.playerid + 1) % 4 + 1;
 	"kamicha",  (gametbl.playerid + 2) % 4 + 1;
 }
+
+function numofquads (gametbl) -- 槓子の数を数える
+	local melds = gametbl:getmeld() -- 鳴き面子
+	local count = 0 -- 返り値
+	for i = 1, #melds do -- 各々の面子について
+		for k, v in pairs(mihajong.MeldType.Quad.Exposed) do
+			if melds[i].type == v then count = count + 1 end
+		end
+		for k, v in pairs(mihajong.MeldType.Quad.Added) do
+			if melds[i].type == v then count = count + 1 end
+		end
+		if melds[i].type == mihajong.MeldType.Quad.Concealed then count = count + 1 end
+	end
+	return count
+end
 
 function ontsumo (gametbl) -- ＡＩの打牌
 	local haiHand = gametbl:gethand()
@@ -820,6 +835,7 @@ end
 function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
 	local haiHand = gametbl:gethand()
 	local haiCurrentSutehai = gametbl:getcurrentdiscard()
+	local haiNakiMianziDat = gametbl:getmeld()
 
 	if isflower(haiCurrentSutehai) then -- 花牌の場合は戻る
 		return mihajong.Call.None
@@ -855,85 +871,64 @@ function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
 	if gametbl:getdeckleft() == 0 then return mihajong.Call.None end -- 河底牌なら判定打ち切り
 	if gametbl:isriichideclared() then return mihajong.Call.None end -- リーチしているなら判定打ち切り
 
-	--[=======[ 書き換え完了ここまで
-	await 0: gosub *countseentiles
-	dim haiCount, 80 -- 計算する牌
-	repeat 14
-		if (haiHand(cnt, PassivePlayer) != 0) then
-			-- 手牌の中の、それぞれの牌の枚数を数える
-			haiCount(haiHand(cnt, PassivePlayer))++
+	local haiCount = gametbl:gettilesinhand() -- 手牌の中の、それぞれの牌の枚数を数える
+
+	local YakuhaiPon = false
+	do -- 捨てられた牌が役牌だった場合
+		local yakuwind = gametbl:getyakuhaiwind()
+		for k, v in pairs(mihajong.Tile.Dragon) do
+			if haiCurrentSutehai.tile == v then YakuhaiPon = true end
 		end
-	loop
-	-- 捨てられた牌が役牌だった場合
-	YakuhaiPon = 0
-	if (haiCurrentSutehai == 35) then YakuhaiPon = 1 end
-	if (haiCurrentSutehai == 36) then YakuhaiPon = 1 end
-	if (haiCurrentSutehai == 37) then YakuhaiPon = 1 end
-	if ((haiCurrentSutehai == 31)&&((hncnTurn/4 == 0)||((targetPlayer+32-hncnTurn)\4 == 0))) then YakuhaiPon = 1 end
-	if ((haiCurrentSutehai == 32)&&((hncnTurn/4 == 1)||((targetPlayer+32-hncnTurn)\4 == 1))) then YakuhaiPon = 1 end
-	if ((haiCurrentSutehai == 33)&&((hncnTurn/4 == 2)||((targetPlayer+32-hncnTurn)\4 == 2))) then YakuhaiPon = 1 end
-	if ((haiCurrentSutehai == 34)&&((hncnTurn/4 == 3)||((targetPlayer+32-hncnTurn)\4 == 3))) then YakuhaiPon = 1 end
-	-- 役牌を鳴いたらフラグを立てる
-	-- ポンが失敗する場合は他家のロンがあるか河底牌の場合
-	-- なのでこの時点でフラグを立てても特に問題はない
-	if (YakuhaiPon) then haiYakuhaiNaki(PassivePlayer) = 1 end
-	await 0: gosub *countseentiles
-	if (haiCount(haiCurrentSutehai) >= 3) then
+		for k, v in pairs(mihajong.Tile.Wind) do
+			if (haiCurrentSutehai.tile == v) and yakuwind[k] then YakuhaiPon = true end
+		end
+		-- 役牌を鳴いたらフラグを立てる処理をしていたが移植後は必要なくなった
+	end
+
+	local haiSeenCount = gametbl:getseentiles()
+	if haiCount[haiCurrentSutehai.tile] >= 3 then
 		-- すでに槓子を２つ持っているなら大明槓させる
-		if (haiNumOfKangs(PassivePlayer) >= 2) then
-			haiMinkan(PassivePlayer) = 1
-			return
+		if numofquads(gametbl) >= 2 then
+			return mihajong.Call.Kan
 		end
 	end
-	if (currentShanten > 0) then -- すでにテンパってたら鳴かない
-		if (currentShanten > Shanten) then -- 有効牌でなければ鳴かない
-			if (haiCount(haiCurrentSutehai) >= 2) then -- ポンできるかどうかの判定
-				if ((haiMenzen(PassivePlayer) == 0)||(YakuhaiPon == 1)) then
-					-- すでに鳴いているか、役牌の場合はポン 対々狙いか一色狙いなら二鳴き
-					haiPon(PassivePlayer) = 1
-					return
-				end else
-					tmpYaojiuTilesCount = 0
-					repeat 13
-						switch haiHand(cnt, PassivePlayer)
-							case 1: case 9: case 11: case 19: case 21: case 29
-							case 31: case 32: case 33: case 34: case 35: case 36: case 37
-								tmpYaojiuTilesCount++
-						swend
-					loop
-					switch CurrentSutehai
-						case 1: case 9: case 11: case 19: case 21: case 29
-						case 31: case 32: case 33: case 34: case 35: case 36: case 37
-							tmpYaojiuTilesCount++
-					swend
-					repeat haiNakiMianziDat(0, PassivePlayer)
-						if (haiNakiMianziDat(0, PassivePlayer) == 0) then break end
-						if ((haiNakiMianziDat(cnt, PassivePlayer) \ 100) > 30) then
-							tmpYaojiuTilesCount++: continue
-						end
-						if ((haiNakiMianziDat(cnt, PassivePlayer) \ 10) == 1) then
-							tmpYaojiuTilesCount++: continue
-						end
-						if ((haiNakiMianziDat(cnt, PassivePlayer) \ 10) == 9) then
-							tmpYaojiuTilesCount++: continue
-						end
-						if ((haiNakiMianziDat(cnt, PassivePlayer) \ 10) == 7) then
-							if ((haiNakiMianziDat(cnt, PassivePlayer) / 1000) < 4) then
-								tmpYaojiuTilesCount++: continue
-							end
-						end
-					loop
-					if (tmpYaojiuTilesCount == 0) then
-						if ((currentShanten == 1)&&(strmid(RuleConf, 19, 1) == "0")) then
-							-- 喰い断をポン聴する
-							haiPon(PassivePlayer) = 1
-							return
+
+	if (currentShanten > 0) and -- すでにテンパってたら鳴かない
+		(currentShanten > Shanten) and -- 有効牌でなければ鳴かない
+		(haiCount[haiCurrentSutehai.tile] >= 2) then -- ポンできるかどうかの判定
+			if (not gametbl:ismenzen()) or YakuhaiPon then
+				-- すでに鳴いているか、役牌の場合はポン 対々狙いか一色狙いなら二鳴き
+				return mihajong.Call.Pon
+			else
+				local tmpYaojiuTilesCount = 0
+				for cnt = 1, 13 do
+					if isyaojiu(haiHand[cnt]) then
+						tmpYaojiuTilesCount = tmpYaojiuTilesCount + 1
+					end
+				end
+				if isyaojiu(CurrentSutehai) then
+					tmpYaojiuTilesCount = tmpYaojiuTilesCount + 1
+				end
+				for cnt = 1, #haiNakiMianziDat do
+					if ishonor(haiNakiMianziDat[cnt]) then
+						tmpYaojiuTilesCount = tmpYaojiuTilesCount + 1
+					elseif gettilenumeral(haiNakiMianziDat[cnt]) == 1 then
+						tmpYaojiuTilesCount = tmpYaojiuTilesCount + 1
+					elseif gettilenumeral(haiNakiMianziDat[cnt]) == 9 then
+						tmpYaojiuTilesCount = tmpYaojiuTilesCount + 1
+					elseif gettilenumeral(haiNakiMianziDat[cnt]) == 7 then
+						if issequence(haiNakiMianziDat[cnt]) then
+							tmpYaojiuTilesCount = tmpYaojiuTilesCount + 1
 						end
 					end
 				end
+				if (tmpYaojiuTilesCount == 0) and (currentShanten == 1) and (gametbl:getrule("kuitan") == "yes") then
+					return mihajong.Call.Pon -- 喰い断をポン聴する
+				end
 			end
-		end
 	end
+
+--[=======[ 書き換え完了ここまで
 #ifndef SANMAX
 	-- チーするかどうかを判定する
 	haiHand(13, PassivePlayer) = haiCurrentSutehai
