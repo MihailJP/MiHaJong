@@ -211,6 +211,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::getwareme); lua_setfield(L, -2, "getwareme");
 	lua_pushcfunction(L, luafunc::getyakuhaiwind); lua_setfield(L, -2, "getyakuhaiwind");
 	lua_pushcfunction(L, luafunc::isankanallowed); lua_setfield(L, -2, "isankanallowed");
+	lua_pushcfunction(L, luafunc::isdoujunfuriten); lua_setfield(L, -2, "isdoujunfuriten");
 	lua_pushcfunction(L, luafunc::isfinalround); lua_setfield(L, -2, "isfinalround");
 	lua_pushcfunction(L, luafunc::isfirstdraw); lua_setfield(L, -2, "isfirstdraw");
 	lua_pushcfunction(L, luafunc::isippatsu); lua_setfield(L, -2, "isippatsu");

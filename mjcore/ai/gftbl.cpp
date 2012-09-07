@@ -490,6 +490,15 @@ int aiscript::table::functable::gametbl::luafunc::isankanallowed(lua_State* cons
 	return 1;
 }
 
+/* 同巡内フリテンか？ */
+int aiscript::table::functable::gametbl::luafunc::isdoujunfuriten(lua_State* const L) {
+	int n = chkargnum(L, 1, 1);
+	const GameTable* gameStat = getGameStatAddr(L);
+	PLAYER_ID player = getPlayerID(L, 0);
+	lua_pushboolean(L, gameStat->Player[player].DoujunFuriten);
+	return 1;
+}
+
 /* オーラスか？ */
 int aiscript::table::functable::gametbl::luafunc::isfinalround(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);

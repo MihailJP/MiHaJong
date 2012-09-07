@@ -533,6 +533,13 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		味をなしません。
 
 
+	▼ gametbl:isdoujunfuriten()
+
+		　同巡内フリテンか、リーチ後見逃しによるフリテンであればtrueを、そうで
+		なければfalseを返します。
+		　現物フリテンかどうか調べるには、gametbl:gettenpaistat()を使用します。
+
+
 	▼ gametbl:isfinalround()
 
 		　オーラスまたは延長戦(半荘戦であれば西入以降)であればtrueを、そうでな
