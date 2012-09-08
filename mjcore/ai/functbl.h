@@ -7,6 +7,8 @@
 #include "../tileutil.h"
 #include "../yaku/yaku.h"
 #include "../shanten.h"
+#include "../random.h"
+#include "../version.h"
 
 enum MeldCallID {
 	meldNone, meldRon, meldKan, meldPon, meldChiiLower, meldChiiMiddle, meldChiiUpper
@@ -17,10 +19,17 @@ private:
 	static const char* tblname;
 	static int tableLockedErr(lua_State* const L);
 	static void lockTable(lua_State* const L);
+	static int random(lua_State* const L);
 	static inline void discardTileCode(lua_State* const L);
+	static inline void doraColorCode(lua_State* const L);
 	static inline void meldCallCode(lua_State* const L);
 	static inline void meldTypeCode(lua_State* const L);
 	static inline void tileCode(lua_State* const L);
+	static inline void agariTypeCode(lua_State* const L);
+	static inline void gametype(lua_State* const L);
+	static inline void version(lua_State* const L);
+	static int version_tostring(lua_State* const L);
+	static int chkargnum(lua_State* const L, int argmin, int argmax);
 	class gametbl;
 public:
 	static inline const char* getGTblName();
@@ -37,6 +46,7 @@ private:
 	static void pushTileTable(lua_State* const L, Int8ByTile& tptr);
 	static void pushTileTable(lua_State* const L, UInt8ByTile& tptr);
 	static void pushTileTable(lua_State* const L, FlagByTile& tptr);
+	static void pushTileTable(lua_State* const L, InfoByTile<MachihaiTileInfo>& tptr);
 	static void setHand(lua_State* const L, GameTable* const tmpGameStat, int index);
 	class luafunc;
 public:
@@ -47,11 +57,15 @@ public:
 inline const char* aiscript::table::functable::getGTblName() {return gametbl::getTblName();}
 
 class aiscript::table::functable::gametbl::luafunc {
+private:
+	class riskchk;
 public:
 	static int evaluate(lua_State* const L);
 	static int getactiveplayer(lua_State* const L);
 	static int getbakaze(lua_State* const L);
+	static int getbasepoint(lua_State* const L);
 	static int getchip(lua_State* const L);
+	static int getcurrentdiscard(lua_State* const L);
 	static int getdeckleft(lua_State* const L);
 	static int getdeposit(lua_State* const L);
 	static int getdiscard(lua_State* const L);
@@ -69,12 +83,16 @@ public:
 	static int getscore(lua_State* const L);
 	static int getseentiles(lua_State* const L);
 	static int getshanten(lua_State* const L);
+	static int gettenpaistat(lua_State* const L);
 	static int gettilecontext(lua_State* const L);
+	static int gettilerisk(lua_State* const L);
 	static int gettilesinhand(lua_State* const L);
 	static int gettsumibou(lua_State* const L);
 	static int getwareme(lua_State* const L);
 	static int getyakuhaiwind(lua_State* const L);
+	static int isabovebase(lua_State* const L);
 	static int isankanallowed(lua_State* const L);
+	static int isdoujunfuriten(lua_State* const L);
 	static int isfinalround(lua_State* const L);
 	static int isfirstdraw(lua_State* const L);
 	static int isippatsu(lua_State* const L);
@@ -87,6 +105,26 @@ public:
 	static int isshisibuda(lua_State* const L);
 	static int issumaroallowed(lua_State* const L);
 	static int isyakitori(lua_State* const L);
+};
+
+class aiscript::table::functable::gametbl::luafunc::riskchk {
+public:
+	static bool issameasprevious(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isdora(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isdorasuji(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isdorasoba(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isnochance(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isonechance(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isneverdiscarded(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isseenfour(const GameTable* const gameStat, PLAYER_ID player, int index);
+	static bool isgembutsu(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool issuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool isurasuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool isaida4ken(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool ismatagisuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool issenkisuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool isnamakurasuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
+	static bool isnakasuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
 };
 
 #endif

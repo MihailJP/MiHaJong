@@ -51,6 +51,10 @@
 #cfunc Wind2Tile "?Wind2Tile@@YAHH@Z" int
 #func _confPath "?confPath@confpath@@YAXPADH@Z" var, int
 
+/* bignum.hsp‚©‚ç‚ÌˆÚA */
+#cfunc BasePoint "?BasePointHSP@@YAHXZ"
+#cfunc isAboveBase "?isAboveBase@@YAHQBUGameTable@@H@Z" int, int
+
 /* tileutil.hsp‚©‚ç‚ÌˆÚA */
 #func lipai "?lipai@@YAXQAUGameTable@@H@Z" int, int
 #func _countseentiles "?countseentiles@@YAXQAHQBUGameTable@@@Z" var, int

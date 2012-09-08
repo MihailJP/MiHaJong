@@ -73,6 +73,12 @@ __declspec(dllexport) inline int WindMax();
 tileCode inline Wind2Tile(uint8_t wind);
 __declspec(dllexport) int Wind2Tile(int wind);
 
+int BasePoint();
+__declspec(dllexport) int BasePointHSP();
+
+bool isAboveBase(const GameTable* const gameStat, PLAYER_ID player);
+__declspec(dllexport) int isAboveBase(const GameTable* const gameStat, int player);
+
 std::string intstr(int val);
 
 namespace confpath {

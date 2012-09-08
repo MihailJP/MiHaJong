@@ -253,6 +253,30 @@ __declspec(dllexport) int Wind2Tile(int wind) {
 	return Wind2Tile((uint8_t)wind);
 }
 
+/* Œ´“_(•Ô‚µ“_) */
+int BasePoint() {
+	if (chkGameType(&GameStat, SanmaT)) {
+		const char rulestat[6][16] = {
+			"35000pts_oka15", "40000pts_oka0", "45000pts_oka-15", "50000pts_oka-30", "25000pts_oka45", "30000pts_oka30",
+		};
+		for (int i = 0; i < 6; i++)
+			if (RuleData::chkRule("starting_point", rulestat[i]))
+				return 40000;
+	}
+	return 30000;
+}
+__declspec(dllexport) int BasePointHSP() {
+	return BasePoint() / 100;
+}
+
+/* •‚‚¢‚Ä‚¢‚é‚©”»’è‚·‚éŠÖ” */
+bool isAboveBase(const GameTable* const gameStat, PLAYER_ID player) {
+	return gameStat->Player[player].PlayerScore >= LargeNum::fromInt(BasePoint());
+}
+__declspec(dllexport) int isAboveBase(const GameTable* const gameStat, int player) {
+	return isAboveBase(gameStat, (PLAYER_ID)gameStat) ? 1 : 0;
+}
+
 /* ”ñ•‰®”1Œ…‚È‚ç‘SŠpE‚»‚êˆÈŠO‚Í”¼Šp */
 std::string intstr(int val) {
 	const char* hanstr = "‚O\0‚P\0‚Q\0‚R\0‚S\0‚T\0‚U\0‚V\0‚W\0‚X\0";

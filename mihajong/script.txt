@@ -152,11 +152,30 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		もあります)。
 
 
-	▼ gametbl:getchip([player])
+	▼ gametbl:getbasepoint()
+
+		　原点(返し点)を返します。
+
+
+	▼ gametbl:getchip([playerid])
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
 		自身)のチップの収支を返します。但し、チップ無しのルールの場合はnilを返
 		します。
+
+
+	▼ gametbl:getcurrentdiscard()
+
+		　現在の捨牌を表すテーブルで返します。ontsumo()関数内では意味を持ちま
+		せん。このテーブルは次のフィールドをもちます。
+
+		● tile フィールド
+
+			　牌の種類を表す番号が入ります。
+
+		● red フィールド
+
+			　赤ドラかどうかを示す番号が入ります。
 
 
 	▼ gametbl:getdeckleft()
@@ -297,7 +316,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　該当する牌がなければ、nilが返ります。
 
 
-	▼ gametbl:getrank([player])
+	▼ gametbl:getrank([playerid])
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
 		自身)の順位を返します。
@@ -318,7 +337,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　ruletagで指定された文字列に対応するルール設定を返します。
 
 
-	▼ gametbl:getscore([player])
+	▼ gametbl:getscore([playerid])
 
 		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
 		自身)の持ち点を返します。
@@ -335,11 +354,44 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		す。
 
 
-	▼ gametbl:getshanten([tiletbl])
+	▼ gametbl:getshanten([tiletbl][, type])
 
 		　現在の向聴数を返します。gametbl:gethand()形式の引数を指定した場合、
 		その手牌の向聴数を計算します。
+		　typeを指定した場合、和了形式を限定した向聴数を返します。typeには、
+		mihajong.AgariTypeのフィールドのどれかを指定します。
 		　聴牌になっている場合は0となり、和了っている場合は-1が返されます。
+		　門前でないのに七対子に対する向聴数を求めようとした場合などそのような
+		和了り方が不可能な場合や、南北戦争なしのルールで南北戦争に対する向聴数
+		を求めようとした場合などそのような和了り方がルール上認められていない場
+		合、返り値はnilになります。
+
+
+	▼ gametbl:gettenpaistat([tiletbl])
+
+		　聴牌に関する情報をテーブルで返します。gametbl:gethand()形式の引数を
+		指定した場合、その手牌について計算します。このテーブルには次のフィール
+		ドがあります。
+
+		● isfuriten フィールド
+
+			　フリテンであればtrueが、そうでなければfalseが入ります。
+
+		● total フィールド
+
+			　待ち牌の残り枚数が入ります。
+
+		● kinds フィールド
+
+			　待ち牌の種類数(2面待ちなら2、3面待ちなら3のように)が入ります。
+
+		● bytile フィールド
+
+			　牌ごとに次の情報を格納したサブテーブルです。このテーブルのキーは
+			mihajong.Tile に定義された数値です。
+
+			・flag……その牌が待ちになっていたらtrue、そうでなければfalseです。
+			・count……その牌の残り枚数です。
 
 
 	▼ gametbl:gettilecontext()
@@ -383,7 +435,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 			　辺搭子をなしている牌ならtrue、そうでなければfalseが格納されます。
 
 
-	▼ gametbl:gettilerisk() (未実装)
+	▼ gametbl:gettilerisk()
 
 		　手牌の中のそれぞれの牌について、安牌かどうか判断するための情報を格納
 		したテーブル返します。インデックスは gametbl:gethand() の返り値と同様
@@ -414,10 +466,6 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 			　ワンチャンスの牌ならtrue、そうでなければfalseが格納されます。
 
-		● isaida4ken フィールド
-
-			　間4ケンの牌ならtrue、そうでなければfalseが格納されます。
-
 		● isneverdiscarded フィールド
 
 			　生牌ならtrue、そうでなければfalseが格納されます。
@@ -437,6 +485,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 			・isgembutsu……現物かどうか
 			・issuji……表筋かどうか
 			・isurasuji……裏筋かどうか
+			・isaida4ken……間4ケンかどうか
 			・ismatagisuji……跨ぎ筋かどうか
 			・issenkisuji……疝気筋かどうか
 			・isnamakurasuji……鈍筋(なまくらすじ)かどうか
@@ -469,11 +518,26 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		になっていればtrueが、そうでなければfalseが設定されています。
 
 
+	▼ gametbl:isabovebase([player])
+
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　浮いている(持ち点が返し点以上)ならtrueを、そうでなければfalseを返し
+		ます。
+
+
 	▼ gametbl:isankanallowed()
 
 		　リーチ後に暗槓出来る状態ならtrueを、そうでなければfalseを返します。
 		　なお、この関数はリーチしていない状態でも使用できますが、その場合は意
 		味をなしません。
+
+
+	▼ gametbl:isdoujunfuriten()
+
+		　同巡内フリテンか、リーチ後見逃しによるフリテンであればtrueを、そうで
+		なければfalseを返します。
+		　現物フリテンかどうか調べるには、gametbl:gettenpaistat()を使用します。
 
 
 	▼ gametbl:isfinalround()
@@ -629,6 +693,22 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		ため、このスクリプト仕様からもそれらのコードは省かれています。
 
 
+	▼ mihajong.AgariType
+
+		　七対子、国士無双といった和了の形式を表す数値を格納したテーブルです。
+		これは、gametbl:getshanten()関数の引数に使用します。このテーブルには、
+		以下のフィールドが格納されています。
+
+		・All …… 和了の形式を問わないことを指定します。
+		・Regular …… 通常の4面子1雀頭の和了。
+		・Pairs …… 七対子。
+		・Orphans …… 国士無双。
+		・Stellar …… 七星無靠(そのような役が存在するルールのみ。以下同様)。
+		・CivilWar …… 南北戦争。
+		・Syzygy …… 惑星直列。
+		・Quanbukao …… 全不靠。
+
+
 	▼ mihajong.Tile
 
 		　一索、五筒といった牌の種類を表す数値を格納したテーブルです。このテー
@@ -657,10 +737,73 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　　　　　　　手牌データには現れません。
 
 
+	▼ mihajong.DoraColor
+
+		　赤ドラかどうかを表す数値を格納したテーブルです。このテーブルには、以
+		下のフィールドが格納されています。
+
+		・Normal …… 黒牌。赤ドラや青ドラではない牌です。
+		・Red …… 赤牌。赤ドラともいいます。
+		・Blue …… 青牌。青ドラありのルールにのみ現れます。
+
+
 	▼ mihajong.gametbl
 
 		　determine_discard、determine_call の引数として渡されるテーブルのプロ
 		トタイプです。詳細は前述しています。
+
+
+	▼ mihajong.random
+
+		　MiHaJongのLuaインタプリタではmathライブラリがオープンされていないの
+		で、乱数が必要な場合は mihajong.random() 関数を使います。C++11の
+		<random>ライブラリで実装されていて、Lua標準ライブラリの math.random
+		(これはC言語のrand()です)よりも高品位な乱数が得られます。
+		　この関数は本物の乱数ではなくあくまで擬似乱数ですが、MiHaJongのシステ
+		ム側で乱数の種は予測不能な値に設定されます。
+		　なお、この関数は引数の与え方によって異なる挙動を示します。
+
+		● mihajong.random()、mihajong.random(nil)、mihajong.random(nil, nil)
+
+			　mihajong.random を引数なしで呼び出した場合、半開区間 [0, 1) の連
+			続一様乱数を返します。
+
+		● mihajong.random(n)、mihajong.random(n, nil)
+
+			　mihajong.random を1つの整数の引数で呼び出した場合、閉区間 (1, n)
+			の離散一様乱数を返します(返り値は整数になります)。たとえば n == 6
+			の場合、サイコロを1つ振るのと同じになります。
+
+		● mihajong.random(mean, var)
+
+			　mihajong.random を2つの引数で呼び出した場合で、2つ目の引数が正の
+			場合、平均 μ == mean、分散 σ^2 == var の正規乱数を返します。
+
+		● mihajong.random(n, -faces)
+
+			　mihajong.random を2つの引数で呼び出した場合で、2つ目の引数が負の
+			場合、|faces| 面のサイコロを n 個振った出目の合計を返します。
+
+
+	▼ mihajong.gametype
+
+		　MiHaJongの種別を表す文字列です。意味は次のとおりです。
+
+		・"yonma" …… 四人打ち。
+		・"sanma" …… 三人打ち。
+		・"sanma_with_four_players" …… 四人三麻。
+		・"sanma_without_honors" …… 数牌三麻。
+
+
+	▼ mihajong.version
+
+		　MiHaJongのバージョンです。このテーブルには、以下のフィールドが格納さ
+		れています。また、tostring(mihajong.version)とすると、"1.7.0"のような
+		文字列が返りますす。
+
+		・major …… メジャーバージョン。
+		・minor …… マイナーバージョン。
+		・patch …… パッチバージョン。
 
 
 ■ ephemeralテーブル

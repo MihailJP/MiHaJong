@@ -16,7 +16,7 @@ EXPORT_STRUCT LargeNum { // ±21不可思議まで表現可能な数のクラス
 	int32_t digitGroup[DIGIT_GROUPS];
 	unsigned int firstArg; // 互換用。
 	void fix();
-	signed int compare(const LargeNum& cmp);
+	signed int compare(const LargeNum& cmp) const;
 	std::string bignumtotext(std::string plusSign, std::string minusSign) const;
 	double bignumtodbl() const;
 	static LargeNum fromInt(int val);
@@ -33,12 +33,12 @@ EXPORT_STRUCT LargeNum { // ±21不可思議まで表現可能な数のクラス
 	LargeNum& operator*=(const int32_t multiplier);
 	const LargeNum operator/(const int32_t divisor);
 	LargeNum& operator/=(const int32_t divisor);
-	const bool operator==(const LargeNum& cmp);
-	const bool operator!=(const LargeNum& cmp);
-	const bool operator<(const LargeNum& cmp);
-	const bool operator>(const LargeNum& cmp);
-	const bool operator<=(const LargeNum& cmp);
-	const bool operator>=(const LargeNum& cmp);
+	const bool operator==(const LargeNum& cmp) const;
+	const bool operator!=(const LargeNum& cmp) const;
+	const bool operator<(const LargeNum& cmp) const;
+	const bool operator>(const LargeNum& cmp) const;
+	const bool operator<=(const LargeNum& cmp) const;
+	const bool operator>=(const LargeNum& cmp) const;
 };
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<LargeNum>::value, "LargeNum is not POD");
