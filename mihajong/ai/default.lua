@@ -153,9 +153,9 @@ end
 function ontsumo (gametbl) -- ＡＩの打牌
 	if not player_rel then
 		player_rel = { -- プレイヤー番号
-			"shimocha", (gametbl.playerid + 0) % 4 + 1;
-			"toimen",   (gametbl.playerid + 1) % 4 + 1;
-			"kamicha",  (gametbl.playerid + 2) % 4 + 1;
+			["shimocha"] = (gametbl.playerid + 0) % 4 + 1,
+			["toimen"  ] = (gametbl.playerid + 1) % 4 + 1,
+			["kamicha" ] = (gametbl.playerid + 2) % 4 + 1,
 		}
 	end
 
@@ -384,7 +384,7 @@ function evaluate_hand (gametbl, cnt, tp, hand, haiDiscardability, tmpde) -- 再
 	local haiHand = clone(hand)
 	local tmpTileNum = cnt
 	local haiCount, haiSeenCount = gametbl:gettilesinhand(), gametbl:getseentiles()
-	for k, v in validtiles do repeat
+	for k, v in pairs(validtiles) do repeat
 		-- 時間がかかったらここで切り上げていた
 		if origShanten > 1 then
 			if ishonor({"tile", v}) and (haiCount[v] + haiSeenCount[v] == 3) then break end -- 字牌のラス牌はとりあえず無視
@@ -570,7 +570,6 @@ function discard_decision (gametbl)
 	until true end
 
 	do -- オープン立直の待ち牌を捨てない(捨ててはならない！)ようにする
-		haiHand[cnt] = clone(tmpHand)
 		local haiOpenRichiMachihai = gametbl:getopenwait()
 		for cnt = 1, 14 do
 			if haiHand[cnt] and not isflower(haiHand[cnt]) then
@@ -743,12 +742,12 @@ function discard_decision (gametbl)
 	local TmpMinScore, TmpMaxScore, MinScore, MaxScore = 999999999, -999999999, {}, {}
 	local haiCount, haiSeenCount = gametbl:gettilesinhand(), gametbl:getseentiles()
 	for tmpTileNum = 1, 14 do repeat
-		MinScore[cnt], MaxScore[cnt] = 0, 0
+		MinScore[tmpTileNum], MaxScore[tmpTileNum] = 0, 0
 		if haiHand[tmpTileNum] then
-			MinScore[cnt], MaxScore[cnt] = 0, 0; break
+			MinScore[tmpTileNum], MaxScore[tmpTileNum] = 0, 0; break
 		end
 		tmpTileCodeNum = clone(haiHand[tmpTileNum])
-		MinScore[cnt], MaxScore[cnt] = 999999999, -999999999
+		MinScore[tmpTileNum], MaxScore[tmpTileNum] = 999999999, -999999999
 		for k, cnt in ipairs(validtiles) do
 			haiHand[tmpTileNum], haiHand[14] = clone(haiHand[14]), {"tile", cnt; "red", 0}
 			if (gametbl:getshanten(haiHand) == -1) then
@@ -948,17 +947,17 @@ function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
 			local nakiCount = {0, 0, 0}
 			if (haiCurrentSutehai.tile - chiType) < 0 then break end -- バグ防止用
 			for cnt = 1, 14 do
-				if (haiHand[cnt].tile == haiCurrentSutehai.tile + 1 - chiType) and (nakiCount[1] < 1) then
-					haiHand[cnt] = nil
-					nakiCount[1] = nakiCount[1] + 1
-				end
-				if (haiHand[cnt].tile == haiCurrentSutehai.tile + 2 - chiType) and (nakiCount[2] < 1) then
-					haiHand[cnt] = nil
-					nakiCount[2] = nakiCount[2] + 1
-				end
-				if (haiHand[cnt].tile == haiCurrentSutehai.tile + 3 - chiType) and (nakiCount[3] < 1) then
-					haiHand[cnt] = nil
-					nakiCount[3] = nakiCount[3] + 1
+				if haiHand[cnt] then
+					if (haiHand[cnt].tile == haiCurrentSutehai.tile + 1 - chiType) and (nakiCount[1] < 1) then
+						haiHand[cnt] = nil
+						nakiCount[1] = nakiCount[1] + 1
+					elseif (haiHand[cnt].tile == haiCurrentSutehai.tile + 2 - chiType) and (nakiCount[2] < 1) then
+						haiHand[cnt] = nil
+						nakiCount[2] = nakiCount[2] + 1
+					elseif (haiHand[cnt].tile == haiCurrentSutehai.tile + 3 - chiType) and (nakiCount[3] < 1) then
+						haiHand[cnt] = nil
+						nakiCount[3] = nakiCount[3] + 1
+					end
 				end
 			end
 			local Shanten = gametbl:getshanten(haiHand)
