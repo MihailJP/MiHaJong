@@ -12,6 +12,7 @@ void aiscript::table::functable::inittable(lua_State* const L, int playerID) {
 	agariTypeCode(L); // subtable 'AgariType'
 	gametbl::makeprototype(L, playerID); // subtable 'gametbl' (prototype)
 	lua_pushcfunction(L, random); lua_setfield(L, -2, "random"); // function 'random'
+	gametype(L); // string 'gametype'
 	version(L); // subtable 'version'
 	lockTable(L); // mark as read-only
 	lua_setglobal(L, tblname); // global table
@@ -126,6 +127,16 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 	TableAdd(L, "Flower", (int)Flower);
 	lockTable(L); lua_setfield(L, -2, "Flower");
 	lockTable(L); lua_setfield(L, -2, "Tile");
+}
+
+/* ëÏÇÃéÌï  */
+inline void aiscript::table::functable::gametype(lua_State* const L) {
+	if (chkGameType(&GameStat, Yonma)) lua_pushstring(L, "yonma");
+	else if (chkGameType(&GameStat, Sanma)) lua_pushstring(L, "sanma");
+	else if (chkGameType(&GameStat, Sanma4)) lua_pushstring(L, "sanma_with_four_players");
+	else if (chkGameType(&GameStat, SanmaS)) lua_pushstring(L, "sanma_without_honors");
+	else lua_pushnil(L);
+	lua_setfield(L, -2, "gametype");
 }
 
 /* ÉoÅ[ÉWÉáÉìî‘çÜ tostring */
