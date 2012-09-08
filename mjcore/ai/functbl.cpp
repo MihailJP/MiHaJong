@@ -10,6 +10,7 @@ void aiscript::table::functable::inittable(lua_State* const L, int playerID) {
 	meldTypeCode(L); // subtable 'MeldType'
 	tileCode(L); // subtable 'Tile'
 	agariTypeCode(L); // subtable 'AgariType'
+	doraColorCode(L); // subtable 'DoraColor'
 	gametbl::makeprototype(L, playerID); // subtable 'gametbl' (prototype)
 	lua_pushcfunction(L, random); lua_setfield(L, -2, "random"); // function 'random'
 	gametype(L); // string 'gametype'
