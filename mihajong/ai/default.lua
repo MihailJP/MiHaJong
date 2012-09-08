@@ -127,6 +127,13 @@ function gettilenumeral (tile) -- 牌の数字(１～９)を取得する
 	end
 	return nil
 end
+function gettilesuit (tile) -- 牌の色を取得する
+	if ischaracter(tile) then return 1
+	elseif iscircle(tile) then return 2
+	elseif isbamboo(tile) then return 3
+	elseif ishonor(tile) then return 4
+	else return nil end
+end
 
 player_rel = { -- プレイヤー番号
 	"shimocha", (gametbl.playerid + 0) % 4 + 1;
@@ -928,98 +935,80 @@ function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
 			end
 	end
 
---[=======[ 書き換え完了ここまで
-#ifndef SANMAX
-	-- チーするかどうかを判定する
-	haiHand(13, PassivePlayer) = haiCurrentSutehai
-	dim tmpHaiHand, 14
-	repeat 14
-		tmpHaiHand(cnt) = haiHand(cnt, PassivePlayer)
-	loop
-	tmp2Shanten = Shanten
-	chosenNaki = 0
-	repeat 3, 1: chiType = cnt
-		targetPlayer = PassivePlayer: targetTile = cnt: gosub *getpaiinfo: await 0
-		nakiCount1 = 0: nakiCount2 = 0: nakiCount3 = 0
-		if ((haiCurrentSutehai-chiType) < 0) then
-			continue -- バグ防止用
-		end
-		repeat 14
-			await 0
-			if ((haiHand(cnt, PassivePlayer) == haiCurrentSutehai+1-chiType)&&(nakiCount1 < 1)) then
-				haiHand(cnt, PassivePlayer) = 0
-				nakiCount1++
-			end
-			if ((haiHand(cnt, PassivePlayer) == haiCurrentSutehai+2-chiType)&&(nakiCount2 < 1)) then
-				haiHand(cnt, PassivePlayer) = 0
-				nakiCount2++
-			end
-			if ((haiHand(cnt, PassivePlayer) == haiCurrentSutehai+3-chiType)&&(nakiCount3 < 1)) then
-				haiHand(cnt, PassivePlayer) = 0
-				nakiCount3++
-			end
-		loop
-		targetPlayer = PassivePlayer: await 0: gosub *countshanten
-		repeat 14
-			haiHand(cnt, PassivePlayer) = tmpHaiHand(cnt)
-		loop
-		if (haiCurrentSutehai >= 30) then
-			continue -- 字牌に順子なし
-		end
-		if ((nakiCount1 == 0)||(nakiCount2 == 0)||(nakiCount3 == 0)) then
-			continue -- 不可能な鳴きの場合
-		end
-		if (currentShanten > (Shanten - 2)) then chosenNaki == cnt end
-	loop
-	Shanten = tmp2Shanten
-	haiHand(13, PassivePlayer) = 0
-	if (currentShanten > 0) then -- すでにテンパってたら鳴かない
---		if ((YakuhaiPon == 1)||(((haiCurrentSutehai/10) == (haiAimingYise(PassivePlayer)-1)))) then
-		if (YakuhaiPon == 1) then
-			-- すでに役牌を鳴いているならチー
-			haiChi(PassivePlayer) = chosenNaki
-		end else
-			tmpYaojiuTilesCount = 0
-			repeat 13
-				await 0
-				switch haiHand(cnt, PassivePlayer)
-					case 1: case 9: case 11: case 19: case 21: case 29
-					case 31: case 32: case 33: case 34: case 35: case 36: case 37
-						tmpYaojiuTilesCount++
-				swend
-			loop
-			switch haiCurrentSutehai
-				case 1: case 9: case 11: case 19: case 21: case 29
-				case 31: case 32: case 33: case 34: case 35: case 36: case 37
-					tmpYaojiuTilesCount++
-			swend
-			repeat haiNakiMianziDat(0, PassivePlayer), 1
-				await 0
-				if (haiNakiMianziDat(0, PassivePlayer) == 0) then break end
-				if ((haiNakiMianziDat(cnt, PassivePlayer) \ 100) > 30) then
-					tmpYaojiuTilesCount++: continue
+	if mihajong.gametype == "yonma" then
+		-- チーするかどうかを判定する
+		haiHand[14] = clone(haiCurrentSutehai)
+		local tmpHaiHand = clone(haiHand)
+		local tmp2Shanten = Shanten
+		local chosenNaki, haiChi = 0, 0
+		for chiType = 1, 3 do repeat
+			--targetPlayer = PassivePlayer: targetTile = cnt: gosub *getpaiinfo: await 0
+			local nakiCount = {0, 0, 0}
+			if (haiCurrentSutehai.tile - chiType) < 0 then break end -- バグ防止用
+			for cnt = 1, 14 do
+				if (haiHand[cnt].tile == haiCurrentSutehai.tile + 1 - chiType) and (nakiCount[1] < 1) then
+					haiHand[cnt] = nil
+					nakiCount[1] = nakiCount[1] + 1
 				end
-				if ((haiNakiMianziDat(cnt, PassivePlayer) \ 10) == 1) then
-					tmpYaojiuTilesCount++: continue
+				if (haiHand[cnt].tile == haiCurrentSutehai.tile + 2 - chiType) and (nakiCount[2] < 1) then
+					haiHand[cnt] = nil
+					nakiCount[2] = nakiCount[2] + 1
 				end
-				if ((haiNakiMianziDat(cnt, PassivePlayer) \ 10) == 9) then
-					tmpYaojiuTilesCount++: continue
+				if (haiHand[cnt].tile == haiCurrentSutehai.tile + 3 - chiType) and (nakiCount[3] < 1) then
+					haiHand[cnt] = nil
+					nakiCount[3] = nakiCount[3] + 1
 				end
-				if ((haiNakiMianziDat(cnt, PassivePlayer) \ 10) == 7) then
-					if ((haiNakiMianziDat(cnt, PassivePlayer) / 1000) < 4) then
-						tmpYaojiuTilesCount++: continue
+			end
+			local Shanten = gametbl:getshanten(haiHand)
+			haiHand = clone(tmpHaiHand)
+			if ishonor(haiCurrentSutehai) or isflower(haiCurrentSutehai) then
+				break -- 字牌に順子なし
+			end
+			if (nakiCount[1] == 0) or (nakiCount[2] == 0) or (nakiCount[3] == 0) then
+				break -- 不可能な鳴きの場合
+			end
+			if currentShanten > (Shanten - 2) then chosenNaki = cnt end
+		until true end
+		Shanten = tmp2Shanten
+		haiHand[14] = nil
+		if (currentShanten > 0) then -- すでにテンパってたら鳴かない
+	--		if ((YakuhaiPon == 1)||(((haiCurrentSutehai/10) == (haiAimingYise(PassivePlayer)-1)))) then
+			if (YakuhaiPon)
+--[[
+				or (gettilesuit(haiCurrentSutehai) == (ephemeral.haiAimingYise - 1))
+--]]
+				then -- すでに役牌を鳴いているならチー
+				haiChi = chosenNaki
+			else
+				local tmpYaojiuTilesCount = 0
+				for cnt = 1, 13 do
+					if isyaojiu(haiHand[cnt]) then
+						tmpYaojiuTilesCount = tmpYaojiuTilesCount + 1
 					end
 				end
-			loop
-			if (tmpYaojiuTilesCount == 0) then
-				if ((currentShanten == 1)&&(strmid(RuleConf, 19, 1) == "0")) then
-					-- 喰い断を吃聴する
-					haiChi(PassivePlayer) = chosenNaki
+				if isyaojiu(haiCurrentSutehai) then
+					tmpYaojiuTilesCount = tmpYaojiuTilesCount + 1
+				end
+				local haiNakiMianziDat = gametbl:getmeld()
+				for cnt = 1, #haiNakiMianziDat do
+					if isyaojiu(haiNakiMianziDat[cnt]) then
+						tmpYaojiuTilesCount = tmpYaojiuTilesCount + 1
+					elseif (gettilenumeral(haiNakiMianziDat[cnt]) == 7) and issequence(haiNakiMianziDat[cnt]) then
+						tmpYaojiuTilesCount = tmpYaojiuTilesCount + 1
+					end
+				end
+				if tmpYaojiuTilesCount == 0 then
+					if (currentShanten == 1) and (gametbl:getrule("kuitan") == "yes") then
+						-- 喰い断を吃聴する
+						haiChi = chosenNaki
+					end
 				end
 			end
 		end
+		if     haiChi == 1 then return mihajong.Call.Chii.Lower
+		elseif haiChi == 2 then return mihajong.Call.Chii.Middle
+		elseif haiChi == 3 then return mihajong.Call.Chii.Upper
+		end
 	end
-#endif
-return
-]=======]
+	return mihajong.Call.None
 end
