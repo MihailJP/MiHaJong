@@ -108,7 +108,7 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 			TableAdd(L, numeral[num - 1], suit + num);
 			TableAdd(L, num, suit + num);
 		}
-		lockTable(L); lua_setfield(L, -2, suitname[suit / TILE_SUIT_HONORS]);
+		lockTable(L); lua_setfield(L, -2, suitname[suit / TILE_SUIT_STEP]);
 	}
 	lua_newtable(L);
 	TableAdd(L, "East", (int)EastWind); TableAdd(L, "South", (int)SouthWind);
