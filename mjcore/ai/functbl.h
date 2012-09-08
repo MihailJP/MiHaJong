@@ -9,6 +9,7 @@
 #include "../shanten.h"
 #include "../random.h"
 #include "../version.h"
+#include "../logging.h"
 
 enum MeldCallID {
 	meldNone, meldRon, meldKan, meldPon, meldChiiLower, meldChiiMiddle, meldChiiUpper
@@ -29,6 +30,7 @@ private:
 	static inline void gametype(lua_State* const L);
 	static inline void version(lua_State* const L);
 	static int version_tostring(lua_State* const L);
+	static int log(lua_State* const L);
 	static int chkargnum(lua_State* const L, int argmin, int argmax);
 	class gametbl;
 public:

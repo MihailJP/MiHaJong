@@ -14,6 +14,7 @@ void aiscript::table::functable::inittable(lua_State* const L, int playerID) {
 	lua_pushcfunction(L, random); lua_setfield(L, -2, "random"); // function 'random'
 	gametype(L); // string 'gametype'
 	version(L); // subtable 'version'
+	lua_pushcfunction(L, log); lua_setfield(L, -2, "log"); // function 'log'
 	lockTable(L); // mark as read-only
 	lua_setglobal(L, tblname); // global table
 }
@@ -204,6 +205,32 @@ int aiscript::table::functable::random(lua_State* const L) {
 		lua_pushnil(L); break; // このコードは実行されないはずである
 	}
 	return 1;
+}
+
+/* ロギング用 */
+int aiscript::table::functable::log(lua_State* const L) {
+	int n = lua_gettop(L); std::string logstr = ""; std::string linea = "";lua_Debug ar;
+	if (n > 1) {
+		for (int i = 2; i <= n; i++) {
+			logstr += lua_tostring(L, i);
+			if (i < n) logstr += " ";
+		}
+	}
+	if (lua_getstack(L, 1, &ar)) {
+		lua_getinfo(L, "Sl", &ar);
+		if (ar.currentline > 0)
+			linea = logger::posPrefix(ar.short_src, ar.currentline, logstr.c_str());
+	}
+	if (linea.empty())
+		linea = "(Unknown) " + logstr;
+	std::string loglevel = lua_tostring(L, 1);
+	if (loglevel == "fatal") logger::fatal_msg(linea.c_str());
+	else if (loglevel == "error") logger::error_msg(linea.c_str());
+	else if (loglevel == "warn") logger::warn_msg(linea.c_str());
+	else if (loglevel == "info") logger::info_msg(linea.c_str());
+	else if (loglevel == "debug") logger::debug_msg(linea.c_str());
+	else if (loglevel == "trace") logger::trace_msg(linea.c_str());
+	return 0;
 }
 
 inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const L, int playerID) {
