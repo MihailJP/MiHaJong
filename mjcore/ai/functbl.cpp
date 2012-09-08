@@ -12,6 +12,7 @@ void aiscript::table::functable::inittable(lua_State* const L, int playerID) {
 	agariTypeCode(L); // subtable 'AgariType'
 	gametbl::makeprototype(L, playerID); // subtable 'gametbl' (prototype)
 	lua_pushcfunction(L, random); lua_setfield(L, -2, "random"); // function 'random'
+	version(L); // subtable 'version'
 	lockTable(L); // mark as read-only
 	lua_setglobal(L, tblname); // global table
 }
@@ -125,6 +126,25 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 	TableAdd(L, "Flower", (int)Flower);
 	lockTable(L); lua_setfield(L, -2, "Flower");
 	lockTable(L); lua_setfield(L, -2, "Tile");
+}
+
+/* バージョン番号 tostring */
+int aiscript::table::functable::version_tostring(lua_State* const L) {
+	lua_pushstring(L, MIHAJONG_VER);
+	return 1;
+}
+
+/* バージョン番号 */
+inline void aiscript::table::functable::version(lua_State* const L) {
+	lua_newtable(L); // version
+	TableAdd(L, "major", MIHAJONG_MAJOR_VER);
+	TableAdd(L, "minor", MIHAJONG_MINOR_VER);
+	TableAdd(L, "patch", MIHAJONG_PATCH_VER);
+	lockTable(L);
+	lua_getmetatable(L, -1);
+	lua_pushcfunction(L, version_tostring); lua_setfield(L, -2, "__tostring");
+	lua_setmetatable(L, -2);
+	lua_setfield(L, -2, "version");
 }
 
 /* 引数の数を数える */

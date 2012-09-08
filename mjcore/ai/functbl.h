@@ -8,6 +8,7 @@
 #include "../yaku/yaku.h"
 #include "../shanten.h"
 #include "../random.h"
+#include "../version.h"
 
 enum MeldCallID {
 	meldNone, meldRon, meldKan, meldPon, meldChiiLower, meldChiiMiddle, meldChiiUpper
@@ -25,6 +26,8 @@ private:
 	static inline void meldTypeCode(lua_State* const L);
 	static inline void tileCode(lua_State* const L);
 	static inline void agariTypeCode(lua_State* const L);
+	static inline void version(lua_State* const L);
+	static int version_tostring(lua_State* const L);
 	static int chkargnum(lua_State* const L, int argmin, int argmax);
 	class gametbl;
 public:
