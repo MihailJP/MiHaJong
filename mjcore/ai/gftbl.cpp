@@ -62,12 +62,12 @@ void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable*
 				tmpGameStat->Player[player].Hand[i].tile = NoTile;
 				tmpGameStat->Player[player].Hand[i].red = Normal;
 			} else if (lua_istable(L, -1)) { // ”v‚ª‚ ‚Á‚½
-				lua_pushstring(L, "tile"); lua_gettable(L, -2);
+				lua_getfield(L, -1, "tile");
 				tmpGameStat->Player[player].Hand[i].tile = (::tileCode)lua_tointeger(L, -1);
-				lua_pop(L, -1);
-				lua_pushstring(L, "red"); lua_gettable(L, -2);
+				lua_pop(L, 1);
+				lua_getfield(L, -1, "red");
 				tmpGameStat->Player[player].Hand[i].red = (doraCol)lua_tointeger(L, -1);
-				lua_pop(L, -1);
+				lua_pop(L, 1);
 			} // •Ï‚È‚±‚Æ‚É‚È‚Á‚Ä‚¢‚½‚ç–³Ž‹
 			lua_pop(L, 1);
 		}
