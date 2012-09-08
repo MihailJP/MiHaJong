@@ -785,6 +785,27 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 			場合、|faces| 面のサイコロを n 個振った出目の合計を返します。
 
 
+	▼ mihajong.gametype
+
+		　MiHaJongの種別を表す文字列です。意味は次のとおりです。
+
+		・"yonma" …… 四人打ち。
+		・"sanma" …… 三人打ち。
+		・"sanma_with_four_players" …… 四人三麻。
+		・"sanma_without_honors" …… 数牌三麻。
+
+
+	▼ mihajong.version
+
+		　MiHaJongのバージョンです。このテーブルには、以下のフィールドが格納さ
+		れています。また、tostring(mihajong.version)とすると、"1.7.0"のような
+		文字列が返りますす。
+
+		・major …… メジャーバージョン。
+		・minor …… マイナーバージョン。
+		・patch …… パッチバージョン。
+
+
 ■ ephemeralテーブル
 
 	　これは空のテーブルで、AI作者が望むものを何でも格納することができます。こ

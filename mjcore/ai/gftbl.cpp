@@ -301,7 +301,8 @@ int aiscript::table::functable::gametbl::luafunc::getround(lua_State* const L) {
 int aiscript::table::functable::gametbl::luafunc::getrule(lua_State* const L) {
 	int n = chkargnum(L, 2, 2);
 	const char* fieldname = lua_tostring(L, 2);
-	lua_pushstring(L, RuleData::chkRule(fieldname).c_str());
+	if (RuleData::chkRule(fieldname, "N/A")) lua_pushnil(L);
+	else lua_pushstring(L, RuleData::chkRule(fieldname).c_str());
 	return 1;
 }
 
