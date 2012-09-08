@@ -135,12 +135,6 @@ function gettilesuit (tile) -- 牌の色を取得する
 	else return nil end
 end
 
-player_rel = { -- プレイヤー番号
-	"shimocha", (gametbl.playerid + 0) % 4 + 1;
-	"toimen",   (gametbl.playerid + 1) % 4 + 1;
-	"kamicha",  (gametbl.playerid + 2) % 4 + 1;
-}
-
 function numofquads (gametbl) -- 槓子の数を数える
 	local melds = gametbl:getmeld() -- 鳴き面子
 	local count = 0 -- 返り値
@@ -157,6 +151,14 @@ function numofquads (gametbl) -- 槓子の数を数える
 end
 
 function ontsumo (gametbl) -- ＡＩの打牌
+	if not player_rel then
+		player_rel = { -- プレイヤー番号
+			"shimocha", (gametbl.playerid + 0) % 4 + 1;
+			"toimen",   (gametbl.playerid + 1) % 4 + 1;
+			"kamicha",  (gametbl.playerid + 2) % 4 + 1;
+		}
+	end
+
 	local haiHand = gametbl:gethand()
 	local dahaiType, teDahai = mihajong.DiscardType.Normal, 14 -- ツモ切り
 	if not (haiHand[14]) then teDahai = 1 -- 鳴いた直後（多牌しないための処理）
