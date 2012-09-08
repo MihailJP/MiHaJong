@@ -13,7 +13,9 @@ INIParser::IniMapMap RuleData::confdict;
 void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 	DWORD size = 0; const uint8_t* csv = NULL;
 	LoadFileInResource(IDR_CSV_TABL1, CSV_TABLE, size, csv);
-	CSVReader::parsecsv(confdat, reinterpret_cast<const char*>(csv));
+	char *csvdat = new char[size + 4]; memset(csvdat, 0, size+4); memcpy_s(csvdat, size+4, csv, size);
+	CSVReader::parsecsv(confdat, csvdat);
+	delete[] csvdat;
 
 	for (auto k = confdat.begin(); k != confdat.end(); k++) // 名前テーブル
 		nametbl[std::atoi((*k)[0].c_str())] = (*k)[8];
@@ -22,7 +24,9 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 void RuleData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
 	DWORD size = 0; const uint8_t* ini = NULL;
 	LoadFileInResource(IDR_INI_FIL1, INI_FILE, size, ini);
-	INIParser::parseini(confdict, reinterpret_cast<const char*>(ini));
+	char *inidat = new char[size + 4]; memset(inidat, 0, size+4); memcpy_s(inidat, size+4, ini, size);
+	INIParser::parseini(confdict, inidat);
+	delete[] inidat;
 }
 
 __declspec(dllexport) void RuleData::configinit() { // コンフィグ用CSVを読み込む
