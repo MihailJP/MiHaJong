@@ -87,7 +87,7 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 		o << "ŒvŽZŒ‹‰Ê‚Í [";
 		for (int i = DIGIT_GROUPS - 1; i >= 0; i--)
 			o << std::setw(4) << std::dec << std::setfill('0') << yStat->AgariPoints.digitGroup[i] / 10000 <<
-			" " << yStat->AgariPoints.digitGroup[i] % 10000 << (i ? " " : "");
+			" " << std::setw(4) << std::dec << std::setfill('0') << yStat->AgariPoints.digitGroup[i] % 10000 << (i ? " " : "");
 		o << "]";
 		trace(o.str().c_str());
 	}
