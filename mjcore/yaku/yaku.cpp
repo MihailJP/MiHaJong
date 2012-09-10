@@ -3,7 +3,7 @@
 
 // 計算を実行(マルチスレッドで……大丈夫かなぁ)
 DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) {
-	((CalculatorParam*)lpParam)->instance->incThreadCount();
+	((CalculatorParam*)lpParam)->instance->recordThreadStart();
 	return ((CalculatorParam*)lpParam)->instance->calculate(
 		((CalculatorParam*)lpParam)->gameStat,
 		&(((CalculatorParam*)lpParam)->analysis),
@@ -12,26 +12,25 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) 
 }
 
 /* 動いているスレッド数の管理用 */
-int yaku::yakuCalculator::CalculatorThread::numOfRunningThreads() { // 動いているスレッドの数
-	return this->runningThreads;
+int yaku::yakuCalculator::CalculatorThread::numOfFinishedThreads() { // 終わったスレッドの数
+	return this->finishedThreads;
 }
 int yaku::yakuCalculator::CalculatorThread::numOfStartedThreads() { // 開始したスレッドの数
 	return this->startedThreads;
 }
 void yaku::yakuCalculator::CalculatorThread::sync(int threads) { // スレッドを同期
 	while (this->startedThreads < threads) Sleep(0); // 規定数のスレッドが開始するのを待ってから
-	while (this->runningThreads > 0) Sleep(0); // 終了するのを待つ
+	while (this->finishedThreads < threads) Sleep(0); // 終了するのを待つ
 }
 
-void yaku::yakuCalculator::CalculatorThread::incThreadCount() {
+void yaku::yakuCalculator::CalculatorThread::recordThreadStart() {
 	while (TryEnterCriticalSection(&this->cs) == 0) Sleep(0);
-	++this->runningThreads; // スレッド数インクリメント
-	++this->startedThreads;
+	++this->startedThreads; // 開始したスレッド数をインクリメント
 	LeaveCriticalSection(&this->cs);
 }
-void yaku::yakuCalculator::CalculatorThread::decThreadCount() {
+void yaku::yakuCalculator::CalculatorThread::recordThreadFinish() {
 	while (TryEnterCriticalSection(&this->cs) == 0) Sleep(0);
-	--this->runningThreads; // スレッド数デクリメント
+	++this->finishedThreads; // 終了したスレッド数をインクリメント
 	LeaveCriticalSection(&this->cs);
 }
 
@@ -479,7 +478,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		int NumOfMelds = 0;
 		mentsuParser::makementsu(gameStat, analysis->player, *pMode, &NumOfMelds, analysis->MianziDat);
 		if (NumOfMelds < SIZE_OF_MELD_BUFFER) { // 条件を満たしてないなら抜けます
-			this->decThreadCount(); return S_OK;
+			this->recordThreadFinish(); return S_OK;
 		}
 		calcbasepoints(gameStat, analysis); // 符を計算する
 		analysis->DuiziCount = countingFacility::countDuiz(analysis->MianziDat);
@@ -555,13 +554,13 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		(result->AgariPoints == LargeNum::fromInt(1920))) // 子の7700・親の11600なら
 			result->AgariPoints = LargeNum::fromInt(2000); // 満貫にする
 	/* 終了処理 */
-	decThreadCount(); // 終わったらスレッド数デクリメント
+	recordThreadFinish(); // スレッドが終わったことを記録
 	return S_OK;
 }
 
 /* コンストラクタとデストラクタ */
 yaku::yakuCalculator::CalculatorThread::CalculatorThread() {
-	InitializeCriticalSection(&cs); runningThreads = startedThreads = 0;
+	InitializeCriticalSection(&cs); finishedThreads = startedThreads = 0;
 }
 yaku::yakuCalculator::CalculatorThread::~CalculatorThread() {
 	/* 終了するときは必ず同期してから行うこと！！ */
@@ -598,7 +597,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	// 高点法の処理
 	memcpy(yakuInfo, &calcprm->result, sizeof(YAKUSTAT));
 	assert(calculator->numOfStartedThreads() == 1);
-	assert(calculator->numOfRunningThreads() == 0);
+	assert(calculator->numOfFinishedThreads() == 1);
 	delete calcprm; delete calculator; // 用事が済んだら片づけましょう
 }
 void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
@@ -631,7 +630,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	}
 	// 計算を実行
 	for (int i = 4; i < 160; i++) { // 0～3はNoTileなのでやらなくていい
-		while (calculator->numOfRunningThreads() >= CalculatorThread::threadLimit)
+		while (calculator->numOfFinishedThreads() - calculator->numOfStartedThreads() >= CalculatorThread::threadLimit)
 			Sleep(0); // スレッド数制限のチェック
 		Thread[i] = CreateThread(NULL, 0, CalculatorThread::calculator, (LPVOID)(&(calcprm[i])), 0, &(ThreadID[i]));
 		Sleep(0);
@@ -644,7 +643,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	}
 	// 用事が済んだら片づけましょう
 	assert(calculator->numOfStartedThreads() == 156);
-	assert(calculator->numOfRunningThreads() == 0);
+	assert(calculator->numOfFinishedThreads() == 156);
 	delete[] calcprm; delete calculator;
 }
 

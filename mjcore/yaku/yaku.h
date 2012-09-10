@@ -202,16 +202,16 @@ private:
 	class CalculatorThread {
 	public:
 		static DWORD WINAPI calculator(LPVOID lpParam);
-		int numOfRunningThreads(); // 動いているスレッドの数
+		int numOfFinishedThreads(); // 終わったスレッドの数
 		static const int threadLimit = 4; // 同時に起動する最大のスレッド数
 		int numOfStartedThreads(); // 開始したスレッドの数
 		void sync(int threads); // スレッドを同期する
 		CalculatorThread(); // デフォルトコンストラクタ
 		~CalculatorThread(); // デフォルトデストラクタ
 	private:
-		void incThreadCount();
-		void decThreadCount();
-		int runningThreads;
+		void recordThreadStart();
+		void recordThreadFinish();
+		int finishedThreads;
 		CRITICAL_SECTION cs;
 		int startedThreads;
 		static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
