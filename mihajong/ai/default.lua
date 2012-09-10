@@ -17,13 +17,13 @@ function clone (t) -- deep-copy a table
 end
 
 validtiles = {
-	mihajong.Tile.Character[1], mihajong.Tile.Character[5], mihajong.Tile.Character[6],
+	mihajong.Tile.Character[1], mihajong.Tile.Character[2], mihajong.Tile.Character[3],
 	mihajong.Tile.Character[4], mihajong.Tile.Character[5], mihajong.Tile.Character[6],
 	mihajong.Tile.Character[7], mihajong.Tile.Character[8], mihajong.Tile.Character[9],
-	mihajong.Tile.Circle[1], mihajong.Tile.Circle[5], mihajong.Tile.Circle[6],
+	mihajong.Tile.Circle[1], mihajong.Tile.Circle[2], mihajong.Tile.Circle[3],
 	mihajong.Tile.Circle[4], mihajong.Tile.Circle[5], mihajong.Tile.Circle[6],
 	mihajong.Tile.Circle[7], mihajong.Tile.Circle[8], mihajong.Tile.Circle[9],
-	mihajong.Tile.Bamboo[1], mihajong.Tile.Bamboo[5], mihajong.Tile.Bamboo[6],
+	mihajong.Tile.Bamboo[1], mihajong.Tile.Bamboo[2], mihajong.Tile.Bamboo[3],
 	mihajong.Tile.Bamboo[4], mihajong.Tile.Bamboo[5], mihajong.Tile.Bamboo[6],
 	mihajong.Tile.Bamboo[7], mihajong.Tile.Bamboo[8], mihajong.Tile.Bamboo[9],
 	mihajong.Tile.Wind.East, mihajong.Tile.Wind.South, mihajong.Tile.Wind.West, mihajong.Tile.Wind.North,
