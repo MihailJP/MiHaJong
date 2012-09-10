@@ -717,11 +717,11 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 		return yakuInfo;
 	}
 	// 和了っているなら
-	yakuInfo.isValid = true; // 有効であることをマーク（縛りを満たしているかはチェックしていない）
 	if (shanten[ShantenAnalyzer::shantenRegular] == -1) // 一般形の和了
 		analysisLoop(gameStat, targetPlayer, shanten, &yakuInfo);
 	else // 七対子、国士無双、その他特殊な和了
 		analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);
+	yakuInfo.isValid = true; // 有効であることをマーク（縛りを満たしているかはチェックしていない）
 	/* アリスドラの牌譜記録 */
 	if ((RuleData::chkRuleApplied("alice")) && (gameStat->Player[targetPlayer].MenzenFlag)) {
 		uint16_t AlicePointer = gameStat->DoraPointer;
