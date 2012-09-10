@@ -717,6 +717,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 		return yakuInfo;
 	}
 	// 和了っているなら
+	yakuInfo.isValid = true; // 有効であることをマーク（縛りを満たしているかはチェックしていない）
 	if (shanten[ShantenAnalyzer::shantenRegular] == -1) // 一般形の和了
 		analysisLoop(gameStat, targetPlayer, shanten, &yakuInfo);
 	else // 七対子、国士無双、その他特殊な和了
