@@ -58,13 +58,13 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 	int totalHan = yStat->CoreHan + yStat->BonusHan; // 合計翻
 	int totalSemiMangan = yStat->CoreSemiMangan + yStat->CoreSemiMangan; // 満貫の半分単位
 
-	if (RuleData::chkRuleApplied("limitless")) { // 通常ルールの場合
+	if (!RuleData::chkRuleApplied("limitless")) { // 通常ルールの場合
 		if ((totalHan < 6) && (totalSemiMangan < 3)) { // 満貫以下
 			doubling(yStat); // 計算を実行
 			if (yStat->AgariPoints > LargeNum::fromInt(2000)) yStat->AgariPoints = LargeNum::fromInt(2000); // 満貫
 		}
 		else if ((totalHan < 8) && (totalSemiMangan < 4)) yStat->AgariPoints = LargeNum::fromInt(3000); // 跳満
-		else if (((totalHan < 10) || ((totalHan == 10) && (RuleData::chkRule("sanbaiman_border", "11han_or_more") == 0))) &&
+		else if (((totalHan < 10) || ((totalHan == 10) && (RuleData::chkRule("sanbaiman_border", "11han_or_more")))) &&
 			(totalSemiMangan < 6)) yStat->AgariPoints = LargeNum::fromInt(4000); // 倍満
 		else if (((totalHan < 12) || ((totalHan == 12) && (RuleData::chkRule("kazoe_border", "13han_or_more")))) &&
 			(totalSemiMangan < 8)) yStat->AgariPoints = LargeNum::fromInt(6000); // 三倍満
