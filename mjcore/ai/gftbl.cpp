@@ -81,11 +81,11 @@ int aiscript::table::functable::gametbl::luafunc::evaluate(lua_State* const L) {
 	tmpGameStat.TsumoAgariFlag = lua_toboolean(L, 2);
 	PLAYER_ID player = getPlayerID(L, 0);
 	setHand(L, &tmpGameStat, 3);
-	yaku::YAKUSTAT evaluation = yaku::yakuCalculator::countyaku(gameStat, player);
+	yaku::YAKUSTAT evaluation = yaku::yakuCalculator::countyaku(&tmpGameStat, player);
 	lua_newtable(L); // •Ô‚è’l‚ðŠi”[
 	TableAdd(L, "ismahjong", evaluation.isValid); // ‚ ‚ª‚Á‚Ä‚¢‚ê‚Îtrue
 	if (evaluation.isValid) {
-		TableAdd(L, "isvalid", yaku::yakuCalculator::checkShibari(gameStat, &evaluation)); // ”›‚è‚ð–ž‚½‚µ‚Ä‚¢‚é‚©
+		TableAdd(L, "isvalid", yaku::yakuCalculator::checkShibari(&tmpGameStat, &evaluation)); // ”›‚è‚ð–ž‚½‚µ‚Ä‚¢‚é‚©
 		TableAdd(L, "fu", evaluation.BasePoints); // •„
 		TableAdd(L, "han", evaluation.CoreHan + evaluation.BonusHan); // ãÊ
 		TableAdd(L, "mangan", (double)(evaluation.CoreSemiMangan + evaluation.BonusSemiMangan) / 2.0); // –žŠÑ
