@@ -1128,7 +1128,7 @@ extern "C" {
 		for (int i = 0; i < PLAYERS; i++) {
 			if (i < ACTUAL_PLAYERS) {
 				gameStat->Player[i].PlayerScore =
-					LargeNum::fromInt(std::atoi(RuleData::chkRule("starting_point").c_str()));
+					LargeNum::fromInt(std::atoi(RuleData::chkRule("starting_point").c_str()), 1000000u);
 			} else {
 				gameStat->Player[i].PlayerScore = LargeNum::fromInt(0, 1000000u);
 			}
