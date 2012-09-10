@@ -217,11 +217,11 @@ function riichi_decision (gametbl)
 	local haiCount, haiSeenCount = gametbl:gettilesinhand(), gametbl:getseentiles()
 	-- リーチをかけるかどうか
 	local ev = {
-		"do_not_discard", {};
-		"haiDiscardability", {0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,};
-		"MinScore", {0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,};
-		"MaxScore", {0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,};
-		"MachihaiTotalTiles", {}; "MachihaiFuritenFlag", {};
+		["do_not_discard"] = {},
+		["haiDiscardability"] = {0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,},
+		["MinScore"] = {0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,},
+		["MaxScore"] = {0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,},
+		["MachihaiTotalTiles"] = {}, ["MachihaiFuritenFlag"] = {},
 	}
 	if (nowShanten == 0) and (gametbl:ismenzen() or (gametbl:getrule("riichi_shibari") ~= "no")) then
 		local Richiability = 0
@@ -254,7 +254,7 @@ function riichi_decision (gametbl)
 				elseif tStat.isfuriten == 1 then ev.MachihaiFuritenFlag[cnt], ev.haiDiscardability[cnt] = true, -99999; break
 				-- 待ち牌が残り２枚以下の場合
 				elseif tStat.total <= 2 then
-					haiDiscardability[cnt] = -9999; break
+					ev.haiDiscardability[cnt] = -9999; break
 				end
 			end
 			-- 不聴立直防止用
@@ -265,15 +265,19 @@ function riichi_decision (gametbl)
 			ev.MinScore[cnt], ev.MaxScore[cnt] = 999999999, -999999999
 			for i, tilecode in ipairs(validtiles) do
 				local haiHand = clone(tmpHaiHand)
-				haiHand[cnt], haiHand[14] = clone(haiHand[14]), {"tile", tilecode; "red", 0}
+				haiHand[cnt], haiHand[14] = clone(haiHand[14]), {["tile"] = tilecode, ["red"] = mihajong.DoraColor.Normal}
 				-- ここで時間チェックをしていた
 				if (gametbl:getshanten(haiHand) == -1) then
 					-- ここで計算されるのはダマ聴で自摸和のときの点数
 					local stat = gametbl:evaluate(true, haiHand)
 					if ev.haiDiscardability[tmpTileNum] >= 10000 then ev.haiDiscardability[tmpTileNum] = ev.haiDiscardability[tmpTileNum] - 10000 end
-					ev.haiDiscardability[tmpTileNum] = ev.haiDiscardability[tmpTileNum] + stat.points*(4-haiCount[tilecode]-haiSeenCount[tilecode])+100000
-					if ev.MinScore[tmpTileNum] > stat.han then ev.MinScore[tmpTileNum] = stat.han end
-					if ev.MaxScore[tmpTileNum] < stat.han then ev.MaxScore[tmpTileNum] = stat.han end
+					if stat.points then
+						ev.haiDiscardability[tmpTileNum] = ev.haiDiscardability[tmpTileNum] + stat.points*(4-haiCount[tilecode]-haiSeenCount[tilecode])+100000
+					end
+					if stat.han then
+						if ev.MinScore[tmpTileNum] > stat.han then ev.MinScore[tmpTileNum] = stat.han end
+						if ev.MaxScore[tmpTileNum] < stat.han then ev.MaxScore[tmpTileNum] = stat.han end
+					end
 				end
 				if ev.MinScore[tmpTileNum] == 999999999 then ev.MinScore[tmpTileNum] = 0 end
 				if ev.MaxScore[tmpTileNum] ==-999999999 then ev.MaxScore[tmpTileNum] = 0 end
@@ -300,7 +304,7 @@ function riichi_decision (gametbl)
 				但しリーチ縛りならリーチする
 			]]
 			if ((ev.MaxScore[teDahai] < 14) and (ev.MinScore[teDahai] < 7)) or gametbl:isfirstdraw() then
-				if (ev.MachihaiTotalTiles[teDahai] >= 8) or ev.MachihaiFuritenFlag[teDahai] then
+				if ev.MachihaiTotalTiles[teDahai] and (ev.MachihaiTotalTiles[teDahai] >= 8) or ev.MachihaiFuritenFlag[teDahai] then
 					if gametbl:ismenzen() then dahaiType = mihajong.DiscardType.OpenRiichi
 					else dahaiType = mihajong.DiscardType.Riichi end
 				elseif someone_hadakatanki(gametbl) then
@@ -387,7 +391,7 @@ function evaluate_hand (gametbl, cnt, tp, hand, haiDiscardability, tmpde) -- 再
 	for k, v in pairs(validtiles) do repeat
 		-- 時間がかかったらここで切り上げていた
 		if origShanten > 1 then
-			if ishonor({"tile", v}) and (haiCount[v] + haiSeenCount[v] == 3) then break end -- 字牌のラス牌はとりあえず無視
+			if ishonor({["tile"] = v}) and (haiCount[v] + haiSeenCount[v] == 3) then break end -- 字牌のラス牌はとりあえず無視
 		end
 		if origShanten > 0 then -- 本来は既にテンパイしているときには行なっていなかった処理
 			if haiCount[v] + haiSeenCount[v] == 4 then break end -- ４枚切れた牌
@@ -397,27 +401,31 @@ function evaluate_hand (gametbl, cnt, tp, hand, haiDiscardability, tmpde) -- 再
 			end
 			if tmpHe then tmpDiscardability[tp] = 0; break end
 		end
-		haiHand[tp], haiHand[14] = clone(haiHand[14]), {"tile", v; "red", 0}
+		haiHand[tp], haiHand[14] = clone(haiHand[14]), {["tile"] = v, ["red"] = mihajong.DoraColor.Normal}
 		local Shanten = gametbl:getshanten(haiHand)
 		if Shanten == -1 then
 			local stat = gametbl:evaluate(true, haiHand)
+--[[
 			if haiDiscardability[tmpTileNum] >= 10000 then
 				tmpDiscardability[tp] = tmpDiscardability[tp] - 10000
 			end
-			tmpDiscardability[tp] = tmpDiscardability[tp] +
-				stat.points * (4 - haiCount[v] - haiSeenCount[v]) + tmpde
+--]]
+			if stat and stat.points then
+				tmpDiscardability[tp] = tmpDiscardability[tp] +
+					stat.points * (4 - haiCount[v] - haiSeenCount[v]) + tmpde
+			end
 		elseif Shanten == (nowShanten - 1) then
-			local tmpde = (4 - haiCount[v] - haiSeenCount[v])
+			local tmpde2 = (4 - haiCount[v] - haiSeenCount[v])
 			-- 時間がかかったらここで切り上げていた
 			for i = 1, 14 do repeat
 				-- 時間がかかったらここで切り上げていた
 				if i > 1 then
-					if haiHand[i] and (haiHand[i].tile == haiHand[i - 1].tile) then
+					if haiHand[i] and haiHand[i - 1] and (haiHand[i].tile == haiHand[i - 1].tile) then
 						tmpDiscardability[i] = tmpDiscardability[i - 1]
 						break -- 同じ牌を２度調べない
 					end
 				end
-				local td = evaluate_hand(gametbl, cnt, tp, haiHand, haiDiscardability, tmpde)
+				local td = evaluate_hand(gametbl, cnt, i, clone(haiHand), haiDiscardability, tmpde2)
 				for j = 1, 14 do tmpDiscardability[i] = tmpDiscardability[i] + td[j] end
 			until true end
 			-- 処理が遅い時はここで別処理をしていた
@@ -557,15 +565,19 @@ function discard_decision (gametbl)
 			end
 		end
 --]=]
+---[[
 		if nowShanten == 2 then -- 二向聴でも先読みさせてみる
-			local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 0) -- 先読み判定
-			for i = 1, 14 do haiDiscardability[i] = haiDiscardability[i] + tmpDiscardability[i] + 100000 end
-		elseif nowShanten == 1 then -- 一向聴のとき
-			local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 0) -- 先読み判定
-			for i = 1, 14 do haiDiscardability[i] = haiDiscardability[i] + tmpDiscardability[i] + 100000 end
+			local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 100000) -- 先読み判定
+			for i = 1, 14 do haiDiscardability[cnt] = haiDiscardability[cnt] + tmpDiscardability[i] end
+		elseif nowShanten == 1 then -- 一向聴のとき ]]
+--[[
+		if nowShanten == 1 then -- 一向聴のとき
+--]]
+			local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 100000) -- 先読み判定
+			for i = 1, 14 do haiDiscardability[cnt] = haiDiscardability[cnt] + tmpDiscardability[i] end
 		elseif nowShanten == 0 then -- 聴牌したとき
 			local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 100000) -- 先読み判定
-			for i = 1, 14 do haiDiscardability[i] = haiDiscardability[i] + tmpDiscardability[i] end
+			for i = 1, 14 do haiDiscardability[cnt] = haiDiscardability[cnt] + tmpDiscardability[i] end
 		end
 	until true end
 
@@ -749,7 +761,7 @@ function discard_decision (gametbl)
 		tmpTileCodeNum = clone(haiHand[tmpTileNum])
 		MinScore[tmpTileNum], MaxScore[tmpTileNum] = 999999999, -999999999
 		for k, cnt in ipairs(validtiles) do
-			haiHand[tmpTileNum], haiHand[14] = clone(haiHand[14]), {"tile", cnt; "red", 0}
+			haiHand[tmpTileNum], haiHand[14] = clone(haiHand[14]), {["tile"] = cnt, ["red"] = mihajong.DoraColor.Normal}
 			if (gametbl:getshanten(haiHand) == -1) then
 				-- ここで計算されるのはダマ聴で自摸和のときの点数
 				local stat = gametbl:evaluate(true, haiHand)
@@ -779,7 +791,7 @@ function discard_decision (gametbl)
 			for plkey, tmpchkcnt in pairs(player_rel) do
 				local done = false
 				repeat
-					if haiMarkingPlayer[tmpchkcnt] then break end
+					if not haiMarkingPlayer[tmpchkcnt] then break end
 					if not riskinfo[tmphaiindex] then break end
 					local tmpflag = false
 					-- 合わせ打ちができるなら合わせ打ち
@@ -973,7 +985,6 @@ function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
 		Shanten = tmp2Shanten
 		haiHand[14] = nil
 		if (currentShanten > 0) then -- すでにテンパってたら鳴かない
-	--		if ((YakuhaiPon == 1)||(((haiCurrentSutehai/10) == (haiAimingYise(PassivePlayer)-1)))) then
 			if (YakuhaiPon)
 --[[
 				or (gettilesuit(haiCurrentSutehai) == (ephemeral.haiAimingYise - 1))
