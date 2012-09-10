@@ -213,7 +213,7 @@ int aiscript::table::functable::log(lua_State* const L) {
 	int n = lua_gettop(L); std::string logstr = ""; std::string linea = "";lua_Debug ar;
 	if (n > 1) {
 		for (int i = 2; i <= n; i++) {
-			logstr += lua_tostring(L, i);
+			logstr += luaL_tolstring(L, i, NULL); lua_pop(L, 1);
 			if (i < n) logstr += " ";
 		}
 	}
@@ -223,7 +223,7 @@ int aiscript::table::functable::log(lua_State* const L) {
 			linea = logger::posPrefix(ar.short_src, ar.currentline, logstr.c_str());
 	}
 	if (linea.empty())
-		linea = "(Unknown) " + logstr;
+		linea = std::string("(Unknown) ") + logstr;
 	std::string loglevel = lua_tostring(L, 1);
 	if (loglevel == "fatal") logger::fatal_msg(linea.c_str());
 	else if (loglevel == "error") logger::error_msg(linea.c_str());
