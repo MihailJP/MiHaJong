@@ -224,7 +224,7 @@ int aiscript::table::functable::log(lua_State* const L) {
 	}
 	if (linea.empty())
 		linea = std::string("(Unknown) ") + logstr;
-	std::string loglevel = lua_tostring(L, 1);
+	std::string loglevel = luaL_tolstring(L, 1, NULL); lua_pop(L, 1);
 	if (loglevel == "fatal") logger::fatal_msg(linea.c_str());
 	else if (loglevel == "error") logger::error_msg(linea.c_str());
 	else if (loglevel == "warn") logger::warn_msg(linea.c_str());
