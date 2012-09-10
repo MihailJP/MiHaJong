@@ -519,7 +519,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	/* À‚Í¬—§‚µ‚Ä‚¢‚È‚¢–ğ‚ğœ‹‚·‚é */
 	for (auto k = yakuOrd.begin(); k != yakuOrd.end(); ) {
 		if ((yakuHan[*k].coreHan.getHan() == 0) && (yakuHan[*k].bonusHan.getHan() == 0)) // À‚Í¬—§‚µ‚Ä‚È‚¢–ğ
-			yakuOrd.erase(k++); // ”‚É”‚¦‚È‚¢
+			k = yakuOrd.erase(k); // ”‚É”‚¦‚È‚¢
 		else ++k;
 	}
 	/* Œã‰ñ‚µ‚Å”»’è‚·‚é–ğ */
@@ -527,7 +527,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	/* ‰ºˆÊ–ğ‚ğœ‹‚·‚é */
 	std::for_each(suppression.begin(), suppression.end(), [&yakuOrd](std::string yaku) {
 		for (auto k = yakuOrd.begin(); k != yakuOrd.end(); ) {
-			if (*k == yaku) yakuOrd.erase(k++);
+			if (*k == yaku) k = yakuOrd.erase(k);
 			else ++k;
 		}
 	});
