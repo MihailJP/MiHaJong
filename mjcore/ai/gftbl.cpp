@@ -57,7 +57,7 @@ void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable*
 	PLAYER_ID player = getPlayerID(L, 0);
 	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) { // ”vp‚ğw’è‚µ‚½ê‡
 		for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
-			lua_pushnumber(L, i + 1); lua_gettable(L, n);
+			lua_pushnumber(L, i + 1); lua_gettable(L, index);
 			if (lua_isnil(L, -1)) { // ‚»‚±‚É”v‚Í‚È‚©‚Á‚½
 				tmpGameStat->Player[player].Hand[i].tile = NoTile;
 				tmpGameStat->Player[player].Hand[i].red = Normal;
