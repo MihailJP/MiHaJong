@@ -900,7 +900,7 @@ function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
 			return mihajong.Call.None
 		end
 	end
-	if ChanKanFlag == 1 then return mihajong.Call.None end -- 搶槓の判定中なら判定打ち切り
+	if ChanKanFlag ~= 0 then return mihajong.Call.None end -- 搶槓の判定中なら判定打ち切り
 	if gametbl:getdeckleft() == 0 then return mihajong.Call.None end -- 河底牌なら判定打ち切り
 	if gametbl:isriichideclared() then return mihajong.Call.None end -- リーチしているなら判定打ち切り
 
@@ -928,7 +928,7 @@ function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
 
 	if (currentShanten > 0) and -- すでにテンパってたら鳴かない
 		(currentShanten > Shanten) and -- 有効牌でなければ鳴かない
-		(haiCount[haiCurrentSutehai.tile] >= 2) then -- ポンできるかどうかの判定
+		haiCount[haiCurrentSutehai.tile] and (haiCount[haiCurrentSutehai.tile] >= 2) then -- ポンできるかどうかの判定
 			if (not gametbl:ismenzen()) or YakuhaiPon then
 				-- すでに鳴いているか、役牌の場合はポン 対々狙いか一色狙いなら二鳴き
 				return mihajong.Call.Pon
