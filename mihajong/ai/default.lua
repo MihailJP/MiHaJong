@@ -592,16 +592,20 @@ function discard_decision (gametbl)
 			end
 		end
 --]=]
---[[
-		if nowShanten == 2 then -- 二向聴でも先読みさせてみる
-			local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 100000) -- 先読み判定
-			for i = 1, 14 do haiDiscardability[cnt] = haiDiscardability[cnt] + tmpDiscardability[i] end
-		elseif nowShanten == 1 then -- 一向聴のとき ]]
+		if
 ---[[
-		if nowShanten == 1 then -- 一向聴のとき
+			false and
 --]]
-			local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 100000) -- 先読み判定
-			for i = 1, 14 do haiDiscardability[cnt] = haiDiscardability[cnt] + tmpDiscardability[i] end
+			nowShanten == 2 then -- 二向聴でも先読みさせてみる
+				local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 100000) -- 先読み判定
+				for i = 1, 14 do haiDiscardability[cnt] = haiDiscardability[cnt] + tmpDiscardability[i] end
+		elseif
+---[[
+			false and
+--]]
+			nowShanten == 1 then -- 一向聴のとき
+				local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 100000) -- 先読み判定
+				for i = 1, 14 do haiDiscardability[cnt] = haiDiscardability[cnt] + tmpDiscardability[i] end
 		elseif nowShanten == 0 then -- 聴牌したとき
 			local tmpDiscardability = evaluate_hand(gametbl, cnt, cnt, haiHand, haiDiscardability, 100000) -- 先読み判定
 			for i = 1, 14 do haiDiscardability[cnt] = haiDiscardability[cnt] + tmpDiscardability[i] end
