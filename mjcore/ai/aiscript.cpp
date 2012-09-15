@@ -7,14 +7,16 @@ const char aiscript::fncname_discard[8] = "ontsumo"; // 捨牌決定用関数の名前
 const char aiscript::fncname_call[3][12] = {"ondiscard", "onkakan", "onankan",}; // 鳴き決定用関数の名前
 
 __declspec(dllexport) void aiscript::initscript() {
+	info("AI用のスクリプトを初期化します");
 	FileSelector::filelist();
-	// Lua初期化 (仮)
+	// Lua初期化
 	for (int i = 0; i < PLAYERS; i++) {
 		status[i].state = luaL_newstate();
 		luaopen_base(status[i].state); // baseライブラリだけは開いておきましょう
 		table::functable::inittable(status[i].state, i);
 		readfile(&status[i], FileSelector::randomfile().c_str()); /* ファイルを読み込み */
 	}
+	info("スクリプトの初期化が完了しました");
 }
 
 __declspec(dllexport) void aiscript::initephemeral() {
@@ -23,6 +25,16 @@ __declspec(dllexport) void aiscript::initephemeral() {
 		lua_newtable(status[i].state);
 		lua_setglobal(status[i].state, "ephemeral");
 	}
+	debug("ephemeral テーブルを初期化しました");
+}
+
+__declspec(dllexport) void aiscript::closescript() {
+	// Luaクリンナップ
+	for (int i = 0; i < PLAYERS; i++) {
+		lua_close(status[i].state); // Luaステートをクローズする
+		status[i].scriptLoaded = false;
+	}
+	info("スクリプトを解放しました");
 }
 
 void aiscript::readfile(aiscript::ScriptStates* const L, const char* const filename) {

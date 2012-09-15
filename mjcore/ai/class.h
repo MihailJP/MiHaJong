@@ -18,6 +18,7 @@ private:
 public:
 	__declspec(dllexport) static void initscript();
 	__declspec(dllexport) static void initephemeral();
+	__declspec(dllexport) static void closescript();
 	static void GameStatToLuaTable(lua_State* const L, const GameTable* const gameStat);
 	__declspec(dllexport) static int compdahai(const GameTable* const gameStat);
 	static DiscardTileNum determine_discard(const GameTable* const gameStat);
