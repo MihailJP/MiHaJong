@@ -537,6 +537,7 @@ function discard_decision (gametbl)
 		if tilect[cnt].formstriplet then
 			-- 役牌の暗刻を切らないようにする
 			if ishonor(tmpHand) then
+				local yakuhailist = gametbl:getyakuhaiwind()
 				if isdragon(tmpHand) then
 					haiDiscardability[cnt] = haiDiscardability[cnt] - 99999 -- 三元牌のとき
 				end
