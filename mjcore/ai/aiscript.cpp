@@ -88,6 +88,8 @@ void aiscript::GameStatToLuaTable(lua_State* const L, const GameTable* const gam
 	lua_setmetatable(L, -2); // update metatable
 }
 
+// -------------------------------------------------------------------------
+
 aiscript::detDiscardThread* aiscript::discard_worker = NULL;
 DiscardTileNum aiscript::discard;
 bool aiscript::finished = false;
@@ -198,8 +200,46 @@ DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameSt
 	}
 }
 
+// -------------------------------------------------------------------------
 
-__declspec(dllexport) void aiscript::compfuuro(GameTable* const gameStat) {
+aiscript::detCallThread* aiscript::meld_worker = NULL;
+__declspec(dllexport) void aiscript::compfuuro_begin(GameTable* const gameStat) {
+	finished = false;
+	meld_worker = new detCallThread();
+	meld_worker->setprm(gameStat, &finished);
+	DWORD threadID;
+	HANDLE hThread = CreateThread(NULL, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
+}
+__declspec(dllexport) int aiscript::compfuuro_check() {
+	return finished ? 1 : 0;
+}
+__declspec(dllexport) void aiscript::compfuuro_end() {
+	delete meld_worker; meld_worker = NULL;
+}
+void aiscript::determine_meld(GameTable* const gameStat) {
+	finished = false;
+	meld_worker = new detCallThread();
+	meld_worker->setprm(gameStat, &finished);
+	DWORD threadID;
+	HANDLE hThread = CreateThread(NULL, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
+	while (!finished) Sleep(0);
+	delete meld_worker; meld_worker = NULL;
+}
+aiscript::detCallThread::detCallThread() {
+	i_gameStat = NULL; i_finished = NULL;
+}
+aiscript::detCallThread::~detCallThread() {
+}
+void aiscript::detCallThread::setprm(GameTable* const gameStat, bool* const finished) {
+	i_gameStat = gameStat; i_finished = finished;
+}
+DWORD WINAPI aiscript::detCallThread::execute(LPVOID param) {
+	return ((detCallThread *)param)->calculate(
+		((detCallThread *)param)->i_gameStat,
+		((detCallThread *)param)->i_finished);
+}
+
+DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool* const finished) {
 	std::ostringstream o;
 	o << "AIの副露判定に入ります。プレイヤー [" << (int)gameStat->CurrentPlayer.Passive << "]";
 	info(o.str().c_str());
@@ -215,12 +255,13 @@ __declspec(dllexport) void aiscript::compfuuro(GameTable* const gameStat) {
 				std::ostringstream o;
 				o << "グローバルシンボル [" << fncname_call[0] << "] の取得に失敗しました"; error(o.str().c_str());
 				info("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。");
-				status[gameStat->CurrentPlayer.Passive].scriptLoaded = false; return;
+				status[gameStat->CurrentPlayer.Passive].scriptLoaded = false; return S_OK;
 			} else {
 				std::ostringstream o;
 				o << "グローバルシンボル [" << fncname_call[gameStat->KangFlag.chankanFlag] <<
 					"] の取得に失敗しました。無視します。";
-				warn(o.str().c_str()); return;
+				warn(o.str().c_str());
+				*finished = true; return S_OK;
 			}
 		}
 		GameStatToLuaTable(status[gameStat->CurrentPlayer.Passive].state, gameStat);
@@ -240,7 +281,7 @@ __declspec(dllexport) void aiscript::compfuuro(GameTable* const gameStat) {
 			}
 			error(o.str().c_str());
 			warn("関数呼び出しに失敗したため、無視します");
-			return;
+			*finished = true; return S_OK;
 		} else {
 			/* 実行完了 */
 			int flag = 0;
@@ -260,10 +301,10 @@ __declspec(dllexport) void aiscript::compfuuro(GameTable* const gameStat) {
 				}
 			}
 			lua_pop(status[gameStat->CurrentPlayer.Passive].state, 1);
-			return;
+			*finished = true; return S_OK;
 		}
 	} else {
 		warn("スクリプトがロードされていないか、使用できないため、無視します");
-		return; // スクリプトは使用不能
+		*finished = true; return S_OK; // スクリプトは使用不能
 	}
 }

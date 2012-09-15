@@ -149,7 +149,9 @@
 #func compdahai_begin "?compdahai_begin@aiscript@@SAXQBUGameTable@@@Z" int
 #cfunc compdahai_check "?compdahai_check@aiscript@@SAHXZ"
 #cfunc compdahai "?compdahai@aiscript@@SAHXZ"
-#func compfuuro "?compfuuro@aiscript@@SAXQAUGameTable@@@Z" int
+#func compfuuro_begin "?compfuuro_begin@aiscript@@SAXQAUGameTable@@@Z" int
+#cfunc compfuuro_check "?compfuuro_check@aiscript@@SAHXZ"
+#func compfuuro_end "?compfuuro_end@aiscript@@SAXXZ"
 
 /* ------------------------------------------------------------------------ */
 

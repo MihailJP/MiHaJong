@@ -15,9 +15,11 @@ private:
 	class table;
 	class FileSelector;
 	class detDiscardThread;
+	class detCallThread;
 	static const DiscardTileNum DiscardThrough;
 	static void readfile(aiscript::ScriptStates* const L, const char* const filename);
 	static DiscardTileNum discard; static bool finished; static detDiscardThread* discard_worker;
+	static detCallThread* meld_worker;
 public:
 	__declspec(dllexport) static void initscript();
 	__declspec(dllexport) static void initephemeral();
@@ -27,7 +29,10 @@ public:
 	__declspec(dllexport) static int compdahai_check();
 	__declspec(dllexport) static int compdahai();
 	static DiscardTileNum determine_discard(const GameTable* const gameStat);
-	__declspec(dllexport) static void compfuuro(GameTable* const gameStat);
+	__declspec(dllexport) static void compfuuro_begin(GameTable* const gameStat);
+	__declspec(dllexport) static int compfuuro_check();
+	__declspec(dllexport) static void compfuuro_end();
+	static void determine_meld(GameTable* const gameStat);
 };
 
 class aiscript::detDiscardThread {
@@ -41,6 +46,18 @@ private:
 	DiscardTileNum* i_discard;
 	bool* i_finished;
 	static DWORD WINAPI calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished);
+};
+
+class aiscript::detCallThread {
+public:
+	detCallThread();
+	~detCallThread();
+	void setprm(GameTable* const gameStat, bool* const finished);
+	static DWORD WINAPI execute(LPVOID param);
+private:
+	GameTable* i_gameStat;
+	bool* i_finished;
+	static DWORD WINAPI calculate(GameTable* const gameStat, bool* const finished);
 };
 
 struct aiscript::ScriptStates {

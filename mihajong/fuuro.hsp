@@ -478,7 +478,12 @@
 					/* COMが「カンニング」しないように処理 */
 					makesandbox Sandbox, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 					/* 処理 */
-					compfuuro Sandbox
+					compfuuro_begin Sandbox
+					repeat
+						if (compfuuro_check()) {break}
+						await 0
+					loop
+					compfuuro_end
 					repeat NUM_OF_PLAYERS
 						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_RON, cnt)}
 						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_MINKAN, cnt)}
