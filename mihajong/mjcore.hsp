@@ -146,7 +146,9 @@
 #func initscript "?initscript@aiscript@@SAXXZ"
 #func initephemeral "?initephemeral@aiscript@@SAXXZ"
 #func closescript "?closescript@aiscript@@SAXXZ"
-#func compdahai "?compdahai@aiscript@@SAHQBUGameTable@@@Z" int
+#func compdahai_begin "?compdahai_begin@aiscript@@SAXQBUGameTable@@@Z" int
+#cfunc compdahai_check "?compdahai_check@aiscript@@SAHXZ"
+#cfunc compdahai "?compdahai@aiscript@@SAHXZ"
 #func compfuuro "?compfuuro@aiscript@@SAXQAUGameTable@@@Z" int
 
 /* ------------------------------------------------------------------------ */

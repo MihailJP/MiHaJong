@@ -16,7 +16,12 @@
 			DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 		} else {
 			if (GetWatchModeFlag(GameEnv) == 1) {
-				compdahai Sandbox: DiscardTileIndex = stat
+				compdahai_begin Sandbox
+				repeat
+					if (compdahai_check()) {break}
+					await 0
+				loop
+				DiscardTileIndex = compdahai()
 			} else {
 				playerdahai GameStat, GameEnv: DiscardTileIndex = stat
 			}
@@ -39,7 +44,12 @@
 					}
 				}
 			} else {
-				compdahai Sandbox: DiscardTileIndex = stat
+				compdahai_begin Sandbox
+				repeat
+					if (compdahai_check()) {break}
+					await 0
+				loop
+				DiscardTileIndex = compdahai()
 				if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 					if (DiscardTileIndex == DAHAI_TYPE_KYUUSHU) {SendingMsg = 0x6e}
 					if (DiscardTileIndex == DAHAI_TYPE_AGARI) {SendingMsg = 0x6f}

@@ -88,10 +88,48 @@ void aiscript::GameStatToLuaTable(lua_State* const L, const GameTable* const gam
 	lua_setmetatable(L, -2); // update metatable
 }
 
-__declspec(dllexport) int aiscript::compdahai(const GameTable* const gameStat) {
-	return determine_discard(gameStat).toSingleInt();
+aiscript::detDiscardThread* aiscript::discard_worker = NULL;
+DiscardTileNum aiscript::discard;
+bool aiscript::finished = false;
+__declspec(dllexport) void aiscript::compdahai_begin(const GameTable* const gameStat) {
+	discard = DiscardTileNum(); finished = false;
+	discard_worker = new detDiscardThread();
+	discard_worker->setprm(gameStat, &discard, &finished);
+	DWORD threadID;
+	HANDLE hThread = CreateThread(NULL, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
+}
+__declspec(dllexport) int aiscript::compdahai_check() {
+	return finished ? 1 : 0;
+}
+__declspec(dllexport) int aiscript::compdahai() {
+	delete discard_worker; discard_worker = NULL;
+	return discard.toSingleInt();
 }
 DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
+	discard = DiscardTileNum(); finished = false;
+	discard_worker = new detDiscardThread();
+	discard_worker->setprm(gameStat, &discard, &finished);
+	DWORD threadID;
+	HANDLE hThread = CreateThread(NULL, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
+	while (!finished) Sleep(0);
+	delete discard_worker; discard_worker = NULL;
+	return discard;
+}
+aiscript::detDiscardThread::detDiscardThread() {
+	i_gameStat = NULL; i_discard = NULL; i_finished = NULL;
+}
+aiscript::detDiscardThread::~detDiscardThread() {
+}
+void aiscript::detDiscardThread::setprm(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished) {
+	i_gameStat = gameStat; i_discard = discard; i_finished = finished;
+}
+DWORD WINAPI aiscript::detDiscardThread::execute(LPVOID param) {
+	return ((detDiscardThread *)param)->calculate(
+		((detDiscardThread *)param)->i_gameStat,
+		((detDiscardThread *)param)->i_discard,
+		((detDiscardThread *)param)->i_finished);
+}
+DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished) {
 	std::ostringstream o;
 	o << "AIの打牌処理に入ります。プレイヤー [" << (int)gameStat->CurrentPlayer.Active << "]";
 	info(o.str().c_str());
@@ -102,7 +140,8 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 			std::ostringstream o;
 			o << "グローバルシンボル [" << fncname_discard << "] の取得に失敗しました"; error(o.str().c_str());
 			info("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。");
-			status[gameStat->CurrentPlayer.Active].scriptLoaded = false; return DiscardThrough;
+			status[gameStat->CurrentPlayer.Active].scriptLoaded = false;
+			*discard = DiscardThrough; *finished = true; return S_OK;
 		}
 		GameStatToLuaTable(status[gameStat->CurrentPlayer.Active].state, gameStat);
 		if (int errcode = lua_pcall(status[gameStat->CurrentPlayer.Active].state, 1, 2, 0)) {
@@ -121,41 +160,41 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 			}
 			error(o.str().c_str());
 			warn("関数呼び出しに失敗したため、ツモ切りとみなします");
-			return DiscardThrough;
+			*discard = DiscardThrough; *finished = true; return S_OK;
 		} else {
 			/* 実行完了 */
-			DiscardTileNum discard; int flag;
-			discard.type = (DiscardTileNum::discardType)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
+			int flag;
+			discard->type = (DiscardTileNum::discardType)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
 			if (!flag) {
 				warn("1番目の返り値が数値ではありません。通常の打牌とみなします。");
-				discard.type = DiscardTileNum::Normal; // fallback
-			} else if ((discard.type < DiscardTileNum::Normal) || (discard.type > DiscardTileNum::Disconnect)) {
+				discard->type = DiscardTileNum::Normal; // fallback
+			} else if ((discard->type < DiscardTileNum::Normal) || (discard->type > DiscardTileNum::Disconnect)) {
 				warn("1番目の返り値が正しくありません。通常の打牌とみなします。");
-				discard.type = DiscardTileNum::Normal; // fallback
+				discard->type = DiscardTileNum::Normal; // fallback
 			}
-			if ((discard.type == DiscardTileNum::Agari) || (discard.type == DiscardTileNum::Kyuushu) ||
-				(discard.type == DiscardTileNum::Disconnect)) { // 番号指定が不要な場合
-					discard.id = NUM_OF_TILES_IN_HAND - 1; // 2番めの返り値は無視
+			if ((discard->type == DiscardTileNum::Agari) || (discard->type == DiscardTileNum::Kyuushu) ||
+				(discard->type == DiscardTileNum::Disconnect)) { // 番号指定が不要な場合
+					discard->id = NUM_OF_TILES_IN_HAND - 1; // 2番めの返り値は無視
 			} else {
 				int i = lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -1, &flag);
 				if (!flag) {
 					warn("2番目の返り値が数値ではありません。ツモ切りとみなします。");
-					discard.id = NUM_OF_TILES_IN_HAND - 1; // fallback
+					discard->id = NUM_OF_TILES_IN_HAND - 1; // fallback
 				} else if ((i >= 1)&&(i <= NUM_OF_TILES_IN_HAND)) {
-					discard.id = i - 1; // オリジンを1にする仕様……
+					discard->id = i - 1; // オリジンを1にする仕様……
 				} else if ((i <= -1)&&(i >= -NUM_OF_TILES_IN_HAND)) { // マイナスを指定した場合の処理
-					discard.id = NUM_OF_TILES_IN_HAND + i;
+					discard->id = NUM_OF_TILES_IN_HAND + i;
 				} else {
 					warn("2番目の返り値が範囲外です。ツモ切りとみなします。");
-					discard.id = NUM_OF_TILES_IN_HAND - 1; // fallback
+					discard->id = NUM_OF_TILES_IN_HAND - 1; // fallback
 				}
 			}
 			lua_pop(status[gameStat->CurrentPlayer.Active].state, 2);
-			return discard;
+			*finished = true; return S_OK;
 		}
 	} else {
 		warn("スクリプトがロードされていないか、使用できないため、ツモ切りとみなします");
-		return DiscardThrough; // スクリプトは使用不能
+		*discard = DiscardThrough; *finished = true; return S_OK; // スクリプトは使用不能
 	}
 }
 

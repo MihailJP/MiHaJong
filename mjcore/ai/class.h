@@ -1,6 +1,7 @@
 #ifndef AISCRIPT_CLASS_H
 #define AISCRIPT_CLASS_H
 
+#include <Windows.h>
 #include <lua.hpp>
 #include "../discard.h"
 #include "../gametbl.h"
@@ -13,16 +14,33 @@ private:
 	static ScriptStates status[PLAYERS];
 	class table;
 	class FileSelector;
+	class detDiscardThread;
 	static const DiscardTileNum DiscardThrough;
 	static void readfile(aiscript::ScriptStates* const L, const char* const filename);
+	static DiscardTileNum discard; static bool finished; static detDiscardThread* discard_worker;
 public:
 	__declspec(dllexport) static void initscript();
 	__declspec(dllexport) static void initephemeral();
 	__declspec(dllexport) static void closescript();
 	static void GameStatToLuaTable(lua_State* const L, const GameTable* const gameStat);
-	__declspec(dllexport) static int compdahai(const GameTable* const gameStat);
+	__declspec(dllexport) static void compdahai_begin(const GameTable* const gameStat);
+	__declspec(dllexport) static int compdahai_check();
+	__declspec(dllexport) static int compdahai();
 	static DiscardTileNum determine_discard(const GameTable* const gameStat);
 	__declspec(dllexport) static void compfuuro(GameTable* const gameStat);
+};
+
+class aiscript::detDiscardThread {
+public:
+	detDiscardThread();
+	~detDiscardThread();
+	void setprm(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished);
+	static DWORD WINAPI execute(LPVOID param);
+private:
+	const GameTable* i_gameStat;
+	DiscardTileNum* i_discard;
+	bool* i_finished;
+	static DWORD WINAPI calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished);
 };
 
 struct aiscript::ScriptStates {
