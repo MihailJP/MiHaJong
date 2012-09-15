@@ -626,6 +626,11 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 	は(暗槓する、リーチするといった捨牌の付帯情報の番号といった)エイリアスが、
 	mihajongテーブルに格納されています。
 
+	　注意！　これらのサブテーブルはすべてプロキシテーブルになっているため、単
+	に pairs(mihajong.Tile.Wind)としただけでは正しいイテレータが返りません。
+	正しいイテレータを取得するには、
+	pairs(getmetatable(mihajong.Tile.Wind).__index) のようにします。
+
 	▼ mihajong.DiscardType
 
 		　暗槓する、リーチするといった捨牌の付帯情報を表す数値を格納したテーブ

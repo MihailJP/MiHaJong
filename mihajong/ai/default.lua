@@ -16,6 +16,22 @@ function clone (t) -- deep-copy a table
 	return target
 end
 
+function getiter (proxy) -- プロキシテーブルになっている場合、正しいイテレータを返すための処理
+	if getmetatable(proxy) then
+		return pairs(getmetatable(proxy).__index)
+	else
+		return pairs(proxy)
+	end
+end
+
+function igetiter (proxy) -- プロキシテーブルになっている場合、正しいイテレータを返すための処理
+	if getmetatable(proxy) then
+		return ipairs(getmetatable(proxy).__index)
+	else
+		return ipairs(proxy)
+	end
+end
+
 validtiles = {
 	mihajong.Tile.Character[1], mihajong.Tile.Character[2], mihajong.Tile.Character[3],
 	mihajong.Tile.Character[4], mihajong.Tile.Character[5], mihajong.Tile.Character[6],
@@ -40,7 +56,7 @@ yaojiutiles = {
 
 function isflower (tile) -- 花牌かどうか判定
 	if tile then -- nilだったらエラーになるのでそれを防止
-		for k, v in pairs(mihajong.Tile.Flower) do
+		for k, v in getiter(mihajong.Tile.Flower) do
 			if tile.tile == v then return true end
 		end
 	end
@@ -63,37 +79,37 @@ function isukihai (tilect_cnt) -- 浮き牌だったらtrue
 end
 
 function ischaracter (tile) -- 萬子かどうか判定する
-	for k, v in ipairs(mihajong.Tile.Character) do
+	for k, v in igetiter(mihajong.Tile.Character) do
 		if tile and (tile.tile == v) then return true end
 	end
 	return false
 end
 function iscircle (tile) -- 筒子かどうか判定する
-	for k, v in ipairs(mihajong.Tile.Circle) do
+	for k, v in igetiter(mihajong.Tile.Circle) do
 		if tile and (tile.tile == v) then return true end
 	end
 	return false
 end
 function isbamboo (tile) -- 索子かどうか判定する
-	for k, v in ipairs(mihajong.Tile.Bamboo) do
+	for k, v in igetiter(mihajong.Tile.Bamboo) do
 		if tile and (tile.tile == v) then return true end
 	end
 	return false
 end
 function isyaojiu (tile) -- 么九牌かどうか
-	for k, v in ipairs(yaojiutiles) do
+	for k, v in igetiter(yaojiutiles) do
 		if tile and (tile.tile == v) then return true end
 	end
 	return false
 end
 function iswind (tile) -- 風牌かどうか
-	for k, v in pairs(mihajong.Tile.Wind) do
+	for k, v in getiter(mihajong.Tile.Wind) do
 		if tile and (tile.tile == v) then return true end
 	end
 	return false
 end
 function isdragon (tile) -- 三元牌かどうか
-	for k, v in pairs(mihajong.Tile.Dragon) do
+	for k, v in getiter(mihajong.Tile.Dragon) do
 		if tile and (tile.tile == v) then return true end
 	end
 	return false
@@ -103,26 +119,26 @@ function ishonor (tile) -- 字牌かどうか
 end
 
 function issequence (meld) -- 順子かどうか
-	for k, v in pairs(mihajong.MeldType.Sequence) do
+	for k, v in getiter(mihajong.MeldType.Sequence) do
 		if meld.type == v then return true end
 	end
 	return false
 end
 function istriplet (meld) -- 刻子かどうか
-	for k, v in pairs(mihajong.MeldType.Triplet) do
+	for k, v in getiter(mihajong.MeldType.Triplet) do
 		if meld.type == v then return true end
 	end
 	return false
 end
 
 function gettilenumeral (tile) -- 牌の数字(１～９)を取得する
-	for k, v in ipairs(mihajong.Tile.Character) do
+	for k, v in igetiter(mihajong.Tile.Character) do
 		if tile and (tile.tile == v) then return tonumber(k) end
 	end
-	for k, v in ipairs(mihajong.Tile.Circle) do
+	for k, v in igetiter(mihajong.Tile.Circle) do
 		if tile and (tile.tile == v) then return tonumber(k) end
 	end
-	for k, v in ipairs(mihajong.Tile.Bamboo) do
+	for k, v in igetiter(mihajong.Tile.Bamboo) do
 		if tile and (tile.tile == v) then return tonumber(k) end
 	end
 	return nil
@@ -139,10 +155,10 @@ function numofquads (gametbl) -- 槓子の数を数える
 	local melds = gametbl:getmeld() -- 鳴き面子
 	local count = 0 -- 返り値
 	for i = 1, #melds do -- 各々の面子について
-		for k, v in pairs(mihajong.MeldType.Quad.Exposed) do
+		for k, v in getiter(mihajong.MeldType.Quad.Exposed) do
 			if melds[i].type == v then count = count + 1 end
 		end
-		for k, v in pairs(mihajong.MeldType.Quad.Added) do
+		for k, v in getiter(mihajong.MeldType.Quad.Added) do
 			if melds[i].type == v then count = count + 1 end
 		end
 		if melds[i].type == mihajong.MeldType.Quad.Concealed then count = count + 1 end
@@ -263,7 +279,7 @@ function riichi_decision (gametbl)
 
 			local tmpTileNum = cnt
 			ev.MinScore[cnt], ev.MaxScore[cnt] = 999999999, -999999999
-			for i, tilecode in ipairs(validtiles) do
+			for i, tilecode in igetiter(validtiles) do
 				local haiHand = clone(tmpHaiHand)
 				if gametbl:isfirstdraw() and (gametbl:getjikaze() == mihajong.Tile.Wind.East) then
 					haiHand[cnt] = {["tile"] = tilecode, ["red"] = mihajong.DoraColor.Normal}
@@ -393,7 +409,7 @@ function evaluate_hand (gametbl, cnt, tp, hand, haiDiscardability, tmpde) -- 再
 	local tmpTileNum = cnt
 	local haiCount, haiSeenCount = gametbl:gettilesinhand(), gametbl:getseentiles()
 	local furitenFlag = false
-	for k, v in pairs(validtiles) do repeat
+	for k, v in getiter(validtiles) do repeat
 		-- 時間がかかったらここで切り上げていた
 		if origShanten > 1 then
 			if ishonor({["tile"] = v}) and (haiCount[v] + haiSeenCount[v] == 3) then break end -- 字牌のラス牌はとりあえず無視
@@ -500,7 +516,7 @@ function discard_decision (gametbl)
 				if isdragon(tmpHand) then
 					haiDiscardability[cnt] = haiDiscardability[cnt] - 100 -- 三元牌のとき
 				end
-				for nom, tile in pairs(mihajong.Tile.Wind) do
+				for nom, tile in getiter(mihajong.Tile.Wind) do
 					if (tmpHand.tile == tile) and yakuhailist[nom] then
 						haiDiscardability[cnt] = haiDiscardability[cnt] - 100 -- 風牌が役牌のとき
 					end
@@ -524,7 +540,7 @@ function discard_decision (gametbl)
 				if isdragon(tmpHand) then
 					haiDiscardability[cnt] = haiDiscardability[cnt] - 99999 -- 三元牌のとき
 				end
-				for nom, tile in pairs(mihajong.Tile.Wind) do
+				for nom, tile in getiter(mihajong.Tile.Wind) do
 					if (tmpHand.tile == tile) and yakuhailist[nom] then
 						haiDiscardability[cnt] = haiDiscardability[cnt] - 99999 -- 風牌が役牌のとき
 					end
@@ -771,7 +787,7 @@ function discard_decision (gametbl)
 		end
 		tmpTileCodeNum = clone(haiHand[tmpTileNum])
 		MinScore[tmpTileNum], MaxScore[tmpTileNum] = 999999999, -999999999
-		for k, cnt in ipairs(validtiles) do
+		for k, cnt in igetiter(validtiles) do
 			haiHand[tmpTileNum], haiHand[14] = clone(haiHand[14]), {["tile"] = cnt, ["red"] = mihajong.DoraColor.Normal}
 			if (gametbl:getshanten(haiHand) == -1) then
 				-- ここで計算されるのはダマ聴で自摸和のときの点数
@@ -801,7 +817,7 @@ function discard_decision (gametbl)
 	do
 		local riskinfo = gametbl:gettilerisk()
 		for tmphaiindex = 1, 14 do -- 降り打ちモードのための処理
-			for plkey, tmpchkcnt in pairs(player_rel) do
+			for plkey, tmpchkcnt in getiter(player_rel) do
 				local done = false
 				repeat
 					if not haiMarkingPlayer[tmpchkcnt] then break end
@@ -909,10 +925,10 @@ function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
 	local YakuhaiPon = false
 	do -- 捨てられた牌が役牌だった場合
 		local yakuwind = gametbl:getyakuhaiwind()
-		for k, v in pairs(mihajong.Tile.Dragon) do
+		for k, v in getiter(mihajong.Tile.Dragon) do
 			if haiCurrentSutehai.tile == v then YakuhaiPon = true end
 		end
-		for k, v in pairs(mihajong.Tile.Wind) do
+		for k, v in getiter(mihajong.Tile.Wind) do
 			if (haiCurrentSutehai.tile == v) and yakuwind[k] then YakuhaiPon = true end
 		end
 		-- 役牌を鳴いたらフラグを立てる処理をしていたが移植後は必要なくなった
