@@ -240,9 +240,9 @@ function riichi_decision (gametbl)
 			if not gametbl:gethand()[cnt] then ev.do_not_discard[cnt], ev.haiDiscardability[cnt] = true, -9999999; break end
 			-- 向聴数から、大まかな評価値を算出
 			local haiHand = clone(tmpHaiHand)
+			local Shanten = gametbl:getshanten(haiHand)
 			haiHand[cnt], haiHand[14] = clone(haiHand[14]), nil
 			local tStat = gametbl:gettenpaistat(haiHand)
-			local Shanten = gametbl:getshanten(haiHand)
 			ev.MachihaiTotalTiles[cnt] = tStat.total
 			-- ダブル立直になる時は一部の判定を省略する
 			if not gametbl:isfirstdraw() then
@@ -251,7 +251,7 @@ function riichi_decision (gametbl)
 				-- 空聴リーチを避ける(錯和ではないが、和了れなくなるため)
 				elseif tStat.total == 0 then ev.haiDiscardability[cnt] = -999999; break
 				-- 振聴リーチを避ける(錯和ではないが、手変わりの可能性を残す)
-				elseif tStat.isfuriten == 1 then ev.MachihaiFuritenFlag[cnt], ev.haiDiscardability[cnt] = true, -99999; break
+				elseif tStat.isfuriten then ev.MachihaiFuritenFlag[cnt], ev.haiDiscardability[cnt] = true, -99999; break
 				-- 待ち牌が残り２枚以下の場合
 				elseif tStat.total <= 2 then
 					ev.haiDiscardability[cnt] = -9999; break
@@ -265,7 +265,11 @@ function riichi_decision (gametbl)
 			ev.MinScore[cnt], ev.MaxScore[cnt] = 999999999, -999999999
 			for i, tilecode in ipairs(validtiles) do
 				local haiHand = clone(tmpHaiHand)
-				haiHand[cnt], haiHand[14] = clone(haiHand[14]), {["tile"] = tilecode, ["red"] = mihajong.DoraColor.Normal}
+				if gametbl:isfirstdraw() and (gametbl:getjikaze() == mihajong.Tile.Wind.East) then
+					haiHand[cnt] = {["tile"] = tilecode, ["red"] = mihajong.DoraColor.Normal}
+				else
+					haiHand[cnt], haiHand[14] = clone(haiHand[14]), {["tile"] = tilecode, ["red"] = mihajong.DoraColor.Normal}
+				end
 				-- ここで時間チェックをしていた
 				if (gametbl:getshanten(haiHand) == -1) then
 					-- ここで計算されるのはダマ聴で自摸和のときの点数
