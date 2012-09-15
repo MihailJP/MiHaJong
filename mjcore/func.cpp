@@ -274,7 +274,7 @@ bool isAboveBase(const GameTable* const gameStat, PLAYER_ID player) {
 	return gameStat->Player[player].PlayerScore >= LargeNum::fromInt(BasePoint());
 }
 __declspec(dllexport) int isAboveBase(const GameTable* const gameStat, int player) {
-	return isAboveBase(gameStat, (PLAYER_ID)gameStat) ? 1 : 0;
+	return isAboveBase(gameStat, (PLAYER_ID)player) ? 1 : 0;
 }
 
 /* ”ñ•‰®”1Œ…‚È‚ç‘SŠpE‚»‚êˆÈŠO‚Í”¼Šp */
