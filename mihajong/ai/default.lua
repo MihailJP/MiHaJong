@@ -866,19 +866,19 @@ function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
 	haiHand[14] = clone(haiCurrentSutehai)
 
 	local Shanten = gametbl:getshanten(haiHand)
-	local yakustat = gametbl:evaluate(false, haiHand)
-	local tenpaistat = gametbl:gettenpaistat(haiHand)
 	-- 暗槓に対する搶槓の判定で、国士聴牌でない場合は戻る
-	if (ChanKanFlag == 2) and (gametbl:getshanten(haiHand, mihajong.AgariType.Orphans) ~= 0) then
+	if (ChanKanFlag == 2) and (gametbl:getshanten(haiHand, mihajong.AgariType.Orphans) ~= -1) then
 		return mihajong.Call.None
 	end
 
 	if Shanten == -1 then
+		local yakustat = gametbl:evaluate(false, haiHand)
+		local tenpaistat = gametbl:gettenpaistat(haiHand)
 		local haiRon = true -- 出和了り
 		if (not yakustat.isvalid) or -- 縛りを満たしていないか
 				tenpaistat.isfuriten or -- 現物フリテンか
 				gametbl:isdoujunfuriten() or -- 同巡内フリテンか
-				((gametbl:getrule("riichi_shibari") ~= "no") and gametbl:isriichideclared()) then -- 立直縛りの場合でリーチしてないなら
+				((gametbl:getrule("riichi_shibari") ~= "no") and (not gametbl:isriichideclared())) then -- 立直縛りの場合でリーチしてないなら
 					haiRon = false -- チョンボになるから和がらないようにする
 		end
 		if haiRon then
