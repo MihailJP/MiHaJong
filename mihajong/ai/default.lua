@@ -283,9 +283,9 @@ function riichi_decision (gametbl)
 						if ev.MaxScore[tmpTileNum] < stat.han then ev.MaxScore[tmpTileNum] = stat.han end
 					end
 				end
-				if ev.MinScore[tmpTileNum] == 999999999 then ev.MinScore[tmpTileNum] = 0 end
-				if ev.MaxScore[tmpTileNum] ==-999999999 then ev.MaxScore[tmpTileNum] = 0 end
 			end
+			if ev.MinScore[tmpTileNum] == 999999999 then ev.MinScore[tmpTileNum] = 0 end
+			if ev.MaxScore[tmpTileNum] ==-999999999 then ev.MaxScore[tmpTileNum] = 0 end
 		until true end
 		-- 時間がかかる時用の簡略版がここにあった
 
