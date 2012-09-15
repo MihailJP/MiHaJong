@@ -18,8 +18,10 @@ void aiscript::FileSelector::filelist() {
 		error("ファイル検索できません！！"); return;
 	}
 	do { // 検索
-		std::ostringstream o; o << "検出: " << finddat.cFileName; info(o.str().c_str());
-		files.push_back(scriptPath + std::string("\\") + std::string(finddat.cFileName));
+		if (!strcmp(finddat.cFileName + strlen(finddat.cFileName) - 4, ".lua")) {
+			std::ostringstream o; o << "検出: " << finddat.cFileName; info(o.str().c_str());
+			files.push_back(scriptPath + std::string("\\") + std::string(finddat.cFileName));
+		}
 	} while (FindNextFile(h, &finddat));
 	/* 検索完了！ */
 	FindClose(h);
