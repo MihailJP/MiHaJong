@@ -388,6 +388,7 @@ function evaluate_hand (gametbl, cnt, tp, hand, haiDiscardability, tmpde) -- 再
 	local haiHand = clone(hand)
 	local tmpTileNum = cnt
 	local haiCount, haiSeenCount = gametbl:gettilesinhand(), gametbl:getseentiles()
+	local furitenFlag = false
 	for k, v in pairs(validtiles) do repeat
 		-- 時間がかかったらここで切り上げていた
 		if origShanten > 1 then
@@ -395,15 +396,17 @@ function evaluate_hand (gametbl, cnt, tp, hand, haiDiscardability, tmpde) -- 再
 		end
 		if origShanten > 0 then -- 本来は既にテンパイしているときには行なっていなかった処理
 			if haiCount[v] + haiSeenCount[v] == 4 then break end -- ４枚切れた牌
-			local tmpHe, haiSutehai = false, gametbl:getdiscard()
-			for idx = 1, #haiSutehai do -- 振聴になる牌を避ける
-				if haiSutehai[idx].tile == v then tmpHe = true; break end
-			end
-			if tmpHe then tmpDiscardability[tp] = 0; break end
 		end
 		haiHand[tp], haiHand[14] = clone(haiHand[14]), {["tile"] = v, ["red"] = mihajong.DoraColor.Normal}
 		local Shanten = gametbl:getshanten(haiHand)
 		if Shanten == -1 then
+			do
+				local tmpHe, haiSutehai = false, gametbl:getdiscard()
+				for idx = 1, #haiSutehai do -- 振聴になる牌を避ける
+					if haiSutehai[idx].tile == v then tmpHe = true; break end
+				end
+				if tmpHe then furitenFlag = true end
+			end
 			local stat = gametbl:evaluate(true, haiHand)
 --[[
 			if haiDiscardability[tmpTileNum] >= 10000 then
@@ -425,14 +428,18 @@ function evaluate_hand (gametbl, cnt, tp, hand, haiDiscardability, tmpde) -- 再
 						break -- 同じ牌を２度調べない
 					end
 				end
-				local td = evaluate_hand(gametbl, cnt, i, clone(haiHand), haiDiscardability, tmpde2)
-				for j = 1, 14 do tmpDiscardability[i] = tmpDiscardability[i] + td[j] end
+				local xHand = clone(haiHand); xHand[i] = nil
+				if gametbl:getshanten(xHand) == Shanten then
+					local td = evaluate_hand(gametbl, cnt, i, clone(haiHand), haiDiscardability, tmpde2)
+					for j = 1, 14 do tmpDiscardability[i] = tmpDiscardability[i] + td[j] end
+				end
 			until true end
 			-- 処理が遅い時はここで別処理をしていた
 		end
 		haiHand = clone(hand)
 		-- 時間がかかったらここで切り上げていた
 	until true end
+	if furitenFlag then tmpDiscardability[tp] = tmpDiscardability[tp] / 3 end -- フリテンだった場合
 	return tmpDiscardability
 end
 
