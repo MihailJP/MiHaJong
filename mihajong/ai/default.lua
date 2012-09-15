@@ -779,8 +779,10 @@ function discard_decision (gametbl)
 				if haiDiscardability[tmpTileNum] >= 10000 then
 					haiDiscardability[tmpTileNum] = haiDiscardability[tmpTileNum] - 10000
 				end
-				haiDiscardability[tmpTileNum] = haiDiscardability[tmpTileNum] +
-					gametbl.points * (4 - haiCount[cnt] - haiSeenCount[cnt]) + 100000
+				if gametbl.points then
+					haiDiscardability[tmpTileNum] = haiDiscardability[tmpTileNum] +
+						gametbl.points * (4 - haiCount[cnt] - haiSeenCount[cnt]) + 100000
+				end
 				if MinScore[tmpTileNum] > stat.han then MinScore[tmpTileNum] = stat.han end
 				if MaxScore[tmpTileNum] < stat.han then MaxScore[tmpTileNum] = stat.han end
 			end
@@ -917,7 +919,7 @@ function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
 	end
 
 	local haiSeenCount = gametbl:getseentiles()
-	if haiCount[haiCurrentSutehai.tile] >= 3 then
+	if haiCount[haiCurrentSutehai.tile] and (haiCount[haiCurrentSutehai.tile] >= 3) then
 		-- すでに槓子を２つ持っているなら大明槓させる
 		if numofquads(gametbl) >= 2 then
 			return mihajong.Call.Kan
