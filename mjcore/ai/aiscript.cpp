@@ -156,15 +156,15 @@ __declspec(dllexport) void aiscript::compfuuro(GameTable* const gameStat) {
 	gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Pon =
 		gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Kan =
 		gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Ron = false;
-	if (status[gameStat->CurrentPlayer.Active].scriptLoaded) { /* 正しく読み込まれているなら */
+	if (status[gameStat->CurrentPlayer.Passive].scriptLoaded) { /* 正しく読み込まれているなら */
 		try { /* determine_discard があればよし、なかったら例外処理 */
-			lua_getglobal(status[gameStat->CurrentPlayer.Active].state, fncname_call[gameStat->KangFlag.chankanFlag]);
+			lua_getglobal(status[gameStat->CurrentPlayer.Passive].state, fncname_call[gameStat->KangFlag.chankanFlag]);
 		} catch (...) { /* determine_discard がなかったらエラーになるので例外処理をする */
 			if (gameStat->KangFlag.chankanFlag) {
 				std::ostringstream o;
 				o << "グローバルシンボル [" << fncname_call[0] << "] の取得に失敗しました"; error(o.str().c_str());
 				info("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。");
-				status[gameStat->CurrentPlayer.Active].scriptLoaded = false; return;
+				status[gameStat->CurrentPlayer.Passive].scriptLoaded = false; return;
 			} else {
 				std::ostringstream o;
 				o << "グローバルシンボル [" << fncname_call[gameStat->KangFlag.chankanFlag] <<
@@ -172,16 +172,16 @@ __declspec(dllexport) void aiscript::compfuuro(GameTable* const gameStat) {
 				warn(o.str().c_str()); return;
 			}
 		}
-		GameStatToLuaTable(status[gameStat->CurrentPlayer.Active].state, gameStat);
-		if (int errcode = lua_pcall(status[gameStat->CurrentPlayer.Active].state, 1, 2, 0)) {
+		GameStatToLuaTable(status[gameStat->CurrentPlayer.Passive].state, gameStat);
+		if (int errcode = lua_pcall(status[gameStat->CurrentPlayer.Passive].state, 1, 2, 0)) {
 			/* 実行失敗！ */
 			std::ostringstream o;
 			switch (errcode) {
 			case LUA_ERRRUN:
 				o << "スクリプトの実行時エラー [" <<
-					lua_tostring(status[gameStat->CurrentPlayer.Active].state, -1) /* エラーメッセージ */ <<
+					lua_tostring(status[gameStat->CurrentPlayer.Passive].state, -1) /* エラーメッセージ */ <<
 					"]";
-				lua_pop(status[gameStat->CurrentPlayer.Active].state, 1);
+				lua_pop(status[gameStat->CurrentPlayer.Passive].state, 1);
 				break;
 			case LUA_ERRMEM: o << "メモリの割当に失敗しました。"; break;
 			case LUA_ERRERR: o << "メッセージハンドラ実行中のエラーです。"; break;
@@ -193,7 +193,7 @@ __declspec(dllexport) void aiscript::compfuuro(GameTable* const gameStat) {
 		} else {
 			/* 実行完了 */
 			int flag = 0;
-			MeldCallID meldtype = (MeldCallID)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
+			MeldCallID meldtype = (MeldCallID)lua_tointegerx(status[gameStat->CurrentPlayer.Passive].state, -2, &flag);
 			if (!flag) {
 				warn("1番目の返り値が数値ではありません。無視します。");
 			} else {
@@ -208,7 +208,7 @@ __declspec(dllexport) void aiscript::compfuuro(GameTable* const gameStat) {
 					default: warn("1番目の返り値が正しくありません。無視します。"); break;
 				}
 			}
-			lua_pop(status[gameStat->CurrentPlayer.Active].state, 1);
+			lua_pop(status[gameStat->CurrentPlayer.Passive].state, 1);
 			return;
 		}
 	} else {
