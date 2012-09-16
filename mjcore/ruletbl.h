@@ -9,6 +9,7 @@
 #include <map>
 #include <array>
 #include <functional>
+#include <sstream>
 #include "logging.h"
 #include "resource.h"
 #include "reader/readrsrc.h"
@@ -42,6 +43,8 @@ private:
 	static void configinit_csv();
 	static void configinit_ini();
 	static std::string getRuleItemTag(std::function<bool(const CSVReader::RECORD&)> RuleF, int index);
+	static std::map<std::string, unsigned int> inverse_nametbl;
+	static const char digit[];
 public:
 	__declspec(dllexport) static void configinit();
 	__declspec(dllexport) static void storeRule(const char** ruleTxt);
@@ -56,6 +59,7 @@ public:
 	static bool chkRuleApplied(std::string RuleTag);
 	inline static uint8_t getRule(std::string RuleTag) {return Rules[RuleTag];}
 	static uint8_t getRule(int RuleID);
+	__declspec(dllexport) static int loadConfigFile(const char* const filename);
 };
 
 __declspec(dllexport) int getRule(int RuleID);

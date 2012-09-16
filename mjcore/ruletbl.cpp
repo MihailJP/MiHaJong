@@ -9,6 +9,8 @@ RULETBL RuleData::Rules;
 std::array<std::string, RULESIZE> RuleData::nametbl;
 CSVReader::CsvVecVec RuleData::confdat;
 INIParser::IniMapMap RuleData::confdict;
+std::map<std::string, unsigned int> RuleData::inverse_nametbl;
+const char RuleData::digit[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 	DWORD size = 0; const uint8_t* csv = NULL;
@@ -17,8 +19,10 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 	CSVReader::parsecsv(confdat, csvdat);
 	delete[] csvdat;
 
-	for (auto k = confdat.begin(); k != confdat.end(); k++) // 名前テーブル
-		nametbl[std::atoi((*k)[0].c_str())] = (*k)[8];
+	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
+		nametbl[std::atoi((*k)[0].c_str())] = (*k)[8]; // 順方向
+		inverse_nametbl[std::string((*k)[8])] = std::atoi((*k)[0].c_str()); // 逆方向
+	}
 }
 
 void RuleData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
@@ -36,7 +40,7 @@ __declspec(dllexport) void RuleData::configinit() { // コンフィグ用CSVを読み込む
 void RuleData::parseRule() { // ルール設定を数値に変換
 	debug("ルール設定を連想配列に変換します。");
 	for (int i = 0; i < RULESIZE; i++) {
-		std::string::size_type idx = std::string("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ").find(
+		std::string::size_type idx = std::string(digit).find(
 			ruleConf[i / RULE_IN_LINE][i % RULE_IN_LINE] );
 		if (!(nametbl[i].empty()))
 			Rules[nametbl[i]] = ((idx == std::string::npos) ? 0 : (uint8_t)idx);
@@ -131,4 +135,41 @@ __declspec(dllexport) void RuleData::getRuleTxt(char* const txt, int bufsize, in
 		(confdict["dictionary"].find(tag) != confdict["dictionary"].end()))
 		strcpy_s(txt, bufsize, confdict["dictionary"][tag].c_str());
 	else strcpy_s(txt, bufsize, tag.c_str());
+}
+
+__declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
+	errno_t err; FILE* conffile;
+	if (err = fopen_s(&conffile, filename, "r")) { // オープンし、失敗したら
+		std::ostringstream o;
+		o << "設定ファイルのオープンに失敗しました。エラーコード [" << err << "]";
+		error(o.str().c_str());
+		fclose(conffile); // ファイルを閉じる
+		return -1;
+	} else { // 正しくオープンされたら
+		fseek(conffile, 0, SEEK_END); long filesize = ftell(conffile); rewind(conffile); // ファイルサイズを取得
+		long bufsize = (filesize | (sizeof(int) - 1)) + 1;
+		char* const filedat = new char[bufsize]; // バッファを確保
+		memset(filedat, 0, bufsize); // バッファをゼロクリア
+		fread_s(filedat, bufsize, sizeof(char), filesize, conffile); // 読み込み
+		{
+			INIParser::IniMapMap config_ini; // INIパース結果を格納する「マップのマップ」
+			INIParser::parseini(config_ini, filedat); // INIをパースする
+			for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++) { // 初期化
+				memset(ruleConf[i], 0, RULE_IN_LINE + 1);
+				memset(ruleConf[i], '-', RULE_IN_LINE);
+			}
+			auto config_rules = config_ini["rules"];
+			for (auto k = config_rules.begin(); k != config_rules.end(); ++k) { // rulesセクションについて
+				if (inverse_nametbl.find(k->first) != inverse_nametbl.end()) { // キーがあったら
+					unsigned int ruleid = inverse_nametbl[k->first]; // 番号に変換
+				} else { // なかったら
+					std::ostringstream o; o << "キー [" << k->first << "] は無視されます";
+					warn(o.str().c_str());
+				}
+			}
+		}
+		delete[] filedat; // バッファを解放
+		fclose(conffile); // ファイルを閉じる
+		return 0;
+	}
 }
