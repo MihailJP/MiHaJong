@@ -59,6 +59,7 @@
 
 /* ‘ì‚ÌŠÂ‹«‚ğ‰Šú‰» */
 	TableEnvInitAll: GameEnv = 0
+	setGameType GAMETYPE
 
 /* İ’èƒtƒ@ƒCƒ‹“Ç‚İ‚İ */
 	setconffile configFile

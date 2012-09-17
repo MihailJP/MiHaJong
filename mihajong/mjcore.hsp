@@ -6,6 +6,8 @@
 
 #uselib "mjcore.dll"
 
+#func setGameType "?setGameType@@YAXH@Z" int
+
 /* ƒƒMƒ“ƒOƒc[ƒ‹ */
 /*
 #func _initlog_ "?initLogger@logger@@YAHXZ"
