@@ -211,6 +211,7 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 						ruleConf[i][j] = '0'; // デフォルト設定
 				}
 			}
+			debug("現在のルール設定の内部表現"); for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++) debug(ruleConf[i]);
 			parseRule(); // データ変換
 		}
 		delete[] filedat; // バッファを解放
@@ -222,6 +223,7 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 
 
 __declspec(dllexport) int RuleData::saveConfigFile(const char* const filename) {
+	debug("現在のルール設定の内部表現"); for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++) debug(ruleConf[i]);
 	std::ofstream file; // デフォルトコンストラクタで初期化
 	auto chkerr = [](std::ofstream& file, const char* const filename) -> void {
 		if (file.bad()) throw std::runtime_error(std::string("ファイル [") + std::string(filename) +
