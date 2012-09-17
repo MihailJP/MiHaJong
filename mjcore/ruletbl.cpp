@@ -144,7 +144,7 @@ std::string RuleData::getRuleItemTag(int RuleID, int index) {
 std::string RuleData::getRuleItemTag(std::string RuleTag, int index) {
 	if (nonapplicable.find(RuleTag) != nonapplicable.end()) // N/Aとする場合
 		return std::string("N/A");
-	else if (ruletags.find(RuleTag) != ruletags.end()) // ルール項目タグが存在しない場合
+	else if (ruletags.find(RuleTag) == ruletags.end()) // ルール項目タグが存在しない場合
 		return std::string("");
 	else // そうでなければ
 		return ruletags[RuleTag][index];
