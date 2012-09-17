@@ -187,9 +187,40 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 					warn(o.str().c_str());
 				}
 			}
+			parseRule(); // データ変換
 		}
 		delete[] filedat; // バッファを解放
 		fclose(conffile); // ファイルを閉じる
 		return 0;
+	}
+}
+
+
+__declspec(dllexport) int RuleData::saveConfigFile(const char* const filename) {
+	std::ofstream file; // デフォルトコンストラクタで初期化
+	auto chkerr = [](std::ofstream& file, const char* const filename) -> void {
+		if (file.bad()) throw std::runtime_error(std::string("ファイル [") + std::string(filename) +
+			std::string("] の書き込み時に致命的エラーが発生しました。設定は保存されません。")); // 失敗したら例外を投げる
+		else if (file.fail()) throw std::runtime_error(std::string("ファイル [") + std::string(filename) +
+			std::string("] の書き込みに失敗しました。設定は保存されません。")); // 失敗したら例外を投げる
+	};
+	try {
+		file.open(filename, std::ios::out | std::ios::trunc); // 上書きテキストモードで、開く
+		if (!file) throw std::runtime_error(std::string("ファイル [") + std::string(filename) +
+			std::string("] を書き込みモードで開けません。設定は保存されません。")); // 失敗したら例外を投げる
+		file << "[rules]" << std::endl; // セクション名
+		chkerr(file, filename); // 失敗したら例外を投げる
+		for (auto k = nametbl.begin(); k != nametbl.end(); ++k) {
+			if ((!(k->empty())) && (nonapplicable.find(*k) == nonapplicable.end())) { // 有効なら
+				file << *k << "=" << chkRule(*k) << std::endl; // 設定データを書き込み
+				chkerr(file, filename); // 失敗したら例外を投げる
+			}
+		}
+		return 0;
+	}
+	catch (std::runtime_error& e) { // 書き込み失敗！！
+		error(e.what());
+		MessageBox(NULL, e.what(), "書き込み失敗", MB_OK | MB_ICONERROR | MB_TASKMODAL | MB_TOPMOST);
+		return -1;
 	}
 }
