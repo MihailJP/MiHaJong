@@ -44,6 +44,9 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 			nonapplicable.insert(nomenPartisRegulae); // リストに追加
 		}
 	}
+
+	assert(inverse_ruletags["game_length"]["east_wind_game"] == 1);
+	assert(ruletags["game_length"][1] == "east_wind_game");
 }
 
 void RuleData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
