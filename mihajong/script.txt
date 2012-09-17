@@ -775,7 +775,7 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 
 		● mihajong.random(n)、mihajong.random(n, nil)
 
-			　mihajong.random を1つの整数の引数で呼び出した場合、閉区間 (1, n)
+			　mihajong.random を1つの整数の引数で呼び出した場合、閉区間 [1, n]
 			の離散一様乱数を返します(返り値は整数になります)。たとえば n == 6
 			の場合、サイコロを1つ振るのと同じになります。
 
