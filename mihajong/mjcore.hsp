@@ -24,6 +24,8 @@
 */
 #cfunc getRule "?getRule@@YAHH@Z" int
 #func configinit "?configinit@RuleData@@SAXXZ"
+#func loadConfigFile "?loadConfigFile@RuleData@@SAHQBD@Z" str
+#func saveConfigFile "?saveConfigFile@RuleData@@SAHQBD@Z" str
 
 /* —”ü‚è */
 #undef randomize

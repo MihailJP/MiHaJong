@@ -191,6 +191,7 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 		}
 		delete[] filedat; // バッファを解放
 		fclose(conffile); // ファイルを閉じる
+		info(std::string(std::string("設定ファイル [") + std::string(filename) + std::string("] を読み込みました。")).c_str());
 		return 0;
 	}
 }

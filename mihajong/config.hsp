@@ -81,26 +81,6 @@ return
 	loop
 return
 
-#deffunc saveRule
-	tmpDigit = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	sdim tmpRuleTxt, RULE_IN_LINE+4, RULE_STRING_LINES
-	repeat length(Rule)-1
-		if ((RuleTxt(0, cnt) == "")||(RuleTxt(0, cnt) == "ÇmÅ^Ç`")) {
-			tmpRuleTxt(cnt/RULE_IN_LINE) += "-"
-		} else {
-			tmpRuleTxt(cnt/RULE_IN_LINE) += (strmid(tmpDigit, Rule(cnt), 1))
-		}
-	loop
-	storeRule tmpRuleTxt
-	RawConfDat = ""
-	notesel RawConfDat
-	repeat RULE_STRING_LINES
-		noteadd tmpRuleTxt(cnt)
-	loop
-	notesave configFile
-	noteunsel
-	return
-
 #deffunc selcat_
 #define NUM_OF_RULE_SETTINGS RULES_IN_PAGE*RULE_PAGES
 #define NUM_OF_RULE_STATS 17
@@ -121,7 +101,7 @@ return
 		swend
 	loop
 	RebootFlag = 0
-	saveRule
+	saveConfigFile configFile
 	return
 
 *rulereset
