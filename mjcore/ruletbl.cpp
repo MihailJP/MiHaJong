@@ -163,11 +163,25 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 				memset(ruleConf[i], 0, RULE_IN_LINE + 1);
 				memset(ruleConf[i], '-', RULE_IN_LINE);
 			}
-			auto config_rules = config_ini["rules"];
+			auto& config_rules = config_ini["rules"];
 			for (auto k = config_rules.begin(); k != config_rules.end(); ++k) { // rulesセクションについて
 				if (inverse_nametbl.find(k->first) != inverse_nametbl.end()) { // キーがあったら
-					unsigned int ruleid = inverse_nametbl[k->first]; // 番号に変換
-
+					const std::string& rulename = k->first; // 別名をつける
+					const unsigned int ruleid = inverse_nametbl[rulename]; // 番号に変換
+					if (nonapplicable.find(rulename) != nonapplicable.end()) { // N/Aだったばあい
+						std::ostringstream o; o << "キー [" << rulename << "] は設定できません。無視します。";
+						warn(o.str().c_str());
+					}
+					else if(inverse_ruletags[rulename].find(k->second) != inverse_ruletags[rulename].end()) { // 実装されている設定なら
+						ruleConf[ruleid / RULE_IN_LINE][ruleid % RULE_IN_LINE] =
+							digit[inverse_ruletags[rulename][k->second]]; // 設定する
+					}
+					else {
+						std::ostringstream o; o << "キー [" << rulename << "] に対する値 [" << k->second << 
+							"] は実装されていません。デフォルト設定を使います。";
+						warn(o.str().c_str());
+						ruleConf[ruleid / RULE_IN_LINE][ruleid % RULE_IN_LINE] = digit[0]; // デフォルト設定とする
+					}
 				} else { // なかったら
 					std::ostringstream o; o << "キー [" << k->first << "] は無視されます";
 					warn(o.str().c_str());
