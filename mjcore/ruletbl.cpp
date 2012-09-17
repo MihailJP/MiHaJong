@@ -31,8 +31,11 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str()))) { // GameType合致した場合
 			ruletags[nomenPartisRegulae].clear(); inverse_ruletags[nomenPartisRegulae].clear();
 			for (unsigned int index = 11; index < (*k).size(); ++index) {
-				if ((!(*k)[index].empty()) && ((*k)[index] != ">>>")) { // 存在するなら
-					ruletags[nomenPartisRegulae][index - 11] = (*k)[index]; // 順方向
+				if ((*k)[index] == ">>>") { // 飛ばすように指定されているなら
+					ruletags[nomenPartisRegulae].push_back("");
+				}
+				else if (!(*k)[index].empty()) { // 存在するなら
+					ruletags[nomenPartisRegulae].push_back((*k)[index]); // 順方向
 					inverse_ruletags[nomenPartisRegulae][(*k)[index]] = index - 11; // 逆方向
 				}
 			}
