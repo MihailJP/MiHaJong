@@ -243,6 +243,7 @@ __declspec(dllexport) int RuleData::saveConfigFile(const char* const filename) {
 				chkerr(file, filename); // 失敗したら例外を投げる
 			}
 		}
+		info(std::string("ファイル [") + std::string(filename) + std::string("] に設定を保存しました。").c_str());
 		return 0;
 	}
 	catch (std::runtime_error& e) { // 書き込み失敗！！
