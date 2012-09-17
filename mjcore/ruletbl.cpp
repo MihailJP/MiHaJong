@@ -59,6 +59,16 @@ void RuleData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
 
 __declspec(dllexport) void RuleData::configinit() { // コンフィグ用CSVを読み込む
 	configinit_csv(); configinit_ini();
+	for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++) { // 初期化
+		memset(ruleConf[i], 0, RULE_IN_LINE + 1);
+		memset(ruleConf[i], '-', RULE_IN_LINE);
+		for (int j = 0; j < RULE_IN_LINE; j++) {
+			if ((ruleConf[i][j] == '-') && // 未設定のままで
+				(!nametbl[i * RULE_IN_LINE + j].empty()) && // 空き番ではなくて
+				(nonapplicable.find(nametbl[i * RULE_IN_LINE + j]) == nonapplicable.end())) // N/Aではないなら
+				ruleConf[i][j] = '0'; // デフォルト設定
+		}
+	}
 }
 
 void RuleData::parseRule() { // ルール設定を数値に変換
@@ -191,6 +201,14 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 				} else { // なかったら
 					std::ostringstream o; o << "キー [" << k->first << "] は無視されます";
 					warn(o.str().c_str());
+				}
+			}
+			for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++) { // 再チェック
+				for (int j = 0; j < RULE_IN_LINE; j++) {
+					if ((ruleConf[i][j] == '-') && // 未設定のままで
+						(!nametbl[i * RULE_IN_LINE + j].empty()) && // 空き番ではなくて
+						(nonapplicable.find(nametbl[i * RULE_IN_LINE + j]) == nonapplicable.end())) // N/Aではないなら
+						ruleConf[i][j] = '0'; // デフォルト設定
 				}
 			}
 			parseRule(); // データ変換
