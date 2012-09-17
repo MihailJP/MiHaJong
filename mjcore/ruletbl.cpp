@@ -10,6 +10,9 @@ std::array<std::string, RULESIZE> RuleData::nametbl;
 CSVReader::CsvVecVec RuleData::confdat;
 INIParser::IniMapMap RuleData::confdict;
 std::map<std::string, unsigned int> RuleData::inverse_nametbl;
+std::map<std::string, std::vector<std::string> > RuleData::ruletags;
+std::map<std::string, std::map<std::string, unsigned int> > RuleData::inverse_ruletags;
+std::set<std::string> RuleData::nonapplicable;
 const char RuleData::digit[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
@@ -20,8 +23,23 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 	delete[] csvdat;
 
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
-		nametbl[std::atoi((*k)[0].c_str())] = (*k)[8]; // 順方向
-		inverse_nametbl[std::string((*k)[8])] = std::atoi((*k)[0].c_str()); // 逆方向
+		std::string nomenPartisRegulae = (*k)[8]; // ルールタグ
+		unsigned int numerusPartisRegulae = std::atoi((*k)[0].c_str()); // ルールタグ
+		nametbl[numerusPartisRegulae] = nomenPartisRegulae; // 順方向
+		inverse_nametbl[nomenPartisRegulae] = numerusPartisRegulae; // 逆方向
+
+		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str()))) { // GameType合致した場合
+			ruletags[nomenPartisRegulae].clear(); inverse_ruletags[nomenPartisRegulae].clear();
+			for (unsigned int index = 11; index < (*k).size(); ++index) {
+				if ((!(*k)[index].empty()) && ((*k)[index] != ">>>")) { // 存在するなら
+					ruletags[nomenPartisRegulae][index - 11] = (*k)[index]; // 順方向
+					inverse_ruletags[nomenPartisRegulae][(*k)[index]] = index - 11; // 逆方向
+				}
+			}
+		}
+		else if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str()))) { // N/A指定があった場合
+			nonapplicable.insert(nomenPartisRegulae); // リストに追加
+		}
 	}
 }
 
@@ -104,29 +122,16 @@ __declspec(dllexport) void RuleData::getRuleDescription(char* const txt, int buf
 	strcpy_s(txt, bufsize, "");
 }
 
-std::string RuleData::getRuleItemTag(std::function<bool(const CSVReader::RECORD&)> RuleF, int index) {
-	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
-		if (RuleF(*k)) continue;
-		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str()))) {
-			if ((*k).size() > (unsigned int)(11 + index))
-				return std::string((*k)[11 + index]);
-			else return std::string("");
-		}
-		else if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str()))) {
-			return std::string("N/A");
-		}
-	}
-	return std::string("");
-}
 std::string RuleData::getRuleItemTag(int RuleID, int index) {
-	return getRuleItemTag(
-		[RuleID](const CSVReader::RECORD& k){return std::atoi(k[0].c_str()) != RuleID;},
-		index);
+	return getRuleItemTag(nametbl[RuleID], index);
 }
 std::string RuleData::getRuleItemTag(std::string RuleTag, int index) {
-	return getRuleItemTag(
-		[RuleTag](const CSVReader::RECORD& k){return k[8] != RuleTag;},
-		index);
+	if (nonapplicable.find(RuleTag) != nonapplicable.end()) // N/Aとする場合
+		return std::string("N/A");
+	else if (ruletags.find(RuleTag) != ruletags.end()) // ルール項目タグが存在しない場合
+		return std::string("");
+	else // そうでなければ
+		return ruletags[RuleTag][index];
 }
 
 __declspec(dllexport) void RuleData::getRuleTxt(char* const txt, int bufsize, int RuleID, int index) {
@@ -162,6 +167,7 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 			for (auto k = config_rules.begin(); k != config_rules.end(); ++k) { // rulesセクションについて
 				if (inverse_nametbl.find(k->first) != inverse_nametbl.end()) { // キーがあったら
 					unsigned int ruleid = inverse_nametbl[k->first]; // 番号に変換
+
 				} else { // なかったら
 					std::ostringstream o; o << "キー [" << k->first << "] は無視されます";
 					warn(o.str().c_str());

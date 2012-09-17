@@ -7,8 +7,8 @@
 #include <cstdlib>
 #include <vector>
 #include <map>
+#include <set>
 #include <array>
-#include <functional>
 #include <sstream>
 #include "logging.h"
 #include "resource.h"
@@ -42,8 +42,10 @@ private:
 	static void parseRule();
 	static void configinit_csv();
 	static void configinit_ini();
-	static std::string getRuleItemTag(std::function<bool(const CSVReader::RECORD&)> RuleF, int index);
 	static std::map<std::string, unsigned int> inverse_nametbl;
+	static std::map<std::string, std::vector<std::string> > ruletags;
+	static std::map<std::string, std::map<std::string, unsigned int> > inverse_ruletags;
+	static std::set<std::string> nonapplicable;
 	static const char digit[];
 public:
 	__declspec(dllexport) static void configinit();
