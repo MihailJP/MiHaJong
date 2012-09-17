@@ -315,6 +315,10 @@ namespace confpath {
 				CopyFile(".\\haifu\\haifu.css",
 					((string)appdata + (string)"\\MiHaJong\\haifu\\haifu.css").c_str(),
 					TRUE);
+				MakeSureDirectoryPathExists(((string)appdata + (string)"\\MiHaJong\\ai\\").c_str());
+				CopyFile(".\\ai\\default.lua",
+					((string)appdata + (string)"\\MiHaJong\\ai\\default.lua").c_str(),
+					TRUE);
 				configpath = (string)appdata + (string)"\\MiHaJong\\";
 			}
 			
