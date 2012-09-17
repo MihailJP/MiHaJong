@@ -92,13 +92,7 @@ return
 		}
 	loop
 	storeRule tmpRuleTxt
-	RawConfDat = ""
-	notesel RawConfDat
-	repeat RULE_STRING_LINES
-		noteadd tmpRuleTxt(cnt)
-	loop
-	notesave configFile
-	noteunsel
+	saveConfigFile configFile
 	return
 
 #deffunc selcat_
