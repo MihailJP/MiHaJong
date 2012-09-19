@@ -279,7 +279,7 @@ return
 	} else {
 		setCenterTitle roundName(getRound(GameStat))
 	}
-#ifdef SANMAX
+#ifdef SANMAX // TODO: この、牌をセットして、洗牌する部分、C++に移植したらどうかなぁ
 	repeat 1*4, 0: setWall GameStat, WALL_TILECODE, cnt, 1: loop // 萬子
 	repeat 1*4, 1*4: setWall GameStat, WALL_TILECODE, cnt, 9: loop // 萬子
 	repeat 9*4, 2*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+9: loop // 筒子
@@ -583,7 +583,7 @@ return
 		redrscreen: await 250
 	loop
 	// ドラをめくる
-#ifdef ALLSANMA
+#ifdef ALLSANMA // TODO: 最初の、ドラをめくるところもC++に移植
 	setDoraPointer GameStat, 102-getRinshanExtension(GameStat) // ドラ表示牌のポインタ
 #else
 	setDoraPointer GameStat, 130 // ドラ表示牌のポインタ
