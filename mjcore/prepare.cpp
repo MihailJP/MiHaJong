@@ -110,6 +110,10 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Ôƒhƒ
 				gameStat->Deck[tilepos[TILE_SUIT_CHARACTERS + i + 3]].red = AkaDora;
 		}
 	}
+	{
+		if (RuleData::chkRule("haku_potchi", "1tile_dora")) // ƒI[ƒ‹ƒ}ƒCƒeƒB[ˆµ‚¢‚Í‚¹‚¸AÔƒhƒ‰‚Æ“¯‚¶ˆµ‚¢
+			gameStat->Deck[tilepos[WhiteDragon]].red = AkaDora; // ”’ƒ|ƒbƒ`
+	}
 }
 
 inline void bluetiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Âƒhƒ‰‚ğİ’è‚·‚é
