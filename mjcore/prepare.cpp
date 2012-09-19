@@ -97,7 +97,7 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Τƒhƒ
 	{
 		const char tileRules[2][16] = {"red_west", "red_north",};
 		const tileCode tileCodes[2] = {WestWind, NorthWind,};
-		for (unsigned int i = 0; i < 2; ++i) { // ””v‚ΜΤƒhƒ‰
+		for (unsigned int i = 0; i < 2; ++i) { // ”v‚ΜΤƒhƒ‰
 			if (RuleData::chkRule(tileRules[i], "4tiles") || RuleData::chkRule(tileRules[i], "3tiles") ||
 				RuleData::chkRule(tileRules[i], "2tiles") || RuleData::chkRule(tileRules[i], "1tile"))
 				gameStat->Deck[tilepos[TILE_SUIT_CHARACTERS + i]].red = AkaDora;
@@ -113,7 +113,31 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Τƒhƒ
 }
 
 inline void bluetiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Βƒhƒ‰‚πέ’θ‚·‚ι
-	// TODO: ‚±‚κ‚πΐ‘•‚·‚ι
+	{
+		const char tileRules[3][16] = {"blue_one", "blue_five", "blue_nine",};
+		const unsigned int tileNum[3] = {1, 5, 9,};
+		for (unsigned int i = 0; i < 3; ++i) { // ””v‚ΜΒƒhƒ‰
+			if (RuleData::chkRule(tileRules[i], "character_suit") || // δέq
+				RuleData::chkRule(tileRules[i], "character_circle_suit") ||
+				RuleData::chkRule(tileRules[i], "character_bamboo_suit") ||
+				RuleData::chkRule(tileRules[i], "all_three_suits"))
+				gameStat->Deck[tilepos[TILE_SUIT_CHARACTERS + tileNum[i]] + 3].red = AoDora;
+			if (RuleData::chkRule(tileRules[i], "circle_suit") || // “›q
+				RuleData::chkRule(tileRules[i], "character_circle_suit") ||
+				RuleData::chkRule(tileRules[i], "circle_bamboo_suit") ||
+				RuleData::chkRule(tileRules[i], "all_three_suits"))
+				gameStat->Deck[tilepos[TILE_SUIT_CIRCLES + tileNum[i]] + 3].red = AoDora;
+			if (RuleData::chkRule(tileRules[i], "bamboo_suit") || // υq
+				RuleData::chkRule(tileRules[i], "circle_bamboo_suit") ||
+				RuleData::chkRule(tileRules[i], "character_bamboo_suit") ||
+				RuleData::chkRule(tileRules[i], "all_three_suits"))
+				gameStat->Deck[tilepos[TILE_SUIT_BAMBOOS + tileNum[i]] + 3].red = AoDora;
+		}
+	}
+	{
+		if (RuleData::chkRule("blue_lvfa", "yes"))
+			gameStat->Deck[tilepos[GreenDragon] + 3].red = AoDora;
+	}
 }
 
 inline void shuffletiles(GameTable* const gameStat, UInt8ByTile& tilepos, unsigned int tiles) { // τ”v‚·‚ι
