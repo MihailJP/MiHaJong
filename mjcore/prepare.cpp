@@ -1,36 +1,36 @@
 #include "prepare.h"
 
 #define settile(tilecode, pos) {tilepos[tilecode] = pos; for (unsigned int i = 0; i < 4u; ++i) {gameStat->Deck[pos++].tile = tilecode;}}
-__declspec(dllexport) void shuffle(GameTable* const gameStat) { // ”v‚πƒoƒbƒtƒ@‚Ι•ΐ‚Χ‚ΔAτ”v
-	UInt8ByTile tilepos;
-	{ // ”v‚π•ΐ‚Χ‚ι
-		unsigned int p = 0; // ”v‚ΜΚ’uID
-		if (chkGameType(gameStat, SanmaX)) {
-			settile(CharacterOne, p); // δέq
-			settile(CharacterNine, p); // δέq
-		} else {
-			for (unsigned int k = 1u; k <= 9u; ++k)
-				settile((tileCode)(TILE_SUIT_CHARACTERS + k), p); // δέq
+inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // ”v‚π•ΐ‚Χ‚ι
+	unsigned int p = 0; // ”v‚ΜΚ’uID
+	if (chkGameType(gameStat, SanmaX)) {
+		settile(CharacterOne, p); // δέq
+		settile(CharacterNine, p); // δέq
+	} else {
+		for (unsigned int k = 1u; k <= 9u; ++k)
+			settile((tileCode)(TILE_SUIT_CHARACTERS + k), p); // δέq
+	}
+	for (unsigned int k = 1u; k <= 9u; ++k)
+		settile((tileCode)(TILE_SUIT_CIRCLES + k), p); // “›q
+	for (unsigned int k = 1u; k <= 9u; ++k)
+		settile((tileCode)(TILE_SUIT_BAMBOOS + k), p); // υq
+	if (!chkGameType(gameStat, SanmaS)) {
+		for (unsigned int k = 1u; k <= 7u; ++k)
+			settile((tileCode)(TILE_SUIT_HONORS + k), p); // ”v
+		if (RuleData::chkRule("flower_tiles", "seasons") || RuleData::chkRule("flower_tiles", "8tiles")) {
+			gameStat->Deck[p++].tile = Spring; gameStat->Deck[p++].tile = Summer;
+			gameStat->Deck[p++].tile = Autumn; gameStat->Deck[p++].tile = Winter;
 		}
-		for (unsigned int k = 1u; k <= 9u; ++k)
-			settile((tileCode)(TILE_SUIT_CIRCLES + k), p); // “›q
-		for (unsigned int k = 1u; k <= 9u; ++k)
-			settile((tileCode)(TILE_SUIT_BAMBOOS + k), p); // υq
-		if (!chkGameType(gameStat, SanmaS)) {
-			for (unsigned int k = 1u; k <= 7u; ++k)
-				settile((tileCode)(TILE_SUIT_HONORS + k), p); // ”v
-			if (RuleData::chkRule("flower_tiles", "seasons") || RuleData::chkRule("flower_tiles", "8tiles")) {
-				gameStat->Deck[p++].tile = Spring; gameStat->Deck[p++].tile = Summer;
-				gameStat->Deck[p++].tile = Autumn; gameStat->Deck[p++].tile = Winter;
-			}
-			if (RuleData::chkRule("flower_tiles", "flowers") || RuleData::chkRule("flower_tiles", "8tiles")) {
-				gameStat->Deck[p++].tile = Plum; gameStat->Deck[p++].tile = Orchid;
-				gameStat->Deck[p++].tile = Chrysanthemum; gameStat->Deck[p++].tile = Bamboo;
-			}
+		if (RuleData::chkRule("flower_tiles", "flowers") || RuleData::chkRule("flower_tiles", "8tiles")) {
+			gameStat->Deck[p++].tile = Plum; gameStat->Deck[p++].tile = Orchid;
+			gameStat->Deck[p++].tile = Chrysanthemum; gameStat->Deck[p++].tile = Bamboo;
 		}
 	}
+	return p;
+}
 
-	{ // Τƒhƒ‰‚πέ’θ‚·‚ι
+inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Τƒhƒ‰‚πέ’θ‚·‚ι
+	{
 		const char tileRules[9][16] = {
 			"red_one", "red_two", "red_three", "red_four", "red_five",
 			"red_six", "red_seven", "red_eight", "red_nine",
@@ -110,4 +110,20 @@ __declspec(dllexport) void shuffle(GameTable* const gameStat) { // ”v‚πƒoƒbƒtƒ@‚
 				gameStat->Deck[tilepos[TILE_SUIT_CHARACTERS + i + 3]].red = AkaDora;
 		}
 	}
+}
+
+inline void bluetiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Βƒhƒ‰‚πέ’θ‚·‚ι
+	// TODO: ‚±‚κ‚πΐ‘•‚·‚ι
+}
+
+inline void shuffletiles(GameTable* const gameStat, UInt8ByTile& tilepos, unsigned int tiles) { // τ”v‚·‚ι
+	// TODO: ‚±‚κ‚πΐ‘•‚·‚ι
+}
+
+__declspec(dllexport) void shuffle(GameTable* const gameStat) { // ”v‚πƒoƒbƒtƒ@‚Ι•ΐ‚Χ‚ΔAτ”v
+	UInt8ByTile tilepos;
+	unsigned int tiles = inittiles(gameStat, tilepos);
+	redtiles(gameStat, tilepos);
+	bluetiles(gameStat, tilepos);
+	shuffletiles(gameStat, tilepos, tiles);
 }
