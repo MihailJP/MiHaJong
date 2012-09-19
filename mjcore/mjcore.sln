@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "logger", "..\logger\logger.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "astro", "..\astro\astro.vcxproj", "{E7C76931-F5F2-493F-AD17-A592D6DC20DC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "socket", "..\socket\socket.vcxproj", "{7B39960B-D346-465D-A9D0-8FDA45A62664}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -28,6 +30,10 @@ Global
 		{E7C76931-F5F2-493F-AD17-A592D6DC20DC}.Debug|Win32.Build.0 = Debug|Win32
 		{E7C76931-F5F2-493F-AD17-A592D6DC20DC}.Release|Win32.ActiveCfg = Release|Win32
 		{E7C76931-F5F2-493F-AD17-A592D6DC20DC}.Release|Win32.Build.0 = Release|Win32
+		{7B39960B-D346-465D-A9D0-8FDA45A62664}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7B39960B-D346-465D-A9D0-8FDA45A62664}.Debug|Win32.Build.0 = Debug|Win32
+		{7B39960B-D346-465D-A9D0-8FDA45A62664}.Release|Win32.ActiveCfg = Release|Win32
+		{7B39960B-D346-465D-A9D0-8FDA45A62664}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
