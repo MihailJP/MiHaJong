@@ -550,11 +550,11 @@ return
 		exportScore GameStat, scoreArray
 		tmpscoretxt = bignumtotext(scoreArray, targetPlayer, 100, "", "-")
 		tmptxt += " "+tmpscoretxt+"点"
-		if (getRule(RULE_WAREME) != 0) {
+		if (chkRule("wareme", "no") == 0) {
 			/* 割れ目の位置を表示 */
 			if (getWareme(GameStat) == targetPlayer) {tmptxt += " 割れ目"}
 		}
-		if (getRule(RULE_DOUKASEN) != 0) {
+		if (chkRule("doukasen", "no") == 0) {
 			/* 導火線の位置を表示 */
 			if (getDoukasen(GameStat) == targetPlayer) {tmptxt += " 導火線"}
 		}
@@ -622,7 +622,7 @@ return
 						if (getYakitori(GameStat, targetPlayer) == 1) {tmptxt += " 焼鳥"}
 						/* チップルールの場合、チップの収支を表示 */
 						/* チップレートはコンフィグで設定可能 */
-						if (getRule(RULE_CHIP) != 0) {
+						if (chkRule("chip", "no") == 0) {
 							if (getChip(GameStat, targetPlayer) >= 0) {tmptxt += " ◎+"+getChip(GameStat, targetPlayer)}
 							else {tmptxt += " ◎"+getChip(GameStat, targetPlayer)}
 						}
@@ -633,11 +633,11 @@ return
 #endif
 		}
 	} else { /* 牌を倒したか伏せたとき */
-		if (getRule(RULE_WAREME) != 0) {
+		if (chkRule("wareme", "no") == 0) {
 			/* 割れ目の位置を表示 */
 			if (getWareme(GameStat) == targetPlayer) {tmptxt += " 割れ目"}
 		}
-		if (getRule(RULE_DOUKASEN) != 0) {
+		if (chkRule("doukasen", "no") == 0) {
 			/* 導火線の位置を表示 */
 			if (getDoukasen(GameStat) == targetPlayer) {tmptxt += " 導火線"}
 		}
@@ -756,7 +756,7 @@ return
 		if (getYakitori(GameStat, targetPlayer) == 1) {tmptxt += " 焼鳥"}
 		/* チップルールの場合、チップの収支を表示 */
 		/* チップレートはコンフィグで設定可能 */
-		if (getRule(RULE_CHIP) != 0) {
+		if (chkRule("chip", "no") == 0) {
 			if (getChip(GameStat, targetPlayer) >= 0) {tmptxt += " ◎+"+getChip(GameStat, targetPlayer)}
 			else {tmptxt += " ◎"+getChip(GameStat, targetPlayer)}
 		}
@@ -1027,24 +1027,24 @@ return
 			if (cnt==0) {tmpdiff *= 100.0}
 			tmppow += "00000000"
 		loop
-		if (tmpdiff > 48000.0)&&(getRule(RULE_LIMITLESS) == 0) {
+		if (tmpdiff > 48000.0)&&(chkRule("limitless", "no") != 0) {
 			color 0, 128, 255
-		} else: if (tmpdiff > 5898240.0)&&(getRule(RULE_LIMITLESS) != 0) {
+		} else: if (tmpdiff > 5898240.0)&&(chkRule("limitless", "no") == 0) {
 			color 0, 128, 255
 		} else: if (tmpdiff > 8000.0) {
-			if (getRule(RULE_LIMITLESS) == 0) {
+			if (chkRule("limitless", "no") != 0) {
 				color 0, 255-((tmpdiff/100-80)*255/800), ((tmpdiff/100-80)*255/400)
 			} else {
 				color 0, 255-(((logf(tmpdiff)/logf(2)-12.96)/(22.50-12.96))*127), (((logf(tmpdiff)/logf(2)-12.96)/(22.50-12.96))*255)
 			}
 		} else: if (tmpdiff > 0) {
 			color 160-(tmpdiff/100*2), 255, 160-(tmpdiff/100*2)
-		} else: if (tmpdiff < -48000.0)&&(getRule(RULE_LIMITLESS) == 0) {
+		} else: if (tmpdiff < -48000.0)&&(chkRule("limitless", "no") != 0) {
 			color 255, 0, 0
-		} else: if (tmpdiff < -5898240.0)&&(getRule(RULE_LIMITLESS) != 0) {
+		} else: if (tmpdiff < -5898240.0)&&(chkRule("limitless", "no") == 0) {
 			color 255, 0, 0
 		} else: if (tmpdiff < -8000.0) {
-			if (getRule(RULE_LIMITLESS) == 0) {
+			if (chkRule("limitless", "no") != 0) {
 				color 255, 255-((abs(tmpdiff/100)-80)*255/400), 0
 			} else {
 				color 255, 255-(((logf(abs(tmpdiff))/logf(2)-12.96)/(22.50-12.96))*255), 0

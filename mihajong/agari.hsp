@@ -157,7 +157,7 @@
 			}
 			swbreak
 		case 3: case 4: case 5:
-			if (getRule(RULE_CHIP) != 0) {
+			if (chkRule("chip", "no") == 0) {
 #ifdef SANMAT
 				if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))) {
 #else
@@ -236,15 +236,15 @@
 		OyaAgari = AgariPlayer
 	}
 	calcAgariPoints GameStat, agariPointArray, AgariPointRaw, PointDelta, -1
-	if (getRule(RULE_WAREME) != 0) {
+	if (chkRule("wareme", "no") == 0) {
 		// Š„‚ê–Úƒ‹[ƒ‹
 		gosub *calculateWareme
 	}
-	if ((getRule(RULE_WAREME) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))) {
+	if ((chkRule("wareme", "greater_wareme") != 0)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))) {
 		// ƒTƒCƒRƒ‚ªƒ]ƒ–Ú‚Ì‚Í‚³‚ç‚É”{
 		gosub *calculateWareme
 	}
-	if (getRule(RULE_DOUKASEN) != 0) {
+	if (chkRule("doukasen", "no") == 0) {
 		// “±‰Îüƒ‹[ƒ‹
 		gosub *calculateDoukasen
 	}
@@ -344,16 +344,16 @@
 		}
 #endif
 		// Š„‚ê–Ú‚ÅÏ‚İ–_‚à‚Q”{‚É‚È‚é
-		if (getRule(RULE_WAREME) != 0) {
+		if (chkRule("wareme", "no") == 0) {
 			// Š„‚ê–Úƒ‹[ƒ‹
 			gosub *calculateWareme
 		}
-		if ((getRule(RULE_WAREME) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))) {
+		if ((chkRule("wareme", "greater_wareme") != 0)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))) {
 			// ƒTƒCƒRƒ‚ªƒ]ƒ–Ú‚Ì‚Í‚³‚ç‚É”{
 			gosub *calculateWareme
 		}
 		// Š„‚ê–Ú‚ÅÏ‚İ–_‚à‚Q”{‚É‚È‚é
-		if (getRule(RULE_DOUKASEN) != 0) {
+		if (chkRule("doukasen", "no") == 0) {
 			// “±‰Îüƒ‹[ƒ‹
 			gosub *calculateDoukasen
 		}
@@ -393,7 +393,7 @@
 		pointcalc GameStat, PointDelta
 	}
 	
-	if ((ChipAmount > 0)&&(getRule(RULE_CHIP) != 0)) {
+	if ((ChipAmount > 0)&&(chkRule("chip", "no") == 0)) {
 		setCenterTitle "j‹V´Z"
 		gosub *chipTransfer
 	}
@@ -412,7 +412,7 @@
 			case 7: ChipAmount = 5: swbreak
 		swend
 	}
-	if ((ChipAmount > 0)&&(getRule(RULE_CHIP) != 0)) {
+	if ((ChipAmount > 0)&&(chkRule("chip", "no") == 0)) {
 		setCenterTitle "–ğ–j‹V"
 		gosub *chipTransfer
 	}

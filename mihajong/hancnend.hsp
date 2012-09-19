@@ -88,7 +88,7 @@
 		}
 	}
 	if ((getRule(RULE_YAKITORI) == 3)||(getRule(RULE_YAKITORI) == 4)||(getRule(RULE_YAKITORI) == 5)) {
-		if (getRule(RULE_CHIP) != 0) {
+		if (chkRule("chip", "no") == 0) {
 #ifdef SANMAT
 			if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)) > 0) {
 #else

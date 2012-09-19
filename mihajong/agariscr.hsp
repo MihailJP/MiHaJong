@@ -404,7 +404,7 @@
 			ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)
 			swbreak
 	swend
-	if ((getRule(RULE_CHIP) != 0)&&(ChipAmount > 0)) {
+	if ((chkRule("chip", "no") == 0)&&(ChipAmount > 0)) {
 #ifdef SANMAT
 		if (getTsumoAgariFlag(GameStat) == 1) {ResultDesc += " [チップ "+ChipAmount+"×２]"}
 		else {ResultDesc += " [チップ "+ChipAmount+"]"}
