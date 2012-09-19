@@ -1277,3 +1277,7 @@ extern "C" {
 	// ---------------------------------------------------------------------
 
 }
+
+__declspec(dllexport) void setGameType(int gameType) {
+	GameStat.gameType = (gameTypeID)gameType;
+}

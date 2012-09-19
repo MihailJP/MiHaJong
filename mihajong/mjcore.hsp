@@ -6,6 +6,8 @@
 
 #uselib "mjcore.dll"
 
+#func setGameType "?setGameType@@YAXH@Z" int
+
 /* ƒƒMƒ“ƒOƒc[ƒ‹ */
 /*
 #func _initlog_ "?initLogger@logger@@YAHXZ"
@@ -24,6 +26,8 @@
 */
 #cfunc getRule "?getRule@@YAHH@Z" int
 #func configinit "?configinit@RuleData@@SAXXZ"
+#func loadConfigFile "?loadConfigFile@RuleData@@SAHQBD@Z" str
+#func saveConfigFile "?saveConfigFile@RuleData@@SAHQBD@Z" str
 
 /* —”ü‚è */
 #undef randomize

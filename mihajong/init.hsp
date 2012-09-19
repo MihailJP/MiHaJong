@@ -10,15 +10,15 @@
 /* コンフィグファイルのパスを設定する(Vista/7用) */
 	/* Vista以降、Program Files以下にファイルを作れないので自分で調整する */
 #ifdef SANMAS
-	configFile = confPath()+"mihassnm.cfg"
+	configFile = confPath()+"mihassnm.ini"
 #else
 	#ifdef SANMA4
-		configFile = confPath()+"mihaysnm.cfg"
+		configFile = confPath()+"mihaysnm.ini"
 	#else
 		#ifdef SANMA
-		configFile = confPath()+"mihasanm.cfg"
+		configFile = confPath()+"mihasanm.ini"
 		#else
-		configFile = confPath()+"mihajong.cfg"
+		configFile = confPath()+"mihajong.ini"
 		#endif
 	#endif
 #endif
@@ -59,28 +59,19 @@
 
 /* 卓の環境を初期化 */
 	TableEnvInitAll: GameEnv = 0
+	setGameType GAMETYPE
 
 /* 設定ファイル読み込み */
 	setconffile configFile
 	exist configFile // 設定ファイルがあるかどうか調べる
 	EnvConf =  "00000000"
+	configinit
 	if (strsize == -1) {
 		info "設定ファイルが見つかりません。デフォルトの設定を使用します。"
-		// デフォルトのコンフィグデータを作成
-		configinit
-		saveRule
+		saveConfigFile configFile // デフォルトのコンフィグデータを作成
 	} else {
-		// 設定ファイル読み込み
-		configinit
-		notesel RawConfDat
-		noteload configFile
-		info "設定ファイルを読み込みました。"
-		sdim RuleDat, RULE_IN_LINE+1, RULE_STRING_LINES
-		repeat RULE_STRING_LINES
-			noteget RuleDat(cnt), cnt
-		loop
-		noteunsel
-		storeRule RuleDat
+		info "設定ファイルが見つかりました。読み込みを開始します。"
+		loadConfigFile configFile // 設定ファイル読み込み
 	}
 
 /* 音源を初期化 */

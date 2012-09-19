@@ -68,10 +68,10 @@
 
 	・OS：Windows 7 Home Premium 32bit (Service Pack 1)
 	・物理メモリ：4GB（3.2GB使用可能）
-	・CPU：Intel Core i5 750 2.67GHz
+	・CPU：Intel Core i5 760 2.80GHz（場合により2.66GHzにダウンクロック）
 	・開発環境：Hot Soup Processor ver3.3、Visual C++ 2010 Express
 	・画像編集ツール：GIMP 2.6
-	・テキストエディタ：Mery、Notepad++、サクラエディタ
+	・テキストエディタ：Mery、Notepad++、サクラエディタ、Kate
 	・Gitクライアント：Cygwin GIT
 
 
@@ -80,11 +80,11 @@
 	・Hot Soup Processor 本体 (http://hsp.tv/)
 	・p2b.dll (http://www.geocities.jp/anachronism128/)
 	・hmm.dll (http://hsp.tv/make/tool3.html)
-	・hsplzmax.dll (http://www.vector.co.jp/soft/winnt/prog/se489215.html)
 	・hspcksum.dll (https://github.com/MihailJP/HSPCkSum/downloads)
 	・l_tooltips.as (http://lhsp.s206.xrea.com/hsp_object6.html)
 	・mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
 	・cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
+	・Lua スタティックライブラリ (http://luabinaries.sourceforge.net/download.html)
 
 
 ■ ライセンスについて
