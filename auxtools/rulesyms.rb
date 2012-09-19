@@ -12,12 +12,17 @@ def gametype (type)
 	return "〈" + tmparr.join(", ") + "〉"
 end
 
-require "csv"
-csvdat = CSV.read("../mjcore/data/confitem.csv", encoding: "SJIS")
-target = open("../mihajong/rulesyms.txt", mode_enc = "wb")
+dir = Dir::pwd # 元々の作業ディレクトリを退避
+Dir::chdir(File.expand_path(File.dirname(__FILE__))) # このスクリプトのあるディレクトリに移動
 
-for row in csvdat
+require "csv"
+csvdat = CSV.read("../mjcore/data/confitem.csv", encoding: "SJIS") # 設定を記述したCSVを開く
+target = open("../mihajong/rulesyms.txt", mode_enc = "wb") # 出力先(改行コードを固定するため敢えてバイナリモードとする)
+
+for row in csvdat # 各項目ごとに出力する
 	target.print "【", row[8], "】", row[9], gametype(row[1]), "\r\n"
 	target.print "\t", row[10], "\r\n"
 	target.print "\t設定値: ", row[11..-1].keep_if{|s| s}.delete_if{|s| s == ">>>"}.join(", "), "\r\n\r\n"
 end
+
+Dir::chdir(dir) # 作業ディレクトリを元に戻す
