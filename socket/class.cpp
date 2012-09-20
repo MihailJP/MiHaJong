@@ -22,3 +22,8 @@ mihajong_socket::Sock::Sock (const std::string& destination, uint16_t port) { //
 	if (::connect(sock, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR) // Ú‘±
 		throw connection_failure(WSAGetLastError());
 }
+
+mihajong_socket::Sock::~Sock() { // Ú‘±‚ğØ‚é
+	shutdown(sock, SD_BOTH);
+	closesocket(sock);
+}

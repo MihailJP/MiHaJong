@@ -16,6 +16,7 @@ private:
 	SOCKET sock;
 public:
 	Sock (const std::string& destination, uint16_t port); // クライアント接続
+	~Sock (); // 接続を切る
 };
 
 }
