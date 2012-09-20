@@ -77,9 +77,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="class.cpp" />
     <ClCompile Include="socket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="class.h" />
+    <ClInclude Include="except.h" />
     <ClInclude Include="socket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

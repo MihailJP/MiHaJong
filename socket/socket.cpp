@@ -5,12 +5,12 @@ HINSTANCE dllInst;
 
 DLL int socket_init () { // ソケットを初期化する
 	try {
-		if (int err = WSAStartup(MAKEWORD(2, 0), &SocketInfo)) throw err;
+		if (int err = WSAStartup(MAKEWORD(2, 0), &SocketInfo)) throw socket_error(err);
 		return 0;
 	}
-	catch (int err) {
+	catch (socket_error& err) {
 		// TODO: ダイアログとか出す
-		return err;
+		return err.error_code();
 	}
 }
 

@@ -6,7 +6,9 @@
 #define NUM_OF_SOCKETS 32
 
 #ifdef SOCKET_EXPORTS
+#include "except.h"
 #define DLL __declspec(dllexport)
+class Sock;
 extern WSADATA SocketInfo;
 extern HINSTANCE dllInst;
 #else
