@@ -31,6 +31,9 @@ mjcore/mjcore.opensdf
 astro/Debug/
 astro/Release/
 astro/ipch/
+socket/Debug/
+socket/Release/
+socket/ipch/
 mjcore/lua/*.lib
 mjcore/lua/include
 release
