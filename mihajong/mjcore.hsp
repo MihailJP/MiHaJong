@@ -109,6 +109,9 @@
 #func haifuwritebuffer "?haifuwritebuffer@haifu@@SAXQBUGameTable@@PAXHHHHPBDW4EndType@@@Z" int, var, int, int, int, int, str, int
 #func haifusave "?haifusave@haifu@@SAXXZ"
 
+/* prepare.hsp‚©‚ç‚ÌˆÚA */
+#func shuffle "?shuffle@@YAXQAUGameTable@@@Z" int
+
 /* ystruct.hsp‚©‚ç‚ÌˆÚA */
 #cfunc _YAKUSTAT_getSize "?getSize@YAKUSTAT@yaku@@SAHXZ"
 #func _YAKUSTAT_Init "?Init@YAKUSTAT@yaku@@SAXQAU12@@Z" var
