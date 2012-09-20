@@ -11,6 +11,7 @@ namespace mihajong_socket {
 
 class Sock {
 private:
+	// TODO: 後でスーパークラス作る
 	class client_thread; // クライアントのスレッド
 	class server_thread; // サーバーのスレッド
 	union Thread { // スレッドオブジェクトのポインタ(共用体)
@@ -30,13 +31,14 @@ public:
 	void connect (const std::string& destination, uint16_t port); // クライアント接続
 	void connect (); // クライアント再接続
 	bool connected (); // 接続されているかを確認
-	int putc (unsigned char byte); // 読み込み
+	int getc (); // 読み込み
+	void putc (unsigned char byte); // 読み込み
 	void disconnect (); // 接続を切る
 };
 
 class Sock::client_thread { // クライアントのスレッド
 public:
-	enum errorType {errNone, errConnection,};
+	enum errorType {errNone, errConnection, errRecv, errSend};
 	client_thread();
 	~client_thread();
 	static DWORD WINAPI thread(LPVOID lp); // スレッドを起動するための処理
@@ -46,6 +48,7 @@ public:
 	void terminate (); // 切断する
 	void chkError (); // エラーをチェックし、もしエラーだったら例外を投げる
 	unsigned char read (); // 1バイト読み込み
+	void write (unsigned char byte); // 1バイト書き込み
 private:
 	static const unsigned int bufsize = 65536;
 	SOCKET* mySock; // ソケット(ポインタ)
@@ -57,6 +60,8 @@ private:
 	sockaddr_in myAddr; // アドレス情報[親スレッドから書き込み]
 	std::queue<unsigned char> myMailBox; // 受け取ったバイト列
 	HANDLE myRecvQueueMutex; // 受信バッファ用ミューテックス
+	std::queue<unsigned char> mySendBox; // 送る予定のバイト列
+	HANDLE mySendQueueMutex; // 送信バッファ用ミューテックス
 	DWORD WINAPI myThreadFunc(); // スレッドの処理
 };
 

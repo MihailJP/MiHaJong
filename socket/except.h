@@ -51,5 +51,15 @@ class queue_empty : public socket_error { // キューが空
 public:
 	queue_empty() : socket_error("Queue is empty") {};
 };
+
+class recv_error : public socket_error { // 受信に失敗した
+public:
+	recv_error(const int err) : socket_error("Receive error", err) {};
+};
+
+class send_error : public socket_error { // 送信に失敗した
+public:
+	send_error(const int err) : socket_error("Send error", err) {};
+};
 }
 #endif

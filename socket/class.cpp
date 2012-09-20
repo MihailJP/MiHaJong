@@ -44,17 +44,26 @@ bool mihajong_socket::Sock::connected () { // Ú‘±‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
 	}
 };
 
-int mihajong_socket::Sock::putc (unsigned char byte) { // “Ç‚İ‚İ
+int mihajong_socket::Sock::getc () { // “Ç‚İ‚İ
 	try {
 		if (isServer) { // ‰¼’u‚«
 			throw socket_error("Not yet implemented");
 		} else {
-			threadPtr.client->chkError();
 			return (int)threadPtr.client->read();
+			threadPtr.client->chkError();
 		}
 	}
 	catch (queue_empty) { // ƒLƒ…[‚ª‹ó‚¾‚Á‚½‚ç
 		return -1;
+	}
+}
+
+void mihajong_socket::Sock::putc (unsigned char byte) { // ‘‚«‚İ
+	if (isServer) {
+		// ‰¼’u‚«
+	} else {
+		threadPtr.client->write(byte);
+		threadPtr.client->chkError();
 	}
 }
 
@@ -79,10 +88,12 @@ mihajong_socket::Sock::client_thread::client_thread() {
 	errtype = errNone; errcode = 0;
 	connected = terminated = finished = false;
 	myRecvQueueMutex = CreateMutex(NULL, TRUE, NULL);
+	mySendQueueMutex = CreateMutex(NULL, TRUE, NULL);
 }
 
 mihajong_socket::Sock::client_thread::~client_thread() {
 	CloseHandle(myRecvQueueMutex);
+	CloseHandle(mySendQueueMutex);
 }
 
 DWORD WINAPI mihajong_socket::Sock::client_thread::thread(LPVOID lp) { // ƒXƒŒƒbƒh‚ğ‹N“®‚·‚é‚½‚ß‚Ìˆ—
@@ -95,6 +106,10 @@ void mihajong_socket::Sock::client_thread::chkError () { // ƒGƒ‰[‚ğƒ`ƒFƒbƒN‚µA
 		break;
 	case errConnection: // Ú‘±¸”s
 		throw connection_failure(errcode);
+	case errRecv: // óM¸”s
+		throw recv_error(errcode);
+	case errSend: // ‘—M¸”s
+		throw send_error(errcode);
 	default: // ‚Ù‚©‚ÌƒGƒ‰[
 		throw socket_error(errcode);
 	}
@@ -102,7 +117,7 @@ void mihajong_socket::Sock::client_thread::chkError () { // ƒGƒ‰[‚ğƒ`ƒFƒbƒN‚µA
 
 DWORD WINAPI mihajong_socket::Sock::client_thread::myThreadFunc() { // ƒXƒŒƒbƒh‚Ìˆ—
 	if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == SOCKET_ERROR) { // Ú‘±
-		errtype = errConnection; errcode = WSAGetLastError(); ExitThread(-((int)errtype));
+		errtype = errConnection; errcode = WSAGetLastError(); return -((int)errtype);
 	}
 	connected = true; // Ú‘±Ï‚İƒtƒ‰ƒO‚ğ—§‚Ä‚é
 	u_long arg = 1;
@@ -120,14 +135,34 @@ DWORD WINAPI mihajong_socket::Sock::client_thread::myThreadFunc() { // ƒXƒŒƒbƒh‚
 				switch (int err = WSAGetLastError()) {
 				case WSAEWOULDBLOCK:
 					break; // ƒf[ƒ^‚ª‚È‚¢ê‡
-				default:
-					// ƒGƒ‰[ˆ—
-					break;
+				default: // ƒGƒ‰[ˆ—
+					errtype = errRecv; errcode = err; terminated = finished = true; connected = false;
+					return -((int)errtype);
 				}
 			}
 		}
-		// TODO ‚±‚±‚É‘—Mˆ—‚ğ‘‚­
+		{ // ‘—Mˆ—
+			unsigned char buf[bufsize] = {0,};
+			WSABUF buffer; buffer.buf = reinterpret_cast<CHAR*>(buf); buffer.len = bufsize;
+			DWORD sendsz = 0;
+
+			WaitForSingleObject(mySendQueueMutex, 0); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
+			while (!mySendBox.empty()) {
+				buf[sendsz++] = mySendBox.front(); mySendBox.pop(); // ƒLƒ…[‚©‚çæ‚èo‚µ
+			}
+			ReleaseMutex(mySendQueueMutex); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
+			if (sendsz && (WSASend(*mySock, &buffer, 1, &sendsz, 0, NULL, NULL))) { // ‘—M
+				switch (int err = WSAGetLastError()) {
+				case WSAEWOULDBLOCK:
+					break; // ‚±‚ÌƒGƒ‰[‚Í–³‹‚·‚é
+				default:
+					errtype = errSend; errcode = err; terminated = finished = true; connected = false;
+					return -((int)errtype);
+				}
+			}
+		}
 	}
+	finished = true;
 	return S_OK;
 }
 
@@ -139,6 +174,12 @@ unsigned char mihajong_socket::Sock::client_thread::read () { // 1ƒoƒCƒg“Ç‚İ‚İ
 	ReleaseMutex(myRecvQueueMutex); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
 	if (empty) throw queue_empty(); // ‹ó‚¾‚Á‚½‚ç—áŠO
 	else return byte; // ‚»‚¤‚Å‚È‚¯‚ê‚Îæ‚èo‚µ‚½’l‚ğ•Ô‚·
+}
+
+void mihajong_socket::Sock::client_thread::write (unsigned char byte) { // 1ƒoƒCƒg‘‚«‚İ
+	WaitForSingleObject(mySendQueueMutex, 0); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
+	mySendBox.push(byte); // ƒLƒ…[‚É’Ç‰Á
+	ReleaseMutex(mySendQueueMutex); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
 }
 
 bool mihajong_socket::Sock::client_thread::isConnected() { // Ú‘±Ï‚©‚ğ•Ô‚·ŠÖ”
