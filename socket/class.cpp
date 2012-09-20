@@ -84,23 +84,23 @@ void mihajong_socket::Sock::disconnect () { // 接続を切る
 
 // -------------------------------------------------------------------------
 
-mihajong_socket::Sock::client_thread::client_thread() {
+mihajong_socket::Sock::network_thread::network_thread() {
 	errtype = errNone; errcode = 0;
 	connected = terminated = finished = false;
 	myRecvQueueMutex = CreateMutex(NULL, TRUE, NULL);
 	mySendQueueMutex = CreateMutex(NULL, TRUE, NULL);
 }
 
-mihajong_socket::Sock::client_thread::~client_thread() {
+mihajong_socket::Sock::network_thread::~network_thread() {
 	CloseHandle(myRecvQueueMutex);
 	CloseHandle(mySendQueueMutex);
 }
 
-DWORD WINAPI mihajong_socket::Sock::client_thread::thread(LPVOID lp) { // スレッドを起動するための処理
+DWORD WINAPI mihajong_socket::Sock::network_thread::thread(LPVOID lp) { // スレッドを起動するための処理
 	return ((client_thread*)lp)->myThreadFunc();
 }
 
-void mihajong_socket::Sock::client_thread::chkError () { // エラーをチェックし、もしエラーだったら例外を投げる
+void mihajong_socket::Sock::network_thread::chkError () { // エラーをチェックし、もしエラーだったら例外を投げる
 	switch (errtype) {
 	case errNone: // エラーなし
 		break;
@@ -115,58 +115,61 @@ void mihajong_socket::Sock::client_thread::chkError () { // エラーをチェックし、
 	}
 }
 
-DWORD WINAPI mihajong_socket::Sock::client_thread::myThreadFunc() { // スレッドの処理
-	if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == SOCKET_ERROR) { // 接続
-		errtype = errConnection; errcode = WSAGetLastError(); return -((int)errtype);
+int mihajong_socket::Sock::network_thread::reader() { // 受信処理
+	unsigned char buf[bufsize] = {0,};
+	WSABUF buffer; buffer.buf = reinterpret_cast<CHAR*>(buf); buffer.len = bufsize;
+	DWORD recvsz; DWORD flag = 0;
+	if (WSARecv(*mySock, &buffer, 1, &recvsz, &flag, NULL, NULL) == 0) { // 受信する
+		WaitForSingleObject(myRecvQueueMutex, 0); // 受信用ミューテックスを取得
+		for (unsigned int i = 0; i < recvsz; ++i) myMailBox.push(buf[i]); // キューに追加
+		ReleaseMutex(myRecvQueueMutex); // 受信用ミューテックスを解放
+	} else { // 受信できない時
+		switch (int err = WSAGetLastError()) {
+		case WSAEWOULDBLOCK:
+			break; // データがない場合
+		default: // エラー処理
+			errtype = errRecv; errcode = err; terminated = finished = true; connected = false;
+			return -((int)errtype);
+		}
 	}
-	connected = true; // 接続済みフラグを立てる
+	return 0;
+}
+
+int mihajong_socket::Sock::network_thread::writer() { // 送信処理
+	unsigned char buf[bufsize] = {0,};
+	WSABUF buffer; buffer.buf = reinterpret_cast<CHAR*>(buf); buffer.len = bufsize;
+	DWORD sendsz = 0;
+
+	WaitForSingleObject(mySendQueueMutex, 0); // 送信用ミューテックスを取得
+	while (!mySendBox.empty()) {
+		buf[sendsz++] = mySendBox.front(); mySendBox.pop(); // キューから取り出し
+	}
+	ReleaseMutex(mySendQueueMutex); // 送信用ミューテックスを解放
+	if (sendsz && (WSASend(*mySock, &buffer, 1, &sendsz, 0, NULL, NULL))) { // 送信
+		switch (int err = WSAGetLastError()) {
+		case WSAEWOULDBLOCK:
+			break; // このエラーは無視する
+		default:
+			errtype = errSend; errcode = err; terminated = finished = true; connected = false;
+			return -((int)errtype);
+		}
+	}
+	return 0;
+}
+
+DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの処理
+	if (int err = establishConnection()) return err; // 接続
 	u_long arg = 1;
 	ioctlsocket(*mySock, FIONBIO, &arg); // non-blocking モードに設定
 	while (!terminated) { // 停止されるまで
-		{ // 受信処理
-			unsigned char buf[bufsize] = {0,};
-			WSABUF buffer; buffer.buf = reinterpret_cast<CHAR*>(buf); buffer.len = bufsize;
-			DWORD recvsz; DWORD flag = 0;
-			if (WSARecv(*mySock, &buffer, 1, &recvsz, &flag, NULL, NULL) == 0) { // 受信する
-				WaitForSingleObject(myRecvQueueMutex, 0); // 受信用ミューテックスを取得
-				for (unsigned int i = 0; i < recvsz; ++i) myMailBox.push(buf[i]); // キューに追加
-				ReleaseMutex(myRecvQueueMutex); // 受信用ミューテックスを解放
-			} else { // 受信できない時
-				switch (int err = WSAGetLastError()) {
-				case WSAEWOULDBLOCK:
-					break; // データがない場合
-				default: // エラー処理
-					errtype = errRecv; errcode = err; terminated = finished = true; connected = false;
-					return -((int)errtype);
-				}
-			}
-		}
-		{ // 送信処理
-			unsigned char buf[bufsize] = {0,};
-			WSABUF buffer; buffer.buf = reinterpret_cast<CHAR*>(buf); buffer.len = bufsize;
-			DWORD sendsz = 0;
-
-			WaitForSingleObject(mySendQueueMutex, 0); // 送信用ミューテックスを取得
-			while (!mySendBox.empty()) {
-				buf[sendsz++] = mySendBox.front(); mySendBox.pop(); // キューから取り出し
-			}
-			ReleaseMutex(mySendQueueMutex); // 送信用ミューテックスを解放
-			if (sendsz && (WSASend(*mySock, &buffer, 1, &sendsz, 0, NULL, NULL))) { // 送信
-				switch (int err = WSAGetLastError()) {
-				case WSAEWOULDBLOCK:
-					break; // このエラーは無視する
-				default:
-					errtype = errSend; errcode = err; terminated = finished = true; connected = false;
-					return -((int)errtype);
-				}
-			}
-		}
+		if (int err = reader()) return err; // 読み込み
+		if (int err = writer()) return err; // 書き込み
 	}
 	finished = true;
 	return S_OK;
 }
 
-unsigned char mihajong_socket::Sock::client_thread::read () { // 1バイト読み込み
+unsigned char mihajong_socket::Sock::network_thread::read () { // 1バイト読み込み
 	unsigned char byte; bool empty = false;
 	WaitForSingleObject(myRecvQueueMutex, 0); // 受信用ミューテックスを取得
 	if (myMailBox.empty()) empty = true; // キューが空の場合
@@ -176,26 +179,36 @@ unsigned char mihajong_socket::Sock::client_thread::read () { // 1バイト読み込み
 	else return byte; // そうでなければ取り出した値を返す
 }
 
-void mihajong_socket::Sock::client_thread::write (unsigned char byte) { // 1バイト書き込み
+void mihajong_socket::Sock::network_thread::write (unsigned char byte) { // 1バイト書き込み
 	WaitForSingleObject(mySendQueueMutex, 0); // 送信用ミューテックスを取得
 	mySendBox.push(byte); // キューに追加
 	ReleaseMutex(mySendQueueMutex); // 送信用ミューテックスを解放
 }
 
-bool mihajong_socket::Sock::client_thread::isConnected() { // 接続済かを返す関数
+bool mihajong_socket::Sock::network_thread::isConnected() { // 接続済かを返す関数
 	return connected;
 }
 
-void mihajong_socket::Sock::client_thread::setaddr (const sockaddr_in destination) { // 接続先を設定する
+void mihajong_socket::Sock::network_thread::setaddr (const sockaddr_in destination) { // 接続先を設定する
 	myAddr = destination;
 }
-void mihajong_socket::Sock::client_thread::setsock (SOCKET* const socket) { // ソケットを設定する
+void mihajong_socket::Sock::network_thread::setsock (SOCKET* const socket) { // ソケットを設定する
 	mySock = socket;
 }
 
-void mihajong_socket::Sock::client_thread::terminate () { // 切断する
+void mihajong_socket::Sock::network_thread::terminate () { // 切断する
 	terminated = true; // フラグを立てる
 	while (!finished) Sleep(0); // スレッドが終了するまで待つ
 	finished = terminated = connected = false; // フラグの後始末
 	errtype = errNone; errcode = 0;
+}
+
+// -------------------------------------------------------------------------
+
+int mihajong_socket::Sock::client_thread::establishConnection() { // 接続を確立する
+	if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == SOCKET_ERROR) { // 接続
+		errtype = errConnection; errcode = WSAGetLastError(); return -((int)errtype);
+	}
+	connected = true; // 接続済みフラグを立てる
+	return 0;
 }

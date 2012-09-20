@@ -11,7 +11,7 @@ namespace mihajong_socket {
 
 class Sock {
 private:
-	// TODO: 後でスーパークラス作る
+	class network_thread; // スレッド(スーパークラス)
 	class client_thread; // クライアントのスレッド
 	class server_thread; // サーバーのスレッド
 	union Thread { // スレッドオブジェクトのポインタ(共用体)
@@ -36,11 +36,10 @@ public:
 	void disconnect (); // 接続を切る
 };
 
-class Sock::client_thread { // クライアントのスレッド
+class Sock::network_thread { // スレッド(スーパークラス)
 public:
-	enum errorType {errNone, errConnection, errRecv, errSend};
-	client_thread();
-	~client_thread();
+	network_thread();
+	virtual ~network_thread();
 	static DWORD WINAPI thread(LPVOID lp); // スレッドを起動するための処理
 	bool isConnected (); // 接続済かを返す関数
 	void setaddr (const sockaddr_in destination); // 接続先を設定する
@@ -49,7 +48,8 @@ public:
 	void chkError (); // エラーをチェックし、もしエラーだったら例外を投げる
 	unsigned char read (); // 1バイト読み込み
 	void write (unsigned char byte); // 1バイト書き込み
-private:
+protected:
+	enum errorType {errNone, errConnection, errRecv, errSend};
 	static const unsigned int bufsize = 65536;
 	SOCKET* mySock; // ソケット(ポインタ)
 	errorType errtype; // エラーの種類
@@ -62,10 +62,18 @@ private:
 	HANDLE myRecvQueueMutex; // 受信バッファ用ミューテックス
 	std::queue<unsigned char> mySendBox; // 送る予定のバイト列
 	HANDLE mySendQueueMutex; // 送信バッファ用ミューテックス
+	virtual int establishConnection () = 0; // 接続を確立する
+	int reader (); // 読み込み
+	int writer (); // 書き込み
 	DWORD WINAPI myThreadFunc(); // スレッドの処理
 };
 
-class Sock::server_thread { // サーバーのスレッド
+class Sock::client_thread : public network_thread { // クライアントのスレッド
+protected:
+	int establishConnection (); // 接続を確立する
+};
+
+class Sock::server_thread : public network_thread { // サーバーのスレッド
 	// TODO: これを実装する
 };
 
