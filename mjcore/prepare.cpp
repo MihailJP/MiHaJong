@@ -145,7 +145,14 @@ inline void bluetiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 青ド
 }
 
 inline void shuffletiles(GameTable* const gameStat, UInt8ByTile& tilepos, unsigned int tiles) { // 洗牌する
-	// TODO: これを実装する
+	if (EnvTable::Instantiate()->GameMode != EnvTable::Client) {
+		for (unsigned int i = 0; i < tiles; ++i) { // 洗牌する
+			unsigned int tmppos = i + RndNum::rnd(tiles - i);
+			TILE tmptile = gameStat->Deck[tmppos];
+			gameStat->Deck[tmppos] = gameStat->Deck[i];
+			gameStat->Deck[i] = tmptile;
+		}
+	}
 }
 
 __declspec(dllexport) void shuffle(GameTable* const gameStat) { // 牌をバッファに並べて、洗牌

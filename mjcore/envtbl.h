@@ -17,11 +17,11 @@ private: // singleton
 		std::string PlayerName;
 		int8_t RemotePlayerFlag;
 	};
+public:
 	enum ClientType : int32_t {
 		Unavailable = (-1),
 		Standalone, Server, Client,
 	};
-public:
 	static EnvTable* Instantiate(); // Singleton instance accessor
 
 	// ÉfÅ[É^
