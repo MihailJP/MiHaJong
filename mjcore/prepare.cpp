@@ -162,3 +162,40 @@ __declspec(dllexport) void shuffle(GameTable* const gameStat) { // ”v‚ðƒoƒbƒtƒ@‚
 	bluetiles(gameStat, tilepos);
 	shuffletiles(gameStat, tilepos, tiles);
 }
+
+#define nagatadora(tilecode) {++gameStat->DoraFlag.Omote[tilecode]; haifu::haifurecdora(tilecode);}
+inline void DoraAdding(GameTable* const gameStat) {
+	setdora(gameStat, 0); // •\ƒhƒ‰‚ðÝ’è‚·‚é
+	if (RuleData::chkRuleApplied("uradora"))
+		setdora(gameStat, 1); // — ƒhƒ‰‚ðÝ’è‚·‚é
+	haifu::haifurecdorap();
+}
+
+__declspec(dllexport) void initdora(GameTable* const gameStat) { // ƒhƒ‰‚ÌÝ’è
+	if (chkGameType(gameStat, AllSanma))
+		gameStat->DoraPointer = 102 - gameStat->ExtraRinshan; // ƒhƒ‰•\Ž¦”v‚Ìƒ|ƒCƒ“ƒ^
+	else gameStat->DoraPointer = 130; // ƒhƒ‰•\Ž¦”v‚Ìƒ|ƒCƒ“ƒ^
+	if (RuleData::chkRuleApplied("nagatacho")) { // ‰i“c’¬ƒ‹[ƒ‹
+		nagatadora(BambooSeven); // Žµõ‚Íí‚Éƒhƒ‰
+		unsigned int dice = gameStat->Dice[0].Number + gameStat->Dice[1].Number;
+		if (dice <= 8) { // 2`8‚Í‚»‚Ì””v‚ªƒhƒ‰@ŽO–ƒ‚Å‚ÍäÝŽq‚ª‚È‚¢‚Ì‚Å•Êˆ—
+			if (!chkGameType(gameStat, SanmaX)) nagatadora(TILE_SUIT_CHARACTERS + dice);
+			nagatadora(TILE_SUIT_CIRCLES + dice); nagatadora(TILE_SUIT_BAMBOOS + dice);
+		} else if (dice == 9) { // 9‚Í‚»‚Ì‚Ü‚Ü9‚ªƒhƒ‰
+			nagatadora(CharacterNine); nagatadora(CircleNine); nagatadora(BambooNine);
+		} else if (dice == 10) { // 10‚ÍŽOŒ³”v‚ªƒhƒ‰
+			nagatadora(WhiteDragon); nagatadora(GreenDragon); nagatadora(RedDragon);
+		} else if (dice == 11) { // 11‚Í””v‚Ì1‚ªƒhƒ‰
+			nagatadora(CharacterOne); nagatadora(CircleOne); nagatadora(BambooOne);
+		} else if (dice == 12) { // 12‚Í•—”v‘S‚Äƒhƒ‰
+			nagatadora(EastWind); nagatadora(SouthWind); nagatadora(WestWind); nagatadora(NorthWind);
+		}
+		haifu::haifurecdorap();
+	}
+	DoraAdding(gameStat);
+	if (RuleData::chkRule("dora_twice", "yes") ||
+		(RuleData::chkRule("dora_twice", "only_when_doublets") && (gameStat->Dice[0].Number == gameStat->Dice[1].Number))) {
+			gameStat->DoraPointer -= 2; /*ƒhƒ‰ƒhƒ‰‘ì*/
+			DoraAdding(gameStat);
+	}
+}

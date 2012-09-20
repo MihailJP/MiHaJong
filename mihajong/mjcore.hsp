@@ -111,6 +111,7 @@
 
 /* prepare.hsp‚©‚ç‚ÌˆÚA */
 #func shuffle "?shuffle@@YAXQAUGameTable@@@Z" int
+#func initdora "?initdora@@YAXQAUGameTable@@@Z" int
 
 /* ystruct.hsp‚©‚ç‚ÌˆÚA */
 #cfunc _YAKUSTAT_getSize "?getSize@YAKUSTAT@yaku@@SAHXZ"
