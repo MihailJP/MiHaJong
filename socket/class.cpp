@@ -44,6 +44,20 @@ bool mihajong_socket::Sock::connected () { // Ú‘±‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
 	}
 };
 
+int mihajong_socket::Sock::putc (unsigned char byte) { // “Ç‚İ‚İ
+	try {
+		if (isServer) { // ‰¼’u‚«
+			throw socket_error("Not yet implemented");
+		} else {
+			threadPtr.client->chkError();
+			return (int)threadPtr.client->read();
+		}
+	}
+	catch (queue_empty) { // ƒLƒ…[‚ª‹ó‚¾‚Á‚½‚ç
+		return -1;
+	}
+}
+
 void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
 	if (isServer) {
 		// ‰¼’u‚«
@@ -64,6 +78,11 @@ void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
 mihajong_socket::Sock::client_thread::client_thread() {
 	errtype = errNone; errcode = 0;
 	connected = terminated = finished = false;
+	myRecvQueueMutex = CreateMutex(NULL, TRUE, NULL);
+}
+
+mihajong_socket::Sock::client_thread::~client_thread() {
+	CloseHandle(myRecvQueueMutex);
 }
 
 DWORD WINAPI mihajong_socket::Sock::client_thread::thread(LPVOID lp) { // ƒXƒŒƒbƒh‚ğ‹N“®‚·‚é‚½‚ß‚Ìˆ—
@@ -85,8 +104,41 @@ DWORD WINAPI mihajong_socket::Sock::client_thread::myThreadFunc() { // ƒXƒŒƒbƒh‚
 	if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == SOCKET_ERROR) { // Ú‘±
 		errtype = errConnection; errcode = WSAGetLastError(); ExitThread(-((int)errtype));
 	}
-	// TODO: ‚±‚±‚Éƒ‹[ƒv‚ğ‘‚­
+	connected = true; // Ú‘±Ï‚İƒtƒ‰ƒO‚ğ—§‚Ä‚é
+	u_long arg = 1;
+	ioctlsocket(*mySock, FIONBIO, &arg); // non-blocking ƒ‚[ƒh‚Éİ’è
+	while (!terminated) { // ’â~‚³‚ê‚é‚Ü‚Å
+		{ // óMˆ—
+			unsigned char buf[bufsize] = {0,};
+			WSABUF buffer; buffer.buf = reinterpret_cast<CHAR*>(buf); buffer.len = bufsize;
+			DWORD recvsz; DWORD flag = 0;
+			if (WSARecv(*mySock, &buffer, 1, &recvsz, &flag, NULL, NULL) == 0) { // óM‚·‚é
+				WaitForSingleObject(myRecvQueueMutex, 0); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
+				for (unsigned int i = 0; i < recvsz; ++i) myMailBox.push(buf[i]); // ƒLƒ…[‚É’Ç‰Á
+				ReleaseMutex(myRecvQueueMutex); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
+			} else { // óM‚Å‚«‚È‚¢
+				switch (int err = WSAGetLastError()) {
+				case WSAEWOULDBLOCK:
+					break; // ƒf[ƒ^‚ª‚È‚¢ê‡
+				default:
+					// ƒGƒ‰[ˆ—
+					break;
+				}
+			}
+		}
+		// TODO ‚±‚±‚É‘—Mˆ—‚ğ‘‚­
+	}
 	return S_OK;
+}
+
+unsigned char mihajong_socket::Sock::client_thread::read () { // 1ƒoƒCƒg“Ç‚İ‚İ
+	unsigned char byte; bool empty = false;
+	WaitForSingleObject(myRecvQueueMutex, 0); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
+	if (myMailBox.empty()) empty = true; // ƒLƒ…[‚ª‹ó‚Ìê‡
+	else {byte = myMailBox.front(); myMailBox.pop();} // ‹ó‚Å‚È‚¯‚ê‚Îæ‚èo‚·
+	ReleaseMutex(myRecvQueueMutex); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
+	if (empty) throw queue_empty(); // ‹ó‚¾‚Á‚½‚ç—áŠO
+	else return byte; // ‚»‚¤‚Å‚È‚¯‚ê‚Îæ‚èo‚µ‚½’l‚ğ•Ô‚·
 }
 
 bool mihajong_socket::Sock::client_thread::isConnected() { // Ú‘±Ï‚©‚ğ•Ô‚·ŠÖ”

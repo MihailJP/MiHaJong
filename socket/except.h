@@ -47,5 +47,9 @@ public:
 	connection_failure(const int err) : socket_error("Connection failed", err) {};
 };
 
+class queue_empty : public socket_error { // ƒLƒ…[‚ª‹ó
+public:
+	queue_empty() : socket_error("Queue is empty") {};
+};
 }
 #endif
