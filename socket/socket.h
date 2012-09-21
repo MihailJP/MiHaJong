@@ -2,7 +2,7 @@
 #define SOCKET_H
 
 #include <WinSock2.h>
-
+#include "class.h"
 
 #define NUM_OF_SOCKETS 32
 
@@ -22,6 +22,7 @@ extern HINSTANCE dllInst;
 #define DLL __declspec(dllimport)
 #endif
 
+void errordlg (socket_error& err); // エラーダイアログ
 DLL int socket_init (); // ソケットを初期化する
 DLL int socket_bye (); // ソケットのクリンナップ
 

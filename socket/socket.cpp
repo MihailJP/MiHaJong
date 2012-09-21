@@ -1,22 +1,33 @@
 #include "socket.h"
 
-WSADATA mihajong_socket::SocketInfo;
-HINSTANCE mihajong_socket::dllInst;
+namespace mihajong_socket {
 
-DLL int mihajong_socket::socket_init () { // ソケットを初期化する
+const unsigned int numOfSockets = 32u;
+WSADATA SocketInfo;
+HINSTANCE dllInst;
+Sock* sockets[numOfSockets];
+
+void errordlg (socket_error& err) { // エラーダイアログ
+	MessageBox(NULL, err.what(), "Socket Error", MB_ICONERROR | MB_TOPMOST | MB_OK);
+}
+
+DLL int socket_init () { // ソケットを初期化する
 	try {
 		if (int err = WSAStartup(MAKEWORD(2, 0), &SocketInfo)) throw socket_initialization_error(err);
 		return 0;
 	}
 	catch (socket_error& err) {
-		// TODO: ダイアログとか出す
+		errordlg(err); // ダイアログを表示する
 		return err.error_code();
 	}
 }
 
-DLL int mihajong_socket::socket_bye () { // ソケットのクリンナップ
+DLL int socket_bye () { // ソケットのクリンナップ
 	return WSACleanup();
 }
+
+}
+// -------------------------------------------------------------------------
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) { // 初期化などを行う
 	switch (fdwReason) {
