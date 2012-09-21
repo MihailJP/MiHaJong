@@ -22,6 +22,7 @@
 #include "p2b.as"
 #include "hmm.as"
 #include "hspsock.as"
+#include "socket.hsp"
 #include "llmod3.hsp"
 #include "obj.hsp"
 #include "l_tooltips.as"

@@ -1,0 +1,11 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *      [専用DLLの設定]
+ *=============================
+ */
+
+#uselib "socket.dll"
+
+#func socket_init "?socket_init@mihajong_socket@@YAHXZ"
+#func s_listen "?listen@mihajong_socket@@YAHHH@Z" int, int
+#func socket_bye "?socket_bye@mihajong_socket@@YAHXZ"

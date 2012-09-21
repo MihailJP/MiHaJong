@@ -24,6 +24,7 @@ extern HINSTANCE dllInst;
 
 void errordlg (socket_error& err); // エラーダイアログ
 DLL int socket_init (); // ソケットを初期化する
+DLL int listen (int sock_id, int port); // サーバー待ち受け開始
 DLL int socket_bye (); // ソケットのクリンナップ
 
 }

@@ -5,7 +5,7 @@ namespace mihajong_socket {
 const unsigned int numOfSockets = 32u;
 WSADATA SocketInfo;
 HINSTANCE dllInst;
-Sock* sockets[numOfSockets];
+Sock* sockets[numOfSockets] = {NULL,};
 
 void errordlg (socket_error& err) { // エラーダイアログ
 	MessageBox(NULL, err.what(), "Socket Error", MB_ICONERROR | MB_TOPMOST | MB_OK);
@@ -19,6 +19,17 @@ DLL int socket_init () { // ソケットを初期化する
 	catch (socket_error& err) {
 		errordlg(err); // ダイアログを表示する
 		return err.error_code();
+	}
+}
+
+DLL int listen (int sock_id, int port) { // サーバー待ち受け開始
+	try {
+		sockets[sock_id] = new Sock(port); // 接続する
+		return 0;
+	}
+	catch (socket_error& err) {
+		errordlg(err); // ダイアログを表示する
+		return 1;
 	}
 }
 
