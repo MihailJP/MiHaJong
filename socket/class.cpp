@@ -21,6 +21,29 @@ mihajong_socket::Sock::~Sock() { // Ú‘±‚ğØ‚é
 	this->disconnect();
 }
 
+mihajong_socket::Sock::Sock (uint16_t port) { // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
+	this->listen(port); // Ú‘±
+}
+
+void mihajong_socket::Sock::listen (uint16_t port) { // ƒT[ƒo[ŠJn
+	lsock = socket(AF_INET, SOCK_STREAM, 0); // ƒ\ƒPƒbƒg‚ğ‰Šú‰»
+	if (lsock == INVALID_SOCKET) throw socket_creation_error(WSAGetLastError()); // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”s‚µ‚½‚ç—áŠO
+	isServer = true; // ƒT[ƒo[‚Å‚ ‚é
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(port); // ƒ|[ƒg”Ô†
+	addr.sin_addr.S_un.S_addr = inet_addr("127.0.0.1"); // ƒAƒhƒŒƒX
+	if (bind(lsock, (sockaddr *)&addr, sizeof(addr)))
+		throw socket_bind_error(WSAGetLastError()); // ¸”s‚µ‚½‚ç—áŠO‚ğ“Š‚°‚é
+	this->listen();
+}
+
+void mihajong_socket::Sock::listen () { // ƒT[ƒo[ŠJn
+	threadPtr.server = new server_thread();
+	threadPtr.server->setaddr(addr);
+	threadPtr.server->setsock(&sock, &lsock);
+	CreateThread(NULL, 0, server_thread::thread, (LPVOID)threadPtr.server, 0, NULL);
+}
+
 void mihajong_socket::Sock::connect (const std::string& destination, uint16_t port) { // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
 	isServer = false; // ƒNƒ‰ƒCƒAƒ“ƒg‚Å‚ ‚é
 	addr.sin_family = AF_INET;
@@ -32,12 +55,14 @@ void mihajong_socket::Sock::connect (const std::string& destination, uint16_t po
 void mihajong_socket::Sock::connect () { // ƒNƒ‰ƒCƒAƒ“ƒgÄÚ‘±
 	threadPtr.client = new client_thread();
 	threadPtr.client->setaddr(addr);
+	threadPtr.client->setsock(&sock);
 	CreateThread(NULL, 0, client_thread::thread, (LPVOID)threadPtr.client, 0, NULL);
 }
 
 bool mihajong_socket::Sock::connected () { // Ú‘±‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
 	if (isServer) {
-		return false; // ‰¼’u‚«
+		threadPtr.server->chkError();
+		return threadPtr.server->isConnected();
 	} else {
 		threadPtr.client->chkError();
 		return threadPtr.client->isConnected();
@@ -47,7 +72,8 @@ bool mihajong_socket::Sock::connected () { // Ú‘±‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
 int mihajong_socket::Sock::getc () { // “Ç‚İ‚İ
 	try {
 		if (isServer) { // ‰¼’u‚«
-			throw socket_error("Not yet implemented");
+			return (int)threadPtr.server->read();
+			threadPtr.server->chkError();
 		} else {
 			return (int)threadPtr.client->read();
 			threadPtr.client->chkError();
@@ -60,7 +86,8 @@ int mihajong_socket::Sock::getc () { // “Ç‚İ‚İ
 
 void mihajong_socket::Sock::putc (unsigned char byte) { // ‘‚«‚İ
 	if (isServer) {
-		// ‰¼’u‚«
+		threadPtr.server->write(byte);
+		threadPtr.server->chkError();
 	} else {
 		threadPtr.client->write(byte);
 		threadPtr.client->chkError();
@@ -69,13 +96,14 @@ void mihajong_socket::Sock::putc (unsigned char byte) { // ‘‚«‚İ
 
 void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
 	if (isServer) {
-		// ‰¼’u‚«
+		threadPtr.server->terminate();
 	} else {
 		threadPtr.client->terminate();
 	}
 	closesocket(sock);
 	if (isServer) {
-		// ‰¼’u‚«
+		delete threadPtr.server;
+		threadPtr.server = NULL;
 	} else {
 		delete threadPtr.client;
 		threadPtr.client = NULL;
@@ -104,6 +132,10 @@ void mihajong_socket::Sock::network_thread::chkError () { // ƒGƒ‰[‚ğƒ`ƒFƒbƒN‚µ
 	switch (errtype) {
 	case errNone: // ƒGƒ‰[‚È‚µ
 		break;
+	case errListen: // listen¸”s
+		throw listen_failure(errcode);
+	case errAccept: // accept¸”s
+		throw accept_failure(errcode);
 	case errConnection: // Ú‘±¸”s
 		throw connection_failure(errcode);
 	case errRecv: // óM¸”s
@@ -211,4 +243,23 @@ int mihajong_socket::Sock::client_thread::establishConnection() { // Ú‘±‚ğŠm—§‚
 	}
 	connected = true; // Ú‘±Ï‚İƒtƒ‰ƒO‚ğ—§‚Ä‚é
 	return 0;
+}
+
+int mihajong_socket::Sock::server_thread::establishConnection() { // Ú‘±‚ğŠm—§‚·‚é
+	if (::listen(*listenerSock, SOMAXCONN) == SOCKET_ERROR) { // ‘Ò‹@
+		errtype = errListen; errcode = WSAGetLastError(); return -((int)errtype);
+	}
+	*mySock = accept(*listenerSock, NULL, 0);
+	if (*mySock == INVALID_SOCKET) { // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”sê‡
+		errtype = errAccept; errcode = WSAGetLastError();
+		closesocket(*listenerSock);
+		return -((int)errtype);
+	}
+	closesocket(*listenerSock);
+	connected = true; // Ú‘±Ï‚İƒtƒ‰ƒO‚ğ—§‚Ä‚é
+	return 0;
+}
+
+void mihajong_socket::Sock::server_thread::setsock (SOCKET* const socket, SOCKET* const lsocket) { // ƒ\ƒPƒbƒg‚ğİ’è‚·‚é
+	mySock = socket; listenerSock = lsocket;
 }

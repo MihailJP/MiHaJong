@@ -42,9 +42,24 @@ public:
 	invalid_address(const int err) : socket_error("Invalid or nonexistent address", err) {};
 };
 
+class socket_bind_error : public socket_error { // ソケットbind時のエラー
+public:
+	socket_bind_error(const int err) : socket_error("Socket bind error", err) {};
+};
+
 class connection_failure : public socket_error { // 接続に失敗した
 public:
 	connection_failure(const int err) : socket_error("Connection failed", err) {};
+};
+
+class listen_failure : public socket_error { // listenに失敗した
+public:
+	listen_failure(const int err) : socket_error("Listen failed", err) {};
+};
+
+class accept_failure : public socket_error { // acceptに失敗した
+public:
+	accept_failure(const int err) : socket_error("Connection acceptance failed", err) {};
 };
 
 class queue_empty : public socket_error { // キューが空

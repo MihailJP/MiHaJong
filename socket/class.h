@@ -22,12 +22,15 @@ private:
 	static uint32_t addr2var(const std::string& address); // アドレスを取得
 	bool isServer;
 	sockaddr_in addr;
-	SOCKET sock;
+	SOCKET sock, lsock;
 	Thread threadPtr;
 public:
 	Sock () {}; // ソケット初期化
+	Sock (uint16_t port); // サーバー開始
 	Sock (const std::string& destination, uint16_t port); // クライアント接続
 	~Sock (); // 接続を切る
+	void listen (uint16_t port); // サーバー開始
+	void listen (); // サーバー開始
 	void connect (const std::string& destination, uint16_t port); // クライアント接続
 	void connect (); // クライアント再接続
 	bool connected (); // 接続されているかを確認
@@ -49,9 +52,10 @@ public:
 	unsigned char read (); // 1バイト読み込み
 	void write (unsigned char byte); // 1バイト書き込み
 protected:
-	enum errorType {errNone, errConnection, errRecv, errSend};
+	enum errorType {errNone, errListen, errAccept, errConnection, errRecv, errSend};
 	static const unsigned int bufsize = 65536;
 	SOCKET* mySock; // ソケット(ポインタ)
+	SOCKET* listenerSock; // ソケット(ポインタ)
 	errorType errtype; // エラーの種類
 	int errcode; // エラーコード
 	bool connected; // 接続済みかのフラグ[ワーカースレッドから書き込み]
@@ -74,7 +78,12 @@ protected:
 };
 
 class Sock::server_thread : public network_thread { // サーバーのスレッド
-	// TODO: これを実装する
+public:
+	void setsock (SOCKET* const socket, SOCKET* const lsocket); // ソケットを設定する
+protected:
+	int establishConnection (); // 接続を確立する
+private:
+	void setsock (SOCKET* const socket); // ソケットを設定する
 };
 
 }
