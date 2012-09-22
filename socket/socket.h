@@ -26,6 +26,7 @@ void errordlg (socket_error& err); // エラーダイアログ
 DLL int init (); // ソケットを初期化する
 DLL int listen (int sock_id, int port); // サーバー待ち受け開始
 DLL int connect (int sock_id, const char* const addr, int port); // クライアント接続開始
+DLL int putc (int sock_id, int byte); // 1バイト送信
 DLL int bye (); // ソケットのクリンナップ
 
 }

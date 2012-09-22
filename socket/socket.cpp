@@ -44,6 +44,15 @@ DLL int connect (int sock_id, const char* const addr, int port) { // ƒNƒ‰ƒCƒAƒ“ƒ
 	}
 }
 
+DLL int putc (int sock_id, int byte) try { // 1ƒoƒCƒg‘—M
+	sockets[sock_id]->putc((unsigned char)byte); // 1ƒoƒCƒg‘—M
+	return 0;
+}
+catch (socket_error& err) { // ‘—M¸”s
+	errordlg(err); // ƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
+	return err.error_code();
+}
+
 DLL int bye () { // ƒ\ƒPƒbƒg‚ÌƒNƒŠƒ“ƒiƒbƒv
 	return WSACleanup();
 }
