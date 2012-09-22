@@ -35,7 +35,8 @@ public:
 	void connect (); // クライアント再接続
 	bool connected (); // 接続されているかを確認
 	unsigned char getc (); // 読み込み
-	void putc (unsigned char byte); // 読み込み
+	void putc (unsigned char byte); // 書き込み
+	void puts (std::string& str); // 文字列書き込み
 	void disconnect (); // 接続を切る
 };
 

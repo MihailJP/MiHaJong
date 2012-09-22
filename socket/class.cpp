@@ -89,6 +89,18 @@ void mihajong_socket::Sock::putc (unsigned char byte) { // ‘‚«‚İ
 	}
 }
 
+void mihajong_socket::Sock::puts (std::string& str) { // •¶š—ñ‘‚«‚İ
+	if (isServer) {
+		for (auto k = str.begin(); k != str.end(); ++k)
+			threadPtr.server->write((unsigned char)*k);
+		threadPtr.server->chkError();
+	} else {
+		for (auto k = str.begin(); k != str.end(); ++k)
+			threadPtr.client->write((unsigned char)*k);
+		threadPtr.client->chkError();
+	}
+}
+
 void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
 	if (isServer) {
 		threadPtr.server->terminate();

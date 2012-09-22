@@ -55,6 +55,15 @@ catch (socket_error& err) { // 送信失敗時
 	return err.error_code();
 }
 
+DLL int puts (int sock_id, const char* const str) try { // 文字列送信
+	sockets[sock_id]->puts(std::string(str)); // null-terminated (C-style) string 送信
+	return 0;
+}
+catch (socket_error& err) { // 送信失敗時
+	errordlg(err); // ダイアログを表示する
+	return err.error_code();
+}
+
 DLL int getc (int sock_id) try { // 1バイト受信
 	return (int)sockets[sock_id]->getc(); // 1バイト受信
 }
