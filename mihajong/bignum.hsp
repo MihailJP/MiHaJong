@@ -368,25 +368,6 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
-#defcfunc isRichiReqSatisfied var GameStat, int targetPlayer
-	Flag = 2
-	repeat NUM_OF_DIGIT_GROUPS-1,1
-		if (getScore(GameStat, targetPlayer, cnt) < 0) {Flag = 0: break}
-		if (getScore(GameStat, targetPlayer, cnt) > 0) {Flag = 1: break}
-	loop
-	if (Flag == 2) {
-		if (getScore(GameStat, targetPlayer, 0) < 10) {Flag = 0}
-		else:if ((getScore(GameStat, targetPlayer, 0) == 10)&&(chkRule("riichi_requisite", "require_1100") != 0)) {Flag = 0}
-		else {Flag = 1}
-	}
-	if (chkRule("riichi_requisite", "no") != 0) {Flag = 1}
-	if (chkRule("buttobi_border", "no") != 0) {Flag = 1}
-	return Flag
-#global
-
-#module
-#include "const.hsp"
-#include "mjcore.hsp"
 #deffunc calcAgariPoints var GameStat, array agariPointArray, array AgariPointRaw, array PointDelta, int Mode
 	if (Mode == -1) {
 		AgariPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)

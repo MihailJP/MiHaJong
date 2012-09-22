@@ -59,6 +59,7 @@
 /* bignum.hsp‚©‚ç‚ÌˆÚA */
 #cfunc BasePoint "?BasePointHSP@@YAHXZ"
 #cfunc isAboveBase "?isAboveBase@@YAHQBUGameTable@@H@Z" int, int
+#cfunc isRichiReqSatisfied "?isRichiReqSatisfied@@YAHQBUGameTable@@H@Z" int, int
 
 /* tileutil.hsp‚©‚ç‚ÌˆÚA */
 #func lipai "?lipai@@YAXQAUGameTable@@H@Z" int, int

@@ -331,3 +331,17 @@ namespace confpath {
 	}
 
 }
+
+/* ƒŠ[ƒ`‚·‚é‚Ì‚ÉŽ‚¿“_‚ª‘«‚è‚Ä‚¢‚é‚©‚Ç‚¤‚© */
+bool isRichiReqSatisfied (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+	bool Flag = true;
+	if (gameStat->Player[targetPlayer].PlayerScore < LargeNum::fromInt(1000)) Flag = false;
+	else if ((gameStat->Player[targetPlayer].PlayerScore == LargeNum::fromInt(1000)) &&
+		(RuleData::chkRule("riichi_requisite", "require_1100"))) Flag = false;
+	if (RuleData::chkRule("riichi_requisite", "no")) Flag = true;
+	if (RuleData::chkRule("buttobi_border", "no")) Flag = true;
+	return Flag;
+}
+__declspec(dllexport) int isRichiReqSatisfied (const GameTable* const gameStat, int targetPlayer) {
+	return isRichiReqSatisfied(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
+}
