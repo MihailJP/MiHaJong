@@ -11,7 +11,7 @@ void errordlg (socket_error& err) { // ƒGƒ‰[ƒ_ƒCƒAƒƒO
 	MessageBox(NULL, err.what(), "Socket Error", MB_ICONERROR | MB_TOPMOST | MB_OK);
 }
 
-DLL int socket_init () { // ƒ\ƒPƒbƒg‚ğ‰Šú‰»‚·‚é
+DLL int init () { // ƒ\ƒPƒbƒg‚ğ‰Šú‰»‚·‚é
 	try {
 		if (int err = WSAStartup(MAKEWORD(2, 0), &SocketInfo)) throw socket_initialization_error(err);
 		return 0;
@@ -44,7 +44,7 @@ DLL int connect (int sock_id, const char* const addr, int port) { // ƒNƒ‰ƒCƒAƒ“ƒ
 	}
 }
 
-DLL int socket_bye () { // ƒ\ƒPƒbƒg‚ÌƒNƒŠƒ“ƒiƒbƒv
+DLL int bye () { // ƒ\ƒPƒbƒg‚ÌƒNƒŠƒ“ƒiƒbƒv
 	return WSACleanup();
 }
 
@@ -55,11 +55,11 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) { /
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
 		mihajong_socket::dllInst = hinstDLL;
-		mihajong_socket::socket_init();
+		mihajong_socket::init();
 		break;
 	case DLL_PROCESS_DETACH:
 		mihajong_socket::dllInst = NULL;
-		mihajong_socket::socket_bye();
+		mihajong_socket::bye();
 		break;
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH:
