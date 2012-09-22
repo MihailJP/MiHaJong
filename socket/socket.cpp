@@ -11,37 +11,31 @@ void errordlg (socket_error& err) { // エラーダイアログ
 	MessageBox(NULL, err.what(), "Socket Error", MB_ICONERROR | MB_TOPMOST | MB_OK);
 }
 
-DLL int init () { // ソケットを初期化する
-	try {
-		if (int err = WSAStartup(MAKEWORD(2, 0), &SocketInfo)) throw socket_initialization_error(err);
-		return 0;
-	}
-	catch (socket_error& err) {
-		errordlg(err); // ダイアログを表示する
-		return err.error_code();
-	}
+DLL int init () try { // ソケットを初期化する
+	if (int err = WSAStartup(MAKEWORD(2, 0), &SocketInfo)) throw socket_initialization_error(err);
+	return 0;
+}
+catch (socket_error& err) {
+	errordlg(err); // ダイアログを表示する
+	return err.error_code();
 }
 
-DLL int listen (int sock_id, int port) { // サーバー待ち受け開始
-	try {
-		sockets[sock_id] = new Sock(port); // 接続する
-		return 0;
-	}
-	catch (socket_error& err) {
-		errordlg(err); // ダイアログを表示する
-		return 1;
-	}
+DLL int listen (int sock_id, int port) try { // サーバー待ち受け開始
+	sockets[sock_id] = new Sock(port); // 接続する
+	return 0;
+}
+catch (socket_error& err) {
+	errordlg(err); // ダイアログを表示する
+	return 1;
 }
 
-DLL int connect (int sock_id, const char* const addr, int port) { // クライアント接続開始
-	try {
-		sockets[sock_id] = new Sock(addr, port); // 接続する
-		return 0;
-	}
-	catch (socket_error& err) {
-		errordlg(err); // ダイアログを表示する
-		return 1;
-	}
+DLL int connect (int sock_id, const char* const addr, int port) try { // クライアント接続開始
+	sockets[sock_id] = new Sock(addr, port); // 接続する
+	return 0;
+}
+catch (socket_error& err) {
+	errordlg(err); // ダイアログを表示する
+	return 1;
 }
 
 DLL int putc (int sock_id, int byte) try { // 1バイト送信
