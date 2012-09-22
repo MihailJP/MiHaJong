@@ -441,7 +441,9 @@ return
 		} else {
 			tmptxt = "！八連荘ﾋﾟﾝﾁ！"
 		}
-	} else:if ((getHonba(GameStat) >= 5)&&(getRule(RULE_RYANSHIBA) == 1)) {
+	} else:if ((getHonba(GameStat) >= 5)&&(chkRule("ryanshiba", "from_5honba") != 0)) {
+		tmptxt = " †二飜縛り† "
+	} else:if ((getHonba(GameStat) >= 4)&&(chkRule("ryanshiba", "from_4honba") != 0)) {
 		tmptxt = " †二飜縛り† "
 	} else:if ((getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat)) >= (getGameLength(GameStat)+1)) {
 		tmptxt = "  ▽延長戦▽  "
@@ -453,13 +455,13 @@ return
 		}
 	} else {
 		color GetTableColorR(GameEnv)*10/8, GetTableColorG(GameEnv)*10/8, GetTableColorB(GameEnv)*10/8: colmode = 1
-		if (getRule(RULE_GAME_LENGTH) == 0) {tmptxt = "  - 東南戦 -  "}
-		if (getRule(RULE_GAME_LENGTH) == 1) {tmptxt = "  - 東風戦 -  "}
-		if (getRule(RULE_GAME_LENGTH) == 2) {tmptxt = "  - 一荘戦 -  "}
-		if (getRule(RULE_GAME_LENGTH) == 3) {tmptxt = "  - 東北戦 -  "}
-		if (getRule(RULE_GAME_LENGTH) == 5) {tmptxt = "  - 東々戦 -  "}
-		if (getRule(RULE_GAME_LENGTH) == 6) {tmptxt = " - 東南西戦 - "}
-		if (getRule(RULE_GAME_LENGTH) == 7) {tmptxt = "  - 東風戦 -  "}
+		if (chkRule("game_length", "east_south_game")) {tmptxt = "  - 東南戦 -  "}
+		else: if (chkRule("game_length", "east_wind_game")) {tmptxt = "  - 東風戦 -  "}
+		else: if (chkRule("game_length", "full_round_game")) {tmptxt = "  - 一荘戦 -  "}
+		else: if (chkRule("game_length", "east_north_game")) {tmptxt = "  - 東北戦 -  "}
+		else: if (chkRule("game_length", "twice_east_game")) {tmptxt = "  - 東々戦 -  "}
+		else: if (chkRule("game_length", "east_south_west_game")) {tmptxt = " - 東南西戦 - "}
+		else: if (chkRule("game_length", "east_only_game")) {tmptxt = "  - 東風戦 -  "}
 	}
 	if (colmode) {
 		borderedtxt2b tmptxt, 250, 282, GetTableColorR(GameEnv)*10/8, GetTableColorG(GameEnv)*10/8, GetTableColorB(GameEnv)*10/8, 0, 14
@@ -469,9 +471,9 @@ return
 	/* 積み棒、残り自摸牌、供託点棒の数を表示 */
 	font fontname, 16, 0: color 0, 0, 0
 #ifdef ALLSANMA
-	if ((tilesLeft(GameStat) < 53)||((tilesLeft(GameStat) < 55)&&(((getRule(RULE_DORA_TWICE) != 1)&&((getRule(RULE_DORA_TWICE) != 2)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
+	if ((tilesLeft(GameStat) < 53)||((tilesLeft(GameStat) < 55)&&(((chkRule("dora_twice", "yes") == 0)&&((chkRule("dora_twice", "only_when_doublets") == 0)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
 #else
-	if ((tilesLeft(GameStat) < 68)||((tilesLeft(GameStat) < 70)&&(((getRule(RULE_DORA_TWICE) != 1)&&((getRule(RULE_DORA_TWICE) != 2)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
+	if ((tilesLeft(GameStat) < 68)||((tilesLeft(GameStat) < 70)&&(((chkRule("dora_twice", "yes") == 0)&&((chkRule("dora_twice", "only_when_doublets") == 0)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
 #endif
 		if (getHonba(GameStat)) {tmptxt = ""+getHonba(GameStat)+"本場"}
 		else {tmptxt = "平場"}

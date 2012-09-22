@@ -12,14 +12,12 @@
 #ifdef ALLSANMA
 	yamahaiMode = 3: NumberOfTiles = 108: LoopCount = 18: PTiles = (102-getRinshanExtension(GameStat))
 #else
-	if (getRule(RULE_FLOWER_TILES) != 0) {
-		if (getRule(RULE_FLOWER_TILES) == 3) {
-			yamahaiMode = 1: NumberOfTiles = 144: LoopCount = 18: PTiles = 130
-		} else {
-			yamahaiMode = 2: NumberOfTiles = 140: LoopCount = 18: PTiles = 130
-		}
-	} else {
+	if (chkRule("flower_tiles", "no")) {
 		yamahaiMode = 0: NumberOfTiles = 136: LoopCount = 17: PTiles = 130
+	} else: if ("flower_tiles", chkRule("8tiles")) {
+		yamahaiMode = 1: NumberOfTiles = 144: LoopCount = 18: PTiles = 130
+	} else {
+		yamahaiMode = 2: NumberOfTiles = 140: LoopCount = 18: PTiles = 130
 	}
 #endif
 #ifdef SANMA4

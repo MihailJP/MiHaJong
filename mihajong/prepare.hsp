@@ -208,13 +208,14 @@ return
 	if (((getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat)) == getGameLength(GameStat))&&(getGameLength(GameStat) > 0)) {
 		// オーラスだけ特別
 		bgmplay MUS_FINAL
+	} else: if ((getHonba(GameStat) >= 5)&&(chkRule("ryanshiba", "from_5honba") != 0)) {
+		// リャンシバ時専用BGM
+		bgmplay MUS_SHIBARI
+	} else: if ((getHonba(GameStat) >= 4)&&(chkRule("ryanshiba", "from_4honba") != 0)) {
+		// リャンシバ時専用BGM
+		bgmplay MUS_SHIBARI
 	} else {
-		if ((getHonba(GameStat) >= 5)&&(getRule(RULE_RYANSHIBA) == 1)) {
-			// リャンシバ時専用BGM
-			bgmplay MUS_SHIBARI
-		} else {
-			bgmplay getRound(GameStat)
-		}
+		bgmplay getRound(GameStat)
 	}
 	if (getHonba(GameStat)) {
 		tmpStatus = ""+roundName(getRound(GameStat))+getHonba(GameStat)+"本場"
@@ -284,14 +285,12 @@ return
 #ifdef ALLSANMA
 			tmpNumberOfTiles = 108
 #else
-		if (getRule(RULE_FLOWER_TILES) != 0) {
-			if (getRule(RULE_FLOWER_TILES) == 3) {
-				tmpNumberOfTiles = 144
-			} else {
-				tmpNumberOfTiles = 140
-			}
-		} else {
+		if (chkRule("flower_tiles", "no") != 0) {
 			tmpNumberOfTiles = 136
+		} else: if (chkRule("flower_tiles", "8tiles") != 0) {
+			tmpNumberOfTiles = 144
+		} else {
+			tmpNumberOfTiles = 140
 		}
 #endif
 		repeat tmpNumberOfTiles
@@ -348,7 +347,7 @@ return
 			await 0
 		loop
 	}
-	if ((getRule(RULE_DORA_TWICE) == 1)||((getRule(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
+	if ((chkRule("dora_twice", "yes") != 0)||((chkRule("dora_twice", "only_when_doublets") != 0)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
 		addDeadWallLength GameStat, 2 /* ドラドラ卓なら王牌の数を増やす */
 	}
 	calcWareme GameStat // 割れ目
@@ -356,16 +355,13 @@ return
 #ifdef ALLSANMA
 		tmpNumberOfTiles = 108
 #else
-		switch getRule(RULE_FLOWER_TILES)
-			case 1: case 2:
-				tmpNumberOfTiles = 140
-				swbreak
-			case 3:
-				tmpNumberOfTiles = 144
-				swbreak
-			default:
-				tmpNumberOfTiles = 136
-		swend
+		if (chkRule("flower_tiles", "no") != 0) {
+			tmpNumberOfTiles = 136
+		} else: if (chkRule("flower_tiles", "8tiles") != 0) {
+			tmpNumberOfTiles = 144
+		} else {
+			tmpNumberOfTiles = 140
+		}
 #endif
 		repeat tmpNumberOfTiles
 			serversend getWall(GameStat, WALL_TILECODE, cnt)+(getWall(GameStat, WALL_REDTILE, cnt)*TILE_NONFLOWER_MAX)+0x10, GameEnv
