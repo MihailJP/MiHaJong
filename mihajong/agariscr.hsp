@@ -7,7 +7,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
-#define ctype doubleDoraEnabled ((getRule(RULE_DORA_TWICE) == 1)||((getRule(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))))
+#define ctype doubleDoraEnabled ((chkRule("dora_twice", "yes") != 0)||((chkRule("dora_twice", "only_when_doublets") != 0)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))))
 #deffunc agariscrproc var GameStat, var GameEnv, var yakuInfo, array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	buffer SCR_AGARI_BUF, 600, 600: color 0, 0, 0: boxf 0, 0, 599, 599
 	gsel 0: redraw 0: gmode gmode_alpha, , , 192
@@ -46,9 +46,9 @@
 	puttehai GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), 50, 60, 0
 	putnakihai GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), 460-((4-MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)))*40), 55, 0
 	tmpOffset = 0
-	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) > RIICHI_NO)&&(getRule(RULE_URADORA) != 1)) {
+	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) > RIICHI_NO)&&(chkRule("uradora", "no") == 0)) {
 		if (doubleDoraEnabled()) {
-			if (getRule(RULE_FLOWER_TILES) == 3) {tmpOffset = -30}
+			if (chkRule("flower_tiles", "8tiles") != 0) {tmpOffset = -30}
 		}
 	}
 	borderedtxt2a "ドラ", 50+tmpOffset, 104, drawcol(0), drawcol(1), drawcol(2), 1, 18
@@ -79,7 +79,7 @@
 			showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
 		}
 	loop
-	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) > RIICHI_NO)&&(getRule(RULE_URADORA) != 1)) {
+	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) > RIICHI_NO)&&(chkRule("uradora", "no") == 0)) {
 		tmpUraFlag = 1
 		if (doubleDoraEnabled()) {
 			pos 235+tmpOffset, 104
@@ -88,7 +88,7 @@
 		}
 		borderedtxt2a "裏", ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 18
 		if (doubleDoraEnabled()) {tmptimes = 6} else {tmptimes = 5}
-		if (getRule(RULE_KANDORA) == 2) {tmptimes -= 4}
+		if (chkRule("kandora", "yes_but_only_omote") != 0) {tmptimes -= 4}
 		repeat tmptimes
 			if (doubleDoraEnabled()) {
 				pos 260+tmpOffset+(cnt*23), 96
@@ -124,7 +124,7 @@
 			}
 		loop
 	}
-	if (getRule(RULE_FLOWER_TILES) != 0) {
+	if (chkRule("flower_tiles", "no") == 0) {
 		if (doubleDoraEnabled()) {
 			tmpOffsetX = 30
 		} else {tmpOffsetX = 0}
@@ -145,63 +145,60 @@
 			}
 		loop
 #else
-		if (getRule(RULE_FLOWER_TILES) == 3) {tmpOffsetX = 0}
+		if (chkRule("flower_tiles", "8tiles")) {tmpOffsetX = 0}
 		borderedtxt2a "花", 375+tmpOffsetX, 104, drawcol(0), drawcol(1), drawcol(2), 1, 18
 		tmpcount = 1
-		switch getRule(RULE_FLOWER_TILES)
-			case 3:
-				repeat 8
-					pos 400+(cnt*23), 96
-					if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))\(tmpcount*2)/(tmpcount)) == 1) {
-						showtileblock 0, ginfo_cx, ginfo_cy
-					} else {
-						showtileblockturned 0, ginfo_cx, ginfo_cy
-					}
-					pos 400+(cnt*23), 96
-					if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))\(tmpcount*2)/(tmpcount)) == 1) {
-						showtile TILE_FLOWER_MIN+cnt+cnt/4, ginfo_cx, ginfo_cy
-					} else {
-						showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
-					}
-					tmpcount = tmpcount * 2
-				loop
-				swbreak
-			case 1:
-				repeat 4
-					pos 400+tmpOffsetX+(cnt*23), 96
-					if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))\(tmpcount*2)/(tmpcount)) == 1) {
-						showtileblock 0, ginfo_cx, ginfo_cy
-					} else {
-						showtileblockturned 0, ginfo_cx, ginfo_cy
-					}
-					pos 400+tmpOffsetX+(cnt*23), 96
-					if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))\(tmpcount*2)/(tmpcount)) == 1) {
-						showtile TILE_SEASON_MIN+cnt, ginfo_cx, ginfo_cy
-					} else {
-						showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
-					}
-					tmpcount = tmpcount * 2
-				loop
-				swbreak
-			case 2:
-				tmpcount = 16
-				repeat 4
-					pos 400+tmpOffsetX+(cnt*23), 96
-					if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))\(tmpcount*2)/(tmpcount)) == 1) {
-						showtileblock 0, ginfo_cx, ginfo_cy
-					} else {
-						showtileblockturned 0, ginfo_cx, ginfo_cy
-					}
-					pos 400+tmpOffsetX+(cnt*23), 96
-					if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))\(tmpcount*2)/(tmpcount)) == 1) {
-						showtile TILE_PLANT_MIN+cnt, ginfo_cx, ginfo_cy
-					} else {
-						showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
-					}
-					tmpcount = tmpcount * 2
-				loop
-				swbreak
-		swend
+		if (chkRule("flower_tiles", "8tiles")) {
+			repeat 8
+				pos 400+(cnt*23), 96
+				if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))\(tmpcount*2)/(tmpcount)) == 1) {
+					showtileblock 0, ginfo_cx, ginfo_cy
+				} else {
+					showtileblockturned 0, ginfo_cx, ginfo_cy
+				}
+				pos 400+(cnt*23), 96
+				if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))\(tmpcount*2)/(tmpcount)) == 1) {
+					showtile TILE_FLOWER_MIN+cnt+cnt/4, ginfo_cx, ginfo_cy
+				} else {
+					showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+				}
+				tmpcount = tmpcount * 2
+			loop
+		} else: if (chkRule("flower_tiles", "seasons")) {
+			repeat 4
+				pos 400+tmpOffsetX+(cnt*23), 96
+				if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))\(tmpcount*2)/(tmpcount)) == 1) {
+					showtileblock 0, ginfo_cx, ginfo_cy
+				} else {
+					showtileblockturned 0, ginfo_cx, ginfo_cy
+				}
+				pos 400+tmpOffsetX+(cnt*23), 96
+				if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))\(tmpcount*2)/(tmpcount)) == 1) {
+					showtile TILE_SEASON_MIN+cnt, ginfo_cx, ginfo_cy
+				} else {
+					showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+				}
+				tmpcount = tmpcount * 2
+			loop
+			swbreak
+		} else: if (chkRule("flower_tiles", "flowers")) {
+			tmpcount = 16
+			repeat 4
+				pos 400+tmpOffsetX+(cnt*23), 96
+				if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))\(tmpcount*2)/(tmpcount)) == 1) {
+					showtileblock 0, ginfo_cx, ginfo_cy
+				} else {
+					showtileblockturned 0, ginfo_cx, ginfo_cy
+				}
+				pos 400+tmpOffsetX+(cnt*23), 96
+				if ((getFlowerFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI))\(tmpcount*2)/(tmpcount)) == 1) {
+					showtile TILE_PLANT_MIN+cnt, ginfo_cx, ginfo_cy
+				} else {
+					showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+				}
+				tmpcount = tmpcount * 2
+			loop
+		}
 #endif
 	}
 	chatrecv GameStat, GameEnv
@@ -231,8 +228,8 @@
 	tmpTotalMangan = (tmpTotalHan+YAKUVAL_MINUS_LIMIT)/YAKUVAL_HALFMANGAN
 	agariScreenMode = 0
 	if (tmpTotalMangan >= 8) {agariScreenMode = 1}
-	else: if ((tmpTotalMangan >= 6)&&((tmpXTotalHan < 12)||((tmpXTotalHan < 13)&&(getRule(RULE_KAZOE_BORDER) == 0))||((tmpXTotalHan < YAKUVAL_YAKUMAN)&&(getRule(RULE_KAZOE_BORDER) == 2)))) {agariScreenMode = 1}
-	else: if ((tmpTotalMangan >= 4)&&((tmpXTotalHan < 10)||((tmpXTotalHan < 11)&&(getRule(RULE_SANBAIMAN_BORDER) == 0)))) {agariScreenMode = 1}
+	else: if ((tmpTotalMangan >= 6)&&((tmpXTotalHan < 12)||((tmpXTotalHan < 13)&&(chkRule("kazoe_border", "13han_or_more") != 0))||((tmpXTotalHan < YAKUVAL_YAKUMAN)&&(chkRule("kazoe_border", "no") != 2)))) {agariScreenMode = 1}
+	else: if ((tmpTotalMangan >= 4)&&((tmpXTotalHan < 10)||((tmpXTotalHan < 11)&&(chkRule("sanbaiman_border", "11han_or_more") != 0)))) {agariScreenMode = 1}
 	else: if ((tmpTotalMangan >= 3)&&(tmpXTotalHan < 8)) {agariScreenMode = 1}
 	else: if ((tmpTotalMangan >= 2)&&(tmpXTotalHan < 6)) {agariScreenMode = 1}
 
@@ -321,7 +318,7 @@
 		tmptxt = ""+getYakuInfo(yakuInfo, YAKUINF_FU)+"符 "+totalHan+"飜"
 	}
 	borderedtxt2a tmptxt, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 48
-	if (getRule(RULE_LIMITLESS) == 0) {
+	if (chkRule("limitless", "no")) {
 		// 青天井じゃない場合
 		font fontname, 72, 0: tmptxt=""
 		pos 30, 500
@@ -377,33 +374,25 @@
 	if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1) {
 		ChipAmount = getYakuInfo(yakuInfo, YAKUINF_URADORA)+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA) // 裏ドラとアリスドラ
 		if ((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_DOUBLE_IPPATSU)) {
-			if (getRule(RULE_RIICHI_IPPATSU) != 1) {
+			if (chkRule("riichi_ippatsu", "no") == 0) {
 				ChipAmount++ // 一発祝儀
 			}
 		}
 	}
-	switch getRule(RULE_REDTILE_CHIP)
-		case 0: case 3:
-			if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)}
-			swbreak
-		case 1: case 4:
-			if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) != RIICHI_NO) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)}
-			swbreak
-		case 2: case 5:
-			ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)
-			swbreak
-	swend
-	switch getRule(RULE_BLUE_CHIP)
-		case 0:
-			if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)}
-			swbreak
-		case 1:
-			if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) != RIICHI_NO) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)}
-			swbreak
-		case 2:
-			ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)
-			swbreak
-	swend
+	if (chkRule("redtile_chip", "menzen_only") || chkRule("redtile_chip", "menzen_only_non_dora")) {
+		if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)}
+	} else: if (chkRule("redtile_chip", "riichi_only") || chkRule("redtile_chip", "riichi_only_non_dora")) {
+		if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) != RIICHI_NO) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)}
+	} else: if (chkRule("redtile_chip", "always") || chkRule("redtile_chip", "always_but_non_dora")) {
+		ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AKADORA)
+	}
+	if (chkRule("blue_chip", "menzen_only")) {
+		if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)}
+	} else: if (chkRule("blue_chip", "riichi_only")) {
+		if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) != RIICHI_NO) {ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)}
+	} else: if (chkRule("blue_chip", "always")) {
+		ChipAmount += getYakuInfo(yakuInfo, YAKUINF_AODORA)
+	}
 	if ((chkRule("chip", "no") == 0)&&(ChipAmount > 0)) {
 #ifdef SANMAT
 		if (getTsumoAgariFlag(GameStat) == 1) {ResultDesc += " [チップ "+ChipAmount+"×２]"}
@@ -418,35 +407,27 @@
 			if (getYakuInfo(yakuInfo, YAKUINF_URADORA) > 0) {tmptxt += "裏ドラ:"+getYakuInfo(yakuInfo, YAKUINF_URADORA)+"枚 "}
 		}
 		if (getYakuInfo(yakuInfo, YAKUINF_AKADORA) > 0) {
-			switch getRule(RULE_REDTILE_CHIP)
-				case 0: case 3:
-					if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1) {tmptxt += "赤ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"枚 "}
-					swbreak
-				case 1: case 4:
-					if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) != RIICHI_NO) {tmptxt += "赤ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"枚 "}
-					swbreak
-				case 2: case 5:
-					tmptxt += "赤ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"枚 "
-					swbreak
-			swend
+			if (chkRule("redtile_chip", "menzen_only") || chkRule("redtile_chip", "menzen_only_non_dora")) {
+				if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1) {tmptxt += "赤ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"枚 "}
+			} else: if (chkRule("redtile_chip", "riichi_only") || chkRule("redtile_chip", "riichi_only_non_dora")) {
+				if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) != RIICHI_NO) {tmptxt += "赤ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"枚 "}
+			} else: if (chkRule("redtile_chip", "always") || chkRule("redtile_chip", "always_but_non_dora")) {
+				tmptxt += "赤ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AKADORA)+"枚 "
+			}
 		}
 		if (getYakuInfo(yakuInfo, YAKUINF_AODORA) > 0) {
-			switch getRule(RULE_BLUE_CHIP)
-				case 0:
-					if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1) {tmptxt += "青ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"枚 "}
-					swbreak
-				case 1:
-					if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) != RIICHI_NO) {tmptxt += "青ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"枚 "}
-					swbreak
-				case 2:
-					tmptxt += "青ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"枚 "
-					swbreak
-			swend
+			if (chkRule("blue_chip", "menzen_only")) {
+				if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1) {tmptxt += "青ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"枚 "}
+			} else: if (chkRule("blue_chip", "riichi_only")) {
+				if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) != RIICHI_NO) {tmptxt += "青ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"枚 "}
+			} else: if (chkRule("blue_chip", "always")) {
+				tmptxt += "青ドラ:"+getYakuInfo(yakuInfo, YAKUINF_AODORA)+"枚 "
+			}
 		}
 		if (getYakuInfo(yakuInfo, YAKUINF_ALICEDORA) > 0) {tmptxt += "アリス:"+getYakuInfo(yakuInfo, YAKUINF_ALICEDORA)+"枚 "}
 		if (getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1) {
-		if ((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_DOUBLE_IPPATSU)) {
-				if (getRule(RULE_RIICHI_IPPATSU) != 1) {
+			if ((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_IPPATSU)||(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_DOUBLE_IPPATSU)) {
+				if (chkRule("riichi_ippatsu", "no") == 0) {
 					tmptxt += "一発:1枚 "
 				}
 			}
