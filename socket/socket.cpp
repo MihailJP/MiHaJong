@@ -38,6 +38,14 @@ catch (socket_error& err) {
 	return 1;
 }
 
+DLL int connected (int sock_id) try { // 接続されているか確認
+	return sockets[sock_id]->connected() ? 1 : 0; // 接続されているか確認
+}
+catch (socket_error& err) { // 送信失敗時
+	errordlg(err); // ダイアログを表示する
+	return -(err.error_code());
+}
+
 DLL int putc (int sock_id, int byte) try { // 1バイト送信
 	sockets[sock_id]->putc((unsigned char)byte); // 1バイト送信
 	return 0;
