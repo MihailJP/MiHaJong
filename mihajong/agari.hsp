@@ -124,62 +124,62 @@
 		redrscreen: redraw 1
 	loop
 	RoundEndType = ENDKYOKU_CHONBO-tmpagariflag
-	switch getRule(RULE_SIMULTANEOUS_MAHJONG)
-		case 0:
-			if (OyaAgari == -1) {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer}
-			else {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, OyaAgari}
-			swbreak
-		case 1: setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer: swbreak
-		case 2:
-			if (OyaAgari == FirstAgariPlayer) {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer+1}
-			else {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer}
-			swbreak
-	swend
+	if (chkRule("simultaneous_mahjong", "renchan_if_dealer_mahjong")) {
+		if (OyaAgari == -1) {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer}
+		else {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, OyaAgari}
+	} else: if (chkRule("simultaneous_mahjong", "renchan_if_dealer_upstream")) {
+		setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer
+	} else: if (chkRule("simultaneous_mahjong", "next_dealer")) {
+		if (OyaAgari == FirstAgariPlayer) {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer+1}
+		else {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer}
+	}
 
-	switch getRule(RULE_PENALTY_NEGATIVE)
-		case 1: case 2:
+	if (chkRule("penalty_negative", "10000pts") || chkRule("penalty_negative", "20000pts")) {
+		if (chkRule("penalty_negative", "10000pts")) {penalty = 100}
+		else: if (chkRule("penalty_negative", "20000pts")) {penalty = 200}
+#ifdef SANMAT
+		if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))) {
+#else
+		if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))||(isDobon(GameStat,PLAYER_NORTH))) {
+#endif
+			dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+			repeat NUM_OF_ACTUAL_PLAYERS
+				if (isDobon(GameStat,cnt)) {
+					PointDelta(cnt) -= penalty
+					PointDelta(AgariPlayerPriority) += penalty
+				}
+			loop
+			setCenterTitle "”ò‚Ñ”±•„"
+			putdelta PointDelta
+			redraw 1: await 3000
+			pointcalc GameStat, PointDelta
+		}
+	} else: if (chkRule("penalty_negative", "chip1") || chkRule("penalty_negative", "chip2") || chkRule("penalty_negative", "chip3")) {
+		if (chkRule("chip", "no") == 0) {
+			if (chkRule("penalty_negative", "chip1")) {penalty = 1}
+			else: if (chkRule("penalty_negative", "chip2")) {penalty = 2}
+			else: if (chkRule("penalty_negative", "chip3")) {penalty = 3}
 #ifdef SANMAT
 			if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))) {
 #else
 			if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))||(isDobon(GameStat,PLAYER_NORTH))) {
 #endif
-				dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+				dim PointDelta, NUM_OF_PLAYERS,NUM_OF_DIGIT_GROUPS
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (isDobon(GameStat,cnt)) {
-						PointDelta(cnt) -= 100*getRule(RULE_PENALTY_NEGATIVE)
-						PointDelta(AgariPlayerPriority) += 100*getRule(RULE_PENALTY_NEGATIVE)
+						PointDelta(cnt) -= penalty
+						PointDelta(AgariPlayerPriority) += penalty
 					}
 				loop
 				setCenterTitle "”ò‚Ñ”±•„"
-				putdelta PointDelta
-				redraw 1: await 3000
-				pointcalc GameStat, PointDelta
+				putchipdelta PointDelta
+				redraw 1: await 1500
+				repeat NUM_OF_PLAYERS
+					addChip GameStat, cnt, PointDelta(cnt)
+				loop
 			}
-			swbreak
-		case 3: case 4: case 5:
-			if (chkRule("chip", "no") == 0) {
-#ifdef SANMAT
-				if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))) {
-#else
-				if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))||(isDobon(GameStat,PLAYER_NORTH))) {
-#endif
-					dim PointDelta, NUM_OF_PLAYERS,NUM_OF_DIGIT_GROUPS
-					repeat NUM_OF_ACTUAL_PLAYERS
-						if (isDobon(GameStat,cnt)) {
-							PointDelta(cnt) -= (getRule(RULE_PENALTY_NEGATIVE)-2)
-							PointDelta(AgariPlayerPriority) += (getRule(RULE_PENALTY_NEGATIVE)-2)
-						}
-					loop
-					setCenterTitle "”ò‚Ñ”±•„"
-					putchipdelta PointDelta
-					redraw 1: await 1500
-					repeat NUM_OF_PLAYERS
-						addChip GameStat, cnt, PointDelta(cnt)
-					loop
-				}
-			}
-			swbreak
-	swend
+		}
+	}
 	return
 #global
 
@@ -258,25 +258,30 @@
 	redraw 1: await 1500
 	pointcalc GameStat, PointDelta
 	
-	if ((getHonba(GameStat))&&(getRule(RULE_TSUMIBOH_RATE) != 3)) {
+	if ((getHonba(GameStat))&&(chkRule("tsumiboh_rate", "no") == 0)) {
+		if (chkRule("tsumiboh_rate", "counter_200")) {tsumiboh_rate = 2}
+		else: if (chkRule("tsumiboh_rate", "counter_300")) {tsumiboh_rate = 3}
+		else: if (chkRule("tsumiboh_rate", "counter_600")) {tsumiboh_rate = 6}
+		else: if (chkRule("tsumiboh_rate", "counter_1000")) {tsumiboh_rate = 10}
+		else: if (chkRule("tsumiboh_rate", "counter_1500")) {tsumiboh_rate = 15}
 		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 #ifdef SANMAT
 		if (playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST) {
 			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*2)*tsumiboh_rate
 					} else {
-						PointDelta(cnt) -= getHonba(GameStat)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= getHonba(GameStat)*tsumiboh_rate
 					}
 				loop
 			} else {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*2)*tsumiboh_rate
 					}
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {
-						PointDelta(cnt) -= (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= (getHonba(GameStat)*2)*tsumiboh_rate
 					}
 				loop
 			}
@@ -284,18 +289,18 @@
 			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*2)*tsumiboh_rate
 					} else {
-						PointDelta(cnt) -= getHonba(GameStat)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= getHonba(GameStat)*tsumiboh_rate
 					}
 				loop
 			} else {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*2)*tsumiboh_rate
 					}
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {
-						PointDelta(cnt) -= (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= (getHonba(GameStat)*2)*tsumiboh_rate
 					}
 				loop
 			}
@@ -305,18 +310,18 @@
 			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*3)*tsumiboh_rate
 					} else {
-						PointDelta(cnt) -= getHonba(GameStat)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= getHonba(GameStat)*tsumiboh_rate
 					}
 				loop
 			} else {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*3)*tsumiboh_rate
 					}
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {
-						PointDelta(cnt) -= (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= (getHonba(GameStat)*3)*tsumiboh_rate
 					}
 				loop
 			}
@@ -324,20 +329,20 @@
 			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*3)*tsumiboh_rate
 					} else: if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
-						PointDelta(cnt) -= getHonba(GameStat)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= getHonba(GameStat)*tsumiboh_rate
 					} else {
-						PointDelta(cnt) -= getHonba(GameStat)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= getHonba(GameStat)*tsumiboh_rate
 					}
 				loop
 			} else {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*3)*tsumiboh_rate
 					}
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {
-						PointDelta(cnt) -= (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= (getHonba(GameStat)*3)*tsumiboh_rate
 					}
 				loop
 			}
