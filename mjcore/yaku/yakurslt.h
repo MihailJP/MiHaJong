@@ -29,7 +29,6 @@ EXPORT_STRUCT yaku::YAKUSTAT {
 	// -----------------------------------------------------------------
 	MELD_BUF MianziDat; // 面子に分解したデータ
 	// -----------------------------------------------------------------
-	static int getSize(); // 構造体のサイズを返す
 	static void Init(YAKUSTAT* const myInstance); // インスタンスを初期化する
 	static void exportYakuPoint(const YAKUSTAT* const myInstance, int* const exportArray);
 	static void setYakuInfo(YAKUSTAT* const myInstance, int index, int value);

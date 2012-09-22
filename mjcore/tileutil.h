@@ -65,9 +65,6 @@ __declspec(dllexport) void lipai(GameTable* const gameStat, int targetPlayer);
 #endif
 
 MJCORE Int8ByTile countseentiles(const GameTable* const gameStat);
-#ifdef MJCORE_EXPORTS
-__declspec(dllexport) void countseentiles(int* const seenTiles, const GameTable* const gameStat);
-#endif
 
 MJCORE Int8ByTile countTilesInHand(const GameTable* const gameStat, PLAYER_ID playerID);
 #ifdef MJCORE_EXPORTS
@@ -75,16 +72,9 @@ __declspec(dllexport) void countTilesInHand(int* const tileCount, const GameTabl
 #endif
 
 MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PLAYER_ID playerID, int doraCol);
-#ifdef MJCORE_EXPORTS
-__declspec(dllexport) void countRedTilesInHand(int* const tileCount, const GameTable* const gameStat, int playerID);
-#endif
 
 MJCORE TileStatus gettilestatus(
 	const GameTable* const gameStat, PLAYER_ID targetPlayer, int targetTile, bool CheckMode);
-#ifdef MJCORE_EXPORTS
-__declspec(dllexport) int gettilestatus(
-	const GameTable* const gameStat, int targetPlayer, int targetTile, int CheckMode);
-#endif
 
 MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PLAYER_ID targetPlayer);
 #ifdef MJCORE_EXPORTS

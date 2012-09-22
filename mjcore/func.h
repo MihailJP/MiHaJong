@@ -69,9 +69,7 @@ __declspec(dllexport) void roundName(char* str, int bufsz, int roundNum);
 std::string inline TileName(tileCode tile);
 __declspec(dllexport) void TileName(char* str, int bufsz, int tile);
 
-__declspec(dllexport) inline int WindMax();
-tileCode inline Wind2Tile(uint8_t wind);
-__declspec(dllexport) int Wind2Tile(int wind);
+tileCode Wind2Tile(uint8_t wind);
 
 int BasePoint();
 __declspec(dllexport) int BasePointHSP();
