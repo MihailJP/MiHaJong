@@ -34,7 +34,7 @@ public:
 	void connect (const std::string& destination, uint16_t port); // クライアント接続
 	void connect (); // クライアント再接続
 	bool connected (); // 接続されているかを確認
-	int getc (); // 読み込み
+	unsigned char getc (); // 読み込み
 	void putc (unsigned char byte); // 読み込み
 	void disconnect (); // 接続を切る
 };

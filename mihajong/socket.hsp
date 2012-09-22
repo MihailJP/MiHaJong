@@ -10,4 +10,5 @@
 #func s_listen "?listen@mihajong_socket@@YAHHH@Z" int, int
 #func s_connect "?connect@mihajong_socket@@YAHHQBDH@Z" int, str, int
 #func s_putc "?putc@mihajong_socket@@YAHHH@Z" int, int
+#cfunc s_getc "?getc@mihajong_socket@@YAHH@Z" int
 #func s_bye "?bye@mihajong_socket@@YAHXZ"

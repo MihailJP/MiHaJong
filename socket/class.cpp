@@ -69,18 +69,13 @@ bool mihajong_socket::Sock::connected () { // 接続されているかを確認
 	}
 };
 
-int mihajong_socket::Sock::getc () { // 読み込み
-	try {
-		if (isServer) { // 仮置き
-			return (int)threadPtr.server->read();
-			threadPtr.server->chkError();
-		} else {
-			return (int)threadPtr.client->read();
-			threadPtr.client->chkError();
-		}
-	}
-	catch (queue_empty) { // キューが空だったら
-		return -1;
+unsigned char mihajong_socket::Sock::getc () { // 読み込み
+	if (isServer) {
+		threadPtr.server->chkError();
+		return threadPtr.server->read();
+	} else {
+		threadPtr.client->chkError();
+		return threadPtr.client->read();
 	}
 }
 
