@@ -8,4 +8,5 @@
 
 #func socket_init "?socket_init@mihajong_socket@@YAHXZ"
 #func s_listen "?listen@mihajong_socket@@YAHHH@Z" int, int
+#func s_connect "?connect@mihajong_socket@@YAHHQBDH@Z" int, str, int
 #func socket_bye "?socket_bye@mihajong_socket@@YAHXZ"

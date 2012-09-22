@@ -33,6 +33,17 @@ DLL int listen (int sock_id, int port) { // サーバー待ち受け開始
 	}
 }
 
+DLL int connect (int sock_id, const char* const addr, int port) { // クライアント接続開始
+	try {
+		sockets[sock_id] = new Sock(addr, port); // 接続する
+		return 0;
+	}
+	catch (socket_error& err) {
+		errordlg(err); // ダイアログを表示する
+		return 1;
+	}
+}
+
 DLL int socket_bye () { // ソケットのクリンナップ
 	return WSACleanup();
 }
