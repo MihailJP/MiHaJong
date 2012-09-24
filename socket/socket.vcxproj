@@ -83,7 +83,11 @@
   <ItemGroup>
     <ClInclude Include="class.h" />
     <ClInclude Include="except.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="socket.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ver.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

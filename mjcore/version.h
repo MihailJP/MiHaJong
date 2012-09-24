@@ -21,4 +21,9 @@
 #define ASTRO_PATCH_VER 0
 #define ASTRO_VER "1.7.0"
 
+#define SOCKET_MAJOR_VER 1
+#define SOCKET_MINOR_VER 7
+#define SOCKET_PATCH_VER 1
+#define SOCKET_VER "1.7.1"
+
 #endif
