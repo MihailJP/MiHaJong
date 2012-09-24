@@ -180,7 +180,6 @@
 				}
 				tmpcount = tmpcount * 2
 			loop
-			swbreak
 		} else: if (chkRule("flower_tiles", "flowers")) {
 			tmpcount = 16
 			repeat 4

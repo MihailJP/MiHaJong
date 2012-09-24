@@ -14,7 +14,7 @@
 #else
 	if (chkRule("flower_tiles", "no")) {
 		yamahaiMode = 0: NumberOfTiles = 136: LoopCount = 17: PTiles = 130
-	} else: if ("flower_tiles", chkRule("8tiles")) {
+	} else: if (chkRule("flower_tiles", "8tiles")) {
 		yamahaiMode = 1: NumberOfTiles = 144: LoopCount = 18: PTiles = 130
 	} else {
 		yamahaiMode = 2: NumberOfTiles = 140: LoopCount = 18: PTiles = 130
