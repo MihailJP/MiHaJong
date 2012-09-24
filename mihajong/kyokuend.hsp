@@ -9,7 +9,7 @@
 #include "mjcore.hsp"
 #deffunc checkroundabort var GameStat, var GameEnv
 	/* 四開槓なら流す */
-	if (getRule(RULE_FOUR_KONG_RYUUKYOKU) != 2) {
+	if (chkRule("four_kong_ryuukyoku", "continue") == 0) {
 		if ((getTotalKang(GameStat) == 4)&&(getNumberOfQuads(GameStat, 0) < 4)&&(getNumberOfQuads(GameStat, 1) < 4)&&(getNumberOfQuads(GameStat, 2) < 4)&&(getNumberOfQuads(GameStat, 3) < 4)) {
 			RoundEndType = ENDKYOKU_SUUKAIKAN
 			redrscreen: return RoundEndType
@@ -17,7 +17,7 @@
 	}
 #ifdef ALLSANMA
 	// 三人立直の判定
-	if (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 0) {
+	if (chkRule("four_riichi_ryuukyoku", "continue") == 0) {
 #ifdef SANMA4
 		if (((getRichiFlag(GameStat, RICHI_FLAG, 0) != RIICHI_NO)||(playerwind(0, getRound(GameStat)) == PLAYER_NORTH))&&((getRichiFlag(GameStat, RICHI_FLAG, 1) != RIICHI_NO)||(playerwind(1, getRound(GameStat)) == PLAYER_NORTH))&&((getRichiFlag(GameStat, RICHI_FLAG, 2) != RIICHI_NO)||(playerwind(2, getRound(GameStat)) == PLAYER_NORTH))&&((getRichiFlag(GameStat, RICHI_FLAG, 3) != RIICHI_NO)||(playerwind(3, getRound(GameStat)) == PLAYER_NORTH))) {
 #else
@@ -27,7 +27,7 @@
 		}
 	}
 	// 三風連打の判定
-	if (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 0) {
+	if (chkRule("four_wind_ryuukyoku", "continue") == 0) {
 #ifdef SANMA4
 		if (((DiscardPointer(GameStat, 0) == 1)||(playerwind(0, getRound(GameStat)) == PLAYER_NORTH))&&((DiscardPointer(GameStat, 1) == 1)||(playerwind(1, getRound(GameStat)) == PLAYER_NORTH))&&((DiscardPointer(GameStat, 2) == 1)||(playerwind(2, getRound(GameStat)) == PLAYER_NORTH))&&((DiscardPointer(GameStat, 3) == 1)||(playerwind(3, getRound(GameStat)) == PLAYER_NORTH))) {
 			if (((getDiscard(GameStat, DISCARD_TILECODE, 1, 0) == getDiscard(GameStat, DISCARD_TILECODE, 1, 1))||(playerwind(1, getRound(GameStat)) == PLAYER_NORTH))&&((getDiscard(GameStat, DISCARD_TILECODE, 1, 1) == getDiscard(GameStat, DISCARD_TILECODE, 1, 2))||(playerwind(2, getRound(GameStat)) == PLAYER_NORTH))&&((getDiscard(GameStat, DISCARD_TILECODE, 1, 2) == getDiscard(GameStat, DISCARD_TILECODE, 1, 3))||(playerwind(3, getRound(GameStat)) == PLAYER_NORTH))&&((getDiscard(GameStat, DISCARD_TILECODE, 1, 3) == getDiscard(GameStat, DISCARD_TILECODE, 1, 0))||(playerwind(0, getRound(GameStat)) == PLAYER_NORTH))) {
@@ -43,11 +43,11 @@
 	}
 #else
 	// 四人立直の判定
-	if (((getRichiFlag(GameStat, RICHI_FLAG, 0)*getRichiFlag(GameStat, RICHI_FLAG, 1)*getRichiFlag(GameStat, RICHI_FLAG, 2)*getRichiFlag(GameStat, RICHI_FLAG, 3)) != 0)&&(getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 2)) {
+	if (((getRichiFlag(GameStat, RICHI_FLAG, 0)*getRichiFlag(GameStat, RICHI_FLAG, 1)*getRichiFlag(GameStat, RICHI_FLAG, 2)*getRichiFlag(GameStat, RICHI_FLAG, 3)) != 0)&&(chkRule("four_riichi_ryuukyoku", "continue") == 0)) {
 		RoundEndType = ENDKYOKU_SUUCHARIICHI: return RoundEndType
 	}
 	// 四風連打の判定
-	if (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 2) {
+	if (chkRule("four_wind_ryuukyoku", "continue") == 0) {
 		if ((DiscardPointer(GameStat, 0) == 1)&&(DiscardPointer(GameStat, 1) == 1)&&(DiscardPointer(GameStat, 2) == 1)&&(DiscardPointer(GameStat, 3) == 1)) {
 			if ((getDiscard(GameStat, DISCARD_TILECODE, 1, 0) == getDiscard(GameStat, DISCARD_TILECODE, 1, 1))&&(getDiscard(GameStat, DISCARD_TILECODE, 1, 1) == getDiscard(GameStat, DISCARD_TILECODE, 1, 2))&&(getDiscard(GameStat, DISCARD_TILECODE, 1, 2) == getDiscard(GameStat, DISCARD_TILECODE, 1, 3))) {
 				if ((getDiscard(GameStat, DISCARD_TILECODE, 1, 0) >= TILE_WIND_MIN)&&(getDiscard(GameStat, DISCARD_TILECODE, 1, 0) <= TILE_WIND_MAX)) {
@@ -60,35 +60,33 @@
 	repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop // バグ防止のため
 	if (((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == getPreviousMeld(GameStat, PREVMELD_TILECODE))||(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) == getPreviousMeld(GameStat, PREVMELD_STEPPED)))&&(getAgariHouki(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 0)) {
 		// 喰い替えの場合の処理
-		switch getRule(RULE_KUIKAE)
-			case 0: case 3:
-				/* 和了り放棄とする設定 */
-				info strf("喰い変えを検出しました。和了り放棄として扱います。打牌 [%d] 鳴いた牌 [%d]", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getPreviousMeld(GameStat, PREVMELD_TILECODE))
-				dsplay@ SND_CUOHU
-				repeat 2
-					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "喰替"
-					redrscreen: await 1500
-					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "和了放棄"
-					redrscreen: await 1500
-				loop
-				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), ""
-				redrscreen
-				/* 和了り放棄は以降強制ツモ切り、強制不聴扱いとなります */
-				setAgariHouki GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
-				if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}
-				vanish2@
-				swbreak
-			case 1: case 4:
-				/* 直ちに錯和とする設定 */
-				info strf("喰い変えを検出しました。チョンボとして扱います。打牌 [%d] 鳴いた牌 [%d]", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getPreviousMeld(GameStat, PREVMELD_TILECODE))
-				dsplay@ SND_CUOHU
-				RoundEndType = ENDKYOKU_CHONBO: setTsumoAgariFlag GameStat, AGARI_KUIKAE
-				setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "錯和"
+		if (chkRule("kuikae", "agari_houki") || chkRule("kuikae", "agari_houki_if_in_kind")) {
+			/* 和了り放棄とする設定 */
+			info strf("喰い変えを検出しました。和了り放棄として扱います。打牌 [%d] 鳴いた牌 [%d]", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getPreviousMeld(GameStat, PREVMELD_TILECODE))
+			dsplay@ SND_CUOHU
+			repeat 2
+				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "喰替"
 				redrscreen: await 1500
-				/* 局を打ち切り、満貫罰符の支払いに進む */
-				return RoundEndType
-		swend
+				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "和了放棄"
+				redrscreen: await 1500
+			loop
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), ""
+			redrscreen
+			/* 和了り放棄は以降強制ツモ切り、強制不聴扱いとなります */
+			setAgariHouki GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
+			if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}
+			vanish2@
+		} else: if (chkRule("kuikae", "chombo") || chkRule("kuikae", "chombo_if_in_kind")) {
+			/* 直ちに錯和とする設定 */
+			info strf("喰い変えを検出しました。チョンボとして扱います。打牌 [%d] 鳴いた牌 [%d]", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getPreviousMeld(GameStat, PREVMELD_TILECODE))
+			dsplay@ SND_CUOHU
+			RoundEndType = ENDKYOKU_CHONBO: setTsumoAgariFlag GameStat, AGARI_KUIKAE
+			setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
+			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "錯和"
+			redrscreen: await 1500
+			/* 局を打ち切り、満貫罰符の支払いに進む */
+			return RoundEndType
+		}
 	}
 	/* 多牌や少牌をしていないかのチェック */
 	tmptilecnt = 0
@@ -154,7 +152,7 @@
 				continue // 北家は無視
 			}
 #endif
-			if (getRule(RULE_NAGASHI_MANGAN) != 4) {
+			if (chkRule("nagashi_mangan", "no") == 0) {
 				if (isNagashiMangan(GameStat, GameEnv, cnt)) {NagashiManganFlag(cnt) = 1: RoundEndType = ENDKYOKU_NAGASHIMANGAN}
 			}
 		loop
@@ -252,12 +250,15 @@
 			loop
 			
 			RenchanFlag = 0
-			switch getRule(RULE_ROUND_CONTINUATION)
-				case 0: if (isTenpai(GameStat, GameEnv, (getRound(GameStat)\NUM_OF_PLAYERS))) {RenchanFlag = 1}: swbreak
-				case 2: RenchanFlag = 1: swbreak
-				case 4: if ((isTenpai(GameStat, GameEnv, (getRound(GameStat)\NUM_OF_PLAYERS)))||((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}: swbreak
-				case 5: if ((isTenpai(GameStat, GameEnv, (getRound(GameStat)\NUM_OF_PLAYERS)))&&((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}: swbreak
-			swend
+			if (chkRule("round_continuation", "renchan_if_ready")) {
+				if (isTenpai(GameStat, GameEnv, (getRound(GameStat)\NUM_OF_PLAYERS))) {RenchanFlag = 1}
+			} else: if (chkRule("round_continuation", "renchan_always")) {
+				RenchanFlag = 1
+			} else: if (chkRule("round_continuation", "renchan_if_ready_until_final_round")) {
+				if ((isTenpai(GameStat, GameEnv, (getRound(GameStat)\NUM_OF_PLAYERS)))||((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}
+			} else: if (chkRule("round_continuation", "renchan_if_mahjong_until_final_round")) {
+				if ((isTenpai(GameStat, GameEnv, (getRound(GameStat)\NUM_OF_PLAYERS)))&&((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}
+			}
 			ryuukyokuProc GameStat, RenchanFlag
 		swbreak
 	/**************/
@@ -268,7 +269,7 @@
 				setCall cnt, ""
 			loop
 			setCenterTitle ""
-			if ((playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
+			if ((playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST)&&(chkRule("round_continuation", "renchan_never") == 0)) {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
 			} else {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
@@ -277,7 +278,7 @@
 			redrscreen
 			redraw 1
 			
-			if ((playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST)&&(getRule(RULE_ROUND_CONTINUATION) != 3)) {
+			if ((playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST)&&(chkRule("round_continuation", "renchan_never") == 0)) {
 				incHonba GameStat
 			} else {
 				setHonba GameStat, 0: incRound GameStat
@@ -312,8 +313,8 @@
 			dsplay@ SND_PINGJU
 			bgmplay_norep MUS_RYUUKYOKU
 			redrscreen: redraw 1: await 3000
-			if (getRule(RULE_NINE_TERMINALS) != 2) {
-				if ((getRule(RULE_NINE_TERMINALS) != 1)||(playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST)) {
+			if (chkRule("nine_terminals", "next_dealer") == 0) {
+				if ((chkRule("nine_terminals", "renchan_if_dealer_kyuushu") == 0)||(playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST)) {
 					RenchanFlag = 1
 				} else {
 					RenchanFlag = 0
@@ -341,7 +342,7 @@
 			bgmplay_norep MUS_RYUUKYOKU
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 3000
-			ryuukyokuProc GameStat, (getRule(RULE_FOUR_KONG_RYUUKYOKU) != 1)
+			ryuukyokuProc GameStat, (chkRule("four_kong_ryuukyoku", "next_dealer") == 0)
 		swbreak
 	/**************/
 	/* 三家和の時 */
@@ -371,28 +372,23 @@
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 3000
 
-			switch getRule(RULE_TRIPLE_MAHJONG)
-				case 0:
-					if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) != PLAYER_EAST) {
-						RenchanFlag = 1
-					} else {
-						RenchanFlag = 0
-					}
-					swbreak
-				case 1:
-					if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) == PLAYER_NORTH) {
-						RenchanFlag = 1
-					} else {
-						RenchanFlag = 0
-					}
-					swbreak
-				case 2:
+			if (chkRule("triple_mahjong", "renchan_if_nondealer_furikomi")) {
+				if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) != PLAYER_EAST) {
 					RenchanFlag = 1
-					swbreak
-				case 3:
+				} else {
 					RenchanFlag = 0
-					swbreak
-			swend
+				}
+			} else: if (chkRule("triple_mahjong", "renchan_if_north_furikomi") || chkRule("triple_mahjong", "renchan_if_west_furikomi")) {
+				if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) == PLAYER_NORTH) {
+					RenchanFlag = 1
+				} else {
+					RenchanFlag = 0
+				}
+			} else: if (chkRule("triple_mahjong", "same_dealer")) {
+				RenchanFlag = 1
+			} else: if (chkRule("triple_mahjong", "next_dealer")) {
+				RenchanFlag = 0
+			}
 			ryuukyokuProc GameStat, RenchanFlag
 		swbreak
 	/**************/
@@ -420,11 +416,7 @@
 			bgmplay_norep MUS_RYUUKYOKU
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 3000
-#ifdef ALLSANMA
-			ryuukyokuProc GameStat, (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 2)
-#else
-			ryuukyokuProc GameStat, (getRule(RULE_FOUR_WIND_RYUUKYOKU) != 1)
-#endif
+			ryuukyokuProc GameStat, (chkRule("four_wind_ryuukyoku", "next_dealer") == 0)
 		swbreak
 	/**************/
 	/* 四人立直時 */
@@ -476,11 +468,7 @@
 				}
 			loop
 
-#ifdef ALLSANMA
-			ryuukyokuProc GameStat, (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 2)
-#else
-			ryuukyokuProc GameStat, (getRule(RULE_FOUR_RIICHI_RYUUKYOKU) != 1)
-#endif
+			ryuukyokuProc GameStat, (chkRule("four_riichi_ryuukyoku", "next_dealer") == 0)
 		swbreak
 	/**************/
 	/* 流し満貫時 */
@@ -491,7 +479,7 @@
 			setCenterTitle "流局"
 			if (NagashiManganFlag(getPlayer(GameStat)) == 1) {agariBgmSet = 0} else {agariBgmSet = 1}
 			if (GetWatchModeFlag(GameEnv) == 1) {agariBgmSet = 0}
-			if (getRule(RULE_NAGASHI_MANGAN) == 3) {
+			if (chkRule("nagashi_mangan", "yakuman")) {
 				switch agariBgmSet
 					case 0: bgmplay_norep MUS_AGARI_SELF_3: swbreak
 					case 1: bgmplay_norep MUS_AGARI_FURIKOMI_3: swbreak
@@ -530,12 +518,15 @@
 #endif
 					swend
 					dim AgariPointRaw, NUM_OF_DIGIT_GROUPS
-					switch getRule(RULE_NAGASHI_MANGAN)
-						case 0: AgariPointRaw(0) = 2000: swbreak
-						case 1: AgariPointRaw(0) = 3000: swbreak
-						case 2: AgariPointRaw(0) = 4000: swbreak
-						case 3: AgariPointRaw(0) = 8000: swbreak
-					swend
+					if (chkRule("nagashi_mangan", "mangan")) {
+						AgariPointRaw(0) = 2000
+					} else: if (chkRule("nagashi_mangan", "haneman")) {
+						AgariPointRaw(0) = 3000
+					} else: if (chkRule("nagashi_mangan", "baiman")) {
+						AgariPointRaw(0) = 4000
+					} else: if (chkRule("nagashi_mangan", "yakuman")) {
+						AgariPointRaw(0) = 8000
+					}
 					calcAgariPoints GameStat, agariPointArray, AgariPointRaw, PointDelta, cnt
 				}
 			loop
@@ -578,7 +569,7 @@
 			bgmplay_norep MUS_RYUUKYOKU
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 3000
-			ryuukyokuProc GameStat, (getRule(RULE_FIFTH_KONG) != 2)
+			ryuukyokuProc GameStat, (chkRule("fifth_kong", "next_dealer") == 0)
 		swbreak
 	swend
 	haifuwritebuffer GameStat, GameEnv, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType
@@ -635,7 +626,7 @@
 #include "mjcore.hsp"
 #deffunc nextRound var GameStat
 	// ハコ割れ終了
-	if (getRule(RULE_BUTTOBI_BORDER) != 2) {
+	if (chkRule("buttobi_border", "no") == 0) {
 		if (isDobon(GameStat,PLAYER_EAST)) {return 1}
 		if (isDobon(GameStat,PLAYER_SOUTH)) {return 1}
 		if (isDobon(GameStat,PLAYER_WEST)) {return 1}
@@ -644,8 +635,8 @@
 #endif
 	}
 	// 和了り止め
-	if (getRule(RULE_AGARIYAME) != 1) {
-		if (((getRound(GameStat)+(getRoundLoop(GameStat)*roundLoopRate())) == getGameLength(GameStat))&&((OrigTurn+(getRoundLoop(GameStat)*roundLoopRate())) == getGameLength(GameStat))&&((RoundEndType == ENDKYOKU_AGARI)||(getRule(RULE_AGARIYAME) == 2))) {
+	if (chkRule("agariyame", "no") == 0) {
+		if (((getRound(GameStat)+(getRoundLoop(GameStat)*roundLoopRate())) == getGameLength(GameStat))&&((OrigTurn+(getRoundLoop(GameStat)*roundLoopRate())) == getGameLength(GameStat))&&((RoundEndType == ENDKYOKU_AGARI)||(chkRule("agariyame", "yes_also_ready") != 0))) {
 			calcRank Rank, GameStat
 			if ((Rank(getRound(GameStat)\NUM_OF_PLAYERS) == 1)&&(getScore(GameStat,getRound(GameStat)\NUM_OF_PLAYERS) >= BasePoint())) {return 1}
 		}
@@ -654,9 +645,9 @@
 	if (getRound(GameStat)\NUM_OF_PLAYERS == 3) {incRound GameStat}
 #endif
 	// 東北廻しのとき
-	if ((getRound(GameStat) == 4)&&(getRule(RULE_GAME_LENGTH) == 3)) {setRound GameStat, 12}
+	if ((getRound(GameStat) == 4)&&(chkRule("game_length", "east_north_game") != 0)) {setRound GameStat, 12}
 	// 東々廻しのとき
-	if ((getRound(GameStat) == 4)&&((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7))) {setRound GameStat, 16}
+	if ((getRound(GameStat) == 4)&&((chkRule("game_length", "twice_east_game") != 0)||(chkRule("game_length", "east_only_game") != 0))) {setRound GameStat, 16}
 	// 通常の半荘終了時（トップが３００００点未満だと西入サドンデス）
 	if (((getRound(GameStat)+(getRoundLoop(GameStat)*roundLoopRate())) >= (getGameLength(GameStat)+1))) {
 #ifdef SANMAT
@@ -665,11 +656,11 @@
 		if (((getScore(GameStat,0) >= BasePoint())||(getScore(GameStat,1) >= BasePoint())||(getScore(GameStat,2) >= BasePoint())||(getScore(GameStat,3) >= BasePoint()))) {return 1}
 #endif
 		// 延長戦なし設定
-		if (getRule(RULE_SUDDEN_DEATH_LENGTH) == 2) {return 1}
+		if (chkRule("sudden_death_type", "no")) {return 1}
 	}
 	// 延長戦の長さに制限がある場合
-	if (getRule(RULE_SUDDEN_DEATH_TYPE) == 1) {
-		if ((getRound(GameStat) == 4)&&((getRule(RULE_GAME_LENGTH) == 5)||(getRule(RULE_GAME_LENGTH) == 7))) {
+	if (chkRule("sudden_death_type", "one_extra_round")) {
+		if ((getRound(GameStat) == 4)&&((chkRule("game_length", "twice_east_game") != 0)||(chkRule("game_length", "east_only_game") != 0))) {
 			// 東々廻しのとき
 			if (((getRound(GameStat)+(getRoundLoop(GameStat)*roundLoopRate())) >= (getGameLength(GameStat)+roundLoopRate()))) {
 				return 1
@@ -683,7 +674,7 @@
 	}
 	// 北場終了の場合は帰り東へ
 	if (getRound(GameStat) == roundLoopRate()) {
-		if (getRule(RULE_SUDDEN_DEATH_TYPE) == 2) {
+		if (chkRule("sudden_death_type", "no")) {
 			// 延長戦無しで終了
 			return 1
 		} else {
