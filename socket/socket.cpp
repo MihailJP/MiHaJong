@@ -75,6 +75,11 @@ catch (socket_error& err) { // 送信失敗時
 	return -(err.error_code());
 }
 
+DLL int hangup (int sock_id) { // 接続を切る
+	sockets[sock_id]->disconnect();
+	return 0;
+}
+
 DLL int bye () { // ソケットのクリンナップ
 	return WSACleanup();
 }

@@ -13,4 +13,5 @@
 #func s_putc "?putc@mihajong_socket@@YAHHH@Z" int, int
 #func s_puts "?puts@mihajong_socket@@YAHHQBD@Z" int, str
 #cfunc s_getc "?getc@mihajong_socket@@YAHH@Z" int
+#func s_hangup "?hangup@mihajong_socket@@YAHH@Z" int
 #func s_bye "?bye@mihajong_socket@@YAHXZ"
