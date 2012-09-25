@@ -5,10 +5,10 @@ namespace mihajong_socket {
 const unsigned int numOfSockets = 32u;
 WSADATA SocketInfo;
 HINSTANCE dllInst;
-Sock* sockets[numOfSockets] = {NULL,};
+Sock* sockets[numOfSockets] = {nullptr,};
 
 void errordlg (socket_error& err) { // エラーダイアログ
-	MessageBox(NULL, err.what(), "Socket Error", MB_ICONERROR | MB_TOPMOST | MB_OK);
+	MessageBox(nullptr, err.what(), "Socket Error", MB_ICONERROR | MB_TOPMOST | MB_OK);
 }
 
 DLL int init () try { // ソケットを初期化する
@@ -94,7 +94,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) { /
 		mihajong_socket::init();
 		break;
 	case DLL_PROCESS_DETACH:
-		mihajong_socket::dllInst = NULL;
+		mihajong_socket::dllInst = nullptr;
 		mihajong_socket::bye();
 		break;
 	case DLL_THREAD_ATTACH:

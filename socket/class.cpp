@@ -4,7 +4,7 @@ uint32_t mihajong_socket::Sock::addr2var(const std::string& address) { // ƒAƒhƒŒ
 	uint32_t addr = inet_addr(address.c_str()); // ‚Ü‚¸‚Í xxx.xxx.xxx.xxx Œ`®‚Å‚ ‚é‚Æ‰¼’è‚·‚é
 	if ((addr == INADDR_NONE) || (addr == INADDR_ANY /* XPˆÈ‘O‚Å‹ó‚Ìê‡ */)) { // ¸”s‚µ‚½ê‡
 		hostent* host = gethostbyname(address.c_str()); // ƒzƒXƒg–¼‚ğ‰ğß
-		if (host == NULL) throw invalid_address(WSAGetLastError()); // ¸”s‚µ‚½‚ç—áŠO‚ğ“Š‚°‚é
+		if (host == nullptr) throw invalid_address(WSAGetLastError()); // ¸”s‚µ‚½‚ç—áŠO‚ğ“Š‚°‚é
 		addr = *(uint32_t *)host->h_addr_list[0]; // ¬Œ÷‚µ‚½‚ç‚»‚ÌƒAƒhƒŒƒX
 	}
 	return addr;
@@ -41,7 +41,7 @@ void mihajong_socket::Sock::listen () { // ƒT[ƒo[ŠJn
 	threadPtr.server = new server_thread();
 	threadPtr.server->setaddr(addr);
 	threadPtr.server->setsock(&sock, &lsock);
-	CreateThread(NULL, 0, server_thread::thread, (LPVOID)threadPtr.server, 0, NULL);
+	CreateThread(nullptr, 0, server_thread::thread, (LPVOID)threadPtr.server, 0, nullptr);
 }
 
 void mihajong_socket::Sock::connect (const std::string& destination, uint16_t port) { // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
@@ -56,7 +56,7 @@ void mihajong_socket::Sock::connect () { // ƒNƒ‰ƒCƒAƒ“ƒgÄÚ‘±
 	threadPtr.client = new client_thread();
 	threadPtr.client->setaddr(addr);
 	threadPtr.client->setsock(&sock);
-	CreateThread(NULL, 0, client_thread::thread, (LPVOID)threadPtr.client, 0, NULL);
+	CreateThread(nullptr, 0, client_thread::thread, (LPVOID)threadPtr.client, 0, nullptr);
 }
 
 bool mihajong_socket::Sock::connected () { // Ú‘±‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
@@ -110,10 +110,10 @@ void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
 	closesocket(sock);
 	if (isServer) {
 		delete threadPtr.server;
-		threadPtr.server = NULL;
+		threadPtr.server = nullptr;
 	} else {
 		delete threadPtr.client;
-		threadPtr.client = NULL;
+		threadPtr.client = nullptr;
 	}
 }
 
@@ -122,8 +122,8 @@ void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
 mihajong_socket::Sock::network_thread::network_thread() {
 	errtype = errNone; errcode = 0;
 	connected = terminated = finished = false;
-	myRecvQueueMutex = CreateMutex(NULL, TRUE, NULL);
-	mySendQueueMutex = CreateMutex(NULL, TRUE, NULL);
+	myRecvQueueMutex = CreateMutex(nullptr, TRUE, nullptr);
+	mySendQueueMutex = CreateMutex(nullptr, TRUE, nullptr);
 }
 
 mihajong_socket::Sock::network_thread::~network_thread() {
@@ -158,7 +158,7 @@ int mihajong_socket::Sock::network_thread::reader() { // óMˆ—
 	unsigned char buf[bufsize] = {0,};
 	WSABUF buffer; buffer.buf = reinterpret_cast<CHAR*>(buf); buffer.len = bufsize;
 	DWORD recvsz; DWORD flag = 0;
-	if (WSARecv(*mySock, &buffer, 1, &recvsz, &flag, NULL, NULL) == 0) { // óM‚·‚é
+	if (WSARecv(*mySock, &buffer, 1, &recvsz, &flag, nullptr, nullptr) == 0) { // óM‚·‚é
 		WaitForSingleObject(myRecvQueueMutex, 0); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
 		for (unsigned int i = 0; i < recvsz; ++i) myMailBox.push(buf[i]); // ƒLƒ…[‚É’Ç‰Á
 		ReleaseMutex(myRecvQueueMutex); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
@@ -184,7 +184,7 @@ int mihajong_socket::Sock::network_thread::writer() { // ‘—Mˆ—
 		buf[sendsz++] = mySendBox.front(); mySendBox.pop(); // ƒLƒ…[‚©‚çæ‚èo‚µ
 	}
 	ReleaseMutex(mySendQueueMutex); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
-	if (sendsz && (WSASend(*mySock, &buffer, 1, &sendsz, 0, NULL, NULL))) { // ‘—M
+	if (sendsz && (WSASend(*mySock, &buffer, 1, &sendsz, 0, nullptr, nullptr))) { // ‘—M
 		switch (int err = WSAGetLastError()) {
 		case WSAEWOULDBLOCK:
 			break; // ‚±‚ÌƒGƒ‰[‚Í–³‹‚·‚é
@@ -256,7 +256,7 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // Ú‘±‚ğŠm—§‚
 	if (::listen(*listenerSock, SOMAXCONN) == SOCKET_ERROR) { // ‘Ò‹@
 		errtype = errListen; errcode = WSAGetLastError(); return -((int)errtype);
 	}
-	*mySock = accept(*listenerSock, NULL, 0);
+	*mySock = accept(*listenerSock, nullptr, 0);
 	if (*mySock == INVALID_SOCKET) { // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”sê‡
 		errtype = errAccept; errcode = WSAGetLastError();
 		closesocket(*listenerSock);
