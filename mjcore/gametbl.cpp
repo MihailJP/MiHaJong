@@ -1146,7 +1146,8 @@ extern "C" {
 			gameStat->GameLength = 0;
 		else if (RuleData::chkRule("game_length", "twice_east_game"))
 			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 18 : 19;
-		else if (RuleData::chkRule("game_length", "east_south_west_game"))
+		else if (RuleData::chkRule("game_length", "east_south_west_game") ||
+			RuleData::chkRule("game_length", "east_west_game"))
 			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 10 : 11;
 		else {
 			error("game_lengthˆÙí’lB”¼‘‘í‚Æ‚İ‚È‚µ‚Ü‚·B");
