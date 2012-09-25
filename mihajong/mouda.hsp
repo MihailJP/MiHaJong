@@ -85,18 +85,18 @@
 	if (DiscardTileIndex == DAHAI_TYPE_AGARI) {
 		haifurectsumo GameStat // 牌譜に記録
 		/* 八連荘判定用の変数 */
-		if (getRule(RULE_PAARENCHAN) != 0) {
+		if (chkRule("paarenchan", "no") == 0) {
 			if (getLastAgariPlayer(GameStat) == getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) {
 				incAgariChain GameStat
 			} else {
-				if ((getRule(RULE_BREAKING_PAARENCHAN) != 0)&&(getAgariChain(GameStat) == 7)) {setAgariChain GameStat, -1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)}
+				if ((chkRule("breaking_paarenchan", "no") == 0)&&(getAgariChain(GameStat) == 7)) {setAgariChain GameStat, -1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)}
 				else {setAgariChain GameStat, 1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)}
 			}
 		}
 		/* 自摸和したことを変数に設定 */
 		setTsumoAgariFlag GameStat, 1
 		countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO))||((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != -1)&&(getRule(RULE_MINKAN_PAO) == 6))) {
+		if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((chkRule("riichi_shibari", "no") == 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO))||((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != -1)&&(chkRule("minkan_pao", "chombo_if_mahjong") != 0))) {
 			/* 縛りを満たしていない場合(役が無いなど)…錯和として局を終了する */
 			RoundEndType = ENDKYOKU_CHONBO
 		} else {
@@ -113,7 +113,7 @@
 	}
 #ifndef SANMAS
 	/* 九種九牌が宣言された場合 */
-	if ((DiscardTileIndex == DAHAI_TYPE_KYUUSHU)&&(getRule(RULE_NINE_TERMINALS) != 3)) {
+	if ((DiscardTileIndex == DAHAI_TYPE_KYUUSHU)&&(chkRule("nine_terminals", "continue") == 0)) {
 		DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX // 九種流しができない時はツモ切りとみなす
 		DaoPaiAbilityFlag = chkdaopaiability(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
 		if (DaoPaiAbilityFlag) {
@@ -127,7 +127,7 @@
 		}
 		warn strf("九種九牌はできません。打牌コード [%d] に補正しました。", DiscardTileIndex)
 	}
-	if ((DiscardTileIndex == DAHAI_TYPE_KYUUSHU)&&(getRule(RULE_NINE_TERMINALS) == 3)) {
+	if ((DiscardTileIndex == DAHAI_TYPE_KYUUSHU)&&(chkRule("nine_terminals", "continue") != 0)) {
 		DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX // 九種流しができない時はツモ切りとみなす
 		warn strf("九種九牌はできません。打牌コード [%d] に補正しました。", DiscardTileIndex)
 	}
@@ -167,9 +167,10 @@
 	}
 #endif
 #endif
+	if (chkRule("fifth_kong", "no") != 0) {kanLim = 4} else {kanLim = 5}
 	/* 暗槓するときの処理 */
-	if ((DiscardTileIndex >= DAHAI_TYPE_KAN)&&(DiscardTileIndex < DAHAI_TYPE_KAN+DAHAI_TYPE_STEP)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
-		if ((getRule(RULE_MINKAN_PAO) == 1)||(getRule(RULE_MINKAN_PAO) == 4)) {
+	if ((DiscardTileIndex >= DAHAI_TYPE_KAN)&&(DiscardTileIndex < DAHAI_TYPE_KAN+DAHAI_TYPE_STEP)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(getTotalKang(GameStat) < kanLim)) {
+		if ((chkRule("minkan_pao", "yes") != 0)||(chkRule("minkan_pao", "yes_2han") != 0)) {
 			setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
 			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
 		}
@@ -178,8 +179,8 @@
 		if (stat == 1) {return RoundEndType} else {return -2}
 	}
 	/* 加槓する時の処理 */
-	if ((DiscardTileIndex >= DAHAI_TYPE_KAKAN)&&(DiscardTileIndex < DAHAI_TYPE_KAKAN+DAHAI_TYPE_KAN)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(getTotalKang(GameStat) < (4+getRule(RULE_FIFTH_KONG)))) {
-		if ((getRule(RULE_MINKAN_PAO) == 1)||(getRule(RULE_MINKAN_PAO) == 4)) {
+	if ((DiscardTileIndex >= DAHAI_TYPE_KAKAN)&&(DiscardTileIndex < DAHAI_TYPE_KAKAN+DAHAI_TYPE_KAN)&&(getDrawPointer(GameStat) < (getRinshanPointer(GameStat) - (getDeadWallLength(GameStat)-1)))&&(getTotalKang(GameStat) < kanLim)) {
+		if ((chkRule("minkan_pao", "yes") != 0)||(chkRule("minkan_pao", "yes_2han") != 0)) {
 			setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, -1
 			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, -1
 		}
@@ -214,7 +215,7 @@
 			warn strf("持ち点の要件を満たしていません。打牌コード [%d] に補正しました。", DiscardTileIndex)
 		}
 	}
-	if (getRule(RULE_OPEN_RIICHI) == 0) {
+	if (chkRule("open_riichi", "no") != 0) {
 		// オープン立直無しの時
 		if ((DiscardTileIndex >= DAHAI_TYPE_OPENRIICHI)&&(DiscardTileIndex < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
 			DiscardTileIndex = (DiscardTileIndex \ DAHAI_TYPE_STEP) + DAHAI_TYPE_RIICHI
@@ -307,7 +308,7 @@
 		dsplay@ SND_DAHAI2
 	} else:if ((getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE) == 1)||(getDoraFlag(GameStat, DORA_OMOTE, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) > 0)) {
 		dsplay@ SND_DAHAI2
-	} else:if ((getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE) == 2)&&(getRule(RULE_BLUE_TILES) != 2)) {
+	} else:if ((getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE) == 2)&&(chkRule("blue_tiles", "-1han") == 0)) {
 		dsplay@ SND_DAHAI2
 	} else {
 		dsplay@ SND_DAHAI1

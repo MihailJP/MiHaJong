@@ -64,7 +64,14 @@
 	}
 	setDeposit GameStat, 0
 
-	if ((getRule(RULE_YAKITORI) == 1)||(getRule(RULE_YAKITORI) == 2)) {
+	yakitoriPoint = 0: yakitoriChip = 0
+	if (chkRule("yakitori", "5000pts")) {yakitoriPoint = 50}
+	else: if (chkRule("yakitori", "10000pts")) {yakitoriPoint = 100}
+	else: if (chkRule("yakitori", "chip1")) {yakitoriChip = 1}
+	else: if (chkRule("yakitori", "chip2")) {yakitoriChip = 2}
+	else: if (chkRule("yakitori", "chip3")) {yakitoriChip = 3}
+
+	if (yakitoriPoint) {
 #ifdef SANMAT
 		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)) > 0) {
 #else
@@ -73,10 +80,10 @@
 			dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 			repeat NUM_OF_ACTUAL_PLAYERS
 				if (getYakitori(GameStat, cnt) == 1) {
-					PointDelta(cnt, 0) -= 50*getRule(RULE_YAKITORI)
+					PointDelta(cnt, 0) -= yakitoriPoint
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (Rank(cnt) == 1) {
-							PointDelta(cnt, 0) += 50*getRule(RULE_YAKITORI)
+							PointDelta(cnt, 0) += yakitoriPoint
 						}
 					loop
 				}
@@ -87,8 +94,8 @@
 			pointcalc GameStat, PointDelta
 		}
 	}
-	if ((getRule(RULE_YAKITORI) == 3)||(getRule(RULE_YAKITORI) == 4)||(getRule(RULE_YAKITORI) == 5)) {
-		if (getRule(RULE_CHIP) != 0) {
+	if (yakitoriChip) {
+		if (chkRule("chip", "no") == 0) {
 #ifdef SANMAT
 			if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)) > 0) {
 #else
@@ -97,10 +104,10 @@
 				dim PointDelta, NUM_OF_PLAYERS
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (getYakitori(GameStat, cnt) == 1) {
-						PointDelta(cnt) -= (getRule(RULE_YAKITORI)-2)
+						PointDelta(cnt) -= yakitoriChip
 						repeat NUM_OF_ACTUAL_PLAYERS
 							if (Rank(cnt) == 1) {
-								PointDelta(cnt) += (getRule(RULE_YAKITORI)-2)
+								PointDelta(cnt) += yakitoriChip
 							}
 						loop
 					}
@@ -116,303 +123,265 @@
 	}
 
 	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-	if (getRule(RULE_POINT_BASIS) != 12) {
+	if (chkRule("point_basis", "no") == 0) {
 		PlusCount = 0
 		repeat NUM_OF_ACTUAL_PLAYERS // 沈みウマの計算用に浮いてる人数を数える
 			if (isAboveBase(GameStat,cnt)) {PlusCount++}
 		loop
 #ifdef SANMAT
 		repeat NUM_OF_ACTUAL_PLAYERS
-			switch getRule(RULE_POINT_BASIS)
-				/* 順位ウマ */
-				case 13:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 30: swbreak
-						case 3: PointDelta(cnt,0) -= 30: swbreak
-					swend
-					swbreak
-				case 14:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 50: swbreak
-						case 3: PointDelta(cnt,0) -= 50: swbreak
-					swend
-					swbreak
-				case 15:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 80: swbreak
-						case 3: PointDelta(cnt,0) -= 80: swbreak
-					swend
-					swbreak
-				case 0:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 100: swbreak
-						case 3: PointDelta(cnt,0) -= 100: swbreak
-					swend
-					swbreak
-				case 1:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 200: swbreak
-						case 3: PointDelta(cnt,0) -= 200: swbreak
-					swend
-					swbreak
-				case 2:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 300: swbreak
-						case 3: PointDelta(cnt,0) -= 300: swbreak
-					swend
-					swbreak
-				case 3:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 400: swbreak
-						case 3: PointDelta(cnt,0) -= 400: swbreak
-					swend
-					swbreak
-				case 4:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 500: swbreak
-						case 3: PointDelta(cnt,0) -= 500: swbreak
-					swend
-					swbreak
-				case 5:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 600: swbreak
-						case 3: PointDelta(cnt,0) -= 600: swbreak
-					swend
-					swbreak
-				/* 複合ウマ */
-				case 6:
-					switch Rank(cnt)
-						case 1:
-							if (PlusCount < 2) {PointDelta(cnt,0) += 120}
-							else {PointDelta(cnt) += 80}
-							swbreak
-						case 2:
-							if (PlusCount < 2) {PointDelta(cnt,0) -= 40}
-							swbreak
-						case 3:
-							PointDelta(cnt) -= 80
-							swbreak
-					swend
-					swbreak
-				case 7:
-					switch Rank(cnt)
-						case 1:
-							if (PlusCount < 2) {PointDelta(cnt,0) += 150}
-							else {PointDelta(cnt) += 100}
-							swbreak
-						case 2:
-							if (PlusCount < 2) {PointDelta(cnt,0) -= 50}
-							swbreak
-						case 3:
-							PointDelta(cnt) -= 100
-							swbreak
-					swend
-					swbreak
-				case 8:
-					switch Rank(cnt)
-						case 1:
-							if (PlusCount < 2) {PointDelta(cnt,0) += 300}
-							else {PointDelta(cnt) += 200}
-							swbreak
-						case 2:
-							if (PlusCount < 2) {PointDelta(cnt,0) -= 100}
-							swbreak
-						case 3:
-							PointDelta(cnt) -= 200
-							swbreak
-					swend
-					swbreak
-				/* 沈みウマ */
-				case 9:
-					if (Rank(cnt) == 1) {PointDelta(cnt,0) += 50*(3-PlusCount)}
-					if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 50}
-					swbreak
-				case 10:
-					if (Rank(cnt) == 1) {PointDelta(cnt,0) += 100*(3-PlusCount)}
-					if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 100}
-					swbreak
-				case 11:
-					if (Rank(cnt) == 1) {PointDelta(cnt,0) += 200*(3-PlusCount)}
-					if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 200}
-					swbreak
-			swend
+			if (chkRule("point_basis", "3")) { /* 順位ウマ */
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 30: swbreak
+					case 3: PointDelta(cnt,0) -= 30: swbreak
+				swend
+			} else: if (chkRule("point_basis", "5")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 50: swbreak
+					case 3: PointDelta(cnt,0) -= 50: swbreak
+				swend
+			} else: if (chkRule("point_basis", "8")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 80: swbreak
+					case 3: PointDelta(cnt,0) -= 80: swbreak
+				swend
+			} else: if (chkRule("point_basis", "10")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 100: swbreak
+					case 3: PointDelta(cnt,0) -= 100: swbreak
+				swend
+			} else: if (chkRule("point_basis", "20")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 200: swbreak
+					case 3: PointDelta(cnt,0) -= 200: swbreak
+				swend
+			} else: if (chkRule("point_basis", "30")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 300: swbreak
+					case 3: PointDelta(cnt,0) -= 300: swbreak
+				swend
+			} else: if (chkRule("point_basis", "40")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 400: swbreak
+					case 3: PointDelta(cnt,0) -= 400: swbreak
+				swend
+			} else: if (chkRule("point_basis", "50")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 500: swbreak
+					case 3: PointDelta(cnt,0) -= 500: swbreak
+				swend
+			} else: if (chkRule("point_basis", "60")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 600: swbreak
+					case 3: PointDelta(cnt,0) -= 600: swbreak
+				swend
+			} else: if (chkRule("point_basis", "4-8")) { /* 複合ウマ */
+				switch Rank(cnt)
+					case 1:
+						if (PlusCount < 2) {PointDelta(cnt,0) += 120}
+						else {PointDelta(cnt) += 80}
+						swbreak
+					case 2:
+						if (PlusCount < 2) {PointDelta(cnt,0) -= 40}
+						swbreak
+					case 3:
+						PointDelta(cnt) -= 80
+						swbreak
+				swend
+			} else: if (chkRule("point_basis", "5-10")) {
+				switch Rank(cnt)
+					case 1:
+						if (PlusCount < 2) {PointDelta(cnt,0) += 150}
+						else {PointDelta(cnt) += 100}
+						swbreak
+					case 2:
+						if (PlusCount < 2) {PointDelta(cnt,0) -= 50}
+						swbreak
+					case 3:
+						PointDelta(cnt) -= 100
+						swbreak
+				swend
+			} else: if (chkRule("point_basis", "10-20")) {
+				switch Rank(cnt)
+					case 1:
+						if (PlusCount < 2) {PointDelta(cnt,0) += 300}
+						else {PointDelta(cnt) += 200}
+						swbreak
+					case 2:
+						if (PlusCount < 2) {PointDelta(cnt,0) -= 100}
+						swbreak
+					case 3:
+						PointDelta(cnt) -= 200
+						swbreak
+				swend
+			} else: if (chkRule("point_basis", "shizumiuma_5")) { /* 沈みウマ */
+				if (Rank(cnt) == 1) {PointDelta(cnt,0) += 50*(3-PlusCount)}
+				if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 50}
+			} else: if (chkRule("point_basis", "shizumiuma_10")) {
+				if (Rank(cnt) == 1) {PointDelta(cnt,0) += 100*(3-PlusCount)}
+				if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 100}
+			} else: if (chkRule("point_basis", "shizumiuma_20")) {
+				if (Rank(cnt) == 1) {PointDelta(cnt,0) += 200*(3-PlusCount)}
+				if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 200}
+			}
 		loop
 #else
 		repeat NUM_OF_ACTUAL_PLAYERS
-			switch getRule(RULE_POINT_BASIS)
-				/* 順位ウマ */
-				case 13:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 30: swbreak
-						case 4: PointDelta(cnt,0) -= 30: swbreak
-					swend
-					swbreak
-				case 14:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 50: swbreak
-						case 4: PointDelta(cnt,0) -= 50: swbreak
-					swend
-					swbreak
-				case 15:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 50: swbreak
-						case 2: PointDelta(cnt,0) += 30: swbreak
-						case 3: PointDelta(cnt,0) -= 30: swbreak
-						case 4: PointDelta(cnt,0) -= 50: swbreak
-					swend
-					swbreak
-				case 0:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 100: swbreak
-						case 2: PointDelta(cnt,0) += 50: swbreak
-						case 3: PointDelta(cnt,0) -= 50: swbreak
-						case 4: PointDelta(cnt,0) -= 100: swbreak
-					swend
-					swbreak
-				case 1:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 200: swbreak
-						case 2: PointDelta(cnt,0) += 100: swbreak
-						case 3: PointDelta(cnt,0) -= 100: swbreak
-						case 4: PointDelta(cnt,0) -= 200: swbreak
-					swend
-					swbreak
-				case 2:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 300: swbreak
-						case 2: PointDelta(cnt,0) += 100: swbreak
-						case 3: PointDelta(cnt,0) -= 100: swbreak
-						case 4: PointDelta(cnt,0) -= 300: swbreak
-					swend
-					swbreak
-				case 3:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 400: swbreak
-						case 2: PointDelta(cnt,0) += 200: swbreak
-						case 3: PointDelta(cnt,0) -= 200: swbreak
-						case 4: PointDelta(cnt,0) -= 400: swbreak
-					swend
-					swbreak
-				case 4:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 500: swbreak
-						case 2: PointDelta(cnt,0) += 200: swbreak
-						case 3: PointDelta(cnt,0) -= 200: swbreak
-						case 4: PointDelta(cnt,0) -= 500: swbreak
-					swend
-					swbreak
-				case 5:
-					switch Rank(cnt)
-						case 1: PointDelta(cnt,0) += 600: swbreak
-						case 2: PointDelta(cnt,0) += 200: swbreak
-						case 3: PointDelta(cnt,0) -= 200: swbreak
-						case 4: PointDelta(cnt,0) -= 600: swbreak
-					swend
-					swbreak
-				/* 複合ウマ */
-				case 6:
-					switch Rank(cnt)
-						case 1: 
-							switch PlusCount
-								case 1: PointDelta(cnt,0) += 150: swbreak
-								case 3: PointDelta(cnt,0) += 70: swbreak
-								default: PointDelta(cnt,0) += 100: swbreak
-							swend
-							swbreak
-						case 2: 
-							switch PlusCount
-								case 1: PointDelta(cnt,0) -= 30: swbreak
-								default: PointDelta(cnt,0) += 50: swbreak
-							swend
-							swbreak
-						case 3: 
-							switch PlusCount
-								case 3: PointDelta(cnt,0) += 30: swbreak
-								default: PointDelta(cnt,0) -= 50: swbreak
-							swend
-							swbreak
-						case 4: 
-							switch PlusCount
-								case 1: PointDelta(cnt,0) -= 70: swbreak
-								case 3: PointDelta(cnt,0) -= 150: swbreak
-								default: PointDelta(cnt,0) -= 100: swbreak
-							swend
-							swbreak
-					swend
-					swbreak
-				case 7:
-					switch Rank(cnt)
-						case 1: 
-							switch PlusCount
-								case 1: PointDelta(cnt,0) += 120: swbreak
-								default: PointDelta(cnt,0) += 80: swbreak
-							swend
-							swbreak
-						case 2: 
-							switch PlusCount
-								case 1: PointDelta(cnt,0) -= 10: swbreak
-								case 3: PointDelta(cnt,0) += 30: swbreak
-								default: PointDelta(cnt,0) += 40: swbreak
-							swend
-							swbreak
-						case 3: 
-							switch PlusCount
-								case 1: PointDelta(cnt,0) -= 30: swbreak
-								case 3: PointDelta(cnt,0) += 10: swbreak
-								default: PointDelta(cnt,0) -= 40: swbreak
-							swend
-							swbreak
-						case 4: 
-							switch PlusCount
-								case 3: PointDelta(cnt,0) -= 120: swbreak
-								default: PointDelta(cnt,0) -= 80: swbreak
-							swend
-							swbreak
-					swend
-					swbreak
-				case 8:
-					switch Rank(cnt)
-						case 1: 
-							switch PlusCount
-								case 1: PointDelta(cnt,0) += 600: swbreak
-								case 2: PointDelta(cnt,0) += 400: swbreak
-								case 3: PointDelta(cnt,0) += 300: swbreak
-							swend
-							swbreak
-						case 2: 
-							switch PlusCount
-								case 1: PointDelta(cnt,0) -= 100: swbreak
-							swend
-							swbreak
-						case 3: 
-							switch PlusCount
-								case 1: PointDelta(cnt,0) -= 200: swbreak
-								case 2: PointDelta(cnt,0) -= 100: swbreak
-							swend
-							swbreak
-						case 4: 
-							switch PlusCount
-								case 1: PointDelta(cnt,0) -= 300: swbreak
-								case 2: PointDelta(cnt,0) -= 300: swbreak
-								case 3: PointDelta(cnt,0) -= 300: swbreak
-							swend
-							swbreak
-					swend
-					swbreak
-				/* 沈みウマ */
-				case 9:
-					if (Rank(cnt) == 1) {PointDelta(cnt,0) += 50*(NUM_OF_PLAYERS-PlusCount)}
-					if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 50}
-					swbreak
-				case 10:
-					if (Rank(cnt) == 1) {PointDelta(cnt,0) += 100*(NUM_OF_PLAYERS-PlusCount)}
-					if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 100}
-					swbreak
-				case 11:
-					if (Rank(cnt) == 1) {PointDelta(cnt,0) += 200*(NUM_OF_PLAYERS-PlusCount)}
-					if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 200}
-					swbreak
-			swend
+			if (chkRule("point_basis", "0-3")) { /* 順位ウマ */
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 30: swbreak
+					case 4: PointDelta(cnt,0) -= 30: swbreak
+				swend
+			} else: if (chkRule("point_basis", "0-5")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 50: swbreak
+					case 4: PointDelta(cnt,0) -= 50: swbreak
+				swend
+			} else: if (chkRule("point_basis", "3-5")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 50: swbreak
+					case 2: PointDelta(cnt,0) += 30: swbreak
+					case 3: PointDelta(cnt,0) -= 30: swbreak
+					case 4: PointDelta(cnt,0) -= 50: swbreak
+				swend
+			} else: if (chkRule("point_basis", "5-10")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 100: swbreak
+					case 2: PointDelta(cnt,0) += 50: swbreak
+					case 3: PointDelta(cnt,0) -= 50: swbreak
+					case 4: PointDelta(cnt,0) -= 100: swbreak
+				swend
+			} else: if (chkRule("point_basis", "10-20")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 200: swbreak
+					case 2: PointDelta(cnt,0) += 100: swbreak
+					case 3: PointDelta(cnt,0) -= 100: swbreak
+					case 4: PointDelta(cnt,0) -= 200: swbreak
+				swend
+			} else: if (chkRule("point_basis", "10-30")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 300: swbreak
+					case 2: PointDelta(cnt,0) += 100: swbreak
+					case 3: PointDelta(cnt,0) -= 100: swbreak
+					case 4: PointDelta(cnt,0) -= 300: swbreak
+				swend
+			} else: if (chkRule("point_basis", "20-40")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 400: swbreak
+					case 2: PointDelta(cnt,0) += 200: swbreak
+					case 3: PointDelta(cnt,0) -= 200: swbreak
+					case 4: PointDelta(cnt,0) -= 400: swbreak
+				swend
+			} else: if (chkRule("point_basis", "20-50")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 500: swbreak
+					case 2: PointDelta(cnt,0) += 200: swbreak
+					case 3: PointDelta(cnt,0) -= 200: swbreak
+					case 4: PointDelta(cnt,0) -= 500: swbreak
+				swend
+			} else: if (chkRule("point_basis", "20-60")) {
+				switch Rank(cnt)
+					case 1: PointDelta(cnt,0) += 600: swbreak
+					case 2: PointDelta(cnt,0) += 200: swbreak
+					case 3: PointDelta(cnt,0) -= 200: swbreak
+					case 4: PointDelta(cnt,0) -= 600: swbreak
+				swend
+			} else: if (chkRule("point_basis", "7-5-3")) { /* 複合ウマ */
+				switch Rank(cnt)
+					case 1: 
+						switch PlusCount
+							case 1: PointDelta(cnt,0) += 150: swbreak
+							case 3: PointDelta(cnt,0) += 70: swbreak
+							default: PointDelta(cnt,0) += 100: swbreak
+						swend
+						swbreak
+					case 2: 
+						switch PlusCount
+							case 1: PointDelta(cnt,0) -= 30: swbreak
+							default: PointDelta(cnt,0) += 50: swbreak
+						swend
+						swbreak
+					case 3: 
+						switch PlusCount
+							case 3: PointDelta(cnt,0) += 30: swbreak
+							default: PointDelta(cnt,0) -= 50: swbreak
+						swend
+						swbreak
+					case 4: 
+						switch PlusCount
+							case 1: PointDelta(cnt,0) -= 70: swbreak
+							case 3: PointDelta(cnt,0) -= 150: swbreak
+							default: PointDelta(cnt,0) -= 100: swbreak
+						swend
+						swbreak
+				swend
+			} else: if (chkRule("point_basis", "8-3-1")) {
+				switch Rank(cnt)
+					case 1: 
+						switch PlusCount
+							case 1: PointDelta(cnt,0) += 120: swbreak
+							default: PointDelta(cnt,0) += 80: swbreak
+						swend
+						swbreak
+					case 2: 
+						switch PlusCount
+							case 1: PointDelta(cnt,0) -= 10: swbreak
+							case 3: PointDelta(cnt,0) += 30: swbreak
+							default: PointDelta(cnt,0) += 40: swbreak
+						swend
+						swbreak
+					case 3: 
+						switch PlusCount
+							case 1: PointDelta(cnt,0) -= 30: swbreak
+							case 3: PointDelta(cnt,0) += 10: swbreak
+							default: PointDelta(cnt,0) -= 40: swbreak
+						swend
+						swbreak
+					case 4: 
+						switch PlusCount
+							case 3: PointDelta(cnt,0) -= 120: swbreak
+							default: PointDelta(cnt,0) -= 80: swbreak
+						swend
+						swbreak
+				swend
+			} else: if (chkRule("point_basis", "10-20-30")) {
+				switch Rank(cnt)
+					case 1: 
+						switch PlusCount
+							case 1: PointDelta(cnt,0) += 600: swbreak
+							case 2: PointDelta(cnt,0) += 400: swbreak
+							case 3: PointDelta(cnt,0) += 300: swbreak
+						swend
+						swbreak
+					case 2: 
+						switch PlusCount
+							case 1: PointDelta(cnt,0) -= 100: swbreak
+						swend
+						swbreak
+					case 3: 
+						switch PlusCount
+							case 1: PointDelta(cnt,0) -= 200: swbreak
+							case 2: PointDelta(cnt,0) -= 100: swbreak
+						swend
+						swbreak
+					case 4: 
+						switch PlusCount
+							case 1: PointDelta(cnt,0) -= 300: swbreak
+							case 2: PointDelta(cnt,0) -= 300: swbreak
+							case 3: PointDelta(cnt,0) -= 300: swbreak
+						swend
+						swbreak
+				swend
+			} else: if (chkRule("point_basis", "shizumiuma_5")) { /* 沈みウマ */
+				if (Rank(cnt) == 1) {PointDelta(cnt,0) += 50*(NUM_OF_PLAYERS-PlusCount)}
+				if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 50}
+			} else: if (chkRule("point_basis", "shizumiuma_10")) {
+				if (Rank(cnt) == 1) {PointDelta(cnt,0) += 100*(NUM_OF_PLAYERS-PlusCount)}
+				if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 100}
+			} else: if (chkRule("point_basis", "shizumiuma_20")) {
+				if (Rank(cnt) == 1) {PointDelta(cnt,0) += 200*(NUM_OF_PLAYERS-PlusCount)}
+				if (Rank(cnt) > PlusCount) {PointDelta(cnt,0) -= 200}
+			}
 		loop
 #endif
 		setCenterTitle "順位点"
@@ -423,44 +392,49 @@
 	
 	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 #ifdef SANMAT
-	if (getRule(RULE_STARTING_POINT) != 1) {
+	if ((chkRule("starting_point", "40000pts_oka0") == 0) && (chkRule("starting_point", "30000pts_oka0") == 0)) {
 		repeat NUM_OF_ACTUAL_PLAYERS
 			if (Rank(cnt) == 1) {
-				switch getRule(RULE_STARTING_POINT)
-					case 0: case 4: PointDelta(cnt) += 150: swbreak
-					case 5: PointDelta(cnt) += 90: swbreak
-					case 7: PointDelta(cnt) += 450: swbreak
-					case 8: PointDelta(cnt) += 300: swbreak
-				swend
-			}
-			if (Rank(cnt) == 3) {
-				switch getRule(RULE_STARTING_POINT)
-					case 2: PointDelta(cnt) -= 150: swbreak
-					case 3: PointDelta(cnt) -= 300: swbreak
-				swend
+				if (chkRule("starting_point", "35000pts_oka15") || chkRule("starting_point", "25000pts_oka15")) {
+					PointDelta(cnt) += 150
+				} else: if (chkRule("starting_point", "27000pts_oka9")) {
+					PointDelta(cnt) += 90
+				} else: if (chkRule("starting_point", "25000pts_oka45")) {
+					PointDelta(cnt) += 450
+				} else: if (chkRule("starting_point", "30000pts_oka30")) {
+					PointDelta(cnt) += 300
+				}
+			} else: if (Rank(cnt) == 3) {
+				if (chkRule("starting_point", "45000pts_oka-15")) {
+					PointDelta(cnt) -= 150
+				} else: if (chkRule("starting_point", "50000pts_oka-30")) {
+					PointDelta(cnt) -= 300
+				}
 			}
 		loop
-		if ((getRule(RULE_STARTING_POINT) == 2)||(getRule(RULE_STARTING_POINT) == 3)) {
+		if (chkRule("starting_point", "45000pts_oka-15") || chkRule("starting_point", "50000pts_oka-30")) {
 			setCenterTitle "ラスペナ"
 		} else {setCenterTitle "トップ賞"}
 #else
-	if (getRule(RULE_STARTING_POINT) != 2) {
+	if (chkRule("starting_point", "30000pts_oka0") == 0) {
 		repeat NUM_OF_ACTUAL_PLAYERS
 			if (Rank(cnt) == 1) {
-				switch getRule(RULE_STARTING_POINT)
-					case 0: PointDelta(cnt) += 200: swbreak
-					case 1: PointDelta(cnt) += 120: swbreak
-					case 5: PointDelta(cnt) += 400: swbreak
-				swend
-			}
-			if (Rank(cnt) == 4) {
-				switch getRule(RULE_STARTING_POINT)
-					case 3: PointDelta(cnt) -= 200: swbreak
-					case 4: PointDelta(cnt) -= 400: swbreak
-				swend
+				if (chkRule("starting_point", "25000pts_oka20")) {
+					PointDelta(cnt) += 200
+				} else: if (chkRule("starting_point", "27000pts_oka12")) {
+					PointDelta(cnt) += 120
+				} else: if (chkRule("starting_point", "20000pts_oka40")) {
+					PointDelta(cnt) += 400
+				}
+			} else: if (Rank(cnt) == 4) {
+				if (chkRule("starting_point", "35000pts_oka-20")) {
+					PointDelta(cnt) -= 200
+				} else: if (chkRule("starting_point", "40000pts_oka-40")) {
+					PointDelta(cnt) -= 400
+				}
 			}
 		loop
-		if ((getRule(RULE_STARTING_POINT) == 3)||(getRule(RULE_STARTING_POINT) == 4)) {
+		if (chkRule("starting_point", "35000pts_oka-20") || chkRule("starting_point", "40000pts_oka-40")) {
 			setCenterTitle "ラスペナ"
 		} else {setCenterTitle "トップ賞"}
 #endif
@@ -478,14 +452,19 @@
 			} else {
 				FinalScore(cnt, 0) = ((getScore(GameStat,cnt, 0)-BasePoint())-5)/10
 			}
-			switch getRule(RULE_CHIP)
-				case 1: FinalScore(cnt, 0) += getChip(GameStat, cnt)/2: swbreak
-				case 2: FinalScore(cnt, 0) += getChip(GameStat, cnt): swbreak
-				case 3: FinalScore(cnt, 0) += getChip(GameStat, cnt)*2: swbreak
-				case 4: FinalScore(cnt, 0) += getChip(GameStat, cnt)*3: swbreak
-				case 5: FinalScore(cnt, 0) += getChip(GameStat, cnt)*5: swbreak
-				case 6: FinalScore(cnt, 0) += getChip(GameStat, cnt)*10: swbreak
-			swend
+			if (chkRule("starting_point", "chip_rate_500")) {
+				FinalScore(cnt, 0) += getChip(GameStat, cnt)/2
+			} else: if (chkRule("starting_point", "chip_rate_1000")) {
+				FinalScore(cnt, 0) += getChip(GameStat, cnt)
+			} else: if (chkRule("starting_point", "chip_rate_2000")) {
+				FinalScore(cnt, 0) += getChip(GameStat, cnt)*2
+			} else: if (chkRule("starting_point", "chip_rate_3000")) {
+				FinalScore(cnt, 0) += getChip(GameStat, cnt)*3
+			} else: if (chkRule("starting_point", "chip_rate_5000")) {
+				FinalScore(cnt, 0) += getChip(GameStat, cnt)*5
+			} else: if (chkRule("starting_point", "chip_rate_10000")) {
+				FinalScore(cnt, 0) += getChip(GameStat, cnt)*10
+			}
 			tmpcnt = cnt
 			repeat NUM_OF_DIGIT_GROUPS-1, 1: FinalScore(tmpcnt, cnt) = getScore(GameStat,tmpcnt, cnt): loop
 		}

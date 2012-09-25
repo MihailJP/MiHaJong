@@ -208,13 +208,14 @@ return
 	if (((getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat)) == getGameLength(GameStat))&&(getGameLength(GameStat) > 0)) {
 		// オーラスだけ特別
 		bgmplay MUS_FINAL
+	} else: if ((getHonba(GameStat) >= 5)&&(chkRule("ryanshiba", "from_5honba") != 0)) {
+		// リャンシバ時専用BGM
+		bgmplay MUS_SHIBARI
+	} else: if ((getHonba(GameStat) >= 4)&&(chkRule("ryanshiba", "from_4honba") != 0)) {
+		// リャンシバ時専用BGM
+		bgmplay MUS_SHIBARI
 	} else {
-		if ((getHonba(GameStat) >= 5)&&(getRule(RULE_RYANSHIBA) == 1)) {
-			// リャンシバ時専用BGM
-			bgmplay MUS_SHIBARI
-		} else {
-			bgmplay getRound(GameStat)
-		}
+		bgmplay getRound(GameStat)
 	}
 	if (getHonba(GameStat)) {
 		tmpStatus = ""+roundName(getRound(GameStat))+getHonba(GameStat)+"本場"
@@ -279,164 +280,17 @@ return
 	} else {
 		setCenterTitle roundName(getRound(GameStat))
 	}
-#ifdef SANMAX
-	repeat 1*4, 0: setWall GameStat, WALL_TILECODE, cnt, 1: loop // 萬子
-	repeat 1*4, 1*4: setWall GameStat, WALL_TILECODE, cnt, 9: loop // 萬子
-	repeat 9*4, 2*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+9: loop // 筒子
-	repeat 9*4, 11*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+10: loop // 索子
-	repeat 7*4, 20*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+11: loop // 字牌
-	if (getRule(RULE_RED_ONE)/4 == 1) {setWall GameStat, WALL_REDTILE, 0, 1} // 赤一萬
-	if (getRule(RULE_RED_NINE)/4 == 1) {setWall GameStat, WALL_REDTILE, 4, 1} // 赤九萬
-	if (getRule(RULE_RED_ONE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 8, 1} // 赤一筒
-	if (getRule(RULE_RED_TWO)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 12, 1} // 赤二筒
-	if (getRule(RULE_RED_THREE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 16, 1} // 赤三筒
-	if (getRule(RULE_RED_FOUR)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 20, 1} // 赤四筒
-	if ((getRule(RULE_RED_FIVE) <= 3)||((getRule(RULE_RED_FIVE)&0x1001) == 0x1001)) {setWall GameStat, WALL_REDTILE, 24, 1} // 赤五筒
-	if ((getRule(RULE_RED_FIVE) >= 1)&&(getRule(RULE_RED_FIVE) <= 3)) {setWall GameStat, WALL_REDTILE, 25, 1} // 赤五筒
-	if (getRule(RULE_RED_SIX)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 28, 1} // 赤六筒
-	if (getRule(RULE_RED_SEVEN)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 32, 1} // 赤七筒
-	if (getRule(RULE_RED_EIGHT)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 36, 1} // 赤八筒
-	if (getRule(RULE_RED_NINE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 40, 1} // 赤九筒
-	if (getRule(RULE_RED_ONE)\2 == 1) {setWall GameStat, WALL_REDTILE, 44, 1} // 赤一索
-	if (getRule(RULE_RED_TWO)\2 == 1) {setWall GameStat, WALL_REDTILE, 48, 1} // 赤二索
-	if (getRule(RULE_RED_THREE)\2 == 1) {setWall GameStat, WALL_REDTILE, 52, 1} // 赤三索
-	if (getRule(RULE_RED_FOUR)\2 == 1) {setWall GameStat, WALL_REDTILE, 56, 1} // 赤四索
-	if ((getRule(RULE_RED_FIVE) <= 2)||((getRule(RULE_RED_FIVE)&0x1010) == 0x1010)) {setWall GameStat, WALL_REDTILE, 60, 1} // 赤五索
-	if (getRule(RULE_RED_FIVE) == 2) {setWall GameStat, WALL_REDTILE, 61, 1} // 赤五索
-	if (getRule(RULE_RED_SIX)\2 == 1) {setWall GameStat, WALL_REDTILE, 64, 1} // 赤六索
-	if (getRule(RULE_RED_SEVEN)\2 == 1) {setWall GameStat, WALL_REDTILE, 68, 1} // 赤七索
-	if (getRule(RULE_RED_EIGHT)\2 == 1) {setWall GameStat, WALL_REDTILE, 72, 1} // 赤八索
-	if (getRule(RULE_RED_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 76, 1} // 赤九索
-	if (getRule(RULE_RED_WEST) == 1) {setWall GameStat, WALL_REDTILE, 88, 1} // 赤西
-	switch getRule(RULE_RED_NORTH) // 赤北
-		case 4: setWall GameStat, WALL_REDTILE, 95, 1 /* FALLTHRU */
-		case 3: setWall GameStat, WALL_REDTILE, 94, 1 /* FALLTHRU */
-		case 2: setWall GameStat, WALL_REDTILE, 93, 1 /* FALLTHRU */
-		case 1: setWall GameStat, WALL_REDTILE, 92, 1
-	swend
-	if (getRule(RULE_HAKU_POTCHI) != 0) {
-		// オールマイティー扱いはせず、赤ドラと同じ扱い
-		setWall GameStat, WALL_REDTILE, 96, 1 // 白ポッチ
-	}
-	if (getRule(RULE_BLUE_ONE)/4 == 1) {setWall GameStat, WALL_REDTILE, 3, 2} // 青一萬
-	if (getRule(RULE_BLUE_NINE)/4 == 1) {setWall GameStat, WALL_REDTILE, 7, 2} // 青九萬
-	if (getRule(RULE_BLUE_ONE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 11, 2} // 青一筒
-	if (getRule(RULE_BLUE_FIVE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 27, 2} // 青五筒
-	if (getRule(RULE_BLUE_NINE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 43, 2} // 青九筒
-	if (getRule(RULE_BLUE_ONE)\2 == 1) {setWall GameStat, WALL_REDTILE, 47, 2} // 青一索
-	if (getRule(RULE_BLUE_FIVE)\2 == 1) {setWall GameStat, WALL_REDTILE, 63, 2} // 青五索
-	if (getRule(RULE_BLUE_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 79, 2} // 青九索
-	if (getRule(RULE_BLUE_LVFA)) {setWall GameStat, WALL_REDTILE, 103, 2} // 青発
-#else
-	repeat 9*4, 0: setWall GameStat, WALL_TILECODE, cnt, cnt/4+1: loop // 萬子
-	repeat 9*4, 9*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+2: loop // 筒子
-	repeat 9*4, 18*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+3: loop // 索子
-#ifndef SANMAS
-	repeat 7*4, 27*4: setWall GameStat, WALL_TILECODE, cnt, cnt/4+4: loop // 字牌
-	switch getRule(RULE_FLOWER_TILES)
-		case 3:
-			repeat 4, 35*4: setWall GameStat, WALL_TILECODE, cnt, cnt-35*4+TILE_PLANT_MIN: loop // 草木牌
-			/* FALLTHRU */
-		case 1:
-			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-34*4+TILE_SEASON_MIN: loop // 季節牌
-			swbreak
-		case 2:
-			repeat 4, 34*4: setWall GameStat, WALL_TILECODE, cnt, cnt-34*4+TILE_PLANT_MIN: loop // 草木牌
-			swbreak
-	swend
-#endif
-	if (getRule(RULE_RED_ONE)/4 == 1) {setWall GameStat, WALL_REDTILE, 0, 1} // 赤一萬
-	if (getRule(RULE_RED_TWO)/4 == 1) {setWall GameStat, WALL_REDTILE, 4, 1} // 赤二萬
-	if (getRule(RULE_RED_THREE)/4 == 1) {setWall GameStat, WALL_REDTILE, 8, 1} // 赤三萬
-	if (getRule(RULE_RED_FOUR)/4 == 1) {setWall GameStat, WALL_REDTILE, 12, 1} // 赤四萬
-	if ((getRule(RULE_RED_FIVE) <= 2)||((getRule(RULE_RED_FIVE)&0x1100) == 0x1100)) {setWall GameStat, WALL_REDTILE, 16, 1} // 赤五萬
-	if (getRule(RULE_RED_FIVE) == 2) {setWall GameStat, WALL_REDTILE, 17, 1} // 赤五萬
-	if (getRule(RULE_RED_SIX)/4 == 1) {setWall GameStat, WALL_REDTILE, 20, 1} // 赤六萬
-	if (getRule(RULE_RED_SEVEN)/4 == 1) {setWall GameStat, WALL_REDTILE, 24, 1} // 赤七萬
-	if (getRule(RULE_RED_EIGHT)/4 == 1) {setWall GameStat, WALL_REDTILE, 28, 1} // 赤八萬
-	if (getRule(RULE_RED_NINE)/4 == 1) {setWall GameStat, WALL_REDTILE, 32, 1} // 赤九萬
-	if (getRule(RULE_RED_ONE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 36, 1} // 赤一筒
-	if (getRule(RULE_RED_TWO)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 40, 1} // 赤二筒
-	if (getRule(RULE_RED_THREE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 44, 1} // 赤三筒
-	if (getRule(RULE_RED_FOUR)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 48, 1} // 赤四筒
-	if ((getRule(RULE_RED_FIVE) <= 3)||((getRule(RULE_RED_FIVE)&0x1001) == 0x1001)) {setWall GameStat, WALL_REDTILE, 52, 1} // 赤五筒
-	if ((getRule(RULE_RED_FIVE) >= 1)&&(getRule(RULE_RED_FIVE) <= 3)) {setWall GameStat, WALL_REDTILE, 53, 1} // 赤五筒
-	if (getRule(RULE_RED_SIX)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 56, 1} // 赤六筒
-	if (getRule(RULE_RED_SEVEN)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 60, 1} // 赤七筒
-	if (getRule(RULE_RED_EIGHT)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 76, 1} // 赤八筒
-	if (getRule(RULE_RED_NINE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 68, 1} // 赤九筒
-	if (getRule(RULE_RED_ONE)\2 == 1) {setWall GameStat, WALL_REDTILE, 72, 1} // 赤一索
-	if (getRule(RULE_RED_TWO)\2 == 1) {setWall GameStat, WALL_REDTILE, 64, 1} // 赤二索
-	if (getRule(RULE_RED_THREE)\2 == 1) {setWall GameStat, WALL_REDTILE, 80, 1} // 赤三索
-	if (getRule(RULE_RED_FOUR)\2 == 1) {setWall GameStat, WALL_REDTILE, 84, 1} // 赤四索
-	if ((getRule(RULE_RED_FIVE) <= 2)||((getRule(RULE_RED_FIVE)&0x1010) == 0x1010)) {setWall GameStat, WALL_REDTILE, 88, 1} // 赤五索
-	if (getRule(RULE_RED_FIVE) == 2) {setWall GameStat, WALL_REDTILE, 89, 1} // 赤五索
-	if (getRule(RULE_RED_SIX)\2 == 1) {setWall GameStat, WALL_REDTILE, 92, 1} // 赤六索
-	if (getRule(RULE_RED_SEVEN)\2 == 1) {setWall GameStat, WALL_REDTILE, 96, 1} // 赤七索
-	if (getRule(RULE_RED_EIGHT)\2 == 1) {setWall GameStat, WALL_REDTILE, 100, 1} // 赤八索
-	if (getRule(RULE_RED_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 104, 1} // 赤九索
-#ifndef SANMAS
-	if (getRule(RULE_RED_WEST) == 1) {setWall GameStat, WALL_REDTILE, 116, 1} // 赤西
-	switch getRule(RULE_RED_NORTH) // 赤北
-		case 4: setWall GameStat, WALL_REDTILE, 123, 1 /* FALLTHRU */
-		case 3: setWall GameStat, WALL_REDTILE, 122, 1 /* FALLTHRU */
-		case 2: setWall GameStat, WALL_REDTILE, 121, 1 /* FALLTHRU */
-		case 1: setWall GameStat, WALL_REDTILE, 120, 1
-	swend
-	if (getRule(RULE_HAKU_POTCHI) != 0) {
-		// オールマイティー扱いはせず、赤ドラと同じ扱い
-		setWall GameStat, WALL_REDTILE, 124, 1 // 白ポッチ
-	}
-#endif
-	if (getRule(RULE_BLUE_ONE)/4 == 1) {setWall GameStat, WALL_REDTILE, 3, 2} // 青一萬
-	if (getRule(RULE_BLUE_FIVE)/4 == 1) {setWall GameStat, WALL_REDTILE, 19, 2} // 青五萬
-	if (getRule(RULE_BLUE_NINE)/4 == 1) {setWall GameStat, WALL_REDTILE, 35, 2} // 青九萬
-	if (getRule(RULE_BLUE_ONE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 39, 2} // 青一筒
-	if (getRule(RULE_BLUE_FIVE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 55, 2} // 青五筒
-	if (getRule(RULE_BLUE_NINE)\4/2 == 1) {setWall GameStat, WALL_REDTILE, 71, 2} // 青九筒
-	if (getRule(RULE_BLUE_ONE)\2 == 1) {setWall GameStat, WALL_REDTILE, 75, 2} // 青一索
-	if (getRule(RULE_BLUE_FIVE)\2 == 1) {setWall GameStat, WALL_REDTILE, 91, 2} // 青五索
-	if (getRule(RULE_BLUE_NINE)\2 == 1) {setWall GameStat, WALL_REDTILE, 107, 2} // 青九索
-#ifndef SANMAS
-	if (getRule(RULE_BLUE_LVFA)) {setWall GameStat, WALL_REDTILE, 131, 2} // 青発
-#endif
-#endif
-	if (getGameMode(GameEnv) != GAMEMODE_CLIENT) {
-#ifdef ALLSANMA
-		YamaLength = 108
-#else
-		if (getRule(RULE_FLOWER_TILES) != 0) {
-			if (getRule(RULE_FLOWER_TILES) == 3) {
-				YamaLength = 144
-			} else {
-				YamaLength = 140
-			}
-		} else {
-			YamaLength = 136
-		}
-#endif
-		repeat YamaLength // 洗牌する
-			tmp1 = cnt + rnd(YamaLength - cnt)
-			tmp = getWall(GameStat, WALL_TILECODE, tmp1)
-			setWall GameStat, WALL_TILECODE, tmp1, getWall(GameStat, WALL_TILECODE, cnt)
-			setWall GameStat, WALL_TILECODE, cnt, tmp
-			tmp = getWall(GameStat, WALL_REDTILE, tmp1)
-			setWall GameStat, WALL_REDTILE, tmp1, getWall(GameStat, WALL_REDTILE, cnt)
-			setWall GameStat, WALL_REDTILE, cnt, tmp
-		loop
-	}
+	shuffle GameStat
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) { // クライアントの場合、データを受信
 #ifdef ALLSANMA
 			tmpNumberOfTiles = 108
 #else
-		if (getRule(RULE_FLOWER_TILES) != 0) {
-			if (getRule(RULE_FLOWER_TILES) == 3) {
-				tmpNumberOfTiles = 144
-			} else {
-				tmpNumberOfTiles = 140
-			}
-		} else {
+		if (chkRule("flower_tiles", "no") != 0) {
 			tmpNumberOfTiles = 136
+		} else: if (chkRule("flower_tiles", "8tiles") != 0) {
+			tmpNumberOfTiles = 144
+		} else {
+			tmpNumberOfTiles = 140
 		}
 #endif
 		repeat tmpNumberOfTiles
@@ -493,7 +347,7 @@ return
 			await 0
 		loop
 	}
-	if ((getRule(RULE_DORA_TWICE) == 1)||((getRule(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
+	if ((chkRule("dora_twice", "yes") != 0)||((chkRule("dora_twice", "only_when_doublets") != 0)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
 		addDeadWallLength GameStat, 2 /* ドラドラ卓なら王牌の数を増やす */
 	}
 	calcWareme GameStat // 割れ目
@@ -501,16 +355,13 @@ return
 #ifdef ALLSANMA
 		tmpNumberOfTiles = 108
 #else
-		switch getRule(RULE_FLOWER_TILES)
-			case 1: case 2:
-				tmpNumberOfTiles = 140
-				swbreak
-			case 3:
-				tmpNumberOfTiles = 144
-				swbreak
-			default:
-				tmpNumberOfTiles = 136
-		swend
+		if (chkRule("flower_tiles", "no") != 0) {
+			tmpNumberOfTiles = 136
+		} else: if (chkRule("flower_tiles", "8tiles") != 0) {
+			tmpNumberOfTiles = 144
+		} else {
+			tmpNumberOfTiles = 140
+		}
 #endif
 		repeat tmpNumberOfTiles
 			serversend getWall(GameStat, WALL_TILECODE, cnt)+(getWall(GameStat, WALL_REDTILE, cnt)*TILE_NONFLOWER_MAX)+0x10, GameEnv
@@ -582,63 +433,13 @@ return
 		dsplay SND_TSUMO
 		redrscreen: await 250
 	loop
-	// ドラをめくる
-#ifdef ALLSANMA
-	setDoraPointer GameStat, 102-getRinshanExtension(GameStat) // ドラ表示牌のポインタ
-#else
-	setDoraPointer GameStat, 130 // ドラ表示牌のポインタ
-#endif
-	if (getRule(RULE_NAGATACHO) != 0) {
-		// 永田町ルール
-		tmpDora == TILE_BAMBOO_SEVEN: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora // 七索は常にドラ
-		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) <= 8) { // 2～8はその数牌がドラ　三麻では萬子がないので別処理
-#ifndef SANMAX
-			tmpDora == (getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+TILE_SUIT_CHARACTERS: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-#endif
-			tmpDora == (getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+TILE_SUIT_CIRCLES: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == (getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+TILE_SUIT_BAMBOOS: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-		}
-		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) == 9) { // 9はそのまま9がドラ
-			tmpDora == TILE_CHARACTER_NINE: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_CIRCLE_NINE: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_BAMBOO_NINE: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-		}
-		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) == 10) { // 10は三元牌がドラ
-			tmpDora == TILE_WHITE_DRAGON: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_GREEN_DRAGON: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_RED_DRAGON: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-		}
-		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) == 11) { // 11は数牌の1がドラ
-			tmpDora == TILE_CHARACTER_ONE: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_CIRCLE_ONE: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_BAMBOO_ONE: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-		}
-		if ((getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0)) == 12) { // 12は風牌全てドラ
-			tmpDora == TILE_EAST_WIND: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_SOUTH_WIND: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_WEST_WIND: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-			tmpDora == TILE_NORTH_WIND: incDoraFlag GameStat, DORA_OMOTE, tmpDora: haifurecdora tmpdora
-		}
-		haifurecdora tmpdorap
-	}
-	gosub *DoraAdding
+
+	initdora GameStat // ドラをめくる
+
 	dsplay SND_MEKURI
-	if ((getRule(RULE_DORA_TWICE) == 1)||((getRule(RULE_DORA_TWICE) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0)))) {
-		setDoraPointer GameStat, getDoraPointer(GameStat) - 2 /*ドラドラ卓*/
-		gosub *DoraAdding
-	}
-	
 	//setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, 0
 	haifurechaipai GameStat
 	statmes ""
 	repeat NUM_OF_PLAYERS: lipai GameStat, cnt: loop
 	dsplay SND_BELL
-return
-
-*DoraAdding
-	setdora GameStat, 0 // 表ドラを設定する
-	if (getRule(RULE_URADORA) == 0) {
-		setdora GameStat, 1 // 裏ドラを設定する
-	}
-	haifurecdorap
 return

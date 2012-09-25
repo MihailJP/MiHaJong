@@ -24,7 +24,8 @@
 #func _storeRule "?storeRule@RuleData@@SAXPAPBD@Z" var
 #func _exportRule "?exportRule@RuleData@@SAXPAPAD@Z" var
 */
-#cfunc getRule "?getRule@@YAHH@Z" int
+#cfunc getRule "?getRule@@YAHH@Z" int // obsolete
+#cfunc chkRule "?chkRule_hsp@RuleData@@SAHQBD0@Z" str, str
 #func configinit "?configinit@RuleData@@SAXXZ"
 #func loadConfigFile "?loadConfigFile@RuleData@@SAHQBD@Z" str
 #func saveConfigFile "?saveConfigFile@RuleData@@SAHQBD@Z" str
@@ -58,6 +59,7 @@
 /* bignum.hspÇ©ÇÁÇÃà⁄êA */
 #cfunc BasePoint "?BasePointHSP@@YAHXZ"
 #cfunc isAboveBase "?isAboveBase@@YAHQBUGameTable@@H@Z" int, int
+#cfunc isRichiReqSatisfied "?isRichiReqSatisfied@@YAHQBUGameTable@@H@Z" int, int
 
 /* tileutil.hspÇ©ÇÁÇÃà⁄êA */
 #func lipai "?lipai@@YAXQAUGameTable@@H@Z" int, int
@@ -107,6 +109,10 @@
 #func haifurecflower "?haifurecflower@haifu@@SAXQBUGameTable@@H@Z" int, int
 #func haifuwritebuffer "?haifuwritebuffer@haifu@@SAXQBUGameTable@@PAXHHHHPBDW4EndType@@@Z" int, var, int, int, int, int, str, int
 #func haifusave "?haifusave@haifu@@SAXXZ"
+
+/* prepare.hspÇ©ÇÁÇÃà⁄êA */
+#func shuffle "?shuffle@@YAXQAUGameTable@@@Z" int
+#func initdora "?initdora@@YAXQAUGameTable@@@Z" int
 
 /* ystruct.hspÇ©ÇÁÇÃà⁄êA */
 #cfunc _YAKUSTAT_getSize "?getSize@YAKUSTAT@yaku@@SAHXZ"
