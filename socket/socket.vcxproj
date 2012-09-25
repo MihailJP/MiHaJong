@@ -78,12 +78,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="class.cpp" />
+    <ClCompile Include="server.cpp" />
     <ClCompile Include="socket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class.h" />
     <ClInclude Include="except.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="server.h" />
     <ClInclude Include="socket.h" />
   </ItemGroup>
   <ItemGroup>
