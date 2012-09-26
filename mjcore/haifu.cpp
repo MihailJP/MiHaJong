@@ -14,12 +14,6 @@ bool haifu::haifukanflag = false;
 
 haifu::HaifuStreams haifu::haifuP, haifu::HThaifuP;
 
-std::ostringstream haifu::PlayerStream::haipai, haifu::PlayerStream::tsumo, haifu::PlayerStream::tsumolabel,
-	haifu::PlayerStream::sutehai, haifu::PlayerStream::sutehailabel, haifu::PlayerStream::final;
-InfoByPlayer<haifu::PlayerStream> haifu::HaifuStreams::streamDat;
-std::ostringstream haifu::HaifuStreams::dora, haifu::HaifuStreams::uraDora, haifu::HaifuStreams::aliceDora,
-	haifu::HaifuStreams::aliceDoraMax, haifu::HaifuStreams::resultDesc;
-
 /* 牌譜記録用の補助ルーチン */
 void haifu::tools::haifuskip(
 	HaifuStreams* haifuP, HaifuStreams* HThaifuP,
