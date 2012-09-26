@@ -1,4 +1,4 @@
-0,15,0,,,,,,game_length,長さ,１試合の長さを設定します,east_south_game,east_wind_game,full_round_game,east_north_game,single_round_game,twice_east_game,east_south_west_game,east_only_game,,,,,,,,
+0,15,0,,,,,,game_length,長さ,１試合の長さを設定します,east_south_game,east_wind_game,full_round_game,east_north_game,single_round_game,twice_east_game,east_south_west_game,east_west_game,east_only_game,,,,,,,,
 1,15,0,,,,,,sudden_death_length,延長戦の制限,延長戦の有無と長さを設定します,unlimited,one_extra_round,no,,,,,,,,,,,,,
 2,15,0,,,,,,sudden_death_type,北場の次,北四局を越えて延長戦が行われる場合の処置を設定します,return_to_east,continue_into_white,,,,,,,,,,,,,,
 3,5,0,,,,,,starting_point,配給原点,試合開始時の持ち点を設定します,25000pts_oka20,27000pts_oka12,30000pts_oka0,35000pts_oka-20,40000pts_oka-40,20000pts_oka40,,,,,,,,,,

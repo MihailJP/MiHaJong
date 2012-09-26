@@ -461,6 +461,7 @@ return
 		else: if (chkRule("game_length", "east_north_game")) {tmptxt = "  - “Œ–kí -  "}
 		else: if (chkRule("game_length", "twice_east_game")) {tmptxt = "  - “ŒXí -  "}
 		else: if (chkRule("game_length", "east_south_west_game")) {tmptxt = " - “Œ“ì¼í - "}
+		else: if (chkRule("game_length", "east_west_game")) {tmptxt = "  - “Œ¼í -  "}
 		else: if (chkRule("game_length", "east_only_game")) {tmptxt = "  - “Œ•—í -  "}
 	}
 	if (colmode) {
