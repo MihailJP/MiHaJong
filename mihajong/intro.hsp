@@ -77,102 +77,21 @@
 *modesel2
 	dsplay SND_BUTTON
 	gosub *entername
-	setPlayerName GameEnv, 0, "[A]"+InputPlayerName
-	setPlayerName GameEnv, 1, "[b]COM"
-	setPlayerName GameEnv, 2, "[c]COM"
-	setPlayerName GameEnv, 3, "[d]COM"
 	setGameMode GameEnv, GAMEMODE_SERVER
 	ServerAddress = ""
-	sockmake SOCK_GAME+0, PORT_GAME
+	exportRule RuleConf
 	vanish
 	objsize 440, 40
 	pos 200, 270: colorbutton gosub "この面子で開始する", *modesel2s, -1, 0xffffff
-	startflag = 0
+	s_server_start InputPlayerName, PORT_GAME, NUM_OF_ACTUAL_PLAYERS, RuleConf
 	repeat
 		redraw 0
 		showbackground
-		CurrentConnection = 1
-		repeat NUM_OF_PLAYERS-1
-			if (IsRemotePlayer(GameEnv, cnt+1) > 0) {CurrentConnection++}
-		loop
+		CurrentConnection = s_server_chkcurrentconnection()
 		sysscr fontname, "接続を待っています", "Waiting clients.", strf("\n現在の接続人数： %d / %d 人", CurrentConnection, NUM_OF_ACTUAL_PLAYERS)
 		redraw 1
-		sockwait SOCK_GAME+0 // クライアントの接続を待機
-		if (stat == 0) {
-			if (IsRemotePlayer(GameEnv, 1) == 0) {
-				SetRemotePlayer GameEnv, 1, 2
-				sockputc 2, SOCK_GAME+0
-				sockclose SOCK_GAME+0
-				sockmake SOCK_GAME+1, PORT_GAME+1
-				repeat
-					sockwait SOCK_GAME+1
-					if (stat == 0) {
-						tmpclientnum = 1
-						gosub *receiveclientname
-						setPlayerName GameEnv, 1, "[B]"+tmpClientName
-						break
-					}
-					await 0
-				loop
-			} else {
-				if (IsRemotePlayer(GameEnv, 2) == 0) {
-					SetRemotePlayer GameEnv, 2, 3
-					sockputc 3, SOCK_GAME+0
-					sockclose SOCK_GAME+0
-					sockmake SOCK_GAME+2, SOCK_GAME+2
-					repeat
-						sockwait SOCK_GAME+2
-						if (stat == 0) {
-							tmpclientnum = 2
-							gosub *receiveclientname
-							setPlayerName GameEnv, 2, "[C]"+tmpClientName
-							break
-						}
-						await 0
-					loop
-#ifndef SANMAT
-				} else {
-					setRemotePlayer GameEnv, 3, 4
-					sockputc 4, SOCK_GAME+0
-					sockclose SOCK_GAME+0
-					sockmake SOCK_GAME+3, PORT_GAME+3
-					repeat
-						sockwait SOCK_GAME+3
-						if (stat == 0) {
-							tmpclientnum = 3
-							gosub *receiveclientname
-							setPlayerName GameEnv, 3, "[D]"+tmpClientName
-							break
-						}
-						await 0
-					loop
-#endif
-				}
-			}
-			sockmake SOCK_GAME+0, PORT_GAME+0
-		}
 		await 0
-		if (CurrentConnection == NUM_OF_ACTUAL_PLAYERS) {startflag = 1}
-		if (startflag) {
-			serversend 0xb4, GameEnv
-			repeat NUM_OF_ACTUAL_PLAYERS
-				tmpcnt = cnt
-				serversend 0xb8, GameEnv
-				tmpPlayerName = getPlayerName(GameEnv, tmpcnt)
-				serversend strlen(tmpPlayerName), GameEnv
-				repeat strlen(tmpPlayerName)
-					serversend peek(tmpPlayerName, cnt), GameEnv
-				loop
-			loop
-			exportRule RuleConf
-			repeat RULE_STRING_LINES
-				tmpcnt = cnt
-				serversend 0xb8, GameEnv
-				serversend strlen(RuleConf(tmpcnt)), GameEnv
-				repeat strlen(RuleConf(tmpcnt)): serversend peek(RuleConf(tmpcnt), cnt), GameEnv: loop
-			loop
-			break
-		}
+		if (s_server_isstartingfinished()) {break}
 	loop
 return
 
@@ -219,7 +138,7 @@ return
 
 *modesel2s
 	dsplay SND_BUTTON
-	startflag = 1
+	s_server_dostart
 	return
 
 *modesel3

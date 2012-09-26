@@ -69,13 +69,27 @@ bool mihajong_socket::Sock::connected () { // Ú‘±‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
 	}
 };
 
-unsigned char mihajong_socket::Sock::getc () { // “Ç‚İ‚İ
+void mihajong_socket::Sock::wait_until_connected () { // •¶š’Ê‚è‚Ì‚±‚Æ‚ğ‚â‚é
+	while (!connected()) Sleep(0);
+};
+unsigned char mihajong_socket::Sock::getc () { // “Ç‚İ‚İ(”ñ“¯Šú)
 	if (isServer) {
 		threadPtr.server->chkError();
 		return threadPtr.server->read();
 	} else {
 		threadPtr.client->chkError();
 		return threadPtr.client->read();
+	}
+}
+
+unsigned char mihajong_socket::Sock::syncgetc () { // “Ç‚İ‚İ(“¯Šú)
+	while (true) {
+		try {
+			return getc();
+		}
+		catch (queue_empty) {
+			Sleep(0); // Yield and try again
+		}
 	}
 }
 
@@ -89,7 +103,7 @@ void mihajong_socket::Sock::putc (unsigned char byte) { // ‘‚«‚İ
 	}
 }
 
-void mihajong_socket::Sock::puts (std::string& str) { // •¶š—ñ‘‚«‚İ
+void mihajong_socket::Sock::puts (const std::string& str) { // •¶š—ñ‘‚«‚İ
 	if (isServer) {
 		for (auto k = str.begin(); k != str.end(); ++k)
 			threadPtr.server->write((unsigned char)*k);

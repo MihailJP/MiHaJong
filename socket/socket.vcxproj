@@ -84,6 +84,7 @@
   <ItemGroup>
     <ClInclude Include="class.h" />
     <ClInclude Include="except.h" />
+    <ClInclude Include="protocol.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="socket.h" />

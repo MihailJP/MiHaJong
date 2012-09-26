@@ -2,7 +2,6 @@
 
 namespace mihajong_socket {
 
-const unsigned int numOfSockets = 32u;
 WSADATA SocketInfo;
 HINSTANCE dllInst;
 Sock* sockets[numOfSockets] = {nullptr,};

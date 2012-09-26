@@ -15,3 +15,10 @@
 #cfunc s_getc "?getc@mihajong_socket@@YAHH@Z" int
 #func s_hangup "?hangup@mihajong_socket@@YAHH@Z" int
 #func s_bye "?bye@mihajong_socket@@YAHXZ"
+
+#func s_server_start "?start@server@mihajong_socket@@YAXQBDHHQBQBD@Z" str, int, int, var
+#func s_server_dostart "?doStart@server@mihajong_socket@@YAXXZ"
+#cfunc s_server_isstartingfinished "?isStartingFinished@server@mihajong_socket@@YAHXZ"
+#cfunc s_server_chkcurrentconnection "?chkCurrentConnection@server@mihajong_socket@@YAHXZ"
+
+#func serversend "?send@server@mihajong_socket@@YAXHPAX@Z" int, int

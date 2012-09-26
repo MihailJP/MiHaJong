@@ -2,6 +2,7 @@
 #define SOCKET_H
 
 #include <WinSock2.h>
+#include <cstdarg>
 #include "class.h"
 
 #define NUM_OF_SOCKETS 32
@@ -16,6 +17,8 @@
 namespace mihajong_socket {
 #ifdef SOCKET_EXPORTS
 class Sock;
+const unsigned int numOfSockets = 32u;
+extern Sock* sockets[numOfSockets];
 extern WSADATA SocketInfo;
 extern HINSTANCE dllInst;
 #else

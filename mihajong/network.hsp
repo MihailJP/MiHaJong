@@ -4,24 +4,6 @@
  *=============================
  */
 
-/* サーバーからメッセージを送信する */
-#module
-#include "const.hsp"
-#deffunc serversend int SendingMsg, var GameEnv
-	repeat NUM_OF_ACTUAL_PLAYERS-1
-#ifdef SANMAT
-		if ((IsRemotePlayer(GameEnv, 0) == cnt+2)||(IsRemotePlayer(GameEnv, 1) == cnt+2)||(IsRemotePlayer(GameEnv, 2) == cnt+2)) {
-#else
-		if ((IsRemotePlayer(GameEnv, 0) == cnt+2)||(IsRemotePlayer(GameEnv, 1) == cnt+2)||(IsRemotePlayer(GameEnv, 2) == cnt+2)||(IsRemotePlayer(GameEnv, 3) == cnt+2)) {
-#endif
-			sockputc@ SendingMsg, cnt+1+SOCK_GAME
-			if (stat) {error strf("データの送信に失敗しました。クライアント [%d] ステータスコード [%d]", cnt+1, stat)}
-			else {trace strf("クライアント [%d] にデータを送信 [0x%02X]", cnt+1, SendingMsg)}
-		}
-	loop
-	return
-#global
-
 /* サーバーがメッセージを受信 */
 #module
 #include "const.hsp"
