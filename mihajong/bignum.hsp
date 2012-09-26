@@ -539,7 +539,6 @@
 								if (chkRule("tsumo_payment", "add_1000")) {PointDelta(cnt, 0) -= 10}
 							}
 						loop
-						swbreak
 				} else: if (chkRule("tsumo_payment", "adjusted_payment")) {
 					repeat NUM_OF_ACTUAL_PLAYERS
 						if (cnt == AgariPlayer) {
