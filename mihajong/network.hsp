@@ -4,16 +4,6 @@
  *=============================
  */
 
-/* サーバーにメッセージを送る */
-#module
-#include "const.hsp"
-#deffunc clientsend int SendingMsg
-	sockputc@ SendingMsg, 0+SOCK_GAME
-	if (stat) {error strf("データの送信に失敗しました。ステータスコード [%d]", stat)}
-	else {trace strf("サーバーにデータを送信 [0x%02X]", SendingMsg)}
-	return
-#global
-
 /* サーバーのメッセージを受信する */
 #module
 #include "const.hsp"
