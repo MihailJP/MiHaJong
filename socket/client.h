@@ -10,6 +10,7 @@ namespace client {
 
 	void send (unsigned char SendingMsg); // サーバーにメッセージを送る
 	DLL void send (int SendingMsg); // サーバーにメッセージを送る [Transitional API]
+	DLL void receive (int* const ClientReceived, int* const ReceivedMsg); // サーバーのメッセージを受信する
 }
 }
 

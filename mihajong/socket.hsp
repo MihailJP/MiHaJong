@@ -26,3 +26,4 @@
 #func serverreceive "?receive@server@mihajong_socket@@YAXQAH0@Z" var, var
 
 #func clientsend "?send@client@mihajong_socket@@YAXH@Z" int
+#func clientreceive "?receive@client@mihajong_socket@@YAXQAH0@Z" var, var
