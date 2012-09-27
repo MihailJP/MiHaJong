@@ -12,6 +12,7 @@ void yaku::yakuCalculator::init() {
 	YakuCatalog::Instantiate()->catalog.clear(); // リセット
 	info("役カタログをリセットしました。");
 	YakuCatalog::catalogInit::yakulst_contextual();
+	YakuCatalog::catalogInit::yakulst_irregular();
 	YakuCatalog::catalogInit::yakulst_pinhu();
 	YakuCatalog::catalogInit::yakulst_suit();
 	YakuCatalog::catalogInit::yakulst_yaojiu();
@@ -29,7 +30,7 @@ yaku::yakuCalculator::Yaku::HANFUNC
 	yaku::yakuCalculator::YakuCatalog::catalogInit::get_yaku_han
 	(const std::string& RuleTag)
 {
-	std::string currcnf = RuleData::chkRule("bird_riichi");
+	std::string currcnf = RuleData::chkRule(RuleTag);
 	if (currcnf == "1han") return yaku::yakuCalculator::Yaku::yval_1han;
 	else if (currcnf == "2han") return yaku::yakuCalculator::Yaku::yval_2han;
 	else if (currcnf == "3han") return yaku::yakuCalculator::Yaku::yval_3han;

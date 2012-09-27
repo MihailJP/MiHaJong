@@ -56,7 +56,7 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 	}
 
 	int totalHan = yStat->CoreHan + yStat->BonusHan; // 合計翻
-	int totalSemiMangan = yStat->CoreSemiMangan + yStat->CoreSemiMangan; // 満貫の半分単位
+	int totalSemiMangan = yStat->CoreSemiMangan + yStat->BonusSemiMangan; // 満貫の半分単位
 
 	if (!RuleData::chkRuleApplied("limitless")) { // 通常ルールの場合
 		if ((totalHan < 6) && (totalSemiMangan < 3)) { // 満貫以下

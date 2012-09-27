@@ -101,6 +101,9 @@ std::string RuleData::chkRule(std::string RuleTag) { // ルール設定タグを取得する
 bool RuleData::chkRule(std::string RuleTag, std::string Expectation) { // ルール設定
 	return getRuleItemTag(RuleTag, Rules[RuleTag]) == Expectation;
 }
+__declspec(dllexport) int RuleData::chkRule_hsp(const char* const RuleTag, const char* const Expectation) { // ルール設定チェック(HSPからの判定用)
+	return (getRuleItemTag(RuleTag, Rules[RuleTag]) == Expectation) ? 1 : 0;
+}
 bool RuleData::chkRuleApplied(std::string RuleTag) { // ルール設定
 	return (!chkRule(RuleTag, "no")) && (!chkRule(RuleTag, "N/A")) && (!chkRule(RuleTag, "continue"));
 }

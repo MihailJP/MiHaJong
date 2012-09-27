@@ -59,6 +59,7 @@ public:
 	static std::string getRuleItemTag(std::string RuleTag, int index);
 	static std::string chkRule(std::string RuleTag);
 	static bool chkRule(std::string RuleTag, std::string Expectation);
+	__declspec(dllexport) static int chkRule_hsp(const char* const RuleTag, const char* const Expectation);
 	static bool chkRuleApplied(std::string RuleTag);
 	inline static uint8_t getRule(std::string RuleTag) {return Rules[RuleTag];}
 	static uint8_t getRule(int RuleID);

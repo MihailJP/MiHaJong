@@ -88,6 +88,9 @@ namespace confpath {
 	__declspec(dllexport) void confPath(char* path, int bufsz);
 }
 
+bool isRichiReqSatisfied (const GameTable* const gameStat, PLAYER_ID targetPlayer);
+__declspec(dllexport) int isRichiReqSatisfied (const GameTable* const gameStat, int targetPlayer);
+
 #endif
 
 #endif
