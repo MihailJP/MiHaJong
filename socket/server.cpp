@@ -120,5 +120,39 @@ namespace server {
 		send((unsigned char)SendingMsg);
 		// かつてはここでログを送っていた
 	}
+
+	// ---------------------------------------------------------------------
+
+	std::array<unsigned, 3> ServerCheckRotation; // クライアントの読み出し優先順位
+
+	DLL void rotation_reset () { // 取得優先順位のリセット
+		for (unsigned i = 0; i < 3; ++i) ServerCheckRotation[i] = i + 1;
+	}
+	DLL void receive (int* const ServerReceived, int* const ReceivedMsg) { // 取得する
+		*ServerReceived = 0; *ReceivedMsg = 1023; bool finished = false;
+		for (unsigned i = 0; i < (NumberOfPlayers - 1); ++i) {
+			if (sockets[ServerCheckRotation[i]] != nullptr) {
+				try {
+					*ServerReceived = ServerCheckRotation[i];
+					*ReceivedMsg = sockets[ServerCheckRotation[i]]->getc();
+					finished = true;
+				}
+				catch (queue_empty) { // Falling back if empty...
+					*ServerReceived = 0;
+					*ReceivedMsg = 1023;
+					finished = false;
+				}
+				// かつてはここでログを送っていた
+			}
+			if (finished) break;
+		}
+		{ // 取得優先順位をシフト
+			unsigned tmp = ServerCheckRotation[0];
+			ServerCheckRotation[0] = ServerCheckRotation[1];
+			ServerCheckRotation[1] = ServerCheckRotation[2];
+			ServerCheckRotation[2] = tmp;
+		}
+	}
+
 }
 }

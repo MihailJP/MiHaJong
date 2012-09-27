@@ -22,3 +22,5 @@
 #cfunc s_server_chkcurrentconnection "?chkCurrentConnection@server@mihajong_socket@@YAHXZ"
 
 #func serversend "?send@server@mihajong_socket@@YAXHPAX@Z" int, int
+#func serverreceive_init "?rotation_reset@server@mihajong_socket@@YAXXZ"
+#func serverreceive "?receive@server@mihajong_socket@@YAXQAH0@Z" var, var

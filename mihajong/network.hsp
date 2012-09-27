@@ -4,38 +4,6 @@
  *=============================
  */
 
-/* サーバーがメッセージを受信 */
-#module
-#include "const.hsp"
-#deffunc serverreceive_init
-	ServerCheckRotation = 1, 2, 3
-	return
-
-#deffunc serverreceive var ServerReceived, var ReceivedMsg
-	ServerReceived = 0
-	ReceivedMsg = 1023
-	repeat NUM_OF_ACTUAL_PLAYERS-1
-		sockcheck@ ServerCheckRotation(cnt)+SOCK_GAME
-		if (stat == 0) {
-			ServerReceived = ServerCheckRotation(cnt)
-			sockgetc@ ReceivedMsg, ServerCheckRotation(cnt)+SOCK_GAME
-			if (ReceivedMsg < 0) {ReceivedMsg += 256 /* signedになっていた場合対策 */}
-			if (stat) {error strf("データの受信に失敗しました。クライアント [%d] ステータスコード [%d]", ServerCheckRotation(cnt), stat)}
-			else {trace strf("クライアント [%d] からデータを受信 [0x%02X]", ServerCheckRotation(cnt), ReceivedMsg)}
-			break
-		}
-	loop
-	ServerCheckRotationTmp = ServerCheckRotation(0)
-	ServerCheckRotation(0) = ServerCheckRotation(1)
-#ifdef SANMAT
-	ServerCheckRotation(1) = ServerCheckRotationTmp
-#else
-	ServerCheckRotation(1) = ServerCheckRotation(2)
-	ServerCheckRotation(2) = ServerCheckRotationTmp
-#endif
-	return
-#global
-
 /* サーバーにメッセージを送る */
 #module
 #include "const.hsp"

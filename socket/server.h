@@ -38,6 +38,9 @@ namespace server {
 	void send (unsigned char SendingMsg); // サーバーからの送信
 	void sendstr (const std::string& sendingStr); // サーバーからの文字列送信
 	DLL void send (int SendingMsg, void*); // サーバーからの送信(DLL)
+	extern std::array<unsigned, 3> ServerCheckRotation; // クライアントの読み出し優先順位
+	DLL void rotation_reset (); // 取得優先順位のリセット
+	DLL void receive (int* const ServerReceived, int* const ReceivedMsg); // 取得する
 }
 }
 
