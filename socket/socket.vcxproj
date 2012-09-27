@@ -78,11 +78,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="class.cpp" />
+    <ClCompile Include="client.cpp" />
     <ClCompile Include="server.cpp" />
     <ClCompile Include="socket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class.h" />
+    <ClInclude Include="client.h" />
     <ClInclude Include="except.h" />
     <ClInclude Include="protocol.h" />
     <ClInclude Include="resource.h" />
