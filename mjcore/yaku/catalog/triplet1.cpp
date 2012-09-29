@@ -201,6 +201,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			return (DragonCnt(analysis) == 6);
 		}
 	));
+	/* 門前大三元 */
+	if (RuleData::chkRuleApplied("menzen_daisangen"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"門前大三元", yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen,
+			"大三元",
+			[DragonCnt](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (DragonCnt(analysis) == 6);
+			}
+		));
 	/* 小四喜 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"小四喜", yaku::yakuCalculator::Yaku::yval_yakuman,
