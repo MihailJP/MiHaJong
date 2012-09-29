@@ -93,6 +93,16 @@
 		await 0
 		if (s_server_isstartingfinished()) {break}
 	loop
+	sdim playerName1, 256: sdim playerName2, 256: sdim playerName3, 256: sdim playerName4, 256
+	s_server_getplayernames playerName1, playerName2, playerName3, playerName4, 256
+	setPlayerName GameEnv, 0, playerName1
+	setPlayerName GameEnv, 1, playerName2
+	setPlayerName GameEnv, 2, playerName3
+	setPlayerName GameEnv, 3, playerName4
+	if (CurrentConnection >= 2) {setRemotePlayer GameEnv, 1, 1}
+	if (CurrentConnection >= 3) {setRemotePlayer GameEnv, 2, 1}
+	if (CurrentConnection >= 4) {setRemotePlayer GameEnv, 3, 1}
+	s_server_releaseobj
 return
 
 *receiveclientname

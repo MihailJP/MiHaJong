@@ -20,6 +20,8 @@
 #func s_server_dostart "?doStart@server@mihajong_socket@@YAXXZ"
 #cfunc s_server_isstartingfinished "?isStartingFinished@server@mihajong_socket@@YAHXZ"
 #cfunc s_server_chkcurrentconnection "?chkCurrentConnection@server@mihajong_socket@@YAHXZ"
+#func s_server_getplayernames "?getPlayerNames@server@mihajong_socket@@YAXPAD000I@Z" var, var, var, var, int
+#func s_server_releaseobj "?releaseobj@server@mihajong_socket@@YAXXZ"
 
 #func serversend "?send@server@mihajong_socket@@YAXHPAX@Z" int, int
 #func serverreceive_init "?rotation_reset@server@mihajong_socket@@YAXXZ"

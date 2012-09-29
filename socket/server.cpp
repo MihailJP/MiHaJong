@@ -87,6 +87,9 @@ namespace server {
 	unsigned int starter::chkCurrentConnection () { // 現在の接続数
 		return CurrentConnection;
 	}
+	std::string starter::getPlayerName (unsigned id) { // プレイヤー名
+		return playerName[id];
+	}
 
 	DLL void start (const char* const name, int port, int players, const char* const * const rule) { // サーバーを開始させる(DLL)
 		NumberOfPlayers = (unsigned int)players;
@@ -96,14 +99,20 @@ namespace server {
 	DLL void doStart() { // 接続待機をやめ、直ちに開始する
 		starterThread->terminate();
 	}
-	DLL int isStartingFinished () { // 待機用スレッドが終わったかどうか、終わったらオブジェクトを解放する
-		if (starterThread->isFinished()) {
-			delete starterThread; starterThread = nullptr;
-			return 1;
-		} else return 0;
+	DLL int isStartingFinished () { // 待機用スレッドが終わったかどうか
+		return starterThread->isFinished() ? 1 : 0;
 	}
 	DLL int chkCurrentConnection () { // 現在の接続数
 		return (int)starterThread->chkCurrentConnection();
+	}
+	DLL void getPlayerNames (char* playerName1, char* playerName2, char* playerName3, char* playerName4, unsigned bufsz) {
+		strcpy_s(playerName1, bufsz, starterThread->getPlayerName(0).c_str());
+		strcpy_s(playerName2, bufsz, starterThread->getPlayerName(1).c_str());
+		strcpy_s(playerName3, bufsz, starterThread->getPlayerName(2).c_str());
+		strcpy_s(playerName4, bufsz, starterThread->getPlayerName(3).c_str());
+	}
+	DLL void releaseobj () { // デストラクタを呼ぶだけ
+		delete starterThread; starterThread = nullptr;
 	}
 
 	// ---------------------------------------------------------------------
