@@ -23,8 +23,9 @@
 /*
 #func _storeRule "?storeRule@RuleData@@SAXPAPBD@Z" var
 #func _exportRule "?exportRule@RuleData@@SAXPAPAD@Z" var
-*/
+#cfunc getRuleSize "?getRuleSize@RuleData@@SAHH@Z" int
 #cfunc getRule "?getRule@@YAHH@Z" int // obsolete
+*/
 #cfunc chkRule "?chkRule_hsp@RuleData@@SAHQBD0@Z" str, str
 #func configinit "?configinit@RuleData@@SAXXZ"
 #func loadConfigFile "?loadConfigFile@RuleData@@SAHQBD@Z" str
