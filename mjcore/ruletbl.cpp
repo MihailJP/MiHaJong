@@ -113,6 +113,9 @@ uint8_t RuleData::getRule(int RuleID) { // ルール設定を取得する[OBSOLETE]
 __declspec(dllexport) int getRule(int RuleID) { // ルール設定を取得する[OBSOLETE]
 	return (int)RuleData::getRule(RuleID);
 }
+__declspec(dllexport) int RuleData::getRuleSize(int RuleID) { // ルール項目のアイテム数
+	return ruletags[nametbl[RuleID]].size();
+}
 
 __declspec(dllexport) void RuleData::getRuleName(char* const txt, int bufsize, int RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
