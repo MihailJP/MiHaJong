@@ -68,6 +68,10 @@ return
 #include "const.hsp"
 #include "mjcore.hsp"
 
+#uselib "mjcore.dll"
+#cfunc getRuleSize "?getRuleSize@RuleData@@SAHH@Z" int
+#cfunc getRule "?getRule@@YAHH@Z" int
+
 #deffunc setconffile str argFileName
 	configFile = argFileName
 	info "設定ファイルは "+configFile+" です。"
@@ -365,7 +369,7 @@ return
 		repeat 1
 			tmpRuleNum = (configPage-1)*RULES_IN_PAGE+tmpBtnCode-1
 			Rule(tmpRuleNum)--
-			if (Rule(tmpRuleNum) < 0) {Rule(tmpRuleNum) = length(RuleTxt)-1}
+			if (Rule(tmpRuleNum) < 0) {Rule(tmpRuleNum) = getRuleSize(tmpRuleNum)-1}
 			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == ">>>") {continue 0}
 			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == "") {continue 0}
 		loop
@@ -373,8 +377,8 @@ return
 		repeat 1
 			tmpRuleNum = (configPage-1)*RULES_IN_PAGE+tmpBtnCode-1
 			Rule(tmpRuleNum)++
+			if (Rule(tmpRuleNum) >= getRuleSize(tmpRuleNum)) {Rule(tmpRuleNum) == 0}
 			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == ">>>") {continue 0}
-			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == "") {Rule(tmpRuleNum) == 0}
 		loop
 	}
 	gosub *config_redraw

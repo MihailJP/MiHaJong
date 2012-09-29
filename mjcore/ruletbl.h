@@ -65,6 +65,7 @@ public:
 	static bool chkRuleApplied(std::string RuleTag);
 	inline static uint8_t getRule(std::string RuleTag) {return Rules[RuleTag];}
 	static uint8_t getRule(int RuleID);
+	__declspec(dllexport) static int getRuleSize(int RuleID);
 	__declspec(dllexport) static int loadConfigFile(const char* const filename);
 	__declspec(dllexport) static int saveConfigFile(const char* const filename);
 };
