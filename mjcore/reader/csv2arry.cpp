@@ -35,10 +35,10 @@ void CSVReader::parsecsv (CsvVecVec& arr, const char* csv) {
 				record.push_back(tmpstr); tmpstr.clear();
 			}
 			else if ((*ptr == '"') && (quoted)) {
-				if ((*ptr + 1) == '"') {
+				if (*(ptr + 1) == '"') {
 					tmpstr += "\""; ++ptr; continue; // double quotes as a letter
 				}
-				else if (((*ptr + 1) == '\r') || ((*ptr + 1) == '\n') || ((*ptr + 1) == ',') || ((*ptr + 1) == '\0')) {
+				else if ((*(ptr + 1) == '\r') || (*(ptr + 1) == '\n') || (*(ptr + 1) == ',') || (*(ptr + 1) == '\0')) {
 					quoted = false; continue; // end of quote
 				}
 				else continue; // invalid? just ignore it
