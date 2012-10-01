@@ -11,7 +11,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	// ---------------------------------------------------------------------
 
 	int totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan;
-	hanSummation(totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan, yakuHan, yakuOrd, NULL);
+	hanSummation(totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan, yakuHan, yakuOrd, nullptr);
 
 	// ---------------------------------------------------------------------
 
