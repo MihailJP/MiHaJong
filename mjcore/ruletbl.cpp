@@ -121,8 +121,10 @@ __declspec(dllexport) void RuleData::getRuleName(char* const txt, int bufsize, i
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (std::atoi((*k)[0].c_str()) != RuleID) continue;
 		if ((chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str()))) ||
-			(chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str()))))
-			strcpy_s(txt, bufsize, ((*k)[9]).c_str()); return;
+			(chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str())))) {
+				strcpy_s(txt, bufsize, ((*k)[9]).c_str());
+				return;
+		}
 	}
 	strcpy_s(txt, bufsize, "");
 }
