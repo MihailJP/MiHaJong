@@ -258,3 +258,62 @@ __declspec(dllexport) int RuleData::saveConfigFile(const char* const filename) {
 		return -1;
 	}
 }
+std::string RuleData::getRuleMaskExpr(const std::string& RuleTag) {
+	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
+		if ((*k)[8] != RuleTag) continue;
+		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str())))
+				return (*k)[3];
+		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str())))
+				return "";
+	}
+	return "";
+}
+
+__declspec(dllexport) int RuleData::reqFailed(int ruleID, const int* const ruleStat) {
+	auto checker = new ReqChecker();
+	bool flag = checker->reqFailed(nametbl[ruleID], getRuleMaskExpr(nametbl[ruleID]), ruleStat);
+	delete checker;
+	return flag ? 1 : 0;
+}
+
+// -------------------------------------------------------------------------
+
+RuleData::ReqChecker::ReqChecker () {
+	myState = luaL_newstate();
+	lua_register(myState, "chk", check);
+}
+RuleData::ReqChecker::~ReqChecker () {
+	lua_close(myState);
+}
+const int* RuleData::ReqChecker::ourRuleStat = nullptr;
+
+int RuleData::ReqChecker::check (lua_State* L) {
+	int n = lua_gettop(L);
+	if (n < 2) luaL_error(L, "Not enough arguments");
+	const char* ruleTag = lua_tostring(L, 1);
+	const char* itemTag = lua_tostring(L, 2);
+	//lua_pushboolean(L, chkRule(ruleTag, itemTag));
+	if (inverse_nametbl.find(ruleTag) == inverse_nametbl.end())
+		return luaL_error(L, "Unrecognized rule key: %s", ruleTag);
+	else if (inverse_ruletags[ruleTag].find(itemTag) == inverse_ruletags[ruleTag].end())
+		return luaL_error(L, "Unrecognized rule value: %s", itemTag);
+	lua_pushboolean(L, ourRuleStat[inverse_nametbl[ruleTag]] == inverse_ruletags[ruleTag][itemTag]);
+	return 1;
+}
+
+bool RuleData::ReqChecker::reqFailed
+	(const std::string& ruleTag, const std::string& expression, const int* const ruleStat)
+{
+	if (expression.empty()) {
+		return false;
+	}
+	else {
+		ourRuleStat = ruleStat;
+		std::string expr = std::string("result = ") + expression;
+		if (luaL_dostring(myState, expr.c_str())) return true;
+		lua_getglobal(myState, "result");
+		bool ans = lua_toboolean(myState, -1);
+		lua_pop(myState, 1);
+		return ans;
+	}
+}

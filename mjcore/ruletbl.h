@@ -2,13 +2,14 @@
 #define RULETBL_H
 
 #include <cstdint>
-#ifdef MJCORE_EXPORTS
+#include <lua.hpp>
 #include <string>
-#include <cstdlib>
-#include <vector>
 #include <map>
 #include <set>
 #include <array>
+#ifdef MJCORE_EXPORTS
+#include <cstdlib>
+#include <vector>
 #include <sstream>
 #include <fstream>
 #include <exception>
@@ -37,6 +38,7 @@ enum gameTypeID : uint8_t { // 卓の種類(四麻、三麻)指定用
 
 class RuleData {
 private:
+	class ReqChecker;
 	static char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
 	static RULETBL Rules;
 	static std::array<std::string, RULESIZE> nametbl;
@@ -68,6 +70,19 @@ public:
 	__declspec(dllexport) static int getRuleSize(int RuleID);
 	__declspec(dllexport) static int loadConfigFile(const char* const filename);
 	__declspec(dllexport) static int saveConfigFile(const char* const filename);
+	static std::string getRuleMaskExpr(const std::string& RuleTag);
+	__declspec(dllexport) static int reqFailed(int ruleID, const int* const ruleStat);
+};
+
+class RuleData::ReqChecker {
+private:
+	lua_State* myState;
+	static int check(lua_State* L);
+	static const int* ourRuleStat;
+public:
+	ReqChecker();
+	~ReqChecker();
+	bool reqFailed (const std::string& ruleTag, const std::string& expression, const int* const ruleStat);
 };
 
 __declspec(dllexport) int getRule(int RuleID);

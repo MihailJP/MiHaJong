@@ -71,6 +71,7 @@ return
 #uselib "mjcore.dll"
 #cfunc getRuleSize "?getRuleSize@RuleData@@SAHH@Z" int
 #cfunc getRule "?getRule@@YAHH@Z" int
+#cfunc reqFailed "?reqFailed@RuleData@@SAHHQBH@Z" int, var
 
 #deffunc setconffile str argFileName
 	configFile = argFileName

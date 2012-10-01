@@ -25,6 +25,7 @@
 #func _exportRule "?exportRule@RuleData@@SAXPAPAD@Z" var
 #cfunc getRuleSize "?getRuleSize@RuleData@@SAHH@Z" int
 #cfunc getRule "?getRule@@YAHH@Z" int // obsolete
+#cfunc reqFailed "?reqFailed@RuleData@@SAHHQBH@Z" int, var
 */
 #cfunc chkRule "?chkRule_hsp@RuleData@@SAHQBD0@Z" str, str
 #func configinit "?configinit@RuleData@@SAXXZ"
