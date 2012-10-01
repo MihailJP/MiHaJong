@@ -21,10 +21,8 @@
 #include "reader/ini2map.h"
 #endif
 #include "mjexport.h"
+#include "nmrules.h"
 
-#define RULESIZE 640U
-#define RULES_IN_PAGE 40U
-#define RULE_IN_LINE 80U
 #ifdef MJCORE_EXPORTS
 typedef std::map<std::string, int8_t> RULETBL;
 #endif

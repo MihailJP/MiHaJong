@@ -176,6 +176,7 @@
     <ClInclude Include="lzma\Types.h" />
     <ClInclude Include="mjexport.h" />
     <ClInclude Include="prepare.h" />
+    <ClInclude Include="nmrules.h" />
     <ClInclude Include="random.h" />
     <ClInclude Include="reader\csv2arry.h" />
     <ClInclude Include="reader\ini2map.h" />
