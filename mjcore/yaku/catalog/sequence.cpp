@@ -146,7 +146,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 					(analysis->ShunziCount[i + 4] >= 1) &&
 					(analysis->ShunziCount[i + 7] >= 1)) {
 						*yakuFlag = true;
-						if (yakuCol != NULL) *yakuCol = i;
+						if (yakuCol != nullptr) *yakuCol = i;
 				}
 			}
 		};
@@ -166,7 +166,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"一気通貫", yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
 			[ikki_tsuukan](const MENTSU_ANALYSIS* const analysis) -> bool {
-				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, NULL);
+				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, nullptr);
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->DuiziCount[EastWind] >= 1) && // 東と
 					(analysis->DuiziCount[NorthWind] >= 1) ); // 北がある
@@ -178,7 +178,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			"東北新幹線", get_yaku_han("tohoku_shinkansen"),
 			"一気通貫", "混一色",
 			[ikki_tsuukan](const MENTSU_ANALYSIS* const analysis) -> bool {
-				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, NULL);
+				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, nullptr);
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->DuiziCount[EastWind] >= 1) && // 東と
 					(analysis->DuiziCount[NorthWind] >= 1) ); // 北がある
@@ -210,7 +210,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			"一気通貫",
 			[ikki_tsuukan, ittsuu_chanta_counting](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int yaojiu, zipai; bool yakuFlag = false;
-				ikki_tsuukan(analysis, &yakuFlag, NULL);
+				ikki_tsuukan(analysis, &yakuFlag, nullptr);
 				ittsuu_chanta_counting(analysis, &yaojiu, &zipai);
 				return ((yakuFlag) && (yaojiu == 4) && (zipai > 0));
 			}
@@ -220,7 +220,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			"一気通貫",
 			[ikki_tsuukan, ittsuu_chanta_counting](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int yaojiu, zipai; bool yakuFlag = false;
-				ikki_tsuukan(analysis, &yakuFlag, NULL);
+				ikki_tsuukan(analysis, &yakuFlag, nullptr);
 				ittsuu_chanta_counting(analysis, &yaojiu, &zipai);
 				return ((yakuFlag) && (yaojiu == 4) && (zipai == 0));
 			}
@@ -244,7 +244,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"竜戯珠", get_yaku_han("longxizhu"),
 			[ikki_tsuukan](const MENTSU_ANALYSIS* const analysis) -> bool {
-				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, NULL);
+				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, nullptr);
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->KeziCount[WestWind] >= 1) && // 西の刻子があり
 					(analysis->MianziDat[0].tile == CircleOne) ); // アタマが一筒
@@ -255,7 +255,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"金龍戯北斗", get_yaku_han("jinlong_dou_beidou"),
 			[ikki_tsuukan](const MENTSU_ANALYSIS* const analysis) -> bool {
-				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, NULL);
+				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, nullptr);
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->KeziCount[CircleSeven] >= 1) && // 七筒の刻子があり
 					(analysis->MianziDat[0].tile == NorthWind) ); // アタマが北
@@ -361,7 +361,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			"上越新幹線あさひ", get_yaku_han("joetsu_asahi"),
 			"上越新幹線とき", "一気通貫", "混一色",
 			[ikki_tsuukan](const MENTSU_ANALYSIS* const analysis) -> bool {
-				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, NULL);
+				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, nullptr);
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->DuiziCount[NorthWind] >= 1) && // 北と
 					(analysis->DuiziCount[WhiteDragon] >= 1) // 白が刻子と雀頭として存在
@@ -374,7 +374,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			"青函連絡船", get_yaku_han("seikan_ship"),
 			"一気通貫", "混一色",
 			[ikki_tsuukan](const MENTSU_ANALYSIS* const analysis) -> bool {
-				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, NULL);
+				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, nullptr);
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->MianziDat[0].tile == NorthWind) && // 北が雀頭で
 					(analysis->AnKangziCount[GreenDragon] >= 1) // 發の暗槓がある
@@ -456,7 +456,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			"北海道新幹線", get_yaku_han("hokkaido_shinkansen"),
 			"一気通貫", "混一色",
 			[ikki_tsuukan](const MENTSU_ANALYSIS* const analysis) -> bool {
-				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, NULL);
+				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, nullptr);
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->AnKangziCount[WhiteDragon] >= 1) && // 白の暗槓があって
 					(analysis->MianziDat[0].tile == NorthWind) ); // 雀頭が北

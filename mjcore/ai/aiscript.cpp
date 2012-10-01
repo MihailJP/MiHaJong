@@ -2,7 +2,7 @@
 
 const DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NUM_OF_TILES_IN_HAND - 1};
 
-aiscript::ScriptStates aiscript::status[PLAYERS] = {{NULL, false}};
+aiscript::ScriptStates aiscript::status[PLAYERS] = {{nullptr, false}};
 const char aiscript::fncname_discard[8] = "ontsumo"; // 捨牌決定用関数の名前
 const char aiscript::fncname_call[3][12] = {"ondiscard", "onkakan", "onankan",}; // 鳴き決定用関数の名前
 
@@ -90,7 +90,7 @@ void aiscript::GameStatToLuaTable(lua_State* const L, const GameTable* const gam
 
 // -------------------------------------------------------------------------
 
-aiscript::detDiscardThread* aiscript::discard_worker = NULL;
+aiscript::detDiscardThread* aiscript::discard_worker = nullptr;
 DiscardTileNum aiscript::discard;
 bool aiscript::finished = false;
 __declspec(dllexport) void aiscript::compdahai_begin(const GameTable* const gameStat) {
@@ -98,13 +98,13 @@ __declspec(dllexport) void aiscript::compdahai_begin(const GameTable* const game
 	discard_worker = new detDiscardThread();
 	discard_worker->setprm(gameStat, &discard, &finished);
 	DWORD threadID;
-	HANDLE hThread = CreateThread(NULL, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
+	HANDLE hThread = CreateThread(nullptr, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
 }
 __declspec(dllexport) int aiscript::compdahai_check() {
 	return finished ? 1 : 0;
 }
 __declspec(dllexport) int aiscript::compdahai() {
-	delete discard_worker; discard_worker = NULL;
+	delete discard_worker; discard_worker = nullptr;
 	return discard.toSingleInt();
 }
 DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
@@ -112,13 +112,13 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 	discard_worker = new detDiscardThread();
 	discard_worker->setprm(gameStat, &discard, &finished);
 	DWORD threadID;
-	HANDLE hThread = CreateThread(NULL, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
+	HANDLE hThread = CreateThread(nullptr, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
 	while (!finished) Sleep(0);
-	delete discard_worker; discard_worker = NULL;
+	delete discard_worker; discard_worker = nullptr;
 	return discard;
 }
 aiscript::detDiscardThread::detDiscardThread() {
-	i_gameStat = NULL; i_discard = NULL; i_finished = NULL;
+	i_gameStat = nullptr; i_discard = nullptr; i_finished = nullptr;
 }
 aiscript::detDiscardThread::~detDiscardThread() {
 }
@@ -202,31 +202,31 @@ DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameSt
 
 // -------------------------------------------------------------------------
 
-aiscript::detCallThread* aiscript::meld_worker = NULL;
+aiscript::detCallThread* aiscript::meld_worker = nullptr;
 __declspec(dllexport) void aiscript::compfuuro_begin(GameTable* const gameStat) {
 	finished = false;
 	meld_worker = new detCallThread();
 	meld_worker->setprm(gameStat, &finished);
 	DWORD threadID;
-	HANDLE hThread = CreateThread(NULL, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
+	HANDLE hThread = CreateThread(nullptr, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
 }
 __declspec(dllexport) int aiscript::compfuuro_check() {
 	return finished ? 1 : 0;
 }
 __declspec(dllexport) void aiscript::compfuuro_end() {
-	delete meld_worker; meld_worker = NULL;
+	delete meld_worker; meld_worker = nullptr;
 }
 void aiscript::determine_meld(GameTable* const gameStat) {
 	finished = false;
 	meld_worker = new detCallThread();
 	meld_worker->setprm(gameStat, &finished);
 	DWORD threadID;
-	HANDLE hThread = CreateThread(NULL, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
+	HANDLE hThread = CreateThread(nullptr, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
 	while (!finished) Sleep(0);
-	delete meld_worker; meld_worker = NULL;
+	delete meld_worker; meld_worker = nullptr;
 }
 aiscript::detCallThread::detCallThread() {
-	i_gameStat = NULL; i_finished = NULL;
+	i_gameStat = nullptr; i_finished = nullptr;
 }
 aiscript::detCallThread::~detCallThread() {
 }

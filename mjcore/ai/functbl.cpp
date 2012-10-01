@@ -213,7 +213,7 @@ int aiscript::table::functable::log(lua_State* const L) {
 	int n = lua_gettop(L); std::string logstr = ""; std::string linea = "";lua_Debug ar;
 	if (n > 1) {
 		for (int i = 2; i <= n; i++) {
-			logstr += luaL_tolstring(L, i, NULL); lua_pop(L, 1);
+			logstr += luaL_tolstring(L, i, nullptr); lua_pop(L, 1);
 			if (i < n) logstr += " ";
 		}
 	}
@@ -224,7 +224,7 @@ int aiscript::table::functable::log(lua_State* const L) {
 	}
 	if (linea.empty())
 		linea = std::string("(Unknown) ") + logstr;
-	std::string loglevel = luaL_tolstring(L, 1, NULL); lua_pop(L, 1);
+	std::string loglevel = luaL_tolstring(L, 1, nullptr); lua_pop(L, 1);
 	if (loglevel == "fatal") logger::fatal_msg(linea.c_str());
 	else if (loglevel == "error") logger::error_msg(linea.c_str());
 	else if (loglevel == "warn") logger::warn_msg(linea.c_str());
@@ -236,7 +236,7 @@ int aiscript::table::functable::log(lua_State* const L) {
 
 inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const L, int playerID) {
 	lua_newtable(L);
-	lua_pushlightuserdata(L, NULL); lua_setfield(L, -2, "addr"); // pointer to C++ struct
+	lua_pushlightuserdata(L, nullptr); lua_setfield(L, -2, "addr"); // pointer to C++ struct
 	lua_pushinteger(L, playerID + 1); lua_setfield(L, -2, "playerid"); // Player ID
 	/* ‚±‚±‚Éƒƒ\ƒbƒh‚ð‘‚­ */
 	lua_pushcfunction(L, luafunc::evaluate); lua_setfield(L, -2, "evaluate");

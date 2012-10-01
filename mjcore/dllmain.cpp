@@ -12,7 +12,7 @@ void translateException(unsigned int code, _EXCEPTION_POINTERS* ep) {
 	info(lmsg.str().c_str());
 
 	CONTEXT context; memcpy(&context, ep->ContextRecord, sizeof(CONTEXT));
-	traceLog(ep->ContextRecord, NULL, 0);
+	traceLog(ep->ContextRecord, nullptr, 0);
 	throw ep;
 }
 
@@ -33,7 +33,7 @@ void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
 #ifdef _M_IX86
 	/* スタックトレース(I386専用です) */
 	std::ostringstream lmsg;
-	if (addrList != NULL) memset(addrList, 0, addrListSize);
+	if (addrList != nullptr) memset(addrList, 0, addrListSize);
 
 	HANDLE hProcess = GetCurrentProcess();
 	DWORD disp;
@@ -41,7 +41,7 @@ void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
 
 	PIMAGEHLP_SYMBOL pSymbol = (PIMAGEHLP_SYMBOL)GlobalAlloc(GMEM_FIXED, 16384);
 	pSymbol->SizeOfStruct = 16384; pSymbol->MaxNameLength = 16384 - sizeof(IMAGEHLP_SYMBOL);
-	SymInitialize(GetCurrentProcess(), NULL, TRUE);
+	SymInitialize(GetCurrentProcess(), nullptr, TRUE);
 
 	STACKFRAME stackFrame; memset(&stackFrame, 0, sizeof(stackFrame));
 	stackFrame.AddrPC.Offset = ex->Eip;
@@ -56,10 +56,10 @@ void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
 
 	for (unsigned int i = 0; true; i++) {
 		if (!StackWalk(IMAGE_FILE_MACHINE_I386, hProcess, hThread,
-			&stackFrame, &context, NULL, SymFunctionTableAccess, SymGetModuleBase, NULL)) break;
+			&stackFrame, &context, nullptr, SymFunctionTableAccess, SymGetModuleBase, nullptr)) break;
 		if (stackFrame.AddrPC.Offset == 0) break;
 
-		if (addrList != NULL) {
+		if (addrList != nullptr) {
 			addrList[i] = stackFrame.AddrPC.Offset;
 			if (i >= (addrListSize / sizeof(int))) break;
 		} else {
@@ -82,7 +82,7 @@ void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
 LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 	std::ostringstream dmsg, lmsg;
 	PIMAGEHLP_SYMBOL pSymbol; DWORD disp;
-	ErrorInfo *errinf = NULL;
+	ErrorInfo *errinf = nullptr;
 
 	lmsg << "ハンドルされていない例外 " <<
 	std::hex << std::setw(8) << std::setfill('0') << ex->ExceptionRecord->ExceptionCode <<
@@ -108,7 +108,7 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 
 		pSymbol = (PIMAGEHLP_SYMBOL)GlobalAlloc(GMEM_FIXED, 16384);
 		pSymbol->SizeOfStruct = 16384; pSymbol->MaxNameLength = 16384 - sizeof(IMAGEHLP_SYMBOL);
-		SymInitialize(GetCurrentProcess(), NULL, TRUE);
+		SymInitialize(GetCurrentProcess(), nullptr, TRUE);
 		for (unsigned int i = 0; true; i++) {
 			if (i >= ADDRBUF) break;
 			if (errinf->traceBack[i] == 0) break;
@@ -125,7 +125,7 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 #endif
 		break;
 	default:
-		traceLog(ex->ContextRecord, NULL, 0);
+		traceLog(ex->ContextRecord, nullptr, 0);
 	}
 
 	terminate();
@@ -162,7 +162,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 		_set_se_translator(translateException);
 		break;
 	case DLL_PROCESS_DETACH:
-		dllInst = NULL;
+		dllInst = nullptr;
 		break;
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH:

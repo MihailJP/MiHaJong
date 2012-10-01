@@ -4,16 +4,16 @@ namespace logger {
 
 	using std::string;
 
-	static HMODULE logger = NULL;
-	static CHRPPROC fpInitLogger, fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC = NULL;
+	static HMODULE logger = nullptr;
+	static CHRPPROC fpInitLogger, fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC = nullptr;
 
 	__declspec(dllexport) int initLogger() {
-		HMODULE lg = NULL;
+		HMODULE lg = nullptr;
 		lg = LoadLibrary((LPCSTR)"logger.dll");
-		if (lg == NULL) return (-1);
+		if (lg == nullptr) return (-1);
 
 		fpInitLogger = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"initLogger");
-		if (lg == NULL) return (-2);
+		if (lg == nullptr) return (-2);
 
 		if (!(fpTraceC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"trace"))) return (-3);
 		if (!(fpDebugC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"debug"))) return (-3);
