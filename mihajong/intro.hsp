@@ -175,74 +175,50 @@ return
 	pos 200, 320: colorbutton gosub "Connect", *modesel3c, -1, 0xffffff
 	ServerSelected = 0
 	repeat
-		if (ServerSelected) {
-			vanish
-			redraw 0
-			showbackground
-			sysscr fontname, "接続先を入力してね", "Choose server.", "サーバーに接続しています\nしばらくお待ちください"
-			redraw 1
-			sockopen SOCK_GAME+0, ServerAddress, PORT_GAME+0
-			if (stat == 0) {
-				repeat
-					sockcheck SOCK_GAME+0
-					if (stat == 0) {
-						repeat
-							clientreceive ClientReceived, ReceivedMsg
-							if (ClientReceived) {break}
-							await 0
-						loop
-						sockclose SOCK_GAME+0
-						tmp = ReceivedMsg
-						repeat
-							sockopen SOCK_GAME+0, ServerAddress, PORT_GAME-1+tmp
-							if (stat == 0) {break}
-							await 1000
-						loop
-						ClientNumber = tmp - 1
-						repeat NUM_OF_ACTUAL_PLAYERS
-							if (cnt != ClientNumber) {setRemotePlayer GameEnv, cnt, 1}
-						loop
-						break
-					}
-					await 0
-				loop
-				redraw 0
-				showbackground
-				sysscr fontname, "接続先を入力してね", "Choose server.", "開始合図を待っています\nしばらくお待ちください"
-				redraw 1
-				clientsend 0xb8
-				clientsend strlen(InputPlayerName)
-				repeat strlen(InputPlayerName)
-					clientsend peek(InputPlayerName, cnt)
-				loop
-				repeat
-					clientreceive ClientReceived, ReceivedMsg
-					if ((ClientReceived)&&(ReceivedMsg == 0xb4)) {break}
-					await 0
-				loop
-				repeat NUM_OF_ACTUAL_PLAYERS
-					tmpclientnum = 0
-					gosub *receiveclientname
-					setPlayerName GameEnv, cnt, tmpClientName
-				loop
-				sdim RuleConf, RULE_IN_LINE+4, length(RuleTxt)
-				repeat RULE_STRING_LINES
-					gosub *receiveclientname: RuleConf(cnt) = tmpClientName
-				loop
-				storeRule RuleConf
-				break
-			} else {
-				dialog "サーバーに接続できません\nオフラインモードで開始します", 1, "接続失敗"
-				setGameMode GameEnv, GAMEMODE_STANDALONE
-				setPlayerName GameEnv, 0, "[A]"+InputPlayerName
-				setPlayerName GameEnv, 1, "[b]"
-				setPlayerName GameEnv, 2, "[c]"
-				setPlayerName GameEnv, 3, "[d]"
-				break
-			}
-		}
+		if (ServerSelected) {break}
 		await 1
 	loop
+	vanish
+	redraw 0
+	showbackground
+	sysscr fontname, "接続先を入力してね", "Choose server.", "サーバーに接続しています\nしばらくお待ちください"
+	redraw 1
+	s_client_start InputPlayerName ,ServerAddress, PORT_GAME, NUM_OF_ACTUAL_PLAYERS
+	repeat
+		if (s_client_isconnectionsucceded()) {
+			redraw 0
+			showbackground
+			sysscr fontname, "接続先を入力してね", "Choose server.", "開始合図を待っています\nしばらくお待ちください"
+			redraw 1
+			break
+		}
+		if (s_client_isconnectionfailed()) {
+			setGameMode GameEnv, GAMEMODE_STANDALONE
+			break
+		}
+		await 0
+	loop
+	repeat
+		if (s_client_isstartingfinished()) {break}
+		await 0
+	loop
+	sdim playerName1, 256: sdim playerName2, 256: sdim playerName3, 256: sdim playerName4, 256
+	s_client_getplayernames playerName1, playerName2, playerName3, playerName4, 256
+	setPlayerName GameEnv, 0, playerName1
+	setPlayerName GameEnv, 1, playerName2
+	setPlayerName GameEnv, 2, playerName3
+	setPlayerName GameEnv, 3, playerName4
+	repeat NUM_OF_ACTUAL_PLAYERS
+		if (s_client_getclientnumber() != cnt) {setRemotePlayer GameEnv, cnt, 1}
+	loop
+	s_client_releaseobj
+	sdim RuleConf, RULE_IN_LINE+4, RULE_STRING_LINES
+	dim RuleConfPtr, RULE_STRING_LINES
+	repeat RULE_STRING_LINES
+		RuleConfPtr(cnt) = varptr(RuleConf(cnt))
+	loop
+	s_client_checkout_rules RuleConfPtr
+	storeRule RuleConf
 	return
 
 *modesel3c

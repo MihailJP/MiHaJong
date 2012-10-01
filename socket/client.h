@@ -21,14 +21,26 @@ namespace client {
 		DWORD WINAPI preparationThread (); // 接続を待ち、接続処理をする
 		int ClientNumber;
 	public:
-		//static DWORD WINAPI initiate (LPVOID param); // CreateThread()に渡す引数用
-		starter (const std::string& InputPlayerName, unsigned short port, const std::string& server); // コンストラクタ
-		//void terminate (); // すぐに開始
-		//bool isFinished (); // 待機用スレッドが終わったかどうか
-		//unsigned int chkCurrentConnection (); // 現在の接続数
-		//std::string getPlayerName (unsigned id); // プレイヤー名
+		static DWORD WINAPI initiate (LPVOID param); // CreateThread()に渡す引数用
+		starter (const std::string& InputPlayerName, const std::string& server, unsigned short port); // コンストラクタ
+		bool isConnected (); // 接続成功したかどうか
+		bool isFailed (); // 接続失敗したかどうか
+		bool isFinished (); // 待機用スレッドが終わったかどうか
+		std::string getPlayerName (unsigned id); // プレイヤー名
+		const char* getRules (unsigned line);
+		int getClientNumber (); // クライアント番号
 	};
+	
+	extern starter* starterThread;
 
+	DLL void start (const char* const name, const char* const server, int port, int players); // クライアントを開始させる(DLL)
+	DLL int isStartingFinished (); // 待機用スレッドが終わったかどうか
+	DLL int isConnectionSucceded (); // 接続成功か
+	DLL int isConnectionFailed (); // 接続失敗か
+	DLL int getClientNumber (); // クライアント番号
+	DLL void getPlayerNames (char* playerName1, char* playerName2, char* playerName3, char* playerName4, unsigned bufsz);
+	DLL void checkout_rules (char** rules); // ルールをチェックアウト
+	DLL void releaseobj (); // デストラクタを呼ぶだけ
 	void send (unsigned char SendingMsg); // サーバーにメッセージを送る
 	DLL void send (int SendingMsg); // サーバーにメッセージを送る [Transitional API]
 	DLL void receive (int* const ClientReceived, int* const ReceivedMsg); // サーバーのメッセージを受信する

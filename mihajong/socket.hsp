@@ -27,5 +27,14 @@
 #func serverreceive_init "?rotation_reset@server@mihajong_socket@@YAXXZ"
 #func serverreceive "?receive@server@mihajong_socket@@YAXQAH0@Z" var, var
 
+#func s_client_start "?start@client@mihajong_socket@@YAXQBD0HH@Z" str, str, int, int
+#cfunc s_client_isstartingfinished "?isStartingFinished@client@mihajong_socket@@YAHXZ"
+#cfunc s_client_isconnectionsucceded "?isConnectionSucceded@client@mihajong_socket@@YAHXZ"
+#cfunc s_client_isconnectionfailed "?isConnectionFailed@client@mihajong_socket@@YAHXZ"
+#cfunc s_client_getclientnumber "?getClientNumber@client@mihajong_socket@@YAHXZ"
+#func s_client_getplayernames "?getPlayerNames@client@mihajong_socket@@YAXPAD000I@Z" var, var, var, var, int
+#func s_client_checkout_rules "?checkout_rules@client@mihajong_socket@@YAXPAPAD@Z" var
+#func s_client_releaseobj "?releaseobj@client@mihajong_socket@@YAXXZ"
+
 #func clientsend "?send@client@mihajong_socket@@YAXH@Z" int
 #func clientreceive "?receive@client@mihajong_socket@@YAXQAH0@Z" var, var

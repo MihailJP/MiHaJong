@@ -2,9 +2,10 @@
 
 namespace mihajong_socket {
 namespace client {
+	starter* starterThread = nullptr;
 	unsigned int NumberOfPlayers = 4;
 
-	starter::starter (const std::string& InputPlayerName, unsigned short port, const std::string& server) { // コンストラクタ
+	starter::starter (const std::string& InputPlayerName, const std::string& server, unsigned short port) { // コンストラクタ
 		connected = finished = failed = false;
 		myName = InputPlayerName;
 		portnum = port;
@@ -47,6 +48,63 @@ namespace client {
 		}
 		finished = true;
 		return S_OK;
+	}
+
+	// ---------------------------------------------------------------------
+
+	DWORD WINAPI starter::initiate (LPVOID param) { // CreateThread()に渡す引数用
+		return ((starter*)param)->preparationThread();
+	}
+	bool starter::isConnected () { // 接続成功したかどうか
+		return connected;
+	}
+	bool starter::isFailed () { // 接続失敗したかどうか
+		return failed;
+	}
+	bool starter::isFinished () { // 待機用スレッドが終わったかどうか
+		return finished;
+	}
+	std::string starter::getPlayerName (unsigned id) { // プレイヤー名
+		return playerName[id];
+	}
+	const char* starter::getRules (unsigned line) {
+		return ruleConf[line];
+	}
+	int starter::getClientNumber () { // クライアント番号
+		return ClientNumber;
+	}
+
+	// ---------------------------------------------------------------------
+
+	DLL void start (const char* const name, const char* const server, int port, int players) { // サーバーを開始させる(DLL)
+		NumberOfPlayers = (unsigned int)players;
+		starterThread = new starter(name, server, (unsigned short)port);
+		CreateThread(nullptr, 0, starter::initiate, (LPVOID)starterThread, 0, nullptr);
+	}
+	DLL int isStartingFinished () { // 待機用スレッドが終わったかどうか
+		return starterThread->isFinished() ? 1 : 0;
+	}
+	DLL int isConnectionSucceded () { // 接続成功か
+		return starterThread->isConnected() ? 1 : 0;
+	}
+	DLL int isConnectionFailed () { // 接続失敗か
+		return starterThread->isFailed() ? 1 : 0;
+	}
+	DLL int getClientNumber () { // クライアント番号
+		return starterThread->getClientNumber();
+	}
+	DLL void getPlayerNames (char* playerName1, char* playerName2, char* playerName3, char* playerName4, unsigned bufsz) {
+		strcpy_s(playerName1, bufsz, starterThread->getPlayerName(0).c_str());
+		strcpy_s(playerName2, bufsz, starterThread->getPlayerName(1).c_str());
+		strcpy_s(playerName3, bufsz, starterThread->getPlayerName(2).c_str());
+		strcpy_s(playerName4, bufsz, starterThread->getPlayerName(3).c_str());
+	}
+	DLL void checkout_rules (char** rules) { // ルールをチェックアウト
+		for (unsigned i = 0; i < (RULESIZE/RULE_IN_LINE); ++i)
+			std::memcpy(rules[i], starterThread->getRules(i), RULE_IN_LINE);
+	}
+	DLL void releaseobj () { // デストラクタを呼ぶだけ
+		delete starterThread; starterThread = nullptr;
 	}
 
 	// ---------------------------------------------------------------------
