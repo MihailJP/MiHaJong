@@ -19,14 +19,11 @@
 	origDoraPointer = getDoraPointer(GameStat)
 
 	repeat NUM_OF_PLAYERS-1
-		switch getRule(RULE_MULTIPLE_MAHJONG)
-			case 0: case 1:
-				if (cnt > 0) {break}
-				swbreak
-			case 2: case 3:
-				if (cnt > 1) {break}
-				swbreak
-		swend
+		if (chkRule("multiple_mahjong", "single_mahjong_with_draw") || chkRule("multiple_mahjong", "single_mahjong")) {
+			if (cnt > 0) {break}
+		} else: if (chkRule("multiple_mahjong", "dual_mahjong_with_draw") || chkRule("multiple_mahjong", "dual_mahjong")) {
+			if (cnt > 1) {break}
+		}
 		if (cnt > 0) {
 			if (getTsumoAgariFlag(GameStat) == 0) {
 				RoundEndType = ENDKYOKU_AGARI
@@ -38,7 +35,7 @@
 					countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS
 					chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS
 					// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´
-					if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_NO))) {
+					if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)||((chkRule("riichi_shibari", "yes") != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_NO))) {
 						RoundEndType = ENDKYOKU_CHONBO // É`ÉáÉìÉ{Ç…Ç∑ÇÈ
 					}
 				} else {
@@ -51,14 +48,11 @@
 
 	repeat NUM_OF_PLAYERS-1
 		setDoraPointer GameStat, origDoraPointer
-		switch getRule(RULE_MULTIPLE_MAHJONG)
-			case 0: case 1:
-				if (cnt > 0) {break}
-				swbreak
-			case 2: case 3:
-				if (cnt > 1) {break}
-				swbreak
-		swend
+		if (chkRule("multiple_mahjong", "single_mahjong_with_draw") || chkRule("multiple_mahjong", "single_mahjong")) {
+			if (cnt > 0) {break}
+		} else: if (chkRule("multiple_mahjong", "dual_mahjong_with_draw") || chkRule("multiple_mahjong", "dual_mahjong")) {
+			if (cnt > 1) {break}
+		}
 		if (cnt == 0) {
 			setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer
 			if (getTsumoAgariFlag(GameStat) == 0) {
@@ -68,14 +62,14 @@
 				countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS
 				chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS
 				// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´
-				if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_NO))) {
+				if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)||((chkRule("riichi_shibari", "yes") != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_NO))) {
 					RoundEndType = ENDKYOKU_CHONBO // É`ÉáÉìÉ{Ç…Ç∑ÇÈ
 				}
 			} else {
 				RoundEndType = ENDKYOKU_AGARI
 				countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS
 				chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS
-				if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO))) {
+				if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||((chkRule("riichi_shibari", "yes") != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_NO))) {
 					RoundEndType = ENDKYOKU_CHONBO // É`ÉáÉìÉ{Ç…Ç∑ÇÈ
 				}
 			}
@@ -90,7 +84,7 @@
 					countyaku GameStat, yakuInfo, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS
 					chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)\NUM_OF_PLAYERS
 					// îõÇËÇñûÇΩÇ≥Ç»Ç¢Ç©ÅAêUíÆÇÃÇ∆Ç´
-					if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)||((getRule(RULE_RIICHI_SHIBARI) != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_NO))) {
+					if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)||((chkRule("riichi_shibari", "yes") != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_NO))) {
 						RoundEndType = ENDKYOKU_CHONBO // É`ÉáÉìÉ{Ç…Ç∑ÇÈ
 					}
 				} else {
@@ -124,62 +118,62 @@
 		redrscreen: redraw 1
 	loop
 	RoundEndType = ENDKYOKU_CHONBO-tmpagariflag
-	switch getRule(RULE_SIMULTANEOUS_MAHJONG)
-		case 0:
-			if (OyaAgari == -1) {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer}
-			else {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, OyaAgari}
-			swbreak
-		case 1: setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer: swbreak
-		case 2:
-			if (OyaAgari == FirstAgariPlayer) {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer+1}
-			else {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer}
-			swbreak
-	swend
+	if (chkRule("simultaneous_mahjong", "renchan_if_dealer_mahjong")) {
+		if (OyaAgari == -1) {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer}
+		else {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, OyaAgari}
+	} else: if (chkRule("simultaneous_mahjong", "renchan_if_dealer_upstream")) {
+		setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer
+	} else: if (chkRule("simultaneous_mahjong", "next_dealer")) {
+		if (OyaAgari == FirstAgariPlayer) {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer+1}
+		else {setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, FirstAgariPlayer}
+	}
 
-	switch getRule(RULE_PENALTY_NEGATIVE)
-		case 1: case 2:
+	if (chkRule("penalty_negative", "10000pts") || chkRule("penalty_negative", "20000pts")) {
+		if (chkRule("penalty_negative", "10000pts")) {penalty = 100}
+		else: if (chkRule("penalty_negative", "20000pts")) {penalty = 200}
+#ifdef SANMAT
+		if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))) {
+#else
+		if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))||(isDobon(GameStat,PLAYER_NORTH))) {
+#endif
+			dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+			repeat NUM_OF_ACTUAL_PLAYERS
+				if (isDobon(GameStat,cnt)) {
+					PointDelta(cnt) -= penalty
+					PointDelta(AgariPlayerPriority) += penalty
+				}
+			loop
+			setCenterTitle "îÚÇ—î±ïÑ"
+			putdelta PointDelta
+			redraw 1: await 3000
+			pointcalc GameStat, PointDelta
+		}
+	} else: if (chkRule("penalty_negative", "chip1") || chkRule("penalty_negative", "chip2") || chkRule("penalty_negative", "chip3")) {
+		if (chkRule("chip", "no") == 0) {
+			if (chkRule("penalty_negative", "chip1")) {penalty = 1}
+			else: if (chkRule("penalty_negative", "chip2")) {penalty = 2}
+			else: if (chkRule("penalty_negative", "chip3")) {penalty = 3}
 #ifdef SANMAT
 			if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))) {
 #else
 			if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))||(isDobon(GameStat,PLAYER_NORTH))) {
 #endif
-				dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+				dim PointDelta, NUM_OF_PLAYERS,NUM_OF_DIGIT_GROUPS
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (isDobon(GameStat,cnt)) {
-						PointDelta(cnt) -= 100*getRule(RULE_PENALTY_NEGATIVE)
-						PointDelta(AgariPlayerPriority) += 100*getRule(RULE_PENALTY_NEGATIVE)
+						PointDelta(cnt) -= penalty
+						PointDelta(AgariPlayerPriority) += penalty
 					}
 				loop
 				setCenterTitle "îÚÇ—î±ïÑ"
-				putdelta PointDelta
-				redraw 1: await 3000
-				pointcalc GameStat, PointDelta
+				putchipdelta PointDelta
+				redraw 1: await 1500
+				repeat NUM_OF_PLAYERS
+					addChip GameStat, cnt, PointDelta(cnt)
+				loop
 			}
-			swbreak
-		case 3: case 4: case 5:
-			if (getRule(RULE_CHIP) != 0) {
-#ifdef SANMAT
-				if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))) {
-#else
-				if ((isDobon(GameStat,PLAYER_EAST))||(isDobon(GameStat,PLAYER_SOUTH))||(isDobon(GameStat,PLAYER_WEST))||(isDobon(GameStat,PLAYER_NORTH))) {
-#endif
-					dim PointDelta, NUM_OF_PLAYERS,NUM_OF_DIGIT_GROUPS
-					repeat NUM_OF_ACTUAL_PLAYERS
-						if (isDobon(GameStat,cnt)) {
-							PointDelta(cnt) -= (getRule(RULE_PENALTY_NEGATIVE)-2)
-							PointDelta(AgariPlayerPriority) += (getRule(RULE_PENALTY_NEGATIVE)-2)
-						}
-					loop
-					setCenterTitle "îÚÇ—î±ïÑ"
-					putchipdelta PointDelta
-					redraw 1: await 1500
-					repeat NUM_OF_PLAYERS
-						addChip GameStat, cnt, PointDelta(cnt)
-					loop
-				}
-			}
-			swbreak
-	swend
+		}
+	}
 	return
 #global
 
@@ -218,7 +212,7 @@
 	await 1500
 	tmpDoraPointer = origDoraPointer
 	AlicePointer = tmpDoraPointer-getYakuInfo(YakuInfo, YAKUINF_ALICEDORA)*2-2
-	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)&&(getRule(RULE_ALICE) != 0)) {
+	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)&&(chkRule("alice", "yes") != 0)) {
 		setCenterTitle "ÉAÉäÉXîªíË"
 		repeat
 			if (getDoraPointer(GameStat) <= AlicePointer) {break}
@@ -236,20 +230,20 @@
 		OyaAgari = AgariPlayer
 	}
 	calcAgariPoints GameStat, agariPointArray, AgariPointRaw, PointDelta, -1
-	if (getRule(RULE_WAREME) != 0) {
+	if (chkRule("wareme", "no") == 0) {
 		// äÑÇÍñ⁄ÉãÅ[Éã
 		gosub *calculateWareme
 	}
-	if ((getRule(RULE_WAREME) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))) {
+	if ((chkRule("wareme", "greater_wareme") != 0)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))) {
 		// ÉTÉCÉRÉçÇ™É]Éçñ⁄ÇÃéûÇÕÇ≥ÇÁÇ…î{
 		gosub *calculateWareme
 	}
-	if (getRule(RULE_DOUKASEN) != 0) {
+	if (chkRule("doukasen", "no") == 0) {
 		// ì±âŒê¸ÉãÅ[Éã
 		gosub *calculateDoukasen
 	}
 	agariscrproc GameStat, GameEnv, yakuInfo, agariPointArray, ChipAmount, ResultDesc, tmpUraFlag /* òaóπâÊñ  */
-	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)&&(getRule(RULE_ALICE) != 0)) {
+	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)&&(chkRule("alice", "yes") != 0)) {
 		setDoraPointer GameStat, AlicePointer
 	}
 	
@@ -258,25 +252,30 @@
 	redraw 1: await 1500
 	pointcalc GameStat, PointDelta
 	
-	if ((getHonba(GameStat))&&(getRule(RULE_TSUMIBOH_RATE) != 3)) {
+	if ((getHonba(GameStat))&&(chkRule("tsumiboh_rate", "no") == 0)) {
+		if (chkRule("tsumiboh_rate", "counter_200")) {tsumiboh_rate = 2}
+		else: if (chkRule("tsumiboh_rate", "counter_300")) {tsumiboh_rate = 3}
+		else: if (chkRule("tsumiboh_rate", "counter_600")) {tsumiboh_rate = 6}
+		else: if (chkRule("tsumiboh_rate", "counter_1000")) {tsumiboh_rate = 10}
+		else: if (chkRule("tsumiboh_rate", "counter_1500")) {tsumiboh_rate = 15}
 		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 #ifdef SANMAT
 		if (playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST) {
 			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*2)*tsumiboh_rate
 					} else {
-						PointDelta(cnt) -= getHonba(GameStat)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= getHonba(GameStat)*tsumiboh_rate
 					}
 				loop
 			} else {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*2)*tsumiboh_rate
 					}
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {
-						PointDelta(cnt) -= (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= (getHonba(GameStat)*2)*tsumiboh_rate
 					}
 				loop
 			}
@@ -284,18 +283,18 @@
 			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*2)*tsumiboh_rate
 					} else {
-						PointDelta(cnt) -= getHonba(GameStat)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= getHonba(GameStat)*tsumiboh_rate
 					}
 				loop
 			} else {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*2)*tsumiboh_rate
 					}
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {
-						PointDelta(cnt) -= (getHonba(GameStat)*2)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= (getHonba(GameStat)*2)*tsumiboh_rate
 					}
 				loop
 			}
@@ -305,18 +304,18 @@
 			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*3)*tsumiboh_rate
 					} else {
-						PointDelta(cnt) -= getHonba(GameStat)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= getHonba(GameStat)*tsumiboh_rate
 					}
 				loop
 			} else {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*3)*tsumiboh_rate
 					}
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {
-						PointDelta(cnt) -= (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= (getHonba(GameStat)*3)*tsumiboh_rate
 					}
 				loop
 			}
@@ -324,36 +323,36 @@
 			if (getTsumoAgariFlag(GameStat)) {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*3)*tsumiboh_rate
 					} else: if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
-						PointDelta(cnt) -= getHonba(GameStat)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= getHonba(GameStat)*tsumiboh_rate
 					} else {
-						PointDelta(cnt) -= getHonba(GameStat)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= getHonba(GameStat)*tsumiboh_rate
 					}
 				loop
 			} else {
 				repeat NUM_OF_ACTUAL_PLAYERS
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-						PointDelta(cnt) += (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) += (getHonba(GameStat)*3)*tsumiboh_rate
 					}
 					if (cnt == getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) {
-						PointDelta(cnt) -= (getHonba(GameStat)*3)*(getRule(RULE_TSUMIBOH_RATE)*2+1)
+						PointDelta(cnt) -= (getHonba(GameStat)*3)*tsumiboh_rate
 					}
 				loop
 			}
 		}
 #endif
 		// äÑÇÍñ⁄Ç≈êœÇ›ñ_Ç‡ÇQî{Ç…Ç»ÇÈ
-		if (getRule(RULE_WAREME) != 0) {
+		if (chkRule("wareme", "no") == 0) {
 			// äÑÇÍñ⁄ÉãÅ[Éã
 			gosub *calculateWareme
 		}
-		if ((getRule(RULE_WAREME) == 2)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))) {
+		if ((chkRule("wareme", "greater_wareme") != 0)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))) {
 			// ÉTÉCÉRÉçÇ™É]Éçñ⁄ÇÃéûÇÕÇ≥ÇÁÇ…î{
 			gosub *calculateWareme
 		}
 		// äÑÇÍñ⁄Ç≈êœÇ›ñ_Ç‡ÇQî{Ç…Ç»ÇÈ
-		if (getRule(RULE_DOUKASEN) != 0) {
+		if (chkRule("doukasen", "no") == 0) {
 			// ì±âŒê¸ÉãÅ[Éã
 			gosub *calculateDoukasen
 		}
@@ -393,7 +392,7 @@
 		pointcalc GameStat, PointDelta
 	}
 	
-	if ((ChipAmount > 0)&&(getRule(RULE_CHIP) != 0)) {
+	if ((ChipAmount > 0)&&(chkRule("chip", "no") == 0)) {
 		setCenterTitle "èjãVê¥éZ"
 		gosub *chipTransfer
 	}
@@ -401,18 +400,16 @@
 	ChipAmount = 0
 	if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE)+getYakuInfo(yakuInfo, YAKUINF_HAN_BONUS)) >= YAKUVAL_YAKUMAN) {
 		// ññûèjãV
-		switch getRule(RULE_LIMITHAND_BONUS)
-			case 0: ChipAmount = 5: swbreak
-			case 1: ChipAmount = 10: swbreak
-			case 2: ChipAmount = 3-(1*getTsumoAgariFlag(GameStat)): swbreak
-			case 3: ChipAmount = 6-(2*getTsumoAgariFlag(GameStat)): swbreak
-			case 4: ChipAmount = 8-(4*getTsumoAgariFlag(GameStat)): swbreak
-			case 5: ChipAmount = 10-(5*getTsumoAgariFlag(GameStat)): swbreak
-			case 6: ChipAmount = 2: swbreak
-			case 7: ChipAmount = 5: swbreak
-		swend
+		if (chkRule("limithand_bonus", "chip5")) {ChipAmount = 5}
+		else: if (chkRule("limithand_bonus", "chip10")) {ChipAmount = 10}
+		else: if (chkRule("limithand_bonus", "chip_tsumo2each_ron3")) {ChipAmount = 3-(1*getTsumoAgariFlag(GameStat))}
+		else: if (chkRule("limithand_bonus", "chip_tsumo4each_ron4")) {ChipAmount = 6-(2*getTsumoAgariFlag(GameStat))}
+		else: if (chkRule("limithand_bonus", "chip_tsumo4each_ron8")) {ChipAmount = 8-(4*getTsumoAgariFlag(GameStat))}
+		else: if (chkRule("limithand_bonus", "chip_tsumo5each_ron10")) {ChipAmount = 10-(5*getTsumoAgariFlag(GameStat))}
+		else: if (chkRule("limithand_bonus", "chip_2_each")) {ChipAmount = 2}
+		else: if (chkRule("limithand_bonus", "chip_6_each")) {ChipAmount = 6}
 	}
-	if ((ChipAmount > 0)&&(getRule(RULE_CHIP) != 0)) {
+	if ((ChipAmount > 0)&&(chkRule("chip", "no") == 0)) {
 		setCenterTitle "ññûèjãV"
 		gosub *chipTransfer
 	}
@@ -438,7 +435,7 @@
 
 *chipTransfer
 	dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-	if ((getTsumoAgariFlag(GameStat) == 0)&&(getRule(RULE_LIMITHAND_BONUS) <= 5)) {
+	if ((getTsumoAgariFlag(GameStat) == 0)&&(chkRule("limithand_bonus", "chip_2_each") == 0)&&(chkRule("limithand_bonus", "chip_6_each") == 0)) {
 		PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI)) = -ChipAmount
 		PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) = ChipAmount
 	} else {
@@ -512,11 +509,11 @@
 	setCenterTitle "çˆòa"
 	// åÎÉçÉìÇ‹ÇΩÇÕåÎÉcÉÇ
 	if ((getTsumoAgariFlag(GameStat) == 0)||(getTsumoAgariFlag(GameStat) == 1)) {
-		if ((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != 1)&&(getRule(RULE_MINKAN_PAO) == 6)) {
+		if ((getPao(GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN) != 1)&&(chkRule("minkan_pao", "chombo_if_mahjong") != 0)) {
 			// ëÂñæû»ÇÃó‰è„äJâ‘ã÷é~ÉãÅ[ÉãÇÃèÍçá
 			setCenterTitle "ñæû»çˆòa": ResultDesc += "(ëÂñæû»ÇÃó‰è„îvÇ≈ÇÃòaóπÇË)"
 		}
-		else:if ((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_NO)&&(getRule(RULE_RIICHI_SHIBARI) != 0)) {
+		else:if ((getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_NO)&&(chkRule("riichi_shibari", "yes") != 0)) {
 			// óßíºîõÇËÇ≈óßíºÇµÇƒÇ»Ç¢Ç»ÇÁçˆòa
 			setCenterTitle "ñŸíÆçˆòa": ResultDesc += "(É_É}íÆÇ≈ÇÃòaóπÇË)"
 		}

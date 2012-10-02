@@ -164,10 +164,7 @@
 /* 音声データの管理番号範囲 */
 
 /* ルール管理番号 */
-#define RULES_IN_PAGE		40
-#define RULE_IN_LINE		80
-
-#include "rulenum.hsp"
+#include "..\\mjcore\\nmrules.h"
 
 #define RULE_PAGES			int((NUM_OF_RULES+RULES_IN_PAGE-1)/RULES_IN_PAGE)
 #define RULE_STRING_LINES	int((RULES_IN_PAGE*RULE_PAGES+RULE_IN_LINE-1)/RULE_IN_LINE)

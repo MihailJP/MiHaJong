@@ -21,9 +21,9 @@ namespace logger {
 		if (!(fpWarnC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"warn"))) return (-3);
 		if (!(fpErrorC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"error"))) return (-3);
 		if (!(fpFatalC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"fatal"))) return (-3);
-
+#ifdef MJCORE_EXPORTS
 		(*fpInitLogger)("debug.log");
-		
+#endif
 		logger = lg;
 		return 0;
 	}

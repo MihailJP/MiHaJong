@@ -14,12 +14,6 @@ bool haifu::haifukanflag = false;
 
 haifu::HaifuStreams haifu::haifuP, haifu::HThaifuP;
 
-std::ostringstream haifu::PlayerStream::haipai, haifu::PlayerStream::tsumo, haifu::PlayerStream::tsumolabel,
-	haifu::PlayerStream::sutehai, haifu::PlayerStream::sutehailabel, haifu::PlayerStream::final;
-InfoByPlayer<haifu::PlayerStream> haifu::HaifuStreams::streamDat;
-std::ostringstream haifu::HaifuStreams::dora, haifu::HaifuStreams::uraDora, haifu::HaifuStreams::aliceDora,
-	haifu::HaifuStreams::aliceDoraMax, haifu::HaifuStreams::resultDesc;
-
 /* 牌譜記録用の補助ルーチン */
 void haifu::tools::haifuskip(
 	HaifuStreams* haifuP, HaifuStreams* HThaifuP,
@@ -292,7 +286,7 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 		tools::haifuwritetsumohai(
 			&haifuP, &HThaifuP, gameStat->CurrentPlayer.Active,
 			gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NUM_OF_TILES_IN_HAND - 1],
-			"　 ", "");
+			"　 ", "<td></td>");
 	}
 	// 捨てた牌を記録
 	tools::recordTile_Table(
@@ -332,7 +326,7 @@ __declspec(dllexport) void haifu::haifurecfurikomi(const GameTable* const gameSt
 __declspec(dllexport) void haifu::haifurecchi(const GameTable* const gameStat) {
 	tools::haifuwritetsumohai(
 		&haifuP, &HThaifuP, gameStat->CurrentPlayer.Passive,
-		gameStat->CurrentDiscard, "ﾁｰ ", "チー");
+		gameStat->CurrentDiscard, "ﾁｰ ", "<td>チー</td>");
 }
 /* ポンしたことを牌譜に記録 */
 __declspec(dllexport) void haifu::haifurecpon(const GameTable* const gameStat) {
@@ -341,14 +335,14 @@ __declspec(dllexport) void haifu::haifurecpon(const GameTable* const gameStat) {
 		gameStat->CurrentPlayer.Passive, gameStat->CurrentPlayer.Active);
 	tools::haifuwritetsumohai(
 		&haifuP, &HThaifuP, gameStat->CurrentPlayer.Passive,
-		gameStat->CurrentDiscard, "ﾎﾟﾝ", "ポン");
+		gameStat->CurrentDiscard, "ﾎﾟﾝ", "<td>ポン</td>");
 }
 /* 自摸和したことを牌譜に記録 */
 __declspec(dllexport) void haifu::haifurectsumo(const GameTable* const gameStat) {
 	tools::haifuwritetsumohai(
 		&haifuP, &HThaifuP, gameStat->CurrentPlayer.Active,
 		gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NUM_OF_TILES_IN_HAND - 1],
-		"ﾂﾓ ", "ツモ");
+		"ﾂﾓ ", "<td>ツモ</td>");
 }
 /* 大明槓したことを牌譜に記録 */
 __declspec(dllexport) void haifu::haifurecminkan(const GameTable* const gameStat) {
@@ -357,7 +351,7 @@ __declspec(dllexport) void haifu::haifurecminkan(const GameTable* const gameStat
 		gameStat->CurrentPlayer.Passive, gameStat->CurrentPlayer.Active);
 	tools::haifuwritetsumohai(
 		&haifuP, &HThaifuP, gameStat->CurrentPlayer.Passive,
-		gameStat->CurrentDiscard, "ｶﾝ ", "カン");
+		gameStat->CurrentDiscard, "ｶﾝ ", "<td>カン</td>");
 	tools::recordBlank_Table(
 		&haifuP.streamDat[gameStat->CurrentPlayer.Passive].sutehai,
 		&HThaifuP.streamDat[gameStat->CurrentPlayer.Passive].sutehai);
@@ -399,7 +393,7 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 				haifuwritetsumohai(
 					haifuP, HThaifuP, gameStat->CurrentPlayer.Active,
 					gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NUM_OF_TILES_IN_HAND - 1],
-					"　 ", "");
+					"　 ", "<td></td>");
 				recordTile_Table(
 					&haifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
 					&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,

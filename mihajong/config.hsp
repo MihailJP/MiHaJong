@@ -68,6 +68,11 @@ return
 #include "const.hsp"
 #include "mjcore.hsp"
 
+#uselib "mjcore.dll"
+#cfunc getRuleSize "?getRuleSize@RuleData@@SAHH@Z" int
+#cfunc getRule "?getRule@@YAHH@Z" int
+#cfunc reqFailed "?reqFailed@RuleData@@SAHHQBH@Z" int, var
+
 #deffunc setconffile str argFileName
 	configFile = argFileName
 	info "設定ファイルは "+configFile+" です。"
@@ -193,86 +198,7 @@ return
 			tmpcol = 255, 255, 255, 192, 192, 192
 			gosub *config_showruletext
 			if (RuleTxt(0, cnt+(configPage-1)*RULES_IN_PAGE) == "Ｎ／Ａ") {gosub *config_strikeout}
-			switch (cnt+(configPage-1)*RULES_IN_PAGE)
-				case RULE_LIMITHAND_BONUS:
-					if (Rule(RULE_CHIP) == 0) {gosub *config_strikeout}
-					swbreak
-#ifdef ALLSANMA
-				case RULE_SIMULTANEOUS_MAHJONG:
-					if (Rule(RULE_MULTIPLE_MAHJONG) != 2) {gosub *config_strikeout}
-					swbreak
-				case RULE_TRIPLE_MAHJONG:
-					if (Rule(RULE_MULTIPLE_MAHJONG) != 5) {gosub *config_strikeout}
-					swbreak
-#else
-				case RULE_SIMULTANEOUS_MAHJONG:
-					if (Rule(RULE_MULTIPLE_MAHJONG) < 2) {gosub *config_strikeout}
-					swbreak
-				case RULE_TRIPLE_MAHJONG:
-					if ((Rule(RULE_MULTIPLE_MAHJONG) != 0)&&(Rule(RULE_MULTIPLE_MAHJONG) != 2)) {gosub *config_strikeout}
-					swbreak
-#endif
-				case RULE_ROUND_TO_MANGAN:
-				case RULE_SANBAIMAN_BORDER:
-				case RULE_KAZOE_BORDER:
-					if (Rule(RULE_LIMITLESS) > 0) {gosub *config_strikeout}
-					swbreak
-#ifndef SANMAX
-				case RULE_TANRON:
-					if (Rule(RULE_HUALONG) == 0) {gosub *config_strikeout}
-					swbreak
-#endif
-				case RULE_ANKAN_CHANKAN:
-					if (Rule(RULE_ANKAN_CONCEAL) == 1) {gosub *config_strikeout}
-					swbreak
-#ifndef ALLSANMA
-				case RULE_OWN_FLOWER:
-					if (Rule(RULE_FLOWER_TILES) == 0) {gosub *config_strikeout}
-					swbreak
-				case RULE_GINKEI_HOUSHUN:
-				case RULE_FOUR_SEASONS:
-					if ((Rule(RULE_FLOWER_TILES) == 0)||(Rule(RULE_FLOWER_TILES) == 2)) {gosub *config_strikeout}
-					swbreak
-				case RULE_FOUR_FLOWERS:
-					if ((Rule(RULE_FLOWER_TILES) == 0)||(Rule(RULE_FLOWER_TILES) == 1)) {gosub *config_strikeout}
-					swbreak
-				case RULE_BAXIAN_JUSHOU:
-				case RULE_EIGHT_FLOWERS:
-					if (Rule(RULE_FLOWER_TILES) != 3) {gosub *config_strikeout}
-					swbreak
-#endif
-				case RULE_REDTILE_CHIP:
-					if (Rule(RULE_CHIP) == 0) {gosub *config_strikeout}
-					else: if ((Rule(RULE_RED_ONE) == 0)&&(Rule(RULE_RED_TWO) == 0)&&(Rule(RULE_RED_THREE) == 0)&&(Rule(RULE_RED_FOUR) == 0)&&(Rule(RULE_RED_FIVE) == 8)&&(Rule(RULE_RED_SIX) == 0)&&(Rule(RULE_RED_SEVEN) == 0)&&(Rule(RULE_RED_EIGHT) == 0)&&(Rule(RULE_RED_NINE) == 0)&&(Rule(RULE_RED_WEST) == 0)&&(Rule(RULE_RED_NORTH) == 0)) {
-						gosub *config_strikeout
-					}
-					swbreak
-				case RULE_BLUE_CHIP:
-					if (Rule(RULE_CHIP) == 0) {gosub *config_strikeout}
-					/* FALLTHRU */
-				case RULE_BLUE_TILES:
-					if ((Rule(RULE_BLUE_ONE) == 0)&&(Rule(RULE_BLUE_FIVE) == 0)&&(Rule(RULE_BLUE_NINE) == 0)&&(Rule(RULE_BLUE_LVFA) == 0)) {
-						gosub *config_strikeout
-					}
-					swbreak
-				case RULE_PENALTY_NEGATIVE:
-				case RULE_RIICHI_REQUISITE:
-					if (Rule(RULE_BUTTOBI_BORDER) == 2) {gosub *config_strikeout}
-					swbreak
-				case RULE_TAOYISE:
-					if (Rule(RULE_RED_FIVE) == 8) {gosub *config_strikeout}
-					swbreak
-				case RULE_CHOUIPPATSU:
-					if ((Rule(RULE_RIICHI_IPPATSU) == 1)||(Rule(RULE_RIICHI_IPPATSU) == 3)) {gosub *config_strikeout}
-					swbreak
-				case RULE_SUDDEN_DEATH_TYPE:
-					if (Rule(RULE_SUDDEN_DEATH_LENGTH) == 2) {gosub *config_strikeout}
-					swbreak
-				case RULE_THREE_OTAKAZE:
-				case RULE_OTAKAZE_XIAOSANFENG:
-					if (Rule(RULE_URAKAZE) == 1) {gosub *config_strikeout}
-					swbreak
-			swend
+			else: if (reqFailed(cnt+(configPage-1)*RULES_IN_PAGE, Rule)) {gosub *config_strikeout}
 			if (cnt == 19) {borderedtxt2 "通信対戦時のルール設定はホスト側の設定が適用されます", 100, 590, 255, 255, 255, 1, 20, 192, 192, 192}
 		loop
 		if ((TxtCached & (1<<(configPage - 1))) == 0) {
@@ -365,7 +291,7 @@ return
 		repeat 1
 			tmpRuleNum = (configPage-1)*RULES_IN_PAGE+tmpBtnCode-1
 			Rule(tmpRuleNum)--
-			if (Rule(tmpRuleNum) < 0) {Rule(tmpRuleNum) = length(RuleTxt)-1}
+			if (Rule(tmpRuleNum) < 0) {Rule(tmpRuleNum) = getRuleSize(tmpRuleNum)-1}
 			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == ">>>") {continue 0}
 			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == "") {continue 0}
 		loop
@@ -373,8 +299,8 @@ return
 		repeat 1
 			tmpRuleNum = (configPage-1)*RULES_IN_PAGE+tmpBtnCode-1
 			Rule(tmpRuleNum)++
+			if (Rule(tmpRuleNum) >= getRuleSize(tmpRuleNum)) {Rule(tmpRuleNum) == 0}
 			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == ">>>") {continue 0}
-			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == "") {Rule(tmpRuleNum) == 0}
 		loop
 	}
 	gosub *config_redraw

@@ -43,12 +43,12 @@ private:
 
 	class PlayerStream {
 	public:
-		static std::ostringstream haipai, tsumo, tsumolabel, sutehai, sutehailabel, final;
+		std::ostringstream haipai, tsumo, tsumolabel, sutehai, sutehailabel, final;
 	};
 	class HaifuStreams {
 	public:
-		static InfoByPlayer<PlayerStream> streamDat;
-		static std::ostringstream dora, uraDora, aliceDora, aliceDoraMax, resultDesc;
+		InfoByPlayer<PlayerStream> streamDat;
+		std::ostringstream dora, uraDora, aliceDora, aliceDoraMax, resultDesc;
 	};
 	static HaifuStreams haifuP, HThaifuP;
 
