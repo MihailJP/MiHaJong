@@ -41,6 +41,10 @@
 			haifurecminkan GameStat // 牌譜に記録
 			incKangFlag GameStat, KANG_CHAINFLAG // 連続槓の回数を記録
 			if (getFirstDrawFlag(GameStat, kangPlayer) == 1) { setKangFlag GameStat, KANG_TOPFLAG, 1 /* 頭槓和のフラグ */ }
+			if (chkRule("minkan_penalty", "yes")) { /* 大明槓をすると1000点供託になるルール */
+				/* TODO: 箱点のチェック */
+				addDeposit GameStat, 1: addScore GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), 0, -10
+			}
 			swbreak
 		default:
 			kangPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)

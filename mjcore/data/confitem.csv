@@ -43,6 +43,7 @@
 33,15,0,,,,,,kakan_furiten,加槓牌の振聴,加槓した牌を振聴の対象とみなすかを設定します,no,yes,,,,,,,,,,,,,,
 34,10,1,,,,,,tsumo_payment,自摸和了の点数,ツモ和了りの点数の負担方法を設定します,fifty_fifty,>>>,north_segment_omitted,add_1000,adjusted_payment,north_segment_halved,,,,,,,,,,
 34,4,1,,,,,,tsumo_payment,自摸和了の点数,ツモ和了りの点数の負担方法を設定します,same_as_yonma,fifty_fifty,north_segment_omitted,add_1000,adjusted_payment,north_segment_halved,,,,,,,,,,
+35,15,0,,,,,,minkan_penalty,大明槓罰符,大明槓をすると1000点供託しなければならないかを設定します,no,yes,,,,,,,,,,,,,,
 40,15,0,,,,,,dora_indicator,ドラ表示牌,ドラ表示牌の意味を設定します,dora_next_kind,dora_indicator_itself,dora_around_indicator,,,,,,,,,,,,,
 41,15,0,,,,,,uradora,裏ドラ,裏ドラの有無を設定します,yes,no,,,,,,,,,,,,,,
 42,15,0,,,,,,kandora,槓ドラ,槓ドラの有無を設定します,yes,no,yes_but_only_omote,,,,,,,,,,,,,
