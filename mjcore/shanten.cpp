@@ -4,11 +4,11 @@ using std::min;
 
 /* –ÊŽqƒf[ƒ^‰Šú‰» */
 
-uint8_t* ShantenAnalyzer::mentsuAnalysisDat = NULL;
+uint8_t* ShantenAnalyzer::mentsuAnalysisDat = nullptr;
 
 size_t ShantenAnalyzer::decompressMentsuAnalysisDat() {
 	DWORD size = 0; size_t uncompressedSize;
-	const uint8_t* compressedBuf = NULL;
+	const uint8_t* compressedBuf = nullptr;
 	int result;
 	LoadFileInResource(IDR_LZMA_STREA1, LZMA_STREAM, size, compressedBuf);
 	assert(size > 13);
@@ -79,16 +79,16 @@ __declspec(dllexport) void ShantenAnalyzer::initMentsuAnalysisDat() { // –ÊŽqƒf
 		verifyMentsuAnalysisDat(decompressMentsuAnalysisDat());
 	}
 	catch (_EXCEPTION_POINTERS* e) {
-		ErrorInfo *errStat = NULL;
+		ErrorInfo *errStat = nullptr;
 		switch (e->ExceptionRecord->ExceptionCode) {
 		case EXCEPTION_MJCORE_DECOMPRESSION_FAILURE:
 			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
-			MessageBox(NULL, errStat->msg, (LPCSTR)"LZMA decompression error",
+			MessageBox(nullptr, errStat->msg, (LPCSTR)"LZMA decompression error",
 				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
 			terminate();
 		case EXCEPTION_MJCORE_HASH_MISMATCH:
 			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
-			MessageBox(NULL, errStat->msg, (LPCSTR)"SHA256 verification error",
+			MessageBox(nullptr, errStat->msg, (LPCSTR)"SHA256 verification error",
 				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
 			terminate();
 		default:

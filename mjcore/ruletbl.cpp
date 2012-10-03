@@ -16,7 +16,7 @@ std::set<std::string> RuleData::nonapplicable;
 const char RuleData::digit[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
-	DWORD size = 0; const uint8_t* csv = NULL;
+	DWORD size = 0; const uint8_t* csv = nullptr;
 	LoadFileInResource(IDR_CSV_TABL1, CSV_TABLE, size, csv);
 	char *csvdat = new char[size + 4]; memset(csvdat, 0, size+4); memcpy_s(csvdat, size+4, csv, size);
 	CSVReader::parsecsv(confdat, csvdat);
@@ -50,7 +50,7 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 }
 
 void RuleData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
-	DWORD size = 0; const uint8_t* ini = NULL;
+	DWORD size = 0; const uint8_t* ini = nullptr;
 	LoadFileInResource(IDR_INI_FIL1, INI_FILE, size, ini);
 	char *inidat = new char[size + 4]; memset(inidat, 0, size+4); memcpy_s(inidat, size+4, ini, size);
 	INIParser::parseini(confdict, inidat);
@@ -121,8 +121,10 @@ __declspec(dllexport) void RuleData::getRuleName(char* const txt, int bufsize, i
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (std::atoi((*k)[0].c_str()) != RuleID) continue;
 		if ((chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str()))) ||
-			(chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str()))))
-			strcpy_s(txt, bufsize, ((*k)[9]).c_str()); return;
+			(chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str())))) {
+				strcpy_s(txt, bufsize, ((*k)[9]).c_str());
+				return;
+		}
 	}
 	strcpy_s(txt, bufsize, "");
 }
@@ -254,7 +256,7 @@ __declspec(dllexport) int RuleData::saveConfigFile(const char* const filename) {
 	}
 	catch (std::runtime_error& e) { // 書き込み失敗！！
 		error(e.what());
-		MessageBox(NULL, e.what(), "書き込み失敗", MB_OK | MB_ICONERROR | MB_TASKMODAL | MB_TOPMOST);
+		MessageBox(nullptr, e.what(), "書き込み失敗", MB_OK | MB_ICONERROR | MB_TASKMODAL | MB_TOPMOST);
 		return -1;
 	}
 }
