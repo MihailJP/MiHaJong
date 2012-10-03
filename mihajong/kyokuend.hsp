@@ -647,7 +647,7 @@
 	// 東北廻しのとき
 	if ((getRound(GameStat) == 4)&&(chkRule("game_length", "east_north_game") != 0)) {setRound GameStat, 12}
 	// 東西廻しのとき
-	if ((getRound(GameStat) == 4)&&(chkRule("game_length", "east_south_game") != 0)) {setRound GameStat, 8}
+	if ((getRound(GameStat) == 4)&&(chkRule("game_length", "east_west_game") != 0)) {setRound GameStat, 8}
 	// 東々廻しのとき
 	if ((getRound(GameStat) == 4)&&((chkRule("game_length", "twice_east_game") != 0)||(chkRule("game_length", "east_only_game") != 0))) {setRound GameStat, 16}
 	// 通常の半荘終了時（トップが３００００点未満だと西入サドンデス）
