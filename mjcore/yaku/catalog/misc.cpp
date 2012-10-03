@@ -128,7 +128,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				const tileCode kezi[] = {
 					BambooOne, BambooFive, BambooSeven, BambooNine, RedDragon,
 				};
-				return chktiles(analysis, kezi, 5, NULL, 0, false);
+				return chktiles(analysis, kezi, 5, nullptr, 0, false);
 			}
 		));
 	/* δέ—Ξ‘p’†κ“_g */
@@ -259,7 +259,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					CircleTwo, CircleFour, CircleEight,
 					EastWind, SouthWind, WestWind, NorthWind,
 				};
-				return chktiles(analysis, kezi, 7, NULL, 0, false);
+				return chktiles(analysis, kezi, 7, nullptr, 0, false);
 			}
 		));
 	/* Β“΄–ε */
@@ -275,9 +275,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 						GreenDragon,
 					};
 					return (yaku::countingFacility::countSpecMentz
-						(analysis->MianziDat, kezi, 8, NULL, 0, false) == SIZE_OF_MELD_BUFFER) &&
+						(analysis->MianziDat, kezi, 8, nullptr, 0, false) == SIZE_OF_MELD_BUFFER) &&
 						(yaku::countingFacility::countSpecMentz
-						(analysis->MianziDat, kezi, 4, NULL, 0, false) == 1);
+						(analysis->MianziDat, kezi, 4, nullptr, 0, false) == 1);
 				}
 				else return false;
 			}
@@ -347,7 +347,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					CircleTwo, CircleThree, CircleFive, CircleSeven,
 					BambooTwo, BambooThree, BambooFive, BambooSeven,
 				};
-				return chktiles(analysis, kezi, 12, NULL, 0, false);
+				return chktiles(analysis, kezi, 12, nullptr, 0, false);
 			}
 		));
 	/* ”’κF (triplet2.cpp‚ζ‚θΪ“®) */
@@ -359,7 +359,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					CharacterEight, CharacterNine, CircleEight, CircleNine,
 					BambooEight, BambooNine, WhiteDragon,
 				};
-				return chktiles(analysis, kezi, 7, NULL, 0, false);
+				return chktiles(analysis, kezi, 7, nullptr, 0, false);
 			}
 		));
 

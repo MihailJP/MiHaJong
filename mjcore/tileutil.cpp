@@ -8,7 +8,7 @@ PLAYER_ID* tobePlayed(const GameTable* const gameStat) {
 		((gameStat->GameRound + 2) % PLAYERS)
 	};
 	if (chkGameType(gameStat, Sanma4)) return tp;
-	else return NULL;
+	else return nullptr;
 }
 PLAYER_ID tobePlayed(const GameTable* const gameStat, int id) {
 	assert((id >= 0)&&(id < 13));

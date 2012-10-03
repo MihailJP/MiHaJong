@@ -60,7 +60,7 @@ __declspec(dllexport) void EnvTable::TableEnvInit(void *) {
 	Instantiate()->WatchModeFlag = false;
 }
 __declspec(dllexport) void EnvTable::TableEnvInitAll(void *) {
-	TableEnvInit(NULL);
+	TableEnvInit(nullptr);
 	Instantiate()->bgColorR =
 		Instantiate()->bgColorG =
 		Instantiate()->bgColorB = 0;
