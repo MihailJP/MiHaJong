@@ -287,17 +287,21 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	// ---------------------------------------------------------------------
 
 	/* –ð”v */
+	auto chkYakuhai = RuleData::chkRuleApplied("exposed_yakuhai") ?
+		(std::function<const Int8ByTile& (const MENTSU_ANALYSIS* const)>)
+		[](const MENTSU_ANALYSIS* const analysis) -> const Int8ByTile& {return analysis->KeziCount;} :
+		[](const MENTSU_ANALYSIS* const analysis) -> const Int8ByTile& {return analysis->AnKeziCount;};
 	auto bakaze =
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return (analysis->KeziCount[Wind2Tile(analysis->GameStat->GameRound / 4)] >= 1);
+		[&chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->GameRound / 4)] >= 1);
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"–ð”vEê•—", yaku::yakuCalculator::Yaku::yval_1han,
 		bakaze
 	));
 	auto jikaze =
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return (analysis->KeziCount[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
+		[&chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (chkYakuhai(analysis)[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
 				analysis->player, analysis->GameStat->GameRound))] >= 1);
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -307,8 +311,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	YAKUFUNC kaimenkaze, urakaze;
 	if (RuleData::chkRuleApplied("kaimenkaze")) {
 		kaimenkaze =
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->KeziCount[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
+			[&chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (chkYakuhai(analysis)[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
 					analysis->GameStat->WaremePlayer, analysis->GameStat->GameRound))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -323,8 +327,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	}
 	if (RuleData::chkRuleApplied("urakaze")) {
 		urakaze =
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->KeziCount[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
+			[&chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (chkYakuhai(analysis)[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
 					RelativePositionOf(analysis->player, sOpposite), analysis->GameStat->GameRound))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -339,20 +343,20 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	}
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"–ð”vE”’", yaku::yakuCalculator::Yaku::yval_1han,
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return (analysis->KeziCount[WhiteDragon] >= 1);
+		[&chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (chkYakuhai(analysis)[WhiteDragon] >= 1);
 		}
 	));
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"–ð”vEá¢", yaku::yakuCalculator::Yaku::yval_1han,
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return (analysis->KeziCount[GreenDragon] >= 1);
+		[&chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (chkYakuhai(analysis)[GreenDragon] >= 1);
 		}
 	));
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"–ð”vE’†", yaku::yakuCalculator::Yaku::yval_1han,
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return (analysis->KeziCount[RedDragon] >= 1);
+		[&chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (chkYakuhai(analysis)[RedDragon] >= 1);
 		}
 	));
 
