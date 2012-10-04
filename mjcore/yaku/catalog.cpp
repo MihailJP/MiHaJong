@@ -18,6 +18,7 @@ void yaku::yakuCalculator::init() {
 	YakuCatalog::catalogInit::yakulst_yaojiu();
 	YakuCatalog::catalogInit::yakulst_triplet_1();
 	YakuCatalog::catalogInit::yakulst_triplet_2();
+	YakuCatalog::catalogInit::yakulst_triplet_3();
 	YakuCatalog::catalogInit::yakulst_quad();
 	YakuCatalog::catalogInit::yakulst_sequence();
 	YakuCatalog::catalogInit::yakulst_misc();
