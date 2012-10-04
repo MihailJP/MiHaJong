@@ -1,6 +1,21 @@
 #include "../catalog.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
+	auto countKeziOf =
+		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
+			return analysis->KeziCount[TILE_SUIT_CHARACTERS + numeral] +
+				analysis->KeziCount[TILE_SUIT_CIRCLES + numeral] +
+				analysis->KeziCount[TILE_SUIT_BAMBOOS + numeral];
+		};
+	auto countDuiziOf =
+		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
+			return analysis->DuiziCount[TILE_SUIT_CHARACTERS + numeral] +
+				analysis->DuiziCount[TILE_SUIT_CIRCLES + numeral] +
+				analysis->DuiziCount[TILE_SUIT_BAMBOOS + numeral];
+		};
+
+	// ---------------------------------------------------------------------
+
 	/* ƒCƒiƒoƒEƒA[ */
 	if (RuleData::chkRuleApplied("inabauer"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -54,17 +69,23 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"ŽO‘Žu", get_yaku_han("sangokushi"),
 			"‘ÎX˜a",
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const unsigned numerals = 4;
-				bool flag[numerals] = {false};
-				const int numeral[numerals] = {3, 5, 9, 4,};
-				for (int k = 0; k < numerals; ++k)
-					for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
-						if (analysis->KangziCount[i + numeral[k]] >= 1)
-							flag[k] = true;
-				for (int k = 0; k < numerals; ++k)
-					if (!flag[k]) return false;
-				return true;
+			[&countKeziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (bool)
+					(countKeziOf(analysis, 3) * countKeziOf(analysis, 5) *
+					countKeziOf(analysis, 9) * countKeziOf(analysis, 4));
+			}
+		));
+	/* ˆê‹x‚³‚ñ */
+	if (RuleData::chkRuleApplied("ikkyuusan"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ˆê‹x‚³‚ñ", get_yaku_han("ikkyuusan"),
+			"‘ÎX˜a",
+			[&countDuiziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((countDuiziOf(analysis, 1) > 0) &&
+					(countDuiziOf(analysis, 9) > 0) &&
+					(countDuiziOf(analysis, 3) > 0) &&
+					(countDuiziOf(analysis, 1) + countDuiziOf(analysis, 9) +
+					countDuiziOf(analysis, 3) == SIZE_OF_MELD_BUFFER));
 			}
 		));
 }
