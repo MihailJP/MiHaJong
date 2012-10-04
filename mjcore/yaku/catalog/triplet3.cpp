@@ -81,11 +81,116 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			"ˆê‹x‚³‚ñ", get_yaku_han("ikkyuusan"),
 			"‘ÎX˜a",
 			[&countDuiziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((countDuiziOf(analysis, 1) > 0) &&
+				return (countDuiziOf(analysis, 1) > 0) &&
 					(countDuiziOf(analysis, 9) > 0) &&
 					(countDuiziOf(analysis, 3) > 0) &&
 					(countDuiziOf(analysis, 1) + countDuiziOf(analysis, 9) +
-					countDuiziOf(analysis, 3) == SIZE_OF_MELD_BUFFER));
+					countDuiziOf(analysis, 3) == SIZE_OF_MELD_BUFFER);
+			}
+		));
+	/* ‘å–‚_ */
+	if (RuleData::chkRuleApplied("daimajin"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‘å–‚_", get_yaku_han("daimajin"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->AnKeziCount[WhiteDragon] +
+					analysis->AnKeziCount[GreenDragon] +
+					analysis->AnKeziCount[RedDragon]) >= 1) &&
+					(analysis->TsumoHai->tile == BambooFive) &&
+					(Machi == yaku::yakuCalculator::machiTanki);
+			}
+		));
+	/* ¼’|”~ */
+	if (RuleData::chkRuleApplied("shouchikubai"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"¼’|”~", get_yaku_han("shouchikubai"),
+			"–ð”vEá¢",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool flag = false;
+				for (int i = 2; i <= 9; ++i)
+					if (analysis->KeziCount[TILE_SUIT_BAMBOOS + i] >= 1)
+						flag = true;
+				return flag &&
+					(analysis->KeziCount[GreenDragon] >= 1) &&
+					(analysis->KeziCount[CircleOne] >= 1);
+			}
+		));
+	/* ƒpƒ“ƒ_ */
+	if (RuleData::chkRuleApplied("panda"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ƒpƒ“ƒ_", get_yaku_han("panda"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[WhiteDragon] >= 1) &&
+					(analysis->KeziCount[CircleOne] >= 1);
+			}
+		));
+
+	// ---------------------------------------------------------------------
+
+	/* •ŠøŒR */
+	if (RuleData::chkRuleApplied("kokkigun"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"•ŠøŒR", get_yaku_han("kokkigun"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[SouthWind] >= 1) &&
+					(analysis->KeziCount[WhiteDragon] >= 1) &&
+					(analysis->KeziCount[CircleEight] >= 1);
+			}
+		));
+	/* ”’ŠøŒR */
+	if (RuleData::chkRuleApplied("hakkigun"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"”’ŠøŒR", get_yaku_han("hakkigun"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[WestWind] >= 1) &&
+					(analysis->KeziCount[WhiteDragon] >= 1) &&
+					(analysis->KeziCount[CircleOne] >= 1);
+			}
+		));
+	/* gŠøŒR */
+	if (RuleData::chkRuleApplied("kohkigun"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"gŠøŒR", get_yaku_han("kohkigun"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[SouthWind] >= 1) &&
+					(analysis->KeziCount[RedDragon] >= 1) &&
+					(analysis->KeziCount[BambooOne] >= 1);
+			}
+		));
+	/* —•ŠøŒR */
+	if (RuleData::chkRuleApplied("rankigun"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"—•ŠøŒR", get_yaku_han("rankigun"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[EastWind] >= 1) &&
+					(analysis->KeziCount[GreenDragon] >= 1) &&
+					(analysis->KeziCount[CircleSeven] >= 1);
+			}
+		));
+
+	// ---------------------------------------------------------------------
+
+	/* “Œ•—‰™’–ö */
+	if (RuleData::chkRuleApplied("dongfeng_yan_jian_liu"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"“Œ•—‰™’–ö", get_yaku_han("dongfeng_yan_jian_liu"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[BambooOne] >= 1) &&
+					(analysis->KeziCount[BambooNine] >= 1) &&
+					(analysis->KeziCount[EastWind] >= 1);
+			}
+		));
+	/* ‹´–{^–ç */
+	if (RuleData::chkRuleApplied("hashimoto_shin_ya"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‹´–{^–ç", get_yaku_han("hashimoto_shin_ya"),
+			"‘ÎX˜a",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->DuiziCount[WhiteDragon] >= 1) &&
+					(analysis->DuiziCount[RedDragon] >= 1) &&
+					(analysis->DuiziCount[CircleSeven] >= 1) &&
+					(analysis->DuiziCount[BambooTwo] >= 1) &&
+					(analysis->DuiziCount[BambooNine] >= 1);
 			}
 		));
 }
