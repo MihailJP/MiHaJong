@@ -174,4 +174,17 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 				return false;
 			}
 		));
+	/* ‡Ši‹FŠè */
+	if (RuleData::chkRuleApplied("goukaku_kigan"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‡Ši‹FŠè", get_yaku_han("goukaku_kigan"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool flag1 = false; bool flag2 = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+					if (analysis->KangziCount[i + 5] >= 1) flag1 = true;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+					if (analysis->KangziCount[i + 9] >= 1) flag2 = true;
+				return flag1 && flag2;
+			}
+		));
 }
