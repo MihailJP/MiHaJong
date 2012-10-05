@@ -1,6 +1,18 @@
 #include "../catalog.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
+	auto countTilesOf =
+		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
+			return analysis->TileCount[TILE_SUIT_CHARACTERS + numeral] +
+				analysis->TileCount[TILE_SUIT_CIRCLES + numeral] +
+				analysis->TileCount[TILE_SUIT_BAMBOOS + numeral];
+		};
+	auto countKangziOf =
+		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
+			return analysis->KangziCount[TILE_SUIT_CHARACTERS + numeral] +
+				analysis->KangziCount[TILE_SUIT_CIRCLES + numeral] +
+				analysis->KangziCount[TILE_SUIT_BAMBOOS + numeral];
+		};
 	auto countKeziOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
 			return analysis->KeziCount[TILE_SUIT_CHARACTERS + numeral] +
@@ -191,6 +203,56 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(analysis->DuiziCount[CircleSeven] >= 1) &&
 					(analysis->DuiziCount[BambooTwo] >= 1) &&
 					(analysis->DuiziCount[BambooNine] >= 1);
+			}
+		));
+	/* 大南西諸島 */
+	if (RuleData::chkRuleApplied("dai_nansei_shotou"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"大南西諸島", get_yaku_han("dai_nansei_shotou"),
+			"対々和", "三色同刻", "混老頭",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[CharacterOne] >= 1) &&
+					(analysis->KeziCount[CircleOne] >= 1) &&
+					(analysis->KeziCount[BambooOne] >= 1) &&
+					(analysis->DuiziCount[SouthWind] >= 1) &&
+					(analysis->DuiziCount[WestWind] >= 1);
+			}
+		));
+	/* 白衣の天使 */
+	if (RuleData::chkRuleApplied("hakuinotenshi"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"白衣の天使", get_yaku_han("hakuinotenshi"),
+			"役牌・白",
+			[&countKeziOf, &countKangziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (countKeziOf(analysis, 7) >= 1) &&
+					(countKeziOf(analysis, 4) >= 1) &&
+					(analysis->KeziCount[WhiteDragon] >= 1) &&
+					(countKangziOf(analysis, 5) >= 1) &&
+					(analysis->DuiziCount[EastWind] + analysis->DuiziCount[SouthWind] +
+					analysis->DuiziCount[WestWind] + analysis->DuiziCount[NorthWind] >= 1);
+			}
+		));
+	/* 七龍珠 */
+	if (RuleData::chkRuleApplied("dragon_ball"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"七龍珠", get_yaku_han("dragon_ball"),
+			"対々和", "大三元", "混一色",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[WhiteDragon] >= 1) &&
+					(analysis->KeziCount[GreenDragon] >= 1) &&
+					(analysis->KeziCount[RedDragon] >= 1) &&
+					(analysis->KeziCount[CircleOne] - analysis->KangziCount[CircleOne] >= 1) &&
+					(analysis->DuiziCount[CircleTwo] >= 1);
+			}
+		));
+	/* 七五三 */
+	if (RuleData::chkRuleApplied("shichigosan"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"七五三", get_yaku_han("shichigosan"),
+			"奇数対々和", "奇数七対子",
+			[&countTilesOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (countTilesOf(analysis, 7) + countTilesOf(analysis, 5) + countTilesOf(analysis, 3) == NUM_OF_TILES_IN_HAND) &&
+					(countTilesOf(analysis, 7) * countTilesOf(analysis, 5) * countTilesOf(analysis, 3));
 			}
 		));
 }
