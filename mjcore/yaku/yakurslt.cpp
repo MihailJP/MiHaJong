@@ -1,5 +1,10 @@
 #include "yakurslt.h"
 
+/* 構造体のサイズを返す */
+int yaku::YAKUSTAT::getSize() {
+	return sizeof(YAKUSTAT);
+}
+
 /* 既存のインスタンスを初期化する */
 void yaku::YAKUSTAT::Init(YAKUSTAT* const myInstance) {
 	myInstance->isValid = false;
