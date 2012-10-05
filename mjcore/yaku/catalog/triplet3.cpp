@@ -81,7 +81,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"ŽO‘Žu", get_yaku_han("sangokushi"),
 			"‘ÎX˜a",
-			[&countKeziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[countKeziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (bool)
 					(countKeziOf(analysis, 3) * countKeziOf(analysis, 5) *
 					countKeziOf(analysis, 9) * countKeziOf(analysis, 4));
@@ -92,7 +92,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"ˆê‹x‚³‚ñ", get_yaku_han("ikkyuusan"),
 			"‘ÎX˜a",
-			[&countDuiziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[countDuiziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (countDuiziOf(analysis, 1) > 0) &&
 					(countDuiziOf(analysis, 9) > 0) &&
 					(countDuiziOf(analysis, 3) > 0) &&
@@ -109,7 +109,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					analysis->AnKeziCount[GreenDragon] +
 					analysis->AnKeziCount[RedDragon]) >= 1) &&
 					(analysis->TsumoHai->tile == BambooFive) &&
-					(Machi == yaku::yakuCalculator::machiTanki);
+					(analysis->Machi == yaku::yakuCalculator::machiTanki);
 			}
 		));
 	/* ¼’|”~ */
@@ -223,7 +223,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"”’ˆß‚Ì“VŽg", get_yaku_han("hakuinotenshi"),
 			"–ð”vE”’",
-			[&countKeziOf, &countKangziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[countKeziOf, countKangziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (countKeziOf(analysis, 7) >= 1) &&
 					(countKeziOf(analysis, 4) >= 1) &&
 					(analysis->KeziCount[WhiteDragon] >= 1) &&
@@ -250,7 +250,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"ŽµŒÜŽO", get_yaku_han("shichigosan"),
 			"Šï”‘ÎX˜a", "Šï”Žµ‘ÎŽq",
-			[&countTilesOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[countTilesOf](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (countTilesOf(analysis, 7) + countTilesOf(analysis, 5) + countTilesOf(analysis, 3) == NUM_OF_TILES_IN_HAND) &&
 					(countTilesOf(analysis, 7) * countTilesOf(analysis, 5) * countTilesOf(analysis, 3));
 			}
