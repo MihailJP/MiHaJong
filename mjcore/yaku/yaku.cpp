@@ -508,7 +508,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	std::vector<std::string> yakuOrd; // 順序保存用
 	std::for_each(YakuCatalog::Instantiate()->catalog.begin(), // 役カタログの最初から
 		YakuCatalog::Instantiate()->catalog.end(), // カタログの末尾まで
-		[&yakuHan, gameStat, analysis, &suppression, &yakuOrd](Yaku& yaku) -> void { // 役ごとに判定処理
+		[&yakuHan, analysis, &suppression, &yakuOrd](Yaku& yaku) -> void { // 役ごとに判定処理
 			if (yaku.checkYaku(analysis)) { // 成立条件を満たしていたら
 				yakuHan[yaku.getName()] = yaku.getHan(analysis); // 飜数を記録
 				yakuOrd.push_back(yaku.getName()); // 順序も記録しておく

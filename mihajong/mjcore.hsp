@@ -107,6 +107,7 @@
 #func initdora "?initdora@@YAXQAUGameTable@@@Z" int
 
 /* ystruct.hspÇ©ÇÁÇÃà⁄êA */
+#cfunc _YAKUSTAT_getSize "?getSize@YAKUSTAT@yaku@@SAHXZ"
 #func _exportYakuPoint "?exportYakuPoint@YAKUSTAT@yaku@@SAXQBU12@QAH@Z" var, var
 #define exportYakuPoint(%1,%2) dim %2, NUM_OF_DIGIT_GROUPS: _exportYakuPoint %1, %2
 //#cfunc _getYakuInfo "?getYakuInfo@YAKUSTAT@yaku@@SAHQBU12@H@Z" var, int
