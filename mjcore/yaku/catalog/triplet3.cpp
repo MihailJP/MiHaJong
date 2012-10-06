@@ -255,4 +255,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(countTilesOf(analysis, 7) * countTilesOf(analysis, 5) * countTilesOf(analysis, 3));
 			}
 		));
+	/* Œä‹ê˜J‚³‚ñ */
+	if (RuleData::chkRuleApplied("gokurousan"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"Œä‹ê˜J‚³‚ñ", get_yaku_han("gokurousan"),
+			"‘ÎX˜a", "‹Ø”v",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool flag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+					if ((analysis->KeziCount[i + 5] >= 1) && (analysis->KeziCount[i + 9] >= 1) &&
+						(analysis->KeziCount[i + 6] >= 1) && (analysis->KeziCount[i + 3] >= 1))
+						flag = true;
+				return flag;
+			}
+		));
 }
