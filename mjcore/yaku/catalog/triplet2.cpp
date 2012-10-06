@@ -1,7 +1,5 @@
 #include "../catalog.h"
 
-extern const std::array<char[4], 6> parsedat_trichrome3;
-
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	/* 奇数対々和 */
 	if (RuleData::chkRuleApplied("odd_toitoi"))
@@ -555,10 +553,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 		));
 	/* 東京二十三区 */
 	if (RuleData::chkRuleApplied("tokyo")) {
-#include "isshoku.h" /* やぶれかぶれ。行儀の悪いinclude */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"東京二十三区",  yaku::yakuCalculator::Yaku::HANFUNC(
-			[isshoku](const MENTSU_ANALYSIS* const analysis) {
+			[](const MENTSU_ANALYSIS* const analysis) {
 				return yaku::yakuCalculator::Yaku::YAKU_HAN(
 					(isshoku(analysis, false)) ?
 					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman :

@@ -8,22 +8,23 @@ yaku::yakuCalculator::YakuCatalog* yaku::yakuCalculator::YakuCatalog::Instantiat
 }
 
 // 設定したルールに基づいて役インスタンスを初期化する
-void yaku::yakuCalculator::init() {
+void yaku::yakuCalculator::YakuCatalog::catalogInit::init() {
 	YakuCatalog::Instantiate()->catalog.clear(); // リセット
 	info("役カタログをリセットしました。");
-	YakuCatalog::catalogInit::yakulst_contextual();
-	YakuCatalog::catalogInit::yakulst_irregular();
-	YakuCatalog::catalogInit::yakulst_pinhu();
-	YakuCatalog::catalogInit::yakulst_suit();
-	YakuCatalog::catalogInit::yakulst_yaojiu();
-	YakuCatalog::catalogInit::yakulst_triplet_1();
-	YakuCatalog::catalogInit::yakulst_triplet_2();
-	YakuCatalog::catalogInit::yakulst_triplet_3();
-	YakuCatalog::catalogInit::yakulst_quad();
-	YakuCatalog::catalogInit::yakulst_sequence();
-	YakuCatalog::catalogInit::yakulst_misc();
-	YakuCatalog::catalogInit::yakulst_dora();
+	yakulst_contextual();
+	yakulst_irregular();
+	yakulst_pinhu();
+	yakulst_suit();
+	yakulst_yaojiu();
+	yakulst_triplet_1(); yakulst_triplet_2(); yakulst_triplet_3();
+	yakulst_quad();
+	yakulst_sequence();
+	yakulst_misc();
+	yakulst_dora();
 	info("役カタログの構築を完了しました。");
+}
+void yaku::yakuCalculator::init() {
+	YakuCatalog::catalogInit::init();
 }
 
 // ルール文字列から飜を設定する用
@@ -79,3 +80,24 @@ yaku::yakuCalculator::Yaku::HANFUNC
 	else if (currcnf == "yakuman_unbound") return yaku::yakuCalculator::Yaku::yval_yakuman_dependent;
 	else return yaku::yakuCalculator::Yaku::HANFUNC();
 }
+
+/* 一色の判定 */
+bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALYSIS* const analysis, bool chin_itsu) {
+	bool flag[TILE_SUIT_HONORS / TILE_SUIT_STEP]; bool yakuFlag = true;
+	for (int i = 0; i < (TILE_SUIT_HONORS / TILE_SUIT_STEP); i++) flag[i] = true;
+	if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1) {
+		for (int k = 1; k < (chin_itsu ? TILE_NONFLOWER_MAX : TILE_SUIT_HONORS); k++)
+			if (analysis->TileCount[k] > 0)
+				for (int i = 0; i < (TILE_SUIT_HONORS / TILE_SUIT_STEP); i++)
+					if ((k / TILE_SUIT_STEP) != i) flag[i] = false;
+	} else if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1) {
+		for (int k = 1; k < (chin_itsu ? TILE_NONFLOWER_MAX : TILE_SUIT_HONORS); k++)
+			if (analysis->TileCount[k] > 0)
+				for (int i = 0; i < (TILE_SUIT_HONORS / TILE_SUIT_STEP); i++)
+					if ((k / TILE_SUIT_STEP) != i) flag[i] = false;
+	}
+	else for (int i = 0; i < (TILE_SUIT_HONORS / TILE_SUIT_STEP); i++) flag[i] = false;
+	for (int i = 0; i < (TILE_SUIT_HONORS / TILE_SUIT_STEP); i++)
+		yakuFlag &= flag[i];
+	return yakuFlag;
+};
