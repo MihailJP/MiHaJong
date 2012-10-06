@@ -14,6 +14,7 @@ std::map<std::string, std::vector<std::string> > RuleData::ruletags;
 std::map<std::string, std::map<std::string, unsigned int> > RuleData::inverse_ruletags;
 std::set<std::string> RuleData::nonapplicable;
 const char RuleData::digit[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+std::array<std::string, RULESIZE/RULES_IN_PAGE> RuleData::pageCaption;
 
 void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 	DWORD size = 0; const uint8_t* csv = nullptr;
@@ -29,6 +30,8 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 		inverse_nametbl[nomenPartisRegulae] = numerusPartisRegulae; // 逆方向
 
 		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str()))) { // GameType合致した場合
+			if ((atoi((*k)[0].c_str()) % RULES_IN_PAGE) == 0)
+				pageCaption[atoi((*k)[0].c_str()) / RULES_IN_PAGE] = std::string((*k)[4]);
 			ruletags[nomenPartisRegulae].clear(); inverse_ruletags[nomenPartisRegulae].clear();
 			for (unsigned int index = 11; index < (*k).size(); ++index) {
 				if ((*k)[index] == ">>>") { // 飛ばすように指定されているなら
@@ -318,4 +321,10 @@ bool RuleData::ReqChecker::reqFailed
 		lua_pop(myState, 1);
 		return ans;
 	}
+}
+
+// -------------------------------------------------------------------------
+
+__declspec(dllexport) void RuleData::getPageCaption(char* const caption, int bufsize, int page) {
+	strcpy_s(caption, bufsize, pageCaption[page].c_str());
 }

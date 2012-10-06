@@ -72,6 +72,7 @@ return
 #cfunc getRuleSize "?getRuleSize@RuleData@@SAHH@Z" int
 #cfunc getRule "?getRule@@YAHH@Z" int
 #cfunc reqFailed "?reqFailed@RuleData@@SAHHQBH@Z" int, var
+#func getPageCaption "?getPageCaption@RuleData@@SAXQADHH@Z" var, int, int
 
 #deffunc setconffile str argFileName
 	configFile = argFileName
@@ -107,8 +108,6 @@ return
 	dim Rule, NUM_OF_RULE_SETTINGS
 	repeat NUM_OF_RULE_SETTINGS: Rule(cnt) = getRule(cnt): loop
 
-	sdim PageCaption, 32, RULE_PAGES
-	PageCaption = "基本のルール設定", "ドラとインフレルール設定", "基本の役設定", "順子役の設定①", "順子役の設定②", "刻子役の設定①", "刻子役の設定②", "刻子役の設定③", "刻子役の設定④", "槓子役・七対子系の役設定", "全体手役の設定①", "全体手役の設定②", "状況役の設定①", "状況役の設定②", "その他の役設定①", "その他の役設定②"
 	dsplay@ SND_BUTTON
 	configPage = 1
 	gosub *confbuttons
@@ -190,7 +189,8 @@ return
 	borderedtxt2 "環 境 設 定", 152, 12, 255, 255, 255, 1, 48, 192, 192, 192
 	font fontname, 24, 0
 	borderedtxt2 "Rule configuration.", 500, 18, 255, 255, 255, 1, 24, 192, 192, 192
-	borderedtxt2 strf("%2d/%2d頁 %s", configPage, RULE_PAGES, PageCaption(configPage-1)), 500, 48, 255, 255, 255, 1, 18, 192, 192, 192
+	sdim PageCaption, 64: getPageCaption PageCaption, 64, configPage-1
+	borderedtxt2 strf("%2d/%2d頁 %s", configPage, RULE_PAGES, PageCaption), 500, 48, 255, 255, 255, 1, 18, 192, 192, 192
 	font fontname, 20, 0
 	repeat
 		gosub *loadcache
