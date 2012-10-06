@@ -4,8 +4,6 @@
 #include "yaku.h"
 
 class yaku::yakuCalculator::YakuCatalog::catalogInit {
-	friend yaku::yakuCalculator;
-	friend yaku::yakuCalculator::YakuCatalog;
 private:
 	static yaku::yakuCalculator::Yaku::HANFUNC get_yaku_han(const std::string& RuleTag);
 	static void yakulst_contextual();
@@ -20,6 +18,8 @@ private:
 	static void yakulst_sequence();
 	static void yakulst_misc();
 	static void yakulst_dora();
+public:
+	static void init();
 };
 
 #endif
