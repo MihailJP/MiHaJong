@@ -25,6 +25,7 @@
 #func _exportRule "?exportRule@RuleData@@SAXPAPAD@Z" var
 #cfunc getRuleSize "?getRuleSize@RuleData@@SAHH@Z" int
 #cfunc getRule "?getRule@@YAHH@Z" int // obsolete
+#cfunc reqFailed "?reqFailed@RuleData@@SAHHQBH@Z" int, var
 */
 #cfunc chkRule "?chkRule_hsp@RuleData@@SAHQBD0@Z" str, str
 #func configinit "?configinit@RuleData@@SAXXZ"
@@ -53,8 +54,6 @@
 #func _windName "?windName@@YAXPADHH@Z" var, int, int
 #func _roundName "?roundName@@YAXPADHH@Z" var, int, int
 #func _TileName "?TileName@@YAXPADHH@Z" var, int, int
-#cfunc WindMax "?WindMax@@YAHXZ"
-#cfunc Wind2Tile "?Wind2Tile@@YAHH@Z" int
 #func _confPath "?confPath@confpath@@YAXPADH@Z" var, int
 
 /* bignum.hspÇ©ÇÁÇÃà⁄êA */
@@ -64,13 +63,8 @@
 
 /* tileutil.hspÇ©ÇÁÇÃà⁄êA */
 #func lipai "?lipai@@YAXQAUGameTable@@H@Z" int, int
-#func _countseentiles "?countseentiles@@YAXQAHQBUGameTable@@@Z" var, int
-#define countseentiles(%1,%2) dim %1, TILE_NONFLOWER_MAX: _countseentiles %1, %2
 #func _countTilesInHand "?countTilesInHand@@YAXQAHQBUGameTable@@H@Z" var, int, int
 #define countTilesInHand(%1,%2,%3) dim %1, TILE_NONFLOWER_MAX: _countTilesInHand %1, %2, %3
-#func _countRedTilesInHand "?countRedTilesInHand@@YAXQAHQBUGameTable@@H@Z" var, int, int
-#define countRedTilesInHand(%1,%2,%3) dim %1, TILE_NONFLOWER_MAX: _countRedTilesInHand %1, %2, %3
-#cfunc getpaiinfo "?gettilestatus@@YAHQBUGameTable@@HHH@Z" int, int, int, int
 #func _chkfuriten "?chkFuriten@@YAXQAH0000QBUGameTable@@H@Z" var, var, var, var, var, int, int
 #define chkfuriten(%1,%2,%3,%4,%5,%6,%7) dim %2, TILE_NONFLOWER_MAX: dim %3, TILE_NONFLOWER_MAX: _chkfuriten %1, %2, %3, %4, %5, %6, %7
 #func chkopenmachi "?chkOpenMachi@@YAXQAUGameTable@@H@Z" int, int
@@ -90,10 +84,7 @@
 #func haifuinit "?haifuinit@haifu@@SAXXZ"
 #func haifurechaipai "?haifurechaipai@haifu@@SAXQBUGameTable@@@Z" int
 #func haifurecdora "?haifurecdora@haifu@@SAXH@Z" int
-#func haifurecuradora "?haifurecuradora@haifu@@SAXH@Z" int
-#func haifurecalicedora "?haifurecalicedora@haifu@@SAXH@Z" int
 #func haifualicedoraupd "?haifualicedoraupd@haifu@@SAXXZ"
-#func haifuresetalicedora "?haifuresetalicedora@haifu@@SAXXZ"
 #func haifurecdorap "?haifurecdorap@haifu@@SAXXZ"
 #func haifurecmota "?haifurecmota@haifu@@SAXQBUGameTable@@H@Z" int, int
 #func haifurecfurikomi "?haifurecfurikomi@haifu@@SAXQBUGameTable@@@Z" int
@@ -117,14 +108,8 @@
 
 /* ystruct.hspÇ©ÇÁÇÃà⁄êA */
 #cfunc _YAKUSTAT_getSize "?getSize@YAKUSTAT@yaku@@SAHXZ"
-#func _YAKUSTAT_Init "?Init@YAKUSTAT@yaku@@SAXQAU12@@Z" var
-#define initYakuInfo(%1) sdim %1, _YAKUSTAT_getSize(): _YAKUSTAT_Init %1
 #func _exportYakuPoint "?exportYakuPoint@YAKUSTAT@yaku@@SAXQBU12@QAH@Z" var, var
 #define exportYakuPoint(%1,%2) dim %2, NUM_OF_DIGIT_GROUPS: _exportYakuPoint %1, %2
-#func setYakuInfo "?setYakuInfo@YAKUSTAT@yaku@@SAXQAU12@HH@Z" var, int, int
-#func setYakuInfoTxt "?setYakuInfo@YAKUSTAT@yaku@@SAXQAU12@HQBD@Z" var, int, str
-#func addYakuInfo "?addYakuInfo@YAKUSTAT@yaku@@SAXQAU12@HH@Z" var, int, int
-#func addYakuInfoTxt "?addYakuInfo@YAKUSTAT@yaku@@SAXQAU12@HQBD@Z" var, int, str
 //#cfunc _getYakuInfo "?getYakuInfo@YAKUSTAT@yaku@@SAHQBU12@H@Z" var, int
 //#func _getYakuInfoTxt "?getYakuInfo@YAKUSTAT@yaku@@SAXQBU12@HQADH@Z" var, int, var, int
 

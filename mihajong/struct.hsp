@@ -42,7 +42,6 @@
 
 #func setTurn "setTurn" int, int
 #func incTurn "incTurn" int
-#cfunc getTurn "getTurn" int
 
 #func setDeposit "setDeposit" int, int
 #func addDeposit "addDeposit" int, int
@@ -68,7 +67,6 @@
 #cfunc getMeld "getMeld" int, int, int, int
 #cfunc MeldPointer "MeldPointer" int, int
 #func MeldPointerIncrement "MeldPointerIncrement" int, int
-#func MeldPointerDecrement "MeldPointerDecrement" int, int
 #func flagMeld "flagMeld" int, int, int, int, int
 
 #func setMenzen "setMenzen" int, int, int
@@ -77,15 +75,11 @@
 #func setHandStat "setHandStat" int, int, int
 #cfunc getHandStat "getHandStat" int, int
 
-#func setNumberOfQuads "setNumberOfQuads" int, int, int
 #func incNumberOfQuads "incNumberOfQuads" int, int
 #cfunc getNumberOfQuads "getNumberOfQuads" int, int
 
 #func setRichiFlag "setRichiFlag" int, int, int, int
 #cfunc getRichiFlag "getRichiFlag" int, int, int
-
-#func setOpenWait "setOpenWait" int, int, int
-#cfunc getOpenWait "getOpenWait" int, int
 
 #func setFirstDrawFlag "setFirstDrawFlag" int, int, int
 #cfunc getFirstDrawFlag "getFirstDrawFlag" int, int
@@ -96,11 +90,9 @@
 #func setAgariHouki "setAgariHouki" int, int, int
 #cfunc getAgariHouki "getAgariHouki" int, int
 
-#func putFlowerFlag "putFlowerFlag" int, int, int
 #func setFlowerFlag "setFlowerFlag" int, int, int
 #cfunc getFlowerFlag "getFlowerFlag" int, int
 
-#func setNorthFlag "setNorthFlag" int, int, int
 #func addNorthFlag "addNorthFlag" int, int
 #cfunc getNorthFlag "getNorthFlag" int, int
 
@@ -108,17 +100,14 @@
 #func incKangFlag "incKangFlag" int, int
 #cfunc getKangFlag "getKangFlag" int, int
 
-#func setTotalKang "setTotalKang" int, int
 #func incTotalKang "incTotalKang" int
 #cfunc getTotalKang "getTotalKang" int
 
 #func setRichiCounterFlag "setRichiCounterFlag" int, int
-#cfunc getRichiCounterFlag "getRichiCounterFlag" int
 
 #func calcWareme "calcWareme" int
 #cfunc getWareme "getWareme" int
 
-#func setDoukasen "setDoukasen" int, int
 #cfunc getDoukasen "getDoukasen" int
 
 #cfunc getShibari "getShibari" int
@@ -137,14 +126,12 @@
 
 #cfunc getRinshanExtension "getRinshanExtension" int
 
-#func setDrawPointer "setDrawPointer" int, int
 #func incDrawPointer "incDrawPointer" int
 #cfunc getDrawPointer "getDrawPointer" int
 
 #func setDoraPointer "setDoraPointer" int, int
 #cfunc getDoraPointer "getDoraPointer" int
 
-#func setRinshanPointer "setRinshanPointer" int, int
 #func decRinshanPointer "decRinshanPointer" int
 #cfunc getRinshanPointer "getRinshanPointer" int
 
@@ -157,7 +144,6 @@
 #func setDisconnectFlag "setDisconnectFlag" int, int, int
 #cfunc getDisconnectFlag "getDisconnectFlag" int, int
 
-#func setDoraFlag "setDoraFlag" int, int, int, int
 #func incDoraFlag "incDoraFlag" int, int, int
 #cfunc getDoraFlag "getDoraFlag" int, int, int
 
@@ -172,7 +158,6 @@
 #cfunc getDeclarationFlag "getDeclarationFlag" int, int, int
 
 #func setCurrentPlayer "setCurrentPlayer" int, int, int
-#func resetCurrentPlayer "resetCurrentPlayer" int
 #cfunc getCurrentPlayer "getCurrentPlayer" int, int
 
 /* ã«íPà Ç≈ÇÃèâä˙âª */

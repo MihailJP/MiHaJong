@@ -8,7 +8,7 @@ PLAYER_ID* tobePlayed(const GameTable* const gameStat) {
 		((gameStat->GameRound + 2) % PLAYERS)
 	};
 	if (chkGameType(gameStat, Sanma4)) return tp;
-	else return NULL;
+	else return nullptr;
 }
 PLAYER_ID tobePlayed(const GameTable* const gameStat, int id) {
 	assert((id >= 0)&&(id < 13));
@@ -177,11 +177,6 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 
 	return seenTiles;
 }
-__declspec(dllexport) void countseentiles(int* const seenTiles, const GameTable* const gameStat) {
-	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-	Int8ByTile tileCnt = countseentiles(gameStat);
-	for (int i = 0; i < TILE_NONFLOWER_MAX; i++) seenTiles[i] = (int)tileCnt[i];
-}
 
 /* è”v‚É‘¶İ‚·‚é”v‚ğí—Ş•Ê‚ÉƒJƒEƒ“ƒg‚·‚é */
 MJCORE Int8ByTile countTilesInHand(const GameTable* const gameStat, PLAYER_ID playerID) {
@@ -247,11 +242,6 @@ MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PLAYER_ID
 	}
 	return count;
 }
-__declspec(dllexport) void countRedTilesInHand(int* const tileCount, const GameTable* const gameStat, int playerID) {
-	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-	Int8ByTile tCount = countRedTilesInHand(gameStat, (PLAYER_ID)playerID, 1);
-	for (int i = 0; i < TILE_NONFLOWER_MAX; i++) tileCount[i] = (int)tCount[i];
-}
 
 
 /* è”v‚Ì‚¤‚¿‚ ‚é‚P–‡‚É’–Ú‚·‚é */
@@ -312,21 +302,6 @@ MJCORE TileStatus gettilestatus(
 	}
 
 	return tlStat;
-}
-__declspec(dllexport) int gettilestatus(
-	const GameTable* const gameStat, int targetPlayer, int targetTile, int CheckMode)
-{
-	auto ans = gettilestatus(gameStat, (PLAYER_ID)targetPlayer, targetTile, (bool)CheckMode);
-	return
-		(ans.isExistent ?
-		(ans.canFormQuad ? 0x40 : 0) +
-		(ans.seqMidWait ? 0x20 : 0) +
-		(ans.seqDoubleSideWait ? 0x10 : 0) +
-		(ans.seqSingleSideWait ? 0x08 : 0) +
-		(ans.formsPair ? 0x04 : 0) +
-		(ans.formsSequence ? 0x02 : 0) +
-		(ans.formsTriplet ? 0x01 : 0)
-		: -999);
 }
 
 /* U’®‚Å‚È‚¢‚©‚Ìƒ`ƒFƒbƒNE‘Ò‚¿”v‚ğ”‚¦‚éˆ—‚àŠÜ‚Ş */

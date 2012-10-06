@@ -229,16 +229,10 @@ __declspec(dllexport) void haifu::haifurecdora(int tmpDora) {
 void haifu::haifurecuradora(tileCode tmpDora) {
 	tools::recordDoraStream(&haifuP.uraDora, &HThaifuP.uraDora, tmpDora);
 }
-__declspec(dllexport) void haifu::haifurecuradora(int tmpDora) {
-	haifurecdora((tileCode)tmpDora);
-}
 
 /* アリスドラを牌譜に記録 */
 void haifu::haifurecalicedora(tileCode tmpDora) {
 	tools::recordDoraStream(&haifuP.aliceDora, &HThaifuP.aliceDora, tmpDora);
-}
-__declspec(dllexport) void haifu::haifurecalicedora(int tmpDora) {
-	haifurecalicedora((tileCode)tmpDora);
 }
 
 /* アリスドラを更新 */
@@ -250,7 +244,7 @@ __declspec(dllexport) void haifu::haifualicedoraupd() {
 }
 
 /* アリスドラ初期化 */
-__declspec(dllexport) void haifu::haifuresetalicedora() {
+void haifu::haifuresetalicedora() {
 	haifuP.aliceDora.str("");
 	HThaifuP.aliceDora.str("");
 }

@@ -16,7 +16,7 @@ std::set<std::string> RuleData::nonapplicable;
 const char RuleData::digit[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
-	DWORD size = 0; const uint8_t* csv = NULL;
+	DWORD size = 0; const uint8_t* csv = nullptr;
 	LoadFileInResource(IDR_CSV_TABL1, CSV_TABLE, size, csv);
 	char *csvdat = new char[size + 4]; memset(csvdat, 0, size+4); memcpy_s(csvdat, size+4, csv, size);
 	CSVReader::parsecsv(confdat, csvdat);
@@ -50,7 +50,7 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 }
 
 void RuleData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
-	DWORD size = 0; const uint8_t* ini = NULL;
+	DWORD size = 0; const uint8_t* ini = nullptr;
 	LoadFileInResource(IDR_INI_FIL1, INI_FILE, size, ini);
 	char *inidat = new char[size + 4]; memset(inidat, 0, size+4); memcpy_s(inidat, size+4, ini, size);
 	INIParser::parseini(confdict, inidat);
@@ -121,8 +121,10 @@ __declspec(dllexport) void RuleData::getRuleName(char* const txt, int bufsize, i
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (std::atoi((*k)[0].c_str()) != RuleID) continue;
 		if ((chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str()))) ||
-			(chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str()))))
-			strcpy_s(txt, bufsize, ((*k)[9]).c_str()); return;
+			(chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str())))) {
+				strcpy_s(txt, bufsize, ((*k)[9]).c_str());
+				return;
+		}
 	}
 	strcpy_s(txt, bufsize, "");
 }
@@ -254,7 +256,66 @@ __declspec(dllexport) int RuleData::saveConfigFile(const char* const filename) {
 	}
 	catch (std::runtime_error& e) { // 書き込み失敗！！
 		error(e.what());
-		MessageBox(NULL, e.what(), "書き込み失敗", MB_OK | MB_ICONERROR | MB_TASKMODAL | MB_TOPMOST);
+		MessageBox(nullptr, e.what(), "書き込み失敗", MB_OK | MB_ICONERROR | MB_TASKMODAL | MB_TOPMOST);
 		return -1;
+	}
+}
+std::string RuleData::getRuleMaskExpr(const std::string& RuleTag) {
+	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
+		if ((*k)[8] != RuleTag) continue;
+		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str())))
+				return (*k)[3];
+		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str())))
+				return "";
+	}
+	return "";
+}
+
+__declspec(dllexport) int RuleData::reqFailed(int ruleID, const int* const ruleStat) {
+	auto checker = new ReqChecker();
+	bool flag = checker->reqFailed(nametbl[ruleID], getRuleMaskExpr(nametbl[ruleID]), ruleStat);
+	delete checker;
+	return flag ? 1 : 0;
+}
+
+// -------------------------------------------------------------------------
+
+RuleData::ReqChecker::ReqChecker () {
+	myState = luaL_newstate();
+	lua_register(myState, "chk", check);
+}
+RuleData::ReqChecker::~ReqChecker () {
+	lua_close(myState);
+}
+const int* RuleData::ReqChecker::ourRuleStat = nullptr;
+
+int RuleData::ReqChecker::check (lua_State* L) {
+	int n = lua_gettop(L);
+	if (n < 2) luaL_error(L, "Not enough arguments");
+	const char* ruleTag = lua_tostring(L, 1);
+	const char* itemTag = lua_tostring(L, 2);
+	//lua_pushboolean(L, chkRule(ruleTag, itemTag));
+	if (inverse_nametbl.find(ruleTag) == inverse_nametbl.end())
+		return luaL_error(L, "Unrecognized rule key: %s", ruleTag);
+	else if (inverse_ruletags[ruleTag].find(itemTag) == inverse_ruletags[ruleTag].end())
+		return luaL_error(L, "Unrecognized rule value: %s", itemTag);
+	lua_pushboolean(L, ourRuleStat[inverse_nametbl[ruleTag]] == inverse_ruletags[ruleTag][itemTag]);
+	return 1;
+}
+
+bool RuleData::ReqChecker::reqFailed
+	(const std::string& ruleTag, const std::string& expression, const int* const ruleStat)
+{
+	if (expression.empty()) {
+		return false;
+	}
+	else {
+		ourRuleStat = ruleStat;
+		std::string expr = std::string("result = ") + expression;
+		if (luaL_dostring(myState, expr.c_str())) return true;
+		lua_getglobal(myState, "result");
+		bool ans = lua_toboolean(myState, -1);
+		lua_pop(myState, 1);
+		return ans;
 	}
 }

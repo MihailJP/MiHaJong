@@ -113,11 +113,11 @@ Int8ByTile yaku::countingFacility::countByMelds(
 	std::function<bool (meldStat)> f)
 { // 計数ルーチン
 	Int8ByTile hitCount; memset(&hitCount, 0, sizeof(hitCount));
-	if (hits != NULL) *hits = 0;
+	if (hits != nullptr) *hits = 0;
 	for (int i = 1; i < SIZE_OF_MELD_BUFFER; i++) {
 		if (f(MianziDat[i].mstat)&&(MianziDat[i].tile != NoTile)) {
 			++(hitCount[MianziDat[i].tile]);
-			if (hits != NULL) ++(*hits);
+			if (hits != nullptr) ++(*hits);
 		}
 	}
 	return hitCount;
@@ -140,7 +140,7 @@ Int8ByTile yaku::countingFacility::countAnKez(const MELD_BUF MianziDat, uint8_t*
 /* 対子・刻子・槓子の数を数える */
 Int8ByTile yaku::countingFacility::countDuiz(const MELD_BUF MianziDat) { /* 対子・刻子・槓子の数を数える */
 	trace("対子・刻子・槓子の種類を調べます。");
-	auto DuiCount = countKez(MianziDat, NULL);
+	auto DuiCount = countKez(MianziDat, nullptr);
 	++(DuiCount[MianziDat[0].tile]);
 	return DuiCount;
 }
@@ -186,8 +186,8 @@ int yaku::countingFacility::countSpecMentz(const MELD_BUF MianziDat, const tileC
 	const tileCode* const targetShunz, int numOfShunz, bool Mode)
 { // 指定した種類の面子を数える
 	int kz = 0; int sz = 0;
-	auto DuiCount = Mode ? countKez(MianziDat, NULL) : countDuiz(MianziDat);
-	auto ShunzCount = countShunz(MianziDat, NULL);
+	auto DuiCount = Mode ? countKez(MianziDat, nullptr) : countDuiz(MianziDat);
+	auto ShunzCount = countShunz(MianziDat, nullptr);
 	int yakuflagcount = 0;
 	for (int i = 0; i < numOfKez; i++) {
 		if (targetKez[i] == NoTile) continue;

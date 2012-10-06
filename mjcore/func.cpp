@@ -234,8 +234,7 @@ __declspec(dllexport) void TileName(char* str, int bufsz, int tile) {
 }
 
 /* 場風牌のリスト */
-__declspec(dllexport) inline int WindMax() {return 7;}
-tileCode inline Wind2Tile(uint8_t wind) {
+tileCode Wind2Tile(uint8_t wind) {
 	switch (wind) {
 		case 0: return EastWind;
 		case 1: return SouthWind;
@@ -248,9 +247,6 @@ tileCode inline Wind2Tile(uint8_t wind) {
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "異常な引数です");
 			return NoTile;
 	}
-}
-__declspec(dllexport) int Wind2Tile(int wind) {
-	return Wind2Tile((uint8_t)wind);
 }
 
 /* 原点(返し点) */

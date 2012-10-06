@@ -287,7 +287,7 @@ void yaku::yakuCalculator::countDora
 		// 牌譜記録ルーチンはスレッドセーフじゃなかったはずなので別の場所でやる
 		while (AlicePointer <= gameStat->TilePointer) {
 			AlicePointer -= 2;
-			if (analysis != NULL) {
+			if (analysis != nullptr) {
 				if (analysis->TileCount[gameStat->Deck[AlicePointer].tile] > 0) ++alice;
 				else break;
 			} else {
@@ -414,7 +414,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			}
 		}
 		/* 役の名前を書き込む */
-		if (result == NULL) continue; // 役の名前の出力がいらないなら次へ
+		if (result == nullptr) continue; // 役の名前の出力がいらないなら次へ
 		if ((yakuHan[yName].coreHan.getUnit() != yakuHan[yName].bonusHan.getUnit()) &&
 			(yakuHan[yName].coreHan.getHan() * yakuHan[yName].bonusHan.getHan() != 0))
 		{ /* 単位が混在！ */
@@ -508,7 +508,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	std::vector<std::string> yakuOrd; // 順序保存用
 	std::for_each(YakuCatalog::Instantiate()->catalog.begin(), // 役カタログの最初から
 		YakuCatalog::Instantiate()->catalog.end(), // カタログの末尾まで
-		[&yakuHan, gameStat, analysis, &suppression, &yakuOrd](Yaku& yaku) -> void { // 役ごとに判定処理
+		[&yakuHan, analysis, &suppression, &yakuOrd](Yaku& yaku) -> void { // 役ごとに判定処理
 			if (yaku.checkYaku(analysis)) { // 成立条件を満たしていたら
 				yakuHan[yaku.getName()] = yaku.getHan(analysis); // 飜数を記録
 				yakuOrd.push_back(yaku.getName()); // 順序も記録しておく
@@ -592,7 +592,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	YAKUSTAT::Init(&calcprm->result);
 	// 計算を実行
 	DWORD ThreadID;
-	HANDLE Thread = CreateThread(NULL, 0, CalculatorThread::calculator, (LPVOID)calcprm, 0, &ThreadID);
+	HANDLE Thread = CreateThread(nullptr, 0, CalculatorThread::calculator, (LPVOID)calcprm, 0, &ThreadID);
 	calculator->sync(1); // 同期(簡略な実装)
 	// 高点法の処理
 	memcpy(yakuInfo, &calcprm->result, sizeof(YAKUSTAT));
@@ -632,7 +632,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	for (int i = 4; i < 160; i++) { // 0～3はNoTileなのでやらなくていい
 		while (calculator->numOfFinishedThreads() - calculator->numOfStartedThreads() >= CalculatorThread::threadLimit)
 			Sleep(0); // スレッド数制限のチェック
-		Thread[i] = CreateThread(NULL, 0, CalculatorThread::calculator, (LPVOID)(&(calcprm[i])), 0, &(ThreadID[i]));
+		Thread[i] = CreateThread(nullptr, 0, CalculatorThread::calculator, (LPVOID)(&(calcprm[i])), 0, &(ThreadID[i]));
 		Sleep(0);
 	}
 	calculator->sync(156); // 同期(簡略な実装)
@@ -685,7 +685,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 #else
 						(RuleData::chkRule("shiisan_puutaa", "mangan")) ? "５飜\n" : "13飜\n");
 #endif
-				countDora(gameStat, NULL, &yakuInfo, targetPlayer); // ドラは数えてあげましょうね
+				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ドラは数えてあげましょうね
 			}
 			/* 十四不塔 */
 			else if (chkShisiBuDa(gameStat, targetPlayer)) { // 十四不塔になってる
@@ -709,7 +709,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 #else
 						"13飜\n");
 #endif
-				countDora(gameStat, NULL, &yakuInfo, targetPlayer); // ドラを数えるのです
+				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ドラを数えるのです
 			}
 		}
 		trace("和了っていないので抜けます");

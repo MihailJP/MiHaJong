@@ -60,7 +60,6 @@
 
 	・OSの設定で左右のボタンを入れ替えているとマウスボタンで正常に打牌できない。
 	・ポン聴または吃聴の直後、画面下の待ち牌表示に変なものが表示される。
-	・たまにCOMが喰い変えをする。
 	・上家が親のときサイコロの上に文字が表示される。
 
 
@@ -85,6 +84,7 @@
 	・mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
 	・cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
 	・Lua スタティックライブラリ (http://luabinaries.sourceforge.net/download.html)
+	・Ruby 処理系 (http://www.ruby-lang.org/ja/downloads/)
 
 
 ■ ライセンスについて

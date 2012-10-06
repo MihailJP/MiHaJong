@@ -122,14 +122,12 @@ public:
 	static __declspec(dllexport) void haifurecdora(int tmpDora);
 
 	static void haifurecuradora(tileCode tmpDora);
-	static __declspec(dllexport) void haifurecuradora(int tmpDora);
 
 	static void haifurecalicedora(tileCode tmpDora);
-	static __declspec(dllexport) void haifurecalicedora(int tmpDora);
 
 	static __declspec(dllexport) void haifualicedoraupd();
 
-	static __declspec(dllexport) void haifuresetalicedora();
+	static void haifuresetalicedora();
 
 	static __declspec(dllexport) void haifurecdorap();
 
