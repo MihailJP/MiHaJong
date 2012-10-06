@@ -107,9 +107,6 @@ bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALY
 					count[k] += analysis->KeziCount[Tiles[k][i]] + analysis->ShunziCount[Tiles[k][i]];
 				else
 					count[k] += analysis->TileCount[Tiles[k][i]];
-	std::ostringstream o;
-	o << "äÝŽq: " << count[0] << ", “›Žq: " << count[1] << ", õŽq: " << count[2] << ", Žš”v: " << count[3];
-	debug(o.str().c_str());
 	return ((count[0] ? 1 : 0) + (count[1] ? 1 : 0) + (count[2] ? 1 : 0) == 1) &&
 		((!chin_itsu) || (count[3] ? false: true));
 };
