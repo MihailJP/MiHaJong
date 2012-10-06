@@ -83,21 +83,33 @@ yaku::yakuCalculator::Yaku::HANFUNC
 
 /* 一色の判定 */
 bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALYSIS* const analysis, bool chin_itsu) {
-	bool flag[TILE_SUIT_HONORS / TILE_SUIT_STEP]; bool yakuFlag = true;
-	for (int i = 0; i < (TILE_SUIT_HONORS / TILE_SUIT_STEP); i++) flag[i] = true;
-	if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1) {
-		for (int k = 1; k < (chin_itsu ? TILE_NONFLOWER_MAX : TILE_SUIT_HONORS); k++)
-			if (analysis->TileCount[k] > 0)
-				for (int i = 0; i < (TILE_SUIT_HONORS / TILE_SUIT_STEP); i++)
-					if ((k / TILE_SUIT_STEP) != i) flag[i] = false;
-	} else if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1) {
-		for (int k = 1; k < (chin_itsu ? TILE_NONFLOWER_MAX : TILE_SUIT_HONORS); k++)
-			if (analysis->TileCount[k] > 0)
-				for (int i = 0; i < (TILE_SUIT_HONORS / TILE_SUIT_STEP); i++)
-					if ((k / TILE_SUIT_STEP) != i) flag[i] = false;
-	}
-	else for (int i = 0; i < (TILE_SUIT_HONORS / TILE_SUIT_STEP); i++) flag[i] = false;
-	for (int i = 0; i < (TILE_SUIT_HONORS / TILE_SUIT_STEP); i++)
-		yakuFlag &= flag[i];
-	return yakuFlag;
+	if (analysis->shanten[ShantenAnalyzer::shantenAll] >= 0) return false; // 足切り要件：和了ってない
+	const tileCode Tiles[][9] = {
+		{
+			CharacterOne, CharacterTwo,   CharacterThree, CharacterFour, CharacterFive,
+			CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
+		}, {
+			CircleOne,    CircleTwo,      CircleThree,    CircleFour,    CircleFive,
+			CircleSix,    CircleSeven,    CircleEight,    CircleNine,
+		}, {
+			BambooOne,    BambooTwo,      BambooThree,    BambooFour,    BambooFive,
+			BambooSix,    BambooSeven,    BambooEight,    BambooNine,
+		}, {
+			EastWind,     SouthWind,      WestWind,       NorthWind,
+			WhiteDragon,  GreenDragon,    RedDragon,      NoTile,        NoTile,
+		}
+	};
+	unsigned count[4] = {0};
+	for (unsigned k = 0; k < 4; k++)
+		for (unsigned i = 0; i < 9; i++)
+			if (Tiles[k][i] != NoTile)
+				if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
+					count[k] += analysis->KeziCount[Tiles[k][i]] + analysis->ShunziCount[Tiles[k][i]];
+				else
+					count[k] += analysis->TileCount[Tiles[k][i]];
+	std::ostringstream o;
+	o << "萬子: " << count[0] << ", 筒子: " << count[1] << ", 索子: " << count[2] << ", 字牌: " << count[3];
+	debug(o.str().c_str());
+	return ((count[0] ? 1 : 0) + (count[1] ? 1 : 0) + (count[2] ? 1 : 0) == 1) &&
+		((!chin_itsu) || (count[3] ? false: true));
 };
