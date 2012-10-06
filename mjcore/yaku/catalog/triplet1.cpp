@@ -1,14 +1,5 @@
 #include "../catalog.h"
 
-extern const std::array<char[8], 3> parsedat_monochrome5, parsedat_monochrome4;
-extern const std::array<char[4], 3> parsedat_monochrome3;
-extern const std::array<char[8], 90> parsedat_bichrome5;
-extern const std::array<char[8], 42> parsedat_bichrome4;
-extern const std::array<char[4], 18> parsedat_bichrome3;
-extern const std::array<char[8], 150> parsedat_trichrome5;
-extern const std::array<char[8], 36> parsedat_trichrome4;
-extern const std::array<char[4], 6> parsedat_trichrome3;
-
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* lˆÃ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(

@@ -1,12 +1,5 @@
 #include "../catalog.h"
 
-extern const std::array<char[8], 3> parsedat_monochrome4;
-extern const std::array<char[4], 3> parsedat_monochrome3;
-extern const std::array<char[8], 42> parsedat_bichrome4;
-extern const std::array<char[4], 18> parsedat_bichrome3;
-extern const std::array<char[8], 36> parsedat_trichrome4;
-extern const std::array<char[4], 6> parsedat_trichrome3;
-
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	/* ˆêF‘o—´‰ï */
 	if (RuleData::chkRuleApplied("isshoku_souryuu"))

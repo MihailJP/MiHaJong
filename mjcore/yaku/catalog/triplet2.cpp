@@ -1,7 +1,5 @@
 #include "../catalog.h"
 
-extern const std::array<char[4], 6> parsedat_trichrome3;
-
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	/* Šï”‘ÎX˜a */
 	if (RuleData::chkRuleApplied("odd_toitoi"))
