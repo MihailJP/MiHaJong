@@ -7,7 +7,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		"対々和", "三暗刻",
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
 				1 : 0) == 4);
 		}
 	));
@@ -18,7 +18,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			"四暗刻", "対々和", "三暗刻",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->TotalAnKezi - (
-					((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (*analysis->TsumoAgariFlag)) ?
+					((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
 					1 : 0) == 4) && (
 					(analysis->GameStat->TianHuFlag) ||
 					((analysis->Machi == yaku::yakuCalculator::machiTanki) && (!analysis->MachiInfo.FuritenFlag))
@@ -30,7 +30,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		"三暗刻", yaku::yakuCalculator::Yaku::yval_2han,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
 				1 : 0) == 3);
 		}
 	));
