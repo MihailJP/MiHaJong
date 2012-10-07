@@ -105,47 +105,6 @@
 	s_server_releaseobj
 return
 
-*receiveclientname
-	sdim tmpClientName, 256
-	repeat
-		ReceivedMsg = 1023
-		sockcheck tmpclientnum
-		if (stat == 0) {
-			sockgetc ReceivedMsg, tmpclientnum
-			if (ReceivedMsg < 0) {ReceivedMsg += 256}
-			if (ReceivedMsg == 0xb8) {
-				break
-			}
-		}
-		await 0
-	loop
-	repeat
-		ReceivedMsg = 1023
-		sockcheck tmpclientnum
-		if (stat == 0) {
-			sockgetc ReceivedMsg, tmpclientnum
-			if (ReceivedMsg < 0) {ReceivedMsg += 256}
-			tmpstrsize = ReceivedMsg
-			break
-		}
-		await 0
-	loop
-	repeat tmpstrsize
-		tmpstrpos = cnt
-		repeat
-			ReceivedMsg = 1023
-			sockcheck tmpclientnum
-			if (stat == 0) {
-				sockgetc ReceivedMsg, tmpclientnum
-				if (ReceivedMsg < 0) {ReceivedMsg += 256}
-				poke tmpClientName, tmpstrpos, ReceivedMsg
-				break
-			}
-			await 0
-		loop
-	loop
-	return
-
 *modesel2s
 	dsplay SND_BUTTON
 	s_server_dostart
