@@ -634,6 +634,15 @@
 		if (isDobon(GameStat,PLAYER_NORTH)) {return 1}
 #endif
 	}
+	// ìVï”èIóπ
+	if (chkRule("teppen", "no") == 0) {
+		if (isTeppen(GameStat,PLAYER_EAST)) {return 1}
+		if (isTeppen(GameStat,PLAYER_SOUTH)) {return 1}
+		if (isTeppen(GameStat,PLAYER_WEST)) {return 1}
+#ifndef SANMAT
+		if (isTeppen(GameStat,PLAYER_NORTH)) {return 1}
+#endif
+	}
 	// òaóπÇËé~Çﬂ
 	if (chkRule("agariyame", "no") == 0) {
 		if (((getRound(GameStat)+(getRoundLoop(GameStat)*roundLoopRate())) == getGameLength(GameStat))&&((OrigTurn+(getRoundLoop(GameStat)*roundLoopRate())) == getGameLength(GameStat))&&((RoundEndType == ENDKYOKU_AGARI)||(chkRule("agariyame", "yes_also_ready") != 0))) {
