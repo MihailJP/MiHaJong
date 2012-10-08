@@ -144,7 +144,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 
 	/* ’®”vŒ`‰Á•„ */
 	analysis->Machi = machiInvalid; // ‰Šú‰»
-	const tileCode* tsumoTile = &(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND].tile); // shorthand
+	const tileCode* tsumoTile = &(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND-1].tile); // shorthand
 	if (analysis->MianziDat[0].tile == *tsumoTile) analysis->Machi = machiTanki; // ’P‹R‘Ò‚¿
 	for (int i = 1; i < SIZE_OF_MELD_BUFFER; i++) { // ‘Ò‚¿‚ÌŽí—Þ‚ð’²‚×‚écc
 		switch (analysis->MianziDat[i].mstat) {
