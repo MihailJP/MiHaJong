@@ -355,19 +355,6 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
-#defcfunc isDobon var GameStat, int targetPlayer
-	exportScore GameStat, tmpArray
-	tmpFlag = bignum_flag(tmpArray, targetPlayer)
-	
-	dobonFlag = 0
-	if (tmpFlag == -1) {dobonFlag = 1}
-	if ((tmpFlag == 0)&&(chkRule("buttobi_border", "nonpositive") != 0)) {dobonFlag = 1}
-	return dobonFlag
-#global
-
-#module
-#include "const.hsp"
-#include "mjcore.hsp"
 #deffunc calcAgariPoints var GameStat, array agariPointArray, array AgariPointRaw, array PointDelta, int Mode
 	if (Mode == -1) {
 		AgariPlayer = getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)

@@ -341,3 +341,18 @@ bool isRichiReqSatisfied (const GameTable* const gameStat, PLAYER_ID targetPlaye
 __declspec(dllexport) int isRichiReqSatisfied (const GameTable* const gameStat, int targetPlayer) {
 	return isRichiReqSatisfied(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
 }
+
+/* ”ò‚Ñ‚É‚È‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚© */
+bool isDobon (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+	if (!RuleData::chkRuleApplied("buttobi_border"))
+		return false;
+	else if (gameStat->Player[targetPlayer].PlayerScore < LargeNum::fromInt(0))
+		return true;
+	else if ((gameStat->Player[targetPlayer].PlayerScore == LargeNum::fromInt(0)) &&
+		RuleData::chkRule("buttobi_border", "nonpositive"))
+		return true;
+	else return false;
+}
+__declspec(dllexport) int isDobon (const GameTable* const gameStat, int targetPlayer) {
+	return isDobon(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
+}
