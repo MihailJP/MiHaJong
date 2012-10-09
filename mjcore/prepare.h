@@ -1,6 +1,8 @@
 #ifndef PREPARE_H
 #define PREPARE_H
 
+#include <algorithm>
+#include "../socket/socket.h"
 #include "gametbl.h"
 #include "envtbl.h"
 #include "random.h"

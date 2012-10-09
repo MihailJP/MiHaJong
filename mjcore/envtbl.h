@@ -11,13 +11,14 @@ private: // singleton
 	EnvTable(const EnvTable&);
 	EnvTable& operator=(const EnvTable&);
 
+public:
 	// “à•”ƒNƒ‰ƒX‚Æ‚©‚ð’è‹`‚·‚é
 	class PlayerLabel {
 	public:
 		std::string PlayerName;
 		int8_t RemotePlayerFlag;
 	};
-public:
+
 	enum ClientType : int32_t {
 		Unavailable = (-1),
 		Standalone, Server, Client,

@@ -3,11 +3,11 @@
 
 #include <WinSock2.h>
 #include <cstdarg>
-#include "class.h"
 
 #define NUM_OF_SOCKETS 32
 
 #ifdef SOCKET_EXPORTS
+#include "class.h"
 #include "except.h"
 #define DLL __declspec(dllexport)
 #else
@@ -21,11 +21,10 @@ const unsigned int numOfSockets = 32u;
 extern Sock* sockets[numOfSockets];
 extern WSADATA SocketInfo;
 extern HINSTANCE dllInst;
-#else
-#define DLL __declspec(dllimport)
-#endif
 
 void errordlg (socket_error& err); // エラーダイアログ
+#endif
+
 DLL int init (); // ソケットを初期化する
 DLL int listen (int sock_id, int port); // サーバー待ち受け開始
 DLL int connect (int sock_id, const char* const addr, int port); // クライアント接続開始

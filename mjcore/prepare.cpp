@@ -199,3 +199,47 @@ __declspec(dllexport) void initdora(GameTable* const gameStat) { // ドラの設定
 			DoraAdding(gameStat);
 	}
 }
+
+// -------------------------------------------------------------------------
+
+void shuffleSeat (unsigned ClientNumber) {
+	//if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
+	//	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+	//		if (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 1)
+	//			; //sockmake SOCK_CHAT-1+IsRemotePlayer(GameEnv, cnt), PORT_CHAT-1+IsRemotePlayer(GameEnv, cnt)
+
+	// 退避
+	auto TmpPlayerDat = EnvTable::Instantiate()->PlayerDat;
+	std::vector<PLAYER_ID> TmpPosition;
+	for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++) TmpPosition.push_back(i);
+	// 場決め
+	if (EnvTable::Instantiate()->GameMode != EnvTable::Client) {
+		// 場決め処理
+		std::random_shuffle(TmpPosition.begin(), TmpPosition.end(),
+			[] (unsigned max) {return RndNum::rnd(max);});
+		// サーバーであれば結果を送信
+		if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
+			for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
+				mihajong_socket::putc(i, TmpPosition[i]);
+	} else {
+		// クライアントであれば受信する
+		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++) {
+			int receivedByte;
+			while ((receivedByte = mihajong_socket::getc(0)) == -1) Sleep(0); // 受信待ち
+			TmpPosition[i] = receivedByte;
+		}
+	}
+	// シャッフル結果を書き込み
+	for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
+		EnvTable::Instantiate()->PlayerDat[TmpPosition[i]] = TmpPlayerDat[i];
+
+	// リモートとしてマーク
+	PLAYER_ID tmpPlayer = TmpPosition[ClientNumber];
+	if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
+			EnvTable::Instantiate()->PlayerDat[TmpPosition[i]].RemotePlayerFlag =
+			(i != tmpPlayer);
+
+	return;
+}
+/* TODO: スレッド */
