@@ -341,3 +341,41 @@ bool isRichiReqSatisfied (const GameTable* const gameStat, PLAYER_ID targetPlaye
 __declspec(dllexport) int isRichiReqSatisfied (const GameTable* const gameStat, int targetPlayer) {
 	return isRichiReqSatisfied(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
 }
+
+/* ”ò‚Ñ‚É‚È‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚© */
+bool isDobon (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+	if (!RuleData::chkRuleApplied("buttobi_border"))
+		return false;
+	else if (gameStat->Player[targetPlayer].PlayerScore < LargeNum::fromInt(0))
+		return true;
+	else if ((gameStat->Player[targetPlayer].PlayerScore == LargeNum::fromInt(0)) &&
+		RuleData::chkRule("buttobi_border", "nonpositive"))
+		return true;
+	else return false;
+}
+__declspec(dllexport) int isDobon (const GameTable* const gameStat, int targetPlayer) {
+	return isDobon(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
+}
+
+/* “V•Ó‚É‚È‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚© */
+bool isTeppen (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+	if (RuleData::chkRule("teppen", "50000pts") &&
+		(gameStat->Player[targetPlayer].PlayerScore >= LargeNum::fromInt(50000)))
+		return true;
+	else if (RuleData::chkRule("teppen", "55000pts") &&
+		(gameStat->Player[targetPlayer].PlayerScore >= LargeNum::fromInt(55000)))
+		return true;
+	else if (RuleData::chkRule("teppen", "60000pts") &&
+		(gameStat->Player[targetPlayer].PlayerScore >= LargeNum::fromInt(60000)))
+		return true;
+	else if (RuleData::chkRule("teppen", "65000pts") &&
+		(gameStat->Player[targetPlayer].PlayerScore >= LargeNum::fromInt(65000)))
+		return true;
+	else if (RuleData::chkRule("teppen", "70000pts") &&
+		(gameStat->Player[targetPlayer].PlayerScore >= LargeNum::fromInt(70000)))
+		return true;
+	else return false;
+}
+__declspec(dllexport) int isTeppen (const GameTable* const gameStat, int targetPlayer) {
+	return isTeppen(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
+}

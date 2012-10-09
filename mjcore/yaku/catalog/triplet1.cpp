@@ -70,7 +70,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRuleApplied("golden_ladder"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"金梯", get_yaku_han("golden_ladder"),
-			"清一色", "対々和",
+			"清一色", "対々和", "小四連刻", "四連刻", "三連刻", "小三連刻",
 			[wulianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return wulianke(analysis, (const char*)&parsedat_monochrome5[0], 3, 8, 1);
 			}
@@ -83,13 +83,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRule("suurenkoh", "8han_incl_toitoi"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四連刻", yaku::yakuCalculator::Yaku::yval_6han /* 対々和込み8飜 */,
-			"金梯",
+			"小四連刻", "三連刻", "小三連刻",
 			suurenkoh
 		));
 	else if (RuleData::chkRuleApplied("suurenkoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四連刻", get_yaku_han("suurenkoh"),
-			"金梯", "対々和",
+			"対々和", "小四連刻", "三連刻", "小三連刻",
 			suurenkoh
 		));
 	/* 三連刻 */
@@ -100,8 +100,39 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRuleApplied("sanrenkoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三連刻", get_yaku_han("sanrenkoh"),
-			"金梯", "四連刻",
+			"小三連刻",
 			sanrenkoh
+		));
+	/* 小四連刻 */
+	if (RuleData::chkRuleApplied("shou_suurenkoh"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"小四連刻", get_yaku_han("shou_suurenkoh"),
+			"三連刻", "小三連刻",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
+					for (int k = 1; k <= 6; k++)
+						if ((analysis->DuiziCount[i + k + 0] >= 1) && (analysis->KeziCount[i + k + 1] >= 1) &&
+							(analysis->KeziCount[i + k + 2] >= 1) && (analysis->DuiziCount[i + k + 3] >= 1))
+							yakuFlag = true;
+				}
+				return yakuFlag;
+			}
+		));
+	/* 小三連刻 */
+	if (RuleData::chkRuleApplied("shou_sanrenkoh"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"小三連刻", get_yaku_han("shou_sanrenkoh"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
+					for (int k = 1; k <= 7; k++)
+						if ((analysis->DuiziCount[i + k + 0] >= 1) && (analysis->DuiziCount[i + k + 1] >= 1) &&
+							(analysis->DuiziCount[i + k + 2] >= 1))
+							yakuFlag = true;
+				}
+				return yakuFlag;
+			}
 		));
 	/* 鏡音レン */
 	if (RuleData::chkRuleApplied("kagamine_len"))

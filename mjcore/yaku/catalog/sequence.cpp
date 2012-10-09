@@ -160,9 +160,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		"ˆê‹C’ÊŠÑ", yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
 			[ikki_tsuukan](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, nullptr);
-				return (yakuFlag && // ˆê‹C’ÊŠÑ‚ª¬—§‚µ‚Ä‚¢‚Ä
-					(analysis->DuiziCount[EastWind] >= 1) && // “Œ‚Æ
-					(analysis->DuiziCount[NorthWind] >= 1) ); // –k‚ª‚ ‚é
+				return yakuFlag;
 			}
 	));
 	/* 20101204j“Œ‹`VÂX‘S’Ê */
