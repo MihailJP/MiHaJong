@@ -38,6 +38,10 @@
 #func randomize "?init@RndNum@@SAXXZ"
 #cfunc rnd "?rnd@RndNum@@SAII@Z" int
 
+/* intro.hsp‚©‚ç‚ÌˆÚA */
+#func startSeatShuffle "?shuffle@SeatShuffler@@SAXI@Z" int
+#cfunc seatShuffleFinished "?isFinished_hsp@SeatShuffler@@SAHXZ"
+
 /* func.hsp‚©‚ç‚ÌˆÚA */
 #cfunc playerwind "?playerwind@@YAHHH@Z" int, int
 #cfunc playerRelative "?playerRelative@@YAHHH@Z" int, int

@@ -233,68 +233,11 @@ return
 return
 
 *chrshuffle
-	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
-		repeat NUM_OF_PLAYERS
-			if (IsRemotePlayer(GameEnv, cnt) > 1) {
-				sockmake SOCK_CHAT-1+IsRemotePlayer(GameEnv, cnt), PORT_CHAT-1+IsRemotePlayer(GameEnv, cnt)
-			}
-		loop
-	}
-	repeat NUM_OF_ACTUAL_PLAYERS
-		TmpRemotePlayer(cnt) = IsRemotePlayer(GameEnv, cnt)
-		TmpPlayerName(cnt) = getPlayerName(GameEnv, cnt)
-		TmpPosition(cnt) = cnt
+	startSeatShuffle ClientNumber
+	repeat
+		if (seatShuffleFinished()) {break}
+		await 0
 	loop
-	if (getGameMode(GameEnv) != GAMEMODE_CLIENT) {
-		repeat 600
-			tmp1 = rnd(NUM_OF_ACTUAL_PLAYERS): tmp2 = rnd(NUM_OF_ACTUAL_PLAYERS)
-			tmp3 = TmpPosition(tmp1)
-			TmpPosition(tmp1) = TmpPosition(tmp2)
-			TmpPosition(tmp2) = tmp3
-		loop
-		if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
-			repeat NUM_OF_ACTUAL_PLAYERS
-				serversend TmpPosition(cnt), GameEnv
-			loop
-		}
-	} else {
-		repeat NUM_OF_ACTUAL_PLAYERS
-			tmp = cnt
-			repeat
-				clientreceive ClientReceived, ReceivedMsg
-				if (ClientReceived) {
-					TmpPosition(tmp) = ReceivedMsg
-					break
-				}
-				await 0
-			loop
-		loop
-	}
-	//await 500
-	titleJia = "ìå", "ìÏ", "êº", "ñk"
-//	font fontname, 192, 0
-//	BorderTextX = 20: BorderTextY = 150: dsplay SND_TYPE
-//	BorderText = titleJia(TmpPosition(0)): borderedtxt BorderText, BorderTextX, BorderTextY, 255, 255, 255: await 500
-//	BorderTextX = 440: BorderTextY = 150: dsplay SND_TYPE
-//	BorderText = titleJia(TmpPosition(1)): borderedtxt BorderText, BorderTextX, BorderTextY, 255, 255, 255: await 500
-//	BorderTextX = 200: BorderTextY = 430: dsplay SND_TYPE
-//	BorderText = titleJia(TmpPosition(2)): borderedtxt BorderText, BorderTextX, BorderTextY, 255, 255, 255: await 500
-//#ifndef SANMAT
-//	BorderTextX = 620: BorderTextY = 430: dsplay SND_TYPE
-//	BorderText = titleJia(TmpPosition(3)): borderedtxt BorderText, BorderTextX, BorderTextY, 255, 255, 255: await 500
-//#endif
-	repeat NUM_OF_ACTUAL_PLAYERS
-		setRemotePlayer GameEnv, TmpPosition(cnt), TmpRemotePlayer(cnt)
-		setPlayerName GameEnv, TmpPosition(cnt), TmpPlayerName(cnt)
-	loop
-	tmpPlayer = TmpPosition(ClientNumber)
-	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
-		repeat NUM_OF_ACTUAL_PLAYERS
-			if (cnt == tmpPlayer) {setRemotePlayer GameEnv, cnt, 0}
-			else {setRemotePlayer GameEnv, cnt, 1}
-		loop
-	}
-	//await 3000
 	return
 
 #ifdef WITH_ADVANCEDCONTROL
