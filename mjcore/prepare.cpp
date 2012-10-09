@@ -202,7 +202,7 @@ __declspec(dllexport) void initdora(GameTable* const gameStat) { // ドラの設定
 
 // -------------------------------------------------------------------------
 
-void shuffleSeat (unsigned ClientNumber) {
+void SeatShuffler::shuffleSeat () {
 	//if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
 	//	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 	//		if (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 1)
@@ -242,4 +242,15 @@ void shuffleSeat (unsigned ClientNumber) {
 
 	return;
 }
-/* TODO: スレッド */
+DWORD WINAPI SeatShuffler::shuffleSeat_start (LPVOID param) {
+	finished = false;
+	shuffleSeat();
+	finished = true;
+	return S_OK;
+}
+__declspec(dllexport) void SeatShuffler::shuffle (unsigned cNumber) {
+	ClientNumber = cNumber;
+	CreateThread(nullptr, 0, nullptr, nullptr, 0, nullptr);
+}
+volatile bool SeatShuffler::finished;
+unsigned SeatShuffler::ClientNumber;
