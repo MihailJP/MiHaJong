@@ -19,6 +19,10 @@ namespace protocol {
 	//                      NAME1 to NAME4 = プレイヤー名
 	//                      RULES = ルール設定(80文字ずつに区切る)
 	const uint8_t Server_StartGame_Signature = 0xb4; // サーバーからプレイ開始のシグネチャ
+
+	// ---------------------------------------------------------------------
+
+	const uint8_t Dahai_Remote_Disconnect = 0x9f; // ツモ順のプレイヤーの接続が切れた場合の符牒
 }
 }
 

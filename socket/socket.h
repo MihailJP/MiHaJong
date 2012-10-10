@@ -12,6 +12,9 @@
 #define DLL __declspec(dllexport)
 #else
 #define DLL __declspec(dllimport)
+#include "protocol.h"
+#include "server.h"
+#include "client.h"
 #endif
 
 namespace mihajong_socket {

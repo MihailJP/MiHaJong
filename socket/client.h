@@ -6,6 +6,7 @@
 
 namespace mihajong_socket {
 namespace client {
+#ifdef SOCKET_EXPORTS
 	using server::getString; using server::putString;
 
 	extern unsigned int NumberOfPlayers;
@@ -32,7 +33,8 @@ namespace client {
 	};
 	
 	extern starter* starterThread;
-
+	void send (unsigned char SendingMsg); // サーバーにメッセージを送る
+#endif
 	DLL void start (const char* const name, const char* const server, int port, int players); // クライアントを開始させる(DLL)
 	DLL int isStartingFinished (); // 待機用スレッドが終わったかどうか
 	DLL int isConnectionSucceded (); // 接続成功か
@@ -41,7 +43,6 @@ namespace client {
 	DLL void getPlayerNames (char* playerName1, char* playerName2, char* playerName3, char* playerName4, unsigned bufsz);
 	DLL void checkout_rules (char** rules); // ルールをチェックアウト
 	DLL void releaseobj (); // デストラクタを呼ぶだけ
-	void send (unsigned char SendingMsg); // サーバーにメッセージを送る
 	DLL void send (int SendingMsg); // サーバーにメッセージを送る [Transitional API]
 	DLL void receive (int* const ClientReceived, int* const ReceivedMsg); // サーバーのメッセージを受信する
 }

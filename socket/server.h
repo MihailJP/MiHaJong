@@ -3,15 +3,18 @@
 
 #include "socket.h"
 #include "protocol.h"
+#ifdef SOCKET_EXPORTS
 #include "except.h"
 #include "../mjcore/nmrules.h"
 #include <Windows.h>
 #include <array>
 #include <string>
 #include <cstdint>
+#endif
 
 namespace mihajong_socket {
 namespace server {
+#ifdef SOCKET_EXPORTS
 	extern unsigned int NumberOfPlayers;
 	std::string getString(unsigned int socketID); // 文字列を返す(同期)
 	void putString(unsigned int socketID, const std::string& sendingStr); // 文字列を送信
@@ -32,16 +35,17 @@ namespace server {
 		std::string getPlayerName (unsigned id); // プレイヤー名
 	};
 	extern starter* starterThread;
+	void send (unsigned char SendingMsg); // サーバーからの送信
+	void sendstr (const std::string& sendingStr); // サーバーからの文字列送信
+	extern std::array<unsigned, 3> ServerCheckRotation; // クライアントの読み出し優先順位
+#endif
 	DLL void start (const char* const name, int port, int players, const char* const * const rule); // サーバーを開始させる(DLL)
 	DLL void doStart(); // 接続待機をやめ、直ちに開始する
 	DLL int isStartingFinished (); // 待機用スレッドが終わったかどうか
 	DLL int chkCurrentConnection (); // 現在の接続数
 	DLL void getPlayerNames (char* playerName1, char* playerName2, char* playerName3, char* playerName4, unsigned bufsz);
 	DLL void releaseobj (); // デストラクタを呼ぶだけ
-	void send (unsigned char SendingMsg); // サーバーからの送信
-	void sendstr (const std::string& sendingStr); // サーバーからの文字列送信
 	DLL void send (int SendingMsg, void*); // サーバーからの送信(DLL)
-	extern std::array<unsigned, 3> ServerCheckRotation; // クライアントの読み出し優先順位
 	DLL void rotation_reset (); // 取得優先順位のリセット
 	DLL void receive (int* const ServerReceived, int* const ReceivedMsg); // 取得する
 }
