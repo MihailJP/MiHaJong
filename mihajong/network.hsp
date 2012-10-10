@@ -24,123 +24,17 @@
 
 /* 接続先の鳴き */
 #module
-#include "const.hsp"
-#include "mjcore.hsp"
+#uselib "mjcore.dll"
+#func remotenaki_begin"?remotenaki_begin@RemoteAction@@YAXQAUGameTable@@@Z" int
+#cfunc remotenaki_isfinished "?remotenaki_isfinished@RemoteAction@@YAHXZ"
+#func remotenaki_end "?remotenaki_end@RemoteAction@@YAXXZ"
 #deffunc remotenaki var GameStat, var GameEnv
-
-	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
-		repeat NUM_OF_ACTUAL_PLAYERS
-			tmp = cnt
-			repeat
-				chatrecv GameStat, GameEnv
-				clientreceive ClientReceived, ReceivedMsg
-				if (ClientReceived) {
-					if (tmp != getPlayer(GameStat)) {
-						if (ReceivedMsg == 0xa1) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, tmp, 1}
-						if (ReceivedMsg == 0xa2) {setDeclarationFlag GameStat, DECLARATIONFLAG_PON, tmp, 1}
-						if (ReceivedMsg == 0xa3) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, tmp, 1}
-#ifndef ALLSANMA
-						if (ReceivedMsg == 0xa4) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, tmp, 1}
-						if (ReceivedMsg == 0xa5) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, tmp, 2}
-						if (ReceivedMsg == 0xa6) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, tmp, 3}
-#endif
-						if (ReceivedMsg == 0xa7) {setDisconnectFlag GameStat, tmp, 1}
-					}
-					break
-				}
-				await 0
-			loop
-		loop
-	}
-	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
-		Received1 = 0: Received2 = 0: Received3 = 0
-#ifdef SANMAT
-		if ((IsRemotePlayer(GameEnv, 0) != 2)&&(IsRemotePlayer(GameEnv, 1) != 2)&&(IsRemotePlayer(GameEnv, 2) != 2)) {
-#else
-		if ((IsRemotePlayer(GameEnv, 0) != 2)&&(IsRemotePlayer(GameEnv, 1) != 2)&&(IsRemotePlayer(GameEnv, 2) != 2)&&(IsRemotePlayer(GameEnv, 3) != 2)) {
-#endif
-			Received1 = 1
-		}
-#ifdef SANMAT
-		if ((IsRemotePlayer(GameEnv, 0) != 3)&&(IsRemotePlayer(GameEnv, 1) != 3)&&(IsRemotePlayer(GameEnv, 2) != 3)) {
-#else
-		if ((IsRemotePlayer(GameEnv, 0) != 3)&&(IsRemotePlayer(GameEnv, 1) != 3)&&(IsRemotePlayer(GameEnv, 2) != 3)&&(IsRemotePlayer(GameEnv, 3) != 3)) {
-#endif
-			Received2 = 1
-		}
-#ifndef SANMAT
-		if ((IsRemotePlayer(GameEnv, 0) != 4)&&(IsRemotePlayer(GameEnv, 1) != 4)&&(IsRemotePlayer(GameEnv, 2) != 4)&&(IsRemotePlayer(GameEnv, 3) != 4)) {
-			Received3 = 1
-		}
-#endif
-		repeat
-			chatrecv GameStat, GameEnv
-			serverreceive ServerReceived, ReceivedMsg
-			if (ServerReceived) {
-				repeat NUM_OF_PLAYERS
-					if ((ServerReceived == 1)&&(IsRemotePlayer(GameEnv, cnt) == 2)) {
-						gosub *checkremotenaki
-						Received1 = 1
-					}
-					if ((ServerReceived == 2)&&(IsRemotePlayer(GameEnv, cnt) == 3)) {
-						gosub *checkremotenaki
-						Received2 = 1
-					}
-#ifndef SANMAT
-					if ((ServerReceived == 3)&&(IsRemotePlayer(GameEnv, cnt) == 4)) {
-						gosub *checkremotenaki
-						Received3 = 1
-					}
-#endif
-				loop
-			}
-#ifdef SANMAT
-			if ((Received1 == 1)&&(Received2 == 1)) {
-#else
-			if ((Received1 == 1)&&(Received2 == 1)&&(Received3 == 1)) {
-#endif
-				repeat NUM_OF_ACTUAL_PLAYERS
-					SendingMsg = 0xa0
-					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 1) {SendingMsg = 0xa1}
-					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, cnt) == 1) {SendingMsg = 0xa2}
-					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 1) {SendingMsg = 0xa3}
-#ifndef ALLSANMA
-					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, cnt) == 1) {SendingMsg = 0xa4}
-					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, cnt) == 2) {SendingMsg = 0xa5}
-					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, cnt) == 3) {SendingMsg = 0xa6}
-#endif
-					if (getDisconnectFlag(GameStat, cnt) == 1) {SendingMsg = 0xa7}
-					serversend SendingMsg, GameEnv
-				loop
-				break
-			}
-			await 0
-		loop
-	}
-	repeat NUM_OF_PLAYERS
-		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 1) {
-			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, cnt, getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
-		}
+	remotenaki_begin GameStat
+	repeat
+		if (remotenaki_isfinished()) {break}
+		await 0
 	loop
-	return
-
-*checkremotenaki
-	if (ReceivedMsg == 1023) {
-		if (getDisconnectFlag(GameStat, cnt) == 0) {
-			setDisconnectFlag GameStat, cnt, 1
-			warn strf("プレイヤー [%d] の回線切断を検知しました。", cnt)
-		}
-		ReceivedMsg = 0xa7
-	}
-	if (ReceivedMsg == 0xa1) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, 1}
-	if (ReceivedMsg == 0xa2) {setDeclarationFlag GameStat, DECLARATIONFLAG_PON, cnt, 1}
-	if (ReceivedMsg == 0xa3) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, cnt, 1}
-#ifndef ALLSANMA
-	if (ReceivedMsg == 0xa4) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, cnt, 1}
-	if (ReceivedMsg == 0xa5) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, cnt, 2}
-	if (ReceivedMsg == 0xa6) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, cnt, 3}
-#endif
+	remotenaki_end
 	return
 #global
 

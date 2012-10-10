@@ -30,6 +30,16 @@ namespace protocol {
 	const uint8_t Dahai_Kyuushu = 0x6e; // 九種九牌
 	const uint8_t Dahai_Tsumo = 0x6f; // 和了
 	const uint8_t Dahai_Remote_Disconnect = 0x9f; // ツモ順のプレイヤーの接続が切れた場合の符牒
+
+	// 鳴きコード送受信用
+	const uint8_t Naki_Ignore = 0xa0; // 無視
+	const uint8_t Naki_Ron = 0xa1; // ロン
+	const uint8_t Naki_Pon = 0xa2; // ポン
+	const uint8_t Naki_Kan = 0xa3; // 明槓
+	const uint8_t Naki_Chii_Lower = 0xa4; // 左チー
+	const uint8_t Naki_Chii_Middle = 0xa5; // 中チー
+	const uint8_t Naki_Chii_Upper = 0xa6; // 右チー
+	const uint8_t Naki_Remote_Disconnect = 0xa7; // 鳴きの問い合わせ中にプレイヤーの接続が切れた場合の符牒
 }
 }
 

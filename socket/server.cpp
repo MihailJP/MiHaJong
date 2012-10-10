@@ -117,7 +117,7 @@ namespace server {
 
 	// ---------------------------------------------------------------------
 
-	void send (unsigned char SendingMsg) { // サーバーからの送信
+	DLL void send (unsigned char SendingMsg) { // サーバーからの送信
 		for (unsigned int i = 1; i < NumberOfPlayers; ++i)
 			if (sockets[i]) sockets[i]->putc(SendingMsg);
 	}

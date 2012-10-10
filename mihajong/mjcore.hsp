@@ -162,6 +162,9 @@
 #cfunc remotedahai_isfinished "?remotedahai_isfinished@RemoteAction@@YAHXZ"
 #cfunc remotedahai_getdiscard "?remotedahai_getdiscard@RemoteAction@@YAHXZ"
 #func remotedahai_end "?remotedahai_end@RemoteAction@@YAXXZ"
+#func remotenaki_begin"?remotenaki_begin@RemoteAction@@YAXQAUGameTable@@@Z" int
+#cfunc remotenaki_isfinished "?remotenaki_isfinished@RemoteAction@@YAHXZ"
+#func remotenaki_end "?remotenaki_end@RemoteAction@@YAXXZ"
 */
 
 /* ------------------------------------------------------------------------ */
