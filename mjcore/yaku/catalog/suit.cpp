@@ -2,11 +2,10 @@
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	/* ƒ`ƒ“ƒCƒc */
-#include "isshoku.h" /* ‚â‚Ô‚ê‚©‚Ô‚êBs‹V‚Ìˆ«‚¢include */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"´ˆêF", get_yaku_han("chiniisoh"),
 		"¬ˆêF", "ƒˆê‹C’ÊŠÑ‘S‘Ñ›ô‹ã",
-		[isshoku](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return isshoku(analysis, true);
 		}
 	));
@@ -220,7 +219,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"•S–œÎ", get_yaku_han("kaga_million"),
 			"´ˆêF",
-			[isshoku, chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, true) && (chiffre(analysis) > 100) &&
 					((analysis->TsumoHai->tile / TILE_SUIT_STEP) ==
 					(TILE_SUIT_CHARACTERS / TILE_SUIT_STEP)));
@@ -230,7 +229,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			"‰Á‰ê•S–œÎ", RuleData::chkRule("kaga_million", "double_yakuman_if_just_100") ?
 			yaku::yakuCalculator::Yaku::yval_yakuman : yaku::yakuCalculator::Yaku::yval_double_yakuman,
 			"´ˆêF",
-			[isshoku, chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, true) && (chiffre(analysis) == 100) &&
 					((analysis->TsumoHai->tile / TILE_SUIT_STEP) ==
 					(TILE_SUIT_CHARACTERS / TILE_SUIT_STEP)));
@@ -242,7 +241,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"“›Žq•S–œÎ", get_yaku_han("pinzu_million"),
 			"´ˆêF",
-			[isshoku, chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, true) && (chiffre(analysis) >= 100) &&
 					((analysis->TsumoHai->tile / TILE_SUIT_STEP) ==
 					(TILE_SUIT_CIRCLES / TILE_SUIT_STEP)));
@@ -253,7 +252,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"‹IBŒÜ\ŒÜ–œÎ", get_yaku_han("kishu550k"),
 			"´ˆêF",
-			[isshoku, chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, true) && (chiffre(analysis) == 55) &&
 					((analysis->TsumoHai->tile / TILE_SUIT_STEP) ==
 					(TILE_SUIT_CHARACTERS / TILE_SUIT_STEP)));
@@ -264,7 +263,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"…ŒËŽO\ŒÜ–œÎ", get_yaku_han("mito350k"),
 			"´ˆêF",
-			[isshoku, chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, true) && (chiffre(analysis) <= 35) &&
 					((analysis->TsumoHai->tile / TILE_SUIT_STEP) ==
 					(TILE_SUIT_CHARACTERS / TILE_SUIT_STEP)));
@@ -275,7 +274,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"ƒtƒ‹ƒ€[ƒ“", get_yaku_han("fullmoon"),
 			"´ˆêF",
-			[isshoku, chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, true) && (chiffre(analysis) == 88));
 			}
 		));
@@ -286,7 +285,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	if (RuleData::chkRuleApplied("starlight"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"¯ŒõŽWà£", get_yaku_han("starlight"),
-			[isshoku](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, true) && (analysis->KeziCount[CircleSeven]));
 			}
 		));
@@ -299,7 +298,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				Žµ‘ÎŽq‚ÌžòˆêF‚Í‚S–‡Žg‚¢‚ð”F‚ß‚È‚¢ŒÀ‚è‚Í‚Q‚Q‚R‚R‚S‚S‚T‚T‚U‚U‚V‚V‚W‚W‚ÌŒ`‚Ì‚Ý
 				‚±‚ê‚Í‘å”—×‚Æ“¯‚¶Œ`‚Å‚ ‚èAžòˆêF‚Ì‚ÝÌ—p‚Ìê‡‚Å‚à–ÊŽqŽè‚Æ‚µ‚Äˆµ‚í‚ê‚é
 			*/
-			[isshoku](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1) {
 					int yakuFlagCount = 0;
@@ -325,7 +324,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"¬ˆêF", yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
 		"ˆê‹C’ÊŠÑ‘S‘Ñ›ô‹ã",
-		[isshoku](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return isshoku(analysis, false);
 		}
 	));
@@ -337,7 +336,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"äÝ˜a", get_yaku_han("characters_mahjong"),
 			"¬ˆêF", "¬˜V“ª",
-			[isshoku](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, false) &&
 					((analysis->TileCount[CharacterOne] >= 1)||(analysis->TileCount[CharacterNine] >= 1)));
 			}
@@ -347,7 +346,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"“Œ‹žƒIƒŠƒ“ƒsƒbƒN", get_yaku_han("tokyo_olympic_monochrome"),
 			"¬ˆêF",
-			[isshoku](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, false) &&
 					((analysis->TileCount[CircleFive] >= 1)||(analysis->TileCount[EastWind] >= 1)));
 			}
@@ -356,7 +355,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	if (RuleData::chkRuleApplied("saigou_nanshuu"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"¼‹½“ìB", get_yaku_han("saigou_nanshuu"),
-			[isshoku](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, false) &&
 					(analysis->KeziCount[SouthWind] >= 1) &&
 					(analysis->KeziCount[WestWind] >= 1) &&
@@ -368,7 +367,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"‹¾‰¹ƒŠƒ“ƒŒƒ“", get_yaku_han("kagamine_rinlen"),
 			"¬ˆêF", "‹¾‰¹ƒŠƒ“", "‹¾‰¹ƒŒƒ“", "ŽO˜A", "‘ÎX˜a",
-			[isshoku](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int i = 1; i < TILE_SUIT_HONORS; i++)
 					if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[i + 1] >= 1) && (analysis->KeziCount[i + 2] >= 1))
@@ -383,7 +382,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	if (RuleData::chkRuleApplied("kagamine_rin"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"‹¾‰¹ƒŠƒ“", get_yaku_han("kagamine_rin"),
-			[isshoku](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int PinMian = 0;
 				for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++)
 					if ((analysis->MianziDat[i].tile / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES / TILE_SUIT_STEP))
@@ -396,7 +395,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	if (RuleData::chkRuleApplied("honmanopotechi"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"–|–ž”T•àŽè’n", get_yaku_han("honmanopotechi"),
-			[isshoku](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int PinMian = 0;
 				if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1) {
 					for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++)

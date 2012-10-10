@@ -1,14 +1,5 @@
 #include "../catalog.h"
 
-extern const std::array<char[8], 3> parsedat_monochrome5, parsedat_monochrome4;
-extern const std::array<char[4], 3> parsedat_monochrome3;
-extern const std::array<char[8], 90> parsedat_bichrome5;
-extern const std::array<char[8], 42> parsedat_bichrome4;
-extern const std::array<char[4], 18> parsedat_bichrome3;
-extern const std::array<char[8], 150> parsedat_trichrome5;
-extern const std::array<char[8], 36> parsedat_trichrome4;
-extern const std::array<char[4], 6> parsedat_trichrome3;
-
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 四暗刻 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -16,7 +7,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		"対々和", "三暗刻",
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
 				1 : 0) == 4);
 		}
 	));
@@ -27,7 +18,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			"四暗刻", "対々和", "三暗刻",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->TotalAnKezi - (
-					((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (*analysis->TsumoAgariFlag)) ?
+					((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
 					1 : 0) == 4) && (
 					(analysis->GameStat->TianHuFlag) ||
 					((analysis->Machi == yaku::yakuCalculator::machiTanki) && (!analysis->MachiInfo.FuritenFlag))
@@ -39,7 +30,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		"三暗刻", yaku::yakuCalculator::Yaku::yval_2han,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
 				1 : 0) == 3);
 		}
 	));
@@ -79,7 +70,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRuleApplied("golden_ladder"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"金梯", get_yaku_han("golden_ladder"),
-			"清一色", "対々和",
+			"清一色", "対々和", "小四連刻", "四連刻", "三連刻", "小三連刻",
 			[wulianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return wulianke(analysis, (const char*)&parsedat_monochrome5[0], 3, 8, 1);
 			}
@@ -92,13 +83,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRule("suurenkoh", "8han_incl_toitoi"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四連刻", yaku::yakuCalculator::Yaku::yval_6han /* 対々和込み8飜 */,
-			"金梯",
+			"小四連刻", "三連刻", "小三連刻",
 			suurenkoh
 		));
 	else if (RuleData::chkRuleApplied("suurenkoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"四連刻", get_yaku_han("suurenkoh"),
-			"金梯", "対々和",
+			"対々和", "小四連刻", "三連刻", "小三連刻",
 			suurenkoh
 		));
 	/* 三連刻 */
@@ -109,8 +100,39 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRuleApplied("sanrenkoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"三連刻", get_yaku_han("sanrenkoh"),
-			"金梯", "四連刻",
+			"小三連刻",
 			sanrenkoh
+		));
+	/* 小四連刻 */
+	if (RuleData::chkRuleApplied("shou_suurenkoh"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"小四連刻", get_yaku_han("shou_suurenkoh"),
+			"三連刻", "小三連刻",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
+					for (int k = 1; k <= 6; k++)
+						if ((analysis->DuiziCount[i + k + 0] >= 1) && (analysis->KeziCount[i + k + 1] >= 1) &&
+							(analysis->KeziCount[i + k + 2] >= 1) && (analysis->DuiziCount[i + k + 3] >= 1))
+							yakuFlag = true;
+				}
+				return yakuFlag;
+			}
+		));
+	/* 小三連刻 */
+	if (RuleData::chkRuleApplied("shou_sanrenkoh"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"小三連刻", get_yaku_han("shou_sanrenkoh"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
+					for (int k = 1; k <= 7; k++)
+						if ((analysis->DuiziCount[i + k + 0] >= 1) && (analysis->DuiziCount[i + k + 1] >= 1) &&
+							(analysis->DuiziCount[i + k + 2] >= 1))
+							yakuFlag = true;
+				}
+				return yakuFlag;
+			}
 		));
 	/* 鏡音レン */
 	if (RuleData::chkRuleApplied("kagamine_len"))

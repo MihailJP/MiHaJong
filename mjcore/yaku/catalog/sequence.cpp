@@ -1,12 +1,5 @@
 #include "../catalog.h"
 
-extern const std::array<char[8], 3> parsedat_monochrome4;
-extern const std::array<char[4], 3> parsedat_monochrome3;
-extern const std::array<char[8], 42> parsedat_bichrome4;
-extern const std::array<char[4], 18> parsedat_bichrome3;
-extern const std::array<char[8], 36> parsedat_trichrome4;
-extern const std::array<char[4], 6> parsedat_trichrome3;
-
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	/* ˆêF‘o—´‰ï */
 	if (RuleData::chkRuleApplied("isshoku_souryuu"))
@@ -167,9 +160,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		"ˆê‹C’ÊŠÑ", yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
 			[ikki_tsuukan](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, nullptr);
-				return (yakuFlag && // ˆê‹C’ÊŠÑ‚ª¬—§‚µ‚Ä‚¢‚Ä
-					(analysis->DuiziCount[EastWind] >= 1) && // “Œ‚Æ
-					(analysis->DuiziCount[NorthWind] >= 1) ); // –k‚ª‚ ‚é
+				return yakuFlag;
 			}
 	));
 	/* 20101204j“Œ‹`VÂX‘S’Ê */

@@ -8,22 +8,23 @@ yaku::yakuCalculator::YakuCatalog* yaku::yakuCalculator::YakuCatalog::Instantiat
 }
 
 // 設定したルールに基づいて役インスタンスを初期化する
-void yaku::yakuCalculator::init() {
+void yaku::yakuCalculator::YakuCatalog::catalogInit::init() {
 	YakuCatalog::Instantiate()->catalog.clear(); // リセット
 	info("役カタログをリセットしました。");
-	YakuCatalog::catalogInit::yakulst_contextual();
-	YakuCatalog::catalogInit::yakulst_irregular();
-	YakuCatalog::catalogInit::yakulst_pinhu();
-	YakuCatalog::catalogInit::yakulst_suit();
-	YakuCatalog::catalogInit::yakulst_yaojiu();
-	YakuCatalog::catalogInit::yakulst_triplet_1();
-	YakuCatalog::catalogInit::yakulst_triplet_2();
-	YakuCatalog::catalogInit::yakulst_triplet_3();
-	YakuCatalog::catalogInit::yakulst_quad();
-	YakuCatalog::catalogInit::yakulst_sequence();
-	YakuCatalog::catalogInit::yakulst_misc();
-	YakuCatalog::catalogInit::yakulst_dora();
+	yakulst_contextual();
+	yakulst_irregular();
+	yakulst_pinhu();
+	yakulst_suit();
+	yakulst_yaojiu();
+	yakulst_triplet_1(); yakulst_triplet_2(); yakulst_triplet_3();
+	yakulst_quad();
+	yakulst_sequence();
+	yakulst_misc();
+	yakulst_dora();
 	info("役カタログの構築を完了しました。");
+}
+void yaku::yakuCalculator::init() {
+	YakuCatalog::catalogInit::init();
 }
 
 // ルール文字列から飜を設定する用
@@ -79,3 +80,33 @@ yaku::yakuCalculator::Yaku::HANFUNC
 	else if (currcnf == "yakuman_unbound") return yaku::yakuCalculator::Yaku::yval_yakuman_dependent;
 	else return yaku::yakuCalculator::Yaku::HANFUNC();
 }
+
+/* 一色の判定 */
+bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALYSIS* const analysis, bool chin_itsu) {
+	if (analysis->shanten[ShantenAnalyzer::shantenAll] >= 0) return false; // 足切り要件：和了ってない
+	const tileCode Tiles[][9] = {
+		{
+			CharacterOne, CharacterTwo,   CharacterThree, CharacterFour, CharacterFive,
+			CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
+		}, {
+			CircleOne,    CircleTwo,      CircleThree,    CircleFour,    CircleFive,
+			CircleSix,    CircleSeven,    CircleEight,    CircleNine,
+		}, {
+			BambooOne,    BambooTwo,      BambooThree,    BambooFour,    BambooFive,
+			BambooSix,    BambooSeven,    BambooEight,    BambooNine,
+		}, {
+			EastWind,     SouthWind,      WestWind,       NorthWind,
+			WhiteDragon,  GreenDragon,    RedDragon,      NoTile,        NoTile,
+		}
+	};
+	unsigned count[4] = {0};
+	for (unsigned k = 0; k < 4; k++)
+		for (unsigned i = 0; i < 9; i++)
+			if (Tiles[k][i] != NoTile)
+				if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
+					count[k] += analysis->KeziCount[Tiles[k][i]] + analysis->ShunziCount[Tiles[k][i]];
+				else
+					count[k] += analysis->TileCount[Tiles[k][i]];
+	return ((count[0] ? 1 : 0) + (count[1] ? 1 : 0) + (count[2] ? 1 : 0) == 1) &&
+		((!chin_itsu) || (count[3] ? false: true));
+};

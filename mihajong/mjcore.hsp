@@ -64,6 +64,9 @@
 #cfunc BasePoint "?BasePointHSP@@YAHXZ"
 #cfunc isAboveBase "?isAboveBase@@YAHQBUGameTable@@H@Z" int, int
 #cfunc isRichiReqSatisfied "?isRichiReqSatisfied@@YAHQBUGameTable@@H@Z" int, int
+#cfunc isDobon "?isDobon@@YAHQBUGameTable@@H@Z" int, int
+/* í«â¡ */
+#cfunc isTeppen "?isTeppen@@YAHQBUGameTable@@H@Z" int, int
 
 /* tileutil.hspÇ©ÇÁÇÃà⁄êA */
 #func lipai "?lipai@@YAXQAUGameTable@@H@Z" int, int

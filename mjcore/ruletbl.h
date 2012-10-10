@@ -49,6 +49,7 @@ private:
 	static std::map<std::string, std::vector<std::string> > ruletags;
 	static std::map<std::string, std::map<std::string, unsigned int> > inverse_ruletags;
 	static std::set<std::string> nonapplicable;
+	static std::array<std::string, RULESIZE/RULES_IN_PAGE> pageCaption;
 	static const char digit[];
 public:
 	__declspec(dllexport) static void configinit();
@@ -70,6 +71,7 @@ public:
 	__declspec(dllexport) static int saveConfigFile(const char* const filename);
 	static std::string getRuleMaskExpr(const std::string& RuleTag);
 	__declspec(dllexport) static int reqFailed(int ruleID, const int* const ruleStat);
+	__declspec(dllexport) static void getPageCaption(char* const caption, int bufsize, int page);
 };
 
 class RuleData::ReqChecker {
