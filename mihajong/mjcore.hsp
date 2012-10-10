@@ -156,6 +156,14 @@
 #cfunc compfuuro_check "?compfuuro_check@aiscript@@SAHXZ"
 #func compfuuro_end "?compfuuro_end@aiscript@@SAXXZ"
 
+/* network.hspからの移植 */
+/*
+#func remotedahai_begin "?remotedahai_begin@RemoteAction@@YAXQAUGameTable@@@Z" int
+#cfunc remotedahai_isfinished "?remotedahai_isfinished@RemoteAction@@YAHXZ"
+#cfunc remotedahai_getdiscard "?remotedahai_getdiscard@RemoteAction@@YAHXZ"
+#func remotedahai_end "?remotedahai_end@RemoteAction@@YAXXZ"
+*/
+
 /* ------------------------------------------------------------------------ */
 
 /*  卓情報へのアクセサ  */

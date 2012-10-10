@@ -6,69 +6,19 @@
 
 /* 接続先の打牌 */
 #module
-#include "const.hsp"
-#include "mjcore.hsp"
+#uselib "mjcore.dll"
+#func remotedahai_begin "?remotedahai_begin@RemoteAction@@YAXQAUGameTable@@@Z" int
+#cfunc remotedahai_isfinished "?remotedahai_isfinished@RemoteAction@@YAHXZ"
+#cfunc remotedahai_getdiscard "?remotedahai_getdiscard@RemoteAction@@YAHXZ"
+#func remotedahai_end "?remotedahai_end@RemoteAction@@YAXXZ"
 #deffunc remotedahai var GameStat, var GameEnv
-	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
-		repeat
-			chatrecv GameStat, GameEnv
-			clientreceive ClientReceived, ReceivedMsg
-			if (ClientReceived) {
-				if (ReceivedMsg == 0x9f) {
-					if (getDisconnectFlag(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 0) {
-						setDisconnectFlag GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
-						warn strf("プレイヤー [%d] の回線切断を検知しました。", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
-					}
-				}
-				break
-			}
-			await 0
-		loop
-	}
-	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
-		repeat
-			chatrecv GameStat, GameEnv
-			serverreceive ServerReceived, ReceivedMsg
-			if (ServerReceived == (IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))-1)) {
-				// 受信失敗の時
-				if (ReceivedMsg == 1023) {
-					repeat NUM_OF_PLAYERS
-						if (IsRemotePlayer(GameEnv, cnt) == ServerReceived+1) {
-							if (getDisconnectFlag(GameStat, cnt) == 0) {
-								setDisconnectFlag GameStat, cnt, 1
-								warn strf("プレイヤー [%d] の回線切断を検知しました。", cnt)
-							}
-						}
-					loop
-					ReceivedMsg = 0x9f
-				}
-				repeat NUM_OF_ACTUAL_PLAYERS-1
-#ifdef SANMAT
-					if (ServerReceived != cnt+1)&&((IsRemotePlayer(GameEnv, 0) == cnt+2)||(IsRemotePlayer(GameEnv, 1) == cnt+2)||(IsRemotePlayer(GameEnv, 2) == cnt+2)) {
-#else
-					if (ServerReceived != cnt+1)&&((IsRemotePlayer(GameEnv, 0) == cnt+2)||(IsRemotePlayer(GameEnv, 1) == cnt+2)||(IsRemotePlayer(GameEnv, 2) == cnt+2)||(IsRemotePlayer(GameEnv, 3) == cnt+2)) {
-#endif
-						sockputc@ SendingMsg, cnt+1+SOCK_GAME
-						if (stat) {error strf("データの送信に失敗しました。クライアント [%d] ステータスコード [%d]", cnt+1, stat)}
-						else {trace strf("クライアント [%d] にデータを送信 [0x%02X]", cnt+1, ReceivedMsg)}
-					}
-				loop
-				break
-			}
-			await 0
-		loop
-	}
-	if ((ReceivedMsg >= 0x60)&&(ReceivedMsg <= 0x6d)) {DiscardTileIndex = ReceivedMsg - 0x60 + DAHAI_TYPE_NORMAL}
-	if ((ReceivedMsg >= 0x70)&&(ReceivedMsg <= 0x7d)) {DiscardTileIndex = ReceivedMsg - 0x70 + DAHAI_TYPE_KAN}
-	if ((ReceivedMsg >= 0x80)&&(ReceivedMsg <= 0x8d)) {DiscardTileIndex = ReceivedMsg - 0x80 + DAHAI_TYPE_KAKAN}
-	if ((ReceivedMsg >= 0x90)&&(ReceivedMsg <= 0x9d)) {DiscardTileIndex = ReceivedMsg - 0x90 + DAHAI_TYPE_RIICHI}
-	if ((ReceivedMsg >= 0xc0)&&(ReceivedMsg <= 0xcd)) {DiscardTileIndex = ReceivedMsg - 0xc0 + DAHAI_TYPE_OPENRIICHI}
-#ifdef SANMAX
-	if ((ReceivedMsg >= 0xd0)&&(ReceivedMsg <= 0xdd)) {DiscardTileIndex = ReceivedMsg - 0xd0 + DAHAI_TYPE_FLOWER}
-#endif
-	if (ReceivedMsg == 0x6e) {DiscardTileIndex = DAHAI_TYPE_KYUUSHU}
-	if (ReceivedMsg == 0x6f) {DiscardTileIndex = DAHAI_TYPE_AGARI}
-	if (ReceivedMsg == 0x9f) {DiscardTileIndex = TSUMOHAI_INDEX + DAHAI_TYPE_NORMAL}
+	remotedahai_begin GameStat
+	repeat
+		if (remotedahai_isfinished()) {break}
+		await 0
+	loop
+	DiscardTileIndex = remotedahai_getdiscard()
+	remotedahai_end
 	return DiscardTileIndex
 #global
 
