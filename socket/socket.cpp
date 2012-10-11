@@ -25,7 +25,7 @@ DLL int listen (int sock_id, int port) try { // サーバー待ち受け開始
 }
 catch (socket_error& err) {
 	errordlg(err); // ダイアログを表示する
-	return 1;
+	return err.error_code();
 }
 
 DLL int connect (int sock_id, const char* const addr, int port) try { // クライアント接続開始
