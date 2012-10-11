@@ -4,7 +4,7 @@
 #include "../socket/socket.h"
 #include "envtbl.h"
 #include <string>
-#include <array>
+#include <sstream>
 
 #define SOCK_CHAT 10
 #define PORT_CHAT 50020
@@ -13,16 +13,18 @@ namespace chat {
 
 	class ChatThread {
 	private:
+		std::ostringstream myChatStream;
 		HANDLE myHandle;
 		volatile bool terminate;
 		std::string myServerAddr;
+		int myClientNum;
 		static DWORD WINAPI thread_loop (LPVOID param);
 		void init();
 		void receive();
 		void send();
 		void cleanup();
 	public:
-		ChatThread (std::string& server_addr);
+		ChatThread (std::string& server_addr, int clientNum);
 		~ChatThread ();
 	};
 	
