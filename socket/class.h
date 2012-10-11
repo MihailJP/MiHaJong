@@ -37,6 +37,7 @@ public:
 	void wait_until_connected (); // 文字通りのことをやる
 	unsigned char getc (); // 読み込み(非同期)
 	unsigned char syncgetc (); // 読み込み(同期)
+	std::string gets (); // 一行読み込み
 	void putc (unsigned char byte); // 書き込み
 	void puts (const std::string& str); // 文字列書き込み
 	void disconnect (); // 接続を切る
@@ -54,6 +55,7 @@ public:
 	void chkError (); // エラーをチェックし、もしエラーだったら例外を投げる
 	unsigned char read (); // 1バイト読み込み
 	void write (unsigned char byte); // 1バイト書き込み
+	std::string readline (); // 1行読み込み
 protected:
 	enum errorType {errNone, errListen, errAccept, errConnection, errRecv, errSend};
 	static const unsigned int bufsize = 65536;

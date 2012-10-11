@@ -93,6 +93,16 @@ unsigned char mihajong_socket::Sock::syncgetc () { // “Ç‚İ‚İ(“¯Šú)
 	}
 }
 
+std::string mihajong_socket::Sock::gets () { // NewLine‚Ü‚Å“Ç‚İ‚İ
+	if (isServer) {
+		threadPtr.server->chkError();
+		return threadPtr.server->readline();
+	} else {
+		threadPtr.client->chkError();
+		return threadPtr.client->readline();
+	}
+}
+
 void mihajong_socket::Sock::putc (unsigned char byte) { // ‘‚«‚İ
 	if (isServer) {
 		threadPtr.server->write(byte);
@@ -230,6 +240,25 @@ unsigned char mihajong_socket::Sock::network_thread::read () { // 1ƒoƒCƒg“Ç‚İ‚
 	ReleaseMutex(myRecvQueueMutex); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
 	if (empty) throw queue_empty(); // ‹ó‚¾‚Á‚½‚ç—áŠO
 	else return byte; // ‚»‚¤‚Å‚È‚¯‚ê‚Îæ‚èo‚µ‚½’l‚ğ•Ô‚·
+}
+
+std::string mihajong_socket::Sock::network_thread::readline () { // 1s“Ç‚İ‚İ
+	std::string line = ""; bool nwl_not_found = true;
+	WaitForSingleObject(myRecvQueueMutex, 0); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
+	auto tmpMailBox = myMailBox; // ƒLƒ…[‚ğì‹Æ—pƒRƒs[
+	while (!tmpMailBox.empty()) {
+		unsigned char tmpchr[sizeof(int)] = {0,};
+		tmpchr[0] = tmpMailBox.front(); tmpMailBox.pop();
+		if (*tmpchr == '\n') {
+			nwl_not_found = false; break;
+		} else if (*tmpchr != '\r') { // CR is just ignored
+			line += std::string(reinterpret_cast<char*>(tmpchr));
+		}
+	}
+	if (!nwl_not_found) myMailBox = tmpMailBox; // ƒLƒ…[‚ğƒRƒ~ƒbƒg
+	ReleaseMutex(myRecvQueueMutex); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
+	if (nwl_not_found) throw queue_empty(); // ‹ó‚¾‚Á‚½‚ç—áŠO
+	else return line; // ‚»‚¤‚Å‚È‚¯‚ê‚ÎŒ‹‰Ê‚ğ•Ô‚·
 }
 
 void mihajong_socket::Sock::network_thread::write (unsigned char byte) { // 1ƒoƒCƒg‘‚«‚İ

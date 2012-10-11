@@ -35,6 +35,7 @@ DLL int connected (int sock_id); // 接続されているか確認
 DLL int putc (int sock_id, int byte); // 1バイト送信
 DLL int puts (int sock_id, const char* const str); // 文字列送信
 DLL int getc (int sock_id); // 1バイト受信
+DLL int gets (int sock_id, char* const stringline, int bufsize); // 1行受信
 DLL int hangup (int sock_id); // 接続を切る
 DLL int bye (); // ソケットのクリンナップ
 

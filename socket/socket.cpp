@@ -69,7 +69,19 @@ DLL int getc (int sock_id) try { // 1バイト受信
 catch (queue_empty&) { // まだ受信するデータがない場合
 	return -1;
 }
-catch (socket_error& err) { // 送信失敗時
+catch (socket_error& err) { // 受信失敗時
+	errordlg(err); // ダイアログを表示する
+	return -(err.error_code());
+}
+
+DLL int gets (int sock_id, char* const stringline, int bufsize) try { // 1行受信
+	strcpy_s(stringline, bufsize, sockets[sock_id]->gets().c_str());
+	return 0;
+}
+catch (queue_empty&) { // まだ受信するデータがない場合
+	return -1;
+}
+catch (socket_error& err) { // 受信失敗時
 	errordlg(err); // ダイアログを表示する
 	return -(err.error_code());
 }
