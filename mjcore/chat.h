@@ -11,7 +11,20 @@
 
 namespace chat {
 
-
+	class ChatThread {
+	private:
+		HANDLE myHandle;
+		volatile bool terminate;
+		std::string myServerAddr;
+		static DWORD WINAPI thread_loop (LPVOID param);
+		void init();
+		void receive();
+		void send();
+		void cleanup();
+	public:
+		ChatThread (std::string& server_addr);
+		~ChatThread ();
+	};
 	
 }
 
