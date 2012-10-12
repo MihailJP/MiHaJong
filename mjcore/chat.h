@@ -15,6 +15,7 @@ namespace chat {
 	class ChatThread {
 	private:
 		static const int bufsize = 65536;
+		CRITICAL_SECTION streamLock;
 		std::ostringstream myChatStream;
 		HANDLE myHandle;
 		volatile bool terminate;

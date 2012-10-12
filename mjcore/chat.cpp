@@ -12,6 +12,7 @@ DWORD WINAPI ChatThread::thread_loop (LPVOID param) {
 	return S_OK;
 }
 ChatThread::ChatThread (std::string& server_addr, int clientNum) {
+	InitializeCriticalSection(&streamLock);
 	myChatStream.str(""); terminate = false;
 	myServerAddr = server_addr; myClientNum = clientNum;
 	myHandle = CreateThread(nullptr, 0, thread_loop, this, 0, nullptr);
@@ -24,6 +25,7 @@ ChatThread::~ChatThread () {
 		if (exitcode != STILL_ACTIVE) break;
 		else Sleep(0);
 	}
+	DeleteCriticalSection(&streamLock);
 }
 
 void ChatThread::init() {
@@ -87,14 +89,17 @@ void ChatThread::receive() {
 
 void ChatThread::chatappend(const std::string& buf) {
 	int tmpPlayer = static_cast<int>(buf[0] - '0');
-	if ((tmpPlayer >= 0) && (tmpPlayer <= ACTUAL_PLAYERS))
+	if ((tmpPlayer >= 0) && (tmpPlayer <= ACTUAL_PLAYERS)) {
+		EnterCriticalSection(&streamLock);
 		myChatStream << EnvTable::Instantiate()->PlayerDat[tmpPlayer].PlayerName <<
-		"(" << windName(playerwind(&GameStat, tmpPlayer, GameStat.GameRound)) << ") : " <<
-		std::string(buf.begin() + 1, buf.end()) <<
+			"(" << windName(playerwind(&GameStat, tmpPlayer, GameStat.GameRound)) << ") : " <<
+			std::string(buf.begin() + 1, buf.end()) <<
 #ifdef _WIN32
-		"\r" <<
+			"\r" <<
 #endif
-		std::endl;
+			std::endl;
+		LeaveCriticalSection(&streamLock);
+	}
 }
 
 } /* namespace */
