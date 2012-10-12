@@ -7,6 +7,7 @@ DWORD WINAPI ChatThread::thread_loop (LPVOID param) {
 	while (!(reinterpret_cast<ChatThread*>(param)->terminate)) {
 		reinterpret_cast<ChatThread*>(param)->receive();
 		reinterpret_cast<ChatThread*>(param)->send();
+		Sleep(0);
 	}
 	reinterpret_cast<ChatThread*>(param)->cleanup();
 	return S_OK;
@@ -139,6 +140,11 @@ void ChatThread::send() {
 		sendQueue.pop();
 	}
 	LeaveCriticalSection(&sendQueueLock);
+}
+
+void ChatThread::cleanup() {
+	for (int i = 0; i < PLAYERS; i++) // 開けてないソケットを閉じようとしても安全になるようにしてる
+		mihajong_socket::hangup(SOCK_CHAT + i);
 }
 
 } /* namespace */
