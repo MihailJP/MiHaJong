@@ -515,7 +515,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 						tCode[k + 1] = (tileCode)(k / 2 * TILE_SUIT_STEP + num2);
 					}
 					if (yaku::countingFacility::countSpecMentz(
-						analysis->MianziDat, tCode, TILE_SUIT_HONORS / TILE_SUIT_STEP * 2, nullptr, 0, false))
+						analysis->MianziDat, tCode, TILE_SUIT_HONORS / TILE_SUIT_STEP * 2, nullptr, 0, false) == SIZE_OF_MELD_BUFFER)
 						yakuFlag = true;
 				}
 				return yakuFlag;

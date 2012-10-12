@@ -558,7 +558,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 						else if (analysis->KeziCount[i+2] >= 1) ++count;
 					}
 				}
-				return ++count;
+				return count;
 			};
 		/* —¼Žl‹Aˆê */
 		if (RuleData::chkRuleApplied("double_four_into_one"))

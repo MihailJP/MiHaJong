@@ -548,7 +548,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 					int yakuTmpFlag = 0;
 					for (int k = 1; k <= 7; k++)
 						if ((analysis->ShunziCount[i % TILE_SUIT_HONORS + k] >= 1) &&
-							(analysis->ShunziCount[(i + TILE_SUIT_HONORS) % TILE_SUIT_HONORS + k] >= 1))
+							(analysis->ShunziCount[(i + TILE_SUIT_STEP) % TILE_SUIT_HONORS + k] >= 1))
 								++yakuTmpFlag;
 					if (yakuTmpFlag == 2) yakuFlag = true;
 				}
