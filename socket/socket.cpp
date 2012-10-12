@@ -87,7 +87,8 @@ catch (socket_error& err) { // ŽóMŽ¸”sŽž
 }
 
 DLL int hangup (int sock_id) { // Ú‘±‚ðØ‚é
-	sockets[sock_id]->disconnect();
+	delete sockets[sock_id];
+	sockets[sock_id] = nullptr;
 	return 0;
 }
 
