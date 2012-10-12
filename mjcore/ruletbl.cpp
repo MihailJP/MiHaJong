@@ -34,10 +34,10 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 				pageCaption[atoi((*k)[0].c_str()) / RULES_IN_PAGE] = std::string((*k)[4]);
 			ruletags[nomenPartisRegulae].clear(); inverse_ruletags[nomenPartisRegulae].clear();
 			for (unsigned int index = 11; index < (*k).size(); ++index) {
-				if ((*k)[index] == ">>>") { // 飛ばすように指定されているなら
+				/*if ((*k)[index] == ">>>") { // 飛ばすように指定されているなら
 					ruletags[nomenPartisRegulae].push_back("");
 				}
-				else if (!(*k)[index].empty()) { // 存在するなら
+				else*/ if (!(*k)[index].empty()) { // 存在するなら
 					ruletags[nomenPartisRegulae].push_back((*k)[index]); // 順方向
 					inverse_ruletags[nomenPartisRegulae][(*k)[index]] = index - 11; // 逆方向
 				}
