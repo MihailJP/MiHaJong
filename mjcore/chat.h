@@ -6,6 +6,7 @@
 #include "func.h"
 #include <string>
 #include <sstream>
+#include <queue>
 
 #define SOCK_CHAT 10
 #define PORT_CHAT 50020
@@ -17,6 +18,8 @@ namespace chat {
 		static const int bufsize = 65536;
 		CRITICAL_SECTION streamLock;
 		std::ostringstream myChatStream;
+		CRITICAL_SECTION sendQueueLock;
+		std::queue<std::string> sendQueue;
 		HANDLE myHandle;
 		volatile bool terminate;
 		std::string myServerAddr;

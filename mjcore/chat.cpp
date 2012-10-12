@@ -13,6 +13,7 @@ DWORD WINAPI ChatThread::thread_loop (LPVOID param) {
 }
 ChatThread::ChatThread (std::string& server_addr, int clientNum) {
 	InitializeCriticalSection(&streamLock);
+	InitializeCriticalSection(&sendQueueLock);
 	myChatStream.str(""); terminate = false;
 	myServerAddr = server_addr; myClientNum = clientNum;
 	myHandle = CreateThread(nullptr, 0, thread_loop, this, 0, nullptr);
@@ -26,6 +27,7 @@ ChatThread::~ChatThread () {
 		else Sleep(0);
 	}
 	DeleteCriticalSection(&streamLock);
+	DeleteCriticalSection(&sendQueueLock);
 }
 
 void ChatThread::init() {
@@ -100,6 +102,43 @@ void ChatThread::chatappend(const std::string& buf) {
 			std::endl;
 		LeaveCriticalSection(&streamLock);
 	}
+}
+
+void ChatThread::send() {
+	EnterCriticalSection(&sendQueueLock);
+	if (!sendQueue.empty()) {
+		char buf[bufsize] = {0}; buf[0] = GameStat.PlayerID + '0';
+		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
+			for (int k = 2; k <= 4; k++) {
+				if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
+					(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
+					(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
+					((!chkGameType(&GameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
+						strcat_s(buf, bufsize, sendQueue.front().c_str());
+						strcat_s(buf, bufsize,
+#ifdef _WIN32
+							"\r\n"
+#else
+							"\n"
+#endif
+							);
+						mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
+				}
+			}
+		} else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
+			strcat_s(buf, bufsize, sendQueue.front().c_str());
+			strcat_s(buf, bufsize,
+#ifdef _WIN32
+				"\r\n"
+#else
+				"\n"
+#endif
+				);
+			mihajong_socket::puts(SOCK_CHAT, buf);
+		}
+		sendQueue.pop();
+	}
+	LeaveCriticalSection(&sendQueueLock);
 }
 
 } /* namespace */
