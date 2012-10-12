@@ -104,7 +104,7 @@ bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALY
 		for (unsigned i = 0; i < 9; i++)
 			if (Tiles[k][i] != NoTile)
 				if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
-					count[k] += analysis->KeziCount[Tiles[k][i]] + analysis->ShunziCount[Tiles[k][i]];
+					count[k] += analysis->DuiziCount[Tiles[k][i]] + analysis->ShunziCount[Tiles[k][i]];
 				else
 					count[k] += analysis->TileCount[Tiles[k][i]];
 	return ((count[0] ? 1 : 0) + (count[1] ? 1 : 0) + (count[2] ? 1 : 0) == 1) &&
