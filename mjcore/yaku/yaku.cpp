@@ -220,7 +220,7 @@ void yaku::yakuCalculator::countDora
 			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, label);
 			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, " ");
 			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, intstr(quantity).c_str());
-#ifdef WIN32
+#ifdef _WIN32
 			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
 			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\r\n");
 #else
@@ -424,14 +424,14 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 普通の役の時 */
 			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
-#ifdef WIN32
+#ifdef _WIN32
 			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
 #else
 			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
 #endif
 			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
 				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str());
-#ifdef WIN32
+#ifdef _WIN32
 			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "飜\r\n");
 #else
 			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "飜\n");
@@ -441,7 +441,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 満貫 */
 			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
-#ifdef WIN32
+#ifdef _WIN32
 			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
 			char hstr[16]; sprintf_s(hstr, "%d\r\n",
 #else
@@ -455,7 +455,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 役満 */
 			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
-#ifdef WIN32
+#ifdef _WIN32
 			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
 			char hstr[16]; sprintf_s(hstr, "%d\r\n",
 #else
@@ -673,14 +673,14 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 				strcpy_s((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
 					yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
 					YAKUSTAT::nameBufSize,
-#ifdef WIN32
+#ifdef _WIN32
 					"十三不搭\r\n");
 #else
 					"十三不搭\n");
 #endif
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
 					strcpy_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
-#ifdef WIN32
+#ifdef _WIN32
 						(RuleData::chkRule("shiisan_puutaa", "mangan")) ? "５飜\r\n" : "13飜\r\n");
 #else
 						(RuleData::chkRule("shiisan_puutaa", "mangan")) ? "５飜\n" : "13飜\n");
@@ -697,14 +697,14 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 				strcpy_s((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
 					yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
 					YAKUSTAT::nameBufSize,
-#ifdef WIN32
+#ifdef _WIN32
 					"十三無靠\r\n");
 #else
 					"十三無靠\n");
 #endif
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
 					strcpy_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
-#ifdef WIN32
+#ifdef _WIN32
 						"13飜\r\n");
 #else
 						"13飜\n");
