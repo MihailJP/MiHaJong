@@ -49,4 +49,52 @@ void ChatThread::init() {
 	}
 }
 
+void ChatThread::receive() {
+	if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
+		for (int i = 0; i < PLAYERS; i++) {
+			if (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag >= 2) {
+				char buf[bufsize] = {0};
+				int stat = mihajong_socket::gets(
+					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag,
+					buf, bufsize);
+				if (stat == 0) {
+					for (int k = 2; k <= 4; k++) {
+						if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
+							(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
+							(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
+							((!chkGameType(&GameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
+								strcat_s(buf, bufsize,
+#ifdef _WIN32
+									"\r\n"
+#else
+									"\n"
+#endif
+									);
+								mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
+						}
+						chatappend(buf);
+					}
+				}
+			}
+		}
+	}
+	else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
+		char buf[bufsize] = {0};
+		int stat = mihajong_socket::gets(SOCK_CHAT, buf, bufsize);
+		if (stat == 0) chatappend(buf);
+	}
+}
+
+void ChatThread::chatappend(const std::string& buf) {
+	int tmpPlayer = static_cast<int>(buf[0] - '0');
+	if ((tmpPlayer >= 0) && (tmpPlayer <= ACTUAL_PLAYERS))
+		myChatStream << EnvTable::Instantiate()->PlayerDat[tmpPlayer].PlayerName <<
+		"(" << windName(playerwind(&GameStat, tmpPlayer, GameStat.GameRound)) << ") : " <<
+		std::string(buf.begin() + 1, buf.end()) <<
+#ifdef _WIN32
+		"\r" <<
+#endif
+		std::endl;
+}
+
 } /* namespace */

@@ -3,6 +3,7 @@
 
 #include "../socket/socket.h"
 #include "envtbl.h"
+#include "func.h"
 #include <string>
 #include <sstream>
 
@@ -13,12 +14,14 @@ namespace chat {
 
 	class ChatThread {
 	private:
+		static const int bufsize = 65536;
 		std::ostringstream myChatStream;
 		HANDLE myHandle;
 		volatile bool terminate;
 		std::string myServerAddr;
 		int myClientNum;
 		static DWORD WINAPI thread_loop (LPVOID param);
+		void chatappend(const std::string& buf);
 		void init();
 		void receive();
 		void send();
