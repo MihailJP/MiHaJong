@@ -8,7 +8,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		const tileCode* const targetShunz, int numOfShunz, bool noDui) -> bool {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
 				return (yaku::countingFacility::countSpecMentz
-					(analysis->MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, noDui)
+					(analysis->MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, !noDui)
 					== SIZE_OF_MELD_BUFFER - (noDui ? 0 : 1));
 			else if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1)
 				return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez, numOfKez)
