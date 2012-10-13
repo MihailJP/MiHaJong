@@ -8,6 +8,7 @@
 #include "filesel.h"
 #include "../gametbl.h"
 #include "../logging.h"
+#include "../chat.h"
 
 class aiscript::table::playertable {
 private:
