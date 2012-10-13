@@ -12,12 +12,17 @@ DWORD WINAPI ChatThread::thread_loop (LPVOID param) {
 	reinterpret_cast<ChatThread*>(param)->cleanup();
 	return S_OK;
 }
+StreamLog::StreamLog () {
+	myChatStream.str("");
+}
 ChatThread::ChatThread (std::string& server_addr, int clientNum) {
 	InitializeCriticalSection(&streamLock);
 	InitializeCriticalSection(&sendQueueLock);
 	myChatStream.str(""); terminate = false;
 	myServerAddr = server_addr; myClientNum = clientNum;
 	myHandle = CreateThread(nullptr, 0, thread_loop, this, 0, nullptr);
+}
+StreamLog::~StreamLog () {
 }
 ChatThread::~ChatThread () {
 	terminate = true;
@@ -147,6 +152,9 @@ void ChatThread::cleanup() {
 		mihajong_socket::hangup(SOCK_CHAT + i);
 }
 
+std::string StreamLog::getlog () {
+	return std::string(myChatStream.str());
+}
 std::string ChatThread::getlog () {
 	EnterCriticalSection(&streamLock);
 	std::string& logbuf = myChatStream.str();
@@ -154,6 +162,9 @@ std::string ChatThread::getlog () {
 	return std::string(logbuf);
 }
 
+void StreamLog::sendstr (const std::string& msg) {
+	sendQueue.push(msg);
+}
 void ChatThread::sendstr (const std::string& msg) {
 	EnterCriticalSection(&sendQueueLock);
 	sendQueue.push(msg);
@@ -162,10 +173,13 @@ void ChatThread::sendstr (const std::string& msg) {
 
 // -------------------------------------------------------------------------
 
-ChatThread* chatobj = nullptr;
+StreamLog* chatobj = nullptr;
 
 __declspec(dllexport) void initchat (const char* const server_addr, int clientNum) {
-	chatobj = new ChatThread(std::string(server_addr), clientNum);
+	if ((EnvTable::Instantiate()->GameMode == EnvTable::Server) ||
+		(EnvTable::Instantiate()->GameMode == EnvTable::Client))
+		chatobj = new ChatThread(std::string(server_addr), clientNum);
+	else chatobj = new StreamLog();
 }
 __declspec(dllexport) void appendchat (const char* const chatstr) {
 	chatobj->sendstr(chatstr);

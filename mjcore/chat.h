@@ -13,13 +13,21 @@
 
 namespace chat {
 
-	class ChatThread {
-	private:
+	class StreamLog {
+	protected:
 		static const int bufsize = 65536;
-		CRITICAL_SECTION streamLock;
 		std::ostringstream myChatStream;
-		CRITICAL_SECTION sendQueueLock;
 		std::queue<std::string> sendQueue;
+	public:
+		StreamLog ();
+		virtual ~StreamLog ();
+		virtual std::string getlog ();
+		virtual void sendstr (const std::string& msg);
+	};
+	class ChatThread : public StreamLog {
+	private:
+		CRITICAL_SECTION streamLock;
+		CRITICAL_SECTION sendQueueLock;
 		HANDLE myHandle;
 		volatile bool terminate;
 		std::string myServerAddr;
@@ -37,7 +45,7 @@ namespace chat {
 		void sendstr (const std::string& msg);
 	};
 	
-	extern ChatThread* chatobj;
+	extern StreamLog* chatobj;
 
 	__declspec(dllexport) void initchat (const char* const server_addr, int clientNum);
 	__declspec(dllexport) void appendchat (const char* const chatstr);
