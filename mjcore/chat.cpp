@@ -147,4 +147,36 @@ void ChatThread::cleanup() {
 		mihajong_socket::hangup(SOCK_CHAT + i);
 }
 
+std::string ChatThread::getlog () {
+	EnterCriticalSection(&streamLock);
+	std::string& logbuf = myChatStream.str();
+	LeaveCriticalSection(&streamLock);
+	return std::string(logbuf);
+}
+
+void ChatThread::sendstr (const std::string& msg) {
+	EnterCriticalSection(&sendQueueLock);
+	sendQueue.push(msg);
+	LeaveCriticalSection(&sendQueueLock);
+}
+
+// -------------------------------------------------------------------------
+
+ChatThread* chatobj = nullptr;
+
+__declspec(dllexport) void initchat (const char* const server_addr, int clientNum) {
+	chatobj = new ChatThread(std::string(server_addr), clientNum);
+}
+__declspec(dllexport) void appendchat (const char* const chatstr) {
+	chatobj->sendstr(chatstr);
+}
+__declspec(dllexport) void getchatlog (const char* chatstr, int* const length) {
+	static std::string chatlog = chatobj->getlog();
+	chatstr = chatlog.c_str();
+	*length = std::strlen(chatstr);
+}
+__declspec(dllexport) void closechat () {
+	delete chatobj; chatobj = nullptr;
+}
+
 } /* namespace */

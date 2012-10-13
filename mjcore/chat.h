@@ -33,8 +33,17 @@ namespace chat {
 	public:
 		ChatThread (std::string& server_addr, int clientNum);
 		~ChatThread ();
+		std::string getlog ();
+		void sendstr (const std::string& msg);
 	};
 	
+	extern ChatThread* chatobj;
+
+	__declspec(dllexport) void initchat (const char* const server_addr, int clientNum);
+	__declspec(dllexport) void appendchat (const char* const chatstr);
+	__declspec(dllexport) void getchatlog (const char* chatstr, int* const length);
+	__declspec(dllexport) void closechat ();
+
 }
 
 #endif
