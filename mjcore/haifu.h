@@ -12,6 +12,7 @@
 #include "envtbl.h"
 #include "version.h"
 #include "discard.h"
+#include "chat.h"
 
 // 今のところここでしか使ってないから仮置き。
 // 移植が進んで別のところでも使うようなら移動します

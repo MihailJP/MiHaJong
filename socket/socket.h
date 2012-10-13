@@ -1,7 +1,9 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
+#ifndef _WINSOCKAPI_
 #include <WinSock2.h>
+#endif
 #include <cstdarg>
 
 #define NUM_OF_SOCKETS 32

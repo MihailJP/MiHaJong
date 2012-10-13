@@ -4,7 +4,9 @@
 #include <string>
 #include <cstdint>
 #include <queue>
+#ifndef _WINSOCKAPI_
 #include <WinSock2.h>
+#endif
 #include "except.h"
 
 namespace mihajong_socket {

@@ -701,7 +701,12 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, PL
 			((gameStat->Player[player].playerChip >= 0) ? "+" : "") <<
 			(int)gameStat->Player[player].playerChip;
 
-	//chatappend "*** "+getPlayerName(GameEnv, tmpcnt)+"("+windName(cnt)+") "+haifutmpscore+"\n"
+	{
+		std::ostringstream p;
+		p << "*** " << EnvTable::Instantiate()->PlayerDat[player].PlayerName << "(" <<
+			windName(wind) << ") " << o.str();
+		chat::chatobj->sendstr(p.str());
+	}
 					
 	// 出力
 	haifuBuffer << windName(wind) << " " <<
@@ -809,7 +814,9 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	fileout.open((filename1.str() + std::string("_haifu_") +
 		filename2.str() + std::string(".txt")).c_str());
 	fileout << haifuBuffer.str(); fileout.close();
-	/* チャットログは未実装です */
+	fileout.open((filename1.str() + std::string("_chat_") +
+		filename2.str() + std::string(".txt")).c_str());
+	fileout << chat::chatobj->getlog(); fileout.close();
 	fileout.open((filename1.str() + std::string("_haifu_") +
 		filename2.str() + std::string(".htm")).c_str());
 	fileout << HThaifuBuffer.str(); fileout.close();
