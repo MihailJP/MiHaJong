@@ -509,7 +509,9 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	std::for_each(YakuCatalog::Instantiate()->catalog.begin(), // 役カタログの最初から
 		YakuCatalog::Instantiate()->catalog.end(), // カタログの末尾まで
 		[&yakuHan, analysis, &suppression, &yakuOrd](Yaku& yaku) -> void { // 役ごとに判定処理
+			//trace(yaku.getName().c_str());
 			if (yaku.checkYaku(analysis)) { // 成立条件を満たしていたら
+				//trace("...は、成立しています。");
 				yakuHan[yaku.getName()] = yaku.getHan(analysis); // 飜数を記録
 				yakuOrd.push_back(yaku.getName()); // 順序も記録しておく
 				std::set<std::string> sup = yaku.getSuppression();

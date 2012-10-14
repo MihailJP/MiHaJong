@@ -287,7 +287,7 @@ SHANTEN ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, PL
 	// ˆÈ‰ºAˆê–‡‚¸‚Â’²‚×‚é
 	for (int i = 0; i < 6; i++) {
 		Int8ByTile tileCountTmp;
-		for (int j = 0; j < TILE_CODE_MAXIMUM; j++) tileCountTmp[j] = tileCount[j];
+		for (int j = 0; j < TILE_NONFLOWER_MAX; j++) tileCountTmp[j] = tileCount[j];
 		tileCode CivilWarPai[NUM_OF_TILES_IN_HAND] = {
 			NoTile, NoTile, NoTile, NoTile,
 			NoTile, NoTile, NoTile, NoTile,
@@ -338,7 +338,7 @@ SHANTEN ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PLAY
 
 	// ˆÈ‰ºAˆê–‡‚¸‚Â’²‚×‚é
 	Int8ByTile tileCountTmp;
-	for (int i = 0; i < TILE_CODE_MAXIMUM; i++) tileCountTmp[i] = tileCount[i];
+	for (int i = 0; i < TILE_NONFLOWER_MAX; i++) tileCountTmp[i] = tileCount[i];
 	tileCode syzygyPai[NUM_OF_TILES_IN_HAND] = {
 		CircleOne, CircleOne, CircleTwo,
 		CircleThree, CircleThree, CircleFour,

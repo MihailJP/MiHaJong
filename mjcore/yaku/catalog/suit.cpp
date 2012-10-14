@@ -426,7 +426,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 						flag[analysis->MianziDat[k].tile / TILE_SUIT_STEP] = true;
 			} else if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1) {
 				for (int k = 1; k < TILE_SUIT_HONORS; k++)
-					if (analysis->TileCount[k] > 0) flag[k] = true;
+					if (analysis->TileCount[k] > 0) flag[k / TILE_SUIT_STEP] = true;
 			}
 			return (
 				(flag[TILE_SUIT_CHARACTERS / TILE_SUIT_STEP] && flag[TILE_SUIT_CIRCLES / TILE_SUIT_STEP] && !flag[TILE_SUIT_BAMBOOS / TILE_SUIT_STEP]) ||
