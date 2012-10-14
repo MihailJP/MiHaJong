@@ -17,18 +17,19 @@ namespace chat {
 	protected:
 		static const int bufsize = 65536;
 		std::ostringstream myChatStream;
-		std::queue<std::string> sendQueue;
 		HWND logWindow;
 	public:
 		StreamLog ();
 		virtual ~StreamLog ();
 		virtual std::string getlog ();
+		virtual void sysmsg (const std::string& msg);
 		virtual void sendstr (const std::string& msg);
 		virtual void updateWindow ();
 		void setLogWindow (HWND wndHandle);
 	};
 	class ChatThread : public StreamLog {
 	private:
+		std::queue<std::string> sendQueue;
 		CRITICAL_SECTION streamLock;
 		CRITICAL_SECTION sendQueueLock;
 		HANDLE myHandle;
@@ -45,6 +46,7 @@ namespace chat {
 		ChatThread (std::string& server_addr, int clientNum);
 		~ChatThread ();
 		std::string getlog ();
+		void sysmsg (const std::string& msg);
 		void sendstr (const std::string& msg);
 		void updateWindow ();
 	};
@@ -53,11 +55,10 @@ namespace chat {
 
 	__declspec(dllexport) void initchat (const char* const server_addr, int clientNum);
 	__declspec(dllexport) void appendchat (const char* const chatstr);
-	__declspec(dllexport) void getchatlog (const char* chatstr, int* const length);
+	__declspec(dllexport) void sendchat (const char* const chatstr);
 	__declspec(dllexport) void closechat ();
 
 	__declspec(dllexport) void setlogwnd (HWND window);
-	__declspec(dllexport) void updatelogwnd ();
 }
 
 #endif

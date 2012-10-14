@@ -108,6 +108,7 @@ void ChatThread::chatappend(const std::string& buf) {
 #endif
 			std::endl;
 		LeaveCriticalSection(&streamLock);
+		updateWindow();
 	}
 }
 
@@ -163,8 +164,26 @@ std::string ChatThread::getlog () {
 	return std::string(logbuf);
 }
 
+void StreamLog::sysmsg(const std::string& str) {
+	myChatStream << str <<
+#ifdef _WIN32
+		"\r" <<
+#endif
+		std::endl;
+	updateWindow();
+}
+void ChatThread::sysmsg(const std::string& str) {
+	EnterCriticalSection(&streamLock);
+	myChatStream << str <<
+#ifdef _WIN32
+		"\r" <<
+#endif
+		std::endl;
+	LeaveCriticalSection(&streamLock);
+	updateWindow();
+}
+
 void StreamLog::sendstr (const std::string& msg) {
-	sendQueue.push(msg);
 }
 void ChatThread::sendstr (const std::string& msg) {
 	EnterCriticalSection(&sendQueueLock);
@@ -203,12 +222,10 @@ __declspec(dllexport) void initchat (const char* const server_addr, int clientNu
 	else chatobj = new StreamLog();
 }
 __declspec(dllexport) void appendchat (const char* const chatstr) {
-	chatobj->sendstr(chatstr);
+	chatobj->sysmsg(chatstr);
 }
-__declspec(dllexport) void getchatlog (const char* chatstr, int* const length) {
-	static std::string chatlog = chatobj->getlog();
-	chatstr = chatlog.c_str();
-	*length = std::strlen(chatstr);
+__declspec(dllexport) void sendchat (const char* const chatstr) {
+	chatobj->sendstr(chatstr);
 }
 __declspec(dllexport) void closechat () {
 	delete chatobj; chatobj = nullptr;
@@ -216,9 +233,6 @@ __declspec(dllexport) void closechat () {
 
 __declspec(dllexport) void setlogwnd (HWND window) {
 	chatobj->setLogWindow(window);
-}
-__declspec(dllexport) void updatelogwnd () {
-	chatobj->updateWindow();
 }
 
 } /* namespace */
