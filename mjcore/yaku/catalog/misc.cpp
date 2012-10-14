@@ -211,7 +211,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					BambooTwo, BambooThree, BambooFour, BambooFive,
 					BambooSix, BambooSeven, BambooNine, SouthWind,
 				};
-				return chktiles(analysis, kezi, 7, kezi, 4, false) &&
+				return chktiles(analysis, kezi, 8, kezi, 4, false) &&
 					(analysis->TileCount[SouthWind] > 0);
 			}
 		));
@@ -566,7 +566,6 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				"両四帰一", get_yaku_han("double_four_into_one"),
 				"四帰一",
 				[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
-					bool yakuFlag = false;
 					return (suukuiyii(analysis) == 2);
 				}
 			));
@@ -575,7 +574,6 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				"四帰一", get_yaku_han("four_into_one"),
 				[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
-					bool yakuFlag = false;
 					return (suukuiyii(analysis) == 1);
 				}
 			));
