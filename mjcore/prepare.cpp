@@ -220,7 +220,7 @@ void SeatShuffler::shuffleSeat () {
 		// サーバーであれば結果を送信
 		if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
 			for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
-				mihajong_socket::putc(i, TmpPosition[i]);
+				mihajong_socket::server::send(TmpPosition[i]);
 	} else {
 		// クライアントであれば受信する
 		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++) {

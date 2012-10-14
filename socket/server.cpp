@@ -69,6 +69,7 @@ namespace server {
 			sendstr(playerName[i]); // 名前を送信
 		for (unsigned i = 0; i < (RULESIZE/RULE_IN_LINE); ++i)
 			sendstr(ruleConf[i]); // ルールを送信
+		finished = true;
 		return S_OK;
 	}
 
@@ -119,11 +120,11 @@ namespace server {
 
 	DLL void send (unsigned char SendingMsg) { // サーバーからの送信
 		for (unsigned int i = 1; i < NumberOfPlayers; ++i)
-			if (sockets[i]) sockets[i]->putc(SendingMsg);
+			if (sockets[i]&&(sockets[i]->connected())) sockets[i]->putc(SendingMsg);
 	}
 	void sendstr (const std::string& sendingStr) { // サーバーからの文字列送信
 		for (unsigned int i = 1; i < NumberOfPlayers; ++i)
-			if (sockets[i]) putString(i, sendingStr);
+			if (sockets[i]&&(sockets[i]->connected())) putString(i, sendingStr);
 	}
 	DLL void send (int SendingMsg, void*) { // サーバーからの送信
 		send((unsigned char)SendingMsg);

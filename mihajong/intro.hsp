@@ -83,7 +83,9 @@
 	vanish
 	objsize 440, 40
 	pos 200, 270: colorbutton gosub "‚±‚Ì–ÊŽq‚ÅŠJŽn‚·‚é", *modesel2s, -1, 0xffffff
-	s_server_start InputPlayerName, PORT_GAME, NUM_OF_ACTUAL_PLAYERS, RuleConf
+	dim RulePtr, length(RuleConf)
+	repeat length(RuleConf): RulePtr(cnt) = varptr(RuleConf(cnt)): loop
+	s_server_start InputPlayerName, PORT_GAME, NUM_OF_ACTUAL_PLAYERS, RulePtr
 	repeat
 		redraw 0
 		showbackground

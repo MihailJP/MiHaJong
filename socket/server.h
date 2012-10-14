@@ -20,7 +20,7 @@ namespace server {
 	void putString(unsigned int socketID, const std::string& sendingStr); // •¶š—ñ‚ğ‘—M
 	class starter {
 	private:
-		bool terminated, finished;
+		volatile bool terminated, finished;
 		unsigned short portnum;
 		unsigned int CurrentConnection;
 		std::array<std::string, 4> playerName;

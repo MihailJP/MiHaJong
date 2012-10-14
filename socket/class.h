@@ -65,14 +65,14 @@ protected:
 	SOCKET* listenerSock; // ソケット(ポインタ)
 	errorType errtype; // エラーの種類
 	int errcode; // エラーコード
-	bool connected; // 接続済みかのフラグ[ワーカースレッドから書き込み]
-	bool terminated; // 接続済みかのフラグ[親スレッドから書き込み]
-	bool finished; // 終了済みかのフラグ[ワーカースレッドから書き込み]
+	volatile bool connected; // 接続済みかのフラグ[ワーカースレッドから書き込み]
+	volatile bool terminated; // 接続済みかのフラグ[親スレッドから書き込み]
+	volatile bool finished; // 終了済みかのフラグ[ワーカースレッドから書き込み]
 	sockaddr_in myAddr; // アドレス情報[親スレッドから書き込み]
 	std::queue<unsigned char> myMailBox; // 受け取ったバイト列
-	HANDLE myRecvQueueMutex; // 受信バッファ用ミューテックス
+	CRITICAL_SECTION myRecvQueueCS; // 受信バッファ用ミューテックス(クリティカルセクションに変更)
 	std::queue<unsigned char> mySendBox; // 送る予定のバイト列
-	HANDLE mySendQueueMutex; // 送信バッファ用ミューテックス
+	CRITICAL_SECTION mySendQueueCS; // 送信バッファ用ミューテックス(クリティカルセクションに変更)
 	virtual int establishConnection () = 0; // 接続を確立する
 	int reader (); // 読み込み
 	int writer (); // 書き込み
