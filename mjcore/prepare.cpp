@@ -250,7 +250,7 @@ DWORD WINAPI SeatShuffler::shuffleSeat_start (LPVOID param) {
 }
 __declspec(dllexport) void SeatShuffler::shuffle (unsigned cNumber) {
 	ClientNumber = cNumber;
-	CreateThread(nullptr, 0, nullptr, nullptr, 0, nullptr);
+	CreateThread(nullptr, 0, shuffleSeat_start, nullptr, 0, nullptr);
 }
 volatile bool SeatShuffler::finished;
 unsigned SeatShuffler::ClientNumber;
