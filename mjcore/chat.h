@@ -18,11 +18,14 @@ namespace chat {
 		static const int bufsize = 65536;
 		std::ostringstream myChatStream;
 		std::queue<std::string> sendQueue;
+		HWND logWindow;
 	public:
 		StreamLog ();
 		virtual ~StreamLog ();
 		virtual std::string getlog ();
 		virtual void sendstr (const std::string& msg);
+		virtual void updateWindow ();
+		void setLogWindow (HWND wndHandle);
 	};
 	class ChatThread : public StreamLog {
 	private:
@@ -43,6 +46,7 @@ namespace chat {
 		~ChatThread ();
 		std::string getlog ();
 		void sendstr (const std::string& msg);
+		void updateWindow ();
 	};
 	
 	extern StreamLog* chatobj;
@@ -52,6 +56,8 @@ namespace chat {
 	__declspec(dllexport) void getchatlog (const char* chatstr, int* const length);
 	__declspec(dllexport) void closechat ();
 
+	__declspec(dllexport) void setlogwnd (HWND window);
+	__declspec(dllexport) void updatelogwnd ();
 }
 
 #endif

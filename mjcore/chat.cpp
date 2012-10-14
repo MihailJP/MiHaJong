@@ -13,6 +13,7 @@ DWORD WINAPI ChatThread::thread_loop (LPVOID param) {
 	return S_OK;
 }
 StreamLog::StreamLog () {
+	logWindow = nullptr;
 	myChatStream.str("");
 }
 ChatThread::ChatThread (std::string& server_addr, int clientNum) {
@@ -171,6 +172,26 @@ void ChatThread::sendstr (const std::string& msg) {
 	LeaveCriticalSection(&sendQueueLock);
 }
 
+void StreamLog::setLogWindow (HWND wndHandle) {
+	logWindow = wndHandle;
+}
+
+void StreamLog::updateWindow () {
+	if (logWindow) {
+		SendMessage(logWindow, WM_SETTEXT, 0, reinterpret_cast<LPARAM>(myChatStream.str().c_str()));
+		auto lines = SendMessage(logWindow, EM_GETLINECOUNT, 0, 0);
+		SendMessage(logWindow, EM_SETSEL, myChatStream.str().length(), myChatStream.str().length());
+		SendMessage(logWindow, EM_LINESCROLL, 0, lines);
+	}
+}
+void ChatThread::updateWindow () {
+	if (logWindow) {
+		EnterCriticalSection(&streamLock);
+		StreamLog::updateWindow();
+		LeaveCriticalSection(&streamLock);
+	}
+}
+
 // -------------------------------------------------------------------------
 
 StreamLog* chatobj = nullptr;
@@ -191,6 +212,13 @@ __declspec(dllexport) void getchatlog (const char* chatstr, int* const length) {
 }
 __declspec(dllexport) void closechat () {
 	delete chatobj; chatobj = nullptr;
+}
+
+__declspec(dllexport) void setlogwnd (HWND window) {
+	chatobj->setLogWindow(window);
+}
+__declspec(dllexport) void updatelogwnd () {
+	chatobj->updateWindow();
 }
 
 } /* namespace */
