@@ -22,7 +22,9 @@ namespace logger {
 		if (!(fpErrorC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"error"))) return (-3);
 		if (!(fpFatalC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"fatal"))) return (-3);
 #ifdef MJCORE_EXPORTS
-		(*fpInitLogger)("debug.log");
+		std::ostringstream fname;
+		fname << "debug" << GetCurrentProcessId() << ".log";
+		(*fpInitLogger)(fname.str().c_str());
 #endif
 		logger = lg;
 		return 0;
