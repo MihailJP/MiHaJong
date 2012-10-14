@@ -49,7 +49,7 @@ void aiscript::readfile(aiscript::ScriptStates* const L, const char* const filen
 			case LUA_ERRGCMM: o << "ガーベジコレクション実行中のエラーです。"; break;
 		}
 		error(o.str().c_str());
-		chat::chatobj->sendstr(std::string("*** ") + o.str());
+		chat::chatobj->sysmsg(std::string("*** ") + o.str());
 	} else {
 		std::ostringstream o;
 		o << "スクリプトファイル [" << filename << "] を読み込みました。";
@@ -69,7 +69,7 @@ void aiscript::readfile(aiscript::ScriptStates* const L, const char* const filen
 			case LUA_ERRGCMM: o << "ガーベジコレクション実行中のエラーです。"; break;
 			}
 			error(o.str().c_str());
-			chat::chatobj->sendstr(std::string("*** ") + o.str());
+			chat::chatobj->sysmsg(std::string("*** ") + o.str());
 		} else {
 			/* 実行完了 */
 			info("スクリプトの実行に成功しました");
@@ -143,7 +143,7 @@ DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameSt
 		} catch (...) { /* determine_discard がなかったらエラーになるので例外処理をする */
 			std::ostringstream o;
 			o << "グローバルシンボル [" << fncname_discard << "] の取得に失敗しました"; error(o.str().c_str());
-			chat::chatobj->sendstr(std::string("*** ") + o.str());
+			chat::chatobj->sysmsg(std::string("*** ") + o.str());
 			info("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。");
 			status[gameStat->CurrentPlayer.Active].scriptLoaded = false;
 			*discard = DiscardThrough; *finished = true; return S_OK;
@@ -164,7 +164,7 @@ DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameSt
 			case LUA_ERRGCMM: o << "ガーベジコレクション実行中のエラーです。"; break;
 			}
 			error(o.str().c_str());
-			chat::chatobj->sendstr(std::string("*** ") + o.str());
+			chat::chatobj->sysmsg(std::string("*** ") + o.str());
 			warn("関数呼び出しに失敗したため、ツモ切りとみなします");
 			*discard = DiscardThrough; *finished = true; return S_OK;
 		} else {
@@ -266,7 +266,7 @@ DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool*
 				warn(o.str().c_str());
 				*finished = true;
 			}
-			chat::chatobj->sendstr(std::string("*** ") + o.str());
+			chat::chatobj->sysmsg(std::string("*** ") + o.str());
 			return S_OK;
 		}
 		GameStatToLuaTable(status[gameStat->CurrentPlayer.Passive].state, gameStat);
@@ -285,7 +285,7 @@ DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool*
 			case LUA_ERRGCMM: o << "ガーベジコレクション実行中のエラーです。"; break;
 			}
 			error(o.str().c_str());
-			chat::chatobj->sendstr(std::string("*** ") + o.str());
+			chat::chatobj->sysmsg(std::string("*** ") + o.str());
 			warn("関数呼び出しに失敗したため、無視します");
 			*finished = true; return S_OK;
 		} else {

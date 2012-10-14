@@ -705,7 +705,7 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, PL
 		std::ostringstream p;
 		p << "*** " << EnvTable::Instantiate()->PlayerDat[player].PlayerName << "(" <<
 			windName(wind) << ") " << o.str();
-		chat::chatobj->sendstr(p.str());
+		chat::chatobj->sysmsg(p.str());
 	}
 					
 	// èoóÕ
