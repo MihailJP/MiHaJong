@@ -200,7 +200,6 @@
 		}
 #endif
 	}
-	chatrecv GameStat, GameEnv
 	redraw 1: redraw 0: await 1000
 	if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 2000) {
 		switch agariBgmSet
@@ -445,7 +444,6 @@
 		else {borderedtxt2a "ƒ`ƒbƒv "+ChipAmount+"–‡", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
 #endif
 	}
-	chatrecv GameStat, GameEnv
 	dsplay@ SND_YAKULST2: redraw 1: await waittime
 	await 3000
 	setYakitori GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), 0 // Ä’¹‚ð‰ðœ‚·‚é

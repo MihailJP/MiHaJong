@@ -7,6 +7,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "socket.hsp"
 #deffunc getdahai var GameStat, var GameEnv
 	/* COMが「カンニング」しないように処理 */
 	makesandbox Sandbox, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)

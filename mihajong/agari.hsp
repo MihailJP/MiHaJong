@@ -103,7 +103,6 @@
 			}
 		}
 		if (RoundEndType == ENDKYOKU_AGARI) {
-			chatrecv GameStat, GameEnv
 			endround_agariproc GameStat, GameEnv, ResultDesc, AgariPlayerPriority, origDoraPointer, YakuInfo, tmpAliceFlag
 		}
 		/**************/
@@ -252,12 +251,12 @@
 	redraw 1: await 1500
 	pointcalc GameStat, PointDelta
 	
-	if ((getHonba(GameStat))&&(chkRule("tsumiboh_rate", "no") == 0)) {
-		if (chkRule("tsumiboh_rate", "counter_200")) {tsumiboh_rate = 2}
-		else: if (chkRule("tsumiboh_rate", "counter_300")) {tsumiboh_rate = 3}
-		else: if (chkRule("tsumiboh_rate", "counter_600")) {tsumiboh_rate = 6}
-		else: if (chkRule("tsumiboh_rate", "counter_1000")) {tsumiboh_rate = 10}
-		else: if (chkRule("tsumiboh_rate", "counter_1500")) {tsumiboh_rate = 15}
+	if ((getHonba(GameStat) > 0)&&(chkRule("tsumiboh_rate", "no") == 0)) {
+		if (chkRule("tsumiboh_rate", "counter_200")) {tsumiboh_rate = 1}
+		else: if (chkRule("tsumiboh_rate", "counter_300")) {tsumiboh_rate = 1}
+		else: if (chkRule("tsumiboh_rate", "counter_600")) {tsumiboh_rate = 3}
+		else: if (chkRule("tsumiboh_rate", "counter_1000")) {tsumiboh_rate = 5}
+		else: if (chkRule("tsumiboh_rate", "counter_1500")) {tsumiboh_rate = 5}
 		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 #ifdef SANMAT
 		if (playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST) {

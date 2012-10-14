@@ -7,6 +7,7 @@
 #module PLAYER
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "socket.hsp"
 /* プレイヤーの打牌 */
 #deffunc playerdahai var GameStat, var GameEnv
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
@@ -181,7 +182,6 @@
 			if (TurnTime < StartTurn) {TurnTime += 3600000}
 		}
 		if ((TimeLeft != tmpTimeLeft)||(tmpmode != mode)) {
-			chatrecv GameStat, GameEnv
 			switch mode
 				case 1: tmpStatus = "リーチをします" :swbreak
 				case 2: tmpStatus = "暗槓または加槓" :swbreak
@@ -487,7 +487,6 @@ return DiscardTileIndex
 			}
 //			redrscreen
 			if (TimeLeft != tmpTimeLeft) {
-				chatrecv GameStat, GameEnv
 				statmes strf("捨牌「%s」への対応 あと%2d秒", TileName(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)), TimeLeft)
 				tmpTimeLeft = TimeLeft
 				tmpmode = mode

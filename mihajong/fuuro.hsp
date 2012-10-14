@@ -465,6 +465,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "socket.hsp"
 #deffunc ronhuproc var GameStat, var GameEnv
 	RoundEndType = -1
 	info "リアクションを問い合わせます。"

@@ -509,8 +509,8 @@
 	loop
 	dsplay@ SND_YAKULST2: redrscreen
 	redraw 1
-	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {sockclose@ SOCK_GAME+0: sockclose@ SOCK_CHAT+0: sockclose@ SOCK_CHAT+1: sockclose@ SOCK_CHAT+2: sockclose@ SOCK_CHAT+3}
-	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {sockclose@ SOCK_GAME+1: sockclose@ SOCK_GAME+2: sockclose@ SOCK_GAME+3}
+	//if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {sockclose@ SOCK_GAME+0: sockclose@ SOCK_CHAT+0: sockclose@ SOCK_CHAT+1: sockclose@ SOCK_CHAT+2: sockclose@ SOCK_CHAT+3}
+	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {s_hangup@ SOCK_GAME+1: s_hangup@ SOCK_GAME+2: s_hangup@ SOCK_GAME+3}
 	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {chatappend "*** 切断しました\n"}
 	gsel SCR_CHAT: objgray 1, 0: objgray 2, 0: gsel 0
 	closescript // スクリプトを閉じる

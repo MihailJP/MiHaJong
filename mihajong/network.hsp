@@ -62,117 +62,18 @@ return
 
 /* チャットバッファ受信 */
 #module
-#include "const.hsp"
-#include "mjcore.hsp"
+#uselib "mjcore.dll"
+#func initchat "?initchat@chat@@YAXQBDH@Z" var, int
+#func sendchat "?sendchat@chat@@YAXQBD@Z" str
 #deffunc initializechat var GameEnv, var ServerAddress, int ClientNumber
 	chatinit: rulewndinit
 	if (getGameMode(GameEnv) == GAMEMODE_STANDALONE) {gsel SCR_CHAT: objgray 1, 0: objgray 2, 0: gsel 0}
-	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
-		ChatBuf1 = "": ChatBuf2 = "": ChatBuf3 = ""
-		repeat NUM_OF_PLAYERS
-			if (IsRemotePlayer(GameEnv, cnt) > 1) {tmpClientWaiting(cnt) = 1}
-			else {tmpClientWaiting(cnt) = 0}
-		loop
-		repeat
-			repeat NUM_OF_PLAYERS
-				if (IsRemotePlayer(GameEnv, cnt) > 1) {
-					if (tmpClientWaiting(cnt) == 1) {
-						sockwait@ SOCK_CHAT-1+IsRemotePlayer(GameEnv, cnt)
-						if (stat == 0) {tmpClientWaiting(cnt) = 0}
-					;	title ""+tmpClientWaiting(0)+" "+tmpClientWaiting(1)+" "+tmpClientWaiting(2)+" "+tmpClientWaiting(3)
-					}
-				}
-			loop
-			await 0
-			if ((tmpClientWaiting(0)+tmpClientWaiting(1)+tmpClientWaiting(2)+tmpClientWaiting(3)) == 0) {
-				break
-			}
-		loop
-	}
-	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
-		sockopen@ SOCK_CHAT+0, ServerAddress, PORT_CHAT+ClientNumber
-		ChatBuf = ""
-	}
-	gsel 0, 1
+	initchat ServerAddress, ClientNumber
 	return
-
-#deffunc chatrecv var GameStat, var GameEnv
-	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
-		repeat NUM_OF_PLAYERS
-			if (IsRemotePlayer(GameEnv, cnt) >= 2) {
-				sockcheck@ SOCK_CHAT-1+IsRemotePlayer(GameEnv, cnt)
-				if (stat == 0) {
-					sdim chattmp, 65536: sockget@ chattmp, 65536, SOCK_CHAT-1+IsRemotePlayer(GameEnv, cnt)
-					switch IsRemotePlayer(GameEnv, cnt)
-						case 2: ChatBuf1 += chattmp: notesel ChatBuf1: swbreak
-						case 3: ChatBuf2 += chattmp: notesel ChatBuf2: swbreak
-						case 4: ChatBuf3 += chattmp: notesel ChatBuf3: swbreak
-					swend
-					repeat notemax
-						if (notemax == 0) {break}
-						tmpcht = "": noteget tmpcht, 0: notedel 0
-						#ifdef SANMAT
-							if ((IsRemotePlayer(GameEnv, 0) == 2)||(IsRemotePlayer(GameEnv, 1) == 2)||(IsRemotePlayer(GameEnv, 2) == 2)) {sockput@ tmpcht+"\n", SOCK_CHAT+1}
-							if ((IsRemotePlayer(GameEnv, 0) == 3)||(IsRemotePlayer(GameEnv, 1) == 3)||(IsRemotePlayer(GameEnv, 2) == 3)) {sockput@ tmpcht+"\n", SOCK_CHAT+2}
-						#else
-							if ((IsRemotePlayer(GameEnv, 0) == 2)||(IsRemotePlayer(GameEnv, 1) == 2)||(IsRemotePlayer(GameEnv, 2) == 2)||(IsRemotePlayer(GameEnv, 3) == 2)) {sockput@ tmpcht+"\n", SOCK_CHAT+1}
-							if ((IsRemotePlayer(GameEnv, 0) == 3)||(IsRemotePlayer(GameEnv, 1) == 3)||(IsRemotePlayer(GameEnv, 2) == 3)||(IsRemotePlayer(GameEnv, 3) == 3)) {sockput@ tmpcht+"\n", SOCK_CHAT+2}
-							if ((IsRemotePlayer(GameEnv, 0) == 4)||(IsRemotePlayer(GameEnv, 1) == 4)||(IsRemotePlayer(GameEnv, 2) == 4)||(IsRemotePlayer(GameEnv, 3) == 4)) {sockput@ tmpcht+"\n", SOCK_CHAT+3}
-						#endif
-							if (strmid(tmpcht, 0, 1) == "0") {chatappend getPlayerName(GameEnv, 0)+"("+windName(playerWind(0, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
-							if (strmid(tmpcht, 0, 1) == "1") {chatappend getPlayerName(GameEnv, 1)+"("+windName(playerWind(1, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
-							if (strmid(tmpcht, 0, 1) == "2") {chatappend getPlayerName(GameEnv, 2)+"("+windName(playerWind(2, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
-						#ifndef SANMAT
-							if (strmid(tmpcht, 0, 1) == "3") {chatappend getPlayerName(GameEnv, 3)+"("+windName(playerWind(3, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
-						#endif
-					loop
-					noteunsel
-				}
-			}
-		loop
-	}
-	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
-		sockcheck@ SOCK_CHAT+0
-		if (stat == 0) {
-			sdim chattmp, 65536: sockget@ chattmp, 65536, SOCK_CHAT+0
-			ChatBuf += chattmp: notesel ChatBuf
-			repeat notemax
-				if (notemax == 0) {break}
-				tmpcht = "": noteget tmpcht, 0: notedel 0
-					if (strmid(tmpcht, 0, 1) == "0") {chatappend getPlayerName(GameEnv, 0)+"("+windName(playerWind(0, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
-					if (strmid(tmpcht, 0, 1) == "1") {chatappend getPlayerName(GameEnv, 1)+"("+windName(playerWind(1, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
-					if (strmid(tmpcht, 0, 1) == "2") {chatappend getPlayerName(GameEnv, 2)+"("+windName(playerWind(2, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
-				#ifndef SANMAT
-					if (strmid(tmpcht, 0, 1) == "3") {chatappend getPlayerName(GameEnv, 3)+"("+windName(playerWind(3, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
-				#endif
-			loop
-			noteunsel
-		}
-	}
-return
 
 #deffunc chatpost var GameStat, var GameEnv
 	CurrentChatTxt = CurrentChatTxt()
-	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
-	#ifdef SANMAT
-		if ((IsRemotePlayer(GameEnv, 0) == 2)||(IsRemotePlayer(GameEnv, 1) == 2)||(IsRemotePlayer(GameEnv, 2) == 2)) {sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+1}
-		if ((IsRemotePlayer(GameEnv, 0) == 3)||(IsRemotePlayer(GameEnv, 1) == 3)||(IsRemotePlayer(GameEnv, 2) == 3)) {sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+2}
-	#else
-		if ((IsRemotePlayer(GameEnv, 0) == 2)||(IsRemotePlayer(GameEnv, 1) == 2)||(IsRemotePlayer(GameEnv, 2) == 2)||(IsRemotePlayer(GameEnv, 3) == 2)) {sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+1}
-		if ((IsRemotePlayer(GameEnv, 0) == 3)||(IsRemotePlayer(GameEnv, 1) == 3)||(IsRemotePlayer(GameEnv, 2) == 3)||(IsRemotePlayer(GameEnv, 3) == 3)) {sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+2}
-		if ((IsRemotePlayer(GameEnv, 0) == 4)||(IsRemotePlayer(GameEnv, 1) == 4)||(IsRemotePlayer(GameEnv, 2) == 4)||(IsRemotePlayer(GameEnv, 3) == 4)) {sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+3}
-	#endif
-		tmpcht = ""+getPlayer(GameStat)+CurrentChatTxt
-			if (strmid(tmpcht, 0, 1) == "0") {chatappend getPlayerName(GameEnv, 0)+"("+windName(playerWind(0, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
-			if (strmid(tmpcht, 0, 1) == "1") {chatappend getPlayerName(GameEnv, 1)+"("+windName(playerWind(1, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
-			if (strmid(tmpcht, 0, 1) == "2") {chatappend getPlayerName(GameEnv, 2)+"("+windName(playerWind(2, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
-		#ifndef SANMAT
-			if (strmid(tmpcht, 0, 1) == "3") {chatappend getPlayerName(GameEnv, 3)+"("+windName(playerWind(3, getRound(GameStat)))+") : "+strmid(tmpcht, 1, strlen(tmpcht))+"\n"}
-		#endif
-	}
-	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
-		sockput@ ""+getPlayer(GameStat)+CurrentChatTxt+"\n", SOCK_CHAT+0
-	}
+	sendchat CurrentChatTxt
 	clearChatTxt
 return
 #global

@@ -198,7 +198,6 @@ return
 return
 
 #deffunc doredrscreen var GameStat, var GameEnv
-	chatrecv GameStat, GameEnv
 	gsel 0: redraw 0
 	color GetTableColorR(GameEnv)/3, GetTableColorG(GameEnv)/3, GetTableColorB(GameEnv)/3
 	boxf 0, 0, 839, 629

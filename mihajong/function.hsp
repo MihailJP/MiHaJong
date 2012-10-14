@@ -112,8 +112,8 @@ return
 	dsend
 	info "DirectSound ‚ğ‰ğ•ú‚µ‚Ü‚µ‚½B"
 	repeat NUM_OF_PLAYERS
-		sockclose SOCK_GAME+cnt
-		sockclose SOCK_CHAT+cnt
+		s_hangup SOCK_GAME+cnt
+		//sockclose SOCK_CHAT+cnt
 	loop
-	sockclose SOCK_LOGGER
+	s_bye
 	end

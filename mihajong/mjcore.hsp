@@ -165,7 +165,12 @@
 #func remotenaki_begin"?remotenaki_begin@RemoteAction@@YAXQAUGameTable@@@Z" int
 #cfunc remotenaki_isfinished "?remotenaki_isfinished@RemoteAction@@YAHXZ"
 #func remotenaki_end "?remotenaki_end@RemoteAction@@YAXXZ"
+#func initchat "?initchat@chat@@YAXQBDH@Z" var, int
+#func sendchat "?sendchat@chat@@YAXQBD@Z" str
+#func setlogwnd "?setlogwnd@chat@@YAXPAUHWND__@@@Z" int
 */
+#func chatappend "?appendchat@chat@@YAXQBD@Z" str
+
 
 /* ------------------------------------------------------------------------ */
 

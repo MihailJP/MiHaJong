@@ -7,6 +7,9 @@
 /* チャットウィンドウ関聯 */
 #module
 #include "const.hsp"
+#uselib "mjcore.dll"
+#func setlogwnd "?setlogwnd@chat@@YAXPAUHWND__@@@Z" int
+
 #deffunc chatinit
 	sdim ChatLog, 32768 // チャットのログ
 	if (ginfo_dispx >= 1280) {
@@ -21,8 +24,10 @@
 	font fontname, 12, 0: objmode 2
 	title "Chat"
 	
-	ChatLog = "MiHaJong Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC+"\n"
+	//ChatLog = "MiHaJong Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC+"\n"
+	ChatLog = ""
 	pos 0, 0: mesbox ChatLog, ChatWindowWidth, 610, 0
+	setlogwnd objinfo_hwnd(0)
 	sdim CurrentChatTxt, 256
 	pos 0, 610: input CurrentChatTxt, ChatWindowWidth-20, 20, 120
 	pos ChatWindowWidth-20, 610: objsize 20, 20: button gosub "OK", *chatpost_@
@@ -50,18 +55,6 @@
 			gsel 0, 1: width , , ((ginfo_dispx-840)/2), (ginfo_dispy-630)/2-20
 	swend
 	return
-
-#deffunc chatreload
-	gsel SCR_CHAT: objprm 0, ChatLog
-	sendmsg objinfo(0, 2), 0x00BA: tmplines = stat /* 行数の取得 */
-	sendmsg objinfo(0, 2), 0x00B1, strlen(ChatLog), strlen(ChatLog) /* カーソル位置修正 */
-	sendmsg objinfo(0, 2), 0x00B6, 0, tmplines /* スクロールさせる */
-	gsel 0
-return
-
-#deffunc chatappend str String
-	ChatLog += String: chatreload
-return
 
 #defcfunc getChatTxt
 	return CurrentChatTxt

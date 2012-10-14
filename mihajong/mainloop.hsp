@@ -22,7 +22,7 @@
 	repeat
 		info strf("局番号 [%d] を開始しました。", getRound(GameStat))
 		if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
-			sockput "8\n", SOCK_CHAT+0 // チャットを同期
+			//sockput "8\n", SOCK_CHAT+0 // チャットを同期
 		}
 		/* ウォッチモードの時は視点を親に移す */
 		setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, -1
