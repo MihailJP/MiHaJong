@@ -511,11 +511,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 					int num1 = (int)(pattern[i * 2] - '0');
 					int num2 = (int)(pattern[i * 2 + 1] - '0');
 					for (int k = 0; k < TILE_SUIT_HONORS / TILE_SUIT_STEP * 2; k += 2) {
-						tCode[k] = (tileCode)(k / 2 * TILE_SUIT_HONORS + num1);
-						tCode[k + 1] = (tileCode)(k / 2 * TILE_SUIT_HONORS + num2);
+						tCode[k] = (tileCode)(k / 2 * TILE_SUIT_STEP + num1);
+						tCode[k + 1] = (tileCode)(k / 2 * TILE_SUIT_STEP + num2);
 					}
 					if (yaku::countingFacility::countSpecMentz(
-						analysis->MianziDat, tCode, TILE_SUIT_HONORS / TILE_SUIT_STEP * 2, nullptr, 0, false))
+						analysis->MianziDat, tCode, TILE_SUIT_HONORS / TILE_SUIT_STEP * 2, nullptr, 0, false) == SIZE_OF_MELD_BUFFER)
 						yakuFlag = true;
 				}
 				return yakuFlag;
@@ -635,10 +635,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 		auto chris =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 0; i < 6; i++)
-					if ((analysis->KeziCount[(&parsedat_trichrome3[0][0])[i * 4 + 0] + 1] >= 1) &&
-						(analysis->KeziCount[(&parsedat_trichrome3[0][0])[i * 4 + 0] + 2] >= 1) &&
-						(analysis->KeziCount[(&parsedat_trichrome3[0][0])[i * 4 + 1] + 2] >= 1) &&
-						(analysis->KeziCount[(&parsedat_trichrome3[0][0])[i * 4 + 1] + 5] >= 1))
+					if ((analysis->KeziCount[(parsedat_trichrome3[i][0] - '0') + 1] >= 1) &&
+						(analysis->KeziCount[(parsedat_trichrome3[i][0] - '0') + 2] >= 1) &&
+						(analysis->KeziCount[(parsedat_trichrome3[i][1] - '0') + 2] >= 1) &&
+						(analysis->KeziCount[(parsedat_trichrome3[i][1] - '0') + 5] >= 1))
 						return true;
 				return false;
 			};

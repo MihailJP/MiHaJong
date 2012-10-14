@@ -145,7 +145,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		};
 	auto ittsuu_monotonic =
 		[ikki_tsuukan](const MENTSU_ANALYSIS* const analysis, bool* const yakuFlag, int* const yakuCol) -> void {
-			int samecol;
+			int samecol = 0;
 			ikki_tsuukan(analysis, yakuFlag, yakuCol);
 			if (!(*yakuFlag)) return;
 			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
@@ -548,7 +548,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 					int yakuTmpFlag = 0;
 					for (int k = 1; k <= 7; k++)
 						if ((analysis->ShunziCount[i % TILE_SUIT_HONORS + k] >= 1) &&
-							(analysis->ShunziCount[(i + TILE_SUIT_HONORS) % TILE_SUIT_HONORS + k] >= 1))
+							(analysis->ShunziCount[(i + TILE_SUIT_STEP) % TILE_SUIT_HONORS + k] >= 1))
 								++yakuTmpFlag;
 					if (yakuTmpFlag == 2) yakuFlag = true;
 				}
@@ -565,10 +565,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			bool yakuFlag = false;
 			for (int i = 0; i < pdsize; i++) {
 				for (int k = 1; k <= (7 - step * (suupuukao ? 3 : 2)); k++)
-					if ((analysis->ShunziCount[(int)(parsedat[i * fldsize + 0] - '0') * TILE_SUIT_STEP + step * k] >= 1) &&
-						(analysis->ShunziCount[(int)(parsedat[i * fldsize + 1] - '0') * TILE_SUIT_STEP + step * k] >= 1) &&
-						(analysis->ShunziCount[(int)(parsedat[i * fldsize + 2] - '0') * TILE_SUIT_STEP + step * k] >= 1) &&
-						(suupuukao&&(analysis->ShunziCount[(int)(parsedat[i * fldsize + 3] - '0') * TILE_SUIT_STEP + step * k] >= 1)) )
+					if ((analysis->ShunziCount[(int)(parsedat[i * fldsize + 0] - '0') * TILE_SUIT_STEP + step * 0 + k] >= 1) &&
+						(analysis->ShunziCount[(int)(parsedat[i * fldsize + 1] - '0') * TILE_SUIT_STEP + step * 1 + k] >= 1) &&
+						(analysis->ShunziCount[(int)(parsedat[i * fldsize + 2] - '0') * TILE_SUIT_STEP + step * 2 + k] >= 1) &&
+						(suupuukao&&(analysis->ShunziCount[(int)(parsedat[i * fldsize + 3] - '0') * TILE_SUIT_STEP + step * 3 + k] >= 1)) )
 						yakuFlag = true;
 			}
 			return yakuFlag;
@@ -693,9 +693,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			bool yakuFlag = false;
 			for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); k++)
-				if ((analysis->ShunziCount[(int)((&*k)[0] - '0') * TILE_SUIT_STEP + 1] >= 1) &&
-					(analysis->ShunziCount[(int)((&*k)[1] - '0') * TILE_SUIT_STEP + 4] >= 1) &&
-					(analysis->ShunziCount[(int)((&*k)[2] - '0') * TILE_SUIT_STEP + 7] >= 1))
+				if ((analysis->ShunziCount[(int)((*k)[0] - '0') * TILE_SUIT_STEP + 1] >= 1) &&
+					(analysis->ShunziCount[(int)((*k)[1] - '0') * TILE_SUIT_STEP + 4] >= 1) &&
+					(analysis->ShunziCount[(int)((*k)[2] - '0') * TILE_SUIT_STEP + 7] >= 1))
 						yakuFlag = true;
 			return yakuFlag;
 		};
@@ -776,9 +776,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			"‹¾“¯˜a",
 			[ShuangLong](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); k++)
-					if (ShuangLong(analysis, (int)((&*k)[0] - '0') * TILE_SUIT_STEP,
-						(int)((&*k)[1] - '0') * TILE_SUIT_STEP,
-						(tileCode)((int)((&*k)[1] - '0') * TILE_SUIT_STEP + 5))) return true;
+					if (ShuangLong(analysis, (int)((*k)[0] - '0') * TILE_SUIT_STEP,
+						(int)((*k)[1] - '0') * TILE_SUIT_STEP,
+						(tileCode)((int)((*k)[1] - '0') * TILE_SUIT_STEP + 5))) return true;
 				return false;
 			}
 		));
