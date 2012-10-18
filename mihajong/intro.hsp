@@ -172,7 +172,6 @@ return
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (s_client_getclientnumber() != cnt) {setRemotePlayer GameEnv, cnt, 1}
 	loop
-	s_client_releaseobj
 	sdim RuleConf, RULE_IN_LINE+4, RULE_STRING_LINES
 	dim RuleConfPtr, RULE_STRING_LINES
 	repeat RULE_STRING_LINES
@@ -180,6 +179,7 @@ return
 	loop
 	s_client_checkout_rules RuleConfPtr
 	storeRule RuleConf
+	s_client_releaseobj
 	return
 
 *modesel3c

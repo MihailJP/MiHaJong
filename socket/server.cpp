@@ -19,7 +19,7 @@ namespace server {
 		return tmpString;
 	}
 	void putString(unsigned int socketID, const std::string& sendingStr) { // •¶Žš—ñ‚ð‘—M
-		sockets[socketID]->putc(protocol::Server_StartGame_Signature);
+		sockets[socketID]->putc(protocol::StartString_Signature);
 		unsigned strsz = sendingStr.length();
 		if (strsz > UCHAR_MAX) {
 			sockets[socketID]->putc(UCHAR_MAX);

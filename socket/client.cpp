@@ -31,14 +31,19 @@ namespace client {
 				playerName[2] = std::string("[c]COM");
 				playerName[3] = std::string("[d]COM");
 				finished = true;
-				return -1;
+				return S_OK;
 			}
 			ClientNumber = sockets[0]->syncgetc() - 1;
 			sockets[0]->disconnect();
 			sockets[0]->connect(serveraddr, portnum + ClientNumber);
 			while (!sockets[0]->connected()) Sleep(0);
 			connected = true;
-			putString(0, myName);
+			try {
+				putString(0, myName);
+			}
+			catch (socket_error& e) { // Failed
+				errordlg(e);
+			}
 			while (sockets[0]->syncgetc() != protocol::Server_StartGame_Signature) Sleep(0); // 開始を待つ
 			for (unsigned int i = 0; i < NumberOfPlayers; ++i)
 				playerName[i] = getString(0); // 名前を受信

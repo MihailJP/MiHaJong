@@ -11,9 +11,6 @@ uint32_t mihajong_socket::Sock::addr2var(const std::string& address) { // ƒAƒhƒŒ
 }
 
 mihajong_socket::Sock::Sock (const std::string& destination, uint16_t port) { // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
-	sock = socket(AF_INET, SOCK_STREAM, 0); // ƒ\ƒPƒbƒg‚ğ‰Šú‰»
-	if (sock == INVALID_SOCKET) throw socket_creation_error(WSAGetLastError()); // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”s‚µ‚½‚ç—áŠO
-
 	this->connect(destination, port); // Ú‘±
 }
 
@@ -45,6 +42,9 @@ void mihajong_socket::Sock::listen () { // ƒT[ƒo[ŠJn
 }
 
 void mihajong_socket::Sock::connect (const std::string& destination, uint16_t port) { // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
+	sock = socket(AF_INET, SOCK_STREAM, 0); // ƒ\ƒPƒbƒg‚ğ‰Šú‰»
+	if (sock == INVALID_SOCKET) throw socket_creation_error(WSAGetLastError()); // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”s‚µ‚½‚ç—áŠO
+
 	isServer = false; // ƒNƒ‰ƒCƒAƒ“ƒg‚Å‚ ‚é
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(port); // ƒ|[ƒg”Ô†
@@ -87,7 +87,7 @@ unsigned char mihajong_socket::Sock::syncgetc () { // “Ç‚İ‚İ(“¯Šú)
 		try {
 			return getc();
 		}
-		catch (queue_empty) {
+		catch (queue_empty&) {
 			Sleep(0); // Yield and try again
 		}
 	}
@@ -131,6 +131,7 @@ void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
 	} else {
 		threadPtr.client->terminate();
 	}
+	shutdown(sock, SD_BOTH);
 	closesocket(sock);
 	if (isServer) {
 		delete threadPtr.server;
@@ -290,7 +291,9 @@ int mihajong_socket::Sock::client_thread::establishConnection() { // Ú‘±‚ğŠm—§‚
 	while (true) {
 		if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == SOCKET_ERROR) { // Ú‘±
 			errcode = WSAGetLastError();
-			if (errcode != WSAEWOULDBLOCK) {
+			if (errcode == WSAEISCONN) {
+				break; // ³í‚ÉÚ‘±Š®—¹‚µ‚½‚Æ‚İ‚È‚·
+			} else if (errcode != WSAEWOULDBLOCK) {
 				errtype = errConnection; return -((int)errtype);
 			}
 		} else break;
