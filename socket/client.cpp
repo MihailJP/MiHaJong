@@ -38,13 +38,8 @@ namespace client {
 			sockets[0]->connect(serveraddr, portnum + ClientNumber);
 			while (!sockets[0]->connected()) Sleep(0);
 			connected = true;
-			try {
-				putString(0, myName);
-			}
-			catch (socket_error& e) { // Failed
-				errordlg(e);
-			}
-			while (sockets[0]->syncgetc() != protocol::Server_StartGame_Signature) Sleep(0); // 開始を待つ
+			putString(0, myName);
+			while (sockets[0]->syncgetc() != protocol::Server_StartGame_Signature) Sleep(10); // 開始を待つ
 			for (unsigned int i = 0; i < NumberOfPlayers; ++i)
 				playerName[i] = getString(0); // 名前を受信
 			for (unsigned i = 0; i < (RULESIZE/RULE_IN_LINE); ++i)

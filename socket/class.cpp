@@ -70,7 +70,7 @@ bool mihajong_socket::Sock::connected () { // Ú‘±‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
 };
 
 void mihajong_socket::Sock::wait_until_connected () { // •¶š’Ê‚è‚Ì‚±‚Æ‚ğ‚â‚é
-	while (!connected()) Sleep(0);
+	while (!connected()) Sleep(50);
 };
 unsigned char mihajong_socket::Sock::getc () { // “Ç‚İ‚İ(”ñ“¯Šú)
 	if (isServer) {
@@ -88,7 +88,7 @@ unsigned char mihajong_socket::Sock::syncgetc () { // “Ç‚İ‚İ(“¯Šú)
 			return getc();
 		}
 		catch (queue_empty&) {
-			Sleep(0); // Yield and try again
+			Sleep(50); // Yield and try again
 		}
 	}
 }
@@ -227,6 +227,7 @@ DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // ƒXƒŒƒbƒh
 	while (!terminated) { // ’â~‚³‚ê‚é‚Ü‚Å
 		if (int err = reader()) return err; // “Ç‚İ‚İ
 		if (int err = writer()) return err; // ‘‚«‚İ
+		Sleep(0);
 	}
 	finished = true;
 	return S_OK;
@@ -280,7 +281,7 @@ void mihajong_socket::Sock::network_thread::setsock (SOCKET* const socket) { // 
 
 void mihajong_socket::Sock::network_thread::terminate () { // Ø’f‚·‚é
 	terminated = true; // ƒtƒ‰ƒO‚ğ—§‚Ä‚é
-	while (!finished) Sleep(0); // ƒXƒŒƒbƒh‚ªI—¹‚·‚é‚Ü‚Å‘Ò‚Â
+	while (!finished) Sleep(50); // ƒXƒŒƒbƒh‚ªI—¹‚·‚é‚Ü‚Å‘Ò‚Â
 	finished = terminated = connected = false; // ƒtƒ‰ƒO‚ÌŒãn––
 	errtype = errNone; errcode = 0;
 }
@@ -297,7 +298,7 @@ int mihajong_socket::Sock::client_thread::establishConnection() { // Ú‘±‚ğŠm—§‚
 				errtype = errConnection; return -((int)errtype);
 			}
 		} else break;
-		Sleep(0);
+		Sleep(50);
 		if (terminated) return 0; // ’†~‚Ìê‡
 	}
 	connected = true; // Ú‘±Ï‚İƒtƒ‰ƒO‚ğ—§‚Ä‚é
@@ -320,8 +321,9 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // Ú‘±‚ğŠm—§‚
 			}
 		} else break;
 		if (terminated) return 0; // ’†~‚Ìê‡
-		Sleep(0);
+		Sleep(50);
 	}
+	shutdown(*listenerSock, SD_BOTH);
 	closesocket(*listenerSock);
 	connected = true; // Ú‘±Ï‚İƒtƒ‰ƒO‚ğ—§‚Ä‚é
 	return 0;

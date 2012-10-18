@@ -61,7 +61,7 @@ namespace server {
 				++CurrentConnection;
 			}
 			if (CurrentConnection >= NumberOfPlayers) break;
-			Sleep(0); // Yield
+			Sleep(50); // Yield
 		}
 		delete sockets[0]; sockets[0] = nullptr; // 待機用のソケットを閉じる
 		send(protocol::Server_StartGame_Signature);
