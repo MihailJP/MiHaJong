@@ -12,6 +12,7 @@
 #include <Windows.h>
 #include <string>
 #include <sstream>
+#include "../socket/logger.h"
 
 namespace logger {
 	typedef int (__cdecl *CHRPPROC)(const char* a);

@@ -17,6 +17,7 @@
 #include "protocol.h"
 #include "server.h"
 #include "client.h"
+#include "logger.h"
 #endif
 
 namespace mihajong_socket {

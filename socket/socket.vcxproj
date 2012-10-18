@@ -79,6 +79,7 @@
   <ItemGroup>
     <ClCompile Include="class.cpp" />
     <ClCompile Include="client.cpp" />
+    <ClCompile Include="logger.cpp" />
     <ClCompile Include="server.cpp" />
     <ClCompile Include="socket.cpp" />
   </ItemGroup>
@@ -86,6 +87,7 @@
     <ClInclude Include="class.h" />
     <ClInclude Include="client.h" />
     <ClInclude Include="except.h" />
+    <ClInclude Include="logger.h" />
     <ClInclude Include="protocol.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="server.h" />
