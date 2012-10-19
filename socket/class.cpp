@@ -23,6 +23,7 @@ mihajong_socket::Sock::Sock (uint16_t port) { // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
 }
 
 void mihajong_socket::Sock::listen (uint16_t port) { // ƒT[ƒo[ŠJn
+	portnum = port;
 	lsock = socket(AF_INET, SOCK_STREAM, 0); // ƒ\ƒPƒbƒg‚ğ‰Šú‰»
 	if (lsock == INVALID_SOCKET) throw socket_creation_error(WSAGetLastError()); // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”s‚µ‚½‚ç—áŠO
 	isServer = true; // ƒT[ƒo[‚Å‚ ‚é
@@ -35,13 +36,14 @@ void mihajong_socket::Sock::listen (uint16_t port) { // ƒT[ƒo[ŠJn
 }
 
 void mihajong_socket::Sock::listen () { // ƒT[ƒo[ŠJn
-	threadPtr.server = new server_thread();
+	threadPtr.server = new server_thread(this);
 	threadPtr.server->setaddr(addr);
 	threadPtr.server->setsock(&sock, &lsock);
 	CreateThread(nullptr, 0, server_thread::thread, (LPVOID)threadPtr.server, 0, nullptr);
 }
 
 void mihajong_socket::Sock::connect (const std::string& destination, uint16_t port) { // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
+	portnum = port;
 	sock = socket(AF_INET, SOCK_STREAM, 0); // ƒ\ƒPƒbƒg‚ğ‰Šú‰»
 	if (sock == INVALID_SOCKET) throw socket_creation_error(WSAGetLastError()); // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”s‚µ‚½‚ç—áŠO
 
@@ -53,7 +55,7 @@ void mihajong_socket::Sock::connect (const std::string& destination, uint16_t po
 }
 
 void mihajong_socket::Sock::connect () { // ƒNƒ‰ƒCƒAƒ“ƒgÄÚ‘±
-	threadPtr.client = new client_thread();
+	threadPtr.client = new client_thread(this);
 	threadPtr.client->setaddr(addr);
 	threadPtr.client->setsock(&sock);
 	CreateThread(nullptr, 0, client_thread::thread, (LPVOID)threadPtr.client, 0, nullptr);
@@ -144,7 +146,8 @@ void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
 
 // -------------------------------------------------------------------------
 
-mihajong_socket::Sock::network_thread::network_thread() {
+mihajong_socket::Sock::network_thread::network_thread(Sock* caller) {
+	myCaller = caller;
 	errtype = errNone; errcode = 0;
 	connected = terminated = finished = false;
 	InitializeCriticalSection(&myRecvQueueCS);
@@ -161,20 +164,27 @@ DWORD WINAPI mihajong_socket::Sock::network_thread::thread(LPVOID lp) { // ƒXƒŒƒ
 }
 
 void mihajong_socket::Sock::network_thread::chkError () { // ƒGƒ‰[‚ğƒ`ƒFƒbƒN‚µA‚à‚µƒGƒ‰[‚¾‚Á‚½‚ç—áŠO‚ğ“Š‚°‚é
+	std::ostringstream o;
 	switch (errtype) {
 	case errNone: // ƒGƒ‰[‚È‚µ
 		break;
 	case errListen: // listen¸”s
+		o << "listen‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
 		throw listen_failure(errcode);
 	case errAccept: // accept¸”s
+		o << "Ú‘±ó‚¯“ü‚ê‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
 		throw accept_failure(errcode);
 	case errConnection: // Ú‘±¸”s
+		o << "Ú‘±‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
 		throw connection_failure(errcode);
 	case errRecv: // óM¸”s
+		o << "óM‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
 		throw recv_error(errcode);
 	case errSend: // ‘—M¸”s
+		o << "‘—M‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
 		throw send_error(errcode);
 	default: // ‚Ù‚©‚ÌƒGƒ‰[
+		o << "ƒ\ƒPƒbƒgƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
 		throw socket_error(errcode);
 	}
 }
@@ -184,8 +194,17 @@ int mihajong_socket::Sock::network_thread::reader() { // óMˆ—
 	WSABUF buffer; buffer.buf = reinterpret_cast<CHAR*>(buf); buffer.len = bufsize;
 	DWORD recvsz; DWORD flag = 0;
 	if (WSARecv(*mySock, &buffer, 1, &recvsz, &flag, nullptr, nullptr) == 0) { // óM‚·‚é
+		std::ostringstream o;
+		o << "ƒf[ƒ^óM ƒ|[ƒg [" << myCaller->portnum << "] ƒXƒgƒŠ[ƒ€ [";
 		EnterCriticalSection(&myRecvQueueCS); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
-		for (unsigned int i = 0; i < recvsz; ++i) myMailBox.push(buf[i]); // ƒLƒ…[‚É’Ç‰Á
+		unsigned count = 0;
+		for (unsigned int i = 0; i < recvsz; ++i) {
+			myMailBox.push(buf[i]); // ƒLƒ…[‚É’Ç‰Á
+			if (i > 0) o << " ";
+			o << std::setw(2) << std::hex << std::setfill('0') << static_cast<unsigned int>(buf[i]);
+		}
+		o << "] ƒTƒCƒY [" << std::dec << recvsz << "]";
+		if (recvsz) trace(o.str().c_str());
 		LeaveCriticalSection(&myRecvQueueCS); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
 	} else { // óM‚Å‚«‚È‚¢
 		switch (int err = WSAGetLastError()) {
@@ -204,11 +223,19 @@ int mihajong_socket::Sock::network_thread::writer() { // ‘—Mˆ—
 	WSABUF buffer; buffer.buf = reinterpret_cast<CHAR*>(buf); buffer.len = bufsize;
 	DWORD sendsz = 0;
 
-	EnterCriticalSection(&mySendQueueCS); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
-	while (!mySendBox.empty()) {
-		buf[sendsz++] = mySendBox.front(); mySendBox.pop(); // ƒLƒ…[‚©‚çæ‚èo‚µ
+	{
+		std::ostringstream o;
+		o << "ƒf[ƒ^‘—M ƒ|[ƒg [" << myCaller->portnum << "] ƒXƒgƒŠ[ƒ€ [";
+		EnterCriticalSection(&mySendQueueCS); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
+		while (!mySendBox.empty()) {
+			buf[sendsz++] = mySendBox.front(); mySendBox.pop(); // ƒLƒ…[‚©‚çæ‚èo‚µ
+			if (sendsz > 1) o << " ";
+			o << std::setw(2) << std::hex << std::setfill('0') << static_cast<unsigned int>(buf[sendsz - 1]);
+		}
+		o << "] ƒTƒCƒY [" << std::dec << sendsz << "]";
+		if (sendsz) trace(o.str().c_str());
+		LeaveCriticalSection(&mySendQueueCS); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
 	}
-	LeaveCriticalSection(&mySendQueueCS); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
 	if (sendsz && (WSASend(*mySock, &buffer, 1, &sendsz, 0, nullptr, nullptr))) { // ‘—M
 		switch (int err = WSAGetLastError()) {
 		case WSAEWOULDBLOCK:

@@ -128,7 +128,6 @@ namespace server {
 	}
 	DLL void send (int SendingMsg, void*) { // サーバーからの送信
 		send((unsigned char)SendingMsg);
-		// かつてはここでログを送っていた
 	}
 
 	// ---------------------------------------------------------------------

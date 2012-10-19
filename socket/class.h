@@ -4,10 +4,13 @@
 #include <string>
 #include <cstdint>
 #include <queue>
+#include <sstream>
+#include <iomanip>
 #ifndef _WINSOCKAPI_
 #include <WinSock2.h>
 #endif
 #include "except.h"
+#include "logger.h"
 
 namespace mihajong_socket {
 
@@ -26,6 +29,7 @@ private:
 	sockaddr_in addr;
 	SOCKET sock, lsock;
 	Thread threadPtr;
+	uint16_t portnum;
 public:
 	Sock () {}; // ソケット初期化
 	Sock (uint16_t port); // サーバー開始
@@ -47,7 +51,7 @@ public:
 
 class Sock::network_thread { // スレッド(スーパークラス)
 public:
-	network_thread();
+	network_thread(Sock* caller);
 	virtual ~network_thread();
 	static DWORD WINAPI thread(LPVOID lp); // スレッドを起動するための処理
 	bool isConnected (); // 接続済かを返す関数
@@ -59,6 +63,7 @@ public:
 	void write (unsigned char byte); // 1バイト書き込み
 	std::string readline (); // 1行読み込み
 protected:
+	Sock* myCaller;
 	enum errorType {errNone, errListen, errAccept, errConnection, errRecv, errSend};
 	static const unsigned int bufsize = 65536;
 	SOCKET* mySock; // ソケット(ポインタ)
@@ -80,12 +85,15 @@ protected:
 };
 
 class Sock::client_thread : public network_thread { // クライアントのスレッド
+public:
+	client_thread(Sock* callee) : network_thread(callee) {}
 protected:
 	int establishConnection (); // 接続を確立する
 };
 
 class Sock::server_thread : public network_thread { // サーバーのスレッド
 public:
+	server_thread(Sock* callee) : network_thread(callee) {}
 	void setsock (SOCKET* const socket, SOCKET* const lsocket); // ソケットを設定する
 protected:
 	int establishConnection (); // 接続を確立する

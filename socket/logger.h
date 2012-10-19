@@ -4,6 +4,14 @@
 #include "socket.h"
 #include <Windows.h>
 
+#ifndef DLL
+#ifdef SOCKET_EXPORTS
+#define DLL __declspec(dllexport)
+#else
+#define DLL __declspec(dllimport)
+#endif /*SOCKET_EXPORTS*/
+#endif /*DLL*/
+
 namespace mihajong_socket {
 namespace logger {
 
@@ -16,6 +24,9 @@ extern CHRPPROC fpInitLogger, fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fp
 DLL void setLoggerLib (HMODULE lib);
 
 #ifdef SOCKET_EXPORTS
+std::string posPrefix(const char* file, int line, std::string msg);
+std::string posPrefix(const char* file, int line, char* msg);
+
 void trace_msg(const char* msg);
 void debug_msg(const char* msg);
 void info_msg(const char* msg);
