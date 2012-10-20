@@ -8,7 +8,7 @@
 *gameinit
 	closingchat
 	GameStat = initializeGameTable(GAMETYPE)
-	setPlayer GameStat, TmpPosition(ClientNumber)
+	setPlayer GameStat, PositionArray(ClientNumber)
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
 	haifubufinit
 	statmes "" // 情報窓への表示

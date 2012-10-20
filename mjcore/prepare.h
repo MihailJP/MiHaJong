@@ -14,12 +14,13 @@ __declspec(dllexport) void initdora(GameTable* const gameStat); // ƒhƒ‰‚Ìİ’è
 
 class SeatShuffler { // êŒˆ‚ßˆ—
 private:
+	static int* posarry;
 	static volatile bool finished;
 	static unsigned ClientNumber;
 	static void shuffleSeat ();
 	static DWORD WINAPI shuffleSeat_start (LPVOID param);
 public:
-	__declspec(dllexport) static void shuffle (unsigned cNumber);
+	__declspec(dllexport) static void shuffle (unsigned cNumber, int* const positionArray);
 	static bool isFinished() {return finished;}
 	__declspec(dllexport) static int isFinished_hsp() {return finished ? 1 : 0;}
 };

@@ -39,7 +39,7 @@
 #cfunc rnd "?rnd@RndNum@@SAII@Z" int
 
 /* intro.hsp‚©‚ç‚ÌˆÚA */
-#func startSeatShuffle "?shuffle@SeatShuffler@@SAXI@Z" int
+#func startSeatShuffle "?shuffle@SeatShuffler@@SAXIQAH@Z" int, var
 #cfunc seatShuffleFinished "?isFinished_hsp@SeatShuffler@@SAHXZ"
 
 /* func.hsp‚©‚ç‚ÌˆÚA */

@@ -160,7 +160,10 @@ return
 		await 0
 	loop
 	repeat
-		if (s_client_isstartingfinished()) {break}
+		if (s_client_isstartingfinished()) {
+			ClientNumber = s_client_getclientnumber()
+			break
+		}
 		await 0
 	loop
 	sdim playerName1, 256: sdim playerName2, 256: sdim playerName3, 256: sdim playerName4, 256
@@ -170,7 +173,7 @@ return
 	setPlayerName GameEnv, 2, playerName3
 	setPlayerName GameEnv, 3, playerName4
 	repeat NUM_OF_ACTUAL_PLAYERS
-		if (s_client_getclientnumber() != cnt) {setRemotePlayer GameEnv, cnt, 1}
+		if (ClientNumber != cnt) {setRemotePlayer GameEnv, cnt, 1}
 	loop
 	sdim RuleConf, RULE_IN_LINE+4, RULE_STRING_LINES
 	dim RuleConfPtr, RULE_STRING_LINES
@@ -235,7 +238,8 @@ return
 return
 
 *chrshuffle
-	startSeatShuffle ClientNumber
+	dim PositionArray, NUM_OF_PLAYERS
+	startSeatShuffle ClientNumber, PositionArray
 	repeat
 		if (seatShuffleFinished()) {break}
 		await 0
