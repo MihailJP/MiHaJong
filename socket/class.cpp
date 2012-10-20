@@ -236,6 +236,7 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 		if (sendsz) trace(o.str().c_str());
 		LeaveCriticalSection(&mySendQueueCS); // 送信用ミューテックスを解放
 	}
+	buffer.len = sendsz; // 送信サイズ
 	if (sendsz && (WSASend(*mySock, &buffer, 1, &sendsz, 0, nullptr, nullptr))) { // 送信
 		switch (int err = WSAGetLastError()) {
 		case WSAEWOULDBLOCK:
