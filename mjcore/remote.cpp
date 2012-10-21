@@ -17,7 +17,6 @@ DWORD WINAPI RemoteDahai::thread () {
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 		int ClientReceived;
 		while (true) {
-			// TODO: チャットの受信
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
 			if (ClientReceived) break;
@@ -51,6 +50,7 @@ DWORD WINAPI RemoteDahai::thread () {
 						std::ostringstream o; o << "プレイヤー [" <<
 							static_cast<int>(gameStat->CurrentPlayer.Active) <<
 							"] の回線切断を検知しました。";
+						warn(o.str().c_str());
 				}
 			}
 			ReceivedMsg = mihajong_socket::protocol::Dahai_Remote_Disconnect;
