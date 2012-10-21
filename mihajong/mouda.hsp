@@ -59,8 +59,8 @@
 					else: if ((DiscardTileIndex >= DAHAI_TYPE_KAKAN)&&(DiscardTileIndex <= DAHAI_TYPE_KAKAN+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_KAKAN+0x80}
 					else: if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex <= DAHAI_TYPE_RIICHI+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_RIICHI+0x90}
 					else: if ((DiscardTileIndex >= DAHAI_TYPE_OPENRIICHI)&&(DiscardTileIndex <= DAHAI_TYPE_OPENRIICHI+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_OPENRIICHI+0xC0}
-					else: if ((DiscardTileIndex >= DAHAI_TYPE_FLOWER)&&(DiscardTileIndex <= DAHAI_TYPE_FLOWER+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_OPENRIICHI+0xD0}
-					else {error "CPU‚Ì‘Å”v”Ô†‚ª‚È‚ñ‚©‚¨‚©‚µ‚¢ "+DiscardTileIndex: SendingMsg = 0x6d}
+					else: if ((DiscardTileIndex >= DAHAI_TYPE_FLOWER)&&(DiscardTileIndex <= DAHAI_TYPE_FLOWER+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_FLOWER+0xD0}
+					else {error "CPU‚Ì‘Å”v”Ô†‚ª‚È‚ñ‚©‚¨‚©‚µ‚¢ ["+DiscardTileIndex+"]": SendingMsg = 0x6d}
 					serversend SendingMsg, GameEnv
 				}
 			}
