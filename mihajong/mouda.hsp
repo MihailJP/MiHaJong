@@ -53,12 +53,14 @@
 				DiscardTileIndex = compdahai()
 				if (getGameMode(GameEnv) == GAMEMODE_SERVER) {
 					if (DiscardTileIndex == DAHAI_TYPE_KYUUSHU) {SendingMsg = 0x6e}
-					if (DiscardTileIndex == DAHAI_TYPE_AGARI) {SendingMsg = 0x6f}
-					if ((DiscardTileIndex >= DAHAI_TYPE_NORMAL)&&(DiscardTileIndex <= DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_NORMAL+0x60}
-					if ((DiscardTileIndex >= DAHAI_TYPE_KAN)&&(DiscardTileIndex <= DAHAI_TYPE_KAN+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_KAN+0x70}
-					if ((DiscardTileIndex >= DAHAI_TYPE_KAKAN)&&(DiscardTileIndex <= DAHAI_TYPE_KAKAN+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_KAKAN+0x80}
-					if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex <= DAHAI_TYPE_RIICHI+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_RIICHI+0x90}
-					if ((DiscardTileIndex >= DAHAI_TYPE_OPENRIICHI)&&(DiscardTileIndex <= DAHAI_TYPE_OPENRIICHI+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_OPENRIICHI+0xC0}
+					else: if (DiscardTileIndex == DAHAI_TYPE_AGARI) {SendingMsg = 0x6f}
+					else: if ((DiscardTileIndex >= DAHAI_TYPE_NORMAL)&&(DiscardTileIndex <= DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_NORMAL+0x60}
+					else: if ((DiscardTileIndex >= DAHAI_TYPE_KAN)&&(DiscardTileIndex <= DAHAI_TYPE_KAN+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_KAN+0x70}
+					else: if ((DiscardTileIndex >= DAHAI_TYPE_KAKAN)&&(DiscardTileIndex <= DAHAI_TYPE_KAKAN+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_KAKAN+0x80}
+					else: if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex <= DAHAI_TYPE_RIICHI+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_RIICHI+0x90}
+					else: if ((DiscardTileIndex >= DAHAI_TYPE_OPENRIICHI)&&(DiscardTileIndex <= DAHAI_TYPE_OPENRIICHI+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_OPENRIICHI+0xC0}
+					else: if ((DiscardTileIndex >= DAHAI_TYPE_FLOWER)&&(DiscardTileIndex <= DAHAI_TYPE_FLOWER+TSUMOHAI_INDEX)) {SendingMsg = DiscardTileIndex-DAHAI_TYPE_OPENRIICHI+0xD0}
+					else {error "CPU‚Ì‘Å”v”Ô†‚ª‚È‚ñ‚©‚¨‚©‚µ‚¢ "+DiscardTileIndex: SendingMsg = 0x6d}
 					serversend SendingMsg, GameEnv
 				}
 			}
