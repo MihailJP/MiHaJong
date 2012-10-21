@@ -231,7 +231,7 @@ void SeatShuffler::shuffleSeat () {
 	}
 	// ƒVƒƒƒbƒtƒ‹Œ‹‰Ê‚ğ‘‚«‚İ
 	for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++) {
-		EnvTable::Instantiate()->PlayerDat[TmpPosition[i]] = TmpPlayerDat[i];
+		EnvTable::Instantiate()->PlayerDat[i] = TmpPlayerDat[TmpPosition[i]];
 		posarry[i] = TmpPosition[i];
 	}
 
@@ -240,7 +240,25 @@ void SeatShuffler::shuffleSeat () {
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
 			EnvTable::Instantiate()->PlayerDat[TmpPosition[i]].RemotePlayerFlag =
-			(i != tmpPlayer);
+			(i != tmpPlayer) ? 1 : 0;
+
+	{
+		std::ostringstream o;
+		o << "ClientNumber [" << (int)ClientNumber << "]";
+		debug(o.str().c_str());
+	}
+	{
+		std::ostringstream o; o << "TmpPosition ";
+		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
+			o << (i ? " " : "[") << (int)TmpPosition[i];
+		o << "]"; debug(o.str().c_str());
+	}
+	{
+		std::ostringstream o; o << "Remote? ";
+		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
+			o << (i ? " " : "[") << (int)EnvTable::Instantiate()->PlayerDat[TmpPosition[i]].RemotePlayerFlag;
+		o << "]"; debug(o.str().c_str());
+	}
 
 	return;
 }
