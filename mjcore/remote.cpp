@@ -122,82 +122,85 @@ RemoteNaki::RemoteNaki (GameTable* const gStat) {
 DWORD WINAPI RemoteNaki::startthread(LPVOID param) {
 	return reinterpret_cast<RemoteNaki*>(param)->thread();
 }
-DWORD WINAPI RemoteNaki::thread() {
-	int ReceivedMsg;
-	if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
-		int ClientReceived;
-		for (int tmp = 0; tmp < ACTUAL_PLAYERS; tmp++) {
-			while (true) {
-				//chatrecv GameStat, GameEnv
-				mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
-				if (ClientReceived) break;
-				Sleep(0);
-			}
-			if (tmp != gameStat->PlayerID) {
-				using namespace mihajong_socket::protocol;
-				switch (ReceivedMsg) {
-				case Naki_Ron:
-					gameStat->Player[tmp].DeclarationFlag.Ron = true;
-					break;
-				case Naki_Pon:
-					gameStat->Player[tmp].DeclarationFlag.Pon = true;
-					break;
-				case Naki_Kan:
-					gameStat->Player[tmp].DeclarationFlag.Kan = true;
-					break;
-				case Naki_Chii_Lower:
-					gameStat->Player[tmp].DeclarationFlag.Chi = 1;
-					break;
-				case Naki_Chii_Middle:
-					gameStat->Player[tmp].DeclarationFlag.Chi = 2;
-					break;
-				case Naki_Chii_Upper:
-					gameStat->Player[tmp].DeclarationFlag.Chi = 3;
-					break;
-				case Naki_Remote_Disconnect:
-					gameStat->Player[tmp].ConnectionLost = true;
-					break;
-				}
+void RemoteNaki::thread_client() {
+	int ReceivedMsg, ClientReceived;
+	for (int tmp = 0; tmp < ACTUAL_PLAYERS; tmp++) {
+		while (true) {
+			//chatrecv GameStat, GameEnv
+			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
+			if (ClientReceived) break;
+			Sleep(0);
+		}
+		if (tmp != gameStat->PlayerID) {
+			using namespace mihajong_socket::protocol;
+			switch (ReceivedMsg) {
+			case Naki_Ron:
+				gameStat->Player[tmp].DeclarationFlag.Ron = true;
+				break;
+			case Naki_Pon:
+				gameStat->Player[tmp].DeclarationFlag.Pon = true;
+				break;
+			case Naki_Kan:
+				gameStat->Player[tmp].DeclarationFlag.Kan = true;
+				break;
+			case Naki_Chii_Lower:
+				gameStat->Player[tmp].DeclarationFlag.Chi = 1;
+				break;
+			case Naki_Chii_Middle:
+				gameStat->Player[tmp].DeclarationFlag.Chi = 2;
+				break;
+			case Naki_Chii_Upper:
+				gameStat->Player[tmp].DeclarationFlag.Chi = 3;
+				break;
+			case Naki_Remote_Disconnect:
+				gameStat->Player[tmp].ConnectionLost = true;
+				break;
 			}
 		}
 	}
-	else if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
-		bool Received[3] = {false,}; int ServerReceived;
-		for (int i = 0; i < 3; i++)
-			if (((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag != i + 2) ||
-				(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag != i + 2) ||
-				(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag != i + 2) ||
-				((!chkGameType(gameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag != i + 2))))
-				Received[i] = true;
-		while (true) {
-			//chatrecv GameStat, GameEnv
-			mihajong_socket::server::receive(&ServerReceived, &ReceivedMsg);
-			if (ServerReceived) {
-				for (int i = 0; i < PLAYERS; i++) {
-					for (int j = 0; j < 3; j++) {
-						if ((ServerReceived == j + 1) && (EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == j + 2)) {
-							checkremotenaki(i, ReceivedMsg);
-							Received[i] = true;
-						}
+}
+void RemoteNaki::thread_server() {
+	bool Received[3] = {false,}; int ReceivedMsg, ServerReceived;
+	for (int i = 0; i < 3; i++)
+		if (((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag != i + 2) ||
+			(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag != i + 2) ||
+			(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag != i + 2) ||
+			((!chkGameType(gameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag != i + 2))))
+			Received[i] = true;
+	while (true) {
+		//chatrecv GameStat, GameEnv
+		mihajong_socket::server::receive(&ServerReceived, &ReceivedMsg);
+		if (ServerReceived) {
+			for (int i = 0; i < PLAYERS; i++) {
+				for (int j = 0; j < 3; j++) {
+					if ((ServerReceived == j + 1) && (EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == j + 2)) {
+						checkremotenaki(i, ReceivedMsg);
+						Received[i] = true;
 					}
 				}
 			}
-			if ((Received[0]) && (Received[1]) && (chkGameType(gameStat, SanmaT) || Received[2]))
-				break;
-			Sleep(0);
 		}
-		for (int i = 0; i < ACTUAL_PLAYERS; i++) {
-			using namespace mihajong_socket::protocol;
-			if (gameStat->Player[i].DeclarationFlag.Ron) mihajong_socket::server::send(Naki_Ron);
-			else if (gameStat->Player[i].DeclarationFlag.Pon) mihajong_socket::server::send(Naki_Pon);
-			else if (gameStat->Player[i].DeclarationFlag.Kan) mihajong_socket::server::send(Naki_Kan);
-			else if (gameStat->Player[i].DeclarationFlag.Chi == 1) mihajong_socket::server::send(Naki_Chii_Lower);
-			else if (gameStat->Player[i].DeclarationFlag.Chi == 2) mihajong_socket::server::send(Naki_Chii_Middle);
-			else if (gameStat->Player[i].DeclarationFlag.Chi == 3) mihajong_socket::server::send(Naki_Chii_Upper);
-			else if (gameStat->Player[i].ConnectionLost) mihajong_socket::server::send(Naki_Remote_Disconnect);
-			else mihajong_socket::server::send(Naki_Ignore);
-		}
+		if ((Received[0]) && (Received[1]) && (chkGameType(gameStat, SanmaT) || Received[2]))
+			break;
+		Sleep(0);
 	}
+	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
+		using namespace mihajong_socket::protocol;
+		if (gameStat->Player[i].DeclarationFlag.Ron) mihajong_socket::server::send(Naki_Ron);
+		else if (gameStat->Player[i].DeclarationFlag.Pon) mihajong_socket::server::send(Naki_Pon);
+		else if (gameStat->Player[i].DeclarationFlag.Kan) mihajong_socket::server::send(Naki_Kan);
+		else if (gameStat->Player[i].DeclarationFlag.Chi == 1) mihajong_socket::server::send(Naki_Chii_Lower);
+		else if (gameStat->Player[i].DeclarationFlag.Chi == 2) mihajong_socket::server::send(Naki_Chii_Middle);
+		else if (gameStat->Player[i].DeclarationFlag.Chi == 3) mihajong_socket::server::send(Naki_Chii_Upper);
+		else if (gameStat->Player[i].ConnectionLost) mihajong_socket::server::send(Naki_Remote_Disconnect);
+		else mihajong_socket::server::send(Naki_Ignore);
+	}
+}
+DWORD WINAPI RemoteNaki::thread() {
+	if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+		thread_client();
+	else if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
+		thread_server();
 	for (int i = 0; i < PLAYERS; i++)
 		if (gameStat->Player[i].DeclarationFlag.Ron) // ƒƒ“‚µ‚½‚çŽ©–Ì”vˆÊ’u‚Éƒƒ“”v‚ðÝ’è(ŽÀ‘•ã‚Ì“s‡)
 			gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1] = gameStat->CurrentDiscard;

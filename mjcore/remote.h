@@ -27,6 +27,8 @@ namespace RemoteAction {
 	private:
 		volatile bool finished;
 		GameTable* gameStat;
+		void thread_client();
+		void thread_server();
 		DWORD WINAPI thread();
 		void checkremotenaki(PLAYER_ID player, int& ReceivedMsg);
 		static DWORD WINAPI startthread(LPVOID param);
