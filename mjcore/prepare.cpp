@@ -203,11 +203,11 @@ __declspec(dllexport) void initdora(GameTable* const gameStat) { // ƒhƒ‰‚ÌÝ’è
 // -------------------------------------------------------------------------
 
 void SeatShuffler::shuffleSeat () {
-	//if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
-	//	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
-	//		if (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 1)
-	//			; //sockmake SOCK_CHAT-1+IsRemotePlayer(GameEnv, cnt), PORT_CHAT-1+IsRemotePlayer(GameEnv, cnt)
-
+	if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
+		for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+			if (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 1)
+				mihajong_socket::listen(SOCK_CHAT - 1 + EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag,
+				PORT_CHAT - 1 + EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag);
 	// ‘Þ”ð
 	auto TmpPlayerDat = EnvTable::Instantiate()->PlayerDat;
 	std::vector<PLAYER_ID> TmpPosition;

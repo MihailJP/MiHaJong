@@ -397,7 +397,7 @@ int mihajong_socket::Sock::client_thread::establishConnection() { // Ú‘±‚ğŠm—§‚
 			errcode = WSAGetLastError();
 			if (errcode == WSAEISCONN) {
 				break; // ³í‚ÉÚ‘±Š®—¹‚µ‚½‚Æ‚İ‚È‚·
-			} else if (errcode != WSAEWOULDBLOCK) {
+			} else if ((errcode != WSAEWOULDBLOCK) && (errcode != WSAEALREADY)) {
 				errtype = errConnection; return -((int)errtype);
 			}
 		} else break;
