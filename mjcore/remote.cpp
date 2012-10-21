@@ -15,7 +15,7 @@ DWORD WINAPI RemoteDahai::startthread(LPVOID param) {
 DWORD WINAPI RemoteDahai::thread () {
 	int ReceivedMsg;
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
-		int ClientReceived;
+		volatile int ClientReceived = 0;
 		while (true) {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
@@ -32,7 +32,7 @@ DWORD WINAPI RemoteDahai::thread () {
 		}
 	}
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
-		int ServerReceived;
+		volatile int ServerReceived = 0;
 		while (true) {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::server::receive(&ServerReceived, &ReceivedMsg);

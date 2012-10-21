@@ -137,7 +137,7 @@ namespace server {
 	DLL void rotation_reset () { // æ“¾—Dæ‡ˆÊ‚ÌƒŠƒZƒbƒg
 		for (unsigned i = 0; i < 3; ++i) ServerCheckRotation[i] = i + 1;
 	}
-	DLL void receive (int* const ServerReceived, int* const ReceivedMsg) { // æ“¾‚·‚é
+	DLL void receive (volatile int* const ServerReceived, int* const ReceivedMsg) { // æ“¾‚·‚é
 		*ServerReceived = 0; *ReceivedMsg = 1023; bool finished = false;
 		for (unsigned i = 0; i < (NumberOfPlayers - 1); ++i) {
 			if (sockets[ServerCheckRotation[i]] != nullptr) {

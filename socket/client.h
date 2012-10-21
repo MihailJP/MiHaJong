@@ -44,7 +44,7 @@ namespace client {
 	DLL void checkout_rules (char** rules); // ルールをチェックアウト
 	DLL void releaseobj (); // デストラクタを呼ぶだけ
 	DLL void send (int SendingMsg); // サーバーにメッセージを送る [Transitional API]
-	DLL void receive (int* const ClientReceived, int* const ReceivedMsg); // サーバーのメッセージを受信する
+	DLL void receive (volatile int* const ClientReceived, int* const ReceivedMsg); // サーバーのメッセージを受信する
 }
 }
 

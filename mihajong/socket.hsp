@@ -25,7 +25,7 @@
 
 #func serversend "?send@server@mihajong_socket@@YAXHPAX@Z" int, int
 #func serverreceive_init "?rotation_reset@server@mihajong_socket@@YAXXZ"
-#func serverreceive "?receive@server@mihajong_socket@@YAXQAH0@Z" var, var
+#func serverreceive "?receive@server@mihajong_socket@@YAXQCHQAH@Z" var, var
 
 #func s_client_start "?start@client@mihajong_socket@@YAXQBD0HH@Z" str, str, int, int
 #cfunc s_client_isstartingfinished "?isStartingFinished@client@mihajong_socket@@YAHXZ"
@@ -37,4 +37,4 @@
 #func s_client_releaseobj "?releaseobj@client@mihajong_socket@@YAXXZ"
 
 #func clientsend "?send@client@mihajong_socket@@YAXH@Z" int
-#func clientreceive "?receive@client@mihajong_socket@@YAXQAH0@Z" var, var
+#func clientreceive "?receive@client@mihajong_socket@@YAXQCHQAH@Z" var, var

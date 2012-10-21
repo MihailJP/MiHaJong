@@ -47,7 +47,7 @@ namespace server {
 	DLL void send (unsigned char SendingMsg); // サーバーからの送信
 	DLL void send (int SendingMsg, void*); // サーバーからの送信(DLL)
 	DLL void rotation_reset (); // 取得優先順位のリセット
-	DLL void receive (int* const ServerReceived, int* const ReceivedMsg); // 取得する
+	DLL void receive (volatile int* const ServerReceived, int* const ReceivedMsg); // 取得する
 }
 }
 

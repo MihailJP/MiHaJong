@@ -119,7 +119,7 @@ namespace client {
 
 	// ---------------------------------------------------------------------
 
-	DLL void receive (int* const ClientReceived, int* const ReceivedMsg) { // サーバーのメッセージを受信する
+	DLL void receive (volatile int* const ClientReceived, int* const ReceivedMsg) { // サーバーのメッセージを受信する
 		*ClientReceived = 0; *ReceivedMsg = 1023;
 		try {
 			*ClientReceived = 1;
