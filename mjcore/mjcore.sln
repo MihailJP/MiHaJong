@@ -3,6 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mjcore", "mjcore.vcxproj", "{A1E77779-D7A8-4C1C-9D52-53586D6AA58A}"
 	ProjectSection(ProjectDependencies) = postProject
+		{7B39960B-D346-465D-A9D0-8FDA45A62664} = {7B39960B-D346-465D-A9D0-8FDA45A62664}
 		{E7C76931-F5F2-493F-AD17-A592D6DC20DC} = {E7C76931-F5F2-493F-AD17-A592D6DC20DC}
 	EndProjectSection
 EndProject
