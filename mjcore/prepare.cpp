@@ -209,7 +209,11 @@ void SeatShuffler::shuffleSeat () {
 				mihajong_socket::listen(SOCK_CHAT - 1 + EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag,
 				PORT_CHAT - 1 + EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag);
 	// ‘Þ”ð
-	auto TmpPlayerDat = EnvTable::Instantiate()->PlayerDat;
+	InfoByPlayer<EnvTable::PlayerLabel> TmpPlayerDat;
+	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+		TmpPlayerDat[i].PlayerName = EnvTable::Instantiate()->PlayerDat[i].PlayerName;
+		TmpPlayerDat[i].RemotePlayerFlag = EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag;
+	}
 	std::vector<PLAYER_ID> TmpPosition;
 	for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++) TmpPosition.push_back(i);
 	// êŒˆ‚ß
@@ -231,7 +235,8 @@ void SeatShuffler::shuffleSeat () {
 	}
 	// ƒVƒƒƒbƒtƒ‹Œ‹‰Ê‚ð‘‚«ž‚Ý
 	for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++) {
-		EnvTable::Instantiate()->PlayerDat[i] = TmpPlayerDat[TmpPosition[i]];
+		EnvTable::Instantiate()->PlayerDat[i].PlayerName = TmpPlayerDat[TmpPosition[i]].PlayerName;
+		EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = TmpPlayerDat[TmpPosition[i]].RemotePlayerFlag;
 		posarry[i] = TmpPosition[i];
 	}
 
@@ -256,8 +261,14 @@ void SeatShuffler::shuffleSeat () {
 	{
 		std::ostringstream o; o << "Remote? ";
 		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
-			o << (i ? " " : "[") << (int)EnvTable::Instantiate()->PlayerDat[TmpPosition[i]].RemotePlayerFlag;
+			o << (i ? " " : "[") << (int)EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag;
 		o << "]"; debug(o.str().c_str());
+	}
+	{
+		std::ostringstream o; o << "Name ";
+		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
+			o << (i ? " [" : "[") << EnvTable::Instantiate()->PlayerDat[i].PlayerName << "]";
+		debug(o.str().c_str());
 	}
 
 	return;

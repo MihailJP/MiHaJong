@@ -142,8 +142,8 @@ namespace server {
 		for (unsigned i = 0; i < (NumberOfPlayers - 1); ++i) {
 			if (sockets[ServerCheckRotation[i]] != nullptr) {
 				try {
-					*ServerReceived = ServerCheckRotation[i];
 					*ReceivedMsg = sockets[ServerCheckRotation[i]]->getc();
+					*ServerReceived = ServerCheckRotation[i];
 					finished = true;
 				}
 				catch (queue_empty) { // Falling back if empty...

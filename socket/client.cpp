@@ -122,8 +122,8 @@ namespace client {
 	DLL void receive (volatile int* const ClientReceived, int* const ReceivedMsg) { // サーバーのメッセージを受信する
 		*ClientReceived = 0; *ReceivedMsg = 1023;
 		try {
-			*ClientReceived = 1;
 			*ReceivedMsg = sockets[0]->getc();
+			*ClientReceived = 1;
 		}
 		catch (queue_empty) { // Falling back if empty...
 			*ClientReceived = 0;

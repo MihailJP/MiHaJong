@@ -36,7 +36,7 @@ DWORD WINAPI RemoteDahai::thread () {
 		while (true) {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::server::receive(&ServerReceived, &ReceivedMsg);
-			if (ServerReceived == (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag - 1)) {
+			if (ServerReceived == EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag) {
 				break;
 			}
 			Sleep(0);
@@ -44,7 +44,7 @@ DWORD WINAPI RemoteDahai::thread () {
 		// 受信失敗の時
 		if (ReceivedMsg == 1023) {
 			for (int i = 0; i < PLAYERS; i++) {
-				if ((EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag == (ServerReceived + 1)) &&
+				if ((EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag == ServerReceived) &&
 					(!gameStat->Player[i].ConnectionLost)) {
 						gameStat->Player[i].ConnectionLost = true;
 						std::ostringstream o; o << "プレイヤー [" <<
@@ -123,7 +123,7 @@ DWORD WINAPI RemoteNaki::startthread(LPVOID param) {
 	return reinterpret_cast<RemoteNaki*>(param)->thread();
 }
 void RemoteNaki::thread_client() {
-	int ReceivedMsg, ClientReceived;
+	int ReceivedMsg; volatile int ClientReceived = 0;
 	for (int tmp = 0; tmp < ACTUAL_PLAYERS; tmp++) {
 		while (true) {
 			//chatrecv GameStat, GameEnv
@@ -160,12 +160,13 @@ void RemoteNaki::thread_client() {
 	}
 }
 void RemoteNaki::thread_server() {
-	bool Received[3] = {false,}; int ReceivedMsg, ServerReceived;
+	bool Received[3] = {false, false, false,};
+	int ReceivedMsg; volatile int ServerReceived = 0;
 	for (int i = 0; i < 3; i++)
-		if (((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag != i + 2) ||
-			(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag != i + 2) ||
-			(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag != i + 2) ||
-			((!chkGameType(gameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag != i + 2))))
+		if (((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag != i + 1) &&
+			(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag != i + 1) &&
+			(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag != i + 1) &&
+			((!chkGameType(gameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag != i + 1))))
 			Received[i] = true;
 	while (true) {
 		//chatrecv GameStat, GameEnv
@@ -173,9 +174,9 @@ void RemoteNaki::thread_server() {
 		if (ServerReceived) {
 			for (int i = 0; i < PLAYERS; i++) {
 				for (int j = 0; j < 3; j++) {
-					if ((ServerReceived == j + 1) && (EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == j + 2)) {
+					if ((ServerReceived == (j + 1)) && (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag == (j + 1))) {
 						checkremotenaki(i, ReceivedMsg);
-						Received[i] = true;
+						Received[j] = true;
 					}
 				}
 			}

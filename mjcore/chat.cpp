@@ -41,7 +41,7 @@ void ChatThread::init() {
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
 		bool tmpClientWaiting[PLAYERS];
 		for (int i = 0; i < PLAYERS; i++) {
-			tmpClientWaiting[i] = (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 1);
+			tmpClientWaiting[i] = (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 0);
 			mihajong_socket::listen(
 				SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag,
 				PORT_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag);
