@@ -4,7 +4,7 @@ mihajong/*.dll
 mihajong/*.i
 mihajong/bgm/
 mihajong/sound/
-mihajong/debug.log
+mihajong/debug*.log
 mihajong/haifu/*.txt
 mihajong/haifu/*.htm
 mihajong/hsptmp

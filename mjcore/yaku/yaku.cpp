@@ -241,7 +241,7 @@ void yaku::yakuCalculator::countDora
 			ura += gameStat->DoraFlag.Ura[gameStat->Player[targetPlayer].Hand[i].tile];
 	}
 	/* –Â‚«–Êq‚Ìƒhƒ‰‚ğ”‚¦‚é */
-	for (int i = 1; i < gameStat->Player[targetPlayer].MeldPointer; i++) {
+	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
 		auto k = &gameStat->Player[targetPlayer].Meld[i];
 		switch (k->mstat) {
 		case meldSequenceExposedLower: case meldSequenceExposedMiddle: case meldSequenceExposedUpper: // ‡q
