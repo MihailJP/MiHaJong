@@ -72,6 +72,10 @@ protected:
 	int errcode; // エラーコード
 	volatile bool connected; // 接続済みかのフラグ[ワーカースレッドから書き込み]
 	volatile bool terminated; // 接続済みかのフラグ[親スレッドから書き込み]
+	volatile bool send_ended; // 送信が全て終わったかのフラグ
+	volatile bool sender_closed; // 送信が全て終わったかのフラグ
+	bool receive_ended; // 受信が全て終わったかのフラグ
+	volatile bool receiver_closed; // 受信が全て終わったかのフラグ
 	volatile bool finished; // 終了済みかのフラグ[ワーカースレッドから書き込み]
 	sockaddr_in myAddr; // アドレス情報[親スレッドから書き込み]
 	std::queue<unsigned char> myMailBox; // 受け取ったバイト列
@@ -82,6 +86,7 @@ protected:
 	int reader (); // 読み込み
 	int writer (); // 書き込み
 	DWORD WINAPI myThreadFunc(); // スレッドの処理
+	void wait_until_sent(); // 送信キューが空になるまで待つ
 };
 
 class Sock::client_thread : public network_thread { // クライアントのスレッド

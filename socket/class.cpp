@@ -280,6 +280,7 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 		o << "] サイズ [" << std::dec << recvsz << "]";
 		if (recvsz) trace(o.str().c_str());
 		LeaveCriticalSection(&myRecvQueueCS); // 受信用ミューテックスを解放
+		if (recvsz == 0) receive_ended = true; // 受信終了？
 	} else { // 受信できない時
 		switch (int err = WSAGetLastError()) {
 		case WSAEWOULDBLOCK:
@@ -308,6 +309,7 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 		}
 		o << "] サイズ [" << std::dec << sendsz << "]";
 		if (sendsz) trace(o.str().c_str());
+		if (receiver_closed) send_ended = true; // 送信ポートが閉じられていたら終了処理へ
 		LeaveCriticalSection(&mySendQueueCS); // 送信用ミューテックスを解放
 	}
 	buffer.len = sendsz; // 送信サイズ
@@ -326,9 +328,12 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの処理
 	u_long arg = 1; ioctlsocket(*mySock, FIONBIO, &arg); // non-blocking モードに設定
 	if (int err = establishConnection()) return err; // 接続
-	while (!terminated) { // 停止されるまで
-		if (int err = reader()) return err; // 読み込み
-		if (int err = writer()) return err; // 書き込み
+	while (sender_closed || receiver_closed) { // 終了するまで
+		int err = 0;
+		if (err = reader()) return err; // 読み込み
+		if (receive_ended) {shutdown(*mySock, SD_RECEIVE); receiver_closed = true;} // 終了ならソケットをシャットダウン
+		if ((!sender_closed) && (err = writer())) return err; // 書き込み
+		if (send_ended) {shutdown(*mySock, SD_SEND); sender_closed = true; send_ended = false;} // 終了ならソケットをシャットダウン
 		Sleep(0);
 	}
 	finished = true;
@@ -381,10 +386,23 @@ void mihajong_socket::Sock::network_thread::setsock (SOCKET* const socket) { // 
 	mySock = socket;
 }
 
+void mihajong_socket::Sock::network_thread::wait_until_sent() { // 送信キューが空になるまで待つ
+	while (true) { // 送信が完了するまで待つ
+		EnterCriticalSection(&mySendQueueCS); // 送信用ミューテックスを取得
+		bool flag = mySendBox.empty(); // 終了したかどうかのフラグ
+		LeaveCriticalSection(&mySendQueueCS); // 送信用ミューテックスを解放
+		if (flag) { // 送るべきデータをすべて送り終えたら
+			send_ended = true; break; // フラグを立てて、ループを抜ける
+		}
+		Sleep(0);
+	}
+}
+
 void mihajong_socket::Sock::network_thread::terminate () { // 切断する
 	terminated = true; // フラグを立てる
-	while (!finished) Sleep(50); // スレッドが終了するまで待つ
-	finished = terminated = connected = false; // フラグの後始末
+	wait_until_sent(); // 送信が完了するまで待つ
+	while (!finished) Sleep(0); // スレッドが終了するまで待つ
+	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = false; // フラグの後始末
 	errtype = errNone; errcode = 0;
 }
 
