@@ -399,4 +399,20 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(analysis->KeziCount[CircleOne] >= 1);
 			}
 		));
+	/* バッハ */
+	if (RuleData::chkRuleApplied("bach"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"バッハ", get_yaku_han("bach"),
+			"二色同刻",
+			[countKeziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+				unsigned count = 0;
+				for (int i = CircleOne; i <= CircleSeven; i++) {
+					count += analysis->DuiziCount[i];
+					count += analysis->ShunziCount[i];
+				}
+				count += analysis->DuiziCount[CircleNine];
+				return (countKeziOf(analysis, 8) >= 2) &&
+					(count >= 3);
+			}
+		));
 }
