@@ -360,4 +360,43 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(analysis->KeziCount[RedDragon] >= 1);
 			}
 		));
+	/* 藤子スペシャル */
+	if (RuleData::chkRuleApplied("fujikospecial"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"藤子スペシャル", get_yaku_han("fujikospecial"),
+			"役牌・白",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool flag = false;
+				for (int i = 1; i < TILE_NONFLOWER_MAX; i++)
+					if (analysis->GameStat->DoraFlag.Omote[i] && analysis->KeziCount[i])
+						flag = true;
+				return flag &&
+					(analysis->KeziCount[CharacterEight] >= 1) &&
+					(analysis->KeziCount[RedDragon] >= 1);
+			}
+		));
+	/* フジテレビ */
+	if (RuleData::chkRuleApplied("fujitv"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"フジテレビ", get_yaku_han("fujitv"),
+			"三色同刻",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->MianziDat[0].tile == CircleOne) &&
+					(analysis->KeziCount[CharacterEight] >= 1) &&
+					(analysis->KeziCount[CircleEight] >= 1) &&
+					(analysis->KeziCount[BambooEight] >= 1);
+			}
+		));
+	/* 東アジア */
+	if (RuleData::chkRuleApplied("eastasia"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"東アジア", get_yaku_han("eastasia"),
+			"役牌・中", "対々和",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[RedDragon] >= 1) &&
+					(analysis->KeziCount[NorthWind] >= 1) &&
+					(analysis->KeziCount[SouthWind] >= 1) &&
+					(analysis->KeziCount[CircleOne] >= 1);
+			}
+		));
 }
