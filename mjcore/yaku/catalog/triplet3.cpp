@@ -415,4 +415,64 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(count >= 3);
 			}
 		));
+	/* TODO: ñkìáéOòY */
+	/* ëÂäôÇÃéÄê_ */
+	if (RuleData::chkRuleApplied("reaper"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ëÂäôÇÃéÄê_", get_yaku_han("reaper"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[CircleSeven] >= 1) &&
+					(analysis->KeziCount[EastWind] >= 1);
+			}
+		));
+	/* âzíJ */
+	if (RuleData::chkRuleApplied("koshigaya"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"âzíJ", get_yaku_han("koshigaya"),
+			[countKeziOf, countKangziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (countKeziOf(analysis, 5) >= 1) &&
+					(countKeziOf(analysis, 4) >= 1) &&
+					(countKangziOf(analysis, 8) >= 1);
+			}
+		));
+	/* ñkâzíJ */
+	if (RuleData::chkRuleApplied("kitakoshigaya"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ñkâzíJ", get_yaku_han("kitakoshigaya"),
+			"âzíJ",
+			[countKeziOf, countKangziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[NorthWind] >= 1) &&
+					(countKeziOf(analysis, 5) >= 1) &&
+					(countKeziOf(analysis, 4) >= 1) &&
+					(countKangziOf(analysis, 8) >= 1);
+			}
+		));
+	/* ìÏâzíJ */
+	if (RuleData::chkRuleApplied("minamikoshigaya"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"ìÏâzíJ", get_yaku_han("minamikoshigaya"),
+			"âzíJ",
+			[countKeziOf, countKangziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[SouthWind] >= 1) &&
+					(countKeziOf(analysis, 5) >= 1) &&
+					(countKeziOf(analysis, 4) >= 1) &&
+					(countKangziOf(analysis, 8) >= 1);
+			}
+		));
+	/* TODO: òaómíÜññû */
+	/* TODO: â[îNññû */
+	/* TODO: Windows8 */
+	/* TODO: êNó™ÉCÉJñ∫ */
+	/* Ç†Ç∏Ç‹éıÇµ */
+	if (RuleData::chkRuleApplied("azumazushi"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"Ç†Ç∏Ç‹éıÇµ", get_yaku_han("azumazushi"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->MianziDat[0].tile == CharacterFour) ||
+					(analysis->MianziDat[0].tile == CircleFour) ||
+					(analysis->MianziDat[0].tile == BambooFour)) &&
+					(analysis->KeziCount[EastWind] >= 1);
+			}
+		));
+	/* TODO: êºêVà‰ */
 }
