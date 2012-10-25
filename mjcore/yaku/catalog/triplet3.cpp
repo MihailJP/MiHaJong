@@ -522,5 +522,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(analysis->KeziCount[EastWind] >= 1);
 			}
 		));
-	/* TODO: ¼Vˆä */
+	/* ¼Vˆä */
+	if (RuleData::chkRuleApplied("nishiarai"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"¼Vˆä", get_yaku_han("nishiarai"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[WestWind] >= 1) &&
+					((analysis->TsumoHai->tile == CharacterOne) ||
+					(analysis->TsumoHai->tile == CircleOne) ||
+					(analysis->TsumoHai->tile == BambooOne) ||
+					(analysis->TsumoHai->tile == CharacterTwo) ||
+					(analysis->TsumoHai->tile == CircleTwo) ||
+					(analysis->TsumoHai->tile == BambooTwo));
+			}
+		));
 }
