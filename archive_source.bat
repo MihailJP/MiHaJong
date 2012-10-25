@@ -30,6 +30,13 @@ copy astro\*.rc release\source\astro
 copy astro\*.vcxproj release\source\astro
 copy astro\*.vcxproj.filters release\source\astro
 
+mkdir release\source\socket
+copy socket\*.c release\source\socket
+copy socket\*.h release\source\socket
+copy socket\*.rc release\source\socket
+copy socket\*.vcxproj release\source\socket
+copy socket\*.vcxproj.filters release\source\socket
+
 del /q source.zip
 cd release
 "C:\Program Files\7-zip\7z.exe" a -mx=9 ..\source.zip source
