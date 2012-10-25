@@ -496,7 +496,29 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(analysis->KeziCount[RedDragon] >= 1);
 			}
 		));
-	/* TODO: ‰[”N–ð–ž */
+	/* ‰[”N–ð–ž */
+	if (RuleData::chkRuleApplied("leap_year"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"‰[”N–ð–ž",
+			yaku::yakuCalculator::Yaku::HANFUNC(
+				[](const MENTSU_ANALYSIS* const analysis) -> yaku::yakuCalculator::Yaku::YAKU_HAN {
+					SYSTEMTIME nowTime; GetLocalTime(&nowTime);
+					if ((nowTime.wMonth == 2) && (nowTime.wDay == 29))
+						return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman;
+					else return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman;
+				}),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
+				bool isLeapYear = (nowTime.wYear % 400 == 0) || ((nowTime.wYear % 4 == 0) && (nowTime.wYear % 100 != 0));
+				if (!isLeapYear) return false;
+				for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); ++k)
+					if ((analysis->KeziCount[((*k)[0] - '0') * TILE_SUIT_STEP + 2] >= 1) &&
+						(analysis->KeziCount[((*k)[1] - '0') * TILE_SUIT_STEP + 2] >= 1) &&
+						(analysis->KeziCount[((*k)[1] - '0') * TILE_SUIT_STEP + 9] >= 1))
+						return true;
+				return false;
+			}
+		));
 	/* Windows8 */
 	if (RuleData::chkRuleApplied("windows8"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
