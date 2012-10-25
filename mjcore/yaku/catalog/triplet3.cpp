@@ -415,7 +415,32 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(count >= 3);
 			}
 		));
-	/* TODO: 北島三郎 */
+	/* 北島三郎 */
+	if (RuleData::chkRuleApplied("kitajima_saburoh"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"北島三郎", get_yaku_han("kitajima_saburoh"),
+			"混一色", "四帰一",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool pairIsHonor = false; bool flag = false;
+				for (int i = TILE_SUIT_HONORS; i < TILE_NONFLOWER_MAX; i++)
+					if (analysis->MianziDat[0].tile == (tileCode)i)
+						pairIsHonor = true;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
+					if ((analysis->KeziCount[i + 3] >= 1) &&
+						(analysis->KeziCount[i + 6] >= 1) &&
+						(analysis->KeziCount[NorthWind] >= 1) &&
+						(pairIsHonor)) {
+							if ((analysis->ShunziCount[i + 4] >= 1) &&
+								(analysis->TsumoHai->tile == (tileCode)(i + 6)))
+								flag = true;
+							if ((analysis->ShunziCount[i + 3] >= 1) &&
+								(analysis->TsumoHai->tile == (tileCode)(i + 3)))
+								flag = true;
+					}
+				}
+				return flag;
+			}
+		));
 	/* 大鎌の死神 */
 	if (RuleData::chkRuleApplied("reaper"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
