@@ -1,3 +1,5 @@
+set ARCHIVE_BASEDIR=%CD%
+
 rmdir /s /q release\source
 
 mkdir release
@@ -40,4 +42,4 @@ copy socket\*.vcxproj.filters release\source\socket
 del /q source.zip
 cd release
 "C:\Program Files\7-zip\7z.exe" a -mx=9 ..\source.zip source
-cd ..
+cd %ARCHIVE_BASEDIR%

@@ -1,3 +1,5 @@
+set PACKAGE_BASEDIR=%CD%
+
 rmdir /s /q release
 
 mkdir release
@@ -23,4 +25,4 @@ copy source.zip release\mihajong
 del /q mihajong.zip
 cd release
 "C:\Program Files\7-zip\7z.exe" a -mx=9 ..\mihajong.zip mihajong
-cd ..
+cd %PACKAGE_BASEDIR%

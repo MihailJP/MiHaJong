@@ -1,8 +1,9 @@
 set HSPPATH="C:\Program Files\hsp321"
+set BASEDIR=%CD%
 ruby auxtools\rulesyms.rb
-cd mjcore
+cd %BASEDIR%\mjcore
 call build.bat
-cd ..\mihajong
+cd %BASEDIR%\mihajong
 call build.bat
-cd ..
+cd %BASEDIR%
 call package.bat
