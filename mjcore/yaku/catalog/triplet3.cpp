@@ -532,7 +532,20 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(!*analysis->TsumoAgariFlag)) ? 1 : 0) >= 3);
 			}
 		));
-	/* TODO: N—ªƒCƒJ–º */
+	/* N—ªƒCƒJ–º */
+	if (RuleData::chkRuleApplied("ikamusume"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"N—ªƒCƒJ–º", get_yaku_han("ikamusume"),
+			"–ð”vE”’", "–ð”vEá¢",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->AnKeziCount[EastWind] - analysis->AnKangziCount[EastWind] +
+					analysis->AnKeziCount[SouthWind] - analysis->AnKangziCount[SouthWind] +
+					analysis->AnKeziCount[WestWind] - analysis->AnKangziCount[WestWind] +
+					analysis->AnKeziCount[NorthWind] - analysis->AnKangziCount[NorthWind]) >= 1) &&
+					((analysis->AnKeziCount[WhiteDragon] - analysis->AnKangziCount[WhiteDragon]) >= 1) &&
+					((analysis->AnKeziCount[GreenDragon] - analysis->AnKangziCount[GreenDragon]) >= 1);
+			}
+		));
 	/* ‚ ‚¸‚ÜŽõ‚µ */
 	if (RuleData::chkRuleApplied("azumazushi"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
