@@ -32,7 +32,7 @@
 			DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 		} else {
 			/* ƒlƒbƒg‘ÎíŽž‚Ìˆ— */
-			if (IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > 0) {
+			if ((getGameMode(GameEnv) == GAMEMODE_CLIENT) || (IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > 0)) {
 				remoteDahai GameStat, GameEnv: DiscardTileIndex = stat
 				if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 					if (ReceivedMsg == 1023) {
