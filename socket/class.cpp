@@ -119,7 +119,7 @@ unsigned char mihajong_socket::Sock::getc () { // “Ç‚İ‚İ(”ñ“¯Šú)
 	}
 	{
 		std::ostringstream o;
-		o << "ƒoƒCƒgóMˆ— ƒ|[ƒg [" << portnum << "] ƒoƒCƒg [0x" <<
+		o << "ƒoƒCƒgóM dequeue ƒ|[ƒg [" << portnum << "] ƒoƒCƒg [0x" <<
 			std::hex << std::setw(2) << std::setfill('0') << (unsigned int)byte << "]";
 		trace(o.str().c_str());
 	}
@@ -171,7 +171,7 @@ std::string mihajong_socket::Sock::gets () { // NewLine‚Ü‚Å“Ç‚İ‚İ
 void mihajong_socket::Sock::putc (unsigned char byte) { // ‘‚«‚İ
 	{
 		std::ostringstream o;
-		o << "ƒoƒCƒg‘—Mˆ— ƒ|[ƒg [" << portnum << "] ƒoƒCƒg [0x" <<
+		o << "ƒoƒCƒg‘—M enqueue ƒ|[ƒg [" << portnum << "] ƒoƒCƒg [0x" <<
 			std::hex << std::setw(2) << std::setfill('0') << (unsigned int)byte << "]";
 		trace(o.str().c_str());
 	}
@@ -207,7 +207,6 @@ void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
 	} else {
 		threadPtr.client->terminate();
 	}
-	shutdown(sock, SD_BOTH);
 	closesocket(sock);
 	if (isServer) {
 		delete threadPtr.server;
@@ -223,7 +222,7 @@ void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
 mihajong_socket::Sock::network_thread::network_thread(Sock* caller) {
 	myCaller = caller;
 	errtype = errNone; errcode = 0;
-	connected = terminated = finished = false;
+	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = false;
 	InitializeCriticalSection(&myRecvQueueCS);
 	InitializeCriticalSection(&mySendQueueCS);
 }
@@ -280,7 +279,7 @@ int mihajong_socket::Sock::network_thread::reader() { // óMˆ—
 		o << "] ƒTƒCƒY [" << std::dec << recvsz << "]";
 		if (recvsz) trace(o.str().c_str());
 		LeaveCriticalSection(&myRecvQueueCS); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
-		if (recvsz == 0) receive_ended = true; // óMI—¹H
+		if (recvsz == 0) {receive_ended = true;} // óMI—¹H
 	} else { // óM‚Å‚«‚È‚¢
 		switch (int err = WSAGetLastError()) {
 		case WSAEWOULDBLOCK:
@@ -309,7 +308,7 @@ int mihajong_socket::Sock::network_thread::writer() { // ‘—Mˆ—
 		}
 		o << "] ƒTƒCƒY [" << std::dec << sendsz << "]";
 		if (sendsz) trace(o.str().c_str());
-		if (receiver_closed) send_ended = true; // ‘—Mƒ|[ƒg‚ª•Â‚¶‚ç‚ê‚Ä‚¢‚½‚çI—¹ˆ—‚Ö
+		//if (receiver_closed) send_ended = true; // óMƒ|[ƒg‚ª•Â‚¶‚ç‚ê‚Ä‚¢‚½‚çI—¹ˆ—‚Ö
 		LeaveCriticalSection(&mySendQueueCS); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
 	}
 	buffer.len = sendsz; // ‘—MƒTƒCƒY
@@ -328,14 +327,21 @@ int mihajong_socket::Sock::network_thread::writer() { // ‘—Mˆ—
 DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // ƒXƒŒƒbƒh‚Ìˆ—
 	u_long arg = 1; ioctlsocket(*mySock, FIONBIO, &arg); // non-blocking ƒ‚[ƒh‚Éİ’è
 	if (int err = establishConnection()) return err; // Ú‘±
-	while (sender_closed || receiver_closed) { // I—¹‚·‚é‚Ü‚Å
+	while ((!sender_closed) || (!receiver_closed)) { // I—¹‚·‚é‚Ü‚Å
 		int err = 0;
-		if (err = reader()) return err; // “Ç‚İ‚İ
-		if (receive_ended) {shutdown(*mySock, SD_RECEIVE); receiver_closed = true;} // I—¹‚È‚çƒ\ƒPƒbƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“
+		if ((!receiver_closed) && (err = reader())) return err; // “Ç‚İ‚İ
+		if (receive_ended) { // I—¹‚È‚çƒ\ƒPƒbƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“
+			std::ostringstream o; o << "óMƒ|[ƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“ ƒ|[ƒg[" << myCaller->portnum << "]"; debug(o.str().c_str());
+			shutdown(*mySock, SD_RECEIVE); receiver_closed = true; receive_ended = false;
+		}
 		if ((!sender_closed) && (err = writer())) return err; // ‘‚«‚İ
-		if (send_ended) {shutdown(*mySock, SD_SEND); sender_closed = true; send_ended = false;} // I—¹‚È‚çƒ\ƒPƒbƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“
+		if (send_ended) { // I—¹‚È‚çƒ\ƒPƒbƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“
+			std::ostringstream o; o << "‘—Mƒ|[ƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“ ƒ|[ƒg[" << myCaller->portnum << "]"; debug(o.str().c_str());
+			shutdown(*mySock, SD_SEND); sender_closed = true; send_ended = false;
+		}
 		Sleep(0);
 	}
+	{std::ostringstream o; o << "‘—óMƒXƒŒƒbƒhƒ‹[ƒv‚ÌI—¹ ƒ|[ƒg[" << myCaller->portnum << "]"; debug(o.str().c_str());}
 	finished = true;
 	return S_OK;
 }
@@ -387,6 +393,10 @@ void mihajong_socket::Sock::network_thread::setsock (SOCKET* const socket) { // 
 }
 
 void mihajong_socket::Sock::network_thread::wait_until_sent() { // ‘—MƒLƒ…[‚ª‹ó‚É‚È‚é‚Ü‚Å‘Ò‚Â
+	{
+		std::ostringstream o; o << "ƒ|[ƒg [" << myCaller->portnum << "] ‚Ì‘—Mƒf[ƒ^‚Í‚±‚±‚Ü‚Å‚ç‚µ‚¢A‘S•”‘—‚èI‚í‚é‚Ü‚Å‘Ò‚¿‚Ü‚·";
+		debug(o.str().c_str());
+	}
 	while (true) { // ‘—M‚ªŠ®—¹‚·‚é‚Ü‚Å‘Ò‚Â
 		EnterCriticalSection(&mySendQueueCS); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
 		bool flag = mySendBox.empty(); // I—¹‚µ‚½‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
@@ -394,14 +404,18 @@ void mihajong_socket::Sock::network_thread::wait_until_sent() { // ‘—MƒLƒ…[‚ª‹
 		if (flag) { // ‘—‚é‚×‚«ƒf[ƒ^‚ğ‚·‚×‚Ä‘—‚èI‚¦‚½‚ç
 			send_ended = true; break; // ƒtƒ‰ƒO‚ğ—§‚Ä‚ÄAƒ‹[ƒv‚ğ”²‚¯‚é
 		}
-		Sleep(0);
+		Sleep(500);
+	}
+	{
+		std::ostringstream o; o << "ƒ|[ƒg [" << myCaller->portnum << "] ‚Ì‘—M‚ÍI‚í‚Á‚½‚ñ‚¶‚á‚È‚¢‚©‚ÈH";
+		debug(o.str().c_str());
 	}
 }
 
 void mihajong_socket::Sock::network_thread::terminate () { // Ø’f‚·‚é
 	terminated = true; // ƒtƒ‰ƒO‚ğ—§‚Ä‚é
 	wait_until_sent(); // ‘—M‚ªŠ®—¹‚·‚é‚Ü‚Å‘Ò‚Â
-	while (!finished) Sleep(0); // ƒXƒŒƒbƒh‚ªI—¹‚·‚é‚Ü‚Å‘Ò‚Â
+	while (!finished) Sleep(10); // ƒXƒŒƒbƒh‚ªI—¹‚·‚é‚Ü‚Å‘Ò‚Â
 	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = false; // ƒtƒ‰ƒO‚ÌŒãn––
 	errtype = errNone; errcode = 0;
 }
