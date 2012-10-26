@@ -41,15 +41,16 @@ void ChatThread::init() {
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
 		bool tmpClientWaiting[PLAYERS];
 		for (int i = 0; i < PLAYERS; i++) {
-			tmpClientWaiting[i] = (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 0);
-			mihajong_socket::listen(
-				SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag,
-				PORT_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag);
+			if (tmpClientWaiting[i] = (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 0))
+				mihajong_socket::listen(
+					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag,
+					PORT_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag);
 		}
 		while (tmpClientWaiting[0] || tmpClientWaiting[1] || tmpClientWaiting[2] || tmpClientWaiting[3]) {
 			for (int i = 0; i < PLAYERS; i++)
-				if (mihajong_socket::connected(
-					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag))
+				if ((tmpClientWaiting[i] = (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 0)) &&
+					(mihajong_socket::connected(
+					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag)))
 					tmpClientWaiting[i] = false;
 			Sleep(0);
 		}
@@ -63,13 +64,13 @@ void ChatThread::init() {
 void ChatThread::receive() {
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
 		for (int i = 0; i < PLAYERS; i++) {
-			if (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag >= 2) {
+			if (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag >= 1) {
 				char buf[bufsize] = {0};
 				int stat = mihajong_socket::gets(
 					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag,
 					buf, bufsize);
 				if (stat == 0) {
-					for (int k = 2; k <= 4; k++) {
+					for (int k = 1; k <= 3; k++) {
 						if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
 							(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
 							(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
@@ -117,7 +118,7 @@ void ChatThread::send() {
 	if (!sendQueue.empty()) {
 		char buf[bufsize] = {0}; buf[0] = GameStat.PlayerID + '0';
 		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
-			for (int k = 2; k <= 4; k++) {
+			for (int k = 1; k <= 3; k++) {
 				if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
 					(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
 					(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
