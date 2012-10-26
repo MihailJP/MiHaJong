@@ -35,4 +35,5 @@ mjcore/lua/*.lib
 mjcore/lua/include
 release
 *.zip
+*.7z
 *~
