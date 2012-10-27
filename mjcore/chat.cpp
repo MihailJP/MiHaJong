@@ -137,6 +137,7 @@ void ChatThread::send() {
 #endif
 							);
 						mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
+						chatappend(buf);
 				}
 			}
 		} else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
