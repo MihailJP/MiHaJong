@@ -151,7 +151,7 @@ unsigned char mihajong_socket::Sock::syncgetc () { // “Ç‚Ýž‚Ý(“¯Šú)
 }
 
 std::string mihajong_socket::Sock::gets () { // NewLine‚Ü‚Å“Ç‚Ýž‚Ý
-	trace("•¶Žš—ñ‚ðNWL(0x0a)‚Ü‚ÅŽæ“¾‚µ‚Ü‚·B");
+	//trace("•¶Žš—ñ‚ðNWL(0x0a)‚Ü‚ÅŽæ“¾‚µ‚Ü‚·B");
 	std::string str;
 	if (isServer) {
 		threadPtr.server->chkError();
