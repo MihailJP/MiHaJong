@@ -60,7 +60,7 @@
 	return CurrentChatTxt
 
 #deffunc clearChatTxt
-	CurrentChatTxt = "": gsel SCR_CHAT: objprm 0, CurrentChatTxt: gsel 0
+	CurrentChatTxt = "": gsel SCR_CHAT: objprm 1, CurrentChatTxt: gsel 0
 return
 
 #global
