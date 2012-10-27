@@ -235,17 +235,17 @@ void SeatShuffler::shuffleSeat () {
 	}
 	// シャッフル結果を書き込み
 	for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++) {
-		EnvTable::Instantiate()->PlayerDat[i].PlayerName = TmpPlayerDat[TmpPosition[i]].PlayerName;
-		EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = TmpPlayerDat[TmpPosition[i]].RemotePlayerFlag;
+		EnvTable::Instantiate()->PlayerDat[TmpPosition[i]].PlayerName = TmpPlayerDat[i].PlayerName;
+		EnvTable::Instantiate()->PlayerDat[TmpPosition[i]].RemotePlayerFlag = TmpPlayerDat[i].RemotePlayerFlag;
 		posarry[i] = TmpPosition[i];
 	}
 
 	// リモートとしてマーク
-	PLAYER_ID tmpPlayer = TmpPosition[ClientNumber];
+	/*PLAYER_ID tmpPlayer = TmpPosition[ClientNumber];
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
 			EnvTable::Instantiate()->PlayerDat[TmpPosition[i]].RemotePlayerFlag =
-			(i != tmpPlayer) ? 1 : 0;
+			(i != tmpPlayer) ? 1 : 0;*/
 
 	{
 		std::ostringstream o;
