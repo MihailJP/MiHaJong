@@ -56,7 +56,7 @@ void ChatThread::init() {
 		}
 	}
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
-		mihajong_socket::connect(SOCK_CHAT+0, myServerAddr.c_str(), PORT_CHAT+myClientNum);
+		mihajong_socket::connect(SOCK_CHAT+0, myServerAddr.c_str(), PORT_CHAT-1+myClientNum);
 		while (!mihajong_socket::connected(SOCK_CHAT+0)) Sleep(0); // Wait until connection established
 	}
 }
