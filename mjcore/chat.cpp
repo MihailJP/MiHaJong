@@ -75,7 +75,8 @@ void ChatThread::receive() {
 							(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
 							(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
 							((!chkGameType(&GameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
-								strcat_s(buf, bufsize,
+								if (buf[strlen(buf) - 1] != '\n')
+									strcat_s(buf, bufsize,
 #ifdef _WIN32
 									"\r\n"
 #else
@@ -83,8 +84,8 @@ void ChatThread::receive() {
 #endif
 									);
 								mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
+								chatappend(buf);
 						}
-						chatappend(buf);
 					}
 				}
 			}
@@ -103,11 +104,14 @@ void ChatThread::chatappend(const std::string& buf) {
 		EnterCriticalSection(&streamLock);
 		myChatStream << EnvTable::Instantiate()->PlayerDat[tmpPlayer].PlayerName <<
 			"(" << windName(playerwind(&GameStat, tmpPlayer, GameStat.GameRound)) << ") : " <<
-			std::string(buf.begin() + 1, buf.end()) <<
+			std::string(buf.begin() + 1, buf.end());
+		if (buf[buf.length() - 1] != '\n')
+			myChatStream <<
 #ifdef _WIN32
 			"\r" <<
 #endif
 			std::endl;
+		else myChatStream.flush();
 		LeaveCriticalSection(&streamLock);
 		updateWindow();
 	}
@@ -124,7 +128,8 @@ void ChatThread::send() {
 					(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
 					((!chkGameType(&GameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
 						strcat_s(buf, bufsize, sendQueue.front().c_str());
-						strcat_s(buf, bufsize,
+						if ((strlen(buf)) && (buf[strlen(buf) - 1] != '\n'))
+							strcat_s(buf, bufsize,
 #ifdef _WIN32
 							"\r\n"
 #else
@@ -136,7 +141,8 @@ void ChatThread::send() {
 			}
 		} else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 			strcat_s(buf, bufsize, sendQueue.front().c_str());
-			strcat_s(buf, bufsize,
+			if ((strlen(buf)) && (buf[strlen(buf) - 1] != '\n'))
+				strcat_s(buf, bufsize,
 #ifdef _WIN32
 				"\r\n"
 #else
@@ -166,20 +172,26 @@ std::string ChatThread::getlog () {
 }
 
 void StreamLog::sysmsg(const std::string& str) {
-	myChatStream << str <<
+	myChatStream << str;
+	if (str[str.length() - 1] != '\n')
+		myChatStream <<
 #ifdef _WIN32
 		"\r" <<
 #endif
 		std::endl;
+	else myChatStream.flush();
 	updateWindow();
 }
 void ChatThread::sysmsg(const std::string& str) {
 	EnterCriticalSection(&streamLock);
-	myChatStream << str <<
+	myChatStream << str;
+	if (str[str.length() - 1] != '\n')
+		myChatStream <<
 #ifdef _WIN32
 		"\r" <<
 #endif
 		std::endl;
+	else myChatStream.flush();
 	LeaveCriticalSection(&streamLock);
 	updateWindow();
 }
