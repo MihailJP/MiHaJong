@@ -4,12 +4,12 @@
 #define MIHAJONG_MAJOR_VER 1
 #define MIHAJONG_MINOR_VER 8
 #define MIHAJONG_PATCH_VER 0
-#define MIHAJONG_VER "1.8.0-beta4"
+#define MIHAJONG_VER "1.8.0-beta5"
 
 #define MJCORE_MAJOR_VER 1
 #define MJCORE_MINOR_VER 8
 #define MJCORE_PATCH_VER 0
-#define MJCORE_VER "1.8.0-beta4"
+#define MJCORE_VER "1.8.0-beta5"
 
 #define LOGGER_MAJOR_VER 1
 #define LOGGER_MINOR_VER 6
