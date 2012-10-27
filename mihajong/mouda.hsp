@@ -14,6 +14,7 @@
 	/* 打牌を取得する */
 	if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == getPlayer(GameStat)) {
 		if (getAgariHouki(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1) {
+			debug "プレイヤーのツモ番ですが残念ながらアガリ放棄です。"
 			DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 		} else {
 			if (GetWatchModeFlag(GameEnv) == 1) {
@@ -24,15 +25,18 @@
 				loop
 				DiscardTileIndex = compdahai()
 			} else {
+				debug "プレイヤーのツモ番です。"
 				playerdahai GameStat, GameEnv: DiscardTileIndex = stat
 			}
 		}
 	} else {
 		if ((IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == -1)||(getAgariHouki(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == 1)) {
+			debug "アガリ放棄か回線切断したプレイヤーのツモ番です。"
 			DiscardTileIndex = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 		} else {
 			/* ネット対戦時の処理 */
 			if ((getGameMode(GameEnv) == GAMEMODE_CLIENT) || (IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > 0)) {
+				debug "リモートプレイヤーのツモ番です。"
 				remoteDahai GameStat, GameEnv: DiscardTileIndex = stat
 				if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 					if (ReceivedMsg == 1023) {
@@ -45,6 +49,7 @@
 					}
 				}
 			} else {
+				debug "AIのツモ番です。"
 				compdahai_begin Sandbox
 				repeat
 					if (compdahai_check()) {break}
