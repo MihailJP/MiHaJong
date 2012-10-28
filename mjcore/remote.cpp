@@ -4,6 +4,19 @@ namespace RemoteAction {
 
 /* 接続先の打牌 */
 RemoteActionPtr rDahaiProc = {nullptr};
+void proc_abrupt_disconnect(GameTable* const gameStat, PLAYER_ID player) {
+	{
+		gameStat->Player[player].ConnectionLost = true;
+		std::ostringstream o; o << "プレイヤー [" << static_cast<int>(player) << "] の回線切断を検知しました。";
+		warn(o.str().c_str());
+	}
+	{
+		std::ostringstream o; o << "*** " << EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
+			"(" << windName(playerwind(gameStat, player, gameStat->GameRound)) << ") の接続が切れました。";
+		chat::appendchat(o.str().c_str());
+		chat::appendchat("*** この局はツモ切り、次局からCPUが代走します。");
+	}
+}
 RemoteDahai::RemoteDahai (GameTable* const gStat) {
 	gameStat = gStat; finished = false;
 	remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = 0;
@@ -23,13 +36,8 @@ DWORD WINAPI RemoteDahai::thread () {
 			Sleep(0); // ポーリング
 		}
 		if ((ReceivedMsg == mihajong_socket::protocol::Dahai_Remote_Disconnect) &&
-			(!gameStat->Player[gameStat->CurrentPlayer.Active].ConnectionLost)) {
-				gameStat->Player[gameStat->CurrentPlayer.Active].ConnectionLost = true;
-				std::ostringstream o; o << "プレイヤー [" <<
-					static_cast<int>(gameStat->CurrentPlayer.Active) <<
-					"] の回線切断を検知しました。";
-				warn(o.str().c_str());
-		}
+			(!gameStat->Player[gameStat->CurrentPlayer.Active].ConnectionLost))
+			proc_abrupt_disconnect(gameStat, gameStat->CurrentPlayer.Active);
 	}
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
 		volatile int ServerReceived = 0;
@@ -45,13 +53,8 @@ DWORD WINAPI RemoteDahai::thread () {
 		if (ReceivedMsg == 1023) {
 			for (int i = 0; i < PLAYERS; i++) {
 				if ((EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag == ServerReceived) &&
-					(!gameStat->Player[i].ConnectionLost)) {
-						gameStat->Player[i].ConnectionLost = true;
-						std::ostringstream o; o << "プレイヤー [" <<
-							static_cast<int>(gameStat->CurrentPlayer.Active) <<
-							"] の回線切断を検知しました。";
-						warn(o.str().c_str());
-				}
+					(!gameStat->Player[i].ConnectionLost))
+					proc_abrupt_disconnect(gameStat, i);
 			}
 			ReceivedMsg = mihajong_socket::protocol::Dahai_Remote_Disconnect;
 		}
@@ -153,7 +156,8 @@ void RemoteNaki::thread_client() {
 				gameStat->Player[tmp].DeclarationFlag.Chi = 3;
 				break;
 			case Naki_Remote_Disconnect:
-				gameStat->Player[tmp].ConnectionLost = true;
+				if (!gameStat->Player[tmp].ConnectionLost)
+					proc_abrupt_disconnect(gameStat, tmp);
 				break;
 			}
 		}
@@ -212,11 +216,8 @@ void RemoteNaki::checkremotenaki(PLAYER_ID player, int& ReceivedMsg) {
 	using namespace mihajong_socket::protocol;
 	switch (ReceivedMsg) {
 	case 1023:
-		if (!gameStat->Player[player].ConnectionLost) {
-			gameStat->Player[player].ConnectionLost = true;
-			std::ostringstream o; o << "プレイヤー [" << static_cast<int>(player) << "] の回線切断を検知しました。";
-			warn(o.str().c_str());
-		}
+		if (!gameStat->Player[player].ConnectionLost)
+			proc_abrupt_disconnect(gameStat, player);
 		ReceivedMsg = Naki_Remote_Disconnect;
 		break;
 	case Naki_Ron:

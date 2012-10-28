@@ -39,28 +39,6 @@
 	return
 #global
 
-/* 落ち戻り用の処理 */
-*reconnection
-	if (ReconnectionSuccess == 0) {
-		dialog "サーバーとの接続が切れました\n再接続を試みます", 1, "回線切断"
-	}
-	sockclose 0+SOCK_GAME: await 1000
-	ReconnectionSuccess = 0
-	repeat 10
-		sockopen 0+SOCK_GAME, ServerAddress, PORT_GAME+ClientNumber
-		if (stat == 0) {ReconnectionSuccess = 1: break}
-		await 1000
-	loop
-	if (ReconnectionSuccess == 0) {
-		errordlg "再接続に失敗しました\nゲームは続行できません", "回線切断"
-		if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {sockclose SOCK_GAME+0}
-		if (getGameMode(GameEnv) == GAMEMODE_SERVER) {sockclose SOCK_GAME+1: sockclose SOCK_GAME+2: sockclose SOCK_GAME+3}
-		font fontname, 48, 0: objsize 200, 60
-		pos 620, 560: colorbutton goto "確認", *startgame, -1, 0xffffff
-		stop
-	}
-return
-
 /* チャットバッファ受信 */
 #module
 #include "const.hsp"

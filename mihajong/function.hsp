@@ -113,7 +113,7 @@ return
 	info "DirectSound ‚ğ‰ğ•ú‚µ‚Ü‚µ‚½B"
 	repeat NUM_OF_PLAYERS
 		s_hangup SOCK_GAME+cnt
-		//sockclose SOCK_CHAT+cnt
+		s_hangup SOCK_CHAT+cnt
 	loop
 	s_bye
 	end

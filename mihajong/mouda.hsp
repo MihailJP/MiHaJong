@@ -40,12 +40,13 @@
 				remoteDahai GameStat, GameEnv: DiscardTileIndex = stat
 				if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 					if (ReceivedMsg == 1023) {
-						setDisconnectFlag GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
-						setCenterTitle "回線切断": redrscreen
-						gosub *reconnection@
-						dialog "再接続しました\nこの回は和了り放棄になります\n次の局から参加可能です", 0, "回線切断"
-						RoundEndType = ENDKYOKU_DISCONNECT
-						return DAHAI_TYPE_DISCONNECT
+						chatappend "*** ホストとの接続が切れました。\n"
+						chatappend "*** この局はツモ切り、次局からCPUが代走します。\n"
+						repeat NUM_OF_PLAYERS
+							if (cnt != getPlayer(GameStat)) {
+								setDisconnectFlag GameStat, cnt, 1
+							}
+						loop
 					}
 				}
 			} else {

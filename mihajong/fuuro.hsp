@@ -336,7 +336,7 @@
 				if (Mode == FUURO_NORTH) {setKangFlag GameStat, KANG_CHANKAN, 3}
 				ronhuproc GameStat, GameEnv: RoundEndType = stat
 				if (Mode == FUURO_NORTH) {setKangFlag GameStat, KANG_CHANKAN, 0}
-				if ((RoundEndType = ENDKYOKU_TRIPLERON)||(RoundEndType = ENDKYOKU_DISCONNECT)) {return 1}
+				if (RoundEndType = ENDKYOKU_TRIPLERON) {return 1}
 				if (RonPlayers(GameStat) > 0) {
 					info "搶槓が宣言されました。ループから出ます。"
 					return 1
@@ -507,11 +507,13 @@
 	}
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		if (ReceivedMsg == 1023) {
-			setCenterTitle "回線切断": redrscreen
-			gosub *reconnection@
-			dialog "再接続しました\nこの回は和了り放棄になります\n次の局から参加可能です", 0, "回線切断"
-			RoundEndType = ENDKYOKU_DISCONNECT
-			return RoundEndType
+			chatappend "*** ホストとの接続が切れました。\n"
+			chatappend "*** この局はツモ切り、次局からCPUが代走します。\n"
+			repeat NUM_OF_PLAYERS
+				if (cnt != getPlayer(GameStat)) {
+					setDisconnectFlag GameStat, cnt, 1
+				}
+			loop
 		}
 	}
 	trace strf("ロン [%d %d %d %d] カン [%d %d %d %d] ポン [%d %d %d %d] チー [%d %d %d %d]", getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 3))

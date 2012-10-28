@@ -91,7 +91,7 @@
 			ronhuproc GameStat, GameEnv // ‰h˜a‚Ìˆ—
 			if (stat >= 0) {RoundEndType = stat: break}
 			await 0
-			if ((RoundEndType = ENDKYOKU_TRIPLERON)||(RoundEndType = ENDKYOKU_DISCONNECT)) {break}
+			if (RoundEndType == ENDKYOKU_TRIPLERON) {break}
 			if (RonPlayers(GameStat) > 0) {break}
 			/* “r’†—¬‹Ç‚Ì”»’è */
 			checkroundabort GameStat, GameEnv

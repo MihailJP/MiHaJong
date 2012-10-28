@@ -22,7 +22,7 @@ return
 	initephemeral // AIのephemeralテーブルを初期化
 	ifaceinit // 押しボタン類のステータス初期化
 	inittable GameStat
-	// 局の開始で同期する。このとき落ち戻りが可能
+	// 局の開始で同期する。1.7系列まではこのとき落ち戻りが可能(落ち戻り機能は1.8で廃止されました)
 	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {serversend 0xb6, GameEnv}
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
@@ -31,12 +31,13 @@ return
 				break
 			}
 			if ((ClientReceived == 1)&&(ReceivedMsg == 1023)) {
-				setDisconnectFlag GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
-				setCenterTitle "回線切断": redrscreen
-				gosub *reconnection
-				dialog "再接続しました", 0, "回線切断"
-				RoundEndType = ENDKYOKU_DISCONNECT
-				break
+				chatappend "*** ホストとの接続が切れました。\n"
+				chatappend "*** この局はツモ切り、次局からCPUが代走します。\n"
+				repeat NUM_OF_PLAYERS
+					if (cnt != getPlayer(GameStat)) {
+						setDisconnectFlag GameStat, cnt, 1
+					}
+				loop
 			}
 			await 0
 		loop

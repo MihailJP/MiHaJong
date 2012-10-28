@@ -544,15 +544,6 @@
 			ryuukyokuProc GameStat, 1
 		swbreak
 	/**************/
-	/* ‰ñüØ’f */
-	/**************/
-		case ENDKYOKU_DISCONNECT:
-			statmes "‰ñü‚ªØ’f‚³‚ê‚Ü‚µ‚½"
-			ResultDesc = "‰ñüØ’f"
-			chatappend "*** ‰ñü‚ªØ’f‚³‚ê‚Ü‚µ‚½\n"
-			// “Á‚É‰½‚à‚µ‚È‚¢
-		swbreak
-	/**************/
 	/* lÈ—¬‹Ç */
 	/**************/
 		case ENDKYOKU_UUKAIKAN:
