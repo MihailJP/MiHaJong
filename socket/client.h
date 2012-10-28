@@ -16,7 +16,7 @@ namespace client {
 		bool connected, finished, failed;
 		unsigned short portnum;
 		std::array<std::string, 4> playerName;
-		char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
+		char ruleConf[RULE_LINES][RULE_IN_LINE + 1];
 		std::string serveraddr;
 		std::string myName;
 		DWORD WINAPI preparationThread (); // Ú‘±‚ğ‘Ò‚¿AÚ‘±ˆ—‚ğ‚·‚é

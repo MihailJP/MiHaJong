@@ -40,7 +40,7 @@ namespace server {
 		playerName[3] = std::string("[d]COM");
 		portnum = port;
 		std::memset(ruleConf, 0, sizeof(ruleConf));
-		for (unsigned i = 0; i < (RULESIZE/RULE_IN_LINE); ++i)
+		for (unsigned i = 0; i < RULE_LINES; ++i)
 			std::memcpy(ruleConf[i], rule[i], RULE_IN_LINE);
 	}
 
@@ -67,7 +67,7 @@ namespace server {
 		send(protocol::Server_StartGame_Signature);
 		for (unsigned int i = 0; i < NumberOfPlayers; ++i)
 			sendstr(playerName[i]); // 名前を送信
-		for (unsigned i = 0; i < (RULESIZE/RULE_IN_LINE); ++i)
+		for (unsigned i = 0; i < RULE_LINES; ++i)
 			sendstr(ruleConf[i]); // ルールを送信
 		finished = true;
 		return S_OK;

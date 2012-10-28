@@ -24,7 +24,7 @@ namespace server {
 		unsigned short portnum;
 		unsigned int CurrentConnection;
 		std::array<std::string, 4> playerName;
-		char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
+		char ruleConf[RULE_LINES][RULE_IN_LINE + 1];
 		DWORD WINAPI preparationThread (); // Ú‘±‚ğ‘Ò‚¿AÚ‘±ˆ—‚ğ‚·‚é
 	public:
 		static DWORD WINAPI initiate (LPVOID param); // CreateThread()‚É“n‚·ˆø”—p

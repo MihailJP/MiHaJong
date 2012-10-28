@@ -42,7 +42,7 @@ namespace client {
 			while (sockets[0]->syncgetc() != protocol::Server_StartGame_Signature) Sleep(10); // 開始を待つ
 			for (unsigned int i = 0; i < NumberOfPlayers; ++i)
 				playerName[i] = getString(0); // 名前を受信
-			for (unsigned i = 0; i < (RULESIZE/RULE_IN_LINE); ++i)
+			for (unsigned i = 0; i < RULE_LINES; ++i)
 				strcpy_s(ruleConf[i], RULE_IN_LINE + 1, getString(0).c_str()); // ルールを受信
 			break;
 		}
@@ -100,7 +100,7 @@ namespace client {
 		strcpy_s(playerName4, bufsz, starterThread->getPlayerName(3).c_str());
 	}
 	DLL void checkout_rules (char** rules) { // ルールをチェックアウト
-		for (unsigned i = 0; i < (RULESIZE/RULE_IN_LINE); ++i)
+		for (unsigned i = 0; i < RULE_LINES; ++i)
 			std::memcpy(rules[i], starterThread->getRules(i), RULE_IN_LINE);
 	}
 	DLL void releaseobj () { // デストラクタを呼ぶだけ
