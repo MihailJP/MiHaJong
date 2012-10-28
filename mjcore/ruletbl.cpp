@@ -4,7 +4,7 @@ struct GameTable;
 extern GameTable GameStat;
 inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType);
 
-char RuleData::ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
+char RuleData::ruleConf[RULE_LINES][RULE_IN_LINE + 1];
 RULETBL RuleData::Rules;
 std::array<std::string, RULESIZE> RuleData::nametbl;
 CSVReader::CsvVecVec RuleData::confdat;
@@ -14,7 +14,7 @@ std::map<std::string, std::vector<std::string> > RuleData::ruletags;
 std::map<std::string, std::map<std::string, unsigned int> > RuleData::inverse_ruletags;
 std::set<std::string> RuleData::nonapplicable;
 const char RuleData::digit[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-std::array<std::string, RULESIZE/RULES_IN_PAGE> RuleData::pageCaption;
+std::array<std::string, RULE_PAGES> RuleData::pageCaption;
 
 void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 	DWORD size = 0; const uint8_t* csv = nullptr;
@@ -62,10 +62,14 @@ void RuleData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
 
 __declspec(dllexport) void RuleData::configinit() { // コンフィグ用CSVを読み込む
 	configinit_csv(); configinit_ini();
-	for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++) { // 初期化
+	for (int i = 0; i < RULE_LINES; i++) { // 初期化
 		memset(ruleConf[i], 0, RULE_IN_LINE + 1);
 		memset(ruleConf[i], '-', RULE_IN_LINE);
 		for (int j = 0; j < RULE_IN_LINE; j++) {
+			if ((i * RULE_IN_LINE + j) >= RULESIZE) { // 番号ここまで
+				ruleConf[i][j] = '\0';
+				break;
+			}
 			if ((ruleConf[i][j] == '-') && // 未設定のままで
 				(!nametbl[i * RULE_IN_LINE + j].empty()) && // 空き番ではなくて
 				(nonapplicable.find(nametbl[i * RULE_IN_LINE + j]) == nonapplicable.end())) // N/Aではないなら
@@ -86,7 +90,7 @@ void RuleData::parseRule() { // ルール設定を数値に変換
 
 __declspec(dllexport) void RuleData::storeRule(const char** ruleTxt) { // HSP→C++ ルール設定転送
 	debug("HSP→C++ ルール転送");
-	for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++)
+	for (int i = 0; i < RULE_LINES; i++)
 		memcpy(ruleConf[i], ruleTxt[i], RULE_IN_LINE);
 	parseRule();
 	info("設定がロードされました。");
@@ -94,7 +98,7 @@ __declspec(dllexport) void RuleData::storeRule(const char** ruleTxt) { // HSP→C
 
 __declspec(dllexport) void RuleData::exportRule(char** ruleTxt) { // C++→HSP ルール設定転送
 	debug("C++→HSP ルール転送");
-	for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++)
+	for (int i = 0; i < RULE_LINES; i++)
 		memcpy(ruleTxt[i], ruleConf[i], RULE_IN_LINE);
 }
 
@@ -186,9 +190,12 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 		{
 			INIParser::IniMapMap config_ini; // INIパース結果を格納する「マップのマップ」
 			INIParser::parseini(config_ini, filedat); // INIをパースする
-			for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++) { // 初期化
+			for (int i = 0; i < RULE_LINES; i++) { // 初期化
 				memset(ruleConf[i], 0, RULE_IN_LINE + 1);
-				memset(ruleConf[i], '-', RULE_IN_LINE);
+				if (((i + 1) * RULE_LINES) > RULESIZE)
+					memset(ruleConf[i], '-', RULESIZE % RULE_IN_LINE);
+				else
+					memset(ruleConf[i], '-', RULE_IN_LINE);
 			}
 			auto& config_rules = config_ini["rules"];
 			for (auto k = config_rules.begin(); k != config_rules.end(); ++k) { // rulesセクションについて
@@ -214,15 +221,19 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 					warn(o.str().c_str());
 				}
 			}
-			for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++) { // 再チェック
+			for (int i = 0; i < RULE_LINES; i++) { // 再チェック
 				for (int j = 0; j < RULE_IN_LINE; j++) {
+					if ((i * RULE_IN_LINE + j) >= RULESIZE) { // 番号ここまで
+						ruleConf[i][j] = '\0';
+						break;
+					}
 					if ((ruleConf[i][j] == '-') && // 未設定のままで
 						(!nametbl[i * RULE_IN_LINE + j].empty()) && // 空き番ではなくて
 						(nonapplicable.find(nametbl[i * RULE_IN_LINE + j]) == nonapplicable.end())) // N/Aではないなら
 						ruleConf[i][j] = '0'; // デフォルト設定
 				}
 			}
-			debug("現在のルール設定の内部表現"); for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++) debug(ruleConf[i]);
+			debug("現在のルール設定の内部表現"); for (int i = 0; i < RULE_LINES; i++) debug(ruleConf[i]);
 			parseRule(); // データ変換
 		}
 		delete[] filedat; // バッファを解放
@@ -234,7 +245,7 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 
 
 __declspec(dllexport) int RuleData::saveConfigFile(const char* const filename) {
-	debug("現在のルール設定の内部表現"); for (int i = 0; i < (RULESIZE/RULE_IN_LINE); i++) debug(ruleConf[i]);
+	debug("現在のルール設定の内部表現"); for (int i = 0; i < RULE_LINES; i++) debug(ruleConf[i]);
 	std::ofstream file; // デフォルトコンストラクタで初期化
 	auto chkerr = [](std::ofstream& file, const char* const filename) -> void {
 		if (file.bad()) throw std::runtime_error(std::string("ファイル [") + std::string(filename) +

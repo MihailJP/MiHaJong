@@ -37,7 +37,7 @@ enum gameTypeID : uint8_t { // 卓の種類(四麻、三麻)指定用
 class RuleData {
 private:
 	class ReqChecker;
-	static char ruleConf[RULESIZE/RULE_IN_LINE][RULE_IN_LINE + 1];
+	static char ruleConf[RULE_LINES][RULE_IN_LINE + 1];
 	static RULETBL Rules;
 	static std::array<std::string, RULESIZE> nametbl;
 	static CSVReader::CsvVecVec confdat;
@@ -49,7 +49,7 @@ private:
 	static std::map<std::string, std::vector<std::string> > ruletags;
 	static std::map<std::string, std::map<std::string, unsigned int> > inverse_ruletags;
 	static std::set<std::string> nonapplicable;
-	static std::array<std::string, RULESIZE/RULES_IN_PAGE> pageCaption;
+	static std::array<std::string, RULE_PAGES> pageCaption;
 	static const char digit[];
 public:
 	__declspec(dllexport) static void configinit();
