@@ -4,12 +4,12 @@
 #define MIHAJONG_MAJOR_VER 1
 #define MIHAJONG_MINOR_VER 8
 #define MIHAJONG_PATCH_VER 0
-#define MIHAJONG_VER "1.8.0-RC1"
+#define MIHAJONG_VER "1.8.0-RC2"
 
 #define MJCORE_MAJOR_VER 1
 #define MJCORE_MINOR_VER 8
 #define MJCORE_PATCH_VER 0
-#define MJCORE_VER "1.8.0-RC1"
+#define MJCORE_VER "1.8.0-RC2"
 
 #define LOGGER_MAJOR_VER 1
 #define LOGGER_MINOR_VER 6
@@ -24,6 +24,6 @@
 #define SOCKET_MAJOR_VER 1
 #define SOCKET_MINOR_VER 8
 #define SOCKET_PATCH_VER 0
-#define SOCKET_VER "1.8.0-beta4"
+#define SOCKET_VER "1.8.0-RC2"
 
 #endif
