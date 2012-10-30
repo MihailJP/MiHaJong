@@ -622,7 +622,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 	if (RuleData::chkRuleApplied("quanliuke"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"‘S˜Z", get_yaku_han("quanliuke"),
-			"‘ÎX˜a", "–ð”vEá¢",
+			"‘ÎX˜a", "–ð”vEá¢", "ŽOF“¯",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->KeziCount[CharacterSix] >= 1) &&
 					(analysis->KeziCount[CircleSix] >= 1) &&
@@ -634,7 +634,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 	if (RuleData::chkRuleApplied("quanjiuke"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"‘S‹è", get_yaku_han("quanjiuke"),
-			"‘ÎX˜a", "–ð”vE’†",
+			"‘ÎX˜a", "–ð”vE’†", "ŽOF“¯",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->KeziCount[CharacterNine] >= 1) &&
 					(analysis->KeziCount[CircleNine] >= 1) &&
@@ -704,6 +704,75 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(analysis->KeziCount[WhiteDragon] >= 1) &&
 					(analysis->KeziCount[BambooThree] - analysis->AnKeziCount[BambooThree] >= 1) &&
 					(analysis->KeziCount[NorthWind] - analysis->AnKeziCount[NorthWind] >= 1);
+			}
+		));
+	/* —•ˆêF */
+	if (RuleData::chkRuleApplied("lanyise"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"—•ˆêF", get_yaku_han("lanyise"),
+			"‘ÎX˜a", "¬ˆêF", "¬ŽO•—",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[CircleOne] >= 1) &&
+					(analysis->KeziCount[CircleTwo] >= 1) &&
+					((analysis->DuiziCount[EastWind] + analysis->DuiziCount[SouthWind] +
+					analysis->DuiziCount[WestWind] + analysis->DuiziCount[NorthWind]) >= (SIZE_OF_MELD_BUFFER - 2));
+			}
+		));
+	/* “ì‘å’Ã”g */
+	if (RuleData::chkRuleApplied("minami_ootsunami"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"“ì‘å’Ã”g", get_yaku_han("minami_ootsunami"),
+			"‘ÎX˜a",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[CircleTwo] >= 1) &&
+					(analysis->KeziCount[CircleThree] >= 1) &&
+					(analysis->KeziCount[CircleSeven] >= 1) &&
+					(analysis->KeziCount[SouthWind] >= 1);
+			}
+		));
+	/* ¼Žð‹è */
+	if (RuleData::chkRuleApplied("xijiujiu"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"¼Žð‹è", get_yaku_han("xijiujiu"),
+			"‘ÎX˜a", "ŽOF“¯",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[CharacterNine] >= 1) &&
+					(analysis->KeziCount[CircleNine] >= 1) &&
+					(analysis->KeziCount[BambooNine] >= 1) &&
+					(analysis->KeziCount[WestWind] >= 1) &&
+					(analysis->MianziDat[0].tile == BambooThree);
+			}
+		));
+	/* “ï”gƒ~ƒiƒ~ */
+	if (RuleData::chkRuleApplied("namba_minami"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"“ï”gƒ~ƒiƒ~", get_yaku_han("namba_minami"),
+			"‘ÎX˜a",
+			[countKeziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool flag1 = false; bool flag2 = false;
+				for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); ++k)
+					if ((analysis->KeziCount[((*k)[0] - '0') * TILE_SUIT_STEP + 3] >= 1) &&
+						(analysis->KeziCount[((*k)[1] - '0') * TILE_SUIT_STEP + 7] >= 1) &&
+						(analysis->KeziCount[((*k)[2] - '0') * TILE_SUIT_STEP + 3] >= 1))
+						flag1 = true;
+				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+					if ((analysis->KeziCount[i + 8] >= 1) &&
+						(analysis->TsumoHai->tile == (tileCode)(i + 8)))
+						flag2 = true;
+				return flag1 && flag2 &&
+					(analysis->MianziDat[0].tile == SouthWind);
+			}
+		));
+	/* Žµ_‹Y–k“l */
+	if (RuleData::chkRuleApplied("qishen_xi_beidou"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"Žµ_‹Y–k“l", get_yaku_han("qishen_xi_beidou"),
+			"‘ÎX˜a", "ŽOF“¯",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KeziCount[CharacterSeven] >= 1) &&
+					(analysis->KeziCount[CircleSeven] >= 1) &&
+					(analysis->KeziCount[BambooSeven] >= 1) &&
+					(analysis->KeziCount[NorthWind] >= 1);
 			}
 		));
 }
