@@ -598,6 +598,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 	if (RuleData::chkRuleApplied("seirogan"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"³˜IŠÛ", get_yaku_han("seirogan"),
+			"–ð”vEá¢",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->KeziCount[WestWind] >= 1) &&
 					(analysis->KeziCount[GreenDragon] >= 1) &&
@@ -608,7 +609,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 	if (RuleData::chkRuleApplied("suzakumon"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"Žé–å", get_yaku_han("suzakumon"),
-			"‘ÎX˜a", "¬ˆêF",
+			"‘ÎX˜a", "¬ˆêF", "–ð”vE’†",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->KeziCount[BambooOne] >= 1) &&
 					(analysis->KeziCount[BambooFour] >= 1) &&
@@ -621,7 +622,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 	if (RuleData::chkRuleApplied("quanliuke"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"‘S˜Z", get_yaku_han("quanliuke"),
-			"‘ÎX˜a",
+			"‘ÎX˜a", "–ð”vEá¢",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->KeziCount[CharacterSix] >= 1) &&
 					(analysis->KeziCount[CircleSix] >= 1) &&
@@ -633,7 +634,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 	if (RuleData::chkRuleApplied("quanjiuke"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"‘S‹è", get_yaku_han("quanjiuke"),
-			"‘ÎX˜a",
+			"‘ÎX˜a", "–ð”vE’†",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->KeziCount[CharacterNine] >= 1) &&
 					(analysis->KeziCount[CircleNine] >= 1) &&
