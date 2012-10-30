@@ -689,7 +689,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					if ((analysis->KeziCount[((*k)[0] - '0') * TILE_SUIT_STEP + 6] >= 1) &&
 						(analysis->KeziCount[((*k)[1] - '0') * TILE_SUIT_STEP + 4] >= 1) &&
 						(analysis->KeziCount[((*k)[2] - '0') * TILE_SUIT_STEP + 5] >= 1))
-						return true;
+						flag = true;
 				return flag &&
 					(analysis->KeziCount[RedDragon] >= 1);
 			}
