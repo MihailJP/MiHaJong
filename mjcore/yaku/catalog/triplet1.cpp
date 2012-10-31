@@ -92,6 +92,28 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			"対々和", "小四連刻", "三連刻", "小三連刻",
 			suurenkoh
 		));
+	/* 四連刻両面待ち */
+	if (RuleData::chkRuleApplied("suurenkoh_double"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"四連刻両面待ち", get_yaku_han("suurenkoh_double"),
+			"清一色", "対々和", "金梯", "四連刻", "小四連刻", "三連刻", "小三連刻",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (auto i = parsedat_monochrome5.begin(); i != parsedat_monochrome5.end(); i++) {
+					for (int k = 1; k <= 5; k++)
+						if ((analysis->DuiziCount[(int)(i[0] - '0') * TILE_SUIT_STEP + k * 0] >= 1) &&
+							(analysis->KeziCount[(int)(i[1] - '0') * TILE_SUIT_STEP + k * 1] >= 1) &&
+							(analysis->KeziCount[(int)(i[2] - '0') * TILE_SUIT_STEP + k * 2] >= 1) &&
+							(analysis->KeziCount[(int)(i[3] - '0') * TILE_SUIT_STEP + k * 3] >= 1) &&
+							(analysis->DuiziCount[(int)(i[4] - '0') * TILE_SUIT_STEP + k * 4] >= 1) &&
+							((analysis->TsumoHai->tile == (tileCode)((int)(i[0] - '0') * TILE_SUIT_STEP + k * 0)) ||
+							(analysis->TsumoHai->tile == (tileCode)((int)(i[0] - '0') * TILE_SUIT_STEP + k * 4)))
+							)
+							yakuFlag = true;
+				}
+				return yakuFlag;
+			}
+		));
 	/* 三連刻 */
 	auto sanrenkoh =
 		[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
