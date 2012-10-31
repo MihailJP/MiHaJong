@@ -187,4 +187,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 				return flag1 && flag2;
 			}
 		));
+	/* V‰z’J */
+	if (RuleData::chkRuleApplied("shinkoshigaya"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"V‰z’J", get_yaku_han("shinkoshigaya"),
+			"‰z’J", /* ŽOžÈŽq‚Æ•¡‡ */
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->KangziCount[CharacterFive] + analysis->KangziCount[CircleFive] + analysis->KangziCount[BambooFive] >= 1) &&
+					(analysis->KangziCount[CharacterFour] + analysis->KangziCount[CircleFour] + analysis->KangziCount[BambooFour] >= 1) &&
+					(analysis->KangziCount[CharacterEight] + analysis->KangziCount[CircleEight] + analysis->KangziCount[BambooEight] >= 1);
+			}
+		));
 }
