@@ -374,12 +374,12 @@ EXPORT struct RISE_SET_HOUR sunrise (int year, int month, int day, double lon, d
 	h = sun_rise_set(d, lon, lat,altit/*,15.0*/);
 	return convert_hour(*h1,*h2,TZ, isdst);
 }
-EXPORT void sunrise_hsp (char* Answer, int strsz, int year, int month, int day, double TZ, int isdst, double lon, double lat, double altit)
+EXPORT void sunrise_hsp (int* Answer, int year, int month, int day, double TZ, int isdst, double lon, double lat, double altit)
 {
 	struct RISE_SET_HOUR rshour = sunrise (year, month, day, lon, lat, TZ, isdst, altit);
-	sprintf(Answer + strsz * 0, "%02d", rshour.hour_rise);
-	sprintf(Answer + strsz * 1, "%02d", rshour.min_rise);
-	sprintf(Answer + strsz * 2, "%02d", rshour.hour_set);
-	sprintf(Answer + strsz * 3, "%02d", rshour.min_set);
+	Answer[0] = rshour.hour_rise;
+	Answer[1] = rshour.min_rise;
+	Answer[2] = rshour.hour_set;
+	Answer[3] = rshour.min_set;
 	return;
 }

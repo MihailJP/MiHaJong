@@ -196,7 +196,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	/* 国士 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"国士無双", yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
-		"十三不塔",
+		"十三不塔", "五門斎",
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->shanten[ShantenAnalyzer::shantenOrphans] == -1);
 		}
@@ -232,6 +232,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	if (RuleData::chkRuleApplied("syzygy"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"惑星直列", get_yaku_han("syzygy"),
+			"清一色",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->shanten[ShantenAnalyzer::shantenSyzygy] == -1);
 			}
@@ -242,6 +243,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			"全不靠", get_yaku_han("quanbukao"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->shanten[ShantenAnalyzer::shantenQuanbukao] == -1);
+			}
+		));
+	/* セブンアップ */
+	if (RuleData::chkRuleApplied("sevenup"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"セブンアップ", get_yaku_han("sevenup"),
+			"混一色",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->shanten[ShantenAnalyzer::shantenSevenup] == -1);
 			}
 		));
 }

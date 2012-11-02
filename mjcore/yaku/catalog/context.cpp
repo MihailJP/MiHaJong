@@ -1,5 +1,10 @@
 #include "../catalog.h"
 
+inline bool isFinalRound(const GameTable* const gameStat) { // オーラスである？
+	return (gameStat->LoopRound * roundLoopRate() +
+		gameStat->GameRound) >= gameStat->GameLength;
+}
+
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* リーチ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -276,6 +281,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(tilesLeft(analysis->GameStat) == 0)); // 王牌を除いた残り山牌が0
 			}
 		));
+	/* 深上開花 */
+	if (RuleData::chkRuleApplied("shenshang_kaihoh"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"深上開花", get_yaku_han("shenshang_kaihoh"),
+			"嶺上開花",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // 何かの手で和了になっている
+					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
+					(*analysis->TsumoAgariFlag) && // ツモアガリ
+					(isFinalRound(analysis->GameStat))); // オーラスである
+			}
+		));
 	/* 東花園 */
 	if (RuleData::chkRuleApplied("higashi_hanazono_triplets"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -353,6 +370,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(analysis->TsumoHai->tile == GreenDragon)); // 和了牌が發
 			}
 		));
+	/* 深海底 */
+	if (RuleData::chkRuleApplied("shen_haitei"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"深海底", get_yaku_han("shen_haitei"),
+			"海底摸月", 
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // 何かの手で和了になっている
+					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
+					(*analysis->TsumoAgariFlag) && // ツモアガリ
+					(tilesLeft(analysis->GameStat) == 0) && // ハイテイである
+					(isFinalRound(analysis->GameStat))); // オーラスである
+			}
+		));
 	/* 河底ロン */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		"河底撈魚", yaku::yakuCalculator::Yaku::yval_1han,
@@ -387,6 +417,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(!*analysis->TsumoAgariFlag) && // ロンアガリ
 					(tilesLeft(analysis->GameStat) == 0) && // ハイテイである
 					(analysis->TsumoHai->tile == WhiteDragon)); // 和了牌が白
+			}
+		));
+	/* 深淵和 */
+	if (RuleData::chkRuleApplied("shenyuanhu"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"深淵和", get_yaku_han("shenyuanhu"),
+			"河底撈魚", 
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // 何かの手で和了になっている
+					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
+					(!*analysis->TsumoAgariFlag) && // ロンアガリ
+					(tilesLeft(analysis->GameStat) == 0) && // ハイテイである
+					(isFinalRound(analysis->GameStat))); // オーラスである
 			}
 		));
 	/* 泥底撈蟲 */
@@ -455,6 +498,17 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.chankanFlag) && // 槍槓フラグが立っている
 					(analysis->TsumoHai->tile == BambooTwo)); // 和了牌が二索
+			}
+		));
+	/* 深搶槓 */
+	if (RuleData::chkRuleApplied("shen_chankan"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			"深搶槓", get_yaku_han("shen_chankan"),
+			"搶槓",
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // 何かの手で和了になっている
+					(analysis->GameStat->KangFlag.chankanFlag) && // 槍槓フラグが立っている
+					(isFinalRound(analysis->GameStat))); // オーラスである
 			}
 		));
 	/* 金鶏奪食 */
