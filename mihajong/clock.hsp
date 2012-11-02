@@ -65,7 +65,6 @@
 
 *drawmoonpanel
 	CalcMoonPhase Answer, JulianDay
-	mpfrac = Answer(0)
 	pphase = Answer(1)
 	MoonCenterX = ClockCenterX: MoonCenterY = ClockCenterY-ClockRadius*17/40: Radius = ClockRadius*3/10
 	color baseColorR/5, baseColorG/5, baseColorB/5
@@ -73,7 +72,7 @@
 	color baseColorR*2/3, baseColorG*2/3, baseColorB*2/3
 	Kreis MoonCenterX, MoonCenterY, Radius, 0
 	repeat Radius*2
-		if (mpfrac < 0.5) {
+		if (pphase < 0.5) {
 			line sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))*(1.0-pphase*2.0)+MoonCenterX, cnt+MoonCenterY-Radius, sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))+MoonCenterX, cnt+MoonCenterY-Radius
 		} else {
 			line sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))*(pphase*2.0-1.0)+MoonCenterX, cnt+MoonCenterY-Radius, -sqrt(Radius*Radius-(cnt-Radius)*(cnt-Radius))+MoonCenterX, cnt+MoonCenterY-Radius
