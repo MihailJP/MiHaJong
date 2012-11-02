@@ -69,7 +69,7 @@ extern "C" {
 
 	/* sunrise.c */
 	EXPORT struct RISE_SET_HOUR sunrise (int, int, int, double, double, double, int, double);
-	EXPORT void sunrise_hsp (char*, int, int, int, int, double, int, double, double, double);
+	EXPORT void sunrise_hsp (int*, int, int, int, double, int, double, double, double);
 
 #ifdef __cplusplus
 }
