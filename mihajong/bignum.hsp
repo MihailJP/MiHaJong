@@ -425,6 +425,7 @@
 		if (playerwind(AgariPlayer, getRound(GameStat)) == PLAYER_EAST) {
 			// êeÇÃòaóπÇË
 			if (TsumoAgari) {
+#ifndef SANMAT
 #ifdef SANMA4
 				if (chkRule("tsumo_payment", "same_as_yonma")) {
 #endif
@@ -438,6 +439,7 @@
 							deltacalcminus AgariPointRaw, PointDelta, 2, cnt
 						}
 					loop
+#endif
 #ifdef ALLSANMA
 #ifdef SANMA4
 				} else: if (chkRule("tsumo_payment", "north_segment_omitted") || chkRule("tsumo_payment", "add_1000")) {
@@ -481,6 +483,7 @@
 		} else {
 			// éqÇÃòaóπÇË
 			if (TsumoAgari) {
+#ifndef SANMAT
 #ifdef SANMA4
 				if (chkRule("tsumo_payment", "same_as_yonma")) {
 #endif
@@ -496,6 +499,7 @@
 							deltacalcminus AgariPointRaw, PointDelta, 1, cnt
 						}
 					loop
+#endif
 #ifdef ALLSANMA
 #ifdef SANMA4
 				} else: if (chkRule("tsumo_payment", "fifty_fifty")) {

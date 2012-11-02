@@ -26,7 +26,7 @@
 #include "reader/readrsrc.h"
 #endif
 
-#define SHANTEN_PAGES 8
+#define SHANTEN_PAGES 9
 
 void LoadFileInResource(int name, int type, DWORD& size, const char*& data);
 typedef int8_t SHANTEN; // 向聴数のためのデータ型（0=聴牌、-1=和了、127=無効）
@@ -57,7 +57,8 @@ public:
 		shantenStellar, // 七星無靠
 		shantenCivilWar, // 南北戦争
 		shantenSyzygy, // 惑星直列
-		shantenQuanbukao // 全不靠
+		shantenQuanbukao, // 全不靠
+		shantenSevenup, // セブンアップ
 	};
 
 	static MJCORE SHANTEN calcShanten(const GameTable* const gameStat, PLAYER_ID playerID, shantenType mode);
@@ -70,6 +71,7 @@ private:
 	static SHANTEN calcShantenStellar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount, bool qixing);
 	static SHANTEN calcShantenCivilWar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount);
 	static SHANTEN calcShantenSyzygy(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount);
+	static SHANTEN calcShantenSevenup(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount);
 #endif
 
 };

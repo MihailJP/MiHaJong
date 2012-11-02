@@ -20,7 +20,7 @@
 #func _julian "time_to_julian_hsp" var, int, int, int, int, int, int, int
 #func _sun_ecliptic "sun_ecliptic_longitude_hsp" var, double
 #func _CalcMoonPhase "calc_moon_phase_hsp" var, double
-#func _sunrise "sunrise_hsp" var, int, int, int, int, double, int, double, double, double
+#func _sunrise "sunrise_hsp" var, int, int, int, double, int, double, double, double
 
 #defcfunc julian int year, int month, int day, int hour, int min, int sec, int msec
 	dbl_ans = 0.0
@@ -38,8 +38,8 @@
 	return
 
 #deffunc sunrise array Answer, int year, int month, int day, double TZ, int isdst, double lon, double lat, double altit
-	sdim Answer, 4, 4
-	_sunrise Answer, 4, year, month, day, TZ, isdst, lon, lat, altit
+	dim Answer, 4
+	_sunrise Answer, year, month, day, TZ, isdst, lon, lat, altit
 	return
 #global
 #endif

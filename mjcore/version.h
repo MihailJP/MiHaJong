@@ -18,7 +18,7 @@
 
 #define ASTRO_MAJOR_VER 1
 #define ASTRO_MINOR_VER 7
-#define ASTRO_PATCH_VER 0
-#define ASTRO_VER "1.7.0"
+#define ASTRO_PATCH_VER 10
+#define ASTRO_VER "1.7.10"
 
 #endif

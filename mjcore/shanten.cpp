@@ -52,7 +52,7 @@ void ShantenAnalyzer::verifyMentsuAnalysisDat(size_t bufSize) {
 		0x2d, 0x10, 0x7e, 0x88, 0x85, 0xad, 0xd7, 0xe0,
 		0x1f, 0xec, 0x65, 0xfa, 0x69, 0x06, 0x33, 0x7a,
 		0xba, 0xe9, 0xf7, 0x6c, 0xfb, 0x6f, 0xc2, 0xe8,
-		0x98, 0xca, 0xfe, 0x17, 0xaa, 0x7b, 0x51, 0xc1
+		0x98, 0xca, 0xfe, 0x17, 0xaa, 0x7b, 0x51, 0xc1,
 	};
 	uint8_t actualDigest[32]; bool mdUnmatch = false;
 	calcSHA256(actualDigest, mentsuAnalysisDat, bufSize);
@@ -120,6 +120,8 @@ MJCORE SHANTEN ShantenAnalyzer::calcShanten(const GameTable* const gameStat, PLA
 		return calcShantenSyzygy(gameStat, playerID, tileCount);
 	case shantenQuanbukao:
 		return calcShantenStellar(gameStat, playerID, tileCount, false);
+	case shantenSevenup:
+		return calcShantenSevenup(gameStat, playerID, tileCount);
 	default:
 		/* 全部求めて一番和了に近いやつを返す */
 		SHANTEN shanten, tmpShanten;
@@ -130,6 +132,7 @@ MJCORE SHANTEN ShantenAnalyzer::calcShanten(const GameTable* const gameStat, PLA
 		tmpShanten = calcShantenCivilWar(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenSyzygy(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenStellar(gameStat, playerID, tileCount, false); if (tmpShanten < shanten) shanten = tmpShanten;
+		tmpShanten = calcShantenSevenup(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		return shanten;
 	}
 }
@@ -356,4 +359,38 @@ SHANTEN ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PLAY
 	// 鳴き面子や暗槓がある場合は考えない
 
 	return (gameStat->Player[playerID].MeldPointer > 0) ? SHANTEN_IMPOSSIBLE : (13 - syzygyPaiCount);
+}
+
+SHANTEN ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+{ // 特殊：セブンアップの向聴数を求める
+	if (!RuleData::chkRuleApplied("sevenup")) return SHANTEN_IMPOSSIBLE;
+
+	SHANTEN shanten = 13;
+	// 以下、一枚ずつ調べる
+	for (int i = 0; i < 3; i++) {
+		Int8ByTile tileCountTmp;
+		for (int j = 0; j < TILE_NONFLOWER_MAX; j++) tileCountTmp[j] = tileCount[j];
+		tileCode tileArrange[NUM_OF_TILES_IN_HAND] = {
+			NoTile, NoTile, NoTile, NoTile,
+			NoTile, NoTile, NoTile,
+			EastWind, SouthWind, WestWind, NorthWind,
+			WhiteDragon, GreenDragon, RedDragon,
+		};
+		for (int j = 0; j < 7; j++)
+			tileArrange[j] = (tileCode)(i * TILE_SUIT_STEP + j + 1);
+
+		int yakuTileCount = 0;
+		for (int j = 0; j < NUM_OF_TILES_IN_HAND; j++) {
+			if (tileCountTmp[tileArrange[j]] >= 1) {
+				yakuTileCount++;
+				tileCountTmp[tileArrange[j]]--;
+			}
+		}
+		SHANTEN tmpShanten = 13 - yakuTileCount;
+		// 鳴き面子や暗槓がある場合は考えない
+		if (gameStat->Player[playerID].MeldPointer > 0) shanten = SHANTEN_IMPOSSIBLE;
+		if (tmpShanten < shanten) shanten = tmpShanten;
+	}
+
+	return shanten;
 }
