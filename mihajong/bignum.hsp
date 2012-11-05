@@ -122,8 +122,8 @@
 	loop
 	
 	repeat agariCount2
-		agariPointArray(0) = int(double(AgariPointRaw(0))*agariBairitsu3+99)/100
-		repeat NUM_OF_DIGIT_GROUPS-1,1: agariPointArray(cnt) = int(double(AgariPointRaw(cnt))*agariBairitsu3): loop
+		agariPointArray(0) += int(double(AgariPointRaw(0))*agariBairitsu3+99)/100
+		repeat NUM_OF_DIGIT_GROUPS-1,1: agariPointArray(cnt) += int(double(AgariPointRaw(cnt))*agariBairitsu3): loop
 		bignum_fix agariPointArray, 0, 1000000
 	loop
 	return
