@@ -38,7 +38,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		"¬‘S‘Ñ›ô‹ã", yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
-				return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles(), 13, YaojiuShunCode, 13, false) == SIZE_OF_MELD_BUFFER);
+				return (yaku::countingFacility::countSpecMentzWithDup(analysis->MianziDat, Honor_Major_Tiles(), 13, YaojiuShunCode, 13, false) == SIZE_OF_MELD_BUFFER);
 			else return false;
 		}
 	));
@@ -48,8 +48,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 			"¬‘S‘Ñ›ô‹ã",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
-					return ( (yaku::countingFacility::countSpecMentz(analysis->MianziDat, OneCode, 10, OneCode, 3, false) == SIZE_OF_MELD_BUFFER) ||
-					(yaku::countingFacility::countSpecMentz(analysis->MianziDat, NineCode, 10, SevenCode, 3, false) == SIZE_OF_MELD_BUFFER) );
+					return ( (yaku::countingFacility::countSpecMentzWithDup(analysis->MianziDat, OneCode, 10, OneCode, 3, false) == SIZE_OF_MELD_BUFFER) ||
+					(yaku::countingFacility::countSpecMentzWithDup(analysis->MianziDat, NineCode, 10, SevenCode, 3, false) == SIZE_OF_MELD_BUFFER) );
 				else return false;
 			}
 		));
@@ -59,7 +59,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		"¬‘S‘Ñ›ô‹ã",
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
-				return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles(), 6, YaojiuShunCode, 6, false) == SIZE_OF_MELD_BUFFER);
+				return (yaku::countingFacility::countSpecMentzWithDup(analysis->MianziDat, Honor_Major_Tiles(), 6, YaojiuShunCode, 6, false) == SIZE_OF_MELD_BUFFER);
 			else return false;
 		}
 	));
