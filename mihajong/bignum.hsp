@@ -122,8 +122,8 @@
 	loop
 	
 	repeat agariCount2
-		agariPointArray(0) = int(double(AgariPointRaw(0))*agariBairitsu3+99)/100
-		repeat NUM_OF_DIGIT_GROUPS-1,1: agariPointArray(cnt) = int(double(AgariPointRaw(cnt))*agariBairitsu3): loop
+		agariPointArray(0) += int(double(AgariPointRaw(0))*agariBairitsu3+99)/100
+		repeat NUM_OF_DIGIT_GROUPS-1,1: agariPointArray(cnt) += int(double(AgariPointRaw(cnt))*agariBairitsu3): loop
 		bignum_fix agariPointArray, 0, 1000000
 	loop
 	return
@@ -451,7 +451,10 @@
 							agaricalc agariPointArray, AgariPointRaw, 2, 2, 1
 							deltacalcplus AgariPointRaw, PointDelta, 2, cnt
 							deltacalcplus AgariPointRaw, PointDelta, 2, cnt
-							if (chkRule("tsumo_payment", "add_1000")) {PointDelta(cnt, 0) += 20}
+							if (chkRule("tsumo_payment", "add_1000")) {
+								agariPointArray(0) += 20
+								PointDelta(cnt, 0) += 20
+							}
 						} else: if (playerwind(cnt, getRound(GameStat)) != PLAYER_NORTH) {
 							deltacalcminus AgariPointRaw, PointDelta, 2, cnt
 							if (chkRule("tsumo_payment", "add_1000")) {PointDelta(cnt, 0) -= 10}
@@ -521,7 +524,10 @@
 								agaricalc agariPointArray, AgariPointRaw, 2, 1, 1
 								deltacalcplus AgariPointRaw, PointDelta, 2, cnt
 								deltacalcplus AgariPointRaw, PointDelta, 1, cnt
-								if (chkRule("tsumo_payment", "add_1000")) {PointDelta(cnt, 0) += 20}
+								if (chkRule("tsumo_payment", "add_1000")) {
+									agariPointArray(0) += 20
+									PointDelta(cnt, 0) += 20
+								}
 							} else: if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
 								deltacalcminus AgariPointRaw, PointDelta, 2, cnt
 								if (chkRule("tsumo_payment", "add_1000")) {PointDelta(cnt, 0) -= 10}

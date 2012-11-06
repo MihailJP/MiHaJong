@@ -17,12 +17,12 @@ PLAYER_ID tobePlayed(const GameTable* const gameStat, int id) {
 }
 
 /* ˆê‹ãŽš”v‚ÌƒR[ƒhˆê—— */
-tileCode* Honor_Major_Tiles() {
+const tileCode* Honor_Major_Tiles() {
 	static const tileCode YaojiuPai[] = {
 		CharacterOne, CharacterNine, CircleOne, CircleNine, BambooOne, BambooNine,
 		EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
 	};
-	return (tileCode*)&YaojiuPai;
+	return YaojiuPai;
 }
 tileCode Honor_Major_Tiles(int code) {
 	assert((code >= 0)&&(code < 13));
