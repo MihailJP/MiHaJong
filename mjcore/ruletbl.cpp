@@ -157,9 +157,13 @@ std::string RuleData::getRuleItemTag(int RuleID, int index) {
 	return getRuleItemTag(nametbl[RuleID], index);
 }
 std::string RuleData::getRuleItemTag(std::string RuleTag, int index) {
-	if (nonapplicable.find(RuleTag) != nonapplicable.end()) // N/Aとする場合
+	if (RuleTag.empty()) // 空文字列なら
+		return std::string("");
+	else if (nonapplicable.find(RuleTag) != nonapplicable.end()) // N/Aとする場合
 		return std::string("N/A");
 	else if (ruletags.find(RuleTag) == ruletags.end()) // ルール項目タグが存在しない場合
+		return std::string("");
+	else if (ruletags[RuleTag].empty()) // 中身が空なら
 		return std::string("");
 	else // そうでなければ
 		return ruletags[RuleTag][index];

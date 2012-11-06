@@ -291,6 +291,7 @@ return
 		repeat 1
 			tmpRuleNum = (configPage-1)*RULES_IN_PAGE+tmpBtnCode-1
 			Rule(tmpRuleNum)--
+			if (RuleTxt(0, tmpRuleNum) == "") {Rule(tmpRuleNum) = 0: break}
 			if (Rule(tmpRuleNum) < 0) {Rule(tmpRuleNum) = getRuleSize(tmpRuleNum)-1}
 			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == ">>>") {continue 0}
 			if (RuleTxt(Rule(tmpRuleNum), tmpRuleNum) == "") {continue 0}
