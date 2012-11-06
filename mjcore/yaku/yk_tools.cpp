@@ -182,8 +182,8 @@ Int8ByTile yaku::countingFacility::countKaKangz(const MELD_BUF MianziDat, uint8_
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 /* 指定の刻子・順子があるか数える */
-int yaku::countingFacility::countSpecMentz(const MELD_BUF MianziDat, const tileCode* const targetKez, int numOfKez,
-	const tileCode* const targetShunz, int numOfShunz, bool Mode)
+inline int yaku::countingFacility::countSpecMentz(const MELD_BUF MianziDat, const tileCode* const targetKez, int numOfKez,
+	const tileCode* const targetShunz, int numOfShunz, bool Mode, bool allowDup)
 { // 指定した種類の面子を数える
 	int kz = 0; int sz = 0;
 	auto DuiCount = Mode ? countKez(MianziDat, nullptr) : countDuiz(MianziDat);
@@ -195,9 +195,20 @@ int yaku::countingFacility::countSpecMentz(const MELD_BUF MianziDat, const tileC
 	}
 	for (int i = 0; i < numOfShunz; i++) {
 		if (targetShunz[i] == NoTile) continue;
-		if (ShunzCount[targetShunz[i]] >= 1) ++yakuflagcount;
+		if (ShunzCount[targetShunz[i]] >= 1)
+			yakuflagcount += allowDup ? ShunzCount[targetShunz[i]] : 1;
 	}
 	return yakuflagcount;
+}
+int yaku::countingFacility::countSpecMentz(const MELD_BUF MianziDat, const tileCode* const targetKez, int numOfKez,
+	const tileCode* const targetShunz, int numOfShunz, bool Mode)
+{
+	return countSpecMentz(MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, Mode, false);
+}
+int yaku::countingFacility::countSpecMentzWithDup(const MELD_BUF MianziDat, const tileCode* const targetKez, int numOfKez,
+	const tileCode* const targetShunz, int numOfShunz, bool Mode)
+{
+	return countSpecMentz(MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, Mode, true);
 }
 
 /* 数字の合計を数える */

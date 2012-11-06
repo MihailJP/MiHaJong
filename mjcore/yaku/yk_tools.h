@@ -33,6 +33,8 @@ private:
 	static Int8ByTile countByMelds(
 		const MELD_BUF MianziDat, uint8_t* const hits,
 		std::function<bool (meldStat)> f);
+	static inline int countSpecMentz(const MELD_BUF MianziDat, const tileCode* const targetKez, int numOfKez,
+		const tileCode* const targetShunz, int numOfShunz, bool Mode, bool allowDup);
 public:
 	static int countPairs(
 		const Int8ByTile tileCount, const tileCode* const targetTiles, int numOfTiles);
@@ -50,6 +52,8 @@ public:
 	static Int8ByTile countKaKangz(const MELD_BUF MianziDat, uint8_t* const Kangzi);
 
 	static int countSpecMentz(const MELD_BUF MianziDat, const tileCode* const targetKez, int numOfKez,
+		const tileCode* const targetShunz, int numOfShunz, bool Mode);
+	static int countSpecMentzWithDup(const MELD_BUF MianziDat, const tileCode* const targetKez, int numOfKez,
 		const tileCode* const targetShunz, int numOfShunz, bool Mode);
 	static int countMentzNumerals(const MELD_BUF MianziDat);
 };
