@@ -9,7 +9,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
 				return (yaku::countingFacility::countSpecMentzWithDup
 					(analysis->MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, noDui)
-					== SIZE_OF_MELD_BUFFER - (noDui ? 0 : 1));
+					== SIZE_OF_MELD_BUFFER - (noDui ? 1 : 0));
 			else if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1)
 				return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez, numOfKez)
 					== NUM_OF_TILES_IN_HAND / 2);
@@ -21,7 +21,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
 				return (yaku::countingFacility::countSpecMentz
 					(analysis->MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, noDui)
-					== SIZE_OF_MELD_BUFFER - (noDui ? 0 : 1));
+					== SIZE_OF_MELD_BUFFER - (noDui ? 1 : 0));
 			else if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1)
 				return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez, numOfKez)
 					== NUM_OF_TILES_IN_HAND / 2);
