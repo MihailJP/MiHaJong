@@ -7,9 +7,21 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		[](const MENTSU_ANALYSIS* const analysis, const tileCode* const targetKez, int numOfKez,
 		const tileCode* const targetShunz, int numOfShunz, bool noDui) -> bool {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
+				return (yaku::countingFacility::countSpecMentzWithDup
+					(analysis->MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, noDui)
+					== SIZE_OF_MELD_BUFFER - (noDui ? 1 : 0));
+			else if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1)
+				return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez, numOfKez)
+					== NUM_OF_TILES_IN_HAND / 2);
+			else return false;
+		};
+	auto chktiles_nodup = // 面子手・七対子兼用の判定関数オブジェクト
+		[](const MENTSU_ANALYSIS* const analysis, const tileCode* const targetKez, int numOfKez,
+		const tileCode* const targetShunz, int numOfShunz, bool noDui) -> bool {
+			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
 				return (yaku::countingFacility::countSpecMentz
 					(analysis->MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, noDui)
-					== SIZE_OF_MELD_BUFFER - (noDui ? 0 : 1));
+					== SIZE_OF_MELD_BUFFER - (noDui ? 1 : 0));
 			else if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1)
 				return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez, numOfKez)
 					== NUM_OF_TILES_IN_HAND / 2);
@@ -687,14 +699,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
 			}),
 			"清一色",
-			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[chktiles_nodup](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
 					CircleFour, CircleSix,
 				};
 				const tileCode shunzi[] = {
 					CircleOne, CircleSeven,
 				};
-				return chktiles(analysis, kezi, 2, shunzi, 2, true) &&
+				return chktiles_nodup(analysis, kezi, 2, shunzi, 2, true) &&
 					(analysis->MianziDat[0].tile == CircleFive) &&
 					(*analysis->MenzenFlag);
 			}
@@ -703,14 +715,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	if (RuleData::chkRuleApplied("xique_naomei"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"喜鵲閙梅", get_yaku_han("xique_naomei"),
-			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[chktiles_nodup](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const tileCode kezi[] = {
 					CircleFive, BambooOne,
 				};
 				const tileCode shunzi[] = {
 					CharacterOne, CircleOne,
 				};
-				return chktiles(analysis, kezi, 2, shunzi, 2, true) &&
+				return chktiles_nodup(analysis, kezi, 2, shunzi, 2, true) &&
 					(analysis->MianziDat[0].tile == BambooFive);
 			}
 		));

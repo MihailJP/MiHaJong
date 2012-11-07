@@ -62,6 +62,7 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 		if ((totalHan < 6) && (totalSemiMangan < 3)) { // ñûä—à»â∫
 			doubling(yStat); // åvéZÇé¿çs
 			if (yStat->AgariPoints > LargeNum::fromInt(2000)) yStat->AgariPoints = LargeNum::fromInt(2000); // ñûä—
+			if (totalSemiMangan == 2) yStat->AgariPoints = LargeNum::fromInt(2000); // å≈íËñûä—ÇÃèÍçá
 		}
 		else if ((totalHan < 8) && (totalSemiMangan < 4)) yStat->AgariPoints = LargeNum::fromInt(3000); // íµñû
 		else if (((totalHan < 10) || ((totalHan == 10) && (RuleData::chkRule("sanbaiman_border", "11han_or_more")))) &&
