@@ -207,8 +207,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			"国士無双", "十三不塔",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenAnalyzer::shantenOrphans] == -1) && // 国士無双になっていて、
-					(/* フリテンかどうか判定する */0) && // フリテンではなくて、
-					((/* 13面待ちか判定する */0)||(analysis->GameStat->TianHuFlag))); // 13面待ちか天和になっている
+					(!analysis->MachiInfo.FuritenFlag) && // フリテンではなくて、
+					((analysis->MachiInfo.MachiMen == 13)||(analysis->GameStat->TianHuFlag))); // 13面待ちか天和になっている
 			}
 		));
 	/* 七星無靠 */

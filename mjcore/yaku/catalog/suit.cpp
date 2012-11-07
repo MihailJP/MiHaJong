@@ -387,7 +387,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++)
 					if ((analysis->MianziDat[i].tile / TILE_SUIT_STEP) == (TILE_SUIT_CIRCLES / TILE_SUIT_STEP))
 						++PinMian;
-				return (isshoku(analysis, false) &&
+				return (isshoku(analysis, false) && (PinMian > 0) &&
 					(analysis->DuiziCount[WhiteDragon] >= 1));
 			}
 		));
