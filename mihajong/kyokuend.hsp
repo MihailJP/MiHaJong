@@ -684,5 +684,18 @@
 			incRoundLoop GameStat: setRound GameStat, 0
 		}
 	}
+	// Ä‚«’¹•œŠˆƒ‹[ƒ‹‚Ìê‡
+	if ((chkRule("yakitori", "no") != 0) && (chkRule("yakitori_again", "no") != 0)) {
+#ifdef SANMAT
+		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)) > 0) {
+			repeat 3
+#else
+		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)+getYakitori(GameStat, 3)) > 0) {
+			repeat 4
+#endif
+				setYakitori GameStat, cnt, 1
+			loop
+		}
+	}
 	return 0
 #global
