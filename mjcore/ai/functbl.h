@@ -21,6 +21,8 @@ private:
 	static int tableLockedErr(lua_State* const L);
 	static void lockTable(lua_State* const L);
 	static int random(lua_State* const L);
+	static int say(lua_State* const L);
+	static PLAYER_ID getPlayerID(lua_State* const L);
 	static inline void discardTileCode(lua_State* const L);
 	static inline void doraColorCode(lua_State* const L);
 	static inline void meldCallCode(lua_State* const L);

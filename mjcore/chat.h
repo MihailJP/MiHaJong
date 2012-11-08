@@ -18,16 +18,20 @@ namespace chat {
 		static const int bufsize = 65536;
 		std::ostringstream myChatStream;
 		HWND logWindow;
+		std::string chatstr(const std::string& buf);
+		virtual void chatappend(const std::string& buf);
 	public:
 		StreamLog ();
 		virtual ~StreamLog ();
 		virtual std::string getlog ();
 		virtual void sysmsg (const std::string& msg);
 		virtual void sendstr (const std::string& msg);
+		virtual void sendstrx (PLAYER_ID player, const std::string& msg);
 		virtual void updateWindow ();
 		void setLogWindow (HWND wndHandle);
 	};
 	class ChatThread : public StreamLog {
+		typedef StreamLog super;
 	private:
 		std::queue<std::string> sendQueue;
 		CRITICAL_SECTION streamLock;
@@ -48,6 +52,7 @@ namespace chat {
 		std::string getlog ();
 		void sysmsg (const std::string& msg);
 		void sendstr (const std::string& msg);
+		void sendstrx (PLAYER_ID player, const std::string& msg);
 		void updateWindow ();
 	};
 	
@@ -56,6 +61,9 @@ namespace chat {
 	__declspec(dllexport) void initchat (const char* const server_addr, int clientNum);
 	__declspec(dllexport) void appendchat (const char* const chatstr);
 	__declspec(dllexport) void sendchat (const char* const chatstr);
+#ifdef MJCORE_EXPORTS
+	void sendchatx (int player, const char* const chatstr);
+#endif
 	__declspec(dllexport) void closechat ();
 
 	__declspec(dllexport) void setlogwnd (HWND window);
