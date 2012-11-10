@@ -1,5 +1,6 @@
 #include "window.h"
 
+ScreenManipulator* MainWindow::myScreenManipulator = nullptr;
 const LPTSTR MainWindow::myWindowClassName = _T("testwnd");
 const LPTSTR MainWindow::WindowCaption = _T("ÉeÉXÉgÉEÉBÉìÉhÉE");
 const unsigned MainWindow::WindowWidth = 1024;
@@ -7,8 +8,16 @@ const unsigned MainWindow::WindowHeight = 768;
 
 LRESULT CALLBACK MainWindow::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) { // ÉEÉBÉìÉhÉEÉvÉçÉVÅ[ÉWÉÉ
 	switch (message) {
-	case WM_DESTROY:
+	case WM_DESTROY: // ÉEÉBÉìÉhÉEÇï¬Ç∂ÇΩéû
 		PostQuitMessage(0);
+		break;
+	case WM_PAINT: // ÉEÉBÉìÉhÉEÇÃçƒï`âÊ
+		if (myScreenManipulator) {
+			myScreenManipulator->Render();
+			ValidateRect(hWnd, nullptr);
+		}
+		else
+			return DefWindowProc(hWnd, message, wParam, lParam);
 		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
@@ -30,7 +39,7 @@ void MainWindow::initWindowClass(HINSTANCE hThisInst) { // ÉEÉBÉìÉhÉEÉNÉâÉXÇÃèâä
 	myWindowClass.lpszMenuName = nullptr;
 	myWindowClass.cbClsExtra = 0;
 	myWindowClass.cbWndExtra = 0;
-	myWindowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	myWindowClass.hbrBackground = nullptr;
 	
 	if (!RegisterClassEx(&myWindowClass))
 		throw _T("ÉEÉBÉìÉhÉEÉNÉâÉXÇÃìoò^Ç…é∏îsÇµÇ‹ÇµÇΩ");
@@ -58,4 +67,9 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode) {
 MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode) {
 	initWindowClass(hThisInst);
 	initWindow(hThisInst, nWinMode);
+	myScreenManipulator = new ScreenManipulator(hWnd);
+}
+
+MainWindow::~MainWindow() {
+	delete myScreenManipulator; myScreenManipulator = nullptr;
 }

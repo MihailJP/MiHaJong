@@ -8,10 +8,13 @@
 class ScreenManipulator {
 private:
 	HWND hWnd;
+	LPDIRECT3D9 pd3d;
 	LPDIRECT3DDEVICE9 pDevice;
-	HRESULT InitDevice(); // Direct3D オブジェクト初期化
+	void InitDevice(); // Direct3D オブジェクト初期化
 public:
+	void Render(); // 画面の再描画
 	ScreenManipulator(HWND windowHandle);
+	~ScreenManipulator();
 };
 
 #endif

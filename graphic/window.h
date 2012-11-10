@@ -3,10 +3,12 @@
 
 #include <Windows.h>
 #include <tchar.h>
+#include "scrmanip.h"
 
 class MainWindow {
 private:
 	HWND hWnd;
+	static ScreenManipulator* myScreenManipulator; // DirectX オブジェクト
 	static const LPTSTR myWindowClassName, WindowCaption;
 	static const unsigned WindowWidth, WindowHeight;
 	static LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam); // ウィンドウプロシージャ
@@ -14,6 +16,7 @@ private:
 	void initWindow(HINSTANCE hThisInst, int nWinMode); // ウィンドウの生成
 public:
 	MainWindow(HINSTANCE hThisInst, int nWinMode);
+	~MainWindow();
 };
 
 #endif

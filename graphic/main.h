@@ -6,7 +6,6 @@
 
 #include <Windows.h>
 #include "window.h"
-#include "scrmanip.h"
 
 #if defined(__GNUC__) && defined(_WIN32) && defined(_UNICODE) /* Workaround for MinGW */
 #define MINGW_UNICODE
