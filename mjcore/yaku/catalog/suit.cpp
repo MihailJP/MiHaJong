@@ -459,8 +459,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				return (chueiimen2(analysis) &&
 					(analysis->shanten[ShantenAnalyzer::shantenRegular] == -1) &&
 					((analysis->MianziDat[1].tile / TILE_SUIT_STEP) ==
-					(analysis->MianziDat[2].tile / TILE_SUIT_STEP) ==
-					(analysis->MianziDat[3].tile / TILE_SUIT_STEP) ==
+					(analysis->MianziDat[2].tile / TILE_SUIT_STEP)) &&
+					((analysis->MianziDat[2].tile / TILE_SUIT_STEP) ==
+					(analysis->MianziDat[3].tile / TILE_SUIT_STEP)) &&
+					((analysis->MianziDat[3].tile / TILE_SUIT_STEP) ==
 					(analysis->MianziDat[4].tile / TILE_SUIT_STEP)) &&
 					(analysis->Machi == yaku::yakuCalculator::machiTanki)
 					);
@@ -504,7 +506,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			[uumenchii](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (uumenchii(analysis) &&
 					(analysis->GameStat->GameRound / 4 == sEast) &&
-					(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound))
+					(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) == sEast)
 					);
 			}
 		));
