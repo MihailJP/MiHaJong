@@ -12,6 +12,8 @@ private:
 	LPDIRECT3D9 pd3d; // Direct3D
 	LPDIRECT3DDEVICE9 pDevice; // Direct3Dデバイス
 	Scene* myScene; // シーン管理用のクラス
+	FPSIndicator* myFPSIndicator; // FPS計算・表示
+	UINT64 lastRedrawTime;
 	void InitDevice(); // Direct3D オブジェクト初期化
 public:
 	void Render(); // 画面の再描画
