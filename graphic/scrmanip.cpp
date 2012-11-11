@@ -32,6 +32,7 @@ void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
 ScreenManipulator::ScreenManipulator(HWND windowHandle) {
 	pDevice = nullptr; hWnd = windowHandle;
 	InitDevice();
+	myScene = nullptr;
 }
 
 void ScreenManipulator::Render() {
@@ -40,7 +41,7 @@ void ScreenManipulator::Render() {
 	pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
 		D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // バッファクリア
 	if (SUCCEEDED(pDevice->BeginScene())) { // シーン開始
-		// ここに処理を書く
+		if (myScene) myScene->Render(); // 再描画処理
 		pDevice->EndScene(); // シーン終了
 	}
 	pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
@@ -48,6 +49,7 @@ void ScreenManipulator::Render() {
 }
 
 ScreenManipulator::~ScreenManipulator() {
+	if (myScene) delete myScene;
 	if (pd3d) {pd3d->Release(); pd3d = nullptr;}
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
 }
