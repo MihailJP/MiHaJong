@@ -14,7 +14,8 @@ void GameTableScreen::InitSprite(LPD3DXSPRITE* sprite) {
 
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	LoadTexture(&tBorder, _T("data\\frame.png"), 768, 768); InitSprite(&sBorder);
-	LoadTexture(&tBaize, _T("data\\baize.png"), 768, 768); InitSprite(&sBaize);
+	LoadTexture(&tBaize, _T("data\\baize.png"), 674, 674); InitSprite(&sBaize);
+	LoadTexture(&tSideBar, _T("data\\sidebar.png"), 256, 768); InitSprite(&sSideBar);
 }
 
 GameTableScreen::~GameTableScreen() {
@@ -22,6 +23,8 @@ GameTableScreen::~GameTableScreen() {
 	if (sBorder) sBorder->Release();
 	if (tBaize) tBaize->Release();
 	if (sBaize) sBaize->Release();
+	if (tSideBar) tSideBar->Release();
+	if (sSideBar) sSideBar->Release();
 }
 
 void GameTableScreen::ShowSprite(LPD3DXSPRITE sprite, LPDIRECT3DTEXTURE9 texture, int X, int Y, int Width, int Height) {
@@ -36,6 +39,7 @@ void GameTableScreen::ShowSprite(LPD3DXSPRITE sprite, LPDIRECT3DTEXTURE9 texture
 void GameTableScreen::Render() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 		D3DCOLOR_XRGB(0, 128, 0), 1.0f, 0); // バッファクリア
+	ShowSprite(sSideBar, tSideBar, 768, 0, 256, 768);
 	ShowSprite(sBaize, tBaize, 47, 47, 674, 674);
 	ShowSprite(sBorder, tBorder, 0, 0, 768, 768);
 }
