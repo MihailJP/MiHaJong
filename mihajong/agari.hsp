@@ -113,7 +113,9 @@
 		}
 
 		if (getTsumoAgariFlag(GameStat) == 1) {break /* ƒcƒ‚˜a—¹‚è‚ÌŽž‚ÍI—¹ */}
-		setDeposit GameStat, 0
+		if ((chkRule("getting_deposit", "riichidori") == 0) || (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) != RIICHI_NO)) {
+			setDeposit GameStat, 0
+		}
 		redrscreen: redraw 1
 	loop
 	RoundEndType = ENDKYOKU_CHONBO-tmpagariflag
@@ -382,13 +384,15 @@
 	}
 	
 	if (getDeposit(GameStat)) {
-		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-		PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), 0) += getDeposit(GameStat)*10
-		
-		setCenterTitle "‹Ÿ‘õ´ŽZ"
-		putdelta PointDelta
-		redraw 1: await 1500
-		pointcalc GameStat, PointDelta
+		if ((chkRule("getting_deposit", "riichidori") == 0) || (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) != RIICHI_NO)) {
+			dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
+			PointDelta(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), 0) += getDeposit(GameStat)*10
+			
+			setCenterTitle "‹Ÿ‘õ´ŽZ"
+			putdelta PointDelta
+			redraw 1: await 1500
+			pointcalc GameStat, PointDelta
+		}
 	}
 	
 	if ((ChipAmount > 0)&&(chkRule("chip", "no") == 0)) {

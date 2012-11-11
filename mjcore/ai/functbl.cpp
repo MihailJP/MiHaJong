@@ -301,3 +301,27 @@ inline void aiscript::table::functable::agariTypeCode(lua_State* const L) {
 	TableAdd(L, "SevenUp", (int)ShantenAnalyzer::shantenSevenup);
 	lockTable(L); lua_setfield(L, -2, "AgariType");
 }
+
+/* プレイヤー番号を取得 */
+PLAYER_ID aiscript::table::functable::getPlayerID(lua_State* const L) {
+	PLAYER_ID player;
+	lua_getglobal(L, tblname);
+	lua_pushstring(L, "gametbl"); lua_gettable(L, -2);
+	lua_pushstring(L, "playerid"); lua_gettable(L, -2);
+	player = lua_tointeger(L, -1);
+	lua_pop(L, 3);
+	return player - 1;
+}
+
+/* チャット出力 */
+int aiscript::table::functable::say(lua_State* const L) {
+	int n = lua_gettop(L); std::string msgstr = "";
+	if (n > 0) {
+		for (int i = 1; i <= n; i++) {
+			msgstr += luaL_tolstring(L, i, nullptr); lua_pop(L, 1);
+			if (i < n) msgstr += " ";
+		}
+		chat::sendchatx(getPlayerID(L), msgstr.c_str());
+	}
+	return 0;
+}
