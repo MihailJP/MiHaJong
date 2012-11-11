@@ -4,5 +4,6 @@
 #include "proto.h"
 #include "fps.h"
 #include "test.h"
+#include "table.h"
 
 #endif

@@ -36,6 +36,9 @@
     <ClCompile Include="scenes\fps.cpp">
       <Filter>ソース ファイル\scenes</Filter>
     </ClCompile>
+    <ClCompile Include="scenes\table.cpp">
+      <Filter>ソース ファイル\scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -57,6 +60,9 @@
       <Filter>ヘッダー ファイル\scenes</Filter>
     </ClInclude>
     <ClInclude Include="scenes\fps.h">
+      <Filter>ヘッダー ファイル\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table.h">
       <Filter>ヘッダー ファイル\scenes</Filter>
     </ClInclude>
   </ItemGroup>

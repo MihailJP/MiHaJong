@@ -74,6 +74,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
+    <ClCompile Include="scenes\table.cpp" />
     <ClCompile Include="scenes\test.cpp" />
     <ClCompile Include="scrmanip.cpp" />
     <ClCompile Include="window.cpp" />
@@ -83,6 +84,7 @@
     <ClInclude Include="scenes\fps.h" />
     <ClInclude Include="scenes\proto.h" />
     <ClInclude Include="scenes\scenes.h" />
+    <ClInclude Include="scenes\table.h" />
     <ClInclude Include="scenes\test.h" />
     <ClInclude Include="scrmanip.h" />
     <ClInclude Include="window.h" />
