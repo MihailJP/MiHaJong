@@ -764,7 +764,6 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->KeziCount[CircleTwo] >= 1) ||
 					(analysis->KeziCount[CircleFour] >= 1) ||
-					(analysis->KeziCount[CircleSix] >= 1) ||
 					(analysis->KeziCount[CircleEight] >= 1)) &&
 					(analysis->KeziCount[GreenDragon] >= 1);
 			}
@@ -776,7 +775,6 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->KeziCount[CircleOne] >= 1) ||
 					(analysis->KeziCount[CircleThree] >= 1) ||
-					(analysis->KeziCount[CircleFive] >= 1) ||
 					(analysis->KeziCount[CircleSeven] >= 1) ||
 					(analysis->KeziCount[CircleNine] >= 1)) &&
 					(analysis->KeziCount[GreenDragon] >= 1);
@@ -787,12 +785,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"ＳＭＡＰ", get_yaku_han("smap"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->KeziCount[CharacterFour] +
-					analysis->KeziCount[CircleFour] +
-					analysis->KeziCount[BambooFour] -
-					analysis->AnKeziCount[CharacterFour] -
-					analysis->AnKeziCount[CircleFour] -
-					analysis->AnKeziCount[BambooFour] >= 1));
+				return ((analysis->KeziCount[CharacterFour] -
+					analysis->AnKeziCount[CharacterFour] >= 1));
 			}
 		));
 	/* モンスターハンター */
