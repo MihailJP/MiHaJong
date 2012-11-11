@@ -2,5 +2,6 @@
 #define GRAPHIC_SCENES_SCENES_H
 
 #include "proto.h"
+#include "test.h"
 
 #endif

@@ -17,6 +17,8 @@ public:
 	void Render(); // ‰æ–Ê‚ÌÄ•`‰æ
 	ScreenManipulator(HWND windowHandle);
 	~ScreenManipulator();
+	HWND getHWnd() {return hWnd;}
+	LPDIRECT3DDEVICE9 getDevice() {return pDevice;}
 };
 
 #endif

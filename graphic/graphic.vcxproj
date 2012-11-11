@@ -73,6 +73,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="scenes\test.cpp" />
     <ClCompile Include="scrmanip.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
@@ -80,6 +81,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="scenes\proto.h" />
     <ClInclude Include="scenes\scenes.h" />
+    <ClInclude Include="scenes\test.h" />
     <ClInclude Include="scrmanip.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>

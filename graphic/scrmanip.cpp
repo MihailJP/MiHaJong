@@ -32,7 +32,7 @@ void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
 ScreenManipulator::ScreenManipulator(HWND windowHandle) {
 	pDevice = nullptr; hWnd = windowHandle;
 	InitDevice();
-	myScene = nullptr;
+	myScene = new TestScene(this);
 }
 
 void ScreenManipulator::Render() {

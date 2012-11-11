@@ -18,9 +18,17 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	}
 	
 	/* メインループ */
-	while (GetMessage(&msg, nullptr, 0, 0)) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+	while (true) {
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE)) {
+			// メッセージがあればメッセージの処理
+			if (!GetMessage(&msg, nullptr, 0, 0)) break;
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		} else {
+			// アイドル時に再描画
+			myMainWindow->Render();
+			Sleep(1);
+		}
 	}
 	
 	/* 終了処理 */

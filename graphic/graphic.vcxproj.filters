@@ -16,6 +16,9 @@
     <Filter Include="ヘッダー ファイル\scenes">
       <UniqueIdentifier>{e061d4f3-9895-4401-b6b7-273515d8f32c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\scenes">
+      <UniqueIdentifier>{2280abdb-7010-49a8-8cb7-641a4937c3c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -26,6 +29,9 @@
     </ClCompile>
     <ClCompile Include="window.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\test.cpp">
+      <Filter>ソース ファイル\scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -42,6 +48,9 @@
       <Filter>ヘッダー ファイル\scenes</Filter>
     </ClInclude>
     <ClInclude Include="scenes\scenes.h">
+      <Filter>ヘッダー ファイル\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\test.h">
       <Filter>ヘッダー ファイル\scenes</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,14 +11,6 @@ LRESULT CALLBACK MainWindow::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	case WM_DESTROY: // ウィンドウを閉じた時
 		PostQuitMessage(0);
 		break;
-	case WM_PAINT: // ウィンドウの再描画
-		if (myScreenManipulator) {
-			myScreenManipulator->Render();
-			ValidateRect(hWnd, nullptr);
-		}
-		else
-			return DefWindowProc(hWnd, message, wParam, lParam);
-		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
@@ -72,4 +64,12 @@ MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode) {
 
 MainWindow::~MainWindow() {
 	delete myScreenManipulator; myScreenManipulator = nullptr;
+}
+
+void MainWindow::Render() { // ウィンドウの再描画
+	if (myScreenManipulator) {
+		myScreenManipulator->Render();
+		ValidateRect(hWnd, nullptr);
+	}
+	return;
 }

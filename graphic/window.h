@@ -17,6 +17,7 @@ private:
 public:
 	MainWindow(HINSTANCE hThisInst, int nWinMode);
 	~MainWindow();
+	void Render();
 };
 
 #endif

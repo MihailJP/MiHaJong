@@ -2,6 +2,8 @@
 #define GRAPHIC_SCENES_PROTO_H
 
 #include <Windows.h>
+#include <d3dx9.h>
+#include <dxerr.h>
 
 class ScreenManipulator;
 
