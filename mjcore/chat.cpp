@@ -98,29 +98,40 @@ void ChatThread::receive() {
 	}
 }
 
-void ChatThread::chatappend(const std::string& buf) {
+std::string StreamLog::chatstr(const std::string& buf) {
+	std::ostringstream o;
 	int tmpPlayer = static_cast<int>(buf[0] - '0');
 	if ((tmpPlayer >= 0) && (tmpPlayer <= ACTUAL_PLAYERS)) {
-		EnterCriticalSection(&streamLock);
-		myChatStream << EnvTable::Instantiate()->PlayerDat[tmpPlayer].PlayerName <<
+		o << EnvTable::Instantiate()->PlayerDat[tmpPlayer].PlayerName <<
 			"(" << windName(playerwind(&GameStat, tmpPlayer, GameStat.GameRound)) << ") : " <<
 			std::string(buf.begin() + 1, buf.end());
 		if (buf[buf.length() - 1] != '\n')
-			myChatStream <<
+			o <<
 #ifdef _WIN32
 			"\r" <<
 #endif
 			std::endl;
-		else myChatStream.flush();
-		LeaveCriticalSection(&streamLock);
+		else o.flush();
+	}
+	return o.str();
+}
+void StreamLog::chatappend(const std::string& buf) {
+	int tmpPlayer = static_cast<int>(buf[0] - '0');
+	if ((tmpPlayer >= 0) && (tmpPlayer <= ACTUAL_PLAYERS)) {
+		myChatStream << chatstr(buf); myChatStream.flush();
 		updateWindow();
 	}
+}
+void ChatThread::chatappend(const std::string& buf) {
+	EnterCriticalSection(&streamLock);
+	super::chatappend(buf);
+	LeaveCriticalSection(&streamLock);
 }
 
 void ChatThread::send() {
 	EnterCriticalSection(&sendQueueLock);
 	if (!sendQueue.empty()) {
-		char buf[bufsize] = {0}; buf[0] = GameStat.PlayerID + '0';
+		char buf[bufsize] = {0}; //buf[0] = GameStat.PlayerID + '0';
 		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
 			for (int k = 1; k <= 3; k++) {
 				if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
@@ -198,10 +209,23 @@ void ChatThread::sysmsg(const std::string& str) {
 }
 
 void StreamLog::sendstr (const std::string& msg) {
+	sendstrx(GameStat.PlayerID, msg);
+}
+void StreamLog::sendstrx (PLAYER_ID player, const std::string& msg) {
+	std::ostringstream s;
+	s << static_cast<int>(player) << msg;
+	if ((player >= 0) && (player <= ACTUAL_PLAYERS)) {
+		myChatStream << chatstr(s.str()); myChatStream.flush();
+		updateWindow();
+	}
 }
 void ChatThread::sendstr (const std::string& msg) {
+	sendstrx(GameStat.PlayerID, msg);
+}
+void ChatThread::sendstrx (PLAYER_ID player, const std::string& msg) {
+	char tmpnum[2] = {0}; tmpnum[0] = player + '0';
 	EnterCriticalSection(&sendQueueLock);
-	sendQueue.push(msg);
+	sendQueue.push(std::string(tmpnum) + msg);
 	LeaveCriticalSection(&sendQueueLock);
 }
 
@@ -240,6 +264,9 @@ __declspec(dllexport) void appendchat (const char* const chatstr) {
 }
 __declspec(dllexport) void sendchat (const char* const chatstr) {
 	chatobj->sendstr(chatstr);
+}
+void sendchatx (int player, const char* const chatstr) {
+	chatobj->sendstrx(player, chatstr);
 }
 __declspec(dllexport) void closechat () {
 	delete chatobj; chatobj = nullptr;
