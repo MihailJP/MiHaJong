@@ -1,28 +1,28 @@
 #!/usr/bin/env ruby
-# -*- coding: shift_jis -*-
+# -*- coding: utf-8 -*-
 
 def gametype (type)
 	typecode = type.to_i
 	if typecode & 0x0f == 0x0f then return "" end
 	tmparr = []
-	if typecode & 0x01 != 0 then tmparr += ["l–ƒ"] end
-	if typecode & 0x02 != 0 then tmparr += ["O–ƒ"] end
-	if typecode & 0x04 != 0 then tmparr += ["llO–ƒ"] end
-	if typecode & 0x08 != 0 then tmparr += ["””vO–ƒ"] end
-	return "q" + tmparr.join(", ") + "r"
+	if typecode & 0x01 != 0 then tmparr += ["å››éº»"] end
+	if typecode & 0x02 != 0 then tmparr += ["ä¸‰éº»"] end
+	if typecode & 0x04 != 0 then tmparr += ["å››äººä¸‰éº»"] end
+	if typecode & 0x08 != 0 then tmparr += ["æ•°ç‰Œä¸‰éº»"] end
+	return "ã€ˆ" + tmparr.join(", ") + "ã€‰"
 end
 
-dir = Dir::pwd # Œ³X‚Ìì‹ÆƒfƒBƒŒƒNƒgƒŠ‚ğ‘Ş”ğ
-Dir::chdir(File.expand_path(File.dirname(__FILE__))) # ‚±‚ÌƒXƒNƒŠƒvƒg‚Ì‚ ‚éƒfƒBƒŒƒNƒgƒŠ‚ÉˆÚ“®
+dir = Dir::pwd # å…ƒã€…ã®ä½œæ¥­ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’é€€é¿
+Dir::chdir(File.expand_path(File.dirname(__FILE__))) # ã“ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã®ã‚ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã«ç§»å‹•
 
 require "csv"
-csvdat = CSV.read("../mjcore/data/confitem.csv", encoding: "SJIS") # İ’è‚ğ‹Lq‚µ‚½CSV‚ğŠJ‚­
-target = open("../mihajong/rulesyms.txt", mode_enc = "wb") # o—Íæ(‰üsƒR[ƒh‚ğŒÅ’è‚·‚é‚½‚ßŠ¸‚¦‚ÄƒoƒCƒiƒŠƒ‚[ƒh‚Æ‚·‚é)
+csvdat = CSV.read("../mjcore/data/confitem.csv", encoding: "UTF-8") # è¨­å®šã‚’è¨˜è¿°ã—ãŸCSVã‚’é–‹ã
+target = open("../mihajong/rulesyms.txt", mode_enc = "wb") # å‡ºåŠ›å…ˆ(æ”¹è¡Œã‚³ãƒ¼ãƒ‰ã‚’å›ºå®šã™ã‚‹ãŸã‚æ•¢ãˆã¦ãƒã‚¤ãƒŠãƒªãƒ¢ãƒ¼ãƒ‰ã¨ã™ã‚‹)
 
-for row in csvdat # Še€–Ú‚²‚Æ‚Éo—Í‚·‚é
-	target.print "y", row[8], "z", row[9], gametype(row[1]), "\r\n"
+for row in csvdat # å„é …ç›®ã”ã¨ã«å‡ºåŠ›ã™ã‚‹
+	target.print "ã€", row[8], "ã€‘", row[9], gametype(row[1]), "\r\n"
 	target.print "\t", row[10], "\r\n"
-	target.print "\tİ’è’l: ", row[11..-1].keep_if{|s| s}.delete_if{|s| s == ">>>"}.join(", "), "\r\n\r\n"
+	target.print "\tè¨­å®šå€¤: ", row[11..-1].keep_if{|s| s}.delete_if{|s| s == ">>>"}.join(", "), "\r\n\r\n"
 end
 
-Dir::chdir(dir) # ì‹ÆƒfƒBƒŒƒNƒgƒŠ‚ğŒ³‚É–ß‚·
+Dir::chdir(dir) # ä½œæ¥­ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å…ƒã«æˆ»ã™
