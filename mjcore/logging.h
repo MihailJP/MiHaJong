@@ -25,7 +25,7 @@ namespace logger {
 	__declspec(dllexport) int initLogger();
 
 	CodeConv::tstring posPrefix(const char* file, int line, CodeConv::tstring msg);
-	CodeConv::tstring posPrefix(const char* file, int line, LPTSTR msg);
+	CodeConv::tstring posPrefix(const char* file, int line, LPCTSTR msg);
 
 	__declspec(dllexport) void trace_msg(LPCTSTR msg);
 	__declspec(dllexport) void debug_msg(LPCTSTR msg);
