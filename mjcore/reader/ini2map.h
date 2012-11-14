@@ -4,12 +4,13 @@
 #include <map>
 #include <string>
 #include <cstring>
+#include "../strcode.h"
 
 class INIParser {
 public:
-	typedef std::map<std::string, std::string> RECORD;
-	typedef std::map<std::string, RECORD> IniMapMap;
-	static void parseini(IniMapMap&, const char*);
+	typedef std::map<CodeConv::tstring, CodeConv::tstring> RECORD;
+	typedef std::map<CodeConv::tstring, RECORD> IniMapMap;
+	static void parseini(IniMapMap&, LPCTSTR);
 };
 
 #endif

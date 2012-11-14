@@ -1,5 +1,7 @@
 #include "ruletbl.h"
 
+using namespace CodeConv;
+
 struct GameTable;
 extern GameTable GameStat;
 inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType);
@@ -14,36 +16,36 @@ std::map<std::string, std::vector<std::string> > RuleData::ruletags;
 std::map<std::string, std::map<std::string, unsigned int> > RuleData::inverse_ruletags;
 std::set<std::string> RuleData::nonapplicable;
 const char RuleData::digit[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-std::array<std::string, RULE_PAGES> RuleData::pageCaption;
+std::array<tstring, RULE_PAGES> RuleData::pageCaption;
 
 void RuleData::configinit_csv() { // ƒRƒ“ƒtƒBƒO—pCSV‚ğ“Ç‚İ‚Ş
 	DWORD size = 0; const uint8_t* csv = nullptr;
 	LoadFileInResource(IDR_CSV_TABL1, CSV_TABLE, size, csv);
 	char *csvdat = new char[size + 4]; memset(csvdat, 0, size+4); memcpy_s(csvdat, size+4, csv, size);
-	CSVReader::parsecsv(confdat, csvdat);
+	CSVReader::parsecsv(confdat, fromUTF8(csvdat).c_str());
 	delete[] csvdat;
 
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // –¼‘Oƒe[ƒuƒ‹
-		std::string nomenPartisRegulae = (*k)[8]; // ƒ‹[ƒ‹ƒ^ƒO
-		unsigned int numerusPartisRegulae = std::atoi((*k)[0].c_str()); // ƒ‹[ƒ‹ƒ^ƒO
+		std::string nomenPartisRegulae(toANSI((*k)[8])); // ƒ‹[ƒ‹ƒ^ƒO
+		unsigned int numerusPartisRegulae = _ttoi((*k)[0].c_str()); // ƒ‹[ƒ‹ƒ^ƒO
 		nametbl[numerusPartisRegulae] = nomenPartisRegulae; // ‡•ûŒü
 		inverse_nametbl[nomenPartisRegulae] = numerusPartisRegulae; // ‹t•ûŒü
 
-		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str()))) { // GameType‡’v‚µ‚½ê‡
-			if ((atoi((*k)[0].c_str()) % RULES_IN_PAGE) == 0)
-				pageCaption[atoi((*k)[0].c_str()) / RULES_IN_PAGE] = std::string((*k)[4]);
+		if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[1].c_str()))) { // GameType‡’v‚µ‚½ê‡
+			if ((_ttoi((*k)[0].c_str()) % RULES_IN_PAGE) == 0)
+				pageCaption[_ttoi((*k)[0].c_str()) / RULES_IN_PAGE] = tstring((*k)[4]);
 			ruletags[nomenPartisRegulae].clear(); inverse_ruletags[nomenPartisRegulae].clear();
 			for (unsigned int index = 11; index < (*k).size(); ++index) {
-				/*if ((*k)[index] == ">>>") { // ”ò‚Î‚·‚æ‚¤‚Éw’è‚³‚ê‚Ä‚¢‚é‚È‚ç
-					ruletags[nomenPartisRegulae].push_back("");
+				/*if ((*k)[index] == _T(">>>")) { // ”ò‚Î‚·‚æ‚¤‚Éw’è‚³‚ê‚Ä‚¢‚é‚È‚ç
+					ruletags[nomenPartisRegulae].push_back(_T(""));
 				}
 				else*/ if (!(*k)[index].empty()) { // ‘¶İ‚·‚é‚È‚ç
-					ruletags[nomenPartisRegulae].push_back((*k)[index]); // ‡•ûŒü
-					inverse_ruletags[nomenPartisRegulae][(*k)[index]] = index - 11; // ‹t•ûŒü
+					ruletags[nomenPartisRegulae].push_back(toANSI((*k)[index])); // ‡•ûŒü
+					inverse_ruletags[nomenPartisRegulae][toANSI((*k)[index])] = index - 11; // ‹t•ûŒü
 				}
 			}
 		}
-		else if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str()))) { // N/Aw’è‚ª‚ ‚Á‚½ê‡
+		else if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[2].c_str()))) { // N/Aw’è‚ª‚ ‚Á‚½ê‡
 			nonapplicable.insert(nomenPartisRegulae); // ƒŠƒXƒg‚É’Ç‰Á
 		}
 	}
@@ -56,7 +58,7 @@ void RuleData::configinit_ini() { // ƒRƒ“ƒtƒBƒO•¶š—ñ•ÏŠ·—pINI‚ğ“Ç‚İ‚Ş
 	DWORD size = 0; const uint8_t* ini = nullptr;
 	LoadFileInResource(IDR_INI_FIL1, INI_FILE, size, ini);
 	char *inidat = new char[size + 4]; memset(inidat, 0, size+4); memcpy_s(inidat, size+4, ini, size);
-	INIParser::parseini(confdict, inidat);
+	INIParser::parseini(confdict, fromUTF8(inidat).c_str());
 	delete[] inidat;
 }
 
@@ -64,40 +66,40 @@ __declspec(dllexport) void RuleData::configinit() { // ƒRƒ“ƒtƒBƒO—pCSV‚ğ“Ç‚İ‚Ş
 	configinit_csv(); configinit_ini();
 	for (int i = 0; i < RULE_LINES; i++) { // ‰Šú‰»
 		memset(ruleConf[i], 0, RULE_IN_LINE + 1);
-		memset(ruleConf[i], '-', RULE_IN_LINE);
+		memset(ruleConf[i], _T('-'), RULE_IN_LINE);
 		for (int j = 0; j < RULE_IN_LINE; j++) {
 			if ((i * RULE_IN_LINE + j) >= RULESIZE) { // ”Ô†‚±‚±‚Ü‚Å
-				ruleConf[i][j] = '\0';
+				ruleConf[i][j] = _T('\0');
 				break;
 			}
-			if ((ruleConf[i][j] == '-') && // –¢İ’è‚Ì‚Ü‚Ü‚Å
+			if ((ruleConf[i][j] == _T('-')) && // –¢İ’è‚Ì‚Ü‚Ü‚Å
 				(!nametbl[i * RULE_IN_LINE + j].empty()) && // ‹ó‚«”Ô‚Å‚Í‚È‚­‚Ä
 				(nonapplicable.find(nametbl[i * RULE_IN_LINE + j]) == nonapplicable.end())) // N/A‚Å‚Í‚È‚¢‚È‚ç
-				ruleConf[i][j] = '0'; // ƒfƒtƒHƒ‹ƒgİ’è
+				ruleConf[i][j] = _T('0'); // ƒfƒtƒHƒ‹ƒgİ’è
 		}
 	}
 }
 
 void RuleData::parseRule() { // ƒ‹[ƒ‹İ’è‚ğ”’l‚É•ÏŠ·
-	debug("ƒ‹[ƒ‹İ’è‚ğ˜A‘z”z—ñ‚É•ÏŠ·‚µ‚Ü‚·B");
+	debug(_T("ƒ‹[ƒ‹İ’è‚ğ˜A‘z”z—ñ‚É•ÏŠ·‚µ‚Ü‚·B"));
 	for (int i = 0; i < RULESIZE; i++) {
 		std::string::size_type idx = std::string(digit).find(
 			ruleConf[i / RULE_IN_LINE][i % RULE_IN_LINE] );
 		if (!(nametbl[i].empty()))
-			Rules[nametbl[i]] = ((idx == std::string::npos) ? 0 : (uint8_t)idx);
+			Rules[nametbl[i]] = ((idx == tstring::npos) ? 0 : (uint8_t)idx);
 	}
 }
 
 __declspec(dllexport) void RuleData::storeRule(const char** ruleTxt) { // HSP¨C++ ƒ‹[ƒ‹İ’è“]‘—
-	debug("HSP¨C++ ƒ‹[ƒ‹“]‘—");
+	debug(_T("HSP¨C++ ƒ‹[ƒ‹“]‘—"));
 	for (int i = 0; i < RULE_LINES; i++)
 		memcpy(ruleConf[i], ruleTxt[i], RULE_IN_LINE);
 	parseRule();
-	info("İ’è‚ªƒ[ƒh‚³‚ê‚Ü‚µ‚½B");
+	info(_T("İ’è‚ªƒ[ƒh‚³‚ê‚Ü‚µ‚½B"));
 }
 
 __declspec(dllexport) void RuleData::exportRule(char** ruleTxt) { // C++¨HSP ƒ‹[ƒ‹İ’è“]‘—
-	debug("C++¨HSP ƒ‹[ƒ‹“]‘—");
+	debug(_T("C++¨HSP ƒ‹[ƒ‹“]‘—"));
 	for (int i = 0; i < RULE_LINES; i++)
 		memcpy(ruleTxt[i], ruleConf[i], RULE_IN_LINE);
 }
@@ -124,33 +126,33 @@ __declspec(dllexport) int RuleData::getRuleSize(int RuleID) { // ƒ‹[ƒ‹€–Ú‚ÌƒAƒ
 	return ruletags[nametbl[RuleID]].size();
 }
 
-__declspec(dllexport) void RuleData::getRuleName(char* const txt, int bufsize, int RuleID) {
+__declspec(dllexport) void RuleData::getRuleName(LPTSTR const txt, int bufsize, int RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // –¼‘Oƒe[ƒuƒ‹
-		if (std::atoi((*k)[0].c_str()) != RuleID) continue;
-		if ((chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str()))) ||
-			(chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str())))) {
-				strcpy_s(txt, bufsize, ((*k)[9]).c_str());
+		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
+		if ((chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[1].c_str()))) ||
+			(chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[2].c_str())))) {
+				_tcscpy_s(txt, bufsize, ((*k)[9]).c_str());
 				return;
 		}
 	}
-	strcpy_s(txt, bufsize, "");
+	_tcscpy_s(txt, bufsize, _T(""));
 }
 
-__declspec(dllexport) void RuleData::getRuleDescription(char* const txt, int bufsize, int RuleID) {
+__declspec(dllexport) void RuleData::getRuleDescription(LPTSTR const txt, int bufsize, int RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // –¼‘Oƒe[ƒuƒ‹
-		if (std::atoi((*k)[0].c_str()) != RuleID) continue;
-		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str()))) {
-			strcpy_s(txt, bufsize, ((*k)[10]).c_str()); return;
+		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
+		if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[1].c_str()))) {
+			_tcscpy_s(txt, bufsize, ((*k)[10]).c_str()); return;
 		}
-		else if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str()))) {
-			if (chkGameType(&GameStat, SanmaS)) strcpy_s(txt, bufsize, "””vO–ƒ‚Å‚Íİ’è‚Å‚«‚Ü‚¹‚ñ");
-			else if (chkGameType(&GameStat, SanmaX)) strcpy_s(txt, bufsize, "Ol‘Å‚¿‚Å‚Íİ’è‚Å‚«‚Ü‚¹‚ñ");
-			else if (chkGameType(&GameStat, Yonma)) strcpy_s(txt, bufsize, "ll‘Å‚¿‚Å‚Íİ’è‚Å‚«‚Ü‚¹‚ñ");
-			else strcpy_s(txt, bufsize, "");
+		else if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[2].c_str()))) {
+			if (chkGameType(&GameStat, SanmaS)) _tcscpy_s(txt, bufsize, _T("””vO–ƒ‚Å‚Íİ’è‚Å‚«‚Ü‚¹‚ñ"));
+			else if (chkGameType(&GameStat, SanmaX)) _tcscpy_s(txt, bufsize, _T("Ol‘Å‚¿‚Å‚Íİ’è‚Å‚«‚Ü‚¹‚ñ"));
+			else if (chkGameType(&GameStat, Yonma)) _tcscpy_s(txt, bufsize, _T("ll‘Å‚¿‚Å‚Íİ’è‚Å‚«‚Ü‚¹‚ñ"));
+			else _tcscpy_s(txt, bufsize, _T(""));
 			return;
 		}
 	}
-	strcpy_s(txt, bufsize, "");
+	_tcscpy_s(txt, bufsize, _T(""));
 }
 
 std::string RuleData::getRuleItemTag(int RuleID, int index) {
@@ -169,19 +171,19 @@ std::string RuleData::getRuleItemTag(std::string RuleTag, int index) {
 		return ruletags[RuleTag][index];
 }
 
-__declspec(dllexport) void RuleData::getRuleTxt(char* const txt, int bufsize, int RuleID, int index) {
+__declspec(dllexport) void RuleData::getRuleTxt(LPTSTR const txt, int bufsize, int RuleID, int index) {
 	const std::string tag = getRuleItemTag(RuleID, index);
-	if ((confdict.find("dictionary") != confdict.end()) &&
-		(confdict["dictionary"].find(tag) != confdict["dictionary"].end()))
-		strcpy_s(txt, bufsize, confdict["dictionary"][tag].c_str());
-	else strcpy_s(txt, bufsize, tag.c_str());
+	if ((confdict.find(_T("dictionary")) != confdict.end()) &&
+		(confdict[_T("dictionary")].find(EnsureTStr(tag)) != confdict[_T("dictionary")].end()))
+		_tcscpy_s(txt, bufsize, confdict[_T("dictionary")][EnsureTStr(tag)].c_str());
+	else _tcscpy_s(txt, bufsize, EnsureTStr(tag).c_str());
 }
 
 __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 	errno_t err; FILE* conffile;
 	if (err = fopen_s(&conffile, filename, "r")) { // ƒI[ƒvƒ“‚µA¸”s‚µ‚½‚ç
-		std::ostringstream o;
-		o << "İ’èƒtƒ@ƒCƒ‹‚ÌƒI[ƒvƒ“‚É¸”s‚µ‚Ü‚µ‚½BƒGƒ‰[ƒR[ƒh [" << err << "]";
+		tostringstream o;
+		o << _T("İ’èƒtƒ@ƒCƒ‹‚ÌƒI[ƒvƒ“‚É¸”s‚µ‚Ü‚µ‚½BƒGƒ‰[ƒR[ƒh [") << err << _T("]");
 		error(o.str().c_str());
 		fclose(conffile); // ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
 		return -1;
@@ -193,63 +195,63 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 		fread_s(filedat, bufsize, sizeof(char), filesize, conffile); // “Ç‚İ‚İ
 		{
 			INIParser::IniMapMap config_ini; // INIƒp[ƒXŒ‹‰Ê‚ğŠi”[‚·‚éuƒ}ƒbƒv‚Ìƒ}ƒbƒvv
-			INIParser::parseini(config_ini, filedat); // INI‚ğƒp[ƒX‚·‚é
+			INIParser::parseini(config_ini, fromUTF8(filedat).c_str()); // INI‚ğƒp[ƒX‚·‚é
 			for (int i = 0; i < RULE_LINES; i++) { // ‰Šú‰»
 				memset(ruleConf[i], 0, RULE_IN_LINE + 1);
 				if (((i + 1) * RULE_LINES) > RULESIZE)
-					memset(ruleConf[i], '-', RULESIZE % RULE_IN_LINE);
+					memset(ruleConf[i], _T('-'), RULESIZE % RULE_IN_LINE);
 				else
-					memset(ruleConf[i], '-', RULE_IN_LINE);
+					memset(ruleConf[i], _T('-'), RULE_IN_LINE);
 			}
-			auto& config_rules = config_ini["rules"];
+			auto& config_rules = config_ini[_T("rules")];
 			for (auto k = config_rules.begin(); k != config_rules.end(); ++k) { // rulesƒZƒNƒVƒ‡ƒ“‚É‚Â‚¢‚Ä
-				if (inverse_nametbl.find(k->first) != inverse_nametbl.end()) { // ƒL[‚ª‚ ‚Á‚½‚ç
-					const std::string& rulename = k->first; // •Ê–¼‚ğ‚Â‚¯‚é
+				if (inverse_nametbl.find(toANSI(k->first)) != inverse_nametbl.end()) { // ƒL[‚ª‚ ‚Á‚½‚ç
+					const std::string& rulename = toANSI(k->first); // •Ê–¼‚ğ‚Â‚¯‚é
 					const unsigned int ruleid = inverse_nametbl[rulename]; // ”Ô†‚É•ÏŠ·
 					if (nonapplicable.find(rulename) != nonapplicable.end()) { // N/A‚¾‚Á‚½‚Î‚ ‚¢
-						std::ostringstream o; o << "ƒL[ [" << rulename << "] ‚Íİ’è‚Å‚«‚Ü‚¹‚ñB–³‹‚µ‚Ü‚·B";
+						tostringstream o; o << _T("ƒL[ [") << EnsureTStr(rulename) << _T("] ‚Íİ’è‚Å‚«‚Ü‚¹‚ñB–³‹‚µ‚Ü‚·B");
 						warn(o.str().c_str());
 					}
-					else if(inverse_ruletags[rulename].find(k->second) != inverse_ruletags[rulename].end()) { // À‘•‚³‚ê‚Ä‚¢‚éİ’è‚È‚ç
+					else if(inverse_ruletags[rulename].find(toANSI(k->second)) != inverse_ruletags[rulename].end()) { // À‘•‚³‚ê‚Ä‚¢‚éİ’è‚È‚ç
 						ruleConf[ruleid / RULE_IN_LINE][ruleid % RULE_IN_LINE] =
-							digit[inverse_ruletags[rulename][k->second]]; // İ’è‚·‚é
+							digit[inverse_ruletags[rulename][toANSI(k->second)]]; // İ’è‚·‚é
 					}
 					else {
-						std::ostringstream o; o << "ƒL[ [" << rulename << "] ‚É‘Î‚·‚é’l [" << k->second << 
-							"] ‚ÍÀ‘•‚³‚ê‚Ä‚¢‚Ü‚¹‚ñBƒfƒtƒHƒ‹ƒgİ’è‚ğg‚¢‚Ü‚·B";
+						tostringstream o; o << _T("ƒL[ [") << EnsureTStr(rulename) << _T("] ‚É‘Î‚·‚é’l [") << k->second << 
+							_T("] ‚ÍÀ‘•‚³‚ê‚Ä‚¢‚Ü‚¹‚ñBƒfƒtƒHƒ‹ƒgİ’è‚ğg‚¢‚Ü‚·B");
 						warn(o.str().c_str());
 						ruleConf[ruleid / RULE_IN_LINE][ruleid % RULE_IN_LINE] = digit[0]; // ƒfƒtƒHƒ‹ƒgİ’è‚Æ‚·‚é
 					}
 				} else { // ‚È‚©‚Á‚½‚ç
-					std::ostringstream o; o << "ƒL[ [" << k->first << "] ‚Í–³‹‚³‚ê‚Ü‚·";
+					tostringstream o; o << _T("ƒL[ [") << k->first << _T("] ‚Í–³‹‚³‚ê‚Ü‚·");
 					warn(o.str().c_str());
 				}
 			}
 			for (int i = 0; i < RULE_LINES; i++) { // Äƒ`ƒFƒbƒN
 				for (int j = 0; j < RULE_IN_LINE; j++) {
 					if ((i * RULE_IN_LINE + j) >= RULESIZE) { // ”Ô†‚±‚±‚Ü‚Å
-						ruleConf[i][j] = '\0';
+						ruleConf[i][j] = _T('\0');
 						break;
 					}
-					if ((ruleConf[i][j] == '-') && // –¢İ’è‚Ì‚Ü‚Ü‚Å
+					if ((ruleConf[i][j] == _T('-')) && // –¢İ’è‚Ì‚Ü‚Ü‚Å
 						(!nametbl[i * RULE_IN_LINE + j].empty()) && // ‹ó‚«”Ô‚Å‚Í‚È‚­‚Ä
 						(nonapplicable.find(nametbl[i * RULE_IN_LINE + j]) == nonapplicable.end())) // N/A‚Å‚Í‚È‚¢‚È‚ç
-						ruleConf[i][j] = '0'; // ƒfƒtƒHƒ‹ƒgİ’è
+						ruleConf[i][j] = _T('0'); // ƒfƒtƒHƒ‹ƒgİ’è
 				}
 			}
-			debug("Œ»İ‚Ìƒ‹[ƒ‹İ’è‚Ì“à•”•\Œ»"); for (int i = 0; i < RULE_LINES; i++) debug(ruleConf[i]);
+			debug(_T("Œ»İ‚Ìƒ‹[ƒ‹İ’è‚Ì“à•”•\Œ»")); for (int i = 0; i < RULE_LINES; i++) debug(EnsureTStr(ruleConf[i]));
 			parseRule(); // ƒf[ƒ^•ÏŠ·
 		}
 		delete[] filedat; // ƒoƒbƒtƒ@‚ğ‰ğ•ú
 		fclose(conffile); // ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
-		info(std::string(std::string("İ’èƒtƒ@ƒCƒ‹ [") + std::string(filename) + std::string("] ‚ğ“Ç‚İ‚İ‚Ü‚µ‚½B")).c_str());
+		info(tstring(tstring(_T("İ’èƒtƒ@ƒCƒ‹ [")) + tstring(EnsureTStr(filename)) + tstring(_T("] ‚ğ“Ç‚İ‚İ‚Ü‚µ‚½B"))).c_str());
 		return 0;
 	}
 }
 
 
 __declspec(dllexport) int RuleData::saveConfigFile(const char* const filename) {
-	debug("Œ»İ‚Ìƒ‹[ƒ‹İ’è‚Ì“à•”•\Œ»"); for (int i = 0; i < RULE_LINES; i++) debug(ruleConf[i]);
+	debug(_T("Œ»İ‚Ìƒ‹[ƒ‹İ’è‚Ì“à•”•\Œ»")); for (int i = 0; i < RULE_LINES; i++) debug(EnsureTStr(ruleConf[i]));
 	std::ofstream file; // ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Å‰Šú‰»
 	auto chkerr = [](std::ofstream& file, const char* const filename) -> void {
 		if (file.bad()) throw std::runtime_error(std::string("ƒtƒ@ƒCƒ‹ [") + std::string(filename) +
@@ -261,29 +263,29 @@ __declspec(dllexport) int RuleData::saveConfigFile(const char* const filename) {
 		file.open(filename, std::ios::out | std::ios::trunc); // ã‘‚«ƒeƒLƒXƒgƒ‚[ƒh‚ÅAŠJ‚­
 		if (!file) throw std::runtime_error(std::string("ƒtƒ@ƒCƒ‹ [") + std::string(filename) +
 			std::string("] ‚ğ‘‚«‚İƒ‚[ƒh‚ÅŠJ‚¯‚Ü‚¹‚ñBİ’è‚Í•Û‘¶‚³‚ê‚Ü‚¹‚ñB")); // ¸”s‚µ‚½‚ç—áŠO‚ğ“Š‚°‚é
-		file << "[rules]" << std::endl; // ƒZƒNƒVƒ‡ƒ“–¼
+		file << toUTF8(_T("[rules]")) << std::endl; // ƒZƒNƒVƒ‡ƒ“–¼
 		chkerr(file, filename); // ¸”s‚µ‚½‚ç—áŠO‚ğ“Š‚°‚é
 		for (auto k = nametbl.begin(); k != nametbl.end(); ++k) {
 			if ((!(k->empty())) && (nonapplicable.find(*k) == nonapplicable.end())) { // —LŒø‚È‚ç
-				file << *k << "=" << chkRule(*k) << std::endl; // İ’èƒf[ƒ^‚ğ‘‚«‚İ
+				file << toUTF8(EnsureTStr(*k)) << toUTF8(_T("=")) << toUTF8(EnsureTStr(chkRule(*k))) << std::endl; // İ’èƒf[ƒ^‚ğ‘‚«‚İ
 				chkerr(file, filename); // ¸”s‚µ‚½‚ç—áŠO‚ğ“Š‚°‚é
 			}
 		}
-		info(std::string("ƒtƒ@ƒCƒ‹ [") + std::string(filename) + std::string("] ‚Éİ’è‚ğ•Û‘¶‚µ‚Ü‚µ‚½B").c_str());
+		info(tstring(_T("ƒtƒ@ƒCƒ‹ [")) + tstring(EnsureTStr(filename)) + tstring(_T("] ‚Éİ’è‚ğ•Û‘¶‚µ‚Ü‚µ‚½B")).c_str());
 		return 0;
 	}
 	catch (std::runtime_error& e) { // ‘‚«‚İ¸”sII
-		error(e.what());
-		MessageBox(nullptr, e.what(), "‘‚«‚İ¸”s", MB_OK | MB_ICONERROR | MB_TASKMODAL | MB_TOPMOST);
+		error(EnsureTStr(e.what()));
+		MessageBox(nullptr, EnsureTStr(e.what()).c_str(), _T("‘‚«‚İ¸”s"), MB_OK | MB_ICONERROR | MB_TASKMODAL | MB_TOPMOST);
 		return -1;
 	}
 }
 std::string RuleData::getRuleMaskExpr(const std::string& RuleTag) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // –¼‘Oƒe[ƒuƒ‹
-		if ((*k)[8] != RuleTag) continue;
-		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[1].c_str())))
-				return (*k)[3];
-		if (chkGameType(&GameStat, (gameTypeID)std::atoi((*k)[2].c_str())))
+		if (toANSI((*k)[8]) != RuleTag) continue;
+		if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[1].c_str())))
+				return toANSI((*k)[3]);
+		if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[2].c_str())))
 				return "";
 	}
 	return "";
@@ -340,6 +342,6 @@ bool RuleData::ReqChecker::reqFailed
 
 // -------------------------------------------------------------------------
 
-__declspec(dllexport) void RuleData::getPageCaption(char* const caption, int bufsize, int page) {
-	strcpy_s(caption, bufsize, pageCaption[page].c_str());
+__declspec(dllexport) void RuleData::getPageCaption(LPTSTR const caption, int bufsize, int page) {
+	_tcscpy_s(caption, bufsize, pageCaption[page].c_str());
 }

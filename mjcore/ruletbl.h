@@ -19,6 +19,7 @@
 #include "reader/readrsrc.h"
 #include "reader/csv2arry.h"
 #include "reader/ini2map.h"
+#include "strcode.h"
 #endif
 #include "mjexport.h"
 #include "nmrules.h"
@@ -49,15 +50,15 @@ private:
 	static std::map<std::string, std::vector<std::string> > ruletags;
 	static std::map<std::string, std::map<std::string, unsigned int> > inverse_ruletags;
 	static std::set<std::string> nonapplicable;
-	static std::array<std::string, RULE_PAGES> pageCaption;
+	static std::array<CodeConv::tstring, RULE_PAGES> pageCaption;
 	static const char digit[];
 public:
 	__declspec(dllexport) static void configinit();
 	__declspec(dllexport) static void storeRule(const char** ruleTxt);
 	__declspec(dllexport) static void exportRule(char** ruleTxt);
-	__declspec(dllexport) static void getRuleName(char* const txt, int bufsize, int RuleID);
-	__declspec(dllexport) static void getRuleDescription(char* const txt, int bufsize, int RuleID);
-	__declspec(dllexport) static void getRuleTxt(char* const txt, int bufsize, int RuleID, int index);
+	__declspec(dllexport) static void getRuleName(LPTSTR const txt, int bufsize, int RuleID);
+	__declspec(dllexport) static void getRuleDescription(LPTSTR const txt, int bufsize, int RuleID);
+	__declspec(dllexport) static void getRuleTxt(LPTSTR const txt, int bufsize, int RuleID, int index);
 	static std::string getRuleItemTag(int RuleID, int index);
 	static std::string getRuleItemTag(std::string RuleTag, int index);
 	static std::string chkRule(std::string RuleTag);
@@ -71,7 +72,7 @@ public:
 	__declspec(dllexport) static int saveConfigFile(const char* const filename);
 	static std::string getRuleMaskExpr(const std::string& RuleTag);
 	__declspec(dllexport) static int reqFailed(int ruleID, const int* const ruleStat);
-	__declspec(dllexport) static void getPageCaption(char* const caption, int bufsize, int page);
+	__declspec(dllexport) static void getPageCaption(LPTSTR const caption, int bufsize, int page);
 };
 
 class RuleData::ReqChecker {

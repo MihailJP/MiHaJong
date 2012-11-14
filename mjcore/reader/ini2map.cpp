@@ -1,6 +1,6 @@
 #include "ini2map.h"
 
-void INIParser::parseini(IniMapMap& inimap, const char* ini) {
+void INIParser::parseini(IniMapMap& inimap, LPCTSTR ini) {
 	/*
 	 *  CSVをパースして配列の配列オブジェクトに代入する
 	 *
@@ -9,16 +9,16 @@ void INIParser::parseini(IniMapMap& inimap, const char* ini) {
 	 *  ・最初のセクション宣言までは無視されます
 	 */
 	inimap.clear(); // まずリセットする
-	std::string tmpstr; // 作業用文字列
-	std::string currentsection; // 現在有効なセクション名
-	std::string recordname; // 現在有効なレコード名
+	CodeConv::tstring tmpstr; // 作業用文字列
+	CodeConv::tstring currentsection; // 現在有効なセクション名
+	CodeConv::tstring recordname; // 現在有効なレコード名
 	RECORD section;
-	char tmpletter[2] = {0, 0};
+	TCHAR tmpletter[2] = {0, 0};
 	bool started = false; bool firstchr = true; bool iscomment = false;
 	bool issectionname = false; bool isrecordentity = false;
-	for (const char* ptr = ini; *ptr != '\0'; ptr++) { // ポインタのforとか使ったことあれへん……
-		if (*ptr == '\r') continue; // just ignore a CR
-		else if (*ptr == '\n') { // new line
+	for (LPCTSTR ptr = ini; *ptr != _T('\0'); ptr++) { // ポインタのforとか使ったことあれへん……
+		if (*ptr == _T('\r')) continue; // just ignore a CR
+		else if (*ptr == _T('\n')) { // new line
 			if (firstchr) continue; // null line
 			else if (issectionname) { // End of the section declaration
 				if (!section.empty()) {
@@ -35,17 +35,17 @@ void INIParser::parseini(IniMapMap& inimap, const char* ini) {
 			firstchr = true; iscomment = issectionname = isrecordentity = false;
 			continue;
 		}
-		else if ((*ptr == ';') && (firstchr)) { // beginning of a comment
+		else if ((*ptr == _T(';')) && (firstchr)) { // beginning of a comment
 			firstchr = false; iscomment = true; continue; // mark as a comment
 		}
-		else if ((*ptr == '[') && (firstchr)) { // beginning of a section
+		else if ((*ptr == _T('[')) && (firstchr)) { // beginning of a section
 			firstchr = false; started = true; issectionname = true; continue;
 		}
-		else if ((*ptr == ']') && (issectionname)) { // end of a section name
+		else if ((*ptr == _T(']')) && (issectionname)) { // end of a section name
 			firstchr = false; iscomment = true; continue; // ignore until newline encountered
 		}
 		else if ((!iscomment) && (started)) {
-			if ((*ptr == '=') && (!issectionname) && (!isrecordentity)) { // delimiter
+			if ((*ptr == _T('=')) && (!issectionname) && (!isrecordentity)) { // delimiter
 				isrecordentity = true; recordname = tmpstr; tmpstr.clear(); firstchr = false;
 			}
 			else { // data

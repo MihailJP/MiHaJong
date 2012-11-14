@@ -38,6 +38,7 @@ typedef std::wstring tstring;
 typedef std::wostringstream tostringstream;
 inline std::string toANSI(const std::wstring& str) {return WIDEtoANSI(str);}
 inline std::string toUTF8(const std::wstring& str) {return WIDEtoUTF8(str);}
+inline std::wstring fromUTF8(const std::string& str) {return UTF8toWIDE(str);}
 inline std::wstring DecodeStr(const std::string& str) {return UTF8toWIDE(str);}
 inline std::string EncodeStr(const std::wstring& str) {return WIDEtoUTF8(str);}
 inline std::wstring EnsureTStr(const std::string& str) {return ANSItoWIDE(str);}
@@ -47,6 +48,7 @@ typedef std::string tstring;
 typedef std::ostringstream tostringstream;
 inline std::string toANSI(const std::string& str) {return str;}
 inline std::string toUTF8(const std::string& str) {return WIDEtoUTF8(ANSItoWIDE(str));}
+inline std::string fromUTF8(const std::string& str) {return WIDEtoANSI(UTF8toWIDE(str));}
 inline std::string DecodeStr(const std::string& str) {return str;}
 inline std::string EncodeStr(const std::string& str) {return str;}
 inline std::string EnsureTStr(const std::string& str) {return str;}
