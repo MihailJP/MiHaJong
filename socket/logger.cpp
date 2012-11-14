@@ -16,24 +16,24 @@ DLL void setLoggerLib (HMODULE lib) {
 	fpFatalC = (CHRPPROC)GetProcAddress(logger, (LPCSTR)"fatal");
 }
 
-std::string posPrefix(const char* file, int line, std::string msg) {
-	std::ostringstream o;
-	o << "("
-		<< ( (std::string(file).rfind("\\")) == std::string::npos ?
-		file : file + (std::string(file).rfind("\\")) + 1 )
-		<< ":" << line << ") " << msg << std::flush;
-	return std::string(o.str());
+CodeConv::tstring posPrefix(LPCTSTR file, int line, CodeConv::tstring msg) {
+	CodeConv::tostringstream o;
+	o << _T("(")
+		<< ( (CodeConv::tstring(file).rfind(_T("\\"))) == CodeConv::tstring::npos ?
+		file : file + (CodeConv::tstring(file).rfind(_T("\\"))) + 1 )
+		<< _T(":") << line << _T(") ") << msg << std::flush;
+	return CodeConv::tstring(o.str());
 }
-std::string posPrefix(const char* file, int line, char* msg) {
-	return posPrefix(file, line, std::string(msg));
+CodeConv::tstring posPrefix(LPCTSTR file, int line, LPCTSTR msg) {
+	return posPrefix(file, line, CodeConv::tstring(msg));
 }
 
-void trace_msg(const char* msg) { if (fpTraceC) (*fpTraceC)(msg); }
-void debug_msg(const char* msg) { if (fpDebugC) (*fpDebugC)(msg); }
-void info_msg(const char* msg) { if (fpInfoC) (*fpInfoC)(msg); }
-void warn_msg(const char* msg) { if (fpWarnC) (*fpWarnC)(msg); }
-void error_msg(const char* msg) { if (fpErrorC) (*fpErrorC)(msg); }
-void fatal_msg(const char* msg) { if (fpFatalC) (*fpFatalC)(msg); }
+void trace_msg(LPCTSTR msg) { if (fpTraceC) (*fpTraceC)(msg); }
+void debug_msg(LPCTSTR msg) { if (fpDebugC) (*fpDebugC)(msg); }
+void info_msg(LPCTSTR msg) { if (fpInfoC) (*fpInfoC)(msg); }
+void warn_msg(LPCTSTR msg) { if (fpWarnC) (*fpWarnC)(msg); }
+void error_msg(LPCTSTR msg) { if (fpErrorC) (*fpErrorC)(msg); }
+void fatal_msg(LPCTSTR msg) { if (fpFatalC) (*fpFatalC)(msg); }
 
 }
 }

@@ -84,6 +84,7 @@
     <ClCompile Include="socket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\mjcore\strcode.h" />
     <ClInclude Include="class.h" />
     <ClInclude Include="client.h" />
     <ClInclude Include="except.h" />

@@ -5,7 +5,7 @@ namespace client {
 	starter* starterThread = nullptr;
 	unsigned int NumberOfPlayers = 4;
 
-	starter::starter (const std::string& InputPlayerName, const std::string& server, unsigned short port) { // コンストラクタ
+	starter::starter (const CodeConv::tstring& InputPlayerName, const std::string& server, unsigned short port) { // コンストラクタ
 		connected = finished = failed = false;
 		myName = InputPlayerName;
 		portnum = port;
@@ -25,11 +25,11 @@ namespace client {
 			catch (socket_error& e) { // Connection failed...
 				failed = true;
 				errordlg(e);
-				MessageBox(nullptr, "サーバーに接続できません\r\nオフラインモードで開始します", "接続失敗", MB_ICONERROR | MB_TOPMOST | MB_OK);
-				playerName[0] = std::string("[A]") + myName;
-				playerName[1] = std::string("[b]COM");
-				playerName[2] = std::string("[c]COM");
-				playerName[3] = std::string("[d]COM");
+				MessageBox(nullptr, _T("サーバーに接続できません\r\nオフラインモードで開始します"), _T("接続失敗"), MB_ICONERROR | MB_TOPMOST | MB_OK);
+				playerName[0] = CodeConv::tstring(_T("[A]")) + myName;
+				playerName[1] = CodeConv::tstring(_T("[b]COM"));
+				playerName[2] = CodeConv::tstring(_T("[c]COM"));
+				playerName[3] = CodeConv::tstring(_T("[d]COM"));
 				finished = true;
 				return S_OK;
 			}
@@ -43,7 +43,7 @@ namespace client {
 			for (unsigned int i = 0; i < NumberOfPlayers; ++i)
 				playerName[i] = getString(0); // 名前を受信
 			for (unsigned i = 0; i < RULE_LINES; ++i)
-				strcpy_s(ruleConf[i], RULE_IN_LINE + 1, getString(0).c_str()); // ルールを受信
+				strcpy_s(ruleConf[i], RULE_IN_LINE + 1, CodeConv::toANSI(getString(0)).c_str()); // ルールを受信
 			break;
 		}
 		finished = true;
@@ -64,7 +64,7 @@ namespace client {
 	bool starter::isFinished () { // 待機用スレッドが終わったかどうか
 		return finished;
 	}
-	std::string starter::getPlayerName (unsigned id) { // プレイヤー名
+	CodeConv::tstring starter::getPlayerName (unsigned id) { // プレイヤー名
 		return playerName[id];
 	}
 	const char* starter::getRules (unsigned line) {
@@ -76,7 +76,7 @@ namespace client {
 
 	// ---------------------------------------------------------------------
 
-	DLL void start (const char* const name, const char* const server, int port, int players) { // サーバーを開始させる(DLL)
+	DLL void start (LPCTSTR const name, LPCSTR const server, int port, int players) { // サーバーを開始させる(DLL)
 		NumberOfPlayers = (unsigned int)players;
 		starterThread = new starter(name, server, (unsigned short)port);
 		CreateThread(nullptr, 0, starter::initiate, (LPVOID)starterThread, 0, nullptr);
@@ -93,11 +93,11 @@ namespace client {
 	DLL int getClientNumber () { // クライアント番号
 		return starterThread->getClientNumber();
 	}
-	DLL void getPlayerNames (char* playerName1, char* playerName2, char* playerName3, char* playerName4, unsigned bufsz) {
-		strcpy_s(playerName1, bufsz, starterThread->getPlayerName(0).c_str());
-		strcpy_s(playerName2, bufsz, starterThread->getPlayerName(1).c_str());
-		strcpy_s(playerName3, bufsz, starterThread->getPlayerName(2).c_str());
-		strcpy_s(playerName4, bufsz, starterThread->getPlayerName(3).c_str());
+	DLL void getPlayerNames (LPTSTR playerName1, LPTSTR playerName2, LPTSTR playerName3, LPTSTR playerName4, unsigned bufsz) {
+		_tcscpy_s(playerName1, bufsz, starterThread->getPlayerName(0).c_str());
+		_tcscpy_s(playerName2, bufsz, starterThread->getPlayerName(1).c_str());
+		_tcscpy_s(playerName3, bufsz, starterThread->getPlayerName(2).c_str());
+		_tcscpy_s(playerName4, bufsz, starterThread->getPlayerName(3).c_str());
 	}
 	DLL void checkout_rules (char** rules) { // ルールをチェックアウト
 		for (unsigned i = 0; i < RULE_LINES; ++i)

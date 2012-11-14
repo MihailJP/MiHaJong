@@ -4,7 +4,7 @@ namespace mihajong_socket {
 namespace server {
 	starter* starterThread = nullptr;
 	unsigned int NumberOfPlayers = 4;
-	std::string getString(unsigned int socketID) { // 文字列を取得(同期)
+	CodeConv::tstring getString(unsigned int socketID) { // 文字列を取得(同期)
 		std::string tmpString; unsigned int l = 0u;
 		while (true) { // 文字列開始シグネチャを受け取る
 			if (sockets[socketID]->syncgetc() == protocol::StartString_Signature)
@@ -16,9 +16,9 @@ namespace server {
 			tmpchr[0] = sockets[socketID]->syncgetc();
 			tmpString += std::string(reinterpret_cast<char*>(tmpchr));
 		}
-		return tmpString;
+		return CodeConv::EnsureTStr(tmpString);
 	}
-	void putString(unsigned int socketID, const std::string& sendingStr) { // 文字列を送信
+	void putString(unsigned int socketID, const CodeConv::tstring& sendingStr) { // 文字列を送信
 		sockets[socketID]->putc(protocol::StartString_Signature);
 		unsigned strsz = sendingStr.length();
 		if (strsz > UCHAR_MAX) {
@@ -32,12 +32,12 @@ namespace server {
 
 	// ---------------------------------------------------------------------
 
-	starter::starter (const std::string& InputPlayerName, unsigned short port, const char* const * const rule) { // コンストラクタ
+	starter::starter (const CodeConv::tstring& InputPlayerName, unsigned short port, const char* const * const rule) { // コンストラクタ
 		terminated = finished = false;
-		playerName[0] = std::string("[A]") + InputPlayerName;
-		playerName[1] = std::string("[b]COM");
-		playerName[2] = std::string("[c]COM");
-		playerName[3] = std::string("[d]COM");
+		playerName[0] = CodeConv::tstring(_T("[A]")) + InputPlayerName;
+		playerName[1] = CodeConv::tstring(_T("[b]COM"));
+		playerName[2] = CodeConv::tstring(_T("[c]COM"));
+		playerName[3] = CodeConv::tstring(_T("[d]COM"));
 		portnum = port;
 		std::memset(ruleConf, 0, sizeof(ruleConf));
 		for (unsigned i = 0; i < RULE_LINES; ++i)
@@ -55,8 +55,8 @@ namespace server {
 				delete sockets[0]; sockets[0] = nullptr;
 				sockets[CurrentConnection] = new Sock(portnum + CurrentConnection);
 				sockets[CurrentConnection]->wait_until_connected(); // 接続を待つ
-				char tmpsignature[] = "[A]"; tmpsignature[1] += CurrentConnection; // 英字
-				playerName[CurrentConnection] = std::string(tmpsignature) + getString(CurrentConnection);
+				TCHAR tmpsignature[] = _T("[A]"); tmpsignature[1] += CurrentConnection; // 英字
+				playerName[CurrentConnection] = CodeConv::tstring(tmpsignature) + getString(CurrentConnection);
 				sockets[0] = new Sock(portnum); // 再度listen開始
 				++CurrentConnection;
 			}
@@ -68,7 +68,7 @@ namespace server {
 		for (unsigned int i = 0; i < NumberOfPlayers; ++i)
 			sendstr(playerName[i]); // 名前を送信
 		for (unsigned i = 0; i < RULE_LINES; ++i)
-			sendstr(ruleConf[i]); // ルールを送信
+			sendstr(CodeConv::EnsureTStr(ruleConf[i])); // ルールを送信
 		finished = true;
 		return S_OK;
 	}
@@ -88,11 +88,11 @@ namespace server {
 	unsigned int starter::chkCurrentConnection () { // 現在の接続数
 		return CurrentConnection;
 	}
-	std::string starter::getPlayerName (unsigned id) { // プレイヤー名
+	CodeConv::tstring starter::getPlayerName (unsigned id) { // プレイヤー名
 		return playerName[id];
 	}
 
-	DLL void start (const char* const name, int port, int players, const char* const * const rule) { // サーバーを開始させる(DLL)
+	DLL void start (LPCTSTR const name, int port, int players, const char* const * const rule) { // サーバーを開始させる(DLL)
 		NumberOfPlayers = (unsigned int)players;
 		starterThread = new starter(name, (unsigned short)port, rule);
 		CreateThread(nullptr, 0, starter::initiate, (LPVOID)starterThread, 0, nullptr);
@@ -106,11 +106,11 @@ namespace server {
 	DLL int chkCurrentConnection () { // 現在の接続数
 		return (int)starterThread->chkCurrentConnection();
 	}
-	DLL void getPlayerNames (char* playerName1, char* playerName2, char* playerName3, char* playerName4, unsigned bufsz) {
-		strcpy_s(playerName1, bufsz, starterThread->getPlayerName(0).c_str());
-		strcpy_s(playerName2, bufsz, starterThread->getPlayerName(1).c_str());
-		strcpy_s(playerName3, bufsz, starterThread->getPlayerName(2).c_str());
-		strcpy_s(playerName4, bufsz, starterThread->getPlayerName(3).c_str());
+	DLL void getPlayerNames (LPTSTR playerName1, LPTSTR playerName2, LPTSTR playerName3, LPTSTR playerName4, unsigned bufsz) {
+		_tcscpy_s(playerName1, bufsz, starterThread->getPlayerName(0).c_str());
+		_tcscpy_s(playerName2, bufsz, starterThread->getPlayerName(1).c_str());
+		_tcscpy_s(playerName3, bufsz, starterThread->getPlayerName(2).c_str());
+		_tcscpy_s(playerName4, bufsz, starterThread->getPlayerName(3).c_str());
 	}
 	DLL void releaseobj () { // デストラクタを呼ぶだけ
 		delete starterThread; starterThread = nullptr;
@@ -122,7 +122,7 @@ namespace server {
 		for (unsigned int i = 1; i < NumberOfPlayers; ++i)
 			if (sockets[i]&&(sockets[i]->connected())) sockets[i]->putc(SendingMsg);
 	}
-	void sendstr (const std::string& sendingStr) { // サーバーからの文字列送信
+	void sendstr (const CodeConv::tstring& sendingStr) { // サーバーからの文字列送信
 		for (unsigned int i = 1; i < NumberOfPlayers; ++i)
 			if (sockets[i]&&(sockets[i]->connected())) putString(i, sendingStr);
 	}

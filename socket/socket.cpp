@@ -7,7 +7,7 @@ HINSTANCE dllInst;
 Sock* sockets[numOfSockets] = {nullptr,};
 
 void errordlg (socket_error& err) { // エラーダイアログ
-	MessageBox(nullptr, err.what(), "Socket Error", MB_ICONERROR | MB_TOPMOST | MB_OK);
+	MessageBox(nullptr, CodeConv::EnsureTStr(err.what()).c_str(), _T("Socket Error"), MB_ICONERROR | MB_TOPMOST | MB_OK);
 }
 
 DLL int init () try { // ソケットを初期化する
@@ -28,7 +28,7 @@ catch (socket_error& err) {
 	return err.error_code();
 }
 
-DLL int connect (int sock_id, const char* const addr, int port) try { // クライアント接続開始
+DLL int connect (int sock_id, LPCSTR const addr, int port) try { // クライアント接続開始
 	sockets[sock_id] = new Sock(addr, port); // 接続する
 	return 0;
 }
@@ -54,8 +54,8 @@ catch (socket_error& err) { // 送信失敗時
 	return err.error_code();
 }
 
-DLL int puts (int sock_id, const char* const str) try { // 文字列送信
-	sockets[sock_id]->puts(std::string(str)); // null-terminated (C-style) string 送信
+DLL int puts (int sock_id, LPCTSTR const str) try { // 文字列送信
+	sockets[sock_id]->puts(CodeConv::tstring(str)); // null-terminated (C-style) string 送信
 	return 0;
 }
 catch (socket_error& err) { // 送信失敗時
@@ -74,8 +74,8 @@ catch (socket_error& err) { // 受信失敗時
 	return -(err.error_code());
 }
 
-DLL int gets (int sock_id, char* const stringline, int bufsize) try { // 1行受信
-	strcpy_s(stringline, bufsize, sockets[sock_id]->gets().c_str());
+DLL int gets (int sock_id, LPTSTR const stringline, int bufsize) try { // 1行受信
+	_tcscpy_s(stringline, bufsize, sockets[sock_id]->gets().c_str());
 	return 0;
 }
 catch (queue_empty&) { // まだ受信するデータがない場合

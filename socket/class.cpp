@@ -12,34 +12,34 @@ uint32_t mihajong_socket::Sock::addr2var(const std::string& address) { // ƒAƒhƒŒ
 
 mihajong_socket::Sock::Sock (const std::string& destination, uint16_t port) { // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
 	{
-		std::ostringstream o;
-		o << "ƒ\ƒPƒbƒgƒIƒuƒWƒFƒNƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^(ƒNƒ‰ƒCƒAƒ“ƒg) ˆ¶æ [" << destination << "] ƒ|[ƒg [" << port << "]";
+		CodeConv::tostringstream o;
+		o << _T("ƒ\ƒPƒbƒgƒIƒuƒWƒFƒNƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^(ƒNƒ‰ƒCƒAƒ“ƒg) ˆ¶æ [") << CodeConv::EnsureTStr(destination) << _T("] ƒ|[ƒg [") << port << _T("]");
 		info(o.str().c_str());
 	}
 	this->connect(destination, port); // Ú‘±
-	info("ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ìˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½");
+	info(_T("ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ìˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½"));
 }
 
 mihajong_socket::Sock::~Sock() { // Ú‘±‚ğØ‚é
-	info("ƒ\ƒPƒbƒgƒIƒuƒWƒFƒNƒgƒfƒXƒgƒ‰ƒNƒ^");
+	info(_T("ƒ\ƒPƒbƒgƒIƒuƒWƒFƒNƒgƒfƒXƒgƒ‰ƒNƒ^"));
 	this->disconnect();
-	info("ƒfƒXƒgƒ‰ƒNƒ^‚Ìˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½");
+	info(_T("ƒfƒXƒgƒ‰ƒNƒ^‚Ìˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½"));
 }
 
 mihajong_socket::Sock::Sock (uint16_t port) { // ƒT[ƒoÚ‘±
 	{
-		std::ostringstream o;
-		o << "ƒ\ƒPƒbƒgƒIƒuƒWƒFƒNƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^(ƒT[ƒo) ƒ|[ƒg [" << port << "]";
+		CodeConv::tostringstream o;
+		o << _T("ƒ\ƒPƒbƒgƒIƒuƒWƒFƒNƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^(ƒT[ƒo) ƒ|[ƒg [") << port << _T("]");
 		info(o.str().c_str());
 	}
 	this->listen(port); // Ú‘±
-	info("ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ìˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½");
+	info(_T("ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ìˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½"));
 }
 
 void mihajong_socket::Sock::listen (uint16_t port) { // ƒT[ƒo[ŠJn
 	{
-		std::ostringstream o;
-		o << "Ú‘±‘Ò‚¿‚ğŠJn‚µ‚Ü‚· ƒ|[ƒg [" << port << "]";
+		CodeConv::tostringstream o;
+		o << _T("Ú‘±‘Ò‚¿‚ğŠJn‚µ‚Ü‚· ƒ|[ƒg [") << port << _T("]");
 		info(o.str().c_str());
 	}
 	portnum = port;
@@ -63,8 +63,8 @@ void mihajong_socket::Sock::listen () { // ƒT[ƒo[ŠJn
 
 void mihajong_socket::Sock::connect (const std::string& destination, uint16_t port) { // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
 	{
-		std::ostringstream o;
-		o << "Ú‘±‚ğŠJn‚µ‚Ü‚· ˆ¶æ [" << destination << "] ƒ|[ƒg [" << port << "]";
+		CodeConv::tostringstream o;
+		o << _T("Ú‘±‚ğŠJn‚µ‚Ü‚· ˆ¶æ [") << CodeConv::EnsureTStr(destination) << _T("] ƒ|[ƒg [") << port << _T("]");
 		info(o.str().c_str());
 	}
 	portnum = port;
@@ -97,14 +97,14 @@ bool mihajong_socket::Sock::connected () { // Ú‘±‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
 
 void mihajong_socket::Sock::wait_until_connected () { // •¶š’Ê‚è‚Ì‚±‚Æ‚ğ‚â‚é
 	{
-		std::ostringstream o;
-		o << "Ú‘±‘Ò‹@ ƒ|[ƒg [" << portnum << "]";
+		CodeConv::tostringstream o;
+		o << _T("Ú‘±‘Ò‹@ ƒ|[ƒg [") << portnum << _T("]");
 		info(o.str().c_str());
 	}
 	while (!connected()) Sleep(50);
 	{
-		std::ostringstream o;
-		o << "Ú‘±‘Ò‹@Š®—¹ ƒ|[ƒg [" << portnum << "]";
+		CodeConv::tostringstream o;
+		o << _T("Ú‘±‘Ò‹@Š®—¹ ƒ|[ƒg [") << portnum << _T("]");
 		info(o.str().c_str());
 	}
 };
@@ -118,9 +118,9 @@ unsigned char mihajong_socket::Sock::getc () { // “Ç‚İ‚İ(”ñ“¯Šú)
 		byte = threadPtr.client->read();
 	}
 	{
-		std::ostringstream o;
-		o << "ƒoƒCƒgóM dequeue ƒ|[ƒg [" << portnum << "] ƒoƒCƒg [0x" <<
-			std::hex << std::setw(2) << std::setfill('0') << (unsigned int)byte << "]";
+		CodeConv::tostringstream o;
+		o << _T("ƒoƒCƒgóM dequeue ƒ|[ƒg [") << portnum << _T("] ƒoƒCƒg [0x") <<
+			std::hex << std::setw(2) << std::setfill(_T('0')) << (unsigned int)byte << _T("]");
 		trace(o.str().c_str());
 	}
 	return byte;
@@ -129,8 +129,8 @@ unsigned char mihajong_socket::Sock::getc () { // “Ç‚İ‚İ(”ñ“¯Šú)
 unsigned char mihajong_socket::Sock::syncgetc () { // “Ç‚İ‚İ(“¯Šú)
 	unsigned char byte; bool fini = false;
 	{
-		std::ostringstream o;
-		o << "ƒoƒCƒgóMˆ—(“¯Šú)ŠJn ƒ|[ƒg [" << portnum << "]";
+		CodeConv::tostringstream o;
+		o << _T("ƒoƒCƒgóMˆ—(“¯Šú)ŠJn ƒ|[ƒg [") << portnum << _T("]");
 		trace(o.str().c_str());
 	}
 	while (!fini) {
@@ -142,17 +142,17 @@ unsigned char mihajong_socket::Sock::syncgetc () { // “Ç‚İ‚İ(“¯Šú)
 		}
 	}
 	{
-		std::ostringstream o;
-		o << "ƒoƒCƒgóMˆ—(“¯Šú) ƒ|[ƒg [" << portnum << "] ƒoƒCƒg [0x" <<
-			std::hex << std::setw(2) << std::setfill('0') << (unsigned int)byte << "]";
+		CodeConv::tostringstream o;
+		o << _T("ƒoƒCƒgóMˆ—(“¯Šú) ƒ|[ƒg [") << portnum << _T("] ƒoƒCƒg [0x") <<
+			std::hex << std::setw(2) << std::setfill(_T('0')) << (unsigned int)byte << _T("]");
 		trace(o.str().c_str());
 	}
 	return byte;
 }
 
-std::string mihajong_socket::Sock::gets () { // NewLine‚Ü‚Å“Ç‚İ‚İ
+CodeConv::tstring mihajong_socket::Sock::gets () { // NewLine‚Ü‚Å“Ç‚İ‚İ
 	//trace("•¶š—ñ‚ğNWL(0x0a)‚Ü‚Åæ“¾‚µ‚Ü‚·B");
-	std::string str;
+	CodeConv::tstring str;
 	if (isServer) {
 		threadPtr.server->chkError();
 		str = threadPtr.server->readline();
@@ -161,8 +161,8 @@ std::string mihajong_socket::Sock::gets () { // NewLine‚Ü‚Å“Ç‚İ‚İ
 		str = threadPtr.client->readline();
 	}
 	{
-		std::ostringstream o;
-		o << "•¶š—ñóMˆ— ƒ|[ƒg [" << portnum << "] ’·‚³ [" << str.length() << "] •¶š—ñ [" << str << "]";
+		CodeConv::tostringstream o;
+		o << _T("•¶š—ñóMˆ— ƒ|[ƒg [") << portnum << _T("] ’·‚³ [") << str.length() << _T("] •¶š—ñ [") << str << _T("]");
 		trace(o.str().c_str());
 	}
 	return str;
@@ -170,9 +170,9 @@ std::string mihajong_socket::Sock::gets () { // NewLine‚Ü‚Å“Ç‚İ‚İ
 
 void mihajong_socket::Sock::putc (unsigned char byte) { // ‘‚«‚İ
 	{
-		std::ostringstream o;
-		o << "ƒoƒCƒg‘—M enqueue ƒ|[ƒg [" << portnum << "] ƒoƒCƒg [0x" <<
-			std::hex << std::setw(2) << std::setfill('0') << (unsigned int)byte << "]";
+		CodeConv::tostringstream o;
+		o << _T("ƒoƒCƒg‘—M enqueue ƒ|[ƒg [") << portnum << _T("] ƒoƒCƒg [0x") <<
+			std::hex << std::setw(2) << std::setfill(_T('0')) << (unsigned int)byte << _T("]");
 		trace(o.str().c_str());
 	}
 	if (isServer) {
@@ -184,18 +184,19 @@ void mihajong_socket::Sock::putc (unsigned char byte) { // ‘‚«‚İ
 	}
 }
 
-void mihajong_socket::Sock::puts (const std::string& str) { // •¶š—ñ‘‚«‚İ
+void mihajong_socket::Sock::puts (const CodeConv::tstring& str) { // •¶š—ñ‘‚«‚İ
 	{
-		std::ostringstream o;
-		o << "•¶š—ñ‘—Mˆ— ƒ|[ƒg [" << portnum << "] ’·‚³ [" << str.length() << "] •¶š—ñ [" << str << "]";
+		CodeConv::tostringstream o;
+		o << _T("•¶š—ñ‘—Mˆ— ƒ|[ƒg [") << portnum << _T("] ’·‚³ [") << str.length() << _T("] •¶š—ñ [") << str << _T("]");
 		trace(o.str().c_str());
 	}
+	std::string encoded_str(CodeConv::EncodeStr(str));
 	if (isServer) {
-		for (auto k = str.begin(); k != str.end(); ++k)
+		for (auto k = encoded_str.begin(); k != encoded_str.end(); ++k)
 			threadPtr.server->write((unsigned char)*k);
 		threadPtr.server->chkError();
 	} else {
-		for (auto k = str.begin(); k != str.end(); ++k)
+		for (auto k = encoded_str.begin(); k != encoded_str.end(); ++k)
 			threadPtr.client->write((unsigned char)*k);
 		threadPtr.client->chkError();
 	}
@@ -237,7 +238,7 @@ DWORD WINAPI mihajong_socket::Sock::network_thread::thread(LPVOID lp) { // ƒXƒŒƒ
 }
 
 void mihajong_socket::Sock::network_thread::chkError () { // ƒGƒ‰[‚ğƒ`ƒFƒbƒN‚µA‚à‚µƒGƒ‰[‚¾‚Á‚½‚ç—áŠO‚ğ“Š‚°‚é
-	std::ostringstream o;
+	CodeConv::tostringstream o;
 	switch (errtype) {
 	case errNone: // ƒGƒ‰[‚È‚µ
 		break;
@@ -267,16 +268,16 @@ int mihajong_socket::Sock::network_thread::reader() { // óMˆ—
 	WSABUF buffer; buffer.buf = reinterpret_cast<CHAR*>(buf); buffer.len = bufsize;
 	DWORD recvsz; DWORD flag = 0;
 	if (WSARecv(*mySock, &buffer, 1, &recvsz, &flag, nullptr, nullptr) == 0) { // óM‚·‚é
-		std::ostringstream o;
+		CodeConv::tostringstream o;
 		o << "ƒf[ƒ^óM ƒ|[ƒg [" << myCaller->portnum << "] ƒXƒgƒŠ[ƒ€ [";
 		EnterCriticalSection(&myRecvQueueCS); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
 		unsigned count = 0;
 		for (unsigned int i = 0; i < recvsz; ++i) {
 			myMailBox.push(buf[i]); // ƒLƒ…[‚É’Ç‰Á
-			if (i > 0) o << " ";
-			o << std::setw(2) << std::hex << std::setfill('0') << static_cast<unsigned int>(buf[i]);
+			if (i > 0) o << _T(" ");
+			o << std::setw(2) << std::hex << std::setfill(_T('0')) << static_cast<unsigned int>(buf[i]);
 		}
-		o << "] ƒTƒCƒY [" << std::dec << recvsz << "]";
+		o << _T("] ƒTƒCƒY [") << std::dec << recvsz << _T("]");
 		if (recvsz) trace(o.str().c_str());
 		LeaveCriticalSection(&myRecvQueueCS); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
 		if (recvsz == 0) {receive_ended = true;} // óMI—¹H
@@ -298,15 +299,15 @@ int mihajong_socket::Sock::network_thread::writer() { // ‘—Mˆ—
 	DWORD sendsz = 0;
 
 	{
-		std::ostringstream o;
-		o << "ƒf[ƒ^‘—M ƒ|[ƒg [" << myCaller->portnum << "] ƒXƒgƒŠ[ƒ€ [";
+		CodeConv::tostringstream o;
+		o << _T("ƒf[ƒ^‘—M ƒ|[ƒg [") << myCaller->portnum << _T("] ƒXƒgƒŠ[ƒ€ [");
 		EnterCriticalSection(&mySendQueueCS); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
 		while (!mySendBox.empty()) {
 			buf[sendsz++] = mySendBox.front(); mySendBox.pop(); // ƒLƒ…[‚©‚çæ‚èo‚µ
-			if (sendsz > 1) o << " ";
-			o << std::setw(2) << std::hex << std::setfill('0') << static_cast<unsigned int>(buf[sendsz - 1]);
+			if (sendsz > 1) o << _T(" ");
+			o << std::setw(2) << std::hex << std::setfill(_T('0')) << static_cast<unsigned int>(buf[sendsz - 1]);
 		}
-		o << "] ƒTƒCƒY [" << std::dec << sendsz << "]";
+		o << _T("] ƒTƒCƒY [") << std::dec << sendsz << _T("]");
 		if (sendsz) trace(o.str().c_str());
 		//if (receiver_closed) send_ended = true; // óMƒ|[ƒg‚ª•Â‚¶‚ç‚ê‚Ä‚¢‚½‚çI—¹ˆ—‚Ö
 		LeaveCriticalSection(&mySendQueueCS); // ‘—M—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
@@ -331,17 +332,17 @@ DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // ƒXƒŒƒbƒh
 		int err = 0;
 		if ((!receiver_closed) && (err = reader())) return err; // “Ç‚İ‚İ
 		if (receive_ended) { // I—¹‚È‚çƒ\ƒPƒbƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“
-			std::ostringstream o; o << "óMƒ|[ƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“ ƒ|[ƒg[" << myCaller->portnum << "]"; debug(o.str().c_str());
+			CodeConv::tostringstream o; o << _T("óMƒ|[ƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“ ƒ|[ƒg[") << myCaller->portnum << _T("]"); debug(o.str().c_str());
 			shutdown(*mySock, SD_RECEIVE); receiver_closed = true; receive_ended = false;
 		}
 		if ((!sender_closed) && (err = writer())) return err; // ‘‚«‚İ
 		if (send_ended) { // I—¹‚È‚çƒ\ƒPƒbƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“
-			std::ostringstream o; o << "‘—Mƒ|[ƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“ ƒ|[ƒg[" << myCaller->portnum << "]"; debug(o.str().c_str());
+			CodeConv::tostringstream o; o << _T("‘—Mƒ|[ƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“ ƒ|[ƒg[") << myCaller->portnum << _T("]"); debug(o.str().c_str());
 			shutdown(*mySock, SD_SEND); sender_closed = true; send_ended = false;
 		}
 		Sleep(0);
 	}
-	{std::ostringstream o; o << "‘—óMƒXƒŒƒbƒhƒ‹[ƒv‚ÌI—¹ ƒ|[ƒg[" << myCaller->portnum << "]"; debug(o.str().c_str());}
+	{CodeConv::tostringstream o; o << _T("‘—óMƒXƒŒƒbƒhƒ‹[ƒv‚ÌI—¹ ƒ|[ƒg[") << myCaller->portnum << _T("]"); debug(o.str().c_str());}
 	finished = true;
 	return S_OK;
 }
@@ -356,7 +357,7 @@ unsigned char mihajong_socket::Sock::network_thread::read () { // 1ƒoƒCƒg“Ç‚İ‚
 	else return byte; // ‚»‚¤‚Å‚È‚¯‚ê‚Îæ‚èo‚µ‚½’l‚ğ•Ô‚·
 }
 
-std::string mihajong_socket::Sock::network_thread::readline () { // 1s“Ç‚İ‚İ
+CodeConv::tstring mihajong_socket::Sock::network_thread::readline () { // 1s“Ç‚İ‚İ
 	std::string line = ""; bool nwl_not_found = true;
 	EnterCriticalSection(&myRecvQueueCS); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
 	auto tmpMailBox = myMailBox; // ƒLƒ…[‚ğì‹Æ—pƒRƒs[
@@ -372,7 +373,7 @@ std::string mihajong_socket::Sock::network_thread::readline () { // 1s“Ç‚İ‚İ
 	if (!nwl_not_found) myMailBox = tmpMailBox; // ƒLƒ…[‚ğƒRƒ~ƒbƒg
 	LeaveCriticalSection(&myRecvQueueCS); // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
 	if (nwl_not_found) throw queue_empty(); // ‹ó‚¾‚Á‚½‚ç—áŠO
-	else return line; // ‚»‚¤‚Å‚È‚¯‚ê‚ÎŒ‹‰Ê‚ğ•Ô‚·
+	else return CodeConv::DecodeStr(line); // ‚»‚¤‚Å‚È‚¯‚ê‚ÎŒ‹‰Ê‚ğ•Ô‚·
 }
 
 void mihajong_socket::Sock::network_thread::write (unsigned char byte) { // 1ƒoƒCƒg‘‚«‚İ
@@ -394,7 +395,7 @@ void mihajong_socket::Sock::network_thread::setsock (SOCKET* const socket) { // 
 
 void mihajong_socket::Sock::network_thread::wait_until_sent() { // ‘—MƒLƒ…[‚ª‹ó‚É‚È‚é‚Ü‚Å‘Ò‚Â
 	{
-		std::ostringstream o; o << "ƒ|[ƒg [" << myCaller->portnum << "] ‚Ì‘—Mƒf[ƒ^‚Í‚±‚±‚Ü‚Å‚ç‚µ‚¢A‘S•”‘—‚èI‚í‚é‚Ü‚Å‘Ò‚¿‚Ü‚·";
+		CodeConv::tostringstream o; o << "ƒ|[ƒg [" << myCaller->portnum << "] ‚Ì‘—Mƒf[ƒ^‚Í‚±‚±‚Ü‚Å‚ç‚µ‚¢A‘S•”‘—‚èI‚í‚é‚Ü‚Å‘Ò‚¿‚Ü‚·";
 		debug(o.str().c_str());
 	}
 	while (true) { // ‘—M‚ªŠ®—¹‚·‚é‚Ü‚Å‘Ò‚Â
@@ -407,7 +408,7 @@ void mihajong_socket::Sock::network_thread::wait_until_sent() { // ‘—MƒLƒ…[‚ª‹
 		Sleep(500);
 	}
 	{
-		std::ostringstream o; o << "ƒ|[ƒg [" << myCaller->portnum << "] ‚Ì‘—M‚ÍI‚í‚Á‚½‚ñ‚¶‚á‚È‚¢‚©‚ÈH";
+		CodeConv::tostringstream o; o << "ƒ|[ƒg [" << myCaller->portnum << "] ‚Ì‘—M‚ÍI‚í‚Á‚½‚ñ‚¶‚á‚È‚¢‚©‚ÈH";
 		debug(o.str().c_str());
 	}
 }
@@ -423,7 +424,7 @@ void mihajong_socket::Sock::network_thread::terminate () { // Ø’f‚·‚é
 // -------------------------------------------------------------------------
 
 int mihajong_socket::Sock::client_thread::establishConnection() { // Ú‘±‚ğŠm—§‚·‚é
-	info("ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±ˆ—‚ğŠJn‚µ‚Ü‚·");
+	info(_T("ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±ˆ—‚ğŠJn‚µ‚Ü‚·"));
 	while (true) {
 		if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == SOCKET_ERROR) { // Ú‘±
 			errcode = WSAGetLastError();
@@ -435,17 +436,17 @@ int mihajong_socket::Sock::client_thread::establishConnection() { // Ú‘±‚ğŠm—§‚
 		} else break;
 		Sleep(50);
 		if (terminated) { // ’†~‚Ìê‡
-			info("ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±ˆ—‚ğ’†~‚µ‚Ü‚µ‚½");
+			info(_T("ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±ˆ—‚ğ’†~‚µ‚Ü‚µ‚½"));
 			return 0;
 		}
 	}
-	info("ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±ˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½");
+	info(_T("ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±ˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½"));
 	connected = true; // Ú‘±Ï‚İƒtƒ‰ƒO‚ğ—§‚Ä‚é
 	return 0;
 }
 
 int mihajong_socket::Sock::server_thread::establishConnection() { // Ú‘±‚ğŠm—§‚·‚é
-	info("ƒT[ƒo‘Òóˆ—‚ğŠJn‚µ‚Ü‚·");
+	info(_T("ƒT[ƒo‘Òóˆ—‚ğŠJn‚µ‚Ü‚·"));
 	u_long arg = 1; ioctlsocket(*listenerSock, FIONBIO, &arg); // non-blocking ƒ‚[ƒh‚Éİ’è
 	if (::listen(*listenerSock, SOMAXCONN) == SOCKET_ERROR) { // ‘Ò‹@
 		errtype = errListen; errcode = WSAGetLastError(); return -((int)errtype);
@@ -461,14 +462,14 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // Ú‘±‚ğŠm—§‚
 			}
 		} else break;
 		if (terminated) { // ’†~‚Ìê‡
-			info("ƒT[ƒo‘Òóˆ—‚ğ’†~‚µ‚Ü‚µ‚½");
+			info(_T("ƒT[ƒo‘Òóˆ—‚ğ’†~‚µ‚Ü‚µ‚½"));
 			return 0;
 		}
 		Sleep(50);
 	}
 	shutdown(*listenerSock, SD_BOTH);
 	closesocket(*listenerSock);
-	info("ƒT[ƒo‘Òóˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½");
+	info(_T("ƒT[ƒo‘Òóˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½"));
 	connected = true; // Ú‘±Ï‚İƒtƒ‰ƒO‚ğ—§‚Ä‚é
 	return 0;
 }
