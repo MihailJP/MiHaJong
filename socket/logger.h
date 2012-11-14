@@ -16,9 +16,11 @@ namespace mihajong_socket {
 namespace logger {
 
 #ifdef SOCKET_EXPORTS
-typedef int (__cdecl *CHRPPROC)(LPCTSTR a);
+typedef int (__cdecl *CHRPPROC)(LPCSTR a);
+typedef int (__cdecl *TCHRPPROC)(LPCTSTR a);
 extern HMODULE logger;
-extern CHRPPROC fpInitLogger, fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC;
+extern CHRPPROC fpInitLogger;
+extern TCHRPPROC fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC;
 #endif
 
 DLL void setLoggerLib (HMODULE lib);

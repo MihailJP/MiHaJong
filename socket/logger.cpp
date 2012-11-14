@@ -4,16 +4,17 @@ namespace mihajong_socket {
 namespace logger {
 
 HMODULE logger = nullptr;
-CHRPPROC fpInitLogger, fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC = nullptr;
+CHRPPROC fpInitLogger = nullptr;
+TCHRPPROC fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC = nullptr;
 
 DLL void setLoggerLib (HMODULE lib) {
 	logger = lib;
-	fpTraceC = (CHRPPROC)GetProcAddress(logger, (LPCSTR)"trace");
-	fpDebugC = (CHRPPROC)GetProcAddress(logger, (LPCSTR)"debug");
-	fpInfoC = (CHRPPROC)GetProcAddress(logger, (LPCSTR)"info");
-	fpWarnC = (CHRPPROC)GetProcAddress(logger, (LPCSTR)"warn");
-	fpErrorC = (CHRPPROC)GetProcAddress(logger, (LPCSTR)"error");
-	fpFatalC = (CHRPPROC)GetProcAddress(logger, (LPCSTR)"fatal");
+	fpTraceC = (TCHRPPROC)GetProcAddress(logger, (LPCSTR)"trace");
+	fpDebugC = (TCHRPPROC)GetProcAddress(logger, (LPCSTR)"debug");
+	fpInfoC = (TCHRPPROC)GetProcAddress(logger, (LPCSTR)"info");
+	fpWarnC = (TCHRPPROC)GetProcAddress(logger, (LPCSTR)"warn");
+	fpErrorC = (TCHRPPROC)GetProcAddress(logger, (LPCSTR)"error");
+	fpFatalC = (TCHRPPROC)GetProcAddress(logger, (LPCSTR)"fatal");
 }
 
 CodeConv::tstring posPrefix(LPCTSTR file, int line, CodeConv::tstring msg) {

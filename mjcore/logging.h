@@ -15,22 +15,24 @@
 #include "../socket/logger.h"
 
 namespace logger {
-	typedef int (__cdecl *CHRPPROC)(const char* a);
+	typedef int (__cdecl *CHRPPROC)(LPCSTR a);
+	typedef int (__cdecl *TCHRPPROC)(LPCTSTR a);
 
 	extern HMODULE logger;
-	extern CHRPPROC fpInitLogger, fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC;
+	extern CHRPPROC fpInitLogger;
+	extern TCHRPPROC fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC;
 
 	__declspec(dllexport) int initLogger();
 
-	std::string posPrefix(const char* file, int line, std::string msg);
-	std::string posPrefix(const char* file, int line, char* msg);
+	CodeConv::tstring posPrefix(const char* file, int line, CodeConv::tstring msg);
+	CodeConv::tstring posPrefix(const char* file, int line, LPTSTR msg);
 
-	__declspec(dllexport) void trace_msg(const char* msg);
-	__declspec(dllexport) void debug_msg(const char* msg);
-	__declspec(dllexport) void info_msg(const char* msg);
-	__declspec(dllexport) void warn_msg(const char* msg);
-	__declspec(dllexport) void error_msg(const char* msg);
-	__declspec(dllexport) void fatal_msg(const char* msg);
+	__declspec(dllexport) void trace_msg(LPCTSTR msg);
+	__declspec(dllexport) void debug_msg(LPCTSTR msg);
+	__declspec(dllexport) void info_msg(LPCTSTR msg);
+	__declspec(dllexport) void warn_msg(LPCTSTR msg);
+	__declspec(dllexport) void error_msg(LPCTSTR msg);
+	__declspec(dllexport) void fatal_msg(LPCTSTR msg);
 }
 
 #define trace(msg) logger::trace_msg(logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())

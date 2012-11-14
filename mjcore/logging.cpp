@@ -2,26 +2,27 @@
 
 namespace logger {
 
-	using std::string;
+	using CodeConv::tstring; using std::string;
 
 	static HMODULE logger = nullptr;
-	static CHRPPROC fpInitLogger, fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC = nullptr;
+	static CHRPPROC fpInitLogger = nullptr;
+	static TCHRPPROC fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC = nullptr;
 
 	__declspec(dllexport) int initLogger() {
 		HMODULE lg = nullptr;
-		lg = LoadLibrary((LPCSTR)"logger.dll");
+		lg = LoadLibrary(_T("logger.dll"));
 		if (lg == nullptr) return (-1);
 		mihajong_socket::logger::setLoggerLib(lg);
 
 		fpInitLogger = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"initLogger");
 		if (lg == nullptr) return (-2);
 
-		if (!(fpTraceC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"trace"))) return (-3);
-		if (!(fpDebugC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"debug"))) return (-3);
-		if (!(fpInfoC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"info"))) return (-3);
-		if (!(fpWarnC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"warn"))) return (-3);
-		if (!(fpErrorC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"error"))) return (-3);
-		if (!(fpFatalC = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"fatal"))) return (-3);
+		if (!(fpTraceC = (TCHRPPROC)GetProcAddress(lg, (LPCSTR)"trace"))) return (-3);
+		if (!(fpDebugC = (TCHRPPROC)GetProcAddress(lg, (LPCSTR)"debug"))) return (-3);
+		if (!(fpInfoC = (TCHRPPROC)GetProcAddress(lg, (LPCSTR)"info"))) return (-3);
+		if (!(fpWarnC = (TCHRPPROC)GetProcAddress(lg, (LPCSTR)"warn"))) return (-3);
+		if (!(fpErrorC = (TCHRPPROC)GetProcAddress(lg, (LPCSTR)"error"))) return (-3);
+		if (!(fpFatalC = (TCHRPPROC)GetProcAddress(lg, (LPCSTR)"fatal"))) return (-3);
 #ifdef MJCORE_EXPORTS
 		std::ostringstream fname;
 		fname << "debug" << GetCurrentProcessId() << ".log";
@@ -31,28 +32,28 @@ namespace logger {
 		return 0;
 	}
 
-	string posPrefix(const char* file, int line, string msg) {
-		std::ostringstream o;
-		o << "("
-			<< ( (string(file).rfind("\\")) == string::npos ?
-			file : file + (string(file).rfind("\\")) + 1 )
-			<< ":" << line << ") " << msg << std::flush;
-		return string(o.str());
+	tstring posPrefix(const char* file, int line, tstring msg) {
+		CodeConv::tostringstream o;
+		o << _T("(")
+			<< ( (CodeConv::EnsureTStr(file).rfind(_T("\\"))) == string::npos ?
+			file : file + (CodeConv::EnsureTStr(file).rfind(_T("\\"))) + 1 )
+			<< _T(":") << line << _T(") ") << msg << std::flush;
+		return tstring(o.str());
 	}
-	string posPrefix(const char* file, int line, char* msg) {
-		std::ostringstream o;
-		o << "("
-			<< ( (string(file).rfind("\\")) == string::npos ?
-			file : file + (string(file).rfind("\\")) + 1 )
-			<< ":" << line << ") " << msg << std::flush;
-		return string(o.str());
+	tstring posPrefix(const char* file, int line, LPCTSTR msg) {
+		CodeConv::tostringstream o;
+		o << _T("(")
+			<< ( (CodeConv::EnsureTStr(file).rfind(_T("\\"))) == string::npos ?
+			file : file + (CodeConv::EnsureTStr(file).rfind(_T("\\"))) + 1 )
+			<< _T(":") << line << _T(") ") << msg << std::flush;
+		return tstring(o.str());
 	}
 
-	__declspec(dllexport) void trace_msg(const char* msg) { if (logger) (*fpTraceC)(msg); }
-	__declspec(dllexport) void debug_msg(const char* msg) { if (logger) (*fpDebugC)(msg); }
-	__declspec(dllexport) void info_msg(const char* msg) { if (logger) (*fpInfoC)(msg); }
-	__declspec(dllexport) void warn_msg(const char* msg) { if (logger) (*fpWarnC)(msg); }
-	__declspec(dllexport) void error_msg(const char* msg) { if (logger) (*fpErrorC)(msg); }
-	__declspec(dllexport) void fatal_msg(const char* msg) { if (logger) (*fpFatalC)(msg); }
+	__declspec(dllexport) void trace_msg(LPCTSTR msg) { if (logger) (*fpTraceC)(msg); }
+	__declspec(dllexport) void debug_msg(LPCTSTR msg) { if (logger) (*fpDebugC)(msg); }
+	__declspec(dllexport) void info_msg(LPCTSTR msg) { if (logger) (*fpInfoC)(msg); }
+	__declspec(dllexport) void warn_msg(LPCTSTR msg) { if (logger) (*fpWarnC)(msg); }
+	__declspec(dllexport) void error_msg(LPCTSTR msg) { if (logger) (*fpErrorC)(msg); }
+	__declspec(dllexport) void fatal_msg(LPCTSTR msg) { if (logger) (*fpFatalC)(msg); }
 
 }
