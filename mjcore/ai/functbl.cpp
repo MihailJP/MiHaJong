@@ -210,11 +210,11 @@ int aiscript::table::functable::random(lua_State* const L) {
 
 /* ロギング用 */
 int aiscript::table::functable::log(lua_State* const L) {
-	int n = lua_gettop(L); std::string logstr = ""; std::string linea = "";lua_Debug ar;
+	int n = lua_gettop(L); CodeConv::tstring logstr = _T(""); CodeConv::tstring linea = _T("");lua_Debug ar;
 	if (n > 1) {
 		for (int i = 2; i <= n; i++) {
-			logstr += luaL_tolstring(L, i, nullptr); lua_pop(L, 1);
-			if (i < n) logstr += " ";
+			logstr += CodeConv::DecodeStr(luaL_tolstring(L, i, nullptr)); lua_pop(L, 1);
+			if (i < n) logstr += _T(" ");
 		}
 	}
 	if (lua_getstack(L, 1, &ar)) {
@@ -223,14 +223,14 @@ int aiscript::table::functable::log(lua_State* const L) {
 			linea = logger::posPrefix(ar.short_src, ar.currentline, logstr.c_str());
 	}
 	if (linea.empty())
-		linea = std::string("(Unknown) ") + logstr;
-	std::string loglevel = luaL_tolstring(L, 1, nullptr); lua_pop(L, 1);
-	if (loglevel == "fatal") logger::fatal_msg(linea.c_str());
-	else if (loglevel == "error") logger::error_msg(linea.c_str());
-	else if (loglevel == "warn") logger::warn_msg(linea.c_str());
-	else if (loglevel == "info") logger::info_msg(linea.c_str());
-	else if (loglevel == "debug") logger::debug_msg(linea.c_str());
-	else if (loglevel == "trace") logger::trace_msg(linea.c_str());
+		linea = CodeConv::tstring(_T("(Unknown) ")) + logstr;
+	CodeConv::tstring loglevel = CodeConv::DecodeStr(luaL_tolstring(L, 1, nullptr)); lua_pop(L, 1);
+	if (loglevel == CodeConv::DecodeStr("fatal")) logger::fatal_msg(linea.c_str());
+	else if (loglevel == CodeConv::DecodeStr("error")) logger::error_msg(linea.c_str());
+	else if (loglevel == CodeConv::DecodeStr("warn")) logger::warn_msg(linea.c_str());
+	else if (loglevel == CodeConv::DecodeStr("info")) logger::info_msg(linea.c_str());
+	else if (loglevel == CodeConv::DecodeStr("debug")) logger::debug_msg(linea.c_str());
+	else if (loglevel == CodeConv::DecodeStr("trace")) logger::trace_msg(linea.c_str());
 	return 0;
 }
 
@@ -315,11 +315,11 @@ PLAYER_ID aiscript::table::functable::getPlayerID(lua_State* const L) {
 
 /* チャット出力 */
 int aiscript::table::functable::say(lua_State* const L) {
-	int n = lua_gettop(L); std::string msgstr = "";
+	int n = lua_gettop(L); CodeConv::tstring msgstr = _T("");
 	if (n > 0) {
 		for (int i = 1; i <= n; i++) {
-			msgstr += luaL_tolstring(L, i, nullptr); lua_pop(L, 1);
-			if (i < n) msgstr += " ";
+			msgstr += CodeConv::DecodeStr(luaL_tolstring(L, i, nullptr)); lua_pop(L, 1);
+			if (i < n) msgstr += _T(" ");
 		}
 		chat::sendchatx(getPlayerID(L), msgstr.c_str());
 	}

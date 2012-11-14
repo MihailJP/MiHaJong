@@ -9,6 +9,7 @@
 #include "../gametbl.h"
 #include "../logging.h"
 #include "../chat.h"
+#include "../strcode.h"
 
 class aiscript::table::playertable {
 private:
