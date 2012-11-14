@@ -6,95 +6,11 @@ using std::min;
 
 uint8_t* ShantenAnalyzer::mentsuAnalysisDat = nullptr;
 
-size_t ShantenAnalyzer::decompressMentsuAnalysisDat() {
-	DWORD size = 0; size_t uncompressedSize;
-	const uint8_t* compressedBuf = nullptr;
-	int result;
-	LoadFileInResource(IDR_LZMA_STREA1, LZMA_STREAM, size, compressedBuf);
-	assert(size > 13);
-	uint8_t* compressedMentsuDat = (uint8_t *)malloc(size+1);
-	memcpy(compressedMentsuDat, compressedBuf, size);
-	compressedMentsuDat[size] = 0;
-	uncompressedSize = *((size_t *)(compressedMentsuDat+5));
-	mentsuAnalysisDat = (uint8_t *)malloc(uncompressedSize);
-	result = LzmaUncompress(mentsuAnalysisDat, &uncompressedSize,
-		(const uint8_t *)(compressedMentsuDat+13),
-		(SizeT *)&size, (const uint8_t *)compressedMentsuDat, 5);
-	if (result != SZ_OK) {
-		std::ostringstream o;
-		o << "LZMAストリームのデコードに失敗しました。ファイルが壊れている虞があります。" <<
-			"エラーコード: " << result;
-		Raise(EXCEPTION_MJCORE_DECOMPRESSION_FAILURE, o.str().c_str());
-	}
-	else {
-		info("LZMAストリームをデコードしました。");
-	}
-	return uncompressedSize;
-}
-
-void ShantenAnalyzer::calcSHA256(uint8_t* digest, const uint8_t* buf, size_t bufSize) {
-	CSha256 p;
-	Sha256_Init(&p);
-	Sha256_Update(&p, buf, bufSize);
-	Sha256_Final(&p, digest);
-}
-
-std::string ShantenAnalyzer::bytesToHexString(std::vector<uint8_t> byteStr) {
-	std::string hx = std::string();
-	std::ostringstream o;
-	o.setf(std::ios::right); o.fill('0'); o.width(2);
-	for (unsigned int i = 0; i < byteStr.size(); i++) o << byteStr[i];
-	return o.str();
-}
-
-void ShantenAnalyzer::verifyMentsuAnalysisDat(size_t bufSize) {
-	uint8_t expectedDigest[] = {
-		0x2d, 0x10, 0x7e, 0x88, 0x85, 0xad, 0xd7, 0xe0,
-		0x1f, 0xec, 0x65, 0xfa, 0x69, 0x06, 0x33, 0x7a,
-		0xba, 0xe9, 0xf7, 0x6c, 0xfb, 0x6f, 0xc2, 0xe8,
-		0x98, 0xca, 0xfe, 0x17, 0xaa, 0x7b, 0x51, 0xc1,
-	};
-	uint8_t actualDigest[32]; bool mdUnmatch = false;
-	calcSHA256(actualDigest, mentsuAnalysisDat, bufSize);
-	for (int i = 0; i < 32; i++) {
-		if (expectedDigest[i] != actualDigest[i]) mdUnmatch = true;
-	}
-	if (mdUnmatch) {
-		std::ostringstream o;
-		o << "面子構成データベースのSHA256ハッシュ値が一致しませんでした。" <<
-			"ファイルが壊れている虞があります。" << std::endl <<
-			"期待されるハッシュ値: " <<
-			bytesToHexString(std::vector<uint8_t>(expectedDigest[0], expectedDigest[31])) <<
-			"実際のハッシュ値: " <<
-			bytesToHexString(std::vector<uint8_t>(actualDigest[0], actualDigest[31]));
-		Raise(EXCEPTION_MJCORE_HASH_MISMATCH, o.str().c_str());
-	}
-	else {
-		info("面子構成データベースのSHA256ハッシュ値の照合に成功しました。");
-	}
-}
-
 __declspec(dllexport) void ShantenAnalyzer::initMentsuAnalysisDat() { // 面子データ初期化
-	try {
-		verifyMentsuAnalysisDat(decompressMentsuAnalysisDat());
-	}
-	catch (_EXCEPTION_POINTERS* e) {
-		ErrorInfo *errStat = nullptr;
-		switch (e->ExceptionRecord->ExceptionCode) {
-		case EXCEPTION_MJCORE_DECOMPRESSION_FAILURE:
-			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
-			MessageBox(nullptr, errStat->msg, (LPCSTR)"LZMA decompression error",
-				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
-			terminate();
-		case EXCEPTION_MJCORE_HASH_MISMATCH:
-			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
-			MessageBox(nullptr, errStat->msg, (LPCSTR)"SHA256 verification error",
-				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
-			terminate();
-		default:
-			throw;
-		}
-	}
+	Compressed::file_mentz_dat* mnzdat = new Compressed::file_mentz_dat();
+	mentsuAnalysisDat = new uint8_t[mnzdat->getDataSize()+4];
+	memcpy_s(mentsuAnalysisDat, mnzdat->getDataSize()+4, mnzdat->getData(), mnzdat->getDataSize());
+	delete mnzdat;
 }
 
 /* 向聴数を計算する */
