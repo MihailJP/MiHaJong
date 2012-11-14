@@ -15,7 +15,7 @@
 #include <exception>
 #include <Windows.h>
 #include "logging.h"
-#include "resource.h"
+#include "decomp.h"
 #include "reader/readrsrc.h"
 #include "reader/csv2arry.h"
 #include "reader/ini2map.h"

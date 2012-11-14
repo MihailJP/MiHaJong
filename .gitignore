@@ -28,6 +28,9 @@ mjcore/test/
 mjcore/mjcore.sdf
 mjcore/mjcore.suo
 mjcore/mjcore.opensdf
+mjcore/data/*.cpp
+mjcore/data/*.h
+mjcore/data/confitem*.lzma
 astro/Debug/
 astro/Release/
 astro/ipch/

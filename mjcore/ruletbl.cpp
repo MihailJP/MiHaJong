@@ -20,10 +20,11 @@ std::array<tstring, RULE_PAGES> RuleData::pageCaption;
 
 void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 	DWORD size = 0; const uint8_t* csv = nullptr;
-	LoadFileInResource(IDR_CSV_TABL1, CSV_TABLE, size, csv);
-	char *csvdat = new char[size + 4]; memset(csvdat, 0, size+4); memcpy_s(csvdat, size+4, csv, size);
+	Compressed::file_confitem_csv* csvfile = new Compressed::file_confitem_csv();
+	char *csvdat = new char[csvfile->getDataSize() + 4]; memset(csvdat, 0, csvfile->getDataSize()+4);
+	memcpy_s(csvdat, csvfile->getDataSize()+4, csvfile->getData(), csvfile->getDataSize());
 	CSVReader::parsecsv(confdat, fromUTF8(csvdat).c_str());
-	delete[] csvdat;
+	delete[] csvdat; delete csvfile;
 
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		std::string nomenPartisRegulae(toANSI((*k)[8])); // ルールタグ
@@ -56,10 +57,12 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 
 void RuleData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
 	DWORD size = 0; const uint8_t* ini = nullptr;
-	LoadFileInResource(IDR_INI_FIL1, INI_FILE, size, ini);
-	char *inidat = new char[size + 4]; memset(inidat, 0, size+4); memcpy_s(inidat, size+4, ini, size);
+
+	Compressed::file_confitem_ini* inifile = new Compressed::file_confitem_ini();
+	char *inidat = new char[inifile->getDataSize() + 4]; memset(inidat, 0, inifile->getDataSize()+4);
+	memcpy_s(inidat, inifile->getDataSize()+4, inifile->getData(), inifile->getDataSize());
 	INIParser::parseini(confdict, fromUTF8(inidat).c_str());
-	delete[] inidat;
+	delete[] inidat; delete inifile;
 }
 
 __declspec(dllexport) void RuleData::configinit() { // コンフィグ用CSVを読み込む
