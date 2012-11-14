@@ -37,7 +37,7 @@ DWORD Logger::LoggerThread(LPVOID lp) { // ロギング実行用スレッド
 			msgQueue.pop_front();
 			LeaveCriticalSection(&cs);
 			/* メッセージを書き出す */
-			*logStream << currentLogMsg.toString() << endl;
+			*logStream << EncodeStr(currentLogMsg.toString()) << endl;
 		}
 	}
 }
@@ -77,11 +77,11 @@ __declspec(dllexport) void initLogger(const char* fname) {
 
 /* メッセージをキューに登録 */
 
-__declspec(dllexport) void trace(const char* msg) { logger->enqueue(TraceMsg(msg)); }
-__declspec(dllexport) void debug(const char* msg) { logger->enqueue(DebugMsg(msg)); }
-__declspec(dllexport) void info(const char* msg) { logger->enqueue(InfoMsg(msg)); }
-__declspec(dllexport) void warn(const char* msg) { logger->enqueue(WarnMsg(msg)); }
-__declspec(dllexport) void error(const char* msg) { logger->enqueue(ErrorMsg(msg)); }
-__declspec(dllexport) void fatal(const char* msg) { logger->enqueue(FatalMsg(msg)); }
+__declspec(dllexport) void trace(LPCTSTR msg) { logger->enqueue(TraceMsg(msg)); }
+__declspec(dllexport) void debug(LPCTSTR msg) { logger->enqueue(DebugMsg(msg)); }
+__declspec(dllexport) void info(LPCTSTR msg) { logger->enqueue(InfoMsg(msg)); }
+__declspec(dllexport) void warn(LPCTSTR msg) { logger->enqueue(WarnMsg(msg)); }
+__declspec(dllexport) void error(LPCTSTR msg) { logger->enqueue(ErrorMsg(msg)); }
+__declspec(dllexport) void fatal(LPCTSTR msg) { logger->enqueue(FatalMsg(msg)); }
 
 }
