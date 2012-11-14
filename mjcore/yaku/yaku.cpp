@@ -83,12 +83,12 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 	}
 
 	{ // トレース用
-		std::ostringstream o;
-		o << "計算結果は [";
+		CodeConv::tostringstream o;
+		o << _T("計算結果は [");
 		for (int i = DIGIT_GROUPS - 1; i >= 0; i--)
-			o << std::setw(4) << std::dec << std::setfill('0') << yStat->AgariPoints.digitGroup[i] / 10000 <<
-			" " << std::setw(4) << std::dec << std::setfill('0') << yStat->AgariPoints.digitGroup[i] % 10000 << (i ? " " : "");
-		o << "]";
+			o << std::setw(4) << std::dec << std::setfill(_T('0')) << yStat->AgariPoints.digitGroup[i] / 10000 <<
+			_T(" ") << std::setw(4) << std::dec << std::setfill(_T('0')) << yStat->AgariPoints.digitGroup[i] % 10000 << (i ? _T(" ") : _T(""));
+		o << _T("]");
 		trace(o.str().c_str());
 	}
 }
@@ -97,7 +97,7 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis)
 {
-	trace("符計算の処理に入ります。");
+	trace(_T("符計算の処理に入ります。"));
 	int fu = 20; // 副底２０符
 
 	/* 雀頭加符(役牌のみ２符) */
@@ -207,7 +207,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 		fu += 10;
 
 	/* 終了処理 */
-	std::ostringstream o; o << "この手牌は [" << fu << "] 符です。"; trace(o.str().c_str());
+	CodeConv::tostringstream o; o << _T("この手牌は [") << fu << _T("] 符です。"); trace(o.str().c_str());
 	analysis->BasePoint = (uint8_t)fu;
 }
 
@@ -217,16 +217,16 @@ void yaku::yakuCalculator::countDora
 	YAKUSTAT* const result, PLAYER_ID targetPlayer)
 {
 	auto doraText =
-		[](YAKUSTAT* const result, const char* const label, int quantity) {
-			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, label);
-			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, " ");
-			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, intstr(quantity).c_str());
+		[](YAKUSTAT* const result, LPCTSTR const label, int quantity) {
+			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, label);
+			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T(" "));
+			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, intstr(quantity).c_str());
 #ifdef _WIN32
-			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
-			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
+			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
 #else
-			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
-			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "\n");
+			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T("\n"));
+			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("\n"));
 #endif
 		};
 	const bool uradoraEnabled = ((RuleData::chkRuleApplied("uradora")) && // 裏ドラありのルールで、
@@ -322,11 +322,11 @@ void yaku::yakuCalculator::countDora
 	/* 計数結果を反映 */
 	if (omote) {
 		result->DoraQuantity += omote; result->BonusHan += omote;
-		doraText(result, "ドラ", omote);
+		doraText(result, _T("ドラ"), omote);
 	}
 	if (ura) {
 		result->DoraQuantity += ura; result->BonusHan += ura; result->UraDoraQuantity = ura;
-		doraText(result, "裏ドラ", ura);
+		doraText(result, _T("裏ドラ"), ura);
 	}
 	if (red) {
 		if (RuleData::chkRule("redtile_chip", "menzen_only") ||
@@ -335,24 +335,24 @@ void yaku::yakuCalculator::countDora
 			result->DoraQuantity += red; result->BonusHan += red;
 		}
 		result->AkaDoraQuantity = red;
-		doraText(result, "赤ドラ", red);
+		doraText(result, _T("赤ドラ"), red);
 	}
 	if (blue) {
 		result->AoDoraQuantity = blue;
 		if (RuleData::chkRule("blue_tiles", "1han")) {
 			result->DoraQuantity += blue; result->BonusHan += blue;
-			doraText(result, "青ドラ", blue);
+			doraText(result, _T("青ドラ"), blue);
 		} else if (RuleData::chkRule("blue_tiles", "2han")) {
 			result->DoraQuantity += blue * 2; result->BonusHan += blue * 2;
-			doraText(result, "青ドラ 2x", blue);
+			doraText(result, _T("青ドラ 2x"), blue);
 		} else if (RuleData::chkRule("blue_tiles", "-1han")) {
 			result->DoraQuantity -= blue; result->BonusHan -= blue;
-			doraText(result, "青ドラ -", blue);
+			doraText(result, _T("青ドラ -"), blue);
 		}
 	}
 	if (alice) {
 		result->AliceDora = alice;
-		doraText(result, "アリス祝儀", alice);
+		doraText(result, _T("アリス祝儀"), alice);
 	}
 }
 
@@ -366,11 +366,11 @@ void yaku::yakuCalculator::CalculatorThread::countDora
 /* 翻を合計する */
 void yaku::yakuCalculator::CalculatorThread::hanSummation(
 	int& totalHan, int& totalSemiMangan, int& totalBonusHan, int& totalBonusSemiMangan,
-	std::map<std::string, Yaku::YAKU_HAN> &yakuHan, std::vector<std::string> &yakuOrd, YAKUSTAT* const result)
+	std::map<CodeConv::tstring, Yaku::YAKU_HAN> &yakuHan, std::vector<CodeConv::tstring> &yakuOrd, YAKUSTAT* const result)
 {
 	totalHan = totalSemiMangan = totalBonusHan = totalBonusSemiMangan = 0; // こっちで初期化してあげよう
 	for (auto yNameIter = yakuOrd.begin(); yNameIter != yakuOrd.end(); yNameIter++) {
-		std::string yName = *yNameIter;
+		CodeConv::tstring yName = *yNameIter;
 		if (RuleData::chkRule("limitless", "yakuman_considered_13han")) { /* 青点ルールで役満を13飜扱いとする場合 */
 			switch (yakuHan[yName].coreHan.getUnit()) {
 				case yaku::yakuCalculator::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
@@ -383,7 +383,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 					break;
 				case yaku::yakuCalculator::Yakuman: totalHan += yakuHan[yName].coreHan.getHan() * 13; break;
 				default:
-					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
+					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
 			switch (yakuHan[yName].bonusHan.getUnit()) {
 				case yaku::yakuCalculator::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
@@ -396,7 +396,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 					break;
 				case yaku::yakuCalculator::Yakuman: totalBonusHan += yakuHan[yName].bonusHan.getHan() * 13; break;
 				default:
-					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
+					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
 		} else { /* 通常の翻計算 */
 			switch (yakuHan[yName].coreHan.getUnit()) {
@@ -404,14 +404,14 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 				case yaku::yakuCalculator::SemiMangan: totalSemiMangan += yakuHan[yName].coreHan.getHan(); break;
 				case yaku::yakuCalculator::Yakuman: totalSemiMangan += yakuHan[yName].coreHan.getHan() * 8; break;
 				default:
-					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
+					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
 			switch (yakuHan[yName].bonusHan.getUnit()) {
 				case yaku::yakuCalculator::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
 				case yaku::yakuCalculator::SemiMangan: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan(); break;
 				case yaku::yakuCalculator::Yakuman: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan() * 8; break;
 				default:
-					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が異常です");
+					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
 		}
 		/* 役の名前を書き込む */
@@ -419,52 +419,52 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 		if ((yakuHan[yName].coreHan.getUnit() != yakuHan[yName].bonusHan.getUnit()) &&
 			(yakuHan[yName].coreHan.getHan() * yakuHan[yName].bonusHan.getHan() != 0))
 		{ /* 単位が混在！ */
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "単位が混在しています");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が混在しています"));
 		}
 		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].coreHan.getHan() == 0)) &&
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 普通の役の時 */
-			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
+			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 #ifdef _WIN32
-			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
+			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
 #else
-			strcat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, "\n");
+			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T("\n"));
 #endif
-			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
+			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
 				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str());
 #ifdef _WIN32
-			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "飜\r\n");
+			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("飜\r\n"));
 #else
-			strcat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, "飜\n");
+			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("飜\n"));
 #endif
 		}
 		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].coreHan.getHan() == 0)) &&
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 満貫 */
-			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
+			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 #ifdef _WIN32
-			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
-			char hstr[16]; sprintf_s(hstr, "%d\r\n",
+			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
+			TCHAR hstr[16]; _stprintf_s(hstr, 16, _T("%d\r\n"),
 #else
-			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\n");
-			char hstr[16]; sprintf_s(hstr, "%d\n",
+			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, _T("\n"));
+			TCHAR hstr[16]; _stprintf_s(hstr, 16, _T("%d\n"),
 #endif
 				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
-			strcat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
+			_tcscat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
 		}
 		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].coreHan.getHan() == 0)) &&
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 役満 */
-			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
+			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 #ifdef _WIN32
-			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\r\n");
-			char hstr[16]; sprintf_s(hstr, "%d\r\n",
+			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
+			TCHAR hstr[16]; _stprintf_s(hstr, 16, _T("%d\r\n"),
 #else
-			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, "\n");
-			char hstr[16]; sprintf_s(hstr, "%d\n",
+			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, _T("\n"));
+			TCHAR hstr[16]; _stprintf_s(hstr, 16, _T("%d\n"),
 #endif
 				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
-			strcat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
+			_tcscat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
 		}
 	}
 }
@@ -504,18 +504,18 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		}
 	}
 	/* 役判定ループ */
-	std::map<std::string, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
-	std::set<std::string> suppression; // 無効化する役
-	std::vector<std::string> yakuOrd; // 順序保存用
+	std::map<CodeConv::tstring, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
+	std::set<CodeConv::tstring> suppression; // 無効化する役
+	std::vector<CodeConv::tstring> yakuOrd; // 順序保存用
 	std::for_each(YakuCatalog::Instantiate()->catalog.begin(), // 役カタログの最初から
 		YakuCatalog::Instantiate()->catalog.end(), // カタログの末尾まで
 		[&yakuHan, analysis, &suppression, &yakuOrd](Yaku& yaku) -> void { // 役ごとに判定処理
 			//trace(yaku.getName().c_str());
 			if (yaku.checkYaku(analysis)) { // 成立条件を満たしていたら
-				//trace("...は、成立しています。");
+				//trace(_T("...は、成立しています。"));
 				yakuHan[yaku.getName()] = yaku.getHan(analysis); // 飜数を記録
 				yakuOrd.push_back(yaku.getName()); // 順序も記録しておく
-				std::set<std::string> sup = yaku.getSuppression();
+				std::set<CodeConv::tstring> sup = yaku.getSuppression();
 				suppression.insert(sup.begin(), sup.end()); // 下位役のリストを結合
 			}
 	});
@@ -528,7 +528,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	/* 後回しで判定する役 */
 	checkPostponedYaku(gameStat, analysis, result, yakuHan, suppression, yakuOrd);
 	/* 下位役を除去する */
-	std::for_each(suppression.begin(), suppression.end(), [&yakuOrd](std::string yaku) {
+	std::for_each(suppression.begin(), suppression.end(), [&yakuOrd](CodeConv::tstring yaku) {
 		for (auto k = yakuOrd.begin(); k != yakuOrd.end(); ) {
 			if (*k == yaku) k = yakuOrd.erase(k);
 			else ++k;
@@ -546,7 +546,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	countDora(gameStat, analysis, result);
 	/* 簡略ルール(全部30符)の場合 */
 	if (RuleData::chkRule("simplified_scoring", "simplified")) {
-		trace("簡略計算ルールのため30符として扱います。");
+		trace(_T("簡略計算ルールのため30符として扱います。"));
 		result->BasePoints = 30;
 	}
 	/* 点数を計算する */
@@ -653,8 +653,8 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 // 役が成立しているか判定する
 yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	// 役判定
-	std::ostringstream o;
-	o << "役判定処理を開始 プレイヤー [" << (int)targetPlayer << "]";
+	CodeConv::tostringstream o;
+	o << _T("役判定処理を開始 プレイヤー [") << (int)targetPlayer << _T("]");
 	debug(o.str().c_str());
 	// 初期化
 	YAKUSTAT yakuInfo; YAKUSTAT::Init(&yakuInfo);
@@ -667,55 +667,55 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 		/* 十三不塔 */
 		if (gameStat->Player[targetPlayer].FirstDrawFlag) { // 鳴きがなくて一巡目の時だけ判定する
 			if (chkShisanBuDa(gameStat, targetPlayer)) { // 十三不塔になってる
-				trace("十三不塔です！！");
+				trace(_T("十三不塔です！！"));
 				yakuInfo.isValid = true; yakuInfo.BasePoints = 30;
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han")) 
 					yakuInfo.CoreHan = (RuleData::chkRule("shiisan_puutaa", "mangan")) ? 5 : 13;
 				else yakuInfo.CoreSemiMangan = (RuleData::chkRule("shiisan_puutaa", "mangan")) ? 2 : 8;
 				calculateScore(&yakuInfo);
-				strcpy_s((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
+				_tcscat_s((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
 					yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
 					YAKUSTAT::nameBufSize,
 #ifdef _WIN32
-					"十三不搭\r\n");
+					_T("十三不搭\r\n"));
 #else
-					"十三不搭\n");
+					_T("十三不搭\n"));
 #endif
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					strcpy_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
+					_tcscat_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
 #ifdef _WIN32
-						(RuleData::chkRule("shiisan_puutaa", "mangan")) ? "５飜\r\n" : "13飜\r\n");
+						(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("５飜\r\n") : _T("13飜\r\n"));
 #else
-						(RuleData::chkRule("shiisan_puutaa", "mangan")) ? "５飜\n" : "13飜\n");
+						(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("５飜\n") : _T("13飜\n"));
 #endif
 				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ドラは数えてあげましょうね
 			}
 			/* 十四不塔 */
 			else if (chkShisiBuDa(gameStat, targetPlayer)) { // 十四不塔になってる
-				trace("十四不塔です！！");
+				trace(_T("十四不塔です！！"));
 				yakuInfo.isValid = true; yakuInfo.BasePoints = 30;
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han")) yakuInfo.CoreHan = 13;
 				else yakuInfo.CoreSemiMangan = 8;
 				calculateScore(&yakuInfo);
-				strcpy_s((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
+				_tcscat_s((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
 					yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
 					YAKUSTAT::nameBufSize,
 #ifdef _WIN32
-					"十三無靠\r\n");
+					_T("十三無靠\r\n"));
 #else
-					"十三無靠\n");
+					_T("十三無靠\n"));
 #endif
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					strcpy_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
+					_tcscat_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
 #ifdef _WIN32
-						"13飜\r\n");
+						_T("13飜\r\n"));
 #else
-						"13飜\n");
+						_T("13飜\n"));
 #endif
 				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ドラを数えるのです
 			}
 		}
-		trace("和了っていないので抜けます");
+		trace(_T("和了っていないので抜けます"));
 		return yakuInfo;
 	}
 	// 和了っているなら
@@ -751,11 +751,11 @@ __declspec(dllexport) void yaku::yakuCalculator::countyaku(const GameTable* cons
 bool yaku::yakuCalculator::checkShibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat) {
 	if ((yakuStat->CoreHan >= 2) || (yakuStat->CoreSemiMangan >= 1))
 		return true; // 2翻以上あったら縛りを満たす
-	else if ((yakuStat->CoreHan == 1) && (RuleData::getRule("ryanshiba") == 0))
+	else if ((yakuStat->CoreHan == 1) && (RuleData::chkRule("ryanshiba", "no")))
 		return true; // リャンシバなしのルールの場合で1翻
-	else if ((yakuStat->CoreHan == 1) && (gameStat->Honba < 5) && (RuleData::getRule("ryanshiba") == 1))
+	else if ((yakuStat->CoreHan == 1) && (gameStat->Honba < 5) && (RuleData::chkRule("ryanshiba", "from_5honba")))
 		return true; // 5本場からリャンシバだが4本場までで1翻
-	else if ((yakuStat->CoreHan == 1) && (gameStat->Honba < 4) && (RuleData::getRule("ryanshiba") == 2))
+	else if ((yakuStat->CoreHan == 1) && (gameStat->Honba < 4) && (RuleData::chkRule("ryanshiba", "from_4honba")))
 		return true; // 4本場からリャンシバだが3本場までで1翻
 	else return false; // 縛りを満たしていない場合
 }

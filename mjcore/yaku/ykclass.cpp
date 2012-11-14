@@ -75,85 +75,85 @@ bool yaku::yakuCalculator::Yaku::checkYaku(const MENTSU_ANALYSIS* const mentsu) 
 	// –ð‚ð”»’è‚·‚é
 	return this->yakuProc(mentsu);
 }
-std::string yaku::yakuCalculator::Yaku::getName() {return this->yakuName;} // –ð‚Ì–¼‘O‚ðŽæ“¾‚·‚é
+CodeConv::tstring yaku::yakuCalculator::Yaku::getName() {return this->yakuName;} // –ð‚Ì–¼‘O‚ðŽæ“¾‚·‚é
 yaku::yakuCalculator::Yaku::HANFUNC yaku::yakuCalculator::Yaku::getHan() {return han;}
 yaku::yakuCalculator::Yaku::YAKU_HAN yaku::yakuCalculator::Yaku::getHan(const MENTSU_ANALYSIS* const mentsu)
 {
 	return han(mentsu);
 }
-std::set<std::string> yaku::yakuCalculator::Yaku::getSuppression() {return suppressionList;}
+std::set<CodeConv::tstring> yaku::yakuCalculator::Yaku::getSuppression() {return suppressionList;}
 
 // Constructor
 #define YKCLASS_GENERAL_INIT \
-	yakuName = std::string(name.begin(), name.end()); han = hanVal; yakuProc = YAKUFUNC(f); \
-	suppressionList = std::set<std::string>()
-yaku::yakuCalculator::Yaku::Yaku(std::string name, HANFUNC hanVal, YAKUFUNC f) {
+	yakuName = CodeConv::tstring(name.begin(), name.end()); han = hanVal; yakuProc = YAKUFUNC(f); \
+	suppressionList = std::set<CodeConv::tstring>()
+yaku::yakuCalculator::Yaku::Yaku(CodeConv::tstring name, HANFUNC hanVal, YAKUFUNC f) {
 	YKCLASS_GENERAL_INIT;
 }
-yaku::yakuCalculator::Yaku::Yaku(std::string name, HANFUNC hanVal,
-	std::string yk1, YAKUFUNC f)
+yaku::yakuCalculator::Yaku::Yaku(CodeConv::tstring name, HANFUNC hanVal,
+	CodeConv::tstring yk1, YAKUFUNC f)
 {
 	YKCLASS_GENERAL_INIT; suppressionList.insert(yk1);
 }
-yaku::yakuCalculator::Yaku::Yaku(std::string name, HANFUNC hanVal,
-	std::string yk1, std::string yk2, YAKUFUNC f)
+yaku::yakuCalculator::Yaku::Yaku(CodeConv::tstring name, HANFUNC hanVal,
+	CodeConv::tstring yk1, CodeConv::tstring yk2, YAKUFUNC f)
 {
 	YKCLASS_GENERAL_INIT; suppressionList.insert(yk1); suppressionList.insert(yk2);
 }
-yaku::yakuCalculator::Yaku::Yaku(std::string name, HANFUNC hanVal,
-	std::string yk1, std::string yk2, std::string yk3, YAKUFUNC f)
+yaku::yakuCalculator::Yaku::Yaku(CodeConv::tstring name, HANFUNC hanVal,
+	CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, YAKUFUNC f)
 {
 	YKCLASS_GENERAL_INIT; suppressionList.insert(yk1); suppressionList.insert(yk2);
 	suppressionList.insert(yk3);
 }
-yaku::yakuCalculator::Yaku::Yaku(std::string name, HANFUNC hanVal,
-	std::string yk1, std::string yk2, std::string yk3, std::string yk4, YAKUFUNC f)
+yaku::yakuCalculator::Yaku::Yaku(CodeConv::tstring name, HANFUNC hanVal,
+	CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, YAKUFUNC f)
 {
 	YKCLASS_GENERAL_INIT; suppressionList.insert(yk1); suppressionList.insert(yk2);
 	suppressionList.insert(yk3); suppressionList.insert(yk4);
 }
-yaku::yakuCalculator::Yaku::Yaku(std::string name, HANFUNC hanVal,
-	std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5, YAKUFUNC f)
+yaku::yakuCalculator::Yaku::Yaku(CodeConv::tstring name, HANFUNC hanVal,
+	CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, CodeConv::tstring yk5, YAKUFUNC f)
 {
 	YKCLASS_GENERAL_INIT; suppressionList.insert(yk1); suppressionList.insert(yk2);
 	suppressionList.insert(yk3); suppressionList.insert(yk4); suppressionList.insert(yk5);
 }
-yaku::yakuCalculator::Yaku::Yaku(std::string name, HANFUNC hanVal,
-	std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
-	std::string yk6, YAKUFUNC f)
+yaku::yakuCalculator::Yaku::Yaku(CodeConv::tstring name, HANFUNC hanVal,
+	CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, CodeConv::tstring yk5,
+	CodeConv::tstring yk6, YAKUFUNC f)
 {
 	YKCLASS_GENERAL_INIT; suppressionList.insert(yk1); suppressionList.insert(yk2);
 	suppressionList.insert(yk3); suppressionList.insert(yk4); suppressionList.insert(yk5);
 	suppressionList.insert(yk6);
 }
-yaku::yakuCalculator::Yaku::Yaku(std::string name, HANFUNC hanVal,
-	std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
-	std::string yk6, std::string yk7, YAKUFUNC f)
+yaku::yakuCalculator::Yaku::Yaku(CodeConv::tstring name, HANFUNC hanVal,
+	CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, CodeConv::tstring yk5,
+	CodeConv::tstring yk6, CodeConv::tstring yk7, YAKUFUNC f)
 {
 	YKCLASS_GENERAL_INIT; suppressionList.insert(yk1); suppressionList.insert(yk2);
 	suppressionList.insert(yk3); suppressionList.insert(yk4); suppressionList.insert(yk5);
 	suppressionList.insert(yk6); suppressionList.insert(yk7);
 }
-yaku::yakuCalculator::Yaku::Yaku(std::string name, HANFUNC hanVal,
-	std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
-	std::string yk6, std::string yk7, std::string yk8, YAKUFUNC f)
+yaku::yakuCalculator::Yaku::Yaku(CodeConv::tstring name, HANFUNC hanVal,
+	CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, CodeConv::tstring yk5,
+	CodeConv::tstring yk6, CodeConv::tstring yk7, CodeConv::tstring yk8, YAKUFUNC f)
 {
 	YKCLASS_GENERAL_INIT; suppressionList.insert(yk1); suppressionList.insert(yk2);
 	suppressionList.insert(yk3); suppressionList.insert(yk4); suppressionList.insert(yk5);
 	suppressionList.insert(yk6); suppressionList.insert(yk7); suppressionList.insert(yk8);
 }
-yaku::yakuCalculator::Yaku::Yaku(std::string name, HANFUNC hanVal,
-	std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
-	std::string yk6, std::string yk7, std::string yk8, std::string yk9, YAKUFUNC f)
+yaku::yakuCalculator::Yaku::Yaku(CodeConv::tstring name, HANFUNC hanVal,
+	CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, CodeConv::tstring yk5,
+	CodeConv::tstring yk6, CodeConv::tstring yk7, CodeConv::tstring yk8, CodeConv::tstring yk9, YAKUFUNC f)
 {
 	YKCLASS_GENERAL_INIT; suppressionList.insert(yk1); suppressionList.insert(yk2);
 	suppressionList.insert(yk3); suppressionList.insert(yk4); suppressionList.insert(yk5);
 	suppressionList.insert(yk6); suppressionList.insert(yk7); suppressionList.insert(yk8);
 	suppressionList.insert(yk9);
 }
-yaku::yakuCalculator::Yaku::Yaku(std::string name, HANFUNC hanVal,
-	std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
-	std::string yk6, std::string yk7, std::string yk8, std::string yk9, std::string yk10,
+yaku::yakuCalculator::Yaku::Yaku(CodeConv::tstring name, HANFUNC hanVal,
+	CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, CodeConv::tstring yk5,
+	CodeConv::tstring yk6, CodeConv::tstring yk7, CodeConv::tstring yk8, CodeConv::tstring yk9, CodeConv::tstring yk10,
 	YAKUFUNC f)
 {
 	YKCLASS_GENERAL_INIT; suppressionList.insert(yk1); suppressionList.insert(yk2);

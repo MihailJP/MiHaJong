@@ -3,6 +3,7 @@
 
 #include "yaku.h"
 #include <array>
+#include "../strcode.h"
 
 class yaku::yakuCalculator::YakuCatalog::catalogInit {
 private:

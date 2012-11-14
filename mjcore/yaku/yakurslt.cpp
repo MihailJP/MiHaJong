@@ -51,17 +51,17 @@ void yaku::YAKUSTAT::setYakuInfo(YAKUSTAT* const myInstance, int index, int valu
 			myInstance->AgariPoints.digitGroup[index - 9] = value;
 			break;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 	}
 }
-void yaku::YAKUSTAT::setYakuInfo(YAKUSTAT* const myInstance, int index, const char* const value) {
+void yaku::YAKUSTAT::setYakuInfo(YAKUSTAT* const myInstance, int index, LPCTSTR const value) {
 	switch (index) {
-		case 17: strcpy_s(myInstance->yakuNameList, nameBufSize, value); break;
-		case 18: strcpy_s(myInstance->yakumanNameList, nameBufSize, value); break;
-		case 19: strcpy_s(myInstance->yakuValList, nameBufSize, value); break;
-		case 20: strcpy_s(myInstance->yakumanValList, nameBufSize, value); break;
+		case 17: _tcscpy_s(myInstance->yakuNameList, nameBufSize, value); break;
+		case 18: _tcscpy_s(myInstance->yakumanNameList, nameBufSize, value); break;
+		case 19: _tcscpy_s(myInstance->yakuValList, nameBufSize, value); break;
+		case 20: _tcscpy_s(myInstance->yakumanValList, nameBufSize, value); break;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 	}
 }
 
@@ -87,17 +87,17 @@ void yaku::YAKUSTAT::addYakuInfo(YAKUSTAT* const myInstance, int index, int valu
 			myInstance->AgariPoints.digitGroup[index - 9] += value;
 			break;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 	}
 }
-void yaku::YAKUSTAT::addYakuInfo(YAKUSTAT* const myInstance, int index, const char* const value) {
+void yaku::YAKUSTAT::addYakuInfo(YAKUSTAT* const myInstance, int index, LPCTSTR const value) {
 	switch (index) {
-		case 17: strcat_s(myInstance->yakuNameList, nameBufSize, value); break;
-		case 18: strcat_s(myInstance->yakumanNameList, nameBufSize, value); break;
-		case 19: strcat_s(myInstance->yakuValList, nameBufSize, value); break;
-		case 20: strcat_s(myInstance->yakumanValList, nameBufSize, value); break;
+		case 17: _tcscpy_s(myInstance->yakuNameList, nameBufSize, value); break;
+		case 18: _tcscpy_s(myInstance->yakumanNameList, nameBufSize, value); break;
+		case 19: _tcscpy_s(myInstance->yakuValList, nameBufSize, value); break;
+		case 20: _tcscpy_s(myInstance->yakumanValList, nameBufSize, value); break;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 	}
 }
 
@@ -116,20 +116,20 @@ int yaku::YAKUSTAT::getYakuInfo(const YAKUSTAT* const myInstance, int index) {
 		case 13: case 14: case 15: case 16:
 			return myInstance->AgariPoints.digitGroup[index - 9];
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			return 0x7fffffff;
 	}
 }
 void yaku::YAKUSTAT::getYakuInfo(const YAKUSTAT* const myInstance,
-	int index, char* const targetStr, int bufSize)
+	int index, LPTSTR const targetStr, int bufSize)
 {
 	switch (index) {
-		case 17: strcpy_s(targetStr, bufSize, myInstance->yakuNameList); break;
-		case 18: strcpy_s(targetStr, bufSize, myInstance->yakumanNameList); break;
-		case 19: strcpy_s(targetStr, bufSize, myInstance->yakuValList); break;
-		case 20: strcpy_s(targetStr, bufSize, myInstance->yakumanValList); break;
+		case 17: _tcscpy_s(targetStr, bufSize, myInstance->yakuNameList); break;
+		case 18: _tcscpy_s(targetStr, bufSize, myInstance->yakumanNameList); break;
+		case 19: _tcscpy_s(targetStr, bufSize, myInstance->yakuValList); break;
+		case 20: _tcscpy_s(targetStr, bufSize, myInstance->yakumanValList); break;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			memset(targetStr, 0, bufSize);
 	}
 }

@@ -89,7 +89,7 @@ int yaku::countingFacility::countPairs(
 	const Int8ByTile tileCount, const tileCode* const targetTiles, int numOfTiles)
 {
 	// 指定した種類の対子を数える
-	trace("対子の種類を調べます。");
+	trace(_T("対子の種類を調べます。"));
 	int yakuflagcount = 0;
 	for (int i = 0; i < numOfTiles; i++)
 		if (tileCount[targetTiles[i]] >= 2) yakuflagcount++;
@@ -127,19 +127,19 @@ Int8ByTile yaku::countingFacility::countByMelds(
 
 /* 刻子の数を数える */
 Int8ByTile yaku::countingFacility::countKez(const MELD_BUF MianziDat, uint8_t* const Kezi) { /* 刻子の数を数える */
-	trace("刻子・槓子の種類を調べます。");
+	trace(_T("刻子・槓子の種類を調べます。"));
 	return countByMelds(MianziDat, Kezi, [](meldStat x){return x >= meldTripletConcealed;});
 }
 
 /* 暗刻子の数を数える */
 Int8ByTile yaku::countingFacility::countAnKez(const MELD_BUF MianziDat, uint8_t* const Kezi) { /* 暗刻子の数を数える */
-	trace("暗刻子・暗槓子の種類を調べます。");
+	trace(_T("暗刻子・暗槓子の種類を調べます。"));
 	return countByMelds(MianziDat, Kezi, [](meldStat x){return ((x == meldTripletConcealed)||(x == meldQuadConcealed));});
 }
 
 /* 対子・刻子・槓子の数を数える */
 Int8ByTile yaku::countingFacility::countDuiz(const MELD_BUF MianziDat) { /* 対子・刻子・槓子の数を数える */
-	trace("対子・刻子・槓子の種類を調べます。");
+	trace(_T("対子・刻子・槓子の種類を調べます。"));
 	auto DuiCount = countKez(MianziDat, nullptr);
 	++(DuiCount[MianziDat[0].tile]);
 	return DuiCount;
@@ -149,13 +149,13 @@ Int8ByTile yaku::countingFacility::countDuiz(const MELD_BUF MianziDat) { /* 対子
 
 /* 順子の数を数える */
 Int8ByTile yaku::countingFacility::countShunz(const MELD_BUF MianziDat, uint8_t* const Shunzi) { /* 順子の数を数える */
-	trace("順子の種類を調べます。");
+	trace(_T("順子の種類を調べます。"));
 	return countByMelds(MianziDat, Shunzi, [](meldStat x){return x < meldTripletConcealed;});
 }
 
 /* 暗順子の数を数える */
 Int8ByTile yaku::countingFacility::countAnShunz(const MELD_BUF MianziDat, uint8_t* const Shunzi) { /* 暗順子の数を数える */
-	trace("暗順子の種類を調べます。");
+	trace(_T("暗順子の種類を調べます。"));
 	return countByMelds(MianziDat, Shunzi, [](meldStat x){return x == meldSequenceConcealed;});
 }
 
@@ -163,19 +163,19 @@ Int8ByTile yaku::countingFacility::countAnShunz(const MELD_BUF MianziDat, uint8_
 
 /* 槓子の数を数える */
 Int8ByTile yaku::countingFacility::countKangz(const MELD_BUF MianziDat, uint8_t* const Kangzi) { /* 槓子の数を数える */
-	trace("槓子の種類を調べます。");
+	trace(_T("槓子の種類を調べます。"));
 	return countByMelds(MianziDat, Kangzi, [](meldStat x){return x >= meldQuadConcealed;});
 }
 
 /* 暗槓子の数を数える */
 Int8ByTile yaku::countingFacility::countAnKangz(const MELD_BUF MianziDat, uint8_t* const Kangzi) { /* 暗槓子の数を数える */
-	trace("暗槓子の種類を調べます。");
+	trace(_T("暗槓子の種類を調べます。"));
 	return countByMelds(MianziDat, Kangzi, [](meldStat x){return x == meldQuadConcealed;});
 }
 
 /* 加槓の数を数える */
 Int8ByTile yaku::countingFacility::countKaKangz(const MELD_BUF MianziDat, uint8_t* const Kangzi) { /* 加槓の数を数える */
-	trace("加槓の種類を調べます。");
+	trace(_T("加槓の種類を調べます。"));
 	return countByMelds(MianziDat, Kangzi, [](meldStat x){return x >= meldQuadAddedLeft;});
 }
 

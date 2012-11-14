@@ -10,7 +10,7 @@ yaku::yakuCalculator::YakuCatalog* yaku::yakuCalculator::YakuCatalog::Instantiat
 // 設定したルールに基づいて役インスタンスを初期化する
 void yaku::yakuCalculator::YakuCatalog::catalogInit::init() {
 	YakuCatalog::Instantiate()->catalog.clear(); // リセット
-	info("役カタログをリセットしました。");
+	info(_T("役カタログをリセットしました。"));
 	yakulst_contextual();
 	yakulst_irregular();
 	yakulst_pinhu();
@@ -21,7 +21,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::init() {
 	yakulst_sequence();
 	yakulst_misc();
 	yakulst_dora();
-	info("役カタログの構築を完了しました。");
+	info(_T("役カタログの構築を完了しました。"));
 }
 void yaku::yakuCalculator::init() {
 	YakuCatalog::catalogInit::init();

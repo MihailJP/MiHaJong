@@ -21,6 +21,7 @@
 #include "../except.h"
 #include "../logging.h"
 #include "../shanten.h"
+#include "../strcode.h"
 
 class yaku::yakuCalculator {
 private:
@@ -159,43 +160,43 @@ private:
 			yval_4han_kuisagari, yval_5han_kuisagari, yval_6han_kuisagari;
 	private:
 		HANFUNC han;
-		std::string yakuName; // 役の名前（文字列）
+		CodeConv::tstring yakuName; // 役の名前（文字列）
 		YAKUFUNC yakuProc; // 役の判定方法
-		std::set<std::string> suppressionList; // 下位役のリスト
+		std::set<CodeConv::tstring> suppressionList; // 下位役のリスト
 		Yaku() {} // Default constructor
 	public:
 		bool checkYaku(const MENTSU_ANALYSIS* const mentsu);
-		std::string getName(); // 役の名前を取得する
+		CodeConv::tstring getName(); // 役の名前を取得する
 		HANFUNC getHan();
 		YAKU_HAN getHan(const MENTSU_ANALYSIS* const mentsu);
-		std::set<std::string> getSuppression();
+		std::set<CodeConv::tstring> getSuppression();
 		// Constructor
-		Yaku(std::string name, HANFUNC hanVal, YAKUFUNC f);
-		Yaku(std::string name, HANFUNC hanVal,
-			std::string yk1, YAKUFUNC f);
-		Yaku(std::string name, HANFUNC hanVal,
-			std::string yk1, std::string yk2, YAKUFUNC f);
-		Yaku(std::string name, HANFUNC hanVal,
-			std::string yk1, std::string yk2, std::string yk3, YAKUFUNC f);
-		Yaku(std::string name, HANFUNC hanVal,
-			std::string yk1, std::string yk2, std::string yk3, std::string yk4, YAKUFUNC f);
-		Yaku(std::string name, HANFUNC hanVal,
-			std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5, YAKUFUNC f);
-		Yaku(std::string name, HANFUNC hanVal,
-			std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
-			std::string yk6, YAKUFUNC f);
-		Yaku(std::string name, HANFUNC hanVal,
-			std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
-			std::string yk6, std::string yk7, YAKUFUNC f);
-		Yaku(std::string name, HANFUNC hanVal,
-			std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
-			std::string yk6, std::string yk7, std::string yk8, YAKUFUNC f);
-		Yaku(std::string name, HANFUNC hanVal,
-			std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
-			std::string yk6, std::string yk7, std::string yk8, std::string yk9, YAKUFUNC f);
-		Yaku(std::string name, HANFUNC hanVal,
-			std::string yk1, std::string yk2, std::string yk3, std::string yk4, std::string yk5,
-			std::string yk6, std::string yk7, std::string yk8, std::string yk9, std::string yk10,
+		Yaku(CodeConv::tstring name, HANFUNC hanVal, YAKUFUNC f);
+		Yaku(CodeConv::tstring name, HANFUNC hanVal,
+			CodeConv::tstring yk1, YAKUFUNC f);
+		Yaku(CodeConv::tstring name, HANFUNC hanVal,
+			CodeConv::tstring yk1, CodeConv::tstring yk2, YAKUFUNC f);
+		Yaku(CodeConv::tstring name, HANFUNC hanVal,
+			CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, YAKUFUNC f);
+		Yaku(CodeConv::tstring name, HANFUNC hanVal,
+			CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, YAKUFUNC f);
+		Yaku(CodeConv::tstring name, HANFUNC hanVal,
+			CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, CodeConv::tstring yk5, YAKUFUNC f);
+		Yaku(CodeConv::tstring name, HANFUNC hanVal,
+			CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, CodeConv::tstring yk5,
+			CodeConv::tstring yk6, YAKUFUNC f);
+		Yaku(CodeConv::tstring name, HANFUNC hanVal,
+			CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, CodeConv::tstring yk5,
+			CodeConv::tstring yk6, CodeConv::tstring yk7, YAKUFUNC f);
+		Yaku(CodeConv::tstring name, HANFUNC hanVal,
+			CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, CodeConv::tstring yk5,
+			CodeConv::tstring yk6, CodeConv::tstring yk7, CodeConv::tstring yk8, YAKUFUNC f);
+		Yaku(CodeConv::tstring name, HANFUNC hanVal,
+			CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, CodeConv::tstring yk5,
+			CodeConv::tstring yk6, CodeConv::tstring yk7, CodeConv::tstring yk8, CodeConv::tstring yk9, YAKUFUNC f);
+		Yaku(CodeConv::tstring name, HANFUNC hanVal,
+			CodeConv::tstring yk1, CodeConv::tstring yk2, CodeConv::tstring yk3, CodeConv::tstring yk4, CodeConv::tstring yk5,
+			CodeConv::tstring yk6, CodeConv::tstring yk7, CodeConv::tstring yk8, CodeConv::tstring yk9, CodeConv::tstring yk10,
 			YAKUFUNC f);
 	};
 
@@ -221,11 +222,11 @@ private:
 		static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result);
 		static void checkPostponedYaku(
 			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result,
-			std::map<std::string, Yaku::YAKU_HAN> &yakuHan, std::set<std::string> &suppression,
-			std::vector<std::string> &yakuOrd);
+			std::map<CodeConv::tstring, Yaku::YAKU_HAN> &yakuHan, std::set<CodeConv::tstring> &suppression,
+			std::vector<CodeConv::tstring> &yakuOrd);
 		static void hanSummation(
 			int& totalHan, int& totalSemiMangan, int& totalBonusHan, int& totalBonusSemiMangan,
-			std::map<std::string, Yaku::YAKU_HAN> &yakuHan, std::vector<std::string> &yakuOrd, YAKUSTAT* const result);
+			std::map<CodeConv::tstring, Yaku::YAKU_HAN> &yakuHan, std::vector<CodeConv::tstring> &yakuOrd, YAKUSTAT* const result);
 	};
 
 	static void doubling(yaku::YAKUSTAT* const yStat);
