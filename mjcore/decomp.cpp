@@ -98,6 +98,9 @@ Data::~Data() {
 	free(DecompressedData); DecompressedData = nullptr;
 }
 
+const char* Data::Description = nullptr;
+const uint8_t Data::expectedDigest[32] = {0,};
+
 const char* file_mentz_dat::Description = "面子構成データベース";
 const uint8_t file_mentz_dat::expectedDigest[32] = {
 	0x2d, 0x10, 0x7e, 0x88, 0x85, 0xad, 0xd7, 0xe0,

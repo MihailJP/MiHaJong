@@ -43,6 +43,12 @@
     <Filter Include="ヘッダー ファイル\reader">
       <UniqueIdentifier>{59fd9a29-e230-4765-93b1-b631d763ed04}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\data">
+      <UniqueIdentifier>{91ee4bd7-caf7-4df1-bd2b-7d2a2775274f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\data">
+      <UniqueIdentifier>{f747bb56-455a-4436-b2eb-7c02e3fc5af2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="shanten.cpp">
@@ -198,6 +204,12 @@
     <ClCompile Include="decomp.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="data\confitem.csv.cpp">
+      <Filter>ソース ファイル\data</Filter>
+    </ClCompile>
+    <ClCompile Include="data\confitem.ini.cpp">
+      <Filter>ソース ファイル\data</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">
@@ -337,6 +349,12 @@
     </ClInclude>
     <ClInclude Include="decomp.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="data\confitem.csv.h">
+      <Filter>ヘッダー ファイル\data</Filter>
+    </ClInclude>
+    <ClInclude Include="data\confitem.ini.h">
+      <Filter>ヘッダー ファイル\data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -108,6 +108,8 @@
     <ClCompile Include="ai\gftbl.cpp" />
     <ClCompile Include="ai\riskchk.cpp" />
     <ClCompile Include="chat.cpp" />
+    <ClCompile Include="data\confitem.csv.cpp" />
+    <ClCompile Include="data\confitem.ini.cpp" />
     <ClCompile Include="decomp.cpp" />
     <ClCompile Include="discard.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -160,6 +162,8 @@
     <ClInclude Include="ai\functbl.h" />
     <ClInclude Include="ai\filesel.h" />
     <ClInclude Include="chat.h" />
+    <ClInclude Include="data\confitem.csv.h" />
+    <ClInclude Include="data\confitem.ini.h" />
     <ClInclude Include="decomp.h" />
     <ClInclude Include="discard.h" />
     <ClInclude Include="dllmain.h" />

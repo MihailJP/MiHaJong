@@ -35,9 +35,19 @@ public:
 /* Compressed file object for mentz.dat */
 class file_mentz_dat : public Data {
 private:
+	static const char* Description;
 	static const int FileID = IDR_LZMA_STREA1;
+	static const uint8_t expectedDigest[32];
 };
 
 }
+
+/* Other compressed resources */
+#define FILEID_CONFITEM_CSV IDR_LZMA_STREA2
+#define FILEID_CONFITEM_INI IDR_LZMA_STREA3
+#define FILEDESC_CONFITEM_CSV "ルール定義ファイル"
+#define FILEDESC_CONFITEM_INI "ルールタグ翻訳ファイル"
+#include "data/confitem.csv.h"
+#include "data/confitem.ini.h"
 
 #endif
