@@ -41,15 +41,15 @@ bool isYaojiu(tileCode code) {
 void lipai(GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	// 理牌する
 
-	std::ostringstream o;
-	o.str(""); o << "理牌を行います。プレイヤー [" << (int)targetPlayer << "]"; debug(o.str());
+	CodeConv::tostringstream o;
+	o.str(_T("")); o << _T("理牌を行います。プレイヤー [") << (int)targetPlayer << _T("]"); debug(o.str());
 
 	/* 手牌データをデバッグログに出力：ビフォー */
-	o.str(""); o << "理牌前の手牌 [";
+	o.str(_T("")); o << _T("理牌前の手牌 [");
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++)
-		o << std::setw(2) << std::setfill('0') << (int)gameStat->Player[targetPlayer].Hand[i].tile
-		<< ((i < (NUM_OF_TILES_IN_HAND - 1)) ? " " : "");
-	o << "]"; trace(o.str());
+		o << std::setw(2) << std::setfill(_T('0')) << (int)gameStat->Player[targetPlayer].Hand[i].tile
+		<< ((i < (NUM_OF_TILES_IN_HAND - 1)) ? _T(" ") : _T(""));
+	o << _T("]"); trace(o.str());
 
 	/* ソートの準備として牌のない枠を処理 */
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
@@ -93,11 +93,11 @@ void lipai(GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	}
 
 	/* 手牌データをデバッグログに出力：アフター */
-	o.str(""); o << "理牌後の手牌 [";
+	o.str(_T("")); o << _T("理牌後の手牌 [");
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++)
-		o << std::setw(2) << std::setfill('0') << (int)gameStat->Player[targetPlayer].Hand[i].tile
-		<< ((i < (NUM_OF_TILES_IN_HAND - 1)) ? " " : "");
-	o << "]"; trace(o.str());
+		o << std::setw(2) << std::setfill(_T('0')) << (int)gameStat->Player[targetPlayer].Hand[i].tile
+		<< ((i < (NUM_OF_TILES_IN_HAND - 1)) ? _T(" ") : _T(""));
+	o << _T("]"); trace(o.str());
 
 	/* 理牌完了！ */
 	return;
@@ -111,7 +111,7 @@ __declspec(dllexport) void lipai(GameTable* const gameStat, int targetPlayer) {
 /* 場に見えてる個数 */
 MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 	// 場に見えている牌の数を数える
-	std::ostringstream o; // エラーメッセージ用
+	CodeConv::tostringstream o; // エラーメッセージ用
 
 	Int8ByTile seenTiles; // 計算する牌
 	memset(&seenTiles, 0, sizeof(seenTiles)); // まずは、初期化
@@ -159,7 +159,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 				seenTiles[gameStat->Player[i].Meld[j].tile] += 4;
 				break;
 			default:
-				RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "副露データに暗順子、暗刻子、または不明な種類の面子が検出されました");
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("副露データに暗順子、暗刻子、または不明な種類の面子が検出されました"));
 			}
 		}
 	}
@@ -237,7 +237,7 @@ MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PLAYER_ID
 			break;
 		default:
 			// 異常データ
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, "副露データに暗順子、暗刻子、または不明な種類の面子が検出されました");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("副露データに暗順子、暗刻子、または不明な種類の面子が検出されました"));
 		}
 	}
 	return count;
@@ -306,7 +306,7 @@ MJCORE TileStatus gettilestatus(
 
 /* 振聴でないかのチェック・待ち牌を数える処理も含む */
 MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
-	trace("振聴かどうか・待ち牌を調べます。");
+	trace(_T("振聴かどうか・待ち牌を調べます。"));
 	Int8ByTile seenTiles = countseentiles(gameStat); // 見えてる牌の数を数える
 	Int8ByTile countTiles = countTilesInHand(gameStat, targetPlayer); // 手の内の牌の数を数える
 	MachihaiInfo machihaiInfo; memset(&machihaiInfo, 0, sizeof(machihaiInfo)); // 初期化
@@ -439,10 +439,10 @@ namespace setdora_tools {
 		for (int i = (RuleData::chkRuleApplied("nagatacho") ? tc % 10 : tc);
 			i <= ((RuleData::chkRuleApplied("nagatacho") && (tc < TILE_SUIT_HONORS)) ? TILE_SUIT_HONORS : tc);
 			i += 10) {
-				std::ostringstream o;
+				CodeConv::tostringstream o;
 				if (Mode) gameStat->DoraFlag.Ura[i]++;	// ドラを設定する
 				else gameStat->DoraFlag.Omote[i]++;	// ドラを設定する
-				o << "牌コード [" << (int)tc << "] をドラにしました。";
+				o << _T("牌コード [") << (int)tc << _T("] をドラにしました。");
 				debug(o.str().c_str());
 				if (Mode) haifu::haifurecuradora((tileCode)i);
 				else haifu::haifurecdora((tileCode)i);
@@ -451,10 +451,10 @@ namespace setdora_tools {
 }
 
 __declspec(dllexport) void setdora(GameTable* const gameStat, int Mode) {
-	std::ostringstream o;
-	o << "ドラの追加 ポインタ [" << gameStat->DoraPointer <<
-		"] 牌コード [" << (int)gameStat->Deck[gameStat->DoraPointer + Mode].tile <<
-		"] モード [" << Mode << "]";
+	CodeConv::tostringstream o;
+	o << _T("ドラの追加 ポインタ [") << gameStat->DoraPointer <<
+		_T("] 牌コード [") << (int)gameStat->Deck[gameStat->DoraPointer + Mode].tile <<
+		_T("] モード [") << Mode << _T("]");
 	debug(o.str().c_str());
 	if (gameStat->Deck[gameStat->DoraPointer + Mode].tile > TILE_SUIT_FLOWERS) {
 		// 花牌がドラ表示牌になったとき
@@ -488,47 +488,47 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 	bool CheckForNumOfTiles(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 		/* ツモった牌が４枚揃ってないなら当然に槓は不可能 */
 		/* 立直後であり送り槓はできないのでツモった牌だけ調べればよい */
-		std::ostringstream o;
+		CodeConv::tostringstream o;
 		Int8ByTile tlCount = countTilesInHand(gameStat, targetPlayer);
 		if (tlCount[gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile] < 4) {
-			o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
+			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
-				"] は、4枚揃っていません。"; debug(o.str());
+				_T("] は、4枚揃っていません。"); debug(o.str());
 			return true;
 		} else {
-			o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
+			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
-				"] は、手牌に合わせて4枚あります。"; debug(o.str());
+				_T("] は、手牌に合わせて4枚あります。"); debug(o.str());
 			return false;
 		}
 	}
 	int CheckForTileClass(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 		/* 字牌に順子はないのでこれ以降のチェックをせずとも槓が可能とわかる */
-		std::ostringstream o;
+		CodeConv::tostringstream o;
 		switch (gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile) {
 		case EastWind: case SouthWind: case WestWind: case NorthWind:
 		case WhiteDragon: case GreenDragon: case RedDragon:
-			o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
+			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
-				"] は字牌です。"; debug(o.str());
+				_T("] は字牌です。"); debug(o.str());
 			return 1;
 		case Spring: case Summer: case Autumn: case Winter:
 		case Plum: case Orchid: case Chrysanthemum: case Bamboo:
 			/* 花牌を槓？　ご冗談を */
-			o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
+			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
-				"] は花牌です。"; debug(o.str());
+				_T("] は花牌です。"); debug(o.str());
 			return 2;
 		default:
-			o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
+			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
-				"] は数牌です。"; debug(o.str());
+				_T("] は数牌です。"); debug(o.str());
 			return 0;
 		}
 	}
 	bool CheckForAtama(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 		/* ツモった牌が雀頭になりうるか調べる */
-		std::ostringstream o;
+		CodeConv::tostringstream o;
 		GameTable tmpGameStat; memcpy(&tmpGameStat, gameStat, sizeof(tmpGameStat));
 
 		// 2枚除去
@@ -555,20 +555,20 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 		*/
 		SHANTEN shanten = ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, ShantenAnalyzer::shantenAll);
 		if (shanten == 1) {
-			o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
+			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
-				"] は、アタマ候補です。"; debug(o.str());
+				_T("] は、アタマ候補です。"); debug(o.str());
 			return true;
 		} else {
-			o.str(""); o << "ツモ牌 [" << std::setw(2) << std::setfill('0') <<
+			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile <<
-				"] は、アタマ候補ではありません。"; debug(o.str());
+				_T("] は、アタマ候補ではありません。"); debug(o.str());
 			return false;
 		}
 	}
 	bool CheckIfMachihaiMatches(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 		/* 待ち牌が一致するかどうか調べる */
-		std::ostringstream o;
+		CodeConv::tostringstream o;
 
 		/* 暗槓する前の待ち牌を調べる */
 		MachihaiInfo machiInfo_Before = chkFuriten(gameStat, targetPlayer);
@@ -595,10 +595,10 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 			if (machiInfo_Before.Machihai[i].MachihaiFlag != machiInfo_After.Machihai[i].MachihaiFlag)
 				machihaiDiffers = true;
 		if (machihaiDiffers) { // 待ち牌が一致しないなら、槓できない
-			debug("槓の前後で待ち牌が一致しません。");
+			debug(_T("槓の前後で待ち牌が一致しません。"));
 			return false;
 		} else { // 条件を満たす暗槓
-			debug("槓の前後で待ち牌が一致しました。");
+			debug(_T("槓の前後で待ち牌が一致しました。"));
 			return true;
 		}
 	}
@@ -616,8 +616,8 @@ MJCORE bool chkAnkanAbility(const GameTable* const gameStat, PLAYER_ID targetPla
 	 * 2b) 待ちが変わってはいけない
 	 */
 
-	std::ostringstream o;
-	o.str(""); o << "暗槓の可否を判定します。プレイヤー [" << (int)targetPlayer << "]"; debug(o.str());
+	CodeConv::tostringstream o;
+	o.str(_T("")); o << _T("暗槓の可否を判定します。プレイヤー [") << (int)targetPlayer << _T("]"); debug(o.str());
 
 	/* ツモった牌が４枚揃ってないなら当然に槓は不可能 */
 	/* 立直後であり送り槓はできないのでツモった牌だけ調べればよい */

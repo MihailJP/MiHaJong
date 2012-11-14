@@ -23,22 +23,22 @@ signed int LargeNum::compare(const LargeNum& cmp) const { // 比較用
 	return ans;
 }
 
-std::string LargeNum::bignumtotext(std::string plusSign, std::string minusSign) const {
+CodeConv::tstring LargeNum::bignumtotext(CodeConv::tstring plusSign, CodeConv::tstring minusSign) const {
 	// 文字列表現に直す
-	static const std::string unitname[] = {
-		"", "万", "億","兆", 
-		"京", "垓", "杼", "穣",
-		"溝", "澗", "正", "載",
-		"極", "恒河沙", "阿僧祇", "那由他",
+	static const CodeConv::tstring unitname[] = {
+		_T(""), _T("万"), _T("億"),_T("兆"), 
+		_T("京"), _T("垓"), _T("杼"), _T("穣"),
+		_T("溝"), _T("澗"), _T("正"), _T("載"),
+		_T("極"), _T("恒河沙"), _T("阿僧祇"), _T("那由他"),
 	};
-	std::ostringstream o;
+	CodeConv::tostringstream o;
 	// 符号
-	if ((LargeNum)*this == fromInt(0, this->firstArg)) return "0";
+	if ((LargeNum)*this == fromInt(0, this->firstArg)) return _T("0");
 	else if ((LargeNum)*this < fromInt(0, this->firstArg)) o << minusSign;
 	else if ((LargeNum)*this > fromInt(0, this->firstArg)) o << plusSign;
 	// 出力
 	if (this->digitGroup[7] / 100000000)
-		o << abs(this->digitGroup[7] / 100000000) << "不可思議";
+		o << abs(this->digitGroup[7] / 100000000) << _T("不可思議");
 	for (int i = 7; i >= 0; i--) {
 		if (this->digitGroup[i] % 100000000 / 10000)
 			o << abs(this->digitGroup[i] % 100000000 / 10000) << unitname[i * 2 + 1];
@@ -128,7 +128,7 @@ const LargeNum LargeNum::operator*(const int32_t multiplier) { // めんどくさいの
 		int64_t tmpdigit = digitGroup[i] * multiplier;
 		if ((i == (DIGIT_GROUPS - 1))
 			&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN))) {
-				Raise(EXCEPTION_MJCORE_OVERFLOW, "オーバーフローしました");
+				Raise(EXCEPTION_MJCORE_OVERFLOW, _T("オーバーフローしました"));
 		}
 		else if (i == (DIGIT_GROUPS - 1)) ans.digitGroup[i] += (int32_t)tmpdigit;
 		else {
@@ -145,7 +145,7 @@ LargeNum& LargeNum::operator*=(const int32_t multiplier) {
 		int64_t tmpdigit = digitGroup[i] * multiplier;
 		if ((i == (DIGIT_GROUPS - 1))
 			&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN))) {
-				Raise(EXCEPTION_MJCORE_OVERFLOW, "オーバーフローしました");
+				Raise(EXCEPTION_MJCORE_OVERFLOW, _T("オーバーフローしました"));
 		}
 		else if (i == (DIGIT_GROUPS - 1)) ans.digitGroup[i] += (int32_t)tmpdigit;
 		else {

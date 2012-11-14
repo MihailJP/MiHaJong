@@ -248,26 +248,26 @@ void SeatShuffler::shuffleSeat () {
 			(i != tmpPlayer) ? 1 : 0;*/
 
 	{
-		std::ostringstream o;
-		o << "ClientNumber [" << (int)ClientNumber << "]";
+		CodeConv::tostringstream o;
+		o << _T("ClientNumber [") << (int)ClientNumber << _T("]");
 		debug(o.str().c_str());
 	}
 	{
-		std::ostringstream o; o << "TmpPosition ";
+		CodeConv::tostringstream o; o << _T("TmpPosition ");
 		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
-			o << (i ? " " : "[") << (int)TmpPosition[i];
-		o << "]"; debug(o.str().c_str());
+			o << (i ? _T(" ") : _T("[")) << (int)TmpPosition[i];
+		o << _T("]"); debug(o.str().c_str());
 	}
 	{
-		std::ostringstream o; o << "Remote? ";
+		CodeConv::tostringstream o; o << _T("Remote? ");
 		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
-			o << (i ? " " : "[") << (int)EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag;
-		o << "]"; debug(o.str().c_str());
+			o << (i ? _T(" ") : _T("[")) << (int)EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag;
+		o << _T("]"); debug(o.str().c_str());
 	}
 	{
-		std::ostringstream o; o << "Name ";
+		CodeConv::tostringstream o; o << _T("Name ");
 		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; i++)
-			o << (i ? " [" : "[") << EnvTable::Instantiate()->PlayerDat[i].PlayerName << "]";
+			o << (i ? _T(" [") : _T("[")) << EnvTable::Instantiate()->PlayerDat[i].PlayerName << _T("]");
 		debug(o.str().c_str());
 	}
 

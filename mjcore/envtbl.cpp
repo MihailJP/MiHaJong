@@ -8,11 +8,11 @@ EnvTable* EnvTable::Instantiate() {
 
 /* HSPからのアクセサ */
 
-__declspec(dllexport) void EnvTable::setPlayerName(void *, int PlayerNum, const char* const NameStr) {
+__declspec(dllexport) void EnvTable::setPlayerName(void *, int PlayerNum, LPCTSTR const NameStr) {
 	Instantiate()->PlayerDat[PlayerNum].PlayerName = NameStr;
 }
-__declspec(dllexport) void EnvTable::getPlayerName(void *, int PlayerNum, char* const NameStr, int bufsize) {
-	strcpy_s(NameStr, bufsize, Instantiate()->PlayerDat[PlayerNum].PlayerName.c_str());
+__declspec(dllexport) void EnvTable::getPlayerName(void *, int PlayerNum, LPTSTR const NameStr, int bufsize) {
+	_tcscpy_s(NameStr, bufsize, Instantiate()->PlayerDat[PlayerNum].PlayerName.c_str());
 }
 
 __declspec(dllexport) void EnvTable::setRemotePlayer(void *, int PlayerNum, int Value) {
@@ -53,7 +53,7 @@ __declspec(dllexport) int EnvTable::getTableColorB(void *) {
 
 __declspec(dllexport) void EnvTable::TableEnvInit(void *) {
 	for (int i = 0; i < PLAYERS; i++) {
-		Instantiate()->PlayerDat[i].PlayerName = "";
+		Instantiate()->PlayerDat[i].PlayerName = _T("");
 		Instantiate()->PlayerDat[i].RemotePlayerFlag = false;
 	}
 	Instantiate()->GameMode = Unavailable;

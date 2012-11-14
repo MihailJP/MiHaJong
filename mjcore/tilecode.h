@@ -87,8 +87,8 @@ template <class T> struct InfoByTile { // ”v‚²‚Æ‚ÉŽw’è‚µ‚½Œ^‚É‚æ‚éî•ñ(ƒeƒ“ƒvƒŒ
 			((tile >= Plum)&&(tile <= Bamboo))) return val[Flower];
 		else {
 #ifdef MJCORE_EXPORTS
-			std::ostringstream o;
-			o << "InfoByTile:“YŽš‚ª”ÍˆÍŠO‚Å‚· (" << (int)tile << ")";
+			CodeConv::tostringstream o;
+			o << _T("InfoByTile:“YŽš‚ª”ÍˆÍŠO‚Å‚· (") << (int)tile << _T(")");
 			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 			return val[NoTile];
@@ -104,8 +104,8 @@ template <class T> struct InfoByTile { // ”v‚²‚Æ‚ÉŽw’è‚µ‚½Œ^‚É‚æ‚éî•ñ(ƒeƒ“ƒvƒŒ
 			((tile >= Plum)&&(tile <= Bamboo))) return val[Flower];
 		else {
 #ifdef MJCORE_EXPORTS
-			std::ostringstream o;
-			o << "InfoByTile:“YŽš‚ª”ÍˆÍŠO‚Å‚· (" << (int)tile << ")";
+			CodeConv::tostringstream o;
+			o << _T("InfoByTile:“YŽš‚ª”ÍˆÍŠO‚Å‚· (") << (int)tile << _T(")");
 			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 			return val[NoTile];

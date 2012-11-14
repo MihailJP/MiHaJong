@@ -16,24 +16,24 @@ namespace chat {
 	class StreamLog {
 	protected:
 		static const int bufsize = 65536;
-		std::ostringstream myChatStream;
+		CodeConv::tostringstream myChatStream;
 		HWND logWindow;
-		std::string chatstr(const std::string& buf);
-		virtual void chatappend(const std::string& buf);
+		CodeConv::tstring chatstr(const CodeConv::tstring& buf);
+		virtual void chatappend(const CodeConv::tstring& buf);
 	public:
 		StreamLog ();
 		virtual ~StreamLog ();
-		virtual std::string getlog ();
-		virtual void sysmsg (const std::string& msg);
-		virtual void sendstr (const std::string& msg);
-		virtual void sendstrx (PLAYER_ID player, const std::string& msg);
+		virtual CodeConv::tstring getlog ();
+		virtual void sysmsg (const CodeConv::tstring& msg);
+		virtual void sendstr (const CodeConv::tstring& msg);
+		virtual void sendstrx (PLAYER_ID player, const CodeConv::tstring& msg);
 		virtual void updateWindow ();
 		void setLogWindow (HWND wndHandle);
 	};
 	class ChatThread : public StreamLog {
 		typedef StreamLog super;
 	private:
-		std::queue<std::string> sendQueue;
+		std::queue<CodeConv::tstring> sendQueue;
 		CRITICAL_SECTION streamLock;
 		CRITICAL_SECTION sendQueueLock;
 		HANDLE myHandle;
@@ -41,7 +41,7 @@ namespace chat {
 		std::string myServerAddr;
 		int myClientNum;
 		static DWORD WINAPI thread_loop (LPVOID param);
-		void chatappend(const std::string& buf);
+		void chatappend(const CodeConv::tstring& buf);
 		void init();
 		void receive();
 		void send();
@@ -49,20 +49,20 @@ namespace chat {
 	public:
 		ChatThread (std::string& server_addr, int clientNum);
 		~ChatThread ();
-		std::string getlog ();
-		void sysmsg (const std::string& msg);
-		void sendstr (const std::string& msg);
-		void sendstrx (PLAYER_ID player, const std::string& msg);
+		CodeConv::tstring getlog ();
+		void sysmsg (const CodeConv::tstring& msg);
+		void sendstr (const CodeConv::tstring& msg);
+		void sendstrx (PLAYER_ID player, const CodeConv::tstring& msg);
 		void updateWindow ();
 	};
 	
 	extern StreamLog* chatobj;
 
 	__declspec(dllexport) void initchat (const char* const server_addr, int clientNum);
-	__declspec(dllexport) void appendchat (const char* const chatstr);
-	__declspec(dllexport) void sendchat (const char* const chatstr);
+	__declspec(dllexport) void appendchat (LPCTSTR const chatstr);
+	__declspec(dllexport) void sendchat (LPCTSTR const chatstr);
 #ifdef MJCORE_EXPORTS
-	void sendchatx (int player, const char* const chatstr);
+	void sendchatx (int player, LPCTSTR const chatstr);
 #endif
 	__declspec(dllexport) void closechat ();
 

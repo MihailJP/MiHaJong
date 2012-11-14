@@ -215,7 +215,7 @@ extern "C" {
 			gameStat->Player[Player].Hand[Index].red = (doraCol)value;
 			break;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			break;
 		}
 		return;
@@ -228,7 +228,7 @@ extern "C" {
 		case 1:
 			return (int)gameStat->Player[Player].Hand[Index].red;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			return 0;
 		}
 	}
@@ -249,7 +249,7 @@ extern "C" {
 			gameStat->Player[Player].Discard[Index].isDiscardThrough = (bool)value;
 			break;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			break;
 		}
 		return;
@@ -265,7 +265,7 @@ extern "C" {
 		case 2:
 			return gameStat->Player[Player].Discard[Index].isDiscardThrough ? 1 : 0;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			return 0;
 		}
 	}
@@ -302,7 +302,7 @@ extern "C" {
 			}
 			break;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			break;
 		}
 		return;
@@ -320,7 +320,7 @@ extern "C" {
 					tmp |= (1 << i);
 			return tmp;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			return 0;
 		}
 	}
@@ -346,7 +346,7 @@ extern "C" {
 					gameStat->Player[Player].Meld[Index].red[i % 4] = (doraCol)(i / 4 + 1);
 			break;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			break;
 		}
 		return;
@@ -421,14 +421,14 @@ extern "C" {
 				gameStat->Player[Player].RichiFlag.DoubleFlag = true;
 				break;
 			default:
-				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "正しくない値が指定されました");
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("正しくない値が指定されました"));
 			}
 			break;
 		case 1:
 			gameStat->Player[Player].RichiFlag.OpenFlag = value;
 			break;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "正しくないページが指定されました");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("正しくないページが指定されました"));
 		}
 	}
 	__declspec(dllexport) int getRichiFlag(const GameTable* const gameStat, int Page, int Player) {
@@ -443,7 +443,7 @@ extern "C" {
 		case 1:
 			return gameStat->Player[Player].RichiFlag.OpenFlag ? 1 : 0;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "正しくないページが指定されました");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("正しくないページが指定されました"));
 			return 0;
 		}
 	}
@@ -533,7 +533,7 @@ extern "C" {
 			case 1: gameStat->KangFlag.chainFlag = (uint8_t)value; break;
 			case 2: gameStat->KangFlag.topFlag = (uint8_t)value; break;
 			case 3: gameStat->KangFlag.chankanFlag = (uint8_t)value; break;
-			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います")); break;
 		}
 		return;
 	}
@@ -544,7 +544,7 @@ extern "C" {
 			case 1: gameStat->KangFlag.chainFlag++; break;
 			case 2: gameStat->KangFlag.topFlag++; break;
 			case 3: gameStat->KangFlag.chankanFlag++; break;
-			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います")); break;
 		}
 		return;
 	}
@@ -556,7 +556,7 @@ extern "C" {
 			case 2: return (int)gameStat->KangFlag.topFlag;
 			case 3: return (int)gameStat->KangFlag.chankanFlag;
 			default:
-				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 				return 0;
 		}
 	}
@@ -628,7 +628,7 @@ extern "C" {
 		switch (Page) {
 			case 0: gameStat->PaoFlag[Yaku].paoPlayer = (PLAYER_ID)value; break;
 			case 1: gameStat->PaoFlag[Yaku].agariPlayer = (PLAYER_ID)value; break;
-			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います")); break;
 		}
 		return;
 	}
@@ -638,7 +638,7 @@ extern "C" {
 			case 0: return (int)gameStat->PaoFlag[Yaku].paoPlayer;
 			case 1: return (int)gameStat->PaoFlag[Yaku].agariPlayer;
 			default:
-				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 				return 0;
 		}
 	}
@@ -663,7 +663,7 @@ extern "C" {
 			case 2: return gameStat->Dice[0].Direction ? 1 : 0; break;
 			case 3: return gameStat->Dice[1].Direction ? 1 : 0; break;
 			default:
-				Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, "正しくない値が指定されました");
+				Raise(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("正しくない値が指定されました"));
 				return 0;
 		}
 	}
@@ -692,7 +692,7 @@ extern "C" {
 			gameStat->Deck[Index].red = (doraCol)value;
 			break;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			break;
 		}
 		return;
@@ -705,7 +705,7 @@ extern "C" {
 		case 1:
 			return (int)gameStat->Deck[Index].red;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			return 0;
 		}
 	}
@@ -769,7 +769,7 @@ extern "C" {
 		switch (Page) {
 			case 0: gameStat->PreviousMeld.Discard = (tileCode) value; break;
 			case 1: gameStat->PreviousMeld.Stepped = (tileCode) value; break;
-			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います")); break;
 		}
 		return;
 	}
@@ -779,7 +779,7 @@ extern "C" {
 			case 0: return (int)gameStat->PreviousMeld.Discard;
 			case 1: return (int)gameStat->PreviousMeld.Stepped;
 			default:
-				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 				return 0;
 		}
 	}
@@ -803,7 +803,7 @@ extern "C" {
 		switch (Page) {
 			case 0: gameStat->DoraFlag.Omote[Tile]++; break;
 			case 1: gameStat->DoraFlag.Ura[Tile]++; break;
-			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います")); break;
 		}
 		return;
 	}
@@ -813,7 +813,7 @@ extern "C" {
 			case 0: return (int)gameStat->DoraFlag.Omote[Tile];
 			case 1: return (int)gameStat->DoraFlag.Ura[Tile];
 			default:
-				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 				return 0;
 		}
 	}
@@ -830,7 +830,7 @@ extern "C" {
 			gameStat->CurrentDiscard.red = (doraCol)value;
 			break;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			break;
 		}
 		return;
@@ -843,7 +843,7 @@ extern "C" {
 		case 1:
 			return (int)gameStat->CurrentDiscard.red;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 			return 0;
 		}
 	}
@@ -869,7 +869,7 @@ extern "C" {
 			case 1: gameStat->Player[Player].DeclarationFlag.Pon = value; break;
 			case 2: gameStat->Player[Player].DeclarationFlag.Chi = (int8_t)value; break;
 			case 3: gameStat->Player[Player].DeclarationFlag.Kan = value; break;
-			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います")); break;
 		}
 		return;
 	}
@@ -891,7 +891,7 @@ extern "C" {
 			case 2: return (int)gameStat->Player[Player].DeclarationFlag.Chi;
 			case 3: return gameStat->Player[Player].DeclarationFlag.Kan ? 1 : 0;
 			default:
-				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 				return 0;
 		}
 	}
@@ -905,7 +905,7 @@ extern "C" {
 			case 1: gameStat->CurrentPlayer.Passive = (PLAYER_ID)value; break;
 			case 2: gameStat->CurrentPlayer.Agari = (PLAYER_ID)value; break;
 			case 3: gameStat->CurrentPlayer.Furikomi = (PLAYER_ID)value; break;
-			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います"); break;
+			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います")); break;
 		}
 		return;
 	}
@@ -917,7 +917,7 @@ extern "C" {
 			case 2: return (int)gameStat->CurrentPlayer.Agari;
 			case 3: return (int)gameStat->CurrentPlayer.Furikomi;
 			default:
-				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "ページが違います");
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います"));
 				return 0;
 		}
 	}
@@ -975,7 +975,7 @@ extern "C" {
 				gameStat->RinshanPointer = 139;
 			else if (RuleData::chkRule("flower_tiles", "8tiles")) gameStat->RinshanPointer = 143;
 			else {
-				error("flower_tiles異常。花牌無しルールとみなして処理します。");
+				error(_T("flower_tiles異常。花牌無しルールとみなして処理します。"));
 				gameStat->RinshanPointer = 135; // 設定異常時のフォールバック
 			}
 		}
@@ -1068,7 +1068,7 @@ extern "C" {
 			RuleData::chkRule("game_length", "east_west_game"))
 			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 10 : 11;
 		else {
-			error("game_length異常値。半荘戦とみなします。");
+			error(_T("game_length異常値。半荘戦とみなします。"));
 			gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 6 : 7;
 		}
 		gameStat->GameRound = gameStat->Honba = gameStat->PlayerID =

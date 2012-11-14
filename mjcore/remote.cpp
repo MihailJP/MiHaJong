@@ -7,14 +7,14 @@ RemoteActionPtr rDahaiProc = {nullptr};
 void proc_abrupt_disconnect(GameTable* const gameStat, PLAYER_ID player) {
 	{
 		gameStat->Player[player].ConnectionLost = true;
-		std::ostringstream o; o << "プレイヤー [" << static_cast<int>(player) << "] の回線切断を検知しました。";
+		CodeConv::tostringstream o; o << _T("プレイヤー [") << static_cast<int>(player) << _T("] の回線切断を検知しました。");
 		warn(o.str().c_str());
 	}
 	{
-		std::ostringstream o; o << "*** " << EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
-			"(" << windName(playerwind(gameStat, player, gameStat->GameRound)) << ") の接続が切れました。";
+		CodeConv::tostringstream o; o << _T("*** ") << EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
+			_T("(") << windName(playerwind(gameStat, player, gameStat->GameRound)) << _T(") の接続が切れました。");
 		chat::appendchat(o.str().c_str());
-		chat::appendchat("*** この局はツモ切り、次局からCPUが代走します。");
+		chat::appendchat(_T("*** この局はツモ切り、次局からCPUが代走します。"));
 	}
 }
 RemoteDahai::RemoteDahai (GameTable* const gStat) {
@@ -66,13 +66,13 @@ DWORD WINAPI RemoteDahai::thread () {
 				(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == i + 2) ||
 				((!chkGameType(gameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == i + 2)))) {
 					int stat = mihajong_socket::putc(i + 1, ReceivedMsg);
-					std::ostringstream o;
+					CodeConv::tostringstream o;
 					if (stat) {
-						o << "データの送信に失敗しました。クライアント [" << (i + 1) << "] ステータスコード [" << stat << "]";
+						o << _T("データの送信に失敗しました。クライアント [") << (i + 1) << _T("] ステータスコード [") << stat << _T("]");
 						error(o.str().c_str());
 					} else {
-						o << "クライアント [" << (i + 1) << "] にデータを送信 [0x" <<
-							std::hex << std::setw(2) << std::setfill('0') << ReceivedMsg << "]";
+						o << _T("クライアント [") << (i + 1) << _T("] にデータを送信 [0x") <<
+							std::hex << std::setw(2) << std::setfill(_T('0')) << ReceivedMsg << _T("]");
 						trace(o.str().c_str());
 					}
 			}

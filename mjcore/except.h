@@ -9,6 +9,7 @@
 #include "logging.h"
 #endif
 #include "mjexport.h"
+#include "strcode.h"
 
 #define STRINGBUF 1024u
 #define ADDRBUF 256u
@@ -29,7 +30,7 @@ void StackTraceToArray();
 extern ErrorInfo errorInfo;
 extern const ULONG_PTR errorInfoPtr[1];
 #define setStruct(message) {\
-	strcpy_s(errorInfo.msg, STRINGBUF, message); \
+	strcpy_s(errorInfo.msg, STRINGBUF, CodeConv::toANSI(message).c_str()); \
 	strcpy_s(errorInfo.file, STRINGBUF, __FILE__); errorInfo.line = __LINE__; \
 	strcpy_s(errorInfo.func, STRINGBUF, __FUNCTION__); \
 	StackTraceToArray();}

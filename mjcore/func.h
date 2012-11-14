@@ -9,6 +9,7 @@
 #include <Windows.h>
 #include <Shlwapi.h>
 #include <direct.h>
+#include "strcode.h"
 #endif
 #include "mjexport.h"
 #include "gametbl.h"
@@ -60,14 +61,14 @@ __declspec(dllexport) int getPaoPlayer(const GameTable* const gameStat, int agar
 
 __declspec(dllexport) int RonPlayers(const GameTable* const gameStat);
 
-std::string inline windName(seatAbsolute wind);
-__declspec(dllexport) void windName(char* str, int bufsz, int wind);
+CodeConv::tstring inline windName(seatAbsolute wind);
+__declspec(dllexport) void windName(LPTSTR str, int bufsz, int wind);
 
-std::string inline roundName(int roundNum, const GameTable* const gameStat);
-__declspec(dllexport) void roundName(char* str, int bufsz, int roundNum);
+CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat);
+__declspec(dllexport) void roundName(LPTSTR str, int bufsz, int roundNum);
 
-std::string inline TileName(tileCode tile);
-__declspec(dllexport) void TileName(char* str, int bufsz, int tile);
+CodeConv::tstring inline TileName(tileCode tile);
+__declspec(dllexport) void TileName(LPTSTR str, int bufsz, int tile);
 
 tileCode Wind2Tile(uint8_t wind);
 
@@ -77,7 +78,7 @@ __declspec(dllexport) int BasePointHSP();
 bool isAboveBase(const GameTable* const gameStat, PLAYER_ID player);
 __declspec(dllexport) int isAboveBase(const GameTable* const gameStat, int player);
 
-std::string intstr(int val);
+CodeConv::tstring intstr(int val);
 
 namespace confpath {
 	bool isVista();

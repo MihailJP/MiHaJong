@@ -17,7 +17,7 @@ EXPORT_STRUCT LargeNum { // ±21不可思議まで表現可能な数のクラス
 	unsigned int firstArg; // 互換用。
 	void fix();
 	signed int compare(const LargeNum& cmp) const;
-	std::string bignumtotext(std::string plusSign, std::string minusSign) const;
+	CodeConv::tstring bignumtotext(CodeConv::tstring plusSign, CodeConv::tstring minusSign) const;
 	double bignumtodbl() const;
 	static LargeNum fromInt(int val);
 	static LargeNum fromInt(int val, unsigned int fArg);

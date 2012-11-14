@@ -36,20 +36,20 @@ enum EndType : int { // 局の終了理由
 class haifu {
 private:
 	/* 雀牌の名前データ */
-	static const std::string tilecodelabel, HTtilecodelabel1, HTtilecodelabel2;
+	static const CodeConv::tstring tilecodelabel, HTtilecodelabel1, HTtilecodelabel2;
 
 	static InfoByPlayer<LargeNum> origPoint;
-	static std::ostringstream haifuBuffer, HThaifuBuffer;
+	static CodeConv::tostringstream haifuBuffer, HThaifuBuffer;
 	static bool haifukanflag;
 
 	class PlayerStream {
 	public:
-		std::ostringstream haipai, tsumo, tsumolabel, sutehai, sutehailabel, final;
+		CodeConv::tostringstream haipai, tsumo, tsumolabel, sutehai, sutehailabel, final;
 	};
 	class HaifuStreams {
 	public:
 		InfoByPlayer<PlayerStream> streamDat;
-		std::ostringstream dora, uraDora, aliceDora, aliceDoraMax, resultDesc;
+		CodeConv::tostringstream dora, uraDora, aliceDora, aliceDoraMax, resultDesc;
 	};
 	static HaifuStreams haifuP, HThaifuP;
 
@@ -61,16 +61,16 @@ private:
 			HaifuStreams* haifuP, HaifuStreams* HThaifuP,
 			PLAYER_ID PassivePlayer, PLAYER_ID ActivePlayer
 			);
-		static std::string haifudoraClass(doraCol Akadora);
-		static void recordDoraStream(std::ostringstream* const p, std::ostringstream* const h, tileCode tmpDora);
-		static void recordTile_Inline(std::ostringstream* const p, std::ostringstream* const h, TILE tlCode, bool rotate);
-		static void recordTile_Inline(std::ostringstream* const p, std::ostringstream* const h, TILE tlCode, doraCol kakanCol);
-		static void recordTile_Table(std::ostringstream* const p, std::ostringstream* const h, TILE tlCode);
-		static void recordBlank_Table(std::ostringstream* const p, std::ostringstream* const h);
+		static CodeConv::tstring haifudoraClass(doraCol Akadora);
+		static void recordDoraStream(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, tileCode tmpDora);
+		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TILE tlCode, bool rotate);
+		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TILE tlCode, doraCol kakanCol);
+		static void recordTile_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TILE tlCode);
+		static void recordBlank_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h);
 		static void haifuwritetsumohai(
 			HaifuStreams* haifuP, HaifuStreams* HThaifuP,
 			PLAYER_ID ActivePlayer, TILE tlCode,
-			std::string PText, std::string HTText
+			CodeConv::tstring PText, CodeConv::tstring HTText
 			);
 		static void haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, PLAYER_ID PassivePlayer);
 
@@ -80,8 +80,8 @@ private:
 				const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 				HaifuStreams* haifuP, HaifuStreams* HThaifuP
 				);
-			static void inline recordChanKan(const GameTable* const gameStat, std::string pTxt, std::string hTxt);
-			static void inline recordKan(const GameTable* const gameStat, std::string pTxt, std::string hTxt);
+			static void inline recordChanKan(const GameTable* const gameStat, CodeConv::tstring pTxt, CodeConv::tstring hTxt);
+			static void inline recordKan(const GameTable* const gameStat, CodeConv::tstring pTxt, CodeConv::tstring hTxt);
 		};
 
 		class hfwriter {
@@ -106,7 +106,7 @@ private:
 		public:
 			static void hfWriteHead(const GameTable* const gameStat,
 				int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
-				std::string ResultDesc, EndType RoundEndType);
+				CodeConv::tstring ResultDesc, EndType RoundEndType);
 
 			static void hfWriteFinalForms(const GameTable* const gameStat, int OrigTurn, EndType RoundEndType);
 			static void hfWriteBottom();
@@ -158,7 +158,7 @@ public:
 	static __declspec(dllexport) void haifuwritebuffer(
 		const GameTable* const gameStat, void *,
 		int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
-		const char* ResultDesc, EndType RoundEndType);
+		LPCTSTR ResultDesc, EndType RoundEndType);
 
 	static void haifusave(const GameTable* const gameStat);
 	static __declspec(dllexport) void haifusave();

@@ -1,20 +1,21 @@
 #ifndef STRCODE_H
 #define STRCODE_H
 
+#include <Windows.h>
 #include <tchar.h>
 #include <string>
 #include <sstream>
 
 namespace CodeConv {
 
-inline std::wstring NarrowToWide(UINT CodePage, const std::string& str) {
+inline std::wstring NarrowToWide(unsigned int CodePage, const std::string& str) {
 	int bufsize = MultiByteToWideChar(CodePage, 0, str.c_str(), -1, nullptr, 0);
 	wchar_t* buf = new wchar_t[bufsize];
 	MultiByteToWideChar(CodePage, 0, str.c_str(), -1, buf, bufsize);
 	std::wstring ans(buf); delete[] buf;
 	return ans;
 }
-inline std::string WideToNarrow(UINT CodePage, const std::wstring& str) {
+inline std::string WideToNarrow(unsigned int CodePage, const std::wstring& str) {
 	int bufsize = WideCharToMultiByte(CodePage, 0, str.c_str(), -1, nullptr, 0, nullptr, nullptr);
 	char* buf = new char[bufsize];
 	WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, buf, bufsize, nullptr, nullptr);

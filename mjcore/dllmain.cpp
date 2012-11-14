@@ -5,10 +5,10 @@ ErrorInfo errorInfo;
 const ULONG_PTR errorInfoPtr[1] = {(ULONG_PTR)(&errorInfo)};
 
 void translateException(unsigned int code, _EXCEPTION_POINTERS* ep) {
-	std::ostringstream lmsg;
-	lmsg << "構造化例外 " <<
-	std::hex << std::setw(8) << std::setfill('0') << ep->ExceptionRecord->ExceptionCode <<
-	" をC++例外に変換します。";
+	CodeConv::tostringstream lmsg;
+	lmsg << _T("構造化例外 ") <<
+	std::hex << std::setw(8) << std::setfill(_T('0')) << ep->ExceptionRecord->ExceptionCode <<
+	_T(" をC++例外に変換します。");
 	info(lmsg.str().c_str());
 
 	CONTEXT context; memcpy(&context, ep->ContextRecord, sizeof(CONTEXT));
@@ -32,7 +32,7 @@ void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
 #ifdef _DEBUG
 #ifdef _M_IX86
 	/* スタックトレース(I386専用です) */
-	std::ostringstream lmsg;
+	CodeConv::tostringstream lmsg;
 	if (addrList != nullptr) memset(addrList, 0, addrListSize);
 
 	HANDLE hProcess = GetCurrentProcess();
@@ -64,12 +64,12 @@ void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
 			if (i >= (addrListSize / sizeof(int))) break;
 		} else {
 			if (SymGetSymFromAddr(hProcess, stackFrame.AddrPC.Offset, &disp, pSymbol))
-				lmsg << std::hex << std::setw(8) << std::setfill('0') << stackFrame.AddrPC.Offset <<
-				" " << pSymbol->Name << "() + " <<
-				std::setfill('0') << disp;
-			else lmsg << std::hex << std::setw(8) << std::setfill('0') << stackFrame.AddrPC.Offset <<
-				" Unknown";
-			debug(lmsg.str().c_str()); lmsg.str("");
+				lmsg << std::hex << std::setw(8) << std::setfill(_T('0')) << stackFrame.AddrPC.Offset <<
+				_T(" ") << pSymbol->Name << _T("() + ") <<
+				std::setfill(_T('0')) << disp;
+			else lmsg << std::hex << std::setw(8) << std::setfill(_T('0')) << stackFrame.AddrPC.Offset <<
+				_T(" Unknown");
+			debug(lmsg.str().c_str()); lmsg.str(_T(""));
 		}
 	}
 	
@@ -80,14 +80,14 @@ void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
 }
 
 LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
-	std::ostringstream dmsg, lmsg;
+	CodeConv::tostringstream dmsg, lmsg;
 	PIMAGEHLP_SYMBOL pSymbol; DWORD disp;
 	ErrorInfo *errinf = nullptr;
 
-	lmsg << "ハンドルされていない例外 " <<
-	std::hex << std::setw(8) << std::setfill('0') << ex->ExceptionRecord->ExceptionCode <<
-	" が発生したため、強制終了されます。";
-	fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str("");
+	lmsg << _T("ハンドルされていない例外 ") <<
+	std::hex << std::setw(8) << std::setfill(_T('0')) << ex->ExceptionRecord->ExceptionCode <<
+	_T(" が発生したため、強制終了されます。");
+	fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str(_T(""));
 
 	CONTEXT context; memcpy(&context, ex->ContextRecord, sizeof(CONTEXT));
 	switch (ex->ExceptionRecord->ExceptionCode) {
@@ -98,13 +98,13 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 	case EXCEPTION_MJCORE_DECOMPRESSION_FAILURE:
 	case EXCEPTION_MJCORE_HASH_MISMATCH:
 		errinf = (ErrorInfo *)(ex->ExceptionRecord->ExceptionInformation[0]);
-		lmsg << ">>> " << errinf->msg;
-		fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str("");
+		lmsg << _T(">>> ") << errinf->msg;
+		fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str(_T(""));
 #ifdef _DEBUG
-		lmsg << ">>> ファイル: " << errinf->file <<
-		" 行: " << errinf->line <<
-		" 関数名: " << errinf->func;
-		fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str("");
+		lmsg << _T(">>> ファイル: ") << errinf->file <<
+		_T(" 行: ") << errinf->line <<
+		_T(" 関数名: ") << errinf->func;
+		fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str(_T(""));
 
 		pSymbol = (PIMAGEHLP_SYMBOL)GlobalAlloc(GMEM_FIXED, 16384);
 		pSymbol->SizeOfStruct = 16384; pSymbol->MaxNameLength = 16384 - sizeof(IMAGEHLP_SYMBOL);
@@ -113,12 +113,12 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 			if (i >= ADDRBUF) break;
 			if (errinf->traceBack[i] == 0) break;
 			if (SymGetSymFromAddr(GetCurrentProcess(), errinf->traceBack[i], &disp, pSymbol))
-				lmsg << std::hex << std::setw(8) << std::setfill('0') << errinf->traceBack[i] <<
-				" " << pSymbol->Name << "() + " <<
-				std::setfill('0') << disp;
-			else lmsg << std::hex << std::setw(8) << std::setfill('0') << errinf->traceBack[i] <<
-				" Unknown";
-			debug(lmsg.str().c_str()); lmsg.str("");
+				lmsg << std::hex << std::setw(8) << std::setfill(_T('0')) << errinf->traceBack[i] <<
+				_T(" ") << pSymbol->Name << _T("() + ") <<
+				std::setfill(_T('0')) << disp;
+			else lmsg << std::hex << std::setw(8) << std::setfill(_T('0')) << errinf->traceBack[i] <<
+				_T(" Unknown");
+			debug(lmsg.str().c_str()); lmsg.str(_T(""));
 		}
 		SymCleanup(GetCurrentProcess());
 		GlobalFree(pSymbol);
@@ -136,18 +136,18 @@ void MJCore_Terminate_Handler() {
 	try {throw;}
 	catch (std::exception& e) { // 例外クラスのインスタンスだった場合
 		const type_info& exceptionType = typeid(e);
-		std::ostringstream dmsg, lmsg;
-		dmsg << "ハンドルされない例外 " << exceptionType.name() <<
-			" が発生したため強制終了されます。" << std::endl <<
+		CodeConv::tostringstream dmsg, lmsg;
+		dmsg << _T("ハンドルされない例外 ") << exceptionType.name() <<
+			_T(" が発生したため強制終了されます。") << std::endl <<
 			e.what();
-		lmsg << "ハンドルされない例外 " << exceptionType.name() <<
-			" が発生したため強制終了されます：" <<
+		lmsg << _T("ハンドルされない例外 ") << exceptionType.name() <<
+			_T(" が発生したため強制終了されます：") <<
 			e.what();
 		fatal(lmsg.str());
 		/* スタックトレースとかの拡張はまた今度書く */
 	}
 	catch (...) { // それ以外だった場合
-		fatal("ハンドルされない例外が発生したため強制終了されます。追加の情報はありません。");
+		fatal(_T("ハンドルされない例外が発生したため強制終了されます。追加の情報はありません。"));
 	}
 	abort();
 }

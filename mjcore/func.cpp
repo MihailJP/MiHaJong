@@ -126,111 +126,111 @@ __declspec(dllexport) int RonPlayers(const GameTable* const gameStat) {
 }
 
 /* u“‰Ζvu“μ‰ΖvuΌ‰Ζvu–k‰Ζv‚Μ•¶—ρ‚π•Τ‚· */
-std::string inline windName(seatAbsolute wind) {
+CodeConv::tstring inline windName(seatAbsolute wind) {
 	switch (wind) {
-		case sEast: return std::string("“‰Ζ");
-		case sSouth: return std::string("“μ‰Ζ");
-		case sWest: return std::string("Ό‰Ζ");
-		case sNorth: return std::string("–k‰Ζ");
+		case sEast: return CodeConv::tstring(_T("“‰Ζ"));
+		case sSouth: return CodeConv::tstring(_T("“μ‰Ζ"));
+		case sWest: return CodeConv::tstring(_T("Ό‰Ζ"));
+		case sNorth: return CodeConv::tstring(_T("–k‰Ζ"));
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "Ων‚Θψ”‚Ε‚·");
-			return std::string("????"); break;
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("Ων‚Θψ”‚Ε‚·"));
+			return CodeConv::tstring(_T("????")); break;
 	}
 }
-__declspec(dllexport) void windName(char* str, int bufsz, int wind) {
-	strcpy_s(str, bufsz, windName((seatAbsolute)wind).c_str());
+__declspec(dllexport) void windName(LPTSTR str, int bufsz, int wind) {
+	_tcscpy_s(str, bufsz, windName((seatAbsolute)wind).c_str());
 }
 
 /* u“›‹Ηv‚Θ‚Η‚Μ•¶—ρ‚π•Τ‚· */
-std::string inline roundName(int roundNum, const GameTable* const gameStat) {
-	std::ostringstream roundNameTxt; roundNameTxt.str("");
+CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat) {
+	CodeConv::tostringstream roundNameTxt; roundNameTxt.str(_T(""));
 	switch (roundNum / PLAYERS) {
-		case 0: roundNameTxt << "“"; break;
-		case 1: roundNameTxt << "“μ"; break;
-		case 2: roundNameTxt << "Ό"; break;
-		case 3: roundNameTxt << "–k"; break;
-		case 4: roundNameTxt << "”’"; break;
-		case 5: roundNameTxt << "”­"; break;
-		case 6: roundNameTxt << "’†"; break;
+		case 0: roundNameTxt << _T("“"); break;
+		case 1: roundNameTxt << _T("“μ"); break;
+		case 2: roundNameTxt << _T("Ό"); break;
+		case 3: roundNameTxt << _T("–k"); break;
+		case 4: roundNameTxt << _T("”’"); break;
+		case 5: roundNameTxt << _T("”­"); break;
+		case 6: roundNameTxt << _T("’†"); break;
 		default: 
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "Ων‚Θψ”‚Ε‚·Bκ•—‚π‰πΝ‚Ε‚«‚ά‚Ή‚ρB");
-			roundNameTxt << "??";
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("Ων‚Θψ”‚Ε‚·Bκ•—‚π‰πΝ‚Ε‚«‚ά‚Ή‚ρB"));
+			roundNameTxt << _T("??");
 	}
 	if (RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game")) {
 		switch (int k = (gameStat->LoopRound * ACTUAL_PLAYERS + roundNum % PLAYERS)) {
-			case 0: roundNameTxt << "κ‹Η"; break;
-			case 1: roundNameTxt << "“ρ‹Η"; break;
-			case 2: roundNameTxt << "O‹Η"; break;
-			case 3: roundNameTxt << "l‹Η"; break;
-			case 4: roundNameTxt << "ά‹Η"; break;
-			case 5: roundNameTxt << "Z‹Η"; break;
-			case 6: roundNameTxt << "µ‹Η"; break;
-			case 7: roundNameTxt << "”ª‹Η"; break;
-			case 8: roundNameTxt << "‹γ‹Η"; break;
-			case 9: roundNameTxt << "\‹Η"; break;
-			default: roundNameTxt << (k+1) << "‹Η"; break;
+			case 0: roundNameTxt << _T("κ‹Η"); break;
+			case 1: roundNameTxt << _T("“ρ‹Η"); break;
+			case 2: roundNameTxt << _T("O‹Η"); break;
+			case 3: roundNameTxt << _T("l‹Η"); break;
+			case 4: roundNameTxt << _T("ά‹Η"); break;
+			case 5: roundNameTxt << _T("Z‹Η"); break;
+			case 6: roundNameTxt << _T("µ‹Η"); break;
+			case 7: roundNameTxt << _T("”ª‹Η"); break;
+			case 8: roundNameTxt << _T("‹γ‹Η"); break;
+			case 9: roundNameTxt << _T("\‹Η"); break;
+			default: roundNameTxt << (k+1) << _T("‹Η"); break;
 		}
 	} else {
 		switch (roundNum % PLAYERS) {
-			case 0: roundNameTxt << "κ‹Η"; break;
-			case 1: roundNameTxt << "“ρ‹Η"; break;
-			case 2: roundNameTxt << "O‹Η"; break;
-			case 3: roundNameTxt << "l‹Η"; break;
+			case 0: roundNameTxt << _T("κ‹Η"); break;
+			case 1: roundNameTxt << _T("“ρ‹Η"); break;
+			case 2: roundNameTxt << _T("O‹Η"); break;
+			case 3: roundNameTxt << _T("l‹Η"); break;
 			default:
-				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "Ων‚Θψ”‚Ε‚·B“―κκ‚Μ5‹Η–ΪΘ~‚Ε‚·B");
-				roundNameTxt << "??‹Η"; break;
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("Ων‚Θψ”‚Ε‚·B“―κκ‚Μ5‹Η–ΪΘ~‚Ε‚·B"));
+				roundNameTxt << _T("??‹Η"); break;
 		}
 	}
-	return std::string(roundNameTxt.str());
+	return CodeConv::tstring(roundNameTxt.str());
 }
-__declspec(dllexport) void roundName(char* str, int bufsz, int roundNum) {
-	strcpy_s(str, bufsz, roundName(roundNum, &GameStat).c_str());
+__declspec(dllexport) void roundName(LPTSTR str, int bufsz, int roundNum) {
+	_tcscpy_s(str, bufsz, roundName(roundNum, &GameStat).c_str());
 }
 
 /* ”v‚Μ–Ό‘O‚Μ•¶—ρ‚π•Τ‚· */
-std::string inline TileName(tileCode tile) {
+CodeConv::tstring inline TileName(tileCode tile) {
 	switch (tile) {
-		case CharacterOne:   return std::string("κδέ");
-		case CharacterTwo:   return std::string("“ρδέ");
-		case CharacterThree: return std::string("Oδέ");
-		case CharacterFour:  return std::string("lδέ");
-		case CharacterFive:  return std::string("άδέ");
-		case CharacterSix:   return std::string("Zδέ");
-		case CharacterSeven: return std::string("µδέ");
-		case CharacterEight: return std::string("”ªδέ");
-		case CharacterNine:  return std::string("‹γδέ");
-		case CircleOne:      return std::string("κ“›");
-		case CircleTwo:      return std::string("“ρ“›");
-		case CircleThree:    return std::string("O“›");
-		case CircleFour:     return std::string("l“›");
-		case CircleFive:     return std::string("ά“›");
-		case CircleSix:      return std::string("Z“›");
-		case CircleSeven:    return std::string("µ“›");
-		case CircleEight:    return std::string("”ª“›");
-		case CircleNine:     return std::string("‹γ“›");
-		case BambooOne:      return std::string("κυ");
-		case BambooTwo:      return std::string("“ρυ");
-		case BambooThree:    return std::string("Oυ");
-		case BambooFour:     return std::string("lυ");
-		case BambooFive:     return std::string("άυ");
-		case BambooSix:      return std::string("Zυ");
-		case BambooSeven:    return std::string("µυ");
-		case BambooEight:    return std::string("”ªυ");
-		case BambooNine:     return std::string("‹γυ");
-		case EastWind:       return std::string("“");
-		case SouthWind:      return std::string("“μ");
-		case WestWind:       return std::string("Ό");
-		case NorthWind:      return std::string("–k");
-		case WhiteDragon:    return std::string("”’");
-		case GreenDragon:    return std::string("αΆ");
-		case RedDragon:      return std::string("’†");
+		case CharacterOne:   return CodeConv::tstring(_T("κδέ"));
+		case CharacterTwo:   return CodeConv::tstring(_T("“ρδέ"));
+		case CharacterThree: return CodeConv::tstring(_T("Oδέ"));
+		case CharacterFour:  return CodeConv::tstring(_T("lδέ"));
+		case CharacterFive:  return CodeConv::tstring(_T("άδέ"));
+		case CharacterSix:   return CodeConv::tstring(_T("Zδέ"));
+		case CharacterSeven: return CodeConv::tstring(_T("µδέ"));
+		case CharacterEight: return CodeConv::tstring(_T("”ªδέ"));
+		case CharacterNine:  return CodeConv::tstring(_T("‹γδέ"));
+		case CircleOne:      return CodeConv::tstring(_T("κ“›"));
+		case CircleTwo:      return CodeConv::tstring(_T("“ρ“›"));
+		case CircleThree:    return CodeConv::tstring(_T("O“›"));
+		case CircleFour:     return CodeConv::tstring(_T("l“›"));
+		case CircleFive:     return CodeConv::tstring(_T("ά“›"));
+		case CircleSix:      return CodeConv::tstring(_T("Z“›"));
+		case CircleSeven:    return CodeConv::tstring(_T("µ“›"));
+		case CircleEight:    return CodeConv::tstring(_T("”ª“›"));
+		case CircleNine:     return CodeConv::tstring(_T("‹γ“›"));
+		case BambooOne:      return CodeConv::tstring(_T("κυ"));
+		case BambooTwo:      return CodeConv::tstring(_T("“ρυ"));
+		case BambooThree:    return CodeConv::tstring(_T("Oυ"));
+		case BambooFour:     return CodeConv::tstring(_T("lυ"));
+		case BambooFive:     return CodeConv::tstring(_T("άυ"));
+		case BambooSix:      return CodeConv::tstring(_T("Zυ"));
+		case BambooSeven:    return CodeConv::tstring(_T("µυ"));
+		case BambooEight:    return CodeConv::tstring(_T("”ªυ"));
+		case BambooNine:     return CodeConv::tstring(_T("‹γυ"));
+		case EastWind:       return CodeConv::tstring(_T("“"));
+		case SouthWind:      return CodeConv::tstring(_T("“μ"));
+		case WestWind:       return CodeConv::tstring(_T("Ό"));
+		case NorthWind:      return CodeConv::tstring(_T("–k"));
+		case WhiteDragon:    return CodeConv::tstring(_T("”’"));
+		case GreenDragon:    return CodeConv::tstring(_T("αΆ"));
+		case RedDragon:      return CodeConv::tstring(_T("’†"));
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "Ων‚Θψ”‚Ε‚·");
-			return std::string("????");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("Ων‚Θψ”‚Ε‚·"));
+			return CodeConv::tstring(_T("????"));
 	}
 }
-__declspec(dllexport) void TileName(char* str, int bufsz, int tile) {
-	strcpy_s(str, bufsz, TileName((tileCode)tile).c_str());
+__declspec(dllexport) void TileName(LPTSTR str, int bufsz, int tile) {
+	_tcscpy_s(str, bufsz, TileName((tileCode)tile).c_str());
 }
 
 /* κ•—”v‚ΜƒƒXƒg */
@@ -244,7 +244,7 @@ tileCode Wind2Tile(uint8_t wind) {
 		case 5: return GreenDragon;
 		case 6: return RedDragon;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, "Ων‚Θψ”‚Ε‚·");
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("Ων‚Θψ”‚Ε‚·"));
 			return NoTile;
 	}
 }
@@ -274,16 +274,16 @@ __declspec(dllexport) int isAboveBase(const GameTable* const gameStat, int playe
 }
 
 /* ”ρ•‰®”1…‚Θ‚η‘SpE‚»‚κΘO‚Ν”Όp */
-std::string intstr(int val) {
-	const char* hanstr = "‚O\0‚P\0‚Q\0‚R\0‚S\0‚T\0‚U\0‚V\0‚W\0‚X\0";
-	std::ostringstream o;
-	if ((val <= 9) && (val >= 0)) o << &(hanstr[val * 3]);
+CodeConv::tstring intstr(int val) {
+	LPCTSTR hanstr = _T("‚O\0‚P\0‚Q\0‚R\0‚S\0‚T\0‚U\0‚V\0‚W\0‚X\0");
+	CodeConv::tostringstream o;
+	if ((val <= 9) && (val >= 0)) o << &(hanstr[val * sizeof(_T("‚O"))]);
 	else o << val;
 	return o.str();
 }
 
 namespace confpath {
-	using std::string;
+	using CodeConv::tstring;
 
 	/* Vista/7‚πg‚Α‚Δ‚Ά‚ι‚©‚Η‚¤‚© */
 	bool isVista() {
@@ -295,11 +295,11 @@ namespace confpath {
 
 	/* ƒRƒ“ƒtƒBƒO‚ΜƒpƒX‚π©“®έ’θ */
 	/* VistaΘ~‚ΕRoaming‚Ι€”υ‚Ε‚«‚Δ‚Ά‚Θ‚―‚κ‚Ξμ‚ι */
-	string confPath() {
-		string configpath = "";
+	std::string confPath() {
+		std::string configpath = "";
 		if (isVista()) {
 			char* cur = new char[1024];
-			GetCurrentDirectory(1024, cur);
+			GetCurrentDirectoryA(1024, cur);
 			char* progfiles = new char[1024];
 			char* appdata = new char[1024];
 			size_t* sz = new size_t;
@@ -307,15 +307,16 @@ namespace confpath {
 			getenv_s(sz, appdata, 1024, "APPDATA");
 
 			if (strstr(cur, progfiles) == cur) {
-				MakeSureDirectoryPathExists(((string)appdata + (string)"\\MiHaJong\\haifu\\").c_str());
-				CopyFile(".\\haifu\\haifu.css",
-					((string)appdata + (string)"\\MiHaJong\\haifu\\haifu.css").c_str(),
+				// MakeSureDirectoryPathExists‚ªƒƒCƒh•¶‘Ξ‰‚µ‚Δ‚Θ‚Ά‚Μ‚Εd•ϋ‚Θ‚­ANSI•¶”Ε
+				MakeSureDirectoryPathExists((std::string(appdata) + std::string("\\MiHaJong\\haifu\\")).c_str());
+				CopyFileA(".\\haifu\\haifu.css",
+					(std::string(appdata) + std::string("\\MiHaJong\\haifu\\haifu.css")).c_str(),
 					TRUE);
-				MakeSureDirectoryPathExists(((string)appdata + (string)"\\MiHaJong\\ai\\").c_str());
-				CopyFile(".\\ai\\default.lua",
-					((string)appdata + (string)"\\MiHaJong\\ai\\default.lua").c_str(),
+				MakeSureDirectoryPathExists((std::string(appdata) + std::string("\\MiHaJong\\ai\\")).c_str());
+				CopyFileA(".\\ai\\default.lua",
+					(std::string(appdata) + std::string("\\MiHaJong\\ai\\default.lua")).c_str(),
 					TRUE);
-				configpath = (string)appdata + (string)"\\MiHaJong\\";
+				configpath = std::string(appdata) + std::string("\\MiHaJong\\");
 			}
 			
 			delete[] cur; delete[] appdata; delete[] progfiles; delete sz;

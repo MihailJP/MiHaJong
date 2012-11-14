@@ -43,8 +43,8 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した型による情報
 		}
 		else {
 #ifdef MJCORE_EXPORTS
-			std::ostringstream o;
-			o << "InfoByPlayer:添字が範囲外です (" << (int)playerID << ")";
+			CodeConv::tostringstream o;
+			o << _T("InfoByPlayer:添字が範囲外です (") << (int)playerID << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 			terminate();
@@ -59,8 +59,8 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した型による情報
 		}
 		else {
 #ifdef MJCORE_EXPORTS
-			std::ostringstream o;
-			o << "InfoByPlayer:添字が範囲外です (" << (int)playerID << ")";
+			CodeConv::tostringstream o;
+			o << _T("InfoByPlayer:添字が範囲外です (") << (int)playerID << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 			terminate();

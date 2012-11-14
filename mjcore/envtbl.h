@@ -15,7 +15,7 @@ public:
 	// 内部クラスとかを定義する
 	class PlayerLabel {
 	public:
-		std::string PlayerName;
+		CodeConv::tstring PlayerName;
 		int8_t RemotePlayerFlag;
 	};
 
@@ -32,8 +32,8 @@ public:
 	uint8_t bgColorR, bgColorG, bgColorB;
 
 	// HSPからのアクセサ
-	__declspec(dllexport) static void setPlayerName(void *, int PlayerNum, const char* const NameStr);
-	__declspec(dllexport) static void getPlayerName(void *, int PlayerNum, char* const NameStr, int bufsize);
+	__declspec(dllexport) static void setPlayerName(void *, int PlayerNum, LPCTSTR const NameStr);
+	__declspec(dllexport) static void getPlayerName(void *, int PlayerNum, LPTSTR const NameStr, int bufsize);
 	__declspec(dllexport) static void setRemotePlayer(void *, int PlayerNum, int Value);
 	__declspec(dllexport) static int isRemotePlayer(void *, int PlayerNum);
 	__declspec(dllexport) static void setGameMode(void *, int Value);

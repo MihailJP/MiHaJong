@@ -14,12 +14,12 @@ DWORD WINAPI ChatThread::thread_loop (LPVOID param) {
 }
 StreamLog::StreamLog () {
 	logWindow = nullptr;
-	myChatStream.str("");
+	myChatStream.str(_T(""));
 }
 ChatThread::ChatThread (std::string& server_addr, int clientNum) {
 	InitializeCriticalSection(&streamLock);
 	InitializeCriticalSection(&sendQueueLock);
-	myChatStream.str(""); terminate = false;
+	myChatStream.str(_T("")); terminate = false;
 	myServerAddr = server_addr; myClientNum = clientNum;
 	myHandle = CreateThread(nullptr, 0, thread_loop, this, 0, nullptr);
 }
@@ -65,7 +65,7 @@ void ChatThread::receive() {
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
 		for (int i = 0; i < PLAYERS; i++) {
 			if (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag >= 1) {
-				char buf[bufsize] = {0};
+				TCHAR buf[bufsize] = {0};
 				int stat = mihajong_socket::gets(
 					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag,
 					buf, bufsize);
@@ -75,12 +75,12 @@ void ChatThread::receive() {
 							(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
 							(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
 							((!chkGameType(&GameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
-								if (buf[strlen(buf) - 1] != '\n')
-									strcat_s(buf, bufsize,
+								if (buf[_tcslen(buf) - 1] != _T('\n'))
+									_tcscat_s(buf, bufsize,
 #ifdef _WIN32
-									"\r\n"
+									_T("\r\n")
 #else
-									"\n"
+									_T("\n")
 #endif
 									);
 								mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
@@ -92,37 +92,37 @@ void ChatThread::receive() {
 		}
 	}
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
-		char buf[bufsize] = {0};
+		TCHAR buf[bufsize] = {0};
 		int stat = mihajong_socket::gets(SOCK_CHAT, buf, bufsize);
 		if (stat == 0) chatappend(buf);
 	}
 }
 
-std::string StreamLog::chatstr(const std::string& buf) {
-	std::ostringstream o;
-	int tmpPlayer = static_cast<int>(buf[0] - '0');
+CodeConv::tstring StreamLog::chatstr(const CodeConv::tstring& buf) {
+	CodeConv::tostringstream o;
+	int tmpPlayer = static_cast<int>(buf[0] - _T('0'));
 	if ((tmpPlayer >= 0) && (tmpPlayer <= ACTUAL_PLAYERS)) {
 		o << EnvTable::Instantiate()->PlayerDat[tmpPlayer].PlayerName <<
-			"(" << windName(playerwind(&GameStat, tmpPlayer, GameStat.GameRound)) << ") : " <<
-			std::string(buf.begin() + 1, buf.end());
-		if (buf[buf.length() - 1] != '\n')
+			_T("(") << windName(playerwind(&GameStat, tmpPlayer, GameStat.GameRound)) << _T(") : ") <<
+			CodeConv::tstring(buf.begin() + 1, buf.end());
+		if (buf[buf.length() - 1] != _T('\n'))
 			o <<
 #ifdef _WIN32
-			"\r" <<
+			_T("\r") <<
 #endif
 			std::endl;
 		else o.flush();
 	}
 	return o.str();
 }
-void StreamLog::chatappend(const std::string& buf) {
-	int tmpPlayer = static_cast<int>(buf[0] - '0');
+void StreamLog::chatappend(const CodeConv::tstring& buf) {
+	int tmpPlayer = static_cast<int>(buf[0] - _T('0'));
 	if ((tmpPlayer >= 0) && (tmpPlayer <= ACTUAL_PLAYERS)) {
 		myChatStream << chatstr(buf); myChatStream.flush();
 		updateWindow();
 	}
 }
-void ChatThread::chatappend(const std::string& buf) {
+void ChatThread::chatappend(const CodeConv::tstring& buf) {
 	EnterCriticalSection(&streamLock);
 	super::chatappend(buf);
 	LeaveCriticalSection(&streamLock);
@@ -131,20 +131,20 @@ void ChatThread::chatappend(const std::string& buf) {
 void ChatThread::send() {
 	EnterCriticalSection(&sendQueueLock);
 	if (!sendQueue.empty()) {
-		char buf[bufsize] = {0}; //buf[0] = GameStat.PlayerID + '0';
+		TCHAR buf[bufsize] = {0}; //buf[0] = GameStat.PlayerID + _T('0');
 		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
 			for (int k = 1; k <= 3; k++) {
 				if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
 					(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
 					(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
 					((!chkGameType(&GameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
-						strcat_s(buf, bufsize, sendQueue.front().c_str());
-						if ((strlen(buf)) && (buf[strlen(buf) - 1] != '\n'))
-							strcat_s(buf, bufsize,
+						_tcscat_s(buf, bufsize, sendQueue.front().c_str());
+						if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
+							_tcscat_s(buf, bufsize,
 #ifdef _WIN32
-							"\r\n"
+							_T("\r\n")
 #else
-							"\n"
+							_T("\n")
 #endif
 							);
 						mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
@@ -152,13 +152,13 @@ void ChatThread::send() {
 				}
 			}
 		} else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
-			strcat_s(buf, bufsize, sendQueue.front().c_str());
-			if ((strlen(buf)) && (buf[strlen(buf) - 1] != '\n'))
-				strcat_s(buf, bufsize,
+			_tcscat_s(buf, bufsize, sendQueue.front().c_str());
+			if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
+				_tcscat_s(buf, bufsize,
 #ifdef _WIN32
-				"\r\n"
+				_T("\r\n")
 #else
-				"\n"
+				_T("\n")
 #endif
 				);
 			mihajong_socket::puts(SOCK_CHAT, buf);
@@ -173,34 +173,34 @@ void ChatThread::cleanup() {
 		mihajong_socket::hangup(SOCK_CHAT + i);
 }
 
-std::string StreamLog::getlog () {
-	return std::string(myChatStream.str());
+CodeConv::tstring StreamLog::getlog () {
+	return CodeConv::tstring(myChatStream.str());
 }
-std::string ChatThread::getlog () {
+CodeConv::tstring ChatThread::getlog () {
 	EnterCriticalSection(&streamLock);
-	std::string& logbuf = myChatStream.str();
+	CodeConv::tstring& logbuf = myChatStream.str();
 	LeaveCriticalSection(&streamLock);
-	return std::string(logbuf);
+	return CodeConv::tstring(logbuf);
 }
 
-void StreamLog::sysmsg(const std::string& str) {
+void StreamLog::sysmsg(const CodeConv::tstring& str) {
 	myChatStream << str;
-	if (str[str.length() - 1] != '\n')
+	if (str[str.length() - 1] != _T('\n'))
 		myChatStream <<
 #ifdef _WIN32
-		"\r" <<
+		_T("\r") <<
 #endif
 		std::endl;
 	else myChatStream.flush();
 	updateWindow();
 }
-void ChatThread::sysmsg(const std::string& str) {
+void ChatThread::sysmsg(const CodeConv::tstring& str) {
 	EnterCriticalSection(&streamLock);
 	myChatStream << str;
-	if (str[str.length() - 1] != '\n')
+	if (str[str.length() - 1] != _T('\n'))
 		myChatStream <<
 #ifdef _WIN32
-		"\r" <<
+		_T("\r") <<
 #endif
 		std::endl;
 	else myChatStream.flush();
@@ -208,24 +208,24 @@ void ChatThread::sysmsg(const std::string& str) {
 	updateWindow();
 }
 
-void StreamLog::sendstr (const std::string& msg) {
+void StreamLog::sendstr (const CodeConv::tstring& msg) {
 	sendstrx(GameStat.PlayerID, msg);
 }
-void StreamLog::sendstrx (PLAYER_ID player, const std::string& msg) {
-	std::ostringstream s;
+void StreamLog::sendstrx (PLAYER_ID player, const CodeConv::tstring& msg) {
+	CodeConv::tostringstream s;
 	s << static_cast<int>(player) << msg;
 	if ((player >= 0) && (player <= ACTUAL_PLAYERS)) {
 		myChatStream << chatstr(s.str()); myChatStream.flush();
 		updateWindow();
 	}
 }
-void ChatThread::sendstr (const std::string& msg) {
+void ChatThread::sendstr (const CodeConv::tstring& msg) {
 	sendstrx(GameStat.PlayerID, msg);
 }
-void ChatThread::sendstrx (PLAYER_ID player, const std::string& msg) {
-	char tmpnum[2] = {0}; tmpnum[0] = player + '0';
+void ChatThread::sendstrx (PLAYER_ID player, const CodeConv::tstring& msg) {
+	TCHAR tmpnum[2] = {0}; tmpnum[0] = player + _T('0');
 	EnterCriticalSection(&sendQueueLock);
-	sendQueue.push(std::string(tmpnum) + msg);
+	sendQueue.push(CodeConv::tstring(tmpnum) + msg);
 	LeaveCriticalSection(&sendQueueLock);
 }
 
@@ -259,13 +259,13 @@ __declspec(dllexport) void initchat (const char* const server_addr, int clientNu
 		chatobj = new ChatThread(std::string(server_addr), clientNum);
 	else chatobj = new StreamLog();
 }
-__declspec(dllexport) void appendchat (const char* const chatstr) {
+__declspec(dllexport) void appendchat (LPCTSTR const chatstr) {
 	chatobj->sysmsg(chatstr);
 }
-__declspec(dllexport) void sendchat (const char* const chatstr) {
+__declspec(dllexport) void sendchat (LPCTSTR const chatstr) {
 	chatobj->sendstr(chatstr);
 }
-void sendchatx (int player, const char* const chatstr) {
+void sendchatx (int player, LPCTSTR const chatstr) {
 	chatobj->sendstrx(player, chatstr);
 }
 __declspec(dllexport) void closechat () {

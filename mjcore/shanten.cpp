@@ -21,13 +21,13 @@ size_t ShantenAnalyzer::decompressMentsuAnalysisDat() {
 		(const uint8_t *)(compressedMentsuDat+13),
 		(SizeT *)&size, (const uint8_t *)compressedMentsuDat, 5);
 	if (result != SZ_OK) {
-		std::ostringstream o;
-		o << "LZMAƒXƒgƒŠ[ƒ€‚ÌƒfƒR[ƒh‚ÉŽ¸”s‚µ‚Ü‚µ‚½Bƒtƒ@ƒCƒ‹‚ª‰ó‚ê‚Ä‚¢‚é‹ñ‚ª‚ ‚è‚Ü‚·B" <<
-			"ƒGƒ‰[ƒR[ƒh: " << result;
+		CodeConv::tostringstream o;
+		o << _T("LZMAƒXƒgƒŠ[ƒ€‚ÌƒfƒR[ƒh‚ÉŽ¸”s‚µ‚Ü‚µ‚½Bƒtƒ@ƒCƒ‹‚ª‰ó‚ê‚Ä‚¢‚é‹ñ‚ª‚ ‚è‚Ü‚·B") <<
+			_T("ƒGƒ‰[ƒR[ƒh: ") << result;
 		Raise(EXCEPTION_MJCORE_DECOMPRESSION_FAILURE, o.str().c_str());
 	}
 	else {
-		info("LZMAƒXƒgƒŠ[ƒ€‚ðƒfƒR[ƒh‚µ‚Ü‚µ‚½B");
+		info(_T("LZMAƒXƒgƒŠ[ƒ€‚ðƒfƒR[ƒh‚µ‚Ü‚µ‚½B"));
 	}
 	return uncompressedSize;
 }
@@ -39,10 +39,10 @@ void ShantenAnalyzer::calcSHA256(uint8_t* digest, const uint8_t* buf, size_t buf
 	Sha256_Final(&p, digest);
 }
 
-std::string ShantenAnalyzer::bytesToHexString(std::vector<uint8_t> byteStr) {
-	std::string hx = std::string();
-	std::ostringstream o;
-	o.setf(std::ios::right); o.fill('0'); o.width(2);
+CodeConv::tstring ShantenAnalyzer::bytesToHexString(std::vector<uint8_t> byteStr) {
+	CodeConv::tstring hx = CodeConv::tstring();
+	CodeConv::tostringstream o;
+	o.setf(std::ios::right); o.fill(_T('0')); o.width(2);
 	for (unsigned int i = 0; i < byteStr.size(); i++) o << byteStr[i];
 	return o.str();
 }
@@ -60,17 +60,17 @@ void ShantenAnalyzer::verifyMentsuAnalysisDat(size_t bufSize) {
 		if (expectedDigest[i] != actualDigest[i]) mdUnmatch = true;
 	}
 	if (mdUnmatch) {
-		std::ostringstream o;
-		o << "–ÊŽq\¬ƒf[ƒ^ƒx[ƒX‚ÌSHA256ƒnƒbƒVƒ…’l‚ªˆê’v‚µ‚Ü‚¹‚ñ‚Å‚µ‚½B" <<
-			"ƒtƒ@ƒCƒ‹‚ª‰ó‚ê‚Ä‚¢‚é‹ñ‚ª‚ ‚è‚Ü‚·B" << std::endl <<
-			"Šú‘Ò‚³‚ê‚éƒnƒbƒVƒ…’l: " <<
+		CodeConv::tostringstream o;
+		o << _T("–ÊŽq\¬ƒf[ƒ^ƒx[ƒX‚ÌSHA256ƒnƒbƒVƒ…’l‚ªˆê’v‚µ‚Ü‚¹‚ñ‚Å‚µ‚½B") <<
+			_T("ƒtƒ@ƒCƒ‹‚ª‰ó‚ê‚Ä‚¢‚é‹ñ‚ª‚ ‚è‚Ü‚·B") << std::endl <<
+			_T("Šú‘Ò‚³‚ê‚éƒnƒbƒVƒ…’l: ") <<
 			bytesToHexString(std::vector<uint8_t>(expectedDigest[0], expectedDigest[31])) <<
-			"ŽÀÛ‚ÌƒnƒbƒVƒ…’l: " <<
+			_T("ŽÀÛ‚ÌƒnƒbƒVƒ…’l: ") <<
 			bytesToHexString(std::vector<uint8_t>(actualDigest[0], actualDigest[31]));
 		Raise(EXCEPTION_MJCORE_HASH_MISMATCH, o.str().c_str());
 	}
 	else {
-		info("–ÊŽq\¬ƒf[ƒ^ƒx[ƒX‚ÌSHA256ƒnƒbƒVƒ…’l‚ÌÆ‡‚É¬Œ÷‚µ‚Ü‚µ‚½B");
+		info(_T("–ÊŽq\¬ƒf[ƒ^ƒx[ƒX‚ÌSHA256ƒnƒbƒVƒ…’l‚ÌÆ‡‚É¬Œ÷‚µ‚Ü‚µ‚½B"));
 	}
 }
 
@@ -83,12 +83,12 @@ __declspec(dllexport) void ShantenAnalyzer::initMentsuAnalysisDat() { // –ÊŽqƒf
 		switch (e->ExceptionRecord->ExceptionCode) {
 		case EXCEPTION_MJCORE_DECOMPRESSION_FAILURE:
 			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
-			MessageBox(nullptr, errStat->msg, (LPCSTR)"LZMA decompression error",
+			MessageBox(nullptr, CodeConv::EnsureTStr(errStat->msg).c_str(), _T("LZMA decompression error"),
 				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
 			terminate();
 		case EXCEPTION_MJCORE_HASH_MISMATCH:
 			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
-			MessageBox(nullptr, errStat->msg, (LPCSTR)"SHA256 verification error",
+			MessageBox(nullptr, CodeConv::EnsureTStr(errStat->msg).c_str(), _T("SHA256 verification error"),
 				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
 			terminate();
 		default:

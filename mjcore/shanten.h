@@ -24,6 +24,7 @@
 #ifdef MJCORE_EXPORTS
 #include "logging.h"
 #include "reader/readrsrc.h"
+#include "strcode.h"
 #endif
 
 #define SHANTEN_PAGES 9
@@ -41,7 +42,7 @@ private:
 #ifdef MJCORE_EXPORTS
 	static size_t decompressMentsuAnalysisDat();
 	static void calcSHA256(uint8_t* digest, const uint8_t* buf, size_t bufSize);
-	static std::string bytesToHexString(std::vector<std::uint8_t> byteStr);
+	static CodeConv::tstring bytesToHexString(std::vector<std::uint8_t> byteStr);
 	static void verifyMentsuAnalysisDat(size_t bufSize);
 public:
 	static __declspec(dllexport) void initMentsuAnalysisDat();
