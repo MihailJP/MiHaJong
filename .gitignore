@@ -43,3 +43,11 @@ release
 *.zip
 *.7z
 *~
+Debug/
+Release/
+Debug(Wide)/
+Release(Wide)/
+ipch/
+*.sdf
+*.opensdf
+*.suo
