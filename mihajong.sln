@@ -21,6 +21,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mjcore", "mjcore\mjcore.vcx
 		{6A6AC2F6-328C-4B0D-BD6F-84C9C5B9BBBA} = {6A6AC2F6-328C-4B0D-BD6F-84C9C5B9BBBA}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mihajong", "mihajong\mihajong.vcxproj", "{C808268F-5339-46B2-A811-1DECCEE1191D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{195EDF02-5A34-45F3-9330-DA6ED8CEB4DE} = {195EDF02-5A34-45F3-9330-DA6ED8CEB4DE}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug(Wide)|Win32 = Debug(Wide)|Win32
@@ -77,6 +82,14 @@ Global
 		{A1E77779-D7A8-4C1C-9D52-53586D6AA58A}.Release(Wide)|Win32.Build.0 = Release(Wide)|Win32
 		{A1E77779-D7A8-4C1C-9D52-53586D6AA58A}.Release|Win32.ActiveCfg = Release|Win32
 		{A1E77779-D7A8-4C1C-9D52-53586D6AA58A}.Release|Win32.Build.0 = Release|Win32
+		{C808268F-5339-46B2-A811-1DECCEE1191D}.Debug(Wide)|Win32.ActiveCfg = Debug(Wide)|Win32
+		{C808268F-5339-46B2-A811-1DECCEE1191D}.Debug(Wide)|Win32.Build.0 = Debug(Wide)|Win32
+		{C808268F-5339-46B2-A811-1DECCEE1191D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C808268F-5339-46B2-A811-1DECCEE1191D}.Debug|Win32.Build.0 = Debug|Win32
+		{C808268F-5339-46B2-A811-1DECCEE1191D}.Release(Wide)|Win32.ActiveCfg = Release(Wide)|Win32
+		{C808268F-5339-46B2-A811-1DECCEE1191D}.Release(Wide)|Win32.Build.0 = Release(Wide)|Win32
+		{C808268F-5339-46B2-A811-1DECCEE1191D}.Release|Win32.ActiveCfg = Release|Win32
+		{C808268F-5339-46B2-A811-1DECCEE1191D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
