@@ -284,9 +284,6 @@
     <ClInclude Include="envtbl.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="version.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="yaku\yaku.h">
       <Filter>ヘッダー ファイル\yaku</Filter>
     </ClInclude>

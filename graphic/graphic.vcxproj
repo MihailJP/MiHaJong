@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="init.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="scenes\fps.h" />
     <ClInclude Include="scenes\game.h" />
     <ClInclude Include="scenes\proto.h" />
@@ -154,6 +155,9 @@
     <ClInclude Include="scenes\test.h" />
     <ClInclude Include="scrmanip.h" />
     <ClInclude Include="window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ver.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,7 +6,7 @@
 #include <commctrl.h>
 #include <richedit.h>
 #include "resource.h"
-#include "version.h"
+#include "../mihajong/version.h"
 
 
 

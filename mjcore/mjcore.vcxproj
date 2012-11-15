@@ -287,7 +287,6 @@
     <ClInclude Include="strcode.h" />
     <ClInclude Include="tilecode.h" />
     <ClInclude Include="tileutil.h" />
-    <ClInclude Include="version.h" />
     <ClInclude Include="yaku\catalog.h" />
     <ClInclude Include="yaku\yaku.h" />
     <ClInclude Include="yaku\yvalue.h" />

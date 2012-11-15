@@ -6,8 +6,16 @@
 #include <commctrl.h>
 #include <richedit.h>
 #include "resource.h"
-#include "../mihajong/version.h"
+#include "version.h"
 
+
+
+
+//
+// Icon resources
+//
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+IDI_ICON1          ICON           ".\\icons\\mihajong.ico"
 
 
 
@@ -16,10 +24,10 @@
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     SOCKET_MAJOR_VER,SOCKET_MINOR_VER,SOCKET_PATCH_VER,0
+    FILEVERSION     MIHAJONG_MAJOR_VER,MIHAJONG_MINOR_VER,MIHAJONG_PATCH_VER,0
     PRODUCTVERSION  MIHAJONG_MAJOR_VER,MIHAJONG_MINOR_VER,MIHAJONG_PATCH_VER,0
     FILEOS          VOS_NT_WINDOWS32
-    FILETYPE        VFT_DLL
+    FILETYPE        VFT_APP
     FILESUBTYPE     VFT2_UNKNOWN
     FILEFLAGSMASK   0x00000001
 #ifdef _DEBUG
@@ -34,12 +42,12 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Comments", ""
             VALUE "CompanyName", ""
-            VALUE "FileDescription", "MiHaJong socket communication library"
-            VALUE "FileVersion", SOCKET_VER
-            VALUE "InternalName", "socket"
+            VALUE "FileDescription", "MiHaJong"
+            VALUE "FileVersion", MIHAJONG_VER
+            VALUE "InternalName", "mihajong"
             VALUE "LegalCopyright", "Copyright (c) 2008-2012 MihailJP Part of rights reserved."
             VALUE "LegalTrademarks", ""
-            VALUE "OriginalFilename", "socket.dll"
+            VALUE "OriginalFilename", "mihajong.exe"
             VALUE "PrivateBuild", ""
             VALUE "ProductName", "MiHaJong"
             VALUE "ProductVersion", MIHAJONG_VER

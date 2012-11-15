@@ -16,7 +16,7 @@
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     SOCKET_MAJOR_VER,SOCKET_MINOR_VER,SOCKET_PATCH_VER,0
+    FILEVERSION     GRAPHIC_MAJOR_VER,GRAPHIC_MINOR_VER,GRAPHIC_PATCH_VER,0
     PRODUCTVERSION  MIHAJONG_MAJOR_VER,MIHAJONG_MINOR_VER,MIHAJONG_PATCH_VER,0
     FILEOS          VOS_NT_WINDOWS32
     FILETYPE        VFT_DLL
@@ -34,12 +34,12 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Comments", ""
             VALUE "CompanyName", ""
-            VALUE "FileDescription", "MiHaJong socket communication library"
-            VALUE "FileVersion", SOCKET_VER
-            VALUE "InternalName", "socket"
+            VALUE "FileDescription", "MiHaJong graphic rendering library"
+            VALUE "FileVersion", GRAPHIC_VER
+            VALUE "InternalName", "graphic"
             VALUE "LegalCopyright", "Copyright (c) 2008-2012 MihailJP Part of rights reserved."
             VALUE "LegalTrademarks", ""
-            VALUE "OriginalFilename", "socket.dll"
+            VALUE "OriginalFilename", "graphic.dll"
             VALUE "PrivateBuild", ""
             VALUE "ProductName", "MiHaJong"
             VALUE "ProductVersion", MIHAJONG_VER

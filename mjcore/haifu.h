@@ -10,7 +10,7 @@
 #include "largenum.h"
 #include "func.h"
 #include "envtbl.h"
-#include "version.h"
+#include "../mihajong/version.h"
 #include "discard.h"
 #include "chat.h"
 
