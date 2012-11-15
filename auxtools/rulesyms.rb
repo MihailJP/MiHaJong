@@ -17,7 +17,7 @@ Dir::chdir(File.expand_path(File.dirname(__FILE__))) # このスクリプトの�
 
 require "csv"
 csvdat = CSV.read("../mjcore/data/confitem.csv", encoding: "UTF-8") # 設定を記述したCSVを開く
-target = open("../mihajong/rulesyms.txt", mode_enc = "wb") # 出力先(改行コードを固定するため敢えてバイナリモードとする)
+target = open("../mihajong_legacy/rulesyms.txt", mode_enc = "wb") # 出力先(改行コードを固定するため敢えてバイナリモードとする)
 
 for row in csvdat # 各項目ごとに出力する
 	target.print "【", row[8], "】", row[9], gametype(row[1]), "\r\n"
