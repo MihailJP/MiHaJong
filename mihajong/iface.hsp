@@ -1,0 +1,307 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *   [インターフェイス周り]
+ *=============================
+ */
+
+/* チャットウィンドウ関聯 */
+#module
+#include "const.hsp"
+#uselib "mjcore.dll"
+#func setlogwnd "?setlogwnd@chat@@YAXPAUHWND__@@@Z" int
+
+#deffunc chatinit
+	sdim ChatLog, 32768 // チャットのログ
+	if (ginfo_dispx >= 1280) {
+		ChatWindowWidth = 440
+	} else : if (ginfo_dispx >= 1152) {
+		ChatWindowWidth = 312
+	} else {
+		ChatWindowWidth = 160
+	}
+	screen SCR_CHAT, ChatWindowWidth, 630, 14, ((ginfo_dispx-840)/2)+840-76, (ginfo_dispy-630)/2-20
+	gsel 0, 1: gsel SCR_CHAT, 0
+	font fontname, 12, 0: objmode 2
+	title "Chat"
+	
+	//ChatLog = "MiHaJong Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC+"\n"
+	ChatLog = ""
+	pos 0, 0: mesbox ChatLog, ChatWindowWidth, 610, 0
+	setlogwnd objinfo_hwnd(0)
+	sdim CurrentChatTxt, 256
+	pos 0, 610: input CurrentChatTxt, ChatWindowWidth-20, 20, 120
+	pos ChatWindowWidth-20, 610: objsize 20, 20: button gosub "OK", *chatpost_@
+	info "チャットウィンドウを初期化しました。"
+	
+	gsel 0
+	return
+
+#deffunc chatwnd int ChatSwitch
+	switch (ChatSwitch)
+		case 1:
+			gsel SCR_RULE, -1
+			gsel SCR_CHAT: width , , ((ginfo_dispx-840)/2)+840-(ChatWindowWidth/2)+4, (ginfo_dispy-630)/2-20
+			gsel 0: width , , ((ginfo_dispx-840)/2)-(ChatWindowWidth/2)-4, (ginfo_dispy-630)/2-20
+			gsel SCR_CHAT, 1: gsel 0, 1
+			swbreak
+		case 2:
+			gsel SCR_CHAT, -1
+			gsel SCR_RULE: width , , ((ginfo_dispx-840)/2)+840-(ChatWindowWidth/2)+4, (ginfo_dispy-630)/2-20
+			gsel 0: width , , ((ginfo_dispx-840)/2)-(ChatWindowWidth/2)-4, (ginfo_dispy-630)/2-20
+			gsel SCR_RULE, 1: gsel 0, 1
+			swbreak
+		default:
+			gsel SCR_CHAT, -1: gsel SCR_RULE, -1
+			gsel 0, 1: width , , ((ginfo_dispx-840)/2), (ginfo_dispy-630)/2-20
+	swend
+	return
+
+#defcfunc getChatTxt
+	return CurrentChatTxt
+
+#deffunc clearChatTxt
+	CurrentChatTxt = "": gsel SCR_CHAT: objprm 1, CurrentChatTxt: gsel 0
+return
+
+#global
+
+/* ルール確認ウィンドウ関聯 */
+#module
+#include "const.hsp"
+#deffunc rulewndinit
+	sdim RuleList, 32768 // ルールテキスト
+	if (ginfo_dispx >= 1280) {
+		WindowWidth = 440
+	} else : if (ginfo_dispx >= 1152) {
+		WindowWidth = 312
+	} else {
+		WindowWidth = 160
+	}
+	screen SCR_RULE, WindowWidth, 630, 14, ((ginfo_dispx-840)/2)+840-76, (ginfo_dispy-630)/2-20
+	gsel 0, 1: gsel SCR_RULE, 0
+	font fontname, 12, 0: objmode 2
+	title "Rule"
+	
+	chatshowrule RuleList
+	pos 0, 0: mesbox RuleList, WindowWidth, 630, 0
+	info "ルール確認ウィンドウを初期化しました。"
+	
+	gsel 0
+	return
+#global
+
+/* 共通スイッチの表示 */
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc ifaceinit
+	StatusBoxTxt = ""
+	AutoAgariSwitch = 0 // オート和了のスイッチ
+	AutoPassSwitch = 0 // オートパスのスイッチ
+	TsumogiriSwitch = 0 // 自動ツモ切りのスイッチ
+	return
+
+#deffunc closingchat
+	ChatSwitch = 0
+	return
+
+#deffunc statmes str msgtxt
+	StatusBoxTxt = msgtxt
+	objprm STATBOX, StatusBoxTxt
+	await 0
+	return
+
+#defcfunc AutoAgariFlag
+	return AutoAgariSwitch
+
+#defcfunc AutoPassFlag
+	return AutoPassSwitch
+
+#defcfunc TsumogiriFlag
+	return TsumogiriSwitch
+
+#deffunc commonswitch var GameStat, var GameEnv
+	TxtBoxPainted = 0
+	font fontname, 12, 0
+	pos 620, 430: objsize 200, 20
+	input StatusBoxTxt
+	hStBox = objinfo(STATBOX, 2)
+	SetWindowLong hStBox, -16, 0x50010081: objgray STATBOX, 0
+#ifdef WITH_ADVANCEDCONTROL@
+	oncmd gosub *txtboxcolor, 0x0138
+	CreateSolidBrush ((170+(GetTableColorB(GameEnv)/3))<<16 | (170+(GetTableColorG(GameEnv)/3))<<8 | (170+(GetTableColorR(GameEnv)/3)))
+	hBrush = stat
+#endif
+	pos 620, 460: objsize 100, 20
+	if ((GetWatchModeFlag(GameEnv) != 1)&&(getAgariHouki(GameStat, getPlayer(GameStat)) == 0)) {
+		SwAutoAGARIenabled = 1
+		if (AutoAgariSwitch == 1) {
+			colorbutton gosub "オート和了【入】", *swAutoAgari, -1, 0xffff00
+		} else {
+			colorbutton gosub "オート和了【切】", *swAutoAgari, -1, 0xffffff
+		}
+		SwIDAutoAGARI = stat
+	} else {
+		SwAutoAGARIenabled = 0
+		colorbutton gosub "オート和了【×】", *swAutoAgari, -1, 0xff0000
+		SwIDAutoAGARI = stat: objgray SwIDAutoAGARI, 0
+	}
+	tooltip@ SwIDAutoAGARI-STATBOX, "オンにすると当たり牌が出たか自摸ったときに自動的に和了します"
+	
+	pos 720, 460: objsize 100, 20
+	switch (ChatSwitch)
+		case 1:
+			colorbutton gosub "チャット表示", *swChat, -1, 0xffff00
+			swbreak
+		case 2:
+			colorbutton gosub "ルール表示", *swChat, -1, 0x00ffff
+			swbreak
+		default:
+			colorbutton gosub "チャット/ルール", *swChat, -1, 0xffffff
+	swend
+	SwIDChat = stat: tooltip@ SwIDChat-STATBOX, "チャットウィンドウを開きます"
+	if ((GetWatchModeFlag(GameEnv) != 1)&&(getAgariHouki(GameStat, getPlayer(GameStat)) == 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getPlayer(GameStat)) == RIICHI_NO)) {
+		AutoPassSwitchEnabled = 1
+		pos 620, 480: objsize 100, 20
+		if (AutoPassSwitch == 1) {
+			colorbutton gosub "オートパス【入】", *swAutoPass, -1, 0xffff00
+		} else {
+			colorbutton gosub "オートパス【切】", *swAutoPass, -1, 0xffffff
+		}
+		SwIDAutoPass = stat: tooltip@ SwIDAutoPass-STATBOX, "オンにすると他家の捨て牌を無視します"
+		pos 720, 480: objsize 100, 20
+		if (TsumogiriSwitch == 1) {
+			colorbutton gosub "ツモ切り【入】", *swTsumogiri, -1, 0xffff00
+		} else {
+			colorbutton gosub "ツモ切り【切】", *swTsumogiri, -1, 0xffffff
+		}
+		SwIDTsumogiri = stat: tooltip@ SwIDTsumogiri-STATBOX, "オンにすると自動的にツモ切りをします"
+	} else {
+		AutoPassSwitchEnabled = 0
+		AutoPassSwitch = 0: TsumogiriSwitch = 0
+		pos 620, 480: objsize 100, 20
+		colorbutton gosub "オートパス【×】", *swAutoPass, -1, 0xff0000
+		SwIDAutoPass = stat: tooltip@ SwIDAutoPass-STATBOX, "オンにすると他家の捨て牌を無視します"
+		objgray SwIDAutoPass
+		pos 720, 480: objsize 100, 20
+		colorbutton gosub "ツモ切り【×】", *swTsumogiri, -1, 0xff0000
+		SwIDTsumogiri = stat: tooltip@ SwIDTsumogiri-STATBOX, "オンにすると自動的にツモ切りをします"
+		objgray SwIDTsumogiri
+	}
+	if (getAgariHouki(GameStat, getPlayer(GameStat)) == 1) {AutoAgariSwitch = 0}
+#ifdef WITH_ADVANCEDCONTROL@
+	repeat
+		if (TxtBoxPainted) {break}
+		await 0
+	loop
+#endif
+	return
+
+#ifdef WITH_ADVANCEDCONTROL@
+*txtboxcolor
+	if (lparam == hStBox) {
+		SetTextColor wparam, 0xffffff
+		SetBkMode wparam, 1
+		TxtBoxPainted = 1
+		return hBrush
+	}
+	return
+#endif
+
+*stAutoAgari
+	if (SwAutoAGARIenabled) {
+		if (AutoAgariSwitch) {
+			_bc_text SwIDAutoAGARI, "オート和了【入】"
+			_bc_color SwIDAutoAGARI, , 0xffff00
+		} else {
+			_bc_text SwIDAutoAGARI, "オート和了【切】"
+			_bc_color SwIDAutoAGARI, , 0xffffff
+		}
+		objgray SwIDAutoAGARI, 1
+	} else {
+		_bc_text SwIDAutoAGARI, "オート和了【×】"
+		_bc_color SwIDAutoAGARI, , 0xff0000
+		objgray SwIDAutoAGARI, 0
+	}
+	return
+
+*stAutoPass
+	if (AutoPassSwitchEnabled) {
+		if (AutoPassSwitch) {
+			_bc_text SwIDAutoPass, "オートパス【入】"
+			_bc_color SwIDAutoPass, , 0xffff00
+		} else {
+			_bc_text SwIDAutoPass, "オートパス【切】"
+			_bc_color SwIDAutoPass, , 0xffffff
+		}
+		objgray SwIDAutoPass, 1
+	} else {
+		_bc_text SwIDAutoPass, "オートパス【×】"
+		_bc_color SwIDAutoPass, , 0xff0000
+		objgray SwIDAutoPass, 0
+	}
+	return
+
+*stTsumogiri
+	if (AutoPassSwitchEnabled) {
+		if (TsumogiriSwitch) {
+			_bc_text SwIDTsumogiri, "ツモ切り【入】"
+			_bc_color SwIDTsumogiri, , 0xffff00
+		} else {
+			_bc_text SwIDTsumogiri, "ツモ切り【切】"
+			_bc_color SwIDTsumogiri, , 0xffffff
+		}
+		objgray SwIDTsumogiri, 1
+	} else {
+		_bc_text SwIDTsumogiri, "ツモ切り【×】"
+		_bc_color SwIDTsumogiri, , 0xff0000
+		objgray SwIDTsumogiri, 0
+	}
+	return
+
+*stChat
+	switch (ChatSwitch)
+		case 1:
+			_bc_text SwIDChat, "チャット表示"
+			_bc_color SwIDChat, , 0xffff00
+			swbreak
+		case 2:
+			_bc_text SwIDChat, "ルール表示"
+			_bc_color SwIDChat, , 0x00ffff
+			swbreak
+		default:
+			_bc_text SwIDChat, "チャット/ルール"
+			_bc_color SwIDChat, , 0xffffff
+			swbreak
+	swend
+	return
+
+*swAutoAgari
+	dsplay@ SND_CLICK
+	AutoAgariSwitch = 1-AutoAgariSwitch
+	gosub *stAutoAgari
+	await 0
+	return
+
+*swAutoPass
+	dsplay@ SND_CLICK
+	AutoPassSwitch = 1-AutoPassSwitch
+	gosub *stAutoPass
+	await 0
+	return
+
+*swTsumogiri
+	dsplay@ SND_CLICK
+	TsumogiriSwitch = 1-TsumogiriSwitch
+	gosub *stTsumogiri
+	await 0
+	return
+
+*swChat
+	dsplay@ SND_CLICK
+	ChatSwitch = (ChatSwitch+1)\3
+	gosub *stChat
+	chatwnd ChatSwitch
+	await 0
+	return
+#global

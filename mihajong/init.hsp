@@ -1,0 +1,185 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *      [初期化ルーチン]
+ *=============================
+ */
+
+/* タイトルバーに表示する文字列 */
+	title "MiHaJong Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
+
+/* コンフィグファイルのパスを設定する(Vista/7用) */
+	/* Vista以降、Program Files以下にファイルを作れないので自分で調整する */
+#ifdef SANMAS
+	configFile = confPath()+"mihassnm.ini"
+#else
+	#ifdef SANMA4
+		configFile = confPath()+"mihaysnm.ini"
+	#else
+		#ifdef SANMA
+		configFile = confPath()+"mihasanm.ini"
+		#else
+		configFile = confPath()+"mihajong.ini"
+		#endif
+	#endif
+#endif
+
+/* ログ初期化 */
+	loginit
+	info "MiHaJong Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
+	info "ビルド日時は "+__date__+" "+__time__+" です。"
+
+/* 解像度をチェックする */
+	info "画面の解像度は "+ginfo_dispx+" x "+ginfo_dispy+" です。"
+	if ((ginfo_dispx < 1024)||(ginfo_dispy < 768)) {
+		errordlg "画面解像度が足りません\nXGA(1024x768)以上で起動してください", "画面が小さすぎます"
+		error "解像度要件を満たしていません。終了します。"
+		end 1
+	}
+
+/* 画面を初期化 */
+	screen SCR_CHAT, 160, 630, 14, ((ginfo_dispx-840)/2)+840-76, (ginfo_dispy-630)/2-20
+	info "チャット用のウィンドウを仮初期化しました。"
+	gsel 0, -1: await 0
+
+/* スプラッシュスクリーン */
+	buffer SCR_SPLASH_BUF: pngload "img\\splash.png"
+	bgscr SCR_SPLASH_WINDOW, 320, 240, , (ginfo_dispx-320)/2, (ginfo_dispy-240)/2
+	gsel SCR_SPLASH_WINDOW, 2
+	menubgcolor
+	boxf 0, 0, 319, 239
+	gmode 7: pos 0, 0: gcopy SCR_SPLASH_BUF, 0, 0, 320, 240
+	color 0, 0, 0: line 319, 0, 0, 0: line 319, 239: line 0, 239: line 0, 0
+	tmptxt = "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
+	borderedtxt2 tmptxt, 160-(strlen(tmptxt)*4), 130, 255, 255, 255, 0, 16, 192, 192, 192
+	tmptxt = "Copyright (c) 2008-2012 MihailJP"
+	borderedtxt2 tmptxt, 160-(strlen(tmptxt)*4), 160, 255, 255, 255, 0, 16, 192, 192, 192
+	tmptxt = "Part of rights reserved"
+	borderedtxt2 tmptxt, 160-(strlen(tmptxt)*4), 180, 255, 255, 255, 0, 16, 192, 192, 192
+	gsel 0, 0: await 0
+
+/* 卓の環境を初期化 */
+	TableEnvInitAll: GameEnv = 0
+	setGameType GAMETYPE
+
+/* 設定ファイル読み込み */
+	setconffile configFile
+	exist configFile // 設定ファイルがあるかどうか調べる
+	EnvConf =  "00000000"
+	configinit
+	if (strsize == -1) {
+		info "設定ファイルが見つかりません。デフォルトの設定を使用します。"
+		saveConfigFile configFile // デフォルトのコンフィグデータを作成
+	} else {
+		info "設定ファイルが見つかりました。読み込みを開始します。"
+		loadConfigFile configFile // 設定ファイル読み込み
+	}
+
+/* 音源を初期化 */
+	dminit: if (stat) {info "DirectMusic を初期化しました。"} else {error "DirectMusic の初期化に失敗しました。"}
+	dsinit: if (stat) {info "DirectSound を初期化しました。"} else {error "DirectSound の初期化に失敗しました。"}
+
+/* 終了時に音源をクリンナップするための処理 */
+	onexit *cleanup
+#ifndef _debug
+	onerror goto *errorproc
+#endif
+
+/* 面子構成データベースの読み込み */
+/* 向聴数の計算に使用：構築には１ヶ月必要 */
+	shantenInit
+
+/* 擬似乱数を初期化 */
+	randomize
+	info "疑似乱数を初期化しました。"
+
+/* grotate命令で使う円周率の値 */
+	#define PI M_PI
+
+/* 牌やサイコロの画像を読み込む */
+	gmode gmode_mem
+	buffer SCR_TILE_PIC: picload "img\\tileset.gif": info "牌の画像を読み込みました。"
+	buffer SCR_TILE_BLOCK, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
+	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X, TILE_BLOCK_SCREEN_Y, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
+	buffer SCR_TILE_SHADE, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
+	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X+TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_Y, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
+	buffer SCR_DICE_PIC, TILE_DICE_SCREEN_WIDTH, TILE_DICE_SCREEN_HEIGHT
+	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X+TILE_BLOCK_SCREEN_WIDTH*2+TILE_DICE_SCREEN_WIDTH, TILE_BLOCK_SCREEN_Y, TILE_DICE_SCREEN_WIDTH, TILE_DICE_SCREEN_HEIGHT
+	buffer SCR_DICE_SHADE, TILE_DICE_SCREEN_WIDTH, TILE_DICE_SCREEN_HEIGHT
+	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X+TILE_BLOCK_SCREEN_WIDTH*2, TILE_BLOCK_SCREEN_Y, TILE_DICE_SCREEN_WIDTH, TILE_DICE_SCREEN_HEIGHT
+	info "牌の画像の処理が完了しました。"
+
+/* タイトルロゴや画像の読み込み */
+	buffer SCR_MAIN_LOGO: pngload "img\\logo.png": info "闘牌時の右上ロゴを読み込みました。"
+	buffer SCR_MAIN_BACKGROUND: pngload "img\\mainbg.png": info "闘牌時の背景画像を読み込みました。"
+	buffer SCR_TITLE_BACKGROUND: pngload "img\\background.png": info "タイトルロゴを読み込みました。"
+	buffer SCR_TITLE_LOGO: pngload "img\\title.png": info "タイトル画面の背景画像を読み込みました。"
+
+/* ＢＧＭを読み込み */
+/* (再生には DirectMusicを使用) */
+	dim bgmmode, 64 // BGMのモードを格納
+	repeat BGM_ROUNDS
+		bgmload strf("bgm%d", cnt+1), cnt
+	loop
+
+/* ＢＧＭを読み込み（続き） */
+	bgmload "richi1", MUS_RICHI1 // 他家リーチ
+	bgmload "richi2", MUS_RICHI2 // 自家リーチ
+	bgmload "richi3", MUS_RICHI3 // 追っかけリーチ
+	bgmload "opnrichi", MUS_OPENRICHI // オープン立直
+	bgmload "agari1", MUS_AGARI_SELF_1 // 満貫未満、自分の和了
+	bgmload "agari2", MUS_AGARI_SELF_2 // 満貫以上、自分の和了
+	bgmload "agari3", MUS_AGARI_SELF_3 // 役満、自分の和了
+	bgmload "agari4", MUS_AGARI_FURIKOMI_1 // 満貫未満、放銃または被自摸
+	bgmload "agari5", MUS_AGARI_FURIKOMI_2 // 満貫以上、放銃または被自摸
+	bgmload "agari6", MUS_AGARI_FURIKOMI_3 // 役満、放銃または被自摸
+	bgmload "agari7", MUS_AGARI_OTHER_1 // 満貫未満、他家の栄和
+	bgmload "agari8", MUS_AGARI_OTHER_2 // 満貫以上、他家の栄和
+	bgmload "agari9", MUS_AGARI_OTHER_3 // 役満、他家の栄和
+	bgmload "pingju", MUS_RYUUKYOKU // 流局・錯和
+	bgmload "final", MUS_FINAL // オーラス曲
+	bgmload "shibari", MUS_SHIBARI // リャンシバ時の曲
+	bgmload "title", MUS_TITLE
+	bgmload "ending", MUS_ENDING
+	bgmload "ending2", MUS_ENDING2
+	bgmload "ending3", MUS_ENDING3
+
+/* 効果音読み込み(DirectSound使用) */
+	soundload "sound\\dahai1.wav", SND_DAHAI1
+	soundload "sound\\dahai2.wav", SND_DAHAI2
+	soundload "sound\\tsumo.wav", SND_TSUMO
+	soundload "sound\\saikoro.wav", SND_SAIKORO
+	soundload "sound\\bell.wav", SND_BELL
+	soundload "sound\\countdn.wav", SND_COUNTDOWN
+	soundload "sound\\chonbo.wav", SND_CUOHU
+	soundload "sound\\yakulst1.wav", SND_YAKULST1
+	soundload "sound\\yakulst2.wav", SND_YAKULST2
+	soundload "sound\\mekuri.wav", SND_MEKURI
+	soundload "sound\\button.wav", SND_BUTTON
+	soundload "sound\\click.wav", SND_CLICK
+	soundload "sound\\page.wav", SND_PAGE
+	soundload "sound\\type.wav", SND_TYPE
+	soundload "sound\\pingju.wav", SND_PINGJU
+	soundload "sound\\flash.wav", SND_FLASH
+	soundload "sound\\signal.wav", SND_SIGNAL
+	soundload "sound\\clock.wav", SND_CLOCK
+
+/* 鳴き仕掛け関係の効果音を読み込む */
+	soundload "sound\\chi.wav", VOX_CHI
+	soundload "sound\\pon.wav", VOX_PON
+	soundload "sound\\kan.wav", VOX_KAN
+	soundload "sound\\richi.wav", VOX_RICHI
+	soundload "sound\\agari1.wav", VOX_TSUMO
+	soundload "sound\\agari2.wav", VOX_RON
+	soundload "sound\\kyuushu.wav", VOX_KYUUSHU
+	soundload "sound\\flower.wav", VOX_FLOWER
+	soundload "sound\\kyuushu.wav", VOX_SIKANG
+	soundload "sound\\kyuushu.wav", VOX_SIFENG
+	soundload "sound\\kyuushu.wav", VOX_SANJIAHU
+	soundload "sound\\kyuushu.wav", VOX_SIJIARICHI
+	soundload "sound\\agari2.wav", VOX_RON_FURIKOMI
+
+/* スプラッシュスクリーンをしまう */
+	gsel SCR_SPLASH_WINDOW, -1
+	screen 0, 840, 630, , (ginfo_dispx-840)/2, (ginfo_dispy-630)/2-20
+	info "ウィンドウを初期化しました。"
+	gsel 0, 1

@@ -1,0 +1,1079 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *     [画面表示ルーチン]
+ *=============================
+ */
+
+/* メニュー画面の背景を表示 */
+#module
+#include "const.hsp"
+#deffunc menubgcolor
+#ifdef SANMAS
+	color 64, 0, 64
+#else
+#ifdef SANMA4
+	color 0, 64, 64
+#else
+#ifdef SANMA
+	color 0, 0, 64
+#else
+	color 0, 64, 0
+#endif
+#endif
+#endif
+	return
+#deffunc showbackground
+	menubgcolor
+	boxf 0, 0, 839, 629
+	gmode gmode_pixela: pos 0, 0: gcopy SCR_TITLE_BACKGROUND, 0, 0, 840, 630: gmode gmode_mem
+	return
+#global
+
+/* 縁取りテキスト */
+#module
+#include "const.hsp"
+#deffunc borderedtxt str BorderText, int BorderTextX, int BorderTextY, int BorderTextR, int BorderTextG, int BorderTextB
+/*
+		borderedtxt p1, p2, p3, p4, p5, p6
+		縁取りテキストを表示する
+
+		p1 : 表示する文字列
+		p2 : 表示するX座標
+		p3 : 表示するY座標
+		p4 : 文字の色の赤成分
+		p5 : 文字の色の緑成分
+		p6 : 文字の色の青成分
+
+		文字列を縁取りして表示します。
+*/
+	BorderThickness = 1
+	TextSize = 0: TextWidthRate = 1.0
+	gosub *doputtext
+return
+
+#deffunc borderedtxt2 str BorderText, int BorderTextX, int BorderTextY, int BorderTextR, int BorderTextG, int BorderTextB, \
+int BorderThickness_, int TextSize_, int GradR, int GradG, int GradB, int Style
+	BorderThickness = BorderThickness_
+	TextSize = TextSize_: TextWidthRate = 1.0
+	gosub *doputtext
+return
+
+#deffunc borderedtxt3 str BorderText, int BorderTextX, int BorderTextY, int BorderTextR, int BorderTextG, int BorderTextB, \
+int BorderThickness_, int TextSize_, int GradR, int GradG, int GradB, int Style, \
+double TextWidthRate_
+	BorderThickness = BorderThickness_
+	TextSize = TextSize_: TextWidthRate = TextWidthRate_
+	gosub *doputtext
+return
+
+*setfnt
+	if (vartype(LastFont) != vartype("str")) {sdim LastFont,32,2}
+	if (length(LastFont) < ginfo_sel) {LastFont(ginfo_sel) = ""}
+	if (length(LastTextSize) < ginfo_sel) {LastTextSize(ginfo_sel) = 0}
+	if (length(LastStyle) < ginfo_sel) {LastStyle(ginfo_sel) = 0}
+	if ((LastFont(ginfo_sel) != fontname)||(LastTextSize(ginfo_sel) != TextSize)||(LastStyle(ginfo_sel) != Style)) {
+		font fontname, TextSize, Style
+		LastTextSize(ginfo_sel) = TextSize
+		LastStyle(ginfo_sel) = Style
+	}
+return
+
+*doputtext
+	if (TextSize) {gosub *setfnt}
+	color 0, 0, 0
+	repeat BorderThickness*2+1
+		BorderOffsetY = cnt-BorderThickness
+		repeat BorderThickness*2+1
+			BorderOffsetX = cnt-BorderThickness
+			if ((BorderOffsetX*BorderOffsetX+BorderOffsetY*BorderOffsetY) <= (BorderThickness*BorderThickness+BorderThickness/2)) {
+				if (TextWidthRate != 1.0) {
+					tmpscr = ginfo_sel
+					buffer SCR_TEXT_RESIZE_BUF, 1200, TextSize: gsel SCR_TEXT_RESIZE_BUF
+					color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
+					color 255, 255, 255: pos 0, 0: gosub *setfnt: print BorderText
+					buffer SCR_TEXT_BUF, 1200, TextSize: gsel SCR_TEXT_BUF
+					color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
+					color 255, 255, 255: pos 600, 0
+					gzoom int(1200.0*TextWidthRate), TextSize, SCR_TEXT_RESIZE_BUF, 0, 0, 1200, TextSize, 1
+					gsel tmpscr: pos BorderTextX+BorderOffsetX, BorderTextY+BorderOffsetY: gmode gmode_pixela, 600, TextSize
+					gcopy SCR_TEXT_BUF, 0, 0, 600, TextSize
+					gmode gmode_mem
+				} else {
+					pos BorderTextX+BorderOffsetX, BorderTextY+BorderOffsetY: print BorderText
+				}
+			}
+		loop
+	loop
+	if (TextSize) {
+		tmpscr = ginfo_sel
+		if (TextWidthRate != 1.0) {
+			buffer SCR_TEXT_RESIZE_BUF, 1200, TextSize: gsel SCR_TEXT_RESIZE_BUF
+			color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
+			color 255, 255, 255: pos 0, 0: gosub *setfnt: print BorderText
+		}
+		buffer SCR_TEXT_BUF, 1200, TextSize: gsel SCR_TEXT_BUF
+		color 0, 0, 0: boxf 0, 0, 1199, TextSize-1
+		BorderTextCol = ((BorderTextR&0xff)<<16)|((BorderTextG&0xff)<<8)|(BorderTextB&0xff)
+		GradCol = ((GradR&0xff)<<16)|((GradG&0xff)<<8)|(GradB&0xff)
+		gradf 0, 0, 599, TextSize/2, 1, BorderTextCol, GradCol
+		gradf 0, TextSize/2, 599, TextSize, 1, BorderTextCol, GradCol
+		if (TextWidthRate == 1.0) {
+			color 255, 255, 255: pos 600, 0: gosub *setfnt: print BorderText
+		} else {
+			color 255, 255, 255: pos 600, 0
+			gzoom int(1200.0*TextWidthRate), TextSize, SCR_TEXT_RESIZE_BUF, 0, 0, 1200, TextSize, 1
+		}
+		gsel tmpscr: pos BorderTextX, BorderTextY: gmode gmode_pixela, 600, TextSize
+		gcopy SCR_TEXT_BUF, 0, 0, 600, TextSize
+		gmode gmode_mem
+	} else {
+		color BorderTextR, BorderTextG, BorderTextB: pos BorderTextX, BorderTextY
+		print BorderText
+	}
+return
+#global
+
+/* バッファから合成 */
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#define PI 3.1415926535897932384626433832795
+#deffunc tablesynthesis int targetPlayer, int Zijia, int targetScreen
+	switch playerRelative(targetPlayer,Zijia)
+		case RELATIVE_SELF:
+			pos 0, 300: gmode gmode_rgb0alpha, 600, 300, 256: gcopy targetScreen+targetPlayer, 0, 0
+			swbreak
+		case RELATIVE_SHIMOCHA:
+			pos 450, 300: gmode gmode_rgb0alpha, 600, 301, 256: grotate targetScreen+targetPlayer, 0, 0, -PI*0.5, 600, 300
+			swbreak
+		case RELATIVE_TOIMEN:
+			gmode gmode_rgb0alpha, 201, 301, 256
+			pos 100, 149: grotate targetScreen+targetPlayer, 400, 0, PI, 200, 300
+			pos 300, 149: grotate targetScreen+targetPlayer, 200, 0, PI, 200, 300
+			pos 499, 149: grotate targetScreen+targetPlayer, 0, 0, PI, 200, 300
+			swbreak
+		case RELATIVE_KAMICHA:
+			pos 149, 300: gmode gmode_rgb0alpha, 600, 301, 256: grotate targetScreen+targetPlayer, 0, 0, PI*0.5, 600, 300
+			swbreak
+	swend
+return
+#global
+
+/* 再描画(賽振りの時) */
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc redrdice var GameStat, var GameEnv
+	repeat NUM_OF_ACTUAL_PLAYERS
+		gsel SCR_PLAYER_BUFFER_UPPER+cnt: gmode gmode_mem
+		if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
+			putsai GameStat, 340, 54, 0, 0
+		}
+	loop
+	gsel 0: redraw 0
+	color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
+	repeat NUM_OF_ACTUAL_PLAYERS
+		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_LOWER
+	loop
+	repeat NUM_OF_ACTUAL_PLAYERS
+		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_UPPER
+	loop
+	repeat 1, getPlayer(GameStat)
+		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_LOWER
+	loop
+	repeat 1, getPlayer(GameStat)
+		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_UPPER
+	loop
+	putcentertitle
+	redraw 1
+return
+#global
+
+/* 再描画 */
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc redrscreen
+	doredrscreen GameStat@, GameEnv@
+return
+
+#deffunc doredrscreen var GameStat, var GameEnv
+	gsel 0: redraw 0
+	color GetTableColorR(GameEnv)/3, GetTableColorG(GameEnv)/3, GetTableColorB(GameEnv)/3
+	boxf 0, 0, 839, 629
+	color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
+	boxf 0, 0, 599, 599
+	color 0, 0, 0
+	repeat NUM_OF_ACTUAL_PLAYERS
+		/* 画面の初期化 */
+		buffer SCR_PLAYER_BUFFER_UPPER+cnt, 600, 300
+		color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
+		boxf 0, 0, 599, 299
+		buffer SCR_PLAYER_BUFFER_LOWER+cnt, 600, 300
+		color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
+		boxf 0, 0, 599, 299
+		/* 名前パネル */
+		putnamepanel GameStat, GameEnv, cnt
+		/* 捨牌 */
+		if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_TOIMEN) {
+			putsutehai GameStat, 232, 81, cnt, 1
+		} else:if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_SELF) {
+			putsutehai GameStat, 232, 74, cnt, 1
+		} else {
+			putsutehai GameStat, 232, 75, cnt, 1
+		}
+		/* 手牌 */
+		puttehai GameStat, cnt, 125, 265, 1
+		/* 下家の晒し面子 */
+		if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_SHIMOCHA) {
+			putnakihai GameStat, cnt, 490, 260, 1
+		}
+		/* 壁牌 */
+		targetPlayer = cnt: targetPosX = 104: targetPosY = 200
+		if (playerRelative(cnt,getPlayer(GameStat))\2 == 1) {targetPosX += 8}
+#ifdef SANMA4
+		trueTargetPlayer = targetPlayer
+		if ((getRound(GameStat)\NUM_OF_PLAYERS) == 0) {tobePlayed = 0, 1, 2, 3}
+		if ((getRound(GameStat)\NUM_OF_PLAYERS) == 1) {tobePlayed = 3, 1, 2, 0}
+		if ((getRound(GameStat)\NUM_OF_PLAYERS) == 2) {tobePlayed = 1, 3, 2, 0}
+		if ((getRound(GameStat)\NUM_OF_PLAYERS) == 3) {tobePlayed = 1, 2, 3, 0}
+		targetPlayer = tobePlayed(trueTargetPlayer)
+		if (targetPlayer < 3) {
+#endif
+			if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_KAMICHA) {
+				gsel SCR_PLAYER_BUFFER_UPPER+cnt: putyama GameStat, targetPosX, targetPosY, targetPlayer, trueTargetPlayer
+			}
+			if (playerRelative(cnt,getPlayer(GameStat)) == RELATIVE_SELF) {
+				gsel SCR_PLAYER_BUFFER_UPPER+cnt: putyama GameStat, targetPosX, targetPosY, targetPlayer, trueTargetPlayer
+			}
+			gsel SCR_PLAYER_BUFFER_LOWER+cnt: putyama GameStat, targetPosX, targetPosY, targetPlayer, trueTargetPlayer
+#ifdef SANMA4
+		}
+		targetPlayer = cnt
+#endif
+		/* 立直棒 */
+		gsel SCR_PLAYER_BUFFER_UPPER+cnt
+		if (getRichiFlag(GameStat, RICHI_FLAG, cnt) > RIICHI_NO) {
+			switch playerRelative(cnt,getPlayer(GameStat))
+				case RELATIVE_SELF:
+					putrichi 263, 60, 0, 2
+					swbreak
+				case RELATIVE_SHIMOCHA:
+					putrichi 263, 60, -2, 0
+					swbreak
+				case RELATIVE_TOIMEN:
+					putrichi 263, 60, 0, -2
+					swbreak
+				case RELATIVE_KAMICHA:
+					putrichi 263, 60, 2, 0
+					swbreak
+			swend
+		}
+		/* サイコロ */
+		gsel SCR_PLAYER_BUFFER_UPPER+cnt
+		if (playerwind(cnt, getRound(GameStat)) == PLAYER_EAST) {
+			switch playerRelative(cnt,getPlayer(GameStat))
+				case RELATIVE_SELF:
+					putsai GameStat, 340, 54, 0, 5
+					swbreak
+				case RELATIVE_SHIMOCHA:
+					putsai GameStat, 340, 54, -5, 0
+					swbreak
+				case RELATIVE_TOIMEN:
+					putsai GameStat, 340, 54, 0, -5
+					swbreak
+				case RELATIVE_KAMICHA:
+					putsai GameStat, 340, 54, 5, 0
+					swbreak
+			swend
+		}
+		/* 下家以外の晒し面子 */
+		if (playerRelative(cnt,getPlayer(GameStat)) != RELATIVE_SHIMOCHA) {
+			gsel SCR_PLAYER_BUFFER_UPPER+cnt
+			putnakihai GameStat, cnt, 490, 260, 1
+		}
+		/* 起家マーク */
+		gsel SCR_PLAYER_BUFFER_LOWER+cnt
+		if (cnt == 0) {
+			switch playerRelative(cnt,getPlayer(GameStat))
+				case RELATIVE_SELF:
+					putchichamark GameStat, 440, 140 , 0, 2
+					swbreak
+				case RELATIVE_SHIMOCHA:
+					putchichamark GameStat, 440, 140 , -2, 0
+					swbreak
+				case RELATIVE_TOIMEN:
+					putchichamark GameStat, 440, 140 , 0, -2
+					swbreak
+				case RELATIVE_KAMICHA:
+					putchichamark GameStat, 440, 140 , 2, 0
+					swbreak
+			swend
+		}
+		/* 各家の情報を表示 */
+		putplayerinfo GameStat, targetPlayer
+		/* 鳴き仕掛けなどのテキスト表示 */
+		putCall cnt
+	loop
+	/* 画面右 */
+	putsidepanel GameEnv
+	/* 画面下に待ち牌などのデータを表示 */
+	putlowerpanel GameStat, GameEnv
+	/* 背景 */
+	color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
+	boxf 0, 0, 599, 599
+	gmode gmode_pixela: pos 0, 0: gcopy SCR_MAIN_BACKGROUND, 0, 0, 840, 630
+	/* プレイヤー別の画面からメイン画面に合成 */
+	repeat NUM_OF_ACTUAL_PLAYERS
+		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_LOWER
+	loop
+	repeat NUM_OF_ACTUAL_PLAYERS
+		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_UPPER
+	loop
+	repeat 1, getPlayer(GameStat)
+		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_LOWER
+	loop
+	repeat 1, getPlayer(GameStat)
+		tablesynthesis cnt, getPlayer(GameStat), SCR_PLAYER_BUFFER_UPPER
+	loop
+	/* 画面中央に表示する情報 */
+	putcenterpanel GameStat, GameEnv
+	/* 画面中央に表示する情報 */
+	putcentertitle
+	/* 再描画して戻る */
+	redraw 1
+return
+#global
+
+#module
+#deffunc setCenterTitle str centerTitleTxt
+	CenterTitle = centerTitleTxt
+return
+
+#deffunc putCenterTitle
+#include "const.hsp"
+	if (vartype(CenterTitle) != vartype("str")) {CenterTitle = ""}
+	font fontname, 96, 0
+	if (strlen(CenterTitle) > 8) {
+		borderedtxt3 CenterTitle, 110, 250, 255, 255, 255, 2, 96, 192, 192, 192, 0, 8.0/double(strlen(CenterTitle))
+	} else {
+		borderedtxt2 CenterTitle, 110+24*(8-strlen(CenterTitle)), 250, 255, 255, 255, 2, 96, 192, 192, 192
+	}
+return
+#global
+
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc putnamepanel var GameStat, var GameEnv, int targetPlayer
+	/* 名前パネル */
+	color GetTableColorR(GameEnv)*10/8, GetTableColorG(GameEnv)*10/8, GetTableColorB(GameEnv)*10/8
+	font fontname, 14, 0
+	pos 240, 65: print "___________________"
+	if ((getScore(GameStat,targetPlayer,7)!=0)||(getScore(GameStat,targetPlayer,6)!=0)||(getScore(GameStat,targetPlayer,5)!=0)||(getScore(GameStat,targetPlayer,4)!=0)||(getScore(GameStat,targetPlayer,3)!=0)||(getScore(GameStat,targetPlayer,2)!=0)||(getScore(GameStat,targetPlayer,1)!=0)||(abs(getScore(GameStat,targetPlayer,0))>=10000)){
+		color GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8
+		tmpcnt=targetPlayer: tmpNumName = "億兆京垓杼穣溝澗正載極恒阿那不"
+		repeat NUM_OF_DIGIT_GROUPS
+			if (cnt < NUM_OF_DIGIT_GROUPS-2) {
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 10000000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000000/10000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000000/1000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -10000000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000000/10000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000000/1000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 1000000) {pos 240, 65: tmptxt= "              "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000000/1000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -1000000) {pos 240, 65: tmptxt= "             -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000000/1000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 100000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000/1000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -100000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000/1000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 10000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000/1000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000/100)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -10000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100000/10000)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000/1000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000/100)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4+2, 2): break}
+				
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 1000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000/1000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000/100)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -1000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10000/1000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000/100)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 100) {pos 240, 65: tmptxt= "              "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000/100)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+				if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -100) {pos 240, 65: tmptxt= "             -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\1000/100)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+				if (cnt < NUM_OF_DIGIT_GROUPS-2) {
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 10) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\100000000/10000000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -10) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\100000000/10000000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 1) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\100000000/10000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\10000000/1000000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -1) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\100000000/10000000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\10000000/1000000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+				} else {
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 10) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\1000000/100000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -10) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\100/10)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\1000000/100000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) >= 1) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\100000/10000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+					if (getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt) <= -1) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt)\10)+"."+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\1000000/100000)+abs(getScore(GameStat,tmpcnt,(NUM_OF_DIGIT_GROUPS-1)-cnt-1)\100000/10000)+strmid(tmpNumName, ((NUM_OF_DIGIT_GROUPS-2)-cnt)*4, 2): break}
+				}
+			} else {
+				if (getScore(GameStat,tmpcnt,0) >= 100000) {pos 240, 65: tmptxt= "             "+abs(getScore(GameStat,tmpcnt,0)\1000000/100000)+abs(getScore(GameStat,tmpcnt,0)\100000/10000)+abs(getScore(GameStat,tmpcnt,0)\10000/1000)+abs(getScore(GameStat,tmpcnt,0)\1000/100)+"万": break}
+				if (getScore(GameStat,tmpcnt,0) <= -100000) {pos 240, 65: tmptxt= "            -"+abs(getScore(GameStat,tmpcnt,0)\1000000/100000)+abs(getScore(GameStat,tmpcnt,0)\100000/10000)+abs(getScore(GameStat,tmpcnt,0)\10000/1000)+abs(getScore(GameStat,tmpcnt,0)\1000/100)+"万": break}
+				if (getScore(GameStat,tmpcnt,0) >= 10000) {pos 240, 65: tmptxt= "              "+abs(getScore(GameStat,tmpcnt,0)\100000/10000)+abs(getScore(GameStat,tmpcnt,0)\10000/1000)+abs(getScore(GameStat,tmpcnt,0)\1000/100)+"万": break}
+				if (getScore(GameStat,tmpcnt,0) <= -10000) {pos 240, 65: tmptxt= "             -"+abs(getScore(GameStat,tmpcnt,0)\100000/10000)+abs(getScore(GameStat,tmpcnt,0)\10000/1000)+abs(getScore(GameStat,tmpcnt,0)\1000/100)+"万": break}
+			}
+		loop
+		borderedtxt2a tmptxt, 240, 65, GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8, 0, 14
+	} else {
+		borderedtxt2b "                 00", 240, 65, GetTableColorR(GameEnv)*10/8, GetTableColorG(GameEnv)*10/8, GetTableColorB(GameEnv)*10/8, 0, 14
+		color GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8
+		/* パネルに持ち点を表示 */
+		pos 240, 65: tmptxt= strf("            %5d", getScore(GameStat,targetPlayer,0))
+		borderedtxt2a tmptxt, 240, 65, GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8, 0, 14
+	}
+	tmpname = getPlayerName(GameEnv, targetPlayer)
+	borderedtxt2a strmid(tmpname, 0, 12), 240, 65, GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8, 0, 14
+	color 255, 255, 240: gmode gmode_mem
+	return
+#global
+
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc putcenterpanel var GameStat, var GameEnv
+	/* 画面中央に表示する情報 */
+	gmode gmode_mem
+	/* 現在何局目かを表示 */
+	font fontname, 32, 0
+	gosub *scribcolor
+	borderedtxt2a roundName(getRound(GameStat)), 250, 250, ginfo_r, ginfo_g, ginfo_b, 1, 32
+	/* 局の情報を表示 */
+	font fontname, 14, 0
+	color GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8: colmode = 0
+	tmptxt = ""
+	if (getAgariChain(GameStat) >= 7) {
+		if ((GetWatchModeFlag(GameEnv) == 1)||(playerWind(getPlayer(GameStat), getRound(GameStat)) == PLAYER_EAST)) {
+			tmptxt = "☆八連荘ﾁｬﾝｽ☆"
+		} else {
+			tmptxt = "！八連荘ﾋﾟﾝﾁ！"
+		}
+	} else:if ((getHonba(GameStat) >= 5)&&(chkRule("ryanshiba", "from_5honba") != 0)) {
+		tmptxt = " †二飜縛り† "
+	} else:if ((getHonba(GameStat) >= 4)&&(chkRule("ryanshiba", "from_4honba") != 0)) {
+		tmptxt = " †二飜縛り† "
+	} else:if ((getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat)) >= (getGameLength(GameStat)+1)) {
+		tmptxt = "  ▽延長戦▽  "
+	} else:if ((getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat)) == getGameLength(GameStat)) {
+		if (getGameLength(GameStat) == 0) {
+			tmptxt = " ◇一局清算◇ "
+		} else {
+			tmptxt = " ～オーラス～ "
+		}
+	} else {
+		color GetTableColorR(GameEnv)*10/8, GetTableColorG(GameEnv)*10/8, GetTableColorB(GameEnv)*10/8: colmode = 1
+		if (chkRule("game_length", "east_south_game")) {tmptxt = "  - 東南戦 -  "}
+		else: if (chkRule("game_length", "east_wind_game")) {tmptxt = "  - 東風戦 -  "}
+		else: if (chkRule("game_length", "full_round_game")) {tmptxt = "  - 一荘戦 -  "}
+		else: if (chkRule("game_length", "east_north_game")) {tmptxt = "  - 東北戦 -  "}
+		else: if (chkRule("game_length", "twice_east_game")) {tmptxt = "  - 東々戦 -  "}
+		else: if (chkRule("game_length", "east_south_west_game")) {tmptxt = " - 東南西戦 - "}
+		else: if (chkRule("game_length", "east_west_game")) {tmptxt = "  - 東西戦 -  "}
+		else: if (chkRule("game_length", "east_only_game")) {tmptxt = "  - 東風戦 -  "}
+	}
+	if (colmode) {
+		borderedtxt2b tmptxt, 250, 282, GetTableColorR(GameEnv)*10/8, GetTableColorG(GameEnv)*10/8, GetTableColorB(GameEnv)*10/8, 0, 14
+	} else {
+		borderedtxt2a tmptxt, 250, 282, GetTableColorR(GameEnv)*12/8, GetTableColorG(GameEnv)*12/8, GetTableColorB(GameEnv)*12/8, 0, 14
+	}
+	/* 積み棒、残り自摸牌、供託点棒の数を表示 */
+	font fontname, 16, 0: color 0, 0, 0
+#ifdef ALLSANMA
+	if ((tilesLeft(GameStat) < 53)||((tilesLeft(GameStat) < 55)&&(((chkRule("dora_twice", "yes") == 0)&&((chkRule("dora_twice", "only_when_doublets") == 0)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
+#else
+	if ((tilesLeft(GameStat) < 68)||((tilesLeft(GameStat) < 70)&&(((chkRule("dora_twice", "yes") == 0)&&((chkRule("dora_twice", "only_when_doublets") == 0)||(getDice(GameStat, 0, 0) != getDice(GameStat, 1, 0))))))) {
+#endif
+		if (getHonba(GameStat)) {tmptxt = ""+getHonba(GameStat)+"本場"}
+		else {tmptxt = "平場"}
+		tmptxt += strf(" 残%2d枚\n", tilesLeft(GameStat))
+		tmptxt += "供託 "
+		if (getDeposit(GameStat)) {tmptxt += ""+getDeposit(GameStat)+"000点"}
+		else {tmptxt += "なし"}
+		tmptxt += "\n"
+	} else {
+		/* 配牌中の場合 */
+		tmptxt = "☆ 配牌中 ☆\n"
+		if (GetWatchModeFlag(GameEnv) == 1) {
+			tmptxt += "Watch Mode\n"
+		} else {
+			switch playerWind(getPlayer(GameStat), getRound(GameStat))
+				case PLAYER_EAST: tmptxt += "Player  親 \n": swbreak
+				case PLAYER_SOUTH: tmptxt += "Player 南家\n": swbreak
+				case PLAYER_WEST: tmptxt += "Player 西家\n": swbreak
+				case PLAYER_NORTH: tmptxt += "Player 北家\n": swbreak
+			swend
+		}
+	}
+	/* 情報を表示 */
+	gosub *scribcolor
+	tmpr = ginfo_r: tmpg = ginfo_g: tmpb = ginfo_b
+	notesel tmptxt
+	repeat notemax
+		noteget tmptxtt, cnt
+		borderedtxt2a tmptxtt, 250, 300+cnt*16, tmpr, tmpg, tmpb, 1, 16
+	loop
+	noteunsel
+	return
+
+*scribcolor
+	if ((getRoundLoop(GameStat))\2 == 0) {
+		if (getRoundLoop(GameStat) == 0) {
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {color 128, 255, 128}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {color 128, 255, 255}
+		} else {
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {color 192, 255, 128}
+			if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {color 255, 192, 128}
+		}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 2) {color 192, 192, 255}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {color 255, 128, 255}
+	} else {
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 0) {color 255, 255, 255}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 1) {color 255, 255, 128}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 2) {color 255, 128, 128}
+		if (getRound(GameStat)/NUM_OF_PLAYERS == 3) {color 192, 192, 192}
+	}
+	if (getRound(GameStat)/NUM_OF_PLAYERS == 4) {color 192, 192, 255}
+	if (getRound(GameStat)/NUM_OF_PLAYERS == 5) {color 192, 255, 192}
+	if (getRound(GameStat)/NUM_OF_PLAYERS == 6) {color 255, 192, 192}
+	return
+#global
+
+/* 各家の情報を表示 */
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc putplayerinfo var GameStat, int targetPlayer
+	gsel SCR_PLAYER_BUFFER_UPPER+targetPlayer
+	color 0, 0, 0
+	/* 暫定順位の計算 */
+	calcRank Rank, GameStat
+	tmpRank = Rank(targetPlayer)
+	/* ツモ番マーカー */
+	/* ツモ番の人はマーカーを表示し、文字を黄色で表示 */
+	if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == targetPlayer) {tmptxt = "▼"}
+	else {tmptxt = "　"}
+	/* 自風と暫定順位 */
+	tmptxt += windName(playerWind(targetPlayer, getRound(GameStat)))+" "+tmpRank+"位"
+	/* 得点とか */
+	if ((getHandStat(GameStat, targetPlayer) == 0)||(getHeavenHandFlag(GameStat) == 1)) { /* 牌を立てているとき */
+		/* 現在の持ち点 */
+		exportScore GameStat, scoreArray
+		tmpscoretxt = bignumtotext(scoreArray, targetPlayer, 100, "", "-")
+		tmptxt += " "+tmpscoretxt+"点"
+		if (chkRule("wareme", "no") == 0) {
+			/* 割れ目の位置を表示 */
+			if (getWareme(GameStat) == targetPlayer) {tmptxt += " 割れ目"}
+		}
+		if (chkRule("doukasen", "no") == 0) {
+			/* 導火線の位置を表示 */
+			if (getDoukasen(GameStat) == targetPlayer) {tmptxt += " 導火線"}
+		}
+		if (getDisconnectFlag(GameStat, targetPlayer) == 1) {
+			/* 通信対戦で回線落ちの場合 */
+			tmptxt += " 回線切断"
+		} else {
+#ifdef SANMA4
+			if (playerwind(targetPlayer, getRound(GameStat)) != PLAYER_NORTH) {
+#endif
+				if (getAgariHouki(GameStat, targetPlayer) == 1) {
+					/* 喰い替えなどによる和了り放棄の場合 */
+					tmptxt += " 和了り放棄"
+				} else {
+					if (getPlayer(GameStat) == targetPlayer) {
+					/* 自家に対してのみ、現在の向聴数を表示 */
+						Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
+						/* まだ聴牌していないなら */
+						if (Shanten > 0) {tmptxt += " "+Shanten+"向聴"}
+						else {
+							/* 聴牌したとき */
+							if (Shanten == 0) {
+								chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, targetPlayer
+								/* 振聴の時は振聴と表示 */
+								if ((FuritenFlag == 1)||(getDoujunFuriten(GameStat, targetPlayer) == 1)) {tmptxt += " 振聴"}
+								else:if (getRichiFlag(GameStat, RICHI_FLAG, getPlayer(GameStat)) > RIICHI_NO) {
+									/* 振聴じゃないとき */
+									tmptxt += " 立直"
+								} else {
+									tmptxt += " 聴牌"
+								}
+							}
+							else:if (Shanten == -1) {
+								/* 和了ってるとき(和了れないときも含む) */
+								tmptxt += " 和了"
+							}
+						}
+					}
+					/* 倒牌可能な状態であれば */
+					DaoPaiAbilityFlag = chkdaopaiability(GameStat, targetPlayer)
+					if ((getPlayer(GameStat) == targetPlayer)&&(DaoPaiAbilityFlag)&&(getFirstDrawFlag(GameStat, targetPlayer))) {
+						tmptxt += " 九種九牌"
+					}
+					/* 大三元か大四喜を包になっている場合 */
+					if (isGotPao(GameStat, targetPlayer)) {tmptxt += " 包責"}
+					/* 自分のツモ番の場合、残り時間を表示 */
+//					if ((getPlayer(GameStat) == targetPlayer)&&(TimeLeft > 0)) {tmptxt += " あと"+TimeLeft+"秒"}
+//					else {
+						/* 抜きドラがあればそれを表示 */
+#ifdef SANMAX
+						if (getNorthFlag(GameStat, targetPlayer) > 0) {tmptxt += " 北×"+getNorthFlag(GameStat, targetPlayer)}
+#else
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_ALL_SEASONS) {tmptxt += " "}
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SPRING) {tmptxt += "春"}
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SUMMER) {tmptxt += "夏"}
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_AUTUMN) {tmptxt += "秋"}
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_WINTER) {tmptxt += "冬"}
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_ALL_FLOWERS) {tmptxt += " "}
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_PLUM) {tmptxt += "梅"}
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_ORCHID) {tmptxt += "蘭"}
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_CHRYSANTHEMUM) {tmptxt += "菊"}
+						if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_BAMBOO) {tmptxt += "竹"}
+#endif
+						/* 焼鳥の場合(焼鳥のペナルティはコンフィグで設定可能) */
+						if (getYakitori(GameStat, targetPlayer) == 1) {tmptxt += " 焼鳥"}
+						/* チップルールの場合、チップの収支を表示 */
+						/* チップレートはコンフィグで設定可能 */
+						if (chkRule("chip", "no") == 0) {
+							if (getChip(GameStat, targetPlayer) >= 0) {tmptxt += " ◎+"+getChip(GameStat, targetPlayer)}
+							else {tmptxt += " ◎"+getChip(GameStat, targetPlayer)}
+						}
+//					}
+				}
+#ifdef SANMA4
+			}
+#endif
+		}
+	} else { /* 牌を倒したか伏せたとき */
+		if (chkRule("wareme", "no") == 0) {
+			/* 割れ目の位置を表示 */
+			if (getWareme(GameStat) == targetPlayer) {tmptxt += " 割れ目"}
+		}
+		if (chkRule("doukasen", "no") == 0) {
+			/* 導火線の位置を表示 */
+			if (getDoukasen(GameStat) == targetPlayer) {tmptxt += " 導火線"}
+		}
+		if (getDisconnectFlag(GameStat, targetPlayer) == 1) {
+			/* 通信対戦で回線落ちの場合 */
+			tmptxt += " 回線切断"
+		} else {
+#ifdef SANMA4
+			if (playerwind(targetPlayer, getRound(GameStat)) != PLAYER_NORTH) {
+#endif
+				if (getAgariHouki(GameStat, targetPlayer) == 1) {
+					/* 喰い替えなどによる和了り放棄の場合 */
+					/* 和了り放棄は強制不聴扱いになります */
+					tmptxt += " 和了り放棄"
+				} else {
+					/* 和了時、オープン立直時、あるいは流局聴牌時の場合
+					   何待ちであるか表示する */
+					/* 振聴であるかどうか、また、何待ちであるかどうかを調べる */
+					chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, targetPlayer
+					Shanten = countshanten(GameStat, targetPlayer, SHANTEN_ALL)
+					/* 何面待ちか調べる */
+					if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > 0)&&(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) <= TILE_NONFLOWER_STRICT_MAX)) {
+						if ((MachihaiFlag(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) == 1)&&(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != getPlayer(GameStat))) {
+							MachihaiCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE))++
+							MachihaiTotal++
+						}
+					}
+					if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) > 0)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) <= TILE_NONFLOWER_STRICT_MAX)) {
+						if (MachihaiFlag(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat))) == 1) {
+							MachihaiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)))++
+							MachihaiTotal++
+						}
+					}
+					/* 処理 */
+					tmpChainFlag = 0
+					if (MachiMen == 13) {
+						/* 国士無双１３面待ちの場合 */
+						tmptxt += " 国士無双１３面待ち"
+						if (FuritenFlag == 1) {tmptxt += "(振聴)"}
+					} else {
+						/* 数牌は色別と筋別にまとめて表示 */
+						repeat TILE_NUMERAL_COLORS
+							if ((MachihaiFlag(cnt*TILE_SUIT_STEP+1) > 0)||(MachihaiFlag(cnt*TILE_SUIT_STEP+4) > 0)||(MachihaiFlag(cnt*TILE_SUIT_STEP+7) > 0)) {
+								if (tmpChainFlag == 1) {tmptxt += "-"} else {tmptxt += " "}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+1) > 0) {tmptxt += "一"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+4) > 0) {tmptxt += "四"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+7) > 0) {tmptxt += "七"}
+								if (cnt == TILE_SUIT_CHARACTERS/TILE_SUIT_STEP) {tmptxt += "萬"}
+								if (cnt == TILE_SUIT_CIRCLES/TILE_SUIT_STEP) {tmptxt += "筒"}
+								if (cnt == TILE_SUIT_BAMBOOS/TILE_SUIT_STEP) {tmptxt += "索"}
+								tmpChainFlag = 1
+							}
+							if ((MachihaiFlag(cnt*TILE_SUIT_STEP+2) > 0)||(MachihaiFlag(cnt*TILE_SUIT_STEP+5) > 0)||(MachihaiFlag(cnt*TILE_SUIT_STEP+8) > 0)) {
+								if (tmpChainFlag == 1) {tmptxt += "-"} else {tmptxt += " "}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+2) > 0) {tmptxt += "二"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+5) > 0) {tmptxt += "五"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+8) > 0) {tmptxt += "八"}
+								if (cnt == TILE_SUIT_CHARACTERS/TILE_SUIT_STEP) {tmptxt += "萬"}
+								if (cnt == TILE_SUIT_CIRCLES/TILE_SUIT_STEP) {tmptxt += "筒"}
+								if (cnt == TILE_SUIT_BAMBOOS/TILE_SUIT_STEP) {tmptxt += "索"}
+								tmpChainFlag = 1
+							}
+							if ((MachihaiFlag(cnt*TILE_SUIT_STEP+3) > 0)||(MachihaiFlag(cnt*TILE_SUIT_STEP+6) > 0)||(MachihaiFlag(cnt*TILE_SUIT_STEP+9) > 0)) {
+								if (tmpChainFlag == 1) {tmptxt += "-"} else {tmptxt += " "}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+3) > 0) {tmptxt += "三"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+6) > 0) {tmptxt += "六"}
+								if (MachihaiFlag(cnt*TILE_SUIT_STEP+9) > 0) {tmptxt += "九"}
+								if (cnt == TILE_SUIT_CHARACTERS/TILE_SUIT_STEP) {tmptxt += "萬"}
+								if (cnt == TILE_SUIT_CIRCLES/TILE_SUIT_STEP) {tmptxt += "筒"}
+								if (cnt == TILE_SUIT_BAMBOOS/TILE_SUIT_STEP) {tmptxt += "索"}
+								tmpChainFlag = 1
+							}
+						loop
+						/* 字牌待ちの場合 */
+						if ((MachihaiFlag(TILE_EAST_WIND) > 0)||(MachihaiFlag(TILE_SOUTH_WIND) > 0)||(MachihaiFlag(TILE_WEST_WIND) > 0)||(MachihaiFlag(TILE_NORTH_WIND) > 0)||(MachihaiFlag(TILE_WHITE_DRAGON) > 0)||(MachihaiFlag(TILE_GREEN_DRAGON) > 0)||(MachihaiFlag(TILE_RED_DRAGON) > 0)) {
+							if (tmpChainFlag == 1) {tmptxt += "-"} else {tmptxt += " "}
+							if (MachihaiFlag(TILE_EAST_WIND) > 0) {tmptxt += "東"}
+							if (MachihaiFlag(TILE_SOUTH_WIND) > 0) {tmptxt += "南"}
+							if (MachihaiFlag(TILE_WEST_WIND) > 0) {tmptxt += "西"}
+							if (MachihaiFlag(TILE_NORTH_WIND) > 0) {tmptxt += "北"}
+							if (MachihaiFlag(TILE_WHITE_DRAGON) > 0) {tmptxt += "白"}
+							if (MachihaiFlag(TILE_GREEN_DRAGON) > 0) {tmptxt += "發"}
+							if (MachihaiFlag(TILE_RED_DRAGON) > 0) {tmptxt += "中"}
+							tmpChainFlag = 1
+						}
+						/* 「～待ち」と付ける */
+						if (MachiMen > 0) {
+							tmptxt += "待ち"
+							if (FuritenFlag == 1) {tmptxt += "(振聴)"}
+						} else {
+							/* 不聴の場合 */
+							tmptxt += " ノーテン"
+						}
+					}
+				}
+#ifdef SANMA4
+			}
+#endif
+		}
+		/* 抜きドラがあればそれを表示 */
+#ifdef SANMAX
+		if (getNorthFlag(GameStat, targetPlayer) > 0) {tmptxt += " 北×"+getNorthFlag(GameStat, targetPlayer)}
+#else
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_ALL_SEASONS) {tmptxt += " "}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SPRING) {tmptxt += "春"}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_SUMMER) {tmptxt += "夏"}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_AUTUMN) {tmptxt += "秋"}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_WINTER) {tmptxt += "冬"}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_ALL_FLOWERS) {tmptxt += " "}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_PLUM) {tmptxt += "梅"}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_ORCHID) {tmptxt += "蘭"}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_CHRYSANTHEMUM) {tmptxt += "菊"}
+		if (getFlowerFlag(GameStat, targetPlayer)&FLOWER_BAMBOO) {tmptxt += "竹"}
+#endif
+		/* 焼鳥の場合(焼鳥のペナルティはコンフィグで設定可能) */
+		if (getYakitori(GameStat, targetPlayer) == 1) {tmptxt += " 焼鳥"}
+		/* チップルールの場合、チップの収支を表示 */
+		/* チップレートはコンフィグで設定可能 */
+		if (chkRule("chip", "no") == 0) {
+			if (getChip(GameStat, targetPlayer) >= 0) {tmptxt += " ◎+"+getChip(GameStat, targetPlayer)}
+			else {tmptxt += " ◎"+getChip(GameStat, targetPlayer)}
+		}
+	}
+	/* 上で設定した内容を表示 */
+	font fontname, 18, 1
+	/* ツモ番の人は黄色、それ以外は白で表示 */
+	/* コネロスは暗転表示 */
+	if (getDisconnectFlag(GameStat, targetPlayer) == 1) {
+		if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == targetPlayer) {
+			color 192, 192, 0
+		} else {
+			color 192, 192, 192
+		}
+	} else {
+		if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == targetPlayer) {
+			color 255, 255, 0
+		} else {
+			color 255, 255, 240
+		}
+	}
+	if (strlen(tmptxt) > 45) {
+		borderedtxt3a tmptxt, 125, 235, ginfo_r, ginfo_g, ginfo_b, 1, 18, 1, 45.0/double(strlen(tmptxt))
+	} else {
+		borderedtxt2a tmptxt, 125, 235, ginfo_r, ginfo_g, ginfo_b, 1, 18, 1
+	}
+	return
+#global
+
+/* 鳴き仕掛けなどのテキスト表示 */
+#module
+#include "const.hsp"
+#deffunc initCall
+	sdim PlayerDeclaration, 12, NUM_OF_PLAYERS
+return
+
+#deffunc setCall int pnum, str callStr
+	PlayerDeclaration(pnum) = callStr
+return
+
+#defcfunc getCall int plnum
+	return PlayerDeclaration(plnum)
+
+#deffunc putCall int player
+	font fontname, 96, 0
+	switch PlayerDeclaration(player)
+		case "リーチ":
+			/* 薄赤 */
+			color 255, 192, 192: swbreak
+		case "ロン": // 優先権のあるロン
+			/* 橙色 */
+			color 255, 224, 192: swbreak
+		case "ツモ": case "流し満貫":
+		case "０": case "親流れ":
+			/* 黄色 */
+			color 255, 255, 192: swbreak
+		case "チー":
+			/* 黄緑 */
+			color 240, 255, 192: swbreak
+		case "聴牌": case "連荘":
+			/* 薄緑 */
+			color 192, 255, 192: swbreak
+		case "不聴":
+			/* 水色 */
+			color 192, 255, 255: swbreak
+		case "ポン":
+			/* 薄青 */
+			color 192, 224, 255: swbreak
+		case "カン":
+			/* 薄紫 */
+			color 224, 192, 255: swbreak
+		case "花":
+			/* 桃色 */
+			color 255, 192, 224: swbreak
+		case " ロン ": // 優先権のないロン
+		case "北": case "２位":
+			/* 白銀 */
+			color 224, 224, 224: swbreak
+		case "九種九牌":
+			/* 銀色 */
+			color 192, 192, 192: swbreak
+		case "錯和": case "和了放棄":
+		case "喰替": case "多牌": case "少牌":
+			/* 赤色 */
+			color 192, 32, 32: swbreak
+		case "１位":
+			/* 金色 */
+			color 255, 224, 32: swbreak
+		case "３位":
+			/* 銅色 */
+			color 192, 96, 32: swbreak
+		case "４位":
+			/* 紫色 */
+			color 128, 32, 192: swbreak
+	swend
+	if (strmid(PlayerDeclaration(player), 0, 1)  == "+") {color 192, 255, 192}
+	if (strmid(PlayerDeclaration(player), 0, 1)  == "-") {color 255, 192, 192}
+	if (strmid(PlayerDeclaration(player), 0, 2)  == "＋") {color 192, 255, 192}
+	if (strmid(PlayerDeclaration(player), 0, 2)  == "－") {color 255, 192, 192}
+	if (strlen(PlayerDeclaration(player)) > 8) {
+		borderedtxt3a PlayerDeclaration(player), 110+24*(8-strlen(PlayerDeclaration(player))), 160, ginfo_r, ginfo_g, ginfo_b, 2, 96, , 8.0/double(strlen(PlayerDeclaration(player)))
+	} else {
+		borderedtxt2a PlayerDeclaration(player), 110+24*(8-strlen(PlayerDeclaration(player))), 160, ginfo_r, ginfo_g, ginfo_b, 2, 96
+	}
+return
+#global
+
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc putsidepanel var GameEnv
+	/* 画面右 */
+	gsel 0: color GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
+	gmode gmode_pixela: pos 590, 0: gcopy SCR_MAIN_LOGO, 0, 0, 240, 120
+	font fontname, 20, 0
+	tmpVersion = "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
+	borderedtxt2a tmpVersion, 600+((24-strlen(tmpVersion))*10), 16, (GetTableColorR(GameEnv)+63+255)/2, (GetTableColorG(GameEnv)+63+255)/2, (GetTableColorB(GameEnv)+63+255)/2, 0, 20
+	showClock 720, 240, 118, GetTableColorR(GameEnv), GetTableColorG(GameEnv), GetTableColorB(GameEnv)
+	/*  */
+	buffer SCR_BUTTON_FLAME_BUFFER, 840, 630
+	color 0, 0, 0
+	boxf 0, 0, 839, 629
+	/* 右下のボタン表示部分の枠線 */
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4
+	line 719, 460, 620, 460
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 719, 479: line 620, 479
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 620, 460
+	line 819, 460, 720, 460
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 819, 479: line 820, 479
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 720, 460
+	line 719, 480, 620, 480
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 719, 499: line 620, 499
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 620, 480
+	line 819, 480, 720, 480
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 819, 499: line 720, 499
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 720, 480
+	line 669, 500, 620, 500
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 669, 529: line 620, 529
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 620, 500
+	line 719, 500, 670, 500
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 719, 529: line 670, 529
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 670, 500
+	line 769, 500, 620, 500
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 769, 529: line 720, 529
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 720, 500
+	line 819, 500, 670, 500
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 819, 529: line 770, 529
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 770, 500
+	line 669, 530, 620, 530
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 669, 559: line 620, 559
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 620, 530
+	line 719, 530, 670, 530
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 719, 559: line 670, 559
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 670, 530
+	line 769, 530, 620, 530
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 769, 559: line 720, 559
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 720, 530
+	line 819, 530, 670, 530
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 819, 559: line 770, 559
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 770, 530
+	line 819, 560, 620, 560
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 819, 619: line 620, 619
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 620, 560
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 820, 459, 619, 459
+	color GetTableColorR(GameEnv)*3/4, GetTableColorG(GameEnv)*3/4, GetTableColorB(GameEnv)*3/4: line 820, 620: line 619, 620
+	color GetTableColorR(GameEnv)*5/4, GetTableColorG(GameEnv)*5/4, GetTableColorB(GameEnv)*5/4: line 619, 459
+	gsel 0: gmode gmode_rgb0alpha, , , 56: pos 0, 0: color 0, 0, 0: gcopy SCR_BUTTON_FLAME_BUFFER, 0, 0, 840, 630
+	return
+#global
+
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc putlowerpanel var GameStat, var GameEnv
+	/* 画面下を黒で塗る */
+	color GetTableColorR(GameEnv)/5, GetTableColorG(GameEnv)/5, GetTableColorB(GameEnv)/5
+	boxf 0, 600, 599, 639
+	/* 画面下に待ち牌などのデータを表示 */
+	font fontname, 14, 0: color 255, 255, 255
+	if ((TimeLeft@player == 0)||(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != getPlayer(GameStat))) {
+		chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, getPlayer(GameStat)
+		Shanten = countshanten(GameStat, getPlayer(GameStat), SHANTEN_ALL)
+		if ((getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > 0)&&(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) <= TILE_NONFLOWER_STRICT_MAX)) {
+			if ((MachihaiFlag(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) == 1)&&(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != getPlayer(GameStat))) {
+				MachihaiCount(getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE))++
+				MachihaiTotal++
+			}
+		}
+		if ((getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) > 0)&&(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) <= TILE_NONFLOWER_STRICT_MAX)) {
+			if (MachihaiFlag(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat))) == 1) {
+				MachihaiCount(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)))++
+				MachihaiTotal++
+			}
+		}
+		if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getPlayer(GameStat)) == 0) {
+			if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX-(MeldPointer(GameStat, getPlayer(GameStat))*3), getPlayer(GameStat)) >= TILE_NONFLOWER_MAX) {MachiMen = 0}
+			else:if (MachihaiFlag(getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX-(MeldPointer(GameStat, getPlayer(GameStat))*3), getPlayer(GameStat))) != 0) {
+				MachiMen = 0
+			}
+		}
+		if (MachiMen == 0) {
+			color 128, 128, 128
+			tmpr=ginfo_r:tmpg=ginfo_g:tmpb=ginfo_b
+			borderedtxt2b "ﾉｰﾃﾝ", 426, 601, tmpr, tmpg, tmpb, 0, 14
+			borderedtxt2b "--枚", 426, 615, tmpr, tmpg, tmpb, 0, 14
+		} else {
+			pos 426, 601
+			if (MachihaiTotal == 0) {color 192, 192, 192}
+			if (MachihaiTotal == 1) {color 255, 0, 0}
+			if (MachihaiTotal == 2) {color 255, 85, 0}
+			if (MachihaiTotal == 3) {color 255, 170, 0}
+			if (MachihaiTotal == 4) {color 255, 255, 0}
+			if (MachihaiTotal == 5) {color 255, 255, 255}
+			if (MachihaiTotal == 6) {color 255, 255, 255}
+			if (MachihaiTotal == 7) {color 255, 255, 255}
+			if (MachihaiTotal == 8) {color 0, 255, 0}
+			if ((MachihaiTotal >= 9)&&(MachihaiTotal <= 15)) {color 0, 255-((MachihaiTotal-8)*16), ((MachihaiTotal-8)*32)}
+			if (MachihaiTotal >= 16) {color 0, 128, 255}
+			tmpr=ginfo_r:tmpg=ginfo_g:tmpb=ginfo_b
+			if (MachihaiTotal == 0) {borderedtxt2a "純ｶﾗ", 426, 601, tmpr, tmpg, tmpb, 0, 14}
+			else:if (FuritenFlag == 1) {borderedtxt2a "ﾌﾘﾃﾝ", 426, 601, tmpr, tmpg, tmpb, 0, 14}
+			else {borderedtxt2a "あと", 426, 601, tmpr, tmpg, tmpb, 0, 14}
+			borderedtxt2a strf("%2d枚", MachihaiTotal), 426, 615, tmpr, tmpg, tmpb, 0, 14
+			if (MachiMen > 0) {
+				tmpmachimiancnt = 0
+				repeat TILE_NONFLOWER_STRICT_MAX
+					if (MachihaiCount(TILE_NONFLOWER_STRICT_MAX-cnt) >= 0) {
+						pos 400-(24*tmpmachimiancnt), 603
+						gzoom 16, 24, SCR_TILE_PIC, ((TILE_NONFLOWER_STRICT_MAX-cnt)\TILE_SUIT_STEP-1)*TILE_WIDTH, (TILE_NONFLOWER_STRICT_MAX-cnt)/TILE_SUIT_STEP*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, 1
+						switch MachihaiCount(TILE_NONFLOWER_STRICT_MAX-cnt)
+							case 0: borderedtxt2a "0", 416-(24*tmpmachimiancnt), 615, 255, 0, 0, 0, 14: swbreak
+							case 1: borderedtxt2a "1", 416-(24*tmpmachimiancnt), 615, 255, 255, 0, 0, 14: swbreak
+							case 2: borderedtxt2a "2", 416-(24*tmpmachimiancnt), 615, 0, 255, 0, 0, 14: swbreak
+							case 3: borderedtxt2a "3", 416-(24*tmpmachimiancnt), 615, 255, 255, 255, 0, 14: swbreak
+							case 4: borderedtxt2a "4", 416-(24*tmpmachimiancnt), 615, 0, 255, 255, 0, 14: swbreak
+							default: borderedtxt2a "?", 416-(24*tmpmachimiancnt), 615, 255, 0, 255, 0, 14: swbreak
+						swend
+						tmpmachimiancnt++
+					}
+				loop
+			}
+		}
+	}
+	/* 点差を表示 */
+#ifdef SANMAT
+	DiffPosCode = 0
+	repeat NUM_OF_PLAYERS-1, 1
+		if ((getPlayer(GameStat)+cnt)\NUM_OF_PLAYERS == 3) {continue}
+		if (DiffPosCode==0) {pos 535, 601}
+		if (DiffPosCode==1) {pos 470, 601}
+		switch cnt
+			case RELATIVE_SHIMOCHA: tmpposname = "下家": swbreak
+			case RELATIVE_TOIMEN: tmpposname = "対面": swbreak
+			case RELATIVE_KAMICHA: tmpposname = "上家": swbreak
+		swend
+		DiffPosCode++
+#else
+	repeat NUM_OF_PLAYERS-1, 1
+		switch cnt
+			case RELATIVE_SHIMOCHA: pos 535, 601: tmpposname = "下家": swbreak
+			case RELATIVE_TOIMEN: pos 470, 601: tmpposname = "対面": swbreak
+			case RELATIVE_KAMICHA: pos 10, 601: tmpposname = "上家": swbreak
+		swend
+#endif
+		tmpcnt = cnt: tmpdiff = 0.0: tmppow = "1"
+		repeat NUM_OF_DIGIT_GROUPS
+			tmpdiff += double(getScore(GameStat,getPlayer(GameStat), cnt) - getScore(GameStat,(getPlayer(GameStat)+tmpcnt)\NUM_OF_PLAYERS, cnt))*double(tmppow)
+			if (cnt==0) {tmpdiff *= 100.0}
+			tmppow += "00000000"
+		loop
+		if (tmpdiff > 48000.0)&&(chkRule("limitless", "no") != 0) {
+			color 0, 128, 255
+		} else: if (tmpdiff > 5898240.0)&&(chkRule("limitless", "no") == 0) {
+			color 0, 128, 255
+		} else: if (tmpdiff > 8000.0) {
+			if (chkRule("limitless", "no") != 0) {
+				color 0, 255-((tmpdiff/100-80)*255/800), ((tmpdiff/100-80)*255/400)
+			} else {
+				color 0, 255-(((logf(tmpdiff)/logf(2)-12.96)/(22.50-12.96))*127), (((logf(tmpdiff)/logf(2)-12.96)/(22.50-12.96))*255)
+			}
+		} else: if (tmpdiff > 0) {
+			color 160-(tmpdiff/100*2), 255, 160-(tmpdiff/100*2)
+		} else: if (tmpdiff < -48000.0)&&(chkRule("limitless", "no") != 0) {
+			color 255, 0, 0
+		} else: if (tmpdiff < -5898240.0)&&(chkRule("limitless", "no") == 0) {
+			color 255, 0, 0
+		} else: if (tmpdiff < -8000.0) {
+			if (chkRule("limitless", "no") != 0) {
+				color 255, 255-((abs(tmpdiff/100)-80)*255/400), 0
+			} else {
+				color 255, 255-(((logf(abs(tmpdiff))/logf(2)-12.96)/(22.50-12.96))*255), 0
+			}
+		} else: if (tmpdiff < 0) {
+			color 255, 255, 160-(abs(tmpdiff/100)*2)
+		} else {
+			color 255, 255, 255
+		}
+#ifdef SANMA4
+		if ((playerWind(getPlayer(GameStat), getRound(GameStat))) == PLAYER_NORTH)||((playerWind(getPlayer(GameStat)+cnt, getRound(GameStat))) == PLAYER_NORTH) {color ginfo_r*2/3,ginfo_g*2/3,ginfo_b*2/3}
+#endif
+		if (tmpdiff == 0.0) {
+			tmptxt = " "+tmpposname+"と \n 同  点"
+		} else: if (absf(tmpdiff) >= 1e6) {
+			tmptxt = strf(" %sと \n%+6.0e差",tmpposname,tmpdiff)
+		} else {
+			tmptxt = strf(" %sと \n%+6d差",tmpposname,tmpdiff)
+		}
+		tmpx=ginfo_cx: tmpy=ginfo_cy
+		tmpr=ginfo_r:tmpg=ginfo_g:tmpb=ginfo_b
+		notesel tmptxt
+		repeat 2
+			noteget tmptxtt, cnt
+			borderedtxt2a tmptxtt, tmpx, tmpy+14*cnt, tmpr, tmpg, tmpb, 0, 14
+		loop
+		noteunsel
+	loop
+	return
+#global

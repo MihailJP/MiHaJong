@@ -1,0 +1,22 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *=============================
+ */
+
+#define global GAMETYPE 0x00000001
+
+#packopt name "mihajong"
+
+;#makeopt icon_rsrc "icons\\mihajong-p16.ico"
+;#makeopt icon_rsrc "icons\\mihajong-p24.ico"
+;#makeopt icon_rsrc "icons\\mihajong-p32.ico"
+;#makeopt icon_rsrc "icons\\mihajong-p48.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f16.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f24.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f32.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f48.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f64.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f128.ico"
+;#makeopt icon_rsrc "icons\\mihajong-f256.ico"
+
+#include "mjmain.hsp"

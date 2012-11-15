@@ -1,0 +1,45 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *     [天文計算ルーチン]
+ *=============================
+ */
+
+#uselib "kernel32.dll"
+#ifndef GetSystemTime
+#func GetSystemTime@ "GetSystemTime" var
+#endif
+#ifndef getutc
+#module
+#defcfunc getutc int param
+	// UTCで時刻を取得する 使い方はgettimeと同様
+	dim nowtime, 4
+	GetSystemTime@ nowtime
+	return wpeek(nowtime, param*2)
+
+#uselib "astro.dll"
+#func _julian "time_to_julian_hsp" var, int, int, int, int, int, int, int
+#func _sun_ecliptic "sun_ecliptic_longitude_hsp" var, double
+#func _CalcMoonPhase "calc_moon_phase_hsp" var, double
+#func _sunrise "sunrise_hsp" var, int, int, int, double, int, double, double, double
+
+#defcfunc julian int year, int month, int day, int hour, int min, int sec, int msec
+	dbl_ans = 0.0
+	_julian dbl_ans, year, month, day, hour, min, sec, msec
+	return dbl_ans
+
+#defcfunc sun_ecliptic double jd
+	dbl_ans = 0.0
+	_sun_ecliptic dbl_ans, jd
+	return dbl_ans
+
+#deffunc CalcMoonPhase array Answer, double pdate
+	ddim Answer, 7
+	_CalcMoonPhase Answer, pdate
+	return
+
+#deffunc sunrise array Answer, int year, int month, int day, double TZ, int isdst, double lon, double lat, double altit
+	dim Answer, 4
+	_sunrise Answer, year, month, day, TZ, isdst, lon, lat, altit
+	return
+#global
+#endif

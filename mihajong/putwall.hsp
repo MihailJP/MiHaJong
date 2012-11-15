@@ -1,0 +1,154 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *     [壁牌表示ルーチン]
+ *=============================
+ */
+
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+/* 壁牌を表示する */
+#deffunc putyama var GameStat, int targetPosX, int targetPosY, int targetPlayer, int trueTargetPlayer
+#ifdef ALLSANMA
+	yamahaiMode = 3: NumberOfTiles = 108: LoopCount = 18: PTiles = (102-getRinshanExtension(GameStat))
+#else
+	if (chkRule("flower_tiles", "no")) {
+		yamahaiMode = 0: NumberOfTiles = 136: LoopCount = 17: PTiles = 130
+	} else: if (chkRule("flower_tiles", "8tiles")) {
+		yamahaiMode = 1: NumberOfTiles = 144: LoopCount = 18: PTiles = 130
+	} else {
+		yamahaiMode = 2: NumberOfTiles = 140: LoopCount = 18: PTiles = 130
+	}
+#endif
+#ifdef SANMA4
+	tmpPlayerCode = playerRelative(trueTargetPlayer, getPlayer(GameStat))
+#else
+	tmpPlayerCode = playerRelative(targetPlayer, getPlayer(GameStat))
+#endif
+	repeat LoopCount
+		j=cnt:gosub *calcTileNum
+		RinshanFlag = 1
+		if ((ActiveTileNum == 0)&&(getRinshanPointer(GameStat) < NumberOfTiles-2)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 2)&&(getRinshanPointer(GameStat) < NumberOfTiles-4)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 4)&&(getRinshanPointer(GameStat) < NumberOfTiles-6)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 6)&&(getRinshanPointer(GameStat) < NumberOfTiles-8)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 8)&&(getRinshanPointer(GameStat) < NumberOfTiles-10)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 10)&&(getRinshanPointer(GameStat) < NumberOfTiles-12)) {RinshanFlag = 0}
+		if ((ActiveTileNum < (NumberOfTiles-getDrawPointer(GameStat)))&&(RinshanFlag == 1)){
+			if (tmpPlayerCode != 1) {
+				if (tmpPlayerCode == 2) {
+					pos targetPosX+TILE_WIDTH*cnt, targetPosY-TILE_THICKNESS
+				} else {
+					pos targetPosX+TILE_WIDTH*cnt, targetPosY
+				}
+				showtileblockturned tmpPlayerCode, ginfo_cx, ginfo_cy
+				if (tmpPlayerCode == 2) {
+					pos targetPosX+TILE_WIDTH*cnt, targetPosY-TILE_THICKNESS
+				} else {
+					pos targetPosX+TILE_WIDTH*cnt, targetPosY
+				}
+				showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+				pos targetPosX+TILE_WIDTH*cnt, targetPosY
+			}
+		}
+		RinshanFlag = 1
+		if ((ActiveTileNum == 0)&&(getRinshanPointer(GameStat) < NumberOfTiles-1)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 2)&&(getRinshanPointer(GameStat) < NumberOfTiles-3)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 4)&&(getRinshanPointer(GameStat) < NumberOfTiles-5)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 6)&&(getRinshanPointer(GameStat) < NumberOfTiles-7)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 8)&&(getRinshanPointer(GameStat) < NumberOfTiles-9)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 10)&&(getRinshanPointer(GameStat) < NumberOfTiles-11)) {RinshanFlag = 0}
+		if ((ActiveTileNum+1 < (NumberOfTiles-getDrawPointer(GameStat)))&&(RinshanFlag == 1)){
+			if (tmpPlayerCode != 1) {
+				if (tmpPlayerCode == 0) {
+					pos targetPosX+TILE_WIDTH*cnt, targetPosY-TILE_THICKNESS
+				} else:if (tmpPlayerCode == 3) {
+					pos targetPosX+TILE_WIDTH*cnt-TILE_THICKNESS, targetPosY
+				} else {
+					pos targetPosX+TILE_WIDTH*cnt, targetPosY
+				}
+				tmpHaiPos = NumberOfTiles-2-ActiveTileNum
+				if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= PTiles)&&(tmpHaiPos\2 == 0)) {
+					showtileblock tmpPlayerCode, ginfo_cx, ginfo_cy
+				} else {
+					showtileblockturned tmpPlayerCode, ginfo_cx, ginfo_cy
+				}
+				if (tmpPlayerCode == 2) {
+					pos targetPosX+TILE_WIDTH*cnt, targetPosY
+				}
+				gosub *putdora
+			}
+		}
+	loop
+	repeat LoopCount
+		j=LoopCount-1-cnt:gosub *calcTileNum
+		RinshanFlag = 1
+		if ((ActiveTileNum == 0)&&(getRinshanPointer(GameStat) < NumberOfTiles-2)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 2)&&(getRinshanPointer(GameStat) < NumberOfTiles-4)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 4)&&(getRinshanPointer(GameStat) < NumberOfTiles-6)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 6)&&(getRinshanPointer(GameStat) < NumberOfTiles-8)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 8)&&(getRinshanPointer(GameStat) < NumberOfTiles-10)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 10)&&(getRinshanPointer(GameStat) < NumberOfTiles-12)) {RinshanFlag = 0}
+		if ((ActiveTileNum < (NumberOfTiles-getDrawPointer(GameStat)))&&(RinshanFlag == 1)){
+			if (tmpPlayerCode == 1) {
+				pos targetPosX+TILE_WIDTH*(LoopCount-1-cnt)-TILE_THICKNESS, targetPosY
+				showtileblockturned 1, ginfo_cx, ginfo_cy
+				pos targetPosX+TILE_WIDTH*(LoopCount-1-cnt)-TILE_THICKNESS, targetPosY
+				showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+				pos targetPosX+TILE_WIDTH*(LoopCount-1-cnt), targetPosY
+			}
+		}
+	loop
+	repeat LoopCount
+		j=LoopCount-1-cnt:gosub *calcTileNum
+		RinshanFlag = 1
+		if ((ActiveTileNum == 0)&&(getRinshanPointer(GameStat) < NumberOfTiles-1)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 2)&&(getRinshanPointer(GameStat) < NumberOfTiles-3)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 4)&&(getRinshanPointer(GameStat) < NumberOfTiles-5)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 6)&&(getRinshanPointer(GameStat) < NumberOfTiles-7)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 8)&&(getRinshanPointer(GameStat) < NumberOfTiles-9)) {RinshanFlag = 0}
+		if ((ActiveTileNum == 10)&&(getRinshanPointer(GameStat) < NumberOfTiles-11)) {RinshanFlag = 0}
+		if ((ActiveTileNum+1 < (NumberOfTiles-getDrawPointer(GameStat)))&&(RinshanFlag == 1)){
+			if (tmpPlayerCode == 1) {
+				pos targetPosX+TILE_WIDTH*(LoopCount-1-cnt), targetPosY
+				tmpHaiPos = NumberOfTiles-2-ActiveTileNum
+				if (((tmpHaiPos/2)*2 >= getDoraPointer(GameStat))&&((tmpHaiPos/2)*2 <= PTiles)&&(tmpHaiPos\2 == 0)) {
+					showtileblock tmpPlayerCode, ginfo_cx, ginfo_cy
+				} else {
+					showtileblockturned tmpPlayerCode, ginfo_cx, ginfo_cy
+				}
+				pos targetPosX+TILE_WIDTH*(LoopCount-1-cnt), targetPosY
+				gosub *putdora
+			}
+		}
+	loop
+return
+
+*calcTileNum
+	switch yamahaiMode
+		case 0:
+			ActiveTileNum = ((((targetPlayer+3)\NUM_OF_PLAYERS)*34)+j*2+(104*(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+34)+((getRound(GameStat)\NUM_OF_PLAYERS)*102))\136
+			swbreak
+		case 1:
+			ActiveTileNum = ((((targetPlayer+3)\NUM_OF_PLAYERS)*36)+j*2+(110*(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+36)+((getRound(GameStat)\NUM_OF_PLAYERS)*108))\144
+			swbreak
+		case 2:
+			ActiveTileNum = (((((targetPlayer+3)\NUM_OF_PLAYERS)*35)+j*2+(107*(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+35)+((getRound(GameStat)\NUM_OF_PLAYERS)*105))\140)/2*2
+			swbreak
+		case 3:
+			ActiveTileNum = ((((targetPlayer+2)\3)*36)+j*2+(74*(getDice(GameStat, 0, 0)+getDice(GameStat, 1, 0))+36)+(((getRound(GameStat)-(getRound(GameStat)/4))\3)*72))\108
+			swbreak
+	swend
+	return
+
+/* ドラ表示牌 */
+*putdora
+	tmpHaiPos = NumberOfTiles-2-ActiveTileNum
+	if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= PTiles)&&(tmpHaiPos\2 == 0)) {
+		showtile getWall(GameStat, WALL_TILECODE, ((tmpHaiPos)/2)*2)+(getWall(GameStat, WALL_REDTILE, ((tmpHaiPos)/2)*2)*TILE_NONFLOWER_MAX), ginfo_cx, ginfo_cy
+	} else {
+		showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+	}
+return
+
+#global

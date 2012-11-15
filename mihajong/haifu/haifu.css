@@ -1,0 +1,64 @@
+/* MiHaJong 牌譜用スタイルシート */
+table {
+	border-collapse: collapse;
+}
+h2 .tile {
+	font: 1.8em "GL-MahjongTile";
+}
+.tile {
+	font: 3em "GL-MahjongTile";
+}
+tr.tile {
+	text-align: center;
+}
+td span.tile {
+	vertical-align: bottom;
+}
+.notice {
+	font-size: 0.6em;
+	height: 1em;
+	vertical-align: top;
+	text-align: center;
+	white-space: nowrap;
+}
+.player {
+	background-color: #000000;
+	color: #ffffff;
+	font-size: 1.3em;
+}
+.akadora {
+	color: #ff0000;
+}
+.aodora {
+	color: #0000ff;
+}
+.fallthru {
+	font: 67% "Times New Roman", serif;
+}
+body, .label {
+	font: 1em sans-serif;
+}
+.tile .label {
+	font-size: 0.333333em;
+}
+.hand {
+	vertical-align: center;
+}
+.label {
+	text-align: center;
+	white-space: nowrap;
+}
+table.kakan {
+	display:inline;
+	vertical-align: bottom;
+	font: 1em "GL-MahjongTile";
+	line-height: 60%;
+	margin:0; padding:0;
+}
+td.kakan {
+	margin:0; padding:0;
+}
+td.hand {
+	vertical-align: middle;
+	line-height: 100%;
+}

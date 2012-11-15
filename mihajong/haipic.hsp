@@ -1,0 +1,557 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *      [牌表示ルーチン]
+ *=============================
+ */
+
+// ((4+targetPlayer-getPlayer(GameStat))\4)*(TileShowMode) の値
+// 0…自家 1…下家 2…対面 3…上家
+
+#module
+#include "const.hsp"
+*execute
+	switch TileShowType
+		case RELATIVE_SELF:
+			pos tmpxx, tmpyy: gcopy origin, TILE_THICKNESS+TILE_BLOCK_WIDTH, TILE_THICKNESS, TILE_WIDTH, TILE_HEIGHT+TILE_THICKNESS
+			swbreak
+		case RELATIVE_SHIMOCHA:
+			pos tmpxx-TILE_THICKNESS, tmpyy: gcopy origin, TILE_BLOCK_WIDTH, TILE_BLOCK_HEIGHT+TILE_THICKNESS, TILE_WIDTH+TILE_THICKNESS, TILE_HEIGHT
+			swbreak
+		case RELATIVE_TOIMEN:
+			pos tmpxx, tmpyy-TILE_THICKNESS: gcopy origin, TILE_THICKNESS+TILE_BLOCK_WIDTH, TILE_BLOCK_HEIGHT*2, TILE_WIDTH, TILE_HEIGHT+TILE_THICKNESS
+			swbreak
+		case RELATIVE_KAMICHA:
+			pos tmpxx, tmpyy: gcopy origin, TILE_THICKNESS+TILE_BLOCK_WIDTH, TILE_BLOCK_HEIGHT*3+TILE_THICKNESS, TILE_WIDTH+TILE_THICKNESS, TILE_HEIGHT
+			swbreak
+	swend
+	return
+
+#deffunc showtileblock int TileShowType1, int tmpxx1, int tmpyy1
+	TileShowType = TileShowType1: tmpxx = tmpxx1: tmpyy = tmpyy1
+	origin = SCR_TILE_BLOCK: gmode gmode_mem: gosub *execute
+	origin = SCR_TILE_SHADE: gmode gmode_alpha, , , TILE_SHADOW: gosub *execute
+	gmode gmode_mem: return
+
+#deffunc showtileshade int TileShowType2, int tmpxx2, int tmpyy2
+	TileShowType = TileShowType2: tmpxx = tmpxx2: tmpyy = tmpyy2
+	origin = SCR_TILE_SHADE: gosub *execute: return
+#global
+
+#module
+#include "const.hsp"
+*execute
+	switch TileShowType
+		case RELATIVE_SELF:
+			pos tmpxx, tmpyy: gcopy origin, TILE_THICKNESS, TILE_THICKNESS, TILE_WIDTH, TILE_HEIGHT+TILE_THICKNESS
+			swbreak
+		case RELATIVE_SHIMOCHA:
+			pos tmpxx-TILE_THICKNESS, tmpyy: gcopy origin, 0, TILE_BLOCK_HEIGHT+TILE_THICKNESS, TILE_WIDTH+TILE_THICKNESS, TILE_HEIGHT
+			swbreak
+		case RELATIVE_TOIMEN:
+			pos tmpxx, tmpyy-TILE_THICKNESS: gcopy origin, TILE_THICKNESS, TILE_BLOCK_HEIGHT*2, TILE_WIDTH, TILE_HEIGHT+TILE_THICKNESS
+			swbreak
+		case RELATIVE_KAMICHA:
+			pos tmpxx, tmpyy: gcopy origin, TILE_THICKNESS, TILE_BLOCK_HEIGHT*3+TILE_THICKNESS, TILE_WIDTH+TILE_THICKNESS, TILE_HEIGHT
+			swbreak
+	swend
+	return
+
+#deffunc showtileblockturned int TileShowType1, int tmpxx1, int tmpyy1
+	TileShowType = TileShowType1: tmpxx = tmpxx1: tmpyy = tmpyy1
+	origin = SCR_TILE_BLOCK: gmode gmode_mem: gosub *execute
+	origin = SCR_TILE_SHADE: gmode gmode_alpha, , , TILE_SHADOW: gosub *execute
+	gmode gmode_mem: return
+
+#deffunc showtileshadeturned int TileShowType2, int tmpxx2, int tmpyy2
+	TileShowType = TileShowType2: tmpxx = tmpxx2: tmpyy = tmpyy2
+	origin = SCR_TILE_SHADE: gosub *execute: return
+#global
+
+#module
+#include "const.hsp"
+*execute
+	switch TileShowType
+		case RELATIVE_SELF:
+			pos tmpxx, tmpyy: gcopy origin, TILE_BLOCK_WIDTH*3-3+TILE_THICKNESS, (TILE_HEIGHT-TILE_WIDTH)+TILE_THICKNESS, TILE_HEIGHT, TILE_WIDTH+TILE_THICKNESS
+			swbreak
+		case RELATIVE_SHIMOCHA:
+			pos tmpxx-TILE_THICKNESS, tmpyy: gcopy origin, TILE_BLOCK_WIDTH*3-3, (TILE_HEIGHT-TILE_WIDTH)+TILE_THICKNESS+TILE_BLOCK_HEIGHT, TILE_HEIGHT+TILE_THICKNESS, TILE_WIDTH
+			swbreak
+		case RELATIVE_TOIMEN:
+			pos tmpxx, tmpyy-TILE_THICKNESS: gcopy origin, TILE_BLOCK_WIDTH*3-3+TILE_THICKNESS, (TILE_HEIGHT-TILE_WIDTH)+TILE_BLOCK_HEIGHT*2, TILE_HEIGHT, TILE_WIDTH+TILE_THICKNESS
+			swbreak
+		case RELATIVE_KAMICHA:
+			pos tmpxx, tmpyy: gcopy origin, TILE_BLOCK_WIDTH*3-3, (TILE_HEIGHT-TILE_WIDTH)+TILE_THICKNESS+TILE_BLOCK_HEIGHT*3, TILE_HEIGHT+TILE_THICKNESS, TILE_WIDTH
+			swbreak
+	swend
+	return
+
+#deffunc showtileblockrotated int TileShowType1, int tmpxx1, int tmpyy1
+	TileShowType = TileShowType1: tmpxx = tmpxx1: tmpyy = tmpyy1
+	origin = SCR_TILE_BLOCK: gmode gmode_mem: gosub *execute
+	origin = SCR_TILE_SHADE: gmode gmode_alpha, , , TILE_SHADOW: gosub *execute
+	gmode gmode_mem: return
+
+#deffunc showtileshaderotated int TileShowType2, int tmpxx2, int tmpyy2
+	TileShowType = TileShowType2: tmpxx = tmpxx2: tmpyy = tmpyy2
+	origin = SCR_TILE_SHADE: gosub *execute: return
+#global
+
+#module
+#include "const.hsp"
+#deffunc showtile int tileid, int tmpxx, int tmpyy
+	pos tmpxx, tmpyy: gcopy SCR_TILE_PIC, (tileid\TILE_SUIT_STEP-1)*TILE_WIDTH, tileid\TILE_CODE_MAXIMUM/TILE_SUIT_STEP*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT
+	return
+#global
+
+#module
+#include "const.hsp"
+#deffunc showtilerotated int tileid, int tmpxx, int tmpyy
+	pos tmpxx, tmpyy: gcopy SCR_TILE_PIC, tileid\TILE_CODE_MAXIMUM/TILE_SUIT_STEP*TILE_HEIGHT+TILE_WIDTH*9, (9-tileid\TILE_SUIT_STEP)*TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH
+	return
+#global
+
+/* 手牌を表示する */
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc puttehai var GameStat, int targetPlayer, int targetPosX, int targetPosY, int TileShowMode
+	// 下家の自摸牌の枠を表示(Ｚオーダーの関係上先行表示)
+	tehaiCount = 0
+	repeat NUM_OF_TILES_IN_HAND
+		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 0) {continue}
+		if ((cnt == TSUMOHAI_INDEX)&&((getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == targetPlayer)||(getHeavenHandFlag(GameStat) == 1)||(TileShowMode == 0))) {
+			tmpxx = targetPosX+(TILE_WIDTH*tehaiCount)+(TILE_WIDTH*(1-getHeavenHandFlag(GameStat)))/3
+			tmpyy = targetPosY
+			if ((getHandStat(GameStat, targetPlayer) == 0)||(getHandStat(GameStat, targetPlayer) == 3)) {
+				if (playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode == 1) {
+					gmode gmode_mem
+					pos tmpxx, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2-3, (TILE_THICKNESS_SIDE-1)*2+TILE_BLOCK_HEIGHT*1, TILE_HEIGHT, TILE_THICKNESS_SIDE
+					gmode gmode_alpha, , , TILE_SHADOW
+					pos tmpxx, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH*2-3, (TILE_THICKNESS_SIDE-1)*2+TILE_BLOCK_HEIGHT*1, TILE_HEIGHT, TILE_THICKNESS_SIDE
+					gmode gmode_mem
+				}
+			}
+		}
+		tehaiCount++
+	loop
+	// 手牌の枠を表示
+	tehaiCount = 0
+	repeat NUM_OF_TILES_IN_HAND
+		if (cnt == TSUMOHAI_INDEX)&&((TsumoTile(GameStat, targetPlayer) == 0)||((getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != targetPlayer)&&(getHeavenHandFlag(GameStat) != 1)&&(TileShowMode != 0))) {
+			break
+		}
+		if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 0) {continue}
+		tmpxx = targetPosX+TILE_WIDTH*cnt
+		if ((cnt == TSUMOHAI_INDEX)&&((getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == targetPlayer)||(getHeavenHandFlag(GameStat) == 1)||(TileShowMode == 0))) {
+			tmpxx == targetPosX+TILE_WIDTH*tehaiCount+(TILE_WIDTH*(1-getHeavenHandFlag(GameStat)))/3
+		}
+		tmpyy = targetPosY
+		if (getHandStat(GameStat, targetPlayer) == 0) {
+			gmode gmode_mem
+			switch playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode
+				case RELATIVE_SELF:
+					pos tmpxx, tmpyy-TILE_THICKNESS: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, 0, TILE_WIDTH, TILE_HEIGHT+TILE_THICKNESS
+					swbreak
+				case RELATIVE_SHIMOCHA:
+					if (cnt == 0) {
+						pos tmpxx, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2-3, (TILE_THICKNESS_SIDE-1)*2+TILE_BLOCK_HEIGHT*1, TILE_HEIGHT, TILE_THICKNESS_SIDE
+						gmode gmode_alpha, , , TILE_SHADOW
+						pos tmpxx, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH*2-3, (TILE_THICKNESS_SIDE-1)*2+TILE_BLOCK_HEIGHT*1, TILE_HEIGHT, TILE_THICKNESS_SIDE
+						gmode gmode_mem
+					}
+					pos tmpxx+TILE_HEIGHT-1, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, (TILE_THICKNESS_SIDE-1)+TILE_BLOCK_HEIGHT*1, TILE_WIDTH, TILE_THICKNESS_SIDE
+					swbreak
+				case RELATIVE_TOIMEN:
+					pos tmpxx, tmpyy-TILE_THICKNESS: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, TILE_THICKNESS+TILE_BLOCK_HEIGHT*2, TILE_WIDTH, TILE_HEIGHT+TILE_THICKNESS
+					gmode gmode_alpha, , , TILE_SHADOW
+					pos tmpxx, tmpyy-TILE_THICKNESS: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, TILE_THICKNESS+TILE_BLOCK_HEIGHT*2, TILE_WIDTH, TILE_HEIGHT
+					gmode gmode_mem
+					swbreak
+				case RELATIVE_KAMICHA:
+					pos tmpxx+TILE_WIDTH-1, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2-3, (TILE_THICKNESS_SIDE-1)*2+TILE_BLOCK_HEIGHT*3, TILE_HEIGHT, TILE_THICKNESS_SIDE
+					gmode gmode_alpha, , , TILE_SHADOW
+					pos tmpxx+TILE_WIDTH-1, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH*2-3, (TILE_THICKNESS_SIDE-1)*2+TILE_BLOCK_HEIGHT*3, TILE_HEIGHT, TILE_THICKNESS_SIDE
+					gmode gmode_mem
+					pos tmpxx, tmpyy+TILE_WIDTH-1: gcopy SCR_TILE_BLOCK, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, (TILE_THICKNESS_SIDE-1)+TILE_BLOCK_HEIGHT*3, TILE_WIDTH, TILE_THICKNESS_SIDE
+					swbreak
+			swend
+		}
+		if ((getHandStat(GameStat, targetPlayer) == 1)||(getHandStat(GameStat, targetPlayer) == 3)) {
+			if (playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode == 0) {
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx, tmpyy-TILE_THICKNESS
+			} else {
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx, tmpyy
+			}
+		}
+		if (getHandStat(GameStat, targetPlayer) == 2) {
+			if (playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode == 0) {
+				showtileblockturned playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx, tmpyy-TILE_THICKNESS
+			} else {
+				showtileblockturned playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx, tmpyy
+			}
+		}
+		tehaiCount++
+	loop
+	// 牌の表を表示
+	tehaiCount = 0
+	if ((targetPlayer == getPlayer(GameStat))||(TileShowMode == 0)||(getHandStat(GameStat, targetPlayer) != 0)) {
+		if (((targetPlayer == getPlayer(GameStat))||(TileShowMode == 0))&&(getHandStat(GameStat, targetPlayer) != 0)) {
+			tmp = TILE_THICKNESS
+		} else {tmp = 0}
+		repeat NUM_OF_TILES_IN_HAND
+			if (cnt == TSUMOHAI_INDEX)&&((TsumoTile(GameStat, targetPlayer) == 0)||((getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != targetPlayer)&&(getHeavenHandFlag(GameStat) != 1)&&(TileShowMode != 0))) {
+				break
+			}
+			if (getHand(GameStat, HAND_TILECODE, cnt, targetPlayer) == 0) {tmp2 = 0: continue}
+			if (getHandStat(GameStat, targetPlayer) == 2) {tmp2 = TILE_BACK_SIDE}
+			else {
+				tmp2 = getHand(GameStat, HAND_TILECODE, cnt, targetPlayer)+(getHand(GameStat, HAND_REDTILE, cnt, targetPlayer)*TILE_NONFLOWER_MAX)
+			}
+			if ((cnt == TSUMOHAI_INDEX)&&((getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == targetPlayer)||(getHeavenHandFlag(GameStat) == 1)||(TileShowMode == 0))) {
+				showtile tmp2, targetPosX+(TILE_WIDTH*tehaiCount)+(TILE_WIDTH*(1-getHeavenHandFlag(GameStat)))/3, targetPosY-tmp
+				if (getHandStat(GameStat, targetPlayer) == 0) {
+					gmode gmode_alpha, , , TILE_SHADOW
+					pos targetPosX+(TILE_WIDTH*tehaiCount)+(TILE_WIDTH*(1-getHeavenHandFlag(GameStat)))/3, targetPosY-tmp: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, 0+TILE_THICKNESS, TILE_WIDTH, TILE_HEIGHT
+					gmode gmode_mem
+				}
+			} else {
+				showtile tmp2, targetPosX+TILE_WIDTH*cnt, targetPosY-tmp
+				if (getHandStat(GameStat, targetPlayer) == 0) {
+					gmode gmode_alpha, , , TILE_SHADOW
+					pos targetPosX+TILE_WIDTH*cnt, targetPosY-tmp: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH*2, 0+TILE_THICKNESS, TILE_WIDTH, TILE_HEIGHT
+					gmode gmode_mem
+				}
+			}
+			tehaiCount++
+		loop
+	}
+return
+#global
+
+/* 捨牌を表示する */
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc putsutehai var GameStat, int targetPosX, int targetPosY, int targetPlayer, int TileShowMode
+	SutehaiCount = 0
+	RichiCount = 0
+	repeat DiscardPointer(GameStat, targetPlayer), 1
+		if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) >= SUTEHAI_RIICHI) {RichiCount = 1} //立直関係
+		if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer)/SUTEHAI_TYPE_STEP == SUTEHAI_TAKEN/SUTEHAI_TYPE_STEP) {continue} //鳴かれた牌
+		if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer)/SUTEHAI_TYPE_STEP == SUTEHAI_RIICHI_TAKEN/SUTEHAI_TYPE_STEP) {continue} //リー牌を鳴かれたとき
+		SutehaiCount++
+		if (SutehaiCount <= 12) {
+			tmpxx = targetPosX+TILE_WIDTH*((SutehaiCount-1)\6)
+			tmpyy = targetPosY+TILE_HEIGHT*((SutehaiCount-1)/6)
+		} else {
+			tmpxx = targetPosX+TILE_WIDTH*(SutehaiCount-13)
+			tmpyy = targetPosY+TILE_HEIGHT*2
+		}
+		if (RichiCount == 2) {tmpxx += (TILE_HEIGHT-TILE_WIDTH)}
+		if (RichiCount == 1) {
+			gmode gmode_mem
+			showtileblockrotated playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)
+			gmode gmode_alpha, , , 48
+			if (getDiscard(GameStat, DISCARD_THROUGH, cnt, targetPlayer) == 1) {
+				// ツモ切り牌の暗転表示
+				showtileshaderotated playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)
+			}
+			gmode gmode_mem
+			RichiCount = 2
+		} else {
+			gmode gmode_mem
+			showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx, tmpyy
+			gmode gmode_alpha, , , 48
+			if (getDiscard(GameStat, DISCARD_THROUGH, cnt, targetPlayer) == 1) {
+				// ツモ切り牌の暗転表示
+				showtileshade playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx, tmpyy
+			}
+			gmode gmode_mem
+		}
+		if ((SutehaiCount == 6)||(SutehaiCount == 12)) {RichiCount = 0}
+	loop
+	// 下家はＺオーダーがややこしいので…
+	SutehaiCount = 0
+	RichiCount = 0
+	repeat DiscardPointer(GameStat, targetPlayer), 1
+		if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer) >= SUTEHAI_RIICHI) {RichiCount = 1} //立直関係
+		if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer)/SUTEHAI_TYPE_STEP == SUTEHAI_TAKEN/SUTEHAI_TYPE_STEP) {continue} //鳴かれた牌
+		if (getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer)/SUTEHAI_TYPE_STEP == SUTEHAI_RIICHI_TAKEN/SUTEHAI_TYPE_STEP) {continue} //リー牌を鳴かれたとき
+		SutehaiCount++
+		if (SutehaiCount <= 12) {
+			tmpxx = targetPosX+TILE_WIDTH*((SutehaiCount-1)\6)
+			tmpyy = targetPosY+TILE_HEIGHT*((SutehaiCount-1)/6)
+		} else {
+			tmpxx = targetPosX+TILE_WIDTH*(SutehaiCount-13)
+			tmpyy = targetPosY+TILE_HEIGHT*2
+		}
+		if (RichiCount == 2) {tmpxx += (TILE_HEIGHT-TILE_WIDTH)}
+		if (RichiCount == 1) {
+			gmode gmode_mem
+			showtilerotated getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer)+getDiscard(GameStat, DISCARD_REDTILE, cnt, targetPlayer)*TILE_NONFLOWER_MAX, tmpxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)
+			gmode gmode_alpha, , , 48
+			if (getDiscard(GameStat, DISCARD_THROUGH, cnt, targetPlayer) == 1) {
+				pos tmpxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH): gcopy SCR_TILE_SHADE, TILE_BLOCK_WIDTH*3-3+TILE_THICKNESS, (TILE_HEIGHT-TILE_WIDTH)+TILE_THICKNESS, TILE_HEIGHT, TILE_WIDTH
+			}
+			gmode gmode_mem
+			RichiCount = 2
+		} else {
+			gmode gmode_mem
+			showtile getDiscard(GameStat, DISCARD_TILECODE, cnt, targetPlayer)+getDiscard(GameStat, DISCARD_REDTILE, cnt, targetPlayer)*TILE_NONFLOWER_MAX, tmpxx, tmpyy
+			gmode gmode_alpha, , , 48
+			if (getDiscard(GameStat, DISCARD_THROUGH, cnt, targetPlayer) == 1) {
+				pos tmpxx, tmpyy: gcopy SCR_TILE_SHADE, TILE_THICKNESS+TILE_BLOCK_WIDTH, TILE_THICKNESS, TILE_WIDTH, TILE_HEIGHT
+			}
+			gmode gmode_mem
+		}
+		if ((SutehaiCount == 6)||(SutehaiCount == 12)) {RichiCount = 0}
+	loop
+return
+#global
+
+/* 副露面子（暗槓を含む）を表示する */
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc putnakihai var GameStat, int targetPlayer, int targetPosX, int targetPosY, int TileShowMode
+	tmpxx = targetPosX: tmpyy = targetPosY
+	// 牌の枠を表示
+	repeat MeldPointer(GameStat, targetPlayer), 1
+		if (cnt == 1) {tmpxxx = 0: tmpyyy = 0}
+		if (cnt == 2) {tmpxxx = -104: tmpyyy = 0}
+		if (cnt == 3) {tmpxxx = -208: tmpyyy = 0}
+		if (cnt == 4) {tmpxxx = -312: tmpyyy = 0}
+		if (playerRelative(targetPlayer,getPlayer(GameStat))*(TileShowMode) == 0) {tmpyyy -= 5}
+		switch getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP
+			// 上家からのポンへの加槓
+			case MELD_QUAD_ADDED_LEFT:
+				showtileblockrotated  playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)-TILE_WIDTH+tmpyyy
+				/* FALLTHRU */
+			// 上家から鳴いた明刻・明順
+			case MELD_SEQUENCE_EXPOSED_LOWER:
+			case MELD_SEQUENCE_EXPOSED_MIDDLE:
+			case MELD_SEQUENCE_EXPOSED_UPPER:
+			case MELD_TRIPLET_EXPOSED_LEFT:
+				showtileblockrotated  playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 対面からのポンへの加槓
+			case MELD_QUAD_ADDED_CENTER:
+				showtileblockrotated  playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)-TILE_WIDTH+tmpyyy
+				/* FALLTHRU */
+			// 対面から鳴いた明刻
+			case MELD_TRIPLET_EXPOSED_CENTER:
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+tmpxxx, tmpyy+tmpyyy
+				showtileblockrotated  playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 下家からのポンへの加槓
+			case MELD_QUAD_ADDED_RIGHT:
+				showtileblockrotated  playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*2+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)-TILE_WIDTH+tmpyyy
+				/* FALLTHRU */
+			// 下家から鳴いた明刻
+			case MELD_TRIPLET_EXPOSED_RIGHT:
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+tmpxxx, tmpyy+tmpyyy
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+tmpyyy
+				showtileblockrotated  playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*2+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+			swbreak
+			// 暗槓
+			case MELD_QUAD_CONCEALED:
+				showtileblockturned playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+tmpxxx, tmpyy+tmpyyy
+				if ((chkRule("ankan_conceal", "closed") != 0)&&(getHandStat(GameStat, targetPlayer) != 1)) {
+					showtileblockturned playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+tmpyyy
+					showtileblockturned playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*2+tmpxxx, tmpyy+tmpyyy
+				} else {
+					showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+tmpyyy
+					showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*2+tmpxxx, tmpyy+tmpyyy
+				}
+				showtileblockturned playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*3+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 上家から鳴いた明槓
+			case MELD_QUAD_EXPOSED_LEFT:
+				showtileblockrotated  playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*3+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 対面から鳴いた明槓
+			case MELD_QUAD_EXPOSED_CENTER:
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+tmpxxx, tmpyy+tmpyyy
+				showtileblockrotated  playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*3+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 下家から鳴いた明槓
+			case MELD_QUAD_EXPOSED_RIGHT:
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+tmpxxx, tmpyy+tmpyyy
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+tmpyyy
+				showtileblock playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*2+tmpxxx, tmpyy+tmpyyy
+				showtileblockrotated  playerRelative(targetPlayer,getPlayer(GameStat))*TileShowMode, tmpxx+TILE_WIDTH*3+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+			swbreak
+		swend
+	loop
+	// 牌の表（おもて）を表示
+	repeat MeldPointer(GameStat, targetPlayer), 1
+		if (cnt == 1) {tmpxxx = 0: tmpyyy = 0}
+		if (cnt == 2) {tmpxxx = -104: tmpyyy = 0}
+		if (cnt == 3) {tmpxxx = -208: tmpyyy = 0}
+		if (cnt == 4) {tmpxxx = -312: tmpyyy = 0}
+		if (playerRelative(targetPlayer,getPlayer(GameStat))*(TileShowMode) == 0) {tmpyyy -= 5}
+		// 赤ドラフラグを判別
+		tmpAkaDoraFlag1 = (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x01)/0x01
+		tmpAkaDoraFlag2 = (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x02)/0x02
+		tmpAkaDoraFlag3 = (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x04)/0x04
+		tmpAkaDoraFlag4 = (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x08)/0x08
+		tmpAkaDoraFlag1 += (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x10)/0x10*2
+		tmpAkaDoraFlag2 += (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x20)/0x20*2
+		tmpAkaDoraFlag3 += (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x40)/0x40*2
+		tmpAkaDoraFlag4 += (getMeld(GameStat, MELD_REDTILE, cnt, targetPlayer)&0x80)/0x80*2
+		gmode gmode_mem
+		switch getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)/MELD_TYPE_STEP
+			// 両面の小さい側か辺張の７からの吃
+			case MELD_SEQUENCE_EXPOSED_LOWER:
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+1+tmpAkaDoraFlag2*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+2+tmpAkaDoraFlag3*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 嵌張からの吃
+			case MELD_SEQUENCE_EXPOSED_MIDDLE:
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+1+tmpAkaDoraFlag2*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+2+tmpAkaDoraFlag3*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 両面の大きい側か辺張の３からの吃
+			case MELD_SEQUENCE_EXPOSED_UPPER:
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+2+tmpAkaDoraFlag3*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+1+tmpAkaDoraFlag2*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 上家からのポンへの加槓
+			case MELD_QUAD_ADDED_LEFT:
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag4*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)-TILE_WIDTH+tmpyyy
+				/* FALLTHRU */
+			// 上家からのポン
+			case MELD_TRIPLET_EXPOSED_LEFT:
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag2*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag3*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 対面からのポンへの加槓
+			case MELD_QUAD_ADDED_CENTER:
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag4*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)-TILE_WIDTH+tmpyyy
+				/* FALLTHRU */
+			// 対面からのポン
+			case MELD_TRIPLET_EXPOSED_CENTER:
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag2*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+tmpyyy
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag3*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 下家からのポンへの加槓
+			case MELD_QUAD_ADDED_RIGHT:
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag4*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)-TILE_WIDTH+tmpyyy
+				/* FALLTHRU */
+			// 下家からのポン
+			case MELD_TRIPLET_EXPOSED_RIGHT:
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag2*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag3*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+tmpyyy
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+			swbreak
+			// 暗槓
+			case MELD_QUAD_CONCEALED:
+				// 赤ドラを含む面子を暗槓した場合は、赤ドラを表に向けるのが一般的である
+					tmpAnkanAkadora = tmpAkaDoraFlag1+tmpAkaDoraFlag2+tmpAkaDoraFlag3+tmpAkaDoraFlag4
+					if (tmpAnkanAkadora >= 1) {tmpAkaDoraFlagA = 1} else {tmpAkaDoraFlagA = 0}
+					if (tmpAnkanAkadora >= 2) {tmpAkaDoraFlagB = 1} else {tmpAkaDoraFlagB = 0}
+				showtile TILE_BACK_SIDE, tmpxx+tmpxxx, tmpyy+tmpyyy
+				if ((chkRule("ankan_conceal", "closed") != 0)&&(getHandStat(GameStat, targetPlayer) != 1)) {
+					showtile TILE_BACK_SIDE, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+tmpyyy
+					showtile TILE_BACK_SIDE, tmpxx+TILE_WIDTH*2+tmpxxx, tmpyy+tmpyyy
+				} else {
+					showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlagA*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+tmpyyy
+					showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlagB*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+tmpxxx, tmpyy+tmpyyy
+				}
+				showtile TILE_BACK_SIDE, tmpxx+TILE_WIDTH*3+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 上家からの明槓
+			case MELD_QUAD_EXPOSED_LEFT:
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag2*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag3*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag4*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*3+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 対面からの明槓
+			case MELD_QUAD_EXPOSED_CENTER:
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag2*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+tmpyyy
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag3*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag4*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*3+(TILE_HEIGHT-TILE_WIDTH)+tmpxxx, tmpyy+tmpyyy
+			swbreak
+			// 下家からの明槓
+			case MELD_QUAD_EXPOSED_RIGHT:
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag2*TILE_NONFLOWER_MAX, tmpxx+tmpxxx, tmpyy+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag3*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH+tmpxxx, tmpyy+tmpyyy
+				showtile getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag4*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*2+tmpxxx, tmpyy+tmpyyy
+				showtilerotated getMeld(GameStat, MELD_TILECODE, cnt, targetPlayer)+tmpAkaDoraFlag1*TILE_NONFLOWER_MAX, tmpxx+TILE_WIDTH*3+tmpxxx, tmpyy+(TILE_HEIGHT-TILE_WIDTH)+tmpyyy
+			swbreak
+		swend
+	loop
+return
+#global
+
+/* 賽を表示する */
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc putsai var GameStat, int targetPosX, int targetPosY, int ShadeX, int ShadeY
+	gmode gmode_mem
+	pos targetPosX+ShadeX, targetPosY+ShadeY
+	gcopy SCR_DICE_PIC, 0*TILE_DICE_WIDTH, getDice(GameStat, 0, 1)*TILE_DICE_HEIGHT, TILE_DICE_WIDTH, TILE_DICE_HEIGHT
+	pos targetPosX+ShadeX+14, targetPosY+ShadeY
+	gcopy SCR_DICE_PIC, 0*TILE_DICE_WIDTH, getDice(GameStat, 1, 1)*TILE_DICE_HEIGHT, TILE_DICE_WIDTH, TILE_DICE_HEIGHT
+	gmode gmode_alpha, , , TILE_DICE_SHADOW
+	pos targetPosX+ShadeX, targetPosY+ShadeY
+	gcopy SCR_DICE_SHADE, 0*TILE_DICE_WIDTH, getDice(GameStat, 0, 1)*TILE_DICE_HEIGHT, TILE_DICE_WIDTH, TILE_DICE_HEIGHT
+	pos targetPosX+ShadeX+14, targetPosY+ShadeY
+	gcopy SCR_DICE_SHADE, 0*TILE_DICE_WIDTH, getDice(GameStat, 1, 1)*TILE_DICE_HEIGHT, TILE_DICE_WIDTH, TILE_DICE_HEIGHT
+	gmode gmode_mem
+	pos targetPosX, targetPosY
+	gcopy SCR_DICE_PIC, (getDice(GameStat, 0, 0)-1)*TILE_DICE_WIDTH, getDice(GameStat, 0, 1)*TILE_DICE_HEIGHT, TILE_DICE_WIDTH, TILE_DICE_HEIGHT
+	pos targetPosX+14, targetPosY
+	gcopy SCR_DICE_PIC, (getDice(GameStat, 1, 0)-1)*TILE_DICE_WIDTH, getDice(GameStat, 1, 1)*TILE_DICE_HEIGHT, TILE_DICE_WIDTH, TILE_DICE_HEIGHT
+return
+#global
+
+/* リー棒を表示する */
+#module
+#include "const.hsp"
+#deffunc putrichi int targetPosX, int targetPosY, int ShadeX, int ShadeY
+	gmode gmode_mem
+	pos targetPosX+ShadeX, targetPosY+ShadeY
+	gcopy SCR_DICE_PIC, 0, TILE_DICE_HEIGHT*2, TILE_RIICHISTICK_LENGTH, TILE_RIICHISTICK_WIDTH
+	gmode gmode_alpha, , , TILE_DICE_SHADOW
+	pos targetPosX+ShadeX, targetPosY+ShadeY
+	gcopy SCR_DICE_SHADE, 0, TILE_DICE_HEIGHT*2, TILE_RIICHISTICK_LENGTH, TILE_RIICHISTICK_WIDTH
+	gmode gmode_mem
+	pos targetPosX, targetPosY
+	gcopy SCR_DICE_PIC, 0, TILE_DICE_HEIGHT*2, TILE_RIICHISTICK_LENGTH, TILE_RIICHISTICK_WIDTH
+return
+#global
+
+/* 起家マークを表示する */
+#module
+#include "const.hsp"
+#include "mjcore.hsp"
+#deffunc putchichamark var GameStat, int targetPosX, int targetPosY , int ShadeX, int ShadeY
+	gmode gmode_mem
+	pos targetPosX+ShadeX, targetPosY+ShadeY
+	gcopy SCR_DICE_PIC, 0+(getRound(GameStat)/NUM_OF_PLAYERS)\2*TILE_CHICHAMARK_WIDTH, TILE_DICE_HEIGHT*2+TILE_RIICHISTICK_WIDTH+(getRound(GameStat)/NUM_OF_PLAYERS)/2*TILE_CHICHAMARK_HEIGHT, TILE_CHICHAMARK_WIDTH, TILE_CHICHAMARK_HEIGHT
+	gmode gmode_alpha, , , TILE_DICE_SHADOW
+	pos targetPosX+ShadeX, targetPosY+ShadeY
+	gcopy SCR_DICE_SHADE, 0+(getRound(GameStat)/NUM_OF_PLAYERS)\2*TILE_CHICHAMARK_WIDTH, TILE_DICE_HEIGHT*2+TILE_RIICHISTICK_WIDTH+(getRound(GameStat)/NUM_OF_PLAYERS)/2*TILE_CHICHAMARK_HEIGHT, TILE_CHICHAMARK_WIDTH, TILE_CHICHAMARK_HEIGHT
+	gmode gmode_mem
+	pos targetPosX, targetPosY
+	gcopy SCR_DICE_PIC, 0+(getRound(GameStat)/NUM_OF_PLAYERS)\2*TILE_CHICHAMARK_WIDTH, TILE_DICE_HEIGHT*2+TILE_RIICHISTICK_WIDTH+(getRound(GameStat)/NUM_OF_PLAYERS)/2*TILE_CHICHAMARK_HEIGHT, TILE_CHICHAMARK_WIDTH, TILE_CHICHAMARK_HEIGHT
+return
+#global

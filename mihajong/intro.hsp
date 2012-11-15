@@ -1,0 +1,270 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *   [タイトル画面ルーチン]
+ *=============================
+ */
+
+/* タイトル画面 */
+*titlemenu
+	debug "タイトル画面を準備します。"
+	gsel 0
+	redraw 0: vanish
+	showbackground
+	gmode gmode_pixela: pos 100, 80: gcopy SCR_TITLE_LOGO, 0, 0, 640, 200: gmode gmode_mem
+	font fontname, 28, 0
+	borderedtxt2 "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC, 530, 125, 255, 255, 255, 1, 28, 192, 192, 192
+	tmptxt = "Copyright (c) 2008-2012 MihailJP, Part of rights reserved"
+	borderedtxt2 tmptxt, 825-(strlen(tmptxt)*10), 595, 255, 255, 255, 1, 20, 192, 192, 192
+#ifdef SANMAS
+	borderedtxt2 "数牌三麻", 130, 100, 255, 255, 255, 1, 28, 192, 192, 192
+#endif
+#ifdef SANMA4
+	borderedtxt2 "四人三麻", 130, 100, 255, 255, 255, 1, 28, 192, 192, 192
+#endif
+#ifdef SANMA
+	borderedtxt2 "三人打ち", 130, 100, 255, 255, 255, 1, 28, 192, 192, 192
+#endif
+	redraw 1
+	objsize 200, 30
+	objmode 2: font fontname, 24, 0
+	pos 100, 410: colorbutton gosub "Offline Start", *modesel1, -1, 0xffffff
+	pos 320, 410: colorbutton gosub "Server Start", *modesel2, -1, 0xffffff
+	pos 540, 410: colorbutton gosub "Client Start", *modesel3, -1, 0xffffff
+	pos 100, 460: colorbutton gosub "Watch Mode", *modesel5, -1, 0xffffff
+	pos 320, 460: colorbutton gosub "Config", *selcat, -1, 0xffffff
+	pos 540, 460: colorbutton goto "Quit", *modesel4, -1, 0xffffff
+	tooltip 0, "コンピューターとの対戦を開始します"
+	tooltip 1, "通信対戦用の卓を準備します"
+	tooltip 2, "通信対戦用の卓に接続します"
+	tooltip 3, "コンピューター同士の対戦を観賞します"
+	tooltip 4, "ルールを設定します"
+	tooltip 5, "終了します"
+	debug "タイトル画面を準備しました。"
+	return
+
+/* モード選択画面 */
+*selmode
+	gosub *titlemenu
+	debug "応答を待ちます。"
+	repeat
+		if (getGameMode(GameEnv) >= GAMEMODE_STANDALONE) {vanish: break}
+		await 1
+	loop: objmode 2: font fontname, 12, 0
+	return
+
+*modesel5
+	dsplay SND_BUTTON
+	setPlayerName GameEnv, 0, "[a]COM1"
+	setPlayerName GameEnv, 1, "[b]COM2"
+	setPlayerName GameEnv, 2, "[c]COM3"
+	setPlayerName GameEnv, 3, "[d]COM4"
+	setGameMode GameEnv, GAMEMODE_STANDALONE
+	SetWatchModeFlag GameEnv, 1
+	ServerAddress = ""
+	return
+
+*modesel1
+	dsplay SND_BUTTON
+	gosub *entername
+	setPlayerName GameEnv, 0, "[A]"+InputPlayerName
+	setPlayerName GameEnv, 1, "[b]COM1"
+	setPlayerName GameEnv, 2, "[c]COM2"
+	setPlayerName GameEnv, 3, "[d]COM3"
+	setGameMode GameEnv, GAMEMODE_STANDALONE
+	ServerAddress = ""
+	return
+
+*modesel2
+	dsplay SND_BUTTON
+	gosub *entername
+	setGameMode GameEnv, GAMEMODE_SERVER
+	ServerAddress = ""
+	exportRule RuleConf
+	vanish
+	objsize 440, 40
+	pos 200, 270: colorbutton gosub "この面子で開始する", *modesel2s, -1, 0xffffff
+	dim RulePtr, length(RuleConf)
+	repeat length(RuleConf): RulePtr(cnt) = varptr(RuleConf(cnt)): loop
+	s_server_start InputPlayerName, PORT_GAME, NUM_OF_ACTUAL_PLAYERS, RulePtr
+	repeat
+		redraw 0
+		showbackground
+		CurrentConnection = s_server_chkcurrentconnection()
+		sysscr fontname, "接続を待っています", "Waiting clients.", strf("\n現在の接続人数： %d / %d 人", CurrentConnection, NUM_OF_ACTUAL_PLAYERS)
+		redraw 1
+		await 0
+		if (s_server_isstartingfinished()) {break}
+	loop
+	sdim playerName1, 256: sdim playerName2, 256: sdim playerName3, 256: sdim playerName4, 256
+	s_server_getplayernames playerName1, playerName2, playerName3, playerName4, 256
+	setPlayerName GameEnv, 0, playerName1
+	setPlayerName GameEnv, 1, playerName2
+	setPlayerName GameEnv, 2, playerName3
+	setPlayerName GameEnv, 3, playerName4
+	if (CurrentConnection >= 2) {setRemotePlayer GameEnv, 1, 1}
+	if (CurrentConnection >= 3) {setRemotePlayer GameEnv, 2, 1}
+	if (CurrentConnection >= 4) {setRemotePlayer GameEnv, 3, 1}
+	s_server_releaseobj
+return
+
+*modesel2s
+	dsplay SND_BUTTON
+	s_server_dostart
+	return
+
+*modesel3
+	dsplay SND_BUTTON
+	gosub *entername
+	redraw 0
+	showbackground
+	sysscr fontname, "接続先を入力してね", "Choose server.", "サーバーのIPアドレス、または\nドメイン名を入力してください"
+	redraw 1
+	setGameMode GameEnv, GAMEMODE_CLIENT: vanish
+	ServerAddress = ""
+	objsize 440, 40
+	pos 200, 270: input ServerAddress
+	
+#ifdef WITH_ADVANCEDCONTROL
+	hStId = stat
+	menubgcolor
+	hStBox = objinfo(hStId, 2)
+	oncmd gosub *txtboxcolor, 0x0133
+	CreateSolidBrush ((ginfo_b)<<16 | (ginfo_g)<<8 | (ginfo_r))
+	hBrush = stat
+#endif
+	
+	pos 200, 320: colorbutton gosub "Connect", *modesel3c, -1, 0xffffff
+	ServerSelected = 0
+	repeat
+		if (ServerSelected) {break}
+		await 1
+	loop
+	vanish
+	redraw 0
+	showbackground
+	sysscr fontname, "接続先を入力してね", "Choose server.", "サーバーに接続しています\nしばらくお待ちください"
+	redraw 1
+	s_client_start InputPlayerName ,ServerAddress, PORT_GAME, NUM_OF_ACTUAL_PLAYERS
+	repeat
+		if (s_client_isconnectionsucceded()) {
+			redraw 0
+			showbackground
+			sysscr fontname, "接続先を入力してね", "Choose server.", "開始合図を待っています\nしばらくお待ちください"
+			redraw 1
+			break
+		}
+		if (s_client_isconnectionfailed()) {
+			setGameMode GameEnv, GAMEMODE_STANDALONE
+			break
+		}
+		await 0
+	loop
+	repeat
+		if (s_client_isstartingfinished()) {
+			ClientNumber = s_client_getclientnumber()
+			break
+		}
+		await 0
+	loop
+	sdim playerName1, 256: sdim playerName2, 256: sdim playerName3, 256: sdim playerName4, 256
+	s_client_getplayernames playerName1, playerName2, playerName3, playerName4, 256
+	setPlayerName GameEnv, 0, playerName1
+	setPlayerName GameEnv, 1, playerName2
+	setPlayerName GameEnv, 2, playerName3
+	setPlayerName GameEnv, 3, playerName4
+	repeat NUM_OF_ACTUAL_PLAYERS
+		if (ClientNumber != cnt) {setRemotePlayer GameEnv, cnt, 1}
+	loop
+	sdim RuleConf, RULE_IN_LINE+4, RULE_STRING_LINES
+	dim RuleConfPtr, RULE_STRING_LINES
+	repeat RULE_STRING_LINES
+		RuleConfPtr(cnt) = varptr(RuleConf(cnt))
+	loop
+	s_client_checkout_rules RuleConfPtr
+	storeRule RuleConf
+	s_client_releaseobj
+	return
+
+*modesel3c
+	dsplay SND_BUTTON
+	ServerSelected = 1
+	return
+
+*modesel4
+	dsplay SND_BUTTON
+	goto *cleanup@
+
+/* 名前の入力 */
+*entername
+	redraw 0
+	vanish
+	showbackground
+	sysscr fontname, "名前を入力してね", "Enter your name.", "プレーヤー名を入力してください\n（全角８文字まで）"
+	redraw 1
+	InputPlayerName = ""
+	objsize 440, 40
+	pos 200, 270: input InputPlayerName
+	
+#ifdef WITH_ADVANCEDCONTROL
+	hStId = stat
+	menubgcolor
+	hStBox = objinfo(hStId, 2)
+	oncmd gosub *txtboxcolor, 0x0133
+	CreateSolidBrush ((ginfo_b)<<16 | (ginfo_g)<<8 | (ginfo_r))
+	hBrush = stat
+#endif
+	
+	pos 200, 320: colorbutton gosub "Enter", *nameentered, -1, 0xffffff
+	nameenteredflag = 0
+	repeat
+		if (strlen(InputPlayerName) > 16) {
+			InputPlayerName = strmid(InputPlayerName, 0, 16)
+			objprm 0+STATBOX, InputPlayerName
+		}
+		if (nameenteredflag) {
+			if (InputPlayerName == "") {InputPlayerName = "(名無し)"}
+			if (strlen(InputPlayerName) > 16) {
+				InputPlayerName = strmid(InputPlayerName, 0, 16)
+			}
+			break
+		}
+		await 1
+	loop
+return
+
+*nameentered
+	dsplay SND_BUTTON
+	nameenteredflag = 1
+return
+
+*chrshuffle
+	dim PositionArray, NUM_OF_PLAYERS
+	startSeatShuffle ClientNumber, PositionArray
+	repeat
+		if (seatShuffleFinished()) {break}
+		await 0
+	loop
+	return
+
+#ifdef WITH_ADVANCEDCONTROL
+*txtboxcolor
+	if (lparam == hStBox) {
+		SetTextColor wparam, 0xffffff
+		SetBkMode wparam, 1
+		return hBrush
+	}
+	return
+#endif
+
+#module
+#deffunc sysscr str fontname, str txt1, str txt2, str txt3
+	borderedtxt2 txt1, 152, 12, 255, 255, 255, 1, 48, 192, 192, 192
+	borderedtxt2 txt2, 600, 24, 255, 255, 255, 1, 24, 192, 192, 192
+	txtbuf = txt3: notesel txtbuf
+	repeat notemax
+		noteget tmptxt, cnt
+		borderedtxt2 tmptxt, 196, 192+32*cnt, 255, 255, 255, 1, 32, 192, 192, 192
+	loop
+	noteunsel
+	return
+#global

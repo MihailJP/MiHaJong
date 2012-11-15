@@ -1,0 +1,119 @@
+/*=============================
+ * HSP麻雀クライアントMiHaJong
+ *    [雑多なサブルーチン]
+ *=============================
+ */
+
+/* デバッグログ */
+#module debuglog
+
+#uselib "mjcore.dll"
+#func _initlog_ "?initLogger@logger@@YAHXZ"
+#func _trace_msg_ "?trace_msg@logger@@YAXPBD@Z" str
+#func _debug_msg_ "?debug_msg@logger@@YAXPBD@Z" str
+#func _info_msg_ "?info_msg@logger@@YAXPBD@Z" str
+#func _warn_msg_ "?warn_msg@logger@@YAXPBD@Z" str
+#func _error_msg_ "?error_msg@logger@@YAXPBD@Z" str
+#func _fatal_msg_ "?fatal_msg@logger@@YAXPBD@Z" str
+
+#include "const.hsp"
+#deffunc loginit
+#ifdef LOGGING
+	_initlog_
+#endif
+return
+
+#deffunc debug_logging str debugmsg, str debugfile, int debugline, int verbosity
+#ifdef LOGGING
+	switch (verbosity)
+		case 5: _trace_msg_ strf("(%s:%d) %s", debugfile, debugline, debugmsg): swbreak
+		case 4: _debug_msg_ strf("(%s:%d) %s", debugfile, debugline, debugmsg): swbreak
+		case 3: _info_msg_ strf("(%s:%d) %s", debugfile, debugline, debugmsg): swbreak
+		case 2: _warn_msg_ strf("(%s:%d) %s", debugfile, debugline, debugmsg): swbreak
+		case 1: _error_msg_ strf("(%s:%d) %s", debugfile, debugline, debugmsg): swbreak
+		case 0: _fatal_msg_ strf("(%s:%d) %s", debugfile, debugline, debugmsg): swbreak
+	swend
+#endif
+return
+#global
+
+#module
+#defcfunc notesearch array tmpnote, str txt
+/*
+		val=notesearch(p1, p2)
+		文字列バッファから特定の文字列を検索する
+
+		p1 : 検索されるバッファ
+		p2 : 検索する文字列
+
+		指定したバッファから特定の文字列になっている行を検索し、見つかった行を返します。
+		見つからなかった場合は-1を返します。
+*/
+	ans=-1
+	notesel tmpnote
+	repeat notemax
+		noteget a, cnt
+		if (a == txt) {ans = cnt: break}
+	loop
+	noteunsel
+	return ans
+#global
+
+#module
+#include "mjcore.hsp"
+
+/* 「東家」「南家」「西家」「北家」の文字列を返す */
+#defcfunc windName int wind
+	sdim tmpstr, 8: _windName tmpstr, 8, wind: return tmpstr
+
+/* 「東○局」などの文字列を返す */
+#defcfunc roundName int roundNum
+	sdim tmpstr, 16: _roundName tmpstr, 16, roundNum: return tmpstr
+
+#defcfunc TileName int tile
+	sdim tmpstr, 16: _TileName tmpstr, 16, tile: return tmpstr
+#global
+
+/* エラーダイアログ */
+#module
+#uselib "user32.dll"
+#func MessageBoxA "MessageBoxA" int,sptr,sptr,int
+#deffunc errordlg str message, str titletxt
+	MessageBoxA hwnd,message,titletxt,0x10
+	return
+#global
+
+#module
+#include "mjcore.hsp"
+/* コンフィグのパスを自動設定 */
+/* Vista以降でRoamingに準備できていなければ作る */
+#defcfunc confPath
+	sdim configpath, 1024: _confPath configpath, 1024: return configpath
+#global
+
+/* エラーがあったときに安全に終了させるための処理 */
+*errorproc
+	error strf("内部エラー [%d] が発生しました。", wparam)
+	errordlg "内部エラー "+wparam+" が発生しました。"
+	/* FALLTHRU */
+
+/* 終了処理 */
+*cleanup
+	gsel SCR_CHAT, -1
+	gsel 0, -1
+	dmstop: dmend
+	info "DirectMusic を解放しました。"
+	repeat SND_END-SND_START+1
+		dsstop cnt+SND_START
+	loop
+	repeat VOX_END-VOX_START+1
+		dsstop cnt+VOX_START
+	loop
+	dsend
+	info "DirectSound を解放しました。"
+	repeat NUM_OF_PLAYERS
+		s_hangup SOCK_GAME+cnt
+		s_hangup SOCK_CHAT+cnt
+	loop
+	s_bye
+	end

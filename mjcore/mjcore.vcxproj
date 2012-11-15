@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A1E77779-D7A8-4C1C-9D52-53586D6AA58A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>mjcore</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MJCORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>
+      </MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <CompileAsManaged>false</CompileAsManaged>
+      <TreatSpecificWarningsAsErrors>4717;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+      <AdditionalIncludeDirectories>.\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ShowProgress>NotSet</ShowProgress>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <MapExports>false</MapExports>
+      <AdditionalDependencies>DbgHelp.lib;Shlwapi.lib;imagehlp.lib;.\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MJCORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <CompileAsManaged>false</CompileAsManaged>
+      <AdditionalIncludeDirectories>.\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Shlwapi.lib;imagehlp.lib;.\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ai\aiscript.cpp" />
+    <ClCompile Include="ai\functbl.cpp" />
+    <ClCompile Include="ai\filesel.cpp" />
+    <ClCompile Include="ai\gftbl.cpp" />
+    <ClCompile Include="ai\riskchk.cpp" />
+    <ClCompile Include="chat.cpp" />
+    <ClCompile Include="data\confitem.csv.cpp" />
+    <ClCompile Include="data\confitem.ini.cpp" />
+    <ClCompile Include="decomp.cpp" />
+    <ClCompile Include="discard.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="envtbl.cpp" />
+    <ClCompile Include="func.cpp" />
+    <ClCompile Include="gametbl.cpp" />
+    <ClCompile Include="haifu.cpp" />
+    <ClCompile Include="largenum.cpp" />
+    <ClCompile Include="logging.cpp" />
+    <ClCompile Include="lzma\Alloc.c" />
+    <ClCompile Include="lzma\LzFind.c" />
+    <ClCompile Include="lzma\LzFindMt.c" />
+    <ClCompile Include="lzma\LzmaDec.c" />
+    <ClCompile Include="lzma\LzmaLib.c" />
+    <ClCompile Include="lzma\Sha256.c" />
+    <ClCompile Include="lzma\Threads.c" />
+    <ClCompile Include="prepare.cpp" />
+    <ClCompile Include="random.cpp" />
+    <ClCompile Include="reader\csv2arry.cpp" />
+    <ClCompile Include="reader\ini2map.cpp" />
+    <ClCompile Include="reader\readrsrc.cpp" />
+    <ClCompile Include="remote.cpp" />
+    <ClCompile Include="shanten.cpp" />
+    <ClCompile Include="ruletbl.cpp" />
+    <ClCompile Include="tileutil.cpp" />
+    <ClCompile Include="yaku\catalog.cpp" />
+    <ClCompile Include="yaku\catalog\context.cpp" />
+    <ClCompile Include="yaku\catalog\dora.cpp" />
+    <ClCompile Include="yaku\catalog\irreg.cpp" />
+    <ClCompile Include="yaku\catalog\misc.cpp" />
+    <ClCompile Include="yaku\catalog\pinhu.cpp" />
+    <ClCompile Include="yaku\catalog\post.cpp" />
+    <ClCompile Include="yaku\catalog\quad.cpp" />
+    <ClCompile Include="yaku\catalog\sequence.cpp" />
+    <ClCompile Include="yaku\catalog\suit.cpp" />
+    <ClCompile Include="yaku\catalog\triplet1.cpp" />
+    <ClCompile Include="yaku\catalog\triplet2.cpp" />
+    <ClCompile Include="yaku\catalog\triplet3.cpp" />
+    <ClCompile Include="yaku\catalog\yaojiu.cpp" />
+    <ClCompile Include="yaku\catalog\shisanbd.cpp" />
+    <ClCompile Include="yaku\suittbl.cpp" />
+    <ClCompile Include="yaku\yaku.cpp" />
+    <ClCompile Include="yaku\yakurslt.cpp" />
+    <ClCompile Include="yaku\ykclass.cpp" />
+    <ClCompile Include="yaku\yk_tools.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ai\aiscript.h" />
+    <ClInclude Include="ai\class.h" />
+    <ClInclude Include="ai\functbl.h" />
+    <ClInclude Include="ai\filesel.h" />
+    <ClInclude Include="chat.h" />
+    <ClInclude Include="data\confitem.csv.h" />
+    <ClInclude Include="data\confitem.ini.h" />
+    <ClInclude Include="decomp.h" />
+    <ClInclude Include="discard.h" />
+    <ClInclude Include="dllmain.h" />
+    <ClInclude Include="envtbl.h" />
+    <ClInclude Include="except.h" />
+    <ClInclude Include="func.h" />
+    <ClInclude Include="gametbl.h" />
+    <ClInclude Include="haifu.h" />
+    <ClInclude Include="largenum.h" />
+    <ClInclude Include="logging.h" />
+    <ClInclude Include="lzma\Alloc.h" />
+    <ClInclude Include="lzma\LzFind.h" />
+    <ClInclude Include="lzma\LzFindMt.h" />
+    <ClInclude Include="lzma\LzHash.h" />
+    <ClInclude Include="lzma\LzmaDec.h" />
+    <ClInclude Include="lzma\LzmaLib.h" />
+    <ClInclude Include="lzma\RotateDefs.h" />
+    <ClInclude Include="lzma\Sha256.h" />
+    <ClInclude Include="lzma\Threads.h" />
+    <ClInclude Include="lzma\Types.h" />
+    <ClInclude Include="mjexport.h" />
+    <ClInclude Include="nmrules.h" />
+    <ClInclude Include="prepare.h" />
+    <ClInclude Include="random.h" />
+    <ClInclude Include="reader\csv2arry.h" />
+    <ClInclude Include="reader\ini2map.h" />
+    <ClInclude Include="reader\readrsrc.h" />
+    <ClInclude Include="remote.h" />
+    <ClInclude Include="shanten.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="ruletbl.h" />
+    <ClInclude Include="strcode.h" />
+    <ClInclude Include="tilecode.h" />
+    <ClInclude Include="tileutil.h" />
+    <ClInclude Include="version.h" />
+    <ClInclude Include="yaku\catalog.h" />
+    <ClInclude Include="yaku\yaku.h" />
+    <ClInclude Include="yaku\yvalue.h" />
+    <ClInclude Include="yaku\yakurslt.h" />
+    <ClInclude Include="yaku\ykclass.h" />
+    <ClInclude Include="yaku\yk_tools.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="mjcore.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
