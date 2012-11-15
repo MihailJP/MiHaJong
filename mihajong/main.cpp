@@ -8,8 +8,8 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	MSG msg;
 
 	/* ウィンドウを初期化する */
-	if (!InitWindow(hInstance, nCmdShow)) // 失敗したら終了
-		exit(1);
+	if (!InitWindow(hInstance, nCmdShow, MAKEINTRESOURCE(IDI_ICON1)))
+		exit(1); // 失敗したら終了
 	
 	/* メインループ */
 	while (true) {

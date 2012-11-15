@@ -17,7 +17,7 @@ LRESULT CALLBACK MainWindow::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	return 0;
 }
 
-void MainWindow::initWindowClass(HINSTANCE hThisInst) { // ÉEÉBÉìÉhÉEÉNÉâÉXÇÃèâä˙âª
+void MainWindow::initWindowClass(HINSTANCE hThisInst, LPCTSTR icon) { // ÉEÉBÉìÉhÉEÉNÉâÉXÇÃèâä˙âª
 	WNDCLASSEX myWindowClass;
 	
 	myWindowClass.hInstance = hThisInst;
@@ -25,8 +25,8 @@ void MainWindow::initWindowClass(HINSTANCE hThisInst) { // ÉEÉBÉìÉhÉEÉNÉâÉXÇÃèâä
 	myWindowClass.lpfnWndProc = WinProc;
 	myWindowClass.style = 0;
 	myWindowClass.cbSize = sizeof(WNDCLASSEX);
-	myWindowClass.hIcon = LoadIcon(hThisInst, IDI_APPLICATION);
-	myWindowClass.hIconSm = LoadIcon(hThisInst, IDI_WINLOGO);
+	myWindowClass.hIcon = (HICON)LoadImage(hThisInst, icon, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
+	myWindowClass.hIconSm = (HICON)LoadImage(hThisInst, icon, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
 	myWindowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	myWindowClass.lpszMenuName = nullptr;
 	myWindowClass.cbClsExtra = 0;
@@ -56,8 +56,8 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode) {
 	return;
 }
 
-MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode) {
-	initWindowClass(hThisInst);
+MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon) {
+	initWindowClass(hThisInst, icon);
 	initWindow(hThisInst, nWinMode);
 	myScreenManipulator = new ScreenManipulator(hWnd);
 }

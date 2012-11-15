@@ -11,7 +11,7 @@
 #define EXPORT __declspec(dllimport)
 #endif
 
-EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow);
+EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon);
 EXPORT void RefreshWindow();
 EXPORT void CleanupWindow();
 

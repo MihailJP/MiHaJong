@@ -12,10 +12,10 @@ private:
 	static const LPTSTR myWindowClassName, WindowCaption;
 	static const unsigned WindowWidth, WindowHeight;
 	static LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam); // ウィンドウプロシージャ
-	void initWindowClass(HINSTANCE hThisInst); // ウィンドウクラスの初期化
+	void initWindowClass(HINSTANCE hThisInst, LPCTSTR icon); // ウィンドウクラスの初期化
 	void initWindow(HINSTANCE hThisInst, int nWinMode); // ウィンドウの生成
 public:
-	MainWindow(HINSTANCE hThisInst, int nWinMode);
+	MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon);
 	~MainWindow();
 	void Render();
 };

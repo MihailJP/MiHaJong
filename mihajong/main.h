@@ -7,6 +7,7 @@
 #include <Windows.h>
 #include <cstdlib>
 #include "../graphic/init.h"
+#include "resource.h"
 
 #if defined(__GNUC__) && defined(_WIN32) && defined(_UNICODE) /* Workaround for MinGW */
 #define MINGW_UNICODE
