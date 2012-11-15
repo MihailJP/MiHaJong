@@ -7,6 +7,8 @@
 #ifdef GRAPHIC_EXPORTS
 #include "window.h"
 #define EXPORT __declspec(dllexport)
+extern HINSTANCE GraphicDLL;
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 #else
 #define EXPORT __declspec(dllimport)
 #endif

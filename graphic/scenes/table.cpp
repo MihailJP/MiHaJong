@@ -1,9 +1,10 @@
 #include "table.h"
 #include "../scrmanip.h"
+#include "../resource.h"
 
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
-	LoadTexture(&tBorder, _T("data\\frame.png"), 768, 768); InitSprite(&sBorder);
-	LoadTexture(&tBaize, _T("data\\baize.png"), 674, 674); InitSprite(&sBaize);
+	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 768, 768); InitSprite(&sBorder);
+	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 674, 674); InitSprite(&sBaize);
 }
 
 GameTableScreen::~GameTableScreen() {
