@@ -1,7 +1,25 @@
 #!/usr/bin/env ruby
 # -*- coding: UTF-8 -*-
 
-require "lzma"; require "digest/sha2"; require "pathname"
+def is_win?
+	if (RUBY_PLATFORM.downcase =~ /mswin(?!ce)|mingw|cygwin|bccwin/) then
+		return true
+	else
+		return false
+	end
+end
+
+require "digest/sha2"; require "pathname"
+
+# If ruby-lzma is available, use it.
+# If not, give an alternative.
+ruby_lzma_available = nil
+begin
+	require "lzma"
+	ruby_lzma_available = true
+rescue LoadError
+	ruby_lzma_available = false
+end
 
 if ARGV.size < 1 then
 	$stderr.print("Usage: #{$0} src-file\n")
@@ -17,11 +35,21 @@ cppfile = Pathname.new((srcfile.to_s) + ".cpp")
 compressed = nil
 digest = nil
 File.open(srcfile, "rb") {|source|
-	digest = Digest::SHA256.hexdigest(source.read())
-	compressed = LZMA.compress(source.read())
-}
-File.open(targetfile, "wb") {|target|
-	target.print(compressed)
+	source_data = source.read()
+	digest = Digest::SHA256.hexdigest(source_data)
+	if ruby_lzma_available then
+		compressed = LZMA.compress(source_data)
+		File.open(targetfile, "wb") {|target|
+			target.print(compressed)
+		}
+	else
+		command = is_win?() ?
+			"python #{File.expand_path(File.dirname(__FILE__)).gsub(/\//, "\\")}\\compress.py" :
+			"python #{File.expand_path(File.dirname(__FILE__))}/compress.py"
+		if not system("#{command} #{srcfile.to_s}") then
+			throw("Failure in #{command}")
+		end
+	end
 }
 File.open(headerfile, "wt") {|target|
 	target.print(<<"FINIS")
