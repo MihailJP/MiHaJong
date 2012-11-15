@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphic", "graphic\graphic.vcxproj", "{195EDF02-5A34-45F3-9330-DA6ED8CEB4DE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A1E77779-D7A8-4C1C-9D52-53586D6AA58A} = {A1E77779-D7A8-4C1C-9D52-53586D6AA58A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "auxtools", "auxtools\auxtools.vcxproj", "{6A6AC2F6-328C-4B0D-BD6F-84C9C5B9BBBA}"
 EndProject
