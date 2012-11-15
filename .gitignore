@@ -45,6 +45,8 @@ release
 *~
 Debug/
 Release/
+Debug(Wide)/
+Release(Wide)/
 ipch/
 *.sdf
 *.opensdf
