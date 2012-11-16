@@ -5,10 +5,22 @@
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 768, 768); InitSprite(&sBorder);
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 674, 674); InitSprite(&sBaize);
-	TileTexture->NewTile(0, BambooOne, Normal, 96, 123, Portrait, Obverse);
-	TileTexture->NewTile(1, BambooOne, Normal, 128, 123, Portrait, Upright);
-	TileTexture->NewTile(2, BambooOne, Normal, 160, 123, Portrait, Reverse);
-	TileTexture->NewTile(3, BambooOne, Normal, 192, 123, UpsideDown, Obverse);
+	for (int i = 2; i < 36; i += 2) {
+		TileTexture->NewTile(i  , BambooOne, Normal, 96 + 32*(i/2), 88, UpsideDown, Reverse);
+		TileTexture->NewTile(i+1, BambooOne, Normal, 96 + 32*(i/2), 77, UpsideDown, Reverse);
+	}
+	for (int i = 0; i < 34; i += 2) {
+		TileTexture->NewTile(36+i  , BambooOne, Normal, 103, 127 + 32*(i/2), Clockwise, Reverse);
+		TileTexture->NewTile(36+i+1, BambooOne, Normal, 103, 116 + 32*(i/2), Clockwise, Reverse);
+	}
+	for (int i = 2; i < 36; i += 2) {
+		TileTexture->NewTile(72+i  , BambooOne, Normal, 679, 81 + 32*(i/2), Clockwise, Reverse);
+		TileTexture->NewTile(72+i+1, BambooOne, Normal, 679, 70 + 32*(i/2), Clockwise, Reverse);
+	}
+	for (int i = 0; i < 34; i += 2) {
+		TileTexture->NewTile(108+i  , BambooOne, Normal, 142 + 32*(i/2), 665, UpsideDown, Reverse);
+		TileTexture->NewTile(108+i+1, BambooOne, Normal, 142 + 32*(i/2), 654, UpsideDown, Reverse);
+	}
 }
 
 GameTableScreen::~GameTableScreen() {

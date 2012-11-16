@@ -88,7 +88,7 @@ void ShowTile::Render() {
 					((*k)->tile % 10) * HoriTileWidth,
 					((*k)->tile / 10) * HoriTileHeight + VertTileHeight * TileRows,
 					((*k)->tile % 10 + 1) * HoriTileWidth,
-					((*k)->tile / 10 + 1) * HoriTileHeight + VertTileWidth * TileRows};
+					((*k)->tile / 10 + 1) * HoriTileHeight + VertTileHeight * TileRows};
 				RECT rectrev = {
 					((int)BackSide % 10) * HoriTileWidth,
 					((int)BackSide / 10) * HoriTileHeight + VertTileHeight * TileRows,

@@ -20,7 +20,7 @@ private:
 	static const unsigned int SideTileWidth  = 20;
 	static const unsigned int SideTileHeight = VertTileHeight;
 	static const unsigned int HoriTileWidth  = 46;
-	static const unsigned int HoriTileHeight = 43;
+	static const unsigned int HoriTileHeight = 41;
 	static const unsigned int TileCols = 10;
 	static const unsigned int TileRows = 13;
 	struct TileDescriptor;
