@@ -69,26 +69,26 @@
 				if (getHand(GameStat, HAND_TILECODE, cnt, kangPlayer) == getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) {
 					if (nakiCount == 0) {
 						switch getHand(GameStat, HAND_REDTILE, cnt, kangPlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x08: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x80: swbreak
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer), kangPlayer, 0x08: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer), kangPlayer, 0x80: swbreak
 						swend
 					}
 					if (nakiCount == 1) {
 						switch getHand(GameStat, HAND_REDTILE, cnt, kangPlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x04: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x40: swbreak
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer), kangPlayer, 0x04: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer), kangPlayer, 0x40: swbreak
 						swend
 					}
 					if (nakiCount == 2) {
 						switch getHand(GameStat, HAND_REDTILE, cnt, kangPlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x02: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x20: swbreak
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer), kangPlayer, 0x02: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer), kangPlayer, 0x20: swbreak
 						swend
 					}
 					if (nakiCount == 3) {
 						switch getHand(GameStat, HAND_REDTILE, cnt, kangPlayer)
-							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x01: swbreak
-							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer)+1, kangPlayer, 0x10: swbreak
+							case 1: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer), kangPlayer, 0x01: swbreak
+							case 2: flagMeld GameStat, MELD_REDTILE, MeldPointer(GameStat, kangPlayer), kangPlayer, 0x10: swbreak
 						swend
 					}
 					setHand GameStat, HAND_TILECODE, cnt, kangPlayer, 0

@@ -400,6 +400,7 @@ __declspec(dllexport) void chkOpenMachi(GameTable* const gameStat, int targetPla
 
 /* 九種九牌流しが可能かどうかのチェック */
 MJCORE bool chkdaopaiability(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+	if (RuleData::chkRule("nine_terminals", "continue")) return false; // 九種九牌なしのルールだったら戻る
 	Int8ByTile TileCount = countTilesInHand(gameStat, targetPlayer);
 	int YaojiuCount = 0; bool AtamaFlag = false;
 	for (int i = 0; i < 13; i++) // ヤオ九牌１種類につき、１をカウントする。
