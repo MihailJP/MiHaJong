@@ -5,6 +5,10 @@
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 768, 768); InitSprite(&sBorder);
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 674, 674); InitSprite(&sBaize);
+	TileTexture->NewTile(0, BambooOne, Normal, 96, 123, Portrait, Obverse);
+	TileTexture->NewTile(1, BambooOne, Normal, 128, 123, Portrait, Upright);
+	TileTexture->NewTile(2, BambooOne, Normal, 160, 123, Portrait, Reverse);
+	TileTexture->NewTile(3, BambooOne, Normal, 192, 123, UpsideDown, Obverse);
 }
 
 GameTableScreen::~GameTableScreen() {
@@ -20,4 +24,5 @@ void GameTableScreen::Render() {
 	ShowSidebar();
 	ShowSprite(sBaize, tBaize, 47, 47, 674, 674);
 	ShowSprite(sBorder, tBorder, 0, 0, 768, 768);
+	TileTexture->Render();
 }

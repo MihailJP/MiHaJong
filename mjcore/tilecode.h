@@ -73,6 +73,7 @@ enum tileCode : uint8_t { // îvÇÃÉRÅ[Éh
 	Bamboo,
 	/* ì¡éÍ */
 	Flower = 38,
+	BackSide = 39,
 	TilePad = UCHAR_MAX,
 };
 

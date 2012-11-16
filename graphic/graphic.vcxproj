@@ -137,15 +137,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="init.cpp" />
+    <ClCompile Include="loadtex.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
     <ClCompile Include="scenes\game.cpp" />
     <ClCompile Include="scenes\table.cpp" />
     <ClCompile Include="scenes\test.cpp" />
     <ClCompile Include="scrmanip.cpp" />
+    <ClCompile Include="showtile.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="init.h" />
+    <ClInclude Include="loadtex.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="scenes\fps.h" />
     <ClInclude Include="scenes\game.h" />
@@ -154,6 +157,7 @@
     <ClInclude Include="scenes\table.h" />
     <ClInclude Include="scenes\test.h" />
     <ClInclude Include="scrmanip.h" />
+    <ClInclude Include="showtile.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>

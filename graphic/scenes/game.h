@@ -2,9 +2,11 @@
 #define GRAPHIC_SCENES_GAME_H
 
 #include "proto.h"
+#include "../showtile.h"
 
 class TableProtoScene : public Scene {
 protected:
+	ShowTile* TileTexture;
 	LPDIRECT3DTEXTURE9 tSideBar; LPD3DXSPRITE sSideBar; // サイドバー
 	void LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource, unsigned width, unsigned height); // テクスチャ読み込み
 	void InitSprite(LPD3DXSPRITE* sprite); // スプライト初期化
