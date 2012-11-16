@@ -12,17 +12,18 @@ enum TileSide {Obverse, Upright, Reverse,};
 enum TileDirection {Portrait, Withershins, UpsideDown, Clockwise,};
 
 class ShowTile {
-private:
-	static const unsigned int TextureWidth   = 960;
-	static const unsigned int TextureHeight  = 1235;
-	static const unsigned int VertTileWidth  = 32;
-	static const unsigned int VertTileHeight = 54;
-	static const unsigned int SideTileWidth  = 20;
+public:
+	static const unsigned int TextureWidth   = 840;
+	static const unsigned int TextureHeight  = 1079;
+	static const unsigned int VertTileWidth  = 28;
+	static const unsigned int VertTileHeight = 47;
+	static const unsigned int SideTileWidth  = 18;
 	static const unsigned int SideTileHeight = VertTileHeight;
-	static const unsigned int HoriTileWidth  = 46;
-	static const unsigned int HoriTileHeight = 41;
+	static const unsigned int HoriTileWidth  = 40;
+	static const unsigned int HoriTileHeight = 36;
 	static const unsigned int TileCols = 10;
 	static const unsigned int TileRows = 13;
+private:
 	struct TileDescriptor;
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 TileTexture;

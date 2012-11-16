@@ -6,20 +6,20 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 768, 768); InitSprite(&sBorder);
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 674, 674); InitSprite(&sBaize);
 	for (int i = 2; i < 36; i += 2) {
-		TileTexture->NewTile(i  , BambooOne, Normal, 96 + 32*(i/2), 88, UpsideDown, Reverse);
-		TileTexture->NewTile(i+1, BambooOne, Normal, 96 + 32*(i/2), 77, UpsideDown, Reverse);
+		TileTexture->NewTile(i  , BambooOne, Normal, 96 + ShowTile::VertTileWidth*(i/2), 88, UpsideDown, Reverse);
+		TileTexture->NewTile(i+1, BambooOne, Normal, 96 + ShowTile::VertTileWidth*(i/2), 77, UpsideDown, Reverse);
 	}
 	for (int i = 0; i < 34; i += 2) {
-		TileTexture->NewTile(36+i  , BambooOne, Normal, 103, 127 + 32*(i/2), Clockwise, Reverse);
-		TileTexture->NewTile(36+i+1, BambooOne, Normal, 103, 116 + 32*(i/2), Clockwise, Reverse);
+		TileTexture->NewTile(36+i  , BambooOne, Normal, 103, 127 + ShowTile::VertTileWidth*(i/2), Clockwise, Reverse);
+		TileTexture->NewTile(36+i+1, BambooOne, Normal, 103, 116 + ShowTile::VertTileWidth*(i/2), Clockwise, Reverse);
 	}
 	for (int i = 2; i < 36; i += 2) {
-		TileTexture->NewTile(72+i  , BambooOne, Normal, 679, 81 + 32*(i/2), Clockwise, Reverse);
-		TileTexture->NewTile(72+i+1, BambooOne, Normal, 679, 70 + 32*(i/2), Clockwise, Reverse);
+		TileTexture->NewTile(72+i  , BambooOne, Normal, 679, 81 + ShowTile::VertTileWidth*(i/2), Clockwise, Reverse);
+		TileTexture->NewTile(72+i+1, BambooOne, Normal, 679, 70 + ShowTile::VertTileWidth*(i/2), Clockwise, Reverse);
 	}
 	for (int i = 0; i < 34; i += 2) {
-		TileTexture->NewTile(108+i  , BambooOne, Normal, 142 + 32*(i/2), 665, UpsideDown, Reverse);
-		TileTexture->NewTile(108+i+1, BambooOne, Normal, 142 + 32*(i/2), 654, UpsideDown, Reverse);
+		TileTexture->NewTile(108+i  , BambooOne, Normal, 142 + ShowTile::VertTileWidth*(i/2), 665, UpsideDown, Reverse);
+		TileTexture->NewTile(108+i+1, BambooOne, Normal, 142 + ShowTile::VertTileWidth*(i/2), 654, UpsideDown, Reverse);
 	}
 }
 
