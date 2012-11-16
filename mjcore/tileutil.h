@@ -18,6 +18,7 @@
 #include "haifu.h"
 #ifdef MJCORE_EXPORTS
 #include "logging.h"
+#include "ruletbl.h"
 #endif
 
 // -------------------------------------------------------------------------
