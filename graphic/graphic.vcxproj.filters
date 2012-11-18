@@ -27,9 +27,6 @@
     <ClCompile Include="window.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="scenes\test.cpp">
-      <Filter>ソース ファイル\scenes</Filter>
-    </ClCompile>
     <ClCompile Include="scenes\fps.cpp">
       <Filter>ソース ファイル\scenes</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
       <Filter>ヘッダー ファイル\scenes</Filter>
     </ClInclude>
     <ClInclude Include="scenes\scenes.h">
-      <Filter>ヘッダー ファイル\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="scenes\test.h">
       <Filter>ヘッダー ファイル\scenes</Filter>
     </ClInclude>
     <ClInclude Include="scenes\fps.h">
