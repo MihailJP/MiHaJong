@@ -13,8 +13,8 @@ enum TileDirection {Portrait, Withershins, UpsideDown, Clockwise,};
 
 class ShowTile {
 public:
-	static const unsigned int TextureWidth   = 960;
-	static const unsigned int TextureHeight  = 1235;
+	static const unsigned int TextureWidth   = 1050;
+	static const unsigned int TextureHeight  = 1313;
 	static const unsigned int VertTileWidth  = 32;
 	static const unsigned int VertTileHeight = 54;
 	static const unsigned int SideTileWidth  = 20;
@@ -23,6 +23,7 @@ public:
 	static const unsigned int HoriTileHeight = 41;
 	static const unsigned int TileCols = 10;
 	static const unsigned int TileRows = 13;
+	static const unsigned int TexturePadding = 3;
 private:
 	struct TileDescriptor;
 	LPDIRECT3DDEVICE9 myDevice;

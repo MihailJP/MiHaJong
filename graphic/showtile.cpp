@@ -60,27 +60,33 @@ void ShowTile::Render() {
 			if (((*k)->direction == Portrait) || ((*k)->direction == UpsideDown)) {
 				/* Portrait alignment */
 				RECT rect = {
-					((*k)->tile % 10) * VertTileWidth, ((*k)->tile / 10) * VertTileHeight,
-					((*k)->tile % 10 + 1) * VertTileWidth, ((*k)->tile / 10 + 1) * VertTileHeight};
+					((*k)->tile % 10) * (VertTileWidth + TexturePadding),
+					((*k)->tile / 10) * (VertTileHeight + TexturePadding),
+					((*k)->tile % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding,
+					((*k)->tile / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding,
+				};
 				RECT rectrev = {
-					((int)BackSide % 10) * VertTileWidth, ((int)BackSide / 10) * VertTileHeight,
-					((int)BackSide % 10 + 1) * VertTileWidth, ((int)BackSide / 10 + 1) * VertTileHeight};
+					((int)BackSide % 10) * (VertTileWidth + TexturePadding),
+					((int)BackSide / 10) * (VertTileHeight + TexturePadding),
+					((int)BackSide % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding,
+					((int)BackSide / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding,
+				};
 				switch ((*k)->side) {
 				case Obverse:
 					if ((*k)->direction == UpsideDown) {
-						rect.left += VertTileWidth * TileCols;
-						rect.right += VertTileWidth * TileCols;
+						rect.left += (VertTileWidth + TexturePadding) * TileCols;
+						rect.right += (VertTileWidth + TexturePadding) * TileCols;
 					}
 					RenderVert(*k, &rect);
 					break;
 				case Upright:
 					if ((*k)->direction == UpsideDown) {
-						rectrev.left += VertTileWidth * TileCols * 2;
-						rectrev.right += VertTileWidth * TileCols * 2;
+						rectrev.left += (VertTileWidth + TexturePadding) * TileCols * 2;
+						rectrev.right += (VertTileWidth + TexturePadding) * TileCols * 2;
 						RenderVert(*k, &rectrev);
 					} else {
-						rect.left += VertTileWidth * TileCols * 2;
-						rect.right += VertTileWidth * TileCols * 2;
+						rect.left += (VertTileWidth + TexturePadding) * TileCols * 2;
+						rect.right += (VertTileWidth + TexturePadding) * TileCols * 2;
 						RenderVert(*k, &rect);
 					}
 					break;
@@ -92,20 +98,23 @@ void ShowTile::Render() {
 			else {
 				/* Landscape alignment */
 				RECT rect = {
-					((*k)->tile % 10) * HoriTileWidth,
-					((*k)->tile / 10) * HoriTileHeight + VertTileHeight * TileRows,
-					((*k)->tile % 10 + 1) * HoriTileWidth,
-					((*k)->tile / 10 + 1) * HoriTileHeight + VertTileHeight * TileRows};
+					((*k)->tile % 10) * (HoriTileWidth + TexturePadding),
+					((*k)->tile / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows,
+					((*k)->tile % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding,
+					((*k)->tile / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding,
+				};
 				RECT rectrev = {
-					((int)BackSide % 10) * HoriTileWidth,
-					((int)BackSide / 10) * HoriTileHeight + VertTileHeight * TileRows,
-					((int)BackSide % 10 + 1) * HoriTileWidth ,
-					((int)BackSide / 10 + 1) * HoriTileHeight + VertTileHeight * TileRows};
+					((int)BackSide % 10) * (HoriTileWidth + TexturePadding),
+					((int)BackSide / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows,
+					((int)BackSide % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding,
+					((int)BackSide / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding,
+				};
 				RECT rectside = {
-					2 * TileRows * HoriTileWidth,
-					VertTileHeight * TileRows,
-					2 * TileRows * HoriTileWidth + SideTileWidth,
-					VertTileWidth * TileRows + SideTileHeight};
+					2 * TileRows * (HoriTileWidth + TexturePadding),
+					(VertTileHeight + TexturePadding) * TileRows,
+					2 * TileRows * (HoriTileWidth + TexturePadding) + SideTileWidth + TexturePadding - TexturePadding,
+					(VertTileWidth + TexturePadding) * TileRows + (SideTileHeight + TexturePadding) - TexturePadding,
+				};
 				switch ((*k)->side) {
 				case Obverse:
 					if ((*k)->direction == Clockwise) {
