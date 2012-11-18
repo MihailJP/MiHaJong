@@ -3,8 +3,9 @@
 #include "../resource.h"
 
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
-	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 768, 768); InitSprite(&sBorder);
-	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 674, 674); InitSprite(&sBaize);
+	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080); InitSprite(&sBorder);
+	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080); InitSprite(&sBaize);
+	/* 山牌 */
 	for (int i = 2; i < 36; i += 2) { /* 対面側の山 */
 		TileTexture->NewTile(i  , BambooOne, Normal, DeckPosH + ShowTile::VertTileWidth*(i/2-1), DeckPosV, UpsideDown, Reverse);
 		TileTexture->NewTile(i+1, BambooOne, Normal, DeckPosH + ShowTile::VertTileWidth*(i/2-1), DeckPosV - TileThickness, UpsideDown, Reverse);
@@ -21,6 +22,10 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 		TileTexture->NewTile(108+i  , BambooOne, Normal, DeckPosH + ShowTile::VertTileWidth*(i/2), TableSize - DeckPosV, Portrait, Reverse);
 		TileTexture->NewTile(108+i+1, BambooOne, Normal, DeckPosH + ShowTile::VertTileWidth*(i/2), TableSize - DeckPosV - TileThickness, Portrait, Reverse);
 	}
+	/* 手牌 */
+	for (int i = 0; i < HandLength; i++) { /* 自分の山 */
+		TileTexture->NewTile(144+i , WhiteDragon, Normal, HandPosH + ShowTile::VertTileWidth*i, TableSize - HandPosV, Portrait, Upright);
+	}
 }
 
 GameTableScreen::~GameTableScreen() {
@@ -34,7 +39,7 @@ void GameTableScreen::Render() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 		D3DCOLOR_XRGB(0, 128, 0), 1.0f, 0); // バッファクリア
 	ShowSidebar();
-	ShowSprite(sBaize, tBaize, 47, 47, 674, 674);
-	ShowSprite(sBorder, tBorder, 0, 0, 768, 768);
+	ShowSprite(sBaize, tBaize, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
+	ShowSprite(sBorder, tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	TileTexture->Render();
 }

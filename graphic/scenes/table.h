@@ -11,6 +11,9 @@ private:
 	static const unsigned int DeckChainLength = 17;
 	static const unsigned int DeckPosH = (TableSize - ShowTile::VertTileWidth * (DeckChainLength - 1)) / 2;
 	static const unsigned int DeckPosV = (TableSize / 2) - 300;
+	static const unsigned int HandLength = 13;
+	static const unsigned int HandPosH = (TableSize - ShowTile::VertTileWidth * (HandLength - 1)) / 2;
+	static const unsigned int HandPosV = DeckPosV - 144;
 	LPDIRECT3DTEXTURE9 tBorder; LPD3DXSPRITE sBorder; // ‘ì‚Ì˜g
 	LPDIRECT3DTEXTURE9 tBaize; LPD3DXSPRITE sBaize; // —…ŽÑ’n
 public:
