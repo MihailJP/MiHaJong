@@ -23,8 +23,17 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 		TileTexture->NewTile(108+i+1, BambooOne, Normal, DeckPosH + ShowTile::VertTileWidth*(i/2), TableSize - DeckPosV - TileThickness, Portrait, Reverse);
 	}
 	/* Žè”v */
-	for (int i = 0; i < HandLength; i++) { /* Ž©•ª‚ÌŽR */
-		TileTexture->NewTile(144+i , WhiteDragon, Normal, HandPosH + ShowTile::VertTileWidth*i, TableSize - HandPosV, Portrait, Upright);
+	for (int i = 0; i < HandLength; i++) { /* ‘Î–Ê‚ÌŽè”v */
+		TileTexture->NewTile(144+i   , WhiteDragon, Normal, HandPosH + ShowTile::VertTileWidth*i, HandPosV, UpsideDown, Upright);
+	}
+	for (int i = 0; i < HandLength; i++) { /* ã‰Æ‚ÌŽè”v */
+		TileTexture->NewTile(144+14+i, BambooOne, Normal, HandPosV, HandPosH + ShowTile::VertTileWidth*i, Clockwise, Upright);
+	}
+	for (int i = 0; i < HandLength; i++) { /* ‰º‰Æ‚ÌŽè”v */
+		TileTexture->NewTile(144+28+i, CircleSeven, Normal, TableSize - HandPosV, HandPosH + ShowTile::VertTileWidth*i, Withershins, Upright);
+	}
+	for (int i = 0; i < HandLength; i++) { /* Ž©•ª‚ÌŽè”v */
+		TileTexture->NewTile(144+52+i, WhiteDragon, Normal, HandPosH + ShowTile::VertTileWidth*i, TableSize - HandPosV, Portrait, Upright);
 	}
 }
 

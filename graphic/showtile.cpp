@@ -34,25 +34,24 @@ void ShowTile::DelTile(unsigned int ID) {
 }
 
 /* ƒŒƒ“ƒ_ƒŠƒ“ƒO */
-void ShowTile::RenderVert(TileDescriptor* tile, RECT* rect) {
+void ShowTile::RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY) {
 	D3DXMATRIX matrix; D3DXMatrixIdentity(&matrix);
 	D3DXMatrixScaling(&matrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
-	D3DXVECTOR3 Center(VertTileWidth/2, VertTileHeight/2, 0);
+	D3DXVECTOR3 Center(CenterX, CenterY, 0);
 	D3DXVECTOR3 Pos((float)tile->X, (float)tile->Y, 0);
 	tile->sprite->Begin(D3DXSPRITE_ALPHABLEND);
 	tile->sprite->SetTransform(&matrix);
 	tile->sprite->Draw(TileTexture, rect, &Center, &Pos, 0xffffffff);
 	tile->sprite->End();
 }
+void ShowTile::RenderVert(TileDescriptor* tile, RECT* rect) {
+	RenderTile(tile, rect, VertTileWidth/2, VertTileHeight/2);
+}
 void ShowTile::RenderHori(TileDescriptor* tile, RECT* rect) {
-	D3DXMATRIX matrix; D3DXMatrixIdentity(&matrix);
-	D3DXMatrixScaling(&matrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
-	D3DXVECTOR3 Center(HoriTileWidth/2, HoriTileHeight/2, 0);
-	D3DXVECTOR3 Pos((float)tile->X, (float)tile->Y, 0);
-	tile->sprite->Begin(D3DXSPRITE_ALPHABLEND);
-	tile->sprite->SetTransform(&matrix);
-	tile->sprite->Draw(TileTexture, rect, &Center, &Pos, 0xffffffff);
-	tile->sprite->End();
+	RenderTile(tile, rect, HoriTileWidth/2, HoriTileHeight/2);
+}
+void ShowTile::RenderSide(TileDescriptor* tile, RECT* rect) {
+	RenderTile(tile, rect, SideTileWidth/2, SideTileHeight/2);
 }
 void ShowTile::Render() {
 	for (auto k = mySprites.begin(); k != mySprites.end(); ++k) {
@@ -110,25 +109,25 @@ void ShowTile::Render() {
 					((int)BackSide / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding,
 				};
 				RECT rectside = {
-					2 * TileRows * (HoriTileWidth + TexturePadding),
+					2 * TileCols * (HoriTileWidth + TexturePadding),
 					(VertTileHeight + TexturePadding) * TileRows,
-					2 * TileRows * (HoriTileWidth + TexturePadding) + SideTileWidth + TexturePadding - TexturePadding,
-					(VertTileWidth + TexturePadding) * TileRows + (SideTileHeight + TexturePadding) - TexturePadding,
+					2 * TileCols * (HoriTileWidth + TexturePadding) + SideTileWidth,
+					(VertTileHeight + TexturePadding) * TileRows + SideTileHeight,
 				};
 				switch ((*k)->side) {
 				case Obverse:
 					if ((*k)->direction == Clockwise) {
-						rect.left += HoriTileWidth * TileCols;
-						rect.right += HoriTileWidth * TileCols;
+						rect.left += (HoriTileWidth + TexturePadding) * TileCols;
+						rect.right += (HoriTileWidth + TexturePadding) * TileCols;
 					}
 					RenderHori(*k, &rect);
 					break;
 				case Upright:
 					if ((*k)->direction == Clockwise) {
-						rectside.left += SideTileWidth;
-						rectside.right += SideTileWidth;
+						rectside.left += SideTileWidth + TexturePadding;
+						rectside.right += SideTileWidth + TexturePadding;
 					}
-					RenderHori(*k, &rectside);
+					RenderSide(*k, &rectside);
 					break;
 				case Reverse:
 					RenderHori(*k, &rectrev);

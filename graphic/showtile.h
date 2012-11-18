@@ -18,7 +18,7 @@ public:
 	static const unsigned int VertTileWidth  = 32;
 	static const unsigned int VertTileHeight = 54;
 	static const unsigned int SideTileWidth  = 20;
-	static const unsigned int SideTileHeight = VertTileHeight;
+	static const unsigned int SideTileHeight = 74;
 	static const unsigned int HoriTileWidth  = 46;
 	static const unsigned int HoriTileHeight = 41;
 	static const unsigned int TileCols = 10;
@@ -29,8 +29,10 @@ private:
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 TileTexture;
 	std::vector<TileDescriptor*> mySprites;
+	void RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY);
 	void RenderVert(TileDescriptor* tile, RECT* rect);
 	void RenderHori(TileDescriptor* tile, RECT* rect);
+	void RenderSide(TileDescriptor* tile, RECT* rect);
 public:
 	void NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side);
 	void DelTile(unsigned int ID);
