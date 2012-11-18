@@ -62,14 +62,14 @@ void ShowTile::Render() {
 				RECT rect = {
 					((*k)->tile % 10) * (VertTileWidth + TexturePadding),
 					((*k)->tile / 10) * (VertTileHeight + TexturePadding),
-					((*k)->tile % 10 + 1) * (VertTileWidth + TexturePadding),
-					((*k)->tile / 10 + 1) * (VertTileHeight + TexturePadding)
+					((*k)->tile % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding,
+					((*k)->tile / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding,
 				};
 				RECT rectrev = {
 					((int)BackSide % 10) * (VertTileWidth + TexturePadding),
 					((int)BackSide / 10) * (VertTileHeight + TexturePadding),
-					((int)BackSide % 10 + 1) * (VertTileWidth + TexturePadding),
-					((int)BackSide / 10 + 1) * (VertTileHeight + TexturePadding)
+					((int)BackSide % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding,
+					((int)BackSide / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding,
 				};
 				switch ((*k)->side) {
 				case Obverse:
@@ -100,20 +100,20 @@ void ShowTile::Render() {
 				RECT rect = {
 					((*k)->tile % 10) * (HoriTileWidth + TexturePadding),
 					((*k)->tile / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows,
-					((*k)->tile % 10 + 1) * (HoriTileWidth + TexturePadding),
-					((*k)->tile / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows
+					((*k)->tile % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding,
+					((*k)->tile / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding,
 				};
 				RECT rectrev = {
 					((int)BackSide % 10) * (HoriTileWidth + TexturePadding),
 					((int)BackSide / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows,
-					((int)BackSide % 10 + 1) * (HoriTileWidth + TexturePadding) ,
-					((int)BackSide / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows
+					((int)BackSide % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding,
+					((int)BackSide / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding,
 				};
 				RECT rectside = {
 					2 * TileRows * (HoriTileWidth + TexturePadding),
 					(VertTileHeight + TexturePadding) * TileRows,
-					2 * TileRows * (HoriTileWidth + TexturePadding) + SideTileWidth+ TexturePadding,
-					(VertTileWidth + TexturePadding) * TileRows + (SideTileHeight + TexturePadding)
+					2 * TileRows * (HoriTileWidth + TexturePadding) + SideTileWidth + TexturePadding - TexturePadding,
+					(VertTileWidth + TexturePadding) * TileRows + (SideTileHeight + TexturePadding) - TexturePadding,
 				};
 				switch ((*k)->side) {
 				case Obverse:
