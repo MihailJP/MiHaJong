@@ -3,7 +3,7 @@
 
 class Geometry {
 public:
-	static const unsigned BaseSize = 1200;
+	static const unsigned BaseSize = 960;
 	static unsigned WindowWidth;
 	static unsigned WindowHeight;
 	static float WindowScale() {return (float)WindowHeight / (float)BaseSize;}
