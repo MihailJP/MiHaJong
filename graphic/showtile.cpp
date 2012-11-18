@@ -1,6 +1,7 @@
 #include "showtile.h"
 #include "resource.h"
 #include "loadtex.h"
+#include "geometry.h"
 
 ShowTile::ShowTile(LPDIRECT3DDEVICE9 device) {
 	myDevice = device;
@@ -34,16 +35,22 @@ void ShowTile::DelTile(unsigned int ID) {
 
 /* ƒŒƒ“ƒ_ƒŠƒ“ƒO */
 void ShowTile::RenderVert(TileDescriptor* tile, RECT* rect) {
+	D3DXMATRIX matrix; D3DXMatrixIdentity(&matrix);
+	D3DXMatrixScaling(&matrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXVECTOR3 Center(VertTileWidth/2, VertTileHeight/2, 0);
 	D3DXVECTOR3 Pos((float)tile->X, (float)tile->Y, 0);
 	tile->sprite->Begin(D3DXSPRITE_ALPHABLEND);
+	tile->sprite->SetTransform(&matrix);
 	tile->sprite->Draw(TileTexture, rect, &Center, &Pos, 0xffffffff);
 	tile->sprite->End();
 }
 void ShowTile::RenderHori(TileDescriptor* tile, RECT* rect) {
+	D3DXMATRIX matrix; D3DXMatrixIdentity(&matrix);
+	D3DXMatrixScaling(&matrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXVECTOR3 Center(HoriTileWidth/2, HoriTileHeight/2, 0);
 	D3DXVECTOR3 Pos((float)tile->X, (float)tile->Y, 0);
 	tile->sprite->Begin(D3DXSPRITE_ALPHABLEND);
+	tile->sprite->SetTransform(&matrix);
 	tile->sprite->Draw(TileTexture, rect, &Center, &Pos, 0xffffffff);
 	tile->sprite->End();
 }

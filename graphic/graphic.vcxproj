@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="geometry.cpp" />
     <ClCompile Include="init.cpp" />
     <ClCompile Include="loadtex.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="geometry.h" />
     <ClInclude Include="init.h" />
     <ClInclude Include="loadtex.h" />
     <ClInclude Include="resource.h" />

@@ -8,7 +8,7 @@ void LoadTexture(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9* texture, LPCTSTR 
 	void* pngData = LockResource(ResourceMem);
 	HRESULT result = 
 		D3DXCreateTextureFromFileInMemoryEx(device, pngData, pngSize, width, height, 0, 0,
-		D3DFMT_UNKNOWN, D3DPOOL_DEFAULT, D3DX_FILTER_NONE, D3DX_DEFAULT,
+		D3DFMT_UNKNOWN, D3DPOOL_DEFAULT, (D3DX_FILTER_TRIANGLE | D3DX_FILTER_DITHER), D3DX_DEFAULT,
 		0x00000000, nullptr, nullptr, texture);
 	UnlockResource(ResourceMem);
 	switch (result) {

@@ -3,8 +3,8 @@
 ScreenManipulator* MainWindow::myScreenManipulator = nullptr;
 const LPTSTR MainWindow::myWindowClassName = _T("testwnd");
 const LPTSTR MainWindow::WindowCaption = _T("テストウィンドウ");
-const unsigned MainWindow::WindowWidth = 1024;
-const unsigned MainWindow::WindowHeight = 768;
+unsigned& MainWindow::WindowWidth = Geometry::WindowWidth;
+unsigned& MainWindow::WindowHeight = Geometry::WindowHeight;
 
 LRESULT CALLBACK MainWindow::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) { // ウィンドウプロシージャ
 	switch (message) {

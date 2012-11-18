@@ -4,13 +4,14 @@
 #include <Windows.h>
 #include <tchar.h>
 #include "scrmanip.h"
+#include "geometry.h"
 
 class MainWindow {
 private:
 	HWND hWnd;
 	static ScreenManipulator* myScreenManipulator; // DirectX オブジェクト
 	static const LPTSTR myWindowClassName, WindowCaption;
-	static const unsigned WindowWidth, WindowHeight;
+	static unsigned& WindowWidth, & WindowHeight;
 	static LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam); // ウィンドウプロシージャ
 	void initWindowClass(HINSTANCE hThisInst, LPCTSTR icon); // ウィンドウクラスの初期化
 	void initWindow(HINSTANCE hThisInst, int nWinMode); // ウィンドウの生成
