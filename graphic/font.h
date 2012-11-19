@@ -12,7 +12,7 @@ private:
 	virtual ~FontMap() {}
 	FontMap& operator=(const FontMap&) {return *this;}
 	fMap m;
-	static const unsigned short Default_Chr = 192;
+	static const unsigned short Default_Chr = 0;
 public:
 	static FontMap* instantiate();
 	unsigned short map(wchar_t c);
