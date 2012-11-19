@@ -4,9 +4,11 @@
 #include "proto.h"
 #include <deque>
 
+class TextRenderer;
+
 class FPSIndicator : public Scene {
 private:
-	LPD3DXFONT pFont;
+	TextRenderer* textRenderer;
 	std::deque<UINT64> RedrawTime;
 	UINT64 LastRecalcTime;
 	float currentFPS;

@@ -10,6 +10,9 @@
 
 class TextRenderer {
 private:
+	static const unsigned int FontBaseSize = 40;
+	static const unsigned int FontCols = 32;
+	static const unsigned int FontPadding = 2;
 	struct StringAttr;
 	struct SpriteAttr;
 	LPDIRECT3DDEVICE9 myDevice;
@@ -21,8 +24,10 @@ private:
 public:
 	TextRenderer(LPDIRECT3DDEVICE9 device);
 	~TextRenderer();
-	void NewText(unsigned int ID, const std::wstring& str, int x, int y, float scale, float width);
-	void NewText(unsigned int ID, const std::string& str, int x, int y, float scale, float width);
+	void NewText(unsigned int ID, const std::wstring& str, int x, int y,
+		float scale = 1.0, float width = 1.0, D3DCOLOR color = 0xffffffff);
+	void NewText(unsigned int ID, const std::string& str, int x, int y,
+		float scale = 1.0, float width = 1.0, D3DCOLOR color = 0xffffffff);
 	void DelText(unsigned int ID);
 	void Render();
 };
@@ -31,11 +36,14 @@ struct TextRenderer::StringAttr {
 	std::wstring str;
 	int X, Y;
 	float scale, width;
+	D3DCOLOR color;
 };
 
 struct TextRenderer::SpriteAttr {
 	LPD3DXSPRITE sprite;
+	wchar_t chr;
 	int X, Y;
 	float widthScale, heightScale;
+	D3DCOLOR color;
 };
 #endif
