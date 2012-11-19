@@ -4,5 +4,6 @@
 #include "proto.h"
 #include "fps.h"
 #include "table.h"
+#include "ruleconf.h"
 
 #endif
