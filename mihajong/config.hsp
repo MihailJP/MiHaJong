@@ -52,7 +52,7 @@
 
 		モジュール内に保持されているルール設定の項目を取得します。
 */
-	sdim RuleText, RULE_IN_LINE+4, length(RuleConf)
+	sdim RuleText, RULE_IN_LINE+4, RULE_LINES
 	dim RulePtr, length(RuleText)
 	repeat length(RuleText): RuleText(cnt) = RuleConf(cnt): RulePtr(cnt) = varptr(RuleText(cnt)): loop
 	_exportRule RulePtr
