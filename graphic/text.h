@@ -6,7 +6,6 @@
 #include <dxerr.h>
 #include <string>
 #include <vector>
-#include <queue>
 #include "loadtex.h"
 
 class TextRenderer {
@@ -20,7 +19,6 @@ private:
 	LPDIRECT3DTEXTURE9 font;
 	std::vector<StringAttr*> StringData;
 	std::vector<std::vector<SpriteAttr*> > SpriteData;
-	std::queue<unsigned int> ReconstructionQueue;
 	void reconstruct();
 	void reconstruct(unsigned int ID);
 	void deleteSprite();

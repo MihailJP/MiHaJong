@@ -28,7 +28,7 @@ void TextRenderer::NewText(unsigned int ID, const std::wstring& str, int x, int 
 	StringData[ID]->X = x; StringData[ID]->Y = y;
 	StringData[ID]->scale = scale; StringData[ID]->width = width;
 	StringData[ID]->color = color;
-	ReconstructionQueue.push(ID); //reconstruct(ID);
+	reconstruct(ID);
 }
 void TextRenderer::NewText(unsigned int ID, const std::string& str, int x, int y, float scale, float width, D3DCOLOR color) {
 	NewText(ID, CodeConv::ANSItoWIDE(str), x, y, scale, width, color);
@@ -74,7 +74,7 @@ void TextRenderer::reconstruct() {
 	// VERY SLOW. DO NOT USE.
 	deleteSprite();
 	for (unsigned i = 0; i < StringData.size(); i++)
-		ReconstructionQueue.push(i); //reconstruct(i);
+		reconstruct(i);
 }
 
 /* スプライトを削除する */
@@ -94,10 +94,6 @@ void TextRenderer::deleteSprite() {
 
 /* レンダリング */
 void TextRenderer::Render() {
-	if (!ReconstructionQueue.empty()) {
-		reconstruct(ReconstructionQueue.front());
-		ReconstructionQueue.pop();
-	}
 	for (auto i = SpriteData.begin(); i != SpriteData.end(); ++i) {
 		for (auto k = (*i).begin(); k != (*i).end(); ++k) {
 			if (!(*k)) continue;
