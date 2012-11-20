@@ -204,6 +204,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="envtbl.cpp" />
     <ClCompile Include="func.cpp" />
+    <ClCompile Include="fuuro.cpp" />
     <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="haifu.cpp" />
     <ClCompile Include="largenum.cpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="envtbl.h" />
     <ClInclude Include="except.h" />
     <ClInclude Include="func.h" />
+    <ClInclude Include="fuuro.h" />
     <ClInclude Include="gametbl.h" />
     <ClInclude Include="haifu.h" />
     <ClInclude Include="largenum.h" />
