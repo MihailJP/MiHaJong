@@ -28,7 +28,7 @@ void TextRenderer::NewText(unsigned int ID, const std::wstring& str, int x, int 
 	StringData[ID]->X = x; StringData[ID]->Y = y;
 	StringData[ID]->scale = scale; StringData[ID]->width = width;
 	StringData[ID]->color = color;
-	reconstruct();
+	ReconstructionQueue.push(ID); //reconstruct(ID);
 }
 void TextRenderer::NewText(unsigned int ID, const std::string& str, int x, int y, float scale, float width, D3DCOLOR color) {
 	NewText(ID, CodeConv::ANSItoWIDE(str), x, y, scale, width, color);
@@ -37,69 +37,82 @@ void TextRenderer::NewText(unsigned int ID, const std::string& str, int x, int y
 /* 文字列オブジェクトの後始末 */
 void TextRenderer::DelText(unsigned int ID) {
 	delete StringData[ID]; StringData[ID] = nullptr;
-	reconstruct();
+	deleteSprite(ID);
 }
 
 /* スプライト再構築 */
-void TextRenderer::reconstruct() {
-	deleteSprite();
-	for (auto k = StringData.begin(); k != StringData.end(); ++k) {
-		float chrAdvance = (FontBaseSize - FontPadding * 2) * (*k)->scale * (*k)->width; float cursorPos = 0;
-		for (auto c = (*k)->str.begin(); c != (*k)->str.end(); ++c) {
-			SpriteData.push_back(new SpriteAttr);
-			SpriteData.back()->sprite = nullptr;
-			if (FAILED(D3DXCreateSprite(myDevice, &SpriteData.back()->sprite)))
-				throw _T("スプライトの生成に失敗しました");
-			SpriteData.back()->chr = *c;
-			SpriteData.back()->X = (*k)->X + chrAdvance * cursorPos - FontPadding;
-			SpriteData.back()->Y = (*k)->Y - FontPadding;
-			SpriteData.back()->widthScale = (*k)->scale * (*k)->width;
-			SpriteData.back()->heightScale = (*k)->scale;
-			SpriteData.back()->color = (*k)->color;
-			if (*c <= L'\x7f') cursorPos += .5f;
-			else cursorPos += 1.0f;
-		}
+void TextRenderer::reconstruct(unsigned int ID) {
+	if (SpriteData.size() <= ID) SpriteData.resize(ID + 1, std::vector<SpriteAttr*>()); // 配列の拡張
+	if (!SpriteData[ID].empty()) deleteSprite(ID); // 既に存在した場合
+	if (!StringData[ID]) /* ぬるぽ */
+		return; /* ガッ */
+	float chrAdvance = (FontBaseSize - FontPadding * 2) * StringData[ID]->scale * StringData[ID]->width;
+	float cursorPos = 0;
+	for (auto k = StringData[ID]->str.begin(); k != StringData[ID]->str.end(); ++k) {
+		SpriteData[ID].push_back(new SpriteAttr);
+		SpriteData[ID].back()->sprite = nullptr;
+		if (FAILED(D3DXCreateSprite(myDevice, &SpriteData[ID].back()->sprite)))
+			throw _T("スプライトの生成に失敗しました");
+		SpriteData[ID].back()->chr_id = FontMap::instantiate()->map(*k);
+		SpriteData[ID].back()->X = StringData[ID]->X + chrAdvance * cursorPos - FontPadding;
+		SpriteData[ID].back()->Y = StringData[ID]->Y - FontPadding;
+		SpriteData[ID].back()->widthScale = StringData[ID]->scale * StringData[ID]->width;
+		SpriteData[ID].back()->heightScale = StringData[ID]->scale;
+		SpriteData[ID].back()->color = StringData[ID]->color;
+		if (*k <= L'\x7f') cursorPos += .5f;
+		else cursorPos += 1.0f;
+		/* 行列を計算する */
+		D3DXMatrixIdentity(&SpriteData[ID].back()->matrix);
+		D3DXMatrixTranslation(&SpriteData[ID].back()->matrix, (float)-(SpriteData[ID].back()->X), (float)-(SpriteData[ID].back()->Y), 0);
+		D3DXMatrixScaling(&SpriteData[ID].back()->matrix, SpriteData[ID].back()->widthScale, SpriteData[ID].back()->heightScale, 0.0f);
+		D3DXMatrixTranslation(&SpriteData[ID].back()->matrix, (float)SpriteData[ID].back()->X, (float)SpriteData[ID].back()->Y, 0);
+		D3DXMatrixScaling(&SpriteData[ID].back()->matrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
+		/* ここまで */
 	}
+}
+void TextRenderer::reconstruct() {
+	// VERY SLOW. DO NOT USE.
+	deleteSprite();
+	for (unsigned i = 0; i < StringData.size(); i++)
+		ReconstructionQueue.push(i); //reconstruct(i);
 }
 
 /* スプライトを削除する */
-void TextRenderer::deleteSprite() {
-	for (auto k = SpriteData.begin(); k != SpriteData.end(); ++k) {
-		if ((*k)->sprite) {
+void TextRenderer::deleteSprite(unsigned int ID) {
+	for (auto k = SpriteData[ID].begin(); k != SpriteData[ID].end(); ++k) {
+		if ((*k) && ((*k)->sprite)) {
 			(*k)->sprite->Release(); (*k)->sprite = nullptr;
 		}
 	}
+	SpriteData[ID].clear();
+}
+void TextRenderer::deleteSprite() {
+	for (unsigned int i = 0; i < SpriteData.size(); i++)
+		deleteSprite(i);
 	SpriteData.clear();
 }
 
 /* レンダリング */
 void TextRenderer::Render() {
-	for (auto k = SpriteData.begin(); k != SpriteData.end(); ++k) {
-		/* 行列を計算する */
-		D3DXMATRIX matrix1; D3DXMatrixIdentity(&matrix1);
-		D3DXMatrixTranslation(&matrix1, (float)-((*k)->X), (float)-((*k)->Y), 0);
-		D3DXMATRIX matrix2; D3DXMatrixIdentity(&matrix2);
-		D3DXMatrixScaling(&matrix2, (float)(*k)->widthScale, (float)(*k)->heightScale, 0.0f);
-		D3DXMATRIX matrix3; D3DXMatrixIdentity(&matrix3);
-		D3DXMatrixTranslation(&matrix3, (float)(*k)->X, (float)(*k)->Y, 0);
-		D3DXMATRIX matrix4; D3DXMatrixIdentity(&matrix4);
-		D3DXMatrixScaling(&matrix4, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
-		D3DXMATRIX matrix; D3DXMatrixIdentity(&matrix);
-		::D3DXMatrixMultiply(&matrix, &matrix1, &matrix2);
-		::D3DXMatrixMultiply(&matrix, &matrix, &matrix3);
-		::D3DXMatrixMultiply(&matrix, &matrix, &matrix4);
-		/* ここまで */
-		RECT rect = {
-			(FontMap::instantiate()->map((*k)->chr) % FontCols) * FontBaseSize,
-			(FontMap::instantiate()->map((*k)->chr) / FontCols) * FontBaseSize,
-			(FontMap::instantiate()->map((*k)->chr) % FontCols + 1) * FontBaseSize,
-			(FontMap::instantiate()->map((*k)->chr) / FontCols + 1) * FontBaseSize,
-		};
-		D3DXVECTOR3 Center(0, 0, 0);
-		D3DXVECTOR3 Pos((float)(*k)->X, (float)(*k)->Y, 0);
-		(*k)->sprite->Begin(D3DXSPRITE_ALPHABLEND);
-		(*k)->sprite->SetTransform(&matrix);
-		(*k)->sprite->Draw(font, &rect, &Center, &Pos, (*k)->color);
-		(*k)->sprite->End();
+	if (!ReconstructionQueue.empty()) {
+		reconstruct(ReconstructionQueue.front());
+		ReconstructionQueue.pop();
+	}
+	for (auto i = SpriteData.begin(); i != SpriteData.end(); ++i) {
+		for (auto k = (*i).begin(); k != (*i).end(); ++k) {
+			if (!(*k)) continue;
+			RECT rect = {
+				((*k)->chr_id % FontCols) * FontBaseSize,
+				((*k)->chr_id / FontCols) * FontBaseSize,
+				((*k)->chr_id % FontCols + 1) * FontBaseSize,
+				((*k)->chr_id / FontCols + 1) * FontBaseSize,
+			};
+			D3DXVECTOR3 Center(0, 0, 0);
+			D3DXVECTOR3 Pos((float)(*k)->X, (float)(*k)->Y, 0);
+			(*k)->sprite->Begin(D3DXSPRITE_ALPHABLEND);
+			(*k)->sprite->SetTransform(&(*k)->matrix);
+			(*k)->sprite->Draw(font, &rect, &Center, &Pos, (*k)->color);
+			(*k)->sprite->End();
+		}
 	}
 }
