@@ -3,8 +3,11 @@
 
 #include "../scrmanip.h"
 #include "proto.h"
+#include "../text.h"
 
 class RuleConfigScene : public Scene {
+private:
+	TextRenderer* textRenderer;
 public:
 	RuleConfigScene(ScreenManipulator* const manipulator);
 	virtual ~RuleConfigScene();
