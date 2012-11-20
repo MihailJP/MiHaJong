@@ -6,6 +6,7 @@
 #include <dxerr.h>
 #include <string>
 #include <vector>
+#include <queue>
 #include "loadtex.h"
 
 class TextRenderer {
@@ -18,9 +19,12 @@ private:
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 font;
 	std::vector<StringAttr*> StringData;
-	std::vector<SpriteAttr*> SpriteData;
+	std::vector<std::vector<SpriteAttr*> > SpriteData;
+	std::queue<unsigned int> ReconstructionQueue;
 	void reconstruct();
+	void reconstruct(unsigned int ID);
 	void deleteSprite();
+	void deleteSprite(unsigned int ID);
 public:
 	TextRenderer(LPDIRECT3DDEVICE9 device);
 	~TextRenderer();
@@ -41,9 +45,10 @@ struct TextRenderer::StringAttr {
 
 struct TextRenderer::SpriteAttr {
 	LPD3DXSPRITE sprite;
-	wchar_t chr;
+	unsigned short chr_id;
 	int X, Y;
 	float widthScale, heightScale;
 	D3DCOLOR color;
+	D3DXMATRIX matrix;
 };
 #endif
