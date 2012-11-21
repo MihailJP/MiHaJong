@@ -16,6 +16,9 @@ sound::SoundManipulator::SoundManipulator() {
 }
 
 sound::SoundManipulator::~SoundManipulator() {
+	for (auto k = sounds.begin(); k != sounds.end(); ++k) {
+		delete (*k); (*k) = nullptr;
+	}
 	if (mVoice) {
 		mVoice->DestroyVoice(); mVoice = nullptr;
 	}
@@ -28,5 +31,17 @@ sound::SoundManipulator::~SoundManipulator() {
 /* ファイル読み込み */
 void sound::SoundManipulator::readWaveData(unsigned ID, const std::string& filename) {
 	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // 配列を拡張
-	sounds[ID] = new WaveData(filename);
+	sounds[ID] = new WaveData(&xAudio, filename);
+}
+
+/* 再生 */
+void sound::SoundManipulator::play(unsigned ID) {
+	if ((sounds.size() <= ID) || (!sounds[ID])) throw "サウンドが読み込まれてないです";
+	sounds[ID]->Play();
+}
+
+/* 停止 */
+void sound::SoundManipulator::stop(unsigned ID) {
+	if ((sounds.size() <= ID) || (!sounds[ID])) throw "サウンドが読み込まれてないです";
+	sounds[ID]->Stop();
 }

@@ -20,5 +20,23 @@ SOUNDDLL_EXPORT int sound::LoadWave(unsigned ID, LPCSTR filename) try {
 	soundManipulator->readWaveData(ID, filename);
 	return 0;
 } catch (...) {
-	return 1;
+	return -1;
+}
+
+/* サウンド再生 */
+SOUNDDLL_EXPORT int sound::Play(unsigned ID) try {
+	if (!soundManipulator) throw "初期化されていません！！！";
+	soundManipulator->play(ID);
+	return 0;
+} catch (...) {
+	return -1;
+}
+
+/* サウンド停止 */
+SOUNDDLL_EXPORT int sound::Stop(unsigned ID) try {
+	if (!soundManipulator) throw "初期化されていません！！！";
+	soundManipulator->stop(ID);
+	return 0;
+} catch (...) {
+	return -1;
 }

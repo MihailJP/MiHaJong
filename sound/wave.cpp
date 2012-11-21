@@ -52,6 +52,34 @@ void sound::WaveData::Prepare(const std::string& filename) {
 	ReadWaveData(file);
 }
 
-sound::WaveData::WaveData(const std::string& filename) {
+sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool looped) {
 	Prepare(filename);
+	std::memset(&bufInfo, 0, sizeof(bufInfo));
+	bufInfo.AudioBytes = buffer.size();
+	bufInfo.pAudioData = reinterpret_cast<BYTE*>(&buffer[0]);
+	bufInfo.LoopCount = (looped ? XAUDIO2_LOOP_INFINITE : 0);
+	if (FAILED((*Engine)->CreateSourceVoice(&voice, &format)))
+		throw "CreateSourceVoice失敗！！";
+	if (FAILED(voice->SubmitSourceBuffer(&bufInfo)))
+		throw "SubmitSourceBuffer失敗！！";
+}
+
+/* 再生 */
+void sound::WaveData::Play() {
+	if (FAILED(voice->Start(0, XAUDIO2_COMMIT_NOW)))
+		throw "Start失敗！！";
+}
+
+/* 停止 */
+void sound::WaveData::Stop() {
+	if (FAILED(voice->Stop()))
+		throw "Stop失敗！！";
+}
+
+/* デストラクタ */
+sound::SoundData::~SoundData() {
+	if (voice) {
+		voice->Stop();
+		voice->DestroyVoice();
+	}
 }

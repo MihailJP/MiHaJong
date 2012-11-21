@@ -14,14 +14,18 @@ namespace sound {
 		/* –¢ŽÀ‘• */
 	public:
 		virtual ~AudioData() {};
+		virtual void Play() = 0;
+		virtual void Stop() = 0;
 	};
 	class SoundData : public AudioData {
 	protected:
 		WAVEFORMATEX format;
 		std::vector<char> buffer;
+		XAUDIO2_BUFFER bufInfo;
+		IXAudio2SourceVoice* voice;
 		virtual void Prepare(const std::string& filename) = 0;
 	public:
-		virtual ~SoundData() {}
+		virtual ~SoundData();
 	};
 	class WaveData : public SoundData {
 	private:
@@ -30,7 +34,9 @@ namespace sound {
 		void ReadWaveData(std::ifstream& file);
 		void Prepare(const std::string& filename);
 	public:
-		WaveData(const std::string& filename);
+		explicit WaveData(IXAudio2** Engine, const std::string& filename, bool looped = false);
+		void Play();
+		void Stop();
 	};
 	class OggData : public SoundData {
 		/* –¢ŽÀ‘• */

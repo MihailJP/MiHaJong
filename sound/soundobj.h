@@ -20,6 +20,8 @@ namespace sound {
 		SoundManipulator();
 		~SoundManipulator();
 		void readWaveData(unsigned ID, const std::string& filename);
+		void play(unsigned ID);
+		void stop(unsigned ID);
 	};
 
 }

@@ -21,6 +21,9 @@ namespace sound {
 	SOUNDDLL_EXPORT void Cleanup(); // å„énññ
 
 	SOUNDDLL_EXPORT int LoadWave(unsigned ID, LPCSTR filename); // WAVEì«Ç›çûÇ›
+
+	SOUNDDLL_EXPORT int Play(unsigned ID); // çƒê∂
+	SOUNDDLL_EXPORT int Stop(unsigned ID); // í‚é~
 }
 
 #endif
