@@ -1,5 +1,7 @@
 For Windows build by VC++:
-Put libogg_static.lib in this directory. It must be built by yourself.
+First of all, put libogg source code in this directory.
+Second, build libogg_static.lib.
+After build, put them in this directory.
 Libogg is available at http://www.xiph.org/downloads/.
 
 
