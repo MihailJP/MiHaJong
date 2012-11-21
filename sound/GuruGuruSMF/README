@@ -1,0 +1,15 @@
+For Windows build by VC++:
+Put GuruGuruSMF4.lib and GuruGuruSMF4_Cpp.h in this directory.
+The executable will depend on GuruGuruSMF4.dll.
+GuruGuruSMF4 is available at http://gurugurusmf.migmig.net/.
+
+
+The license follows.
+
+
+フリーウェアです。著作権は放棄されていません。
+無保証です。
+dll/hpiでリンクする場合、使用の報告、表示の義務もありません。そのままノーロイヤリティで商用利用も可能です。
+修正BSDライセンスによるソースコードの公開も予定してます。
+
+GuruGuruSMF4 (C)2003-2011 卯如

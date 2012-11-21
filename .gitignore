@@ -39,6 +39,8 @@ sound/Release/
 sound/ipch/
 mjcore/lua/*.lib
 mjcore/lua/include
+sound/GuruGuruSMF/*
+!sound/GuruGuruSMF/README
 release
 *.zip
 *.7z

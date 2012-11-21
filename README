@@ -10,6 +10,7 @@ Build-time requirements are:
 - l_tooltips.as (http://lhsp.s206.xrea.com/hsp_object6.html)
 - mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
 - cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
+- GuruGuruSMF (Windows only, http://gurugurusmf.migmig.net/)
 - Visual C++ (because of compiler-specific DLL export name)
 - Lua static link library
 - Ruby interpreter
