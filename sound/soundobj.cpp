@@ -24,3 +24,9 @@ sound::SoundManipulator::~SoundManipulator() {
 	}
 	CoUninitialize();
 }
+
+/* ファイル読み込み */
+void sound::SoundManipulator::readWaveData(unsigned ID, const std::string& filename) {
+	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // 配列を拡張
+	sounds[ID] = new WaveData(filename);
+}

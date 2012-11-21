@@ -74,8 +74,10 @@
   <ItemGroup>
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="soundobj.cpp" />
+    <ClCompile Include="wave.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="snddata.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="soundobj.h" />
   </ItemGroup>

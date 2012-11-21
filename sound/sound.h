@@ -17,8 +17,10 @@ namespace sound {
 	extern SoundManipulator* soundManipulator;
 #endif
 
-	SOUNDDLL_EXPORT int Initialize();
-	SOUNDDLL_EXPORT void Cleanup();
+	SOUNDDLL_EXPORT int Initialize(); // èâä˙âª
+	SOUNDDLL_EXPORT void Cleanup(); // å„énññ
+
+	SOUNDDLL_EXPORT int LoadWave(unsigned ID, LPCSTR filename); // WAVEì«Ç›çûÇ›
 }
 
 #endif
