@@ -11,6 +11,7 @@ Build-time requirements are:
 - mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
 - cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
 - Visual C++ (because of compiler-specific DLL export name)
+- libogg and libvorbis (http://www.xiph.org/downloads/)
 - Lua static link library
 - Ruby interpreter
 

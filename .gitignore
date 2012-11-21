@@ -39,6 +39,10 @@ sound/Release/
 sound/ipch/
 mjcore/lua/*.lib
 mjcore/lua/include
+sound/libogg/*
+sound/libvorbis/*
+!sound/libogg/Readme.txt
+!sound/libvorbis/Readme.txt
 release
 *.zip
 *.7z
