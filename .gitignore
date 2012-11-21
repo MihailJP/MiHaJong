@@ -34,6 +34,9 @@ astro/ipch/
 socket/Debug/
 socket/Release/
 socket/ipch/
+sound/Debug/
+sound/Release/
+sound/ipch/
 mjcore/lua/*.lib
 mjcore/lua/include
 release
