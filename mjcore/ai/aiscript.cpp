@@ -40,7 +40,8 @@ bool aiscript::callFunc(const GameTable* const gameStat, PLAYER_ID player_id, co
 			case LUA_ERRGCMM: o << "ガーベジコレクション実行中のエラーです。"; break;
 			}
 			error(o.str().c_str());
-			chat::chatobj->sysmsg(std::string("*** ") + o.str());
+			if (is_mandatory)
+				chat::chatobj->sysmsg(std::string("*** ") + o.str());
 			if (std::string(function_name) == std::string(fncname_discard))
 				warn("関数呼び出しに失敗したため、ツモ切りとみなします");
 			else
@@ -79,6 +80,13 @@ __declspec(dllexport) void aiscript::initephemeral() {
 		lua_setglobal(status[i].state, "ephemeral");
 	}
 	debug("ephemeral テーブルを初期化しました");
+}
+
+void aiscript::initcall(const GameTable* const gameStat, PLAYER_ID player) {
+	callFunc(gameStat, player, "init", false);
+}
+__declspec(dllexport) void aiscript::initcall(const GameTable* const gameStat, int player) {
+	initcall(gameStat, (PLAYER_ID)player);
 }
 
 __declspec(dllexport) void aiscript::closescript() {

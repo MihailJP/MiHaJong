@@ -24,6 +24,8 @@ private:
 public:
 	__declspec(dllexport) static void initscript();
 	__declspec(dllexport) static void initephemeral();
+	static void initcall(const GameTable* const gameStat, PLAYER_ID player);
+	__declspec(dllexport) static void initcall(const GameTable* const gameStat, int player);
 	__declspec(dllexport) static void closescript();
 	static void GameStatToLuaTable(lua_State* const L, const GameTable* const gameStat);
 	__declspec(dllexport) static void compdahai_begin(const GameTable* const gameStat);
