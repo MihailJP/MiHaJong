@@ -82,12 +82,18 @@ void sound::SoundManipulator::readMidiData(unsigned ID, const std::string& filen
 
 /* 再生 */
 void sound::SoundManipulator::play(unsigned ID) {
-	if ((sounds.size() <= ID) || (!sounds[ID])) throw std::string("サウンドが読み込まれてないです");
+	if ((sounds.size() <= ID) || (!sounds[ID])) {
+		std::ostringstream o; o << "サウンド ID [" << ID << "] は読み込まれてないです";
+		throw o.str();
+	}
 	sounds[ID]->Play();
 }
 
 /* 停止 */
 void sound::SoundManipulator::stop(unsigned ID) {
-	if ((sounds.size() <= ID) || (!sounds[ID])) throw std::string("サウンドが読み込まれてないです");
+	if ((sounds.size() <= ID) || (!sounds[ID])) {
+		std::ostringstream o; o << "サウンド ID [" << ID << "] は読み込まれてないです";
+		throw o.str();
+	}
 	sounds[ID]->Stop();
 }

@@ -1,6 +1,7 @@
 #include "sound.h"
 #include "logger.h"
 #include <string>
+#include <sstream>
 
 sound::SoundManipulator* sound::soundManipulator = nullptr;
 
@@ -53,6 +54,10 @@ SOUNDDLL_EXPORT int sound::LoadMidi(unsigned ID, LPCSTR filename, int looped) tr
 
 /* サウンド再生 */
 SOUNDDLL_EXPORT int sound::Play(unsigned ID) try {
+	{
+		std::ostringstream o; o << "サウンド再生 ID [" << ID << "]";
+		debug(o.str().c_str());
+	}
 	if (!soundManipulator) throw std::string("初期化されていません！！！");
 	soundManipulator->play(ID);
 	return 0;
