@@ -6,7 +6,7 @@
 /* OGGファイル読み込み */
 void sound::OggData::Prepare(const std::string& filename) {
 	std::memset(&format, 0, sizeof(format));
-	std::memset(&buffer, 0, sizeof(buffer));
+	std::memset(&bufInfo, 0, sizeof(buffer));
 	// ファイルを開く
 	FILE* file;
 	if (fopen_s(&file, filename.c_str(), "rb")) throw std::string("ファイルを開けませんでした");

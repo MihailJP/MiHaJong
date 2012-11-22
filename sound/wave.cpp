@@ -44,7 +44,7 @@ void sound::WaveData::ReadWaveData(std::ifstream& file) {
 /* WAVEファイル読み込み */
 void sound::WaveData::Prepare(const std::string& filename) {
 	std::memset(&format, 0, sizeof(format));
-	std::memset(&buffer, 0, sizeof(buffer));
+	std::memset(&bufInfo, 0, sizeof(buffer));
 	std::ifstream file(filename, std::ios::in | std::ios::binary);
 	if (!file) throw std::string("ファイルを開けませんでした");
 	if (!checkTag(file, "RIFF")) throw std::string("RIFFチャンクがないです");
