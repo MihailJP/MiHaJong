@@ -148,6 +148,7 @@
 /* comp_act.hsp‚©‚ç‚ÌˆÚA */
 #func initscript "?initscript@aiscript@@SAXXZ"
 #func initephemeral "?initephemeral@aiscript@@SAXXZ"
+#func ai_init "?initcall@aiscript@@SAXQBUGameTable@@H@Z" int, int
 #func closescript "?closescript@aiscript@@SAXXZ"
 #func compdahai_begin "?compdahai_begin@aiscript@@SAXQBUGameTable@@@Z" int
 #cfunc compdahai_check "?compdahai_check@aiscript@@SAHXZ"

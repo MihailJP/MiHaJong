@@ -77,6 +77,13 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 		　誰かの暗槓があると、この関数が呼ばれます。引数・返り値は ondiscard
 		と同様です。この関数は、国士無双を槍槓で和了るために定義されています。
 
+	▼ init(gametbl)
+
+		　局が開始され、ephemeralテーブル(後述)が初期化されると呼ばれます。引
+		数はontsumoやondiscardと同様です。戻り値はありません。ephemeralテーブ
+		ルにサブテーブルが必要な場合などは、この関数内で初期化を行なってくださ
+		い。
+
 
 ■ 予約されている名前
 
@@ -84,7 +91,6 @@ AI用スクリプト説明 Copyright (c) 2008-2012 MihailJP, Part of rights reserved
 	来の拡張のために予約されています。
 
 	・ name
-	・ init
 	・ onhaipaistart
 	・ onhaipaiend
 	・ onmyagari
