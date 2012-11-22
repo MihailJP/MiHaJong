@@ -7,7 +7,7 @@
 
 void sound::SoundManipulator::InitXAudio() {
 	HRESULT hr;
-	if (FAILED(hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED))) {
+	if (FAILED(hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED))) {
 		std::ostringstream o; o << "CoInitializeExŽ¸”sII (0x" <<
 			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
 		throw o.str();
