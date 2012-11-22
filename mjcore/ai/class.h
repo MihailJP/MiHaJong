@@ -20,9 +20,12 @@ private:
 	static void readfile(aiscript::ScriptStates* const L, const char* const filename);
 	static DiscardTileNum discard; static bool finished; static detDiscardThread* discard_worker;
 	static detCallThread* meld_worker;
+	static bool callFunc(const GameTable* const gameStat, PLAYER_ID player_id, const char* const function_name, bool is_mandatory);
 public:
 	__declspec(dllexport) static void initscript();
 	__declspec(dllexport) static void initephemeral();
+	static void initcall(const GameTable* const gameStat, PLAYER_ID player);
+	__declspec(dllexport) static void initcall(const GameTable* const gameStat, int player);
 	__declspec(dllexport) static void closescript();
 	static void GameStatToLuaTable(lua_State* const L, const GameTable* const gameStat);
 	__declspec(dllexport) static void compdahai_begin(const GameTable* const gameStat);
