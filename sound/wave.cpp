@@ -1,5 +1,7 @@
 #include "snddata.h"
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 
 /* 4バイト単位のチャンクのチェック */
 bool sound::WaveData::checkTag(std::ifstream& file, const std::string& tag) {
@@ -54,28 +56,42 @@ void sound::WaveData::Prepare(const std::string& filename) {
 }
 
 sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool looped) {
-	voice = nullptr;
+	HRESULT hr;
 	Prepare(filename);
 	std::memset(&bufInfo, 0, sizeof(bufInfo));
 	bufInfo.AudioBytes = buffer.size();
 	bufInfo.pAudioData = reinterpret_cast<BYTE*>(&buffer[0]);
 	bufInfo.LoopCount = (looped ? XAUDIO2_LOOP_INFINITE : 0);
-	if (FAILED((*Engine)->CreateSourceVoice(&voice, &format)))
-		throw std::string("CreateSourceVoice失敗！！");
-	if (FAILED(voice->SubmitSourceBuffer(&bufInfo)))
-		throw std::string("SubmitSourceBuffer失敗！！");
+	if (FAILED(hr = (*Engine)->CreateSourceVoice(&voice, &format))) {
+		std::ostringstream o; o << "CreateSourceVoice失敗！！ (0x" <<
+			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
+		throw o.str();
+	}
+	if (FAILED(hr = voice->SubmitSourceBuffer(&bufInfo))) {
+		std::ostringstream o; o << "SubmitSourceBuffer失敗！！ (0x" <<
+			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
+		throw o.str();
+	}
 }
 
 /* 再生 */
 void sound::WaveData::Play() {
-	if (FAILED(voice->Start(0, XAUDIO2_COMMIT_NOW)))
-		throw std::string("Start失敗！！");
+	HRESULT hr;
+	if (FAILED(hr = voice->Start(0, XAUDIO2_COMMIT_NOW))) {
+		std::ostringstream o; o << "Start失敗！！ (0x" <<
+			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
+		throw o.str();
+	}
 }
 
 /* 停止 */
 void sound::WaveData::Stop() {
-	if (FAILED(voice->Stop()))
-		throw std::string("Stop失敗！！");
+	HRESULT hr;
+	if (FAILED(hr = voice->Stop())) {
+		std::ostringstream o; o << "Stop失敗！！ (0x" <<
+			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
+		throw o.str();
+	}
 }
 
 /* デストラクタ */
