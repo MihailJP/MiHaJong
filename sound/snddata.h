@@ -47,10 +47,10 @@ namespace sound {
 #else
 	public:
 		explicit OggData(IXAudio2** Engine, const std::string& filename, bool looped = false) {
-			throw "Vorbisはサポートされていません";
+			throw std::string("Vorbisはサポートされていません");
 		}
-		void Play() {throw "Vorbisはサポートされていません";}
-		void Stop() {throw "Vorbisはサポートされていません";}
+		void Play() {throw std::string("Vorbisはサポートされていません");}
+		void Stop() {throw std::string("Vorbisはサポートされていません");}
 #endif
 	};
 	class MidiData : public AudioData {
@@ -66,10 +66,10 @@ namespace sound {
 #else
 	public:
 		explicit MidiData(unsigned ID, const std::string& filename, bool looped = false) {
-			throw "このバージョンはMIDIファイルの再生をサポートしていません";
+			throw std::string("このバージョンはMIDIファイルの再生をサポートしていません");
 		}
-		void Play() {throw "このバージョンはMIDIファイルの再生をサポートしていません";}
-		void Stop() {throw "このバージョンはMIDIファイルの再生をサポートしていません";}
+		void Play() {throw std::string("このバージョンはMIDIファイルの再生をサポートしていません");}
+		void Stop() {throw std::string("このバージョンはMIDIファイルの再生をサポートしていません");}
 #endif
 	};
 

@@ -12,15 +12,15 @@ bool sound::WaveData::checkTag(std::ifstream& file, const std::string& tag) {
 void sound::WaveData::GetFormat(std::ifstream& file) {
 	static_assert(sizeof(std::uint32_t) == 4, "sizeof(uint32_t) is not 4");
 	static_assert(sizeof(std::uint16_t) == 2, "sizeof(uint16_t) is not 2");
-	if (!checkTag(file, "WAVE")) throw "WAVEチャンクがないです";
-	if (!checkTag(file, "fmt ")) throw "fmt チャンクがないです";
+	if (!checkTag(file, "WAVE")) throw std::string("WAVEチャンクがないです");
+	if (!checkTag(file, "fmt ")) throw std::string("fmt チャンクがないです");
 	// ヘッダサイズ
 	std::uint32_t format_size; file.read(reinterpret_cast<char*>(&format_size), 4);
 	// データフォーマット
 	std::uint16_t id; file.read(reinterpret_cast<char*>(&id), 2);
 	if (id == 1) format.wFormatTag = WAVE_FORMAT_PCM;
 	else if (id == 2) format.wFormatTag = WAVE_FORMAT_ADPCM;
-	else throw "対応していないフォーマットです";
+	else throw std::string("対応していないフォーマットです");
 	// ヘッダ読み込み
 	file.read(reinterpret_cast<char*>(&format.nChannels), sizeof(format.nChannels));
 	file.read(reinterpret_cast<char*>(&format.nSamplesPerSec), sizeof(format.nSamplesPerSec));
@@ -34,7 +34,7 @@ void sound::WaveData::GetFormat(std::ifstream& file) {
 /* 波形データ読み込み */
 void sound::WaveData::ReadWaveData(std::ifstream& file) {
 	static_assert(sizeof(std::uint32_t) == 4, "sizeof(uint32_t) is not 4");
-	if (!checkTag(file, "data")) throw "dataチャンクがないです";
+	if (!checkTag(file, "data")) throw std::string("dataチャンクがないです");
 	std::uint32_t size; file.read(reinterpret_cast<char*>(&size), 4);
 	buffer.resize(size);
 	// 読み込み
@@ -46,8 +46,8 @@ void sound::WaveData::Prepare(const std::string& filename) {
 	std::memset(&format, 0, sizeof(format));
 	std::memset(&buffer, 0, sizeof(buffer));
 	std::ifstream file(filename, std::ios::in | std::ios::binary);
-	if (!file) throw "ファイルを開けませんでした";
-	if (!checkTag(file, "RIFF")) throw "RIFFチャンクがないです";
+	if (!file) throw std::string("ファイルを開けませんでした");
+	if (!checkTag(file, "RIFF")) throw std::string("RIFFチャンクがないです");
 	file.ignore(4);
 	GetFormat(file);
 	ReadWaveData(file);
@@ -60,21 +60,21 @@ sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool l
 	bufInfo.pAudioData = reinterpret_cast<BYTE*>(&buffer[0]);
 	bufInfo.LoopCount = (looped ? XAUDIO2_LOOP_INFINITE : 0);
 	if (FAILED((*Engine)->CreateSourceVoice(&voice, &format)))
-		throw "CreateSourceVoice失敗！！";
+		throw std::string("CreateSourceVoice失敗！！");
 	if (FAILED(voice->SubmitSourceBuffer(&bufInfo)))
-		throw "SubmitSourceBuffer失敗！！";
+		throw std::string("SubmitSourceBuffer失敗！！");
 }
 
 /* 再生 */
 void sound::WaveData::Play() {
 	if (FAILED(voice->Start(0, XAUDIO2_COMMIT_NOW)))
-		throw "Start失敗！！";
+		throw std::string("Start失敗！！");
 }
 
 /* 停止 */
 void sound::WaveData::Stop() {
 	if (FAILED(voice->Stop()))
-		throw "Stop失敗！！";
+		throw std::string("Stop失敗！！");
 }
 
 /* デストラクタ */

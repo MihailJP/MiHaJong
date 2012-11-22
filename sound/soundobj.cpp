@@ -2,38 +2,39 @@
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 #include "GuruGuruSMF/GuruGuruSMF4_Cpp.h"
 #endif
+#include <string>
 
 void sound::SoundManipulator::InitXAudio() {
 	if (FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED)))
-		throw "CoInitializeEx失敗！！";
+		throw std::string("CoInitializeEx失敗！！");
 
 	UINT32 flags = 0;
 #ifdef _DEBUG
 	flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
 	if (FAILED(XAudio2Create(&xAudio, flags)))
-		throw "XAudio2Create失敗！！";
+		throw std::string("XAudio2Create失敗！！");
 
 	if (FAILED(xAudio->CreateMasteringVoice(&mVoice)))
-		throw "CreateMasteringVoice失敗！！";
+		throw std::string("CreateMasteringVoice失敗！！");
 }
 
 sound::SoundManipulator::SoundManipulator() {
 	InitXAudio();
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)
-		throw "GGSINITIALIZE失敗！！";
+		throw std::string("GGSINITIALIZE失敗！！");
 	if (GGS->OpenDevice(GuruGuruSmf::Device::DirectMusic, nullptr))
-		throw "GGS->OpenDevice失敗！！";
+		throw std::string("GGS->OpenDevice失敗！！");
 #endif
 }
 sound::SoundManipulator::SoundManipulator(HWND hWnd) {
 	InitXAudio();
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)
-		throw "GGSINITIALIZE失敗！！";
+		throw std::string("GGSINITIALIZE失敗！！");
 	if (GGS->OpenDevice(GuruGuruSmf::Device::DirectMusic, hWnd))
-		throw "GGS->OpenDevice失敗！！";
+		throw std::string("GGS->OpenDevice失敗！！");
 #endif
 }
 
@@ -70,12 +71,12 @@ void sound::SoundManipulator::readMidiData(unsigned ID, const std::string& filen
 
 /* 再生 */
 void sound::SoundManipulator::play(unsigned ID) {
-	if ((sounds.size() <= ID) || (!sounds[ID])) throw "サウンドが読み込まれてないです";
+	if ((sounds.size() <= ID) || (!sounds[ID])) throw std::string("サウンドが読み込まれてないです");
 	sounds[ID]->Play();
 }
 
 /* 停止 */
 void sound::SoundManipulator::stop(unsigned ID) {
-	if ((sounds.size() <= ID) || (!sounds[ID])) throw "サウンドが読み込まれてないです";
+	if ((sounds.size() <= ID) || (!sounds[ID])) throw std::string("サウンドが読み込まれてないです");
 	sounds[ID]->Stop();
 }
