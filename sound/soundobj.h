@@ -21,9 +21,9 @@ namespace sound {
 		SoundManipulator();
 		SoundManipulator(HWND hWnd);
 		~SoundManipulator();
-		void readWaveData(unsigned ID, const std::string& filename);
-		void readVorbisData(unsigned ID, const std::string& filename);
-		void readMidiData(unsigned ID, const std::string& filename);
+		void readWaveData(unsigned ID, const std::string& filename, bool looped = false);
+		void readVorbisData(unsigned ID, const std::string& filename, bool looped = false);
+		void readMidiData(unsigned ID, const std::string& filename, bool looped = false);
 		void play(unsigned ID);
 		void stop(unsigned ID);
 	};

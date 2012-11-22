@@ -55,17 +55,17 @@ sound::SoundManipulator::~SoundManipulator() {
 }
 
 /* ファイル読み込み */
-void sound::SoundManipulator::readWaveData(unsigned ID, const std::string& filename) {
+void sound::SoundManipulator::readWaveData(unsigned ID, const std::string& filename, bool looped) {
 	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // 配列を拡張
-	sounds[ID] = new WaveData(&xAudio, filename);
+	sounds[ID] = new WaveData(&xAudio, filename, looped);
 }
-void sound::SoundManipulator::readVorbisData(unsigned ID, const std::string& filename) {
+void sound::SoundManipulator::readVorbisData(unsigned ID, const std::string& filename, bool looped) {
 	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // 配列を拡張
-	sounds[ID] = new OggData(&xAudio, filename);
+	sounds[ID] = new OggData(&xAudio, filename, looped);
 }
-void sound::SoundManipulator::readMidiData(unsigned ID, const std::string& filename) {
+void sound::SoundManipulator::readMidiData(unsigned ID, const std::string& filename, bool looped) {
 	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // 配列を拡張
-	sounds[ID] = new MidiData(ID, filename);
+	sounds[ID] = new MidiData(ID, filename, looped);
 }
 
 /* 再生 */

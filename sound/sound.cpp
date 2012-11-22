@@ -22,23 +22,23 @@ SOUNDDLL_EXPORT void sound::Cleanup() {
 }
 
 /* サウンドデータ読み込み */
-SOUNDDLL_EXPORT int sound::LoadWave(unsigned ID, LPCSTR filename) try {
+SOUNDDLL_EXPORT int sound::LoadWave(unsigned ID, LPCSTR filename, int looped) try {
 	if (!soundManipulator) throw "初期化されていません！！！";
-	soundManipulator->readWaveData(ID, filename);
+	soundManipulator->readWaveData(ID, filename, looped);
 	return 0;
 } catch (...) {
 	return -1;
 }
-SOUNDDLL_EXPORT int sound::LoadVorbis(unsigned ID, LPCSTR filename) try {
+SOUNDDLL_EXPORT int sound::LoadVorbis(unsigned ID, LPCSTR filename, int looped) try {
 	if (!soundManipulator) throw "初期化されていません！！！";
-	soundManipulator->readVorbisData(ID, filename);
+	soundManipulator->readVorbisData(ID, filename, looped);
 	return 0;
 } catch (...) {
 	return -1;
 }
-SOUNDDLL_EXPORT int sound::LoadMidi(unsigned ID, LPCSTR filename) try {
+SOUNDDLL_EXPORT int sound::LoadMidi(unsigned ID, LPCSTR filename, int looped) try {
 	if (!soundManipulator) throw "初期化されていません！！！";
-	soundManipulator->readMidiData(ID, filename);
+	soundManipulator->readMidiData(ID, filename, looped);
 	return 0;
 } catch (...) {
 	return -1;
