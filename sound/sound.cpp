@@ -28,6 +28,10 @@ SOUNDDLL_EXPORT void sound::Cleanup() {
 
 /* サウンドデータ読み込み */
 SOUNDDLL_EXPORT int sound::LoadWave(unsigned ID, LPCSTR filename, int looped) try {
+	{
+		std::ostringstream o; o << "WAVE ファイル読み込み ID [" << ID << "] ファイル名 [" << filename << "]";
+		debug(o.str().c_str());
+	}
 	if (!soundManipulator) throw std::string("初期化されていません！！！");
 	soundManipulator->readWaveData(ID, filename, looped);
 	return 0;
@@ -36,6 +40,10 @@ SOUNDDLL_EXPORT int sound::LoadWave(unsigned ID, LPCSTR filename, int looped) tr
 	return -1;
 }
 SOUNDDLL_EXPORT int sound::LoadVorbis(unsigned ID, LPCSTR filename, int looped) try {
+	{
+		std::ostringstream o; o << "Ogg Vorbis ファイル読み込み ID [" << ID << "] ファイル名 [" << filename << "]";
+		debug(o.str().c_str());
+	}
 	if (!soundManipulator) throw std::string("初期化されていません！！！");
 	soundManipulator->readVorbisData(ID, filename, looped);
 	return 0;
@@ -44,6 +52,10 @@ SOUNDDLL_EXPORT int sound::LoadVorbis(unsigned ID, LPCSTR filename, int looped) 
 	return -1;
 }
 SOUNDDLL_EXPORT int sound::LoadMidi(unsigned ID, LPCSTR filename, int looped) try {
+	{
+		std::ostringstream o; o << "MIDI ファイル読み込み ID [" << ID << "] ファイル名 [" << filename << "]";
+		debug(o.str().c_str());
+	}
 	if (!soundManipulator) throw std::string("初期化されていません！！！");
 	soundManipulator->readMidiData(ID, filename, looped);
 	return 0;
