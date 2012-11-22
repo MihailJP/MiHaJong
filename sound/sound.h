@@ -18,6 +18,7 @@ namespace sound {
 #endif
 
 	SOUNDDLL_EXPORT int Initialize(); // ‰Šú‰»
+	SOUNDDLL_EXPORT int Initialize(HWND hWnd); // ‰Šú‰»
 	SOUNDDLL_EXPORT void Cleanup(); // Œãn––
 
 	SOUNDDLL_EXPORT int LoadWave(unsigned ID, LPCSTR filename); // WAVE“Ç‚İ‚İ

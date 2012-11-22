@@ -9,6 +9,13 @@ SOUNDDLL_EXPORT int sound::Initialize() try {
 	return -1;
 }
 
+SOUNDDLL_EXPORT int sound::Initialize(HWND hWnd) try {
+	soundManipulator = new SoundManipulator(hWnd);
+	return 0;
+} catch (...) {
+	return -1;
+}
+
 SOUNDDLL_EXPORT void sound::Cleanup() {
 	delete soundManipulator;
 	soundManipulator = nullptr;

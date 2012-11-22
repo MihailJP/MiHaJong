@@ -16,8 +16,10 @@ namespace sound {
 		IXAudio2* xAudio;
 		IXAudio2MasteringVoice* mVoice;
 		std::vector<AudioData*> sounds;
+		void InitXAudio();
 	public:
 		SoundManipulator();
+		SoundManipulator(HWND hWnd);
 		~SoundManipulator();
 		void readWaveData(unsigned ID, const std::string& filename);
 		void play(unsigned ID);

@@ -1,6 +1,9 @@
 #include "soundobj.h"
+#if defined(MIDI_SUPPORT) && defined(_WIN32)
+#include "GuruGuruSMF/GuruGuruSMF4_Cpp.h"
+#endif
 
-sound::SoundManipulator::SoundManipulator() {
+void sound::SoundManipulator::InitXAudio() {
 	if (FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED)))
 		throw "CoInitializeExŽ¸”sII";
 
@@ -15,7 +18,30 @@ sound::SoundManipulator::SoundManipulator() {
 		throw "CreateMasteringVoiceŽ¸”sII";
 }
 
+sound::SoundManipulator::SoundManipulator() {
+	InitXAudio();
+#if defined(MIDI_SUPPORT) && defined(_WIN32)
+	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)
+		throw "GGSINITIALIZEŽ¸”sII";
+	if (GGS->OpenDevice(GuruGuruSmf::Device::DirectMusic, nullptr))
+		throw "GGS->OpenDeviceŽ¸”sII";
+#endif
+}
+sound::SoundManipulator::SoundManipulator(HWND hWnd) {
+	InitXAudio();
+#if defined(MIDI_SUPPORT) && defined(_WIN32)
+	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)
+		throw "GGSINITIALIZEŽ¸”sII";
+	if (GGS->OpenDevice(GuruGuruSmf::Device::DirectMusic, hWnd))
+		throw "GGS->OpenDeviceŽ¸”sII";
+#endif
+}
+
 sound::SoundManipulator::~SoundManipulator() {
+#if defined(MIDI_SUPPORT) && defined(_WIN32)
+	GGS->CloseDevice();
+	GGSFREE();
+#endif
 	for (auto k = sounds.begin(); k != sounds.end(); ++k) {
 		delete (*k); (*k) = nullptr;
 	}

@@ -1,5 +1,6 @@
 For Windows build by VC++:
-Put GuruGuruSMF4.lib and GuruGuruSMF4_Cpp.h in this directory.
+Put GuruGuruSMF4.lib, GuruGuruSMF4_Cpp.h, GuruGuruSMF4_Cpp_Static.cpp
+and stdafx.h in this directory.
 The executable will depend on GuruGuruSMF4.dll.
 GuruGuruSMF4 is available at http://gurugurusmf.migmig.net/.
 

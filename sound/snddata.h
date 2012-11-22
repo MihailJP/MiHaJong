@@ -42,7 +42,23 @@ namespace sound {
 		/* 未実装 */
 	};
 	class MidiData : public AudioData {
-		/* 未実装 */
+#if defined(MIDI_SUPPORT) && defined(_WIN32)
+	private:
+		int myID;
+		bool loopFlag;
+	public:
+		explicit MidiData(unsigned ID, const std::string& filename, bool looped = false);
+		void Play();
+		void Stop();
+		virtual ~MidiData();
+#else
+	public:
+		explicit MidiData(unsigned ID, const std::string& filename, bool looped = false) {
+			throw "このバージョンはMIDIファイルの再生をサポートしていません";
+		}
+		void Play() {throw "このバージョンはMIDIファイルの再生をサポートしていません";}
+		void Stop() {throw "このバージョンはMIDIファイルの再生をサポートしていません";}
+#endif
 	};
 
 }
