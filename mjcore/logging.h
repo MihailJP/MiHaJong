@@ -13,6 +13,7 @@
 #include <string>
 #include <sstream>
 #include "../socket/logger.h"
+#include "../sound/logger.h"
 
 namespace logger {
 	typedef int (__cdecl *CHRPPROC)(const char* a);

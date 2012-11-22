@@ -2,21 +2,32 @@
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 #include "GuruGuruSMF/GuruGuruSMF4_Cpp.h"
 #endif
-#include <string>
+#include <sstream>
+#include <iomanip>
 
 void sound::SoundManipulator::InitXAudio() {
-	if (FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED)))
-		throw std::string("CoInitializeExé∏îsÅIÅI");
+	HRESULT hr;
+	if (FAILED(hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED))) {
+		std::ostringstream o; o << "CoInitializeExé∏îsÅIÅI (0x" <<
+			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
+		throw o.str();
+	}
 
 	UINT32 flags = 0;
 #ifdef _DEBUG
 	flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
-	if (FAILED(XAudio2Create(&xAudio, flags)))
-		throw std::string("XAudio2Createé∏îsÅIÅI");
+	if (FAILED(hr = XAudio2Create(&xAudio, flags))) {
+		std::ostringstream o; o << "XAudio2Createé∏îsÅIÅI (0x" <<
+			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
+		throw o.str();
+	}
 
-	if (FAILED(xAudio->CreateMasteringVoice(&mVoice)))
-		throw std::string("CreateMasteringVoiceé∏îsÅIÅI");
+	if (FAILED(hr = xAudio->CreateMasteringVoice(&mVoice))) {
+		std::ostringstream o; o << "CreateMasteringVoiceé∏îsÅIÅI (0x" <<
+			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
+		throw o.str();
+	}
 }
 
 sound::SoundManipulator::SoundManipulator() {

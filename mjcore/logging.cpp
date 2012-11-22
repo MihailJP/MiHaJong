@@ -12,6 +12,7 @@ namespace logger {
 		lg = LoadLibrary((LPCSTR)"logger.dll");
 		if (lg == nullptr) return (-1);
 		mihajong_socket::logger::setLoggerLib(lg);
+		sound::logger::setLoggerLib(lg);
 
 		fpInitLogger = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"initLogger");
 		if (lg == nullptr) return (-2);

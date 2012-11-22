@@ -9,7 +9,7 @@
 #define DLL __declspec(dllexport)
 #else
 #define DLL __declspec(dllimport)
-#endif /*SOCKET_EXPORTS*/
+#endif /*SOUND_EXPORTS*/
 #endif /*DLL*/
 
 namespace sound {

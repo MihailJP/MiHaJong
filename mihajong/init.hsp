@@ -75,7 +75,7 @@
 	}
 
 /* 音源を初期化 */
-	snd_init: if (stat) {info "サウンドDLLを初期化しました。"} else {error "サウンドDLLの初期化に失敗しました。"}
+	snd_init: if (stat == 0) {info "サウンドDLLを初期化しました。"} else {error "サウンドDLLの初期化に失敗しました。"}
 
 /* 終了時に音源をクリンナップするための処理 */
 	onexit *cleanup
