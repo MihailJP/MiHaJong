@@ -110,7 +110,7 @@
 		endround GameStat, GameEnv, RoundEndType, OrigTurn, OrigHonba
 		await 5000
 		// ”¼‘‘I—¹”»’è
-		nextRound GameStat
+		nextRound GameStat, OrigTurn
 		if (stat) {break}
 	loop
 	// ”¼‘‘I—¹

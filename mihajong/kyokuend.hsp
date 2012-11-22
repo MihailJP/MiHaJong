@@ -615,7 +615,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
-#deffunc nextRound var GameStat
+#deffunc nextRound var GameStat, int OrigTurn
 	// ƒnƒRŠ„‚êI—¹
 	if (chkRule("buttobi_border", "no") == 0) {
 		if (isDobon(GameStat,PLAYER_EAST)) {return 1}
