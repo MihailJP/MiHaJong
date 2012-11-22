@@ -49,8 +49,8 @@
 /* ＢＧＭ再生 */
 #deffunc bgmplay int id
 	bgmstop
-	snd_play bgmcode
-	if (stat) {info strf("BGM [%d] 番を再生します。", bgmcode)}
-	else {warn strf("BGM [%d] 番を再生できませんでした。", bgmcode)}
+	snd_play id
+	if (stat) {info strf("BGM [%d] 番を再生します。", id)}
+	else {warn strf("BGM [%d] 番を再生できませんでした。", id)}
 	return
 #global
