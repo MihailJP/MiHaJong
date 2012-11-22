@@ -1014,7 +1014,7 @@ function decide_call (gametbl, ChanKanFlag) -- ＡＩの鳴き・栄和
 			if (nakiCount[1] == 0) or (nakiCount[2] == 0) or (nakiCount[3] == 0) then
 				break -- 不可能な鳴きの場合
 			end
-			if currentShanten > (Shanten - 2) then chosenNaki = cnt end
+			if currentShanten > (Shanten - 2) then chosenNaki = chiType end
 		until true end
 		Shanten = tmp2Shanten
 		haiHand[14] = nil

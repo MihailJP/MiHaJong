@@ -70,7 +70,7 @@
 	・CPU：Intel Core i5 760 2.80GHz（場合により2.66GHzにダウンクロック）
 	・開発環境：Hot Soup Processor ver3.3、Visual C++ 2010 Express
 	・画像編集ツール：GIMP 2.6
-	・テキストエディタ：Mery、Notepad++、サクラエディタ、Kate
+	・テキストエディタ：Mery、Notepad++、Kate
 	・Gitクライアント：Cygwin GIT
 
 

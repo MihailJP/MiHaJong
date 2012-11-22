@@ -20,6 +20,10 @@ return
 /* 卓の初期化 */
 *tableinit
 	initephemeral // AIのephemeralテーブルを初期化
+	repeat NUM_OF_PLAYERS
+		makesandbox Sandbox, GameStat, cnt
+		ai_init Sandbox, cnt
+	loop
 	ifaceinit // 押しボタン類のステータス初期化
 	inittable GameStat
 	// 局の開始で同期する。1.7系列まではこのとき落ち戻りが可能(落ち戻り機能は1.8で廃止されました)
