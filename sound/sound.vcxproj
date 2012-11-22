@@ -78,6 +78,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GuruGuruSMF\GuruGuruSMF4_Cpp_Static.cpp" />
+    <ClCompile Include="logger.cpp" />
     <ClCompile Include="midi.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="soundobj.cpp" />
@@ -86,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GuruGuruSMF\GuruGuruSMF4_Cpp.h" />
+    <ClInclude Include="logger.h" />
     <ClInclude Include="snddata.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="soundobj.h" />

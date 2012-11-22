@@ -36,6 +36,9 @@
     <ClCompile Include="vorbis.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="logger.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sound.h">
@@ -49,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="GuruGuruSMF\GuruGuruSMF4_Cpp.h">
       <Filter>GuruGuruSMF</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
