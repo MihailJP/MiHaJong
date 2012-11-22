@@ -22,6 +22,8 @@ namespace sound {
 	SOUNDDLL_EXPORT void Cleanup(); // å„énññ
 
 	SOUNDDLL_EXPORT int LoadWave(unsigned ID, LPCSTR filename); // WAVEì«Ç›çûÇ›
+	SOUNDDLL_EXPORT int LoadVorbis(unsigned ID, LPCSTR filename); // Vorbisì«Ç›çûÇ›
+	SOUNDDLL_EXPORT int LoadMidi(unsigned ID, LPCSTR filename); // MIDIì«Ç›çûÇ›
 
 	SOUNDDLL_EXPORT int Play(unsigned ID); // çƒê∂
 	SOUNDDLL_EXPORT int Stop(unsigned ID); // í‚é~

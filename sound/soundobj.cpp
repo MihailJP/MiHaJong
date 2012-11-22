@@ -59,6 +59,14 @@ void sound::SoundManipulator::readWaveData(unsigned ID, const std::string& filen
 	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // ”z—ñ‚ðŠg’£
 	sounds[ID] = new WaveData(&xAudio, filename);
 }
+void sound::SoundManipulator::readVorbisData(unsigned ID, const std::string& filename) {
+	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // ”z—ñ‚ðŠg’£
+	sounds[ID] = new OggData(&xAudio, filename);
+}
+void sound::SoundManipulator::readMidiData(unsigned ID, const std::string& filename) {
+	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // ”z—ñ‚ðŠg’£
+	sounds[ID] = new MidiData(ID, filename);
+}
 
 /* Ä¶ */
 void sound::SoundManipulator::play(unsigned ID) {

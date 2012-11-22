@@ -29,6 +29,20 @@ SOUNDDLL_EXPORT int sound::LoadWave(unsigned ID, LPCSTR filename) try {
 } catch (...) {
 	return -1;
 }
+SOUNDDLL_EXPORT int sound::LoadVorbis(unsigned ID, LPCSTR filename) try {
+	if (!soundManipulator) throw "初期化されていません！！！";
+	soundManipulator->readVorbisData(ID, filename);
+	return 0;
+} catch (...) {
+	return -1;
+}
+SOUNDDLL_EXPORT int sound::LoadMidi(unsigned ID, LPCSTR filename) try {
+	if (!soundManipulator) throw "初期化されていません！！！";
+	soundManipulator->readMidiData(ID, filename);
+	return 0;
+} catch (...) {
+	return -1;
+}
 
 /* サウンド再生 */
 SOUNDDLL_EXPORT int sound::Play(unsigned ID) try {
