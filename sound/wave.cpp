@@ -67,16 +67,16 @@ sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool l
 			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
 		throw o.str();
 	}
-	if (FAILED(hr = voice->SubmitSourceBuffer(&bufInfo))) {
-		std::ostringstream o; o << "SubmitSourceBufferŽ¸”sII (0x" <<
-			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
-		throw o.str();
-	}
 }
 
 /* Ä¶ */
 void sound::WaveData::Play() {
 	HRESULT hr;
+	if (FAILED(hr = voice->SubmitSourceBuffer(&bufInfo))) {
+		std::ostringstream o; o << "SubmitSourceBufferŽ¸”sII (0x" <<
+			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
+		throw o.str();
+	}
 	if (FAILED(hr = voice->Start(0, XAUDIO2_COMMIT_NOW))) {
 		std::ostringstream o; o << "StartŽ¸”sII (0x" <<
 			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
@@ -89,6 +89,11 @@ void sound::WaveData::Stop() {
 	HRESULT hr;
 	if (FAILED(hr = voice->Stop())) {
 		std::ostringstream o; o << "StopŽ¸”sII (0x" <<
+			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
+		throw o.str();
+	}
+	if (FAILED(hr = voice->FlushSourceBuffers())) {
+		std::ostringstream o; o << "FlushSourceBuffersŽ¸”sII (0x" <<
 			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
 		throw o.str();
 	}
