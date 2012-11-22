@@ -615,7 +615,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
-#deffunc nextRound var GameStat
+#deffunc nextRound var GameStat, int OrigTurn
 	// ハコ割れ終了
 	if (chkRule("buttobi_border", "no") == 0) {
 		if (isDobon(GameStat,PLAYER_EAST)) {return 1}
@@ -687,10 +687,10 @@
 	// 焼き鳥復活ルールの場合
 	if ((chkRule("yakitori", "no") != 0) && (chkRule("yakitori_again", "no") != 0)) {
 #ifdef SANMAT
-		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)) > 0) {
+		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)) == 0) {
 			repeat 3
 #else
-		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)+getYakitori(GameStat, 3)) > 0) {
+		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)+getYakitori(GameStat, 3)) == 0) {
 			repeat 4
 #endif
 				setYakitori GameStat, cnt, 1
