@@ -78,6 +78,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "sounddll.hsp"
 #deffunc procdahai var GameStat, var GameEnv, var DiscardTileIndex
 	// 打牌コード
 	// ０～１２…それぞれの手牌
@@ -117,7 +118,7 @@
 		setCall getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), "ツモ"
 		if (getHeavenHandFlag(GameStat) == 1) {setCall getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), "ロン"} //天和の時はロンと言う慣わし
 		setHandStat GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), 1
-		if (getHeavenHandFlag(GameStat) == 1) {dsplay@ VOX_RON} else {dsplay@ VOX_TSUMO}
+		if (getHeavenHandFlag(GameStat) == 1) {snd_play VOX_RON} else {snd_play VOX_TSUMO}
 		redrscreen: return RoundEndType
 	}
 #ifndef SANMAS
@@ -130,7 +131,7 @@
 				RoundEndType = ENDKYOKU_KYUUSHUKYUUHAI
 				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "九種九牌"
 				setHandStat GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 1
-				dsplay@ VOX_KYUUSHU
+				snd_play VOX_KYUUSHU
 				redrscreen: return RoundEndType
 			}
 		}
@@ -234,9 +235,9 @@
 	/* 立直を宣言する */
 	if ((DiscardTileIndex >= DAHAI_TYPE_OPENRIICHI)&&(DiscardTileIndex < DAHAI_TYPE_OPENRIICHI+DAHAI_TYPE_STEP)) {
 		setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "リーチ"
-		dsplay@ VOX_RICHI
+		snd_play VOX_RICHI
 		if ((getRichiFlag(GameStat, RICHI_OPENFLAG, 0)+getRichiFlag(GameStat, RICHI_OPENFLAG, 1)+getRichiFlag(GameStat, RICHI_OPENFLAG, 2)+getRichiFlag(GameStat, RICHI_OPENFLAG, 3)) == 0) {
-			bgmplay_short MUS_OPENRICHI
+			bgmplay MUS_OPENRICHI
 		}
 		redrscreen
 		await 1000
@@ -246,19 +247,19 @@
 	}
 	if ((DiscardTileIndex >= DAHAI_TYPE_RIICHI)&&(DiscardTileIndex < DAHAI_TYPE_RIICHI+DAHAI_TYPE_STEP)) {
 		setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "リーチ"
-		dsplay@ VOX_RICHI
+		snd_play VOX_RICHI
 		if ((getRichiFlag(GameStat, RICHI_OPENFLAG, 0)+getRichiFlag(GameStat, RICHI_OPENFLAG, 1)+getRichiFlag(GameStat, RICHI_OPENFLAG, 2)+getRichiFlag(GameStat, RICHI_OPENFLAG, 3)) == 0) {
 			if ((getRichiFlag(GameStat, RICHI_FLAG, 0) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 1) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 2) == RIICHI_NO)&&(getRichiFlag(GameStat, RICHI_FLAG, 3) == RIICHI_NO)) {
 				if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == getPlayer(GameStat)) {
-					bgmplay_short MUS_RICHI2
+					bgmplay MUS_RICHI2
 				} else {
-					bgmplay_short MUS_RICHI1
+					bgmplay MUS_RICHI1
 				}
 				await 0
 			} else {
 				if (GetWatchModeFlag(GameEnv) == 0) {
 					if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == getPlayer(GameStat)) {
-						bgmplay_short MUS_RICHI3
+						bgmplay MUS_RICHI3
 					}
 				}
 				await 0
@@ -314,13 +315,13 @@
 	/* 打牌するときの音を鳴らす */
 	/* ドラを捨てる時は強打の音にする */
 	if (getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE) > TILE_SUIT_FLOWERS) {
-		dsplay@ SND_DAHAI2
+		snd_play SND_DAHAI2
 	} else:if ((getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE) == 1)||(getDoraFlag(GameStat, DORA_OMOTE, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)) > 0)) {
-		dsplay@ SND_DAHAI2
+		snd_play SND_DAHAI2
 	} else:if ((getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE) == 2)&&(chkRule("blue_tiles", "-1han") == 0)) {
-		dsplay@ SND_DAHAI2
+		snd_play SND_DAHAI2
 	} else {
-		dsplay@ SND_DAHAI1
+		snd_play SND_DAHAI1
 	}
 	/* このとき牌を捨てているはずなので、バグ防止のための処理 */
 	repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
@@ -332,6 +333,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "sounddll.hsp"
 #deffunc tsumoproc var GameStat
 	/* 次のプレイヤーが牌を自摸る */
 	incDrawPointer GameStat: setHeavenHandFlag GameStat, 0
@@ -354,9 +356,9 @@
 	setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getWall(GameStat, WALL_REDTILE, getDrawPointer(GameStat))
 	setPreviousMeld GameStat, PREVMELD_TILECODE, 0
 	setPreviousMeld GameStat, PREVMELD_STEPPED, 0
-	dsplay@ SND_TSUMO
+	snd_play SND_TSUMO
 	if (tilesLeft(GameStat) < 10) {
-		dsplay@ SND_COUNTDOWN
+		snd_play SND_COUNTDOWN
 	}
 	return
 #global

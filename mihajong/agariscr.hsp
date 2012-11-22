@@ -7,6 +7,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "sounddll.hsp"
 #define ctype doubleDoraEnabled ((chkRule("dora_twice", "yes") != 0)||((chkRule("dora_twice", "only_when_doublets") != 0)&&(getDice(GameStat, 0, 0) == getDice(GameStat, 1, 0))))
 #deffunc agariscrproc var GameStat, var GameEnv, var yakuInfo, array agariPointArray, var ChipAmount, var ResultDesc, var tmpUraFlag
 	buffer SCR_AGARI_BUF, 600, 600: color 0, 0, 0: boxf 0, 0, 599, 599
@@ -203,21 +204,21 @@
 	redraw 1: redraw 0: await 1000
 	if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 2000) {
 		switch agariBgmSet
-			case 0: bgmplay_norep MUS_AGARI_SELF_1: swbreak
-			case 1: bgmplay_norep MUS_AGARI_FURIKOMI_1: swbreak
-			case 2: bgmplay_norep MUS_AGARI_OTHER_1: swbreak
+			case 0: bgmplay MUS_AGARI_SELF_1: swbreak
+			case 1: bgmplay MUS_AGARI_FURIKOMI_1: swbreak
+			case 2: bgmplay MUS_AGARI_OTHER_1: swbreak
 		swend
 	} else: if (getYakuInfo(yakuInfo, YAKUINF_POINTS+0) < 8000) {
 		switch agariBgmSet
-			case 0: bgmplay_norep MUS_AGARI_SELF_2: swbreak
-			case 1: bgmplay_norep MUS_AGARI_FURIKOMI_2: swbreak
-			case 2: bgmplay_norep MUS_AGARI_OTHER_2: swbreak
+			case 0: bgmplay MUS_AGARI_SELF_2: swbreak
+			case 1: bgmplay MUS_AGARI_FURIKOMI_2: swbreak
+			case 2: bgmplay MUS_AGARI_OTHER_2: swbreak
 		swend
 	} else {
 		switch agariBgmSet
-			case 0: bgmplay_norep MUS_AGARI_SELF_3: swbreak
-			case 1: bgmplay_norep MUS_AGARI_FURIKOMI_3: swbreak
-			case 2: bgmplay_norep MUS_AGARI_OTHER_3: swbreak
+			case 0: bgmplay MUS_AGARI_SELF_3: swbreak
+			case 1: bgmplay MUS_AGARI_FURIKOMI_3: swbreak
+			case 2: bgmplay MUS_AGARI_OTHER_3: swbreak
 		swend
 	}
 	/* 和了役表示 */
@@ -272,25 +273,25 @@
 			}
 		}
 		if (agariScreenMode == 0) {
-			if (strmid(tmpdat, 0, 4) == "ドラ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+			if (strmid(tmpdat, 0, 4) == "ドラ") {snd_play SND_YAKULST1: redraw 1: redraw 0: await 800}
 #ifdef SANMAX
-			if (strmid(tmpdat, 0, 4) == "ガリ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+			if (strmid(tmpdat, 0, 4) == "ガリ") {snd_play SND_YAKULST1: redraw 1: redraw 0: await 800}
 #else
-			if (strmid(tmpdat, 0, 4) == "花牌") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+			if (strmid(tmpdat, 0, 4) == "花牌") {snd_play SND_YAKULST1: redraw 1: redraw 0: await 800}
 #endif
-			if (strmid(tmpdat, 0, 6) == "赤ドラ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
-			if (strmid(tmpdat, 0, 6) == "青ドラ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
-			if (strmid(tmpdat, 0, 6) == "裏ドラ") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
-			if (strmid(tmpdat, 0, 6) == "アリス") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+			if (strmid(tmpdat, 0, 6) == "赤ドラ") {snd_play SND_YAKULST1: redraw 1: redraw 0: await 800}
+			if (strmid(tmpdat, 0, 6) == "青ドラ") {snd_play SND_YAKULST1: redraw 1: redraw 0: await 800}
+			if (strmid(tmpdat, 0, 6) == "裏ドラ") {snd_play SND_YAKULST1: redraw 1: redraw 0: await 800}
+			if (strmid(tmpdat, 0, 6) == "アリス") {snd_play SND_YAKULST1: redraw 1: redraw 0: await 800}
 			notesel yakuVal
 			noteget tmpdat, cnt
 			if (tmpdat != "") {ResultDesc += "("+tmpdat+")"}
 			pos 240+(cnt\2)*240, 140+(cnt/2)*32
 			borderedtxt2a tmpdat, ginfo_cx, ginfo_cy, drawcol(0), drawcol(1), drawcol(2), 1, 24
-			if (tmpdat != "") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+			if (tmpdat != "") {snd_play SND_YAKULST1: redraw 1: redraw 0: await 800}
 			noteunsel
 		} else {
-			if (tmpdat != "") {dsplay@ SND_YAKULST1: redraw 1: redraw 0: await 800}
+			if (tmpdat != "") {snd_play SND_YAKULST1: redraw 1: redraw 0: await 800}
 		}
 	loop
 	noteunsel
@@ -444,7 +445,7 @@
 		else {borderedtxt2a "チップ "+ChipAmount+"枚", 450, 580, drawcol(0), drawcol(1), drawcol(2), 1, 20}
 #endif
 	}
-	dsplay@ SND_YAKULST2: redraw 1: await waittime
+	snd_play SND_YAKULST2: redraw 1: await waittime
 	await 3000
 	setYakitori GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), 0 // 焼鳥を解除する
 return
