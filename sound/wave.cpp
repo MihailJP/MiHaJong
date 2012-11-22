@@ -54,6 +54,7 @@ void sound::WaveData::Prepare(const std::string& filename) {
 }
 
 sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool looped) {
+	voice = nullptr;
 	Prepare(filename);
 	std::memset(&bufInfo, 0, sizeof(bufInfo));
 	bufInfo.AudioBytes = buffer.size();
@@ -83,4 +84,9 @@ sound::SoundData::~SoundData() {
 		voice->Stop();
 		voice->DestroyVoice();
 	}
+}
+
+/* コンストラクタ(スーパークラス) */
+sound::SoundData::SoundData() {
+	voice = nullptr;
 }

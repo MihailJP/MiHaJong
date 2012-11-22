@@ -23,6 +23,7 @@ namespace sound {
 		XAUDIO2_BUFFER bufInfo;
 		IXAudio2SourceVoice* voice;
 	public:
+		explicit SoundData();
 		virtual ~SoundData();
 	};
 	class WaveData : public SoundData {
