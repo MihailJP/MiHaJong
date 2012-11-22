@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include "logger.h"
 
 /* 4バイト単位のチャンクのチェック */
 bool sound::WaveData::checkTag(std::ifstream& file, const std::string& tag) {
@@ -52,7 +53,17 @@ void sound::WaveData::Prepare(const std::string& filename) {
 	if (!checkTag(file, "RIFF")) throw std::string("RIFFチャンクがないです");
 	file.ignore(4);
 	GetFormat(file);
-	ReadWaveData(file);
+	try {
+		ReadWaveData(file);
+	} catch (std::string&) {
+		debug("'fmt ' チャンクの直後が 'daata' チャンクではありません");
+		file.seekg(-4, std::ios_base::cur);
+		if (!checkTag(file, "fact")) throw std::string("factチャンクがないです");
+		debug("'fact' チャンクを無視します");
+		std::uint32_t fact_size; file.read(reinterpret_cast<char*>(&fact_size), 4);
+		file.ignore(fact_size);
+		ReadWaveData(file);
+	}
 }
 
 sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool looped) {
