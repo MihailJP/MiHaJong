@@ -256,7 +256,7 @@ DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool*
 			lua_getglobal(status[gameStat->CurrentPlayer.Passive].state, fncname_call[gameStat->KangFlag.chankanFlag]);
 		} catch (...) { /* determine_discard がなかったらエラーになるので例外処理をする */
 			std::ostringstream o;
-			if (gameStat->KangFlag.chankanFlag) {
+			if (gameStat->KangFlag.chankanFlag == 0) {
 				o << "グローバルシンボル [" << fncname_call[0] << "] の取得に失敗しました"; error(o.str().c_str());
 				info("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。");
 				status[gameStat->CurrentPlayer.Passive].scriptLoaded = false;
