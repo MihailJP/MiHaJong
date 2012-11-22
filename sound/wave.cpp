@@ -1,4 +1,5 @@
 #include "snddata.h"
+#include <fstream>
 
 /* 4バイト単位のチャンクのチェック */
 bool sound::WaveData::checkTag(std::ifstream& file, const std::string& tag) {

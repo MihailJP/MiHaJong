@@ -4,7 +4,6 @@
 #include <XAudio2.h>
 #include <cstdint>
 #include <cstring>
-#include <fstream>
 #include <vector>
 
 namespace sound {
@@ -23,7 +22,6 @@ namespace sound {
 		std::vector<char> buffer;
 		XAUDIO2_BUFFER bufInfo;
 		IXAudio2SourceVoice* voice;
-		virtual void Prepare(const std::string& filename) = 0;
 	public:
 		virtual ~SoundData();
 	};
@@ -39,7 +37,21 @@ namespace sound {
 		void Stop();
 	};
 	class OggData : public SoundData {
-		/* 未実装 */
+	private:
+		void Prepare(const std::string& filename);
+#ifdef VORBIS_SUPPORT
+	public:
+		explicit OggData(IXAudio2** Engine, const std::string& filename, bool looped = false);
+		void Play();
+		void Stop();
+#else
+	public:
+		explicit OggData(IXAudio2** Engine, const std::string& filename, bool looped = false) {
+			throw "Vorbisはサポートされていません";
+		}
+		void Play() {throw "Vorbisはサポートされていません";}
+		void Stop() {throw "Vorbisはサポートされていません";}
+#endif
 	};
 	class MidiData : public AudioData {
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
