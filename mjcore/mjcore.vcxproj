@@ -251,6 +251,7 @@
     <ClInclude Include="ai\class.h" />
     <ClInclude Include="ai\functbl.h" />
     <ClInclude Include="ai\filesel.h" />
+    <ClInclude Include="bgmid.h" />
     <ClInclude Include="chat.h" />
     <ClInclude Include="data\confitem.csv.h" />
     <ClInclude Include="data\confitem.ini.h" />

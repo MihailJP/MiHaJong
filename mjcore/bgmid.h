@@ -52,7 +52,7 @@ namespace sound {
 		sndSignal,
 		sndClock,
 	};
-	const unsigned SndEnd = snd_clock;
+	const unsigned SndEnd = sndClock;
 
 	const unsigned VoxStart = SndEnd + 1;
 	enum VSoundID : unsigned {
@@ -70,7 +70,7 @@ namespace sound {
 		voxSijiarichi,
 		voxRonFurikomi,
 	};
-	const unsigned VoxEnd = vox_ron_furikomi;
+	const unsigned VoxEnd = voxRonFurikomi;
 
   }
 }
