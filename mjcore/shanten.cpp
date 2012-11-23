@@ -122,6 +122,8 @@ MJCORE SHANTEN ShantenAnalyzer::calcShanten(const GameTable* const gameStat, PLA
 		return calcShantenStellar(gameStat, playerID, tileCount, false);
 	case shantenSevenup:
 		return calcShantenSevenup(gameStat, playerID, tileCount);
+	case shantenZuhelong:
+		return calcShantenZuhelong(gameStat, playerID, tileCount);
 	default:
 		/* 全部求めて一番和了に近いやつを返す */
 		SHANTEN shanten, tmpShanten;
@@ -133,6 +135,7 @@ MJCORE SHANTEN ShantenAnalyzer::calcShanten(const GameTable* const gameStat, PLA
 		tmpShanten = calcShantenSyzygy(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenStellar(gameStat, playerID, tileCount, false); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenSevenup(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
+		tmpShanten = calcShantenZuhelong(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		return shanten;
 	}
 }
@@ -142,10 +145,9 @@ __declspec(dllexport) int ShantenAnalyzer::calcShanten(const GameTable* const ga
 	return (int)calcShanten(gameStat, (PLAYER_ID)playerID, (shantenType)mode);
 }
 
-SHANTEN ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
-{ // 面子手の向聴数を求める
-	SHANTEN shanten = 8; // 全く揃ってないてんでバラバラだったら面子手に対して8向聴（七対子に対してなら6向聴になる）
-
+unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount, unsigned limit) {
+	// 面子を2、対子・塔子を1とした数値
+	unsigned int ans = 0;
 	// 数牌
 	int mianzi = 0; int tarzi = 0; bool atama = false; // 面子塔子雀頭の数
 	for (int suit = 0; suit < TILE_NUMERAL_COLORS; suit++) {
@@ -162,7 +164,7 @@ SHANTEN ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PLA
 
 	// 字牌
 	for (int i = 1; i <= 7; i++) {
-		if (tileCount[TILE_SUIT_HONORS + i] == 2) {tarzi++; atama = 1;}
+		if (tileCount[TILE_SUIT_HONORS + i] == 2) {tarzi++; atama = true;}
 		if (tileCount[TILE_SUIT_HONORS + i] >= 3) {mianzi++;}
 	}
 
@@ -170,17 +172,23 @@ SHANTEN ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PLA
 	mianzi += gameStat->Player[playerID].MeldPointer;
 	
 	int mianziCount = 0;
-	if (mianzi + tarzi > 4) {
+	if (mianzi + tarzi > limit) {
 		// 面子多多のとき
-		shanten = 8 - (mianzi * 2) - (4 - mianzi);
+		ans = (mianzi * 2) + (limit - mianzi);
 		// 面子多多でも、頭がある時は頭も数える
-		if (atama) shanten -= 1;
+		if (atama) ans += 1;
 	} else {
 		// そうでないとき
-		shanten = 8 - (mianzi * 2) - tarzi;
+		ans = (mianzi * 2) + tarzi;
 	}
 
-	return shanten;
+	return ans;
+}
+
+SHANTEN ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+{ // 面子手の向聴数を求める
+	return 8 - // 全く揃ってないてんでバラバラだったら面子手に対して8向聴（七対子に対してなら6向聴になる）
+		chkMianzi(gameStat, playerID, tileCount, 4);
 }
 
 SHANTEN ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
@@ -221,6 +229,42 @@ SHANTEN ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, PLA
 	return shanten;
 }
 
+void ShantenAnalyzer::setQixingTilePattern(tileCode* const QixingPai, unsigned int pattern) {
+	switch (pattern) {
+	case 0: case 1:
+		QixingPai[0] = CharacterOne; QixingPai[1] = CharacterFour;
+		QixingPai[2] = CharacterSeven; break;
+	case 2: case 3:
+		QixingPai[0] = CharacterTwo; QixingPai[1] = CharacterFive;
+		QixingPai[2] = CharacterEight; break;
+	case 4: case 5:
+		QixingPai[0] = CharacterThree; QixingPai[1] = CharacterSix;
+		QixingPai[2] = CharacterNine; break;
+	}
+	switch (pattern) {
+	case 2: case 4:
+		QixingPai[3] = CircleOne; QixingPai[4] = CircleFour;
+		QixingPai[5] = CircleSeven; break;
+	case 0: case 5:
+		QixingPai[3] = CircleTwo; QixingPai[4] = CircleFive;
+		QixingPai[5] = CircleEight; break;
+	case 1: case 3:
+		QixingPai[3] = CircleThree; QixingPai[4] = CircleSix;
+		QixingPai[5] = CircleNine; break;
+	}
+	switch (pattern) {
+	case 3: case 5:
+		QixingPai[6] = BambooOne; QixingPai[7] = BambooFour;
+		QixingPai[8] = BambooSeven; break;
+	case 1: case 4:
+		QixingPai[6] = BambooTwo; QixingPai[7] = BambooFive;
+		QixingPai[8] = BambooEight; break;
+	case 0: case 2:
+		QixingPai[6] = BambooThree; QixingPai[7] = BambooSix;
+		QixingPai[8] = BambooNine; break;
+	}
+}
+
 SHANTEN ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount, bool qixing)
 { // 特殊：七星不靠/全不靠の向聴数を求める
 	if ((!RuleData::chkRuleApplied("stellar_uushii"))&&(qixing)) return SHANTEN_IMPOSSIBLE;
@@ -236,39 +280,7 @@ SHANTEN ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PLA
 			qixingZiPaiCount++;
 	for (int i = 0; i < 6; i++) {
 		tileCode QixingPai[9];
-		switch (i) {
-		case 0: case 1:
-			QixingPai[0] = CharacterOne; QixingPai[1] = CharacterFour;
-			QixingPai[2] = CharacterSeven; break;
-		case 2: case 3:
-			QixingPai[0] = CharacterTwo; QixingPai[1] = CharacterFive;
-			QixingPai[2] = CharacterEight; break;
-		case 4: case 5:
-			QixingPai[0] = CharacterThree; QixingPai[1] = CharacterSix;
-			QixingPai[2] = CharacterNine; break;
-		}
-		switch (i) {
-		case 2: case 4:
-			QixingPai[3] = CircleOne; QixingPai[4] = CircleFour;
-			QixingPai[5] = CircleSeven; break;
-		case 0: case 5:
-			QixingPai[3] = CircleTwo; QixingPai[4] = CircleFive;
-			QixingPai[5] = CircleEight; break;
-		case 1: case 3:
-			QixingPai[3] = CircleThree; QixingPai[4] = CircleSix;
-			QixingPai[5] = CircleNine; break;
-		}
-		switch (i) {
-		case 3: case 5:
-			QixingPai[6] = BambooOne; QixingPai[7] = BambooFour;
-			QixingPai[8] = BambooSeven; break;
-		case 1: case 4:
-			QixingPai[6] = BambooTwo; QixingPai[7] = BambooFive;
-			QixingPai[8] = BambooEight; break;
-		case 0: case 2:
-			QixingPai[6] = BambooThree; QixingPai[7] = BambooSix;
-			QixingPai[8] = BambooNine; break;
-		}
+		setQixingTilePattern(QixingPai, i);
 		int qixingShuPaiCount = 0;
 		for (int i = 0; i < 9; i++)
 			if ((tileCount[QixingPai[i]] >= 1) &&
@@ -389,6 +401,31 @@ SHANTEN ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, PLA
 		SHANTEN tmpShanten = 13 - yakuTileCount;
 		// 鳴き面子や暗槓がある場合は考えない
 		if (gameStat->Player[playerID].MeldPointer > 0) shanten = SHANTEN_IMPOSSIBLE;
+		if (tmpShanten < shanten) shanten = tmpShanten;
+	}
+
+	return shanten;
+}
+
+SHANTEN ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+{ // 特殊：組合龍の向聴数を求める
+	if (!RuleData::chkRuleApplied("zuhelong")) return SHANTEN_IMPOSSIBLE;
+
+	SHANTEN shanten = SHANTEN_IMPOSSIBLE;
+	int qixingZiPaiCount = 0;
+	for (int i = 0; i < 6; i++) {
+		tileCode QixingPai[9];
+		setQixingTilePattern(QixingPai, i);
+		int qTileCount = 0;
+		Int8ByTile tmpTileCount; std::memcpy(tmpTileCount.val, tileCount.val, sizeof(tmpTileCount.val));
+		for (int i = 0; i < 9; i++) {
+			if (tmpTileCount[QixingPai[i]] >= 1) {
+				++qTileCount; --tmpTileCount[QixingPai[i]];
+			}
+		}
+		SHANTEN tmpShanten = 12 - qTileCount - chkMianzi(gameStat, playerID, tmpTileCount, 1);
+		// 鳴き面子や暗槓が2つ以上ある場合は不可能
+		if (gameStat->Player[playerID].MeldPointer > 1) shanten = SHANTEN_IMPOSSIBLE;
 		if (tmpShanten < shanten) shanten = tmpShanten;
 	}
 
