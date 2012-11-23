@@ -134,7 +134,6 @@ return
 	gosub *titlemenu@
 	confselFinished = 1
 	configPage = 0
-	bgmplay MUS_TITLE
 	return
 *rulenext
 	snd_play SND_BUTTON
