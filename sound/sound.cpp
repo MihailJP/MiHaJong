@@ -2,13 +2,14 @@
 #include "logger.h"
 #include <string>
 #include <sstream>
+#include "../mjcore/strcode.h"
 
 sound::SoundManipulator* sound::soundManipulator = nullptr;
 
 SOUNDDLL_EXPORT int sound::Initialize() try {
 	soundManipulator = new SoundManipulator();
 	return 0;
-} catch (std::string& e) {
+} catch (CodeConv::tstring& e) {
 	error(e.c_str());
 	return -1;
 }
@@ -16,7 +17,7 @@ SOUNDDLL_EXPORT int sound::Initialize() try {
 SOUNDDLL_EXPORT int sound::Initialize(HWND hWnd) try {
 	soundManipulator = new SoundManipulator(hWnd);
 	return 0;
-} catch (std::string& e) {
+} catch (CodeConv::tstring& e) {
 	error(e.c_str());
 	return -1;
 }
@@ -29,37 +30,37 @@ SOUNDDLL_EXPORT void sound::Cleanup() {
 /* サウンドデータ読み込み */
 SOUNDDLL_EXPORT int sound::LoadWave(unsigned ID, LPCSTR filename, int looped) try {
 	{
-		std::ostringstream o; o << "WAVE ファイル読み込み ID [" << ID << "] ファイル名 [" << filename << "]";
+		CodeConv::tostringstream o; o << _T("WAVE ファイル読み込み ID [") << ID << _T("] ファイル名 [") << filename << _T("]");
 		debug(o.str().c_str());
 	}
-	if (!soundManipulator) throw std::string("初期化されていません！！！");
+	if (!soundManipulator) throw CodeConv::tstring(_T("初期化されていません！！！"));
 	soundManipulator->readWaveData(ID, filename, looped);
 	return 0;
-} catch (std::string& e) {
+} catch (CodeConv::tstring& e) {
 	error(e.c_str());
 	return -1;
 }
 SOUNDDLL_EXPORT int sound::LoadVorbis(unsigned ID, LPCSTR filename, int looped) try {
 	{
-		std::ostringstream o; o << "Ogg Vorbis ファイル読み込み ID [" << ID << "] ファイル名 [" << filename << "]";
+		CodeConv::tostringstream o; o << _T("Ogg Vorbis ファイル読み込み ID [") << ID << _T("] ファイル名 [") << filename << _T("]");
 		debug(o.str().c_str());
 	}
-	if (!soundManipulator) throw std::string("初期化されていません！！！");
+	if (!soundManipulator) throw CodeConv::tstring(_T("初期化されていません！！！"));
 	soundManipulator->readVorbisData(ID, filename, looped);
 	return 0;
-} catch (std::string& e) {
+} catch (CodeConv::tstring& e) {
 	error(e.c_str());
 	return -1;
 }
 SOUNDDLL_EXPORT int sound::LoadMidi(unsigned ID, LPCSTR filename, int looped) try {
 	{
-		std::ostringstream o; o << "MIDI ファイル読み込み ID [" << ID << "] ファイル名 [" << filename << "]";
+		CodeConv::tostringstream o; o << _T("MIDI ファイル読み込み ID [") << ID << _T("] ファイル名 [") << filename << _T("]");
 		debug(o.str().c_str());
 	}
-	if (!soundManipulator) throw std::string("初期化されていません！！！");
+	if (!soundManipulator) throw CodeConv::tstring(_T("初期化されていません！！！"));
 	soundManipulator->readMidiData(ID, filename, looped);
 	return 0;
-} catch (std::string& e) {
+} catch (CodeConv::tstring& e) {
 	error(e.c_str());
 	return -1;
 }
@@ -67,23 +68,23 @@ SOUNDDLL_EXPORT int sound::LoadMidi(unsigned ID, LPCSTR filename, int looped) tr
 /* サウンド再生 */
 SOUNDDLL_EXPORT int sound::Play(unsigned ID) try {
 	{
-		std::ostringstream o; o << "サウンド再生 ID [" << ID << "]";
+		CodeConv::tostringstream o; o << _T("サウンド再生 ID [") << ID << _T("]");
 		debug(o.str().c_str());
 	}
-	if (!soundManipulator) throw std::string("初期化されていません！！！");
+	if (!soundManipulator) throw CodeConv::tstring(_T("初期化されていません！！！"));
 	soundManipulator->play(ID);
 	return 0;
-} catch (std::string& e) {
+} catch (CodeConv::tstring& e) {
 	error(e.c_str());
 	return -1;
 }
 
 /* サウンド停止 */
 SOUNDDLL_EXPORT int sound::Stop(unsigned ID) try {
-	if (!soundManipulator) throw std::string("初期化されていません！！！");
+	if (!soundManipulator) throw CodeConv::tstring(_T("初期化されていません！！！"));
 	soundManipulator->stop(ID);
 	return 0;
-} catch (std::string& e) {
+} catch (CodeConv::tstring& e) {
 	error(e.c_str());
 	return -1;
 }

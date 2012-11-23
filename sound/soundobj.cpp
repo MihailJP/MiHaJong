@@ -4,12 +4,13 @@
 #endif
 #include <sstream>
 #include <iomanip>
+#include "../mjcore/strcode.h"
 
 void sound::SoundManipulator::InitXAudio() {
 	HRESULT hr;
 	if (FAILED(hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED))) {
-		std::ostringstream o; o << "CoInitializeEx失敗！！ (0x" <<
-			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
+		CodeConv::tostringstream o; o << _T("CoInitializeEx失敗！！ (0x") <<
+			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
 
@@ -18,14 +19,14 @@ void sound::SoundManipulator::InitXAudio() {
 	flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
 	if (FAILED(hr = XAudio2Create(&xAudio, flags))) {
-		std::ostringstream o; o << "XAudio2Create失敗！！ (0x" <<
-			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
+		CodeConv::tostringstream o; o << _T("XAudio2Create失敗！！ (0x") <<
+			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
 
 	if (FAILED(hr = xAudio->CreateMasteringVoice(&mVoice))) {
-		std::ostringstream o; o << "CreateMasteringVoice失敗！！ (0x" <<
-			std::hex << std::setw(8) << std::setfill('0') << hr << ")";
+		CodeConv::tostringstream o; o << _T("CreateMasteringVoice失敗！！ (0x") <<
+			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
 }
@@ -34,18 +35,18 @@ sound::SoundManipulator::SoundManipulator() {
 	InitXAudio();
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)
-		throw std::string("GGSINITIALIZE失敗！！");
+		throw CodeConv::tstring(_T("GGSINITIALIZE失敗！！"));
 	if (GGS->OpenDevice(GuruGuruSmf::Device::DirectMusic, nullptr))
-		throw std::string("GGS->OpenDevice失敗！！");
+		throw CodeConv::tstring(_T("GGS->OpenDevice失敗！！"));
 #endif
 }
 sound::SoundManipulator::SoundManipulator(HWND hWnd) {
 	InitXAudio();
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)
-		throw std::string("GGSINITIALIZE失敗！！");
+		throw CodeConv::tstring(_T("GGSINITIALIZE失敗！！"));
 	if (GGS->OpenDevice(GuruGuruSmf::Device::DirectMusic, hWnd))
-		throw std::string("GGS->OpenDevice失敗！！");
+		throw CodeConv::tstring(_T("GGS->OpenDevice失敗！！"));
 #endif
 }
 
@@ -83,7 +84,7 @@ void sound::SoundManipulator::readMidiData(unsigned ID, const std::string& filen
 /* 再生 */
 void sound::SoundManipulator::play(unsigned ID) {
 	if ((sounds.size() <= ID) || (!sounds[ID])) {
-		std::ostringstream o; o << "サウンド ID [" << ID << "] は読み込まれてないです";
+		CodeConv::tostringstream o; o << _T("サウンド ID [") << ID << _T("] は読み込まれてないです");
 		throw o.str();
 	}
 	sounds[ID]->Play();
@@ -92,7 +93,7 @@ void sound::SoundManipulator::play(unsigned ID) {
 /* 停止 */
 void sound::SoundManipulator::stop(unsigned ID) {
 	if ((sounds.size() <= ID) || (!sounds[ID])) {
-		std::ostringstream o; o << "サウンド ID [" << ID << "] は読み込まれてないです";
+		CodeConv::tostringstream o; o << _T("サウンド ID [") << ID << _T("] は読み込まれてないです");
 		throw o.str();
 	}
 	sounds[ID]->Stop();

@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cstring>
 #include <vector>
+#include "../mjcore/strcode.h"
 
 namespace sound {
 
@@ -48,10 +49,10 @@ namespace sound {
 #else
 	public:
 		explicit OggData(IXAudio2** Engine, const std::string& filename, bool looped = false) {
-			throw std::string("Vorbisはサポートされていません");
+			throw CodeConv::tstring(_T("Vorbisはサポートされていません"));
 		}
-		void Play() {throw std::string("Vorbisはサポートされていません");}
-		void Stop() {throw std::string("Vorbisはサポートされていません");}
+		void Play() {throw CodeConv::tstring(_T("Vorbisはサポートされていません"));}
+		void Stop() {throw CodeConv::tstring(_T("Vorbisはサポートされていません"));}
 #endif
 	};
 	class MidiData : public AudioData {
@@ -67,10 +68,10 @@ namespace sound {
 #else
 	public:
 		explicit MidiData(unsigned ID, const std::string& filename, bool looped = false) {
-			throw std::string("このバージョンはMIDIファイルの再生をサポートしていません");
+			throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));
 		}
-		void Play() {throw std::string("このバージョンはMIDIファイルの再生をサポートしていません");}
-		void Stop() {throw std::string("このバージョンはMIDIファイルの再生をサポートしていません");}
+		void Play() {throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));}
+		void Stop() {throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));}
 #endif
 	};
 
