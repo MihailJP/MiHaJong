@@ -94,6 +94,7 @@ return
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "sounddll.hsp"
 #deffunc ifaceinit
 	StatusBoxTxt = ""
 	AutoAgariSwitch = 0 // オート和了のスイッチ
@@ -277,28 +278,28 @@ return
 	return
 
 *swAutoAgari
-	dsplay@ SND_CLICK
+	snd_play SND_CLICK
 	AutoAgariSwitch = 1-AutoAgariSwitch
 	gosub *stAutoAgari
 	await 0
 	return
 
 *swAutoPass
-	dsplay@ SND_CLICK
+	snd_play SND_CLICK
 	AutoPassSwitch = 1-AutoPassSwitch
 	gosub *stAutoPass
 	await 0
 	return
 
 *swTsumogiri
-	dsplay@ SND_CLICK
+	snd_play SND_CLICK
 	TsumogiriSwitch = 1-TsumogiriSwitch
 	gosub *stTsumogiri
 	await 0
 	return
 
 *swChat
-	dsplay@ SND_CLICK
+	snd_play SND_CLICK
 	ChatSwitch = (ChatSwitch+1)\3
 	gosub *stChat
 	chatwnd ChatSwitch

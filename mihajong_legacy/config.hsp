@@ -67,6 +67,7 @@ return
 #module config
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "sounddll.hsp"
 
 #uselib "mjcore.dll"
 #cfunc getRuleSize "?getRuleSize@RuleData@@SAHH@Z" int
@@ -108,7 +109,7 @@ return
 	dim Rule, NUM_OF_RULE_SETTINGS
 	repeat NUM_OF_RULE_SETTINGS: Rule(cnt) = getRule(cnt): loop
 
-	dsplay@ SND_BUTTON
+	snd_play SND_BUTTON
 	configPage = 1
 	gosub *confbuttons
 	repeat
@@ -123,25 +124,24 @@ return
 	return
 
 *rulereset
-	dsplay@ SND_BUTTON
+	snd_play SND_BUTTON
 	repeat length(Rule): rule(cnt) = 0: loop
 	gsel 0
 	gosub *config_redraw
 	return
 *rulewrite
-	dsplay@ SND_BUTTON
+	snd_play SND_BUTTON
 	gosub *titlemenu@
 	confselFinished = 1
 	configPage = 0
-	bgmplay MUS_TITLE
 	return
 *rulenext
-	dsplay@ SND_BUTTON
+	snd_play SND_BUTTON
 	confselFinished = 1
 	configPage++
 	return
 *ruleback
-	dsplay@ SND_BUTTON
+	snd_play SND_BUTTON
 	confselFinished = 1
 	if(configPage > 1) {configPage--}
 	return
@@ -285,7 +285,7 @@ return
 
 *ruleselbtn
 	tmpBtnCode=stat
-	dsplay@ SND_CLICK
+	snd_play SND_CLICK
 	getkey KeyFlag, 16
 	if (KeyFlag) {
 		repeat 1

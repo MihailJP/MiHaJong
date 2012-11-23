@@ -70,7 +70,7 @@
 	・CPU：Intel Core i5 760 2.80GHz（場合により2.66GHzにダウンクロック）
 	・開発環境：Hot Soup Processor ver3.3、Visual C++ 2010 Express
 	・画像編集ツール：GIMP 2.6
-	・テキストエディタ：Mery、Notepad++、サクラエディタ、Kate
+	・テキストエディタ：Mery、Notepad++、Kate
 	・Gitクライアント：Cygwin GIT
 
 
@@ -78,13 +78,15 @@
 
 	・Hot Soup Processor 本体 (http://hsp.tv/)
 	・p2b.dll (http://www.geocities.jp/anachronism128/)
-	・hmm.dll (http://hsp.tv/make/tool3.html)
 	・hspcksum.dll (https://github.com/MihailJP/HSPCkSum/downloads)
 	・l_tooltips.as (http://lhsp.s206.xrea.com/hsp_object6.html)
 	・mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
 	・cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
 	・Lua スタティックライブラリ (http://luabinaries.sourceforge.net/download.html)
 	・Ruby 処理系 (http://www.ruby-lang.org/ja/downloads/)
+	・Lua スタティックライブラリ (http://luabinaries.sourceforge.net/download.html)
+	・libogg/libvorbis (http://www.xiph.org/downloads/)
+	・GuruGuruSMF (http://gurugurusmf.migmig.net/)
 
 
 ■ ライセンスについて
