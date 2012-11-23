@@ -56,7 +56,7 @@ void sound::WaveData::Prepare(const std::string& filename) {
 	try {
 		ReadWaveData(file);
 	} catch (std::string&) {
-		debug("'fmt ' チャンクの直後が 'daata' チャンクではありません");
+		debug("'fmt ' チャンクの直後が 'data' チャンクではありません");
 		file.seekg(-4, std::ios_base::cur);
 		if (!checkTag(file, "fact")) throw std::string("factチャンクがないです");
 		debug("'fact' チャンクを無視します");
