@@ -56,8 +56,12 @@ Global
 		{7B39960B-D346-465D-A9D0-8FDA45A62664}.Release(Wide)|Win32.Build.0 = Release(Wide)|Win32
 		{7B39960B-D346-465D-A9D0-8FDA45A62664}.Release|Win32.ActiveCfg = Release|Win32
 		{7B39960B-D346-465D-A9D0-8FDA45A62664}.Release|Win32.Build.0 = Release|Win32
+		{7CC2860A-273F-4908-8235-1EC880D13346}.Debug(Wide)|Win32.ActiveCfg = Debug(Wide)|Win32
+		{7CC2860A-273F-4908-8235-1EC880D13346}.Debug(Wide)|Win32.Build.0 = Debug(Wide)|Win32
 		{7CC2860A-273F-4908-8235-1EC880D13346}.Debug|Win32.ActiveCfg = Debug|Win32
 		{7CC2860A-273F-4908-8235-1EC880D13346}.Debug|Win32.Build.0 = Debug|Win32
+		{7CC2860A-273F-4908-8235-1EC880D13346}.Release(Wide)|Win32.ActiveCfg = Release(Wide)|Win32
+		{7CC2860A-273F-4908-8235-1EC880D13346}.Release(Wide)|Win32.Build.0 = Release(Wide)|Win32
 		{7CC2860A-273F-4908-8235-1EC880D13346}.Release|Win32.ActiveCfg = Release|Win32
 		{7CC2860A-273F-4908-8235-1EC880D13346}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
