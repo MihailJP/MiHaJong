@@ -50,7 +50,7 @@
 #deffunc bgmplay int id
 	bgmstop
 	snd_play id
-	if (stat) {info strf("BGM [%d] ”Ô‚ğÄ¶‚µ‚Ü‚·B", id)}
+	if (stat == 0) {info strf("BGM [%d] ”Ô‚ğÄ¶‚µ‚Ü‚·B", id)}
 	else {warn strf("BGM [%d] ”Ô‚ğÄ¶‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½B", id)}
 	return
 #global
