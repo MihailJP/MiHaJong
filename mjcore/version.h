@@ -2,14 +2,14 @@
 #define VERSION_H
 
 #define MIHAJONG_MAJOR_VER 1
-#define MIHAJONG_MINOR_VER 8
-#define MIHAJONG_PATCH_VER 7
-#define MIHAJONG_VER "1.8.7"
+#define MIHAJONG_MINOR_VER 9
+#define MIHAJONG_PATCH_VER 0
+#define MIHAJONG_VER "1.9.0"
 
 #define MJCORE_MAJOR_VER 1
-#define MJCORE_MINOR_VER 8
-#define MJCORE_PATCH_VER 7
-#define MJCORE_VER "1.8.7"
+#define MJCORE_MINOR_VER 9
+#define MJCORE_PATCH_VER 0
+#define MJCORE_VER "1.9.0"
 
 #define LOGGER_MAJOR_VER 1
 #define LOGGER_MINOR_VER 6
@@ -25,5 +25,10 @@
 #define SOCKET_MINOR_VER 8
 #define SOCKET_PATCH_VER 0
 #define SOCKET_VER "1.8.0"
+
+#define SOUND_MAJOR_VER 1
+#define SOUND_MINOR_VER 9
+#define SOUND_PATCH_VER 0
+#define SOUND_VER "1.9.0"
 
 #endif

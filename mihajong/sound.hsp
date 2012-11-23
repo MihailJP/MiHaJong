@@ -4,83 +4,55 @@
  *=============================
  */
 
-/* DirectX Audio周りの命令はモジュールにするとうまく動作しない。どういうことなの… */
+#module
+#include "const.hsp"
+#include "sounddll.hsp"
 
 /* BGM読み込み */
-*_bgmload
+#deffunc bgmload int id, str filename, int looped
+	bgmmode(id) = 0
 	exist "bgm\\"+filename+".ogg"
 	if (strsize >= 0) {
-		dsoggloadfnamethread "bgm\\"+filename+".ogg", bgmid, 1
-		if (stat) {
-			info strf("BGMファイル [%s.ogg] の読み込みを開始します。", filename)
-			repeat
-				dsoggloadingcheck bgmid
-				if (stat == 0) {
-					info strf("BGMファイル [%s.ogg] の読み込みを完了しました。", filename)
-					break
-				}
-				await 0
-			loop
+		snd_loadvorbis id, "bgm\\"+filename+".ogg", looped
+		if (stat == 0) {
+			info strf("BGMファイル [%s.ogg] の読み込みを完了しました。", filename)
+			bgmmode(id) = 1
 		} else {warn strf("BGMファイル [%s.ogg] の読み込みに失敗しました。", filename)}
-		bgmmode(bgmid) = 1
 	}
 	else {
 		info strf("BGMファイル [%s.ogg] はありません。", filename)
-		dmloadfname "bgm\\"+filename+".mid", bgmid: await 0
-		if (stat) {info strf("BGMファイル [%s.mid] を読み込みました。", filename)}
+		snd_loadmidi id, "bgm\\"+filename+".mid", looped: await 0
+		if (stat == 0) {
+			info strf("BGMファイル [%s.mid] を読み込みました。", filename)
+			bgmmode(id) = 2
+		}
 		else {warn strf("BGMファイル [%s.mid] の読み込みに失敗しました。", filename)}
-		bgmmode(bgmid) = 0
 	}
 	return
 
-*_soundload
-	dsloadfname filename, soundid, 0, 1
-	if (stat) {info strf("音声ファイル [%s] を読み込みました。", filename)}
+/* サウンド読み込み */
+#deffunc soundload int id, str filename, int looped
+	snd_loadwave id, filename, looped
+	if (stat == 0) {info strf("音声ファイル [%s] を読み込みました。", filename)}
 	else {warn strf("音声ファイル [%s] の読み込みに失敗しました。", filename)}
 	await 0
 	return
 
-/* ＢＧＭ再生 */
-*_bgmplay
-	bgmloopcount=15: bgmloopflag=1: gosub *bgmplay_main
-return
-
-*_bgmplay_short
-	bgmloopcount=7: bgmloopflag=1: gosub *bgmplay_main
-return
-
-*_bgmplay_norep
-	bgmloopcount=0: bgmloopflag=0: gosub *bgmplay_main
-return
-
-*bgmplay_main
-	dmstop
-	if (stat) {info "MIDI BGM再生を停止しました。"}
-	else {warn "MIDI BGM再生を停止できませんでした。"}
-	await 0
+/* BGM停止 */
+#deffunc bgmstop
+	info "BGM再生を停止します。"
 	repeat BGM_END-BGM_START+1, BGM_START
-		tmpbgmnum = cnt
-		if (bgmmode(tmpbgmnum) == 1) {
-			dscheckplay tmpbgmnum
-			if (stat == 1) {
-				dsstop tmpbgmnum
-				if (stat) {info strf("OGG BGM [%d] 番を停止しました。", tmpbgmnum)}
-				else {warn strf("OGG BGM [%d] 番を停止できませんでした。", tmpbgmnum)}
-			}
+		if (bgmmode(cnt) != 0) {
+			snd_stop cnt
 		}
 	loop
-	if (bgmmode(bgmcode) == 1) {
-		dsplay bgmcode, bgmloopflag
-		if (stat) {info strf("OGG BGM [%d] 番を再生します。", bgmcode)}
-		else {warn strf("OGG BGM [%d] 番を再生できませんでした。", bgmcode)}
-	} else {
-		dmplay bgmloopcount, bgmcode
-		if (stat) {info strf("MIDI BGM [%d] 番を再生します。", bgmcode)}
-		else {warn strf("MIDI BGM [%d] 番を再生できませんでした。", bgmcode)}
-	}
-return
+	return
 
-*_bgmstop
-	dmstop
-return
-
+/* ＢＧＭ再生 */
+#deffunc bgmplay int id
+	bgmstop
+	snd_play id
+	if (stat == 0) {info strf("BGM [%d] 番を再生します。", id)}
+	else {warn strf("BGM [%d] 番を再生できませんでした。", id)}
+	return
+#global

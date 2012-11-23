@@ -6,15 +6,8 @@
 #include <commctrl.h>
 #include <richedit.h>
 #include "resource.h"
-#include "version.h"
+#include "../mjcore/version.h"
 
-
-
-
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-IDR_LZMA_STREA1    LZMA_STREAM    "data\\mentz.dat.lzma"
-IDR_LZMA_STREA2    LZMA_STREAM    "data\\confitem.csv.lzma"
-IDR_LZMA_STREA3    LZMA_STREAM    "data\\confitem.ini.lzma"
 
 
 
@@ -23,7 +16,7 @@ IDR_LZMA_STREA3    LZMA_STREAM    "data\\confitem.ini.lzma"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     MJCORE_MAJOR_VER,MJCORE_MINOR_VER,MJCORE_PATCH_VER,0
+    FILEVERSION     SOUND_MAJOR_VER,SOUND_MINOR_VER,SOUND_PATCH_VER,0
     PRODUCTVERSION  MIHAJONG_MAJOR_VER,MIHAJONG_MINOR_VER,MIHAJONG_PATCH_VER,0
     FILEOS          VOS_NT_WINDOWS32
     FILETYPE        VFT_DLL
@@ -41,12 +34,16 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Comments", ""
             VALUE "CompanyName", ""
-            VALUE "FileDescription", "MiHaJong core module"
-            VALUE "FileVersion", MJCORE_VER
-            VALUE "InternalName", "mjcore"
-            VALUE "LegalCopyright", "Copyright (c) 2008-2012 MihailJP Part of rights reserved.\nLZMA SDK by Igor Pavlov, under public domain.\nLua interpreter Copyright (C) 1994-2012 Lua.org, PUC-Rio."
+            VALUE "FileDescription", "MiHaJong sound manipulation library"
+            VALUE "FileVersion", SOUND_VER
+            VALUE "InternalName", "socket"
+#ifdef VORBIS_SUPPORT
+            VALUE "LegalCopyright", "Copyright (c) 2008-2012 MihailJP Part of rights reserved.\nLibogg Copyright (c) 2002, Xiph.org Foundation\nLibvorbis Copyright (c) 2002-2008 Xiph.org Foundation"
+#else
+            VALUE "LegalCopyright", "Copyright (c) 2008-2012 MihailJP Part of rights reserved."
+#endif
             VALUE "LegalTrademarks", ""
-            VALUE "OriginalFilename", "mjcore.dll"
+            VALUE "OriginalFilename", "socket.dll"
             VALUE "PrivateBuild", ""
             VALUE "ProductName", "MiHaJong"
             VALUE "ProductVersion", MIHAJONG_VER

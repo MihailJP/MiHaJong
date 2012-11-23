@@ -53,7 +53,7 @@
 	return
 
 *modesel5
-	dsplay SND_BUTTON
+	snd_play SND_BUTTON
 	setPlayerName GameEnv, 0, "[a]COM1"
 	setPlayerName GameEnv, 1, "[b]COM2"
 	setPlayerName GameEnv, 2, "[c]COM3"
@@ -64,7 +64,7 @@
 	return
 
 *modesel1
-	dsplay SND_BUTTON
+	snd_play SND_BUTTON
 	gosub *entername
 	setPlayerName GameEnv, 0, "[A]"+InputPlayerName
 	setPlayerName GameEnv, 1, "[b]COM1"
@@ -75,7 +75,7 @@
 	return
 
 *modesel2
-	dsplay SND_BUTTON
+	snd_play SND_BUTTON
 	gosub *entername
 	setGameMode GameEnv, GAMEMODE_SERVER
 	ServerAddress = ""
@@ -108,12 +108,12 @@
 return
 
 *modesel2s
-	dsplay SND_BUTTON
+	snd_play SND_BUTTON
 	s_server_dostart
 	return
 
 *modesel3
-	dsplay SND_BUTTON
+	snd_play SND_BUTTON
 	gosub *entername
 	redraw 0
 	showbackground
@@ -186,12 +186,12 @@ return
 	return
 
 *modesel3c
-	dsplay SND_BUTTON
+	snd_play SND_BUTTON
 	ServerSelected = 1
 	return
 
 *modesel4
-	dsplay SND_BUTTON
+	snd_play SND_BUTTON
 	goto *cleanup@
 
 /* –¼‘O‚Ì“ü—Í */
@@ -233,7 +233,7 @@ return
 return
 
 *nameentered
-	dsplay SND_BUTTON
+	snd_play SND_BUTTON
 	nameenteredflag = 1
 return
 

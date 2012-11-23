@@ -4,3 +4,4 @@ msbuild mjcore.sln /p:Configuration=Release
 copy Release\mjcore.dll ..\mihajong\
 copy Release\astro.dll ..\mihajong\
 copy Release\socket.dll ..\mihajong\
+copy Release\sound.dll ..\mihajong\

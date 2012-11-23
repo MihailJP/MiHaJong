@@ -328,10 +328,10 @@ return
 	repeat 10 // ÊŒÇêUÇÈ
 		setDice GameStat, 0, 0, rnd(6)+1: setDice GameStat, 1, 0, rnd(6)+1
 		setDice GameStat, 0, 1, rnd(2): setDice GameStat, 1, 1, rnd(2)
-		dsplay SND_SAIKORO
+		snd_play SND_SAIKORO
 		redrdice GameStat, GameEnv: await 80
 	loop
-	dsplay SND_SAIKORO
+	snd_play SND_SAIKORO
 	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
 		repeat
 			clientreceive ClientReceived, ReceivedMsg
@@ -414,7 +414,7 @@ return
 		}
 		if (cnt\4 == 3) {
 			calcdoukasen GameStat
-			dsplay SND_TSUMO
+			snd_play SND_TSUMO
 			redrscreen: await 250
 		}
 	loop
@@ -435,16 +435,16 @@ return
 #endif
 		incDrawPointer GameStat
 		calcdoukasen GameStat
-		dsplay SND_TSUMO
+		snd_play SND_TSUMO
 		redrscreen: await 250
 	loop
 
 	initdora GameStat // ÉhÉâÇÇﬂÇ≠ÇÈ
 
-	dsplay SND_MEKURI
+	snd_play SND_MEKURI
 	//setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, 0
 	haifurechaipai GameStat
 	statmes ""
 	repeat NUM_OF_PLAYERS: lipai GameStat, cnt: loop
-	dsplay SND_BELL
+	snd_play SND_BELL
 return
