@@ -127,7 +127,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			RuleData::chkRule("red_eight", "no") && RuleData::chkRule("red_nine", "no") &&
 			RuleData::chkRule("red_west", "no") && RuleData::chkRule("red_north", "no"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_("–å“DŒö"), get_yaku_han("akadora_all"),
+				_T("–å“DŒö"), get_yaku_han("akadora_all"),
 				[countRed](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return (analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // ‰½‚©‚Ìè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
 						(countRed(analysis) == 4u); // Ôƒhƒ‰‚ª4–‡‚Å‚ ‚é
