@@ -50,13 +50,16 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;MIDI_SUPPORT;VORBIS_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(DXSDK_DIR)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -67,6 +70,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;MIDI_SUPPORT;VORBIS_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(DXSDK_DIR)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -75,6 +79,9 @@
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GuruGuruSMF\GuruGuruSMF4_Cpp_Static.cpp" />
