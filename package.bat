@@ -22,8 +22,6 @@ mkdir release\mihajong\img
 copy mihajong\img\*.* release\mihajong\img
 mkdir release\mihajong\sound
 copy mihajong\sound\*.* release\mihajong\sound
-call archive_source.bat
-copy source.zip release\mihajong
 del /q mihajong.zip
 cd release
 "C:\Program Files\7-zip\7z.exe" a -mx=9 ..\mihajong.zip mihajong
