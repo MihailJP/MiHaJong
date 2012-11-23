@@ -113,7 +113,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			RuleData::chkRule("red_eight", "no") && RuleData::chkRule("red_nine", "no") &&
 			RuleData::chkRule("red_west", "no") && RuleData::chkRule("red_north", "no"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				"赤ドラ三色", get_yaku_han("akadora_all"),
+				_T("赤ドラ三色"), get_yaku_han("akadora_all"),
 				[countRed](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return (analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // 何かの手で和了になっている
 						(countRed(analysis) == 3u); // 赤ドラが3枚である
@@ -127,7 +127,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			RuleData::chkRule("red_eight", "no") && RuleData::chkRule("red_nine", "no") &&
 			RuleData::chkRule("red_west", "no") && RuleData::chkRule("red_north", "no"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				"門泥公", get_yaku_han("akadora_all"),
+				_("門泥公"), get_yaku_han("akadora_all"),
 				[countRed](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return (analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // 何かの手で和了になっている
 						(countRed(analysis) == 4u); // 赤ドラが4枚である

@@ -257,7 +257,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	/* ‘g‡—´ */
 	if (RuleData::chkRuleApplied("zuhelong"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			"‘g‡—´", get_yaku_han("zuhelong"),
+			_T("‘g‡—´"), get_yaku_han("zuhelong"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->shanten[ShantenAnalyzer::shantenZuhelong] == -1);
 			}
