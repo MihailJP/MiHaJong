@@ -8,8 +8,8 @@
 
 #define MJCORE_MAJOR_VER 1
 #define MJCORE_MINOR_VER 8
-#define MJCORE_PATCH_VER 6
-#define MJCORE_VER "1.8.6"
+#define MJCORE_PATCH_VER 7
+#define MJCORE_VER "1.8.7"
 
 #define LOGGER_MAJOR_VER 1
 #define LOGGER_MINOR_VER 6
