@@ -41,7 +41,7 @@
 	info "BGMÄ¶‚ğ’â~‚µ‚Ü‚·B"
 	repeat BGM_END-BGM_START+1, BGM_START
 		if (bgmmode(cnt) != 0) {
-			snd_stop tmpbgmnum
+			snd_stop cnt
 		}
 	loop
 	return
