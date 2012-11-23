@@ -6,13 +6,12 @@ Run on Windows XP/Vista/7 with Direct X 9+
 Build-time requirements are:
 - Hot Soup Processor (http://hsp.tv/)
 - p2b.dll (http://www.geocities.jp/anachronism128/)
-- hmm.dll (http://hsp.tv/make/tool3.html)
 - l_tooltips.as (http://lhsp.s206.xrea.com/hsp_object6.html)
 - mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
 - cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
-- GuruGuruSMF (Windows only, http://gurugurusmf.migmig.net/)
 - Visual C++ (because of compiler-specific DLL export name)
 - libogg and libvorbis (http://www.xiph.org/downloads/)
+- GuruGuruSMF (Windows only, http://gurugurusmf.migmig.net/)
 - Lua static link library
 - Ruby interpreter
 
