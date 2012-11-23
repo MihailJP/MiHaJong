@@ -88,9 +88,13 @@
   <ItemGroup>
     <ClInclude Include="GuruGuruSMF\GuruGuruSMF4_Cpp.h" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="snddata.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="soundobj.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ver.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
