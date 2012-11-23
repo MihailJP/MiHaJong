@@ -150,7 +150,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		lipai(gameStat, kangPlayer);
 		break;
 	case FuuroNorth: /* 三麻抜きドラ */
-		/* TODO: 効果音を鳴らす dsplay@ VOX_FLOWER */
+		sound::Play(sound::IDs::voxFlower);
 		++(gameStat->Player[kangPlayer].NorthFlag);
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].tile = NoTile;
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].red = Normal;
@@ -161,7 +161,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 			gameStat->Player[i].FirstDrawFlag = false;
 		break;
 	case FuuroFlower: /* 花牌 */
-		/* TODO: 効果音を鳴らす dsplay@ VOX_FLOWER */
+		sound::Play(sound::IDs::voxFlower);
 		switch (gameStat->CurrentDiscard.tile) {
 			case Spring:        gameStat->Player[kangPlayer].FlowerFlag.Spring = true; break;
 			case Summer:        gameStat->Player[kangPlayer].FlowerFlag.Summer = true; break;
@@ -219,7 +219,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		/* 理牌する */
 		lipai(gameStat, kangPlayer);
 		/* ポンを宣言する */
-		/* TODO: 効果音を鳴らす dsplay@ VOX_PON */
+		sound::Play(sound::IDs::voxPon);
 		/* TODO: 発声 setCall getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), "ポン"*/
 		/* 喰い替えの判定に使う変数を設定 */
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
@@ -262,7 +262,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		/* 自動理牌 */
 		lipai(gameStat, kangPlayer);
 		/* チーを宣言 */
-		/* TODO: 効果音を鳴らす dsplay@ VOX_CHI */
+		sound::Play(sound::IDs::voxChi);
 		/* TODO: 発声 setCall getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), "チー" */
 		/* 喰い替え判定用の変数を指定 */
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
@@ -297,7 +297,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 	/* カンを宣言、天和や地和のフラグが立っていれば降ろす */
 	if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
 		gameStat->TianHuFlag = false;
-		/* TODO: 効果音を鳴らす dsplay@ VOX_KAN */
+		sound::Play(sound::IDs::voxKan);
 		/* TODO: 発声 setCall kangPlayer, "カン" */
 		lipai(gameStat, kangPlayer);
 		for (PLAYER_ID i = 0; i < PLAYERS; i++)
@@ -377,17 +377,14 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 		gameStat->Player[kangPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->Deck[gameStat->RinshanPointer].tile;
 		gameStat->Player[kangPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].red = gameStat->Deck[gameStat->RinshanPointer].red;
 		--gameStat->RinshanPointer;
-		/* TODO: 効果音を鳴らす
-		dsplay@ SND_TSUMO
-		if (tilesLeft(GameStat) < 10) {
-			dsplay@ SND_COUNTDOWN
-		}
-		*/
+		sound::Play(sound::IDs::sndTsumo);
+		if (tilesLeft(gameStat) < 10)
+			sound::Play(sound::IDs::sndCountdown);
 		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
 			/* 槓ドラをめくる */
 			if (RuleData::chkRuleApplied("kandora")) {
 				gameStat->DoraPointer -= 2;
-				/* TODO: 効果音を鳴らす dsplay@ SND_MEKURI */
+				sound::Play(sound::IDs::sndMekuri);
 				setdora(gameStat, 0); // 表ドラを設定する
 				if (RuleData::chkRuleApplied("kandora") && RuleData::chkRuleApplied("uradora")) {
 					setdora(gameStat, 1); // 裏ドラを設定する

@@ -4,12 +4,14 @@
 #ifdef MJCORE_EXPORTS
 #include <sstream>
 #include <cassert>
+#include "../sound/sound.h"
 #include "strcode.h"
 #include "logging.h"
 #include "haifu.h"
 #include "ruletbl.h"
 #include "tileutil.h"
 #include "discard.h"
+#include "bgmid.h"
 #endif
 #include "gametbl.h"
 #include "endtype.h"
