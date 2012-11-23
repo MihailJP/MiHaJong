@@ -8,6 +8,7 @@
 #module FINIS
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "sounddll.hsp"
 #deffunc endgame var GameStat, var GameEnv, int origTurn, int origHonba
 	calcRank Rank, GameStat
 	chatappend "-------------\n*** èIóπ\n"
@@ -37,21 +38,21 @@
 		setCall cnt, ""
 	loop
 	setCenterTitle "èIóπ"
-	dsplay@ SND_PAGE: redrscreen: await 500
+	snd_play SND_PAGE: redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 1) {setCall cnt, "ÇPà "}
-	loop: dsplay@ SND_TYPE: redrscreen: await 500
+	loop: snd_play SND_TYPE: redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 2) {setCall cnt, "ÇQà "}
-	loop: dsplay@ SND_TYPE: redrscreen: await 500
+	loop: snd_play SND_TYPE: redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 3) {setCall cnt, "ÇRà "}
 #ifndef SANMAT
-	loop: dsplay@ SND_TYPE: redrscreen: await 500
+	loop: snd_play SND_TYPE: redrscreen: await 500
 	repeat NUM_OF_ACTUAL_PLAYERS
 		if (Rank(cnt) == 4) {setCall cnt, "ÇSà "}
 #endif
-	loop: dsplay@ SND_TYPE: redrscreen: await 3000
+	loop: snd_play SND_TYPE: redrscreen: await 3000
 	if (getDeposit(GameStat)) {
 		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 		repeat NUM_OF_PLAYERS
@@ -507,7 +508,7 @@
 			}
 		loop
 	loop
-	dsplay@ SND_YAKULST2: redrscreen
+	snd_play SND_YAKULST2: redrscreen
 	redraw 1
 	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {s_hangup@ SOCK_GAME+0: s_hangup@ SOCK_CHAT+0: s_hangup@ SOCK_CHAT+1: s_hangup@ SOCK_CHAT+2: s_hangup@ SOCK_CHAT+3}
 	if (getGameMode(GameEnv) == GAMEMODE_SERVER) {s_hangup@ SOCK_GAME+1: s_hangup@ SOCK_GAME+2: s_hangup@ SOCK_GAME+3}
@@ -521,7 +522,7 @@
 #global
 
 *finishbtn
-	dsplay@ SND_BUTTON
+	snd_play SND_BUTTON
 	closingchat : chatwnd 0
 	await 10
 	buttonPressed = 1

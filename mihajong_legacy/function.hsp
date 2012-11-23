@@ -101,19 +101,12 @@ return
 *cleanup
 	gsel SCR_CHAT, -1
 	gsel 0, -1
-	dmstop: dmend
-	info "DirectMusic を解放しました。"
-	repeat SND_END-SND_START+1
-		dsstop cnt+SND_START
-	loop
-	repeat VOX_END-VOX_START+1
-		dsstop cnt+VOX_START
-	loop
-	dsend
-	info "DirectSound を解放しました。"
+	snd_cleanup
+	info "サウンドDLLを解放しました。"
 	repeat NUM_OF_PLAYERS
 		s_hangup SOCK_GAME+cnt
 		s_hangup SOCK_CHAT+cnt
 	loop
 	s_bye
+	info "ソケットDLLを解放しました。"
 	end

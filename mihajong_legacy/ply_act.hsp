@@ -8,6 +8,7 @@
 #include "const.hsp"
 #include "mjcore.hsp"
 #include "socket.hsp"
+#include "sounddll.hsp"
 /* プレイヤーの打牌 */
 #deffunc playerdahai var GameStat, var GameEnv
 	dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 // 起家でのバグ防止用に仮初期化
@@ -42,7 +43,7 @@
 		if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {clientsend 0x6d}
 		return DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX // リーチ後は自動的にツモ切り
 	}
-	if (getHeavenHandFlag(GameStat) == 0) {dsplay@ SND_BELL}
+	if (getHeavenHandFlag(GameStat) == 0) {snd_play SND_BELL}
 	// リーチ後、和了りを見逃すかどうか
 	if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) > RIICHI_NO) {
 		repeat NUM_OF_TILES_IN_HAND-1
@@ -143,7 +144,7 @@
 		if ((ginfo(2) == 0)&&(mode == 0)) {
 			if (clickflag & 512) {
 				if (getHand(GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) != 0) {
-					dsplay@ SND_CLICK
+					snd_play SND_CLICK
 					vanish2@
 					SelectedTile = DAHAI_TYPE_NORMAL+TSUMOHAI_INDEX
 				}
@@ -154,7 +155,7 @@
 		TimeLeft = ((15000-(TurnTime - StartTurn))/1000)+1
 		if (((TurnTime - StartTurn)/1000) != tmpClockTime) {
 			if (TurnTime-StartTurn >= 10000) {
-				dsplay@ SND_CLOCK
+				snd_play SND_CLOCK
 				tmpClockTime = (TurnTime - StartTurn)/1000
 			}
 		}
@@ -440,7 +441,7 @@ return DiscardTileIndex
 #endif
 	}
 	if (playerThru == 0) {
-		dsplay@ SND_SIGNAL
+		snd_play SND_SIGNAL
 		objsize 50, 30
 		pos 770, 530: colorbutton gosub "F8/無視", *playerIgnoreNaki, -1, 0xffffff: tooltip@ stat-STATBOX, "捨て牌を通します"
 		stick clickflag: await 0 // バグ防止のため、クリック状態を一旦取得して捨てる
@@ -463,7 +464,7 @@ return DiscardTileIndex
 			stick clickflag
 			if (ginfo(2) == 0) {
 				if (clickflag & 512) {
-					dsplay@ SND_CLICK
+					snd_play SND_CLICK
 					vanish2@: SelectedTile = -90
 				}
 			}
@@ -478,7 +479,7 @@ return DiscardTileIndex
 			}
 			if (((TurnTime - StartTurn)/1000) != tmpClockTime) {
 				if (TurnTime-StartTurn >= 5000) {
-					dsplay@ SND_CLOCK
+					snd_play SND_CLOCK
 					tmpClockTime = (TurnTime - StartTurn)/1000
 				}
 			}
@@ -625,71 +626,71 @@ return
 
 // 牌選択ボタン
 *SelTile01
-	dsplay@ SND_BUTTON: SelectedTile = 0: return
+	snd_play SND_BUTTON: SelectedTile = 0: return
 *SelTile02
-	dsplay@ SND_BUTTON: SelectedTile = 1: return
+	snd_play SND_BUTTON: SelectedTile = 1: return
 *SelTile03
-	dsplay@ SND_BUTTON: SelectedTile = 2: return
+	snd_play SND_BUTTON: SelectedTile = 2: return
 *SelTile04
-	dsplay@ SND_BUTTON: SelectedTile = 3: return
+	snd_play SND_BUTTON: SelectedTile = 3: return
 *SelTile05
-	dsplay@ SND_BUTTON: SelectedTile = 4: return
+	snd_play SND_BUTTON: SelectedTile = 4: return
 *SelTile06
-	dsplay@ SND_BUTTON: SelectedTile = 5: return
+	snd_play SND_BUTTON: SelectedTile = 5: return
 *SelTile07
-	dsplay@ SND_BUTTON: SelectedTile = 6: return
+	snd_play SND_BUTTON: SelectedTile = 6: return
 *SelTile08
-	dsplay@ SND_BUTTON: SelectedTile = 7: return
+	snd_play SND_BUTTON: SelectedTile = 7: return
 *SelTile09
-	dsplay@ SND_BUTTON: SelectedTile = 8: return
+	snd_play SND_BUTTON: SelectedTile = 8: return
 *SelTile10
-	dsplay@ SND_BUTTON: SelectedTile = 9: return
+	snd_play SND_BUTTON: SelectedTile = 9: return
 *SelTile11
-	dsplay@ SND_BUTTON: SelectedTile = 10: return
+	snd_play SND_BUTTON: SelectedTile = 10: return
 *SelTile12
-	dsplay@ SND_BUTTON: SelectedTile = 11: return
+	snd_play SND_BUTTON: SelectedTile = 11: return
 *SelTile13
-	dsplay@ SND_BUTTON: SelectedTile = 12: return
+	snd_play SND_BUTTON: SelectedTile = 12: return
 *SelTile14
-	dsplay@ SND_BUTTON: SelectedTile = TSUMOHAI_INDEX: return
+	snd_play SND_BUTTON: SelectedTile = TSUMOHAI_INDEX: return
 
 *playerRichi
-	dsplay@ SND_BUTTON: SelectedTile = -98: return
+	snd_play SND_BUTTON: SelectedTile = -98: return
 
 *playerTsumoAgari
-	dsplay@ SND_BUTTON: SelectedTile = -97: return
+	snd_play SND_BUTTON: SelectedTile = -97: return
 
 *playerAnkan
-	dsplay@ SND_BUTTON: SelectedTile = -96: return
+	snd_play SND_BUTTON: SelectedTile = -96: return
 
 *playerKyushu
-	dsplay@ SND_BUTTON: SelectedTile = -95: return
+	snd_play SND_BUTTON: SelectedTile = -95: return
 
 *playerFlower
-	dsplay@ SND_BUTTON: SelectedTile = -94: return
+	snd_play SND_BUTTON: SelectedTile = -94: return
 
 *playerOpenRichi
-	dsplay@ SND_BUTTON: SelectedTile = -93: return
+	snd_play SND_BUTTON: SelectedTile = -93: return
 
 *playerIgnoreNaki
-	dsplay@ SND_BUTTON: SelectedTile = -90: return
+	snd_play SND_BUTTON: SelectedTile = -90: return
 
 *playerRonAgari
-	dsplay@ SND_BUTTON: SelectedTile = -89: return
+	snd_play SND_BUTTON: SelectedTile = -89: return
 
 *playerPon
-	dsplay@ SND_BUTTON: SelectedTile = -88: return
+	snd_play SND_BUTTON: SelectedTile = -88: return
 
 #ifndef ALLSANMA
 *playerChi1
-	dsplay@ SND_BUTTON: SelectedTile = -87: return
+	snd_play SND_BUTTON: SelectedTile = -87: return
 *playerChi2
-	dsplay@ SND_BUTTON: SelectedTile = -86: return
+	snd_play SND_BUTTON: SelectedTile = -86: return
 *playerChi3
-	dsplay@ SND_BUTTON: SelectedTile = -85: return
+	snd_play SND_BUTTON: SelectedTile = -85: return
 #endif
 
 *playerMinkan
-	dsplay@ SND_BUTTON: SelectedTile = -84: return
+	snd_play SND_BUTTON: SelectedTile = -84: return
 
 #global

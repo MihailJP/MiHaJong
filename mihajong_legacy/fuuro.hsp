@@ -8,6 +8,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "sounddll.hsp"
 #deffunc fuuroproc var GameStat, var GameEnv, var RoundEndType, int DiscardTileIndex, int Mode
 	info strf("副露の処理を開始します。モード [%d]", Mode)
 	switch Mode
@@ -160,7 +161,7 @@
 			swbreak
 #ifdef SANMAX
 		case FUURO_NORTH: /* 三麻抜きドラ */
-			dsplay@ VOX_FLOWER
+			snd_play VOX_FLOWER
 			addNorthFlag GameStat, kangPlayer
 			setHand GameStat, HAND_TILECODE, DiscardTileIndex-DAHAI_TYPE_FLOWER, kangPlayer, 0
 			setHand GameStat, HAND_REDTILE, DiscardTileIndex-DAHAI_TYPE_FLOWER, kangPlayer, 0
@@ -173,7 +174,7 @@
 			swbreak
 #else
 		case FUURO_FLOWER: /* 花牌 */
-			dsplay@ VOX_FLOWER
+			snd_play VOX_FLOWER
 			switch getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
 				case TILE_SPRING: setFlowerFlag GameStat, kangPlayer, FLOWER_SPRING: swbreak
 				case TILE_SUMMER: setFlowerFlag GameStat, kangPlayer, FLOWER_SUMMER: swbreak
@@ -232,7 +233,7 @@
 			/* 理牌する */
 			lipai GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 			/* ポンを宣言する */
-			dsplay@ VOX_PON
+			snd_play VOX_PON
 			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), "ポン"
 			/* 喰い替えの判定に使う変数を設定 */
 			setPreviousMeld GameStat, PREVMELD_TILECODE, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
@@ -284,7 +285,7 @@
 			/* 自動理牌 */
 			lipai GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
 			/* チーを宣言 */
-			dsplay@ VOX_CHI
+			snd_play VOX_CHI
 			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), "チー"
 			/* 喰い替え判定用の変数を指定 */
 			setPreviousMeld GameStat, PREVMELD_TILECODE, getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
@@ -314,7 +315,7 @@
 	/* カンを宣言、天和や地和のフラグが立っていれば降ろす */
 	if (Mode==FUURO_ANKAN)||(Mode==FUURO_KAKAN)||(Mode==FUURO_DAIMINKAN) {
 		setHeavenHandFlag GameStat, 0
-		dsplay@ VOX_KAN
+		snd_play VOX_KAN
 		setCall kangPlayer, "カン"
 		lipai GameStat, kangPlayer
 		repeat NUM_OF_PLAYERS
@@ -383,15 +384,15 @@
 		setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, kangPlayer, getWall(GameStat, WALL_TILECODE, getRinshanPointer(GameStat))
 		setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, kangPlayer, getWall(GameStat, WALL_REDTILE, getRinshanPointer(GameStat))
 		decRinshanPointer GameStat
-		dsplay@ SND_TSUMO
+		snd_play SND_TSUMO
 		if (tilesLeft(GameStat) < 10) {
-			dsplay@ SND_COUNTDOWN
+			snd_play SND_COUNTDOWN
 		}
 		if (Mode==FUURO_ANKAN)||(Mode==FUURO_KAKAN)||(Mode==FUURO_DAIMINKAN) {
 			/* 槓ドラをめくる */
 			if (chkRule("kandora", "no") == 0) {
 				setDoraPointer GameStat, getDoraPointer(GameStat) - 2
-				dsplay@ SND_MEKURI
+				snd_play SND_MEKURI
 				setdora GameStat, 0 // 表ドラを設定する
 				if (chkRule("kandora", "yes") && chkRule("uradora", "yes")) {
 					setdora GameStat, 1 // 裏ドラを設定する
@@ -466,6 +467,7 @@
 #include "const.hsp"
 #include "mjcore.hsp"
 #include "socket.hsp"
+#include "sounddll.hsp"
 #deffunc ronhuproc var GameStat, var GameEnv
 	RoundEndType = -1
 	info "リアクションを問い合わせます。"
@@ -605,9 +607,9 @@
 			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
 			/* 栄和のサウンドを鳴らす */
 			if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == getPlayer(GameStat)) {
-				dsplay@ VOX_RON_FURIKOMI
+				snd_play VOX_RON_FURIKOMI
 			} else {
-				dsplay@ VOX_RON
+				snd_play VOX_RON
 			}
 			/* 画面更新して戻る */
 			redrscreen

@@ -75,8 +75,7 @@
 	}
 
 /* 音源を初期化 */
-	dminit: if (stat) {info "DirectMusic を初期化しました。"} else {error "DirectMusic の初期化に失敗しました。"}
-	dsinit: if (stat) {info "DirectSound を初期化しました。"} else {error "DirectSound の初期化に失敗しました。"}
+	snd_init: if (stat == 0) {info "サウンドDLLを初期化しました。"} else {error "サウンドDLLの初期化に失敗しました。"}
 
 /* 終了時に音源をクリンナップするための処理 */
 	onexit *cleanup
@@ -116,67 +115,66 @@
 
 /* ＢＧＭを読み込み */
 /* (再生には DirectMusicを使用) */
-	dim bgmmode, 64 // BGMのモードを格納
 	repeat BGM_ROUNDS
-		bgmload strf("bgm%d", cnt+1), cnt
+		bgmload cnt, strf("bgm%d", cnt+1), 1
 	loop
 
 /* ＢＧＭを読み込み（続き） */
-	bgmload "richi1", MUS_RICHI1 // 他家リーチ
-	bgmload "richi2", MUS_RICHI2 // 自家リーチ
-	bgmload "richi3", MUS_RICHI3 // 追っかけリーチ
-	bgmload "opnrichi", MUS_OPENRICHI // オープン立直
-	bgmload "agari1", MUS_AGARI_SELF_1 // 満貫未満、自分の和了
-	bgmload "agari2", MUS_AGARI_SELF_2 // 満貫以上、自分の和了
-	bgmload "agari3", MUS_AGARI_SELF_3 // 役満、自分の和了
-	bgmload "agari4", MUS_AGARI_FURIKOMI_1 // 満貫未満、放銃または被自摸
-	bgmload "agari5", MUS_AGARI_FURIKOMI_2 // 満貫以上、放銃または被自摸
-	bgmload "agari6", MUS_AGARI_FURIKOMI_3 // 役満、放銃または被自摸
-	bgmload "agari7", MUS_AGARI_OTHER_1 // 満貫未満、他家の栄和
-	bgmload "agari8", MUS_AGARI_OTHER_2 // 満貫以上、他家の栄和
-	bgmload "agari9", MUS_AGARI_OTHER_3 // 役満、他家の栄和
-	bgmload "pingju", MUS_RYUUKYOKU // 流局・錯和
-	bgmload "final", MUS_FINAL // オーラス曲
-	bgmload "shibari", MUS_SHIBARI // リャンシバ時の曲
-	bgmload "title", MUS_TITLE
-	bgmload "ending", MUS_ENDING
-	bgmload "ending2", MUS_ENDING2
-	bgmload "ending3", MUS_ENDING3
+	bgmload MUS_RICHI1, "richi1", 1 // 他家リーチ
+	bgmload MUS_RICHI2, "richi2", 1 // 自家リーチ
+	bgmload MUS_RICHI3, "richi3", 1 // 追っかけリーチ
+	bgmload MUS_OPENRICHI, "opnrichi", 1 // オープン立直
+	bgmload MUS_AGARI_SELF_1, "agari1", 0 // 満貫未満、自分の和了
+	bgmload MUS_AGARI_SELF_2, "agari2", 0 // 満貫以上、自分の和了
+	bgmload MUS_AGARI_SELF_3, "agari3", 0 // 役満、自分の和了
+	bgmload MUS_AGARI_FURIKOMI_1, "agari4", 0 // 満貫未満、放銃または被自摸
+	bgmload MUS_AGARI_FURIKOMI_2, "agari5", 0 // 満貫以上、放銃または被自摸
+	bgmload MUS_AGARI_FURIKOMI_3, "agari6", 0 // 役満、放銃または被自摸
+	bgmload MUS_AGARI_OTHER_1, "agari7", 0 // 満貫未満、他家の栄和
+	bgmload MUS_AGARI_OTHER_2, "agari8", 0 // 満貫以上、他家の栄和
+	bgmload MUS_AGARI_OTHER_3, "agari9", 0 // 役満、他家の栄和
+	bgmload MUS_RYUUKYOKU, "pingju", 0 // 流局・錯和
+	bgmload MUS_FINAL, "final", 1 // オーラス曲
+	bgmload MUS_SHIBARI, "shibari", 1 // リャンシバ時の曲
+	bgmload MUS_TITLE, "title", 1
+	bgmload MUS_ENDING, "ending", 1
+	bgmload MUS_ENDING2, "ending2", 1
+	bgmload MUS_ENDING3, "ending3", 1
 
 /* 効果音読み込み(DirectSound使用) */
-	soundload "sound\\dahai1.wav", SND_DAHAI1
-	soundload "sound\\dahai2.wav", SND_DAHAI2
-	soundload "sound\\tsumo.wav", SND_TSUMO
-	soundload "sound\\saikoro.wav", SND_SAIKORO
-	soundload "sound\\bell.wav", SND_BELL
-	soundload "sound\\countdn.wav", SND_COUNTDOWN
-	soundload "sound\\chonbo.wav", SND_CUOHU
-	soundload "sound\\yakulst1.wav", SND_YAKULST1
-	soundload "sound\\yakulst2.wav", SND_YAKULST2
-	soundload "sound\\mekuri.wav", SND_MEKURI
-	soundload "sound\\button.wav", SND_BUTTON
-	soundload "sound\\click.wav", SND_CLICK
-	soundload "sound\\page.wav", SND_PAGE
-	soundload "sound\\type.wav", SND_TYPE
-	soundload "sound\\pingju.wav", SND_PINGJU
-	soundload "sound\\flash.wav", SND_FLASH
-	soundload "sound\\signal.wav", SND_SIGNAL
-	soundload "sound\\clock.wav", SND_CLOCK
+	soundload SND_DAHAI1, "sound\\dahai1.wav", 0
+	soundload SND_DAHAI2, "sound\\dahai2.wav", 0
+	soundload SND_TSUMO, "sound\\tsumo.wav", 0
+	soundload SND_SAIKORO, "sound\\saikoro.wav", 0
+	soundload SND_BELL, "sound\\bell.wav", 0
+	soundload SND_COUNTDOWN, "sound\\countdn.wav", 0
+	soundload SND_CUOHU, "sound\\chonbo.wav", 0
+	soundload SND_YAKULST1, "sound\\yakulst1.wav", 0
+	soundload SND_YAKULST2, "sound\\yakulst2.wav", 0
+	soundload SND_MEKURI, "sound\\mekuri.wav", 0
+	soundload SND_BUTTON, "sound\\button.wav", 0
+	soundload SND_CLICK, "sound\\click.wav", 0
+	soundload SND_PAGE, "sound\\page.wav", 0
+	soundload SND_TYPE, "sound\\type.wav", 0
+	soundload SND_PINGJU, "sound\\pingju.wav", 0
+	soundload SND_FLASH, "sound\\flash.wav", 0
+	soundload SND_SIGNAL, "sound\\signal.wav", 0
+	soundload SND_CLOCK, "sound\\clock.wav", 0
 
 /* 鳴き仕掛け関係の効果音を読み込む */
-	soundload "sound\\chi.wav", VOX_CHI
-	soundload "sound\\pon.wav", VOX_PON
-	soundload "sound\\kan.wav", VOX_KAN
-	soundload "sound\\richi.wav", VOX_RICHI
-	soundload "sound\\agari1.wav", VOX_TSUMO
-	soundload "sound\\agari2.wav", VOX_RON
-	soundload "sound\\kyuushu.wav", VOX_KYUUSHU
-	soundload "sound\\flower.wav", VOX_FLOWER
-	soundload "sound\\kyuushu.wav", VOX_SIKANG
-	soundload "sound\\kyuushu.wav", VOX_SIFENG
-	soundload "sound\\kyuushu.wav", VOX_SANJIAHU
-	soundload "sound\\kyuushu.wav", VOX_SIJIARICHI
-	soundload "sound\\agari2.wav", VOX_RON_FURIKOMI
+	soundload VOX_CHI, "sound\\chi.wav", 0
+	soundload VOX_PON, "sound\\pon.wav", 0
+	soundload VOX_KAN, "sound\\kan.wav", 0
+	soundload VOX_RICHI, "sound\\richi.wav", 0
+	soundload VOX_TSUMO, "sound\\agari1.wav", 0
+	soundload VOX_RON, "sound\\agari2.wav", 0
+	soundload VOX_KYUUSHU, "sound\\kyuushu.wav", 0
+	soundload VOX_FLOWER, "sound\\flower.wav", 0
+	soundload VOX_SIKANG, "sound\\kyuushu.wav", 0
+	soundload VOX_SIFENG, "sound\\kyuushu.wav", 0
+	soundload VOX_SANJIAHU, "sound\\kyuushu.wav", 0
+	soundload VOX_SIJIARICHI, "sound\\kyuushu.wav", 0
+	soundload VOX_RON_FURIKOMI, "sound\\agari2.wav", 0
 
 /* スプラッシュスクリーンをしまう */
 	gsel SCR_SPLASH_WINDOW, -1
