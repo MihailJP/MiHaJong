@@ -5,10 +5,12 @@
  */
 
 #module
+#include "const.hsp"
 #include "sounddll.hsp"
 
 /* BGM“Ç‚Ýž‚Ý */
 #deffunc bgmload int id, str filename, int looped
+	bgmmode(id) = 0
 	exist "bgm\\"+filename+".ogg"
 	if (strsize >= 0) {
 		snd_loadvorbis id, "bgm\\"+filename+".ogg", looped
