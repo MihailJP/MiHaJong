@@ -88,4 +88,50 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 		));
 	}
+	/* 赤ドラを揃える系の役 */
+	if (RuleData::chkRuleApplied("akadora_all")) {
+		auto countRed = [](const MENTSU_ANALYSIS* const analysis) -> unsigned {
+			unsigned red = 0;
+			for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+				if (analysis->PlayerStat->Hand[i].tile == NoTile) continue;
+				else if (analysis->PlayerStat->Hand[i].tile >= TILE_NONFLOWER_MAX) continue;
+				else if (analysis->PlayerStat->Hand[i].red == AkaDora) ++red;
+			}
+			for (int i = 1; i < analysis->PlayerStat->MeldPointer; i++) {
+				auto k = &analysis->PlayerStat->Meld[i];
+				for (int j = 0; j < (k->mstat >= meldQuadConcealed ? 4 : 3); j++) {
+					if (analysis->PlayerStat->Meld[i].red[j] == AkaDora) ++red;
+				}
+			}
+			return red;
+		};
+		/* 赤ドラ三色 */
+		if (RuleData::chkRule("red_one", "no") && RuleData::chkRule("red_two", "no") &&
+			RuleData::chkRule("red_three", "no") && RuleData::chkRule("red_four", "no") &&
+			RuleData::chkRule("red_five", "3tiles") &&
+			RuleData::chkRule("red_six", "no") && RuleData::chkRule("red_seven", "no") &&
+			RuleData::chkRule("red_eight", "no") && RuleData::chkRule("red_nine", "no") &&
+			RuleData::chkRule("red_west", "no") && RuleData::chkRule("red_north", "no"))
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"赤ドラ三色", get_yaku_han("akadora_all"),
+				[countRed](const MENTSU_ANALYSIS* const analysis) -> bool {
+					return (analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // 何かの手で和了になっている
+						(countRed(analysis) == 3u); // 赤ドラが3枚である
+				}
+			));
+		/* 門泥公 */
+		if (RuleData::chkRule("red_one", "no") && RuleData::chkRule("red_two", "no") &&
+			RuleData::chkRule("red_three", "no") && RuleData::chkRule("red_four", "no") &&
+			RuleData::chkRule("red_five", "4tiles") &&
+			RuleData::chkRule("red_six", "no") && RuleData::chkRule("red_seven", "no") &&
+			RuleData::chkRule("red_eight", "no") && RuleData::chkRule("red_nine", "no") &&
+			RuleData::chkRule("red_west", "no") && RuleData::chkRule("red_north", "no"))
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				"門泥公", get_yaku_han("akadora_all"),
+				[countRed](const MENTSU_ANALYSIS* const analysis) -> bool {
+					return (analysis->shanten[ShantenAnalyzer::shantenAll] == -1) && // 何かの手で和了になっている
+						(countRed(analysis) == 4u); // 赤ドラが4枚である
+				}
+			));
+	}
 }

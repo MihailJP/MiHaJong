@@ -59,12 +59,15 @@ public:
 		shantenSyzygy, // 惑星直列
 		shantenQuanbukao, // 全不靠
 		shantenSevenup, // セブンアップ
+		shantenZuhelong, // 組合龍
 	};
 
 	static MJCORE SHANTEN calcShanten(const GameTable* const gameStat, PLAYER_ID playerID, shantenType mode);
 #ifdef MJCORE_EXPORTS
 	static __declspec(dllexport) int calcShanten(const GameTable* const gameStat, int playerID, int mode);
 private:
+	static void setQixingTilePattern(tileCode* const QixingPai, unsigned int pattern);
+	static unsigned int chkMianzi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount, unsigned limit);
 	static SHANTEN calcShantenRegular(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount);
 	static SHANTEN calcShantenChiitoi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount);
 	static SHANTEN calcShantenKokushi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount);
@@ -72,6 +75,7 @@ private:
 	static SHANTEN calcShantenCivilWar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount);
 	static SHANTEN calcShantenSyzygy(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount);
 	static SHANTEN calcShantenSevenup(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount);
+	static SHANTEN calcShantenZuhelong(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount);
 #endif
 
 };
