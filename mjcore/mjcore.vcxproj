@@ -216,6 +216,7 @@
     <ClCompile Include="lzma\LzmaLib.c" />
     <ClCompile Include="lzma\Sha256.c" />
     <ClCompile Include="lzma\Threads.c" />
+    <ClCompile Include="mouda.cpp" />
     <ClCompile Include="prepare.cpp" />
     <ClCompile Include="random.cpp" />
     <ClCompile Include="reader\csv2arry.cpp" />
@@ -278,6 +279,7 @@
     <ClInclude Include="lzma\Threads.h" />
     <ClInclude Include="lzma\Types.h" />
     <ClInclude Include="mjexport.h" />
+    <ClInclude Include="mouda.h" />
     <ClInclude Include="nmrules.h" />
     <ClInclude Include="prepare.h" />
     <ClInclude Include="random.h" />
