@@ -501,16 +501,14 @@ EndType ronhuproc(GameTable* const gameStat) {
 				/* TODO: プレイヤー鳴き選択 playerfuuro GameStat, GameEnv */
 			} else if (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Passive].RemotePlayerFlag == 0) {
 				/* COMが「カンニング」しないように処理 */
-				/* TODO: makesandbox Sandbox, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE) */
+				GameTable* sandbox = makesandBox(gameStat, gameStat->CurrentPlayer.Passive);
 				/* 処理 */
-				aiscript::compfuuro(gameStat);
+				aiscript::compfuuro(sandbox);
 				for (PLAYER_ID j = 0; j < PLAYERS; j++) {
-					/* TODO: 鳴き状態コミット
-					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_RON, cnt)}
-					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_MINKAN, cnt)}
-					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_PON, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_PON, cnt)}
-					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_CHI, cnt)}
-					*/
+					if (!gameStat->Player[j].DeclarationFlag.Ron) gameStat->Player[j].DeclarationFlag.Ron = sandbox->Player[j].DeclarationFlag.Ron;
+					if (!gameStat->Player[j].DeclarationFlag.Kan) gameStat->Player[j].DeclarationFlag.Kan = sandbox->Player[j].DeclarationFlag.Kan;
+					if (!gameStat->Player[j].DeclarationFlag.Pon) gameStat->Player[j].DeclarationFlag.Pon = sandbox->Player[j].DeclarationFlag.Pon;
+					if (gameStat->Player[j].DeclarationFlag.Chi == chiiNone) gameStat->Player[j].DeclarationFlag.Chi = sandbox->Player[j].DeclarationFlag.Chi;
 				}
 			}
 		} else if (i == gameStat->PlayerID) {

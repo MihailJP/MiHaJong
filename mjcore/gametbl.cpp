@@ -1091,7 +1091,7 @@ extern "C" {
 
 	// ---------------------------------------------------------------------
 
-	__declspec(dllexport) void makesandBox(int* const Sandbox, const GameTable* const gameStat, int targetPlayer) {
+	GameTable* makesandBox(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 		/* 卓の状態のサンドボックスを作る */
 		GameTable* const sandbox = &StatSandBox;
 		doInitializeGameTable(sandbox, gameStat->gameType);
@@ -1191,7 +1191,7 @@ extern "C" {
 		sandbox->CurrentPlayer.Agari = gameStat->CurrentPlayer.Agari;
 		sandbox->CurrentPlayer.Furikomi = gameStat->CurrentPlayer.Furikomi;
 
-		*Sandbox = (int)sandbox;
+		return sandbox;
 	}
 
 	// ---------------------------------------------------------------------
