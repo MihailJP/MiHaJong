@@ -147,13 +147,13 @@ void RemoteNaki::thread_client() {
 				gameStat->Player[tmp].DeclarationFlag.Kan = true;
 				break;
 			case Naki_Chii_Lower:
-				gameStat->Player[tmp].DeclarationFlag.Chi = 1;
+				gameStat->Player[tmp].DeclarationFlag.Chi = chiiLower;
 				break;
 			case Naki_Chii_Middle:
-				gameStat->Player[tmp].DeclarationFlag.Chi = 2;
+				gameStat->Player[tmp].DeclarationFlag.Chi = chiiMiddle;
 				break;
 			case Naki_Chii_Upper:
-				gameStat->Player[tmp].DeclarationFlag.Chi = 3;
+				gameStat->Player[tmp].DeclarationFlag.Chi = chiiUpper;
 				break;
 			case Naki_Remote_Disconnect:
 				if (!gameStat->Player[tmp].ConnectionLost)
@@ -230,13 +230,13 @@ void RemoteNaki::checkremotenaki(PLAYER_ID player, int& ReceivedMsg) {
 		gameStat->Player[player].DeclarationFlag.Kan = true;
 		break;
 	case Naki_Chii_Lower:
-		gameStat->Player[player].DeclarationFlag.Chi = 1;
+		gameStat->Player[player].DeclarationFlag.Chi = chiiLower;
 		break;
 	case Naki_Chii_Middle:
-		gameStat->Player[player].DeclarationFlag.Chi = 2;
+		gameStat->Player[player].DeclarationFlag.Chi = chiiMiddle;
 		break;
 	case Naki_Chii_Upper:
-		gameStat->Player[player].DeclarationFlag.Chi = 3;
+		gameStat->Player[player].DeclarationFlag.Chi = chiiUpper;
 		break;
 	}
 	return;

@@ -273,7 +273,7 @@ DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool*
 	CodeConv::tostringstream o;
 	o << "AIの副露判定に入ります。プレイヤー [" << (int)gameStat->CurrentPlayer.Passive << "]";
 	info(o.str().c_str());
-	gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = 0; // リセット
+	gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = chiiNone; // リセット
 	gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Pon =
 		gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Kan =
 		gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Ron = false;
@@ -291,9 +291,9 @@ DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool*
 				case meldRon: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Ron = true; break;
 				case meldKan: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Kan = true; break;
 				case meldPon: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Pon = true; break;
-				case meldChiiLower: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = 1; break;
-				case meldChiiMiddle: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = 2; break;
-				case meldChiiUpper: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = 3; break;
+				case meldChiiLower: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = chiiLower; break;
+				case meldChiiMiddle: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = chiiMiddle; break;
+				case meldChiiUpper: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = chiiUpper; break;
 				default: warn(_T("1番目の返り値が正しくありません。無視します。")); break;
 			}
 		}

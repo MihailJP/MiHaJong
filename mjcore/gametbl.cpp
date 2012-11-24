@@ -867,7 +867,7 @@ extern "C" {
 		switch(Page) {
 			case 0: gameStat->Player[Player].DeclarationFlag.Ron = value; break;
 			case 1: gameStat->Player[Player].DeclarationFlag.Pon = value; break;
-			case 2: gameStat->Player[Player].DeclarationFlag.Chi = (int8_t)value; break;
+			case 2: gameStat->Player[Player].DeclarationFlag.Chi = (ChiiType)value; break;
 			case 3: gameStat->Player[Player].DeclarationFlag.Kan = value; break;
 			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ƒy[ƒW‚ªˆá‚¢‚Ü‚·")); break;
 		}
@@ -879,7 +879,7 @@ extern "C" {
 			gameStat->Player[pl].DeclarationFlag.Ron =
 				gameStat->Player[pl].DeclarationFlag.Pon =
 				gameStat->Player[pl].DeclarationFlag.Kan = false;
-			gameStat->Player[pl].DeclarationFlag.Chi = 0;
+			gameStat->Player[pl].DeclarationFlag.Chi = chiiNone;
 		}
 		return;
 	}

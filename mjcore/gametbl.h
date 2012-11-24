@@ -175,9 +175,12 @@ static_assert(std::is_pod<doraStatBook>::value, "doraStatBook is not POD");
 
 // -------------------------------------------------------------------------
 
+enum ChiiType : int8_t {
+	chiiNone, chiiLower, chiiMiddle, chiiUpper,
+};
 EXPORT_STRUCT DECLFLAG {
 	bool Ron, Kan, Pon;
-	int8_t Chi;
+	ChiiType Chi;
 };
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<DECLFLAG>::value, "DECLFLAG is not POD");

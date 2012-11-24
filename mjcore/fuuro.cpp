@@ -492,7 +492,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 		gameStat->Player[pl].DeclarationFlag.Ron =
 			gameStat->Player[pl].DeclarationFlag.Pon =
 			gameStat->Player[pl].DeclarationFlag.Kan = false;
-		gameStat->Player[pl].DeclarationFlag.Chi = 0;
+		gameStat->Player[pl].DeclarationFlag.Chi = chiiNone;
 	}
 	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
 		if (gameStat->CurrentPlayer.Active != i) {
@@ -547,7 +547,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 			}
 			gameStat->Player[i].DeclarationFlag.Ron = gameStat->Player[i].DeclarationFlag.Pon =
 				gameStat->Player[i].DeclarationFlag.Kan = false;
-			gameStat->Player[i].DeclarationFlag.Chi = 0;
+			gameStat->Player[i].DeclarationFlag.Chi = chiiNone;
 		}
 	}
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */
