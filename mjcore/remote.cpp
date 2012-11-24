@@ -3,7 +3,6 @@
 namespace RemoteAction {
 
 /* Ú‘±æ‚Ì‘Å”v */
-RemoteActionPtr rDahaiProc = {nullptr};
 void proc_abrupt_disconnect(GameTable* const gameStat, PLAYER_ID player) {
 	{
 		gameStat->Player[player].ConnectionLost = true;
@@ -103,18 +102,12 @@ DWORD WINAPI RemoteDahai::thread () {
 	finished = true;
 	return S_OK;
 }
-/* ¡‚Í”–î‚É‚æ‚èŒÄ‚Ño‚µŒ³‚ÅŠÇ—‚µ‚Ä‚¢‚é‚ªAŠ®‘SˆÚA’B¬Œã‚Í¥³‚·‚é—\’è */
-__declspec(dllexport) void remotedahai_begin (GameTable* const gameStat) {
-	rDahaiProc.dahai = new RemoteDahai(gameStat);
-}
-__declspec(dllexport) int remotedahai_isfinished () {
-	return rDahaiProc.dahai->isFinished() ? 1 : 0;
-}
-__declspec(dllexport) int remotedahai_getdiscard () {
-	return rDahaiProc.dahai->get().toSingleInt();
-}
-__declspec(dllexport) void remotedahai_end () {
-	delete rDahaiProc.dahai; rDahaiProc.dahai = nullptr;
+DiscardTileNum remotedahai (GameTable* const gameStat) {
+	RemoteDahai* rDahai = new RemoteDahai(gameStat);
+	while (!rDahai->isFinished()) Sleep(1);
+	DiscardTileNum d = rDahai->get();
+	delete rDahai; rDahai = nullptr;
+	return d;
 }
 
 /* Ú‘±æ‚Ì–Â‚« */

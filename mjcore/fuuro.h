@@ -9,6 +9,7 @@
 #include "logging.h"
 #include "haifu.h"
 #include "ruletbl.h"
+#include "envtbl.h"
 #include "tileutil.h"
 #include "discard.h"
 #include "bgmid.h"

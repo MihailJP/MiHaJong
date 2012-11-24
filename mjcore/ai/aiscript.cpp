@@ -156,19 +156,15 @@ void aiscript::GameStatToLuaTable(lua_State* const L, const GameTable* const gam
 aiscript::detDiscardThread* aiscript::discard_worker = nullptr;
 DiscardTileNum aiscript::discard;
 bool aiscript::finished = false;
-__declspec(dllexport) void aiscript::compdahai_begin(const GameTable* const gameStat) {
+DiscardTileNum aiscript::compdahai(const GameTable* const gameStat) {
 	discard = DiscardTileNum(); finished = false;
 	discard_worker = new detDiscardThread();
 	discard_worker->setprm(gameStat, &discard, &finished);
 	DWORD threadID;
 	HANDLE hThread = CreateThread(nullptr, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
-}
-__declspec(dllexport) int aiscript::compdahai_check() {
-	return finished ? 1 : 0;
-}
-__declspec(dllexport) int aiscript::compdahai() {
+	while (!finished) Sleep(1);
 	delete discard_worker; discard_worker = nullptr;
-	return discard.toSingleInt();
+	return discard;
 }
 DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 	discard = DiscardTileNum(); finished = false;

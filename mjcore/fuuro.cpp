@@ -519,6 +519,19 @@ EndType ronhuproc(GameTable* const gameStat) {
 	/* 通信対戦時の処理 */
 	if (EnvTable::Instantiate()->GameMode != EnvTable::Standalone)
 		RemoteAction::remotenaki(gameStat);
+	/* TODO: 切断時の処理
+	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
+		if (ReceivedMsg == 1023) {
+			chatappend "*** ホストとの接続が切れました。\n"
+			chatappend "*** この局はツモ切り、次局からCPUが代走します。\n"
+			repeat NUM_OF_PLAYERS
+				if (cnt != getPlayer(GameStat)) {
+					setDisconnectFlag GameStat, cnt, 1
+				}
+			loop
+		}
+	}
+	*/
 	{
 		CodeConv::tostringstream o;
 		o << _T("ロン [");
