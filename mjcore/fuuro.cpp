@@ -1,5 +1,7 @@
 #include "fuuro.h"
 
+namespace {
+
 /* ”v•ˆ‚Ö‚Ì‹L˜^‚È‚Ç€”õˆ— */
 PLAYER_ID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex, FuuroType Mode) {
 	PLAYER_ID fuuroPlayer;
@@ -405,6 +407,8 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 	}
 	return false;
 }
+
+} /* namespace */
 
 /* •›˜I‚Ìˆ— */
 bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTileNum& DiscardTileIndex, FuuroType Mode) {
