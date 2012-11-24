@@ -698,3 +698,57 @@ EndType ronhuproc(GameTable* const gameStat) {
 	}
 	return RoundEndType;
 }
+
+bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) {
+	/* 捨牌をポン、または大明槓する場合の処理 */
+	/* 同じ牌は４枚しかないので、ポンと明槓は同時に起こることがない */
+	unsigned declCount = 0; EndType roundEndType = Continuing;
+	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+		if (gameStat->Player[i].DeclarationFlag.Pon) ++declCount;
+		if (gameStat->Player[i].DeclarationFlag.Kan) ++declCount;
+	}
+	if (declCount > 1)
+		error(_T("複数同時のポン・槓が宣言されています。"));
+	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+		Sleep(1);
+		/* 捨牌をポンする場合 */
+		if (gameStat->Player[i].DeclarationFlag.Pon) {
+			gameStat->CurrentPlayer.Passive = i; // 鳴いたプレイヤーを設定
+			fuuroproc(gameStat, &roundEndType, DiscardTileIndex, FuuroPon);
+			break;
+		}
+		/* 明槓の場合 */
+		const unsigned kanLim = (RuleData::chkRuleApplied("fifth_kong") ? 5 : 4);
+		if (gameStat->Player[i].DeclarationFlag.Kan && (gameStat->KangNum < kanLim)) {
+			gameStat->CurrentPlayer.Passive = i; // 鳴いたプレイヤーを設定
+			fuuroproc(gameStat, &roundEndType, DiscardTileIndex, FuuroDaiminkan);
+			break;
+		}
+	}
+	/* 吃とポンが同時に起こった場合、ポンを優先する */
+	if (declCount > 0) {
+		/* ポンや槓の時はツモ順を飛ばしたとみなして数え、北家→東家をまたいだ場合は次の巡目として扱う */
+		if (playerwind(gameStat, gameStat->CurrentPlayer.Passive, gameStat->GameRound) < playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound))
+			++gameStat->TurnRound;
+		gameStat->CurrentPlayer.Active = gameStat->CurrentPlayer.Passive;
+		return true;
+	} else if (!chkGameType(gameStat, AllSanma)) {
+		/* 吃の処理 */
+		/* 三人打ちでは吃なし */
+		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Passive, sRight)].DeclarationFlag.Chi > 0) {
+			/* ポンや槓の時はツモ順を飛ばしたとみなして数え、北家→東家をまたいだ場合は次の巡目として扱う */
+			gameStat->CurrentPlayer.Passive = RelativePositionOf(gameStat->CurrentPlayer.Passive, sRight); // 吃ができるのは上家の捨牌のみ
+			if (playerwind(gameStat, gameStat->CurrentPlayer.Passive, gameStat->GameRound) < playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound))
+				++gameStat->TurnRound;
+			fuuroproc(gameStat, &roundEndType, DiscardTileIndex, FuuroChii);
+			gameStat->CurrentPlayer.Active = gameStat->CurrentPlayer.Passive;
+			return true;
+		}
+	}
+	/* バグ防止のアレ */
+	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+		gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND].tile = NoTile;
+		gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND].red = Normal;
+	}
+	return false;
+}
