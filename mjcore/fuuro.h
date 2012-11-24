@@ -16,6 +16,7 @@
 #include "../socket/socket.h"
 #include "yaku/ykclass.h"
 #include "yaku/yaku.h"
+#include "remote.h"
 #endif
 #include "gametbl.h"
 #include "endtype.h"

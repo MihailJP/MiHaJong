@@ -37,7 +37,7 @@ namespace RemoteAction {
 		bool isFinished () {return finished;}
 	};
 
-	union RemoteActionPtr {
+	union RemoteActionPtr { /* OBSOLETE */
 		RemoteDahai* dahai;
 		RemoteNaki* naki;
 	};
@@ -47,9 +47,7 @@ namespace RemoteAction {
 	__declspec(dllexport) int remotedahai_isfinished ();
 	__declspec(dllexport) int remotedahai_getdiscard ();
 	__declspec(dllexport) void remotedahai_end ();
-	__declspec(dllexport) void remotenaki_begin (GameTable* const gameStat);
-	__declspec(dllexport) int remotenaki_isfinished ();
-	__declspec(dllexport) void remotenaki_end ();
+	void remotenaki (GameTable* const gameStat);
 }
 
 #endif

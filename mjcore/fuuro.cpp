@@ -520,20 +520,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 	}
 	/* 通信対戦時の処理 */
 	if (EnvTable::Instantiate()->GameMode != EnvTable::Standalone)
-		/* TODO: remotenaki GameStat, GameEnv */;
-	if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
-		/* TODO:
-		if (ReceivedMsg == 1023) {
-			chatappend "*** ホストとの接続が切れました。\n"
-			chatappend "*** この局はツモ切り、次局からCPUが代走します。\n"
-			repeat NUM_OF_PLAYERS
-				if (cnt != getPlayer(GameStat)) {
-					setDisconnectFlag GameStat, cnt, 1
-				}
-			loop
-		}
-		*/
-	}
+		RemoteAction::remotenaki(gameStat);
 	{
 		CodeConv::tostringstream o;
 		o << _T("ロン [");

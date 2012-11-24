@@ -242,14 +242,11 @@ void RemoteNaki::checkremotenaki(PLAYER_ID player, int& ReceivedMsg) {
 	return;
 }
 
-__declspec(dllexport) void remotenaki_begin (GameTable* const gameStat) {
-	rDahaiProc.naki = new RemoteNaki(gameStat);
-}
-__declspec(dllexport) int remotenaki_isfinished () {
-	return rDahaiProc.naki->isFinished() ? 1 : 0;
-}
-__declspec(dllexport) void remotenaki_end () {
-	delete rDahaiProc.naki; rDahaiProc.naki = nullptr;
+void remotenaki (GameTable* const gameStat) {
+	RemoteNaki* rNaki = new RemoteNaki(gameStat);
+	while (!rNaki->isFinished())
+		Sleep(1);
+	delete rNaki; rNaki = nullptr;
 }
 
 } /* namespace */
