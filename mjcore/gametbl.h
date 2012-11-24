@@ -300,6 +300,7 @@ PLAYER_ID tobePlayed(const GameTable* const gameStat, int id);
 extern GameTable GameStat, StatSandBox;
 inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType);
 extern "C" GameTable* makesandBox(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+extern "C" GameTable* initializeGameTable(gameTypeID gameType);
 #endif
 
 // -------------------------------------------------------------------------

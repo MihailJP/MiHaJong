@@ -51,13 +51,16 @@ __declspec(dllexport) int EnvTable::getTableColorB(void *) {
 	return (int)(Instantiate()->bgColorB);
 }
 
-__declspec(dllexport) void EnvTable::TableEnvInit(void *) {
+void EnvTable::TableEnvInit() {
 	for (int i = 0; i < PLAYERS; i++) {
 		Instantiate()->PlayerDat[i].PlayerName = _T("");
 		Instantiate()->PlayerDat[i].RemotePlayerFlag = false;
 	}
 	Instantiate()->GameMode = Unavailable;
 	Instantiate()->WatchModeFlag = false;
+}
+__declspec(dllexport) void EnvTable::TableEnvInit(void *) {
+	TableEnvInit();
 }
 __declspec(dllexport) void EnvTable::TableEnvInitAll(void *) {
 	TableEnvInit(nullptr);

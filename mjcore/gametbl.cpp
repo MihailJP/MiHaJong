@@ -1038,7 +1038,7 @@ extern "C" {
 		assert(gameStat->Player[0].DiscardPointer == 0); // 初期化できてるかチェック（デバッグ用）
 	}
 
-	void doInitializeGameTable(GameTable* const gameStat, int gameType) { // 半荘単位の初期化処理
+	void doInitializeGameTable(GameTable* const gameStat, gameTypeID gameType) { // 半荘単位の初期化処理
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		/* 内部処理用でエクスポートしない */
 		memset(gameStat, 0, sizeof(GameTable));
@@ -1084,7 +1084,7 @@ extern "C" {
 		inittable(gameStat); // 局ごとの初期化も行う
 	}
 
-	__declspec(dllexport) const GameTable* const initializeGameTable(int gameType) { // 半荘単位の初期化処理
+	GameTable* initializeGameTable(gameTypeID gameType) { // 半荘単位の初期化処理
 		doInitializeGameTable(&GameStat, gameType);
 		return &GameStat;
 	}
