@@ -3,6 +3,7 @@
 
 /* 局終了コード */
 enum EndType : int { // 局の終了理由
+	Continuing = -1, // 継続中
 	Ryuukyoku,       // 普通の流局
 	Agari,           // 誰かの和了
 	Chonbo,          // 錯和で終了

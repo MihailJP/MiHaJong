@@ -368,7 +368,7 @@ extern "C" {
 
 	__declspec(dllexport) void setHandStat(GameTable* const gameStat, int Player, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		gameStat->Player[Player].HandStat = value;
+		gameStat->Player[Player].HandStat = (handStatCode)value;
 		return;
 	}
 	__declspec(dllexport) int getHandStat(const GameTable* const gameStat, int Player) {
@@ -529,10 +529,10 @@ extern "C" {
 	__declspec(dllexport) void setKangFlag(GameTable* const gameStat, int Page, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
-			case 0: gameStat->KangFlag.kangFlag = (uint8_t)value; break;
-			case 1: gameStat->KangFlag.chainFlag = (uint8_t)value; break;
+			case 0: gameStat->KangFlag.kangFlag = (bool)value; break;
+			case 1: gameStat->KangFlag.chainFlag = (bool)value; break;
 			case 2: gameStat->KangFlag.topFlag = (uint8_t)value; break;
-			case 3: gameStat->KangFlag.chankanFlag = (uint8_t)value; break;
+			case 3: gameStat->KangFlag.chankanFlag = (ChankanStat)value; break;
 			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います")); break;
 		}
 		return;
@@ -543,7 +543,7 @@ extern "C" {
 			case 0: gameStat->KangFlag.kangFlag++; break;
 			case 1: gameStat->KangFlag.chainFlag++; break;
 			case 2: gameStat->KangFlag.topFlag++; break;
-			case 3: gameStat->KangFlag.chankanFlag++; break;
+			case 3: gameStat->KangFlag.chankanFlag = (ChankanStat)(gameStat->KangFlag.chankanFlag + 1); break;
 			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います")); break;
 		}
 		return;
@@ -954,8 +954,9 @@ extern "C" {
 
 		for (int i = 0; i < TILE_NONFLOWER_MAX; i++) // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
 			gameStat->OpenRichiWait[i] = false;
-		gameStat->KangFlag.kangFlag = gameStat->KangFlag.chainFlag = // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
-			gameStat->KangFlag.topFlag = gameStat->KangFlag.chankanFlag = 0;
+		gameStat->KangFlag.kangFlag = gameStat->KangFlag.topFlag = false; // 嶺上開花；頭槓和；連開花と槓振り；搶槓の判定に使う
+		gameStat->KangFlag.chainFlag = 0;
+		gameStat->KangFlag.chankanFlag = chankanNone;
 		gameStat->TurnRound =  // 現在の巡目
 			gameStat->KangNum = 0; // 四槓流局、四槓子などの判定に使う
 		gameStat->RichiCounter =
@@ -1008,7 +1009,7 @@ extern "C" {
 				gameStat->Player[pl].Discard[i].isDiscardThrough = false;
 			}
 			gameStat->Player[pl].MenzenFlag = true; // 門前フラグ
-			gameStat->Player[pl].HandStat = 0; // 手牌の状態（立てる・見せる・伏せる）
+			gameStat->Player[pl].HandStat = handUpright; // 手牌の状態（立てる・見せる・伏せる）
 			gameStat->Player[pl].MeldPointer = 0; // 最初変な数字が入ってたりするんで……
 			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
 				// 鳴き面子を格納

@@ -12,6 +12,10 @@
 #include "tileutil.h"
 #include "discard.h"
 #include "bgmid.h"
+#include "ai/class.h"
+#include "../socket/socket.h"
+#include "yaku/ykclass.h"
+#include "yaku/yaku.h"
 #endif
 #include "gametbl.h"
 #include "endtype.h"
@@ -28,5 +32,7 @@ enum FuuroType : unsigned { /* •›˜Iˆ—‚Ìí—Ş */
 };
 
 bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTileNum& DiscardTileIndex, FuuroType Mode);
+void checkpao(GameTable* const gameStat);
+EndType ronhuproc(GameTable* const gameStat);
 
 #endif

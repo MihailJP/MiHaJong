@@ -236,17 +236,14 @@ DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameSt
 // -------------------------------------------------------------------------
 
 aiscript::detCallThread* aiscript::meld_worker = nullptr;
-__declspec(dllexport) void aiscript::compfuuro_begin(GameTable* const gameStat) {
+void aiscript::compfuuro(GameTable* const gameStat) {
 	finished = false;
 	meld_worker = new detCallThread();
 	meld_worker->setprm(gameStat, &finished);
 	DWORD threadID;
 	HANDLE hThread = CreateThread(nullptr, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
-}
-__declspec(dllexport) int aiscript::compfuuro_check() {
-	return finished ? 1 : 0;
-}
-__declspec(dllexport) void aiscript::compfuuro_end() {
+	while (!finished)
+		Sleep(1);
 	delete meld_worker; meld_worker = nullptr;
 }
 void aiscript::determine_meld(GameTable* const gameStat) {

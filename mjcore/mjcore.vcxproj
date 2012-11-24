@@ -258,6 +258,7 @@
     <ClInclude Include="decomp.h" />
     <ClInclude Include="discard.h" />
     <ClInclude Include="dllmain.h" />
+    <ClInclude Include="endtype.h" />
     <ClInclude Include="envtbl.h" />
     <ClInclude Include="except.h" />
     <ClInclude Include="func.h" />

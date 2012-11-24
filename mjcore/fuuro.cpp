@@ -32,7 +32,7 @@ PLAYER_ID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardT
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
 			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
 		haifu::haifurecminkan(gameStat);
-		gameStat->KangFlag.chankanFlag++; // 連続槓の回数を記録
+		gameStat->KangFlag.chainFlag++; // 連続槓の回数を記録
 		if (gameStat->Player[fuuroPlayer].FirstDrawFlag)
 			gameStat->KangFlag.topFlag = 1; /* 頭槓和のフラグ */
 		if (RuleData::chkRule("minkan_penalty", "yes")) { /* 大明槓をすると1000点供託になるルール */
@@ -48,7 +48,7 @@ PLAYER_ID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardT
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
 			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
 		haifu::haifurecankan(gameStat, DiscardTileIndex); // 暗槓を仮に牌譜に記録
-		gameStat->KangFlag.chankanFlag++; // 連続槓の回数を記録
+		gameStat->KangFlag.chainFlag++; // 連続槓の回数を記録
 		if (gameStat->Player[fuuroPlayer].FirstDrawFlag)
 			gameStat->KangFlag.topFlag = 1; /* 頭槓和のフラグ */
 		break;
@@ -225,7 +225,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
 		gameStat->PreviousMeld.Stepped = NoTile;
 		/* 包の判定 */
-		/* TODO: 包の判定 checkpao GameStat */
+		checkpao(gameStat);
 		break;
 	case FuuroChii: /* チー */
 		/* チーする牌を設定 */
@@ -318,17 +318,17 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 			if ((Mode == FuuroKakan) || (Mode == FuuroNorth) ||
 				(RuleData::chkRule("ankan_conceal", "open") && RuleData::chkRule("ankan_chankan", "yes"))) {
 					debug(_T("搶槓の判定をします。"));
-					if (Mode == FuuroAnkan) gameStat->KangFlag.chankanFlag = 2;
-					else if (Mode == FuuroNorth) gameStat->KangFlag.chankanFlag = 3;
-					else gameStat->KangFlag.chankanFlag = 1;
-					/* TODO: 出和了り判定 ronhuproc GameStat, GameEnv: RoundEndType = stat */
-					if (Mode == FuuroNorth) gameStat->KangFlag.chankanFlag = 0;
+					if (Mode == FuuroAnkan) gameStat->KangFlag.chankanFlag = chankanOfAnkan;
+					else if (Mode == FuuroNorth) gameStat->KangFlag.chankanFlag = chankanOfNorth;
+					else gameStat->KangFlag.chankanFlag = chankanRegular;
+					*RoundEndType = ronhuproc(gameStat);
+					if (Mode == FuuroNorth) gameStat->KangFlag.chankanFlag = chankanNone;
 					if (*RoundEndType == TripleRon) return true;
 					if (RonPlayers(gameStat) > 0) {
 						info(_T("搶槓が宣言されました。ループから出ます。"));
 						return true;
 					}
-					gameStat->KangFlag.chankanFlag = 0;
+					gameStat->KangFlag.chankanFlag = chankanNone;
 			}
 		}
 		/* 搶槓の判定 ここまで */
@@ -350,10 +350,8 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 		}
 		/* 大明槓の包判定用 */
 		if ((!RuleData::chkRule("minkan_pao", "no")) && (!RuleData::chkRule("minkan_pao", "no_but_2han"))) {
-			/* TODO: 包の設定
-				setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_MINKAN, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-				setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_MINKAN, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
-			*/
+			gameStat->PaoFlag[pyMinkan].paoPlayer = gameStat->CurrentPlayer.Active;
+			gameStat->PaoFlag[pyMinkan].agariPlayer = gameStat->CurrentPlayer.Passive;
 		}
 	}
 	return false;
@@ -392,7 +390,7 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 				haifu::haifurecdorap();
 			}
 			/* 包の判定 */
-			/* TODO: 包の判定 checkpao GameStat */
+			checkpao(gameStat);
 		}
 		/* 槓子をカウントする(四開槓の判定のため) */
 		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
@@ -439,92 +437,92 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 	return false;
 }
 
-#if 0
 /* 包を判定する */
-#module
-#include "const.hsp"
-#include "mjcore.hsp"
-#deffunc checkpao var GameStat
+void checkpao(GameTable* const gameStat) {
 	// 包の判定 ここから
-	debug "包の条件を判定します。"
-	DragonPons = 0: WindPons = 0: NumOfKangs = 0
-	repeat MeldPointer(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)), 1
-		if (((getMeld(GameStat, MELD_TILECODE, cnt , getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))\TILE_CODE_MAXIMUM) >= TILE_DRAGON_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt , getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))\TILE_CODE_MAXIMUM) <= TILE_DRAGON_MAX)) {
-			DragonPons++
+	debug(_T("包の条件を判定します。"));
+	unsigned DragonPons = 0, WindPons = 0, NumOfKangs = 0;
+	const PlayerTable* playerStat = &gameStat->Player[gameStat->CurrentPlayer.Passive];
+	for (unsigned i = 1; i <= playerStat->MeldPointer; i++) {
+		switch (playerStat->Meld[i].tile) {
+		case WhiteDragon: case GreenDragon: case RedDragon:
+			++DragonPons; break;
+		case EastWind: case SouthWind: case WestWind: case NorthWind:
+			++WindPons; break;
 		}
-		if (((getMeld(GameStat, MELD_TILECODE, cnt , getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))\TILE_CODE_MAXIMUM) >= TILE_WIND_MIN)&&((getMeld(GameStat, MELD_TILECODE, cnt , getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))\TILE_CODE_MAXIMUM) <= TILE_WIND_MAX)) {
-			WindPons++
-		}
-		if ((getMeld(GameStat, MELD_TILECODE, cnt , getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE))/MELD_TYPE_STEP) >= MELD_QUAD) {
-			NumOfKangs++
-		}
-	loop
-	if (chkRule("normal_pao", "yes")) {
-		if ((DragonPons == 3)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN) == -1)) {
-			debug strf("プレイヤー [%d] は、大三元を包になります。", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
-			setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISANGEN, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISANGEN, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
-		}
-		if ((WindPons == 4)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI) == -1)) {
-			debug strf("プレイヤー [%d] は、大四喜を包になります。", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
-			setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_DAISIXI, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-			setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_DAISIXI, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
+		switch (playerStat->Meld[i].mstat) {
+		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight:
+		case meldQuadAddedLeft:   case meldQuadAddedCenter:   case meldQuadAddedRight:
+		case meldQuadConcealed:
+			++NumOfKangs; break;
 		}
 	}
-	if (((chkRule("suukantsu", "yakuman_with_pao") != 0) || (chkRule("suukantsu", "double_yakuman_with_pao") != 0))&&(NumOfKangs == 4)&&(getPao(GameStat, PAO_PLAYER_PAO, PAO_YAKU_SIKANG) == -1)) {
-		debug strf("プレイヤー [%d] は、四槓子を包になります。", getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))
-		setPao GameStat, PAO_PLAYER_PAO, PAO_YAKU_SIKANG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-		setPao GameStat, PAO_PLAYER_AGARI, PAO_YAKU_SIKANG, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
+	CodeConv::tostringstream o;
+	if (RuleData::chkRuleApplied("normal_pao")) {
+		if ((DragonPons == 3) && (gameStat->PaoFlag[pyDaisangen].paoPlayer == -1)) {
+			o << _T("プレイヤー [") << (int)gameStat->CurrentPlayer.Active << _T("] は、大三元を包になります。");
+			debug(o.str().c_str());
+			gameStat->PaoFlag[pyDaisangen].paoPlayer = gameStat->CurrentPlayer.Active;
+			gameStat->PaoFlag[pyDaisangen].agariPlayer = gameStat->CurrentPlayer.Passive;
+		}
+		if ((WindPons == 4) && (gameStat->PaoFlag[pyDaisixi].paoPlayer == -1)) {
+			o << _T("プレイヤー [") << (int)gameStat->CurrentPlayer.Active << _T("] は、大四喜を包になります。");
+			debug(o.str().c_str());
+			gameStat->PaoFlag[pyDaisixi].paoPlayer = gameStat->CurrentPlayer.Active;
+			gameStat->PaoFlag[pyDaisixi].agariPlayer = gameStat->CurrentPlayer.Passive;
+		}
+	}
+	if ((RuleData::chkRule("suukantsu", "yakuman_with_pao") || RuleData::chkRule("suukantsu", "double_yakuman_with_pao")) &&
+		(NumOfKangs == 4) && (gameStat->PaoFlag[pySikang].paoPlayer == -1)) {
+		o << _T("プレイヤー [") << (int)gameStat->CurrentPlayer.Active << _T("] は、四槓子を包になります。");
+		debug(o.str().c_str());
+		gameStat->PaoFlag[pySikang].paoPlayer = gameStat->CurrentPlayer.Active;
+		gameStat->PaoFlag[pySikang].agariPlayer = gameStat->CurrentPlayer.Passive;
 	}
 	// 包の判定 ここまで
-	return
-#global
+	return;
+}
 
 /* 栄和のときの処理 */
-#module
-#include "const.hsp"
-#include "mjcore.hsp"
-#include "socket.hsp"
-#deffunc ronhuproc var GameStat, var GameEnv
-	RoundEndType = -1
-	info "リアクションを問い合わせます。"
+EndType ronhuproc(GameTable* const gameStat) {
+	EndType RoundEndType = Continuing;
+	info(_T("リアクションを問い合わせます。"));
 	/* 栄和や鳴き仕掛けをするかどうか問い合わせる */
-	resetDeclarationFlag GameStat
-	repeat NUM_OF_PLAYERS
-		if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) != cnt) {
-			setCurrentPlayer GameStat, CURRENTPLAYER_PASSIVE, cnt
-			if (getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE) == getPlayer(GameStat)) {
-				playerfuuro GameStat, GameEnv
-			} else {
-				if (IsRemotePlayer(GameEnv, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)) == 0) {
-					/* COMが「カンニング」しないように処理 */
-					makesandbox Sandbox, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
-					/* 処理 */
-					compfuuro_begin Sandbox
-					repeat
-						if (compfuuro_check()) {break}
-						await 0
-					loop
-					compfuuro_end
-					repeat NUM_OF_PLAYERS
-						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_RON, cnt)}
-						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_MINKAN, cnt)}
-						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_PON, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_PON, cnt)}
-						if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_CHI, cnt)}
-					loop
+	for (int pl = 0; pl < PLAYERS; pl++) {
+		gameStat->Player[pl].DeclarationFlag.Ron =
+			gameStat->Player[pl].DeclarationFlag.Pon =
+			gameStat->Player[pl].DeclarationFlag.Kan = false;
+		gameStat->Player[pl].DeclarationFlag.Chi = 0;
+	}
+	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+		if (gameStat->CurrentPlayer.Active != i) {
+			gameStat->CurrentPlayer.Passive = i;
+			if (gameStat->CurrentPlayer.Passive == gameStat->PlayerID) {
+				/* TODO: プレイヤー鳴き選択 playerfuuro GameStat, GameEnv */
+			} else if (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Passive].RemotePlayerFlag == 0) {
+				/* COMが「カンニング」しないように処理 */
+				/* TODO: makesandbox Sandbox, GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE) */
+				/* 処理 */
+				aiscript::compfuuro(gameStat);
+				for (PLAYER_ID j = 0; j < PLAYERS; j++) {
+					/* TODO: 鳴き状態コミット
+					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_RON, cnt)}
+					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_MINKAN, cnt)}
+					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_PON, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_PON, cnt)}
+					if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, cnt) == 0) {setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, cnt, getDeclarationFlag(Sandbox, DECLARATIONFLAG_CHI, cnt)}
+					*/
 				}
 			}
-		} else {
-			if (cnt == getPlayer(GameStat)) {
-				if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {clientsend 0xa0}
-			}
+		} else if (i == gameStat->PlayerID) {
+			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Ignore);
 		}
-	loop
-	/* 通信対戦時の処理 */
-	if (getGameMode(GameEnv) != GAMEMODE_STANDALONE) {
-		remotenaki GameStat, GameEnv
 	}
-	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
+	/* 通信対戦時の処理 */
+	if (EnvTable::Instantiate()->GameMode != EnvTable::Standalone)
+		/* TODO: remotenaki GameStat, GameEnv */;
+	if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
+		/* TODO:
 		if (ReceivedMsg == 1023) {
 			chatappend "*** ホストとの接続が切れました。\n"
 			chatappend "*** この局はツモ切り、次局からCPUが代走します。\n"
@@ -534,190 +532,169 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 				}
 			loop
 		}
+		*/
 	}
-	trace strf("ロン [%d %d %d %d] カン [%d %d %d %d] ポン [%d %d %d %d] チー [%d %d %d %d]", getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 0),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 1),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 2),getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, 3))
+	{
+		CodeConv::tostringstream o;
+		o << _T("ロン [");
+		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+			o << (i ? _T(" ") : _T("")) << (int)gameStat->Player[i].DeclarationFlag.Ron;
+		o << _T("] カン [");
+		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+			o << (i ? _T(" ") : _T("")) << (int)gameStat->Player[i].DeclarationFlag.Kan;
+		o << _T("] ポン [");
+		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+			o << (i ? _T(" ") : _T("")) << (int)gameStat->Player[i].DeclarationFlag.Pon;
+		o << _T("] チー [");
+		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+			o << (i ? _T(" ") : _T("")) << (int)gameStat->Player[i].DeclarationFlag.Chi;
+		o << _T("]"); trace(o.str().c_str());
+	}
 	/* 和了り放棄の時は宣言を無効にする */
-	repeat NUM_OF_PLAYERS
-		if (getAgariHouki(GameStat, cnt) == 1) {
-			debug strf("プレイヤー [%d] は和了り放棄です。宣言フラグを下ろします。", cnt)
-			setDeclarationFlag GameStat, DECLARATIONFLAG_RON, cnt, 0: setDeclarationFlag GameStat, DECLARATIONFLAG_PON, cnt, 0
-			setDeclarationFlag GameStat, DECLARATIONFLAG_CHI, cnt, 0: setDeclarationFlag GameStat, DECLARATIONFLAG_MINKAN, cnt, 0
+	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+		if (gameStat->Player[i].AgariHouki) {
+			{
+				CodeConv::tostringstream o;
+				o << _T("プレイヤー [") << (int)i << _T("] は和了り放棄です。宣言フラグを下ろします。");
+				debug(o.str().c_str());
+			}
+			gameStat->Player[i].DeclarationFlag.Ron = gameStat->Player[i].DeclarationFlag.Pon =
+				gameStat->Player[i].DeclarationFlag.Kan = false;
+			gameStat->Player[i].DeclarationFlag.Chi = 0;
 		}
-	loop
+	}
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */
-	repeat NUM_OF_PLAYERS
-		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, cnt) == 1) {
-			debug strf("プレイヤー [%d] は、栄和を宣言します。", cnt)
+	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+		if (gameStat->Player[i].DeclarationFlag.Ron) {
+			{
+				CodeConv::tostringstream o;
+				o << _T("プレイヤー [") << (int)i << _T("] は、栄和を宣言します。");
+				debug(o.str().c_str());
+			}
 			// 優先権のないロンも表示されるようにする
-			setCall cnt, " ロン "
-			setHandStat GameStat, cnt, 1
+			/* TODO: 発声 setCall cnt, " ロン " */
+			gameStat->Player[i].HandStat = handExposed;
 		}
-	loop
+	}
 	/* 実際にロンできる人を表示 */
-	roncount = 0: repeat NUM_OF_PLAYERS-1
-		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1)) == 1) {
-			if (roncount == 0) {
-				debug strf("プレイヤー [%d] は、栄和できます。", RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1))
-				setCall RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1), "ロン"
+	unsigned roncount = 0;
+	for (int i = 0; i < (PLAYERS - 1); i++) {
+		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1))].DeclarationFlag.Ron) {
+			bool accept = false;
+			switch (roncount) {
+			case 0:
+				accept = true; break;
+			case 1:
+				accept =
+					RuleData::chkRule("multiple_mahjong", "dual_mahjong_with_draw") ||
+					RuleData::chkRule("multiple_mahjong", "dual_mahjong") ||
+					RuleData::chkRule("multiple_mahjong", "trial_mahjong");
+				break;
+			case 2:
+				accept = RuleData::chkRule("multiple_mahjong", "trial_mahjong");
+				break;
 			}
-			if ((roncount == 1)&&((chkRule("multiple_mahjong", "dual_mahjong_with_draw") != 0) || (chkRule("multiple_mahjong", "dual_mahjong") != 0) || (chkRule("multiple_mahjong", "trial_mahjong") != 0))) {
-				debug strf("プレイヤー [%d] は、栄和できます。", RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1))
-				setCall RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1), "ロン"
+			if (accept) {
+				CodeConv::tostringstream o;
+				o << _T("プレイヤー [") << (int)i << _T("] は、栄和できます。");
+				debug(o.str().c_str());
+				/* TODO: 発声 setCall RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1), "ロン" */
 			}
-			if ((roncount == 2)&&(chkRule("multiple_mahjong", "trial_mahjong") != 0)) {
-				debug strf("プレイヤー [%d] は、栄和できます。", RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1))
-				setCall RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1), "ロン"
-			}
-			roncount++
+			++roncount;
 		}
-	loop
+	}
 	/* 実際に栄和を行なう処理 */
-	repeat NUM_OF_PLAYERS-1
-		await 0
-		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_RON, RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1)) == 1) {
+	for (int i = 0; i < (PLAYERS - 1); i++) {
+		Sleep(1); PLAYER_ID pl = RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1));
+		if (gameStat->Player[pl].DeclarationFlag.Ron) {
 			/* ウォッチモードの場合は和了った人に視点を向ける */
-			if (GetWatchModeFlag(GameEnv) == 1) {
-				setPlayer GameStat, RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1)
-			}
+			if (EnvTable::Instantiate()->WatchModeFlag)
+				gameStat->PlayerID = pl;
 			/* 栄和したことを変数に記録 */
-			RoundEndType = ENDKYOKU_AGARI: setTsumoAgariFlag GameStat, 0
-			setCurrentPlayer GameStat, CURRENTPLAYER_FURIKOMI, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-			setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1)
+			RoundEndType = Agari; gameStat->TsumoAgariFlag = false;
+			gameStat->CurrentPlayer.Furikomi = gameStat->CurrentPlayer.Active;
+			gameStat->CurrentPlayer.Agari = pl;
 			/* 八連荘の判定に使う変数 */
-			if (chkRule("paarenchan", "no") == 0) {
-				if (getLastAgariPlayer(GameStat) == getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) {
-					incAgariChain GameStat
+			if (RuleData::chkRuleApplied("paarenchan")) {
+				if (gameStat->LastAgariPlayer == gameStat->CurrentPlayer.Agari) {
+					++gameStat->AgariChain;
+				} else if (RuleData::chkRuleApplied("breaking_paarenchan") && (gameStat->AgariChain == 7)) {
+					gameStat->AgariChain = -1;
+					gameStat->LastAgariPlayer = gameStat->CurrentPlayer.Agari;
 				} else { /* FIXME: 八連荘ありの時にダブロン・トリロンした時の処理 */
-					if ((chkRule("breaking_paarenchan", "no") == 0)&&(getAgariChain(GameStat) == 7)) {setAgariChain GameStat, -1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)}
-					else {setAgariChain GameStat, 1: setLastAgariPlayer GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)}
+					gameStat->AgariChain = 1;
+					gameStat->LastAgariPlayer = gameStat->CurrentPlayer.Agari;
 				}
 			}
 			/* 和了り牌を設定 */
-			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
-			if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 0, 10: setRichiCounterFlag GameStat, 1}
-			if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_DOUBLE_IPPATSU) {setRichiFlag GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 0, 10: setRichiCounterFlag GameStat, 2}
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].red = gameStat->CurrentDiscard.red;
+			/* 立直宣言牌での放銃の場合、立直を無効とし供託点棒を返却する */
+			if (gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.IppatsuFlag) {
+				if (gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.DoubleFlag) {
+					gameStat->DoubleRichiCounter = true;
+					trace(_T("ダブル立直宣言牌での放銃のため、立直棒を返還します。"));
+				} else {
+					gameStat->RichiCounter = true;
+					trace(_T("立直宣言牌での放銃のため、立直棒を返還します。"));
+				}
+				gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.IppatsuFlag =
+					gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.DoubleFlag =
+					gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.OpenFlag =
+					gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.RichiFlag = false;
+				--gameStat->Deposit;
+				gameStat->Player[gameStat->CurrentPlayer.Active].PlayerScore += LargeNum::fromInt(1000);
+			}
 			/* 役や振聴の判定 */
-			countyaku GameStat, yakuInfo, RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1)
-			chkfuriten FuritenFlag, MachihaiFlag, MachihaiCount, MachihaiTotal, MachiMen, GameStat, RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1)
+			yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, pl);
+			MachihaiInfo mInfo = chkFuriten(gameStat, pl);
 			// 縛りを満たさないか、振聴のとき
-			if ((getYakuInfo(yakuInfo, YAKUINF_HAN_BASE) <= getShibari(GameStat))||(FuritenFlag == 1)||(getDoujunFuriten(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)||((chkRule("riichi_shibari", "yes") != 0)&&(getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == RIICHI_NO))) {
-				trace "縛りを満たさないか振聴です。次の処理をチョンボ用に切り替えます。"
-				RoundEndType = ENDKYOKU_CHONBO // チョンボにする
+			if (((yakuInfo.CoreHan < (gameStat->ShibariFlag ? 2 : 1)) && (yakuInfo.CoreSemiMangan == 0)) ||
+				(mInfo.FuritenFlag) || (gameStat->Player[pl].DoujunFuriten) ||
+				(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->Player[pl].RichiFlag.RichiFlag))) {
+					trace(_T("縛りを満たさないか振聴です。次の処理をチョンボ用に切り替えます。"));
+					RoundEndType = Chonbo; // チョンボにする
 			}
 			// ロンをしたことを表示
-			//setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-			//setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
-			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), "ロン"
-			setHandStat GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), 1
-			/* 立直宣言牌での放銃の場合、立直を無効とし供託点棒を返却する */
-			if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_IPPATSU) {
-				trace "立直宣言牌での放銃のため、立直棒を返還します。"
-				setRichiFlag GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 0, 10: setRichiCounterFlag GameStat, 1
-			}
-			if (getRichiFlag(GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) == RIICHI_DOUBLE_IPPATSU) {
-				trace "ダブル立直宣言牌での放銃のため、立直棒を返還します。"
-				setRichiFlag GameStat, RICHI_FLAG, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), RIICHI_NO: addDeposit GameStat, -1: addScore GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), 0, 10: setRichiCounterFlag GameStat, 2
-			}
+			/* TODO: 発声 setCall getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), "ロン" */
+			gameStat->Player[gameStat->CurrentPlayer.Agari].HandStat = handExposed;
 			/* 和了り牌を設定 */
-			setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE)
-			setHand GameStat, HAND_REDTILE, TSUMOHAI_INDEX, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getCurrentDiscard(GameStat, CURRENTDISCARD_REDTILE)
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].red = gameStat->CurrentDiscard.red;
 			/* 栄和のサウンドを鳴らす */
-			if (getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE) == getPlayer(GameStat)) {
-				dsplay@ VOX_RON_FURIKOMI
-			} else {
-				dsplay@ VOX_RON
-			}
+			if (gameStat->CurrentPlayer.Active == gameStat->PlayerID)
+				sound::Play(sound::IDs::voxRonFurikomi);
+			else
+				sound::Play(sound::IDs::voxRon);
 			/* 画面更新して戻る */
-			redrscreen
-			break
+			/* TODO: 画面更新 redrscreen */
+			break;
 		}
-	loop
+	}
 	/* 牌譜に記録 */
-	roncount = 0
-	if (RonPlayers(GameStat) > 0) {
-		if (getKangFlag(GameStat, KANG_CHANKAN) > 0) {
-#ifdef SANMAX
-			if (getKangFlag(GameStat, KANG_CHANKAN) == 3) {
-				haifurecchanpei GameStat
-			} else {
-#endif
-				haifurecchankan GameStat
-#ifdef SANMAX
-			}
-#endif
+	roncount = 0;
+	if (RonPlayers(gameStat) > 0) {
+		if (gameStat->KangFlag.chankanFlag != chankanNone) {
+			if (gameStat->KangFlag.chankanFlag == chankanOfNorth)
+				haifu::haifurecchanpei(gameStat);
+			else
+				haifu::haifurecchankan(gameStat);
 		} else {
-			haifurecfurikomi GameStat
+			haifu::haifurecfurikomi(gameStat);
 		}
+	} else if (!gameStat->KangFlag.kangFlag) { // 抜き北で牌譜がずれるのを抑止
+		haifu::haifurecfurikomi(gameStat);
+	}
+	if (chkGameType(gameStat, AllSanma)) {
+		// 二家和の判定
+		if ((RonPlayers(gameStat) >= 2) && RuleData::chkRule("multiple_mahjong", "aborted"))
+			return TripleRon;
 	} else {
-		if (getKangFlag(GameStat, KANG_FLAG) == 0) { // 抜き北で牌譜がずれるのを抑止
-			haifurecfurikomi GameStat
-		}
+		// 三家和の判定
+		if ((RonPlayers(gameStat) >= 3) &&
+			(RuleData::chkRule("multiple_mahjong", "single_mahjong_with_draw") ||
+			RuleData::chkRule("multiple_mahjong", "dual_mahjong_with_draw")))
+			return TripleRon;
 	}
-#ifdef ALLSANMA
-	// 二家和の判定
-	if ((RonPlayers(GameStat) >= 2)&&(chkRule("multiple_mahjong", "aborted") != 0)) {
-		RoundEndType = ENDKYOKU_TRIPLERON: return RoundEndType
-	}
-#else
-	// 三家和の判定
-	if ((RonPlayers(GameStat) >= 3)&&((chkRule("multiple_mahjong", "single_mahjong_with_draw") != 0)||(chkRule("multiple_mahjong", "dual_mahjong_with_draw") != 0))) {
-		RoundEndType = ENDKYOKU_TRIPLERON: return RoundEndType
-	}
-#endif
-return RoundEndType
-#global
-
-#module
-#include "const.hsp"
-#include "mjcore.hsp"
-#deffunc executeFuuro var GameStat, int DiscardTileIndex
-	/* 捨牌をポン、または大明槓する場合の処理 */
-	/* 同じ牌は４枚しかないので、ポンと明槓は同時に起こることがない */
-	if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3) > 1) {
-		error "複数同時のポン・槓が宣言されています。"
-	}
-	repeat NUM_OF_PLAYERS: await 0
-		/* 捨牌をポンする場合 */
-		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, cnt) == 1) {
-			setCurrentPlayer GameStat, CURRENTPLAYER_PASSIVE, cnt // 鳴いたプレイヤーを設定
-			fuuroproc GameStat, GameEnv, RoundEndType, DiscardTileIndex, FUURO_PON
-			break
-		}
-		/* 明槓の場合 */
-		if (chkRule("fifth_kong", "no")) {kanLim = 4} else {kanLim = 5}
-		if ((getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, cnt) == 1)&&(getTotalKang(GameStat) < kanLim)) {
-			setCurrentPlayer GameStat, CURRENTPLAYER_PASSIVE, cnt // 鳴いたプレイヤーを設定
-			fuuroproc GameStat, GameEnv, RoundEndType, DiscardTileIndex, FUURO_DAIMINKAN
-			break
-		}
-	loop
-	/* 吃とポンが同時に起こった場合、ポンを優先する */
-	if ((getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_PON, 3)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 0)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 1)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 2)+getDeclarationFlag(GameStat, DECLARATIONFLAG_MINKAN, 3)) > 0) {
-		/* ポンや槓の時はツモ順を飛ばしたとみなして数え、北家→東家をまたいだ場合は次の巡目として扱う */
-		if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getRound(GameStat)) < playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat))) {
-			incTurn GameStat
-		}
-		setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
-		return 1
-#ifndef ALLSANMA
-	} else {
-		/* 吃の処理 */
-		/* 三人打ちでは吃なし */
-		if (getDeclarationFlag(GameStat, DECLARATIONFLAG_CHI, ShimochaOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE))) > 0) {
-			/* ポンや槓の時はツモ順を飛ばしたとみなして数え、北家→東家をまたいだ場合は次の巡目として扱う */
-			if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), getRound(GameStat)) < playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat))) {
-				incTurn GameStat
-			}
-			setCurrentPlayer GameStat, CURRENTPLAYER_PASSIVE, ShimochaOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)) // 吃ができるのは上家の捨牌のみ
-			fuuroproc GameStat, GameEnv, RoundEndType, DiscardTileIndex, FUURO_CHII
-			setCurrentPlayer GameStat, CURRENTPLAYER_ACTIVE, getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE)
-			return 1
-		}
-#endif
-	}
-	/* バグ防止のアレ */
-	repeat NUM_OF_PLAYERS: setHand GameStat, HAND_TILECODE, TSUMOHAI_INDEX, cnt, 0: loop
-	return 0
-#global
-#endif
+	return RoundEndType;
+}
