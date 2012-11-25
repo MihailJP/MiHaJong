@@ -20,7 +20,7 @@
 /* Šg’£‹@”\‚Ì“o˜^ */
 #include "mjcore.hsp"
 #include "p2b.as"
-#include "hmm.as"
+#include "sounddll.hsp"
 #include "socket.hsp"
 #include "llmod3.hsp"
 #include "obj.hsp"

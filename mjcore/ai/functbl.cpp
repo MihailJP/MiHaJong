@@ -299,6 +299,7 @@ inline void aiscript::table::functable::agariTypeCode(lua_State* const L) {
 	TableAdd(L, "Syzygy", (int)ShantenAnalyzer::shantenSyzygy);
 	TableAdd(L, "Quanbukao", (int)ShantenAnalyzer::shantenQuanbukao);
 	TableAdd(L, "SevenUp", (int)ShantenAnalyzer::shantenSevenup);
+	TableAdd(L, "ZuheLong", (int)ShantenAnalyzer::shantenZuhelong);
 	lockTable(L); lua_setfield(L, -2, "AgariType");
 }
 

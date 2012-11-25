@@ -6,6 +6,60 @@ aiscript::ScriptStates aiscript::status[PLAYERS] = {{nullptr, false}};
 const char aiscript::fncname_discard[8] = "ontsumo"; // 捨牌決定用関数の名前
 const char aiscript::fncname_call[3][12] = {"ondiscard", "onkakan", "onankan",}; // 鳴き決定用関数の名前
 
+bool aiscript::callFunc(const GameTable* const gameStat, PLAYER_ID player_id, const char* const function_name, bool is_mandatory) {
+	if (status[player_id].scriptLoaded) { /* 正しく読み込まれているなら */
+		try { /* シンボルがあればよし、なかったら例外処理 */
+			lua_getglobal(status[player_id].state, function_name);
+		} catch (...) { /* シンボルがなかったらエラーになるので例外処理をする */
+			CodeConv::tostringstream o;
+			if (is_mandatory) {
+				o << _T("グローバルシンボル [") << CodeConv::EnsureTStr(function_name) << _T("] の取得に失敗しました"); error(o.str().c_str());
+				info(_T("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。"));
+				status[player_id].scriptLoaded = false;
+				chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
+				return true;
+			} else {
+				o << _T("グローバルシンボル [") << CodeConv::EnsureTStr(function_name) << _T("] の取得に失敗しました。無視します。");
+				warn(o.str().c_str());
+				return true;
+			}
+		}
+		GameStatToLuaTable(status[player_id].state, gameStat);
+		if (int errcode = lua_pcall(status[player_id].state, 1, 2, 0)) {
+			/* 実行失敗！ */
+			CodeConv::tostringstream o;
+			switch (errcode) {
+			case LUA_ERRRUN:
+				o << _T("スクリプトの実行時エラー [") <<
+					CodeConv::DecodeStr(lua_tostring(status[player_id].state, -1)) /* エラーメッセージ */ <<
+					_T("]");
+				lua_pop(status[player_id].state, 1);
+				break;
+			case LUA_ERRMEM: o << _T("メモリの割当に失敗しました。"); break;
+			case LUA_ERRERR: o << _T("メッセージハンドラ実行中のエラーです。"); break;
+			case LUA_ERRGCMM: o << _T("ガーベジコレクション実行中のエラーです。"); break;
+			}
+			error(o.str().c_str());
+			if (is_mandatory)
+				chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
+			if (std::string(function_name) == std::string(fncname_discard))
+				warn(_T("関数呼び出しに失敗したため、ツモ切りとみなします"));
+			else
+				warn(_T("関数呼び出しに失敗したため、無視します"));
+			return true;
+		} else {
+			/* 実行完了 */
+			return false;
+		}
+	} else {
+		if (std::string(function_name) == std::string(fncname_discard))
+			warn(_T("スクリプトがロードされていないか、使用できないため、ツモ切りとみなします"));
+		else
+			warn(_T("スクリプトがロードされていないか、使用できないため、無視します"));
+		return true; // スクリプトは使用不能
+	}
+}
+
 __declspec(dllexport) void aiscript::initscript() {
 	info(_T("AI用のスクリプトを初期化します"));
 	FileSelector::filelist();
@@ -26,6 +80,13 @@ __declspec(dllexport) void aiscript::initephemeral() {
 		lua_setglobal(status[i].state, "ephemeral");
 	}
 	debug(_T("ephemeral テーブルを初期化しました"));
+}
+
+void aiscript::initcall(const GameTable* const gameStat, PLAYER_ID player) {
+	callFunc(gameStat, player, "init", false);
+}
+__declspec(dllexport) void aiscript::initcall(const GameTable* const gameStat, int player) {
+	initcall(gameStat, (PLAYER_ID)player);
 }
 
 __declspec(dllexport) void aiscript::closescript() {
@@ -135,72 +196,40 @@ DWORD WINAPI aiscript::detDiscardThread::execute(LPVOID param) {
 }
 DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished) {
 	CodeConv::tostringstream o;
-	o << "AIの打牌処理に入ります。プレイヤー [" << (int)gameStat->CurrentPlayer.Active << "]";
+	o << _T("AIの打牌処理に入ります。プレイヤー [") << (int)gameStat->CurrentPlayer.Active << _T("]");
 	info(o.str().c_str());
-	if (status[gameStat->CurrentPlayer.Active].scriptLoaded) { /* 正しく読み込まれているなら */
-		try { /* determine_discard があればよし、なかったら例外処理 */
-			lua_getglobal(status[gameStat->CurrentPlayer.Active].state, fncname_discard);
-		} catch (...) { /* determine_discard がなかったらエラーになるので例外処理をする */
-			CodeConv::tostringstream o;
-			o << _T("グローバルシンボル [") << CodeConv::EnsureTStr(fncname_discard) << _T("] の取得に失敗しました"); error(o.str().c_str());
-			chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
-			info(_T("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。"));
-			status[gameStat->CurrentPlayer.Active].scriptLoaded = false;
-			*discard = DiscardThrough; *finished = true; return S_OK;
-		}
-		GameStatToLuaTable(status[gameStat->CurrentPlayer.Active].state, gameStat);
-		if (int errcode = lua_pcall(status[gameStat->CurrentPlayer.Active].state, 1, 2, 0)) {
-			/* 実行失敗！ */
-			CodeConv::tostringstream o;
-			switch (errcode) {
-			case LUA_ERRRUN:
-				o << _T("スクリプトの実行時エラー [") <<
-					CodeConv::DecodeStr(lua_tostring(status[gameStat->CurrentPlayer.Active].state, -1)) /* エラーメッセージ */ <<
-					_T("]");
-				lua_pop(status[gameStat->CurrentPlayer.Active].state, 1);
-				break;
-			case LUA_ERRMEM: o << _T("メモリの割当に失敗しました。"); break;
-			case LUA_ERRERR: o << _T("メッセージハンドラ実行中のエラーです。"); break;
-			case LUA_ERRGCMM: o << _T("ガーベジコレクション実行中のエラーです。"); break;
-			}
-			error(o.str().c_str());
-			chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
-			warn(_T("関数呼び出しに失敗したため、ツモ切りとみなします"));
-			*discard = DiscardThrough; *finished = true; return S_OK;
-		} else {
-			/* 実行完了 */
-			int flag;
-			discard->type = (DiscardTileNum::discardType)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
-			if (!flag) {
-				warn(_T("1番目の返り値が数値ではありません。通常の打牌とみなします。"));
-				discard->type = DiscardTileNum::Normal; // fallback
-			} else if ((discard->type < DiscardTileNum::Normal) || (discard->type > DiscardTileNum::Disconnect)) {
-				warn(_T("1番目の返り値が正しくありません。通常の打牌とみなします。"));
-				discard->type = DiscardTileNum::Normal; // fallback
-			}
-			if ((discard->type == DiscardTileNum::Agari) || (discard->type == DiscardTileNum::Kyuushu) ||
-				(discard->type == DiscardTileNum::Disconnect)) { // 番号指定が不要な場合
-					discard->id = NUM_OF_TILES_IN_HAND - 1; // 2番めの返り値は無視
-			} else {
-				int i = lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -1, &flag);
-				if (!flag) {
-					warn(_T("2番目の返り値が数値ではありません。ツモ切りとみなします。"));
-					discard->id = NUM_OF_TILES_IN_HAND - 1; // fallback
-				} else if ((i >= 1)&&(i <= NUM_OF_TILES_IN_HAND)) {
-					discard->id = i - 1; // オリジンを1にする仕様……
-				} else if ((i <= -1)&&(i >= -NUM_OF_TILES_IN_HAND)) { // マイナスを指定した場合の処理
-					discard->id = NUM_OF_TILES_IN_HAND + i;
-				} else {
-					warn(_T("2番目の返り値が範囲外です。ツモ切りとみなします。"));
-					discard->id = NUM_OF_TILES_IN_HAND - 1; // fallback
-				}
-			}
-			lua_pop(status[gameStat->CurrentPlayer.Active].state, 2);
-			*finished = true; return S_OK;
-		}
+	if (callFunc(gameStat, gameStat->CurrentPlayer.Active, fncname_discard, true)) {
+		*discard = DiscardThrough; *finished = true; return S_OK;
 	} else {
-		warn(_T("スクリプトがロードされていないか、使用できないため、ツモ切りとみなします"));
-		*discard = DiscardThrough; *finished = true; return S_OK; // スクリプトは使用不能
+		/* 実行完了 */
+		int flag;
+		discard->type = (DiscardTileNum::discardType)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
+		if (!flag) {
+			warn(_T("1番目の返り値が数値ではありません。通常の打牌とみなします。"));
+			discard->type = DiscardTileNum::Normal; // fallback
+		} else if ((discard->type < DiscardTileNum::Normal) || (discard->type > DiscardTileNum::Disconnect)) {
+			warn(_T("1番目の返り値が正しくありません。通常の打牌とみなします。"));
+			discard->type = DiscardTileNum::Normal; // fallback
+		}
+		if ((discard->type == DiscardTileNum::Agari) || (discard->type == DiscardTileNum::Kyuushu) ||
+			(discard->type == DiscardTileNum::Disconnect)) { // 番号指定が不要な場合
+				discard->id = NUM_OF_TILES_IN_HAND - 1; // 2番めの返り値は無視
+		} else {
+			int i = lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -1, &flag);
+			if (!flag) {
+				warn(_T("2番目の返り値が数値ではありません。ツモ切りとみなします。"));
+				discard->id = NUM_OF_TILES_IN_HAND - 1; // fallback
+			} else if ((i >= 1)&&(i <= NUM_OF_TILES_IN_HAND)) {
+				discard->id = i - 1; // オリジンを1にする仕様……
+			} else if ((i <= -1)&&(i >= -NUM_OF_TILES_IN_HAND)) { // マイナスを指定した場合の処理
+				discard->id = NUM_OF_TILES_IN_HAND + i;
+			} else {
+				warn(_T("2番目の返り値が範囲外です。ツモ切りとみなします。"));
+				discard->id = NUM_OF_TILES_IN_HAND - 1; // fallback
+			}
+		}
+		lua_pop(status[gameStat->CurrentPlayer.Active].state, 2);
+		*finished = true; return S_OK;
 	}
 }
 
@@ -251,66 +280,27 @@ DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool*
 	gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Pon =
 		gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Kan =
 		gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Ron = false;
-	if (status[gameStat->CurrentPlayer.Passive].scriptLoaded) { /* 正しく読み込まれているなら */
-		try { /* determine_discard があればよし、なかったら例外処理 */
-			lua_getglobal(status[gameStat->CurrentPlayer.Passive].state, fncname_call[gameStat->KangFlag.chankanFlag]);
-		} catch (...) { /* determine_discard がなかったらエラーになるので例外処理をする */
-			CodeConv::tostringstream o;
-			if (gameStat->KangFlag.chankanFlag) {
-				o << _T("グローバルシンボル [") << CodeConv::EnsureTStr(fncname_call[0]) << _T("] の取得に失敗しました"); error(o.str().c_str());
-				info(_T("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。"));
-				status[gameStat->CurrentPlayer.Passive].scriptLoaded = false;
-			} else {
-				o << "グローバルシンボル [" << fncname_call[gameStat->KangFlag.chankanFlag] <<
-					"] の取得に失敗しました。無視します。";
-				warn(o.str().c_str());
-				*finished = true;
-			}
-			chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
-			return S_OK;
-		}
-		GameStatToLuaTable(status[gameStat->CurrentPlayer.Passive].state, gameStat);
-		if (int errcode = lua_pcall(status[gameStat->CurrentPlayer.Passive].state, 1, 2, 0)) {
-			/* 実行失敗！ */
-			CodeConv::tostringstream o;
-			switch (errcode) {
-			case LUA_ERRRUN:
-				o << "スクリプトの実行時エラー [" <<
-					lua_tostring(status[gameStat->CurrentPlayer.Passive].state, -1) /* エラーメッセージ */ <<
-					"]";
-				lua_pop(status[gameStat->CurrentPlayer.Passive].state, 1);
-				break;
-			case LUA_ERRMEM: o << "メモリの割当に失敗しました。"; break;
-			case LUA_ERRERR: o << "メッセージハンドラ実行中のエラーです。"; break;
-			case LUA_ERRGCMM: o << "ガーベジコレクション実行中のエラーです。"; break;
-			}
-			error(o.str().c_str());
-			chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
-			warn(_T("関数呼び出しに失敗したため、無視します"));
-			*finished = true; return S_OK;
-		} else {
-			/* 実行完了 */
-			int flag = 0;
-			MeldCallID meldtype = (MeldCallID)lua_tointegerx(status[gameStat->CurrentPlayer.Passive].state, -2, &flag);
-			if (!flag) {
-				warn(_T("1番目の返り値が数値ではありません。無視します。"));
-			} else {
-				switch (meldtype) {
-					case meldNone: break;
-					case meldRon: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Ron = true; break;
-					case meldKan: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Kan = true; break;
-					case meldPon: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Pon = true; break;
-					case meldChiiLower: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = 1; break;
-					case meldChiiMiddle: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = 2; break;
-					case meldChiiUpper: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = 3; break;
-					default: warn(_T("1番目の返り値が正しくありません。無視します。")); break;
-				}
-			}
-			lua_pop(status[gameStat->CurrentPlayer.Passive].state, 1);
-			*finished = true; return S_OK;
-		}
+	if (callFunc(gameStat, gameStat->CurrentPlayer.Passive, fncname_call[gameStat->KangFlag.chankanFlag], (gameStat->KangFlag.chankanFlag == 0))) {
+		*finished = true; return S_OK;
 	} else {
-		warn(_T("スクリプトがロードされていないか、使用できないため、無視します"));
-		*finished = true; return S_OK; // スクリプトは使用不能
+		/* 実行完了 */
+		int flag = 0;
+		MeldCallID meldtype = (MeldCallID)lua_tointegerx(status[gameStat->CurrentPlayer.Passive].state, -2, &flag);
+		if (!flag) {
+			warn(_T("1番目の返り値が数値ではありません。無視します。"));
+		} else {
+			switch (meldtype) {
+				case meldNone: break;
+				case meldRon: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Ron = true; break;
+				case meldKan: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Kan = true; break;
+				case meldPon: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Pon = true; break;
+				case meldChiiLower: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = 1; break;
+				case meldChiiMiddle: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = 2; break;
+				case meldChiiUpper: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = 3; break;
+				default: warn(_T("1番目の返り値が正しくありません。無視します。")); break;
+			}
+		}
+		lua_pop(status[gameStat->CurrentPlayer.Passive].state, 1);
+		*finished = true; return S_OK;
 	}
 }

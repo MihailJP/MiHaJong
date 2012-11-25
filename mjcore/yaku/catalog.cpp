@@ -78,6 +78,11 @@ yaku::yakuCalculator::Yaku::HANFUNC
 	else if (currcnf == "2han_added") return yaku::yakuCalculator::Yaku::yval_2han_dependent;
 	else if (currcnf == "4han_added") return yaku::yakuCalculator::Yaku::yval_4han_dependent;
 	else if (currcnf == "yakuman_unbound") return yaku::yakuCalculator::Yaku::yval_yakuman_dependent;
+	else if (currcnf == "-4han")
+		return yaku::yakuCalculator::Yaku::FixedHan(
+		yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han,
+		yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(-5)
+		);
 	else return yaku::yakuCalculator::Yaku::HANFUNC();
 }
 

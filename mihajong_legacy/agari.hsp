@@ -182,6 +182,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "sounddll.hsp"
 #deffunc endround_agariproc var GameStat, var GameEnv, var ResultDesc, var AgariPlayerPriority, int origDoraPointer, array YakuInfo, var tmpAliceFlag
 	exportYakuPoint yakuInfo, AgariPointRaw
 	if (AgariPlayerPriority == -1) {AgariPlayerPriority = getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)}
@@ -218,7 +219,7 @@
 		repeat
 			if (getDoraPointer(GameStat) <= AlicePointer) {break}
 			setDoraPointer GameStat, getDoraPointer(GameStat) - 2
-			dsplay@ SND_MEKURI
+			snd_play SND_MEKURI
 			redrscreen: await 1200
 		loop
 		setDoraPointer GameStat, tmpDoraPointer
@@ -493,6 +494,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "sounddll.hsp"
 #deffunc endround_chonboproc var GameStat, var GameEnv, var ResultDesc
 	if (ResultDesc != "") {ResultDesc += "\n"}
 	tmpResultDesc = ""
@@ -508,7 +510,7 @@
 	chatappend "*** "+tmpResultDesc+"\n"
 	statmes tmpResultDesc
 	await 1500
-	bgmplay_norep MUS_RYUUKYOKU
+	bgmplay MUS_RYUUKYOKU
 	setCenterTitle "ö˜a"
 	// Œëƒƒ“‚Ü‚½‚ÍŒëƒcƒ‚
 	if ((getTsumoAgariFlag(GameStat) == 0)||(getTsumoAgariFlag(GameStat) == 1)) {
@@ -543,7 +545,7 @@
 	}
 	// Œëƒƒ“AŒëƒcƒ‚ˆÈŠO‚Ìö˜a
 	if (getTsumoAgariFlag(GameStat) == AGARI_KUIKAE) {setCenterTitle "‹ò‘Öö˜a": ResultDesc += "(‹ò‚¢‘Ö‚¦)"} // ‹ò‚¢‘Ö‚¦‚ð‚µ‚½‚Æ‚«
-	if (getTsumoAgariFlag(GameStat) > 1) {dsplay@ SND_PAGE} else {dsplay@ SND_CUOHU}
+	if (getTsumoAgariFlag(GameStat) > 1) {snd_play SND_PAGE} else {snd_play SND_CUOHU}
 	redrscreen: await 5000
 
 	transferChonboPenalty GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)

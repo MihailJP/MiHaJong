@@ -7,6 +7,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "sounddll.hsp"
 #deffunc checkroundabort var GameStat, var GameEnv
 	/* 四開槓なら流す */
 	if (chkRule("four_kong_ryuukyoku", "continue") == 0) {
@@ -63,7 +64,7 @@
 		if (chkRule("kuikae", "agari_houki") || chkRule("kuikae", "agari_houki_if_in_kind")) {
 			/* 和了り放棄とする設定 */
 			info strf("喰い変えを検出しました。和了り放棄として扱います。打牌 [%d] 鳴いた牌 [%d]", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getPreviousMeld(GameStat, PREVMELD_TILECODE))
-			dsplay@ SND_CUOHU
+			snd_play SND_CUOHU
 			repeat 2
 				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "喰替"
 				redrscreen: await 1500
@@ -79,7 +80,7 @@
 		} else: if (chkRule("kuikae", "chombo") || chkRule("kuikae", "chombo_if_in_kind")) {
 			/* 直ちに錯和とする設定 */
 			info strf("喰い変えを検出しました。チョンボとして扱います。打牌 [%d] 鳴いた牌 [%d]", getCurrentDiscard(GameStat, CURRENTDISCARD_TILECODE), getPreviousMeld(GameStat, PREVMELD_TILECODE))
-			dsplay@ SND_CUOHU
+			snd_play SND_CUOHU
 			RoundEndType = ENDKYOKU_CHONBO: setTsumoAgariFlag GameStat, AGARI_KUIKAE
 			setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
 			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "錯和"
@@ -101,7 +102,7 @@
 		} else {
 			warn "少牌を検出しました。和了り放棄として扱いますが、摸打の処理で不整合が起きていた可能性があります。"
 		}
-		dsplay@ SND_CUOHU
+		snd_play SND_CUOHU
 		repeat 2
 			if (tmptilecnt > (NUM_OF_TILES_IN_HAND-1)) {
 				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "多牌"
@@ -127,6 +128,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "sounddll.hsp"
 #deffunc endround var GameStat, var GameEnv, int _RoundEndType, int OrigTurn, int OrigHonba
 	// 局面終了コード
 	// ０…荒牌流局
@@ -172,8 +174,8 @@
 			ResultDesc = "荒牌流局"
 			chatappend "*** "+ResultDesc+"\n"
 			setCenterTitle "流局"
-			bgmplay_norep MUS_RYUUKYOKU
-			dsplay@ SND_PINGJU
+			bgmplay MUS_RYUUKYOKU
+			snd_play SND_PINGJU
 			redrscreen: await 1500
 			TenpaiCnt = 0
 			repeat NUM_OF_PLAYERS
@@ -274,7 +276,7 @@
 			} else {
 				setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
 			}
-			dsplay@ SND_PAGE
+			snd_play SND_PAGE
 			redrscreen
 			redraw 1
 			
@@ -310,8 +312,8 @@
 			chatappend "*** "+ResultDesc+"\n"
 			await 1500
 			setCenterTitle "流局"
-			dsplay@ SND_PINGJU
-			bgmplay_norep MUS_RYUUKYOKU
+			snd_play SND_PINGJU
+			bgmplay MUS_RYUUKYOKU
 			redrscreen: redraw 1: await 3000
 			if (chkRule("nine_terminals", "next_dealer") == 0) {
 				if ((chkRule("nine_terminals", "renchan_if_dealer_kyuushu") == 0)||(playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST)) {
@@ -330,7 +332,7 @@
 	/**************/
 		case ENDKYOKU_SUUKAIKAN:
 			statmes "流局(四開槓)"
-			dsplay@ VOX_SIKANG
+			snd_play VOX_SIKANG
 			ResultDesc = "四開槓"
 			chatappend "*** "+ResultDesc+"\n"
 			setCenterTitle "四開槓"
@@ -338,8 +340,8 @@
 			repeat NUM_OF_PLAYERS
 				setCall cnt, ""
 			loop
-			dsplay@ SND_PINGJU
-			bgmplay_norep MUS_RYUUKYOKU
+			snd_play SND_PINGJU
+			bgmplay MUS_RYUUKYOKU
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 3000
 			ryuukyokuProc GameStat, (chkRule("four_kong_ryuukyoku", "next_dealer") == 0)
@@ -351,14 +353,14 @@
 #ifdef ALLSANMA
 			statmes "流局(二家和)"
 			await 1300
-			dsplay@ VOX_SANJIAHU
+			snd_play VOX_SANJIAHU
 			ResultDesc = "二家和"
 			chatappend "*** "+ResultDesc+"\n"
 			setCenterTitle "二家和"
 #else
 			statmes "流局(三家和)"
 			await 1300
-			dsplay@ VOX_SANJIAHU
+			snd_play VOX_SANJIAHU
 			ResultDesc = "三家和"
 			chatappend "*** "+ResultDesc+"\n"
 			setCenterTitle "三家和"
@@ -367,8 +369,8 @@
 			repeat NUM_OF_PLAYERS
 				setCall cnt, ""
 			loop
-			dsplay@ SND_PINGJU
-			bgmplay_norep MUS_RYUUKYOKU
+			snd_play SND_PINGJU
+			bgmplay MUS_RYUUKYOKU
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 3000
 
@@ -397,13 +399,13 @@
 		case ENDKYOKU_SUUFONRENDA:
 #ifdef ALLSANMA
 			statmes "流局(三風連打)"
-			dsplay@ VOX_SIFENG
+			snd_play VOX_SIFENG
 			ResultDesc = "三風連打"
 			chatappend "*** "+ResultDesc+"\n"
 			setCenterTitle "三風連打"
 #else
 			statmes "流局(四風連打)"
-			dsplay@ VOX_SIFENG
+			snd_play VOX_SIFENG
 			ResultDesc = "四風連打"
 			chatappend "*** "+ResultDesc+"\n"
 			setCenterTitle "四風連打"
@@ -412,8 +414,8 @@
 			repeat NUM_OF_PLAYERS
 				setCall cnt, ""
 			loop
-			dsplay@ SND_PINGJU
-			bgmplay_norep MUS_RYUUKYOKU
+			snd_play SND_PINGJU
+			bgmplay MUS_RYUUKYOKU
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 3000
 			ryuukyokuProc GameStat, (chkRule("four_wind_ryuukyoku", "next_dealer") == 0)
@@ -424,13 +426,13 @@
 		case ENDKYOKU_SUUCHARIICHI:
 #ifdef ALLSANMA
 			statmes "流局(三家立直)"
-			dsplay@ VOX_SIJIARICHI
+			snd_play VOX_SIJIARICHI
 			ResultDesc = "三家立直"
 			chatappend "*** "+ResultDesc+"\n"
 			setCenterTitle "三家立直"
 #else
 			statmes "流局(四家立直)"
-			dsplay@ VOX_SIJIARICHI
+			snd_play VOX_SIJIARICHI
 			ResultDesc = "四家立直"
 			chatappend "*** "+ResultDesc+"\n"
 			setCenterTitle "四家立直"
@@ -439,8 +441,8 @@
 			repeat NUM_OF_PLAYERS
 				setCall cnt, ""
 			loop
-			dsplay@ SND_PINGJU
-			bgmplay_norep MUS_RYUUKYOKU
+			snd_play SND_PINGJU
+			bgmplay MUS_RYUUKYOKU
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 1500
 			TenpaiCnt = 0
@@ -475,19 +477,19 @@
 	/**************/
 		case ENDKYOKU_NAGASHIMANGAN:
 			statmes "流局です"
-			dsplay@ SND_PINGJU
+			snd_play SND_PINGJU
 			setCenterTitle "流局"
 			if (NagashiManganFlag(getPlayer(GameStat)) == 1) {agariBgmSet = 0} else {agariBgmSet = 1}
 			if (GetWatchModeFlag(GameEnv) == 1) {agariBgmSet = 0}
 			if (chkRule("nagashi_mangan", "yakuman")) {
 				switch agariBgmSet
-					case 0: bgmplay_norep MUS_AGARI_SELF_3: swbreak
-					case 1: bgmplay_norep MUS_AGARI_FURIKOMI_3: swbreak
+					case 0: bgmplay MUS_AGARI_SELF_3: swbreak
+					case 1: bgmplay MUS_AGARI_FURIKOMI_3: swbreak
 				swend
 			} else {
 				switch agariBgmSet
-					case 0: bgmplay_norep MUS_AGARI_SELF_2: swbreak
-					case 1: bgmplay_norep MUS_AGARI_FURIKOMI_2: swbreak
+					case 0: bgmplay MUS_AGARI_SELF_2: swbreak
+					case 1: bgmplay MUS_AGARI_FURIKOMI_2: swbreak
 				swend
 			}
 			redrscreen: await 1500
@@ -532,7 +534,7 @@
 			loop
 			ResultDesc += "の流し満貫"
 			chatappend "*** "+ResultDesc+"\n"
-			dsplay@ SND_PAGE
+			snd_play SND_PAGE
 			redrscreen
 			redraw 1: await 1500
 			
@@ -548,7 +550,7 @@
 	/**************/
 		case ENDKYOKU_UUKAIKAN:
 			statmes "流局(四開槓)"
-			dsplay@ VOX_SIKANG
+			snd_play VOX_SIKANG
 			ResultDesc = "四開槓(５回目の槓での流局)"
 			chatappend "*** "+ResultDesc+"\n"
 			setCenterTitle "四開槓"
@@ -556,8 +558,8 @@
 			repeat NUM_OF_PLAYERS
 				setCall cnt, ""
 			loop
-			dsplay@ SND_PINGJU
-			bgmplay_norep MUS_RYUUKYOKU
+			snd_play SND_PINGJU
+			bgmplay MUS_RYUUKYOKU
 			setCenterTitle "流局"
 			redrscreen: redraw 1: await 3000
 			ryuukyokuProc GameStat, (chkRule("fifth_kong", "next_dealer") == 0)
@@ -570,6 +572,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
+#include "sounddll.hsp"
 #deffunc ryuukyokuProc var GameStat, int RenchanFlag
 	repeat NUM_OF_PLAYERS
 		setCall cnt, ""
@@ -580,7 +583,7 @@
 	} else {
 		setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
 	}
-	dsplay@ SND_PAGE
+	snd_play SND_PAGE
 	redrscreen
 	redraw 1
 	incHonba GameStat
@@ -615,7 +618,7 @@
 #module
 #include "const.hsp"
 #include "mjcore.hsp"
-#deffunc nextRound var GameStat
+#deffunc nextRound var GameStat, int OrigTurn
 	// ハコ割れ終了
 	if (chkRule("buttobi_border", "no") == 0) {
 		if (isDobon(GameStat,PLAYER_EAST)) {return 1}
@@ -685,12 +688,12 @@
 		}
 	}
 	// 焼き鳥復活ルールの場合
-	if ((chkRule("yakitori", "no") != 0) && (chkRule("yakitori_again", "no") != 0)) {
+	if ((chkRule("yakitori", "no") == 0) && (chkRule("yakitori_again", "no") == 0)) {
 #ifdef SANMAT
-		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)) > 0) {
+		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)) == 0) {
 			repeat 3
 #else
-		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)+getYakitori(GameStat, 3)) > 0) {
+		if ((getYakitori(GameStat, 0)+getYakitori(GameStat, 1)+getYakitori(GameStat, 2)+getYakitori(GameStat, 3)) == 0) {
 			repeat 4
 #endif
 				setYakitori GameStat, cnt, 1

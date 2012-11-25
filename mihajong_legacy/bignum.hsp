@@ -298,9 +298,10 @@
 /* 持ち点デルタ表示 */
 #module
 #include "const.hsp"
+#include "sounddll.hsp"
 #deffunc putdelta array PointDelta
 	deltatxt PointDelta, 100
-	dsplay@ SND_PAGE
+	snd_play SND_PAGE
 	redrscreen
 	return
 #global
@@ -308,9 +309,10 @@
 /* チップデルタ表示 */
 #module
 #include "const.hsp"
+#include "sounddll.hsp"
 #deffunc putchipdelta array PointDelta
 	deltatxt PointDelta, 1
-	dsplay@ SND_PAGE
+	snd_play SND_PAGE
 	redrscreen
 	return
 #global
