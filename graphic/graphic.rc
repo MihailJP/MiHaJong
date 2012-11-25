@@ -19,6 +19,7 @@ IDB_PNG_TBLBAIZE      PNG_FILE         ".\\data\\baize.png"
 IDB_PNG_TBLBORDER     PNG_FILE         ".\\data\\frame.png"
 IDB_PNG_SDBAR         PNG_FILE         ".\\data\\sidebar.png"
 IDB_PNG_TILE          PNG_FILE         ".\\data\\tiles.png"
+IDB_PNG_FONT          PNG_FILE         ".\\data\\font.png"
 
 
 

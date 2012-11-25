@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="font.cpp" />
     <ClCompile Include="geometry.cpp" />
     <ClCompile Include="init.cpp" />
     <ClCompile Include="loadtex.cpp" />
@@ -144,9 +145,11 @@
     <ClCompile Include="scenes\table.cpp" />
     <ClCompile Include="scrmanip.cpp" />
     <ClCompile Include="showtile.cpp" />
+    <ClCompile Include="text.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="font.h" />
     <ClInclude Include="geometry.h" />
     <ClInclude Include="init.h" />
     <ClInclude Include="loadtex.h" />
@@ -158,6 +161,7 @@
     <ClInclude Include="scenes\table.h" />
     <ClInclude Include="scrmanip.h" />
     <ClInclude Include="showtile.h" />
+    <ClInclude Include="text.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
