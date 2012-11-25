@@ -287,3 +287,371 @@ __declspec(dllexport) void SeatShuffler::shuffle (unsigned cNumber, int* const p
 volatile bool SeatShuffler::finished;
 unsigned SeatShuffler::ClientNumber;
 int* SeatShuffler::posarry = nullptr;
+
+// -------------------------------------------------------------------------
+
+/* 半荘の初期化 */
+void gameinit(GameTable* gameStat, gameTypeID gameType) {
+	/* TODO: チャットウィンドウ初期化 closingchat */
+	gameStat = initializeGameTable(gameType);
+	/* TODO: プレイヤー番号設定 setPlayer GameStat, PositionArray(ClientNumber) */
+	/* TODO: 多分これは不要。詳細を確認すること dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 */ // 起家でのバグ防止用に仮初期化
+	haifu::haifubufinit();
+	/* TODO: statmes "" */ // 情報窓への表示
+	/* TODO: チャットウィンドウ初期化 initializechat GameEnv, ServerAddress, ClientNumber */
+	yaku::yakuCalculator::init(); // 役カタログの初期化
+	aiscript::initscript(); // AIの初期化
+	return;
+}
+
+/* 卓の初期化 */
+namespace {
+	void init_ai(const GameTable* const gameStat) {
+		aiscript::initephemeral(); // AIのephemeralテーブルを初期化
+		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+			aiscript::initcall(makesandBox(gameStat, i), i);
+	}
+	void statsync(GameTable* const gameStat, std::uint8_t serverMsg, std::function<bool (GameTable* const, std::uint8_t)> f) {
+		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
+			mihajong_socket::server::send(serverMsg);
+		}
+		else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
+			volatile int ClientReceived = 0;
+			int ReceivedMsg = 1023;
+			while (true) {
+				mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
+				if (ClientReceived == 1)
+					if (f(gameStat, ReceivedMsg))
+						break;
+				Sleep(1);
+			}
+		}
+	}
+	void syncTableStat(GameTable* const gameStat) {
+		// 場風のデータを送信。とりあえず１６周目の北四局まで対応
+		statsync(gameStat, gameStat->LoopRound * roundLoopRate() + gameStat->GameRound,
+			[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+				gameStat->LoopRound = ReceivedMsg / roundLoopRate();
+				gameStat->GameRound = ReceivedMsg % roundLoopRate();
+				return true;
+			});
+		// 積み棒のデータを送信。とりあえず２５５本場まで対応
+		statsync(gameStat, gameStat->Honba,
+			[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+				gameStat->Honba = ReceivedMsg;
+				return true;
+			});
+		// 供託本数のデータを送信。とりあえず２５５０００点まで対応
+		statsync(gameStat, gameStat->Deposit,
+			[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+				gameStat->Deposit = ReceivedMsg;
+				return true;
+			});
+		// 八連荘の判定に使うデータを送信
+		statsync(gameStat, ((gameStat->LastAgariPlayer + 1) << 4) + gameStat->AgariChain,
+			[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+				gameStat->LastAgariPlayer = (ReceivedMsg + 1) / 16 - 1;
+				gameStat->AgariChain = (ReceivedMsg + 1) % 16 - 1;
+				return true;
+			});
+		// 持ち点のデータを送信。符号込みで33バイトずつ・スモールエンディアン
+		for (PLAYER_ID player = 0; player < PLAYERS; player++) {
+			for (int i = 0; i < DIGIT_GROUPS; i++)
+				for (int j = 0; j < 4; j++)
+					statsync(gameStat, (gameStat->Player[player].PlayerScore.digitGroup[i] >> (j * 8)) & 0xff,
+						[player, i, j](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+							if (!j) gameStat->Player[player].PlayerScore.digitGroup[i] = 0;
+							gameStat->Player[player].PlayerScore.digitGroup[i] |= (int)ReceivedMsg << (j * 8);
+							return true;
+						});
+			statsync(gameStat, (gameStat->Player[player].PlayerScore < LargeNum::fromInt(0)) ? 0x01 : 0x00,
+				[player](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+					if (ReceivedMsg) gameStat->Player[player].PlayerScore *= -1;
+					return true;
+				});
+		}
+		// 焼鳥のデータを送信
+		statsync(gameStat, (gameStat->Player[0].YakitoriFlag ? 8 : 0) + (gameStat->Player[1].YakitoriFlag ? 4 : 0) + (gameStat->Player[2].YakitoriFlag ? 2 : 0) + (gameStat->Player[3].YakitoriFlag ? 1 : 0),
+			[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+				gameStat->Player[0].YakitoriFlag = ReceivedMsg & 0x08;
+				gameStat->Player[1].YakitoriFlag = ReceivedMsg & 0x04;
+				gameStat->Player[2].YakitoriFlag = ReceivedMsg & 0x02;
+				gameStat->Player[3].YakitoriFlag = ReceivedMsg & 0x01;
+				return true;
+			});
+		// チップのデータを送信。一応±１２７まで対応
+		for (PLAYER_ID player = 0; player < PLAYERS; player++)
+			/* Excess-128 */
+			statsync(gameStat, gameStat->Player[player].playerChip + 128,
+				[player](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+					gameStat->Player[player].playerChip = (int)ReceivedMsg - 128;
+					return true;
+				});
+		// 四馬路解禁フラグを送信
+		statsync(gameStat, (gameStat->Player[0].SumaroFlag ? 8 : 0) + (gameStat->Player[1].SumaroFlag ? 4 : 0) + (gameStat->Player[2].SumaroFlag ? 2 : 0) + (gameStat->Player[3].SumaroFlag ? 1 : 0),
+			[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+				gameStat->Player[0].SumaroFlag = ReceivedMsg & 0x08;
+				gameStat->Player[1].SumaroFlag = ReceivedMsg & 0x04;
+				gameStat->Player[2].SumaroFlag = ReceivedMsg & 0x02;
+				gameStat->Player[3].SumaroFlag = ReceivedMsg & 0x01;
+				return true;
+			});
+	}
+	void choosebgm(const GameTable* const gameStat) { // BGMを鳴らす
+		if (((gameStat->LoopRound * roundLoopRate() + gameStat->GameRound) == gameStat->GameLength) &&
+			(gameStat->GameLength > 0))
+			sound::Play(sound::IDs::musFinal); // オーラスだけ特別
+		else if ((gameStat->Honba >= 5) && RuleData::chkRule("ryanshiba", "from_5honba"))
+			sound::Play(sound::IDs::musShibari); // リャンシバ時専用BGM
+		else if ((gameStat->Honba >= 4) && RuleData::chkRule("ryanshiba", "from_4honba"))
+			sound::Play(sound::IDs::musShibari); // リャンシバ時専用BGM
+		else
+			sound::Play(sound::IDs::BgmStart + gameStat->GameRound);
+	}
+	void screen(const GameTable* const gameStat) {
+		/* TODO: これを移植する。画面表示関係
+		if (getHonba(GameStat)) {
+			tmpStatus = ""+roundName(getRound(GameStat))+getHonba(GameStat)+"本場"
+		} else {
+			tmpStatus = ""+roundName(getRound(GameStat))
+		}
+		chatappend "-------------\n*** "+tmpStatus+"\n"
+		if (GetWatchModeFlag(GameEnv) == 1) {
+			tmpStatus += " Watch Mode"
+		} else {
+			switch playerWind(getPlayer(GameStat), getRound(GameStat))
+				case PLAYER_EAST: tmpStatus += " あなたが親です": swbreak
+				case PLAYER_SOUTH: tmpStatus += " あなたは南家です": swbreak
+				case PLAYER_WEST: tmpStatus += " あなたは西家です": swbreak
+	#ifdef SANMA4
+				case PLAYER_NORTH: tmpStatus += " あなたは抜け番です": swbreak
+	#else
+				case PLAYER_NORTH: tmpStatus += " あなたは北家です": swbreak
+	#endif
+			swend
+		}
+		statmes tmpStatus
+		await 100
+		setCenterTitle "" // 画面中央に大書する文字列
+		initCall/ // 鳴きなど
+		*/
+		EnvTable* env = EnvTable::Instantiate();
+		if (gameStat->LoopRound % 2 == 0) {
+			switch (gameStat->GameRound / PLAYERS) {
+			case 0:
+				if (gameStat->LoopRound == 0) {
+					env->bgColorR =   0; env->bgColorG = 160; env->bgColorB =   0;
+				} else {
+					env->bgColorR =  80; env->bgColorG = 160; env->bgColorB =   0;
+				}
+				break;
+			case 1:
+				if (gameStat->LoopRound == 0) {
+					env->bgColorR =   0; env->bgColorG = 160; env->bgColorB = 160;
+				} else {
+					env->bgColorR = 160; env->bgColorG =  80; env->bgColorB =   0;
+				}
+				break;
+			case 2:
+				env->bgColorR =   0; env->bgColorG =  80; env->bgColorB = 160;
+				break;
+			case 3:
+				env->bgColorR = 120; env->bgColorG =   0; env->bgColorB = 160;
+				break;
+			}
+		} else {
+			switch (gameStat->GameRound / PLAYERS) {
+			case 0:
+				env->bgColorR = 160; env->bgColorG = 160; env->bgColorB = 160;
+				break;
+			case 1:
+				env->bgColorR = 160; env->bgColorG = 160; env->bgColorB =   0;
+				break;
+			case 2:
+				env->bgColorR = 160; env->bgColorG =   0; env->bgColorB =   0;
+				break;
+			case 3:
+				env->bgColorR =  80; env->bgColorG =  80; env->bgColorB =  80;
+				break;
+			}
+		}
+		switch (gameStat->GameRound / PLAYERS) {
+		case 4:
+			env->bgColorR = 120; env->bgColorG = 120; env->bgColorB = 160;
+			break;
+		case 5:
+			env->bgColorR = 120; env->bgColorG = 160; env->bgColorB = 120;
+			break;
+		case 6:
+			env->bgColorR = 160; env->bgColorG = 120; env->bgColorB = 120;
+			break;
+		}
+		/* TODO: これ
+		if ((getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat)) >= (getGameLength(GameStat)+1)) {
+			setCenterTitle "延長戦"
+		} else: if ((getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat)) == getGameLength(GameStat)) {
+			setCenterTitle "オーラス"
+		} else {
+			setCenterTitle roundName(getRound(GameStat))
+		}
+		*/
+	}
+	void tileshuffle(GameTable* const gameStat) {
+		shuffle(gameStat); unsigned tmpNumberOfTiles;
+		if (chkGameType(gameStat, AllSanma))
+			tmpNumberOfTiles = 108;
+		else if (RuleData::chkRule("flower_tiles", "no"))
+			tmpNumberOfTiles = 136;
+		else if (RuleData::chkRule("flower_tiles", "8tiles"))
+			tmpNumberOfTiles = 144;
+		else
+			tmpNumberOfTiles = 140;
+		for (unsigned i = 0; i < tmpNumberOfTiles; i++) // サーバーの場合、牌山のデータを送信
+			statsync(gameStat, gameStat->Deck[i].tile + (gameStat->Deck[i].red * TILE_NONFLOWER_MAX) + mihajong_socket::protocol::StartRound_Tile_Excess,
+				[i](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool { // クライアントの場合、データを受信
+					if ( ((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) > TILE_NONFLOWER_MAX) &&
+						((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) < TILE_SUIT_FLOWERS) ) {
+							gameStat->Deck[i].tile = (tileCode)((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) % TILE_NONFLOWER_MAX);
+							gameStat->Deck[i].red  = (doraCol)((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) / TILE_NONFLOWER_MAX);
+					} else {
+						gameStat->Deck[i].tile = (tileCode)(ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess);
+						gameStat->Deck[i].red = Normal;
+					}
+					return true;
+				});
+		/* TODO 画面更新 vanish */
+	}
+	void rolldice(GameTable* const gameStat) {
+		// 賽を振る
+		for (unsigned i = 0; i < 2; i++) {
+			gameStat->Dice[i].Number = RndNum::dice();
+			gameStat->Dice[i].Direction = RndNum::rnd(2);
+		}
+		/* TODO: 画面更新 redrscreen: commonswitch GameStat, GameEnv */
+		for (unsigned k = 0; k < 10; k++) { // 賽を振る
+			for (unsigned i = 0; i < 2; i++) {
+				gameStat->Dice[i].Number = RndNum::dice();
+				gameStat->Dice[i].Direction = RndNum::rnd(2);
+			}
+			sound::Play(sound::IDs::sndSaikoro);
+			/* TODO: 画面更新 redrdice GameStat, GameEnv: await 80 */
+		}
+		sound::Play(sound::IDs::sndSaikoro);
+		/* サイコロの出目を送信 */
+		for (unsigned i = 0; i < 2; i++)
+			statsync(gameStat, gameStat->Dice[i].Number + mihajong_socket::protocol::StartRound_Dice_Excess,
+				[i](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+					gameStat->Dice[i].Number = ReceivedMsg - mihajong_socket::protocol::StartRound_Dice_Excess;
+					gameStat->Dice[i].Direction = RndNum::rnd(2);
+					return true;
+				});
+		// --
+		if (RuleData::chkRule("dora_twice", "yes") ||
+			(RuleData::chkRule("dora_twice", "only_when_doublets") && (gameStat->Dice[0].Number == gameStat->Dice[1].Number)))
+			gameStat->DeadTiles += 2; /* ドラドラ卓なら王牌の数を増やす */
+		calcWareme(gameStat); // 割れ目
+		// 通常機能の表示
+		/* TODO vanish2@ */
+	}
+	void haipai(GameTable* const gameStat) { // 配牌
+		/* TODO: 画面の真ん中に「東○局」 setCenterTitle roundName(getRound(GameStat)) */
+		for (int i = 0; i < (chkGameType(gameStat, AllSanma) ? 36 : 48); i++) { // ２幢ずつを３回
+			unsigned handIndex = i % 4 + (i / (chkGameType(gameStat, AllSanma) ? 12 : 16)) * 4;
+			PLAYER_ID player;
+			if (chkGameType(gameStat, Sanma4))
+				player = ((i % 12 / 4) + gameStat->GameRound) % 4;
+			else if (chkGameType(gameStat, SanmaT))
+				player = ((i % 12 / 4) + (gameStat->GameRound - (gameStat->GameRound / 4))) % 3;
+			else
+				player = ((i % 16 / 4) + gameStat->GameRound) % 4;
+			gameStat->Player[player].Hand[handIndex].tile = gameStat->Deck[gameStat->TilePointer].tile;
+			gameStat->Player[player].Hand[handIndex].red  = gameStat->Deck[gameStat->TilePointer].red;
+			++gameStat->TilePointer;
+			if (i == (chkGameType(gameStat, AllSanma) ? 24 : 18)) {
+				// TODO: ここの移植
+				//switch getHonba(GameStat)
+				//	case 0: /* do nothing */ swbreak
+				//	case 1: setCenterTitle "１本場": swbreak
+				//	case 2: setCenterTitle "２本場": swbreak
+				//	case 3: setCenterTitle "３本場": swbreak
+				//	case 4: setCenterTitle "４本場": swbreak
+				//	case 5: setCenterTitle "５本場": swbreak
+				//	case 6: setCenterTitle "６本場": swbreak
+				//	case 7: setCenterTitle "７本場": swbreak
+				//	case 8: setCenterTitle "８本場": swbreak
+				//	case 9: setCenterTitle "９本場": swbreak
+				//	default: setCenterTitle ""+getHonba(GameStat)+"本場"
+				//swend
+			}
+			if (i % 4 == 3) {
+				calcdoukasen(gameStat);
+				sound::Play(sound::IDs::sndTsumo);
+				/* TODO: 画面更新して時間待ち redrscreen: await 250 */
+			}
+		}
+		/* TODO: 「東○局」の表示を消す setCenterTitle "" */
+		for (int i = 0; i < (chkGameType(gameStat, AllSanma) ? 4 : 5); i++) { // １枚ずつを１回、親のチョンチョン
+			unsigned handIndex = i % 4 + 12;
+			PLAYER_ID player;
+			if (chkGameType(gameStat, Sanma4))
+				player = ((i % 12 / 4) + gameStat->GameRound) % 4;
+			else if (chkGameType(gameStat, SanmaT))
+				player = ((i % 12 / 4) + (gameStat->GameRound - (gameStat->GameRound / 4))) % 3;
+			else
+				player = ((i % 16 / 4) + gameStat->GameRound) % 4;
+			gameStat->Player[player].Hand[handIndex].tile = gameStat->Deck[gameStat->TilePointer].tile;
+			gameStat->Player[player].Hand[handIndex].red  = gameStat->Deck[gameStat->TilePointer].red;
+			++gameStat->TilePointer;
+			calcdoukasen(gameStat);
+			sound::Play(sound::IDs::sndTsumo);
+			/* TODO: 画面更新して時間待ち redrscreen: await 250 */
+		}
+
+		initdora(gameStat); // ドラをめくる
+
+		sound::Play(sound::IDs::sndMekuri);
+		haifu::haifurechaipai(gameStat);
+		/* TODO: ステータス表示 statmes "" */
+		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+			lipai(gameStat, i);
+		sound::Play(sound::IDs::sndBell);
+	}
+}
+void tableinit(GameTable* const gameStat) {
+	init_ai(gameStat);
+	/* TODO: ifaceinit */ // 押しボタン類のステータス初期化
+	inittable(gameStat);
+	// 局の開始で同期する。1.7系列まではこのとき落ち戻りが可能(落ち戻り機能は1.8で廃止されました)
+	statsync(gameStat, mihajong_socket::protocol::Server_StartRound_Signature,
+		[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+			if (ReceivedMsg == mihajong_socket::protocol::Server_StartRound_Signature)
+				return true;
+			/* TODO: ここを移植する
+			if ((ClientReceived == 1)&&(ReceivedMsg == 1023)) {
+				chatappend "*** ホストとの接続が切れました。\n"
+				chatappend "*** この局はツモ切り、次局からCPUが代走します。\n"
+				repeat NUM_OF_PLAYERS
+					if (cnt != getPlayer(GameStat)) {
+						setDisconnectFlag GameStat, cnt, 1
+					}
+				loop
+			}
+			*/
+			return false;
+		});
+	// 牌譜バッファの初期化
+	haifu::haifuinit();
+	/* 卓の情報を同期 */
+	syncTableStat(gameStat);
+	// BGMを鳴らす
+	choosebgm(gameStat);
+	// 画面の準備
+	screen(gameStat);
+	// 洗牌
+	tileshuffle(gameStat);
+	// 賽を振る
+	rolldice(gameStat);
+	// 配牌
+	haipai(gameStat);
+	return;
+}

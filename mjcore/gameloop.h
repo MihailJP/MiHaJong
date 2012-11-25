@@ -11,6 +11,7 @@
 #include "tileutil.h"
 #include "mouda.h"
 #include "fuuro.h"
+#include "prepare.h"
 #endif
 #include "gametbl.h"
 

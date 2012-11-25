@@ -71,7 +71,7 @@ bool doTableRound(GameTable* const gameStat) {
 	/* 破回八連荘の後始末 */
 	if (gameStat->AgariChain == -1) gameStat->AgariChain = 1;
 	/* 半荘の初期化と配牌を行なう */
-	/* TODO: 初期化処理 gosub *tableinit */
+	tableinit(gameStat);
 	/* 配牌終了時の処理 */
 	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
 		gameStat->Player[i].HandStat = handUpright;
