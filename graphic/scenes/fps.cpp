@@ -1,14 +1,14 @@
 #include "fps.h"
 #include "../scrmanip.h"
+#include "../text.h"
 
 FPSIndicator::FPSIndicator(ScreenManipulator* const manipulator) : Scene(manipulator) {
-	D3DXCreateFont(caller->getDevice(), 18, 0, FW_REGULAR, 1, false, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
-		DEFAULT_QUALITY, FIXED_PITCH | FF_DONTCARE, nullptr, &pFont);
+	textRenderer = new TextRenderer(caller->getDevice());
 	fpsstr[0] = 0;
 }
 
 FPSIndicator::~FPSIndicator() {
-	if (pFont) pFont->Release();
+	if (textRenderer) delete textRenderer;
 }
 
 void FPSIndicator::Render() {
@@ -30,8 +30,6 @@ void FPSIndicator::Render() {
 		}
 	}
 	/* •\¦‚·‚é */
-	RECT rect; SetRect(&rect, 1, 1, 50, 50);
-	pFont->DrawText(nullptr, fpsstr, -1, &rect, DT_LEFT | DT_NOCLIP, D3DCOLOR_ARGB(255, 0, 0, 0));
-	SetRect(&rect, 0, 0, 50, 50);
-	pFont->DrawText(nullptr, fpsstr, -1, &rect, DT_LEFT | DT_NOCLIP, D3DCOLOR_ARGB(255, 255, 255, 255));
+	textRenderer->NewText(0, fpsstr, 0, 0, 0.75, 1.333333);
+	textRenderer->Render();
 }
