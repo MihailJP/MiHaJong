@@ -5,6 +5,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 #else
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 #endif
+	GameTable* const gameStat = setGameType(Yonma);
+	GameStatus::updateGameStat(gameStat);
 	MSG msg;
 
 	/* ウィンドウを初期化する */

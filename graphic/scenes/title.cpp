@@ -1,6 +1,7 @@
 #include "title.h"
 #include "../scrmanip.h"
 #include "../gametbl.h"
+#include <cassert>
 
 TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	caller = manipulator;
@@ -29,8 +30,6 @@ void TitleScreen::Render() {
 			D3DCOLOR_XRGB(128, 0, 128), 1.0f, 0);
 		break;
 	default:
-		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
-			D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-		break;
+		assert(false); // This may not occur.
 	}
 }

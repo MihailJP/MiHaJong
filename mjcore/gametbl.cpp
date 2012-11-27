@@ -1198,6 +1198,7 @@ extern "C" {
 
 }
 
-__declspec(dllexport) void setGameType(int gameType) {
-	GameStat.gameType = (gameTypeID)gameType;
+MJCORE GameTable* setGameType(gameTypeID gameType) {
+	GameStat.gameType = gameType;
+	return &GameStat;
 }
