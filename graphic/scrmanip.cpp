@@ -32,7 +32,7 @@ void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
 ScreenManipulator::ScreenManipulator(HWND windowHandle) {
 	pDevice = nullptr; hWnd = windowHandle;
 	InitDevice();
-	myScene = new GameTableScreen(this);
+	myScene = new TitleScreen(this);
 	myFPSIndicator = new FPSIndicator(this);
 	lastRedrawTime = 0;
 }
