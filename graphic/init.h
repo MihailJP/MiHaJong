@@ -3,14 +3,12 @@
 
 #include <Windows.h>
 #include <tchar.h>
+#include "exports.h"
 
 #ifdef GRAPHIC_EXPORTS
 #include "window.h"
-#define EXPORT __declspec(dllexport)
 extern HINSTANCE GraphicDLL;
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
-#else
-#define EXPORT __declspec(dllimport)
 #endif
 
 EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon);
