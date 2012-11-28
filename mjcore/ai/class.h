@@ -28,13 +28,9 @@ public:
 	__declspec(dllexport) static void initcall(const GameTable* const gameStat, int player);
 	__declspec(dllexport) static void closescript();
 	static void GameStatToLuaTable(lua_State* const L, const GameTable* const gameStat);
-	__declspec(dllexport) static void compdahai_begin(const GameTable* const gameStat);
-	__declspec(dllexport) static int compdahai_check();
-	__declspec(dllexport) static int compdahai();
+	static DiscardTileNum compdahai(const GameTable* const gameStat);
 	static DiscardTileNum determine_discard(const GameTable* const gameStat);
-	__declspec(dllexport) static void compfuuro_begin(GameTable* const gameStat);
-	__declspec(dllexport) static int compfuuro_check();
-	__declspec(dllexport) static void compfuuro_end();
+	static void compfuuro(GameTable* const gameStat);
 	static void determine_meld(GameTable* const gameStat);
 };
 

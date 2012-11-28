@@ -3,7 +3,6 @@
 namespace RemoteAction {
 
 /* Ú‘±æ‚Ì‘Å”v */
-RemoteActionPtr rDahaiProc = {nullptr};
 void proc_abrupt_disconnect(GameTable* const gameStat, PLAYER_ID player) {
 	{
 		gameStat->Player[player].ConnectionLost = true;
@@ -103,18 +102,12 @@ DWORD WINAPI RemoteDahai::thread () {
 	finished = true;
 	return S_OK;
 }
-/* ¡‚Í”Ž–î‚É‚æ‚èŒÄ‚Ño‚µŒ³‚ÅŠÇ—‚µ‚Ä‚¢‚é‚ªAŠ®‘SˆÚA’B¬Œã‚Í¥³‚·‚é—\’è */
-__declspec(dllexport) void remotedahai_begin (GameTable* const gameStat) {
-	rDahaiProc.dahai = new RemoteDahai(gameStat);
-}
-__declspec(dllexport) int remotedahai_isfinished () {
-	return rDahaiProc.dahai->isFinished() ? 1 : 0;
-}
-__declspec(dllexport) int remotedahai_getdiscard () {
-	return rDahaiProc.dahai->get().toSingleInt();
-}
-__declspec(dllexport) void remotedahai_end () {
-	delete rDahaiProc.dahai; rDahaiProc.dahai = nullptr;
+DiscardTileNum remotedahai (GameTable* const gameStat) {
+	RemoteDahai* rDahai = new RemoteDahai(gameStat);
+	while (!rDahai->isFinished()) Sleep(1);
+	DiscardTileNum d = rDahai->get();
+	delete rDahai; rDahai = nullptr;
+	return d;
 }
 
 /* Ú‘±æ‚Ì–Â‚« */
@@ -147,13 +140,13 @@ void RemoteNaki::thread_client() {
 				gameStat->Player[tmp].DeclarationFlag.Kan = true;
 				break;
 			case Naki_Chii_Lower:
-				gameStat->Player[tmp].DeclarationFlag.Chi = 1;
+				gameStat->Player[tmp].DeclarationFlag.Chi = chiiLower;
 				break;
 			case Naki_Chii_Middle:
-				gameStat->Player[tmp].DeclarationFlag.Chi = 2;
+				gameStat->Player[tmp].DeclarationFlag.Chi = chiiMiddle;
 				break;
 			case Naki_Chii_Upper:
-				gameStat->Player[tmp].DeclarationFlag.Chi = 3;
+				gameStat->Player[tmp].DeclarationFlag.Chi = chiiUpper;
 				break;
 			case Naki_Remote_Disconnect:
 				if (!gameStat->Player[tmp].ConnectionLost)
@@ -230,26 +223,23 @@ void RemoteNaki::checkremotenaki(PLAYER_ID player, int& ReceivedMsg) {
 		gameStat->Player[player].DeclarationFlag.Kan = true;
 		break;
 	case Naki_Chii_Lower:
-		gameStat->Player[player].DeclarationFlag.Chi = 1;
+		gameStat->Player[player].DeclarationFlag.Chi = chiiLower;
 		break;
 	case Naki_Chii_Middle:
-		gameStat->Player[player].DeclarationFlag.Chi = 2;
+		gameStat->Player[player].DeclarationFlag.Chi = chiiMiddle;
 		break;
 	case Naki_Chii_Upper:
-		gameStat->Player[player].DeclarationFlag.Chi = 3;
+		gameStat->Player[player].DeclarationFlag.Chi = chiiUpper;
 		break;
 	}
 	return;
 }
 
-__declspec(dllexport) void remotenaki_begin (GameTable* const gameStat) {
-	rDahaiProc.naki = new RemoteNaki(gameStat);
-}
-__declspec(dllexport) int remotenaki_isfinished () {
-	return rDahaiProc.naki->isFinished() ? 1 : 0;
-}
-__declspec(dllexport) void remotenaki_end () {
-	delete rDahaiProc.naki; rDahaiProc.naki = nullptr;
+void remotenaki (GameTable* const gameStat) {
+	RemoteNaki* rNaki = new RemoteNaki(gameStat);
+	while (!rNaki->isFinished())
+		Sleep(1);
+	delete rNaki; rNaki = nullptr;
 }
 
 } /* namespace */

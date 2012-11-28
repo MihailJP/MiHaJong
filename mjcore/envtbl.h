@@ -31,6 +31,7 @@ public:
 	bool WatchModeFlag;
 	uint8_t bgColorR, bgColorG, bgColorB;
 
+	static void TableEnvInit();
 	// HSPからのアクセサ
 	__declspec(dllexport) static void setPlayerName(void *, int PlayerNum, LPCTSTR const NameStr);
 	__declspec(dllexport) static void getPlayerName(void *, int PlayerNum, LPTSTR const NameStr, int bufsize);
