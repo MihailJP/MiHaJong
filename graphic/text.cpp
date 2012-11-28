@@ -3,6 +3,7 @@
 #include "font.h"
 #include "geometry.h"
 #include "../mjcore/strcode.h"
+#include "sprite.h"
 
 TextRenderer::TextRenderer(LPDIRECT3DDEVICE9 device) {
 	myDevice = device;
@@ -103,12 +104,9 @@ void TextRenderer::Render() {
 				((*k)->chr_id % FontCols + 1) * FontBaseSize,
 				((*k)->chr_id / FontCols + 1) * FontBaseSize,
 			};
-			D3DXVECTOR3 Center(0, 0, 0);
-			D3DXVECTOR3 Pos((float)(*k)->X, (float)(*k)->Y, 0);
-			(*k)->sprite->Begin(D3DXSPRITE_ALPHABLEND);
-			(*k)->sprite->SetTransform(&(*k)->matrix);
-			(*k)->sprite->Draw(font, &rect, &Center, &Pos, (*k)->color);
-			(*k)->sprite->End();
+			SpriteRenderer::ShowSprite(
+				(*k)->sprite, font, (*k)->X, (*k)->Y, FontBaseSize, FontBaseSize,
+				(*k)->color, &rect);
 		}
 	}
 }
