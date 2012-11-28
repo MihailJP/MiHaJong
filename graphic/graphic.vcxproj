@@ -140,6 +140,7 @@
     <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="geometry.cpp" />
     <ClCompile Include="init.cpp" />
+    <ClCompile Include="input.cpp" />
     <ClCompile Include="loadtex.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
     <ClCompile Include="scenes\game.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="gametbl.h" />
     <ClInclude Include="geometry.h" />
     <ClInclude Include="init.h" />
+    <ClInclude Include="input.h" />
     <ClInclude Include="loadtex.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="scenes\fps.h" />
