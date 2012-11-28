@@ -25,13 +25,15 @@ EXPORT void CleanupWindow() {
 	delete myMainWindow;
 }
 
+}
+
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
-		GraphicDLL = hinstDLL;
+		mihajong_graphic::GraphicDLL = hinstDLL;
 		break;
 	case DLL_PROCESS_DETACH:
-		GraphicDLL = nullptr;
+		mihajong_graphic::GraphicDLL = nullptr;
 		break;
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH:
@@ -39,6 +41,4 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	}
 
 	return TRUE;
-}
-
 }
