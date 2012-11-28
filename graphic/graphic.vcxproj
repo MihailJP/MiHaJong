@@ -89,7 +89,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d9.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;$(TargetDir)mjcore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug(Wide)|Win32'">
@@ -100,7 +100,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d9.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;$(TargetDir)mjcore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -116,7 +116,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>d3d9.lib;d3dx9.lib;dxerr.lib;dxguid.lib;$(TargetDir)mjcore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;dxerr.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release(Wide)|Win32'">
@@ -132,11 +132,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>d3d9.lib;d3dx9.lib;dxerr.lib;dxguid.lib;$(TargetDir)mjcore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;dxerr.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="font.cpp" />
+    <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="geometry.cpp" />
     <ClCompile Include="init.cpp" />
     <ClCompile Include="loadtex.cpp" />
@@ -145,11 +146,14 @@
     <ClCompile Include="scenes\table.cpp" />
     <ClCompile Include="scrmanip.cpp" />
     <ClCompile Include="showtile.cpp" />
+    <ClCompile Include="sprite.cpp" />
     <ClCompile Include="text.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="exports.h" />
     <ClInclude Include="font.h" />
+    <ClInclude Include="gametbl.h" />
     <ClInclude Include="geometry.h" />
     <ClInclude Include="init.h" />
     <ClInclude Include="loadtex.h" />
@@ -161,6 +165,7 @@
     <ClInclude Include="scenes\table.h" />
     <ClInclude Include="scrmanip.h" />
     <ClInclude Include="showtile.h" />
+    <ClInclude Include="sprite.h" />
     <ClInclude Include="text.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>

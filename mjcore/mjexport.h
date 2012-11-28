@@ -6,7 +6,7 @@
 #define MJCEXTERN
 #else
 #define MJCORE __declspec(dllimport)
-#define MJCEXTERN extern
+#define MJCEXTERN /*extern*/
 #endif /* MJCORE_EXPORTS */
 
 #define EXPORT_STRUCT MJCEXTERN struct MJCORE

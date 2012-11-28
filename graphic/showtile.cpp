@@ -2,6 +2,7 @@
 #include "resource.h"
 #include "loadtex.h"
 #include "geometry.h"
+#include "sprite.h"
 
 ShowTile::ShowTile(LPDIRECT3DDEVICE9 device) {
 	myDevice = device;
@@ -35,14 +36,7 @@ void ShowTile::DelTile(unsigned int ID) {
 
 /* ƒŒƒ“ƒ_ƒŠƒ“ƒO */
 void ShowTile::RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY) {
-	D3DXMATRIX matrix; D3DXMatrixIdentity(&matrix);
-	D3DXMatrixScaling(&matrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
-	D3DXVECTOR3 Center(CenterX, CenterY, 0);
-	D3DXVECTOR3 Pos((float)tile->X, (float)tile->Y, 0);
-	tile->sprite->Begin(D3DXSPRITE_ALPHABLEND);
-	tile->sprite->SetTransform(&matrix);
-	tile->sprite->Draw(TileTexture, rect, &Center, &Pos, 0xffffffff);
-	tile->sprite->End();
+	SpriteRenderer::ShowSprite(tile->sprite, TileTexture, tile->X, tile->Y, CenterX*2, CenterY*2, 0xffffffff, rect);
 }
 void ShowTile::RenderVert(TileDescriptor* tile, RECT* rect) {
 	RenderTile(tile, rect, VertTileWidth/2, VertTileHeight/2);
