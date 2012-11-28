@@ -8,6 +8,8 @@
 #include <vector>
 #include "../mjcore/mjimport.h"
 
+namespace mihajong_graphic {
+
 enum TileSide {Obverse, Upright, Reverse,};
 enum TileDirection {Portrait, Withershins, UpsideDown, Clockwise,};
 
@@ -50,4 +52,5 @@ struct ShowTile::TileDescriptor {
 	TileSide side;
 };
 
+}
 #endif

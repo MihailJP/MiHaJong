@@ -8,7 +8,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	MSG msg;
 
 	/* ウィンドウを初期化する */
-	if (!InitWindow(hInstance, nCmdShow, MAKEINTRESOURCE(IDI_ICON1)))
+	if (!mihajong_graphic::InitWindow(hInstance, nCmdShow, MAKEINTRESOURCE(IDI_ICON1)))
 		exit(1); // 失敗したら終了
 	
 	/* メインループ */
@@ -20,12 +20,12 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 			DispatchMessage(&msg);
 		} else {
 			// アイドル時に再描画
-			RefreshWindow();
+			mihajong_graphic::RefreshWindow();
 			Sleep(1);
 		}
 	}
 	
 	/* 終了処理 */
-	CleanupWindow();
+	mihajong_graphic::CleanupWindow();
 	return msg.wParam;
 }

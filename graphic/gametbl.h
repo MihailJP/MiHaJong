@@ -4,6 +4,8 @@
 #include "../mjcore/mjimport.h"
 #include "exports.h"
 
+namespace mihajong_graphic {
+
 class GameStatus {
 #ifdef GRAPHIC_EXPORTS
 private:
@@ -16,4 +18,5 @@ public:
 	EXPORT static void updateGameStat(const GameTable* const gameStat);
 };
 
+}
 #endif

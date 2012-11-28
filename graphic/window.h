@@ -6,6 +6,8 @@
 #include "scrmanip.h"
 #include "geometry.h"
 
+namespace mihajong_graphic {
+
 class MainWindow {
 private:
 	HWND hWnd;
@@ -21,4 +23,5 @@ public:
 	void Render();
 };
 
+}
 #endif

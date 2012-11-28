@@ -1,5 +1,7 @@
 #include "scrmanip.h"
 
+namespace mihajong_graphic {
+
 void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
 	/* Direct3D オブジェクト生成 */
 	pd3d = Direct3DCreate9(D3D_SDK_VERSION);
@@ -54,4 +56,6 @@ ScreenManipulator::~ScreenManipulator() {
 	if (myFPSIndicator) delete myFPSIndicator;
 	if (pd3d) {pd3d->Release(); pd3d = nullptr;}
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
+}
+
 }

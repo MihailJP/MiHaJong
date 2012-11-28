@@ -4,6 +4,8 @@
 #include "geometry.h"
 #include "sprite.h"
 
+namespace mihajong_graphic {
+
 ShowTile::ShowTile(LPDIRECT3DDEVICE9 device) {
 	myDevice = device;
 	LoadTexture(myDevice, &TileTexture, MAKEINTRESOURCE(IDB_PNG_TILE), TextureWidth, TextureHeight);
@@ -130,4 +132,6 @@ void ShowTile::Render() {
 			}
 		}
 	}
+}
+
 }

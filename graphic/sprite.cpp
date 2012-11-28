@@ -1,6 +1,8 @@
 #include "sprite.h"
 #include "geometry.h"
 
+namespace mihajong_graphic {
+
 void SpriteRenderer::ShowSprite(
 	LPD3DXSPRITE sprite, LPDIRECT3DTEXTURE9 texture, int X, int Y, int Width, int Height,
 	D3DCOLOR color, RECT* rect, int CenterX, int CenterY, LPD3DXMATRIX matrix)
@@ -14,4 +16,6 @@ void SpriteRenderer::ShowSprite(
 	sprite->SetTransform(matrix ? matrix : &defaultMatrix);
 	sprite->Draw(texture, rect ? rect : &defaultRect, &Center, &Pos, color);
 	sprite->End();
+}
+
 }

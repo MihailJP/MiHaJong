@@ -5,6 +5,8 @@
 #include "../mjcore/strcode.h"
 #include "sprite.h"
 
+namespace mihajong_graphic {
+
 TextRenderer::TextRenderer(LPDIRECT3DDEVICE9 device) {
 	myDevice = device;
 	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT), 1280, 1280);
@@ -109,4 +111,6 @@ void TextRenderer::Render() {
 				(*k)->color, &rect);
 		}
 	}
+}
+
 }

@@ -5,6 +5,8 @@
 #include <d3dx9.h>
 #include <dxerr.h>
 
+namespace mihajong_graphic {
+
 class ScreenManipulator;
 
 /* シーン オブジェクトのスーパークラス */
@@ -19,4 +21,5 @@ public:
 	virtual ~Scene() {}
 };
 
+}
 #endif

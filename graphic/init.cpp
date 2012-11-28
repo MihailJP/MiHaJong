@@ -1,5 +1,7 @@
 #include "init.h"
 
+namespace mihajong_graphic {
+
 HINSTANCE GraphicDLL = nullptr;
 MainWindow* myMainWindow = nullptr;
 
@@ -37,4 +39,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	}
 
 	return TRUE;
+}
+
 }

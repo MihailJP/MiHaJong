@@ -1,5 +1,7 @@
 #include "window.h"
 
+namespace mihajong_graphic {
+
 ScreenManipulator* MainWindow::myScreenManipulator = nullptr;
 const LPTSTR MainWindow::myWindowClassName = _T("testwnd");
 const LPTSTR MainWindow::WindowCaption = _T("テストウィンドウ");
@@ -72,4 +74,6 @@ void MainWindow::Render() { // ウィンドウの再描画
 		ValidateRect(hWnd, nullptr);
 	}
 	return;
+}
+
 }

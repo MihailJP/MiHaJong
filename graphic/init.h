@@ -7,12 +7,17 @@
 
 #ifdef GRAPHIC_EXPORTS
 #include "window.h"
-extern HINSTANCE GraphicDLL;
+namespace mihajong_graphic {
+	extern HINSTANCE GraphicDLL;
+}
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 #endif
+
+namespace mihajong_graphic {
 
 EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon);
 EXPORT void RefreshWindow();
 EXPORT void CleanupWindow();
 
+}
 #endif

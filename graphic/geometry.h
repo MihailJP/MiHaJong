@@ -1,6 +1,8 @@
 #ifndef GRAPHIC_GEOMETRY_H
 #define GRAPHIC_GEOMETRY_H
 
+namespace mihajong_graphic {
+
 class Geometry {
 public:
 	static const unsigned BaseSize = 1080;
@@ -10,4 +12,5 @@ public:
 	static unsigned SidebarWidth() {return (WindowWidth - WindowHeight) / WindowScale() ;}
 };
 
+}
 #endif
