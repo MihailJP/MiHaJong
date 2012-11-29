@@ -8,6 +8,10 @@
 #include "../resource.h"
 #include "../sprite.h"
 
+namespace mihajong_graphic {
+
+// -------------------------------------------------------------------------
+
 TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	caller = manipulator;
 	TitleSprite::LoadTexture(caller->getDevice());
@@ -77,7 +81,7 @@ void TitleScreen::Render() {
 LPDIRECT3DTEXTURE9 TitleScreen::TitleSprite::texture = nullptr;
 
 void TitleScreen::TitleSprite::LoadTexture(LPDIRECT3DDEVICE9 device) {
-	::LoadTexture(device, &texture, MAKEINTRESOURCE(IDB_PNG_TITLE), 1700, 300);
+	mihajong_graphic::LoadTexture(device, &texture, MAKEINTRESOURCE(IDB_PNG_TITLE), 1700, 300);
 }
 void TitleScreen::TitleSprite::DisposeTexture() {
 	if (texture) texture->Release();
@@ -105,4 +109,8 @@ void TitleScreen::TitleSprite::show(int X, int Y, float scale, uint8_t opacity) 
 	SpriteRenderer::ShowSprite(
 		sprite, texture, X, Y, width, height,
 		(opacity << 24) | 0xffffff, &rect, width/2, height/3, &matrix);
+}
+
+// -------------------------------------------------------------------------
+
 }

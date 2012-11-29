@@ -8,6 +8,8 @@
 #include <vector>
 #include "loadtex.h"
 
+namespace mihajong_graphic {
+
 class TextRenderer {
 private:
 	static const unsigned int FontBaseSize = 40;
@@ -49,4 +51,6 @@ struct TextRenderer::SpriteAttr {
 	D3DCOLOR color;
 	D3DXMATRIX matrix;
 };
+
+}
 #endif

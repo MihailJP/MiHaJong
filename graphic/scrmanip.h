@@ -6,6 +6,8 @@
 #include <tchar.h>
 #include "scenes/scenes.h"
 
+namespace mihajong_graphic {
+
 class ScreenManipulator {
 private:
 	HWND hWnd;
@@ -23,4 +25,5 @@ public:
 	LPDIRECT3DDEVICE9 getDevice() {return pDevice;}
 };
 
+}
 #endif

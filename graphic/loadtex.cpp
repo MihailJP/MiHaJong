@@ -1,6 +1,8 @@
 #include "loadtex.h"
 #include "resource.h"
 
+namespace mihajong_graphic {
+
 void LoadTexture(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9* texture, LPCTSTR resource, unsigned width, unsigned height) {
 	HRSRC Resource = FindResource(GraphicDLL, resource, MAKEINTRESOURCE(PNG_FILE));
 	HGLOBAL ResourceMem = LoadResource(GraphicDLL, Resource);
@@ -27,4 +29,6 @@ void LoadTexture(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9* texture, LPCTSTR 
 	default: // This may not happen...
 		throw _T("テクスチャの生成に失敗しました。原因不明のエラーです。");
 	}
+}
+
 }

@@ -4,6 +4,8 @@
 #include "geometry.h"
 #include "sprite.h"
 
+namespace mihajong_graphic {
+
 ShowTile::ShowTile(LPDIRECT3DDEVICE9 device) {
 	myDevice = device;
 	LoadTexture(myDevice, &TileTexture, MAKEINTRESOURCE(IDB_PNG_TILE), TextureWidth, TextureHeight);
@@ -36,7 +38,8 @@ void ShowTile::DelTile(unsigned int ID) {
 
 /* ƒŒƒ“ƒ_ƒŠƒ“ƒO */
 void ShowTile::RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY) {
-	SpriteRenderer::ShowSprite(tile->sprite, TileTexture, tile->X, tile->Y, CenterX*2, CenterY*2, 0xffffffff, rect);
+	SpriteRenderer::ShowSprite(tile->sprite, TileTexture, tile->X, tile->Y,
+		CenterX*2, CenterY*2, 0xffffffff, rect, CenterX, CenterY);
 }
 void ShowTile::RenderVert(TileDescriptor* tile, RECT* rect) {
 	RenderTile(tile, rect, VertTileWidth/2, VertTileHeight/2);
@@ -130,4 +133,6 @@ void ShowTile::Render() {
 			}
 		}
 	}
+}
+
 }

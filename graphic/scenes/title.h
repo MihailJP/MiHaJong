@@ -5,6 +5,8 @@
 #include <array>
 #include <cstdint>
 
+namespace mihajong_graphic {
+
 class TitleScreen : public Scene {
 private:
 	static const unsigned nsTitleLogo = 3;
@@ -35,4 +37,5 @@ public:
 	void show(int X, int Y, float scale = 1.0f, uint8_t opacity = 0xff);
 };
 
+}
 #endif

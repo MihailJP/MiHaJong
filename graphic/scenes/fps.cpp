@@ -2,6 +2,8 @@
 #include "../scrmanip.h"
 #include "../text.h"
 
+namespace mihajong_graphic {
+
 FPSIndicator::FPSIndicator(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	textRenderer = new TextRenderer(caller->getDevice());
 	fpsstr[0] = 0;
@@ -32,4 +34,6 @@ void FPSIndicator::Render() {
 	/* •\¦‚·‚é */
 	textRenderer->NewText(0, fpsstr, 0, 0, 0.75, 1.333333);
 	textRenderer->Render();
+}
+
 }
