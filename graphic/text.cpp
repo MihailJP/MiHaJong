@@ -25,13 +25,18 @@ TextRenderer::~TextRenderer() {
 /* 新規の文字列オブジェクトを作成する */
 void TextRenderer::NewText(unsigned int ID, const std::wstring& str, int x, int y, float scale, float width, D3DCOLOR color) {
 	if (StringData.size() <= ID) StringData.resize(ID + 1, nullptr); // 配列の拡張
-	if (!StringData[ID]) delete StringData[ID]; // 既に存在した場合
-	StringData[ID] = new StringAttr;
-	StringData[ID]->str = std::wstring(str);
+	bool TextChanged = (!StringData[ID]) || (StringData[ID]->str != str);
+	if (StringData[ID] && TextChanged) delete StringData[ID]; // 既に存在した場合
+	if (TextChanged) StringData[ID] = new StringAttr;
 	StringData[ID]->X = x; StringData[ID]->Y = y;
 	StringData[ID]->scale = scale; StringData[ID]->width = width;
 	StringData[ID]->color = color;
-	reconstruct(ID);
+	if (TextChanged) {
+		StringData[ID]->str = std::wstring(str);
+		reconstruct(ID, true);
+	} else {
+		reconstruct(ID, false);
+	}
 }
 void TextRenderer::NewText(unsigned int ID, const std::string& str, int x, int y, float scale, float width, D3DCOLOR color) {
 	NewText(ID, CodeConv::ANSItoWIDE(str), x, y, scale, width, color);
@@ -44,38 +49,49 @@ void TextRenderer::DelText(unsigned int ID) {
 }
 
 /* スプライト再構築 */
-void TextRenderer::reconstruct(unsigned int ID) {
+void TextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrAdvance, float cursorPos) {
+	sprite->X = StringData[ID]->X + chrAdvance * cursorPos - FontPadding;
+	sprite->Y = StringData[ID]->Y - FontPadding;
+	sprite->widthScale = StringData[ID]->scale * StringData[ID]->width;
+	sprite->heightScale = StringData[ID]->scale;
+	sprite->color = StringData[ID]->color;
+	/* 行列を計算する */
+	D3DXMATRIX m; D3DXMatrixIdentity(&m);
+	D3DXMatrixIdentity(&sprite->matrix);
+	D3DXMatrixTranslation(&m, (float)-(sprite->X), (float)-(sprite->Y), 0);
+	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);
+	D3DXMatrixScaling(&m, sprite->widthScale, sprite->heightScale, 0.0f);
+	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);
+	D3DXMatrixTranslation(&m, (float)sprite->X, (float)sprite->Y, 0);
+	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);
+	D3DXMatrixScaling(&m, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
+	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);
+	/* ここまで */
+}
+void TextRenderer::reconstruct(unsigned int ID, bool rescanStr) {
 	if (SpriteData.size() <= ID) SpriteData.resize(ID + 1, std::vector<SpriteAttr*>()); // 配列の拡張
-	if (!SpriteData[ID].empty()) deleteSprite(ID); // 既に存在した場合
+	if ((!SpriteData[ID].empty()) && rescanStr) deleteSprite(ID); // 既に存在した場合
 	if (!StringData[ID]) /* ぬるぽ */
 		return; /* ガッ */
 	float chrAdvance = (FontBaseSize - FontPadding * 2) * StringData[ID]->scale * StringData[ID]->width;
 	float cursorPos = 0;
-	for (auto k = StringData[ID]->str.begin(); k != StringData[ID]->str.end(); ++k) {
-		SpriteData[ID].push_back(new SpriteAttr);
-		SpriteData[ID].back()->sprite = nullptr;
-		if (FAILED(D3DXCreateSprite(myDevice, &SpriteData[ID].back()->sprite)))
-			throw _T("スプライトの生成に失敗しました");
-		SpriteData[ID].back()->chr_id = FontMap::instantiate()->map(*k);
-		SpriteData[ID].back()->X = StringData[ID]->X + chrAdvance * cursorPos - FontPadding;
-		SpriteData[ID].back()->Y = StringData[ID]->Y - FontPadding;
-		SpriteData[ID].back()->widthScale = StringData[ID]->scale * StringData[ID]->width;
-		SpriteData[ID].back()->heightScale = StringData[ID]->scale;
-		SpriteData[ID].back()->color = StringData[ID]->color;
-		if (*k <= L'\x7f') cursorPos += .5f;
-		else cursorPos += 1.0f;
-		/* 行列を計算する */
-		D3DXMATRIX m; D3DXMatrixIdentity(&m);
-		D3DXMatrixIdentity(&SpriteData[ID].back()->matrix);
-		D3DXMatrixTranslation(&m, (float)-(SpriteData[ID].back()->X), (float)-(SpriteData[ID].back()->Y), 0);
-		D3DXMatrixMultiply(&SpriteData[ID].back()->matrix, &SpriteData[ID].back()->matrix, &m);
-		D3DXMatrixScaling(&m, SpriteData[ID].back()->widthScale, SpriteData[ID].back()->heightScale, 0.0f);
-		D3DXMatrixMultiply(&SpriteData[ID].back()->matrix, &SpriteData[ID].back()->matrix, &m);
-		D3DXMatrixTranslation(&m, (float)SpriteData[ID].back()->X, (float)SpriteData[ID].back()->Y, 0);
-		D3DXMatrixMultiply(&SpriteData[ID].back()->matrix, &SpriteData[ID].back()->matrix, &m);
-		D3DXMatrixScaling(&m, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
-		D3DXMatrixMultiply(&SpriteData[ID].back()->matrix, &SpriteData[ID].back()->matrix, &m);
-		/* ここまで */
+	if (rescanStr) {
+		for (auto k = StringData[ID]->str.begin(); k != StringData[ID]->str.end(); ++k) {
+			SpriteData[ID].push_back(new SpriteAttr);
+			SpriteData[ID].back()->sprite = nullptr;
+			if (FAILED(D3DXCreateSprite(myDevice, &SpriteData[ID].back()->sprite)))
+				throw _T("スプライトの生成に失敗しました");
+			SpriteData[ID].back()->chr_id = FontMap::instantiate()->map(*k);
+			spriteRecalc(ID, SpriteData[ID].back(), chrAdvance, cursorPos);
+			if (*k <= L'\x7f') cursorPos += .5f;
+			else cursorPos += 1.0f;
+		}
+	} else {
+		for (auto k = SpriteData[ID].begin(); k != SpriteData[ID].end(); ++k) {
+			spriteRecalc(ID, *k, chrAdvance, cursorPos);
+			if (((*k)->chr_id > 0) && ((*k)->chr_id <= 96)) cursorPos += .5f;
+			else cursorPos += 1.0f;
+		}
 	}
 }
 void TextRenderer::reconstruct() {
