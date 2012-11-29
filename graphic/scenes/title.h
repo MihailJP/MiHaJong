@@ -27,6 +27,7 @@ public:
 	TitleScreen(ScreenManipulator* const manipulator);
 	~TitleScreen();
 	void Render();
+	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 };
 
 class TitleScreen::TitleSprite {

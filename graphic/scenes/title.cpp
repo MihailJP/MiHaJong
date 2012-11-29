@@ -19,7 +19,7 @@ TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : Scene(manipulat
 		sTitleLogo[i] = new TitleSprite(caller->getDevice(), 500 * i, 0, (i == 2) ? 700 : 500, 300);
 	myTextRenderer = new TextRenderer(caller->getDevice());
 	GetSystemTimeAsFileTime(&startTime);
-	menuCursor = 0;
+	menuCursor = 1;
 }
 
 TitleScreen::~TitleScreen() {
@@ -108,7 +108,7 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 		1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
 		0x33ffffff);
 	} else if (t >= (double)(endF - startF)) {
-		if (ID == menuCursor)
+		if (ID == (menuCursor - 1))
 			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f,
 			1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
 			0xcc000000 | (0x00ffffff & hsv2rgb(t - (double)(endF - startF), 0.25, 1.0))
@@ -136,6 +136,21 @@ void TitleScreen::Render() {
 	zoomingLogo(sTitleLogo[0],  220, 168,   0, 30);
 	zoomingLogo(sTitleLogo[1],  640, 168,  30, 60);
 	zoomingLogo(sTitleLogo[2], 1120, 168,  60, 90);
+}
+
+void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+	switch (od->dwOfs) {
+	case DIK_UP:
+		if (elapsed() > 180u * timePerFrame)
+			if (od->dwData)
+				if (--menuCursor == 0) menuCursor = 6;
+		break;
+	case DIK_DOWN:
+		if (elapsed() > 180u * timePerFrame)
+			if (od->dwData)
+				if (++menuCursor > 6) menuCursor = 1;
+		break;
+	}
 }
 
 // -------------------------------------------------------------------------
