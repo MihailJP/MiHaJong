@@ -21,8 +21,9 @@ private:
 	LPDIRECT3DTEXTURE9 font;
 	std::vector<StringAttr*> StringData;
 	std::vector<std::vector<SpriteAttr*> > SpriteData;
+	void spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrAdvance, float cursorPos);
 	void reconstruct();
-	void reconstruct(unsigned int ID);
+	void reconstruct(unsigned int ID, bool rescanStr = true);
 	void deleteSprite();
 	void deleteSprite(unsigned int ID);
 public:
