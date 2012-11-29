@@ -4,7 +4,9 @@
 #include <d3dx9.h>
 #include <dxerr.h>
 #include <tchar.h>
+#include <functional>
 #include "scenes/scenes.h"
+#include "input.h"
 
 namespace mihajong_graphic {
 
@@ -17,12 +19,14 @@ private:
 	FPSIndicator* myFPSIndicator; // FPS計算・表示
 	UINT64 lastRedrawTime;
 	void InitDevice(); // Direct3D オブジェクト初期化
+	void inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f);
 public:
 	void Render(); // 画面の再描画
 	ScreenManipulator(HWND windowHandle);
 	~ScreenManipulator();
 	HWND getHWnd() {return hWnd;}
 	LPDIRECT3DDEVICE9 getDevice() {return pDevice;}
+	void inputProc(input::InputManipulator* iManip);
 };
 
 }
