@@ -63,11 +63,16 @@ void TextRenderer::reconstruct(unsigned int ID) {
 		if (*k <= L'\x7f') cursorPos += .5f;
 		else cursorPos += 1.0f;
 		/* s—ñ‚ðŒvŽZ‚·‚é */
+		D3DXMATRIX m; D3DXMatrixIdentity(&m);
 		D3DXMatrixIdentity(&SpriteData[ID].back()->matrix);
-		D3DXMatrixTranslation(&SpriteData[ID].back()->matrix, (float)-(SpriteData[ID].back()->X), (float)-(SpriteData[ID].back()->Y), 0);
-		D3DXMatrixScaling(&SpriteData[ID].back()->matrix, SpriteData[ID].back()->widthScale, SpriteData[ID].back()->heightScale, 0.0f);
-		D3DXMatrixTranslation(&SpriteData[ID].back()->matrix, (float)SpriteData[ID].back()->X, (float)SpriteData[ID].back()->Y, 0);
-		D3DXMatrixScaling(&SpriteData[ID].back()->matrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
+		D3DXMatrixTranslation(&m, (float)-(SpriteData[ID].back()->X), (float)-(SpriteData[ID].back()->Y), 0);
+		D3DXMatrixMultiply(&SpriteData[ID].back()->matrix, &SpriteData[ID].back()->matrix, &m);
+		D3DXMatrixScaling(&m, SpriteData[ID].back()->widthScale, SpriteData[ID].back()->heightScale, 0.0f);
+		D3DXMatrixMultiply(&SpriteData[ID].back()->matrix, &SpriteData[ID].back()->matrix, &m);
+		D3DXMatrixTranslation(&m, (float)SpriteData[ID].back()->X, (float)SpriteData[ID].back()->Y, 0);
+		D3DXMatrixMultiply(&SpriteData[ID].back()->matrix, &SpriteData[ID].back()->matrix, &m);
+		D3DXMatrixScaling(&m, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
+		D3DXMatrixMultiply(&SpriteData[ID].back()->matrix, &SpriteData[ID].back()->matrix, &m);
 		/* ‚±‚±‚Ü‚Å */
 	}
 }
@@ -106,7 +111,7 @@ void TextRenderer::Render() {
 			};
 			SpriteRenderer::ShowSprite(
 				(*k)->sprite, font, (*k)->X, (*k)->Y, FontBaseSize, FontBaseSize,
-				(*k)->color, &rect);
+				(*k)->color, &rect, 0, 0, &((*k)->matrix));
 		}
 	}
 }
