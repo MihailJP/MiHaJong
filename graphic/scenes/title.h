@@ -4,6 +4,8 @@
 #include "proto.h"
 #include <array>
 #include <cstdint>
+#include "../text.h"
+#include "../../mjcore/strcode.h"
 
 namespace mihajong_graphic {
 
@@ -17,6 +19,9 @@ private:
 	static const unsigned timePerFrame = 166667u;
 	uint64_t elapsed();
 	void zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF);
+	TextRenderer* myTextRenderer;
+	void menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, int X, int Y, unsigned startF, unsigned endF);
+	void menuLabels();
 public:
 	TitleScreen(ScreenManipulator* const manipulator);
 	~TitleScreen();

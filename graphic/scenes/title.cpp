@@ -71,8 +71,30 @@ void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF
 		sprite->show(X, Y, 1.0f, 128);
 }
 
+void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, int X, int Y, unsigned startF, unsigned endF) {
+	double t = ((double)elapsed() / (double)timePerFrame - (double)startF);
+	float virt_width = (float)Geometry::WindowWidth / Geometry::WindowScale();
+	if ((t >= 0.0f) && (t < (double)(endF - startF)))
+		myTextRenderer->NewText(ID,
+		menustr, X + virt_width * pow(1.0 - t / (double)(endF - startF), 2.0),
+		Y, 2.0f, 1.6f, 0x33ffffff);
+	else if (t >= (double)(endF - startF))
+		myTextRenderer->NewText(ID, menustr, X, Y, 2.0f, 1.6f, 0x33ffffff);
+}
+
+void TitleScreen::menuLabels() {
+	menuLabelSlide(0, _T("Lorem ipsum dolor sit amet"), 0, 400, 120, 180);
+	menuLabelSlide(1, _T("Lorem ipsum dolor sit amet"), 0, 500, 125, 180);
+	menuLabelSlide(2, _T("Lorem ipsum dolor sit amet"), 0, 600, 130, 180);
+	menuLabelSlide(3, _T("Lorem ipsum dolor sit amet"), 0, 700, 135, 180);
+	menuLabelSlide(4, _T("Lorem ipsum dolor sit amet"), 0, 800, 140, 180);
+	menuLabelSlide(5, _T("Lorem ipsum dolor sit amet"), 0, 900, 145, 180);
+	myTextRenderer->Render();
+}
+
 void TitleScreen::Render() {
 	clearWithGameTypeColor();
+	menuLabels();
 	zoomingLogo(sTitleLogo[0],  220, 168,   0, 30);
 	zoomingLogo(sTitleLogo[1],  640, 168,  30, 60);
 	zoomingLogo(sTitleLogo[2], 1120, 168,  60, 90);
