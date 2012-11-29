@@ -4,6 +4,9 @@
 #include <Windows.h>
 #include <d3dx9.h>
 #include <dxerr.h>
+#include "../input.h"
+
+namespace mihajong_graphic {
 
 class ScreenManipulator;
 
@@ -17,6 +20,9 @@ public:
 		caller = manipulator;
 	}
 	virtual ~Scene() {}
+	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od) {};
+	virtual void MouseInput(LPDIDEVICEOBJECTDATA od) {};
 };
 
+}
 #endif

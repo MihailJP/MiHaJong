@@ -1,5 +1,7 @@
 #include "font.h"
 
+namespace mihajong_graphic {
+
 FontMap* FontMap::instantiate() {
 	static FontMap myInstance;
 	return &myInstance;
@@ -1029,4 +1031,6 @@ FontMap::FontMap() {
 	m.insert(fMapDat(L'\u9ed9', 1021));
 	m.insert(fMapDat(L'\u9f13', 1022));
 	m.insert(fMapDat(L'\u9f8d', 1023));
+}
+
 }

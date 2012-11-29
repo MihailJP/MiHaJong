@@ -1,6 +1,7 @@
 #include "window.h"
 
-ScreenManipulator* MainWindow::myScreenManipulator = nullptr;
+namespace mihajong_graphic {
+
 const LPTSTR MainWindow::myWindowClassName = _T("testwnd");
 const LPTSTR MainWindow::WindowCaption = _T("テストウィンドウ");
 unsigned& MainWindow::WindowWidth = Geometry::WindowWidth;
@@ -60,6 +61,7 @@ MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon) {
 	initWindowClass(hThisInst, icon);
 	initWindow(hThisInst, nWinMode);
 	myScreenManipulator = new ScreenManipulator(hWnd);
+	myInputManipulator = new input::InputManipulator(hWnd);
 }
 
 MainWindow::~MainWindow() {
@@ -70,6 +72,10 @@ void MainWindow::Render() { // ウィンドウの再描画
 	if (myScreenManipulator) {
 		myScreenManipulator->Render();
 		ValidateRect(hWnd, nullptr);
+		if (myInputManipulator)
+			myScreenManipulator->inputProc(myInputManipulator);
 	}
 	return;
+}
+
 }

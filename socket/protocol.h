@@ -19,6 +19,22 @@ namespace protocol {
 	//                      NAME1 to NAME4 = プレイヤー名
 	//                      RULES = ルール設定(80文字ずつに区切る)
 	const uint8_t Server_StartGame_Signature = 0xb4; // サーバーからプレイ開始のシグネチャ
+	
+	// 開始のシグネチャ…… B6 RN HB RB PR SCORE1 SCORE2 SCORE3 SCORE4 YK CH CH CH CH SU \
+	//                      DECK DI DI
+	//                      RN = 局番号(東1局=0、東2局=1、以下同様にして南4局=7)
+	//                      HB = 積み棒の数
+	//                      RB = リーチ棒の数
+	//                      PR = 八連荘判定用((最終和了プレイヤー番号(なければ-1) + 1) << 4 + 連続和了数)
+	//                      SCORE1 to SCORE4 = 持ち点
+	//                      YK = 焼き鳥フラグ(bit4～bit7 = 0, bit3 = Player0, ..., bit0 = Player3)
+	//                      CH = チップ(excess-128, Player0 to Player3)
+	//                      YK = 四馬路解禁フラグ(bit4～bit7 = 0, bit3 = Player0, ..., bit0 = Player3)
+	//                      DECK = 洗牌済みの山牌
+	//                      DI = サイコロの目(0xa9～0xae)
+	const uint8_t Server_StartRound_Signature = 0xb6; // サーバーから局開始のシグネチャ
+	const uint8_t StartRound_Dice_Excess = 0xa8; // サイコロの出目 0xa9～0xae
+	const uint8_t StartRound_Tile_Excess = 0x10; // 牌番号のゲタ
 
 	// 捨牌コード送受信用
 	const uint8_t Dahai_Type_Normal_Offset = 0x60; // 普通の捨牌 (0x60 .. 0x6d)

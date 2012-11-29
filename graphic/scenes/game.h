@@ -4,6 +4,8 @@
 #include "proto.h"
 #include "../showtile.h"
 
+namespace mihajong_graphic {
+
 class TableProtoScene : public Scene {
 protected:
 	ShowTile* TileTexture;
@@ -17,4 +19,5 @@ public:
 	virtual ~TableProtoScene();
 };
 
+}
 #endif

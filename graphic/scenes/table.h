@@ -4,6 +4,8 @@
 #include "game.h"
 #include "../geometry.h"
 
+namespace mihajong_graphic {
+
 class GameTableScreen : public TableProtoScene {
 private:
 	static const unsigned int TableSize = Geometry::BaseSize;
@@ -22,4 +24,5 @@ public:
 	void Render();
 };
 
+}
 #endif

@@ -134,7 +134,10 @@ static_assert(std::is_pod<RichiStat>::value, "RichiStat is not POD");
 
 // -------------------------------------------------------------------------
 
-EXPORT_STRUCT KANGSTAT { uint8_t kangFlag, chainFlag, topFlag, chankanFlag; };
+enum ChankanStat : uint8_t {
+	chankanNone, chankanRegular, chankanOfAnkan, chankanOfNorth,
+};
+EXPORT_STRUCT KANGSTAT { bool kangFlag, topFlag; uint8_t chainFlag; ChankanStat chankanFlag; };
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<KANGSTAT>::value, "KANGSTAT is not POD");
 #endif
@@ -172,9 +175,12 @@ static_assert(std::is_pod<doraStatBook>::value, "doraStatBook is not POD");
 
 // -------------------------------------------------------------------------
 
+enum ChiiType : int8_t {
+	chiiNone, chiiLower, chiiMiddle, chiiUpper,
+};
 EXPORT_STRUCT DECLFLAG {
 	bool Ron, Kan, Pon;
-	int8_t Chi;
+	ChiiType Chi;
 };
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<DECLFLAG>::value, "DECLFLAG is not POD");
@@ -210,6 +216,9 @@ static_assert(std::is_pod<DICE>::value, "DICE is not POD");
 
 // -------------------------------------------------------------------------
 
+enum handStatCode : int8_t {
+	handUpright, handExposed, handHidden, handOpenRiichi,
+};
 EXPORT_STRUCT PlayerTable { // プレイヤーの状態を格納
 	LargeNum PlayerScore;
 	int playerChip; // チップの収支
@@ -221,7 +230,7 @@ EXPORT_STRUCT PlayerTable { // プレイヤーの状態を格納
 	MELD_BUF Meld; // 鳴き面子を格納
 	uint8_t MeldPointer;
 	bool MenzenFlag; // 門前フラグ
-	int8_t HandStat; // 手牌の状態（立てる・見せる・伏せる）
+	handStatCode HandStat; // 手牌の状態（立てる・見せる・伏せる）
 	int8_t NumberOfQuads; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
 	RichiStat RichiFlag; // リーチしているかどうか
 	bool FirstDrawFlag; // １巡目である（地和、ダブル立直の判定に使う）
@@ -290,7 +299,12 @@ PLAYER_ID tobePlayed(const GameTable* const gameStat, int id);
 /* gametbl.cpp */
 extern GameTable GameStat, StatSandBox;
 inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType);
+extern "C" __declspec(dllexport) void calcWareme(GameTable* const gameStat);
+extern "C" GameTable* makesandBox(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+extern "C" __declspec(dllexport) void inittable(GameTable* const gameStat);
+extern "C" GameTable* initializeGameTable(gameTypeID gameType);
 #endif
+MJCORE GameTable* setGameType(gameTypeID gameType);
 
 // -------------------------------------------------------------------------
 

@@ -5,6 +5,8 @@
 #include "proto.h"
 #include "../text.h"
 
+namespace mihajong_graphic {
+
 class RuleConfigScene : public Scene {
 private:
 	TextRenderer* textRenderer;
@@ -14,4 +16,5 @@ public:
 	void Render();
 };
 
+}
 #endif

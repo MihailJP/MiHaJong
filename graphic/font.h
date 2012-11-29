@@ -3,6 +3,8 @@
 
 #include <map>
 
+namespace mihajong_graphic {
+
 class FontMap {
 private:
 	typedef std::map<wchar_t, unsigned short> fMap;
@@ -18,4 +20,5 @@ public:
 	unsigned short map(wchar_t c);
 };
 
+}
 #endif

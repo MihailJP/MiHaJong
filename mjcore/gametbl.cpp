@@ -368,7 +368,7 @@ extern "C" {
 
 	__declspec(dllexport) void setHandStat(GameTable* const gameStat, int Player, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		gameStat->Player[Player].HandStat = value;
+		gameStat->Player[Player].HandStat = (handStatCode)value;
 		return;
 	}
 	__declspec(dllexport) int getHandStat(const GameTable* const gameStat, int Player) {
@@ -529,10 +529,10 @@ extern "C" {
 	__declspec(dllexport) void setKangFlag(GameTable* const gameStat, int Page, int value) {
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		switch (Page) {
-			case 0: gameStat->KangFlag.kangFlag = (uint8_t)value; break;
-			case 1: gameStat->KangFlag.chainFlag = (uint8_t)value; break;
+			case 0: gameStat->KangFlag.kangFlag = (bool)value; break;
+			case 1: gameStat->KangFlag.chainFlag = (bool)value; break;
 			case 2: gameStat->KangFlag.topFlag = (uint8_t)value; break;
-			case 3: gameStat->KangFlag.chankanFlag = (uint8_t)value; break;
+			case 3: gameStat->KangFlag.chankanFlag = (ChankanStat)value; break;
 			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います")); break;
 		}
 		return;
@@ -543,7 +543,7 @@ extern "C" {
 			case 0: gameStat->KangFlag.kangFlag++; break;
 			case 1: gameStat->KangFlag.chainFlag++; break;
 			case 2: gameStat->KangFlag.topFlag++; break;
-			case 3: gameStat->KangFlag.chankanFlag++; break;
+			case 3: gameStat->KangFlag.chankanFlag = (ChankanStat)(gameStat->KangFlag.chankanFlag + 1); break;
 			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います")); break;
 		}
 		return;
@@ -867,7 +867,7 @@ extern "C" {
 		switch(Page) {
 			case 0: gameStat->Player[Player].DeclarationFlag.Ron = value; break;
 			case 1: gameStat->Player[Player].DeclarationFlag.Pon = value; break;
-			case 2: gameStat->Player[Player].DeclarationFlag.Chi = (int8_t)value; break;
+			case 2: gameStat->Player[Player].DeclarationFlag.Chi = (ChiiType)value; break;
 			case 3: gameStat->Player[Player].DeclarationFlag.Kan = value; break;
 			default: RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ページが違います")); break;
 		}
@@ -879,7 +879,7 @@ extern "C" {
 			gameStat->Player[pl].DeclarationFlag.Ron =
 				gameStat->Player[pl].DeclarationFlag.Pon =
 				gameStat->Player[pl].DeclarationFlag.Kan = false;
-			gameStat->Player[pl].DeclarationFlag.Chi = 0;
+			gameStat->Player[pl].DeclarationFlag.Chi = chiiNone;
 		}
 		return;
 	}
@@ -954,8 +954,9 @@ extern "C" {
 
 		for (int i = 0; i < TILE_NONFLOWER_MAX; i++) // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
 			gameStat->OpenRichiWait[i] = false;
-		gameStat->KangFlag.kangFlag = gameStat->KangFlag.chainFlag = // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
-			gameStat->KangFlag.topFlag = gameStat->KangFlag.chankanFlag = 0;
+		gameStat->KangFlag.kangFlag = gameStat->KangFlag.topFlag = false; // 嶺上開花；頭槓和；連開花と槓振り；搶槓の判定に使う
+		gameStat->KangFlag.chainFlag = 0;
+		gameStat->KangFlag.chankanFlag = chankanNone;
 		gameStat->TurnRound =  // 現在の巡目
 			gameStat->KangNum = 0; // 四槓流局、四槓子などの判定に使う
 		gameStat->RichiCounter =
@@ -1008,7 +1009,7 @@ extern "C" {
 				gameStat->Player[pl].Discard[i].isDiscardThrough = false;
 			}
 			gameStat->Player[pl].MenzenFlag = true; // 門前フラグ
-			gameStat->Player[pl].HandStat = 0; // 手牌の状態（立てる・見せる・伏せる）
+			gameStat->Player[pl].HandStat = handUpright; // 手牌の状態（立てる・見せる・伏せる）
 			gameStat->Player[pl].MeldPointer = 0; // 最初変な数字が入ってたりするんで……
 			for (int i = 0; i < SIZE_OF_MELD_BUFFER; i++) {
 				// 鳴き面子を格納
@@ -1037,7 +1038,7 @@ extern "C" {
 		assert(gameStat->Player[0].DiscardPointer == 0); // 初期化できてるかチェック（デバッグ用）
 	}
 
-	void doInitializeGameTable(GameTable* const gameStat, int gameType) { // 半荘単位の初期化処理
+	void doInitializeGameTable(GameTable* const gameStat, gameTypeID gameType) { // 半荘単位の初期化処理
 		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 		/* 内部処理用でエクスポートしない */
 		memset(gameStat, 0, sizeof(GameTable));
@@ -1083,14 +1084,14 @@ extern "C" {
 		inittable(gameStat); // 局ごとの初期化も行う
 	}
 
-	__declspec(dllexport) const GameTable* const initializeGameTable(int gameType) { // 半荘単位の初期化処理
+	GameTable* initializeGameTable(gameTypeID gameType) { // 半荘単位の初期化処理
 		doInitializeGameTable(&GameStat, gameType);
 		return &GameStat;
 	}
 
 	// ---------------------------------------------------------------------
 
-	__declspec(dllexport) void makesandBox(int* const Sandbox, const GameTable* const gameStat, int targetPlayer) {
+	GameTable* makesandBox(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 		/* 卓の状態のサンドボックスを作る */
 		GameTable* const sandbox = &StatSandBox;
 		doInitializeGameTable(sandbox, gameStat->gameType);
@@ -1190,13 +1191,14 @@ extern "C" {
 		sandbox->CurrentPlayer.Agari = gameStat->CurrentPlayer.Agari;
 		sandbox->CurrentPlayer.Furikomi = gameStat->CurrentPlayer.Furikomi;
 
-		*Sandbox = (int)sandbox;
+		return sandbox;
 	}
 
 	// ---------------------------------------------------------------------
 
 }
 
-__declspec(dllexport) void setGameType(int gameType) {
-	GameStat.gameType = (gameTypeID)gameType;
+MJCORE GameTable* setGameType(gameTypeID gameType) {
+	GameStat.gameType = gameType;
+	return &GameStat;
 }

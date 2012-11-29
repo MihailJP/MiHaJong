@@ -4,6 +4,8 @@
 #include "proto.h"
 #include <deque>
 
+namespace mihajong_graphic {
+
 class TextRenderer;
 
 class FPSIndicator : public Scene {
@@ -20,4 +22,5 @@ public:
 	void Render();
 };
 
+}
 #endif

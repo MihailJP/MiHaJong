@@ -86,7 +86,7 @@
       <ExceptionHandling>Async</ExceptionHandling>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CompileAsManaged>false</CompileAsManaged>
-      <TreatSpecificWarningsAsErrors>4717;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+      <TreatSpecificWarningsAsErrors>4717;4700;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
       <AdditionalIncludeDirectories>.\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -118,7 +118,7 @@
       <ExceptionHandling>Async</ExceptionHandling>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CompileAsManaged>false</CompileAsManaged>
-      <TreatSpecificWarningsAsErrors>4717;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+      <TreatSpecificWarningsAsErrors>4717;4700;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
       <AdditionalIncludeDirectories>.\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -152,6 +152,7 @@
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CompileAsManaged>false</CompileAsManaged>
       <AdditionalIncludeDirectories>.\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatSpecificWarningsAsErrors>4717;4700;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -178,6 +179,7 @@
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CompileAsManaged>false</CompileAsManaged>
       <AdditionalIncludeDirectories>.\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatSpecificWarningsAsErrors>4717;4700;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -204,6 +206,8 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="envtbl.cpp" />
     <ClCompile Include="func.cpp" />
+    <ClCompile Include="fuuro.cpp" />
+    <ClCompile Include="gameloop.cpp" />
     <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="haifu.cpp" />
     <ClCompile Include="largenum.cpp" />
@@ -215,6 +219,7 @@
     <ClCompile Include="lzma\LzmaLib.c" />
     <ClCompile Include="lzma\Sha256.c" />
     <ClCompile Include="lzma\Threads.c" />
+    <ClCompile Include="mouda.cpp" />
     <ClCompile Include="prepare.cpp" />
     <ClCompile Include="random.cpp" />
     <ClCompile Include="reader\csv2arry.cpp" />
@@ -250,15 +255,19 @@
     <ClInclude Include="ai\class.h" />
     <ClInclude Include="ai\functbl.h" />
     <ClInclude Include="ai\filesel.h" />
+    <ClInclude Include="bgmid.h" />
     <ClInclude Include="chat.h" />
     <ClInclude Include="data\confitem.csv.h" />
     <ClInclude Include="data\confitem.ini.h" />
     <ClInclude Include="decomp.h" />
     <ClInclude Include="discard.h" />
     <ClInclude Include="dllmain.h" />
+    <ClInclude Include="endtype.h" />
     <ClInclude Include="envtbl.h" />
     <ClInclude Include="except.h" />
     <ClInclude Include="func.h" />
+    <ClInclude Include="fuuro.h" />
+    <ClInclude Include="gameloop.h" />
     <ClInclude Include="gametbl.h" />
     <ClInclude Include="haifu.h" />
     <ClInclude Include="largenum.h" />
@@ -274,6 +283,7 @@
     <ClInclude Include="lzma\Threads.h" />
     <ClInclude Include="lzma\Types.h" />
     <ClInclude Include="mjexport.h" />
+    <ClInclude Include="mouda.h" />
     <ClInclude Include="nmrules.h" />
     <ClInclude Include="prepare.h" />
     <ClInclude Include="random.h" />

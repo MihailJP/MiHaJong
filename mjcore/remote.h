@@ -37,19 +37,8 @@ namespace RemoteAction {
 		bool isFinished () {return finished;}
 	};
 
-	union RemoteActionPtr {
-		RemoteDahai* dahai;
-		RemoteNaki* naki;
-	};
-
-	extern RemoteActionPtr rDahaiProc;
-	__declspec(dllexport) void remotedahai_begin (GameTable* const gameStat);
-	__declspec(dllexport) int remotedahai_isfinished ();
-	__declspec(dllexport) int remotedahai_getdiscard ();
-	__declspec(dllexport) void remotedahai_end ();
-	__declspec(dllexport) void remotenaki_begin (GameTable* const gameStat);
-	__declspec(dllexport) int remotenaki_isfinished ();
-	__declspec(dllexport) void remotenaki_end ();
+	DiscardTileNum remotedahai (GameTable* const gameStat);
+	void remotenaki (GameTable* const gameStat);
 }
 
 #endif

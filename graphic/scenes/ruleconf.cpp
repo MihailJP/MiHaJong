@@ -1,5 +1,7 @@
 #include "ruleconf.h"
 
+namespace mihajong_graphic {
+
 RuleConfigScene::RuleConfigScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	textRenderer = new TextRenderer(manipulator->getDevice());
 }
@@ -25,4 +27,6 @@ void RuleConfigScene::Render() {
 		}
 	}
 	textRenderer->Render();
+}
+
 }
