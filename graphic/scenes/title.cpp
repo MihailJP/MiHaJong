@@ -17,6 +17,7 @@ TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : Scene(manipulat
 	TitleSprite::LoadTexture(caller->getDevice());
 	for (int i = 0; i < nsTitleLogo; i++)
 		sTitleLogo[i] = new TitleSprite(caller->getDevice(), 500 * i, 0, (i == 2) ? 700 : 500, 300);
+	myTextRenderer = new TextRenderer(caller->getDevice());
 	GetSystemTimeAsFileTime(&startTime);
 }
 
@@ -24,6 +25,7 @@ TitleScreen::~TitleScreen() {
 	TitleSprite::DisposeTexture();
 	for (int i = 0; i < nsTitleLogo; i++)
 		if (sTitleLogo[i]) delete sTitleLogo[i];
+	delete myTextRenderer;
 }
 
 void TitleScreen::clearWithGameTypeColor() {
@@ -60,7 +62,7 @@ uint64_t TitleScreen::elapsed() {
 }
 
 void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF) {
-	double t = (double)elapsed() / (double)timePerFrame - (double)startF / 2.0f;
+	double t = ((double)elapsed() / (double)timePerFrame - (double)startF) / 2.0;
 	if ((t >= 0.0f) && (t < ((float)(endF - startF) * 1.1118f)))
 		sprite->show(X, Y,
 			powf((float)((double)(endF - startF) - t) / (float)(endF - startF) * 4.0f, 2.0f) + 0.8f,
@@ -71,9 +73,9 @@ void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF
 
 void TitleScreen::Render() {
 	clearWithGameTypeColor();
-	zoomingLogo(sTitleLogo[0],  220, 128,   0,  60);
-	zoomingLogo(sTitleLogo[1],  640, 128,  60, 120);
-	zoomingLogo(sTitleLogo[2], 1120, 128, 120, 180);
+	zoomingLogo(sTitleLogo[0],  220, 168,   0, 30);
+	zoomingLogo(sTitleLogo[1],  640, 168,  30, 60);
+	zoomingLogo(sTitleLogo[2], 1120, 168,  60, 90);
 }
 
 // -------------------------------------------------------------------------
