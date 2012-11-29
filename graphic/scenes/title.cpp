@@ -19,6 +19,7 @@ TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : Scene(manipulat
 		sTitleLogo[i] = new TitleSprite(caller->getDevice(), 500 * i, 0, (i == 2) ? 700 : 500, 300);
 	myTextRenderer = new TextRenderer(caller->getDevice());
 	GetSystemTimeAsFileTime(&startTime);
+	menuCursor = 0;
 }
 
 TitleScreen::~TitleScreen() {
@@ -72,14 +73,46 @@ void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF
 }
 
 void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, int X, int Y, unsigned startF, unsigned endF) {
+	const auto hsv2rgb = [](double Hue, double Saturation, double Value) -> uint32_t {
+		const double circleAngle = 360.0;
+		const double h = Hue - floor(Hue / circleAngle) * circleAngle;
+		const double s = max(0.0, min(1.0, Saturation));
+		const double v = max(0.0, min(1.0, Value));
+		const double f = h / 60.0 - ((int)h / 60);
+		const double p = v * (1.0 - s);
+		const double q = v * (1.0 - f * s);
+		const double t = v * (1.0 - (1.0 - f) * s);
+		switch ((int)h / 60) {
+		case 0:
+			return ((int)(v * 255) << 16) | ((int)(t * 255) << 8) | (int)(p * 255);
+		case 1:
+			return ((int)(q * 255) << 16) | ((int)(v * 255) << 8) | (int)(p * 255);
+		case 2:
+			return ((int)(p * 255) << 16) | ((int)(v * 255) << 8) | (int)(t * 255);
+		case 3:
+			return ((int)(p * 255) << 16) | ((int)(q * 255) << 8) | (int)(v * 255);
+		case 4:
+			return ((int)(t * 255) << 16) | ((int)(p * 255) << 8) | (int)(v * 255);
+		case 5:
+			return ((int)(v * 255) << 16) | ((int)(p * 255) << 8) | (int)(q * 255);
+		default:
+			return 0xffffffff;
+		}
+	};
 	double t = ((double)elapsed() / (double)timePerFrame - (double)startF);
 	float virt_width = (float)Geometry::WindowWidth / Geometry::WindowScale();
-	if ((t >= 0.0f) && (t < (double)(endF - startF)))
+	if ((t >= 0.0f) && (t < (double)(endF - startF))) {
 		myTextRenderer->NewText(ID,
 		menustr, X + virt_width * pow(1.0 - t / (double)(endF - startF), 2.0),
 		Y, 2.0f, 1.6f, 0x33ffffff);
-	else if (t >= (double)(endF - startF))
-		myTextRenderer->NewText(ID, menustr, X, Y, 2.0f, 1.6f, 0x33ffffff);
+	} else if (t >= (double)(endF - startF)) {
+		if (ID == menuCursor)
+			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f, 1.6f,
+			0xcc000000 | (0x00ffffff & hsv2rgb(t - (double)(endF - startF), 0.25, 1.0))
+			);
+		else
+			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f, 1.6f, 0x33ffffff);
+	}
 }
 
 void TitleScreen::menuLabels() {

@@ -22,6 +22,7 @@ private:
 	TextRenderer* myTextRenderer;
 	void menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, int X, int Y, unsigned startF, unsigned endF);
 	void menuLabels();
+	unsigned menuCursor;
 public:
 	TitleScreen(ScreenManipulator* const manipulator);
 	~TitleScreen();
