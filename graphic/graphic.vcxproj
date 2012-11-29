@@ -145,6 +145,7 @@
     <ClCompile Include="scenes\fps.cpp" />
     <ClCompile Include="scenes\game.cpp" />
     <ClCompile Include="scenes\table.cpp" />
+    <ClCompile Include="scenes\title.cpp" />
     <ClCompile Include="scrmanip.cpp" />
     <ClCompile Include="showtile.cpp" />
     <ClCompile Include="sprite.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="scenes\proto.h" />
     <ClInclude Include="scenes\scenes.h" />
     <ClInclude Include="scenes\table.h" />
+    <ClInclude Include="scenes\title.h" />
     <ClInclude Include="scrmanip.h" />
     <ClInclude Include="showtile.h" />
     <ClInclude Include="sprite.h" />
