@@ -7,19 +7,21 @@ namespace input {
 
 // -------------------------------------------------------------------------
 
-namespace {
-	InputManipulator* iManip = nullptr;
-}
-
 InputManipulator::InputManipulator(HWND hwnd) {
 	if (FAILED(DirectInput8Create(
 		GraphicDLL, 0x0800, IID_IDirectInput8, reinterpret_cast<void**>(&myInterface), nullptr)))
 		throw CodeConv::tstring(_T("DirectInput8CreateŽ¸”sII"));
+	myKeyboard = new Keyboard(myInterface, hwnd);
 }
 
 InputManipulator::~InputManipulator() {
+	if (myKeyboard) delete myKeyboard;
 	myInterface->Release();
 }
+
+// -------------------------------------------------------------------------
+
+InputDevice::~InputDevice() {}
 
 // -------------------------------------------------------------------------
 
@@ -35,16 +37,6 @@ Keyboard::~Keyboard() {
 		myInputDevice->Unacquire();
 		myInputDevice->Release();
 	}
-}
-
-// -------------------------------------------------------------------------
-
-EXPORT void InitInputManipulator(HWND hwnd) {
-	iManip = new InputManipulator(hwnd);
-}
-EXPORT void DisposeInputManipulator() {
-	if (iManip) delete iManip;
-	iManip = nullptr;
 }
 
 // -------------------------------------------------------------------------

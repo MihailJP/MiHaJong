@@ -58,4 +58,19 @@ ScreenManipulator::~ScreenManipulator() {
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
 }
 
+void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f) {
+	DIDEVICEOBJECTDATA objDat; DWORD items = 1;
+	HRESULT hr = inputDev->getDevice()->GetDeviceData(
+		sizeof(DIDEVICEOBJECTDATA), &objDat, &items, 0);
+	if (hr == DIERR_INPUTLOST)
+		inputDev->getDevice()->Acquire();
+	else if (SUCCEEDED(hr) && (items > 0))
+		f(myScene, &objDat);
+}
+void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
+	if (iManip) {
+		inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {sc->KeyboardInput(od);});
+	}
+}
+
 }
