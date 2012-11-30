@@ -34,8 +34,10 @@ void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName,
 
 void RuleConfigScene::redrawItems() {
 	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ÉAÉXî‰Å~0.75(â°ïùí≤êÆóp)
-	for (int i = 0; i < 40; i++)
-		itemText(i, _T("Lorem ipsum"), _T("dolor sit amet"));
+	for (int i = 0; i < 40; i++) {
+		CodeConv::tostringstream o; o << _T("ItemNr.") << (menuCursor / 40 * 40) + i;
+		itemText(i, o.str(), _T("Lorem ipsum dolor sit amet"));
+	}
 }
 
 void RuleConfigScene::Render() {
