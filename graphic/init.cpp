@@ -1,4 +1,5 @@
 #include "init.h"
+#include "event.h"
 
 namespace mihajong_graphic {
 
@@ -9,6 +10,7 @@ EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon) {
 	/* ウィンドウの初期化 */
 	try {
 		myMainWindow = new MainWindow(hInstance, nCmdShow, icon);
+		ui::UIEvent = new ui::UI_Event();
 	}
 	catch (LPTSTR e) {
 		MessageBox(nullptr, e, _T("Error"), MB_OK | MB_ICONERROR);
@@ -23,6 +25,7 @@ EXPORT void RefreshWindow() {
 
 EXPORT void CleanupWindow() {
 	delete myMainWindow;
+	delete ui::UIEvent;
 }
 
 }

@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="event.cpp" />
     <ClCompile Include="font.cpp" />
     <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="geometry.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="event.h" />
     <ClInclude Include="exports.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="gametbl.h" />
