@@ -57,6 +57,7 @@ void ScreenManipulator::transit(sceneID scene) {
 	case sceneSplash:
 		break;
 	case sceneTitle:
+		myScene = new TitleScreen(this);
 		break;
 	case sceneConfig:
 		break;
