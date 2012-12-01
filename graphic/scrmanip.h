@@ -23,6 +23,7 @@ public:
 	~ScreenManipulator();
 	HWND getHWnd() {return hWnd;}
 	LPDIRECT3DDEVICE9 getDevice() {return pDevice;}
+	void transit(sceneID scene);
 };
 
 }

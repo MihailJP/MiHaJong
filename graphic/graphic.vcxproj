@@ -162,6 +162,7 @@
     <ClInclude Include="scenes\game.h" />
     <ClInclude Include="scenes\proto.h" />
     <ClInclude Include="scenes\scenes.h" />
+    <ClInclude Include="scenes\scene_id.h" />
     <ClInclude Include="scenes\table.h" />
     <ClInclude Include="scrmanip.h" />
     <ClInclude Include="showtile.h" />

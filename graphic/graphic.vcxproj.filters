@@ -113,6 +113,9 @@
     <ClInclude Include="sprite.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="scenes\scene_id.h">
+      <Filter>ヘッダー ファイル\scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="graphic.rc">

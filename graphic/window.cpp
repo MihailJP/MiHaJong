@@ -76,4 +76,9 @@ void MainWindow::Render() { // ウィンドウの再描画
 	return;
 }
 
+void MainWindow::transit(sceneID scene) { // シーン切り替え
+	if (myScreenManipulator)
+		myScreenManipulator->transit(scene);
+}
+
 }

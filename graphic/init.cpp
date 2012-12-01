@@ -21,6 +21,16 @@ EXPORT void RefreshWindow() {
 	myMainWindow->Render();
 }
 
+EXPORT BOOL Transit(sceneID scene) try {
+	if (!myMainWindow) throw _T("ウィンドウが初期化されていません");
+	myMainWindow->transit(scene);
+	return TRUE;
+}
+catch (LPTSTR e) {
+	MessageBox(nullptr, e, _T("Error"), MB_OK | MB_ICONERROR);
+	return FALSE;
+}
+
 EXPORT void CleanupWindow() {
 	delete myMainWindow;
 }

@@ -51,6 +51,23 @@ void ScreenManipulator::Render() {
 	return;
 }
 
+void ScreenManipulator::transit(sceneID scene) {
+	delete myScene; myScene = nullptr;
+	switch (scene) {
+	case sceneSplash:
+		break;
+	case sceneTitle:
+		break;
+	case sceneConfig:
+		break;
+	case sceneGameTable:
+		myScene = new GameTableScreen(this);
+		break;
+	default:
+		throw _T("ê≥ÇµÇ≠Ç»Ç¢ÉVÅ[Éìî‘çÜÇ™éwíËÇ≥ÇÍÇ‹ÇµÇΩ");
+	}
+}
+
 ScreenManipulator::~ScreenManipulator() {
 	if (myScene) delete myScene;
 	if (myFPSIndicator) delete myFPSIndicator;

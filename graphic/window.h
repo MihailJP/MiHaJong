@@ -5,6 +5,7 @@
 #include <tchar.h>
 #include "scrmanip.h"
 #include "geometry.h"
+#include "scenes/scene_id.h"
 
 namespace mihajong_graphic {
 
@@ -21,6 +22,7 @@ public:
 	MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon);
 	~MainWindow();
 	void Render();
+	void transit(sceneID scene);
 };
 
 }
