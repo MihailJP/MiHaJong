@@ -60,6 +60,7 @@ void ScreenManipulator::transit(sceneID scene) {
 		myScene = new TitleScreen(this);
 		break;
 	case sceneConfig:
+		myScene = new RuleConfigScene(this);
 		break;
 	case sceneGameTable:
 		myScene = new GameTableScreen(this);
