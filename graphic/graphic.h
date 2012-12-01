@@ -5,5 +5,6 @@
 
 #include "init.h"
 #include "gametbl.h"
+#include "event.h"
 
 #endif

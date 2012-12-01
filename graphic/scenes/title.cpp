@@ -19,7 +19,7 @@ TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : Scene(manipulat
 		sTitleLogo[i] = new TitleSprite(caller->getDevice(), 500 * i, 0, (i == 2) ? 700 : 500, 300);
 	myTextRenderer = new TextRenderer(caller->getDevice());
 	GetSystemTimeAsFileTime(&startTime);
-	menuCursor = 0;
+	menuCursor = 1;
 }
 
 TitleScreen::~TitleScreen() {
@@ -104,24 +104,29 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 	if ((t >= 0.0f) && (t < (double)(endF - startF))) {
 		myTextRenderer->NewText(ID,
 		menustr, X + virt_width * pow(1.0 - t / (double)(endF - startF), 2.0),
-		Y, 2.0f, 1.6f, 0x33ffffff);
+		Y, 2.0f,
+		1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
+		0x33ffffff);
 	} else if (t >= (double)(endF - startF)) {
-		if (ID == menuCursor)
-			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f, 1.6f,
+		if (ID == (menuCursor - 1))
+			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f,
+			1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
 			0xcc000000 | (0x00ffffff & hsv2rgb(t - (double)(endF - startF), 0.25, 1.0))
 			);
 		else
-			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f, 1.6f, 0x33ffffff);
+			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f,
+			1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
+			0x33ffffff);
 	}
 }
 
 void TitleScreen::menuLabels() {
 	menuLabelSlide(0, _T("Lorem ipsum dolor sit amet"), 0, 400, 120, 180);
-	menuLabelSlide(1, _T("Lorem ipsum dolor sit amet"), 0, 500, 125, 180);
-	menuLabelSlide(2, _T("Lorem ipsum dolor sit amet"), 0, 600, 130, 180);
-	menuLabelSlide(3, _T("Lorem ipsum dolor sit amet"), 0, 700, 135, 180);
-	menuLabelSlide(4, _T("Lorem ipsum dolor sit amet"), 0, 800, 140, 180);
-	menuLabelSlide(5, _T("Lorem ipsum dolor sit amet"), 0, 900, 145, 180);
+	menuLabelSlide(1, _T("Lorem ipsum dolor sit amet"), 0, 480, 125, 180);
+	menuLabelSlide(2, _T("Lorem ipsum dolor sit amet"), 0, 560, 130, 180);
+	menuLabelSlide(3, _T("Lorem ipsum dolor sit amet"), 0, 640, 135, 180);
+	menuLabelSlide(4, _T("Lorem ipsum dolor sit amet"), 0, 720, 140, 180);
+	menuLabelSlide(5, _T("Lorem ipsum dolor sit amet"), 0, 800, 145, 180);
 	myTextRenderer->Render();
 }
 
@@ -131,6 +136,21 @@ void TitleScreen::Render() {
 	zoomingLogo(sTitleLogo[0],  220, 168,   0, 30);
 	zoomingLogo(sTitleLogo[1],  640, 168,  30, 60);
 	zoomingLogo(sTitleLogo[2], 1120, 168,  60, 90);
+}
+
+void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+	switch (od->dwOfs) {
+	case DIK_UP:
+		if (elapsed() > 180u * timePerFrame)
+			if (od->dwData)
+				if (--menuCursor == 0) menuCursor = 6;
+		break;
+	case DIK_DOWN:
+		if (elapsed() > 180u * timePerFrame)
+			if (od->dwData)
+				if (++menuCursor > 6) menuCursor = 1;
+		break;
+	}
 }
 
 // -------------------------------------------------------------------------

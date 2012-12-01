@@ -27,6 +27,7 @@ public:
 	HWND getHWnd() {return hWnd;}
 	LPDIRECT3DDEVICE9 getDevice() {return pDevice;}
 	void inputProc(input::InputManipulator* iManip);
+	void transit(sceneID scene);
 };
 
 }
