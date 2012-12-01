@@ -698,8 +698,8 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, PL
 	if (origPoint[player] != gameStat->Player[player].PlayerScore) // 点数が一致しないなら
 		o << _T(" → ") <<
 			gameStat->Player[player].PlayerScore.bignumtotext(_T(""), _T("△")) << _T(" (") <<
-			((LargeNum)gameStat->Player[player].PlayerScore -
-			origPoint[player]).bignumtotext(_T("+"), _T("-")) <<
+			((LNum)gameStat->Player[player].PlayerScore -
+			origPoint[player]).to_str(_T("+"), _T("-")) <<
 			_T(")");
 	if (RuleData::chkRuleApplied("chip")) // チップありの時
 		o << _T(" チップ: ") <<

@@ -364,7 +364,7 @@ namespace {
 							gameStat->Player[player].PlayerScore.digitGroup[i] |= (int)ReceivedMsg << (j * 8);
 							return true;
 						});
-			statsync(gameStat, (gameStat->Player[player].PlayerScore < LargeNum::fromInt(0)) ? 0x01 : 0x00,
+			statsync(gameStat, (gameStat->Player[player].PlayerScore < (LNum)0) ? 0x01 : 0x00,
 				[player](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
 					if (ReceivedMsg) gameStat->Player[player].PlayerScore *= -1;
 					return true;

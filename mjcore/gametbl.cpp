@@ -1047,9 +1047,9 @@ extern "C" {
 		for (int i = 0; i < PLAYERS; i++) {
 			if (i < ACTUAL_PLAYERS) {
 				gameStat->Player[i].PlayerScore =
-					LargeNum::fromInt(std::atoi(RuleData::chkRule("starting_point").c_str()), 1000000u);
+					LNum(std::atoi(RuleData::chkRule("starting_point").c_str()), 1000000u);
 			} else {
-				gameStat->Player[i].PlayerScore = LargeNum::fromInt(0, 1000000u);
+				gameStat->Player[i].PlayerScore = LNum(0, 1000000u);
 			}
 		}
 
@@ -1096,7 +1096,7 @@ extern "C" {
 		GameTable* const sandbox = &StatSandBox;
 		doInitializeGameTable(sandbox, gameStat->gameType);
 		for (int p = 0; p < PLAYERS; p++) {
-			sandbox->Player[p].PlayerScore = LargeNum(gameStat->Player[p].PlayerScore);
+			sandbox->Player[p].PlayerScore = (LNum)gameStat->Player[p].PlayerScore;
 			sandbox->Player[p].playerChip = gameStat->Player[p].playerChip;
 			sandbox->Player[p].SumaroFlag = gameStat->Player[p].SumaroFlag;
 			sandbox->Player[p].YakitoriFlag = gameStat->Player[p].YakitoriFlag;
