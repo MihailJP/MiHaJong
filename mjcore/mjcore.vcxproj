@@ -97,7 +97,7 @@
       <MapFileName>
       </MapFileName>
       <MapExports>false</MapExports>
-      <AdditionalDependencies>DbgHelp.lib;Shlwapi.lib;imagehlp.lib;.\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DbgHelp.lib;Shlwapi.lib;imagehlp.lib;.\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -129,7 +129,7 @@
       <MapFileName>
       </MapFileName>
       <MapExports>false</MapExports>
-      <AdditionalDependencies>DbgHelp.lib;Shlwapi.lib;imagehlp.lib;.\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DbgHelp.lib;Shlwapi.lib;imagehlp.lib;.\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -159,7 +159,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Shlwapi.lib;imagehlp.lib;.\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;imagehlp.lib;.\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>
@@ -186,7 +186,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Shlwapi.lib;imagehlp.lib;.\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;imagehlp.lib;.\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>
@@ -229,6 +229,7 @@
     <ClCompile Include="remote.cpp" />
     <ClCompile Include="shanten.cpp" />
     <ClCompile Include="ruletbl.cpp" />
+    <ClCompile Include="sound.cpp" />
     <ClCompile Include="tileutil.cpp" />
     <ClCompile Include="yaku\catalog.cpp" />
     <ClCompile Include="yaku\catalog\context.cpp" />
@@ -296,6 +297,8 @@
     <ClInclude Include="shanten.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ruletbl.h" />
+    <ClInclude Include="socknum.h" />
+    <ClInclude Include="sound.h" />
     <ClInclude Include="strcode.h" />
     <ClInclude Include="tilecode.h" />
     <ClInclude Include="tileutil.h" />

@@ -380,3 +380,14 @@ bool isTeppen (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 __declspec(dllexport) int isTeppen (const GameTable* const gameStat, int targetPlayer) {
 	return isTeppen(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
 }
+
+MJCORE void cleanup() {
+	sound::Cleanup();
+	info(_T("サウンドDLLを解放しました。"));
+	for (int i = 0; i < PLAYERS; i++) {
+		mihajong_socket::hangup(SOCK_GAME + i);
+		mihajong_socket::hangup(SOCK_CHAT + i);
+	}
+	mihajong_socket::bye();
+	info(_T("ソケットDLLを解放しました。"));
+}

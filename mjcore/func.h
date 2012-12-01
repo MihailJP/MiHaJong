@@ -10,6 +10,9 @@
 #include <Shlwapi.h>
 #include <direct.h>
 #include "strcode.h"
+#include "../sound/sound.h"
+#include "../socket/socket.h"
+#include "socknum.h"
 #endif
 #include "mjexport.h"
 #include "gametbl.h"
@@ -96,6 +99,11 @@ __declspec(dllexport) int isDobon (const GameTable* const gameStat, int targetPl
 bool isTeppen (const GameTable* const gameStat, PLAYER_ID targetPlayer);
 __declspec(dllexport) int isTeppen (const GameTable* const gameStat, int targetPlayer);
 
+inline bool exist (LPCSTR filename) {
+	return (GetFileAttributesA(filename) != -1);
+}
 #endif
+
+MJCORE void cleanup();
 
 #endif

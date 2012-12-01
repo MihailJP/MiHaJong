@@ -36,11 +36,11 @@ namespace logger {
 	__declspec(dllexport) void fatal_msg(LPCTSTR msg);
 }
 
-#define trace(msg) logger::trace_msg(logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
-#define debug(msg) logger::debug_msg(logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
-#define info(msg) logger::info_msg(logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
-#define warn(msg) logger::warn_msg(logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
-#define error(msg) logger::error_msg(logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
-#define fatal(msg) logger::fatal_msg(logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
+#define trace(msg) ::logger::trace_msg(::logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
+#define debug(msg) ::logger::debug_msg(::logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
+#define info(msg) ::logger::info_msg(::logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
+#define warn(msg) ::logger::warn_msg(::logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
+#define error(msg) ::logger::error_msg(::logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
+#define fatal(msg) ::logger::fatal_msg(::logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
 
 #endif

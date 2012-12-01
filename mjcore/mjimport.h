@@ -6,6 +6,7 @@
 #include "except.h"
 #include "func.h"
 #include "gametbl.h"
+#include "init.h"
 #include "largenum.h"
 #include "ruletbl.h"
 #include "shanten.h"

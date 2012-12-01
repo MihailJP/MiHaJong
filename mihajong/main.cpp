@@ -7,6 +7,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 #endif
 	GameTable* const gameStat = setGameType(Yonma);
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
+	
 	MSG msg;
 
 	/* ウィンドウを初期化する */
@@ -29,5 +30,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	
 	/* 終了処理 */
 	mihajong_graphic::CleanupWindow();
+	cleanup();
 	return msg.wParam;
 }
