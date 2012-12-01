@@ -9,22 +9,33 @@ namespace mihajong_graphic {
 namespace ui {
 	
 #ifdef GRAPHIC_EXPORTS
-class UI_Event { // UIの入力が完了したかどうかを表すイベント
+class Event { // イベントの基底クラス
 private:
-	UI_Event(const UI_Event&) {};
+	Event(const Event&) {}
 protected:
 	HANDLE myEvent;
 public:
-	UI_Event();
-	virtual ~UI_Event();
-	void set();
-	void wait();
+	Event(bool initialStat = false, bool automatic = false);
+	virtual ~Event() = 0;
+	virtual void set();
+	virtual DWORD wait(DWORD timeout = INFINITE);
+};
+
+class UI_Event : public Event { // UIの入力が完了したかどうかを表すイベント
+private:
+	UI_Event(const UI_Event&) {}
+	DWORD retValue;
+public:
+	UI_Event() : Event(false, false) {}
+	~UI_Event() {}
+	void set(DWORD retval);
+	DWORD wait();
 };
 
 extern UI_Event* UIEvent;
 #endif
 
-EXPORT void WaitUI();
+EXPORT DWORD WaitUI();
 
 }
 }

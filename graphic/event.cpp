@@ -5,26 +5,38 @@ namespace ui {
 
 UI_Event* UIEvent = nullptr;
 
-UI_Event::UI_Event() {
-	myEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr);
+Event::Event(bool initialStat, bool automatic) {
+	myEvent = CreateEvent(nullptr, !automatic, initialStat, nullptr);
 	if (!myEvent) throw _T("イベントオブジェクトの初期化に失敗しました");
 }
 
-UI_Event::~UI_Event() {
+Event::~Event() {
 	CloseHandle(myEvent);
 }
 
-void UI_Event::set() {
+void Event::set() {
 	SetEvent(myEvent);
 }
 
-void UI_Event::wait() {
-	WaitForSingleObject(myEvent, INFINITE);
+DWORD Event::wait(DWORD timeout) {
+	DWORD result = WaitForSingleObject(myEvent, timeout);
 	ResetEvent(myEvent);
+	return result;
 }
 
-EXPORT void WaitUI() {
-	if (UIEvent) UIEvent->wait();
+void UI_Event::set(DWORD retval) {
+	retValue = retval;
+	Event::set();
+}
+
+DWORD UI_Event::wait() {
+	Event::wait();
+	return retValue;
+}
+
+EXPORT DWORD WaitUI() {
+	if (UIEvent) return UIEvent->wait();
+	else return 0xcccccccc;
 }
 
 }
