@@ -3,6 +3,7 @@
 
 #include "proto.h"
 #include "fps.h"
+#include "title.h"
 #include "table.h"
 
 #endif

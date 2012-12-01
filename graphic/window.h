@@ -5,13 +5,15 @@
 #include <tchar.h>
 #include "scrmanip.h"
 #include "geometry.h"
+#include "input.h"
 
 namespace mihajong_graphic {
 
 class MainWindow {
 private:
 	HWND hWnd;
-	static ScreenManipulator* myScreenManipulator; // DirectX オブジェクト
+	ScreenManipulator* myScreenManipulator; // DirectX オブジェクト
+	input::InputManipulator* myInputManipulator; // DirectInput
 	static const LPTSTR myWindowClassName, WindowCaption;
 	static unsigned& WindowWidth, & WindowHeight;
 	static LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam); // ウィンドウプロシージャ
