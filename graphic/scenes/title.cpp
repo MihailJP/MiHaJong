@@ -7,6 +7,7 @@
 #include "../loadtex.h"
 #include "../resource.h"
 #include "../sprite.h"
+#include "../event.h"
 
 namespace mihajong_graphic {
 
@@ -140,15 +141,20 @@ void TitleScreen::Render() {
 
 void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	switch (od->dwOfs) {
-	case DIK_UP:
+	case DIK_UP: // カーソル上
 		if (elapsed() > 180u * timePerFrame)
 			if (od->dwData)
 				if (--menuCursor == 0) menuCursor = 6;
 		break;
-	case DIK_DOWN:
+	case DIK_DOWN: // カーソル下
 		if (elapsed() > 180u * timePerFrame)
 			if (od->dwData)
 				if (++menuCursor > 6) menuCursor = 1;
+		break;
+	case DIK_RETURN: case DIK_Z: // 決定
+		if (elapsed() > 180u * timePerFrame)
+			if (od->dwData)
+				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
 		break;
 	}
 }
