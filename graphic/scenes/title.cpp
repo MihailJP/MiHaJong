@@ -122,12 +122,13 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 }
 
 void TitleScreen::menuLabels() {
-	menuLabelSlide(0, _T("Lorem ipsum dolor sit amet"), 0, 400, 120, 180);
-	menuLabelSlide(1, _T("Lorem ipsum dolor sit amet"), 0, 480, 125, 180);
-	menuLabelSlide(2, _T("Lorem ipsum dolor sit amet"), 0, 560, 130, 180);
-	menuLabelSlide(3, _T("Lorem ipsum dolor sit amet"), 0, 640, 135, 180);
-	menuLabelSlide(4, _T("Lorem ipsum dolor sit amet"), 0, 720, 140, 180);
-	menuLabelSlide(5, _T("Lorem ipsum dolor sit amet"), 0, 800, 145, 180);
+	auto center = [](unsigned cols) {return signed(Geometry::BaseSize * 2 / 3) - signed(1.6 * 18 * cols);};
+	menuLabelSlide(0, _T("Standalone Game"), center(15), 400, 120, 180);
+	menuLabelSlide(1, _T("Network Game (Server)"), center(21), 480, 125, 180);
+	menuLabelSlide(2, _T("Network Game (Client)"), center(21), 560, 130, 180);
+	menuLabelSlide(3, _T("Rule Configuration"), center(18), 640, 135, 180);
+	menuLabelSlide(4, _T("System Configuration"), center(20), 720, 140, 180);
+	menuLabelSlide(5, _T("Exit"), center(4), 800, 145, 180);
 	myTextRenderer->Render();
 }
 
@@ -140,21 +141,25 @@ void TitleScreen::Render() {
 }
 
 void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+	const bool flag = ((elapsed() > 180u * timePerFrame) && (od->dwData));
 	switch (od->dwOfs) {
 	case DIK_UP: // カーソル上
-		if (elapsed() > 180u * timePerFrame)
-			if (od->dwData)
-				if (--menuCursor == 0) menuCursor = 6;
+		if (flag)
+			if (--menuCursor == 0) menuCursor = 6;
 		break;
 	case DIK_DOWN: // カーソル下
-		if (elapsed() > 180u * timePerFrame)
-			if (od->dwData)
-				if (++menuCursor > 6) menuCursor = 1;
+		if (flag)
+			if (++menuCursor > 6) menuCursor = 1;
 		break;
-	case DIK_RETURN: case DIK_Z: // 決定
-		if (elapsed() > 180u * timePerFrame)
-			if (od->dwData)
-				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // 決定
+		if (flag) {
+			ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+		}
+		break;
+	case DIK_ESCAPE: case DIK_X: // キャンセル
+		if (flag) {
+			menuCursor = 6; // Exitにカーソルを合わせる
+		}
 		break;
 	}
 }
