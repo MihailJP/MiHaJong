@@ -163,6 +163,7 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 	sound::util::soundload(sound::IDs::sndMekuri, "sound\\mekuri.wav", false);
 	sound::util::soundload(sound::IDs::sndButton, "sound\\button.wav", false);
 	sound::util::soundload(sound::IDs::sndClick, "sound\\click.wav", false);
+	sound::util::soundload(sound::IDs::sndCursor, "sound\\cursor.wav", false);
 	sound::util::soundload(sound::IDs::sndPage, "sound\\page.wav", false);
 	sound::util::soundload(sound::IDs::sndType, "sound\\type.wav", false);
 	sound::util::soundload(sound::IDs::sndPingju, "sound\\pingju.wav", false);

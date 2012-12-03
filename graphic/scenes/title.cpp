@@ -147,13 +147,13 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	switch (od->dwOfs) {
 	case DIK_UP: // カーソル上
 		if (flag) {
-			sound::Play(sound::IDs::sndClick);
+			sound::Play(sound::IDs::sndCursor);
 			if (--menuCursor == 0) menuCursor = 6;
 		}
 		break;
 	case DIK_DOWN: // カーソル下
 		if (flag) {
-			sound::Play(sound::IDs::sndClick);
+			sound::Play(sound::IDs::sndCursor);
 			if (++menuCursor > 6) menuCursor = 1;
 		}
 		break;
@@ -170,7 +170,11 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_ESCAPE: case DIK_X: // キャンセル
 		if (flag) {
 			sound::Play(sound::IDs::sndClick);
-			menuCursor = 6; // Exitにカーソルを合わせる
+			if (menuCursor != 6) {
+				menuCursor = 6; // Exitにカーソルを合わせる
+			} else {
+				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+			}
 		}
 		break;
 	}

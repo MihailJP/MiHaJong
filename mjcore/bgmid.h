@@ -45,6 +45,7 @@ namespace sound {
 		sndMekuri,
 		sndButton,
 		sndClick,
+		sndCursor,
 		sndPage,
 		sndType,
 		sndPingju,
