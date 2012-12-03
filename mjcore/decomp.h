@@ -23,13 +23,13 @@ protected:
 	uint8_t* DecompressedData;
 	size_t decompressedSize;
 	uint8_t actualDigest[32];
-	void decompress();
+	void decompress(int FileID_);
 	void calcSHA256();
-	std::string bytesToHexString(std::vector<uint8_t> byteStr);
-	void verify();
+	static std::string bytesToHexString(std::vector<uint8_t> byteStr);
+	void verify(LPCTSTR Description_, const uint8_t* const expectedDigest_);
+	Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDigest_); // Decompress within constructor
 public:
-	Data(); // Decompress within constructor
-	virtual ~Data();
+	virtual ~Data() = 0;
 	const uint8_t* getData() {return DecompressedData;}
 	size_t getDataSize() {return decompressedSize;}
 };
@@ -39,6 +39,9 @@ private:
 	static LPCTSTR Description;
 	static const int FileID = IDR_LZMA_STREA1;
 	static const uint8_t expectedDigest[32];
+public:
+	file_mentz_dat() : Data(Description, FileID, expectedDigest) {}
+	~file_mentz_dat() {}
 };
 
 }
