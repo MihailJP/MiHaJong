@@ -67,6 +67,9 @@ private:
 	static LPCTSTR Description;
 	static const int FileID = FILEID_#{symbolname};
 	static const uint8_t expectedDigest[32];
+public:
+	file_#{symbolname.downcase}() : Data(Description, FileID, expectedDigest) {}
+	~file_#{symbolname.downcase}() {}
 };
 
 }

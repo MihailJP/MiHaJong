@@ -5,11 +5,11 @@ using std::min;
 /* 面子データ初期化 */
 namespace Compressed {
 
-void Data::decompress() {
+void Data::decompress(int FileID_) {
 	DWORD size = 0;
 	const uint8_t* compressedBuf = nullptr;
 	int result;
-	LoadFileInResource(FileID, LZMA_STREAM, size, compressedBuf);
+	LoadFileInResource(FileID_, LZMA_STREAM, size, compressedBuf);
 	assert(size > 13);
 	uint8_t* compressedData = (uint8_t *)malloc(size+1);
 	memcpy(compressedData, compressedBuf, size);
@@ -47,33 +47,33 @@ std::string Data::bytesToHexString(std::vector<uint8_t> byteStr) {
 	return o.str();
 }
 
-void Data::verify() {
+void Data::verify(LPCTSTR Description_, const uint8_t* const expectedDigest_) {
 	memset(actualDigest, 0, sizeof(actualDigest)); bool mdUnmatch = false;
 	calcSHA256();
 	for (int i = 0; i < 32; i++) {
-		if (expectedDigest[i] != actualDigest[i]) mdUnmatch = true;
+		if (expectedDigest_[i] != actualDigest[i]) mdUnmatch = true;
 	}
 	if (mdUnmatch) {
 		CodeConv::tostringstream o;
-		o << Description << _T("のSHA256ハッシュ値が一致しませんでした。") <<
+		o << Description_ << _T("のSHA256ハッシュ値が一致しませんでした。") <<
 			_T("ファイルが壊れている虞があります。") << std::endl <<
 			_T("期待されるハッシュ値: ") <<
-			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(expectedDigest[0], expectedDigest[31]))) <<
+			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(expectedDigest_[0], expectedDigest_[31]))) <<
 			_T("実際のハッシュ値: ") <<
 			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(actualDigest[0], actualDigest[31])));
 		Raise(EXCEPTION_MJCORE_HASH_MISMATCH, o.str().c_str());
 	}
 	else {
 		CodeConv::tostringstream o;
-		o << Description << _T("のSHA256ハッシュ値の照合に成功しました。");
+		o << Description_ << _T("のSHA256ハッシュ値の照合に成功しました。");
 		info(o.str().c_str());
 	}
 }
 
-Data::Data() { // 初期化
+Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDigest_) { // 初期化
 	try {
-		decompress();
-		verify();
+		decompress(FileID_);
+		verify(Description_, expectedDigest_);
 	}
 	catch (_EXCEPTION_POINTERS* e) {
 		ErrorInfo *errStat = nullptr;
