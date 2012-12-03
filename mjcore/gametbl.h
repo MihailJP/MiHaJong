@@ -304,6 +304,7 @@ extern "C" GameTable* makesandBox(const GameTable* const gameStat, PLAYER_ID tar
 extern "C" __declspec(dllexport) void inittable(GameTable* const gameStat);
 extern "C" GameTable* initializeGameTable(gameTypeID gameType);
 #endif
+MJCORE GameTable* setGameType(gameTypeID gameType);
 
 // -------------------------------------------------------------------------
 

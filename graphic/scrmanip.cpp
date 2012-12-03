@@ -32,23 +32,47 @@ void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
 }
 ScreenManipulator::ScreenManipulator(HWND windowHandle) {
+	redrawFlag = false;
 	pDevice = nullptr; hWnd = windowHandle;
 	InitDevice();
-	myScene = new GameTableScreen(this);
+	myScene = new SplashScreen(this);
 	myFPSIndicator = new FPSIndicator(this);
 	lastRedrawTime = 0;
+	redrawFlag = true;
 }
 
 void ScreenManipulator::Render() {
-	pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
-		D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // バッファクリア
-	if (SUCCEEDED(pDevice->BeginScene())) { // シーン開始
-		if (myScene) myScene->Render(); // 再描画処理
-		if (myFPSIndicator) myFPSIndicator->Render(); // FPS表示
-		pDevice->EndScene(); // シーン終了
+	if (redrawFlag) {
+		pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
+			D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // バッファクリア
+		if (SUCCEEDED(pDevice->BeginScene())) { // シーン開始
+			if (myScene) myScene->Render(); // 再描画処理
+			if (myFPSIndicator) myFPSIndicator->Render(); // FPS表示
+			pDevice->EndScene(); // シーン終了
+		}
+		pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 	}
-	pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 	return;
+}
+
+void ScreenManipulator::transit(sceneID scene) {
+	redrawFlag = false;
+	delete myScene; myScene = nullptr;
+	switch (scene) {
+	case sceneSplash:
+		myScene = new SplashScreen(this); redrawFlag = true;
+		break;
+	case sceneTitle:
+		myScene = new TitleScreen(this); redrawFlag = true;
+		break;
+	case sceneConfig:
+		break;
+	case sceneGameTable:
+		myScene = new GameTableScreen(this); redrawFlag = true;
+		break;
+	default:
+		throw _T("正しくないシーン番号が指定されました");
+	}
 }
 
 ScreenManipulator::~ScreenManipulator() {
@@ -56,6 +80,21 @@ ScreenManipulator::~ScreenManipulator() {
 	if (myFPSIndicator) delete myFPSIndicator;
 	if (pd3d) {pd3d->Release(); pd3d = nullptr;}
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
+}
+
+void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f) {
+	DIDEVICEOBJECTDATA objDat; DWORD items = 1;
+	HRESULT hr = inputDev->getDevice()->GetDeviceData(
+		sizeof(DIDEVICEOBJECTDATA), &objDat, &items, 0);
+	if (FAILED(hr)) /*(hr == DIERR_INPUTLOST)*/
+		inputDev->getDevice()->Acquire();
+	else if (SUCCEEDED(hr) && (items > 0))
+		f(myScene, &objDat);
+}
+void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
+	if (iManip) {
+		inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {sc->KeyboardInput(od);});
+	}
 }
 
 }
