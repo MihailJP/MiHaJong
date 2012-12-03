@@ -144,6 +144,7 @@
     <ClCompile Include="loadtex.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
     <ClCompile Include="scenes\game.cpp" />
+    <ClCompile Include="scenes\splash.cpp" />
     <ClCompile Include="scenes\table.cpp" />
     <ClCompile Include="scenes\title.cpp" />
     <ClCompile Include="scrmanip.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="scenes\game.h" />
     <ClInclude Include="scenes\proto.h" />
     <ClInclude Include="scenes\scenes.h" />
+    <ClInclude Include="scenes\splash.h" />
     <ClInclude Include="scenes\table.h" />
     <ClInclude Include="scenes\title.h" />
     <ClInclude Include="scrmanip.h" />
