@@ -17,7 +17,7 @@
 
 ■ 動作環境
 
-	　Windows XP/Vista/7、Direct X 9 以降
+	　Windows XP/Vista/7、Direct X 9 (June 2010) 以降
 	　HTML形式の牌譜を閲覧する場合は別途フォントのインストールが必要
 
 
@@ -84,7 +84,6 @@
 	・cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
 	・Lua スタティックライブラリ (http://luabinaries.sourceforge.net/download.html)
 	・Ruby 処理系 (http://www.ruby-lang.org/ja/downloads/)
-	・Lua スタティックライブラリ (http://luabinaries.sourceforge.net/download.html)
 	・libogg/libvorbis (http://www.xiph.org/downloads/)
 	・GuruGuruSMF (http://gurugurusmf.migmig.net/)
 
