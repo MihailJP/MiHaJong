@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <tchar.h>
 #include "exports.h"
+#include "scenes/scene_id.h"
 
 #ifdef GRAPHIC_EXPORTS
 #include "window.h"
@@ -17,6 +18,7 @@ namespace mihajong_graphic {
 
 EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon);
 EXPORT void RefreshWindow();
+EXPORT BOOL Transit(sceneID scene);
 EXPORT void CleanupWindow();
 
 }

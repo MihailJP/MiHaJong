@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug(Wide)|Win32">
@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="event.cpp" />
     <ClCompile Include="font.cpp" />
     <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="geometry.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="event.h" />
     <ClInclude Include="exports.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="gametbl.h" />
@@ -167,6 +169,7 @@
     <ClInclude Include="scenes\proto.h" />
     <ClInclude Include="scenes\scenes.h" />
     <ClInclude Include="scenes\splash.h" />
+    <ClInclude Include="scenes\scene_id.h" />
     <ClInclude Include="scenes\table.h" />
     <ClInclude Include="scenes\title.h" />
     <ClInclude Include="scrmanip.h" />
