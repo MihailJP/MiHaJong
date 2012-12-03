@@ -8,6 +8,8 @@
 #include "../resource.h"
 #include "../sprite.h"
 #include "../event.h"
+#include "../../sound/sound.h"
+#include "../../mjcore/bgmid.h"
 
 namespace mihajong_graphic {
 
@@ -144,20 +146,30 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	const bool flag = ((elapsed() > 180u * timePerFrame) && (od->dwData));
 	switch (od->dwOfs) {
 	case DIK_UP: // カーソル上
-		if (flag)
+		if (flag) {
+			sound::Play(sound::IDs::sndClick);
 			if (--menuCursor == 0) menuCursor = 6;
+		}
 		break;
 	case DIK_DOWN: // カーソル下
-		if (flag)
+		if (flag) {
+			sound::Play(sound::IDs::sndClick);
 			if (++menuCursor > 6) menuCursor = 1;
+		}
 		break;
 	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // 決定
 		if (flag) {
-			ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+			if (menuCursor == 6) {
+				sound::Play(sound::IDs::sndButton);
+				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+			} else {
+				sound::Play(sound::IDs::sndCuohu); // 未実装
+			}
 		}
 		break;
 	case DIK_ESCAPE: case DIK_X: // キャンセル
 		if (flag) {
+			sound::Play(sound::IDs::sndClick);
 			menuCursor = 6; // Exitにカーソルを合わせる
 		}
 		break;
