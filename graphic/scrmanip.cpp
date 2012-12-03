@@ -32,38 +32,43 @@ void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
 }
 ScreenManipulator::ScreenManipulator(HWND windowHandle) {
+	redrawFlag = false;
 	pDevice = nullptr; hWnd = windowHandle;
 	InitDevice();
 	myScene = new SplashScreen(this);
 	myFPSIndicator = new FPSIndicator(this);
 	lastRedrawTime = 0;
+	redrawFlag = true;
 }
 
 void ScreenManipulator::Render() {
-	pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
-		D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // バッファクリア
-	if (SUCCEEDED(pDevice->BeginScene())) { // シーン開始
-		if (myScene) myScene->Render(); // 再描画処理
-		if (myFPSIndicator) myFPSIndicator->Render(); // FPS表示
-		pDevice->EndScene(); // シーン終了
+	if (redrawFlag) {
+		pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
+			D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // バッファクリア
+		if (SUCCEEDED(pDevice->BeginScene())) { // シーン開始
+			if (myScene) myScene->Render(); // 再描画処理
+			if (myFPSIndicator) myFPSIndicator->Render(); // FPS表示
+			pDevice->EndScene(); // シーン終了
+		}
+		pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 	}
-	pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 	return;
 }
 
 void ScreenManipulator::transit(sceneID scene) {
+	redrawFlag = false;
 	delete myScene; myScene = nullptr;
 	switch (scene) {
 	case sceneSplash:
-		myScene = new SplashScreen(this);
+		myScene = new SplashScreen(this); redrawFlag = true;
 		break;
 	case sceneTitle:
-		myScene = new TitleScreen(this);
+		myScene = new TitleScreen(this); redrawFlag = true;
 		break;
 	case sceneConfig:
 		break;
 	case sceneGameTable:
-		myScene = new GameTableScreen(this);
+		myScene = new GameTableScreen(this); redrawFlag = true;
 		break;
 	default:
 		throw _T("正しくないシーン番号が指定されました");

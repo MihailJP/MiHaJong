@@ -1,3 +1,7 @@
+mihajong/*.ini
+mihajong/debug*.log
+mihajong/haifu/+.txt
+mihajong/haifu/*.htm
 mihajong_legacy/*.ini
 mihajong_legacy/*.exe
 mihajong_legacy/*.dll

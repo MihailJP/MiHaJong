@@ -18,6 +18,7 @@ private:
 	Scene* myScene; // シーン管理用のクラス
 	FPSIndicator* myFPSIndicator; // FPS計算・表示
 	UINT64 lastRedrawTime;
+	bool redrawFlag; // 画面の再描画をするかどうかのフラグ
 	void InitDevice(); // Direct3D オブジェクト初期化
 	void inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f);
 public:

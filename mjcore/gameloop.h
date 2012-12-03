@@ -12,6 +12,7 @@
 #include "mouda.h"
 #include "fuuro.h"
 #include "prepare.h"
+#include "../graphic/graphic.h"
 #endif
 #include "gametbl.h"
 

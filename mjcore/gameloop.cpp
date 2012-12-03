@@ -96,6 +96,15 @@ bool doTableRound(GameTable* const gameStat) {
 	return false; // 仮置き
 }
 
+namespace {
+
+DWORD titlescreen() {
+	mihajong_graphic::Transit(mihajong_graphic::sceneTitle);
+	return mihajong_graphic::ui::WaitUI();
+}
+
+}
+
 /* ゲーム開始処理 */
 void startgame(gameTypeID gameType) {
 	while (true) {
@@ -106,6 +115,7 @@ void startgame(gameTypeID gameType) {
 		info(_T("ゲーム情報を初期化しました。"));
 		mihajong_socket::server::rotation_reset();
 		sound::Play(sound::IDs::musTitle); // タイトル曲を流す
+		titlescreen();
 		/* TODO: gosub *selmode */ // タイトル画面
 		/* TODO: gosub *chrshuffle */ // 親決めの処理
 		/* TODO: gosub *gameinit */ // 半荘の初期化処理

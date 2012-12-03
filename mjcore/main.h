@@ -11,6 +11,7 @@
 #include "init.h"
 #include "func.h"
 #include "../graphic/graphic.h"
+#include "gameloop.h"
 
 class GameThread {
 private:

@@ -14,18 +14,18 @@ GameThread::~GameThread() {
 	/* プログラム終了時にのみ呼び出されることを想定しています */
 	/* それ以外の時には絶対に呼び出さないこと！！！ */
 	DWORD exitCode; GetExitCodeThread(hThread, &exitCode);
-	if (exitCode == STILL_ACTIVE)
+	if (exitCode == STILL_ACTIVE) {
 		warn(_T("スレッドを強制終了します！"));
-	TerminateThread(hThread, S_OK);
+		TerminateThread(hThread, S_OK);
+	}
 }
 
 DWORD WINAPI GameThread::ThreadMain(LPVOID lpParam) {
 	gameTypeID gameType = reinterpret_cast<GameThread*>(lpParam)->myGameType;
 	HWND hwnd = reinterpret_cast<GameThread*>(lpParam)->hWnd;
 	initapp(gameType, hwnd);
-	while (true) {
-		Sleep(1000);
-	}
+	startgame(gameType);
+	PostQuitMessage(0);
 	return S_OK;
 }
 

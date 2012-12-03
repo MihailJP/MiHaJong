@@ -190,4 +190,5 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 	screen 0, 840, 630, , (ginfo_dispx-840)/2, (ginfo_dispy-630)/2-20
 	info "ウィンドウを初期化しました。"
 	gsel 0, 1*/
+
 }
