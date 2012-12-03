@@ -1,5 +1,5 @@
-#ifndef GRAPHIC_MAIN_H
-#define GRAPHIC_MAIN_H
+#ifndef MIHAJONG_MAIN_H
+#define MIHAJONG_MAIN_H
 
 #define STRICT
 #define WIN32_LEAN_AND_MEAN

@@ -16,7 +16,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 
 namespace mihajong_graphic {
 
-EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon);
+EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr);
 EXPORT void RefreshWindow();
 EXPORT BOOL Transit(sceneID scene);
 EXPORT void CleanupWindow();

@@ -2,6 +2,7 @@
 
 void LoadFileInResource(int name, int type, DWORD& size, const uint8_t*& data) {
 	HRSRC rc = ::FindResource(dllInst, MAKEINTRESOURCE(name), MAKEINTRESOURCE(type));
+	DWORD err = GetLastError();
 	assert(rc != nullptr);
 	HGLOBAL rcData = ::LoadResource(dllInst, rc);
 	assert(rcData != nullptr);

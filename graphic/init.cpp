@@ -6,11 +6,12 @@ namespace mihajong_graphic {
 HINSTANCE GraphicDLL = nullptr;
 MainWindow* myMainWindow = nullptr;
 
-EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon) {
+EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr) {
 	/* ウィンドウの初期化 */
 	try {
 		myMainWindow = new MainWindow(hInstance, nCmdShow, icon);
 		ui::UIEvent = new ui::UI_Event();
+		if (hwndPtr) *hwndPtr = myMainWindow->gethwnd();
 	}
 	catch (LPTSTR e) {
 		MessageBox(nullptr, e, _T("Error"), MB_OK | MB_ICONERROR);

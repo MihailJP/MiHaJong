@@ -5,15 +5,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 #else
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 #endif
-	GameTable* const gameStat = setGameType(Yonma);
-	mihajong_graphic::GameStatus::updateGameStat(gameStat);
-	
-	MSG msg;
+	MSG msg; HWND hwnd;
 
 	/* ウィンドウを初期化する */
-	if (!mihajong_graphic::InitWindow(hInstance, nCmdShow, MAKEINTRESOURCE(IDI_ICON1)))
+	if (!mihajong_graphic::InitWindow(hInstance, nCmdShow, MAKEINTRESOURCE(IDI_ICON1), &hwnd))
 		exit(1); // 失敗したら終了
 	
+	/* スタート */
+	StartGame(Yonma, hwnd);
+
 	/* メインループ */
 	while (true) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE)) {
@@ -29,7 +29,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	}
 	
 	/* 終了処理 */
-	mihajong_graphic::CleanupWindow();
-	cleanup();
+	TerminateGame();
 	return msg.wParam;
 }
