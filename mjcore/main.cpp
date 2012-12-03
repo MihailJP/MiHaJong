@@ -25,7 +25,8 @@ DWORD WINAPI GameThread::ThreadMain(LPVOID lpParam) {
 	HWND hwnd = reinterpret_cast<GameThread*>(lpParam)->hWnd;
 	initapp(gameType, hwnd);
 	startgame(gameType);
-	PostQuitMessage(0);
+	cleanup();
+	SendMessage(hwnd, WM_CLOSE, 0, 0);
 	return S_OK;
 }
 
@@ -36,5 +37,4 @@ MJCORE void StartGame (gameTypeID gameType, HWND hwnd) {
 MJCORE void TerminateGame () {
 	delete gameThread;
 	mihajong_graphic::CleanupWindow();
-	cleanup();
 }
