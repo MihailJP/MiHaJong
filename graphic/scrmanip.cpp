@@ -1,4 +1,5 @@
 #include "scrmanip.h"
+#include "scenes/scenes.h"
 
 namespace mihajong_graphic {
 

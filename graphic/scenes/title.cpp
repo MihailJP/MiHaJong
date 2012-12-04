@@ -15,13 +15,10 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
-TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : Scene(manipulator) {
-	caller = manipulator;
+TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
 	TitleSprite::LoadTexture(caller->getDevice());
 	for (int i = 0; i < nsTitleLogo; i++)
 		sTitleLogo[i] = new TitleSprite(caller->getDevice(), 500 * i, 0, (i == 2) ? 700 : 500, 300);
-	myTextRenderer = new TextRenderer(caller->getDevice());
-	GetSystemTimeAsFileTime(&startTime);
 	menuCursor = 1;
 }
 
@@ -29,40 +26,6 @@ TitleScreen::~TitleScreen() {
 	TitleSprite::DisposeTexture();
 	for (int i = 0; i < nsTitleLogo; i++)
 		if (sTitleLogo[i]) delete sTitleLogo[i];
-	delete myTextRenderer;
-}
-
-void TitleScreen::clearWithGameTypeColor() {
-	// バッファクリア
-	switch (GameStatus::gameStat()->gameType) {
-	case Yonma:
-		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
-			D3DCOLOR_XRGB(0, 64, 0), 1.0f, 0);
-		break;
-	case Sanma:
-		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
-			D3DCOLOR_XRGB(0, 0, 64), 1.0f, 0);
-		break;
-	case Sanma4:
-		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
-			D3DCOLOR_XRGB(0, 64, 64), 1.0f, 0);
-		break;
-	case SanmaS:
-		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
-			D3DCOLOR_XRGB(64, 0, 64), 1.0f, 0);
-		break;
-	default:
-		assert(false); // This may not occur.
-	}
-}
-
-uint64_t TitleScreen::elapsed() {
-	FILETIME currTime; GetSystemTimeAsFileTime(&currTime);
-	uint64_t st = ((uint64_t)startTime.dwHighDateTime << 32) | startTime.dwLowDateTime;
-	uint64_t ct = ((uint64_t)currTime.dwHighDateTime << 32) | currTime.dwLowDateTime;
-	assert(ct >= st);
-	//if ((ct - st) >= 30000000) startTime = currTime; // debug loop
-	return ct - st;
 }
 
 void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF) {

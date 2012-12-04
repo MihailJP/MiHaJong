@@ -5,7 +5,9 @@
 #include <dxerr.h>
 #include <tchar.h>
 #include <functional>
-#include "scenes/scenes.h"
+#include "scenes/scene_id.h"
+#include "scenes/proto.h"
+#include "scenes/fps.h"
 #include "input.h"
 
 namespace mihajong_graphic {

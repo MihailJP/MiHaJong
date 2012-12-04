@@ -1,18 +1,17 @@
 #include "ruleconf.h"
+#include "../scrmanip.h"
 #include "../geometry.h"
 #include "../../sound/sound.h"
 #include "../../mjcore/bgmid.h"
 
 namespace mihajong_graphic {
 
-RuleConfigScene::RuleConfigScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
-	textRenderer = new TextRenderer(manipulator->getDevice());
+RuleConfigScene::RuleConfigScene(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
 	menuCursor = 0;
 	redrawItems();
 }
 
 RuleConfigScene::~RuleConfigScene() {
-	delete textRenderer;
 }
 
 void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName, const CodeConv::tstring& prmContent) {
@@ -23,14 +22,14 @@ void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName,
 		if (*k <= _T('\x7f')) itmNameCols += 1;
 		else itmNameCols += 2;
 	}
-	D3DCOLOR menuColor = (menuCursor % 40 == prmID) ? 0xffffffff : 0x9fffffff;
-	textRenderer->NewText(prmID * 3, prmName,
+	D3DCOLOR menuColor = (menuCursor % 40 == prmID) ? 0xffffffff : 0x7fffffff;
+	myTextRenderer->NewText(prmID * 3, prmName,
 		(prmID / 20 * 720 + 50) * WidthRate, 160 + (prmID % 20) * 40, 1.0f,
 		WidthRate * ((itmNameCols <= 8) ? 1.0f : 8.0f / (float)itmNameCols),
 		menuColor);
-	textRenderer->NewText(prmID * 3 + 1, _T(":"),
+	myTextRenderer->NewText(prmID * 3 + 1, _T(":"),
 		(prmID / 20 * 720 + 50 + 144) * WidthRate, 160 + (prmID % 20) * 40, 1.0, WidthRate, menuColor);
-	textRenderer->NewText(prmID * 3 + 2, prmContent,
+	myTextRenderer->NewText(prmID * 3 + 2, prmContent,
 		(prmID / 20 * 720 + 50 + 162) * WidthRate, 160 + (prmID % 20) * 40, 1.0, WidthRate, menuColor);
 }
 
@@ -43,9 +42,8 @@ void RuleConfigScene::redrawItems() {
 }
 
 void RuleConfigScene::Render() {
-	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
-	D3DCOLOR_XRGB(0, 128, 0), 1.0f, 0); // バッファクリア
-	textRenderer->Render();
+	clearWithGameTypeColor(); // バッファクリア
+	myTextRenderer->Render();
 }
 
 void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {

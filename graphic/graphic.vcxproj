@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug(Wide)|Win32">
@@ -147,6 +147,7 @@
     <ClCompile Include="scenes\game.cpp" />
     <ClCompile Include="scenes\splash.cpp" />
     <ClCompile Include="scenes\ruleconf.cpp" />
+    <ClCompile Include="scenes\sysscr.cpp" />
     <ClCompile Include="scenes\table.cpp" />
     <ClCompile Include="scenes\title.cpp" />
     <ClCompile Include="scrmanip.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="scenes\scenes.h" />
     <ClInclude Include="scenes\splash.h" />
     <ClInclude Include="scenes\scene_id.h" />
+    <ClInclude Include="scenes\sysscr.h" />
     <ClInclude Include="scenes\table.h" />
     <ClInclude Include="scenes\title.h" />
     <ClInclude Include="scrmanip.h" />
