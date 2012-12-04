@@ -9,7 +9,7 @@ namespace mihajong_graphic {
 
 TextRenderer::TextRenderer(LPDIRECT3DDEVICE9 device) {
 	myDevice = device;
-	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT), 1280, 1280);
+	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT), 1280, 3240);
 }
 
 TextRenderer::~TextRenderer() {
