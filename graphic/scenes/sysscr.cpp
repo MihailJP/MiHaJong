@@ -50,6 +50,13 @@ uint64_t SystemScreen::elapsed() {
 	return ct - st;
 }
 
+void SystemScreen::skipto(unsigned frames) {
+	FILETIME currTime; GetSystemTimeAsFileTime(&currTime);
+	int64_t ct = ((int64_t)currTime.dwHighDateTime << 32) | currTime.dwLowDateTime;
+	ct -= frames * timePerFrame;
+	startTime.dwHighDateTime = ct >> 32; startTime.dwLowDateTime = ct & 0xffffffff;
+}
+
 // -------------------------------------------------------------------------
 
 }

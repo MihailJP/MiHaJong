@@ -128,6 +128,9 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 			} else {
 				sound::Play(sound::IDs::sndCuohu); // –¢ŽÀ‘•
 			}
+		} else if (od->dwData) {
+			sound::Play(sound::IDs::sndClick);
+			skipto(180);
 		}
 		break;
 	case DIK_ESCAPE: case DIK_X: // ƒLƒƒƒ“ƒZƒ‹

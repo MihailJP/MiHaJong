@@ -16,6 +16,7 @@ protected:
 	static const unsigned timePerFrame = 166667u;
 	uint64_t elapsed();
 	TextRenderer* myTextRenderer;
+	void skipto(unsigned frames);
 public:
 	SystemScreen(ScreenManipulator* const manipulator);
 	virtual ~SystemScreen();
