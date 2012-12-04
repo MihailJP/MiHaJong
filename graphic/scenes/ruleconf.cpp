@@ -51,12 +51,18 @@ void RuleConfigScene::Render() {
 		float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
 		uint64_t t = elapsed();
 		CodeConv::tstring caption = _T("");
-		switch ((t / 30000000u) % 2) {
+		switch ((t / 30000000u) % 4) {
 		case 0:
 			TCHAR menuitem[128]; rules::getRuleDescription(menuitem, 128, menuCursor);
 			caption = CodeConv::tstring(menuitem);
 			break;
 		case 1:
+			caption = CodeConv::tstring(_T("↑/↓:カーソル移動  ←/→:選択中の項目を変更"));
+			break;
+		case 2:
+			caption = CodeConv::tstring(_T("Home/End:左右カラム間の移動  PageUp/PageDown:ページ間の移動"));
+			break;
+		case 3:
 			caption = CodeConv::tstring(_T("通信対戦時のルール設定はホスト側の設定が適用されます"));
 			break;
 		}
