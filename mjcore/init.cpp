@@ -80,6 +80,11 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 			info(_T("設定ファイルが見つかりました。読み込みを開始します。"));
 			RuleData::loadConfigFile(configFile.c_str()); // 設定ファイル読み込み
 		}
+		// UI用のDLLに関数の場所を教える
+		mihajong_graphic::rules::setfunc(
+			RuleData::getRuleName, RuleData::getRuleDescription, RuleData::getRuleTxt,
+			RuleData::getRule, RuleData::getRuleSize, RuleData::reqFailed,
+			RuleData::getPageCaption);
 	}
 
 	/* 音源を初期化 */

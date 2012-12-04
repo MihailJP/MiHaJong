@@ -4,6 +4,8 @@
 #include "sysscr.h"
 #include "../text.h"
 #include "../../mjcore/strcode.h"
+#include "../rule.h"
+#include "../../mjcore/nmrules.h"
 
 namespace mihajong_graphic {
 
@@ -12,6 +14,7 @@ private:
 	void itemText(unsigned prmID, const CodeConv::tstring& prmName, const CodeConv::tstring& prmContent);
 	void redrawItems();
 	signed short int menuCursor;
+	int rulestat[RULESIZE];
 public:
 	RuleConfigScene(ScreenManipulator* const manipulator);
 	virtual ~RuleConfigScene();

@@ -143,6 +143,7 @@
     <ClCompile Include="init.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="loadtex.cpp" />
+    <ClCompile Include="rule.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
     <ClCompile Include="scenes\game.cpp" />
     <ClCompile Include="scenes\splash.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="loadtex.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="rule.h" />
     <ClInclude Include="scenes\fps.h" />
     <ClInclude Include="scenes\game.h" />
     <ClInclude Include="scenes\proto.h" />

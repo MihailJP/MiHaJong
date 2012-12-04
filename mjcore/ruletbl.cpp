@@ -113,23 +113,17 @@ std::string RuleData::chkRule(std::string RuleTag) { // ルール設定タグを取得する
 bool RuleData::chkRule(std::string RuleTag, std::string Expectation) { // ルール設定
 	return getRuleItemTag(RuleTag, Rules[RuleTag]) == Expectation;
 }
-__declspec(dllexport) int RuleData::chkRule_hsp(const char* const RuleTag, const char* const Expectation) { // ルール設定チェック(HSPからの判定用)
-	return (getRuleItemTag(RuleTag, Rules[RuleTag]) == Expectation) ? 1 : 0;
-}
 bool RuleData::chkRuleApplied(std::string RuleTag) { // ルール設定
 	return (!chkRule(RuleTag, "no")) && (!chkRule(RuleTag, "N/A")) && (!chkRule(RuleTag, "continue"));
 }
-uint8_t RuleData::getRule(int RuleID) { // ルール設定を取得する[OBSOLETE]
+int RuleData::getRule(uint16_t RuleID) { // ルール設定を取得する(旧仕様)
 	return Rules[nametbl[RuleID]];
 }
-__declspec(dllexport) int getRule(int RuleID) { // ルール設定を取得する[OBSOLETE]
-	return (int)RuleData::getRule(RuleID);
-}
-__declspec(dllexport) int RuleData::getRuleSize(int RuleID) { // ルール項目のアイテム数
+__declspec(dllexport) int RuleData::getRuleSize(uint16_t RuleID) { // ルール項目のアイテム数
 	return ruletags[nametbl[RuleID]].size();
 }
 
-__declspec(dllexport) void RuleData::getRuleName(LPTSTR const txt, int bufsize, int RuleID) {
+__declspec(dllexport) void RuleData::getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
 		if ((chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[1].c_str()))) ||
@@ -141,7 +135,7 @@ __declspec(dllexport) void RuleData::getRuleName(LPTSTR const txt, int bufsize, 
 	_tcscpy_s(txt, bufsize, _T(""));
 }
 
-__declspec(dllexport) void RuleData::getRuleDescription(LPTSTR const txt, int bufsize, int RuleID) {
+__declspec(dllexport) void RuleData::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
 		if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[1].c_str()))) {
@@ -158,7 +152,7 @@ __declspec(dllexport) void RuleData::getRuleDescription(LPTSTR const txt, int bu
 	_tcscpy_s(txt, bufsize, _T(""));
 }
 
-std::string RuleData::getRuleItemTag(int RuleID, int index) {
+std::string RuleData::getRuleItemTag(uint16_t RuleID, int index) {
 	return getRuleItemTag(nametbl[RuleID], index);
 }
 std::string RuleData::getRuleItemTag(std::string RuleTag, int index) {
@@ -174,7 +168,7 @@ std::string RuleData::getRuleItemTag(std::string RuleTag, int index) {
 		return ruletags[RuleTag][index];
 }
 
-__declspec(dllexport) void RuleData::getRuleTxt(LPTSTR const txt, int bufsize, int RuleID, int index) {
+__declspec(dllexport) void RuleData::getRuleTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index) {
 	const std::string tag = getRuleItemTag(RuleID, index);
 	if ((confdict.find(_T("dictionary")) != confdict.end()) &&
 		(confdict[_T("dictionary")].find(EnsureTStr(tag)) != confdict[_T("dictionary")].end()))
@@ -210,7 +204,7 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 			for (auto k = config_rules.begin(); k != config_rules.end(); ++k) { // rulesセクションについて
 				if (inverse_nametbl.find(toANSI(k->first)) != inverse_nametbl.end()) { // キーがあったら
 					const std::string& rulename = toANSI(k->first); // 別名をつける
-					const unsigned int ruleid = inverse_nametbl[rulename]; // 番号に変換
+					const uint16_t ruleid = inverse_nametbl[rulename]; // 番号に変換
 					if (nonapplicable.find(rulename) != nonapplicable.end()) { // N/Aだったばあい
 						tostringstream o; o << _T("キー [") << EnsureTStr(rulename) << _T("] は設定できません。無視します。");
 						warn(o.str().c_str());
@@ -294,9 +288,9 @@ std::string RuleData::getRuleMaskExpr(const std::string& RuleTag) {
 	return "";
 }
 
-__declspec(dllexport) int RuleData::reqFailed(int ruleID, const int* const ruleStat) {
+__declspec(dllexport) BOOL RuleData::reqFailed(uint16_t RuleID, const int* const ruleStat) {
 	auto checker = new ReqChecker();
-	bool flag = checker->reqFailed(nametbl[ruleID], getRuleMaskExpr(nametbl[ruleID]), ruleStat);
+	bool flag = checker->reqFailed(nametbl[RuleID], getRuleMaskExpr(nametbl[RuleID]), ruleStat);
 	delete checker;
 	return flag ? 1 : 0;
 }
@@ -345,6 +339,6 @@ bool RuleData::ReqChecker::reqFailed
 
 // -------------------------------------------------------------------------
 
-__declspec(dllexport) void RuleData::getPageCaption(LPTSTR const caption, int bufsize, int page) {
+__declspec(dllexport) void RuleData::getPageCaption(LPTSTR const caption, unsigned bufsize, uint8_t page) {
 	_tcscpy_s(caption, bufsize, pageCaption[page].c_str());
 }

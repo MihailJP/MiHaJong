@@ -1,4 +1,5 @@
 #include "ruleconf.h"
+#include <cstring>
 #include "../scrmanip.h"
 #include "../geometry.h"
 #include "../../sound/sound.h"
@@ -7,6 +8,7 @@
 namespace mihajong_graphic {
 
 RuleConfigScene::RuleConfigScene(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
+	memset(rulestat, 0, sizeof(rulestat));
 	menuCursor = 0;
 	redrawItems();
 }
@@ -36,8 +38,10 @@ void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName,
 void RuleConfigScene::redrawItems() {
 	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
 	for (int i = 0; i < 40; i++) {
-		CodeConv::tostringstream o; o << _T("ItemNr.") << (menuCursor / 40 * 40) + i;
-		itemText(i, o.str(), _T("Lorem ipsum dolor sit amet"));
+		const unsigned ItemNum = (menuCursor / 40 * 40) + i;
+		TCHAR menuitem[128]; rules::getRuleName(menuitem, 128, ItemNum);
+		TCHAR itmfield[128]; rules::getRuleTxt(itmfield, 128, ItemNum, rulestat[ItemNum]);
+		itemText(i, CodeConv::tstring(menuitem), CodeConv::tstring(itmfield));
 	}
 }
 
@@ -51,41 +55,57 @@ void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_UP: // 前の項目
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
-			--menuCursor; redrawItems();
+			if (--menuCursor < 0) menuCursor = 0;
+			redrawItems();
 		}
 		break;
 	case DIK_DOWN: // 次の項目
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
-			++menuCursor; redrawItems();
+			if (++menuCursor >= RULESIZE) menuCursor = RULESIZE - 1;
+			redrawItems();
 		}
 		break;
 	case DIK_LEFT: // 前の選択肢
+		if (od->dwData) {
+			sound::Play(sound::IDs::sndClick);
+			if ((--rulestat[menuCursor]) < 0) rulestat[menuCursor] = rules::getRuleSize(menuCursor) - 1;
+			redrawItems();
+		}
 		break;
 	case DIK_RIGHT: // 次の選択肢
+		if (od->dwData) {
+			sound::Play(sound::IDs::sndClick);
+			if ((++rulestat[menuCursor]) >= rules::getRuleSize(menuCursor)) rulestat[menuCursor] = 0;
+			redrawItems();
+		}
 		break;
 	case DIK_HOME: // 前のカラム
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
-			menuCursor -= 20; redrawItems();
+			if ((menuCursor -= 20) < 0) menuCursor = 0;
+			redrawItems();
 		}
 		break;
 	case DIK_END: // 次のカラム
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
-			menuCursor += 20; redrawItems();
+			if ((menuCursor += 20) >= RULESIZE) menuCursor = RULESIZE - 1;
+			redrawItems();
 		}
 		break;
 	case DIK_PRIOR: // 前のページ
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
-			menuCursor -= 40; redrawItems();
+			if ((menuCursor -= 40) < 0) menuCursor = 0;
+			redrawItems();
 		}
 		break;
 	case DIK_NEXT: // 次のページ
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
-			menuCursor += 40; redrawItems();
+			if ((menuCursor += 40) >= RULESIZE) menuCursor = RULESIZE - 1;
+			redrawItems();
 		}
 		break;
 	}
