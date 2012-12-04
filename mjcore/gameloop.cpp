@@ -108,6 +108,7 @@ DWORD titlescreen() {
 /* ゲーム開始処理 */
 void startgame(gameTypeID gameType) {
 	while (true) {
+		start:
 		/* 変数類の初期化 */
 		EnvTable::TableEnvInit();
 		GameTable* gameStat = initializeGameTable(gameType);
@@ -116,6 +117,10 @@ void startgame(gameTypeID gameType) {
 		mihajong_socket::server::rotation_reset();
 		sound::Play(sound::IDs::musTitle); // タイトル曲を流す
 		switch (titlescreen()) { // タイトル画面
+		case 4:
+			mihajong_graphic::Transit(mihajong_graphic::sceneConfig);
+			mihajong_graphic::ui::WaitUI();
+			goto start;
 		case 6:
 			return;
 		}

@@ -94,7 +94,9 @@ void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<vo
 }
 void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 	if (iManip) {
-		inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {sc->KeyboardInput(od);});
+		inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
+			if (sc) sc->KeyboardInput(od);
+		});
 	}
 }
 

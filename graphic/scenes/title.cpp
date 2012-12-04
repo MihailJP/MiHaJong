@@ -159,7 +159,7 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // 決定
 		if (flag) {
-			if (menuCursor == 6) {
+			if ((menuCursor == 4) || (menuCursor == 6)) {
 				sound::Play(sound::IDs::sndButton);
 				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
 			} else {
