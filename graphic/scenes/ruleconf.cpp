@@ -1,5 +1,7 @@
 #include "ruleconf.h"
 #include "../geometry.h"
+#include "../../sound/sound.h"
+#include "../../mjcore/bgmid.h"
 
 namespace mihajong_graphic {
 
@@ -49,26 +51,44 @@ void RuleConfigScene::Render() {
 void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	switch (od->dwOfs) {
 	case DIK_UP: // 前の項目
-		if (od->dwData) {--menuCursor; redrawItems();}
+		if (od->dwData) {
+			sound::Play(sound::IDs::sndCursor);
+			--menuCursor; redrawItems();
+		}
 		break;
 	case DIK_DOWN: // 次の項目
-		if (od->dwData) {++menuCursor; redrawItems();}
+		if (od->dwData) {
+			sound::Play(sound::IDs::sndCursor);
+			++menuCursor; redrawItems();
+		}
 		break;
 	case DIK_LEFT: // 前の選択肢
 		break;
 	case DIK_RIGHT: // 次の選択肢
 		break;
 	case DIK_HOME: // 前のカラム
-		if (od->dwData) {menuCursor -= 20; redrawItems();}
+		if (od->dwData) {
+			sound::Play(sound::IDs::sndCursor);
+			menuCursor -= 20; redrawItems();
+		}
 		break;
 	case DIK_END: // 次のカラム
-		if (od->dwData) {menuCursor += 20; redrawItems();}
+		if (od->dwData) {
+			sound::Play(sound::IDs::sndCursor);
+			menuCursor += 20; redrawItems();
+		}
 		break;
 	case DIK_PRIOR: // 前のページ
-		if (od->dwData) {menuCursor -= 40; redrawItems();}
+		if (od->dwData) {
+			sound::Play(sound::IDs::sndCursor);
+			menuCursor -= 40; redrawItems();
+		}
 		break;
 	case DIK_NEXT: // 次のページ
-		if (od->dwData) {menuCursor += 40; redrawItems();}
+		if (od->dwData) {
+			sound::Play(sound::IDs::sndCursor);
+			menuCursor += 40; redrawItems();
+		}
 		break;
 	}
 }
