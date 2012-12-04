@@ -47,6 +47,28 @@ void RuleConfigScene::redrawItems() {
 
 void RuleConfigScene::Render() {
 	clearWithGameTypeColor(); // バッファクリア
+	{
+		float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
+		uint64_t t = elapsed();
+		CodeConv::tstring caption = _T("");
+		switch ((t / 30000000u) % 2) {
+		case 0:
+			TCHAR menuitem[128]; rules::getRuleDescription(menuitem, 128, menuCursor);
+			caption = CodeConv::tstring(menuitem);
+			break;
+		case 1:
+			caption = CodeConv::tstring(_T("通信対戦時のルール設定はホスト側の設定が適用されます"));
+			break;
+		}
+		unsigned captionCols = 0u; // 桁数(日本語は2桁)
+		for (auto k = caption.begin(); k != caption.end(); ++k) {
+			if (*k <= _T('\x7f')) captionCols += 1;
+			else captionCols += 2;
+		}
+		myTextRenderer->NewText(120, caption,
+			(720 - 9 * captionCols) * WidthRate, 980, 1.0f, WidthRate,
+			((t % 30000000u) < 5000000u) ? (55u + ((t % 30000000u) / 25000u)) << 24 | 0x00ffffff : 0xffffffff);
+	}
 	myTextRenderer->Render();
 }
 
@@ -56,14 +78,14 @@ void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
 			if (--menuCursor < 0) menuCursor = 0;
-			redrawItems();
+			skipto(0); redrawItems();
 		}
 		break;
 	case DIK_DOWN: // 次の項目
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
 			if (++menuCursor >= RULESIZE) menuCursor = RULESIZE - 1;
-			redrawItems();
+			skipto(0); redrawItems();
 		}
 		break;
 	case DIK_LEFT: // 前の選択肢
@@ -84,28 +106,28 @@ void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
 			if ((menuCursor -= 20) < 0) menuCursor = 0;
-			redrawItems();
+			skipto(0); redrawItems();
 		}
 		break;
 	case DIK_END: // 次のカラム
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
 			if ((menuCursor += 20) >= RULESIZE) menuCursor = RULESIZE - 1;
-			redrawItems();
+			skipto(0); redrawItems();
 		}
 		break;
 	case DIK_PRIOR: // 前のページ
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
 			if ((menuCursor -= 40) < 0) menuCursor = 0;
-			redrawItems();
+			skipto(0); redrawItems();
 		}
 		break;
 	case DIK_NEXT: // 次のページ
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
 			if ((menuCursor += 40) >= RULESIZE) menuCursor = RULESIZE - 1;
-			redrawItems();
+			skipto(0); redrawItems();
 		}
 		break;
 	}
