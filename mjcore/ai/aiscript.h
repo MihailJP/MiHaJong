@@ -1,5 +1,4 @@
-#ifndef AISCRIPT_H
-#define AISCRIPT_H
+#pragma once
 
 #include <lua.hpp>
 #include <sstream>
@@ -27,4 +26,3 @@ public:
 	static inline void PlayerFlower(lua_State* const L, const FLOWERS* const plstat);
 	static inline void PlayerDeclFlag(lua_State* const L, const DECLFLAG* const plstat);
 };
-#endif

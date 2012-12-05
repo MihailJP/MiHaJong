@@ -1,5 +1,4 @@
-#ifndef INI2MAP_H
-#define INI2MAP_H
+#pragma once
 
 #include <map>
 #include <string>
@@ -12,5 +11,3 @@ public:
 	typedef std::map<CodeConv::tstring, RECORD> IniMapMap;
 	static void parseini(IniMapMap&, LPCTSTR);
 };
-
-#endif

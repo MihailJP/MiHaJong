@@ -1,5 +1,4 @@
-#ifndef YK_TOOLS_H
-#define YK_TOOLS_H
+#pragma once
 
 #include <type_traits>
 #include "ykclass.h"
@@ -57,5 +56,3 @@ public:
 		const tileCode* const targetShunz, int numOfShunz, bool Mode);
 	static int countMentzNumerals(const MELD_BUF MianziDat);
 };
-
-#endif

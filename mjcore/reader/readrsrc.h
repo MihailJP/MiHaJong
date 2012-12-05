@@ -1,5 +1,4 @@
-#ifndef READRSRC_H
-#define READRSRC_H
+#pragma once
 
 #include <cstdint>
 #include <Windows.h>
@@ -7,5 +6,3 @@
 #include "../dllmain.h"
 
 void LoadFileInResource(int name, int type, DWORD& size, const uint8_t*& data);
-
-#endif
