@@ -84,7 +84,8 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 		mihajong_graphic::rules::setfunc(
 			RuleData::getRuleName, RuleData::getRuleDescription, RuleData::getRuleTxt,
 			RuleData::getRule, RuleData::getRuleSize, RuleData::reqFailed,
-			RuleData::getPageCaption);
+			RuleData::getPageCaption, RuleData::storeRule, RuleData::exportRule,
+			RuleData::ruleDigit());
 	}
 
 	/* âπåπÇèâä˙âª */

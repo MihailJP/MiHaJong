@@ -15,6 +15,7 @@ private:
 	void redrawItems();
 	signed short int menuCursor;
 	int rulestat[RULESIZE];
+	char RuleConf[RULE_LINES][RULE_IN_LINE + 4];
 public:
 	RuleConfigScene(ScreenManipulator* const manipulator);
 	virtual ~RuleConfigScene();

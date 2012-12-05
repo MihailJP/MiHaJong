@@ -14,6 +14,8 @@ typedef void (*RetrieveTxtIndex)(LPTSTR const /*txt*/, unsigned /*bufsize*/, uin
 typedef int (*RetrieveInt)(uint16_t /*RuleID*/);
 typedef BOOL (*CheckDep)(uint16_t /*RuleID*/, const int* const /* ruleStat */);
 typedef void (*RetrieveCaption)(LPTSTR const /*txt*/, unsigned /*bufsize*/, uint8_t /*page*/);
+typedef void (*RuleWrite)(const char** /*ruleTxt*/);
+typedef void (*RuleRead)(char** /*ruleTxt*/);
 
 #ifdef GRAPHIC_EXPORTS
 extern RetrieveTxt getRuleName;
@@ -23,12 +25,16 @@ extern RetrieveInt getRule;
 extern RetrieveInt getRuleSize;
 extern CheckDep reqFailed;
 extern RetrieveCaption getPageCaption;
+extern RuleWrite storeRule;
+extern RuleRead exportRule;
+extern const char* digit;
 #endif
 
 EXPORT void setfunc(
 	RetrieveTxt fpGetRuleName, RetrieveTxt fpGetRuleDesc, RetrieveTxtIndex fpGetRuleTxt,
 	RetrieveInt fpGetRule, RetrieveInt fpGetRuleSize, CheckDep fpReqFailed,
-	RetrieveCaption fpGetPageCaption);
+	RetrieveCaption fpGetPageCaption, RuleWrite fpStoreRule, RuleRead fpExportRule,
+	const char* pDigit);
 
 }
 }

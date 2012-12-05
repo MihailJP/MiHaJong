@@ -93,16 +93,16 @@ void RuleData::parseRule() { // ルール設定を数値に変換
 	}
 }
 
-__declspec(dllexport) void RuleData::storeRule(const char** ruleTxt) { // HSP→C++ ルール設定転送
-	debug(_T("HSP→C++ ルール転送"));
+__declspec(dllexport) void RuleData::storeRule(const char** ruleTxt) { // UI→Core ルール設定転送
+	debug(_T("ルール設定をコアモジュールに書き込み"));
 	for (int i = 0; i < RULE_LINES; i++)
 		memcpy(ruleConf[i], ruleTxt[i], RULE_IN_LINE);
 	parseRule();
 	info(_T("設定がロードされました。"));
 }
 
-__declspec(dllexport) void RuleData::exportRule(char** ruleTxt) { // C++→HSP ルール設定転送
-	debug(_T("C++→HSP ルール転送"));
+__declspec(dllexport) void RuleData::exportRule(char** ruleTxt) { // Core→UI ルール設定転送
+	debug(_T("ルール設定をコアモジュールから読み出し"));
 	for (int i = 0; i < RULE_LINES; i++)
 		memcpy(ruleTxt[i], ruleConf[i], RULE_IN_LINE);
 }

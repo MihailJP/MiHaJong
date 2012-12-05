@@ -74,6 +74,7 @@ public:
 	static std::string getRuleMaskExpr(const std::string& RuleTag);
 	__declspec(dllexport) static BOOL reqFailed(uint16_t ruleID, const int* const ruleStat);
 	__declspec(dllexport) static void getPageCaption(LPTSTR const caption, unsigned bufsize, uint8_t page);
+	static const char* ruleDigit() {return digit;}
 };
 
 class RuleData::ReqChecker {

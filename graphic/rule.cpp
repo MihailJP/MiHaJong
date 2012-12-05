@@ -10,11 +10,15 @@ RetrieveInt getRule = nullptr;
 RetrieveInt getRuleSize = nullptr;
 CheckDep reqFailed = nullptr;
 RetrieveCaption getPageCaption = nullptr;
+RuleWrite storeRule = nullptr;
+RuleRead exportRule = nullptr;
+extern const char* digit = nullptr;
 
 EXPORT void setfunc(
 	RetrieveTxt fpGetRuleName, RetrieveTxt fpGetRuleDesc, RetrieveTxtIndex fpGetRuleTxt,
 	RetrieveInt fpGetRule, RetrieveInt fpGetRuleSize, CheckDep fpReqFailed,
-	RetrieveCaption fpGetPageCaption)
+	RetrieveCaption fpGetPageCaption, RuleWrite fpStoreRule, RuleRead fpExportRule,
+	const char* pDigit)
 {
 	getRuleName = fpGetRuleName;
 	getRuleDescription = fpGetRuleDesc;
@@ -23,6 +27,9 @@ EXPORT void setfunc(
 	getRuleSize = fpGetRuleSize;
 	reqFailed = fpReqFailed;
 	getPageCaption = fpGetPageCaption;
+	storeRule = fpStoreRule;
+	exportRule = fpExportRule;
+	digit = pDigit;
 }
 
 }
