@@ -146,6 +146,7 @@
     <ClCompile Include="rule.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
     <ClCompile Include="scenes\game.cpp" />
+    <ClCompile Include="scenes\proto.cpp" />
     <ClCompile Include="scenes\splash.cpp" />
     <ClCompile Include="scenes\ruleconf.cpp" />
     <ClCompile Include="scenes\sysscr.cpp" />

@@ -85,18 +85,30 @@ ScreenManipulator::~ScreenManipulator() {
 }
 
 void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f) {
-	DIDEVICEOBJECTDATA objDat; DWORD items = 1;
-	HRESULT hr = inputDev->getDevice()->GetDeviceData(
-		sizeof(DIDEVICEOBJECTDATA), &objDat, &items, 0);
-	if (FAILED(hr)) /*(hr == DIERR_INPUTLOST)*/
-		inputDev->getDevice()->Acquire();
-	else if (SUCCEEDED(hr) && (items > 0))
-		f(myScene, &objDat);
+	while (true) {
+		DIDEVICEOBJECTDATA objDat; DWORD items = 1;
+		HRESULT hr = inputDev->getDevice()->GetDeviceData(
+			sizeof(DIDEVICEOBJECTDATA), &objDat, &items, 0);
+		if (FAILED(hr)) /*(hr == DIERR_INPUTLOST)*/ {
+			inputDev->getDevice()->Acquire();
+			break;
+		}
+		else if (SUCCEEDED(hr) && (items > 0)) {
+			f(myScene, &objDat);
+		}
+		else {
+			break;
+		}
+	}
 }
 void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 	if (iManip) {
 		inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
 			if (sc) sc->KeyboardInput(od);
+		});
+		inputProc(iManip->mouse(), [iManip](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
+			input::Mouse::Position mousepos = iManip->mouse()->pos();
+			if (sc) sc->MouseInput(od, mousepos.first, mousepos.second);
 		});
 	}
 }

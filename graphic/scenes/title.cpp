@@ -84,6 +84,12 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 			1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
 			0x33ffffff);
 	}
+	if (regions.size() <= ID) {
+		Region nullRegion = {0, 0, -1, -1};
+		regions.resize(ID + 1, Region(nullRegion));
+	}
+	regions[ID].Left = X; regions[ID].Top = Y; 
+	regions[ID].Right = 1439 - X; regions[ID].Bottom = Y + 71; 
 }
 
 void TitleScreen::menuLabels() {
@@ -140,6 +146,51 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 				menuCursor = 6; // Exitにカーソルを合わせる
 			} else {
 				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+			}
+		}
+		break;
+	}
+}
+
+void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	const bool flag1 = (elapsed() > 180u * timePerFrame);
+	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
+	const int scaledY = Y / Geometry::WindowScale();
+	const int region = whichRegion(scaledX, scaledY);
+#if 0
+	{
+		CodeConv::tostringstream o;
+		o << _T("(") << scaledX << _T(", ") << scaledY << _T(") ");
+		if (region != -1) o << _T("Region ") << region;
+		else o << _T("No Region");
+		myTextRenderer->NewText(9, o.str(), 0, 1000);
+	}
+#endif
+	switch (od->dwOfs) {
+	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
+		if (flag1) {
+			switch (region) {
+			case 0: case 1: case 2: case 3: case 4: case 5:
+				if (region != (menuCursor - 1)) {
+					sound::Play(sound::IDs::sndCursor);
+					menuCursor = region + 1;
+				}
+				break;
+			}
+		}
+		break;
+	case DIMOFS_BUTTON0: // マウスの左ボタン
+		if (od->dwData) {
+			if ((flag1) && (region != -1))  {
+				if ((menuCursor == 4) || (menuCursor == 6)) {
+					sound::Play(sound::IDs::sndButton);
+					ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+				} else {
+					sound::Play(sound::IDs::sndCuohu); // 未実装
+				}
+			} else if (!flag1) {
+				sound::Play(sound::IDs::sndClick);
+				skipto(180);
 			}
 		}
 		break;
