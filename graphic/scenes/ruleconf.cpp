@@ -26,8 +26,8 @@ void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName,
 		if (*k <= _T('\x7f')) itmNameCols += 1;
 		else itmNameCols += 2;
 	}
-	D3DCOLOR baseColor = ((prmContent == _T("‚m^‚`")) || (prmContent.empty()) || (rules::reqFailed(prmID, rulestat))) ? 0x00bfbfbf : 0x00ffffff;
-	D3DCOLOR menuColor = (menuCursor % 40 == prmID) ? 0xff000000 : 0x7f000000;
+	D3DCOLOR baseColor = ((prmContent == _T("‚m^‚`")) || (prmContent.empty()) || (rules::reqFailed(menuCursor / RULES_IN_PAGE * RULES_IN_PAGE + prmID, rulestat))) ? 0x00bfbfbf : 0x00ffffff;
+	D3DCOLOR menuColor = (menuCursor % RULES_IN_PAGE == prmID) ? 0xff000000 : 0x7f000000;
 	myTextRenderer->NewText(prmID * 3, prmName,
 		(prmID / 20 * 720 + 50) * WidthRate, 160 + (prmID % 20) * 40, 1.0f,
 		WidthRate * ((itmNameCols <= 8) ? 1.0f : 8.0f / (float)itmNameCols),
@@ -40,8 +40,8 @@ void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName,
 
 void RuleConfigScene::redrawItems() {
 	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ƒAƒX”ä~0.75(‰¡•’²®—p)
-	for (int i = 0; i < 40; i++) {
-		const unsigned ItemNum = (menuCursor / 40 * 40) + i;
+	for (int i = 0; i < RULES_IN_PAGE; i++) {
+		const unsigned ItemNum = (menuCursor / RULES_IN_PAGE * RULES_IN_PAGE) + i;
 		TCHAR menuitem[128]; rules::getRuleName(menuitem, 128, ItemNum);
 		TCHAR itmfield[128]; rules::getRuleTxt(itmfield, 128, ItemNum, rulestat[ItemNum]);
 		itemText(i, CodeConv::tstring(menuitem), CodeConv::tstring(itmfield));
@@ -112,14 +112,22 @@ void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_LEFT: // ‘O‚Ì‘I‘ðŽˆ
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndClick);
-			if ((--rulestat[menuCursor]) < 0) rulestat[menuCursor] = rules::getRuleSize(menuCursor) - 1;
+			while (true) {
+				if ((--rulestat[menuCursor]) < 0) rulestat[menuCursor] = rules::getRuleSize(menuCursor) - 1;
+				TCHAR menuitem[128]; rules::getRuleTxt(menuitem, 128, menuCursor, rulestat[menuCursor]);
+				if (CodeConv::tstring(menuitem) != CodeConv::tstring(_T(">>>"))) break;
+			}
 			redrawItems();
 		}
 		break;
 	case DIK_RIGHT: // ŽŸ‚Ì‘I‘ðŽˆ
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndClick);
-			if ((++rulestat[menuCursor]) >= rules::getRuleSize(menuCursor)) rulestat[menuCursor] = 0;
+			while (true) {
+				if ((++rulestat[menuCursor]) >= rules::getRuleSize(menuCursor)) rulestat[menuCursor] = 0;
+				TCHAR menuitem[128]; rules::getRuleTxt(menuitem, 128, menuCursor, rulestat[menuCursor]);
+				if (CodeConv::tstring(menuitem) != CodeConv::tstring(_T(">>>"))) break;
+			}
 			redrawItems();
 		}
 		break;
@@ -140,14 +148,14 @@ void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_PRIOR: // ‘O‚Ìƒy[ƒW
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
-			if ((menuCursor -= 40) < 0) menuCursor = 0;
+			if ((menuCursor -= RULES_IN_PAGE) < 0) menuCursor = 0;
 			skipto(0); redrawItems();
 		}
 		break;
 	case DIK_NEXT: // ŽŸ‚Ìƒy[ƒW
 		if (od->dwData) {
 			sound::Play(sound::IDs::sndCursor);
-			if ((menuCursor += 40) >= RULESIZE) menuCursor = RULESIZE - 1;
+			if ((menuCursor += RULES_IN_PAGE) >= RULESIZE) menuCursor = RULESIZE - 1;
 			skipto(0); redrawItems();
 		}
 		break;
