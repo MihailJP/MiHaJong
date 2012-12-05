@@ -17,6 +17,8 @@ protected:
 	uint64_t elapsed();
 	TextRenderer* myTextRenderer;
 	void skipto(unsigned frames);
+	unsigned strwidth(const std::wstring& str);
+	unsigned strwidth(const std::string& str);
 public:
 	SystemScreen(ScreenManipulator* const manipulator);
 	virtual ~SystemScreen();

@@ -21,11 +21,7 @@ RuleConfigScene::~RuleConfigScene() {
 void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName, const CodeConv::tstring& prmContent) {
 	// 項目を表示
 	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
-	unsigned itmNameCols = 0u; // 桁数(日本語は2桁)
-	for (auto k = prmName.begin(); k != prmName.end(); ++k) {
-		if (*k <= _T('\x7f')) itmNameCols += 1;
-		else itmNameCols += 2;
-	}
+	unsigned itmNameCols = strwidth(prmName); // 桁数(日本語は2桁)
 	D3DCOLOR baseColor = ((prmContent == _T("Ｎ／Ａ")) || (prmContent.empty()) || (rules::reqFailed(menuCursor / RULES_IN_PAGE * RULES_IN_PAGE + prmID, rulestat))) ? 0x00bfbfbf : 0x00ffffff;
 	D3DCOLOR menuColor = (menuCursor % RULES_IN_PAGE == prmID) ? 0xff000000 : 0x7f000000;
 	myTextRenderer->NewText(prmID * 3, prmName,
@@ -80,11 +76,7 @@ void RuleConfigScene::Render() {
 			caption = CodeConv::tstring(_T("通信対戦時のルール設定はホスト側の設定が適用されます"));
 			break;
 		}
-		unsigned captionCols = 0u; // 桁数(日本語は2桁)
-		for (auto k = caption.begin(); k != caption.end(); ++k) {
-			if (*k <= _T('\x7f')) captionCols += 1;
-			else captionCols += 2;
-		}
+		unsigned captionCols = strwidth(caption); // 桁数(日本語は2桁)
 		myTextRenderer->NewText(120, caption,
 			(720 - 9 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 980, 1.0f,
 			(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate,
@@ -93,11 +85,7 @@ void RuleConfigScene::Render() {
 	{
 		CodeConv::tostringstream o; o << _T("Page ") << std::setw(2) << (menuCursor / RULES_IN_PAGE + 1) << _T("/") << RULE_PAGES;
 		CodeConv::tstring pagecaption(o.str());
-		unsigned captionCols = 0u; // 桁数(日本語は2桁)
-		for (auto k = pagecaption.begin(); k != pagecaption.end(); ++k) {
-			if (*k <= _T('\x7f')) captionCols += 1;
-			else captionCols += 2;
-		}
+		unsigned captionCols = strwidth(pagecaption); // 桁数(日本語は2桁)
 		myTextRenderer->NewText(121, pagecaption,
 			(1400 - 15 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 70, 0.833333f,
 			(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate, 0xffffffff);
@@ -105,11 +93,7 @@ void RuleConfigScene::Render() {
 	{
 		TCHAR pagecap[128]; rules::getPageCaption(pagecap, 128, menuCursor / RULES_IN_PAGE);
 		CodeConv::tstring pagecaption(pagecap);
-		unsigned captionCols = 0u; // 桁数(日本語は2桁)
-		for (auto k = pagecaption.begin(); k != pagecaption.end(); ++k) {
-			if (*k <= _T('\x7f')) captionCols += 1;
-			else captionCols += 2;
-		}
+		unsigned captionCols = strwidth(pagecaption); // 桁数(日本語は2桁)
 		myTextRenderer->NewText(122, pagecaption,
 			(1400 - 15 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 100, 0.833333f,
 			(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate, 0xffffffff);
