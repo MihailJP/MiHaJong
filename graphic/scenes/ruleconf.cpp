@@ -5,6 +5,7 @@
 #include "../../sound/sound.h"
 #include "../../mjcore/bgmid.h"
 #include "../../mihajong/version.h"
+#include "../event.h"
 #include <iomanip>
 
 namespace mihajong_graphic {
@@ -36,6 +37,12 @@ void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName,
 		(prmID / 20 * 720 + 50 + 144) * WidthRate, 160 + (prmID % 20) * 40, 1.0, WidthRate, menuColor | baseColor);
 	myTextRenderer->NewText(prmID * 3 + 2, prmContent,
 		(prmID / 20 * 720 + 50 + 162) * WidthRate, 160 + (prmID % 20) * 40, 1.0, WidthRate, menuColor | baseColor);
+	if (regions.size() <= prmID) {
+		Region nullRegion = {0, 0, -1, -1};
+		regions.resize(prmID + 1, Region(nullRegion));
+	}
+	regions[prmID].Left = (prmID / 20 * 720 + 50); regions[prmID].Top = 160 + (prmID % 20) * 40; 
+	regions[prmID].Right = (prmID / 20 * 720 + 670); regions[prmID].Bottom = regions[prmID].Top + 35; 
 }
 
 void RuleConfigScene::redrawItems() {
@@ -170,6 +177,56 @@ void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 			if ((menuCursor += RULES_IN_PAGE) >= RULESIZE) menuCursor = RULESIZE - 1;
 			skipto(0); redrawItems();
 		}
+		break;
+	}
+}
+
+void RuleConfigScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
+	const int scaledY = Y / Geometry::WindowScale();
+	const int region = whichRegion(scaledX, scaledY);
+#if 0
+	{
+		CodeConv::tostringstream o;
+		o << _T("(") << scaledX << _T(", ") << scaledY << _T(") ");
+		if (region != -1) o << _T("Region ") << region;
+		else o << _T("No Region");
+		myTextRenderer->NewText(144, o.str(), 0, 1000);
+	}
+#endif
+	auto setcursor = [&]() -> void {
+		if ((region >= 0) && (region <= (RULES_IN_PAGE - 1))) {
+			if (region != menuCursor % RULES_IN_PAGE) {
+				sound::Play(sound::IDs::sndCursor);
+				menuCursor = menuCursor / RULES_IN_PAGE * RULES_IN_PAGE + region;
+				skipto(0); redrawItems();
+			}
+		}
+	};
+	switch (od->dwOfs) {
+	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
+		setcursor();
+		break;
+	case DIMOFS_Z: // ホイールの操作
+		setcursor();
+		sound::Play(sound::IDs::sndClick);
+		while (true) {
+			if ((LONG)od->dwData > 0) {
+				if ((--rulestat[menuCursor]) < 0) rulestat[menuCursor] = rules::getRuleSize(menuCursor) - 1;
+			} else if ((LONG)od->dwData < 0) {
+				if ((++rulestat[menuCursor]) >= rules::getRuleSize(menuCursor)) rulestat[menuCursor] = 0;
+			}
+#if 0
+			{
+				CodeConv::tostringstream o;
+				o << _T("Wheel ") << (signed)od->dwData;
+				myTextRenderer->NewText(144, o.str(), 0, 1000);
+			}
+#endif
+			TCHAR menuitem[128]; rules::getRuleTxt(menuitem, 128, menuCursor, rulestat[menuCursor]);
+			if (CodeConv::tstring(menuitem) != CodeConv::tstring(_T(">>>"))) break;
+		}
+		redrawItems();
 		break;
 	}
 }

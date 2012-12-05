@@ -87,9 +87,9 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 	if (regions.size() <= ID) {
 		Region nullRegion = {0, 0, -1, -1};
 		regions.resize(ID + 1, Region(nullRegion));
-		regions[ID].Left = X; regions[ID].Top = Y; 
-		regions[ID].Right = 1439 - X; regions[ID].Bottom = Y + 71; 
 	}
+	regions[ID].Left = X; regions[ID].Top = Y; 
+	regions[ID].Right = 1439 - X; regions[ID].Bottom = Y + 71; 
 }
 
 void TitleScreen::menuLabels() {
