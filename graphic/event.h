@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_EVENT_H
-#define GRAPHIC_EVENT_H
+#pragma once
 
 #include "exports.h"
 #include <Windows.h>
@@ -39,4 +38,3 @@ EXPORT DWORD WaitUI();
 
 }
 }
-#endif

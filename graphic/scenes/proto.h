@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_SCENES_PROTO_H
-#define GRAPHIC_SCENES_PROTO_H
+#pragma once
 
 #include <Windows.h>
 #include <d3dx9.h>
@@ -25,4 +24,3 @@ public:
 };
 
 }
-#endif

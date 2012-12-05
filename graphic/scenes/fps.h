@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_SCENES_FPS_H
-#define GRAPHIC_SCENES_FPS_H
+#pragma once
 
 #include "proto.h"
 #include <deque>
@@ -23,4 +22,3 @@ public:
 };
 
 }
-#endif

@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_GEOMETRY_H
-#define GRAPHIC_GEOMETRY_H
+#pragma once
 
 namespace mihajong_graphic {
 
@@ -13,4 +12,3 @@ public:
 };
 
 }
-#endif

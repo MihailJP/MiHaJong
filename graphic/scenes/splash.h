@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_SCENES_SPLASH_H
-#define GRAPHIC_SCENES_SPLASH_H
+#pragma once
 
 #include "proto.h"
 
@@ -13,4 +12,3 @@ public:
 };
 
 }
-#endif

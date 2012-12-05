@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_SCENES_TABLE_H
-#define GRAPHIC_SCENES_TABLE_H
+#pragma once
 
 #include "game.h"
 #include "../geometry.h"
@@ -25,4 +24,3 @@ public:
 };
 
 }
-#endif

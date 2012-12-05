@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_SCENES_TITLE_H
-#define GRAPHIC_SCENES_TITLE_H
+#pragma once
 
 #include "proto.h"
 #include <array>
@@ -45,4 +44,3 @@ public:
 };
 
 }
-#endif

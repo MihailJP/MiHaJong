@@ -1,6 +1,6 @@
-#ifndef IDC_STATIC
+#pragma once
+
 #define IDC_STATIC (-1)
-#endif
 
 #define PNG_FILE                             256
 #define IDB_PNG_TBLBAIZE                     100

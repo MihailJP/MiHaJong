@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_SCRMANIP_H
-#define GRAPHIC_SCRMANIP_H
+#pragma once
 
 #include <d3dx9.h>
 #include <dxerr.h>
@@ -32,4 +31,3 @@ public:
 };
 
 }
-#endif
