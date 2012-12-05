@@ -1,5 +1,4 @@
-#ifndef YVALUE_H
-#define YVALUE_H
+#pragma once
 
 #include "yaku.h"
 
@@ -152,5 +151,3 @@ const yaku::yakuCalculator::Yaku::MenzenHan yaku::yakuCalculator::Yaku::yval_2ha
 const yaku::yakuCalculator::Yaku::MenzenHan yaku::yakuCalculator::Yaku::yval_yakuman_menzen_dependent =
 	yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
 	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
-
-#endif

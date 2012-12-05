@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_SCENES_SYSSCR_H
-#define GRAPHIC_SCENES_SYSSCR_H
+#pragma once
 
 #include "proto.h"
 #include <array>
@@ -25,4 +24,3 @@ public:
 };
 
 }
-#endif

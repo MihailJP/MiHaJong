@@ -1,5 +1,4 @@
-#ifndef CLASS_H
-#define CLASS_H
+#pragma once
 
 #include <string>
 #include <cstdint>
@@ -107,4 +106,3 @@ private:
 };
 
 }
-#endif

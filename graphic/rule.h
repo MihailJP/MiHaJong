@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_RULE_H
-#define GRAPHIC_RULE_H
+#pragma once
 
 #include <Windows.h>
 #include <cstdint>
@@ -38,5 +37,3 @@ EXPORT void setfunc(
 
 }
 }
-
-#endif

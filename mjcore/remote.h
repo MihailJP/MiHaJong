@@ -1,5 +1,4 @@
-#ifndef REMOTE_H
-#define REMOTE_H
+#pragma once
 
 #include "../socket/socket.h"
 #include "gametbl.h"
@@ -40,5 +39,3 @@ namespace RemoteAction {
 	DiscardTileNum remotedahai (GameTable* const gameStat);
 	void remotenaki (GameTable* const gameStat);
 }
-
-#endif

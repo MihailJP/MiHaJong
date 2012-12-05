@@ -1,5 +1,4 @@
-#ifndef FILESEL_H
-#define FILESEL_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -16,5 +15,3 @@ public:
 	static void filelist(); // ファイル一覧を用意！
 	static std::string randomfile();
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef AISCRIPT_CLASS_H
-#define AISCRIPT_CLASS_H
+#pragma once
 
 #include <Windows.h>
 #include <lua.hpp>
@@ -90,5 +89,3 @@ public:
 	class playertable;
 	class functable;
 };
-
-#endif

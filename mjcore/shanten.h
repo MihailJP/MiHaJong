@@ -1,5 +1,4 @@
-#ifndef SHANTEN_H
-#define SHANTEN_H
+#pragma once
 
 #include <windows.h>
 #ifdef MJCORE_EXPORTS
@@ -73,5 +72,3 @@ private:
 #endif
 
 };
-
-#endif

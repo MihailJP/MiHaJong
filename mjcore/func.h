@@ -1,5 +1,4 @@
-#ifndef FUNC_H
-#define FUNC_H
+#pragma once
 
 #include <cstdint>
 #ifdef MJCORE_EXPORTS
@@ -105,5 +104,3 @@ inline bool exist (LPCSTR filename) {
 #endif
 
 MJCORE void cleanup();
-
-#endif

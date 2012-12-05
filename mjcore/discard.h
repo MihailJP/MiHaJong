@@ -1,5 +1,4 @@
-#ifndef DISCARD_H
-#define DISCARD_H
+#pragma once
 
 #include <cstdint>
 #include <type_traits>
@@ -18,5 +17,4 @@ EXPORT_STRUCT DiscardTileNum { /* 打牌コード用 */
 };
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<DiscardTileNum>::value, "DiscardTileNum is not POD");
-#endif
 #endif

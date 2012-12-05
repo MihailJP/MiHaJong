@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_SCENES_RULECONF_H
-#define GRAPHIC_SCENES_RULECONF_H
+#pragma once
 
 #include "sysscr.h"
 #include "../text.h"
@@ -24,4 +23,3 @@ public:
 };
 
 }
-#endif

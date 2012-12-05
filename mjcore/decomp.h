@@ -1,5 +1,4 @@
-#ifndef DECOMP_H
-#define DECOMP_H
+#pragma once
 
 #include <cstdint>
 #include <vector>
@@ -53,5 +52,3 @@ public:
 #define FILEDESC_CONFITEM_INI _T("ルールタグ翻訳ファイル")
 #include "data/confitem.csv.h"
 #include "data/confitem.ini.h"
-
-#endif

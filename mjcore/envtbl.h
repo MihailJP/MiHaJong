@@ -1,5 +1,4 @@
-#ifndef ENVTBL_H
-#define ENVTBL_H
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -48,5 +47,3 @@ public:
 	__declspec(dllexport) static void TableEnvInit(void *);
 	__declspec(dllexport) static void TableEnvInitAll(void *);
 };
-
-#endif

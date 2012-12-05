@@ -1,5 +1,4 @@
-#ifndef INIT_H
-#define INIT_H
+#pragma once
 
 #include "mjexport.h"
 #include "gametbl.h"
@@ -19,5 +18,3 @@
 #endif
 
 MJCORE void initapp(gameTypeID gameType, HWND hwnd);
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef VERSION_H
-#define VERSION_H
+#pragma once
 
 #define MIHAJONG_MAJOR_VER 2
 #define MIHAJONG_MINOR_VER 0
@@ -35,5 +34,3 @@
 #define GRAPHIC_MINOR_VER 0
 #define GRAPHIC_PATCH_VER 0
 #define GRAPHIC_VER "2.0.0-devel"
-
-#endif

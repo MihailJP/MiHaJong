@@ -1,5 +1,4 @@
-#ifndef RULETBL_H
-#define RULETBL_H
+#pragma once
 
 #include <cstdint>
 #ifdef MJCORE_EXPORTS
@@ -89,6 +88,4 @@ public:
 };
 
 __declspec(dllexport) int getRule(int RuleID);
-#endif
-
 #endif

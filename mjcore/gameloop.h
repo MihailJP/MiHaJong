@@ -1,5 +1,4 @@
-#ifndef GAMELOOP_H
-#define GAMELOOP_H
+#pragma once
 
 #ifdef MJCORE_EXPORTS
 #include "strcode.h"
@@ -19,5 +18,3 @@
 EndType doTableTurn(GameTable* const gameStat);
 bool doTableRound(GameTable* const gameStat);
 void startgame(gameTypeID gameType);
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_GAMETBL_H
-#define GRAPHIC_GAMETBL_H
+#pragma once
 
 #include "../mjcore/mjimport.h"
 #include "exports.h"
@@ -19,4 +18,3 @@ public:
 };
 
 }
-#endif

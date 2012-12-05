@@ -1,5 +1,4 @@
-#ifndef LARGENUM_H
-#define LARGENUM_H
+#pragma once
 
 #include <cstdint>
 #include <cstdlib>
@@ -42,6 +41,4 @@ EXPORT_STRUCT LargeNum { // ±21不可思議まで表現可能な数のクラス
 };
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<LargeNum>::value, "LargeNum is not POD");
-#endif
-
 #endif

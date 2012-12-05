@@ -1,5 +1,4 @@
-#ifndef MIHAJONG_MAIN_H
-#define MIHAJONG_MAIN_H
+#pragma once
 
 #define STRICT
 #define WIN32_LEAN_AND_MEAN
@@ -15,6 +14,4 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow);
 #else
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow);
-#endif
-
 #endif

@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_SHOWTILE_H
-#define GRAPHIC_SHOWTILE_H
+#pragma once
 
 #include <Windows.h>
 #include <d3dx9.h>
@@ -53,4 +52,3 @@ struct ShowTile::TileDescriptor {
 };
 
 }
-#endif

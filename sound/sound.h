@@ -1,5 +1,4 @@
-#ifndef SOUND_DLL_SOUND_H
-#define SOUND_DLL_SOUND_H
+#pragma once
 
 #include <Windows.h>
 #include <dsound.h>
@@ -28,5 +27,3 @@ namespace sound {
 	SOUNDDLL_EXPORT int Play(unsigned ID); // çƒê∂
 	SOUNDDLL_EXPORT int Stop(unsigned ID); // í‚é~
 }
-
-#endif

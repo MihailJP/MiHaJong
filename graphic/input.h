@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_INPUT_H
-#define GRAPHIC_INPUT_H
+#pragma once
 
 #include <Windows.h>
 #include <dinput.h>
@@ -32,5 +31,3 @@ public:
 
 }
 }
-
-#endif

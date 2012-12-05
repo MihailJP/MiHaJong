@@ -1,5 +1,4 @@
-#ifndef SOCK_LOGGER_H
-#define SOCK_LOGGER_H
+#pragma once
 
 #include "socket.h"
 #include <Windows.h>
@@ -47,6 +46,4 @@ void fatal_msg(LPCTSTR msg);
 #define warn(msg) mihajong_socket::logger::warn_msg(logger::posPrefix(_T(__FILE__), __LINE__, (msg)).c_str())
 #define error(msg) mihajong_socket::logger::error_msg(logger::posPrefix(_T(__FILE__), __LINE__, (msg)).c_str())
 #define fatal(msg) mihajong_socket::logger::fatal_msg(logger::posPrefix(_T(__FILE__), __LINE__, (msg)).c_str())
-#endif
-
 #endif

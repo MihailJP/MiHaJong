@@ -1,5 +1,4 @@
-#ifndef TILECODE_H
-#define TILECODE_H
+#pragma once
 
 #include <cstdint>
 #ifdef MJCORE_EXPORTS
@@ -128,6 +127,4 @@ typedef InfoByTile<uint8_t> UInt8ByTile;
 
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<InfoByTile<int8_t> >::value, "Non-POD data type detected");
-#endif
-
 #endif

@@ -1,5 +1,4 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#pragma once
 
 #define WINDOWS_LEAN_AND_MEAN
 #define WINDOWS_EXTRA_LEAN
@@ -110,5 +109,3 @@ public:
 private:
 	DWORD WINAPI ExecThread();
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef SOUND_DLL_LOGGER_H
-#define SOUND_DLL_LOGGER_H
+#pragma once
 
 #include <Windows.h>
 #include <string>
@@ -48,6 +47,4 @@ void fatal_msg(LPCTSTR msg);
 #define warn(msg) sound::logger::warn_msg(logger::posPrefix(_T(__FILE__), __LINE__, (msg)).c_str())
 #define error(msg) sound::logger::error_msg(logger::posPrefix(_T(__FILE__), __LINE__, (msg)).c_str())
 #define fatal(msg) sound::logger::fatal_msg(logger::posPrefix(_T(__FILE__), __LINE__, (msg)).c_str())
-#endif
-
 #endif

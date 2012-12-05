@@ -1,5 +1,4 @@
-#ifndef NMRULES_H
-#define NMRULES_H
+#pragma once
 
 #define RULESIZE 680
 #define RULES_IN_PAGE 40
@@ -8,5 +7,3 @@
 #define RULE_PAGES (RULESIZE/RULES_IN_PAGE)
 
 #define NUM_OF_RULES RULESIZE
-
-#endif
