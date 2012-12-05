@@ -61,7 +61,7 @@ void RuleConfigScene::Render() {
 	{
 		uint64_t t = elapsed();
 		CodeConv::tstring caption = _T("");
-		switch ((t / 50000000u) % 4) {
+		switch ((t / 50000000u) % 6) {
 		case 0:
 			TCHAR menuitem[128]; rules::getRuleDescription(menuitem, 128, menuCursor);
 			caption = CodeConv::tstring(menuitem);
@@ -78,12 +78,18 @@ void RuleConfigScene::Render() {
 			}
 			break;
 		case 1:
-			caption = CodeConv::tstring(_T("↑/↓:カーソル移動  ←/→:選択中の項目を変更"));
+			caption = CodeConv::tstring(_T("キーボード操作  ↑/↓:カーソル移動  ←/→:選択中の項目を変更"));
 			break;
 		case 2:
-			caption = CodeConv::tstring(_T("Home/End:左右カラム間の移動  PageUp/PageDown:ページ間の移動"));
+			caption = CodeConv::tstring(_T("キーボード操作  Home/End:左右カラム間の移動  PageUp/PageDown:ページ間の移動"));
 			break;
 		case 3:
+			caption = CodeConv::tstring(_T("マウス操作  項目上で左クリック/ホイール回転:選択中の項目を変更"));
+			break;
+		case 4:
+			caption = CodeConv::tstring(_T("マウス操作  右上見出し上でホイール回転:ページ間の移動"));
+			break;
+		case 5:
 			caption = CodeConv::tstring(_T("通信対戦時のルール設定はホスト側の設定が適用されます"));
 			break;
 		}
@@ -108,6 +114,12 @@ void RuleConfigScene::Render() {
 		myTextRenderer->NewText(122, pagecaption,
 			(1400 - 15 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 100, 0.833333f,
 			(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate, 0xffffffff);
+		if (regions.size() <= 40) {
+			Region nullRegion = {0, 0, -1, -1};
+			regions.resize(40 + 1, Region(nullRegion));
+		}
+		regions[40].Left = (1400 - 15 * ((captionCols > 76) ? 76 : captionCols));
+		regions[40].Top = 70; regions[40].Right = 1400; regions[40].Bottom = 129; 
 	}
 	myTextRenderer->Render();
 }
@@ -208,25 +220,47 @@ void RuleConfigScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		setcursor();
 		break;
 	case DIMOFS_Z: // ホイールの操作
-		setcursor();
-		sound::Play(sound::IDs::sndClick);
-		while (true) {
-			if ((LONG)od->dwData > 0) {
-				if ((--rulestat[menuCursor]) < 0) rulestat[menuCursor] = rules::getRuleSize(menuCursor) - 1;
-			} else if ((LONG)od->dwData < 0) {
-				if ((++rulestat[menuCursor]) >= rules::getRuleSize(menuCursor)) rulestat[menuCursor] = 0;
-			}
+		if ((region >= 0) && (region <= (RULES_IN_PAGE - 1))) {
+			setcursor();
+			sound::Play(sound::IDs::sndClick);
+			while (true) {
+				if ((LONG)od->dwData > 0) {
+					if ((--rulestat[menuCursor]) < 0) rulestat[menuCursor] = rules::getRuleSize(menuCursor) - 1;
+				} else if ((LONG)od->dwData < 0) {
+					if ((++rulestat[menuCursor]) >= rules::getRuleSize(menuCursor)) rulestat[menuCursor] = 0;
+				}
 #if 0
-			{
-				CodeConv::tostringstream o;
-				o << _T("Wheel ") << (signed)od->dwData;
-				myTextRenderer->NewText(144, o.str(), 0, 1000);
-			}
+				{
+					CodeConv::tostringstream o;
+					o << _T("Wheel ") << (signed)od->dwData;
+					myTextRenderer->NewText(144, o.str(), 0, 1000);
+				}
 #endif
-			TCHAR menuitem[128]; rules::getRuleTxt(menuitem, 128, menuCursor, rulestat[menuCursor]);
-			if (CodeConv::tstring(menuitem) != CodeConv::tstring(_T(">>>"))) break;
+				TCHAR menuitem[128]; rules::getRuleTxt(menuitem, 128, menuCursor, rulestat[menuCursor]);
+				if (CodeConv::tstring(menuitem) != CodeConv::tstring(_T(">>>"))) break;
+			}
+			redrawItems();
+		} else if (region == 40) {
+			sound::Play(sound::IDs::sndClick);
+			if ((LONG)od->dwData > 0) {
+				if ((menuCursor -= RULES_IN_PAGE) < 0) menuCursor += RULES_IN_PAGE;
+			} else if ((LONG)od->dwData < 0) {
+				if ((menuCursor += RULES_IN_PAGE) >= RULESIZE) menuCursor -= RULES_IN_PAGE;
+			}
+			skipto(0); redrawItems();
 		}
-		redrawItems();
+		break;
+	case DIMOFS_BUTTON0: // 左クリック
+		if ((od->dwData) && (region >= 0) && (region <= (RULES_IN_PAGE - 1))) {
+			setcursor();
+			sound::Play(sound::IDs::sndClick);
+			while (true) {
+				if ((++rulestat[menuCursor]) >= rules::getRuleSize(menuCursor)) rulestat[menuCursor] = 0;
+				TCHAR menuitem[128]; rules::getRuleTxt(menuitem, 128, menuCursor, rulestat[menuCursor]);
+				if (CodeConv::tstring(menuitem) != CodeConv::tstring(_T(">>>"))) break;
+			}
+			redrawItems();
+		}
 		break;
 	}
 }
