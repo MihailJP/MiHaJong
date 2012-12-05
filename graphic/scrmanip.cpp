@@ -98,6 +98,10 @@ void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 		inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
 			if (sc) sc->KeyboardInput(od);
 		});
+		inputProc(iManip->mouse(), [iManip](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
+			input::Mouse::Position mousepos = iManip->mouse()->pos();
+			if (sc) sc->MouseInput(od, mousepos.first, mousepos.second);
+		});
 	}
 }
 

@@ -20,7 +20,7 @@ public:
 	}
 	virtual ~Scene() {}
 	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od) {};
-	virtual void MouseInput(LPDIDEVICEOBJECTDATA od) {};
+	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {};
 };
 
 }
