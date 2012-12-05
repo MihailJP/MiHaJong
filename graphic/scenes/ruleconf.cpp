@@ -50,8 +50,8 @@ void RuleConfigScene::redrawItems() {
 
 void RuleConfigScene::Render() {
 	clearWithGameTypeColor(); // バッファクリア
+	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
 	{
-		float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
 		uint64_t t = elapsed();
 		CodeConv::tstring caption = _T("");
 		switch ((t / 50000000u) % 4) {
@@ -89,6 +89,30 @@ void RuleConfigScene::Render() {
 			(720 - 9 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 980, 1.0f,
 			(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate,
 			((t % 50000000u) < 5000000u) ? (55u + ((t % 50000000u) / 25000u)) << 24 | 0x00ffffff : 0xffffffff);
+	}
+	{
+		CodeConv::tostringstream o; o << _T("Page ") << std::setw(2) << (menuCursor / RULES_IN_PAGE + 1) << _T("/") << RULE_PAGES;
+		CodeConv::tstring pagecaption(o.str());
+		unsigned captionCols = 0u; // 桁数(日本語は2桁)
+		for (auto k = pagecaption.begin(); k != pagecaption.end(); ++k) {
+			if (*k <= _T('\x7f')) captionCols += 1;
+			else captionCols += 2;
+		}
+		myTextRenderer->NewText(121, pagecaption,
+			(1400 - 15 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 70, 0.833333f,
+			(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate, 0xffffffff);
+	}
+	{
+		TCHAR pagecap[128]; rules::getPageCaption(pagecap, 128, menuCursor / RULES_IN_PAGE);
+		CodeConv::tstring pagecaption(pagecap);
+		unsigned captionCols = 0u; // 桁数(日本語は2桁)
+		for (auto k = pagecaption.begin(); k != pagecaption.end(); ++k) {
+			if (*k <= _T('\x7f')) captionCols += 1;
+			else captionCols += 2;
+		}
+		myTextRenderer->NewText(122, pagecaption,
+			(1400 - 15 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 100, 0.833333f,
+			(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate, 0xffffffff);
 	}
 	myTextRenderer->Render();
 }
