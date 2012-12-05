@@ -1,5 +1,4 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#pragma once
 
 #include "socket.h"
 #include "server.h"
@@ -47,5 +46,3 @@ namespace client {
 	DLL void receive (volatile int* const ClientReceived, int* const ReceivedMsg); // サーバーのメッセージを受信する
 }
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef PROTOCOL_H
-#define PROTOCOL_H
+#pragma once
 
 #include <cstdint>
 
@@ -58,5 +57,3 @@ namespace protocol {
 	const uint8_t Naki_Remote_Disconnect = 0xa7; // –Â‚«‚Ì–â‚¢‡‚í‚¹’†‚ÉƒvƒŒƒCƒ„[‚ÌÚ‘±‚ªØ‚ê‚½ê‡‚Ì•„’«
 }
 }
-
-#endif
