@@ -1,5 +1,4 @@
-#ifndef TILEUTIL_H
-#define TILEUTIL_H
+#pragma once
 
 #ifdef MJCORE_EXPORTS
 #include <sstream>
@@ -106,6 +105,4 @@ __declspec(dllexport) int isTenpai(const GameTable* const gameStat, void *, int 
 
 bool isNagashiMangan(const GameTable* const gameStat, PLAYER_ID targetPlayer);
 __declspec(dllexport) int isNagashiMangan(const GameTable* const gameStat, void *, int targetPlayer);
-#endif
-
 #endif

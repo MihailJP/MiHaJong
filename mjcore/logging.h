@@ -1,5 +1,4 @@
-#ifndef LOGGING_H
-#define LOGGING_H
+#pragma once
 
 #ifndef WINDOWS_LEAN_AND_MEAN
 #define WINDOWS_LEAN_AND_MEAN
@@ -42,5 +41,3 @@ namespace logger {
 #define warn(msg) ::logger::warn_msg(::logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
 #define error(msg) ::logger::error_msg(::logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
 #define fatal(msg) ::logger::fatal_msg(::logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())
-
-#endif

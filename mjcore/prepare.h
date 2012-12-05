@@ -1,5 +1,4 @@
-#ifndef PREPARE_H
-#define PREPARE_H
+#pragma once
 
 #include <cstdint>
 #include <algorithm>
@@ -34,5 +33,3 @@ public:
 
 void gameinit(GameTable* gameStat, gameTypeID gameType);
 void tableinit(GameTable* const gameStat);
-
-#endif

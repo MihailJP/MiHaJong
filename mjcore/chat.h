@@ -1,5 +1,4 @@
-#ifndef CHAT_H
-#define CHAT_H
+#pragma once
 
 #include "../socket/socket.h"
 #include "envtbl.h"
@@ -68,5 +67,3 @@ namespace chat {
 
 	__declspec(dllexport) void setlogwnd (HWND window);
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef MAIN_H
-#define MAIN_H
+#pragma once
 
 #include "mjexport.h"
 #include "gametbl.h"
@@ -29,5 +28,3 @@ extern GameThread* gameThread;
 
 MJCORE void StartGame (gameTypeID gameType, HWND hwnd);
 MJCORE void TerminateGame ();
-
-#endif

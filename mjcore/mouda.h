@@ -1,5 +1,4 @@
-#ifndef MOUDA_H
-#define MOUDA_H
+#pragma once
 
 #ifdef MJCORE_EXPORTS
 #include <cassert>
@@ -23,5 +22,3 @@
 DiscardTileNum getdahai(GameTable* const gameStat);
 EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex);
 void tsumoproc(GameTable* const gameStat);
-
-#endif

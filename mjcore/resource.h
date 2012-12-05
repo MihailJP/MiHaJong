@@ -1,6 +1,6 @@
-#ifndef IDC_STATIC
+#pragma once
+
 #define IDC_STATIC (-1)
-#endif
 
 #define LZMA_STREAM                             256
 #define IDR_LZMA_STREA1                         100

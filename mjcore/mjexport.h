@@ -1,5 +1,4 @@
-#ifndef MJEXPORT_H
-#define MJEXPORT_H
+#pragma once
 
 #ifdef MJCORE_EXPORTS
 #define MJCORE __declspec(dllexport)
@@ -11,5 +10,3 @@
 
 #define EXPORT_STRUCT MJCEXTERN struct MJCORE
 #define EXPORT_TEMPLATE_STRUCT MJCEXTERN template struct MJCORE
-
-#endif /* MJEXPORT_H */

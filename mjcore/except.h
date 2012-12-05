@@ -1,5 +1,4 @@
-#ifndef EXCEPT_H
-#define EXCEPT_H
+#pragma once
 
 #ifdef MJCORE_EXPORTS
 #define WINDOWS_LEAN_AND_MEAN
@@ -50,5 +49,3 @@ extern const ULONG_PTR errorInfoPtr[1];
 #define EXCEPTION_MJCORE_OVERFLOW               0xc2580011
 #define EXCEPTION_MJCORE_DECOMPRESSION_FAILURE  0xc2580101
 #define EXCEPTION_MJCORE_HASH_MISMATCH          0xc2580102
-
-#endif
