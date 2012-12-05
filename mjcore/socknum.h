@@ -2,5 +2,3 @@
 
 #define SOCK_GAME 0
 #define SOCK_CHAT 10
-
-#endif
