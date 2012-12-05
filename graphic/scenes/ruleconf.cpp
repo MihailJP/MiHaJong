@@ -26,7 +26,7 @@ void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName,
 		if (*k <= _T('\x7f')) itmNameCols += 1;
 		else itmNameCols += 2;
 	}
-	D3DCOLOR baseColor = ((prmContent == _T("‚m^‚`")) || (prmContent.empty())) ? 0x00bfbfbf : 0x00ffffff;
+	D3DCOLOR baseColor = ((prmContent == _T("‚m^‚`")) || (prmContent.empty()) || (rules::reqFailed(prmID, rulestat))) ? 0x00bfbfbf : 0x00ffffff;
 	D3DCOLOR menuColor = (menuCursor % 40 == prmID) ? 0xff000000 : 0x7f000000;
 	myTextRenderer->NewText(prmID * 3, prmName,
 		(prmID / 20 * 720 + 50) * WidthRate, 160 + (prmID % 20) * 40, 1.0f,
