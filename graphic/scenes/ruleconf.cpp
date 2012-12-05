@@ -4,6 +4,8 @@
 #include "../geometry.h"
 #include "../../sound/sound.h"
 #include "../../mjcore/bgmid.h"
+#include "../../mihajong/version.h"
+#include <iomanip>
 
 namespace mihajong_graphic {
 
@@ -24,15 +26,16 @@ void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName,
 		if (*k <= _T('\x7f')) itmNameCols += 1;
 		else itmNameCols += 2;
 	}
-	D3DCOLOR menuColor = (menuCursor % 40 == prmID) ? 0xffffffff : 0x7fffffff;
+	D3DCOLOR baseColor = ((prmContent == _T("Ｎ／Ａ")) || (prmContent.empty())) ? 0x00bfbfbf : 0x00ffffff;
+	D3DCOLOR menuColor = (menuCursor % 40 == prmID) ? 0xff000000 : 0x7f000000;
 	myTextRenderer->NewText(prmID * 3, prmName,
 		(prmID / 20 * 720 + 50) * WidthRate, 160 + (prmID % 20) * 40, 1.0f,
 		WidthRate * ((itmNameCols <= 8) ? 1.0f : 8.0f / (float)itmNameCols),
-		menuColor);
+		menuColor | baseColor);
 	myTextRenderer->NewText(prmID * 3 + 1, _T(":"),
-		(prmID / 20 * 720 + 50 + 144) * WidthRate, 160 + (prmID % 20) * 40, 1.0, WidthRate, menuColor);
+		(prmID / 20 * 720 + 50 + 144) * WidthRate, 160 + (prmID % 20) * 40, 1.0, WidthRate, menuColor | baseColor);
 	myTextRenderer->NewText(prmID * 3 + 2, prmContent,
-		(prmID / 20 * 720 + 50 + 162) * WidthRate, 160 + (prmID % 20) * 40, 1.0, WidthRate, menuColor);
+		(prmID / 20 * 720 + 50 + 162) * WidthRate, 160 + (prmID % 20) * 40, 1.0, WidthRate, menuColor | baseColor);
 }
 
 void RuleConfigScene::redrawItems() {
@@ -51,10 +54,21 @@ void RuleConfigScene::Render() {
 		float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
 		uint64_t t = elapsed();
 		CodeConv::tstring caption = _T("");
-		switch ((t / 30000000u) % 4) {
+		switch ((t / 50000000u) % 4) {
 		case 0:
 			TCHAR menuitem[128]; rules::getRuleDescription(menuitem, 128, menuCursor);
 			caption = CodeConv::tstring(menuitem);
+			if (caption.empty()) {
+				CodeConv::tostringstream o; SYSTEMTIME Zeit; GetLocalTime(&Zeit);
+				o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / 現在日時 ") <<
+					std::setw(4) << Zeit.wYear << _T("年") <<
+					std::setw(2) << Zeit.wMonth << _T("月") <<
+					std::setw(2) << Zeit.wDay << _T("日 ") <<
+					((Zeit.wHour / 12 == 0) ? _T("午前") : _T("午後")) <<
+					std::setw(2) << (Zeit.wHour % 12) << _T("時") <<
+					std::setw(2) << std::setfill(_T('0')) << Zeit.wMinute << _T("分");
+				caption = o.str();
+			}
 			break;
 		case 1:
 			caption = CodeConv::tstring(_T("↑/↓:カーソル移動  ←/→:選択中の項目を変更"));
@@ -72,8 +86,9 @@ void RuleConfigScene::Render() {
 			else captionCols += 2;
 		}
 		myTextRenderer->NewText(120, caption,
-			(720 - 9 * captionCols) * WidthRate, 980, 1.0f, WidthRate,
-			((t % 30000000u) < 5000000u) ? (55u + ((t % 30000000u) / 25000u)) << 24 | 0x00ffffff : 0xffffffff);
+			(720 - 9 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 980, 1.0f,
+			(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate,
+			((t % 50000000u) < 5000000u) ? (55u + ((t % 50000000u) / 25000u)) << 24 | 0x00ffffff : 0xffffffff);
 	}
 	myTextRenderer->Render();
 }
