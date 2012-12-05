@@ -1,5 +1,4 @@
-#ifndef SOUND_DLL_SOUNDOBJ_H
-#define SOUND_DLL_SOUNDOBJ_H
+#pragma once
 
 #include <XAudio2.h>
 #include <cstdint>
@@ -29,5 +28,3 @@ namespace sound {
 	};
 
 }
-
-#endif
