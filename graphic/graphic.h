@@ -1,10 +1,7 @@
-#ifndef GRAPHIC_GRAPHIC_H
-#define GRAPHIC_GRAPHIC_H
+#pragma once
 
 #include "exports.h"
 
 #include "init.h"
 #include "gametbl.h"
 #include "event.h"
-
-#endif
