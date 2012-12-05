@@ -22,6 +22,7 @@ public:
 	~TitleScreen();
 	void Render();
 	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od);
+	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 };
 
 class TitleScreen::TitleSprite {
