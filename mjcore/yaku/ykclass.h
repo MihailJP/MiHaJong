@@ -1,5 +1,4 @@
-#ifndef YKCLASS_H
-#define YKCLASS_H
+#pragma once
 
 #include <cstdint>
 #include "../mjexport.h"
@@ -17,4 +16,3 @@ private:
 	class mentsuParser;
 	class countingFacility;
 };
-#endif

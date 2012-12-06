@@ -1,5 +1,4 @@
-#ifndef SERVER_H
-#define SERVER_H
+#pragma once
 
 #include "socket.h"
 #include "protocol.h"
@@ -51,5 +50,3 @@ namespace server {
 	DLL void receive (volatile int* const ServerReceived, int* const ReceivedMsg); // Žæ“¾‚·‚é
 }
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef HAIFU_H
-#define HAIFU_H
+#pragma once
 
 #include <sstream>
 #include <fstream>
@@ -148,5 +147,3 @@ public:
 	static void haifusave(const GameTable* const gameStat);
 	static __declspec(dllexport) void haifusave();
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_SCENES_GAME_H
-#define GRAPHIC_SCENES_GAME_H
+#pragma once
 
 #include "proto.h"
 #include "../showtile.h"
@@ -20,4 +19,3 @@ public:
 };
 
 }
-#endif

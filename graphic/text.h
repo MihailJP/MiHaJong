@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_TEXT_H
-#define GRAPHIC_TEXT_H
+#pragma once
 
 #include <Windows.h>
 #include <d3dx9.h>
@@ -54,4 +53,3 @@ struct TextRenderer::SpriteAttr {
 };
 
 }
-#endif

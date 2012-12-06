@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_SPRITE_H
-#define GRAPHIC_SPRITE_H
+#pragma once
 
 #include <Windows.h>
 #include <d3dx9.h>
@@ -14,4 +13,3 @@ public:
 };
 
 }
-#endif

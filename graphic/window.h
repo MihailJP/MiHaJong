@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_WINDOW_H
-#define GRAPHIC_WINDOW_H
+#pragma once
 
 #include <Windows.h>
 #include <tchar.h>
@@ -29,4 +28,3 @@ public:
 };
 
 }
-#endif

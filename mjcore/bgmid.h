@@ -1,5 +1,4 @@
-#ifndef BGMID_H
-#define BGMID_H
+#pragma once
 
 namespace sound {
   namespace IDs {
@@ -75,5 +74,3 @@ namespace sound {
 
   }
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef SOUND_H
-#define SOUND_H
+#pragma once
 
 #include "../sound/sound.h"
 #include "bgmid.h"
@@ -17,5 +16,3 @@ void bgmplay(unsigned ID); /* ‚a‚f‚lÄ¶ */
 
 }
 }
-
-#endif

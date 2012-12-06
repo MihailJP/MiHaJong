@@ -1,5 +1,4 @@
-#ifndef YAKURSLT_H
-#define YAKURSLT_H
+#pragma once
 
 #include "ykclass.h"
 #include "../mjexport.h"
@@ -42,6 +41,4 @@ EXPORT_STRUCT yaku::YAKUSTAT {
 };
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<yaku::YAKUSTAT>::value, "YAKUSTAT is not POD");
-#endif
-
 #endif

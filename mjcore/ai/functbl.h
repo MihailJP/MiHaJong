@@ -1,5 +1,4 @@
-#ifndef FUNCTBL_H
-#define FUNCTBL_H
+#pragma once
 
 #include <lua.hpp>
 #include "class.h"
@@ -130,5 +129,3 @@ public:
 	static bool isnamakurasuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
 	static bool isnakasuji(const GameTable* const gameStat, PLAYER_ID player, PLAYER_ID tplayer, int index);
 };
-
-#endif

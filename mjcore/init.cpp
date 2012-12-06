@@ -1,9 +1,6 @@
 #include "init.h"
 
 MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
-	/* タイトルバーに表示する文字列 */ // TODO: これを移植する
-	//title "MiHaJong Ver. "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
-
 	/* コンフィグファイルのパスを設定する */
 	/* Vista以降、Program Files以下にファイルを作れないので自分で調整する */
 	std::string configFile;
@@ -70,7 +67,7 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 
 	/* 設定ファイル読み込み */
 	{
-		// TODO: これを移植 setconffile configFile
+		mihajong_graphic::rules::setconffile(configFile.c_str());
 		bool cnfFileExists = exist(configFile.c_str()); // 設定ファイルがあるかどうか調べる
 		RuleData::configinit();
 		if (!cnfFileExists) {
@@ -80,6 +77,12 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 			info(_T("設定ファイルが見つかりました。読み込みを開始します。"));
 			RuleData::loadConfigFile(configFile.c_str()); // 設定ファイル読み込み
 		}
+		// UI用のDLLに関数の場所を教える
+		mihajong_graphic::rules::setfunc(
+			RuleData::getRuleName, RuleData::getRuleDescription, RuleData::getRuleTxt,
+			RuleData::getRule, RuleData::getRuleSize, RuleData::reqFailed,
+			RuleData::getPageCaption, RuleData::storeRule, RuleData::exportRule,
+			RuleData::saveConfigFile, RuleData::ruleDigit());
 	}
 
 	/* 音源を初期化 */

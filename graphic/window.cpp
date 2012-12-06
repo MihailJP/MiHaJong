@@ -1,9 +1,10 @@
 #include "window.h"
+#include "../mihajong/version.h"
 
 namespace mihajong_graphic {
 
-const LPTSTR MainWindow::myWindowClassName = _T("testwnd");
-const LPTSTR MainWindow::WindowCaption = _T("テストウィンドウ");
+const LPTSTR MainWindow::myWindowClassName = _T("mihajong_main");
+const LPTSTR MainWindow::WindowCaption = _T("MiHaJong ver. ") _T(MIHAJONG_VER);
 unsigned& MainWindow::WindowWidth = Geometry::WindowWidth;
 unsigned& MainWindow::WindowHeight = Geometry::WindowHeight;
 

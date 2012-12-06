@@ -1,5 +1,4 @@
-#ifndef FUURO_H
-#define FUURO_H
+#pragma once
 
 #ifdef MJCORE_EXPORTS
 #include <sstream>
@@ -37,5 +36,3 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 void checkpao(GameTable* const gameStat);
 EndType ronhuproc(GameTable* const gameStat);
 bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);
-
-#endif

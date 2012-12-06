@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_FONT_H
-#define GRAPHIC_FONT_H
+#pragma once
 
 #include <map>
 
@@ -21,4 +20,3 @@ public:
 };
 
 }
-#endif

@@ -1,5 +1,4 @@
-#ifndef STRCODE_H
-#define STRCODE_H
+#pragma once
 
 #include <Windows.h>
 #include <tchar.h>
@@ -57,5 +56,3 @@ inline std::string EnsureTStr(const std::wstring& str) {return WIDEtoANSI(str);}
 #endif
 
 }
-
-#endif

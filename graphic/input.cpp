@@ -12,6 +12,7 @@ InputManipulator::InputManipulator(HWND hwnd) {
 		GraphicDLL, 0x0800, IID_IDirectInput8, reinterpret_cast<void**>(&myInterface), nullptr)))
 		throw CodeConv::tstring(_T("DirectInput8CreateŽ¸”sII"));
 	myKeyboard = new Keyboard(myInterface, hwnd);
+	myMouse = new Mouse(myInterface, hwnd);
 }
 
 InputManipulator::~InputManipulator() {
@@ -48,6 +49,41 @@ Keyboard::~Keyboard() {
 		myInputDevice->Unacquire();
 		myInputDevice->Release();
 	}
+}
+
+// -------------------------------------------------------------------------
+
+Mouse::Mouse(LPDIRECTINPUT8 inputInterface, HWND hwnd) {
+	hWnd = hwnd;
+	if (FAILED(inputInterface->CreateDevice(GUID_SysMouse, &myInputDevice, nullptr)))
+		throw CodeConv::tstring(_T("CreateDeviceŽ¸”sII"));
+	if (FAILED(myInputDevice->SetDataFormat(&c_dfDIMouse2)))
+		throw CodeConv::tstring(_T("SetDataFormatŽ¸”sII"));
+	if (FAILED(myInputDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
+		throw CodeConv::tstring(_T("SetCooperativeLevelŽ¸”sII"));
+	DIPROPDWORD diProp;
+	diProp.diph.dwSize = sizeof(diProp);
+	diProp.diph.dwHeaderSize = sizeof(diProp.diph);
+	diProp.diph.dwObj = 0;
+	diProp.diph.dwHow = DIPH_DEVICE;
+	diProp.dwData = 1000;
+	if (FAILED(myInputDevice->SetProperty(DIPROP_BUFFERSIZE, &diProp.diph)))
+		throw CodeConv::tstring(_T("SetPropertyŽ¸”sII"));
+	myInputDevice->Acquire();
+}
+
+Mouse::~Mouse() {
+	if (myInputDevice) {
+		myInputDevice->Unacquire();
+		myInputDevice->Release();
+	}
+}
+
+Mouse::Position Mouse::pos() {
+	POINT mpos;
+	GetCursorPos(&mpos);
+	ScreenToClient(hWnd, &mpos);
+	return Position(mpos.x, mpos.y);
 }
 
 // -------------------------------------------------------------------------

@@ -1,7 +1,6 @@
-#ifndef GRAPHIC_SCENES_TITLE_H
-#define GRAPHIC_SCENES_TITLE_H
+#pragma once
 
-#include "proto.h"
+#include "sysscr.h"
 #include <array>
 #include <cstdint>
 #include "../text.h"
@@ -9,17 +8,12 @@
 
 namespace mihajong_graphic {
 
-class TitleScreen : public Scene {
+class TitleScreen : public SystemScreen {
 private:
 	static const unsigned nsTitleLogo = 3;
 	class TitleSprite;
 	std::array<TitleSprite*, nsTitleLogo> sTitleLogo;
-	void clearWithGameTypeColor();
-	FILETIME startTime;
-	static const unsigned timePerFrame = 166667u;
-	uint64_t elapsed();
 	void zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF);
-	TextRenderer* myTextRenderer;
 	void menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, int X, int Y, unsigned startF, unsigned endF);
 	void menuLabels();
 	unsigned menuCursor;
@@ -28,6 +22,7 @@ public:
 	~TitleScreen();
 	void Render();
 	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od);
+	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 };
 
 class TitleScreen::TitleSprite {
@@ -45,4 +40,3 @@ public:
 };
 
 }
-#endif

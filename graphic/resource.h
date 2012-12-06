@@ -1,6 +1,6 @@
-#ifndef IDC_STATIC
+#pragma once
+
 #define IDC_STATIC (-1)
-#endif
 
 #define PNG_FILE                             256
 #define IDB_PNG_TBLBAIZE                     100
@@ -9,3 +9,4 @@
 #define IDB_PNG_TILE                         103
 #define IDB_PNG_FONT                         104
 #define IDB_PNG_TITLE                        105
+#define IDB_PNG_BUTTON                       106

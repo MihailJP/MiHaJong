@@ -1,5 +1,4 @@
-#ifndef YAKU_H
-#define YAKU_H
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -253,5 +252,3 @@ public:
 	static bool checkShibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat);
 	static __declspec(dllexport) int check_shibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat);
 };
-
-#endif

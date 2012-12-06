@@ -1,5 +1,4 @@
-#ifndef RANDOM_H
-#define RANDOM_H
+#pragma once
 
 #include <random>
 #include <vector>
@@ -20,5 +19,3 @@ public:
 	__declspec(dllexport) static void frnd(double* const);
 	__declspec(dllexport) static unsigned int dice();
 };
-
-#endif

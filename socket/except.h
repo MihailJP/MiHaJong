@@ -1,5 +1,4 @@
-#ifndef EXCEPT_H
-#define EXCEPT_H
+#pragma once
 
 #include <exception>
 #include <stdexcept>
@@ -77,4 +76,3 @@ public:
 	send_error(const int err) : socket_error("Send error", err) {};
 };
 }
-#endif

@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_SCENES_SCENE_ID_H
-#define GRAPHIC_SCENES_SCENE_ID_H
+#pragma once
 
 namespace mihajong_graphic {
 
@@ -11,4 +10,3 @@ enum sceneID { // ÉVÅ[Éìî‘çÜ
 };
 
 }
-#endif

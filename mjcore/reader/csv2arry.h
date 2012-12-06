@@ -1,5 +1,4 @@
-#ifndef CSV2ARRY_H
-#define CSV2ARRY_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -12,5 +11,3 @@ public:
 	typedef std::vector<RECORD> CsvVecVec;
 	static void parsecsv (CsvVecVec&, LPCTSTR csv);
 };
-
-#endif

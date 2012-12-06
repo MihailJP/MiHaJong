@@ -1,5 +1,4 @@
-#ifndef ASTRO_H
-#define ASTRO_H
+#pragma once
 
 #ifdef ASTRO_EXPORTS
 #pragma once
@@ -73,6 +72,4 @@ extern "C" {
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

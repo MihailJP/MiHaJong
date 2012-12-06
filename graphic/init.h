@@ -1,5 +1,4 @@
-#ifndef GRAPHIC_INIT_H
-#define GRAPHIC_INIT_H
+#pragma once
 
 #include <Windows.h>
 #include <tchar.h>
@@ -22,4 +21,3 @@ EXPORT BOOL Transit(sceneID scene);
 EXPORT void CleanupWindow();
 
 }
-#endif

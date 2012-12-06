@@ -1,5 +1,4 @@
-#ifndef GAMETBL_H
-#define GAMETBL_H
+#pragma once
 
 #include <cstdint>
 #ifdef MJCORE_EXPORTS
@@ -307,5 +306,3 @@ extern "C" GameTable* initializeGameTable(gameTypeID gameType);
 MJCORE GameTable* setGameType(gameTypeID gameType);
 
 // -------------------------------------------------------------------------
-
-#endif

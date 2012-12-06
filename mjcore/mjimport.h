@@ -1,5 +1,4 @@
-#ifndef MJIMPORT_H
-#define MJIMPORT_H
+#pragma once
 
 #include "mjexport.h"
 
@@ -13,5 +12,3 @@
 #include "shanten.h"
 #include "tilecode.h"
 #include "tileutil.h"
-
-#endif

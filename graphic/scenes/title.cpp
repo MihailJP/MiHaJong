@@ -15,13 +15,10 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
-TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : Scene(manipulator) {
-	caller = manipulator;
+TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
 	TitleSprite::LoadTexture(caller->getDevice());
 	for (int i = 0; i < nsTitleLogo; i++)
 		sTitleLogo[i] = new TitleSprite(caller->getDevice(), 500 * i, 0, (i == 2) ? 700 : 500, 300);
-	myTextRenderer = new TextRenderer(caller->getDevice());
-	GetSystemTimeAsFileTime(&startTime);
 	menuCursor = 1;
 }
 
@@ -29,40 +26,6 @@ TitleScreen::~TitleScreen() {
 	TitleSprite::DisposeTexture();
 	for (int i = 0; i < nsTitleLogo; i++)
 		if (sTitleLogo[i]) delete sTitleLogo[i];
-	delete myTextRenderer;
-}
-
-void TitleScreen::clearWithGameTypeColor() {
-	// バッファクリア
-	switch (GameStatus::gameStat()->gameType) {
-	case Yonma:
-		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
-			D3DCOLOR_XRGB(0, 64, 0), 1.0f, 0);
-		break;
-	case Sanma:
-		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
-			D3DCOLOR_XRGB(0, 0, 64), 1.0f, 0);
-		break;
-	case Sanma4:
-		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
-			D3DCOLOR_XRGB(0, 64, 64), 1.0f, 0);
-		break;
-	case SanmaS:
-		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
-			D3DCOLOR_XRGB(64, 0, 64), 1.0f, 0);
-		break;
-	default:
-		assert(false); // This may not occur.
-	}
-}
-
-uint64_t TitleScreen::elapsed() {
-	FILETIME currTime; GetSystemTimeAsFileTime(&currTime);
-	uint64_t st = ((uint64_t)startTime.dwHighDateTime << 32) | startTime.dwLowDateTime;
-	uint64_t ct = ((uint64_t)currTime.dwHighDateTime << 32) | currTime.dwLowDateTime;
-	assert(ct >= st);
-	//if ((ct - st) >= 30000000) startTime = currTime; // debug loop
-	return ct - st;
 }
 
 void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF) {
@@ -121,6 +84,12 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 			1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
 			0x33ffffff);
 	}
+	if (regions.size() <= ID) {
+		Region nullRegion = {0, 0, -1, -1};
+		regions.resize(ID + 1, Region(nullRegion));
+	}
+	regions[ID].Left = X; regions[ID].Top = Y; 
+	regions[ID].Right = 1439 - X; regions[ID].Bottom = Y + 71; 
 }
 
 void TitleScreen::menuLabels() {
@@ -159,12 +128,15 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // 決定
 		if (flag) {
-			if (menuCursor == 6) {
+			if ((menuCursor == 4) || (menuCursor == 6)) {
 				sound::Play(sound::IDs::sndButton);
 				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
 			} else {
 				sound::Play(sound::IDs::sndCuohu); // 未実装
 			}
+		} else if (od->dwData) {
+			sound::Play(sound::IDs::sndClick);
+			skipto(180);
 		}
 		break;
 	case DIK_ESCAPE: case DIK_X: // キャンセル
@@ -174,6 +146,51 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 				menuCursor = 6; // Exitにカーソルを合わせる
 			} else {
 				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+			}
+		}
+		break;
+	}
+}
+
+void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	const bool flag1 = (elapsed() > 180u * timePerFrame);
+	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
+	const int scaledY = Y / Geometry::WindowScale();
+	const int region = whichRegion(scaledX, scaledY);
+#if 0
+	{
+		CodeConv::tostringstream o;
+		o << _T("(") << scaledX << _T(", ") << scaledY << _T(") ");
+		if (region != -1) o << _T("Region ") << region;
+		else o << _T("No Region");
+		myTextRenderer->NewText(9, o.str(), 0, 1000);
+	}
+#endif
+	switch (od->dwOfs) {
+	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
+		if (flag1) {
+			switch (region) {
+			case 0: case 1: case 2: case 3: case 4: case 5:
+				if (region != (menuCursor - 1)) {
+					sound::Play(sound::IDs::sndCursor);
+					menuCursor = region + 1;
+				}
+				break;
+			}
+		}
+		break;
+	case DIMOFS_BUTTON0: // マウスの左ボタン
+		if (od->dwData) {
+			if ((flag1) && (region != -1))  {
+				if ((menuCursor == 4) || (menuCursor == 6)) {
+					sound::Play(sound::IDs::sndButton);
+					ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+				} else {
+					sound::Play(sound::IDs::sndCuohu); // 未実装
+				}
+			} else if (!flag1) {
+				sound::Play(sound::IDs::sndClick);
+				skipto(180);
 			}
 		}
 		break;

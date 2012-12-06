@@ -1,5 +1,4 @@
-#ifndef SOCKET_H
-#define SOCKET_H
+#pragma once
 
 #ifndef _WINSOCKAPI_
 #include <WinSock2.h>
@@ -44,4 +43,3 @@ DLL int hangup (int sock_id); // 接続を切る
 DLL int bye (); // ソケットのクリンナップ
 
 }
-#endif

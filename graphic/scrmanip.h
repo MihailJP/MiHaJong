@@ -1,11 +1,12 @@
-#ifndef GRAPHIC_SCRMANIP_H
-#define GRAPHIC_SCRMANIP_H
+#pragma once
 
 #include <d3dx9.h>
 #include <dxerr.h>
 #include <tchar.h>
 #include <functional>
-#include "scenes/scenes.h"
+#include "scenes/scene_id.h"
+#include "scenes/proto.h"
+#include "scenes/fps.h"
 #include "input.h"
 
 namespace mihajong_graphic {
@@ -32,4 +33,3 @@ public:
 };
 
 }
-#endif
