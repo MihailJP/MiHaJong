@@ -56,6 +56,7 @@ sound::OggData::OggData(IXAudio2** Engine, const std::string& filename, bool loo
 
 /* Ä¶ */
 void sound::OggData::Play() {
+	Stop();
 	HRESULT hr;
 	if (FAILED(hr = voice->SubmitSourceBuffer(&bufInfo))) {
 		std::ostringstream o; o << "SubmitSourceBufferŽ¸”sII (0x" <<
