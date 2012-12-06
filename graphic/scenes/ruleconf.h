@@ -21,6 +21,7 @@ private:
 	int rulestat[RULESIZE];
 	char RuleConf[RULE_LINES][RULE_IN_LINE + 4];
 	ButtonPic* myButtonPic;
+	void saveRule();
 	void CreateButton(unsigned btnID, int X, int Y, unsigned Width, unsigned Height, const CodeConv::tstring& caption);
 	void ShowPageCaption();
 	void ShowMessageBelow();

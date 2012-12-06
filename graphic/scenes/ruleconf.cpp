@@ -183,6 +183,22 @@ void RuleConfigScene::Render() {
 	myButtonPic->Render();
 }
 
+void RuleConfigScene::saveRule() {
+	std::memset(&RuleConf[0][0], 0, sizeof(RuleConf));
+	for (unsigned i = 0; i < RULESIZE; i++) {
+		TCHAR ruletxt[128]; rules::getRuleTxt(ruletxt, 128, i, 0);
+		if ((CodeConv::tstring(ruletxt) == _T("")) || (CodeConv::tstring(ruletxt) == _T("‚m^‚`")))
+			RuleConf[i / RULE_IN_LINE][i % RULE_IN_LINE] = '-';
+		else
+			RuleConf[i / RULE_IN_LINE][i % RULE_IN_LINE] = rules::digit[rulestat[i]];
+	}
+	const char* ruleLine[RULE_LINES];
+	for (unsigned i = 0; i < RULE_LINES; i++) ruleLine[i] = RuleConf[i];
+	rules::storeRule(ruleLine);
+	rules::saveConfigFile(rules::conffile.c_str());
+	return;
+}
+
 void RuleConfigScene::BtnEvent_OK_Down() {
 	if (buttonCursor != -1) {
 		sound::Play(sound::IDs::sndButton);
@@ -202,6 +218,10 @@ void RuleConfigScene::BtnEvent_OK_Up() {
 			break;
 		case 1:
 			ui::UIEvent->set(1);
+			break;
+		case 0:
+			saveRule();
+			ui::UIEvent->set(0);
 			break;
 		}
 		buttonDown = -1;
