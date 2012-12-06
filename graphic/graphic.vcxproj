@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="button.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="font.cpp" />
     <ClCompile Include="gametbl.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="button.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="exports.h" />
     <ClInclude Include="font.h" />
