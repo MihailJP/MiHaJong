@@ -200,9 +200,13 @@ void RuleConfigScene::BtnEvent_OK_Up() {
 		case 2:
 			BtnEvent_Content_Page_Next();
 			break;
+		case 1:
+			ui::UIEvent->set(1);
+			break;
 		}
 		buttonDown = -1;
-		myButtonPic->setButton(buttonCursor, ButtonPic::raised);
+		for (unsigned i = 0; i < buttons; i++)
+			myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
 	}
 }
 void RuleConfigScene::BtnEvent_Cancel_Down() {
