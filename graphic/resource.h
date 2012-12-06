@@ -9,3 +9,4 @@
 #define IDB_PNG_TILE                         103
 #define IDB_PNG_FONT                         104
 #define IDB_PNG_TITLE                        105
+#define IDB_PNG_BUTTON                       106
