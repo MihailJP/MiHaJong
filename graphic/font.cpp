@@ -7,7 +7,12 @@ FontMap* FontMap::instantiate() {
 	return &myInstance;
 }
 
-unsigned short FontMap::map(wchar_t c) {
+FontMapLargeChr* FontMapLargeChr::instantiate() {
+	static FontMapLargeChr myInstance;
+	return &myInstance;
+}
+
+unsigned short FontMapClass::map(wchar_t c) {
 	if (m.find(c) != m.end()) return m[c];
 	else return Default_Chr;
 }
@@ -2602,6 +2607,65 @@ FontMap::FontMap() {
 	m.insert(fMapDat(L'\u9f3b', 2588));
 	m.insert(fMapDat(L'\u9f62', 2589));
 	m.insert(fMapDat(L'\u9f8d', 2590));
+}
+
+FontMapLargeChr::FontMapLargeChr() {
+	m.insert(fMapDat(L'“Œ', 0));
+	m.insert(fMapDat(L'“ì', 1));
+	m.insert(fMapDat(L'¼', 2));
+	m.insert(fMapDat(L'–k', 3));
+	m.insert(fMapDat(L'”’', 4));
+	m.insert(fMapDat(L'á¢', 5));
+	m.insert(fMapDat(L'’†', 6));
+	m.insert(fMapDat(L'‹Ç', 7));
+	m.insert(fMapDat(L'ˆê', 8));
+	m.insert(fMapDat(L'ƒj', 9));
+	m.insert(fMapDat(L'O', 10));
+	m.insert(fMapDat(L'l', 11));
+	m.insert(fMapDat(L'ŒÜ', 12));
+	m.insert(fMapDat(L'˜Z', 13));
+	m.insert(fMapDat(L'µ', 14));
+	m.insert(fMapDat(L'”ª', 15));
+	m.insert(fMapDat(L'‹ã', 16));
+	m.insert(fMapDat(L'\', 17));
+	m.insert(fMapDat(L'‚P', 18));
+	m.insert(fMapDat(L'‚Q', 19));
+	m.insert(fMapDat(L'‚R', 20));
+	m.insert(fMapDat(L'‚S', 21));
+	m.insert(fMapDat(L'‚T', 22));
+	m.insert(fMapDat(L'‚U', 23));
+	m.insert(fMapDat(L'‚V', 24));
+	m.insert(fMapDat(L'‚W', 25));
+	m.insert(fMapDat(L'‚X', 26));
+	m.insert(fMapDat(L'0', 27));
+	m.insert(fMapDat(L'1', 28));
+	m.insert(fMapDat(L'2', 29));
+	m.insert(fMapDat(L'3', 30));
+	m.insert(fMapDat(L'4', 31));
+	m.insert(fMapDat(L'5', 32));
+	m.insert(fMapDat(L'6', 33));
+	m.insert(fMapDat(L'7', 34));
+	m.insert(fMapDat(L'8', 35));
+	m.insert(fMapDat(L'9', 36));
+	m.insert(fMapDat(L'–{', 37));
+	m.insert(fMapDat(L'ê', 38));
+	m.insert(fMapDat(L'‰„', 39));
+	m.insert(fMapDat(L'’·', 40));
+	m.insert(fMapDat(L'í', 41));
+	m.insert(fMapDat(L'ƒI', 42));
+	m.insert(fMapDat(L'[', 43));
+	m.insert(fMapDat(L'ƒ‰', 44));
+	m.insert(fMapDat(L'ƒX', 45));
+	m.insert(fMapDat(L'•—', 46));
+	m.insert(fMapDat(L'˜A', 47));
+	m.insert(fMapDat(L'‘Å', 48));
+	m.insert(fMapDat(L'í', 49));
+	m.insert(fMapDat(L'”v', 50));
+	m.insert(fMapDat(L'‰Æ', 51));
+	m.insert(fMapDat(L'˜a', 52));
+	m.insert(fMapDat(L'ŠJ', 53));
+	m.insert(fMapDat(L'È', 54));
+	m.insert(fMapDat(L'—¬', 55));
 }
 
 }

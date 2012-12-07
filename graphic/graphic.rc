@@ -22,6 +22,7 @@ IDB_PNG_TILE          PNG_FILE         ".\\data\\tiles.png"
 IDB_PNG_FONT          PNG_FILE         ".\\data\\font.png"
 IDB_PNG_TITLE         PNG_FILE         ".\\data\\title.png"
 IDB_PNG_BUTTON        PNG_FILE         ".\\data\\button.png"
+IDB_PNG_FONT_HUGE     PNG_FILE         ".\\data\\largechr.png"
 
 
 
