@@ -14,6 +14,9 @@ ButtonPic::ButtonPic(LPDIRECT3DDEVICE9 device) {
 }
 
 ButtonPic::~ButtonPic() {
+	for (auto k = mySprites.begin(); k != mySprites.end(); ++k)
+		if (std::get<1>(*k))
+			std::get<1>(*k)->Release();
 	myTexture->Release();
 	delete myTextRenderer;
 }
