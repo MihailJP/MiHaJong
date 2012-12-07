@@ -115,6 +115,7 @@ void startgame(gameTypeID gameType) {
 		info(_T("ゲーム情報を初期化しました。"));
 		mihajong_socket::server::rotation_reset();
 		sound::Play(sound::IDs::musTitle); // タイトル曲を流す
+		unsigned ClientNumber = 0u;
 		start:
 		switch (titlescreen()) { // タイトル画面
 		case 4:
@@ -124,8 +125,8 @@ void startgame(gameTypeID gameType) {
 		case 6:
 			return;
 		}
-		/* TODO: gosub *chrshuffle */ // 親決めの処理
-		/* TODO: gosub *gameinit */ // 半荘の初期化処理
+		auto PositionArray = SeatShuffler::shuffle(ClientNumber); // 親決めの処理
+		gameinit(&GameStat, gameType); // 半荘の初期化処理
 
 		/* 半荘の進行 */
 		bool endFlag = false;

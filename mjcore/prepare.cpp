@@ -273,20 +273,15 @@ void SeatShuffler::shuffleSeat () {
 
 	return;
 }
-DWORD WINAPI SeatShuffler::shuffleSeat_start (LPVOID param) {
-	finished = false;
-	shuffleSeat();
-	finished = true;
-	return S_OK;
-}
-__declspec(dllexport) void SeatShuffler::shuffle (unsigned cNumber, int* const positionArray) {
-	posarry = positionArray;
-	ClientNumber = cNumber;
-	CreateThread(nullptr, 0, shuffleSeat_start, nullptr, 0, nullptr);
-}
-volatile bool SeatShuffler::finished;
 unsigned SeatShuffler::ClientNumber;
 int* SeatShuffler::posarry = nullptr;
+std::array<int, PLAYERS> SeatShuffler::shuffle (unsigned cNumber) {
+	std::array<int, PLAYERS> posArry;
+	posarry = &positionArray[0];
+	ClientNumber = cNumber;
+	shuffleSeat();
+	return posArry;
+}
 
 // -------------------------------------------------------------------------
 
