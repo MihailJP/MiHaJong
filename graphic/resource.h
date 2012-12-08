@@ -11,3 +11,4 @@
 #define IDB_PNG_TITLE                        105
 #define IDB_PNG_BUTTON                       106
 #define IDB_PNG_FONT_HUGE                    107
+#define IDB_PNG_DICE                         108
