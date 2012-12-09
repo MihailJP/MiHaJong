@@ -2,6 +2,7 @@ mihajong/*.ini
 mihajong/*.exe
 mihajong/*.dll
 mihajong/*.i
+mihajong/ai/
 mihajong/bgm/
 mihajong/sound/
 mihajong/debug*.log
