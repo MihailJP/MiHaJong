@@ -207,7 +207,7 @@ static_assert(std::is_pod<FLOWERS>::value, "FLOWERS is not POD");
 
 EXPORT_STRUCT DICE { // ÉTÉCÉRÉç
 	uint8_t Number;
-	bool Direction;
+	uint8_t Direction;
 };
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<DICE>::value, "DICE is not POD");

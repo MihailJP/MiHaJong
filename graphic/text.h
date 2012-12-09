@@ -6,16 +6,18 @@
 #include <string>
 #include <vector>
 #include "loadtex.h"
+#include "font.h"
 
 namespace mihajong_graphic {
 
-class TextRenderer {
-private:
-	static const unsigned int FontBaseSize = 40;
-	static const unsigned int FontCols = 32;
-	static const unsigned int FontPadding = 2;
+class ITextRenderer {
+protected:
+	virtual const unsigned int FontBaseSize() = 0;
+	virtual const unsigned int FontCols() = 0;
+	virtual const unsigned int FontPadding() = 0;
 	struct StringAttr;
 	struct SpriteAttr;
+	FontMapClass* fontmap;
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 font;
 	std::vector<StringAttr*> StringData;
@@ -26,8 +28,8 @@ private:
 	void deleteSprite();
 	void deleteSprite(unsigned int ID);
 public:
-	TextRenderer(LPDIRECT3DDEVICE9 device);
-	~TextRenderer();
+	explicit ITextRenderer(LPDIRECT3DDEVICE9 device);
+	virtual ~ITextRenderer() = 0;
 	void NewText(unsigned int ID, const std::wstring& str, int x, int y,
 		float scale = 1.0, float width = 1.0, D3DCOLOR color = 0xffffffff);
 	void NewText(unsigned int ID, const std::string& str, int x, int y,
@@ -36,14 +38,34 @@ public:
 	void Render();
 };
 
-struct TextRenderer::StringAttr {
+class TextRenderer : public ITextRenderer {
+private:
+	const unsigned int FontBaseSize() {return 40;}
+	const unsigned int FontCols() {return 32;}
+	const unsigned int FontPadding() {return 2;}
+public:
+	explicit TextRenderer(LPDIRECT3DDEVICE9 device);
+	~TextRenderer();
+};
+
+class HugeTextRenderer : public ITextRenderer {
+private:
+	const unsigned int FontBaseSize() {return 224;}
+	const unsigned int FontCols() {return 224;}
+	const unsigned int FontPadding() {return 0;}
+public:
+	explicit HugeTextRenderer(LPDIRECT3DDEVICE9 device);
+	~HugeTextRenderer();
+};
+
+struct ITextRenderer::StringAttr {
 	std::wstring str;
 	int X, Y;
 	float scale, width;
 	D3DCOLOR color;
 };
 
-struct TextRenderer::SpriteAttr {
+struct ITextRenderer::SpriteAttr {
 	LPD3DXSPRITE sprite;
 	unsigned short chr_id;
 	int X, Y;
