@@ -22,6 +22,7 @@ private:
 	bool redrawFlag; // 画面の再描画をするかどうかのフラグ
 	void InitDevice(); // Direct3D オブジェクト初期化
 	void inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f);
+	CRITICAL_SECTION csRedrawFlag; // 再描画フラグ操作用のクリティカルセクション
 public:
 	void Render(); // 画面の再描画
 	ScreenManipulator(HWND windowHandle);

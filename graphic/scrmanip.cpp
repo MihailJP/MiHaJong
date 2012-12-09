@@ -33,6 +33,8 @@ void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
 }
 ScreenManipulator::ScreenManipulator(HWND windowHandle) {
+	InitializeCriticalSection(&csRedrawFlag);
+	EnterCriticalSection(&csRedrawFlag);
 	redrawFlag = false;
 	pDevice = nullptr; hWnd = windowHandle;
 	InitDevice();
@@ -40,9 +42,11 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle) {
 	myFPSIndicator = new FPSIndicator(this);
 	lastRedrawTime = 0;
 	redrawFlag = true;
+	LeaveCriticalSection(&csRedrawFlag);
 }
 
 void ScreenManipulator::Render() {
+	EnterCriticalSection(&csRedrawFlag);
 	if (redrawFlag) {
 		pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
 			D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // バッファクリア
@@ -50,13 +54,15 @@ void ScreenManipulator::Render() {
 			if (myScene) myScene->Render(); // 再描画処理
 			if (myFPSIndicator) myFPSIndicator->Render(); // FPS表示
 			pDevice->EndScene(); // シーン終了
+			pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 		}
-		pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 	}
+	LeaveCriticalSection(&csRedrawFlag);
 	return;
 }
 
 void ScreenManipulator::transit(sceneID scene) {
+	EnterCriticalSection(&csRedrawFlag);
 	redrawFlag = false;
 	delete myScene; myScene = nullptr;
 	switch (scene) {
@@ -73,8 +79,10 @@ void ScreenManipulator::transit(sceneID scene) {
 		myScene = new GameTableScreen(this); redrawFlag = true;
 		break;
 	default:
+		LeaveCriticalSection(&csRedrawFlag);
 		throw _T("正しくないシーン番号が指定されました");
 	}
+	LeaveCriticalSection(&csRedrawFlag);
 }
 
 ScreenManipulator::~ScreenManipulator() {
@@ -82,6 +90,7 @@ ScreenManipulator::~ScreenManipulator() {
 	if (myFPSIndicator) delete myFPSIndicator;
 	if (pd3d) {pd3d->Release(); pd3d = nullptr;}
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
+	DeleteCriticalSection(&csRedrawFlag);
 }
 
 void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f) {
