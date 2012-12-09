@@ -8,11 +8,20 @@ namespace mihajong_graphic {
 class GameStatus {
 #ifdef GRAPHIC_EXPORTS
 private:
-	static GameTable myGameStat;
+	class GStatModFlag {
+	public:
+		CRITICAL_SECTION myCriticalSection;
+		bool myModificationFlag;
+		GStatModFlag();
+		~GStatModFlag();
+	};
+	static GStatModFlag myModFlag;
+	static GameTable myGameStat, myGameStat1;
 #endif
 public:
 #ifdef GRAPHIC_EXPORTS
-	static GameTable* gameStat() {return &myGameStat;}
+	static GameTable* gameStat();
+	static bool isModified();
 #endif
 	EXPORT static void updateGameStat(const GameTable* const gameStat);
 };
