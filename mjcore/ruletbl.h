@@ -64,6 +64,7 @@ public:
 	static std::string getRuleItemTag(std::string RuleTag, int index);
 	static std::string chkRule(std::string RuleTag);
 	static bool chkRule(std::string RuleTag, std::string Expectation);
+	static BOOL chkRule(const char* RuleTag, const char* Expectation);
 	static bool chkRuleApplied(std::string RuleTag);
 	inline static int getRule(std::string RuleTag) {return Rules[RuleTag];}
 	static int getRule(uint16_t RuleID);
