@@ -965,7 +965,7 @@ extern "C" {
 			gameStat->DoukasenPlayer = -1; // “±‰Îü‚ÌˆÊ’u(-1‚Å“±‰Îü‚È‚µ)
 		gameStat->DoraPointer = 999;
 		gameStat->Dice[0].Number = gameStat->Dice[1].Number = 0;
-		gameStat->Dice[0].Direction = gameStat->Dice[1].Direction = false;
+		gameStat->Dice[0].Direction = gameStat->Dice[1].Direction = 0;
 		gameStat->TilePointer = 0;
 
 		if (chkGameType(gameStat, AllSanma)) {
