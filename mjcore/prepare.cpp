@@ -277,7 +277,7 @@ unsigned SeatShuffler::ClientNumber;
 int* SeatShuffler::posarry = nullptr;
 std::array<int, PLAYERS> SeatShuffler::shuffle (unsigned cNumber) {
 	std::array<int, PLAYERS> posArry;
-	posarry = &positionArray[0];
+	posarry = &posArry[0];
 	ClientNumber = cNumber;
 	shuffleSeat();
 	return posArry;
