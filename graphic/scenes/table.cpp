@@ -1,29 +1,22 @@
 #include "table.h"
 #include "../scrmanip.h"
 #include "../resource.h"
+#include "../gametbl.h"
+#include "../rule.h"
+#include <tuple>
+#include <cassert>
 
 namespace mihajong_graphic {
 
+namespace {
+	seatRelative inline playerRelative(PLAYER_ID targetPlayer, PLAYER_ID basePlayer) {
+		return (seatRelative)((PLAYERS + targetPlayer - basePlayer) % PLAYERS);
+	}
+}
+	
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080); InitSprite(&sBorder);
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080); InitSprite(&sBaize);
-	/* 山牌 */
-	for (int i = 2; i < 36; i += 2) { /* 対面側の山 */
-		TileTexture->NewTile(i  , BambooOne, Normal, DeckPosH + ShowTile::VertTileWidth*(i/2-1), DeckPosV, UpsideDown, Reverse);
-		TileTexture->NewTile(i+1, BambooOne, Normal, DeckPosH + ShowTile::VertTileWidth*(i/2-1), DeckPosV - TileThickness, UpsideDown, Reverse);
-	}
-	for (int i = 0; i < 34; i += 2) { /* 上家側の山 */
-		TileTexture->NewTile(36+i  , BambooOne, Normal, DeckPosV, DeckPosH + ShowTile::VertTileWidth*(i/2), Clockwise, Reverse);
-		TileTexture->NewTile(36+i+1, BambooOne, Normal, DeckPosV, DeckPosH - TileThickness + ShowTile::VertTileWidth*(i/2), Clockwise, Reverse);
-	}
-	for (int i = 2; i < 36; i += 2) { /* 下家側の山 */
-		TileTexture->NewTile(72+i  , BambooOne, Normal, TableSize - DeckPosV, DeckPosH + ShowTile::VertTileWidth*(i/2-1), Withershins, Reverse);
-		TileTexture->NewTile(72+i+1, BambooOne, Normal, TableSize - DeckPosV, DeckPosH - TileThickness + ShowTile::VertTileWidth*(i/2-1), Withershins, Reverse);
-	}
-	for (int i = 0; i < 34; i += 2) { /* 自分の山 */
-		TileTexture->NewTile(108+i  , BambooOne, Normal, DeckPosH + ShowTile::VertTileWidth*(i/2), TableSize - DeckPosV, Portrait, Reverse);
-		TileTexture->NewTile(108+i+1, BambooOne, Normal, DeckPosH + ShowTile::VertTileWidth*(i/2), TableSize - DeckPosV - TileThickness, Portrait, Reverse);
-	}
 	/* 手牌 */
 	for (int i = 0; i < HandLength; i++) { /* 対面の手牌 */
 		TileTexture->NewTile(144+i   , WhiteDragon, Normal, HandPosH + ShowTile::VertTileWidth*i, HandPosV, UpsideDown, Upright);
@@ -46,12 +39,115 @@ GameTableScreen::~GameTableScreen() {
 	if (sBaize) sBaize->Release();
 }
 
+void GameTableScreen::ReconstructYamahai(PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer) {
+	std::tuple<unsigned, unsigned, unsigned, unsigned> yamahaiAttr;
+	const GameTable* const gameStat = GameStatus::gameStat();
+	if (gameStat->gameType & AllSanma)
+		yamahaiAttr = std::make_tuple(3, 108, 18, 102 - gameStat->ExtraRinshan);
+	else if (rules::chkRule("flower_tiles", "no"))
+		yamahaiAttr = std::make_tuple(0, 136, 17, 130);
+	else if (rules::chkRule("flower_tiles", "8tiles"))
+		yamahaiAttr = std::make_tuple(1, 144, 18, 130);
+	else
+		yamahaiAttr = std::make_tuple(2, 140, 18, 130);
+	seatRelative tmpPlayerCode = playerRelative((gameStat->gameType & Sanma4) ? trueTargetPlayer : targetPlayer, gameStat->PlayerID);
+	auto calcTileNum = [&gameStat, &targetPlayer, &yamahaiAttr](unsigned j) -> unsigned {
+		const unsigned yamahaiMode = std::get<0>(yamahaiAttr);
+		const unsigned dice = gameStat->Dice[0].Number + gameStat->Dice[1].Number;
+		if ((gameStat->Dice[0].Number == 0) && (gameStat->Dice[1].Number == 0)) return 0; // 未設定
+		assert((dice >= 2) && (dice <= 12));
+		switch (yamahaiMode) {
+		case 0:
+			return
+				((((targetPlayer + 3) % PLAYERS) * 34) + j * 2 + (104 * dice + 34) +
+				((gameStat->gameType % PLAYERS)                       * 102)) % 136;
+		case 1:
+			return
+				((((targetPlayer + 3) % PLAYERS) * 36) + j * 2 + (110 * dice + 36) +
+				((gameStat->gameType % PLAYERS)                       * 108)) % 144;
+		case 2:
+			return (
+				((((targetPlayer + 3) % PLAYERS) * 35) + j * 2 + (107 * dice + 35) +
+				((gameStat->gameType % PLAYERS)                       * 105)) % 140
+				) / 2 * 2;
+		case 3:
+			return
+				((((targetPlayer + 2) % 3      ) * 36) + j * 2 + (74 * dice + 36) +
+				(((gameStat->gameType - (gameStat->gameType / 4)) % 3)*  72)) % 108;
+		default:
+			throw _T("calcTileNum: Invalid mode!");
+		}
+	};
+	auto getRinshanFlag = [&gameStat, &yamahaiAttr](unsigned ActiveTileNum) -> bool {
+		const unsigned NumberOfTiles = std::get<1>(yamahaiAttr);
+		bool RinshanFlag = false;
+		for (unsigned i = 0; i <= 10; i += 2)
+			if ((ActiveTileNum == i) && (gameStat->RinshanPointer < NumberOfTiles - i - 2)) RinshanFlag = true;
+		return RinshanFlag;
+	};
+	switch (tmpPlayerCode) {
+	case sOpposite:
+		for (int i = (18 - std::get<2>(yamahaiAttr)) * 2; i < 36; i += 2) { /* 対面側の山 */
+			unsigned tileNum = calcTileNum((std::get<2>(yamahaiAttr) * 2 - i) / 2);
+			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
+			TileTexture->NewTile(      i    , gameStat->Deck[k + 1].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2 - 1),
+				DeckPosV,                 UpsideDown, Reverse);
+			TileTexture->NewTile(      i + 1, gameStat->Deck[k    ].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2 - 1),
+				DeckPosV - TileThickness, UpsideDown, getRinshanFlag(tileNum) ? Obverse : Reverse);
+		}
+		break;
+	case sLeft:
+		for (int i = 0; i < std::get<2>(yamahaiAttr) * 2; i += 2) { /* 上家側の山 */
+			unsigned tileNum = calcTileNum(i / 2);
+			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
+			TileTexture->NewTile( 36 + i    , gameStat->Deck[k + 1].tile, Normal, DeckPosV,
+				DeckPosH                 + ShowTile::VertTileWidth * (i / 2), Clockwise, Reverse);
+			TileTexture->NewTile( 36 + i + 1, gameStat->Deck[k    ].tile, Normal, DeckPosV,
+				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2), Clockwise, getRinshanFlag(tileNum) ? Obverse : Reverse);
+		}
+		break;
+	case sRight:
+		for (int i = (18 - std::get<2>(yamahaiAttr)) * 2; i < 36; i += 2) { /* 下家側の山 */
+			unsigned tileNum = calcTileNum((std::get<2>(yamahaiAttr) * 2 - i) / 2);
+			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
+			TileTexture->NewTile( 72 + i    , gameStat->Deck[k + 1].tile, Normal, TableSize - DeckPosV,
+				DeckPosH                 + ShowTile::VertTileWidth * (i / 2 - 1), Withershins, Reverse);
+			TileTexture->NewTile( 72 + i + 1, gameStat->Deck[k    ].tile, Normal, TableSize - DeckPosV,
+				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2 - 1), Withershins, getRinshanFlag(tileNum) ? Obverse : Reverse);
+		}
+		break;
+	case sSelf:
+		for (int i = 0; i < std::get<2>(yamahaiAttr) * 2; i += 2) { /* 自分の山 */
+			unsigned tileNum = calcTileNum(i / 2);
+			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
+			TileTexture->NewTile(108 + i    , gameStat->Deck[k + 1].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2),
+				TableSize - DeckPosV,                 Portrait, Reverse);
+			TileTexture->NewTile(108 + i + 1, gameStat->Deck[k    ].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2),
+				TableSize - DeckPosV - TileThickness, Portrait, getRinshanFlag(tileNum) ? Obverse : Reverse);
+		}
+		break;
+	}
+	return;
+
+/* ドラ表示牌 */
+/**putdora
+	tmpHaiPos = NumberOfTiles-2-ActiveTileNum
+	if ((tmpHaiPos >= getDoraPointer(GameStat))&&(tmpHaiPos <= PTiles)&&(tmpHaiPos\2 == 0)) {
+		showtile getWall(GameStat, WALL_TILECODE, ((tmpHaiPos)/2)*2)+(getWall(GameStat, WALL_REDTILE, ((tmpHaiPos)/2)*2)*TILE_NONFLOWER_MAX), ginfo_cx, ginfo_cy
+	} else {
+		showtile TILE_BACK_SIDE, ginfo_cx, ginfo_cy
+	}
+return*/
+}
+
 void GameTableScreen::Render() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 		D3DCOLOR_XRGB(0, 128, 0), 1.0f, 0); // バッファクリア
 	ShowSidebar();
 	ShowSprite(sBaize, tBaize, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	ShowSprite(sBorder, tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
+	for (PLAYER_ID i = 0; i < 4; i++)
+		ReconstructYamahai(i, 0);
 	TileTexture->Render();
 }
 

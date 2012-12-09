@@ -490,6 +490,7 @@ namespace {
 			setCenterTitle roundName(getRound(GameStat))
 		}
 		*/
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::Transit(mihajong_graphic::sceneGameTable);
 	}
 	void tileshuffle(GameTable* const gameStat) {
@@ -523,14 +524,14 @@ namespace {
 			gameStat->Dice[i].Number = RndNum::dice();
 			gameStat->Dice[i].Direction = RndNum::rnd(4);
 		}
-		/* TODO: 画面更新 redrscreen: commonswitch GameStat, GameEnv */
+		mihajong_graphic::GameStatus::updateGameStat(gameStat); /* TODO: 画面更新 redrscreen: commonswitch GameStat, GameEnv */
 		for (unsigned k = 0; k < 10; k++) { // 賽を振る
 			for (unsigned i = 0; i < 2; i++) {
 				gameStat->Dice[i].Number = RndNum::dice();
 				gameStat->Dice[i].Direction = RndNum::rnd(4);
 			}
 			sound::Play(sound::IDs::sndSaikoro);
-			/* TODO: 画面更新 redrdice GameStat, GameEnv: await 80 */
+			mihajong_graphic::GameStatus::updateGameStat(gameStat); /* TODO: 画面更新 redrdice GameStat, GameEnv: await 80 */
 		}
 		sound::Play(sound::IDs::sndSaikoro);
 		/* サイコロの出目を送信 */
@@ -582,7 +583,7 @@ namespace {
 			if (i % 4 == 3) {
 				calcdoukasen(gameStat);
 				sound::Play(sound::IDs::sndTsumo);
-				/* TODO: 画面更新して時間待ち redrscreen: await 250 */
+				mihajong_graphic::GameStatus::updateGameStat(gameStat); /* TODO: 画面更新して時間待ち redrscreen: await 250 */
 			}
 		}
 		/* TODO: 「東○局」の表示を消す setCenterTitle "" */
@@ -600,7 +601,7 @@ namespace {
 			++gameStat->TilePointer;
 			calcdoukasen(gameStat);
 			sound::Play(sound::IDs::sndTsumo);
-			/* TODO: 画面更新して時間待ち redrscreen: await 250 */
+			mihajong_graphic::GameStatus::updateGameStat(gameStat); /* TODO: 画面更新して時間待ち redrscreen: await 250 */
 		}
 
 		initdora(gameStat); // ドラをめくる
@@ -649,5 +650,7 @@ void tableinit(GameTable* const gameStat) {
 	rolldice(gameStat);
 	// 配牌
 	haipai(gameStat);
+	Sleep(5000);
+	Sleep(INFINITE);
 	return;
 }
