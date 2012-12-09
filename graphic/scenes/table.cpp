@@ -39,9 +39,8 @@ GameTableScreen::~GameTableScreen() {
 	if (sBaize) sBaize->Release();
 }
 
-void GameTableScreen::ReconstructYamahai(PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer) {
+void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer) {
 	std::tuple<unsigned, unsigned, unsigned, unsigned> yamahaiAttr;
-	const GameTable* const gameStat = GameStatus::gameStat();
 	if (gameStat->gameType & AllSanma)
 		yamahaiAttr = std::make_tuple(3, 108, 18, 102 - gameStat->ExtraRinshan);
 	else if (rules::chkRule("flower_tiles", "no"))
@@ -152,8 +151,11 @@ void GameTableScreen::Render() {
 	ShowSidebar();
 	ShowSprite(sBaize, tBaize, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	ShowSprite(sBorder, tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
-	for (PLAYER_ID i = 0; i < 4; i++)
-		ReconstructYamahai(i, 0);
+	if (GameStatus::isModified()) {
+		const GameTable* const gameStat = GameStatus::gameStat();
+		for (PLAYER_ID i = 0; i < 4; i++)
+			ReconstructYamahai(gameStat, i, 0);
+	}
 	TileTexture->Render();
 }
 

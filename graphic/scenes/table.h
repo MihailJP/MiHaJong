@@ -17,7 +17,7 @@ private:
 	static const unsigned int HandPosV = DeckPosV - 144;
 	LPDIRECT3DTEXTURE9 tBorder; LPD3DXSPRITE sBorder; // ‘ì‚Ì˜g
 	LPDIRECT3DTEXTURE9 tBaize; LPD3DXSPRITE sBaize; // —…Ñ’n
-	void ReconstructYamahai(PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // R”v‚ÌÄ\’z
+	void ReconstructYamahai(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // R”v‚ÌÄ\’z
 public:
 	GameTableScreen(ScreenManipulator* const manipulator);
 	~GameTableScreen();
