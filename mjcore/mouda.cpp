@@ -15,6 +15,8 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 		} else {
 			debug(_T("プレイヤーのツモ番です。"));
 			/* TODO: プレイヤー打牌選択 playerdahai GameStat, GameEnv: DiscardTileIndex = stat */
+			DiscardTileIndex.type = DiscardTileNum::Normal; // テストダブル
+			DiscardTileIndex.id = NUM_OF_TILES_IN_HAND - 1; // (ツモ切り)
 		}
 	} else if (
 		(EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag == -1) ||

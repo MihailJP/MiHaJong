@@ -22,9 +22,11 @@ void TableProtoScene::InitSprite(LPD3DXSPRITE* sprite) {
 
 TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR), 960, 1080); InitSprite(&sSideBar);
+	myDiceRenderer = new DiceRenderer(manipulator->getDevice());
 }
 
 TableProtoScene::~TableProtoScene() {
+	delete myDiceRenderer;
 	if (tSideBar) tSideBar->Release();
 	if (sSideBar) sSideBar->Release();
 	delete TileTexture;

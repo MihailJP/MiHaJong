@@ -14,6 +14,7 @@
 #include "../sound/sound.h"
 #include "bgmid.h"
 #include "random.h"
+#include "../graphic/graphic.h"
 
 __declspec(dllexport) void shuffle(GameTable* const gameStat); // 牌をバッファに並べて、洗牌
 __declspec(dllexport) void initdora(GameTable* const gameStat); // ドラの設定

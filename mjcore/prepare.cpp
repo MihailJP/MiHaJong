@@ -490,6 +490,7 @@ namespace {
 			setCenterTitle roundName(getRound(GameStat))
 		}
 		*/
+		mihajong_graphic::Transit(mihajong_graphic::sceneGameTable);
 	}
 	void tileshuffle(GameTable* const gameStat) {
 		shuffle(gameStat); unsigned tmpNumberOfTiles;
