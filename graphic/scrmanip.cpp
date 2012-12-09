@@ -33,8 +33,8 @@ void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
 }
 ScreenManipulator::ScreenManipulator(HWND windowHandle) {
-	InitializeCriticalSection(&csRedrawFlag);
-	EnterCriticalSection(&csRedrawFlag);
+	InitializeCriticalSection(&CS_SceneAccess);
+	EnterCriticalSection(&CS_SceneAccess);
 	redrawFlag = false;
 	pDevice = nullptr; hWnd = windowHandle;
 	InitDevice();
@@ -42,11 +42,11 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle) {
 	myFPSIndicator = new FPSIndicator(this);
 	lastRedrawTime = 0;
 	redrawFlag = true;
-	LeaveCriticalSection(&csRedrawFlag);
+	LeaveCriticalSection(&CS_SceneAccess);
 }
 
 void ScreenManipulator::Render() {
-	EnterCriticalSection(&csRedrawFlag);
+	EnterCriticalSection(&CS_SceneAccess);
 	if (redrawFlag) {
 		pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
 			D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // バッファクリア
@@ -57,12 +57,12 @@ void ScreenManipulator::Render() {
 			pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 		}
 	}
-	LeaveCriticalSection(&csRedrawFlag);
+	LeaveCriticalSection(&CS_SceneAccess);
 	return;
 }
 
 void ScreenManipulator::transit(sceneID scene) {
-	EnterCriticalSection(&csRedrawFlag);
+	EnterCriticalSection(&CS_SceneAccess);
 	redrawFlag = false;
 	delete myScene; myScene = nullptr;
 	switch (scene) {
@@ -79,10 +79,10 @@ void ScreenManipulator::transit(sceneID scene) {
 		myScene = new GameTableScreen(this); redrawFlag = true;
 		break;
 	default:
-		LeaveCriticalSection(&csRedrawFlag);
+		LeaveCriticalSection(&CS_SceneAccess);
 		throw _T("正しくないシーン番号が指定されました");
 	}
-	LeaveCriticalSection(&csRedrawFlag);
+	LeaveCriticalSection(&CS_SceneAccess);
 }
 
 ScreenManipulator::~ScreenManipulator() {
@@ -90,7 +90,7 @@ ScreenManipulator::~ScreenManipulator() {
 	if (myFPSIndicator) delete myFPSIndicator;
 	if (pd3d) {pd3d->Release(); pd3d = nullptr;}
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
-	DeleteCriticalSection(&csRedrawFlag);
+	DeleteCriticalSection(&CS_SceneAccess);
 }
 
 void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f) {
@@ -112,6 +112,7 @@ void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<vo
 }
 void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 	if (iManip) {
+		EnterCriticalSection(&CS_SceneAccess);
 		inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
 			if (sc) sc->KeyboardInput(od);
 		});
@@ -119,6 +120,7 @@ void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 			input::Mouse::Position mousepos = iManip->mouse()->pos();
 			if (sc) sc->MouseInput(od, mousepos.first, mousepos.second);
 		});
+		LeaveCriticalSection(&CS_SceneAccess);
 	}
 }
 
