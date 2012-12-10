@@ -30,7 +30,7 @@ void ShowTile::NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y
 
 /* 牌オブジェクトの後始末 */
 void ShowTile::DelTile(unsigned int ID) {
-	if (mySprites[ID]) {
+	if ((mySprites.size() > ID) && (mySprites[ID])) {
 		if (mySprites[ID]->sprite) mySprites[ID]->sprite->Release();
 		delete mySprites[ID]; mySprites[ID] = nullptr;
 	}

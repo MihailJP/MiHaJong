@@ -17,6 +17,7 @@ namespace {
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080); InitSprite(&sBorder);
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080); InitSprite(&sBaize);
+	Reconstruct(GameStatus::gameStat());
 	/* 手牌 */
 	for (int i = 0; i < HandLength; i++) { /* 対面の手牌 */
 		TileTexture->NewTile(144+i   , WhiteDragon, Normal, HandPosH + ShowTile::VertTileWidth*i, HandPosV, UpsideDown, Upright);
@@ -145,17 +146,32 @@ void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID ta
 	return;
 }
 
+void GameTableScreen::Reconstruct(const GameTable* gameStat) {
+	if (gameStat->gameType & Yonma) {
+		for (PLAYER_ID i = 0; i < 4; i++)
+			ReconstructYamahai(gameStat, i, i);
+	} else if (gameStat->gameType & Sanma4) {
+		PLAYER_ID tobePlayed[4][4] = {
+			{0, 1, 2, 3}, {3, 1, 2, 0}, {1, 3, 2, 0}, {1, 2, 3, 0},
+		};
+		for (PLAYER_ID i = 0; i < 4; i++) {
+			PLAYER_ID j(tobePlayed[gameStat->GameRound % PLAYERS][i]);
+			if (j < 3) ReconstructYamahai(gameStat, j, i);
+		}
+	} else {
+		for (PLAYER_ID i = 0; i < 3; i++)
+			ReconstructYamahai(gameStat, i, i);
+	}
+}
+
 void GameTableScreen::Render() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 		D3DCOLOR_XRGB(0, 128, 0), 1.0f, 0); // バッファクリア
 	ShowSidebar();
 	ShowSprite(sBaize, tBaize, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	ShowSprite(sBorder, tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
-	if (GameStatus::isModified()) {
-		const GameTable* const gameStat = GameStatus::gameStat();
-		for (PLAYER_ID i = 0; i < 4; i++)
-			ReconstructYamahai(gameStat, i, 0);
-	}
+	if (GameStatus::isModified())
+		Reconstruct(GameStatus::gameStat());
 	TileTexture->Render();
 }
 
