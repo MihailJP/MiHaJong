@@ -38,7 +38,7 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle) {
 	redrawFlag = false;
 	pDevice = nullptr; hWnd = windowHandle;
 	InitDevice();
-	myScene = new SplashScreen(this);
+	myScene = new TestScene(this);
 	myFPSIndicator = new FPSIndicator(this);
 	lastRedrawTime = 0;
 	redrawFlag = true;

@@ -23,6 +23,7 @@ GameThread::~GameThread() {
 DWORD WINAPI GameThread::ThreadMain(LPVOID lpParam) {
 	gameTypeID gameType = reinterpret_cast<GameThread*>(lpParam)->myGameType;
 	HWND hwnd = reinterpret_cast<GameThread*>(lpParam)->hWnd;
+	Sleep(INFINITE);
 	initapp(gameType, hwnd);
 	startgame(gameType);
 	cleanup();

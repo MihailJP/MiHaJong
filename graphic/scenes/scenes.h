@@ -7,3 +7,4 @@
 #include "title.h"
 #include "table.h"
 #include "ruleconf.h"
+#include "test.h"
