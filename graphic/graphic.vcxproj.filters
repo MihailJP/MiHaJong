@@ -90,6 +90,9 @@
     <ClCompile Include="scenes\test.cpp">
       <Filter>ソース ファイル\scenes</Filter>
     </ClCompile>
+    <ClCompile Include="editbox.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scrmanip.h">
@@ -172,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="scenes\test.h">
       <Filter>ヘッダー ファイル\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="editbox.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
