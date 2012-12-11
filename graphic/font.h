@@ -6,8 +6,9 @@ namespace mihajong_graphic {
 
 class FontMapClass {
 protected:
-	typedef std::map<wchar_t, unsigned short> fMap;
-	typedef std::map<wchar_t, unsigned short>::value_type fMapDat;
+	typedef std::pair<bool, unsigned short> charAttr;
+	typedef std::map<wchar_t, charAttr> fMap;
+	typedef fMap::value_type fMapDat;
 	FontMapClass() {};
 	FontMapClass(const FontMapClass&) {}
 	virtual ~FontMapClass() = 0 {};
@@ -16,7 +17,7 @@ protected:
 	virtual const unsigned short Default_Chr() = 0;
 public:
 	static FontMapClass* instantiate() {return nullptr;} // This class is an abstract class which cannot be instantiated
-	unsigned short map(wchar_t c);
+	charAttr map(wchar_t c);
 };
 
 class FontMap : public FontMapClass {

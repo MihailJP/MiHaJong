@@ -97,16 +97,17 @@ void ITextRenderer::reconstruct(unsigned int ID, bool rescanStr) {
 			SpriteData[ID].back()->sprite = nullptr;
 			if (FAILED(D3DXCreateSprite(myDevice, &SpriteData[ID].back()->sprite)))
 				throw _T("スプライトの生成に失敗しました");
-			SpriteData[ID].back()->chr_id = fontmap->map(*k);
+			SpriteData[ID].back()->isFullWidth = fontmap->map(*k).first;
+			SpriteData[ID].back()->chr_id = fontmap->map(*k).second;
 			spriteRecalc(ID, SpriteData[ID].back(), chrAdvance, cursorPos);
-			if (*k <= L'\x7f') cursorPos += .5f;
-			else cursorPos += 1.0f;
+			if (SpriteData[ID].back()->isFullWidth) cursorPos += 1.0f;
+			else cursorPos += .5f;
 		}
 	} else {
 		for (auto k = SpriteData[ID].begin(); k != SpriteData[ID].end(); ++k) {
 			spriteRecalc(ID, *k, chrAdvance, cursorPos);
-			if (((*k)->chr_id > 0) && ((*k)->chr_id <= 96)) cursorPos += .5f;
-			else cursorPos += 1.0f;
+			if ((*k)->isFullWidth) cursorPos += 1.0f;
+			else cursorPos += .5f;
 		}
 	}
 }
