@@ -16,4 +16,12 @@ void TestScene::Render() {
 	myEditBox->Render();
 }
 
+void TestScene::KeyboardInput(WPARAM wParam, LPARAM lParam) {
+	myEditBox->KeyboardInput(wParam, lParam);
+}
+
+void TestScene::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
+	myEditBox->IMEvent(message, wParam, lParam);
+}
+
 }

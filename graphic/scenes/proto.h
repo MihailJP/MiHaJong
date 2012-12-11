@@ -23,8 +23,10 @@ public:
 		caller = manipulator;
 	}
 	virtual ~Scene() {}
-	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od) {};
-	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {};
+	virtual void IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {}
+	virtual void KeyboardInput(WPARAM wParam, LPARAM lParam) {}
+	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od) {}
+	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {}
 };
 
 }

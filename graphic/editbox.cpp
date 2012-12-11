@@ -1,4 +1,5 @@
 #include "editbox.h"
+#include <iomanip>
 
 namespace mihajong_graphic {
 
@@ -13,27 +14,39 @@ EditBox::~EditBox() {
 	delete myTextRenderer;
 }
 
+bool EditBox::isFullWidth(wchar_t chr) {
+	return !(((chr >= L' ') && (chr <= L'~')) || ((chr >= L'\uff61') && (chr <= L'\uff9f')));
+}
+bool EditBox::isFullWidth(char) {
+	return false;
+}
+
+
 void EditBox::Render() {
 	int X, Y; std::tie(X, Y, std::ignore, std::ignore) = myRegion;
 	IMStat imStat(myHWnd);
 	CodeConv::tstring convStr(imStat.getGCSCompStr());
 	std::vector<BYTE> charInfo(imStat.getGCSCompAttr());
 	unsigned TextID = 0u, cols = 0u, startcol = 0u, startchr = 0u; BYTE tmpInfo;
+	for (unsigned i = 0u; i < myText.size(); i++)
+		cols += isFullWidth(myText[i]) ? 2 : 1;
+	myTextRenderer->NewText(TextID++, myText, X, Y, 1.0f, 1.0f, 0xff333333);
+	startcol = cols;
 	for (unsigned i = 0u; i <= convStr.size(); i++) {
 		if (convStr.empty()) break;
 		if ((i == convStr.size()) || ((i > 0) && (i < charInfo.size()) && (tmpInfo != charInfo[i]))) {
 			D3DCOLOR color;
 			switch (tmpInfo) {
 			case ATTR_INPUT:
-				color = 0xff336699; break;
+				color = 0xff0000ff; break;
 			case ATTR_CONVERTED:
-				color = 0xff993366; break;
+				color = 0xff00cc33; break;
 			case ATTR_TARGET_CONVERTED:
-				color = 0xff996633; break;
+				color = 0xffff6600; break;
 			case ATTR_TARGET_NOTCONVERTED:
-				color = 0xff669933; break;
+				color = 0xff9900ff; break;
 			default:
-				color = 0xff666666; break;
+				color = 0xffff0000; break;
 			}
 			myTextRenderer->NewText(TextID++, convStr.substr(startchr, i - startchr), X + startcol * 9, Y, 1.0f, 1.0f, color);
 			startcol = cols; startchr = i;
@@ -41,20 +54,38 @@ void EditBox::Render() {
 		}
 		if (i < charInfo.size()) tmpInfo = charInfo[i];
 		else tmpInfo = -1;
-#ifdef UNICODE
-		if (((convStr[i] >= L' ') && (convStr[i] <= L'~')) || ((convStr[i] >= L'\uff61') && (convStr[i] <= L'\uff9f')))
-			cols += 1;
-		else cols += 2;
-#else
-		cols += 1;
-#endif
+		cols += isFullWidth(convStr[i]) ? 2 : 1;
 	}
-	CodeConv::tstring resultStr(imStat.getGCSResultStr());
-	myTextRenderer->NewText(TextID++, resultStr, X, Y + 20, 1.0f, 1.0f, 0xff009900);
 	for (unsigned i = TextID; i < maxStr; i++)
 		myTextRenderer->DelText(i);
 	maxStr = TextID;
 	myTextRenderer->Render();
+}
+
+void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
+	HKL hkl = GetKeyboardLayout(0);
+	BYTE keyState[256]; GetKeyboardState(keyState);
+	WCHAR Letter[16] = {0,};
+	int letters = ToUnicodeEx((UINT)wParam, (UINT)((lParam & 0x00ff0000) >> 16), keyState, Letter, 15, 0, hkl);
+	if (letters <= 0) return; // No characters
+	if (Letter[0] >= L' ') { // Ordinary
+		CodeConv::tstring currentInput = CodeConv::EnsureTStr(std::wstring(Letter));
+		myText.append(currentInput);
+	} else if ((Letter[0] == L'\b') && (!myText.empty())) { // Backspace
+		myText.pop_back();
+#ifndef UNICODE
+		if ((GetACP() == 932) && ((myText.back() >= 0x81) && (myText.back() <= 0x9f)) || ((myText.back() >= 0xe0) && (myText.back() <= 0xfc)))
+			myText.pop_back();
+#endif
+	}
+}
+
+void EditBox::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
+	if ((message == WM_IME_COMPOSITION) && (lParam & GCS_RESULTSTR)) {
+		IMStat imStat(myHWnd);
+		CodeConv::tstring resultStr(imStat.getGCSResultStr());
+		myText.append(resultStr);
+	}
 }
 
 // -------------------------------------------------------------------------

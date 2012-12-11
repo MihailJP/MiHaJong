@@ -7,11 +7,19 @@ const LPTSTR MainWindow::myWindowClassName = _T("mihajong_main");
 const LPTSTR MainWindow::WindowCaption = _T("MiHaJong ver. ") _T(MIHAJONG_VER);
 unsigned& MainWindow::WindowWidth = Geometry::WindowWidth;
 unsigned& MainWindow::WindowHeight = Geometry::WindowHeight;
+extern MainWindow* myMainWindow;
 
 LRESULT CALLBACK MainWindow::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) { // ウィンドウプロシージャ
 	switch (message) {
 	case WM_DESTROY: // ウィンドウを閉じた時
 		PostQuitMessage(0);
+		break;
+	case WM_KEYDOWN:
+		if (myMainWindow) myMainWindow->myScreenManipulator->inputProc(wParam, lParam);
+		break;
+	case WM_INPUTLANGCHANGE: case WM_IME_SETCONTEXT: case WM_IME_STARTCOMPOSITION:
+	case WM_IME_COMPOSITION: case WM_IME_ENDCOMPOSITION: case WM_IME_NOTIFY:
+		if (myMainWindow) myMainWindow->myScreenManipulator->IMEvent(message, wParam, lParam);
 		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);

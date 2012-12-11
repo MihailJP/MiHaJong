@@ -3,6 +3,7 @@
 #include "../mjcore/strcode.h"
 #include <d3dx9.h>
 #include <dxerr.h>
+#include <WinUser.h>
 #include <Imm.h>
 #include <tuple>
 #include "text.h"
@@ -18,11 +19,15 @@ private:
 	SmallTextRenderer* myTextRenderer;
 	LPDIRECT3DDEVICE9 myDevice;
 	unsigned maxStr;
+	bool isFullWidth(wchar_t chr);
+	bool isFullWidth(char chr);
 	class IMStat;
 public:
 	EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width, unsigned height);
 	~EditBox();
 	void Render();
+	void KeyboardInput(WPARAM wParam, LPARAM lParam);
+	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 };
 
 class EditBox::IMStat { // IMEÇÃèÛë‘

@@ -12,6 +12,8 @@ public:
 	TestScene(ScreenManipulator* const manipulator);
 	~TestScene();
 	void Render();
+	void KeyboardInput(WPARAM wParam, LPARAM lParam);
+	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 };
 
 }
