@@ -62,7 +62,7 @@ class SmallTextRenderer : public ITextRenderer {
 private:
 	const unsigned int FontBaseSize() {return 20;}
 	const unsigned int FontCols() {return 94;}
-	const unsigned int FontPadding() {return 2;}
+	const unsigned int FontPadding() {return 1;}
 public:
 	explicit SmallTextRenderer(LPDIRECT3DDEVICE9 device);
 	~SmallTextRenderer();
