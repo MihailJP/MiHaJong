@@ -17,6 +17,10 @@ HugeTextRenderer::HugeTextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(dev
 	fontmap = FontMapLargeChr::instantiate();
 	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_HUGE), 1792, 1568);
 }
+SmallTextRenderer::SmallTextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
+	fontmap = FontMapSmallChr::instantiate();
+	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_SMALL), 1880, 1920);
+}
 
 ITextRenderer::~ITextRenderer() {
 	deleteSprite();
@@ -30,6 +34,8 @@ ITextRenderer::~ITextRenderer() {
 TextRenderer::~TextRenderer() {
 }
 HugeTextRenderer::~HugeTextRenderer() {
+}
+SmallTextRenderer::~SmallTextRenderer() {
 }
 
 /* 新規の文字列オブジェクトを作成する */
