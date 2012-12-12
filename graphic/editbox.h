@@ -21,7 +21,17 @@ private:
 	unsigned maxStr;
 	bool isFullWidth(wchar_t chr);
 	bool isFullWidth(char chr);
+	LPD3DXLINE cursorLine;
+	unsigned cursorPos;
+	unsigned long long cursorBlinkStart;
+	unsigned long long currTime();
 	class IMStat;
+	bool isLeadingByte(wchar_t chr);
+	bool isLeadingByte(char chr);
+	void renderNormalText(unsigned start, unsigned end, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol);
+	void renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol);
+	void renderIMCandidates(IMStat& imStat, int X, int Y, unsigned& TextID);
+	void renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol);
 public:
 	EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width, unsigned height);
 	~EditBox();
@@ -43,6 +53,7 @@ public:
 	CodeConv::tstring getGCSCompStr();
 	std::vector<BYTE> getGCSCompAttr();
 	CodeConv::tstring getGCSResultStr();
+	int getGCSCursorPos();
 	std::tuple<unsigned, std::vector<CodeConv::tstring>, unsigned, unsigned> getCandidateList();
 };
 

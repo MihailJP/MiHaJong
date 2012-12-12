@@ -170,6 +170,7 @@
     <ClInclude Include="editbox.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="exports.h" />
+    <ClInclude Include="extchar.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="gametbl.h" />
     <ClInclude Include="geometry.h" />
