@@ -13,9 +13,13 @@ namespace mihajong_graphic {
 
 class EditBox { // 自前のエディットボックスもどき
 private:
+	static unsigned const halffontsz = 9; // 半角の横幅
 	HWND myHWnd;
+	LPDIRECT3DTEXTURE9 myTexture;
+	LPD3DXSPRITE mySprites[3];
+	std::vector<LPD3DXSPRITE> myCSprites;
 	CodeConv::tstring myText;
-	std::tuple<int, int, unsigned, unsigned> myRegion;
+	std::tuple<int, int, unsigned> myRegion;
 	SmallTextRenderer* myTextRenderer;
 	LPDIRECT3DDEVICE9 myDevice;
 	unsigned maxStr;
@@ -28,12 +32,15 @@ private:
 	class IMStat;
 	bool isLeadingByte(wchar_t chr);
 	bool isLeadingByte(char chr);
+	D3DXMATRIX getMatrix(int X, int Y, unsigned width);
+	void renderFrame(int X, int Y, unsigned width);
+	void renderIMCandidateFrame(int X, int Y, unsigned width, unsigned lines);
 	void renderNormalText(unsigned start, unsigned end, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol);
 	void renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol);
 	void renderIMCandidates(IMStat& imStat, int X, int Y, unsigned& TextID);
 	void renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol);
 public:
-	EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width, unsigned height);
+	EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width);
 	~EditBox();
 	void Render();
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);

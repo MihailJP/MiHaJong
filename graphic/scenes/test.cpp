@@ -4,7 +4,7 @@
 namespace mihajong_graphic {
 
 TestScene::TestScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
-	myEditBox = new EditBox(caller->getHWnd(), caller->getDevice(), 100, 100, 200, 200);
+	myEditBox = new EditBox(caller->getHWnd(), caller->getDevice(), 100, 100, 40);
 }
 
 TestScene::~TestScene() {
