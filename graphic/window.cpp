@@ -14,7 +14,7 @@ LRESULT CALLBACK MainWindow::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	case WM_DESTROY: // ウィンドウを閉じた時
 		PostQuitMessage(0);
 		break;
-	case WM_KEYDOWN:
+	case WM_CHAR:
 		if (myMainWindow) myMainWindow->myScreenManipulator->inputProc(wParam, lParam);
 		break;
 	case WM_INPUTLANGCHANGE: case WM_IME_SETCONTEXT: case WM_IME_STARTCOMPOSITION:

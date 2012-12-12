@@ -1,5 +1,4 @@
 #include "editbox.h"
-#include <iomanip>
 
 namespace mihajong_graphic {
 
@@ -74,11 +73,7 @@ void EditBox::Render() {
 }
 
 void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
-	HKL hkl = GetKeyboardLayout(0);
-	BYTE keyState[256]; GetKeyboardState(keyState);
-	WCHAR Letter[16] = {0,};
-	int letters = ToUnicodeEx((UINT)wParam, (UINT)((lParam & 0x00ff0000) >> 16), keyState, Letter, 15, 0, hkl);
-	if (letters <= 0) return; // No characters
+	WCHAR Letter[2] = {(WCHAR)wParam, 0};
 	if (Letter[0] >= L' ') { // Ordinary
 		CodeConv::tstring currentInput = CodeConv::EnsureTStr(std::wstring(Letter));
 		myText.append(currentInput);
