@@ -56,6 +56,17 @@ void EditBox::Render() {
 		else tmpInfo = -1;
 		cols += isFullWidth(convStr[i]) ? 2 : 1;
 	}
+
+	unsigned candidateNum, pageStart, pageSize;
+	std::vector<CodeConv::tstring> candidates;
+	std::tie(candidateNum, candidates, pageStart, pageSize) = imStat.getCandidateList();
+	for (unsigned i = pageStart; (i < candidates.size()) && (i < (pageStart + pageSize)); i++) {
+		CodeConv::tostringstream o;
+		o << (i - pageStart + 1) << ". " << candidates[i];
+		myTextRenderer->NewText(TextID++, o.str(), X, Y + 20 * (i - pageStart + 1), 1.0f, 1.0f,
+			(candidateNum == i) ? 0xffff6600 : 0xff999999);
+	}
+
 	for (unsigned i = TextID; i < maxStr; i++)
 		myTextRenderer->DelText(i);
 	maxStr = TextID;
@@ -135,6 +146,25 @@ CodeConv::tstring EditBox::IMStat::getGCSResultStr() {
 	for (int i = 0; i < sizeof(TCHAR); i++)
 		data.push_back(0);
 	return CodeConv::tstring(reinterpret_cast<LPTSTR>(&(data[0])));
+}
+
+std::tuple<unsigned, std::vector<CodeConv::tstring>, unsigned, unsigned> EditBox::IMStat::getCandidateList() {
+	DWORD BufSize = ImmGetCandidateList(hIMC, 0, nullptr, 0);
+	BYTE* buf = new BYTE[BufSize];
+	if (ImmGetCandidateList(hIMC, 0, reinterpret_cast<LPCANDIDATELIST>(buf), BufSize)) {
+		unsigned selection = reinterpret_cast<LPCANDIDATELIST>(buf)->dwSelection;
+		unsigned count = reinterpret_cast<LPCANDIDATELIST>(buf)->dwCount;
+		unsigned start = reinterpret_cast<LPCANDIDATELIST>(buf)->dwPageStart;
+		unsigned pagesize = reinterpret_cast<LPCANDIDATELIST>(buf)->dwPageSize;
+		std::vector<CodeConv::tstring> candidates; candidates.resize(count);
+		for (unsigned i = 0; i < count; i++)
+			candidates[i] = CodeConv::tstring((LPTSTR)(buf + (reinterpret_cast<LPCANDIDATELIST>(buf)->dwOffset[i])));
+		delete[] buf;
+		return std::make_tuple(selection, candidates, start, pagesize);
+	} else {
+		delete[] buf;
+		return std::make_tuple(0, std::vector<CodeConv::tstring>(), 0, 0);
+	}
 }
 
 }

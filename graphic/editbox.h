@@ -43,6 +43,7 @@ public:
 	CodeConv::tstring getGCSCompStr();
 	std::vector<BYTE> getGCSCompAttr();
 	CodeConv::tstring getGCSResultStr();
+	std::tuple<unsigned, std::vector<CodeConv::tstring>, unsigned, unsigned> getCandidateList();
 };
 
 }
