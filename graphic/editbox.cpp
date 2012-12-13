@@ -5,15 +5,17 @@
 #include "loadtex.h"
 #include "sprite.h"
 #include <cassert>
+#include <algorithm>
 
 namespace mihajong_graphic {
 
 EditBox::EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width) {
+	assert(width >= 8);
 	myHWnd = hwnd; myDevice = device;
 	myRegion = std::make_tuple(X, Y, width);
 	myTextRenderer = new SmallTextRenderer(device);
 	D3DXCreateLine(device, &cursorLine);
-	maxStr = 0u; cursorPos = 0u;
+	maxStr = 0u; cursorPos = 0u; scrollPos = 0u;
 	cursorBlinkStart = currTime();
 	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX), 88, 56);
 	for (int i = 0; i < 3; i++)
@@ -92,26 +94,51 @@ void EditBox::renderIMCandidateFrame(int X, int Y, unsigned width, unsigned line
 	rect.top = 28 + 24; rect.bottom = 28 + 28; drawLine(20 * lines);
 }
 
-void EditBox::renderNormalText(unsigned start, unsigned end, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol) {
+unsigned EditBox::scrollRBound(IMStat& imStat) {
+	bool imeflag = imStat.isOpened();
+	unsigned width; std::tie(std::ignore, std::ignore, width) = myRegion;
+	unsigned cols = 0;
+	CodeConv::tstring s(myText.substr(0, cursorPos) + imStat.getGCSCompStr() + myText.substr(cursorPos, myText.size()));
+	for (unsigned i = scrollPos; i < s.size(); i++) {
+		cols += isFullWidth(s[i]) ? 2 : 1;
+		if (cols > width) return i;
+		else if (cols == width) return i + 1;
+	}
+	return s.size();
+}
+
+void EditBox::renderNormalText(IMStat& imStat, unsigned start, unsigned end, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol) {
+	unsigned width; std::tie(std::ignore, std::ignore, width) = myRegion;
+	unsigned start_ = start, end_ = end;
+	if (start < cursorPos) {
+		if ((start_ += scrollPos) >= end_) return; // Do nothing if completely out of frame
+	} else {
+		if (cols >= width) return; // Do nothing if completely out of frame
+	}
 	const unsigned startcol = cols;
-	for (unsigned i = start; i < end; i++) {
+	for (unsigned i = start_; i < end_; i++) {
 		if (i == cursorPos) cursorcol = cols;
 		cols += isFullWidth(myText[i]) ? 2 : 1;
+		if (cols > width) end_ = i;
+		else if (cols == width) end_ = i + 1;
 	}
-	myTextRenderer->NewText(TextID++, myText.substr(start, end - start), X + startcol * halffontsz, Y, 1.0f, 1.0f, 0xff333333);
+	myTextRenderer->NewText(TextID++, myText.substr(start_, end_ - start_), X + startcol * halffontsz, Y, 1.0f, 1.0f, 0xff333333);
 }
 
 void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol) {
 	unsigned startcol = 0u, startchr = 0u; BYTE tmpInfo;
+	unsigned width; std::tie(std::ignore, std::ignore, width) = myRegion;
 	CodeConv::tstring convStr(imStat.getGCSCompStr());
 	std::vector<BYTE> charInfo(imStat.getGCSCompAttr());
 	int imCursor(imStat.getGCSCursorPos());
 	startcol = cols;
 	if (!convStr.empty()) cursorcol = -1;
-	for (unsigned i = 0u; i <= convStr.size(); i++) {
+	unsigned strStartPos = 0u;
+	if (cursorPos < scrollPos) strStartPos = startchr = (scrollPos - cursorPos);
+	for (unsigned i = strStartPos; i <= convStr.size(); i++) {
 		if (convStr.empty()) break;
 		if (i == imCursor) cursorcol = cols;
-		if ((i == convStr.size()) || ((i > 0) && (i < charInfo.size()) && (tmpInfo != charInfo[i]))) {
+		if ((cols >= width) || (i == convStr.size()) || ((i > strStartPos) && (i < charInfo.size()) && (tmpInfo != charInfo[i]))) {
 			D3DCOLOR color;
 			switch (tmpInfo) {
 			case ATTR_INPUT:
@@ -127,11 +154,12 @@ void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsig
 			}
 			myTextRenderer->NewText(TextID++, convStr.substr(startchr, i - startchr), X + startcol * halffontsz, Y, 1.0f, 1.0f, color);
 			startcol = cols; startchr = i;
-			if (i == convStr.size()) break;
+			if ((cols >= width) || (i == convStr.size())) break;
 		}
 		if (i < charInfo.size()) tmpInfo = charInfo[i];
 		else tmpInfo = -1;
 		cols += isFullWidth(convStr[i]) ? 2 : 1;
+		//if (cols > width) i -= 1;
 	}
 }
 
@@ -174,6 +202,44 @@ void EditBox::renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol) {
 	cursorLine->End();
 }
 
+void EditBox::scroll(IMStat& imStat) {
+	unsigned width; std::tie(std::ignore, std::ignore, width) = myRegion;
+	const CodeConv::tstring s(myText.substr(0, cursorPos) + imStat.getGCSCompStr() + myText.substr(cursorPos, myText.size()));
+	const auto compAttr(imStat.getGCSCompAttr());
+	const int paragraphLength =
+		std::count_if(compAttr.begin(), compAttr.end(), [](BYTE p) {
+			return ((p == ATTR_TARGET_CONVERTED) || (p == ATTR_TARGET_NOTCONVERTED));
+		}
+	);
+	const unsigned trueRBound = (scrollRBound(imStat) < paragraphLength) ? 0 : (scrollRBound(imStat) - paragraphLength);
+	unsigned textRightmostToFill = s.size(), fillCols = 0u;
+	for (; textRightmostToFill > 0; textRightmostToFill--) {
+		if (isFullWidth(s[textRightmostToFill - 1])) fillCols += 2;
+		else fillCols += 1;
+		if (fillCols >= width) {textRightmostToFill--; break;}
+	}
+	if (fillCols > width) textRightmostToFill++;
+	if ((textRightmostToFill > 0 ) && (isLeadingByte(s, textRightmostToFill - 1))) textRightmostToFill++;
+
+	while (true) {
+		const unsigned trueCursorPos = cursorPos + ((imStat.getGCSCursorPos() < 0) ? 0 : imStat.getGCSCursorPos());
+		if (trueCursorPos > (scrollRBound(imStat) - paragraphLength)) {
+			try {
+				if (isLeadingByte(s, scrollPos)) ++scrollPos;
+				++scrollPos;
+			} catch (std::out_of_range&) {}
+		} else if (trueCursorPos < scrollPos) {
+			try {
+				--scrollPos;
+				if (isLeadingByte(s, scrollPos - 1)) --scrollPos;
+			} catch (std::out_of_range&) {}
+		} else if (scrollPos > textRightmostToFill) {
+			scrollPos = textRightmostToFill;
+			break;
+		} else break;
+	}
+}
+
 void EditBox::Render() {
 	/* Initialize */
 	int X, Y; unsigned width; std::tie(X, Y, width) = myRegion;
@@ -184,9 +250,10 @@ void EditBox::Render() {
 	renderFrame(X, Y, width);
 
 	/* Text */
-	renderNormalText(0u, cursorPos, X, Y, TextID, cols, cursorcol);
+	scroll(imStat);
+	renderNormalText(imStat, 0u, cursorPos, X, Y, TextID, cols, cursorcol);
 	renderIMText(imStat, X, Y, TextID, cols, cursorcol);
-	renderNormalText(cursorPos, myText.size(), X, Y, TextID, cols, cursorcol);
+	renderNormalText(imStat, cursorPos, myText.size(), X, Y, TextID, cols, cursorcol);
 	if (cursorcol == -1) cursorcol = cols;
 
 	/* Candidate words */
@@ -203,23 +270,35 @@ void EditBox::Render() {
 }
 
 bool EditBox::isLeadingByte(wchar_t chr) {
-	return false;
+	static_assert((sizeof (wchar_t) == 2) || (sizeof (wchar_t) == 4), "sizeof (wchar_t) is invalid");
+	if (sizeof (wchar_t) == 2) // assume UTF-16
+		return (chr >= 0xd800) && (chr <= 0xdbff);
+	else // assume UTF-32
+		return false;
 }
 bool EditBox::isLeadingByte(char chr) {
-	if (GetACP() == 932)
+	if (GetACP() == 932) // CP932 aka SJIS
 		return ((chr >= 0x81) && (chr <= 0x9f)) || ((chr >= 0xe0) && (chr <= 0xfc));
-	else return false;
+	else return false; // Other codepages are not supported
+}
+bool EditBox::isLeadingByte(const CodeConv::tstring& str, unsigned pos) {
+	bool flag = false;
+	for (unsigned i = 0; i <= pos; i++) {
+		if (!flag) flag = isLeadingByte(str.at(i));
+		else flag = false;
+	}
+	return flag;
 }
 
 void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 	if (wParam == CHARDAT_CURSOR_LEFT) { // Cursor key
 		if (cursorPos > 0) --cursorPos;
 		try {
-			if (isLeadingByte(myText.at(cursorPos))) --cursorPos;
+			if (isLeadingByte(myText, cursorPos)) --cursorPos;
 		} catch (std::out_of_range&) {}
 	} else if (wParam == CHARDAT_CURSOR_RIGHT) { // Cursor key
 		try {
-			if (isLeadingByte(myText.at(cursorPos))) ++cursorPos;
+			if (isLeadingByte(myText, cursorPos)) ++cursorPos;
 			if (cursorPos < myText.size()) ++cursorPos;
 		} catch (std::out_of_range&) {}
 	} else {
@@ -233,7 +312,7 @@ void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 				try {
 					myText = myText.substr(0, cursorPos - 1) + myText.substr(cursorPos, myText.size());
 					--cursorPos;
-					if (isLeadingByte(myText.at(cursorPos))) {
+					if (isLeadingByte(myText, cursorPos)) {
 						myText = myText.substr(0, cursorPos - 1) + myText.substr(cursorPos, myText.size());
 						--cursorPos;
 					}

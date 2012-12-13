@@ -8,6 +8,7 @@
 #include <tuple>
 #include "text.h"
 #include <vector>
+#include <functional>
 
 namespace mihajong_graphic {
 
@@ -27,15 +28,19 @@ private:
 	bool isFullWidth(char chr);
 	LPD3DXLINE cursorLine;
 	unsigned cursorPos;
+	unsigned scrollPos;
 	unsigned long long cursorBlinkStart;
 	unsigned long long currTime();
 	class IMStat;
+	unsigned scrollRBound(IMStat& imStat);
+	void scroll(IMStat& imStat);
 	bool isLeadingByte(wchar_t chr);
 	bool isLeadingByte(char chr);
+	bool isLeadingByte(const CodeConv::tstring&, unsigned pos);
 	D3DXMATRIX getMatrix(int X, int Y, unsigned width);
 	void renderFrame(int X, int Y, unsigned width);
 	void renderIMCandidateFrame(int X, int Y, unsigned width, unsigned lines);
-	void renderNormalText(unsigned start, unsigned end, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol);
+	void renderNormalText(IMStat& imStat, unsigned start, unsigned end, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol);
 	void renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol);
 	void renderIMCandidates(IMStat& imStat, int X, int Y, unsigned& TextID);
 	void renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol);
