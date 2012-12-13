@@ -122,6 +122,7 @@ void EditBox::renderNormalText(IMStat& imStat, unsigned start, unsigned end, int
 		if (cols > width) end_ = i;
 		else if (cols == width) end_ = i + 1;
 	}
+	if (isLeadingByte(myText, end_ - 1)) --end_;
 	myTextRenderer->NewText(TextID++, myText.substr(start_, end_ - start_), X + startcol * halffontsz, Y, 1.0f, 1.0f, 0xff333333);
 }
 
@@ -152,6 +153,7 @@ void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsig
 			default:
 				color = 0xffff0000; break;
 			}
+			if (isLeadingByte(convStr, i - 1)) --i;
 			myTextRenderer->NewText(TextID++, convStr.substr(startchr, i - startchr), X + startcol * halffontsz, Y, 1.0f, 1.0f, color);
 			startcol = cols; startchr = i;
 			if ((cols >= width) || (i == convStr.size())) break;
@@ -159,7 +161,6 @@ void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsig
 		if (i < charInfo.size()) tmpInfo = charInfo[i];
 		else tmpInfo = -1;
 		cols += isFullWidth(convStr[i]) ? 2 : 1;
-		//if (cols > width) i -= 1;
 	}
 }
 
@@ -278,14 +279,18 @@ bool EditBox::isLeadingByte(wchar_t chr) {
 }
 bool EditBox::isLeadingByte(char chr) {
 	if (GetACP() == 932) // CP932 aka SJIS
-		return ((chr >= 0x81) && (chr <= 0x9f)) || ((chr >= 0xe0) && (chr <= 0xfc));
+		return ((chr >= (char)0x81) && (chr <= (char)0x9f)) || ((chr >= (char)0xe0) && (chr <= (char)0xfc));
 	else return false; // Other codepages are not supported
 }
 bool EditBox::isLeadingByte(const CodeConv::tstring& str, unsigned pos) {
 	bool flag = false;
 	for (unsigned i = 0; i <= pos; i++) {
-		if (!flag) flag = isLeadingByte(str.at(i));
-		else flag = false;
+		try {
+			if (!flag) flag = isLeadingByte(str.at(i));
+			else flag = false;
+		} catch (std::out_of_range&) {
+			return false;
+		}
 	}
 	return flag;
 }
@@ -294,7 +299,7 @@ void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 	if (wParam == CHARDAT_CURSOR_LEFT) { // Cursor key
 		if (cursorPos > 0) --cursorPos;
 		try {
-			if (isLeadingByte(myText, cursorPos)) --cursorPos;
+			if (isLeadingByte(myText, cursorPos - 1)) --cursorPos;
 		} catch (std::out_of_range&) {}
 	} else if (wParam == CHARDAT_CURSOR_RIGHT) { // Cursor key
 		try {
@@ -312,7 +317,7 @@ void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 				try {
 					myText = myText.substr(0, cursorPos - 1) + myText.substr(cursorPos, myText.size());
 					--cursorPos;
-					if (isLeadingByte(myText, cursorPos)) {
+					if (isLeadingByte(myText, cursorPos - 1)) {
 						myText = myText.substr(0, cursorPos - 1) + myText.substr(cursorPos, myText.size());
 						--cursorPos;
 					}
