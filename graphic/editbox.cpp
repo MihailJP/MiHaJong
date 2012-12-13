@@ -21,6 +21,7 @@ EditBox::EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned wid
 	for (int i = 0; i < 3; i++)
 		if (FAILED(D3DXCreateSprite(device, &(mySprites[i]))))
 			throw _T("スプライトの生成に失敗しました");
+	isActive = false;
 }
 
 EditBox::~EditBox() {
@@ -58,7 +59,9 @@ D3DXMATRIX EditBox::getMatrix(int X, int Y, unsigned width) {
 }
 
 void EditBox::renderFrame(int X, int Y, unsigned width) {
-	RECT rect; rect.left = 0; rect.top = 0; rect.right = 5; rect.bottom = 28;
+	RECT rect; rect.left = 0; rect.right = 5;
+	if (isActive) {rect.top = 28; rect.bottom = 56;}
+	else {rect.top = 0; rect.bottom = 28;}
 	SpriteRenderer::ShowSprite(mySprites[0], myTexture, X - 5, Y - 5, 5, 28, 0xffffffff, &rect);
 	rect.left = 5; rect.right = 82;
 	D3DXMATRIX mat = getMatrix(X, Y, width);
@@ -253,12 +256,12 @@ void EditBox::Render() {
 	/* Text */
 	scroll(imStat);
 	renderNormalText(imStat, 0u, cursorPos, X, Y, TextID, cols, cursorcol);
-	renderIMText(imStat, X, Y, TextID, cols, cursorcol);
+	if (isActive) renderIMText(imStat, X, Y, TextID, cols, cursorcol);
 	renderNormalText(imStat, cursorPos, myText.size(), X, Y, TextID, cols, cursorcol);
 	if (cursorcol == -1) cursorcol = cols;
 
 	/* Candidate words */
-	renderIMCandidates(imStat, X, Y + 20, TextID);
+	renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + 20, TextID);
 
 	/* Commit */
 	for (unsigned i = TextID; i < maxStr; i++)
@@ -267,7 +270,8 @@ void EditBox::Render() {
 	myTextRenderer->Render();
 
 	/* Cursor */
-	renderCursor(imStat, X, Y, cursorcol);
+	if (isActive)
+		renderCursor(imStat, X, Y, cursorcol);
 }
 
 bool EditBox::isLeadingByte(wchar_t chr) {
@@ -296,6 +300,7 @@ bool EditBox::isLeadingByte(const CodeConv::tstring& str, unsigned pos) {
 }
 
 void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
+	if (!isActive) return;
 	if (wParam == CHARDAT_CURSOR_LEFT) { // Cursor key
 		if (cursorPos > 0) --cursorPos;
 		try {
@@ -328,6 +333,7 @@ void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 }
 
 void EditBox::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
+	if (!isActive) return;
 	if ((message == WM_IME_COMPOSITION) && (lParam & GCS_RESULTSTR)) {
 		IMStat imStat(myHWnd);
 		CodeConv::tstring resultStr(imStat.getGCSResultStr());

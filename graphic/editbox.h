@@ -44,12 +44,15 @@ private:
 	void renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol);
 	void renderIMCandidates(IMStat& imStat, int X, int Y, unsigned& TextID);
 	void renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol);
+	bool isActive;
 public:
 	EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width);
 	~EditBox();
 	void Render();
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
+	void activate() {isActive = true;}
+	void deactivate() {isActive = false;}
 };
 
 class EditBox::IMStat { // IMEÇÃèÛë‘
