@@ -124,4 +124,16 @@ void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 	}
 }
 
+void ScreenManipulator::inputProc(WPARAM wParam, LPARAM lParam) {
+	EnterCriticalSection(&CS_SceneAccess);
+	if (myScene) myScene->KeyboardInput(wParam, lParam);
+	LeaveCriticalSection(&CS_SceneAccess);
+}
+
+void ScreenManipulator::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
+	EnterCriticalSection(&CS_SceneAccess);
+	if (myScene) myScene->IMEvent(message, wParam, lParam);
+	LeaveCriticalSection(&CS_SceneAccess);
+}
+
 }

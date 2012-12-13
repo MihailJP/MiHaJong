@@ -24,6 +24,8 @@ IDB_PNG_TITLE         PNG_FILE         ".\\data\\title.png"
 IDB_PNG_BUTTON        PNG_FILE         ".\\data\\button.png"
 IDB_PNG_FONT_HUGE     PNG_FILE         ".\\data\\largechr.png"
 IDB_PNG_DICE          PNG_FILE         ".\\data\\dice.png"
+IDB_PNG_FONT_SMALL    PNG_FILE         ".\\data\\smallchr.png"
+IDB_PNG_TEXTBOX       PNG_FILE         ".\\data\\editbox.png"
 
 
 

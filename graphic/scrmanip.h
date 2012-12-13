@@ -24,6 +24,8 @@ private:
 	void inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f);
 	CRITICAL_SECTION CS_SceneAccess; // シーンアクセスのクリティカルセクション
 public:
+	void inputProc(WPARAM wParam, LPARAM lParam);
+	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 	void Render(); // 画面の再描画
 	ScreenManipulator(HWND windowHandle);
 	~ScreenManipulator();
