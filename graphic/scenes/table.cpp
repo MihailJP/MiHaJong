@@ -18,19 +18,6 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080); InitSprite(&sBorder);
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080); InitSprite(&sBaize);
 	Reconstruct(GameStatus::gameStat());
-	/* éËîv */
-	for (int i = 0; i < HandLength; i++) { /* ëŒñ ÇÃéËîv */
-		TileTexture->NewTile(144+i   , WhiteDragon, Normal, HandPosH + ShowTile::VertTileWidth*i, HandPosV, UpsideDown, Upright);
-	}
-	for (int i = 0; i < HandLength; i++) { /* è„â∆ÇÃéËîv */
-		TileTexture->NewTile(144+14+i, BambooOne, Normal, HandPosV, HandPosH + ShowTile::VertTileWidth*i, Clockwise, Upright);
-	}
-	for (int i = 0; i < HandLength; i++) { /* â∫â∆ÇÃéËîv */
-		TileTexture->NewTile(144+28+i, CircleSeven, Normal, TableSize - HandPosV, HandPosH + ShowTile::VertTileWidth*i, Withershins, Upright);
-	}
-	for (int i = 0; i < HandLength; i++) { /* é©ï™ÇÃéËîv */
-		TileTexture->NewTile(144+52+i, WhiteDragon, Normal, HandPosH + ShowTile::VertTileWidth*i, TableSize - HandPosV, Portrait, Upright);
-	}
 }
 
 GameTableScreen::~GameTableScreen() {
@@ -40,6 +27,7 @@ GameTableScreen::~GameTableScreen() {
 	if (sBaize) sBaize->Release();
 }
 
+/* éRîvÇÃï\é¶ */
 void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer) {
 	std::tuple<unsigned, unsigned, unsigned, unsigned> yamahaiAttr;
 	if (gameStat->gameType & AllSanma)
@@ -146,21 +134,79 @@ void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID ta
 	return;
 }
 
+/* éËîvÇï\é¶Ç∑ÇÈ */
+void GameTableScreen::ReconstructTehai(const GameTable* gameStat, PLAYER_ID targetPlayer) {
+	int tilePos;
+	/* éËîv */
+	switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
+	case sOpposite: /* ëŒñ ÇÃéËîv */
+		tilePos = 0;
+		for (int i = 0; i <= HandLength; ++i)
+			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
+				++tilePos;
+		for (int i = 0; i <= HandLength; ++i)
+			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
+				TileTexture->NewTile(144+i,
+				gameStat->Player.val[targetPlayer].Hand[i].tile,
+				gameStat->Player.val[targetPlayer].Hand[i].red,
+				HandPosH + ShowTile::VertTileWidth * (--tilePos) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
+				HandPosV, UpsideDown, Obverse);
+		break;
+	case sLeft: /* è„â∆ÇÃéËîv */
+		tilePos = 0;
+		for (int i = 0; i <= HandLength; ++i)
+			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
+				TileTexture->NewTile(144+14+i,
+				gameStat->Player.val[targetPlayer].Hand[i].tile,
+				gameStat->Player.val[targetPlayer].Hand[i].red,
+				HandPosV,
+				HandPosH + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
+				Clockwise, Obverse);
+		break;
+	case sRight: /* â∫â∆ÇÃéËîv */
+		tilePos = 0;
+		for (int i = HandLength; i >= 0; --i)
+			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
+				TileTexture->NewTile(144+28+(13-i),
+				gameStat->Player.val[targetPlayer].Hand[i].tile,
+				gameStat->Player.val[targetPlayer].Hand[i].red,
+				TableSize - HandPosV,
+				HandPosH + ShowTile::VertTileWidth * (tilePos++) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
+				Withershins, Obverse);
+		break;
+	case sSelf: /* é©ï™ÇÃéËîv */
+		tilePos = 0;
+		for (int i = 0; i <= HandLength; ++i)
+			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
+				TileTexture->NewTile(144+52+i,
+				gameStat->Player.val[targetPlayer].Hand[i].tile,
+				gameStat->Player.val[targetPlayer].Hand[i].red,
+				HandPosH + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
+				TableSize - HandPosV, Portrait, Obverse);
+		break;
+	}
+}
+
+void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer) {
+	ReconstructYamahai(gameStat, targetPlayer, trueTargetPlayer);
+	ReconstructTehai(gameStat, targetPlayer);
+}
+
 void GameTableScreen::Reconstruct(const GameTable* gameStat) {
 	if (gameStat->gameType & Yonma) {
 		for (PLAYER_ID i = 0; i < 4; i++)
-			ReconstructYamahai(gameStat, i, i);
+			ReconstructPlayer(gameStat, i, i);
 	} else if (gameStat->gameType & Sanma4) {
 		PLAYER_ID tobePlayed[4][4] = {
 			{0, 1, 2, 3}, {3, 1, 2, 0}, {1, 3, 2, 0}, {1, 2, 3, 0},
 		};
 		for (PLAYER_ID i = 0; i < 4; i++) {
 			PLAYER_ID j(tobePlayed[gameStat->GameRound % PLAYERS][i]);
-			if (j < 3) ReconstructYamahai(gameStat, j, i);
+			if (j < 3) ReconstructPlayer(gameStat, j, i);
 		}
 	} else {
 		for (PLAYER_ID i = 0; i < 3; i++)
-			ReconstructYamahai(gameStat, i, i);
+			ReconstructPlayer(gameStat, i, i);
 	}
 }
 
