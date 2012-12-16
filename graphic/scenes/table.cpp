@@ -476,7 +476,7 @@ void GameTableScreen::YamahaiReconst::ReconstructNakihai(const GameTable* gameSt
 			posOffset[i] = posOffset[i - 1] + ShowTile::VertTileWidth * 2;
 			break;
 		default:
-			posOffset[i] = posOffset[i - 1] + ShowTile::HoriTileHeight;
+			posOffset[i] = posOffset[i - 1] + ShowTile::HoriTileWidth;
 			break;
 		}
 	}
