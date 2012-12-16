@@ -458,13 +458,13 @@ void GameTableScreen::YamahaiReconst::NakihaiSelRoutine(const GameTable* gameSta
 		NakihaiAnkan(gameStat, targetPlayer, PositionOffset, IDOffset, meldID);
 		break;
 	case meldQuadExposedLeft:
-		NakihaiKamicha(gameStat, targetPlayer, PositionOffset, IDOffset, meldID);
+		MinkanKamicha(gameStat, targetPlayer, PositionOffset, IDOffset, meldID);
 		break;
 	case meldQuadExposedCenter:
-		NakihaiToimen(gameStat, targetPlayer, PositionOffset, IDOffset, meldID);
+		MinkanToimen(gameStat, targetPlayer, PositionOffset, IDOffset, meldID);
 		break;
 	case meldQuadExposedRight:
-		NakihaiShimocha(gameStat, targetPlayer, PositionOffset, IDOffset, meldID);
+		MinkanShimocha(gameStat, targetPlayer, PositionOffset, IDOffset, meldID);
 		break;
 	}
 }
