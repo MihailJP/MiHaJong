@@ -19,12 +19,39 @@ private:
 	LPDIRECT3DTEXTURE9 tBaize; LPD3DXSPRITE sBaize; // óÖé—ín
 	void ReconstructYamahai(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // éRîvÇÃçƒç\íz
 	void ReconstructTehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // éËîvÇÃçƒç\íz
+	class YamahaiReconst;
+	friend class GameTableScreen::YamahaiReconst;
+	YamahaiReconst* yamahaiReconst;
 	void ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // ÉvÉåÉCÉÑÅ[ä÷åWÇÃâÊñ ÇÃçƒç\íz
 	void Reconstruct(const GameTable* gameStat); // âÊñ ÇÃçƒï`âÊ
 public:
 	GameTableScreen(ScreenManipulator* const manipulator);
 	~GameTableScreen();
 	void Render();
+};
+
+class GameTableScreen::YamahaiReconst {
+private:
+	static const unsigned int MeldPosH = TableSize - 31;
+	static const unsigned int MeldPosV = DeckPosV - 166;
+	static const unsigned int MPosVVert = TableSize - MeldPosV;
+	static const unsigned int MPosVHorU = TableSize - MeldPosV - ShowTile::VertTileWidth + 6;
+	static const unsigned int MPosVHorL = TableSize - MeldPosV + 6;
+	static inline const unsigned int MPosHVertR(unsigned p) {return MeldPosH - ShowTile::VertTileWidth * p;}
+	static inline const unsigned int MPosHVertL(unsigned p) {return MeldPosH - ShowTile::VertTileWidth * (p - 1) - ShowTile::HoriTileHeight - 5;}
+	static inline const unsigned int MPosHHor(unsigned p) {return MeldPosH - ShowTile::VertTileWidth * (p - 1) - ShowTile::HoriTileHeight + 2;}
+	void NakihaiAnkan(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID);
+	void NakihaiKamicha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID);
+	void NakihaiToimen(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID);
+	void NakihaiShimocha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID);
+	void MinkanKamicha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID);
+	void MinkanToimen(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID);
+	void MinkanShimocha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID);
+	void NakihaiSelRoutine(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID);
+public:
+	GameTableScreen* caller;
+	void ReconstructNakihai(const GameTable* gameStat, PLAYER_ID targetPlayer); // ñ¬Ç¢ÇΩîvÇÃçƒç\íz
+	YamahaiReconst(GameTableScreen* parent) {caller = parent;}
 };
 
 }
