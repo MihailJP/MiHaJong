@@ -21,7 +21,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 			gstat->Player.val[i].MeldPointer = 4;
 			for (PLAYER_ID j = 1; j <= 4; ++j) {
 				gstat->Player.val[i].Meld[j].mstat = meldQuadAddedCenter;
-				gstat->Player.val[i].Meld[j].tile = BambooOne;
+				gstat->Player.val[i].Meld[j].tile = (tileCode)(BambooOne + (j - 1));
 			}
 		}
 		GameStatus::updateGameStat(gstat);
@@ -238,6 +238,105 @@ void GameTableScreen::Render() {
 // -------------------------------------------------------------------------
 
 /* –Â‚¢‚½”v‚ð•\Ž¦‚·‚é */
+std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, std::function<int (unsigned)>, TileDirection, TileDirection, TileDirection>
+	GameTableScreen::YamahaiReconst::playerPosition(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID,
+	unsigned h1, unsigned h2, unsigned h3, unsigned h4, unsigned v1, unsigned v2, unsigned v3, unsigned v4,
+	bool r1, bool r2, bool r3, bool r4)
+{
+	switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
+	case sOpposite:
+		return std::make_tuple(
+			[=](unsigned i) -> unsigned {return 215 - i - IDOffset;},
+			[=](unsigned i) -> int {
+				switch (i) {
+					case 0: return TableSize - h1; break;
+					case 1: return TableSize - h2; break;
+					case 2: return TableSize - h3; break;
+					case 3: return TableSize - h4; break;
+					default: throw "Out of range";
+				}
+			},
+			[=](unsigned i) -> int {
+				switch (i) {
+					case 0: return TableSize - v1 + PositionOffset - (r1 ? 5 : 4); break;
+					case 1: return TableSize - v2 + PositionOffset - (r2 ? 5 : 4); break;
+					case 2: return TableSize - v3 + PositionOffset - (r3 ? 5 : 4); break;
+					case 3: return TableSize - v4 + PositionOffset - (r4 ? 5 : 4); break;
+					default: throw "Out of range";
+				}
+			},
+			Clockwise, UpsideDown, Withershins);
+	case sLeft:
+		return std::make_tuple(
+			[=](unsigned i) -> unsigned {return 231 - i - IDOffset;},
+			[=](unsigned i) -> int {
+				switch (i) {
+					case 0: return TableSize - v1 + PositionOffset - (r1 ? 5 : 4); break;
+					case 1: return TableSize - v2 + PositionOffset - (r2 ? 5 : 4); break;
+					case 2: return TableSize - v3 + PositionOffset - (r3 ? 5 : 4); break;
+					case 3: return TableSize - v4 + PositionOffset - (r4 ? 5 : 4); break;
+					default: throw "Out of range";
+				}
+			},
+			[=](unsigned i) -> int {
+				switch (i) {
+					case 0: return h1 - 5; break;
+					case 1: return h2 - 5; break;
+					case 2: return h3 - 5; break;
+					case 3: return h4 - 5; break;
+					default: throw "Out of range";
+				}
+			},
+			Portrait, Clockwise, UpsideDown);
+		break;
+	case sRight:
+		return std::make_tuple(
+			[=](unsigned i) -> unsigned {return 232 + i + IDOffset;},
+			[=](unsigned i) -> int {
+				switch (i) {
+					case 0: return v1 - PositionOffset + (r1 ? 5 : 4); break;
+					case 1: return v2 - PositionOffset + (r2 ? 5 : 4); break;
+					case 2: return v3 - PositionOffset + (r3 ? 5 : 4); break;
+					case 3: return v4 - PositionOffset + (r4 ? 5 : 4); break;
+					default: throw "Out of range";
+				}
+			},
+			[=](unsigned i) -> int {
+				switch (i) {
+					case 0: return TableSize - h1; break;
+					case 1: return TableSize - h2; break;
+					case 2: return TableSize - h3; break;
+					case 3: return TableSize - h4; break;
+					default: throw "Out of range";
+				}
+			},
+			UpsideDown, Withershins, Portrait);
+		break;
+	case sSelf:
+		return std::make_tuple(
+			[=](unsigned i) -> unsigned {return 248 + i + IDOffset;},
+			[=](unsigned i) -> int {
+				switch (i) {
+					case 0: return h1; break;
+					case 1: return h2; break;
+					case 2: return h3; break;
+					case 3: return h4; break;
+					default: throw "Out of range";
+				}
+			},
+			[=](unsigned i) -> int {
+				switch (i) {
+					case 0: return v1 - PositionOffset; break;
+					case 1: return v2 - PositionOffset; break;
+					case 2: return v3 - PositionOffset; break;
+					case 3: return v4 - PositionOffset; break;
+					default: throw "Out of range";
+				}
+			},
+			Withershins, Portrait, Clockwise);
+		break;
+	}
+}
 void GameTableScreen::YamahaiReconst::NakihaiAnkan(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
@@ -245,10 +344,14 @@ void GameTableScreen::YamahaiReconst::NakihaiAnkan(const GameTable* gameStat, PL
 	const TileSide AnkanExpose =
 		(rules::chkRule("ankan_conceal", "closed") && (gameStat->Player.val[targetPlayer].HandStat != handExposed)) ?
 		Reverse : Obverse;
-	caller->TileTexture->NewTile(200 + IDOffset, tile->tile, tile->red[2], MPosHVertR(1), MPosVVert - PositionOffset, Portrait, Reverse);
-	caller->TileTexture->NewTile(201 + IDOffset, tile->tile, tile->red[0], MPosHVertR(2), MPosVVert - PositionOffset, Portrait, AnkanExpose);
-	caller->TileTexture->NewTile(202 + IDOffset, tile->tile, tile->red[1], MPosHVertR(3), MPosVVert - PositionOffset, Portrait, AnkanExpose);
-	caller->TileTexture->NewTile(203 + IDOffset, tile->tile, tile->red[3], MPosHVertR(4), MPosVVert - PositionOffset, Portrait, Reverse);
+	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert;
+	std::tie(num, x, y, std::ignore, vert, std::ignore) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
+		MPosHVertR(1), MPosHVertR(2), MPosHVertR(3), MPosHVertR(4), MPosVVert, MPosVVert, MPosVVert, MPosVVert,
+		false, false, false, false);
+	caller->TileTexture->NewTile(num(0), tile->tile, tile->red[2], x(0), y(0), vert, Reverse);
+	caller->TileTexture->NewTile(num(1), tile->tile, tile->red[0], x(1), y(1), vert, AnkanExpose);
+	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[1], x(2), y(2), vert, AnkanExpose);
+	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[3], x(3), y(3), vert, Reverse);
 }
 void GameTableScreen::YamahaiReconst::NakihaiKamicha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
@@ -262,58 +365,82 @@ void GameTableScreen::YamahaiReconst::NakihaiKamicha(const GameTable* gameStat, 
 	const doraCol redL = (tile->mstat == meldSequenceExposedMiddle) ? tile->red[1] : ((tile->mstat == meldSequenceExposedUpper) ? tile->red[2] : tile->red[0]);
 	const doraCol redC = ((tile->mstat == meldSequenceExposedMiddle) || (tile->mstat == meldSequenceExposedUpper)) ? tile->red[0] : tile->red[1];
 	const doraCol redR = (tile->mstat == meldSequenceExposedUpper) ? tile->red[1] : tile->red[2];
-	caller->TileTexture->NewTile(200 + IDOffset, tileR, redR, MPosHVertR(1), MPosVVert - PositionOffset, Portrait, Obverse);
-	caller->TileTexture->NewTile(201 + IDOffset, tileC, redC, MPosHVertR(2), MPosVVert - PositionOffset, Portrait, Obverse);
+	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert, hor;
+	std::tie(num, x, y, hor, vert, std::ignore) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
+		MPosHVertR(1), MPosHVertR(2), MPosHHor(3), MPosHHor(3), MPosVVert, MPosVVert, MPosVHorU, MPosVHorL,
+		false, false, true, true);
+	caller->TileTexture->NewTile(num(0), tileR, redR, x(0), y(0), vert, Obverse);
+	caller->TileTexture->NewTile(num(1), tileC, redC, x(1), y(1), vert, Obverse);
 	if (tile->mstat == meldQuadAddedLeft)
-		caller->TileTexture->NewTile(202 + IDOffset, tileL, tile->red[3], MPosHHor(3), MPosVHorU - PositionOffset, Withershins, Obverse);
-	caller->TileTexture->NewTile(203 + IDOffset, tileL, redL, MPosHHor(3), MPosVHorL - PositionOffset, Withershins, Obverse);
+		caller->TileTexture->NewTile(num(2), tileL, tile->red[3], x(2), y(2), hor, Obverse);
+	caller->TileTexture->NewTile(num(3), tileL, redL, x(3), y(3), hor, Obverse);
 }
 void GameTableScreen::YamahaiReconst::NakihaiToimen(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
 	assert((tile->mstat == meldTripletExposedCenter) || (tile->mstat == meldQuadAddedCenter));
-	caller->TileTexture->NewTile(200 + IDOffset, tile->tile, tile->red[2], MPosHVertR(1), MPosVVert - PositionOffset, Portrait, Obverse);
+	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert, hor;
+	std::tie(num, x, y, hor, vert, std::ignore) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
+		MPosHVertR(1), MPosHHor(2), MPosHHor(2), MPosHVertL(3), MPosVVert, MPosVHorU, MPosVHorL, MPosVVert,
+		false, true, true, false);
+	caller->TileTexture->NewTile(num(0), tile->tile, tile->red[2], x(0), y(0), vert, Obverse);
 	if (tile->mstat == meldQuadAddedCenter)
-		caller->TileTexture->NewTile(201 + IDOffset, tile->tile, tile->red[3], MPosHHor(2), MPosVHorU - PositionOffset, Withershins, Obverse);
-	caller->TileTexture->NewTile(202 + IDOffset, tile->tile, tile->red[0], MPosHHor(2), MPosVHorL - PositionOffset, Withershins, Obverse);
-	caller->TileTexture->NewTile(203 + IDOffset, tile->tile, tile->red[1], MPosHVertL(3), MPosVVert - PositionOffset, Portrait, Obverse);
+		caller->TileTexture->NewTile(num(1), tile->tile, tile->red[3], x(1), y(1), hor, Obverse);
+	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[0], x(2), y(2), hor, Obverse);
+	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
 void GameTableScreen::YamahaiReconst::NakihaiShimocha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
 	assert((tile->mstat == meldTripletExposedRight) || (tile->mstat == meldQuadAddedRight));
+	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert, hor;
+	std::tie(num, x, y, std::ignore, vert, hor) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
+		MPosHHor(1), MPosHHor(1), MPosHVertL(2), MPosHVertL(3), MPosVHorU, MPosVHorL, MPosVVert, MPosVVert,
+		true, true, false, false);
 	if (tile->mstat == meldQuadAddedRight)
-		caller->TileTexture->NewTile(200 + IDOffset, tile->tile, tile->red[3], MPosHHor(1), MPosVHorU - PositionOffset, Withershins, Obverse);
-	caller->TileTexture->NewTile(201 + IDOffset, tile->tile, tile->red[0], MPosHHor(1), MPosVHorL - PositionOffset, Withershins, Obverse);
-	caller->TileTexture->NewTile(202 + IDOffset, tile->tile, tile->red[2], MPosHVertL(2), MPosVVert - PositionOffset, Portrait, Obverse);
-	caller->TileTexture->NewTile(203 + IDOffset, tile->tile, tile->red[1], MPosHVertL(3), MPosVVert - PositionOffset, Portrait, Obverse);
+		caller->TileTexture->NewTile(num(0), tile->tile, tile->red[3], x(0), y(0), hor, Obverse);
+	caller->TileTexture->NewTile(num(1), tile->tile, tile->red[0], x(1), y(1), hor, Obverse);
+	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[2], x(2), y(2), vert, Obverse);
+	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
 void GameTableScreen::YamahaiReconst::MinkanKamicha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
 	assert(tile->mstat == meldQuadExposedLeft);
-	caller->TileTexture->NewTile(200 + IDOffset, tile->tile, tile->red[3], MPosHVertR(1), MPosVVert - PositionOffset, Portrait, Obverse);
-	caller->TileTexture->NewTile(201 + IDOffset, tile->tile, tile->red[2], MPosHVertR(2), MPosVVert - PositionOffset, Portrait, Obverse);
-	caller->TileTexture->NewTile(202 + IDOffset, tile->tile, tile->red[1], MPosHVertR(3), MPosVVert - PositionOffset, Portrait, Obverse);
-	caller->TileTexture->NewTile(203 + IDOffset, tile->tile, tile->red[0], MPosHHor(4), MPosVHorL - PositionOffset, Portrait, Obverse);
+	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert, hor;
+	std::tie(num, x, y, hor, vert, std::ignore) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
+		MPosHVertR(1), MPosHVertR(2), MPosHVertR(3), MPosHHor(4), MPosVVert, MPosVVert, MPosVVert, MPosVHorL,
+		false, false, false, true);
+	caller->TileTexture->NewTile(num(0), tile->tile, tile->red[3], x(0), y(0), vert, Obverse);
+	caller->TileTexture->NewTile(num(1), tile->tile, tile->red[2], x(1), y(1), vert, Obverse);
+	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[1], x(2), y(2), vert, Obverse);
+	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[0], x(3), y(3), hor, Obverse);
 }
 void GameTableScreen::YamahaiReconst::MinkanToimen(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
 	assert(tile->mstat == meldQuadExposedCenter);
-	caller->TileTexture->NewTile(200 + IDOffset, tile->tile, tile->red[3], MPosHVertR(1), MPosVVert - PositionOffset, Portrait, Obverse);
-	caller->TileTexture->NewTile(201 + IDOffset, tile->tile, tile->red[2], MPosHVertR(2), MPosVVert - PositionOffset, Portrait, Obverse);
-	caller->TileTexture->NewTile(202 + IDOffset, tile->tile, tile->red[0], MPosHHor(3), MPosVHorL - PositionOffset, Portrait, Obverse);
-	caller->TileTexture->NewTile(203 + IDOffset, tile->tile, tile->red[1], MPosHVertL(4), MPosVVert - PositionOffset, Portrait, Obverse);
+	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert, hor;
+	std::tie(num, x, y, hor, vert, std::ignore) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
+		MPosHVertR(1), MPosHVertR(2), MPosHHor(3), MPosHVertL(4), MPosVVert, MPosVVert, MPosVHorL, MPosVVert,
+		false, false, true, false);
+	caller->TileTexture->NewTile(num(0), tile->tile, tile->red[3], x(0), y(0), vert, Obverse);
+	caller->TileTexture->NewTile(num(1), tile->tile, tile->red[2], x(1), y(1), vert, Obverse);
+	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[0], x(2), y(2), hor, Obverse);
+	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
 void GameTableScreen::YamahaiReconst::MinkanShimocha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
 	assert(tile->mstat == meldQuadExposedRight);
-	caller->TileTexture->NewTile(200 + IDOffset, tile->tile, tile->red[0], MPosHHor(1), MPosVHorL - PositionOffset, Portrait, Obverse);
-	caller->TileTexture->NewTile(201 + IDOffset, tile->tile, tile->red[3], MPosHVertL(2), MPosVVert - PositionOffset, Portrait, Obverse);
-	caller->TileTexture->NewTile(202 + IDOffset, tile->tile, tile->red[2], MPosHVertL(3), MPosVVert - PositionOffset, Portrait, Obverse);
-	caller->TileTexture->NewTile(203 + IDOffset, tile->tile, tile->red[1], MPosHVertL(4), MPosVVert - PositionOffset, Portrait, Obverse);
+	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert, hor;
+	std::tie(num, x, y, std::ignore, vert, hor) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
+		MPosHHor(1), MPosHVertL(2), MPosHVertL(3), MPosHVertL(4), MPosVHorL, MPosVVert, MPosVVert, MPosVVert,
+		true, false, false, false);
+	caller->TileTexture->NewTile(num(0), tile->tile, tile->red[0], x(0), y(0), hor, Obverse);
+	caller->TileTexture->NewTile(num(1), tile->tile, tile->red[3], x(1), y(1), vert, Obverse);
+	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[2], x(2), y(2), vert, Obverse);
+	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
 void GameTableScreen::YamahaiReconst::NakihaiSelRoutine(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	switch (gameStat->Player.val[targetPlayer].Meld[meldID].mstat) {
@@ -354,9 +481,8 @@ void GameTableScreen::YamahaiReconst::ReconstructNakihai(const GameTable* gameSt
 		}
 	}
 	for (int i = 1; i <= gameStat->Player.val[targetPlayer].MeldPointer; ++i)
-		NakihaiSelRoutine(gameStat, targetPlayer,
-		posOffset[i - 1],
-		(gameStat->Player.val[targetPlayer].MeldPointer - i) * 4 + 200, i);
+		NakihaiSelRoutine(gameStat, targetPlayer, posOffset[i - 1],
+			(gameStat->Player.val[targetPlayer].MeldPointer - i) * 4, i);
 }
 
 }
