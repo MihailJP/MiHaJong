@@ -189,10 +189,61 @@ void GameTableScreen::ReconstructTehai(const GameTable* gameStat, PLAYER_ID targ
 	}
 }
 
+/* ŽÌ”v‚Ì•\Ž¦‚·‚é */
+void GameTableScreen::ReconstructSutehai_portrait(const GameTable* gameStat, PLAYER_ID targetPlayer,
+	unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos) {
+		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
+		case sOpposite: /* ‘Î–Ê */
+			TileTexture->NewTile(296 - tileID,
+				BambooOne,
+				Normal,
+				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++),
+				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
+				UpsideDown, Obverse);
+			break;
+		case sLeft: /* ã‰Æ */
+			TileTexture->NewTile(297 + tileID,
+				BambooOne,
+				Normal,
+				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
+				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++),
+				Clockwise, Obverse);
+			break;
+		case sRight: /* ‰º‰Æ */
+			TileTexture->NewTile(362 - tileID,
+				BambooOne,
+				Normal,
+				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
+				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++),
+				Withershins, Obverse);
+			break;
+		case sSelf: /* Ž©•ª */
+			TileTexture->NewTile(363 + tileID,
+				BambooOne,
+				Normal,
+				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++),
+				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
+				Portrait, Obverse);
+			break;
+		}
+		if ((tilePosCol >= DiscardLineLength) && (tilePosRow < 2)) {
+			tilePosCol = 0; ++tilePosRow; shiftPos = false;
+		}
+}
+void GameTableScreen::ReconstructSutehai_rotated(const GameTable* gameStat, PLAYER_ID targetPlayer) {
+}
+void GameTableScreen::ReconstructSutehai(const GameTable* gameStat, PLAYER_ID targetPlayer) {
+	unsigned tilePosCol = 0, tilePosRow = 0; bool shiftPosFlag = false;
+	for (unsigned i = 0; i < 17; ++i) {
+		ReconstructSutehai_portrait(gameStat, targetPlayer, i, tilePosCol, tilePosRow, shiftPosFlag);
+	}
+}
+
 void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer) {
 	ReconstructYamahai(gameStat, targetPlayer, trueTargetPlayer);
 	ReconstructTehai(gameStat, targetPlayer);
 	yamahaiReconst->ReconstructNakihai(gameStat, targetPlayer);
+	ReconstructSutehai(gameStat, targetPlayer);
 }
 
 void GameTableScreen::Reconstruct(const GameTable* gameStat) {

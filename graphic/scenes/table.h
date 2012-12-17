@@ -17,10 +17,17 @@ private:
 	static const unsigned int HandLength = 13;
 	static const unsigned int HandPosH = (TableSize - ShowTile::VertTileWidth * (HandLength - 1)) / 2;
 	static const unsigned int HandPosV = DeckPosV - 144;
+	static const unsigned int DiscardLineLength = 6;
+	static const unsigned int DiscardPosH = (TableSize - ShowTile::VertTileWidth * (DiscardLineLength - 1)) / 2;
+	static const unsigned int DiscardPosV = (TableSize / 2) - 130;
 	LPDIRECT3DTEXTURE9 tBorder; LPD3DXSPRITE sBorder; // ‘ì‚Ì˜g
 	LPDIRECT3DTEXTURE9 tBaize; LPD3DXSPRITE sBaize; // —…Ñ’n
 	void ReconstructYamahai(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // R”v‚ÌÄ\’z
 	void ReconstructTehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // è”v‚ÌÄ\’z
+	void ReconstructSutehai_portrait(const GameTable* gameStat, PLAYER_ID targetPlayer,
+		unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos);
+	void ReconstructSutehai_rotated(const GameTable* gameStat, PLAYER_ID targetPlayer);
+	void ReconstructSutehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // Ì”v‚ÌÄ\’z
 	class YamahaiReconst;
 	friend class GameTableScreen::YamahaiReconst;
 	YamahaiReconst* yamahaiReconst;
