@@ -15,17 +15,6 @@ namespace {
 }
 	
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
-	{ /* Debug status */
-		GameTable* gstat = GameStatus::gameStat();
-		for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
-			gstat->Player.val[i].DiscardPointer = 19;
-			for (PLAYER_ID j = 1; j <= 19; ++j) {
-				gstat->Player.val[i].Discard[j].dstat = discardNormal;
-				gstat->Player.val[i].Discard[j].tcode.tile = BambooOne;
-			}
-		}
-		GameStatus::updateGameStat(gstat);
-	}
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080); InitSprite(&sBorder);
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080); InitSprite(&sBaize);
 	yamahaiReconst = new YamahaiReconst(this);
