@@ -26,6 +26,7 @@ IDB_PNG_FONT_HUGE     PNG_FILE         ".\\data\\largechr.png"
 IDB_PNG_DICE          PNG_FILE         ".\\data\\dice.png"
 IDB_PNG_FONT_SMALL    PNG_FILE         ".\\data\\smallchr.png"
 IDB_PNG_TEXTBOX       PNG_FILE         ".\\data\\editbox.png"
+IDB_PNG_TENBOU        PNG_FILE         ".\\data\\tenbou.png"
 
 
 

@@ -14,3 +14,4 @@
 #define IDB_PNG_DICE                         108
 #define IDB_PNG_FONT_SMALL                   109
 #define IDB_PNG_TEXTBOX                      110
+#define IDB_PNG_TENBOU                       111
