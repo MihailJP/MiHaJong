@@ -435,6 +435,8 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 			},
 			Withershins, Portrait, Clockwise);
 		break;
+	default:
+		throw "Argument error";
 	}
 }
 void GameTableScreen::YamahaiReconst::NakihaiAnkan(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
