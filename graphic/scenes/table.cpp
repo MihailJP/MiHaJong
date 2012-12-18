@@ -3,6 +3,7 @@
 #include "../resource.h"
 #include "../gametbl.h"
 #include "../rule.h"
+#include "../sprite.h"
 #include <tuple>
 #include <cassert>
 
@@ -17,12 +18,18 @@ namespace {
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080); InitSprite(&sBorder);
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080); InitSprite(&sBaize);
+	LoadTexture(&tRichi, MAKEINTRESOURCE(IDB_PNG_TENBOU), 218, 148);
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+		InitSprite(&sRichi[i]);
 	yamahaiReconst = new YamahaiReconst(this);
 	Reconstruct(GameStatus::gameStat());
 }
 
 GameTableScreen::~GameTableScreen() {
 	delete yamahaiReconst;
+	if (tRichi) tRichi->Release();
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+		if (sRichi[i]) sRichi[i]->Release();
 	if (tBorder) tBorder->Release();
 	if (sBorder) sBorder->Release();
 	if (tBaize) tBaize->Release();
@@ -324,6 +331,32 @@ void GameTableScreen::Reconstruct(const GameTable* gameStat) {
 	}
 }
 
+/* リーチ棒表示する */
+void GameTableScreen::ShowRiichibou(const GameTable* gameStat) {
+	RECT rectH = {72, 30, 216, 42,}, rectV = {30, 2, 42, 146,};
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
+		if (!gameStat->Player.val[i].RichiFlag.RichiFlag) continue;
+		switch (playerRelative(i, gameStat->PlayerID)) {
+		case sSelf:
+			SpriteRenderer::ShowSprite(sRichi[0], tRichi, RiichiPosH, RiichiPosV, 144, 12,
+				0xffffffff, &rectH, 72, 6);
+			break;
+		case sOpposite:
+			SpriteRenderer::ShowSprite(sRichi[1], tRichi, RiichiPosH, TableSize - RiichiPosV, 144, 12,
+				0xffffffff, &rectH, 72, 6);
+			break;
+		case sLeft:
+			SpriteRenderer::ShowSprite(sRichi[2], tRichi, TableSize - RiichiPosV, RiichiPosH, 12, 144,
+				0xffffffff, &rectV, 6, 72);
+			break;
+		case sRight:
+			SpriteRenderer::ShowSprite(sRichi[3], tRichi, RiichiPosV, RiichiPosH, 12, 144,
+				0xffffffff, &rectV, 6, 72);
+			break;
+		}
+	}
+}
+
 void GameTableScreen::Render() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 		D3DCOLOR_XRGB(0, 128, 0), 1.0f, 0); // バッファクリア
@@ -332,6 +365,7 @@ void GameTableScreen::Render() {
 	ShowSprite(sBorder, tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	if (GameStatus::isModified())
 		Reconstruct(GameStatus::gameStat());
+	ShowRiichibou(GameStatus::gameStat());
 	TileTexture->Render();
 }
 

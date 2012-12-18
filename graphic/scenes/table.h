@@ -20,8 +20,11 @@ private:
 	static const unsigned int DiscardLineLength = 6;
 	static const unsigned int DiscardPosH = (TableSize - ShowTile::VertTileWidth * (DiscardLineLength - 1)) / 2;
 	static const unsigned int DiscardPosV = (TableSize / 2) - 130;
+	static const unsigned int RiichiPosH = TableSize / 2;
+	static const unsigned int RiichiPosV = (TableSize / 2) + 86;
 	LPDIRECT3DTEXTURE9 tBorder; LPD3DXSPRITE sBorder; // ‘ì‚Ì˜g
 	LPDIRECT3DTEXTURE9 tBaize; LPD3DXSPRITE sBaize; // —…Ñ’n
+	LPDIRECT3DTEXTURE9 tRichi; LPD3DXSPRITE sRichi[PLAYERS];  // ƒŠ[ƒ`–_
 	void ReconstructYamahai(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // R”v‚ÌÄ\’z
 	void ReconstructTehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // è”v‚ÌÄ\’z
 	void ReconstructSutehai_portrait(const GameTable* gameStat, PLAYER_ID targetPlayer,
@@ -29,6 +32,7 @@ private:
 	void ReconstructSutehai_rotated(const GameTable* gameStat, PLAYER_ID targetPlayer,
 		unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos);
 	void ReconstructSutehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // Ì”v‚ÌÄ\’z
+	void ShowRiichibou(const GameTable* gameStat); // ƒŠ[ƒ`–_‚ÌÄ\’z
 	class YamahaiReconst;
 	friend class GameTableScreen::YamahaiReconst;
 	YamahaiReconst* yamahaiReconst;
