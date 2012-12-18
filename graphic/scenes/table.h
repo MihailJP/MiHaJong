@@ -26,7 +26,8 @@ private:
 	void ReconstructTehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // è”v‚ÌÄ\’z
 	void ReconstructSutehai_portrait(const GameTable* gameStat, PLAYER_ID targetPlayer,
 		unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos);
-	void ReconstructSutehai_rotated(const GameTable* gameStat, PLAYER_ID targetPlayer);
+	void ReconstructSutehai_rotated(const GameTable* gameStat, PLAYER_ID targetPlayer,
+		unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos);
 	void ReconstructSutehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // Ì”v‚ÌÄ\’z
 	class YamahaiReconst;
 	friend class GameTableScreen::YamahaiReconst;

@@ -203,36 +203,37 @@ void GameTableScreen::ReconstructTehai(const GameTable* gameStat, PLAYER_ID targ
 /* ŽÌ”v‚Ì•\Ž¦‚·‚é */
 void GameTableScreen::ReconstructSutehai_portrait(const GameTable* gameStat, PLAYER_ID targetPlayer,
 	unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos) {
+		assert(gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile != NoTile);
 		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
 		case sOpposite: /* ‘Î–Ê */
 			TileTexture->NewTile(296 - tileID,
-				BambooOne,
-				Normal,
-				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++),
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
+				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
 				UpsideDown, Obverse);
 			break;
 		case sLeft: /* ã‰Æ */
 			TileTexture->NewTile(297 + tileID,
-				BambooOne,
-				Normal,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
-				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++),
+				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				Clockwise, Obverse);
 			break;
 		case sRight: /* ‰º‰Æ */
 			TileTexture->NewTile(362 - tileID,
-				BambooOne,
-				Normal,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
-				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++),
+				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				Withershins, Obverse);
 			break;
 		case sSelf: /* Ž©•ª */
 			TileTexture->NewTile(363 + tileID,
-				BambooOne,
-				Normal,
-				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++),
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
+				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
 				Portrait, Obverse);
 			break;
@@ -241,12 +242,63 @@ void GameTableScreen::ReconstructSutehai_portrait(const GameTable* gameStat, PLA
 			tilePosCol = 0; ++tilePosRow; shiftPos = false;
 		}
 }
-void GameTableScreen::ReconstructSutehai_rotated(const GameTable* gameStat, PLAYER_ID targetPlayer) {
+void GameTableScreen::ReconstructSutehai_rotated(const GameTable* gameStat, PLAYER_ID targetPlayer,
+	unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos) {
+		assert(gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile != NoTile);
+		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
+		case sOpposite: /* ‘Î–Ê */
+			TileTexture->NewTile(296 - tileID,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
+				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
+				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
+				Clockwise, Obverse);
+			break;
+		case sLeft: /* ã‰Æ */
+			TileTexture->NewTile(297 + tileID,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
+				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
+				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
+				Portrait, Obverse);
+			break;
+		case sRight: /* ‰º‰Æ */
+			TileTexture->NewTile(362 - tileID,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
+				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
+				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
+				UpsideDown, Obverse);
+			break;
+		case sSelf: /* Ž©•ª */
+			TileTexture->NewTile(363 + tileID,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
+				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
+				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
+				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
+				Withershins, Obverse);
+			break;
+		}
+		shiftPos = true;
+		if ((tilePosCol >= DiscardLineLength) && (tilePosRow < 2)) {
+			tilePosCol = 0; ++tilePosRow; shiftPos = false;
+		}
 }
 void GameTableScreen::ReconstructSutehai(const GameTable* gameStat, PLAYER_ID targetPlayer) {
-	unsigned tilePosCol = 0, tilePosRow = 0; bool shiftPosFlag = false;
-	for (unsigned i = 0; i < 17; ++i) {
-		ReconstructSutehai_portrait(gameStat, targetPlayer, i, tilePosCol, tilePosRow, shiftPosFlag);
+	unsigned tilePosCol = 0, tilePosRow = 0; bool shiftPosFlag = false, riichiFlag = false;
+	for (unsigned i = 0; i < gameStat->Player.val[targetPlayer].DiscardPointer; ++i) {
+		if ((gameStat->Player.val[targetPlayer].Discard[i + 1].dstat == discardRiichi) ||
+			(gameStat->Player.val[targetPlayer].Discard[i + 1].dstat == discardRiichiTaken))
+			riichiFlag = true;
+		if ((gameStat->Player.val[targetPlayer].Discard[i + 1].dstat == discardNormal) ||
+			(gameStat->Player.val[targetPlayer].Discard[i + 1].dstat == discardRiichi)) {
+				if (riichiFlag) {
+					ReconstructSutehai_rotated(gameStat, targetPlayer, i, tilePosCol, tilePosRow, shiftPosFlag);
+					riichiFlag = false;
+				} else {
+					ReconstructSutehai_portrait(gameStat, targetPlayer, i, tilePosCol, tilePosRow, shiftPosFlag);
+				}
+		}
 	}
 }
 
