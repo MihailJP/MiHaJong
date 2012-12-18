@@ -17,13 +17,14 @@ ShowTile::~ShowTile() {
 }
 
 /* 新規の牌オブジェクトを作成する */
-void ShowTile::NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side) {
+void ShowTile::NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, D3DCOLOR filterCol) {
 	if (mySprites.size() <= ID) mySprites.resize(ID + 1, nullptr); // 配列の拡張
 	if (!mySprites[ID]) DelTile(ID); // 既に存在した場合
 	mySprites[ID] = new TileDescriptor;
 	mySprites[ID]->tile = tile; mySprites[ID]->red = red;
 	mySprites[ID]->X = x; mySprites[ID]->Y = y;
 	mySprites[ID]->direction = direction; mySprites[ID]->side = side;
+	mySprites[ID]->color = filterCol;
 	if (FAILED(D3DXCreateSprite(myDevice, &mySprites[ID]->sprite)))
 		throw _T("スプライトの生成に失敗しました");
 }
@@ -39,7 +40,7 @@ void ShowTile::DelTile(unsigned int ID) {
 /* レンダリング */
 void ShowTile::RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY) {
 	SpriteRenderer::ShowSprite(tile->sprite, TileTexture, tile->X, tile->Y,
-		CenterX*2, CenterY*2, 0xffffffff, rect, CenterX, CenterY);
+		CenterX*2, CenterY*2, tile->color, rect, CenterX, CenterY);
 }
 void ShowTile::RenderVert(TileDescriptor* tile, RECT* rect) {
 	RenderTile(tile, rect, VertTileWidth/2, VertTileHeight/2);

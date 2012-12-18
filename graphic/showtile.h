@@ -35,7 +35,7 @@ private:
 	void RenderHori(TileDescriptor* tile, RECT* rect);
 	void RenderSide(TileDescriptor* tile, RECT* rect);
 public:
-	void NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side);
+	void NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, D3DCOLOR filterCol = 0xffffffff);
 	void DelTile(unsigned int ID);
 	void Render();
 	ShowTile(LPDIRECT3DDEVICE9 device);
@@ -49,6 +49,7 @@ struct ShowTile::TileDescriptor {
 	int X, Y;
 	TileDirection direction;
 	TileSide side;
+	D3DCOLOR color;
 };
 
 }
