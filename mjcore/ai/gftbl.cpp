@@ -520,7 +520,7 @@ int aiscript::table::functable::gametbl::luafunc::isippatsu(lua_State* const L) 
 	int n = chkargnum(L, 1, 2);
 	PLAYER_ID player = getPlayerID(L, 2);
 	if (RuleData::chkRuleApplied("riichi_ippatsu")) lua_pushnil(L);
-	else lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].RichiFlag.IppatsuFlag);
+	else lua_pushboolean(L, getGameStatAddr(L)->Player[player].RichiFlag.IppatsuFlag);
 	return 1;
 }
 
@@ -536,7 +536,7 @@ int aiscript::table::functable::gametbl::luafunc::iskyuushu(lua_State* const L) 
 int aiscript::table::functable::gametbl::luafunc::ismenzen(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	PLAYER_ID player = getPlayerID(L, 2);
-	lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].MenzenFlag);
+	lua_pushboolean(L, getGameStatAddr(L)->Player[player].MenzenFlag);
 	return 1;
 }
 
@@ -544,7 +544,7 @@ int aiscript::table::functable::gametbl::luafunc::ismenzen(lua_State* const L) {
 int aiscript::table::functable::gametbl::luafunc::isopenriichideclared(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	PLAYER_ID player = getPlayerID(L, 2);
-	lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].RichiFlag.OpenFlag);
+	lua_pushboolean(L, getGameStatAddr(L)->Player[player].RichiFlag.OpenFlag);
 	return 1;
 }
 
@@ -560,7 +560,7 @@ int aiscript::table::functable::gametbl::luafunc::ispenultimateround(lua_State* 
 int aiscript::table::functable::gametbl::luafunc::isriichideclared(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	PLAYER_ID player = getPlayerID(L, 2);
-	lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].RichiFlag.RichiFlag);
+	lua_pushboolean(L, getGameStatAddr(L)->Player[player].RichiFlag.RichiFlag);
 	return 1;
 }
 
@@ -585,7 +585,7 @@ int aiscript::table::functable::gametbl::luafunc::issumaroallowed(lua_State* con
 	int n = chkargnum(L, 1, 2);
 	PLAYER_ID player = getPlayerID(L, 2);
 	if (RuleData::chkRuleApplied("sumaro")) lua_pushnil(L);
-	else lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].SumaroFlag);
+	else lua_pushboolean(L, getGameStatAddr(L)->Player[player].SumaroFlag);
 	return 1;
 }
 
@@ -594,6 +594,6 @@ int aiscript::table::functable::gametbl::luafunc::isyakitori(lua_State* const L)
 	int n = chkargnum(L, 1, 2);
 	PLAYER_ID player = getPlayerID(L, 2);
 	if (RuleData::chkRuleApplied("yakitori")) lua_pushnil(L);
-	else lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].YakitoriFlag);
+	else lua_pushboolean(L, getGameStatAddr(L)->Player[player].YakitoriFlag);
 	return 1;
 }

@@ -925,7 +925,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		const int rules = 4;
 		const char ruleCodeList[rules][16] = {"univ_tokyo", "univ_hokkaido", "univ_chuo", "univ_hakuoh"};
 		const tileCode tileCodeList[rules] = {EastWind, NorthWind, RedDragon, WhiteDragon};
-		const char yakuNameList[rules][16] = {"“Œ‘å–ğ–", "–k‘å–ğ–", "’†‘å–ğ–", "”’cŠw‰€"};
+		const char yakuNameList[rules][16] = {"“Œ‘å–ğ–", "–k‘å–ğ–", "’†‘å–ğ–", "”’cŠw‰@"};
 		for (int i = 0; i < rules; i++) {
 			const tileCode targetTile = tileCodeList[i];
 			if (RuleData::chkRuleApplied(ruleCodeList[i]))
