@@ -16,6 +16,7 @@ void aiscript::table::functable::inittable(lua_State* const L, int playerID) {
 	gametype(L); // string 'gametype'
 	version(L); // subtable 'version'
 	lua_pushcfunction(L, log); lua_setfield(L, -2, "log"); // function 'log'
+	lua_pushcfunction(L, say); lua_setfield(L, -2, "say"); // function 'say'
 	lockTable(L); // mark as read-only
 	lua_setglobal(L, tblname); // global table
 }

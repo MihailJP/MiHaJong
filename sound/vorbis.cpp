@@ -30,12 +30,12 @@ void sound::OggData::Prepare(const std::string& filename) {
 	// ƒf[ƒ^“Ç‚İ‚İ
 	char buf[1 << 22 /* 4 MiB */] = {0,}; long bytes_read = 0; int current = 0;
 	do {
-		bytes_read = ov_read(ovFile, buf, 1 << 22, 0, 1, 1, &current);
+		bytes_read = ov_read(ovFile, buf, (1 << 22) - 1, 0, 2, 1, &current);
 		if (bytes_read == OV_HOLE) throw CodeConv::tstring(_T("“Ç‚İ‚İ‚ÍOV_HOLE‚Å¸”s‚µ‚Ü‚µ‚½"));
 		else if (bytes_read == OV_EBADLINK) throw CodeConv::tstring(_T("“Ç‚İ‚İ‚ÍOV_EBADLINK‚Å¸”s‚µ‚Ü‚µ‚½"));
 		else if (bytes_read == OV_EINVAL) throw CodeConv::tstring(_T("“Ç‚İ‚İ‚ÍOV_EINVAL‚Å¸”s‚µ‚Ü‚µ‚½"));
 		else if (bytes_read)
-			buffer.insert(buffer.end(), &buf[0], &buf[bytes_read - 1]);
+			buffer.insert(buffer.end(), &buf[0], &buf[bytes_read]);
 	} while (bytes_read);
 	// “Ç‚İI‚í‚è
 	fclose(file); delete ovFile;
