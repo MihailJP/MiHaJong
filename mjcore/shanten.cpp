@@ -423,7 +423,7 @@ SHANTEN ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, PL
 				++qTileCount; --tmpTileCount[QixingPai[i]];
 			}
 		}
-		SHANTEN tmpShanten = 12 - qTileCount - chkMianzi(gameStat, playerID, tmpTileCount, 1);
+		SHANTEN tmpShanten = 11 - qTileCount - chkMianzi(gameStat, playerID, tmpTileCount, 1);
 		// –Â‚«–ÊŽq‚âˆÃžÈ‚ª2‚ÂˆÈã‚ ‚éê‡‚Í•s‰Â”\
 		if (gameStat->Player[playerID].MeldPointer > 1) shanten = SHANTEN_IMPOSSIBLE;
 		if (tmpShanten < shanten) shanten = tmpShanten;
