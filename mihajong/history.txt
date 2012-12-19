@@ -5,6 +5,22 @@
 
 ■ バージョン履歴
 
+	▼ [1.8.8] 2012年12月19日
+
+		　mihajongテーブルにsay関数を追加し忘れていたのを修正
+		　AIスクリプトAPIで一部の関数でプレイヤー番号の指定が無視されるのを修
+		正。影響のあった関数は以下の通り。
+			・gametbl:isippatsu
+			・gametbl:ismenzen
+			・gametbl:isopenriichideclared
+			・gametbl:isriichideclared
+			・gametbl:issumaroallowed
+			・gametbl:isyakitori
+		　清連環套が判定されないのを修正
+		　東方風神録で和了り牌の判定が抜けていたのを修正
+		　設定ファイルの誤字修正
+		　組合龍が判定されないのを修正
+
 	▼ [1.9.0] 2012年11月23日
 
 		　サウンド再生処理を移植。
