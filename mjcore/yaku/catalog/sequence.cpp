@@ -595,7 +595,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			"´˜AŠÂ“…", get_yaku_han("yamasanjun"),
 			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return puukao(analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 2, true);
+				return puukao(analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 2, false);
 			}
 		));
 	/* “ñFl•à‚ */
