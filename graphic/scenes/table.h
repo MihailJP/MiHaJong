@@ -41,6 +41,15 @@ protected: /**** リーチ棒 ****/
 	static const unsigned int RiichiPosV = (TableSize / 2) + 86;
 	LPDIRECT3DTEXTURE9 tRichi; LPD3DXSPRITE sRichi[PLAYERS];  // リーチ棒
 	void ShowRiichibou(const GameTable* gameStat); // リーチ棒の再構築
+protected: /**** サイコロ ****/
+	static const unsigned int DiceWidth = 24;
+	static const unsigned int DiceHeight = 34;
+	static const unsigned int DicePadding = 2;
+	static const unsigned int DicePosH = TableSize - 230;
+	static const unsigned int DicePosV = TableSize - 70;
+	static const unsigned int DicePosInterstice = DiceWidth / 3;
+	LPDIRECT3DTEXTURE9 tDice; LPD3DXSPRITE sDice[2]; // サイコロ
+	void ShowDice(const GameTable* gameStat); // サイコロを表示する
 protected:
 	void ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // プレイヤー関係の画面の再構築
 	void Reconstruct(const GameTable* gameStat); // 画面の再描画

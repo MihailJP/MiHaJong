@@ -21,12 +21,18 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	LoadTexture(&tRichi, MAKEINTRESOURCE(IDB_PNG_TENBOU), 218, 148);
 	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 		InitSprite(&sRichi[i]);
+	LoadTexture(&tDice, MAKEINTRESOURCE(IDB_PNG_DICE), 156, 144);
+	for (int i = 0; i < 2; ++i)
+		InitSprite(&sDice[i]);
 	nakihaiReconst = new NakihaiReconst(this);
 	Reconstruct(GameStatus::gameStat());
 }
 
 GameTableScreen::~GameTableScreen() {
 	delete nakihaiReconst;
+	if (tDice) tDice->Release();
+	for (int i = 0; i < 2; ++i)
+		if (sDice[i]) sDice[i]->Release();
 	if (tRichi) tRichi->Release();
 	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 		if (sRichi[i]) sRichi[i]->Release();
@@ -357,6 +363,44 @@ void GameTableScreen::ShowRiichibou(const GameTable* gameStat) {
 	}
 }
 
+/* サイコロを表示する */
+void GameTableScreen::ShowDice(const GameTable* gameStat) {
+	RECT rect1 = {
+		(DiceWidth + DicePadding) * (gameStat->Dice[0].Number - 1), (DiceHeight + DicePadding) * (gameStat->Dice[0].Direction    ),
+		(DiceWidth + DicePadding) * (gameStat->Dice[0].Number    ), (DiceHeight + DicePadding) * (gameStat->Dice[0].Direction + 1),
+	};
+	RECT rect2 = {
+		(DiceWidth + DicePadding) * (gameStat->Dice[1].Number - 1), (DiceHeight + DicePadding) * (gameStat->Dice[1].Direction    ),
+		(DiceWidth + DicePadding) * (gameStat->Dice[1].Number    ), (DiceHeight + DicePadding) * (gameStat->Dice[1].Direction + 1),
+	};
+	switch (playerRelative(gameStat->GameRound % PLAYERS, gameStat->PlayerID)) {
+	case sSelf:
+		SpriteRenderer::ShowSprite(sDice[0], tDice, DicePosH - (DiceWidth + DicePosInterstice) / 2, DicePosV,
+			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
+		SpriteRenderer::ShowSprite(sDice[1], tDice, DicePosH + (DiceWidth + DicePosInterstice) / 2, DicePosV,
+			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
+		break;
+	case sOpposite:
+		SpriteRenderer::ShowSprite(sDice[0], tDice, TableSize - DicePosH + (DiceWidth + DicePosInterstice) / 2, TableSize - DicePosV,
+			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
+		SpriteRenderer::ShowSprite(sDice[1], tDice, TableSize - DicePosH - (DiceWidth + DicePosInterstice) / 2, TableSize - DicePosV,
+			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
+		break;
+	case sLeft:
+		SpriteRenderer::ShowSprite(sDice[0], tDice, TableSize - DicePosV, DicePosH - (DiceWidth + DicePosInterstice) / 2,
+			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
+		SpriteRenderer::ShowSprite(sDice[1], tDice, TableSize - DicePosV, DicePosH + (DiceWidth + DicePosInterstice) / 2,
+			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
+		break;
+	case sRight:
+		SpriteRenderer::ShowSprite(sDice[0], tDice, DicePosV, TableSize - DicePosH - (DiceWidth + DicePosInterstice) / 2,
+			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
+		SpriteRenderer::ShowSprite(sDice[1], tDice, DicePosV, TableSize - DicePosH + (DiceWidth + DicePosInterstice) / 2,
+			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
+		break;
+	}
+}
+
 void GameTableScreen::Render() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 		D3DCOLOR_XRGB(0, 128, 0), 1.0f, 0); // バッファクリア
@@ -366,6 +410,7 @@ void GameTableScreen::Render() {
 	if (GameStatus::isModified())
 		Reconstruct(GameStatus::gameStat());
 	ShowRiichibou(GameStatus::gameStat());
+	ShowDice(GameStatus::gameStat());
 	TileTexture->Render();
 }
 
