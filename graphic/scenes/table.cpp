@@ -21,12 +21,12 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	LoadTexture(&tRichi, MAKEINTRESOURCE(IDB_PNG_TENBOU), 218, 148);
 	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 		InitSprite(&sRichi[i]);
-	yamahaiReconst = new YamahaiReconst(this);
+	nakihaiReconst = new NakihaiReconst(this);
 	Reconstruct(GameStatus::gameStat());
 }
 
 GameTableScreen::~GameTableScreen() {
-	delete yamahaiReconst;
+	delete nakihaiReconst;
 	if (tRichi) tRichi->Release();
 	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 		if (sRichi[i]) sRichi[i]->Release();
@@ -309,7 +309,7 @@ void GameTableScreen::ReconstructSutehai(const GameTable* gameStat, PLAYER_ID ta
 void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer) {
 	ReconstructYamahai(gameStat, targetPlayer, trueTargetPlayer);
 	ReconstructTehai(gameStat, targetPlayer);
-	yamahaiReconst->ReconstructNakihai(gameStat, targetPlayer);
+	nakihaiReconst->ReconstructNakihai(gameStat, targetPlayer);
 	ReconstructSutehai(gameStat, targetPlayer);
 }
 
@@ -373,7 +373,7 @@ void GameTableScreen::Render() {
 
 /* –Â‚¢‚½”v‚ð•\Ž¦‚·‚é */
 std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, std::function<int (unsigned)>, TileDirection, TileDirection, TileDirection>
-	GameTableScreen::YamahaiReconst::playerPosition(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID,
+	GameTableScreen::NakihaiReconst::playerPosition(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID,
 	unsigned h1, unsigned h2, unsigned h3, unsigned h4, unsigned v1, unsigned v2, unsigned v3, unsigned v4,
 	bool r1, bool r2, bool r3, bool r4)
 {
@@ -473,7 +473,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 		throw "Argument error";
 	}
 }
-void GameTableScreen::YamahaiReconst::NakihaiAnkan(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
+void GameTableScreen::NakihaiReconst::NakihaiAnkan(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
 	assert(tile->mstat == meldQuadConcealed);
@@ -489,7 +489,7 @@ void GameTableScreen::YamahaiReconst::NakihaiAnkan(const GameTable* gameStat, PL
 	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[1], x(2), y(2), vert, AnkanExpose);
 	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[3], x(3), y(3), vert, Reverse);
 }
-void GameTableScreen::YamahaiReconst::NakihaiKamicha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
+void GameTableScreen::NakihaiReconst::NakihaiKamicha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
 	assert((tile->mstat == meldTripletExposedLeft) || (tile->mstat == meldQuadAddedLeft) ||
@@ -511,7 +511,7 @@ void GameTableScreen::YamahaiReconst::NakihaiKamicha(const GameTable* gameStat, 
 		caller->TileTexture->NewTile(num(2), tileL, tile->red[3], x(2), y(2), hor, Obverse);
 	caller->TileTexture->NewTile(num(3), tileL, redL, x(3), y(3), hor, Obverse);
 }
-void GameTableScreen::YamahaiReconst::NakihaiToimen(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
+void GameTableScreen::NakihaiReconst::NakihaiToimen(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
 	assert((tile->mstat == meldTripletExposedCenter) || (tile->mstat == meldQuadAddedCenter));
@@ -525,7 +525,7 @@ void GameTableScreen::YamahaiReconst::NakihaiToimen(const GameTable* gameStat, P
 	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[0], x(2), y(2), hor, Obverse);
 	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
-void GameTableScreen::YamahaiReconst::NakihaiShimocha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
+void GameTableScreen::NakihaiReconst::NakihaiShimocha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
 	assert((tile->mstat == meldTripletExposedRight) || (tile->mstat == meldQuadAddedRight));
@@ -539,7 +539,7 @@ void GameTableScreen::YamahaiReconst::NakihaiShimocha(const GameTable* gameStat,
 	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[2], x(2), y(2), vert, Obverse);
 	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
-void GameTableScreen::YamahaiReconst::MinkanKamicha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
+void GameTableScreen::NakihaiReconst::MinkanKamicha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
 	assert(tile->mstat == meldQuadExposedLeft);
@@ -552,7 +552,7 @@ void GameTableScreen::YamahaiReconst::MinkanKamicha(const GameTable* gameStat, P
 	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[1], x(2), y(2), vert, Obverse);
 	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[0], x(3), y(3), hor, Obverse);
 }
-void GameTableScreen::YamahaiReconst::MinkanToimen(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
+void GameTableScreen::NakihaiReconst::MinkanToimen(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
 	assert(tile->mstat == meldQuadExposedCenter);
@@ -565,7 +565,7 @@ void GameTableScreen::YamahaiReconst::MinkanToimen(const GameTable* gameStat, PL
 	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[0], x(2), y(2), hor, Obverse);
 	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
-void GameTableScreen::YamahaiReconst::MinkanShimocha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
+void GameTableScreen::NakihaiReconst::MinkanShimocha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const meldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
 	assert(tile->mstat == meldQuadExposedRight);
@@ -578,7 +578,7 @@ void GameTableScreen::YamahaiReconst::MinkanShimocha(const GameTable* gameStat, 
 	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[2], x(2), y(2), vert, Obverse);
 	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
-void GameTableScreen::YamahaiReconst::NakihaiSelRoutine(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
+void GameTableScreen::NakihaiReconst::NakihaiSelRoutine(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	switch (gameStat->Player.val[targetPlayer].Meld[meldID].mstat) {
 	case meldSequenceExposedLower: case meldSequenceExposedMiddle: case meldSequenceExposedUpper:
 	case meldTripletExposedLeft: case meldQuadAddedLeft:
@@ -604,7 +604,7 @@ void GameTableScreen::YamahaiReconst::NakihaiSelRoutine(const GameTable* gameSta
 		break;
 	}
 }
-void GameTableScreen::YamahaiReconst::ReconstructNakihai(const GameTable* gameStat, PLAYER_ID targetPlayer) {
+void GameTableScreen::NakihaiReconst::ReconstructNakihai(const GameTable* gameStat, PLAYER_ID targetPlayer) {
 	unsigned posOffset[5] = {0,};
 	for (int i = 1; i <= gameStat->Player.val[targetPlayer].MeldPointer; ++i) {
 		switch (gameStat->Player.val[targetPlayer].Meld[i].mstat) {

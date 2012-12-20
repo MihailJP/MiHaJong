@@ -8,43 +8,49 @@
 namespace mihajong_graphic {
 
 class GameTableScreen : public TableProtoScene {
-private:
+protected:
 	static const unsigned int TableSize = Geometry::BaseSize;
 	static const unsigned int TileThickness = ShowTile::HoriTileHeight - ShowTile::VertTileWidth;
+	LPDIRECT3DTEXTURE9 tBorder; LPD3DXSPRITE sBorder; // ‘ì‚Ì˜g
+	LPDIRECT3DTEXTURE9 tBaize; LPD3DXSPRITE sBaize; // —…Ñ’n
+protected: /**** R”v ****/
 	static const unsigned int DeckChainLength = 17;
 	static const unsigned int DeckPosH = (TableSize - ShowTile::VertTileWidth * (DeckChainLength - 1)) / 2;
 	static const unsigned int DeckPosV = (TableSize / 2) - 300;
+	void ReconstructYamahai(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // R”v‚ÌÄ\’z
+protected: /**** è”v ****/
 	static const unsigned int HandLength = 13;
 	static const unsigned int HandPosH = (TableSize - ShowTile::VertTileWidth * (HandLength - 1)) / 2;
 	static const unsigned int HandPosV = DeckPosV - 144;
+	void ReconstructTehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // è”v‚ÌÄ\’z
+protected: /**** –Â‚«”v ****/
+	class NakihaiReconst; // ˆ—‚Í“à•”ƒNƒ‰ƒX‚É‚Ü‚Æ‚ß‚Ä‚ ‚é
+	friend class GameTableScreen::NakihaiReconst;
+	NakihaiReconst* nakihaiReconst;
+protected: /**** Ì”v ****/
 	static const unsigned int DiscardLineLength = 6;
 	static const unsigned int DiscardPosH = (TableSize - ShowTile::VertTileWidth * (DiscardLineLength - 1)) / 2;
 	static const unsigned int DiscardPosV = (TableSize / 2) - 130;
-	static const unsigned int RiichiPosH = TableSize / 2;
-	static const unsigned int RiichiPosV = (TableSize / 2) + 86;
-	LPDIRECT3DTEXTURE9 tBorder; LPD3DXSPRITE sBorder; // ‘ì‚Ì˜g
-	LPDIRECT3DTEXTURE9 tBaize; LPD3DXSPRITE sBaize; // —…Ñ’n
-	LPDIRECT3DTEXTURE9 tRichi; LPD3DXSPRITE sRichi[PLAYERS];  // ƒŠ[ƒ`–_
-	void ReconstructYamahai(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // R”v‚ÌÄ\’z
-	void ReconstructTehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // è”v‚ÌÄ\’z
 	void ReconstructSutehai_portrait(const GameTable* gameStat, PLAYER_ID targetPlayer,
 		unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos);
 	void ReconstructSutehai_rotated(const GameTable* gameStat, PLAYER_ID targetPlayer,
 		unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos);
 	void ReconstructSutehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // Ì”v‚ÌÄ\’z
+protected: /**** ƒŠ[ƒ`–_ ****/
+	static const unsigned int RiichiPosH = TableSize / 2;
+	static const unsigned int RiichiPosV = (TableSize / 2) + 86;
+	LPDIRECT3DTEXTURE9 tRichi; LPD3DXSPRITE sRichi[PLAYERS];  // ƒŠ[ƒ`–_
 	void ShowRiichibou(const GameTable* gameStat); // ƒŠ[ƒ`–_‚ÌÄ\’z
-	class YamahaiReconst;
-	friend class GameTableScreen::YamahaiReconst;
-	YamahaiReconst* yamahaiReconst;
+protected:
 	void ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // ƒvƒŒƒCƒ„[ŠÖŒW‚Ì‰æ–Ê‚ÌÄ\’z
 	void Reconstruct(const GameTable* gameStat); // ‰æ–Ê‚ÌÄ•`‰æ
 public:
 	GameTableScreen(ScreenManipulator* const manipulator);
-	~GameTableScreen();
+	virtual ~GameTableScreen();
 	void Render();
 };
 
-class GameTableScreen::YamahaiReconst {
+class GameTableScreen::NakihaiReconst {
 private:
 	static const unsigned int MeldPosH = TableSize - 31;
 	static const unsigned int MeldPosV = DeckPosV - 166;
@@ -69,7 +75,7 @@ private:
 public:
 	GameTableScreen* caller;
 	void ReconstructNakihai(const GameTable* gameStat, PLAYER_ID targetPlayer); // –Â‚¢‚½”v‚ÌÄ\’z
-	YamahaiReconst(GameTableScreen* parent) {caller = parent;}
+	NakihaiReconst(GameTableScreen* parent) {caller = parent;}
 };
 
 }
