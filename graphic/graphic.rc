@@ -27,6 +27,7 @@ IDB_PNG_DICE          PNG_FILE         ".\\data\\dice.png"
 IDB_PNG_FONT_SMALL    PNG_FILE         ".\\data\\smallchr.png"
 IDB_PNG_TEXTBOX       PNG_FILE         ".\\data\\editbox.png"
 IDB_PNG_TENBOU        PNG_FILE         ".\\data\\tenbou.png"
+IDB_PNG_CHICHAMARK    PNG_FILE         ".\\data\\chiicha.png"
 
 
 
