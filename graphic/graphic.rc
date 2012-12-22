@@ -15,19 +15,20 @@
 // Bitmap resources
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-IDB_PNG_TBLBAIZE      PNG_FILE         ".\\data\\baize.png"
-IDB_PNG_TBLBORDER     PNG_FILE         ".\\data\\frame.png"
-IDB_PNG_SDBAR         PNG_FILE         ".\\data\\sidebar.png"
-IDB_PNG_TILE          PNG_FILE         ".\\data\\tiles.png"
-IDB_PNG_FONT          PNG_FILE         ".\\data\\font.png"
-IDB_PNG_TITLE         PNG_FILE         ".\\data\\title.png"
-IDB_PNG_BUTTON        PNG_FILE         ".\\data\\button.png"
-IDB_PNG_FONT_HUGE     PNG_FILE         ".\\data\\largechr.png"
-IDB_PNG_DICE          PNG_FILE         ".\\data\\dice.png"
-IDB_PNG_FONT_SMALL    PNG_FILE         ".\\data\\smallchr.png"
-IDB_PNG_TEXTBOX       PNG_FILE         ".\\data\\editbox.png"
-IDB_PNG_TENBOU        PNG_FILE         ".\\data\\tenbou.png"
-IDB_PNG_CHICHAMARK    PNG_FILE         ".\\data\\chiicha.png"
+IDB_PNG_TBLBAIZE              PNG_FILE ".\\data\\baize.png"
+IDB_PNG_TBLBORDER             PNG_FILE ".\\data\\frame.png"
+IDB_PNG_SDBAR                 PNG_FILE ".\\data\\sidebar.png"
+IDB_PNG_TILE                  PNG_FILE ".\\data\\tiles.png"
+IDB_PNG_FONT                  PNG_FILE ".\\data\\font.png"
+IDB_PNG_TITLE                 PNG_FILE ".\\data\\title.png"
+IDB_PNG_BUTTON                PNG_FILE ".\\data\\button.png"
+IDB_PNG_FONT_HUGE             PNG_FILE ".\\data\\largechr.png"
+IDB_PNG_DICE                  PNG_FILE ".\\data\\dice.png"
+IDB_PNG_FONT_SMALL            PNG_FILE ".\\data\\smallchr.png"
+IDB_PNG_TEXTBOX               PNG_FILE ".\\data\\editbox.png"
+IDB_PNG_TENBOU                PNG_FILE ".\\data\\tenbou.png"
+IDB_PNG_CHICHAMARK            PNG_FILE ".\\data\\chiicha.png"
+IDB_PNG_SCORE_INDICATOR       PNG_FILE ".\\data\\score.png"
 
 
 
