@@ -50,6 +50,33 @@ protected: /**** サイコロ ****/
 	static const unsigned int DicePosInterstice = DiceWidth / 3;
 	LPDIRECT3DTEXTURE9 tDice; LPD3DXSPRITE sDice[2]; // サイコロ
 	void ShowDice(const GameTable* gameStat); // サイコロを表示する
+protected: /**** 起家マーク・ヤキトリマークを置く凹み ****/
+	static const unsigned int TrayHLeft = 275;
+	static const unsigned int TrayHTop = 75;
+	static const unsigned int TrayHRight = 373;
+	static const unsigned int TrayHBottom = 115;
+	static const unsigned int TrayHWidth = TrayHRight - TrayHLeft;
+	static const unsigned int TrayHHeight = TrayHBottom - TrayHTop;
+	static const unsigned int TrayVLeft = 377;
+	static const unsigned int TrayVTop = 1;
+	static const unsigned int TrayVRight = 417;
+	static const unsigned int TrayVBottom = 99;
+	static const unsigned int TrayVWidth = TrayVRight - TrayVLeft;
+	static const unsigned int TrayVHeight = TrayVBottom - TrayVTop;
+	static const unsigned int TrayPosH = TableSize - 200;
+	static const unsigned int TrayPosV = TableSize - 24;
+	void ShowTray(); // 起家マークを置く場所表示
+	/* テクスチャは起家マークと同一ファイル */ LPD3DXSPRITE sTray[PLAYERS]; // 起家マーク置き場
+protected: /**** 起家マーク ****/
+	static const unsigned int PlateWidthH = 45;
+	static const unsigned int PlateHeightH = 35;
+	static const unsigned int PlateWidthV = 32;
+	static const unsigned int PlateHeightV = 48;
+	static const unsigned int PlatePadding = 1;
+	static const unsigned int PlatePosH = TrayPosH + (PlateWidthH / 2) + PlatePadding;
+	static const unsigned int PlatePosV = TrayPosV;
+	LPDIRECT3DTEXTURE9 tChiicha; LPD3DXSPRITE sChiicha; // 起家マーク
+	void ShowChiicha(const GameTable* gameStat); // 起家マークを表示する
 protected:
 	void ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // プレイヤー関係の画面の再構築
 	void Reconstruct(const GameTable* gameStat); // 画面の再描画

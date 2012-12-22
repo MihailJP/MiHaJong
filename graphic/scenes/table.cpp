@@ -18,6 +18,9 @@ namespace {
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080); InitSprite(&sBorder);
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080); InitSprite(&sBaize);
+	LoadTexture(&tChiicha, MAKEINTRESOURCE(IDB_PNG_CHICHAMARK), 419, 174); InitSprite(&sChiicha);
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+		InitSprite(&sTray[i]);
 	LoadTexture(&tRichi, MAKEINTRESOURCE(IDB_PNG_TENBOU), 218, 148);
 	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 		InitSprite(&sRichi[i]);
@@ -401,6 +404,67 @@ void GameTableScreen::ShowDice(const GameTable* gameStat) {
 	}
 }
 
+/* 起家マークを置く凹み */
+void GameTableScreen::ShowTray() {
+	RECT rect1 = {TrayHLeft, TrayHTop, TrayHRight, TrayHBottom,};
+	RECT rect2 = {TrayVLeft, TrayVTop, TrayVRight, TrayVBottom,};
+	SpriteRenderer::ShowSprite(sTray[0], tChiicha, TrayPosH, TrayPosV,
+		TrayHWidth, TrayHHeight, 0xffffffff, &rect1, TrayHWidth / 2, TrayHHeight / 2);
+	SpriteRenderer::ShowSprite(sTray[1], tChiicha, TableSize - TrayPosH, TableSize - TrayPosV,
+		TrayHWidth, TrayHHeight, 0xffffffff, &rect1, TrayHWidth / 2, TrayHHeight / 2);
+	SpriteRenderer::ShowSprite(sTray[2], tChiicha, TableSize - TrayPosV, TrayPosH,
+		TrayVWidth, TrayVHeight, 0xffffffff, &rect2, TrayVWidth / 2, TrayVHeight / 2);
+	SpriteRenderer::ShowSprite(sTray[3], tChiicha, TrayPosV, TableSize - TrayPosH,
+		TrayVWidth, TrayVHeight, 0xffffffff, &rect2, TrayVWidth / 2, TrayVHeight / 2);
+}
+
+/* 起家マークの表示 */
+void GameTableScreen::ShowChiicha(const GameTable* gameStat) {
+	switch (playerRelative(0, gameStat->PlayerID)) {
+	case sSelf:
+		{
+			RECT rect = {
+				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / PLAYERS    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (0    ) + PlatePadding,
+				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / PLAYERS + 1) - PlatePadding, (PlateHeightH + PlatePadding * 2) * (0 + 1) - PlatePadding,
+			};
+			SpriteRenderer::ShowSprite(sChiicha, tChiicha, PlatePosH, PlatePosV,
+				PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
+		}
+		break;
+	case sOpposite:
+		{
+			RECT rect = {
+				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / PLAYERS    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (1    ) + PlatePadding,
+				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / PLAYERS + 1) - PlatePadding, (PlateHeightH + PlatePadding * 2) * (1 + 1) - PlatePadding,
+			};
+			SpriteRenderer::ShowSprite(sChiicha, tChiicha, TableSize - PlatePosH, TableSize - PlatePosV,
+				PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
+		}
+		break;
+	case sRight:
+		{
+			RECT rect = {
+				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / PLAYERS    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (0    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
+				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / PLAYERS + 1) - PlatePadding, (PlateHeightV + PlatePadding * 2) * (0 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
+			};
+			SpriteRenderer::ShowSprite(sChiicha, tChiicha, PlatePosV, TableSize - PlatePosH,
+				PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
+		}
+		break;
+	case sLeft:
+		{
+			RECT rect = {
+				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / PLAYERS    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (1    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
+				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / PLAYERS + 1) - PlatePadding, (PlateHeightV + PlatePadding * 2) * (1 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
+			};
+			SpriteRenderer::ShowSprite(sChiicha, tChiicha, TableSize - PlatePosV, PlatePosH,
+				PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
+		}
+		break;
+	}
+}
+
+/* 卓を表示 ここから */
 void GameTableScreen::Render() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 		D3DCOLOR_XRGB(0, 128, 0), 1.0f, 0); // バッファクリア
@@ -411,6 +475,8 @@ void GameTableScreen::Render() {
 		Reconstruct(GameStatus::gameStat());
 	ShowRiichibou(GameStatus::gameStat());
 	ShowDice(GameStatus::gameStat());
+	ShowTray();
+	ShowChiicha(GameStatus::gameStat());
 	TileTexture->Render();
 }
 
