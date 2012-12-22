@@ -464,6 +464,55 @@ void GameTableScreen::ShowChiicha(const GameTable* gameStat) {
 	}
 }
 
+/* ヤキトリマークの表示 */
+void GameTableScreen::ShowYakitori(const GameTable* gameStat) {
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
+		if (!gameStat->Player.val[i].YakitoriFlag) continue;
+		switch (playerRelative(i, gameStat->PlayerID)) {
+		case sSelf:
+			{
+				RECT rect = {
+					(PlateWidthH + PlatePadding * 2) * (PlateID_Yakitori    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (0    ) + PlatePadding,
+					(PlateWidthH + PlatePadding * 2) * (PlateID_Yakitori + 1) - PlatePadding, (PlateHeightH + PlatePadding * 2) * (0 + 1) - PlatePadding,
+				};
+				SpriteRenderer::ShowSprite(sChiicha, tChiicha, YakitoriPosH, YakitoriPosV,
+					PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
+			}
+			break;
+		case sOpposite:
+			{
+				RECT rect = {
+					(PlateWidthH + PlatePadding * 2) * (PlateID_Yakitori    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (1    ) + PlatePadding,
+					(PlateWidthH + PlatePadding * 2) * (PlateID_Yakitori + 1) - PlatePadding, (PlateHeightH + PlatePadding * 2) * (1 + 1) - PlatePadding,
+				};
+				SpriteRenderer::ShowSprite(sChiicha, tChiicha, TableSize - YakitoriPosH, TableSize - YakitoriPosV,
+					PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
+			}
+			break;
+		case sRight:
+			{
+				RECT rect = {
+					(PlateWidthV + PlatePadding * 2) * (PlateID_Yakitori    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (0    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
+					(PlateWidthV + PlatePadding * 2) * (PlateID_Yakitori + 1) - PlatePadding, (PlateHeightV + PlatePadding * 2) * (0 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
+				};
+				SpriteRenderer::ShowSprite(sChiicha, tChiicha, YakitoriPosV, TableSize - YakitoriPosH,
+					PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
+			}
+			break;
+		case sLeft:
+			{
+				RECT rect = {
+					(PlateWidthV + PlatePadding * 2) * (PlateID_Yakitori    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (1    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
+					(PlateWidthV + PlatePadding * 2) * (PlateID_Yakitori + 1) - PlatePadding, (PlateHeightV + PlatePadding * 2) * (1 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
+				};
+				SpriteRenderer::ShowSprite(sChiicha, tChiicha, TableSize - YakitoriPosV, YakitoriPosH,
+					PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
+			}
+			break;
+		}
+	}
+}
+
 /* 卓を表示 ここから */
 void GameTableScreen::Render() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
@@ -477,6 +526,7 @@ void GameTableScreen::Render() {
 	ShowDice(GameStatus::gameStat());
 	ShowTray();
 	ShowChiicha(GameStatus::gameStat());
+	ShowYakitori(GameStatus::gameStat());
 	TileTexture->Render();
 }
 

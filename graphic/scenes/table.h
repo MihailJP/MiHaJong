@@ -73,10 +73,16 @@ protected: /**** 起家マーク ****/
 	static const unsigned int PlateWidthV = 32;
 	static const unsigned int PlateHeightV = 48;
 	static const unsigned int PlatePadding = 1;
-	static const unsigned int PlatePosH = TrayPosH + (PlateWidthH / 2) + PlatePadding;
+	static const unsigned int PlatePosH = TrayPosH + (PlateWidthH / 2) + (PlatePadding * 2);
 	static const unsigned int PlatePosV = TrayPosV;
 	LPDIRECT3DTEXTURE9 tChiicha; LPD3DXSPRITE sChiicha; // 起家マーク
 	void ShowChiicha(const GameTable* gameStat); // 起家マークを表示する
+protected: /**** ヤキトリマーク ****/
+	static const unsigned int PlateID_Yakitori = 7;
+	static const unsigned int YakitoriPosH = TrayPosH - (PlateWidthH / 2) - (PlatePadding * 2);
+	static const unsigned int YakitoriPosV = TrayPosV;
+	/* テクスチャは起家マークと同一ファイル */ LPD3DXSPRITE sYakitori[PLAYERS]; // 起家マーク
+	void ShowYakitori(const GameTable* gameStat); // ヤキトリマークを表示する
 protected:
 	void ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // プレイヤー関係の画面の再構築
 	void Reconstruct(const GameTable* gameStat); // 画面の再描画
