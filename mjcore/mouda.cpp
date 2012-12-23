@@ -295,7 +295,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		CodeConv::tostringstream o;
 		o << _T("ƒvƒŒƒCƒ„[ [") << (int)gameStat->CurrentPlayer.Active <<
 			_T("] ‘Å”vƒ^ƒCƒv [") << (int)DiscardTileIndex.type <<
-			_T("Žè”v”Ô† [") << (int)DiscardTileIndex.id << _T("]");
+			_T("] Žè”v”Ô† [") << (int)DiscardTileIndex.id << _T("]");
 		info(o.str().c_str());
 	}
 	/* —§’¼‚µ‚Ä‚¢‚È‚¢“¯‡U’®‚È‚ç‚»‚ÌŠúŒÀ‚Ì‚½‚ßU’®‚ð‰ðœ‚·‚é */
