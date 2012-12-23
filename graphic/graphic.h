@@ -6,3 +6,4 @@
 #include "gametbl.h"
 #include "event.h"
 #include "rule.h"
+#include "utils.h"
