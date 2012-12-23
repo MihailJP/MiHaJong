@@ -158,14 +158,12 @@ void GameTableScreen::ReconstructTehai(const GameTable* gameStat, PLAYER_ID targ
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i)
 			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
-				++tilePos;
-		for (int i = 0; i <= HandLength; ++i)
-			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
 				TileTexture->NewTile(144+i,
 				gameStat->Player.val[targetPlayer].Hand[i].tile,
 				gameStat->Player.val[targetPlayer].Hand[i].red,
-				HandPosH + ShowTile::VertTileWidth * (--tilePos) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
+				HandPosH + ShowTile::VertTileWidth * (HandLength - (tilePos++)) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
 				HandPosV, UpsideDown, Obverse);
+			else TileTexture->DelTile(144+i);
 		break;
 	case sLeft: /* ã‰Æ‚ÌŽè”v */
 		tilePos = 0;
@@ -177,17 +175,22 @@ void GameTableScreen::ReconstructTehai(const GameTable* gameStat, PLAYER_ID targ
 				HandPosV,
 				HandPosH + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
 				Clockwise, Obverse);
+			else TileTexture->DelTile(144+14+i);
 		break;
 	case sRight: /* ‰º‰Æ‚ÌŽè”v */
 		tilePos = 0;
+		for (int i = HandLength; i >= 0; --i)
+			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
+				++tilePos;
 		for (int i = HandLength; i >= 0; --i)
 			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
 				TileTexture->NewTile(144+28+(13-i),
 				gameStat->Player.val[targetPlayer].Hand[i].tile,
 				gameStat->Player.val[targetPlayer].Hand[i].red,
 				TableSize - HandPosV,
-				HandPosH + ShowTile::VertTileWidth * (tilePos++) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
+				HandPosH + ShowTile::VertTileWidth * (HandLength - (--tilePos)) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
 				Withershins, Obverse);
+			else TileTexture->DelTile(144+28+(13-i));
 		break;
 	case sSelf: /* Ž©•ª‚ÌŽè”v */
 		tilePos = 0;
@@ -198,6 +201,7 @@ void GameTableScreen::ReconstructTehai(const GameTable* gameStat, PLAYER_ID targ
 				gameStat->Player.val[targetPlayer].Hand[i].red,
 				HandPosH + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
 				TableSize - HandPosV, Portrait, Obverse);
+			else TileTexture->DelTile(144+42+i);
 		break;
 	}
 }
