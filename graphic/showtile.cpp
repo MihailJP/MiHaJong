@@ -9,10 +9,13 @@ namespace mihajong_graphic {
 ShowTile::ShowTile(LPDIRECT3DDEVICE9 device) {
 	myDevice = device;
 	LoadTexture(myDevice, &TileTexture, MAKEINTRESOURCE(IDB_PNG_TILE), TextureWidth, TextureHeight);
+	if (FAILED(D3DXCreateSprite(myDevice, &sprite)))
+		throw _T("スプライトの生成に失敗しました");
 }
 ShowTile::~ShowTile() {
 	for (unsigned int i = 0; i < mySprites.size(); i++)
-		if (mySprites[i] && (mySprites[i]->sprite)) DelTile(i);
+		if (mySprites[i]) DelTile(i);
+	if (sprite) sprite->Release();
 	if (TileTexture) TileTexture->Release();
 }
 
@@ -25,21 +28,18 @@ void ShowTile::NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y
 	mySprites[ID]->X = x; mySprites[ID]->Y = y;
 	mySprites[ID]->direction = direction; mySprites[ID]->side = side;
 	mySprites[ID]->color = filterCol;
-	if (FAILED(D3DXCreateSprite(myDevice, &mySprites[ID]->sprite)))
-		throw _T("スプライトの生成に失敗しました");
 }
 
 /* 牌オブジェクトの後始末 */
 void ShowTile::DelTile(unsigned int ID) {
 	if ((mySprites.size() > ID) && (mySprites[ID])) {
-		if (mySprites[ID]->sprite) mySprites[ID]->sprite->Release();
 		delete mySprites[ID]; mySprites[ID] = nullptr;
 	}
 }
 
 /* レンダリング */
 void ShowTile::RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY) {
-	SpriteRenderer::ShowSprite(tile->sprite, TileTexture, tile->X, tile->Y,
+	SpriteRenderer::ShowSprite(sprite, TileTexture, tile->X, tile->Y,
 		CenterX*2, CenterY*2, tile->color, rect, CenterX, CenterY);
 }
 void ShowTile::RenderVert(TileDescriptor* tile, RECT* rect) {
@@ -53,7 +53,7 @@ void ShowTile::RenderSide(TileDescriptor* tile, RECT* rect) {
 }
 void ShowTile::Render() {
 	for (auto k = mySprites.begin(); k != mySprites.end(); ++k) {
-		if ((*k) && ((*k)->sprite)) {
+		if (*k) {
 			if (((*k)->direction == Portrait) || ((*k)->direction == UpsideDown)) {
 				/* Portrait alignment */
 				RECT rect = {
