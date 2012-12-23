@@ -431,17 +431,17 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 	}
 
 	MakeMeld(gameStat, DiscardTileIndex, Mode, fuuroPlayer);
-	/* TODO: 画面の再構築 redrscreen */
+	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	if (CheckChankan(gameStat, RoundEndType, Mode)) return true;
-	/* TODO: 画面の再構築 redrscreen */
-	/* TODO: 1秒待ち await 1000 */
+	mihajong_graphic::GameStatus::updateGameStat(gameStat);
+	Sleep(1000);
 	if (ProcRinshan(gameStat, RoundEndType, Mode, fuuroPlayer)) return true;
 	/* 事後処理 */
 	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 		mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::None); /* 発声文字列を消去 */
 	mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone); // 発声表示から戻る
 	/* 再描画 */
-	/* TODO: 画面の再構築 redrscreen */
+	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	/* 鳴きが成立したので、一発のフラグを降ろす */
 	for (PLAYER_ID i = 0; i < PLAYERS; i++)
 		gameStat->Player[i].RichiFlag.IppatsuFlag =
@@ -679,8 +679,8 @@ EndType ronhuproc(GameTable* const gameStat) {
 			else
 				sound::Play(sound::IDs::voxRon);
 			/* 画面更新して戻る */
-			/* TODO: 画面更新 redrscreen */
 			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			break;
 		}
 	}

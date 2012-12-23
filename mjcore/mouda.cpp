@@ -1,4 +1,5 @@
 #include "mouda.h"
+#include "../graphic/graphic.h"
 
 DiscardTileNum getdahai(GameTable* const gameStat) {
 	DiscardTileNum DiscardTileIndex;
@@ -117,7 +118,7 @@ namespace { /* 内部処理分割用 */
 		gameStat->Player[gameStat->CurrentPlayer.Agari].HandStat = handExposed;
 		if (gameStat->TianHuFlag) sound::Play(sound::IDs::voxRon);
 		else sound::Play(sound::IDs::voxTsumo);
-		/* TODO: 画面更新 redrscreen */
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		return RoundEndType;
 	}
 	EndType procDahaiSubKyuushu(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 九種九牌が宣言された場合 */
@@ -130,7 +131,7 @@ namespace { /* 内部処理分割用 */
 				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 				gameStat->Player[gameStat->CurrentPlayer.Active].HandStat = handExposed;
 				sound::Play(sound::IDs::voxKyuushu);
-				/* TODO: 画面更新 redrscreen */
+				mihajong_graphic::GameStatus::updateGameStat(gameStat);
 				return KyuushuKyuuhai;
 		} else {
 			warn(_T("九種九牌はできません。ツモ切りとみなします。"));
@@ -206,8 +207,8 @@ namespace { /* 内部処理分割用 */
 			if (!(gameStat->Player[0].RichiFlag.OpenFlag || gameStat->Player[1].RichiFlag.OpenFlag ||
 				gameStat->Player[2].RichiFlag.OpenFlag || gameStat->Player[3].RichiFlag.OpenFlag))
 				sound::Play(sound::IDs::musOpenrichi);
-			/* TODO: 画面更新 redrscreen */
-			/* TODO: 1秒待つ await 1000 */
+			mihajong_graphic::GameStatus::updateGameStat(gameStat);
+			Sleep(1000);
 			gameStat->Player[gameStat->CurrentPlayer.Active].HandStat = handOpenRiichi;
 			gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.OpenFlag = true;
 			/* TODO: 一部ボタンの無効化 vanish2@ */
@@ -229,8 +230,8 @@ namespace { /* 内部処理分割用 */
 							sound::Play(sound::IDs::musRichi3);
 					}
 			}
-			/* TODO: 画面更新 redrscreen */
-			/* TODO: 1秒待つ await 1000 */
+			mihajong_graphic::GameStatus::updateGameStat(gameStat);
+			Sleep(1000);
 			/* TODO: 一部ボタンの無効化 vanish2@ */
 		}
 	}
@@ -291,7 +292,7 @@ namespace { /* 内部処理分割用 */
 			gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].red  = Normal;
 		}
 		/* 再描画 */
-		/* TODO: 再描画 redrscreen */
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	}
 }
 

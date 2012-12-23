@@ -21,21 +21,21 @@ EndType doTableTurn(GameTable* const gameStat) {
 	if (EnvTable::Instantiate()->WatchModeFlag)
 		gameStat->PlayerID = gameStat->CurrentPlayer.Active;
 	/* 再描画 */
-	/* TODO: redrscreen */
+	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	/* 摸打の処理 */
 	DiscardTileNum DiscardTileIndex = getdahai(gameStat);
 	if (DiscardTileIndex.type == DiscardTileNum::Disconnect)
 		return Disconnect;
 	/* ウェイトを入れる */
-	/* await 0 */
+	Sleep(1);
 	EndType RoundEndType = procdahai(gameStat, DiscardTileIndex);
 	if (RoundEndType != Continuing)
 		return RoundEndType;
-	/* await 80 */
+	Sleep(80);
 	/* 栄和の処理 */
 	RoundEndType = ronhuproc(gameStat); // 栄和の処理
 	if (RoundEndType != Continuing) return RoundEndType;
-	/* await 0 */
+	Sleep(1);
 	/* 途中流局の判定 */
 	EndType round_abort_type = endround::checkroundabort(gameStat);
 	if (round_abort_type != Continuing) return round_abort_type;
@@ -43,7 +43,7 @@ EndType doTableTurn(GameTable* const gameStat) {
 	if (executeFuuro(gameStat, DiscardTileIndex))
 		return Continuing; /* 鳴きがあった場合、鳴いたプレーヤーに順番を移して戻る */
 	/* ウェイトを入れる */
-	/* await 100 */
+	Sleep(100);
 	/* 次のプレイヤーが牌を自摸る */
 	tsumoproc(gameStat);
 	// 打牌へ戻る

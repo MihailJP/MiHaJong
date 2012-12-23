@@ -535,7 +535,7 @@ namespace {
 				gameStat->Dice[i].Direction = RndNum::rnd(4);
 			}
 			sound::Play(sound::IDs::sndSaikoro);
-			mihajong_graphic::GameStatus::updateGameStat(gameStat); /* TODO: 画面更新 redrdice GameStat, GameEnv: await 80 */
+			mihajong_graphic::GameStatus::updateGameStat(gameStat); Sleep(80);
 		}
 		sound::Play(sound::IDs::sndSaikoro);
 		/* サイコロの出目を送信 */
@@ -587,7 +587,7 @@ namespace {
 			if (i % 4 == 3) {
 				calcdoukasen(gameStat);
 				sound::Play(sound::IDs::sndTsumo);
-				mihajong_graphic::GameStatus::updateGameStat(gameStat); /* TODO: 画面更新して時間待ち redrscreen: await 250 */
+				mihajong_graphic::GameStatus::updateGameStat(gameStat); Sleep(250);
 			}
 		}
 		/* TODO: 「東○局」の表示を消す setCenterTitle "" */
@@ -605,7 +605,7 @@ namespace {
 			++gameStat->TilePointer;
 			calcdoukasen(gameStat);
 			sound::Play(sound::IDs::sndTsumo);
-			mihajong_graphic::GameStatus::updateGameStat(gameStat); /* TODO: 画面更新して時間待ち redrscreen: await 250 */
+			mihajong_graphic::GameStatus::updateGameStat(gameStat); Sleep(250);
 		}
 
 		initdora(gameStat); // ドラをめくる
@@ -654,7 +654,5 @@ void tableinit(GameTable* const gameStat) {
 	rolldice(gameStat);
 	// 配牌
 	haipai(gameStat);
-	Sleep(5000);
-	Sleep(INFINITE);
 	return;
 }
