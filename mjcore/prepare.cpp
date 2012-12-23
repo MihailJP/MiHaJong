@@ -588,14 +588,14 @@ namespace {
 		}
 		/* TODO: 「東○局」の表示を消す setCenterTitle "" */
 		for (int i = 0; i < (chkGameType(gameStat, AllSanma) ? 4 : 5); i++) { // １枚ずつを１回、親のチョンチョン
-			unsigned handIndex = i % 4 + 12;
+			unsigned handIndex = i / (chkGameType(gameStat, AllSanma) ? 3 : 4) + 12;
 			PLAYER_ID player;
 			if (chkGameType(gameStat, Sanma4))
-				player = ((i % 12 / 4) + gameStat->GameRound) % 4;
+				player = (i % 3 + gameStat->GameRound) % 4;
 			else if (chkGameType(gameStat, SanmaT))
-				player = ((i % 12 / 4) + (gameStat->GameRound - (gameStat->GameRound / 4))) % 3;
+				player = (i + (gameStat->GameRound - (gameStat->GameRound / 4))) % 3;
 			else
-				player = ((i % 16 / 4) + gameStat->GameRound) % 4;
+				player = (i + gameStat->GameRound) % 4;
 			gameStat->Player[player].Hand[handIndex].tile = gameStat->Deck[gameStat->TilePointer].tile;
 			gameStat->Player[player].Hand[handIndex].red  = gameStat->Deck[gameStat->TilePointer].red;
 			++gameStat->TilePointer;
