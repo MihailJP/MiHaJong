@@ -4,16 +4,13 @@
 #include "../gametbl.h"
 #include "../rule.h"
 #include "../sprite.h"
+#include "../utils.h"
 #include <tuple>
 #include <cassert>
 
 namespace mihajong_graphic {
 
-namespace {
-	seatRelative inline playerRelative(PLAYER_ID targetPlayer, PLAYER_ID basePlayer) {
-		return (seatRelative)((PLAYERS + targetPlayer - basePlayer) % PLAYERS);
-	}
-}
+using utils::playerRelative;
 	
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080); InitSprite(&sBorder);
@@ -28,7 +25,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	for (int i = 0; i < 2; ++i)
 		InitSprite(&sDice[i]);
 	nakihaiReconst = new NakihaiReconst(this);
-	Reconstruct(GameStatus::gameStat());
+	Reconstruct(GameStatus::retrGameStat());
 }
 
 GameTableScreen::~GameTableScreen() {
@@ -521,7 +518,7 @@ void GameTableScreen::Render() {
 	ShowSprite(sBaize, tBaize, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	ShowSprite(sBorder, tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	if (GameStatus::isModified())
-		Reconstruct(GameStatus::gameStat());
+		Reconstruct(GameStatus::retrGameStat());
 	ShowRiichibou(GameStatus::gameStat());
 	ShowDice(GameStatus::gameStat());
 	ShowTray();

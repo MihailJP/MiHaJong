@@ -17,10 +17,12 @@ private:
 	};
 	static GStatModFlag myModFlag;
 	static GameTable myGameStat, myGameStat1;
+	static bool isInitialized;
 #endif
 public:
 #ifdef GRAPHIC_EXPORTS
 	static GameTable* gameStat();
+	static GameTable* retrGameStat();
 	static bool isModified();
 #endif
 	EXPORT static void updateGameStat(const GameTable* const gameStat);
