@@ -519,6 +519,7 @@ void GameTableScreen::Render() {
 	ShowSprite(sBorder, tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	if (GameStatus::isModified())
 		Reconstruct(GameStatus::retrGameStat());
+	ShowScorePanel();
 	ShowRiichibou(GameStatus::gameStat());
 	ShowDice(GameStatus::gameStat());
 	ShowTray();
