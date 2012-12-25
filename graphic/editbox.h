@@ -24,8 +24,6 @@ private:
 	SmallTextRenderer* myTextRenderer;
 	LPDIRECT3DDEVICE9 myDevice;
 	unsigned maxStr;
-	bool isFullWidth(wchar_t chr);
-	bool isFullWidth(char chr);
 	LPD3DXLINE cursorLine;
 	unsigned cursorPos;
 	unsigned scrollPos;
@@ -34,9 +32,6 @@ private:
 	class IMStat;
 	unsigned scrollRBound(IMStat& imStat);
 	void scroll(IMStat& imStat);
-	bool isLeadingByte(wchar_t chr);
-	bool isLeadingByte(char chr);
-	bool isLeadingByte(const CodeConv::tstring&, unsigned pos);
 	D3DXMATRIX getMatrix(int X, int Y, unsigned width);
 	void renderFrame(int X, int Y, unsigned width);
 	void renderIMCandidateFrame(int X, int Y, unsigned width, unsigned lines);
