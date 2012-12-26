@@ -4,6 +4,8 @@
 #include "../mjcore/strcode.h"
 #include <d3dx9.h>
 #include <dxerr.h>
+#include <vector>
+#include "text.h"
 
 namespace mihajong_graphic {
 namespace logwnd {
@@ -20,9 +22,14 @@ private:
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 myTexture;
 	LPD3DXSPRITE mysprite;
+	SmallTextRenderer* myTextRenderer;
 	int x, y; unsigned width, height;
 	void renderFrame();
 	D3DXMATRIX getMatrix(int X, int Y, unsigned Width);
+private:
+	static unsigned const lineheight = 20;
+	std::vector<CodeConv::tstring> lines;
+	void reconstruct_lines();
 public:
 	LogWindow(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned Width, unsigned Height);
 	~LogWindow();
