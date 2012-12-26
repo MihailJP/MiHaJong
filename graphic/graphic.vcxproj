@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="button.cpp" />
+    <ClCompile Include="chrwidth.cpp" />
     <ClCompile Include="editbox.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="font.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="init.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="loadtex.cpp" />
+    <ClCompile Include="logwnd.cpp" />
     <ClCompile Include="rule.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
     <ClCompile Include="scenes\game.cpp" />
@@ -167,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="button.h" />
+    <ClInclude Include="chrwidth.h" />
     <ClInclude Include="editbox.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="exports.h" />
@@ -177,6 +180,7 @@
     <ClInclude Include="init.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="loadtex.h" />
+    <ClInclude Include="logwnd.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="rule.h" />
     <ClInclude Include="scenes\fps.h" />
