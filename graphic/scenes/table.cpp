@@ -5,8 +5,10 @@
 #include "../rule.h"
 #include "../sprite.h"
 #include "../utils.h"
+#include "../geometry.h"
 #include <tuple>
 #include <cassert>
+#include <cmath>
 
 namespace mihajong_graphic {
 
@@ -26,9 +28,14 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 		InitSprite(&sDice[i]);
 	nakihaiReconst = new NakihaiReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
+	const unsigned logWidth = (unsigned)std::floor(0.5f + // VC++2010‚Å‚Íround()‚ªŽg‚¦‚È‚¢
+		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
+	logWindow = new logwnd::LogWindow(caller->getHWnd(), caller->getDevice(),
+		1100, 100, logWidth, 20);
 }
 
 GameTableScreen::~GameTableScreen() {
+	delete logWindow;
 	delete nakihaiReconst;
 	if (tDice) tDice->Release();
 	for (int i = 0; i < 2; ++i)
@@ -530,6 +537,7 @@ void GameTableScreen::Render() {
 	ShowChiicha(GameStatus::gameStat());
 	ShowYakitori(GameStatus::gameStat());
 	TileTexture->Render();
+	logWindow->Render();
 }
 
 // -------------------------------------------------------------------------
