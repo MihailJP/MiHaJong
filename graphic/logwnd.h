@@ -2,10 +2,12 @@
 
 #include "exports.h"
 #include "../mjcore/strcode.h"
+#ifdef GRAPHIC_EXPORTS
 #include <d3dx9.h>
 #include <dxerr.h>
 #include <vector>
 #include "text.h"
+#endif
 
 namespace mihajong_graphic {
 namespace logwnd {
