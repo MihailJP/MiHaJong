@@ -70,7 +70,6 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(TargetDir)graphic.lib;$(TargetDir)mjcore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <StackReserveSize>33554432</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug(Wide)|Win32'">
@@ -81,7 +80,6 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(TargetDir)graphic.lib;$(TargetDir)mjcore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <StackReserveSize>33554432</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -97,7 +95,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>$(TargetDir)graphic.lib;$(TargetDir)mjcore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <StackReserveSize>33554432</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release(Wide)|Win32'">
@@ -113,7 +110,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>$(TargetDir)graphic.lib;$(TargetDir)mjcore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <StackReserveSize>33554432</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
