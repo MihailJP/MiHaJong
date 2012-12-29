@@ -31,11 +31,12 @@ private:
 	unsigned long long currTime();
 private:
 	LPDIRECT3DDEVICE9 myDevice;
-	PLAYER_ID playerID;
+	seatRelative relativePlayerID;
 	int xpos, ypos; float wScale;
 	LPDIRECT3DTEXTURE9 texture; LPD3DXSPRITE baseSprite;
 	D3DXMATRIX myMatrix;
 	static const unsigned int PanelWidth = 175, PanelHeight = 120;
+	PLAYER_ID playerID();
 private:
 	static const unsigned int WindPosX = 9, WindPosY = 30;
 	static const unsigned int WindCharX = 180, WindCharY = 40;
@@ -62,7 +63,7 @@ private:
 	static const unsigned int ScoreUnitPosX = ScorePosX + NumCharWidth * 3, ScoreUnitPosY = ScorePosY;
 	void renderScoreUnit(unsigned unitnum);
 public:
-	ScoreBoard(LPDIRECT3DDEVICE9 device, PLAYER_ID player, int x, int y, float widthScale);
+	ScoreBoard(LPDIRECT3DDEVICE9 device, seatRelative relativePos, int x, int y, float widthScale);
 	~ScoreBoard();
 	void Render();
 };

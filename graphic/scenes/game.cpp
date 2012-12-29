@@ -46,30 +46,22 @@ void TableProtoScene::ShowSidebar() {
 void TableProtoScene::InitScorePanel() {
 	const float widthScale = Geometry::SidebarWidth() / (Geometry::BaseSize / 0.75f - Geometry::BaseSize);
 	if (widthScale >= 1.5f) {
-		scorePanel[0] = new ScoreBoard(caller->getDevice(),
-			utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sOpposite),
+		scorePanel[0] = new ScoreBoard(caller->getDevice(), sOpposite,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 3     + 3, panelPosY +  62, widthScale / 1.5f);
-		scorePanel[1] = new ScoreBoard(caller->getDevice(),
-			utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sLeft),
+		scorePanel[1] = new ScoreBoard(caller->getDevice(), sLeft,
 			Geometry::BaseSize                                    + 3, panelPosY + 125, widthScale / 1.5f);
-		scorePanel[2] = new ScoreBoard(caller->getDevice(),
-			utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sRight),
+		scorePanel[2] = new ScoreBoard(caller->getDevice(), sRight,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 3 * 2 + 3, panelPosY + 125, widthScale / 1.5f);
-		scorePanel[3] = new ScoreBoard(caller->getDevice(), 
-			GameStatus::gameStat()->PlayerID,
+		scorePanel[3] = new ScoreBoard(caller->getDevice(), sSelf,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 3     + 3, panelPosY + 188, widthScale / 1.5f);
 	} else {
-		scorePanel[0] = new ScoreBoard(caller->getDevice(),
-			utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sOpposite),
+		scorePanel[0] = new ScoreBoard(caller->getDevice(), sOpposite,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 4    , panelPosY      , widthScale);
-		scorePanel[1] = new ScoreBoard(caller->getDevice(),
-			utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sLeft),
+		scorePanel[1] = new ScoreBoard(caller->getDevice(), sLeft,
 			Geometry::BaseSize                                + 3, panelPosY + 125, widthScale);
-		scorePanel[2] = new ScoreBoard(caller->getDevice(),
-			utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sRight),
+		scorePanel[2] = new ScoreBoard(caller->getDevice(), sRight,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 2 + 3, panelPosY + 125, widthScale);
-		scorePanel[3] = new ScoreBoard(caller->getDevice(), 
-			GameStatus::gameStat()->PlayerID,
+		scorePanel[3] = new ScoreBoard(caller->getDevice(), sSelf,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 4    , panelPosY + 250, widthScale);
 	}
 }
@@ -86,8 +78,12 @@ unsigned long long TableProtoScene::ScoreBoard::currTime() { // 現在時刻
 	return ((unsigned long long)czas.dwHighDateTime << 32) | czas.dwLowDateTime;
 }
 
-TableProtoScene::ScoreBoard::ScoreBoard(LPDIRECT3DDEVICE9 device, PLAYER_ID player, int x, int y, float widthScale) {
-	myDevice = device; playerID = player; xpos = x; ypos = y; wScale = widthScale;
+PLAYER_ID TableProtoScene::ScoreBoard::playerID() {
+	return utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, relativePlayerID);
+}
+
+TableProtoScene::ScoreBoard::ScoreBoard(LPDIRECT3DDEVICE9 device, seatRelative relativePos, int x, int y, float widthScale) {
+	myDevice = device; relativePlayerID = relativePos; xpos = x; ypos = y; wScale = widthScale;
 	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR), 860, 120);
 	if (FAILED(D3DXCreateSprite(myDevice, &baseSprite)))
 		throw _T("スプライトの生成に失敗しました");
@@ -121,10 +117,10 @@ void TableProtoScene::ScoreBoard::Render() {
 }
 
 void TableProtoScene::ScoreBoard::renderWind() {
-	if ((currTime() % 10000000 >= 5000000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID)) return;
+	if ((currTime() % 10000000 >= 5000000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return;
 	RECT rect = {
-		WindCharX + WindCharWidth * (utils::playerwind(GameStatus::gameStat(), playerID, GameStatus::gameStat()->GameRound)    ), WindCharY,
-		WindCharX + WindCharWidth * (utils::playerwind(GameStatus::gameStat(), playerID, GameStatus::gameStat()->GameRound) + 1), WindCharY + WindCharHeight
+		WindCharX + WindCharWidth * (utils::playerwind(GameStatus::gameStat(), playerID(), GameStatus::gameStat()->GameRound)    ), WindCharY,
+		WindCharX + WindCharWidth * (utils::playerwind(GameStatus::gameStat(), playerID(), GameStatus::gameStat()->GameRound) + 1), WindCharY + WindCharHeight
 	};
 	SpriteRenderer::ShowSprite(windSprite, texture, (int)xpos + WindPosX, (int)ypos + WindPosY,
 		WindCharWidth, WindCharHeight, 0xffff0000, &rect, 0, 0, &myMatrix);
@@ -141,20 +137,20 @@ void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num) {
 
 void TableProtoScene::ScoreBoard::renderRank() {
 	PlayerRankList rankList = utils::calcRank(GameStatus::gameStat());
-	renderNumeral(RankPosX, RankPosY, rankList.val[playerID]);
-	if ((currTime() % 10000000 < 5000000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID))
+	renderNumeral(RankPosX, RankPosY, rankList.val[playerID()]);
+	if ((currTime() % 10000000 < 5000000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID()))
 		renderNumeral(RankPosX, RankPosY, digitDecimal);
 }
 
 int TableProtoScene::ScoreBoard::getScoreSign() {
 	for (int i = DIGIT_GROUPS - 1; i >= 0; --i)
-		if (GameStatus::gameStat()->Player.val[playerID].PlayerScore.digitGroup[i] > 0) return 1;
-		else if (GameStatus::gameStat()->Player.val[playerID].PlayerScore.digitGroup[i] < 0) return -1;
+		if (GameStatus::gameStat()->Player.val[playerID()].PlayerScore.digitGroup[i] > 0) return 1;
+		else if (GameStatus::gameStat()->Player.val[playerID()].PlayerScore.digitGroup[i] < 0) return -1;
 	return 0;
 }
 
 std::tuple<unsigned, unsigned, signed> TableProtoScene::ScoreBoard::scoreInfo() {
-	const LargeNum* const score = &(GameStatus::gameStat()->Player.val[playerID].PlayerScore);
+	const LargeNum* const score = &(GameStatus::gameStat()->Player.val[playerID()].PlayerScore);
 	const int digit[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
 	for (int i = DIGIT_GROUPS - 1; i >= 0; --i) {
 		for (int j = ((i == DIGIT_GROUPS - 1) ? 9 : 7); j >= 0; --j) {
