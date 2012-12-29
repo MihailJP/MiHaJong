@@ -286,14 +286,14 @@ std::array<int, PLAYERS> SeatShuffler::shuffle (unsigned cNumber) {
 // -------------------------------------------------------------------------
 
 /* 半荘の初期化 */
-void gameinit(GameTable* gameStat, gameTypeID gameType) {
+void gameinit(GameTable* gameStat, gameTypeID gameType, const std::string& ServerAddress, const std::array<int, 4>& PositionArray, unsigned ClientNumber) {
 	/* TODO: チャットウィンドウ初期化 closingchat */
 	gameStat = initializeGameTable(gameType);
-	/* TODO: プレイヤー番号設定 setPlayer GameStat, PositionArray(ClientNumber) */
+	gameStat->PlayerID = PositionArray[ClientNumber];
 	/* TODO: 多分これは不要。詳細を確認すること dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 */ // 起家でのバグ防止用に仮初期化
 	haifu::haifubufinit();
 	/* TODO: statmes "" */ // 情報窓への表示
-	/* TODO: チャットウィンドウ初期化 initializechat GameEnv, ServerAddress, ClientNumber */
+	chat::initchat(ServerAddress.c_str(), ClientNumber);
 	yaku::yakuCalculator::init(); // 役カタログの初期化
 	aiscript::initscript(); // AIの初期化
 	return;

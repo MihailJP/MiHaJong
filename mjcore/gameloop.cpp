@@ -126,7 +126,7 @@ void startgame(gameTypeID gameType) {
 			return;
 		}
 		auto PositionArray = SeatShuffler::shuffle(ClientNumber); // 親決めの処理
-		gameinit(&GameStat, gameType); // 半荘の初期化処理
+		gameinit(&GameStat, gameType, ""/* TODO: 通信対戦の時は接続先サーバーIPにすること */, PositionArray, ClientNumber); // 半荘の初期化処理
 
 		/* 半荘の進行 */
 		bool endFlag = false;

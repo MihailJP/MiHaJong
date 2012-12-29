@@ -28,5 +28,6 @@ public:
 	static std::array<int, PLAYERS> shuffle(unsigned cNumber);
 };
 
-void gameinit(GameTable* gameStat, gameTypeID gameType);
+void gameinit(GameTable* gameStat, gameTypeID gameType, const std::string& ServerAddress,
+	const std::array<int, 4>& PositionArray, unsigned ClientNumber);
 void tableinit(GameTable* const gameStat);
