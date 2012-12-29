@@ -28,7 +28,8 @@ void sound::OggData::Prepare(const std::string& filename) {
 	format.nBlockAlign = static_cast<WORD>(info->channels * 2);
 	format.nAvgBytesPerSec = format.nSamplesPerSec * format.nBlockAlign;
 	// データ読み込み
-	char buf[1 << 22 /* 4 MiB */] = {0,}; long bytes_read = 0; int current = 0;
+	char* buf = (char*)calloc(1, 1 << 22 /* 4 MiB */);
+	long bytes_read = 0; int current = 0;
 	do {
 		bytes_read = ov_read(ovFile, buf, 1 << 22, 0, 1, 1, &current);
 		if (bytes_read == OV_HOLE) throw CodeConv::tstring(_T("読み込みはOV_HOLEで失敗しました"));
@@ -39,6 +40,7 @@ void sound::OggData::Prepare(const std::string& filename) {
 	} while (bytes_read);
 	// 読み終わり
 	fclose(file); delete ovFile;
+	free(buf); buf = nullptr;
 }
 
 sound::OggData::OggData(IXAudio2** Engine, const std::string& filename, bool looped) {
