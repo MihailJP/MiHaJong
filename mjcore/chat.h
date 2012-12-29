@@ -15,8 +15,6 @@ namespace chat {
 	class StreamLog {
 	protected:
 		static const int bufsize = 65536;
-		CodeConv::tostringstream myChatStream;
-		HWND logWindow;
 		CodeConv::tstring chatstr(const CodeConv::tstring& buf);
 		virtual void chatappend(const CodeConv::tstring& buf);
 	public:
@@ -26,8 +24,6 @@ namespace chat {
 		virtual void sysmsg (const CodeConv::tstring& msg);
 		virtual void sendstr (const CodeConv::tstring& msg);
 		virtual void sendstrx (PLAYER_ID player, const CodeConv::tstring& msg);
-		virtual void updateWindow ();
-		void setLogWindow (HWND wndHandle);
 	};
 	class ChatThread : public StreamLog {
 		typedef StreamLog super;
@@ -64,6 +60,4 @@ namespace chat {
 	void sendchatx (int player, LPCTSTR const chatstr);
 #endif
 	__declspec(dllexport) void closechat ();
-
-	__declspec(dllexport) void setlogwnd (HWND window);
 }

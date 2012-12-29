@@ -1,4 +1,5 @@
 #include "chat.h"
+#include "../graphic/graphic.h"
 
 namespace chat {
 
@@ -12,14 +13,11 @@ DWORD WINAPI ChatThread::thread_loop (LPVOID param) {
 	reinterpret_cast<ChatThread*>(param)->cleanup();
 	return S_OK;
 }
-StreamLog::StreamLog () {
-	logWindow = nullptr;
-	myChatStream.str(_T(""));
-}
+StreamLog::StreamLog () {}
 ChatThread::ChatThread (std::string& server_addr, int clientNum) {
 	InitializeCriticalSection(&streamLock);
 	InitializeCriticalSection(&sendQueueLock);
-	myChatStream.str(_T("")); terminate = false;
+	terminate = false;
 	myServerAddr = server_addr; myClientNum = clientNum;
 	myHandle = CreateThread(nullptr, 0, thread_loop, this, 0, nullptr);
 }
@@ -118,8 +116,7 @@ CodeConv::tstring StreamLog::chatstr(const CodeConv::tstring& buf) {
 void StreamLog::chatappend(const CodeConv::tstring& buf) {
 	int tmpPlayer = static_cast<int>(buf[0] - _T('0'));
 	if ((tmpPlayer >= 0) && (tmpPlayer <= ACTUAL_PLAYERS)) {
-		myChatStream << chatstr(buf); myChatStream.flush();
-		updateWindow();
+		mihajong_graphic::logwnd::append(chatstr(buf).c_str());
 	}
 }
 void ChatThread::chatappend(const CodeConv::tstring& buf) {
@@ -174,38 +171,30 @@ void ChatThread::cleanup() {
 }
 
 CodeConv::tstring StreamLog::getlog () {
-	return CodeConv::tstring(myChatStream.str());
+	return CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
 }
 CodeConv::tstring ChatThread::getlog () {
 	EnterCriticalSection(&streamLock);
-	CodeConv::tstring& logbuf = myChatStream.str();
+	CodeConv::tstring& logbuf = CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
 	LeaveCriticalSection(&streamLock);
 	return CodeConv::tstring(logbuf);
 }
 
 void StreamLog::sysmsg(const CodeConv::tstring& str) {
-	myChatStream << str;
+	CodeConv::tstring tmpstr = str;
 	if (str[str.length() - 1] != _T('\n'))
-		myChatStream <<
+		tmpstr +=
 #ifdef _WIN32
-		_T("\r") <<
+		_T("\r\n");
+#else
+		_T("\n");
 #endif
-		std::endl;
-	else myChatStream.flush();
-	updateWindow();
+	mihajong_graphic::logwnd::append(tmpstr.c_str());
 }
 void ChatThread::sysmsg(const CodeConv::tstring& str) {
 	EnterCriticalSection(&streamLock);
-	myChatStream << str;
-	if (str[str.length() - 1] != _T('\n'))
-		myChatStream <<
-#ifdef _WIN32
-		_T("\r") <<
-#endif
-		std::endl;
-	else myChatStream.flush();
+	StreamLog::sysmsg(str);
 	LeaveCriticalSection(&streamLock);
-	updateWindow();
 }
 
 void StreamLog::sendstr (const CodeConv::tstring& msg) {
@@ -215,8 +204,7 @@ void StreamLog::sendstrx (PLAYER_ID player, const CodeConv::tstring& msg) {
 	CodeConv::tostringstream s;
 	s << static_cast<int>(player) << msg;
 	if ((player >= 0) && (player <= ACTUAL_PLAYERS)) {
-		myChatStream << chatstr(s.str()); myChatStream.flush();
-		updateWindow();
+		mihajong_graphic::logwnd::append(s.str().c_str());
 	}
 }
 void ChatThread::sendstr (const CodeConv::tstring& msg) {
@@ -227,26 +215,6 @@ void ChatThread::sendstrx (PLAYER_ID player, const CodeConv::tstring& msg) {
 	EnterCriticalSection(&sendQueueLock);
 	sendQueue.push(CodeConv::tstring(tmpnum) + msg);
 	LeaveCriticalSection(&sendQueueLock);
-}
-
-void StreamLog::setLogWindow (HWND wndHandle) {
-	logWindow = wndHandle;
-}
-
-void StreamLog::updateWindow () {
-	if (logWindow) {
-		SendMessage(logWindow, WM_SETTEXT, 0, reinterpret_cast<LPARAM>(myChatStream.str().c_str()));
-		auto lines = SendMessage(logWindow, EM_GETLINECOUNT, 0, 0);
-		SendMessage(logWindow, EM_SETSEL, myChatStream.str().length(), myChatStream.str().length());
-		SendMessage(logWindow, EM_LINESCROLL, 0, lines);
-	}
-}
-void ChatThread::updateWindow () {
-	if (logWindow) {
-		EnterCriticalSection(&streamLock);
-		StreamLog::updateWindow();
-		LeaveCriticalSection(&streamLock);
-	}
 }
 
 // -------------------------------------------------------------------------
@@ -270,10 +238,6 @@ void sendchatx (int player, LPCTSTR const chatstr) {
 }
 __declspec(dllexport) void closechat () {
 	delete chatobj; chatobj = nullptr;
-}
-
-__declspec(dllexport) void setlogwnd (HWND window) {
-	chatobj->setLogWindow(window);
 }
 
 } /* namespace */
