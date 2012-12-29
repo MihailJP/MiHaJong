@@ -13,6 +13,7 @@ namespace mihajong_graphic {
 namespace logwnd {
 
 EXPORT void append(LPCTSTR logstr);
+EXPORT LPCTSTR getlogptr();
 
 #ifdef GRAPHIC_EXPORTS
 CodeConv::tstring getlog();
