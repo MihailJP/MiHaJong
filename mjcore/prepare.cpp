@@ -404,13 +404,16 @@ namespace {
 			sound::Play(sound::IDs::BgmStart + gameStat->GameRound);
 	}
 	void screen(const GameTable* const gameStat) {
-		/* TODO: ‚±‚ê‚ğˆÚA‚·‚éB‰æ–Ê•\¦ŠÖŒW
-		if (getHonba(GameStat)) {
-			tmpStatus = ""+roundName(getRound(GameStat))+getHonba(GameStat)+"–{ê"
+		CodeConv::tstring tmpStatus;
+		if (gameStat->Honba) {
+			CodeConv::tostringstream o;
+			o << roundName(gameStat->GameRound, gameStat) << gameStat->Honba << _T("–{ê");
+			tmpStatus = o.str();
 		} else {
-			tmpStatus = ""+roundName(getRound(GameStat))
+			tmpStatus = roundName(gameStat->GameRound, gameStat);
 		}
-		chatappend "-------------\n*** "+tmpStatus+"\n"
+		chat::appendchat((CodeConv::tstring(_T("-------------\n*** ")) + tmpStatus + CodeConv::tstring(_T("\n"))).c_str());
+		/* TODO: ‚±‚ê‚ğˆÚA‚·‚éB‰æ–Ê•\¦ŠÖŒW
 		if (GetWatchModeFlag(GameEnv) == 1) {
 			tmpStatus += " Watch Mode"
 		} else {
