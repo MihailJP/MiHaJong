@@ -37,10 +37,8 @@ EndType doTableTurn(GameTable* const gameStat) {
 	if (RoundEndType != Continuing) return RoundEndType;
 	/* await 0 */
 	/* 途中流局の判定 */
-	/* TODO: ここを移植する
-	checkroundabort GameStat, GameEnv
-	if (stat >= 0) {RoundEndType = stat: break}
-	*/
+	EndType round_abort_type = endround::checkroundabort(gameStat);
+	if (round_abort_type != Continuing) return round_abort_type;
 	/* 捨牌をポン、または大明槓する場合の処理 */
 	if (executeFuuro(gameStat, DiscardTileIndex))
 		return Continuing; /* 鳴きがあった場合、鳴いたプレーヤーに順番を移して戻る */

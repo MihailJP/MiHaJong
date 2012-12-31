@@ -12,6 +12,7 @@
 #include "fuuro.h"
 #include "prepare.h"
 #include "../graphic/graphic.h"
+#include "endround.h"
 #endif
 #include "gametbl.h"
 
