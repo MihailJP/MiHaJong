@@ -152,6 +152,7 @@
     <ClCompile Include="loadtex.cpp" />
     <ClCompile Include="logwnd.cpp" />
     <ClCompile Include="rule.cpp" />
+    <ClCompile Include="scenes\call.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
     <ClCompile Include="scenes\game.cpp" />
     <ClCompile Include="scenes\proto.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="logwnd.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="rule.h" />
+    <ClInclude Include="scenes\call.h" />
     <ClInclude Include="scenes\fps.h" />
     <ClInclude Include="scenes\game.h" />
     <ClInclude Include="scenes\proto.h" />

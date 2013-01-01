@@ -6,4 +6,5 @@
 #include "splash.h"
 #include "title.h"
 #include "table.h"
+#include "call.h"
 #include "ruleconf.h"

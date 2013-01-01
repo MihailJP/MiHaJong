@@ -91,7 +91,7 @@ protected:
 public:
 	GameTableScreen(ScreenManipulator* const manipulator);
 	virtual ~GameTableScreen();
-	void Render();
+	virtual void Render();
 };
 
 class GameTableScreen::NakihaiReconst {
