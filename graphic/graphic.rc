@@ -29,6 +29,7 @@ IDB_PNG_TEXTBOX               PNG_FILE ".\\data\\editbox.png"
 IDB_PNG_TENBOU                PNG_FILE ".\\data\\tenbou.png"
 IDB_PNG_CHICHAMARK            PNG_FILE ".\\data\\chiicha.png"
 IDB_PNG_SCORE_INDICATOR       PNG_FILE ".\\data\\score.png"
+IDB_PNG_CALL_TEXT             PNG_FILE ".\\data\\call.png"
 
 
 
