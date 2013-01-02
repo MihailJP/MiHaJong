@@ -141,7 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="button.cpp" />
-    <ClCompile Include="call.cpp" />
+    <ClCompile Include="calltext.cpp" />
     <ClCompile Include="chrwidth.cpp" />
     <ClCompile Include="editbox.cpp" />
     <ClCompile Include="event.cpp" />
@@ -171,7 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="button.h" />
-    <ClInclude Include="call.h" />
+    <ClInclude Include="calltext.h" />
     <ClInclude Include="chrwidth.h" />
     <ClInclude Include="editbox.h" />
     <ClInclude Include="event.h" />

@@ -102,7 +102,7 @@
     <ClCompile Include="scenes\call.cpp">
       <Filter>ソース ファイル\scenes</Filter>
     </ClCompile>
-    <ClCompile Include="call.cpp">
+    <ClCompile Include="calltext.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -203,7 +203,7 @@
     <ClInclude Include="scenes\call.h">
       <Filter>ヘッダー ファイル\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="call.h">
+    <ClInclude Include="calltext.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
