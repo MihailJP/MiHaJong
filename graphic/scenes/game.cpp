@@ -15,7 +15,6 @@ namespace mihajong_graphic {
 
 void TableProtoScene::LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource, unsigned width, unsigned height) {
 	mihajong_graphic::LoadTexture(caller->getDevice(), texture, resource, width, height);
-	TileTexture = new ShowTile(caller->getDevice());
 }
 void TableProtoScene::InitSprite(LPD3DXSPRITE* sprite) {
 	if (FAILED(D3DXCreateSprite(caller->getDevice(), sprite)))
@@ -24,6 +23,7 @@ void TableProtoScene::InitSprite(LPD3DXSPRITE* sprite) {
 
 TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR), 960, 1080); InitSprite(&sSideBar);
+	TileTexture = new ShowTile(caller->getDevice());
 	InitScorePanel();
 }
 
