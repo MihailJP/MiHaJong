@@ -8,3 +8,4 @@
 #include "rule.h"
 #include "utils.h"
 #include "logwnd.h"
+#include "calltext.h"
