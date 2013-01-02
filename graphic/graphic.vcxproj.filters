@@ -105,13 +105,13 @@
     <ClCompile Include="chrwidth.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="scenes\call.cpp">
-      <Filter>ソース ファイル\scenes</Filter>
-    </ClCompile>
     <ClCompile Include="calltext.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="scenes\table\tablesub.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\table\call.cpp">
       <Filter>ソース ファイル\scenes\table</Filter>
     </ClCompile>
   </ItemGroup>
@@ -209,9 +209,6 @@
     <ClInclude Include="chrwidth.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="scenes\call.h">
-      <Filter>ヘッダー ファイル\scenes</Filter>
-    </ClInclude>
     <ClInclude Include="calltext.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -222,6 +219,9 @@
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
     <ClInclude Include="scenes\table\tblnorm.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\call.h">
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
   </ItemGroup>

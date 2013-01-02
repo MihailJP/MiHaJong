@@ -153,7 +153,6 @@
     <ClCompile Include="loadtex.cpp" />
     <ClCompile Include="logwnd.cpp" />
     <ClCompile Include="rule.cpp" />
-    <ClCompile Include="scenes\call.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
     <ClCompile Include="scenes\game.cpp" />
     <ClCompile Include="scenes\proto.cpp" />
@@ -161,6 +160,7 @@
     <ClCompile Include="scenes\ruleconf.cpp" />
     <ClCompile Include="scenes\sysscr.cpp" />
     <ClCompile Include="scenes\table.cpp" />
+    <ClCompile Include="scenes\table\call.cpp" />
     <ClCompile Include="scenes\table\tablesub.cpp" />
     <ClCompile Include="scenes\title.cpp" />
     <ClCompile Include="scrmanip.cpp" />
@@ -187,7 +187,6 @@
     <ClInclude Include="logwnd.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="rule.h" />
-    <ClInclude Include="scenes\call.h" />
     <ClInclude Include="scenes\fps.h" />
     <ClInclude Include="scenes\game.h" />
     <ClInclude Include="scenes\proto.h" />
@@ -197,6 +196,7 @@
     <ClInclude Include="scenes\scene_id.h" />
     <ClInclude Include="scenes\sysscr.h" />
     <ClInclude Include="scenes\table.h" />
+    <ClInclude Include="scenes\table\call.h" />
     <ClInclude Include="scenes\table\tablesub.h" />
     <ClInclude Include="scenes\table\tblnorm.h" />
     <ClInclude Include="scenes\table\tblsubs.h" />

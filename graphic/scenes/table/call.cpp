@@ -1,29 +1,32 @@
 #include "call.h"
-#include "../resource.h"
-#include "../sprite.h"
-#include "../calltext.h"
-#include "../utils.h"
+#include "../../resource.h"
+#include "../../sprite.h"
+#include "../../calltext.h"
+#include "../../utils.h"
+#include "../table.h"
 
 namespace mihajong_graphic {
 
-GameTableCall::GameTableCall(ScreenManipulator* const manipulator) : GameTableScreen(manipulator) {
+TableSubsceneCall::TableSubsceneCall(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
 	startTime = currTime();
-	LoadTexture(&tCall, MAKEINTRESOURCE(IDB_PNG_CALL_TEXT), 384, 1632); InitSprite(&sCall);
+	LoadTexture(device, &tCall, MAKEINTRESOURCE(IDB_PNG_CALL_TEXT), 384, 1632);
+	if (FAILED(D3DXCreateSprite(device, &sCall)))
+		throw _T("スプライトの生成に失敗しました");
 }
 
-GameTableCall::~GameTableCall() {
+TableSubsceneCall::~TableSubsceneCall() {
 	if (tCall) tCall->Release();
 	if (sCall) sCall->Release();
 }
 
 /* 現在時刻(Windowsでは100ns単位) */
-std::uint64_t GameTableCall::currTime() {
+std::uint64_t TableSubsceneCall::currTime() {
 	FILETIME Zeit; GetSystemTimeAsFileTime(&Zeit);
 	return ((std::uint64_t)Zeit.dwHighDateTime << 32) | Zeit.dwLowDateTime;
 }
 
 /* 表示処理 */
-void GameTableCall::ShowCall(PLAYER_ID player, int x, int y) {
+void TableSubsceneCall::ShowCall(PLAYER_ID player, int x, int y) {
 	if (calltext::getCall(player) == calltext::None) return;
 	const std::uint64_t curr = currTime();
 	const int animationLength = 5000000;
@@ -45,16 +48,11 @@ void GameTableCall::ShowCall(PLAYER_ID player, int x, int y) {
 	SpriteRenderer::ShowSprite(sCall, tCall, x, y, 384, 96, col, &rect, 192, 48, &matrix);
 }
 
-void GameTableCall::RenderCall() {
+void TableSubsceneCall::Render() {
 	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sOpposite), TableSize / 2      ,                 192);
 	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sLeft    ),                 256, TableSize / 2      );
 	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sRight   ), TableSize     - 256, TableSize / 2      );
 	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sSelf    ), TableSize / 2      , TableSize     - 192);
-}
-
-void GameTableCall::RenderTable() {
-	GameTableScreen::RenderTable();
-	RenderCall();
 }
 
 }
