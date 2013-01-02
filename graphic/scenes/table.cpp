@@ -522,22 +522,34 @@ void GameTableScreen::ShowYakitori(const GameTable* gameStat) {
 }
 
 /* 卓を表示 ここから */
-void GameTableScreen::Render() {
+void GameTableScreen::cls() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 		D3DCOLOR_XRGB(0, 128, 0), 1.0f, 0); // バッファクリア
-	ShowSidebar();
+}
+
+void GameTableScreen::RenderTable() {
 	ShowSprite(sBaize, tBaize, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	ShowSprite(sBorder, tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	if (GameStatus::isModified())
 		Reconstruct(GameStatus::retrGameStat());
-	ShowScorePanel();
 	ShowRiichibou(GameStatus::gameStat());
 	ShowDice(GameStatus::gameStat());
 	ShowTray();
 	ShowChiicha(GameStatus::gameStat());
 	ShowYakitori(GameStatus::gameStat());
 	TileTexture->Render();
+}
+
+void GameTableScreen::RenderSideBar() {
+	ShowSidebar();
+	ShowScorePanel();
 	logWindow->Render();
+}
+
+void GameTableScreen::Render() {
+	cls();
+	RenderTable();
+	RenderSideBar();
 }
 
 // -------------------------------------------------------------------------

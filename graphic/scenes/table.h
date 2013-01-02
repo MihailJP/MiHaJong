@@ -88,6 +88,10 @@ protected: /**** ヤキトリマーク ****/
 protected:
 	void ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // プレイヤー関係の画面の再構築
 	void Reconstruct(const GameTable* gameStat); // 画面の再描画
+protected:
+	void cls(); // 画面をクリア
+	virtual void RenderTable(); // 卓を表示
+	void RenderSideBar(); // サイドバー
 public:
 	GameTableScreen(ScreenManipulator* const manipulator);
 	virtual ~GameTableScreen();

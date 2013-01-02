@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="button.cpp" />
+    <ClCompile Include="calltext.cpp" />
     <ClCompile Include="chrwidth.cpp" />
     <ClCompile Include="editbox.cpp" />
     <ClCompile Include="event.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="loadtex.cpp" />
     <ClCompile Include="logwnd.cpp" />
     <ClCompile Include="rule.cpp" />
+    <ClCompile Include="scenes\call.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
     <ClCompile Include="scenes\game.cpp" />
     <ClCompile Include="scenes\proto.cpp" />
@@ -169,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="button.h" />
+    <ClInclude Include="calltext.h" />
     <ClInclude Include="chrwidth.h" />
     <ClInclude Include="editbox.h" />
     <ClInclude Include="event.h" />
@@ -183,6 +186,7 @@
     <ClInclude Include="logwnd.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="rule.h" />
+    <ClInclude Include="scenes\call.h" />
     <ClInclude Include="scenes\fps.h" />
     <ClInclude Include="scenes\game.h" />
     <ClInclude Include="scenes\proto.h" />

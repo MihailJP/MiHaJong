@@ -78,6 +78,9 @@ void ScreenManipulator::transit(sceneID scene) {
 	case sceneGameTable:
 		myScene = new GameTableScreen(this); redrawFlag = true;
 		break;
+	case sceneGameTableCall:
+		myScene = new GameTableCall(this); redrawFlag = true;
+		break;
 	default:
 		LeaveCriticalSection(&CS_SceneAccess);
 		throw _T("³‚µ‚­‚È‚¢ƒV[ƒ“”Ô†‚ªw’è‚³‚ê‚Ü‚µ‚½");

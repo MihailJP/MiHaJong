@@ -7,6 +7,7 @@ enum sceneID { // シーン番号
 	sceneTitle, // タイトル画面
 	sceneConfig, // コンフィグ画面
 	sceneGameTable, // 卓の画面
+	sceneGameTableCall, // 発声表示画面
 };
 
 }
