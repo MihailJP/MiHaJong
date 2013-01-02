@@ -18,6 +18,7 @@ namespace mihajong_graphic {
 EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr);
 EXPORT void RefreshWindow();
 EXPORT BOOL Transit(sceneID scene);
+EXPORT BOOL Subscene(unsigned int subsceneID);
 EXPORT void CleanupWindow();
 
 }

@@ -12,6 +12,7 @@ class ScreenManipulator;
 
 /* シーン オブジェクトのスーパークラス */
 class Scene {
+
 protected:
 	ScreenManipulator* caller; // 呼び出し元へのポインタ
 	struct Region {int Left, Top, Right, Bottom;}; // クリック位置判定用
@@ -27,6 +28,7 @@ public:
 	virtual void KeyboardInput(WPARAM wParam, LPARAM lParam) {}
 	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od) {}
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {}
+	virtual void SetSubscene(unsigned int scene_ID) {}
 };
 
 }

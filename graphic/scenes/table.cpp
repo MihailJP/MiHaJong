@@ -9,6 +9,7 @@
 #include <tuple>
 #include <cassert>
 #include <cmath>
+#include "scene_id.h"
 
 namespace mihajong_graphic {
 
@@ -32,9 +33,12 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
 	logWindow = new logwnd::LogWindow(caller->getHWnd(), caller->getDevice(),
 		1100, 100, logWidth, 20);
+	InitializeCriticalSection(&subSceneCS);
+	mySubScene = new TableSubsceneNormal(manipulator->getDevice());
 }
 
 GameTableScreen::~GameTableScreen() {
+	delete mySubScene; DeleteCriticalSection(&subSceneCS);
 	delete logWindow;
 	delete nakihaiReconst;
 	if (tDice) tDice->Release();
@@ -549,7 +553,22 @@ void GameTableScreen::RenderSideBar() {
 void GameTableScreen::Render() {
 	cls();
 	RenderTable();
+	if (TryEnterCriticalSection(&subSceneCS)) {
+		mySubScene->Render();
+		LeaveCriticalSection(&subSceneCS);
+	}
 	RenderSideBar();
+}
+
+void GameTableScreen::SetSubscene(unsigned int scene_ID) {
+	EnterCriticalSection(&subSceneCS);
+	delete mySubScene;
+	switch (static_cast<TableSubsceneID>(scene_ID)) {
+	default:
+		mySubScene = new TableSubsceneNormal(caller->getDevice());
+		break;
+	}
+	LeaveCriticalSection(&subSceneCS);
 }
 
 // -------------------------------------------------------------------------

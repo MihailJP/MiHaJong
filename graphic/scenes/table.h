@@ -5,6 +5,7 @@
 #include <tuple>
 #include <functional>
 #include "../logwnd.h"
+#include "table/tblsubs.h"
 
 namespace mihajong_graphic {
 
@@ -15,6 +16,10 @@ protected:
 	LPDIRECT3DTEXTURE9 tBorder; LPD3DXSPRITE sBorder; // 卓の枠
 	LPDIRECT3DTEXTURE9 tBaize; LPD3DXSPRITE sBaize; // 羅紗地
 	logwnd::LogWindow* logWindow; // ログウィンドウ
+protected:
+	TableSubscene* mySubScene; // サブシーンオブジェクト
+	CRITICAL_SECTION subSceneCS; // サブシーン切り替え用クリティカルセクション
+	void SetSubscene(unsigned int scene_ID); // サブシーン切り替え
 protected: /**** 山牌 ****/
 	static const unsigned int DeckChainLength = 17;
 	static const unsigned int DeckPosH = (TableSize - ShowTile::VertTileWidth * (DeckChainLength - 1)) / 2;

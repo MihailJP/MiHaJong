@@ -25,6 +25,7 @@ public:
 	~MainWindow();
 	void Render();
 	void transit(sceneID scene);
+	void subscene(unsigned int subsceneID);
 	HWND gethwnd() {return hWnd;}
 };
 

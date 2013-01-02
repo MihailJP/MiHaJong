@@ -78,14 +78,16 @@ void ScreenManipulator::transit(sceneID scene) {
 	case sceneGameTable:
 		myScene = new GameTableScreen(this); redrawFlag = true;
 		break;
-	case sceneGameTableCall:
-		myScene = new GameTableCall(this); redrawFlag = true;
-		break;
 	default:
 		LeaveCriticalSection(&CS_SceneAccess);
 		throw _T("³‚µ‚­‚È‚¢ƒV[ƒ“”Ô†‚ªŽw’è‚³‚ê‚Ü‚µ‚½");
 	}
 	LeaveCriticalSection(&CS_SceneAccess);
+}
+
+void ScreenManipulator::subscene(unsigned int subsceneID) {
+	if (myScene)
+		myScene->SetSubscene(subsceneID);
 }
 
 ScreenManipulator::~ScreenManipulator() {

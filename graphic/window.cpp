@@ -109,4 +109,9 @@ void MainWindow::transit(sceneID scene) { // シーン切り替え
 		myScreenManipulator->transit(scene);
 }
 
+void MainWindow::subscene(unsigned int subsceneID) { // サブシーン切り替え
+	if (myScreenManipulator)
+		myScreenManipulator->subscene(subsceneID);
+}
+
 }

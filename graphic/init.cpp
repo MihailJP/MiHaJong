@@ -34,6 +34,16 @@ catch (LPTSTR e) {
 	return FALSE;
 }
 
+EXPORT BOOL Subscene(unsigned int subsceneID) try {
+	if (!myMainWindow) throw _T("ウィンドウが初期化されていません");
+	myMainWindow->subscene(subsceneID);
+	return TRUE;
+}
+catch (LPTSTR e) {
+	MessageBox(nullptr, e, _T("Error"), MB_OK | MB_ICONERROR);
+	return FALSE;
+}
+
 EXPORT void CleanupWindow() {
 	delete myMainWindow;
 	delete ui::UIEvent;

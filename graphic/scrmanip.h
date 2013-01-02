@@ -33,6 +33,7 @@ public:
 	LPDIRECT3DDEVICE9 getDevice() {return pDevice;}
 	void inputProc(input::InputManipulator* iManip);
 	void transit(sceneID scene);
+	void subscene(unsigned int subsceneID);
 };
 
 }
