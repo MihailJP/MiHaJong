@@ -8,7 +8,6 @@
 namespace mihajong_graphic {
 
 TableSubsceneCall::TableSubsceneCall(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
-	startTime = currTime();
 	LoadTexture(device, &tCall, MAKEINTRESOURCE(IDB_PNG_CALL_TEXT), 384, 1632);
 	if (FAILED(D3DXCreateSprite(device, &sCall)))
 		throw _T("スプライトの生成に失敗しました");
@@ -17,12 +16,6 @@ TableSubsceneCall::TableSubsceneCall(LPDIRECT3DDEVICE9 device) : TableSubscene(d
 TableSubsceneCall::~TableSubsceneCall() {
 	if (tCall) tCall->Release();
 	if (sCall) sCall->Release();
-}
-
-/* 現在時刻(Windowsでは100ns単位) */
-std::uint64_t TableSubsceneCall::currTime() {
-	FILETIME Zeit; GetSystemTimeAsFileTime(&Zeit);
-	return ((std::uint64_t)Zeit.dwHighDateTime << 32) | Zeit.dwLowDateTime;
 }
 
 /* 表示処理 */
