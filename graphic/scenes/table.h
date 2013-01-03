@@ -95,11 +95,11 @@ protected:
 	void Reconstruct(const GameTable* gameStat); // 画面の再描画
 protected:
 	void cls(); // 画面をクリア
-	virtual void RenderTable(); // 卓を表示
+	void RenderTable(); // 卓を表示
 	void RenderSideBar(); // サイドバー
 public:
 	GameTableScreen(ScreenManipulator* const manipulator);
-	virtual ~GameTableScreen();
+	~GameTableScreen();
 	void Render();
 };
 
