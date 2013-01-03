@@ -1,4 +1,5 @@
 #include "fuuro.h"
+#include "../graphic/graphic.h"
 
 namespace {
 
@@ -157,7 +158,8 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].tile = NoTile;
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].red = Normal;
 		gameStat->TianHuFlag = false;
-		/* TODO: 発声 setCall kangPlayer, "北" */
+		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::North);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 		lipai(gameStat, kangPlayer);
 		for (PLAYER_ID i = 0; i < PLAYERS; i++)
 			gameStat->Player[i].FirstDrawFlag = false;
@@ -183,7 +185,8 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].tile = NoTile;
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].red = Normal;
 		gameStat->TianHuFlag = false;
-		/* TODO: 発声 setCall kangPlayer, "花" */
+		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::Flower);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 		lipai(gameStat, kangPlayer);
 		for (PLAYER_ID i = 0; i < PLAYERS; i++)
 			gameStat->Player[i].FirstDrawFlag = false;
@@ -222,7 +225,8 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		lipai(gameStat, kangPlayer);
 		/* ポンを宣言する */
 		sound::Play(sound::IDs::voxPon);
-		/* TODO: 発声 setCall getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), "ポン"*/
+		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Passive, mihajong_graphic::calltext::Pon);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 		/* 喰い替えの判定に使う変数を設定 */
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
 		gameStat->PreviousMeld.Stepped = NoTile;
@@ -265,7 +269,8 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		lipai(gameStat, kangPlayer);
 		/* チーを宣言 */
 		sound::Play(sound::IDs::voxChi);
-		/* TODO: 発声 setCall getCurrentPlayer(GameStat, CURRENTPLAYER_PASSIVE), "チー" */
+		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Passive, mihajong_graphic::calltext::Chii);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 		/* 喰い替え判定用の変数を指定 */
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
 		if (RuleData::chkRule("kuikae", "agari_houki") || RuleData::chkRule("kuikae", "chombo")) {
@@ -300,7 +305,8 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 	if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
 		gameStat->TianHuFlag = false;
 		sound::Play(sound::IDs::voxKan);
-		/* TODO: 発声 setCall kangPlayer, "カン" */
+		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::Kan);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 		lipai(gameStat, kangPlayer);
 		for (PLAYER_ID i = 0; i < PLAYERS; i++)
 			gameStat->Player[i].FirstDrawFlag = false;
@@ -431,7 +437,9 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 	/* TODO: 1秒待ち await 1000 */
 	if (ProcRinshan(gameStat, RoundEndType, Mode, fuuroPlayer)) return true;
 	/* 事後処理 */
-	/* TODO: 発声文字列を消去 repeat NUM_OF_PLAYERS: setCall cnt, "": loop */
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+		mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::None); /* 発声文字列を消去 */
+	mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone); // 発声表示から戻る
 	/* 再描画 */
 	/* TODO: 画面の再構築 redrscreen */
 	/* 鳴きが成立したので、一発のフラグを降ろす */
@@ -574,7 +582,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 				debug(o.str().c_str());
 			}
 			// 優先権のないロンも表示されるようにする
-			/* TODO: 発声 setCall cnt, " ロン " */
+			mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::Ron);
 			gameStat->Player[i].HandStat = handExposed;
 		}
 	}
@@ -600,7 +608,9 @@ EndType ronhuproc(GameTable* const gameStat) {
 				CodeConv::tostringstream o;
 				o << _T("プレイヤー [") << (int)i << _T("] は、栄和できます。");
 				debug(o.str().c_str());
-				/* TODO: 発声 setCall RelativePositionOf(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), cnt+1), "ロン" */
+				mihajong_graphic::calltext::setCall(
+					RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1)),
+					mihajong_graphic::calltext::RonQualified);
 			}
 			++roncount;
 		}
@@ -658,7 +668,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 					RoundEndType = Chonbo; // チョンボにする
 			}
 			// ロンをしたことを表示
-			/* TODO: 発声 setCall getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), "ロン" */
+			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::RonQualified);
 			gameStat->Player[gameStat->CurrentPlayer.Agari].HandStat = handExposed;
 			/* 和了り牌を設定 */
 			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
@@ -670,6 +680,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 				sound::Play(sound::IDs::voxRon);
 			/* 画面更新して戻る */
 			/* TODO: 画面更新 redrscreen */
+			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 			break;
 		}
 	}

@@ -431,8 +431,9 @@ namespace {
 		statmes tmpStatus
 		await 100
 		setCenterTitle "" // ‰æ–Ê’†‰›‚É‘å‘‚·‚é•¶š—ñ
-		initCall/ // –Â‚«‚È‚Ç
 		*/
+		for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+			mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::None); /* ”­º•¶š—ñ‚ğÁ‹ */
 		EnvTable* env = EnvTable::Instantiate();
 		if (gameStat->LoopRound % 2 == 0) {
 			switch (gameStat->GameRound / PLAYERS) {
