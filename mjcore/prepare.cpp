@@ -496,6 +496,7 @@ namespace {
 		*/
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::Transit(mihajong_graphic::sceneGameTable);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneBeginning);
 	}
 	void tileshuffle(GameTable* const gameStat) {
 		shuffle(gameStat); unsigned tmpNumberOfTiles;
