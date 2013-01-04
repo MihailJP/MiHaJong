@@ -567,6 +567,24 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 	case tblSubsceneBeginning:
 		mySubScene = new TableSubsceneBeginning(caller->getDevice());
 		break;
+	case tblSubsceneHonba:
+		mySubScene = new TableSubsceneTitlingHonba(caller->getDevice());
+		break;
+	case tblSubsceneRyuukyoku:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("流局"));
+		break;
+	case tblSubsceneSifeng:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("四風連打"));
+		break;
+	case tblSubsceneTripleRon:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("三家和"));
+		break;
+	case tblSubsceneSikang:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("四開槓"));
+		break;
+	case tblSubsceneFourRiichi:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("四家立直"));
+		break;
 	case tblSubsceneCall:
 		mySubScene = new TableSubsceneCall(caller->getDevice());
 		break;

@@ -12,6 +12,12 @@ enum sceneID { // シーン番号
 enum TableSubsceneID : unsigned int { // 卓画面のサブシーン番号
 	tblSubsceneNone, // 通常
 	tblSubsceneBeginning, // 局開始画面
+	tblSubsceneHonba, // 「○本場」
+	tblSubsceneRyuukyoku, // 「流局」
+	tblSubsceneSifeng, // 「四風連打」
+	tblSubsceneTripleRon, // 「三家和」
+	tblSubsceneSikang, // 「四開槓」
+	tblSubsceneFourRiichi, // 「四人立直」
 	tblSubsceneCall, // 発声表示画面
 };
 
