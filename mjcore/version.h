@@ -3,13 +3,13 @@
 
 #define MIHAJONG_MAJOR_VER 1
 #define MIHAJONG_MINOR_VER 9
-#define MIHAJONG_PATCH_VER 1
-#define MIHAJONG_VER "1.9.1"
+#define MIHAJONG_PATCH_VER 2
+#define MIHAJONG_VER "1.9.2"
 
 #define MJCORE_MAJOR_VER 1
 #define MJCORE_MINOR_VER 9
-#define MJCORE_PATCH_VER 1
-#define MJCORE_VER "1.9.1"
+#define MJCORE_PATCH_VER 2
+#define MJCORE_VER "1.9.2"
 
 #define LOGGER_MAJOR_VER 1
 #define LOGGER_MINOR_VER 6
@@ -28,7 +28,7 @@
 
 #define SOUND_MAJOR_VER 1
 #define SOUND_MINOR_VER 9
-#define SOUND_PATCH_VER 1
-#define SOUND_VER "1.9.1"
+#define SOUND_PATCH_VER 2
+#define SOUND_VER "1.9.2"
 
 #endif
