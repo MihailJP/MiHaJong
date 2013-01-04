@@ -19,6 +19,7 @@ enum TableSubsceneID : unsigned int { // 卓画面のサブシーン番号
 	tblSubsceneSikang, // 「四開槓」
 	tblSubsceneFourRiichi, // 「四人立直」
 	tblSubsceneCall, // 発声表示画面
+	tblSubsceneCallFade, // 発声表示画面(フェード)
 };
 
 }
