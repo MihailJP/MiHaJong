@@ -564,6 +564,9 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 	EnterCriticalSection(&subSceneCS);
 	delete mySubScene;
 	switch (static_cast<TableSubsceneID>(scene_ID)) {
+	case tblSubsceneBeginning:
+		mySubScene = new TableSubsceneBeginning(caller->getDevice());
+		break;
 	case tblSubsceneCall:
 		mySubScene = new TableSubsceneCall(caller->getDevice());
 		break;
