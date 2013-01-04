@@ -22,7 +22,10 @@ private:
 	bool redrawFlag; // 画面の再描画をするかどうかのフラグ
 	void InitDevice(); // Direct3D オブジェクト初期化
 	void inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f);
+	CRITICAL_SECTION CS_SceneAccess; // シーンアクセスのクリティカルセクション
 public:
+	void inputProc(WPARAM wParam, LPARAM lParam);
+	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 	void Render(); // 画面の再描画
 	ScreenManipulator(HWND windowHandle);
 	~ScreenManipulator();
@@ -30,6 +33,7 @@ public:
 	LPDIRECT3DDEVICE9 getDevice() {return pDevice;}
 	void inputProc(input::InputManipulator* iManip);
 	void transit(sceneID scene);
+	void subscene(unsigned int subsceneID);
 };
 
 }

@@ -51,11 +51,21 @@ public:
 class HugeTextRenderer : public ITextRenderer {
 private:
 	const unsigned int FontBaseSize() {return 224;}
-	const unsigned int FontCols() {return 224;}
+	const unsigned int FontCols() {return 8;}
 	const unsigned int FontPadding() {return 0;}
 public:
 	explicit HugeTextRenderer(LPDIRECT3DDEVICE9 device);
 	~HugeTextRenderer();
+};
+
+class SmallTextRenderer : public ITextRenderer {
+private:
+	const unsigned int FontBaseSize() {return 20;}
+	const unsigned int FontCols() {return 94;}
+	const unsigned int FontPadding() {return 1;}
+public:
+	explicit SmallTextRenderer(LPDIRECT3DDEVICE9 device);
+	~SmallTextRenderer();
 };
 
 struct ITextRenderer::StringAttr {
@@ -68,6 +78,7 @@ struct ITextRenderer::StringAttr {
 struct ITextRenderer::SpriteAttr {
 	LPD3DXSPRITE sprite;
 	unsigned short chr_id;
+	bool isFullWidth;
 	int X, Y;
 	float widthScale, heightScale;
 	D3DCOLOR color;

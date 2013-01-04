@@ -13,6 +13,7 @@ RetrieveCaption getPageCaption = nullptr;
 RuleWrite storeRule = nullptr;
 RuleRead exportRule = nullptr;
 ConfSave saveConfigFile = nullptr;
+CheckRule chkRule = nullptr;
 extern const char* digit = nullptr;
 std::string conffile = "";
 
@@ -20,7 +21,7 @@ EXPORT void setfunc(
 	RetrieveTxt fpGetRuleName, RetrieveTxt fpGetRuleDesc, RetrieveTxtIndex fpGetRuleTxt,
 	RetrieveInt fpGetRule, RetrieveInt fpGetRuleSize, CheckDep fpReqFailed,
 	RetrieveCaption fpGetPageCaption, RuleWrite fpStoreRule, RuleRead fpExportRule,
-	ConfSave fpSaveConfigFile, const char* pDigit)
+	ConfSave fpSaveConfigFile, CheckRule fpChkRule, const char* pDigit)
 {
 	getRuleName = fpGetRuleName;
 	getRuleDescription = fpGetRuleDesc;
@@ -32,6 +33,7 @@ EXPORT void setfunc(
 	storeRule = fpStoreRule;
 	exportRule = fpExportRule;
 	saveConfigFile = fpSaveConfigFile;
+	chkRule = fpChkRule;
 	digit = pDigit;
 }
 

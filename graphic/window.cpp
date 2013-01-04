@@ -1,5 +1,6 @@
 #include "window.h"
 #include "../mihajong/version.h"
+#include "extchar.h"
 
 namespace mihajong_graphic {
 
@@ -7,11 +8,35 @@ const LPTSTR MainWindow::myWindowClassName = _T("mihajong_main");
 const LPTSTR MainWindow::WindowCaption = _T("MiHaJong ver. ") _T(MIHAJONG_VER);
 unsigned& MainWindow::WindowWidth = Geometry::WindowWidth;
 unsigned& MainWindow::WindowHeight = Geometry::WindowHeight;
+extern MainWindow* myMainWindow;
+
+LRESULT MainWindow::keyev(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	switch (wParam) {
+	case VK_LEFT:
+		if (myMainWindow) myMainWindow->myScreenManipulator->inputProc(CHARDAT_CURSOR_LEFT, lParam);
+		break;
+	case VK_RIGHT:
+		if (myMainWindow) myMainWindow->myScreenManipulator->inputProc(CHARDAT_CURSOR_RIGHT, lParam);
+		break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+	return 0;
+}
 
 LRESULT CALLBACK MainWindow::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) { // ウィンドウプロシージャ
 	switch (message) {
 	case WM_DESTROY: // ウィンドウを閉じた時
 		PostQuitMessage(0);
+		break;
+	case WM_KEYDOWN:
+		return keyev(hWnd, message, wParam, lParam);
+	case WM_CHAR:
+		if (myMainWindow) myMainWindow->myScreenManipulator->inputProc(wParam, lParam);
+		break;
+	case WM_INPUTLANGCHANGE: case WM_IME_SETCONTEXT: case WM_IME_STARTCOMPOSITION:
+	case WM_IME_COMPOSITION: case WM_IME_ENDCOMPOSITION: case WM_IME_NOTIFY:
+		if (myMainWindow) myMainWindow->myScreenManipulator->IMEvent(message, wParam, lParam);
 		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
@@ -82,6 +107,11 @@ void MainWindow::Render() { // ウィンドウの再描画
 void MainWindow::transit(sceneID scene) { // シーン切り替え
 	if (myScreenManipulator)
 		myScreenManipulator->transit(scene);
+}
+
+void MainWindow::subscene(unsigned int subsceneID) { // サブシーン切り替え
+	if (myScreenManipulator)
+		myScreenManipulator->subscene(subsceneID);
 }
 
 }

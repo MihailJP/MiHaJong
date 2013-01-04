@@ -18,21 +18,23 @@ void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
 	d3dpp.Windowed = TRUE;
 
 	if (SUCCEEDED(pd3d->CreateDevice( // HAL
-		D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dpp, &pDevice
+		D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED, &d3dpp, &pDevice
 		)))
 		return;
 	else if (SUCCEEDED(pd3d->CreateDevice( // HEL
-		D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &pDevice
+		D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED, &d3dpp, &pDevice
 		)))
 		return;
 	else if (SUCCEEDED(pd3d->CreateDevice( // REF
-		D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &pDevice
+		D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED, &d3dpp, &pDevice
 		)))
 		return;
 	else // All the four failed
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
 }
 ScreenManipulator::ScreenManipulator(HWND windowHandle) {
+	InitializeCriticalSection(&CS_SceneAccess);
+	EnterCriticalSection(&CS_SceneAccess);
 	redrawFlag = false;
 	pDevice = nullptr; hWnd = windowHandle;
 	InitDevice();
@@ -40,9 +42,11 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle) {
 	myFPSIndicator = new FPSIndicator(this);
 	lastRedrawTime = 0;
 	redrawFlag = true;
+	LeaveCriticalSection(&CS_SceneAccess);
 }
 
 void ScreenManipulator::Render() {
+	EnterCriticalSection(&CS_SceneAccess);
 	if (redrawFlag) {
 		pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
 			D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // バッファクリア
@@ -50,13 +54,15 @@ void ScreenManipulator::Render() {
 			if (myScene) myScene->Render(); // 再描画処理
 			if (myFPSIndicator) myFPSIndicator->Render(); // FPS表示
 			pDevice->EndScene(); // シーン終了
+			pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 		}
-		pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 	}
+	LeaveCriticalSection(&CS_SceneAccess);
 	return;
 }
 
 void ScreenManipulator::transit(sceneID scene) {
+	EnterCriticalSection(&CS_SceneAccess);
 	redrawFlag = false;
 	delete myScene; myScene = nullptr;
 	switch (scene) {
@@ -73,8 +79,15 @@ void ScreenManipulator::transit(sceneID scene) {
 		myScene = new GameTableScreen(this); redrawFlag = true;
 		break;
 	default:
+		LeaveCriticalSection(&CS_SceneAccess);
 		throw _T("正しくないシーン番号が指定されました");
 	}
+	LeaveCriticalSection(&CS_SceneAccess);
+}
+
+void ScreenManipulator::subscene(unsigned int subsceneID) {
+	if (myScene)
+		myScene->SetSubscene(subsceneID);
 }
 
 ScreenManipulator::~ScreenManipulator() {
@@ -82,6 +95,7 @@ ScreenManipulator::~ScreenManipulator() {
 	if (myFPSIndicator) delete myFPSIndicator;
 	if (pd3d) {pd3d->Release(); pd3d = nullptr;}
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
+	DeleteCriticalSection(&CS_SceneAccess);
 }
 
 void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f) {
@@ -103,6 +117,7 @@ void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<vo
 }
 void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 	if (iManip) {
+		EnterCriticalSection(&CS_SceneAccess);
 		inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
 			if (sc) sc->KeyboardInput(od);
 		});
@@ -110,7 +125,20 @@ void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 			input::Mouse::Position mousepos = iManip->mouse()->pos();
 			if (sc) sc->MouseInput(od, mousepos.first, mousepos.second);
 		});
+		LeaveCriticalSection(&CS_SceneAccess);
 	}
+}
+
+void ScreenManipulator::inputProc(WPARAM wParam, LPARAM lParam) {
+	EnterCriticalSection(&CS_SceneAccess);
+	if (myScene) myScene->KeyboardInput(wParam, lParam);
+	LeaveCriticalSection(&CS_SceneAccess);
+}
+
+void ScreenManipulator::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
+	EnterCriticalSection(&CS_SceneAccess);
+	if (myScene) myScene->IMEvent(message, wParam, lParam);
+	LeaveCriticalSection(&CS_SceneAccess);
 }
 
 }

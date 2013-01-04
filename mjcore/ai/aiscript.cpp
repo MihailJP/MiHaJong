@@ -267,7 +267,7 @@ DWORD WINAPI aiscript::detCallThread::execute(LPVOID param) {
 
 DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool* const finished) {
 	CodeConv::tostringstream o;
-	o << "AIの副露判定に入ります。プレイヤー [" << (int)gameStat->CurrentPlayer.Passive << "]";
+	o << _T("AIの副露判定に入ります。プレイヤー [") << (int)gameStat->CurrentPlayer.Passive << _T("]");
 	info(o.str().c_str());
 	gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = chiiNone; // リセット
 	gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Pon =

@@ -1,4 +1,5 @@
 #include "mouda.h"
+#include "../graphic/graphic.h"
 
 DiscardTileNum getdahai(GameTable* const gameStat) {
 	DiscardTileNum DiscardTileIndex;
@@ -15,6 +16,8 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 		} else {
 			debug(_T("プレイヤーのツモ番です。"));
 			/* TODO: プレイヤー打牌選択 playerdahai GameStat, GameEnv: DiscardTileIndex = stat */
+			DiscardTileIndex.type = DiscardTileNum::Normal; // テストダブル
+			DiscardTileIndex.id = NUM_OF_TILES_IN_HAND - 1; // (ツモ切り)
 		}
 	} else if (
 		(EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag == -1) ||
@@ -106,14 +109,16 @@ namespace { /* 内部処理分割用 */
 			RoundEndType = Agari; /* 縛りを満たすなら和了りとして成立 */
 		gameStat->TsumoAgariFlag = true;
 		gameStat->CurrentPlayer.Agari = gameStat->CurrentPlayer.Active;
-		/* TODO: 発声
-		setCall getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), "ツモ"
-		if (getHeavenHandFlag(GameStat) == 1) {setCall getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), "ロン"} //天和の時はロンと言う慣わし
-		*/
+		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active,
+			gameStat->TianHuFlag ?
+			mihajong_graphic::calltext::RonQualified : //天和の時はロンと言う慣わし
+			mihajong_graphic::calltext::Tsumo
+			);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 		gameStat->Player[gameStat->CurrentPlayer.Agari].HandStat = handExposed;
 		if (gameStat->TianHuFlag) sound::Play(sound::IDs::voxRon);
 		else sound::Play(sound::IDs::voxTsumo);
-		/* TODO: 画面更新 redrscreen */
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		return RoundEndType;
 	}
 	EndType procDahaiSubKyuushu(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 九種九牌が宣言された場合 */
@@ -122,10 +127,11 @@ namespace { /* 内部処理分割用 */
 		if (RuleData::chkRuleApplied("nine_terminals") &&
 			chkdaopaiability(gameStat, gameStat->CurrentPlayer.Active) &&
 			gameStat->Player[gameStat->CurrentPlayer.Active].FirstDrawFlag) {
-				/* TODO: 発声 setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "九種九牌" */
+				mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Kyuushu);
+				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 				gameStat->Player[gameStat->CurrentPlayer.Active].HandStat = handExposed;
 				sound::Play(sound::IDs::voxKyuushu);
-				/* TODO: 画面更新 redrscreen */
+				mihajong_graphic::GameStatus::updateGameStat(gameStat);
 				return KyuushuKyuuhai;
 		} else {
 			warn(_T("九種九牌はできません。ツモ切りとみなします。"));
@@ -195,19 +201,21 @@ namespace { /* 内部処理分割用 */
 		}
 		/* 立直を宣言する */
 		if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi) {
-			/* TODO: 発声 setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "リーチ" */
+			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Riichi);
+			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 			sound::Play(sound::IDs::voxRichi);
 			if (!(gameStat->Player[0].RichiFlag.OpenFlag || gameStat->Player[1].RichiFlag.OpenFlag ||
 				gameStat->Player[2].RichiFlag.OpenFlag || gameStat->Player[3].RichiFlag.OpenFlag))
 				sound::Play(sound::IDs::musOpenrichi);
-			/* TODO: 画面更新 redrscreen */
-			/* TODO: 1秒待つ await 1000 */
+			mihajong_graphic::GameStatus::updateGameStat(gameStat);
+			Sleep(1000);
 			gameStat->Player[gameStat->CurrentPlayer.Active].HandStat = handOpenRiichi;
 			gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.OpenFlag = true;
 			/* TODO: 一部ボタンの無効化 vanish2@ */
 		}
 		if (DiscardTileIndex.type == DiscardTileNum::Riichi) {
-			/* TODO: 発声 setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "リーチ" */
+			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Riichi);
+			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 			sound::Play(sound::IDs::voxRichi);
 			if (!(gameStat->Player[0].RichiFlag.OpenFlag || gameStat->Player[1].RichiFlag.OpenFlag ||
 				gameStat->Player[2].RichiFlag.OpenFlag || gameStat->Player[3].RichiFlag.OpenFlag)) {
@@ -222,8 +230,8 @@ namespace { /* 内部処理分割用 */
 							sound::Play(sound::IDs::musRichi3);
 					}
 			}
-			/* TODO: 画面更新 redrscreen */
-			/* TODO: 1秒待つ await 1000 */
+			mihajong_graphic::GameStatus::updateGameStat(gameStat);
+			Sleep(1000);
 			/* TODO: 一部ボタンの無効化 vanish2@ */
 		}
 	}
@@ -252,7 +260,8 @@ namespace { /* 内部処理分割用 */
 		}
 		/* 立直をした直後の場合、千点を供託し一発のフラグを立てる */
 		if ((DiscardTileIndex.type == DiscardTileNum::Riichi) || (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)) {
-			/* TODO: 発声文字列を消去 setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "" */
+			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
+			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone); // 発声文字列を消去
 			gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.RichiFlag =
 				gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.IppatsuFlag = true;
 			gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.DoubleFlag =
@@ -283,7 +292,7 @@ namespace { /* 内部処理分割用 */
 			gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].red  = Normal;
 		}
 		/* 再描画 */
-		/* TODO: 再描画 redrscreen */
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	}
 }
 
@@ -293,7 +302,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		CodeConv::tostringstream o;
 		o << _T("プレイヤー [") << (int)gameStat->CurrentPlayer.Active <<
 			_T("] 打牌タイプ [") << (int)DiscardTileIndex.type <<
-			_T("手牌番号 [") << (int)DiscardTileIndex.id << _T("]");
+			_T("] 手牌番号 [") << (int)DiscardTileIndex.id << _T("]");
 		info(o.str().c_str());
 	}
 	/* 立直していない同順振聴ならその期限のため振聴を解除する */

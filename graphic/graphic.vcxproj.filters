@@ -19,6 +19,12 @@
     <Filter Include="ソース ファイル\scenes">
       <UniqueIdentifier>{2280abdb-7010-49a8-8cb7-641a4937c3c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\scenes\table">
+      <UniqueIdentifier>{68939266-5cc7-49c3-9796-c1c543bffaa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\scenes\table">
+      <UniqueIdentifier>{4e41f59f-4dc5-4f11-9959-7b0d07a87898}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="scrmanip.cpp">
@@ -86,6 +92,33 @@
     </ClCompile>
     <ClCompile Include="button.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="editbox.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="logwnd.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="chrwidth.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="calltext.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\table\tablesub.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\table\call.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\table\rndstart.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\table\titling.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +199,42 @@
     </ClInclude>
     <ClInclude Include="button.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="editbox.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="extchar.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="logwnd.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="chrwidth.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="calltext.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\tablesub.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\tblsubs.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\tblnorm.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\call.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\rndstart.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\titling.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

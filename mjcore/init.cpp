@@ -82,7 +82,9 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 			RuleData::getRuleName, RuleData::getRuleDescription, RuleData::getRuleTxt,
 			RuleData::getRule, RuleData::getRuleSize, RuleData::reqFailed,
 			RuleData::getPageCaption, RuleData::storeRule, RuleData::exportRule,
-			RuleData::saveConfigFile, RuleData::ruleDigit());
+			RuleData::saveConfigFile, RuleData::chkRule, RuleData::ruleDigit());
+		mihajong_graphic::utils::setfunc(
+			playerwind, playerRelative, RelativePositionOf, tilesLeft, calcRank);
 	}
 
 	/* âπåπÇèâä˙âª */

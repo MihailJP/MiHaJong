@@ -286,14 +286,14 @@ std::array<int, PLAYERS> SeatShuffler::shuffle (unsigned cNumber) {
 // -------------------------------------------------------------------------
 
 /* 半荘の初期化 */
-void gameinit(GameTable* gameStat, gameTypeID gameType) {
+void gameinit(GameTable* gameStat, gameTypeID gameType, const std::string& ServerAddress, const std::array<int, 4>& PositionArray, unsigned ClientNumber) {
 	/* TODO: チャットウィンドウ初期化 closingchat */
 	gameStat = initializeGameTable(gameType);
-	/* TODO: プレイヤー番号設定 setPlayer GameStat, PositionArray(ClientNumber) */
+	gameStat->PlayerID = PositionArray[ClientNumber];
 	/* TODO: 多分これは不要。詳細を確認すること dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 */ // 起家でのバグ防止用に仮初期化
 	haifu::haifubufinit();
 	/* TODO: statmes "" */ // 情報窓への表示
-	/* TODO: チャットウィンドウ初期化 initializechat GameEnv, ServerAddress, ClientNumber */
+	chat::initchat(ServerAddress.c_str(), ClientNumber);
 	yaku::yakuCalculator::init(); // 役カタログの初期化
 	aiscript::initscript(); // AIの初期化
 	return;
@@ -404,13 +404,16 @@ namespace {
 			sound::Play(sound::IDs::BgmStart + gameStat->GameRound);
 	}
 	void screen(const GameTable* const gameStat) {
-		/* TODO: これを移植する。画面表示関係
-		if (getHonba(GameStat)) {
-			tmpStatus = ""+roundName(getRound(GameStat))+getHonba(GameStat)+"本場"
+		CodeConv::tstring tmpStatus;
+		if (gameStat->Honba) {
+			CodeConv::tostringstream o;
+			o << roundName(gameStat->GameRound, gameStat) << gameStat->Honba << _T("本場");
+			tmpStatus = o.str();
 		} else {
-			tmpStatus = ""+roundName(getRound(GameStat))
+			tmpStatus = roundName(gameStat->GameRound, gameStat);
 		}
-		chatappend "-------------\n*** "+tmpStatus+"\n"
+		chat::appendchat((CodeConv::tstring(_T("-------------\n*** ")) + tmpStatus + CodeConv::tstring(_T("\n"))).c_str());
+		/* TODO: これを移植する。画面表示関係
 		if (GetWatchModeFlag(GameEnv) == 1) {
 			tmpStatus += " Watch Mode"
 		} else {
@@ -428,8 +431,9 @@ namespace {
 		statmes tmpStatus
 		await 100
 		setCenterTitle "" // 画面中央に大書する文字列
-		initCall/ // 鳴きなど
 		*/
+		for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+			mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::None); /* 発声文字列を消去 */
 		EnvTable* env = EnvTable::Instantiate();
 		if (gameStat->LoopRound % 2 == 0) {
 			switch (gameStat->GameRound / PLAYERS) {
@@ -490,6 +494,9 @@ namespace {
 			setCenterTitle roundName(getRound(GameStat))
 		}
 		*/
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
+		mihajong_graphic::Transit(mihajong_graphic::sceneGameTable);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneBeginning);
 	}
 	void tileshuffle(GameTable* const gameStat) {
 		shuffle(gameStat); unsigned tmpNumberOfTiles;
@@ -522,14 +529,14 @@ namespace {
 			gameStat->Dice[i].Number = RndNum::dice();
 			gameStat->Dice[i].Direction = RndNum::rnd(4);
 		}
-		/* TODO: 画面更新 redrscreen: commonswitch GameStat, GameEnv */
+		mihajong_graphic::GameStatus::updateGameStat(gameStat); /* TODO: 画面更新 redrscreen: commonswitch GameStat, GameEnv */
 		for (unsigned k = 0; k < 10; k++) { // 賽を振る
 			for (unsigned i = 0; i < 2; i++) {
 				gameStat->Dice[i].Number = RndNum::dice();
 				gameStat->Dice[i].Direction = RndNum::rnd(4);
 			}
 			sound::Play(sound::IDs::sndSaikoro);
-			/* TODO: 画面更新 redrdice GameStat, GameEnv: await 80 */
+			mihajong_graphic::GameStatus::updateGameStat(gameStat); Sleep(80);
 		}
 		sound::Play(sound::IDs::sndSaikoro);
 		/* サイコロの出目を送信 */
@@ -549,7 +556,6 @@ namespace {
 		/* TODO vanish2@ */
 	}
 	void haipai(GameTable* const gameStat) { // 配牌
-		/* TODO: 画面の真ん中に「東○局」 setCenterTitle roundName(getRound(GameStat)) */
 		for (int i = 0; i < (chkGameType(gameStat, AllSanma) ? 36 : 48); i++) { // ２幢ずつを３回
 			unsigned handIndex = i % 4 + (i / (chkGameType(gameStat, AllSanma) ? 12 : 16)) * 4;
 			PLAYER_ID player;
@@ -562,44 +568,30 @@ namespace {
 			gameStat->Player[player].Hand[handIndex].tile = gameStat->Deck[gameStat->TilePointer].tile;
 			gameStat->Player[player].Hand[handIndex].red  = gameStat->Deck[gameStat->TilePointer].red;
 			++gameStat->TilePointer;
-			if (i == (chkGameType(gameStat, AllSanma) ? 24 : 18)) {
-				// TODO: ここの移植
-				//switch getHonba(GameStat)
-				//	case 0: /* do nothing */ swbreak
-				//	case 1: setCenterTitle "１本場": swbreak
-				//	case 2: setCenterTitle "２本場": swbreak
-				//	case 3: setCenterTitle "３本場": swbreak
-				//	case 4: setCenterTitle "４本場": swbreak
-				//	case 5: setCenterTitle "５本場": swbreak
-				//	case 6: setCenterTitle "６本場": swbreak
-				//	case 7: setCenterTitle "７本場": swbreak
-				//	case 8: setCenterTitle "８本場": swbreak
-				//	case 9: setCenterTitle "９本場": swbreak
-				//	default: setCenterTitle ""+getHonba(GameStat)+"本場"
-				//swend
-			}
+			if ((i == (chkGameType(gameStat, AllSanma) ? 24 : 18)) && (gameStat->Honba > 0))
+				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneHonba);
 			if (i % 4 == 3) {
 				calcdoukasen(gameStat);
 				sound::Play(sound::IDs::sndTsumo);
-				/* TODO: 画面更新して時間待ち redrscreen: await 250 */
+				mihajong_graphic::GameStatus::updateGameStat(gameStat); Sleep(250);
 			}
 		}
-		/* TODO: 「東○局」の表示を消す setCenterTitle "" */
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 		for (int i = 0; i < (chkGameType(gameStat, AllSanma) ? 4 : 5); i++) { // １枚ずつを１回、親のチョンチョン
-			unsigned handIndex = i % 4 + 12;
+			unsigned handIndex = i / (chkGameType(gameStat, AllSanma) ? 3 : 4) + 12;
 			PLAYER_ID player;
 			if (chkGameType(gameStat, Sanma4))
-				player = ((i % 12 / 4) + gameStat->GameRound) % 4;
+				player = (i % 3 + gameStat->GameRound) % 4;
 			else if (chkGameType(gameStat, SanmaT))
-				player = ((i % 12 / 4) + (gameStat->GameRound - (gameStat->GameRound / 4))) % 3;
+				player = (i + (gameStat->GameRound - (gameStat->GameRound / 4))) % 3;
 			else
-				player = ((i % 16 / 4) + gameStat->GameRound) % 4;
+				player = (i + gameStat->GameRound) % 4;
 			gameStat->Player[player].Hand[handIndex].tile = gameStat->Deck[gameStat->TilePointer].tile;
 			gameStat->Player[player].Hand[handIndex].red  = gameStat->Deck[gameStat->TilePointer].red;
 			++gameStat->TilePointer;
 			calcdoukasen(gameStat);
 			sound::Play(sound::IDs::sndTsumo);
-			/* TODO: 画面更新して時間待ち redrscreen: await 250 */
+			mihajong_graphic::GameStatus::updateGameStat(gameStat); Sleep(250);
 		}
 
 		initdora(gameStat); // ドラをめくる

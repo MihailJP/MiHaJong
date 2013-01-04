@@ -16,6 +16,7 @@ private:
 	input::InputManipulator* myInputManipulator; // DirectInput
 	static const LPTSTR myWindowClassName, WindowCaption;
 	static unsigned& WindowWidth, & WindowHeight;
+	static LRESULT keyev(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam); // ウィンドウプロシージャ
 	void initWindowClass(HINSTANCE hThisInst, LPCTSTR icon); // ウィンドウクラスの初期化
 	void initWindow(HINSTANCE hThisInst, int nWinMode); // ウィンドウの生成
@@ -24,6 +25,7 @@ public:
 	~MainWindow();
 	void Render();
 	void transit(sceneID scene);
+	void subscene(unsigned int subsceneID);
 	HWND gethwnd() {return hWnd;}
 };
 

@@ -17,6 +17,7 @@ typedef void (*RetrieveCaption)(LPTSTR const /*txt*/, unsigned /*bufsize*/, uint
 typedef void (*RuleWrite)(const char** /*ruleTxt*/);
 typedef void (*RuleRead)(char** /*ruleTxt*/);
 typedef int (*ConfSave)(const char* const /*filename*/);
+typedef BOOL (*CheckRule)(const char* /*RuleTag*/, const char* /*Expectation*/);
 
 #ifdef GRAPHIC_EXPORTS
 extern RetrieveTxt getRuleName;
@@ -29,6 +30,7 @@ extern RetrieveCaption getPageCaption;
 extern RuleWrite storeRule;
 extern RuleRead exportRule;
 extern ConfSave saveConfigFile;
+extern CheckRule chkRule;
 extern const char* digit;
 extern std::string conffile;
 #endif
@@ -37,7 +39,7 @@ EXPORT void setfunc(
 	RetrieveTxt fpGetRuleName, RetrieveTxt fpGetRuleDesc, RetrieveTxtIndex fpGetRuleTxt,
 	RetrieveInt fpGetRule, RetrieveInt fpGetRuleSize, CheckDep fpReqFailed,
 	RetrieveCaption fpGetPageCaption, RuleWrite fpStoreRule, RuleRead fpExportRule,
-	ConfSave fpSaveConfigFile, const char* pDigit);
+	ConfSave fpSaveConfigFile, CheckRule fpChkRule, const char* pDigit);
 
 EXPORT void setconffile(const char* filename);
 

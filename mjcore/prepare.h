@@ -14,6 +14,8 @@
 #include "../sound/sound.h"
 #include "bgmid.h"
 #include "random.h"
+#include "../graphic/graphic.h"
+#include "chat.h"
 
 __declspec(dllexport) void shuffle(GameTable* const gameStat); // 牌をバッファに並べて、洗牌
 __declspec(dllexport) void initdora(GameTable* const gameStat); // ドラの設定
@@ -27,5 +29,6 @@ public:
 	static std::array<int, PLAYERS> shuffle(unsigned cNumber);
 };
 
-void gameinit(GameTable* gameStat, gameTypeID gameType);
+void gameinit(GameTable* gameStat, gameTypeID gameType, const std::string& ServerAddress,
+	const std::array<int, 4>& PositionArray, unsigned ClientNumber);
 void tableinit(GameTable* const gameStat);

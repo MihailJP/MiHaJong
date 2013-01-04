@@ -9,37 +9,38 @@ namespace mihajong_graphic {
 ShowTile::ShowTile(LPDIRECT3DDEVICE9 device) {
 	myDevice = device;
 	LoadTexture(myDevice, &TileTexture, MAKEINTRESOURCE(IDB_PNG_TILE), TextureWidth, TextureHeight);
+	if (FAILED(D3DXCreateSprite(myDevice, &sprite)))
+		throw _T("スプライトの生成に失敗しました");
 }
 ShowTile::~ShowTile() {
 	for (unsigned int i = 0; i < mySprites.size(); i++)
-		if (mySprites[i] && (mySprites[i]->sprite)) DelTile(i);
+		if (mySprites[i]) DelTile(i);
+	if (sprite) sprite->Release();
 	if (TileTexture) TileTexture->Release();
 }
 
 /* 新規の牌オブジェクトを作成する */
-void ShowTile::NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side) {
+void ShowTile::NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, D3DCOLOR filterCol) {
 	if (mySprites.size() <= ID) mySprites.resize(ID + 1, nullptr); // 配列の拡張
 	if (!mySprites[ID]) DelTile(ID); // 既に存在した場合
 	mySprites[ID] = new TileDescriptor;
 	mySprites[ID]->tile = tile; mySprites[ID]->red = red;
 	mySprites[ID]->X = x; mySprites[ID]->Y = y;
 	mySprites[ID]->direction = direction; mySprites[ID]->side = side;
-	if (FAILED(D3DXCreateSprite(myDevice, &mySprites[ID]->sprite)))
-		throw _T("スプライトの生成に失敗しました");
+	mySprites[ID]->color = filterCol;
 }
 
 /* 牌オブジェクトの後始末 */
 void ShowTile::DelTile(unsigned int ID) {
-	if (mySprites[ID]) {
-		if (mySprites[ID]->sprite) mySprites[ID]->sprite->Release();
+	if ((mySprites.size() > ID) && (mySprites[ID])) {
 		delete mySprites[ID]; mySprites[ID] = nullptr;
 	}
 }
 
 /* レンダリング */
 void ShowTile::RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY) {
-	SpriteRenderer::ShowSprite(tile->sprite, TileTexture, tile->X, tile->Y,
-		CenterX*2, CenterY*2, 0xffffffff, rect, CenterX, CenterY);
+	SpriteRenderer::ShowSprite(sprite, TileTexture, tile->X, tile->Y,
+		CenterX*2, CenterY*2, tile->color, rect, CenterX, CenterY);
 }
 void ShowTile::RenderVert(TileDescriptor* tile, RECT* rect) {
 	RenderTile(tile, rect, VertTileWidth/2, VertTileHeight/2);
@@ -52,7 +53,7 @@ void ShowTile::RenderSide(TileDescriptor* tile, RECT* rect) {
 }
 void ShowTile::Render() {
 	for (auto k = mySprites.begin(); k != mySprites.end(); ++k) {
-		if ((*k) && ((*k)->sprite)) {
+		if (*k) {
 			if (((*k)->direction == Portrait) || ((*k)->direction == UpsideDown)) {
 				/* Portrait alignment */
 				RECT rect = {

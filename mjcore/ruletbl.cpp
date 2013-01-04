@@ -113,6 +113,9 @@ std::string RuleData::chkRule(std::string RuleTag) { // ルール設定タグを取得する
 bool RuleData::chkRule(std::string RuleTag, std::string Expectation) { // ルール設定
 	return getRuleItemTag(RuleTag, Rules[RuleTag]) == Expectation;
 }
+BOOL RuleData::chkRule(const char* RuleTag, const char* Expectation) { // ルール設定
+	return chkRule(std::string(RuleTag), std::string(Expectation)) ? TRUE : FALSE;
+}
 bool RuleData::chkRuleApplied(std::string RuleTag) { // ルール設定
 	return (!chkRule(RuleTag, "no")) && (!chkRule(RuleTag, "N/A")) && (!chkRule(RuleTag, "continue"));
 }

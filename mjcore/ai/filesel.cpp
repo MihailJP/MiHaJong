@@ -19,7 +19,7 @@ void aiscript::FileSelector::filelist() {
 	}
 	do { // åüçı
 		if (!strcmp(finddat.cFileName + strlen(finddat.cFileName) - 4, ".lua")) {
-			CodeConv::tostringstream o; o << "åüèo: " << finddat.cFileName; info(o.str().c_str());
+			CodeConv::tostringstream o; o << _T("åüèo: ") << finddat.cFileName; info(o.str().c_str());
 			files.push_back(scriptPath + std::string("\\") + std::string(finddat.cFileName));
 		}
 	} while (FindNextFileA(h, &finddat));

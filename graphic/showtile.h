@@ -29,13 +29,14 @@ private:
 	struct TileDescriptor;
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 TileTexture;
+	LPD3DXSPRITE sprite;
 	std::vector<TileDescriptor*> mySprites;
 	void RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY);
 	void RenderVert(TileDescriptor* tile, RECT* rect);
 	void RenderHori(TileDescriptor* tile, RECT* rect);
 	void RenderSide(TileDescriptor* tile, RECT* rect);
 public:
-	void NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side);
+	void NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, D3DCOLOR filterCol = 0xffffffff);
 	void DelTile(unsigned int ID);
 	void Render();
 	ShowTile(LPDIRECT3DDEVICE9 device);
@@ -43,12 +44,12 @@ public:
 };
 
 struct ShowTile::TileDescriptor {
-	LPD3DXSPRITE sprite;
 	tileCode tile;
 	doraCol red;
 	int X, Y;
 	TileDirection direction;
 	TileSide side;
+	D3DCOLOR color;
 };
 
 }
