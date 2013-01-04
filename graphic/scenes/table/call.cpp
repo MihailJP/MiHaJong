@@ -22,7 +22,7 @@ TableSubsceneCall::~TableSubsceneCall() {
 void TableSubsceneCall::ShowCall(PLAYER_ID player, int x, int y) {
 	if (calltext::getCall(player) == calltext::None) return;
 	const std::uint64_t curr = currTime();
-	const int animationLength = 5000000;
+	const int animationLength = 2500000;
 	const float scale = (curr >= (startTime + animationLength)) ? 1.0f : std::pow((float)(animationLength - ((signed)curr - (signed)startTime)) / 2.5e6f + 1.0f, 2);
 	const D3DCOLOR col = D3DCOLOR_ARGB(
 		(curr >= (startTime + animationLength)) ? 255 :
