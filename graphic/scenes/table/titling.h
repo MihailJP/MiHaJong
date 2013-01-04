@@ -17,4 +17,14 @@ public:
 	virtual ~TableSubsceneTitling();
 };
 
+class TableSubsceneMsg : public TableSubsceneTitling {
+private:
+	std::wstring myString;
+public:
+	TableSubsceneMsg(LPDIRECT3DDEVICE9 device, const std::wstring& str = L"");
+	TableSubsceneMsg(LPDIRECT3DDEVICE9 device, const std::string& str);
+	~TableSubsceneMsg();
+	void Render();
+};
+
 }
