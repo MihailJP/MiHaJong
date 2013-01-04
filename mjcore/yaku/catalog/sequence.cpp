@@ -480,10 +480,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				bool yakuFlag = false;
 				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
 					int yakuFlagCount = 0;
-					for (int j = 1; j <= 4; j++)
-						for (int k = 1; k <= 2; k++)
-							if ((analysis->ShunziCount[i + j] >= k) && (analysis->ShunziCount[i + j + 3] >= k))
-								++yakuFlagCount;
+					if ((analysis->ShunziCount[i + 0] >= 1) && (analysis->ShunziCount[i + 3] >= 2) && (analysis->ShunziCount[i + 6] >= 1)) {
+						yakuFlag = true;
+					} else if ((analysis->ShunziCount[i + 0] >= 1) && (analysis->ShunziCount[i + 3] == 1) && (analysis->ShunziCount[i + 6] >= 1)) {
+						continue;
+					} else {
+						for (int j = 1; j <= 4; j++)
+							for (int k = 1; k <= 2; k++)
+								if ((analysis->ShunziCount[i + j] >= k) && (analysis->ShunziCount[i + j + 3] >= k))
+									++yakuFlagCount;
+					}
 					if ((yakuFlagCount == 2) && (analysis->MianziDat[0].tile == i + 7))
 						yakuFlag = true;
 				}
