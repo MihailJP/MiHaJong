@@ -27,8 +27,8 @@
 
 #define SOUND_MAJOR_VER 1
 #define SOUND_MINOR_VER 9
-#define SOUND_PATCH_VER 1
-#define SOUND_VER "1.9.1"
+#define SOUND_PATCH_VER 2
+#define SOUND_VER "1.9.2"
 
 #define GRAPHIC_MAJOR_VER 2
 #define GRAPHIC_MINOR_VER 0

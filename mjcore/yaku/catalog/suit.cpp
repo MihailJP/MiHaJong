@@ -348,7 +348,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("¬ˆêF"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, false) &&
-					((analysis->TileCount[CircleFive] >= 1)||(analysis->TileCount[EastWind] >= 1)));
+					(analysis->TileCount[CircleFive] >= 1) && (analysis->TileCount[EastWind] >= 1));
 			}
 		));
 	/* ¼‹½“ìB */
@@ -506,7 +506,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			[uumenchii](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (uumenchii(analysis) &&
 					(analysis->GameStat->GameRound / 4 == sEast) &&
-					(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) == sEast)
+					(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) == sEast) &&
+					(analysis->KeziCount[EastWind] >= 1)
 					);
 			}
 		));
