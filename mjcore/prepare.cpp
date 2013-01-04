@@ -556,7 +556,6 @@ namespace {
 		/* TODO vanish2@ */
 	}
 	void haipai(GameTable* const gameStat) { // ”z”v
-		/* TODO: ‰æ–Ê‚Ì^‚ñ’†‚Éu“Œ›‹Çv setCenterTitle roundName(getRound(GameStat)) */
 		for (int i = 0; i < (chkGameType(gameStat, AllSanma) ? 36 : 48); i++) { // ‚Q›ï‚¸‚Â‚ğ‚R‰ñ
 			unsigned handIndex = i % 4 + (i / (chkGameType(gameStat, AllSanma) ? 12 : 16)) * 4;
 			PLAYER_ID player;
@@ -569,29 +568,15 @@ namespace {
 			gameStat->Player[player].Hand[handIndex].tile = gameStat->Deck[gameStat->TilePointer].tile;
 			gameStat->Player[player].Hand[handIndex].red  = gameStat->Deck[gameStat->TilePointer].red;
 			++gameStat->TilePointer;
-			if (i == (chkGameType(gameStat, AllSanma) ? 24 : 18)) {
-				// TODO: ‚±‚±‚ÌˆÚA
-				//switch getHonba(GameStat)
-				//	case 0: /* do nothing */ swbreak
-				//	case 1: setCenterTitle "‚P–{ê": swbreak
-				//	case 2: setCenterTitle "‚Q–{ê": swbreak
-				//	case 3: setCenterTitle "‚R–{ê": swbreak
-				//	case 4: setCenterTitle "‚S–{ê": swbreak
-				//	case 5: setCenterTitle "‚T–{ê": swbreak
-				//	case 6: setCenterTitle "‚U–{ê": swbreak
-				//	case 7: setCenterTitle "‚V–{ê": swbreak
-				//	case 8: setCenterTitle "‚W–{ê": swbreak
-				//	case 9: setCenterTitle "‚X–{ê": swbreak
-				//	default: setCenterTitle ""+getHonba(GameStat)+"–{ê"
-				//swend
-			}
+			if ((i == (chkGameType(gameStat, AllSanma) ? 24 : 18)) && (gameStat->Honba > 0))
+				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneHonba);
 			if (i % 4 == 3) {
 				calcdoukasen(gameStat);
 				sound::Play(sound::IDs::sndTsumo);
 				mihajong_graphic::GameStatus::updateGameStat(gameStat); Sleep(250);
 			}
 		}
-		/* TODO: u“Œ›‹Çv‚Ì•\¦‚ğÁ‚· setCenterTitle "" */
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 		for (int i = 0; i < (chkGameType(gameStat, AllSanma) ? 4 : 5); i++) { // ‚P–‡‚¸‚Â‚ğ‚P‰ñAe‚Ìƒ`ƒ‡ƒ“ƒ`ƒ‡ƒ“
 			unsigned handIndex = i / (chkGameType(gameStat, AllSanma) ? 3 : 4) + 12;
 			PLAYER_ID player;
