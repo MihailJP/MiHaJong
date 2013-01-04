@@ -1,4 +1,5 @@
 #include "titling.h"
+#include "../../gametbl.h"
 
 namespace mihajong_graphic {
 
@@ -24,6 +25,25 @@ void TableSubsceneTitling::FadeinStr(const std::wstring& str) {
 	} else if (Zeit >= Ende) {
 		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * len), TableSize / 2 - 192);
 	}
+}
+
+// -------------------------------------------------------------------------
+
+TableSubsceneTitlingHonba::TableSubsceneTitlingHonba(LPDIRECT3DDEVICE9 device) : TableSubsceneTitling(device) {
+}
+TableSubsceneTitlingHonba::~TableSubsceneTitlingHonba() {
+}
+
+const std::wstring TableSubsceneTitlingHonba::Numeral = L"0‚P‚Q‚R‚S‚T‚U‚V‚W‚X";
+
+void TableSubsceneTitlingHonba::Render() {
+	std::wstringstream o;
+	const int honba = GameStatus::gameStat()->Honba;
+	if (honba < 10) o << Numeral.substr(honba, honba + 1);
+	else o << honba;
+	o << L"–{ê";
+	FadeinStr(o.str());
+	myTextRenderer->Render();
 }
 
 // -------------------------------------------------------------------------

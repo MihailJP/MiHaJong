@@ -17,4 +17,13 @@ public:
 	virtual ~TableSubsceneTitling();
 };
 
+class TableSubsceneTitlingHonba : public TableSubsceneTitling {
+private:
+	static const std::wstring Numeral;
+public:
+	TableSubsceneTitlingHonba(LPDIRECT3DDEVICE9 device);
+	~TableSubsceneTitlingHonba();
+	void Render();
+};
+
 }
