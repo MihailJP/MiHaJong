@@ -348,7 +348,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			"¬ˆêF",
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, false) &&
-					((analysis->TileCount[CircleFive] >= 1)||(analysis->TileCount[EastWind] >= 1)));
+					(analysis->TileCount[CircleFive] >= 1) && (analysis->TileCount[EastWind] >= 1));
 			}
 		));
 	/* ¼‹½“ìB */
