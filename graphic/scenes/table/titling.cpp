@@ -27,6 +27,24 @@ void TableSubsceneTitling::FadeinStr(const std::wstring& str) {
 	}
 }
 
+
+// -------------------------------------------------------------------------
+
+TableSubsceneMsg::TableSubsceneMsg(LPDIRECT3DDEVICE9 device, const std::wstring& str) : TableSubsceneTitling(device) {
+	myString = str;
+}
+TableSubsceneMsg::TableSubsceneMsg(LPDIRECT3DDEVICE9 device, const std::string& str) : TableSubsceneTitling(device) {
+	myString = CodeConv::ANSItoWIDE(str);
+}
+
+TableSubsceneMsg::~TableSubsceneMsg() {
+}
+
+void TableSubsceneMsg::Render() {
+	FadeinStr(myString);
+	myTextRenderer->Render();
+}
+
 // -------------------------------------------------------------------------
 
 TableSubsceneTitlingHonba::TableSubsceneTitlingHonba(LPDIRECT3DDEVICE9 device) : TableSubsceneTitling(device) {
