@@ -54,15 +54,14 @@ namespace { // “à•”ˆ—‚Ég‚¤ŠÖ”
 				if (RuleData::chkRule("kuikae", "agari_houki") || RuleData::chkRule("kuikae", "agari_houki_if_in_kind")) {
 					/* ˜a—¹‚è•úŠü‚Æ‚·‚éİ’è */
 					logKuikae(gameStat, false);
-					/* TODO: ‚±‚±‚ÌˆÚA
-					repeat 2
-						setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "‹ò‘Ö"
-						redrscreen: await 1500
-						setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "˜a—¹•úŠü"
-						redrscreen: await 1500
-					loop
-					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), ""
-					*/
+					for (unsigned i = 0; i < 2; ++i) {
+						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Kuikae);
+						mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); Sleep(1500);
+						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::AgariHouki);
+						mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); Sleep(1500);
+					}
+					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
+					mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 					mihajong_graphic::GameStatus::updateGameStat(gameStat);
 					/* ˜a—¹‚è•úŠü‚ÍˆÈ~‹­§ƒcƒ‚Ø‚èA‹­§•s’®ˆµ‚¢‚Æ‚È‚è‚Ü‚· */
 					gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki = true;
@@ -71,12 +70,8 @@ namespace { // “à•”ˆ—‚Ég‚¤ŠÖ”
 				} else if (RuleData::chkRule("kuikae", "chombo") || RuleData::chkRule("kuikae", "chombo_if_in_kind")) {
 					/* ’¼‚¿‚Éö˜a‚Æ‚·‚éİ’è */
 					logKuikae(gameStat, true);
-					/* TODO: ‚±‚±‚ğˆÚA
-					RoundEndType = ENDKYOKU_CHONBO: setTsumoAgariFlag GameStat, AGARI_KUIKAE
-					setCurrentPlayer GameStat, CURRENTPLAYER_AGARI, getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE)
-					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "ö˜a"
-					redrscreen: await 1500
-					*/
+					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Chonbo);
+					mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); Sleep(1500);
 					/* ‹Ç‚ğ‘Å‚¿Ø‚èA–ŠÑ”±•„‚Ìx•¥‚¢‚Éi‚Ş */
 					return true;
 				}
@@ -98,19 +93,17 @@ namespace { // “à•”ˆ—‚Ég‚¤ŠÖ”
 			else
 				warn(_T("­”v‚ğŒŸo‚µ‚Ü‚µ‚½B˜a—¹‚è•úŠü‚Æ‚µ‚Äˆµ‚¢‚Ü‚·‚ªA–Ì‘Å‚Ìˆ—‚Å•s®‡‚ª‹N‚«‚Ä‚¢‚½‰Â”\«‚ª‚ ‚è‚Ü‚·B"));
 			sound::Play(sound::IDs::sndCuohu);
-			/* TODO: ‚±‚±‚ÌˆÚA
-			repeat 2
-				if (tmptilecnt > (NUM_OF_TILES_IN_HAND-1)) {
-					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "‘½”v"
-				} else {
-					setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "­”v"
-				}
-				redrscreen: await 1500
-				setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), "˜a—¹•úŠü"
-				redrscreen: await 1500
-			loop
-			setCall getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), ""
-			*/
+			for (unsigned i = 0; i < 2; ++i) {
+				if (tmptilecnt > (NUM_OF_TILES_IN_HAND - 1))
+					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Tahai);
+				else
+					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Shouhai);
+				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); Sleep(1500);
+				mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::AgariHouki);
+				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); Sleep(1500);
+			}
+			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
+			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki = true;
 			/* TODO: ˆÚA‚·‚é‚©‚à‚µ‚ê‚È‚¢‚µ”p~‚·‚é‚©‚à‚µ‚ê‚È‚¢ if (GetWatchModeFlag(GameEnv) == 0) {statmes "˜a—¹‚è•úŠüF‹­§ƒcƒ‚Ø‚è‚³‚ê‚Ü‚·"} */
