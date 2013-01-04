@@ -117,6 +117,9 @@
     <ClCompile Include="scenes\table\rndstart.cpp">
       <Filter>ソース ファイル\scenes\table</Filter>
     </ClCompile>
+    <ClCompile Include="scenes\table\titling.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scrmanip.h">
@@ -228,6 +231,9 @@
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
     <ClInclude Include="scenes\table\rndstart.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\titling.h">
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
   </ItemGroup>

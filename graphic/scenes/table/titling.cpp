@@ -1,0 +1,31 @@
+#include "titling.h"
+
+namespace mihajong_graphic {
+
+// -------------------------------------------------------------------------
+
+TableSubsceneTitling::TableSubsceneTitling(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
+	myTextRenderer = new HugeTextRenderer(device);
+}
+
+TableSubsceneTitling::~TableSubsceneTitling() {
+	delete myTextRenderer;
+}
+
+void TableSubsceneTitling::FadeinStr(const std::wstring& str) {
+	const uint64_t Zeit = currTime() - startTime, Anfang = 0, Ende = 5000000;
+	unsigned len = 0;
+	for (auto k = str.begin(); k != str.end(); ++k)
+		if (*k <= L'\x7f') len += 1;
+		else len += 2;
+	if ((Zeit >= Anfang) && (Zeit < Ende)) {
+		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * len), TableSize / 2 - 192,
+			1.0f, 1.0f, D3DCOLOR_ARGB((int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f), 255, 255, 255));
+	} else if (Zeit >= Ende) {
+		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * len), TableSize / 2 - 192);
+	}
+}
+
+// -------------------------------------------------------------------------
+
+}
