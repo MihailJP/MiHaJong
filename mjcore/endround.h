@@ -16,4 +16,5 @@
 namespace endround {
 	EndType checkroundabort(GameTable* gameStat); // ‹ÇI—¹ğŒ‚Ì”»’è
 	void endround(const GameTable* gameStat, EndType roundEndType, unsigned OrigTurn, unsigned OrigHonba);
+	bool nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int OrigTurn); // Ÿ‚Ì‹Ç‚Ö(I—¹‚·‚éê‡‚Ítrue)
 }

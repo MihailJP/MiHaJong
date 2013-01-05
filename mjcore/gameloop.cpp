@@ -87,10 +87,7 @@ bool doTableRound(GameTable* const gameStat) {
 	endround::endround(gameStat, roundEndType, OrigTurn, OrigHonba);
 	Sleep(5000);
 	// ”¼‘‘I—¹”»’è
-	/* TODO: ‚±‚ê‚ğˆÚA‚·‚é
-	nextRound GameStat, OrigTurn
-	if (stat) {break}
-	*/
+	/* return */ endround::nextRound(gameStat, roundEndType, OrigTurn);
 	return false; // ‰¼’u‚«
 }
 

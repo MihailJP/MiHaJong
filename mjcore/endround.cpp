@@ -535,3 +535,78 @@ void endround::endround(const GameTable* gameStat, EndType roundEndType, unsigne
 	// TODO: これ haifuwritebuffer GameStat, GameEnv, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType
 	return;
 }
+
+// -------------------------------------------------------------------------
+
+bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int OrigTurn) { // 次の局へ(終了する場合はtrue)
+	// ハコ割れ終了
+	if (RuleData::chkRuleApplied("buttobi_border"))
+		for (PLAYER_ID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
+			if (isDobon(gameStat, i)) return true;
+	// 天辺終了
+	if (RuleData::chkRuleApplied("teppen"))
+		for (PLAYER_ID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
+			if (isTeppen(gameStat, i)) return true;
+	// 和了り止め
+	if (RuleData::chkRuleApplied("agariyame")) {
+		if (((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) == gameStat->GameLength) &&
+			((OrigTurn + gameStat->LoopRound * roundLoopRate()) == gameStat->GameLength) &&
+			((RoundEndType == Agari) || (RuleData::chkRule("agariyame", "yes_also_ready")))) {
+				PlayerRankList Rank = calcRank(gameStat);
+				if ((Rank[gameStat->GameRound % PLAYERS] == 1) &&
+					(gameStat->Player[gameStat->GameRound % PLAYERS].PlayerScore >= LargeNum::fromInt(BasePoint())))
+					return true;
+		}
+	}
+	// 三麻の場合
+	if (chkGameType(gameStat, SanmaT) &&
+		((gameStat->GameRound % PLAYERS) == 3))
+		++(gameStat->GameRound);
+	// 南入した場合……
+	if (gameStat->GameRound == 4) {
+		if (RuleData::chkRule("game_length", "east_north_game")) // 東北廻しのとき
+			gameStat->GameRound = 12;
+		else if (RuleData::chkRule("game_length", "east_west_game")) // 東西廻しのとき
+			gameStat->GameRound = 8;
+		else if (RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game")) // 東々廻しのとき
+			gameStat->GameRound = 16;
+	}
+	// 通常の半荘終了時（トップが３００００点未満だと西入サドンデス）
+	if ((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) > gameStat->GameLength) {
+		bool flag = false;
+		for (PLAYER_ID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
+			if (gameStat->Player[i].PlayerScore >= LargeNum::fromInt(BasePoint()))
+				return true;
+		// 延長戦なし設定
+		if (RuleData::chkRule("sudden_death_type", "no")) return true;
+	}
+	// 延長戦の長さに制限がある場合
+	if (RuleData::chkRule("sudden_death_type", "one_extra_round")) {
+		if ((gameStat->GameRound == 16) && // 東々廻しのとき
+			(RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game"))) {
+				if (((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) >= (gameStat->GameLength + roundLoopRate())))
+					return true;
+		} else { // それ以外のとき
+			if (((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) >= (gameStat->GameLength + 5)))
+				return true;
+		}
+	}
+	// 北場終了の場合は帰り東へ
+	if (gameStat->GameRound == roundLoopRate()) {
+		if (RuleData::chkRule("sudden_death_type", "no")) { // 延長戦無しで終了
+			return true;
+		} else { // 返り東
+			++(gameStat->LoopRound); gameStat->GameRound = 0;
+		}
+	}
+	// 焼き鳥復活ルールの場合
+	if (RuleData::chkRuleApplied("yakitori") && RuleData::chkRuleApplied("yakitori_again")) {
+		bool flag = true;
+		for (PLAYER_ID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
+			if (gameStat->Player[i].YakitoriFlag) flag = false;
+		if (flag)
+			for (PLAYER_ID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
+				gameStat->Player[i].YakitoriFlag = true;
+	}
+	return false;
+}
