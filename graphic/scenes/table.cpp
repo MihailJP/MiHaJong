@@ -574,16 +574,19 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("流局"));
 		break;
 	case tblSubsceneSifeng:
-		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("四風連打"));
+		mySubScene = new TableSubsceneMsg(caller->getDevice(),
+			(GameStatus::gameStat()->gameType & AllSanma) ? _T("三風連打") : _T("四風連打"));
 		break;
 	case tblSubsceneTripleRon:
-		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("三家和"));
+		mySubScene = new TableSubsceneMsg(caller->getDevice(),
+			(GameStatus::gameStat()->gameType & AllSanma) ? _T("二家和") : _T("三家和"));
 		break;
 	case tblSubsceneSikang:
 		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("四開槓"));
 		break;
 	case tblSubsceneFourRiichi:
-		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("四家立直"));
+		mySubScene = new TableSubsceneMsg(caller->getDevice(),
+			(GameStatus::gameStat()->gameType & AllSanma) ? _T("三家立直") : _T("四家立直"));
 		break;
 	case tblSubsceneCall:
 		mySubScene = new TableSubsceneCall(caller->getDevice());
