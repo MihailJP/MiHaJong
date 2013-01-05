@@ -199,15 +199,11 @@ void endround::endround(const GameTable* gameStat, EndType roundEndType, unsigne
 	/**************/
 	/* çrîvó¨ã«éû */
 	/**************/
-	case Ryuukyoku: /* ñ¢é¿ëï */
-#if 0
-		statmes "ó¨ã«Ç≈Ç∑"
-		ResultDesc = "çrîvó¨ã«"
-		chatappend "*** "+ResultDesc+"\n"
-		setCenterTitle "ó¨ã«"
-		bgmplay MUS_RYUUKYOKU
-		snd_play SND_PINGJU
-		redrscreen: await 1500
+	case Ryuukyoku:
+		/* TODO: Ç±ÇÍëΩï™Ç¢ÇÁÇ»Ç¢ statmes "ó¨ã«Ç≈Ç∑" */
+		ResultDesc = _T("çrîvó¨ã«");
+		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
+#if 0 /* ñ¢é¿ëï */
 		TenpaiCnt = 0
 		repeat NUM_OF_PLAYERS
 #ifdef SANMA4
