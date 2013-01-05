@@ -2624,7 +2624,7 @@ FontMapLargeChr::FontMapLargeChr() {
 	m.insert(fMapDat(L'\u4e2d', std::make_pair(true, 6)));
 	m.insert(fMapDat(L'\u5c40', std::make_pair(true, 7)));
 	m.insert(fMapDat(L'\u4e00', std::make_pair(true, 8)));
-	m.insert(fMapDat(L'\u30cb', std::make_pair(true, 9)));
+	m.insert(fMapDat(L'\u4e8c', std::make_pair(true, 9)));
 	m.insert(fMapDat(L'\u4e09', std::make_pair(true, 10)));
 	m.insert(fMapDat(L'\u56db', std::make_pair(true, 11)));
 	m.insert(fMapDat(L'\u4e94', std::make_pair(true, 12)));
