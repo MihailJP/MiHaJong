@@ -84,8 +84,8 @@ bool doTableRound(GameTable* const gameStat) {
 		roundEndType = doTableTurn(gameStat);
 	} while ((roundEndType == DrawRinshan) || (roundEndType == Continuing));
 	int OrigHonba = gameStat->Honba, OrigTurn = gameStat->GameRound;
-	/* TODO: I—¹‚Ìˆ— endround GameStat, GameEnv, RoundEndType, OrigTurn, OrigHonba */
-	/* TODO: await 5000 */
+	endround::endround(gameStat, roundEndType, OrigTurn, OrigHonba);
+	Sleep(5000);
 	// ”¼‘‘I—¹”»’è
 	/* TODO: ‚±‚ê‚ğˆÚA‚·‚é
 	nextRound GameStat, OrigTurn
