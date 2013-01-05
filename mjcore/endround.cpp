@@ -164,7 +164,7 @@ namespace {
 		using namespace CodeConv;
 		if (ResultDesc) {
 			sound::Play(soundNum);
-			logwnd::append((tstring(_T("*** ")) + (*ResultDesc) + _T("\n")).c_str());
+			chat::appendchat((_T("*** ") + (*ResultDesc) + _T("\n")).c_str());
 			Subscene(subsceneCode);
 			Sleep(3000);
 		}
@@ -223,6 +223,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	case Ryuukyoku:
 		/* TODO: Ç±ÇÍëΩï™Ç¢ÇÁÇ»Ç¢ statmes "ó¨ã«Ç≈Ç∑" */
 		ResultDesc = _T("çrîvó¨ã«");
+		chat::appendchat((_T("*** ") + ResultDesc + _T("\n")).c_str());
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
 #if 0 /* ñ¢é¿ëï */
 		TenpaiCnt = 0
