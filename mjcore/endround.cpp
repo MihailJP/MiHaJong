@@ -175,9 +175,30 @@ namespace {
 		Subscene(tblSubsceneRyuukyoku);
 		Sleep(waittime);
 	}
+
+	void ryuukyokuProc(GameTable* gameStat, bool RenchanFlag) {
+		/* TODO: この辺再考のこと
+		repeat NUM_OF_PLAYERS
+			setCall cnt, ""
+		loop
+		setCenterTitle ""
+		if (RenchanFlag) {
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
+		} else {
+			setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
+		}
+		snd_play SND_PAGE
+		redrscreen
+		redraw 1
+		*/
+		++(gameStat->Honba);
+		if (!RenchanFlag) ++(gameStat->GameRound);
+		gameStat->AgariChain = 0; gameStat->LastAgariPlayer = -1;
+		return;
+	}
 }
 
-void endround::endround(const GameTable* gameStat, EndType roundEndType, unsigned OrigTurn, unsigned OrigHonba) {
+void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned OrigTurn, unsigned OrigHonba) {
 	EndType RoundEndType = roundEndType;
 	{
 		CodeConv::tostringstream o;
@@ -277,19 +298,23 @@ void endround::endround(const GameTable* gameStat, EndType roundEndType, unsigne
 				await 500
 			}
 		loop
-		
-		RenchanFlag = 0
-		if (chkRule("round_continuation", "renchan_if_ready")) {
-			if (isTenpai(GameStat, GameEnv, (getRound(GameStat)\NUM_OF_PLAYERS))) {RenchanFlag = 1}
-		} else: if (chkRule("round_continuation", "renchan_always")) {
-			RenchanFlag = 1
-		} else: if (chkRule("round_continuation", "renchan_if_ready_until_final_round")) {
-			if ((isTenpai(GameStat, GameEnv, (getRound(GameStat)\NUM_OF_PLAYERS)))||((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}
-		} else: if (chkRule("round_continuation", "renchan_if_mahjong_until_final_round")) {
-			if ((isTenpai(GameStat, GameEnv, (getRound(GameStat)\NUM_OF_PLAYERS)))&&((getGameLength(GameStat)/NUM_OF_ACTUAL_PLAYERS) <= (getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat))/NUM_OF_ACTUAL_PLAYERS)) {RenchanFlag = 1}
-		}
-		ryuukyokuProc GameStat, RenchanFlag
 #endif
+		
+		bool RenchanFlag = false;
+		if (RuleData::chkRule("round_continuation", "renchan_if_ready")) {
+			if (isTenpai(gameStat, gameStat->GameRound % PLAYERS)) RenchanFlag = true;
+		} else if (RuleData::chkRule("round_continuation", "renchan_always")) {
+			RenchanFlag = true;
+		} else if (RuleData::chkRule("round_continuation", "renchan_if_ready_until_final_round")) {
+			if (isTenpai(gameStat, gameStat->GameRound % PLAYERS) ||
+				((gameStat->GameLength / ACTUAL_PLAYERS) <= (gameStat->LoopRound * roundLoopRate() + gameStat->GameRound) / ACTUAL_PLAYERS))
+				RenchanFlag = true;
+		} else if (RuleData::chkRule("round_continuation", "renchan_if_mahjong_until_final_round")) {
+			if (isTenpai(gameStat, gameStat->GameRound % PLAYERS) &&
+				((gameStat->GameLength / ACTUAL_PLAYERS) <= (gameStat->LoopRound * roundLoopRate() + gameStat->GameRound) / ACTUAL_PLAYERS))
+				RenchanFlag = true;
+		}
+		ryuukyokuProc(gameStat, RenchanFlag);
 		break;
 	/**************/
 	/* 和了成立時 */
@@ -345,18 +370,14 @@ void endround::endround(const GameTable* gameStat, EndType roundEndType, unsigne
 		snd_play SND_PINGJU
 		bgmplay MUS_RYUUKYOKU
 		redrscreen: redraw 1: await 3000
-		if (chkRule("nine_terminals", "next_dealer") == 0) {
-			if ((chkRule("nine_terminals", "renchan_if_dealer_kyuushu") == 0)||(playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat)) == PLAYER_EAST)) {
-				RenchanFlag = 1
-			} else {
-				RenchanFlag = 0
-			}
-		} else {
-			RenchanFlag = 0
-		}
-		ryuukyokuProc GameStat, RenchanFlag
 #endif
-	break;
+		bool RenchanFlag = false;
+		if (RuleData::chkRule("nine_terminals", "next_dealer") == 0)
+			RenchanFlag = ((!RuleData::chkRule("nine_terminals", "renchan_if_dealer_kyuushu")) || (gameStat->CurrentPlayer.Active == (gameStat->GameRound % PLAYERS)));
+		else
+			RenchanFlag = false;
+		ryuukyokuProc(gameStat, RenchanFlag);
+		break;
 	/**************/
 	/* 四槓流局時 */
 	/**************/
@@ -364,7 +385,7 @@ void endround::endround(const GameTable* gameStat, EndType roundEndType, unsigne
 		/* TODO: これの是非を確認 statmes "流局(四開槓)" */
 		ResultDesc = _T("四開槓");
 		ryuukyokuScreen(sound::IDs::voxSikang, &ResultDesc, mihajong_graphic::tblSubsceneSikang);
-		/* TODO: これを移植 ryuukyokuProc GameStat, (chkRule("four_kong_ryuukyoku", "next_dealer") == 0) */
+		ryuukyokuProc(gameStat, !RuleData::chkRule("four_kong_ryuukyoku", "next_dealer"));
 		break;
 	/**************/
 	/* 三家和の時 */
@@ -377,25 +398,17 @@ void endround::endround(const GameTable* gameStat, EndType roundEndType, unsigne
 		*/
 		ResultDesc = chkGameType(gameStat, AllSanma) ? _T("二家和") : _T("三家和");
 		ryuukyokuScreen(sound::IDs::voxSanjiahu, &ResultDesc, mihajong_graphic::tblSubsceneTripleRon);
-		/* TODO: これを移植
-		if (chkRule("triple_mahjong", "renchan_if_nondealer_furikomi")) {
-			if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) != PLAYER_EAST) {
-				RenchanFlag = 1
-			} else {
-				RenchanFlag = 0
-			}
-		} else: if (chkRule("triple_mahjong", "renchan_if_north_furikomi") || chkRule("triple_mahjong", "renchan_if_west_furikomi")) {
-			if (playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_FURIKOMI), getRound(GameStat)) == PLAYER_NORTH) {
-				RenchanFlag = 1
-			} else {
-				RenchanFlag = 0
-			}
-		} else: if (chkRule("triple_mahjong", "same_dealer")) {
-			RenchanFlag = 1
-		} else: if (chkRule("triple_mahjong", "next_dealer")) {
-			RenchanFlag = 0
-		}
-		ryuukyokuProc GameStat, RenchanFlag */
+
+		bool RenchanFlag = false;
+		if (RuleData::chkRule("triple_mahjong", "renchan_if_nondealer_furikomi"))
+			RenchanFlag = (gameStat->CurrentPlayer.Furikomi != (gameStat->GameRound % PLAYERS));
+		else if (RuleData::chkRule("triple_mahjong", "renchan_if_north_furikomi") || RuleData::chkRule("triple_mahjong", "renchan_if_west_furikomi"))
+			RenchanFlag = (gameStat->CurrentPlayer.Furikomi == ((gameStat->GameRound + (chkGameType(gameStat, AllSanma) ? sWest : sNorth)) % PLAYERS));
+		else if (RuleData::chkRule("triple_mahjong", "same_dealer"))
+			RenchanFlag = true;
+		else if (RuleData::chkRule("triple_mahjong", "next_dealer"))
+			RenchanFlag = false;
+		ryuukyokuProc(gameStat, RenchanFlag);
 		break;
 	/**************/
 	/* 四風流局時 */
@@ -407,7 +420,7 @@ void endround::endround(const GameTable* gameStat, EndType roundEndType, unsigne
 		*/
 		ResultDesc = chkGameType(gameStat, AllSanma) ? _T("三風連打") : _T("四風連打");
 		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::tblSubsceneSifeng);
-		/* TODO: これを移植 ryuukyokuProc GameStat, (chkRule("four_wind_ryuukyoku", "next_dealer") == 0) */
+		ryuukyokuProc(gameStat, !RuleData::chkRule("four_wind_ryuukyoku", "next_dealer"));
 		break;
 	/**************/
 	/* 四人立直時 */
@@ -445,7 +458,7 @@ void endround::endround(const GameTable* gameStat, EndType roundEndType, unsigne
 			}
 		loop
 		*/
-		/* TODO: これを移植 ryuukyokuProc GameStat, (chkRule("four_riichi_ryuukyoku", "next_dealer") == 0) */
+		ryuukyokuProc(gameStat, !RuleData::chkRule("four_riichi_ryuukyoku", "next_dealer"));
 		break;
 	/**************/
 	/* 流し満貫時 */
@@ -529,7 +542,7 @@ void endround::endround(const GameTable* gameStat, EndType roundEndType, unsigne
 		/* TODO: こいつをリストラするかどうか決めること statmes "流局(四開槓)" */
 		ResultDesc = _T("四開槓(５回目の槓での流局)");
 		ryuukyokuScreen(sound::IDs::voxSikang, &ResultDesc, mihajong_graphic::tblSubsceneSikang);
-		/* TODO: これを移植する ryuukyokuProc GameStat, (chkRule("fifth_kong", "next_dealer") == 0) */
+		ryuukyokuProc(gameStat, !RuleData::chkRule("fifth_kong", "next_dealer"));
 		break;
 	}
 	// TODO: これ haifuwritebuffer GameStat, GameEnv, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType
