@@ -215,7 +215,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	if ((RoundEndType == Agari) || (RoundEndType == Chonbo)) {
 		/* TODO: ˜a—¹‚èŽž‚Ìˆ— agariproc RoundEndType, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc */
 	}
-	CodeConv::tstring ResultDesc;
+	CodeConv::tstring ResultDesc; bool RenchanFlag = false;
 	switch (RoundEndType) {
 	/**************/
 	/* r”v—¬‹ÇŽž */
@@ -301,7 +301,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		loop
 #endif
 		
-		bool RenchanFlag = false;
 		if (RuleData::chkRule("round_continuation", "renchan_if_ready")) {
 			if (isTenpai(gameStat, gameStat->GameRound % PLAYERS)) RenchanFlag = true;
 		} else if (RuleData::chkRule("round_continuation", "renchan_always")) {
@@ -368,7 +367,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		else ResultDesc = _T("‹ãŽí‹ã”v"); // ©Œˆ‚µ‚ÄŽÀs‚³‚ê‚È‚¢‚Í‚¸
 		chat::appendchat((_T("*** ") + ResultDesc + _T("\n")).c_str());
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
-		bool RenchanFlag = false;
+
 		if (RuleData::chkRule("nine_terminals", "next_dealer") == 0)
 			RenchanFlag = ((!RuleData::chkRule("nine_terminals", "renchan_if_dealer_kyuushu")) || (gameStat->CurrentPlayer.Active == (gameStat->GameRound % PLAYERS)));
 		else
@@ -396,7 +395,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ResultDesc = chkGameType(gameStat, AllSanma) ? _T("“ñ‰Æ˜a") : _T("ŽO‰Æ˜a");
 		ryuukyokuScreen(sound::IDs::voxSanjiahu, &ResultDesc, mihajong_graphic::tblSubsceneTripleRon);
 
-		bool RenchanFlag = false;
 		if (RuleData::chkRule("triple_mahjong", "renchan_if_nondealer_furikomi"))
 			RenchanFlag = (gameStat->CurrentPlayer.Furikomi != (gameStat->GameRound % PLAYERS));
 		else if (RuleData::chkRule("triple_mahjong", "renchan_if_north_furikomi") || RuleData::chkRule("triple_mahjong", "renchan_if_west_furikomi"))
