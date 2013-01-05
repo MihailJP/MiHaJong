@@ -357,21 +357,17 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/* ‹ãŽí—¬‹ÇŽž */
 	/**************/
 	case KyuushuKyuuhai: /* –¢ŽÀ‘• */
-#if 0
-		statmes "—¬‹Ç(‹ãŽí‹ã”v)"
-		switch playerWind(getCurrentPlayer(GameStat, CURRENTPLAYER_ACTIVE), getRound(GameStat))
-			case PLAYER_EAST: ResultDesc = "“Œ‰Æ‚Ì‹ãŽí‹ã”v": swbreak
-			case PLAYER_SOUTH: ResultDesc = "“ì‰Æ‚Ì‹ãŽí‹ã”v": swbreak
-			case PLAYER_WEST: ResultDesc = "¼‰Æ‚Ì‹ãŽí‹ã”v": swbreak
-			case PLAYER_NORTH: ResultDesc = "–k‰Æ‚Ì‹ãŽí‹ã”v": swbreak
-		swend
-		chatappend "*** "+ResultDesc+"\n"
-		await 1500
-		setCenterTitle "—¬‹Ç"
-		snd_play SND_PINGJU
-		bgmplay MUS_RYUUKYOKU
-		redrscreen: redraw 1: await 3000
-#endif
+		if      (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sEast ) % PLAYERS))
+			ResultDesc = _T("“Œ‰Æ‚Ì‹ãŽí‹ã”v");
+		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sSouth) % PLAYERS))
+			ResultDesc = _T("“ì‰Æ‚Ì‹ãŽí‹ã”v");
+		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sWest ) % PLAYERS))
+			ResultDesc = _T("¼‰Æ‚Ì‹ãŽí‹ã”v");
+		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sNorth) % PLAYERS))
+			ResultDesc = _T("–k‰Æ‚Ì‹ãŽí‹ã”v");
+		else ResultDesc = _T("‹ãŽí‹ã”v"); // ©Œˆ‚µ‚ÄŽÀs‚³‚ê‚È‚¢‚Í‚¸
+		chat::appendchat((_T("*** ") + ResultDesc + _T("\n")).c_str());
+		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
 		bool RenchanFlag = false;
 		if (RuleData::chkRule("nine_terminals", "next_dealer") == 0)
 			RenchanFlag = ((!RuleData::chkRule("nine_terminals", "renchan_if_dealer_kyuushu")) || (gameStat->CurrentPlayer.Active == (gameStat->GameRound % PLAYERS)));
