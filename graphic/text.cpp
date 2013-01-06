@@ -15,7 +15,7 @@ TextRenderer::TextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
 }
 HugeTextRenderer::HugeTextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
 	fontmap = FontMapLargeChr::instantiate();
-	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_HUGE), 1792, 1568);
+	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_HUGE), 1792, 2240);
 }
 SmallTextRenderer::SmallTextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
 	fontmap = FontMapSmallChr::instantiate();
