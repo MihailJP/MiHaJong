@@ -5,3 +5,4 @@
 #include "rndstart.h"
 #include "titling.h"
 #include "call.h"
+#include "chktnpai.h"
