@@ -50,4 +50,14 @@ public:
 	static FontMapSmallChr* instantiate();
 };
 
+class FontMapCallDigits : public FontMapClass {
+private:
+	FontMapCallDigits();
+	FontMapCallDigits(const FontMapCallDigits&) {}
+	virtual ~FontMapCallDigits() {}
+	const unsigned short Default_Chr() {return 12;}
+public:
+	static FontMapCallDigits* instantiate();
+};
+
 }

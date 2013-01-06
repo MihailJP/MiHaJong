@@ -18,3 +18,4 @@
 #define IDB_PNG_CHICHAMARK                   112
 #define IDB_PNG_SCORE_INDICATOR              113
 #define IDB_PNG_CALL_TEXT                    114
+#define IDB_PNG_CALL_DIGITS                  115

@@ -17,6 +17,11 @@ FontMapSmallChr* FontMapSmallChr::instantiate() {
 	return &myInstance;
 }
 
+FontMapCallDigits* FontMapCallDigits::instantiate() {
+	static FontMapCallDigits myInstance;
+	return &myInstance;
+}
+
 FontMapClass::charAttr FontMapClass::map(wchar_t c) {
 	if (m.find(c) != m.end()) return m[c];
 	else return std::make_pair(true, Default_Chr());
@@ -10179,6 +10184,48 @@ FontMapSmallChr::FontMapSmallChr() {
 	m.insert(fMapDat(L'\uffe4', std::make_pair(true, 8833)));
 	m.insert(fMapDat(L'\uff07', std::make_pair(true, 8834)));
 	m.insert(fMapDat(L'\uff02', std::make_pair(true, 8835)));
+}
+
+FontMapCallDigits::FontMapCallDigits() {
+	m.insert(fMapDat(L'0', std::make_pair(true, 0)));
+	m.insert(fMapDat(L'1', std::make_pair(true, 1)));
+	m.insert(fMapDat(L'2', std::make_pair(true, 2)));
+	m.insert(fMapDat(L'3', std::make_pair(true, 3)));
+	m.insert(fMapDat(L'4', std::make_pair(true, 4)));
+	m.insert(fMapDat(L'5', std::make_pair(true, 5)));
+	m.insert(fMapDat(L'6', std::make_pair(true, 6)));
+	m.insert(fMapDat(L'7', std::make_pair(true, 7)));
+	m.insert(fMapDat(L'8', std::make_pair(true, 8)));
+	m.insert(fMapDat(L'9', std::make_pair(true, 9)));
+	m.insert(fMapDat(L'.', std::make_pair(true, 10)));
+	m.insert(fMapDat(L'+', std::make_pair(true, 11)));
+	m.insert(fMapDat(L'-', std::make_pair(true, 12)));
+	m.insert(fMapDat(L'\u4e07', std::make_pair(true, 13)));
+	m.insert(fMapDat(L'\u5104', std::make_pair(true, 14)));
+	m.insert(fMapDat(L'\u5146', std::make_pair(true, 15)));
+	m.insert(fMapDat(L'\u4eac', std::make_pair(true, 16)));
+	m.insert(fMapDat(L'\u5793', std::make_pair(true, 17)));
+	m.insert(fMapDat(L'\u677c', std::make_pair(true, 18)));
+	m.insert(fMapDat(L'\u25771', std::make_pair(true, 19)));
+	m.insert(fMapDat(L'\u7a63', std::make_pair(true, 20)));
+	m.insert(fMapDat(L'\u6e9d', std::make_pair(true, 21)));
+	m.insert(fMapDat(L'\u6f97', std::make_pair(true, 22)));
+	m.insert(fMapDat(L'\u6b63', std::make_pair(true, 23)));
+	m.insert(fMapDat(L'\u8f09', std::make_pair(true, 24)));
+	m.insert(fMapDat(L'\u6975', std::make_pair(true, 25)));
+	m.insert(fMapDat(L'\u6052', std::make_pair(true, 26)));
+	m.insert(fMapDat(L'\u6cb3', std::make_pair(true, 27)));
+	m.insert(fMapDat(L'\u6c99', std::make_pair(true, 28)));
+	m.insert(fMapDat(L'\u963f', std::make_pair(true, 29)));
+	m.insert(fMapDat(L'\u50e7', std::make_pair(true, 30)));
+	m.insert(fMapDat(L'\u7947', std::make_pair(true, 31)));
+	m.insert(fMapDat(L'\u90a3', std::make_pair(true, 32)));
+	m.insert(fMapDat(L'\u7531', std::make_pair(true, 33)));
+	m.insert(fMapDat(L'\u4ed6', std::make_pair(true, 34)));
+	m.insert(fMapDat(L'\u4e0d', std::make_pair(true, 35)));
+	m.insert(fMapDat(L'\u53ef', std::make_pair(true, 36)));
+	m.insert(fMapDat(L'\u601d', std::make_pair(true, 37)));
+	m.insert(fMapDat(L'\u8b70', std::make_pair(true, 38)));
 }
 
 }

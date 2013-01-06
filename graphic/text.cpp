@@ -21,6 +21,10 @@ SmallTextRenderer::SmallTextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(d
 	fontmap = FontMapSmallChr::instantiate();
 	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_SMALL), 1880, 1920);
 }
+CallDigitRenderer::CallDigitRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
+	fontmap = FontMapSmallChr::instantiate();
+	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_CALL_DIGITS), 1872, 96);
+}
 
 ITextRenderer::~ITextRenderer() {
 	deleteSprite();
@@ -36,6 +40,8 @@ TextRenderer::~TextRenderer() {
 HugeTextRenderer::~HugeTextRenderer() {
 }
 SmallTextRenderer::~SmallTextRenderer() {
+}
+CallDigitRenderer::~CallDigitRenderer() {
 }
 
 /* 新規の文字列オブジェクトを作成する */
@@ -89,7 +95,7 @@ void ITextRenderer::reconstruct(unsigned int ID, bool rescanStr) {
 	if ((!SpriteData[ID].empty()) && rescanStr) deleteSprite(ID); // 既に存在した場合
 	if (!StringData[ID]) /* ぬるぽ */
 		return; /* ガッ */
-	float chrAdvance = (FontBaseSize() - FontPadding() * 2) * StringData[ID]->scale * StringData[ID]->width;
+	float chrAdvance = (FontWidth() - FontPadding() * 2) * StringData[ID]->scale * StringData[ID]->width;
 	float cursorPos = 0;
 	if (rescanStr) {
 		for (auto k = StringData[ID]->str.begin(); k != StringData[ID]->str.end(); ++k) {
@@ -139,13 +145,13 @@ void ITextRenderer::Render() {
 		for (auto k = (*i).begin(); k != (*i).end(); ++k) {
 			if (!(*k)) continue;
 			RECT rect = {
-				((*k)->chr_id % FontCols()) * FontBaseSize(),
+				((*k)->chr_id % FontCols()) * FontWidth(),
 				((*k)->chr_id / FontCols()) * FontBaseSize(),
-				((*k)->chr_id % FontCols() + 1) * FontBaseSize(),
+				((*k)->chr_id % FontCols() + 1) * FontWidth(),
 				((*k)->chr_id / FontCols() + 1) * FontBaseSize(),
 			};
 			SpriteRenderer::ShowSprite(
-				(*k)->sprite, font, (*k)->X, (*k)->Y, FontBaseSize(), FontBaseSize(),
+				(*k)->sprite, font, (*k)->X, (*k)->Y, FontWidth(), FontBaseSize(),
 				(*k)->color, &rect, 0, 0, &((*k)->matrix));
 		}
 	}
