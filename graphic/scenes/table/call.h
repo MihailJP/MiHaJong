@@ -2,12 +2,14 @@
 
 #include "tablesub.h"
 #include "../../gametbl.h"
+#include "../../calltext.h"
 
 namespace mihajong_graphic {
 
 class TableSubsceneCallProto : public TableSubscene {
 protected:
 	LPDIRECT3DTEXTURE9 tCall; LPD3DXSPRITE sCall;
+	virtual void ShowCallMsg(PLAYER_ID player, calltext::CallType callType, int x, int y) = 0;
 	virtual void ShowCall(PLAYER_ID player, int x, int y) = 0;
 	virtual void ShowAllCall() = 0;
 public:
@@ -17,6 +19,7 @@ public:
 
 class TableSubsceneCallZoomProto : public TableSubsceneCallProto {
 protected:
+	void ShowCallMsg(PLAYER_ID player, calltext::CallType callType, int x, int y);
 	void ShowCall(PLAYER_ID player, int x, int y);
 	void ShowAllCall();
 public:
@@ -33,6 +36,7 @@ public:
 
 class TableSubsceneCallFadeProto : public TableSubsceneCallProto {
 protected:
+	void ShowCallMsg(PLAYER_ID player, calltext::CallType callType, int x, int y);
 	void ShowCall(PLAYER_ID player, int x, int y);
 	void ShowAllCall();
 public:
