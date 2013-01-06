@@ -15,6 +15,7 @@ protected:
 	FontMapClass& operator=(const FontMapClass&) {return *this;}
 	fMap m;
 	virtual const unsigned short Default_Chr() = 0;
+	void readCharMap(int ResourceNum);
 public:
 	static FontMapClass* instantiate() {return nullptr;} // This class is an abstract class which cannot be instantiated
 	charAttr map(wchar_t c);
