@@ -84,7 +84,7 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 			RuleData::getPageCaption, RuleData::storeRule, RuleData::exportRule,
 			RuleData::saveConfigFile, RuleData::chkRule, RuleData::ruleDigit());
 		mihajong_graphic::utils::setfunc(
-			playerwind, playerRelative, RelativePositionOf, tilesLeft, calcRank);
+			playerwind, playerRelative, RelativePositionOf, tilesLeft, calcRank, chkFuriten, isTenpai);
 	}
 
 	/* âπåπÇèâä˙âª */
