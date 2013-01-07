@@ -7,6 +7,7 @@ void SpriteRenderer::ShowSprite(
 	LPD3DXSPRITE sprite, LPDIRECT3DTEXTURE9 texture, int X, int Y, int Width, int Height,
 	D3DCOLOR color, RECT* rect, int CenterX, int CenterY, LPD3DXMATRIX matrix)
 {
+	if ((!sprite) || (!texture)) return; // Ç ÇÈÇ€ÇÕ(ÅEÅÕÅE)∂¥⁄!!
 	RECT defaultRect = {0, 0, Width, Height};
 	D3DXMATRIX defaultMatrix; D3DXMatrixIdentity(&defaultMatrix);
 	D3DXMatrixScaling(&defaultMatrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
