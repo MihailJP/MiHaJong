@@ -634,9 +634,19 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	// 計算を実行
 	for (int i = 4; i < 160; i++) { // 0～3はNoTileなのでやらなくていい
 		while (calculator->numOfFinishedThreads() - calculator->numOfStartedThreads() >= CalculatorThread::threadLimit)
-			Sleep(0); // スレッド数制限のチェック
-		Thread[i] = CreateThread(nullptr, 0, CalculatorThread::calculator, (LPVOID)(&(calcprm[i])), 0, &(ThreadID[i]));
-		Sleep(0);
+			Sleep(1); // スレッド数制限のチェック
+		do {
+			Thread[i] = CreateThread(nullptr, 0, CalculatorThread::calculator, (LPVOID)(&(calcprm[i])), 0, &(ThreadID[i]));
+			if (Thread[i]) break; // 成功したらそれでよし
+			{ // なんで失敗すんねんこのドアホ……
+				CodeConv::tostringstream o;
+				o << _T("スレッドの開始に失敗しました。 ループ[") << i << _T("] エラーコード [") <<
+					std::hex << std::setw(8) << std::setfill(_T('0')) << GetLastError() << _T(']');
+				error(o.str().c_str());
+				Sleep(100);
+			}
+		} while (true);
+		Sleep(1);
 	}
 	calculator->sync(156); // 同期(簡略な実装)
 	// 高点法の処理
