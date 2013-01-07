@@ -128,8 +128,10 @@ void ITextRenderer::reconstruct() {
 void ITextRenderer::deleteSprite(unsigned int ID) {
 	for (auto k = SpriteData[ID].begin(); k != SpriteData[ID].end(); ++k) {
 		if ((*k) && ((*k)->sprite)) {
-			(*k)->sprite->Release(); (*k)->sprite = nullptr;
+			(*k)->sprite->Release();
+			(*k)->sprite = nullptr;
 		}
+		delete (*k);
 	}
 	SpriteData[ID].clear();
 }

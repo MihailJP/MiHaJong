@@ -17,6 +17,7 @@ InputManipulator::InputManipulator(HWND hwnd) {
 
 InputManipulator::~InputManipulator() {
 	if (myKeyboard) delete myKeyboard;
+	if (myMouse) delete myMouse;
 	myInterface->Release();
 }
 

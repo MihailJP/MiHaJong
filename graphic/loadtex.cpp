@@ -4,6 +4,7 @@
 namespace mihajong_graphic {
 
 void LoadTexture(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9* texture, LPCTSTR resource, unsigned width, unsigned height) {
+	/* FIXME: Ç±ÇÃÇ‹Ç‹Ç≈ÇÕÉäÅ[ÉNÇ∑ÇÈÇ¡Ç€Ç¢ÇÃÇ≈Ç»ÇÒÇ∆Ç©ÇµÇÈ */
 	HRSRC Resource = FindResource(GraphicDLL, resource, MAKEINTRESOURCE(PNG_FILE));
 	HGLOBAL ResourceMem = LoadResource(GraphicDLL, Resource);
 	DWORD pngSize = SizeofResource(GraphicDLL, Resource);
