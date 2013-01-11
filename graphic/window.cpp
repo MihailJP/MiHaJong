@@ -1,6 +1,7 @@
 #include "window.h"
 #include "../mihajong/version.h"
 #include "extchar.h"
+#include "loadtex.h"
 
 namespace mihajong_graphic {
 
@@ -92,6 +93,7 @@ MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon) {
 
 MainWindow::~MainWindow() {
 	delete myScreenManipulator; myScreenManipulator = nullptr;
+	UnloadAllTextures();
 }
 
 void MainWindow::Render() { // ウィンドウの再描画
