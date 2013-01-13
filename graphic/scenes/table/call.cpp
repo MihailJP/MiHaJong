@@ -1,7 +1,6 @@
 #include "call.h"
 #include "../../resource.h"
 #include "../../sprite.h"
-#include "../../calltext.h"
 #include "../../utils.h"
 #include "../table.h"
 
@@ -26,8 +25,8 @@ TableSubsceneCallZoomProto::~TableSubsceneCallZoomProto() {
 }
 
 /* •\Ž¦ˆ— */
-void TableSubsceneCallZoomProto::ShowCall(PLAYER_ID player, int x, int y) {
-	if (calltext::getCall(player) == calltext::None) return;
+void TableSubsceneCallZoomProto::ShowCallMsg(PLAYER_ID player, calltext::CallType callType, int x, int y) {
+	if (callType == calltext::None) return;
 	const std::uint64_t curr = currTime();
 	const int animationLength = 2500000;
 	const float scale = (curr >= (startTime + animationLength)) ? 1.0f : std::pow((float)(animationLength - ((signed)curr - (signed)startTime)) / 2.5e6f + 1.0f, 2);
@@ -42,10 +41,14 @@ void TableSubsceneCallZoomProto::ShowCall(PLAYER_ID player, int x, int y) {
 	D3DXMatrixTranslation(&matrix1, (float)x, (float)y, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	RECT rect = {
-		0  , 96 * (calltext::getCall(player)    ),
-		384, 96 * (calltext::getCall(player) + 1),
+		0  , 96 * (callType    ),
+		384, 96 * (callType + 1),
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, col, &rect, 192, 48, &matrix);
+}
+
+void TableSubsceneCallZoomProto::ShowCall(PLAYER_ID player, int x, int y) {
+	ShowCallMsg(player, calltext::getCall(player), x, y);
 }
 
 void TableSubsceneCallZoomProto::ShowAllCall() {
@@ -76,8 +79,8 @@ TableSubsceneCallFadeProto::~TableSubsceneCallFadeProto() {
 }
 
 /* •\Ž¦ˆ— */
-void TableSubsceneCallFadeProto::ShowCall(PLAYER_ID player, int x, int y) {
-	if (calltext::getCall(player) == calltext::None) return;
+void TableSubsceneCallFadeProto::ShowCallMsg(PLAYER_ID player, calltext::CallType callType, int x, int y) {
+	if (callType == calltext::None) return;
 	const std::uint64_t curr = currTime();
 	const int animationLength = 2500000;
 	const D3DCOLOR col = D3DCOLOR_ARGB(
@@ -85,10 +88,14 @@ void TableSubsceneCallFadeProto::ShowCall(PLAYER_ID player, int x, int y) {
 		(int)std::pow((float)((curr - startTime) * 255) / animationLength / 16.0f, 2),
 		0xff, 0xff, 0xff);
 	RECT rect = {
-		0  , 96 * (calltext::getCall(player)    ),
-		384, 96 * (calltext::getCall(player) + 1),
+		0  , 96 * (callType    ),
+		384, 96 * (callType + 1),
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, col, &rect, 192, 48);
+}
+
+void TableSubsceneCallFadeProto::ShowCall(PLAYER_ID player, int x, int y) {
+	ShowCallMsg(player, calltext::getCall(player), x, y);
 }
 
 void TableSubsceneCallFadeProto::ShowAllCall() {
