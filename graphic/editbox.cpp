@@ -21,17 +21,10 @@ EditBox::EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned wid
 	maxStr = 0u; cursorPos = 0u; scrollPos = 0u;
 	cursorBlinkStart = currTime();
 	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX), 88, 56);
-	for (int i = 0; i < 3; i++)
-		if (FAILED(D3DXCreateSprite(device, &(mySprites[i]))))
-			throw _T("スプライトの生成に失敗しました");
 	isActive = false;
 }
 
 EditBox::~EditBox() {
-	for (auto k = myCSprites.begin(); k != myCSprites.end(); ++k)
-		(*k)->Release();
-	for (int i = 0; i < 3; i++)
-		if (mySprites[i]) mySprites[i]->Release();
 	if (myTexture) myTexture->Release();
 	if (cursorLine) cursorLine->Release();
 	if (myTextRenderer) delete myTextRenderer;
@@ -58,34 +51,26 @@ void EditBox::renderFrame(int X, int Y, unsigned width) {
 	RECT rect; rect.left = 0; rect.right = 5;
 	if (isActive) {rect.top = 28; rect.bottom = 56;}
 	else {rect.top = 0; rect.bottom = 28;}
-	SpriteRenderer::ShowSprite(mySprites[0], myTexture, X - 5, Y - 5, 5, 28, 0xffffffff, &rect);
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X - 5, Y - 5, 5, 28, 0xffffffff, &rect);
 	rect.left = 5; rect.right = 82;
 	D3DXMATRIX mat = getMatrix(X, Y, width);
-	SpriteRenderer::ShowSprite(mySprites[1], myTexture, X, Y - 5, width * halffontsz, 28, 0xffffffff, &rect, 0, 0, &mat);
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y - 5, width * halffontsz, 28, 0xffffffff, &rect, 0, 0, &mat);
 	rect.left = 82; rect.right = 87;
-	SpriteRenderer::ShowSprite(mySprites[2], myTexture, X + width * halffontsz, Y - 5, 5, 28, 0xffffffff, &rect);
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X + width * halffontsz, Y - 5, 5, 28, 0xffffffff, &rect);
 }
 
 void EditBox::renderIMCandidateFrame(int X, int Y, unsigned width, unsigned lines) {
 	assert(lines != 0);
 	RECT rect;
-	if (lines != (myCSprites.size() * 3 + 6)) {
-		for (auto k = myCSprites.begin(); k != myCSprites.end(); ++k)
-			(*k)->Release();
-		myCSprites.resize(lines * 3 + 6);
-		for (auto k = myCSprites.begin(); k != myCSprites.end(); ++k)
-			if (FAILED(D3DXCreateSprite(myDevice, &(*k))))
-				throw _T("スプライトの生成に失敗しました");
-	}
 	unsigned spriteNum = 0u;
 	auto drawLine = [&rect, &spriteNum, X, Y, width, this](int y) -> void {
 		rect.left = 0; rect.right = 5;
-		SpriteRenderer::ShowSprite(myCSprites[spriteNum++], myTexture, X - 5, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect);
+		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X - 5, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect);
 		rect.left = 5; rect.right = 82;
 		D3DXMATRIX mat = getMatrix(X, Y, width);
-		SpriteRenderer::ShowSprite(myCSprites[spriteNum++], myTexture, X, Y + y, width * halffontsz, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &mat);
+		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y + y, width * halffontsz, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &mat);
 		rect.left = 82; rect.right = 87;
-		SpriteRenderer::ShowSprite(myCSprites[spriteNum++], myTexture, X + width * halffontsz, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect);
+		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X + width * halffontsz, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect);
 	};
 	rect.top = 28 + 0; rect.bottom = 28 + 5; drawLine(-5);
 	rect.top = 28 + 4; rect.bottom = 28 + 24;

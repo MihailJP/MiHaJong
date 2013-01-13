@@ -100,9 +100,6 @@ void ITextRenderer::reconstruct(unsigned int ID, bool rescanStr) {
 	if (rescanStr) {
 		for (auto k = StringData[ID]->str.begin(); k != StringData[ID]->str.end(); ++k) {
 			SpriteData[ID].push_back(new SpriteAttr);
-			SpriteData[ID].back()->sprite = nullptr;
-			if (FAILED(D3DXCreateSprite(myDevice, &SpriteData[ID].back()->sprite)))
-				throw _T("スプライトの生成に失敗しました");
 			SpriteData[ID].back()->isFullWidth = fontmap->map(*k).first;
 			SpriteData[ID].back()->chr_id = fontmap->map(*k).second;
 			spriteRecalc(ID, SpriteData[ID].back(), chrAdvance, cursorPos);
@@ -126,13 +123,8 @@ void ITextRenderer::reconstruct() {
 
 /* スプライトを削除する */
 void ITextRenderer::deleteSprite(unsigned int ID) {
-	for (auto k = SpriteData[ID].begin(); k != SpriteData[ID].end(); ++k) {
-		if ((*k) && ((*k)->sprite)) {
-			(*k)->sprite->Release();
-			(*k)->sprite = nullptr;
-		}
+	for (auto k = SpriteData[ID].begin(); k != SpriteData[ID].end(); ++k)
 		delete (*k);
-	}
 	SpriteData[ID].clear();
 }
 void ITextRenderer::deleteSprite() {
@@ -152,8 +144,8 @@ void ITextRenderer::Render() {
 				((*k)->chr_id % FontCols() + 1) * FontWidth(),
 				((*k)->chr_id / FontCols() + 1) * FontBaseSize(),
 			};
-			SpriteRenderer::ShowSprite(
-				(*k)->sprite, font, (*k)->X, (*k)->Y, FontWidth(), FontBaseSize(),
+			SpriteRenderer::instantiate(myDevice)->ShowSprite(
+				font, (*k)->X, (*k)->Y, FontWidth(), FontBaseSize(),
 				(*k)->color, &rect, 0, 0, &((*k)->matrix));
 		}
 	}

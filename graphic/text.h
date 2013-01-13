@@ -91,7 +91,6 @@ struct ITextRenderer::StringAttr {
 };
 
 struct ITextRenderer::SpriteAttr {
-	LPD3DXSPRITE sprite;
 	unsigned short chr_id;
 	bool isFullWidth;
 	int X, Y;

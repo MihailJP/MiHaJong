@@ -28,9 +28,9 @@ public:
 class TitleScreen::TitleSprite {
 private:
 	static LPDIRECT3DTEXTURE9 texture;
-	LPD3DXSPRITE sprite;
 	RECT rect;
 	int width, height;
+	LPDIRECT3DDEVICE9 myDevice;
 public:
 	static void LoadTexture(LPDIRECT3DDEVICE9 device);
 	static void DisposeTexture();

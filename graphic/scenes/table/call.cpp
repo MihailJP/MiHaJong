@@ -11,13 +11,10 @@ namespace mihajong_graphic {
 
 TableSubsceneCallProto::TableSubsceneCallProto(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
 	LoadTexture(device, &tCall, MAKEINTRESOURCE(IDB_PNG_CALL_TEXT), 384, 1632);
-	if (FAILED(D3DXCreateSprite(device, &sCall)))
-		throw _T("スプライトの生成に失敗しました");
 }
 
 TableSubsceneCallProto::~TableSubsceneCallProto() {
 	if (tCall) tCall->Release();
-	if (sCall) sCall->Release();
 }
 
 // -------------------------------------------------------------------------
@@ -48,7 +45,7 @@ void TableSubsceneCallZoomProto::ShowCall(PLAYER_ID player, int x, int y) {
 		0  , 96 * (calltext::getCall(player)    ),
 		384, 96 * (calltext::getCall(player) + 1),
 	};
-	SpriteRenderer::ShowSprite(sCall, tCall, x, y, 384, 96, col, &rect, 192, 48, &matrix);
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, col, &rect, 192, 48, &matrix);
 }
 
 void TableSubsceneCallZoomProto::ShowAllCall() {
@@ -91,7 +88,7 @@ void TableSubsceneCallFadeProto::ShowCall(PLAYER_ID player, int x, int y) {
 		0  , 96 * (calltext::getCall(player)    ),
 		384, 96 * (calltext::getCall(player) + 1),
 	};
-	SpriteRenderer::ShowSprite(sCall, tCall, x, y, 384, 96, col, &rect, 192, 48);
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, col, &rect, 192, 48);
 }
 
 void TableSubsceneCallFadeProto::ShowAllCall() {

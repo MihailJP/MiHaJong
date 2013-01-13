@@ -7,7 +7,7 @@ namespace mihajong_graphic {
 
 class TableSubsceneCallProto : public TableSubscene {
 protected:
-	LPDIRECT3DTEXTURE9 tCall; LPD3DXSPRITE sCall;
+	LPDIRECT3DTEXTURE9 tCall;
 	virtual void ShowCall(PLAYER_ID player, int x, int y) = 0;
 	virtual void ShowAllCall() = 0;
 public:

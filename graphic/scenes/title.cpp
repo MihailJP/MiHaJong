@@ -211,11 +211,9 @@ void TitleScreen::TitleSprite::DisposeTexture() {
 TitleScreen::TitleSprite::TitleSprite(LPDIRECT3DDEVICE9 device, int X, int Y, int Width, int Height) {
 	rect.left = X; rect.top = Y; rect.right = X + Width; rect.bottom = Y + Height;
 	width = Width; height = Height;
-	if (FAILED(D3DXCreateSprite(device, &sprite)))
-		throw _T("スプライトの生成に失敗しました");
+	myDevice = device;
 }
 TitleScreen::TitleSprite::~TitleSprite() {
-	if (sprite) sprite->Release();
 }
 void TitleScreen::TitleSprite::show(int X, int Y, float scale, uint8_t opacity) {
 	D3DXMATRIX matrix, matrix1;
@@ -227,8 +225,8 @@ void TitleScreen::TitleSprite::show(int X, int Y, float scale, uint8_t opacity) 
 		(float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight * Geometry::WindowScale(),
 		Geometry::WindowScale(),
 		0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	SpriteRenderer::ShowSprite(
-		sprite, texture, X, Y, width, height,
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(
+		texture, X, Y, width, height,
 		(opacity << 24) | 0xffffff, &rect, width/2, height/3, &matrix);
 }
 

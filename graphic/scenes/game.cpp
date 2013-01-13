@@ -16,13 +16,9 @@ namespace mihajong_graphic {
 void TableProtoScene::LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource, unsigned width, unsigned height) {
 	mihajong_graphic::LoadTexture(caller->getDevice(), texture, resource, width, height);
 }
-void TableProtoScene::InitSprite(LPD3DXSPRITE* sprite) {
-	if (FAILED(D3DXCreateSprite(caller->getDevice(), sprite)))
-		throw _T("スプライトの生成に失敗しました");
-}
 
 TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
-	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR), 960, 1080); InitSprite(&sSideBar);
+	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR), 960, 1080);
 	TileTexture = new ShowTile(caller->getDevice());
 	InitScorePanel();
 }
@@ -31,16 +27,12 @@ TableProtoScene::~TableProtoScene() {
 	for (auto k = scorePanel.begin(); k != scorePanel.end(); ++k)
 		delete *k;
 	if (tSideBar) tSideBar->Release();
-	if (sSideBar) sSideBar->Release();
 	delete TileTexture;
 }
 
-void TableProtoScene::ShowSprite(LPD3DXSPRITE sprite, LPDIRECT3DTEXTURE9 texture, int X, int Y, int Width, int Height) {
-	SpriteRenderer::ShowSprite(sprite, texture, X, Y, Width, Height);
-}
-
 void TableProtoScene::ShowSidebar() {
-	ShowSprite(sSideBar, tSideBar, Geometry::BaseSize, 0, Geometry::SidebarWidth(), 1080);
+	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+		tSideBar, Geometry::BaseSize, 0, Geometry::SidebarWidth(), 1080);
 }
 
 void TableProtoScene::InitScorePanel() {
@@ -85,12 +77,6 @@ PLAYER_ID TableProtoScene::ScoreBoard::playerID() {
 TableProtoScene::ScoreBoard::ScoreBoard(LPDIRECT3DDEVICE9 device, seatRelative relativePos, int x, int y, float widthScale) {
 	myDevice = device; relativePlayerID = relativePos; xpos = x; ypos = y; wScale = widthScale;
 	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR), 860, 120);
-	if (FAILED(D3DXCreateSprite(myDevice, &baseSprite)))
-		throw _T("スプライトの生成に失敗しました");
-	if (FAILED(D3DXCreateSprite(myDevice, &windSprite)))
-		throw _T("スプライトの生成に失敗しました");
-	if (FAILED(D3DXCreateSprite(myDevice, &numSprite)))
-		throw _T("スプライトの生成に失敗しました");
 	// 行列の構築
 	D3DXMATRIX tmpmtx;
 	D3DXMatrixIdentity(&myMatrix); D3DXMatrixIdentity(&tmpmtx);
@@ -102,14 +88,11 @@ TableProtoScene::ScoreBoard::ScoreBoard(LPDIRECT3DDEVICE9 device, seatRelative r
 
 TableProtoScene::ScoreBoard::~ScoreBoard() {
 	if (texture) texture->Release();
-	if (baseSprite) baseSprite->Release();
-	if (windSprite) windSprite->Release();
-	if (numSprite) numSprite->Release();
 }
 
 void TableProtoScene::ScoreBoard::Render() {
 	RECT rect = {0, 0, PanelWidth, PanelHeight};
-	SpriteRenderer::ShowSprite(baseSprite, texture, (int)xpos, (int)ypos,
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos, (int)ypos,
 		PanelWidth, PanelHeight, 0xffffffff, &rect, 0, 0, &myMatrix);
 	renderWind();
 	renderRank();
@@ -122,7 +105,7 @@ void TableProtoScene::ScoreBoard::renderWind() {
 		WindCharX + WindCharWidth * (utils::playerwind(GameStatus::gameStat(), playerID(), GameStatus::gameStat()->GameRound)    ), WindCharY,
 		WindCharX + WindCharWidth * (utils::playerwind(GameStatus::gameStat(), playerID(), GameStatus::gameStat()->GameRound) + 1), WindCharY + WindCharHeight
 	};
-	SpriteRenderer::ShowSprite(windSprite, texture, (int)xpos + WindPosX, (int)ypos + WindPosY,
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + WindPosX, (int)ypos + WindPosY,
 		WindCharWidth, WindCharHeight, 0xffff0000, &rect, 0, 0, &myMatrix);
 }
 
@@ -131,7 +114,7 @@ void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num) {
 		NumCharX + NumCharWidth * (num    ), NumCharY,
 		NumCharX + NumCharWidth * (num + 1), NumCharY + NumCharHeight
 	};
-	SpriteRenderer::ShowSprite(numSprite, texture, (int)xpos + x, (int)ypos + y,
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + x, (int)ypos + y,
 		NumCharWidth, NumCharHeight, 0xffff0000, &rect, 0, 0, &myMatrix);
 }
 
@@ -195,7 +178,7 @@ void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum) {
 		ScoreUnitCharX + ScoreUnitCharWidth * (unitnum    ), ScoreUnitCharY,
 		ScoreUnitCharX + ScoreUnitCharWidth * (unitnum + 1), ScoreUnitCharY + ScoreUnitCharHeight
 	};
-	SpriteRenderer::ShowSprite(numSprite, texture, (int)xpos + ScoreUnitPosX, (int)ypos + ScoreUnitPosY,
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + ScoreUnitPosX, (int)ypos + ScoreUnitPosY,
 		ScoreUnitCharWidth, ScoreUnitCharHeight, 0xffff0000, &rect, 0, 0, &myMatrix);
 }
 

@@ -29,7 +29,6 @@ private:
 	struct TileDescriptor;
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 TileTexture;
-	LPD3DXSPRITE sprite;
 	std::vector<TileDescriptor*> mySprites;
 	void RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY);
 	void RenderVert(TileDescriptor* tile, RECT* rect);
