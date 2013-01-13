@@ -2,6 +2,7 @@
 #include "resource.h"
 #include <map>
 #include <cassert>
+#include "../mjcore/strcode.h"
 
 namespace mihajong_graphic {
 
@@ -50,7 +51,9 @@ void LoadTexture(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9* texture, LPCTSTR 
 void UnloadAllTextures() {
 	for (auto k = Textures.begin(); k != Textures.end(); ++k) {
 		ULONG refs = (*k).second->Release();
-		assert(refs == 0);
+		CodeConv::tostringstream o;
+		o << _T("UnloadAllTextures(): Texture resource #") << (*k).first << _T(": remaining number of refs is ") << refs << std::endl;
+		OutputDebugString(o.str().c_str());
 	}
 	Textures.clear();
 }
