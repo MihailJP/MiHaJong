@@ -37,6 +37,7 @@ GameTableScreen::~GameTableScreen() {
 	delete nakihaiReconst;
 	if (tDice) tDice->Release();
 	if (tRichi) tRichi->Release();
+	if (tChiicha) tChiicha->Release();
 	if (tBorder) tBorder->Release();
 	if (tBaize) tBaize->Release();
 }
