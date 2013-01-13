@@ -29,7 +29,7 @@ private:
 	struct TileDescriptor;
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 TileTexture;
-	std::vector<TileDescriptor*> mySprites;
+	std::vector<TileDescriptor> mySprites;
 	void RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY);
 	void RenderVert(TileDescriptor* tile, RECT* rect);
 	void RenderHori(TileDescriptor* tile, RECT* rect);
@@ -43,6 +43,7 @@ public:
 };
 
 struct ShowTile::TileDescriptor {
+	bool exist;
 	tileCode tile;
 	doraCol red;
 	int X, Y;
