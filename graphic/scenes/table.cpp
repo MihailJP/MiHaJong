@@ -81,13 +81,20 @@ void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID ta
 			throw _T("calcTileNum: Invalid mode!");
 		}
 	};
-	auto getRinshanFlag = [&gameStat, &yamahaiAttr](unsigned ActiveTileNum) -> bool {
-		const unsigned NumberOfTiles = std::get<1>(yamahaiAttr);
-		bool RinshanFlag = false;
-		for (unsigned i = 0; i <= 10; i += 2)
-			if ((ActiveTileNum == i) && (gameStat->RinshanPointer < NumberOfTiles - i - 2)) RinshanFlag = true;
-		return RinshanFlag;
+	auto getRinshanFlag = [gameStat, yamahaiAttr](unsigned int a) -> std::function<bool (unsigned)> {
+		const GameTable* const gameStat_ = gameStat;
+		const std::tuple<unsigned, unsigned, unsigned, unsigned> yamahaiAttr_ = yamahaiAttr;
+		return
+		[gameStat_, yamahaiAttr_, a](unsigned ActiveTileNum) -> bool {
+			const unsigned NumberOfTiles = std::get<1>(yamahaiAttr_);
+			bool RinshanFlag = false;
+			for (unsigned i = 0; i <= 10; i += 2)
+				if ((ActiveTileNum == i) && (gameStat_->RinshanPointer < NumberOfTiles - i - a)) RinshanFlag = true;
+			return RinshanFlag;
+		};
 	};
+	auto getRinshanFlag2 = getRinshanFlag(2);
+	auto getRinshanFlag1 = getRinshanFlag(1);
 	switch (tmpPlayerCode) {
 	case sOpposite:
 		for (int i = (18 - std::get<2>(yamahaiAttr)) * 2; i < 36; i += 2) { /* ‘Î–Ê‘¤‚ÌŽR */
@@ -95,10 +102,10 @@ void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID ta
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i); TileTexture->DelTile(i + 1);
-			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
 				TileTexture->NewTile(      i    , gameStat->Deck[k + 1].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2 - 1),
 				DeckPosV,                 UpsideDown, Reverse);
-			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
 				TileTexture->NewTile(      i + 1, gameStat->Deck[k    ].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2 - 1),
 				DeckPosV - TileThickness, UpsideDown, dora ? Obverse : Reverse);
 		}
@@ -109,10 +116,10 @@ void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID ta
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 36); TileTexture->DelTile(i + 37);
-			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
 				TileTexture->NewTile( 36 + i    , gameStat->Deck[k + 1].tile, Normal, DeckPosV,
 				DeckPosH                 + ShowTile::VertTileWidth * (i / 2), Clockwise, Reverse);
-			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
 				TileTexture->NewTile( 36 + i + 1, gameStat->Deck[k    ].tile, Normal, DeckPosV,
 				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2), Clockwise, dora ? Obverse : Reverse);
 		}
@@ -123,10 +130,10 @@ void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID ta
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 72); TileTexture->DelTile(i + 73);
-			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
 				TileTexture->NewTile( 72 + i    , gameStat->Deck[k + 1].tile, Normal, TableSize - DeckPosV,
 				DeckPosH                 + ShowTile::VertTileWidth * (i / 2 - 1), Withershins, Reverse);
-			if ((gameStat->TilePointer <= k) && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
 				TileTexture->NewTile( 72 + i + 1, gameStat->Deck[k    ].tile, Normal, TableSize - DeckPosV,
 				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2 - 1), Withershins, dora ? Obverse : Reverse);
 		}
@@ -137,10 +144,10 @@ void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID ta
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k  >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 108); TileTexture->DelTile(i + 109);
-			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
 				TileTexture->NewTile(108 + i    , gameStat->Deck[k + 1].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2),
 				TableSize - DeckPosV,                 Portrait, Reverse);
-			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
 				TileTexture->NewTile(108 + i + 1, gameStat->Deck[k    ].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2),
 				TableSize - DeckPosV - TileThickness, Portrait, dora ? Obverse : Reverse);
 		}
