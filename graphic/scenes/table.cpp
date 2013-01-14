@@ -300,6 +300,14 @@ void GameTableScreen::ReconstructSutehai_rotated(const GameTable* gameStat, PLAY
 }
 void GameTableScreen::ReconstructSutehai(const GameTable* gameStat, PLAYER_ID targetPlayer) {
 	unsigned tilePosCol = 0, tilePosRow = 0; bool shiftPosFlag = false, riichiFlag = false;
+	for (unsigned tileID = 0; tileID < 33; ++tileID) {
+		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
+			case sOpposite: TileTexture->DelTile(296 - tileID); break; /* ‘Î–Ê */
+			case sLeft:     TileTexture->DelTile(297 + tileID); break; /* ã‰Æ */
+			case sRight:    TileTexture->DelTile(362 - tileID); break; /* ‰º‰Æ */
+			case sSelf:     TileTexture->DelTile(363 + tileID); break; /* Ž©•ª */
+		}
+	}
 	for (unsigned i = 0; i < gameStat->Player.val[targetPlayer].DiscardPointer; ++i) {
 		if ((gameStat->Player.val[targetPlayer].Discard[i + 1].dstat == discardRiichi) ||
 			(gameStat->Player.val[targetPlayer].Discard[i + 1].dstat == discardRiichiTaken))
