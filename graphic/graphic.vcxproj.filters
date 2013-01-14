@@ -123,6 +123,9 @@
     <ClCompile Include="scenes\table\chktnpai.cpp">
       <Filter>ソース ファイル\scenes\table</Filter>
     </ClCompile>
+    <ClCompile Include="scenes\table\callval.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scrmanip.h">
@@ -240,6 +243,9 @@
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
     <ClInclude Include="scenes\table\chktnpai.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\callval.h">
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
   </ItemGroup>
