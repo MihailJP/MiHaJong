@@ -176,6 +176,36 @@ namespace {
 		Sleep(waittime);
 	}
 
+	unsigned checkTenpai(GameTable* gameStat, CodeConv::tstring& ResultDesc, unsigned OrigTurn) {
+		unsigned TenpaiCnt = 0;
+		for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
+			if (chkGameType(gameStat, Sanma4) && (playerwind(gameStat, i, OrigTurn)))
+				continue; // llO–ƒ‚Ì–k‰Æ‚Í–³‹
+			if (isTenpai(gameStat, i)) { // ’®”v‚Ì
+				++TenpaiCnt; gameStat->Player[i].HandStat = handExposed;
+			} else if (gameStat->Player[i].RichiFlag.RichiFlag) { // ö˜a(•s’®)ƒŠ[ƒ`‚Ì
+				gameStat->Player[i].HandStat = handExposed;
+			} else { // •s’®‚Ì‚Í•š‚¹‚é
+				gameStat->Player[i].HandStat = handHidden;
+			}
+		}
+		CodeConv::tstring TenpaiCountTxt;
+		switch (TenpaiCnt) {
+			case 0: TenpaiCountTxt = _T("‘Sˆõ•s’®"); break;
+			case 1: TenpaiCountTxt = _T("‚Pl’®”v"); break;
+			case 2: TenpaiCountTxt = _T("‚Ql’®”v"); break;
+			case 3: TenpaiCountTxt = _T("‚Rl’®”v"); break;
+			case 4: TenpaiCountTxt = _T("‚Sl’®”v"); break;
+		}
+		ResultDesc = _T("r”v—¬‹ÇA") + TenpaiCountTxt;
+		/* TODO: ‚±‚ê‚¢‚ç‚È‚¢‚©Šm”F statmes "—¬‹Ç "+TenpaiCountTxt */
+		chat::appendchat((_T("*** ") + TenpaiCountTxt + _T("‚Å‚·\n")).c_str());
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChkTenpai);
+		Sleep(5000);
+		return TenpaiCnt;
+	}
+
 	void ryuukyokuProc(GameTable* gameStat, bool RenchanFlag) {
 		/* TODO: ‚±‚Ì•ÓÄl‚Ì‚±‚Æ
 		repeat NUM_OF_PLAYERS
@@ -225,39 +255,8 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ResultDesc = _T("r”v—¬‹Ç");
 		chat::appendchat((_T("*** ") + ResultDesc + _T("\n")).c_str());
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
+		checkTenpai(gameStat, ResultDesc, OrigTurn);
 #if 0 /* –¢À‘• */
-		TenpaiCnt = 0
-		repeat NUM_OF_PLAYERS
-#ifdef SANMA4
-			if (playerWind(cnt, getRound(GameStat)) == PLAYER_NORTH) {
-				continue // –k‰Æ‚Í–³‹
-			}
-#endif
-			if (isTenpai(GameStat, GameEnv, cnt)) {
-				TenpaiCnt++
-				setHandStat GameStat, cnt, 1
-				setCall cnt, "’®”v"
-			} else:if (getRichiFlag(GameStat, RICHI_FLAG, cnt)) {
-				setHandStat GameStat, cnt, 1
-				setCall cnt, "ö˜a"
-			} else {
-				setHandStat GameStat, cnt, 2
-				setCall cnt, "•s’®"
-			}
-		loop
-		switch TenpaiCnt
-			case 0: TenpaiCountTxt = "‘Sˆõ•s’®": swbreak
-			case 1: TenpaiCountTxt = "‚Pl’®”v": swbreak
-			case 2: TenpaiCountTxt = "‚Ql’®”v": swbreak
-			case 3: TenpaiCountTxt = "‚Rl’®”v": swbreak
-			case 4: TenpaiCountTxt = "‚Sl’®”v": swbreak
-		swend
-		ResultDesc = "r”v—¬‹ÇA"+TenpaiCountTxt
-		statmes "—¬‹Ç "+TenpaiCountTxt
-		chatappend "*** "+TenpaiCountTxt+"‚Å‚·\n"
-		setCenterTitle TenpaiCountTxt
-//			title "—¬‹Ç"
-		redrscreen: await 5000
 		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
 		repeat NUM_OF_ACTUAL_PLAYERS
 #ifdef SANMA4
