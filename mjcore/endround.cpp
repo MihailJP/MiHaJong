@@ -617,3 +617,66 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 	}
 	return false;
 }
+
+// -------------------------------------------------------------------------
+
+namespace {
+	InfoByPlayer<LargeNum> delta;
+
+	std::tuple<bool, signed short> checkExponent(PLAYER_ID player, unsigned group, unsigned digit) {
+		if (delta[player].digitGroup[group] / (int)std::pow(10.0, (int)digit) != 0) {
+			if (digit == 0) {
+				assert(group != 0);
+				return std::make_tuple(true,
+					(delta[player].digitGroup[group] % 10) * 100 + delta[player].digitGroup[group - 1] / 1000000);
+			} else if (digit == 1) {
+				assert(group != 0);
+				return std::make_tuple(true,
+					(delta[player].digitGroup[group] % 100) * 10 + delta[player].digitGroup[group - 1] / 10000000);
+			} else {
+				return std::make_tuple(true,
+					(delta[player].digitGroup[group] / ((int)std::pow(10.0, (int)digit) - 2)) % 1000);
+			}
+		}
+		else if ((group == 0) && (digit == 2))
+			return std::make_tuple(true, delta[player].digitGroup[0]);
+		else return std::make_tuple(false, 0);
+	}
+
+	void setTransferParam() {
+		bool finishFlag = false; signed short mantissa = 0;
+		for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
+			mihajong_graphic::callvalue::CallValue callVal = {0, 0u};
+			for (int j = DIGIT_GROUPS - 1; j >= 0; --j) {
+				for (int k = (j == DIGIT_GROUPS - 1) ? 9 : 7; k >= 0; --k) {
+					std::tie(finishFlag, mantissa) = checkExponent(i, j, k);
+					if (finishFlag) {
+						callVal.Exponent = j * 8 + k;
+						callVal.Mantissa = mantissa;
+						break;
+					}
+				}
+				if (finishFlag) break;
+			}
+			if (mantissa != 0)
+				mihajong_graphic::callvalue::setVal(i, callVal.Mantissa, callVal.Exponent);
+			else
+				mihajong_graphic::callvalue::setVal(i, 0, 0u);
+		}
+	}
+}
+void endround::transfer::resetDelta() {
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+		delta[i] = LargeNum::fromInt(0);
+}
+void endround::transfer::addDelta(PLAYER_ID player, LargeNum& deltaVal) {
+	delta[player] += deltaVal;
+}
+void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, unsigned wait) {
+	setTransferParam();
+	mihajong_graphic::Subscene(subscene);
+	Sleep(wait);
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+		gameStat->Player[i].PlayerScore += delta[i];
+	mihajong_graphic::GameStatus::updateGameStat(gameStat);
+}
