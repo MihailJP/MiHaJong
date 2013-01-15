@@ -21,6 +21,7 @@ enum TableSubsceneID : unsigned int { // 卓画面のサブシーン番号
 	tblSubsceneCall, // 発声表示画面
 	tblSubsceneCallFade, // 発声表示画面(フェード)
 	tblSubsceneCallVal, // 点数の増分表示
+	tblSubsceneCallValNotenBappu, // 点数の増分表示（ノーテン罰符）
 	tblSubsceneChkTenpai, // 流局時の聴牌確認
 };
 
