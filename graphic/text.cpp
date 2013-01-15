@@ -22,7 +22,7 @@ SmallTextRenderer::SmallTextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(d
 	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_SMALL), 1880, 1920);
 }
 CallDigitRenderer::CallDigitRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
-	fontmap = FontMapSmallChr::instantiate();
+	fontmap = FontMapCallDigits::instantiate();
 	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_CALL_DIGITS), 1872, 96);
 }
 
