@@ -51,6 +51,7 @@ void SpriteRenderer::ShowSprite(
 	D3DXVECTOR3 Pos((float)X, (float)Y, 0);
 	sprite->SetTransform(matrix ? matrix : &defaultMatrix);
 	sprite->Draw(texture, rect ? rect : &defaultRect, &Center, &Pos, color);
+	sprite->Flush();
 }
 
 }
