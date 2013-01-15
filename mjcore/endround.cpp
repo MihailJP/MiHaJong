@@ -179,7 +179,7 @@ namespace {
 	unsigned checkTenpai(GameTable* gameStat, CodeConv::tstring& ResultDesc, unsigned OrigTurn) {
 		unsigned TenpaiCnt = 0;
 		for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
-			if (chkGameType(gameStat, Sanma4) && (playerwind(gameStat, i, OrigTurn)))
+			if (chkGameType(gameStat, Sanma4) && (playerwind(gameStat, i, OrigTurn) == sNorth))
 				continue; // ŽllŽO–ƒ‚Ì–k‰Æ‚Í–³Ž‹
 			if (isTenpai(gameStat, i)) { // ’®”v‚ÌŽž
 				++TenpaiCnt; gameStat->Player[i].HandStat = handExposed;
@@ -204,6 +204,30 @@ namespace {
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChkTenpai);
 		Sleep(5000);
 		return TenpaiCnt;
+	}
+
+	void transferNotenBappu(GameTable* gameStat, unsigned OrigTurn, unsigned TenpaiCnt) {
+		using namespace endround::transfer;
+		resetDelta();
+		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; ++i) {
+			if (chkGameType(gameStat, Sanma4) && (playerwind(gameStat, i, OrigTurn) == sNorth))
+				continue; // ŽllŽO–ƒ‚Ì–k‰Æ‚Í–³Ž‹
+			if (chkGameType(gameStat, AllSanma)) { // ŽO–ƒ‚Ìê‡
+				if ((TenpaiCnt > 0) && (TenpaiCnt < 3)) {
+					if (isTenpai(gameStat, i))
+						addDelta(i, LargeNum::fromInt(3000 / TenpaiCnt));
+					else addDelta(i, LargeNum::fromInt(-3000 / (signed)(3 - TenpaiCnt)));
+				}
+			} else { // Žl–ƒ‚Ìê‡
+				if ((TenpaiCnt > 0) && (TenpaiCnt < 4)) {
+					if (isTenpai(gameStat, i))
+						addDelta(i, LargeNum::fromInt(3000 / TenpaiCnt));
+					else addDelta(i, LargeNum::fromInt(-3000 / (signed)(4 - TenpaiCnt)));
+				}
+			}
+		}
+		if ((TenpaiCnt > 0) && (TenpaiCnt < ACTUAL_PLAYERS))
+			transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValNotenBappu, 2500);
 	}
 
 	void ryuukyokuProc(GameTable* gameStat, bool RenchanFlag) {
@@ -255,42 +279,10 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ResultDesc = _T("r”v—¬‹Ç");
 		chat::appendchat((_T("*** ") + ResultDesc + _T("\n")).c_str());
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
-		checkTenpai(gameStat, ResultDesc, OrigTurn);
+		transferNotenBappu(gameStat, OrigTurn,
+			checkTenpai(gameStat, ResultDesc, OrigTurn));
+
 #if 0 /* –¢ŽÀ‘• */
-		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-		repeat NUM_OF_ACTUAL_PLAYERS
-#ifdef SANMA4
-			if (playerWind(cnt, getRound(GameStat)) == PLAYER_NORTH) {
-				continue // –k‰Æ‚Í–³Ž‹
-			}
-#endif
-#ifdef ALLSANMA
-			if (isTenpai(GameStat, GameEnv, cnt)) {
-				if (TenpaiCnt == 1) {PointDelta(cnt) += 30}
-				if (TenpaiCnt == 2) {PointDelta(cnt) += 15}
-			} else {
-				if (TenpaiCnt == 1) {PointDelta(cnt) -= 15}
-				if (TenpaiCnt == 2) {PointDelta(cnt) -= 30}
-			}
-#else
-			if (isTenpai(GameStat, GameEnv, cnt)) {
-				if (TenpaiCnt == 1) {PointDelta(cnt) += 30}
-				if (TenpaiCnt == 2) {PointDelta(cnt) += 15}
-				if (TenpaiCnt == 3) {PointDelta(cnt) += 10}
-			} else {
-				if (TenpaiCnt == 1) {PointDelta(cnt) -= 10}
-				if (TenpaiCnt == 2) {PointDelta(cnt) -= 15}
-				if (TenpaiCnt == 3) {PointDelta(cnt) -= 30}
-			}
-#endif
-		loop
-		if ((TenpaiCnt > 0)&&(TenpaiCnt < NUM_OF_ACTUAL_PLAYERS)) {
-			setCenterTitle "•s’®”±•„"
-			putdelta PointDelta
-			redraw 1: await 2500
-			pointcalc GameStat, PointDelta
-		}
-		
 		repeat NUM_OF_ACTUAL_PLAYERS
 			// ö˜a—§’¼i•s’®—§’¼j‚ÌŽÒ‚ª‚¢‚½ê‡
 			if ((isTenpai(GameStat, GameEnv, cnt) == 0)&&(getRichiFlag(GameStat, RICHI_FLAG, cnt))) {
@@ -616,4 +608,67 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 				gameStat->Player[i].YakitoriFlag = true;
 	}
 	return false;
+}
+
+// -------------------------------------------------------------------------
+
+namespace {
+	InfoByPlayer<LargeNum> delta;
+
+	std::tuple<bool, signed short> checkExponent(PLAYER_ID player, unsigned group, unsigned digit) {
+		if (delta[player].digitGroup[group] / (int)std::pow(10.0, (int)digit) != 0) {
+			if (digit == 0) {
+				assert(group != 0);
+				return std::make_tuple(true,
+					(delta[player].digitGroup[group] % 10) * 100 + delta[player].digitGroup[group - 1] / 1000000);
+			} else if (digit == 1) {
+				assert(group != 0);
+				return std::make_tuple(true,
+					(delta[player].digitGroup[group] % 100) * 10 + delta[player].digitGroup[group - 1] / 10000000);
+			} else {
+				return std::make_tuple(true,
+					(delta[player].digitGroup[group] / ((int)std::pow(10.0, (int)digit) - 2)) % 1000);
+			}
+		}
+		else if ((group == 0) && (digit == 2))
+			return std::make_tuple(true, delta[player].digitGroup[0]);
+		else return std::make_tuple(false, 0);
+	}
+
+	void setTransferParam() {
+		bool finishFlag = false; signed short mantissa = 0;
+		for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
+			mihajong_graphic::callvalue::CallValue callVal = {0, 0u};
+			for (int j = DIGIT_GROUPS - 1; j >= 0; --j) {
+				for (int k = (j == DIGIT_GROUPS - 1) ? 9 : 7; k >= 0; --k) {
+					std::tie(finishFlag, mantissa) = checkExponent(i, j, k);
+					if (finishFlag) {
+						callVal.Exponent = j * 8 + k;
+						callVal.Mantissa = mantissa;
+						break;
+					}
+				}
+				if (finishFlag) break;
+			}
+			if (mantissa != 0)
+				mihajong_graphic::callvalue::setVal(i, callVal.Mantissa, callVal.Exponent);
+			else
+				mihajong_graphic::callvalue::setVal(i, 0, 0u);
+		}
+	}
+}
+void endround::transfer::resetDelta() {
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+		delta[i] = LargeNum::fromInt(0);
+}
+void endround::transfer::addDelta(PLAYER_ID player, LargeNum& deltaVal) {
+	delta[player] += deltaVal;
+}
+void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, unsigned wait) {
+	setTransferParam();
+	mihajong_graphic::Subscene(subscene);
+	Sleep(wait);
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+		gameStat->Player[i].PlayerScore += delta[i];
+	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 }
