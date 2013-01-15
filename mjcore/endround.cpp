@@ -627,7 +627,7 @@ namespace {
 					(delta[player].digitGroup[group] % 100) * 10 + delta[player].digitGroup[group - 1] / 10000000);
 			} else {
 				return std::make_tuple(true,
-					(delta[player].digitGroup[group] / ((int)std::pow(10.0, (int)digit) - 2)) % 1000);
+					(delta[player].digitGroup[group] / ((int)std::pow(10.0, (int)digit - 2))) % 1000);
 			}
 		}
 		else if ((group == 0) && (digit == 2))
