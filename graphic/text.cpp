@@ -66,6 +66,7 @@ void ITextRenderer::NewText(unsigned int ID, const std::string& str, int x, int 
 
 /* 文字列オブジェクトの後始末 */
 void ITextRenderer::DelText(unsigned int ID) {
+	if (StringData.size() <= ID) return;
 	delete StringData[ID]; StringData[ID] = nullptr;
 	deleteSprite(ID);
 }
