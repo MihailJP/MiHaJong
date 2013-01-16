@@ -637,7 +637,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 	switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
 	case sOpposite:
 		return std::make_tuple(
-			[=](unsigned i) -> unsigned {return 215 - i - IDOffset;},
+			[=](unsigned i) -> unsigned {return 203 - i + IDOffset;},
 			[=](unsigned i) -> int {
 				switch (i) {
 					case 0: return TableSize - h1; break;
