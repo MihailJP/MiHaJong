@@ -18,7 +18,7 @@ const CodeConv::tstring haifu::HTtilecodelabel1 =
 const CodeConv::tstring haifu::HTtilecodelabel2 =
 	_T(" QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   -^\\[%@;:]");
 
-InfoByPlayer<LargeNum> haifu::origPoint;
+InfoByPlayer<LNum> haifu::origPoint;
 CodeConv::tostringstream haifu::haifuBuffer, haifu::HThaifuBuffer;
 bool haifu::haifukanflag = false;
 
@@ -704,7 +704,7 @@ void haifu::tools::hfwriter::finalformWriter::hfExposedMeld(const GameTable* con
 void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, PLAYER_ID player, seatAbsolute wind) {
 	// ì_êîÇÃïœìÆ
 	CodeConv::tostringstream o;
-	o << _T(" ") << origPoint[player].bignumtotext(_T(""), _T("Å¢"));
+	o << _T(" ") << origPoint[player].to_str(_T(""), _T("Å¢"));
 	if (origPoint[player] != gameStat->Player[player].PlayerScore) // ì_êîÇ™àÍívÇµÇ»Ç¢Ç»ÇÁ
 		o << _T(" Å® ") <<
 			gameStat->Player[player].PlayerScore.bignumtotext(_T(""), _T("Å¢")) << _T(" (") <<
