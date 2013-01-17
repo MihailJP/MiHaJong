@@ -346,7 +346,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	/* ‹ãí—¬‹Ç */
 	/**************/
-	case KyuushuKyuuhai: /* –¢À‘• */
+	case KyuushuKyuuhai:
 		if      (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sEast ) % PLAYERS))
 			ResultDesc = _T("“Œ‰Æ‚Ì‹ãí‹ã”v");
 		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sSouth) % PLAYERS))
@@ -418,21 +418,8 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		*/
 		ResultDesc = chkGameType(gameStat, AllSanma) ? _T("O‰Æ—§’¼") : _T("l‰Æ—§’¼");
 		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::tblSubsceneFourRiichi, 1500u);
-		/* TODO: ’®”v‚©‚Ç‚¤‚©Šm”F‚·‚éˆ—‚ğˆÚA‚·‚é
-		TenpaiCnt = 0
-		repeat NUM_OF_PLAYERS
-#ifdef SANMA4
-			if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
-#endif
-			setHandStat GameStat, cnt, 1
-			if (isTenpai(GameStat, GameEnv, cnt)) {
-				setCall cnt, "’®”v"
-			} else {
-				setCall cnt, "ö˜a"
-			}
-		loop
-		redrscreen: await 5000
-
+		checkTenpai(gameStat, ResultDesc, OrigTurn);
+		/* TODO: ö˜a”±•„‚Ìˆ—
 		repeat NUM_OF_ACTUAL_PLAYERS
 #ifdef SANMA4
 			if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
