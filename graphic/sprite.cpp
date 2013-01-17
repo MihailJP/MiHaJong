@@ -42,7 +42,7 @@ void SpriteRenderer::End() {
 void SpriteRenderer::ShowSprite(
 	LPDIRECT3DTEXTURE9 texture, int X, int Y, int Width, int Height,
 	D3DCOLOR color, RECT* rect, int CenterX, int CenterY, LPD3DXMATRIX matrix)
-{ /* FIXME: Zオーダーが乱れることがあるんで要修正。特に対面の鳴き面子 */
+{
 	if ((!sprite) || (!texture)) return; // ぬるぽは(・∀・)ｶｴﾚ!!
 	RECT defaultRect = {0, 0, Width, Height};
 	D3DXMATRIX defaultMatrix; D3DXMatrixIdentity(&defaultMatrix);
