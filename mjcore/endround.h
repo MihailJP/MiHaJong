@@ -10,7 +10,7 @@ namespace endround {
 
 	namespace transfer {
 		void resetDelta();
-		void addDelta(PLAYER_ID player, LargeNum& deltaVal);
+		void addDelta(PLAYER_ID player, const LNum& deltaVal);
 		void transferPoints(GameTable* gameStat, unsigned subscene, unsigned wait);
 	}
 }
