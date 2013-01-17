@@ -10,8 +10,10 @@ namespace endround {
 	bool nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int OrigTurn); // Ÿ‚Ì‹Ç‚Ö(I—¹‚·‚éê‡‚Ítrue)
 
 	namespace transfer {
+		InfoByPlayer<LNum>& getDelta();
 		void resetDelta();
 		void addDelta(PLAYER_ID player, const LNum& deltaVal);
+		void negateDelta();
 		void transferPoints(GameTable* gameStat, unsigned subscene, unsigned wait);
 	}
 }

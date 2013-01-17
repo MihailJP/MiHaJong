@@ -13,6 +13,7 @@
 #include "tileutil.h"
 #include "haifu.h"
 #include "chat.h"
+#include "agari.h"
 
 // 食い変え判定用の gameStat->AgariSpecialStat 番号
 #define AGARI_KUIKAE 999
@@ -296,15 +297,13 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		transferNotenBappu(gameStat, OrigTurn,
 			checkTenpai(gameStat, ResultDesc, OrigTurn));
 
-#if 0 /* 未実装 */
-		repeat NUM_OF_ACTUAL_PLAYERS
+		for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 			// 錯和立直（不聴立直）の者がいた場合
-			if ((isTenpai(GameStat, GameEnv, cnt) == 0)&&(getRichiFlag(GameStat, RICHI_FLAG, cnt))) {
-				transferChonboPenalty GameStat, cnt
-				await 500
+			if ((!isTenpai(gameStat, cnt)) && (gameStat->Player[cnt].RichiFlag.RichiFlag)) {
+				transferChonboPenalty(gameStat, cnt);
+				Sleep(500);
 			}
-		loop
-#endif
+		}
 		
 		if (RuleData::chkRule("round_continuation", "renchan_if_ready")) {
 			if (isTenpai(gameStat, gameStat->GameRound % PLAYERS)) RenchanFlag = true;
@@ -433,18 +432,15 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ResultDesc = chkGameType(gameStat, AllSanma) ? _T("三家立直") : _T("四家立直");
 		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::tblSubsceneFourRiichi, 1500u);
 		checkTenpai(gameStat, ResultDesc, OrigTurn);
-		/* TODO: 錯和罰符の処理
-		repeat NUM_OF_ACTUAL_PLAYERS
-#ifdef SANMA4
-			if (playerWind(targetPlayer, getRound(GameStat)) == PLAYER_NORTH) {continue}
-#endif
+		for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			if (chkGameType(gameStat, Sanma4) && (playerwind(gameStat, cnt, gameStat->GameRound) == sNorth))
+				continue;
 			// 錯和立直（不聴立直）の者がいた場合
-			if (isTenpai(GameStat, GameEnv, cnt) == 0) {
-				transferChonboPenalty GameStat, cnt
-				await 500
+			if (!isTenpai(gameStat, cnt)) {
+				transferChonboPenalty(gameStat, cnt);
+				Sleep(500);
 			}
-		loop
-		*/
+		}
 		ryuukyokuProc(gameStat, !RuleData::chkRule("four_riichi_ryuukyoku", "next_dealer"));
 		break;
 	/**************/
@@ -540,13 +536,9 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 
 void endround::transferChonboPenalty(GameTable* gameStat, PLAYER_ID targetPlayer) {
 	transfer::resetDelta();
-	/* TODO: これ移植
-	dim AgariPointRaw, NUM_OF_DIGIT_GROUPS
-	AgariPointRaw(0) = 2000
-	calcAgariPoints GameStat, agariPointArray, AgariPointRaw, PointDelta, targetPlayer
-	repeat NUM_OF_PLAYERS*NUM_OF_DIGIT_GROUPS
-		PointDelta(cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS) = -PointDelta(cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS)
-	loop*/
+	LNum AgariPoint = 0, AgariPointRaw = 2000;
+	agari::calcAgariPoints(gameStat, AgariPoint, AgariPointRaw, transfer::getDelta(), targetPlayer);
+	transfer::negateDelta();
 	/* なぜわざわざ一旦プラスで求めて符号を反転するという回りくどいことをしているのかというと
 	   点パネの計算時に天井函数(数値として大きい方に丸める)的な処理を行っているため、
 	   引数をマイナスで与えると(特に三麻で丸取り設定にしてるときとか)チョンボ料が減る虞があるからです */
@@ -676,12 +668,20 @@ namespace {
 		}
 	}
 }
+
+InfoByPlayer<LNum>& endround::transfer::getDelta() {
+	return delta;
+}
 void endround::transfer::resetDelta() {
 	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 		delta[i] = 0;
 }
 void endround::transfer::addDelta(PLAYER_ID player, const LNum& deltaVal) {
 	delta[player] += deltaVal;
+}
+void endround::transfer::negateDelta() {
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+		delta[i] *= -1;
 }
 void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, unsigned wait) {
 	setTransferParam();
