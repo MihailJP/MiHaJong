@@ -223,6 +223,22 @@ LNum::LNum(const LNum& val) {
 		myVal.digitGroup[i] = LargeNum(val).digitGroup[i];
 	myVal.firstArg = LargeNum(val).firstArg;
 }
+LNum& LNum::operator=(int32_t val) {
+	myVal = LargeNum::fromInt(val);
+	return *this;
+}
+LNum& LNum::operator=(const LargeNum& val) {
+	for (int i = 0; i < DIGIT_GROUPS; i++)
+		myVal.digitGroup[i] = val.digitGroup[i];
+	myVal.firstArg = val.firstArg;
+	return *this;
+}
+LNum& LNum::operator=(const LNum& val) {
+	for (int i = 0; i < DIGIT_GROUPS; i++)
+		myVal.digitGroup[i] = LargeNum(val).digitGroup[i];
+	myVal.firstArg = LargeNum(val).firstArg;
+	return *this;
+}
 LNum::operator LargeNum() const {return myVal;}
 LNum::operator double() const {return myVal.bignumtodbl();}
 LNum::operator CodeConv::tstring() const {return myVal.bignumtotext(_T(""), _T("-"));}

@@ -43,7 +43,7 @@ EXPORT_STRUCT LargeNum { // ±21不可思議まで表現可能な数のクラス
 #ifdef MJCORE_EXPORTS
 static_assert(std::is_pod<LargeNum>::value, "LargeNum is not POD");
 
-/* non-POD wrapper */
+/* non-POD wrapper, for convenience */
 class LNum {
 private:
 	LargeNum myVal;
@@ -54,6 +54,9 @@ public:
 	LNum(int32_t val, uint32_t fArg);
 	LNum(const LargeNum& val);
 	LNum(const LNum& val);
+	LNum& operator=(int32_t val);
+	LNum& operator=(const LargeNum& val);
+	LNum& operator=(const LNum& val);
 	/* Casts */
 	operator LargeNum() const;
 	operator double() const;
