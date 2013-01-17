@@ -12,13 +12,11 @@
 
 EXPORT_STRUCT LargeNum { // ±21不可思議まで表現可能な数のクラス
 	int32_t digitGroup[DIGIT_GROUPS];
-	unsigned int firstArg; // 互換用。
 	void fix();
 	signed int compare(const LargeNum& cmp) const;
 	CodeConv::tstring bignumtotext(CodeConv::tstring plusSign, CodeConv::tstring minusSign) const;
 	double bignumtodbl() const;
 	static LargeNum fromInt(int val);
-	static LargeNum fromInt(int val, unsigned int fArg);
 	void ceilHundred();
 	/* ここから演算子をオーバーロード */
 	const LargeNum operator+(const LargeNum& addend) const;
@@ -51,7 +49,6 @@ public:
 	/* Constructors */
 	LNum();
 	LNum(int32_t val);
-	LNum(int32_t val, uint32_t fArg);
 	LNum(const LargeNum& val);
 	LNum(const LNum& val);
 	LNum& operator=(int32_t val);

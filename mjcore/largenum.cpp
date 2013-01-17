@@ -37,9 +37,9 @@ CodeConv::tstring LargeNum::bignumtotext(CodeConv::tstring plusSign, CodeConv::t
 	};
 	CodeConv::tostringstream o;
 	// 符号
-	if ((LargeNum)*this == fromInt(0, this->firstArg)) return _T("0");
-	else if ((LargeNum)*this < fromInt(0, this->firstArg)) o << minusSign;
-	else if ((LargeNum)*this > fromInt(0, this->firstArg)) o << plusSign;
+	if ((LargeNum)*this == fromInt(0)) return _T("0");
+	else if ((LargeNum)*this < fromInt(0)) o << minusSign;
+	else if ((LargeNum)*this > fromInt(0)) o << plusSign;
 	// 出力
 	if (this->digitGroup[7] / 100000000)
 		o << abs(this->digitGroup[7] / 100000000) << _T("不可思議");
@@ -66,15 +66,6 @@ LargeNum LargeNum::fromInt(int val) {
 	for (int i = 0; i < DIGIT_GROUPS; i++) num.digitGroup[i] = 0;
 	num.digitGroup[0] = (val % 100000000);
 	num.digitGroup[1] = (val / 100000000);
-	num.firstArg = 100000000u;
-	return num;
-}
-LargeNum LargeNum::fromInt(int val, unsigned int fArg) {
-	LargeNum num;
-	for (int i = 0; i < DIGIT_GROUPS; i++) num.digitGroup[i] = 0;
-	num.digitGroup[0] = (val % 100000000);
-	num.digitGroup[1] = (val / 100000000);
-	num.firstArg = fArg;
 	return num;
 }
 void LargeNum::ceilHundred() { // 100点単位に切り上げ
@@ -210,18 +201,13 @@ LNum::LNum() {
 LNum::LNum(int32_t val) {
 	myVal = LargeNum::fromInt(val);
 }
-LNum::LNum(int32_t val, uint32_t fArg) {
-	myVal = LargeNum::fromInt(val, fArg);
-}
 LNum::LNum(const LargeNum& val) {
 	for (int i = 0; i < DIGIT_GROUPS; i++)
 		myVal.digitGroup[i] = val.digitGroup[i];
-	myVal.firstArg = val.firstArg;
 }
 LNum::LNum(const LNum& val) {
 	for (int i = 0; i < DIGIT_GROUPS; i++)
 		myVal.digitGroup[i] = LargeNum(val).digitGroup[i];
-	myVal.firstArg = LargeNum(val).firstArg;
 }
 LNum& LNum::operator=(int32_t val) {
 	myVal = LargeNum::fromInt(val);
@@ -230,13 +216,11 @@ LNum& LNum::operator=(int32_t val) {
 LNum& LNum::operator=(const LargeNum& val) {
 	for (int i = 0; i < DIGIT_GROUPS; i++)
 		myVal.digitGroup[i] = val.digitGroup[i];
-	myVal.firstArg = val.firstArg;
 	return *this;
 }
 LNum& LNum::operator=(const LNum& val) {
 	for (int i = 0; i < DIGIT_GROUPS; i++)
 		myVal.digitGroup[i] = LargeNum(val).digitGroup[i];
-	myVal.firstArg = LargeNum(val).firstArg;
 	return *this;
 }
 LNum::operator LargeNum() const {return myVal;}
