@@ -1,5 +1,7 @@
 #include "discard.h"
 
+#include "gametbl.h"
+
 /* ]—ˆ‚Ì‘Å”vƒR[ƒh‚É’¼‚· */
 int DiscardTileNum::toSingleInt() const {
 	switch (this->type) {

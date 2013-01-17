@@ -1,5 +1,19 @@
 #include "endround.h"
 
+#include "ruletbl.h"
+#include "func.h"
+#include "logging.h"
+#include <functional>
+#include <array>
+#include <tuple>
+#include <cassert>
+#include "../sound/sound.h"
+#include "bgmid.h"
+#include "../graphic/graphic.h"
+#include "tileutil.h"
+#include "haifu.h"
+#include "chat.h"
+
 // êHÇ¢ïœÇ¶îªíËópÇÃ gameStat->AgariSpecialStat î‘çÜ
 #define AGARI_KUIKAE 999
 

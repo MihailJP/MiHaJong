@@ -1,5 +1,18 @@
 #include "func.h"
 
+#include <cassert>
+#include <memory>
+#include <cstring>
+#include <sstream>
+#include <Windows.h>
+#include <ImageHlp.h>
+#include <direct.h>
+#include "strcode.h"
+#include "../sound/sound.h"
+#include "../socket/socket.h"
+#include "socknum.h"
+#include "except.h"
+
 /* サイコロの出目を取得 */
 extern "C" inline uint8_t diceSum(const GameTable* const gameStat) {
 	return (gameStat->Dice[0].Number + gameStat->Dice[1].Number);

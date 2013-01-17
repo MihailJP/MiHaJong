@@ -1,19 +1,6 @@
 #pragma once
 
-#ifdef MJCORE_EXPORTS
-#include "strcode.h"
-#include "logging.h"
-#include "envtbl.h"
-#include "../socket/socket.h"
-#include "../sound/sound.h"
-#include "bgmid.h"
-#include "tileutil.h"
-#include "mouda.h"
-#include "fuuro.h"
-#include "prepare.h"
-#include "../graphic/graphic.h"
 #include "endround.h"
-#endif
 #include "gametbl.h"
 
 EndType doTableTurn(GameTable* const gameStat);

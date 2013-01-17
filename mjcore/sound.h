@@ -1,10 +1,6 @@
 #pragma once
 
 #include "../sound/sound.h"
-#include "bgmid.h"
-#include "strcode.h"
-#include "func.h"
-#include <vector>
 
 namespace sound {
 namespace util {

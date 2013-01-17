@@ -1,5 +1,11 @@
 #include "gametbl.h"
 
+#ifdef MJCORE_EXPORTS
+#include <algorithm>
+#include <cassert>
+#endif
+#include "except.h"
+
 GameTable GameStat, StatSandBox;
 
 inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType) {

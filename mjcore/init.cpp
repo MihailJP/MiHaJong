@@ -1,5 +1,18 @@
 #include "init.h"
 
+#include "logging.h"
+#include "func.h"
+#include <string>
+#include "strcode.h"
+#include "../mihajong/version.h"
+#include "envtbl.h"
+#include "../sound/sound.h"
+#include "bgmid.h"
+#include "sound.h"
+#include "shanten.h"
+#include "random.h"
+#include "../graphic/graphic.h"
+
 MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 	/* コンフィグファイルのパスを設定する */
 	/* Vista以降、Program Files以下にファイルを作れないので自分で調整する */

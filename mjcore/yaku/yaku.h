@@ -1,26 +1,14 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
 #include <type_traits>
 #include <functional>
 #include <list>
-#include <map>
-#include <set>
-#include <sstream>
-#include <iomanip>
-#include <array>
-#include <vector>
-#include <Windows.h>
 #include "ykclass.h"
 #include "yk_tools.h"
-#include "../largenum.h"
 #include "../gametbl.h"
 #include "../tileutil.h"
-#include "../except.h"
-#include "../logging.h"
 #include "../shanten.h"
-#include "../strcode.h"
 
 class yaku::yakuCalculator {
 private:

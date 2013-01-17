@@ -2,14 +2,8 @@
 
 #include <cstdint>
 #include <vector>
-#ifdef MJCORE_EXPORTS
 #include "resource.h"
-#include "lzma/LzmaLib.h"
-#include "lzma/Sha256.h"
-#include "logging.h"
-#include "reader/readrsrc.h"
 #include "strcode.h"
-#endif
 
 namespace Compressed {
 

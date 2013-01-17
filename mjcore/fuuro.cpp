@@ -1,4 +1,21 @@
 #include "fuuro.h"
+
+#include <sstream>
+#include <cassert>
+#include "../sound/sound.h"
+#include "strcode.h"
+#include "logging.h"
+#include "haifu.h"
+#include "ruletbl.h"
+#include "envtbl.h"
+#include "tileutil.h"
+#include "discard.h"
+#include "bgmid.h"
+#include "ai/class.h"
+#include "../socket/socket.h"
+#include "yaku/ykclass.h"
+#include "yaku/yaku.h"
+#include "remote.h"
 #include "../graphic/graphic.h"
 
 namespace {

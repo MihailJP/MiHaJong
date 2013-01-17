@@ -1,14 +1,6 @@
 #pragma once
 
-#include <lua.hpp>
-#include <sstream>
 #include "class.h"
-#include "functbl.h"
-#include "filesel.h"
-#include "../gametbl.h"
-#include "../logging.h"
-#include "../chat.h"
-#include "../strcode.h"
 
 class aiscript::table::playertable {
 private:

@@ -1,5 +1,7 @@
 #include "functbl.h"
 
+#include "../func.h"
+
 bool aiscript::table::functable::gametbl::luafunc::riskchk::issameasprevious
 	(const GameTable* const gameStat, PLAYER_ID player, int index) { // ‡‚í‚¹‘Å‚¿‚Å‚«‚é‚©‚Ç‚¤‚©
 		PLAYER_ID prev_p = RelativePositionOf(player, sLeft); // ã‰Æ‚ÌƒvƒŒƒCƒ„[”Ô†

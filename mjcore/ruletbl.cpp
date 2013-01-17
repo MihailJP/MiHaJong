@@ -1,5 +1,17 @@
 #include "ruletbl.h"
 
+#include <cstdlib>
+#include <vector>
+#include <sstream>
+#include <fstream>
+#include <exception>
+#include <Windows.h>
+#include <cassert>
+#include "logging.h"
+#include "decomp.h"
+#include "reader/readrsrc.h"
+#include "strcode.h"
+
 using namespace CodeConv;
 
 struct GameTable;

@@ -1,19 +1,9 @@
 #pragma once
 
-#include <sstream>
-#include <fstream>
-#include <iomanip>
-#include <string>
-#include <Windows.h>
+#include "strcode.h"
 #include "gametbl.h"
-#include "largenum.h"
 #include "func.h"
-#include "envtbl.h"
-#include "../mihajong/version.h"
 #include "discard.h"
-#include "chat.h"
-
-/* 局終了コード */
 #include "endtype.h"
 
 // 牌譜関係のコードはクラスに隔離しておきましょうか。

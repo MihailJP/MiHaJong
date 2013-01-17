@@ -1,5 +1,11 @@
 #include "random.h"
 
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <cstdint>
+#include <cmath>
+
 std::seed_seq RndNum::seed;
 std::mt19937 RndNum::engine;
 

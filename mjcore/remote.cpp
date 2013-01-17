@@ -1,5 +1,13 @@
 #include "remote.h"
 
+#include "../socket/socket.h"
+#include "envtbl.h"
+#include "tileutil.h"
+#include "func.h"
+#include "chat.h"
+#include <sstream>
+#include <iomanip>
+
 namespace RemoteAction {
 
 /* Ú‘±æ‚Ì‘Å”v */

@@ -1,5 +1,7 @@
 #include "catalog.h"
 
+#include "../strcode.h"
+
 /* シングルトン インスタンス アクセサ */
 yaku::yakuCalculator::YakuCatalog* yaku::yakuCalculator::YakuCatalog::Instantiate() {
 	// Singleton instance accessor

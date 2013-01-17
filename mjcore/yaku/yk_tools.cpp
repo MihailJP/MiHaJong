@@ -1,5 +1,6 @@
 #include "yaku.h"
 
+
 /* ‡q‚Ìˆ— */
 bool yaku::mentsuParser::makementsu_shuntsu(Int8ByTile& countForMentsu, MELD_BUF MianziDat,
 	int* const ProcessedMelds, tileCode tile)

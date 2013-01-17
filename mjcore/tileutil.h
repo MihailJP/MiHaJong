@@ -1,24 +1,11 @@
 #pragma once
 
 #ifdef MJCORE_EXPORTS
-#include <sstream>
-#include <iomanip>
-#include <cstdlib>
-#include <cassert>
 #include <type_traits>
-#include <cstring>
 #endif
 #include <cstdint>
 #include "mjexport.h"
 #include "gametbl.h"
-#include "shanten.h"
-#include "func.h"
-#include "envtbl.h"
-#include "haifu.h"
-#ifdef MJCORE_EXPORTS
-#include "logging.h"
-#include "ruletbl.h"
-#endif
 
 // -------------------------------------------------------------------------
 

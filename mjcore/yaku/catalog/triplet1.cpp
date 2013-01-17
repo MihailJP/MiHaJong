@@ -1,5 +1,7 @@
 #include "../catalog.h"
 
+#include "../../func.h"
+
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* ŽlˆÃ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(

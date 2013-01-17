@@ -3,12 +3,6 @@
 #define WINDOWS_LEAN_AND_MEAN
 #define WINDOWS_EXTRA_MEAN
 #include <Windows.h>
-#include <DbgHelp.h>
-#include <cstdlib>
-#include <sstream>
-#include <iomanip>
-#include <typeinfo>
-#include "logging.h"
 #include "except.h"
 
 extern HINSTANCE dllInst;

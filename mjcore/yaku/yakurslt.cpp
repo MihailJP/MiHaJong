@@ -1,5 +1,8 @@
 #include "yakurslt.h"
 
+#include "../except.h"
+#include "../strcode.h"
+
 /* 構造体のサイズを返す */
 int yaku::YAKUSTAT::getSize() {
 	return sizeof(YAKUSTAT);

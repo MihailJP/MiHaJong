@@ -1,5 +1,15 @@
 #include "haifu.h"
 
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+#include <Windows.h>
+#include "largenum.h"
+#include "envtbl.h"
+#include "../mihajong/version.h"
+#include "chat.h"
+
 /* ”v‚Ì–¼‘Oƒf[ƒ^ */
 const CodeConv::tstring haifu::tilecodelabel =
 	_T("Hˆê“ñOlŒÜ˜Zµ”ª‹ãH‡@‡A‡B‡C‡D‡E‡F‡G‡HH‚P‚Q‚R‚S‚T‚U‚V‚W‚XH“Œ“ì¼–k”’á¢’†HHHˆë“óQãæŒŞ—¤½J‹èH‡J‡K‡L‡M‡N‡O‡P‡Q‡RH‡T‡U‡V‡W‡X‡Y‡Z‡[‡\H‚d‚r‚v‚m‚o‚e‚bHHHb‰³•¸’š•èŒÈMhpH‚¢‚ë‚Í‚É‚Ù‚Ö‚Æ‚¿‚èHú@úAúBúCúDúEúFúGúHH‚…‚“‚—‚‚‚†‚ƒHHHt‰ÄH“~•S”~—–‹e’|H");

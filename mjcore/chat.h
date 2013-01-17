@@ -1,11 +1,8 @@
 #pragma once
 
-#include "../socket/socket.h"
-#include "envtbl.h"
-#include "func.h"
-#include <string>
-#include <sstream>
 #include <queue>
+#include "gametbl.h"
+#include "strcode.h"
 
 #define SOCK_CHAT 10
 #define PORT_CHAT 50020

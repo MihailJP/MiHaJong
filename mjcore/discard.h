@@ -3,7 +3,6 @@
 #include <cstdint>
 #include <type_traits>
 #include "mjexport.h"
-#include "gametbl.h"
 
 EXPORT_STRUCT DiscardTileNum { /* 打牌コード用 */
 	enum discardType : uint8_t {

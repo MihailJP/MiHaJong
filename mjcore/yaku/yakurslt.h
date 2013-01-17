@@ -4,8 +4,6 @@
 #include "../mjexport.h"
 #include "../largenum.h"
 #include "../gametbl.h"
-#include "../except.h"
-#include "../strcode.h"
 
 EXPORT_STRUCT yaku::YAKUSTAT {
 	static const int SemiMangan = 12500; // ”¼–žŠÑ

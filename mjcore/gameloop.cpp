@@ -1,5 +1,16 @@
 #include "gameloop.h"
 
+#include "strcode.h"
+#include "logging.h"
+#include "envtbl.h"
+#include "../socket/socket.h"
+#include "../sound/sound.h"
+#include "bgmid.h"
+#include "tileutil.h"
+#include "mouda.h"
+#include "fuuro.h"
+#include "prepare.h"
+#include "../graphic/graphic.h"
 
 /* îºëëÇÃêiçs */
 EndType doTableTurn(GameTable* const gameStat) {

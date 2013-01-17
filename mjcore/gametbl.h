@@ -2,15 +2,12 @@
 
 #include <cstdint>
 #ifdef MJCORE_EXPORTS
-#include <algorithm>
-#include <cassert>
 #include <type_traits>
 #endif
 #include "mjexport.h"
 #include "tilecode.h"
 #include "ruletbl.h"
 #include "largenum.h"
-#include "except.h"
 
 // -------------------------------------------------------------------------
 

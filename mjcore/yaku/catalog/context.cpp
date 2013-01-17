@@ -1,5 +1,7 @@
 #include "../catalog.h"
 
+#include "../../func.h"
+
 inline bool isFinalRound(const GameTable* const gameStat) { // オーラスである？
 	return (gameStat->LoopRound * roundLoopRate() +
 		gameStat->GameRound) >= gameStat->GameLength;

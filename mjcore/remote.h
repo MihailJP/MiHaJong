@@ -1,12 +1,7 @@
 #pragma once
 
-#include "../socket/socket.h"
 #include "gametbl.h"
-#include "envtbl.h"
 #include "discard.h"
-#include "tileutil.h"
-#include <sstream>
-#include <iomanip>
 
 namespace RemoteAction {
 	class RemoteDahai {

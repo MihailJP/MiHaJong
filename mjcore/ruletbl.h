@@ -9,18 +9,8 @@
 #include <set>
 #include <array>
 #ifdef MJCORE_EXPORTS
-#include <cstdlib>
-#include <vector>
-#include <sstream>
-#include <fstream>
-#include <exception>
-#include <Windows.h>
-#include "logging.h"
-#include "decomp.h"
-#include "reader/readrsrc.h"
 #include "reader/csv2arry.h"
 #include "reader/ini2map.h"
-#include "strcode.h"
 #endif
 #include "mjexport.h"
 #include "nmrules.h"

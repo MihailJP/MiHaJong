@@ -1,10 +1,9 @@
 #pragma once
 
+#include <type_traits>
 #include <cstdint>
-#include <cstdlib>
-#include <memory>
 #include "mjexport.h"
-#include "except.h"
+#include "strcode.h"
 
 // 青天ルール対策
 // 一応21不可思議まで表現可能……

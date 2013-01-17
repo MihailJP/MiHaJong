@@ -1,5 +1,10 @@
 #include "logging.h"
 
+#include <string>
+#include <sstream>
+#include "../socket/logger.h"
+#include "../sound/logger.h"
+
 namespace logger {
 
 	using CodeConv::tstring; using std::string;

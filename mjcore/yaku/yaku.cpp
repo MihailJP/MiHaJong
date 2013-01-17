@@ -1,4 +1,20 @@
 #include "yaku.h"
+
+#include <string>
+#include <map>
+#include <set>
+#include <sstream>
+#include <iomanip>
+#include <array>
+#include <vector>
+#include <cassert>
+#include <Windows.h>
+#include "../largenum.h"
+#include "../except.h"
+#include "../logging.h"
+#include "../strcode.h"
+#include "../func.h"
+#include "../haifu.h"
 #include "yvalue.h"
 
 // 計算を実行(マルチスレッドで……大丈夫かなぁ)
