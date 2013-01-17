@@ -781,6 +781,7 @@ void GameTableScreen::NakihaiReconst::NakihaiKamicha(const GameTable* gameStat, 
 	caller->TileTexture->NewTile(num(1), tileC, redC, x(1), y(1), vert, Obverse);
 	if (tile->mstat == meldQuadAddedLeft)
 		caller->TileTexture->NewTile(num(2), tileL, tile->red[3], x(2), y(2), hor, Obverse);
+	else caller->TileTexture->DelTile(num(2));
 	caller->TileTexture->NewTile(num(3), tileL, redL, x(3), y(3), hor, Obverse);
 }
 void GameTableScreen::NakihaiReconst::NakihaiToimen(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
@@ -794,6 +795,7 @@ void GameTableScreen::NakihaiReconst::NakihaiToimen(const GameTable* gameStat, P
 	caller->TileTexture->NewTile(num(0), tile->tile, tile->red[2], x(0), y(0), vert, Obverse);
 	if (tile->mstat == meldQuadAddedCenter)
 		caller->TileTexture->NewTile(num(1), tile->tile, tile->red[3], x(1), y(1), hor, Obverse);
+	else caller->TileTexture->DelTile(num(1));
 	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[0], x(2), y(2), hor, Obverse);
 	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
@@ -807,6 +809,7 @@ void GameTableScreen::NakihaiReconst::NakihaiShimocha(const GameTable* gameStat,
 		true, true, false, false);
 	if (tile->mstat == meldQuadAddedRight)
 		caller->TileTexture->NewTile(num(0), tile->tile, tile->red[3], x(0), y(0), hor, Obverse);
+	else caller->TileTexture->DelTile(num(0));
 	caller->TileTexture->NewTile(num(1), tile->tile, tile->red[0], x(1), y(1), hor, Obverse);
 	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[2], x(2), y(2), vert, Obverse);
 	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
