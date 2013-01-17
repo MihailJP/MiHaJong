@@ -538,6 +538,24 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 
 // -------------------------------------------------------------------------
 
+void endround::transferChonboPenalty(GameTable* gameStat, PLAYER_ID targetPlayer) {
+	transfer::resetDelta();
+	/* TODO: これ移植
+	dim AgariPointRaw, NUM_OF_DIGIT_GROUPS
+	AgariPointRaw(0) = 2000
+	calcAgariPoints GameStat, agariPointArray, AgariPointRaw, PointDelta, targetPlayer
+	repeat NUM_OF_PLAYERS*NUM_OF_DIGIT_GROUPS
+		PointDelta(cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS) = -PointDelta(cnt\NUM_OF_PLAYERS, cnt/NUM_OF_PLAYERS)
+	loop*/
+	/* なぜわざわざ一旦プラスで求めて符号を反転するという回りくどいことをしているのかというと
+	   点パネの計算時に天井函数(数値として大きい方に丸める)的な処理を行っているため、
+	   引数をマイナスで与えると(特に三麻で丸取り設定にしてるときとか)チョンボ料が減る虞があるからです */
+	transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValChonboBappu, 1500);
+	return;
+}
+
+// -------------------------------------------------------------------------
+
 bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int OrigTurn) { // 次の局へ(終了する場合はtrue)
 	// ハコ割れ終了
 	if (RuleData::chkRuleApplied("buttobi_border"))

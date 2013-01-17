@@ -6,6 +6,7 @@
 namespace endround {
 	EndType checkroundabort(GameTable* gameStat); // ‹ÇI—¹ğŒ‚Ì”»’è
 	void endround(GameTable* gameStat, EndType roundEndType, unsigned OrigTurn, unsigned OrigHonba);
+	void transferChonboPenalty(GameTable* gameStat, PLAYER_ID targetPlayer);
 	bool nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int OrigTurn); // Ÿ‚Ì‹Ç‚Ö(I—¹‚·‚éê‡‚Ítrue)
 
 	namespace transfer {
