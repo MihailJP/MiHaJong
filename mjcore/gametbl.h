@@ -288,17 +288,12 @@ static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
-/* êÊçsêÈåæ */
-extern "C" inline uint8_t diceSum(const GameTable* const gameStat);
-PLAYER_ID tobePlayed(const GameTable* const gameStat, int id);
-
-/* gametbl.cpp */
 extern GameTable GameStat, StatSandBox;
 inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType);
-extern "C" __declspec(dllexport) void calcWareme(GameTable* const gameStat);
-extern "C" GameTable* makesandBox(const GameTable* const gameStat, PLAYER_ID targetPlayer);
-extern "C" __declspec(dllexport) void inittable(GameTable* const gameStat);
-extern "C" GameTable* initializeGameTable(gameTypeID gameType);
+__declspec(dllexport) void calcWareme(GameTable* const gameStat);
+GameTable* makesandBox(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+__declspec(dllexport) void inittable(GameTable* const gameStat);
+GameTable* initializeGameTable(gameTypeID gameType);
 #endif
 MJCORE GameTable* setGameType(gameTypeID gameType);
 
