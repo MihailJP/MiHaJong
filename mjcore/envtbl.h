@@ -6,7 +6,7 @@
 
 class EnvTable { // ‘ì‚É‚Í’¼ÚŠÖŒW‚È‚¢ƒf[ƒ^ [singleton]
 private: // singleton
-	EnvTable(){}
+	EnvTable();
 	EnvTable(const EnvTable&);
 	EnvTable& operator=(const EnvTable&);
 
@@ -29,6 +29,4 @@ public:
 	ClientType GameMode;
 	bool WatchModeFlag;
 	uint8_t bgColorR, bgColorG, bgColorB;
-
-	static void TableEnvInit();
 };

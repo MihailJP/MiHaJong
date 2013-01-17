@@ -115,7 +115,6 @@ DWORD titlescreen() {
 void startgame(gameTypeID gameType) {
 	while (true) {
 		/* •Ï”—Ş‚Ì‰Šú‰» */
-		EnvTable::TableEnvInit();
 		GameTable* gameStat = initializeGameTable(gameType);
 		/* TODO: ‰æ–Ê‰Šú‰» vanish */
 		info(_T("ƒQ[ƒ€î•ñ‚ğ‰Šú‰»‚µ‚Ü‚µ‚½B"));

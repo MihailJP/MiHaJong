@@ -6,11 +6,11 @@ EnvTable* EnvTable::Instantiate() {
 	return &instance;
 }
 
-void EnvTable::TableEnvInit() {
+EnvTable::EnvTable() {
 	for (int i = 0; i < PLAYERS; i++) {
-		Instantiate()->PlayerDat[i].PlayerName = _T("");
-		Instantiate()->PlayerDat[i].RemotePlayerFlag = false;
+		PlayerDat[i].PlayerName = _T("");
+		PlayerDat[i].RemotePlayerFlag = false;
 	}
-	Instantiate()->GameMode = Unavailable;
-	Instantiate()->WatchModeFlag = false;
+	GameMode = Unavailable;
+	WatchModeFlag = false;
 }

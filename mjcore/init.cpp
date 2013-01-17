@@ -70,7 +70,6 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 
 	/* ‘ì‚ÌŠÂ‹«‚ð‰Šú‰» */
 	{
-		EnvTable::TableEnvInit();
 		EnvTable::Instantiate()->bgColorR =
 			EnvTable::Instantiate()->bgColorG =
 			EnvTable::Instantiate()->bgColorB = 0;
