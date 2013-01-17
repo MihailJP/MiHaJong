@@ -49,12 +49,12 @@ void TableSubsceneCheckTenpai::RecalcTenpaiFlag() {
 }
 
 void TableSubsceneCheckTenpai::Render() {
-	tileRenderer->Render();
 	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sOpposite), TableSize / 2      ,                 192);
 	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sLeft    ),                 256, TableSize / 2      );
 	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sRight   ), TableSize     - 256, TableSize / 2      );
 	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sSelf    ), TableSize / 2      , TableSize     - 192);
 	txtRenderer->Render();
+	tileRenderer->Render();
 }
 
 }
