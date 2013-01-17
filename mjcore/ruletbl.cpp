@@ -304,7 +304,7 @@ std::string RuleData::getRuleMaskExpr(const std::string& RuleTag) {
 }
 
 __declspec(dllexport) BOOL RuleData::reqFailed(uint16_t RuleID, const int* const ruleStat) {
-	bool flag = ReqChecker::instantiate()->reqFailed(nametbl[RuleID], getRuleMaskExpr(nametbl[RuleID]), ruleStat);
+	bool flag = ReqChecker::instantiate()->reqFailed(getRuleMaskExpr(nametbl[RuleID]), ruleStat);
 	return flag ? 1 : 0;
 }
 
@@ -338,9 +338,8 @@ int RuleData::ReqChecker::check (lua_State* L) {
 	return 1;
 }
 
-bool RuleData::ReqChecker::reqFailed
-	(const std::string& ruleTag, const std::string& expression, const int* const ruleStat)
-{
+bool RuleData::ReqChecker::reqFailed(const std::string& expression, const int* const ruleStat) {
+	/* XXX: Ç†Ç∆ÇÃÉyÅ[ÉWÇŸÇ«íxÇ¢ */
 	if (expression.empty()) {
 		return false;
 	}

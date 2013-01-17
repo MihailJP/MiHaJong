@@ -77,7 +77,7 @@ private:
 	ReqChecker(const ReqChecker&) {throw;}
 	ReqChecker& operator=(const ReqChecker&) {throw;}
 public:
-	bool reqFailed (const std::string& ruleTag, const std::string& expression, const int* const ruleStat);
+	bool reqFailed (const std::string& expression, const int* const ruleStat);
 	static ReqChecker* instantiate();
 };
 
