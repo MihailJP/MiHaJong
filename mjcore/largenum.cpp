@@ -119,12 +119,12 @@ const LargeNum LargeNum::operator-(const int32_t subtrahend) const {
 }
 LargeNum& LargeNum::operator-=(const LargeNum& subtrahend) {
 	for (int i = 0; i < DIGIT_GROUPS; i++)
-		digitGroup[i] += subtrahend.digitGroup[i];
+		digitGroup[i] -= subtrahend.digitGroup[i];
 	fix();
 	return *this;
 }
 LargeNum& LargeNum::operator-=(const int32_t subtrahend) {
-	digitGroup[0] += subtrahend;
+	digitGroup[0] -= subtrahend;
 	fix();
 	return *this;
 }
