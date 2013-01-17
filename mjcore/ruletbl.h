@@ -72,10 +72,13 @@ private:
 	lua_State* myState;
 	static int check(lua_State* L);
 	static const int* ourRuleStat;
-public:
 	ReqChecker();
 	~ReqChecker();
+	ReqChecker(const ReqChecker&) {throw;}
+	ReqChecker& operator=(const ReqChecker&) {throw;}
+public:
 	bool reqFailed (const std::string& ruleTag, const std::string& expression, const int* const ruleStat);
+	static ReqChecker* instantiate();
 };
 
 __declspec(dllexport) int getRule(int RuleID);

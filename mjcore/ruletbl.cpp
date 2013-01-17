@@ -304,13 +304,16 @@ std::string RuleData::getRuleMaskExpr(const std::string& RuleTag) {
 }
 
 __declspec(dllexport) BOOL RuleData::reqFailed(uint16_t RuleID, const int* const ruleStat) {
-	auto checker = new ReqChecker();
-	bool flag = checker->reqFailed(nametbl[RuleID], getRuleMaskExpr(nametbl[RuleID]), ruleStat);
-	delete checker;
+	bool flag = ReqChecker::instantiate()->reqFailed(nametbl[RuleID], getRuleMaskExpr(nametbl[RuleID]), ruleStat);
 	return flag ? 1 : 0;
 }
 
 // -------------------------------------------------------------------------
+
+RuleData::ReqChecker* RuleData::ReqChecker::instantiate() {
+	static ReqChecker reqChecker;
+	return &reqChecker;
+}
 
 RuleData::ReqChecker::ReqChecker () {
 	myState = luaL_newstate();
