@@ -193,6 +193,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="agari.cpp" />
     <ClCompile Include="ai\aiscript.cpp" />
     <ClCompile Include="ai\functbl.cpp" />
     <ClCompile Include="ai\filesel.cpp" />
@@ -255,6 +256,7 @@
     <ClCompile Include="yaku\yk_tools.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="agari.h" />
     <ClInclude Include="ai\aiscript.h" />
     <ClInclude Include="ai\class.h" />
     <ClInclude Include="ai\functbl.h" />
