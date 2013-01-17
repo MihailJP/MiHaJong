@@ -283,7 +283,7 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 			gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.OpenFlag =
 				(DiscardTileIndex.type == DiscardTileNum::OpenRiichi);
 			++gameStat->Deposit;
-			gameStat->Player[gameStat->CurrentPlayer.Active].PlayerScore += LargeNum::fromInt(-1000);
+			gameStat->Player[gameStat->CurrentPlayer.Active].PlayerScore -= 1000;
 			if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)
 				chkOpenMachi(gameStat, gameStat->CurrentPlayer.Active);
 		}

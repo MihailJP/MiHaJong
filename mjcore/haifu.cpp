@@ -18,7 +18,7 @@ const CodeConv::tstring haifu::HTtilecodelabel1 =
 const CodeConv::tstring haifu::HTtilecodelabel2 =
 	_T(" QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   -^\\[%@;:]");
 
-InfoByPlayer<LargeNum> haifu::origPoint;
+InfoByPlayer<LNum> haifu::origPoint;
 CodeConv::tostringstream haifu::haifuBuffer, haifu::HThaifuBuffer;
 bool haifu::haifukanflag = false;
 
@@ -704,12 +704,12 @@ void haifu::tools::hfwriter::finalformWriter::hfExposedMeld(const GameTable* con
 void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, PLAYER_ID player, seatAbsolute wind) {
 	// 点数の変動
 	CodeConv::tostringstream o;
-	o << _T(" ") << origPoint[player].bignumtotext(_T(""), _T("△"));
+	o << _T(" ") << origPoint[player].to_str(_T(""), _T("△"));
 	if (origPoint[player] != gameStat->Player[player].PlayerScore) // 点数が一致しないなら
 		o << _T(" → ") <<
 			gameStat->Player[player].PlayerScore.bignumtotext(_T(""), _T("△")) << _T(" (") <<
-			((LargeNum)gameStat->Player[player].PlayerScore -
-			origPoint[player]).bignumtotext(_T("+"), _T("-")) <<
+			((LNum)gameStat->Player[player].PlayerScore -
+			origPoint[player]).to_str(_T("+"), _T("-")) <<
 			_T(")");
 	if (RuleData::chkRuleApplied("chip")) // チップありの時
 		o << _T(" チップ: ") <<

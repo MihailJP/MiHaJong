@@ -12,7 +12,7 @@ private:
 	/* 雀牌の名前データ */
 	static const CodeConv::tstring tilecodelabel, HTtilecodelabel1, HTtilecodelabel2;
 
-	static InfoByPlayer<LargeNum> origPoint;
+	static InfoByPlayer<LNum> origPoint;
 	static CodeConv::tostringstream haifuBuffer, HThaifuBuffer;
 	static bool haifukanflag;
 
