@@ -294,6 +294,7 @@
     <ClInclude Include="nmrules.h" />
     <ClInclude Include="prepare.h" />
     <ClInclude Include="random.h" />
+    <ClInclude Include="rational.h" />
     <ClInclude Include="reader\csv2arry.h" />
     <ClInclude Include="reader\ini2map.h" />
     <ClInclude Include="reader\readrsrc.h" />
