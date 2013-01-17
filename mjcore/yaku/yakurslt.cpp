@@ -17,7 +17,7 @@ void yaku::YAKUSTAT::Init(YAKUSTAT* const myInstance) {
 		myInstance->DoraQuantity = myInstance->UraDoraQuantity =
 		myInstance->AkaDoraQuantity = myInstance->AoDoraQuantity =
 		myInstance->AliceDora = myInstance->FlowerQuantity = 0;
-	myInstance->AgariPoints = LargeNum::fromInt(0);
+	myInstance->AgariPoints = (LNum)0;
 	memset(myInstance->yakuNameList, 0, nameBufSize);
 	memset(myInstance->yakuValList, 0, nameBufSize);
 	memset(myInstance->yakumanNameList, 0, nameBufSize);

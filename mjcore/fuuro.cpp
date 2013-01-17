@@ -58,8 +58,7 @@ PLAYER_ID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardT
 		if (RuleData::chkRule("minkan_penalty", "yes")) { /* 大明槓をすると1000点供託になるルール */
 			/* TODO: 箱点のチェック */
 			gameStat->Deposit++;
-			gameStat->Player[fuuroPlayer].PlayerScore =
-				gameStat->Player[fuuroPlayer].PlayerScore - LargeNum::fromInt(1000);
+			gameStat->Player[fuuroPlayer].PlayerScore -= (LNum)1000;
 		}
 		break;
 	case FuuroKakan: case FuuroAnkan:
@@ -672,7 +671,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 					gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.OpenFlag =
 					gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.RichiFlag = false;
 				--gameStat->Deposit;
-				gameStat->Player[gameStat->CurrentPlayer.Active].PlayerScore += LargeNum::fromInt(1000);
+				gameStat->Player[gameStat->CurrentPlayer.Active].PlayerScore += (LNum)1000;
 			}
 			/* 役や振聴の判定 */
 			yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, pl);

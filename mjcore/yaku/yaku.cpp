@@ -53,13 +53,13 @@ void yaku::yakuCalculator::CalculatorThread::recordThreadFinish() {
 /* 翻を計算する */
 void yaku::yakuCalculator::doubling(yaku::YAKUSTAT* const yStat) {
 	int totalHan = yStat->CoreHan + yStat->BonusHan; // 合計翻
-	yStat->AgariPoints = LargeNum::fromInt(yStat->BasePoints); // 原点
+	yStat->AgariPoints = (LNum)yStat->BasePoints; // 原点
 	if (totalHan >= -2) {
 		for (int i = 0; i < (totalHan + 2); i++) yStat->AgariPoints *= 2;
 	} else {
 		for (int i = 0; i < (totalHan + 2); i++) yStat->AgariPoints /= 2;
 	}
-	if (yStat->AgariPoints <= LargeNum::fromInt(0)) yStat->AgariPoints = LargeNum::fromInt(1); // 最低1点にはなるようにする
+	if (yStat->AgariPoints <= (LNum)0) yStat->AgariPoints = (LNum)1; // 最低1点にはなるようにする
 }
 
 /* 符と翻から点数を計算する */
@@ -67,7 +67,7 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 	/* 縛りを満たしてなかったら0を返す
 	   点数が0ならコア部分で錯和と判断される……はず */
 	if ((yStat->CoreHan <= 0)&&(yStat->CoreSemiMangan <= 0)) {
-		yStat->AgariPoints = LargeNum::fromInt(0);
+		yStat->AgariPoints = (LNum)0;
 		return;
 	}
 
@@ -77,24 +77,24 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 	if (!RuleData::chkRuleApplied("limitless")) { // 通常ルールの場合
 		if ((totalHan < 6) && (totalSemiMangan < 3)) { // 満貫以下
 			doubling(yStat); // 計算を実行
-			if (yStat->AgariPoints > LargeNum::fromInt(2000)) yStat->AgariPoints = LargeNum::fromInt(2000); // 満貫
-			if (totalSemiMangan == 2) yStat->AgariPoints = LargeNum::fromInt(2000); // 固定満貫の場合
+			if (yStat->AgariPoints > (LNum)2000) yStat->AgariPoints = (LNum)2000; // 満貫
+			if (totalSemiMangan == 2) yStat->AgariPoints = (LNum)2000; // 固定満貫の場合
 		}
-		else if ((totalHan < 8) && (totalSemiMangan < 4)) yStat->AgariPoints = LargeNum::fromInt(3000); // 跳満
+		else if ((totalHan < 8) && (totalSemiMangan < 4)) yStat->AgariPoints = (LNum)3000; // 跳満
 		else if (((totalHan < 10) || ((totalHan == 10) && (RuleData::chkRule("sanbaiman_border", "11han_or_more")))) &&
-			(totalSemiMangan < 6)) yStat->AgariPoints = LargeNum::fromInt(4000); // 倍満
+			(totalSemiMangan < 6)) yStat->AgariPoints = (LNum)4000; // 倍満
 		else if (((totalHan < 12) || ((totalHan == 12) && (RuleData::chkRule("kazoe_border", "13han_or_more")))) &&
-			(totalSemiMangan < 8)) yStat->AgariPoints = LargeNum::fromInt(6000); // 三倍満
+			(totalSemiMangan < 8)) yStat->AgariPoints = (LNum)6000; // 三倍満
 		else if ((totalSemiMangan < 8) && (RuleData::chkRule("kazoe_border", "no")))
-			yStat->AgariPoints = LargeNum::fromInt(6000); // 三倍満
-		else if (totalSemiMangan < 16) yStat->AgariPoints = LargeNum::fromInt(8000); // 役満 or 数え
-		else yStat->AgariPoints = LargeNum::fromInt(8000 * (totalSemiMangan / 8)); // ダブル役満以上
+			yStat->AgariPoints = (LNum)6000; // 三倍満
+		else if (totalSemiMangan < 16) yStat->AgariPoints = (LNum)8000; // 役満 or 数え
+		else yStat->AgariPoints = (LNum)(8000 * (totalSemiMangan / 8)); // ダブル役満以上
 	} else { // 青天井ルールの場合
-		if (totalSemiMangan >= 8) yStat->AgariPoints = LargeNum::fromInt(2500000); // 役満を固定点にするルール
-		else if (totalSemiMangan >= 6) yStat->AgariPoints = LargeNum::fromInt(1875000);
-		else if (totalSemiMangan >= 4) yStat->AgariPoints = LargeNum::fromInt(1250000);
-		else if (totalSemiMangan >= 3) yStat->AgariPoints = LargeNum::fromInt(937500);
-		else if (totalSemiMangan >= 2) yStat->AgariPoints = LargeNum::fromInt(625000);
+		if (totalSemiMangan >= 8) yStat->AgariPoints = (LNum)2500000; // 役満を固定点にするルール
+		else if (totalSemiMangan >= 6) yStat->AgariPoints = (LNum)1875000;
+		else if (totalSemiMangan >= 4) yStat->AgariPoints = (LNum)1250000;
+		else if (totalSemiMangan >= 3) yStat->AgariPoints = (LNum)937500;
+		else if (totalSemiMangan >= 2) yStat->AgariPoints = (LNum)625000;
 		else doubling(yStat); // 計算する
 	}
 
@@ -570,8 +570,8 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	/* 切り上げ満貫の処理 */
 	if ((RuleData::chkRuleApplied("round_to_mangan")) && // 切り上げ満貫ルールがONで
 		(!RuleData::chkRuleApplied("limitless")) && // 青天井ルールでない場合
-		(result->AgariPoints == LargeNum::fromInt(1920))) // 子の7700・親の11600なら
-			result->AgariPoints = LargeNum::fromInt(2000); // 満貫にする
+		(result->AgariPoints == (LNum)1920)) // 子の7700・親の11600なら
+			result->AgariPoints = (LNum)2000; // 満貫にする
 	/* 終了処理 */
 	recordThreadFinish(); // スレッドが終わったことを記録
 	return S_OK;
