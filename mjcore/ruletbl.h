@@ -41,6 +41,7 @@ private:
 	static std::map<std::string, std::vector<std::string> > ruletags;
 	static std::map<std::string, std::map<std::string, unsigned int> > inverse_ruletags;
 	static std::set<std::string> nonapplicable;
+	static std::map<std::string, std::string> rulemask_expr;
 	static std::array<CodeConv::tstring, RULE_PAGES> pageCaption;
 	static const char digit[];
 public:
