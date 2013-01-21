@@ -9,7 +9,7 @@ namespace mihajong_graphic {
 // -------------------------------------------------------------------------
 
 TableSubsceneCallProto::TableSubsceneCallProto(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
-	LoadTexture(device, &tCall, MAKEINTRESOURCE(IDB_PNG_CALL_TEXT), 384, 1632);
+	LoadTexture(device, &tCall, MAKEINTRESOURCE(IDB_PNG_CALL_TEXT), 384, 1920);
 }
 
 TableSubsceneCallProto::~TableSubsceneCallProto() {
