@@ -483,15 +483,8 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		sound::Play(sound::IDs::sndPage);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall);
 		Sleep(1500);
-#if 0
-		
-		setCenterTitle "—¬‚µ–žŠÑ"
-		putdelta PointDelta
-		redraw 1: await 1500
-		pointcalc GameStat, PointDelta
-		
-		ryuukyokuProc GameStat, 1
-#endif
+		transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValNagashiMangan, 1500);
+		ryuukyokuProc(gameStat, true);
 		break;
 	/**************/
 	/* ŽlžÈ—¬‹ÇŽž */
