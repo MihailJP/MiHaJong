@@ -160,6 +160,10 @@ EndType endround::checkroundabort(GameTable* gameStat) { // ‹ÇI—¹ğŒ‚Ì”»’è
 // -------------------------------------------------------------------------
 
 namespace {
+	inline void writeChat(const CodeConv::tstring& ResultDesc) {
+		chat::appendchat((CodeConv::tstring(_T("*** ")) + ResultDesc + CodeConv::tstring(_T("\n"))).c_str());
+	}
+
 	std::array<bool, PLAYERS> chkNagashiMangan(const GameTable* gameStat, EndType& RoundEndType) { /* —¬‚µ–ŠÑ‚Ì”»’è */
 		std::array<bool, PLAYERS> NagashiManganFlag = {false,};
 		if (RoundEndType == Ryuukyoku) {
@@ -179,7 +183,7 @@ namespace {
 		using namespace CodeConv;
 		if (ResultDesc) {
 			sound::Play(soundNum);
-			chat::appendchat((_T("*** ") + (*ResultDesc) + _T("\n")).c_str());
+			writeChat(*ResultDesc);
 			Subscene(subsceneCode);
 			Sleep(3000);
 		}
@@ -214,7 +218,7 @@ namespace {
 		}
 		ResultDesc = _T("r”v—¬‹ÇA") + TenpaiCountTxt;
 		/* TODO: ‚±‚ê‚¢‚ç‚È‚¢‚©Šm”F statmes "—¬‹Ç "+TenpaiCountTxt */
-		chat::appendchat((_T("*** ") + TenpaiCountTxt + _T("‚Å‚·\n")).c_str());
+		writeChat(ResultDesc + _T("‚Å‚·"));
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChkTenpai);
 		Sleep(5000);
@@ -292,7 +296,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	case Ryuukyoku:
 		/* TODO: ‚±‚ê‘½•ª‚¢‚ç‚È‚¢ statmes "—¬‹Ç‚Å‚·" */
 		ResultDesc = _T("r”v—¬‹Ç");
-		chat::appendchat((_T("*** ") + ResultDesc + _T("\n")).c_str());
+		writeChat(ResultDesc);
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
 		transferNotenBappu(gameStat, OrigTurn,
 			checkTenpai(gameStat, ResultDesc, OrigTurn));
@@ -369,7 +373,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sNorth) % PLAYERS))
 			ResultDesc = _T("–k‰Æ‚Ì‹ãí‹ã”v");
 		else ResultDesc = _T("‹ãí‹ã”v"); // ©Œˆ‚µ‚ÄÀs‚³‚ê‚È‚¢‚Í‚¸
-		chat::appendchat((_T("*** ") + ResultDesc + _T("\n")).c_str());
+		writeChat(ResultDesc);
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
 
 		if (RuleData::chkRule("nine_terminals", "next_dealer") == 0)
