@@ -27,6 +27,9 @@ enum CallType {
 	Kuikae,
 	AgariHouki,
 	Chonbo,
+	NagashiMangan,
+	Renchan,
+	Oyanagare,
 };
 
 EXPORT CallType getCall(PLAYER_ID playerID);

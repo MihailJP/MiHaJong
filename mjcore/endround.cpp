@@ -14,6 +14,7 @@
 #include "haifu.h"
 #include "chat.h"
 #include "agari.h"
+#include "envtbl.h"
 
 // 食い変え判定用の gameStat->AgariSpecialStat 番号
 #define AGARI_KUIKAE 999
@@ -178,7 +179,7 @@ namespace {
 		return NagashiManganFlag;
 	}
 
-	void ryuukyokuScreen(unsigned soundNum, CodeConv::tstring* ResultDesc, unsigned subsceneCode, unsigned waittime = 3000) {
+	void ryuukyokuScreen(unsigned soundNum, CodeConv::tstring* ResultDesc, unsigned subsceneCode, unsigned waittime = 3000, unsigned bgmNum = sound::IDs::musRyuukyoku) {
 		using namespace mihajong_graphic;
 		using namespace CodeConv;
 		if (ResultDesc) {
@@ -190,7 +191,7 @@ namespace {
 		for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 			calltext::setCall(i, calltext::None);
 		sound::Play(sound::IDs::sndPingju);
-		sound::Play(sound::IDs::musRyuukyoku);
+		sound::Play(bgmNum);
 		Subscene(tblSubsceneRyuukyoku);
 		Sleep(waittime);
 	}
@@ -451,76 +452,43 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/* 流し満貫時 */
 	/**************/
 	case NagashiMangan: /* 未実装 */
-#if 0
-		statmes "流局です"
-		snd_play SND_PINGJU
-		setCenterTitle "流局"
-		if (NagashiManganFlag(getPlayer(GameStat)) == 1) {agariBgmSet = 0} else {agariBgmSet = 1}
-		if (GetWatchModeFlag(GameEnv) == 1) {agariBgmSet = 0}
-		if (chkRule("nagashi_mangan", "yakuman")) {
-			switch agariBgmSet
-				case 0: bgmplay MUS_AGARI_SELF_3: swbreak
-				case 1: bgmplay MUS_AGARI_FURIKOMI_3: swbreak
-			swend
-		} else {
-			switch agariBgmSet
-				case 0: bgmplay MUS_AGARI_SELF_2: swbreak
-				case 1: bgmplay MUS_AGARI_FURIKOMI_2: swbreak
-			swend
-		}
-		redrscreen: await 1500
-		statmes "流し満貫が成立しました"
-		dim PointDelta, NUM_OF_PLAYERS, NUM_OF_DIGIT_GROUPS
-		ResultDesc = ""
-		repeat NUM_OF_ACTUAL_PLAYERS
-			if (isNagashiMangan(GameStat, GameEnv, cnt)) {
-				setCall cnt, "流し満貫"
-				switch playerWind(cnt, getRound(GameStat))
-					case PLAYER_EAST:
-						if (ResultDesc != "") {ResultDesc += "、"}
-						ResultDesc += "東家"
-					swbreak
-					case PLAYER_SOUTH:
-						if (ResultDesc != "") {ResultDesc += "、"}
-						ResultDesc += "南家"
-					swbreak
-					case PLAYER_WEST:
-						if (ResultDesc != "") {ResultDesc += "、"}
-						ResultDesc += "西家"
-					swbreak
-#ifndef SANMAT
-					case PLAYER_NORTH:
-						if (ResultDesc != "") {ResultDesc += "、"}
-						ResultDesc += "北家"
-					swbreak
-#endif
-				swend
-				dim AgariPointRaw, NUM_OF_DIGIT_GROUPS
-				if (chkRule("nagashi_mangan", "mangan")) {
-					AgariPointRaw(0) = 2000
-				} else: if (chkRule("nagashi_mangan", "haneman")) {
-					AgariPointRaw(0) = 3000
-				} else: if (chkRule("nagashi_mangan", "baiman")) {
-					AgariPointRaw(0) = 4000
-				} else: if (chkRule("nagashi_mangan", "yakuman")) {
-					AgariPointRaw(0) = 8000
+		/* TODO: 本当にいらないか確認 statmes "流局です" */
+		const bool agariBgmSet = !(NagashiManganFlag[gameStat->PlayerID] || EnvTable::Instantiate()->WatchModeFlag); // 自分の流し満貫ならtrue
+		const unsigned bgmNum =
+			RuleData::chkRule("nagashi_mangan", "yakuman") ? (agariBgmSet ? sound::IDs::musAgariSelf3 : sound::IDs::musAgariFurikomi3)
+			: (agariBgmSet ? sound::IDs::musAgariSelf2 : sound::IDs::musAgariFurikomi2);
+		ryuukyokuScreen(0u, nullptr, 0u, 1500u, bgmNum);
+		/* TODO: これは本当にいらないのかどうか statmes "流し満貫が成立しました" */
+		transfer::resetDelta();
+		{
+			CodeConv::tstring ResultDesc(_T(""));
+			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+				if (isNagashiMangan(gameStat, cnt)) {
+					mihajong_graphic::calltext::setCall(cnt, mihajong_graphic::calltext::NagashiMangan);
+					if (!ResultDesc.empty()) ResultDesc += _T("、");
+					switch (playerwind(gameStat, cnt, gameStat->GameRound)) {
+						case sEast:  ResultDesc += _T("東家"); break;
+						case sSouth: ResultDesc += _T("南家"); break;
+						case sWest:  ResultDesc += _T("西家"); break;
+						case sNorth: ResultDesc += _T("北家"); break;
+					}
+					LNum AgariPointRaw = 0;
+					if      (RuleData::chkRule("nagashi_mangan", "mangan"))  AgariPointRaw = 2000;
+					else if (RuleData::chkRule("nagashi_mangan", "haneman")) AgariPointRaw = 3000;
+					else if (RuleData::chkRule("nagashi_mangan", "baiman"))  AgariPointRaw = 4000;
+					else if (RuleData::chkRule("nagashi_mangan", "yakuman")) AgariPointRaw = 8000;
+					LNum agariPoint; // ダミー。この変数は使用しない。
+					agari::calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), cnt);
 				}
-				calcAgariPoints GameStat, agariPointArray, AgariPointRaw, PointDelta, cnt
 			}
-		loop
-		ResultDesc += "の流し満貫"
-		chatappend "*** "+ResultDesc+"\n"
-		snd_play SND_PAGE
-		redrscreen
-		redraw 1: await 1500
-		
-		setCenterTitle "流し満貫"
-		putdelta PointDelta
-		redraw 1: await 1500
-		pointcalc GameStat, PointDelta
-		
-		ryuukyokuProc GameStat, 1
-#endif
+			ResultDesc += _T("の流し満貫");
+			writeChat(ResultDesc);
+		}
+		sound::Play(sound::IDs::sndPage);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall);
+		Sleep(1500);
+		transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValNagashiMangan, 1500);
+		ryuukyokuProc(gameStat, true);
 		break;
 	/**************/
 	/* 四槓流局時 */
