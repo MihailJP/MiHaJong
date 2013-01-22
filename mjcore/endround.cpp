@@ -451,7 +451,8 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	/* 流し満貫時 */
 	/**************/
-	case NagashiMangan: /* 未実装 */
+	case NagashiMangan:
+	{
 		/* TODO: 本当にいらないか確認 statmes "流局です" */
 		const bool agariBgmSet = !(NagashiManganFlag[gameStat->PlayerID] || EnvTable::Instantiate()->WatchModeFlag); // 自分の流し満貫ならtrue
 		const unsigned bgmNum =
@@ -490,6 +491,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValNagashiMangan, 1500);
 		ryuukyokuProc(gameStat, true);
 		break;
+	}
 	/**************/
 	/* 四槓流局時 */
 	/**************/
