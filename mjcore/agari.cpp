@@ -1,13 +1,18 @@
 #include "agari.h"
 
+#include <functional>
+#include <regex>
+#include "../graphic/graphic.h"
+#include "../sound/sound.h"
+#include "bgmid.h"
 #include "func.h"
 #include "yaku/yaku.h"
 #include "haifu.h"
 #include "envtbl.h"
-#include <functional>
-#include "../graphic/graphic.h"
 #include "endround.h"
-#include <regex>
+#include "chat.h"
+#include "ruletbl.h"
+#include "tileutil.h"
 
 // -------------------------------------------------------------------------
 
@@ -363,7 +368,7 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 		return true;
 	});
 
-	forEachAgariPlayers([&gameStat, &RoundEndType, FirstAgariPlayer, &tmpagariflag](int& cnt) -> bool {
+	forEachAgariPlayers([&, FirstAgariPlayer](int& cnt) -> bool {
 		if (cnt == 0) {
 			gameStat->CurrentPlayer.Agari = FirstAgariPlayer;
 			verifyAgari(gameStat, RoundEndType);
@@ -388,8 +393,8 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 		/**************/
 		/* ö˜a”­¶Žž */
 		/**************/
-		//if (RoundEndType == Chonbo)
-			/* TODO: ‚±‚±‚ÌˆÚA endround_chonboproc GameStat, GameEnv, ResultDesc */
+		if (RoundEndType == Chonbo)
+			endround_chonboproc(gameStat, ResultDesc);
 
 		if (gameStat->TsumoAgariFlag) return false; /* ƒcƒ‚˜a—¹‚è‚ÌŽž‚ÍI—¹ */
 		if ((!RuleData::chkRule("getting_deposit", "riichidori")) || gameStat->Player[gameStat->CurrentPlayer.Agari].RichiFlag.RichiFlag)
@@ -407,5 +412,57 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 		gameStat->CurrentPlayer.Agari = FirstAgariPlayer + ((OyaAgari == FirstAgariPlayer) ? 1 : 0) % PLAYERS;
 
 	dobonPenalty(gameStat, AgariPlayerPriority);
+	return;
+}
+
+// -------------------------------------------------------------------------
+
+/* ö˜a”­¶Žž‚Ìˆ— */
+void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring& ResultDesc) {
+	if (!ResultDesc.empty()) ResultDesc += _T("\n");
+	CodeConv::tstring tmpResultDesc;
+	switch (playerwind(gameStat, gameStat->CurrentPlayer.Agari, gameStat->GameRound)) {
+		case sEast:  tmpResultDesc += _T("“Œ‰Æ‚Ìƒ`ƒ‡ƒ“ƒ{"); break;
+		case sSouth: tmpResultDesc += _T("“ì‰Æ‚Ìƒ`ƒ‡ƒ“ƒ{"); break;
+		case sWest:  tmpResultDesc += _T("¼‰Æ‚Ìƒ`ƒ‡ƒ“ƒ{"); break;
+		case sNorth: tmpResultDesc += _T("–k‰Æ‚Ìƒ`ƒ‡ƒ“ƒ{"); break;
+	}
+	ResultDesc += tmpResultDesc + _T("‚Å‚·");
+	writeChat(tmpResultDesc);
+	/* TODO: ‚±‚ê‚ð”pŽ~‚·‚é‚©‚ÌŒˆ’è statmes tmpResultDesc */
+	Sleep(1500);
+	sound::Play(sound::IDs::musRyuukyoku);
+	/* Œëƒƒ“‚Ü‚½‚ÍŒëƒcƒ‚ */
+	if ((gameStat->AgariSpecialStat == 0) || (gameStat->AgariSpecialStat == 1)) {
+		if ((gameStat->PaoFlag[pyMinkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong"))
+			ResultDesc += _T("(‘å–¾žÈ‚Ì—äã”v‚Å‚Ì˜a—¹‚è)"); // ‘å–¾žÈ‚Ì—äãŠJ‰Ô‹ÖŽ~ƒ‹[ƒ‹‚Ìê‡
+		else if ((!gameStat->Player[gameStat->CurrentPlayer.Agari].RichiFlag.RichiFlag) && RuleData::chkRuleApplied("riichi_shibari"))
+			ResultDesc += _T("(ƒ_ƒ}’®‚Å‚Ì˜a—¹‚è)"); // —§’¼”›‚è‚Å—§’¼‚µ‚Ä‚È‚¢‚È‚çö˜a
+		else if (!isTenpai(gameStat, gameStat->CurrentPlayer.Agari))
+			ResultDesc += _T("(¬—§‚µ‚Ä‚¢‚È‚¢˜a—¹‚è)"); // ˜a—¹‚è‚ª¬—§‚µ‚Ä‚¢‚È‚¢ê‡ö˜a
+		else {
+			yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Agari);
+			MachihaiInfo machiInfo = chkFuriten(gameStat, gameStat->CurrentPlayer.Agari);
+			if (machiInfo.FuritenFlag || gameStat->Player[gameStat->CurrentPlayer.Agari].DoujunFuriten)
+				ResultDesc += _T("(U’®‚Å‚Ìƒƒ“˜a—¹‚è)"); // U’®‚È‚Ì‚Éƒƒ“‚µ‚½ê‡‚Íö˜a
+			else if (yakuInfo.CoreHan == 0)
+				ResultDesc += _T("(–ð‚Ì‚È‚¢˜a—¹‚è)"); // –ð‚ª‚È‚©‚Á‚½ê‡‚Íö˜a
+			else if ((yakuInfo.CoreHan == 1) && gameStat->ShibariFlag)
+				ResultDesc += _T("(ˆêãÊ‚µ‚©‚È‚¢˜a—¹‚è)"); // “ñãÊ”›‚è‚Å‚PãÊ‚µ‚©‚È‚¢‚È‚çö˜a
+			else if (gameStat->Player[gameStat->CurrentPlayer.Agari].AgariHouki || (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Agari].RemotePlayerFlag == -1))
+				ResultDesc += _T("(˜a—¹‚è•úŠü“K—p’†)"); // ˜a—¹‚è•úŠü‚È‚Ì‚É˜a—¹‚ë‚¤‚Æ‚µ‚½
+		}
+		sound::Play(sound::IDs::sndCuohu);
+	}
+	/* Œëƒƒ“AŒëƒcƒ‚ˆÈŠO‚Ìö˜a */
+	else {
+		if (gameStat->AgariSpecialStat == AGARI_KUIKAE)
+			ResultDesc += _T("(‹ò‚¢‘Ö‚¦)"); // ‹ò‚¢‘Ö‚¦‚ð‚µ‚½‚Æ‚«
+		sound::Play(sound::IDs::sndPage);
+	}
+	mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChonbo);
+	Sleep(5000);
+
+	transferChonboPenalty(gameStat, gameStat->CurrentPlayer.Agari);
 	return;
 }

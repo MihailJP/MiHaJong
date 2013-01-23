@@ -604,6 +604,9 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		mySubScene = new TableSubsceneMsg(caller->getDevice(),
 			(GameStatus::gameStat()->gameType & AllSanma) ? _T("ŽO‰Æ—§’¼") : _T("Žl‰Æ—§’¼"));
 		break;
+	case tblSubsceneChonbo:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("ö˜a"));
+		break;
 	case tblSubsceneCall:
 		mySubScene = new TableSubsceneCall(caller->getDevice());
 		break;

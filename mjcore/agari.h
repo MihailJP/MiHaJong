@@ -40,6 +40,7 @@ void calcAgariPoints(const GameTable* gameStat, LNum& agariPoint,
 // -------------------------------------------------------------------------
 
 void agariproc(EndType& RoundEndType, GameTable* gameStat, bool& tmpUraFlag, bool& tmpAliceFlag, CodeConv::tstring& ResultDesc);
+void endround_chonboproc(GameTable* gameStat, CodeConv::tstring& ResultDesc);
 
 // -------------------------------------------------------------------------
 

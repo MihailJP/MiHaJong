@@ -18,6 +18,7 @@ enum TableSubsceneID : unsigned int { // 卓画面のサブシーン番号
 	tblSubsceneTripleRon, // 「三家和」
 	tblSubsceneSikang, // 「四開槓」
 	tblSubsceneFourRiichi, // 「四人立直」
+	tblSubsceneChonbo, // 「錯和」
 	tblSubsceneCall, // 発声表示画面
 	tblSubsceneCallFade, // 発声表示画面(フェード)
 	tblSubsceneCallVal, // 点数の増分表示

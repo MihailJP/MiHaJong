@@ -16,9 +16,6 @@
 #include "agari.h"
 #include "envtbl.h"
 
-// 食い変え判定用の gameStat->AgariSpecialStat 番号
-#define AGARI_KUIKAE 999
-
 namespace { // 内部処理に使う関数
 	bool all_player(const GameTable* gameStat, std::function<bool (const PlayerTable*)> f) {
 		bool flag = true;
@@ -161,10 +158,6 @@ EndType endround::checkroundabort(GameTable* gameStat) { // 局終了条件の判定
 // -------------------------------------------------------------------------
 
 namespace {
-	inline void writeChat(const CodeConv::tstring& ResultDesc) {
-		chat::appendchat((CodeConv::tstring(_T("*** ")) + ResultDesc + CodeConv::tstring(_T("\n"))).c_str());
-	}
-
 	std::array<bool, PLAYERS> chkNagashiMangan(const GameTable* gameStat, EndType& RoundEndType) { /* 流し満貫の判定 */
 		std::array<bool, PLAYERS> NagashiManganFlag = {false,};
 		if (RoundEndType == Ryuukyoku) {
