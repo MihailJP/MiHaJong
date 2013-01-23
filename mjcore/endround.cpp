@@ -250,21 +250,21 @@ namespace {
 			transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValNotenBappu, 2500);
 	}
 
+	void showRenchanFlag(GameTable* gameStat, bool RenchanFlag) {
+		using namespace mihajong_graphic::calltext;
+		for (PLAYER_ID cnt = 0; cnt < PLAYERS; ++cnt)
+			setCall(cnt, None);
+		if (RenchanFlag)
+			setCall(gameStat->GameRound % PLAYERS, Renchan);
+		else
+			setCall(gameStat->GameRound % PLAYERS, Oyanagare);
+		sound::Play(sound::IDs::sndPage);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade);
+		return;
+	}
+
 	void ryuukyokuProc(GameTable* gameStat, bool RenchanFlag) {
-		/* TODO: この辺再考のこと
-		repeat NUM_OF_PLAYERS
-			setCall cnt, ""
-		loop
-		setCenterTitle ""
-		if (RenchanFlag) {
-			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
-		} else {
-			setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
-		}
-		snd_play SND_PAGE
-		redrscreen
-		redraw 1
-		*/
+		showRenchanFlag(gameStat, RenchanFlag);
 		++(gameStat->Honba);
 		if (!RenchanFlag) ++(gameStat->GameRound);
 		gameStat->AgariChain = 0; gameStat->LastAgariPlayer = -1;
@@ -328,38 +328,27 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	/* 和了成立時 */
 	/**************/
-	case Agari: /* 未実装 */
-#if 0
-		repeat NUM_OF_PLAYERS
-			setCall cnt, ""
-		loop
-		setCenterTitle ""
-		if ((playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST)&&(chkRule("round_continuation", "renchan_never") == 0)) {
-			setCall getRound(GameStat)\NUM_OF_PLAYERS, "連荘"
+	case Agari: {
+		const bool RenchanFlag =
+			(playerwind(gameStat, gameStat->CurrentPlayer.Agari, gameStat->GameRound) == sEast) &&
+			(!RuleData::chkRule("round_continuation", "renchan_never"));
+		showRenchanFlag(gameStat, RenchanFlag);
+		if (RenchanFlag) {
+			++(gameStat->Honba);
 		} else {
-			setCall getRound(GameStat)\NUM_OF_PLAYERS, "親流れ"
+			++(gameStat->GameRound); gameStat->Honba = 0;
 		}
-		snd_play SND_PAGE
-		redrscreen
-		redraw 1
-		
-		if ((playerwind(getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI), getRound(GameStat)) == PLAYER_EAST)&&(chkRule("round_continuation", "renchan_never") == 0)) {
-			incHonba GameStat
-		} else {
-			setHonba GameStat, 0: incRound GameStat
-		}
-		setDeposit GameStat, 0
+		gameStat->Deposit = 0;
 		// 八連荘成立時、カウンタをリセット
-		if (getAgariChain(GameStat) == 8) {
-			setAgariChain GameStat, 0
-		}
-#endif
+		if (gameStat->AgariChain == 8)
+			gameStat->AgariChain = 0;
+	}
 		break;
 	/**************/
 	/* 錯和発生時 */
 	/**************/
-	case Chonbo: /* 未実装 */
-		/* TODO: これ setAgariChain GameStat, 0: setLastAgariPlayer GameStat, -1 */
+	case Chonbo:
+		gameStat->AgariChain = 0; gameStat->LastAgariPlayer = -1;
 		break;
 	/**************/
 	/* 九種流局時 */
@@ -490,8 +479,8 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		Sleep(1500);
 		transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValNagashiMangan, 1500);
 		ryuukyokuProc(gameStat, true);
-		break;
 	}
+		break;
 	/**************/
 	/* 四槓流局時 */
 	/**************/
