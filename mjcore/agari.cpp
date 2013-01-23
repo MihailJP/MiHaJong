@@ -1,6 +1,13 @@
 #include "agari.h"
 
 #include "func.h"
+#include "yaku/yaku.h"
+#include "haifu.h"
+#include "envtbl.h"
+#include <functional>
+#include "../graphic/graphic.h"
+#include "endround.h"
+#include <regex>
 
 // -------------------------------------------------------------------------
 
@@ -246,3 +253,159 @@ void endround::agari::calcAgariPoints(
 }
 
 // -------------------------------------------------------------------------
+
+namespace {
+	void forEachAgariPlayers(std::function<bool (int&)> f) {
+		for (int cnt = 0; cnt < PLAYERS - 1; ++cnt) {
+			if (RuleData::chkRule("multiple_mahjong", "single_mahjong_with_draw") || RuleData::chkRule("multiple_mahjong", "single_mahjong")) {
+				if (cnt > 0) break; // 頭ハネ(ダブロンなし)ルールの場合
+			} else if (RuleData::chkRule("multiple_mahjong", "dual_mahjong_with_draw") || RuleData::chkRule("multiple_mahjong", "dual_mahjong")) {
+				if (cnt > 1) break; // ダブロンあり・トリロンなしの場合
+			}
+			if (!f(cnt)) break;
+		}
+	}
+
+	void chonboIfShibariUnmet(const GameTable* gameStat, const yaku::YAKUSTAT& yakuInfo, const MachihaiInfo& machiInfo, EndType& RoundEndType) {
+		// 縛りを満たさないか、振聴のとき
+		if ((yakuInfo.CoreHan <= (gameStat->ShibariFlag ? 1 : 0)) || // 縛りを満たしていないか、
+			(!gameStat->TsumoAgariFlag && ( // 「ロンの時で
+			machiInfo.FuritenFlag || // フリテンか
+			gameStat->Player[gameStat->CurrentPlayer.Agari].DoujunFuriten)) || // 同順フリテンの時」、もしくは
+			(RuleData::chkRule("riichi_shibari", "yes") && (!gameStat->Player[gameStat->CurrentPlayer.Agari].RichiFlag.RichiFlag))) // リーチ縛りを満たしていないならば
+			RoundEndType = Chonbo; // チョンボにする
+	}
+
+	void verifyAgari(GameTable* gameStat, EndType& RoundEndType) {
+		if (!gameStat->TsumoAgariFlag) {
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].red  = gameStat->CurrentDiscard.red;
+		}
+		yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Agari);
+		MachihaiInfo machiInfo = chkFuriten(gameStat, gameStat->CurrentPlayer.Agari);
+		// 縛りを満たさないか、振聴のときは錯和
+		chonboIfShibariUnmet(gameStat, yakuInfo, machiInfo, RoundEndType);
+	}
+
+	enum OptionBool {oFalse, oTrue, oNull,};
+
+	OptionBool procSecondaryRon(GameTable* gameStat, EndType& RoundEndType, int& cnt) {
+		RoundEndType = Agari;
+		gameStat->CurrentPlayer.Agari = (gameStat->CurrentPlayer.Agari + 1) % PLAYERS;
+		if (gameStat->CurrentPlayer.Agari == gameStat->CurrentPlayer.Furikomi) return oFalse; // 一周した時点で抜ける
+		if (gameStat->Player[gameStat->CurrentPlayer.Agari].DeclarationFlag.Ron) { // ロンしていれば
+			verifyAgari(gameStat, RoundEndType);
+		} else {
+			--cnt; return oTrue;
+		}
+		return oNull;
+	}
+
+	bool isSomeoneDobon(const GameTable* gameStat) {
+		bool flag = false;
+		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; ++i)
+			if (isDobon(gameStat, i)) flag = true;
+		return flag;
+	}
+
+	void calcDobonDelta(const GameTable* gameStat, PLAYER_ID AgariPlayerPriority, int penalty) {
+		endround::transfer::resetDelta();
+		for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			if (isDobon(gameStat, cnt)) {
+				endround::transfer::addDelta(cnt, -penalty);
+				endround::transfer::addDelta(AgariPlayerPriority, penalty);
+			}
+		}
+	}
+
+
+	void dobonPenalty(GameTable* gameStat, PLAYER_ID AgariPlayerPriority) {
+		int penalty = 0;
+		std::string penaConf(RuleData::chkRule("penalty_negative"));
+		std::smatch matchDat;
+		if (std::regex_match(penaConf, matchDat, std::regex("(\\d+)pts"))) { // 点棒で精算
+			penalty = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
+			if (isSomeoneDobon(gameStat)) {
+				calcDobonDelta(gameStat, AgariPlayerPriority, penalty);
+				endround::transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValDobon, 3000);
+			}
+		} else if (std::regex_match(penaConf, matchDat, std::regex("chip(\\d+)"))) { // チップで精算
+			if (RuleData::chkRuleApplied("chip")) {
+				penalty = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
+				if (isSomeoneDobon(gameStat)) {
+					calcDobonDelta(gameStat, AgariPlayerPriority, penalty);
+					endround::transfer::transferChip(gameStat, mihajong_graphic::tblSubsceneCallValDobon, 1500);
+				}
+			}
+		}
+		return;
+	}
+
+}
+
+void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool& tmpUraFlag, bool& tmpAliceFlag, CodeConv::tstring& ResultDesc) {
+	bool tmpagariflag = false;
+	PLAYER_ID FirstAgariPlayer = gameStat->CurrentPlayer.Agari;
+	int OyaAgari = -1;
+	ResultDesc = _T("");
+	tmpUraFlag = 0;
+	tmpAliceFlag = 0;
+	int AgariPlayerPriority = -1;
+	std::uint16_t origDoraPointer = gameStat->DoraPointer;
+
+	forEachAgariPlayers([&gameStat, &RoundEndType](int& cnt) -> bool {
+		if (cnt > 0) { // ダブロン用の処理
+			OptionBool result = procSecondaryRon(gameStat, RoundEndType, cnt);
+			if (result == oFalse) return false;
+			else if (result == oTrue) return true;
+		}
+		if (gameStat->TsumoAgariFlag) return false;
+		return true;
+	});
+
+	forEachAgariPlayers([&gameStat, &RoundEndType, FirstAgariPlayer, &tmpagariflag](int& cnt) -> bool {
+		if (cnt == 0) {
+			gameStat->CurrentPlayer.Agari = FirstAgariPlayer;
+			verifyAgari(gameStat, RoundEndType);
+		} else if (cnt > 0) {
+			if (!gameStat->TsumoAgariFlag) {
+				OptionBool result = procSecondaryRon(gameStat, RoundEndType, cnt);
+				if (result == oFalse) return false;
+				else if (result == oTrue) return true;
+			}
+		}
+		haifu::haifualicedoraupd();
+		/**************/
+		/* 和了成立時 */
+		/**************/
+		if (RoundEndType == Agari) {
+			tmpagariflag = true;
+			if (gameStat->Player[gameStat->CurrentPlayer.Agari].AgariHouki || (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Agari].RemotePlayerFlag == -1))
+				RoundEndType = Chonbo; // 和了り放棄時の処理→誤ロン・誤ツモとして罰符とする
+		}
+		//if (RoundEndType == Agari)
+			/* TODO: ここの移植 endround_agariproc GameStat, GameEnv, ResultDesc, AgariPlayerPriority, origDoraPointer, YakuInfo, tmpAliceFlag */
+		/**************/
+		/* 錯和発生時 */
+		/**************/
+		//if (RoundEndType == Chonbo)
+			/* TODO: ここの移植 endround_chonboproc GameStat, GameEnv, ResultDesc */
+
+		if (gameStat->TsumoAgariFlag) return false; /* ツモ和了りの時は終了 */
+		if ((!RuleData::chkRule("getting_deposit", "riichidori")) || gameStat->Player[gameStat->CurrentPlayer.Agari].RichiFlag.RichiFlag)
+			gameStat->Deposit = 0;
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
+		return true;
+	});
+	RoundEndType = tmpagariflag ? Agari : Chonbo;
+	/* 連荘判定用のプレイヤー番号設定 */
+	if (RuleData::chkRule("simultaneous_mahjong", "renchan_if_dealer_mahjong"))
+		gameStat->CurrentPlayer.Agari = (OyaAgari == -1) ? FirstAgariPlayer : OyaAgari;
+	else if (RuleData::chkRule("simultaneous_mahjong", "renchan_if_dealer_upstream"))
+		gameStat->CurrentPlayer.Agari = FirstAgariPlayer;
+	else if (RuleData::chkRule("simultaneous_mahjong", "next_dealer"))
+		gameStat->CurrentPlayer.Agari = FirstAgariPlayer + ((OyaAgari == FirstAgariPlayer) ? 1 : 0) % PLAYERS;
+
+	dobonPenalty(gameStat, AgariPlayerPriority);
+	return;
+}

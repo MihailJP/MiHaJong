@@ -274,6 +274,8 @@ namespace {
 
 void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned OrigTurn, unsigned OrigHonba) {
 	EndType RoundEndType = roundEndType;
+	bool tmpUraFlag = false, tmpAliceFlag = false;
+	CodeConv::tstring ResultDesc; 
 	{
 		CodeConv::tostringstream o;
 		o << _T("‹Ç‚ðI—¹ I—¹ƒR[ƒh [") << (int)RoundEndType << _T(']');
@@ -286,10 +288,9 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/************/
 	/* ˜a—¹ˆ— */
 	/************/
-	if ((RoundEndType == Agari) || (RoundEndType == Chonbo)) {
-		/* TODO: ˜a—¹‚èŽž‚Ìˆ— agariproc RoundEndType, GameStat, GameEnv, tmpUraFlag, tmpAliceFlag, ResultDesc */
-	}
-	CodeConv::tstring ResultDesc; bool RenchanFlag = false;
+	if ((RoundEndType == Agari) || (RoundEndType == Chonbo))
+		agari::agariproc(RoundEndType, gameStat, tmpUraFlag, tmpAliceFlag, ResultDesc);
+	bool RenchanFlag = false;
 	switch (RoundEndType) {
 	/**************/
 	/* r”v—¬‹ÇŽž */
@@ -652,5 +653,13 @@ void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, 
 	Sleep(wait);
 	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 		gameStat->Player[i].PlayerScore += delta[i];
+	mihajong_graphic::GameStatus::updateGameStat(gameStat);
+}
+void endround::transfer::transferChip(GameTable* gameStat, unsigned subscene, unsigned wait) {
+	setTransferParam();
+	mihajong_graphic::Subscene(subscene);
+	Sleep(wait);
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+		gameStat->Player[i].playerChip += delta[i];
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 }
