@@ -3,9 +3,13 @@
 #include "gametbl.h"
 #include "largenum.h"
 #include "rational.h"
+#include "endtype.h"
+#include "yaku/yaku.h"
 
 namespace endround {
 namespace agari {
+
+// -------------------------------------------------------------------------
 
 typedef Rational<int> Rat;
 typedef const Rat& rat;
@@ -33,6 +37,15 @@ inline void deltacalcminus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointD
 const int CAP_normal = -1;
 void calcAgariPoints(const GameTable* gameStat, LNum& agariPoint,
 	const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, int Mode = CAP_normal);
+
+// -------------------------------------------------------------------------
+
+void agariproc(EndType& RoundEndType, GameTable* gameStat, bool& tmpUraFlag, bool& tmpAliceFlag, CodeConv::tstring& ResultDesc);
+void endround_agariproc(GameTable* gameStat, CodeConv::tstring& ResultDesc, PLAYER_ID& AgariPlayerPriority,
+	std::uint16_t origDoraPointer, const yaku::YAKUSTAT& yakuInfo, bool tmpAliceFlag, int& OyaAgari);
+void endround_chonboproc(GameTable* gameStat, CodeConv::tstring& ResultDesc);
+
+// -------------------------------------------------------------------------
 
 }
 }

@@ -58,3 +58,7 @@ namespace chat {
 #endif
 	__declspec(dllexport) void closechat ();
 }
+
+inline void writeChat(const CodeConv::tstring& ResultDesc) {
+	chat::appendchat((CodeConv::tstring(_T("*** ")) + ResultDesc + CodeConv::tstring(_T("\n"))).c_str());
+}

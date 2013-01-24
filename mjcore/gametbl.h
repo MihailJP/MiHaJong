@@ -288,6 +288,13 @@ static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
+// êHÇ¢ïœÇ¶îªíËópÇÃ gameStat->AgariSpecialStat î‘çÜ
+#define AGARI_KUIKAE 999
+#endif
+
+// -------------------------------------------------------------------------
+
+#ifdef MJCORE_EXPORTS
 extern GameTable GameStat, StatSandBox;
 inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType);
 __declspec(dllexport) void calcWareme(GameTable* const gameStat);

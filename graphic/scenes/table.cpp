@@ -604,6 +604,9 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		mySubScene = new TableSubsceneMsg(caller->getDevice(),
 			(GameStatus::gameStat()->gameType & AllSanma) ? _T("ŽO‰Æ—§’¼") : _T("Žl‰Æ—§’¼"));
 		break;
+	case tblSubsceneChonbo:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("ö˜a"));
+		break;
 	case tblSubsceneCall:
 		mySubScene = new TableSubsceneCall(caller->getDevice());
 		break;
@@ -633,6 +636,15 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		break;
 	case tblSubsceneCallValNagashiMangan:
 		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("—¬‚µ–žŠÑ"));
+		break;
+	case tblSubsceneCallValDobon:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("”ò‚Ñ”±•„"));
+		break;
+	case tblSubsceneCallValKitamakura:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("–k–”±•„"));
+		break;
+	case tblSubsceneCallValYakuman:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("–ð–žj‹V"));
 		break;
 	case tblSubsceneChkTenpai:
 		mySubScene = new TableSubsceneCheckTenpai(caller->getDevice());
