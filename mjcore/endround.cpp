@@ -640,6 +640,13 @@ void endround::transfer::negateDelta() {
 	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 		delta[i] *= -1;
 }
+void endround::transfer::doubleDelta(PLAYER_ID player) {
+	delta[player] *= 2;
+}
+void endround::transfer::doubleDelta() {
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+		delta[i] *= 2;
+}
 void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, unsigned wait) {
 	setTransferParam();
 	mihajong_graphic::Subscene(subscene);

@@ -5,8 +5,8 @@
 #include "../graphic/graphic.h"
 #include "../sound/sound.h"
 #include "bgmid.h"
+#include "sound.h"
 #include "func.h"
-#include "yaku/yaku.h"
 #include "haifu.h"
 #include "envtbl.h"
 #include "endround.h"
@@ -355,7 +355,7 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 	ResultDesc = _T("");
 	tmpUraFlag = 0;
 	tmpAliceFlag = 0;
-	int AgariPlayerPriority = -1;
+	PLAYER_ID AgariPlayerPriority = -1;
 	std::uint16_t origDoraPointer = gameStat->DoraPointer;
 
 	forEachAgariPlayers([&gameStat, &RoundEndType](int& cnt) -> bool {
@@ -388,8 +388,10 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 			if (gameStat->Player[gameStat->CurrentPlayer.Agari].AgariHouki || (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Agari].RemotePlayerFlag == -1))
 				RoundEndType = Chonbo; // ˜a—¹‚è•úŠü‚Ìˆ—¨Œëƒƒ“EŒëƒcƒ‚‚Æ‚µ‚Ä”±•„‚Æ‚·‚é
 		}
-		//if (RoundEndType == Agari)
-			/* TODO: ‚±‚±‚ÌˆÚA endround_agariproc GameStat, GameEnv, ResultDesc, AgariPlayerPriority, origDoraPointer, YakuInfo, tmpAliceFlag */
+		if (RoundEndType == Agari) {
+			yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Agari);
+			endround_agariproc(gameStat, ResultDesc, AgariPlayerPriority, origDoraPointer, yakuInfo, tmpAliceFlag, OyaAgari);
+		}
 		/**************/
 		/* ö˜a”­¶ */
 		/**************/
@@ -412,6 +414,204 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 		gameStat->CurrentPlayer.Agari = FirstAgariPlayer + ((OyaAgari == FirstAgariPlayer) ? 1 : 0) % PLAYERS;
 
 	dobonPenalty(gameStat, AgariPlayerPriority);
+	return;
+}
+
+// -------------------------------------------------------------------------
+
+namespace {
+	void deltawareme(PLAYER_ID agariTmpPlayer, PLAYER_ID agariTmpWareme) {
+		LNum subtrahend = endround::transfer::getDelta()[agariTmpWareme];
+		endround::transfer::addDelta(agariTmpPlayer, -subtrahend);
+		return;
+	}
+
+	void calculateWareme(const GameTable* gameStat) {
+		if (gameStat->WaremePlayer == gameStat->CurrentPlayer.Agari) {
+			endround::transfer::doubleDelta(); // Š„‚ê–Ú‚Ìl‚ª˜a—¹‚Á‚½‚Æ‚«
+		} else { // Š„‚ê–Ú‚ÌlˆÈŠO‚ª˜a—¹‚Á‚½‚Æ‚«
+			deltawareme(gameStat->CurrentPlayer.Agari, gameStat->WaremePlayer);
+			endround::transfer::doubleDelta(gameStat->WaremePlayer);
+		}
+		return;
+	}
+
+	void calculateDoukasen(const GameTable* gameStat) {
+		if (gameStat->DoukasenPlayer == gameStat->CurrentPlayer.Agari) {
+			endround::transfer::doubleDelta(); // “±‰Îü‚Ìl‚ª˜a—¹‚Á‚½‚Æ‚«
+		} else { // “±‰Îü‚ÌlˆÈŠO‚ª˜a—¹‚Á‚½‚Æ‚«
+			deltawareme(gameStat->CurrentPlayer.Agari, gameStat->DoukasenPlayer);
+			endround::transfer::doubleDelta(gameStat->DoukasenPlayer);
+		}
+		return;
+	}
+
+	void calculateWaremeDelta(const GameTable* gameStat) { // Š„‚ê–Ú‚Æ‚©
+		if (RuleData::chkRuleApplied("wareme"))
+			calculateWareme(gameStat); // Š„‚ê–Úƒ‹[ƒ‹
+		if ((RuleData::chkRule("wareme", "greater_wareme")) && (gameStat->Dice[0].Number == gameStat->Dice[1].Number))
+			calculateWareme(gameStat); // ƒTƒCƒRƒ‚ªƒ]ƒ–Ú‚Ì‚Í‚³‚ç‚É”{
+		if (RuleData::chkRuleApplied("doukasen"))
+			calculateDoukasen(gameStat); // “±‰Îüƒ‹[ƒ‹
+	}
+
+	void calculateTsumibouDelta(const GameTable* gameStat) { // Ï‚İ–_‚ÌŒvZ
+		int tsumiboh_rate = 0;
+		std::smatch matchDat;
+		if (std::regex_match(RuleData::chkRule("tsumiboh_rate"), matchDat, std::regex("counter_(\\d+)")))
+			tsumiboh_rate = std::atoi(matchDat[1].str().c_str()) / (ACTUAL_PLAYERS - 1);
+		endround::transfer::resetDelta();
+		if (gameStat->TsumoAgariFlag) {
+			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+				if (cnt == gameStat->CurrentPlayer.Agari)
+					endround::transfer::addDelta(cnt, gameStat->Honba *   (ACTUAL_PLAYERS - 1)  * tsumiboh_rate);
+				else
+					endround::transfer::addDelta(cnt, gameStat->Honba * (-(ACTUAL_PLAYERS - 1)) * tsumiboh_rate);
+			}
+		} else {
+			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+				if (cnt == gameStat->CurrentPlayer.Agari)
+					endround::transfer::addDelta(cnt, gameStat->Honba *   (ACTUAL_PLAYERS - 1)  * tsumiboh_rate);
+				else if (cnt == gameStat->CurrentPlayer.Furikomi)
+					endround::transfer::addDelta(cnt, gameStat->Honba * (-(ACTUAL_PLAYERS - 1)) * tsumiboh_rate);
+			}
+		}
+	}
+
+	void chipTransfer(GameTable* gameStat, unsigned subscene, int ChipAmount) {
+		if ((ChipAmount <= 0) || (!RuleData::chkRuleApplied("chip"))) return;
+		endround::transfer::resetDelta();
+		if ((!gameStat->TsumoAgariFlag) && (!std::regex_match(RuleData::chkRule("limithand_bonus"), std::regex("chip_\\d+_each")))) {
+			endround::transfer::addDelta(gameStat->CurrentPlayer.Furikomi, -ChipAmount);
+			endround::transfer::addDelta(gameStat->CurrentPlayer.Agari   ,  ChipAmount);
+		} else {
+			for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; ++i)
+				endround::transfer::addDelta(i, -ChipAmount);
+			endround::transfer::addDelta(gameStat->CurrentPlayer.Agari, ChipAmount * ACTUAL_PLAYERS);
+		}
+		endround::transfer::transferChip(gameStat, subscene, 1500);
+		return;
+	}
+
+}
+
+/* ˜a—¹¬—§‚Ìˆ— */
+void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring& ResultDesc, PLAYER_ID& AgariPlayerPriority,
+	std::uint16_t origDoraPointer, const yaku::YAKUSTAT& yakuInfo, bool tmpAliceFlag, int& OyaAgari)
+{
+	LNum AgariPointRaw = yakuInfo.AgariPoints;
+	if (AgariPlayerPriority == -1) AgariPlayerPriority = gameStat->CurrentPlayer.Agari;
+	if (!ResultDesc.empty()) ResultDesc += _T("\n");
+	CodeConv::tstring tmpResultDesc;
+	switch (playerwind(gameStat->CurrentPlayer.Agari, gameStat->GameRound)) {
+		case sEast:  tmpResultDesc += _T("“Œ‰Æ"); break;
+		case sSouth: tmpResultDesc += _T("“ì‰Æ"); break;
+		case sWest:  tmpResultDesc += _T("¼‰Æ"); break;
+		case sNorth: tmpResultDesc += _T("–k‰Æ"); break;
+	}
+	if (gameStat->TsumoAgariFlag) {
+		tmpResultDesc += _T("‚Ìƒcƒ‚˜a—¹‚è");
+	} else {
+		switch (playerwind(gameStat->CurrentPlayer.Furikomi, gameStat->GameRound)) {
+			case sEast:  tmpResultDesc += _T("‚ª“Œ‰Æ‚©‚çƒƒ“˜a—¹‚è"); break;
+			case sSouth: tmpResultDesc += _T("‚ª“ì‰Æ‚©‚çƒƒ“˜a—¹‚è"); break;
+			case sWest:  tmpResultDesc += _T("‚ª¼‰Æ‚©‚çƒƒ“˜a—¹‚è"); break;
+			case sNorth: tmpResultDesc += _T("‚ª–k‰Æ‚©‚çƒƒ“˜a—¹‚è"); break;
+		}
+	}
+	ResultDesc += tmpResultDesc;
+	writeChat(tmpResultDesc);
+	/* TODO: ‚±‚ê‚ğ”p~‚·‚é‚©‚ÌŒˆ’è statmes tmpResultDesc */
+	Sleep(1500);
+	std::uint16_t tmpDoraPointer = origDoraPointer;
+	int AlicePointer = tmpDoraPointer - yakuInfo.AliceDora * 2 - 2;
+	/* TODO: ‚±‚±‚ğˆÚA‚·‚é
+	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)&&(chkRule("alice", "yes") != 0)) {
+		setCenterTitle "ƒAƒŠƒX”»’è"
+		repeat
+			if (getDoraPointer(GameStat) <= AlicePointer) {break}
+			setDoraPointer GameStat, getDoraPointer(GameStat) - 2
+			snd_play SND_MEKURI
+			redrscreen: await 1200
+		loop
+		setDoraPointer GameStat, tmpDoraPointer
+		tmpAliceFlag = 1
+	}
+	*/
+	sound::util::bgmstop();
+
+	transfer::resetDelta();
+	if (playerwind(gameStat, gameStat->CurrentPlayer.Agari, gameStat->GameRound) == sEast)
+		OyaAgari = gameStat->CurrentPlayer.Agari; // e‚Ì˜a—¹‚è
+	LNum agariPoint;
+	calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), -1);
+	calculateWaremeDelta(gameStat);
+	/* TODO: agariscrproc GameStat, GameEnv, yakuInfo, agariPointArray, ChipAmount, ResultDesc, tmpUraFlag */ /* ˜a—¹‰æ–Ê */
+	if (gameStat->Player[gameStat->CurrentPlayer.Agari].MenzenFlag && RuleData::chkRuleApplied("alice"))
+		gameStat->DoraPointer = AlicePointer;
+	transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValAgariten, 1500);
+	
+	if ((gameStat->Honba > 0) && RuleData::chkRuleApplied("tsumiboh_rate")) {
+		calculateTsumibouDelta(gameStat);
+		// Š„‚ê–Ú‚ÅÏ‚İ–_‚à‚Q”{‚É‚È‚é
+		calculateWaremeDelta(gameStat);
+		/* •ï‚Ìê‡ */
+		if (isPaoAgari(gameStat, gameStat->CurrentPlayer.Agari)) {
+			PLAYER_ID PaoPlayer = getPaoPlayer(gameStat, gameStat->CurrentPlayer.Agari);
+			if (gameStat->TsumoAgariFlag) {
+				for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+					if ((PaoPlayer != cnt) && (gameStat->CurrentPlayer.Agari != cnt)) {
+						transfer::addDelta(gameStat->CurrentPlayer.Agari, transfer::getDelta()[cnt]);
+						transfer::addDelta(cnt, -transfer::getDelta()[cnt]);
+					}
+				}
+			} else {
+				for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+					if ((PaoPlayer != cnt) && (gameStat->CurrentPlayer.Furikomi != cnt) && (gameStat->CurrentPlayer.Agari != cnt)) {
+						transfer::addDelta(PaoPlayer, transfer::getDelta()[cnt]);
+						transfer::addDelta(cnt, -transfer::getDelta()[cnt]);
+					}
+				}
+			}
+		}
+		transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValTsumibou, 1500);
+	}
+	
+	if (gameStat->Deposit) { // ‹Ÿ‘õ“_–_‚ªê‚É‚ ‚éê‡‚ÅAğŒ‚ğ–‚½‚µ‚Ä‚¢‚é‚È‚ç
+		if ((!RuleData::chkRule("getting_deposit", "riichidori")) || gameStat->Player[gameStat->CurrentPlayer.Agari].RichiFlag.RichiFlag) {
+			transfer::resetDelta();
+			transfer::addDelta(gameStat->CurrentPlayer.Agari, gameStat->Deposit * 1000);
+			transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValKyoutaku, 1500);
+		}
+	}
+	
+	int ChipAmount = 0; // TODO: ‚±‚ê‚Í‰¼‚Ìd—lBagariscrproc À‘•‚Ü‚Å‚ÌƒeƒXƒgƒ_ƒuƒ‹‚Æ‚µ‚Ä‚±‚±‚É’u‚¢‚Ä‚¨‚­
+	chipTransfer(gameStat, mihajong_graphic::tblSubsceneCallValChip, ChipAmount);
+	
+	ChipAmount = 0;
+	if ((yakuInfo.CoreSemiMangan + yakuInfo.BonusSemiMangan) >= 8) { // –ğ–j‹V
+		std::smatch vals;
+		if (std::regex_match(RuleData::chkRule("limithand_bonus"), vals, std::regex("chip(\\d+)")))
+			ChipAmount = std::atoi(vals[1].str().c_str());
+		else if (std::regex_match(RuleData::chkRule("limithand_bonus"), vals, std::regex("chip_tsumo(\\d+)each_ron(\\d)")))
+			ChipAmount = std::atoi(vals[gameStat->TsumoAgariFlag ? 1 : 2].str().c_str());
+		else if (std::regex_match(RuleData::chkRule("limithand_bonus"), vals, std::regex("chip_(\\d+)_each")))
+			ChipAmount = std::atoi(vals[1].str().c_str());
+	}
+	chipTransfer(gameStat, mihajong_graphic::tblSubsceneCallValYakuman, ChipAmount);
+
+	/* l”n˜H‚ª–k‰Æ‚Ì•úe‚¾‚Á‚½ê‡ */
+	if (!chkGameType(gameStat, SanmaT)) {
+		if (playerwind(gameStat, gameStat->CurrentPlayer.Furikomi, gameStat->GameRound) == sNorth) {
+			if (std::regex_search(yakuInfo.yakuNameList, std::basic_regex<TCHAR>(_T("(^|\\r?\\n)l”n˜H(\r?\n|$)")))) {
+				transfer::resetDelta();
+				for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+					transfer::addDelta(i, 1000);
+				transfer::addDelta(gameStat->CurrentPlayer.Agari, -3000);
+				transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValKitamakura, 1500);
+			}
+		}
+	}
 	return;
 }
 

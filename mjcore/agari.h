@@ -4,6 +4,7 @@
 #include "largenum.h"
 #include "rational.h"
 #include "endtype.h"
+#include "yaku/yaku.h"
 
 namespace endround {
 namespace agari {
@@ -40,6 +41,8 @@ void calcAgariPoints(const GameTable* gameStat, LNum& agariPoint,
 // -------------------------------------------------------------------------
 
 void agariproc(EndType& RoundEndType, GameTable* gameStat, bool& tmpUraFlag, bool& tmpAliceFlag, CodeConv::tstring& ResultDesc);
+void endround_agariproc(GameTable* gameStat, CodeConv::tstring& ResultDesc, PLAYER_ID& AgariPlayerPriority,
+	std::uint16_t origDoraPointer, const yaku::YAKUSTAT& yakuInfo, bool tmpAliceFlag, int& OyaAgari);
 void endround_chonboproc(GameTable* gameStat, CodeConv::tstring& ResultDesc);
 
 // -------------------------------------------------------------------------

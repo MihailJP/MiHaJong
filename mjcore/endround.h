@@ -14,6 +14,8 @@ namespace endround {
 		void resetDelta();
 		void addDelta(PLAYER_ID player, const LNum& deltaVal);
 		void negateDelta();
+		void doubleDelta(PLAYER_ID player);
+		void doubleDelta();
 		void transferPoints(GameTable* gameStat, unsigned subscene, unsigned wait);
 		void transferChip(GameTable* gameStat, unsigned subscene, unsigned wait);
 	}
