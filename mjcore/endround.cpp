@@ -650,6 +650,7 @@ void endround::transfer::doubleDelta() {
 void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, unsigned wait) {
 	setTransferParam();
 	mihajong_graphic::Subscene(subscene);
+	sound::Play(sound::IDs::sndPage);
 	Sleep(wait);
 	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 		gameStat->Player[i].PlayerScore += delta[i];
@@ -658,6 +659,7 @@ void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, 
 void endround::transfer::transferChip(GameTable* gameStat, unsigned subscene, unsigned wait) {
 	setTransferParam();
 	mihajong_graphic::Subscene(subscene);
+	sound::Play(sound::IDs::sndPage);
 	Sleep(wait);
 	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 		gameStat->Player[i].playerChip += delta[i];
