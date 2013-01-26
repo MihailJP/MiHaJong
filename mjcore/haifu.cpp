@@ -75,13 +75,13 @@ CodeConv::tstring haifu::tools::haifudoraClass(doraCol Akadora) {
 }
 
 void haifu::tools::recordDoraStream(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, tileCode tmpDora) {
-	*p << tilecodelabel.substr((int)tmpDora * (sizeof(_T("ˆê")) - 1), 2);
+	*p << tilecodelabel.substr((int)tmpDora * StringElemSize, StringElemSize);
 	*h << HTtilecodelabel1.substr((int)tmpDora, 1);
 }
 
 void haifu::tools::recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TILE tlCode, bool rotate) {
 	*p << (rotate ? _T("[") : _T("")) <<
-		tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * 2, 2) <<
+		tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * StringElemSize, StringElemSize) <<
 		(rotate ? _T("]") : _T(""));
 	if (tlCode.red) *h << _T("<span") << haifudoraClass(tlCode.red) << _T(">");
 	*h << (rotate ? HTtilecodelabel2 : HTtilecodelabel1).substr(
@@ -90,8 +90,8 @@ void haifu::tools::recordTile_Inline(CodeConv::tostringstream* const p, CodeConv
 }
 void haifu::tools::recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TILE tlCode, doraCol kakanCol) {
 	*p << _T("[") <<
-		tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * 2, 2) <<
-		tilecodelabel.substr(((int)tlCode.tile + (int)kakanCol * TILE_NONFLOWER_MAX) * 2, 2) <<
+		tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * StringElemSize, StringElemSize) <<
+		tilecodelabel.substr(((int)tlCode.tile + (int)kakanCol * TILE_NONFLOWER_MAX) * StringElemSize, StringElemSize) <<
 		_T("]");
 	*h << _T("<table class=\"kakan\"><tr><td>");
 		if (kakanCol) *h << _T("<span") << haifudoraClass(kakanCol) << _T(">");
@@ -104,7 +104,7 @@ void haifu::tools::recordTile_Inline(CodeConv::tostringstream* const p, CodeConv
 	*h << _T("</tr></td></table>");
 }
 void haifu::tools::recordTile_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TILE tlCode) {
-	*p << tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * 2, 2) << _T(" ");
+	*p << tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * StringElemSize, StringElemSize) << _T(" ");
 	*h << _T("<td") << haifudoraClass(tlCode.red) << _T(">") <<
 		HTtilecodelabel1.substr((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX, 1) <<
 		_T("</td>");

@@ -9,6 +9,13 @@
 // 牌譜関係のコードはクラスに隔離しておきましょうか。
 class haifu {
 private:
+	static const unsigned StringElemSize =
+#ifdef _UNICODE
+		1u;
+#else
+		2u;
+#endif
+
 	/* 雀牌の名前データ */
 	static const CodeConv::tstring tilecodelabel, HTtilecodelabel1, HTtilecodelabel2;
 
