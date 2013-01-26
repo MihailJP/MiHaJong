@@ -458,7 +458,9 @@ namespace {
 	void calculateTsumibouDelta(const GameTable* gameStat) { // Ï‚Ý–_‚ÌŒvŽZ
 		int tsumiboh_rate = 0;
 		std::smatch matchDat;
-		if (std::regex_match(RuleData::chkRule("tsumiboh_rate"), matchDat, std::regex("counter_(\\d+)")))
+		std::string tsumiboh_rate_str(RuleData::chkRule("tsumiboh_rate"));
+		// MEMORANDUM: ŒŸõ‘ÎÛ•¶Žš—ñ‚ðin-situ‚Åì‚Á‚Ä‚Íƒ_ƒ •K‚¸ˆø”‚É“n‚·‘O‚ÉƒIƒuƒWƒFƒNƒg‚ðì‚Á‚Ä‚¨‚­‚±‚Æ
+		if (std::regex_match(tsumiboh_rate_str, matchDat, std::regex("counter_(\\d+)")))
 			tsumiboh_rate = std::atoi(matchDat[1].str().c_str()) / (ACTUAL_PLAYERS - 1);
 		endround::transfer::resetDelta();
 		if (gameStat->TsumoAgariFlag) {
@@ -481,7 +483,8 @@ namespace {
 	void chipTransfer(GameTable* gameStat, unsigned subscene, int ChipAmount) {
 		if ((ChipAmount <= 0) || (!RuleData::chkRuleApplied("chip"))) return;
 		endround::transfer::resetDelta();
-		if ((!gameStat->TsumoAgariFlag) && (!std::regex_match(RuleData::chkRule("limithand_bonus"), std::regex("chip_\\d+_each")))) {
+		std::string limithand_bonus(RuleData::chkRule("limithand_bonus"));
+		if ((!gameStat->TsumoAgariFlag) && (!std::regex_match(limithand_bonus, std::regex("chip_\\d+_each")))) {
 			endround::transfer::addDelta(gameStat->CurrentPlayer.Furikomi, -ChipAmount);
 			endround::transfer::addDelta(gameStat->CurrentPlayer.Agari   ,  ChipAmount);
 		} else {
@@ -591,11 +594,12 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	ChipAmount = 0;
 	if ((yakuInfo.CoreSemiMangan + yakuInfo.BonusSemiMangan) >= 8) { // –ð–žj‹V
 		std::smatch vals;
-		if (std::regex_match(RuleData::chkRule("limithand_bonus"), vals, std::regex("chip(\\d+)")))
+		std::string limithand_bonus(RuleData::chkRule("limithand_bonus"));
+		if (std::regex_match(limithand_bonus, vals, std::regex("chip(\\d+)")))
 			ChipAmount = std::atoi(vals[1].str().c_str());
-		else if (std::regex_match(RuleData::chkRule("limithand_bonus"), vals, std::regex("chip_tsumo(\\d+)each_ron(\\d)")))
+		else if (std::regex_match(limithand_bonus, vals, std::regex("chip_tsumo(\\d+)each_ron(\\d)")))
 			ChipAmount = std::atoi(vals[gameStat->TsumoAgariFlag ? 1 : 2].str().c_str());
-		else if (std::regex_match(RuleData::chkRule("limithand_bonus"), vals, std::regex("chip_(\\d+)_each")))
+		else if (std::regex_match(limithand_bonus, vals, std::regex("chip_(\\d+)_each")))
 			ChipAmount = std::atoi(vals[1].str().c_str());
 	}
 	chipTransfer(gameStat, mihajong_graphic::tblSubsceneCallValYakuman, ChipAmount);
