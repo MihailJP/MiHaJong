@@ -1,5 +1,7 @@
 #include "csv2arry.h"
 
+#include <cstring>
+
 void CSVReader::parsecsv (CsvVecVec& arr, LPCTSTR csv) {
 	/*
 	 *  CSVをパースして配列の配列オブジェクトに代入する

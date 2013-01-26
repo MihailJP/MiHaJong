@@ -32,19 +32,19 @@ void TableSubsceneBeginning::Render() {
 	const int roundnum = GameStatus::gameStat()->GameRound;
 	if (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game")) {
 		// “Œê‚Ì‚İ‚Ìƒ‹[ƒ‹
-		ZoomChar(    0, WindName.substr(0                 ,                      1), -256,       0, 2500000);
+		ZoomChar(    0, WindName.substr(0                 , 1), -256,       0, 2500000);
 		if (roundnum < 10) {
-			ZoomChar(1, Numeral.substr( roundnum          , roundnum           + 1),    0, 2500000, 5000000);
+			ZoomChar(1, Numeral.substr( roundnum          , 1),    0, 2500000, 5000000);
 		} else {
 			std::wstringstream o; o << (roundnum + 1);
-			ZoomChar(1, o.str()                                                    ,    0, 2500000, 5000000);
+			ZoomChar(1, o.str()                               ,    0, 2500000, 5000000);
 		}
 	} else {
-		// “Œê‚Ì‚İ‚Ìƒ‹[ƒ‹
-		ZoomChar(    0, WindName.substr(roundnum / PLAYERS, roundnum / PLAYERS + 1), -256,       0, 2500000);
-		ZoomChar(    1, Numeral.substr( roundnum % PLAYERS, roundnum % PLAYERS + 1),    0, 2500000, 5000000);
+		// ˆê”Ê‚Ìƒ‹[ƒ‹
+		ZoomChar(    0, WindName.substr(roundnum / PLAYERS, 1), -256,       0, 2500000);
+		ZoomChar(    1, Numeral.substr( roundnum % PLAYERS, 1),    0, 2500000, 5000000);
 	}
-	ZoomChar(        2, _T("‹Ç")                                                   ,  256, 5000000, 7500000);
+	ZoomChar(        2, _T("‹Ç")                              ,  256, 5000000, 7500000);
 	myTextRenderer->Render();
 }
 

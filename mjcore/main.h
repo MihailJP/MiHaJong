@@ -5,12 +5,6 @@
 #include <Windows.h>
 
 #ifdef MJCORE_EXPORTS
-#include <tuple>
-#include "logging.h"
-#include "init.h"
-#include "func.h"
-#include "../graphic/graphic.h"
-#include "gameloop.h"
 
 class GameThread {
 private:

@@ -1,5 +1,8 @@
 #include "functbl.h"
 
+#include "../func.h"
+#include "../yaku/yaku.h"
+
 /* gameStatのアドレスを取得（暗黙の引数） */
 GameTable* aiscript::table::functable::gametbl::getGameStatAddr(lua_State* const L) {
 	lua_getfield(L, 1, "addr"); GameTable* addr = (GameTable*)lua_touserdata(L, -1); lua_pop(L, 1);

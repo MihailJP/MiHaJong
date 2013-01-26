@@ -9,18 +9,8 @@
 #include <set>
 #include <array>
 #ifdef MJCORE_EXPORTS
-#include <cstdlib>
-#include <vector>
-#include <sstream>
-#include <fstream>
-#include <exception>
-#include <Windows.h>
-#include "logging.h"
-#include "decomp.h"
-#include "reader/readrsrc.h"
 #include "reader/csv2arry.h"
 #include "reader/ini2map.h"
-#include "strcode.h"
 #endif
 #include "mjexport.h"
 #include "nmrules.h"
@@ -51,6 +41,7 @@ private:
 	static std::map<std::string, std::vector<std::string> > ruletags;
 	static std::map<std::string, std::map<std::string, unsigned int> > inverse_ruletags;
 	static std::set<std::string> nonapplicable;
+	static std::map<std::string, std::string> rulemask_expr;
 	static std::array<CodeConv::tstring, RULE_PAGES> pageCaption;
 	static const char digit[];
 public:
@@ -82,10 +73,13 @@ private:
 	lua_State* myState;
 	static int check(lua_State* L);
 	static const int* ourRuleStat;
-public:
 	ReqChecker();
 	~ReqChecker();
-	bool reqFailed (const std::string& ruleTag, const std::string& expression, const int* const ruleStat);
+	ReqChecker(const ReqChecker&) {throw;}
+	ReqChecker& operator=(const ReqChecker&) {throw;}
+public:
+	bool reqFailed (const std::string& expression, const int* const ruleStat);
+	static ReqChecker* instantiate();
 };
 
 __declspec(dllexport) int getRule(int RuleID);

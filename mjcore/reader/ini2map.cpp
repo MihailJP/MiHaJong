@@ -1,5 +1,7 @@
 #include "ini2map.h"
 
+#include <cstring>
+
 void INIParser::parseini(IniMapMap& inimap, LPCTSTR ini) {
 	/*
 	 *  CSVをパースして配列の配列オブジェクトに代入する

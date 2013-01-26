@@ -1,5 +1,7 @@
 #include "../catalog.h"
 
+#include "../../func.h"
+
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 	auto countTilesOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {

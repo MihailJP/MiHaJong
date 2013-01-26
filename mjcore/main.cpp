@@ -1,5 +1,12 @@
 #include "main.h"
 
+#include <tuple>
+#include "logging.h"
+#include "init.h"
+#include "func.h"
+#include "../graphic/graphic.h"
+#include "gameloop.h"
+
 GameThread* gameThread = nullptr;
 
 GameThread::GameThread(gameTypeID gameType, HWND hwnd) {

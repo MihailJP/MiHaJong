@@ -2,20 +2,10 @@
 
 #include <cstdint>
 #ifdef MJCORE_EXPORTS
-#include <memory>
-#include <cstring>
-#include <sstream>
-#include <Windows.h>
-#include <Shlwapi.h>
-#include <direct.h>
-#include "strcode.h"
-#include "../sound/sound.h"
-#include "../socket/socket.h"
-#include "socknum.h"
+#include <type_traits>
 #endif
 #include "mjexport.h"
 #include "gametbl.h"
-#include "except.h"
 
 // -------------------------------------------------------------------------
 

@@ -1,28 +1,25 @@
 #pragma once
 
-#include <sstream>
-#include <fstream>
-#include <iomanip>
-#include <string>
-#include <Windows.h>
+#include "strcode.h"
 #include "gametbl.h"
-#include "largenum.h"
 #include "func.h"
-#include "envtbl.h"
-#include "../mihajong/version.h"
 #include "discard.h"
-#include "chat.h"
-
-/* 局終了コード */
 #include "endtype.h"
 
 // 牌譜関係のコードはクラスに隔離しておきましょうか。
 class haifu {
 private:
+	static const unsigned StringElemSize =
+#ifdef _UNICODE
+		1u;
+#else
+		2u;
+#endif
+
 	/* 雀牌の名前データ */
 	static const CodeConv::tstring tilecodelabel, HTtilecodelabel1, HTtilecodelabel2;
 
-	static InfoByPlayer<LargeNum> origPoint;
+	static InfoByPlayer<LNum> origPoint;
 	static CodeConv::tostringstream haifuBuffer, HThaifuBuffer;
 	static bool haifukanflag;
 

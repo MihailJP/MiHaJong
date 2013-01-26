@@ -86,7 +86,7 @@
       <ExceptionHandling>Async</ExceptionHandling>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CompileAsManaged>false</CompileAsManaged>
-      <TreatSpecificWarningsAsErrors>4717;4700;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+      <TreatSpecificWarningsAsErrors>4717;4700;4172;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
       <AdditionalIncludeDirectories>.\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -118,7 +118,7 @@
       <ExceptionHandling>Async</ExceptionHandling>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CompileAsManaged>false</CompileAsManaged>
-      <TreatSpecificWarningsAsErrors>4717;4700;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+      <TreatSpecificWarningsAsErrors>4717;4700;4172;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
       <AdditionalIncludeDirectories>.\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -152,7 +152,7 @@
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CompileAsManaged>false</CompileAsManaged>
       <AdditionalIncludeDirectories>.\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatSpecificWarningsAsErrors>4717;4700;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+      <TreatSpecificWarningsAsErrors>4717;4700;4172;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -179,7 +179,7 @@
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CompileAsManaged>false</CompileAsManaged>
       <AdditionalIncludeDirectories>.\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatSpecificWarningsAsErrors>4717;4700;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+      <TreatSpecificWarningsAsErrors>4717;4700;4172;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -193,6 +193,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="agari.cpp" />
     <ClCompile Include="ai\aiscript.cpp" />
     <ClCompile Include="ai\functbl.cpp" />
     <ClCompile Include="ai\filesel.cpp" />
@@ -255,6 +256,7 @@
     <ClCompile Include="yaku\yk_tools.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="agari.h" />
     <ClInclude Include="ai\aiscript.h" />
     <ClInclude Include="ai\class.h" />
     <ClInclude Include="ai\functbl.h" />
@@ -294,6 +296,7 @@
     <ClInclude Include="nmrules.h" />
     <ClInclude Include="prepare.h" />
     <ClInclude Include="random.h" />
+    <ClInclude Include="rational.h" />
     <ClInclude Include="reader\csv2arry.h" />
     <ClInclude Include="reader\ini2map.h" />
     <ClInclude Include="reader\readrsrc.h" />

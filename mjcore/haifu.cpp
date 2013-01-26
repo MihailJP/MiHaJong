@@ -1,5 +1,15 @@
 #include "haifu.h"
 
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+#include <Windows.h>
+#include "largenum.h"
+#include "envtbl.h"
+#include "../mihajong/version.h"
+#include "chat.h"
+
 /* ”v‚Ì–¼‘Oƒf[ƒ^ */
 const CodeConv::tstring haifu::tilecodelabel =
 	_T("Hˆê“ñOlŒÜ˜Zµ”ª‹ãH‡@‡A‡B‡C‡D‡E‡F‡G‡HH‚P‚Q‚R‚S‚T‚U‚V‚W‚XH“Œ“ì¼–k”’á¢’†HHHˆë“óQãæŒŞ—¤½J‹èH‡J‡K‡L‡M‡N‡O‡P‡Q‡RH‡T‡U‡V‡W‡X‡Y‡Z‡[‡\H‚d‚r‚v‚m‚o‚e‚bHHHb‰³•¸’š•èŒÈMhpH‚¢‚ë‚Í‚É‚Ù‚Ö‚Æ‚¿‚èHú@úAúBúCúDúEúFúGúHH‚…‚“‚—‚‚‚†‚ƒHHHt‰ÄH“~•S”~—–‹e’|H");
@@ -8,7 +18,7 @@ const CodeConv::tstring haifu::HTtilecodelabel1 =
 const CodeConv::tstring haifu::HTtilecodelabel2 =
 	_T(" QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   -^\\[%@;:]");
 
-InfoByPlayer<LargeNum> haifu::origPoint;
+InfoByPlayer<LNum> haifu::origPoint;
 CodeConv::tostringstream haifu::haifuBuffer, haifu::HThaifuBuffer;
 bool haifu::haifukanflag = false;
 
@@ -65,13 +75,13 @@ CodeConv::tstring haifu::tools::haifudoraClass(doraCol Akadora) {
 }
 
 void haifu::tools::recordDoraStream(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, tileCode tmpDora) {
-	*p << tilecodelabel.substr((int)tmpDora * (sizeof(_T("ˆê")) - 1), 2);
+	*p << tilecodelabel.substr((int)tmpDora * StringElemSize, StringElemSize);
 	*h << HTtilecodelabel1.substr((int)tmpDora, 1);
 }
 
 void haifu::tools::recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TILE tlCode, bool rotate) {
 	*p << (rotate ? _T("[") : _T("")) <<
-		tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * 2, 2) <<
+		tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * StringElemSize, StringElemSize) <<
 		(rotate ? _T("]") : _T(""));
 	if (tlCode.red) *h << _T("<span") << haifudoraClass(tlCode.red) << _T(">");
 	*h << (rotate ? HTtilecodelabel2 : HTtilecodelabel1).substr(
@@ -80,8 +90,8 @@ void haifu::tools::recordTile_Inline(CodeConv::tostringstream* const p, CodeConv
 }
 void haifu::tools::recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TILE tlCode, doraCol kakanCol) {
 	*p << _T("[") <<
-		tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * 2, 2) <<
-		tilecodelabel.substr(((int)tlCode.tile + (int)kakanCol * TILE_NONFLOWER_MAX) * 2, 2) <<
+		tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * StringElemSize, StringElemSize) <<
+		tilecodelabel.substr(((int)tlCode.tile + (int)kakanCol * TILE_NONFLOWER_MAX) * StringElemSize, StringElemSize) <<
 		_T("]");
 	*h << _T("<table class=\"kakan\"><tr><td>");
 		if (kakanCol) *h << _T("<span") << haifudoraClass(kakanCol) << _T(">");
@@ -94,7 +104,7 @@ void haifu::tools::recordTile_Inline(CodeConv::tostringstream* const p, CodeConv
 	*h << _T("</tr></td></table>");
 }
 void haifu::tools::recordTile_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TILE tlCode) {
-	*p << tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * 2, 2) << _T(" ");
+	*p << tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX) * StringElemSize, StringElemSize) << _T(" ");
 	*h << _T("<td") << haifudoraClass(tlCode.red) << _T(">") <<
 		HTtilecodelabel1.substr((int)tlCode.tile + (int)tlCode.red * TILE_NONFLOWER_MAX, 1) <<
 		_T("</td>");
@@ -694,12 +704,12 @@ void haifu::tools::hfwriter::finalformWriter::hfExposedMeld(const GameTable* con
 void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, PLAYER_ID player, seatAbsolute wind) {
 	// “_”‚Ì•Ï“®
 	CodeConv::tostringstream o;
-	o << _T(" ") << origPoint[player].bignumtotext(_T(""), _T("¢"));
+	o << _T(" ") << origPoint[player].to_str(_T(""), _T("¢"));
 	if (origPoint[player] != gameStat->Player[player].PlayerScore) // “_”‚ªˆê’v‚µ‚È‚¢‚È‚ç
 		o << _T(" ¨ ") <<
 			gameStat->Player[player].PlayerScore.bignumtotext(_T(""), _T("¢")) << _T(" (") <<
-			((LargeNum)gameStat->Player[player].PlayerScore -
-			origPoint[player]).bignumtotext(_T("+"), _T("-")) <<
+			((LNum)gameStat->Player[player].PlayerScore -
+			origPoint[player]).to_str(_T("+"), _T("-")) <<
 			_T(")");
 	if (RuleData::chkRuleApplied("chip")) // ƒ`ƒbƒv‚ ‚è‚Ì
 		o << _T(" ƒ`ƒbƒv: ") <<

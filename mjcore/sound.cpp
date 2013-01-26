@@ -1,5 +1,10 @@
 #include "sound.h"
 
+#include "bgmid.h"
+#include "strcode.h"
+#include "func.h"
+#include <vector>
+
 namespace {
 	enum bgmMode {None, Vorbis, Midi,};
 	std::vector<bgmMode> BGM_Mode;

@@ -9,10 +9,7 @@
 #endif
 
 #include <Windows.h>
-#include <string>
-#include <sstream>
-#include "../socket/logger.h"
-#include "../sound/logger.h"
+#include "strcode.h"
 
 namespace logger {
 	typedef int (__cdecl *CHRPPROC)(LPCSTR a);

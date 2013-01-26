@@ -1,5 +1,13 @@
 #include "decomp.h"
 
+#include <cassert>
+#include "lzma/LzmaLib.h"
+#include "lzma/Sha256.h"
+#include "logging.h"
+#include "reader/readrsrc.h"
+#include "strcode.h"
+#include "except.h"
+
 using std::min;
 
 /* 面子データ初期化 */

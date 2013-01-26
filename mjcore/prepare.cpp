@@ -1,5 +1,21 @@
 #include "prepare.h"
 
+#include <cstdint>
+#include <algorithm>
+#include <functional>
+#include "../socket/socket.h"
+#include "envtbl.h"
+#include "random.h"
+#include "haifu.h"
+#include "tileutil.h"
+#include "yaku/yaku.h"
+#include "ai/class.h"
+#include "../sound/sound.h"
+#include "bgmid.h"
+#include "random.h"
+#include "../graphic/graphic.h"
+#include "chat.h"
+
 #define settile(tilecode, pos) {tilepos[tilecode] = pos; for (unsigned int i = 0; i < 4u; ++i) {gameStat->Deck[pos++].tile = tilecode;}}
 inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // ”v‚ð•À‚×‚é
 	unsigned int p = 0; // ”v‚ÌˆÊ’uID
@@ -359,7 +375,7 @@ namespace {
 							gameStat->Player[player].PlayerScore.digitGroup[i] |= (int)ReceivedMsg << (j * 8);
 							return true;
 						});
-			statsync(gameStat, (gameStat->Player[player].PlayerScore < LargeNum::fromInt(0)) ? 0x01 : 0x00,
+			statsync(gameStat, (gameStat->Player[player].PlayerScore < (LNum)0) ? 0x01 : 0x00,
 				[player](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
 					if (ReceivedMsg) gameStat->Player[player].PlayerScore *= -1;
 					return true;

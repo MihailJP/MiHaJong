@@ -1,4 +1,8 @@
 #include "chat.h"
+
+#include "../socket/socket.h"
+#include "envtbl.h"
+#include "func.h"
 #include "../graphic/graphic.h"
 
 namespace chat {

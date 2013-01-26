@@ -1,5 +1,10 @@
 #include "filesel.h"
 
+#include <sstream>
+#include <Windows.h>
+#include "../func.h"
+#include "../random.h"
+
 std::vector<std::string> aiscript::FileSelector::files; // AIのスクリプトファイル一覧をフルパスで格納
 
 /* ファイルリスト走査 */

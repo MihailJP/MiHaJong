@@ -2,11 +2,7 @@
 
 #include <string>
 #include <vector>
-#include <sstream>
-#include <Windows.h>
 #include "class.h"
-#include "../func.h"
-#include "../random.h"
 
 class aiscript::FileSelector {
 private:

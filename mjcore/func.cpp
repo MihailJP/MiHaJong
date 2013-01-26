@@ -1,5 +1,18 @@
 #include "func.h"
 
+#include <cassert>
+#include <memory>
+#include <cstring>
+#include <sstream>
+#include <Windows.h>
+#include <ImageHlp.h>
+#include <direct.h>
+#include "strcode.h"
+#include "../sound/sound.h"
+#include "../socket/socket.h"
+#include "socknum.h"
+#include "except.h"
+
 /* サイコロの出目を取得 */
 extern "C" inline uint8_t diceSum(const GameTable* const gameStat) {
 	return (gameStat->Dice[0].Number + gameStat->Dice[1].Number);
@@ -51,9 +64,9 @@ PlayerRankList calcRank(const GameTable* const gameStat) {
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		rankList[i] = 1;
 		for (int j = 0; j < ACTUAL_PLAYERS; j++) {
-			if ((LargeNum)gameStat->Player[j].PlayerScore > gameStat->Player[i].PlayerScore)
+			if ((LNum)gameStat->Player[j].PlayerScore > gameStat->Player[i].PlayerScore)
 				rankList[i]++;
-			if (((LargeNum)gameStat->Player[j].PlayerScore == gameStat->Player[i].PlayerScore) &&
+			if (((LNum)gameStat->Player[j].PlayerScore == gameStat->Player[i].PlayerScore) &&
 				(i > j)) rankList[i]++; // 同着の場合は起家に近い側が上位
 		}
 	}
@@ -267,7 +280,7 @@ __declspec(dllexport) int BasePointHSP() {
 
 /* 浮いているか判定する関数 */
 bool isAboveBase(const GameTable* const gameStat, PLAYER_ID player) {
-	return gameStat->Player[player].PlayerScore >= LargeNum::fromInt(BasePoint());
+	return gameStat->Player[player].PlayerScore >= (LNum)BasePoint();
 }
 __declspec(dllexport) int isAboveBase(const GameTable* const gameStat, int player) {
 	return isAboveBase(gameStat, (PLAYER_ID)player) ? 1 : 0;
@@ -332,8 +345,8 @@ namespace confpath {
 /* リーチするのに持ち点が足りているかどうか */
 bool isRichiReqSatisfied (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	bool Flag = true;
-	if (gameStat->Player[targetPlayer].PlayerScore < LargeNum::fromInt(1000)) Flag = false;
-	else if ((gameStat->Player[targetPlayer].PlayerScore == LargeNum::fromInt(1000)) &&
+	if (gameStat->Player[targetPlayer].PlayerScore < (LNum)1000) Flag = false;
+	else if ((gameStat->Player[targetPlayer].PlayerScore == (LNum)1000) &&
 		(RuleData::chkRule("riichi_requisite", "require_1100"))) Flag = false;
 	if (RuleData::chkRule("riichi_requisite", "no")) Flag = true;
 	if (RuleData::chkRule("buttobi_border", "no")) Flag = true;
@@ -347,9 +360,9 @@ __declspec(dllexport) int isRichiReqSatisfied (const GameTable* const gameStat, 
 bool isDobon (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	if (!RuleData::chkRuleApplied("buttobi_border"))
 		return false;
-	else if (gameStat->Player[targetPlayer].PlayerScore < LargeNum::fromInt(0))
+	else if (gameStat->Player[targetPlayer].PlayerScore < (LNum)0)
 		return true;
-	else if ((gameStat->Player[targetPlayer].PlayerScore == LargeNum::fromInt(0)) &&
+	else if ((gameStat->Player[targetPlayer].PlayerScore == (LNum)0) &&
 		RuleData::chkRule("buttobi_border", "nonpositive"))
 		return true;
 	else return false;
@@ -361,19 +374,19 @@ __declspec(dllexport) int isDobon (const GameTable* const gameStat, int targetPl
 /* 天辺になっているかどうか */
 bool isTeppen (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	if (RuleData::chkRule("teppen", "50000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= LargeNum::fromInt(50000)))
+		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)50000))
 		return true;
 	else if (RuleData::chkRule("teppen", "55000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= LargeNum::fromInt(55000)))
+		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)55000))
 		return true;
 	else if (RuleData::chkRule("teppen", "60000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= LargeNum::fromInt(60000)))
+		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)60000))
 		return true;
 	else if (RuleData::chkRule("teppen", "65000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= LargeNum::fromInt(65000)))
+		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)65000))
 		return true;
 	else if (RuleData::chkRule("teppen", "70000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= LargeNum::fromInt(70000)))
+		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)70000))
 		return true;
 	else return false;
 }

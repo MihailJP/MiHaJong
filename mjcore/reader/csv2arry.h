@@ -1,8 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <string>
-#include <cstring>
 #include "../strcode.h"
 
 class CSVReader {

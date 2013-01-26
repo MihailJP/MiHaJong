@@ -1,5 +1,8 @@
 #include "readrsrc.h"
 
+#include <cassert>
+#include "../dllmain.h"
+
 void LoadFileInResource(int name, int type, DWORD& size, const uint8_t*& data) {
 	HRSRC rc = ::FindResource(dllInst, MAKEINTRESOURCE(name), MAKEINTRESOURCE(type));
 	DWORD err = GetLastError();

@@ -17,8 +17,6 @@ private:
 	static unsigned const halffontsz = 9; // îºäpÇÃâ°ïù
 	HWND myHWnd;
 	LPDIRECT3DTEXTURE9 myTexture;
-	LPD3DXSPRITE mySprites[3];
-	std::vector<LPD3DXSPRITE> myCSprites;
 	CodeConv::tstring myText;
 	std::tuple<int, int, unsigned> myRegion;
 	SmallTextRenderer* myTextRenderer;

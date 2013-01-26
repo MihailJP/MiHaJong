@@ -1,5 +1,14 @@
 #include "functbl.h"
 
+#include <lua.hpp>
+#include "../func.h"
+#include "../yaku/yaku.h"
+#include "../shanten.h"
+#include "../random.h"
+#include "../../mihajong/version.h"
+#include "../logging.h"
+#include "../chat.h"
+
 const char* aiscript::table::functable::tblname = "mihajong"; // table name
 const char* aiscript::table::functable::gametbl::tblname = "gametbl"; // table name
 

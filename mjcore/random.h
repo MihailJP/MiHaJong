@@ -1,11 +1,6 @@
 #pragma once
 
 #include <random>
-#include <vector>
-#include <algorithm>
-#include <functional>
-#include <cstdint>
-#include <cmath>
 
 class RndNum {
 private:

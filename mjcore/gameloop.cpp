@@ -1,5 +1,16 @@
 #include "gameloop.h"
 
+#include "strcode.h"
+#include "logging.h"
+#include "envtbl.h"
+#include "../socket/socket.h"
+#include "../sound/sound.h"
+#include "bgmid.h"
+#include "tileutil.h"
+#include "mouda.h"
+#include "fuuro.h"
+#include "prepare.h"
+#include "../graphic/graphic.h"
 
 /* 半荘の進行 */
 EndType doTableTurn(GameTable* const gameStat) {
@@ -84,13 +95,10 @@ bool doTableRound(GameTable* const gameStat) {
 		roundEndType = doTableTurn(gameStat);
 	} while ((roundEndType == DrawRinshan) || (roundEndType == Continuing));
 	int OrigHonba = gameStat->Honba, OrigTurn = gameStat->GameRound;
-	/* TODO: 終了時の処理 endround GameStat, GameEnv, RoundEndType, OrigTurn, OrigHonba */
-	/* TODO: await 5000 */
+	endround::endround(gameStat, roundEndType, OrigTurn, OrigHonba);
+	Sleep(5000);
 	// 半荘終了判定
-	/* TODO: これを移植する
-	nextRound GameStat, OrigTurn
-	if (stat) {break}
-	*/
+	/* return */ endround::nextRound(gameStat, roundEndType, OrigTurn);
 	return false; // 仮置き
 }
 
@@ -107,7 +115,6 @@ DWORD titlescreen() {
 void startgame(gameTypeID gameType) {
 	while (true) {
 		/* 変数類の初期化 */
-		EnvTable::TableEnvInit();
 		GameTable* gameStat = initializeGameTable(gameType);
 		/* TODO: 画面初期化 vanish */
 		info(_T("ゲーム情報を初期化しました。"));

@@ -1,5 +1,20 @@
 #include "shanten.h"
 
+#include <windows.h>
+#include <cstdio>
+#include <cstdlib>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <cassert>
+#include "except.h"
+#include "tilecode.h"
+#include "func.h"
+#include "logging.h"
+#include "reader/readrsrc.h"
+#include "strcode.h"
+#include "decomp.h"
+
 using std::min;
 
 /* 面子データ初期化 */

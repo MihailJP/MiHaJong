@@ -15,11 +15,15 @@ TextRenderer::TextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
 }
 HugeTextRenderer::HugeTextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
 	fontmap = FontMapLargeChr::instantiate();
-	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_HUGE), 1792, 1568);
+	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_HUGE), 1792, 2240);
 }
 SmallTextRenderer::SmallTextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
 	fontmap = FontMapSmallChr::instantiate();
 	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_SMALL), 1880, 1920);
+}
+CallDigitRenderer::CallDigitRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
+	fontmap = FontMapCallDigits::instantiate();
+	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_CALL_DIGITS), 1872, 96);
 }
 
 ITextRenderer::~ITextRenderer() {
@@ -36,6 +40,8 @@ TextRenderer::~TextRenderer() {
 HugeTextRenderer::~HugeTextRenderer() {
 }
 SmallTextRenderer::~SmallTextRenderer() {
+}
+CallDigitRenderer::~CallDigitRenderer() {
 }
 
 /* 新規の文字列オブジェクトを作成する */
@@ -60,6 +66,7 @@ void ITextRenderer::NewText(unsigned int ID, const std::string& str, int x, int 
 
 /* 文字列オブジェクトの後始末 */
 void ITextRenderer::DelText(unsigned int ID) {
+	if (StringData.size() <= ID) return;
 	delete StringData[ID]; StringData[ID] = nullptr;
 	deleteSprite(ID);
 }
@@ -89,14 +96,11 @@ void ITextRenderer::reconstruct(unsigned int ID, bool rescanStr) {
 	if ((!SpriteData[ID].empty()) && rescanStr) deleteSprite(ID); // 既に存在した場合
 	if (!StringData[ID]) /* ぬるぽ */
 		return; /* ガッ */
-	float chrAdvance = (FontBaseSize() - FontPadding() * 2) * StringData[ID]->scale * StringData[ID]->width;
+	float chrAdvance = (FontWidth() - FontPadding() * 2) * StringData[ID]->scale * StringData[ID]->width;
 	float cursorPos = 0;
 	if (rescanStr) {
 		for (auto k = StringData[ID]->str.begin(); k != StringData[ID]->str.end(); ++k) {
 			SpriteData[ID].push_back(new SpriteAttr);
-			SpriteData[ID].back()->sprite = nullptr;
-			if (FAILED(D3DXCreateSprite(myDevice, &SpriteData[ID].back()->sprite)))
-				throw _T("スプライトの生成に失敗しました");
 			SpriteData[ID].back()->isFullWidth = fontmap->map(*k).first;
 			SpriteData[ID].back()->chr_id = fontmap->map(*k).second;
 			spriteRecalc(ID, SpriteData[ID].back(), chrAdvance, cursorPos);
@@ -120,11 +124,8 @@ void ITextRenderer::reconstruct() {
 
 /* スプライトを削除する */
 void ITextRenderer::deleteSprite(unsigned int ID) {
-	for (auto k = SpriteData[ID].begin(); k != SpriteData[ID].end(); ++k) {
-		if ((*k) && ((*k)->sprite)) {
-			(*k)->sprite->Release(); (*k)->sprite = nullptr;
-		}
-	}
+	for (auto k = SpriteData[ID].begin(); k != SpriteData[ID].end(); ++k)
+		delete (*k);
 	SpriteData[ID].clear();
 }
 void ITextRenderer::deleteSprite() {
@@ -139,13 +140,13 @@ void ITextRenderer::Render() {
 		for (auto k = (*i).begin(); k != (*i).end(); ++k) {
 			if (!(*k)) continue;
 			RECT rect = {
-				((*k)->chr_id % FontCols()) * FontBaseSize(),
+				((*k)->chr_id % FontCols()) * FontWidth(),
 				((*k)->chr_id / FontCols()) * FontBaseSize(),
-				((*k)->chr_id % FontCols() + 1) * FontBaseSize(),
+				((*k)->chr_id % FontCols() + 1) * FontWidth(),
 				((*k)->chr_id / FontCols() + 1) * FontBaseSize(),
 			};
-			SpriteRenderer::ShowSprite(
-				(*k)->sprite, font, (*k)->X, (*k)->Y, FontBaseSize(), FontBaseSize(),
+			SpriteRenderer::instantiate(myDevice)->ShowSprite(
+				font, (*k)->X, (*k)->Y, FontWidth(), FontBaseSize(),
 				(*k)->color, &rect, 0, 0, &((*k)->matrix));
 		}
 	}

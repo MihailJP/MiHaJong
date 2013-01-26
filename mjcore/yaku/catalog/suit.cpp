@@ -1,5 +1,7 @@
 #include "../catalog.h"
 
+#include "../../func.h"
+
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	/* ƒ`ƒ“ƒCƒc */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(

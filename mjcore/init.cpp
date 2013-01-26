@@ -1,5 +1,18 @@
 #include "init.h"
 
+#include "logging.h"
+#include "func.h"
+#include <string>
+#include "strcode.h"
+#include "../mihajong/version.h"
+#include "envtbl.h"
+#include "../sound/sound.h"
+#include "bgmid.h"
+#include "sound.h"
+#include "shanten.h"
+#include "random.h"
+#include "../graphic/graphic.h"
+
 MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 	/* コンフィグファイルのパスを設定する */
 	/* Vista以降、Program Files以下にファイルを作れないので自分で調整する */
@@ -57,7 +70,6 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 
 	/* 卓の環境を初期化 */
 	{
-		EnvTable::TableEnvInit();
 		EnvTable::Instantiate()->bgColorR =
 			EnvTable::Instantiate()->bgColorG =
 			EnvTable::Instantiate()->bgColorB = 0;
@@ -84,7 +96,7 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 			RuleData::getPageCaption, RuleData::storeRule, RuleData::exportRule,
 			RuleData::saveConfigFile, RuleData::chkRule, RuleData::ruleDigit());
 		mihajong_graphic::utils::setfunc(
-			playerwind, playerRelative, RelativePositionOf, tilesLeft, calcRank);
+			playerwind, playerRelative, RelativePositionOf, tilesLeft, calcRank, chkFuriten, isTenpai);
 	}
 
 	/* 音源を初期化 */

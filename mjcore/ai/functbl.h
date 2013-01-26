@@ -1,14 +1,7 @@
 #pragma once
 
-#include <lua.hpp>
 #include "class.h"
-#include "../func.h"
 #include "../tileutil.h"
-#include "../yaku/yaku.h"
-#include "../shanten.h"
-#include "../random.h"
-#include "../../mihajong/version.h"
-#include "../logging.h"
 
 enum MeldCallID {
 	meldNone, meldRon, meldKan, meldPon, meldChiiLower, meldChiiMiddle, meldChiiUpper

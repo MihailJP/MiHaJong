@@ -15,6 +15,7 @@ protected:
 	FontMapClass& operator=(const FontMapClass&) {return *this;}
 	fMap m;
 	virtual const unsigned short Default_Chr() = 0;
+	void readCharMap(int ResourceNum);
 public:
 	static FontMapClass* instantiate() {return nullptr;} // This class is an abstract class which cannot be instantiated
 	charAttr map(wchar_t c);
@@ -35,7 +36,7 @@ private:
 	FontMapLargeChr();
 	FontMapLargeChr(const FontMapLargeChr&) {}
 	virtual ~FontMapLargeChr() {}
-	const unsigned short Default_Chr() {return 43;}
+	const unsigned short Default_Chr() {return 79;}
 public:
 	static FontMapLargeChr* instantiate();
 };
@@ -48,6 +49,16 @@ private:
 	const unsigned short Default_Chr() {return 187;}
 public:
 	static FontMapSmallChr* instantiate();
+};
+
+class FontMapCallDigits : public FontMapClass {
+private:
+	FontMapCallDigits();
+	FontMapCallDigits(const FontMapCallDigits&) {}
+	virtual ~FontMapCallDigits() {}
+	const unsigned short Default_Chr() {return 12;}
+public:
+	static FontMapCallDigits* instantiate();
 };
 
 }

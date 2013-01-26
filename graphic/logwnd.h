@@ -24,7 +24,6 @@ private:
 	HWND myHWnd;
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 myTexture;
-	LPD3DXSPRITE mysprite;
 	SmallTextRenderer* myTextRenderer;
 	int x, y; unsigned width, height;
 	void renderFrame();

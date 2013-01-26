@@ -1,27 +1,8 @@
 #pragma once
 
-#include <windows.h>
-#ifdef MJCORE_EXPORTS
-#include <cstdio>
-#endif
 #include <cstdint>
-#ifdef MJCORE_EXPORTS
-#include <cstdlib>
-#include <sstream>
-#include <string>
-#include <algorithm>
-#endif
-#include "except.h"
 #include "mjexport.h"
 #include "gametbl.h"
-#include "tilecode.h"
-#include "func.h"
-#ifdef MJCORE_EXPORTS
-#include "logging.h"
-#include "reader/readrsrc.h"
-#include "strcode.h"
-#include "decomp.h"
-#endif
 
 #define SHANTEN_PAGES 10
 

@@ -14,10 +14,8 @@ private:
 	static const unsigned int panelPosY = 550;
 protected:
 	ShowTile* TileTexture;
-	LPDIRECT3DTEXTURE9 tSideBar; LPD3DXSPRITE sSideBar; // サイドバー
+	LPDIRECT3DTEXTURE9 tSideBar; // サイドバー
 	void LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource, unsigned width, unsigned height); // テクスチャ読み込み
-	void InitSprite(LPD3DXSPRITE* sprite); // スプライト初期化
-	void ShowSprite(LPD3DXSPRITE sprite, LPDIRECT3DTEXTURE9 texture, int X, int Y, int Width, int Height); // スプライト表示
 	void ShowSidebar();
 	void InitScorePanel();
 	void ShowScorePanel();
@@ -33,7 +31,7 @@ private:
 	LPDIRECT3DDEVICE9 myDevice;
 	seatRelative relativePlayerID;
 	int xpos, ypos; float wScale;
-	LPDIRECT3DTEXTURE9 texture; LPD3DXSPRITE baseSprite;
+	LPDIRECT3DTEXTURE9 texture;
 	D3DXMATRIX myMatrix;
 	static const unsigned int PanelWidth = 175, PanelHeight = 120;
 	PLAYER_ID playerID();
@@ -41,12 +39,10 @@ private:
 	static const unsigned int WindPosX = 9, WindPosY = 30;
 	static const unsigned int WindCharX = 180, WindCharY = 40;
 	static const unsigned int WindCharWidth = 40, WindCharHeight = 40;
-	LPD3DXSPRITE windSprite;
 	void renderWind();
 private:
 	static const unsigned int NumCharX = 180, NumCharY = 0;
 	static const unsigned int NumCharWidth = 30, NumCharHeight = 40;
-	LPD3DXSPRITE numSprite;
 	void renderNumeral(int x, int y, unsigned num);
 	static const unsigned int digitDecimal = 10, digitPlus = 11, digitMinus = 12;
 private:

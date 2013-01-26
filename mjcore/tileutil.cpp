@@ -1,5 +1,17 @@
 #include "tileutil.h"
 
+#include <sstream>
+#include <iomanip>
+#include <cstdlib>
+#include <cassert>
+#include <cstring>
+#include "logging.h"
+#include "ruletbl.h"
+#include "shanten.h"
+#include "func.h"
+#include "envtbl.h"
+#include "haifu.h"
+
 /* 四人三麻用 */
 PLAYER_ID* tobePlayed(const GameTable* const gameStat) {
 	static PLAYER_ID tp[] = {

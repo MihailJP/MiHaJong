@@ -13,6 +13,7 @@ namespace mihajong_graphic {
 class ITextRenderer {
 protected:
 	virtual const unsigned int FontBaseSize() = 0;
+	virtual const unsigned int FontWidth() = 0;
 	virtual const unsigned int FontCols() = 0;
 	virtual const unsigned int FontPadding() = 0;
 	struct StringAttr;
@@ -41,6 +42,7 @@ public:
 class TextRenderer : public ITextRenderer {
 private:
 	const unsigned int FontBaseSize() {return 40;}
+	const unsigned int FontWidth() {return FontBaseSize();}
 	const unsigned int FontCols() {return 32;}
 	const unsigned int FontPadding() {return 2;}
 public:
@@ -51,6 +53,7 @@ public:
 class HugeTextRenderer : public ITextRenderer {
 private:
 	const unsigned int FontBaseSize() {return 224;}
+	const unsigned int FontWidth() {return FontBaseSize();}
 	const unsigned int FontCols() {return 8;}
 	const unsigned int FontPadding() {return 0;}
 public:
@@ -61,11 +64,23 @@ public:
 class SmallTextRenderer : public ITextRenderer {
 private:
 	const unsigned int FontBaseSize() {return 20;}
+	const unsigned int FontWidth() {return FontBaseSize();}
 	const unsigned int FontCols() {return 94;}
 	const unsigned int FontPadding() {return 1;}
 public:
 	explicit SmallTextRenderer(LPDIRECT3DDEVICE9 device);
 	~SmallTextRenderer();
+};
+
+class CallDigitRenderer : public ITextRenderer {
+private:
+	const unsigned int FontBaseSize() {return 96;}
+	const unsigned int FontWidth() {return 48;}
+	const unsigned int FontCols() {return 39;}
+	const unsigned int FontPadding() {return 0;}
+public:
+	explicit CallDigitRenderer(LPDIRECT3DDEVICE9 device);
+	~CallDigitRenderer();
 };
 
 struct ITextRenderer::StringAttr {
@@ -76,7 +91,6 @@ struct ITextRenderer::StringAttr {
 };
 
 struct ITextRenderer::SpriteAttr {
-	LPD3DXSPRITE sprite;
 	unsigned short chr_id;
 	bool isFullWidth;
 	int X, Y;

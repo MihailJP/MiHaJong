@@ -23,7 +23,7 @@ private:
 	LPDIRECT3DTEXTURE9 myTexture;
 	LPDIRECT3DDEVICE9 myDevice;
 	TextRenderer* myTextRenderer;
-	std::vector<std::tuple<ButtonStat, LPD3DXSPRITE, int, int, unsigned, unsigned, D3DCOLOR, CodeConv::tstring> > mySprites;
+	std::vector<std::tuple<ButtonStat, int, int, unsigned, unsigned, D3DCOLOR, CodeConv::tstring> > mySprites;
 };
 
 }

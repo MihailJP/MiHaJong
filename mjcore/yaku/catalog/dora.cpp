@@ -1,5 +1,7 @@
 #include "../catalog.h"
 
+#include "../../func.h"
+
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 	/* ƒhƒ‰‚Å˜a—¹‚Á‚½‚ç1ãÊ */
 	if (RuleData::chkRuleApplied("dorahoh"))

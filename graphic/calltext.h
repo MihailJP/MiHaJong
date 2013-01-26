@@ -27,10 +27,24 @@ enum CallType {
 	Kuikae,
 	AgariHouki,
 	Chonbo,
+	NagashiMangan,
+	Renchan,
+	Oyanagare,
 };
 
 EXPORT CallType getCall(PLAYER_ID playerID);
 EXPORT void setCall(PLAYER_ID playerID, CallType callType);
+
+}
+namespace callvalue {
+
+struct CallValue {
+	signed   short Mantissa;
+	unsigned short Exponent;
+};
+
+EXPORT CallValue getVal(PLAYER_ID playerID);
+EXPORT void setVal(PLAYER_ID playerID, signed short mantissa, unsigned short exponent);
 
 }
 }

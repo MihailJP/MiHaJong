@@ -16,17 +16,11 @@ namespace mihajong_graphic {
 using utils::playerRelative;
 	
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
-	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080); InitSprite(&sBorder);
-	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080); InitSprite(&sBaize);
-	LoadTexture(&tChiicha, MAKEINTRESOURCE(IDB_PNG_CHICHAMARK), 419, 174); InitSprite(&sChiicha);
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
-		InitSprite(&sTray[i]);
+	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080);
+	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080);
+	LoadTexture(&tChiicha, MAKEINTRESOURCE(IDB_PNG_CHICHAMARK), 419, 174);
 	LoadTexture(&tRichi, MAKEINTRESOURCE(IDB_PNG_TENBOU), 218, 148);
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
-		InitSprite(&sRichi[i]);
 	LoadTexture(&tDice, MAKEINTRESOURCE(IDB_PNG_DICE), 156, 144);
-	for (int i = 0; i < 2; ++i)
-		InitSprite(&sDice[i]);
 	nakihaiReconst = new NakihaiReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
 	const unsigned logWidth = (unsigned)std::floor(0.5f + // VC++2010‚Å‚Íround()‚ªŽg‚¦‚È‚¢
@@ -42,15 +36,10 @@ GameTableScreen::~GameTableScreen() {
 	delete logWindow;
 	delete nakihaiReconst;
 	if (tDice) tDice->Release();
-	for (int i = 0; i < 2; ++i)
-		if (sDice[i]) sDice[i]->Release();
 	if (tRichi) tRichi->Release();
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
-		if (sRichi[i]) sRichi[i]->Release();
+	if (tChiicha) tChiicha->Release();
 	if (tBorder) tBorder->Release();
-	if (sBorder) sBorder->Release();
 	if (tBaize) tBaize->Release();
-	if (sBaize) sBaize->Release();
 }
 
 /* ŽR”v‚Ì•\Ž¦ */
@@ -92,13 +81,20 @@ void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID ta
 			throw _T("calcTileNum: Invalid mode!");
 		}
 	};
-	auto getRinshanFlag = [&gameStat, &yamahaiAttr](unsigned ActiveTileNum) -> bool {
-		const unsigned NumberOfTiles = std::get<1>(yamahaiAttr);
-		bool RinshanFlag = false;
-		for (unsigned i = 0; i <= 10; i += 2)
-			if ((ActiveTileNum == i) && (gameStat->RinshanPointer < NumberOfTiles - i - 2)) RinshanFlag = true;
-		return RinshanFlag;
+	auto getRinshanFlag = [gameStat, yamahaiAttr](unsigned int a) -> std::function<bool (unsigned)> {
+		const GameTable* const gameStat_ = gameStat;
+		const std::tuple<unsigned, unsigned, unsigned, unsigned> yamahaiAttr_ = yamahaiAttr;
+		return
+		[gameStat_, yamahaiAttr_, a](unsigned ActiveTileNum) -> bool {
+			const unsigned NumberOfTiles = std::get<1>(yamahaiAttr_);
+			bool RinshanFlag = false;
+			for (unsigned i = 0; i <= 10; i += 2)
+				if ((ActiveTileNum == i) && (gameStat_->RinshanPointer < NumberOfTiles - i - a)) RinshanFlag = true;
+			return RinshanFlag;
+		};
 	};
+	auto getRinshanFlag2 = getRinshanFlag(2);
+	auto getRinshanFlag1 = getRinshanFlag(1);
 	switch (tmpPlayerCode) {
 	case sOpposite:
 		for (int i = (18 - std::get<2>(yamahaiAttr)) * 2; i < 36; i += 2) { /* ‘Î–Ê‘¤‚ÌŽR */
@@ -106,10 +102,10 @@ void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID ta
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i); TileTexture->DelTile(i + 1);
-			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
 				TileTexture->NewTile(      i    , gameStat->Deck[k + 1].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2 - 1),
 				DeckPosV,                 UpsideDown, Reverse);
-			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
 				TileTexture->NewTile(      i + 1, gameStat->Deck[k    ].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2 - 1),
 				DeckPosV - TileThickness, UpsideDown, dora ? Obverse : Reverse);
 		}
@@ -120,10 +116,10 @@ void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID ta
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 36); TileTexture->DelTile(i + 37);
-			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
 				TileTexture->NewTile( 36 + i    , gameStat->Deck[k + 1].tile, Normal, DeckPosV,
 				DeckPosH                 + ShowTile::VertTileWidth * (i / 2), Clockwise, Reverse);
-			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
 				TileTexture->NewTile( 36 + i + 1, gameStat->Deck[k    ].tile, Normal, DeckPosV,
 				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2), Clockwise, dora ? Obverse : Reverse);
 		}
@@ -134,10 +130,10 @@ void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID ta
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 72); TileTexture->DelTile(i + 73);
-			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
 				TileTexture->NewTile( 72 + i    , gameStat->Deck[k + 1].tile, Normal, TableSize - DeckPosV,
 				DeckPosH                 + ShowTile::VertTileWidth * (i / 2 - 1), Withershins, Reverse);
-			if ((gameStat->TilePointer <= k) && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
 				TileTexture->NewTile( 72 + i + 1, gameStat->Deck[k    ].tile, Normal, TableSize - DeckPosV,
 				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2 - 1), Withershins, dora ? Obverse : Reverse);
 		}
@@ -148,10 +144,10 @@ void GameTableScreen::ReconstructYamahai(const GameTable* gameStat, PLAYER_ID ta
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k  >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 108); TileTexture->DelTile(i + 109);
-			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
 				TileTexture->NewTile(108 + i    , gameStat->Deck[k + 1].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2),
 				TableSize - DeckPosV,                 Portrait, Reverse);
-			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag(tileNum)))
+			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
 				TileTexture->NewTile(108 + i + 1, gameStat->Deck[k    ].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2),
 				TableSize - DeckPosV - TileThickness, Portrait, dora ? Obverse : Reverse);
 		}
@@ -311,6 +307,14 @@ void GameTableScreen::ReconstructSutehai_rotated(const GameTable* gameStat, PLAY
 }
 void GameTableScreen::ReconstructSutehai(const GameTable* gameStat, PLAYER_ID targetPlayer) {
 	unsigned tilePosCol = 0, tilePosRow = 0; bool shiftPosFlag = false, riichiFlag = false;
+	for (unsigned tileID = 0; tileID < 33; ++tileID) {
+		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
+			case sOpposite: TileTexture->DelTile(296 - tileID); break; /* ‘Î–Ê */
+			case sLeft:     TileTexture->DelTile(297 + tileID); break; /* ã‰Æ */
+			case sRight:    TileTexture->DelTile(362 - tileID); break; /* ‰º‰Æ */
+			case sSelf:     TileTexture->DelTile(363 + tileID); break; /* Ž©•ª */
+		}
+	}
 	for (unsigned i = 0; i < gameStat->Player.val[targetPlayer].DiscardPointer; ++i) {
 		if ((gameStat->Player.val[targetPlayer].Discard[i + 1].dstat == discardRiichi) ||
 			(gameStat->Player.val[targetPlayer].Discard[i + 1].dstat == discardRiichiTaken))
@@ -359,19 +363,23 @@ void GameTableScreen::ShowRiichibou(const GameTable* gameStat) {
 		if (!gameStat->Player.val[i].RichiFlag.RichiFlag) continue;
 		switch (playerRelative(i, gameStat->PlayerID)) {
 		case sSelf:
-			SpriteRenderer::ShowSprite(sRichi[0], tRichi, RiichiPosH, RiichiPosV, 144, 12,
+			SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+				tRichi, RiichiPosH, RiichiPosV, 144, 12,
 				0xffffffff, &rectH, 72, 6);
 			break;
 		case sOpposite:
-			SpriteRenderer::ShowSprite(sRichi[1], tRichi, RiichiPosH, TableSize - RiichiPosV, 144, 12,
+			SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+				tRichi, RiichiPosH, TableSize - RiichiPosV, 144, 12,
 				0xffffffff, &rectH, 72, 6);
 			break;
 		case sLeft:
-			SpriteRenderer::ShowSprite(sRichi[2], tRichi, TableSize - RiichiPosV, RiichiPosH, 12, 144,
+			SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+				tRichi, TableSize - RiichiPosV, RiichiPosH, 12, 144,
 				0xffffffff, &rectV, 6, 72);
 			break;
 		case sRight:
-			SpriteRenderer::ShowSprite(sRichi[3], tRichi, RiichiPosV, RiichiPosH, 12, 144,
+			SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+				tRichi, RiichiPosV, RiichiPosH, 12, 144,
 				0xffffffff, &rectV, 6, 72);
 			break;
 		}
@@ -390,27 +398,35 @@ void GameTableScreen::ShowDice(const GameTable* gameStat) {
 	};
 	switch (playerRelative(gameStat->GameRound % PLAYERS, gameStat->PlayerID)) {
 	case sSelf:
-		SpriteRenderer::ShowSprite(sDice[0], tDice, DicePosH - (DiceWidth + DicePosInterstice) / 2, DicePosV,
+		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+			tDice, DicePosH - (DiceWidth + DicePosInterstice) / 2, DicePosV,
 			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
-		SpriteRenderer::ShowSprite(sDice[1], tDice, DicePosH + (DiceWidth + DicePosInterstice) / 2, DicePosV,
+		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+			tDice, DicePosH + (DiceWidth + DicePosInterstice) / 2, DicePosV,
 			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
 		break;
 	case sOpposite:
-		SpriteRenderer::ShowSprite(sDice[0], tDice, TableSize - DicePosH + (DiceWidth + DicePosInterstice) / 2, TableSize - DicePosV,
+		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+			tDice, TableSize - DicePosH + (DiceWidth + DicePosInterstice) / 2, TableSize - DicePosV,
 			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
-		SpriteRenderer::ShowSprite(sDice[1], tDice, TableSize - DicePosH - (DiceWidth + DicePosInterstice) / 2, TableSize - DicePosV,
+		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+			tDice, TableSize - DicePosH - (DiceWidth + DicePosInterstice) / 2, TableSize - DicePosV,
 			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
 		break;
 	case sLeft:
-		SpriteRenderer::ShowSprite(sDice[0], tDice, TableSize - DicePosV, DicePosH - (DiceWidth + DicePosInterstice) / 2,
+		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+			tDice, TableSize - DicePosV, DicePosH - (DiceWidth + DicePosInterstice) / 2,
 			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
-		SpriteRenderer::ShowSprite(sDice[1], tDice, TableSize - DicePosV, DicePosH + (DiceWidth + DicePosInterstice) / 2,
+		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+			tDice, TableSize - DicePosV, DicePosH + (DiceWidth + DicePosInterstice) / 2,
 			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
 		break;
 	case sRight:
-		SpriteRenderer::ShowSprite(sDice[0], tDice, DicePosV, TableSize - DicePosH - (DiceWidth + DicePosInterstice) / 2,
+		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+			tDice, DicePosV, TableSize - DicePosH - (DiceWidth + DicePosInterstice) / 2,
 			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
-		SpriteRenderer::ShowSprite(sDice[1], tDice, DicePosV, TableSize - DicePosH + (DiceWidth + DicePosInterstice) / 2,
+		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
+			tDice, DicePosV, TableSize - DicePosH + (DiceWidth + DicePosInterstice) / 2,
 			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
 		break;
 	}
@@ -420,13 +436,13 @@ void GameTableScreen::ShowDice(const GameTable* gameStat) {
 void GameTableScreen::ShowTray() {
 	RECT rect1 = {TrayHLeft, TrayHTop, TrayHRight, TrayHBottom,};
 	RECT rect2 = {TrayVLeft, TrayVTop, TrayVRight, TrayVBottom,};
-	SpriteRenderer::ShowSprite(sTray[0], tChiicha, TrayPosH, TrayPosV,
+	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tChiicha, TrayPosH, TrayPosV,
 		TrayHWidth, TrayHHeight, 0xffffffff, &rect1, TrayHWidth / 2, TrayHHeight / 2);
-	SpriteRenderer::ShowSprite(sTray[1], tChiicha, TableSize - TrayPosH, TableSize - TrayPosV,
+	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tChiicha, TableSize - TrayPosH, TableSize - TrayPosV,
 		TrayHWidth, TrayHHeight, 0xffffffff, &rect1, TrayHWidth / 2, TrayHHeight / 2);
-	SpriteRenderer::ShowSprite(sTray[2], tChiicha, TableSize - TrayPosV, TrayPosH,
+	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tChiicha, TableSize - TrayPosV, TrayPosH,
 		TrayVWidth, TrayVHeight, 0xffffffff, &rect2, TrayVWidth / 2, TrayVHeight / 2);
-	SpriteRenderer::ShowSprite(sTray[3], tChiicha, TrayPosV, TableSize - TrayPosH,
+	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tChiicha, TrayPosV, TableSize - TrayPosH,
 		TrayVWidth, TrayVHeight, 0xffffffff, &rect2, TrayVWidth / 2, TrayVHeight / 2);
 }
 
@@ -439,7 +455,7 @@ void GameTableScreen::ShowChiicha(const GameTable* gameStat) {
 				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / PLAYERS    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (0    ) + PlatePadding,
 				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / PLAYERS + 1) - PlatePadding, (PlateHeightH + PlatePadding * 2) * (0 + 1) - PlatePadding,
 			};
-			SpriteRenderer::ShowSprite(sChiicha, tChiicha, PlatePosH, PlatePosV,
+			SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tChiicha, PlatePosH, PlatePosV,
 				PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
 		}
 		break;
@@ -449,7 +465,7 @@ void GameTableScreen::ShowChiicha(const GameTable* gameStat) {
 				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / PLAYERS    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (1    ) + PlatePadding,
 				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / PLAYERS + 1) - PlatePadding, (PlateHeightH + PlatePadding * 2) * (1 + 1) - PlatePadding,
 			};
-			SpriteRenderer::ShowSprite(sChiicha, tChiicha, TableSize - PlatePosH, TableSize - PlatePosV,
+			SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tChiicha, TableSize - PlatePosH, TableSize - PlatePosV,
 				PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
 		}
 		break;
@@ -459,7 +475,7 @@ void GameTableScreen::ShowChiicha(const GameTable* gameStat) {
 				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / PLAYERS    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (0    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
 				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / PLAYERS + 1) - PlatePadding, (PlateHeightV + PlatePadding * 2) * (0 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
 			};
-			SpriteRenderer::ShowSprite(sChiicha, tChiicha, PlatePosV, TableSize - PlatePosH,
+			SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tChiicha, PlatePosV, TableSize - PlatePosH,
 				PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
 		}
 		break;
@@ -469,7 +485,7 @@ void GameTableScreen::ShowChiicha(const GameTable* gameStat) {
 				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / PLAYERS    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (1    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
 				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / PLAYERS + 1) - PlatePadding, (PlateHeightV + PlatePadding * 2) * (1 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
 			};
-			SpriteRenderer::ShowSprite(sChiicha, tChiicha, TableSize - PlatePosV, PlatePosH,
+			SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tChiicha, TableSize - PlatePosV, PlatePosH,
 				PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
 		}
 		break;
@@ -487,7 +503,7 @@ void GameTableScreen::ShowYakitori(const GameTable* gameStat) {
 					(PlateWidthH + PlatePadding * 2) * (PlateID_Yakitori    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (0    ) + PlatePadding,
 					(PlateWidthH + PlatePadding * 2) * (PlateID_Yakitori + 1) - PlatePadding, (PlateHeightH + PlatePadding * 2) * (0 + 1) - PlatePadding,
 				};
-				SpriteRenderer::ShowSprite(sChiicha, tChiicha, YakitoriPosH, YakitoriPosV,
+				SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tChiicha, YakitoriPosH, YakitoriPosV,
 					PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
 			}
 			break;
@@ -497,7 +513,7 @@ void GameTableScreen::ShowYakitori(const GameTable* gameStat) {
 					(PlateWidthH + PlatePadding * 2) * (PlateID_Yakitori    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (1    ) + PlatePadding,
 					(PlateWidthH + PlatePadding * 2) * (PlateID_Yakitori + 1) - PlatePadding, (PlateHeightH + PlatePadding * 2) * (1 + 1) - PlatePadding,
 				};
-				SpriteRenderer::ShowSprite(sChiicha, tChiicha, TableSize - YakitoriPosH, TableSize - YakitoriPosV,
+				SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tChiicha, TableSize - YakitoriPosH, TableSize - YakitoriPosV,
 					PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
 			}
 			break;
@@ -507,7 +523,7 @@ void GameTableScreen::ShowYakitori(const GameTable* gameStat) {
 					(PlateWidthV + PlatePadding * 2) * (PlateID_Yakitori    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (0    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
 					(PlateWidthV + PlatePadding * 2) * (PlateID_Yakitori + 1) - PlatePadding, (PlateHeightV + PlatePadding * 2) * (0 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
 				};
-				SpriteRenderer::ShowSprite(sChiicha, tChiicha, YakitoriPosV, TableSize - YakitoriPosH,
+				SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tChiicha, YakitoriPosV, TableSize - YakitoriPosH,
 					PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
 			}
 			break;
@@ -517,7 +533,7 @@ void GameTableScreen::ShowYakitori(const GameTable* gameStat) {
 					(PlateWidthV + PlatePadding * 2) * (PlateID_Yakitori    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (1    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
 					(PlateWidthV + PlatePadding * 2) * (PlateID_Yakitori + 1) - PlatePadding, (PlateHeightV + PlatePadding * 2) * (1 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
 				};
-				SpriteRenderer::ShowSprite(sChiicha, tChiicha, TableSize - YakitoriPosV, YakitoriPosH,
+				SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tChiicha, TableSize - YakitoriPosV, YakitoriPosH,
 					PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
 			}
 			break;
@@ -532,8 +548,8 @@ void GameTableScreen::cls() {
 }
 
 void GameTableScreen::RenderTable() {
-	ShowSprite(sBaize, tBaize, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
-	ShowSprite(sBorder, tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
+	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tBaize, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
+	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	if (GameStatus::isModified())
 		Reconstruct(GameStatus::retrGameStat());
 	ShowRiichibou(GameStatus::gameStat());
@@ -574,22 +590,64 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("—¬‹Ç"));
 		break;
 	case tblSubsceneSifeng:
-		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("Žl•—˜A‘Å"));
+		mySubScene = new TableSubsceneMsg(caller->getDevice(),
+			(GameStatus::gameStat()->gameType & AllSanma) ? _T("ŽO•—˜A‘Å") : _T("Žl•—˜A‘Å"));
 		break;
 	case tblSubsceneTripleRon:
-		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("ŽO‰Æ˜a"));
+		mySubScene = new TableSubsceneMsg(caller->getDevice(),
+			(GameStatus::gameStat()->gameType & AllSanma) ? _T("“ñ‰Æ˜a") : _T("ŽO‰Æ˜a"));
 		break;
 	case tblSubsceneSikang:
 		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("ŽlŠJžÈ"));
 		break;
 	case tblSubsceneFourRiichi:
-		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("Žl‰Æ—§’¼"));
+		mySubScene = new TableSubsceneMsg(caller->getDevice(),
+			(GameStatus::gameStat()->gameType & AllSanma) ? _T("ŽO‰Æ—§’¼") : _T("Žl‰Æ—§’¼"));
+		break;
+	case tblSubsceneChonbo:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("ö˜a"));
 		break;
 	case tblSubsceneCall:
 		mySubScene = new TableSubsceneCall(caller->getDevice());
 		break;
 	case tblSubsceneCallFade:
 		mySubScene = new TableSubsceneCallFade(caller->getDevice());
+		break;
+	case tblSubsceneCallVal:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice());
+		break;
+	case tblSubsceneCallValNotenBappu:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("•s’®”±•„"));
+		break;
+	case tblSubsceneCallValAgariten:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("˜a—¹“_"));
+		break;
+	case tblSubsceneCallValTsumibou:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("Ï–_¸ŽZ"));
+		break;
+	case tblSubsceneCallValChip:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("j‹V¸ŽZ"));
+		break;
+	case tblSubsceneCallValKyoutaku:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("‹Ÿ‘õ¸ŽZ"));
+		break;
+	case tblSubsceneCallValChonboBappu:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("ö˜a”±•„"));
+		break;
+	case tblSubsceneCallValNagashiMangan:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("—¬‚µ–žŠÑ"));
+		break;
+	case tblSubsceneCallValDobon:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("”ò‚Ñ”±•„"));
+		break;
+	case tblSubsceneCallValKitamakura:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("–k–”±•„"));
+		break;
+	case tblSubsceneCallValYakuman:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("–ð–žj‹V"));
+		break;
+	case tblSubsceneChkTenpai:
+		mySubScene = new TableSubsceneCheckTenpai(caller->getDevice());
 		break;
 	default:
 		mySubScene = new TableSubsceneNormal(caller->getDevice());
@@ -738,6 +796,7 @@ void GameTableScreen::NakihaiReconst::NakihaiKamicha(const GameTable* gameStat, 
 	caller->TileTexture->NewTile(num(1), tileC, redC, x(1), y(1), vert, Obverse);
 	if (tile->mstat == meldQuadAddedLeft)
 		caller->TileTexture->NewTile(num(2), tileL, tile->red[3], x(2), y(2), hor, Obverse);
+	else caller->TileTexture->DelTile(num(2));
 	caller->TileTexture->NewTile(num(3), tileL, redL, x(3), y(3), hor, Obverse);
 }
 void GameTableScreen::NakihaiReconst::NakihaiToimen(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
@@ -751,6 +810,7 @@ void GameTableScreen::NakihaiReconst::NakihaiToimen(const GameTable* gameStat, P
 	caller->TileTexture->NewTile(num(0), tile->tile, tile->red[2], x(0), y(0), vert, Obverse);
 	if (tile->mstat == meldQuadAddedCenter)
 		caller->TileTexture->NewTile(num(1), tile->tile, tile->red[3], x(1), y(1), hor, Obverse);
+	else caller->TileTexture->DelTile(num(1));
 	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[0], x(2), y(2), hor, Obverse);
 	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
@@ -764,6 +824,7 @@ void GameTableScreen::NakihaiReconst::NakihaiShimocha(const GameTable* gameStat,
 		true, true, false, false);
 	if (tile->mstat == meldQuadAddedRight)
 		caller->TileTexture->NewTile(num(0), tile->tile, tile->red[3], x(0), y(0), hor, Obverse);
+	else caller->TileTexture->DelTile(num(0));
 	caller->TileTexture->NewTile(num(1), tile->tile, tile->red[0], x(1), y(1), hor, Obverse);
 	caller->TileTexture->NewTile(num(2), tile->tile, tile->red[2], x(2), y(2), vert, Obverse);
 	caller->TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);

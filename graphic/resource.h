@@ -18,3 +18,10 @@
 #define IDB_PNG_CHICHAMARK                   112
 #define IDB_PNG_SCORE_INDICATOR              113
 #define IDB_PNG_CALL_TEXT                    114
+#define IDB_PNG_CALL_DIGITS                  115
+
+#define CHARMAP_FILE                         257
+#define IDB_CHARMAP_FONT                     120
+#define IDB_CHARMAP_FONT_HUGE                121
+#define IDB_CHARMAP_FONT_SMALL               122
+#define IDB_CHARMAP_CALL_DIGITS              123

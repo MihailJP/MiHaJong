@@ -1,5 +1,17 @@
 #include "ruletbl.h"
 
+#include <cstdlib>
+#include <vector>
+#include <sstream>
+#include <fstream>
+#include <exception>
+#include <Windows.h>
+#include <cassert>
+#include "logging.h"
+#include "decomp.h"
+#include "reader/readrsrc.h"
+#include "strcode.h"
+
 using namespace CodeConv;
 
 struct GameTable;
@@ -15,6 +27,7 @@ std::map<std::string, unsigned int> RuleData::inverse_nametbl;
 std::map<std::string, std::vector<std::string> > RuleData::ruletags;
 std::map<std::string, std::map<std::string, unsigned int> > RuleData::inverse_ruletags;
 std::set<std::string> RuleData::nonapplicable;
+std::map<std::string, std::string> RuleData::rulemask_expr;
 const char RuleData::digit[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 std::array<tstring, RULE_PAGES> RuleData::pageCaption;
 
@@ -26,7 +39,7 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 	CSVReader::parsecsv(confdat, fromUTF8(csvdat).c_str());
 	delete[] csvdat; delete csvfile;
 
-	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
+	for (auto k = confdat.begin(); k != confdat.end(); ++k) { // 名前テーブル
 		std::string nomenPartisRegulae(toANSI((*k)[8])); // ルールタグ
 		unsigned int numerusPartisRegulae = _ttoi((*k)[0].c_str()); // ルールタグ
 		nametbl[numerusPartisRegulae] = nomenPartisRegulae; // 順方向
@@ -49,6 +62,12 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 		else if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[2].c_str()))) { // N/A指定があった場合
 			nonapplicable.insert(nomenPartisRegulae); // リストに追加
 		}
+
+		// ルール設定画面のマスクデータ
+		if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[1].c_str())))
+			rulemask_expr[nomenPartisRegulae] = toANSI((*k)[3]);
+		else if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[2].c_str())))
+			rulemask_expr[nomenPartisRegulae] = "";
 	}
 
 	assert(inverse_ruletags["game_length"]["east_wind_game"] == 1);
@@ -281,24 +300,23 @@ __declspec(dllexport) int RuleData::saveConfigFile(const char* const filename) {
 	}
 }
 std::string RuleData::getRuleMaskExpr(const std::string& RuleTag) {
-	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
-		if (toANSI((*k)[8]) != RuleTag) continue;
-		if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[1].c_str())))
-				return toANSI((*k)[3]);
-		if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[2].c_str())))
-				return "";
-	}
-	return "";
+	if (rulemask_expr.find(RuleTag) != rulemask_expr.end())
+		return rulemask_expr[RuleTag];
+	else
+		return "";
 }
 
 __declspec(dllexport) BOOL RuleData::reqFailed(uint16_t RuleID, const int* const ruleStat) {
-	auto checker = new ReqChecker();
-	bool flag = checker->reqFailed(nametbl[RuleID], getRuleMaskExpr(nametbl[RuleID]), ruleStat);
-	delete checker;
-	return flag ? 1 : 0;
+	bool flag = ReqChecker::instantiate()->reqFailed(getRuleMaskExpr(nametbl[RuleID]), ruleStat);
+	return flag ? TRUE : FALSE;
 }
 
 // -------------------------------------------------------------------------
+
+RuleData::ReqChecker* RuleData::ReqChecker::instantiate() {
+	static ReqChecker reqChecker;
+	return &reqChecker;
+}
 
 RuleData::ReqChecker::ReqChecker () {
 	myState = luaL_newstate();
@@ -323,9 +341,7 @@ int RuleData::ReqChecker::check (lua_State* L) {
 	return 1;
 }
 
-bool RuleData::ReqChecker::reqFailed
-	(const std::string& ruleTag, const std::string& expression, const int* const ruleStat)
-{
+bool RuleData::ReqChecker::reqFailed(const std::string& expression, const int* const ruleStat) {
 	if (expression.empty()) {
 		return false;
 	}

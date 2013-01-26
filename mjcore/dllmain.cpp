@@ -1,5 +1,12 @@
 #include "dllmain.h"
 
+#include <DbgHelp.h>
+#include <cstdlib>
+#include <sstream>
+#include <iomanip>
+#include <typeinfo>
+#include "logging.h"
+
 HINSTANCE dllInst;
 ErrorInfo errorInfo;
 const ULONG_PTR errorInfoPtr[1] = {(ULONG_PTR)(&errorInfo)};

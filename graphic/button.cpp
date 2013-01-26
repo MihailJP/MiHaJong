@@ -14,17 +14,14 @@ ButtonPic::ButtonPic(LPDIRECT3DDEVICE9 device) {
 }
 
 ButtonPic::~ButtonPic() {
-	for (auto k = mySprites.begin(); k != mySprites.end(); ++k)
-		if (std::get<1>(*k))
-			std::get<1>(*k)->Release();
 	myTexture->Release();
 	delete myTextRenderer;
 }
 
 void ButtonPic::setText(unsigned ButtonID) {
-	const int X = std::get<2>(mySprites[ButtonID]), Y = std::get<3>(mySprites[ButtonID]);
-	const unsigned Width = std::get<4>(mySprites[ButtonID]), Height = std::get<5>(mySprites[ButtonID]);
-	const CodeConv::tstring& caption = std::get<7>(mySprites[ButtonID]);
+	const int X = std::get<1>(mySprites[ButtonID]), Y = std::get<2>(mySprites[ButtonID]);
+	const unsigned Width = std::get<3>(mySprites[ButtonID]), Height = std::get<4>(mySprites[ButtonID]);
+	const CodeConv::tstring& caption = std::get<6>(mySprites[ButtonID]);
 	const int xpos = (int)((float)(X + (6.0f * Width / 156.0f)) / Geometry::WindowScale());
 	const int ypos = (int)((float)(Y + (6.0f * Height / 48.0f)) / Geometry::WindowScale());
 #ifdef _UNICODE
@@ -44,36 +41,33 @@ void ButtonPic::setText(unsigned ButtonID) {
 
 void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat, int X, int Y, unsigned Width, unsigned Height, D3DCOLOR color, const CodeConv::tstring& caption) {
 	if (mySprites.size() <= ButtonID)
-		mySprites.resize(ButtonID + 1, std::make_tuple(absent, nullptr, 0, 0, 0, 0, 0, _T("")));
+		mySprites.resize(ButtonID + 1, std::make_tuple(absent, 0, 0, 0, 0, 0, _T("")));
 	assert(stat != absent);
-	LPD3DXSPRITE sprite = nullptr;
-	D3DXCreateSprite(myDevice, &sprite);
-	mySprites[ButtonID] = std::make_tuple(stat, sprite, X, Y, Width, Height, color, CodeConv::tstring(caption));
+	mySprites[ButtonID] = std::make_tuple(stat, X, Y, Width, Height, color, CodeConv::tstring(caption));
 	setText(ButtonID);
 }
 
 void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat) {
-	if ((mySprites.size() <= ButtonID) || (!std::get<1>(mySprites[ButtonID])))
+	if (mySprites.size() <= ButtonID)
 		throw _T("ƒ{ƒ^ƒ“‚ª‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
-	LPD3DXSPRITE sprite = nullptr;
 	mySprites[ButtonID] = std::make_tuple(stat,
-		std::get<1>(mySprites[ButtonID]), std::get<2>(mySprites[ButtonID]), std::get<3>(mySprites[ButtonID]),
-		std::get<4>(mySprites[ButtonID]), std::get<5>(mySprites[ButtonID]),
-		std::get<6>(mySprites[ButtonID]), std::get<7>(mySprites[ButtonID]));
+		std::get<1>(mySprites[ButtonID]), std::get<2>(mySprites[ButtonID]),
+		std::get<3>(mySprites[ButtonID]), std::get<4>(mySprites[ButtonID]),
+		std::get<5>(mySprites[ButtonID]), std::get<6>(mySprites[ButtonID]));
 	setText(ButtonID);
 }
 
 void ButtonPic::Render() {
 	for (auto k = mySprites.begin(); k != mySprites.end(); ++k) {
 		if (std::get<0>(*k) == absent) continue;
-		int X = std::get<2>(*k), Y = std::get<3>(*k);
-		unsigned width = std::get<4>(*k), height = std::get<5>(*k);
+		int X = std::get<1>(*k), Y = std::get<2>(*k);
+		unsigned width = std::get<3>(*k), height = std::get<4>(*k);
 		D3DXMATRIX mat, mat2; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat2);
 		D3DXMatrixTranslation(&mat2, (float)(-X), (float)(-Y), 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
 		D3DXMatrixScaling(&mat2, (float)width / 156.0f, (float)height / 48.0f, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
 		D3DXMatrixTranslation(&mat2, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
 		RECT rect = {0, 52 * (std::get<0>(*k) - 1), 156, 52 * (std::get<0>(*k) - 1) + 48};
-		SpriteRenderer::ShowSprite(std::get<1>(*k), myTexture, X, Y, width, height, std::get<6>(*k) | 0xff000000, &rect, 0, 0, &mat);
+		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y, width, height, std::get<5>(*k) | 0xff000000, &rect, 0, 0, &mat);
 	}
 	myTextRenderer->Render();
 }

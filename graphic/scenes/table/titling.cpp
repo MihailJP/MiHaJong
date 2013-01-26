@@ -57,7 +57,7 @@ const std::wstring TableSubsceneTitlingHonba::Numeral = L"0‚P‚Q‚R‚S‚T‚U‚V‚W‚X";
 void TableSubsceneTitlingHonba::Render() {
 	std::wstringstream o;
 	const int honba = GameStatus::gameStat()->Honba;
-	if (honba < 10) o << Numeral.substr(honba, honba + 1);
+	if (honba < 10) o << Numeral.substr(honba, 1);
 	else o << honba;
 	o << L"–{ê";
 	FadeinStr(o.str());

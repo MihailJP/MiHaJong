@@ -13,8 +13,8 @@ class GameTableScreen : public TableProtoScene {
 protected:
 	static const unsigned int TableSize = Geometry::BaseSize;
 	static const unsigned int TileThickness = ShowTile::HoriTileHeight - ShowTile::VertTileWidth;
-	LPDIRECT3DTEXTURE9 tBorder; LPD3DXSPRITE sBorder; // 卓の枠
-	LPDIRECT3DTEXTURE9 tBaize; LPD3DXSPRITE sBaize; // 羅紗地
+	LPDIRECT3DTEXTURE9 tBorder; // 卓の枠
+	LPDIRECT3DTEXTURE9 tBaize; // 羅紗地
 	logwnd::LogWindow* logWindow; // ログウィンドウ
 protected:
 	TableSubscene* mySubScene; // サブシーンオブジェクト
@@ -46,7 +46,7 @@ protected: /**** 捨牌 ****/
 protected: /**** リーチ棒 ****/
 	static const unsigned int RiichiPosH = TableSize / 2;
 	static const unsigned int RiichiPosV = (TableSize / 2) + 86;
-	LPDIRECT3DTEXTURE9 tRichi; LPD3DXSPRITE sRichi[PLAYERS];  // リーチ棒
+	LPDIRECT3DTEXTURE9 tRichi;  // リーチ棒
 	void ShowRiichibou(const GameTable* gameStat); // リーチ棒の再構築
 protected: /**** サイコロ ****/
 	static const unsigned int DiceWidth = 24;
@@ -55,7 +55,7 @@ protected: /**** サイコロ ****/
 	static const unsigned int DicePosH = TableSize - 230;
 	static const unsigned int DicePosV = TableSize - 70;
 	static const unsigned int DicePosInterstice = DiceWidth / 3;
-	LPDIRECT3DTEXTURE9 tDice; LPD3DXSPRITE sDice[2]; // サイコロ
+	LPDIRECT3DTEXTURE9 tDice; // サイコロ
 	void ShowDice(const GameTable* gameStat); // サイコロを表示する
 protected: /**** 起家マーク・ヤキトリマークを置く凹み ****/
 	static const unsigned int TrayHLeft = 275;
@@ -73,7 +73,6 @@ protected: /**** 起家マーク・ヤキトリマークを置く凹み ****/
 	static const unsigned int TrayPosH = TableSize - 200;
 	static const unsigned int TrayPosV = TableSize - 24;
 	void ShowTray(); // 起家マークを置く場所表示
-	/* テクスチャは起家マークと同一ファイル */ LPD3DXSPRITE sTray[PLAYERS]; // 起家マーク置き場
 protected: /**** 起家マーク ****/
 	static const unsigned int PlateWidthH = 45;
 	static const unsigned int PlateHeightH = 35;
@@ -82,13 +81,12 @@ protected: /**** 起家マーク ****/
 	static const unsigned int PlatePadding = 1;
 	static const unsigned int PlatePosH = TrayPosH + (PlateWidthH / 2) + (PlatePadding * 2);
 	static const unsigned int PlatePosV = TrayPosV;
-	LPDIRECT3DTEXTURE9 tChiicha; LPD3DXSPRITE sChiicha; // 起家マーク
+	LPDIRECT3DTEXTURE9 tChiicha; // 起家マーク
 	void ShowChiicha(const GameTable* gameStat); // 起家マークを表示する
 protected: /**** ヤキトリマーク ****/
 	static const unsigned int PlateID_Yakitori = 7;
 	static const unsigned int YakitoriPosH = TrayPosH - (PlateWidthH / 2) - (PlatePadding * 2);
 	static const unsigned int YakitoriPosV = TrayPosV;
-	/* テクスチャは起家マークと同一ファイル */ LPD3DXSPRITE sYakitori[PLAYERS]; // 起家マーク
 	void ShowYakitori(const GameTable* gameStat); // ヤキトリマークを表示する
 protected:
 	void ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // プレイヤー関係の画面の再構築

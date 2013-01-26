@@ -1,5 +1,14 @@
 #include "aiscript.h"
 
+#include <lua.hpp>
+#include <sstream>
+#include "functbl.h"
+#include "filesel.h"
+#include "../gametbl.h"
+#include "../logging.h"
+#include "../chat.h"
+#include "../strcode.h"
+
 const DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NUM_OF_TILES_IN_HAND - 1};
 
 aiscript::ScriptStates aiscript::status[PLAYERS] = {{nullptr, false}};
