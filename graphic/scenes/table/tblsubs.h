@@ -7,3 +7,4 @@
 #include "call.h"
 #include "callval.h"
 #include "chktnpai.h"
+#include "player.h"
