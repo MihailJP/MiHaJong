@@ -9,6 +9,7 @@
 #include <tuple>
 #include <cassert>
 #include <cmath>
+#include <iomanip>
 #include "scene_id.h"
 
 namespace mihajong_graphic {
@@ -29,12 +30,14 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 		1100, 100, logWidth, 20);
 	InitializeCriticalSection(&subSceneCS);
 	mySubScene = new TableSubsceneNormal(manipulator->getDevice());
+	myTextRenderer = new TextRenderer(manipulator->getDevice());
 }
 
 GameTableScreen::~GameTableScreen() {
 	delete mySubScene; DeleteCriticalSection(&subSceneCS);
 	delete logWindow;
 	delete nakihaiReconst;
+	delete myTextRenderer;
 	if (tDice) tDice->Release();
 	if (tRichi) tRichi->Release();
 	if (tChiicha) tChiicha->Release();
@@ -541,6 +544,41 @@ void GameTableScreen::ShowYakitori(const GameTable* gameStat) {
 	}
 }
 
+/* ‹Ÿ‘õ“_–_‚È‚Ç‚Ìî•ñ‚ğ•\¦ */
+void GameTableScreen::ShowStatus(const GameTable* gameStat) {
+	const wchar_t* const WindName = L"“Œ“ì¼–k”’á¢’†";
+	const wchar_t* const Numeral = L"ˆê“ñOlŒÜ˜Zµ”ª‹ã\";
+	const wchar_t* const FWDigit = L"‚O‚P‚Q‚R‚S‚T‚U‚V‚W‚X";
+	CodeConv::tostringstream o;
+	o << CodeConv::EnsureTStr(std::wstring(WindName + gameStat->GameRound / 4, WindName + gameStat->GameRound / 4 + 1));
+	if (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game")) { // “Œê‚Ì‚İ‚Ìƒ‹[ƒ‹
+		const unsigned roundnum = gameStat->LoopRound * 4 + gameStat->GameRound;
+		if (roundnum < 10)
+			o << CodeConv::EnsureTStr(std::wstring(Numeral + roundnum, Numeral + roundnum + 1));
+		else
+			o << (roundnum + 1);
+	} else { // ˆê”Ê‚Ìƒ‹[ƒ‹
+		const unsigned roundnum = gameStat->GameRound % 4;
+		o << CodeConv::EnsureTStr(std::wstring(Numeral + roundnum, Numeral + roundnum + 1));
+	}
+	o << _T("‹Ç ");
+	if (gameStat->Honba >= 10) o << std::setw(2) << (gameStat->Honba) << _T("–{ê");
+	else if (gameStat->Honba > 0) o << CodeConv::EnsureTStr(std::wstring(FWDigit + gameStat->Honba, FWDigit + gameStat->Honba + 1)) << _T("–{ê");
+	else o << _T("•½@ê");
+	myTextRenderer->NewText(0, o.str(), Geometry::BaseSize + 5, 5, 0.875f);
+
+	o.str(_T(""));
+	const int tiles = gameStat->RinshanPointer - gameStat->TilePointer - gameStat->ExtraRinshan - gameStat->DeadTiles + 1;
+	if (tiles >= 100) o << _T("c--”v");
+	else o << _T("c") << std::setw(2) << tiles << _T("”v");
+	o << _T(" ‹Ÿ‘õ");
+	if (gameStat->Deposit) o << std::setw(2) << gameStat->Deposit << _T("–{");
+	else o << _T("‚È‚µ");
+	myTextRenderer->NewText(1, o.str(), Geometry::BaseSize + 5, 35, 0.875f);
+
+	myTextRenderer->Render();
+}
+
 /* ‘ì‚ğ•\¦ ‚±‚±‚©‚ç */
 void GameTableScreen::cls() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
@@ -562,6 +600,7 @@ void GameTableScreen::RenderTable() {
 
 void GameTableScreen::RenderSideBar() {
 	ShowSidebar();
+	ShowStatus(GameStatus::gameStat());
 	ShowScorePanel();
 	logWindow->Render();
 }
