@@ -208,7 +208,8 @@ void GameTableScreen::ReconstructTehai(const GameTable* gameStat, PLAYER_ID targ
 				gameStat->Player.val[targetPlayer].Hand[i].tile,
 				gameStat->Player.val[targetPlayer].Hand[i].red,
 				HandPosH + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
-				TableSize - HandPosV, Portrait, Obverse);
+				TableSize - HandPosV, Portrait, Obverse,
+				(tileCursor == i) ? 0xffff9999 : 0xffffffff);
 			else TileTexture->DelTile(144+42+i);
 		break;
 	}
@@ -662,8 +663,20 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	switch (od->dwOfs) {
 	case DIK_LEFT:
+		if (od->dwData) {
+			do {
+				if ((--tileCursor) < 0) tileCursor = NUM_OF_TILES_IN_HAND - 1;
+			} while (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[tileCursor].tile == NoTile);
+			ReconstructTehai(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+		}
 		break;
 	case DIK_RIGHT:
+		if (od->dwData) {
+			do {
+				if ((++tileCursor) >= NUM_OF_TILES_IN_HAND) tileCursor = 0;
+			} while (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[tileCursor].tile == NoTile);
+			ReconstructTehai(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+		}
 		break;
 	}
 }
