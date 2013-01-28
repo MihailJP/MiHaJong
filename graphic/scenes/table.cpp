@@ -29,6 +29,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 		1100, 100, logWidth, 20);
 	InitializeCriticalSection(&subSceneCS);
 	mySubScene = new TableSubsceneNormal(manipulator->getDevice());
+	tileCursor = 0;
 }
 
 GameTableScreen::~GameTableScreen() {
@@ -654,6 +655,17 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		break;
 	}
 	LeaveCriticalSection(&subSceneCS);
+}
+
+// -------------------------------------------------------------------------
+
+void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+	switch (od->dwOfs) {
+	case DIK_LEFT:
+		break;
+	case DIK_RIGHT:
+		break;
+	}
 }
 
 // -------------------------------------------------------------------------

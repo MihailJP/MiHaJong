@@ -29,6 +29,8 @@ protected: /**** 手牌 ****/
 	static const unsigned int HandLength = 13;
 	static const unsigned int HandPosH = (TableSize - ShowTile::VertTileWidth * (HandLength - 1)) / 2;
 	static const unsigned int HandPosV = DeckPosV - 144;
+	static const int tileCursorOff = -3; // 手牌カーソル無効時
+	int tileCursor; // 手牌カーソル
 	void ReconstructTehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // 手牌の再構築
 protected: /**** 鳴き牌 ****/
 	class NakihaiReconst; // 処理は内部クラスにまとめてある
@@ -99,6 +101,7 @@ public:
 	GameTableScreen(ScreenManipulator* const manipulator);
 	~GameTableScreen();
 	void Render();
+	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 };
 
 class GameTableScreen::NakihaiReconst {
