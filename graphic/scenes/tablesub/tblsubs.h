@@ -8,3 +8,4 @@
 #include "callval.h"
 #include "chktnpai.h"
 #include "player.h"
+#include "agariscr.h"

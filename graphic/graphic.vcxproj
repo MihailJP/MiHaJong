@@ -160,6 +160,7 @@
     <ClCompile Include="scenes\ruleconf.cpp" />
     <ClCompile Include="scenes\sysscr.cpp" />
     <ClCompile Include="scenes\table.cpp" />
+    <ClCompile Include="scenes\tablesub\agariscr.cpp" />
     <ClCompile Include="scenes\tablesub\call.cpp" />
     <ClCompile Include="scenes\tablesub\callval.cpp" />
     <ClCompile Include="scenes\tablesub\chktnpai.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="scenes\scene_id.h" />
     <ClInclude Include="scenes\sysscr.h" />
     <ClInclude Include="scenes\table.h" />
+    <ClInclude Include="scenes\tablesub\agariscr.h" />
     <ClInclude Include="scenes\tablesub\call.h" />
     <ClInclude Include="scenes\tablesub\callval.h" />
     <ClInclude Include="scenes\tablesub\chktnpai.h" />
