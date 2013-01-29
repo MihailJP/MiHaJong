@@ -12,6 +12,7 @@
 #include "ai/class.h"
 #include "../sound/sound.h"
 #include "bgmid.h"
+#include "sound.h"
 #include "random.h"
 #include "../graphic/graphic.h"
 #include "chat.h"
@@ -411,13 +412,13 @@ namespace {
 	void choosebgm(const GameTable* const gameStat) { // BGMを鳴らす
 		if (((gameStat->LoopRound * roundLoopRate() + gameStat->GameRound) == gameStat->GameLength) &&
 			(gameStat->GameLength > 0))
-			sound::Play(sound::IDs::musFinal); // オーラスだけ特別
+			sound::util::bgmplay(sound::IDs::musFinal); // オーラスだけ特別
 		else if ((gameStat->Honba >= 5) && RuleData::chkRule("ryanshiba", "from_5honba"))
-			sound::Play(sound::IDs::musShibari); // リャンシバ時専用BGM
+			sound::util::bgmplay(sound::IDs::musShibari); // リャンシバ時専用BGM
 		else if ((gameStat->Honba >= 4) && RuleData::chkRule("ryanshiba", "from_4honba"))
-			sound::Play(sound::IDs::musShibari); // リャンシバ時専用BGM
+			sound::util::bgmplay(sound::IDs::musShibari); // リャンシバ時専用BGM
 		else
-			sound::Play(sound::IDs::BgmStart + gameStat->GameRound);
+			sound::util::bgmplay(sound::IDs::BgmStart + gameStat->GameRound);
 	}
 	void screen(const GameTable* const gameStat) {
 		CodeConv::tstring tmpStatus;
