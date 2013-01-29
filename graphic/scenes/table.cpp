@@ -10,6 +10,8 @@
 #include <cassert>
 #include <cmath>
 #include "scene_id.h"
+#include "../../sound/sound.h"
+#include "../../mjcore/bgmid.h"
 
 namespace mihajong_graphic {
 
@@ -667,6 +669,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 			do {
 				if ((--tileCursor) < 0) tileCursor = NUM_OF_TILES_IN_HAND - 1;
 			} while (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[tileCursor].tile == NoTile);
+			sound::Play(sound::IDs::sndCursor);
 			ReconstructTehai(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 		}
 		break;
@@ -675,6 +678,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 			do {
 				if ((++tileCursor) >= NUM_OF_TILES_IN_HAND) tileCursor = 0;
 			} while (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[tileCursor].tile == NoTile);
+			sound::Play(sound::IDs::sndCursor);
 			ReconstructTehai(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 		}
 		break;
