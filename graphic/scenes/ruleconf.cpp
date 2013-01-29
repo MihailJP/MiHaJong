@@ -298,15 +298,15 @@ void RuleConfigScene::BtnEvent_Button_Next() {
 
 void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	switch (od->dwOfs) {
-	case DIK_UP: // 前の項目
+	case DIK_UP: case DIK_K: // 前の項目
 		if ((od->dwData) && (buttonCursor == -1))
 			BtnEvent_Content_Item_Prev(1);
 		break;
-	case DIK_DOWN: // 次の項目
+	case DIK_DOWN: case DIK_J: // 次の項目
 		if ((od->dwData) && (buttonCursor == -1))
 			BtnEvent_Content_Item_Next(1);
 		break;
-	case DIK_LEFT: // 前の選択肢
+	case DIK_LEFT: case DIK_H: // 前の選択肢
 		if (od->dwData) {
 			if (buttonCursor == -1)
 				BtnEvent_Content_Roll_Down();
@@ -314,7 +314,7 @@ void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 				BtnEvent_Button_Next();
 		}
 		break;
-	case DIK_RIGHT: // 次の選択肢
+	case DIK_RIGHT: case DIK_L: // 次の選択肢
 		if (od->dwData) {
 			if (buttonCursor == -1)
 				BtnEvent_Content_Roll_Up();

@@ -204,7 +204,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	};
 	const PlayerTable* const plDat = &(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID]);
 	switch (od->dwOfs) {
-	case DIK_LEFT:
+	case DIK_LEFT: case DIK_H:
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
 			do {
 				if (tehaiReconst->decrTileCursor() < 0) tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
@@ -212,7 +212,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 			cursorMoved();
 		}
 		break;
-	case DIK_RIGHT:
+	case DIK_RIGHT: case DIK_L:
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
 			do {
 				if (tehaiReconst->incrTileCursor() >= NUM_OF_TILES_IN_HAND) tehaiReconst->setTileCursor(0);
