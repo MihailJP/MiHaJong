@@ -102,6 +102,7 @@ public:
 	~GameTableScreen();
 	void Render();
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
+	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 };
 
 class GameTableScreen::NakihaiReconst {

@@ -204,15 +204,28 @@ void GameTableScreen::ReconstructTehai(const GameTable* gameStat, PLAYER_ID targ
 		break;
 	case sSelf: /* 自分の手牌 */
 		tilePos = 0;
-		for (int i = 0; i <= HandLength; ++i)
-			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
+		for (int i = 0; i <= HandLength; ++i) {
+			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile) {
+				const int tileX = HandPosH + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0);
+				const int tileY = TableSize - HandPosV;
 				TileTexture->NewTile(144+42+i,
-				gameStat->Player.val[targetPlayer].Hand[i].tile,
-				gameStat->Player.val[targetPlayer].Hand[i].red,
-				HandPosH + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
-				TableSize - HandPosV, Portrait, Obverse,
-				(tileCursor == i) ? 0xffff9999 : 0xffffffff);
-			else TileTexture->DelTile(144+42+i);
+					gameStat->Player.val[targetPlayer].Hand[i].tile,
+					gameStat->Player.val[targetPlayer].Hand[i].red,
+					tileX, tileY, Portrait, Obverse,
+					(tileCursor == i) ? 0xffff9999 : 0xffffffff);
+				if (regions.size() <= i) regions.resize(i + 1);
+				const Region newRegion = {
+					tileX - ShowTile::VertTileWidth / 2, tileY - ShowTile::VertTileHeight / 2,
+					tileX + ShowTile::VertTileWidth / 2, tileY + ShowTile::VertTileHeight / 2,
+				};
+				regions[i] = newRegion;
+			} else {
+				TileTexture->DelTile(144+42+i);
+				if (regions.size() <= i) regions.resize(i + 1);
+				const Region nullRegion = {0, 0, -1, -1};
+				regions[i] = nullRegion;
+			}
+		}
 		break;
 	}
 }
@@ -684,6 +697,24 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	}
 }
+
+void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
+	const int scaledY = Y / Geometry::WindowScale();
+	const int region = whichRegion(scaledX, scaledY);
+	switch (od->dwOfs) {
+	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
+		if ((region >= 0) && (region < NUM_OF_TILES_IN_HAND) && (region != tileCursor) &&
+			(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[region].tile != NoTile))
+		{
+			tileCursor = region;
+			sound::Play(sound::IDs::sndCursor);
+			ReconstructTehai(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+		}
+		break;
+	}
+}
+
 
 // -------------------------------------------------------------------------
 
