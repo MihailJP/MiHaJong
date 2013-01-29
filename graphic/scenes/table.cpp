@@ -31,7 +31,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 		1100, 100, logWidth, 20);
 	InitializeCriticalSection(&subSceneCS);
 	mySubScene = new TableSubsceneNormal(manipulator->getDevice());
-	tileCursor = 0;
+	tileCursor = tileCursorOff;
 }
 
 GameTableScreen::~GameTableScreen() {
@@ -595,7 +595,7 @@ void GameTableScreen::Render() {
 
 void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 	EnterCriticalSection(&subSceneCS);
-	delete mySubScene;
+	delete mySubScene; tileCursor = tileCursorOff;
 	switch (static_cast<TableSubsceneID>(scene_ID)) {
 	case tblSubsceneBeginning:
 		mySubScene = new TableSubsceneBeginning(caller->getDevice());
@@ -666,6 +666,10 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 	case tblSubsceneChkTenpai:
 		mySubScene = new TableSubsceneCheckTenpai(caller->getDevice());
 		break;
+	case tblSubscenePlayerDahai:
+		mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
+		tileCursor = NUM_OF_TILES_IN_HAND - 1;
+		break;
 	default:
 		mySubScene = new TableSubsceneNormal(caller->getDevice());
 		break;
@@ -678,7 +682,7 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	switch (od->dwOfs) {
 	case DIK_LEFT:
-		if (od->dwData) {
+		if ((od->dwData) && (tileCursor != tileCursorOff)) {
 			do {
 				if ((--tileCursor) < 0) tileCursor = NUM_OF_TILES_IN_HAND - 1;
 			} while (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[tileCursor].tile == NoTile);
@@ -687,7 +691,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		}
 		break;
 	case DIK_RIGHT:
-		if (od->dwData) {
+		if ((od->dwData) && (tileCursor != tileCursorOff)) {
 			do {
 				if ((++tileCursor) >= NUM_OF_TILES_IN_HAND) tileCursor = 0;
 			} while (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[tileCursor].tile == NoTile);
@@ -705,6 +709,7 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	switch (od->dwOfs) {
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
 		if ((region >= 0) && (region < NUM_OF_TILES_IN_HAND) && (region != tileCursor) &&
+			(tileCursor != tileCursorOff) &&
 			(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[region].tile != NoTile))
 		{
 			tileCursor = region;

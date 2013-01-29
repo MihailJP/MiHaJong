@@ -10,4 +10,11 @@ public:
 	virtual ~TableSubscenePlayerProto();
 };
 
+class TableSubscenePlayerDahai : public TableSubscenePlayerProto {
+public:
+	TableSubscenePlayerDahai(LPDIRECT3DDEVICE9 device);
+	~TableSubscenePlayerDahai();
+	void Render();
+};
+
 }

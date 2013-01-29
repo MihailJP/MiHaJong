@@ -15,6 +15,14 @@
 #include "fuuro.h"
 #include "../graphic/graphic.h"
 
+namespace {
+	DiscardTileNum playerdahai(const GameTable* gameStat) { // プレイヤーの打牌
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubscenePlayerDahai);
+		Sleep(INFINITE); // ここで停止
+		return DiscardTileNum();
+	}
+}
+
 DiscardTileNum getdahai(GameTable* const gameStat) {
 	DiscardTileNum DiscardTileIndex;
 	/* COMが「カンニング」しないように処理 */
@@ -29,9 +37,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 			DiscardTileIndex = aiscript::compdahai(sandbox);
 		} else {
 			debug(_T("プレイヤーのツモ番です。"));
-			/* TODO: プレイヤー打牌選択 playerdahai GameStat, GameEnv: DiscardTileIndex = stat */
-			DiscardTileIndex.type = DiscardTileNum::Normal; // テストダブル
-			DiscardTileIndex.id = NUM_OF_TILES_IN_HAND - 1; // (ツモ切り)
+			DiscardTileIndex = playerdahai(gameStat);
 		}
 	} else if (
 		(EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag == -1) ||
