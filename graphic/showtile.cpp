@@ -4,6 +4,8 @@
 #include "geometry.h"
 #include "sprite.h"
 
+/* FIXME: ê‘îvÇ™ï\é¶Ç≥ÇÍÇ»Ç¢ */
+
 namespace mihajong_graphic {
 
 ShowTile::ShowTile(LPDIRECT3DDEVICE9 device) {
