@@ -12,6 +12,7 @@
 #include "scene_id.h"
 #include "../../sound/sound.h"
 #include "../../mjcore/bgmid.h"
+#include "../event.h"
 
 namespace mihajong_graphic {
 
@@ -704,23 +705,24 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	/* カーソル位置の直截指定 */
 	/* ASSUMING JAPANESE KEYBOARD: 1 2 3 4 5 6 7 8 9 0 - ^ ￥ BS */
-	case DIK_1:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 0].tile != NoTile)) {if (tileCursor ==  0) goto finish_choice; else {tileCursor =  0; cursorMoved();}} break;
-	case DIK_2:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 1].tile != NoTile)) {if (tileCursor ==  1) goto finish_choice; else {tileCursor =  1; cursorMoved();}} break;
-	case DIK_3:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 2].tile != NoTile)) {if (tileCursor ==  2) goto finish_choice; else {tileCursor =  2; cursorMoved();}} break;
-	case DIK_4:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 3].tile != NoTile)) {if (tileCursor ==  3) goto finish_choice; else {tileCursor =  3; cursorMoved();}} break;
-	case DIK_5:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 4].tile != NoTile)) {if (tileCursor ==  4) goto finish_choice; else {tileCursor =  4; cursorMoved();}} break;
-	case DIK_6:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 5].tile != NoTile)) {if (tileCursor ==  5) goto finish_choice; else {tileCursor =  5; cursorMoved();}} break;
-	case DIK_7:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 6].tile != NoTile)) {if (tileCursor ==  6) goto finish_choice; else {tileCursor =  6; cursorMoved();}} break;
-	case DIK_8:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 7].tile != NoTile)) {if (tileCursor ==  7) goto finish_choice; else {tileCursor =  7; cursorMoved();}} break;
-	case DIK_9:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 8].tile != NoTile)) {if (tileCursor ==  8) goto finish_choice; else {tileCursor =  8; cursorMoved();}} break;
-	case DIK_0:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 9].tile != NoTile)) {if (tileCursor ==  9) goto finish_choice; else {tileCursor =  9; cursorMoved();}} break;
-	case DIK_MINUS:      if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[10].tile != NoTile)) {if (tileCursor == 10) goto finish_choice; else {tileCursor = 10; cursorMoved();}} break;
-	case DIK_CIRCUMFLEX: if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[11].tile != NoTile)) {if (tileCursor == 11) goto finish_choice; else {tileCursor = 11; cursorMoved();}} break;
-	case DIK_YEN:        if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[12].tile != NoTile)) {if (tileCursor == 12) goto finish_choice; else {tileCursor = 12; cursorMoved();}} break;
-	case DIK_BACK:       if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[13].tile != NoTile)) {if (tileCursor == 13) goto finish_choice; else {tileCursor = 13; cursorMoved();}} break;
+	case DIK_1:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 0].tile != NoTile)) {if (tileCursor ==  0) FinishTileChoice(); else {tileCursor =  0; cursorMoved();}} break;
+	case DIK_2:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 1].tile != NoTile)) {if (tileCursor ==  1) FinishTileChoice(); else {tileCursor =  1; cursorMoved();}} break;
+	case DIK_3:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 2].tile != NoTile)) {if (tileCursor ==  2) FinishTileChoice(); else {tileCursor =  2; cursorMoved();}} break;
+	case DIK_4:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 3].tile != NoTile)) {if (tileCursor ==  3) FinishTileChoice(); else {tileCursor =  3; cursorMoved();}} break;
+	case DIK_5:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 4].tile != NoTile)) {if (tileCursor ==  4) FinishTileChoice(); else {tileCursor =  4; cursorMoved();}} break;
+	case DIK_6:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 5].tile != NoTile)) {if (tileCursor ==  5) FinishTileChoice(); else {tileCursor =  5; cursorMoved();}} break;
+	case DIK_7:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 6].tile != NoTile)) {if (tileCursor ==  6) FinishTileChoice(); else {tileCursor =  6; cursorMoved();}} break;
+	case DIK_8:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 7].tile != NoTile)) {if (tileCursor ==  7) FinishTileChoice(); else {tileCursor =  7; cursorMoved();}} break;
+	case DIK_9:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 8].tile != NoTile)) {if (tileCursor ==  8) FinishTileChoice(); else {tileCursor =  8; cursorMoved();}} break;
+	case DIK_0:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 9].tile != NoTile)) {if (tileCursor ==  9) FinishTileChoice(); else {tileCursor =  9; cursorMoved();}} break;
+	case DIK_MINUS:      if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[10].tile != NoTile)) {if (tileCursor == 10) FinishTileChoice(); else {tileCursor = 10; cursorMoved();}} break;
+	case DIK_CIRCUMFLEX: if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[11].tile != NoTile)) {if (tileCursor == 11) FinishTileChoice(); else {tileCursor = 11; cursorMoved();}} break;
+	case DIK_YEN:        if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[12].tile != NoTile)) {if (tileCursor == 12) FinishTileChoice(); else {tileCursor = 12; cursorMoved();}} break;
+	case DIK_BACK:       if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[13].tile != NoTile)) {if (tileCursor == 13) FinishTileChoice(); else {tileCursor = 13; cursorMoved();}} break;
 	/* 決定キー */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
-	finish_choice:
+		if ((od->dwData) && (tileCursor != tileCursorOff))
+			FinishTileChoice();
 		break;
 	}
 }
@@ -729,20 +731,28 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
 	const int scaledY = Y / Geometry::WindowScale();
 	const int region = whichRegion(scaledX, scaledY);
+	const bool isValidTile = (region >= 0) && (region < NUM_OF_TILES_IN_HAND) && (region != tileCursor) &&
+		(tileCursor != tileCursorOff) &&
+		(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[region].tile != NoTile);
 	switch (od->dwOfs) {
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
-		if ((region >= 0) && (region < NUM_OF_TILES_IN_HAND) && (region != tileCursor) &&
-			(tileCursor != tileCursorOff) &&
-			(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[region].tile != NoTile))
-		{
+		if (isValidTile) {
 			tileCursor = region;
 			sound::Play(sound::IDs::sndCursor);
 			ReconstructTehai(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 		}
 		break;
+	case DIMOFS_BUTTON0: // マウスクリック
+		if ((isValidTile) && (od->dwData))
+			FinishTileChoice();
+		break;
 	}
 }
 
+/* 捨牌を決定する */
+void GameTableScreen::FinishTileChoice() {
+	ui::UIEvent->set((unsigned)tileCursor); // 牌の番号を設定
+}
 
 // -------------------------------------------------------------------------
 

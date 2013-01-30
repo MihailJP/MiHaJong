@@ -17,9 +17,11 @@
 
 namespace {
 	DiscardTileNum playerdahai(const GameTable* gameStat) { // プレイヤーの打牌
+		/* TODO: ここでイベントフラグをリセット */
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubscenePlayerDahai);
-		Sleep(INFINITE); // ここで停止
-		return DiscardTileNum();
+		DWORD result = mihajong_graphic::ui::WaitUI();
+		DiscardTileNum discardTile(DiscardTileNum::fromSingleInt(result));
+		return discardTile;
 	}
 }
 
