@@ -27,12 +27,8 @@ protected: /**** R”v ****/
 	class YamahaiReconst;
 	YamahaiReconst* yamahaiReconst;
 protected: /**** è”v ****/
-	static const unsigned int HandLength = 13;
-	static const unsigned int HandPosH = (TableSize - ShowTile::VertTileWidth * (HandLength - 1)) / 2;
-	static const unsigned int HandPosV = DeckPosV - 144;
-	static const int tileCursorOff = -3; // è”vƒJ[ƒ\ƒ‹–³Œø
-	int tileCursor; // è”vƒJ[ƒ\ƒ‹
-	void ReconstructTehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // è”v‚ÌÄ\’z
+	class TehaiReconst;
+	TehaiReconst* tehaiReconst;
 protected: /**** –Â‚«”v ****/
 	class NakihaiReconst; // ˆ—‚Í“à•”ƒNƒ‰ƒX‚É‚Ü‚Æ‚ß‚Ä‚ ‚é
 	NakihaiReconst* nakihaiReconst;

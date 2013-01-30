@@ -168,6 +168,7 @@
     <ClCompile Include="scenes\tablesub\tablesub.cpp" />
     <ClCompile Include="scenes\tablesub\titling.cpp" />
     <ClCompile Include="scenes\table\nakihai.cpp" />
+    <ClCompile Include="scenes\table\tehai.cpp" />
     <ClCompile Include="scenes\table\yamahai.cpp" />
     <ClCompile Include="scenes\title.cpp" />
     <ClCompile Include="scrmanip.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="scenes\tablesub\tblsubs.h" />
     <ClInclude Include="scenes\tablesub\titling.h" />
     <ClInclude Include="scenes\table\nakihai.h" />
+    <ClInclude Include="scenes\table\tehai.h" />
     <ClInclude Include="scenes\table\yamahai.h" />
     <ClInclude Include="scenes\title.h" />
     <ClInclude Include="scrmanip.h" />

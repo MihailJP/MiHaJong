@@ -14,6 +14,7 @@
 #include "../event.h"
 
 #include "table/yamahai.h"
+#include "table/tehai.h"
 #include "table/nakihai.h"
 
 namespace mihajong_graphic {
@@ -27,6 +28,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	LoadTexture(&tRichi, MAKEINTRESOURCE(IDB_PNG_TENBOU), 218, 148);
 	LoadTexture(&tDice, MAKEINTRESOURCE(IDB_PNG_DICE), 156, 144);
 	yamahaiReconst = new YamahaiReconst(this);
+	tehaiReconst = new TehaiReconst(this);
 	nakihaiReconst = new NakihaiReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
 	const unsigned logWidth = (unsigned)std::floor(0.5f + // VC++2010ではround()が使えない
@@ -35,90 +37,19 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 		1100, 100, logWidth, 20);
 	InitializeCriticalSection(&subSceneCS);
 	mySubScene = new TableSubsceneNormal(manipulator->getDevice());
-	tileCursor = tileCursorOff;
 }
 
 GameTableScreen::~GameTableScreen() {
 	delete mySubScene; DeleteCriticalSection(&subSceneCS);
 	delete logWindow;
 	delete nakihaiReconst;
+	delete tehaiReconst;
 	delete yamahaiReconst;
 	if (tDice) tDice->Release();
 	if (tRichi) tRichi->Release();
 	if (tChiicha) tChiicha->Release();
 	if (tBorder) tBorder->Release();
 	if (tBaize) tBaize->Release();
-}
-
-/* 手牌を表示する */
-void GameTableScreen::ReconstructTehai(const GameTable* gameStat, PLAYER_ID targetPlayer) {
-	int tilePos;
-	/* 手牌 */
-	switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
-	case sOpposite: /* 対面の手牌 */
-		tilePos = 0;
-		for (int i = 0; i <= HandLength; ++i)
-			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
-				TileTexture->NewTile(144+i,
-				gameStat->Player.val[targetPlayer].Hand[i].tile,
-				gameStat->Player.val[targetPlayer].Hand[i].red,
-				HandPosH + ShowTile::VertTileWidth * (HandLength - (tilePos++)) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
-				HandPosV, UpsideDown, Obverse);
-			else TileTexture->DelTile(144+i);
-		break;
-	case sLeft: /* 上家の手牌 */
-		tilePos = 0;
-		for (int i = 0; i <= HandLength; ++i)
-			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
-				TileTexture->NewTile(144+14+i,
-				gameStat->Player.val[targetPlayer].Hand[i].tile,
-				gameStat->Player.val[targetPlayer].Hand[i].red,
-				HandPosV,
-				HandPosH + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
-				Clockwise, Obverse);
-			else TileTexture->DelTile(144+14+i);
-		break;
-	case sRight: /* 下家の手牌 */
-		tilePos = 0;
-		for (int i = HandLength; i >= 0; --i)
-			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
-				++tilePos;
-		for (int i = HandLength; i >= 0; --i)
-			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
-				TileTexture->NewTile(144+28+(13-i),
-				gameStat->Player.val[targetPlayer].Hand[i].tile,
-				gameStat->Player.val[targetPlayer].Hand[i].red,
-				TableSize - HandPosV,
-				HandPosH + ShowTile::VertTileWidth * (HandLength - (--tilePos)) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
-				Withershins, Obverse);
-			else TileTexture->DelTile(144+28+(13-i));
-		break;
-	case sSelf: /* 自分の手牌 */
-		tilePos = 0;
-		for (int i = 0; i <= HandLength; ++i) {
-			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile) {
-				const int tileX = HandPosH + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0);
-				const int tileY = TableSize - HandPosV;
-				TileTexture->NewTile(144+42+i,
-					gameStat->Player.val[targetPlayer].Hand[i].tile,
-					gameStat->Player.val[targetPlayer].Hand[i].red,
-					tileX, tileY, Portrait, Obverse,
-					(tileCursor == i) ? 0xffff9999 : 0xffffffff);
-				if (regions.size() <= i) regions.resize(i + 1);
-				const Region newRegion = {
-					tileX - ShowTile::VertTileWidth / 2, tileY - ShowTile::VertTileHeight / 2,
-					tileX + ShowTile::VertTileWidth / 2, tileY + ShowTile::VertTileHeight / 2,
-				};
-				regions[i] = newRegion;
-			} else {
-				TileTexture->DelTile(144+42+i);
-				if (regions.size() <= i) regions.resize(i + 1);
-				const Region nullRegion = {0, 0, -1, -1};
-				regions[i] = nullRegion;
-			}
-		}
-		break;
-	}
 }
 
 /* 捨牌の表示する */
@@ -241,7 +172,7 @@ void GameTableScreen::ReconstructSutehai(const GameTable* gameStat, PLAYER_ID ta
 
 void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer) {
 	yamahaiReconst->Reconstruct(gameStat, targetPlayer, trueTargetPlayer);
-	ReconstructTehai(gameStat, targetPlayer);
+	tehaiReconst->Reconstruct(gameStat, targetPlayer);
 	nakihaiReconst->Reconstruct(gameStat, targetPlayer);
 	ReconstructSutehai(gameStat, targetPlayer);
 }
@@ -465,9 +396,10 @@ void GameTableScreen::RenderTable() {
 	ShowTray();
 	ShowChiicha(GameStatus::gameStat());
 	ShowYakitori(GameStatus::gameStat());
-	TileTexture->Render();
 	yamahaiReconst->Render(); // 0
+	tehaiReconst->Render(); // 144
 	nakihaiReconst->Render(); // 200
+	TileTexture->Render();
 }
 
 void GameTableScreen::RenderSideBar() {
@@ -488,7 +420,7 @@ void GameTableScreen::Render() {
 
 void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 	EnterCriticalSection(&subSceneCS);
-	delete mySubScene; tileCursor = tileCursorOff;
+	delete mySubScene; tehaiReconst->setTileCursor();
 	switch (static_cast<TableSubsceneID>(scene_ID)) {
 	case tblSubsceneBeginning:
 		mySubScene = new TableSubsceneBeginning(caller->getDevice());
@@ -561,7 +493,7 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		break;
 	case tblSubscenePlayerDahai:
 		mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
-		tileCursor = NUM_OF_TILES_IN_HAND - 1;
+		tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
 		break;
 	default:
 		mySubScene = new TableSubsceneNormal(caller->getDevice());
@@ -575,45 +507,45 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	auto cursorMoved = [&]() -> void {
 		sound::Play(sound::IDs::sndCursor);
-		ReconstructTehai(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 	};
 	const PlayerTable* const plDat = &(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID]);
 	switch (od->dwOfs) {
 	case DIK_LEFT:
-		if ((od->dwData) && (tileCursor != tileCursorOff)) {
+		if ((od->dwData) && (tehaiReconst->isTileCursorDisable())) {
 			do {
-				if ((--tileCursor) < 0) tileCursor = NUM_OF_TILES_IN_HAND - 1;
-			} while (plDat->Hand[tileCursor].tile == NoTile);
+				if (tehaiReconst->decrTileCursor() < 0) tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
+			} while (plDat->Hand[tehaiReconst->getTileCursor()].tile == NoTile);
 			cursorMoved();
 		}
 		break;
 	case DIK_RIGHT:
-		if ((od->dwData) && (tileCursor != tileCursorOff)) {
+		if ((od->dwData) && (tehaiReconst->isTileCursorDisable())) {
 			do {
-				if ((++tileCursor) >= NUM_OF_TILES_IN_HAND) tileCursor = 0;
-			} while (plDat->Hand[tileCursor].tile == NoTile);
+				if (tehaiReconst->incrTileCursor() >= NUM_OF_TILES_IN_HAND) tehaiReconst->setTileCursor(0);
+			} while (plDat->Hand[tehaiReconst->getTileCursor()].tile == NoTile);
 			cursorMoved();
 		}
 		break;
 	/* カーソル位置の直截指定 */
 	/* ASSUMING JAPANESE KEYBOARD: 1 2 3 4 5 6 7 8 9 0 - ^ ￥ BS */
-	case DIK_1:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 0].tile != NoTile)) {if (tileCursor ==  0) FinishTileChoice(); else {tileCursor =  0; cursorMoved();}} break;
-	case DIK_2:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 1].tile != NoTile)) {if (tileCursor ==  1) FinishTileChoice(); else {tileCursor =  1; cursorMoved();}} break;
-	case DIK_3:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 2].tile != NoTile)) {if (tileCursor ==  2) FinishTileChoice(); else {tileCursor =  2; cursorMoved();}} break;
-	case DIK_4:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 3].tile != NoTile)) {if (tileCursor ==  3) FinishTileChoice(); else {tileCursor =  3; cursorMoved();}} break;
-	case DIK_5:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 4].tile != NoTile)) {if (tileCursor ==  4) FinishTileChoice(); else {tileCursor =  4; cursorMoved();}} break;
-	case DIK_6:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 5].tile != NoTile)) {if (tileCursor ==  5) FinishTileChoice(); else {tileCursor =  5; cursorMoved();}} break;
-	case DIK_7:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 6].tile != NoTile)) {if (tileCursor ==  6) FinishTileChoice(); else {tileCursor =  6; cursorMoved();}} break;
-	case DIK_8:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 7].tile != NoTile)) {if (tileCursor ==  7) FinishTileChoice(); else {tileCursor =  7; cursorMoved();}} break;
-	case DIK_9:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 8].tile != NoTile)) {if (tileCursor ==  8) FinishTileChoice(); else {tileCursor =  8; cursorMoved();}} break;
-	case DIK_0:          if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[ 9].tile != NoTile)) {if (tileCursor ==  9) FinishTileChoice(); else {tileCursor =  9; cursorMoved();}} break;
-	case DIK_MINUS:      if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[10].tile != NoTile)) {if (tileCursor == 10) FinishTileChoice(); else {tileCursor = 10; cursorMoved();}} break;
-	case DIK_CIRCUMFLEX: if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[11].tile != NoTile)) {if (tileCursor == 11) FinishTileChoice(); else {tileCursor = 11; cursorMoved();}} break;
-	case DIK_YEN:        if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[12].tile != NoTile)) {if (tileCursor == 12) FinishTileChoice(); else {tileCursor = 12; cursorMoved();}} break;
-	case DIK_BACK:       if ((od->dwData) && (tileCursor != tileCursorOff) && (plDat->Hand[13].tile != NoTile)) {if (tileCursor == 13) FinishTileChoice(); else {tileCursor = 13; cursorMoved();}} break;
+	case DIK_1:          if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[ 0].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  0) FinishTileChoice(); else {tehaiReconst->setTileCursor( 0); cursorMoved();}} break;
+	case DIK_2:          if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[ 1].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  1) FinishTileChoice(); else {tehaiReconst->setTileCursor( 1); cursorMoved();}} break;
+	case DIK_3:          if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[ 2].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  2) FinishTileChoice(); else {tehaiReconst->setTileCursor( 2); cursorMoved();}} break;
+	case DIK_4:          if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[ 3].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  3) FinishTileChoice(); else {tehaiReconst->setTileCursor( 3); cursorMoved();}} break;
+	case DIK_5:          if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[ 4].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  4) FinishTileChoice(); else {tehaiReconst->setTileCursor( 4); cursorMoved();}} break;
+	case DIK_6:          if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[ 5].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  5) FinishTileChoice(); else {tehaiReconst->setTileCursor( 5); cursorMoved();}} break;
+	case DIK_7:          if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[ 6].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  6) FinishTileChoice(); else {tehaiReconst->setTileCursor( 6); cursorMoved();}} break;
+	case DIK_8:          if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[ 7].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  7) FinishTileChoice(); else {tehaiReconst->setTileCursor( 7); cursorMoved();}} break;
+	case DIK_9:          if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[ 8].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  8) FinishTileChoice(); else {tehaiReconst->setTileCursor( 8); cursorMoved();}} break;
+	case DIK_0:          if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[ 9].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  9) FinishTileChoice(); else {tehaiReconst->setTileCursor( 9); cursorMoved();}} break;
+	case DIK_MINUS:      if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[10].tile != NoTile)) {if (tehaiReconst->getTileCursor() == 10) FinishTileChoice(); else {tehaiReconst->setTileCursor(10); cursorMoved();}} break;
+	case DIK_CIRCUMFLEX: if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[11].tile != NoTile)) {if (tehaiReconst->getTileCursor() == 11) FinishTileChoice(); else {tehaiReconst->setTileCursor(11); cursorMoved();}} break;
+	case DIK_YEN:        if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[12].tile != NoTile)) {if (tehaiReconst->getTileCursor() == 12) FinishTileChoice(); else {tehaiReconst->setTileCursor(12); cursorMoved();}} break;
+	case DIK_BACK:       if ((od->dwData) && (tehaiReconst->isTileCursorDisable()) && (plDat->Hand[13].tile != NoTile)) {if (tehaiReconst->getTileCursor() == 13) FinishTileChoice(); else {tehaiReconst->setTileCursor(13); cursorMoved();}} break;
 	/* 決定キー */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
-		if ((od->dwData) && (tileCursor != tileCursorOff))
+		if ((od->dwData) && (tehaiReconst->isTileCursorDisable()))
 			FinishTileChoice();
 		break;
 	}
@@ -623,15 +555,15 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
 	const int scaledY = Y / Geometry::WindowScale();
 	const int region = whichRegion(scaledX, scaledY);
-	const bool isValidTile = (region >= 0) && (region < NUM_OF_TILES_IN_HAND) && (region != tileCursor) &&
-		(tileCursor != tileCursorOff) &&
+	const bool isValidTile = (region >= 0) && (region < NUM_OF_TILES_IN_HAND) &&
+		(region != tehaiReconst->getTileCursor()) && (tehaiReconst->isTileCursorDisable()) &&
 		(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[region].tile != NoTile);
 	switch (od->dwOfs) {
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
 		if (isValidTile) {
-			tileCursor = region;
+			tehaiReconst->setTileCursor(region);
 			sound::Play(sound::IDs::sndCursor);
-			ReconstructTehai(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 		}
 		break;
 	case DIMOFS_BUTTON0: // マウスクリック
@@ -643,7 +575,7 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 
 /* 捨牌を決定する */
 void GameTableScreen::FinishTileChoice() {
-	ui::UIEvent->set((unsigned)tileCursor); // 牌の番号を設定
+	ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor()); // 牌の番号を設定
 }
 
 }
