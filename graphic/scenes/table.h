@@ -5,7 +5,7 @@
 #include <tuple>
 #include <functional>
 #include "../logwnd.h"
-#include "table/tblsubs.h"
+#include "tablesub/tblsubs.h"
 
 namespace mihajong_graphic {
 

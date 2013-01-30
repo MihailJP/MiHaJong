@@ -19,10 +19,10 @@
     <Filter Include="ソース ファイル\scenes">
       <UniqueIdentifier>{2280abdb-7010-49a8-8cb7-641a4937c3c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\scenes\table">
+    <Filter Include="ソース ファイル\scenes\tablesub">
       <UniqueIdentifier>{68939266-5cc7-49c3-9796-c1c543bffaa8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\scenes\table">
+    <Filter Include="ヘッダー ファイル\scenes\tablesub">
       <UniqueIdentifier>{4e41f59f-4dc5-4f11-9959-7b0d07a87898}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -108,26 +108,26 @@
     <ClCompile Include="calltext.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="scenes\table\tablesub.cpp">
-      <Filter>ソース ファイル\scenes\table</Filter>
+    <ClCompile Include="scenes\tablesub\tablesub.cpp">
+      <Filter>ソース ファイル\scenes\tablesub</Filter>
     </ClCompile>
-    <ClCompile Include="scenes\table\call.cpp">
-      <Filter>ソース ファイル\scenes\table</Filter>
+    <ClCompile Include="scenes\tablesub\call.cpp">
+      <Filter>ソース ファイル\scenes\tablesub</Filter>
     </ClCompile>
-    <ClCompile Include="scenes\table\rndstart.cpp">
-      <Filter>ソース ファイル\scenes\table</Filter>
+    <ClCompile Include="scenes\tablesub\rndstart.cpp">
+      <Filter>ソース ファイル\scenes\tablesub</Filter>
     </ClCompile>
-    <ClCompile Include="scenes\table\titling.cpp">
-      <Filter>ソース ファイル\scenes\table</Filter>
+    <ClCompile Include="scenes\tablesub\titling.cpp">
+      <Filter>ソース ファイル\scenes\tablesub</Filter>
     </ClCompile>
-    <ClCompile Include="scenes\table\chktnpai.cpp">
-      <Filter>ソース ファイル\scenes\table</Filter>
+    <ClCompile Include="scenes\tablesub\chktnpai.cpp">
+      <Filter>ソース ファイル\scenes\tablesub</Filter>
     </ClCompile>
-    <ClCompile Include="scenes\table\callval.cpp">
-      <Filter>ソース ファイル\scenes\table</Filter>
+    <ClCompile Include="scenes\tablesub\callval.cpp">
+      <Filter>ソース ファイル\scenes\tablesub</Filter>
     </ClCompile>
-    <ClCompile Include="scenes\table\player.cpp">
-      <Filter>ソース ファイル\scenes\table</Filter>
+    <ClCompile Include="scenes\tablesub\player.cpp">
+      <Filter>ソース ファイル\scenes\tablesub</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,32 +227,32 @@
     <ClInclude Include="calltext.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="scenes\table\tablesub.h">
-      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    <ClInclude Include="scenes\tablesub\tablesub.h">
+      <Filter>ヘッダー ファイル\scenes\tablesub</Filter>
     </ClInclude>
-    <ClInclude Include="scenes\table\tblsubs.h">
-      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    <ClInclude Include="scenes\tablesub\tblsubs.h">
+      <Filter>ヘッダー ファイル\scenes\tablesub</Filter>
     </ClInclude>
-    <ClInclude Include="scenes\table\tblnorm.h">
-      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    <ClInclude Include="scenes\tablesub\tblnorm.h">
+      <Filter>ヘッダー ファイル\scenes\tablesub</Filter>
     </ClInclude>
-    <ClInclude Include="scenes\table\call.h">
-      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    <ClInclude Include="scenes\tablesub\call.h">
+      <Filter>ヘッダー ファイル\scenes\tablesub</Filter>
     </ClInclude>
-    <ClInclude Include="scenes\table\rndstart.h">
-      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    <ClInclude Include="scenes\tablesub\rndstart.h">
+      <Filter>ヘッダー ファイル\scenes\tablesub</Filter>
     </ClInclude>
-    <ClInclude Include="scenes\table\titling.h">
-      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    <ClInclude Include="scenes\tablesub\titling.h">
+      <Filter>ヘッダー ファイル\scenes\tablesub</Filter>
     </ClInclude>
-    <ClInclude Include="scenes\table\chktnpai.h">
-      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    <ClInclude Include="scenes\tablesub\chktnpai.h">
+      <Filter>ヘッダー ファイル\scenes\tablesub</Filter>
     </ClInclude>
-    <ClInclude Include="scenes\table\callval.h">
-      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    <ClInclude Include="scenes\tablesub\callval.h">
+      <Filter>ヘッダー ファイル\scenes\tablesub</Filter>
     </ClInclude>
-    <ClInclude Include="scenes\table\player.h">
-      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    <ClInclude Include="scenes\tablesub\player.h">
+      <Filter>ヘッダー ファイル\scenes\tablesub</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
