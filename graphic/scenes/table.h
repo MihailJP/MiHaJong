@@ -13,6 +13,9 @@ class GameTableScreen : public TableProtoScene {
 protected:
 	static const unsigned int TableSize = Geometry::BaseSize;
 	static const unsigned int TileThickness = ShowTile::HoriTileHeight - ShowTile::VertTileWidth;
+	static const unsigned int DeckChainLength = 17;
+	static const unsigned int DeckPosH = (TableSize - ShowTile::VertTileWidth * (DeckChainLength - 1)) / 2;
+	static const unsigned int DeckPosV = (TableSize / 2) - 300;
 	LPDIRECT3DTEXTURE9 tBorder; // 卓の枠
 	LPDIRECT3DTEXTURE9 tBaize; // 羅紗地
 	logwnd::LogWindow* logWindow; // ログウィンドウ
@@ -21,10 +24,8 @@ protected:
 	CRITICAL_SECTION subSceneCS; // サブシーン切り替え用クリティカルセクション
 	void SetSubscene(unsigned int scene_ID); // サブシーン切り替え
 protected: /**** 山牌 ****/
-	static const unsigned int DeckChainLength = 17;
-	static const unsigned int DeckPosH = (TableSize - ShowTile::VertTileWidth * (DeckChainLength - 1)) / 2;
-	static const unsigned int DeckPosV = (TableSize / 2) - 300;
-	void ReconstructYamahai(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // 山牌の再構築
+	class YamahaiReconst;
+	YamahaiReconst* yamahaiReconst;
 protected: /**** 手牌 ****/
 	static const unsigned int HandLength = 13;
 	static const unsigned int HandPosH = (TableSize - ShowTile::VertTileWidth * (HandLength - 1)) / 2;
@@ -34,7 +35,6 @@ protected: /**** 手牌 ****/
 	void ReconstructTehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // 手牌の再構築
 protected: /**** 鳴き牌 ****/
 	class NakihaiReconst; // 処理は内部クラスにまとめてある
-	friend class GameTableScreen::NakihaiReconst;
 	NakihaiReconst* nakihaiReconst;
 protected: /**** 捨牌 ****/
 	static const unsigned int DiscardLineLength = 6;
