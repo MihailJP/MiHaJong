@@ -25,6 +25,12 @@
     <Filter Include="ヘッダー ファイル\scenes\tablesub">
       <UniqueIdentifier>{4e41f59f-4dc5-4f11-9959-7b0d07a87898}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\scenes\table">
+      <UniqueIdentifier>{119c84f2-fab5-4bae-9ddd-cc417b8561de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\scenes\table">
+      <UniqueIdentifier>{b6472560-96c3-416a-a7e7-1c22205928db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="scrmanip.cpp">
@@ -128,6 +134,9 @@
     </ClCompile>
     <ClCompile Include="scenes\tablesub\player.cpp">
       <Filter>ソース ファイル\scenes\tablesub</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\table\nakihai.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="scenes\tablesub\player.h">
       <Filter>ヘッダー ファイル\scenes\tablesub</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\nakihai.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
