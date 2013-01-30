@@ -33,14 +33,8 @@ protected: /**** –Â‚«”v ****/
 	class NakihaiReconst; // ˆ—‚Í“à•”ƒNƒ‰ƒX‚É‚Ü‚Æ‚ß‚Ä‚ ‚é
 	NakihaiReconst* nakihaiReconst;
 protected: /**** Ì”v ****/
-	static const unsigned int DiscardLineLength = 6;
-	static const unsigned int DiscardPosH = (TableSize - ShowTile::VertTileWidth * (DiscardLineLength - 1)) / 2;
-	static const unsigned int DiscardPosV = (TableSize / 2) - 130;
-	void ReconstructSutehai_portrait(const GameTable* gameStat, PLAYER_ID targetPlayer,
-		unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos);
-	void ReconstructSutehai_rotated(const GameTable* gameStat, PLAYER_ID targetPlayer,
-		unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos);
-	void ReconstructSutehai(const GameTable* gameStat, PLAYER_ID targetPlayer); // Ì”v‚ÌÄ\’z
+	class SutehaiReconst;
+	SutehaiReconst* sutehaiReconst;
 protected: /**** ƒŠ[ƒ`–_ ****/
 	static const unsigned int RiichiPosH = TableSize / 2;
 	static const unsigned int RiichiPosV = (TableSize / 2) + 86;

@@ -16,6 +16,7 @@
 #include "table/yamahai.h"
 #include "table/tehai.h"
 #include "table/nakihai.h"
+#include "table/sutehai.h"
 
 namespace mihajong_graphic {
 
@@ -30,6 +31,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	yamahaiReconst = new YamahaiReconst(this);
 	tehaiReconst = new TehaiReconst(this);
 	nakihaiReconst = new NakihaiReconst(this);
+	sutehaiReconst = new SutehaiReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
 	const unsigned logWidth = (unsigned)std::floor(0.5f + // VC++2010‚Å‚Íround()‚ªŽg‚¦‚È‚¢
 		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
@@ -42,6 +44,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 GameTableScreen::~GameTableScreen() {
 	delete mySubScene; DeleteCriticalSection(&subSceneCS);
 	delete logWindow;
+	delete sutehaiReconst;
 	delete nakihaiReconst;
 	delete tehaiReconst;
 	delete yamahaiReconst;
@@ -52,129 +55,11 @@ GameTableScreen::~GameTableScreen() {
 	if (tBaize) tBaize->Release();
 }
 
-/* ŽÌ”v‚Ì•\Ž¦‚·‚é */
-void GameTableScreen::ReconstructSutehai_portrait(const GameTable* gameStat, PLAYER_ID targetPlayer,
-	unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos) {
-		assert(gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile != NoTile);
-		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
-		case sOpposite: /* ‘Î–Ê */
-			TileTexture->NewTile(296 - tileID,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
-				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
-				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
-				UpsideDown, Obverse,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
-			break;
-		case sLeft: /* ã‰Æ */
-			TileTexture->NewTile(297 + tileID,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
-				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
-				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
-				Clockwise, Obverse,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
-			break;
-		case sRight: /* ‰º‰Æ */
-			TileTexture->NewTile(362 - tileID,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
-				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
-				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
-				Withershins, Obverse,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
-			break;
-		case sSelf: /* Ž©•ª */
-			TileTexture->NewTile(363 + tileID,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
-				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
-				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
-				Portrait, Obverse,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
-			break;
-		}
-		if ((tilePosCol >= DiscardLineLength) && (tilePosRow < 2)) {
-			tilePosCol = 0; ++tilePosRow; shiftPos = false;
-		}
-}
-void GameTableScreen::ReconstructSutehai_rotated(const GameTable* gameStat, PLAYER_ID targetPlayer,
-	unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos) {
-		assert(gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile != NoTile);
-		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
-		case sOpposite: /* ‘Î–Ê */
-			TileTexture->NewTile(296 - tileID,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
-				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
-				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
-				Clockwise, Obverse,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
-			break;
-		case sLeft: /* ã‰Æ */
-			TileTexture->NewTile(297 + tileID,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
-				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
-				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
-				Portrait, Obverse,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
-			break;
-		case sRight: /* ‰º‰Æ */
-			TileTexture->NewTile(362 - tileID,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
-				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
-				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
-				UpsideDown, Obverse,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
-			break;
-		case sSelf: /* Ž©•ª */
-			TileTexture->NewTile(363 + tileID,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.red,
-				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
-				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
-				Withershins, Obverse,
-				gameStat->Player.val[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
-			break;
-		}
-		shiftPos = true;
-		if ((tilePosCol >= DiscardLineLength) && (tilePosRow < 2)) {
-			tilePosCol = 0; ++tilePosRow; shiftPos = false;
-		}
-}
-void GameTableScreen::ReconstructSutehai(const GameTable* gameStat, PLAYER_ID targetPlayer) {
-	unsigned tilePosCol = 0, tilePosRow = 0; bool shiftPosFlag = false, riichiFlag = false;
-	for (unsigned tileID = 0; tileID < 33; ++tileID) {
-		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
-			case sOpposite: TileTexture->DelTile(296 - tileID); break; /* ‘Î–Ê */
-			case sLeft:     TileTexture->DelTile(297 + tileID); break; /* ã‰Æ */
-			case sRight:    TileTexture->DelTile(362 - tileID); break; /* ‰º‰Æ */
-			case sSelf:     TileTexture->DelTile(363 + tileID); break; /* Ž©•ª */
-		}
-	}
-	for (unsigned i = 0; i < gameStat->Player.val[targetPlayer].DiscardPointer; ++i) {
-		if ((gameStat->Player.val[targetPlayer].Discard[i + 1].dstat == discardRiichi) ||
-			(gameStat->Player.val[targetPlayer].Discard[i + 1].dstat == discardRiichiTaken))
-			riichiFlag = true;
-		if ((gameStat->Player.val[targetPlayer].Discard[i + 1].dstat == discardNormal) ||
-			(gameStat->Player.val[targetPlayer].Discard[i + 1].dstat == discardRiichi)) {
-				if (riichiFlag) {
-					ReconstructSutehai_rotated(gameStat, targetPlayer, i, tilePosCol, tilePosRow, shiftPosFlag);
-					riichiFlag = false;
-				} else {
-					ReconstructSutehai_portrait(gameStat, targetPlayer, i, tilePosCol, tilePosRow, shiftPosFlag);
-				}
-		}
-	}
-}
-
 void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer) {
 	yamahaiReconst->Reconstruct(gameStat, targetPlayer, trueTargetPlayer);
 	tehaiReconst->Reconstruct(gameStat, targetPlayer);
 	nakihaiReconst->Reconstruct(gameStat, targetPlayer);
-	ReconstructSutehai(gameStat, targetPlayer);
+	sutehaiReconst->Reconstruct(gameStat, targetPlayer);
 }
 
 void GameTableScreen::Reconstruct(const GameTable* gameStat) {
@@ -399,6 +284,7 @@ void GameTableScreen::RenderTable() {
 	yamahaiReconst->Render(); // 0
 	tehaiReconst->Render(); // 144
 	nakihaiReconst->Render(); // 200
+	sutehaiReconst->Render(); // 264
 	TileTexture->Render();
 }
 
