@@ -6,6 +6,9 @@ namespace mihajong_graphic {
 
 class GameTableScreen::NakihaiReconst {
 private:
+	ShowTile* TileTexture;
+	GameTableScreen* caller;
+private:
 	static const unsigned int MeldPosH = TableSize - 31;
 	static const unsigned int MeldPosV = DeckPosV - 166;
 	static const unsigned int MPosVVert = TableSize - MeldPosV;
@@ -27,9 +30,10 @@ private:
 	void MinkanShimocha(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID);
 	void NakihaiSelRoutine(const GameTable* gameStat, PLAYER_ID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID);
 public:
-	GameTableScreen* caller;
-	void ReconstructNakihai(const GameTable* gameStat, PLAYER_ID targetPlayer); // ñ¬Ç¢ÇΩîvÇÃçƒç\íz
-	NakihaiReconst(GameTableScreen* parent) {caller = parent;}
+	void Reconstruct(const GameTable* gameStat, PLAYER_ID targetPlayer); // ñ¬Ç¢ÇΩîvÇÃçƒç\íz
+	void Render();
+	explicit NakihaiReconst(GameTableScreen* parent);
+	~NakihaiReconst();
 };
 
 }

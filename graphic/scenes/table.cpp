@@ -353,7 +353,7 @@ void GameTableScreen::ReconstructSutehai(const GameTable* gameStat, PLAYER_ID ta
 void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer) {
 	ReconstructYamahai(gameStat, targetPlayer, trueTargetPlayer);
 	ReconstructTehai(gameStat, targetPlayer);
-	nakihaiReconst->ReconstructNakihai(gameStat, targetPlayer);
+	nakihaiReconst->Reconstruct(gameStat, targetPlayer);
 	ReconstructSutehai(gameStat, targetPlayer);
 }
 
@@ -577,6 +577,7 @@ void GameTableScreen::RenderTable() {
 	ShowChiicha(GameStatus::gameStat());
 	ShowYakitori(GameStatus::gameStat());
 	TileTexture->Render();
+	nakihaiReconst->Render(); // 200
 }
 
 void GameTableScreen::RenderSideBar() {
