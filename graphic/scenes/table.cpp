@@ -18,6 +18,7 @@
 #include "table/nakihai.h"
 #include "table/sutehai.h"
 #include "table/showdice.h"
+#include "table/richibou.h"
 #include "table/chicha.h"
 
 namespace mihajong_graphic {
@@ -28,7 +29,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080);
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080);
 	trayReconst = new TrayReconst(this);
-	LoadTexture(&tRichi, MAKEINTRESOURCE(IDB_PNG_TENBOU), 218, 148);
+	richibouReconst = new RichibouReconst(this);
 	diceReconst = new DiceReconst(this);
 	yamahaiReconst = new YamahaiReconst(this);
 	tehaiReconst = new TehaiReconst(this);
@@ -51,7 +52,7 @@ GameTableScreen::~GameTableScreen() {
 	delete tehaiReconst;
 	delete yamahaiReconst;
 	delete diceReconst;
-	if (tRichi) tRichi->Release();
+	delete richibouReconst;
 	delete trayReconst;
 	if (tBorder) tBorder->Release();
 	if (tBaize) tBaize->Release();
@@ -82,36 +83,6 @@ void GameTableScreen::Reconstruct(const GameTable* gameStat) {
 	}
 }
 
-/* リーチ棒表示する */
-void GameTableScreen::ShowRiichibou(const GameTable* gameStat) {
-	RECT rectH = {72, 30, 216, 42,}, rectV = {30, 2, 42, 146,};
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
-		if (!gameStat->Player.val[i].RichiFlag.RichiFlag) continue;
-		switch (playerRelative(i, gameStat->PlayerID)) {
-		case sSelf:
-			SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
-				tRichi, RiichiPosH, RiichiPosV, 144, 12,
-				0xffffffff, &rectH, 72, 6);
-			break;
-		case sOpposite:
-			SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
-				tRichi, RiichiPosH, TableSize - RiichiPosV, 144, 12,
-				0xffffffff, &rectH, 72, 6);
-			break;
-		case sLeft:
-			SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
-				tRichi, TableSize - RiichiPosV, RiichiPosH, 12, 144,
-				0xffffffff, &rectV, 6, 72);
-			break;
-		case sRight:
-			SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
-				tRichi, RiichiPosV, RiichiPosH, 12, 144,
-				0xffffffff, &rectV, 6, 72);
-			break;
-		}
-	}
-}
-
 /* 卓を表示 ここから */
 void GameTableScreen::cls() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
@@ -123,7 +94,7 @@ void GameTableScreen::RenderTable() {
 	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	if (GameStatus::isModified())
 		Reconstruct(GameStatus::retrGameStat());
-	ShowRiichibou(GameStatus::gameStat());
+	richibouReconst->Render();
 	diceReconst->Render();
 	trayReconst->Render();
 	yamahaiReconst->Render(); // 0
