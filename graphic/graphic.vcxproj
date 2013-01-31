@@ -169,6 +169,7 @@
     <ClCompile Include="scenes\tablesub\titling.cpp" />
     <ClCompile Include="scenes\table\chicha.cpp" />
     <ClCompile Include="scenes\table\nakihai.cpp" />
+    <ClCompile Include="scenes\table\showdice.cpp" />
     <ClCompile Include="scenes\table\sutehai.cpp" />
     <ClCompile Include="scenes\table\tehai.cpp" />
     <ClCompile Include="scenes\table\yamahai.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="scenes\tablesub\titling.h" />
     <ClInclude Include="scenes\table\chicha.h" />
     <ClInclude Include="scenes\table\nakihai.h" />
+    <ClInclude Include="scenes\table\showdice.h" />
     <ClInclude Include="scenes\table\sutehai.h" />
     <ClInclude Include="scenes\table\tehai.h" />
     <ClInclude Include="scenes\table\yamahai.h" />

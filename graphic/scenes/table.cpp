@@ -17,6 +17,7 @@
 #include "table/tehai.h"
 #include "table/nakihai.h"
 #include "table/sutehai.h"
+#include "table/showdice.h"
 #include "table/chicha.h"
 
 namespace mihajong_graphic {
@@ -28,7 +29,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080);
 	trayReconst = new TrayReconst(this);
 	LoadTexture(&tRichi, MAKEINTRESOURCE(IDB_PNG_TENBOU), 218, 148);
-	LoadTexture(&tDice, MAKEINTRESOURCE(IDB_PNG_DICE), 156, 144);
+	diceReconst = new DiceReconst(this);
 	yamahaiReconst = new YamahaiReconst(this);
 	tehaiReconst = new TehaiReconst(this);
 	nakihaiReconst = new NakihaiReconst(this);
@@ -49,7 +50,7 @@ GameTableScreen::~GameTableScreen() {
 	delete nakihaiReconst;
 	delete tehaiReconst;
 	delete yamahaiReconst;
-	if (tDice) tDice->Release();
+	delete diceReconst;
 	if (tRichi) tRichi->Release();
 	delete trayReconst;
 	if (tBorder) tBorder->Release();
@@ -111,52 +112,6 @@ void GameTableScreen::ShowRiichibou(const GameTable* gameStat) {
 	}
 }
 
-/* サイコロを表示する */
-void GameTableScreen::ShowDice(const GameTable* gameStat) {
-	RECT rect1 = {
-		(DiceWidth + DicePadding) * (gameStat->Dice[0].Number - 1), (DiceHeight + DicePadding) * (gameStat->Dice[0].Direction    ),
-		(DiceWidth + DicePadding) * (gameStat->Dice[0].Number    ), (DiceHeight + DicePadding) * (gameStat->Dice[0].Direction + 1),
-	};
-	RECT rect2 = {
-		(DiceWidth + DicePadding) * (gameStat->Dice[1].Number - 1), (DiceHeight + DicePadding) * (gameStat->Dice[1].Direction    ),
-		(DiceWidth + DicePadding) * (gameStat->Dice[1].Number    ), (DiceHeight + DicePadding) * (gameStat->Dice[1].Direction + 1),
-	};
-	switch (playerRelative(gameStat->GameRound % PLAYERS, gameStat->PlayerID)) {
-	case sSelf:
-		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
-			tDice, DicePosH - (DiceWidth + DicePosInterstice) / 2, DicePosV,
-			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
-		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
-			tDice, DicePosH + (DiceWidth + DicePosInterstice) / 2, DicePosV,
-			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
-		break;
-	case sOpposite:
-		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
-			tDice, TableSize - DicePosH + (DiceWidth + DicePosInterstice) / 2, TableSize - DicePosV,
-			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
-		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
-			tDice, TableSize - DicePosH - (DiceWidth + DicePosInterstice) / 2, TableSize - DicePosV,
-			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
-		break;
-	case sLeft:
-		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
-			tDice, TableSize - DicePosV, DicePosH - (DiceWidth + DicePosInterstice) / 2,
-			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
-		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
-			tDice, TableSize - DicePosV, DicePosH + (DiceWidth + DicePosInterstice) / 2,
-			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
-		break;
-	case sRight:
-		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
-			tDice, DicePosV, TableSize - DicePosH - (DiceWidth + DicePosInterstice) / 2,
-			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
-		SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
-			tDice, DicePosV, TableSize - DicePosH + (DiceWidth + DicePosInterstice) / 2,
-			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
-		break;
-	}
-}
-
 /* 卓を表示 ここから */
 void GameTableScreen::cls() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
@@ -169,7 +124,7 @@ void GameTableScreen::RenderTable() {
 	if (GameStatus::isModified())
 		Reconstruct(GameStatus::retrGameStat());
 	ShowRiichibou(GameStatus::gameStat());
-	ShowDice(GameStatus::gameStat());
+	diceReconst->Render();
 	trayReconst->Render();
 	yamahaiReconst->Render(); // 0
 	tehaiReconst->Render(); // 144
