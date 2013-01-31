@@ -19,7 +19,6 @@ void TableProtoScene::LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource,
 
 TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR), 960, 1080);
-	TileTexture = new ShowTile(caller->getDevice());
 	InitScorePanel();
 }
 
@@ -27,7 +26,6 @@ TableProtoScene::~TableProtoScene() {
 	for (auto k = scorePanel.begin(); k != scorePanel.end(); ++k)
 		delete *k;
 	if (tSideBar) tSideBar->Release();
-	delete TileTexture;
 }
 
 void TableProtoScene::ShowSidebar() {

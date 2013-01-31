@@ -285,7 +285,6 @@ void GameTableScreen::RenderTable() {
 	tehaiReconst->Render(); // 144
 	nakihaiReconst->Render(); // 200
 	sutehaiReconst->Render(); // 264
-	TileTexture->Render();
 }
 
 void GameTableScreen::RenderSideBar() {
