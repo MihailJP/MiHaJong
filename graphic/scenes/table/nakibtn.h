@@ -11,17 +11,17 @@ private:
 	ButtonPic* buttons;
 public:
 	enum ButtonID {
-		btnChii, btnPon, btnKan, btnFlower, btnRiichi, btnAgari, btnPass,
+		btnChii1, btnChii2, btnChii3, btnPon, btnKan, btnRiichi, btnRon, btnPass,
 		btnMAXIMUM,
+		btnKyuushu = 2, btnFlower, btnTsumo = 6,
 	};
 private:
 	struct BtnData { // É{É^ÉìÇÃëÆê´äiî[
 		LPCTSTR label;
 		const int x, y;
-		const unsigned width, height;
 		const D3DCOLOR color;
 	};
-	static const BtnData buttonDat[btnMAXIMUM];
+	static const BtnData buttonDat[2][btnMAXIMUM];
 public:
 	void Render();
 	explicit ButtonReconst(GameTableScreen* parent);
