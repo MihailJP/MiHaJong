@@ -309,9 +309,12 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 
 	/* 暗槓・加槓を実行する */
 	nakiCount = 0;
+	/* FIXME: 鳴かれる側のプレイヤーが正しくないかもしれない */
 	if ((Mode == FuuroChii) || (Mode == FuuroPon) || (Mode == FuuroDaiminkan)) {
 		/* 鳴いた捨牌を河で非表示にする */
-		discardTile* tmpSutehaiVar = &gameStat->Player[gameStat->CurrentPlayer.Active].Discard[gameStat->Player[gameStat->CurrentPlayer.Active].DiscardPointer];
+		PlayerTable* const activePlDat = &(gameStat->Player[gameStat->CurrentPlayer.Active]);
+		discardTile* const tmpSutehaiVar = &(activePlDat->Discard[activePlDat->DiscardPointer]);
+		assert(tmpSutehaiVar->tcode.tile == gameStat->CurrentDiscard.tile); // [デバッグ用]本当に正しい牌なのか確認
 		if (tmpSutehaiVar->dstat == discardNormal)
 			tmpSutehaiVar->dstat = discardTaken;
 		else if (tmpSutehaiVar->dstat == discardRiichi)
