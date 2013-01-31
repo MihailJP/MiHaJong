@@ -9,6 +9,7 @@
 #include <cassert>
 #include "../sound/sound.h"
 #include "bgmid.h"
+#include "sound.h"
 #include "../graphic/graphic.h"
 #include "tileutil.h"
 #include "haifu.h"
@@ -184,7 +185,7 @@ namespace {
 		for (PLAYER_ID i = 0; i < PLAYERS; ++i)
 			calltext::setCall(i, calltext::None);
 		sound::Play(sound::IDs::sndPingju);
-		sound::Play(bgmNum);
+		sound::util::bgmplay(bgmNum);
 		Subscene(tblSubsceneRyuukyoku);
 		Sleep(waittime);
 	}

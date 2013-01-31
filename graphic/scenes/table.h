@@ -6,6 +6,7 @@
 #include <functional>
 #include "../logwnd.h"
 #include "tablesub/tblsubs.h"
+#include "../text.h"
 
 namespace mihajong_graphic {
 
@@ -19,6 +20,7 @@ protected:
 	LPDIRECT3DTEXTURE9 tBorder; // 卓の枠
 	LPDIRECT3DTEXTURE9 tBaize; // 羅紗地
 	logwnd::LogWindow* logWindow; // ログウィンドウ
+	TextRenderer* myTextRenderer; // 文字表示
 protected:
 	TableSubscene* mySubScene; // サブシーンオブジェクト
 	CRITICAL_SECTION subSceneCS; // サブシーン切り替え用クリティカルセクション
@@ -44,6 +46,8 @@ protected: /**** サイコロ ****/
 protected: /**** 起家マーク・ヤキトリマークを置く凹み ****/
 	class TrayReconst;
 	TrayReconst* trayReconst;
+protected: /**** 情報表示 ****/
+	void ShowStatus(const GameTable* gameStat); // 供託点棒などの情報を表示
 protected:
 	void ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // プレイヤー関係の画面の再構築
 	void Reconstruct(const GameTable* gameStat); // 画面の再描画

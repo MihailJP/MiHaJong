@@ -12,6 +12,7 @@
 #include "yaku/yaku.h"
 #include "../sound/sound.h"
 #include "bgmid.h"
+#include "sound.h"
 #include "fuuro.h"
 #include "../graphic/graphic.h"
 
@@ -228,7 +229,7 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 			sound::Play(sound::IDs::voxRichi);
 			if (!(gameStat->Player[0].RichiFlag.OpenFlag || gameStat->Player[1].RichiFlag.OpenFlag ||
 				gameStat->Player[2].RichiFlag.OpenFlag || gameStat->Player[3].RichiFlag.OpenFlag))
-				sound::Play(sound::IDs::musOpenrichi);
+				sound::util::bgmplay(sound::IDs::musOpenrichi);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			Sleep(1000);
 			gameStat->Player[gameStat->CurrentPlayer.Active].HandStat = handOpenRiichi;
@@ -244,12 +245,12 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 					if (!(gameStat->Player[0].RichiFlag.RichiFlag || gameStat->Player[1].RichiFlag.RichiFlag ||
 						gameStat->Player[2].RichiFlag.RichiFlag || gameStat->Player[3].RichiFlag.RichiFlag)) {
 							if (gameStat->CurrentPlayer.Active == gameStat->PlayerID)
-								sound::Play(sound::IDs::musRichi2);
+								sound::util::bgmplay(sound::IDs::musRichi2);
 							else
-								sound::Play(sound::IDs::musRichi1);
+								sound::util::bgmplay(sound::IDs::musRichi1);
 					} else if (!EnvTable::Instantiate()->WatchModeFlag) {
 						if (gameStat->CurrentPlayer.Active == gameStat->PlayerID)
-							sound::Play(sound::IDs::musRichi3);
+							sound::util::bgmplay(sound::IDs::musRichi3);
 					}
 			}
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
