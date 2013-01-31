@@ -46,6 +46,9 @@ protected: /**** サイコロ ****/
 protected: /**** 起家マーク・ヤキトリマークを置く凹み ****/
 	class TrayReconst;
 	TrayReconst* trayReconst;
+protected: /**** 鳴き選択用ボタン ****/
+	class ButtonReconst;
+	ButtonReconst* buttonReconst;
 protected: /**** 情報表示 ****/
 	void ShowStatus(const GameTable* gameStat); // 供託点棒などの情報を表示
 protected:

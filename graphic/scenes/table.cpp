@@ -14,12 +14,14 @@
 #include "table/showdice.h"
 #include "table/richibou.h"
 #include "table/chicha.h"
+#include "table/nakibtn.h"
 
 namespace mihajong_graphic {
 	
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080);
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080);
+	buttonReconst = new ButtonReconst(this);
 	trayReconst = new TrayReconst(this);
 	richibouReconst = new RichibouReconst(this);
 	diceReconst = new DiceReconst(this);
@@ -47,6 +49,7 @@ GameTableScreen::~GameTableScreen() {
 	delete diceReconst;
 	delete richibouReconst;
 	delete trayReconst;
+	delete buttonReconst;
 	delete myTextRenderer;
 	if (tBorder) tBorder->Release();
 	if (tBaize) tBaize->Release();
@@ -130,6 +133,7 @@ void GameTableScreen::RenderTable() {
 	tehaiReconst->Render(); // 144
 	nakihaiReconst->Render(); // 200
 	sutehaiReconst->Render(); // 264
+	buttonReconst->Render();
 }
 
 void GameTableScreen::RenderSideBar() {
