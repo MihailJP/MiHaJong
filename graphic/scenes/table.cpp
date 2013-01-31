@@ -1,14 +1,6 @@
 #include "table.h"
-#include "../scrmanip.h"
 #include "../resource.h"
-#include "../rule.h"
 #include "../sprite.h"
-#include "../utils.h"
-#include "../geometry.h"
-#include <tuple>
-#include <cassert>
-#include <cmath>
-#include "scene_id.h"
 #include "../../sound/sound.h"
 #include "../../mjcore/bgmid.h"
 #include "../event.h"
@@ -23,7 +15,7 @@
 
 namespace mihajong_graphic {
 
-using utils::playerRelative;
+//using utils::playerRelative;
 	
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080);
