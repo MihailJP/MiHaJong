@@ -103,10 +103,10 @@ void GameTableScreen::SutehaiReconst::Reconstruct(const GameTable* gameStat, PLA
 	unsigned tilePosCol = 0, tilePosRow = 0; bool shiftPosFlag = false, riichiFlag = false;
 	for (unsigned tileID = 0; tileID < 33; ++tileID) {
 		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
-			case sOpposite: TileTexture->DelTile(296 - tileID); break; /* ‘Î–Ê */
-			case sLeft:     TileTexture->DelTile(297 + tileID); break; /* ã‰Æ */
-			case sRight:    TileTexture->DelTile(362 - tileID); break; /* ‰º‰Æ */
-			case sSelf:     TileTexture->DelTile(363 + tileID); break; /* Ž©•ª */
+			case sOpposite: TileTexture->DelTile(32 - tileID); break; /* ‘Î–Ê */
+			case sLeft:     TileTexture->DelTile(33 + tileID); break; /* ã‰Æ */
+			case sRight:    TileTexture->DelTile(98 - tileID); break; /* ‰º‰Æ */
+			case sSelf:     TileTexture->DelTile(99 + tileID); break; /* Ž©•ª */
 		}
 	}
 	for (unsigned i = 0; i < gameStat->Player.val[targetPlayer].DiscardPointer; ++i) {
