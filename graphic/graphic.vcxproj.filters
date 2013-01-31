@@ -147,6 +147,9 @@
     <ClCompile Include="scenes\table\sutehai.cpp">
       <Filter>ソース ファイル\scenes\table</Filter>
     </ClCompile>
+    <ClCompile Include="scenes\table\chicha.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scrmanip.h">
@@ -282,6 +285,9 @@
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
     <ClInclude Include="scenes\table\sutehai.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\chicha.h">
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
   </ItemGroup>
