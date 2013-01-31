@@ -22,7 +22,7 @@ public:
 public:
 	int getTileCursor() {return tileCursor;}
 	void setTileCursor(int val = tileCursorOff) {tileCursor = val;}
-	bool isTileCursorDisable() {return tileCursor == tileCursorOff;}
+	bool isCursorEnabled() {return tileCursor != tileCursorOff;}
 	int incrTileCursor() {return ++tileCursor;}
 	int decrTileCursor() {return --tileCursor;}
 };
