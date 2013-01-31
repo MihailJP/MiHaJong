@@ -249,11 +249,11 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	const int scaledY = Y / Geometry::WindowScale();
 	const int region = whichRegion(scaledX, scaledY);
 	const bool isValidTile = (region >= 0) && (region < NUM_OF_TILES_IN_HAND) &&
-		(region != tehaiReconst->getTileCursor()) && (tehaiReconst->isCursorEnabled()) &&
+		(tehaiReconst->isCursorEnabled()) &&
 		(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[region].tile != NoTile);
 	switch (od->dwOfs) {
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
-		if (isValidTile) {
+		if ((region != tehaiReconst->getTileCursor()) && (isValidTile)) {
 			tehaiReconst->setTileCursor(region);
 			sound::Play(sound::IDs::sndCursor);
 			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
