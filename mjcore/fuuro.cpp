@@ -157,11 +157,11 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->Player[kangPlayer].MenzenFlag = false;
 		/* 槓子として晒す */
 		++gameStat->Player[kangPlayer].MeldPointer;
-		if (playerRelative(kangPlayer, gameStat->CurrentPlayer.Active) == sLeft)
+		if (playerRelative(gameStat->CurrentPlayer.Active, kangPlayer) == sLeft)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldQuadExposedLeft;
-		else if (playerRelative(kangPlayer, gameStat->CurrentPlayer.Active) == sOpposite)
+		else if (playerRelative(gameStat->CurrentPlayer.Active, kangPlayer) == sOpposite)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldQuadExposedCenter;
-		else if (playerRelative(kangPlayer, gameStat->CurrentPlayer.Active) == sRight)
+		else if (playerRelative(gameStat->CurrentPlayer.Active, kangPlayer) == sRight)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldQuadExposedRight;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile = gameStat->CurrentDiscard.tile;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].red[0] = gameStat->CurrentDiscard.red;
@@ -229,11 +229,11 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->Player[kangPlayer].MenzenFlag = false;
 		/* 明刻として晒す */
 		++gameStat->Player[kangPlayer].MeldPointer;
-		if (playerRelative(kangPlayer, gameStat->CurrentPlayer.Active) == sLeft)
+		if (playerRelative(gameStat->CurrentPlayer.Active, kangPlayer) == sLeft)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldTripletExposedLeft;
-		else if (playerRelative(kangPlayer, gameStat->CurrentPlayer.Active) == sOpposite)
+		else if (playerRelative(gameStat->CurrentPlayer.Active, kangPlayer) == sOpposite)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldTripletExposedCenter;
-		else if (playerRelative(kangPlayer, gameStat->CurrentPlayer.Active) == sRight)
+		else if (playerRelative(gameStat->CurrentPlayer.Active, kangPlayer) == sRight)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldTripletExposedRight;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile = gameStat->CurrentDiscard.tile;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].red[0] = gameStat->CurrentDiscard.red;
@@ -311,7 +311,9 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 	nakiCount = 0;
 	if ((Mode == FuuroChii) || (Mode == FuuroPon) || (Mode == FuuroDaiminkan)) {
 		/* 鳴いた捨牌を河で非表示にする */
-		discardTile* tmpSutehaiVar = &gameStat->Player[gameStat->CurrentPlayer.Active].Discard[gameStat->Player[gameStat->CurrentPlayer.Active].DiscardPointer];
+		PlayerTable* const activePlDat = &(gameStat->Player[gameStat->CurrentPlayer.Active]);
+		discardTile* const tmpSutehaiVar = &(activePlDat->Discard[activePlDat->DiscardPointer]);
+		assert(tmpSutehaiVar->tcode.tile == gameStat->CurrentDiscard.tile); // [デバッグ用]本当に正しい牌なのか確認
 		if (tmpSutehaiVar->dstat == discardNormal)
 			tmpSutehaiVar->dstat = discardTaken;
 		else if (tmpSutehaiVar->dstat == discardRiichi)

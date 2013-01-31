@@ -114,13 +114,13 @@ void TitleScreen::Render() {
 void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	const bool flag = ((elapsed() > 180u * timePerFrame) && (od->dwData));
 	switch (od->dwOfs) {
-	case DIK_UP: // カーソル上
+	case DIK_UP: case DIK_K: // カーソル上
 		if (flag) {
 			sound::Play(sound::IDs::sndCursor);
 			if (--menuCursor == 0) menuCursor = 6;
 		}
 		break;
-	case DIK_DOWN: // カーソル下
+	case DIK_DOWN: case DIK_J: // カーソル下
 		if (flag) {
 			sound::Play(sound::IDs::sndCursor);
 			if (++menuCursor > 6) menuCursor = 1;

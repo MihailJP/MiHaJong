@@ -13,7 +13,6 @@ private:
 	std::array<ScoreBoard*, PLAYERS> scorePanel;
 	static const unsigned int panelPosY = 550;
 protected:
-	ShowTile* TileTexture;
 	LPDIRECT3DTEXTURE9 tSideBar; // サイドバー
 	void LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource, unsigned width, unsigned height); // テクスチャ読み込み
 	void ShowSidebar();
