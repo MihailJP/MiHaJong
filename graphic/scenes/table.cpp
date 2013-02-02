@@ -247,6 +247,16 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 	};
 	const PlayerTable* const plDat = &(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID]);
+	auto directTileCursor = [&](int cursorPos) -> void {
+		if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[cursorPos].tile != NoTile)) {
+			if (tehaiReconst->getTileCursor() ==  3) {
+				FinishTileChoice();
+			} else {
+				tehaiReconst->setTileCursor(cursorPos);
+				cursorMoved();
+			}
+		}
+	};
 	switch (od->dwOfs) {
 	case DIK_LEFT: case DIK_H:
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
@@ -266,20 +276,20 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	/* カーソル位置の直截指定 */
 	/* ASSUMING JAPANESE KEYBOARD: 1 2 3 4 5 6 7 8 9 0 - ^ ￥ BS */
-	case DIK_1:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 0].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  0) FinishTileChoice(); else {tehaiReconst->setTileCursor( 0); cursorMoved();}} break;
-	case DIK_2:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 1].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  1) FinishTileChoice(); else {tehaiReconst->setTileCursor( 1); cursorMoved();}} break;
-	case DIK_3:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 2].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  2) FinishTileChoice(); else {tehaiReconst->setTileCursor( 2); cursorMoved();}} break;
-	case DIK_4:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 3].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  3) FinishTileChoice(); else {tehaiReconst->setTileCursor( 3); cursorMoved();}} break;
-	case DIK_5:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 4].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  4) FinishTileChoice(); else {tehaiReconst->setTileCursor( 4); cursorMoved();}} break;
-	case DIK_6:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 5].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  5) FinishTileChoice(); else {tehaiReconst->setTileCursor( 5); cursorMoved();}} break;
-	case DIK_7:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 6].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  6) FinishTileChoice(); else {tehaiReconst->setTileCursor( 6); cursorMoved();}} break;
-	case DIK_8:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 7].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  7) FinishTileChoice(); else {tehaiReconst->setTileCursor( 7); cursorMoved();}} break;
-	case DIK_9:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 8].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  8) FinishTileChoice(); else {tehaiReconst->setTileCursor( 8); cursorMoved();}} break;
-	case DIK_0:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 9].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  9) FinishTileChoice(); else {tehaiReconst->setTileCursor( 9); cursorMoved();}} break;
-	case DIK_MINUS:      if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[10].tile != NoTile)) {if (tehaiReconst->getTileCursor() == 10) FinishTileChoice(); else {tehaiReconst->setTileCursor(10); cursorMoved();}} break;
-	case DIK_CIRCUMFLEX: if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[11].tile != NoTile)) {if (tehaiReconst->getTileCursor() == 11) FinishTileChoice(); else {tehaiReconst->setTileCursor(11); cursorMoved();}} break;
-	case DIK_YEN:        if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[12].tile != NoTile)) {if (tehaiReconst->getTileCursor() == 12) FinishTileChoice(); else {tehaiReconst->setTileCursor(12); cursorMoved();}} break;
-	case DIK_BACK:       if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[13].tile != NoTile)) {if (tehaiReconst->getTileCursor() == 13) FinishTileChoice(); else {tehaiReconst->setTileCursor(13); cursorMoved();}} break;
+	case DIK_1:          directTileCursor( 0); break;
+	case DIK_2:          directTileCursor( 1); break;
+	case DIK_3:          directTileCursor( 2); break;
+	case DIK_4:          directTileCursor( 3); break;
+	case DIK_5:          directTileCursor( 4); break;
+	case DIK_6:          directTileCursor( 5); break;
+	case DIK_7:          directTileCursor( 6); break;
+	case DIK_8:          directTileCursor( 7); break;
+	case DIK_9:          directTileCursor( 8); break;
+	case DIK_0:          directTileCursor( 9); break;
+	case DIK_MINUS:      directTileCursor(10); break;
+	case DIK_CIRCUMFLEX: directTileCursor(11); break;
+	case DIK_YEN:        directTileCursor(12); break;
+	case DIK_BACK:       directTileCursor(13); break;
 	/* 決定キー */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled()))
