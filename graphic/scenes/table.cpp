@@ -245,6 +245,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	auto cursorMoved = [&]() -> void {
 		sound::Play(sound::IDs::sndCursor);
 		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+		buttonReconst->reconstruct();
 	};
 	const PlayerTable* const plDat = &(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID]);
 	auto directTileCursor = [&](int cursorPos) -> void {
@@ -258,11 +259,31 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		}
 	};
 	switch (od->dwOfs) {
+	/* ボタン選択/牌選択 モード切り替え */
+	case DIK_UP: case DIK_K: // 牌選択モードに切り替え
+		if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
+			tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
+			buttonReconst->setCursor();
+			cursorMoved();
+		}
+		break;
+	case DIK_DOWN: case DIK_J: // ボタン選択モードに切り替え
+		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
+			tehaiReconst->setTileCursor();
+			buttonReconst->setCursor(ButtonReconst::btnMAXIMUM - 1);
+			cursorMoved();
+		}
+		break;
+	/* カーソル移動 */
 	case DIK_LEFT: case DIK_H:
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
 			do {
 				if (tehaiReconst->decrTileCursor() < 0) tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
 			} while (plDat->Hand[tehaiReconst->getTileCursor()].tile == NoTile);
+			cursorMoved();
+		}
+		else if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
+			if (buttonReconst->decCursor() < 0) buttonReconst->setCursor(ButtonReconst::btnMAXIMUM - 1);
 			cursorMoved();
 		}
 		break;
@@ -271,6 +292,10 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 			do {
 				if (tehaiReconst->incrTileCursor() >= NUM_OF_TILES_IN_HAND) tehaiReconst->setTileCursor(0);
 			} while (plDat->Hand[tehaiReconst->getTileCursor()].tile == NoTile);
+			cursorMoved();
+		}
+		if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
+			if (buttonReconst->incCursor() >= ButtonReconst::btnMAXIMUM) buttonReconst->setCursor(0);
 			cursorMoved();
 		}
 		break;

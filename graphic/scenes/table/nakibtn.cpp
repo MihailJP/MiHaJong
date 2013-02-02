@@ -43,24 +43,28 @@ void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 		btnColor.rgbaAsStruct.g /= 3;
 		btnColor.rgbaAsStruct.b /= 3;
 	}
-	buttons->setButton(buttonID, ButtonPic::clear,
+	buttons->setButton(buttonID, (cursor == buttonID) ? ButtonPic::raised : ButtonPic::clear,
 		buttonDat[currentButtonSet][buttonID].x * Geometry::WindowScale(),
 		buttonDat[currentButtonSet][buttonID].y * Geometry::WindowScale(),
 		117 * Geometry::WindowScale(), 36 * Geometry::WindowScale(),
 		btnColor.rgbaAsOneValue, buttonDat[currentButtonSet][buttonID].label);
 	const Region nullRegion = {0, 0, -1, -1};
-	if (caller->regions.size() <= (buttonID + 20))
-		caller->regions.resize(21 + buttonID, nullRegion);
-	caller->regions[buttonID + 20].Left   = buttonDat[currentButtonSet][buttonID].x;
-	caller->regions[buttonID + 20].Top    = buttonDat[currentButtonSet][buttonID].y + 117;
-	caller->regions[buttonID + 20].Right  = buttonDat[currentButtonSet][buttonID].x;
-	caller->regions[buttonID + 20].Bottom = buttonDat[currentButtonSet][buttonID].y + 36;
+	if (caller->regions.size() <= (buttonID + ButtonRegionNum))
+		caller->regions.resize(ButtonRegionNum + 1 + buttonID, nullRegion);
+	caller->regions[buttonID + ButtonRegionNum].Left   = buttonDat[currentButtonSet][buttonID].x;
+	caller->regions[buttonID + ButtonRegionNum].Top    = buttonDat[currentButtonSet][buttonID].y + 117;
+	caller->regions[buttonID + ButtonRegionNum].Right  = buttonDat[currentButtonSet][buttonID].x;
+	caller->regions[buttonID + ButtonRegionNum].Bottom = buttonDat[currentButtonSet][buttonID].y + 36;
 }
+void GameTableScreen::ButtonReconst::reconstruct() {
+	for (unsigned i = 0; i < btnMAXIMUM; ++i)
+		reconstruct((ButtonID)i);
+}
+
 
 void GameTableScreen::ButtonReconst::ChangeButtonSet(ButtonSet btnSet) {
 	currentButtonSet = btnSet;
-	for (unsigned i = 0; i < btnMAXIMUM; ++i)
-		reconstruct((ButtonID)i);
+	reconstruct();
 }
 
 void GameTableScreen::ButtonReconst::enable(ButtonID buttonID) {
@@ -71,12 +75,12 @@ void GameTableScreen::ButtonReconst::disable(ButtonID buttonID) {
 }
 void GameTableScreen::ButtonReconst::enable(const std::bitset<btnMAXIMUM>& flagset) {
 	buttonEnabled = flagset;
-	for (unsigned i = 0; i < btnMAXIMUM; ++i)
-		reconstruct((ButtonID)i);
+	reconstruct();
 }
 
 GameTableScreen::ButtonReconst::ButtonReconst(GameTableScreen* parent) {
 	caller = parent;
+	cursor = CursorDisabled;
 	buttons = new ButtonPic(caller->caller->getDevice());
 	ChangeButtonSet(btnSetNormal);
 }
