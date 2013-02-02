@@ -155,6 +155,7 @@ void GameTableScreen::Render() {
 
 void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 	EnterCriticalSection(&subSceneCS);
+	buttonReconst->ChangeButtonSet(ButtonReconst::btnSetNormal);
 	delete mySubScene; tehaiReconst->setTileCursor();
 	switch (static_cast<TableSubsceneID>(scene_ID)) {
 	case tblSubsceneBeginning:
@@ -229,6 +230,7 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 	case tblSubscenePlayerDahai:
 		mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
 		tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
+		buttonReconst->ChangeButtonSet(ButtonReconst::btnSetTsumo);
 		break;
 	default:
 		mySubScene = new TableSubsceneNormal(caller->getDevice());
