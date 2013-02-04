@@ -230,7 +230,8 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 	case tblSubscenePlayerDahai:
 		mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
 		tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
-		buttonReconst->ChangeButtonSet(ButtonReconst::btnSetTsumo);
+		buttonReconst->btnSetForDahai();
+		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 		break;
 	default:
 		mySubScene = new TableSubsceneNormal(caller->getDevice());

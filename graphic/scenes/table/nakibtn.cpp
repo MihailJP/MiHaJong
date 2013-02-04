@@ -1,6 +1,9 @@
 #include "nakibtn.h"
 
 #include "../../geometry.h"
+#include "../../utils.h"
+#include "../../gametbl.h"
+#include "../../rule.h"
 
 namespace mihajong_graphic {
 
@@ -61,7 +64,6 @@ void GameTableScreen::ButtonReconst::reconstruct() {
 		reconstruct((ButtonID)i);
 }
 
-
 void GameTableScreen::ButtonReconst::ChangeButtonSet(ButtonSet btnSet) {
 	currentButtonSet = btnSet;
 	reconstruct();
@@ -75,6 +77,33 @@ void GameTableScreen::ButtonReconst::disable(ButtonID buttonID) {
 }
 void GameTableScreen::ButtonReconst::enable(const std::bitset<btnMAXIMUM>& flagset) {
 	buttonEnabled = flagset;
+	reconstruct();
+}
+
+void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
+	currentButtonSet = btnSetTsumo; buttonEnabled.reset(); // 状態をリセット
+	const GameTable* const gameStat = GameStatus::gameStat();
+	const PLAYER_ID ActivePlayer = gameStat->CurrentPlayer.Active;
+	const PlayerTable* const playerStat = &(gameStat->Player.val[ActivePlayer]);
+	const SHANTEN Shanten = utils::calcShanten(gameStat, ActivePlayer, ShantenAnalyzer::shantenAll);
+	if (utils::isRichiReqSatisfied(gameStat, ActivePlayer) && // 点棒要件を満たしている（点棒が足りている）
+		(Shanten <= 0) && // テンパイしている
+		(playerStat->MenzenFlag || (!rules::chkRule("riichi_shibari", "no"))) && // 門前であるか、リーチ縛りルールである
+		(!playerStat->RichiFlag.RichiFlag) && // まだリーチしていない
+		((gameStat->TilePointer + ((gameStat->gameType & AllSanma) ? 2 : 3)) < // 残りツモ牌が
+		(gameStat->RinshanPointer - gameStat->DeadTiles - 1))) // 十分あるなら
+		buttonEnabled[btnRiichi] = true; // リーチボタンを有効に
+
+	const bool DaoPaiAbilityFlag = utils::chkdaopaiability(gameStat, ActivePlayer);
+	if ((DaoPaiAbilityFlag) && (playerStat->FirstDrawFlag))
+		buttonEnabled[btnKyuushu] = true; // 九種九牌ボタン
+
+	const bool ShisanBuDa = utils::chkShisanBuDa(gameStat, ActivePlayer);
+	const bool ShisiBuDa = utils::chkShisiBuDa(gameStat, ActivePlayer);
+	if (((Shanten <= -1) && (playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile != NoTile)) || // 和了になっているか
+		ShisanBuDa || ShisiBuDa) // 十三不塔の場合（十三不塔なしの場合この変数はfalseになる）
+		buttonEnabled[btnTsumo] = true; // 和了ボタン
+
 	reconstruct();
 }
 

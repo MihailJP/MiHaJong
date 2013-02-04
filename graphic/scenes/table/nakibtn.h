@@ -50,6 +50,7 @@ public:
 private: // Ä\’zE•\¦ˆ—
 	void reconstruct(ButtonID buttonID);
 public:
+	void btnSetForDahai();
 	void reconstruct();
 	void Render();
 	explicit ButtonReconst(GameTableScreen* parent);
