@@ -29,8 +29,10 @@ const GameTableScreen::ButtonReconst::BtnData
 };
 
 void GameTableScreen::ButtonReconst::Render() {
+	EnterCriticalSection(&reconstructionCS);
 	buttons->Render();
 	buttons->Render();
+	LeaveCriticalSection(&reconstructionCS);
 }
 
 void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
@@ -60,8 +62,10 @@ void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 	caller->regions[buttonID + ButtonRegionNum].Bottom = buttonDat[currentButtonSet][buttonID].y + 36;
 }
 void GameTableScreen::ButtonReconst::reconstruct() {
+	EnterCriticalSection(&reconstructionCS);
 	for (unsigned i = 0; i < btnMAXIMUM; ++i)
 		reconstruct((ButtonID)i);
+	LeaveCriticalSection(&reconstructionCS);
 }
 
 void GameTableScreen::ButtonReconst::ChangeButtonSet(ButtonSet btnSet) {
@@ -108,6 +112,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ƒcƒ‚”Ô‚ÌŽž—p‚Ì
 }
 
 GameTableScreen::ButtonReconst::ButtonReconst(GameTableScreen* parent) {
+	InitializeCriticalSection(&reconstructionCS);
 	caller = parent;
 	cursor = CursorDisabled;
 	buttons = new ButtonPic(caller->caller->getDevice());
@@ -116,6 +121,7 @@ GameTableScreen::ButtonReconst::ButtonReconst(GameTableScreen* parent) {
 
 GameTableScreen::ButtonReconst::~ButtonReconst() {
 	delete buttons;
+	DeleteCriticalSection(&reconstructionCS);
 }
 
 }

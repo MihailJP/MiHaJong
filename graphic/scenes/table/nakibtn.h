@@ -3,6 +3,7 @@
 #include "../table.h"
 #include "../../button.h"
 #include <bitset>
+#include <Windows.h>
 
 namespace mihajong_graphic {
 
@@ -51,6 +52,7 @@ public:
 	int decCursor() {return --cursor;}
 private: // Ä\’zE•\¦ˆ—
 	void reconstruct(ButtonID buttonID);
+	CRITICAL_SECTION reconstructionCS;
 public:
 	void btnSetForDahai();
 	void reconstruct();
