@@ -318,8 +318,25 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_BACK:       directTileCursor(13); break;
 	/* Œˆ’èƒL[ */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
-		if ((od->dwData) && (tehaiReconst->isCursorEnabled()))
+		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
 			FinishTileChoice();
+		} else if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
+			if (buttonReconst->isEnabled((ButtonReconst::ButtonID)buttonReconst->getCursor())) {
+				sound::Play(sound::IDs::sndCuohu);
+			} else if (buttonReconst->getButtonSet() == ButtonReconst::btnSetTsumo) {
+				switch (buttonReconst->getCursor()) {
+				case ButtonReconst::btnTsumo:
+					CallTsumoAgari();
+					break;
+				case ButtonReconst::btnKyuushu:
+					CallKyuushuKyuuhai();
+					break;
+				default:
+					sound::Play(sound::IDs::sndCuohu);
+					break;
+				}
+			}
+		}
 		break;
 	}
 }
@@ -350,5 +367,13 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 void GameTableScreen::FinishTileChoice() {
 	ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor()); // ”v‚Ì”Ô†‚ðÝ’è
 }
+
+void GameTableScreen::CallTsumoAgari() { // ƒcƒ‚ƒAƒKƒŠ
+	ui::UIEvent->set(0xffffffff);
+}
+void GameTableScreen::CallKyuushuKyuuhai() { // ‹ãŽí‹ã”v
+	ui::UIEvent->set(0xfffffffe);
+}
+
 
 }

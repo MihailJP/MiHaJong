@@ -66,6 +66,8 @@ public:
 	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 private:
 	void FinishTileChoice();
+	void CallTsumoAgari();
+	void CallKyuushuKyuuhai();
 };
 
 }

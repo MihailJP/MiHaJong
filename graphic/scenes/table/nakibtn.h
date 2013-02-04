@@ -30,6 +30,8 @@ public:
 	void ChangeButtonSet(ButtonSet btnSet);
 private: // ボタンの有効・無効の状態
 	ButtonSet currentButtonSet;
+public:
+	ButtonSet getButtonSet() {return currentButtonSet;}
 private:
 	std::bitset<btnMAXIMUM> buttonEnabled; // ボタン有効・無効の状態
 public:
