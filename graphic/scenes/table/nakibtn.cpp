@@ -70,6 +70,8 @@ void GameTableScreen::ButtonReconst::reconstruct() {
 
 void GameTableScreen::ButtonReconst::ChangeButtonSet(ButtonSet btnSet) {
 	currentButtonSet = btnSet;
+	cursor = CursorDisabled;
+	buttonEnabled.reset();
 	reconstruct();
 }
 

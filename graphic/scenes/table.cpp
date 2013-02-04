@@ -250,10 +250,11 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	};
 	const PlayerTable* const plDat = &(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID]);
 	auto directTileCursor = [&](int cursorPos) -> void {
-		if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[cursorPos].tile != NoTile)) {
-			if (tehaiReconst->getTileCursor() ==  3) {
+		if ((od->dwData) && ((tehaiReconst->isCursorEnabled()) || (buttonReconst->isCursorEnabled())) && (plDat->Hand[cursorPos].tile != NoTile)) {
+			if (tehaiReconst->getTileCursor() == cursorPos) {
 				FinishTileChoice();
 			} else {
+				buttonReconst->setCursor();
 				tehaiReconst->setTileCursor(cursorPos);
 				cursorMoved();
 			}
@@ -321,7 +322,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
 			FinishTileChoice();
 		} else if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
-			if (buttonReconst->isEnabled((ButtonReconst::ButtonID)buttonReconst->getCursor())) {
+			if (!buttonReconst->isEnabled((ButtonReconst::ButtonID)buttonReconst->getCursor())) {
 				sound::Play(sound::IDs::sndCuohu);
 			} else if (buttonReconst->getButtonSet() == ButtonReconst::btnSetTsumo) {
 				switch (buttonReconst->getCursor()) {
