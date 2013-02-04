@@ -308,6 +308,9 @@
     <ClInclude Include="scenes\table\nakibtn.h">
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
+    <ClInclude Include="scenes\table\color.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="graphic.rc">

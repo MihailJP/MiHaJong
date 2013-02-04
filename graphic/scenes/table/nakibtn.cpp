@@ -36,12 +36,7 @@ void GameTableScreen::ButtonReconst::Render() {
 }
 
 void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
-	union Color { // とりあえずここに仮置き
-		D3DCOLOR rgbaAsOneValue;
-		/* 当面はスモールエンディアンのみ対応 */
-		struct {unsigned b:8, g:8, r:8, a:8;} rgbaAsStruct;
-	};
-	static_assert(sizeof (Color) == 4, "union Color is not 32-bit long");
+#include "color.h"
 	Color btnColor; btnColor.rgbaAsOneValue = buttonDat[currentButtonSet][buttonID].color;
 	if (!buttonEnabled[buttonID]) { // 暗転処理
 		btnColor.rgbaAsStruct.r /= 3;

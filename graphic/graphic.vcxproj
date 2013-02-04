@@ -219,6 +219,7 @@
     <ClInclude Include="scenes\tablesub\tblsubs.h" />
     <ClInclude Include="scenes\tablesub\titling.h" />
     <ClInclude Include="scenes\table\chicha.h" />
+    <ClInclude Include="scenes\table\color.h" />
     <ClInclude Include="scenes\table\nakibtn.h" />
     <ClInclude Include="scenes\table\nakihai.h" />
     <ClInclude Include="scenes\table\richibou.h" />
