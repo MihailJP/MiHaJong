@@ -21,7 +21,7 @@ const GameTableScreen::ButtonReconst::BtnData
 			{_T("花牌"),     5 + 117 * 3, Geometry::BaseSize - 40, 0xff99ccff},
 			{_T("カン"),     5 + 117 * 4, Geometry::BaseSize - 40, 0xff9966ff},
 			{_T("リーチ"),   5 + 117 * 5, Geometry::BaseSize - 40, 0xffff66ff},
-			{_T("ツモ"),     5 + 117 * 6, Geometry::BaseSize - 40, 0xffffffff},
+			{_T("ツモ"),     5 + 117 * 6, Geometry::BaseSize - 40, 0xffffff66},
 		},
 };
 
