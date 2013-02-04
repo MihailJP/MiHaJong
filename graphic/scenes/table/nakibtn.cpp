@@ -57,8 +57,8 @@ void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 	if (caller->regions.size() <= (buttonID + ButtonRegionNum))
 		caller->regions.resize(ButtonRegionNum + 1 + buttonID, nullRegion);
 	caller->regions[buttonID + ButtonRegionNum].Left   = buttonDat[currentButtonSet][buttonID].x;
-	caller->regions[buttonID + ButtonRegionNum].Top    = buttonDat[currentButtonSet][buttonID].y + 117;
-	caller->regions[buttonID + ButtonRegionNum].Right  = buttonDat[currentButtonSet][buttonID].x;
+	caller->regions[buttonID + ButtonRegionNum].Top    = buttonDat[currentButtonSet][buttonID].y;
+	caller->regions[buttonID + ButtonRegionNum].Right  = buttonDat[currentButtonSet][buttonID].x + 117;
 	caller->regions[buttonID + ButtonRegionNum].Bottom = buttonDat[currentButtonSet][buttonID].y + 36;
 }
 void GameTableScreen::ButtonReconst::reconstruct() {
