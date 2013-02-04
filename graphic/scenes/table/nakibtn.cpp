@@ -82,7 +82,7 @@ void GameTableScreen::ButtonReconst::enable(const std::bitset<btnMAXIMUM>& flags
 
 void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 	currentButtonSet = btnSetTsumo; buttonEnabled.reset(); // 状態をリセット
-	const GameTable* const gameStat = GameStatus::gameStat();
+	const GameTable* const gameStat = GameStatus::retrGameStat();
 	const PLAYER_ID ActivePlayer = gameStat->CurrentPlayer.Active;
 	const PlayerTable* const playerStat = &(gameStat->Player.val[ActivePlayer]);
 	const SHANTEN Shanten = utils::calcShanten(gameStat, ActivePlayer, ShantenAnalyzer::shantenAll);
