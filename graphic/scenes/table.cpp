@@ -6,6 +6,7 @@
 #include "../../sound/sound.h"
 #include "../../mjcore/bgmid.h"
 #include "../event.h"
+#include "../../mjcore/discard.h"
 
 #include "table/yamahai.h"
 #include "table/tehai.h"
@@ -37,6 +38,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	InitializeCriticalSection(&subSceneCS);
 	mySubScene = new TableSubsceneNormal(manipulator->getDevice());
 	myTextRenderer = new TextRenderer(manipulator->getDevice());
+	tileSelectMode = 0;
 }
 
 GameTableScreen::~GameTableScreen() {
@@ -366,7 +368,7 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 /* ŽÌ”v‚ðŒˆ’è‚·‚é */
 void GameTableScreen::FinishTileChoice() {
 	sound::Play(sound::IDs::sndClick);
-	ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor()); // ”v‚Ì”Ô†‚ðÝ’è
+	ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // ”v‚Ì”Ô†‚ðÝ’è
 }
 
 /* ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½Žž‚Ìˆ— */
@@ -381,6 +383,14 @@ void GameTableScreen::ButtonPressed() {
 			break;
 		case ButtonReconst::btnKyuushu:
 			CallKyuushuKyuuhai();
+			break;
+		case ButtonReconst::btnRiichi:
+			tileSelectMode = DiscardTileNum::Riichi;
+			buttonReconst->setSunkenButton(ButtonReconst::btnRiichi);
+			for (int i = 0; i < ButtonReconst::btnMAXIMUM; ++i)
+				if (i != ButtonReconst::btnRiichi)
+					buttonReconst->disable((ButtonReconst::ButtonID)i);
+			buttonReconst->reconstruct();
 			break;
 		default:
 			sound::Play(sound::IDs::sndCuohu);

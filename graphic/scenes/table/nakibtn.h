@@ -41,6 +41,13 @@ public:
 	void enable(ButtonID buttonID);
 	void disable(ButtonID buttonID);
 	void enable(const std::bitset<btnMAXIMUM>& flagset);
+private: // ボタンの押し込み
+	int sunkenButton;
+	static const int NoSunkenButton = -3;
+public:
+	bool isSunkenButtonExists() {return sunkenButton != NoSunkenButton;}
+	int getSunkenButtonID() {return sunkenButton;}
+	void setSunkenButton(int buttonID = NoSunkenButton) {sunkenButton = buttonID;}
 private: // カーソル
 	int cursor;
 	static const int CursorDisabled = -3;

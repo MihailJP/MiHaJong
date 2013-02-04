@@ -48,7 +48,8 @@ void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 		btnColor.rgbaAsStruct.g /= 3;
 		btnColor.rgbaAsStruct.b /= 3;
 	}
-	buttons->setButton(buttonID, (cursor == buttonID) ? ButtonPic::raised : ButtonPic::clear,
+	buttons->setButton(buttonID,
+		(sunkenButton == buttonID) ? ButtonPic::sunken : ((cursor == buttonID) ? ButtonPic::raised : ButtonPic::clear),
 		buttonDat[currentButtonSet][buttonID].x * Geometry::WindowScale(),
 		buttonDat[currentButtonSet][buttonID].y * Geometry::WindowScale(),
 		117 * Geometry::WindowScale(), 36 * Geometry::WindowScale(),
@@ -71,6 +72,7 @@ void GameTableScreen::ButtonReconst::reconstruct() {
 void GameTableScreen::ButtonReconst::ChangeButtonSet(ButtonSet btnSet) {
 	currentButtonSet = btnSet;
 	cursor = CursorDisabled;
+	sunkenButton = NoSunkenButton;
 	buttonEnabled.reset();
 	reconstruct();
 }
@@ -116,7 +118,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ƒcƒ‚”Ô‚ÌŽž—p‚Ì
 GameTableScreen::ButtonReconst::ButtonReconst(GameTableScreen* parent) {
 	InitializeCriticalSection(&reconstructionCS);
 	caller = parent;
-	cursor = CursorDisabled;
+	cursor = CursorDisabled; sunkenButton = NoSunkenButton;
 	buttons = new ButtonPic(caller->caller->getDevice());
 	ChangeButtonSet(btnSetNormal);
 }

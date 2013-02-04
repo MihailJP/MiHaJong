@@ -59,7 +59,8 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PLAYE
 					gameStat->Player.val[targetPlayer].Hand[i].red,
 					tileX, tileY, Portrait, Obverse,
 					(tileCursor == i) ? 0xffff9999 : 0xffffffff);
-				if (caller->regions.size() <= i) caller->regions.resize(i + 1);
+				const Region nullRegion = {0, 0, -1, -1};
+				if (caller->regions.size() <= i) caller->regions.resize(i + 1, nullRegion);
 				const Region newRegion = {
 					tileX - ShowTile::VertTileWidth / 2, tileY - ShowTile::VertTileHeight / 2,
 					tileX + ShowTile::VertTileWidth / 2, tileY + ShowTile::VertTileHeight / 2,
