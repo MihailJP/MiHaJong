@@ -319,25 +319,10 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_BACK:       directTileCursor(13); break;
 	/* 決定キー */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
-		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
+		if ((od->dwData) && (tehaiReconst->isCursorEnabled()))
 			FinishTileChoice();
-		} else if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
-			if (!buttonReconst->isEnabled((ButtonReconst::ButtonID)buttonReconst->getCursor())) {
-				sound::Play(sound::IDs::sndCuohu);
-			} else if (buttonReconst->getButtonSet() == ButtonReconst::btnSetTsumo) {
-				switch (buttonReconst->getCursor()) {
-				case ButtonReconst::btnTsumo:
-					CallTsumoAgari();
-					break;
-				case ButtonReconst::btnKyuushu:
-					CallKyuushuKyuuhai();
-					break;
-				default:
-					sound::Play(sound::IDs::sndCuohu);
-					break;
-				}
-			}
-		}
+		else if ((od->dwData) && (buttonReconst->isCursorEnabled()))
+			ButtonPressed();
 		break;
 	}
 }
@@ -346,27 +331,62 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
 	const int scaledY = Y / Geometry::WindowScale();
 	const int region = whichRegion(scaledX, scaledY);
+	const bool isCursorEnabled = tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled();
 	const bool isValidTile = (region >= 0) && (region < NUM_OF_TILES_IN_HAND) &&
-		(tehaiReconst->isCursorEnabled()) &&
+		isCursorEnabled &&
 		(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[region].tile != NoTile);
+	const bool isButton = (region >= ButtonReconst::ButtonRegionNum) &&
+		(region < ButtonReconst::ButtonRegionNum + ButtonReconst::btnMAXIMUM) &&
+		isCursorEnabled;
 	switch (od->dwOfs) {
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
 		if ((region != tehaiReconst->getTileCursor()) && (isValidTile)) {
 			tehaiReconst->setTileCursor(region);
+			buttonReconst->setCursor();
 			sound::Play(sound::IDs::sndCursor);
 			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+			buttonReconst->reconstruct();
+		} else if ((region != (ButtonReconst::ButtonRegionNum + buttonReconst->getCursor())) && (isButton)) {
+			tehaiReconst->setTileCursor();
+			buttonReconst->setCursor(region - ButtonReconst::ButtonRegionNum);
+			sound::Play(sound::IDs::sndCursor);
+			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+			buttonReconst->reconstruct();
 		}
 		break;
 	case DIMOFS_BUTTON0: // マウスクリック
 		if ((isValidTile) && (od->dwData))
 			FinishTileChoice();
+		else if ((isButton) && (od->dwData))
+			ButtonPressed();
 		break;
 	}
 }
 
 /* 捨牌を決定する */
 void GameTableScreen::FinishTileChoice() {
+	sound::Play(sound::IDs::sndClick);
 	ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor()); // 牌の番号を設定
+}
+
+/* ボタンが押された時の処理 */
+void GameTableScreen::ButtonPressed() {
+	sound::Play(sound::IDs::sndButton);
+	if (!buttonReconst->isEnabled((ButtonReconst::ButtonID)buttonReconst->getCursor())) {
+		sound::Play(sound::IDs::sndCuohu);
+	} else if (buttonReconst->getButtonSet() == ButtonReconst::btnSetTsumo) {
+		switch (buttonReconst->getCursor()) {
+		case ButtonReconst::btnTsumo:
+			CallTsumoAgari();
+			break;
+		case ButtonReconst::btnKyuushu:
+			CallKyuushuKyuuhai();
+			break;
+		default:
+			sound::Play(sound::IDs::sndCuohu);
+			break;
+		}
+	}
 }
 
 void GameTableScreen::CallTsumoAgari() { // ツモアガリ
