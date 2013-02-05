@@ -8,6 +8,7 @@
 #include "../event.h"
 #include "../../mjcore/discard.h"
 #include "../utils.h"
+#include <functional>
 
 #include "table/yamahai.h"
 #include "table/tehai.h"
@@ -383,6 +384,21 @@ void GameTableScreen::FinishTileChoice() {
 
 /* ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Ìˆ— */
 void GameTableScreen::ButtonPressed() {
+	auto setMode = [&](DiscardTileNum::discardType mode, ButtonReconst::ButtonID button, std::function<bool(int, GameTable*)> f) -> void {
+		tileSelectMode = mode;
+		buttonReconst->setSunkenButton(button);
+		for (int i = 0; i < mihajong_graphic::GameTableScreen::ButtonReconst::btnMAXIMUM; ++i)
+			if (i != button)
+				buttonReconst->disable((mihajong_graphic::GameTableScreen::ButtonReconst::ButtonID)i);
+		buttonReconst->reconstruct();
+		tehaiReconst->enable();
+		for (int i = 0; i < NUM_OF_TILES_IN_HAND; ++i) {
+			GameTable tmpStat; std::memcpy(&tmpStat, GameStatus::gameStat(), sizeof (GameTable));
+			if (f(i, &tmpStat)) tehaiReconst->disable(i);
+		}
+		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
+	};
+
 	sound::Play(sound::IDs::sndButton);
 	if (!buttonReconst->isEnabled((ButtonReconst::ButtonID)buttonReconst->getCursor())) {
 		sound::Play(sound::IDs::sndCuohu);
@@ -395,20 +411,12 @@ void GameTableScreen::ButtonPressed() {
 			CallKyuushuKyuuhai();
 			break;
 		case ButtonReconst::btnRiichi: // —§’¼
-			tileSelectMode = DiscardTileNum::Riichi;
-			buttonReconst->setSunkenButton(ButtonReconst::btnRiichi);
-			for (int i = 0; i < ButtonReconst::btnMAXIMUM; ++i)
-				if (i != ButtonReconst::btnRiichi)
-					buttonReconst->disable((ButtonReconst::ButtonID)i);
-			buttonReconst->reconstruct();
-			tehaiReconst->enable();
-			for (int i = 0; i < NUM_OF_TILES_IN_HAND; ++i) {
-				GameTable tmpStat; std::memcpy(&tmpStat, GameStatus::gameStat(), sizeof (GameTable));
-				tmpStat.Player.val[tmpStat.CurrentPlayer.Active].Hand[i].tile = NoTile;
-				SHANTEN Shanten = utils::calcShanten(&tmpStat, tmpStat.CurrentPlayer.Active, ShantenAnalyzer::shantenAll);
-				if (Shanten > 0) tehaiReconst->disable(i);
-			}
-			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
+			setMode(DiscardTileNum::Riichi, ButtonReconst::btnRiichi,
+				[](int i, GameTable* tmpStat) -> bool {
+					tmpStat->Player.val[tmpStat->CurrentPlayer.Active].Hand[i].tile = NoTile;
+					SHANTEN Shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, ShantenAnalyzer::shantenAll);
+					return (Shanten > 0);
+				});
 			break;
 		default:
 			sound::Play(sound::IDs::sndCuohu);
