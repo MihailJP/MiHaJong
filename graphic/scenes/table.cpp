@@ -7,6 +7,7 @@
 #include "../../mjcore/bgmid.h"
 #include "../event.h"
 #include "../../mjcore/discard.h"
+#include "../utils.h"
 
 #include "table/yamahai.h"
 #include "table/tehai.h"
@@ -158,6 +159,8 @@ void GameTableScreen::Render() {
 void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 	EnterCriticalSection(&subSceneCS);
 	buttonReconst->ChangeButtonSet(ButtonReconst::btnSetNormal);
+	tehaiReconst->enable();
+	tileSelectMode = 0;
 	delete mySubScene; tehaiReconst->setTileCursor();
 	switch (static_cast<TableSubsceneID>(scene_ID)) {
 	case tblSubsceneBeginning:
@@ -233,6 +236,10 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
 		tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
 		buttonReconst->btnSetForDahai();
+		tehaiReconst->enable();
+		if (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag)
+			for (int i = 0; i < (NUM_OF_TILES_IN_HAND - 1); ++i)
+				tehaiReconst->disable(i);
 		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 		break;
 	default:
@@ -368,7 +375,10 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 /* ŽÌ”v‚ðŒˆ’è‚·‚é */
 void GameTableScreen::FinishTileChoice() {
 	sound::Play(sound::IDs::sndClick);
-	ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // ”v‚Ì”Ô†‚ðÝ’è
+	if (tehaiReconst->isCursorEnabled() && tehaiReconst->isEnabled(tehaiReconst->getTileCursor()))
+		ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // ”v‚Ì”Ô†‚ðÝ’è
+	else
+		sound::Play(sound::IDs::sndCuohu);
 }
 
 /* ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½Žž‚Ìˆ— */
@@ -384,13 +394,21 @@ void GameTableScreen::ButtonPressed() {
 		case ButtonReconst::btnKyuushu:
 			CallKyuushuKyuuhai();
 			break;
-		case ButtonReconst::btnRiichi:
+		case ButtonReconst::btnRiichi: // —§’¼
 			tileSelectMode = DiscardTileNum::Riichi;
 			buttonReconst->setSunkenButton(ButtonReconst::btnRiichi);
 			for (int i = 0; i < ButtonReconst::btnMAXIMUM; ++i)
 				if (i != ButtonReconst::btnRiichi)
 					buttonReconst->disable((ButtonReconst::ButtonID)i);
 			buttonReconst->reconstruct();
+			tehaiReconst->enable();
+			for (int i = 0; i < NUM_OF_TILES_IN_HAND; ++i) {
+				GameTable tmpStat; std::memcpy(&tmpStat, GameStatus::gameStat(), sizeof (GameTable));
+				tmpStat.Player.val[tmpStat.CurrentPlayer.Active].Hand[i].tile = NoTile;
+				SHANTEN Shanten = utils::calcShanten(&tmpStat, tmpStat.CurrentPlayer.Active, ShantenAnalyzer::shantenAll);
+				if (Shanten > 0) tehaiReconst->disable(i);
+			}
+			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
 			break;
 		default:
 			sound::Play(sound::IDs::sndCuohu);
