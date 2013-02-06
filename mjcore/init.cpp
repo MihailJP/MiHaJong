@@ -99,7 +99,8 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 		mihajong_graphic::utils::setfunc(
 			playerwind, playerRelative, RelativePositionOf, tilesLeft, calcRank, chkFuriten,
 			isTenpai, isRichiReqSatisfied, ShantenAnalyzer::calcShanten, chkdaopaiability,
-			yaku::yakuCalculator::chkShisanBuDa, yaku::yakuCalculator::chkShisiBuDa);
+			yaku::yakuCalculator::chkShisanBuDa, yaku::yakuCalculator::chkShisiBuDa,
+			countTilesInHand, chkAnkanAbility);
 	}
 
 	/* âπåπÇèâä˙âª */

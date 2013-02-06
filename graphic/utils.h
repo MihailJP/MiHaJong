@@ -20,6 +20,8 @@ typedef SHANTEN (*calcShanten_type)(const GameTable*, PLAYER_ID, ShantenAnalyzer
 typedef bool (*chkdaopaiability_type)(const GameTable*, PLAYER_ID);
 typedef bool (*chkShisanBuDa_type)(const GameTable*, PLAYER_ID);
 typedef bool (*chkShisiBuDa_type)(const GameTable*, PLAYER_ID);
+typedef Int8ByTile (*countTilesInHand_type)(const GameTable*, PLAYER_ID);
+typedef bool (*chkAnkanAbility_type)(const GameTable*, PLAYER_ID);
 
 #ifdef GRAPHIC_EXPORTS
 extern playerwind_type playerwind;
@@ -34,6 +36,8 @@ extern calcShanten_type calcShanten;
 extern chkdaopaiability_type chkdaopaiability;
 extern chkShisanBuDa_type chkShisanBuDa;
 extern chkShisiBuDa_type chkShisiBuDa;
+extern countTilesInHand_type countTilesInHand;
+extern chkAnkanAbility_type chkAnkanAbility;
 #endif
 
 EXPORT void setfunc(
@@ -48,7 +52,9 @@ EXPORT void setfunc(
 	calcShanten_type ptr_calcShanten,
 	chkdaopaiability_type ptr_chkdaopaiability,
 	chkShisanBuDa_type ptr_chkShisanBuDa,
-	chkShisiBuDa_type ptr_chkShisiBuDa);
+	chkShisiBuDa_type ptr_chkShisiBuDa,
+	countTilesInHand_type ptr_countTilesInHand,
+	chkAnkanAbility_type ptr_chkAnkanAbility);
 
 }
 }

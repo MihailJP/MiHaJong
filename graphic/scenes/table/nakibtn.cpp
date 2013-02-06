@@ -86,6 +86,9 @@ void GameTableScreen::ButtonReconst::enable(const std::bitset<btnMAXIMUM>& flags
 void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 	currentButtonSet = btnSetTsumo; buttonEnabled.reset(); // 状態をリセット
 	const GameTable* const gameStat = GameStatus::retrGameStat();
+	auto tilesMoreThan = [gameStat](int tiles) {
+		return (gameStat->TilePointer + tiles) < (gameStat->RinshanPointer - gameStat->DeadTiles - 1);
+	};
 	const PLAYER_ID ActivePlayer = gameStat->CurrentPlayer.Active;
 	const PlayerTable* const playerStat = &(gameStat->Player.val[ActivePlayer]);
 	const SHANTEN Shanten = utils::calcShanten(gameStat, ActivePlayer, ShantenAnalyzer::shantenAll);
@@ -93,8 +96,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		(Shanten <= 0) && // テンパイしている
 		(playerStat->MenzenFlag || (!rules::chkRule("riichi_shibari", "no"))) && // 門前であるか、リーチ縛りルールである
 		(!playerStat->RichiFlag.RichiFlag) && // まだリーチしていない
-		((gameStat->TilePointer + ((gameStat->gameType & AllSanma) ? 2 : 3)) < // 残りツモ牌が
-		(gameStat->RinshanPointer - gameStat->DeadTiles - 1))) // 十分あるなら
+		(tilesMoreThan((gameStat->gameType & AllSanma) ? 2 : 3))) // 残りツモ牌が十分あるなら
 		buttonEnabled[btnRiichi] = true; // リーチボタンを有効に
 
 	const bool DaoPaiAbilityFlag = utils::chkdaopaiability(gameStat, ActivePlayer);
@@ -106,6 +108,31 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 	if (((Shanten <= -1) && (playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile != NoTile)) || // 和了になっているか
 		ShisanBuDa || ShisiBuDa) // 十三不塔の場合（十三不塔なしの場合この変数はfalseになる）
 		buttonEnabled[btnTsumo] = true; // 和了ボタン
+
+	const Int8ByTile TileCount = utils::countTilesInHand(gameStat, ActivePlayer);
+	const int kanLim = rules::chkRule("fifth_kong", "no") ? 4 : 5;
+	const bool KanFlag = [tilesMoreThan, gameStat, TileCount, playerStat, kanLim]() -> bool {
+		for (int i = 1; i < TILE_NONFLOWER_MAX; ++i) {
+			if (tilesMoreThan(0) && (gameStat->KangNum < kanLim)) {
+				// 暗槓できる場合
+				if (TileCount.val[i] == 4)
+					return true;
+				// 加槓できる場合
+				else if (TileCount.val[i] == 1) {
+					for (int j = 1; j <= playerStat->MeldPointer; ++j)
+						if ((playerStat->Meld[j].tile == i) &&
+							((playerStat->Meld[j].mstat == meldTripletExposedLeft) ||
+							(playerStat->Meld[j].mstat == meldTripletExposedCenter) ||
+							(playerStat->Meld[j].mstat == meldTripletExposedRight)))
+							return true;
+				}
+			}
+		}
+		return false;
+	} ();
+	if (KanFlag && (playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile != NoTile) &&
+		(!playerStat->RichiFlag.RichiFlag) || utils::chkAnkanAbility(gameStat, ActivePlayer))
+		buttonEnabled[btnKan] = true;
 
 	reconstruct();
 }

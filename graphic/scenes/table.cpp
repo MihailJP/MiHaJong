@@ -376,10 +376,15 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 /* ŽÌ”v‚ðŒˆ’è‚·‚é */
 void GameTableScreen::FinishTileChoice() {
 	sound::Play(sound::IDs::sndClick);
-	if (tehaiReconst->isCursorEnabled() && tehaiReconst->isEnabled(tehaiReconst->getTileCursor()))
-		ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // ”v‚Ì”Ô†‚ðÝ’è
-	else
+	if (tehaiReconst->isCursorEnabled() && tehaiReconst->isEnabled(tehaiReconst->getTileCursor())) {
+		const Int8ByTile TileCount = utils::countTilesInHand(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
+		if ((tileSelectMode == DiscardTileNum::Ankan) && (TileCount.val[tehaiReconst->getTileCursor()] == 1))
+			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(DiscardTileNum::Kakan * DiscardTileNum::TypeStep)); // ‰ÁžÈ‚Ìê‡
+		else
+			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // ”v‚Ì”Ô†‚ðÝ’è
+	} else {
 		sound::Play(sound::IDs::sndCuohu);
+	}
 }
 
 /* ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½Žž‚Ìˆ— */
@@ -416,6 +421,25 @@ void GameTableScreen::ButtonPressed() {
 					tmpStat->Player.val[tmpStat->CurrentPlayer.Active].Hand[i].tile = NoTile;
 					SHANTEN Shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, ShantenAnalyzer::shantenAll);
 					return (Shanten > 0);
+				});
+			break;
+		case ButtonReconst::btnKan: // ƒJƒ“
+			setMode(DiscardTileNum::Ankan, ButtonReconst::btnKan,
+				[](int i, GameTable* tmpStat) -> bool {
+					bool flag = false;
+					const PLAYER_ID ActivePlayer = tmpStat->CurrentPlayer.Active;
+					const Int8ByTile TileCount = utils::countTilesInHand(tmpStat, ActivePlayer);
+					const PlayerTable* const playerStat = &(tmpStat->Player.val[ActivePlayer]);
+					if (TileCount.val[playerStat->Hand[i].tile] < 4) flag = true;
+					if (TileCount.val[playerStat->Hand[i].tile] == 4) {
+						for (int j = 1; j <= playerStat->MeldPointer; ++j)
+							if ((playerStat->Meld[j].tile == i) &&
+								((playerStat->Meld[j].mstat == meldTripletExposedLeft) ||
+								(playerStat->Meld[j].mstat == meldTripletExposedCenter) ||
+								(playerStat->Meld[j].mstat == meldTripletExposedRight)))
+								flag = false;
+					}
+					return flag;
 				});
 			break;
 		default:

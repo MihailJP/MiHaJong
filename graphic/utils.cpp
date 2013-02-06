@@ -15,6 +15,8 @@ calcShanten_type calcShanten = nullptr;
 chkdaopaiability_type chkdaopaiability = nullptr;
 chkShisanBuDa_type chkShisanBuDa = nullptr;
 chkShisiBuDa_type chkShisiBuDa = nullptr;
+countTilesInHand_type countTilesInHand = nullptr;
+chkAnkanAbility_type chkAnkanAbility = nullptr;
 
 EXPORT void setfunc(
 	playerwind_type ptr_playerwind,
@@ -28,7 +30,9 @@ EXPORT void setfunc(
 	calcShanten_type ptr_calcShanten,
 	chkdaopaiability_type ptr_chkdaopaiability,
 	chkShisanBuDa_type ptr_chkShisanBuDa,
-	chkShisiBuDa_type ptr_chkShisiBuDa)
+	chkShisiBuDa_type ptr_chkShisiBuDa,
+	countTilesInHand_type ptr_countTilesInHand,
+	chkAnkanAbility_type ptr_chkAnkanAbility)
 {
 	playerwind = ptr_playerwind;
 	playerRelative = ptr_playerRelative;
@@ -42,6 +46,8 @@ EXPORT void setfunc(
 	chkdaopaiability = ptr_chkdaopaiability;
 	chkShisanBuDa = ptr_chkShisanBuDa;
 	chkShisiBuDa = ptr_chkShisiBuDa;
+	countTilesInHand = ptr_countTilesInHand;
+	chkAnkanAbility = ptr_chkAnkanAbility;
 }
 
 }
