@@ -134,6 +134,19 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ƒcƒ‚”Ô‚ÌŽž—p‚Ì
 		(!playerStat->RichiFlag.RichiFlag) || utils::chkAnkanAbility(gameStat, ActivePlayer))
 		buttonEnabled[btnKan] = true;
 
+	const tileCode flowerTile = (gameStat->gameType & SanmaX) ? NorthWind : Flower;
+	const bool Flowerabilityflag = [gameStat, playerStat]() -> bool {
+		if (gameStat->gameType & SanmaX)
+			return (playerStat->Hand[NUM_OF_TILES_IN_HAND].tile == NorthWind) && (!rules::chkRule("flower_tiles", "no"));
+		else
+			return playerStat->Hand[NUM_OF_TILES_IN_HAND].tile > TILE_SUIT_FLOWERS;
+	} ();
+	if ((!rules::chkRule("flower_tiles", "no")) &&
+		(playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile != NoTile) &&
+		(TileCount.val[flowerTile] >= 1) &&
+		((!playerStat->RichiFlag.RichiFlag) || Flowerabilityflag))
+		buttonEnabled[btnFlower] = true;
+
 	reconstruct();
 }
 

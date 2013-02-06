@@ -442,6 +442,13 @@ void GameTableScreen::ButtonPressed() {
 					return flag;
 				});
 			break;
+		case ButtonReconst::btnFlower: // ‰Ô”v
+			setMode(DiscardTileNum::Flower, ButtonReconst::btnFlower,
+				[](int i, GameTable* tmpStat) -> bool {
+					return tmpStat->Player.val[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
+						(tmpStat->gameType & SanmaX) ? NorthWind : Flower;
+				});
+			break;
 		default:
 			sound::Play(sound::IDs::sndCuohu);
 			break;
