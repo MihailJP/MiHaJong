@@ -502,6 +502,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 			else if (RuleData::chkRule("quanbukao", "3han_40fu") || RuleData::chkRule("quanbukao", "4han_40fu"))
 				analysis->BasePoint = 40;
 		}
+		else analysis->BasePoint = 30;
 	}
 	/* –ğ”»’èƒ‹[ƒv */
 	std::map<std::string, Yaku::YAKU_HAN> yakuHan; // ó‚¯M‰Šú‰»
