@@ -30,10 +30,12 @@ void yaku::mentsuParser::makementsu_koutsu(Int8ByTile& countForMentsu, MELD_BUF 
 
 /* –Êq‚É•ª‰ğ‚·‚é */
 void yaku::mentsuParser::makementsu(const GameTable* const gameStat,
-	PLAYER_ID targetPlayer, ParseMode AtamaCode, int* const ProcessedMelds, MELD_BUF MianziDat)
+	PLAYER_ID targetPlayer, ParseMode AtamaCode, int* const ProcessedMelds_, MELD_BUF MianziDat)
 { /* –Êq‚É•ª‰ğ‚·‚é */
 	memset(MianziDat, 0, sizeof(MELD_BUF)); // ‰Šú‰»
 	auto countForMentsu = countTilesInHand(gameStat, targetPlayer);
+	int processedMelds;
+	int* const ProcessedMelds = ProcessedMelds_ ? ProcessedMelds_ : &processedMelds;
 	*ProcessedMelds = 0;
 
 	// “ª‚Æ‚È‚è“¾‚È‚¢”v‚È‚ç–ß‚é
