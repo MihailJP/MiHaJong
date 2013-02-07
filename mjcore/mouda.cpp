@@ -21,6 +21,7 @@ namespace {
 		/* TODO: ここでイベントフラグをリセット */
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubscenePlayerDahai);
 		DWORD result = mihajong_graphic::ui::WaitUI();
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 		DiscardTileNum discardTile(DiscardTileNum::fromSingleInt(result));
 		return discardTile;
 	}

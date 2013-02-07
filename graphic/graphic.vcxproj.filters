@@ -156,6 +156,9 @@
     <ClCompile Include="scenes\table\richibou.cpp">
       <Filter>ソース ファイル\scenes\table</Filter>
     </ClCompile>
+    <ClCompile Include="scenes\table\nakibtn.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scrmanip.h">
@@ -300,6 +303,12 @@
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
     <ClInclude Include="scenes\table\richibou.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\nakibtn.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\color.h">
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
   </ItemGroup>

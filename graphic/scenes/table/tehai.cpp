@@ -7,6 +7,7 @@ using utils::playerRelative;
 
 /* Žè”v‚ð•\Ž¦‚·‚é */
 void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PLAYER_ID targetPlayer) {
+#include "color.h"
 	int tilePos;
 	/* Žè”v */
 	switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
@@ -52,14 +53,21 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PLAYE
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i) {
 			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile) {
+				Color tileColor; tileColor.rgbaAsOneValue = (tileCursor == i) ? 0xffff9999 : 0xffffffff;
+				if (!tileEnabled[i]) { // ˆÃ“]ˆ—
+					tileColor.rgbaAsStruct.r /= 3;
+					tileColor.rgbaAsStruct.g /= 3;
+					tileColor.rgbaAsStruct.b /= 3;
+				}
 				const int tileX = HandPosH + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0);
 				const int tileY = TableSize - HandPosV;
 				TileTexture->NewTile(i + NUM_OF_TILES_IN_HAND * 3,
 					gameStat->Player.val[targetPlayer].Hand[i].tile,
 					gameStat->Player.val[targetPlayer].Hand[i].red,
 					tileX, tileY, Portrait, Obverse,
-					(tileCursor == i) ? 0xffff9999 : 0xffffffff);
-				if (caller->regions.size() <= i) caller->regions.resize(i + 1);
+					tileColor.rgbaAsOneValue);
+				const Region nullRegion = {0, 0, -1, -1};
+				if (caller->regions.size() <= i) caller->regions.resize(i + 1, nullRegion);
 				const Region newRegion = {
 					tileX - ShowTile::VertTileWidth / 2, tileY - ShowTile::VertTileHeight / 2,
 					tileX + ShowTile::VertTileWidth / 2, tileY + ShowTile::VertTileHeight / 2,
@@ -84,6 +92,7 @@ GameTableScreen::TehaiReconst::TehaiReconst(GameTableScreen* parent) {
 	caller = parent;
 	TileTexture = new ShowTile(parent->caller->getDevice());
 	tileCursor = tileCursorOff;
+	tileEnabled.set();
 }
 
 GameTableScreen::TehaiReconst::~TehaiReconst() {
