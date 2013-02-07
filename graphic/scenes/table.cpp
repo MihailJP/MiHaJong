@@ -235,6 +235,7 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		break;
 	case tblSubscenePlayerDahai:
 		mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
+		// カーソルとボタンの設定
 		tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
 		buttonReconst->btnSetForDahai();
 		tehaiReconst->enable();
@@ -242,6 +243,10 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			for (int i = 0; i < (NUM_OF_TILES_IN_HAND - 1); ++i)
 				tehaiReconst->disable(i);
 		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+		// リーチ後オートツモ切り
+		if ((GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag) &&
+			buttonReconst->areEnabled().none())
+			ui::UIEvent->set(NUM_OF_TILES_IN_HAND - 1);
 		break;
 	default:
 		mySubScene = new TableSubsceneNormal(caller->getDevice());
