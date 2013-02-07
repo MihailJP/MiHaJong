@@ -293,7 +293,7 @@ std::string RuleData::getRuleMaskExpr(const std::string& RuleTag) {
 }
 
 __declspec(dllexport) int RuleData::reqFailed(int ruleID, const int* const ruleStat) {
-	bool flag = ReqChecker::instantiate()->reqFailed(getRuleMaskExpr(nametbl[RuleID]), ruleStat);
+	bool flag = ReqChecker::instantiate()->reqFailed(getRuleMaskExpr(nametbl[ruleID]), ruleStat);
 	return flag ? 1 : 0;
 }
 
