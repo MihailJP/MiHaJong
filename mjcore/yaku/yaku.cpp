@@ -502,6 +502,11 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 			else if (RuleData::chkRule("quanbukao", "3han_40fu") || RuleData::chkRule("quanbukao", "4han_40fu"))
 				analysis->BasePoint = 40;
 		}
+		else if (analysis->shanten[ShantenAnalyzer::shantenZuhelong] == -1) { // 組合龍
+			mentsuParser::makementsu(gameStat, analysis->player, *pMode, nullptr, analysis->MianziDat);
+			calcbasepoints(gameStat, analysis); // 符を計算する
+		}
+		else analysis->BasePoint = 30;
 	}
 	/* 役判定ループ */
 	std::map<std::string, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
