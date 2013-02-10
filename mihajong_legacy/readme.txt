@@ -61,8 +61,6 @@
 	・OSの設定で左右のボタンを入れ替えているとマウスボタンで正常に打牌できない。
 	・ポン聴または吃聴の直後、画面下の待ち牌表示に変なものが表示される。
 	・上家が親のときサイコロの上に文字が表示される。
-	・OGGの読み込みでスタックオーバーフローするため現在OGG Vorbisサポートが無
-	　効化されている。
 
 
 ■ MihailJPの開発環境
@@ -80,12 +78,12 @@
 
 	・Hot Soup Processor 本体 (http://hsp.tv/)
 	・p2b.dll (http://www.geocities.jp/anachronism128/)
-	・hspcksum.dll (https://github.com/MihailJP/HSPCkSum/downloads)
 	・l_tooltips.as (http://lhsp.s206.xrea.com/hsp_object6.html)
 	・mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
 	・cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
 	・Lua スタティックライブラリ (http://luabinaries.sourceforge.net/download.html)
 	・Ruby 処理系 (http://www.ruby-lang.org/ja/downloads/)
+	・ruby-lzmaが使えない場合、 Python 処理系 (http://www.python.jp/download/)
 	・libogg/libvorbis (http://www.xiph.org/downloads/)
 	・GuruGuruSMF (http://gurugurusmf.migmig.net/)
 
