@@ -67,7 +67,6 @@ public:
 private:
 	int tileSelectMode;
 	void FinishTileChoice();
-	void ButtonPressed();
 	void CallTsumoAgari();
 	void CallKyuushuKyuuhai();
 };

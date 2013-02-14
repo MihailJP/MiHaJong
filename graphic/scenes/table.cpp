@@ -337,7 +337,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled()))
 			FinishTileChoice();
 		else if ((od->dwData) && (buttonReconst->isCursorEnabled()))
-			ButtonPressed();
+			buttonReconst->ButtonPressed();
 		break;
 	}
 }
@@ -373,7 +373,7 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		if ((isValidTile) && (od->dwData))
 			FinishTileChoice();
 		else if ((isButton) && (od->dwData))
-			ButtonPressed();
+			buttonReconst->ButtonPressed();
 		break;
 	}
 }
@@ -389,75 +389,6 @@ void GameTableScreen::FinishTileChoice() {
 			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // ”v‚Ì”Ô†‚ğİ’è
 	} else {
 		sound::Play(sound::IDs::sndCuohu);
-	}
-}
-
-/* ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Ìˆ— */
-void GameTableScreen::ButtonPressed() {
-	auto setMode = [&](DiscardTileNum::discardType mode, ButtonReconst::ButtonID button, std::function<bool(int, GameTable*)> f) -> void {
-		tileSelectMode = mode;
-		buttonReconst->setSunkenButton(button);
-		for (int i = 0; i < mihajong_graphic::GameTableScreen::ButtonReconst::btnMAXIMUM; ++i)
-			if (i != button)
-				buttonReconst->disable((mihajong_graphic::GameTableScreen::ButtonReconst::ButtonID)i);
-		buttonReconst->reconstruct();
-		tehaiReconst->enable();
-		for (int i = 0; i < NUM_OF_TILES_IN_HAND; ++i) {
-			GameTable tmpStat; std::memcpy(&tmpStat, GameStatus::gameStat(), sizeof (GameTable));
-			if (f(i, &tmpStat)) tehaiReconst->disable(i);
-		}
-		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
-	};
-
-	sound::Play(sound::IDs::sndButton);
-	if (!buttonReconst->isEnabled((ButtonReconst::ButtonID)buttonReconst->getCursor())) {
-		sound::Play(sound::IDs::sndCuohu);
-	} else if (buttonReconst->getButtonSet() == ButtonReconst::btnSetTsumo) {
-		switch (buttonReconst->getCursor()) {
-		case ButtonReconst::btnTsumo:
-			CallTsumoAgari();
-			break;
-		case ButtonReconst::btnKyuushu:
-			CallKyuushuKyuuhai();
-			break;
-		case ButtonReconst::btnRiichi: // —§’¼
-			setMode(DiscardTileNum::Riichi, ButtonReconst::btnRiichi,
-				[](int i, GameTable* tmpStat) -> bool {
-					tmpStat->Player.val[tmpStat->CurrentPlayer.Active].Hand[i].tile = NoTile;
-					SHANTEN Shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, ShantenAnalyzer::shantenAll);
-					return (Shanten > 0);
-				});
-			break;
-		case ButtonReconst::btnKan: // ƒJƒ“
-			setMode(DiscardTileNum::Ankan, ButtonReconst::btnKan,
-				[](int i, GameTable* tmpStat) -> bool {
-					bool flag = false;
-					const PLAYER_ID ActivePlayer = tmpStat->CurrentPlayer.Active;
-					const Int8ByTile TileCount = utils::countTilesInHand(tmpStat, ActivePlayer);
-					const PlayerTable* const playerStat = &(tmpStat->Player.val[ActivePlayer]);
-					if (TileCount.val[playerStat->Hand[i].tile] < 4) flag = true;
-					if (TileCount.val[playerStat->Hand[i].tile] == 4) {
-						for (int j = 1; j <= playerStat->MeldPointer; ++j)
-							if ((playerStat->Meld[j].tile == i) &&
-								((playerStat->Meld[j].mstat == meldTripletExposedLeft) ||
-								(playerStat->Meld[j].mstat == meldTripletExposedCenter) ||
-								(playerStat->Meld[j].mstat == meldTripletExposedRight)))
-								flag = false;
-					}
-					return flag;
-				});
-			break;
-		case ButtonReconst::btnFlower: // ‰Ô”v
-			setMode(DiscardTileNum::Flower, ButtonReconst::btnFlower,
-				[](int i, GameTable* tmpStat) -> bool {
-					return tmpStat->Player.val[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
-						(tmpStat->gameType & SanmaX) ? NorthWind : Flower;
-				});
-			break;
-		default:
-			sound::Play(sound::IDs::sndCuohu);
-			break;
-		}
 	}
 }
 
