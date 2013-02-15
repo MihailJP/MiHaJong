@@ -652,6 +652,15 @@ EndType ronhuproc(GameTable* const gameStat) {
 			gameStat->Player[i].DeclarationFlag.Chi = chiiNone;
 		}
 	}
+	/* 当たり牌見逃しを同順フリテンにする処理 */
+	for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
+		const tileCode xTile = gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].tile;
+		gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
+		const SHANTEN tmpShanten = ShantenAnalyzer::calcShanten(gameStat, i, ShantenAnalyzer::shantenAll);
+		if ((tmpShanten == -1) && (!(gameStat->Player[i].DeclarationFlag.Ron)))
+			gameStat->Player[i].DoujunFuriten = true;
+		gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].tile = xTile;
+	}
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */
 	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
 		if (gameStat->Player[i].DeclarationFlag.Ron) {
