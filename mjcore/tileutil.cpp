@@ -194,6 +194,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 MJCORE Int8ByTile countTilesInHand(const GameTable* const gameStat, PLAYER_ID playerID) {
 	// 手牌に存在する牌を種類別にカウントする（鳴き面子・暗槓は除く）
 	Int8ByTile count; memset(&count, 0, sizeof(count)); tileCode tmpTC;
+	if ((playerID < 0) || (playerID > PLAYERS)) return Int8ByTile();
 	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
 		if ((tmpTC = gameStat->Player[playerID].Hand[i].tile) != NoTile)
 			count[tmpTC]++;
