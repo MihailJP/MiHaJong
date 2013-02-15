@@ -17,6 +17,7 @@
 #include "yaku/yaku.h"
 #include "remote.h"
 #include "../graphic/graphic.h"
+#include "../graphic/scenes/table/naki_id.h"
 
 namespace {
 
@@ -513,6 +514,65 @@ void checkpao(GameTable* const gameStat) {
 	return;
 }
 
+namespace {
+	void playerfuuro(GameTable* gameStat) {
+		PlayerTable* const playerStat = &(gameStat->Player[gameStat->PlayerID]);
+		using namespace mihajong_graphic;
+		using namespace mihajong_graphic::naki;
+		Subscene(tblSubscenePlayerNaki);
+		DWORD result = ui::WaitUI();
+		Subscene(tblSubsceneNone);
+		switch ((NakiTypeID)result) {
+		case nakiRon:
+			playerStat->DeclarationFlag.Ron = true;
+			playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
+			playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].red = gameStat->CurrentDiscard.red;
+			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Ron);
+			break;
+		case nakiKan:
+			playerStat->DeclarationFlag.Kan = true;
+			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Kan);
+			break;
+		case nakiPon:
+			playerStat->DeclarationFlag.Pon = true;
+			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Pon);
+			break;
+		case nakiChiLower:
+			playerStat->DeclarationFlag.Chi = chiiLower;
+			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Chii_Lower);
+			break;
+		case nakiChiMiddle:
+			playerStat->DeclarationFlag.Chi = chiiMiddle;
+			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Chii_Middle);
+			break;
+		case nakiChiUpper:
+			playerStat->DeclarationFlag.Chi = chiiUpper;
+			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Chii_Upper);
+			break;
+		case nakiNone:
+			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Ignore);
+			break;
+		default:
+			{
+				CodeConv::tostringstream o;
+				o << _T("インターフェイスからの戻り値が異常です！！ [") <<
+					result << _T(']');
+				error(o.str().c_str());
+			}
+			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Ignore);
+			break;
+		}
+	}
+}
+
 /* 栄和のときの処理 */
 EndType ronhuproc(GameTable* const gameStat) {
 	EndType RoundEndType = Continuing;
@@ -528,7 +588,8 @@ EndType ronhuproc(GameTable* const gameStat) {
 		if (gameStat->CurrentPlayer.Active != i) {
 			gameStat->CurrentPlayer.Passive = i;
 			if (gameStat->CurrentPlayer.Passive == gameStat->PlayerID) {
-				/* TODO: プレイヤー鳴き選択 playerfuuro GameStat, GameEnv */
+				mihajong_graphic::GameStatus::updateGameStat(gameStat);
+				playerfuuro(gameStat);
 			} else if (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Passive].RemotePlayerFlag == 0) {
 				/* COMが「カンニング」しないように処理 */
 				GameTable* sandbox = makesandBox(gameStat, gameStat->CurrentPlayer.Passive);

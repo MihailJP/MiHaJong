@@ -19,6 +19,8 @@
 #include "table/chicha.h"
 #include "table/nakibtn.h"
 
+#include "table/naki_id.h"
+
 namespace mihajong_graphic {
 	
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
@@ -248,6 +250,14 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			buttonReconst->areEnabled().none())
 			ui::UIEvent->set(NUM_OF_TILES_IN_HAND - 1);
 		break;
+	case tblSubscenePlayerNaki:
+		mySubScene = new TableSubscenePlayerNaki(caller->getDevice());
+		// カーソルとボタンの設定
+		buttonReconst->btnSetForNaki();
+		buttonReconst->setCursor(ButtonReconst::btnRon);
+		if (buttonReconst->areEnabled().none())
+			ui::UIEvent->set(naki::nakiNone);
+		break;
 	default:
 		mySubScene = new TableSubsceneNormal(caller->getDevice());
 		break;
@@ -343,12 +353,13 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 }
 
 void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
 	const int scaledY = Y / Geometry::WindowScale();
 	const int region = whichRegion(scaledX, scaledY);
 	const bool isCursorEnabled = tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled();
 	const bool isValidTile = (region >= 0) && (region < NUM_OF_TILES_IN_HAND) &&
-		isCursorEnabled &&
+		isCursorEnabled && (!isNakiSel) &&
 		(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[region].tile != NoTile);
 	const bool isButton = (region >= ButtonReconst::ButtonRegionNum) &&
 		(region < ButtonReconst::ButtonRegionNum + ButtonReconst::btnMAXIMUM) &&
@@ -374,6 +385,12 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 			FinishTileChoice();
 		else if ((isButton) && (od->dwData))
 			buttonReconst->ButtonPressed();
+		break;
+	case DIMOFS_BUTTON1: // マウス右クリック
+		if ((od->dwData) && isNakiSel) { // 鳴き選択中の時
+			sound::Play(sound::IDs::sndClick);
+			ui::UIEvent->set(naki::nakiNone); // 牌の番号を設定
+		}
 		break;
 	}
 }
