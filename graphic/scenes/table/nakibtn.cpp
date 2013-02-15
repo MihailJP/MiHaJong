@@ -157,6 +157,69 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 	reconstruct();
 }
 
+void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
+	currentButtonSet = btnSetNormal; buttonEnabled.reset(); // 状態をリセット
+	GameTable* const gameStat = new GameTable;
+	memcpy(gameStat, GameStatus::retrGameStat(), sizeof (GameTable));
+	auto tilesMoreThan = [gameStat](int tiles) {
+		return (gameStat->TilePointer + tiles) < (gameStat->RinshanPointer - gameStat->DeadTiles - 1);
+	};
+	const PLAYER_ID ActivePlayer = gameStat->CurrentPlayer.Active;
+	const PLAYER_ID PassivePlayer = gameStat->CurrentPlayer.Passive;
+	PlayerTable* const playerStat = &(gameStat->Player.val[PassivePlayer]);
+	playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
+	const SHANTEN Shanten = utils::calcShanten(gameStat, gameStat->PlayerID, ShantenAnalyzer::shantenAll);
+	playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile = NoTile;
+
+	if (gameStat->CurrentDiscard.tile > TILE_SUIT_FLOWERS) goto end; /* 花牌の場合は残りの判定をスキップ */
+	if (playerStat->AgariHouki) goto end; /* 和了り放棄だったら残りの判定をスキップ */
+	if ((gameStat->KangFlag.chankanFlag == chankanOfAnkan) && // 暗槓に対する搶槓判定のときで、
+		(utils::calcShanten(gameStat, PassivePlayer, ShantenAnalyzer::shantenOrphans) >= 0)) // 国士聴牌でない場合は
+		goto end; // 残りの判定をスキップ
+
+	if (Shanten < 0) // 出た牌が当たり牌
+		buttonEnabled[btnRon] = true; // 和了ボタン（フリテンの場合なども点灯）
+
+	if (!playerStat->RichiFlag.RichiFlag) { // リーチしてないとき……
+		const Int8ByTile TileCount = utils::countTilesInHand(gameStat, PassivePlayer);
+		const int kanLim = rules::chkRule("fifth_kong", "no") ? 4 : 5;
+
+		if (TileCount.val[gameStat->CurrentDiscard.tile] >= 2)
+			buttonEnabled[btnPon] = true; // ポン
+		if ((TileCount.val[gameStat->CurrentDiscard.tile] >= 3) && // 出てきた牌を暗刻で持っていて
+			(gameStat->KangFlag.chankanFlag == chankanNone) && // 槍槓の判定中ではなくて
+			(gameStat->KangNum < kanLim)) // 限度以内の場合
+			buttonEnabled[btnKan] = true; // カン
+
+		// チーできる条件：上家の捨牌であること、かつ、数牌であること
+		if ((gameStat->gameType & Yonma) && // 四麻である
+			(gameStat->CurrentDiscard.tile < TILE_SUIT_HONORS) && // 数牌で
+			(gameStat->KangFlag.chankanFlag == chankanNone) && // 槍槓の判定中ではなくて
+			(gameStat->CurrentPlayer.Active == ((gameStat->CurrentPlayer.Passive + 3) % 4))) { // 捨てたのが上家
+				if ((gameStat->CurrentDiscard.tile >= 1) &&
+					(TileCount.val[gameStat->CurrentDiscard.tile + 1] >= 1) && (TileCount.val[gameStat->CurrentDiscard.tile + 2] >= 1)) { // 下吃
+						buttonEnabled[btnChii1] = true;
+				}
+				if ((gameStat->CurrentDiscard.tile >= 2) &&
+					(TileCount.val[gameStat->CurrentDiscard.tile - 1] >= 1) && (TileCount.val[gameStat->CurrentDiscard.tile + 1] >= 1)) { // 嵌張吃
+						buttonEnabled[btnChii2] = true;
+				}
+				if ((gameStat->CurrentDiscard.tile >= 3) &&
+					(TileCount.val[gameStat->CurrentDiscard.tile - 2] >= 1) && (TileCount.val[gameStat->CurrentDiscard.tile - 1] >= 1)) { // 上吃
+						buttonEnabled[btnChii3] = true;
+				}
+		}
+	}
+
+	if (buttonEnabled.any()) // 何らかのボタンが点灯していたら無視するボタンも点灯する
+		buttonEnabled[btnPass] = true;
+
+end:
+	delete gameStat;
+	reconstruct();
+	return;
+}
+
 GameTableScreen::ButtonReconst::ButtonReconst(GameTableScreen* parent) {
 	InitializeCriticalSection(&reconstructionCS);
 	caller = parent;
@@ -231,6 +294,33 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					return tmpStat->Player.val[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
 						(tmpStat->gameType & SanmaX) ? NorthWind : Flower;
 				});
+			break;
+		default:
+			sound::Play(sound::IDs::sndCuohu);
+			break;
+		}
+	} else if (this->getButtonSet() == btnSetNormal) {
+		switch (this->getCursor()) {
+		case btnPass:
+			ui::UIEvent->set(naki::nakiNone);
+			break;
+		case btnRon:
+			ui::UIEvent->set(naki::nakiRon);
+			break;
+		case btnKan:
+			ui::UIEvent->set(naki::nakiKan);
+			break;
+		case btnPon:
+			ui::UIEvent->set(naki::nakiPon);
+			break;
+		case btnChii1:
+			ui::UIEvent->set(naki::nakiChiLower);
+			break;
+		case btnChii2:
+			ui::UIEvent->set(naki::nakiChiMiddle);
+			break;
+		case btnChii3:
+			ui::UIEvent->set(naki::nakiChiUpper);
 			break;
 		default:
 			sound::Play(sound::IDs::sndCuohu);
