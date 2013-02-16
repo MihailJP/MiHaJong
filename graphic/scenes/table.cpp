@@ -237,8 +237,11 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		break;
 	case tblSubscenePlayerDahai:
 		mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
+		(void)GameStatus::retrGameStat();
 		// カーソルとボタンの設定
 		tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
+		while (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[tehaiReconst->getTileCursor()].tile == NoTile)
+			tehaiReconst->decrTileCursor(); // 鳴いた直後の時のカーソル初期位置
 		buttonReconst->btnSetForDahai();
 		tehaiReconst->enable();
 		if (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag)
@@ -249,15 +252,19 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		if ((GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag) &&
 			buttonReconst->areEnabled().none())
 			ui::UIEvent->set(NUM_OF_TILES_IN_HAND - 1);
+		else // 自摸番が来たら音を鳴らす
+			sound::Play(sound::IDs::sndBell);
 		break;
 	case tblSubscenePlayerNaki:
 		mySubScene = new TableSubscenePlayerNaki(caller->getDevice());
 		// カーソルとボタンの設定
 		buttonReconst->btnSetForNaki();
-		buttonReconst->setCursor(ButtonReconst::btnRon);
+		buttonReconst->setCursor(buttonReconst->isEnabled(ButtonReconst::btnRon) ? ButtonReconst::btnRon : ButtonReconst::btnPass);
 		buttonReconst->reconstruct();
 		if (buttonReconst->areEnabled().none())
 			ui::UIEvent->set(naki::nakiNone);
+		else // 音を鳴らす
+			sound::Play(sound::IDs::sndSignal);
 		break;
 	default:
 		mySubScene = new TableSubsceneNormal(caller->getDevice());
@@ -269,6 +276,7 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 // -------------------------------------------------------------------------
 
 void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 	auto cursorMoved = [&]() -> void {
 		sound::Play(sound::IDs::sndCursor);
 		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
@@ -289,7 +297,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	switch (od->dwOfs) {
 	/* ボタン選択/牌選択 モード切り替え */
 	case DIK_UP: case DIK_K: // 牌選択モードに切り替え
-		if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
+		if ((od->dwData) && (buttonReconst->isCursorEnabled()) && (!isNakiSel)) {
 			tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
 			buttonReconst->setCursor();
 			cursorMoved();

@@ -1,3 +1,8 @@
+#ifdef _MSC_VER
+#define _USE_MATH_DEFINES /* required for M_PI by MS VC++ */
+#endif
+#include <cmath>
+
 #include "nakibtn.h"
 
 #include "../../geometry.h"
@@ -36,7 +41,22 @@ const GameTableScreen::ButtonReconst::BtnData
 };
 
 void GameTableScreen::ButtonReconst::Render() {
+	if (getCursor() != CursorDisabled) {
+#include "color.h"
+		Color btnColor; btnColor.rgbaAsOneValue = buttonDat[currentButtonSet][cursor].color;
+		const double Zeit = (double)(currTime() % 90000000ULL);
+		btnColor.rgbaAsStruct.r = (unsigned)((double)btnColor.rgbaAsStruct.r * (sin(Zeit / 4500000.0 * M_PI) / 4.0 + 0.75));
+		btnColor.rgbaAsStruct.g = (unsigned)((double)btnColor.rgbaAsStruct.g * (sin(Zeit / 4500000.0 * M_PI) / 4.0 + 0.75));
+		btnColor.rgbaAsStruct.b = (unsigned)((double)btnColor.rgbaAsStruct.b * (sin(Zeit / 4500000.0 * M_PI) / 4.0 + 0.75));
+		buttons->setButton(cursor,
+			(sunkenButton == cursor) ? ButtonPic::sunken : (buttonEnabled[cursor] ? ButtonPic::raised : ButtonPic::clear),
+			buttonDat[currentButtonSet][cursor].x * Geometry::WindowScale(),
+			buttonDat[currentButtonSet][cursor].y * Geometry::WindowScale(),
+			117 * Geometry::WindowScale(), 36 * Geometry::WindowScale(),
+			btnColor.rgbaAsOneValue, buttonDat[currentButtonSet][cursor].label);
+	} 
 	EnterCriticalSection(&reconstructionCS);
+	buttons->Render();
 	buttons->Render();
 	buttons->Render();
 	LeaveCriticalSection(&reconstructionCS);
@@ -45,13 +65,13 @@ void GameTableScreen::ButtonReconst::Render() {
 void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 #include "color.h"
 	Color btnColor; btnColor.rgbaAsOneValue = buttonDat[currentButtonSet][buttonID].color;
-	if (!buttonEnabled[buttonID]) { // à√ì]èàóù
+	/*if (!buttonEnabled[buttonID]) { // à√ì]èàóù
 		btnColor.rgbaAsStruct.r /= 3;
 		btnColor.rgbaAsStruct.g /= 3;
 		btnColor.rgbaAsStruct.b /= 3;
-	}
+	}*/
 	buttons->setButton(buttonID,
-		(sunkenButton == buttonID) ? ButtonPic::sunken : ((cursor == buttonID) ? ButtonPic::raised : ButtonPic::clear),
+		(sunkenButton == buttonID) ? ButtonPic::sunken : (buttonEnabled[buttonID] ? ButtonPic::raised : ButtonPic::clear),
 		buttonDat[currentButtonSet][buttonID].x * Geometry::WindowScale(),
 		buttonDat[currentButtonSet][buttonID].y * Geometry::WindowScale(),
 		117 * Geometry::WindowScale(), 36 * Geometry::WindowScale(),
@@ -226,11 +246,16 @@ GameTableScreen::ButtonReconst::ButtonReconst(GameTableScreen* parent) {
 	cursor = CursorDisabled; sunkenButton = NoSunkenButton;
 	buttons = new ButtonPic(caller->caller->getDevice());
 	ChangeButtonSet(btnSetNormal);
-}
+};
 
 GameTableScreen::ButtonReconst::~ButtonReconst() {
 	delete buttons;
 	DeleteCriticalSection(&reconstructionCS);
+}
+
+std::uint64_t GameTableScreen::ButtonReconst::currTime() { /* åªç›éûçè(WindowsÇ≈ÇÕ100nsíPà ) */
+	FILETIME Zeit; GetSystemTimeAsFileTime(&Zeit);
+	return ((std::uint64_t)Zeit.dwHighDateTime << 32) | Zeit.dwLowDateTime;
 }
 
 /* É{É^ÉìÇ™âüÇ≥ÇÍÇΩéûÇÃèàóù */
@@ -277,7 +302,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					const Int8ByTile TileCount = utils::countTilesInHand(tmpStat, ActivePlayer);
 					const PlayerTable* const playerStat = &(tmpStat->Player.val[ActivePlayer]);
 					if (TileCount.val[playerStat->Hand[i].tile] < 4) flag = true;
-					if (TileCount.val[playerStat->Hand[i].tile] == 4) {
+					if (TileCount.val[playerStat->Hand[i].tile] == 1) {
 						for (int j = 1; j <= playerStat->MeldPointer; ++j)
 							if ((playerStat->Meld[j].tile == i) &&
 								((playerStat->Meld[j].mstat == meldTripletExposedLeft) ||

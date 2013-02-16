@@ -33,6 +33,8 @@ public:
 	void disable() {tileEnabled.reset();}
 	void disable(unsigned tileID) {tileEnabled[tileID] = false;}
 	bool isEnabled(unsigned tileID) {return tileEnabled[tileID];}
+private: // ŽžŠÔŠÖŒW
+	std::uint64_t currTime();
 };
 
 }

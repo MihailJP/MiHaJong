@@ -68,6 +68,8 @@ public:
 	void Render();
 	explicit ButtonReconst(GameTableScreen* parent);
 	~ButtonReconst();
+private: // ŽžŠÔŠÖŒW
+	std::uint64_t currTime();
 };
 
 }
