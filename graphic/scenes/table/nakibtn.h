@@ -62,6 +62,8 @@ private: // Ä\’zE•\¦ˆ—
 	CRITICAL_SECTION reconstructionCS;
 public:
 	void btnSetForDahai();
+	void btnSetForNaki();
+	void ButtonPressed();
 	void reconstruct();
 	void Render();
 	explicit ButtonReconst(GameTableScreen* parent);

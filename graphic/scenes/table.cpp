@@ -19,6 +19,8 @@
 #include "table/chicha.h"
 #include "table/nakibtn.h"
 
+#include "table/naki_id.h"
+
 namespace mihajong_graphic {
 	
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
@@ -248,6 +250,15 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			buttonReconst->areEnabled().none())
 			ui::UIEvent->set(NUM_OF_TILES_IN_HAND - 1);
 		break;
+	case tblSubscenePlayerNaki:
+		mySubScene = new TableSubscenePlayerNaki(caller->getDevice());
+		// カーソルとボタンの設定
+		buttonReconst->btnSetForNaki();
+		buttonReconst->setCursor(ButtonReconst::btnRon);
+		buttonReconst->reconstruct();
+		if (buttonReconst->areEnabled().none())
+			ui::UIEvent->set(naki::nakiNone);
+		break;
 	default:
 		mySubScene = new TableSubsceneNormal(caller->getDevice());
 		break;
@@ -337,18 +348,19 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled()))
 			FinishTileChoice();
 		else if ((od->dwData) && (buttonReconst->isCursorEnabled()))
-			ButtonPressed();
+			buttonReconst->ButtonPressed();
 		break;
 	}
 }
 
 void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
 	const int scaledY = Y / Geometry::WindowScale();
 	const int region = whichRegion(scaledX, scaledY);
 	const bool isCursorEnabled = tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled();
 	const bool isValidTile = (region >= 0) && (region < NUM_OF_TILES_IN_HAND) &&
-		isCursorEnabled &&
+		isCursorEnabled && (!isNakiSel) &&
 		(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[region].tile != NoTile);
 	const bool isButton = (region >= ButtonReconst::ButtonRegionNum) &&
 		(region < ButtonReconst::ButtonRegionNum + ButtonReconst::btnMAXIMUM) &&
@@ -373,7 +385,13 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		if ((isValidTile) && (od->dwData))
 			FinishTileChoice();
 		else if ((isButton) && (od->dwData))
-			ButtonPressed();
+			buttonReconst->ButtonPressed();
+		break;
+	case DIMOFS_BUTTON1: // マウス右クリック
+		if ((od->dwData) && isNakiSel) { // 鳴き選択中の時
+			sound::Play(sound::IDs::sndClick);
+			ui::UIEvent->set(naki::nakiNone); // 牌の番号を設定
+		}
 		break;
 	}
 }
@@ -389,75 +407,6 @@ void GameTableScreen::FinishTileChoice() {
 			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // 牌の番号を設定
 	} else {
 		sound::Play(sound::IDs::sndCuohu);
-	}
-}
-
-/* ボタンが押された時の処理 */
-void GameTableScreen::ButtonPressed() {
-	auto setMode = [&](DiscardTileNum::discardType mode, ButtonReconst::ButtonID button, std::function<bool(int, GameTable*)> f) -> void {
-		tileSelectMode = mode;
-		buttonReconst->setSunkenButton(button);
-		for (int i = 0; i < mihajong_graphic::GameTableScreen::ButtonReconst::btnMAXIMUM; ++i)
-			if (i != button)
-				buttonReconst->disable((mihajong_graphic::GameTableScreen::ButtonReconst::ButtonID)i);
-		buttonReconst->reconstruct();
-		tehaiReconst->enable();
-		for (int i = 0; i < NUM_OF_TILES_IN_HAND; ++i) {
-			GameTable tmpStat; std::memcpy(&tmpStat, GameStatus::gameStat(), sizeof (GameTable));
-			if (f(i, &tmpStat)) tehaiReconst->disable(i);
-		}
-		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
-	};
-
-	sound::Play(sound::IDs::sndButton);
-	if (!buttonReconst->isEnabled((ButtonReconst::ButtonID)buttonReconst->getCursor())) {
-		sound::Play(sound::IDs::sndCuohu);
-	} else if (buttonReconst->getButtonSet() == ButtonReconst::btnSetTsumo) {
-		switch (buttonReconst->getCursor()) {
-		case ButtonReconst::btnTsumo:
-			CallTsumoAgari();
-			break;
-		case ButtonReconst::btnKyuushu:
-			CallKyuushuKyuuhai();
-			break;
-		case ButtonReconst::btnRiichi: // 立直
-			setMode(DiscardTileNum::Riichi, ButtonReconst::btnRiichi,
-				[](int i, GameTable* tmpStat) -> bool {
-					tmpStat->Player.val[tmpStat->CurrentPlayer.Active].Hand[i].tile = NoTile;
-					SHANTEN Shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, ShantenAnalyzer::shantenAll);
-					return (Shanten > 0);
-				});
-			break;
-		case ButtonReconst::btnKan: // カン
-			setMode(DiscardTileNum::Ankan, ButtonReconst::btnKan,
-				[](int i, GameTable* tmpStat) -> bool {
-					bool flag = false;
-					const PLAYER_ID ActivePlayer = tmpStat->CurrentPlayer.Active;
-					const Int8ByTile TileCount = utils::countTilesInHand(tmpStat, ActivePlayer);
-					const PlayerTable* const playerStat = &(tmpStat->Player.val[ActivePlayer]);
-					if (TileCount.val[playerStat->Hand[i].tile] < 4) flag = true;
-					if (TileCount.val[playerStat->Hand[i].tile] == 4) {
-						for (int j = 1; j <= playerStat->MeldPointer; ++j)
-							if ((playerStat->Meld[j].tile == i) &&
-								((playerStat->Meld[j].mstat == meldTripletExposedLeft) ||
-								(playerStat->Meld[j].mstat == meldTripletExposedCenter) ||
-								(playerStat->Meld[j].mstat == meldTripletExposedRight)))
-								flag = false;
-					}
-					return flag;
-				});
-			break;
-		case ButtonReconst::btnFlower: // 花牌
-			setMode(DiscardTileNum::Flower, ButtonReconst::btnFlower,
-				[](int i, GameTable* tmpStat) -> bool {
-					return tmpStat->Player.val[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
-						(tmpStat->gameType & SanmaX) ? NorthWind : Flower;
-				});
-			break;
-		default:
-			sound::Play(sound::IDs::sndCuohu);
-			break;
-		}
 	}
 }
 

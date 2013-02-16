@@ -17,4 +17,11 @@ public:
 	void Render();
 };
 
+class TableSubscenePlayerNaki : public TableSubscenePlayerProto {
+public:
+	TableSubscenePlayerNaki(LPDIRECT3DDEVICE9 device);
+	~TableSubscenePlayerNaki();
+	void Render();
+};
+
 }

@@ -222,6 +222,7 @@
     <ClInclude Include="scenes\table\color.h" />
     <ClInclude Include="scenes\table\nakibtn.h" />
     <ClInclude Include="scenes\table\nakihai.h" />
+    <ClInclude Include="scenes\table\naki_id.h" />
     <ClInclude Include="scenes\table\richibou.h" />
     <ClInclude Include="scenes\table\showdice.h" />
     <ClInclude Include="scenes\table\sutehai.h" />

@@ -23,4 +23,15 @@ void TableSubscenePlayerDahai::Render() {
 
 // -------------------------------------------------------------------------
 
+TableSubscenePlayerNaki::TableSubscenePlayerNaki(LPDIRECT3DDEVICE9 device) : TableSubscenePlayerProto(device) {
+}
+
+TableSubscenePlayerNaki::~TableSubscenePlayerNaki() {
+}
+
+void TableSubscenePlayerNaki::Render() {
+}
+
+// -------------------------------------------------------------------------
+
 }
