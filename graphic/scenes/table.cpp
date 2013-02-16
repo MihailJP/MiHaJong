@@ -237,8 +237,11 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		break;
 	case tblSubscenePlayerDahai:
 		mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
+		(void)GameStatus::retrGameStat();
 		// カーソルとボタンの設定
 		tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
+		while (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[tehaiReconst->getTileCursor()].tile == NoTile)
+			tehaiReconst->decrTileCursor(); // 鳴いた直後の時のカーソル初期位置
 		buttonReconst->btnSetForDahai();
 		tehaiReconst->enable();
 		if (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag)
