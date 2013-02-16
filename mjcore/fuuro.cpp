@@ -843,9 +843,9 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 	} else if (!chkGameType(gameStat, AllSanma)) {
 		/* ‹h‚Ìˆ— */
 		/* ŽOl‘Å‚¿‚Å‚Í‹h‚È‚µ */
-		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Passive, sRight)].DeclarationFlag.Chi > 0) {
+		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Active, sRight)].DeclarationFlag.Chi > 0) {
 			/* ƒ|ƒ“‚âžÈ‚ÌŽž‚Íƒcƒ‚‡‚ð”ò‚Î‚µ‚½‚Æ‚Ý‚È‚µ‚Ä”‚¦A–k‰Æ¨“Œ‰Æ‚ð‚Ü‚½‚¢‚¾ê‡‚ÍŽŸ‚Ì„–Ú‚Æ‚µ‚Äˆµ‚¤ */
-			gameStat->CurrentPlayer.Passive = RelativePositionOf(gameStat->CurrentPlayer.Passive, sRight); // ‹h‚ª‚Å‚«‚é‚Ì‚Íã‰Æ‚ÌŽÌ”v‚Ì‚Ý
+			gameStat->CurrentPlayer.Passive = RelativePositionOf(gameStat->CurrentPlayer.Active, sRight); // ‹h‚ª‚Å‚«‚é‚Ì‚Íã‰Æ‚ÌŽÌ”v‚Ì‚Ý
 			if (playerwind(gameStat, gameStat->CurrentPlayer.Passive, gameStat->GameRound) < playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound))
 				++gameStat->TurnRound;
 			fuuroproc(gameStat, &roundEndType, DiscardTileIndex, FuuroChii);
