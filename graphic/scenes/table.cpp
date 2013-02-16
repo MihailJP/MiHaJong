@@ -255,6 +255,7 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		// カーソルとボタンの設定
 		buttonReconst->btnSetForNaki();
 		buttonReconst->setCursor(ButtonReconst::btnRon);
+		buttonReconst->reconstruct();
 		if (buttonReconst->areEnabled().none())
 			ui::UIEvent->set(naki::nakiNone);
 		break;
