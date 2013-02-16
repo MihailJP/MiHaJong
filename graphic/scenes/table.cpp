@@ -249,6 +249,8 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		if ((GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag) &&
 			buttonReconst->areEnabled().none())
 			ui::UIEvent->set(NUM_OF_TILES_IN_HAND - 1);
+		else // Ž©–Ì”Ô‚ª—ˆ‚½‚ç‰¹‚ð–Â‚ç‚·
+			sound::Play(sound::IDs::sndBell);
 		break;
 	case tblSubscenePlayerNaki:
 		mySubScene = new TableSubscenePlayerNaki(caller->getDevice());
@@ -258,6 +260,8 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		buttonReconst->reconstruct();
 		if (buttonReconst->areEnabled().none())
 			ui::UIEvent->set(naki::nakiNone);
+		else // ‰¹‚ð–Â‚ç‚·
+			sound::Play(sound::IDs::sndSignal);
 		break;
 	default:
 		mySubScene = new TableSubsceneNormal(caller->getDevice());
