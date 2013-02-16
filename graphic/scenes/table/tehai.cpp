@@ -1,3 +1,8 @@
+#ifdef _MSC_VER
+#define _USE_MATH_DEFINES /* required for M_PI by MS VC++ */
+#endif
+#include <cmath>
+
 #include "tehai.h"
 #include "../../utils.h"
 
@@ -53,7 +58,12 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PLAYE
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i) {
 			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile) {
-				Color tileColor; tileColor.rgbaAsOneValue = (tileCursor == i) ? 0xffff9999 : 0xffffffff;
+				Color tileColor; tileColor.rgbaAsOneValue = 0xffffffff;
+				if (tileCursor == i) {
+					const double Zeit = (double)(currTime() % 90000000ULL);
+					tileColor.rgbaAsStruct.g = (unsigned)((double)tileColor.rgbaAsStruct.g * (sin(Zeit / 4500000.0 * M_PI) / 5.0 + 0.75));
+					tileColor.rgbaAsStruct.b = (unsigned)((double)tileColor.rgbaAsStruct.b * (sin(Zeit / 4500000.0 * M_PI) / 5.0 + 0.75));
+				}
 				if (!tileEnabled[i]) { // à√ì]èàóù
 					tileColor.rgbaAsStruct.r /= 3;
 					tileColor.rgbaAsStruct.g /= 3;
@@ -85,6 +95,8 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PLAYE
 }
 
 void GameTableScreen::TehaiReconst::Render() {
+	if (tileCursor != tileCursorOff)
+		Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 	TileTexture->Render();
 }
 
@@ -97,6 +109,11 @@ GameTableScreen::TehaiReconst::TehaiReconst(GameTableScreen* parent) {
 
 GameTableScreen::TehaiReconst::~TehaiReconst() {
 	delete TileTexture;
+}
+
+std::uint64_t GameTableScreen::TehaiReconst::currTime() { /* åªç›éûçè(WindowsÇ≈ÇÕ100nsíPà ) */
+	FILETIME Zeit; GetSystemTimeAsFileTime(&Zeit);
+	return ((std::uint64_t)Zeit.dwHighDateTime << 32) | Zeit.dwLowDateTime;
 }
 
 }
