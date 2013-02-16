@@ -12,6 +12,7 @@
 #include "shanten.h"
 #include "random.h"
 #include "../graphic/graphic.h"
+#include "yaku/yaku.h"
 
 MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 	/* コンフィグファイルのパスを設定する */
@@ -96,7 +97,10 @@ MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
 			RuleData::getPageCaption, RuleData::storeRule, RuleData::exportRule,
 			RuleData::saveConfigFile, RuleData::chkRule, RuleData::ruleDigit());
 		mihajong_graphic::utils::setfunc(
-			playerwind, playerRelative, RelativePositionOf, tilesLeft, calcRank, chkFuriten, isTenpai);
+			playerwind, playerRelative, RelativePositionOf, tilesLeft, calcRank, chkFuriten,
+			isTenpai, isRichiReqSatisfied, ShantenAnalyzer::calcShanten, chkdaopaiability,
+			yaku::yakuCalculator::chkShisanBuDa, yaku::yakuCalculator::chkShisiBuDa,
+			countTilesInHand, chkAnkanAbility);
 	}
 
 	/* 音源を初期化 */

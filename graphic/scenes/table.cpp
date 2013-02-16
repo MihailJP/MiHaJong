@@ -6,6 +6,9 @@
 #include "../../sound/sound.h"
 #include "../../mjcore/bgmid.h"
 #include "../event.h"
+#include "../../mjcore/discard.h"
+#include "../utils.h"
+#include <functional>
 
 #include "table/yamahai.h"
 #include "table/tehai.h"
@@ -14,12 +17,16 @@
 #include "table/showdice.h"
 #include "table/richibou.h"
 #include "table/chicha.h"
+#include "table/nakibtn.h"
+
+#include "table/naki_id.h"
 
 namespace mihajong_graphic {
 	
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080);
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080);
+	buttonReconst = new ButtonReconst(this);
 	trayReconst = new TrayReconst(this);
 	richibouReconst = new RichibouReconst(this);
 	diceReconst = new DiceReconst(this);
@@ -35,6 +42,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	InitializeCriticalSection(&subSceneCS);
 	mySubScene = new TableSubsceneNormal(manipulator->getDevice());
 	myTextRenderer = new TextRenderer(manipulator->getDevice());
+	tileSelectMode = 0;
 }
 
 GameTableScreen::~GameTableScreen() {
@@ -47,6 +55,7 @@ GameTableScreen::~GameTableScreen() {
 	delete diceReconst;
 	delete richibouReconst;
 	delete trayReconst;
+	delete buttonReconst;
 	delete myTextRenderer;
 	if (tBorder) tBorder->Release();
 	if (tBaize) tBaize->Release();
@@ -130,6 +139,7 @@ void GameTableScreen::RenderTable() {
 	tehaiReconst->Render(); // 144
 	nakihaiReconst->Render(); // 200
 	sutehaiReconst->Render(); // 264
+	buttonReconst->Render();
 }
 
 void GameTableScreen::RenderSideBar() {
@@ -151,6 +161,9 @@ void GameTableScreen::Render() {
 
 void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 	EnterCriticalSection(&subSceneCS);
+	buttonReconst->ChangeButtonSet(ButtonReconst::btnSetNormal);
+	tehaiReconst->enable();
+	tileSelectMode = 0;
 	delete mySubScene; tehaiReconst->setTileCursor();
 	switch (static_cast<TableSubsceneID>(scene_ID)) {
 	case tblSubsceneBeginning:
@@ -224,7 +237,34 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		break;
 	case tblSubscenePlayerDahai:
 		mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
+		(void)GameStatus::retrGameStat();
+		// カーソルとボタンの設定
 		tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
+		while (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[tehaiReconst->getTileCursor()].tile == NoTile)
+			tehaiReconst->decrTileCursor(); // 鳴いた直後の時のカーソル初期位置
+		buttonReconst->btnSetForDahai();
+		tehaiReconst->enable();
+		if (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag)
+			for (int i = 0; i < (NUM_OF_TILES_IN_HAND - 1); ++i)
+				tehaiReconst->disable(i);
+		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+		// リーチ後オートツモ切り
+		if ((GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag) &&
+			buttonReconst->areEnabled().none())
+			ui::UIEvent->set(NUM_OF_TILES_IN_HAND - 1);
+		else // 自摸番が来たら音を鳴らす
+			sound::Play(sound::IDs::sndBell);
+		break;
+	case tblSubscenePlayerNaki:
+		mySubScene = new TableSubscenePlayerNaki(caller->getDevice());
+		// カーソルとボタンの設定
+		buttonReconst->btnSetForNaki();
+		buttonReconst->setCursor(buttonReconst->isEnabled(ButtonReconst::btnRon) ? ButtonReconst::btnRon : ButtonReconst::btnPass);
+		buttonReconst->reconstruct();
+		if (buttonReconst->areEnabled().none())
+			ui::UIEvent->set(naki::nakiNone);
+		else // 音を鳴らす
+			sound::Play(sound::IDs::sndSignal);
 		break;
 	default:
 		mySubScene = new TableSubsceneNormal(caller->getDevice());
@@ -236,17 +276,50 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 // -------------------------------------------------------------------------
 
 void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 	auto cursorMoved = [&]() -> void {
 		sound::Play(sound::IDs::sndCursor);
 		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+		buttonReconst->reconstruct();
 	};
 	const PlayerTable* const plDat = &(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID]);
+	auto directTileCursor = [&](int cursorPos) -> void {
+		if ((od->dwData) && ((tehaiReconst->isCursorEnabled()) || (buttonReconst->isCursorEnabled())) && (plDat->Hand[cursorPos].tile != NoTile)) {
+			if (tehaiReconst->getTileCursor() == cursorPos) {
+				FinishTileChoice();
+			} else {
+				buttonReconst->setCursor();
+				tehaiReconst->setTileCursor(cursorPos);
+				cursorMoved();
+			}
+		}
+	};
 	switch (od->dwOfs) {
+	/* ボタン選択/牌選択 モード切り替え */
+	case DIK_UP: case DIK_K: // 牌選択モードに切り替え
+		if ((od->dwData) && (buttonReconst->isCursorEnabled()) && (!isNakiSel)) {
+			tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
+			buttonReconst->setCursor();
+			cursorMoved();
+		}
+		break;
+	case DIK_DOWN: case DIK_J: // ボタン選択モードに切り替え
+		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
+			tehaiReconst->setTileCursor();
+			buttonReconst->setCursor(ButtonReconst::btnMAXIMUM - 1);
+			cursorMoved();
+		}
+		break;
+	/* カーソル移動 */
 	case DIK_LEFT: case DIK_H:
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
 			do {
 				if (tehaiReconst->decrTileCursor() < 0) tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
 			} while (plDat->Hand[tehaiReconst->getTileCursor()].tile == NoTile);
+			cursorMoved();
+		}
+		else if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
+			if (buttonReconst->decCursor() < 0) buttonReconst->setCursor(ButtonReconst::btnMAXIMUM - 1);
 			cursorMoved();
 		}
 		break;
@@ -257,56 +330,100 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 			} while (plDat->Hand[tehaiReconst->getTileCursor()].tile == NoTile);
 			cursorMoved();
 		}
+		if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
+			if (buttonReconst->incCursor() >= ButtonReconst::btnMAXIMUM) buttonReconst->setCursor(0);
+			cursorMoved();
+		}
 		break;
 	/* カーソル位置の直截指定 */
 	/* ASSUMING JAPANESE KEYBOARD: 1 2 3 4 5 6 7 8 9 0 - ^ ￥ BS */
-	case DIK_1:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 0].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  0) FinishTileChoice(); else {tehaiReconst->setTileCursor( 0); cursorMoved();}} break;
-	case DIK_2:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 1].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  1) FinishTileChoice(); else {tehaiReconst->setTileCursor( 1); cursorMoved();}} break;
-	case DIK_3:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 2].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  2) FinishTileChoice(); else {tehaiReconst->setTileCursor( 2); cursorMoved();}} break;
-	case DIK_4:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 3].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  3) FinishTileChoice(); else {tehaiReconst->setTileCursor( 3); cursorMoved();}} break;
-	case DIK_5:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 4].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  4) FinishTileChoice(); else {tehaiReconst->setTileCursor( 4); cursorMoved();}} break;
-	case DIK_6:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 5].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  5) FinishTileChoice(); else {tehaiReconst->setTileCursor( 5); cursorMoved();}} break;
-	case DIK_7:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 6].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  6) FinishTileChoice(); else {tehaiReconst->setTileCursor( 6); cursorMoved();}} break;
-	case DIK_8:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 7].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  7) FinishTileChoice(); else {tehaiReconst->setTileCursor( 7); cursorMoved();}} break;
-	case DIK_9:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 8].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  8) FinishTileChoice(); else {tehaiReconst->setTileCursor( 8); cursorMoved();}} break;
-	case DIK_0:          if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[ 9].tile != NoTile)) {if (tehaiReconst->getTileCursor() ==  9) FinishTileChoice(); else {tehaiReconst->setTileCursor( 9); cursorMoved();}} break;
-	case DIK_MINUS:      if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[10].tile != NoTile)) {if (tehaiReconst->getTileCursor() == 10) FinishTileChoice(); else {tehaiReconst->setTileCursor(10); cursorMoved();}} break;
-	case DIK_CIRCUMFLEX: if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[11].tile != NoTile)) {if (tehaiReconst->getTileCursor() == 11) FinishTileChoice(); else {tehaiReconst->setTileCursor(11); cursorMoved();}} break;
-	case DIK_YEN:        if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[12].tile != NoTile)) {if (tehaiReconst->getTileCursor() == 12) FinishTileChoice(); else {tehaiReconst->setTileCursor(12); cursorMoved();}} break;
-	case DIK_BACK:       if ((od->dwData) && (tehaiReconst->isCursorEnabled()) && (plDat->Hand[13].tile != NoTile)) {if (tehaiReconst->getTileCursor() == 13) FinishTileChoice(); else {tehaiReconst->setTileCursor(13); cursorMoved();}} break;
+	case DIK_1:          directTileCursor( 0); break;
+	case DIK_2:          directTileCursor( 1); break;
+	case DIK_3:          directTileCursor( 2); break;
+	case DIK_4:          directTileCursor( 3); break;
+	case DIK_5:          directTileCursor( 4); break;
+	case DIK_6:          directTileCursor( 5); break;
+	case DIK_7:          directTileCursor( 6); break;
+	case DIK_8:          directTileCursor( 7); break;
+	case DIK_9:          directTileCursor( 8); break;
+	case DIK_0:          directTileCursor( 9); break;
+	case DIK_MINUS:      directTileCursor(10); break;
+	case DIK_CIRCUMFLEX: directTileCursor(11); break;
+	case DIK_YEN:        directTileCursor(12); break;
+	case DIK_BACK:       directTileCursor(13); break;
 	/* 決定キー */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled()))
 			FinishTileChoice();
+		else if ((od->dwData) && (buttonReconst->isCursorEnabled()))
+			buttonReconst->ButtonPressed();
 		break;
 	}
 }
 
 void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
 	const int scaledY = Y / Geometry::WindowScale();
 	const int region = whichRegion(scaledX, scaledY);
+	const bool isCursorEnabled = tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled();
 	const bool isValidTile = (region >= 0) && (region < NUM_OF_TILES_IN_HAND) &&
-		(tehaiReconst->isCursorEnabled()) &&
+		isCursorEnabled && (!isNakiSel) &&
 		(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[region].tile != NoTile);
+	const bool isButton = (region >= ButtonReconst::ButtonRegionNum) &&
+		(region < ButtonReconst::ButtonRegionNum + ButtonReconst::btnMAXIMUM) &&
+		isCursorEnabled;
 	switch (od->dwOfs) {
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
 		if ((region != tehaiReconst->getTileCursor()) && (isValidTile)) {
 			tehaiReconst->setTileCursor(region);
+			buttonReconst->setCursor();
 			sound::Play(sound::IDs::sndCursor);
 			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+			buttonReconst->reconstruct();
+		} else if ((region != (ButtonReconst::ButtonRegionNum + buttonReconst->getCursor())) && (isButton)) {
+			tehaiReconst->setTileCursor();
+			buttonReconst->setCursor(region - ButtonReconst::ButtonRegionNum);
+			sound::Play(sound::IDs::sndCursor);
+			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+			buttonReconst->reconstruct();
 		}
 		break;
 	case DIMOFS_BUTTON0: // マウスクリック
 		if ((isValidTile) && (od->dwData))
 			FinishTileChoice();
+		else if ((isButton) && (od->dwData))
+			buttonReconst->ButtonPressed();
+		break;
+	case DIMOFS_BUTTON1: // マウス右クリック
+		if ((od->dwData) && isNakiSel) { // 鳴き選択中の時
+			sound::Play(sound::IDs::sndClick);
+			ui::UIEvent->set(naki::nakiNone); // 牌の番号を設定
+		}
 		break;
 	}
 }
 
 /* 捨牌を決定する */
 void GameTableScreen::FinishTileChoice() {
-	ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor()); // 牌の番号を設定
+	sound::Play(sound::IDs::sndClick);
+	if (tehaiReconst->isCursorEnabled() && tehaiReconst->isEnabled(tehaiReconst->getTileCursor())) {
+		const Int8ByTile TileCount = utils::countTilesInHand(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
+		if ((tileSelectMode == DiscardTileNum::Ankan) && (TileCount.val[tehaiReconst->getTileCursor()] == 1))
+			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(DiscardTileNum::Kakan * DiscardTileNum::TypeStep)); // 加槓の場合
+		else
+			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // 牌の番号を設定
+	} else {
+		sound::Play(sound::IDs::sndCuohu);
+	}
 }
+
+void GameTableScreen::CallTsumoAgari() { // ツモアガリ
+	ui::UIEvent->set(0xffffffff);
+}
+void GameTableScreen::CallKyuushuKyuuhai() { // 九種九牌
+	ui::UIEvent->set(0xfffffffe);
+}
+
 
 }

@@ -34,6 +34,7 @@ enum TableSubsceneID : unsigned int { // 卓画面のサブシーン番号
 	tblSubsceneCallValYakuman, // 点数の増分表示（役満祝儀）
 	tblSubsceneChkTenpai, // 流局時の聴牌確認
 	tblSubscenePlayerDahai, // プレイヤーの打牌選択用
+	tblSubscenePlayerNaki, // プレイヤーの副露選択用
 };
 
 }
