@@ -302,7 +302,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					const Int8ByTile TileCount = utils::countTilesInHand(tmpStat, ActivePlayer);
 					const PlayerTable* const playerStat = &(tmpStat->Player.val[ActivePlayer]);
 					if (TileCount.val[playerStat->Hand[i].tile] < 4) flag = true;
-					if (TileCount.val[playerStat->Hand[i].tile] == 4) {
+					if (TileCount.val[playerStat->Hand[i].tile] == 1) {
 						for (int j = 1; j <= playerStat->MeldPointer; ++j)
 							if ((playerStat->Meld[j].tile == i) &&
 								((playerStat->Meld[j].mstat == meldTripletExposedLeft) ||
