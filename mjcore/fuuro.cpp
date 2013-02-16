@@ -524,6 +524,7 @@ namespace {
 		Subscene(tblSubsceneNone);
 		switch ((NakiTypeID)result) {
 		case nakiRon:
+			debug(_T("プレイヤーからの応答：ロン"));
 			playerStat->DeclarationFlag.Ron = true;
 			playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
 			playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].red = gameStat->CurrentDiscard.red;
@@ -531,31 +532,37 @@ namespace {
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Ron);
 			break;
 		case nakiKan:
+			debug(_T("プレイヤーからの応答：カン"));
 			playerStat->DeclarationFlag.Kan = true;
 			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Kan);
 			break;
 		case nakiPon:
+			debug(_T("プレイヤーからの応答：ポン"));
 			playerStat->DeclarationFlag.Pon = true;
 			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Pon);
 			break;
 		case nakiChiLower:
+			debug(_T("プレイヤーからの応答：チー(小さい側)"));
 			playerStat->DeclarationFlag.Chi = chiiLower;
 			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Chii_Lower);
 			break;
 		case nakiChiMiddle:
+			debug(_T("プレイヤーからの応答：チー(嵌塔子)"));
 			playerStat->DeclarationFlag.Chi = chiiMiddle;
 			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Chii_Middle);
 			break;
 		case nakiChiUpper:
+			debug(_T("プレイヤーからの応答：チー(大きい側)"));
 			playerStat->DeclarationFlag.Chi = chiiUpper;
 			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Chii_Upper);
 			break;
 		case nakiNone:
+			debug(_T("プレイヤーからの応答：通し"));
 			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Ignore);
 			break;
