@@ -7,7 +7,7 @@
 #include <Windows.h>
 #include "largenum.h"
 #include "envtbl.h"
-#include "../mihajong/version.h"
+#include "../common/version.h"
 #include "chat.h"
 
 /* 雀牌の名前データ */

@@ -4,7 +4,7 @@
 #include "func.h"
 #include <string>
 #include "../common/strcode.h"
-#include "../mihajong/version.h"
+#include "../common/version.h"
 #include "envtbl.h"
 #include "../sound/sound.h"
 #include "bgmid.h"
