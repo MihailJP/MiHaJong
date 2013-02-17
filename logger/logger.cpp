@@ -1,4 +1,11 @@
 #include "logger.h"
+#include <Windows.h>
+#include <process.h>
+#include <string>
+#include <deque>
+#include <sstream>
+#include <iostream>
+#include <fstream>
 
 /* ŠÈˆÕƒƒMƒ“ƒOƒc[ƒ‹ */
 

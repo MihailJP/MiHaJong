@@ -1,15 +1,6 @@
 #pragma once
 
-#define WINDOWS_LEAN_AND_MEAN
-#define WINDOWS_EXTRA_LEAN
-#include <Windows.h>
-#include <process.h>
-#include <string>
-#include <deque>
 #include <sys/timeb.h>
-#include <sstream>
-#include <iostream>
-#include <fstream>
 #include <iomanip>
 #include "../mjcore/strcode.h"
 
