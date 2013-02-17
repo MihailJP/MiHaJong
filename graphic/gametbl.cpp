@@ -8,10 +8,10 @@ GameStatus::GStatModFlag GameStatus::myModFlag = GameStatus::GStatModFlag();
 bool GameStatus::isInitialized = false;
 
 void GameStatus::updateGameStat(const GameTable* const gameStat) {
-	EnterCriticalSection(&myModFlag.myCriticalSection);
-	std::memcpy(&myGameStat, gameStat, sizeof(GameTable));
-	myModFlag.myModificationFlag = true;
-	LeaveCriticalSection(&myModFlag.myCriticalSection);
+	myModFlag.myCriticalSection.syncDo<void>([gameStat]() -> void {
+		std::memcpy(&myGameStat, gameStat, sizeof(GameTable));
+		myModFlag.myModificationFlag = true;
+	});
 }
 
 GameTable* GameStatus::gameStat() {
@@ -20,28 +20,23 @@ GameTable* GameStatus::gameStat() {
 }
 
 GameTable* GameStatus::retrGameStat() {
-	EnterCriticalSection(&myModFlag.myCriticalSection);
-	myModFlag.myModificationFlag = false;
-	std::memcpy(&myGameStat1, &myGameStat, sizeof(GameTable));
-	LeaveCriticalSection(&myModFlag.myCriticalSection);
+	myModFlag.myCriticalSection.syncDo<void>([]() -> void {
+		myModFlag.myModificationFlag = false;
+		std::memcpy(&myGameStat1, &myGameStat, sizeof(GameTable));
+	});
 	isInitialized = true;
 	return &myGameStat1;
 }
 
 bool GameStatus::isModified() {
-	EnterCriticalSection(&myModFlag.myCriticalSection);
-	bool flag = myModFlag.myModificationFlag;
-	LeaveCriticalSection(&myModFlag.myCriticalSection);
-	return flag;
+	return myModFlag.myCriticalSection.syncDo<bool>([]() {return myModFlag.myModificationFlag;});
 }
 
 GameStatus::GStatModFlag::GStatModFlag() {
-	InitializeCriticalSection(&myCriticalSection);
 	myModificationFlag = false;
 }
 
 GameStatus::GStatModFlag::~GStatModFlag() {
-	DeleteCriticalSection(&myCriticalSection);
 }
 
 }

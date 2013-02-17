@@ -3,6 +3,7 @@
 #include <queue>
 #include "gametbl.h"
 #include "../common/strcode.h"
+#include "../common/mutex.h"
 
 #define SOCK_CHAT 10
 #define PORT_CHAT 50020
@@ -26,8 +27,8 @@ namespace chat {
 		typedef StreamLog super;
 	private:
 		std::queue<CodeConv::tstring> sendQueue;
-		CRITICAL_SECTION streamLock;
-		CRITICAL_SECTION sendQueueLock;
+		MHJMutex streamLock;
+		MHJMutex sendQueueLock;
 		HANDLE myHandle;
 		volatile bool terminate;
 		std::string myServerAddr;

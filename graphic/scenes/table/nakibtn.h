@@ -4,6 +4,7 @@
 #include "../../button.h"
 #include <bitset>
 #include <Windows.h>
+#include "../../../common/mutex.h"
 
 namespace mihajong_graphic {
 
@@ -59,7 +60,7 @@ public:
 	int decCursor() {return --cursor;}
 private: // çƒç\ízÅEï\é¶èàóù
 	void reconstruct(ButtonID buttonID);
-	CRITICAL_SECTION reconstructionCS;
+	MHJMutex reconstructionCS;
 public:
 	void btnSetForDahai();
 	void btnSetForNaki();

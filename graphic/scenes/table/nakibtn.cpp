@@ -54,12 +54,12 @@ void GameTableScreen::ButtonReconst::Render() {
 			buttonDat[currentButtonSet][cursor].y * Geometry::WindowScale(),
 			117 * Geometry::WindowScale(), 36 * Geometry::WindowScale(),
 			btnColor.rgbaAsOneValue, buttonDat[currentButtonSet][cursor].label);
-	} 
-	EnterCriticalSection(&reconstructionCS);
-	buttons->Render();
-	buttons->Render();
-	buttons->Render();
-	LeaveCriticalSection(&reconstructionCS);
+	}
+	reconstructionCS.syncDo<void>([this]() -> void {
+		buttons->Render();
+		buttons->Render();
+		buttons->Render();
+	});
 }
 
 void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
@@ -85,10 +85,10 @@ void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 	caller->regions[buttonID + ButtonRegionNum].Bottom = buttonDat[currentButtonSet][buttonID].y + 36;
 }
 void GameTableScreen::ButtonReconst::reconstruct() {
-	EnterCriticalSection(&reconstructionCS);
-	for (unsigned i = 0; i < btnMAXIMUM; ++i)
-		reconstruct((ButtonID)i);
-	LeaveCriticalSection(&reconstructionCS);
+	reconstructionCS.syncDo<void>([this]() -> void {
+		for (unsigned i = 0; i < btnMAXIMUM; ++i)
+			reconstruct((ButtonID)i);
+	});
 }
 
 void GameTableScreen::ButtonReconst::ChangeButtonSet(ButtonSet btnSet) {
@@ -241,7 +241,6 @@ end:
 }
 
 GameTableScreen::ButtonReconst::ButtonReconst(GameTableScreen* parent) {
-	InitializeCriticalSection(&reconstructionCS);
 	caller = parent;
 	cursor = CursorDisabled; sunkenButton = NoSunkenButton;
 	buttons = new ButtonPic(caller->caller->getDevice());
@@ -250,7 +249,6 @@ GameTableScreen::ButtonReconst::ButtonReconst(GameTableScreen* parent) {
 
 GameTableScreen::ButtonReconst::~ButtonReconst() {
 	delete buttons;
-	DeleteCriticalSection(&reconstructionCS);
 }
 
 std::uint64_t GameTableScreen::ButtonReconst::currTime() { /* åªç›éûçè(WindowsÇ≈ÇÕ100nsíPà ) */
