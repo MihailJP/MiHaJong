@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 #include <string>
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 #ifndef DLL
 #ifdef SOUND_EXPORTS

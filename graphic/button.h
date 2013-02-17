@@ -5,7 +5,7 @@
 #include <dxerr.h>
 #include <vector>
 #include <tuple>
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 #include "text.h"
 
 namespace mihajong_graphic {

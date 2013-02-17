@@ -4,7 +4,7 @@
 #endif
 #include <sstream>
 #include <iomanip>
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 void sound::SoundManipulator::InitXAudio() {
 	HRESULT hr;

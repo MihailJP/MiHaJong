@@ -1,6 +1,6 @@
 #include "input.h"
 #include "init.h"
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 namespace mihajong_graphic {
 namespace input {

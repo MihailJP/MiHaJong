@@ -12,7 +12,7 @@
 #include "../largenum.h"
 #include "../except.h"
 #include "../logging.h"
-#include "../strcode.h"
+#include "../../common/strcode.h"
 #include "../func.h"
 #include "../haifu.h"
 #include "yvalue.h"

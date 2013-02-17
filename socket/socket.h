@@ -4,7 +4,7 @@
 #include <WinSock2.h>
 #endif
 #include <cstdarg>
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 #define NUM_OF_SOCKETS 32
 

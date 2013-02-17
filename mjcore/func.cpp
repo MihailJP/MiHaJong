@@ -7,7 +7,7 @@
 #include <Windows.h>
 #include <ImageHlp.h>
 #include <direct.h>
-#include "strcode.h"
+#include "../common/strcode.h"
 #include "../sound/sound.h"
 #include "../socket/socket.h"
 #include "socknum.h"

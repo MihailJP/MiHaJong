@@ -4,7 +4,7 @@
 #include <array>
 #include <cstdint>
 #include "../text.h"
-#include "../../mjcore/strcode.h"
+#include "../../common/strcode.h"
 
 namespace mihajong_graphic {
 

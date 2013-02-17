@@ -1,6 +1,6 @@
 #include "player.h"
 
-#include "../../../mjcore/strcode.h"
+#include "../../../common/strcode.h"
 #include <iomanip>
 #include "../../../sound/sound.h"
 #include "../../../mjcore/bgmid.h"

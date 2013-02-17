@@ -9,7 +9,7 @@
 #endif
 
 #include <Windows.h>
-#include "strcode.h"
+#include "../common/strcode.h"
 
 namespace logger {
 	typedef int (__cdecl *CHRPPROC)(LPCSTR a);

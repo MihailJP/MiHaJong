@@ -3,7 +3,7 @@
 #include "logging.h"
 #include "func.h"
 #include <string>
-#include "strcode.h"
+#include "../common/strcode.h"
 #include "../mihajong/version.h"
 #include "envtbl.h"
 #include "../sound/sound.h"

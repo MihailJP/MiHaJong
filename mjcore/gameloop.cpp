@@ -1,6 +1,6 @@
 #include "gameloop.h"
 
-#include "strcode.h"
+#include "../common/strcode.h"
 #include "logging.h"
 #include "envtbl.h"
 #include "../socket/socket.h"

@@ -2,7 +2,7 @@
 
 #include <queue>
 #include "gametbl.h"
-#include "strcode.h"
+#include "../common/strcode.h"
 
 #define SOCK_CHAT 10
 #define PORT_CHAT 50020

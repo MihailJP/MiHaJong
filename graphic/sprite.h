@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <d3dx9.h>
 #include <dxerr.h>
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 namespace mihajong_graphic {
 

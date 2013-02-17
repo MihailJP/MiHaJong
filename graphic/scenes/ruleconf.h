@@ -2,7 +2,7 @@
 
 #include "sysscr.h"
 #include "../text.h"
-#include "../../mjcore/strcode.h"
+#include "../../common/strcode.h"
 #include "../rule.h"
 #include "../../mjcore/nmrules.h"
 #include "../button.h"

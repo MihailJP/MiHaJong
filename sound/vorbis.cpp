@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <sstream>
 #include <iomanip>
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 /* OGGƒtƒ@ƒCƒ‹“Ç‚İ‚İ */
 void sound::OggData::Prepare(const std::string& filename) {

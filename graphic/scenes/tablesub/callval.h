@@ -4,7 +4,7 @@
 #include "../../text.h"
 #include "../../gametbl.h"
 #include <array>
-#include "../../../mjcore/strcode.h"
+#include "../../../common/strcode.h"
 #include "titling.h"
 
 namespace mihajong_graphic {

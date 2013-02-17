@@ -368,9 +368,6 @@
     <ClInclude Include="chat.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="strcode.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="decomp.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

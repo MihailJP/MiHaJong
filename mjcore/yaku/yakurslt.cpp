@@ -1,7 +1,7 @@
 #include "yakurslt.h"
 
 #include "../except.h"
-#include "../strcode.h"
+#include "../../common/strcode.h"
 
 /* 既存のインスタンスを初期化する */
 void yaku::YAKUSTAT::Init(YAKUSTAT* const myInstance) {

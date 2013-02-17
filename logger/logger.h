@@ -11,7 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 using namespace std; using namespace CodeConv;
 

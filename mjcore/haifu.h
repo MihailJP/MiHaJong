@@ -1,6 +1,6 @@
 #pragma once
 
-#include "strcode.h"
+#include "../common/strcode.h"
 #include "gametbl.h"
 #include "func.h"
 #include "discard.h"

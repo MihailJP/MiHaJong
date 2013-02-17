@@ -1,7 +1,7 @@
 #include "sound.h"
 
 #include "bgmid.h"
-#include "strcode.h"
+#include "../common/strcode.h"
 #include "func.h"
 #include <vector>
 
