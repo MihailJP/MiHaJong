@@ -1,4 +1,5 @@
 #include "logger.h"
+#include "../common/mutex.h"
 
 /* 簡易ロギングツール */
 
@@ -9,7 +10,7 @@ using namespace std;
 static Logger* logger = NULL;
 static DWORD threadID;
 static HANDLE hThread;
-static CRITICAL_SECTION cs;
+static MHJMutex cs;
 static HANDLE hEvent;
 static ostream* logStream = &cout;
 static ofstream logFile;
@@ -25,17 +26,19 @@ DWORD Logger::LoggerThread(LPVOID lp) { // ロギング実行用スレッド
 		WaitForSingleObject(hEvent, INFINITE);
 		while (1) {
 			/* キューからpopする */
-			EnterCriticalSection(&cs);
-			if (msgQueue.empty()) { // キューが空だったら抜ける
-				LeaveCriticalSection(&cs); // ちゃんと返してあげましょうね
+			LogMsg currentLogMsg = TraceMsg(_T(""));
+			bool finished = cs.syncDo<bool>([&currentLogMsg]() -> bool {
+				if (msgQueue.empty()) { // キューが空だったら抜ける
 #ifdef SYNCMODE
-				SetEvent(hWriteFinishEvent);
+					SetEvent(hWriteFinishEvent);
 #endif
-				break;
-			}
-			LogMsg currentLogMsg = LogMsg(msgQueue[0]);
-			msgQueue.pop_front();
-			LeaveCriticalSection(&cs);
+					return true;
+				}
+				currentLogMsg = LogMsg(msgQueue[0]);
+				msgQueue.pop_front();
+				return false;
+			});
+			if (finished) break; // キューが空だったら抜ける
 			/* メッセージを書き出す */
 			*logStream << EncodeStr(currentLogMsg.toString()) << endl;
 		}
@@ -43,9 +46,9 @@ DWORD Logger::LoggerThread(LPVOID lp) { // ロギング実行用スレッド
 }
 
 void Logger::enqueue(LogMsg msgdat) { // キューにpushする
-	EnterCriticalSection(&cs);
-	msgQueue.push_back(LogMsg(msgdat));
-	LeaveCriticalSection(&cs);
+	cs.syncDo<void>([&msgdat]() -> void {
+		msgQueue.push_back(LogMsg(msgdat));
+	});
 	SetEvent(hEvent);
 #ifdef SYNCMODE
 	WaitForSingleObject(hWriteFinishEvent, INFINITE);
@@ -69,7 +72,6 @@ __declspec(dllexport) void initLogger(const char* fname) {
 #ifdef SYNCMODE
 	hWriteFinishEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 #endif
-	InitializeCriticalSection(&cs);
 	hThread = CreateThread(NULL, 0, Logger::LoggerThread, (LPVOID)logger,
 		CREATE_SUSPENDED, &threadID);
 	ResumeThread(hThread);
