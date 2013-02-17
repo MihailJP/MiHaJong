@@ -7,6 +7,7 @@
 #include "../logwnd.h"
 #include "tablesub/tblsubs.h"
 #include "../text.h"
+#include "../../common/mutex.h"
 
 namespace mihajong_graphic {
 
@@ -23,7 +24,7 @@ protected:
 	TextRenderer* myTextRenderer; // 文字表示
 protected:
 	TableSubscene* mySubScene; // サブシーンオブジェクト
-	CRITICAL_SECTION subSceneCS; // サブシーン切り替え用クリティカルセクション
+	MHJMutex subSceneCS; // サブシーン切り替え用クリティカルセクション
 	void SetSubscene(unsigned int scene_ID); // サブシーン切り替え
 protected: /**** 山牌 ****/
 	class YamahaiReconst;

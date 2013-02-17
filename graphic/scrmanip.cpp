@@ -34,58 +34,56 @@ void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
 }
 ScreenManipulator::ScreenManipulator(HWND windowHandle) {
-	InitializeCriticalSection(&CS_SceneAccess);
-	EnterCriticalSection(&CS_SceneAccess);
-	redrawFlag = false;
-	pDevice = nullptr; hWnd = windowHandle;
-	InitDevice();
-	myScene = new SplashScreen(this);
-	myFPSIndicator = new FPSIndicator(this);
-	lastRedrawTime = 0;
-	redrawFlag = true;
-	LeaveCriticalSection(&CS_SceneAccess);
+	CS_SceneAccess.syncDo<void>([this, windowHandle]() -> void {
+		redrawFlag = false;
+		pDevice = nullptr; hWnd = windowHandle;
+		InitDevice();
+		myScene = new SplashScreen(this);
+		myFPSIndicator = new FPSIndicator(this);
+		lastRedrawTime = 0;
+		redrawFlag = true;
+	});
 }
 
 void ScreenManipulator::Render() {
-	EnterCriticalSection(&CS_SceneAccess);
-	if (redrawFlag) {
-		pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
-			D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // バッファクリア
-		if (SUCCEEDED(pDevice->BeginScene())) { // シーン開始
-			SpriteRenderer::instantiate(pDevice)->Start(); // スプライト描画開始
-			if (myScene) myScene->Render(); // 再描画処理
-			if (myFPSIndicator) myFPSIndicator->Render(); // FPS表示
-			SpriteRenderer::instantiate(pDevice)->End(); // スプライト描画終了
-			pDevice->EndScene(); // シーン終了
-			pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
+	CS_SceneAccess.syncDo<void>([this]() -> void {
+		if (redrawFlag) {
+			pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
+				D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // バッファクリア
+			if (SUCCEEDED(pDevice->BeginScene())) { // シーン開始
+				SpriteRenderer::instantiate(pDevice)->Start(); // スプライト描画開始
+				if (myScene) myScene->Render(); // 再描画処理
+				if (myFPSIndicator) myFPSIndicator->Render(); // FPS表示
+				SpriteRenderer::instantiate(pDevice)->End(); // スプライト描画終了
+				pDevice->EndScene(); // シーン終了
+				pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
+			}
 		}
-	}
-	LeaveCriticalSection(&CS_SceneAccess);
+	});
 	return;
 }
 
 void ScreenManipulator::transit(sceneID scene) {
-	EnterCriticalSection(&CS_SceneAccess);
-	redrawFlag = false;
-	delete myScene; myScene = nullptr;
-	switch (scene) {
-	case sceneSplash:
-		myScene = new SplashScreen(this); redrawFlag = true;
-		break;
-	case sceneTitle:
-		myScene = new TitleScreen(this); redrawFlag = true;
-		break;
-	case sceneConfig:
-		myScene = new RuleConfigScene(this); redrawFlag = true;
-		break;
-	case sceneGameTable:
-		myScene = new GameTableScreen(this); redrawFlag = true;
-		break;
-	default:
-		LeaveCriticalSection(&CS_SceneAccess);
-		throw _T("正しくないシーン番号が指定されました");
-	}
-	LeaveCriticalSection(&CS_SceneAccess);
+	CS_SceneAccess.syncDo<void>([this, scene]() -> void {
+		redrawFlag = false;
+		delete myScene; myScene = nullptr;
+		switch (scene) {
+		case sceneSplash:
+			myScene = new SplashScreen(this); redrawFlag = true;
+			break;
+		case sceneTitle:
+			myScene = new TitleScreen(this); redrawFlag = true;
+			break;
+		case sceneConfig:
+			myScene = new RuleConfigScene(this); redrawFlag = true;
+			break;
+		case sceneGameTable:
+			myScene = new GameTableScreen(this); redrawFlag = true;
+			break;
+		default:
+			throw _T("正しくないシーン番号が指定されました");
+		}
+	});
 }
 
 void ScreenManipulator::subscene(unsigned int subsceneID) {
@@ -98,7 +96,6 @@ ScreenManipulator::~ScreenManipulator() {
 	if (myFPSIndicator) delete myFPSIndicator;
 	if (pd3d) {pd3d->Release(); pd3d = nullptr;}
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
-	DeleteCriticalSection(&CS_SceneAccess);
 }
 
 void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f) {
@@ -120,28 +117,29 @@ void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<vo
 }
 void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 	if (iManip) {
-		EnterCriticalSection(&CS_SceneAccess);
-		inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
-			if (sc) sc->KeyboardInput(od);
+		CS_SceneAccess.syncDo<void>([this, iManip]() -> void {
+			input::InputManipulator* iManip_ = iManip;
+			inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
+				if (sc) sc->KeyboardInput(od);
+			});
+			inputProc(iManip->mouse(), [iManip_](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
+				input::Mouse::Position mousepos = iManip_->mouse()->pos();
+				if (sc) sc->MouseInput(od, mousepos.first, mousepos.second);
+			});
 		});
-		inputProc(iManip->mouse(), [iManip](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
-			input::Mouse::Position mousepos = iManip->mouse()->pos();
-			if (sc) sc->MouseInput(od, mousepos.first, mousepos.second);
-		});
-		LeaveCriticalSection(&CS_SceneAccess);
 	}
 }
 
 void ScreenManipulator::inputProc(WPARAM wParam, LPARAM lParam) {
-	EnterCriticalSection(&CS_SceneAccess);
-	if (myScene) myScene->KeyboardInput(wParam, lParam);
-	LeaveCriticalSection(&CS_SceneAccess);
+	CS_SceneAccess.syncDo<void>([this, wParam, lParam]() -> void {
+		if (myScene) myScene->KeyboardInput(wParam, lParam);
+	});
 }
 
 void ScreenManipulator::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
-	EnterCriticalSection(&CS_SceneAccess);
-	if (myScene) myScene->IMEvent(message, wParam, lParam);
-	LeaveCriticalSection(&CS_SceneAccess);
+	CS_SceneAccess.syncDo<void>([this, message, wParam, lParam]() -> void {
+		if (myScene) myScene->IMEvent(message, wParam, lParam);
+	});
 }
 
 }
