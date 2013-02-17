@@ -12,8 +12,21 @@
 #include "yaku/yaku.h"
 #include "../sound/sound.h"
 #include "bgmid.h"
+#include "sound.h"
 #include "fuuro.h"
 #include "../graphic/graphic.h"
+
+namespace {
+	DiscardTileNum playerdahai(const GameTable* gameStat) { // プレイヤーの打牌
+		/* TODO: ここでイベントフラグをリセット */
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubscenePlayerDahai);
+		DWORD result = mihajong_graphic::ui::WaitUI();
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
+		DiscardTileNum discardTile(DiscardTileNum::fromSingleInt(result));
+		return discardTile;
+	}
+}
 
 DiscardTileNum getdahai(GameTable* const gameStat) {
 	DiscardTileNum DiscardTileIndex;
@@ -29,9 +42,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 			DiscardTileIndex = aiscript::compdahai(sandbox);
 		} else {
 			debug(_T("プレイヤーのツモ番です。"));
-			/* TODO: プレイヤー打牌選択 playerdahai GameStat, GameEnv: DiscardTileIndex = stat */
-			DiscardTileIndex.type = DiscardTileNum::Normal; // テストダブル
-			DiscardTileIndex.id = NUM_OF_TILES_IN_HAND - 1; // (ツモ切り)
+			DiscardTileIndex = playerdahai(gameStat);
 		}
 	} else if (
 		(EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag == -1) ||
@@ -220,7 +231,7 @@ namespace { /* 内部処理分割用 */
 			sound::Play(sound::IDs::voxRichi);
 			if (!(gameStat->Player[0].RichiFlag.OpenFlag || gameStat->Player[1].RichiFlag.OpenFlag ||
 				gameStat->Player[2].RichiFlag.OpenFlag || gameStat->Player[3].RichiFlag.OpenFlag))
-				sound::Play(sound::IDs::musOpenrichi);
+				sound::util::bgmplay(sound::IDs::musOpenrichi);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			Sleep(1000);
 			gameStat->Player[gameStat->CurrentPlayer.Active].HandStat = handOpenRiichi;
@@ -236,12 +247,12 @@ namespace { /* 内部処理分割用 */
 					if (!(gameStat->Player[0].RichiFlag.RichiFlag || gameStat->Player[1].RichiFlag.RichiFlag ||
 						gameStat->Player[2].RichiFlag.RichiFlag || gameStat->Player[3].RichiFlag.RichiFlag)) {
 							if (gameStat->CurrentPlayer.Active == gameStat->PlayerID)
-								sound::Play(sound::IDs::musRichi2);
+								sound::util::bgmplay(sound::IDs::musRichi2);
 							else
-								sound::Play(sound::IDs::musRichi1);
+								sound::util::bgmplay(sound::IDs::musRichi1);
 					} else if (!EnvTable::Instantiate()->WatchModeFlag) {
 						if (gameStat->CurrentPlayer.Active == gameStat->PlayerID)
-							sound::Play(sound::IDs::musRichi3);
+							sound::util::bgmplay(sound::IDs::musRichi3);
 					}
 			}
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);

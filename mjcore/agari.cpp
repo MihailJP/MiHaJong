@@ -635,7 +635,7 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 	writeChat(tmpResultDesc);
 	/* TODO: ‚±‚ê‚ð”pŽ~‚·‚é‚©‚ÌŒˆ’è statmes tmpResultDesc */
 	Sleep(1500);
-	sound::Play(sound::IDs::musRyuukyoku);
+	sound::util::bgmplay(sound::IDs::musRyuukyoku);
 	/* Œëƒƒ“‚Ü‚½‚ÍŒëƒcƒ‚ */
 	if ((gameStat->AgariSpecialStat == 0) || (gameStat->AgariSpecialStat == 1)) {
 		if ((gameStat->PaoFlag[pyMinkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong"))

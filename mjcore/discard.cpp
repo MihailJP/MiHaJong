@@ -8,7 +8,7 @@ int DiscardTileNum::toSingleInt() const {
 		case Agari: return -1;
 		case Kyuushu: return -2;
 		case Disconnect: return -3;
-		default: return (int)this->type * 20 + (int)this->id;
+		default: return (int)this->type * TypeStep + (int)this->id;
 	}
 }
 /* ]—ˆ‚Ì‘Å”vƒR[ƒh‚©‚ç•ÏŠ· */

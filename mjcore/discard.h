@@ -9,6 +9,7 @@ EXPORT_STRUCT DiscardTileNum { /* 打牌コード用 */
 		Normal, Ankan, Kakan, Riichi, Flower, OpenRiichi,
 		Agari, Kyuushu, Disconnect
 	};
+	static const int TypeStep = 20;
 	discardType type;
 	uint8_t id;
 	int toSingleInt() const;
