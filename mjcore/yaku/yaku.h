@@ -9,6 +9,7 @@
 #include "../gametbl.h"
 #include "../tileutil.h"
 #include "../shanten.h"
+#include "../../common/mutex.h"
 
 class yaku::yakuCalculator {
 private:
@@ -200,7 +201,7 @@ private:
 		void recordThreadStart();
 		void recordThreadFinish();
 		int finishedThreads;
-		CRITICAL_SECTION cs;
+		MHJMutex cs;
 		int startedThreads;
 		static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
 		DWORD WINAPI calculate(

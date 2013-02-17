@@ -19,8 +19,6 @@ DWORD WINAPI ChatThread::thread_loop (LPVOID param) {
 }
 StreamLog::StreamLog () {}
 ChatThread::ChatThread (std::string& server_addr, int clientNum) {
-	InitializeCriticalSection(&streamLock);
-	InitializeCriticalSection(&sendQueueLock);
 	terminate = false;
 	myServerAddr = server_addr; myClientNum = clientNum;
 	myHandle = CreateThread(nullptr, 0, thread_loop, this, 0, nullptr);
@@ -35,8 +33,6 @@ ChatThread::~ChatThread () {
 		if (exitcode != STILL_ACTIVE) break;
 		else Sleep(0);
 	}
-	DeleteCriticalSection(&streamLock);
-	DeleteCriticalSection(&sendQueueLock);
 }
 
 void ChatThread::init() {
@@ -124,49 +120,49 @@ void StreamLog::chatappend(const CodeConv::tstring& buf) {
 	}
 }
 void ChatThread::chatappend(const CodeConv::tstring& buf) {
-	EnterCriticalSection(&streamLock);
-	super::chatappend(buf);
-	LeaveCriticalSection(&streamLock);
+	streamLock.acquire();
+	super::chatappend(buf); // ←ラムダを使うとこれが呼び出せない
+	streamLock.release();
 }
 
 void ChatThread::send() {
-	EnterCriticalSection(&sendQueueLock);
-	if (!sendQueue.empty()) {
-		TCHAR buf[bufsize] = {0}; //buf[0] = GameStat.PlayerID + _T('0');
-		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
-			for (int k = 1; k <= 3; k++) {
-				if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
-					(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
-					(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
-					((!chkGameType(&GameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
-						_tcscat_s(buf, bufsize, sendQueue.front().c_str());
-						if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
-							_tcscat_s(buf, bufsize,
+	sendQueueLock.syncDo<void>([this]() -> void {
+		if (!sendQueue.empty()) {
+			TCHAR buf[bufsize] = {0}; //buf[0] = GameStat.PlayerID + _T('0');
+			if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
+				for (int k = 1; k <= 3; k++) {
+					if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
+						(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
+						(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
+						((!chkGameType(&GameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
+							_tcscat_s(buf, bufsize, sendQueue.front().c_str());
+							if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
+								_tcscat_s(buf, bufsize,
 #ifdef _WIN32
-							_T("\r\n")
+								_T("\r\n")
 #else
-							_T("\n")
+								_T("\n")
 #endif
-							);
-						mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
-						chatappend(buf);
+								);
+							mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
+							chatappend(buf);
+					}
 				}
-			}
-		} else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
-			_tcscat_s(buf, bufsize, sendQueue.front().c_str());
-			if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
-				_tcscat_s(buf, bufsize,
+			} else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
+				_tcscat_s(buf, bufsize, sendQueue.front().c_str());
+				if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
+					_tcscat_s(buf, bufsize,
 #ifdef _WIN32
-				_T("\r\n")
+					_T("\r\n")
 #else
-				_T("\n")
+					_T("\n")
 #endif
-				);
-			mihajong_socket::puts(SOCK_CHAT, buf);
+					);
+				mihajong_socket::puts(SOCK_CHAT, buf);
+			}
+			sendQueue.pop();
 		}
-		sendQueue.pop();
-	}
-	LeaveCriticalSection(&sendQueueLock);
+	});
 }
 
 void ChatThread::cleanup() {
@@ -178,10 +174,9 @@ CodeConv::tstring StreamLog::getlog () {
 	return CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
 }
 CodeConv::tstring ChatThread::getlog () {
-	EnterCriticalSection(&streamLock);
-	CodeConv::tstring& logbuf = CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
-	LeaveCriticalSection(&streamLock);
-	return CodeConv::tstring(logbuf);
+	return streamLock.syncDo<CodeConv::tstring>([this]() {
+		return CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
+	});
 }
 
 void StreamLog::sysmsg(const CodeConv::tstring& str) {
@@ -196,9 +191,9 @@ void StreamLog::sysmsg(const CodeConv::tstring& str) {
 	mihajong_graphic::logwnd::append(tmpstr.c_str());
 }
 void ChatThread::sysmsg(const CodeConv::tstring& str) {
-	EnterCriticalSection(&streamLock);
-	StreamLog::sysmsg(str);
-	LeaveCriticalSection(&streamLock);
+	streamLock.acquire();
+	super::sysmsg(str); // ←ラムダを使うとこれが呼び出せない
+	streamLock.release();
 }
 
 void StreamLog::sendstr (const CodeConv::tstring& msg) {
@@ -216,9 +211,9 @@ void ChatThread::sendstr (const CodeConv::tstring& msg) {
 }
 void ChatThread::sendstrx (PLAYER_ID player, const CodeConv::tstring& msg) {
 	TCHAR tmpnum[2] = {0}; tmpnum[0] = player + _T('0');
-	EnterCriticalSection(&sendQueueLock);
-	sendQueue.push(CodeConv::tstring(tmpnum) + msg);
-	LeaveCriticalSection(&sendQueueLock);
+	sendQueueLock.syncDo<void>([this, &tmpnum, msg]() -> void {
+		sendQueue.push(CodeConv::tstring(tmpnum) + msg);
+	});
 }
 
 // -------------------------------------------------------------------------

@@ -40,14 +40,14 @@ void yaku::yakuCalculator::CalculatorThread::sync(int threads) { // スレッドを同
 }
 
 void yaku::yakuCalculator::CalculatorThread::recordThreadStart() {
-	while (TryEnterCriticalSection(&this->cs) == 0) Sleep(0);
-	++this->startedThreads; // 開始したスレッド数をインクリメント
-	LeaveCriticalSection(&this->cs);
+	cs.syncDo<void>([this]() -> void {
+		++startedThreads; // 開始したスレッド数をインクリメント
+	});
 }
 void yaku::yakuCalculator::CalculatorThread::recordThreadFinish() {
-	while (TryEnterCriticalSection(&this->cs) == 0) Sleep(0);
-	++this->finishedThreads; // 終了したスレッド数をインクリメント
-	LeaveCriticalSection(&this->cs);
+	cs.syncDo<void>([this]() -> void {
+		++finishedThreads; // 終了したスレッド数をインクリメント
+	});
 }
 
 /* 翻を計算する */
@@ -584,11 +584,10 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 
 /* コンストラクタとデストラクタ */
 yaku::yakuCalculator::CalculatorThread::CalculatorThread() {
-	InitializeCriticalSection(&cs); finishedThreads = startedThreads = 0;
+	finishedThreads = startedThreads = 0;
 }
 yaku::yakuCalculator::CalculatorThread::~CalculatorThread() {
 	/* 終了するときは必ず同期してから行うこと！！ */
-	DeleteCriticalSection(&cs);
 }
 		
 /* 引数の準備とか */
