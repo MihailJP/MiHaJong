@@ -149,10 +149,26 @@ void GameTableScreen::RenderSideBar() {
 	logWindow->Render();
 }
 
+void GameTableScreen::checkTimeout() {
+	if ((mySubScene) && (mySubScene->timeout() <= 0) && (buttonReconst->areEnabled().any() || tehaiReconst->isCursorEnabled())) { /* タイムアウトの処理 */
+		const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
+		if (isNakiSel) { // 鳴き選択中の時
+			ui::UIEvent->set(naki::nakiNone); // 牌の番号を設定
+		} else if (buttonReconst->getButtonSet() == ButtonReconst::btnSetTsumo) {
+			if (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[NUM_OF_TILES_IN_HAND - 1].tile != NoTile)
+				ui::UIEvent->set(NUM_OF_TILES_IN_HAND - 1); // ツモ切り
+			else ui::UIEvent->set(0); // 鳴いた直後の場合
+		}
+		tehaiReconst->setTileCursor();
+		buttonReconst->setCursor();
+	}
+}
+
 void GameTableScreen::Render() {
 	cls();
 	RenderTable();
 	if (TryEnterCriticalSection(&subSceneCS)) {
+		checkTimeout();
 		mySubScene->Render();
 		LeaveCriticalSection(&subSceneCS);
 	}
