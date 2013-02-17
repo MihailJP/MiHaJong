@@ -65,6 +65,7 @@ public:
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 private:
+	void checkTimeout();
 	int tileSelectMode;
 	void FinishTileChoice();
 	void CallTsumoAgari();
