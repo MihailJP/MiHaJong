@@ -3,7 +3,7 @@
 #include <type_traits>
 #include <cstdint>
 #include "mjexport.h"
-#include "strcode.h"
+#include "../common/strcode.h"
 
 // 青天ルール対策
 // 一応21不可思議まで表現可能……

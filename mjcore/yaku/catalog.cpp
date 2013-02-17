@@ -1,6 +1,6 @@
 #include "catalog.h"
 
-#include "../strcode.h"
+#include "../../common/strcode.h"
 
 /* シングルトン インスタンス アクセサ */
 yaku::yakuCalculator::YakuCatalog* yaku::yakuCalculator::YakuCatalog::Instantiate() {

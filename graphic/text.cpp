@@ -1,7 +1,7 @@
 #include "text.h"
 #include "resource.h"
 #include "geometry.h"
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 #include "sprite.h"
 
 namespace mihajong_graphic {

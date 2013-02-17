@@ -2,7 +2,7 @@
 
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 #include "GuruGuruSMF/GuruGuruSMF4_Cpp.h"
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 
 sound::MidiData::MidiData(unsigned ID, const std::string& filename, bool looped) {

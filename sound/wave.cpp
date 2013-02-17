@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iomanip>
 #include "logger.h"
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 /* 4バイト単位のチャンクのチェック */
 bool sound::WaveData::checkTag(std::ifstream& file, const std::string& tag) {

@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <cstdint>
 #include <string>
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 #include "exports.h"
 
 namespace mihajong_graphic {

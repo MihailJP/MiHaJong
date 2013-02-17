@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include "resource.h"
-#include "strcode.h"
+#include "../common/strcode.h"
 
 namespace Compressed {
 

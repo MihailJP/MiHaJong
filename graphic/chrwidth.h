@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 namespace mihajong_graphic {
 namespace character_width {

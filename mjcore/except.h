@@ -8,7 +8,7 @@
 #include "logging.h"
 #endif
 #include "mjexport.h"
-#include "strcode.h"
+#include "../common/strcode.h"
 
 #define STRINGBUF 1024u
 #define ADDRBUF 256u

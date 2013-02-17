@@ -118,7 +118,6 @@
   <ItemGroup>
     <ClInclude Include="main.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mihajong.rc" />

@@ -7,7 +7,7 @@
 #include "../gametbl.h"
 #include "../logging.h"
 #include "../chat.h"
-#include "../strcode.h"
+#include "../../common/strcode.h"
 
 const DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NUM_OF_TILES_IN_HAND - 1};
 

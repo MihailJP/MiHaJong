@@ -5,7 +5,7 @@
 #include "../yaku/yaku.h"
 #include "../shanten.h"
 #include "../random.h"
-#include "../../mihajong/version.h"
+#include "../../common/version.h"
 #include "../logging.h"
 #include "../chat.h"
 

@@ -12,7 +12,7 @@
 #include "func.h"
 #include "logging.h"
 #include "reader/readrsrc.h"
-#include "strcode.h"
+#include "../common/strcode.h"
 #include "decomp.h"
 
 using std::min;

@@ -164,7 +164,6 @@
     <ClCompile Include="logger.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\mjcore\strcode.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

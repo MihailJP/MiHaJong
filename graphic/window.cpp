@@ -1,5 +1,5 @@
 #include "window.h"
-#include "../mihajong/version.h"
+#include "../common/version.h"
 #include "extchar.h"
 #include "loadtex.h"
 

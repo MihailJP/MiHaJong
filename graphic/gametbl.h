@@ -2,6 +2,7 @@
 
 #include "../mjcore/mjimport.h"
 #include "exports.h"
+#include "../common/mutex.h"
 
 namespace mihajong_graphic {
 
@@ -10,7 +11,7 @@ class GameStatus {
 private:
 	class GStatModFlag {
 	public:
-		CRITICAL_SECTION myCriticalSection;
+		MHJMutex myCriticalSection;
 		bool myModificationFlag;
 		GStatModFlag();
 		~GStatModFlag();

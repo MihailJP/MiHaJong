@@ -9,7 +9,7 @@
 #include <array>
 #include <string>
 #include <cstdint>
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 #endif
 
 namespace mihajong_socket {

@@ -1,7 +1,7 @@
 #include "rndstart.h"
 #include "../../rule.h"
 #include "../../gametbl.h"
-#include "../../../mjcore/strcode.h"
+#include "../../../common/strcode.h"
 
 namespace mihajong_graphic {
 

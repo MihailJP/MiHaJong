@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "../strcode.h"
+#include "../../common/strcode.h"
 
 class CSVReader {
 public:

@@ -3,7 +3,7 @@
 #include "resource.h"
 #include <cassert>
 #include "sprite.h"
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 namespace mihajong_graphic {
 

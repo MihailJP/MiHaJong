@@ -2,7 +2,7 @@
 #include "resource.h"
 #include <map>
 #include <cassert>
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 namespace mihajong_graphic {
 

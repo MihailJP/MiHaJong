@@ -5,7 +5,7 @@
 #include "lzma/Sha256.h"
 #include "logging.h"
 #include "reader/readrsrc.h"
-#include "strcode.h"
+#include "../common/strcode.h"
 #include "except.h"
 
 using std::min;

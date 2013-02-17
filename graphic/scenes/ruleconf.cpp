@@ -4,7 +4,7 @@
 #include "../geometry.h"
 #include "../../sound/sound.h"
 #include "../../mjcore/bgmid.h"
-#include "../../mihajong/version.h"
+#include "../../common/version.h"
 #include "../event.h"
 #include <iomanip>
 

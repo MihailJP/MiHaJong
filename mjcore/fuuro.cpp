@@ -3,7 +3,7 @@
 #include <sstream>
 #include <cassert>
 #include "../sound/sound.h"
-#include "strcode.h"
+#include "../common/strcode.h"
 #include "logging.h"
 #include "haifu.h"
 #include "ruletbl.h"

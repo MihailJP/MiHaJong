@@ -1,7 +1,7 @@
 #pragma once
 
 #include <map>
-#include "../strcode.h"
+#include "../../common/strcode.h"
 
 class INIParser {
 public:

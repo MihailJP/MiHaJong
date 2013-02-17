@@ -10,7 +10,7 @@
 #include "logging.h"
 #include "decomp.h"
 #include "reader/readrsrc.h"
-#include "strcode.h"
+#include "../common/strcode.h"
 
 using namespace CodeConv;
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "exports.h"
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 #ifdef GRAPHIC_EXPORTS
 #include <d3dx9.h>
 #include <dxerr.h>

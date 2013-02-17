@@ -20,10 +20,10 @@
 #define ASTRO_PATCH_VER 10
 #define ASTRO_VER "1.7.10"
 
-#define SOCKET_MAJOR_VER 1
-#define SOCKET_MINOR_VER 8
+#define SOCKET_MAJOR_VER 2
+#define SOCKET_MINOR_VER 0
 #define SOCKET_PATCH_VER 0
-#define SOCKET_VER "1.8.0"
+#define SOCKET_VER "2.0.0-devel"
 
 #define SOUND_MAJOR_VER 1
 #define SOUND_MINOR_VER 9

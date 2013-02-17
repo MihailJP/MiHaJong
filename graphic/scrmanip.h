@@ -8,6 +8,7 @@
 #include "scenes/proto.h"
 #include "scenes/fps.h"
 #include "input.h"
+#include "../common/mutex.h"
 
 namespace mihajong_graphic {
 
@@ -22,7 +23,7 @@ private:
 	bool redrawFlag; // 画面の再描画をするかどうかのフラグ
 	void InitDevice(); // Direct3D オブジェクト初期化
 	void inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f);
-	CRITICAL_SECTION CS_SceneAccess; // シーンアクセスのクリティカルセクション
+	MHJMutex CS_SceneAccess; // シーンアクセスのクリティカルセクション
 public:
 	void inputProc(WPARAM wParam, LPARAM lParam);
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);

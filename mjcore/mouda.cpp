@@ -1,7 +1,7 @@
 #include "mouda.h"
 
 #include <cassert>
-#include "strcode.h"
+#include "../common/strcode.h"
 #include "logging.h"
 #include "haifu.h"
 #include "envtbl.h"

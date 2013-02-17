@@ -2,7 +2,7 @@
 #include "logger.h"
 #include <string>
 #include <sstream>
-#include "../mjcore/strcode.h"
+#include "../common/strcode.h"
 
 sound::SoundManipulator* sound::soundManipulator = nullptr;
 
