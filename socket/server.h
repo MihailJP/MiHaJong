@@ -4,7 +4,7 @@
 #include "protocol.h"
 #ifdef SOCKET_EXPORTS
 #include "except.h"
-#include "../mjcore/nmrules.h"
+#include "../common/nmrules.h"
 #include <Windows.h>
 #include <array>
 #include <string>

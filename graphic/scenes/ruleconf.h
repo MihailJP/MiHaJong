@@ -4,7 +4,7 @@
 #include "../text.h"
 #include "../../common/strcode.h"
 #include "../rule.h"
-#include "../../mjcore/nmrules.h"
+#include "../../common/nmrules.h"
 #include "../button.h"
 
 namespace mihajong_graphic {

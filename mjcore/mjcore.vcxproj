@@ -292,7 +292,6 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="mjexport.h" />
     <ClInclude Include="mouda.h" />
-    <ClInclude Include="nmrules.h" />
     <ClInclude Include="prepare.h" />
     <ClInclude Include="random.h" />
     <ClInclude Include="rational.h" />

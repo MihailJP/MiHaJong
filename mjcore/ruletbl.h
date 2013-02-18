@@ -13,7 +13,7 @@
 #include "reader/ini2map.h"
 #endif
 #include "mjexport.h"
-#include "nmrules.h"
+#include "../common/nmrules.h"
 #include "../common/gametype.h"
 
 #ifdef MJCORE_EXPORTS
