@@ -6,6 +6,7 @@
 #endif
 #include "mjexport.h"
 #include "gametbl.h"
+#include "../common/seatrank.h"
 
 // -------------------------------------------------------------------------
 
@@ -13,14 +14,10 @@ using mihajong_structs::InfoByPlayer;
 using mihajong_structs::PlayerID;
 using mihajong_structs::TileCode;
 
-enum seatAbsolute : uint8_t { sEast, sSouth, sWest, sNorth };
-enum seatRelative : uint8_t { sSelf, sRight, sOpposite, sLeft };
-typedef uint8_t PLAYER_RANK;
-template struct InfoByPlayer<PLAYER_RANK>;
-typedef InfoByPlayer<PLAYER_RANK> PlayerRankList;
-#ifdef MJCORE_EXPORTS
-static_assert(std::is_pod<PlayerRankList>::value, "PlayerRankList is not POD");
-#endif
+using mihajong_structs::seatAbsolute;
+using mihajong_structs::seatRelative;
+using mihajong_structs::PlayerRank;
+using mihajong_structs::PlayerRankList;
 
 // -------------------------------------------------------------------------
 

@@ -1,8 +1,9 @@
 #pragma once
 
 #include "exports.h"
-#include "../mjcore/func.h"
-#include "../mjcore/tileutil.h"
+#include "../common/seatrank.h"
+#include "../common/gametbl.h"
+#include "../common/machihai.h"
 #include "../common/shanten.h"
 
 namespace mihajong_graphic {

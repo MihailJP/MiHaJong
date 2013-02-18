@@ -6,6 +6,7 @@
 #include <cstdint>
 #include "mjexport.h"
 #include "gametbl.h"
+#include "../common/machihai.h"
 
 // -------------------------------------------------------------------------
 
@@ -14,33 +15,9 @@ using mihajong_structs::PlayerID;
 using mihajong_structs::TileCode;
 using mihajong_structs::Int8ByTile;
 
-EXPORT_STRUCT MachihaiTileInfo {
-	bool MachihaiFlag; // 待ち牌になっているかのフラグ
-	int8_t MachihaiCount; // 待ち牌の残り枚数
-};
-#ifdef MJCORE_EXPORTS
-static_assert(std::is_pod<MachihaiTileInfo>::value, "MachihaiTileInfo is not POD");
-#endif
-
-EXPORT_TEMPLATE_STRUCT InfoByTile<MachihaiTileInfo>;
-EXPORT_STRUCT MachihaiInfo { // 待ち牌とかの情報を格納(chkFuriten関数用)
-	bool FuritenFlag; // フリテンかどうかのフラグ
-	InfoByTile<MachihaiTileInfo> Machihai; // 待ち牌情報
-	int8_t MachihaiTotal; // 待ち牌の合計枚数
-	int8_t MachiMen; // 何面待ち？
-};
-#ifdef MJCORE_EXPORTS
-static_assert(std::is_pod<MachihaiInfo>::value, "MachihaiInfo is not POD");
-#endif
-
-EXPORT_STRUCT TileStatus { // gettilestatus用
-	bool isExistent, canFormQuad,
-		seqMidWait, seqDoubleSideWait, seqSingleSideWait,
-		formsPair, formsSequence, formsTriplet;
-};
-#ifdef MJCORE_EXPORTS
-static_assert(std::is_pod<TileStatus>::value, "TileStatus is not POD");
-#endif
+using mihajong_structs::MachihaiTileInfo;
+using mihajong_structs::MachihaiInfo;
+using mihajong_structs::TileStatus;
 
 // -------------------------------------------------------------------------
 
