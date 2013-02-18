@@ -5,4 +5,4 @@
 
 EndType doTableTurn(GameTable* const gameStat);
 bool doTableRound(GameTable* const gameStat);
-void startgame(gameTypeID gameType);
+void startgame(GameTypeID gameType);

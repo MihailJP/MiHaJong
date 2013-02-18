@@ -94,9 +94,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 	if (RuleData::chkRuleApplied("akadora_all")) {
 		auto countRed = [](const MENTSU_ANALYSIS* const analysis) -> unsigned {
 			unsigned red = 0;
-			for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+			for (int i = 0; i < NumOfTilesInHand; i++) {
 				if (analysis->PlayerStat->Hand[i].tile == NoTile) continue;
-				else if (analysis->PlayerStat->Hand[i].tile >= TILE_NONFLOWER_MAX) continue;
+				else if (analysis->PlayerStat->Hand[i].tile >= TileNonflowerMax) continue;
 				else if (analysis->PlayerStat->Hand[i].red == AkaDora) ++red;
 			}
 			for (int i = 1; i < analysis->PlayerStat->MeldPointer; i++) {

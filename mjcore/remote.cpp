@@ -11,7 +11,7 @@
 namespace RemoteAction {
 
 /* Ú‘±æ‚Ì‘Å”v */
-void proc_abrupt_disconnect(GameTable* const gameStat, PLAYER_ID player) {
+void proc_abrupt_disconnect(GameTable* const gameStat, PlayerID player) {
 	{
 		gameStat->Player[player].ConnectionLost = true;
 		CodeConv::tostringstream o; o << _T("ƒvƒŒƒCƒ„[ [") << static_cast<int>(player) << _T("] ‚Ì‰ñüØ’f‚ðŒŸ’m‚µ‚Ü‚µ‚½B");
@@ -58,7 +58,7 @@ DWORD WINAPI RemoteDahai::thread () {
 		}
 		// ŽóMŽ¸”s‚ÌŽž
 		if (ReceivedMsg == 1023) {
-			for (int i = 0; i < PLAYERS; i++) {
+			for (int i = 0; i < Players; i++) {
 				if ((EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag == ServerReceived) &&
 					(!gameStat->Player[i].ConnectionLost))
 					proc_abrupt_disconnect(gameStat, i);
@@ -87,24 +87,24 @@ DWORD WINAPI RemoteDahai::thread () {
 	}
 	{
 		using namespace mihajong_socket::protocol;
-		if ((ReceivedMsg >= Dahai_Type_Normal_Offset) && (ReceivedMsg < (Dahai_Type_Normal_Offset + NUM_OF_TILES_IN_HAND))) {
+		if ((ReceivedMsg >= Dahai_Type_Normal_Offset) && (ReceivedMsg < (Dahai_Type_Normal_Offset + NumOfTilesInHand))) {
 			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = ReceivedMsg - Dahai_Type_Normal_Offset;
-		} else if ((ReceivedMsg >= Dahai_Type_Ankan_Offset) && (ReceivedMsg < (Dahai_Type_Ankan_Offset + NUM_OF_TILES_IN_HAND))) {
+		} else if ((ReceivedMsg >= Dahai_Type_Ankan_Offset) && (ReceivedMsg < (Dahai_Type_Ankan_Offset + NumOfTilesInHand))) {
 			remoteDahai.type = DiscardTileNum::Ankan; remoteDahai.id = ReceivedMsg - Dahai_Type_Ankan_Offset;
-		} else if ((ReceivedMsg >= Dahai_Type_Kakan_Offset) && (ReceivedMsg < (Dahai_Type_Kakan_Offset + NUM_OF_TILES_IN_HAND))) {
+		} else if ((ReceivedMsg >= Dahai_Type_Kakan_Offset) && (ReceivedMsg < (Dahai_Type_Kakan_Offset + NumOfTilesInHand))) {
 			remoteDahai.type = DiscardTileNum::Kakan; remoteDahai.id = ReceivedMsg - Dahai_Type_Kakan_Offset;
-		} else if ((ReceivedMsg >= Dahai_Type_Riichi_Offset) && (ReceivedMsg < (Dahai_Type_Riichi_Offset + NUM_OF_TILES_IN_HAND))) {
+		} else if ((ReceivedMsg >= Dahai_Type_Riichi_Offset) && (ReceivedMsg < (Dahai_Type_Riichi_Offset + NumOfTilesInHand))) {
 			remoteDahai.type = DiscardTileNum::Riichi; remoteDahai.id = ReceivedMsg - Dahai_Type_Riichi_Offset;
-		} else if ((ReceivedMsg >= Dahai_Type_ORiichi_Offset) && (ReceivedMsg < (Dahai_Type_ORiichi_Offset + NUM_OF_TILES_IN_HAND))) {
+		} else if ((ReceivedMsg >= Dahai_Type_ORiichi_Offset) && (ReceivedMsg < (Dahai_Type_ORiichi_Offset + NumOfTilesInHand))) {
 			remoteDahai.type = DiscardTileNum::OpenRiichi; remoteDahai.id = ReceivedMsg - Dahai_Type_ORiichi_Offset;
-		} else if ((ReceivedMsg >= Dahai_Type_Flower_Offset) && (ReceivedMsg < (Dahai_Type_Flower_Offset + NUM_OF_TILES_IN_HAND))) {
+		} else if ((ReceivedMsg >= Dahai_Type_Flower_Offset) && (ReceivedMsg < (Dahai_Type_Flower_Offset + NumOfTilesInHand))) {
 			remoteDahai.type = DiscardTileNum::Flower; remoteDahai.id = ReceivedMsg - Dahai_Type_Flower_Offset;
 		} else if (ReceivedMsg == Dahai_Kyuushu) {
 			remoteDahai.type = DiscardTileNum::Kyuushu; remoteDahai.id = 0;
 		} else if (ReceivedMsg == Dahai_Tsumo) {
 			remoteDahai.type = DiscardTileNum::Agari; remoteDahai.id = 0;
 		} else if (ReceivedMsg == Dahai_Remote_Disconnect) {
-			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = NUM_OF_TILES_IN_HAND - 1;
+			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = NumOfTilesInHand - 1;
 		}
 	}
 	finished = true;
@@ -177,7 +177,7 @@ void RemoteNaki::thread_server() {
 		//chatrecv GameStat, GameEnv
 		mihajong_socket::server::receive(&ServerReceived, &ReceivedMsg);
 		if (ServerReceived) {
-			for (int i = 0; i < PLAYERS; i++) {
+			for (int i = 0; i < Players; i++) {
 				for (int j = 0; j < 3; j++) {
 					if ((ServerReceived == (j + 1)) && (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag == (j + 1))) {
 						checkremotenaki(i, ReceivedMsg);
@@ -207,13 +207,13 @@ DWORD WINAPI RemoteNaki::thread() {
 		thread_client();
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
 		thread_server();
-	for (int i = 0; i < PLAYERS; i++)
+	for (int i = 0; i < Players; i++)
 		if (gameStat->Player[i].DeclarationFlag.Ron) // ƒƒ“‚µ‚½‚çŽ©–Ì”vˆÊ’u‚Éƒƒ“”v‚ðÝ’è(ŽÀ‘•ã‚Ì“s‡)
-			gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1] = gameStat->CurrentDiscard;
+			gameStat->Player[i].Hand[NumOfTilesInHand - 1] = gameStat->CurrentDiscard;
 	finished = true;
 	return S_OK;
 }
-void RemoteNaki::checkremotenaki(PLAYER_ID player, int& ReceivedMsg) {
+void RemoteNaki::checkremotenaki(PlayerID player, int& ReceivedMsg) {
 	using namespace mihajong_socket::protocol;
 	switch (ReceivedMsg) {
 	case 1023:

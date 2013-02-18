@@ -76,17 +76,17 @@ bool doTableRound(GameTable* const gameStat) {
 	/* ウォッチモードの時は視点を親に移す */
 	gameStat->CurrentPlayer.Active = -1;
 	if (EnvTable::Instantiate()->WatchModeFlag)
-		gameStat->PlayerID = gameStat->GameRound % PLAYERS;
+		gameStat->PlayerID = gameStat->GameRound % Players;
 	/* 破回八連荘の後始末 */
 	if (gameStat->AgariChain == -1) gameStat->AgariChain = 1;
 	/* 半荘の初期化と配牌を行なう */
 	tableinit(gameStat);
 	/* 配牌終了時の処理 */
-	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+	for (PlayerID i = 0; i < Players; i++) {
 		gameStat->Player[i].HandStat = handUpright;
 		lipai(gameStat, i);
 	}
-	gameStat->CurrentPlayer.Active = gameStat->GameRound % PLAYERS; // 最初に親から捨牌を行なう
+	gameStat->CurrentPlayer.Active = gameStat->GameRound % Players; // 最初に親から捨牌を行なう
 	info(_T("配牌を完了しました。"));
 	gameStat->TurnRound = 1; // 配牌が終わったら1巡目
 	/* 摸打ループ */
@@ -112,7 +112,7 @@ DWORD titlescreen() {
 }
 
 /* ゲーム開始処理 */
-void startgame(gameTypeID gameType) {
+void startgame(GameTypeID gameType) {
 	while (true) {
 		/* 変数類の初期化 */
 		GameTable* gameStat = initializeGameTable(gameType);

@@ -13,10 +13,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	));
 
 	auto chktiles = // ”»’èŠÖ”ƒIƒuƒWƒFƒNƒg
-		[isQiDui](const MENTSU_ANALYSIS* const analysis, const tileCode* const targetDuiz, int numOfDuiz) -> bool {
+		[isQiDui](const MENTSU_ANALYSIS* const analysis, const TileCode* const targetDuiz, int numOfDuiz) -> bool {
 			if (isQiDui(analysis))
 				return (yaku::countingFacility::countPairs(analysis->TileCount, targetDuiz, numOfDuiz)
-					== NUM_OF_TILES_IN_HAND / 2);
+					== NumOfTilesInHand / 2);
 			else return false;
 		};
 	// ---------------------------------------------------------------------
@@ -28,7 +28,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("¬˜V“ª"), _T("¬ˆêF"), _T("ŽOŒ³Žµ‘ÎŽq"), _T("ŽlŠìŽµ‘ÎŽq"), _T("g”’Žµ‘Î"),
 			[isQiDui](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (isQiDui(analysis))
-					return (yaku::countingFacility::countPairs(analysis->TileCount, Honor_Major_Tiles()+6, 7) == NUM_OF_TILES_IN_HAND / 2);
+					return (yaku::countingFacility::countPairs(analysis->TileCount, Honor_Major_Tiles()+6, 7) == NumOfTilesInHand / 2);
 				else return false;
 			}
 		));
@@ -60,7 +60,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("Šï”Žµ‘ÎŽq"), get_yaku_han("odd_pairs"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const tileCode tc[15] = {
+				const TileCode tc[15] = {
 					CharacterOne, CharacterThree, CharacterFive, CharacterSeven, CharacterNine,
 					CircleOne, CircleThree, CircleFive, CircleSeven, CircleNine,
 					BambooOne, BambooThree, BambooFive, BambooSeven, BambooNine,
@@ -74,7 +74,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("‹ô”Žµ‘ÎŽq"), get_yaku_han("even_pairs"),
 			_T("’f›ô‹ã"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const tileCode tc[12] = {
+				const TileCode tc[12] = {
 					CharacterTwo, CharacterFour, CharacterSix, CharacterEight,
 					CircleTwo, CircleFour, CircleSix, CircleEight,
 					BambooTwo, BambooFour, BambooSix, BambooEight,
@@ -111,7 +111,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			}),
 			_T("¬ˆêF"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const tileCode tc[7] = {
+				const TileCode tc[7] = {
 					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
 					NorthWind, WhiteDragon,
 				};
@@ -124,7 +124,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("¢ŠEˆê"), get_yaku_han("sekaiichi"),
 			_T("ŽlŠìŽµ‘ÎŽq"), _T("¬˜V“ª"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const tileCode tc[7] = {
+				const TileCode tc[7] = {
 					CharacterOne, CircleOne, BambooOne,
 					EastWind, SouthWind, WestWind, NorthWind,
 				};
@@ -141,9 +141,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			[isQiDui](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int i = 1; i <= 9; i++)
-					if ((analysis->TileCount[TILE_SUIT_CHARACTERS + i] >= 2) &&
-						(analysis->TileCount[TILE_SUIT_CIRCLES + i] >= 2) &&
-						(analysis->TileCount[TILE_SUIT_BAMBOOS + i] >= 2))
+					if ((analysis->TileCount[TileSuitCharacters + i] >= 2) &&
+						(analysis->TileCount[TileSuitCircles + i] >= 2) &&
+						(analysis->TileCount[TileSuitBamboos + i] >= 2))
 						yakuFlag = true;
 				return isQiDui(analysis) && yakuFlag;
 			}
@@ -154,7 +154,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	{
 		auto gyakusharin =
 			[isQiDui](const MENTSU_ANALYSIS* const analysis, int suit) -> bool {
-				std::array<tileCode, 7> honors = {
+				std::array<TileCode, 7> honors = {
 					EastWind, SouthWind, WestWind, NorthWind,
 					WhiteDragon, GreenDragon, RedDragon,
 				}; int count = 0;
@@ -170,7 +170,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("‹tŽÔ—Ö"), get_yaku_han("gyakusharin"),
 				[gyakusharin](const MENTSU_ANALYSIS* const analysis) -> bool {
-					return gyakusharin(analysis, TILE_SUIT_CIRCLES);
+					return gyakusharin(analysis, TileSuitCircles);
 				}
 			));
 		/* ‹t’|—Ñ */
@@ -178,7 +178,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("‹t’|—Ñ"), get_yaku_han("gyakuchikurin"),
 				[gyakusharin](const MENTSU_ANALYSIS* const analysis) -> bool {
-					return gyakusharin(analysis, TILE_SUIT_BAMBOOS);
+					return gyakusharin(analysis, TileSuitBamboos);
 				}
 			));
 		/* ‹t”—× */
@@ -186,7 +186,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("‹t”—×"), get_yaku_han("gyakusuurin"),
 				[gyakusharin](const MENTSU_ANALYSIS* const analysis) -> bool {
-					return gyakusharin(analysis, TILE_SUIT_CHARACTERS);
+					return gyakusharin(analysis, TileSuitCharacters);
 				}
 			));
 	}

@@ -116,7 +116,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 	auto tilesMoreThan = [gameStat](int tiles) {
 		return (gameStat->TilePointer + tiles) < (gameStat->RinshanPointer - gameStat->DeadTiles - 1);
 	};
-	const PLAYER_ID ActivePlayer = gameStat->CurrentPlayer.Active;
+	const PlayerID ActivePlayer = gameStat->CurrentPlayer.Active;
 	const PlayerTable* const playerStat = &(gameStat->Player.val[ActivePlayer]);
 	const SHANTEN Shanten = utils::calcShanten(gameStat, ActivePlayer, ShantenAnalyzer::shantenAll);
 	if (utils::isRichiReqSatisfied(gameStat, ActivePlayer) && // 点棒要件を満たしている（点棒が足りている）
@@ -132,14 +132,14 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 
 	const bool ShisanBuDa = utils::chkShisanBuDa(gameStat, ActivePlayer);
 	const bool ShisiBuDa = utils::chkShisiBuDa(gameStat, ActivePlayer);
-	if (((Shanten <= -1) && (playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile != NoTile)) || // 和了になっているか
+	if (((Shanten <= -1) && (playerStat->Hand[NumOfTilesInHand - 1].tile != NoTile)) || // 和了になっているか
 		ShisanBuDa || ShisiBuDa) // 十三不塔の場合（十三不塔なしの場合この変数はfalseになる）
 		buttonEnabled[btnTsumo] = true; // 和了ボタン
 
 	const Int8ByTile TileCount = utils::countTilesInHand(gameStat, ActivePlayer);
 	const int kanLim = rules::chkRule("fifth_kong", "no") ? 4 : 5;
 	const bool KanFlag = [tilesMoreThan, gameStat, TileCount, playerStat, kanLim]() -> bool {
-		for (int i = 1; i < TILE_NONFLOWER_MAX; ++i) {
+		for (int i = 1; i < TileNonflowerMax; ++i) {
 			if (tilesMoreThan(0) && (gameStat->KangNum < kanLim)) {
 				// 暗槓できる場合
 				if (TileCount.val[i] == 4)
@@ -157,19 +157,19 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		}
 		return false;
 	} ();
-	if (KanFlag && (playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile != NoTile) &&
+	if (KanFlag && (playerStat->Hand[NumOfTilesInHand - 1].tile != NoTile) &&
 		(!playerStat->RichiFlag.RichiFlag) || utils::chkAnkanAbility(gameStat, ActivePlayer))
 		buttonEnabled[btnKan] = true;
 
-	const tileCode flowerTile = (gameStat->gameType & SanmaX) ? NorthWind : Flower;
+	const TileCode flowerTile = (gameStat->gameType & SanmaX) ? NorthWind : Flower;
 	const bool Flowerabilityflag = [gameStat, playerStat]() -> bool {
 		if (gameStat->gameType & SanmaX)
-			return (playerStat->Hand[NUM_OF_TILES_IN_HAND].tile == NorthWind) && (!rules::chkRule("flower_tiles", "no"));
+			return (playerStat->Hand[NumOfTilesInHand].tile == NorthWind) && (!rules::chkRule("flower_tiles", "no"));
 		else
-			return playerStat->Hand[NUM_OF_TILES_IN_HAND].tile > TILE_SUIT_FLOWERS;
+			return playerStat->Hand[NumOfTilesInHand].tile > TileSuitFlowers;
 	} ();
 	if ((!rules::chkRule("flower_tiles", "no")) &&
-		(playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile != NoTile) &&
+		(playerStat->Hand[NumOfTilesInHand - 1].tile != NoTile) &&
 		(TileCount.val[flowerTile] >= 1) &&
 		((!playerStat->RichiFlag.RichiFlag) || Flowerabilityflag))
 		buttonEnabled[btnFlower] = true;
@@ -184,14 +184,14 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 	auto tilesMoreThan = [gameStat](int tiles) {
 		return (gameStat->TilePointer + tiles) < (gameStat->RinshanPointer - gameStat->DeadTiles - 1);
 	};
-	const PLAYER_ID ActivePlayer = gameStat->CurrentPlayer.Active;
-	const PLAYER_ID PassivePlayer = gameStat->CurrentPlayer.Passive;
+	const PlayerID ActivePlayer = gameStat->CurrentPlayer.Active;
+	const PlayerID PassivePlayer = gameStat->CurrentPlayer.Passive;
 	PlayerTable* const playerStat = &(gameStat->Player.val[PassivePlayer]);
-	playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
+	playerStat->Hand[NumOfTilesInHand - 1].tile = gameStat->CurrentDiscard.tile;
 	const SHANTEN Shanten = utils::calcShanten(gameStat, gameStat->PlayerID, ShantenAnalyzer::shantenAll);
-	playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile = NoTile;
+	playerStat->Hand[NumOfTilesInHand - 1].tile = NoTile;
 
-	if (gameStat->CurrentDiscard.tile > TILE_SUIT_FLOWERS) goto end; /* 花牌の場合は残りの判定をスキップ */
+	if (gameStat->CurrentDiscard.tile > TileSuitFlowers) goto end; /* 花牌の場合は残りの判定をスキップ */
 	if (playerStat->AgariHouki) goto end; /* 和了り放棄だったら残りの判定をスキップ */
 	if ((gameStat->KangFlag.chankanFlag == chankanOfAnkan) && // 暗槓に対する搶槓判定のときで、
 		(utils::calcShanten(gameStat, PassivePlayer, ShantenAnalyzer::shantenOrphans) >= 0)) // 国士聴牌でない場合は
@@ -213,7 +213,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 
 		// チーできる条件：上家の捨牌であること、かつ、数牌であること
 		if ((gameStat->gameType & Yonma) && // 四麻である
-			(gameStat->CurrentDiscard.tile < TILE_SUIT_HONORS) && // 数牌で
+			(gameStat->CurrentDiscard.tile < TileSuitHonors) && // 数牌で
 			(gameStat->KangFlag.chankanFlag == chankanNone) && // 槍槓の判定中ではなくて
 			(gameStat->CurrentPlayer.Active == ((gameStat->CurrentPlayer.Passive + 3) % 4))) { // 捨てたのが上家
 				if ((gameStat->CurrentDiscard.tile >= 1) &&
@@ -266,7 +266,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 				this->disable((ButtonID)i);
 		this->reconstruct();
 		caller->tehaiReconst->enable();
-		for (int i = 0; i < NUM_OF_TILES_IN_HAND; ++i) {
+		for (int i = 0; i < NumOfTilesInHand; ++i) {
 			GameTable tmpStat; std::memcpy(&tmpStat, GameStatus::gameStat(), sizeof (GameTable));
 			if (f(i, &tmpStat)) caller->tehaiReconst->disable(i);
 		}
@@ -296,7 +296,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			setMode(DiscardTileNum::Ankan, btnKan,
 				[](int i, GameTable* tmpStat) -> bool {
 					bool flag = false;
-					const PLAYER_ID ActivePlayer = tmpStat->CurrentPlayer.Active;
+					const PlayerID ActivePlayer = tmpStat->CurrentPlayer.Active;
 					const Int8ByTile TileCount = utils::countTilesInHand(tmpStat, ActivePlayer);
 					const PlayerTable* const playerStat = &(tmpStat->Player.val[ActivePlayer]);
 					if (TileCount.val[playerStat->Hand[i].tile] < 4) flag = true;

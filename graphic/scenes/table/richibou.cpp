@@ -12,7 +12,7 @@ using utils::playerRelative;
 /* ÉäÅ[É`ñ_ï\é¶Ç∑ÇÈ */
 void GameTableScreen::RichibouReconst::ShowRiichibou(const GameTable* gameStat) {
 	RECT rectH = {72, 30, 216, 42,}, rectV = {30, 2, 42, 146,};
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
+	for (PlayerID i = 0; i < Players; ++i) {
 		if (!gameStat->Player.val[i].RichiFlag.RichiFlag) continue;
 		switch (playerRelative(i, gameStat->PlayerID)) {
 		case sSelf:

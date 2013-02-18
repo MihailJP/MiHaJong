@@ -91,7 +91,7 @@ yaku::yakuCalculator::Yaku::HANFUNC
 /* ˆêF‚Ì”»’è */
 bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALYSIS* const analysis, bool chin_itsu) {
 	if (analysis->shanten[ShantenAnalyzer::shantenAll] >= 0) return false; // ‘«Ø‚è—vŒF˜a—¹‚Á‚Ä‚È‚¢
-	const tileCode Tiles[][9] = {
+	const TileCode Tiles[][9] = {
 		{
 			CharacterOne, CharacterTwo,   CharacterThree, CharacterFour, CharacterFive,
 			CharacterSix, CharacterSeven, CharacterEight, CharacterNine,

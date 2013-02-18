@@ -12,9 +12,9 @@ private:
 	static unsigned ClientNumber;
 	static void shuffleSeat ();
 public:
-	static std::array<int, PLAYERS> shuffle(unsigned cNumber);
+	static std::array<int, Players> shuffle(unsigned cNumber);
 };
 
-void gameinit(GameTable* gameStat, gameTypeID gameType, const std::string& ServerAddress,
+void gameinit(GameTable* gameStat, GameTypeID gameType, const std::string& ServerAddress,
 	const std::array<int, 4>& PositionArray, unsigned ClientNumber);
 void tableinit(GameTable* const gameStat);

@@ -5,27 +5,27 @@
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 	auto countTilesOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
-			return analysis->TileCount[TILE_SUIT_CHARACTERS + numeral] +
-				analysis->TileCount[TILE_SUIT_CIRCLES + numeral] +
-				analysis->TileCount[TILE_SUIT_BAMBOOS + numeral];
+			return analysis->TileCount[TileSuitCharacters + numeral] +
+				analysis->TileCount[TileSuitCircles + numeral] +
+				analysis->TileCount[TileSuitBamboos + numeral];
 		};
 	auto countKangziOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
-			return analysis->KangziCount[TILE_SUIT_CHARACTERS + numeral] +
-				analysis->KangziCount[TILE_SUIT_CIRCLES + numeral] +
-				analysis->KangziCount[TILE_SUIT_BAMBOOS + numeral];
+			return analysis->KangziCount[TileSuitCharacters + numeral] +
+				analysis->KangziCount[TileSuitCircles + numeral] +
+				analysis->KangziCount[TileSuitBamboos + numeral];
 		};
 	auto countKeziOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
-			return analysis->KeziCount[TILE_SUIT_CHARACTERS + numeral] +
-				analysis->KeziCount[TILE_SUIT_CIRCLES + numeral] +
-				analysis->KeziCount[TILE_SUIT_BAMBOOS + numeral];
+			return analysis->KeziCount[TileSuitCharacters + numeral] +
+				analysis->KeziCount[TileSuitCircles + numeral] +
+				analysis->KeziCount[TileSuitBamboos + numeral];
 		};
 	auto countDuiziOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
-			return analysis->DuiziCount[TILE_SUIT_CHARACTERS + numeral] +
-				analysis->DuiziCount[TILE_SUIT_CIRCLES + numeral] +
-				analysis->DuiziCount[TILE_SUIT_BAMBOOS + numeral];
+			return analysis->DuiziCount[TileSuitCharacters + numeral] +
+				analysis->DuiziCount[TileSuitCircles + numeral] +
+				analysis->DuiziCount[TileSuitBamboos + numeral];
 		};
 
 	// ---------------------------------------------------------------------
@@ -37,7 +37,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("´ˆêF"), _T("‘ÎX˜a"), _T("‹Ø”v"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag = false;
-				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
 					if ((analysis->DuiziCount[i + 1] >= 1) &&
 						(analysis->DuiziCount[i + 7] >= 1) &&
 						(analysis->DuiziCount[i + 8] >= 1) &&
@@ -59,7 +59,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			[isApril1st](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (!isApril1st()) return false;
 				bool flag = false;
-				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
 					if ((analysis->KeziCount[i + 4] >= 1) &&
 						(analysis->KeziCount[i + 1] >= 1))
 						flag = true;
@@ -99,7 +99,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(countDuiziOf(analysis, 9) > 0) &&
 					(countDuiziOf(analysis, 3) > 0) &&
 					(countDuiziOf(analysis, 1) + countDuiziOf(analysis, 9) +
-					countDuiziOf(analysis, 3) == SIZE_OF_MELD_BUFFER);
+					countDuiziOf(analysis, 3) == SizeOfMeldBuffer);
 			}
 		));
 	/* ‘å–‚_ */
@@ -122,7 +122,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag = false;
 				for (int i = 2; i <= 9; ++i)
-					if (analysis->KeziCount[TILE_SUIT_BAMBOOS + i] >= 1)
+					if (analysis->KeziCount[TileSuitBamboos + i] >= 1)
 						flag = true;
 				return flag &&
 					(analysis->KeziCount[GreenDragon] >= 1) &&
@@ -253,7 +253,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("ŽµŒÜŽO"), get_yaku_han("shichigosan"),
 			_T("Šï”‘ÎX˜a"), _T("Šï”Žµ‘ÎŽq"), _T("’f›ô‹ã"),
 			[countTilesOf](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (countTilesOf(analysis, 7) + countTilesOf(analysis, 5) + countTilesOf(analysis, 3) == NUM_OF_TILES_IN_HAND) &&
+				return (countTilesOf(analysis, 7) + countTilesOf(analysis, 5) + countTilesOf(analysis, 3) == NumOfTilesInHand) &&
 					(countTilesOf(analysis, 7) * countTilesOf(analysis, 5) * countTilesOf(analysis, 3));
 			}
 		));
@@ -264,7 +264,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("‘ÎX˜a"), _T("‹Ø”v"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag = false;
-				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
 					if ((analysis->KeziCount[i + 5] >= 1) && (analysis->KeziCount[i + 9] >= 1) &&
 						(analysis->KeziCount[i + 6] >= 1) && (analysis->KeziCount[i + 3] >= 1))
 						flag = true;
@@ -277,7 +277,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("ƒjƒRƒjƒR–ð–ž"), get_yaku_han("nikoniko_yakuman"),
 			_T("‘ÎX˜a"), _T("’f›ô‹ã"),
 			[countDuiziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (countDuiziOf(analysis, 2) + countDuiziOf(analysis, 5) == SIZE_OF_MELD_BUFFER);
+				return (countDuiziOf(analysis, 2) + countDuiziOf(analysis, 5) == SizeOfMeldBuffer);
 			}
 		));
 	/* •—á•ó‘o•— */
@@ -369,7 +369,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("–ð”vE”’"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag = false;
-				for (int i = 1; i < TILE_NONFLOWER_MAX; i++)
+				for (int i = 1; i < TileNonflowerMax; i++)
 					if (analysis->GameStat->DoraFlag.Omote[i] && analysis->KeziCount[i])
 						flag = true;
 				return flag &&
@@ -424,19 +424,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("¬ˆêF"), _T("Žl‹Aˆê"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool pairIsHonor = false; bool flag = false;
-				for (int i = TILE_SUIT_HONORS; i < TILE_NONFLOWER_MAX; i++)
-					if (analysis->MianziDat[0].tile == (tileCode)i)
+				for (int i = TileSuitHonors; i < TileNonflowerMax; i++)
+					if (analysis->MianziDat[0].tile == (TileCode)i)
 						pairIsHonor = true;
-				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP) {
+				for (int i = 0; i < TileSuitHonors; i += TileSuitStep) {
 					if ((analysis->KeziCount[i + 3] >= 1) &&
 						(analysis->KeziCount[i + 6] >= 1) &&
 						(analysis->KeziCount[NorthWind] >= 1) &&
 						(pairIsHonor)) {
 							if ((analysis->ShunziCount[i + 4] >= 1) &&
-								(analysis->TsumoHai->tile == (tileCode)(i + 6)))
+								(analysis->TsumoHai->tile == (TileCode)(i + 6)))
 								flag = true;
 							if ((analysis->ShunziCount[i + 3] >= 1) &&
-								(analysis->TsumoHai->tile == (tileCode)(i + 3)))
+								(analysis->TsumoHai->tile == (TileCode)(i + 3)))
 								flag = true;
 					}
 				}
@@ -514,9 +514,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				bool isLeapYear = (nowTime.wYear % 400 == 0) || ((nowTime.wYear % 4 == 0) && (nowTime.wYear % 100 != 0));
 				if (!isLeapYear) return false;
 				for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); ++k)
-					if ((analysis->KeziCount[((*k)[0] - _T('0')) * TILE_SUIT_STEP + 2] >= 1) &&
-						(analysis->KeziCount[((*k)[1] - _T('0')) * TILE_SUIT_STEP + 2] >= 1) &&
-						(analysis->KeziCount[((*k)[1] - _T('0')) * TILE_SUIT_STEP + 9] >= 1))
+					if ((analysis->KeziCount[((*k)[0] - _T('0')) * TileSuitStep + 2] >= 1) &&
+						(analysis->KeziCount[((*k)[1] - _T('0')) * TileSuitStep + 2] >= 1) &&
+						(analysis->KeziCount[((*k)[1] - _T('0')) * TileSuitStep + 9] >= 1))
 						return true;
 				return false;
 			}
@@ -688,9 +688,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag = false;
 				for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); ++k)
-					if ((analysis->KeziCount[((*k)[0] - _T('0')) * TILE_SUIT_STEP + 6] >= 1) &&
-						(analysis->KeziCount[((*k)[1] - _T('0')) * TILE_SUIT_STEP + 4] >= 1) &&
-						(analysis->KeziCount[((*k)[2] - _T('0')) * TILE_SUIT_STEP + 5] >= 1))
+					if ((analysis->KeziCount[((*k)[0] - _T('0')) * TileSuitStep + 6] >= 1) &&
+						(analysis->KeziCount[((*k)[1] - _T('0')) * TileSuitStep + 4] >= 1) &&
+						(analysis->KeziCount[((*k)[2] - _T('0')) * TileSuitStep + 5] >= 1))
 						flag = true;
 				return flag &&
 					(analysis->KeziCount[RedDragon] >= 1);
@@ -717,7 +717,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				return (analysis->KeziCount[CircleOne] >= 1) &&
 					(analysis->KeziCount[CircleTwo] >= 1) &&
 					((analysis->DuiziCount[EastWind] + analysis->DuiziCount[SouthWind] +
-					analysis->DuiziCount[WestWind] + analysis->DuiziCount[NorthWind]) >= (SIZE_OF_MELD_BUFFER - 2));
+					analysis->DuiziCount[WestWind] + analysis->DuiziCount[NorthWind]) >= (SizeOfMeldBuffer - 2));
 			}
 		));
 	/* “ì‘å’Ã”g */
@@ -753,13 +753,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			[countKeziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag1 = false; bool flag2 = false;
 				for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); ++k)
-					if ((analysis->KeziCount[((*k)[0] - _T('0')) * TILE_SUIT_STEP + 3] >= 1) &&
-						(analysis->KeziCount[((*k)[1] - _T('0')) * TILE_SUIT_STEP + 7] >= 1) &&
-						(analysis->KeziCount[((*k)[2] - _T('0')) * TILE_SUIT_STEP + 3] >= 1))
+					if ((analysis->KeziCount[((*k)[0] - _T('0')) * TileSuitStep + 3] >= 1) &&
+						(analysis->KeziCount[((*k)[1] - _T('0')) * TileSuitStep + 7] >= 1) &&
+						(analysis->KeziCount[((*k)[2] - _T('0')) * TileSuitStep + 3] >= 1))
 						flag1 = true;
-				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
 					if ((analysis->KeziCount[i + 8] >= 1) &&
-						(analysis->TsumoHai->tile == (tileCode)(i + 8)))
+						(analysis->TsumoHai->tile == (TileCode)(i + 8)))
 						flag2 = true;
 				return flag1 && flag2 &&
 					(analysis->MianziDat[0].tile == SouthWind);

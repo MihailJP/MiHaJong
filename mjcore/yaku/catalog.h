@@ -2,6 +2,7 @@
 
 #include "yaku.h"
 #include <array>
+#include "../ruletbl.h"
 
 class yaku::yakuCalculator::YakuCatalog::catalogInit {
 private:

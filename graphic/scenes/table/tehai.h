@@ -15,9 +15,9 @@ private:
 	static const unsigned int HandPosV = DeckPosV - 144;
 	static const int tileCursorOff = -3; // è”vƒJ[ƒ\ƒ‹–³Œø
 	int tileCursor; // è”vƒJ[ƒ\ƒ‹
-	std::bitset<NUM_OF_TILES_IN_HAND> tileEnabled;
+	std::bitset<NumOfTilesInHand> tileEnabled;
 public:
-	void Reconstruct(const GameTable* gameStat, PLAYER_ID targetPlayer); // è”v‚ÌÄ\’z
+	void Reconstruct(const GameTable* gameStat, PlayerID targetPlayer); // è”v‚ÌÄ\’z
 	void Render();
 	explicit TehaiReconst(GameTableScreen* parent);
 	~TehaiReconst();

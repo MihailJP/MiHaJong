@@ -28,8 +28,8 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 	case sSelf:
 		{
 			RECT rect = {
-				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / PLAYERS    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (0    ) + PlatePadding,
-				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / PLAYERS + 1) - PlatePadding, (PlateHeightH + PlatePadding * 2) * (0 + 1) - PlatePadding,
+				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (0    ) + PlatePadding,
+				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players + 1) - PlatePadding, (PlateHeightH + PlatePadding * 2) * (0 + 1) - PlatePadding,
 			};
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(tChiicha, PlatePosH, PlatePosV,
 				PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
@@ -38,8 +38,8 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 	case sOpposite:
 		{
 			RECT rect = {
-				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / PLAYERS    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (1    ) + PlatePadding,
-				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / PLAYERS + 1) - PlatePadding, (PlateHeightH + PlatePadding * 2) * (1 + 1) - PlatePadding,
+				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (1    ) + PlatePadding,
+				(PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players + 1) - PlatePadding, (PlateHeightH + PlatePadding * 2) * (1 + 1) - PlatePadding,
 			};
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(tChiicha, TableSize - PlatePosH, TableSize - PlatePosV,
 				PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
@@ -48,8 +48,8 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 	case sRight:
 		{
 			RECT rect = {
-				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / PLAYERS    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (0    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
-				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / PLAYERS + 1) - PlatePadding, (PlateHeightV + PlatePadding * 2) * (0 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
+				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (0    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
+				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players + 1) - PlatePadding, (PlateHeightV + PlatePadding * 2) * (0 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
 			};
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(tChiicha, PlatePosV, TableSize - PlatePosH,
 				PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
@@ -58,8 +58,8 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 	case sLeft:
 		{
 			RECT rect = {
-				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / PLAYERS    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (1    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
-				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / PLAYERS + 1) - PlatePadding, (PlateHeightV + PlatePadding * 2) * (1 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
+				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (1    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
+				(PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players + 1) - PlatePadding, (PlateHeightV + PlatePadding * 2) * (1 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
 			};
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(tChiicha, TableSize - PlatePosV, PlatePosH,
 				PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
@@ -70,7 +70,7 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 
 /* ヤキトリマークの表示 */
 void GameTableScreen::TrayReconst::ShowYakitori(const GameTable* gameStat) {
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
+	for (PlayerID i = 0; i < Players; ++i) {
 		if (!gameStat->Player.val[i].YakitoriFlag) continue;
 		switch (playerRelative(i, gameStat->PlayerID)) {
 		case sSelf:

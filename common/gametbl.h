@@ -262,4 +262,10 @@ const unsigned int agariKuikae = 999;
 
 // -------------------------------------------------------------------------
 
+inline bool chkGameType(const GameTable* const gameStat, GameTypeID gameType) {
+	return ((gameStat->gameType) & gameType);
+}
+
+// -------------------------------------------------------------------------
+
 } /* namespace */

@@ -25,7 +25,7 @@ TableSubsceneCallZoomProto::~TableSubsceneCallZoomProto() {
 }
 
 /* •\Ž¦ˆ— */
-void TableSubsceneCallZoomProto::ShowCallMsg(PLAYER_ID player, calltext::CallType callType, int x, int y) {
+void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
 	if (callType == calltext::None) return;
 	const std::uint64_t curr = currTime();
 	const int animationLength = 2500000;
@@ -47,7 +47,7 @@ void TableSubsceneCallZoomProto::ShowCallMsg(PLAYER_ID player, calltext::CallTyp
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, col, &rect, 192, 48, &matrix);
 }
 
-void TableSubsceneCallZoomProto::ShowCall(PLAYER_ID player, int x, int y) {
+void TableSubsceneCallZoomProto::ShowCall(PlayerID player, int x, int y) {
 	ShowCallMsg(player, calltext::getCall(player), x, y);
 }
 
@@ -79,7 +79,7 @@ TableSubsceneCallFadeProto::~TableSubsceneCallFadeProto() {
 }
 
 /* •\Ž¦ˆ— */
-void TableSubsceneCallFadeProto::ShowCallMsg(PLAYER_ID player, calltext::CallType callType, int x, int y) {
+void TableSubsceneCallFadeProto::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
 	if (callType == calltext::None) return;
 	const std::uint64_t curr = currTime();
 	const int animationLength = 2500000;
@@ -94,7 +94,7 @@ void TableSubsceneCallFadeProto::ShowCallMsg(PLAYER_ID player, calltext::CallTyp
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, col, &rect, 192, 48);
 }
 
-void TableSubsceneCallFadeProto::ShowCall(PLAYER_ID player, int x, int y) {
+void TableSubsceneCallFadeProto::ShowCall(PlayerID player, int x, int y) {
 	ShowCallMsg(player, calltext::getCall(player), x, y);
 }
 

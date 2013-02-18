@@ -1,4 +1,5 @@
 #include "../yaku.h"
+#include "../../ruletbl.h"
 
 /* ”»’è‚ğŒã‰ñ‚µ‚É‚·‚é–ğ‚Ìˆ—(“Áê‚Èˆ—‚ª•K—v‚È‚à‚Ì) */
 void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku

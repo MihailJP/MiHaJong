@@ -9,22 +9,22 @@
 #include "../chat.h"
 #include "../../common/strcode.h"
 
-const DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NUM_OF_TILES_IN_HAND - 1};
+const DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NumOfTilesInHand - 1};
 
-aiscript::ScriptStates aiscript::status[PLAYERS] = {{nullptr, false}};
+aiscript::ScriptStates aiscript::status[Players] = {{nullptr, false}};
 const char aiscript::fncname_discard[8] = "ontsumo"; // 捨牌決定用関数の名前
 const char aiscript::fncname_call[3][12] = {"ondiscard", "onkakan", "onankan",}; // 鳴き決定用関数の名前
 
-bool aiscript::callFunc(const GameTable* const gameStat, PLAYER_ID player_id, const char* const function_name, bool is_mandatory) {
-	if (status[player_id].scriptLoaded) { /* 正しく読み込まれているなら */
+bool aiscript::callFunc(const GameTable* const gameStat, PlayerID PlayerID, const char* const function_name, bool is_mandatory) {
+	if (status[PlayerID].scriptLoaded) { /* 正しく読み込まれているなら */
 		try { /* シンボルがあればよし、なかったら例外処理 */
-			lua_getglobal(status[player_id].state, function_name);
+			lua_getglobal(status[PlayerID].state, function_name);
 		} catch (...) { /* シンボルがなかったらエラーになるので例外処理をする */
 			CodeConv::tostringstream o;
 			if (is_mandatory) {
 				o << _T("グローバルシンボル [") << CodeConv::EnsureTStr(function_name) << _T("] の取得に失敗しました"); error(o.str().c_str());
 				info(_T("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。"));
-				status[player_id].scriptLoaded = false;
+				status[PlayerID].scriptLoaded = false;
 				chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
 				return true;
 			} else {
@@ -33,16 +33,16 @@ bool aiscript::callFunc(const GameTable* const gameStat, PLAYER_ID player_id, co
 				return true;
 			}
 		}
-		GameStatToLuaTable(status[player_id].state, gameStat);
-		if (int errcode = lua_pcall(status[player_id].state, 1, 2, 0)) {
+		GameStatToLuaTable(status[PlayerID].state, gameStat);
+		if (int errcode = lua_pcall(status[PlayerID].state, 1, 2, 0)) {
 			/* 実行失敗！ */
 			CodeConv::tostringstream o;
 			switch (errcode) {
 			case LUA_ERRRUN:
 				o << _T("スクリプトの実行時エラー [") <<
-					CodeConv::DecodeStr(lua_tostring(status[player_id].state, -1)) /* エラーメッセージ */ <<
+					CodeConv::DecodeStr(lua_tostring(status[PlayerID].state, -1)) /* エラーメッセージ */ <<
 					_T("]");
-				lua_pop(status[player_id].state, 1);
+				lua_pop(status[PlayerID].state, 1);
 				break;
 			case LUA_ERRMEM: o << _T("メモリの割当に失敗しました。"); break;
 			case LUA_ERRERR: o << _T("メッセージハンドラ実行中のエラーです。"); break;
@@ -73,7 +73,7 @@ __declspec(dllexport) void aiscript::initscript() {
 	info(_T("AI用のスクリプトを初期化します"));
 	FileSelector::filelist();
 	// Lua初期化
-	for (int i = 0; i < PLAYERS; i++) {
+	for (int i = 0; i < Players; i++) {
 		status[i].state = luaL_newstate();
 		luaopen_base(status[i].state); // baseライブラリだけは開いておきましょう
 		table::functable::inittable(status[i].state, i);
@@ -84,23 +84,23 @@ __declspec(dllexport) void aiscript::initscript() {
 
 __declspec(dllexport) void aiscript::initephemeral() {
 	// ephemeralテーブル初期化
-	for (int i = 0; i < PLAYERS; i++) {
+	for (int i = 0; i < Players; i++) {
 		lua_newtable(status[i].state);
 		lua_setglobal(status[i].state, "ephemeral");
 	}
 	debug(_T("ephemeral テーブルを初期化しました"));
 }
 
-void aiscript::initcall(const GameTable* const gameStat, PLAYER_ID player) {
+void aiscript::initcall(const GameTable* const gameStat, PlayerID player) {
 	callFunc(gameStat, player, "init", false);
 }
 __declspec(dllexport) void aiscript::initcall(const GameTable* const gameStat, int player) {
-	initcall(gameStat, (PLAYER_ID)player);
+	initcall(gameStat, (PlayerID)player);
 }
 
 __declspec(dllexport) void aiscript::closescript() {
 	// Luaクリンナップ
-	for (int i = 0; i < PLAYERS; i++) {
+	for (int i = 0; i < Players; i++) {
 		lua_close(status[i].state); // Luaステートをクローズする
 		status[i].scriptLoaded = false;
 	}
@@ -218,19 +218,19 @@ DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameSt
 		}
 		if ((discard->type == DiscardTileNum::Agari) || (discard->type == DiscardTileNum::Kyuushu) ||
 			(discard->type == DiscardTileNum::Disconnect)) { // 番号指定が不要な場合
-				discard->id = NUM_OF_TILES_IN_HAND - 1; // 2番めの返り値は無視
+				discard->id = NumOfTilesInHand - 1; // 2番めの返り値は無視
 		} else {
 			int i = lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -1, &flag);
 			if (!flag) {
 				warn(_T("2番目の返り値が数値ではありません。ツモ切りとみなします。"));
-				discard->id = NUM_OF_TILES_IN_HAND - 1; // fallback
-			} else if ((i >= 1)&&(i <= NUM_OF_TILES_IN_HAND)) {
+				discard->id = NumOfTilesInHand - 1; // fallback
+			} else if ((i >= 1)&&(i <= NumOfTilesInHand)) {
 				discard->id = i - 1; // オリジンを1にする仕様……
-			} else if ((i <= -1)&&(i >= -NUM_OF_TILES_IN_HAND)) { // マイナスを指定した場合の処理
-				discard->id = NUM_OF_TILES_IN_HAND + i;
+			} else if ((i <= -1)&&(i >= -((int)NumOfTilesInHand))) { // マイナスを指定した場合の処理
+				discard->id = NumOfTilesInHand + i;
 			} else {
 				warn(_T("2番目の返り値が範囲外です。ツモ切りとみなします。"));
-				discard->id = NUM_OF_TILES_IN_HAND - 1; // fallback
+				discard->id = NumOfTilesInHand - 1; // fallback
 			}
 		}
 		lua_pop(status[gameStat->CurrentPlayer.Active].state, 2);

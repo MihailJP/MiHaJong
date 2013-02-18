@@ -5,6 +5,7 @@
 #include "func.h"
 #include "discard.h"
 #include "endtype.h"
+#include "largenum.h"
 
 // îvïàä÷åWÇÃÉRÅ[ÉhÇÕÉNÉâÉXÇ…äuó£ÇµÇƒÇ®Ç´Ç‹ÇµÇÂÇ§Ç©ÅB
 class haifu {
@@ -40,20 +41,20 @@ private:
 
 		static void haifuskip(
 			HaifuStreams* haifuP, HaifuStreams* HThaifuP,
-			PLAYER_ID PassivePlayer, PLAYER_ID ActivePlayer
+			PlayerID PassivePlayer, PlayerID ActivePlayer
 			);
 		static CodeConv::tstring haifudoraClass(doraCol Akadora);
-		static void recordDoraStream(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, tileCode tmpDora);
-		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TILE tlCode, bool rotate);
-		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TILE tlCode, doraCol kakanCol);
-		static void recordTile_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TILE tlCode);
+		static void recordDoraStream(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TileCode tmpDora);
+		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, bool rotate);
+		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, doraCol kakanCol);
+		static void recordTile_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode);
 		static void recordBlank_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h);
 		static void haifuwritetsumohai(
 			HaifuStreams* haifuP, HaifuStreams* HThaifuP,
-			PLAYER_ID ActivePlayer, TILE tlCode,
+			PlayerID ActivePlayer, Tile tlCode,
 			CodeConv::tstring PText, CodeConv::tstring HTText
 			);
-		static void haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, PLAYER_ID PassivePlayer);
+		static void haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, PlayerID PassivePlayer);
 
 		class kan_sub {
 		public:
@@ -71,18 +72,18 @@ private:
 			private:
 				class MeldWriter {
 				public:
-					static void hfChii(PLAYER_ID player, meldCode meld);
-					static inline void hfPon1(PLAYER_ID player, meldCode meld);
-					static void hfPon(PLAYER_ID player, meldCode meld);
+					static void hfChii(PlayerID player, MeldCode meld);
+					static inline void hfPon1(PlayerID player, MeldCode meld);
+					static void hfPon(PlayerID player, MeldCode meld);
 				};
 			public:
-				static void hfFinalForm(const GameTable* const gameStat, PLAYER_ID player, EndType RoundEndType);
-				static void hfFlower(const GameTable* const gameStat, PLAYER_ID player);
-				static void hfExposedMeld(const GameTable* const gameStat, PLAYER_ID player);
+				static void hfFinalForm(const GameTable* const gameStat, PlayerID player, EndType RoundEndType);
+				static void hfFlower(const GameTable* const gameStat, PlayerID player);
+				static void hfExposedMeld(const GameTable* const gameStat, PlayerID player);
 			};
 
-			static void hfScoreWriteOut(const GameTable* const gameStat, PLAYER_ID player, seatAbsolute wind);
-			static void hfWriteOut(const GameTable* const gameStat, PLAYER_ID player);
+			static void hfScoreWriteOut(const GameTable* const gameStat, PlayerID player, seatAbsolute wind);
+			static void hfWriteOut(const GameTable* const gameStat, PlayerID player);
 
 		public:
 			static void hfWriteHead(const GameTable* const gameStat,
@@ -100,12 +101,12 @@ public:
 
 	static __declspec(dllexport) void haifurechaipai(const GameTable* const gameStat);
 
-	static void haifurecdora(tileCode tmpDora);
+	static void haifurecdora(TileCode tmpDora);
 	static __declspec(dllexport) void haifurecdora(int tmpDora);
 
-	static void haifurecuradora(tileCode tmpDora);
+	static void haifurecuradora(TileCode tmpDora);
 
-	static void haifurecalicedora(tileCode tmpDora);
+	static void haifurecalicedora(TileCode tmpDora);
 
 	static __declspec(dllexport) void haifualicedoraupd();
 

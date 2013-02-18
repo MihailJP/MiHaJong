@@ -8,7 +8,7 @@ namespace mihajong_graphic {
 using utils::playerRelative;
 
 /* ŽÌ”v‚Ì•\Ž¦ */
-void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTable* gameStat, PLAYER_ID targetPlayer,
+void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTable* gameStat, PlayerID targetPlayer,
 	unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos) {
 		assert(gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile != NoTile);
 		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
@@ -53,7 +53,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 			tilePosCol = 0; ++tilePosRow; shiftPos = false;
 		}
 }
-void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable* gameStat, PLAYER_ID targetPlayer,
+void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable* gameStat, PlayerID targetPlayer,
 	unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos) {
 		assert(gameStat->Player.val[targetPlayer].Discard[tileID + 1].tcode.tile != NoTile);
 		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
@@ -99,7 +99,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 			tilePosCol = 0; ++tilePosRow; shiftPos = false;
 		}
 }
-void GameTableScreen::SutehaiReconst::Reconstruct(const GameTable* gameStat, PLAYER_ID targetPlayer) {
+void GameTableScreen::SutehaiReconst::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer) {
 	unsigned tilePosCol = 0, tilePosRow = 0; bool shiftPosFlag = false, riichiFlag = false;
 	for (unsigned tileID = 0; tileID < 33; ++tileID) {
 		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {

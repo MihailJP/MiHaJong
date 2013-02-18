@@ -4,6 +4,9 @@
 #include <type_traits>
 #include <functional>
 #include <list>
+#include <set>
+#include <map>
+#include <vector>
 #include "ykclass.h"
 #include "yk_tools.h"
 #include "../gametbl.h"
@@ -37,9 +40,9 @@ private:
 		machiTanki    // 単騎
 	};
 	struct MENTSU_ANALYSIS { // 面子解析結果
-		PLAYER_ID player;
+		PlayerID player;
 		SHANTEN shanten[SHANTEN_PAGES];
-		MELD_BUF MianziDat; // 面子パース結果
+		MeldBuf MianziDat; // 面子パース結果
 		uint8_t BasePoint; // 符
 		MachiType Machi; // 待ちの種類
 		MachihaiInfo MachiInfo; // 待ち牌の数とか
@@ -63,7 +66,7 @@ private:
 		uint8_t TotalKaKangzi; // 加槓合計
 		const GameTable* GameStat; // 卓情報へのポインタ
 		const PlayerTable* PlayerStat; // プレイヤー情報へのポインタ
-		const TILE* TsumoHai; // 和了牌へのポインタ
+		const Tile* TsumoHai; // 和了牌へのポインタ
 		const bool* MenzenFlag; // 門前かどうかのフラグ
 		const bool* TsumoAgariFlag; // ツモアガリどうかのフラグ
 	};
@@ -220,23 +223,23 @@ private:
 	static void doubling(yaku::YAKUSTAT* const yStat);
 	static void calculateScore(yaku::YAKUSTAT* const yStat);
 
-	static void analysisNonLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
+	static void analysisNonLoop(const GameTable* const gameStat, PlayerID targetPlayer,
 		SHANTEN* const shanten, YAKUSTAT* const yakuInfo);
-	static void analysisLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
+	static void analysisLoop(const GameTable* const gameStat, PlayerID targetPlayer,
 		SHANTEN* const shanten, YAKUSTAT* const yakuInfo);
 
 	static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
-		YAKUSTAT* const result, PLAYER_ID targetPlayer);
+		YAKUSTAT* const result, PlayerID targetPlayer);
 
 public:
 	static __declspec(dllexport) void init();
 
-	static YAKUSTAT countyaku(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+	static YAKUSTAT countyaku(const GameTable* const gameStat, PlayerID targetPlayer);
 	static __declspec(dllexport) void countyaku(const GameTable* const gameStat,
 		YAKUSTAT* const yakuInfo, int targetPlayer);
-	static bool chkShisanBuDa(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+	static bool chkShisanBuDa(const GameTable* const gameStat, PlayerID targetPlayer);
 	static __declspec(dllexport) int chkShisanBuDa(const GameTable* const gameStat, int targetPlayer);
-	static bool chkShisiBuDa(const GameTable* const gameStat, PLAYER_ID targetPlayer);
+	static bool chkShisiBuDa(const GameTable* const gameStat, PlayerID targetPlayer);
 	static __declspec(dllexport) int chkShisiBuDa(const GameTable* const gameStat, int targetPlayer);
 	static bool checkShibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat);
 	static __declspec(dllexport) int check_shibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat);

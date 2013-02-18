@@ -68,7 +68,7 @@ unsigned long long TableProtoScene::ScoreBoard::currTime() { // åªç›éûçè
 	return ((unsigned long long)czas.dwHighDateTime << 32) | czas.dwLowDateTime;
 }
 
-PLAYER_ID TableProtoScene::ScoreBoard::playerID() {
+PlayerID TableProtoScene::ScoreBoard::playerID() {
 	return utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, relativePlayerID);
 }
 
@@ -124,7 +124,7 @@ void TableProtoScene::ScoreBoard::renderRank() {
 }
 
 int TableProtoScene::ScoreBoard::getScoreSign() {
-	for (int i = DIGIT_GROUPS - 1; i >= 0; --i)
+	for (int i = DigitGroups - 1; i >= 0; --i)
 		if (GameStatus::gameStat()->Player.val[playerID()].PlayerScore.digitGroup[i] > 0) return 1;
 		else if (GameStatus::gameStat()->Player.val[playerID()].PlayerScore.digitGroup[i] < 0) return -1;
 	return 0;
@@ -133,8 +133,8 @@ int TableProtoScene::ScoreBoard::getScoreSign() {
 std::tuple<unsigned, unsigned, signed> TableProtoScene::ScoreBoard::scoreInfo() {
 	const LargeNum* const score = &(GameStatus::gameStat()->Player.val[playerID()].PlayerScore);
 	const int digit[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
-	for (int i = DIGIT_GROUPS - 1; i >= 0; --i) {
-		for (int j = ((i == DIGIT_GROUPS - 1) ? 9 : 7); j >= 0; --j) {
+	for (int i = DigitGroups - 1; i >= 0; --i) {
+		for (int j = ((i == DigitGroups - 1) ? 9 : 7); j >= 0; --j) {
 			if ((i == 0) && (j == 4)) {
 				return std::make_tuple(abs(score->digitGroup[0] / 100), 0, 0);
 			}

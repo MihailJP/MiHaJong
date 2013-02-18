@@ -53,7 +53,7 @@ protected: /**** 鳴き選択用ボタン ****/
 protected: /**** 情報表示 ****/
 	void ShowStatus(const GameTable* gameStat); // 供託点棒などの情報を表示
 protected:
-	void ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer); // プレイヤー関係の画面の再構築
+	void ReconstructPlayer(const GameTable* gameStat, PlayerID targetPlayer, PlayerID trueTargetPlayer); // プレイヤー関係の画面の再構築
 	void Reconstruct(const GameTable* gameStat); // 画面の再描画
 protected:
 	void cls(); // 画面をクリア

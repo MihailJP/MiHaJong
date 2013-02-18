@@ -32,8 +32,8 @@ enum CallType {
 	Oyanagare,
 };
 
-EXPORT CallType getCall(PLAYER_ID playerID);
-EXPORT void setCall(PLAYER_ID playerID, CallType callType);
+EXPORT CallType getCall(PlayerID playerID);
+EXPORT void setCall(PlayerID playerID, CallType callType);
 
 }
 namespace callvalue {
@@ -43,8 +43,8 @@ struct CallValue {
 	unsigned short Exponent;
 };
 
-EXPORT CallValue getVal(PLAYER_ID playerID);
-EXPORT void setVal(PLAYER_ID playerID, signed short mantissa, unsigned short exponent);
+EXPORT CallValue getVal(PlayerID playerID);
+EXPORT void setVal(PlayerID playerID, signed short mantissa, unsigned short exponent);
 
 }
 }

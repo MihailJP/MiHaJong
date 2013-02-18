@@ -11,12 +11,12 @@
 #include "decomp.h"
 #include "reader/readrsrc.h"
 #include "../common/strcode.h"
+#include "gametbl.h"
 
 using namespace CodeConv;
+using namespace mihajong_structs;
 
-struct GameTable;
 extern GameTable GameStat;
-inline bool chkGameType(const GameTable* const gameStat, gameTypeID gameType);
 
 char RuleData::ruleConf[RULE_LINES][RULE_IN_LINE + 1];
 RULETBL RuleData::Rules;
@@ -45,7 +45,7 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 		nametbl[numerusPartisRegulae] = nomenPartisRegulae; // 順方向
 		inverse_nametbl[nomenPartisRegulae] = numerusPartisRegulae; // 逆方向
 
-		if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[1].c_str()))) { // GameType合致した場合
+		if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) { // GameType合致した場合
 			if ((_ttoi((*k)[0].c_str()) % RULES_IN_PAGE) == 0)
 				pageCaption[_ttoi((*k)[0].c_str()) / RULES_IN_PAGE] = tstring((*k)[4]);
 			ruletags[nomenPartisRegulae].clear(); inverse_ruletags[nomenPartisRegulae].clear();
@@ -59,14 +59,14 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 				}
 			}
 		}
-		else if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[2].c_str()))) { // N/A指定があった場合
+		else if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str()))) { // N/A指定があった場合
 			nonapplicable.insert(nomenPartisRegulae); // リストに追加
 		}
 
 		// ルール設定画面のマスクデータ
-		if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[1].c_str())))
+		if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str())))
 			rulemask_expr[nomenPartisRegulae] = toANSI((*k)[3]);
-		else if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[2].c_str())))
+		else if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str())))
 			rulemask_expr[nomenPartisRegulae] = "";
 	}
 
@@ -148,8 +148,8 @@ __declspec(dllexport) int RuleData::getRuleSize(uint16_t RuleID) { // ルール項目
 __declspec(dllexport) void RuleData::getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
-		if ((chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[1].c_str()))) ||
-			(chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[2].c_str())))) {
+		if ((chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) ||
+			(chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str())))) {
 				_tcscpy_s(txt, bufsize, ((*k)[9]).c_str());
 				return;
 		}
@@ -160,10 +160,10 @@ __declspec(dllexport) void RuleData::getRuleName(LPTSTR const txt, unsigned bufs
 __declspec(dllexport) void RuleData::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
-		if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[1].c_str()))) {
+		if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) {
 			_tcscpy_s(txt, bufsize, ((*k)[10]).c_str()); return;
 		}
-		else if (chkGameType(&GameStat, (gameTypeID)_ttoi((*k)[2].c_str()))) {
+		else if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str()))) {
 			if (chkGameType(&GameStat, SanmaS)) _tcscpy_s(txt, bufsize, _T("数牌三麻では設定できません"));
 			else if (chkGameType(&GameStat, SanmaX)) _tcscpy_s(txt, bufsize, _T("三人打ちでは設定できません"));
 			else if (chkGameType(&GameStat, Yonma)) _tcscpy_s(txt, bufsize, _T("四人打ちでは設定できません"));

@@ -1,13 +1,13 @@
 #include "../catalog.h"
 
-static const tileCode YaojiuShunCode[] = {
+static const TileCode YaojiuShunCode[] = {
 	CharacterOne, CharacterSeven, CircleOne, CircleSeven, BambooOne, BambooSeven,
 	EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
 };
-static const tileCode OneCode[] = {CharacterOne, CircleOne, BambooOne,
+static const TileCode OneCode[] = {CharacterOne, CircleOne, BambooOne,
 	EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon};
-static const tileCode SevenCode[] = {CharacterSeven, CircleSeven, BambooSeven};
-static const tileCode NineCode[] = {CharacterNine, CircleNine, BambooNine,
+static const TileCode SevenCode[] = {CharacterSeven, CircleSeven, BambooSeven};
+static const TileCode NineCode[] = {CharacterNine, CircleNine, BambooNine,
 	EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon};
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
@@ -38,7 +38,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		_T("混全帯幺九"), yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
-				return (yaku::countingFacility::countSpecMentzWithDup(analysis->MianziDat, Honor_Major_Tiles(), 13, YaojiuShunCode, 13, false) == SIZE_OF_MELD_BUFFER);
+				return (yaku::countingFacility::countSpecMentzWithDup(analysis->MianziDat, Honor_Major_Tiles(), 13, YaojiuShunCode, 13, false) == SizeOfMeldBuffer);
 			else return false;
 		}
 	));
@@ -48,8 +48,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 			_T("混全帯幺九"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
-					return ( (yaku::countingFacility::countSpecMentzWithDup(analysis->MianziDat, OneCode, 10, OneCode, 3, false) == SIZE_OF_MELD_BUFFER) ||
-					(yaku::countingFacility::countSpecMentzWithDup(analysis->MianziDat, NineCode, 10, SevenCode, 3, false) == SIZE_OF_MELD_BUFFER) );
+					return ( (yaku::countingFacility::countSpecMentzWithDup(analysis->MianziDat, OneCode, 10, OneCode, 3, false) == SizeOfMeldBuffer) ||
+					(yaku::countingFacility::countSpecMentzWithDup(analysis->MianziDat, NineCode, 10, SevenCode, 3, false) == SizeOfMeldBuffer) );
 				else return false;
 			}
 		));
@@ -59,7 +59,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		_T("混全帯幺九"),
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
-				return (yaku::countingFacility::countSpecMentzWithDup(analysis->MianziDat, Honor_Major_Tiles(), 6, YaojiuShunCode, 6, false) == SIZE_OF_MELD_BUFFER);
+				return (yaku::countingFacility::countSpecMentzWithDup(analysis->MianziDat, Honor_Major_Tiles(), 6, YaojiuShunCode, 6, false) == SizeOfMeldBuffer);
 			else return false;
 		}
 	));
@@ -69,8 +69,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 			_T("純全帯幺九"), _T("偏全帯幺九"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
-					return ( (yaku::countingFacility::countSpecMentz(analysis->MianziDat, OneCode, 3, OneCode, 3, false) == SIZE_OF_MELD_BUFFER) ||
-					(yaku::countingFacility::countSpecMentz(analysis->MianziDat, NineCode, 3, SevenCode, 3, false) == SIZE_OF_MELD_BUFFER) );
+					return ( (yaku::countingFacility::countSpecMentz(analysis->MianziDat, OneCode, 3, OneCode, 3, false) == SizeOfMeldBuffer) ||
+					(yaku::countingFacility::countSpecMentz(analysis->MianziDat, NineCode, 3, SevenCode, 3, false) == SizeOfMeldBuffer) );
 				else return false;
 			}
 		));
@@ -80,9 +80,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		_T("混全帯幺九"),
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
-				return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles(), 13, nullptr, 0, false) == SIZE_OF_MELD_BUFFER);
+				return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles(), 13, nullptr, 0, false) == SizeOfMeldBuffer);
 			else if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1)
-				return (yaku::countingFacility::countPairs(analysis->TileCount, Honor_Major_Tiles(), 13) == NUM_OF_TILES_IN_HAND / 2);
+				return (yaku::countingFacility::countPairs(analysis->TileCount, Honor_Major_Tiles(), 13) == NumOfTilesInHand / 2);
 			else return false;
 		}
 	));
@@ -92,7 +92,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		_T("混全帯幺九"), _T("純全帯幺九"), _T("混老頭"), _T("対々和"),
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
-				return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles(), 6, nullptr, 0, false) == SIZE_OF_MELD_BUFFER);
+				return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles(), 6, nullptr, 0, false) == SizeOfMeldBuffer);
 			else return false;
 		}
 	));
@@ -102,9 +102,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		_T("混全帯幺九"), _T("純全帯幺九"), _T("混老頭"), _T("混一色"), _T("四字刻"), _T("対々和"), _T("茶一色"), _T("三元七対子"), _T("四喜七対子"), _T("紅白七対"),
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
-				return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles()+6, 7, nullptr, 0, false) == SIZE_OF_MELD_BUFFER);
+				return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles()+6, 7, nullptr, 0, false) == SizeOfMeldBuffer);
 			else if (analysis->shanten[ShantenAnalyzer::shantenPairs] == -1)
-				return (yaku::countingFacility::countPairs(analysis->TileCount, Honor_Major_Tiles()+6, 7) == NUM_OF_TILES_IN_HAND / 2);
+				return (yaku::countingFacility::countPairs(analysis->TileCount, Honor_Major_Tiles()+6, 7) == NumOfTilesInHand / 2);
 			else return false;
 		}
 	));
@@ -114,7 +114,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 			_T("混全帯幺九"), _T("純全帯幺九"), _T("混老頭"), _T("混一色"), _T("茶一色"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
-					return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles()+6, 7, nullptr, 0, true) == (SIZE_OF_MELD_BUFFER - 1));
+					return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles()+6, 7, nullptr, 0, true) == (SizeOfMeldBuffer - 1));
 				else return false;
 			}
 		));

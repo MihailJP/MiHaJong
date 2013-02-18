@@ -62,9 +62,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 			_T("ŽOF“¯"), _T("ŽOžÈŽq"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 1; i < 9; i++)
-					if ((analysis->KangziCount[TILE_SUIT_CHARACTERS + i] >= 1) &&
-						(analysis->KangziCount[TILE_SUIT_CIRCLES + i] >= 1) &&
-						(analysis->KangziCount[TILE_SUIT_BAMBOOS + i] >= 1))
+					if ((analysis->KangziCount[TileSuitCharacters + i] >= 1) &&
+						(analysis->KangziCount[TileSuitCircles + i] >= 1) &&
+						(analysis->KangziCount[TileSuitBamboos + i] >= 1))
 						return true;
 				return false;
 			}
@@ -119,7 +119,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 			_T("ˆÃ’†–Íõ"), get_yaku_han("anchumosaku"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->AnKangziCount[RedDragon] >= 1) &&
-					(analysis->TsumoHai->tile / TILE_SUIT_STEP == TILE_SUIT_BAMBOOS / TILE_SUIT_STEP) &&
+					(analysis->TsumoHai->tile / TileSuitStep == TileSuitBamboos / TileSuitStep) &&
 					(*analysis->TsumoAgariFlag));
 			}
 		));
@@ -169,7 +169,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 			_T("‘‰Á"), get_yaku_han("souka"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 1; i < 9; i++)
-					if (analysis->KaKangziCount[TILE_SUIT_BAMBOOS + i] >= 1)
+					if (analysis->KaKangziCount[TileSuitBamboos + i] >= 1)
 						return true;
 				return false;
 			}
@@ -180,9 +180,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 			_T("‡Ši‹FŠè"), get_yaku_han("goukaku_kigan"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag1 = false; bool flag2 = false;
-				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
 					if (analysis->KangziCount[i + 5] >= 1) flag1 = true;
-				for (int i = 0; i < TILE_SUIT_HONORS; i += TILE_SUIT_STEP)
+				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
 					if (analysis->KangziCount[i + 9] >= 1) flag2 = true;
 				return flag1 && flag2;
 			}

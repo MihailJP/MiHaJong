@@ -16,6 +16,7 @@
 #include "../func.h"
 #include "../haifu.h"
 #include "yvalue.h"
+#include "../ruletbl.h"
 
 // 計算を実行(マルチスレッドで……大丈夫かなぁ)
 DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) {
@@ -139,7 +140,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	}
 
 	/* 面子加符 */
-	for (int i = 1; i < SIZE_OF_MELD_BUFFER; i++) {
+	for (int i = 1; i < SizeOfMeldBuffer; i++) {
 		switch (analysis->MianziDat[i].mstat) {
 		case meldTripletExposedLeft: case meldTripletExposedCenter: case meldTripletExposedRight:
 			fu += isYaojiu(analysis->MianziDat[i].tile) ? 4 : 2; /* 明刻子 */
@@ -161,19 +162,19 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 
 	/* 聴牌形加符 */
 	analysis->Machi = machiInvalid; // 初期化
-	const tileCode* tsumoTile = &(gameStat->Player[analysis->player].Hand[NUM_OF_TILES_IN_HAND-1].tile); // shorthand
+	const TileCode* tsumoTile = &(gameStat->Player[analysis->player].Hand[NumOfTilesInHand-1].tile); // shorthand
 	if (analysis->MianziDat[0].tile == *tsumoTile) analysis->Machi = machiTanki; // 単騎待ち
-	for (int i = 1; i < SIZE_OF_MELD_BUFFER; i++) { // 待ちの種類を調べる……
+	for (int i = 1; i < SizeOfMeldBuffer; i++) { // 待ちの種類を調べる……
 		switch (analysis->MianziDat[i].mstat) {
 		case meldSequenceConcealed: case meldSequenceExposedLower:
 		case meldSequenceExposedMiddle: case meldSequenceExposedUpper: /* 順子 */
 			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 1)) analysis->Machi = machiKanchan;
 			if (analysis->MianziDat[i].tile == *tsumoTile) {
-				if (analysis->MianziDat[i].tile % TILE_SUIT_STEP == 7) analysis->Machi = machiPenchan; // 辺張待ち
+				if (analysis->MianziDat[i].tile % TileSuitStep == 7) analysis->Machi = machiPenchan; // 辺張待ち
 				else {analysis->Machi = machiRyanmen; LiangMianFlag = true;} // 両面待ち
 			}
 			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 2)) {
-				if (analysis->MianziDat[i].tile % TILE_SUIT_STEP == 1) analysis->Machi = machiPenchan; // 辺張待ち
+				if (analysis->MianziDat[i].tile % TileSuitStep == 1) analysis->Machi = machiPenchan; // 辺張待ち
 				else {analysis->Machi = machiRyanmen; LiangMianFlag = true;} // 両面待ち
 			}
 			break;
@@ -230,7 +231,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 /* ドラ計数 */
 void yaku::yakuCalculator::countDora
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
-	YAKUSTAT* const result, PLAYER_ID targetPlayer)
+	YAKUSTAT* const result, PlayerID targetPlayer)
 {
 	auto doraText =
 		[](YAKUSTAT* const result, LPCTSTR const label, int quantity) {
@@ -251,7 +252,7 @@ void yaku::yakuCalculator::countDora
 	int omote = 0; int ura = 0; int red = 0; int blue = 0; int alice = 0;
 	int flower = 0; int north = 0;
 	/* ドラを計算する */
-	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) continue;
 		omote += gameStat->DoraFlag.Omote[gameStat->Player[targetPlayer].Hand[i].tile];
 		if (uradoraEnabled) // 裏ドラ適用
@@ -280,9 +281,9 @@ void yaku::yakuCalculator::countDora
 		}
 	}
 	/* 赤ドラ・青ドラ */
-	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) continue;
-		else if (gameStat->Player[targetPlayer].Hand[i].tile >= TILE_NONFLOWER_MAX) continue;
+		else if (gameStat->Player[targetPlayer].Hand[i].tile >= TileNonflowerMax) continue;
 		switch (gameStat->Player[targetPlayer].Hand[i].red) {
 			case AkaDora: ++red; break;
 			case AoDora: ++blue; break;
@@ -494,7 +495,7 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1) {
 		int NumOfMelds = 0;
 		mentsuParser::makementsu(gameStat, analysis->player, *pMode, &NumOfMelds, analysis->MianziDat);
-		if (NumOfMelds < SIZE_OF_MELD_BUFFER) { // 条件を満たしてないなら抜けます
+		if (NumOfMelds < SizeOfMeldBuffer) { // 条件を満たしてないなら抜けます
 			this->recordThreadFinish(); return S_OK;
 		}
 		calcbasepoints(gameStat, analysis); // 符を計算する
@@ -591,7 +592,7 @@ yaku::yakuCalculator::CalculatorThread::~CalculatorThread() {
 }
 		
 /* 引数の準備とか */
-void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
+void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PlayerID targetPlayer,
 	SHANTEN* const shanten, YAKUSTAT* const yakuInfo)
 {
 	CalculatorThread* calculator = new CalculatorThread; // インスタンスの準備
@@ -605,7 +606,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	analysis.MachiInfo = chkFuriten(gameStat, targetPlayer);
 	analysis.GameStat = gameStat;
 	analysis.PlayerStat = &(gameStat->Player[targetPlayer]);
-	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1]);
+	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1]);
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	// 計算ルーチンに渡すパラメータの準備
@@ -623,7 +624,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PLAY
 	assert(calculator->numOfFinishedThreads() == 1);
 	delete calcprm; delete calculator; // 用事が済んだら片づけましょう
 }
-void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_ID targetPlayer,
+void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerID targetPlayer,
 	SHANTEN* const shanten, YAKUSTAT* const yakuInfo)
 {
 	CalculatorThread* calculator = new CalculatorThread; // インスタンスの準備
@@ -637,7 +638,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	analysis.MachiInfo = chkFuriten(gameStat, targetPlayer);
 	analysis.GameStat = gameStat;
 	analysis.PlayerStat = &(gameStat->Player[targetPlayer]);
-	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Hand[NUM_OF_TILES_IN_HAND - 1]);
+	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1]);
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	// 計算ルーチンに渡すパラメータの準備
@@ -646,7 +647,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 	for (int i = 0; i < 160; i++) {
 		calcprm[i].instance = calculator;
 		calcprm[i].gameStat = gameStat; calcprm[i].instance = calculator;
-		calcprm[i].pMode.AtamaCode = (tileCode)(i / 4);
+		calcprm[i].pMode.AtamaCode = (TileCode)(i / 4);
 		calcprm[i].pMode.Order = (ParseOrder)(i % 4);
 		memcpy(&calcprm[i].analysis, &analysis, sizeof(MENTSU_ANALYSIS));
 		YAKUSTAT::Init(&calcprm[i].result);
@@ -681,7 +682,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PLAYER_
 }
 
 // 役が成立しているか判定する
-yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, PlayerID targetPlayer) {
 	// 役判定
 	CodeConv::tostringstream o;
 	o << _T("役判定処理を開始 プレイヤー [") << (int)targetPlayer << _T("]");
@@ -774,7 +775,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 __declspec(dllexport) void yaku::yakuCalculator::countyaku(const GameTable* const gameStat,
 	YAKUSTAT* const yakuInfo, int targetPlayer)
 {
-	*yakuInfo = countyaku(gameStat, (PLAYER_ID)targetPlayer);
+	*yakuInfo = countyaku(gameStat, (PlayerID)targetPlayer);
 }
 
 /* 縛りを満たしているか調べる */

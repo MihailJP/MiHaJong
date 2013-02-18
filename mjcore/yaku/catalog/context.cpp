@@ -601,7 +601,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			_T("‹q—ˆ˜a"), get_yaku_han("otakaze_ron"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag;
-				switch (tileCode tc = analysis->TsumoHai->tile) {
+				switch (TileCode tc = analysis->TsumoHai->tile) {
 				case EastWind: case SouthWind: case WestWind: case NorthWind: // •—”v‚¾‚Á‚½
 					yakuFlag = (!*analysis->TsumoAgariFlag); // ‰¼‚Éƒtƒ‰ƒOÝ’è
 					if (tc == Wind2Tile((uint8_t)playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound))) // Ž©•—‚¾‚Á‚½
@@ -631,7 +631,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			"houkansou", "gekkanjun", "shinriishou", "kinki_kikan", "hokuto_shoukan",
 			"daija_kanketsu", "dongfengchui", "nanfengchui", "xifengchui", "beifengchui",
 		};
-		const tileCode tmpTileCodeList[Rules] = {
+		const TileCode tmpTileCodeList[Rules] = {
 			BambooOne, CircleOne, CharacterOne, BambooSeven, CircleSeven,
 			CharacterSeven, EastWind, SouthWind, WestWind, NorthWind,
 		};
@@ -641,7 +641,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		};
 		for (int i = 0; i < Rules; i++) {
 			if (RuleData::chkRuleApplied(tmpRuleCodeList[i])) {
-				tileCode tc = tmpTileCodeList[i];
+				TileCode tc = tmpTileCodeList[i];
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 					tmpYakuNameList[i], get_yaku_han(tmpRuleCodeList[i]),
 					[tc](const MENTSU_ANALYSIS* const analysis) -> bool {

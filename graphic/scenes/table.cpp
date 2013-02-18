@@ -60,7 +60,7 @@ GameTableScreen::~GameTableScreen() {
 	if (tBaize) tBaize->Release();
 }
 
-void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer) {
+void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PlayerID targetPlayer, PlayerID trueTargetPlayer) {
 	yamahaiReconst->Reconstruct(gameStat, targetPlayer, trueTargetPlayer);
 	tehaiReconst->Reconstruct(gameStat, targetPlayer);
 	nakihaiReconst->Reconstruct(gameStat, targetPlayer);
@@ -69,18 +69,18 @@ void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PLAYER_ID tar
 
 void GameTableScreen::Reconstruct(const GameTable* gameStat) {
 	if (gameStat->gameType & Yonma) {
-		for (PLAYER_ID i = 0; i < 4; i++)
+		for (PlayerID i = 0; i < 4; i++)
 			ReconstructPlayer(gameStat, i, i);
 	} else if (gameStat->gameType & Sanma4) {
-		PLAYER_ID tobePlayed[4][4] = {
+		PlayerID tobePlayed[4][4] = {
 			{0, 1, 2, 3}, {3, 1, 2, 0}, {1, 3, 2, 0}, {1, 2, 3, 0},
 		};
-		for (PLAYER_ID i = 0; i < 4; i++) {
-			PLAYER_ID j(tobePlayed[gameStat->GameRound % PLAYERS][i]);
+		for (PlayerID i = 0; i < 4; i++) {
+			PlayerID j(tobePlayed[gameStat->GameRound % Players][i]);
 			if (j < 3) ReconstructPlayer(gameStat, j, i);
 		}
 	} else {
-		for (PLAYER_ID i = 0; i < 3; i++)
+		for (PlayerID i = 0; i < 3; i++)
 			ReconstructPlayer(gameStat, i, i);
 	}
 }
@@ -154,8 +154,8 @@ void GameTableScreen::checkTimeout() {
 		if (isNakiSel) { // 鳴き選択中の時
 			ui::UIEvent->set(naki::nakiNone); // 牌の番号を設定
 		} else if (buttonReconst->getButtonSet() == ButtonReconst::btnSetTsumo) {
-			if (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[NUM_OF_TILES_IN_HAND - 1].tile != NoTile)
-				ui::UIEvent->set(NUM_OF_TILES_IN_HAND - 1); // ツモ切り
+			if (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[NumOfTilesInHand - 1].tile != NoTile)
+				ui::UIEvent->set(NumOfTilesInHand - 1); // ツモ切り
 			else ui::UIEvent->set(0); // 鳴いた直後の場合
 		}
 		tehaiReconst->setTileCursor();
@@ -253,19 +253,19 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
 			(void)GameStatus::retrGameStat();
 			// カーソルとボタンの設定
-			tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
+			tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
 			while (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[tehaiReconst->getTileCursor()].tile == NoTile)
 				tehaiReconst->decrTileCursor(); // 鳴いた直後の時のカーソル初期位置
 			buttonReconst->btnSetForDahai();
 			tehaiReconst->enable();
 			if (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag)
-				for (int i = 0; i < (NUM_OF_TILES_IN_HAND - 1); ++i)
+				for (int i = 0; i < (NumOfTilesInHand - 1); ++i)
 					tehaiReconst->disable(i);
 			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 			// リーチ後オートツモ切り
 			if ((GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag) &&
 				buttonReconst->areEnabled().none())
-				ui::UIEvent->set(NUM_OF_TILES_IN_HAND - 1);
+				ui::UIEvent->set(NumOfTilesInHand - 1);
 			else // 自摸番が来たら音を鳴らす
 				sound::Play(sound::IDs::sndBell);
 			break;
@@ -312,7 +312,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	/* ボタン選択/牌選択 モード切り替え */
 	case DIK_UP: case DIK_K: // 牌選択モードに切り替え
 		if ((od->dwData) && (buttonReconst->isCursorEnabled()) && (!isNakiSel)) {
-			tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
+			tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
 			buttonReconst->setCursor();
 			cursorMoved();
 		}
@@ -328,7 +328,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_LEFT: case DIK_H:
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
 			do {
-				if (tehaiReconst->decrTileCursor() < 0) tehaiReconst->setTileCursor(NUM_OF_TILES_IN_HAND - 1);
+				if (tehaiReconst->decrTileCursor() < 0) tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
 			} while (plDat->Hand[tehaiReconst->getTileCursor()].tile == NoTile);
 			cursorMoved();
 		}
@@ -340,7 +340,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_RIGHT: case DIK_L:
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
 			do {
-				if (tehaiReconst->incrTileCursor() >= NUM_OF_TILES_IN_HAND) tehaiReconst->setTileCursor(0);
+				if (tehaiReconst->incrTileCursor() >= NumOfTilesInHand) tehaiReconst->setTileCursor(0);
 			} while (plDat->Hand[tehaiReconst->getTileCursor()].tile == NoTile);
 			cursorMoved();
 		}
@@ -381,7 +381,7 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	const int scaledY = Y / Geometry::WindowScale();
 	const int region = whichRegion(scaledX, scaledY);
 	const bool isCursorEnabled = tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled();
-	const bool isValidTile = (region >= 0) && (region < NUM_OF_TILES_IN_HAND) &&
+	const bool isValidTile = (region >= 0) && (region < NumOfTilesInHand) &&
 		isCursorEnabled && (!isNakiSel) &&
 		(GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[region].tile != NoTile);
 	const bool isButton = (region >= ButtonReconst::ButtonRegionNum) &&

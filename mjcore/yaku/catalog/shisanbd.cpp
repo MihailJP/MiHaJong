@@ -1,6 +1,6 @@
 #include "../catalog.h"
 
-bool yaku::yakuCalculator::chkShisanBuDa(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+bool yaku::yakuCalculator::chkShisanBuDa(const GameTable* const gameStat, PlayerID targetPlayer) {
 	// 十三不塔かどうか判定する
 	if (!RuleData::chkRuleApplied("shiisan_puutaa")) return false; // そんなルールあるとでも思った？ 残念！さy(ry
 	if (gameStat->Player[targetPlayer].FirstDrawFlag) // 鳴きがなくて一巡目であることが必須条件
@@ -10,10 +10,10 @@ bool yaku::yakuCalculator::chkShisanBuDa(const GameTable* const gameStat, PLAYER
 	else return false;
 }
 __declspec(dllexport) int yaku::yakuCalculator::chkShisanBuDa(const GameTable* const gameStat, int targetPlayer) {
-	return chkShisanBuDa(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
+	return chkShisanBuDa(gameStat, (PlayerID)targetPlayer) ? 1 : 0;
 }
 
-bool yaku::yakuCalculator::chkShisiBuDa(const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+bool yaku::yakuCalculator::chkShisiBuDa(const GameTable* const gameStat, PlayerID targetPlayer) {
 	// 十四不塔かどうか判定する
 	if (!RuleData::chkRuleApplied("shiisan_uushii")) return false; // そんなルールあるとでも思った？ 残念！さy(ry
 	if (gameStat->Player[targetPlayer].FirstDrawFlag) // 鳴きがなくて一巡目であることが必須条件
@@ -21,6 +21,6 @@ bool yaku::yakuCalculator::chkShisiBuDa(const GameTable* const gameStat, PLAYER_
 	else return false;
 }
 __declspec(dllexport) int yaku::yakuCalculator::chkShisiBuDa(const GameTable* const gameStat, int targetPlayer) {
-	return chkShisiBuDa(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
+	return chkShisiBuDa(gameStat, (PlayerID)targetPlayer) ? 1 : 0;
 }
 

@@ -15,6 +15,7 @@
 #include "sound.h"
 #include "fuuro.h"
 #include "../graphic/graphic.h"
+#include "ruletbl.h"
 
 namespace {
 	DiscardTileNum playerdahai(const GameTable* gameStat) { // プレイヤーの打牌
@@ -37,7 +38,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 		if (gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki) {
 			debug(_T("プレイヤーのツモ番ですが残念ながらアガリ放棄です。"));
 			DiscardTileIndex.type = DiscardTileNum::Normal;
-			DiscardTileIndex.id = NUM_OF_TILES_IN_HAND - 1;
+			DiscardTileIndex.id = NumOfTilesInHand - 1;
 		} else if (EnvTable::Instantiate()->WatchModeFlag) {
 			DiscardTileIndex = aiscript::compdahai(sandbox);
 		} else {
@@ -49,7 +50,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 		gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki) {
 			debug(_T("アガリ放棄か回線切断したプレイヤーのツモ番です。"));
 			DiscardTileIndex.type = DiscardTileNum::Normal;
-			DiscardTileIndex.id = NUM_OF_TILES_IN_HAND - 1;
+			DiscardTileIndex.id = NumOfTilesInHand - 1;
 	} else if ((EnvTable::Instantiate()->GameMode == EnvTable::Client) ||
 		(EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag > 0)) {
 			/* ネット対戦時の処理 */
@@ -74,7 +75,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
 			assert((DiscardTileIndex.type == DiscardTileNum::Kyuushu) ||
 				(DiscardTileIndex.type == DiscardTileNum::Agari) ||
-				((DiscardTileIndex.id >= 0) && (DiscardTileIndex.id < NUM_OF_TILES_IN_HAND)));
+				((DiscardTileIndex.id >= 0) && (DiscardTileIndex.id < NumOfTilesInHand)));
 			switch (DiscardTileIndex.type) {
 			case DiscardTileNum::Kyuushu:
 				mihajong_socket::server::send(mihajong_socket::protocol::Dahai_Kyuushu);
@@ -148,7 +149,7 @@ namespace { /* 内部処理分割用 */
 	}
 	EndType procDahaiSubKyuushu(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 九種九牌が宣言された場合 */
 		DiscardTileIndex.type = DiscardTileNum::Normal;
-		DiscardTileIndex.id = NUM_OF_TILES_IN_HAND; // 九種流しができない時はツモ切りとみなす
+		DiscardTileIndex.id = NumOfTilesInHand; // 九種流しができない時はツモ切りとみなす
 		if (RuleData::chkRuleApplied("nine_terminals") &&
 			chkdaopaiability(gameStat, gameStat->CurrentPlayer.Active) &&
 			gameStat->Player[gameStat->CurrentPlayer.Active].FirstDrawFlag) {
@@ -165,7 +166,7 @@ namespace { /* 内部処理分割用 */
 	}
 	EndType procDahaiSubFlower(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 花牌を抜いた場合の処理 */
 		if ((DiscardTileIndex.type == DiscardTileNum::Ankan) &&
-			(gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id].tile > TILE_SUIT_FLOWERS)) {
+			(gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id].tile > TileSuitFlowers)) {
 				DiscardTileIndex.type = DiscardTileNum::Flower;
 				info(_T("花牌の処理に移ります。打牌コードを補正しました。"));
 		}
@@ -262,7 +263,7 @@ namespace { /* 内部処理分割用 */
 	}
 	void procDahaiSubPost(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) { /* 事後処理 */
 		/* 打牌を記録する */
-		discardTile* const newDiscard = &(gameStat->Player[gameStat->CurrentPlayer.Active].Discard[++gameStat->Player[gameStat->CurrentPlayer.Active].DiscardPointer]);
+		DiscardTile* const newDiscard = &(gameStat->Player[gameStat->CurrentPlayer.Active].Discard[++gameStat->Player[gameStat->CurrentPlayer.Active].DiscardPointer]);
 		newDiscard->tcode.tile = gameStat->CurrentDiscard.tile = gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id].tile;
 		newDiscard->tcode.red  = gameStat->CurrentDiscard.red  = gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id].red;
 		if (DiscardTileIndex.type == DiscardTileNum::Riichi) /* 立直宣言牌の場合 */
@@ -271,7 +272,7 @@ namespace { /* 内部処理分割用 */
 			newDiscard->dstat = discardRiichi;
 		else /* それ以外の場合 */
 			newDiscard->dstat = discardNormal;
-		newDiscard->isDiscardThrough = (DiscardTileIndex.id == NUM_OF_TILES_IN_HAND - 1) && (!gameStat->TianHuFlag);
+		newDiscard->isDiscardThrough = (DiscardTileIndex.id == NumOfTilesInHand - 1) && (!gameStat->TianHuFlag);
 		gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id].tile = NoTile;
 		gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id].red  = Normal;
 		/* 一発のフラグを降ろす */
@@ -279,9 +280,9 @@ namespace { /* 内部処理分割用 */
 		/* 自動的に理牌を行なう */
 		lipai(gameStat, gameStat->CurrentPlayer.Active);
 		// このとき牌を捨てているはず 表示バグ防止のため
-		for (PLAYER_ID i = 0; i < PLAYERS; i++) {
-			gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].tile = NoTile;
-			gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].red  = Normal;
+		for (PlayerID i = 0; i < Players; i++) {
+			gameStat->Player[i].Hand[NumOfTilesInHand - 1].tile = NoTile;
+			gameStat->Player[i].Hand[NumOfTilesInHand - 1].red  = Normal;
 		}
 		/* 立直をした直後の場合、千点を供託し一発のフラグを立てる */
 		if ((DiscardTileIndex.type == DiscardTileNum::Riichi) || (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)) {
@@ -303,7 +304,7 @@ namespace { /* 内部処理分割用 */
 			gameStat->TianHuFlag = false;
 		/* 打牌するときの音を鳴らす */
 		/* ドラを捨てる時は強打の音にする */
-		if (gameStat->CurrentDiscard.tile > TILE_SUIT_FLOWERS)
+		if (gameStat->CurrentDiscard.tile > TileSuitFlowers)
 			sound::Play(sound::IDs::sndDahai2);
 		else if ((gameStat->CurrentDiscard.red == AkaDora) || (gameStat->DoraFlag.Omote[gameStat->CurrentDiscard.tile] > 0))
 			sound::Play(sound::IDs::sndDahai2);
@@ -312,9 +313,9 @@ namespace { /* 内部処理分割用 */
 		else
 			sound::Play(sound::IDs::sndDahai1);
 		/* このとき牌を捨てているはずなので、バグ防止のための処理 */
-		for (PLAYER_ID i = 0; i < PLAYERS; i++) {
-			gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].tile = NoTile;
-			gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].red  = Normal;
+		for (PlayerID i = 0; i < Players; i++) {
+			gameStat->Player[i].Hand[NumOfTilesInHand - 1].tile = NoTile;
+			gameStat->Player[i].Hand[NumOfTilesInHand - 1].red  = Normal;
 		}
 		/* 再描画 */
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
@@ -376,15 +377,15 @@ void tsumoproc(GameTable* const gameStat) {
 		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % ACTUAL_PLAYERS;
 	} else {
 		if (chkGameType(gameStat, Sanma4) && (playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound) == sWest)) /* 四人三麻の場合は北家をスキップ */
-			gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % PLAYERS;
-		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % PLAYERS;
+			gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % Players;
+		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % Players;
 	}
 	/* 東家の順番が回ってきたら次の巡目となる */
 	if (playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound) == sEast)
 		++gameStat->TurnRound;
-	gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NUM_OF_TILES_IN_HAND - 1].tile =
+	gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NumOfTilesInHand - 1].tile =
 		gameStat->Deck[gameStat->TilePointer].tile;
-	gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NUM_OF_TILES_IN_HAND - 1].red =
+	gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NumOfTilesInHand - 1].red =
 		gameStat->Deck[gameStat->TilePointer].red;
 	gameStat->PreviousMeld.Discard = gameStat->PreviousMeld.Stepped = NoTile;
 	sound::Play(sound::IDs::sndTsumo);

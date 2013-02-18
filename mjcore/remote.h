@@ -24,7 +24,7 @@ namespace RemoteAction {
 		void thread_client();
 		void thread_server();
 		DWORD WINAPI thread();
-		void checkremotenaki(PLAYER_ID player, int& ReceivedMsg);
+		void checkremotenaki(PlayerID player, int& ReceivedMsg);
 		static DWORD WINAPI startthread(LPVOID param);
 	public:
 		RemoteNaki(GameTable* const gStat);
