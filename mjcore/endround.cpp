@@ -64,7 +64,7 @@ namespace { // 内部処理に使う関数
 	bool chkKuikae(GameTable* gameStat) { // 喰い替えの場合の処理
 		if (((gameStat->CurrentDiscard.tile == gameStat->PreviousMeld.Discard) || // 現物の食い変えになっている場合か
 			(gameStat->CurrentDiscard.tile == gameStat->PreviousMeld.Stepped)) && // 筋食い変えになっている場合で
-			(!gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki)) { // まだアガリ放棄になっていないなら
+			(!gameStat->statOfActive().AgariHouki)) { // まだアガリ放棄になっていないなら
 				if (RuleData::chkRule("kuikae", "agari_houki") || RuleData::chkRule("kuikae", "agari_houki_if_in_kind")) {
 					/* 和了り放棄とする設定 */
 					logKuikae(gameStat, false);
@@ -78,7 +78,7 @@ namespace { // 内部処理に使う関数
 					mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 					mihajong_graphic::GameStatus::updateGameStat(gameStat);
 					/* 和了り放棄は以降強制ツモ切り、強制不聴扱いとなります */
-					gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki = true;
+					gameStat->statOfActive().AgariHouki = true;
 					/* TODO: 移植するかもしれないし廃止するかもしれない if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}*/
 					/* TODO: これについて確認すること vanish2@ */
 				} else if (RuleData::chkRule("kuikae", "chombo") || RuleData::chkRule("kuikae", "chombo_if_in_kind")) {
@@ -97,10 +97,10 @@ namespace { // 内部処理に使う関数
 		/* 多牌や少牌をしていないかのチェック */
 		unsigned tmptilecnt = 0;
 		for (unsigned i = 0; i < NumOfTilesInHand; ++i)
-			if (gameStat->Player[gameStat->CurrentPlayer.Active].Hand[i].tile != NoTile)
+			if (gameStat->statOfActive().Hand[i].tile != NoTile)
 				++tmptilecnt;
-		tmptilecnt += gameStat->Player[gameStat->CurrentPlayer.Active].MeldPointer * 3;
-		if ((tmptilecnt != (NumOfTilesInHand - 1)) && (!gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki)) {
+		tmptilecnt += gameStat->statOfActive().MeldPointer * 3;
+		if ((tmptilecnt != (NumOfTilesInHand - 1)) && (!gameStat->statOfActive().AgariHouki)) {
 			// 多牌や少牌の場合の処理(通常起きることはないはずだが…)
 			if (tmptilecnt > (NumOfTilesInHand - 1))
 				warn(_T("多牌を検出しました。和了り放棄として扱いますが、摸打の処理で不整合が起きていた可能性があります。"));
@@ -119,7 +119,7 @@ namespace { // 内部処理に使う関数
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
 			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
-			gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki = true;
+			gameStat->statOfActive().AgariHouki = true;
 			/* TODO: 移植するかもしれないし廃止するかもしれない if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"} */
 			/* TODO: これについて確認すること vanish2@ */
 		}

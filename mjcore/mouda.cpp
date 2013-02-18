@@ -35,7 +35,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 	GameTable* sandbox = makesandBox(gameStat, gameStat->CurrentPlayer.Active);
 	/* ‘Å”v‚ðŽæ“¾‚·‚é */
 	if (gameStat->CurrentPlayer.Active == gameStat->PlayerID) {
-		if (gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki) {
+		if (gameStat->statOfActive().AgariHouki) {
 			debug(_T("ƒvƒŒƒCƒ„[‚Ìƒcƒ‚”Ô‚Å‚·‚ªŽc”O‚È‚ª‚çƒAƒKƒŠ•úŠü‚Å‚·B"));
 			DiscardTileIndex.type = DiscardTileNum::Normal;
 			DiscardTileIndex.id = NumOfTilesInHand - 1;
@@ -47,7 +47,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 		}
 	} else if (
 		(EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag == -1) ||
-		gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki) {
+		gameStat->statOfActive().AgariHouki) {
 			debug(_T("ƒAƒKƒŠ•úŠü‚©‰ñüØ’f‚µ‚½ƒvƒŒƒCƒ„[‚Ìƒcƒ‚”Ô‚Å‚·B"));
 			DiscardTileIndex.type = DiscardTileNum::Normal;
 			DiscardTileIndex.id = NumOfTilesInHand - 1;
@@ -128,7 +128,7 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 		gameStat->TsumoAgariFlag = true;
 		yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Active);
 		if (((yakuInfo.CoreHan < (gameStat->ShibariFlag ? 2 : 1)) && (yakuInfo.CoreSemiMangan == 0)) ||
-			(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.RichiFlag)) ||
+			(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->statOfActive().RichiFlag.RichiFlag)) ||
 			((gameStat->PaoFlag[pyMinkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong")))
 			RoundEndType = Chonbo; /* ”›‚è‚ð–ž‚½‚µ‚Ä‚¢‚È‚¢ê‡(–ð‚ª–³‚¢‚È‚Ç)cö˜a‚Æ‚µ‚Ä‹Ç‚ðI—¹‚·‚é */
 		else
@@ -152,10 +152,10 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 		DiscardTileIndex.id = NumOfTilesInHand; // ‹ãŽí—¬‚µ‚ª‚Å‚«‚È‚¢Žž‚Íƒcƒ‚Ø‚è‚Æ‚Ý‚È‚·
 		if (RuleData::chkRuleApplied("nine_terminals") &&
 			chkdaopaiability(gameStat, gameStat->CurrentPlayer.Active) &&
-			gameStat->Player[gameStat->CurrentPlayer.Active].FirstDrawFlag) {
+			gameStat->statOfActive().FirstDrawFlag) {
 				mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Kyuushu);
 				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // ”­º•\Ž¦ˆ—
-				gameStat->Player[gameStat->CurrentPlayer.Active].HandStat = handExposed;
+				gameStat->statOfActive().HandStat = handExposed;
 				sound::Play(sound::IDs::voxKyuushu);
 				mihajong_graphic::GameStatus::updateGameStat(gameStat);
 				return KyuushuKyuuhai;
@@ -166,7 +166,7 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 	}
 	EndType procDahaiSubFlower(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* ‰Ô”v‚ð”²‚¢‚½ê‡‚Ìˆ— */
 		if ((DiscardTileIndex.type == DiscardTileNum::Ankan) &&
-			(gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id].tile > TileSuitFlowers)) {
+			(gameStat->statOfActive().Hand[DiscardTileIndex.id].tile > TileSuitFlowers)) {
 				DiscardTileIndex.type = DiscardTileNum::Flower;
 				info(_T("‰Ô”v‚Ìˆ—‚ÉˆÚ‚è‚Ü‚·B‘Å”vƒR[ƒh‚ð•â³‚µ‚Ü‚µ‚½B"));
 		}
@@ -235,8 +235,8 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 				sound::util::bgmplay(sound::IDs::musOpenrichi);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			Sleep(1000);
-			gameStat->Player[gameStat->CurrentPlayer.Active].HandStat = handOpenRiichi;
-			gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.OpenFlag = true;
+			gameStat->statOfActive().HandStat = handOpenRiichi;
+			gameStat->statOfActive().RichiFlag.OpenFlag = true;
 			/* TODO: ˆê•”ƒ{ƒ^ƒ“‚Ì–³Œø‰» vanish2@ */
 		}
 		if (DiscardTileIndex.type == DiscardTileNum::Riichi) {
@@ -263,9 +263,9 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 	}
 	void procDahaiSubPost(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) { /* Ž–Œãˆ— */
 		/* ‘Å”v‚ð‹L˜^‚·‚é */
-		DiscardTile* const newDiscard = &(gameStat->Player[gameStat->CurrentPlayer.Active].Discard[++gameStat->Player[gameStat->CurrentPlayer.Active].DiscardPointer]);
-		newDiscard->tcode.tile = gameStat->CurrentDiscard.tile = gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id].tile;
-		newDiscard->tcode.red  = gameStat->CurrentDiscard.red  = gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id].red;
+		DiscardTile* const newDiscard = &(gameStat->statOfActive().Discard[++gameStat->statOfActive().DiscardPointer]);
+		newDiscard->tcode.tile = gameStat->CurrentDiscard.tile = gameStat->statOfActive().Hand[DiscardTileIndex.id].tile;
+		newDiscard->tcode.red  = gameStat->CurrentDiscard.red  = gameStat->statOfActive().Hand[DiscardTileIndex.id].red;
 		if (DiscardTileIndex.type == DiscardTileNum::Riichi) /* —§’¼éŒ¾”v‚Ìê‡ */
 			newDiscard->dstat = discardRiichi;
 		else if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi) /* ƒI[ƒvƒ“—§’¼éŒ¾”v‚Ìê‡ */
@@ -273,10 +273,10 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 		else /* ‚»‚êˆÈŠO‚Ìê‡ */
 			newDiscard->dstat = discardNormal;
 		newDiscard->isDiscardThrough = (DiscardTileIndex.id == NumOfTilesInHand - 1) && (!gameStat->TianHuFlag);
-		gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id].tile = NoTile;
-		gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id].red  = Normal;
+		gameStat->statOfActive().Hand[DiscardTileIndex.id].tile = NoTile;
+		gameStat->statOfActive().Hand[DiscardTileIndex.id].red  = Normal;
 		/* ˆê”­‚Ìƒtƒ‰ƒO‚ð~‚ë‚· */
-		gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.IppatsuFlag = false;
+		gameStat->statOfActive().RichiFlag.IppatsuFlag = false;
 		/* Ž©“®“I‚É—”v‚ðs‚È‚¤ */
 		lipai(gameStat, gameStat->CurrentPlayer.Active);
 		// ‚±‚Ì‚Æ‚«”v‚ðŽÌ‚Ä‚Ä‚¢‚é‚Í‚¸ •\Ž¦ƒoƒO–hŽ~‚Ì‚½‚ß
@@ -288,19 +288,19 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 		if ((DiscardTileIndex.type == DiscardTileNum::Riichi) || (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
 			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone); // ”­º•¶Žš—ñ‚ðÁ‹Ž
-			gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.RichiFlag =
-				gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.IppatsuFlag = true;
-			gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.DoubleFlag =
-				gameStat->Player[gameStat->CurrentPlayer.Active].FirstDrawFlag;
-			gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.OpenFlag =
+			gameStat->statOfActive().RichiFlag.RichiFlag =
+				gameStat->statOfActive().RichiFlag.IppatsuFlag = true;
+			gameStat->statOfActive().RichiFlag.DoubleFlag =
+				gameStat->statOfActive().FirstDrawFlag;
+			gameStat->statOfActive().RichiFlag.OpenFlag =
 				(DiscardTileIndex.type == DiscardTileNum::OpenRiichi);
 			++gameStat->Deposit;
-			gameStat->Player[gameStat->CurrentPlayer.Active].PlayerScore -= 1000;
+			gameStat->statOfActive().PlayerScore -= 1000;
 			if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)
 				chkOpenMachi(gameStat, gameStat->CurrentPlayer.Active);
 		}
 		/* “V˜a‚â’n˜a‚Ìƒtƒ‰ƒO‚ð~‚ë‚· */
-		gameStat->Player[gameStat->CurrentPlayer.Active].FirstDrawFlag =
+		gameStat->statOfActive().FirstDrawFlag =
 			gameStat->TianHuFlag = false;
 		/* ‘Å”v‚·‚é‚Æ‚«‚Ì‰¹‚ð–Â‚ç‚· */
 		/* ƒhƒ‰‚ðŽÌ‚Ä‚éŽž‚Í‹­‘Å‚Ì‰¹‚É‚·‚é */
@@ -332,8 +332,8 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		info(o.str().c_str());
 	}
 	/* —§’¼‚µ‚Ä‚¢‚È‚¢“¯‡U’®‚È‚ç‚»‚ÌŠúŒÀ‚Ì‚½‚ßU’®‚ð‰ðœ‚·‚é */
-	if (!gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.RichiFlag)
-		gameStat->Player[gameStat->CurrentPlayer.Active].DoujunFuriten = false;
+	if (!gameStat->statOfActive().RichiFlag.RichiFlag)
+		gameStat->statOfActive().DoujunFuriten = false;
 	/* Ž©–Ì˜a‚Ìˆ— */
 	if (DiscardTileIndex.type == DiscardTileNum::Agari) {
 		RoundEndType = procDahaiSubAgari(gameStat, DiscardTileIndex);
@@ -383,9 +383,9 @@ void tsumoproc(GameTable* const gameStat) {
 	/* “Œ‰Æ‚Ì‡”Ô‚ª‰ñ‚Á‚Ä‚«‚½‚çŽŸ‚Ì„–Ú‚Æ‚È‚é */
 	if (playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound) == sEast)
 		++gameStat->TurnRound;
-	gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NumOfTilesInHand - 1].tile =
+	gameStat->statOfActive().Hand[NumOfTilesInHand - 1].tile =
 		gameStat->Deck[gameStat->TilePointer].tile;
-	gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NumOfTilesInHand - 1].red =
+	gameStat->statOfActive().Hand[NumOfTilesInHand - 1].red =
 		gameStat->Deck[gameStat->TilePointer].red;
 	gameStat->PreviousMeld.Discard = gameStat->PreviousMeld.Stepped = NoTile;
 	sound::Play(sound::IDs::sndTsumo);

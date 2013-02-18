@@ -289,7 +289,7 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 		tools::recordBlank_Table(
 			&haifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel,
 			&HThaifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel);
-	} else if (gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NumOfTilesInHand - 1].tile == NoTile) {
+	} else if (gameStat->statOfActive().Hand[NumOfTilesInHand - 1].tile == NoTile) {
 		// –Â‚¢‚½’¼Œã (‰½‚à‚µ‚È‚¢)
 	} else if ((DiscardTileIndex.id) == (NumOfTilesInHand - 1)) {
 		// ƒcƒ‚Ø‚è
@@ -301,19 +301,19 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 	} else {
 		tools::haifuwritetsumohai(
 			&haifuP, &HThaifuP, gameStat->CurrentPlayer.Active,
-			gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NumOfTilesInHand - 1],
+			gameStat->statOfActive().Hand[NumOfTilesInHand - 1],
 			_T("@ "), _T("<td></td>"));
 	}
 	// Ì‚Ä‚½”v‚ğ‹L˜^
 	tools::recordTile_Table(
 		&haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehai,
 		&HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehai,
-		gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id]);
+		gameStat->statOfActive().Hand[DiscardTileIndex.id]);
 }
 
 /* •úe‚µ‚½‚©”Û‚©‚ğ”v•ˆ‚É‹L˜^ */
 __declspec(dllexport) void haifu::haifurecfurikomi(const GameTable* const gameStat) {
-	if (gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.IppatsuFlag) {
+	if (gameStat->statOfActive().RichiFlag.IppatsuFlag) {
 		// —§’¼éŒ¾”v‚Ìê‡
 		if (RonPlayers(gameStat) > 0) {
 			// —§’¼éŒ¾”v‚Å‚ÌU‚è‚İ
@@ -357,7 +357,7 @@ __declspec(dllexport) void haifu::haifurecpon(const GameTable* const gameStat) {
 __declspec(dllexport) void haifu::haifurectsumo(const GameTable* const gameStat) {
 	tools::haifuwritetsumohai(
 		&haifuP, &HThaifuP, gameStat->CurrentPlayer.Active,
-		gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NumOfTilesInHand - 1],
+		gameStat->statOfActive().Hand[NumOfTilesInHand - 1],
 		_T("ÂÓ "), _T("<td>ƒcƒ‚</td>"));
 }
 /* ‘å–¾È‚µ‚½‚±‚Æ‚ğ”v•ˆ‚É‹L˜^ */
@@ -395,32 +395,32 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 				recordTile_Table(
 					&haifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
 					&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
-					gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id]);
+					gameStat->statOfActive().Hand[DiscardTileIndex.id]);
 				haifukanflag = true;
-			} else if (gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NumOfTilesInHand - 1].tile ==
-				gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id].tile) {
+			} else if (gameStat->statOfActive().Hand[NumOfTilesInHand - 1].tile ==
+				gameStat->statOfActive().Hand[DiscardTileIndex.id].tile) {
 					// ƒcƒ‚‚Á‚Ä‚«‚½”v‚Æ“¯‚¶‚¾‚Á‚½
 					recordTile_Table(
 						&haifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
 						&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
-						gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id]);
+						gameStat->statOfActive().Hand[DiscardTileIndex.id]);
 					haifukanflag = false;
 			} else {
 				haifuwritetsumohai(
 					haifuP, HThaifuP, gameStat->CurrentPlayer.Active,
-					gameStat->Player[gameStat->CurrentPlayer.Active].Hand[NumOfTilesInHand - 1],
+					gameStat->statOfActive().Hand[NumOfTilesInHand - 1],
 					_T("@ "), _T("<td></td>"));
 				recordTile_Table(
 					&haifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
 					&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
-					gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id]);
+					gameStat->statOfActive().Hand[DiscardTileIndex.id]);
 				haifukanflag = true;
 			}
 		} else {
 			recordTile_Table(
 				&haifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
 				&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].tsumo,
-				gameStat->Player[gameStat->CurrentPlayer.Active].Hand[DiscardTileIndex.id]);
+				gameStat->statOfActive().Hand[DiscardTileIndex.id]);
 			haifukanflag = false;
 		}
 }

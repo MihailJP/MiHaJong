@@ -252,6 +252,13 @@ struct GameTable { // 卓の情報を格納する
 	uint8_t RinshanPointer; // 嶺上牌のポインタ
 	bool TianHuFlag; // 親の第一打牌がまだ（天和の判定などに使う）
 	Tile CurrentDiscard;
+
+	const PlayerTable& statOfActive () const {return Player[CurrentPlayer.Active ];} /* 自摸番のプレイヤーの情報 (immutable) */
+	      PlayerTable& statOfActive ()       {return Player[CurrentPlayer.Active ];} /* 自摸番のプレイヤーの情報 (mutable) */
+	const PlayerTable& statOfPassive() const {return Player[CurrentPlayer.Passive];} /* 鳴き判定中のプレイヤーの情報 (immutable) */
+	      PlayerTable& statOfPassive()       {return Player[CurrentPlayer.Passive];} /* 鳴き判定中のプレイヤーの情報 (mutable) */
+	const PlayerTable& statOfMine   () const {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (immutable) */
+	      PlayerTable& statOfMine   ()       {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (mutable) */
 };
 static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 

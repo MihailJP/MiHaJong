@@ -43,7 +43,7 @@ DWORD WINAPI RemoteDahai::thread () {
 			Sleep(0); // ƒ|[ƒŠƒ“ƒO
 		}
 		if ((ReceivedMsg == mihajong_socket::protocol::Dahai_Remote_Disconnect) &&
-			(!gameStat->Player[gameStat->CurrentPlayer.Active].ConnectionLost))
+			(!gameStat->statOfActive().ConnectionLost))
 			proc_abrupt_disconnect(gameStat, gameStat->CurrentPlayer.Active);
 	}
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {

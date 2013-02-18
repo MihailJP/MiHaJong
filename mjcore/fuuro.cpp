@@ -312,7 +312,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 	nakiCount = 0;
 	if ((Mode == FuuroChii) || (Mode == FuuroPon) || (Mode == FuuroDaiminkan)) {
 		/* –Â‚¢‚½Ì”v‚ğ‰Í‚Å”ñ•\¦‚É‚·‚é */
-		PlayerTable* const activePlDat = &(gameStat->Player[gameStat->CurrentPlayer.Active]);
+		PlayerTable* const activePlDat = &(gameStat->statOfActive());
 		DiscardTile* const tmpSutehaiVar = &(activePlDat->Discard[activePlDat->DiscardPointer]);
 		assert(tmpSutehaiVar->tcode.tile == gameStat->CurrentDiscard.tile); // [ƒfƒoƒbƒO—p]–{“–‚É³‚µ‚¢”v‚È‚Ì‚©Šm”F
 		if (tmpSutehaiVar->dstat == discardNormal)
@@ -473,7 +473,7 @@ void checkpao(GameTable* const gameStat) {
 	// •ï‚Ì”»’è ‚±‚±‚©‚ç
 	debug(_T("•ï‚ÌğŒ‚ğ”»’è‚µ‚Ü‚·B"));
 	unsigned DragonPons = 0, WindPons = 0, NumOfKangs = 0;
-	const PlayerTable* playerStat = &gameStat->Player[gameStat->CurrentPlayer.Passive];
+	const PlayerTable* playerStat = &gameStat->statOfPassive();
 	for (unsigned i = 1; i <= playerStat->MeldPointer; i++) {
 		switch (playerStat->Meld[i].tile) {
 		case WhiteDragon: case GreenDragon: case RedDragon:
@@ -516,7 +516,7 @@ void checkpao(GameTable* const gameStat) {
 
 namespace {
 	void playerfuuro(GameTable* gameStat) {
-		PlayerTable* const playerStat = &(gameStat->Player[gameStat->PlayerID]);
+		PlayerTable* const playerStat = &(gameStat->statOfMine());
 		using namespace mihajong_graphic;
 		using namespace mihajong_graphic::naki;
 		Subscene(tblSubscenePlayerNaki);
@@ -737,20 +737,20 @@ EndType ronhuproc(GameTable* const gameStat) {
 			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NumOfTilesInHand - 1].tile = gameStat->CurrentDiscard.tile;
 			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NumOfTilesInHand - 1].red = gameStat->CurrentDiscard.red;
 			/* —§’¼éŒ¾”v‚Å‚Ì•úe‚Ìê‡A—§’¼‚ğ–³Œø‚Æ‚µ‹Ÿ‘õ“_–_‚ğ•Ô‹p‚·‚é */
-			if (gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.IppatsuFlag) {
-				if (gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.DoubleFlag) {
+			if (gameStat->statOfActive().RichiFlag.IppatsuFlag) {
+				if (gameStat->statOfActive().RichiFlag.DoubleFlag) {
 					gameStat->DoubleRichiCounter = true;
 					trace(_T("ƒ_ƒuƒ‹—§’¼éŒ¾”v‚Å‚Ì•úe‚Ì‚½‚ßA—§’¼–_‚ğ•ÔŠÒ‚µ‚Ü‚·B"));
 				} else {
 					gameStat->RichiCounter = true;
 					trace(_T("—§’¼éŒ¾”v‚Å‚Ì•úe‚Ì‚½‚ßA—§’¼–_‚ğ•ÔŠÒ‚µ‚Ü‚·B"));
 				}
-				gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.IppatsuFlag =
-					gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.DoubleFlag =
-					gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.OpenFlag =
-					gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.RichiFlag = false;
+				gameStat->statOfActive().RichiFlag.IppatsuFlag =
+					gameStat->statOfActive().RichiFlag.DoubleFlag =
+					gameStat->statOfActive().RichiFlag.OpenFlag =
+					gameStat->statOfActive().RichiFlag.RichiFlag = false;
 				--gameStat->Deposit;
-				gameStat->Player[gameStat->CurrentPlayer.Active].PlayerScore += (LNum)1000;
+				gameStat->statOfActive().PlayerScore += (LNum)1000;
 			}
 			/* –ğ‚âU’®‚Ì”»’è */
 			yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, pl);

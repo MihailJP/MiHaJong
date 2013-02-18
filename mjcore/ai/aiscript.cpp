@@ -278,10 +278,10 @@ DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool*
 	CodeConv::tostringstream o;
 	o << _T("AIの副露判定に入ります。プレイヤー [") << (int)gameStat->CurrentPlayer.Passive << _T("]");
 	info(o.str().c_str());
-	gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = chiiNone; // リセット
-	gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Pon =
-		gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Kan =
-		gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Ron = false;
+	gameStat->statOfPassive().DeclarationFlag.Chi = chiiNone; // リセット
+	gameStat->statOfPassive().DeclarationFlag.Pon =
+		gameStat->statOfPassive().DeclarationFlag.Kan =
+		gameStat->statOfPassive().DeclarationFlag.Ron = false;
 	if (callFunc(gameStat, gameStat->CurrentPlayer.Passive, fncname_call[gameStat->KangFlag.chankanFlag], (gameStat->KangFlag.chankanFlag == 0))) {
 		*finished = true; return S_OK;
 	} else {
@@ -293,12 +293,12 @@ DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool*
 		} else {
 			switch (meldtype) {
 				case meldNone: break;
-				case meldRon: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Ron = true; break;
-				case meldKan: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Kan = true; break;
-				case meldPon: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Pon = true; break;
-				case meldChiiLower: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = chiiLower; break;
-				case meldChiiMiddle: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = chiiMiddle; break;
-				case meldChiiUpper: gameStat->Player[gameStat->CurrentPlayer.Passive].DeclarationFlag.Chi = chiiUpper; break;
+				case meldRon: gameStat->statOfPassive().DeclarationFlag.Ron = true; break;
+				case meldKan: gameStat->statOfPassive().DeclarationFlag.Kan = true; break;
+				case meldPon: gameStat->statOfPassive().DeclarationFlag.Pon = true; break;
+				case meldChiiLower: gameStat->statOfPassive().DeclarationFlag.Chi = chiiLower; break;
+				case meldChiiMiddle: gameStat->statOfPassive().DeclarationFlag.Chi = chiiMiddle; break;
+				case meldChiiUpper: gameStat->statOfPassive().DeclarationFlag.Chi = chiiUpper; break;
 				default: warn(_T("1番目の返り値が正しくありません。無視します。")); break;
 			}
 		}
