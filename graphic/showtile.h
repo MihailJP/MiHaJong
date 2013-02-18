@@ -5,9 +5,14 @@
 #include <dxerr.h>
 #include <tchar.h>
 #include <vector>
-#include "../mjcore/mjimport.h"
+#include "../common/tilecode.h"
+#include "../common/gametbl.h"
+#include "../common/seatrank.h"
+#include "../common/machihai.h"
 
 namespace mihajong_graphic {
+
+using namespace mihajong_structs;
 
 enum TileSide {Obverse, Upright, Reverse,};
 enum TileDirection {Portrait, Withershins, UpsideDown, Clockwise,};
