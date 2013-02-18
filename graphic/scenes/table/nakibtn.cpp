@@ -10,7 +10,7 @@
 #include "../../gametbl.h"
 #include "../../rule.h"
 #include "../../event.h"
-#include "../../../mjcore/discard.h"
+#include "../../../common/discard.h"
 #include "../../../sound/sound.h"
 #include "../../../mjcore/bgmid.h"
 

@@ -6,7 +6,7 @@
 #include "../../sound/sound.h"
 #include "../../mjcore/bgmid.h"
 #include "../event.h"
-#include "../../mjcore/discard.h"
+#include "../../common/discard.h"
 #include "../utils.h"
 #include <functional>
 
