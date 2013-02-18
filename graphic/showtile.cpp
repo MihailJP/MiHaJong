@@ -15,7 +15,7 @@ ShowTile::~ShowTile() {
 }
 
 /* 新規の牌オブジェクトを作成する */
-void ShowTile::NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, D3DCOLOR filterCol) {
+void ShowTile::NewTile(unsigned int ID, TileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, D3DCOLOR filterCol) {
 	const TileDescriptor empty = {false, NoTile, Normal, 0, 0, Portrait, Obverse, 0xffffffff};
 	if (mySprites.size() <= ID) mySprites.resize(ID + 1, empty); // 配列の拡張
 	mySprites[ID].exist = true;
@@ -52,10 +52,10 @@ void ShowTile::Render() {
 			if ((k->direction == Portrait) || (k->direction == UpsideDown)) {
 				/* Portrait alignment */
 				RECT rect = {
-					((k->tile + k->red * TILE_NONFLOWER_MAX) % 10) * (VertTileWidth + TexturePadding),
-					((k->tile + k->red * TILE_NONFLOWER_MAX) / 10) * (VertTileHeight + TexturePadding),
-					((k->tile + k->red * TILE_NONFLOWER_MAX) % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding,
-					((k->tile + k->red * TILE_NONFLOWER_MAX) / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding,
+					((k->tile + k->red * TileNonflowerMax) % 10) * (VertTileWidth + TexturePadding),
+					((k->tile + k->red * TileNonflowerMax) / 10) * (VertTileHeight + TexturePadding),
+					((k->tile + k->red * TileNonflowerMax) % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding,
+					((k->tile + k->red * TileNonflowerMax) / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding,
 				};
 				RECT rectrev = {
 					((int)BackSide % 10) * (VertTileWidth + TexturePadding),
@@ -90,10 +90,10 @@ void ShowTile::Render() {
 			else {
 				/* Landscape alignment */
 				RECT rect = {
-					((k->tile + k->red * TILE_NONFLOWER_MAX) % 10) * (HoriTileWidth + TexturePadding),
-					((k->tile + k->red * TILE_NONFLOWER_MAX) / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows,
-					((k->tile + k->red * TILE_NONFLOWER_MAX) % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding,
-					((k->tile + k->red * TILE_NONFLOWER_MAX) / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding,
+					((k->tile + k->red * TileNonflowerMax) % 10) * (HoriTileWidth + TexturePadding),
+					((k->tile + k->red * TileNonflowerMax) / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows,
+					((k->tile + k->red * TileNonflowerMax) % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding,
+					((k->tile + k->red * TileNonflowerMax) / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding,
 				};
 				RECT rectrev = {
 					((int)BackSide % 10) * (HoriTileWidth + TexturePadding),

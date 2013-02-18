@@ -1,27 +1,30 @@
 #pragma once
 
 #include "exports.h"
-#include "../mjcore/func.h"
-#include "../mjcore/tileutil.h"
-#include "../mjcore/shanten.h"
+#include "../common/seatrank.h"
+#include "../common/gametbl.h"
+#include "../common/machihai.h"
+#include "../common/shanten.h"
 
 namespace mihajong_graphic {
 namespace utils {
 
-typedef seatAbsolute (*playerwind_type)(const GameTable*, PLAYER_ID, int);
-typedef seatRelative (*playerRelative_type)(PLAYER_ID, PLAYER_ID);
-typedef PLAYER_ID (*RelativePositionOf_type)(PLAYER_ID, seatRelative);
+using namespace mihajong_structs;
+
+typedef seatAbsolute (*playerwind_type)(const GameTable*, PlayerID, int);
+typedef seatRelative (*playerRelative_type)(PlayerID, PlayerID);
+typedef PlayerID (*RelativePositionOf_type)(PlayerID, seatRelative);
 typedef int (*tilesLeft_type)(const GameTable*);
 typedef PlayerRankList (*calcRank_type)(const GameTable*);
-typedef MachihaiInfo (*chkFuriten_type)(const GameTable*, PLAYER_ID);
-typedef bool (*isTenpai_type)(const GameTable*, PLAYER_ID);
-typedef bool (*isRichiReqSatisfied_type)(const GameTable*, PLAYER_ID);
-typedef SHANTEN (*calcShanten_type)(const GameTable*, PLAYER_ID, ShantenAnalyzer::shantenType);
-typedef bool (*chkdaopaiability_type)(const GameTable*, PLAYER_ID);
-typedef bool (*chkShisanBuDa_type)(const GameTable*, PLAYER_ID);
-typedef bool (*chkShisiBuDa_type)(const GameTable*, PLAYER_ID);
-typedef Int8ByTile (*countTilesInHand_type)(const GameTable*, PLAYER_ID);
-typedef bool (*chkAnkanAbility_type)(const GameTable*, PLAYER_ID);
+typedef MachihaiInfo (*chkFuriten_type)(const GameTable*, PlayerID);
+typedef bool (*isTenpai_type)(const GameTable*, PlayerID);
+typedef bool (*isRichiReqSatisfied_type)(const GameTable*, PlayerID);
+typedef Shanten (*calcShanten_type)(const GameTable*, PlayerID, ShantenType);
+typedef bool (*chkdaopaiability_type)(const GameTable*, PlayerID);
+typedef bool (*chkShisanBuDa_type)(const GameTable*, PlayerID);
+typedef bool (*chkShisiBuDa_type)(const GameTable*, PlayerID);
+typedef Int8ByTile (*countTilesInHand_type)(const GameTable*, PlayerID);
+typedef bool (*chkAnkanAbility_type)(const GameTable*, PlayerID);
 
 #ifdef GRAPHIC_EXPORTS
 extern playerwind_type playerwind;

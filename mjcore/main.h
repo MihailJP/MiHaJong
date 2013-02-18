@@ -8,17 +8,17 @@
 
 class GameThread {
 private:
-	gameTypeID myGameType;
+	GameTypeID myGameType;
 	HANDLE hThread;
 	HWND hWnd;
 	static DWORD WINAPI ThreadMain(LPVOID lpParam);
 public:
-	explicit GameThread(gameTypeID gameType, HWND hWnd);
+	explicit GameThread(GameTypeID gameType, HWND hWnd);
 	~GameThread();
 };
 
 extern GameThread* gameThread;
 #endif
 
-MJCORE void StartGame (gameTypeID gameType, HWND hwnd);
+MJCORE void StartGame (GameTypeID gameType, HWND hwnd);
 MJCORE void TerminateGame ();

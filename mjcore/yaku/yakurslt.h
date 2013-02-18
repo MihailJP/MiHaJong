@@ -25,7 +25,7 @@ EXPORT_STRUCT yaku::YAKUSTAT {
 	TCHAR yakumanNameList[nameBufSize];
 	TCHAR yakumanValList[nameBufSize];
 	// -----------------------------------------------------------------
-	MELD_BUF MianziDat; // 面子に分解したデータ
+	MeldBuf MianziDat; // 面子に分解したデータ
 	// -----------------------------------------------------------------
 	static void Init(YAKUSTAT* const myInstance); // インスタンスを初期化する
 };

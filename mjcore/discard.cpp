@@ -16,13 +16,13 @@ DiscardTileNum DiscardTileNum::fromSingleInt(int val) {
 	DiscardTileNum discardID;
 	switch (val) {
 	case -1:
-		discardID.type = Agari; discardID.id = NUM_OF_TILES_IN_HAND - 1;
+		discardID.type = Agari; discardID.id = NumOfTilesInHand - 1;
 		break;
 	case -2:
-		discardID.type = Kyuushu; discardID.id = NUM_OF_TILES_IN_HAND - 1;
+		discardID.type = Kyuushu; discardID.id = NumOfTilesInHand - 1;
 		break;
 	case -3:
-		discardID.type = Disconnect; discardID.id = NUM_OF_TILES_IN_HAND - 1;
+		discardID.type = Disconnect; discardID.id = NumOfTilesInHand - 1;
 		break;
 	default:
 		discardID.type = (discardType)(val / 20);

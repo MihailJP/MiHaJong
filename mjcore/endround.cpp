@@ -8,7 +8,7 @@
 #include <tuple>
 #include <cassert>
 #include "../sound/sound.h"
-#include "bgmid.h"
+#include "../common/bgmid.h"
 #include "sound.h"
 #include "../graphic/graphic.h"
 #include "tileutil.h"
@@ -21,30 +21,30 @@ namespace { // 内部処理に使う関数
 	bool all_player(const GameTable* gameStat, std::function<bool (const PlayerTable*)> f) {
 		bool flag = true;
 		if (chkGameType(gameStat, Sanma4)) {
-			for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+			for (PlayerID i = 0; i < Players; ++i)
 				flag = flag && ((playerwind(gameStat, i, gameStat->GameRound) == sNorth) || f(&(gameStat->Player[i])));
 		} else if (chkGameType(gameStat, SanmaT)) {
-			for (PLAYER_ID i = 0; i < 3; ++i)
+			for (PlayerID i = 0; i < 3; ++i)
 				flag = flag && f(&(gameStat->Player[i]));
 		} else {
-			for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+			for (PlayerID i = 0; i < Players; ++i)
 				flag = flag && f(&(gameStat->Player[i]));
 		}
 		return flag;
 	}
 	bool chksifeng(const GameTable* gameStat) {
 		bool flag = false;
-		std::array<tileCode, 4> winds = {EastWind, SouthWind, WestWind, NorthWind,};
+		std::array<TileCode, 4> winds = {EastWind, SouthWind, WestWind, NorthWind,};
 		for (auto k = winds.begin(); k != winds.end(); ++k) {
 			bool tmpflag = true;
 			if (chkGameType(gameStat, Sanma4)) {
-				for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+				for (PlayerID i = 0; i < Players; ++i)
 					tmpflag = tmpflag && ((playerwind(gameStat, i, gameStat->GameRound) == sNorth) || (gameStat->Player[i].Discard[1].tcode.tile == *k));
 			} else if (chkGameType(gameStat, SanmaT)) {
-				for (PLAYER_ID i = 0; i < 3; ++i)
+				for (PlayerID i = 0; i < 3; ++i)
 					tmpflag = tmpflag && (gameStat->Player[i].Discard[1].tcode.tile == *k);
 			} else {
-				for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+				for (PlayerID i = 0; i < Players; ++i)
 					tmpflag = tmpflag && (gameStat->Player[i].Discard[1].tcode.tile == *k);
 			}
 			flag = flag || tmpflag;
@@ -64,7 +64,7 @@ namespace { // 内部処理に使う関数
 	bool chkKuikae(GameTable* gameStat) { // 喰い替えの場合の処理
 		if (((gameStat->CurrentDiscard.tile == gameStat->PreviousMeld.Discard) || // 現物の食い変えになっている場合か
 			(gameStat->CurrentDiscard.tile == gameStat->PreviousMeld.Stepped)) && // 筋食い変えになっている場合で
-			(!gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki)) { // まだアガリ放棄になっていないなら
+			(!gameStat->statOfActive().AgariHouki)) { // まだアガリ放棄になっていないなら
 				if (RuleData::chkRule("kuikae", "agari_houki") || RuleData::chkRule("kuikae", "agari_houki_if_in_kind")) {
 					/* 和了り放棄とする設定 */
 					logKuikae(gameStat, false);
@@ -78,7 +78,7 @@ namespace { // 内部処理に使う関数
 					mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 					mihajong_graphic::GameStatus::updateGameStat(gameStat);
 					/* 和了り放棄は以降強制ツモ切り、強制不聴扱いとなります */
-					gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki = true;
+					gameStat->statOfActive().AgariHouki = true;
 					/* TODO: 移植するかもしれないし廃止するかもしれない if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}*/
 					/* TODO: これについて確認すること vanish2@ */
 				} else if (RuleData::chkRule("kuikae", "chombo") || RuleData::chkRule("kuikae", "chombo_if_in_kind")) {
@@ -96,19 +96,19 @@ namespace { // 内部処理に使う関数
 	void chkTahai(GameTable* gameStat) {
 		/* 多牌や少牌をしていないかのチェック */
 		unsigned tmptilecnt = 0;
-		for (unsigned i = 0; i < NUM_OF_TILES_IN_HAND; ++i)
-			if (gameStat->Player[gameStat->CurrentPlayer.Active].Hand[i].tile != NoTile)
+		for (unsigned i = 0; i < NumOfTilesInHand; ++i)
+			if (gameStat->statOfActive().Hand[i].tile != NoTile)
 				++tmptilecnt;
-		tmptilecnt += gameStat->Player[gameStat->CurrentPlayer.Active].MeldPointer * 3;
-		if ((tmptilecnt != (NUM_OF_TILES_IN_HAND - 1)) && (!gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki)) {
+		tmptilecnt += gameStat->statOfActive().MeldPointer * 3;
+		if ((tmptilecnt != (NumOfTilesInHand - 1)) && (!gameStat->statOfActive().AgariHouki)) {
 			// 多牌や少牌の場合の処理(通常起きることはないはずだが…)
-			if (tmptilecnt > (NUM_OF_TILES_IN_HAND - 1))
+			if (tmptilecnt > (NumOfTilesInHand - 1))
 				warn(_T("多牌を検出しました。和了り放棄として扱いますが、摸打の処理で不整合が起きていた可能性があります。"));
 			else
 				warn(_T("少牌を検出しました。和了り放棄として扱いますが、摸打の処理で不整合が起きていた可能性があります。"));
 			sound::Play(sound::IDs::sndCuohu);
 			for (unsigned i = 0; i < 2; ++i) {
-				if (tmptilecnt > (NUM_OF_TILES_IN_HAND - 1))
+				if (tmptilecnt > (NumOfTilesInHand - 1))
 					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Tahai);
 				else
 					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Shouhai);
@@ -119,7 +119,7 @@ namespace { // 内部処理に使う関数
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
 			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
-			gameStat->Player[gameStat->CurrentPlayer.Active].AgariHouki = true;
+			gameStat->statOfActive().AgariHouki = true;
 			/* TODO: 移植するかもしれないし廃止するかもしれない if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"} */
 			/* TODO: これについて確認すること vanish2@ */
 		}
@@ -142,9 +142,9 @@ EndType endround::checkroundabort(GameTable* gameStat) { // 局終了条件の判定
 		(chksifeng(gameStat)))
 		return SuufonRenda;
 
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i) gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].tile = NoTile; // バグ防止のため
+	for (PlayerID i = 0; i < Players; ++i) gameStat->Player[i].Tsumohai().tile = NoTile; // バグ防止のため
 	if (chkKuikae(gameStat)) { // 喰い替えの場合の処理
-		gameStat->AgariSpecialStat = AGARI_KUIKAE;
+		gameStat->AgariSpecialStat = agariKuikae;
 		return Chonbo;
 	}
 	/* 多牌や少牌をしていないかのチェック */
@@ -159,8 +159,8 @@ EndType endround::checkroundabort(GameTable* gameStat) { // 局終了条件の判定
 // -------------------------------------------------------------------------
 
 namespace {
-	std::array<bool, PLAYERS> chkNagashiMangan(const GameTable* gameStat, EndType& RoundEndType) { /* 流し満貫の判定 */
-		std::array<bool, PLAYERS> NagashiManganFlag = {false,};
+	std::array<bool, Players> chkNagashiMangan(const GameTable* gameStat, EndType& RoundEndType) { /* 流し満貫の判定 */
+		std::array<bool, Players> NagashiManganFlag = {false,};
 		if (RoundEndType == Ryuukyoku) {
 			for (unsigned i = 0; i < ACTUAL_PLAYERS; ++i) {
 				if (chkGameType(gameStat, Sanma4) && (playerwind(gameStat, i, gameStat->GameRound) == sNorth))
@@ -182,7 +182,7 @@ namespace {
 			Subscene(subsceneCode);
 			Sleep(3000);
 		}
-		for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+		for (PlayerID i = 0; i < Players; ++i)
 			calltext::setCall(i, calltext::None);
 		sound::Play(sound::IDs::sndPingju);
 		sound::util::bgmplay(bgmNum);
@@ -192,7 +192,7 @@ namespace {
 
 	unsigned checkTenpai(GameTable* gameStat, CodeConv::tstring& ResultDesc, unsigned OrigTurn) {
 		unsigned TenpaiCnt = 0;
-		for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
+		for (PlayerID i = 0; i < Players; ++i) {
 			if (chkGameType(gameStat, Sanma4) && (playerwind(gameStat, i, OrigTurn) == sNorth))
 				continue; // 四人三麻の北家は無視
 			if (isTenpai(gameStat, i)) { // 聴牌の時
@@ -223,7 +223,7 @@ namespace {
 	void transferNotenBappu(GameTable* gameStat, unsigned OrigTurn, unsigned TenpaiCnt) {
 		using namespace endround::transfer;
 		resetDelta();
-		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; ++i) {
+		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i) {
 			if (chkGameType(gameStat, Sanma4) && (playerwind(gameStat, i, OrigTurn) == sNorth))
 				continue; // 四人三麻の北家は無視
 			if (chkGameType(gameStat, AllSanma)) { // 三麻の場合
@@ -246,12 +246,12 @@ namespace {
 
 	void showRenchanFlag(GameTable* gameStat, bool RenchanFlag) {
 		using namespace mihajong_graphic::calltext;
-		for (PLAYER_ID cnt = 0; cnt < PLAYERS; ++cnt)
+		for (PlayerID cnt = 0; cnt < Players; ++cnt)
 			setCall(cnt, None);
 		if (RenchanFlag)
-			setCall(gameStat->GameRound % PLAYERS, Renchan);
+			setCall(gameStat->GameRound % Players, Renchan);
 		else
-			setCall(gameStat->GameRound % PLAYERS, Oyanagare);
+			setCall(gameStat->GameRound % Players, Oyanagare);
 		sound::Play(sound::IDs::sndPage);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade);
 		return;
@@ -297,7 +297,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		transferNotenBappu(gameStat, OrigTurn,
 			checkTenpai(gameStat, ResultDesc, OrigTurn));
 
-		for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 			// 錯和立直（不聴立直）の者がいた場合
 			if ((!isTenpai(gameStat, cnt)) && (gameStat->Player[cnt].RichiFlag.RichiFlag)) {
 				transferChonboPenalty(gameStat, cnt);
@@ -306,15 +306,15 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		}
 		
 		if (RuleData::chkRule("round_continuation", "renchan_if_ready")) {
-			if (isTenpai(gameStat, gameStat->GameRound % PLAYERS)) RenchanFlag = true;
+			if (isTenpai(gameStat, gameStat->GameRound % Players)) RenchanFlag = true;
 		} else if (RuleData::chkRule("round_continuation", "renchan_always")) {
 			RenchanFlag = true;
 		} else if (RuleData::chkRule("round_continuation", "renchan_if_ready_until_final_round")) {
-			if (isTenpai(gameStat, gameStat->GameRound % PLAYERS) ||
+			if (isTenpai(gameStat, gameStat->GameRound % Players) ||
 				((gameStat->GameLength / ACTUAL_PLAYERS) <= (gameStat->LoopRound * roundLoopRate() + gameStat->GameRound) / ACTUAL_PLAYERS))
 				RenchanFlag = true;
 		} else if (RuleData::chkRule("round_continuation", "renchan_if_mahjong_until_final_round")) {
-			if (isTenpai(gameStat, gameStat->GameRound % PLAYERS) &&
+			if (isTenpai(gameStat, gameStat->GameRound % Players) &&
 				((gameStat->GameLength / ACTUAL_PLAYERS) <= (gameStat->LoopRound * roundLoopRate() + gameStat->GameRound) / ACTUAL_PLAYERS))
 				RenchanFlag = true;
 		}
@@ -349,20 +349,20 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/* 九種流局時 */
 	/**************/
 	case KyuushuKyuuhai:
-		if      (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sEast ) % PLAYERS))
+		if      (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sEast ) % Players))
 			ResultDesc = _T("東家の九種九牌");
-		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sSouth) % PLAYERS))
+		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sSouth) % Players))
 			ResultDesc = _T("南家の九種九牌");
-		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sWest ) % PLAYERS))
+		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sWest ) % Players))
 			ResultDesc = _T("西家の九種九牌");
-		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sNorth) % PLAYERS))
+		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sNorth) % Players))
 			ResultDesc = _T("北家の九種九牌");
 		else ResultDesc = _T("九種九牌"); // ←決して実行されないはず
 		writeChat(ResultDesc);
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
 
 		if (RuleData::chkRule("nine_terminals", "next_dealer") == 0)
-			RenchanFlag = ((!RuleData::chkRule("nine_terminals", "renchan_if_dealer_kyuushu")) || (gameStat->CurrentPlayer.Active == (gameStat->GameRound % PLAYERS)));
+			RenchanFlag = ((!RuleData::chkRule("nine_terminals", "renchan_if_dealer_kyuushu")) || (gameStat->CurrentPlayer.Active == (gameStat->GameRound % Players)));
 		else
 			RenchanFlag = false;
 		ryuukyokuProc(gameStat, RenchanFlag);
@@ -389,9 +389,9 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ryuukyokuScreen(sound::IDs::voxSanjiahu, &ResultDesc, mihajong_graphic::tblSubsceneTripleRon);
 
 		if (RuleData::chkRule("triple_mahjong", "renchan_if_nondealer_furikomi"))
-			RenchanFlag = (gameStat->CurrentPlayer.Furikomi != (gameStat->GameRound % PLAYERS));
+			RenchanFlag = (gameStat->CurrentPlayer.Furikomi != (gameStat->GameRound % Players));
 		else if (RuleData::chkRule("triple_mahjong", "renchan_if_north_furikomi") || RuleData::chkRule("triple_mahjong", "renchan_if_west_furikomi"))
-			RenchanFlag = (gameStat->CurrentPlayer.Furikomi == ((gameStat->GameRound + (chkGameType(gameStat, AllSanma) ? sWest : sNorth)) % PLAYERS));
+			RenchanFlag = (gameStat->CurrentPlayer.Furikomi == ((gameStat->GameRound + (chkGameType(gameStat, AllSanma) ? sWest : sNorth)) % Players));
 		else if (RuleData::chkRule("triple_mahjong", "same_dealer"))
 			RenchanFlag = true;
 		else if (RuleData::chkRule("triple_mahjong", "next_dealer"))
@@ -421,7 +421,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ResultDesc = chkGameType(gameStat, AllSanma) ? _T("三家立直") : _T("四家立直");
 		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::tblSubsceneFourRiichi, 1500u);
 		checkTenpai(gameStat, ResultDesc, OrigTurn);
-		for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 			if (chkGameType(gameStat, Sanma4) && (playerwind(gameStat, cnt, gameStat->GameRound) == sNorth))
 				continue;
 			// 錯和立直（不聴立直）の者がいた場合
@@ -447,7 +447,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		transfer::resetDelta();
 		{
 			CodeConv::tstring ResultDesc(_T(""));
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (isNagashiMangan(gameStat, cnt)) {
 					mihajong_graphic::calltext::setCall(cnt, mihajong_graphic::calltext::NagashiMangan);
 					if (!ResultDesc.empty()) ResultDesc += _T("、");
@@ -492,7 +492,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 
 // -------------------------------------------------------------------------
 
-void endround::transferChonboPenalty(GameTable* gameStat, PLAYER_ID targetPlayer) {
+void endround::transferChonboPenalty(GameTable* gameStat, PlayerID targetPlayer) {
 	transfer::resetDelta();
 	LNum AgariPoint = 0, AgariPointRaw = 2000;
 	agari::calcAgariPoints(gameStat, AgariPoint, AgariPointRaw, transfer::getDelta(), targetPlayer);
@@ -509,11 +509,11 @@ void endround::transferChonboPenalty(GameTable* gameStat, PLAYER_ID targetPlayer
 bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int OrigTurn) { // 次の局へ(終了する場合はtrue)
 	// ハコ割れ終了
 	if (RuleData::chkRuleApplied("buttobi_border"))
-		for (PLAYER_ID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
+		for (PlayerID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
 			if (isDobon(gameStat, i)) return true;
 	// 天辺終了
 	if (RuleData::chkRuleApplied("teppen"))
-		for (PLAYER_ID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
+		for (PlayerID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
 			if (isTeppen(gameStat, i)) return true;
 	// 和了り止め
 	if (RuleData::chkRuleApplied("agariyame")) {
@@ -521,14 +521,14 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 			((OrigTurn + gameStat->LoopRound * roundLoopRate()) == gameStat->GameLength) &&
 			((RoundEndType == Agari) || (RuleData::chkRule("agariyame", "yes_also_ready")))) {
 				PlayerRankList Rank = calcRank(gameStat);
-				if ((Rank[gameStat->GameRound % PLAYERS] == 1) &&
-					(gameStat->Player[gameStat->GameRound % PLAYERS].PlayerScore >= (LNum)BasePoint()))
+				if ((Rank[gameStat->GameRound % (int)Players] == 1) &&
+					(gameStat->Player[gameStat->GameRound % (int)Players].PlayerScore >= (LNum)BasePoint()))
 					return true;
 		}
 	}
 	// 三麻の場合
 	if (chkGameType(gameStat, SanmaT) &&
-		((gameStat->GameRound % PLAYERS) == 3))
+		((gameStat->GameRound % Players) == 3))
 		++(gameStat->GameRound);
 	// 南入した場合……
 	if (gameStat->GameRound == 4) {
@@ -542,7 +542,7 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 	// 通常の半荘終了時（トップが３００００点未満だと西入サドンデス）
 	if ((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) > gameStat->GameLength) {
 		bool flag = false;
-		for (PLAYER_ID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
+		for (PlayerID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
 			if (gameStat->Player[i].PlayerScore >= (LNum)BasePoint())
 				return true;
 		// 延長戦なし設定
@@ -570,10 +570,10 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 	// 焼き鳥復活ルールの場合
 	if (RuleData::chkRuleApplied("yakitori") && RuleData::chkRuleApplied("yakitori_again")) {
 		bool flag = true;
-		for (PLAYER_ID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
+		for (PlayerID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
 			if (gameStat->Player[i].YakitoriFlag) flag = false;
 		if (flag)
-			for (PLAYER_ID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
+			for (PlayerID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
 				gameStat->Player[i].YakitoriFlag = true;
 	}
 	return false;
@@ -584,7 +584,7 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 namespace {
 	InfoByPlayer<LNum> delta;
 
-	std::tuple<bool, signed short> checkExponent(PLAYER_ID player, unsigned group, unsigned digit) {
+	std::tuple<bool, signed short> checkExponent(PlayerID player, unsigned group, unsigned digit) {
 		if (((LargeNum)delta[player]).digitGroup[group] / (int)std::pow(10.0, (int)digit) != 0) {
 			if (digit == 0) {
 				assert(group != 0);
@@ -606,7 +606,7 @@ namespace {
 
 	void setTransferParam() {
 		bool finishFlag = false; signed short mantissa = 0;
-		for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
+		for (PlayerID i = 0; i < Players; ++i) {
 			mihajong_graphic::callvalue::CallValue callVal = {0, 0u};
 			for (int j = DIGIT_GROUPS - 1; j >= 0; --j) {
 				for (int k = (j == DIGIT_GROUPS - 1) ? 9 : 7; k >= 0; --k) {
@@ -631,21 +631,21 @@ InfoByPlayer<LNum>& endround::transfer::getDelta() {
 	return delta;
 }
 void endround::transfer::resetDelta() {
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+	for (PlayerID i = 0; i < Players; ++i)
 		delta[i] = 0;
 }
-void endround::transfer::addDelta(PLAYER_ID player, const LNum& deltaVal) {
+void endround::transfer::addDelta(PlayerID player, const LNum& deltaVal) {
 	delta[player] += deltaVal;
 }
 void endround::transfer::negateDelta() {
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+	for (PlayerID i = 0; i < Players; ++i)
 		delta[i] *= -1;
 }
-void endround::transfer::doubleDelta(PLAYER_ID player) {
+void endround::transfer::doubleDelta(PlayerID player) {
 	delta[player] *= 2;
 }
 void endround::transfer::doubleDelta() {
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+	for (PlayerID i = 0; i < Players; ++i)
 		delta[i] *= 2;
 }
 void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, unsigned wait) {
@@ -653,7 +653,7 @@ void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, 
 	mihajong_graphic::Subscene(subscene);
 	sound::Play(sound::IDs::sndPage);
 	Sleep(wait);
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+	for (PlayerID i = 0; i < Players; ++i)
 		gameStat->Player[i].PlayerScore += delta[i];
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 }
@@ -662,7 +662,7 @@ void endround::transfer::transferChip(GameTable* gameStat, unsigned subscene, un
 	mihajong_graphic::Subscene(subscene);
 	sound::Play(sound::IDs::sndPage);
 	Sleep(wait);
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+	for (PlayerID i = 0; i < Players; ++i)
 		gameStat->Player[i].playerChip += delta[i];
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 }

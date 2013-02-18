@@ -8,7 +8,7 @@ namespace mihajong_graphic {
 using utils::playerRelative;
 
 /* ŽR”v‚Ì•\Ž¦ */
-void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, PLAYER_ID targetPlayer, PLAYER_ID trueTargetPlayer) {
+void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer, PlayerID trueTargetPlayer) {
 	std::tuple<unsigned, unsigned, unsigned, unsigned> yamahaiAttr;
 	if (gameStat->gameType & AllSanma)
 		yamahaiAttr = std::make_tuple(3, 108, 18, 102 - gameStat->ExtraRinshan);
@@ -27,16 +27,16 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, PLA
 		switch (yamahaiMode) {
 		case 0:
 			return
-				((((targetPlayer + 3) % PLAYERS) * 34) + j * 2 + (104 * dice + 34) +
-				((gameStat->gameType % PLAYERS)                       * 102)) % 136;
+				((((targetPlayer + 3) % Players) * 34) + j * 2 + (104 * dice + 34) +
+				((gameStat->gameType % Players)                       * 102)) % 136;
 		case 1:
 			return
-				((((targetPlayer + 3) % PLAYERS) * 36) + j * 2 + (110 * dice + 36) +
-				((gameStat->gameType % PLAYERS)                       * 108)) % 144;
+				((((targetPlayer + 3) % Players) * 36) + j * 2 + (110 * dice + 36) +
+				((gameStat->gameType % Players)                       * 108)) % 144;
 		case 2:
 			return (
-				((((targetPlayer + 3) % PLAYERS) * 35) + j * 2 + (107 * dice + 35) +
-				((gameStat->gameType % PLAYERS)                       * 105)) % 140
+				((((targetPlayer + 3) % Players) * 35) + j * 2 + (107 * dice + 35) +
+				((gameStat->gameType % Players)                       * 105)) % 140
 				) / 2 * 2;
 		case 3:
 			return

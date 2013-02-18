@@ -14,7 +14,7 @@ private:
 	TableSubsceneMsg* captionRenderer;
 	static const std::array<CodeConv::tstring, 17> digitName;
 	CallDigitRenderer* fontRenderer;
-	void ShowCall(PLAYER_ID player, int x, int y);
+	void ShowCall(PlayerID player, int x, int y);
 	void ShowAllCall();
 public:
 	TableSubsceneCallValue(LPDIRECT3DDEVICE9 device, const CodeConv::tstring& caption = _T(""));

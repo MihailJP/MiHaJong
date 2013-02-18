@@ -7,7 +7,7 @@ EnvTable* EnvTable::Instantiate() {
 }
 
 EnvTable::EnvTable() {
-	for (int i = 0; i < PLAYERS; i++) {
+	for (int i = 0; i < Players; i++) {
 		PlayerDat[i].PlayerName = _T("");
 		PlayerDat[i].RemotePlayerFlag = false;
 	}

@@ -11,7 +11,7 @@ namespace mihajong_graphic {
 using utils::playerRelative;
 
 /* è”v‚ğ•\¦‚·‚é */
-void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PLAYER_ID targetPlayer) {
+void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer) {
 #include "color.h"
 	int tilePos;
 	/* è”v */
@@ -19,10 +19,10 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PLAYE
 	case sOpposite: /* ‘Î–Ê‚Ìè”v */
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i)
-			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
+			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile)
 				TileTexture->NewTile(i,
-				gameStat->Player.val[targetPlayer].Hand[i].tile,
-				gameStat->Player.val[targetPlayer].Hand[i].red,
+				gameStat->Player[targetPlayer].Hand[i].tile,
+				gameStat->Player[targetPlayer].Hand[i].red,
 				HandPosH + ShowTile::VertTileWidth * (HandLength - (tilePos++)) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
 				HandPosV, UpsideDown, Obverse);
 			else TileTexture->DelTile(i);
@@ -30,34 +30,34 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PLAYE
 	case sLeft: /* ã‰Æ‚Ìè”v */
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i)
-			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
-				TileTexture->NewTile(i + NUM_OF_TILES_IN_HAND,
-				gameStat->Player.val[targetPlayer].Hand[i].tile,
-				gameStat->Player.val[targetPlayer].Hand[i].red,
+			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile)
+				TileTexture->NewTile(i + NumOfTilesInHand,
+				gameStat->Player[targetPlayer].Hand[i].tile,
+				gameStat->Player[targetPlayer].Hand[i].red,
 				HandPosV,
 				HandPosH + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
 				Clockwise, Obverse);
-			else TileTexture->DelTile(i + NUM_OF_TILES_IN_HAND);
+			else TileTexture->DelTile(i + NumOfTilesInHand);
 		break;
 	case sRight: /* ‰º‰Æ‚Ìè”v */
 		tilePos = 0;
 		for (int i = HandLength; i >= 0; --i)
-			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
+			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile)
 				++tilePos;
 		for (int i = HandLength; i >= 0; --i)
-			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile)
-				TileTexture->NewTile((NUM_OF_TILES_IN_HAND - 1 - i) + NUM_OF_TILES_IN_HAND * 2,
-				gameStat->Player.val[targetPlayer].Hand[i].tile,
-				gameStat->Player.val[targetPlayer].Hand[i].red,
+			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile)
+				TileTexture->NewTile((NumOfTilesInHand - 1 - i) + NumOfTilesInHand * 2,
+				gameStat->Player[targetPlayer].Hand[i].tile,
+				gameStat->Player[targetPlayer].Hand[i].red,
 				TableSize - HandPosV,
 				HandPosH + ShowTile::VertTileWidth * (HandLength - (--tilePos)) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
 				Withershins, Obverse);
-			else TileTexture->DelTile((NUM_OF_TILES_IN_HAND - 1 - i) + NUM_OF_TILES_IN_HAND * 2);
+			else TileTexture->DelTile((NumOfTilesInHand - 1 - i) + NumOfTilesInHand * 2);
 		break;
 	case sSelf: /* ©•ª‚Ìè”v */
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i) {
-			if (gameStat->Player.val[targetPlayer].Hand[i].tile != NoTile) {
+			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile) {
 				Color tileColor; tileColor.rgbaAsOneValue = 0xffffffff;
 				if (tileCursor == i) {
 					const double Zeit = (double)(currTime() % 90000000ULL);
@@ -71,9 +71,9 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PLAYE
 				}
 				const int tileX = HandPosH + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0);
 				const int tileY = TableSize - HandPosV;
-				TileTexture->NewTile(i + NUM_OF_TILES_IN_HAND * 3,
-					gameStat->Player.val[targetPlayer].Hand[i].tile,
-					gameStat->Player.val[targetPlayer].Hand[i].red,
+				TileTexture->NewTile(i + NumOfTilesInHand * 3,
+					gameStat->Player[targetPlayer].Hand[i].tile,
+					gameStat->Player[targetPlayer].Hand[i].red,
 					tileX, tileY, Portrait, Obverse,
 					tileColor.rgbaAsOneValue);
 				const Region nullRegion = {0, 0, -1, -1};
@@ -84,7 +84,7 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PLAYE
 				};
 				caller->regions[i] = newRegion;
 			} else {
-				TileTexture->DelTile(i + NUM_OF_TILES_IN_HAND * 3);
+				TileTexture->DelTile(i + NumOfTilesInHand * 3);
 				if (caller->regions.size() <= i) caller->regions.resize(i + 1);
 				const Region nullRegion = {0, 0, -1, -1};
 				caller->regions[i] = nullRegion;

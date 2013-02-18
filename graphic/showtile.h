@@ -5,9 +5,14 @@
 #include <dxerr.h>
 #include <tchar.h>
 #include <vector>
-#include "../mjcore/mjimport.h"
+#include "../common/tilecode.h"
+#include "../common/gametbl.h"
+#include "../common/seatrank.h"
+#include "../common/machihai.h"
 
 namespace mihajong_graphic {
+
+using namespace mihajong_structs;
 
 enum TileSide {Obverse, Upright, Reverse,};
 enum TileDirection {Portrait, Withershins, UpsideDown, Clockwise,};
@@ -35,7 +40,7 @@ private:
 	void RenderHori(TileDescriptor* tile, RECT* rect);
 	void RenderSide(TileDescriptor* tile, RECT* rect);
 public:
-	void NewTile(unsigned int ID, tileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, D3DCOLOR filterCol = 0xffffffff);
+	void NewTile(unsigned int ID, TileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, D3DCOLOR filterCol = 0xffffffff);
 	void DelTile(unsigned int ID);
 	void Render();
 	ShowTile(LPDIRECT3DDEVICE9 device);
@@ -44,7 +49,7 @@ public:
 
 struct ShowTile::TileDescriptor {
 	bool exist;
-	tileCode tile;
+	TileCode tile;
 	doraCol red;
 	int X, Y;
 	TileDirection direction;

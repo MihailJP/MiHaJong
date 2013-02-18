@@ -2,6 +2,7 @@
 
 #include "../func.h"
 #include "../yaku/yaku.h"
+#include "../ruletbl.h"
 
 /* gameStatのアドレスを取得（暗黙の引数） */
 GameTable* aiscript::table::functable::gametbl::getGameStatAddr(lua_State* const L) {
@@ -10,15 +11,15 @@ GameTable* aiscript::table::functable::gametbl::getGameStatAddr(lua_State* const
 }
 
 /* プレイヤー番号を取得 */
-PLAYER_ID aiscript::table::functable::gametbl::getPlayerID(lua_State* const L, int index) {
-	PLAYER_ID player; int n = lua_gettop(L);
+PlayerID aiscript::table::functable::gametbl::getPlayerID(lua_State* const L, int index) {
+	PlayerID player; int n = lua_gettop(L);
 	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) player = lua_tointeger(L, index);
 	else {lua_getfield(L, 1, "playerid"); player = lua_tointeger(L, -1); lua_pop(L, 1);}
 	return player - 1;
 }
 
 /* 牌の種類ごとの表をスタックに積む */
-const std::array<tileCode, 35> aiscript::table::functable::gametbl::validTiles = {
+const std::array<TileCode, 35> aiscript::table::functable::gametbl::validTiles = {
 	CharacterOne, CharacterTwo, CharacterThree, CharacterFour, CharacterFive,
 	CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
 	CircleOne, CircleTwo, CircleThree, CircleFour, CircleFive,
@@ -57,16 +58,16 @@ void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, Info
 /* 手牌を取得 */
 void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable* const tmpGameStat, int index) {
 	int n = lua_gettop(L);
-	PLAYER_ID player = getPlayerID(L, 0);
+	PlayerID player = getPlayerID(L, 0);
 	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) { // 牌姿を指定した場合
-		for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+		for (int i = 0; i < NumOfTilesInHand; i++) {
 			lua_pushnumber(L, i + 1); lua_gettable(L, index);
 			if (lua_isnil(L, -1)) { // そこに牌はなかった
 				tmpGameStat->Player[player].Hand[i].tile = NoTile;
 				tmpGameStat->Player[player].Hand[i].red = Normal;
 			} else if (lua_istable(L, -1)) { // 牌があった
 				lua_getfield(L, -1, "tile");
-				tmpGameStat->Player[player].Hand[i].tile = (::tileCode)lua_tointeger(L, -1);
+				tmpGameStat->Player[player].Hand[i].tile = (::TileCode)lua_tointeger(L, -1);
 				lua_pop(L, 1);
 				lua_getfield(L, -1, "red");
 				tmpGameStat->Player[player].Hand[i].red = (doraCol)lua_tointeger(L, -1);
@@ -82,7 +83,7 @@ int aiscript::table::functable::gametbl::luafunc::evaluate(lua_State* const L) {
 	int n = chkargnum(L, 2, 3);
 	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
 	tmpGameStat.TsumoAgariFlag = lua_toboolean(L, 2);
-	PLAYER_ID player = getPlayerID(L, 0);
+	PlayerID player = getPlayerID(L, 0);
 	setHand(L, &tmpGameStat, 3);
 	yaku::YAKUSTAT evaluation = yaku::yakuCalculator::countyaku(&tmpGameStat, player);
 	lua_newtable(L); // 返り値を格納
@@ -108,7 +109,7 @@ int aiscript::table::functable::gametbl::luafunc::getactiveplayer(lua_State* con
 int aiscript::table::functable::gametbl::luafunc::getbakaze(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 0);
+	PlayerID player = getPlayerID(L, 0);
 	lua_pushinteger(L, (int)Wind2Tile((uint8_t)(gameStat->GameRound / 4)));
 	return 1;
 }
@@ -125,7 +126,7 @@ int aiscript::table::functable::gametbl::luafunc::getbasepoint(lua_State* const 
 int aiscript::table::functable::gametbl::luafunc::getchip(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	if (RuleData::chkRuleApplied("chip")) lua_pushnil(L); // チップ無しルールならnil
 	else lua_pushinteger(L, gameStat->Player[player].playerChip); // チップの収支をスタックに積む
 	return 1;
@@ -159,7 +160,7 @@ int aiscript::table::functable::gametbl::luafunc::getdeposit(lua_State* const L)
 int aiscript::table::functable::gametbl::luafunc::getdiscard(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	lua_newtable(L); // 戻り値を格納するテーブル
 	for (uint8_t i = 1; i <= gameStat->Player[player].DiscardPointer; i++) {
 		lua_pushnumber(L, i);
@@ -197,7 +198,7 @@ int aiscript::table::functable::gametbl::luafunc::getdoukasen(lua_State* const L
 int aiscript::table::functable::gametbl::luafunc::getflower(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	if (chkGameType(gameStat, Yonma)) { // 四麻は花牌
 		int k = 0;
 		if (gameStat->Player[player].FlowerFlag.Spring) ++k;
@@ -219,9 +220,9 @@ int aiscript::table::functable::gametbl::luafunc::getflower(lua_State* const L) 
 int aiscript::table::functable::gametbl::luafunc::gethand(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	lua_newtable(L); // 戻り値を格納するテーブル
-	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[player].Hand[i].tile != NoTile) {
 			/* 牌があったらサプテーブルに変換、なかったらnilのまま放置 */
 			lua_pushnumber(L, i + 1);
@@ -238,7 +239,7 @@ int aiscript::table::functable::gametbl::luafunc::gethand(lua_State* const L) {
 int aiscript::table::functable::gametbl::luafunc::getjikaze(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 0);
+	PlayerID player = getPlayerID(L, 0);
 	lua_pushinteger(L, (int)Wind2Tile((uint8_t)playerwind(gameStat, player, gameStat->GameRound)));
 	return 1;
 }
@@ -247,7 +248,7 @@ int aiscript::table::functable::gametbl::luafunc::getjikaze(lua_State* const L) 
 int aiscript::table::functable::gametbl::luafunc::getmeld(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	lua_newtable(L); // 戻り値を格納するテーブル
 	for (uint8_t i = 1; i <= gameStat->Player[player].MeldPointer; i++) {
 		lua_pushinteger(L, i); lua_newtable(L);
@@ -283,7 +284,7 @@ int aiscript::table::functable::gametbl::luafunc::getpreviousdiscard(lua_State* 
 int aiscript::table::functable::gametbl::luafunc::getrank(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	lua_pushinteger(L, calcRank(gameStat)[player]); // 順位をスタックに積む
 	return 1;
 }
@@ -313,7 +314,7 @@ int aiscript::table::functable::gametbl::luafunc::getrule(lua_State* const L) {
 int aiscript::table::functable::gametbl::luafunc::getscore(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	lua_pushnumber(L, gameStat->Player[player].PlayerScore.bignumtodbl()); // 持ち点をdoubleにしてスタックに積む
 	return 1;
 }
@@ -330,12 +331,12 @@ int aiscript::table::functable::gametbl::luafunc::getseentiles(lua_State* const 
 int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L) {
 	int n = chkargnum(L, 1, 3);
 	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
-	PLAYER_ID player = getPlayerID(L, 0);
+	PlayerID player = getPlayerID(L, 0);
 	setHand(L, &tmpGameStat, 2);
-	ShantenAnalyzer::shantenType type = ShantenAnalyzer::shantenAll;
-	if ((n >= 3) && (lua_isnumber(L, 3))) type = (ShantenAnalyzer::shantenType)lua_tointeger(L, 3);
-	SHANTEN s = ShantenAnalyzer::calcShanten(&tmpGameStat, player, type);
-	if (s == ShantenAnalyzer::SHANTEN_IMPOSSIBLE) lua_pushnil(L);
+	ShantenType type = shantenAll;
+	if ((n >= 3) && (lua_isnumber(L, 3))) type = (ShantenType)lua_tointeger(L, 3);
+	Shanten s = ShantenAnalyzer::calcShanten(&tmpGameStat, player, type);
+	if (s == ShantenImpossible) lua_pushnil(L);
 	else lua_pushinteger(L, ShantenAnalyzer::calcShanten(&tmpGameStat, player, type));
 	return 1;
 }
@@ -344,7 +345,7 @@ int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L)
 int aiscript::table::functable::gametbl::luafunc::gettenpaistat(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
-	PLAYER_ID player = getPlayerID(L, 0);
+	PlayerID player = getPlayerID(L, 0);
 	setHand(L, &tmpGameStat, 2); MachihaiInfo status = chkFuriten(&tmpGameStat, player);
 	// ---------------------------------------------------------------------
 	lua_newtable(L);
@@ -359,9 +360,9 @@ int aiscript::table::functable::gametbl::luafunc::gettenpaistat(lua_State* const
 int aiscript::table::functable::gametbl::luafunc::gettilecontext(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	lua_newtable(L); // 戻り値を格納するテーブル
-	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+	for (int i = 0; i < NumOfTilesInHand; i++) {
 		lua_pushnumber(L, i + 1);
 		lua_newtable(L);
 		TileStatus tileStat = gettilestatus(gameStat, player, i, false);
@@ -384,9 +385,9 @@ int aiscript::table::functable::gametbl::luafunc::gettilecontext(lua_State* cons
 int aiscript::table::functable::gametbl::luafunc::gettilerisk(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 0);
+	PlayerID player = getPlayerID(L, 0);
 	lua_newtable(L); // 戻り値を格納するテーブル
-	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[player].Hand[i].tile != NoTile) {
 			lua_pushnumber(L, i + 1);
 			lua_newtable(L);
@@ -400,7 +401,7 @@ int aiscript::table::functable::gametbl::luafunc::gettilerisk(lua_State* const L
 			TableAdd(L, "isseenfour", riskchk::isseenfour(gameStat, player, i));
 			{
 				static const char tblname[3][16] = {"kamicha", "toimen", "shimocha",};
-				const PLAYER_ID targetP[3] = {
+				const PlayerID targetP[3] = {
 					RelativePositionOf(player, sLeft),
 					RelativePositionOf(player, sOpposite),
 					RelativePositionOf(player, sRight),
@@ -428,7 +429,7 @@ int aiscript::table::functable::gametbl::luafunc::gettilerisk(lua_State* const L
 int aiscript::table::functable::gametbl::luafunc::gettilesinhand(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	pushTileTable(L, countTilesInHand(gameStat, player));
 	return 1;
 }
@@ -453,9 +454,9 @@ int aiscript::table::functable::gametbl::luafunc::getwareme(lua_State* const L) 
 int aiscript::table::functable::gametbl::luafunc::getyakuhaiwind(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 0);
+	PlayerID player = getPlayerID(L, 0);
 	lua_newtable(L); // 返り値を格納
-	const ::tileCode windtiles[4] = {EastWind, SouthWind, WestWind, NorthWind,};
+	const ::TileCode windtiles[4] = {EastWind, SouthWind, WestWind, NorthWind,};
 	const char windname[4][8] = {"East", "South", "West", "North",};
 	for (int i = 0; i < 4; i++) {
 		bool flag = false;
@@ -480,7 +481,7 @@ int aiscript::table::functable::gametbl::luafunc::getyakuhaiwind(lua_State* cons
 int aiscript::table::functable::gametbl::luafunc::isabovebase(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	const GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	lua_pushboolean(L, isAboveBase(gameStat, player));
 	return 1;
 }
@@ -489,7 +490,7 @@ int aiscript::table::functable::gametbl::luafunc::isabovebase(lua_State* const L
 int aiscript::table::functable::gametbl::luafunc::isankanallowed(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	const GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 0);
+	PlayerID player = getPlayerID(L, 0);
 	lua_pushboolean(L, chkAnkanAbility(gameStat, player));
 	return 1;
 }
@@ -498,7 +499,7 @@ int aiscript::table::functable::gametbl::luafunc::isankanallowed(lua_State* cons
 int aiscript::table::functable::gametbl::luafunc::isdoujunfuriten(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	const GameTable* gameStat = getGameStatAddr(L);
-	PLAYER_ID player = getPlayerID(L, 0);
+	PlayerID player = getPlayerID(L, 0);
 	lua_pushboolean(L, gameStat->Player[player].DoujunFuriten);
 	return 1;
 }
@@ -521,7 +522,7 @@ int aiscript::table::functable::gametbl::luafunc::isfirstdraw(lua_State* const L
 /* 一発圏内？ */
 int aiscript::table::functable::gametbl::luafunc::isippatsu(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	if (RuleData::chkRuleApplied("riichi_ippatsu")) lua_pushnil(L);
 	else lua_pushboolean(L, getGameStatAddr(L)->Player[player].RichiFlag.IppatsuFlag);
 	return 1;
@@ -538,7 +539,7 @@ int aiscript::table::functable::gametbl::luafunc::iskyuushu(lua_State* const L) 
 /* 門前？ */
 int aiscript::table::functable::gametbl::luafunc::ismenzen(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	lua_pushboolean(L, getGameStatAddr(L)->Player[player].MenzenFlag);
 	return 1;
 }
@@ -546,7 +547,7 @@ int aiscript::table::functable::gametbl::luafunc::ismenzen(lua_State* const L) {
 /* オープン立直している？ */
 int aiscript::table::functable::gametbl::luafunc::isopenriichideclared(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	lua_pushboolean(L, getGameStatAddr(L)->Player[player].RichiFlag.OpenFlag);
 	return 1;
 }
@@ -562,7 +563,7 @@ int aiscript::table::functable::gametbl::luafunc::ispenultimateround(lua_State* 
 /* 立直している？ */
 int aiscript::table::functable::gametbl::luafunc::isriichideclared(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	lua_pushboolean(L, getGameStatAddr(L)->Player[player].RichiFlag.RichiFlag);
 	return 1;
 }
@@ -586,7 +587,7 @@ int aiscript::table::functable::gametbl::luafunc::isshisibuda(lua_State* const L
 /* 四馬路解禁？ */
 int aiscript::table::functable::gametbl::luafunc::issumaroallowed(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	if (RuleData::chkRuleApplied("sumaro")) lua_pushnil(L);
 	else lua_pushboolean(L, getGameStatAddr(L)->Player[player].SumaroFlag);
 	return 1;
@@ -595,7 +596,7 @@ int aiscript::table::functable::gametbl::luafunc::issumaroallowed(lua_State* con
 /* 焼き鳥？ */
 int aiscript::table::functable::gametbl::luafunc::isyakitori(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
-	PLAYER_ID player = getPlayerID(L, 2);
+	PlayerID player = getPlayerID(L, 2);
 	if (RuleData::chkRuleApplied("yakitori")) lua_pushnil(L);
 	else lua_pushboolean(L, getGameStatAddr(L)->Player[player].YakitoriFlag);
 	return 1;

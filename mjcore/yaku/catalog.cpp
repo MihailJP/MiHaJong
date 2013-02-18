@@ -90,8 +90,8 @@ yaku::yakuCalculator::Yaku::HANFUNC
 
 /* 一色の判定 */
 bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALYSIS* const analysis, bool chin_itsu) {
-	if (analysis->shanten[ShantenAnalyzer::shantenAll] >= 0) return false; // 足切り要件：和了ってない
-	const tileCode Tiles[][9] = {
+	if (analysis->shanten[shantenAll] >= 0) return false; // 足切り要件：和了ってない
+	const TileCode Tiles[][9] = {
 		{
 			CharacterOne, CharacterTwo,   CharacterThree, CharacterFour, CharacterFive,
 			CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
@@ -110,7 +110,7 @@ bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALY
 	for (unsigned k = 0; k < 4; k++)
 		for (unsigned i = 0; i < 9; i++)
 			if (Tiles[k][i] != NoTile)
-				if (analysis->shanten[ShantenAnalyzer::shantenRegular] == -1)
+				if (analysis->shanten[shantenRegular] == -1)
 					count[k] += analysis->DuiziCount[Tiles[k][i]] + analysis->ShunziCount[Tiles[k][i]];
 				else
 					count[k] += analysis->TileCount[Tiles[k][i]];

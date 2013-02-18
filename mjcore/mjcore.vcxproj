@@ -261,7 +261,6 @@
     <ClInclude Include="ai\class.h" />
     <ClInclude Include="ai\functbl.h" />
     <ClInclude Include="ai\filesel.h" />
-    <ClInclude Include="bgmid.h" />
     <ClInclude Include="chat.h" />
     <ClInclude Include="data\confitem.csv.h" />
     <ClInclude Include="data\confitem.ini.h" />
@@ -293,7 +292,6 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="mjexport.h" />
     <ClInclude Include="mouda.h" />
-    <ClInclude Include="nmrules.h" />
     <ClInclude Include="prepare.h" />
     <ClInclude Include="random.h" />
     <ClInclude Include="rational.h" />

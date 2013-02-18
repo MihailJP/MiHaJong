@@ -25,7 +25,7 @@ const std::array<CodeConv::tstring, 17> TableSubsceneCallValue::digitName = {
 	_T("çPâÕçπ"), _T("à¢ëmã_"), _T("ìﬂóRëº"), _T("ïsâ¬évãc"),
 };
 
-void TableSubsceneCallValue::ShowCall(PLAYER_ID player, int x, int y) {
+void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 	fontRenderer->DelText(player);
 	callvalue::CallValue c_val = callvalue::getVal(player);
 	if ((c_val.Mantissa == 0) && (c_val.Exponent == 0)) return; // ï\é¶ÇµÇ»Ç¢èÍçá

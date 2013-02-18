@@ -13,16 +13,12 @@
 #include "reader/ini2map.h"
 #endif
 #include "mjexport.h"
-#include "nmrules.h"
+#include "../common/nmrules.h"
+#include "../common/gametype.h"
 
 #ifdef MJCORE_EXPORTS
 typedef std::map<std::string, int8_t> RULETBL;
 #endif
-
-enum gameTypeID : uint8_t { // 卓の種類(四麻、三麻)指定用
-	Yonma = 0x01, Sanma = 0x02, Sanma4 = 0x04, SanmaS = 0x08,
-	AllSanma = 0x0e, SanmaT = 0x0a, SanmaX = 0x06
-};
 
 #ifdef MJCORE_EXPORTS
 

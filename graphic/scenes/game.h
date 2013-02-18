@@ -10,7 +10,7 @@ namespace mihajong_graphic {
 class TableProtoScene : public Scene {
 private:
 	class ScoreBoard; // 持ち点表示用のクラス
-	std::array<ScoreBoard*, PLAYERS> scorePanel;
+	std::array<ScoreBoard*, Players> scorePanel;
 	static const unsigned int panelPosY = 550;
 protected:
 	LPDIRECT3DTEXTURE9 tSideBar; // サイドバー
@@ -33,7 +33,7 @@ private:
 	LPDIRECT3DTEXTURE9 texture;
 	D3DXMATRIX myMatrix;
 	static const unsigned int PanelWidth = 175, PanelHeight = 120;
-	PLAYER_ID playerID();
+	PlayerID playerID();
 private:
 	static const unsigned int WindPosX = 9, WindPosY = 30;
 	static const unsigned int WindCharX = 180, WindCharY = 40;

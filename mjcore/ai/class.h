@@ -10,7 +10,7 @@ private:
 	struct ScriptStates;
 	static const char fncname_discard[8];
 	static const char fncname_call[3][12];
-	static ScriptStates status[PLAYERS];
+	static ScriptStates status[Players];
 	class table;
 	class FileSelector;
 	class detDiscardThread;
@@ -19,11 +19,11 @@ private:
 	static void readfile(aiscript::ScriptStates* const L, const char* const filename);
 	static DiscardTileNum discard; static bool finished; static detDiscardThread* discard_worker;
 	static detCallThread* meld_worker;
-	static bool callFunc(const GameTable* const gameStat, PLAYER_ID player_id, const char* const function_name, bool is_mandatory);
+	static bool callFunc(const GameTable* const gameStat, PlayerID PlayerID, const char* const function_name, bool is_mandatory);
 public:
 	__declspec(dllexport) static void initscript();
 	__declspec(dllexport) static void initephemeral();
-	static void initcall(const GameTable* const gameStat, PLAYER_ID player);
+	static void initcall(const GameTable* const gameStat, PlayerID player);
 	__declspec(dllexport) static void initcall(const GameTable* const gameStat, int player);
 	__declspec(dllexport) static void closescript();
 	static void GameStatToLuaTable(lua_State* const L, const GameTable* const gameStat);
@@ -83,8 +83,8 @@ private:
 	static inline void TableAdd(lua_State* const L, lua_Integer key, bool val) {
 		lua_pushnumber(L, key); lua_pushboolean(L, val); lua_settable(L, -3);
 	}
-	static inline void TableAdd(lua_State* const L, const char* const, const TILE val);
-	static inline void TableAdd(lua_State* const L, const char* const, const meldCode val);
+	static inline void TableAdd(lua_State* const L, const char* const, const Tile val);
+	static inline void TableAdd(lua_State* const L, const char* const, const MeldCode val);
 public:
 	class playertable;
 	class functable;

@@ -37,15 +37,15 @@ ChatThread::~ChatThread () {
 
 void ChatThread::init() {
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
-		bool tmpClientWaiting[PLAYERS];
-		for (int i = 0; i < PLAYERS; i++) {
+		bool tmpClientWaiting[Players];
+		for (int i = 0; i < Players; i++) {
 			if (tmpClientWaiting[i] = (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 0))
 				mihajong_socket::listen(
 					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag,
 					PORT_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag);
 		}
 		while (tmpClientWaiting[0] || tmpClientWaiting[1] || tmpClientWaiting[2] || tmpClientWaiting[3]) {
-			for (int i = 0; i < PLAYERS; i++)
+			for (int i = 0; i < Players; i++)
 				if ((tmpClientWaiting[i] = (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 0)) &&
 					(mihajong_socket::connected(
 					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag)))
@@ -61,7 +61,7 @@ void ChatThread::init() {
 
 void ChatThread::receive() {
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
-		for (int i = 0; i < PLAYERS; i++) {
+		for (int i = 0; i < Players; i++) {
 			if (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag >= 1) {
 				TCHAR buf[bufsize] = {0};
 				int stat = mihajong_socket::gets(
@@ -166,7 +166,7 @@ void ChatThread::send() {
 }
 
 void ChatThread::cleanup() {
-	for (int i = 0; i < PLAYERS; i++) // 開けてないソケットを閉じようとしても安全になるようにしてる
+	for (int i = 0; i < Players; i++) // 開けてないソケットを閉じようとしても安全になるようにしてる
 		mihajong_socket::hangup(SOCK_CHAT + i);
 }
 
@@ -199,7 +199,7 @@ void ChatThread::sysmsg(const CodeConv::tstring& str) {
 void StreamLog::sendstr (const CodeConv::tstring& msg) {
 	sendstrx(GameStat.PlayerID, msg);
 }
-void StreamLog::sendstrx (PLAYER_ID player, const CodeConv::tstring& msg) {
+void StreamLog::sendstrx (PlayerID player, const CodeConv::tstring& msg) {
 	CodeConv::tostringstream s;
 	s << static_cast<int>(player) << msg;
 	if ((player >= 0) && (player <= ACTUAL_PLAYERS)) {
@@ -209,7 +209,7 @@ void StreamLog::sendstrx (PLAYER_ID player, const CodeConv::tstring& msg) {
 void ChatThread::sendstr (const CodeConv::tstring& msg) {
 	sendstrx(GameStat.PlayerID, msg);
 }
-void ChatThread::sendstrx (PLAYER_ID player, const CodeConv::tstring& msg) {
+void ChatThread::sendstrx (PlayerID player, const CodeConv::tstring& msg) {
 	TCHAR tmpnum[2] = {0}; tmpnum[0] = player + _T('0');
 	sendQueueLock.syncDo<void>([this, &tmpnum, msg]() -> void {
 		sendQueue.push(CodeConv::tstring(tmpnum) + msg);

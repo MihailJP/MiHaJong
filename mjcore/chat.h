@@ -21,7 +21,7 @@ namespace chat {
 		virtual CodeConv::tstring getlog ();
 		virtual void sysmsg (const CodeConv::tstring& msg);
 		virtual void sendstr (const CodeConv::tstring& msg);
-		virtual void sendstrx (PLAYER_ID player, const CodeConv::tstring& msg);
+		virtual void sendstrx (PlayerID player, const CodeConv::tstring& msg);
 	};
 	class ChatThread : public StreamLog {
 		typedef StreamLog super;
@@ -45,7 +45,7 @@ namespace chat {
 		CodeConv::tstring getlog ();
 		void sysmsg (const CodeConv::tstring& msg);
 		void sendstr (const CodeConv::tstring& msg);
-		void sendstrx (PLAYER_ID player, const CodeConv::tstring& msg);
+		void sendstrx (PlayerID player, const CodeConv::tstring& msg);
 		void updateWindow ();
 	};
 	

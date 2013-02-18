@@ -12,6 +12,8 @@
 #include "../socket/socket.h"
 #include "socknum.h"
 #include "except.h"
+#include "ruletbl.h"
+#include "largenum.h"
 
 /* サイコロの出目を取得 */
 extern "C" inline uint8_t diceSum(const GameTable* const gameStat) {
@@ -19,29 +21,29 @@ extern "C" inline uint8_t diceSum(const GameTable* const gameStat) {
 }
 
 /* プレイヤーの自風がどれか調べる */
-seatAbsolute inline playerwind(const GameTable* const gameStat, PLAYER_ID player, int currentRound) {
+seatAbsolute inline playerwind(const GameTable* const gameStat, PlayerID player, int currentRound) {
 	if (chkGameType(gameStat, SanmaT))
 		return (seatAbsolute)((player + 24 - (currentRound - ( currentRound / 4))) % 3);
 	else return (seatAbsolute)((player + 32 - currentRound) % 4);
 }
 __declspec(dllexport) inline int playerwind(int player, int currentRound) {
-	return (int)playerwind(&GameStat, (PLAYER_ID)player, (int)currentRound);
+	return (int)playerwind(&GameStat, (PlayerID)player, (int)currentRound);
 }
 
 /* あるプレイヤーに対して指定したプレイヤーがどこ(下家、対面、上家)にいるか調べる */
-seatRelative inline playerRelative(PLAYER_ID targetPlayer, PLAYER_ID basePlayer) {
-	return (seatRelative)((PLAYERS + targetPlayer - basePlayer) % PLAYERS);
+seatRelative inline playerRelative(PlayerID targetPlayer, PlayerID basePlayer) {
+	return (seatRelative)((Players + targetPlayer - basePlayer) % Players);
 }
 __declspec(dllexport) inline int playerRelative(int targetPlayer, int basePlayer) {
-	return (int)playerRelative((PLAYER_ID)targetPlayer, (PLAYER_ID)basePlayer);
+	return (int)playerRelative((PlayerID)targetPlayer, (PlayerID)basePlayer);
 }
 
 /* あるプレイヤーの(下家、対面、上家)を調べる */
-PLAYER_ID inline RelativePositionOf(PLAYER_ID targetPlayer, seatRelative relative) {
-	return (PLAYER_ID)(((int)targetPlayer + (int)relative) % PLAYERS);
+PlayerID inline RelativePositionOf(PlayerID targetPlayer, seatRelative relative) {
+	return (PlayerID)(((int)targetPlayer + (int)relative) % Players);
 }
 __declspec(dllexport) inline int RelativePositionOf(int targetPlayer, int relative) {
-	return (int)RelativePositionOf((PLAYER_ID)targetPlayer, (seatRelative)relative);
+	return (int)RelativePositionOf((PlayerID)targetPlayer, (seatRelative)relative);
 }
 
 /* 一周するまでに必要な場の数 */
@@ -75,13 +77,13 @@ PlayerRankList calcRank(const GameTable* const gameStat) {
 __declspec(dllexport) void calcRank(int* const Rank, const GameTable* const gameStat) {
 	const PlayerRankList rankList = calcRank(gameStat);
 	assert(rankList[0] > 0); assert(rankList[1] > 0);
-	for (int i = 0; i < PLAYERS; i++) *(Rank + i) = rankList[i];
+	for (int i = 0; i < Players; i++) *(Rank + i) = rankList[i];
 }
 
 /* 包かどうかの判定 */
-bool isPao(const GameTable* const gameStat, PLAYER_ID agariPlayer, PLAYER_ID paoPlayer) {
+bool isPao(const GameTable* const gameStat, PlayerID agariPlayer, PlayerID paoPlayer) {
 	bool paoFlag = false;
-	for (int i = 0; i < PAO_YAKU_PAGES; i++) {
+	for (int i = 0; i < PaoYakuPages; i++) {
 		if ((paoPlayer == gameStat->PaoFlag[i].paoPlayer) &&
 			(agariPlayer == gameStat->PaoFlag[i].agariPlayer))
 		{ paoFlag = true; break;}
@@ -89,36 +91,36 @@ bool isPao(const GameTable* const gameStat, PLAYER_ID agariPlayer, PLAYER_ID pao
 	return paoFlag;
 }
 __declspec(dllexport) int isPao(const GameTable* const gameStat, int agariPlayer, int paoPlayer) {
-	return (int)isPao(gameStat, (PLAYER_ID)agariPlayer, (PLAYER_ID)paoPlayer);
+	return (int)isPao(gameStat, (PlayerID)agariPlayer, (PlayerID)paoPlayer);
 }
 
-bool isPaoAgari(const GameTable* const gameStat, PLAYER_ID agariPlayer) {
+bool isPaoAgari(const GameTable* const gameStat, PlayerID agariPlayer) {
 	bool paoFlag = false;
-	for (int i = 0; i < PAO_YAKU_PAGES; i++) {
+	for (int i = 0; i < PaoYakuPages; i++) {
 		if (agariPlayer == gameStat->PaoFlag[i].agariPlayer)
 		{ paoFlag = true; break;}
 	}
 	return paoFlag;
 }
 __declspec(dllexport) int isPaoAgari(const GameTable* const gameStat, int agariPlayer) {
-	return (int)isPaoAgari(gameStat, (PLAYER_ID)agariPlayer);
+	return (int)isPaoAgari(gameStat, (PlayerID)agariPlayer);
 }
 
-bool isGotPao(const GameTable* const gameStat, PLAYER_ID paoPlayer) {
+bool isGotPao(const GameTable* const gameStat, PlayerID paoPlayer) {
 	bool paoFlag = false;
-	for (int i = 0; i < PAO_YAKU_PAGES; i++) {
+	for (int i = 0; i < PaoYakuPages; i++) {
 		if (paoPlayer == gameStat->PaoFlag[i].paoPlayer)
 		{ paoFlag = true; break;}
 	}
 	return paoFlag;
 }
 __declspec(dllexport) int isGotPao(const GameTable* const gameStat, int paoPlayer) {
-	return (int)isGotPao(gameStat, (PLAYER_ID)paoPlayer);
+	return (int)isGotPao(gameStat, (PlayerID)paoPlayer);
 }
 
-PLAYER_ID getPaoPlayer(const GameTable* const gameStat, PLAYER_ID agariPlayer) {
-	PLAYER_ID paoPlayer = -1;
-	for (int i = 0; i < PAO_YAKU_PAGES; i++) {
+PlayerID getPaoPlayer(const GameTable* const gameStat, PlayerID agariPlayer) {
+	PlayerID paoPlayer = -1;
+	for (int i = 0; i < PaoYakuPages; i++) {
 		if ((gameStat->PaoFlag[i].paoPlayer >= 0) &&
 			(gameStat->PaoFlag[i].agariPlayer == agariPlayer))
 			paoPlayer = gameStat->PaoFlag[i].paoPlayer;
@@ -126,13 +128,13 @@ PLAYER_ID getPaoPlayer(const GameTable* const gameStat, PLAYER_ID agariPlayer) {
 	return paoPlayer;
 }
 __declspec(dllexport) int getPaoPlayer(const GameTable* const gameStat, int agariPlayer) {
-	return (int)getPaoPlayer(gameStat, (PLAYER_ID)agariPlayer);
+	return (int)getPaoPlayer(gameStat, (PlayerID)agariPlayer);
 }
 
 /* ロンしたプレイヤーの数 */
 __declspec(dllexport) int RonPlayers(const GameTable* const gameStat) {
 	int qualified = 0;
-	for (int i = 0; i < PLAYERS; i++)
+	for (int i = 0; i < Players; i++)
 		if (gameStat->Player[i].DeclarationFlag.Ron)
 			qualified++;
 	return qualified;
@@ -157,7 +159,7 @@ __declspec(dllexport) void windName(LPTSTR str, int bufsz, int wind) {
 /* 「東○局」などの文字列を返す */
 CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat) {
 	CodeConv::tostringstream roundNameTxt; roundNameTxt.str(_T(""));
-	switch (roundNum / PLAYERS) {
+	switch (roundNum / Players) {
 		case 0: roundNameTxt << _T("東"); break;
 		case 1: roundNameTxt << _T("南"); break;
 		case 2: roundNameTxt << _T("西"); break;
@@ -170,7 +172,7 @@ CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat
 			roundNameTxt << _T("??");
 	}
 	if (RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game")) {
-		switch (int k = (gameStat->LoopRound * ACTUAL_PLAYERS + roundNum % PLAYERS)) {
+		switch (int k = (gameStat->LoopRound * ACTUAL_PLAYERS + roundNum % Players)) {
 			case 0: roundNameTxt << _T("一局"); break;
 			case 1: roundNameTxt << _T("二局"); break;
 			case 2: roundNameTxt << _T("三局"); break;
@@ -184,7 +186,7 @@ CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat
 			default: roundNameTxt << (k+1) << _T("局"); break;
 		}
 	} else {
-		switch (roundNum % PLAYERS) {
+		switch (roundNum % Players) {
 			case 0: roundNameTxt << _T("一局"); break;
 			case 1: roundNameTxt << _T("二局"); break;
 			case 2: roundNameTxt << _T("三局"); break;
@@ -201,7 +203,7 @@ __declspec(dllexport) void roundName(LPTSTR str, int bufsz, int roundNum) {
 }
 
 /* 牌の名前の文字列を返す */
-CodeConv::tstring inline TileName(tileCode tile) {
+CodeConv::tstring inline TileName(TileCode tile) {
 	switch (tile) {
 		case CharacterOne:   return CodeConv::tstring(_T("一萬"));
 		case CharacterTwo:   return CodeConv::tstring(_T("二萬"));
@@ -243,11 +245,11 @@ CodeConv::tstring inline TileName(tileCode tile) {
 	}
 }
 __declspec(dllexport) void TileName(LPTSTR str, int bufsz, int tile) {
-	_tcscpy_s(str, bufsz, TileName((tileCode)tile).c_str());
+	_tcscpy_s(str, bufsz, TileName((TileCode)tile).c_str());
 }
 
 /* 場風牌のリスト */
-tileCode Wind2Tile(uint8_t wind) {
+TileCode Wind2Tile(uint8_t wind) {
 	switch (wind) {
 		case 0: return EastWind;
 		case 1: return SouthWind;
@@ -279,11 +281,11 @@ __declspec(dllexport) int BasePointHSP() {
 }
 
 /* 浮いているか判定する関数 */
-bool isAboveBase(const GameTable* const gameStat, PLAYER_ID player) {
+bool isAboveBase(const GameTable* const gameStat, PlayerID player) {
 	return gameStat->Player[player].PlayerScore >= (LNum)BasePoint();
 }
 __declspec(dllexport) int isAboveBase(const GameTable* const gameStat, int player) {
-	return isAboveBase(gameStat, (PLAYER_ID)player) ? 1 : 0;
+	return isAboveBase(gameStat, (PlayerID)player) ? 1 : 0;
 }
 
 /* 非負整数1桁なら全角・それ以外は半角 */
@@ -343,7 +345,7 @@ namespace confpath {
 }
 
 /* リーチするのに持ち点が足りているかどうか */
-bool isRichiReqSatisfied (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+bool isRichiReqSatisfied (const GameTable* const gameStat, PlayerID targetPlayer) {
 	bool Flag = true;
 	if (gameStat->Player[targetPlayer].PlayerScore < (LNum)1000) Flag = false;
 	else if ((gameStat->Player[targetPlayer].PlayerScore == (LNum)1000) &&
@@ -353,11 +355,11 @@ bool isRichiReqSatisfied (const GameTable* const gameStat, PLAYER_ID targetPlaye
 	return Flag;
 }
 __declspec(dllexport) int isRichiReqSatisfied (const GameTable* const gameStat, int targetPlayer) {
-	return isRichiReqSatisfied(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
+	return isRichiReqSatisfied(gameStat, (PlayerID)targetPlayer) ? 1 : 0;
 }
 
 /* 飛びになっているかどうか */
-bool isDobon (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+bool isDobon (const GameTable* const gameStat, PlayerID targetPlayer) {
 	if (!RuleData::chkRuleApplied("buttobi_border"))
 		return false;
 	else if (gameStat->Player[targetPlayer].PlayerScore < (LNum)0)
@@ -368,11 +370,11 @@ bool isDobon (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	else return false;
 }
 __declspec(dllexport) int isDobon (const GameTable* const gameStat, int targetPlayer) {
-	return isDobon(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
+	return isDobon(gameStat, (PlayerID)targetPlayer) ? 1 : 0;
 }
 
 /* 天辺になっているかどうか */
-bool isTeppen (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
+bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer) {
 	if (RuleData::chkRule("teppen", "50000pts") &&
 		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)50000))
 		return true;
@@ -391,13 +393,13 @@ bool isTeppen (const GameTable* const gameStat, PLAYER_ID targetPlayer) {
 	else return false;
 }
 __declspec(dllexport) int isTeppen (const GameTable* const gameStat, int targetPlayer) {
-	return isTeppen(gameStat, (PLAYER_ID)targetPlayer) ? 1 : 0;
+	return isTeppen(gameStat, (PlayerID)targetPlayer) ? 1 : 0;
 }
 
 MJCORE void cleanup() {
 	sound::Cleanup();
 	info(_T("サウンドDLLを解放しました。"));
-	for (int i = 0; i < PLAYERS; i++) {
+	for (int i = 0; i < Players; i++) {
 		mihajong_socket::hangup(SOCK_GAME + i);
 		mihajong_socket::hangup(SOCK_CHAT + i);
 	}

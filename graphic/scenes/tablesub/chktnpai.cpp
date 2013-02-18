@@ -15,13 +15,13 @@ TableSubsceneCheckTenpai::~TableSubsceneCheckTenpai() {
 	delete txtRenderer;
 }
 
-void TableSubsceneCheckTenpai::CalculateTenpaiFlag(PLAYER_ID player, int x, int y) {
+void TableSubsceneCheckTenpai::CalculateTenpaiFlag(PlayerID player, int x, int y) {
 	tenpaiflag[player] = utils::isTenpai(GameStatus::gameStat(), player);
 	machiInfo[player] = utils::chkFuriten(GameStatus::gameStat(), player);
 	if (tenpaiflag[player]) { // ’®”v
 		int tile = 0;
-		for (tileCode k = CharacterOne; k <= RedDragon; k = (tileCode)(k + 1)) {
-			if (machiInfo[player].Machihai.val[k].MachihaiFlag) // ‘Ò‚¿”v‚É‚È‚Á‚Ä‚¢‚éê‡
+		for (TileCode k = CharacterOne; k <= RedDragon; k = (TileCode)(k + 1)) {
+			if (machiInfo[player].Machihai[k].MachihaiFlag) // ‘Ò‚¿”v‚É‚È‚Á‚Ä‚¢‚éê‡
 				tileRenderer->NewTile(player * 9 + tile, k, Normal,
 				x - 20 * (machiInfo[player].MachiMen - 1) + 40 * (tile++),
 				y + 20, Portrait, Obverse); // ‚»‚Ì”v‚ğ•\¦
@@ -33,10 +33,10 @@ void TableSubsceneCheckTenpai::CalculateTenpaiFlag(PLAYER_ID player, int x, int 
 	}
 }
 
-void TableSubsceneCheckTenpai::ShowTenpaiFlag(PLAYER_ID player, int x, int y) {
+void TableSubsceneCheckTenpai::ShowTenpaiFlag(PlayerID player, int x, int y) {
 	if (tenpaiflag[player]) // ’®”v
 		ShowCallMsg(player, calltext::Tenpai, x, y - 40);
-	else if (GameStatus::gameStat()->Player.val[player].RichiFlag.RichiFlag)
+	else if (GameStatus::gameStat()->Player[player].RichiFlag.RichiFlag)
 		ShowCallMsg(player, calltext::Chonbo, x, y); // ƒm[ƒeƒ“ƒŠ[ƒ`‚µ‚Ä‚½ê‡‚Íö˜a‚Æ•\¦
 	else ShowCallMsg(player, calltext::Noten, x, y); // •s’®
 }

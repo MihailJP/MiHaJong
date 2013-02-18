@@ -4,7 +4,7 @@
 #include <regex>
 #include "../graphic/graphic.h"
 #include "../sound/sound.h"
-#include "bgmid.h"
+#include "../common/bgmid.h"
 #include "sound.h"
 #include "func.h"
 #include "haifu.h"
@@ -40,11 +40,11 @@ namespace {
 	void calcAgariPoints_Pao( // 包適用時
 		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, int Mode)
 	{
-		const PLAYER_ID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : (PLAYER_ID)Mode;
+		const PlayerID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : (PlayerID)Mode;
 		const bool TsumoAgari = (Mode == CAP_normal) ? gameStat->TsumoAgariFlag : true;
 		if (playerwind(AgariPlayer, gameStat->GameRound) == sEast) { // 親の和了り
 			if (TsumoAgari) { // ツモアガリ(包の人が一人払い)
-				for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+				for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 					if (cnt == AgariPlayer) {
 						agariPoint = agaricalc(AgariPointRaw, 6, 0, 0);
 						deltacalcplus(AgariPointRaw, PointDelta, 6, cnt);
@@ -53,7 +53,7 @@ namespace {
 						deltacalcminus(AgariPointRaw, PointDelta, 6, cnt);
 				}
 			} else { // ロンアガリ(包の人と振り込んだ人で折半)
-				for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+				for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 					if (cnt == AgariPlayer) {
 						agariPoint = agaricalc(AgariPointRaw, 3, 3, 1);
 						deltacalcplus(AgariPointRaw, PointDelta, 3, cnt);
@@ -68,7 +68,7 @@ namespace {
 		} else {
 			// 子の和了り
 			if (TsumoAgari) { // ツモアガリ(包の人が一人払い)
-				for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+				for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 					if (cnt == AgariPlayer) {
 						agariPoint = agaricalc(AgariPointRaw, 4, 0, 0);
 						deltacalcplus(AgariPointRaw, PointDelta, 4, cnt);
@@ -77,7 +77,7 @@ namespace {
 						deltacalcminus(AgariPointRaw, PointDelta, 4, cnt);
 				}
 			} else { // ロンアガリ(包の人と振り込んだ人で折半)
-				for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+				for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 					if (cnt == AgariPlayer) {
 						agariPoint = agaricalc(AgariPointRaw, 2, 2, 1);
 						deltacalcplus(AgariPointRaw, PointDelta, 2, cnt);
@@ -93,10 +93,10 @@ namespace {
 	}
 
 	void calcAgariPoints_Ron( // 通常時：ロン
-		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PLAYER_ID AgariPlayer)
+		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PlayerID AgariPlayer)
 	{
 		if (playerwind(AgariPlayer, gameStat->GameRound) == sEast) { // 親の和了り
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
 					agariPoint = agaricalc(AgariPointRaw, 6, 0, 0);
 					deltacalcplus(AgariPointRaw, PointDelta, 6, cnt);
@@ -105,7 +105,7 @@ namespace {
 					deltacalcminus(AgariPointRaw, PointDelta, 6, cnt);
 			}
 		} else { // 子の和了り
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
 					agariPoint = agaricalc(AgariPointRaw, 4, 0, 0);
 					deltacalcplus(AgariPointRaw, PointDelta, 4, cnt);
@@ -117,11 +117,11 @@ namespace {
 	}
 
 	void calcAgariPoints_Tsumo_Dealer( // 通常時：親のツモ
-		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PLAYER_ID AgariPlayer)
+		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PlayerID AgariPlayer)
 	{
 		if (chkGameType(gameStat, Yonma) || (chkGameType(gameStat, Sanma4) && RuleData::chkRule("tsumo_payment", "same_as_yonma"))) {
 			// 四麻式ルール
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
 					agariPoint = agaricalc(AgariPointRaw, 2, 2, 2);
 					deltacalcplus(AgariPointRaw, PointDelta, 2, cnt);
@@ -133,7 +133,7 @@ namespace {
 			}
 		} else if (RuleData::chkRule("tsumo_payment", "north_segment_omitted") || RuleData::chkRule("tsumo_payment", "add_1000")) {
 			// 三麻自摸減りルール
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
 					agariPoint = agaricalc(AgariPointRaw, 2, 2, 1);
 					deltacalcplus(AgariPointRaw, PointDelta, 2, cnt);
@@ -148,7 +148,7 @@ namespace {
 				}
 			}
 		} else { // 三麻でツモ減りしないルール
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
 					agariPoint = agaricalc(AgariPointRaw, 3, 3, 1);
 					deltacalcplus(AgariPointRaw, PointDelta, 3, cnt);
@@ -160,11 +160,11 @@ namespace {
 	}
 
 	void calcAgariPoints_Tsumo_NonDealer( // 通常時：子のツモ
-		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PLAYER_ID AgariPlayer)
+		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PlayerID AgariPlayer)
 	{
 		if (chkGameType(gameStat, Yonma) || (chkGameType(gameStat, Sanma4) && RuleData::chkRule("tsumo_payment", "same_as_yonma"))) {
 			// 四麻式ルール
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
 					agaricalc(AgariPointRaw, 2, 1, 2);
 					deltacalcplus(AgariPointRaw, PointDelta, 2, cnt);
@@ -178,7 +178,7 @@ namespace {
 			}
 		} else if (RuleData::chkRule("tsumo_payment", "fifty_fifty")) {
 			// 三麻：親子関係なく折半ルール
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
 					agariPoint = agaricalc(AgariPointRaw, 2, 2, 1);
 					deltacalcplus(AgariPointRaw, PointDelta, 2, cnt);
@@ -189,7 +189,7 @@ namespace {
 			}
 		} else if (RuleData::chkRule("tsumo_payment", "north_segment_omitted") || RuleData::chkRule("tsumo_payment", "add_1000")) {
 			// 三麻：自摸減りルール、千点加符ルール
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
 					agariPoint = agaricalc(AgariPointRaw, 2, 1, 1);
 					deltacalcplus(AgariPointRaw, PointDelta, 2, cnt);
@@ -208,7 +208,7 @@ namespace {
 			}
 		} else if (RuleData::chkRule("tsumo_payment", "adjusted_payment")) {
 			// 三麻：丸取りルール
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
 					agariPoint = agaricalc(AgariPointRaw, Rat(8, 3), Rat(4, 3), 1, 0, 0);
 					deltacalcplus(AgariPointRaw, PointDelta, Rat(8, 3), cnt);
@@ -221,7 +221,7 @@ namespace {
 			}
 		} else if (RuleData::chkRule("tsumo_payment", "north_segment_halved")) {
 			// 三麻：北家の分を折半
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
 					agariPoint = agaricalc(AgariPointRaw, 2, 1, 1, Rat(1, 2), 2);
 					deltacalcplus(AgariPointRaw, PointDelta, 2, cnt);
@@ -244,7 +244,7 @@ void endround::agari::calcAgariPoints(
 	const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw,
 	InfoByPlayer<LNum>& PointDelta, int Mode)
 {
-	const PLAYER_ID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : (PLAYER_ID)Mode;
+	const PlayerID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : (PlayerID)Mode;
 	const bool TsumoAgari = (Mode == CAP_normal) ? gameStat->TsumoAgariFlag : true;
 	if (isPaoAgari(gameStat, AgariPlayer)) // 包適用時
 		calcAgariPoints_Pao(gameStat, agariPoint, AgariPointRaw, PointDelta, Mode);
@@ -261,7 +261,7 @@ void endround::agari::calcAgariPoints(
 
 namespace {
 	void forEachAgariPlayers(std::function<bool (int&)> f) {
-		for (int cnt = 0; cnt < PLAYERS - 1; ++cnt) {
+		for (int cnt = 0; cnt < Players - 1; ++cnt) {
 			if (RuleData::chkRule("multiple_mahjong", "single_mahjong_with_draw") || RuleData::chkRule("multiple_mahjong", "single_mahjong")) {
 				if (cnt > 0) break; // 頭ハネ(ダブロンなし)ルールの場合
 			} else if (RuleData::chkRule("multiple_mahjong", "dual_mahjong_with_draw") || RuleData::chkRule("multiple_mahjong", "dual_mahjong")) {
@@ -283,8 +283,8 @@ namespace {
 
 	void verifyAgari(GameTable* gameStat, EndType& RoundEndType) {
 		if (!gameStat->TsumoAgariFlag) {
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].red  = gameStat->CurrentDiscard.red;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().tile = gameStat->CurrentDiscard.tile;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().red  = gameStat->CurrentDiscard.red;
 		}
 		yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Agari);
 		MachihaiInfo machiInfo = chkFuriten(gameStat, gameStat->CurrentPlayer.Agari);
@@ -296,7 +296,7 @@ namespace {
 
 	OptionBool procSecondaryRon(GameTable* gameStat, EndType& RoundEndType, int& cnt) {
 		RoundEndType = Agari;
-		gameStat->CurrentPlayer.Agari = (gameStat->CurrentPlayer.Agari + 1) % PLAYERS;
+		gameStat->CurrentPlayer.Agari = (gameStat->CurrentPlayer.Agari + 1) % Players;
 		if (gameStat->CurrentPlayer.Agari == gameStat->CurrentPlayer.Furikomi) return oFalse; // 一周した時点で抜ける
 		if (gameStat->Player[gameStat->CurrentPlayer.Agari].DeclarationFlag.Ron) { // ロンしていれば
 			verifyAgari(gameStat, RoundEndType);
@@ -308,14 +308,14 @@ namespace {
 
 	bool isSomeoneDobon(const GameTable* gameStat) {
 		bool flag = false;
-		for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; ++i)
+		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i)
 			if (isDobon(gameStat, i)) flag = true;
 		return flag;
 	}
 
-	void calcDobonDelta(const GameTable* gameStat, PLAYER_ID AgariPlayerPriority, int penalty) {
+	void calcDobonDelta(const GameTable* gameStat, PlayerID AgariPlayerPriority, int penalty) {
 		endround::transfer::resetDelta();
-		for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 			if (isDobon(gameStat, cnt)) {
 				endround::transfer::addDelta(cnt, -penalty);
 				endround::transfer::addDelta(AgariPlayerPriority, penalty);
@@ -324,7 +324,7 @@ namespace {
 	}
 
 
-	void dobonPenalty(GameTable* gameStat, PLAYER_ID AgariPlayerPriority) {
+	void dobonPenalty(GameTable* gameStat, PlayerID AgariPlayerPriority) {
 		int penalty = 0;
 		std::string penaConf(RuleData::chkRule("penalty_negative"));
 		std::smatch matchDat;
@@ -350,12 +350,12 @@ namespace {
 
 void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool& tmpUraFlag, bool& tmpAliceFlag, CodeConv::tstring& ResultDesc) {
 	bool tmpagariflag = false;
-	PLAYER_ID FirstAgariPlayer = gameStat->CurrentPlayer.Agari;
+	PlayerID FirstAgariPlayer = gameStat->CurrentPlayer.Agari;
 	int OyaAgari = -1;
 	ResultDesc = _T("");
 	tmpUraFlag = 0;
 	tmpAliceFlag = 0;
-	PLAYER_ID AgariPlayerPriority = -1;
+	PlayerID AgariPlayerPriority = -1;
 	std::uint16_t origDoraPointer = gameStat->DoraPointer;
 
 	forEachAgariPlayers([&gameStat, &RoundEndType](int& cnt) -> bool {
@@ -411,7 +411,7 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 	else if (RuleData::chkRule("simultaneous_mahjong", "renchan_if_dealer_upstream"))
 		gameStat->CurrentPlayer.Agari = FirstAgariPlayer;
 	else if (RuleData::chkRule("simultaneous_mahjong", "next_dealer"))
-		gameStat->CurrentPlayer.Agari = FirstAgariPlayer + ((OyaAgari == FirstAgariPlayer) ? 1 : 0) % PLAYERS;
+		gameStat->CurrentPlayer.Agari = FirstAgariPlayer + ((OyaAgari == FirstAgariPlayer) ? 1 : 0) % Players;
 
 	dobonPenalty(gameStat, AgariPlayerPriority);
 	return;
@@ -420,7 +420,7 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 // -------------------------------------------------------------------------
 
 namespace {
-	void deltawareme(PLAYER_ID agariTmpPlayer, PLAYER_ID agariTmpWareme) {
+	void deltawareme(PlayerID agariTmpPlayer, PlayerID agariTmpWareme) {
 		LNum subtrahend = endround::transfer::getDelta()[agariTmpWareme];
 		endround::transfer::addDelta(agariTmpPlayer, -subtrahend);
 		return;
@@ -464,14 +464,14 @@ namespace {
 			tsumiboh_rate = std::atoi(matchDat[1].str().c_str()) / (ACTUAL_PLAYERS - 1);
 		endround::transfer::resetDelta();
 		if (gameStat->TsumoAgariFlag) {
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == gameStat->CurrentPlayer.Agari)
 					endround::transfer::addDelta(cnt, gameStat->Honba *   (ACTUAL_PLAYERS - 1)  * tsumiboh_rate);
 				else
 					endround::transfer::addDelta(cnt, gameStat->Honba * (-(ACTUAL_PLAYERS - 1)) * tsumiboh_rate);
 			}
 		} else {
-			for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == gameStat->CurrentPlayer.Agari)
 					endround::transfer::addDelta(cnt, gameStat->Honba *   (ACTUAL_PLAYERS - 1)  * tsumiboh_rate);
 				else if (cnt == gameStat->CurrentPlayer.Furikomi)
@@ -488,7 +488,7 @@ namespace {
 			endround::transfer::addDelta(gameStat->CurrentPlayer.Furikomi, -ChipAmount);
 			endround::transfer::addDelta(gameStat->CurrentPlayer.Agari   ,  ChipAmount);
 		} else {
-			for (PLAYER_ID i = 0; i < ACTUAL_PLAYERS; ++i)
+			for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i)
 				endround::transfer::addDelta(i, -ChipAmount);
 			endround::transfer::addDelta(gameStat->CurrentPlayer.Agari, ChipAmount * ACTUAL_PLAYERS);
 		}
@@ -499,7 +499,7 @@ namespace {
 }
 
 /* 和了成立時の処理 */
-void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring& ResultDesc, PLAYER_ID& AgariPlayerPriority,
+void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring& ResultDesc, PlayerID& AgariPlayerPriority,
 	std::uint16_t origDoraPointer, const yaku::YAKUSTAT& yakuInfo, bool tmpAliceFlag, int& OyaAgari)
 {
 	LNum AgariPointRaw = yakuInfo.AgariPoints;
@@ -560,16 +560,16 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 		calculateWaremeDelta(gameStat);
 		/* 包の場合 */
 		if (isPaoAgari(gameStat, gameStat->CurrentPlayer.Agari)) {
-			PLAYER_ID PaoPlayer = getPaoPlayer(gameStat, gameStat->CurrentPlayer.Agari);
+			PlayerID PaoPlayer = getPaoPlayer(gameStat, gameStat->CurrentPlayer.Agari);
 			if (gameStat->TsumoAgariFlag) {
-				for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+				for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 					if ((PaoPlayer != cnt) && (gameStat->CurrentPlayer.Agari != cnt)) {
 						transfer::addDelta(gameStat->CurrentPlayer.Agari, transfer::getDelta()[cnt]);
 						transfer::addDelta(cnt, -transfer::getDelta()[cnt]);
 					}
 				}
 			} else {
-				for (PLAYER_ID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+				for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 					if ((PaoPlayer != cnt) && (gameStat->CurrentPlayer.Furikomi != cnt) && (gameStat->CurrentPlayer.Agari != cnt)) {
 						transfer::addDelta(PaoPlayer, transfer::getDelta()[cnt]);
 						transfer::addDelta(cnt, -transfer::getDelta()[cnt]);
@@ -609,7 +609,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 		if (playerwind(gameStat, gameStat->CurrentPlayer.Furikomi, gameStat->GameRound) == sNorth) {
 			if (std::regex_search(yakuInfo.yakuNameList, std::basic_regex<TCHAR>(_T("(^|\\r?\\n)四馬路(\r?\n|$)")))) {
 				transfer::resetDelta();
-				for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+				for (PlayerID i = 0; i < Players; ++i)
 					transfer::addDelta(i, 1000);
 				transfer::addDelta(gameStat->CurrentPlayer.Agari, -3000);
 				transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValKitamakura, 1500);
@@ -660,7 +660,7 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 	}
 	/* 誤ロン、誤ツモ以外の錯和 */
 	else {
-		if (gameStat->AgariSpecialStat == AGARI_KUIKAE)
+		if (gameStat->AgariSpecialStat == agariKuikae)
 			ResultDesc += _T("(喰い替え)"); // 喰い替えをしたとき
 		sound::Play(sound::IDs::sndPage);
 	}

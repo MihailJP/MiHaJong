@@ -17,7 +17,7 @@ void GameTableScreen::DiceReconst::ShowDice(const GameTable* gameStat) {
 		(DiceWidth + DicePadding) * (gameStat->Dice[1].Number - 1), (DiceHeight + DicePadding) * (gameStat->Dice[1].Direction    ),
 		(DiceWidth + DicePadding) * (gameStat->Dice[1].Number    ), (DiceHeight + DicePadding) * (gameStat->Dice[1].Direction + 1),
 	};
-	switch (playerRelative(gameStat->GameRound % PLAYERS, gameStat->PlayerID)) {
+	switch (playerRelative(gameStat->GameRound % Players, gameStat->PlayerID)) {
 	case sSelf:
 		SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 			tDice, DicePosH - (DiceWidth + DicePosInterstice) / 2, DicePosV,

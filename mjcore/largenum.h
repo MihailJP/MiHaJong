@@ -1,45 +1,17 @@
 #pragma once
 
-#include <type_traits>
 #include <cstdint>
 #include "mjexport.h"
 #include "../common/strcode.h"
+#include "../common/largenum.h"
 
 // 青天ルール対策
 // 一応21不可思議まで表現可能……
 
-#define DIGIT_GROUPS 8
-
-EXPORT_STRUCT LargeNum { // ±21不可思議まで表現可能な数のクラス
-	int32_t digitGroup[DIGIT_GROUPS];
-	void fix();
-	signed int compare(const LargeNum& cmp) const;
-	CodeConv::tstring bignumtotext(CodeConv::tstring plusSign, CodeConv::tstring minusSign) const;
-	double bignumtodbl() const;
-	static LargeNum fromInt(int val);
-	void ceilHundred();
-	/* ここから演算子をオーバーロード */
-	const LargeNum operator+(const LargeNum& addend) const;
-	const LargeNum operator+(const int32_t addend) const;
-	LargeNum& operator+=(const LargeNum& addend);
-	LargeNum& operator+=(const int32_t addend);
-	const LargeNum operator-(const LargeNum& subtrahend) const;
-	const LargeNum operator-(const int32_t subtrahend) const;
-	LargeNum& operator-=(const LargeNum& subtrahend);
-	LargeNum& operator-=(const int32_t subtrahend);
-	const LargeNum operator*(const int32_t multiplier) const;
-	LargeNum& operator*=(const int32_t multiplier);
-	const LargeNum operator/(const int32_t divisor) const;
-	LargeNum& operator/=(const int32_t divisor);
-	const bool operator==(const LargeNum& cmp) const;
-	const bool operator!=(const LargeNum& cmp) const;
-	const bool operator<(const LargeNum& cmp) const;
-	const bool operator>(const LargeNum& cmp) const;
-	const bool operator<=(const LargeNum& cmp) const;
-	const bool operator>=(const LargeNum& cmp) const;
-};
 #ifdef MJCORE_EXPORTS
-static_assert(std::is_pod<LargeNum>::value, "LargeNum is not POD");
+
+#define DIGIT_GROUPS mihajong_structs::DigitGroups
+using mihajong_structs::LargeNum;
 
 /* non-POD wrapper, for convenience */
 class LNum {

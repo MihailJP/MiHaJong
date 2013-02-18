@@ -9,7 +9,7 @@
 
 GameThread* gameThread = nullptr;
 
-GameThread::GameThread(gameTypeID gameType, HWND hwnd) {
+GameThread::GameThread(GameTypeID gameType, HWND hwnd) {
 	myGameType = gameType;
 	hWnd = hwnd;
 	hThread = CreateThread(nullptr, 0, ThreadMain, this, 0, nullptr);
@@ -28,7 +28,7 @@ GameThread::~GameThread() {
 }
 
 DWORD WINAPI GameThread::ThreadMain(LPVOID lpParam) {
-	gameTypeID gameType = reinterpret_cast<GameThread*>(lpParam)->myGameType;
+	GameTypeID gameType = reinterpret_cast<GameThread*>(lpParam)->myGameType;
 	HWND hwnd = reinterpret_cast<GameThread*>(lpParam)->hWnd;
 	initapp(gameType, hwnd);
 	startgame(gameType);
@@ -37,7 +37,7 @@ DWORD WINAPI GameThread::ThreadMain(LPVOID lpParam) {
 	return S_OK;
 }
 
-MJCORE void StartGame (gameTypeID gameType, HWND hwnd) {
+MJCORE void StartGame (GameTypeID gameType, HWND hwnd) {
 	gameThread = new GameThread(gameType, hwnd);
 }
 

@@ -7,14 +7,15 @@
 #include "../common/version.h"
 #include "envtbl.h"
 #include "../sound/sound.h"
-#include "bgmid.h"
+#include "../common/bgmid.h"
 #include "sound.h"
 #include "shanten.h"
 #include "random.h"
 #include "../graphic/graphic.h"
 #include "yaku/yaku.h"
+#include "ruletbl.h"
 
-MJCORE void initapp(gameTypeID gameType, HWND hwnd) {
+MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
 	/* コンフィグファイルのパスを設定する */
 	/* Vista以降、Program Files以下にファイルを作れないので自分で調整する */
 	std::string configFile;

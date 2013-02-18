@@ -3,7 +3,7 @@
 #include "../../../common/strcode.h"
 #include <iomanip>
 #include "../../../sound/sound.h"
-#include "../../../mjcore/bgmid.h"
+#include "../../../common/bgmid.h"
 
 namespace mihajong_graphic {
 

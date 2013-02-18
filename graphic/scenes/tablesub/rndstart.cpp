@@ -41,8 +41,8 @@ void TableSubsceneBeginning::Render() {
 		}
 	} else {
 		// ˆê”Ê‚Ìƒ‹[ƒ‹
-		ZoomChar(    0, WindName.substr(roundnum / PLAYERS, 1), -256,       0, 2500000);
-		ZoomChar(    1, Numeral.substr( roundnum % PLAYERS, 1),    0, 2500000, 5000000);
+		ZoomChar(    0, WindName.substr(roundnum / Players, 1), -256,       0, 2500000);
+		ZoomChar(    1, Numeral.substr( roundnum % Players, 1),    0, 2500000, 5000000);
 	}
 	ZoomChar(        2, _T("‹Ç")                              ,  256, 5000000, 7500000);
 	myTextRenderer->Render();

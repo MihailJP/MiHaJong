@@ -1,10 +1,12 @@
 #pragma once
 
-#include "../mjcore/mjimport.h"
 #include "exports.h"
 #include "../common/mutex.h"
+#include "../common/gametbl.h"
 
 namespace mihajong_graphic {
+
+using namespace mihajong_structs;
 
 class GameStatus {
 #ifdef GRAPHIC_EXPORTS

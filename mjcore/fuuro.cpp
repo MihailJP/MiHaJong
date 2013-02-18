@@ -10,7 +10,7 @@
 #include "envtbl.h"
 #include "tileutil.h"
 #include "discard.h"
-#include "bgmid.h"
+#include "../common/bgmid.h"
 #include "ai/class.h"
 #include "../socket/socket.h"
 #include "yaku/ykclass.h"
@@ -22,8 +22,8 @@
 namespace {
 
 /* 牌譜への記録など準備処理 */
-PLAYER_ID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex, FuuroType Mode) {
-	PLAYER_ID fuuroPlayer;
+PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex, FuuroType Mode) {
+	PlayerID fuuroPlayer;
 	switch (Mode) {
 	case FuuroChii:
 		fuuroPlayer = gameStat->CurrentPlayer.Passive;
@@ -79,14 +79,14 @@ PLAYER_ID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardT
 }
 
 /* 暗槓・加槓を実行する(その他の鳴きの処理も行う) */
-void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex, FuuroType Mode, PLAYER_ID kangPlayer) {
+void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex, FuuroType Mode, PlayerID kangPlayer) {
 	unsigned nakiCount = 0;
 	switch (Mode) {
 	case FuuroAnkan: /* 暗槓 */
 		++gameStat->Player[kangPlayer].MeldPointer;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldQuadConcealed;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile = gameStat->CurrentDiscard.tile;
-		for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+		for (int i = 0; i < NumOfTilesInHand; i++) {
 			if (gameStat->Player[kangPlayer].Hand[i].tile == gameStat->CurrentDiscard.tile) {
 				gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].red[nakiCount] = gameStat->Player[kangPlayer].Hand[i].red;
 				gameStat->Player[kangPlayer].Hand[i].tile = NoTile;
@@ -136,7 +136,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		}
 		break;
 	case FuuroDaiminkan: /* 大明槓 */
-		for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+		for (int i = 0; i < NumOfTilesInHand; i++) {
 			if ((gameStat->Player[kangPlayer].Hand[i].tile == gameStat->CurrentDiscard.tile) && (nakiCount < 3)) {
 				// 鳴いた牌を純手牌から消去
 				gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer + 1].red[nakiCount + 1] = gameStat->Player[kangPlayer].Hand[i].red;
@@ -178,7 +178,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::North);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 		lipai(gameStat, kangPlayer);
-		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+		for (PlayerID i = 0; i < Players; i++)
 			gameStat->Player[i].FirstDrawFlag = false;
 		break;
 	case FuuroFlower: /* 花牌 */
@@ -205,13 +205,13 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::Flower);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 		lipai(gameStat, kangPlayer);
-		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+		for (PlayerID i = 0; i < Players; i++)
 			gameStat->Player[i].FirstDrawFlag = false;
 		break;
 	case FuuroPon: /* ポン */
 		/* ポンした対子を消去 */
 		nakiCount = 0;
-		for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+		for (int i = 0; i < NumOfTilesInHand; i++) {
 			if ((gameStat->Player[kangPlayer].Hand[i].tile == gameStat->CurrentDiscard.tile) && (nakiCount < 2)) {
 				// 鳴いた牌を純手牌から消去
 				gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer + 1].red[nakiCount + 1] = gameStat->Player[kangPlayer].Hand[i].red;
@@ -252,23 +252,23 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		break;
 	case FuuroChii: /* チー */
 		/* チーする牌を設定 */
-		gameStat->Player[kangPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
-		gameStat->Player[kangPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].red = gameStat->CurrentDiscard.red;
+		gameStat->Player[kangPlayer].Tsumohai().tile = gameStat->CurrentDiscard.tile;
+		gameStat->Player[kangPlayer].Tsumohai().red = gameStat->CurrentDiscard.red;
 		/* 純手牌から鳴いた塔子を除去 */
 		{
 			bool nakiCount[3] = {false};
-			for (int i = NUM_OF_TILES_IN_HAND - 1; i < NUM_OF_TILES_IN_HAND * 2 - 1; i++) {
+			for (int i = NumOfTilesInHand - 1; i < NumOfTilesInHand * 2 - 1; i++) {
 				for (unsigned j = 0; j < 3; j++) {
-					if ((!nakiCount[j]) && (gameStat->Player[kangPlayer].Hand[i % NUM_OF_TILES_IN_HAND].tile ==
+					if ((!nakiCount[j]) && (gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand].tile ==
 						(gameStat->CurrentDiscard.tile + j + 1 - gameStat->Player[kangPlayer].DeclarationFlag.Chi))) {
-							gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer + 1].red[j] = gameStat->Player[kangPlayer].Hand[i % NUM_OF_TILES_IN_HAND].red;
-							gameStat->Player[kangPlayer].Hand[i % NUM_OF_TILES_IN_HAND].tile = NoTile;
-							gameStat->Player[kangPlayer].Hand[i % NUM_OF_TILES_IN_HAND].red = Normal;
+							gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer + 1].red[j] = gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand].red;
+							gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand].tile = NoTile;
+							gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand].red = Normal;
 							nakiCount[j] = true;
 					}
 				}
 			}
-			assert(gameStat->Player[kangPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile == NoTile);
+			assert(gameStat->Player[kangPlayer].Tsumohai().tile == NoTile);
 		}
 		/* 門前フラグを降ろす */
 		gameStat->Player[kangPlayer].MenzenFlag = false;
@@ -281,7 +281,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		else if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == 3)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldSequenceExposedUpper;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile =
-			(tileCode)(gameStat->CurrentDiscard.tile + 1 - gameStat->Player[kangPlayer].DeclarationFlag.Chi);
+			(TileCode)(gameStat->CurrentDiscard.tile + 1 - gameStat->Player[kangPlayer].DeclarationFlag.Chi);
 		/* 自動理牌 */
 		lipai(gameStat, kangPlayer);
 		/* チーを宣言 */
@@ -292,9 +292,9 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
 		if (RuleData::chkRule("kuikae", "agari_houki") || RuleData::chkRule("kuikae", "chombo")) {
 			switch (gameStat->Player[kangPlayer].DeclarationFlag.Chi) {
-				case 1: gameStat->PreviousMeld.Stepped = (tileCode)(gameStat->CurrentDiscard.tile + 3); break;
+				case 1: gameStat->PreviousMeld.Stepped = (TileCode)(gameStat->CurrentDiscard.tile + 3); break;
 				case 2: gameStat->PreviousMeld.Stepped = NoTile; break;
-				case 3: gameStat->PreviousMeld.Stepped = (tileCode)(gameStat->CurrentDiscard.tile - 3); break;
+				case 3: gameStat->PreviousMeld.Stepped = (TileCode)(gameStat->CurrentDiscard.tile - 3); break;
 			}
 		} else {
 			gameStat->PreviousMeld.Stepped = NoTile;
@@ -312,8 +312,8 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 	nakiCount = 0;
 	if ((Mode == FuuroChii) || (Mode == FuuroPon) || (Mode == FuuroDaiminkan)) {
 		/* 鳴いた捨牌を河で非表示にする */
-		PlayerTable* const activePlDat = &(gameStat->Player[gameStat->CurrentPlayer.Active]);
-		discardTile* const tmpSutehaiVar = &(activePlDat->Discard[activePlDat->DiscardPointer]);
+		PlayerTable* const activePlDat = &(gameStat->statOfActive());
+		DiscardTile* const tmpSutehaiVar = &(activePlDat->Discard[activePlDat->DiscardPointer]);
 		assert(tmpSutehaiVar->tcode.tile == gameStat->CurrentDiscard.tile); // [デバッグ用]本当に正しい牌なのか確認
 		if (tmpSutehaiVar->dstat == discardNormal)
 			tmpSutehaiVar->dstat = discardTaken;
@@ -327,7 +327,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::Kan);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 		lipai(gameStat, kangPlayer);
-		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+		for (PlayerID i = 0; i < Players; i++)
 			gameStat->Player[i].FirstDrawFlag = false;
 	}
 }
@@ -371,9 +371,9 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 	}
 	if (Mode == FuuroDaiminkan) {
 		/* バグ防止の為 */
-		for (PLAYER_ID i = 0; i < PLAYERS; i++) {
-			gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND].tile = NoTile;
-			gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND].red = Normal;
+		for (PlayerID i = 0; i < Players; i++) {
+			gameStat->Player[i].Hand[NumOfTilesInHand].tile = NoTile;
+			gameStat->Player[i].Hand[NumOfTilesInHand].red = Normal;
 		}
 		/* 大明槓の包判定用 */
 		if ((!RuleData::chkRule("minkan_pao", "no")) && (!RuleData::chkRule("minkan_pao", "no_but_2han"))) {
@@ -385,7 +385,7 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 }
 
 /* 嶺上の処理 */
-bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mode, PLAYER_ID kangPlayer) {
+bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mode, PlayerID kangPlayer) {
 	if ((Mode != FuuroPon) && (Mode != FuuroChii)) {
 		/* 四槓子の聴牌者がいて、５回目の槓があると流局とするルールの場合
 		   その条件を判定する*/
@@ -399,8 +399,8 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 			*RoundEndType = Ryuukyoku; return true; /* 荒牌なら終了 */
 		}
 		/* 嶺上牌を自摸る */
-		gameStat->Player[kangPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->Deck[gameStat->RinshanPointer].tile;
-		gameStat->Player[kangPlayer].Hand[NUM_OF_TILES_IN_HAND - 1].red = gameStat->Deck[gameStat->RinshanPointer].red;
+		gameStat->Player[kangPlayer].Tsumohai().tile = gameStat->Deck[gameStat->RinshanPointer].tile;
+		gameStat->Player[kangPlayer].Tsumohai().red = gameStat->Deck[gameStat->RinshanPointer].red;
 		--gameStat->RinshanPointer;
 		sound::Play(sound::IDs::sndTsumo);
 		if (tilesLeft(gameStat) < 10)
@@ -442,7 +442,7 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 		o << _T("副露の処理を開始します。モード[") << (int)Mode << _T("]");
 		info(o.str().c_str());
 	}
-	PLAYER_ID fuuroPlayer = PrepareFuuro(gameStat, DiscardTileIndex, Mode);
+	PlayerID fuuroPlayer = PrepareFuuro(gameStat, DiscardTileIndex, Mode);
 
 	if ((Mode != FuuroPon)&&(Mode != FuuroChii)&&(Mode != FuuroDaiminkan)) { /* カンする牌を設定 */
 		gameStat->CurrentDiscard.tile = gameStat->Player[fuuroPlayer].Hand[DiscardTileIndex.id].tile;
@@ -456,13 +456,13 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 	Sleep(1000);
 	if (ProcRinshan(gameStat, RoundEndType, Mode, fuuroPlayer)) return true;
 	/* 事後処理 */
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i)
+	for (PlayerID i = 0; i < Players; ++i)
 		mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::None); /* 発声文字列を消去 */
 	mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone); // 発声表示から戻る
 	/* 再描画 */
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	/* 鳴きが成立したので、一発のフラグを降ろす */
-	for (PLAYER_ID i = 0; i < PLAYERS; i++)
+	for (PlayerID i = 0; i < Players; i++)
 		gameStat->Player[i].RichiFlag.IppatsuFlag =
 		gameStat->Player[i].FirstDrawFlag = false;
 	return false;
@@ -473,7 +473,7 @@ void checkpao(GameTable* const gameStat) {
 	// 包の判定 ここから
 	debug(_T("包の条件を判定します。"));
 	unsigned DragonPons = 0, WindPons = 0, NumOfKangs = 0;
-	const PlayerTable* playerStat = &gameStat->Player[gameStat->CurrentPlayer.Passive];
+	const PlayerTable* playerStat = &gameStat->statOfPassive();
 	for (unsigned i = 1; i <= playerStat->MeldPointer; i++) {
 		switch (playerStat->Meld[i].tile) {
 		case WhiteDragon: case GreenDragon: case RedDragon:
@@ -516,7 +516,7 @@ void checkpao(GameTable* const gameStat) {
 
 namespace {
 	void playerfuuro(GameTable* gameStat) {
-		PlayerTable* const playerStat = &(gameStat->Player[gameStat->PlayerID]);
+		PlayerTable* const playerStat = &(gameStat->statOfMine());
 		using namespace mihajong_graphic;
 		using namespace mihajong_graphic::naki;
 		Subscene(tblSubscenePlayerNaki);
@@ -526,8 +526,8 @@ namespace {
 		case nakiRon:
 			debug(_T("プレイヤーからの応答：ロン"));
 			playerStat->DeclarationFlag.Ron = true;
-			playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
-			playerStat->Hand[NUM_OF_TILES_IN_HAND - 1].red = gameStat->CurrentDiscard.red;
+			playerStat->Tsumohai().tile = gameStat->CurrentDiscard.tile;
+			playerStat->Tsumohai().red = gameStat->CurrentDiscard.red;
 			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Ron);
 			break;
@@ -585,13 +585,13 @@ EndType ronhuproc(GameTable* const gameStat) {
 	EndType RoundEndType = Continuing;
 	info(_T("リアクションを問い合わせます。"));
 	/* 栄和や鳴き仕掛けをするかどうか問い合わせる */
-	for (int pl = 0; pl < PLAYERS; pl++) {
+	for (int pl = 0; pl < Players; pl++) {
 		gameStat->Player[pl].DeclarationFlag.Ron =
 			gameStat->Player[pl].DeclarationFlag.Pon =
 			gameStat->Player[pl].DeclarationFlag.Kan = false;
 		gameStat->Player[pl].DeclarationFlag.Chi = chiiNone;
 	}
-	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+	for (PlayerID i = 0; i < Players; i++) {
 		if (gameStat->CurrentPlayer.Active != i) {
 			gameStat->CurrentPlayer.Passive = i;
 			if (gameStat->CurrentPlayer.Passive == gameStat->PlayerID) {
@@ -602,7 +602,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 				GameTable* sandbox = makesandBox(gameStat, gameStat->CurrentPlayer.Passive);
 				/* 処理 */
 				aiscript::compfuuro(sandbox);
-				for (PLAYER_ID j = 0; j < PLAYERS; j++) {
+				for (PlayerID j = 0; j < Players; j++) {
 					if (!gameStat->Player[j].DeclarationFlag.Ron) gameStat->Player[j].DeclarationFlag.Ron = sandbox->Player[j].DeclarationFlag.Ron;
 					if (!gameStat->Player[j].DeclarationFlag.Kan) gameStat->Player[j].DeclarationFlag.Kan = sandbox->Player[j].DeclarationFlag.Kan;
 					if (!gameStat->Player[j].DeclarationFlag.Pon) gameStat->Player[j].DeclarationFlag.Pon = sandbox->Player[j].DeclarationFlag.Pon;
@@ -633,21 +633,21 @@ EndType ronhuproc(GameTable* const gameStat) {
 	{
 		CodeConv::tostringstream o;
 		o << _T("ロン [");
-		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+		for (PlayerID i = 0; i < Players; i++)
 			o << (i ? _T(" ") : _T("")) << (int)gameStat->Player[i].DeclarationFlag.Ron;
 		o << _T("] カン [");
-		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+		for (PlayerID i = 0; i < Players; i++)
 			o << (i ? _T(" ") : _T("")) << (int)gameStat->Player[i].DeclarationFlag.Kan;
 		o << _T("] ポン [");
-		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+		for (PlayerID i = 0; i < Players; i++)
 			o << (i ? _T(" ") : _T("")) << (int)gameStat->Player[i].DeclarationFlag.Pon;
 		o << _T("] チー [");
-		for (PLAYER_ID i = 0; i < PLAYERS; i++)
+		for (PlayerID i = 0; i < Players; i++)
 			o << (i ? _T(" ") : _T("")) << (int)gameStat->Player[i].DeclarationFlag.Chi;
 		o << _T("]"); trace(o.str().c_str());
 	}
 	/* 和了り放棄の時は宣言を無効にする */
-	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+	for (PlayerID i = 0; i < Players; i++) {
 		if (gameStat->Player[i].AgariHouki) {
 			{
 				CodeConv::tostringstream o;
@@ -660,16 +660,16 @@ EndType ronhuproc(GameTable* const gameStat) {
 		}
 	}
 	/* 当たり牌見逃しを同順フリテンにする処理 */
-	for (PLAYER_ID i = 0; i < PLAYERS; ++i) {
-		const tileCode xTile = gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].tile;
-		gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
-		const SHANTEN tmpShanten = ShantenAnalyzer::calcShanten(gameStat, i, ShantenAnalyzer::shantenAll);
+	for (PlayerID i = 0; i < Players; ++i) {
+		const TileCode xTile = gameStat->Player[i].Tsumohai().tile;
+		gameStat->Player[i].Tsumohai().tile = gameStat->CurrentDiscard.tile;
+		const Shanten tmpShanten = ShantenAnalyzer::calcShanten(gameStat, i, shantenAll);
 		if ((tmpShanten == -1) && (!(gameStat->Player[i].DeclarationFlag.Ron)))
 			gameStat->Player[i].DoujunFuriten = true;
-		gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND - 1].tile = xTile;
+		gameStat->Player[i].Tsumohai().tile = xTile;
 	}
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */
-	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+	for (PlayerID i = 0; i < Players; i++) {
 		if (gameStat->Player[i].DeclarationFlag.Ron) {
 			{
 				CodeConv::tostringstream o;
@@ -683,7 +683,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 	}
 	/* 実際にロンできる人を表示 */
 	unsigned roncount = 0;
-	for (int i = 0; i < (PLAYERS - 1); i++) {
+	for (int i = 0; i < (Players - 1); i++) {
 		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1))].DeclarationFlag.Ron) {
 			bool accept = false;
 			switch (roncount) {
@@ -711,8 +711,8 @@ EndType ronhuproc(GameTable* const gameStat) {
 		}
 	}
 	/* 実際に栄和を行なう処理 */
-	for (int i = 0; i < (PLAYERS - 1); i++) {
-		Sleep(1); PLAYER_ID pl = RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1));
+	for (int i = 0; i < (Players - 1); i++) {
+		Sleep(1); PlayerID pl = RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1));
 		if (gameStat->Player[pl].DeclarationFlag.Ron) {
 			/* ウォッチモードの場合は和了った人に視点を向ける */
 			if (EnvTable::Instantiate()->WatchModeFlag)
@@ -734,23 +734,23 @@ EndType ronhuproc(GameTable* const gameStat) {
 				}
 			}
 			/* 和了り牌を設定 */
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].red = gameStat->CurrentDiscard.red;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().tile = gameStat->CurrentDiscard.tile;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().red = gameStat->CurrentDiscard.red;
 			/* 立直宣言牌での放銃の場合、立直を無効とし供託点棒を返却する */
-			if (gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.IppatsuFlag) {
-				if (gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.DoubleFlag) {
+			if (gameStat->statOfActive().RichiFlag.IppatsuFlag) {
+				if (gameStat->statOfActive().RichiFlag.DoubleFlag) {
 					gameStat->DoubleRichiCounter = true;
 					trace(_T("ダブル立直宣言牌での放銃のため、立直棒を返還します。"));
 				} else {
 					gameStat->RichiCounter = true;
 					trace(_T("立直宣言牌での放銃のため、立直棒を返還します。"));
 				}
-				gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.IppatsuFlag =
-					gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.DoubleFlag =
-					gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.OpenFlag =
-					gameStat->Player[gameStat->CurrentPlayer.Active].RichiFlag.RichiFlag = false;
+				gameStat->statOfActive().RichiFlag.IppatsuFlag =
+					gameStat->statOfActive().RichiFlag.DoubleFlag =
+					gameStat->statOfActive().RichiFlag.OpenFlag =
+					gameStat->statOfActive().RichiFlag.RichiFlag = false;
 				--gameStat->Deposit;
-				gameStat->Player[gameStat->CurrentPlayer.Active].PlayerScore += (LNum)1000;
+				gameStat->statOfActive().PlayerScore += (LNum)1000;
 			}
 			/* 役や振聴の判定 */
 			yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, pl);
@@ -766,8 +766,8 @@ EndType ronhuproc(GameTable* const gameStat) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::RonQualified);
 			gameStat->Player[gameStat->CurrentPlayer.Agari].HandStat = handExposed;
 			/* 和了り牌を設定 */
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].tile = gameStat->CurrentDiscard.tile;
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NUM_OF_TILES_IN_HAND - 1].red = gameStat->CurrentDiscard.red;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().tile = gameStat->CurrentDiscard.tile;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().red = gameStat->CurrentDiscard.red;
 			/* 栄和のサウンドを鳴らす */
 			if (gameStat->CurrentPlayer.Active == gameStat->PlayerID)
 				sound::Play(sound::IDs::voxRonFurikomi);
@@ -811,13 +811,13 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 	/* 捨牌をポン、または大明槓する場合の処理 */
 	/* 同じ牌は４枚しかないので、ポンと明槓は同時に起こることがない */
 	unsigned declCount = 0; EndType roundEndType = Continuing;
-	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+	for (PlayerID i = 0; i < Players; i++) {
 		if (gameStat->Player[i].DeclarationFlag.Pon) ++declCount;
 		if (gameStat->Player[i].DeclarationFlag.Kan) ++declCount;
 	}
 	if (declCount > 1)
 		error(_T("複数同時のポン・槓が宣言されています。"));
-	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
+	for (PlayerID i = 0; i < Players; i++) {
 		Sleep(1);
 		/* 捨牌をポンする場合 */
 		if (gameStat->Player[i].DeclarationFlag.Pon) {
@@ -854,9 +854,9 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 		}
 	}
 	/* バグ防止のアレ */
-	for (PLAYER_ID i = 0; i < PLAYERS; i++) {
-		gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND].tile = NoTile;
-		gameStat->Player[i].Hand[NUM_OF_TILES_IN_HAND].red = Normal;
+	for (PlayerID i = 0; i < Players; i++) {
+		gameStat->Player[i].Hand[NumOfTilesInHand].tile = NoTile;
+		gameStat->Player[i].Hand[NumOfTilesInHand].red = Normal;
 	}
 	return false;
 }

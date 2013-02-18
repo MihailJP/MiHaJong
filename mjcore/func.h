@@ -6,30 +6,31 @@
 #endif
 #include "mjexport.h"
 #include "gametbl.h"
+#include "../common/seatrank.h"
 
 // -------------------------------------------------------------------------
 
-enum seatAbsolute : uint8_t { sEast, sSouth, sWest, sNorth };
-enum seatRelative : uint8_t { sSelf, sRight, sOpposite, sLeft };
-typedef uint8_t PLAYER_RANK;
-EXPORT_TEMPLATE_STRUCT InfoByPlayer<PLAYER_RANK>;
-typedef InfoByPlayer<PLAYER_RANK> PlayerRankList;
-#ifdef MJCORE_EXPORTS
-static_assert(std::is_pod<PlayerRankList>::value, "PlayerRankList is not POD");
-#endif
+using mihajong_structs::InfoByPlayer;
+using mihajong_structs::PlayerID;
+using mihajong_structs::TileCode;
+
+using mihajong_structs::seatAbsolute;
+using mihajong_structs::seatRelative;
+using mihajong_structs::PlayerRank;
+using mihajong_structs::PlayerRankList;
 
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
 extern "C" inline uint8_t diceSum(const GameTable* const gameStat);
 
-seatAbsolute inline playerwind(const GameTable* const gameStat, PLAYER_ID player, int currentRound);
+seatAbsolute inline playerwind(const GameTable* const gameStat, PlayerID player, int currentRound);
 __declspec(dllexport) inline int playerwind(int player, int currentRound);
 
-seatRelative inline playerRelative(PLAYER_ID targetPlayer, PLAYER_ID basePlayer);
+seatRelative inline playerRelative(PlayerID targetPlayer, PlayerID basePlayer);
 __declspec(dllexport) inline int playerRelative(int targetPlayer, int basePlayer);
 
-PLAYER_ID inline RelativePositionOf(PLAYER_ID targetPlayer, seatRelative relative);
+PlayerID inline RelativePositionOf(PlayerID targetPlayer, seatRelative relative);
 __declspec(dllexport) inline int RelativePositionOf(int targetPlayer, int relative);
 
 __declspec(dllexport) inline int roundLoopRate();
@@ -39,16 +40,16 @@ __declspec(dllexport) inline int tilesLeft(const GameTable* const gameStat);
 PlayerRankList calcRank(const GameTable* const gameStat);
 __declspec(dllexport) void calcRank(int* Rank, const GameTable* const gameStat);
 
-bool isPao(const GameTable* const gameStat, PLAYER_ID agariPlayer, PLAYER_ID paoPlayer);
+bool isPao(const GameTable* const gameStat, PlayerID agariPlayer, PlayerID paoPlayer);
 __declspec(dllexport) int isPao(const GameTable* const gameStat, int agariPlayer, int paoPlayer);
 
-bool isPaoAgari(const GameTable* const gameStat, PLAYER_ID agariPlayer);
+bool isPaoAgari(const GameTable* const gameStat, PlayerID agariPlayer);
 __declspec(dllexport) int isPaoAgari(const GameTable* const gameStat, int agariPlayer);
 
-bool isGotPao(const GameTable* const gameStat, PLAYER_ID paoPlayer);
+bool isGotPao(const GameTable* const gameStat, PlayerID paoPlayer);
 __declspec(dllexport) int isGotPao(const GameTable* const gameStat, int paoPlayer);
 
-PLAYER_ID getPaoPlayer(const GameTable* const gameStat, PLAYER_ID agariPlayer);
+PlayerID getPaoPlayer(const GameTable* const gameStat, PlayerID agariPlayer);
 __declspec(dllexport) int getPaoPlayer(const GameTable* const gameStat, int agariPlayer);
 
 __declspec(dllexport) int RonPlayers(const GameTable* const gameStat);
@@ -59,15 +60,15 @@ __declspec(dllexport) void windName(LPTSTR str, int bufsz, int wind);
 CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat);
 __declspec(dllexport) void roundName(LPTSTR str, int bufsz, int roundNum);
 
-CodeConv::tstring inline TileName(tileCode tile);
+CodeConv::tstring inline TileName(TileCode tile);
 __declspec(dllexport) void TileName(LPTSTR str, int bufsz, int tile);
 
-tileCode Wind2Tile(uint8_t wind);
+TileCode Wind2Tile(uint8_t wind);
 
 int BasePoint();
 __declspec(dllexport) int BasePointHSP();
 
-bool isAboveBase(const GameTable* const gameStat, PLAYER_ID player);
+bool isAboveBase(const GameTable* const gameStat, PlayerID player);
 __declspec(dllexport) int isAboveBase(const GameTable* const gameStat, int player);
 
 CodeConv::tstring intstr(int val);
@@ -79,13 +80,13 @@ namespace confpath {
 	__declspec(dllexport) void confPath(char* path, int bufsz);
 }
 
-bool isRichiReqSatisfied (const GameTable* const gameStat, PLAYER_ID targetPlayer);
+bool isRichiReqSatisfied (const GameTable* const gameStat, PlayerID targetPlayer);
 __declspec(dllexport) int isRichiReqSatisfied (const GameTable* const gameStat, int targetPlayer);
 
-bool isDobon (const GameTable* const gameStat, PLAYER_ID targetPlayer);
+bool isDobon (const GameTable* const gameStat, PlayerID targetPlayer);
 __declspec(dllexport) int isDobon (const GameTable* const gameStat, int targetPlayer);
 
-bool isTeppen (const GameTable* const gameStat, PLAYER_ID targetPlayer);
+bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer);
 __declspec(dllexport) int isTeppen (const GameTable* const gameStat, int targetPlayer);
 
 inline bool exist (LPCSTR filename) {

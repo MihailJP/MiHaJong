@@ -8,12 +8,13 @@
 #include <algorithm>
 #include <cassert>
 #include "except.h"
-#include "tilecode.h"
+#include "TileCode.h"
 #include "func.h"
 #include "logging.h"
 #include "reader/readrsrc.h"
 #include "../common/strcode.h"
 #include "decomp.h"
+#include "ruletbl.h"
 
 using std::min;
 
@@ -30,7 +31,7 @@ __declspec(dllexport) void ShantenAnalyzer::initMentsuAnalysisDat() { // –Êqƒf
 
 /* Œü’®”‚ğŒvZ‚·‚é */
 
-MJCORE SHANTEN ShantenAnalyzer::calcShanten(const GameTable* const gameStat, PLAYER_ID playerID, shantenType mode)
+MJCORE Shanten ShantenAnalyzer::calcShanten(const GameTable* const gameStat, PlayerID playerID, ShantenType mode)
 { // Œü’®”‚ğŒvZ‚·‚é
 	/* ””v‚»‚ê‚¼‚ê‚Ì–Êq‚Ì”‚ğ”‚¦‚é */
 	Int8ByTile tileCount = countTilesInHand(gameStat, playerID);
@@ -57,7 +58,7 @@ MJCORE SHANTEN ShantenAnalyzer::calcShanten(const GameTable* const gameStat, PLA
 		return calcShantenZuhelong(gameStat, playerID, tileCount);
 	default:
 		/* ‘S•”‹‚ß‚Äˆê”Ô˜a—¹‚É‹ß‚¢‚â‚Â‚ğ•Ô‚· */
-		SHANTEN shanten, tmpShanten;
+		Shanten shanten, tmpShanten;
 		shanten = calcShantenRegular(gameStat, playerID, tileCount);
 		tmpShanten = calcShantenChiitoi(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenKokushi(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
@@ -73,10 +74,10 @@ MJCORE SHANTEN ShantenAnalyzer::calcShanten(const GameTable* const gameStat, PLA
 __declspec(dllexport) int ShantenAnalyzer::calcShanten(const GameTable* const gameStat, int playerID, int mode)
 {
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-	return (int)calcShanten(gameStat, (PLAYER_ID)playerID, (shantenType)mode);
+	return (int)calcShanten(gameStat, (PlayerID)playerID, (ShantenType)mode);
 }
 
-unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount, unsigned limit) {
+unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit) {
 	// –Êq‚ğ2A‘ÎqE“ƒq‚ğ1‚Æ‚µ‚½”’l
 	unsigned int ans = 0;
 	// ””v
@@ -84,7 +85,7 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PLAYER_
 	for (int suit = 0; suit < TILE_NUMERAL_COLORS; suit++) {
 		unsigned int statcode = 0; unsigned int qDigit = 1;
 		for (int i = 1; i <= 9; i++) {
-			statcode += min(tileCount[suit * TILE_SUIT_STEP + i], 4) * qDigit;
+			statcode += min(tileCount[suit * TileSuitStep + i], 4) * qDigit;
 			qDigit *= 5;
 		}
 		uint8_t tmpdat = mentsuAnalysisDat[statcode];
@@ -95,8 +96,8 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PLAYER_
 
 	// š”v
 	for (int i = 1; i <= 7; i++) {
-		if (tileCount[TILE_SUIT_HONORS + i] == 2) {tarzi++; atama = true;}
-		if (tileCount[TILE_SUIT_HONORS + i] >= 3) {mianzi++;}
+		if (tileCount[TileSuitHonors + i] == 2) {tarzi++; atama = true;}
+		if (tileCount[TileSuitHonors + i] >= 3) {mianzi++;}
 	}
 
 	// –Â‚«–Êq‚âˆÃÈ‚ª‚ ‚éê‡
@@ -116,37 +117,37 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PLAYER_
 	return ans;
 }
 
-SHANTEN ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
 { // –Êqè‚ÌŒü’®”‚ğ‹‚ß‚é
 	return 8 - // ‘S‚­‘µ‚Á‚Ä‚È‚¢‚Ä‚ñ‚Åƒoƒ‰ƒoƒ‰‚¾‚Á‚½‚ç–Êqè‚É‘Î‚µ‚Ä8Œü’®iµ‘Îq‚É‘Î‚µ‚Ä‚È‚ç6Œü’®‚É‚È‚éj
 		chkMianzi(gameStat, playerID, tileCount, 4);
 }
 
-SHANTEN ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
 { // µ‘Îq‚É‘Î‚·‚éŒü’®”‚ğ‹‚ß‚éB
-	SHANTEN shanten = 6;
-	for (int i = 0; i < TILE_NONFLOWER_MAX; i++)
+	Shanten shanten = 6;
+	for (int i = 0; i < TileNonflowerMax; i++)
 		// ’Pƒ‚É‘Îq‚Ì”‚ğ’²‚×‚ê‚Î‚æ‚¢
 		// ‚½‚¾‚µA“¯‚¶”v‚S–‡‚ğ‘Îq‚Q‚Â‚Æ‚µ‚Äg‚Á‚Ä‚Í‚È‚ç‚È‚¢
 		if (tileCount[i] >= 2) shanten--;
 	// ˆÃ‚ª‚ ‚éê‡‚É’®”v‚Æ‚İ‚È‚³‚È‚¢‚æ‚¤‚É‚·‚é
-	for (int i = 0; i < TILE_NONFLOWER_MAX; i++)
+	for (int i = 0; i < TileNonflowerMax; i++)
 		if ((tileCount[i] >= 3)&&(shanten < 1)) shanten++;
 	// –Â‚«–Êq‚âˆÃÈ‚ª‚ ‚éê‡‚Íµ‘Îq‚Í•s‰Â”\
-	if (gameStat->Player[playerID].MeldPointer > 0) shanten = SHANTEN_IMPOSSIBLE;
+	if (gameStat->Player[playerID].MeldPointer > 0) shanten = ShantenImpossible;
 
 	return shanten;
 }
 
-SHANTEN ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
 { // ‘m–³‘o‚É‘Î‚·‚éŒü’®”‚ğ‹‚ß‚éB
-	if (chkGameType(gameStat, SanmaS)) return SHANTEN_IMPOSSIBLE; // ””vO–ƒ‚Å‚Í•s‰Â”\
+	if (chkGameType(gameStat, SanmaS)) return ShantenImpossible; // ””vO–ƒ‚Å‚Í•s‰Â”\
 
-	tileCode YaojiuPai[13] = {
+	TileCode YaojiuPai[13] = {
 		CharacterOne, CharacterNine, CircleOne, CircleNine, BambooOne, BambooNine,
 		EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
 	};
-	SHANTEN shanten = 13; bool atama = false;
+	Shanten shanten = 13; bool atama = false;
 	for (int i = 0; i < 13; i++) {
 		// ƒ„ƒI‹ã”v‚Pí—Ş‚É‚Â‚«A‚P‚ğƒJƒEƒ“ƒg‚·‚éB
 		if (tileCount[YaojiuPai[i]] >= 2) atama = true; // ƒAƒ^ƒ}Œó•â
@@ -155,12 +156,12 @@ SHANTEN ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, PLA
 	/* “ª‚ª‚ ‚éê‡ */
 	if (atama) shanten--;
 	// –Â‚«–Êq‚âˆÃÈ‚ª‚ ‚éê‡‚Í‘m–³‘o‚à•s‰Â”\
-	if (gameStat->Player[playerID].MeldPointer > 0) shanten = SHANTEN_IMPOSSIBLE;
+	if (gameStat->Player[playerID].MeldPointer > 0) shanten = ShantenImpossible;
 
 	return shanten;
 }
 
-void ShantenAnalyzer::setQixingTilePattern(tileCode* const QixingPai, unsigned int pattern) {
+void ShantenAnalyzer::setQixingTilePattern(TileCode* const QixingPai, unsigned int pattern) {
 	switch (pattern) {
 	case 0: case 1:
 		QixingPai[0] = CharacterOne; QixingPai[1] = CharacterFour;
@@ -196,13 +197,13 @@ void ShantenAnalyzer::setQixingTilePattern(tileCode* const QixingPai, unsigned i
 	}
 }
 
-SHANTEN ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount, bool qixing)
+Shanten ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, bool qixing)
 { // “ÁêFµ¯•sèÏ/‘S•sèÏ‚ÌŒü’®”‚ğ‹‚ß‚é
-	if ((!RuleData::chkRuleApplied("stellar_uushii"))&&(qixing)) return SHANTEN_IMPOSSIBLE;
-	else if ((!RuleData::chkRuleApplied("quanbukao"))&&(!qixing)) return SHANTEN_IMPOSSIBLE;
+	if ((!RuleData::chkRuleApplied("stellar_uushii"))&&(qixing)) return ShantenImpossible;
+	else if ((!RuleData::chkRuleApplied("quanbukao"))&&(!qixing)) return ShantenImpossible;
 
-	SHANTEN shanten = SHANTEN_IMPOSSIBLE;
-	tileCode QixingZiPai[7] = {
+	Shanten shanten = ShantenImpossible;
+	TileCode QixingZiPai[7] = {
 		EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
 	};
 	int qixingZiPaiCount = 0;
@@ -210,31 +211,31 @@ SHANTEN ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PLA
 		if (tileCount[QixingZiPai[i]] >= 1)
 			qixingZiPaiCount++;
 	for (int i = 0; i < 6; i++) {
-		tileCode QixingPai[9];
+		TileCode QixingPai[9];
 		setQixingTilePattern(QixingPai, i);
 		int qixingShuPaiCount = 0;
 		for (int i = 0; i < 9; i++)
 			if ((tileCount[QixingPai[i]] >= 1) &&
 				((qixingShuPaiCount < 7)||(!qixing))) qixingShuPaiCount++;
-		SHANTEN tmpShanten = 13 - qixingZiPaiCount - qixingShuPaiCount;
+		Shanten tmpShanten = 13 - qixingZiPaiCount - qixingShuPaiCount;
 		// –Â‚«–Êq‚âˆÃÈ‚ª‚ ‚éê‡‚Í•s‰Â”\
-		if (gameStat->Player[playerID].MeldPointer > 0) shanten = SHANTEN_IMPOSSIBLE;
+		if (gameStat->Player[playerID].MeldPointer > 0) shanten = ShantenImpossible;
 		if (tmpShanten < shanten) shanten = tmpShanten;
 	}
 
 	return shanten;
 }
 
-SHANTEN ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
 { // “ÁêF“ì–kí‘ˆ‚ÌŒü’®”‚ğ‹‚ß‚é
-	if (!RuleData::chkRuleApplied("civil_war")) return SHANTEN_IMPOSSIBLE;
+	if (!RuleData::chkRuleApplied("civil_war")) return ShantenImpossible;
 
-	SHANTEN shanten = 13;
+	Shanten shanten = 13;
 	// ˆÈ‰ºAˆê–‡‚¸‚Â’²‚×‚é
 	for (int i = 0; i < 6; i++) {
 		Int8ByTile tileCountTmp;
-		for (int j = 0; j < TILE_NONFLOWER_MAX; j++) tileCountTmp[j] = tileCount[j];
-		tileCode CivilWarPai[NUM_OF_TILES_IN_HAND] = {
+		for (int j = 0; j < TileNonflowerMax; j++) tileCountTmp[j] = tileCount[j];
+		TileCode CivilWarPai[NumOfTilesInHand] = {
 			NoTile, NoTile, NoTile, NoTile,
 			NoTile, NoTile, NoTile, NoTile,
 			SouthWind, SouthWind, SouthWind,
@@ -263,29 +264,29 @@ SHANTEN ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, PL
 			CivilWarPai[7] = BambooFive; break;
 		}
 		int civilWarPaiCount = 0;
-		for (int j = 0; j < NUM_OF_TILES_IN_HAND; j++) {
+		for (int j = 0; j < NumOfTilesInHand; j++) {
 			if (tileCountTmp[CivilWarPai[j]] >= 1) {
 				civilWarPaiCount++;
 				tileCountTmp[CivilWarPai[j]]--;
 			}
 		}
-		SHANTEN tmpShanten = 13 - civilWarPaiCount;
+		Shanten tmpShanten = 13 - civilWarPaiCount;
 		// –Â‚«–Êq‚âˆÃÈ‚ª‚ ‚éê‡‚Íl‚¦‚È‚¢
-		if (gameStat->Player[playerID].MeldPointer > 0) shanten = SHANTEN_IMPOSSIBLE;
+		if (gameStat->Player[playerID].MeldPointer > 0) shanten = ShantenImpossible;
 		if (tmpShanten < shanten) shanten = tmpShanten;
 	}
 
 	return shanten;
 }
 
-SHANTEN ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
 { // “ÁêF˜f¯’¼—ñ‚ÌŒü’®”‚ğ‹‚ß‚é
-	if (!RuleData::chkRuleApplied("syzygy")) return SHANTEN_IMPOSSIBLE;
+	if (!RuleData::chkRuleApplied("syzygy")) return ShantenImpossible;
 
 	// ˆÈ‰ºAˆê–‡‚¸‚Â’²‚×‚é
 	Int8ByTile tileCountTmp;
-	for (int i = 0; i < TILE_NONFLOWER_MAX; i++) tileCountTmp[i] = tileCount[i];
-	tileCode syzygyPai[NUM_OF_TILES_IN_HAND] = {
+	for (int i = 0; i < TileNonflowerMax; i++) tileCountTmp[i] = tileCount[i];
+	TileCode syzygyPai[NumOfTilesInHand] = {
 		CircleOne, CircleOne, CircleTwo,
 		CircleThree, CircleThree, CircleFour,
 		CircleFive, CircleFive, CircleSix,
@@ -293,7 +294,7 @@ SHANTEN ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PLAY
 		CircleNine, CircleNine
 	};
 	int syzygyPaiCount = 0;
-	for (int i = 0; i < NUM_OF_TILES_IN_HAND; i++) {
+	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (tileCountTmp[syzygyPai[i]] >= 1) {
 			syzygyPaiCount++;
 			tileCountTmp[syzygyPai[i]]--;
@@ -301,51 +302,51 @@ SHANTEN ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PLAY
 	}
 	// –Â‚«–Êq‚âˆÃÈ‚ª‚ ‚éê‡‚Íl‚¦‚È‚¢
 
-	return (gameStat->Player[playerID].MeldPointer > 0) ? SHANTEN_IMPOSSIBLE : (13 - syzygyPaiCount);
+	return (gameStat->Player[playerID].MeldPointer > 0) ? ShantenImpossible : (13 - syzygyPaiCount);
 }
 
-SHANTEN ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
 { // “ÁêFƒZƒuƒ“ƒAƒbƒv‚ÌŒü’®”‚ğ‹‚ß‚é
-	if (!RuleData::chkRuleApplied("sevenup")) return SHANTEN_IMPOSSIBLE;
+	if (!RuleData::chkRuleApplied("sevenup")) return ShantenImpossible;
 
-	SHANTEN shanten = 13;
+	Shanten shanten = 13;
 	// ˆÈ‰ºAˆê–‡‚¸‚Â’²‚×‚é
 	for (int i = 0; i < 3; i++) {
 		Int8ByTile tileCountTmp;
-		for (int j = 0; j < TILE_NONFLOWER_MAX; j++) tileCountTmp[j] = tileCount[j];
-		tileCode tileArrange[NUM_OF_TILES_IN_HAND] = {
+		for (int j = 0; j < TileNonflowerMax; j++) tileCountTmp[j] = tileCount[j];
+		TileCode tileArrange[NumOfTilesInHand] = {
 			NoTile, NoTile, NoTile, NoTile,
 			NoTile, NoTile, NoTile,
 			EastWind, SouthWind, WestWind, NorthWind,
 			WhiteDragon, GreenDragon, RedDragon,
 		};
 		for (int j = 0; j < 7; j++)
-			tileArrange[j] = (tileCode)(i * TILE_SUIT_STEP + j + 1);
+			tileArrange[j] = (TileCode)(i * TileSuitStep + j + 1);
 
 		int yakuTileCount = 0;
-		for (int j = 0; j < NUM_OF_TILES_IN_HAND; j++) {
+		for (int j = 0; j < NumOfTilesInHand; j++) {
 			if (tileCountTmp[tileArrange[j]] >= 1) {
 				yakuTileCount++;
 				tileCountTmp[tileArrange[j]]--;
 			}
 		}
-		SHANTEN tmpShanten = 13 - yakuTileCount;
+		Shanten tmpShanten = 13 - yakuTileCount;
 		// –Â‚«–Êq‚âˆÃÈ‚ª‚ ‚éê‡‚Íl‚¦‚È‚¢
-		if (gameStat->Player[playerID].MeldPointer > 0) shanten = SHANTEN_IMPOSSIBLE;
+		if (gameStat->Player[playerID].MeldPointer > 0) shanten = ShantenImpossible;
 		if (tmpShanten < shanten) shanten = tmpShanten;
 	}
 
 	return shanten;
 }
 
-SHANTEN ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, PLAYER_ID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
 { // “ÁêF‘g‡—´‚ÌŒü’®”‚ğ‹‚ß‚é
-	if (!RuleData::chkRuleApplied("zuhelong")) return SHANTEN_IMPOSSIBLE;
+	if (!RuleData::chkRuleApplied("zuhelong")) return ShantenImpossible;
 
-	SHANTEN shanten = SHANTEN_IMPOSSIBLE;
+	Shanten shanten = ShantenImpossible;
 	int qixingZiPaiCount = 0;
 	for (int i = 0; i < 6; i++) {
-		tileCode QixingPai[9];
+		TileCode QixingPai[9];
 		setQixingTilePattern(QixingPai, i);
 		int qTileCount = 0;
 		Int8ByTile tmpTileCount; std::memcpy(tmpTileCount.val, tileCount.val, sizeof(tmpTileCount.val));
@@ -354,9 +355,9 @@ SHANTEN ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, PL
 				++qTileCount; --tmpTileCount[QixingPai[i]];
 			}
 		}
-		SHANTEN tmpShanten = 11 - qTileCount - chkMianzi(gameStat, playerID, tmpTileCount, 1);
+		Shanten tmpShanten = 11 - qTileCount - chkMianzi(gameStat, playerID, tmpTileCount, 1);
 		// –Â‚«–Êq‚âˆÃÈ‚ª2‚ÂˆÈã‚ ‚éê‡‚Í•s‰Â”\
-		if (gameStat->Player[playerID].MeldPointer > 1) shanten = SHANTEN_IMPOSSIBLE;
+		if (gameStat->Player[playerID].MeldPointer > 1) shanten = ShantenImpossible;
 		if (tmpShanten < shanten) shanten = tmpShanten;
 	}
 

@@ -10,12 +10,12 @@ class TableSubsceneCheckTenpai : public TableSubsceneCallFadeProto {
 private:
 	TextRenderer* txtRenderer;
 	ShowTile* tileRenderer;
-	bool tenpaiflag[PLAYERS];
-	MachihaiInfo machiInfo[PLAYERS];
+	bool tenpaiflag[Players];
+	MachihaiInfo machiInfo[Players];
 private:
 	void RecalcTenpaiFlag();
-	void CalculateTenpaiFlag(PLAYER_ID player, int x, int y);
-	void ShowTenpaiFlag(PLAYER_ID player, int x, int y);
+	void CalculateTenpaiFlag(PlayerID player, int x, int y);
+	void ShowTenpaiFlag(PlayerID player, int x, int y);
 public:
 	TableSubsceneCheckTenpai(LPDIRECT3DDEVICE9 device);
 	~TableSubsceneCheckTenpai();

@@ -17,19 +17,19 @@ typedef const Rat& rat;
 LNum agaricalc(const LNum& AgariPointRaw, int agariBairitsu, int agariBairitsu2, unsigned agariCount);
 LNum agaricalc(const LNum& AgariPointRaw, rat agariBairitsu, rat agariBairitsu2, int agariCount, rat agariBairitsu3, int agariCount2);
 
-inline void deltacalcplus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, int agariBairitsu, PLAYER_ID targetPlayer) {
+inline void deltacalcplus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, int agariBairitsu, PlayerID targetPlayer) {
 	PointDelta[targetPlayer] += (AgariPointRaw * agariBairitsu + 99) / 100 * 100;
 	return;
 }
-inline void deltacalcminus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, int agariBairitsu, PLAYER_ID targetPlayer) {
+inline void deltacalcminus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, int agariBairitsu, PlayerID targetPlayer) {
 	PointDelta[targetPlayer] -= (AgariPointRaw * agariBairitsu + 99) / 100 * 100;
 	return;
 }
-inline void deltacalcplus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, rat agariBairitsu, PLAYER_ID targetPlayer) {
+inline void deltacalcplus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, rat agariBairitsu, PlayerID targetPlayer) {
 	PointDelta[targetPlayer] += (AgariPointRaw * agariBairitsu.getNumerator() / agariBairitsu.getDenominator() + 99) / 100 * 100;
 	return;
 }
-inline void deltacalcminus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, rat agariBairitsu, PLAYER_ID targetPlayer) {
+inline void deltacalcminus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, rat agariBairitsu, PlayerID targetPlayer) {
 	PointDelta[targetPlayer] -= (AgariPointRaw * agariBairitsu.getNumerator() / agariBairitsu.getDenominator() + 99) / 100 * 100;
 	return;
 }
@@ -41,7 +41,7 @@ void calcAgariPoints(const GameTable* gameStat, LNum& agariPoint,
 // -------------------------------------------------------------------------
 
 void agariproc(EndType& RoundEndType, GameTable* gameStat, bool& tmpUraFlag, bool& tmpAliceFlag, CodeConv::tstring& ResultDesc);
-void endround_agariproc(GameTable* gameStat, CodeConv::tstring& ResultDesc, PLAYER_ID& AgariPlayerPriority,
+void endround_agariproc(GameTable* gameStat, CodeConv::tstring& ResultDesc, PlayerID& AgariPlayerPriority,
 	std::uint16_t origDoraPointer, const yaku::YAKUSTAT& yakuInfo, bool tmpAliceFlag, int& OyaAgari);
 void endround_chonboproc(GameTable* gameStat, CodeConv::tstring& ResultDesc);
 

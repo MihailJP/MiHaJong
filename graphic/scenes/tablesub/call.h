@@ -9,8 +9,8 @@ namespace mihajong_graphic {
 class TableSubsceneCallProto : public TableSubscene {
 protected:
 	LPDIRECT3DTEXTURE9 tCall;
-	virtual void ShowCallMsg(PLAYER_ID player, calltext::CallType callType, int x, int y) = 0;
-	virtual void ShowCall(PLAYER_ID player, int x, int y) = 0;
+	virtual void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) = 0;
+	virtual void ShowCall(PlayerID player, int x, int y) = 0;
 	virtual void ShowAllCall() = 0;
 public:
 	TableSubsceneCallProto(LPDIRECT3DDEVICE9 device);
@@ -19,8 +19,8 @@ public:
 
 class TableSubsceneCallZoomProto : public TableSubsceneCallProto {
 protected:
-	void ShowCallMsg(PLAYER_ID player, calltext::CallType callType, int x, int y);
-	void ShowCall(PLAYER_ID player, int x, int y);
+	void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y);
+	void ShowCall(PlayerID player, int x, int y);
 	void ShowAllCall();
 public:
 	TableSubsceneCallZoomProto(LPDIRECT3DDEVICE9 device);
@@ -36,8 +36,8 @@ public:
 
 class TableSubsceneCallFadeProto : public TableSubsceneCallProto {
 protected:
-	void ShowCallMsg(PLAYER_ID player, calltext::CallType callType, int x, int y);
-	void ShowCall(PLAYER_ID player, int x, int y);
+	void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y);
+	void ShowCall(PlayerID player, int x, int y);
 	void ShowAllCall();
 public:
 	TableSubsceneCallFadeProto(LPDIRECT3DDEVICE9 device);

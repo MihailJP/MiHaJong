@@ -353,9 +353,6 @@
     <ClInclude Include="random.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="nmrules.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="prepare.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -378,9 +375,6 @@
       <Filter>ヘッダー ファイル\data</Filter>
     </ClInclude>
     <ClInclude Include="fuuro.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="bgmid.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="endtype.h">

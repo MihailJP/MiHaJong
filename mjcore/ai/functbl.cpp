@@ -17,7 +17,7 @@ void aiscript::table::functable::inittable(lua_State* const L, int playerID) {
 	discardTileCode(L); // subtable 'DiscardType'
 	meldCallCode(L); // subtable 'Call'
 	meldTypeCode(L); // subtable 'MeldType'
-	tileCode(L); // subtable 'Tile'
+	TileCode(L); // subtable 'Tile'
 	agariTypeCode(L); // subtable 'AgariType'
 	doraColorCode(L); // subtable 'DoraColor'
 	gametbl::makeprototype(L, playerID); // subtable 'gametbl' (prototype)
@@ -110,17 +110,17 @@ inline void aiscript::table::functable::meldTypeCode(lua_State* const L) {
 }
 
 /* 牌の番号 */
-inline void aiscript::table::functable::tileCode(lua_State* const L) {
+inline void aiscript::table::functable::TileCode(lua_State* const L) {
 	const char suitname[3][16] = {"Character","Circle","Bamboo",};
 	const char numeral[9][8] = {"One","Two","Three","Four","Five","Six","Seven","Eight","Nine",};
 	lua_newtable(L);
-	for (int suit = 0; suit < TILE_SUIT_HONORS; suit += TILE_SUIT_STEP) { // 数牌(ループ)
+	for (int suit = 0; suit < TileSuitHonors; suit += TileSuitStep) { // 数牌(ループ)
 		lua_newtable(L);
 		for (int num = 1; num <= 9; num++) {
 			TableAdd(L, numeral[num - 1], suit + num);
 			TableAdd(L, num, suit + num);
 		}
-		lockTable(L); lua_setfield(L, -2, suitname[suit / TILE_SUIT_STEP]);
+		lockTable(L); lua_setfield(L, -2, suitname[suit / TileSuitStep]);
 	}
 	lua_newtable(L);
 	TableAdd(L, "East", (int)EastWind); TableAdd(L, "South", (int)SouthWind);
@@ -300,22 +300,22 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 /* 鳴きの種別コード */
 inline void aiscript::table::functable::agariTypeCode(lua_State* const L) {
 	lua_newtable(L); // AgariType
-	TableAdd(L, "All", (int)ShantenAnalyzer::shantenAll);
-	TableAdd(L, "Regular", (int)ShantenAnalyzer::shantenRegular);
-	TableAdd(L, "Pairs", (int)ShantenAnalyzer::shantenPairs);
-	TableAdd(L, "Orphans", (int)ShantenAnalyzer::shantenOrphans);
-	TableAdd(L, "Stellar", (int)ShantenAnalyzer::shantenStellar);
-	TableAdd(L, "CivilWar", (int)ShantenAnalyzer::shantenCivilWar);
-	TableAdd(L, "Syzygy", (int)ShantenAnalyzer::shantenSyzygy);
-	TableAdd(L, "Quanbukao", (int)ShantenAnalyzer::shantenQuanbukao);
-	TableAdd(L, "SevenUp", (int)ShantenAnalyzer::shantenSevenup);
-	TableAdd(L, "ZuheLong", (int)ShantenAnalyzer::shantenZuhelong);
+	TableAdd(L, "All", (int)shantenAll);
+	TableAdd(L, "Regular", (int)shantenRegular);
+	TableAdd(L, "Pairs", (int)shantenPairs);
+	TableAdd(L, "Orphans", (int)shantenOrphans);
+	TableAdd(L, "Stellar", (int)shantenStellar);
+	TableAdd(L, "CivilWar", (int)shantenCivilWar);
+	TableAdd(L, "Syzygy", (int)shantenSyzygy);
+	TableAdd(L, "Quanbukao", (int)shantenQuanbukao);
+	TableAdd(L, "SevenUp", (int)shantenSevenup);
+	TableAdd(L, "ZuheLong", (int)shantenZuhelong);
 	lockTable(L); lua_setfield(L, -2, "AgariType");
 }
 
 /* プレイヤー番号を取得 */
-PLAYER_ID aiscript::table::functable::getPlayerID(lua_State* const L) {
-	PLAYER_ID player;
+PlayerID aiscript::table::functable::getPlayerID(lua_State* const L) {
+	PlayerID player;
 	lua_getglobal(L, tblname);
 	lua_pushstring(L, "gametbl"); lua_gettable(L, -2);
 	lua_pushstring(L, "playerid"); lua_gettable(L, -2);
