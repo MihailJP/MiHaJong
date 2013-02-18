@@ -300,16 +300,16 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 /* ñ¬Ç´ÇÃéÌï ÉRÅ[Éh */
 inline void aiscript::table::functable::agariTypeCode(lua_State* const L) {
 	lua_newtable(L); // AgariType
-	TableAdd(L, "All", (int)ShantenAnalyzer::shantenAll);
-	TableAdd(L, "Regular", (int)ShantenAnalyzer::shantenRegular);
-	TableAdd(L, "Pairs", (int)ShantenAnalyzer::shantenPairs);
-	TableAdd(L, "Orphans", (int)ShantenAnalyzer::shantenOrphans);
-	TableAdd(L, "Stellar", (int)ShantenAnalyzer::shantenStellar);
-	TableAdd(L, "CivilWar", (int)ShantenAnalyzer::shantenCivilWar);
-	TableAdd(L, "Syzygy", (int)ShantenAnalyzer::shantenSyzygy);
-	TableAdd(L, "Quanbukao", (int)ShantenAnalyzer::shantenQuanbukao);
-	TableAdd(L, "SevenUp", (int)ShantenAnalyzer::shantenSevenup);
-	TableAdd(L, "ZuheLong", (int)ShantenAnalyzer::shantenZuhelong);
+	TableAdd(L, "All", (int)shantenAll);
+	TableAdd(L, "Regular", (int)shantenRegular);
+	TableAdd(L, "Pairs", (int)shantenPairs);
+	TableAdd(L, "Orphans", (int)shantenOrphans);
+	TableAdd(L, "Stellar", (int)shantenStellar);
+	TableAdd(L, "CivilWar", (int)shantenCivilWar);
+	TableAdd(L, "Syzygy", (int)shantenSyzygy);
+	TableAdd(L, "Quanbukao", (int)shantenQuanbukao);
+	TableAdd(L, "SevenUp", (int)shantenSevenup);
+	TableAdd(L, "ZuheLong", (int)shantenZuhelong);
 	lockTable(L); lua_setfield(L, -2, "AgariType");
 }
 

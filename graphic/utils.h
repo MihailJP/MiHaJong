@@ -3,10 +3,12 @@
 #include "exports.h"
 #include "../mjcore/func.h"
 #include "../mjcore/tileutil.h"
-#include "../mjcore/shanten.h"
+#include "../common/shanten.h"
 
 namespace mihajong_graphic {
 namespace utils {
+
+using namespace mihajong_structs;
 
 typedef seatAbsolute (*playerwind_type)(const GameTable*, PlayerID, int);
 typedef seatRelative (*playerRelative_type)(PlayerID, PlayerID);
@@ -16,7 +18,7 @@ typedef PlayerRankList (*calcRank_type)(const GameTable*);
 typedef MachihaiInfo (*chkFuriten_type)(const GameTable*, PlayerID);
 typedef bool (*isTenpai_type)(const GameTable*, PlayerID);
 typedef bool (*isRichiReqSatisfied_type)(const GameTable*, PlayerID);
-typedef SHANTEN (*calcShanten_type)(const GameTable*, PlayerID, ShantenAnalyzer::shantenType);
+typedef Shanten (*calcShanten_type)(const GameTable*, PlayerID, ShantenType);
 typedef bool (*chkdaopaiability_type)(const GameTable*, PlayerID);
 typedef bool (*chkShisanBuDa_type)(const GameTable*, PlayerID);
 typedef bool (*chkShisiBuDa_type)(const GameTable*, PlayerID);

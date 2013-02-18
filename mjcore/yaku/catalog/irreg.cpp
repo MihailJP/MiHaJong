@@ -5,7 +5,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	/* チートイ */
 	auto isQiDui =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return ((analysis->shanten[ShantenAnalyzer::shantenPairs] == -1)&&(analysis->shanten[ShantenAnalyzer::shantenRegular] >= 0));
+			return ((analysis->shanten[shantenPairs] == -1)&&(analysis->shanten[shantenRegular] >= 0));
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("七対子"), get_yaku_han("seven_pairs"), /* 1翻50符のルールと2翻25符のルールがある。符はここでは設定できないです…… */
@@ -198,7 +198,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		_T("国士無双"), yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 		_T("十三不塔"), _T("五門斎"),
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return (analysis->shanten[ShantenAnalyzer::shantenOrphans] == -1);
+			return (analysis->shanten[shantenOrphans] == -1);
 		}
 	));
 	if (RuleData::chkRuleApplied("double_yakuman")) /* 国士13面待ち（ダブル役満） */
@@ -206,7 +206,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("国士無双十三面"), yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen,
 			_T("国士無双"), _T("十三不塔"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->shanten[ShantenAnalyzer::shantenOrphans] == -1) && // 国士無双になっていて、
+				return ((analysis->shanten[shantenOrphans] == -1) && // 国士無双になっていて、
 					(!analysis->MachiInfo.FuritenFlag) && // フリテンではなくて、
 					((analysis->MachiInfo.MachiMen == 13)||(analysis->GameStat->TianHuFlag))); // 13面待ちか天和になっている
 			}
@@ -217,7 +217,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("七星無靠"), get_yaku_han("stellar_uushii"),
 			_T("全不靠"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[ShantenAnalyzer::shantenStellar] == -1);
+				return (analysis->shanten[shantenStellar] == -1);
 			}
 		));
 	/* 南北戦争 */
@@ -225,7 +225,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("南北戦争"), get_yaku_han("civil_war"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[ShantenAnalyzer::shantenCivilWar] == -1);
+				return (analysis->shanten[shantenCivilWar] == -1);
 			}
 		));
 	/* 惑星直列 */
@@ -234,7 +234,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("惑星直列"), get_yaku_han("syzygy"),
 			_T("清一色"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[ShantenAnalyzer::shantenSyzygy] == -1);
+				return (analysis->shanten[shantenSyzygy] == -1);
 			}
 		));
 	/* 全不靠 */
@@ -242,7 +242,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("全不靠"), get_yaku_han("quanbukao"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[ShantenAnalyzer::shantenQuanbukao] == -1);
+				return (analysis->shanten[shantenQuanbukao] == -1);
 			}
 		));
 	/* セブンアップ */
@@ -251,7 +251,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("セブンアップ"), get_yaku_han("sevenup"),
 			_T("混一色"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[ShantenAnalyzer::shantenSevenup] == -1);
+				return (analysis->shanten[shantenSevenup] == -1);
 			}
 		));
 	/* 組合龍 */
@@ -259,7 +259,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("組合龍"), get_yaku_han("zuhelong"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[ShantenAnalyzer::shantenZuhelong] == -1);
+				return (analysis->shanten[shantenZuhelong] == -1);
 			}
 		));
 }

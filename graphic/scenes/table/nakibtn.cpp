@@ -118,7 +118,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 	};
 	const PlayerID ActivePlayer = gameStat->CurrentPlayer.Active;
 	const PlayerTable* const playerStat = &(gameStat->Player.val[ActivePlayer]);
-	const SHANTEN Shanten = utils::calcShanten(gameStat, ActivePlayer, ShantenAnalyzer::shantenAll);
+	const Shanten Shanten = utils::calcShanten(gameStat, ActivePlayer, shantenAll);
 	if (utils::isRichiReqSatisfied(gameStat, ActivePlayer) && // 点棒要件を満たしている（点棒が足りている）
 		(Shanten <= 0) && // テンパイしている
 		(playerStat->MenzenFlag || (!rules::chkRule("riichi_shibari", "no"))) && // 門前であるか、リーチ縛りルールである
@@ -188,13 +188,13 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 	const PlayerID PassivePlayer = gameStat->CurrentPlayer.Passive;
 	PlayerTable* const playerStat = &(gameStat->Player.val[PassivePlayer]);
 	playerStat->Tsumohai().tile = gameStat->CurrentDiscard.tile;
-	const SHANTEN Shanten = utils::calcShanten(gameStat, gameStat->PlayerID, ShantenAnalyzer::shantenAll);
+	const Shanten Shanten = utils::calcShanten(gameStat, gameStat->PlayerID, shantenAll);
 	playerStat->Tsumohai().tile = NoTile;
 
 	if (gameStat->CurrentDiscard.tile > TileSuitFlowers) goto end; /* 花牌の場合は残りの判定をスキップ */
 	if (playerStat->AgariHouki) goto end; /* 和了り放棄だったら残りの判定をスキップ */
 	if ((gameStat->KangFlag.chankanFlag == chankanOfAnkan) && // 暗槓に対する搶槓判定のときで、
-		(utils::calcShanten(gameStat, PassivePlayer, ShantenAnalyzer::shantenOrphans) >= 0)) // 国士聴牌でない場合は
+		(utils::calcShanten(gameStat, PassivePlayer, shantenOrphans) >= 0)) // 国士聴牌でない場合は
 		goto end; // 残りの判定をスキップ
 
 	if (Shanten < 0) // 出た牌が当たり牌
@@ -288,7 +288,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			setMode(DiscardTileNum::Riichi, btnRiichi,
 				[](int i, GameTable* tmpStat) -> bool {
 					tmpStat->Player.val[tmpStat->CurrentPlayer.Active].Hand[i].tile = NoTile;
-					SHANTEN Shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, ShantenAnalyzer::shantenAll);
+					Shanten Shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, shantenAll);
 					return (Shanten > 0);
 				});
 			break;

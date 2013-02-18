@@ -41,7 +41,7 @@ private:
 	};
 	struct MENTSU_ANALYSIS { // 面子解析結果
 		PlayerID player;
-		SHANTEN shanten[SHANTEN_PAGES];
+		Shanten shanten[SHANTEN_PAGES];
 		MeldBuf MianziDat; // 面子パース結果
 		uint8_t BasePoint; // 符
 		MachiType Machi; // 待ちの種類
@@ -224,9 +224,9 @@ private:
 	static void calculateScore(yaku::YAKUSTAT* const yStat);
 
 	static void analysisNonLoop(const GameTable* const gameStat, PlayerID targetPlayer,
-		SHANTEN* const shanten, YAKUSTAT* const yakuInfo);
+		Shanten* const shanten, YAKUSTAT* const yakuInfo);
 	static void analysisLoop(const GameTable* const gameStat, PlayerID targetPlayer,
-		SHANTEN* const shanten, YAKUSTAT* const yakuInfo);
+		Shanten* const shanten, YAKUSTAT* const yakuInfo);
 
 	static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
 		YAKUSTAT* const result, PlayerID targetPlayer);

@@ -328,7 +328,7 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 	for (TileCode i = CharacterOne; i < Flower; i = (TileCode)((int)i + 1)) {
 		if ((int)i % TileSuitStep == 0) continue; // ‚È‚¢”v‚¾‚Á‚½‚ç–ß‚é
 		tmpGameStat.Player[targetPlayer].Tsumohai().tile = i;
-		if (ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, ShantenAnalyzer::shantenAll) == -1) { // ‘Ò‚¿‚É‚È‚Á‚Ä‚¢‚½‚ç
+		if (ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, shantenAll) == -1) { // ‘Ò‚¿‚É‚È‚Á‚Ä‚¢‚½‚ç
 			machihaiInfo.MachiMen++; machihaiInfo.Machihai[i].MachihaiFlag = true; // ƒtƒ‰ƒO‚ğƒZƒbƒg‚µ‚Ü‚µ‚å‚¤
 			machihaiInfo.MachihaiTotal += // ƒJƒEƒ“ƒg‚ğ‰ÁZ‚µ‚Ü‚µ‚å‚¤
 				(machihaiInfo.Machihai[i].MachihaiCount =
@@ -395,7 +395,7 @@ void chkOpenMachi(GameTable* const gameStat, PlayerID targetPlayer) {
 		/* ‚Ü‚¸‚ÍA‚ ‚é”v‚ğƒcƒ‚‚Á‚½‚Æ‰¼’è‚µ‚Ü‚· */
 		gameStat->Player[targetPlayer].Tsumohai().tile = (TileCode)i;
 		/* ‚à‚µ‚»‚ê‚ª˜a—¹‚É‚È‚Á‚Ä‚¢‚½‚çAƒtƒ‰ƒO‚ğƒZƒbƒg‚µ‚Ü‚µ‚å‚¤ */
-		if (ShantenAnalyzer::calcShanten(gameStat, targetPlayer, ShantenAnalyzer::shantenAll) == -1)
+		if (ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenAll) == -1)
 			gameStat->OpenRichiWait[i] = true;
 		/* ‚±‚ê‚ğ‚·‚×‚Ä‚Ì”v‚É‚Â‚¢‚Äs‚µ‚Ü‚µ‚å‚¤ */
 	}
@@ -567,7 +567,7 @@ namespace chkAnkanAbilityTools { // chkAnkanAbilityŠÖ”—p‚Ìˆ—
 			‚P‚P‚P‚R‚S‚S‚S“Œ“Œ“Œ”­–– ©”­‚ğæ‚ë‚¤‚Æ‚·‚é‚Æ
 			+‡@++‚P++-‚Q-++-‚Q-+~     c ‚U(“ñŒü’®)
 		*/
-		SHANTEN shanten = ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, ShantenAnalyzer::shantenAll);
+		Shanten shanten = ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, shantenAll);
 		if (shanten == 1) {
 			o.str(_T("")); o << _T("ƒcƒ‚”v [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
@@ -703,7 +703,7 @@ __declspec(dllexport) void calcdoukasen(GameTable* const gameStat) {
 
 /* ’®”v‚©‚Ç‚¤‚©’²‚×‚é */
 bool isTenpai(const GameTable* const gameStat, PlayerID targetPlayer) {
-	auto Shanten = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, ShantenAnalyzer::shantenAll);
+	auto Shanten = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenAll);
 	if (gameStat->Player[targetPlayer].AgariHouki) Shanten = 1; // ƒAƒKƒŠ•úŠü‚È‚ç‹­§•s’®
 	if (EnvTable::Instantiate()->PlayerDat[targetPlayer].RemotePlayerFlag == -1)
 		return false;

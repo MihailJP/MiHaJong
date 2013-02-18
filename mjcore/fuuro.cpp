@@ -663,7 +663,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 	for (PlayerID i = 0; i < Players; ++i) {
 		const TileCode xTile = gameStat->Player[i].Tsumohai().tile;
 		gameStat->Player[i].Tsumohai().tile = gameStat->CurrentDiscard.tile;
-		const SHANTEN tmpShanten = ShantenAnalyzer::calcShanten(gameStat, i, ShantenAnalyzer::shantenAll);
+		const Shanten tmpShanten = ShantenAnalyzer::calcShanten(gameStat, i, shantenAll);
 		if ((tmpShanten == -1) && (!(gameStat->Player[i].DeclarationFlag.Ron)))
 			gameStat->Player[i].DoujunFuriten = true;
 		gameStat->Player[i].Tsumohai().tile = xTile;
