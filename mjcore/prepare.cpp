@@ -11,7 +11,7 @@
 #include "yaku/yaku.h"
 #include "ai/class.h"
 #include "../sound/sound.h"
-#include "bgmid.h"
+#include "../common/bgmid.h"
 #include "sound.h"
 #include "random.h"
 #include "../graphic/graphic.h"

@@ -12,7 +12,7 @@
 #include "../../event.h"
 #include "../../../common/discard.h"
 #include "../../../sound/sound.h"
-#include "../../../mjcore/bgmid.h"
+#include "../../../common/bgmid.h"
 
 #include "tehai.h"
 #include "naki_id.h"

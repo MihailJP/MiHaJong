@@ -5,7 +5,7 @@
 #include "envtbl.h"
 #include "../socket/socket.h"
 #include "../sound/sound.h"
-#include "bgmid.h"
+#include "../common/bgmid.h"
 #include "tileutil.h"
 #include "mouda.h"
 #include "fuuro.h"

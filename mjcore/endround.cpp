@@ -8,7 +8,7 @@
 #include <tuple>
 #include <cassert>
 #include "../sound/sound.h"
-#include "bgmid.h"
+#include "../common/bgmid.h"
 #include "sound.h"
 #include "../graphic/graphic.h"
 #include "tileutil.h"

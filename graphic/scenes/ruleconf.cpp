@@ -3,7 +3,7 @@
 #include "../scrmanip.h"
 #include "../geometry.h"
 #include "../../sound/sound.h"
-#include "../../mjcore/bgmid.h"
+#include "../../common/bgmid.h"
 #include "../../common/version.h"
 #include "../event.h"
 #include <iomanip>

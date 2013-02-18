@@ -10,7 +10,7 @@
 #include "envtbl.h"
 #include "tileutil.h"
 #include "discard.h"
-#include "bgmid.h"
+#include "../common/bgmid.h"
 #include "ai/class.h"
 #include "../socket/socket.h"
 #include "yaku/ykclass.h"

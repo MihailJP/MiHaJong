@@ -7,7 +7,7 @@
 #include "../common/version.h"
 #include "envtbl.h"
 #include "../sound/sound.h"
-#include "bgmid.h"
+#include "../common/bgmid.h"
 #include "sound.h"
 #include "shanten.h"
 #include "random.h"

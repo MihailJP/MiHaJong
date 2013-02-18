@@ -4,7 +4,7 @@
 #include "../sprite.h"
 #include <iomanip>
 #include "../../sound/sound.h"
-#include "../../mjcore/bgmid.h"
+#include "../../common/bgmid.h"
 #include "../event.h"
 #include "../../common/discard.h"
 #include "../utils.h"

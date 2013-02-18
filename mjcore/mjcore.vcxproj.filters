@@ -380,9 +380,6 @@
     <ClInclude Include="fuuro.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="bgmid.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="endtype.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

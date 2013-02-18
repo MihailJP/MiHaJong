@@ -9,7 +9,7 @@
 #include "../sprite.h"
 #include "../event.h"
 #include "../../sound/sound.h"
-#include "../../mjcore/bgmid.h"
+#include "../../common/bgmid.h"
 
 namespace mihajong_graphic {
 

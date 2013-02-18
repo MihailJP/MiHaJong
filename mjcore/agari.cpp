@@ -4,7 +4,7 @@
 #include <regex>
 #include "../graphic/graphic.h"
 #include "../sound/sound.h"
-#include "bgmid.h"
+#include "../common/bgmid.h"
 #include "sound.h"
 #include "func.h"
 #include "haifu.h"
