@@ -187,7 +187,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 			if (i > 0) tmpdigit[i - 1] += (tmpdigit[i] % (int64_t)divisor) * 100000000L;
 			tmpdigit[i] /= (int64_t)divisor;
 		}
-		for (int i = 0; i < DigitGroups; i++) ans.digitGroup[i] = tmpdigit[i];
+		for (int i = 0; i < DigitGroups; i++) ans.digitGroup[i] = (int32_t)(tmpdigit[i] & 0xffffffffull);
 		ans.fix();
 		return ans;
 	}
@@ -199,7 +199,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 			if (i > 0) tmpdigit[i - 1] += (tmpdigit[i] % (int64_t)divisor) * 100000000L;
 			tmpdigit[i] /= (int64_t)divisor;
 		}
-		for (int i = 0; i < DigitGroups; i++) digitGroup[i] = tmpdigit[i];
+		for (int i = 0; i < DigitGroups; i++) digitGroup[i] = (int32_t)(tmpdigit[i] & 0xffffffffull);
 		fix();
 		return *this;
 	}
