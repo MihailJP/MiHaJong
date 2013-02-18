@@ -2,10 +2,11 @@
 
 #include <cstdint>
 #include "../mjexport.h"
+#include "../../common/yakurslt.h"
 
 class yaku {
 public:
-	EXPORT_STRUCT YAKUSTAT;
+	typedef mihajong_structs::YakuResult YAKUSTAT;
 	class yakuCalculator;
 
 private:

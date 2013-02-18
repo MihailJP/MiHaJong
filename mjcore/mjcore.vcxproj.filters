@@ -108,9 +108,6 @@
     <ClCompile Include="yaku\ykclass.cpp">
       <Filter>ソース ファイル\yaku</Filter>
     </ClCompile>
-    <ClCompile Include="yaku\yakurslt.cpp">
-      <Filter>ソース ファイル\yaku</Filter>
-    </ClCompile>
     <ClCompile Include="yaku\yk_tools.cpp">
       <Filter>ソース ファイル\yaku</Filter>
     </ClCompile>
@@ -320,9 +317,6 @@
     <ClInclude Include="yaku\ykclass.h">
       <Filter>ヘッダー ファイル\yaku</Filter>
     </ClInclude>
-    <ClInclude Include="yaku\yakurslt.h">
-      <Filter>ヘッダー ファイル\yaku</Filter>
-    </ClInclude>
     <ClInclude Include="yaku\yk_tools.h">
       <Filter>ヘッダー ファイル\yaku</Filter>
     </ClInclude>
@@ -354,9 +348,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="prepare.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="nmrules.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="remote.h">
