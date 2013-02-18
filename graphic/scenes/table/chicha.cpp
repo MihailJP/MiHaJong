@@ -71,7 +71,7 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 /* ヤキトリマークの表示 */
 void GameTableScreen::TrayReconst::ShowYakitori(const GameTable* gameStat) {
 	for (PlayerID i = 0; i < Players; ++i) {
-		if (!gameStat->Player.val[i].YakitoriFlag) continue;
+		if (!gameStat->Player[i].YakitoriFlag) continue;
 		switch (playerRelative(i, gameStat->PlayerID)) {
 		case sSelf:
 			{

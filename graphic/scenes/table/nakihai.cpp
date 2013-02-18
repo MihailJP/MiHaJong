@@ -111,11 +111,11 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 	}
 }
 void GameTableScreen::NakihaiReconst::NakihaiAnkan(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
-	const MeldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
-	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
+	const MeldCode* const tile = &(gameStat->Player[targetPlayer].Meld[meldID]);
+	assert((meldID > 0) && (meldID <= gameStat->Player[targetPlayer].MeldPointer));
 	assert(tile->mstat == meldQuadConcealed);
 	const TileSide AnkanExpose =
-		(rules::chkRule("ankan_conceal", "closed") && (gameStat->Player.val[targetPlayer].HandStat != handExposed)) ?
+		(rules::chkRule("ankan_conceal", "closed") && (gameStat->Player[targetPlayer].HandStat != handExposed)) ?
 		Reverse : Obverse;
 	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert;
 	std::tie(num, x, y, std::ignore, vert, std::ignore) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
@@ -127,8 +127,8 @@ void GameTableScreen::NakihaiReconst::NakihaiAnkan(const GameTable* gameStat, Pl
 	TileTexture->NewTile(num(3), tile->tile, tile->red[3], x(3), y(3), vert, Reverse);
 }
 void GameTableScreen::NakihaiReconst::NakihaiKamicha(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
-	const MeldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
-	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
+	const MeldCode* const tile = &(gameStat->Player[targetPlayer].Meld[meldID]);
+	assert((meldID > 0) && (meldID <= gameStat->Player[targetPlayer].MeldPointer));
 	assert((tile->mstat == meldTripletExposedLeft) || (tile->mstat == meldQuadAddedLeft) ||
 		(tile->mstat == meldSequenceExposedLower) || (tile->mstat == meldSequenceExposedMiddle) ||
 		(tile->mstat == meldSequenceExposedUpper));
@@ -150,8 +150,8 @@ void GameTableScreen::NakihaiReconst::NakihaiKamicha(const GameTable* gameStat, 
 	TileTexture->NewTile(num(3), tileL, redL, x(3), y(3), hor, Obverse);
 }
 void GameTableScreen::NakihaiReconst::NakihaiToimen(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
-	const MeldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
-	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
+	const MeldCode* const tile = &(gameStat->Player[targetPlayer].Meld[meldID]);
+	assert((meldID > 0) && (meldID <= gameStat->Player[targetPlayer].MeldPointer));
 	assert((tile->mstat == meldTripletExposedCenter) || (tile->mstat == meldQuadAddedCenter));
 	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert, hor;
 	std::tie(num, x, y, hor, vert, std::ignore) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
@@ -165,8 +165,8 @@ void GameTableScreen::NakihaiReconst::NakihaiToimen(const GameTable* gameStat, P
 	TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
 void GameTableScreen::NakihaiReconst::NakihaiShimocha(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
-	const MeldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
-	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
+	const MeldCode* const tile = &(gameStat->Player[targetPlayer].Meld[meldID]);
+	assert((meldID > 0) && (meldID <= gameStat->Player[targetPlayer].MeldPointer));
 	assert((tile->mstat == meldTripletExposedRight) || (tile->mstat == meldQuadAddedRight));
 	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert, hor;
 	std::tie(num, x, y, std::ignore, vert, hor) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
@@ -180,8 +180,8 @@ void GameTableScreen::NakihaiReconst::NakihaiShimocha(const GameTable* gameStat,
 	TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
 void GameTableScreen::NakihaiReconst::MinkanKamicha(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
-	const MeldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
-	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
+	const MeldCode* const tile = &(gameStat->Player[targetPlayer].Meld[meldID]);
+	assert((meldID > 0) && (meldID <= gameStat->Player[targetPlayer].MeldPointer));
 	assert(tile->mstat == meldQuadExposedLeft);
 	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert, hor;
 	std::tie(num, x, y, hor, vert, std::ignore) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
@@ -193,8 +193,8 @@ void GameTableScreen::NakihaiReconst::MinkanKamicha(const GameTable* gameStat, P
 	TileTexture->NewTile(num(3), tile->tile, tile->red[0], x(3), y(3), hor, Obverse);
 }
 void GameTableScreen::NakihaiReconst::MinkanToimen(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
-	const MeldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
-	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
+	const MeldCode* const tile = &(gameStat->Player[targetPlayer].Meld[meldID]);
+	assert((meldID > 0) && (meldID <= gameStat->Player[targetPlayer].MeldPointer));
 	assert(tile->mstat == meldQuadExposedCenter);
 	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert, hor;
 	std::tie(num, x, y, hor, vert, std::ignore) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
@@ -206,8 +206,8 @@ void GameTableScreen::NakihaiReconst::MinkanToimen(const GameTable* gameStat, Pl
 	TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
 void GameTableScreen::NakihaiReconst::MinkanShimocha(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
-	const MeldCode* const tile = &(gameStat->Player.val[targetPlayer].Meld[meldID]);
-	assert((meldID > 0) && (meldID <= gameStat->Player.val[targetPlayer].MeldPointer));
+	const MeldCode* const tile = &(gameStat->Player[targetPlayer].Meld[meldID]);
+	assert((meldID > 0) && (meldID <= gameStat->Player[targetPlayer].MeldPointer));
 	assert(tile->mstat == meldQuadExposedRight);
 	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert, hor;
 	std::tie(num, x, y, std::ignore, vert, hor) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
@@ -219,7 +219,7 @@ void GameTableScreen::NakihaiReconst::MinkanShimocha(const GameTable* gameStat, 
 	TileTexture->NewTile(num(3), tile->tile, tile->red[1], x(3), y(3), vert, Obverse);
 }
 void GameTableScreen::NakihaiReconst::NakihaiSelRoutine(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
-	switch (gameStat->Player.val[targetPlayer].Meld[meldID].mstat) {
+	switch (gameStat->Player[targetPlayer].Meld[meldID].mstat) {
 	case meldSequenceExposedLower: case meldSequenceExposedMiddle: case meldSequenceExposedUpper:
 	case meldTripletExposedLeft: case meldQuadAddedLeft:
 		NakihaiKamicha(gameStat, targetPlayer, PositionOffset, IDOffset, meldID);
@@ -246,8 +246,8 @@ void GameTableScreen::NakihaiReconst::NakihaiSelRoutine(const GameTable* gameSta
 }
 void GameTableScreen::NakihaiReconst::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer) {
 	unsigned posOffset[5] = {0,};
-	for (int i = 1; i <= gameStat->Player.val[targetPlayer].MeldPointer; ++i) {
-		switch (gameStat->Player.val[targetPlayer].Meld[i].mstat) {
+	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; ++i) {
+		switch (gameStat->Player[targetPlayer].Meld[i].mstat) {
 		case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight:
 			posOffset[i] = posOffset[i - 1] + ShowTile::VertTileWidth * 2;
 			break;
@@ -256,9 +256,9 @@ void GameTableScreen::NakihaiReconst::Reconstruct(const GameTable* gameStat, Pla
 			break;
 		}
 	}
-	for (int i = 1; i <= gameStat->Player.val[targetPlayer].MeldPointer; ++i)
+	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; ++i)
 		NakihaiSelRoutine(gameStat, targetPlayer, posOffset[i - 1],
-			(gameStat->Player.val[targetPlayer].MeldPointer - i) * 4, i);
+			(gameStat->Player[targetPlayer].MeldPointer - i) * 4, i);
 }
 
 void GameTableScreen::NakihaiReconst::Render() {

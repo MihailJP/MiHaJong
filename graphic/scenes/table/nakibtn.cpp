@@ -117,7 +117,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		return (gameStat->TilePointer + tiles) < (gameStat->RinshanPointer - gameStat->DeadTiles - 1);
 	};
 	const PlayerID ActivePlayer = gameStat->CurrentPlayer.Active;
-	const PlayerTable* const playerStat = &(gameStat->Player.val[ActivePlayer]);
+	const PlayerTable* const playerStat = &(gameStat->Player[ActivePlayer]);
 	const Shanten Shanten = utils::calcShanten(gameStat, ActivePlayer, shantenAll);
 	if (utils::isRichiReqSatisfied(gameStat, ActivePlayer) && // 点棒要件を満たしている（点棒が足りている）
 		(Shanten <= 0) && // テンパイしている
@@ -142,10 +142,10 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		for (int i = 1; i < TileNonflowerMax; ++i) {
 			if (tilesMoreThan(0) && (gameStat->KangNum < kanLim)) {
 				// 暗槓できる場合
-				if (TileCount.val[i] == 4)
+				if (TileCount[i] == 4)
 					return true;
 				// 加槓できる場合
-				else if (TileCount.val[i] == 1) {
+				else if (TileCount[i] == 1) {
 					for (int j = 1; j <= playerStat->MeldPointer; ++j)
 						if ((playerStat->Meld[j].tile == i) &&
 							((playerStat->Meld[j].mstat == meldTripletExposedLeft) ||
@@ -170,7 +170,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 	} ();
 	if ((!rules::chkRule("flower_tiles", "no")) &&
 		(playerStat->Tsumohai().tile != NoTile) &&
-		(TileCount.val[flowerTile] >= 1) &&
+		(TileCount[flowerTile] >= 1) &&
 		((!playerStat->RichiFlag.RichiFlag) || Flowerabilityflag))
 		buttonEnabled[btnFlower] = true;
 
@@ -186,7 +186,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 	};
 	const PlayerID ActivePlayer = gameStat->CurrentPlayer.Active;
 	const PlayerID PassivePlayer = gameStat->CurrentPlayer.Passive;
-	PlayerTable* const playerStat = &(gameStat->Player.val[PassivePlayer]);
+	PlayerTable* const playerStat = &(gameStat->Player[PassivePlayer]);
 	playerStat->Tsumohai().tile = gameStat->CurrentDiscard.tile;
 	const Shanten Shanten = utils::calcShanten(gameStat, gameStat->PlayerID, shantenAll);
 	playerStat->Tsumohai().tile = NoTile;
@@ -204,9 +204,9 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 		const Int8ByTile TileCount = utils::countTilesInHand(gameStat, PassivePlayer);
 		const int kanLim = rules::chkRule("fifth_kong", "no") ? 4 : 5;
 
-		if (TileCount.val[gameStat->CurrentDiscard.tile] >= 2)
+		if (TileCount[gameStat->CurrentDiscard.tile] >= 2)
 			buttonEnabled[btnPon] = true; // ポン
-		if ((TileCount.val[gameStat->CurrentDiscard.tile] >= 3) && // 出てきた牌を暗刻で持っていて
+		if ((TileCount[gameStat->CurrentDiscard.tile] >= 3) && // 出てきた牌を暗刻で持っていて
 			(gameStat->KangFlag.chankanFlag == chankanNone) && // 槍槓の判定中ではなくて
 			(gameStat->KangNum < kanLim)) // 限度以内の場合
 			buttonEnabled[btnKan] = true; // カン
@@ -217,15 +217,15 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 			(gameStat->KangFlag.chankanFlag == chankanNone) && // 槍槓の判定中ではなくて
 			(gameStat->CurrentPlayer.Active == ((gameStat->CurrentPlayer.Passive + 3) % 4))) { // 捨てたのが上家
 				if ((gameStat->CurrentDiscard.tile >= 1) &&
-					(TileCount.val[gameStat->CurrentDiscard.tile + 1] >= 1) && (TileCount.val[gameStat->CurrentDiscard.tile + 2] >= 1)) { // 下吃
+					(TileCount[gameStat->CurrentDiscard.tile + 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 2] >= 1)) { // 下吃
 						buttonEnabled[btnChii1] = true;
 				}
 				if ((gameStat->CurrentDiscard.tile >= 2) &&
-					(TileCount.val[gameStat->CurrentDiscard.tile - 1] >= 1) && (TileCount.val[gameStat->CurrentDiscard.tile + 1] >= 1)) { // 嵌張吃
+					(TileCount[gameStat->CurrentDiscard.tile - 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 1] >= 1)) { // 嵌張吃
 						buttonEnabled[btnChii2] = true;
 				}
 				if ((gameStat->CurrentDiscard.tile >= 3) &&
-					(TileCount.val[gameStat->CurrentDiscard.tile - 2] >= 1) && (TileCount.val[gameStat->CurrentDiscard.tile - 1] >= 1)) { // 上吃
+					(TileCount[gameStat->CurrentDiscard.tile - 2] >= 1) && (TileCount[gameStat->CurrentDiscard.tile - 1] >= 1)) { // 上吃
 						buttonEnabled[btnChii3] = true;
 				}
 		}
@@ -287,7 +287,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		case btnRiichi: // 立直
 			setMode(DiscardTileNum::Riichi, btnRiichi,
 				[](int i, GameTable* tmpStat) -> bool {
-					tmpStat->Player.val[tmpStat->CurrentPlayer.Active].Hand[i].tile = NoTile;
+					tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile = NoTile;
 					Shanten Shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, shantenAll);
 					return (Shanten > 0);
 				});
@@ -298,9 +298,9 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					bool flag = false;
 					const PlayerID ActivePlayer = tmpStat->CurrentPlayer.Active;
 					const Int8ByTile TileCount = utils::countTilesInHand(tmpStat, ActivePlayer);
-					const PlayerTable* const playerStat = &(tmpStat->Player.val[ActivePlayer]);
-					if (TileCount.val[playerStat->Hand[i].tile] < 4) flag = true;
-					if (TileCount.val[playerStat->Hand[i].tile] == 1) {
+					const PlayerTable* const playerStat = &(tmpStat->Player[ActivePlayer]);
+					if (TileCount[playerStat->Hand[i].tile] < 4) flag = true;
+					if (TileCount[playerStat->Hand[i].tile] == 1) {
 						for (int j = 1; j <= playerStat->MeldPointer; ++j)
 							if ((playerStat->Meld[j].tile == i) &&
 								((playerStat->Meld[j].mstat == meldTripletExposedLeft) ||
@@ -314,7 +314,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		case btnFlower: // 花牌
 			setMode(DiscardTileNum::Flower, btnFlower,
 				[](int i, GameTable* tmpStat) -> bool {
-					return tmpStat->Player.val[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
+					return tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
 						(tmpStat->gameType & SanmaX) ? NorthWind : Flower;
 				});
 			break;

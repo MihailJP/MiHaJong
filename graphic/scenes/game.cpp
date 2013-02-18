@@ -118,20 +118,20 @@ void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num) {
 
 void TableProtoScene::ScoreBoard::renderRank() {
 	PlayerRankList rankList = utils::calcRank(GameStatus::gameStat());
-	renderNumeral(RankPosX, RankPosY, rankList.val[playerID()]);
+	renderNumeral(RankPosX, RankPosY, rankList[playerID()]);
 	if ((currTime() % 10000000 < 5000000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID()))
 		renderNumeral(RankPosX, RankPosY, digitDecimal);
 }
 
 int TableProtoScene::ScoreBoard::getScoreSign() {
 	for (int i = DigitGroups - 1; i >= 0; --i)
-		if (GameStatus::gameStat()->Player.val[playerID()].PlayerScore.digitGroup[i] > 0) return 1;
-		else if (GameStatus::gameStat()->Player.val[playerID()].PlayerScore.digitGroup[i] < 0) return -1;
+		if (GameStatus::gameStat()->Player[playerID()].PlayerScore.digitGroup[i] > 0) return 1;
+		else if (GameStatus::gameStat()->Player[playerID()].PlayerScore.digitGroup[i] < 0) return -1;
 	return 0;
 }
 
 std::tuple<unsigned, unsigned, signed> TableProtoScene::ScoreBoard::scoreInfo() {
-	const LargeNum* const score = &(GameStatus::gameStat()->Player.val[playerID()].PlayerScore);
+	const LargeNum* const score = &(GameStatus::gameStat()->Player[playerID()].PlayerScore);
 	const int digit[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
 	for (int i = DigitGroups - 1; i >= 0; --i) {
 		for (int j = ((i == DigitGroups - 1) ? 9 : 7); j >= 0; --j) {

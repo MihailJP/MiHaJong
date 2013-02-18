@@ -13,7 +13,7 @@ using utils::playerRelative;
 void GameTableScreen::RichibouReconst::ShowRiichibou(const GameTable* gameStat) {
 	RECT rectH = {72, 30, 216, 42,}, rectV = {30, 2, 42, 146,};
 	for (PlayerID i = 0; i < Players; ++i) {
-		if (!gameStat->Player.val[i].RichiFlag.RichiFlag) continue;
+		if (!gameStat->Player[i].RichiFlag.RichiFlag) continue;
 		switch (playerRelative(i, gameStat->PlayerID)) {
 		case sSelf:
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
