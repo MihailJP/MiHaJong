@@ -183,6 +183,7 @@
     <ClCompile Include="text.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="window.cpp" />
+    <ClCompile Include="yakustat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="button.h" />
@@ -237,6 +238,7 @@
     <ClInclude Include="text.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="window.h" />
+    <ClInclude Include="yakustat.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="graphic.rc" />

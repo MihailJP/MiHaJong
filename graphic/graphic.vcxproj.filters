@@ -165,6 +165,9 @@
     <ClCompile Include="scenes\tablesub\agariscr.cpp">
       <Filter>ソース ファイル\scenes\tablesub</Filter>
     </ClCompile>
+    <ClCompile Include="yakustat.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scrmanip.h">
@@ -325,6 +328,9 @@
     </ClInclude>
     <ClInclude Include="scenes\tablesub\agariscr.h">
       <Filter>ヘッダー ファイル\scenes\tablesub</Filter>
+    </ClInclude>
+    <ClInclude Include="yakustat.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
