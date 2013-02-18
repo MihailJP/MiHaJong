@@ -9,3 +9,4 @@
 #include "utils.h"
 #include "logwnd.h"
 #include "calltext.h"
+#include "yakustat.h"
