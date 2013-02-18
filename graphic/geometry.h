@@ -8,7 +8,7 @@ public:
 	static unsigned WindowWidth;
 	static unsigned WindowHeight;
 	static float WindowScale() {return (float)WindowHeight / (float)BaseSize;}
-	static unsigned SidebarWidth() {return (WindowWidth - WindowHeight) / WindowScale() ;}
+	static unsigned SidebarWidth() {return (unsigned)((WindowWidth - WindowHeight) / WindowScale());}
 };
 
 }
