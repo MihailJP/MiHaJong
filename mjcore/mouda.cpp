@@ -281,8 +281,8 @@ namespace { /* 内部処理分割用 */
 		lipai(gameStat, gameStat->CurrentPlayer.Active);
 		// このとき牌を捨てているはず 表示バグ防止のため
 		for (PlayerID i = 0; i < Players; i++) {
-			gameStat->Player[i].Hand[NumOfTilesInHand - 1].tile = NoTile;
-			gameStat->Player[i].Hand[NumOfTilesInHand - 1].red  = Normal;
+			gameStat->Player[i].Tsumohai().tile = NoTile;
+			gameStat->Player[i].Tsumohai().red  = Normal;
 		}
 		/* 立直をした直後の場合、千点を供託し一発のフラグを立てる */
 		if ((DiscardTileIndex.type == DiscardTileNum::Riichi) || (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)) {
@@ -314,8 +314,8 @@ namespace { /* 内部処理分割用 */
 			sound::Play(sound::IDs::sndDahai1);
 		/* このとき牌を捨てているはずなので、バグ防止のための処理 */
 		for (PlayerID i = 0; i < Players; i++) {
-			gameStat->Player[i].Hand[NumOfTilesInHand - 1].tile = NoTile;
-			gameStat->Player[i].Hand[NumOfTilesInHand - 1].red  = Normal;
+			gameStat->Player[i].Tsumohai().tile = NoTile;
+			gameStat->Player[i].Tsumohai().red  = Normal;
 		}
 		/* 再描画 */
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
@@ -383,9 +383,9 @@ void tsumoproc(GameTable* const gameStat) {
 	/* 東家の順番が回ってきたら次の巡目となる */
 	if (playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound) == sEast)
 		++gameStat->TurnRound;
-	gameStat->statOfActive().Hand[NumOfTilesInHand - 1].tile =
+	gameStat->statOfActive().Tsumohai().tile =
 		gameStat->Deck[gameStat->TilePointer].tile;
-	gameStat->statOfActive().Hand[NumOfTilesInHand - 1].red =
+	gameStat->statOfActive().Tsumohai().red =
 		gameStat->Deck[gameStat->TilePointer].red;
 	gameStat->PreviousMeld.Discard = gameStat->PreviousMeld.Stepped = NoTile;
 	sound::Play(sound::IDs::sndTsumo);

@@ -132,7 +132,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 
 	const bool ShisanBuDa = utils::chkShisanBuDa(gameStat, ActivePlayer);
 	const bool ShisiBuDa = utils::chkShisiBuDa(gameStat, ActivePlayer);
-	if (((Shanten <= -1) && (playerStat->Hand[NumOfTilesInHand - 1].tile != NoTile)) || // 和了になっているか
+	if (((Shanten <= -1) && (playerStat->Tsumohai().tile != NoTile)) || // 和了になっているか
 		ShisanBuDa || ShisiBuDa) // 十三不塔の場合（十三不塔なしの場合この変数はfalseになる）
 		buttonEnabled[btnTsumo] = true; // 和了ボタン
 
@@ -157,7 +157,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		}
 		return false;
 	} ();
-	if (KanFlag && (playerStat->Hand[NumOfTilesInHand - 1].tile != NoTile) &&
+	if (KanFlag && (playerStat->Tsumohai().tile != NoTile) &&
 		(!playerStat->RichiFlag.RichiFlag) || utils::chkAnkanAbility(gameStat, ActivePlayer))
 		buttonEnabled[btnKan] = true;
 
@@ -169,7 +169,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 			return playerStat->Hand[NumOfTilesInHand].tile > TileSuitFlowers;
 	} ();
 	if ((!rules::chkRule("flower_tiles", "no")) &&
-		(playerStat->Hand[NumOfTilesInHand - 1].tile != NoTile) &&
+		(playerStat->Tsumohai().tile != NoTile) &&
 		(TileCount.val[flowerTile] >= 1) &&
 		((!playerStat->RichiFlag.RichiFlag) || Flowerabilityflag))
 		buttonEnabled[btnFlower] = true;
@@ -187,9 +187,9 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 	const PlayerID ActivePlayer = gameStat->CurrentPlayer.Active;
 	const PlayerID PassivePlayer = gameStat->CurrentPlayer.Passive;
 	PlayerTable* const playerStat = &(gameStat->Player.val[PassivePlayer]);
-	playerStat->Hand[NumOfTilesInHand - 1].tile = gameStat->CurrentDiscard.tile;
+	playerStat->Tsumohai().tile = gameStat->CurrentDiscard.tile;
 	const SHANTEN Shanten = utils::calcShanten(gameStat, gameStat->PlayerID, ShantenAnalyzer::shantenAll);
-	playerStat->Hand[NumOfTilesInHand - 1].tile = NoTile;
+	playerStat->Tsumohai().tile = NoTile;
 
 	if (gameStat->CurrentDiscard.tile > TileSuitFlowers) goto end; /* 花牌の場合は残りの判定をスキップ */
 	if (playerStat->AgariHouki) goto end; /* 和了り放棄だったら残りの判定をスキップ */

@@ -907,7 +907,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 					(analysis->KeziCount[SouthWind] >= 1) ||
 					(analysis->KeziCount[WestWind] >= 1) ||
 					(analysis->KeziCount[NorthWind] >= 1)) &&
-					(analysis->PlayerStat->Hand[NumOfTilesInHand - 1].tile == EastWind);
+					(analysis->PlayerStat->Tsumohai().tile == EastWind);
 			}
 		));
 	/* ”Ž—í—ì–² */

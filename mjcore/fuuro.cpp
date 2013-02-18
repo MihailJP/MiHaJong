@@ -252,8 +252,8 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		break;
 	case FuuroChii: /* チー */
 		/* チーする牌を設定 */
-		gameStat->Player[kangPlayer].Hand[NumOfTilesInHand - 1].tile = gameStat->CurrentDiscard.tile;
-		gameStat->Player[kangPlayer].Hand[NumOfTilesInHand - 1].red = gameStat->CurrentDiscard.red;
+		gameStat->Player[kangPlayer].Tsumohai().tile = gameStat->CurrentDiscard.tile;
+		gameStat->Player[kangPlayer].Tsumohai().red = gameStat->CurrentDiscard.red;
 		/* 純手牌から鳴いた塔子を除去 */
 		{
 			bool nakiCount[3] = {false};
@@ -268,7 +268,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 					}
 				}
 			}
-			assert(gameStat->Player[kangPlayer].Hand[NumOfTilesInHand - 1].tile == NoTile);
+			assert(gameStat->Player[kangPlayer].Tsumohai().tile == NoTile);
 		}
 		/* 門前フラグを降ろす */
 		gameStat->Player[kangPlayer].MenzenFlag = false;
@@ -399,8 +399,8 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 			*RoundEndType = Ryuukyoku; return true; /* 荒牌なら終了 */
 		}
 		/* 嶺上牌を自摸る */
-		gameStat->Player[kangPlayer].Hand[NumOfTilesInHand - 1].tile = gameStat->Deck[gameStat->RinshanPointer].tile;
-		gameStat->Player[kangPlayer].Hand[NumOfTilesInHand - 1].red = gameStat->Deck[gameStat->RinshanPointer].red;
+		gameStat->Player[kangPlayer].Tsumohai().tile = gameStat->Deck[gameStat->RinshanPointer].tile;
+		gameStat->Player[kangPlayer].Tsumohai().red = gameStat->Deck[gameStat->RinshanPointer].red;
 		--gameStat->RinshanPointer;
 		sound::Play(sound::IDs::sndTsumo);
 		if (tilesLeft(gameStat) < 10)
@@ -526,8 +526,8 @@ namespace {
 		case nakiRon:
 			debug(_T("プレイヤーからの応答：ロン"));
 			playerStat->DeclarationFlag.Ron = true;
-			playerStat->Hand[NumOfTilesInHand - 1].tile = gameStat->CurrentDiscard.tile;
-			playerStat->Hand[NumOfTilesInHand - 1].red = gameStat->CurrentDiscard.red;
+			playerStat->Tsumohai().tile = gameStat->CurrentDiscard.tile;
+			playerStat->Tsumohai().red = gameStat->CurrentDiscard.red;
 			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Ron);
 			break;
@@ -661,12 +661,12 @@ EndType ronhuproc(GameTable* const gameStat) {
 	}
 	/* 当たり牌見逃しを同順フリテンにする処理 */
 	for (PlayerID i = 0; i < Players; ++i) {
-		const TileCode xTile = gameStat->Player[i].Hand[NumOfTilesInHand - 1].tile;
-		gameStat->Player[i].Hand[NumOfTilesInHand - 1].tile = gameStat->CurrentDiscard.tile;
+		const TileCode xTile = gameStat->Player[i].Tsumohai().tile;
+		gameStat->Player[i].Tsumohai().tile = gameStat->CurrentDiscard.tile;
 		const SHANTEN tmpShanten = ShantenAnalyzer::calcShanten(gameStat, i, ShantenAnalyzer::shantenAll);
 		if ((tmpShanten == -1) && (!(gameStat->Player[i].DeclarationFlag.Ron)))
 			gameStat->Player[i].DoujunFuriten = true;
-		gameStat->Player[i].Hand[NumOfTilesInHand - 1].tile = xTile;
+		gameStat->Player[i].Tsumohai().tile = xTile;
 	}
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */
 	for (PlayerID i = 0; i < Players; i++) {
@@ -734,8 +734,8 @@ EndType ronhuproc(GameTable* const gameStat) {
 				}
 			}
 			/* 和了り牌を設定 */
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NumOfTilesInHand - 1].tile = gameStat->CurrentDiscard.tile;
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NumOfTilesInHand - 1].red = gameStat->CurrentDiscard.red;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().tile = gameStat->CurrentDiscard.tile;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().red = gameStat->CurrentDiscard.red;
 			/* 立直宣言牌での放銃の場合、立直を無効とし供託点棒を返却する */
 			if (gameStat->statOfActive().RichiFlag.IppatsuFlag) {
 				if (gameStat->statOfActive().RichiFlag.DoubleFlag) {
@@ -766,8 +766,8 @@ EndType ronhuproc(GameTable* const gameStat) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::RonQualified);
 			gameStat->Player[gameStat->CurrentPlayer.Agari].HandStat = handExposed;
 			/* 和了り牌を設定 */
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NumOfTilesInHand - 1].tile = gameStat->CurrentDiscard.tile;
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NumOfTilesInHand - 1].red = gameStat->CurrentDiscard.red;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().tile = gameStat->CurrentDiscard.tile;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().red = gameStat->CurrentDiscard.red;
 			/* 栄和のサウンドを鳴らす */
 			if (gameStat->CurrentPlayer.Active == gameStat->PlayerID)
 				sound::Play(sound::IDs::voxRonFurikomi);

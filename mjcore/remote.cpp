@@ -209,7 +209,7 @@ DWORD WINAPI RemoteNaki::thread() {
 		thread_server();
 	for (int i = 0; i < Players; i++)
 		if (gameStat->Player[i].DeclarationFlag.Ron) // ƒƒ“‚µ‚½‚çŽ©–Ì”vˆÊ’u‚Éƒƒ“”v‚ðÝ’è(ŽÀ‘•ã‚Ì“s‡)
-			gameStat->Player[i].Hand[NumOfTilesInHand - 1] = gameStat->CurrentDiscard;
+			gameStat->Player[i].Tsumohai() = gameStat->CurrentDiscard;
 	finished = true;
 	return S_OK;
 }

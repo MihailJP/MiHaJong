@@ -283,8 +283,8 @@ namespace {
 
 	void verifyAgari(GameTable* gameStat, EndType& RoundEndType) {
 		if (!gameStat->TsumoAgariFlag) {
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NumOfTilesInHand - 1].tile = gameStat->CurrentDiscard.tile;
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Hand[NumOfTilesInHand - 1].red  = gameStat->CurrentDiscard.red;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().tile = gameStat->CurrentDiscard.tile;
+			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().red  = gameStat->CurrentDiscard.red;
 		}
 		yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Agari);
 		MachihaiInfo machiInfo = chkFuriten(gameStat, gameStat->CurrentPlayer.Agari);

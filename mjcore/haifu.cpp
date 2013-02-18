@@ -289,7 +289,7 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 		tools::recordBlank_Table(
 			&haifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel,
 			&HThaifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel);
-	} else if (gameStat->statOfActive().Hand[NumOfTilesInHand - 1].tile == NoTile) {
+	} else if (gameStat->statOfActive().Tsumohai().tile == NoTile) {
 		// –Â‚¢‚½’¼Œã (‰½‚à‚µ‚È‚¢)
 	} else if ((DiscardTileIndex.id) == (NumOfTilesInHand - 1)) {
 		// ƒcƒ‚Ø‚è
@@ -301,7 +301,7 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 	} else {
 		tools::haifuwritetsumohai(
 			&haifuP, &HThaifuP, gameStat->CurrentPlayer.Active,
-			gameStat->statOfActive().Hand[NumOfTilesInHand - 1],
+			gameStat->statOfActive().Tsumohai(),
 			_T("@ "), _T("<td></td>"));
 	}
 	// Ì‚Ä‚½”v‚ğ‹L˜^
@@ -357,7 +357,7 @@ __declspec(dllexport) void haifu::haifurecpon(const GameTable* const gameStat) {
 __declspec(dllexport) void haifu::haifurectsumo(const GameTable* const gameStat) {
 	tools::haifuwritetsumohai(
 		&haifuP, &HThaifuP, gameStat->CurrentPlayer.Active,
-		gameStat->statOfActive().Hand[NumOfTilesInHand - 1],
+		gameStat->statOfActive().Tsumohai(),
 		_T("ÂÓ "), _T("<td>ƒcƒ‚</td>"));
 }
 /* ‘å–¾È‚µ‚½‚±‚Æ‚ğ”v•ˆ‚É‹L˜^ */
@@ -397,7 +397,7 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 					&HThaifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
 					gameStat->statOfActive().Hand[DiscardTileIndex.id]);
 				haifukanflag = true;
-			} else if (gameStat->statOfActive().Hand[NumOfTilesInHand - 1].tile ==
+			} else if (gameStat->statOfActive().Tsumohai().tile ==
 				gameStat->statOfActive().Hand[DiscardTileIndex.id].tile) {
 					// ƒcƒ‚‚Á‚Ä‚«‚½”v‚Æ“¯‚¶‚¾‚Á‚½
 					recordTile_Table(
@@ -408,7 +408,7 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 			} else {
 				haifuwritetsumohai(
 					haifuP, HThaifuP, gameStat->CurrentPlayer.Active,
-					gameStat->statOfActive().Hand[NumOfTilesInHand - 1],
+					gameStat->statOfActive().Tsumohai(),
 					_T("@ "), _T("<td></td>"));
 				recordTile_Table(
 					&haifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,

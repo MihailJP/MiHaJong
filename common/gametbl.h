@@ -24,6 +24,7 @@ const unsigned int Players = 4;
 #define ACTUAL_PLAYERS (chkGameType(&GameStat, SanmaT) ? 3 : 4)
 #endif
 const unsigned int NumOfTilesInHand = 14;
+const unsigned int TsumohaiIndex = NumOfTilesInHand - 1;
 const unsigned int SizeOfDiscardBuffer = 33;
 
 typedef int8_t PlayerID; // プレイヤー番号
@@ -210,6 +211,9 @@ struct PlayerTable { // プレイヤーの状態を格納
 	bool SumaroFlag; // 四馬路解禁フラグ
 	bool YakitoriFlag; // 焼き鳥フラグ
 	bool ConnectionLost;
+
+	const Tile& Tsumohai() const {return Hand[TsumohaiIndex];} /* 自摸牌 (immutable) */
+	      Tile& Tsumohai()       {return Hand[TsumohaiIndex];} /* 自摸牌 (mutable) */
 };
 static_assert(std::is_pod<PlayerTable>::value, "PlayerTable is not POD");
 

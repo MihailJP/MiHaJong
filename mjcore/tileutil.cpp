@@ -327,7 +327,7 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 
 	for (TileCode i = CharacterOne; i < Flower; i = (TileCode)((int)i + 1)) {
 		if ((int)i % TileSuitStep == 0) continue; // ない牌だったら戻る
-		tmpGameStat.Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile = i;
+		tmpGameStat.Player[targetPlayer].Tsumohai().tile = i;
 		if (ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, ShantenAnalyzer::shantenAll) == -1) { // 待ちになっていたら
 			machihaiInfo.MachiMen++; machihaiInfo.Machihai[i].MachihaiFlag = true; // フラグをセットしましょう
 			machihaiInfo.MachihaiTotal += // カウントを加算しましょう
@@ -387,20 +387,20 @@ __declspec(dllexport) void chkFuriten(
 /* オープン立直の待ち牌 */
 void chkOpenMachi(GameTable* const gameStat, PlayerID targetPlayer) {
 	// オープンリーチの待ち牌情報を更新する
-	assert(gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile == NoTile);
+	assert(gameStat->Player[targetPlayer].Tsumohai().tile == NoTile);
 	for (int i = 0; i < TileNonflowerMax; i++) {
 		/* 変な牌で計算しないようにしましょう */
 		if (i % TileSuitStep == 0) continue;
 		if (i % TileSuitStep > RedDragon) continue;
 		/* まずは、ある牌をツモったと仮定します */
-		gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile = (TileCode)i;
+		gameStat->Player[targetPlayer].Tsumohai().tile = (TileCode)i;
 		/* もしそれが和了になっていたら、フラグをセットしましょう */
 		if (ShantenAnalyzer::calcShanten(gameStat, targetPlayer, ShantenAnalyzer::shantenAll) == -1)
 			gameStat->OpenRichiWait[i] = true;
 		/* これをすべての牌について試行しましょう */
 	}
 	/* もとに戻すのを忘れないようにしましょう。さもなくば多牌になってしまいます */
-	gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile = NoTile;
+	gameStat->Player[targetPlayer].Tsumohai().tile = NoTile;
 
 	/* これで処理が終わりました。戻りましょう */
 	return;
@@ -504,14 +504,14 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 		/* 立直後であり送り槓はできないのでツモった牌だけ調べればよい */
 		CodeConv::tostringstream o;
 		Int8ByTile tlCount = countTilesInHand(gameStat, targetPlayer);
-		if (tlCount[gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile] < 4) {
+		if (tlCount[gameStat->Player[targetPlayer].Tsumohai().tile] < 4) {
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile <<
+				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
 				_T("] は、4枚揃っていません。"); debug(o.str());
 			return true;
 		} else {
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile <<
+				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
 				_T("] は、手牌に合わせて4枚あります。"); debug(o.str());
 			return false;
 		}
@@ -519,23 +519,23 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 	int CheckForTileClass(const GameTable* const gameStat, PlayerID targetPlayer) {
 		/* 字牌に順子はないのでこれ以降のチェックをせずとも槓が可能とわかる */
 		CodeConv::tostringstream o;
-		switch (gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile) {
+		switch (gameStat->Player[targetPlayer].Tsumohai().tile) {
 		case EastWind: case SouthWind: case WestWind: case NorthWind:
 		case WhiteDragon: case GreenDragon: case RedDragon:
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile <<
+				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
 				_T("] は字牌です。"); debug(o.str());
 			return 1;
 		case Spring: case Summer: case Autumn: case Winter:
 		case Plum: case Orchid: case Chrysanthemum: case Bamboo:
 			/* 花牌を槓？　ご冗談を */
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile <<
+				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
 				_T("] は花牌です。"); debug(o.str());
 			return 2;
 		default:
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile <<
+				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
 				_T("] は数牌です。"); debug(o.str());
 			return 0;
 		}
@@ -549,13 +549,13 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 		int tmpTakenCount = 0;
 		for (int i = 0; i < (NumOfTilesInHand-1); i++) {
 			if (tmpGameStat.Player[targetPlayer].Hand[i].tile ==
-				tmpGameStat.Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile) {
+				tmpGameStat.Player[targetPlayer].Tsumohai().tile) {
 					tmpGameStat.Player[targetPlayer].Hand[i].tile = NoTile;
 					tmpTakenCount++;
 			}
 			if (tmpTakenCount == 2) break;
 		}
-		tmpGameStat.Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile = NoTile;
+		tmpGameStat.Player[targetPlayer].Tsumohai().tile = NoTile;
 		/*	
 			例：
 			面子を２、対子や塔子を１、雀頭候補を①と定義する。
@@ -570,12 +570,12 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 		SHANTEN shanten = ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, ShantenAnalyzer::shantenAll);
 		if (shanten == 1) {
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile <<
+				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
 				_T("] は、アタマ候補です。"); debug(o.str());
 			return true;
 		} else {
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile <<
+				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
 				_T("] は、アタマ候補ではありません。"); debug(o.str());
 			return false;
 		}
@@ -591,14 +591,14 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 		GameTable tmpGameStat; memcpy(&tmpGameStat, gameStat, sizeof(GameTable));
 		for (int i = 0; i < NumOfTilesInHand; i++) {
 			if (tmpGameStat.Player[targetPlayer].Hand[i].tile ==
-				tmpGameStat.Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile) {
+				tmpGameStat.Player[targetPlayer].Tsumohai().tile) {
 					tmpGameStat.Player[targetPlayer].Hand[i].tile = NoTile;
 					tmpTakenCount++;
 			}
 		}
 		assert(tmpTakenCount == 4); // デバッグ用：ちょうど4枚だったか確認
 		tmpGameStat.Player[targetPlayer].Meld[++ tmpGameStat.Player[targetPlayer].MeldPointer].tile =
-			gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1].tile; /* ツモった牌を */
+			gameStat->Player[targetPlayer].Tsumohai().tile; /* ツモった牌を */
 		tmpGameStat.Player[targetPlayer].Meld[tmpGameStat.Player[targetPlayer].MeldPointer].mstat =
 			meldQuadConcealed; /* 暗槓したとみなす */
 		MachihaiInfo machiInfo_After = chkFuriten(&tmpGameStat, targetPlayer);

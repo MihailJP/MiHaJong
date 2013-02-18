@@ -162,7 +162,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 
 	/* 聴牌形加符 */
 	analysis->Machi = machiInvalid; // 初期化
-	const TileCode* tsumoTile = &(gameStat->Player[analysis->player].Hand[NumOfTilesInHand-1].tile); // shorthand
+	const TileCode* tsumoTile = &(gameStat->Player[analysis->player].Tsumohai().tile); // shorthand
 	if (analysis->MianziDat[0].tile == *tsumoTile) analysis->Machi = machiTanki; // 単騎待ち
 	for (int i = 1; i < SizeOfMeldBuffer; i++) { // 待ちの種類を調べる……
 		switch (analysis->MianziDat[i].mstat) {
@@ -606,7 +606,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	analysis.MachiInfo = chkFuriten(gameStat, targetPlayer);
 	analysis.GameStat = gameStat;
 	analysis.PlayerStat = &(gameStat->Player[targetPlayer]);
-	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1]);
+	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Tsumohai());
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	// 計算ルーチンに渡すパラメータの準備
@@ -638,7 +638,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	analysis.MachiInfo = chkFuriten(gameStat, targetPlayer);
 	analysis.GameStat = gameStat;
 	analysis.PlayerStat = &(gameStat->Player[targetPlayer]);
-	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Hand[NumOfTilesInHand - 1]);
+	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Tsumohai());
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	// 計算ルーチンに渡すパラメータの準備

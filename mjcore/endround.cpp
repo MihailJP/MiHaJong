@@ -142,7 +142,7 @@ EndType endround::checkroundabort(GameTable* gameStat) { // ‹ÇI—¹ğŒ‚Ì”»’è
 		(chksifeng(gameStat)))
 		return SuufonRenda;
 
-	for (PlayerID i = 0; i < Players; ++i) gameStat->Player[i].Hand[NumOfTilesInHand - 1].tile = NoTile; // ƒoƒO–h~‚Ì‚½‚ß
+	for (PlayerID i = 0; i < Players; ++i) gameStat->Player[i].Tsumohai().tile = NoTile; // ƒoƒO–h~‚Ì‚½‚ß
 	if (chkKuikae(gameStat)) { // ‹ò‚¢‘Ö‚¦‚Ìê‡‚Ìˆ—
 		gameStat->AgariSpecialStat = agariKuikae;
 		return Chonbo;

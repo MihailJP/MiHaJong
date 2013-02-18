@@ -154,7 +154,7 @@ void GameTableScreen::checkTimeout() {
 		if (isNakiSel) { // –Â‚«‘I‘ð’†‚ÌŽž
 			ui::UIEvent->set(naki::nakiNone); // ”v‚Ì”Ô†‚ðÝ’è
 		} else if (buttonReconst->getButtonSet() == ButtonReconst::btnSetTsumo) {
-			if (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Hand[NumOfTilesInHand - 1].tile != NoTile)
+			if (GameStatus::gameStat()->Player.val[GameStatus::gameStat()->PlayerID].Tsumohai().tile != NoTile)
 				ui::UIEvent->set(NumOfTilesInHand - 1); // ƒcƒ‚Ø‚è
 			else ui::UIEvent->set(0); // –Â‚¢‚½’¼Œã‚Ìê‡
 		}
