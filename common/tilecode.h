@@ -18,9 +18,9 @@ const unsigned int TileSuitCharacters = TileSuitStep * 0;
 const unsigned int TileSuitCircles    = TileSuitStep * 1;
 const unsigned int TileSuitBamboos    = TileSuitStep * 2;
 const unsigned int TileSuitHonors     = TileSuitStep * TileNumeralColors;
-const unsigned int TileNonflowerMax   = TileSuitStep * (TileSuitHonors + 1);
+const unsigned int TileNonflowerMax   = TileSuitStep   + TileSuitHonors;
 const unsigned int TileSuitFlowers    = TileSuitStep * 12;
-const unsigned int TileFlowerMax      = TileSuitStep * (TileSuitFlowers + 1);
+const unsigned int TileFlowerMax      = TileSuitStep   + TileSuitFlowers;
 
 enum TileCode : uint8_t { // îvÇÃÉRÅ[Éh
 	NoTile = 0,

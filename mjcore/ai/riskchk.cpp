@@ -15,12 +15,12 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::issameasprevious
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isdora
 	(const GameTable* const gameStat, PlayerID player, int index) { // ドラかどうか
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		return (t == NoTile) ? false : gameStat->DoraFlag.Omote[t];
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isdorasuji
 	(const GameTable* const gameStat, PlayerID player, int index) { // ドラ筋かどうか
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if ((t >= TileSuitHonors)||(t == NoTile)) {return false;}
 		else {
 			if (((t % TileSuitStep) >= 4) &&
@@ -32,7 +32,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isdorasuji
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isdorasoba
 	(const GameTable* const gameStat, PlayerID player, int index) { // ドラそばかどうか
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if ((t >= TileSuitHonors)||(t == NoTile)) {return false;}
 		else {
 			if (((t % TileSuitStep) >= 2) &&
@@ -48,7 +48,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isdorasoba
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isnochance
 	(const GameTable* const gameStat, PlayerID player, int index) { // ノーチャンスかどうか
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		Int8ByTile s = countseentiles(gameStat);
 		Int8ByTile h = countTilesInHand(gameStat, player);
 		if ((t >= TileSuitHonors)||(t == NoTile)) {return false;}
@@ -62,7 +62,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isnochance
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isonechance
 	(const GameTable* const gameStat, PlayerID player, int index) { // ワンチャンスかどうか
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		Int8ByTile s = countseentiles(gameStat);
 		Int8ByTile h = countTilesInHand(gameStat, player);
 		if ((t >= TileSuitHonors)||(t == NoTile)) {return false;}
@@ -76,14 +76,14 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isonechance
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isneverdiscarded
 	(const GameTable* const gameStat, PlayerID player, int index) { // 生牌かどうか
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		Int8ByTile s = countseentiles(gameStat);
 		if (t == NoTile) return false;
 		else return (s[t] == 0);
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isseenfour
 	(const GameTable* const gameStat, PlayerID player, int index) { // 場に4枚見えているかどうか
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		Int8ByTile s = countseentiles(gameStat);
 		Int8ByTile h = countTilesInHand(gameStat, player);
 		if (t == NoTile) return false;
@@ -92,7 +92,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isseenfour
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isgembutsu
 	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // 現物かどうか
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if (t == NoTile) return false;
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++)
 			if (gameStat->Player[tplayer].Discard[i].tcode.tile == t)
@@ -102,7 +102,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isgembutsu
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::issuji
 	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // 筋かどうか
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // 字牌と空白は除外
 		if (((t % TileSuitStep) >= 4) && ((t % TileSuitStep) <= 6)) return false; // 筋心牌以外にのみ適用可能
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++)
@@ -115,7 +115,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::issuji
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isnakasuji
 	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // 中筋かどうか
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // 字牌と空白は除外
 		if (((t % TileSuitStep) < 4) || ((t % TileSuitStep) > 6)) return false; // 筋心牌にのみ適用可能
 		bool flag1 = false; bool flag2 = false;
@@ -135,7 +135,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isurasuji
 		 *  ①２・・５⑥・・・　/　・②３・・６⑦・・　/　・・③４・・７⑧・
 		 *  ・・・④５・・８⑨　/　１・・４⑤６・・９
 		 */
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // 字牌と空白は除外
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((t % TileSuitStep) >= 2) && ((t % TileSuitStep) <= 6))
@@ -161,7 +161,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isaida4ken
 		 *  ①２・・５⑥・・・　/　・②３・・６⑦・・　/　・・③４・・７⑧・
 		 *  ・・・④５・・８⑨
 		 */
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // 字牌と空白は除外
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((t % TileSuitStep) >= 2) && ((t % TileSuitStep) <= 5))
@@ -184,7 +184,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::issenkisuji
 		 *  １・・４・⑥・・・　/　・２・・５・⑦・・　/　①・３・・６・⑧・
 		 *  ・②・４・・７・⑨　/　・・③・５・・８・　/　・・・④・６・・９
 		 */
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // 字牌と空白は除外
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((t % TileSuitStep) >= 3) && ((t % TileSuitStep) <= 6))
@@ -212,7 +212,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::ismatagisuji
 		 *  ・・３４⑤６７・・　/　・・・４５⑥７８・　/　・・・・５６⑦８９
 		 *  ・・・・・６・⑧９
 		 */
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // 字牌と空白は除外
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((t % TileSuitStep) >= 2) && ((t % TileSuitStep) <= 7))
@@ -237,7 +237,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isnamakurasuji
 		 *  ①・・④・・７・・　/　・②・・⑤・・８・　/　・・③・・⑥・・９
 		 *  １・・④・・⑦・・　/　・２・・⑤・・⑧・　/　・・３・・⑥・・⑨
 		 */
-		::TileCode t = gameStat->Player[player].Hand[index].tile;
+		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // 字牌と空白は除外
 		bool flag1 = false; bool flag2 = false;
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {

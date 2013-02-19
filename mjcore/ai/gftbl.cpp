@@ -67,7 +67,7 @@ void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable*
 				tmpGameStat->Player[player].Hand[i].red = Normal;
 			} else if (lua_istable(L, -1)) { // ”v‚ª‚ ‚Á‚½
 				lua_getfield(L, -1, "tile");
-				tmpGameStat->Player[player].Hand[i].tile = (::TileCode)lua_tointeger(L, -1);
+				tmpGameStat->Player[player].Hand[i].tile = (TileCode)lua_tointeger(L, -1);
 				lua_pop(L, 1);
 				lua_getfield(L, -1, "red");
 				tmpGameStat->Player[player].Hand[i].red = (doraCol)lua_tointeger(L, -1);
@@ -456,7 +456,7 @@ int aiscript::table::functable::gametbl::luafunc::getyakuhaiwind(lua_State* cons
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
 	lua_newtable(L); // •Ô‚è’l‚ðŠi”[
-	const ::TileCode windtiles[4] = {EastWind, SouthWind, WestWind, NorthWind,};
+	const TileCode windtiles[4] = {EastWind, SouthWind, WestWind, NorthWind,};
 	const char windname[4][8] = {"East", "South", "West", "North",};
 	for (int i = 0; i < 4; i++) {
 		bool flag = false;
