@@ -496,6 +496,17 @@ namespace {
 		return;
 	}
 
+	void agariscrproc(const GameTable* gameStat, const YakuResult* yakuInfo,
+		const LNum* agariPointArray, int ChipAmount, const CodeConv::tstring& ResultDesc, bool tmpUraFlag)
+	{
+		// ‰¼À‘•
+		sound::util::bgmstop();
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
+		mihajong_graphic::YakuResult::setYakuStat(yakuInfo);
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgari);
+		(void)mihajong_graphic::ui::WaitUI();
+	}
+
 }
 
 /* ˜a—¹¬—§‚Ìˆ— */

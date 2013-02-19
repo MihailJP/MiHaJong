@@ -11,4 +11,13 @@ TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
 
 // -------------------------------------------------------------------------
 
+TableSubsceneAgariScreen::TableSubsceneAgariScreen(LPDIRECT3DDEVICE9 device) : TableSubsceneAgariScreenProto(device) {
+}
+TableSubsceneAgariScreen::~TableSubsceneAgariScreen() {
+}
+void TableSubsceneAgariScreen::Render() {
+}
+
+// -------------------------------------------------------------------------
+
 }

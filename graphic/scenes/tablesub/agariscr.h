@@ -10,4 +10,11 @@ public:
 	virtual ~TableSubsceneAgariScreenProto();
 };
 
+class TableSubsceneAgariScreen : public TableSubsceneAgariScreenProto {
+public:
+	TableSubsceneAgariScreen(LPDIRECT3DDEVICE9 device);
+	~TableSubsceneAgariScreen();
+	void Render();
+};
+
 }

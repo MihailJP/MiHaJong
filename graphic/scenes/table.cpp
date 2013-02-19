@@ -280,6 +280,9 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			else // ‰¹‚ð–Â‚ç‚·
 				sound::Play(sound::IDs::sndSignal);
 			break;
+		case tblSubsceneAgari:
+			mySubScene = new TableSubsceneAgariScreen(caller->getDevice());
+			break;
 		default:
 			mySubScene = new TableSubsceneNormal(caller->getDevice());
 			break;
