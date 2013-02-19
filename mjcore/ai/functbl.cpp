@@ -17,7 +17,7 @@ void aiscript::table::functable::inittable(lua_State* const L, int playerID) {
 	discardTileCode(L); // subtable 'DiscardType'
 	meldCallCode(L); // subtable 'Call'
 	meldTypeCode(L); // subtable 'MeldType'
-	TileCode(L); // subtable 'Tile'
+	tileCode(L); // subtable 'Tile'
 	agariTypeCode(L); // subtable 'AgariType'
 	doraColorCode(L); // subtable 'DoraColor'
 	gametbl::makeprototype(L, playerID); // subtable 'gametbl' (prototype)
@@ -110,7 +110,7 @@ inline void aiscript::table::functable::meldTypeCode(lua_State* const L) {
 }
 
 /* îvÇÃî‘çÜ */
-inline void aiscript::table::functable::TileCode(lua_State* const L) {
+inline void aiscript::table::functable::tileCode(lua_State* const L) {
 	const char suitname[3][16] = {"Character","Circle","Bamboo",};
 	const char numeral[9][8] = {"One","Two","Three","Four","Five","Six","Seven","Eight","Nine",};
 	lua_newtable(L);

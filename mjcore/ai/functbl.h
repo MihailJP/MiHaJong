@@ -20,7 +20,7 @@ private:
 	static inline void doraColorCode(lua_State* const L);
 	static inline void meldCallCode(lua_State* const L);
 	static inline void meldTypeCode(lua_State* const L);
-	static inline void TileCode(lua_State* const L);
+	static inline void tileCode(lua_State* const L);
 	static inline void agariTypeCode(lua_State* const L);
 	static inline void gametype(lua_State* const L);
 	static inline void version(lua_State* const L);
