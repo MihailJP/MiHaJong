@@ -703,11 +703,11 @@ __declspec(dllexport) void calcdoukasen(GameTable* const gameStat) {
 
 /* ’®”v‚©‚Ç‚¤‚©’²‚×‚é */
 bool isTenpai(const GameTable* const gameStat, PlayerID targetPlayer) {
-	auto Shanten = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenAll);
-	if (gameStat->Player[targetPlayer].AgariHouki) Shanten = 1; // ƒAƒKƒŠ•úŠü‚È‚ç‹­§•s’®
+	Shanten shanten = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenAll);
+	if (gameStat->Player[targetPlayer].AgariHouki) shanten = 1; // ƒAƒKƒŠ•úŠü‚È‚ç‹­§•s’®
 	if (EnvTable::Instantiate()->PlayerDat[targetPlayer].RemotePlayerFlag == -1)
 		return false;
-	return (Shanten <= 0);
+	return (shanten <= 0);
 }
 __declspec(dllexport) int isTenpai(const GameTable* const gameStat, void *, int targetPlayer) {
 	return isTenpai(gameStat, (PlayerID)targetPlayer) ? 1 : 0;

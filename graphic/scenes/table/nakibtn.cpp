@@ -118,9 +118,9 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 	};
 	const PlayerID ActivePlayer = gameStat->CurrentPlayer.Active;
 	const PlayerTable* const playerStat = &(gameStat->Player[ActivePlayer]);
-	const Shanten Shanten = utils::calcShanten(gameStat, ActivePlayer, shantenAll);
+	const Shanten shanten = utils::calcShanten(gameStat, ActivePlayer, shantenAll);
 	if (utils::isRichiReqSatisfied(gameStat, ActivePlayer) && // 点棒要件を満たしている（点棒が足りている）
-		(Shanten <= 0) && // テンパイしている
+		(shanten <= 0) && // テンパイしている
 		(playerStat->MenzenFlag || (!rules::chkRule("riichi_shibari", "no"))) && // 門前であるか、リーチ縛りルールである
 		(!playerStat->RichiFlag.RichiFlag) && // まだリーチしていない
 		(tilesMoreThan((gameStat->gameType & AllSanma) ? 2 : 3))) // 残りツモ牌が十分あるなら
@@ -132,7 +132,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 
 	const bool ShisanBuDa = utils::chkShisanBuDa(gameStat, ActivePlayer);
 	const bool ShisiBuDa = utils::chkShisiBuDa(gameStat, ActivePlayer);
-	if (((Shanten <= -1) && (playerStat->Tsumohai().tile != NoTile)) || // 和了になっているか
+	if (((shanten <= -1) && (playerStat->Tsumohai().tile != NoTile)) || // 和了になっているか
 		ShisanBuDa || ShisiBuDa) // 十三不塔の場合（十三不塔なしの場合この変数はfalseになる）
 		buttonEnabled[btnTsumo] = true; // 和了ボタン
 
@@ -188,7 +188,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 	const PlayerID PassivePlayer = gameStat->CurrentPlayer.Passive;
 	PlayerTable* const playerStat = &(gameStat->Player[PassivePlayer]);
 	playerStat->Tsumohai().tile = gameStat->CurrentDiscard.tile;
-	const Shanten Shanten = utils::calcShanten(gameStat, gameStat->PlayerID, shantenAll);
+	const Shanten shanten = utils::calcShanten(gameStat, gameStat->PlayerID, shantenAll);
 	playerStat->Tsumohai().tile = NoTile;
 
 	if (gameStat->CurrentDiscard.tile > TileSuitFlowers) goto end; /* 花牌の場合は残りの判定をスキップ */
@@ -197,7 +197,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 		(utils::calcShanten(gameStat, PassivePlayer, shantenOrphans) >= 0)) // 国士聴牌でない場合は
 		goto end; // 残りの判定をスキップ
 
-	if (Shanten < 0) // 出た牌が当たり牌
+	if (shanten < 0) // 出た牌が当たり牌
 		buttonEnabled[btnRon] = true; // 和了ボタン（フリテンの場合なども点灯）
 
 	if (!playerStat->RichiFlag.RichiFlag) { // リーチしてないとき……
@@ -288,8 +288,8 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			setMode(DiscardTileNum::Riichi, btnRiichi,
 				[](int i, GameTable* tmpStat) -> bool {
 					tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile = NoTile;
-					Shanten Shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, shantenAll);
-					return (Shanten > 0);
+					Shanten shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, shantenAll);
+					return (shanten > 0);
 				});
 			break;
 		case btnKan: // カン
