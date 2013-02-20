@@ -12,7 +12,7 @@ namespace mihajong_graphic {
 
 TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
 	myDevice = device;
-	LoadTexture(device, &windowTexture, MAKEINTRESOURCE(IDB_PNG_AGARI_WINDOW), 600, 864);
+	LoadTexture(device, &windowTexture, MAKEINTRESOURCE(IDB_PNG_AGARI_WINDOW), yakuWndWidth, yakuWndHeight);
 	yakuData = YakuResult::getYakuStat();
 	parseYakuList();
 }
@@ -44,13 +44,13 @@ void TableSubsceneAgariScreenProto::parseYakuList() {
 }
 
 void TableSubsceneAgariScreenProto::renderWindow() {
-	const double Zeit = (double)(currTime() - startTime) / 10000000.0;
+	const double Zeit = seconds();
 	const int yOffset = (Zeit >= 1.0) ? 0 : (int)(pow(1.0 - Zeit, 2) * (double)Geometry::BaseSize);
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(
-		windowTexture,
-		((signed)Geometry::BaseSize - 600) / 2,
-		((signed)Geometry::BaseSize - 864) / 2 - yOffset,
-		600, 864);
+		windowTexture, BaseX, BaseY - yOffset, yakuWndWidth, yakuWndHeight);
+}
+
+void TableSubsceneAgariScreenProto::renderYakuName() {
 }
 
 // -------------------------------------------------------------------------
@@ -61,6 +61,7 @@ TableSubsceneAgariScreen::~TableSubsceneAgariScreen() {
 }
 void TableSubsceneAgariScreen::Render() {
 	renderWindow();
+	renderYakuName();
 }
 
 // -------------------------------------------------------------------------
