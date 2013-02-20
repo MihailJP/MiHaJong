@@ -1,6 +1,10 @@
 #pragma once
 
 #include "tablesub.h"
+#include "../../../common/yakurslt.h"
+#include <vector>
+#include <utility>
+#include "../../../common/strcode.h"
 
 namespace mihajong_graphic {
 
@@ -8,6 +12,10 @@ class TableSubsceneAgariScreenProto : public TableSubscene {
 protected:
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 windowTexture;
+protected:
+	mihajong_structs::YakuResult yakuData;
+	std::vector<std::pair<CodeConv::tstring, CodeConv::tstring> > yakuList;
+	void parseYakuList();
 protected:
 	void renderWindow();
 public:
