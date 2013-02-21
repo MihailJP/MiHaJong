@@ -76,17 +76,17 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 			int cols = 0;
 			for (auto k = tmpstr.begin(); k != tmpstr.end(); ++k)
 				cols += ((*k > L'\x7f') ? 2 : 1);
-			return (cols > 8) ? (8.0f / (float)cols) : 1.0f;
+			return (cols > 12) ? (8.0f / (float)cols) : 1.0f;
 		} (yakuList[yakuNum].first);
 		// •\Ž¦
 		const D3DCOLOR color = (Zeit >= anmTime) ? 0xffffffff : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | 0x00ffffff);
-		const int x = BaseX + ((yakuNum % 2 == 0) ? 50 : 330);
+		const int x = BaseX + ((yakuNum % 2 == 0) ? 50 : 390);
 		const int y = BaseY + 100;
 		myTextRenderer->NewText(yakuNum * 2, yakuList[yakuNum].first,
 			x + xOffset, y + (yakuNum / 2) * 50,
 			1.0f, compressRate, color);
 		myTextRenderer->NewText(yakuNum * 2 + 1, yakuList[yakuNum].second,
-			x + 160, y + 8 + (yakuNum / 2) * 50,
+			x + 220, y + 8 + (yakuNum / 2) * 50,
 			0.75f, 1.0f, color);
 		return true;
 	}
