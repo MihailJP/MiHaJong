@@ -5,6 +5,7 @@
 #include <vector>
 #include <utility>
 #include "../../../common/strcode.h"
+#include "../../text.h"
 
 namespace mihajong_graphic {
 
@@ -18,12 +19,14 @@ protected:
 protected:
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 windowTexture;
+	TextRenderer* myTextRenderer;
 protected:
 	mihajong_structs::YakuResult yakuData;
 	std::vector<std::pair<CodeConv::tstring, CodeConv::tstring> > yakuList;
 	void parseYakuList();
 protected:
 	void renderWindow();
+	bool renderYakuName(unsigned yakuNum);
 	void renderYakuName();
 public:
 	TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 device);
