@@ -6,8 +6,11 @@
 #include <utility>
 #include "../../../common/strcode.h"
 #include "../../text.h"
+#include "../table/tehai0.h"
 
 namespace mihajong_graphic {
+
+// -------------------------------------------------------------------------
 
 class TableSubsceneAgariScreenProto : public TableSubscene {
 protected:
@@ -26,6 +29,7 @@ protected:
 	void parseYakuList();
 protected:
 	void renderWindow();
+	class AgariTehai; AgariTehai* agariTehai;
 	bool renderYakuName(unsigned yakuNum);
 	void renderYakuName();
 public:
@@ -39,5 +43,19 @@ public:
 	~TableSubsceneAgariScreen();
 	void Render();
 };
+
+// -------------------------------------------------------------------------
+
+class TableSubsceneAgariScreenProto::AgariTehai : public ShowTehai {
+private:
+	TableSubsceneAgariScreenProto* myCaller;
+	void Reconstruct(const GameTable* gameStat);
+public:
+	void Render();
+	explicit AgariTehai(TableSubsceneAgariScreenProto* caller);
+	~AgariTehai();
+};
+
+// -------------------------------------------------------------------------
 
 }

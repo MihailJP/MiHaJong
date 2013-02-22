@@ -18,8 +18,10 @@ TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 d
 	yakuData = YakuResult::getYakuStat();
 	parseYakuList();
 	myTextRenderer = new TextRenderer(device);
+	agariTehai = new AgariTehai(this);
 }
 TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
+	delete agariTehai;
 	delete myTextRenderer;
 	windowTexture->Release();
 }
@@ -113,8 +115,30 @@ void TableSubsceneAgariScreen::Render() {
 	renderWindow();
 	renderYakuName();
 	myTextRenderer->Render();
+	agariTehai->Render();
 }
 
 // -------------------------------------------------------------------------
+
+TableSubsceneAgariScreenProto::AgariTehai::AgariTehai(TableSubsceneAgariScreenProto* caller) : ShowTehai(caller->myDevice) {
+	myCaller = caller;
+}
+TableSubsceneAgariScreenProto::AgariTehai::~AgariTehai() {
+}
+
+void TableSubsceneAgariScreenProto::AgariTehai::Reconstruct(const GameTable* gameStat) {
+	ShowTehai::Reconstruct(gameStat, gameStat->CurrentPlayer.Agari,
+		[this](seatRelative) -> std::tuple<int, int> {
+			const double Zeit = myCaller->seconds();
+			const int yOffset = (Zeit >= 1.0) ? 0 : (int)(pow(1.0 - Zeit, 2) * (double)Geometry::BaseSize);
+			return std::make_tuple(BaseX + 16, BaseY + 32 - yOffset);
+		},
+		sSelf, [](int){return (D3DCOLOR)0xffffffff;},
+		[](const int*, const int*, int){});
+}
+
+void TableSubsceneAgariScreenProto::AgariTehai::Render() {
+	TileTexture->Render();
+}
 
 }
