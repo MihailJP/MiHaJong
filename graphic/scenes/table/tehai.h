@@ -2,18 +2,16 @@
 
 #include "../table.h"
 #include <bitset>
+#include "tehai0.h"
 
 namespace mihajong_graphic {
 
-class GameTableScreen::TehaiReconst {
+class GameTableScreen::TehaiReconst : public ShowTehai {
 private:
-	ShowTile* TileTexture;
 	GameTableScreen* caller;
 private:
-	static const unsigned int HandLength = 13;
 	static const unsigned int HandPosH = (TableSize - ShowTile::VertTileWidth * (HandLength - 1)) / 2;
 	static const unsigned int HandPosV = DeckPosV - 144;
-	static const int tileCursorOff = -3; // 手牌カーソル無効時
 	int tileCursor; // 手牌カーソル
 	std::bitset<NumOfTilesInHand> tileEnabled;
 public:

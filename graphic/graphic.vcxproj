@@ -175,6 +175,7 @@
     <ClCompile Include="scenes\table\showdice.cpp" />
     <ClCompile Include="scenes\table\sutehai.cpp" />
     <ClCompile Include="scenes\table\tehai.cpp" />
+    <ClCompile Include="scenes\table\tehai0.cpp" />
     <ClCompile Include="scenes\table\yamahai.cpp" />
     <ClCompile Include="scenes\title.cpp" />
     <ClCompile Include="scrmanip.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="scenes\table\showdice.h" />
     <ClInclude Include="scenes\table\sutehai.h" />
     <ClInclude Include="scenes\table\tehai.h" />
+    <ClInclude Include="scenes\table\tehai0.h" />
     <ClInclude Include="scenes\table\yamahai.h" />
     <ClInclude Include="scenes\title.h" />
     <ClInclude Include="scrmanip.h" />
