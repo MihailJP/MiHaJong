@@ -50,6 +50,7 @@ class TableSubsceneAgariScreenProto::AgariTehai : public ShowTehai {
 private:
 	TableSubsceneAgariScreenProto* myCaller;
 	void Reconstruct(const GameTable* gameStat);
+	bool reconstFlag;
 public:
 	void Render();
 	explicit AgariTehai(TableSubsceneAgariScreenProto* caller);

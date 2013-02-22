@@ -7,6 +7,7 @@
 #include <cmath>
 #include "../../../sound/sound.h"
 #include "../../../common/bgmid.h"
+#include "../../gametbl.h"
 
 namespace mihajong_graphic {
 
@@ -122,6 +123,7 @@ void TableSubsceneAgariScreen::Render() {
 
 TableSubsceneAgariScreenProto::AgariTehai::AgariTehai(TableSubsceneAgariScreenProto* caller) : ShowTehai(caller->myDevice) {
 	myCaller = caller;
+	reconstFlag = true;
 }
 TableSubsceneAgariScreenProto::AgariTehai::~AgariTehai() {
 }
@@ -131,13 +133,16 @@ void TableSubsceneAgariScreenProto::AgariTehai::Reconstruct(const GameTable* gam
 		[this](seatRelative) -> std::tuple<int, int> {
 			const double Zeit = myCaller->seconds();
 			const int yOffset = (Zeit >= 1.0) ? 0 : (int)(pow(1.0 - Zeit, 2) * (double)Geometry::BaseSize);
-			return std::make_tuple(BaseX + 16, BaseY + 32 - yOffset);
+			return std::make_tuple(BaseX + 28, BaseY + 48 - yOffset);
 		},
 		sSelf, [](int){return (D3DCOLOR)0xffffffff;},
 		[](const int*, const int*, int){});
 }
 
 void TableSubsceneAgariScreenProto::AgariTehai::Render() {
+	const double Zeit = myCaller->seconds();
+	if (reconstFlag) Reconstruct(GameStatus::gameStat());
+	if (Zeit >= 1.0) reconstFlag = false;
 	TileTexture->Render();
 }
 
