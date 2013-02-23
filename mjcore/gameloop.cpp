@@ -94,28 +94,28 @@ bool doTableRound(GameTable* const gameStat) {
 	{
 		const HandTiles debugTile[Players] = {
 			{
-				{CharacterFive, Normal}, {NoTile, Normal}, {NoTile, Normal},
+				{CircleOne,     Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, gameStat->Player[0].Hand[13],
 			},
 			{
-				{BambooFive,    Normal}, {NoTile, Normal}, {NoTile, Normal},
+				{CircleOne,     Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, gameStat->Player[1].Hand[13],
 			},
 			{
-				{CircleFive,    Normal}, {NoTile, Normal}, {NoTile, Normal},
+				{CircleOne,     Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, gameStat->Player[2].Hand[13],
 			},
 			{
-				{WestWind,      Normal}, {NoTile, Normal}, {NoTile, Normal},
+				{CircleOne,     Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, {NoTile, Normal}, {NoTile, Normal},
 				{NoTile,        Normal}, {NoTile, Normal}, {NoTile, Normal},
