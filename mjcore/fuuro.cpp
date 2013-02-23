@@ -456,7 +456,7 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	if (CheckChankan(gameStat, RoundEndType, Mode)) return true;
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
-	Sleep(1000);
+	Sleep((gameStat->KangFlag.chankanFlag != chankanNone) ? 500 : 1000);
 	if (ProcRinshan(gameStat, RoundEndType, Mode, fuuroPlayer)) return true;
 	/* 事後処理 */
 	for (PlayerID i = 0; i < Players; ++i)
@@ -522,9 +522,18 @@ namespace {
 		PlayerTable* const playerStat = &(gameStat->statOfMine());
 		using namespace mihajong_graphic;
 		using namespace mihajong_graphic::naki;
-		Subscene(tblSubscenePlayerNaki);
+		if (gameStat->KangFlag.chankanFlag != chankanNone) {
+			Sleep(500);
+			Subscene(tblSubscenePlayerChankan);
+		} else {
+			Subscene(tblSubscenePlayerNaki);
+		}
 		DWORD result = ui::WaitUI();
-		Subscene(tblSubsceneNone);
+		if (gameStat->KangFlag.chankanFlag != chankanNone) {
+			Subscene(tblSubsceneCallCut);
+		} else {
+			Subscene(tblSubsceneNone);
+		}
 		switch ((NakiTypeID)result) {
 		case nakiRon:
 			debug(_T("プレイヤーからの応答：ロン"));
