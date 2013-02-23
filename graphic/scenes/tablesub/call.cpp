@@ -146,6 +146,24 @@ void TableSubsceneCallCut::Render() {
 
 // -------------------------------------------------------------------------
 
+TableSubsceneCallChankanPre::TableSubsceneCallChankanPre(LPDIRECT3DDEVICE9 device) : TableSubsceneCallCutProto(device) {
+}
+
+TableSubsceneCallChankanPre::~TableSubsceneCallChankanPre() {
+}
+
+/* ï\é¶èàóù */
+void TableSubsceneCallChankanPre::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
+	if ((callType != calltext::Ron) && (callType != calltext::RonQualified))
+		TableSubsceneCallCutProto::ShowCallMsg(player, callType, x, y);
+}
+
+void TableSubsceneCallChankanPre::Render() {
+	ShowAllCall();
+}
+
+// -------------------------------------------------------------------------
+
 TableSubsceneCallChankanRon::TableSubsceneCallChankanRon(LPDIRECT3DDEVICE9 device) : TableSubsceneCallProto(device) {
 	zoomCall = new TableSubsceneCall(device);
 	cutCall = new TableSubsceneCallCut(device);

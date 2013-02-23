@@ -54,7 +54,7 @@ public:
 
 class TableSubsceneCallCutProto : public TableSubsceneCallProto {
 protected:
-	void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y);
+	virtual void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y);
 	void ShowCall(PlayerID player, int x, int y);
 public:
 	TableSubsceneCallCutProto(LPDIRECT3DDEVICE9 device);
@@ -66,6 +66,15 @@ class TableSubsceneCallCut : public TableSubsceneCallCutProto {
 public:
 	TableSubsceneCallCut(LPDIRECT3DDEVICE9 device);
 	~TableSubsceneCallCut();
+	void Render();
+};
+
+class TableSubsceneCallChankanPre : public TableSubsceneCallCutProto {
+protected:
+	void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y);
+public:
+	TableSubsceneCallChankanPre(LPDIRECT3DDEVICE9 device);
+	~TableSubsceneCallChankanPre();
 	void Render();
 };
 

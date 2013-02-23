@@ -530,7 +530,7 @@ namespace {
 		}
 		DWORD result = ui::WaitUI();
 		if (gameStat->KangFlag.chankanFlag != chankanNone) {
-			Subscene(tblSubsceneCallCut);
+			Subscene(tblSubsceneCallChankanPre);
 		} else {
 			Subscene(tblSubsceneNone);
 		}
