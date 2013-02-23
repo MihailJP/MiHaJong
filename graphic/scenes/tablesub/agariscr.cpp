@@ -20,8 +20,10 @@ TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 d
 	parseYakuList();
 	myTextRenderer = new TextRenderer(device);
 	agariTehai = new AgariTehai(this);
+	agariNaki = new AgariNaki(this);
 }
 TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
+	delete agariNaki;
 	delete agariTehai;
 	delete myTextRenderer;
 	windowTexture->Release();
@@ -117,6 +119,7 @@ void TableSubsceneAgariScreen::Render() {
 	renderYakuName();
 	myTextRenderer->Render();
 	agariTehai->Render();
+	agariNaki->Render();
 }
 
 // -------------------------------------------------------------------------
@@ -133,7 +136,7 @@ void TableSubsceneAgariScreenProto::AgariTehai::Reconstruct(const GameTable* gam
 		[this](seatRelative) -> std::tuple<int, int> {
 			const double Zeit = myCaller->seconds();
 			const int yOffset = (Zeit >= 1.0) ? 0 : (int)(pow(1.0 - Zeit, 2) * (double)Geometry::BaseSize);
-			return std::make_tuple(BaseX + 28, BaseY + 48 - yOffset);
+			return std::make_tuple(BaseX + 28, handPosY - yOffset);
 		},
 		sSelf, [](int){return (D3DCOLOR)0xffffffff;},
 		[](const int*, const int*, int){});
@@ -145,5 +148,72 @@ void TableSubsceneAgariScreenProto::AgariTehai::Render() {
 	if (Zeit >= 1.0) reconstFlag = false;
 	TileTexture->Render();
 }
+
+// -------------------------------------------------------------------------
+
+/* –Â‚¢‚½”v‚ð•\Ž¦‚·‚é */
+std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, std::function<int (unsigned)>, TileDirection, TileDirection, TileDirection>
+	TableSubsceneAgariScreenProto::AgariNaki::playerPosition(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID,
+	unsigned h1, unsigned h2, unsigned h3, unsigned h4, unsigned v1, unsigned v2, unsigned v3, unsigned v4,
+	bool r1, bool r2, bool r3, bool r4)
+{
+	return std::make_tuple(
+		[=](unsigned i) -> unsigned {return i + IDOffset;},
+		[=](unsigned i) -> int {
+			switch (i) {
+				case 0: return h1 - PositionOffset; break;
+				case 1: return h2 - PositionOffset; break;
+				case 2: return h3 - PositionOffset; break;
+				case 3: return h4 - PositionOffset; break;
+				default: throw "Out of range";
+			}
+		},
+		[=](unsigned i) -> int {
+			switch (i) {
+				case 0: return v1; break;
+				case 1: return v2; break;
+				case 2: return v3; break;
+				case 3: return v4; break;
+				default: throw "Out of range";
+			}
+		},
+		Withershins, Portrait, Clockwise);
+}
+void TableSubsceneAgariScreenProto::AgariNaki::Reconstruct(const GameTable* gameStat) {
+	const PlayerID targetPlayer = gameStat->CurrentPlayer.Agari;
+	unsigned posOffset[5] = {0,};
+	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; ++i) {
+		switch (gameStat->Player[targetPlayer].Meld[i].mstat) {
+		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight:
+			posOffset[i] = posOffset[i - 1] + ShowTile::VertTileWidth * 3 + ShowTile::HoriTileWidth;
+			break;
+		case meldQuadConcealed:
+			posOffset[i] = posOffset[i - 1] + ShowTile::VertTileWidth * 4;
+			break;
+		default:
+			posOffset[i] = posOffset[i - 1] + ShowTile::VertTileWidth * 2 + ShowTile::HoriTileWidth;
+			break;
+		}
+	}
+	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; ++i)
+		NakihaiSelRoutine(gameStat, targetPlayer, posOffset[i - 1],
+			(gameStat->Player[targetPlayer].MeldPointer - i) * 4, i);
+}
+
+void TableSubsceneAgariScreenProto::AgariNaki::Render() {
+	const double Zeit = myCaller->seconds();
+	if (reconstFlag) Reconstruct(GameStatus::gameStat());
+	if (Zeit >= 1.0) reconstFlag = false;
+	TileTexture->Render();
+}
+
+TableSubsceneAgariScreenProto::AgariNaki::AgariNaki(TableSubsceneAgariScreenProto* caller) : ShowNakihai(caller->myDevice) {
+	myCaller = caller;
+}
+
+TableSubsceneAgariScreenProto::AgariNaki::~AgariNaki() {
+}
+
+// -------------------------------------------------------------------------
 
 }
