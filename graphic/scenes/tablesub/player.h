@@ -2,6 +2,7 @@
 
 #include "tablesub.h"
 #include "../../text.h"
+#include "call.h"
 
 namespace mihajong_graphic {
 
@@ -26,10 +27,25 @@ public:
 	void Render();
 };
 
-class TableSubscenePlayerNaki : public TableSubscenePlayerProto {
+class TableSubscenePlayerNakiProto : public TableSubscenePlayerProto {
+public:
+	TableSubscenePlayerNakiProto(LPDIRECT3DDEVICE9 device);
+	~TableSubscenePlayerNakiProto();
+};
+
+class TableSubscenePlayerNaki : public TableSubscenePlayerNakiProto {
 public:
 	TableSubscenePlayerNaki(LPDIRECT3DDEVICE9 device);
 	~TableSubscenePlayerNaki();
+	void Render();
+};
+
+class TableSubscenePlayerNakiChankan : public TableSubscenePlayerNakiProto {
+private:
+	TableSubsceneCallCut* callScreen;
+public:
+	TableSubscenePlayerNakiChankan(LPDIRECT3DDEVICE9 device);
+	~TableSubscenePlayerNakiChankan();
 	void Render();
 };
 
