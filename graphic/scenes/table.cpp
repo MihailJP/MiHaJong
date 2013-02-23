@@ -423,7 +423,7 @@ void GameTableScreen::FinishTileChoice() {
 	sound::Play(sound::IDs::sndClick);
 	if (tehaiReconst->isCursorEnabled() && tehaiReconst->isEnabled(tehaiReconst->getTileCursor())) {
 		const Int8ByTile TileCount = utils::countTilesInHand(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
-		if ((tileSelectMode == DiscardTileNum::Ankan) && (TileCount[tehaiReconst->getTileCursor()] == 1))
+		if ((tileSelectMode == DiscardTileNum::Ankan) && (TileCount[GameStatus::gameStat()->statOfActive().Hand[tehaiReconst->getTileCursor()].tile] == 1))
 			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(DiscardTileNum::Kakan * DiscardTileNum::TypeStep)); // ‰ÁÈ‚Ìê‡
 		else
 			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // ”v‚Ì”Ô†‚ğİ’è
