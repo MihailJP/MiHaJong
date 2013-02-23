@@ -48,14 +48,37 @@ void TableSubscenePlayerDahai::Render() {
 
 // -------------------------------------------------------------------------
 
-TableSubscenePlayerNaki::TableSubscenePlayerNaki(LPDIRECT3DDEVICE9 device) : TableSubscenePlayerProto(device) {
+TableSubscenePlayerNakiProto::TableSubscenePlayerNakiProto(LPDIRECT3DDEVICE9 device) : TableSubscenePlayerProto(device) {
 	timeout_val = 10000;
+}
+
+TableSubscenePlayerNakiProto::~TableSubscenePlayerNakiProto() {
+}
+
+// -------------------------------------------------------------------------
+
+TableSubscenePlayerNaki::TableSubscenePlayerNaki(LPDIRECT3DDEVICE9 device) : TableSubscenePlayerNakiProto(device) {
 }
 
 TableSubscenePlayerNaki::~TableSubscenePlayerNaki() {
 }
 
 void TableSubscenePlayerNaki::Render() {
+	showTimeout();
+}
+
+// -------------------------------------------------------------------------
+
+TableSubscenePlayerNakiChankan::TableSubscenePlayerNakiChankan(LPDIRECT3DDEVICE9 device) : TableSubscenePlayerNakiProto(device) {
+	callScreen = new TableSubsceneCallCut(device);
+}
+
+TableSubscenePlayerNakiChankan::~TableSubscenePlayerNakiChankan() {
+	delete callScreen;
+}
+
+void TableSubscenePlayerNakiChankan::Render() {
+	callScreen->Render();
 	showTimeout();
 }
 

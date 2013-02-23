@@ -21,6 +21,9 @@ enum TableSubsceneID : unsigned int { // 卓画面のサブシーン番号
 	tblSubsceneChonbo, // 「錯和」
 	tblSubsceneCall, // 発声表示画面
 	tblSubsceneCallFade, // 発声表示画面(フェード)
+	tblSubsceneCallCut, // 発声表示画面(カット)
+	tblSubsceneCallChankanPre, // 発声表示画面(槍槓用特殊)
+	tblSubsceneCallChankan, // 発声表示画面(槍槓用特殊)
 	tblSubsceneCallVal, // 点数の増分表示
 	tblSubsceneCallValNotenBappu, // 点数の増分表示（ノーテン罰符）
 	tblSubsceneCallValAgariten, // 点数の増分表示（和了り点）
@@ -35,6 +38,7 @@ enum TableSubsceneID : unsigned int { // 卓画面のサブシーン番号
 	tblSubsceneChkTenpai, // 流局時の聴牌確認
 	tblSubscenePlayerDahai, // プレイヤーの打牌選択用
 	tblSubscenePlayerNaki, // プレイヤーの副露選択用
+	tblSubscenePlayerChankan, // プレイヤーの副露選択用(槍槓)
 	tblSubsceneAgari, // 和了役表示画面
 };
 

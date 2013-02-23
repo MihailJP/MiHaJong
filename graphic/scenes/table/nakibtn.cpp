@@ -302,7 +302,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					if (TileCount[playerStat->Hand[i].tile] < 4) flag = true;
 					if (TileCount[playerStat->Hand[i].tile] == 1) {
 						for (int j = 1; j <= playerStat->MeldPointer; ++j)
-							if ((playerStat->Meld[j].tile == i) &&
+							if ((playerStat->Meld[j].tile == playerStat->Hand[i].tile) &&
 								((playerStat->Meld[j].mstat == meldTripletExposedLeft) ||
 								(playerStat->Meld[j].mstat == meldTripletExposedCenter) ||
 								(playerStat->Meld[j].mstat == meldTripletExposedRight)))
