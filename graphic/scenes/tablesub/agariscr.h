@@ -20,7 +20,7 @@ protected:
 	static const int BaseX = ((signed)Geometry::BaseSize - (signed)yakuWndWidth ) / 2;
 	static const int BaseY = ((signed)Geometry::BaseSize - (signed)yakuWndHeight) / 2;
 	double seconds() {return (double)(currTime() - startTime) / 10000000.0;}
-	static const int handPosY = BaseY + 48;
+	static const int handPosY = BaseY + 56;
 protected:
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 windowTexture;
@@ -33,6 +33,9 @@ protected:
 	void renderWindow();
 	class AgariTehai; AgariTehai* agariTehai;
 	class AgariNaki; AgariNaki* agariNaki;
+	class DoraTiles; class DoraTilesOmote; class DoraTilesUra;
+	DoraTilesOmote* doraTilesOmote;
+	DoraTilesUra* doraTilesUra;
 	bool renderYakuName(unsigned yakuNum);
 	void renderYakuName();
 public:
@@ -85,6 +88,45 @@ public:
 	void Render();
 	explicit AgariNaki(TableSubsceneAgariScreenProto* caller);
 	~AgariNaki();
+};
+
+// -------------------------------------------------------------------------
+
+class TableSubsceneAgariScreenProto::DoraTiles {
+protected:
+	TableSubsceneAgariScreenProto* myCaller;
+	ShowTile* tileObj;
+	virtual int xPos() = 0;
+	virtual int yPos() = 0;
+	virtual int tileIdOffset() = 0;
+	virtual double startTime() = 0;
+	virtual void Reconstruct();
+public:
+	virtual void Render();
+	explicit DoraTiles(TableSubsceneAgariScreenProto* caller);
+	virtual ~DoraTiles() = 0;
+};
+
+class TableSubsceneAgariScreenProto::DoraTilesOmote : public TableSubsceneAgariScreenProto::DoraTiles {
+protected:
+	int xPos() {return BaseX + 32;}
+	int yPos() {return BaseY + 120;}
+	int tileIdOffset() {return 2;}
+	double startTime() {return 1.0;}
+public:
+	explicit DoraTilesOmote(TableSubsceneAgariScreenProto* caller);
+	~DoraTilesOmote();
+};
+
+class TableSubsceneAgariScreenProto::DoraTilesUra : public TableSubsceneAgariScreenProto::DoraTiles {
+protected:
+	int xPos() {return BaseX + 32;}
+	int yPos() {return BaseY + 120 + ShowTile::HoriTileWidth;}
+	int tileIdOffset() {return 1;}
+	double startTime() {return 1.0625;}
+public:
+	explicit DoraTilesUra(TableSubsceneAgariScreenProto* caller);
+	~DoraTilesUra();
 };
 
 // -------------------------------------------------------------------------

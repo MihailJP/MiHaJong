@@ -8,6 +8,7 @@
 #include "../../../sound/sound.h"
 #include "../../../common/bgmid.h"
 #include "../../gametbl.h"
+#include "../../rule.h"
 
 namespace mihajong_graphic {
 
@@ -21,8 +22,12 @@ TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 d
 	myTextRenderer = new TextRenderer(device);
 	agariTehai = new AgariTehai(this);
 	agariNaki = new AgariNaki(this);
+	doraTilesOmote = new DoraTilesOmote(this);
+	doraTilesUra = new DoraTilesUra(this);
 }
 TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
+	delete doraTilesUra;
+	delete doraTilesOmote;
 	delete agariNaki;
 	delete agariTehai;
 	delete myTextRenderer;
@@ -62,7 +67,7 @@ void TableSubsceneAgariScreenProto::renderWindow() {
 bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 	const double anmTime = 0.5;
 	const double interval = 0.75;
-	const double Zeit = seconds() - (1.0 + interval * yakuNum);
+	const double Zeit = seconds() - (2.0 + interval * yakuNum);
 	const int xOffset = (Zeit >= anmTime) ? 0 : (int)(pow(2.0 * (anmTime - Zeit), 2) * (double)(yakuWndWidth / 5));
 	if (Zeit <= 0) {
 		myTextRenderer->DelText(yakuNum * 2);
@@ -86,7 +91,7 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 		// •\Ž¦
 		const D3DCOLOR color = (Zeit >= anmTime) ? 0xffffffff : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | 0x00ffffff);
 		const int x = BaseX + ((yakuNum % 2 == 0) ? 50 : 390);
-		const int y = BaseY + 100;
+		const int y = BaseY + 200;
 		myTextRenderer->NewText(yakuNum * 2, yakuList[yakuNum].first,
 			x + xOffset, y + (yakuNum / 2) * 50,
 			1.0f, compressRate, color);
@@ -120,6 +125,8 @@ void TableSubsceneAgariScreen::Render() {
 	myTextRenderer->Render();
 	agariTehai->Render();
 	agariNaki->Render();
+	doraTilesOmote->Render();
+	doraTilesUra->Render();
 }
 
 // -------------------------------------------------------------------------
@@ -212,6 +219,58 @@ TableSubsceneAgariScreenProto::AgariNaki::AgariNaki(TableSubsceneAgariScreenProt
 }
 
 TableSubsceneAgariScreenProto::AgariNaki::~AgariNaki() {
+}
+
+// -------------------------------------------------------------------------
+
+TableSubsceneAgariScreenProto::DoraTiles::DoraTiles(TableSubsceneAgariScreenProto* caller) {
+	myCaller = caller;
+	tileObj = new ShowTile(caller->myDevice);
+}
+TableSubsceneAgariScreenProto::DoraTiles::~DoraTiles() {
+	delete tileObj;
+}
+void TableSubsceneAgariScreenProto::DoraTiles::Reconstruct() {
+	const GameTable* const gameStat = GameStatus::gameStat();
+	const int numberOfTiles = [gameStat]() -> int {
+		if (chkGameType(gameStat, AllSanma))
+			return 108;
+		else if (rules::chkRule("flower_tiles", "no"))
+			return 136;
+		else if (rules::chkRule("flower_tiles", "8tiles"))
+			return 144;
+		else
+			return 140;
+	}();
+	const int DoraPosStart = numberOfTiles - tileIdOffset() - 4 - gameStat->ExtraRinshan;
+	const int DoraPosEnd = numberOfTiles - tileIdOffset() - gameStat->DeadTiles;
+	for (int i = DoraPosStart; i > DoraPosEnd; i -= 2) {
+		const int tileIndex = (i - DoraPosStart) / (-2);
+		const double Zeit = myCaller->seconds() - (startTime() + (double)tileIndex * 0.0625);
+		if (Zeit >= 0.0) {
+			const D3DCOLOR color = (Zeit >= 0.325) ? 0xffffffff : ((255 - (int)((0.325 - Zeit) * 700)) << 24 | 0x00ffffff);
+			tileObj->NewTile(tileIndex,
+				(gameStat->DoraPointer <= i) ? gameStat->Deck[i].tile : BackSide,
+				(gameStat->DoraPointer <= i) ? gameStat->Deck[i].red : Normal,
+				xPos() + ShowTile::VertTileWidth * tileIndex, yPos(), Portrait, Obverse, color);
+		}
+	}
+}
+void TableSubsceneAgariScreenProto::DoraTiles::Render() {
+	Reconstruct();
+	tileObj->Render();
+}
+
+TableSubsceneAgariScreenProto::DoraTilesOmote::DoraTilesOmote(TableSubsceneAgariScreenProto* caller) : DoraTiles(caller) {
+	Reconstruct();
+}
+TableSubsceneAgariScreenProto::DoraTilesOmote::~DoraTilesOmote() {
+}
+
+TableSubsceneAgariScreenProto::DoraTilesUra::DoraTilesUra(TableSubsceneAgariScreenProto* caller) : DoraTiles(caller) {
+	Reconstruct();
+}
+TableSubsceneAgariScreenProto::DoraTilesUra::~DoraTilesUra() {
 }
 
 // -------------------------------------------------------------------------
