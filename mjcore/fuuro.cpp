@@ -62,15 +62,18 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 			gameStat->Player[fuuroPlayer].PlayerScore -= (LNum)1000;
 		}
 		break;
-	case FuuroKakan: case FuuroAnkan:
+	case FuuroAnkan:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
-		gameStat->KangFlag.kangFlag = 1; // 嶺上開花のフラグを立てる
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
 			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
+		/* FALLTHRU */
+	case FuuroKakan:
+		fuuroPlayer = gameStat->CurrentPlayer.Active;
+		gameStat->KangFlag.kangFlag = true; // 嶺上開花のフラグを立てる
 		haifu::haifurecankan(gameStat, DiscardTileIndex); // 暗槓を仮に牌譜に記録
 		gameStat->KangFlag.chainFlag++; // 連続槓の回数を記録
 		if (gameStat->Player[fuuroPlayer].FirstDrawFlag)
-			gameStat->KangFlag.topFlag = 1; /* 頭槓和のフラグ */
+			gameStat->KangFlag.topFlag = true; /* 頭槓和のフラグ */
 		break;
 	default:
 		fuuroPlayer = -1;
@@ -105,7 +108,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		}
 		break;
 	case FuuroKakan: /* 加槓 */
-		for (unsigned i = 1; i <= gameStat->Player[kangPlayer].MeldPointer; i++) {
+		for (unsigned i = 1; i <= (gameStat->Player[kangPlayer].MeldPointer); i++) {
 			if (gameStat->Player[kangPlayer].Meld[i].tile == gameStat->CurrentDiscard.tile) {
 				bool ProcessFlag = false;
 				switch (gameStat->Player[kangPlayer].Meld[i].mstat) {
