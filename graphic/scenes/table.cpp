@@ -213,6 +213,15 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		case tblSubsceneCallFade:
 			mySubScene = new TableSubsceneCallFade(caller->getDevice());
 			break;
+		case tblSubsceneCallCut:
+			mySubScene = new TableSubsceneCallCut(caller->getDevice());
+			break;
+		case tblSubsceneCallChankanPre:
+			mySubScene = new TableSubsceneCallChankanPre(caller->getDevice());
+			break;
+		case tblSubsceneCallChankan:
+			mySubScene = new TableSubsceneCallChankanRon(caller->getDevice());
+			break;
 		case tblSubsceneCallVal:
 			mySubScene = new TableSubsceneCallValue(caller->getDevice());
 			break;
@@ -271,6 +280,11 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			break;
 		case tblSubscenePlayerNaki:
 			mySubScene = new TableSubscenePlayerNaki(caller->getDevice());
+			goto setNakiButton;
+		case tblSubscenePlayerChankan:
+			mySubScene = new TableSubscenePlayerNakiChankan(caller->getDevice());
+			goto setNakiButton;
+		setNakiButton:
 			// カーソルとボタンの設定
 			buttonReconst->btnSetForNaki();
 			buttonReconst->setCursor(buttonReconst->isEnabled(GameTableScreen::ButtonReconst::btnRon) ? GameTableScreen::ButtonReconst::btnRon : GameTableScreen::ButtonReconst::btnPass);
