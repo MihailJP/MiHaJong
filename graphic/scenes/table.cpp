@@ -213,6 +213,9 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		case tblSubsceneCallFade:
 			mySubScene = new TableSubsceneCallFade(caller->getDevice());
 			break;
+		case tblSubsceneCallCut:
+			mySubScene = new TableSubsceneCallCut(caller->getDevice());
+			break;
 		case tblSubsceneCallVal:
 			mySubScene = new TableSubsceneCallValue(caller->getDevice());
 			break;

@@ -16,6 +16,13 @@ TableSubsceneCallProto::~TableSubsceneCallProto() {
 	if (tCall) tCall->Release();
 }
 
+void TableSubsceneCallProto::ShowAllCall() {
+	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sOpposite), TableSize / 2      ,                 192);
+	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sLeft    ),                 256, TableSize / 2      );
+	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sRight   ), TableSize     - 256, TableSize / 2      );
+	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sSelf    ), TableSize / 2      , TableSize     - 192);
+}
+
 // -------------------------------------------------------------------------
 
 TableSubsceneCallZoomProto::TableSubsceneCallZoomProto(LPDIRECT3DDEVICE9 device) : TableSubsceneCallProto(device) {
@@ -49,13 +56,6 @@ void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType
 
 void TableSubsceneCallZoomProto::ShowCall(PlayerID player, int x, int y) {
 	ShowCallMsg(player, calltext::getCall(player), x, y);
-}
-
-void TableSubsceneCallZoomProto::ShowAllCall() {
-	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sOpposite), TableSize / 2      ,                 192);
-	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sLeft    ),                 256, TableSize / 2      );
-	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sRight   ), TableSize     - 256, TableSize / 2      );
-	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sSelf    ), TableSize / 2      , TableSize     - 192);
 }
 
 // -------------------------------------------------------------------------
@@ -98,13 +98,6 @@ void TableSubsceneCallFadeProto::ShowCall(PlayerID player, int x, int y) {
 	ShowCallMsg(player, calltext::getCall(player), x, y);
 }
 
-void TableSubsceneCallFadeProto::ShowAllCall() {
-	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sOpposite), TableSize / 2      ,                 192);
-	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sLeft    ),                 256, TableSize / 2      );
-	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sRight   ), TableSize     - 256, TableSize / 2      );
-	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sSelf    ), TableSize / 2      , TableSize     - 192);
-}
-
 // -------------------------------------------------------------------------
 
 TableSubsceneCallFade::TableSubsceneCallFade(LPDIRECT3DDEVICE9 device) : TableSubsceneCallFadeProto(device) {
@@ -114,6 +107,40 @@ TableSubsceneCallFade::~TableSubsceneCallFade() {
 }
 
 void TableSubsceneCallFade::Render() {
+	ShowAllCall();
+}
+
+// -------------------------------------------------------------------------
+
+TableSubsceneCallCutProto::TableSubsceneCallCutProto(LPDIRECT3DDEVICE9 device) : TableSubsceneCallProto(device) {
+}
+
+TableSubsceneCallCutProto::~TableSubsceneCallCutProto() {
+}
+
+/* •\Ž¦ˆ— */
+void TableSubsceneCallCutProto::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
+	if (callType == calltext::None) return;
+	RECT rect = {
+		0  , 96 * (callType    ),
+		384, 96 * (callType + 1),
+	};
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, 0xffffffff, &rect, 192, 48);
+}
+
+void TableSubsceneCallCutProto::ShowCall(PlayerID player, int x, int y) {
+	ShowCallMsg(player, calltext::getCall(player), x, y);
+}
+
+// -------------------------------------------------------------------------
+
+TableSubsceneCallCut::TableSubsceneCallCut(LPDIRECT3DDEVICE9 device) : TableSubsceneCallCutProto(device) {
+}
+
+TableSubsceneCallCut::~TableSubsceneCallCut() {
+}
+
+void TableSubsceneCallCut::Render() {
 	ShowAllCall();
 }
 
