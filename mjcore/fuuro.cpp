@@ -786,7 +786,11 @@ EndType ronhuproc(GameTable* const gameStat) {
 			else
 				sound::Play(sound::IDs::voxRon);
 			/* 画面更新して戻る */
-			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+			if (gameStat->KangFlag.chankanFlag != chankanNone) {
+				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallChankan); // 発声表示処理
+			} else {
+				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+			}
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			break;
 		}

@@ -17,6 +17,8 @@ public:
 	virtual ~TableSubsceneCallProto();
 };
 
+class TableSubsceneCallChankanRon;
+
 class TableSubsceneCallZoomProto : public TableSubsceneCallProto {
 protected:
 	void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y);
@@ -27,6 +29,7 @@ public:
 };
 
 class TableSubsceneCall : public TableSubsceneCallZoomProto {
+	friend class TableSubsceneCallChankanRon;
 public:
 	TableSubsceneCall(LPDIRECT3DDEVICE9 device);
 	~TableSubsceneCall();
@@ -59,9 +62,23 @@ public:
 };
 
 class TableSubsceneCallCut : public TableSubsceneCallCutProto {
+	friend class TableSubsceneCallChankanRon;
 public:
 	TableSubsceneCallCut(LPDIRECT3DDEVICE9 device);
 	~TableSubsceneCallCut();
+	void Render();
+};
+
+class TableSubsceneCallChankanRon : public TableSubsceneCallProto {
+private:
+	TableSubsceneCall* zoomCall;
+	TableSubsceneCallCut* cutCall;
+protected:
+	void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y);
+	void ShowCall(PlayerID player, int x, int y);
+public:
+	TableSubsceneCallChankanRon(LPDIRECT3DDEVICE9 device);
+	~TableSubsceneCallChankanRon();
 	void Render();
 };
 
