@@ -40,6 +40,7 @@ enum TableSubsceneID : unsigned int { // 卓画面のサブシーン番号
 	tblSubscenePlayerNaki, // プレイヤーの副露選択用
 	tblSubscenePlayerChankan, // プレイヤーの副露選択用(槍槓)
 	tblSubsceneAgari, // 和了役表示画面
+	tblSubsceneAgariUradora, // 和了役表示画面(裏ドラあり)
 };
 
 }

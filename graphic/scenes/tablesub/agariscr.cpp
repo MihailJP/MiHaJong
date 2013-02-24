@@ -23,10 +23,8 @@ TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 d
 	agariTehai = new AgariTehai(this);
 	agariNaki = new AgariNaki(this);
 	doraTilesOmote = new DoraTilesOmote(this);
-	doraTilesUra = new DoraTilesUra(this);
 }
 TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
-	delete doraTilesUra;
 	delete doraTilesOmote;
 	delete agariNaki;
 	delete agariTehai;
@@ -123,6 +121,23 @@ TableSubsceneAgariScreen::TableSubsceneAgariScreen(LPDIRECT3DDEVICE9 device) : T
 TableSubsceneAgariScreen::~TableSubsceneAgariScreen() {
 }
 void TableSubsceneAgariScreen::Render() {
+	renderWindow();
+	renderYakuName();
+	myTextRenderer->Render();
+	agariTehai->Render();
+	agariNaki->Render();
+	doraTilesOmote->Render();
+}
+
+// -------------------------------------------------------------------------
+
+TableSubsceneAgariScreenUradora::TableSubsceneAgariScreenUradora(LPDIRECT3DDEVICE9 device) : TableSubsceneAgariScreenProto(device) {
+	doraTilesUra = new DoraTilesUra(this);
+}
+TableSubsceneAgariScreenUradora::~TableSubsceneAgariScreenUradora() {
+	delete doraTilesUra;
+}
+void TableSubsceneAgariScreenUradora::Render() {
 	renderWindow();
 	renderYakuName();
 	myTextRenderer->Render();
@@ -270,10 +285,10 @@ TableSubsceneAgariScreenProto::DoraTilesOmote::DoraTilesOmote(TableSubsceneAgari
 TableSubsceneAgariScreenProto::DoraTilesOmote::~DoraTilesOmote() {
 }
 
-TableSubsceneAgariScreenProto::DoraTilesUra::DoraTilesUra(TableSubsceneAgariScreenProto* caller) : DoraTiles(caller) {
+TableSubsceneAgariScreenUradora::DoraTilesUra::DoraTilesUra(TableSubsceneAgariScreenProto* caller) : DoraTiles(caller) {
 	Reconstruct();
 }
-TableSubsceneAgariScreenProto::DoraTilesUra::~DoraTilesUra() {
+TableSubsceneAgariScreenUradora::DoraTilesUra::~DoraTilesUra() {
 }
 
 // -------------------------------------------------------------------------

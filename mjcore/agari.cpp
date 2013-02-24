@@ -497,13 +497,17 @@ namespace {
 	}
 
 	void agariscrproc(const GameTable* gameStat, const YakuResult* yakuInfo,
-		const LNum* agariPointArray, int ChipAmount, const CodeConv::tstring& ResultDesc, bool tmpUraFlag)
+		const LNum* agariPointArray, int ChipAmount, const CodeConv::tstring& ResultDesc, bool& tmpUraFlag)
 	{
 		// ‰¼ŽÀ‘•
 		sound::util::bgmstop();
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::YakuResult::setYakuStat(yakuInfo);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgari);
+		tmpUraFlag = gameStat->statOfAgari().MenzenFlag && gameStat->statOfAgari().RichiFlag.RichiFlag && (!RuleData::chkRule("uradora", "no"));
+		if (tmpUraFlag)
+			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgariUradora);
+		else
+			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgari);
 		(void)mihajong_graphic::ui::WaitUI();
 	}
 
@@ -560,7 +564,8 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	LNum agariPoint;
 	calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), -1);
 	calculateWaremeDelta(gameStat);
-	agariscrproc(gameStat, &yakuInfo, &agariPoint, 0, ResultDesc, false); // ‰¼ŽÀ‘•
+	bool tmpUraFlag;
+	agariscrproc(gameStat, &yakuInfo, &agariPoint, 0, ResultDesc, tmpUraFlag); // ‰¼ŽÀ‘•
 	/* TODO: agariscrproc GameStat, GameEnv, yakuInfo, agariPointArray, ChipAmount, ResultDesc, tmpUraFlag */ /* ˜a—¹‰æ–Ê */
 	if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice"))
 		gameStat->DoraPointer = AlicePointer;

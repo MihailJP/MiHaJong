@@ -297,6 +297,9 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		case tblSubsceneAgari:
 			mySubScene = new TableSubsceneAgariScreen(caller->getDevice());
 			break;
+		case tblSubsceneAgariUradora:
+			mySubScene = new TableSubsceneAgariScreenUradora(caller->getDevice());
+			break;
 		default:
 			mySubScene = new TableSubsceneNormal(caller->getDevice());
 			break;

@@ -33,9 +33,8 @@ protected:
 	void renderWindow();
 	class AgariTehai; AgariTehai* agariTehai;
 	class AgariNaki; AgariNaki* agariNaki;
-	class DoraTiles; class DoraTilesOmote; class DoraTilesUra;
+	class DoraTiles; class DoraTilesOmote;
 	DoraTilesOmote* doraTilesOmote;
-	DoraTilesUra* doraTilesUra;
 	bool renderYakuName(unsigned yakuNum);
 	void renderYakuName();
 public:
@@ -47,6 +46,16 @@ class TableSubsceneAgariScreen : public TableSubsceneAgariScreenProto {
 public:
 	TableSubsceneAgariScreen(LPDIRECT3DDEVICE9 device);
 	~TableSubsceneAgariScreen();
+	void Render();
+};
+
+class TableSubsceneAgariScreenUradora : public TableSubsceneAgariScreenProto {
+private:
+	class DoraTilesUra;
+	DoraTilesUra* doraTilesUra;
+public:
+	TableSubsceneAgariScreenUradora(LPDIRECT3DDEVICE9 device);
+	~TableSubsceneAgariScreenUradora();
 	void Render();
 };
 
@@ -118,7 +127,7 @@ public:
 	~DoraTilesOmote();
 };
 
-class TableSubsceneAgariScreenProto::DoraTilesUra : public TableSubsceneAgariScreenProto::DoraTiles {
+class TableSubsceneAgariScreenUradora::DoraTilesUra : public TableSubsceneAgariScreenProto::DoraTiles {
 protected:
 	int xPos() {return BaseX + 32;}
 	int yPos() {return BaseY + 120 + ShowTile::HoriTileWidth;}
