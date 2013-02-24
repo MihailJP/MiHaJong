@@ -276,15 +276,15 @@ namespace {
 		if ((yakuInfo.CoreHan <= (gameStat->ShibariFlag ? 1 : 0)) || // ”›‚è‚ð–ž‚½‚µ‚Ä‚¢‚È‚¢‚©A
 			(!gameStat->TsumoAgariFlag && ( // uƒƒ“‚ÌŽž‚Å
 			machiInfo.FuritenFlag || // ƒtƒŠƒeƒ“‚©
-			gameStat->Player[gameStat->CurrentPlayer.Agari].DoujunFuriten)) || // “¯‡ƒtƒŠƒeƒ“‚ÌŽžvA‚à‚µ‚­‚Í
-			(RuleData::chkRule("riichi_shibari", "yes") && (!gameStat->Player[gameStat->CurrentPlayer.Agari].RichiFlag.RichiFlag))) // ƒŠ[ƒ`”›‚è‚ð–ž‚½‚µ‚Ä‚¢‚È‚¢‚È‚ç‚Î
+			gameStat->statOfAgari().DoujunFuriten)) || // “¯‡ƒtƒŠƒeƒ“‚ÌŽžvA‚à‚µ‚­‚Í
+			(RuleData::chkRule("riichi_shibari", "yes") && (!gameStat->statOfAgari().RichiFlag.RichiFlag))) // ƒŠ[ƒ`”›‚è‚ð–ž‚½‚µ‚Ä‚¢‚È‚¢‚È‚ç‚Î
 			RoundEndType = Chonbo; // ƒ`ƒ‡ƒ“ƒ{‚É‚·‚é
 	}
 
 	void verifyAgari(GameTable* gameStat, EndType& RoundEndType) {
 		if (!gameStat->TsumoAgariFlag) {
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().tile = gameStat->CurrentDiscard.tile;
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().red  = gameStat->CurrentDiscard.red;
+			gameStat->statOfAgari().Tsumohai().tile = gameStat->CurrentDiscard.tile;
+			gameStat->statOfAgari().Tsumohai().red  = gameStat->CurrentDiscard.red;
 		}
 		yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Agari);
 		MachihaiInfo machiInfo = chkFuriten(gameStat, gameStat->CurrentPlayer.Agari);
@@ -298,7 +298,7 @@ namespace {
 		RoundEndType = Agari;
 		gameStat->CurrentPlayer.Agari = (gameStat->CurrentPlayer.Agari + 1) % Players;
 		if (gameStat->CurrentPlayer.Agari == gameStat->CurrentPlayer.Furikomi) return oFalse; // ˆêŽü‚µ‚½Žž“_‚Å”²‚¯‚é
-		if (gameStat->Player[gameStat->CurrentPlayer.Agari].DeclarationFlag.Ron) { // ƒƒ“‚µ‚Ä‚¢‚ê‚Î
+		if (gameStat->statOfAgari().DeclarationFlag.Ron) { // ƒƒ“‚µ‚Ä‚¢‚ê‚Î
 			verifyAgari(gameStat, RoundEndType);
 		} else {
 			--cnt; return oTrue;
@@ -385,7 +385,7 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 		/**************/
 		if (RoundEndType == Agari) {
 			tmpagariflag = true;
-			if (gameStat->Player[gameStat->CurrentPlayer.Agari].AgariHouki || (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Agari].RemotePlayerFlag == -1))
+			if (gameStat->statOfAgari().AgariHouki || (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Agari].RemotePlayerFlag == -1))
 				RoundEndType = Chonbo; // ˜a—¹‚è•úŠüŽž‚Ìˆ—¨Œëƒƒ“EŒëƒcƒ‚‚Æ‚µ‚Ä”±•„‚Æ‚·‚é
 		}
 		if (RoundEndType == Agari) {
@@ -399,7 +399,7 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 			endround_chonboproc(gameStat, ResultDesc);
 
 		if (gameStat->TsumoAgariFlag) return false; /* ƒcƒ‚˜a—¹‚è‚ÌŽž‚ÍI—¹ */
-		if ((!RuleData::chkRule("getting_deposit", "riichidori")) || gameStat->Player[gameStat->CurrentPlayer.Agari].RichiFlag.RichiFlag)
+		if ((!RuleData::chkRule("getting_deposit", "riichidori")) || gameStat->statOfAgari().RichiFlag.RichiFlag)
 			gameStat->Deposit = 0;
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		return true;
@@ -562,7 +562,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	calculateWaremeDelta(gameStat);
 	agariscrproc(gameStat, &yakuInfo, &agariPoint, 0, ResultDesc, false); // ‰¼ŽÀ‘•
 	/* TODO: agariscrproc GameStat, GameEnv, yakuInfo, agariPointArray, ChipAmount, ResultDesc, tmpUraFlag */ /* ˜a—¹‰æ–Ê */
-	if (gameStat->Player[gameStat->CurrentPlayer.Agari].MenzenFlag && RuleData::chkRuleApplied("alice"))
+	if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice"))
 		gameStat->DoraPointer = AlicePointer;
 	transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValAgariten, 1500);
 	
@@ -593,7 +593,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	}
 	
 	if (gameStat->Deposit) { // ‹Ÿ‘õ“_–_‚ªê‚É‚ ‚éê‡‚ÅAðŒ‚ð–ž‚½‚µ‚Ä‚¢‚é‚È‚ç
-		if ((!RuleData::chkRule("getting_deposit", "riichidori")) || gameStat->Player[gameStat->CurrentPlayer.Agari].RichiFlag.RichiFlag) {
+		if ((!RuleData::chkRule("getting_deposit", "riichidori")) || gameStat->statOfAgari().RichiFlag.RichiFlag) {
 			transfer::resetDelta();
 			transfer::addDelta(gameStat->CurrentPlayer.Agari, gameStat->Deposit * 1000);
 			transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValKyoutaku, 1500);
@@ -652,20 +652,20 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 	if ((gameStat->AgariSpecialStat == 0) || (gameStat->AgariSpecialStat == 1)) {
 		if ((gameStat->PaoFlag[pyMinkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong"))
 			ResultDesc += _T("(‘å–¾žÈ‚Ì—äã”v‚Å‚Ì˜a—¹‚è)"); // ‘å–¾žÈ‚Ì—äãŠJ‰Ô‹ÖŽ~ƒ‹[ƒ‹‚Ìê‡
-		else if ((!gameStat->Player[gameStat->CurrentPlayer.Agari].RichiFlag.RichiFlag) && RuleData::chkRuleApplied("riichi_shibari"))
+		else if ((!gameStat->statOfAgari().RichiFlag.RichiFlag) && RuleData::chkRuleApplied("riichi_shibari"))
 			ResultDesc += _T("(ƒ_ƒ}’®‚Å‚Ì˜a—¹‚è)"); // —§’¼”›‚è‚Å—§’¼‚µ‚Ä‚È‚¢‚È‚çö˜a
 		else if (!isTenpai(gameStat, gameStat->CurrentPlayer.Agari))
 			ResultDesc += _T("(¬—§‚µ‚Ä‚¢‚È‚¢˜a—¹‚è)"); // ˜a—¹‚è‚ª¬—§‚µ‚Ä‚¢‚È‚¢ê‡ö˜a
 		else {
 			yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Agari);
 			MachihaiInfo machiInfo = chkFuriten(gameStat, gameStat->CurrentPlayer.Agari);
-			if (machiInfo.FuritenFlag || gameStat->Player[gameStat->CurrentPlayer.Agari].DoujunFuriten)
+			if (machiInfo.FuritenFlag || gameStat->statOfAgari().DoujunFuriten)
 				ResultDesc += _T("(U’®‚Å‚Ìƒƒ“˜a—¹‚è)"); // U’®‚È‚Ì‚Éƒƒ“‚µ‚½ê‡‚Íö˜a
 			else if (yakuInfo.CoreHan == 0)
 				ResultDesc += _T("(–ð‚Ì‚È‚¢˜a—¹‚è)"); // –ð‚ª‚È‚©‚Á‚½ê‡‚Íö˜a
 			else if ((yakuInfo.CoreHan == 1) && gameStat->ShibariFlag)
 				ResultDesc += _T("(ˆêãÊ‚µ‚©‚È‚¢˜a—¹‚è)"); // “ñãÊ”›‚è‚Å‚PãÊ‚µ‚©‚È‚¢‚È‚çö˜a
-			else if (gameStat->Player[gameStat->CurrentPlayer.Agari].AgariHouki || (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Agari].RemotePlayerFlag == -1))
+			else if (gameStat->statOfAgari().AgariHouki || (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Agari].RemotePlayerFlag == -1))
 				ResultDesc += _T("(˜a—¹‚è•úŠü“K—p’†)"); // ˜a—¹‚è•úŠü‚È‚Ì‚É˜a—¹‚ë‚¤‚Æ‚µ‚½
 		}
 		sound::Play(sound::IDs::sndCuohu);
