@@ -273,7 +273,7 @@ namespace {
 
 	void chonboIfShibariUnmet(const GameTable* gameStat, const yaku::YAKUSTAT& yakuInfo, const MachihaiInfo& machiInfo, EndType& RoundEndType) {
 		// 縛りを満たさないか、振聴のとき
-		if ((yakuInfo.CoreHan <= (gameStat->ShibariFlag ? 1 : 0)) || // 縛りを満たしていないか、
+		if (((yakuInfo.CoreHan <= (gameStat->ShibariFlag ? 1 : 0)) && (yakuInfo.CoreSemiMangan <= 0)) || // 縛りを満たしていないか、
 			(!gameStat->TsumoAgariFlag && ( // 「ロンの時で
 			machiInfo.FuritenFlag || // フリテンか
 			gameStat->statOfAgari().DoujunFuriten)) || // 同順フリテンの時」、もしくは
