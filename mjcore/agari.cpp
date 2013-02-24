@@ -502,7 +502,7 @@ namespace {
 		// ‰¼ŽÀ‘•
 		sound::util::bgmstop();
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
-		mihajong_graphic::YakuResult::setYakuStat(yakuInfo);
+		mihajong_graphic::YakuResult::setYakuStat(yakuInfo, static_cast<LargeNum>(*agariPointArray));
 		tmpUraFlag = gameStat->statOfAgari().MenzenFlag && gameStat->statOfAgari().RichiFlag.RichiFlag && (!RuleData::chkRule("uradora", "no"));
 		if (tmpUraFlag)
 			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgariUradora);

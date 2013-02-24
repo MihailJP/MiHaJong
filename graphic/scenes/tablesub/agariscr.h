@@ -21,6 +21,8 @@ protected:
 	static const int BaseY = ((signed)Geometry::BaseSize - (signed)yakuWndHeight) / 2;
 	double seconds() {return (double)(currTime() - startTime) / 10000000.0;}
 	static const int handPosY = BaseY + 56;
+	static const double yakuInterval;
+	static const double yakuAnimStartSecond;
 protected:
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 windowTexture;
@@ -35,6 +37,7 @@ protected:
 	class AgariNaki; AgariNaki* agariNaki;
 	class DoraTiles; class DoraTilesOmote;
 	DoraTilesOmote* doraTilesOmote;
+	class ShowScore; ShowScore* showScore;
 	bool renderYakuName(unsigned yakuNum);
 	void renderYakuName();
 public:
@@ -136,6 +139,20 @@ protected:
 public:
 	explicit DoraTilesUra(TableSubsceneAgariScreenProto* caller);
 	~DoraTilesUra();
+};
+
+// -------------------------------------------------------------------------
+
+class TableSubsceneAgariScreenProto::ShowScore {
+private:
+	TableSubsceneAgariScreenProto* myCaller;
+	CallDigitRenderer* digitRenderer;
+	void ReconstructScoreTxt();
+	void Reconstruct();
+public:
+	void Render();
+	explicit ShowScore(TableSubsceneAgariScreenProto* caller);
+	~ShowScore();
 };
 
 // -------------------------------------------------------------------------

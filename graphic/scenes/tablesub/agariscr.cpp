@@ -14,6 +14,9 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
+const double TableSubsceneAgariScreenProto::yakuInterval = 0.75;
+const double TableSubsceneAgariScreenProto::yakuAnimStartSecond = 2.0;
+
 TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
 	myDevice = device;
 	LoadTexture(device, &windowTexture, MAKEINTRESOURCE(IDB_PNG_AGARI_WINDOW), yakuWndWidth, yakuWndHeight);
@@ -23,8 +26,10 @@ TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 d
 	agariTehai = new AgariTehai(this);
 	agariNaki = new AgariNaki(this);
 	doraTilesOmote = new DoraTilesOmote(this);
+	showScore = new ShowScore(this);
 }
 TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
+	delete showScore;
 	delete doraTilesOmote;
 	delete agariNaki;
 	delete agariTehai;
@@ -67,8 +72,7 @@ void TableSubsceneAgariScreenProto::renderWindow() {
 
 bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 	const double anmTime = 0.5;
-	const double interval = 0.75;
-	const double Zeit = seconds() - (2.0 + interval * yakuNum);
+	const double Zeit = seconds() - (yakuAnimStartSecond + yakuInterval * yakuNum);
 	const int xOffset = (Zeit >= anmTime) ? 0 : (int)(pow(2.0 * (anmTime - Zeit), 2) * (double)(yakuWndWidth / 5));
 	if (Zeit <= 0) {
 		myTextRenderer->DelText(yakuNum * 2);
@@ -127,6 +131,7 @@ void TableSubsceneAgariScreen::Render() {
 	agariTehai->Render();
 	agariNaki->Render();
 	doraTilesOmote->Render();
+	showScore->Render();
 }
 
 // -------------------------------------------------------------------------
@@ -145,6 +150,7 @@ void TableSubsceneAgariScreenUradora::Render() {
 	agariNaki->Render();
 	doraTilesOmote->Render();
 	doraTilesUra->Render();
+	showScore->Render();
 }
 
 // -------------------------------------------------------------------------
@@ -289,6 +295,45 @@ TableSubsceneAgariScreenUradora::DoraTilesUra::DoraTilesUra(TableSubsceneAgariSc
 	Reconstruct();
 }
 TableSubsceneAgariScreenUradora::DoraTilesUra::~DoraTilesUra() {
+}
+
+// -------------------------------------------------------------------------
+
+TableSubsceneAgariScreenProto::ShowScore::ShowScore(TableSubsceneAgariScreenProto* caller) {
+	myCaller = caller;
+	digitRenderer = new CallDigitRenderer(caller->myDevice);
+}
+TableSubsceneAgariScreenProto::ShowScore::~ShowScore() {
+	delete digitRenderer;
+}
+void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
+	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
+	if (Zeit <= 0.0) return;
+	const double anmTime = 0.75;
+	const CodeConv::tstring scoreTxt = YakuResult::getAgariScore().bignumtotext(_T(""), _T("-"));
+	std::wstring scoreTxtW =
+#ifdef _UNICODE
+		scoreTxt;
+#else
+		CodeConv::ANSItoWIDE(scoreTxt);
+#endif
+	const int x = BaseX + yakuWndWidth - 24 - 72 * ((scoreTxtW.size() < 6) ? scoreTxtW.size() : 6);
+	const int y = BaseY + 700;
+	const float scale = (Zeit >= anmTime) ? 1.0f : (pow(2.5f * (float)(anmTime - Zeit), 2) + 1.0f);
+	const D3DCOLOR color = (Zeit >= anmTime) ? 0xffffffff : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | 0x00ffffff);
+	digitRenderer->NewText(0, scoreTxt,
+		x - (int)(36.0f * ((scoreTxtW.size() < 6) ? (float)scoreTxtW.size() : 6.0f) * (scale - 1.0f)),
+		y - (int)(48.0f * (scale - 1.0f)),
+		scale,
+		(scoreTxtW.size() < 6) ? 1.5f : (float)(1.5 * 6.0 / (double)scoreTxtW.size()),
+		color);
+}
+void TableSubsceneAgariScreenProto::ShowScore::Reconstruct() {
+	ReconstructScoreTxt();
+}
+void TableSubsceneAgariScreenProto::ShowScore::Render() {
+	Reconstruct();
+	digitRenderer->Render();
 }
 
 // -------------------------------------------------------------------------
