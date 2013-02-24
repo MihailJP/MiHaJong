@@ -23,6 +23,7 @@ protected:
 	static const int handPosY = BaseY + 56;
 	static const double yakuInterval;
 	static const double yakuAnimStartSecond;
+	static bool YakumanMode();
 protected:
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 windowTexture;

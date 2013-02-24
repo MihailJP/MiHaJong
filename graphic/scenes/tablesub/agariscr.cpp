@@ -38,10 +38,36 @@ TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
 	windowTexture->Release();
 }
 
+bool TableSubsceneAgariScreenProto::YakumanMode() {
+	static bool cached = false, agariScreenMode = false;
+	if (!cached) {
+		const mihajong_structs::YakuResult yakuInfo = YakuResult::getYakuStat();
+		const int tmpTotalHan = yakuInfo.CoreHan + yakuInfo.BonusHan;
+		const int tmpTotalMangan = yakuInfo.CoreSemiMangan + yakuInfo.BonusSemiMangan;
+		if (tmpTotalMangan >= 8)
+			agariScreenMode = true;
+		else if ((tmpTotalMangan >= 6) &&
+			((tmpTotalHan < 12) ||
+			((tmpTotalHan < 13) && (rules::chkRule("kazoe_border", "13han_or_more"))) ||
+			((tmpTotalMangan < 8) && (rules::chkRule("kazoe_border", "no")))))
+			agariScreenMode = true;
+		else if ((tmpTotalMangan >= 4) &&
+			((tmpTotalHan < 10) ||
+			((tmpTotalHan < 11) && (rules::chkRule("sanbaiman_border", "11han_or_more")))))
+			agariScreenMode = true;
+		else if ((tmpTotalMangan >= 3) && (tmpTotalHan < 8))
+			agariScreenMode = true;
+		else if ((tmpTotalMangan >= 2) && (tmpTotalHan < 6))
+			agariScreenMode = true;
+		cached = true;
+	}
+	return agariScreenMode;
+}
+
 void TableSubsceneAgariScreenProto::parseYakuList() {
 	typedef std::vector<CodeConv::tstring> TStrList;
-	LPCTSTR yakuName = (yakuData.yakumanNameList[0] == _T('\0')) ? yakuData.yakuNameList : yakuData.yakumanNameList;
-	LPCTSTR yakuVal  = (yakuData.yakumanValList [0] == _T('\0')) ? yakuData.yakuValList  : yakuData.yakumanValList;
+	LPCTSTR yakuName = YakumanMode() ? yakuData.yakumanNameList : yakuData.yakuNameList;
+	LPCTSTR yakuVal  = YakumanMode() ? yakuData.yakumanValList  : yakuData.yakuValList;
 	CodeConv::tstring yakuNameTxt, yakuValTxt;
 	auto splitstr = [](LPCTSTR str) -> TStrList { // ‰üs‚Å•ªŠ„
 		TStrList txtlst;
@@ -58,10 +84,10 @@ void TableSubsceneAgariScreenProto::parseYakuList() {
 	};
 	TStrList yakuNameList(splitstr(yakuName)), yakuValList(splitstr(yakuVal));
 	for (int i = 0; i < min(yakuNameList.size(), yakuValList.size()); ++i)
-		if (yakuData.yakumanNameList[0] == _T('\0'))
-			yakuList.push_back(std::make_pair(yakuNameList[i], yakuValList[i]));
-		else
+		if (YakumanMode())
 			yakuList.push_back(std::make_pair(yakuNameList[i], _T("")));
+		else
+			yakuList.push_back(std::make_pair(yakuNameList[i], yakuValList[i]));
 }
 
 void TableSubsceneAgariScreenProto::renderWindow() {
