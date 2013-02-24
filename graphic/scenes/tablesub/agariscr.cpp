@@ -67,8 +67,25 @@ bool TableSubsceneAgariScreenProto::YakumanMode() {
 
 void TableSubsceneAgariScreenProto::parseYakuList() {
 	typedef std::vector<CodeConv::tstring> TStrList;
+	LPTSTR yakuNameUnified = nullptr, yakuValUnified = nullptr;
 	LPCTSTR yakuName = YakumanMode() ? yakuData.yakumanNameList : yakuData.yakuNameList;
 	LPCTSTR yakuVal  = YakumanMode() ? yakuData.yakumanValList  : yakuData.yakuValList;
+	if (!rules::chkRule("limitless", "no")) {
+		const size_t bufsz = yakuData.nameBufSize * 2;
+		yakuNameUnified = new TCHAR[bufsz]; yakuNameUnified[0] = _T('\0');
+		yakuValUnified = new TCHAR[bufsz]; yakuValUnified[0] = _T('\0');
+		_tcscpy_s(yakuNameUnified, bufsz, yakuData.yakumanNameList);
+		for (TCHAR* k = yakuNameUnified; *k != _T('\0'); ++k)
+			if (*k == _T('\n'))
+#ifdef _WIN32
+				_tcscat_s(yakuValUnified, bufsz, _T("\r\n"));
+#else
+				_tcscat_s(yakuValUnified, bufsz, _T("\n"));
+#endif
+		_tcscat_s(yakuNameUnified, bufsz, yakuData.yakuNameList);
+		_tcscat_s(yakuValUnified, bufsz, yakuData.yakuValList);
+		yakuName = yakuNameUnified; yakuVal = yakuValUnified;
+	}
 	CodeConv::tstring yakuNameTxt, yakuValTxt;
 	auto splitstr = [](LPCTSTR str) -> TStrList { // ‰üs‚Å•ªŠ„
 		TStrList txtlst;
@@ -89,6 +106,10 @@ void TableSubsceneAgariScreenProto::parseYakuList() {
 			yakuList.push_back(std::make_pair(yakuNameList[i], _T("")));
 		else
 			yakuList.push_back(std::make_pair(yakuNameList[i], yakuValList[i]));
+	if (!rules::chkRule("limitless", "no")) {
+		delete[] yakuNameUnified;
+		delete[] yakuValUnified;
+	}
 }
 
 void TableSubsceneAgariScreenProto::renderWindow() {
