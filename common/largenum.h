@@ -139,7 +139,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 	const LargeNum operator*(const int32_t multiplier) const { // めんどくさいので32bit整数倍だけ……
 		LargeNum ans = LargeNum();
 		for (int i = 0; i < DigitGroups; i++) {
-			int64_t tmpdigit = digitGroup[i] * multiplier;
+			int64_t tmpdigit = static_cast<int64_t>(digitGroup[i]) * static_cast<int64_t>(multiplier);
 			if ((i == (DigitGroups - 1))
 				&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN))) {
 #ifdef MJCORE_EXPORTS
@@ -160,7 +160,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 	LargeNum& operator*=(const int32_t multiplier) {
 		LargeNum ans = LargeNum();
 		for (int i = 0; i < DigitGroups; i++) {
-			int64_t tmpdigit = digitGroup[i] * multiplier;
+			int64_t tmpdigit = static_cast<int64_t>(digitGroup[i]) * static_cast<int64_t>(multiplier);
 			if ((i == (DigitGroups - 1))
 				&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN))) {
 #ifdef MJCORE_EXPORTS
