@@ -167,7 +167,7 @@ namespace {
 			// 四麻式ルール
 			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
-					agaricalc(AgariPointRaw, 2, 1, 2);
+					agariPoint = agaricalc(AgariPointRaw, 2, 1, 2);
 					deltacalcplus(AgariPointRaw, PointDelta, 2, cnt);
 					deltacalcplus(AgariPointRaw, PointDelta, 1, cnt);
 					deltacalcplus(AgariPointRaw, PointDelta, 1, cnt);
@@ -252,7 +252,7 @@ void endround::agari::calcAgariPoints(
 	else if ((TsumoAgari) && (playerwind(AgariPlayer, gameStat->GameRound) == sEast)) // 通常時：親のツモアガリ
 		calcAgariPoints_Tsumo_Dealer(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer);
 	else if (TsumoAgari) // 通常時：子のツモアガリ
-		calcAgariPoints_Tsumo_NonDealer(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer); // PLACEHOLDER
+		calcAgariPoints_Tsumo_NonDealer(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer);
 	else // 通常時：ロンアガリ
 		calcAgariPoints_Ron(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer);
 	return;

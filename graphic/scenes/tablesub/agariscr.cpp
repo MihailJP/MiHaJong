@@ -351,7 +351,6 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
 	txtRenderer->NewText(0, o.str(), x, y, 1.0f, (han >= 100) ? (1.5f * 0.9f) : 1.5f, color);
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
-	// XXX: ごくまれに0と表示されるかもしれない？ このへんのコーディング途中で1回しか遭遇しなかったため詳細不明
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 	if (Zeit <= 0.0) return;
 	const double anmTime = 0.75;
