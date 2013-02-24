@@ -141,7 +141,7 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 			mihajong_graphic::calltext::Tsumo
 			);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // ”­º•\Ž¦ˆ—
-		gameStat->Player[gameStat->CurrentPlayer.Agari].HandStat = handExposed;
+		gameStat->statOfAgari().HandStat = handExposed;
 		if (gameStat->TianHuFlag) sound::Play(sound::IDs::voxRon);
 		else sound::Play(sound::IDs::voxTsumo);
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);

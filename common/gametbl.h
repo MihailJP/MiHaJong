@@ -261,6 +261,8 @@ struct GameTable { // 卓の情報を格納する
 	      PlayerTable& statOfActive ()       {return Player[CurrentPlayer.Active ];} /* 自摸番のプレイヤーの情報 (mutable) */
 	const PlayerTable& statOfPassive() const {return Player[CurrentPlayer.Passive];} /* 鳴き判定中のプレイヤーの情報 (immutable) */
 	      PlayerTable& statOfPassive()       {return Player[CurrentPlayer.Passive];} /* 鳴き判定中のプレイヤーの情報 (mutable) */
+	const PlayerTable& statOfAgari  () const {return Player[CurrentPlayer.Agari  ];} /* 和了ったプレイヤーの情報 (immutable) */
+	      PlayerTable& statOfAgari  ()       {return Player[CurrentPlayer.Agari  ];} /* 和了ったプレイヤーの情報 (mutable) */
 	const PlayerTable& statOfMine   () const {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (immutable) */
 	      PlayerTable& statOfMine   ()       {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (mutable) */
 };
