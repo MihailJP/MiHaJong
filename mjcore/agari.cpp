@@ -13,6 +13,7 @@
 #include "chat.h"
 #include "ruletbl.h"
 #include "tileutil.h"
+#include <cassert>
 
 // -------------------------------------------------------------------------
 
@@ -563,6 +564,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 		OyaAgari = gameStat->CurrentPlayer.Agari; // e‚Ì˜a—¹‚è
 	LNum agariPoint;
 	calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), -1);
+	assert(agariPoint > (LNum)0);
 	calculateWaremeDelta(gameStat);
 	bool tmpUraFlag;
 	agariscrproc(gameStat, &yakuInfo, &agariPoint, 0, ResultDesc, tmpUraFlag); // ‰¼ŽÀ‘•

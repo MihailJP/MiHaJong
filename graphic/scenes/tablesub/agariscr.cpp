@@ -9,6 +9,7 @@
 #include "../../../common/bgmid.h"
 #include "../../gametbl.h"
 #include "../../rule.h"
+#include <cassert>
 
 namespace mihajong_graphic {
 
@@ -307,10 +308,12 @@ TableSubsceneAgariScreenProto::ShowScore::~ShowScore() {
 	delete digitRenderer;
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
+	// XXX: ごくまれに0と表示されるかもしれない？ このへんのコーディング途中で1回しか遭遇しなかったため詳細不明
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 	if (Zeit <= 0.0) return;
 	const double anmTime = 0.75;
 	const CodeConv::tstring scoreTxt = YakuResult::getAgariScore().bignumtotext(_T(""), _T("-"));
+	assert(scoreTxt != _T("0"));
 	std::wstring scoreTxtW =
 #ifdef _UNICODE
 		scoreTxt;
