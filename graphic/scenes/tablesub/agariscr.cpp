@@ -10,6 +10,7 @@
 #include "../../gametbl.h"
 #include "../../rule.h"
 #include <cassert>
+#include <iomanip>
 
 namespace mihajong_graphic {
 
@@ -329,9 +330,25 @@ TableSubsceneAgariScreenUradora::DoraTilesUra::~DoraTilesUra() {
 TableSubsceneAgariScreenProto::ShowScore::ShowScore(TableSubsceneAgariScreenProto* caller) {
 	myCaller = caller;
 	digitRenderer = new CallDigitRenderer(caller->myDevice);
+	txtRenderer = new TextRenderer(caller->myDevice);
 }
 TableSubsceneAgariScreenProto::ShowScore::~ShowScore() {
+	delete txtRenderer;
 	delete digitRenderer;
+}
+void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
+	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
+	if (Zeit <= 0.0) return;
+	if (YakumanMode()) return;
+	const double anmTime = 0.75;
+	const int han = (YakuResult::getYakuStat().CoreHan + YakuResult::getYakuStat().BonusHan);
+	CodeConv::tostringstream o;
+	o << std::setw(3) << std::setfill(_T(' ')) << YakuResult::getYakuStat().BasePoints << _T("符") <<
+		std::setw(2) << std::setfill(_T(' ')) << han << _T("飜");
+	const int x = BaseX + yakuWndWidth - 32 - 27 * 9;
+	const int y = BaseY + 650;
+	const D3DCOLOR color = (Zeit >= anmTime) ? 0xffffffff : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | 0x00ffffff);
+	txtRenderer->NewText(0, o.str(), x, y, 1.0f, (han >= 100) ? (1.5f * 0.9f) : 1.5f, color);
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 	// XXX: ごくまれに0と表示されるかもしれない？ このへんのコーディング途中で1回しか遭遇しなかったため詳細不明
@@ -358,10 +375,12 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 		color);
 }
 void TableSubsceneAgariScreenProto::ShowScore::Reconstruct() {
+	ReconstructScoreFuHan();
 	ReconstructScoreTxt();
 }
 void TableSubsceneAgariScreenProto::ShowScore::Render() {
 	Reconstruct();
+	txtRenderer->Render();
 	digitRenderer->Render();
 }
 

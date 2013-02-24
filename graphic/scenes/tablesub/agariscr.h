@@ -148,6 +148,8 @@ class TableSubsceneAgariScreenProto::ShowScore {
 private:
 	TableSubsceneAgariScreenProto* myCaller;
 	CallDigitRenderer* digitRenderer;
+	TextRenderer* txtRenderer;
+	void ReconstructScoreFuHan();
 	void ReconstructScoreTxt();
 	void Reconstruct();
 public:
