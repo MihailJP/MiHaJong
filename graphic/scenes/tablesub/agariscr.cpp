@@ -54,7 +54,10 @@ void TableSubsceneAgariScreenProto::parseYakuList() {
 	};
 	TStrList yakuNameList(splitstr(yakuName)), yakuValList(splitstr(yakuVal));
 	for (int i = 0; i < min(yakuNameList.size(), yakuValList.size()); ++i)
-		yakuList.push_back(std::make_pair(yakuNameList[i], yakuValList[i]));
+		if (yakuData.yakumanNameList[0] == _T('\0'))
+			yakuList.push_back(std::make_pair(yakuNameList[i], yakuValList[i]));
+		else
+			yakuList.push_back(std::make_pair(yakuNameList[i], _T("")));
 }
 
 void TableSubsceneAgariScreenProto::renderWindow() {
