@@ -746,8 +746,8 @@ EndType ronhuproc(GameTable* const gameStat) {
 				}
 			}
 			/* ˜a—¹‚è”v‚ðÝ’è */
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().tile = gameStat->CurrentDiscard.tile;
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().red = gameStat->CurrentDiscard.red;
+			gameStat->statOfAgari().Tsumohai().tile = gameStat->CurrentDiscard.tile;
+			gameStat->statOfAgari().Tsumohai().red = gameStat->CurrentDiscard.red;
 			/* —§’¼éŒ¾”v‚Å‚Ì•úe‚Ìê‡A—§’¼‚ð–³Œø‚Æ‚µ‹Ÿ‘õ“_–_‚ð•Ô‹p‚·‚é */
 			if (gameStat->statOfActive().RichiFlag.IppatsuFlag) {
 				if (gameStat->statOfActive().RichiFlag.DoubleFlag) {
@@ -776,10 +776,10 @@ EndType ronhuproc(GameTable* const gameStat) {
 			}
 			// ƒƒ“‚ð‚µ‚½‚±‚Æ‚ð•\Ž¦
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::RonQualified);
-			gameStat->Player[gameStat->CurrentPlayer.Agari].HandStat = handExposed;
+			gameStat->statOfAgari().HandStat = handExposed;
 			/* ˜a—¹‚è”v‚ðÝ’è */
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().tile = gameStat->CurrentDiscard.tile;
-			gameStat->Player[gameStat->CurrentPlayer.Agari].Tsumohai().red = gameStat->CurrentDiscard.red;
+			gameStat->statOfAgari().Tsumohai().tile = gameStat->CurrentDiscard.tile;
+			gameStat->statOfAgari().Tsumohai().red = gameStat->CurrentDiscard.red;
 			/* ‰h˜a‚ÌƒTƒEƒ“ƒh‚ð–Â‚ç‚· */
 			if (gameStat->CurrentPlayer.Active == gameStat->PlayerID)
 				sound::Play(sound::IDs::voxRonFurikomi);
