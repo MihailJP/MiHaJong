@@ -151,6 +151,7 @@ private:
 	TextRenderer* txtRenderer;
 	void ReconstructScoreFuHan();
 	void ReconstructScoreTxt();
+	void ReconstructScoreRank();
 	void Reconstruct();
 public:
 	void Render();

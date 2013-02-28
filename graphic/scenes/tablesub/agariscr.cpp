@@ -394,9 +394,57 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 		(scoreTxtW.size() < 6) ? 1.5f : (float)(1.5 * 6.0 / (double)scoreTxtW.size()),
 		color);
 }
+void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
+	if (rules::chkRule("limitless", "no")) {
+		const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
+		if (Zeit <= 0.0) return;
+		const double anmTime = 0.75;
+
+		const unsigned score = (unsigned)(YakuResult::getYakuStat().AgariPoints.bignumtodbl());
+		CodeConv::tstring tmptxt; unsigned strWidth = 0;
+		if      (score ==  2000) {tmptxt = _T("–žŠÑ");   strWidth = 4;}
+		else if (score ==  3000) {tmptxt = _T("’µ–ž");   strWidth = 4;}
+		else if (score ==  4000) {tmptxt = _T("”{–ž");   strWidth = 4;}
+		else if (score ==  6000) {tmptxt = _T("ŽO”{–ž"); strWidth = 6;}
+		else if (score ==  8000) {
+			if (YakuResult::getYakuStat().CoreSemiMangan + YakuResult::getYakuStat().BonusSemiMangan >= 8) {
+				tmptxt = _T("–ð–ž");     strWidth = 4;
+			} else {
+				tmptxt = _T("”‚¦–ð–ž"); strWidth = 8;
+			}
+		}
+		else if (score == 16000) {tmptxt = _T("“ñ”{–ð–ž"); strWidth = 8;}
+		else if (score == 24000) {tmptxt = _T("ŽO”{–ð–ž"); strWidth = 8;}
+		else if (score == 32000) {tmptxt = _T("Žl”{–ð–ž"); strWidth = 8;}
+		else if (score == 40000) {tmptxt = _T("ŒÜ”{–ð–ž"); strWidth = 8;}
+		else if (score == 48000) {tmptxt = _T("˜Z”{–ð–ž"); strWidth = 8;}
+		else if (score == 56000) {tmptxt = _T("Žµ”{–ð–ž"); strWidth = 8;}
+		else if (score == 64000) {tmptxt = _T("”ª”{–ð–ž"); strWidth = 8;}
+		else if (score == 72000) {tmptxt = _T("‹ã”{–ð–ž"); strWidth = 8;}
+		else if (score == 80000) {tmptxt = _T("\”{–ð–ž"); strWidth = 8;}
+		else if (score >= 88000) {
+			CodeConv::tostringstream o;
+			o << score / 8000; strWidth = o.str().length();
+			o << "”{–ð–ž"; strWidth += 6;
+			tmptxt = o.str();
+		}
+
+		if (strWidth) {
+			const int x = BaseX + 30;
+			const int y = BaseY + 720;
+			const float scale = (Zeit >= anmTime) ? 1.0f : (pow(2.5f * (float)(anmTime - Zeit), 2) + 1.0f);
+			const D3DCOLOR color = (Zeit >= anmTime) ? 0xffffffff : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | 0x00ffffff);
+			txtRenderer->NewText(1, tmptxt,
+				x - (int)(54.0f * (scale - 1.0f)),
+				y - (int)(36.0f * (scale - 1.0f)),
+				2.0f * scale, 6.0f / (float)strWidth, color);
+		}
+	}
+}
 void TableSubsceneAgariScreenProto::ShowScore::Reconstruct() {
 	ReconstructScoreFuHan();
 	ReconstructScoreTxt();
+	ReconstructScoreRank();
 }
 void TableSubsceneAgariScreenProto::ShowScore::Render() {
 	Reconstruct();
