@@ -101,7 +101,7 @@ MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
 			playerwind, playerRelative, RelativePositionOf, tilesLeft, calcRank, chkFuriten,
 			isTenpai, isRichiReqSatisfied, ShantenAnalyzer::calcShanten, chkdaopaiability,
 			yaku::yakuCalculator::chkShisanBuDa, yaku::yakuCalculator::chkShisiBuDa,
-			countTilesInHand, chkAnkanAbility);
+			countTilesInHand, chkAnkanAbility, isPao, isPaoAgari);
 	}
 
 	/* âπåπÇèâä˙âª */
