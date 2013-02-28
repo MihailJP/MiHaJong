@@ -27,6 +27,7 @@ typedef Int8ByTile (*countTilesInHand_type)(const GameTable*, PlayerID);
 typedef bool (*chkAnkanAbility_type)(const GameTable*, PlayerID);
 typedef bool (*isPao_type)(const GameTable*, PlayerID, PlayerID);
 typedef bool (*isPaoAgari_type)(const GameTable*, PlayerID);
+typedef void (*bgmplay_type)(unsigned);
 
 #ifdef GRAPHIC_EXPORTS
 extern playerwind_type playerwind;
@@ -45,6 +46,7 @@ extern countTilesInHand_type countTilesInHand;
 extern chkAnkanAbility_type chkAnkanAbility;
 extern isPao_type isPao;
 extern isPaoAgari_type isPaoAgari;
+extern bgmplay_type bgmplay;
 #endif
 
 EXPORT void setfunc(
@@ -63,7 +65,16 @@ EXPORT void setfunc(
 	countTilesInHand_type ptr_countTilesInHand,
 	chkAnkanAbility_type ptr_chkAnkanAbility,
 	isPao_type ptr_isPao,
-	isPaoAgari_type ptr_isPaoAgari);
+	isPaoAgari_type ptr_isPaoAgari,
+	bgmplay_type ptr_bgmplay);
 
 }
 }
+
+#ifdef GRAPHIC_EXPORTS
+namespace sound {
+namespace util {
+	using mihajong_graphic::utils::bgmplay;
+}
+}
+#endif

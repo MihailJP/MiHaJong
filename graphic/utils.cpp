@@ -19,6 +19,7 @@ countTilesInHand_type countTilesInHand = nullptr;
 chkAnkanAbility_type chkAnkanAbility = nullptr;
 isPao_type isPao = nullptr;
 isPaoAgari_type isPaoAgari = nullptr;
+bgmplay_type bgmplay = nullptr;
 
 EXPORT void setfunc(
 	playerwind_type ptr_playerwind,
@@ -36,7 +37,8 @@ EXPORT void setfunc(
 	countTilesInHand_type ptr_countTilesInHand,
 	chkAnkanAbility_type ptr_chkAnkanAbility,
 	isPao_type ptr_isPao,
-	isPaoAgari_type ptr_isPaoAgari)
+	isPaoAgari_type ptr_isPaoAgari,
+	bgmplay_type ptr_bgmplay)
 {
 	playerwind = ptr_playerwind;
 	playerRelative = ptr_playerRelative;
@@ -54,6 +56,7 @@ EXPORT void setfunc(
 	chkAnkanAbility = ptr_chkAnkanAbility;
 	isPao = ptr_isPao;
 	isPaoAgari = ptr_isPaoAgari;
+	bgmplay = ptr_bgmplay;
 }
 
 }

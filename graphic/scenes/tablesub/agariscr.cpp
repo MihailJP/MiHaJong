@@ -160,6 +160,29 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 		myTextRenderer->DelText(yakuNum * 2 + 1);
 		return false;
 	} else {
+		static bool bgmFlag = true;
+		if (bgmFlag) {
+			if (YakuResult::getYakuStat().AgariPoints < LargeNum::fromInt(2000)) {
+				switch (getAgariStyle()) {
+					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf1); break;
+					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi1); break;
+					case agariOthers:   sound::util::bgmplay(sound::IDs::musAgariOther1); break;
+				}
+			} else if (YakuResult::getYakuStat().AgariPoints < LargeNum::fromInt(8000)) {
+				switch (getAgariStyle()) {
+					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf2); break;
+					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi2); break;
+					case agariOthers:   sound::util::bgmplay(sound::IDs::musAgariOther2); break;
+				}
+			} else {
+				switch (getAgariStyle()) {
+					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf3); break;
+					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi3); break;
+					case agariOthers:   sound::util::bgmplay(sound::IDs::musAgariOther3); break;
+				}
+			}
+			bgmFlag = false;
+		}
 		// •ŒvŽZ
 		const float compressRate = [](const CodeConv::tstring& str) -> float {
 			const std::wstring tmpstr(
