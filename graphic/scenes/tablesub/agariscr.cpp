@@ -11,6 +11,7 @@
 #include "../../rule.h"
 #include <cassert>
 #include <iomanip>
+#include "../../utils.h"
 
 namespace mihajong_graphic {
 
@@ -65,6 +66,37 @@ bool TableSubsceneAgariScreenProto::YakumanMode() {
 	return agariScreenMode;
 }
 
+TableSubsceneAgariScreenProto::AgariStyle TableSubsceneAgariScreenProto::getAgariStyle() {
+	const GameTable* const gameStat = GameStatus::gameStat();
+	if (gameStat->CurrentPlayer.Agari == gameStat->PlayerID) {
+		return agariMine;
+	} else {
+		if (utils::isPaoAgari(gameStat, gameStat->CurrentPlayer.Agari)) {
+			if (utils::isPao(gameStat, gameStat->CurrentPlayer.Agari, gameStat->PlayerID))
+				return agariFurikomi;
+			else if (gameStat->CurrentPlayer.Furikomi == gameStat->PlayerID)
+				return agariFurikomi;
+			else
+				return agariOthers;
+		} else {
+			if (gameStat->TsumoAgariFlag)
+				return agariFurikomi;
+			else if (gameStat->CurrentPlayer.Furikomi == gameStat->PlayerID)
+				return agariFurikomi;
+			else
+				return agariOthers;
+		}
+	}
+}
+D3DCOLOR TableSubsceneAgariScreenProto::baseColor() {
+	switch (getAgariStyle()) {
+		case agariMine:     return 0xffffdf00;
+		case agariFurikomi: return 0xffff7f7f;
+		case agariOthers:   return 0xffffffff;
+		default:            return 0x00000000;
+	}
+}
+
 void TableSubsceneAgariScreenProto::parseYakuList() {
 	typedef std::vector<CodeConv::tstring> TStrList;
 	LPTSTR yakuNameUnified = nullptr, yakuValUnified = nullptr;
@@ -116,7 +148,7 @@ void TableSubsceneAgariScreenProto::renderWindow() {
 	const double Zeit = seconds();
 	const int yOffset = (Zeit >= 1.0) ? 0 : (int)(pow(1.0 - Zeit, 2) * (double)Geometry::BaseSize);
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(
-		windowTexture, BaseX, BaseY - yOffset, yakuWndWidth, yakuWndHeight);
+		windowTexture, BaseX, BaseY - yOffset, yakuWndWidth, yakuWndHeight, baseColor());
 }
 
 bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
@@ -143,7 +175,7 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 			return (cols > 12) ? (8.0f / (float)cols) : 1.0f;
 		} (yakuList[yakuNum].first);
 		// •\Ž¦
-		const D3DCOLOR color = (Zeit >= anmTime) ? 0xffffffff : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | 0x00ffffff);
+		const D3DCOLOR color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (baseColor() & 0x00ffffff));
 		const int x = BaseX + ((yakuNum % 2 == 0) ? 50 : 390);
 		const int y = BaseY + 200;
 		myTextRenderer->NewText(yakuNum * 2, yakuList[yakuNum].first,
@@ -373,7 +405,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
 		std::setw(2) << std::setfill(_T(' ')) << han << _T("ãÊ");
 	const int x = BaseX + yakuWndWidth - 32 - 27 * 9;
 	const int y = BaseY + 650;
-	const D3DCOLOR color = (Zeit >= anmTime) ? 0xffffffff : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | 0x00ffffff);
+	const D3DCOLOR color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
 	txtRenderer->NewText(0, o.str(), x, y, 1.0f, (han >= 100) ? (1.5f * 0.9f) : 1.5f, color);
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
@@ -391,7 +423,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 	const int x = BaseX + yakuWndWidth - 24 - 72 * ((scoreTxtW.size() < 6) ? scoreTxtW.size() : 6);
 	const int y = BaseY + 700;
 	const float scale = (Zeit >= anmTime) ? 1.0f : (pow(2.5f * (float)(anmTime - Zeit), 2) + 1.0f);
-	const D3DCOLOR color = (Zeit >= anmTime) ? 0xffffffff : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | 0x00ffffff);
+	const D3DCOLOR color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
 	digitRenderer->NewText(0, scoreTxt,
 		x - (int)(36.0f * ((scoreTxtW.size() < 6) ? (float)scoreTxtW.size() : 6.0f) * (scale - 1.0f)),
 		y - (int)(48.0f * (scale - 1.0f)),
@@ -438,7 +470,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
 			const int x = BaseX + 30;
 			const int y = BaseY + 720;
 			const float scale = (Zeit >= anmTime) ? 1.0f : (pow(2.5f * (float)(anmTime - Zeit), 2) + 1.0f);
-			const D3DCOLOR color = (Zeit >= anmTime) ? 0xffffffff : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | 0x00ffffff);
+			const D3DCOLOR color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
 			txtRenderer->NewText(1, tmptxt,
 				x - (int)(54.0f * (scale - 1.0f)),
 				y - (int)(36.0f * (scale - 1.0f)),

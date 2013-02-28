@@ -24,6 +24,9 @@ protected:
 	static const double yakuInterval;
 	static const double yakuAnimStartSecond;
 	static bool YakumanMode();
+	enum AgariStyle {agariMine, agariFurikomi, agariOthers,};
+	static AgariStyle getAgariStyle();
+	static D3DCOLOR baseColor();
 protected:
 	LPDIRECT3DDEVICE9 myDevice;
 	LPDIRECT3DTEXTURE9 windowTexture;
