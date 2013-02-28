@@ -12,6 +12,7 @@
 #include <cassert>
 #include <iomanip>
 #include "../../utils.h"
+#include "../../event.h"
 
 namespace mihajong_graphic {
 
@@ -453,6 +454,11 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 		scale,
 		(scoreTxtW.size() < 6) ? 1.5f : (float)(1.5 * 6.0 / (double)scoreTxtW.size()),
 		color);
+	static bool timeFlag = true;
+	if ((timeFlag) && (Zeit >= 2.0)) {
+		ui::UIEvent->set(0);
+		timeFlag = false;
+	}
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
 	if (rules::chkRule("limitless", "no")) {
