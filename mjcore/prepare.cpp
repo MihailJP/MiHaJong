@@ -121,11 +121,11 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Ôƒhƒ
 				gameStat->Deck[tilepos[tileCodes[i]]].red = AkaDora;
 			if (RuleData::chkRule(tileRules[i], "4tiles") || RuleData::chkRule(tileRules[i], "3tiles") ||
 				RuleData::chkRule(tileRules[i], "2tiles"))
-				gameStat->Deck[tilepos[tileCodes[i] + 1]].red = AkaDora;
+				gameStat->Deck[tilepos[tileCodes[i]] + 1].red = AkaDora;
 			if (RuleData::chkRule(tileRules[i], "4tiles") || RuleData::chkRule(tileRules[i], "3tiles"))
-				gameStat->Deck[tilepos[tileCodes[i] + 2]].red = AkaDora;
+				gameStat->Deck[tilepos[tileCodes[i]] + 2].red = AkaDora;
 			if (RuleData::chkRule(tileRules[i], "4tiles"))
-				gameStat->Deck[tilepos[tileCodes[i] + 3]].red = AkaDora;
+				gameStat->Deck[tilepos[tileCodes[i]] + 3].red = AkaDora;
 		}
 	}
 	{
