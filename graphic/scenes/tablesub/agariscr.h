@@ -23,7 +23,7 @@ protected:
 	static const int handPosY = BaseY + 56;
 	static const double yakuInterval;
 	static const double yakuAnimStartSecond;
-	static bool YakumanMode();
+	bool YakumanMode();
 	enum AgariStyle {agariMine, agariFurikomi, agariOthers,};
 	static AgariStyle getAgariStyle();
 	static D3DCOLOR baseColor();
@@ -44,6 +44,11 @@ protected:
 	class ShowScore; ShowScore* showScore;
 	bool renderYakuName(unsigned yakuNum);
 	void renderYakuName();
+protected:
+	bool cached;
+	bool agariScreenMode;
+	bool bgmFlag;
+	int maxShown;
 public:
 	TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 device);
 	virtual ~TableSubsceneAgariScreenProto();
@@ -156,6 +161,9 @@ private:
 	void ReconstructScoreTxt();
 	void ReconstructScoreRank();
 	void Reconstruct();
+private:
+	bool soundFlag;
+	bool timeFlag;
 public:
 	void Render();
 	explicit ShowScore(TableSubsceneAgariScreenProto* caller);

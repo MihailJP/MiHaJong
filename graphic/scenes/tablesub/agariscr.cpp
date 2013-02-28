@@ -31,6 +31,9 @@ TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 d
 	agariNaki = new AgariNaki(this);
 	doraTilesOmote = new DoraTilesOmote(this);
 	showScore = new ShowScore(this);
+	cached = false; agariScreenMode = false;
+	bgmFlag = true;
+	maxShown = -1;
 }
 TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
 	delete showScore;
@@ -42,7 +45,6 @@ TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
 }
 
 bool TableSubsceneAgariScreenProto::YakumanMode() {
-	static bool cached = false, agariScreenMode = false;
 	if (!cached) {
 		const mihajong_structs::YakuResult yakuInfo = YakuResult::getYakuStat();
 		const int tmpTotalHan = yakuInfo.CoreHan + yakuInfo.BonusHan;
@@ -161,7 +163,6 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 		myTextRenderer->DelText(yakuNum * 2 + 1);
 		return false;
 	} else {
-		static bool bgmFlag = true;
 		if (bgmFlag) {
 			if (YakuResult::getYakuStat().AgariPoints < LargeNum::fromInt(2000)) {
 				switch (getAgariStyle()) {
@@ -213,7 +214,6 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 }
 
 void TableSubsceneAgariScreenProto::renderYakuName() {
-	static int maxShown = -1;
 	for (unsigned i = 0; i < yakuList.size(); ++i) {
 		const bool isShown = renderYakuName(i);
 		if (isShown && (maxShown < (signed)i)) {
@@ -408,20 +408,21 @@ TableSubsceneAgariScreenProto::ShowScore::ShowScore(TableSubsceneAgariScreenProt
 	myCaller = caller;
 	digitRenderer = new CallDigitRenderer(caller->myDevice);
 	txtRenderer = new TextRenderer(caller->myDevice);
+	soundFlag = true;
+	timeFlag = true;
 }
 TableSubsceneAgariScreenProto::ShowScore::~ShowScore() {
 	delete txtRenderer;
 	delete digitRenderer;
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
-	static bool soundFlag = true;
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 	if (Zeit <= 0.0) return;
 	if (soundFlag) { // Œø‰Ê‰¹‚ð‚±‚±‚Å–Â‚ç‚·
 		sound::Play(sound::IDs::sndYakulst2);
 		soundFlag = false;
 	}
-	if (YakumanMode()) return;
+	if (myCaller->YakumanMode()) return;
 	const double anmTime = 0.75;
 	const int han = (YakuResult::getYakuStat().CoreHan + YakuResult::getYakuStat().BonusHan);
 	CodeConv::tostringstream o;
@@ -454,7 +455,6 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 		scale,
 		(scoreTxtW.size() < 6) ? 1.5f : (float)(1.5 * 6.0 / (double)scoreTxtW.size()),
 		color);
-	static bool timeFlag = true;
 	if ((timeFlag) && (Zeit >= 2.0)) {
 		ui::UIEvent->set(0);
 		timeFlag = false;
