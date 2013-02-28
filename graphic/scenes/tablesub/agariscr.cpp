@@ -162,7 +162,7 @@ void TableSubsceneAgariScreenProto::renderYakuName() {
 		const bool isShown = renderYakuName(i);
 		if (isShown && (maxShown < (signed)i)) {
 			maxShown = (signed)i;
-			sound::Play(sound::IDs::sndPage);
+			sound::Play(sound::IDs::sndYakulst1);
 		}
 	}
 }
@@ -358,8 +358,13 @@ TableSubsceneAgariScreenProto::ShowScore::~ShowScore() {
 	delete digitRenderer;
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
+	static bool soundFlag = true;
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 	if (Zeit <= 0.0) return;
+	if (soundFlag) { // Œø‰Ê‰¹‚ð‚±‚±‚Å–Â‚ç‚·
+		sound::Play(sound::IDs::sndYakulst2);
+		soundFlag = false;
+	}
 	if (YakumanMode()) return;
 	const double anmTime = 0.75;
 	const int han = (YakuResult::getYakuStat().CoreHan + YakuResult::getYakuStat().BonusHan);
