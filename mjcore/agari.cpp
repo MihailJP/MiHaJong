@@ -13,6 +13,7 @@
 #include "chat.h"
 #include "ruletbl.h"
 #include "tileutil.h"
+#include <cassert>
 
 // -------------------------------------------------------------------------
 
@@ -166,7 +167,7 @@ namespace {
 			// 四麻式ルール
 			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
-					agaricalc(AgariPointRaw, 2, 1, 2);
+					agariPoint = agaricalc(AgariPointRaw, 2, 1, 2);
 					deltacalcplus(AgariPointRaw, PointDelta, 2, cnt);
 					deltacalcplus(AgariPointRaw, PointDelta, 1, cnt);
 					deltacalcplus(AgariPointRaw, PointDelta, 1, cnt);
@@ -251,7 +252,7 @@ void endround::agari::calcAgariPoints(
 	else if ((TsumoAgari) && (playerwind(AgariPlayer, gameStat->GameRound) == sEast)) // 通常時：親のツモアガリ
 		calcAgariPoints_Tsumo_Dealer(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer);
 	else if (TsumoAgari) // 通常時：子のツモアガリ
-		calcAgariPoints_Tsumo_NonDealer(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer); // PLACEHOLDER
+		calcAgariPoints_Tsumo_NonDealer(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer);
 	else // 通常時：ロンアガリ
 		calcAgariPoints_Ron(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer);
 	return;
@@ -496,6 +497,21 @@ namespace {
 		return;
 	}
 
+	void agariscrproc(const GameTable* gameStat, const YakuResult* yakuInfo,
+		const LNum* agariPointArray, int ChipAmount, const CodeConv::tstring& ResultDesc, bool& tmpUraFlag)
+	{
+		// 仮実装
+		sound::util::bgmstop();
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
+		mihajong_graphic::YakuResult::setYakuStat(yakuInfo, static_cast<LargeNum>(*agariPointArray));
+		tmpUraFlag = gameStat->statOfAgari().MenzenFlag && gameStat->statOfAgari().RichiFlag.RichiFlag && (!RuleData::chkRule("uradora", "no"));
+		if (tmpUraFlag)
+			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgariUradora);
+		else
+			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgari);
+		(void)mihajong_graphic::ui::WaitUI();
+	}
+
 }
 
 /* 和了成立時の処理 */
@@ -548,7 +564,10 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 		OyaAgari = gameStat->CurrentPlayer.Agari; // 親の和了り
 	LNum agariPoint;
 	calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), -1);
+	assert(agariPoint > (LNum)0);
 	calculateWaremeDelta(gameStat);
+	bool tmpUraFlag;
+	agariscrproc(gameStat, &yakuInfo, &agariPoint, 0, ResultDesc, tmpUraFlag); // 仮実装
 	/* TODO: agariscrproc GameStat, GameEnv, yakuInfo, agariPointArray, ChipAmount, ResultDesc, tmpUraFlag */ /* 和了画面 */
 	if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice"))
 		gameStat->DoraPointer = AlicePointer;

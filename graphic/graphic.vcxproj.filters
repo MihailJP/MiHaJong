@@ -159,6 +159,21 @@
     <ClCompile Include="scenes\table\nakibtn.cpp">
       <Filter>ソース ファイル\scenes\table</Filter>
     </ClCompile>
+    <ClCompile Include="yakustat.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\tablesub\agariscr.cpp">
+      <Filter>ソース ファイル\scenes\tablesub</Filter>
+    </ClCompile>
+    <ClCompile Include="yakustat.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\table\tehai0.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\table\nakihai0.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scrmanip.h">
@@ -312,6 +327,21 @@
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
     <ClInclude Include="scenes\table\naki_id.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="yakustat.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\tablesub\agariscr.h">
+      <Filter>ヘッダー ファイル\scenes\tablesub</Filter>
+    </ClInclude>
+    <ClInclude Include="yakustat.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\tehai0.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\nakihai0.h">
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
   </ItemGroup>

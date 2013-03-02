@@ -8,7 +8,7 @@
 // 一応21不可思議まで表現可能……
 
 #ifdef MJCORE_EXPORTS
-#include "except.h"
+#include "../mjcore/except.h"
 #endif
 
 namespace mihajong_structs {

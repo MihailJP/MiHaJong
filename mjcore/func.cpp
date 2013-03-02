@@ -290,9 +290,12 @@ __declspec(dllexport) int isAboveBase(const GameTable* const gameStat, int playe
 
 /* ”ñ•‰®”1Œ…‚È‚ç‘SŠpE‚»‚êˆÈŠO‚Í”¼Šp */
 CodeConv::tstring intstr(int val) {
-	LPCTSTR hanstr = _T("‚O\0‚P\0‚Q\0‚R\0‚S\0‚T\0‚U\0‚V\0‚W\0‚X\0");
+	LPCTSTR hanstr[10] = {
+		_T("‚O"), _T("‚P"), _T("‚Q"), _T("‚R"), _T("‚S"),
+		_T("‚T"), _T("‚U"), _T("‚V"), _T("‚W"), _T("‚X"),
+	};
 	CodeConv::tostringstream o;
-	if ((val <= 9) && (val >= 0)) o << &(hanstr[val * sizeof(_T("‚O"))]);
+	if ((val <= 9) && (val >= 0)) o << hanstr[val];
 	else o << val;
 	return o.str();
 }

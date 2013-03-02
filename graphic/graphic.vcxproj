@@ -160,6 +160,7 @@
     <ClCompile Include="scenes\ruleconf.cpp" />
     <ClCompile Include="scenes\sysscr.cpp" />
     <ClCompile Include="scenes\table.cpp" />
+    <ClCompile Include="scenes\tablesub\agariscr.cpp" />
     <ClCompile Include="scenes\tablesub\call.cpp" />
     <ClCompile Include="scenes\tablesub\callval.cpp" />
     <ClCompile Include="scenes\tablesub\chktnpai.cpp" />
@@ -170,10 +171,12 @@
     <ClCompile Include="scenes\table\chicha.cpp" />
     <ClCompile Include="scenes\table\nakibtn.cpp" />
     <ClCompile Include="scenes\table\nakihai.cpp" />
+    <ClCompile Include="scenes\table\nakihai0.cpp" />
     <ClCompile Include="scenes\table\richibou.cpp" />
     <ClCompile Include="scenes\table\showdice.cpp" />
     <ClCompile Include="scenes\table\sutehai.cpp" />
     <ClCompile Include="scenes\table\tehai.cpp" />
+    <ClCompile Include="scenes\table\tehai0.cpp" />
     <ClCompile Include="scenes\table\yamahai.cpp" />
     <ClCompile Include="scenes\title.cpp" />
     <ClCompile Include="scrmanip.cpp" />
@@ -182,6 +185,7 @@
     <ClCompile Include="text.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="window.cpp" />
+    <ClCompile Include="yakustat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="button.h" />
@@ -209,6 +213,7 @@
     <ClInclude Include="scenes\scene_id.h" />
     <ClInclude Include="scenes\sysscr.h" />
     <ClInclude Include="scenes\table.h" />
+    <ClInclude Include="scenes\tablesub\agariscr.h" />
     <ClInclude Include="scenes\tablesub\call.h" />
     <ClInclude Include="scenes\tablesub\callval.h" />
     <ClInclude Include="scenes\tablesub\chktnpai.h" />
@@ -222,11 +227,13 @@
     <ClInclude Include="scenes\table\color.h" />
     <ClInclude Include="scenes\table\nakibtn.h" />
     <ClInclude Include="scenes\table\nakihai.h" />
+    <ClInclude Include="scenes\table\nakihai0.h" />
     <ClInclude Include="scenes\table\naki_id.h" />
     <ClInclude Include="scenes\table\richibou.h" />
     <ClInclude Include="scenes\table\showdice.h" />
     <ClInclude Include="scenes\table\sutehai.h" />
     <ClInclude Include="scenes\table\tehai.h" />
+    <ClInclude Include="scenes\table\tehai0.h" />
     <ClInclude Include="scenes\table\yamahai.h" />
     <ClInclude Include="scenes\title.h" />
     <ClInclude Include="scrmanip.h" />
@@ -235,6 +242,7 @@
     <ClInclude Include="text.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="window.h" />
+    <ClInclude Include="yakustat.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="graphic.rc" />

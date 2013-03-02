@@ -2,7 +2,9 @@
 
 #include <type_traits>
 #include "ykclass.h"
-#include "yakurslt.h"
+#include "../../common/tilecode.h"
+
+using namespace mihajong_structs;
 
 struct yaku::ParseMode {
 	TileCode AtamaCode;
