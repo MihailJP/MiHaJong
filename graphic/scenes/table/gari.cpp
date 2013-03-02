@@ -23,17 +23,49 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 			++numOfTiles;
 
 	// •\Ž¦ˆ—
-	// TODO: ‚±‚±‚ðŽÀ‘•‚·‚é
 	switch (playerRelative(playerID, gameStat->PlayerID)) {
 	case sOpposite:
+		for (int i = 0; i < 8; ++i)
+			if (flowerParam[i].flag)
+				TileTexture->NewTile(i, flowerParam[i].tileCode, Normal,
+				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
+				GariPosV(),
+				UpsideDown, Obverse);
+			else
+				TileTexture->DelTile(i);
 		break;
 	case sLeft:
+		for (int i = 0; i < 8; ++i)
+			if (flowerParam[i].flag)
+				TileTexture->NewTile(i + 8, flowerParam[i].tileCode, Normal,
+				GariPosV(),
+				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
+				Clockwise, Obverse);
+			else
+				TileTexture->DelTile(i + 8);
 		break;
 	case sRight:
+		for (int i = 0; i < 8; ++i)
+			if (flowerParam[i].flag)
+				TileTexture->NewTile(23 - i, flowerParam[i].tileCode, Normal,
+				TableSize - GariPosV(),
+				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
+				Withershins, Obverse);
+			else
+				TileTexture->DelTile(23 - i);
 		break;
 	case sSelf:
+		for (int i = 0; i < 8; ++i)
+			if (flowerParam[i].flag)
+				TileTexture->NewTile(i + 24, flowerParam[i].tileCode, Normal,
+				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
+				TableSize - GariPosV(),
+				Portrait, Obverse);
+			else
+				TileTexture->DelTile(i + 24);
 		break;
 	}
+	TileTexture->Render();
 }
 
 void GameTableScreen::GariReconst::Render() {

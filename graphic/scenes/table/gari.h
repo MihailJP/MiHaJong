@@ -9,8 +9,8 @@ private:
 	GameTableScreen* caller;
 	ShowTile* TileTexture;
 private: /**** î≤Ç´ñkÅEâ‘îv ****/
-	unsigned int GariPosH() {return TableSize - 176;}
-	unsigned int GariPosV() {return DeckPosV - 200;}
+	unsigned int GariPosH() {return TableSize - 200;}
+	unsigned int GariPosV() {return DeckPosV - 80;}
 	void RenderFlower(PlayerID playerID);
 public:
 	void Render();
