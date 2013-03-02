@@ -31,7 +31,6 @@ TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 d
 	agariNaki = new AgariNaki(this);
 	doraTilesOmote = new DoraTilesOmote(this);
 	showScore = new ShowScore(this);
-	cached = false; agariScreenMode = false;
 	bgmFlag = true;
 	maxShown = -1;
 }
@@ -45,7 +44,8 @@ TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
 }
 
 bool TableSubsceneAgariScreenProto::YakumanMode() {
-	if (!cached) {
+	bool agariScreenMode = false;
+	{
 		const mihajong_structs::YakuResult yakuInfo = YakuResult::getYakuStat();
 		const int tmpTotalHan = yakuInfo.CoreHan + yakuInfo.BonusHan;
 		const int tmpTotalMangan = yakuInfo.CoreSemiMangan + yakuInfo.BonusSemiMangan;
@@ -64,7 +64,8 @@ bool TableSubsceneAgariScreenProto::YakumanMode() {
 			agariScreenMode = true;
 		else if ((tmpTotalMangan >= 2) && (tmpTotalHan < 6))
 			agariScreenMode = true;
-		cached = true;
+		else
+			agariScreenMode = false;
 	}
 	return agariScreenMode;
 }

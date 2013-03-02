@@ -45,8 +45,6 @@ protected:
 	bool renderYakuName(unsigned yakuNum);
 	void renderYakuName();
 protected:
-	bool cached;
-	bool agariScreenMode;
 	bool bgmFlag;
 	int maxShown;
 public:
