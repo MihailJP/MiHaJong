@@ -314,8 +314,12 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		case btnFlower: // ‰Ô”v
 			setMode(DiscardTileNum::Flower, btnFlower,
 				[](int i, GameTable* tmpStat) -> bool {
-					return tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
-						(tmpStat->gameType & SanmaX) ? NorthWind : Flower;
+					if (tmpStat->gameType & SanmaX)
+						return tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
+							NorthWind;
+					else
+						return tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile <
+							TileSuitFlowers;
 				});
 			break;
 		default:
