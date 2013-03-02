@@ -372,7 +372,17 @@ void TableSubsceneAgariScreenProto::DoraTiles::Reconstruct() {
 		else
 			return 140;
 	}();
-	const int DoraPosStart = numberOfTiles - tileIdOffset() - 4 - gameStat->ExtraRinshan;
+	const int DoraPosStart = numberOfTiles - tileIdOffset() - 4 - gameStat->ExtraRinshan -
+		[gameStat]() -> int {
+			if (chkGameType(gameStat, AllSanma))
+				return 0;
+			else if (rules::chkRule("flower_tiles", "no"))
+				return 0;
+			else if (rules::chkRule("flower_tiles", "8tiles"))
+				return 8;
+			else
+				return 4;
+		}();
 	const int DoraPosEnd = numberOfTiles - tileIdOffset() - gameStat->DeadTiles;
 	for (int i = DoraPosStart; i > DoraPosEnd; i -= 2) {
 		const int tileIndex = (i - DoraPosStart) / (-2);
