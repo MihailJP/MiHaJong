@@ -169,6 +169,7 @@
     <ClCompile Include="scenes\tablesub\tablesub.cpp" />
     <ClCompile Include="scenes\tablesub\titling.cpp" />
     <ClCompile Include="scenes\table\chicha.cpp" />
+    <ClCompile Include="scenes\table\gari.cpp" />
     <ClCompile Include="scenes\table\nakibtn.cpp" />
     <ClCompile Include="scenes\table\nakihai.cpp" />
     <ClCompile Include="scenes\table\nakihai0.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="scenes\tablesub\titling.h" />
     <ClInclude Include="scenes\table\chicha.h" />
     <ClInclude Include="scenes\table\color.h" />
+    <ClInclude Include="scenes\table\gari.h" />
     <ClInclude Include="scenes\table\nakibtn.h" />
     <ClInclude Include="scenes\table\nakihai.h" />
     <ClInclude Include="scenes\table\nakihai0.h" />

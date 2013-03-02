@@ -47,6 +47,9 @@ protected: /**** サイコロ ****/
 protected: /**** 起家マーク・ヤキトリマークを置く凹み ****/
 	class TrayReconst;
 	TrayReconst* trayReconst;
+protected: /**** 抜き北・花牌 ****/
+	class GariReconst;
+	GariReconst* gariReconst;
 protected: /**** 鳴き選択用ボタン ****/
 	class ButtonReconst;
 	ButtonReconst* buttonReconst;
