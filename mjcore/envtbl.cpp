@@ -14,3 +14,7 @@ EnvTable::EnvTable() {
 	GameMode = Unavailable;
 	WatchModeFlag = false;
 }
+
+LPCTSTR getName(PlayerID playerID) {
+	return EnvTable::Instantiate()->PlayerDat[playerID].PlayerName.c_str();
+}

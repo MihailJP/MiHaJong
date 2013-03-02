@@ -30,3 +30,5 @@ public:
 	bool WatchModeFlag;
 	uint8_t bgColorR, bgColorG, bgColorB;
 };
+
+LPCTSTR getName(PlayerID playerID);
