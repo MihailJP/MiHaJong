@@ -7,7 +7,11 @@ namespace mihajong_graphic {
 class GameTableScreen::GariReconst {
 private:
 	GameTableScreen* caller;
-//private: /**** ”²‚«–kE‰Ô”v ****/
+	ShowTile* TileTexture;
+private: /**** ”²‚«–kE‰Ô”v ****/
+	unsigned int GariPosH() {return TableSize - 176;}
+	unsigned int GariPosV() {return DeckPosV - 200;}
+	void RenderFlower(PlayerID playerID);
 public:
 	void Render();
 	explicit GariReconst(GameTableScreen* parent);
