@@ -75,6 +75,7 @@ PlayerID TableProtoScene::ScoreBoard::playerID() {
 TableProtoScene::ScoreBoard::ScoreBoard(LPDIRECT3DDEVICE9 device, seatRelative relativePos, int x, int y, float widthScale) {
 	myDevice = device; relativePlayerID = relativePos; xpos = x; ypos = y; wScale = widthScale;
 	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR), 860, 120);
+	nameText = new SmallTextRenderer(device);
 	// s—ñ‚Ì\’z
 	D3DXMATRIX tmpmtx;
 	D3DXMatrixIdentity(&myMatrix); D3DXMatrixIdentity(&tmpmtx);
@@ -86,6 +87,7 @@ TableProtoScene::ScoreBoard::ScoreBoard(LPDIRECT3DDEVICE9 device, seatRelative r
 
 TableProtoScene::ScoreBoard::~ScoreBoard() {
 	if (texture) texture->Release();
+	delete nameText;
 }
 
 void TableProtoScene::ScoreBoard::Render() {
@@ -95,6 +97,7 @@ void TableProtoScene::ScoreBoard::Render() {
 	renderWind();
 	renderRank();
 	renderScore();
+	renderName();
 }
 
 void TableProtoScene::ScoreBoard::renderWind() {
@@ -178,6 +181,20 @@ void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum) {
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + ScoreUnitPosX, (int)ypos + ScoreUnitPosY,
 		ScoreUnitCharWidth, ScoreUnitCharHeight, 0xffff0000, &rect, 0, 0, &myMatrix);
+}
+
+void TableProtoScene::ScoreBoard::renderName() {
+	unsigned tmpWidth = 0;
+	for (LPCTSTR k = utils::getName(playerID()); *k != _T('\0'); ++k) {
+#ifdef _UNICODE
+		if (*k >= 0x0080)
+			tmpWidth += 2;
+		else
+#endif
+			tmpWidth += 1;
+	}
+	nameText->NewText(0, utils::getName(playerID()), xpos + NamePosX, ypos + NamePosY, 1.0, (tmpWidth > 18) ? (18.0f / (float)tmpWidth) : 1.0f);
+	nameText->Render();
 }
 
 }

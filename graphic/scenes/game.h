@@ -4,6 +4,7 @@
 #include "../showtile.h"
 #include <array>
 #include <tuple>
+#include "../text.h"
 
 namespace mihajong_graphic {
 
@@ -57,6 +58,10 @@ private:
 	static const unsigned int ScoreUnitCharWidth = 40, ScoreUnitCharHeight = 40;
 	static const unsigned int ScoreUnitPosX = ScorePosX + NumCharWidth * 3, ScoreUnitPosY = ScorePosY;
 	void renderScoreUnit(unsigned unitnum);
+private:
+	static const unsigned int NamePosX = 5, NamePosY = 5;
+	SmallTextRenderer* nameText;
+	void renderName();
 public:
 	ScoreBoard(LPDIRECT3DDEVICE9 device, seatRelative relativePos, int x, int y, float widthScale);
 	~ScoreBoard();
