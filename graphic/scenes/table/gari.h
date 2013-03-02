@@ -12,6 +12,7 @@ private: /**** ”²‚«–kE‰Ô”v ****/
 	unsigned int GariPosH() {return TableSize - 200;}
 	unsigned int GariPosV() {return DeckPosV - 80;}
 	void RenderFlower(PlayerID playerID);
+	void RenderNorth(PlayerID playerID);
 public:
 	void Render();
 	explicit GariReconst(GameTableScreen* parent);

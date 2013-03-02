@@ -65,12 +65,66 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 				TileTexture->DelTile(i + 24);
 		break;
 	}
-	TileTexture->Render();
+}
+
+void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
+	const GameTable* const gameStat = GameStatus::gameStat();
+
+	// 判定に使うパラメータ
+	int numOfTiles = gameStat->Player[playerID].NorthFlag, currentTile = 0;
+
+	// 表示処理
+	switch (playerRelative(playerID, gameStat->PlayerID)) {
+	case sOpposite:
+		for (int i = 0; i < 4; ++i)
+			if (i < numOfTiles)
+				TileTexture->NewTile(i, NorthWind, Normal,
+				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
+				GariPosV(),
+				UpsideDown, Obverse);
+			else
+				TileTexture->DelTile(i);
+		break;
+	case sLeft:
+		for (int i = 0; i < 4; ++i)
+			if (i < numOfTiles)
+				TileTexture->NewTile(i + 4, NorthWind, Normal,
+				GariPosV(),
+				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
+				Clockwise, Obverse);
+			else
+				TileTexture->DelTile(i + 4);
+		break;
+	case sRight:
+		for (int i = 0; i < 4; ++i)
+			if (i < numOfTiles)
+				TileTexture->NewTile(11 - i, NorthWind, Normal,
+				TableSize - GariPosV(),
+				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
+				Withershins, Obverse);
+			else
+				TileTexture->DelTile(11 - i);
+		break;
+	case sSelf:
+		for (int i = 0; i < 4; ++i)
+			if (i < numOfTiles)
+				TileTexture->NewTile(i + 12, NorthWind, Normal,
+				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
+				TableSize - GariPosV(),
+				Portrait, Obverse);
+			else
+				TileTexture->DelTile(i + 12);
+		break;
+	}
 }
 
 void GameTableScreen::GariReconst::Render() {
 	for (PlayerID i = 0; i < Players; ++i)
-		RenderFlower(i);
+		if (chkGameType(GameStatus::gameStat(), AllSanma))
+			RenderNorth(i);
+		else
+			RenderFlower(i);
+	TileTexture->Render();
 }
 
 GameTableScreen::GariReconst::GariReconst(GameTableScreen* parent) {
