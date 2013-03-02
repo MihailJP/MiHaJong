@@ -18,6 +18,7 @@
 #include "table/richibou.h"
 #include "table/chicha.h"
 #include "table/nakibtn.h"
+#include "table/gari.h"
 
 #include "table/naki_id.h"
 
@@ -34,6 +35,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	tehaiReconst = new TehaiReconst(this);
 	nakihaiReconst = new NakihaiReconst(this);
 	sutehaiReconst = new SutehaiReconst(this);
+	gariReconst = new GariReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
 	const unsigned logWidth = (unsigned)std::floor(0.5f + // VC++2010‚Å‚Íround()‚ªg‚¦‚È‚¢
 		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
@@ -47,6 +49,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 GameTableScreen::~GameTableScreen() {
 	delete mySubScene;
 	delete logWindow;
+	delete gariReconst;
 	delete sutehaiReconst;
 	delete nakihaiReconst;
 	delete tehaiReconst;
@@ -138,6 +141,7 @@ void GameTableScreen::RenderTable() {
 	tehaiReconst->Render(); // 144
 	nakihaiReconst->Render(); // 200
 	sutehaiReconst->Render(); // 264
+	gariReconst->Render();
 	buttonReconst->Render();
 }
 

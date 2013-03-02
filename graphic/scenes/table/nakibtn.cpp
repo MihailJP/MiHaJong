@@ -164,9 +164,9 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ƒcƒ‚”Ô‚ÌŽž—p‚Ì
 	const TileCode flowerTile = (gameStat->gameType & SanmaX) ? NorthWind : Flower;
 	const bool Flowerabilityflag = [gameStat, playerStat]() -> bool {
 		if (gameStat->gameType & SanmaX)
-			return (playerStat->Hand[NumOfTilesInHand].tile == NorthWind) && (!rules::chkRule("flower_tiles", "no"));
+			return (playerStat->Tsumohai().tile == NorthWind) && (!rules::chkRule("flower_tiles", "no"));
 		else
-			return playerStat->Hand[NumOfTilesInHand].tile > TileSuitFlowers;
+			return playerStat->Tsumohai().tile > TileSuitFlowers;
 	} ();
 	if ((!rules::chkRule("flower_tiles", "no")) &&
 		(playerStat->Tsumohai().tile != NoTile) &&
@@ -314,8 +314,12 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		case btnFlower: // ‰Ô”v
 			setMode(DiscardTileNum::Flower, btnFlower,
 				[](int i, GameTable* tmpStat) -> bool {
-					return tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
-						(tmpStat->gameType & SanmaX) ? NorthWind : Flower;
+					if (tmpStat->gameType & SanmaX)
+						return tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
+							NorthWind;
+					else
+						return tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile <
+							TileSuitFlowers;
 				});
 			break;
 		default:
