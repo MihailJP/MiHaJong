@@ -47,7 +47,7 @@ private:
 private:
 	static const unsigned int NumCharX = 180, NumCharY = 0;
 	static const unsigned int NumCharWidth = 30, NumCharHeight = 40;
-	void renderNumeral(int x, int y, unsigned num);
+	void renderNumeral(int x, int y, unsigned num, D3DCOLOR color = ledColorRed);
 	static const unsigned int digitDecimal = 10, digitPlus = 11, digitMinus = 12;
 private:
 	static const unsigned int RankPosX = 100, RankPosY = 30;

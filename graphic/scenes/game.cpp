@@ -113,20 +113,25 @@ void TableProtoScene::ScoreBoard::renderWind() {
 		&rect, 0, 0, &myMatrix);
 }
 
-void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num) {
+void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, D3DCOLOR color) {
 	RECT rect = {
 		NumCharX + NumCharWidth * (num    ), NumCharY,
 		NumCharX + NumCharWidth * (num + 1), NumCharY + NumCharHeight
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + x, (int)ypos + y,
-		NumCharWidth, NumCharHeight, 0xffff0000, &rect, 0, 0, &myMatrix);
+		NumCharWidth, NumCharHeight, color, &rect, 0, 0, &myMatrix);
 }
 
 void TableProtoScene::ScoreBoard::renderRank() {
 	PlayerRankList rankList = utils::calcRank(GameStatus::gameStat());
-	renderNumeral(RankPosX, RankPosY, rankList[playerID()]);
+	const D3DCOLOR color =
+		(rankList[playerID()] == 1) ? ledColorRed : // トップは赤
+		(rankList[playerID()] == (chkGameType(GameStatus::gameStat(), SanmaT) ? 3 : 4) ? ledColorOrange : // ラスはオレンジ
+		ledColorGreen); // その他は緑で表示
+
+	renderNumeral(RankPosX, RankPosY, rankList[playerID()], color); // その他は緑で表示
 	if ((currTime() % 10000000 < 5000000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID()))
-		renderNumeral(RankPosX, RankPosY, digitDecimal);
+		renderNumeral(RankPosX, RankPosY, digitDecimal, color);
 }
 
 int TableProtoScene::ScoreBoard::getScoreSign() {
