@@ -101,13 +101,16 @@ void TableProtoScene::ScoreBoard::Render() {
 }
 
 void TableProtoScene::ScoreBoard::renderWind() {
-	if ((currTime() % 10000000 >= 5000000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return;
+	if ((currTime() % 10000000 >= 5000000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return; // ツモ番の時は表示を点滅させる
+	const seatAbsolute wind = utils::playerwind(GameStatus::gameStat(), playerID(), GameStatus::gameStat()->GameRound);
 	RECT rect = {
-		WindCharX + WindCharWidth * (utils::playerwind(GameStatus::gameStat(), playerID(), GameStatus::gameStat()->GameRound)    ), WindCharY,
-		WindCharX + WindCharWidth * (utils::playerwind(GameStatus::gameStat(), playerID(), GameStatus::gameStat()->GameRound) + 1), WindCharY + WindCharHeight
+		WindCharX + WindCharWidth * ((int)wind    ), WindCharY,
+		WindCharX + WindCharWidth * ((int)wind + 1), WindCharY + WindCharHeight
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + WindPosX, (int)ypos + WindPosY,
-		WindCharWidth, WindCharHeight, 0xffff0000, &rect, 0, 0, &myMatrix);
+		WindCharWidth, WindCharHeight,
+		(wind == sEast) ? ledColorRed : ledColorGreen, // 「東」のみ赤で、それ以外を緑で表示すればわかりやすいと思うのでそうする
+		&rect, 0, 0, &myMatrix);
 }
 
 void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num) {

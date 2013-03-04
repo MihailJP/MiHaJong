@@ -36,6 +36,10 @@ private:
 	static const unsigned int PanelWidth = 175, PanelHeight = 120;
 	PlayerID playerID();
 private:
+	static const D3DCOLOR ledColorRed = 0xffff0000, // Ì‚È‚ª‚ç‚Ì3FLED•—‚ÌF
+		ledColorOrange = 0xffff9900,
+		ledColorGreen = 0xffccff00;
+private:
 	static const unsigned int WindPosX = 9, WindPosY = 30;
 	static const unsigned int WindCharX = 180, WindCharY = 40;
 	static const unsigned int WindCharWidth = 40, WindCharHeight = 40;
