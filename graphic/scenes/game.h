@@ -39,6 +39,8 @@ private:
 	static const D3DCOLOR ledColorRed = 0xffff0000, // êÃÇ»Ç™ÇÁÇÃ3êFLEDïóÇÃêF
 		ledColorOrange = 0xffff9900,
 		ledColorGreen = 0xffccff00;
+	enum ScoreMode {scorePoints, scoreDiff, scoreChip};
+	ScoreMode getScoreMode();
 private:
 	static const unsigned int WindPosX = 9, WindPosY = 30;
 	static const unsigned int WindCharX = 180, WindCharY = 40;
@@ -47,7 +49,7 @@ private:
 private:
 	static const unsigned int NumCharX = 180, NumCharY = 0;
 	static const unsigned int NumCharWidth = 30, NumCharHeight = 40;
-	void renderNumeral(int x, int y, unsigned num, D3DCOLOR color = ledColorRed);
+	void renderNumeral(int x, int y, unsigned num, D3DCOLOR color);
 	static const unsigned int digitDecimal = 10, digitPlus = 11, digitMinus = 12;
 private:
 	static const unsigned int RankPosX = 100, RankPosY = 30;
@@ -55,13 +57,13 @@ private:
 private:
 	static const unsigned int ScorePosX = 38, ScorePosY = 74;
 	int getScoreSign();
-	std::tuple<unsigned, unsigned, signed> scoreInfo();
+	std::tuple<unsigned, unsigned, signed, signed> scoreInfo(ScoreMode scoreMode);
 	void renderScore();
 private:
 	static const unsigned int ScoreUnitCharX = 180, ScoreUnitCharY = 80;
 	static const unsigned int ScoreUnitCharWidth = 40, ScoreUnitCharHeight = 40;
 	static const unsigned int ScoreUnitPosX = ScorePosX + NumCharWidth * 3, ScoreUnitPosY = ScorePosY;
-	void renderScoreUnit(unsigned unitnum);
+	void renderScoreUnit(unsigned unitnum, D3DCOLOR color);
 private:
 	static const unsigned int NamePosX = 5, NamePosY = 5;
 	SmallTextRenderer* nameText;
