@@ -6,6 +6,7 @@
 #include "../sprite.h"
 #include "../gametbl.h"
 #include "../utils.h"
+#include "../rule.h"
 #include <cassert>
 #include <cstdlib>
 
@@ -91,7 +92,7 @@ TableProtoScene::ScoreBoard::~ScoreBoard() {
 }
 
 TableProtoScene::ScoreBoard::ScoreMode TableProtoScene::ScoreBoard::getScoreMode() {
-	return (ScoreMode)((currTime() / 20000000) % 2);
+	return (ScoreMode)((currTime() / 20000000) % ((rules::chkRule("chip", "no")) ? 2 : 3));
 }
 
 void TableProtoScene::ScoreBoard::Render() {
@@ -146,32 +147,37 @@ int TableProtoScene::ScoreBoard::getScoreSign() {
 }
 
 std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scoreInfo(ScoreMode scoreMode) {
-	const LargeNum playerScoreDiff = GameStatus::gameStat()->Player[playerID()].PlayerScore - GameStatus::gameStat()->statOfMine().PlayerScore;
-	const LargeNum* const score = (scoreMode == scoreDiff) ?
-		&playerScoreDiff :
-		&(GameStatus::gameStat()->Player[playerID()].PlayerScore);
-	const int digit[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
-	int sign;
-	if      (*score > LargeNum::fromInt(0)) sign =  1;
-	else if (*score < LargeNum::fromInt(0)) sign = -1;
-	else                                    sign =  0;
-	for (int i = DigitGroups - 1; i >= 0; --i) {
-		for (int j = ((i == DigitGroups - 1) ? 9 : 7); j >= 0; --j) {
-			if ((i == 0) && (j == 4)) {
-				return std::make_tuple(abs(score->digitGroup[0] / 100), 0, 0, sign);
-			}
-			else if (score->digitGroup[i] / digit[j]) {
-				unsigned digitCode = i * 8 + j; unsigned digits;
-				if (j >= 2) {
-					digits = abs(score->digitGroup[i] / digit[j - 2]);
-				} else {
-					assert(i > 0);
-					digits = abs(score->digitGroup[i] * digit[2 - j]) + abs(score->digitGroup[i - 1] / digit[j + 6]);
+	if (scoreMode == scoreChip) {
+		const int& chipAmount = GameStatus::gameStat()->Player[playerID()].playerChip;
+		return std::make_tuple(abs(chipAmount), 0, 0, (chipAmount > 0) ? 1 : (chipAmount < 0) ? -1 : 0);
+	} else {
+		const LargeNum playerScoreDiff = GameStatus::gameStat()->Player[playerID()].PlayerScore - GameStatus::gameStat()->statOfMine().PlayerScore;
+		const LargeNum* const score = (scoreMode == scoreDiff) ?
+			&playerScoreDiff :
+			&(GameStatus::gameStat()->Player[playerID()].PlayerScore);
+		const int digit[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
+		int sign;
+		if      (*score > LargeNum::fromInt(0)) sign =  1;
+		else if (*score < LargeNum::fromInt(0)) sign = -1;
+		else                                    sign =  0;
+		for (int i = DigitGroups - 1; i >= 0; --i) {
+			for (int j = ((i == DigitGroups - 1) ? 9 : 7); j >= 0; --j) {
+				if ((i == 0) && (j == 4)) {
+					return std::make_tuple(abs(score->digitGroup[0] / 100), 0, 0, sign);
 				}
-				if (digitCode % 4 == 3)
-					return std::make_tuple(digits, digitCode / 4 + 1, -1, sign);
-				else
-					return std::make_tuple(digits, digitCode / 4, digitCode % 4, sign);
+				else if (score->digitGroup[i] / digit[j]) {
+					unsigned digitCode = i * 8 + j; unsigned digits;
+					if (j >= 2) {
+						digits = abs(score->digitGroup[i] / digit[j - 2]);
+					} else {
+						assert(i > 0);
+						digits = abs(score->digitGroup[i] * digit[2 - j]) + abs(score->digitGroup[i - 1] / digit[j + 6]);
+					}
+					if (digitCode % 4 == 3)
+						return std::make_tuple(digits, digitCode / 4 + 1, -1, sign);
+					else
+						return std::make_tuple(digits, digitCode / 4, digitCode % 4, sign);
+				}
 			}
 		}
 	}
@@ -188,10 +194,10 @@ void TableProtoScene::ScoreBoard::renderScore() {
 	case scorePoints:
 		color = ledColorRed;
 		break;
-	case scoreDiff:
+	case scoreDiff: case scoreChip:
 		if      (sign ==  1) color = ledColorRed;
 		else if (sign == -1) color = ledColorGreen;
-		else                           color = ledColorOrange;
+		else                 color = ledColorOrange;
 		break;
 	}
 
@@ -204,7 +210,8 @@ void TableProtoScene::ScoreBoard::renderScore() {
 	renderNumeral(ScorePosX + NumCharWidth * 2, ScorePosY, digits % 10       , color);
 	if (unitcode != 0)
 		renderNumeral(ScorePosX + NumCharWidth * decimalPos, ScorePosY, digitDecimal, color);
-	renderScoreUnit(unitcode, color);
+	if (scoreMode != scoreChip)
+		renderScoreUnit(unitcode, color);
 }
 
 void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum, D3DCOLOR color) {
@@ -227,7 +234,7 @@ void TableProtoScene::ScoreBoard::renderName() {
 			tmpWidth += 1;
 	}
 	nameText->NewText(0,
-		(getScoreMode() == scoreDiff) ? _T("点差表示") : utils::getName(playerID()),
+		(getScoreMode() == scoreDiff) ? _T("点差表示") : ((getScoreMode() == scoreChip) ? _T("チップ表示") : utils::getName(playerID())),
 		xpos + NamePosX, ypos + NamePosY, 1.0, (tmpWidth > 18) ? (18.0f / (float)tmpWidth) : 1.0f);
 	nameText->Render();
 }
