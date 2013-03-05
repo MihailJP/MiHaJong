@@ -497,14 +497,47 @@ namespace {
 		return;
 	}
 
+	int getChipAmount(const GameTable* gameStat, const YakuResult* yakuInfo) {
+		int ChipAmount /* チップの量 */ = 0;
+		/* 裏ドラ、アリス、一発祝儀 */
+		if (gameStat->statOfAgari().MenzenFlag) {
+			ChipAmount = yakuInfo->UraDoraQuantity + yakuInfo->AliceDora; // 裏ドラとアリスドラ
+			if ((gameStat->statOfAgari().RichiFlag.IppatsuFlag) &&
+				(RuleData::chkRuleApplied("riichi_ippatsu")))
+				++ChipAmount; // 一発祝儀
+		}
+		/* 赤ドラ祝儀 */
+		if (RuleData::chkRule("redtile_chip", "menzen_only") || RuleData::chkRule("redtile_chip", "menzen_only_non_dora")) { // 門前のみ赤ドラチップが付くルール
+			if (gameStat->statOfAgari().MenzenFlag)
+				ChipAmount += yakuInfo->AkaDoraQuantity;
+		} else if (RuleData::chkRule("redtile_chip", "riichi_only") || RuleData::chkRule("redtile_chip", "riichi_only_non_dora")) { // リーチ時のみ赤ドラチップが付くルール
+			if (gameStat->statOfAgari().RichiFlag.RichiFlag)
+				ChipAmount += yakuInfo->AkaDoraQuantity;
+		} else if (RuleData::chkRule("redtile_chip", "always") || RuleData::chkRule("redtile_chip", "always_but_non_dora")) { // 鳴いていても赤ドラチップが付くルール
+			ChipAmount += yakuInfo->AkaDoraQuantity;
+		}
+		/* 青ドラ祝儀 */
+		if (RuleData::chkRule("blue_chip", "menzen_only")) { // 門前のみ赤ドラチップが付くルール
+			if (gameStat->statOfAgari().MenzenFlag)
+				ChipAmount += yakuInfo->AoDoraQuantity;
+		} else if (RuleData::chkRule("blue_chip", "riichi_only")) { // リーチ時のみ赤ドラチップが付くルール
+			if (gameStat->statOfAgari().RichiFlag.RichiFlag)
+				ChipAmount += yakuInfo->AoDoraQuantity;
+		} else if (RuleData::chkRule("blue_chip", "always")) { // 鳴いていても赤ドラチップが付くルール
+			ChipAmount += yakuInfo->AoDoraQuantity;
+		}
+		/* 合計を返す */
+		return ChipAmount;
+	}
+
 	void agariscrproc(const GameTable* gameStat, const YakuResult* yakuInfo,
-		const LNum* agariPointArray, int ChipAmount, const CodeConv::tstring& ResultDesc, bool& tmpUraFlag)
+		const LNum* agariPointArray, int& ChipAmount, const CodeConv::tstring& ResultDesc, bool& tmpUraFlag)
 	{
-		// 仮実装
 		sound::util::bgmstop();
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::YakuResult::setYakuStat(yakuInfo, static_cast<LargeNum>(*agariPointArray));
 		tmpUraFlag = gameStat->statOfAgari().MenzenFlag && gameStat->statOfAgari().RichiFlag.RichiFlag && (!RuleData::chkRule("uradora", "no"));
+		ChipAmount = getChipAmount(gameStat, yakuInfo);
 		if (tmpUraFlag)
 			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgariUradora);
 		else
@@ -566,9 +599,8 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), -1);
 	assert(agariPoint > (LNum)0);
 	calculateWaremeDelta(gameStat);
-	bool tmpUraFlag;
-	agariscrproc(gameStat, &yakuInfo, &agariPoint, 0, ResultDesc, tmpUraFlag); // 仮実装
-	/* TODO: agariscrproc GameStat, GameEnv, yakuInfo, agariPointArray, ChipAmount, ResultDesc, tmpUraFlag */ /* 和了画面 */
+	bool tmpUraFlag; int ChipAmount;
+	agariscrproc(gameStat, &yakuInfo, &agariPoint, ChipAmount, ResultDesc, tmpUraFlag); /* 和了画面 */
 	if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice"))
 		gameStat->DoraPointer = AlicePointer;
 	transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValAgariten, 1500);
@@ -607,7 +639,6 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 		}
 	}
 	
-	int ChipAmount = 0; // TODO: これは仮の仕様。agariscrproc 実装までのテストダブルとしてここに置いておく
 	chipTransfer(gameStat, mihajong_graphic::tblSubsceneCallValChip, ChipAmount);
 	
 	ChipAmount = 0;
