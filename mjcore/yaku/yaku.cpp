@@ -303,7 +303,7 @@ void yaku::yakuCalculator::countDora
 		// アリスありルールで門前でないと駄目
 		auto AlicePointer = gameStat->DoraPointer;
 		// 牌譜記録ルーチンはスレッドセーフじゃなかったはずなので別の場所でやる
-		while (AlicePointer <= gameStat->TilePointer) {
+		while (AlicePointer >= gameStat->TilePointer) {
 			AlicePointer -= 2;
 			if (analysis != nullptr) {
 				if (analysis->TileCount[gameStat->Deck[AlicePointer].tile] > 0) ++alice;
