@@ -229,7 +229,22 @@ void TableProtoScene::ScoreBoard::renderScore() {
 	std::tie(digits, unitcode, decimalPos, sign) = scoreInfo(scoreMode);
 	switch (scoreMode) {
 	case scorePoints:
-		color = ledColorRed;
+		if (sign < 1) // プラスじゃなかったら緑
+			color = ledColorGreen;
+		else if (unitcode != 0) // 万単位以上の表示だったら赤
+			color = ledColorRed;
+		else if (digits >= 400) // 4万以上は浮き
+			color = ledColorRed;
+		else if ((digits >= 300) && (!chkGameType(GameStatus::gameStat(), SanmaT))) // 三人打ち以外で3万以上は浮き
+			color = ledColorRed;
+		else if ((digits >= 300) && (// 30000点返しの浮きの場合
+			rules::chkRule("starting_point", "25000pts_oka15") ||
+			rules::chkRule("starting_point", "27000pts_oka9") ||
+			rules::chkRule("starting_point", "30000pts_oka0")
+			))
+			color = ledColorRed;
+		else
+			color = ledColorGreen;
 		break;
 	case scoreDiff: case scoreChip:
 		if      (sign ==  1) color = ledColorRed;
