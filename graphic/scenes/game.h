@@ -19,6 +19,7 @@ protected:
 	void ShowSidebar();
 	void InitScorePanel();
 	void ShowScorePanel();
+	D3DCOLOR roundColor(); // ê‚²‚Æ‚ÌF•ª‚¯
 public:
 	TableProtoScene(ScreenManipulator* const manipulator);
 	virtual ~TableProtoScene();
