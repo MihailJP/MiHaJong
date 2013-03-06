@@ -518,10 +518,31 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
 		}
 	}
 }
+void TableSubsceneAgariScreenProto::ShowScore::ReconstructChipAmount() {
+	if (rules::chkRule("chip", "no")) return;
+	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
+	if (Zeit <= 0.0) return;
+	if (myCaller->YakumanMode()) return;
+	const double anmTime = 0.75;
+	CodeConv::tostringstream o;
+	o << _T("ƒ`ƒbƒv") << std::setw(2) << std::setfill(_T(' ')) << YakuResult::getChipVal();
+	if (GameStatus::gameStat()->TsumoAgariFlag) {
+		if (chkGameType(GameStatus::gameStat(), SanmaT))
+			o << _T("‚˜‚Q");
+		else
+			o << _T("‚˜‚R");
+	}
+	o << _T("–‡");
+	const int x = BaseX + yakuWndWidth - 32 - 27 * 10;
+	const int y = BaseY + yakuWndHeight - 70;
+	const D3DCOLOR color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
+	txtRenderer->NewText(2, o.str(), x, y, 1.0f, (GameStatus::gameStat()->TsumoAgariFlag) ? (1.5f * 5.0f / 7.0f) : 1.5f, color);
+}
 void TableSubsceneAgariScreenProto::ShowScore::Reconstruct() {
 	ReconstructScoreFuHan();
 	ReconstructScoreTxt();
 	ReconstructScoreRank();
+	ReconstructChipAmount();
 }
 void TableSubsceneAgariScreenProto::ShowScore::Render() {
 	Reconstruct();

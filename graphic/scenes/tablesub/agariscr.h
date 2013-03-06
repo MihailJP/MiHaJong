@@ -158,6 +158,7 @@ private:
 	void ReconstructScoreFuHan();
 	void ReconstructScoreTxt();
 	void ReconstructScoreRank();
+	void ReconstructChipAmount();
 	void Reconstruct();
 private:
 	bool soundFlag;
