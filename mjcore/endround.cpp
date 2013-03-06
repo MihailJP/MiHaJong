@@ -485,7 +485,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ryuukyokuProc(gameStat, !RuleData::chkRule("fifth_kong", "next_dealer"));
 		break;
 	}
-	// TODO: ‚±‚ê haifuwritebuffer GameStat, GameEnv, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType
+	haifu::haifuwritebuffer(gameStat, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc.c_str(), RoundEndType);
 	return;
 }
 

@@ -138,7 +138,7 @@ public:
 	static void haifurecflower(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);
 
 	static __declspec(dllexport) void haifuwritebuffer(
-		const GameTable* const gameStat, void *,
+		const GameTable* const gameStat,
 		int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
 		LPCTSTR ResultDesc, EndType RoundEndType);
 
