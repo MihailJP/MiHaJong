@@ -202,12 +202,14 @@ void TableProtoScene::ScoreBoard::renderScore() {
 	}
 
 	if (sign == 1)
-		renderNumeral(ScorePosX - NumCharWidth, ScorePosY, digitPlus         , color);
+		renderNumeral(ScorePosX - NumCharWidth    , ScorePosY, digitPlus         , color);
 	else if (sign == -1)
-		renderNumeral(ScorePosX - NumCharWidth, ScorePosY, digitMinus        , color);
-	renderNumeral(ScorePosX                   , ScorePosY, digits       / 100, color);
-	renderNumeral(ScorePosX + NumCharWidth    , ScorePosY, digits % 100 / 10 , color);
-	renderNumeral(ScorePosX + NumCharWidth * 2, ScorePosY, digits % 10       , color);
+		renderNumeral(ScorePosX - NumCharWidth    , ScorePosY, digitMinus        , color);
+	if ((unitcode != 0) || (digits / 100))
+		renderNumeral(ScorePosX                   , ScorePosY, digits       / 100, color);
+	if ((unitcode != 0) || (digits / 100) || (digits % 100 / 10))
+		renderNumeral(ScorePosX + NumCharWidth    , ScorePosY, digits % 100 / 10 , color);
+	renderNumeral(    ScorePosX + NumCharWidth * 2, ScorePosY, digits % 10       , color);
 	if (unitcode != 0)
 		renderNumeral(ScorePosX + NumCharWidth * decimalPos, ScorePosY, digitDecimal, color);
 	if (scoreMode != scoreChip)
