@@ -211,6 +211,9 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		case tblSubsceneChonbo:
 			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("ö˜a"));
 			break;
+		case tblSubsceneAlice:
+			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("ƒAƒŠƒX”»’è"));
+			break;
 		case tblSubsceneCall:
 			mySubScene = new TableSubsceneCall(caller->getDevice());
 			break;

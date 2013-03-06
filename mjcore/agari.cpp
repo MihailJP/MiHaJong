@@ -577,19 +577,19 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	Sleep(1500);
 	std::uint16_t tmpDoraPointer = origDoraPointer;
 	int AlicePointer = tmpDoraPointer - yakuInfo.AliceDora * 2 - 2;
-	/* TODO: ‚±‚±‚ğˆÚA‚·‚é
-	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)&&(chkRule("alice", "yes") != 0)) {
-		setCenterTitle "ƒAƒŠƒX”»’è"
-		repeat
-			if (getDoraPointer(GameStat) <= AlicePointer) {break}
-			setDoraPointer GameStat, getDoraPointer(GameStat) - 2
-			snd_play SND_MEKURI
-			redrscreen: await 1200
-		loop
-		setDoraPointer GameStat, tmpDoraPointer
-		tmpAliceFlag = 1
+
+	if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice")) { // ‚ß‚­‚Á‚Ä‚¢‚­ˆ—
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAlice); // •\¦
+		while (gameStat->DoraPointer > AlicePointer) {
+			gameStat->DoraPointer -= 2;
+			sound::Play(sound::IDs::sndMekuri);
+			mihajong_graphic::GameStatus::updateGameStat(gameStat);
+			Sleep(1200);
+		}
+		gameStat->DoraPointer = tmpDoraPointer;
+		tmpAliceFlag = true;
 	}
-	*/
+
 	sound::util::bgmstop();
 
 	transfer::resetDelta();
@@ -601,8 +601,8 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	calculateWaremeDelta(gameStat);
 	bool tmpUraFlag; int ChipAmount;
 	agariscrproc(gameStat, &yakuInfo, &agariPoint, ChipAmount, ResultDesc, tmpUraFlag); /* ˜a—¹‰æ–Ê */
-	if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice"))
-		gameStat->DoraPointer = AlicePointer;
+	/*if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice"))
+		gameStat->DoraPointer = AlicePointer;*/
 	transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValAgariten, 1500);
 	
 	if ((gameStat->Honba > 0) && RuleData::chkRuleApplied("tsumiboh_rate")) {
