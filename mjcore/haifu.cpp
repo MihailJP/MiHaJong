@@ -792,7 +792,7 @@ void haifu::tools::hfwriter::hfWriteBottom() {
 
 /* 配牌をバッファに出力 */
 __declspec(dllexport) void haifu::haifuwritebuffer(
-	const GameTable* const gameStat, void *,
+	const GameTable* const gameStat,
 	int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
 	LPCTSTR ResultDesc, EndType RoundEndType
 	) { /* 配牌をバッファに出力 */

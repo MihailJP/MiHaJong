@@ -292,7 +292,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	case Ryuukyoku:
 		/* TODO: Ç±ÇÍëΩï™Ç¢ÇÁÇ»Ç¢ statmes "ó¨ã«Ç≈Ç∑" */
 		ResultDesc = _T("çrîvó¨ã«");
-		writeChat(ResultDesc);
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
 		transferNotenBappu(gameStat, OrigTurn,
 			checkTenpai(gameStat, ResultDesc, OrigTurn));
@@ -486,7 +485,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ryuukyokuProc(gameStat, !RuleData::chkRule("fifth_kong", "next_dealer"));
 		break;
 	}
-	// TODO: Ç±ÇÍ haifuwritebuffer GameStat, GameEnv, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc, RoundEndType
+	haifu::haifuwritebuffer(gameStat, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc.c_str(), RoundEndType);
 	return;
 }
 
