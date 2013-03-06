@@ -292,7 +292,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	case Ryuukyoku:
 		/* TODO: Ç±ÇÍëΩï™Ç¢ÇÁÇ»Ç¢ statmes "ó¨ã«Ç≈Ç∑" */
 		ResultDesc = _T("çrîvó¨ã«");
-		writeChat(ResultDesc);
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
 		transferNotenBappu(gameStat, OrigTurn,
 			checkTenpai(gameStat, ResultDesc, OrigTurn));
