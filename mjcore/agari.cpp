@@ -498,6 +498,7 @@ namespace {
 	}
 
 	int getChipAmount(const GameTable* gameStat, const YakuResult* yakuInfo) {
+		if (!RuleData::chkRuleApplied("chip")) return 0; // チップ無しのルールならすぐ戻る
 		int ChipAmount /* チップの量 */ = 0;
 		/* 裏ドラ、アリス、一発祝儀 */
 		if (gameStat->statOfAgari().MenzenFlag) {
