@@ -20,10 +20,11 @@ void TableSubsceneTitling::FadeinStr(const std::wstring& str) {
 		if (*k <= L'\x7f') len += 1;
 		else len += 2;
 	if ((Zeit >= Anfang) && (Zeit < Ende)) {
-		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * len), TableSize / 2 - 192,
-			1.0f, 1.0f, D3DCOLOR_ARGB((int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f), 255, 255, 255));
+		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * (len > 8 ? 8 :len)), TableSize / 2 - 192,
+			1.0f, (len > 8 ? 8.0f / (float)len : 1.0f), D3DCOLOR_ARGB((int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f), 255, 255, 255));
 	} else if (Zeit >= Ende) {
-		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * len), TableSize / 2 - 192);
+		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * (len > 8 ? 8 :len)), TableSize / 2 - 192,
+			1.0f, (len > 8 ? 8.0f / (float)len : 1.0f));
 	}
 }
 
