@@ -126,7 +126,7 @@ void GameTableScreen::ShowStatus(const GameTable* gameStat) {
 /* 卓を表示 ここから */
 void GameTableScreen::cls() {
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
-		D3DCOLOR_XRGB(0, 128, 0), 1.0f, 0); // バッファクリア
+		roundColor(), 1.0f, 0); // バッファクリア
 }
 
 void GameTableScreen::RenderTable() {
