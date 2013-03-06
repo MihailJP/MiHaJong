@@ -767,6 +767,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 			}
 			haifu::haifurecalicedora(gameStat->Deck[AlicePointer].tile);
 			if (tiles[gameStat->Deck[AlicePointer].tile] <= 0) break;
+			++(yakuInfo.AliceDora);
 		}
 	}
 	/* ‚¨‚í‚è */

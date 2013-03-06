@@ -498,6 +498,7 @@ namespace {
 	}
 
 	int getChipAmount(const GameTable* gameStat, const YakuResult* yakuInfo) {
+		if (!RuleData::chkRuleApplied("chip")) return 0; // チップ無しのルールならすぐ戻る
 		int ChipAmount /* チップの量 */ = 0;
 		/* 裏ドラ、アリス、一発祝儀 */
 		if (gameStat->statOfAgari().MenzenFlag) {
@@ -535,9 +536,9 @@ namespace {
 	{
 		sound::util::bgmstop();
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
-		mihajong_graphic::YakuResult::setYakuStat(yakuInfo, static_cast<LargeNum>(*agariPointArray));
-		tmpUraFlag = gameStat->statOfAgari().MenzenFlag && gameStat->statOfAgari().RichiFlag.RichiFlag && (!RuleData::chkRule("uradora", "no"));
 		ChipAmount = getChipAmount(gameStat, yakuInfo);
+		mihajong_graphic::YakuResult::setYakuStat(yakuInfo, static_cast<LargeNum>(*agariPointArray), ChipAmount);
+		tmpUraFlag = gameStat->statOfAgari().MenzenFlag && gameStat->statOfAgari().RichiFlag.RichiFlag && (!RuleData::chkRule("uradora", "no"));
 		if (tmpUraFlag)
 			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgariUradora);
 		else
@@ -577,19 +578,19 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	Sleep(1500);
 	std::uint16_t tmpDoraPointer = origDoraPointer;
 	int AlicePointer = tmpDoraPointer - yakuInfo.AliceDora * 2 - 2;
-	/* TODO: ここを移植する
-	if ((getMenzen(GameStat, getCurrentPlayer(GameStat, CURRENTPLAYER_AGARI)) == 1)&&(chkRule("alice", "yes") != 0)) {
-		setCenterTitle "アリス判定"
-		repeat
-			if (getDoraPointer(GameStat) <= AlicePointer) {break}
-			setDoraPointer GameStat, getDoraPointer(GameStat) - 2
-			snd_play SND_MEKURI
-			redrscreen: await 1200
-		loop
-		setDoraPointer GameStat, tmpDoraPointer
-		tmpAliceFlag = 1
+
+	if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice")) { // めくっていく処理
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAlice); // 表示
+		while (gameStat->DoraPointer > AlicePointer) {
+			gameStat->DoraPointer -= 2;
+			sound::Play(sound::IDs::sndMekuri);
+			mihajong_graphic::GameStatus::updateGameStat(gameStat);
+			Sleep(1200);
+		}
+		gameStat->DoraPointer = tmpDoraPointer;
+		tmpAliceFlag = true;
 	}
-	*/
+
 	sound::util::bgmstop();
 
 	transfer::resetDelta();
@@ -601,8 +602,8 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	calculateWaremeDelta(gameStat);
 	bool tmpUraFlag; int ChipAmount;
 	agariscrproc(gameStat, &yakuInfo, &agariPoint, ChipAmount, ResultDesc, tmpUraFlag); /* 和了画面 */
-	if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice"))
-		gameStat->DoraPointer = AlicePointer;
+	/*if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice"))
+		gameStat->DoraPointer = AlicePointer;*/
 	transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValAgariten, 1500);
 	
 	if ((gameStat->Honba > 0) && RuleData::chkRuleApplied("tsumiboh_rate")) {
