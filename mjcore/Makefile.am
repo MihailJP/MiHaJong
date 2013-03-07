@@ -1,5 +1,5 @@
-lib_LTLIBRARIES = mjcore.la
-mjcore_la_SOURCES = \
+lib_LTLIBRARIES = libmihajong-mjcore.la
+libmihajong_mjcore_la_SOURCES = \
 	agari.cpp chat.cpp decomp.cpp discard.cpp dllmain.cpp endround.cpp \
 	envtbl.cpp func.cpp fuuro.cpp gameloop.cpp gametbl.cpp haifu.cpp init.cpp \
 	largenum.cpp logging.cpp main.cpp mouda.cpp prepare.cpp random.cpp \
@@ -29,4 +29,4 @@ mjcore_la_SOURCES = \
 	reader/csv2arry.h reader/ini2map.h reader/readrsrc.h \
 	yaku/catalog.h yaku/yaku.h yaku/yvalue.h yaku/ykclass.h yaku/yk_tools.h \
 	mjcore.rc
-mjcore_la_LDFLAGS = -no-undefined
+libmihajong_mjcore_la_LDFLAGS = -no-undefined

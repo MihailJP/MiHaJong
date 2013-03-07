@@ -1,5 +1,5 @@
-lib_LTLIBRARIES = graphic.la
-graphic_la_SOURCES = \
+lib_LTLIBRARIES = libmihajong-graphic.la
+libmihajong_graphic_la_SOURCES = \
 	button.cpp calltext.cpp chrwidth.cpp editbox.cpp event.cpp font.cpp \
 	gametbl.cpp geometry.cpp init.cpp input.cpp loadtex.cpp logwnd.cpp \
 	rule.cpp scrmanip.cpp showtile.cpp sprite.cpp text.cpp utils.cpp \
@@ -31,4 +31,4 @@ graphic_la_SOURCES = \
 	scenes/table/richibou.h scenes/table/showdice.h scenes/table/sutehai.h \
 	scenes/table/tehai.h scenes/table/tehai0.h scenes/table/yamahai.h \
 	graphic.rc
-graphic_la_LDFLAGS = -no-undefined
+libmihajong_graphic_la_LDFLAGS = -no-undefined
