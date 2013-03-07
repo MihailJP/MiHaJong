@@ -6,3 +6,4 @@ libmihajong_sound_la_SOURCES = \
 	logger.h resource.h snddata.h sound.h soundobj.h \
 	ver.rc
 libmihajong_sound_la_LDFLAGS = -no-undefined
+libmihajong_sound_la_CXXFLAGS = -DSOUND_EXPORTS
