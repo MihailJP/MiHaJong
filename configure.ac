@@ -39,6 +39,14 @@ AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([floor gethostbyname memmove memset pow socket sqrt strstr])
 
+AC_ARG_ENABLE([midi],
+	[AS_HELP_STRING([--enable-midi],
+		[enable MIDI support as background music (Windows only) [default=no]])],
+	[],
+	[enable_midi=no]
+)
+AM_CONDITIONAL(MIDI_SUPPORT, test x$enable_midi != xno)
+
 AC_CONFIG_FILES([Makefile
                  astro/Makefile
                  graphic/Makefile
