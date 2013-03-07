@@ -51,3 +51,16 @@ ipch/
 *.sdf
 *.opensdf
 *.suo
+INSTALL
+aclocal.m4
+autom4te.cache/
+config.guess
+config.h.in
+config.log
+config.sub
+configure
+depcomp
+install-sh
+ltmain.sh
+m4/
+missing
