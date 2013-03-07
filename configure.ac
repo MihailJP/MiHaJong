@@ -4,7 +4,7 @@
 AC_PREREQ([2.69])
 AC_INIT(mihajong, 2.0.0, mihailjp@gmail.com)
 LT_INIT
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_SRCDIR([astro/astro.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
