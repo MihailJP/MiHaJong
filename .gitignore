@@ -62,5 +62,6 @@ configure
 depcomp
 install-sh
 ltmain.sh
-m4/
+m4/*
+!m4/ax_*.m4
 missing
