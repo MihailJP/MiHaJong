@@ -3,6 +3,7 @@
 #include <array>
 #include "sysscr.h"
 #include "../../common/gametbl.h"
+#include "../timer.h"
 
 namespace mihajong_graphic {
 
@@ -21,7 +22,7 @@ public:
 class ResultScreen::RankRenderer {
 private:
 	LPDIRECT3DDEVICE9 myDevice;
-	uint64_t startTime;
+	Timer myTimer;
 	int myID;
 public:
 	RankRenderer(LPDIRECT3DDEVICE9 device, int id);

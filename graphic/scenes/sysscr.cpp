@@ -10,7 +10,6 @@ namespace mihajong_graphic {
 SystemScreen::SystemScreen(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	caller = manipulator;
 	myTextRenderer = new TextRenderer(caller->getDevice());
-	GetSystemTimeAsFileTime(&startTime);
 }
 
 SystemScreen::~SystemScreen() {
@@ -39,22 +38,6 @@ void SystemScreen::clearWithGameTypeColor() {
 	default:
 		assert(false); // This may not occur.
 	}
-}
-
-uint64_t SystemScreen::elapsed() {
-	FILETIME currTime; GetSystemTimeAsFileTime(&currTime);
-	uint64_t st = ((uint64_t)startTime.dwHighDateTime << 32) | startTime.dwLowDateTime;
-	uint64_t ct = ((uint64_t)currTime.dwHighDateTime << 32) | currTime.dwLowDateTime;
-	assert(ct >= st);
-	//if ((ct - st) >= 30000000) startTime = currTime; // debug loop
-	return ct - st;
-}
-
-void SystemScreen::skipto(unsigned frames) {
-	FILETIME currTime; GetSystemTimeAsFileTime(&currTime);
-	int64_t ct = ((int64_t)currTime.dwHighDateTime << 32) | currTime.dwLowDateTime;
-	ct -= frames * timePerFrame;
-	startTime.dwHighDateTime = ct >> 32; startTime.dwLowDateTime = ct & 0xffffffff;
 }
 
 unsigned SystemScreen::strwidth(const std::wstring& str) {
