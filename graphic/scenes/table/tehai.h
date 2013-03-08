@@ -3,6 +3,7 @@
 #include "../table.h"
 #include <bitset>
 #include "tehai0.h"
+#include "../../timer.h"
 
 namespace mihajong_graphic {
 
@@ -32,7 +33,7 @@ public:
 	void disable(unsigned tileID) {tileEnabled[tileID] = false;}
 	bool isEnabled(unsigned tileID) {return tileEnabled[tileID];}
 private: // ŽžŠÔŠÖŒW
-	std::uint64_t currTime();
+	Timer myTimer;
 };
 
 }

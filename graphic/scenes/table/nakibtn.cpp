@@ -44,10 +44,10 @@ void GameTableScreen::ButtonReconst::Render() {
 	if (getCursor() != CursorDisabled) {
 #include "color.h"
 		Color btnColor; btnColor.rgbaAsOneValue = buttonDat[currentButtonSet][cursor].color;
-		const double Zeit = (double)(currTime() % 90000000ULL);
-		btnColor.rgbaAsStruct.r = (unsigned)((double)btnColor.rgbaAsStruct.r * (sin(Zeit / 4500000.0 * M_PI) / 4.0 + 0.75));
-		btnColor.rgbaAsStruct.g = (unsigned)((double)btnColor.rgbaAsStruct.g * (sin(Zeit / 4500000.0 * M_PI) / 4.0 + 0.75));
-		btnColor.rgbaAsStruct.b = (unsigned)((double)btnColor.rgbaAsStruct.b * (sin(Zeit / 4500000.0 * M_PI) / 4.0 + 0.75));
+		const double Zeit = (double)(myTimer.currTime() % 9000000ULL);
+		btnColor.rgbaAsStruct.r = (unsigned)((double)btnColor.rgbaAsStruct.r * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
+		btnColor.rgbaAsStruct.g = (unsigned)((double)btnColor.rgbaAsStruct.g * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
+		btnColor.rgbaAsStruct.b = (unsigned)((double)btnColor.rgbaAsStruct.b * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
 		buttons->setButton(cursor,
 			(sunkenButton == cursor) ? ButtonPic::sunken : (buttonEnabled[cursor] ? ButtonPic::raised : ButtonPic::clear),
 			buttonDat[currentButtonSet][cursor].x * Geometry::WindowScale(),
@@ -249,11 +249,6 @@ GameTableScreen::ButtonReconst::ButtonReconst(GameTableScreen* parent) {
 
 GameTableScreen::ButtonReconst::~ButtonReconst() {
 	delete buttons;
-}
-
-std::uint64_t GameTableScreen::ButtonReconst::currTime() { /* åªç›éûçè(WindowsÇ≈ÇÕ100nsíPà ) */
-	FILETIME Zeit; GetSystemTimeAsFileTime(&Zeit);
-	return ((std::uint64_t)Zeit.dwHighDateTime << 32) | Zeit.dwLowDateTime;
 }
 
 /* É{É^ÉìÇ™âüÇ≥ÇÍÇΩéûÇÃèàóù */

@@ -18,7 +18,7 @@ TableSubscenePlayerProto::~TableSubscenePlayerProto() {
 }
 
 std::int32_t TableSubscenePlayerProto::timeout() {
-	return timeout_val - (int)((double)(currTime() - startTime) / ((double)timeResolution / 1000.0));
+	return timeout_val - (int)((double)myTimer.elapsed() / ((double)timeResolution / 1000.0));
 }
 
 void TableSubscenePlayerProto::showTimeout() {

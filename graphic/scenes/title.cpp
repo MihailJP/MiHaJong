@@ -29,7 +29,7 @@ TitleScreen::~TitleScreen() {
 }
 
 void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF) {
-	double t = ((double)elapsed() / (double)timePerFrame - (double)startF) / 2.0;
+	double t = ((double)myTimer.elapsed() / (double)timePerFrame - (double)startF) / 2.0;
 	if ((t >= 0.0f) && (t < ((float)(endF - startF) * 1.1118f)))
 		sprite->show(X, Y,
 			powf((float)((double)(endF - startF) - t) / (float)(endF - startF) * 4.0f, 2.0f) + 0.8f,
@@ -65,7 +65,7 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 			return 0xffffffff;
 		}
 	};
-	double t = ((double)elapsed() / (double)timePerFrame - (double)startF);
+	double t = ((double)myTimer.elapsed() / (double)timePerFrame - (double)startF);
 	float virt_width = (float)Geometry::WindowWidth / Geometry::WindowScale();
 	if ((t >= 0.0f) && (t < (double)(endF - startF))) {
 		myTextRenderer->NewText(ID,
@@ -112,7 +112,7 @@ void TitleScreen::Render() {
 }
 
 void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
-	const bool flag = ((elapsed() > 180u * timePerFrame) && (od->dwData));
+	const bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->dwData));
 	switch (od->dwOfs) {
 	case DIK_UP: case DIK_K: // カーソル上
 		if (flag) {
@@ -136,7 +136,7 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 			}
 		} else if (od->dwData) {
 			sound::Play(sound::IDs::sndClick);
-			skipto(180);
+			myTimer.skipTo(180 * timePerFrame);
 		}
 		break;
 	case DIK_ESCAPE: case DIK_X: // キャンセル
@@ -153,7 +153,7 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 }
 
 void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
-	const bool flag1 = (elapsed() > 180u * timePerFrame);
+	const bool flag1 = (myTimer.elapsed() > 180u * timePerFrame);
 	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
 	const int scaledY = Y / Geometry::WindowScale();
 	const int region = whichRegion(scaledX, scaledY);
@@ -190,7 +190,7 @@ void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 				}
 			} else if (!flag1) {
 				sound::Play(sound::IDs::sndClick);
-				skipto(180);
+				myTimer.skipTo(180 * timePerFrame);
 			}
 		}
 		break;
