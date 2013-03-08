@@ -230,6 +230,7 @@
     <ClCompile Include="reader\ini2map.cpp" />
     <ClCompile Include="reader\readrsrc.cpp" />
     <ClCompile Include="remote.cpp" />
+    <ClCompile Include="result.cpp" />
     <ClCompile Include="shanten.cpp" />
     <ClCompile Include="ruletbl.cpp" />
     <ClCompile Include="sound.cpp" />
@@ -298,6 +299,7 @@
     <ClInclude Include="reader\ini2map.h" />
     <ClInclude Include="reader\readrsrc.h" />
     <ClInclude Include="remote.h" />
+    <ClInclude Include="result.h" />
     <ClInclude Include="shanten.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ruletbl.h" />
