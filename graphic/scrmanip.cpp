@@ -80,6 +80,9 @@ void ScreenManipulator::transit(sceneID scene) {
 		case sceneGameTable:
 			myScene = new GameTableScreen(this); redrawFlag = true;
 			break;
+		case sceneResult:
+			myScene = new ResultScreen(this); redrawFlag = true;
+			break;
 		default:
 			throw _T("³‚µ‚­‚È‚¢ƒV[ƒ“”Ô†‚ªw’è‚³‚ê‚Ü‚µ‚½");
 		}

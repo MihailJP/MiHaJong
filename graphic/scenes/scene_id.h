@@ -7,6 +7,7 @@ enum sceneID { // シーン番号
 	sceneTitle, // タイトル画面
 	sceneConfig, // コンフィグ画面
 	sceneGameTable, // 卓の画面
+	sceneResult, // 結果画面
 };
 
 enum TableSubsceneID : unsigned int { // 卓画面のサブシーン番号
