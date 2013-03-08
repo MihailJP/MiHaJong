@@ -184,6 +184,7 @@
     <ClCompile Include="showtile.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="text.cpp" />
+    <ClCompile Include="timer.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="window.cpp" />
     <ClCompile Include="yakustat.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="showtile.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="text.h" />
+    <ClInclude Include="timer.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="yakustat.h" />
