@@ -16,12 +16,23 @@ AX_CXX_COMPILE_STDCXX_11([noext])
 AC_PROG_CC
 AX_PROG_LUA([5.1])
 
+# Checks for Win32
+AC_CHECK_HEADER([Windows.h], [using_winapi=yes], [using_winapi=no])
+
 # Checks for libraries.
 AX_LUA_LIBS([], [AC_MSG_ERROR([liblua is not installed.])])
 
+AS_IF([test "x$using_winapi" != xno],
+	[AC_CHECK_LIB([ws2_32], [main], [], AC_MSG_ERROR("cannot find ws2_32"))]
+)
+
+
 # Checks for header files.
-AC_CHECK_HEADERS([float.h stddef.h stdlib.h string.h sys/timeb.h])
+AC_CHECK_HEADERS([float.h limits.h stddef.h stdlib.h string.h sys/timeb.h])
 AX_LUA_HEADERS([], [AC_MSG_ERROR([liblua headers unavailable.])])
+AS_IF([test "x$using_winapi" != xno],
+	[AC_CHECK_HEADER([WinSock2.h], [], AC_MSG_ERROR("WinSock2.h"))]
+)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
