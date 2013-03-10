@@ -14,15 +14,14 @@ AC_LANG([C++])
 AC_PROG_CXX
 AX_CXX_COMPILE_STDCXX_11([noext])
 AC_PROG_CC
+AX_PROG_LUA([5.1])
 
 # Checks for libraries.
-AC_CHECK_LIB(lua, lua_newstate, has_liblua=yes, has_liblua=no)
-AS_IF([test "x$has_liblua" = xno],
-	[AC_MSG_ERROR("FATAL: liblua is not installed.")]
-)
+AX_LUA_LIBS([], [AC_MSG_ERROR([liblua is not installed.])])
 
 # Checks for header files.
-AC_CHECK_HEADERS([float.h stddef.h stdlib.h string.h sys/timeb.h lua.hpp])
+AC_CHECK_HEADERS([float.h stddef.h stdlib.h string.h sys/timeb.h])
+AX_LUA_HEADERS([], [AC_MSG_ERROR([liblua headers unavailable.])])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
