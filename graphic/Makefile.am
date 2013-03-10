@@ -32,4 +32,4 @@ libmihajong_graphic_la_SOURCES = \
 	scenes/table/tehai.h scenes/table/tehai0.h scenes/table/yamahai.h \
 	graphic.rc
 libmihajong_graphic_la_LDFLAGS = -no-undefined
-libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS
+libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS --input-charset=cp932

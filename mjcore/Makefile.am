@@ -30,4 +30,4 @@ libmihajong_mjcore_la_SOURCES = \
 	yaku/catalog.h yaku/yaku.h yaku/yvalue.h yaku/ykclass.h yaku/yk_tools.h \
 	mjcore.rc
 libmihajong_mjcore_la_LDFLAGS = -no-undefined
-libmihajong_mjcore_la_CXXFLAGS = -DMJCORE_EXPORTS
+libmihajong_mjcore_la_CXXFLAGS = -DMJCORE_EXPORTS --input-charset=cp932

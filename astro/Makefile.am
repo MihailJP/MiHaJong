@@ -4,4 +4,4 @@ libmihajong_astro_la_SOURCES = \
 	astro.h resource.h \
 	ver.rc
 libmihajong_astro_la_LDFLAGS = -no-undefined
-libmihajong_astro_la_CFLAGS = -DASTRO_EXPORTS
+libmihajong_astro_la_CFLAGS = -DASTRO_EXPORTS --input-charset=cp932
