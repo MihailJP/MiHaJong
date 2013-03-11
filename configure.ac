@@ -3,6 +3,9 @@
 
 AC_PREREQ([2.69])
 AC_INIT(mihajong, 2.0.0, mihailjp@gmail.com)
+AC_LIBTOOL_WIN32_DLL
+AC_DISABLE_STATIC
+lt_cv_deplibs_check_method='pass_all'
 LT_INIT
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_SRCDIR([astro/astro.h])
@@ -23,7 +26,10 @@ AC_CHECK_HEADER([Windows.h], [using_winapi=yes], [using_winapi=no])
 AX_LUA_LIBS([], [AC_MSG_ERROR([liblua is not installed.])])
 
 AS_IF([test "x$using_winapi" != xno],
-	[AC_CHECK_LIB([ws2_32], [main], [], AC_MSG_ERROR("cannot find ws2_32"))]
+	[AC_CHECK_LIB([ws2_32], [main], [], AC_MSG_ERROR([ws2_32 is unavailable]))
+	 AC_CHECK_LIB([ole32], [main], [], AC_MSG_ERROR([ole32 is unavailable]))
+	 AC_CHECK_LIB([uuid], [main], [], AC_MSG_ERROR([uuid is unavailable]))
+	 AC_CHECK_LIB([dsound], [main], [], AC_MSG_ERROR([dsound is unavailable]))]
 )
 
 
@@ -31,7 +37,8 @@ AS_IF([test "x$using_winapi" != xno],
 AC_CHECK_HEADERS([float.h limits.h stddef.h stdlib.h string.h sys/timeb.h])
 AX_LUA_HEADERS([], [AC_MSG_ERROR([liblua headers unavailable.])])
 AS_IF([test "x$using_winapi" != xno],
-	[AC_CHECK_HEADER([WinSock2.h], [], AC_MSG_ERROR("WinSock2.h"))]
+	[AC_CHECK_HEADER([WinSock2.h], [], AC_MSG_ERROR([WinSock2.h is unavailable]))
+	 AC_CHECK_HEADER([dsound.h], [], AC_MSG_ERROR([dsound.h is unavailable]))]
 )
 
 # Checks for typedefs, structures, and compiler characteristics.
