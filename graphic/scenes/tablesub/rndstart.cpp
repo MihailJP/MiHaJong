@@ -37,19 +37,19 @@ void TableSubsceneBeginning::Render() {
 
 	if (currTime() - startTime < timeOffset) {
 		if (roundcode > GameStatus::gameStat()->GameLength) {
-			ZoomChar(0, _T("延"), -256, 0, 2500000);
-			ZoomChar(1, _T("長"),    0, 0, 2500000);
-			ZoomChar(2, _T("戦"),  256, 0, 2500000);
+			ZoomChar(0, L"延", -256, 0, 2500000);
+			ZoomChar(1, L"長",    0, 0, 2500000);
+			ZoomChar(2, L"戦",  256, 0, 2500000);
 		} else if (roundcode == 0) {
-			ZoomChar(0, _T("一"), -336, 0, 2500000);
-			ZoomChar(1, _T("局"), -112, 0, 2500000);
-			ZoomChar(2, _T("精"),  112, 0, 2500000);
-			ZoomChar(3, _T("算"),  336, 0, 2500000);
+			ZoomChar(0, L"一", -336, 0, 2500000);
+			ZoomChar(1, L"局", -112, 0, 2500000);
+			ZoomChar(2, L"精",  112, 0, 2500000);
+			ZoomChar(3, L"算",  336, 0, 2500000);
 		} else {
-			ZoomChar(0, _T("オ"), -336, 0, 2500000);
-			ZoomChar(1, _T("ー"), -112, 0, 2500000);
-			ZoomChar(2, _T("ラ"),  112, 0, 2500000);
-			ZoomChar(3, _T("ス"),  336, 0, 2500000);
+			ZoomChar(0, L"オ", -336, 0, 2500000);
+			ZoomChar(1, L"ー", -112, 0, 2500000);
+			ZoomChar(2, L"ラ",  112, 0, 2500000);
+			ZoomChar(3, L"ス",  336, 0, 2500000);
 		}
 	} else {
 		if (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game")) {
@@ -66,7 +66,7 @@ void TableSubsceneBeginning::Render() {
 			ZoomChar(    0, WindName.substr(roundnum / Players, 1), -256,       0 + timeOffset, 2500000 + timeOffset);
 			ZoomChar(    1, Numeral.substr( roundnum % Players, 1),    0, 2500000 + timeOffset, 5000000 + timeOffset);
 		}
-		ZoomChar(        2, _T("局")                              ,  256, 5000000 + timeOffset, 7500000 + timeOffset);
+		ZoomChar(        2, L"局"                                 ,  256, 5000000 + timeOffset, 7500000 + timeOffset);
 		myTextRenderer->DelText(3);
 	}
 	myTextRenderer->Render();
