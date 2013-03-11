@@ -51,16 +51,16 @@ void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 		} else { // Â“Vƒ‹[ƒ‹—p
 			switch (c_val.Exponent % 4) {
 			case 0:
-				o << (std::abs(c_val.Mantissa) / 100) << _T('.') << (std::abs(c_val.Mantissa) % 100);
+				o << ((int)std::abs(c_val.Mantissa) / 100) << _T('.') << ((int)std::abs(c_val.Mantissa) % 100);
 				break;
 			case 1:
-				o << (std::abs(c_val.Mantissa) / 10) << _T('.') << (std::abs(c_val.Mantissa) % 10);
+				o << ((int)std::abs(c_val.Mantissa) / 10) << _T('.') << ((int)std::abs(c_val.Mantissa) % 10);
 				break;
 			case 2:
-				o << std::abs(c_val.Mantissa);
+				o << (int)std::abs(c_val.Mantissa);
 				break;
 			case 3:
-				o << std::abs(c_val.Mantissa) << _T('0');
+				o << (int)std::abs(c_val.Mantissa) << _T('0');
 				break;
 			}
 			callLen = o.str().size() + 1u;
