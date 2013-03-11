@@ -1,7 +1,6 @@
 #pragma once
 
-#include <d3dx9.h>
-#include <dxerr.h>
+#include "directx.h"
 #include <tuple>
 #include <functional>
 #include "../../showtile.h"

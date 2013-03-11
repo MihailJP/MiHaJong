@@ -1,8 +1,7 @@
 #pragma once
 
 #include <Windows.h>
-#include <d3dx9.h>
-#include <dxerr.h>
+#include "directx.h"
 #include <tchar.h>
 #include <vector>
 #include "../common/tilecode.h"
