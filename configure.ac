@@ -29,7 +29,13 @@ AS_IF([test "x$using_winapi" != xno],
 	[AC_CHECK_LIB([ws2_32], [main], [], AC_MSG_ERROR([ws2_32 is unavailable]))
 	 AC_CHECK_LIB([ole32], [main], [], AC_MSG_ERROR([ole32 is unavailable]))
 	 AC_CHECK_LIB([uuid], [main], [], AC_MSG_ERROR([uuid is unavailable]))
-	 AC_CHECK_LIB([dsound], [main], [], AC_MSG_ERROR([dsound is unavailable]))]
+	 AC_CHECK_LIB([dsound], [main], [], AC_MSG_ERROR([dsound is unavailable]))
+	 AC_CHECK_LIB([d3d9], [main], [], AC_MSG_ERROR([d3d9 is unavailable]))
+	 AC_CHECK_LIB([d3dx9d], [main], [], AC_MSG_ERROR([d3dx9d is unavailable]))
+	 AC_CHECK_LIB([dxerr9], [main], [], AC_MSG_ERROR([dxerr9 is unavailable]))
+	 AC_CHECK_LIB([dxguid], [main], [], AC_MSG_ERROR([dxguid is unavailable]))
+	 AC_CHECK_LIB([dinput8], [main], [], AC_MSG_ERROR([dinput8 is unavailable]))
+	 AC_CHECK_LIB([imm32], [main], [], AC_MSG_ERROR([imm32 is unavailable]))]
 )
 
 
@@ -38,7 +44,14 @@ AC_CHECK_HEADERS([float.h limits.h stddef.h stdlib.h string.h sys/timeb.h])
 AX_LUA_HEADERS([], [AC_MSG_ERROR([liblua headers unavailable.])])
 AS_IF([test "x$using_winapi" != xno],
 	[AC_CHECK_HEADER([WinSock2.h], [], AC_MSG_ERROR([WinSock2.h is unavailable]))
-	 AC_CHECK_HEADER([dsound.h], [], AC_MSG_ERROR([dsound.h is unavailable]))]
+	 AC_CHECK_HEADER([dsound.h], [], AC_MSG_ERROR([dsound.h is unavailable]))
+	 MH_CHECK_DIRECT3D
+	 AC_CHECK_HEADER([dinput.h], [], AC_MSG_ERROR([dinput.h is unavailable]))
+	 AC_CHECK_HEADER([imm.h], [], AC_MSG_ERROR([imm.h is unavailable]), [[
+#include <windef.h>
+#include <Wingdi.h>
+]]
+	 )]
 )
 
 # Checks for typedefs, structures, and compiler characteristics.

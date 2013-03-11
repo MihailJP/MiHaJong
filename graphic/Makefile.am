@@ -34,3 +34,4 @@ libmihajong_graphic_la_SOURCES = \
 	graphic.rc
 libmihajong_graphic_la_LDFLAGS = -no-undefined
 libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS --input-charset=cp932
+libmihajong_graphic_la_LIBADD = ../sound/libmihajong-sound.la
