@@ -207,6 +207,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="loadtex.h" />
     <ClInclude Include="logwnd.h" />
+    <ClInclude Include="pi.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="rule.h" />
     <ClInclude Include="scenes\result.h" />

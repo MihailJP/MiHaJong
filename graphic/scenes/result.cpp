@@ -1,6 +1,5 @@
 #ifdef _MSC_VER
 #define NOMINMAX
-#define _USE_MATH_DEFINES /* TODO: 仮対処。M_PIのヘッダ定義用(非推奨に付き自前で定義すること！) */
 #endif
 #include "result.h"
 #include <cmath>
@@ -8,6 +7,7 @@
 #include "../utils.h"
 #include "../gametbl.h"
 #include "../finscore.h"
+#include "../pi.h"
 
 namespace mihajong_graphic {
 

@@ -1,7 +1,5 @@
-#ifdef _MSC_VER
-#define _USE_MATH_DEFINES /* required for M_PI by MS VC++ */
-#endif
 #include <cmath>
+#include "../../pi.h"
 
 #include "tehai.h"
 #include "../../utils.h"
