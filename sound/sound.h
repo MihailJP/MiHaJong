@@ -1,9 +1,9 @@
 #pragma once
 
+#ifdef SOUND_EXPORTS
 #include <Windows.h>
 #include <dsound.h>
 
-#ifdef SOUND_EXPORTS
 #define SOUNDDLL_EXPORT __declspec(dllexport)
 #include "soundobj.h"
 #else
