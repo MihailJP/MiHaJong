@@ -18,6 +18,7 @@ libmihajong_graphic_la_SOURCES = \
 	button.h calltext.h chrwidth.h editbox.h event.h exports.h extchar.h \
 	font.h gametbl.h geometry.h init.h input.h loadtex.h logwnd.h resource.h \
 	rule.h scrmanip.h showtile.h sprite.h text.h utils.h window.h yakustat.h \
+	directx.h pi.h \
 	scenes/fps.h scenes/game.h scenes/proto.h scenes/ruleconf.h \
 	scenes/scenes.h scenes/splash.h scenes/scene_id.h scenes/sysscr.h \
 	scenes/table.h scenes/title.h \
@@ -33,3 +34,4 @@ libmihajong_graphic_la_SOURCES = \
 	graphic.rc
 libmihajong_graphic_la_LDFLAGS = -no-undefined
 libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS --input-charset=cp932
+libmihajong_graphic_la_LIBADD = ../sound/libmihajong-sound.la
