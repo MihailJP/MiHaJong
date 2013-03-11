@@ -267,7 +267,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		this->reconstruct();
 		caller->tehaiReconst->enable();
 		for (int i = 0; i < NumOfTilesInHand; ++i) {
-			GameTable tmpStat; std::memcpy(&tmpStat, GameStatus::gameStat(), sizeof (GameTable));
+			GameTable tmpStat; memcpy(&tmpStat, GameStatus::gameStat(), sizeof (GameTable));
 			if (f(i, &tmpStat)) caller->tehaiReconst->disable(i);
 		}
 		caller->tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);

@@ -102,6 +102,9 @@ D3DCOLOR TableSubsceneAgariScreenProto::baseColor() {
 }
 
 void TableSubsceneAgariScreenProto::parseYakuList() {
+#if !defined(_MSC_VER)
+	using std::min;
+#endif
 	typedef std::vector<CodeConv::tstring> TStrList;
 	LPTSTR yakuNameUnified = nullptr, yakuValUnified = nullptr;
 	LPCTSTR yakuName = YakumanMode() ? yakuData.yakumanNameList : yakuData.yakuNameList;
