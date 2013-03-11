@@ -23,13 +23,15 @@ public:
 
 private:
 	template <typename T, typename dummy_type=void> class trySyncDo_obj { // 相互排他的に関数オブジェクトを実行(ロックしない)
+	private:
 		MHJMutex* caller;
+	public:
 		trySyncDo_obj(MHJMutex* callerPtr) {caller = callerPtr;}
 		bool operator()(T* ans, std::function<T (void)> f) {
-			if (tryAcquire()) {
+			if (caller->tryAcquire()) {
 				DoFinally<T> myFunc(
 					[f, this]() -> T    {return f();},
-					[   this]() -> void {this->release();} );
+					[   this]() -> void {caller->release();} );
 				if (ans) *ans = myFunc();
 				return true;
 			} else {
@@ -38,13 +40,15 @@ private:
 		}
 	};
 	template <typename T2> class trySyncDo_obj<void, T2> { // 相互排他的に関数オブジェクトを実行(ロックしない)
+	private:
 		MHJMutex* caller;
+	public:
 		trySyncDo_obj(MHJMutex* callerPtr) {caller = callerPtr;}
 		bool operator()(void*, std::function<void (void)> f) {
-			if (tryAcquire()) {
+			if (caller->tryAcquire()) {
 				DoFinally<void> myFunc(
 					[f, this]() -> void {return f();},
-					[   this]() -> void {this->release();} );
+					[   this]() -> void {caller->release();} );
 				myFunc();
 				return true;
 			} else {
