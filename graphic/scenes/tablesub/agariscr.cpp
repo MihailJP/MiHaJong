@@ -110,16 +110,27 @@ void TableSubsceneAgariScreenProto::parseYakuList() {
 		const size_t bufsz = yakuData.nameBufSize * 2;
 		yakuNameUnified = new TCHAR[bufsz]; yakuNameUnified[0] = _T('\0');
 		yakuValUnified = new TCHAR[bufsz]; yakuValUnified[0] = _T('\0');
+#if defined(_MSC_VER)
 		_tcscpy_s(yakuNameUnified, bufsz, yakuData.yakumanNameList);
+#else
+		_tcsncpy(yakuNameUnified, yakuData.yakumanNameList, bufsz - _tcslen(yakuNameUnified));
+#endif
 		for (TCHAR* k = yakuNameUnified; *k != _T('\0'); ++k)
 			if (*k == _T('\n'))
-#ifdef _WIN32
+#if defined(_MSC_VER)
 				_tcscat_s(yakuValUnified, bufsz, _T("\r\n"));
+#elif defined(_WIN32)
+				_tcsncat(yakuValUnified, _T("\r\n"), bufsz - _tcslen(yakuValUnified));
 #else
 				_tcscat_s(yakuValUnified, bufsz, _T("\n"));
 #endif
+#if defined(_MSC_VER)
 		_tcscat_s(yakuNameUnified, bufsz, yakuData.yakuNameList);
 		_tcscat_s(yakuValUnified, bufsz, yakuData.yakuValList);
+#else
+		_tcsncat(yakuNameUnified, yakuData.yakuNameList, bufsz - _tcslen(yakuNameUnified));
+		_tcsncat(yakuValUnified, yakuData.yakuValList, bufsz - _tcslen(yakuValUnified));
+#endif
 		yakuName = yakuNameUnified; yakuVal = yakuValUnified;
 	}
 	CodeConv::tstring yakuNameTxt, yakuValTxt;
