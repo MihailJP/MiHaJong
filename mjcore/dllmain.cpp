@@ -138,8 +138,10 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 		GlobalFree(pSymbol);
 #endif
 		break;
+#ifdef _MSC_VER
 	default:
 		traceLog(ex->ContextRecord, nullptr, 0);
+#endif
 	}
 
 #ifdef _MSC_VER
