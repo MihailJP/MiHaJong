@@ -1,6 +1,8 @@
 #include "dllmain.h"
 
+#ifdef _MSC_VER
 #include <DbgHelp.h>
+#endif
 #include <cstdlib>
 #include <sstream>
 #include <iomanip>
@@ -11,6 +13,7 @@ HINSTANCE dllInst;
 ErrorInfo errorInfo;
 const ULONG_PTR errorInfoPtr[1] = {(ULONG_PTR)(&errorInfo)};
 
+#ifdef _MSC_VER
 void translateException(unsigned int code, _EXCEPTION_POINTERS* ep) {
 	CodeConv::tostringstream lmsg;
 	lmsg << _T("構造化例外 ") <<
@@ -85,10 +88,14 @@ void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
 #endif
 #endif
 }
+#endif
 
 LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 	CodeConv::tostringstream dmsg, lmsg;
-	PIMAGEHLP_SYMBOL pSymbol; DWORD disp;
+#ifdef _MSC_VER
+	PIMAGEHLP_SYMBOL pSymbol;
+#endif
+	DWORD disp;
 	ErrorInfo *errinf = nullptr;
 
 	lmsg << _T("ハンドルされていない例外 ") <<
@@ -107,7 +114,7 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 		errinf = (ErrorInfo *)(ex->ExceptionRecord->ExceptionInformation[0]);
 		lmsg << _T(">>> ") << errinf->msg;
 		fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str(_T(""));
-#ifdef _DEBUG
+#if defined(_MSC_VER) && defined(_DEBUG)
 		lmsg << _T(">>> ファイル: ") << errinf->file <<
 		_T(" 行: ") << errinf->line <<
 		_T(" 関数名: ") << errinf->func;
@@ -169,8 +176,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	case DLL_PROCESS_ATTACH:
 		dllInst = hinstDLL;
 		SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)MJCore_Exception_Filter);
+#ifdef _MSC_VER
 		//set_terminate(MJCore_Terminate_Handler);
 		_set_se_translator(translateException);
+#endif
 		break;
 	case DLL_PROCESS_DETACH:
 		dllInst = nullptr;
