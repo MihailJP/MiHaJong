@@ -35,7 +35,8 @@ AS_IF([test "x$using_winapi" != xno],
 	 AC_CHECK_LIB([dxerr9], [main], [], AC_MSG_ERROR([dxerr9 is unavailable]))
 	 AC_CHECK_LIB([dxguid], [main], [], AC_MSG_ERROR([dxguid is unavailable]))
 	 AC_CHECK_LIB([dinput8], [main], [], AC_MSG_ERROR([dinput8 is unavailable]))
-	 AC_CHECK_LIB([imm32], [main], [], AC_MSG_ERROR([imm32 is unavailable]))]
+	 AC_CHECK_LIB([imm32], [main], [], AC_MSG_ERROR([imm32 is unavailable]))
+	 AC_CHECK_LIB([imagehlp], [main], [], AC_MSG_ERROR([imagehlp is unavailable]))]
 )
 
 
@@ -50,6 +51,12 @@ AS_IF([test "x$using_winapi" != xno],
 	 AC_CHECK_HEADER([imm.h], [], AC_MSG_ERROR([imm.h is unavailable]), [[
 #include <windef.h>
 #include <Wingdi.h>
+]]
+	 )
+	 AC_CHECK_HEADER([imagehlp.h], [], AC_MSG_ERROR([imagehlp.h is unavailable]), [[
+#include <windef.h>
+#include <stdarg.h>
+#include <Winbase.h>
 ]]
 	 )]
 )

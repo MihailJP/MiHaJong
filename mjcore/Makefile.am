@@ -31,3 +31,9 @@ libmihajong_mjcore_la_SOURCES = \
 	mjcore.rc
 libmihajong_mjcore_la_LDFLAGS = -no-undefined
 libmihajong_mjcore_la_CXXFLAGS = -DMJCORE_EXPORTS --input-charset=cp932
+libmihajong_mjcore_la_LIBADD = \
+	$(LUA_LIB) \
+	../sound/libmihajong-sound.la \
+	../graphic/libmihajong-graphic.la \
+	../socket/libmihajong-socket.la \
+	../astro/libmihajong-astro.la
