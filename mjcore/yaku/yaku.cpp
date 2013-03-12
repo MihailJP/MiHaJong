@@ -8,6 +8,7 @@
 #include <array>
 #include <vector>
 #include <cassert>
+#include <algorithm>
 #include <Windows.h>
 #include "../largenum.h"
 #include "../except.h"
