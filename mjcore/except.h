@@ -38,8 +38,7 @@ extern const ULONG_PTR errorInfoPtr[1];
 #define setStruct(message) {\
 	strncpy(errorInfo.msg, CodeConv::toANSI(message).c_str(), STRINGBUF); \
 	strncpy(errorInfo.file, __FILE__, STRINGBUF); errorInfo.line = __LINE__; \
-	strncpy(errorInfo.func, __FUNCTION__, STRINGBUF); \
-	StackTraceToArray();}
+	strncpy(errorInfo.func, __FUNCTION__, STRINGBUF);}
 #endif
 #define Raise(exceptionCode,message) {fatal(message); \
 	setStruct(message); \
