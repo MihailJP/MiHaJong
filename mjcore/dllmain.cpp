@@ -135,7 +135,11 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 		traceLog(ex->ContextRecord, nullptr, 0);
 	}
 
+#ifdef _MSC_VER
 	terminate();
+#else
+	abort();
+#endif
 }
 
 #if 0
