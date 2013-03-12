@@ -323,7 +323,8 @@ int aiscript::table::functable::gametbl::luafunc::getscore(lua_State* const L) {
 int aiscript::table::functable::gametbl::luafunc::getseentiles(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
-	pushTileTable(L, countseentiles(gameStat));
+	Int8ByTile tiles(countseentiles(gameStat));
+	pushTileTable(L, tiles);
 	return 1;
 }
 
@@ -430,7 +431,8 @@ int aiscript::table::functable::gametbl::luafunc::gettilesinhand(lua_State* cons
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	pushTileTable(L, countTilesInHand(gameStat, player));
+	Int8ByTile tiles(countTilesInHand(gameStat, player));
+	pushTileTable(L, tiles);
 	return 1;
 }
 
