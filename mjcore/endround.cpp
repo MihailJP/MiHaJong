@@ -16,6 +16,7 @@
 #include "chat.h"
 #include "agari.h"
 #include "envtbl.h"
+#include <cmath>
 
 namespace { // “à•”ˆ—‚Ég‚¤ŠÖ”
 	bool all_player(const GameTable* gameStat, std::function<bool (const PlayerTable*)> f) {
@@ -584,7 +585,7 @@ namespace {
 	InfoByPlayer<LNum> delta;
 
 	std::tuple<bool, signed short> checkExponent(PlayerID player, unsigned group, unsigned digit) {
-		if (((LargeNum)delta[player]).digitGroup[group] / (int)std::pow(10.0, (int)digit) != 0) {
+		if (((LargeNum)delta[player]).digitGroup[group] / (int)pow(10.0, (int)digit) != 0) {
 			if (digit == 0) {
 				assert(group != 0);
 				return std::make_tuple(true,
@@ -595,7 +596,7 @@ namespace {
 					(((LargeNum)delta[player]).digitGroup[group] % 100) * 10 + ((LargeNum)delta[player]).digitGroup[group - 1] / 10000000);
 			} else {
 				return std::make_tuple(true,
-					(((LargeNum)delta[player]).digitGroup[group] / ((int)std::pow(10.0, (int)digit - 2))) % 1000);
+					(((LargeNum)delta[player]).digitGroup[group] / ((int)pow(10.0, (int)digit - 2))) % 1000);
 			}
 		}
 		else if ((group == 0) && (digit == 2))

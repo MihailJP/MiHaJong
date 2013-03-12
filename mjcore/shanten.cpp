@@ -85,7 +85,7 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerI
 	for (int suit = 0; suit < TILE_NUMERAL_COLORS; suit++) {
 		unsigned int statcode = 0; unsigned int qDigit = 1;
 		for (int i = 1; i <= 9; i++) {
-			statcode += min(tileCount[suit * TileSuitStep + i], 4) * qDigit;
+			statcode += std::min((int)tileCount[suit * TileSuitStep + i], 4) * qDigit;
 			qDigit *= 5;
 		}
 		uint8_t tmpdat = mentsuAnalysisDat[statcode];
@@ -349,7 +349,7 @@ Shanten ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, Pl
 		TileCode QixingPai[9];
 		setQixingTilePattern(QixingPai, i);
 		int qTileCount = 0;
-		Int8ByTile tmpTileCount; std::memcpy(tmpTileCount.val, tileCount.val, sizeof(tmpTileCount.val));
+		Int8ByTile tmpTileCount; memcpy(tmpTileCount.val, tileCount.val, sizeof(tmpTileCount.val));
 		for (int i = 0; i < 9; i++) {
 			if (tmpTileCount[QixingPai[i]] >= 1) {
 				++qTileCount; --tmpTileCount[QixingPai[i]];
