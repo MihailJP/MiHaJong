@@ -1,5 +1,5 @@
-lib_LTLIBRARIES = libmihajong-mjcore.la
-libmihajong_mjcore_la_SOURCES = \
+lib_LTLIBRARIES = libmihajong.la
+libmihajong_la_SOURCES = \
 	agari.cpp chat.cpp decomp.cpp discard.cpp dllmain.cpp endround.cpp \
 	envtbl.cpp func.cpp fuuro.cpp gameloop.cpp gametbl.cpp haifu.cpp init.cpp \
 	largenum.cpp logging.cpp main.cpp mouda.cpp prepare.cpp random.cpp \
@@ -27,20 +27,20 @@ libmihajong_mjcore_la_SOURCES = \
 	reader/csv2arry.h reader/ini2map.h reader/readrsrc.h \
 	yaku/catalog.h yaku/yaku.h yaku/yvalue.h yaku/ykclass.h yaku/yk_tools.h \
 	mjcore.rc
-nodist_libmihajong_mjcore_la_SOURCES = \
+nodist_libmihajong_la_SOURCES = \
 	data/confitem_csv.cpp data/confitem_ini.cpp \
 	data/confitem_csv.h data/confitem_ini.h
-BUILT_SOURCES = $(nodist_libmihajong_mjcore_la_SOURCES)
-libmihajong_mjcore_la_LDFLAGS = -no-undefined
-libmihajong_mjcore_la_CXXFLAGS = -DMJCORE_EXPORTS --input-charset=cp932
-libmihajong_mjcore_la_LIBADD = \
+BUILT_SOURCES = $(nodist_libmihajong_la_SOURCES)
+libmihajong_la_LDFLAGS = -no-undefined
+libmihajong_la_CXXFLAGS = -DMJCORE_EXPORTS --input-charset=cp932
+libmihajong_la_LIBADD = \
 	$(LUA_LIB) \
 	../sound/libmihajong-sound.la \
 	../graphic/libmihajong-graphic.la \
 	../socket/libmihajong-socket.la \
 	../astro/libmihajong-astro.la
 
-CLEANFILES = $(libmihajong_mjcore_la_BUILT_SOURCES) \
+CLEANFILES = $(libmihajong_la_BUILT_SOURCES) \
 	data/confitem.csv.lzma data/confitem.ini.lzma
 
 data/confitem.csv.lzma: data/confitem.csv
