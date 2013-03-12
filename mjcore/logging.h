@@ -15,10 +15,6 @@ namespace logger {
 	typedef int (__cdecl *CHRPPROC)(LPCSTR a);
 	typedef int (__cdecl *TCHRPPROC)(LPCTSTR a);
 
-	extern HMODULE logger;
-	extern CHRPPROC fpInitLogger;
-	extern TCHRPPROC fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC;
-
 	__declspec(dllexport) int initLogger();
 
 	CodeConv::tstring posPrefix(const char* file, int line, CodeConv::tstring msg);

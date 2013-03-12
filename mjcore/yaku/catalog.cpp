@@ -83,7 +83,11 @@ yaku::yakuCalculator::Yaku::HANFUNC
 	else if (currcnf == "-4han")
 		return yaku::yakuCalculator::Yaku::FixedHan(
 		yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han,
+#ifdef _MSC_VER
 		yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(-5)
+#else
+		yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(-5)
+#endif
 		);
 	else return yaku::yakuCalculator::Yaku::HANFUNC();
 }
