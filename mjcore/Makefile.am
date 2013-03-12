@@ -34,7 +34,7 @@ BUILT_SOURCES = $(nodist_libmihajong_la_SOURCES)
 libmihajong_la_LDFLAGS = -no-undefined
 libmihajong_la_CXXFLAGS = -DMJCORE_EXPORTS --input-charset=cp932
 libmihajong_la_LIBADD = \
-	$(LUA_LIB) \
+	$(LUA_LIB) mjcore.o \
 	../sound/libmihajong-sound.la \
 	../graphic/libmihajong-graphic.la \
 	../socket/libmihajong-socket.la \
@@ -42,6 +42,11 @@ libmihajong_la_LIBADD = \
 
 CLEANFILES = $(libmihajong_la_BUILT_SOURCES) \
 	data/confitem.csv.lzma data/confitem.ini.lzma
+
+.rc.o:
+	windres $^ -o $@ -l 0411
+%.o: %.rc
+	windres $^ -o $@ -l 0411
 
 data/confitem.csv.lzma: data/confitem.csv
 	../auxtools/compress.rb data/confitem.csv

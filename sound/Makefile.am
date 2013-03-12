@@ -9,4 +9,10 @@ libmihajong_sound_la_SOURCES += \
 	GuruGuruSMF/GuruGuruSMF4_Cpp.h
 endif
 libmihajong_sound_la_LDFLAGS = -no-undefined
+libmihajong_sound_la_LIBADD = ver.o
 libmihajong_sound_la_CXXFLAGS = -DSOUND_EXPORTS --input-charset=cp932
+
+.rc.o:
+	windres $^ -o $@ -l 0411
+%.o: %.rc
+	windres $^ -o $@ -l 0411
