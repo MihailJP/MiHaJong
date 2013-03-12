@@ -25,7 +25,11 @@ uint8_t* ShantenAnalyzer::mentsuAnalysisDat = nullptr;
 __declspec(dllexport) void ShantenAnalyzer::initMentsuAnalysisDat() { // 面子データ初期化
 	Compressed::file_mentz_dat* mnzdat = new Compressed::file_mentz_dat();
 	mentsuAnalysisDat = new uint8_t[mnzdat->getDataSize()+4];
+#ifdef _MSC_VER
 	memcpy_s(mentsuAnalysisDat, mnzdat->getDataSize()+4, mnzdat->getData(), mnzdat->getDataSize());
+#else
+	memcpy(mentsuAnalysisDat, mnzdat->getData(), mnzdat->getDataSize());
+#endif
 	delete mnzdat;
 }
 

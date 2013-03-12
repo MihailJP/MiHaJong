@@ -153,7 +153,11 @@ CodeConv::tstring inline windName(seatAbsolute wind) {
 	}
 }
 __declspec(dllexport) void windName(LPTSTR str, int bufsz, int wind) {
+#if defined(_MSC_VER)
 	_tcscpy_s(str, bufsz, windName((seatAbsolute)wind).c_str());
+#else
+	_tcsncpy(str, windName((seatAbsolute)wind).c_str(), bufsz);
+#endif
 }
 
 /* 「東○局」などの文字列を返す */
@@ -199,7 +203,11 @@ CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat
 	return CodeConv::tstring(roundNameTxt.str());
 }
 __declspec(dllexport) void roundName(LPTSTR str, int bufsz, int roundNum) {
+#if defined(_MSC_VER)
 	_tcscpy_s(str, bufsz, roundName(roundNum, &GameStat).c_str());
+#else
+	_tcsncpy(str, roundName(roundNum, &GameStat).c_str(), bufsz);
+#endif
 }
 
 /* 牌の名前の文字列を返す */
@@ -245,7 +253,11 @@ CodeConv::tstring inline TileName(TileCode tile) {
 	}
 }
 __declspec(dllexport) void TileName(LPTSTR str, int bufsz, int tile) {
+#if defined(_MSC_VER)
 	_tcscpy_s(str, bufsz, TileName((TileCode)tile).c_str());
+#else
+	_tcsncpy(str, TileName((TileCode)tile).c_str(), bufsz);
+#endif
 }
 
 /* 場風牌のリスト */
@@ -320,9 +332,15 @@ namespace confpath {
 			GetCurrentDirectoryA(1024, cur);
 			char* progfiles = new char[1024];
 			char* appdata = new char[1024];
+#if defined(_MSC_VER)
 			size_t* sz = new size_t;
 			getenv_s(sz, progfiles, 1024, "ProgramFiles");
 			getenv_s(sz, appdata, 1024, "APPDATA");
+#else
+			strncpy(progfiles, getenv("ProgramFiles"), 1023);
+			strncpy(appdata,   getenv("APPDATA"),      1023);
+			progfiles[1023] = appdata[1023] = '\0';
+#endif
 
 			if (strstr(cur, progfiles) == cur) {
 				// MakeSureDirectoryPathExistsがワイド文字対応してないので仕方なくANSI文字版
@@ -337,12 +355,19 @@ namespace confpath {
 				configpath = std::string(appdata) + std::string("\\MiHaJong\\");
 			}
 			
-			delete[] cur; delete[] appdata; delete[] progfiles; delete sz;
+			delete[] cur; delete[] appdata; delete[] progfiles;
+#if defined(_MSC_VER)
+			delete sz;
+#endif
 		}
 		return configpath;
 	}
 	__declspec(dllexport) void confPath(char* path, int bufsz) {
+#if defined(_MSC_VER)
 		strcpy_s(path, bufsz, confPath().c_str());
+#else
+		strncpy(path, confPath().c_str(), bufsz);
+#endif
 	}
 
 }

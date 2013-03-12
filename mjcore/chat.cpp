@@ -74,13 +74,13 @@ void ChatThread::receive() {
 							(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
 							((!chkGameType(&GameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
 								if (buf[_tcslen(buf) - 1] != _T('\n'))
-									_tcscat_s(buf, bufsize,
-#ifdef _WIN32
-									_T("\r\n")
+#if defined(_MSC_VER)
+									_tcscat_s(buf, bufsize, _T("\r\n"));
+#elif defined(_WIN32)
+									_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
 #else
-									_T("\n")
+									_tcscat_s(buf, bufsize, _T("\n"));
 #endif
-									);
 								mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
 								chatappend(buf);
 						}
@@ -135,29 +135,39 @@ void ChatThread::send() {
 						(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
 						(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
 						((!chkGameType(&GameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
+#if defined(_MSC_VER)
 							_tcscat_s(buf, bufsize, sendQueue.front().c_str());
-							if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
-								_tcscat_s(buf, bufsize,
-#ifdef _WIN32
-								_T("\r\n")
 #else
-								_T("\n")
+							_tcsncat(buf, sendQueue.front().c_str(), bufsize - _tcslen(buf));
 #endif
-								);
+							if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
+#if defined(_MSC_VER)
+								_tcscat_s(buf, bufsize, _T("\r\n"));
+#elif defined(_WIN32)
+								_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
+#else
+								/* TODO: Linuxà⁄êA */
+								_tcscat_s(buf, bufsize, _T("\n"));
+#endif
 							mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
 							chatappend(buf);
 					}
 				}
 			} else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
+#if defined(_MSC_VER)
 				_tcscat_s(buf, bufsize, sendQueue.front().c_str());
-				if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
-					_tcscat_s(buf, bufsize,
-#ifdef _WIN32
-					_T("\r\n")
 #else
-					_T("\n")
+				_tcsncat(buf, sendQueue.front().c_str(), bufsize - _tcslen(buf));
 #endif
-					);
+				if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
+#if defined(_MSC_VER)
+					_tcscat_s(buf, bufsize, _T("\r\n"));
+#elif defined(_WIN32)
+					_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
+#else
+					/* TODO: Linuxà⁄êA */
+					_tcscat_s(buf, bufsize, _T("\n"));
+#endif
 				mihajong_socket::puts(SOCK_CHAT, buf);
 			}
 			sendQueue.pop();
