@@ -7,6 +7,7 @@
 #include "chrwidth.h"
 #include <cassert>
 #include <algorithm>
+#include <stdexcept>
 
 namespace mihajong_graphic {
 

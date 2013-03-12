@@ -201,10 +201,10 @@
     <ClCompile Include="decomp.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="data\confitem.csv.cpp">
+    <ClCompile Include="data\confitem_csv.cpp">
       <Filter>ソース ファイル\data</Filter>
     </ClCompile>
-    <ClCompile Include="data\confitem.ini.cpp">
+    <ClCompile Include="data\confitem_ini.cpp">
       <Filter>ソース ファイル\data</Filter>
     </ClCompile>
     <ClCompile Include="fuuro.cpp">
@@ -359,10 +359,10 @@
     <ClInclude Include="decomp.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="data\confitem.csv.h">
+    <ClInclude Include="data\confitem_csv.h">
       <Filter>ヘッダー ファイル\data</Filter>
     </ClInclude>
-    <ClInclude Include="data\confitem.ini.h">
+    <ClInclude Include="data\confitem_ini.h">
       <Filter>ヘッダー ファイル\data</Filter>
     </ClInclude>
     <ClInclude Include="fuuro.h">

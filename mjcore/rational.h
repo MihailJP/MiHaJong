@@ -80,11 +80,11 @@ public:
 	}
 	// Division
 	const Rational& operator/(const Rational<T>& divisor) const {
-		if (multiplier.num == 0) throw std::invalid_argument("Division by zero");
+		if (divisor.num == 0) throw std::invalid_argument("Division by zero");
 		return Rational<T>(num * divisor.denom, denom * divisor.num).reduce();
 	}
 	Rational& operator/=(const Rational<T>& divisor) {
-		if (multiplier.num == 0) throw std::invalid_argument("Division by zero");
+		if (divisor.num == 0) throw std::invalid_argument("Division by zero");
 		return (*this = Rational<T>(num * divisor.denom, denom * divisor.num).reduce());
 	}
 	// Equality

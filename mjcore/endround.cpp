@@ -653,7 +653,7 @@ void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, 
 	sound::Play(sound::IDs::sndPage);
 	Sleep(wait);
 	for (PlayerID i = 0; i < Players; ++i)
-		gameStat->Player[i].PlayerScore += delta[i];
+		gameStat->Player[i].PlayerScore += (LargeNum)delta[i];
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 }
 void endround::transfer::transferChip(GameTable* gameStat, unsigned subscene, unsigned wait) {

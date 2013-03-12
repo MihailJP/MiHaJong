@@ -8,6 +8,7 @@
 #include <array>
 #include <vector>
 #include <cassert>
+#include <algorithm>
 #include <Windows.h>
 #include "../largenum.h"
 #include "../except.h"
@@ -124,13 +125,13 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 			Wind2Tile((uint8_t)(gameStat->GameRound / 4))) // ê•—”v
 			fu += 2;
 		if (analysis->MianziDat[0].tile ==
-			playerwind(gameStat, analysis->player, gameStat->GameRound)) // ©•—”v
+			Wind2Tile(playerwind(gameStat, analysis->player, gameStat->GameRound))) // ©•—”v
 			fu += 2;
 		if ((RuleData::chkRuleApplied("kaimenkaze")) && (analysis->MianziDat[0].tile == // ŠJ–å•—”v
-			playerwind(gameStat, gameStat->WaremePlayer, gameStat->GameRound)))
+			Wind2Tile(playerwind(gameStat, gameStat->WaremePlayer, gameStat->GameRound))))
 			fu += 2;
 		if ((RuleData::chkRuleApplied("urakaze")) && (analysis->MianziDat[0].tile == // — •—”v
-			playerwind(gameStat, analysis->player + 2, gameStat->GameRound)))
+			Wind2Tile(playerwind(gameStat, analysis->player + 2, gameStat->GameRound))))
 			fu += 2;
 		if ((!RuleData::chkRuleApplied("double_yaku_wind_pair")) && (fu > 22)) fu = 22; // ƒ_ƒu•—“ª‚ğ2•„‚ÆŒ©‚È‚·ƒ‹[ƒ‹‚Ìê‡
 		break;

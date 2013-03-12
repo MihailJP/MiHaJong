@@ -37,7 +37,7 @@ public:
 class aiscript::table::functable::gametbl {
 private:
 	static const char* tblname;
-	static const std::array<::TileCode, 35> validTiles;
+	static const std::array< ::TileCode, 35> validTiles;
 	static GameTable* getGameStatAddr(lua_State* const L);
 	static PlayerID getPlayerID(lua_State* const L, int index);
 	static void pushTileTable(lua_State* const L, Int8ByTile& tptr);

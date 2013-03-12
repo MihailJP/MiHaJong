@@ -221,9 +221,10 @@ void ChatThread::sendstrx (PlayerID player, const CodeConv::tstring& msg) {
 StreamLog* chatobj = nullptr;
 
 __declspec(dllexport) void initchat (const char* const server_addr, int clientNum) {
+	std::string serverAddr(server_addr);
 	if ((EnvTable::Instantiate()->GameMode == EnvTable::Server) ||
 		(EnvTable::Instantiate()->GameMode == EnvTable::Client))
-		chatobj = new ChatThread(std::string(server_addr), clientNum);
+		chatobj = new ChatThread(serverAddr, clientNum);
 	else chatobj = new StreamLog();
 }
 __declspec(dllexport) void appendchat (LPCTSTR const chatstr) {
