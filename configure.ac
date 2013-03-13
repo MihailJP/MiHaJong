@@ -90,6 +90,18 @@ AC_ARG_ENABLE([midi],
 )
 AM_CONDITIONAL(MIDI_SUPPORT, test x$enable_midi != xno)
 
+AC_ARG_WITH([oggvorbis],
+	[AS_HELP_STRING([--without-oggvorbis],
+		[disable Ogg Vorbis support as background music])],
+	[],
+	[with_oggvorbis=yes]
+)
+AM_CONDITIONAL(VORBIS_SUPPORT, test x$with_oggvorbis != xno)
+AS_IF([test "x$with_oggvorbis" != xno],
+	[MH_OGG_VORBIS_LIBS
+	 MH_OGG_VORBIS_HEADERS]
+)
+
 AC_CONFIG_FILES([Makefile
                  astro/Makefile
                  graphic/Makefile

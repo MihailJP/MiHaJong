@@ -1,6 +1,14 @@
 #include "snddata.h"
 #ifdef VORBIS_SUPPORT
+#ifdef __MINGW32__ /* Workaround */
+#undef __MINGW32__
+#undef _WIN32
 #include <vorbis/vorbisfile.h>
+#define _WIN32
+#define __MINGW32__
+#else /* __MINGW32__ */
+#include <vorbis/vorbisfile.h>
+#endif /* __MINGW32__ */
 #include <cstdio>
 #include <sstream>
 #include <iomanip>
@@ -14,7 +22,12 @@ void sound::OggData::Prepare(const std::string& filename) {
 #endif
 	// ファイルを開く
 	FILE* file;
-	if (fopen_s(&file, filename.c_str(), "rb")) throw CodeConv::tstring(_T("ファイルを開けませんでした"));
+#ifdef _MSC_VER
+	if (fopen_s(&file, filename.c_str(), "rb"))
+#else
+	if ((file = fopen(filename.c_str(), "rb")) == nullptr)
+#endif
+		throw CodeConv::tstring(_T("ファイルを開けませんでした"));
 	OggVorbis_File* ovFile(new OggVorbis_File());
 	if (ov_open(file, ovFile, nullptr, 0)) {
 		fclose(file); throw CodeConv::tstring(_T("Ogg Vorbis ファイルではありません"));

@@ -11,6 +11,9 @@ endif
 libmihajong_sound_la_LDFLAGS = -no-undefined
 libmihajong_sound_la_LIBADD = ver.o
 libmihajong_sound_la_CXXFLAGS = -DSOUND_EXPORTS --input-charset=cp932
+if VORBIS_SUPPORT
+libmihajong_sound_la_CXXFLAGS += -DVORBIS_SUPPORT
+endif
 
 .rc.o:
 	windres $^ -o $@ -l 0411
