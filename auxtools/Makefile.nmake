@@ -1,8 +1,8 @@
 DATAPATH=$(SolutionDir)mjcore\data\ 
 EXEPATH=$(SolutionDir)mihajong_legacy\ 
 
-TARGETS_COMPRESS_CONFITEM_CSV=$(DATAPATH)confitem.csv.lzma $(DATAPATH)confitem.csv.cpp $(DATAPATH)confitem.csv.h
-TARGETS_COMPRESS_CONFITEM_INI=$(DATAPATH)confitem.ini.lzma $(DATAPATH)confitem.ini.cpp $(DATAPATH)confitem.ini.h
+TARGETS_COMPRESS_CONFITEM_CSV=$(DATAPATH)confitem.csv.lzma $(DATAPATH)confitem_csv.cpp $(DATAPATH)confitem_csv.h
+TARGETS_COMPRESS_CONFITEM_INI=$(DATAPATH)confitem.ini.lzma $(DATAPATH)confitem_ini.cpp $(DATAPATH)confitem_ini.h
 TARGETS_PARSE_RULESYMS_TXT=$(EXEPATH)rulesyms.txt
 
 TARGETS=$(TARGETS_COMPRESS_CONFITEM_CSV) $(TARGETS_COMPRESS_CONFITEM_INI) $(TARGETS_PARSE_RULESYMS_TXT)
@@ -13,13 +13,13 @@ $(EXEPATH)rulesyms.txt: $(DATAPATH)confitem.csv
 
 $(DATAPATH)confitem.csv.lzma: $(DATAPATH)confitem.csv
 	ruby compress.rb $**
-$(DATAPATH)confitem.csv.cpp: $(DATAPATH)confitem.csv.lzma
-$(DATAPATH)confitem.csv.h: $(DATAPATH)confitem.csv.lzma
+$(DATAPATH)confitem_csv.cpp: $(DATAPATH)confitem.csv.lzma
+$(DATAPATH)confitem_csv.h: $(DATAPATH)confitem.csv.lzma
 
 $(DATAPATH)confitem.ini.lzma: $(DATAPATH)confitem.ini
 	ruby compress.rb $**
-$(DATAPATH)confitem.ini.cpp: $(DATAPATH)confitem.ini.lzma
-$(DATAPATH)confitem.ini.h: $(DATAPATH)confitem.ini.lzma
+$(DATAPATH)confitem_ini.cpp: $(DATAPATH)confitem.ini.lzma
+$(DATAPATH)confitem_ini.h: $(DATAPATH)confitem.ini.lzma
 
 clean:
 	del /q $(TARGETS)

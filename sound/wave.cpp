@@ -23,7 +23,9 @@ void sound::WaveData::GetFormat(std::ifstream& file) {
 	// データフォーマット
 	std::uint16_t id; file.read(reinterpret_cast<char*>(&id), 2);
 	if (id == 1) format.wFormatTag = WAVE_FORMAT_PCM;
+#if defined(USE_XAUDIO2)
 	else if (id == 2) format.wFormatTag = WAVE_FORMAT_ADPCM;
+#endif
 	else throw CodeConv::tstring(_T("対応していないフォーマットです"));
 	// ヘッダ読み込み
 	file.read(reinterpret_cast<char*>(&format.nChannels), sizeof(format.nChannels));
@@ -48,7 +50,9 @@ void sound::WaveData::ReadWaveData(std::ifstream& file) {
 /* WAVEファイル読み込み */
 void sound::WaveData::Prepare(const std::string& filename) {
 	std::memset(&format, 0, sizeof(format));
+#if defined(USE_XAUDIO2)
 	std::memset(&bufInfo, 0, sizeof(buffer));
+#endif
 	std::ifstream file(filename, std::ios::in | std::ios::binary);
 	if (!file) throw CodeConv::tstring(_T("ファイルを開けませんでした"));
 	if (!checkTag(file, "RIFF")) throw CodeConv::tstring(_T("RIFFチャンクがないです"));
@@ -67,9 +71,10 @@ void sound::WaveData::Prepare(const std::string& filename) {
 	}
 }
 
-sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool looped) {
+/* バッファの準備 */
+#if defined(USE_XAUDIO2)
+void sound::SoundData::PrepareBuffer(IXAudio2** Engine, bool looped) {
 	HRESULT hr;
-	Prepare(filename);
 	std::memset(&bufInfo, 0, sizeof(bufInfo));
 	bufInfo.AudioBytes = buffer.size();
 	bufInfo.pAudioData = reinterpret_cast<BYTE*>(&buffer[0]);
@@ -80,33 +85,82 @@ sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool l
 		throw o.str();
 	}
 }
-
-/* 再生 */
-void sound::WaveData::Play() {
-	Stop();
+#else
+void sound::SoundData::PrepareBuffer(LPDIRECTSOUND8* Engine, bool looped) {
 	HRESULT hr;
-	if (FAILED(hr = voice->SubmitSourceBuffer(&bufInfo))) {
-		CodeConv::tostringstream o; o << _T("SubmitSourceBuffer失敗！！ (0x") <<
+	withLoop = looped;
+	DSBUFFERDESC dsbd;
+	memset(&dsbd, 0, sizeof(DSBUFFERDESC));
+	dsbd.dwSize = sizeof(DSBUFFERDESC);
+	dsbd.dwFlags = 0;
+	dsbd.dwBufferBytes = buffer.size();
+	dsbd.lpwfxFormat = &format;
+	dsbd.guid3DAlgorithm = GUID_NULL;
+	if (FAILED(hr = (*Engine)->CreateSoundBuffer(&dsbd, &voice, nullptr))) {
+		CodeConv::tostringstream o; o << _T("CreateSoundBuffer失敗！！ (0x") <<
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
+}
+#endif
+
+#if defined(USE_XAUDIO2)
+sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool looped) {
+#else
+sound::WaveData::WaveData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped) {
+#endif
+	Prepare(filename);
+	PrepareBuffer(Engine, looped);
+}
+
+/* 再生 */
+void sound::SoundData::Play() {
+	Stop();
+	HRESULT hr;
+#if defined(USE_XAUDIO2)
+	if (FAILED(hr = voice->SubmitSourceBuffer(&bufInfo))) {
+		CodeConv::tostringstream o; o << _T("SubmitSourceBuffer失敗！！ (0x") <<
+#else
+	void* writePtr = nullptr; DWORD bufLen = 0;
+	if (FAILED(hr = voice->Lock(0, 0, &writePtr, &bufLen, nullptr, nullptr, DSBLOCK_ENTIREBUFFER))) {
+		CodeConv::tostringstream o; o << _T("Lock失敗！！ (0x") <<
+#endif
+			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
+		throw o.str();
+	}
+#if !defined(USE_XAUDIO2)
+	else { // 書き込み
+		memcpy(writePtr, &buffer[0], bufLen);
+		voice->Unlock(writePtr, bufLen, nullptr, 0);
+	}
+#endif
+#if defined(USE_XAUDIO2)
 	if (FAILED(hr = voice->Start(0, XAUDIO2_COMMIT_NOW))) {
 		CodeConv::tostringstream o; o << _T("Start失敗！！ (0x") <<
+#else
+	if (FAILED(hr = voice->Play(0, 0, withLoop ? DSBPLAY_LOOPING : 0))) {
+		CodeConv::tostringstream o; o << _T("Play失敗！！ (0x") <<
+#endif
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
 }
 
 /* 停止 */
-void sound::WaveData::Stop() {
+void sound::SoundData::Stop() {
 	HRESULT hr;
 	if (FAILED(hr = voice->Stop())) {
 		CodeConv::tostringstream o; o << _T("Stop失敗！！ (0x") <<
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
+#if defined(USE_XAUDIO2)
 	if (FAILED(hr = voice->FlushSourceBuffers())) {
 		CodeConv::tostringstream o; o << _T("FlushSourceBuffers失敗！！ (0x") <<
+#else
+	if (FAILED(hr = voice->SetCurrentPosition(0))) {
+		CodeConv::tostringstream o; o << _T("SetCurrentPosition失敗！！ (0x") <<
+#endif
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
@@ -116,7 +170,11 @@ void sound::WaveData::Stop() {
 sound::SoundData::~SoundData() {
 	if (voice) {
 		voice->Stop();
+#if defined(USE_XAUDIO2)
 		voice->DestroyVoice();
+#else
+		voice->Release();
+#endif
 	}
 }
 

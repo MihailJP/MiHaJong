@@ -2,6 +2,7 @@
 
 #include <type_traits>
 #include <cstdint>
+#include <climits>
 #include "strcode.h"
 
 // Â“Vƒ‹[ƒ‹‘Îô

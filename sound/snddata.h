@@ -1,6 +1,10 @@
 #pragma once
 
+#if defined(USE_XAUDIO2)
 #include <XAudio2.h>
+#else
+#include <dsound.h>
+#endif
 #include <cstdint>
 #include <cstring>
 #include <vector>
@@ -20,11 +24,24 @@ namespace sound {
 	protected:
 		WAVEFORMATEX format;
 		std::vector<char> buffer;
+#if defined(USE_XAUDIO2)
 		XAUDIO2_BUFFER bufInfo;
 		IXAudio2SourceVoice* voice;
+#else
+		bool withLoop;
+		LPDIRECTSOUNDBUFFER voice;
+#endif
+		virtual void Prepare(const std::string& filename) = 0;
+#if defined(USE_XAUDIO2)
+		void PrepareBuffer(IXAudio2** Engine, bool looped = false);
+#else
+		void PrepareBuffer(LPDIRECTSOUND8* Engine, bool looped);
+#endif
 	public:
+		virtual void Play();
+		virtual void Stop();
 		explicit SoundData();
-		virtual ~SoundData();
+		virtual ~SoundData() = 0;
 	};
 	class WaveData : public SoundData {
 	private:
@@ -33,21 +50,31 @@ namespace sound {
 		void ReadWaveData(std::ifstream& file);
 		void Prepare(const std::string& filename);
 	public:
+#if defined(USE_XAUDIO2)
 		explicit WaveData(IXAudio2** Engine, const std::string& filename, bool looped = false);
-		void Play();
-		void Stop();
+#else
+		explicit WaveData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped = false);
+#endif
 	};
 	class OggData : public SoundData {
+#ifdef VORBIS_SUPPORT
 	private:
 		void Prepare(const std::string& filename);
-#ifdef VORBIS_SUPPORT
 	public:
+#if defined(USE_XAUDIO2)
 		explicit OggData(IXAudio2** Engine, const std::string& filename, bool looped = false);
-		void Play();
-		void Stop();
 #else
+		explicit OggData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped = false);
+#endif
+#else
+	private:
+		void Prepare(const std::string&) {}
 	public:
+#if defined(USE_XAUDIO2)
 		explicit OggData(IXAudio2** Engine, const std::string& filename, bool looped = false) {
+#else
+		explicit OggData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped = false) {
+#endif
 			throw CodeConv::tstring(_T("Vorbisはサポートされていません"));
 		}
 		void Play() {throw CodeConv::tstring(_T("Vorbisはサポートされていません"));}

@@ -334,7 +334,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 
 	/* –ð”v */
 	auto chkYakuhai = RuleData::chkRuleApplied("exposed_yakuhai") ?
+#ifdef _MSC_VER
 		(std::function<const Int8ByTile& (const MENTSU_ANALYSIS* const)>)
+#endif
 		[](const MENTSU_ANALYSIS* const analysis) -> const Int8ByTile& {return analysis->KeziCount;} :
 		[](const MENTSU_ANALYSIS* const analysis) -> const Int8ByTile& {return analysis->AnKeziCount;};
 	auto bakaze =

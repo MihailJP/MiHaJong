@@ -323,7 +323,8 @@ int aiscript::table::functable::gametbl::luafunc::getscore(lua_State* const L) {
 int aiscript::table::functable::gametbl::luafunc::getseentiles(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
-	pushTileTable(L, countseentiles(gameStat));
+	Int8ByTile tiles(countseentiles(gameStat));
+	pushTileTable(L, tiles);
 	return 1;
 }
 
@@ -430,7 +431,8 @@ int aiscript::table::functable::gametbl::luafunc::gettilesinhand(lua_State* cons
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	pushTileTable(L, countTilesInHand(gameStat, player));
+	Int8ByTile tiles(countTilesInHand(gameStat, player));
+	pushTileTable(L, tiles);
 	return 1;
 }
 
@@ -464,13 +466,13 @@ int aiscript::table::functable::gametbl::luafunc::getyakuhaiwind(lua_State* cons
 			Wind2Tile((uint8_t)(gameStat->GameRound / 4))) // ê•—”v
 			flag = true;
 		else if (windtiles[i] ==
-			playerwind(gameStat, player, gameStat->GameRound)) // ©•—”v
+			Wind2Tile(playerwind(gameStat, player, gameStat->GameRound))) // ©•—”v
 			flag = true;
 		else if ((RuleData::chkRuleApplied("kaimenkaze")) && (windtiles[i] == // ŠJ–å•—”v
-			playerwind(gameStat, gameStat->WaremePlayer, gameStat->GameRound)))
+			Wind2Tile(playerwind(gameStat, gameStat->WaremePlayer, gameStat->GameRound))))
 			flag = true;
 		else if ((RuleData::chkRuleApplied("urakaze")) && (windtiles[i] == // — •—”v
-			playerwind(gameStat, player + 2, gameStat->GameRound)))
+			Wind2Tile(playerwind(gameStat, player + 2, gameStat->GameRound))))
 			flag = true;
 		TableAdd(L, windname[i], flag); // Œ‹‰Ê‚ğŠi”[
 	}

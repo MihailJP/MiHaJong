@@ -35,7 +35,11 @@ void RuleData::configinit_csv() { // コンフィグ用CSVを読み込む
 	DWORD size = 0; const uint8_t* csv = nullptr;
 	Compressed::file_confitem_csv* csvfile = new Compressed::file_confitem_csv();
 	char *csvdat = new char[csvfile->getDataSize() + 4]; memset(csvdat, 0, csvfile->getDataSize()+4);
+#ifdef _MSC_VER
 	memcpy_s(csvdat, csvfile->getDataSize()+4, csvfile->getData(), csvfile->getDataSize());
+#else
+	memcpy(csvdat, csvfile->getData(), csvfile->getDataSize());
+#endif
 	CSVReader::parsecsv(confdat, fromUTF8(csvdat).c_str());
 	delete[] csvdat; delete csvfile;
 
@@ -79,7 +83,11 @@ void RuleData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
 
 	Compressed::file_confitem_ini* inifile = new Compressed::file_confitem_ini();
 	char *inidat = new char[inifile->getDataSize() + 4]; memset(inidat, 0, inifile->getDataSize()+4);
+#ifdef _MSC_VER
 	memcpy_s(inidat, inifile->getDataSize()+4, inifile->getData(), inifile->getDataSize());
+#else
+	memcpy(inidat, inifile->getData(), inifile->getDataSize());
+#endif
 	INIParser::parseini(confdict, fromUTF8(inidat).c_str());
 	delete[] inidat; delete inifile;
 }
@@ -150,28 +158,51 @@ __declspec(dllexport) void RuleData::getRuleName(LPTSTR const txt, unsigned bufs
 		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
 		if ((chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) ||
 			(chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str())))) {
+#ifdef _MSC_VER
 				_tcscpy_s(txt, bufsize, ((*k)[9]).c_str());
+#else
+				_tcsncpy(txt, ((*k)[9]).c_str(), bufsize);
+#endif
 				return;
 		}
 	}
+#ifdef _MSC_VER
 	_tcscpy_s(txt, bufsize, _T(""));
+#else
+	_tcsncpy(txt, _T(""), bufsize);
+#endif
 }
 
 __declspec(dllexport) void RuleData::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
 		if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) {
+#ifdef _MSC_VER
 			_tcscpy_s(txt, bufsize, ((*k)[10]).c_str()); return;
+#else
+			_tcsncpy(txt, ((*k)[10]).c_str(), bufsize); return;
+#endif
 		}
 		else if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str()))) {
+#ifdef _MSC_VER
 			if (chkGameType(&GameStat, SanmaS)) _tcscpy_s(txt, bufsize, _T("数牌三麻では設定できません"));
 			else if (chkGameType(&GameStat, SanmaX)) _tcscpy_s(txt, bufsize, _T("三人打ちでは設定できません"));
 			else if (chkGameType(&GameStat, Yonma)) _tcscpy_s(txt, bufsize, _T("四人打ちでは設定できません"));
 			else _tcscpy_s(txt, bufsize, _T(""));
+#else
+			if (chkGameType(&GameStat, SanmaS)) _tcsncpy(txt, _T("数牌三麻では設定できません"), bufsize);
+			else if (chkGameType(&GameStat, SanmaX)) _tcsncpy(txt, _T("三人打ちでは設定できません"), bufsize);
+			else if (chkGameType(&GameStat, Yonma)) _tcsncpy(txt, _T("四人打ちでは設定できません"), bufsize);
+			else _tcsncpy(txt, _T(""), bufsize);
+#endif
 			return;
 		}
 	}
+#ifdef _MSC_VER
 	_tcscpy_s(txt, bufsize, _T(""));
+#else
+	_tcsncpy(txt, _T(""), bufsize);
+#endif
 }
 
 std::string RuleData::getRuleItemTag(uint16_t RuleID, int index) {
@@ -194,15 +225,30 @@ __declspec(dllexport) void RuleData::getRuleTxt(LPTSTR const txt, unsigned bufsi
 	const std::string tag = getRuleItemTag(RuleID, index);
 	if ((confdict.find(_T("dictionary")) != confdict.end()) &&
 		(confdict[_T("dictionary")].find(EnsureTStr(tag)) != confdict[_T("dictionary")].end()))
+#ifdef _MSC_VER
 		_tcscpy_s(txt, bufsize, confdict[_T("dictionary")][EnsureTStr(tag)].c_str());
 	else _tcscpy_s(txt, bufsize, EnsureTStr(tag).c_str());
+#else
+		_tcsncpy(txt, confdict[_T("dictionary")][EnsureTStr(tag)].c_str(), bufsize);
+	else _tcsncpy(txt, EnsureTStr(tag).c_str(), bufsize);
+#endif
 }
 
 __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
-	errno_t err; FILE* conffile;
+#ifdef _MSC_VER
+	errno_t err;
+#endif
+	FILE* conffile;
+#ifdef _MSC_VER
 	if (err = fopen_s(&conffile, filename, "r")) { // オープンし、失敗したら
+#else
+	if ((conffile = fopen(filename, "r")) == nullptr) { // オープンし、失敗したら
+#endif
 		tostringstream o;
-		o << _T("設定ファイルのオープンに失敗しました。エラーコード [") << err << _T("]");
+		o << _T("設定ファイルのオープンに失敗しました。");
+#ifdef _MSC_VER
+		o << _T("エラーコード [") << err << _T("]");
+#endif
 		error(o.str().c_str());
 		fclose(conffile); // ファイルを閉じる
 		return -1;
@@ -211,7 +257,11 @@ __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 		long bufsize = (filesize | (sizeof(int) - 1)) + 1;
 		char* const filedat = new char[bufsize]; // バッファを確保
 		memset(filedat, 0, bufsize); // バッファをゼロクリア
+#ifdef _MSC_VER
 		fread_s(filedat, bufsize, sizeof(char), filesize, conffile); // 読み込み
+#else
+		fread(filedat, sizeof(char), filesize, conffile); // 読み込み
+#endif
 		{
 			INIParser::IniMapMap config_ini; // INIパース結果を格納する「マップのマップ」
 			INIParser::parseini(config_ini, fromUTF8(filedat).c_str()); // INIをパースする
@@ -359,5 +409,9 @@ bool RuleData::ReqChecker::reqFailed(const std::string& expression, const int* c
 // -------------------------------------------------------------------------
 
 __declspec(dllexport) void RuleData::getPageCaption(LPTSTR const caption, unsigned bufsize, uint8_t page) {
+#ifdef _MSC_VER
 	_tcscpy_s(caption, bufsize, pageCaption[page].c_str());
+#else
+	_tcsncpy(caption, pageCaption[page].c_str(), bufsize);
+#endif
 }

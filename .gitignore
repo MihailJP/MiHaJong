@@ -65,6 +65,7 @@ install-sh
 ltmain.sh
 m4/*
 !m4/ax_*.m4
+!m4/mh_*.m4
 missing
 Makefile
 astro/.deps/

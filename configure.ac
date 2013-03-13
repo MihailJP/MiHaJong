@@ -3,7 +3,12 @@
 
 AC_PREREQ([2.69])
 AC_INIT(mihajong, 2.0.0, mihailjp@gmail.com)
+AC_LIBTOOL_WIN32_DLL
+AC_DISABLE_STATIC
+lt_cv_deplibs_check_method='pass_all'
 LT_INIT
+LT_LANG([C++])
+LT_LANG([Windows Resource])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_SRCDIR([astro/astro.h])
 AC_CONFIG_HEADERS([config.h])
@@ -16,12 +21,47 @@ AX_CXX_COMPILE_STDCXX_11([noext])
 AC_PROG_CC
 AX_PROG_LUA([5.1])
 
+# Checks for Win32
+AC_CHECK_HEADER([Windows.h], [using_winapi=yes], [using_winapi=no])
+
 # Checks for libraries.
 AX_LUA_LIBS([], [AC_MSG_ERROR([liblua is not installed.])])
 
+AS_IF([test "x$using_winapi" != xno],
+	[AC_CHECK_LIB([ws2_32], [main], [], AC_MSG_ERROR([ws2_32 is unavailable]))
+	 AC_CHECK_LIB([ole32], [main], [], AC_MSG_ERROR([ole32 is unavailable]))
+	 AC_CHECK_LIB([uuid], [main], [], AC_MSG_ERROR([uuid is unavailable]))
+	 AC_CHECK_LIB([dsound], [main], [], AC_MSG_ERROR([dsound is unavailable]))
+	 AC_CHECK_LIB([d3d9], [main], [], AC_MSG_ERROR([d3d9 is unavailable]))
+	 AC_CHECK_LIB([d3dx9d], [main], [], AC_MSG_ERROR([d3dx9d is unavailable]))
+	 AC_CHECK_LIB([dxerr9], [main], [], AC_MSG_ERROR([dxerr9 is unavailable]))
+	 AC_CHECK_LIB([dxguid], [main], [], AC_MSG_ERROR([dxguid is unavailable]))
+	 AC_CHECK_LIB([dinput8], [main], [], AC_MSG_ERROR([dinput8 is unavailable]))
+	 AC_CHECK_LIB([imm32], [main], [], AC_MSG_ERROR([imm32 is unavailable]))
+	 AC_CHECK_LIB([imagehlp], [main], [], AC_MSG_ERROR([imagehlp is unavailable]))]
+)
+
+
 # Checks for header files.
-AC_CHECK_HEADERS([float.h stddef.h stdlib.h string.h sys/timeb.h])
+AC_CHECK_HEADERS([float.h limits.h stddef.h stdlib.h string.h sys/timeb.h])
 AX_LUA_HEADERS([], [AC_MSG_ERROR([liblua headers unavailable.])])
+AS_IF([test "x$using_winapi" != xno],
+	[AC_CHECK_HEADER([WinSock2.h], [], AC_MSG_ERROR([WinSock2.h is unavailable]))
+	 AC_CHECK_HEADER([dsound.h], [], AC_MSG_ERROR([dsound.h is unavailable]))
+	 MH_CHECK_DIRECT3D
+	 AC_CHECK_HEADER([dinput.h], [], AC_MSG_ERROR([dinput.h is unavailable]))
+	 AC_CHECK_HEADER([imm.h], [], AC_MSG_ERROR([imm.h is unavailable]), [[
+#include <windef.h>
+#include <Wingdi.h>
+]]
+	 )
+	 AC_CHECK_HEADER([imagehlp.h], [], AC_MSG_ERROR([imagehlp.h is unavailable]), [[
+#include <windef.h>
+#include <stdarg.h>
+#include <Winbase.h>
+]]
+	 )]
+)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL

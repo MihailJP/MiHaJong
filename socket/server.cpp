@@ -1,4 +1,5 @@
 #include "server.h"
+#include <climits>
 
 namespace mihajong_socket {
 namespace server {
@@ -39,9 +40,9 @@ namespace server {
 		playerName[2] = CodeConv::tstring(_T("[c]COM"));
 		playerName[3] = CodeConv::tstring(_T("[d]COM"));
 		portnum = port;
-		std::memset(ruleConf, 0, sizeof(ruleConf));
+		memset(ruleConf, 0, sizeof(ruleConf));
 		for (unsigned i = 0; i < RULE_LINES; ++i)
-			std::memcpy(ruleConf[i], rule[i], RULE_IN_LINE);
+			memcpy(ruleConf[i], rule[i], RULE_IN_LINE);
 	}
 
 	// ---------------------------------------------------------------------
@@ -107,10 +108,17 @@ namespace server {
 		return (int)starterThread->chkCurrentConnection();
 	}
 	DLL void getPlayerNames (LPTSTR playerName1, LPTSTR playerName2, LPTSTR playerName3, LPTSTR playerName4, unsigned bufsz) {
+#if defined(_MSC_VER)
 		_tcscpy_s(playerName1, bufsz, starterThread->getPlayerName(0).c_str());
 		_tcscpy_s(playerName2, bufsz, starterThread->getPlayerName(1).c_str());
 		_tcscpy_s(playerName3, bufsz, starterThread->getPlayerName(2).c_str());
 		_tcscpy_s(playerName4, bufsz, starterThread->getPlayerName(3).c_str());
+#else
+		_tcsncpy(playerName1, starterThread->getPlayerName(0).c_str(), bufsz);
+		_tcsncpy(playerName2, starterThread->getPlayerName(1).c_str(), bufsz);
+		_tcsncpy(playerName3, starterThread->getPlayerName(2).c_str(), bufsz);
+		_tcsncpy(playerName4, starterThread->getPlayerName(3).c_str(), bufsz);
+#endif
 	}
 	DLL void releaseobj () { // デストラクタを呼ぶだけ
 		delete starterThread; starterThread = nullptr;

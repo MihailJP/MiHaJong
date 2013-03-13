@@ -1,7 +1,5 @@
-#ifdef _MSC_VER
-#define _USE_MATH_DEFINES /* required for M_PI by MS VC++ */
-#endif
 #include <cmath>
+#include "../../pi.h"
 
 #include "nakibtn.h"
 
@@ -267,7 +265,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		this->reconstruct();
 		caller->tehaiReconst->enable();
 		for (int i = 0; i < NumOfTilesInHand; ++i) {
-			GameTable tmpStat; std::memcpy(&tmpStat, GameStatus::gameStat(), sizeof (GameTable));
+			GameTable tmpStat; memcpy(&tmpStat, GameStatus::gameStat(), sizeof (GameTable));
 			if (f(i, &tmpStat)) caller->tehaiReconst->disable(i);
 		}
 		caller->tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
