@@ -61,4 +61,14 @@ public:
 	static FontMapCallDigits* instantiate();
 };
 
+class FontMapScoreDigits : public FontMapClass {
+private:
+	FontMapScoreDigits();
+	FontMapScoreDigits(const FontMapScoreDigits&) {}
+	virtual ~FontMapScoreDigits() {}
+	const unsigned short Default_Chr() {return 39;}
+public:
+	static FontMapScoreDigits* instantiate();
+};
+
 }

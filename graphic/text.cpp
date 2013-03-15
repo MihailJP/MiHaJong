@@ -25,6 +25,10 @@ CallDigitRenderer::CallDigitRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(d
 	fontmap = FontMapCallDigits::instantiate();
 	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_CALL_DIGITS), 1872, 96);
 }
+ScoreDigitRenderer::ScoreDigitRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
+	fontmap = FontMapScoreDigits::instantiate();
+	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_SCORE_DIGITS), 960, 640);
+}
 
 ITextRenderer::~ITextRenderer() {
 	deleteSprite();
@@ -42,6 +46,8 @@ HugeTextRenderer::~HugeTextRenderer() {
 SmallTextRenderer::~SmallTextRenderer() {
 }
 CallDigitRenderer::~CallDigitRenderer() {
+}
+ScoreDigitRenderer::~ScoreDigitRenderer() {
 }
 
 /* 新規の文字列オブジェクトを作成する */
