@@ -4,6 +4,8 @@
 #include "result.h"
 #include <cmath>
 #include <algorithm>
+#include "../utils.h"
+#include "../gametbl.h"
 
 namespace mihajong_graphic {
 
@@ -41,6 +43,10 @@ ResultScreen::RankRenderer::RankRenderer(LPDIRECT3DDEVICE9 device, int id) {
 	myDevice = device;
 	myID = id;
 	BaseY = (3 - id) * 150 + 300;
+	PlayerRankList rank = utils::calcRank(GameStatus::retrGameStat());
+	player = -1;
+	for (PlayerID i = 0; i < (utils::chkGameType(GameStatus::retrGameStat(), SanmaT) ? 3 : 4); ++i)
+		if (rank[i] == (4 - id)) player = i;
 	nameRenderer = new SmallTextRenderer(device);
 	rankRenderer = new HugeTextRenderer(device);
 	scoreRenderer = new ScoreDigitRenderer(device);
@@ -77,12 +83,14 @@ void ResultScreen::RankRenderer::RenderNameScore() {
 	const D3DCOLOR strcolor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
 		(255 - (int)(200.0 - ((double)tempus / (double)animTime * 200.0))),
 		255, 255, 255);
-	const CodeConv::tstring nomen(_T("‚¢‚ë‚Í‚É‚Ù‚Ö‚Æ‚¿‚è‚Ê‚é‚ð‚í‚©‚æ"));
+	const CodeConv::tstring nomen(utils::getName(player));
 	const unsigned latitudoNominis = stringWidth(nomen);
 	nameRenderer->NewText(0, nomen, 150, BaseY + 10, 3.0f,
 		(latitudoNominis >= 30) ? 30.0f / (float)latitudoNominis : 1.0f,
 		strcolor);
-	const CodeConv::tstring punctaticum(_T("‘f“_F12345678901234567890123456789012345678901234567890"));
+	const CodeConv::tstring punctaticum(
+		CodeConv::tstring(_T("‘f“_F")) +
+		GameStatus::gameStat()->Player[player].PlayerScore.bignumtotext(_T(""), _T("¢")));
 	const unsigned latitudoPunctatici = stringWidth(punctaticum);
 	nameRenderer->NewText(1, punctaticum, 150, BaseY + 70, 3.0f,
 		(latitudoPunctatici >= 30) ? 30.0f / (float)latitudoPunctatici : 1.0f,
@@ -109,7 +117,8 @@ void ResultScreen::RankRenderer::RenderScore() {
 		return ws.length();
 	} (scoreTxt);
 	scoreRenderer->NewText(0, scoreTxt,
-		1000 + 96 * std::max((signed)widthLimit - (signed)strWidth, 0) - (int)(96.0f * (float)std::min(strWidth, widthLimit) * (scale - 1.0)),
+		1000 + 96 * std::max((signed)widthLimit - (signed)strWidth, 0) -
+		(int)(96.0f * (float)std::min(strWidth, widthLimit) * (scale - 1.0)),
 		BaseY + 10 - (int)(64.0f * (scale - 1.0)),
 		scale,
 		(float)widthLimit / (float)std::max(strWidth, widthLimit),

@@ -29,6 +29,7 @@ private:
 	Timer myTimer;
 	int myID;
 	int BaseY;
+	mihajong_structs::PlayerID player;
 private:
 	HugeTextRenderer* rankRenderer;
 	void RenderRank();
