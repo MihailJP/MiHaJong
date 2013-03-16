@@ -4,6 +4,7 @@
 #include "sysscr.h"
 #include "../../common/gametbl.h"
 #include "../timer.h"
+#include "../text.h"
 
 namespace mihajong_graphic {
 
@@ -25,6 +26,17 @@ private:
 	LPDIRECT3DDEVICE9 myDevice;
 	Timer myTimer;
 	int myID;
+	int BaseY;
+private:
+	HugeTextRenderer* rankRenderer;
+	void RenderRank();
+private:
+	SmallTextRenderer* nameRenderer;
+	unsigned stringWidth(const CodeConv::tstring& str);
+	void RenderNameScore();
+private:
+	ScoreDigitRenderer* scoreRenderer;
+	void RenderScore();
 public:
 	RankRenderer(LPDIRECT3DDEVICE9 device, int id);
 	~RankRenderer();
