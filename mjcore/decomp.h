@@ -42,7 +42,10 @@ public:
 /* Other compressed resources */
 #define FILEID_CONFITEM_CSV IDR_LZMA_STREA2
 #define FILEID_CONFITEM_INI IDR_LZMA_STREA3
+#define FILEID_RANKVAL_CSV IDR_LZMA_STREA4
 #define FILEDESC_CONFITEM_CSV _T("ルール定義ファイル")
 #define FILEDESC_CONFITEM_INI _T("ルールタグ翻訳ファイル")
+#define FILEDESC_RANKVAL_CSV _T("ウマ定義ファイル")
 #include "data/confitem_csv.h"
 #include "data/confitem_ini.h"
+#include "data/rankval_csv.h"

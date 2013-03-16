@@ -6,3 +6,4 @@
 #define IDR_LZMA_STREA1                         100
 #define IDR_LZMA_STREA2                         101
 #define IDR_LZMA_STREA3                         102
+#define IDR_LZMA_STREA4                         103
