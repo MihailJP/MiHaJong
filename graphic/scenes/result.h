@@ -23,6 +23,8 @@ public:
 
 class ResultScreen::RankRenderer {
 private:
+	static const unsigned animTime = 500000u;
+private:
 	LPDIRECT3DDEVICE9 myDevice;
 	Timer myTimer;
 	int myID;

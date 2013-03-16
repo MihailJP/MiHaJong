@@ -1,4 +1,9 @@
+#ifdef _MSC_VER
+#define NOMINMAX
+#endif
 #include "result.h"
+#include <cmath>
+#include <algorithm>
 
 namespace mihajong_graphic {
 
@@ -68,18 +73,31 @@ void ResultScreen::RankRenderer::RenderRank() {
 }
 
 void ResultScreen::RankRenderer::RenderNameScore() {
+	const uint64_t tempus = myTimer.elapsed();
+	const D3DCOLOR strcolor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
+		(255 - (int)(200.0 - ((double)tempus / (double)animTime * 200.0))),
+		255, 255, 255);
 	const CodeConv::tstring nomen(_T("‚¢‚ë‚Í‚É‚Ù‚Ö‚Æ‚¿‚è‚Ê‚é‚ð‚í‚©‚æ"));
 	const unsigned latitudoNominis = stringWidth(nomen);
 	nameRenderer->NewText(0, nomen, 150, BaseY + 10, 3.0f,
-		(latitudoNominis >= 30) ? 30.0f / (float)latitudoNominis : 1.0f);
+		(latitudoNominis >= 30) ? 30.0f / (float)latitudoNominis : 1.0f,
+		strcolor);
 	const CodeConv::tstring punctaticum(_T("‘f“_F12345678901234567890123456789012345678901234567890"));
 	const unsigned latitudoPunctatici = stringWidth(punctaticum);
 	nameRenderer->NewText(1, punctaticum, 150, BaseY + 70, 3.0f,
-		(latitudoPunctatici >= 30) ? 30.0f / (float)latitudoPunctatici : 1.0f);
+		(latitudoPunctatici >= 30) ? 30.0f / (float)latitudoPunctatici : 1.0f,
+		strcolor);
 	nameRenderer->Render();
 }
 
 void ResultScreen::RankRenderer::RenderScore() {
+	const unsigned widthLimit = 4u;
+	const uint64_t tempus = myTimer.elapsed();
+	const D3DCOLOR strcolor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
+		(255 - (int)(200.0 - ((double)tempus / ((double)animTime / 200.0)))),
+		255, 255, 255);
+	const float scale = (tempus >= animTime) ? 1.0f :
+		1.0f + pow((float)(animTime - tempus) / (float)animTime * 3.5f, 2);
 	const CodeConv::tstring scoreTxt(_T("+1–œ2345"));
 	const unsigned strWidth = [](const CodeConv::tstring& str) -> unsigned {
 		const std::wstring ws =
@@ -90,8 +108,12 @@ void ResultScreen::RankRenderer::RenderScore() {
 #endif
 		return ws.length();
 	} (scoreTxt);
-	scoreRenderer->NewText(0, scoreTxt, 1000, BaseY + 10, 1.0f,
-		(strWidth > 4u) ? (4.0f / (float)strWidth) : 1.0f);
+	scoreRenderer->NewText(0, scoreTxt,
+		1000 + 96 * std::max((signed)widthLimit - (signed)strWidth, 0) - (int)(96.0f * (float)std::min(strWidth, widthLimit) * (scale - 1.0)),
+		BaseY + 10 - (int)(64.0f * (scale - 1.0)),
+		scale,
+		(float)widthLimit / (float)std::max(strWidth, widthLimit),
+		strcolor);
 	scoreRenderer->Render();
 }
 
