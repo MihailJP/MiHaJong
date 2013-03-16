@@ -44,5 +44,5 @@ public:
 #define FILEID_CONFITEM_INI IDR_LZMA_STREA3
 #define FILEDESC_CONFITEM_CSV _T("ルール定義ファイル")
 #define FILEDESC_CONFITEM_INI _T("ルールタグ翻訳ファイル")
-#include "data/confitem.csv.h"
-#include "data/confitem.ini.h"
+#include "data/confitem_csv.h"
+#include "data/confitem_ini.h"

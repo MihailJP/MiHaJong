@@ -29,8 +29,12 @@ end
 srcfile = Pathname.new(ARGV[0])
 targetfile = Pathname.new((srcfile.to_s) + ".lzma")
 symbolname = srcfile.basename.to_s.upcase.gsub(/\W/, '_')
-headerfile = Pathname.new((srcfile.to_s) + ".h")
-cppfile = Pathname.new((srcfile.to_s) + ".cpp")
+headerfile =
+	Pathname.new(srcfile.dirname.to_s + "/" +
+	             (srcfile.basename.to_s.gsub(/\./, "_")) + ".h")
+cppfile =
+	Pathname.new(srcfile.dirname.to_s + "/" +
+	             (srcfile.basename.to_s.gsub(/\./, "_")) + ".cpp")
 
 compressed = nil
 digest = nil
