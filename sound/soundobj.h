@@ -1,6 +1,10 @@
 #pragma once
 
+#if defined(USE_XAUDIO2)
 #include <XAudio2.h>
+#else
+#include <dsound.h>
+#endif
 #include <cstdint>
 #include <cstring>
 #include <fstream>
@@ -12,10 +16,15 @@ namespace sound {
 	/* サウンド操作用クラス */
 	class SoundManipulator {
 	private:
+#if defined(USE_XAUDIO2)
 		IXAudio2* xAudio;
 		IXAudio2MasteringVoice* mVoice;
+#else
+		LPDIRECTSOUND8 pDSound;
+		LPDIRECTSOUNDBUFFER mVoice;
+#endif
 		std::vector<AudioData*> sounds;
-		void InitXAudio();
+		void InitXAudio(HWND hWnd = nullptr);
 	public:
 		SoundManipulator();
 		SoundManipulator(HWND hWnd);

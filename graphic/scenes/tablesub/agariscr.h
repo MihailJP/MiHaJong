@@ -19,7 +19,7 @@ protected:
 	static const unsigned yakuWndHeight = 864u;
 	static const int BaseX = ((signed)Geometry::BaseSize - (signed)yakuWndWidth ) / 2;
 	static const int BaseY = ((signed)Geometry::BaseSize - (signed)yakuWndHeight) / 2;
-	double seconds() {return (double)(currTime() - startTime) / 10000000.0;}
+	double seconds() {return (double)myTimer.elapsed() / 1000000.0;}
 	static const int handPosY = BaseY + 56;
 	static const double yakuInterval;
 	static const double yakuAnimStartSecond;

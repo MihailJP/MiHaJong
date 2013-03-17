@@ -19,7 +19,6 @@ EditBox::EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned wid
 	myTextRenderer = new SmallTextRenderer(device);
 	D3DXCreateLine(device, &cursorLine);
 	maxStr = 0u; cursorPos = 0u; scrollPos = 0u;
-	cursorBlinkStart = currTime();
 	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX), 88, 56);
 	isActive = false;
 }
@@ -28,11 +27,6 @@ EditBox::~EditBox() {
 	if (myTexture) myTexture->Release();
 	if (cursorLine) cursorLine->Release();
 	if (myTextRenderer) delete myTextRenderer;
-}
-
-unsigned long long EditBox::currTime() {
-	FILETIME t; GetSystemTimeAsFileTime(&t);
-	return ((unsigned long long)t.dwHighDateTime << 32) | t.dwLowDateTime;
 }
 
 D3DXMATRIX EditBox::getMatrix(int X, int Y, unsigned width) {
@@ -182,7 +176,7 @@ void EditBox::renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol) {
 	cursorLine->Begin();
 	cursorLine->Draw(vec, 2,
 		(imStat.isOpened() ? 0xffcc0000 : 0xff000066) |
-		((int)(sin((double)(currTime() - cursorBlinkStart) / 2000000.0) * 96.0 + 120.0) << 8)
+		((int)(sin((double)myTimer.elapsed() / 200000.0) * 96.0 + 120.0) << 8)
 		);
 	cursorLine->End();
 }

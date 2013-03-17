@@ -9,6 +9,7 @@
 #include "text.h"
 #include <vector>
 #include <functional>
+#include "timer.h"
 
 namespace mihajong_graphic {
 
@@ -25,8 +26,7 @@ private:
 	LPD3DXLINE cursorLine;
 	unsigned cursorPos;
 	unsigned scrollPos;
-	unsigned long long cursorBlinkStart;
-	unsigned long long currTime();
+	Timer myTimer;
 	class IMStat;
 	unsigned scrollRBound(IMStat& imStat);
 	void scroll(IMStat& imStat);

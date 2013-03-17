@@ -101,11 +101,6 @@ D3DCOLOR TableProtoScene::roundColor() {
 
 // -------------------------------------------------------------------------
 
-unsigned long long TableProtoScene::ScoreBoard::currTime() { // 現在時刻
-	FILETIME czas; GetSystemTimeAsFileTime(&czas);
-	return ((unsigned long long)czas.dwHighDateTime << 32) | czas.dwLowDateTime;
-}
-
 PlayerID TableProtoScene::ScoreBoard::playerID() {
 	return utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, relativePlayerID);
 }
@@ -129,7 +124,7 @@ TableProtoScene::ScoreBoard::~ScoreBoard() {
 }
 
 TableProtoScene::ScoreBoard::ScoreMode TableProtoScene::ScoreBoard::getScoreMode() {
-	return (ScoreMode)((currTime() / 20000000) % ((rules::chkRule("chip", "no")) ? 2 : 3));
+	return (ScoreMode)((myTimer.currTime() / 2000000) % ((rules::chkRule("chip", "no")) ? 2 : 3));
 }
 
 void TableProtoScene::ScoreBoard::Render() {
@@ -143,7 +138,7 @@ void TableProtoScene::ScoreBoard::Render() {
 }
 
 void TableProtoScene::ScoreBoard::renderWind() {
-	if ((currTime() % 10000000 >= 5000000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return; // ツモ番の時は表示を点滅させる
+	if ((myTimer.currTime() % 1000000 >= 500000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return; // ツモ番の時は表示を点滅させる
 	const seatAbsolute wind = utils::playerwind(GameStatus::gameStat(), playerID(), GameStatus::gameStat()->GameRound);
 	RECT rect = {
 		WindCharX + WindCharWidth * ((int)wind    ), WindCharY,
@@ -172,7 +167,7 @@ void TableProtoScene::ScoreBoard::renderRank() {
 		ledColorGreen); // その他は緑で表示
 
 	renderNumeral(RankPosX, RankPosY, rankList[playerID()], color); // その他は緑で表示
-	if ((currTime() % 10000000 < 5000000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID()))
+	if ((myTimer.currTime() % 1000000 < 500000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID()))
 		renderNumeral(RankPosX, RankPosY, digitDecimal, color);
 }
 

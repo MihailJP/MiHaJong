@@ -9,7 +9,9 @@
 /* OGGファイル読み込み */
 void sound::OggData::Prepare(const std::string& filename) {
 	std::memset(&format, 0, sizeof(format));
+#if defined(USE_XAUDIO2)
 	std::memset(&bufInfo, 0, sizeof(buffer));
+#endif
 	// ファイルを開く
 	FILE* file;
 	if (fopen_s(&file, filename.c_str(), "rb")) throw CodeConv::tstring(_T("ファイルを開けませんでした"));
@@ -43,49 +45,13 @@ void sound::OggData::Prepare(const std::string& filename) {
 	free(buf); buf = nullptr;
 }
 
+#if defined(USE_XAUDIO2)
 sound::OggData::OggData(IXAudio2** Engine, const std::string& filename, bool looped) {
-	HRESULT hr;
+#else
+sound::OggData::OggData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped) {
+#endif
 	Prepare(filename);
-	std::memset(&bufInfo, 0, sizeof(bufInfo));
-	bufInfo.AudioBytes = buffer.size();
-	bufInfo.pAudioData = reinterpret_cast<BYTE*>(&buffer[0]);
-	bufInfo.LoopCount = (looped ? XAUDIO2_LOOP_INFINITE : 0);
-	if (FAILED(hr = (*Engine)->CreateSourceVoice(&voice, &format))) {
-		CodeConv::tostringstream o; o << _T("CreateSourceVoice失敗！！ (0x") <<
-			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
-		throw o.str();
-	}
-}
-
-/* 再生 */
-void sound::OggData::Play() {
-	Stop();
-	HRESULT hr;
-	if (FAILED(hr = voice->SubmitSourceBuffer(&bufInfo))) {
-		CodeConv::tostringstream o; o << _T("SubmitSourceBuffer失敗！！ (0x") <<
-			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
-		throw o.str();
-	}
-	if (FAILED(hr = voice->Start(0, XAUDIO2_COMMIT_NOW))) {
-		CodeConv::tostringstream o; o << _T("Start失敗！！ (0x") <<
-			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
-		throw o.str();
-	}
-}
-
-/* 停止 */
-void sound::OggData::Stop() {
-	HRESULT hr;
-	if (FAILED(hr = voice->Stop())) {
-		CodeConv::tostringstream o; o << _T("Stop失敗！！ (0x") <<
-			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
-		throw o.str();
-	}
-	if (FAILED(hr = voice->FlushSourceBuffers())) {
-		CodeConv::tostringstream o; o << _T("FlushSourceBuffers失敗！！ (0x") <<
-			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
-		throw o.str();
-	}
+	PrepareBuffer(Engine, looped);
 }
 
 

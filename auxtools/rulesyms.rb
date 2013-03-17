@@ -17,12 +17,12 @@ Dir::chdir(File.expand_path(File.dirname(__FILE__))) # このスクリプトの�
 
 require "csv"
 csvdat = CSV.read("../mjcore/data/confitem.csv", encoding: "UTF-8") # 設定を記述したCSVを開く
-target = open("../mihajong_legacy/rulesyms.txt", mode_enc = "wb") # 出力先(改行コードを固定するため敢えてバイナリモードとする)
+target = open("../doc/rulesyms.txt", mode_enc = "wt") # 出力先
 
 for row in csvdat # 各項目ごとに出力する
-	target.print "【", row[8], "】", row[9], gametype(row[1]), "\r\n"
-	target.print "\t", row[10], "\r\n"
-	target.print "\t設定値: ", row[11..-1].keep_if{|s| s}.delete_if{|s| s == ">>>"}.join(", "), "\r\n\r\n"
+	target.print "【", row[8], "】", row[9], gametype(row[1]), "\n"
+	target.print "\t", row[10], "\n"
+	target.print "\t設定値: ", row[11..-1].keep_if{|s| s}.delete_if{|s| s == ">>>"}.join(", "), "\n\n"
 end
 
 Dir::chdir(dir) # 作業ディレクトリを元に戻す
