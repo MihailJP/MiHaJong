@@ -1,4 +1,5 @@
 #include "result.h"
+#include <regex>
 #include "../graphic/graphic.h"
 #include "../sound/sound.h"
 #include "sound.h"
@@ -54,15 +55,32 @@ namespace {
 		}
 	}
 
+	/* チップレート */
+	unsigned int chipRate() {
+		if (RuleData::chkRule("chip", "no")) return 0; // チップなしルール
+		std::string chipRule(RuleData::chkRule("chip"));
+		std::smatch matchDat;
+		if (std::regex_match(chipRule, matchDat, std::regex("chip_rate_(\\d+)"))) { // チップレート
+			return atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
+		} else { // 異常データ？
+			CodeConv::tostringstream o;
+			o << _T("認識できないチップレート設定です [") <<
+				CodeConv::EnsureTStr(chipRule) << _T(']');
+			warn(o.str().c_str());
+			return 0;
+		}
+	}
+
 	/* 得点計算 */
 	void calcScore(const GameTable* gameStat) {
 		InfoByPlayer<LNum> playerScore;
-		for (PlayerID i = 0; i < Players; ++i)
+		for (PlayerID i = 0; i < Players; ++i) // 点数処理
 			playerScore[i] = gameStat->Player[i].PlayerScore - BasePoint();
+		for (PlayerID i = 0; i < Players; ++i) // チップを反映
+			playerScore[i] += gameStat->Player[i].playerChip * (signed)chipRate();
 		calcUma(gameStat, playerScore); // ウマを加算する
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i) // 丸め処理
 			playerScore[i] = roundScore(playerScore[i]);
-		/* TODO: チップの反映 */
 		calcOka(gameStat, playerScore); // オカを加算する
 		mihajong_graphic::setFinalScore( // 表示処理用DLLに渡す
 			playerScore[0], playerScore[1], playerScore[2], playerScore[3]);
@@ -72,6 +90,7 @@ namespace {
 void gameResult(GameTable* gameStat, int origTurn, int origHonba) {
 	sound::util::bgmstop();
 	withdrawDepoScore(gameStat); // 供託点棒の処理
+	/* TODO: 焼き鳥・飛び賞などの反映 */
 	mihajong_graphic::GameStatus::updateGameStat(gameStat); // 反映させる
 	calcScore(gameStat);
 	/*  */

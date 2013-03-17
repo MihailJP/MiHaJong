@@ -7,7 +7,9 @@
 #include "../utils.h"
 #include "../gametbl.h"
 #include "../finscore.h"
+#include "../rule.h"
 #include "../pi.h"
+#include "../event.h"
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
 
@@ -149,9 +151,20 @@ void ResultScreen::RankRenderer::RenderNameScore() {
 	nameRenderer->NewText(0, nomen, 150, BaseY + 10, 3.0f,
 		(latitudoNominis >= 30) ? 30.0f / (float)latitudoNominis : 1.0f,
 		aColor & color);
-	const CodeConv::tstring punctaticum(
-		CodeConv::tstring(_T("素点：")) +
-		GameStatus::gameStat()->Player[player].PlayerScore.bignumtotext(_T(""), _T("△")));
+
+	CodeConv::tostringstream punctaticum_;
+	punctaticum_ << _T("素点：") <<
+		(GameStatus::gameStat()->Player[player].PlayerScore.bignumtotext(_T(""), _T("△")));
+	const int chipVal = GameStatus::gameStat()->Player[player].playerChip;
+	if (!rules::chkRule("chip", "no")) {
+		if (chipVal > 0)
+			punctaticum_ << _T(" チップ：＋") << chipVal;
+		else if (chipVal < 0)
+			punctaticum_ << _T(" チップ：△") << (-chipVal);
+		else
+			punctaticum_ << _T(" チップ：0");
+	}
+	const CodeConv::tstring punctaticum(punctaticum_.str());
 	const unsigned latitudoPunctatici = stringWidth(punctaticum);
 	nameRenderer->NewText(1, punctaticum, 150, BaseY + 70, 3.0f,
 		(latitudoPunctatici >= 30) ? 30.0f / (float)latitudoPunctatici : 1.0f,
