@@ -19,15 +19,22 @@ using namespace mihajong_structs;
 
 ResultScreen::ResultScreen(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
 	rankRenderer.fill(nullptr);
+	titleRenderer = new HugeTextRenderer(manipulator->getDevice());
 }
 
 ResultScreen::~ResultScreen() {
 	for (auto k = rankRenderer.begin(); k != rankRenderer.end(); ++k)
 		if (*k) delete *k;
+	delete titleRenderer;
 }
 
 void ResultScreen::Render() {
 	clearWithGameTypeColor();
+
+	titleRenderer->NewText(0, _T("èIÅ@Å@ã«"), 272, 60, 1.0f, 1.0f,
+		(myTimer.elapsed() < 1000000) ? (((unsigned int)(255 - (1000000 - myTimer.elapsed()) / 5000) << 24) | 0x00ffffff) : 0xffffffff);
+	titleRenderer->Render();
+
 	for (int i = 0; i < Players; ++i)
 		if ((myTimer.elapsed() >= (1000000 + i * 500000)) && (rankRenderer[i] == nullptr))
 			rankRenderer[i] = new RankRenderer(caller->getDevice(), i);
@@ -46,7 +53,7 @@ void ResultScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 ResultScreen::RankRenderer::RankRenderer(LPDIRECT3DDEVICE9 device, int id) {
 	myDevice = device;
 	myID = id;
-	BaseY = (3 - id) * 150 + 300;
+	BaseY = (3 - id) * 150 + 350;
 	PlayerRankList rank = utils::calcRank(GameStatus::retrGameStat());
 	player = -1;
 	for (PlayerID i = 0; i < (utils::chkGameType(GameStatus::retrGameStat(), SanmaT) ? 3 : 4); ++i)

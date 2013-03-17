@@ -12,6 +12,7 @@ class ResultScreen : public SystemScreen {
 private:
 	class RankRenderer;
 	std::array<RankRenderer*, mihajong_structs::Players> rankRenderer;
+	HugeTextRenderer* titleRenderer;
 	Timer myTimer;
 public:
 	ResultScreen(ScreenManipulator* const manipulator);
