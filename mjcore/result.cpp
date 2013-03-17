@@ -70,7 +70,7 @@ namespace {
 }
 
 void gameResult(GameTable* gameStat, int origTurn, int origHonba) {
-	sound::util::bgmstop(); /* TODO: BGM‘I‘ğ */
+	sound::util::bgmstop();
 	withdrawDepoScore(gameStat); // ‹Ÿ‘õ“_–_‚Ìˆ—
 	mihajong_graphic::GameStatus::updateGameStat(gameStat); // ”½‰f‚³‚¹‚é
 	calcScore(gameStat);
