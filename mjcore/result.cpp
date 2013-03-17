@@ -13,7 +13,7 @@ namespace {
 
 	/* 最後まで残っていた供託点棒はトップ取り */
 	void withdrawDepoScore(GameTable* gameStat) {
-		PlayerRankList rank(calcRank(gameStat));
+		const PlayerRankList rank(calcRank(gameStat));
 		for (PlayerID i = 0; i < Players; ++i) {
 			if (rank[i] == 1) {
 				gameStat->Player[i].PlayerScore += gameStat->Deposit * 1000;
@@ -31,7 +31,7 @@ namespace {
 
 	/* ウマ計算 */
 	void calcUma(const GameTable* gameStat, InfoByPlayer<LNum>& score) {
-		PlayerRankList rank(calcRank(gameStat));
+		const PlayerRankList rank(calcRank(gameStat));
 		int plusCount = 0;
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i)
 			if (isAboveBase(gameStat, i))
@@ -43,7 +43,7 @@ namespace {
 
 	/* オカ計算 */
 	void calcOka(const GameTable* gameStat, InfoByPlayer<LNum>& score) {
-		PlayerRankList rank(calcRank(gameStat));
+		const PlayerRankList rank(calcRank(gameStat));
 		LNum sumOfScore = 0; // 不足分または過剰分
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i)
 			sumOfScore += score[i];
@@ -58,7 +58,7 @@ namespace {
 	/* チップレート */
 	unsigned int chipRate() {
 		if (RuleData::chkRule("chip", "no")) return 0; // チップなしルール
-		std::string chipRule(RuleData::chkRule("chip"));
+		const std::string chipRule(RuleData::chkRule("chip"));
 		std::smatch matchDat;
 		if (std::regex_match(chipRule, matchDat, std::regex("chip_rate_(\\d+)"))) { // チップレート
 			return atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
