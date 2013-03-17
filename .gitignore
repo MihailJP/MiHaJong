@@ -6,8 +6,7 @@ mihajong/ai/
 mihajong/bgm/
 mihajong/sound/
 mihajong/debug*.log
-mihajong/haifu/*.txt
-mihajong/haifu/*.htm
+mihajong/haifu/
 mihajong_legacy/rulesyms.txt
 logger/Debug/
 logger/Release/

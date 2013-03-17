@@ -6,6 +6,7 @@
 #include "largenum.h"
 #include "rankval.h"
 #include "ruletbl.h"
+#include "haifu.h"
 
 namespace {
 
@@ -75,6 +76,7 @@ void gameResult(GameTable* gameStat, int origTurn, int origHonba) {
 	calcScore(gameStat);
 	/*  */
 	mihajong_graphic::Transit(mihajong_graphic::sceneResult);
+	haifu::haifusave(gameStat); // ”v•ˆ‚ğ•Û‘¶‚·‚é
 	/* TODO: I—¹‚Ìˆ— */
 	/* TODO: “ü—Í‘Ò‚¿
 	buttonPressed = 0
