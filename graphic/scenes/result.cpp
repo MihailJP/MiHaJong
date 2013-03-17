@@ -75,7 +75,14 @@ unsigned ResultScreen::RankRenderer::stringWidth(const CodeConv::tstring& str) {
 
 void ResultScreen::RankRenderer::RenderRank() {
 	CodeConv::tostringstream o; o << (4 - myID);
-	rankRenderer->NewText(0, o.str(), 60, BaseY, 0.625f);
+	D3DCOLOR txtcolor;
+	switch (4 - myID) {
+		case 1:  txtcolor = 0xffffd700; break;
+		case 2:  txtcolor = 0xffffffff; break;
+		case 3:  txtcolor = 0xffb87333; break;
+		default: txtcolor = 0xff9955ee; break;
+	}
+	rankRenderer->NewText(0, o.str(), 60, BaseY, 0.625f, 1.0f, txtcolor);
 	rankRenderer->Render();
 }
 
