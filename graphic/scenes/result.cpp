@@ -8,6 +8,8 @@
 #include "../gametbl.h"
 #include "../finscore.h"
 #include "../pi.h"
+#include "../../sound/sound.h"
+#include "../../common/bgmid.h"
 
 namespace mihajong_graphic {
 
@@ -52,6 +54,12 @@ ResultScreen::RankRenderer::RankRenderer(LPDIRECT3DDEVICE9 device, int id) {
 	nameRenderer = new SmallTextRenderer(device);
 	rankRenderer = new HugeTextRenderer(device);
 	scoreRenderer = new ScoreDigitRenderer(device);
+
+	sound::Play(sound::IDs::sndType);
+	if ((4 - id) == 1)
+		sound::Play(sound::IDs::sndYakulst2);
+	else
+		sound::Play(sound::IDs::sndYakulst1);
 }
 
 ResultScreen::RankRenderer::~RankRenderer() {
