@@ -227,6 +227,7 @@
     <ClCompile Include="mouda.cpp" />
     <ClCompile Include="prepare.cpp" />
     <ClCompile Include="random.cpp" />
+    <ClCompile Include="rankval.cpp" />
     <ClCompile Include="reader\csv2arry.cpp" />
     <ClCompile Include="reader\ini2map.cpp" />
     <ClCompile Include="reader\readrsrc.cpp" />
@@ -296,6 +297,7 @@
     <ClInclude Include="mouda.h" />
     <ClInclude Include="prepare.h" />
     <ClInclude Include="random.h" />
+    <ClInclude Include="rankval.h" />
     <ClInclude Include="rational.h" />
     <ClInclude Include="reader\csv2arry.h" />
     <ClInclude Include="reader\ini2map.h" />

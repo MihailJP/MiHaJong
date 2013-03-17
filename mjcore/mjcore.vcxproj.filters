@@ -237,6 +237,9 @@
     <ClCompile Include="data\rankval_csv.cpp">
       <Filter>ソース ファイル\data</Filter>
     </ClCompile>
+    <ClCompile Include="rankval.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lzma\Alloc.h">
@@ -409,6 +412,9 @@
     </ClInclude>
     <ClInclude Include="data\rankval_csv.h">
       <Filter>ヘッダー ファイル\data</Filter>
+    </ClInclude>
+    <ClInclude Include="rankval.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
