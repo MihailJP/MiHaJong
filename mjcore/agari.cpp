@@ -603,6 +603,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	calculateWaremeDelta(gameStat);
 	bool tmpUraFlag; int ChipAmount;
 	agariscrproc(gameStat, &yakuInfo, &agariPoint, ChipAmount, ResultDesc, tmpUraFlag); /* ˜a—¹‰æ–Ê */
+	gameStat->statOfAgari().YakitoriFlag = false; // Ä‚«’¹ƒtƒ‰ƒO‚ð‰º‚ë‚·
 	/*if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice"))
 		gameStat->DoraPointer = AlicePointer;*/
 	transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValAgariten, 1500);
