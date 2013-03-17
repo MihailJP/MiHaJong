@@ -67,6 +67,14 @@ ResultScreen::RankRenderer::RankRenderer(LPDIRECT3DDEVICE9 device, int id) {
 		sound::Play(sound::IDs::sndYakulst2);
 	else
 		sound::Play(sound::IDs::sndYakulst1);
+
+	if ((4 - id) == 1)
+		if (rank[GameStatus::gameStat()->PlayerID] == 1)
+			sound::util::bgmplay(sound::IDs::musEnding);
+		else if (rank[GameStatus::gameStat()->PlayerID] == (chkGameType(GameStatus::gameStat(), SanmaT) ? 3 : 4))
+			sound::util::bgmplay(sound::IDs::musEnding3);
+		else
+			sound::util::bgmplay(sound::IDs::musEnding2);
 }
 
 ResultScreen::RankRenderer::~RankRenderer() {
