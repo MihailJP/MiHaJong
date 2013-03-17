@@ -164,6 +164,10 @@ void ResultScreen::RankRenderer::RenderNameScore() {
 		else
 			punctaticum_ << _T(" チップ：0");
 	}
+	if (!rules::chkRule("yakitori", "no")) {
+		if (GameStatus::gameStat()->Player[player].YakitoriFlag)
+			punctaticum_ << _T(" 焼鳥");
+	}
 	const CodeConv::tstring punctaticum(punctaticum_.str());
 	const unsigned latitudoPunctatici = stringWidth(punctaticum);
 	nameRenderer->NewText(1, punctaticum, 150, BaseY + 70, 3.0f,

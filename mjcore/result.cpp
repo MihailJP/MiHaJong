@@ -85,12 +85,43 @@ namespace {
 		mihajong_graphic::setFinalScore( // 表示処理用DLLに渡す
 			playerScore[0], playerScore[1], playerScore[2], playerScore[3]);
 	}
+
+	/* 焼き鳥 */
+	void yakitori(GameTable* gameStat) {
+		const PlayerRankList rank(calcRank(gameStat));
+		const std::string yakitoriRule(RuleData::chkRule("yakitori"));
+		const PlayerID winner = [rank]() -> PlayerID {
+			for (PlayerID i = 0; i < Players; ++i) // Who is the winner?
+				if (rank[i] == 1)                  // Are you the winner?
+					return i;                      // This is the winner!
+			return -1;                             // Nobody won: this shouldn't be occur...
+		} ();
+		std::smatch matchDat;
+		if (std::regex_match(yakitoriRule, matchDat, std::regex("(\\d+)pts"))) { // 点棒で支払う場合
+			int yakitoriVal = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
+			for (PlayerID i = 0; i < Players; ++i) {
+				if (gameStat->Player[i].YakitoriFlag) {
+					gameStat->Player[i].PlayerScore -= yakitoriVal;
+					gameStat->Player[winner].PlayerScore += yakitoriVal;
+				}
+			}
+		} else if (std::regex_match(yakitoriRule, matchDat, std::regex("chip(\\d+)"))) { // チップで支払う場合
+			int yakitoriVal = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
+			for (PlayerID i = 0; i < Players; ++i) {
+				if (gameStat->Player[i].YakitoriFlag) {
+					gameStat->Player[i].playerChip -= yakitoriVal;
+					gameStat->Player[winner].playerChip += yakitoriVal;
+				}
+			}
+		}
+	}
+
 }
 
 void gameResult(GameTable* gameStat, int origTurn, int origHonba) {
 	sound::util::bgmstop();
 	withdrawDepoScore(gameStat); // 供託点棒の処理
-	/* TODO: 焼き鳥・飛び賞などの反映 */
+	yakitori(gameStat); // 焼き鳥の処理
 	mihajong_graphic::GameStatus::updateGameStat(gameStat); // 反映させる
 	calcScore(gameStat);
 	/*  */
