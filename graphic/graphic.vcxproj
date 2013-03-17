@@ -145,6 +145,7 @@
     <ClCompile Include="chrwidth.cpp" />
     <ClCompile Include="editbox.cpp" />
     <ClCompile Include="event.cpp" />
+    <ClCompile Include="finscore.cpp" />
     <ClCompile Include="font.cpp" />
     <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="geometry.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="event.h" />
     <ClInclude Include="exports.h" />
     <ClInclude Include="extchar.h" />
+    <ClInclude Include="finscore.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="gametbl.h" />
     <ClInclude Include="geometry.h" />

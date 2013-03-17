@@ -63,6 +63,8 @@ namespace {
 			playerScore[i] = roundScore(playerScore[i]);
 		/* TODO: チップの反映 */
 		calcOka(gameStat, playerScore); // オカを加算する
+		mihajong_graphic::setFinalScore( // 表示処理用DLLに渡す
+			playerScore[0], playerScore[1], playerScore[2], playerScore[3]);
 	}
 }
 
