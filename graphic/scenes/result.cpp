@@ -43,9 +43,33 @@ void ResultScreen::Render() {
 }
 
 void ResultScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+	const bool flag = ((myTimer.elapsed() > 3000000u) && (od->dwData));
+	switch (od->dwOfs) {
+	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // 決定
+		if (od->dwData) {
+			sound::Play(sound::IDs::sndClick);
+			if (flag)
+				ui::UIEvent->set(0); // イベントをセット
+			else
+				myTimer.skipTo(3000000u);
+		}
+		break;
+	}
 }
 
 void ResultScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	const bool flag = (myTimer.elapsed() > 3000000u);
+	switch (od->dwOfs) {
+	case DIMOFS_BUTTON0: // マウスの左ボタン
+		if (od->dwData) {
+			sound::Play(sound::IDs::sndClick);
+			if (flag)
+				ui::UIEvent->set(0); // イベントをセット
+			else
+				myTimer.skipTo(3000000u);
+		}
+		break;
+	}
 }
 
 // -------------------------------------------------------------------------
