@@ -1,5 +1,6 @@
 #ifdef _MSC_VER
 #define NOMINMAX
+#define _USE_MATH_DEFINES /* TODO: 仮対処。M_PIのヘッダ定義用(非推奨に付き自前で定義すること！) */
 #endif
 #include "result.h"
 #include <cmath>
@@ -88,21 +89,26 @@ void ResultScreen::RankRenderer::RenderRank() {
 
 void ResultScreen::RankRenderer::RenderNameScore() {
 	const uint64_t tempus = myTimer.elapsed();
-	const D3DCOLOR strcolor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
+	const D3DCOLOR aColor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
 		(255 - (int)(200.0 - ((double)tempus / (double)animTime * 200.0))),
 		255, 255, 255);
+	const D3DCOLOR color = (player != GameStatus::gameStat()->PlayerID) ? 0xffffffff :
+		D3DCOLOR_ARGB(255, 255,
+		(int)(200.0 - sin((double)myTimer.elapsed() * M_PI / 500000.0) * 50.0),
+		(int)(200.0 - sin((double)myTimer.elapsed() * M_PI / 500000.0) * 50.0)
+		);
 	const CodeConv::tstring nomen(utils::getName(player));
 	const unsigned latitudoNominis = stringWidth(nomen);
 	nameRenderer->NewText(0, nomen, 150, BaseY + 10, 3.0f,
 		(latitudoNominis >= 30) ? 30.0f / (float)latitudoNominis : 1.0f,
-		strcolor);
+		aColor & color);
 	const CodeConv::tstring punctaticum(
 		CodeConv::tstring(_T("素点：")) +
 		GameStatus::gameStat()->Player[player].PlayerScore.bignumtotext(_T(""), _T("△")));
 	const unsigned latitudoPunctatici = stringWidth(punctaticum);
 	nameRenderer->NewText(1, punctaticum, 150, BaseY + 70, 3.0f,
 		(latitudoPunctatici >= 30) ? 30.0f / (float)latitudoPunctatici : 1.0f,
-		strcolor);
+		aColor & color);
 	nameRenderer->Render();
 }
 
