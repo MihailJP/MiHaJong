@@ -22,7 +22,9 @@ EXPORT void append(LPCTSTR logstr) {
 }
 
 EXPORT LPCTSTR getlogptr() {
-	return logdata.str().c_str();
+	static CodeConv::tstring logstr;
+	logstr = logdata.str();
+	return logstr.c_str();
 }
 
 CodeConv::tstring getlog() {
