@@ -2,4 +2,4 @@
 
 #include "gametbl.h"
 
-void gameResult(const GameTable* gameStat, int origTurn, int origHonba);
+void gameResult(GameTable* gameStat, int origTurn, int origHonba);
