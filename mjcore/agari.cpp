@@ -579,6 +579,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	std::uint16_t tmpDoraPointer = origDoraPointer;
 	int AlicePointer = tmpDoraPointer - yakuInfo.AliceDora * 2 - 2;
 
+	/* FIXME: アリスのめくり演出でめくる数が正しくない */
 	if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice")) { // めくっていく処理
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAlice); // 表示
 		while (gameStat->DoraPointer > AlicePointer) {
@@ -602,6 +603,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	calculateWaremeDelta(gameStat);
 	bool tmpUraFlag; int ChipAmount;
 	agariscrproc(gameStat, &yakuInfo, &agariPoint, ChipAmount, ResultDesc, tmpUraFlag); /* 和了画面 */
+	gameStat->statOfAgari().YakitoriFlag = false; // 焼き鳥フラグを下ろす
 	/*if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice"))
 		gameStat->DoraPointer = AlicePointer;*/
 	transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValAgariten, 1500);

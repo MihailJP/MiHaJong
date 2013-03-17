@@ -17,12 +17,16 @@ namespace {
 	CodeConv::tostringstream logdata;
 }
 
+/* FIXME: ログがリセットされていない */
+
 EXPORT void append(LPCTSTR logstr) {
 	logdata << logstr; logdata.flush();
 }
 
 EXPORT LPCTSTR getlogptr() {
-	return logdata.str().c_str();
+	static CodeConv::tstring logstr;
+	logstr = logdata.str();
+	return logstr.c_str();
 }
 
 CodeConv::tstring getlog() {

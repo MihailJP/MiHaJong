@@ -11,6 +11,7 @@
 #include "fuuro.h"
 #include "prepare.h"
 #include "../graphic/graphic.h"
+#include "result.h"
 
 /* 半荘の進行 */
 EndType doTableTurn(GameTable* const gameStat) {
@@ -62,7 +63,7 @@ EndType doTableTurn(GameTable* const gameStat) {
 }
 
 /* 半荘の進行 */
-bool doTableRound(GameTable* const gameStat) {
+bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 	{
 		CodeConv::tostringstream o;
 		o << _T("局番号 [") << gameStat->GameRound << _T("] を開始しました。");
@@ -94,12 +95,11 @@ bool doTableRound(GameTable* const gameStat) {
 	do {
 		roundEndType = doTableTurn(gameStat);
 	} while ((roundEndType == DrawRinshan) || (roundEndType == Continuing));
-	int OrigHonba = gameStat->Honba, OrigTurn = gameStat->GameRound;
+	OrigHonba = gameStat->Honba; OrigTurn = gameStat->GameRound;
 	endround::endround(gameStat, roundEndType, OrigTurn, OrigHonba);
 	Sleep(5000);
 	// 半荘終了判定
-	/* return */ endround::nextRound(gameStat, roundEndType, OrigTurn);
-	return false; // 仮置き
+	return endround::nextRound(gameStat, roundEndType, OrigTurn);
 }
 
 namespace {
@@ -134,19 +134,11 @@ void startgame(GameTypeID gameType) {
 		gameinit(&GameStat, gameType, ""/* TODO: 通信対戦の時は接続先サーバーIPにすること */, PositionArray, ClientNumber); // 半荘の初期化処理
 
 		/* 半荘の進行 */
-		bool endFlag = false;
+		bool endFlag = false; int OrigTurn = 0, OrigHonba = 0;
 		do {
-			bool endFlag = doTableRound(gameStat);
+			endFlag = doTableRound(gameStat, OrigTurn, OrigHonba);
 		} while (!endFlag);
 		// 半荘終了時
-		/* TODO: 終了時の処理 endgame GameStat, GameEnv, origTurn, origHonba */
-		/* TODO: 入力待ち
-		buttonPressed = 0
-		repeat
-			redrscreen
-			await 1000
-			if (buttonPressed) {break}
-		loop
-		*/
+		gameResult(gameStat, OrigTurn, OrigHonba);
 	}
 }

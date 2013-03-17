@@ -145,6 +145,7 @@
     <ClCompile Include="chrwidth.cpp" />
     <ClCompile Include="editbox.cpp" />
     <ClCompile Include="event.cpp" />
+    <ClCompile Include="finscore.cpp" />
     <ClCompile Include="font.cpp" />
     <ClCompile Include="gametbl.cpp" />
     <ClCompile Include="geometry.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="loadtex.cpp" />
     <ClCompile Include="logwnd.cpp" />
     <ClCompile Include="rule.cpp" />
+    <ClCompile Include="scenes\result.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
     <ClCompile Include="scenes\game.cpp" />
     <ClCompile Include="scenes\proto.cpp" />
@@ -197,6 +199,7 @@
     <ClInclude Include="event.h" />
     <ClInclude Include="exports.h" />
     <ClInclude Include="extchar.h" />
+    <ClInclude Include="finscore.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="gametbl.h" />
     <ClInclude Include="geometry.h" />
@@ -204,8 +207,10 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="loadtex.h" />
     <ClInclude Include="logwnd.h" />
+    <ClInclude Include="pi.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="rule.h" />
+    <ClInclude Include="scenes\result.h" />
     <ClInclude Include="scenes\fps.h" />
     <ClInclude Include="scenes\game.h" />
     <ClInclude Include="scenes\proto.h" />

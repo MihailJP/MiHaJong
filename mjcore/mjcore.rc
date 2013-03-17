@@ -15,6 +15,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 IDR_LZMA_STREA1    LZMA_STREAM    "data\\mentz.dat.lzma"
 IDR_LZMA_STREA2    LZMA_STREAM    "data\\confitem.csv.lzma"
 IDR_LZMA_STREA3    LZMA_STREAM    "data\\confitem.ini.lzma"
+IDR_LZMA_STREA4    LZMA_STREAM    "data\\rankval.csv.lzma"
 
 
 

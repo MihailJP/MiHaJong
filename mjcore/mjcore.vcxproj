@@ -202,6 +202,7 @@
     <ClCompile Include="chat.cpp" />
     <ClCompile Include="data\confitem_csv.cpp" />
     <ClCompile Include="data\confitem_ini.cpp" />
+    <ClCompile Include="data\rankval_csv.cpp" />
     <ClCompile Include="decomp.cpp" />
     <ClCompile Include="discard.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -226,10 +227,12 @@
     <ClCompile Include="mouda.cpp" />
     <ClCompile Include="prepare.cpp" />
     <ClCompile Include="random.cpp" />
+    <ClCompile Include="rankval.cpp" />
     <ClCompile Include="reader\csv2arry.cpp" />
     <ClCompile Include="reader\ini2map.cpp" />
     <ClCompile Include="reader\readrsrc.cpp" />
     <ClCompile Include="remote.cpp" />
+    <ClCompile Include="result.cpp" />
     <ClCompile Include="shanten.cpp" />
     <ClCompile Include="ruletbl.cpp" />
     <ClCompile Include="sound.cpp" />
@@ -263,6 +266,7 @@
     <ClInclude Include="chat.h" />
     <ClInclude Include="data\confitem_csv.h" />
     <ClInclude Include="data\confitem_ini.h" />
+    <ClInclude Include="data\rankval_csv.h" />
     <ClInclude Include="decomp.h" />
     <ClInclude Include="discard.h" />
     <ClInclude Include="dllmain.h" />
@@ -293,11 +297,13 @@
     <ClInclude Include="mouda.h" />
     <ClInclude Include="prepare.h" />
     <ClInclude Include="random.h" />
+    <ClInclude Include="rankval.h" />
     <ClInclude Include="rational.h" />
     <ClInclude Include="reader\csv2arry.h" />
     <ClInclude Include="reader\ini2map.h" />
     <ClInclude Include="reader\readrsrc.h" />
     <ClInclude Include="remote.h" />
+    <ClInclude Include="result.h" />
     <ClInclude Include="shanten.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ruletbl.h" />

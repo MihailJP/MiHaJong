@@ -177,7 +177,13 @@
     <ClCompile Include="scenes\table\gari.cpp">
       <Filter>ソース ファイル\scenes\table</Filter>
     </ClCompile>
+    <ClCompile Include="scenes\result.cpp">
+      <Filter>ソース ファイル\scenes</Filter>
+    </ClCompile>
     <ClCompile Include="timer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="finscore.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -353,7 +359,16 @@
     <ClInclude Include="scenes\table\gari.h">
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
+    <ClInclude Include="scenes\result.h">
+      <Filter>ヘッダー ファイル\scenes</Filter>
+    </ClInclude>
     <ClInclude Include="timer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="finscore.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="pi.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
