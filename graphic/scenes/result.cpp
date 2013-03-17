@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "../utils.h"
 #include "../gametbl.h"
+#include "../finscore.h"
 
 namespace mihajong_graphic {
 
@@ -101,12 +102,16 @@ void ResultScreen::RankRenderer::RenderNameScore() {
 void ResultScreen::RankRenderer::RenderScore() {
 	const unsigned widthLimit = 4u;
 	const uint64_t tempus = myTimer.elapsed();
-	const D3DCOLOR strcolor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
+	const D3DCOLOR aColor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
 		(255 - (int)(200.0 - ((double)tempus / ((double)animTime / 200.0)))),
 		255, 255, 255);
 	const float scale = (tempus >= animTime) ? 1.0f :
 		1.0f + pow((float)(animTime - tempus) / (float)animTime * 3.5f, 2);
-	const CodeConv::tstring scoreTxt(_T("+1–œ2345"));
+	const LargeNum point(FinalScoreDat::getData(player));
+	const CodeConv::tstring scoreTxt(point.bignumtotext(_T("+"), _T("¢")));
+	const D3DCOLOR color =
+		(point > LargeNum::fromInt(0)) ? 0xffccffcc :
+		(point < LargeNum::fromInt(0)) ? 0xffffcccc : 0xffffffcc;
 	const unsigned strWidth = [](const CodeConv::tstring& str) -> unsigned {
 		const std::wstring ws =
 #ifdef _UNICODE
@@ -122,7 +127,7 @@ void ResultScreen::RankRenderer::RenderScore() {
 		BaseY + 10 - (int)(64.0f * (scale - 1.0)),
 		scale,
 		(float)widthLimit / (float)std::max(strWidth, widthLimit),
-		strcolor);
+		aColor & color);
 	scoreRenderer->Render();
 }
 
