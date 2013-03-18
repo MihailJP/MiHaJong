@@ -41,6 +41,8 @@ private:
 	public:
 		static const unsigned int cols = 40u;
 
+		static void checkCycle(bool reset = false);
+
 		static void haifuskip(
 			HaifuStreams* haifuP, HaifuStreams* HThaifuP,
 			PlayerID PassivePlayer, PlayerID ActivePlayer

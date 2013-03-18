@@ -71,6 +71,7 @@ void haifu::tools::haifuskip(
 			for (int i = 0; i < 4; i++) {
 				*p[i] << _T("　 "); *h[i] << _T("<td></td>");
 			}
+			checkCycle();
 			XhaifuBuffer << _T("\t\t\t\t<turn player=\"player") <<
 				(int)RelativePositionOf(ActivePlayer, sRight) << _T("\" />") << std::endl;
 		}
@@ -79,8 +80,10 @@ void haifu::tools::haifuskip(
 			for (int i = 0; i < 8; i++) {
 				*p[i] << _T("　 "); *h[i] << _T("<td></td>");
 			}
+			checkCycle();
 			XhaifuBuffer << _T("\t\t\t\t<turn player=\"player") <<
 				(int)RelativePositionOf(ActivePlayer, sRight) << _T("\" />") << std::endl;
+			checkCycle();
 			XhaifuBuffer << _T("\t\t\t\t<turn player=\"player") <<
 				(int)RelativePositionOf(ActivePlayer, sOpposite) << _T("\" />") << std::endl;
 		}
@@ -177,6 +180,7 @@ void haifu::tools::haifuwritetsumohai(
 	PlayerID ActivePlayer, Tile tlCode,
 	CodeConv::tstring PText, CodeConv::tstring HTText, CodeConv::tstring XAttr
 	) {
+		checkCycle();
 		XhaifuBuffer << _T("\t\t\t\t<turn player=\"player") << (int)ActivePlayer << _T("\">") << std::endl;
 		XhaifuBuffer << _T("\t\t\t\t\t");
 		recordTile_Table(
@@ -220,10 +224,13 @@ void haifu::tools::haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, Pl
 	for (int i = 0; i < 12; i++) {
 		*p[i] << _T("　 "); *h[i] << _T("<td></td>");
 	}
+	checkCycle();
 	XhaifuBuffer << _T("\t\t\t\t<turn player=\"player") <<
 		(int)RelativePositionOf(PassivePlayer, sRight) << _T("\" />") << std::endl;
+	checkCycle();
 	XhaifuBuffer << _T("\t\t\t\t<turn player=\"player") <<
 		(int)RelativePositionOf(PassivePlayer, sOpposite) << _T("\" />") << std::endl;
+	checkCycle();
 	XhaifuBuffer << _T("\t\t\t\t<turn player=\"player") <<
 		(int)RelativePositionOf(PassivePlayer, sLeft) << _T("\" />") << std::endl;
 }
@@ -386,7 +393,7 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 		tools::recordBlank_Table(
 			&haifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel,
 			&HThaifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel);
-		XhaifuBuffer << _T("\t\t\t<cycle>") << std::endl;
+		tools::checkCycle(true);
 		XhaifuBuffer << _T("\t\t\t\t<turn player=\"player") << (int)gameStat->CurrentPlayer.Active << _T("\">") << std::endl;
 	} else if (gameStat->statOfActive().Tsumohai().tile == NoTile) {
 		// 鳴いた直後 (何もしない)
@@ -398,6 +405,7 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 		haifuP.streamDat[gameStat->CurrentPlayer.Active].tsumo << _T("↓ ");
 		HThaifuP.streamDat[gameStat->CurrentPlayer.Active].tsumo << _T("<td class=\"fallthru\">↓</td>");
 		discard_through = true;
+		tools::checkCycle();
 		XhaifuBuffer << _T("\t\t\t\t<turn player=\"player") << (int)gameStat->CurrentPlayer.Active << _T("\">") << std::endl;
 	} else {
 		tools::haifuwritetsumohai(
@@ -488,6 +496,21 @@ __declspec(dllexport) void haifu::haifurecminkan(const GameTable* const gameStat
 	tools::haifuskipall(&haifuP, &HThaifuP, gameStat->CurrentPlayer.Passive);
 }
 
+/* 巡目区切りか */
+void haifu::tools::checkCycle(bool reset) {
+	static int cycle = 1, turn = 0;
+	if (reset) {
+		cycle = 1; turn = 0;
+		XhaifuBuffer << _T("\t\t\t<cycle ord=\"1\">") << std::endl;
+	} else {
+		if ((++turn) >= Players) {
+			++cycle; turn = 0;
+			XhaifuBuffer << _T("\t\t\t</cycle>") << std::endl <<
+				_T("\t\t\t<cycle ord=\"") << cycle << _T("\">") << std::endl;
+		}
+	}
+}
+
 /* カンがあった時 */
 void haifu::tools::kan_sub::recordKanOrFlower(
 	const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
@@ -496,7 +519,7 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 		if ((gameStat->TianHuFlag)||((DiscardTileIndex.id) != (NumOfTilesInHand - 1))) {
 			// 親の１巡目の場合か、ツモってきた牌以外をカンした場合
 			if (gameStat->TianHuFlag) {
-				XhaifuBuffer << _T("\t\t\t<cycle>") << std::endl;
+				checkCycle(true);
 				XhaifuBuffer << _T("\t\t\t\t<turn player=\"player") << (int)gameStat->CurrentPlayer.Active << _T("\">") << std::endl;
 				XhaifuBuffer << _T("\t\t\t\t\t");
 				recordBlank_Table(
@@ -514,6 +537,7 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 			} else if (gameStat->statOfActive().Tsumohai().tile ==
 				gameStat->statOfActive().Hand[DiscardTileIndex.id].tile) {
 					// ツモってきた牌と同じだった
+					checkCycle();
 					XhaifuBuffer << _T("\t\t\t\t<turn player=\"player") << (int)gameStat->CurrentPlayer.Active << _T("\">") << std::endl;
 					XhaifuBuffer << _T("\t\t\t\t\t");
 					recordTile_Table(
@@ -536,6 +560,7 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 				haifukanflag = true;
 			}
 		} else {
+			checkCycle();
 			XhaifuBuffer << _T("\t\t\t\t<turn player=\"player") << (int)gameStat->CurrentPlayer.Active << _T("\">") << std::endl;
 			XhaifuBuffer << _T("\t\t\t\t\t");
 			recordTile_Table(
