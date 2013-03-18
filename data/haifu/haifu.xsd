@@ -115,8 +115,6 @@
 					<xsd:attribute name="score-after" type="xsd:integer" />
 					<xsd:attribute name="delta" type="xsd:integer" />
 					<xsd:attribute name="chip" type="xsd:integer" />
-					<xsd:attribute name="chip-after" type="xsd:integer" />
-					<xsd:attribute name="chip-delta" type="xsd:integer" />
 				</xsd:complexType>
 			</xsd:element>
 		</xsd:sequence>

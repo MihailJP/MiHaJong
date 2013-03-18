@@ -707,7 +707,6 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 		if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(RuleData::chkRuleApplied("alice")))
 			XhaifuBuffer << _T("\t\t\t<alice>") << std::endl <<
 			XhaifuP.aliceDoraMax.str() << _T("\t\t\t</alice>") << std::endl;
-		XhaifuBuffer << _T("\t\t</round-description>") << std::endl;
 }
 
 // 最終牌姿
@@ -946,6 +945,21 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 		windName(wind) << _T(" ") <<
 		EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
 		o.str() << _T("</td></tr>") << std::endl;
+
+	// XML用出力
+	const CodeConv::tstring nomDeVent[4] = {_T("east"), _T("south"), _T("west"), _T("north")};
+	XhaifuBuffer << _T("\t\t\t\t<player ref=\"player") << (int)player << _T("\" wind=\"") <<
+		nomDeVent[wind] << _T("\" score=\"")
+		<< origPoint[player].to_str_plain() << _T('"');
+	if (origPoint[player] != gameStat->Player[player].PlayerScore) // 点数が一致しないなら
+		XhaifuBuffer << _T(" score-after=\"") <<
+			gameStat->Player[player].PlayerScore.bignumtoplaintext() << _T("\" delta=\"") <<
+			((LNum)gameStat->Player[player].PlayerScore -
+			origPoint[player]).to_str_plain() << _T('"');
+	if (RuleData::chkRuleApplied("chip")) // チップありの時
+		XhaifuBuffer << _T(" chip=\"") <<
+			(int)gameStat->Player[player].playerChip << _T('"');
+	XhaifuBuffer << _T(" />") << std::endl;
 }
 
 void haifu::tools::hfwriter::hfWriteOut(const GameTable* const gameStat, PlayerID player) {
@@ -982,6 +996,7 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 	XhaifuBufferBody << _T("\t\t\t</cycle>") << std::endl;
 	XhaifuBufferBody << _T("\t\t</progress>") << std::endl;
 	XhaifuBufferBody << _T("\t\t<final-hands>") << std::endl;
+	XhaifuBuffer << _T("\t\t\t<player-score>") << std::endl;
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << i << _T("\">") << std::endl;
 		PlayerID k = RelativePositionOf(i, OrigTurn % Players);
@@ -1001,6 +1016,7 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 		XhaifuBufferBody << _T("\t\t\t</final-hand>") << std::endl;
 	}
 	XhaifuBufferBody << _T("\t\t</final-hands>") << std::endl;
+	XhaifuBuffer << _T("\t\t\t</player-score>") << std::endl;
 }
 
 void haifu::tools::hfwriter::hfWriteBottom() {
@@ -1008,7 +1024,8 @@ void haifu::tools::hfwriter::hfWriteBottom() {
 		_T("------------------------------------------------------------------------------") <<
 		std::endl << std::endl;
 	HThaifuBuffer << _T("</table>") << std::endl << _T("<hr>") << std::endl;
-	XhaifuBuffer << XhaifuBufferBody.str() << _T("\t</round>") << std::endl;
+	XhaifuBuffer << _T("\t\t</round-description>") << std::endl <<
+		XhaifuBufferBody.str() << _T("\t</round>") << std::endl;
 }
 
 /* 配牌をバッファに出力 */

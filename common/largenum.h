@@ -2,6 +2,7 @@
 
 #include <type_traits>
 #include <cstdint>
+#include <iomanip>
 #include "strcode.h"
 
 // 青天ルール対策
@@ -55,6 +56,24 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 				o << abs(this->digitGroup[i] % 100000000 / 10000) << unitname[i * 2 + 1];
 			if (this->digitGroup[i] % 10000)
 				o << abs(this->digitGroup[i] % 10000) << unitname[i * 2];
+		}
+		return o.str();
+	}
+	CodeConv::tstring bignumtoplaintext(CodeConv::tstring plusSign = _T(""), CodeConv::tstring minusSign = _T("-")) const {
+		// 文字列表現に直す
+		CodeConv::tostringstream o;
+		// 符号
+		if ((LargeNum)*this == fromInt(0)) return _T("0");
+		else if ((LargeNum)*this < fromInt(0)) o << minusSign;
+		else if ((LargeNum)*this > fromInt(0)) o << plusSign;
+		// 出力
+		bool valFlag = false;
+		for (int i = DigitGroups - 1; i >= 0; i--) {
+			if (valFlag) {
+				o << std::setw(8) << std::setfill(_T('0')) << abs(this->digitGroup[i]);
+			} else if (this->digitGroup[i]) {
+				o << abs(this->digitGroup[i]); valFlag = true;
+			}
 		}
 		return o.str();
 	}
