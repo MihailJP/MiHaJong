@@ -19,8 +19,24 @@ const CodeConv::tstring haifu::HTtilecodelabel1 =
 const CodeConv::tstring haifu::HTtilecodelabel2 =
 	_T(" QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   -^\\[%@;:]");
 
+const std::array<CodeConv::tstring, TileFlowerMax> haifu::Xtilerefcode = {
+	_T(""), _T("&m1;"),     _T("&m2;"),     _T("&m3;"),     _T("&m4;"),     _T("&m5;"),    _T("&m6;"),    _T("&m7;"),     _T("&m8;"),    _T("&m9;"),
+	_T(""), _T("&p1;"),     _T("&p2;"),     _T("&p3;"),     _T("&p4;"),     _T("&p5;"),    _T("&p6;"),    _T("&p7;"),     _T("&p8;"),    _T("&p9;"),
+	_T(""), _T("&s1;"),     _T("&s2;"),     _T("&s3;"),     _T("&s4;"),     _T("&s5;"),    _T("&s6;"),    _T("&s7;"),     _T("&s8;"),    _T("&s9;"),
+	_T(""), _T("&east;"),   _T("&south;"),  _T("&west;"),   _T("&north;"),  _T("&white;"), _T("&green;"), _T("&red;"),    _T(""),        _T(""),
+	_T(""), _T("&m1;"),     _T("&m2;"),     _T("&m3;"),     _T("&m4;"),     _T("&m5;"),    _T("&m6;"),    _T("&m7;"),     _T("&m8;"),    _T("&m9;"),
+	_T(""), _T("&p1;"),     _T("&p2;"),     _T("&p3;"),     _T("&p4;"),     _T("&p5;"),    _T("&p6;"),    _T("&p7;"),     _T("&p8;"),    _T("&p9;"),
+	_T(""), _T("&s1;"),     _T("&s2;"),     _T("&s3;"),     _T("&s4;"),     _T("&s5;"),    _T("&s6;"),    _T("&s7;"),     _T("&s8;"),    _T("&s9;"),
+	_T(""), _T("&east;"),   _T("&south;"),  _T("&west;"),   _T("&north;"),  _T("&white;"), _T("&green;"), _T("&red;"),    _T(""),        _T(""),
+	_T(""), _T("&m1;"),     _T("&m2;"),     _T("&m3;"),     _T("&m4;"),     _T("&m5;"),    _T("&m6;"),    _T("&m7;"),     _T("&m8;"),    _T("&m9;"),
+	_T(""), _T("&p1;"),     _T("&p2;"),     _T("&p3;"),     _T("&p4;"),     _T("&p5;"),    _T("&p6;"),    _T("&p7;"),     _T("&p8;"),    _T("&p9;"),
+	_T(""), _T("&s1;"),     _T("&s2;"),     _T("&s3;"),     _T("&s4;"),     _T("&s5;"),    _T("&s6;"),    _T("&s7;"),     _T("&s8;"),    _T("&s9;"),
+	_T(""), _T("&east;"),   _T("&south;"),  _T("&west;"),   _T("&north;"),  _T("&white;"), _T("&green;"), _T("&red;"),    _T(""),        _T(""),
+	_T(""), _T("&spring;"), _T("&summer;"), _T("&autumn;"), _T("&winter;"), _T("&joker;"), _T("&plum;"),  _T("&orchid;"), _T("&chrys;"), _T("&bamboo;"),
+};
+
 InfoByPlayer<LNum> haifu::origPoint;
-CodeConv::tostringstream haifu::haifuBuffer, haifu::HThaifuBuffer;
+CodeConv::tostringstream haifu::haifuBuffer, haifu::HThaifuBuffer, haifu::XhaifuBuffer;
 bool haifu::haifukanflag = false;
 
 haifu::HaifuStreams haifu::haifuP, haifu::HThaifuP;
@@ -64,12 +80,22 @@ void haifu::tools::haifuskip(
 		}
 }
 
-CodeConv::tstring haifu::tools::haifudoraClass(doraCol Akadora) {
+CodeConv::tstring haifu::tools::haifudoraClass(doraCol Akadora) { // ê‘îvçïîvÇÃï (HTMLîvïà)
 	switch (Akadora) {
 	case AkaDora:
 		return _T(" class=\"akadora\"");
 	case AoDora:
 		return _T(" class=\"aodora\"");
+	default:
+		return _T("");
+	}
+}
+CodeConv::tstring haifu::tools::haifudoraClassX(doraCol Akadora) { // ê‘îvçïîvÇÃï (XMLîvïà)
+	switch (Akadora) {
+	case AkaDora:
+		return _T(" dora=\"red\"");
+	case AoDora:
+		return _T(" dora=\"blue\"");
 	default:
 		return _T("");
 	}
@@ -80,20 +106,29 @@ void haifu::tools::recordDoraStream(CodeConv::tostringstream* const p, CodeConv:
 	*h << HTtilecodelabel1.substr((int)tmpDora, 1);
 }
 
+/* îvÇãLò^Ç∑ÇÈ */
 void haifu::tools::recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, bool rotate) {
+	// plain-text
 	*p << (rotate ? _T("[") : _T("")) <<
 		tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TileNonflowerMax) * StringElemSize, StringElemSize) <<
 		(rotate ? _T("]") : _T(""));
+	// hypertext
 	if (tlCode.red) *h << _T("<span") << haifudoraClass(tlCode.red) << _T(">");
 	*h << (rotate ? HTtilecodelabel2 : HTtilecodelabel1).substr(
 		(int)tlCode.tile + (int)tlCode.red * TileNonflowerMax, 1);
 	if (tlCode.red) *h << _T("</span>");
+	// XML machine-readable
+	XhaifuBuffer << _T("<tile tile=\"") <<
+		Xtilerefcode[(int)tlCode.tile + (int)tlCode.red * TileNonflowerMax] << _T('\"') <<
+		haifudoraClassX(tlCode.red) << _T(" />");
 }
 void haifu::tools::recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, doraCol kakanCol) {
+	// plain-text
 	*p << _T("[") <<
 		tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TileNonflowerMax) * StringElemSize, StringElemSize) <<
 		tilecodelabel.substr(((int)tlCode.tile + (int)kakanCol * TileNonflowerMax) * StringElemSize, StringElemSize) <<
 		_T("]");
+	// hypertext
 	*h << _T("<table class=\"kakan\"><tr><td>");
 		if (kakanCol) *h << _T("<span") << haifudoraClass(kakanCol) << _T(">");
 		*h << HTtilecodelabel2.substr((int)tlCode.tile + (int)kakanCol * TileNonflowerMax, 1);
@@ -103,6 +138,12 @@ void haifu::tools::recordTile_Inline(CodeConv::tostringstream* const p, CodeConv
 		*h << HTtilecodelabel2.substr((int)tlCode.tile + (int)tlCode.red * TileNonflowerMax, 1);
 		if (tlCode.red) *h << _T("</span>");
 	*h << _T("</tr></td></table>");
+	// XML machine-readable
+	XhaifuBuffer << _T("<tile tile=\"") <<
+		Xtilerefcode[(int)tlCode.tile + (int)kakanCol * TileNonflowerMax] << _T('\"') <<
+		haifudoraClassX(kakanCol) << _T(" /><tile tile=\"") <<
+		Xtilerefcode[(int)tlCode.tile + (int)tlCode.red * TileNonflowerMax] << _T('\"') <<
+		haifudoraClassX(tlCode.red) << _T(" />");
 }
 void haifu::tools::recordTile_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode) {
 	*p << tilecodelabel.substr(((int)tlCode.tile + (int)tlCode.red * TileNonflowerMax) * StringElemSize, StringElemSize) << _T(" ");
@@ -194,6 +235,29 @@ __declspec(dllexport) void haifu::haifubufinit() {
 		_T("<link rel=\"stylesheet\" href=\"haifu.css\" type=\"text/css\">") << std::endl <<
 		_T("</head>") << std::endl << _T("<body>") << std::endl <<
 		_T("<h1>") << headerTxt.str() << _T("</h1>") << std::endl << _T("<hr>") << std::endl;
+
+	/* XMLîvïà */
+	XhaifuBuffer.str(_T(""));
+	XhaifuBuffer <<
+#ifdef UNICODE
+		_T("<?xml version=\"1.0\" encoding=\"UTF-8\"?>") <<
+#else
+		_T("<?xml version=\"1.0\" encoding=\"Shift_JIS\"?>") <<
+#endif
+		std::endl << _T("<!DOCTYPE haifu [") << std::endl <<
+		_T("\t<!ENTITY east \"&#x1f000;\"><!ENTITY south \"&#x1f001;\"><!ENTITY west \"&#x1f002;\"><!ENTITY north \"&#x1f003;\">")
+		_T("<!ENTITY red \"&#x1f004;\"><!ENTITY green \"&#x1f005;\"><!ENTITY white \"&#x1f006;\">") << std::endl <<
+		_T("\t<!ENTITY m1 \"&#x1f007;\"><!ENTITY m2 \"&#x1f008;\"><!ENTITY m3 \"&#x1f009;\"><!ENTITY m4 \"&#x1f00a;\"><!ENTITY m5 \"&#x1f00b;\">")
+		_T("<!ENTITY m6 \"&#x1f00c;\"><!ENTITY m7 \"&#x1f00d;\"><!ENTITY m8 \"&#x1f00e;\"><!ENTITY m9 \"&#x1f00f;\">") << std::endl <<
+		_T("\t<!ENTITY s1 \"&#x1f010;\"><!ENTITY s2 \"&#x1f011;\"><!ENTITY s3 \"&#x1f012;\"><!ENTITY s4 \"&#x1f013;\"><!ENTITY s5 \"&#x1f014;\">")
+		_T("<!ENTITY s6 \"&#x1f015;\"><!ENTITY s7 \"&#x1f016;\"><!ENTITY s8 \"&#x1f017;\"><!ENTITY s9 \"&#x1f018;\">") << std::endl <<
+		_T("\t<!ENTITY p1 \"&#x1f019;\"><!ENTITY p2 \"&#x1f01a;\"><!ENTITY p3 \"&#x1f01b;\"><!ENTITY p4 \"&#x1f01c;\"><!ENTITY p5 \"&#x1f01d;\">")
+		_T("<!ENTITY p6 \"&#x1f01e;\"><!ENTITY p7 \"&#x1f01f;\"><!ENTITY p8 \"&#x1f020;\"><!ENTITY p9 \"&#x1f021;\">") << std::endl <<
+		_T("\t<!ENTITY plum \"&#x1f022;\"><!ENTITY orchid \"&#x1f023;\"><!ENTITY bamboo \"&#x1f024;\"><!ENTITY chrys \"&#x1f025;\"><!ENTITY chrysanthemum \"&#x1f025;\">")
+		_T("<!ENTITY spring \"&#x1f026;\"><!ENTITY summer \"&#x1f027;\"><!ENTITY autumn \"&#x1f028;\"><!ENTITY winter \"&#x1f029;\">")
+		_T("<!ENTITY joker \"&#x1f02a;\"><!ENTITY back \"&#x1f02b;\">") << std::endl <<
+		_T("]>") << std::endl <<
+		_T("<haifu>") << std::endl;
 }
 
 /* àÍã«ï™ÇÃîvïàÉoÉbÉtÉ@Çèâä˙âª */
@@ -218,7 +282,9 @@ __declspec(dllexport) void haifu::haifuinit() {
 
 /* îzîvÇîvïàÇ…ãLò^ */
 __declspec(dllexport) void haifu::haifurechaipai(const GameTable* const gameStat) {
+	XhaifuBuffer << _T("<distribution>") << std::endl;
 	for (int p = 0; p < Players; p++) {
+		XhaifuBuffer << _T("<initial-hand>") << std::endl;
 		for (int i = 0; i < NumOfTilesInHand; i++) {
 			if (gameStat->Player[p].Hand[i].tile != NoTile) {
 				tools::recordTile_Inline(
@@ -227,10 +293,13 @@ __declspec(dllexport) void haifu::haifurechaipai(const GameTable* const gameStat
 					gameStat->Player[p].Hand[i],
 					false
 				);
+				XhaifuBuffer << std::endl;
 			}
 		}
+		XhaifuBuffer << _T("</initial-hand>") << std::endl;
 		origPoint[p] = gameStat->Player[p].PlayerScore;
 	}
+	XhaifuBuffer << _T("</distribution>") << std::endl;
 }
 
 /* ÉhÉâÇîvïàÇ…ãLò^ */
@@ -532,6 +601,7 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 // ç≈èIîvép
 void haifu::tools::hfwriter::finalformWriter::hfFinalForm(const GameTable* const gameStat, PlayerID player, EndType RoundEndType) {
 	// ç≈èIîvép(èÉéËîvÇÃÇ›)
+	XhaifuBuffer << _T("<hand>") << std::endl;
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[player].Hand[i].tile != NoTile) {
 			if (i == NumOfTilesInHand - 1) {
@@ -549,8 +619,10 @@ void haifu::tools::hfwriter::finalformWriter::hfFinalForm(const GameTable* const
 			recordTile_Inline(
 				&haifuP.streamDat[player].final, &HThaifuP.streamDat[player].final,
 				gameStat->Player[player].Hand[i], false);
+			XhaifuBuffer << std::endl;
 		}
 	}
+	XhaifuBuffer << _T("</hand>") << std::endl;
 }
 void haifu::tools::hfwriter::finalformWriter::hfFlower(const GameTable* const gameStat, PlayerID player) {
 	if (gameStat->Player[player].FlowerFlag.Spring ||
@@ -605,6 +677,7 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player
 	// É`Å[
 	haifuP.streamDat[player].final << _T(" ÅÉÉ`Å[");
 	HThaifuP.streamDat[player].final << _T("</span> É`Å[<span class=\"tile\">");
+	XhaifuBuffer << _T("<sequence>") << std::endl;
 	Tile meldTile[3];
 	switch (meld.mstat) {
 	case meldSequenceExposedLower:
@@ -626,7 +699,9 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player
 			&haifuP.streamDat[player].final,
 			&HThaifuP.streamDat[player].final,
 			meldTile[i], i == 0);
+		XhaifuBuffer << std::endl;
 	}
+	XhaifuBuffer << _T("</sequence>") << std::endl;
 }
 inline void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon1(PlayerID player, MeldCode meld) {
 	Tile meldTile = {meld.tile, meld.red[0]};
@@ -641,6 +716,7 @@ inline void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon1(PlayerID
 		&haifuP.streamDat[player].final,
 		&HThaifuP.streamDat[player].final,
 		meldTile, true);
+	XhaifuBuffer << std::endl;
 }
 void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player, MeldCode meld) {
 	int tiles, interrupt;
@@ -660,9 +736,16 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 		tiles = 3;
 		haifuP.streamDat[player].final << _T("É|Éì");
 		HThaifuP.streamDat[player].final << _T("</span> É|Éì<span class=\"tile\">");
+		XhaifuBuffer << _T("<triplet>") << std::endl;
 		break;
 	case meldQuadExposedLeft: case meldQuadExposedCenter:
-	case meldQuadExposedRight: case meldQuadConcealed:
+	case meldQuadExposedRight:
+		XhaifuBuffer << _T("<quad-exposed>") << std::endl;
+		goto quad_4tiles;
+	case meldQuadConcealed:
+		XhaifuBuffer << _T("<quad-concealed>") << std::endl;
+		goto quad_4tiles;
+	quad_4tiles:
 		tiles = 4;
 		haifuP.streamDat[player].final << _T("ÉJÉì");
 		HThaifuP.streamDat[player].final << _T("</span> ÉJÉì<span class=\"tile\">");
@@ -672,6 +755,7 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 		tiles = 3;
 		haifuP.streamDat[player].final << _T("Å§ÉJÉì");
 		HThaifuP.streamDat[player].final << _T("</span> ÉJÉì<span class=\"tile\">");
+		XhaifuBuffer << _T("<quad-exposed>") << std::endl;
 		break;
 	}
 	for (int i = (meld.mstat == meldQuadConcealed ? 0 : 1); i < tiles; i++) {
@@ -681,8 +765,22 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 			&haifuP.streamDat[player].final,
 			&HThaifuP.streamDat[player].final,
 			meldTile, false);
+		XhaifuBuffer << std::endl;
 	}
 	if (interrupt == 8) hfPon1(player, meld);
+	switch (meld.mstat) {
+	case meldTripletExposedLeft: case meldTripletExposedCenter:
+	case meldTripletExposedRight:
+		XhaifuBuffer << _T("</triplet>") << std::endl;
+		break;
+	case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight:
+	case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight:
+		XhaifuBuffer << _T("</quad-exposed>") << std::endl;
+		break;
+	case meldQuadConcealed:
+		XhaifuBuffer << _T("</quad-concealed>") << std::endl;
+		break;
+	}
 }
 
 void haifu::tools::hfwriter::finalformWriter::hfExposedMeld(const GameTable* const gameStat, PlayerID player) {
@@ -765,7 +863,9 @@ void haifu::tools::hfwriter::hfWriteOut(const GameTable* const gameStat, PlayerI
 }
 
 void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, int OrigTurn, EndType RoundEndType) {
+	XhaifuBuffer << _T("<final-hands>") << std::endl;
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
+		XhaifuBuffer << _T("<final-hand>") << std::endl;
 		PlayerID k = RelativePositionOf(i, OrigTurn % Players);
 		if (chkGameType(gameStat, SanmaT))
 			if (((OrigTurn % Players) + i) >= ACTUAL_PLAYERS)
@@ -780,7 +880,9 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 		if ((!chkGameType(gameStat, Sanma4))||(i < 3))
 			hfWriteOut(gameStat, k);
 		else haifuBuffer << std::endl;
+		XhaifuBuffer << _T("</final-hand>") << std::endl;
 	}
+	XhaifuBuffer << _T("</final-hands>") << std::endl;
 }
 
 void haifu::tools::hfwriter::hfWriteBottom() {
@@ -806,8 +908,11 @@ __declspec(dllexport) void haifu::haifuwritebuffer(
 
 /* îvïàÇï€ë∂ */
 void haifu::haifusave(const GameTable* const gameStat) {
-	std::string configPath = confpath::confPath();
 	HThaifuBuffer << _T("</body>") << std::endl << _T("</html>") << std::endl; // Finalize HTML
+	XhaifuBuffer << _T("</haifu>") << std::endl; // Finalize XML
+
+	/* ÉtÉ@ÉCÉãñºÇÃé©ìÆåàíË */
+	std::string configPath = confpath::confPath();
 	std::ostringstream filename1, filename2;
 	filename1 << configPath << "haifu\\";
 	switch (gameStat->gameType) {
@@ -826,16 +931,20 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	filename2 << std::setw(2) << std::setfill('0') << ltime.wHour;
 	filename2 << std::setw(2) << std::setfill('0') << ltime.wMinute;
 
+	/* ÉtÉ@ÉCÉãèëÇ´èoÇµ */
 	std::ofstream fileout;
-	fileout.open((filename1.str() + std::string("_haifu_") +
+	fileout.open((filename1.str() + std::string("_haifu_") + // ÉvÉåÅ[ÉìÉeÉLÉXÉgå`éÆîvïà
 		filename2.str() + std::string(".txt")).c_str());
 	fileout << CodeConv::EncodeStr(haifuBuffer.str()); fileout.close();
-	fileout.open((filename1.str() + std::string("_chat_") +
+	fileout.open((filename1.str() + std::string("_chat_") + // É`ÉÉÉbÉgÉçÉO
 		filename2.str() + std::string(".txt")).c_str());
 	fileout << CodeConv::EncodeStr(chat::chatobj->getlog()); fileout.close();
-	fileout.open((filename1.str() + std::string("_haifu_") +
+	fileout.open((filename1.str() + std::string("_haifu_") + // HTMLå`éÆîvïà
 		filename2.str() + std::string(".htm")).c_str());
 	fileout << CodeConv::EncodeStr(HThaifuBuffer.str()); fileout.close();
+	fileout.open((filename1.str() + std::string("_haifu_") + // XMLå`éÆîvïà
+		filename2.str() + std::string(".xml")).c_str());
+	fileout << CodeConv::EncodeStr(XhaifuBuffer.str()); fileout.close();
 }
 __declspec(dllexport) void haifu::haifusave() {
 	haifusave(&GameStat);

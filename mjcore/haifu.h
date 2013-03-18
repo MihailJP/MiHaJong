@@ -6,6 +6,7 @@
 #include "discard.h"
 #include "endtype.h"
 #include "largenum.h"
+#include <array>
 
 // 牌譜関係のコードはクラスに隔離しておきましょうか。
 class haifu {
@@ -19,9 +20,10 @@ private:
 
 	/* 雀牌の名前データ */
 	static const CodeConv::tstring tilecodelabel, HTtilecodelabel1, HTtilecodelabel2;
+	static const std::array<CodeConv::tstring, TileFlowerMax> Xtilerefcode;
 
 	static InfoByPlayer<LNum> origPoint;
-	static CodeConv::tostringstream haifuBuffer, HThaifuBuffer;
+	static CodeConv::tostringstream haifuBuffer, HThaifuBuffer, XhaifuBuffer;
 	static bool haifukanflag;
 
 	class PlayerStream {
@@ -44,6 +46,7 @@ private:
 			PlayerID PassivePlayer, PlayerID ActivePlayer
 			);
 		static CodeConv::tstring haifudoraClass(doraCol Akadora);
+		static CodeConv::tstring haifudoraClassX(doraCol Akadora);
 		static void recordDoraStream(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TileCode tmpDora);
 		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, bool rotate);
 		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, doraCol kakanCol);
