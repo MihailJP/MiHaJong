@@ -50,12 +50,12 @@ private:
 		static void recordDoraStream(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TileCode tmpDora);
 		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, bool rotate);
 		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, doraCol kakanCol);
-		static void recordTile_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode);
+		static void recordTile_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, bool omitXml = false, CodeConv::tstring tagName = _T("tile"), bool keepOpen = false);
 		static void recordBlank_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h);
 		static void haifuwritetsumohai(
 			HaifuStreams* haifuP, HaifuStreams* HThaifuP,
 			PlayerID ActivePlayer, Tile tlCode,
-			CodeConv::tstring PText, CodeConv::tstring HTText
+			CodeConv::tstring PText, CodeConv::tstring HTText, CodeConv::tstring XAttr
 			);
 		static void haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, PlayerID PassivePlayer);
 
@@ -65,8 +65,8 @@ private:
 				const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 				HaifuStreams* haifuP, HaifuStreams* HThaifuP
 				);
-			static void inline recordChanKan(const GameTable* const gameStat, CodeConv::tstring pTxt, CodeConv::tstring hTxt);
-			static void inline recordKan(const GameTable* const gameStat, CodeConv::tstring pTxt, CodeConv::tstring hTxt);
+			static void inline recordChanKan(const GameTable* const gameStat, CodeConv::tstring pTxt, CodeConv::tstring hTxt, CodeConv::tstring XAttrA, CodeConv::tstring XAttrB);
+			static void inline recordKan(const GameTable* const gameStat, CodeConv::tstring pTxt, CodeConv::tstring hTxt, CodeConv::tstring XAttrA, CodeConv::tstring XAttrB);
 		};
 
 		class hfwriter {
