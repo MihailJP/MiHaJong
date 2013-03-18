@@ -712,6 +712,7 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 // ç≈èIîvép
 void haifu::tools::hfwriter::finalformWriter::hfFinalForm(const GameTable* const gameStat, PlayerID player, EndType RoundEndType) {
 	// ç≈èIîvép(èÉéËîvÇÃÇ›)
+	bool agariFlag = false;
 	XhaifuBufferBody << _T("\t\t\t\t<hand>") << std::endl;
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[player].Hand[i].tile != NoTile) {
@@ -720,10 +721,15 @@ void haifu::tools::hfwriter::finalformWriter::hfFinalForm(const GameTable* const
 					if (gameStat->TsumoAgariFlag) {
 						haifuP.streamDat[player].final << _T(" ÉcÉÇ");
 						HThaifuP.streamDat[player].final << _T("</span> ÉcÉÇ<span class=\"tile\">");
+						XhaifuBufferBody << _T("\t\t\t\t</hand>") << std::endl;
+						XhaifuBufferBody << _T("\t\t\t\t<finishing-tile finish-type=\"tsumo\">") << std::endl;
 					} else {
 						haifuP.streamDat[player].final << _T(" ÉçÉì");
 						HThaifuP.streamDat[player].final << _T("</span> ÉçÉì<span class=\"tile\">");
+						XhaifuBufferBody << _T("\t\t\t\t</hand>") << std::endl;
+						XhaifuBufferBody << _T("\t\t\t\t<finishing-tile finish-type=\"ron\">") << std::endl;
 					}
+					agariFlag = true;
 				}
 				else haifuP.streamDat[player].final << _T(" ");
 			}
@@ -734,9 +740,17 @@ void haifu::tools::hfwriter::finalformWriter::hfFinalForm(const GameTable* const
 			XhaifuBufferBody << std::endl;
 		}
 	}
-	XhaifuBufferBody << _T("\t\t\t\t</hand>") << std::endl;
+	if (agariFlag)
+		XhaifuBufferBody << _T("\t\t\t\t</finishing-tile>") << std::endl;
+	else
+		XhaifuBufferBody << _T("\t\t\t\t</hand>") << std::endl;
 }
 void haifu::tools::hfwriter::finalformWriter::hfFlower(const GameTable* const gameStat, PlayerID player) {
+	if (gameStat->Player[player].FlowerFlag.Spring || gameStat->Player[player].FlowerFlag.Summer ||
+		gameStat->Player[player].FlowerFlag.Autumn || gameStat->Player[player].FlowerFlag.Winter ||
+		gameStat->Player[player].FlowerFlag.Plum || gameStat->Player[player].FlowerFlag.Orchid ||
+		gameStat->Player[player].FlowerFlag.Chrys || gameStat->Player[player].FlowerFlag.Bamboo)
+		XhaifuBufferBody << _T("\t\t\t\t<flower>") << std::endl;
 	if (gameStat->Player[player].FlowerFlag.Spring ||
 		gameStat->Player[player].FlowerFlag.Summer ||
 		gameStat->Player[player].FlowerFlag.Autumn ||
@@ -746,18 +760,22 @@ void haifu::tools::hfwriter::finalformWriter::hfFlower(const GameTable* const ga
 			if (gameStat->Player[player].FlowerFlag.Spring) {
 				haifuP.streamDat[player].final << _T("èt");
 				HThaifuP.streamDat[player].final << _T("@");
+				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&spring;\" />") << std::endl;
 			}
 			if (gameStat->Player[player].FlowerFlag.Summer) {
 				haifuP.streamDat[player].final << _T("âƒ");
 				HThaifuP.streamDat[player].final << _T(";");
+				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&summer;\" />") << std::endl;
 			}
 			if (gameStat->Player[player].FlowerFlag.Autumn) {
 				haifuP.streamDat[player].final << _T("èH");
 				HThaifuP.streamDat[player].final << _T(":");
+				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&autumn;\" />") << std::endl;
 			}
 			if (gameStat->Player[player].FlowerFlag.Winter) {
 				haifuP.streamDat[player].final << _T("ì~");
 				HThaifuP.streamDat[player].final << _T("]");
+				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&winter;\" />") << std::endl;
 			}
 	}
 	if (gameStat->Player[player].FlowerFlag.Plum ||
@@ -769,20 +787,29 @@ void haifu::tools::hfwriter::finalformWriter::hfFlower(const GameTable* const ga
 			if (gameStat->Player[player].FlowerFlag.Plum) {
 				haifuP.streamDat[player].final << _T("î~");
 				HThaifuP.streamDat[player].final << _T("-");
+				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&plum;\" />") << std::endl;
 			}
 			if (gameStat->Player[player].FlowerFlag.Orchid) {
 				haifuP.streamDat[player].final << _T("óñ");
 				HThaifuP.streamDat[player].final << _T("^");
+				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&orchid;\" />") << std::endl;
 			}
 			if (gameStat->Player[player].FlowerFlag.Chrys) {
 				haifuP.streamDat[player].final << _T("ãe");
 				HThaifuP.streamDat[player].final << _T("[");
+				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&chrys;\" />") << std::endl;
 			}
 			if (gameStat->Player[player].FlowerFlag.Bamboo) {
 				haifuP.streamDat[player].final << _T("í|");
 				HThaifuP.streamDat[player].final << _T("\\");
+				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&bamboo;\" />") << std::endl;
 			}
 	}
+	if (gameStat->Player[player].FlowerFlag.Spring || gameStat->Player[player].FlowerFlag.Summer ||
+		gameStat->Player[player].FlowerFlag.Autumn || gameStat->Player[player].FlowerFlag.Winter ||
+		gameStat->Player[player].FlowerFlag.Plum || gameStat->Player[player].FlowerFlag.Orchid ||
+		gameStat->Player[player].FlowerFlag.Chrys || gameStat->Player[player].FlowerFlag.Bamboo)
+		XhaifuBufferBody << _T("\t\t\t\t</flower>") << std::endl;
 }
 
 void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player, MeldCode meld) {

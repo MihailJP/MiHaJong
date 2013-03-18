@@ -277,6 +277,7 @@
 					<xsd:sequence>
 						<xsd:element name="hand" type="concealed-hand" />
 						<xsd:element name="finishing-tile" type="finishing-tile" minOccurs="0" maxOccurs="1" />
+						<xsd:element name="flower" type="concealed-hand" />
 						<xsd:choice minOccurs="0" maxOccurs="5">
 							<xsd:element name="sequence" type="sequence" />
 							<xsd:element name="triplet" type="triplet" />
@@ -291,11 +292,10 @@
 	</xsd:complexType>
 	<!-- 和了牌 -->
 	<xsd:complexType name="finishing-tile">
-		<xsd:complexContent>
-			<xsd:extension base="tile">
-				<xsd:attribute name="finish-type" type="finish-type" default="unspecified" />
-			</xsd:extension>
-		</xsd:complexContent>
+		<xsd:sequence>
+			<xsd:element name="tile" type="tile" />
+		</xsd:sequence>
+		<xsd:attribute name="finish-type" type="finish-type" default="unspecified" />
 	</xsd:complexType>
 	<xsd:simpleType name="finish-type">
 		<xsd:restriction base="xsd:string">
