@@ -23,7 +23,7 @@ private:
 	static const std::array<CodeConv::tstring, TileFlowerMax> Xtilerefcode;
 
 	static InfoByPlayer<LNum> origPoint;
-	static CodeConv::tostringstream haifuBuffer, HThaifuBuffer, XhaifuBuffer;
+	static CodeConv::tostringstream haifuBuffer, HThaifuBuffer, XhaifuBuffer, XhaifuBufferBody;
 	static bool haifukanflag;
 
 	class PlayerStream {
@@ -35,7 +35,7 @@ private:
 		InfoByPlayer<PlayerStream> streamDat;
 		CodeConv::tostringstream dora, uraDora, aliceDora, aliceDoraMax, resultDesc;
 	};
-	static HaifuStreams haifuP, HThaifuP;
+	static HaifuStreams haifuP, HThaifuP, XhaifuP;
 
 	class tools {
 	public:
@@ -49,7 +49,7 @@ private:
 			);
 		static CodeConv::tstring haifudoraClass(doraCol Akadora);
 		static CodeConv::tstring haifudoraClassX(doraCol Akadora);
-		static void recordDoraStream(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, TileCode tmpDora);
+		static void recordDoraStream(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, CodeConv::tostringstream* const x, TileCode tmpDora);
 		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, bool rotate);
 		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, doraCol kakanCol);
 		static void recordTile_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, bool omitXml = false, CodeConv::tstring tagName = _T("tile"), bool keepOpen = false);

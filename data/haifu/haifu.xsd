@@ -92,9 +92,10 @@
 		<xsd:sequence>
 			<xsd:element name="round-number" type="round-number" />
 			<xsd:element name="result" type="xsd:string" />
-			<xsd:element name="player-score" type="player-score" />
 			<xsd:element name="dora" type="dora-list" minOccurs="0" maxOccurs="1" />
 			<xsd:element name="uradora" type="dora-list" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="alice" type="dora-list" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="player-score" type="player-score" />
 		</xsd:sequence>
 	</xsd:complexType>
 	<!-- 局番号情報 -->
