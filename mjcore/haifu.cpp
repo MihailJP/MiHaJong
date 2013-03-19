@@ -290,7 +290,32 @@ __declspec(dllexport) void haifu::haifubufinit() {
 		_T("<!ENTITY spring \"&#x1f026;\"><!ENTITY summer \"&#x1f027;\"><!ENTITY autumn \"&#x1f028;\"><!ENTITY winter \"&#x1f029;\">")
 		_T("<!ENTITY joker \"&#x1f02a;\"><!ENTITY back \"&#x1f02b;\">") << std::endl <<
 		_T("]>") << std::endl <<
-		_T("<haifu>") << std::endl;
+		_T("<haifu>") << std::endl <<
+		_T("\t<match-description>") << std::endl <<
+		_T("\t\t<title>") << headerTxt.str() << _T("</title>") << std::endl;
+	SYSTEMTIME currTime; GetLocalTime(&currTime);
+	TIME_ZONE_INFORMATION tz; GetTimeZoneInformation(&tz);
+	XhaifuBuffer << _T("\t\t<time-played>") <<
+		std::setw(4) << std::setfill(_T('0')) << currTime.wYear << _T("-") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.wMonth << _T("-") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.wDay << _T("T") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.wHour << _T(":") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.wMinute << _T(":") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.wSecond << _T(".") <<
+		std::setw(3) << std::setfill(_T('0')) << currTime.wMilliseconds <<
+		std::showpos << std::setw(3) << std::setfill(_T('0')) << std::internal << ((-tz.Bias) / 60) << _T(":") <<
+		std::noshowpos << std::setw(2) << std::setfill(_T('0')) << ((-tz.Bias) % 60) <<
+		_T("</time-played>") << std::endl;
+	XhaifuBuffer << _T("\t\t<ruleset />") << std::endl; // TODO: ルール一覧
+	XhaifuBuffer << _T("\t\t<player-description>") << std::endl;
+	const CodeConv::tstring nomenVenti[4] = {_T("east"), _T("south"), _T("west"), _T("north")};
+	for (int i = 0; i < Players; ++i)
+		XhaifuBuffer << _T("\t\t\t<player-data id=\"player") << i << _T("\" name=\"") <<
+		EnvTable::Instantiate()->PlayerDat[i].PlayerName << _T("\" starting-wind=\"") <<
+		nomenVenti[i] << _T("\" />") << std::endl;
+	XhaifuBuffer <<
+		_T("\t\t</player-description>") << std::endl <<
+		_T("\t</match-description>") << std::endl;
 }
 
 /* 一局分の牌譜バッファを初期化 */
