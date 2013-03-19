@@ -41,7 +41,13 @@
 	<xsd:complexType name="match-description">
 		<xsd:sequence>
 			<xsd:element name="title" type="xsd:string" />
-			<xsd:element name="time-played" type="xsd:dateTime" />
+			<xsd:choice>
+				<xsd:element name="time-played" type="xsd:dateTime" />
+				<xsd:sequence>
+					<xsd:element name="time-began" type="xsd:dateTime" />
+					<xsd:element name="time-finished" type="xsd:dateTime" />
+				</xsd:sequence>
+			</xsd:choice>
 			<xsd:element name="ruleset" type="ruleset" />
 			<xsd:element name="player-description" type="player-description" />
 		</xsd:sequence>

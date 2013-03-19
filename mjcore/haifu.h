@@ -23,7 +23,7 @@ private:
 	static const std::array<CodeConv::tstring, TileFlowerMax> Xtilerefcode;
 
 	static InfoByPlayer<LNum> origPoint;
-	static CodeConv::tostringstream haifuBuffer, HThaifuBuffer, XhaifuBuffer, XhaifuBufferBody;
+	static CodeConv::tostringstream haifuBuffer, HThaifuBuffer, XMLhaifuBuffer, XhaifuBuffer, XhaifuBufferBody;
 	static bool haifukanflag;
 
 	class PlayerStream {
@@ -43,6 +43,7 @@ private:
 
 		static void checkCycle(bool reset = false);
 
+		static void haifuRecTime(CodeConv::tstring tagName);
 		static void haifuskip(
 			HaifuStreams* haifuP, HaifuStreams* HThaifuP,
 			PlayerID PassivePlayer, PlayerID ActivePlayer

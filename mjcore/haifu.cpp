@@ -37,7 +37,7 @@ const std::array<CodeConv::tstring, TileFlowerMax> haifu::Xtilerefcode = {
 
 InfoByPlayer<LNum> haifu::origPoint;
 CodeConv::tostringstream haifu::haifuBuffer, haifu::HThaifuBuffer,
-	haifu::XhaifuBuffer, haifu::XhaifuBufferBody;
+	haifu::XMLhaifuBuffer, haifu::XhaifuBuffer, haifu::XhaifuBufferBody;
 bool haifu::haifukanflag = false;
 
 haifu::HaifuStreams haifu::haifuP, haifu::HThaifuP, haifu::XhaifuP;
@@ -270,8 +270,8 @@ __declspec(dllexport) void haifu::haifubufinit() {
 		_T("<h1>") << headerTxt.str() << _T("</h1>") << std::endl << _T("<hr>") << std::endl;
 
 	/* XML牌譜 */
-	XhaifuBuffer.str(_T(""));
-	XhaifuBuffer <<
+	XMLhaifuBuffer.str(_T("")); XhaifuBuffer.str(_T(""));
+	XMLhaifuBuffer <<
 #ifdef UNICODE
 		_T("<?xml version=\"1.0\" encoding=\"UTF-8\"?>") <<
 #else
@@ -293,19 +293,7 @@ __declspec(dllexport) void haifu::haifubufinit() {
 		_T("<haifu>") << std::endl <<
 		_T("\t<match-description>") << std::endl <<
 		_T("\t\t<title>") << headerTxt.str() << _T("</title>") << std::endl;
-	SYSTEMTIME currTime; GetLocalTime(&currTime);
-	TIME_ZONE_INFORMATION tz; GetTimeZoneInformation(&tz);
-	XhaifuBuffer << _T("\t\t<time-played>") <<
-		std::setw(4) << std::setfill(_T('0')) << currTime.wYear << _T("-") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.wMonth << _T("-") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.wDay << _T("T") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.wHour << _T(":") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.wMinute << _T(":") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.wSecond << _T(".") <<
-		std::setw(3) << std::setfill(_T('0')) << currTime.wMilliseconds <<
-		std::showpos << std::setw(3) << std::setfill(_T('0')) << std::internal << ((-tz.Bias) / 60) << _T(":") <<
-		std::noshowpos << std::setw(2) << std::setfill(_T('0')) << ((-tz.Bias) % 60) <<
-		_T("</time-played>") << std::endl;
+	tools::haifuRecTime(_T("time-began"));
 	XhaifuBuffer << _T("\t\t<ruleset />") << std::endl; // TODO: ルール一覧
 	XhaifuBuffer << _T("\t\t<player-description>") << std::endl;
 	const CodeConv::tstring nomenVenti[4] = {_T("east"), _T("south"), _T("west"), _T("north")};
@@ -316,6 +304,22 @@ __declspec(dllexport) void haifu::haifubufinit() {
 	XhaifuBuffer <<
 		_T("\t\t</player-description>") << std::endl <<
 		_T("\t</match-description>") << std::endl;
+}
+
+void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // 現在時刻タグ
+	SYSTEMTIME currTime; GetLocalTime(&currTime);
+	TIME_ZONE_INFORMATION tz; GetTimeZoneInformation(&tz);
+	XMLhaifuBuffer << _T("\t\t<") << tagName << _T(">") <<
+		std::setw(4) << std::setfill(_T('0')) << currTime.wYear << _T("-") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.wMonth << _T("-") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.wDay << _T("T") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.wHour << _T(":") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.wMinute << _T(":") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.wSecond << _T(".") <<
+		std::setw(3) << std::setfill(_T('0')) << currTime.wMilliseconds <<
+		std::showpos << std::setw(3) << std::setfill(_T('0')) << std::internal << ((-tz.Bias) / 60) << _T(":") <<
+		std::noshowpos << std::setw(2) << std::setfill(_T('0')) << ((-tz.Bias) % 60) <<
+		_T("</") << tagName << _T(">") << std::endl;
 }
 
 /* 一局分の牌譜バッファを初期化 */
@@ -1099,6 +1103,9 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	HThaifuBuffer << _T("</body>") << std::endl << _T("</html>") << std::endl; // Finalize HTML
 	XhaifuBuffer << _T("</haifu>") << std::endl; // Finalize XML
 
+	tools::haifuRecTime(_T("time-finished"));
+	XMLhaifuBuffer << XhaifuBuffer.str();
+
 	/* ファイル名の自動決定 */
 	std::string configPath = confpath::confPath();
 	std::ostringstream filename1, filename2;
@@ -1132,7 +1139,7 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	fileout << CodeConv::EncodeStr(HThaifuBuffer.str()); fileout.close();
 	fileout.open((filename1.str() + std::string("_haifu_") + // XML形式牌譜
 		filename2.str() + std::string(".xml")).c_str());
-	fileout << CodeConv::EncodeStr(XhaifuBuffer.str()); fileout.close();
+	fileout << CodeConv::EncodeStr(XMLhaifuBuffer.str()); fileout.close();
 }
 __declspec(dllexport) void haifu::haifusave() {
 	haifusave(&GameStat);
