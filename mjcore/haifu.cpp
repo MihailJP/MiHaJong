@@ -294,7 +294,12 @@ __declspec(dllexport) void haifu::haifubufinit() {
 		_T("\t<match-description>") << std::endl <<
 		_T("\t\t<title>") << headerTxt.str() << _T("</title>") << std::endl;
 	tools::haifuRecTime(_T("time-began"));
-	XhaifuBuffer << _T("\t\t<ruleset />") << std::endl; // TODO: ƒ‹[ƒ‹ˆê——
+	XhaifuBuffer << _T("\t\t<ruleset>") << std::endl;
+	RuleData::forEachRule([&](std::string key, std::string val) -> void {
+		XhaifuBuffer << _T("\t\t\t<rule key=\"") << CodeConv::EnsureTStr(key) << _T("\" val=\"") <<
+			CodeConv::EnsureTStr(val) << _T("\" />") << std::endl;
+	});
+	XhaifuBuffer << _T("\t\t</ruleset>") << std::endl;
 	XhaifuBuffer << _T("\t\t<player-description>") << std::endl;
 	const CodeConv::tstring nomenVenti[4] = {_T("east"), _T("south"), _T("west"), _T("north")};
 	for (int i = 0; i < Players; ++i)
