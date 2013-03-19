@@ -294,7 +294,12 @@ __declspec(dllexport) void haifu::haifubufinit() {
 		_T("\t<match-description>") << std::endl <<
 		_T("\t\t<title>") << headerTxt.str() << _T("</title>") << std::endl;
 	tools::haifuRecTime(_T("time-began"));
-	XhaifuBuffer << _T("\t\t<ruleset>") << std::endl;
+	XhaifuBuffer << _T("\t\t<ruleset system=\"") <<
+		(chkGameType(&GameStat, Yonma) ? _T("richi") :
+		chkGameType(&GameStat, Sanma) ? _T("sanma") :
+		chkGameType(&GameStat, Sanma4) ? _T("sanma-4players") :
+		chkGameType(&GameStat, SanmaS) ? _T("sanma-numerals") : _T(""))
+		<< _T("\">") << std::endl;
 	RuleData::forEachRule([&](std::string key, std::string val) -> void {
 		XhaifuBuffer << _T("\t\t\t<rule key=\"") << CodeConv::EnsureTStr(key) << _T("\" val=\"") <<
 			CodeConv::EnsureTStr(val) << _T("\" />") << std::endl;
