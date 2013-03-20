@@ -900,13 +900,16 @@ inline void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon1(PlayerID
 	XhaifuBufferBody << std::endl;
 }
 void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player, MeldCode meld) {
-	int tiles, interrupt;
+	int tiles, interrupt; CodeConv::tstring meldDirection;
 	switch (meld.mstat) {
 	case meldTripletExposedLeft: case meldQuadExposedLeft: case meldQuadAddedLeft:
+		meldDirection = _T(" from=\"left\"");
 		haifuP.streamDat[player].final << _T(" ＜"); interrupt = 1; break;
 	case meldTripletExposedCenter: case meldQuadExposedCenter: case meldQuadAddedCenter:
+		meldDirection = _T(" from=\"opposite\"");
 		haifuP.streamDat[player].final << _T(" ∧"); interrupt = 2; break;
 	case meldTripletExposedRight: case meldQuadExposedRight: case meldQuadAddedRight:
+		meldDirection = _T(" from=\"right\"");
 		haifuP.streamDat[player].final << _T(" ＞"); interrupt = 8; break;
 	case meldQuadConcealed:
 		haifuP.streamDat[player].final << _T(" ◇"); interrupt = 7; break;
@@ -917,11 +920,11 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 		tiles = 3;
 		haifuP.streamDat[player].final << _T("ポン");
 		HThaifuP.streamDat[player].final << _T("</span> ポン<span class=\"tile\">");
-		XhaifuBufferBody << _T("\t\t\t\t<triplet>") << std::endl;
+		XhaifuBufferBody << _T("\t\t\t\t<triplet>") << meldDirection << std::endl;
 		break;
 	case meldQuadExposedLeft: case meldQuadExposedCenter:
 	case meldQuadExposedRight:
-		XhaifuBufferBody << _T("\t\t\t\t<quad-exposed>") << std::endl;
+		XhaifuBufferBody << _T("\t\t\t\t<quad-exposed") << meldDirection << _T(" added=\"false\">") << std::endl;
 		goto quad_4tiles;
 	case meldQuadConcealed:
 		XhaifuBufferBody << _T("\t\t\t\t<quad-concealed>") << std::endl;
@@ -936,7 +939,7 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 		tiles = 3;
 		haifuP.streamDat[player].final << _T("▽カン");
 		HThaifuP.streamDat[player].final << _T("</span> カン<span class=\"tile\">");
-		XhaifuBufferBody << _T("\t\t\t\t<quad-exposed>") << std::endl;
+		XhaifuBufferBody << _T("\t\t\t\t<quad-exposed") << meldDirection << _T(" added=\"true\">") << std::endl;
 		break;
 	}
 	for (int i = (meld.mstat == meldQuadConcealed ? 0 : 1); i < tiles; i++) {
