@@ -88,12 +88,16 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 		Region nullRegion = {0, 0, -1, -1};
 		regions.resize(ID + 1, Region(nullRegion));
 	}
-	regions[ID].Left = X; regions[ID].Top = Y; 
-	regions[ID].Right = 1439 - X; regions[ID].Bottom = Y + 71; 
+	regions[ID].Left = X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight);
+	regions[ID].Top = Y;
+	regions[ID].Right = Geometry::WindowWidth - X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight);
+	regions[ID].Bottom = Y + 71;
 }
 
 void TitleScreen::menuLabels() {
-	auto center = [](unsigned cols) {return signed(Geometry::BaseSize * 2 / 3) - signed(1.6 * 18 * cols);};
+	auto center = [](unsigned cols) {
+		return (signed(Geometry::BaseSize * 2 / 3) - signed(1.6 * 18 * cols)) * ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight);
+	};
 	menuLabelSlide(0, _T("Standalone Game"), center(15), 400, 120, 180);
 	menuLabelSlide(1, _T("Network Game (Server)"), center(21), 480, 125, 180);
 	menuLabelSlide(2, _T("Network Game (Client)"), center(21), 560, 130, 180);
@@ -154,8 +158,8 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 
 void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	const bool flag1 = (myTimer.elapsed() > 180u * timePerFrame);
-	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
-	const int scaledY = Y / Geometry::WindowScale();
+	const int scaledX = (int)((float)X / Geometry::WindowScale() / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight));
+	const int scaledY = (int)((float)Y / Geometry::WindowScale());
 	const int region = whichRegion(scaledX, scaledY);
 #if 0
 	{
