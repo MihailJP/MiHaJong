@@ -36,6 +36,10 @@ public:
 		float scale = 1.0, float width = 1.0, D3DCOLOR color = 0xffffffff);
 	void DelText(unsigned int ID);
 	void Render();
+	virtual unsigned strWidthByCols(const std::wstring& str);
+	virtual unsigned strWidthByCols(const std::string& str);
+	virtual unsigned strWidthByPix(const std::wstring& str);
+	virtual unsigned strWidthByPix(const std::string& str);
 };
 
 class TextRenderer : public ITextRenderer {

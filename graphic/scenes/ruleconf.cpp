@@ -34,7 +34,7 @@ void RuleConfigScene::CreateButton(unsigned btnID, int X, int Y, unsigned Width,
 	myButtonPic->setButton(btnID, ButtonPic::clear,
 		X * (WidthRate * Geometry::WindowScale()), Y * Geometry::WindowScale(),
 		Width * (WidthRate * Geometry::WindowScale()), Height * Geometry::WindowScale(),
-		0xffffffff, caption);
+		0xffffffff, caption, true);
 	if (regions.size() <= (btnID + btnRegionStart + 1)) {
 		Region nullRegion = {0, 0, -1, -1};
 		regions.resize(btnID + btnRegionStart + 1, Region(nullRegion));
@@ -349,8 +349,8 @@ void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 }
 
 void RuleConfigScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
-	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
-	const int scaledY = Y / Geometry::WindowScale();
+	const int scaledX = (int)((float)X / Geometry::WindowScale() / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight));
+	const int scaledY = (int)((float)Y / Geometry::WindowScale());
 	const int region = whichRegion(scaledX, scaledY);
 #if 0
 	{

@@ -275,18 +275,11 @@ void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum, D3DCOLOR col
 }
 
 void TableProtoScene::ScoreBoard::renderName() {
-	unsigned tmpWidth = 0;
-	for (LPCTSTR k = utils::getName(playerID()); *k != _T('\0'); ++k) {
-#ifdef _UNICODE
-		if (*k >= 0x0080)
-			tmpWidth += 2;
-		else
-#endif
-			tmpWidth += 1;
-	}
+	const CodeConv::tstring pName(utils::getName(playerID()));
+	const unsigned tmpWidth = nameText->strWidthByCols(pName);
 	nameText->NewText(0,
-		(getScoreMode() == scoreDiff) ? _T("点差表示") : ((getScoreMode() == scoreChip) ? _T("チップ表示") : utils::getName(playerID())),
-		xpos + NamePosX, ypos + NamePosY, 1.0, (tmpWidth > 18) ? (18.0f / (float)tmpWidth) : 1.0f);
+		(getScoreMode() == scoreDiff) ? _T("点差表示") : ((getScoreMode() == scoreChip) ? _T("チップ表示") : pName),
+		xpos + NamePosX, ypos + NamePosY, 1.0, ((tmpWidth > 18) ? (18.0f / (float)tmpWidth) : 1.0f) * wScale);
 	nameText->Render();
 }
 

@@ -42,6 +42,9 @@ LNum::operator CodeConv::tstring() const {return myVal.bignumtotext(_T(""), _T("
 CodeConv::tstring LNum::to_str(CodeConv::tstring plusSign, CodeConv::tstring minusSign) const {
 	return myVal.bignumtotext(plusSign, minusSign);
 }
+CodeConv::tstring LNum::to_str_plain() const {
+	return myVal.bignumtoplaintext();
+}
 
 const LNum LNum::operator+(const LNum& addend) const {return LNum(this->myVal + LargeNum(addend));}
 const LNum LNum::operator+(const int32_t addend) const {return LNum(this->myVal + addend);}
