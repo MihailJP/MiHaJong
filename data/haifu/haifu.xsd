@@ -220,7 +220,7 @@
 			<!-- 10 or 11 tiles ... Sichuanese -->
 			<!-- 13 or 14 tiles ... Richi or Guobiao -->
 			<!-- 16 or 17 tiles ... Taiwanese -->
-			<xsd:element name="tile" type="tile" minOccurs="4" maxOccurs="17" />
+			<xsd:element name="tile" type="tile" minOccurs="1" maxOccurs="17" />
 		</xsd:sequence>
 	</xsd:complexType>
 	<!-- 摸打 -->
@@ -290,7 +290,7 @@
 					<xsd:sequence>
 						<xsd:element name="hand" type="concealed-hand" />
 						<xsd:element name="finishing-tile" type="finishing-tile" minOccurs="0" maxOccurs="1" />
-						<xsd:element name="flower" type="concealed-hand" />
+						<xsd:element name="flower" type="dora-list" />
 						<xsd:choice minOccurs="0" maxOccurs="5">
 							<xsd:element name="sequence" type="sequence" />
 							<xsd:element name="triplet" type="triplet" />
