@@ -16,14 +16,14 @@ public:
 	explicit ButtonPic(LPDIRECT3DDEVICE9 device);
 	~ButtonPic();
 	void setText(unsigned ButtonID);
-	void setButton(unsigned ButtonID, ButtonStat stat, int X, int Y, unsigned Width, unsigned Height, D3DCOLOR color, const CodeConv::tstring& caption);
+	void setButton(unsigned ButtonID, ButtonStat stat, int X, int Y, unsigned Width, unsigned Height, D3DCOLOR color, const CodeConv::tstring& caption, bool adjustWidth = false);
 	void setButton(unsigned ButtonID, ButtonStat stat);
 	void Render();
 private:
 	LPDIRECT3DTEXTURE9 myTexture;
 	LPDIRECT3DDEVICE9 myDevice;
 	TextRenderer* myTextRenderer;
-	std::vector<std::tuple<ButtonStat, int, int, unsigned, unsigned, D3DCOLOR, CodeConv::tstring> > mySprites;
+	std::vector<std::tuple<ButtonStat, int, int, unsigned, unsigned, D3DCOLOR, CodeConv::tstring, bool> > mySprites;
 };
 
 }

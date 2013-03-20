@@ -34,7 +34,7 @@ void RuleConfigScene::CreateButton(unsigned btnID, int X, int Y, unsigned Width,
 	myButtonPic->setButton(btnID, ButtonPic::clear,
 		X * (WidthRate * Geometry::WindowScale()), Y * Geometry::WindowScale(),
 		Width * (WidthRate * Geometry::WindowScale()), Height * Geometry::WindowScale(),
-		0xffffffff, caption);
+		0xffffffff, caption, true);
 	if (regions.size() <= (btnID + btnRegionStart + 1)) {
 		Region nullRegion = {0, 0, -1, -1};
 		regions.resize(btnID + btnRegionStart + 1, Region(nullRegion));
