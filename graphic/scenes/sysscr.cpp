@@ -41,15 +41,10 @@ void SystemScreen::clearWithGameTypeColor() {
 }
 
 unsigned SystemScreen::strwidth(const std::wstring& str) {
-	unsigned cols = 0u; // Œ…”(“ú–{Œê‚Í2Œ…)
-	for (auto k = str.begin(); k != str.end(); ++k) {
-		if (*k <= _T('\x7f')) cols += 1;
-		else cols += 2;
-	}
-	return cols;
+	return myTextRenderer->strWidthByCols(str);
 }
 unsigned SystemScreen::strwidth(const std::string& str) {
-	return str.size();
+	return myTextRenderer->strWidthByCols(str);
 }
 
 // -------------------------------------------------------------------------

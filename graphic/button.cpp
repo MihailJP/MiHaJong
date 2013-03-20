@@ -25,15 +25,7 @@ void ButtonPic::setText(unsigned ButtonID) {
 	const bool adjustWidth = std::get<7>(mySprites[ButtonID]);
 	const int xpos = (int)((float)(X + (6.0f * Width / 156.0f)) / Geometry::WindowScale());
 	const int ypos = (int)((float)(Y + (6.0f * Height / 48.0f)) / Geometry::WindowScale());
-#ifdef _UNICODE
-	unsigned w = 0;
-	for (auto k = caption.begin(); k != caption.end(); ++k) {
-		if (*k <= _T('\x7f')) w += 1;
-		else w += 2;
-	}
-#else
-	unsigned w = caption.size();
-#endif
+	const unsigned w = myTextRenderer->strWidthByCols(caption);
 	myTextRenderer->NewText(ButtonID, caption,
 		(w < 8) ? xpos + (9 * (8 - w) * (Width / 156.0f / Geometry::WindowScale())) : xpos, ypos,
 		Height / 48.0f / Geometry::WindowScale(),

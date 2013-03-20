@@ -36,7 +36,6 @@ private:
 	void RenderRank();
 private:
 	SmallTextRenderer* nameRenderer;
-	unsigned stringWidth(const CodeConv::tstring& str);
 	void RenderNameScore();
 private:
 	ScoreDigitRenderer* scoreRenderer;

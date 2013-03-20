@@ -1,3 +1,6 @@
+#ifdef _MSC_VER
+#define NOMINMAX
+#endif
 #include "agariscr.h"
 #include "../../loadtex.h"
 #include "../../resource.h"
@@ -137,7 +140,7 @@ void TableSubsceneAgariScreenProto::parseYakuList() {
 		return txtlst;
 	};
 	TStrList yakuNameList(splitstr(yakuName)), yakuValList(splitstr(yakuVal));
-	for (int i = 0; i < min(yakuNameList.size(), yakuValList.size()); ++i)
+	for (int i = 0; i < std::min(yakuNameList.size(), yakuValList.size()); ++i)
 		if (YakumanMode())
 			yakuList.push_back(std::make_pair(yakuNameList[i], _T("")));
 		else
@@ -187,17 +190,8 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 			bgmFlag = false;
 		}
 		// •ŒvŽZ
-		const float compressRate = [](const CodeConv::tstring& str) -> float {
-			const std::wstring tmpstr(
-#ifdef _UNICODE
-				str
-#else
-				CodeConv::ANSItoWIDE(str)
-#endif
-				);
-			int cols = 0;
-			for (auto k = tmpstr.begin(); k != tmpstr.end(); ++k)
-				cols += ((*k > L'\x7f') ? 2 : 1);
+		const float compressRate = [this](const CodeConv::tstring& str) -> float {
+			const int cols = myTextRenderer->strWidthByCols(str);
 			return (cols > 12) ? (8.0f / (float)cols) : 1.0f;
 		} (yakuList[yakuNum].first);
 		// •\Ž¦
@@ -450,21 +444,16 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 	const double anmTime = 0.75;
 	const CodeConv::tstring scoreTxt = YakuResult::getAgariScore().bignumtotext(_T(""), _T("-"));
 	assert(scoreTxt != _T("0"));
-	std::wstring scoreTxtW =
-#ifdef _UNICODE
-		scoreTxt;
-#else
-		CodeConv::ANSItoWIDE(scoreTxt);
-#endif
-	const int x = BaseX + yakuWndWidth - 24 - 72 * ((scoreTxtW.size() < 6) ? scoreTxtW.size() : 6);
+	const unsigned txtWidth = std::min(digitRenderer->strWidthByCols(scoreTxt), 6u);
+	const int x = BaseX + yakuWndWidth - 24 - 72 * txtWidth;
 	const int y = BaseY + 700;
 	const float scale = (Zeit >= anmTime) ? 1.0f : (pow(2.5f * (float)(anmTime - Zeit), 2) + 1.0f);
 	const D3DCOLOR color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
 	digitRenderer->NewText(0, scoreTxt,
-		x - (int)(36.0f * ((scoreTxtW.size() < 6) ? (float)scoreTxtW.size() : 6.0f) * (scale - 1.0f)),
+		x - (int)(36.0f * (float)txtWidth * (scale - 1.0f)),
 		y - (int)(48.0f * (scale - 1.0f)),
 		scale,
-		(scoreTxtW.size() < 6) ? 1.5f : (float)(1.5 * 6.0 / (double)scoreTxtW.size()),
+		(txtWidth < 6) ? 1.5f : (float)(1.5 * 6.0 / (double)txtWidth),
 		color);
 	if ((timeFlag) && (Zeit >= 2.0)) {
 		ui::UIEvent->set(0);

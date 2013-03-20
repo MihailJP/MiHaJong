@@ -158,4 +158,22 @@ void ITextRenderer::Render() {
 	}
 }
 
+/* •¶Žš—ñ‚Ì•‚ðŒvŽZ */
+unsigned ITextRenderer::strWidthByCols(const std::wstring& str) {
+	unsigned cols = 0;
+	for (auto k = str.begin(); k != str.end(); ++k)
+		cols += (fontmap->map(*k).first) ? /* ‘SŠp */ 2 : /* ”¼Šp */ 1;
+	return cols;
+}
+unsigned ITextRenderer::strWidthByCols(const std::string& str) {
+	const std::wstring wstr(CodeConv::ANSItoWIDE(str));
+	return strWidthByCols(wstr);
+}
+unsigned ITextRenderer::strWidthByPix(const std::wstring& str) {
+	return strWidthByCols(str) * FontWidth();
+}
+unsigned ITextRenderer::strWidthByPix(const std::string& str) {
+	return strWidthByCols(str) * FontWidth();
+}
+
 }

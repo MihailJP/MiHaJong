@@ -112,20 +112,6 @@ ResultScreen::RankRenderer::~RankRenderer() {
 	delete scoreRenderer;
 }
 
-unsigned ResultScreen::RankRenderer::stringWidth(const CodeConv::tstring& str) {
-	std::wstring wstr(
-#ifdef _UNICODE
-		str
-#else
-		CodeConv::ANSItoWIDE(str)
-#endif
-		);
-	unsigned Anzahl = 0;
-	for (auto k = wstr.begin(); k != wstr.end(); ++k)
-		Anzahl += (*k <= L'\x7f') ? 1 : 2;
-	return Anzahl;
-}
-
 void ResultScreen::RankRenderer::RenderRank() {
 	const float widthScale = (float)Geometry::WindowWidth * 0.75 / (float)Geometry::WindowHeight;
 	CodeConv::tostringstream o; o << (4 - myID);
@@ -152,7 +138,7 @@ void ResultScreen::RankRenderer::RenderNameScore() {
 		(int)(200.0 - sin((double)myTimer.elapsed() * M_PI / 500000.0) * 50.0)
 		);
 	const CodeConv::tstring nomen(utils::getName(player));
-	const unsigned latitudoNominis = stringWidth(nomen);
+	const unsigned latitudoNominis = nameRenderer->strWidthByCols(nomen);
 	nameRenderer->NewText(0, nomen, 150 * widthScale, BaseY + 10, 3.0f,
 		((latitudoNominis >= 30) ? 30.0f / (float)latitudoNominis : 1.0f) * widthScale,
 		aColor & color);
@@ -174,7 +160,7 @@ void ResultScreen::RankRenderer::RenderNameScore() {
 			punctaticum_ << _T(" Ä’¹");
 	}
 	const CodeConv::tstring punctaticum(punctaticum_.str());
-	const unsigned latitudoPunctatici = stringWidth(punctaticum);
+	const unsigned latitudoPunctatici = nameRenderer->strWidthByCols(punctaticum);
 	nameRenderer->NewText(1, punctaticum, 150 * widthScale, BaseY + 70, 3.0f,
 		((latitudoPunctatici >= 30) ? 30.0f / (float)latitudoPunctatici : 1.0f) * widthScale,
 		aColor & color);
@@ -195,15 +181,7 @@ void ResultScreen::RankRenderer::RenderScore() {
 	const D3DCOLOR color =
 		(point > LargeNum::fromInt(0)) ? 0xffccffcc :
 		(point < LargeNum::fromInt(0)) ? 0xffffcccc : 0xffffffcc;
-	const unsigned strWidth = [](const CodeConv::tstring& str) -> unsigned {
-		const std::wstring ws =
-#ifdef _UNICODE
-			str;
-#else
-			CodeConv::ANSItoWIDE(str);
-#endif
-		return ws.length();
-	} (scoreTxt);
+	const unsigned strWidth = scoreRenderer->strWidthByCols(scoreTxt);
 	scoreRenderer->NewText(0, scoreTxt,
 		(1000 + 96 * std::max((signed)widthLimit - (signed)strWidth, 0) -
 		(int)(96.0f * (float)std::min(strWidth, widthLimit) * (scale - 1.0))) * widthScale,
