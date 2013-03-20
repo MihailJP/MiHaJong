@@ -290,7 +290,8 @@ __declspec(dllexport) void haifu::haifubufinit() {
 		_T("<!ENTITY spring \"&#x1f026;\"><!ENTITY summer \"&#x1f027;\"><!ENTITY autumn \"&#x1f028;\"><!ENTITY winter \"&#x1f029;\">")
 		_T("<!ENTITY joker \"&#x1f02a;\"><!ENTITY back \"&#x1f02b;\">") << std::endl <<
 		_T("]>") << std::endl <<
-		_T("<haifu>") << std::endl <<
+		_T("<haifu xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance")
+		_T("\" xsi:noNamespaceSchemaLocation=\"haifu.xsd\">") << std::endl <<
 		_T("\t<match-description>") << std::endl <<
 		_T("\t\t<title>") << headerTxt.str() << _T("</title>") << std::endl;
 	tools::haifuRecTime(_T("time-began"));

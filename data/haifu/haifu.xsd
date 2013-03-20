@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE xsd:schema SYSTEM "haifu.dtd">
+<!DOCTYPE xsd:schema [
+	<!ENTITY east "&#x1f000;"><!ENTITY south "&#x1f001;"><!ENTITY west "&#x1f002;"><!ENTITY north "&#x1f003;"><!ENTITY red "&#x1f004;"><!ENTITY green "&#x1f005;"><!ENTITY white "&#x1f006;">
+	<!ENTITY m1 "&#x1f007;"><!ENTITY m2 "&#x1f008;"><!ENTITY m3 "&#x1f009;"><!ENTITY m4 "&#x1f00a;"><!ENTITY m5 "&#x1f00b;"><!ENTITY m6 "&#x1f00c;"><!ENTITY m7 "&#x1f00d;"><!ENTITY m8 "&#x1f00e;"><!ENTITY m9 "&#x1f00f;">
+	<!ENTITY s1 "&#x1f010;"><!ENTITY s2 "&#x1f011;"><!ENTITY s3 "&#x1f012;"><!ENTITY s4 "&#x1f013;"><!ENTITY s5 "&#x1f014;"><!ENTITY s6 "&#x1f015;"><!ENTITY s7 "&#x1f016;"><!ENTITY s8 "&#x1f017;"><!ENTITY s9 "&#x1f018;">
+	<!ENTITY p1 "&#x1f019;"><!ENTITY p2 "&#x1f01a;"><!ENTITY p3 "&#x1f01b;"><!ENTITY p4 "&#x1f01c;"><!ENTITY p5 "&#x1f01d;"><!ENTITY p6 "&#x1f01e;"><!ENTITY p7 "&#x1f01f;"><!ENTITY p8 "&#x1f020;"><!ENTITY p9 "&#x1f021;">
+	<!ENTITY plum "&#x1f022;"><!ENTITY orchid "&#x1f023;"><!ENTITY bamboo "&#x1f024;"><!ENTITY chrys "&#x1f025;"><!ENTITY chrysanthemum "&#x1f025;"><!ENTITY spring "&#x1f026;"><!ENTITY summer "&#x1f027;"><!ENTITY autumn "&#x1f028;"><!ENTITY winter "&#x1f029;"><!ENTITY joker "&#x1f02a;"><!ENTITY back "&#x1f02b;">
+]>
 <!-- MiHaJong XML 牌譜データ仕様 -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<!-- トップレベル -->
