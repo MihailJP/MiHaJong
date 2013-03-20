@@ -404,8 +404,8 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 
 void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
-	const int scaledX = X / Geometry::WindowScale() * (Geometry::WindowWidth * 0.75f / Geometry::WindowHeight);
-	const int scaledY = Y / Geometry::WindowScale();
+	const int scaledX = (int)((float)X / Geometry::WindowScale());
+	const int scaledY = (int)((float)Y / Geometry::WindowScale());
 	const int region = whichRegion(scaledX, scaledY);
 	const bool isCursorEnabled = tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled();
 	const bool isValidTile = (region >= 0) && (region < NumOfTilesInHand) &&
