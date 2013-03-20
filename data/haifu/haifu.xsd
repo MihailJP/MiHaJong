@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xsd:schema [
+	<!ENTITY east "&#x1f000;"><!ENTITY south "&#x1f001;"><!ENTITY west "&#x1f002;"><!ENTITY north "&#x1f003;"><!ENTITY red "&#x1f004;"><!ENTITY green "&#x1f005;"><!ENTITY white "&#x1f006;">
+	<!ENTITY m1 "&#x1f007;"><!ENTITY m2 "&#x1f008;"><!ENTITY m3 "&#x1f009;"><!ENTITY m4 "&#x1f00a;"><!ENTITY m5 "&#x1f00b;"><!ENTITY m6 "&#x1f00c;"><!ENTITY m7 "&#x1f00d;"><!ENTITY m8 "&#x1f00e;"><!ENTITY m9 "&#x1f00f;">
+	<!ENTITY s1 "&#x1f010;"><!ENTITY s2 "&#x1f011;"><!ENTITY s3 "&#x1f012;"><!ENTITY s4 "&#x1f013;"><!ENTITY s5 "&#x1f014;"><!ENTITY s6 "&#x1f015;"><!ENTITY s7 "&#x1f016;"><!ENTITY s8 "&#x1f017;"><!ENTITY s9 "&#x1f018;">
+	<!ENTITY p1 "&#x1f019;"><!ENTITY p2 "&#x1f01a;"><!ENTITY p3 "&#x1f01b;"><!ENTITY p4 "&#x1f01c;"><!ENTITY p5 "&#x1f01d;"><!ENTITY p6 "&#x1f01e;"><!ENTITY p7 "&#x1f01f;"><!ENTITY p8 "&#x1f020;"><!ENTITY p9 "&#x1f021;">
+	<!ENTITY plum "&#x1f022;"><!ENTITY orchid "&#x1f023;"><!ENTITY bamboo "&#x1f024;"><!ENTITY chrys "&#x1f025;"><!ENTITY chrysanthemum "&#x1f025;"><!ENTITY spring "&#x1f026;"><!ENTITY summer "&#x1f027;"><!ENTITY autumn "&#x1f028;"><!ENTITY winter "&#x1f029;"><!ENTITY joker "&#x1f02a;"><!ENTITY back "&#x1f02b;">
+]>
+<!-- MiHaJong XML 牌譜データ仕様 -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<!-- トップレベル -->
+	<xsd:element name="haifu">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="match-description" type="match-description" />
+				<xsd:element name="round" type="round" minOccurs="1" maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:key name="player-name">
+			<xsd:selector xpath="match-description/player-description/player-data" />
+			<xsd:field xpath="@id" />
+		</xsd:key>
+		<xsd:keyref name="player-ref-desc" refer="player-name">
+			<xsd:selector xpath="round/round-description/player-score/player" />
+			<xsd:field xpath="@ref" />
+		</xsd:keyref>
+		<xsd:keyref name="player-ref-haipai" refer="player-name">
+			<xsd:selector xpath="round/distribution/initial-hand" />
+			<xsd:field xpath="@player" />
+		</xsd:keyref>
+		<xsd:keyref name="player-ref-prog" refer="player-name">
+			<xsd:selector xpath="round/progress/cycle/turn" />
+			<xsd:field xpath="@player" />
+		</xsd:keyref>
+		<xsd:keyref name="player-ref-final" refer="player-name">
+			<xsd:selector xpath="round/final-hands/final-hand" />
+			<xsd:field xpath="@player" />
+		</xsd:keyref>
+	</xsd:element>
+	<!-- 英字識別子 -->
+	<xsd:simpleType name="id-string">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-zA-Z][a-zA-Z0-9_]*"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 牌譜メタデータ -->
+	<xsd:complexType name="match-description">
+		<xsd:sequence>
+			<xsd:element name="title" type="xsd:string" />
+			<xsd:choice>
+				<xsd:element name="time-played" type="xsd:dateTime" />
+				<xsd:sequence>
+					<xsd:element name="time-began" type="xsd:dateTime" />
+					<xsd:element name="time-finished" type="xsd:dateTime" />
+				</xsd:sequence>
+			</xsd:choice>
+			<xsd:element name="ruleset" type="ruleset" />
+			<xsd:element name="player-description" type="player-description" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- ルール情報 -->
+	<xsd:complexType name="ruleset">
+		<xsd:sequence>
+			<xsd:element name="rule" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:attribute name="key" type="xsd:string" use="required" />
+					<xsd:attribute name="val" type="xsd:string" use="required" />
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="system" type="xsd:string" />
+	</xsd:complexType>
+	<!-- プレイヤー情報 -->
+	<xsd:complexType name="player-description">
+		<xsd:sequence>
+			<xsd:element name="player-data" minOccurs="1" maxOccurs="4">
+				<xsd:complexType>
+					<xsd:attribute name="id" type="id-string" use="required" />
+					<xsd:attribute name="name" type="xsd:string" use="required" />
+					<xsd:attribute name="starting-wind" type="wind" use="required" />
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 列挙型:風位 -->
+	<xsd:simpleType name="wind">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="east" />
+			<xsd:enumeration value="south" />
+			<xsd:enumeration value="west" />
+			<xsd:enumeration value="north" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 局進行情報 -->
+	<xsd:complexType name="round">
+		<xsd:sequence>
+			<xsd:element name="round-description" type="round-description" />
+			<xsd:element name="distribution" type="distribution" />
+			<xsd:element name="progress" type="progress" />
+			<xsd:element name="final-hands" type="final-hands" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 局ごとの情報 -->
+	<xsd:complexType name="round-description">
+		<xsd:sequence>
+			<xsd:element name="round-number" type="round-number" />
+			<xsd:element name="result" type="xsd:string" />
+			<xsd:element name="dora" type="dora-list" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="uradora" type="dora-list" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="alice" type="dora-list" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="player-score" type="player-score" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 局番号情報 -->
+	<xsd:complexType name="round-number">
+		<xsd:attribute name="prevailing-wind" type="xsd:string" use="required" fixed="east" />
+		<xsd:attribute name="rotation" type="xsd:positiveInteger" use="required" />
+		<xsd:attribute name="counter" type="xsd:nonNegativeInteger" default="0" />
+	</xsd:complexType>
+	<!-- プレイヤーごとの収支情報 -->
+	<xsd:complexType name="player-score">
+		<xsd:sequence>
+			<xsd:element name="player" minOccurs="1" maxOccurs="4">
+				<xsd:complexType>
+					<xsd:attribute name="ref" type="id-string" use="required" />
+					<xsd:attribute name="wind" type="wind" use="required" />
+					<xsd:attribute name="score" type="xsd:integer" use="required" />
+					<xsd:attribute name="score-after" type="xsd:integer" />
+					<xsd:attribute name="delta" type="xsd:integer" />
+					<xsd:attribute name="chip" type="xsd:integer" />
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- ドラの一覧 -->
+	<xsd:complexType name="dora-list">
+		<xsd:sequence>
+			<xsd:element name="tile" type="tile" minOccurs="1" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 牌 -->
+	<xsd:complexType name="tile">
+		<xsd:attribute name="tile" type="tile-char" use="required" />
+		<xsd:attribute name="dora" type="color-dora" default="normal" />
+	</xsd:complexType>
+	<xsd:simpleType name="tile-char">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="&m1;" />
+			<xsd:enumeration value="&m2;" />
+			<xsd:enumeration value="&m3;" />
+			<xsd:enumeration value="&m4;" />
+			<xsd:enumeration value="&m5;" />
+			<xsd:enumeration value="&m6;" />
+			<xsd:enumeration value="&m7;" />
+			<xsd:enumeration value="&m8;" />
+			<xsd:enumeration value="&m9;" />
+			<xsd:enumeration value="&p1;" />
+			<xsd:enumeration value="&p2;" />
+			<xsd:enumeration value="&p3;" />
+			<xsd:enumeration value="&p4;" />
+			<xsd:enumeration value="&p5;" />
+			<xsd:enumeration value="&p6;" />
+			<xsd:enumeration value="&p7;" />
+			<xsd:enumeration value="&p8;" />
+			<xsd:enumeration value="&p9;" />
+			<xsd:enumeration value="&s1;" />
+			<xsd:enumeration value="&s2;" />
+			<xsd:enumeration value="&s3;" />
+			<xsd:enumeration value="&s4;" />
+			<xsd:enumeration value="&s5;" />
+			<xsd:enumeration value="&s6;" />
+			<xsd:enumeration value="&s7;" />
+			<xsd:enumeration value="&s8;" />
+			<xsd:enumeration value="&s9;" />
+			<xsd:enumeration value="&east;" />
+			<xsd:enumeration value="&south;" />
+			<xsd:enumeration value="&west;" />
+			<xsd:enumeration value="&north;" />
+			<xsd:enumeration value="&white;" />
+			<xsd:enumeration value="&green;" />
+			<xsd:enumeration value="&red;" />
+			<xsd:enumeration value="&spring;" />
+			<xsd:enumeration value="&summer;" />
+			<xsd:enumeration value="&autumn;" />
+			<xsd:enumeration value="&winter;" />
+			<xsd:enumeration value="&plum;" />
+			<xsd:enumeration value="&orchid;" />
+			<xsd:enumeration value="&chrys;" />
+			<xsd:enumeration value="&bamboo;" />
+			<xsd:enumeration value="&joker;" />
+			<xsd:enumeration value="&back;" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="color-dora">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="normal" />
+			<xsd:enumeration value="red" />
+			<xsd:enumeration value="blue" />
+			<xsd:enumeration value="gold" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 配牌 -->
+	<xsd:complexType name="distribution">
+		<xsd:sequence>
+			<xsd:element name="initial-hand" minOccurs="1" maxOccurs="4">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="concealed-hand">
+							<xsd:attribute name="player" type="id-string" use="required" />
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="concealed-hand">
+		<xsd:sequence>
+			<!--  4 or  5 tiles ... practice -->
+			<!--  7 or  8 tiles ... practice or Sichuanese -->
+			<!-- 10 or 11 tiles ... Sichuanese -->
+			<!-- 13 or 14 tiles ... Richi or Guobiao -->
+			<!-- 16 or 17 tiles ... Taiwanese -->
+			<xsd:element name="tile" type="tile" minOccurs="1" maxOccurs="17" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 摸打 -->
+	<xsd:complexType name="progress">
+		<xsd:sequence>
+			<xsd:element name="cycle" type="cycle" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="cycle">
+		<xsd:sequence>
+			<xsd:element name="turn" type="turn" minOccurs="1" maxOccurs="4" />
+		</xsd:sequence>
+		<xsd:attribute name="ord" type="xsd:positiveInteger" use="optional" />
+	</xsd:complexType>
+	<xsd:complexType name="turn">
+		<xsd:choice>
+			<xsd:sequence>
+				<xsd:element name="pick" type="picked-tile" minOccurs="0" maxOccurs="1" />
+				<xsd:element name="discard" type="discarded-tile" minOccurs="0" maxOccurs="1" />
+			</xsd:sequence>
+			<xsd:element name="discard-through" type="discarded-tile" />
+		</xsd:choice>
+		<xsd:attribute name="player" type="id-string" use="required" />
+	</xsd:complexType>
+	<!-- 自摸牌 -->
+	<xsd:complexType name="picked-tile">
+		<xsd:complexContent>
+			<xsd:extension base="tile">
+				<xsd:attribute name="meld" default="none">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="none" />
+							<xsd:enumeration value="mahjong" />
+							<xsd:enumeration value="sequence" />
+							<xsd:enumeration value="triplet" />
+							<xsd:enumeration value="quad" />
+							<xsd:enumeration value="flower" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 打牌 -->
+	<xsd:complexType name="discarded-tile">
+		<xsd:complexContent>
+			<xsd:extension base="tile">
+				<xsd:attribute name="call" default="none">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="none" />
+							<xsd:enumeration value="richi" />
+							<xsd:enumeration value="quad" />
+							<xsd:enumeration value="flower" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:attribute>
+				<xsd:attribute name="let-go" type="xsd:boolean" default="false" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 最終形 -->
+	<xsd:complexType name="final-hands">
+		<xsd:sequence>
+			<xsd:element name="final-hand" minOccurs="1" maxOccurs="4">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="hand" type="concealed-hand" />
+						<xsd:element name="finishing-tile" type="finishing-tile" minOccurs="0" maxOccurs="1" />
+						<xsd:element name="flower" type="dora-list" />
+						<xsd:choice minOccurs="0" maxOccurs="5">
+							<xsd:element name="sequence" type="sequence" />
+							<xsd:element name="triplet" type="triplet" />
+							<xsd:element name="quad-concealed" type="quad-concealed" />
+							<xsd:element name="quad-exposed" type="quad-exposed" />
+						</xsd:choice>
+					</xsd:sequence>
+					<xsd:attribute name="player" type="xsd:string" use="required" />
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 和了牌 -->
+	<xsd:complexType name="finishing-tile">
+		<xsd:sequence>
+			<xsd:element name="tile" type="tile" />
+		</xsd:sequence>
+		<xsd:attribute name="finish-type" type="finish-type" default="unspecified" />
+	</xsd:complexType>
+	<xsd:simpleType name="finish-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="unspecified" />
+			<xsd:enumeration value="ron" />
+			<xsd:enumeration value="tsumo" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 鳴き面子 -->
+	<xsd:complexType name="sequence">
+		<xsd:sequence>
+			<xsd:element name="tile" type="tile" minOccurs="3" maxOccurs="3" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="triplet">
+		<xsd:sequence>
+			<xsd:element name="tile" type="tile" minOccurs="3" maxOccurs="3" />
+		</xsd:sequence>
+		<xsd:attribute name="from" type="meld-direction" use="required" />
+	</xsd:complexType>
+	<xsd:complexType name="quad-exposed">
+		<xsd:sequence>
+			<xsd:element name="tile" type="tile" minOccurs="4" maxOccurs="4" />
+		</xsd:sequence>
+		<xsd:attribute name="from" type="meld-direction" use="required" />
+		<xsd:attribute name="added" type="xsd:boolean" default="false" />
+	</xsd:complexType>
+	<xsd:complexType name="quad-concealed">
+		<xsd:sequence>
+			<xsd:element name="tile" type="tile" minOccurs="4" maxOccurs="4" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="meld-direction">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="left" />
+			<xsd:enumeration value="opposite" />
+			<xsd:enumeration value="right" />
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

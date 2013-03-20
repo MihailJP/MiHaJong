@@ -8,6 +8,7 @@
 #include <map>
 #include <set>
 #include <array>
+#include <functional>
 #ifdef MJCORE_EXPORTS
 #include "reader/csv2arry.h"
 #include "reader/ini2map.h"
@@ -62,6 +63,7 @@ public:
 	__declspec(dllexport) static BOOL reqFailed(uint16_t ruleID, const int* const ruleStat);
 	__declspec(dllexport) static void getPageCaption(LPTSTR const caption, unsigned bufsize, uint8_t page);
 	static const char* ruleDigit() {return digit;}
+	static void forEachRule(std::function<void (std::string, std::string)> f);
 };
 
 class RuleData::ReqChecker {

@@ -286,7 +286,7 @@ void TableProtoScene::ScoreBoard::renderName() {
 	}
 	nameText->NewText(0,
 		(getScoreMode() == scoreDiff) ? _T("点差表示") : ((getScoreMode() == scoreChip) ? _T("チップ表示") : utils::getName(playerID())),
-		xpos + NamePosX, ypos + NamePosY, 1.0, (tmpWidth > 18) ? (18.0f / (float)tmpWidth) : 1.0f);
+		xpos + NamePosX, ypos + NamePosY, 1.0, ((tmpWidth > 18) ? (18.0f / (float)tmpWidth) : 1.0f) * wScale);
 	nameText->Render();
 }
 

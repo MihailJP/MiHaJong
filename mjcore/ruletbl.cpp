@@ -311,6 +311,11 @@ __declspec(dllexport) BOOL RuleData::reqFailed(uint16_t RuleID, const int* const
 	return flag ? TRUE : FALSE;
 }
 
+void RuleData::forEachRule(std::function<void (std::string, std::string)> f) {
+	for (auto k = inverse_nametbl.begin(); k != inverse_nametbl.end(); ++k)
+		f(k->first, chkRule(k->first));
+}
+
 // -------------------------------------------------------------------------
 
 RuleData::ReqChecker* RuleData::ReqChecker::instantiate() {

@@ -32,6 +32,7 @@ public:
 	operator CodeConv::tstring() const;
 	/* Other methods */
 	CodeConv::tstring to_str(CodeConv::tstring plusSign, CodeConv::tstring minusSign) const;
+	CodeConv::tstring to_str_plain() const;
 	/* Arithmetic operators */
 	const LNum operator+(const LNum& addend) const;
 	const LNum operator+(const int32_t addend) const;
