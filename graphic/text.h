@@ -82,6 +82,17 @@ public:
 	~CallDigitRenderer();
 };
 
+class ScoreDigitRenderer : public ITextRenderer {
+private:
+	const unsigned int FontBaseSize() {return 128;}
+	const unsigned int FontWidth() {return 96;}
+	const unsigned int FontCols() {return 10;}
+	const unsigned int FontPadding() {return 0;}
+public:
+	explicit ScoreDigitRenderer(LPDIRECT3DDEVICE9 device);
+	~ScoreDigitRenderer();
+};
+
 struct ITextRenderer::StringAttr {
 	std::wstring str;
 	int X, Y;

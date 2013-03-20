@@ -103,10 +103,10 @@ void RuleConfigScene::ShowPageCaption() {
 }
 void RuleConfigScene::ShowMessageBelow() {
 	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ƒAƒX”ä~0.75(‰¡•’²®—p)
-	uint64_t t = elapsed();
+	TimerMicrosec t = myTimer.elapsed();
 	CodeConv::tstring caption = _T("");
 	if (buttonCursor == -1) {
-		switch ((t / 50000000u) % 6) {
+		switch ((t / 5000000u) % 6) {
 		case 0:
 			TCHAR menuitem[128]; rules::getRuleDescription(menuitem, 128, menuCursor);
 			caption = CodeConv::tstring(menuitem);
@@ -139,7 +139,7 @@ void RuleConfigScene::ShowMessageBelow() {
 			break;
 		}
 	} else {
-		switch ((t / 50000000u) % 3) {
+		switch ((t / 5000000u) % 3) {
 		case 0:
 			switch (buttonCursor) {
 			case 0:
@@ -168,7 +168,7 @@ void RuleConfigScene::ShowMessageBelow() {
 	myTextRenderer->NewText(120, caption,
 		(720 - 9 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 955, 1.0f,
 		(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate,
-		((t % 50000000u) < 5000000u) ? (55u + ((t % 50000000u) / 25000u)) << 24 | 0x00ffffff : 0xffffffff);
+		((t % 5000000u) < 500000u) ? (55u + ((t % 5000000u) / 2500u)) << 24 | 0x00ffffff : 0xffffffff);
 }
 
 void RuleConfigScene::Render() {
@@ -238,7 +238,7 @@ void RuleConfigScene::BtnEvent_Cancel_Down() {
 	}
 	for (unsigned i = 0; i < buttons; i++)
 		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
-		skipto(0); redrawItems();
+		myTimer.skipTo(0); redrawItems();
 }
 
 void RuleConfigScene::BtnEvent_Content_Roll_Up() {
@@ -263,22 +263,22 @@ void RuleConfigScene::BtnEvent_Content_Roll_Down() {
 void RuleConfigScene::BtnEvent_Content_Item_Prev(unsigned short val) {
 	sound::Play(sound::IDs::sndCursor);
 	if ((menuCursor -= val) < 0) menuCursor = 0;
-	skipto(0); redrawItems();
+	myTimer.skipTo(0); redrawItems();
 }
 void RuleConfigScene::BtnEvent_Content_Item_Next(unsigned short val) {
 	sound::Play(sound::IDs::sndCursor);
 	if ((menuCursor += val) >= RULESIZE) menuCursor = RULESIZE - 1;
-	skipto(0); redrawItems();
+	myTimer.skipTo(0); redrawItems();
 }
 void RuleConfigScene::BtnEvent_Content_Page_Prev() {
 	sound::Play(sound::IDs::sndClick);
 	if ((menuCursor -= RULES_IN_PAGE) < 0) menuCursor += RULES_IN_PAGE;
-	skipto(0); redrawItems();
+	myTimer.skipTo(0); redrawItems();
 }
 void RuleConfigScene::BtnEvent_Content_Page_Next() {
 	sound::Play(sound::IDs::sndClick);
 	if ((menuCursor += RULES_IN_PAGE) >= RULESIZE) menuCursor -= RULES_IN_PAGE;
-	skipto(0); redrawItems();
+	myTimer.skipTo(0); redrawItems();
 }
 
 void RuleConfigScene::BtnEvent_Button_Prev() {
@@ -286,14 +286,14 @@ void RuleConfigScene::BtnEvent_Button_Prev() {
 	if ((--buttonCursor) < 0) buttonCursor = buttons - 1;
 	for (unsigned i = 0; i < buttons; i++)
 		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
-	skipto(0); redrawItems();
+	myTimer.skipTo(0); redrawItems();
 }
 void RuleConfigScene::BtnEvent_Button_Next() {
 	sound::Play(sound::IDs::sndCursor);
 	if ((++buttonCursor) >= buttons) buttonCursor = 0;
 	for (unsigned i = 0; i < buttons; i++)
 		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
-	skipto(0); redrawItems();
+	myTimer.skipTo(0); redrawItems();
 }
 
 void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
@@ -368,7 +368,7 @@ void RuleConfigScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 				menuCursor = menuCursor / RULES_IN_PAGE * RULES_IN_PAGE + region;
 				buttonCursor = -1;
 				for (unsigned i = 0; i < buttons; i++) myButtonPic->setButton(i, ButtonPic::clear);
-				skipto(0); redrawItems();
+				myTimer.skipTo(0); redrawItems();
 			}
 		}
 		else if ((region >= btnRegionStart) && (region <= (btnRegionStart + buttons - 1))) {
@@ -377,7 +377,7 @@ void RuleConfigScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 				buttonCursor = region - btnRegionStart;
 				for (unsigned i = 0; i < buttons; i++)
 					myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
-				skipto(0); redrawItems();
+				myTimer.skipTo(0); redrawItems();
 			}
 		}
 	};

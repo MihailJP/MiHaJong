@@ -5,6 +5,7 @@
 #include <array>
 #include <tuple>
 #include "../text.h"
+#include "../timer.h"
 
 namespace mihajong_graphic {
 
@@ -27,7 +28,7 @@ public:
 
 class TableProtoScene::ScoreBoard {
 private:
-	unsigned long long currTime();
+	Timer myTimer;
 private:
 	LPDIRECT3DDEVICE9 myDevice;
 	seatRelative relativePlayerID;

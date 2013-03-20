@@ -541,15 +541,14 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 	}
 	// 通常の半荘終了時（トップが３００００点未満だと西入サドンデス）
 	if ((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) > gameStat->GameLength) {
-		bool flag = false;
 		for (PlayerID i = 0; i < (chkGameType(gameStat, SanmaT) ? 3 : 4); ++i)
 			if (gameStat->Player[i].PlayerScore >= (LNum)BasePoint())
 				return true;
 		// 延長戦なし設定
-		if (RuleData::chkRule("sudden_death_type", "no")) return true;
+		if (RuleData::chkRule("sudden_death_length", "no")) return true;
 	}
 	// 延長戦の長さに制限がある場合
-	if (RuleData::chkRule("sudden_death_type", "one_extra_round")) {
+	if (RuleData::chkRule("sudden_death_length", "one_extra_round")) {
 		if ((gameStat->GameRound == 16) && // 東々廻しのとき
 			(RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game"))) {
 				if (((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) >= (gameStat->GameLength + roundLoopRate())))
@@ -561,7 +560,7 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 	}
 	// 北場終了の場合は帰り東へ
 	if (gameStat->GameRound == roundLoopRate()) {
-		if (RuleData::chkRule("sudden_death_type", "no")) { // 延長戦無しで終了
+		if (RuleData::chkRule("sudden_death_length", "no")) { // 延長戦無しで終了
 			return true;
 		} else { // 返り東
 			++(gameStat->LoopRound); gameStat->GameRound = 0;

@@ -14,7 +14,7 @@ TableSubsceneTitling::~TableSubsceneTitling() {
 }
 
 void TableSubsceneTitling::FadeinStr(const std::wstring& str) {
-	const uint64_t Zeit = currTime() - startTime, Anfang = 0, Ende = 5000000;
+	const uint64_t Zeit = myTimer.elapsed(), Anfang = 0, Ende = 500000;
 	unsigned len = 0;
 	for (auto k = str.begin(); k != str.end(); ++k)
 		if (*k <= L'\x7f') len += 1;

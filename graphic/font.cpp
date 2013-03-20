@@ -43,6 +43,11 @@ FontMapCallDigits* FontMapCallDigits::instantiate() {
 	return &myInstance;
 }
 
+FontMapScoreDigits* FontMapScoreDigits::instantiate() {
+	static FontMapScoreDigits myInstance;
+	return &myInstance;
+}
+
 void FontMapClass::readCharMap(int ResourceNum) {
 	DWORD size; const uint8_t* data;
 	LoadFileInResource(ResourceNum, CHARMAP_FILE, size, data);
@@ -77,6 +82,10 @@ FontMapSmallChr::FontMapSmallChr() {
 
 FontMapCallDigits::FontMapCallDigits() {
 	readCharMap(IDB_CHARMAP_CALL_DIGITS);
+}
+
+FontMapScoreDigits::FontMapScoreDigits() {
+	readCharMap(IDB_CHARMAP_SCORE_DIGITS);
 }
 
 }

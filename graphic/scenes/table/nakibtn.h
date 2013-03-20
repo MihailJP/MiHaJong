@@ -5,6 +5,7 @@
 #include <bitset>
 #include <Windows.h>
 #include "../../../common/mutex.h"
+#include "../../timer.h"
 
 namespace mihajong_graphic {
 
@@ -70,7 +71,7 @@ public:
 	explicit ButtonReconst(GameTableScreen* parent);
 	~ButtonReconst();
 private: // ŽžŠÔŠÖŒW
-	std::uint64_t currTime();
+	Timer myTimer;
 };
 
 }

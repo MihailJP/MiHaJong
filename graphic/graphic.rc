@@ -32,10 +32,12 @@ IDB_PNG_SCORE_INDICATOR       PNG_FILE ".\\data\\score.png"
 IDB_PNG_CALL_TEXT             PNG_FILE ".\\data\\call.png"
 IDB_PNG_CALL_DIGITS           PNG_FILE ".\\data\\cdigits.png"
 IDB_PNG_AGARI_WINDOW          PNG_FILE ".\\data\\agariwnd.png"
+IDB_PNG_SCORE_DIGITS          PNG_FILE ".\\data\\sdigits.png"
 IDB_CHARMAP_FONT          CHARMAP_FILE ".\\data\\font.chr"
 IDB_CHARMAP_FONT_HUGE     CHARMAP_FILE ".\\data\\largechr.chr"
 IDB_CHARMAP_FONT_SMALL    CHARMAP_FILE ".\\data\\smallchr.chr"
 IDB_CHARMAP_CALL_DIGITS   CHARMAP_FILE ".\\data\\cdigits.chr"
+IDB_CHARMAP_SCORE_DIGITS  CHARMAP_FILE ".\\data\\sdigits.chr"
 
 
 

@@ -31,11 +31,11 @@ void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 	if ((c_val.Mantissa == 0) && (c_val.Exponent == 0)) return; // •\Ž¦‚µ‚È‚¢ê‡
 	assert(c_val.Exponent >= 2u); // ¬”‚É‚Í‘Î‰ž‚µ‚È‚¢
 
-	const std::uint64_t curr = currTime();
-	const int animationLength = 2500000;
+	const std::uint64_t curr = myTimer.elapsed();
+	const int animationLength = 250000;
 	const D3DCOLOR col = D3DCOLOR_ARGB(
-		(curr >= (startTime + animationLength)) ? 255 :
-		(int)std::pow((float)((curr - startTime) * 255) / animationLength / 16.0f, 2),
+		(curr >= animationLength) ? 255 :
+		(int)std::pow((float)(curr * 255) / animationLength / 16.0f, 2),
 		c_val.Mantissa > 0 ? 0xcc : 0xff,
 		c_val.Mantissa < 0 ? 0xcc : 0xff,
 		0xcc);

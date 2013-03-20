@@ -6,8 +6,7 @@ mihajong/ai/
 mihajong/bgm/
 mihajong/sound/
 mihajong/debug*.log
-mihajong/haifu/*.txt
-mihajong/haifu/*.htm
+mihajong/haifu/
 doc/rulesyms.txt
 logger/Debug/
 logger/Release/
@@ -22,6 +21,7 @@ mjcore/mjcore.opensdf
 mjcore/data/*.cpp
 mjcore/data/*.h
 mjcore/data/confitem*.lzma
+mjcore/data/rankval.csv.lzma
 astro/Debug/
 astro/Release/
 astro/ipch/

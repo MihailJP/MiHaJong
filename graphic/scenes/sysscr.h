@@ -5,17 +5,16 @@
 #include <cstdint>
 #include "../text.h"
 #include "../../common/strcode.h"
+#include "../timer.h"
 
 namespace mihajong_graphic {
 
 class SystemScreen : public Scene {
 protected:
 	void clearWithGameTypeColor();
-	FILETIME startTime;
-	static const unsigned timePerFrame = 166667u;
-	uint64_t elapsed();
+	Timer myTimer;
+	static const unsigned timePerFrame = 16667u;
 	TextRenderer* myTextRenderer;
-	void skipto(unsigned frames);
 	unsigned strwidth(const std::wstring& str);
 	unsigned strwidth(const std::string& str);
 public:

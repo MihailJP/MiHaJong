@@ -18,13 +18,12 @@ FPSIndicator::~FPSIndicator() {
 
 void FPSIndicator::Render() {
 	{ // ‚ğæ“¾
-		FILETIME sTime; GetSystemTimeAsFileTime(&sTime);
-		UINT64 tempus = ((UINT64)sTime.dwHighDateTime << 32) | sTime.dwLowDateTime;
+		UINT64 tempus = myTimer.currTime();
 		RedrawTime.push_back(tempus);
-		while ((tempus - RedrawTime.front()) > 10000000) RedrawTime.pop_front();
+		while ((tempus - RedrawTime.front()) > 1000000) RedrawTime.pop_front();
 	}
 	/* ŒvZ‚·‚é */
-	if ((RedrawTime.back() - LastRecalcTime) >= 5000000) {
+	if ((RedrawTime.back() - LastRecalcTime) >= 500000) {
 		LastRecalcTime = RedrawTime.back();
 		if ((RedrawTime.size() < 3) || (RedrawTime.back() == RedrawTime.front())) {
 			currentFPS = 0;
@@ -34,7 +33,7 @@ void FPSIndicator::Render() {
 			_sntprintf(fpsstr, fpsstr_size, _T("--.-- FPS"));
 #endif
 		} else {
-			currentFPS = 10000000.0f / ((float)(RedrawTime.back() - RedrawTime.front()) / (float)(RedrawTime.size() - 1));
+			currentFPS = 1000000.0f / ((float)(RedrawTime.back() - RedrawTime.front()) / (float)(RedrawTime.size() - 1));
 #if defined(_MSC_VER)
 			_stprintf_s(fpsstr, fpsstr_size, _T("%5.2f FPS"), currentFPS);
 #else
