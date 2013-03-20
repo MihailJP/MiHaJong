@@ -90,7 +90,7 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 	}
 	regions[ID].Left = X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight);
 	regions[ID].Top = Y;
-	regions[ID].Right = Geometry::WindowWidth - X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight);
+	regions[ID].Right = (Geometry::BaseSize * 4 / 3) - X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight);
 	regions[ID].Bottom = Y + 71;
 }
 
