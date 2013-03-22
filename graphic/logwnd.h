@@ -12,6 +12,7 @@
 namespace mihajong_graphic {
 namespace logwnd {
 
+EXPORT void reset();
 EXPORT void append(LPCTSTR logstr);
 EXPORT LPCTSTR getlogptr();
 

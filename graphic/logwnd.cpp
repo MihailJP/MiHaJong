@@ -17,7 +17,9 @@ namespace {
 	CodeConv::tostringstream logdata;
 }
 
-/* FIXME: ログがリセットされていない */
+EXPORT void reset() {
+	logdata.clear(); logdata.str(_T(""));
+}
 
 EXPORT void append(LPCTSTR logstr) {
 	logdata << logstr; logdata.flush();
