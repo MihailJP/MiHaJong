@@ -131,10 +131,12 @@ void TableProtoScene::ScoreBoard::Render() {
 	RECT rect = {0, 0, PanelWidth, PanelHeight};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos, (int)ypos,
 		PanelWidth, PanelHeight, 0xffffffff, &rect, 0, 0, &myMatrix);
-	renderWind();
-	renderRank();
-	renderScore();
-	renderName();
+	if ((playerID() >= 0) && (playerID() < (chkGameType(GameStatus::gameStat(), SanmaT) ? 3 : 4))) {
+		renderWind();
+		renderRank();
+		renderScore();
+		renderName();
+	}
 }
 
 void TableProtoScene::ScoreBoard::renderWind() {
