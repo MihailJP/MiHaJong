@@ -181,7 +181,7 @@ void ResultScreen::RankRenderer::RenderScore() {
 	const D3DCOLOR color =
 		(point > LargeNum::fromInt(0)) ? 0xffccffcc :
 		(point < LargeNum::fromInt(0)) ? 0xffffcccc : 0xffffffcc;
-	const unsigned strWidth = scoreRenderer->strWidthByCols(scoreTxt);
+	const unsigned strWidth = scoreRenderer->strWidthByCols(scoreTxt) / 2u;
 	scoreRenderer->NewText(0, scoreTxt,
 		(1000 + 96 * std::max((signed)widthLimit - (signed)strWidth, 0) -
 		(int)(96.0f * (float)std::min(strWidth, widthLimit) * (scale - 1.0))) * widthScale,
