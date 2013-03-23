@@ -18,7 +18,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		yamahaiAttr = std::make_tuple(1, 144, 18, 130);
 	else
 		yamahaiAttr = std::make_tuple(2, 140, 18, 130);
-	seatRelative tmpPlayerCode = playerRelative((gameStat->gameType & Sanma4) ? trueTargetPlayer : targetPlayer, gameStat->PlayerID);
+	seatRelative tmpPlayerCode = playerRelative(trueTargetPlayer, gameStat->PlayerID);
 	auto calcTileNum = [&gameStat, &targetPlayer, &yamahaiAttr](unsigned j) -> unsigned {
 		const unsigned yamahaiMode = std::get<0>(yamahaiAttr);
 		const unsigned dice = gameStat->Dice[0].Number + gameStat->Dice[1].Number;
@@ -28,20 +28,20 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		case 0:
 			return
 				((((targetPlayer + 3) % Players) * 34) + j * 2 + (104 * dice + 34) +
-				((gameStat->gameType % Players)                       * 102)) % 136;
+				((gameStat->GameRound % Players)                        * 102)) % 136;
 		case 1:
 			return
 				((((targetPlayer + 3) % Players) * 36) + j * 2 + (110 * dice + 36) +
-				((gameStat->gameType % Players)                       * 108)) % 144;
+				((gameStat->GameRound % Players)                        * 108)) % 144;
 		case 2:
 			return (
 				((((targetPlayer + 3) % Players) * 35) + j * 2 + (107 * dice + 35) +
-				((gameStat->gameType % Players)                       * 105)) % 140
+				((gameStat->GameRound % Players)                        * 105)) % 140
 				) / 2 * 2;
 		case 3:
 			return
 				((((targetPlayer + 2) % 3      ) * 36) + j * 2 + (74 * dice + 36) +
-				(((gameStat->gameType - (gameStat->gameType / 4)) % 3)*  72)) % 108;
+				(((gameStat->GameRound - (gameStat->GameRound / 4)) % 3)*  72)) % 108;
 		default:
 			throw _T("calcTileNum: Invalid mode!");
 		}
