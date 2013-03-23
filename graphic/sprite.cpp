@@ -1,10 +1,11 @@
 #include "sprite.h"
 #include "geometry.h"
-#include <map>
 
 /* スプライト表示処理 */
 
 namespace mihajong_graphic {
+
+std::map<int, SpriteRenderer*> SpriteRenderer::renderer;
 
 /* コンストラクタ */
 SpriteRenderer::SpriteRenderer(LPDIRECT3DDEVICE9 device) {
@@ -19,12 +20,18 @@ SpriteRenderer::~SpriteRenderer() {
 
 /* インスタンス化 */
 SpriteRenderer* SpriteRenderer::instantiate(LPDIRECT3DDEVICE9 device) {
-	static std::map<int, SpriteRenderer*> renderer;
 	if (renderer.find((int)device) != renderer.end()) { // デバイスに対応するスプライトがすでにある
 		return renderer[(int)device];
 	} else { // デバイスに対応するスプライトは初回の使用(初期化が必要)
 		renderer[(int)device] = new SpriteRenderer(device);
 		return renderer[(int)device];
+	}
+}
+
+void SpriteRenderer::delInstance(LPDIRECT3DDEVICE9 device) {
+	if (renderer.find((int)device) != renderer.end()) {
+		delete renderer[(int)device];
+		renderer.erase((int)device);
 	}
 }
 
