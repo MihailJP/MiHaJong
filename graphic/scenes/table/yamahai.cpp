@@ -60,10 +60,11 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 	};
 	auto getRinshanFlag2 = getRinshanFlag(2);
 	auto getRinshanFlag1 = getRinshanFlag(1);
+	const bool shorterWall = (std::get<0>(yamahaiAttr) == 2) && (utils::playerwind(gameStat, trueTargetPlayer, gameStat->GameRound) % 2 == 1);
 	switch (tmpPlayerCode) {
 	case sOpposite:
-		for (int i = (18 - std::get<2>(yamahaiAttr)) * 2; i < 36; i += 2) { /* 対面側の山 */
-			unsigned tileNum = calcTileNum((34 - i) / 2);
+		for (int i = (18 - std::get<2>(yamahaiAttr) + (shorterWall ? 1 : 0)) * 2; i < 36; i += 2) { /* 対面側の山 */
+			unsigned tileNum = calcTileNum((34 - (i - (shorterWall ? 2 : 0))) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i); TileTexture->DelTile(i + 1);
@@ -76,8 +77,8 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		}
 		break;
 	case sLeft:
-		for (int i = 0; i < std::get<2>(yamahaiAttr) * 2; i += 2) { /* 上家側の山 */
-			unsigned tileNum = calcTileNum(i / 2);
+		for (int i = 0; i < (std::get<2>(yamahaiAttr) - (shorterWall ? 1 : 0)) * 2; i += 2) { /* 上家側の山 */
+			unsigned tileNum = calcTileNum((i + (shorterWall ? 2 : 0)) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 36); TileTexture->DelTile(i + 37);
@@ -90,8 +91,8 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		}
 		break;
 	case sRight:
-		for (int i = (18 - std::get<2>(yamahaiAttr)) * 2; i < 36; i += 2) { /* 下家側の山 */
-			unsigned tileNum = calcTileNum((34 - i) / 2);
+		for (int i = (18 - std::get<2>(yamahaiAttr) + (shorterWall ? 1 : 0)) * 2; i < 36; i += 2) { /* 下家側の山 */
+			unsigned tileNum = calcTileNum((34 - (i - (shorterWall ? 2 : 0))) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 72); TileTexture->DelTile(i + 73);
@@ -104,8 +105,8 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		}
 		break;
 	case sSelf:
-		for (int i = 0; i < std::get<2>(yamahaiAttr) * 2; i += 2) { /* 自分の山 */
-			unsigned tileNum = calcTileNum(i / 2);
+		for (int i = 0; i < (std::get<2>(yamahaiAttr) - (shorterWall ? 1 : 0)) * 2; i += 2) { /* 自分の山 */
+			unsigned tileNum = calcTileNum((i + (shorterWall ? 2 : 0)) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k  >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 108); TileTexture->DelTile(i + 109);
