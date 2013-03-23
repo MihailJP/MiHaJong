@@ -178,7 +178,7 @@ __declspec(dllexport) void shuffle(GameTable* const gameStat) { // ”v‚ðƒoƒbƒtƒ@‚
 	unsigned int tiles = inittiles(gameStat, tilepos);
 	redtiles(gameStat, tilepos);
 	bluetiles(gameStat, tilepos);
-	//shuffletiles(gameStat, tilepos, tiles); // ƒfƒoƒbƒO‚Ì‚½‚ßô”v‚È‚µ
+	shuffletiles(gameStat, tilepos, tiles);
 }
 
 #define nagatadora(TileCode) {++gameStat->DoraFlag.Omote[TileCode]; haifu::haifurecdora(TileCode);}
