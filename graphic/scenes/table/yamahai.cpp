@@ -69,10 +69,10 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i); TileTexture->DelTile(i + 1);
 			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
-				TileTexture->NewTile(      i    , gameStat->Deck[k + 1].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2 - 1),
+				TileTexture->NewTile(      i    , gameStat->Deck[k + 1].tile, gameStat->Deck[k + 1].red, DeckPosH + ShowTile::VertTileWidth * (i / 2 - 1),
 				DeckPosV,                 UpsideDown, Reverse);
 			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
-				TileTexture->NewTile(      i + 1, gameStat->Deck[k    ].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2 - 1),
+				TileTexture->NewTile(      i + 1, gameStat->Deck[k    ].tile, gameStat->Deck[k    ].red, DeckPosH + ShowTile::VertTileWidth * (i / 2 - 1),
 				DeckPosV - TileThickness, UpsideDown, dora ? Obverse : Reverse);
 		}
 		break;
@@ -83,10 +83,10 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 36); TileTexture->DelTile(i + 37);
 			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
-				TileTexture->NewTile( 36 + i    , gameStat->Deck[k + 1].tile, Normal, DeckPosV,
+				TileTexture->NewTile( 36 + i    , gameStat->Deck[k + 1].tile, gameStat->Deck[k + 1].red, DeckPosV,
 				DeckPosH                 + ShowTile::VertTileWidth * (i / 2), Clockwise, Reverse);
 			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
-				TileTexture->NewTile( 36 + i + 1, gameStat->Deck[k    ].tile, Normal, DeckPosV,
+				TileTexture->NewTile( 36 + i + 1, gameStat->Deck[k    ].tile, gameStat->Deck[k    ].red, DeckPosV,
 				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2), Clockwise, dora ? Obverse : Reverse);
 		}
 		break;
@@ -97,10 +97,10 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 72); TileTexture->DelTile(i + 73);
 			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
-				TileTexture->NewTile( 72 + i    , gameStat->Deck[k + 1].tile, Normal, TableSize - DeckPosV,
+				TileTexture->NewTile( 72 + i    , gameStat->Deck[k + 1].tile, gameStat->Deck[k + 1].red, TableSize - DeckPosV,
 				DeckPosH                 + ShowTile::VertTileWidth * (i / 2 - 1), Withershins, Reverse);
 			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
-				TileTexture->NewTile( 72 + i + 1, gameStat->Deck[k    ].tile, Normal, TableSize - DeckPosV,
+				TileTexture->NewTile( 72 + i + 1, gameStat->Deck[k    ].tile, gameStat->Deck[k    ].red, TableSize - DeckPosV,
 				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2 - 1), Withershins, dora ? Obverse : Reverse);
 		}
 		break;
@@ -111,10 +111,10 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 			bool dora = (k  >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 108); TileTexture->DelTile(i + 109);
 			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
-				TileTexture->NewTile(108 + i    , gameStat->Deck[k + 1].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2),
+				TileTexture->NewTile(108 + i    , gameStat->Deck[k + 1].tile, gameStat->Deck[k + 1].red, DeckPosH + ShowTile::VertTileWidth * (i / 2),
 				TableSize - DeckPosV,                 Portrait, Reverse);
 			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
-				TileTexture->NewTile(108 + i + 1, gameStat->Deck[k    ].tile, Normal, DeckPosH + ShowTile::VertTileWidth * (i / 2),
+				TileTexture->NewTile(108 + i + 1, gameStat->Deck[k    ].tile, gameStat->Deck[k    ].red, DeckPosH + ShowTile::VertTileWidth * (i / 2),
 				TableSize - DeckPosV - TileThickness, Portrait, dora ? Obverse : Reverse);
 		}
 		break;
