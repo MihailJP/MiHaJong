@@ -372,7 +372,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 
 void tsumoproc(GameTable* const gameStat) {
 	/* ŽŸ‚ÌƒvƒŒƒCƒ„[‚ª”v‚ðŽ©–Ì‚é */
-	++gameStat->TilePointer; gameStat->TianHuFlag = false;
+	gameStat->TianHuFlag = false;
 	if (chkGameType(gameStat, SanmaT)) {
 		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % ACTUAL_PLAYERS;
 	} else {
@@ -388,6 +388,7 @@ void tsumoproc(GameTable* const gameStat) {
 	gameStat->statOfActive().Tsumohai().red =
 		gameStat->Deck[gameStat->TilePointer].red;
 	gameStat->PreviousMeld.Discard = gameStat->PreviousMeld.Stepped = NoTile;
+	++gameStat->TilePointer;
 	sound::Play(sound::IDs::sndTsumo);
 	if (tilesLeft(gameStat) < 10)
 		sound::Play(sound::IDs::sndCountdown);

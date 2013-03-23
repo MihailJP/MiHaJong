@@ -39,7 +39,9 @@ private:
 	std::bitset<btnMAXIMUM> buttonEnabled; // ボタン有効・無効の状態
 public:
 	std::bitset<btnMAXIMUM> areEnabled() {return buttonEnabled;}
-	bool isEnabled(ButtonID buttonID) {return buttonEnabled[buttonID];}
+	bool isEnabled(ButtonID buttonID) {
+		return (buttonID >= 0) && (buttonID < btnMAXIMUM) && buttonEnabled[buttonID];
+	}
 	void enable(ButtonID buttonID);
 	void disable(ButtonID buttonID);
 	void enable(const std::bitset<btnMAXIMUM>& flagset);
