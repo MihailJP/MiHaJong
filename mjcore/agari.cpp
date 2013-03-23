@@ -577,9 +577,8 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	/* TODO: ‚±‚ê‚ð”pŽ~‚·‚é‚©‚ÌŒˆ’è statmes tmpResultDesc */
 	Sleep(1500);
 	std::uint16_t tmpDoraPointer = origDoraPointer;
-	int AlicePointer = tmpDoraPointer - yakuInfo.AliceDora * 2 - 2;
+	const int AlicePointer = tmpDoraPointer - yakuInfo.AliceDora * 2 - 2;
 
-	/* FIXME: ƒAƒŠƒX‚Ì‚ß‚­‚è‰‰o‚Å‚ß‚­‚é”‚ª³‚µ‚­‚È‚¢ */
 	if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice")) { // ‚ß‚­‚Á‚Ä‚¢‚­ˆ—
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAlice); // •\Ž¦
 		while (gameStat->DoraPointer > AlicePointer) {
