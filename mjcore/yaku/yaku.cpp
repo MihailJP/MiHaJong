@@ -813,6 +813,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 		uint16_t AlicePointer = gameStat->DoraPointer;
 		auto tiles = countTilesInHand(gameStat, targetPlayer);
 		haifu::haifuresetalicedora();
+		yakuInfo.AliceDora = 0;
 		while (1) {
 			AlicePointer -= 2;
 			if (AlicePointer <= gameStat->TilePointer) {

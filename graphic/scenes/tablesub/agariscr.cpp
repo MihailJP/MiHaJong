@@ -458,7 +458,8 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 	const double anmTime = 0.75;
 	const CodeConv::tstring scoreTxt = YakuResult::getAgariScore().bignumtotext(_T(""), _T("-"));
 	assert(scoreTxt != _T("0"));
-	const unsigned txtWidth = std::min(digitRenderer->strWidthByCols(scoreTxt), 6u);
+	const unsigned txtWidthNoAdj = digitRenderer->strWidthByCols(scoreTxt) / 2u;
+	const unsigned txtWidth = std::min(txtWidthNoAdj, 6u);
 	const int x = BaseX + yakuWndWidth - 24 - 72 * txtWidth;
 	const int y = BaseY + 700;
 	const float scale = (Zeit >= anmTime) ? 1.0f : (pow(2.5f * (float)(anmTime - Zeit), 2) + 1.0f);
@@ -467,7 +468,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 		x - (int)(36.0f * (float)txtWidth * (scale - 1.0f)),
 		y - (int)(48.0f * (scale - 1.0f)),
 		scale,
-		(txtWidth < 6) ? 1.5f : (float)(1.5 * 6.0 / (double)txtWidth),
+		(txtWidthNoAdj < 6) ? 1.5f : (float)(1.5 * 6.0 / (double)txtWidthNoAdj),
 		color);
 	if ((timeFlag) && (Zeit >= 2.0)) {
 		ui::UIEvent->set(0);

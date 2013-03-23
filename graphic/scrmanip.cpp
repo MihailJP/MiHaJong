@@ -98,6 +98,7 @@ ScreenManipulator::~ScreenManipulator() {
 	if (myScene) delete myScene;
 	if (myFPSIndicator) delete myFPSIndicator;
 	if (pd3d) {pd3d->Release(); pd3d = nullptr;}
+	SpriteRenderer::delInstance(pDevice);
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
 }
 

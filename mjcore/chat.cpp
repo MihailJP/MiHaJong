@@ -17,8 +17,10 @@ DWORD WINAPI ChatThread::thread_loop (LPVOID param) {
 	reinterpret_cast<ChatThread*>(param)->cleanup();
 	return S_OK;
 }
-StreamLog::StreamLog () {}
-ChatThread::ChatThread (std::string& server_addr, int clientNum) {
+StreamLog::StreamLog () {
+	mihajong_graphic::logwnd::reset();
+}
+ChatThread::ChatThread (std::string& server_addr, int clientNum) : StreamLog() {
 	terminate = false;
 	myServerAddr = server_addr; myClientNum = clientNum;
 	myHandle = CreateThread(nullptr, 0, thread_loop, this, 0, nullptr);
