@@ -63,7 +63,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 	switch (tmpPlayerCode) {
 	case sOpposite:
 		for (int i = (18 - std::get<2>(yamahaiAttr)) * 2; i < 36; i += 2) { /* ‘Î–Ê‘¤‚ÌŽR */
-			unsigned tileNum = calcTileNum((std::get<2>(yamahaiAttr) * 2 - i) / 2);
+			unsigned tileNum = calcTileNum((34 - i) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i); TileTexture->DelTile(i + 1);
@@ -91,7 +91,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		break;
 	case sRight:
 		for (int i = (18 - std::get<2>(yamahaiAttr)) * 2; i < 36; i += 2) { /* ‰º‰Æ‘¤‚ÌŽR */
-			unsigned tileNum = calcTileNum((std::get<2>(yamahaiAttr) * 2 - i) / 2);
+			unsigned tileNum = calcTileNum((34 - i) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
 			TileTexture->DelTile(i + 72); TileTexture->DelTile(i + 73);
