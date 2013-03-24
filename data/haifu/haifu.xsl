@@ -41,10 +41,16 @@
 		<table>
 			<xsl:variable name="cols" select="40" />
 			<xsl:for-each select="round-description/player-score/player">
+				<xsl:variable name="pcode" select="@ref" />
+				<!-- 幅の調整 -->
+				<tr>
+					<xsl:call-template name="width-adjuster">
+						<xsl:with-param name="iteration" select="$cols" />
+					</xsl:call-template>
+				</tr>
 				<!-- プレイヤー別の情報 -->
 				<tr>
 					<td class="player" colspan="{$cols}">
-						<xsl:variable name="pcode" select="@ref" />
 						<xsl:call-template name="wind-name">
 							<xsl:with-param name="wind" select="@wind" />
 						</xsl:call-template>
@@ -75,8 +81,56 @@
 						</xsl:if>
 					</td>
 				</tr>
+				<!-- プレイヤー別の情報：配牌 -->
+				<tr>
+					<td class="label">配牌</td>
+					<td colspan="{$cols - 1}">
+						<xsl:for-each select="../../../distribution/initial-hand[@player = $pcode]/tile">
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="@tile" />
+								<xsl:with-param name="dora" select="@dora" />
+							</xsl:call-template>
+						</xsl:for-each>
+					</td>
+				</tr>
 			</xsl:for-each>
 		</table>
+	</xsl:template>
+
+	<!-- 牌を表示 -->
+	<xsl:template name="tile">
+		<xsl:param name="tile" />
+		<xsl:param name="dora" />
+		<span class="tile">
+			<xsl:choose>
+				<xsl:when test="$dora = 'red'">
+					<span class="akadora">
+						<xsl:value-of select="$tile" />
+					</span>
+				</xsl:when>
+				<xsl:when test="$dora = 'blue'">
+					<span class="aodora">
+						<xsl:value-of select="$tile" />
+					</span>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$tile" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</span>
+	</xsl:template>
+
+	<!-- 幅調整用 -->
+	<xsl:template name="width-adjuster">
+		<xsl:param name="iteration" />
+		<xsl:param name="index" select="1" />
+		<td width="{100.0 div $iteration}%" />
+		<xsl:if test="$index &lt; $iteration">
+			<xsl:call-template name="width-adjuster">
+				<xsl:with-param name="iteration" select="$iteration" />
+				<xsl:with-param name="index" select="$index + 1" />
+			</xsl:call-template>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- 風位を英日翻訳 -->
