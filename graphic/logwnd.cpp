@@ -17,17 +17,20 @@ using namespace character_width;
 namespace {
 	CodeConv::tostringstream logdata;
 	MHJMutex LogWindowMutex;
+	bool updated = false;
 }
 
 EXPORT void reset() {
 	LogWindowMutex.syncDo<void>([]() -> void {
 		logdata.clear(); logdata.str(_T(""));
+		updated = true;
 	});
 }
 
 EXPORT void append(LPCTSTR logstr) {
 	LogWindowMutex.syncDo<void>([logstr]() -> void {
 		logdata << logstr; logdata.flush();
+		updated = true;
 	});
 }
 
@@ -52,6 +55,7 @@ LogWindow::LogWindow(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned
 	myHWnd = hwnd; myDevice = device; x = X; y = Y; width = Width; height = Height;
 	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX), 88, 56);
 	myTextRenderer = new SmallTextRenderer(myDevice);
+	reconstruct_lines();
 }
 LogWindow::~LogWindow() {
 	if (myTextRenderer) delete myTextRenderer;
@@ -93,7 +97,11 @@ void LogWindow::renderFrame() {
 void LogWindow::Render() {
 	using std::max;
 	renderFrame();
-	reconstruct_lines();
+	LogWindowMutex.syncDo<void>([this]() -> void {
+		if (updated) {
+			reconstruct_lines(); updated = false;
+		}
+	});
 	unsigned linenum = 0;
 	for (unsigned i = (unsigned)(max(0, (signed)lines.size() - (signed)height)); i < lines.size(); ++i) { // ログの最後の部分を表示
 	//for (unsigned i = 0; i < min(height, lines.size()); ++i) { // ログの最初の部分を表示
