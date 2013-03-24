@@ -905,13 +905,13 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 	int tiles, interrupt; CodeConv::tstring meldDirection;
 	switch (meld.mstat) {
 	case meldTripletExposedLeft: case meldQuadExposedLeft: case meldQuadAddedLeft:
-		meldDirection = _T(" from=\"left\"");
+		meldDirection = _T(" meld-direction=\"left\"");
 		haifuP.streamDat[player].final << _T(" ƒ"); interrupt = 1; break;
 	case meldTripletExposedCenter: case meldQuadExposedCenter: case meldQuadAddedCenter:
-		meldDirection = _T(" from=\"opposite\"");
+		meldDirection = _T(" meld-direction=\"opposite\"");
 		haifuP.streamDat[player].final << _T(" È"); interrupt = 2; break;
 	case meldTripletExposedRight: case meldQuadExposedRight: case meldQuadAddedRight:
-		meldDirection = _T(" from=\"right\"");
+		meldDirection = _T(" meld-direction=\"right\"");
 		haifuP.streamDat[player].final << _T(" „"); interrupt = 8; break;
 	case meldQuadConcealed:
 		haifuP.streamDat[player].final << _T(" ž"); interrupt = 7; break;
