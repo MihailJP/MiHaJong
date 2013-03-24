@@ -277,7 +277,9 @@ __declspec(dllexport) void haifu::haifubufinit() {
 #else
 		_T("<?xml version=\"1.0\" encoding=\"Shift_JIS\"?>") <<
 #endif
-		std::endl << _T("<!DOCTYPE haifu [") << std::endl <<
+		std::endl <<
+		_T("<?xml-stylesheet href=\"haifu.xsl\" type=\"text/xsl\"?>") << std::endl <<
+		_T("<!DOCTYPE haifu [") << std::endl <<
 		_T("\t<!ENTITY east \"&#x1f000;\"><!ENTITY south \"&#x1f001;\"><!ENTITY west \"&#x1f002;\"><!ENTITY north \"&#x1f003;\">")
 		_T("<!ENTITY red \"&#x1f004;\"><!ENTITY green \"&#x1f005;\"><!ENTITY white \"&#x1f006;\">") << std::endl <<
 		_T("\t<!ENTITY m1 \"&#x1f007;\"><!ENTITY m2 \"&#x1f008;\"><!ENTITY m3 \"&#x1f009;\"><!ENTITY m4 \"&#x1f00a;\"><!ENTITY m5 \"&#x1f00b;\">")
@@ -903,13 +905,13 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 	int tiles, interrupt; CodeConv::tstring meldDirection;
 	switch (meld.mstat) {
 	case meldTripletExposedLeft: case meldQuadExposedLeft: case meldQuadAddedLeft:
-		meldDirection = _T(" from=\"left\"");
+		meldDirection = _T(" meld-direction=\"left\"");
 		haifuP.streamDat[player].final << _T(" ƒ"); interrupt = 1; break;
 	case meldTripletExposedCenter: case meldQuadExposedCenter: case meldQuadAddedCenter:
-		meldDirection = _T(" from=\"opposite\"");
+		meldDirection = _T(" meld-direction=\"opposite\"");
 		haifuP.streamDat[player].final << _T(" È"); interrupt = 2; break;
 	case meldTripletExposedRight: case meldQuadExposedRight: case meldQuadAddedRight:
-		meldDirection = _T(" from=\"right\"");
+		meldDirection = _T(" meld-direction=\"right\"");
 		haifuP.streamDat[player].final << _T(" „"); interrupt = 8; break;
 	case meldQuadConcealed:
 		haifuP.streamDat[player].final << _T(" ž"); interrupt = 7; break;
@@ -920,7 +922,7 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 		tiles = 3;
 		haifuP.streamDat[player].final << _T("ƒ|ƒ“");
 		HThaifuP.streamDat[player].final << _T("</span> ƒ|ƒ“<span class=\"tile\">");
-		XhaifuBufferBody << _T("\t\t\t\t<triplet>") << meldDirection << std::endl;
+		XhaifuBufferBody << _T("\t\t\t\t<triplet") << meldDirection << _T('>') << std::endl;
 		break;
 	case meldQuadExposedLeft: case meldQuadExposedCenter:
 	case meldQuadExposedRight:
