@@ -224,6 +224,9 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		return *this;
 	}
 
+	const LargeNum operator+() const { return *this; }
+	const LargeNum operator-() const { return (*this) * (-1); }
+
 	const bool operator==(const LargeNum& cmp) const { return (this->compare(cmp) == 0); }
 	const bool operator!=(const LargeNum& cmp) const { return (this->compare(cmp) != 0); }
 	const bool operator<(const LargeNum& cmp) const { return (this->compare(cmp) < 0); }

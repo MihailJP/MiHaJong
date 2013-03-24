@@ -5,6 +5,7 @@
 #include <cassert>
 #include <algorithm>
 #include "chrwidth.h"
+#include "../common/mutex.h"
 
 namespace mihajong_graphic {
 namespace logwnd {
@@ -15,24 +16,33 @@ using namespace character_width;
 
 namespace {
 	CodeConv::tostringstream logdata;
+	MHJMutex LogWindowMutex;
 }
 
 EXPORT void reset() {
-	logdata.clear(); logdata.str(_T(""));
+	LogWindowMutex.syncDo<void>([]() -> void {
+		logdata.clear(); logdata.str(_T(""));
+	});
 }
 
 EXPORT void append(LPCTSTR logstr) {
-	logdata << logstr; logdata.flush();
+	LogWindowMutex.syncDo<void>([logstr]() -> void {
+		logdata << logstr; logdata.flush();
+	});
 }
 
 EXPORT LPCTSTR getlogptr() {
 	static CodeConv::tstring logstr;
-	logstr = logdata.str();
-	return logstr.c_str();
+	return LogWindowMutex.syncDo<LPCTSTR>([]() -> LPCTSTR {
+		logstr = logdata.str();
+		return logstr.c_str();
+	});
 }
 
 CodeConv::tstring getlog() {
-	return logdata.str();
+	return LogWindowMutex.syncDo<CodeConv::tstring>([]() -> CodeConv::tstring {
+		return logdata.str();
+	});
 }
 
 // -------------------------------------------------------------------------
