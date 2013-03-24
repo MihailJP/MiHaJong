@@ -546,7 +546,7 @@
 			</xsl:when>
 			<xsl:when test="$val &lt; 0" >
 				<xsl:text>△</xsl:text>
-				<xsl:value-of select="- $val" />
+				<xsl:value-of select="substring-after($val, '-')" />
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$val" />
