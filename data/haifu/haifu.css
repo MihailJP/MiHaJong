@@ -42,7 +42,7 @@ body, .label {
 	font-size: 0.333333em;
 }
 .hand {
-	vertical-align: center;
+	vertical-align: middle;
 }
 .label {
 	text-align: center;
