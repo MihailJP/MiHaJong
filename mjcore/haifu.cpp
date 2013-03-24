@@ -703,14 +703,14 @@ void haifu::haifurecflower(const GameTable* const gameStat, const DiscardTileNum
 
 /* hfwriter */
 void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
-	int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
+	int OrigTurn, int OrigHonba, bool tmpUraFlag, bool tmpAliceFlag,
 	CodeConv::tstring ResultDesc, EndType RoundEndType) {
 		haifuBuffer << ::roundName(OrigTurn, gameStat);
 		if (OrigHonba > 0) haifuBuffer << _T(" ") << OrigHonba << _T("本場");
 		haifuBuffer << _T(" ドラ：") << haifuP.dora.str();
-		if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(RuleData::chkRuleApplied("uradora")))
+		if ((RoundEndType == Agari)&&(tmpUraFlag)&&(RuleData::chkRuleApplied("uradora")))
 			haifuBuffer << _T("裏ドラ：") << haifuP.uraDora.str();
-		if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(RuleData::chkRuleApplied("alice")))
+		if ((RoundEndType == Agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
 			haifuBuffer << _T("アリス：") << haifuP.aliceDoraMax.str();
 		haifuBuffer << std::endl << std::endl <<
 			_T("結果：") << ResultDesc << std::endl << std::endl;
@@ -719,12 +719,12 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 		if (OrigHonba > 0) HThaifuBuffer << _T(" ") << OrigHonba <<_T("本場");
 		HThaifuBuffer << _T(" ドラ：<span class=\"tile\">") <<
 			HThaifuP.dora.str() << _T("</span>");
-		if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(RuleData::chkRuleApplied("uradora")))
+		if ((RoundEndType == Agari)&&(tmpUraFlag)&&(RuleData::chkRuleApplied("uradora")))
 			HThaifuBuffer << _T("裏ドラ：<span class=\"tile\">") <<
-			haifuP.uraDora.str() << _T("</span>"); /* FIXME: 変数間違ってるので後で直すこと */
-		if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(RuleData::chkRuleApplied("alice")))
+			HThaifuP.uraDora.str() << _T("</span>");
+		if ((RoundEndType == Agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
 			HThaifuBuffer << _T("アリス：<span class=\"tile\">") <<
-			haifuP.aliceDoraMax.str() << _T("</span>"); /* FIXME: 変数間違ってるので後で直すこと */
+			HThaifuP.aliceDoraMax.str() << _T("</span>");
 		HThaifuBuffer << _T("</h2>") << std::endl <<
 			_T("<p>結果：") << ResultDesc << _T("</p>") << std::endl <<
 			_T("<table>") << std::endl << _T("<tr>");
@@ -743,10 +743,10 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 		XhaifuBuffer << _T("\t\t\t<result>") << ResultDesc << _T("</result>") << std::endl;
 		XhaifuBuffer << _T("\t\t\t<dora>") << std::endl <<
 			XhaifuP.dora.str() << _T("\t\t\t</dora>") << std::endl;
-		if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(RuleData::chkRuleApplied("uradora")))
+		if ((RoundEndType == Agari)&&(tmpUraFlag)&&(RuleData::chkRuleApplied("uradora")))
 			XhaifuBuffer << _T("\t\t\t<uradora>") << std::endl <<
 			XhaifuP.uraDora.str() << _T("\t\t\t</uradora>") << std::endl;
-		if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(RuleData::chkRuleApplied("alice")))
+		if ((RoundEndType == Agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
 			XhaifuBuffer << _T("\t\t\t<alice>") << std::endl <<
 			XhaifuP.aliceDoraMax.str() << _T("\t\t\t</alice>") << std::endl;
 }
@@ -1103,7 +1103,7 @@ void haifu::tools::hfwriter::hfWriteBottom() {
 /* 配牌をバッファに出力 */
 __declspec(dllexport) void haifu::haifuwritebuffer(
 	const GameTable* const gameStat,
-	int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
+	int OrigTurn, int OrigHonba, bool tmpUraFlag, bool tmpAliceFlag,
 	LPCTSTR ResultDesc, EndType RoundEndType
 	) { /* 配牌をバッファに出力 */
 		tools::hfwriter::hfWriteHead(

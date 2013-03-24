@@ -93,7 +93,7 @@ private:
 
 		public:
 			static void hfWriteHead(const GameTable* const gameStat,
-				int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
+				int OrigTurn, int OrigHonba, bool tmpUraFlag, bool tmpAliceFlag,
 				CodeConv::tstring ResultDesc, EndType RoundEndType);
 
 			static void hfWriteFinalForms(const GameTable* const gameStat, int OrigTurn, EndType RoundEndType);
@@ -145,7 +145,7 @@ public:
 
 	static __declspec(dllexport) void haifuwritebuffer(
 		const GameTable* const gameStat,
-		int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
+		int OrigTurn, int OrigHonba, bool tmpUraFlag, bool tmpAliceFlag,
 		LPCTSTR ResultDesc, EndType RoundEndType);
 
 	static void haifusave(const GameTable* const gameStat);
