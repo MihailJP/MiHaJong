@@ -85,13 +85,52 @@
 				<tr>
 					<td class="label">配牌</td>
 					<td colspan="{$cols - 1}">
-						<xsl:for-each select="../../../distribution/initial-hand[@player = $pcode]/tile">
-							<xsl:call-template name="tile">
-								<xsl:with-param name="tile" select="@tile" />
-								<xsl:with-param name="dora" select="@dora" />
-							</xsl:call-template>
-						</xsl:for-each>
+						<span class="tile">
+							<xsl:for-each select="../../../distribution/initial-hand[@player = $pcode]/tile">
+								<xsl:call-template name="tile">
+									<xsl:with-param name="tile" select="@tile" />
+									<xsl:with-param name="dora" select="@dora" />
+								</xsl:call-template>
+							</xsl:for-each>
+						</span>
 					</td>
+				</tr>
+				<!-- プレイヤー別の情報：自摸 -->
+				<tr class="tile">
+					<td class="label" rowspan="2">自摸</td>
+					<xsl:for-each select="../../../progress/cycle">
+						<td>
+							<xsl:if test="turn[@player = $pcode]">
+								<xsl:if test="turn[@player = $pcode]/pick">
+									<xsl:call-template name="tile">
+										<xsl:with-param name="tile" select="turn[@player = $pcode]/pick/@tile" />
+										<xsl:with-param name="dora" select="turn[@player = $pcode]/pick/@dora" />
+									</xsl:call-template>
+								</xsl:if>
+								<xsl:if test="turn[@player = $pcode]/discard-through">
+									<span class="fallthru">↓</span>
+								</xsl:if>
+							</xsl:if>
+						</td>
+					</xsl:for-each>
+				</tr>
+				<tr>
+					<xsl:for-each select="../../../progress/cycle">
+						<td class="notice">
+							<xsl:if test="turn[@player = $pcode]">
+								<xsl:if test="turn[@player = $pcode]/pick">
+									<xsl:variable name="meld" select="turn[@player = $pcode]/pick/@meld" />
+									<xsl:choose>
+										<xsl:when test="$meld = 'mahjong' ">ツモ</xsl:when>
+										<xsl:when test="$meld = 'sequence'">チー</xsl:when>
+										<xsl:when test="$meld = 'triplet' ">ポン</xsl:when>
+										<xsl:when test="$meld = 'quad'    ">カン</xsl:when>
+										<xsl:when test="$meld = 'flower'  ">花</xsl:when>
+									</xsl:choose>
+								</xsl:if>
+							</xsl:if>
+						</td>
+					</xsl:for-each>
 				</tr>
 			</xsl:for-each>
 		</table>
@@ -101,23 +140,21 @@
 	<xsl:template name="tile">
 		<xsl:param name="tile" />
 		<xsl:param name="dora" />
-		<span class="tile">
-			<xsl:choose>
-				<xsl:when test="$dora = 'red'">
-					<span class="akadora">
-						<xsl:value-of select="$tile" />
-					</span>
-				</xsl:when>
-				<xsl:when test="$dora = 'blue'">
-					<span class="aodora">
-						<xsl:value-of select="$tile" />
-					</span>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="$dora = 'red'">
+				<span class="akadora">
 					<xsl:value-of select="$tile" />
-				</xsl:otherwise>
-			</xsl:choose>
-		</span>
+				</span>
+			</xsl:when>
+			<xsl:when test="$dora = 'blue'">
+				<span class="aodora">
+					<xsl:value-of select="$tile" />
+				</span>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$tile" />
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- 幅調整用 -->
