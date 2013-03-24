@@ -34,14 +34,12 @@ public:
 private: // ボタンの有効・無効の状態
 	ButtonSet currentButtonSet;
 public:
-	ButtonSet getButtonSet() {return currentButtonSet;}
+	ButtonSet getButtonSet();
 private:
 	std::bitset<btnMAXIMUM> buttonEnabled; // ボタン有効・無効の状態
 public:
-	std::bitset<btnMAXIMUM> areEnabled() {return buttonEnabled;}
-	bool isEnabled(ButtonID buttonID) {
-		return (buttonID >= 0) && (buttonID < btnMAXIMUM) && buttonEnabled[buttonID];
-	}
+	std::bitset<btnMAXIMUM> areEnabled();
+	bool isEnabled(ButtonID buttonID);
 	void enable(ButtonID buttonID);
 	void disable(ButtonID buttonID);
 	void enable(const std::bitset<btnMAXIMUM>& flagset);
@@ -49,18 +47,18 @@ private: // ボタンの押し込み
 	int sunkenButton;
 	static const int NoSunkenButton = -3;
 public:
-	bool isSunkenButtonExists() {return sunkenButton != NoSunkenButton;}
-	int getSunkenButtonID() {return sunkenButton;}
-	void setSunkenButton(int buttonID = NoSunkenButton) {sunkenButton = buttonID;}
+	bool isSunkenButtonExists();
+	int getSunkenButtonID();
+	void setSunkenButton(int buttonID = NoSunkenButton);
 private: // カーソル
 	int cursor;
 	static const int CursorDisabled = -3;
 public:
-	bool isCursorEnabled() {return cursor != CursorDisabled;}
-	int getCursor() {return cursor;}
-	void setCursor(int cursorPos = CursorDisabled) {cursor = cursorPos;}
-	int incCursor() {return ++cursor;}
-	int decCursor() {return --cursor;}
+	bool isCursorEnabled();
+	int getCursor();
+	void setCursor(int cursorPos = CursorDisabled);
+	int incCursor();
+	int decCursor();
 private: // 再構築・表示処理
 	void reconstruct(ButtonID buttonID);
 	MHJMutex reconstructionCS;
