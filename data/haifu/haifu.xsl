@@ -234,6 +234,24 @@
 			</span>
 		</span>
 	</xsl:template>
+	<xsl:template name="tile-rotated-double">
+		<xsl:param name="tile" />
+		<xsl:param name="dora" select="normal" />
+		<xsl:param name="tile2" select="$tile" />
+		<xsl:param name="dora2" select="normal" />
+		<span class="rotated-tiles-dbl">
+			<span class="rotated-stacked">
+				<xsl:call-template name="tile">
+					<xsl:with-param name="tile" select="$tile" />
+					<xsl:with-param name="dora" select="$dora" />
+				</xsl:call-template>
+				<xsl:call-template name="tile">
+					<xsl:with-param name="tile" select="$tile2" />
+					<xsl:with-param name="dora" select="$dora2" />
+				</xsl:call-template>
+			</span>
+		</span>
+	</xsl:template>
 
 	<!-- 最終牌姿表示用 -->
 	<xsl:template match="hand" mode="final">
@@ -351,6 +369,123 @@
 						<xsl:with-param name="dora" select="tile[position() = 3]/@dora" />
 					</xsl:call-template>
 				</xsl:when>
+			</xsl:choose>
+		</span>
+	</xsl:template>
+	<xsl:template match="quad-exposed" mode="final">
+		<xsl:text> カン</xsl:text>
+		<span class="tile">
+			<xsl:choose>
+				<xsl:when test="@added = 'true'">
+					<xsl:choose>
+						<xsl:when test="@meld-direction = 'left'">
+							<xsl:call-template name="tile-rotated-double">
+								<xsl:with-param name="tile" select="tile[position() = 1]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 1]/@dora" />
+								<xsl:with-param name="tile2" select="tile[position() = 2]/@tile" />
+								<xsl:with-param name="dora2" select="tile[position() = 2]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 3]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 3]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 4]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 4]/@dora" />
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="@meld-direction = 'opposite'">
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 1]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 1]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile-rotated-double">
+								<xsl:with-param name="tile" select="tile[position() = 2]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 2]/@dora" />
+								<xsl:with-param name="tile2" select="tile[position() = 3]/@tile" />
+								<xsl:with-param name="dora2" select="tile[position() = 3]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 4]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 4]/@dora" />
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="@meld-direction = 'right'">
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 1]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 1]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 2]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 2]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile-rotated-double">
+								<xsl:with-param name="tile" select="tile[position() = 3]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 3]/@dora" />
+								<xsl:with-param name="tile2" select="tile[position() = 4]/@tile" />
+								<xsl:with-param name="dora2" select="tile[position() = 4]/@dora" />
+							</xsl:call-template>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="@meld-direction = 'left'">
+							<xsl:call-template name="tile-rotated">
+								<xsl:with-param name="tile" select="tile[position() = 1]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 1]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 2]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 2]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 3]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 3]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 4]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 4]/@dora" />
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="@meld-direction = 'opposite'">
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 1]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 1]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile-rotated">
+								<xsl:with-param name="tile" select="tile[position() = 2]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 2]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 3]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 3]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 4]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 4]/@dora" />
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="@meld-direction = 'right'">
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 1]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 1]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 2]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 2]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile">
+								<xsl:with-param name="tile" select="tile[position() = 3]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 3]/@dora" />
+							</xsl:call-template>
+							<xsl:call-template name="tile-rotated">
+								<xsl:with-param name="tile" select="tile[position() = 4]/@tile" />
+								<xsl:with-param name="dora" select="tile[position() = 4]/@dora" />
+							</xsl:call-template>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:otherwise>
 			</xsl:choose>
 		</span>
 	</xsl:template>

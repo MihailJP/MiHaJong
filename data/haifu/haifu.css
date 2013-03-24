@@ -64,13 +64,30 @@ td.hand {
 }
 .rotated-tiles {
 	display: inline-table;
+	vertical-align: text-bottom;
+	-o-transform: rotate(-90deg);
+}
+.rotated-tiles-dbl {
+	display: inline-table;
+	vertical-align: text-bottom;
+	-o-transform: rotate(-90deg);
+	width: 1em;
 }
 .rotated {
-	display: table-cell; vertical-align: bottom;
+	display: table-cell; /*vertical-align: bottom;*/
 	-moz-transform: rotate(-90deg);
 	-webkit-transform: rotate(-90deg);
 	-o-transform: rotate(-90deg);
 	-ms-transform: rotate(-90deg);
 	transform: rotate(-90deg);
-	width: 0.9em; line-height: 0.9ex;
+	width: 0.9em;
+}
+.rotated-stacked {
+	display: table-cell; /*vertical-align: bottom;*/
+	-moz-transform: rotate(-90deg);
+	-webkit-transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+	width: 0.9em; max-width: 0.9em;
 }
