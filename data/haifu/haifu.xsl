@@ -43,6 +43,39 @@
 				<xsl:value-of select="round-description/round-number/@counter" />
 				<xsl:text>本場</xsl:text>
 			</xsl:if>
+			<xsl:if test="round-description/dora">
+				<xsl:text> ドラ：</xsl:text>
+				<span class="tile">
+					<xsl:for-each select="round-description/dora/tile">
+						<xsl:call-template name="tile">
+							<xsl:with-param name="tile" select="@tile" />
+							<xsl:with-param name="dora" select="@dora" />
+						</xsl:call-template>
+					</xsl:for-each>
+				</span>
+			</xsl:if>
+			<xsl:if test="round-description/uradora">
+				<xsl:text> 裏ドラ：</xsl:text>
+				<span class="tile">
+					<xsl:for-each select="round-description/uradora/tile">
+						<xsl:call-template name="tile">
+							<xsl:with-param name="tile" select="@tile" />
+							<xsl:with-param name="dora" select="@dora" />
+						</xsl:call-template>
+					</xsl:for-each>
+				</span>
+			</xsl:if>
+			<xsl:if test="round-description/alice">
+				<xsl:text> アリス：</xsl:text>
+				<span class="tile">
+					<xsl:for-each select="round-description/alice/tile">
+						<xsl:call-template name="tile">
+							<xsl:with-param name="tile" select="@tile" />
+							<xsl:with-param name="dora" select="@dora" />
+						</xsl:call-template>
+					</xsl:for-each>
+				</span>
+			</xsl:if>
 		</h2>
 		<p>結果：<xsl:value-of select="round-description/result" /></p>
 		<table>
