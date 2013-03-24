@@ -922,7 +922,7 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 		tiles = 3;
 		haifuP.streamDat[player].final << _T("ƒ|ƒ“");
 		HThaifuP.streamDat[player].final << _T("</span> ƒ|ƒ“<span class=\"tile\">");
-		XhaifuBufferBody << _T("\t\t\t\t<triplet>") << meldDirection << std::endl;
+		XhaifuBufferBody << _T("\t\t\t\t<triplet") << meldDirection << _T('>') << std::endl;
 		break;
 	case meldQuadExposedLeft: case meldQuadExposedCenter:
 	case meldQuadExposedRight:
