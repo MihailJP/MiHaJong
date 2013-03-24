@@ -9,7 +9,7 @@ lt_cv_deplibs_check_method='pass_all'
 LT_INIT
 LT_LANG([C++])
 LT_LANG([Windows Resource])
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([foreign dist-xz no-dist-gzip])
 AC_CONFIG_SRCDIR([astro/astro.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])

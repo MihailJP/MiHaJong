@@ -4,6 +4,10 @@ mihajong_CXXFLAGS = --input-charset=cp932
 mihajong_LDADD = \
 	../graphic/libmihajong-graphic.la \
 	../mjcore/libmihajong.la
+EXTRA_DIST = \
+	mihajong.vcxproj mihajong.vcxproj.filters mihajong.vcxproj.user \
+	icons/mihajong.ico icons/mihasanm.ico icons/mihassnm.ico \
+	icons/mihaysnm.ico
 
 .rc.o:
 	windres $^ -o $@ -l 0411

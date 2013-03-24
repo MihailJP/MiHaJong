@@ -4,7 +4,7 @@ libmihajong_sound_la_SOURCES = \
 	logger.h resource.h snddata.h sound.h soundobj.h \
 	ver.rc
 if MIDI_SUPPORT
-libmihajong_sound_la_SOURCES += \
+nodist_libmihajong_sound_la_SOURCES = \
 	GuruGuruSMF/GuruGuruSMF4_Cpp_Static.cpp \
 	GuruGuruSMF/GuruGuruSMF4_Cpp.h
 endif
@@ -14,6 +14,9 @@ libmihajong_sound_la_CXXFLAGS = -DSOUND_EXPORTS --input-charset=cp932
 if VORBIS_SUPPORT
 libmihajong_sound_la_CXXFLAGS += -DVORBIS_SUPPORT
 endif
+EXTRA_DIST = \
+	sound.vcxproj sound.vcxproj.filters sound.vcxproj.user \
+	GuruGuruSMF/README libogg/Readme.txt libvorbis/Readme.txt
 
 .rc.o:
 	windres $^ -o $@ -l 0411

@@ -6,6 +6,8 @@ libmihajong_socket_la_SOURCES = \
 libmihajong_socket_la_LDFLAGS = -no-undefined
 libmihajong_socket_la_LIBADD = ver.o
 libmihajong_socket_la_CXXFLAGS = -DSOCKET_EXPORTS --input-charset=cp932
+EXTRA_DIST = \
+	socket.vcxproj socket.vcxproj.filters socket.vcxproj.user
 
 .rc.o:
 	windres $^ -o $@ -l 0411

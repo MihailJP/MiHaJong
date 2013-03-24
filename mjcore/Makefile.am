@@ -40,6 +40,14 @@ libmihajong_la_LIBADD = \
 	../graphic/libmihajong-graphic.la \
 	../socket/libmihajong-socket.la \
 	../astro/libmihajong-astro.la
+dist_data_DATA = \
+	data/mentz.dat.lzma
+nodist_data_DATA = \
+	data/confitem.csv.lzma data/confitem.ini.lzma data/rankval.csv.lzma
+EXTRA_DIST = \
+	mjcore.vcxproj mjcore.vcxproj.filters mjcore.vcxproj.user \
+	lua/README \
+	data/confitem.csv data/confitem.ini data/rankval.csv
 
 CLEANFILES = $(libmihajong_la_BUILT_SOURCES) \
 	data/confitem.csv.lzma data/confitem.ini.lzma data/rankval.csv.lzma
