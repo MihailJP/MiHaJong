@@ -38,6 +38,45 @@
 			</xsl:if>
 		</h2>
 		<p>結果：<xsl:value-of select="round-description/result" /></p>
+		<table>
+			<xsl:variable name="cols" select="40" />
+			<xsl:for-each select="round-description/player-score/player">
+				<!-- プレイヤー別の情報 -->
+				<tr>
+					<td class="player" colspan="{$cols}">
+						<xsl:variable name="pcode" select="@ref" />
+						<xsl:call-template name="wind-name">
+							<xsl:with-param name="wind" select="@wind" />
+						</xsl:call-template>
+						<xsl:text>家 </xsl:text>
+						<xsl:value-of select="/haifu/match-description/player-description/player-data[@id = $pcode]/@name" />
+						<xsl:text> </xsl:text>
+						<xsl:call-template name="stylize-sign">
+							<xsl:with-param name="val" select="@score" />
+						</xsl:call-template>
+						<xsl:if test="@score-after">
+							<xsl:text> → </xsl:text>
+							<xsl:call-template name="stylize-sign">
+								<xsl:with-param name="val" select="@score-after" />
+							</xsl:call-template>
+						</xsl:if>
+						<xsl:if test="@delta">
+							<xsl:text> (</xsl:text>
+							<xsl:call-template name="stylize-sign">
+								<xsl:with-param name="val" select="@delta" />
+							</xsl:call-template>
+							<xsl:text>)</xsl:text>
+						</xsl:if>
+						<xsl:if test="@chip">
+							<xsl:text> チップ：</xsl:text>
+							<xsl:call-template name="stylize-sign">
+								<xsl:with-param name="val" select="@chip" />
+							</xsl:call-template>
+						</xsl:if>
+					</td>
+				</tr>
+			</xsl:for-each>
+		</table>
 	</xsl:template>
 
 	<!-- 風位を英日翻訳 -->
@@ -70,6 +109,24 @@
 			<xsl:when test="$val =  9" >九</xsl:when>
 			<xsl:when test="$val = 10" >十</xsl:when>
 			<xsl:otherwise><xsl:value-of select="$val" /></xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- 符号の表記 -->
+	<xsl:template name="stylize-sign">
+		<xsl:param name="val" />
+		<xsl:choose>
+			<xsl:when test="$val > 0" >
+				<xsl:text>+</xsl:text>
+				<xsl:value-of select="$val" />
+			</xsl:when>
+			<xsl:when test="$val &lt; 0" >
+				<xsl:text>△</xsl:text>
+				<xsl:value-of select="- $val" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$val" />
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>
