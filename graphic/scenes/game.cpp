@@ -142,6 +142,7 @@ void TableProtoScene::ScoreBoard::Render() {
 void TableProtoScene::ScoreBoard::renderWind() {
 	if ((myTimer.currTime() % 1000000 >= 500000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return; // ツモ番の時は表示を点滅させる
 	const seatAbsolute wind = utils::playerwind(GameStatus::gameStat(), playerID(), GameStatus::gameStat()->GameRound);
+	if (chkGameType(GameStatus::gameStat(), Sanma4) && (wind == sNorth)) return; // 四人三麻の時の抜け番は何も表示しないようにする
 	RECT rect = {
 		WindCharX + WindCharWidth * ((int)wind    ), WindCharY,
 		WindCharX + WindCharWidth * ((int)wind + 1), WindCharY + WindCharHeight
