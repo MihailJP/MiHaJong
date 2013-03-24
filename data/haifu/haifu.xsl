@@ -132,6 +132,56 @@
 						</td>
 					</xsl:for-each>
 				</tr>
+				<!-- プレイヤー別の情報：打牌 -->
+				<tr class="tile">
+					<td class="label" rowspan="2">打牌</td>
+					<xsl:for-each select="../../../progress/cycle">
+						<td>
+							<xsl:if test="turn[@player = $pcode]">
+								<xsl:if test="turn[@player = $pcode]/discard">
+									<xsl:call-template name="tile">
+										<xsl:with-param name="tile" select="turn[@player = $pcode]/discard/@tile" />
+										<xsl:with-param name="dora" select="turn[@player = $pcode]/discard/@dora" />
+									</xsl:call-template>
+								</xsl:if>
+								<xsl:if test="turn[@player = $pcode]/discard-through">
+									<xsl:call-template name="tile">
+										<xsl:with-param name="tile" select="turn[@player = $pcode]/discard-through/@tile" />
+										<xsl:with-param name="dora" select="turn[@player = $pcode]/discard-through/@dora" />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:if>
+						</td>
+					</xsl:for-each>
+				</tr>
+				<tr>
+					<xsl:for-each select="../../../progress/cycle">
+						<td class="notice">
+							<xsl:if test="turn[@player = $pcode]">
+								<xsl:if test="turn[@player = $pcode]/discard">
+									<xsl:variable name="meld" select="turn[@player = $pcode]/discard/@call" />
+									<xsl:variable name="let-go" select="turn[@player = $pcode]/discard/@let-go" />
+									<xsl:choose>
+										<xsl:when test="$meld = 'richi' ">リーチ<br /></xsl:when>
+										<xsl:when test="$meld = 'quad'  ">カン<br /></xsl:when>
+										<xsl:when test="$meld = 'flower'">花<br /></xsl:when>
+									</xsl:choose>
+									<xsl:if test="$let-go = 'true'">ウチ<br /></xsl:if>
+								</xsl:if>
+								<xsl:if test="turn[@player = $pcode]/discard-through">
+									<xsl:variable name="meld" select="turn[@player = $pcode]/discard-through/@call" />
+									<xsl:variable name="let-go" select="turn[@player = $pcode]/discard-through/@let-go" />
+									<xsl:choose>
+										<xsl:when test="$meld = 'richi' ">リーチ<br /></xsl:when>
+										<xsl:when test="$meld = 'quad'  ">カン<br /></xsl:when>
+										<xsl:when test="$meld = 'flower'">花<br /></xsl:when>
+									</xsl:choose>
+									<xsl:if test="$let-go = 'true'">ウチ<br /></xsl:if>
+								</xsl:if>
+							</xsl:if>
+						</td>
+					</xsl:for-each>
+				</tr>
 			</xsl:for-each>
 		</table>
 	</xsl:template>
