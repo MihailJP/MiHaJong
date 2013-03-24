@@ -42,7 +42,7 @@ void calcAgariPoints(const GameTable* gameStat, LNum& agariPoint,
 
 void agariproc(EndType& RoundEndType, GameTable* gameStat, bool& tmpUraFlag, bool& tmpAliceFlag, CodeConv::tstring& ResultDesc);
 void endround_agariproc(GameTable* gameStat, CodeConv::tstring& ResultDesc, PlayerID& AgariPlayerPriority,
-	std::uint16_t origDoraPointer, const yaku::YAKUSTAT& yakuInfo, bool tmpAliceFlag, int& OyaAgari);
+	std::uint16_t origDoraPointer, const yaku::YAKUSTAT& yakuInfo, bool& tmpUraFlag, bool& tmpAliceFlag, int& OyaAgari);
 void endround_chonboproc(GameTable* gameStat, CodeConv::tstring& ResultDesc);
 
 // -------------------------------------------------------------------------

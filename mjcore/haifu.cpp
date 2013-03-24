@@ -277,7 +277,9 @@ __declspec(dllexport) void haifu::haifubufinit() {
 #else
 		_T("<?xml version=\"1.0\" encoding=\"Shift_JIS\"?>") <<
 #endif
-		std::endl << _T("<!DOCTYPE haifu [") << std::endl <<
+		std::endl <<
+		_T("<?xml-stylesheet href=\"haifu.xsl\" type=\"text/xsl\"?>") << std::endl <<
+		_T("<!DOCTYPE haifu [") << std::endl <<
 		_T("\t<!ENTITY east \"&#x1f000;\"><!ENTITY south \"&#x1f001;\"><!ENTITY west \"&#x1f002;\"><!ENTITY north \"&#x1f003;\">")
 		_T("<!ENTITY red \"&#x1f004;\"><!ENTITY green \"&#x1f005;\"><!ENTITY white \"&#x1f006;\">") << std::endl <<
 		_T("\t<!ENTITY m1 \"&#x1f007;\"><!ENTITY m2 \"&#x1f008;\"><!ENTITY m3 \"&#x1f009;\"><!ENTITY m4 \"&#x1f00a;\"><!ENTITY m5 \"&#x1f00b;\">")
@@ -701,14 +703,14 @@ void haifu::haifurecflower(const GameTable* const gameStat, const DiscardTileNum
 
 /* hfwriter */
 void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
-	int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
+	int OrigTurn, int OrigHonba, bool tmpUraFlag, bool tmpAliceFlag,
 	CodeConv::tstring ResultDesc, EndType RoundEndType) {
 		haifuBuffer << ::roundName(OrigTurn, gameStat);
 		if (OrigHonba > 0) haifuBuffer << _T(" ") << OrigHonba << _T("本場");
 		haifuBuffer << _T(" ドラ：") << haifuP.dora.str();
-		if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(RuleData::chkRuleApplied("uradora")))
+		if ((RoundEndType == Agari)&&(tmpUraFlag)&&(RuleData::chkRuleApplied("uradora")))
 			haifuBuffer << _T("裏ドラ：") << haifuP.uraDora.str();
-		if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(RuleData::chkRuleApplied("alice")))
+		if ((RoundEndType == Agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
 			haifuBuffer << _T("アリス：") << haifuP.aliceDoraMax.str();
 		haifuBuffer << std::endl << std::endl <<
 			_T("結果：") << ResultDesc << std::endl << std::endl;
@@ -717,12 +719,12 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 		if (OrigHonba > 0) HThaifuBuffer << _T(" ") << OrigHonba <<_T("本場");
 		HThaifuBuffer << _T(" ドラ：<span class=\"tile\">") <<
 			HThaifuP.dora.str() << _T("</span>");
-		if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(RuleData::chkRuleApplied("uradora")))
+		if ((RoundEndType == Agari)&&(tmpUraFlag)&&(RuleData::chkRuleApplied("uradora")))
 			HThaifuBuffer << _T("裏ドラ：<span class=\"tile\">") <<
-			haifuP.uraDora.str() << _T("</span>"); /* FIXME: 変数間違ってるので後で直すこと */
-		if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(RuleData::chkRuleApplied("alice")))
+			HThaifuP.uraDora.str() << _T("</span>");
+		if ((RoundEndType == Agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
 			HThaifuBuffer << _T("アリス：<span class=\"tile\">") <<
-			haifuP.aliceDoraMax.str() << _T("</span>"); /* FIXME: 変数間違ってるので後で直すこと */
+			HThaifuP.aliceDoraMax.str() << _T("</span>");
 		HThaifuBuffer << _T("</h2>") << std::endl <<
 			_T("<p>結果：") << ResultDesc << _T("</p>") << std::endl <<
 			_T("<table>") << std::endl << _T("<tr>");
@@ -741,10 +743,10 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 		XhaifuBuffer << _T("\t\t\t<result>") << ResultDesc << _T("</result>") << std::endl;
 		XhaifuBuffer << _T("\t\t\t<dora>") << std::endl <<
 			XhaifuP.dora.str() << _T("\t\t\t</dora>") << std::endl;
-		if ((RoundEndType == Agari)&&(tmpUraFlag == 1)&&(RuleData::chkRuleApplied("uradora")))
+		if ((RoundEndType == Agari)&&(tmpUraFlag)&&(RuleData::chkRuleApplied("uradora")))
 			XhaifuBuffer << _T("\t\t\t<uradora>") << std::endl <<
 			XhaifuP.uraDora.str() << _T("\t\t\t</uradora>") << std::endl;
-		if ((RoundEndType == Agari)&&(tmpAliceFlag == 1)&&(RuleData::chkRuleApplied("alice")))
+		if ((RoundEndType == Agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
 			XhaifuBuffer << _T("\t\t\t<alice>") << std::endl <<
 			XhaifuP.aliceDoraMax.str() << _T("\t\t\t</alice>") << std::endl;
 }
@@ -903,13 +905,13 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 	int tiles, interrupt; CodeConv::tstring meldDirection;
 	switch (meld.mstat) {
 	case meldTripletExposedLeft: case meldQuadExposedLeft: case meldQuadAddedLeft:
-		meldDirection = _T(" from=\"left\"");
+		meldDirection = _T(" meld-direction=\"left\"");
 		haifuP.streamDat[player].final << _T(" ＜"); interrupt = 1; break;
 	case meldTripletExposedCenter: case meldQuadExposedCenter: case meldQuadAddedCenter:
-		meldDirection = _T(" from=\"opposite\"");
+		meldDirection = _T(" meld-direction=\"opposite\"");
 		haifuP.streamDat[player].final << _T(" ∧"); interrupt = 2; break;
 	case meldTripletExposedRight: case meldQuadExposedRight: case meldQuadAddedRight:
-		meldDirection = _T(" from=\"right\"");
+		meldDirection = _T(" meld-direction=\"right\"");
 		haifuP.streamDat[player].final << _T(" ＞"); interrupt = 8; break;
 	case meldQuadConcealed:
 		haifuP.streamDat[player].final << _T(" ◇"); interrupt = 7; break;
@@ -920,7 +922,7 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 		tiles = 3;
 		haifuP.streamDat[player].final << _T("ポン");
 		HThaifuP.streamDat[player].final << _T("</span> ポン<span class=\"tile\">");
-		XhaifuBufferBody << _T("\t\t\t\t<triplet>") << meldDirection << std::endl;
+		XhaifuBufferBody << _T("\t\t\t\t<triplet") << meldDirection << _T('>') << std::endl;
 		break;
 	case meldQuadExposedLeft: case meldQuadExposedCenter:
 	case meldQuadExposedRight:
@@ -1101,7 +1103,7 @@ void haifu::tools::hfwriter::hfWriteBottom() {
 /* 配牌をバッファに出力 */
 __declspec(dllexport) void haifu::haifuwritebuffer(
 	const GameTable* const gameStat,
-	int OrigTurn, int OrigHonba, int tmpUraFlag, int tmpAliceFlag,
+	int OrigTurn, int OrigHonba, bool tmpUraFlag, bool tmpAliceFlag,
 	LPCTSTR ResultDesc, EndType RoundEndType
 	) { /* 配牌をバッファに出力 */
 		tools::hfwriter::hfWriteHead(

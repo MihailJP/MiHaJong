@@ -354,8 +354,8 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 	PlayerID FirstAgariPlayer = gameStat->CurrentPlayer.Agari;
 	int OyaAgari = -1;
 	ResultDesc = _T("");
-	tmpUraFlag = 0;
-	tmpAliceFlag = 0;
+	tmpUraFlag = false;
+	tmpAliceFlag = false;
 	PlayerID AgariPlayerPriority = -1;
 	std::uint16_t origDoraPointer = gameStat->DoraPointer;
 
@@ -391,7 +391,7 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 		}
 		if (RoundEndType == Agari) {
 			yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Agari);
-			endround_agariproc(gameStat, ResultDesc, AgariPlayerPriority, origDoraPointer, yakuInfo, tmpAliceFlag, OyaAgari);
+			endround_agariproc(gameStat, ResultDesc, AgariPlayerPriority, origDoraPointer, yakuInfo, tmpUraFlag, tmpAliceFlag, OyaAgari);
 		}
 		/**************/
 		/* ö˜a”­¶Žž */
@@ -550,7 +550,7 @@ namespace {
 
 /* ˜a—¹¬—§Žž‚Ìˆ— */
 void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring& ResultDesc, PlayerID& AgariPlayerPriority,
-	std::uint16_t origDoraPointer, const yaku::YAKUSTAT& yakuInfo, bool tmpAliceFlag, int& OyaAgari)
+	std::uint16_t origDoraPointer, const yaku::YAKUSTAT& yakuInfo, bool& tmpUraFlag, bool& tmpAliceFlag, int& OyaAgari)
 {
 	LNum AgariPointRaw = yakuInfo.AgariPoints;
 	if (AgariPlayerPriority == -1) AgariPlayerPriority = gameStat->CurrentPlayer.Agari;
@@ -600,7 +600,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), -1);
 	assert(agariPoint > (LNum)0);
 	calculateWaremeDelta(gameStat);
-	bool tmpUraFlag; int ChipAmount;
+	int ChipAmount;
 	agariscrproc(gameStat, &yakuInfo, &agariPoint, ChipAmount, ResultDesc, tmpUraFlag); /* ˜a—¹‰æ–Ê */
 	gameStat->statOfAgari().YakitoriFlag = false; // Ä‚«’¹ƒtƒ‰ƒO‚ð‰º‚ë‚·
 	/*if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice"))
