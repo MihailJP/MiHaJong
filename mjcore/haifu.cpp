@@ -43,6 +43,12 @@ bool haifu::haifukanflag = false;
 haifu::HaifuStreams haifu::haifuP, haifu::HThaifuP, haifu::XhaifuP;
 
 /* 牌譜記録用の補助ルーチン */
+void haifu::tools::haifuskipX(PlayerID targetPlayer) {
+	if (chkGameType(&GameStat, SanmaT) && (targetPlayer == 3)) return; // 三麻で北家にあたる位置だったら帰る
+	if (chkGameType(&GameStat, Sanma4) && (playerwind(&GameStat, targetPlayer, GameStat.GameRound) == sNorth)) return; // 四人三麻で北家だったら帰る
+	checkCycle();
+	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << (int)targetPlayer << _T("\" />") << std::endl;
+}
 void haifu::tools::haifuskip(
 	HaifuStreams* haifuP, HaifuStreams* HThaifuP,
 	PlayerID PassivePlayer, PlayerID ActivePlayer
@@ -72,21 +78,15 @@ void haifu::tools::haifuskip(
 			for (int i = 0; i < 4; i++) {
 				*p[i] << _T("　 "); *h[i] << _T("<td></td>");
 			}
-			checkCycle();
-			XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") <<
-				(int)RelativePositionOf(ActivePlayer, sRight) << _T("\" />") << std::endl;
+			haifuskipX(RelativePositionOf(ActivePlayer, sRight));
 		}
 		if (playerRelative(ActivePlayer, PassivePlayer) == sRight) {
 			// 下家からポンした場合
 			for (int i = 0; i < 8; i++) {
 				*p[i] << _T("　 "); *h[i] << _T("<td></td>");
 			}
-			checkCycle();
-			XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") <<
-				(int)RelativePositionOf(ActivePlayer, sRight) << _T("\" />") << std::endl;
-			checkCycle();
-			XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") <<
-				(int)RelativePositionOf(ActivePlayer, sOpposite) << _T("\" />") << std::endl;
+			haifuskipX(RelativePositionOf(ActivePlayer, sRight));
+			haifuskipX(RelativePositionOf(ActivePlayer, sOpposite));
 		}
 }
 
@@ -226,15 +226,9 @@ void haifu::tools::haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, Pl
 	for (int i = 0; i < 12; i++) {
 		*p[i] << _T("　 "); *h[i] << _T("<td></td>");
 	}
-	checkCycle();
-	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") <<
-		(int)RelativePositionOf(PassivePlayer, sRight) << _T("\" />") << std::endl;
-	checkCycle();
-	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") <<
-		(int)RelativePositionOf(PassivePlayer, sOpposite) << _T("\" />") << std::endl;
-	checkCycle();
-	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") <<
-		(int)RelativePositionOf(PassivePlayer, sLeft) << _T("\" />") << std::endl;
+	haifuskipX(RelativePositionOf(PassivePlayer, sRight));
+	haifuskipX(RelativePositionOf(PassivePlayer, sOpposite));
+	haifuskipX(RelativePositionOf(PassivePlayer, sLeft));
 }
 
 /* 一半荘分の牌譜バッファを初期化 */
@@ -549,7 +543,7 @@ void haifu::tools::checkCycle(bool reset) {
 		cycle = 1; turn = 0;
 		XhaifuBufferBody << _T("\t\t\t<cycle ord=\"1\">") << std::endl;
 	} else {
-		if ((++turn) >= Players) {
+		if ((++turn) >= (chkGameType(&GameStat, AllSanma) ? 3 : 4)) {
 			++cycle; turn = 0;
 			XhaifuBufferBody << _T("\t\t\t</cycle>") << std::endl <<
 				_T("\t\t\t<cycle ord=\"") << cycle << _T("\">") << std::endl;

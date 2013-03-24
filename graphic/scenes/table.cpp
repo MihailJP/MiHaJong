@@ -63,19 +63,19 @@ GameTableScreen::~GameTableScreen() {
 	if (tBaize) tBaize->Release();
 }
 
-void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PlayerID targetPlayer, PlayerID trueTargetPlayer) {
-	yamahaiReconst->Reconstruct(gameStat, targetPlayer, trueTargetPlayer);
+void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PlayerID deckTargetPlayer, PlayerID targetPlayer) {
+	yamahaiReconst->Reconstruct(gameStat, deckTargetPlayer, targetPlayer);
 	tehaiReconst->Reconstruct(gameStat, targetPlayer);
 	nakihaiReconst->Reconstruct(gameStat, targetPlayer);
 	sutehaiReconst->Reconstruct(gameStat, targetPlayer);
 }
 
 void GameTableScreen::Reconstruct(const GameTable* gameStat) {
-	if (gameStat->gameType & Yonma) {
+	if (chkGameType(gameStat, Yonma)) {
 		for (PlayerID i = 0; i < 4; i++)
 			ReconstructPlayer(gameStat, i, i);
-	} else if (gameStat->gameType & Sanma4) {
-		PlayerID tobePlayed[4][4] = {
+	} else if (chkGameType(gameStat, Sanma4)) {
+		const PlayerID tobePlayed[4][4] = {
 			{0, 1, 2, 3}, {3, 1, 2, 0}, {1, 3, 2, 0}, {1, 2, 3, 0},
 		};
 		for (PlayerID i = 0; i < 4; i++) {
