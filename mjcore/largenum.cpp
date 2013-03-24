@@ -59,6 +59,9 @@ LNum& LNum::operator*=(const int32_t multiplier) {this->myVal *= multiplier; ret
 const LNum LNum::operator/(const int32_t divisor) const {return LNum(this->myVal / divisor);}
 LNum& LNum::operator/=(const int32_t divisor) {this->myVal /= divisor; return *this;}
 
+const LNum LNum::operator+() const {return LNum(this->myVal);}
+const LNum LNum::operator-() const {return LNum(-(this->myVal));}
+
 const bool LNum::operator==(const LNum& cmp) const {return this->myVal == LargeNum(cmp);}
 const bool LNum::operator!=(const LNum& cmp) const {return this->myVal != LargeNum(cmp);}
 const bool LNum::operator<(const LNum& cmp) const {return this->myVal < LargeNum(cmp);}

@@ -46,6 +46,9 @@ public:
 	LNum& operator*=(const int32_t multiplier);
 	const LNum operator/(const int32_t divisor) const;
 	LNum& operator/=(const int32_t divisor);
+	/* Unary plus/minus */
+	const LNum operator+() const;
+	const LNum operator-() const;
 	/* Comparison operators */
 	const bool operator==(const LNum& cmp) const;
 	const bool operator!=(const LNum& cmp) const;
