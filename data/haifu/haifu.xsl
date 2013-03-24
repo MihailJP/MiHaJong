@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xsl:stylesheet [
+	<!ENTITY east "&#x1f000;"><!ENTITY south "&#x1f001;"><!ENTITY west "&#x1f002;"><!ENTITY north "&#x1f003;"><!ENTITY red "&#x1f004;"><!ENTITY green "&#x1f005;"><!ENTITY white "&#x1f006;">
+	<!ENTITY m1 "&#x1f007;"><!ENTITY m2 "&#x1f008;"><!ENTITY m3 "&#x1f009;"><!ENTITY m4 "&#x1f00a;"><!ENTITY m5 "&#x1f00b;"><!ENTITY m6 "&#x1f00c;"><!ENTITY m7 "&#x1f00d;"><!ENTITY m8 "&#x1f00e;"><!ENTITY m9 "&#x1f00f;">
+	<!ENTITY s1 "&#x1f010;"><!ENTITY s2 "&#x1f011;"><!ENTITY s3 "&#x1f012;"><!ENTITY s4 "&#x1f013;"><!ENTITY s5 "&#x1f014;"><!ENTITY s6 "&#x1f015;"><!ENTITY s7 "&#x1f016;"><!ENTITY s8 "&#x1f017;"><!ENTITY s9 "&#x1f018;">
+	<!ENTITY p1 "&#x1f019;"><!ENTITY p2 "&#x1f01a;"><!ENTITY p3 "&#x1f01b;"><!ENTITY p4 "&#x1f01c;"><!ENTITY p5 "&#x1f01d;"><!ENTITY p6 "&#x1f01e;"><!ENTITY p7 "&#x1f01f;"><!ENTITY p8 "&#x1f020;"><!ENTITY p9 "&#x1f021;">
+	<!ENTITY plum "&#x1f022;"><!ENTITY orchid "&#x1f023;"><!ENTITY bamboo "&#x1f024;"><!ENTITY chrys "&#x1f025;"><!ENTITY chrysanthemum "&#x1f025;"><!ENTITY spring "&#x1f026;"><!ENTITY summer "&#x1f027;"><!ENTITY autumn "&#x1f028;"><!ENTITY winter "&#x1f029;"><!ENTITY joker "&#x1f02a;"><!ENTITY back "&#x1f02b;">
+]>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output method="html" version="4.0" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" />
 
@@ -182,6 +189,15 @@
 						</td>
 					</xsl:for-each>
 				</tr>
+				<!-- プレイヤー別の情報：最終形 -->
+				<tr>
+					<td class="label">牌姿</td>
+					<td colspan="{$cols - 1}">
+						<xsl:for-each select="../../../final-hands/final-hand[@player = $pcode]">
+							<xsl:apply-templates mode="final" />
+						</xsl:for-each>
+					</td>
+				</tr>
 			</xsl:for-each>
 		</table>
 	</xsl:template>
@@ -189,7 +205,7 @@
 	<!-- 牌を表示 -->
 	<xsl:template name="tile">
 		<xsl:param name="tile" />
-		<xsl:param name="dora" />
+		<xsl:param name="dora" select="normal" />
 		<xsl:choose>
 			<xsl:when test="$dora = 'red'">
 				<span class="akadora">
@@ -205,6 +221,138 @@
 				<xsl:value-of select="$tile" />
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	<xsl:template name="tile-rotated">
+		<xsl:param name="tile" />
+		<xsl:param name="dora" select="normal" />
+		<span class="rotated-tiles">
+			<span class="rotated">
+				<xsl:call-template name="tile">
+					<xsl:with-param name="tile" select="$tile" />
+					<xsl:with-param name="dora" select="$dora" />
+				</xsl:call-template>
+			</span>
+		</span>
+	</xsl:template>
+
+	<!-- 最終牌姿表示用 -->
+	<xsl:template match="hand" mode="final">
+		<span class="tile">
+			<xsl:for-each select="tile">
+				<xsl:call-template name="tile">
+					<xsl:with-param name="tile" select="@tile" />
+					<xsl:with-param name="dora" select="@dora" />
+				</xsl:call-template>
+			</xsl:for-each>
+		</span>
+	</xsl:template>
+	<xsl:template match="finishing-tile" mode="final">
+		<xsl:choose>
+			<xsl:when test="@finish-type = 'ron'  "><xsl:text> ロン</xsl:text></xsl:when>
+			<xsl:when test="@finish-type = 'tsumo'"><xsl:text> ツモ</xsl:text></xsl:when>
+			<xsl:otherwise                         ><xsl:text> 和了</xsl:text></xsl:otherwise>
+		</xsl:choose>
+		<span class="tile">
+			<xsl:call-template name="tile">
+				<xsl:with-param name="tile" select="tile/@tile" />
+				<xsl:with-param name="dora" select="tile/@dora" />
+			</xsl:call-template>
+		</span>
+	</xsl:template>
+	<xsl:template match="flower" mode="final">
+		<xsl:text> 花</xsl:text>
+		<span class="tile">
+			<xsl:for-each select="tile">
+				<xsl:call-template name="tile">
+					<xsl:with-param name="tile" select="@tile" />
+				</xsl:call-template>
+			</xsl:for-each>
+		</span>
+	</xsl:template>
+	<xsl:template match="quad-concealed" mode="final">
+		<xsl:text> カン</xsl:text>
+		<span class="tile">
+			<xsl:call-template name="tile">
+				<xsl:with-param name="tile" select="'&back;'" />
+			</xsl:call-template>
+			<xsl:call-template name="tile">
+				<xsl:with-param name="tile" select="tile[position() = 1]/@tile" />
+				<xsl:with-param name="dora" select="tile[position() = 1]/@dora" />
+			</xsl:call-template>
+			<xsl:call-template name="tile">
+				<xsl:with-param name="tile" select="tile[position() = 2]/@tile" />
+				<xsl:with-param name="dora" select="tile[position() = 2]/@dora" />
+			</xsl:call-template>
+			<xsl:call-template name="tile">
+				<xsl:with-param name="tile" select="'&back;'" />
+			</xsl:call-template>
+		</span>
+	</xsl:template>
+	<xsl:template match="sequence" mode="final">
+		<xsl:text> チー</xsl:text>
+		<span class="tile">
+			<xsl:call-template name="tile-rotated">
+				<xsl:with-param name="tile" select="tile[position() = 1]/@tile" />
+				<xsl:with-param name="dora" select="tile[position() = 1]/@dora" />
+			</xsl:call-template>
+			<xsl:call-template name="tile">
+				<xsl:with-param name="tile" select="tile[position() = 2]/@tile" />
+				<xsl:with-param name="dora" select="tile[position() = 2]/@dora" />
+			</xsl:call-template>
+			<xsl:call-template name="tile">
+				<xsl:with-param name="tile" select="tile[position() = 3]/@tile" />
+				<xsl:with-param name="dora" select="tile[position() = 3]/@dora" />
+			</xsl:call-template>
+		</span>
+	</xsl:template>
+	<xsl:template match="triplet" mode="final">
+		<xsl:text> ポン</xsl:text>
+		<span class="tile">
+			<xsl:choose>
+				<xsl:when test="@meld-direction = 'left'">
+					<xsl:call-template name="tile-rotated">
+						<xsl:with-param name="tile" select="tile[position() = 1]/@tile" />
+						<xsl:with-param name="dora" select="tile[position() = 1]/@dora" />
+					</xsl:call-template>
+					<xsl:call-template name="tile">
+						<xsl:with-param name="tile" select="tile[position() = 2]/@tile" />
+						<xsl:with-param name="dora" select="tile[position() = 2]/@dora" />
+					</xsl:call-template>
+					<xsl:call-template name="tile">
+						<xsl:with-param name="tile" select="tile[position() = 3]/@tile" />
+						<xsl:with-param name="dora" select="tile[position() = 3]/@dora" />
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="@meld-direction = 'opposite'">
+					<xsl:call-template name="tile">
+						<xsl:with-param name="tile" select="tile[position() = 1]/@tile" />
+						<xsl:with-param name="dora" select="tile[position() = 1]/@dora" />
+					</xsl:call-template>
+					<xsl:call-template name="tile-rotated">
+						<xsl:with-param name="tile" select="tile[position() = 2]/@tile" />
+						<xsl:with-param name="dora" select="tile[position() = 2]/@dora" />
+					</xsl:call-template>
+					<xsl:call-template name="tile">
+						<xsl:with-param name="tile" select="tile[position() = 3]/@tile" />
+						<xsl:with-param name="dora" select="tile[position() = 3]/@dora" />
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="@meld-direction = 'right'">
+					<xsl:call-template name="tile">
+						<xsl:with-param name="tile" select="tile[position() = 1]/@tile" />
+						<xsl:with-param name="dora" select="tile[position() = 1]/@dora" />
+					</xsl:call-template>
+					<xsl:call-template name="tile">
+						<xsl:with-param name="tile" select="tile[position() = 2]/@tile" />
+						<xsl:with-param name="dora" select="tile[position() = 2]/@dora" />
+					</xsl:call-template>
+					<xsl:call-template name="tile-rotated">
+						<xsl:with-param name="tile" select="tile[position() = 3]/@tile" />
+						<xsl:with-param name="dora" select="tile[position() = 3]/@dora" />
+					</xsl:call-template>
+				</xsl:when>
+			</xsl:choose>
+		</span>
 	</xsl:template>
 
 	<!-- 幅調整用 -->
