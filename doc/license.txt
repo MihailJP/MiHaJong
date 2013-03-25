@@ -42,35 +42,19 @@
 
 ■ 使用した牌画データの元データについて
 
-	▼ 花牌以外
-
-		　麻雀素材「まつセン」で配布されていたデータを元にしています。
-		
-		> ・使用にあたって連絡の必要はありませんし、リンクや出典表示も強制しま
-		> 　せん。
-		> ・著作権フリー。改造、再配布､プログラムへの使用もOKです。
-		
-		　なお、ブラック牌のデータはこれを元に色を変更したものです。現在使用し
-		ていませんが、差し替えて使うことができます。
-
-		　参照：http://www4.cty-net.ne.jp/~l6000all/ (リンク切れ)
-		　Web Archiveに残るデータは次の場所にあります。
-		　http://web.archive.org/web/20080421025908/http://www4.cty-net.ne.jp/~l6000all/
-
-	▼ 花牌
-
-		　Wikimedia Commons の Mahjong-flowersseasons.jpeg を元に加工して使用
-		しています。
-		
-		> This image has been (or is hereby) released into the public domain
-		> by its author, Patrick McKleinschuss at the Spanish Wikipedia
-		> project. This applies worldwide.
-		> In case this is not legally possible:
-		> Patrick McKleinschuss grants anyone the right to use this work for
-		> any purpose, without any conditions, unless such conditions are
-		> required by law.
-
-		　参照：http://commons.wikimedia.org/wiki/Image:Mahjong-flowersseasons.jpeg
+	　Gutenberg Laboで配布されている「GL-MahjongTile」を元にしています。
+	　※Version 2.0より牌画データを全面差し替えしました。
+	
+	> These fonts are free softwares.
+	> Unlimited permission is granted to use, copy, and distribute it, with or
+	> without modification, either commercially and noncommercially.
+	> THESE FONTS ARE PROVIDED "AS IS" WITHOUT WARRANTY.
+	>
+	> これらのフォントはフリー（自由な）ソフトウエアです。
+	> あらゆる改変の有無に関わらず、また商業的な利用であっても、自由にご利用、
+	> 複製、再配布することができますが、全て無保証とさせていただきます。
+	
+	　参照：http://gutenberg.sourceforge.jp/ja/license.html
 
 
 ■ 使用した効果音のデータについて
@@ -269,109 +253,12 @@
 	> 修正BSDライセンスによるソースコードの公開も予定してます。
 
 
-■ HSPの拡張機能について
+■ LZMA SDKについて
 
-	▼ p2b.dll
-
-		　PNGファイルの読み込みに使用しています。使用条件等は以下の通りです。
-
-		> 著作権
-		> --------------------------------------------------------------------
-		> libpng 1.2.8  Copyright (c) 1998-2004 Glenn Randers-Pehrson
-		> zlib 1.2.3  Copyright (C) 1995-2005 Jean-loup Gailly and Mark Adler
-		> --------------------------------------------------------------------
-		> 
-		> 免責事項
-		> 本DLLを使用したことによって生じた、いかなる損害に対してもDLL作者は一
-		> 切の責任を負いません。
-		> 
-		> 配布条件
-		> 有償、無償を問わず再配布可能です。
-		> 配布物に上記の著作権表記を含める必要があります。(DLLのバージョン情報
-		> に埋め込んであるので不要らしいけど)
-
-	▼ mjcore.dll
-
-		　Ver.1.6.0より、一部の処理をC++に移植しています。移植した処理がこの
-		DLLに含まれています。
-		　ライセンスはMiHaJong本体に準じます。
-		
-		　このDLLには、LZMA SDKのコードを含みます。ライセンスは次の通りです。
-		
-		> LZMA SDK is written and placed in the public domain by Igor Pavlov.
-		
-		　このDLLには、Luaインタプリタを含みます。ライセンスは前述の通りです。
-
-	▼ astro.dll
-
-		　天文計算処理を行うライブラリです。本来はゲームの本質に関係ない部分
-		で使用していましたが、現在一つだけ成立条件の判定に天文計算が必要な役
-		(鬼は外)が実装されており、その判定にも使用しています。
-		
-		　このDLLには、Perl モジュールの Astro::MoonPhase、Astro::Sunrise か
-		らの移植コードを含みます。ライセンスは前述の通りです。
-
-	▼ socket.dll
-
-		　通信処理を行うライブラリです。Ver.1.8.0より、このDLLに処理を移植しま
-		した。
-
-	▼ sound.dll
-
-		　BGMと効果音の再生処理を行うライブラリです。Ver.1.9.0より、このDLLに
-		処理を移植しました。
-		
-		　このDLLには、libogg、libvorbis がスタティックリンクされています。ラ
-		イセンスは前述の通りです。
-		　また、MIDI再生ルーチンは GuruGuruSMF4.dll に依存しています。
-
-	▼ l_tooltips.as
-
-		　ツールチップの挙動改善に使用しています。使用条件等は以下の通りです。
-
-		> Copyright (c) 2005-2011 Kpan. All rights reserved. 
-		> 
-		> 　このサイト上に掲載されている文章、スクリプト、モジュールなどの転載
-		> は禁止しています。著作権は管理人に帰属します。
-		> 
-		> 　なお、各ページ上に掲載してるスクリプトやモジュールを自身のプログラ
-		> ム内で利用する場合、別に連絡はいりません。もしよかったら、Readme
-		> ファイルなどで一言触れていただければありがたいです。あと、ホームペー
-		> ジやブログをお持ちの方はリンクを貼ってくれるとうれしいですね。
-		>  <（＾ｏ＾ ）
-
-		参照：http://lhsp.s206.xrea.com/
-
-	▼ mod_customizebutton.hsp
-
-		　ボタンの着色に使用しています。使用条件等は以下の通りです。
-
-		> ◎著作権等
-		> 
-		> アーカイブ内の全てのファイルの著作権は作者である naznyark にあります。
-		> 
-		> アーカイブ内の全てのファイルは自由に使用してかまいませんが、使用に
-		> よって生じた問題等について作者は一切の責任を負いません。
-		> 
-		> アーカイブ自体、および、アーカイブ内のファイルの転載・再配布は以下の
-		> 条件を満たす場合のみ許可します。
-		>     ・ファイルの作者を明示すること。
-		>     ・転載・再配布であることを明示すること。
-		>     ・(条件終わり)
-		> 
-		> オリジナル(アーカイブ自体、および、アーカイブ内の各ファイル)からの派
-		> 生物(オリジナルのファイルの一部、あるいは全てを流用・改変等したもの、
-		> およびそのソースを使用したバイナリファイルなど)の公開・配布は以下の
-		> 条件を満たす場合のみ許可します。
-		>     ・オリジナルの作者を明示すること。
-		>     ・オリジナルからの派生物であることを明示すること。
-		>     ・派生物の入手者が(望むなら)容易にオリジナルを入手できるようにす
-		> ること。
-		>       (オリジナルアーカイブの入手先の提示、派生物へのオリジナルの同
-		> 梱など)
-		>     ・(条件終わり)
-		>
-		>  なお派生物についてはオリジナルの作者は一切関知しません。
+	　圧縮データの読み込みに、LZMA SDKのコードを使用しています。ライセンスは次
+	の通りです。
+	
+	> LZMA SDK is written and placed in the public domain by Igor Pavlov.
 
 
 ==============================================================================

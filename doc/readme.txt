@@ -76,16 +76,12 @@
 
 ■ ビルドに別途必要なもの
 
-	・Hot Soup Processor 本体 (http://hsp.tv/)
-	・p2b.dll (http://www.geocities.jp/anachronism128/)
-	・l_tooltips.as (http://lhsp.s206.xrea.com/hsp_object6.html)
-	・mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
-	・cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
-	・Lua スタティックライブラリ (http://luabinaries.sourceforge.net/download.html)
+	・liblua (http://www.lua.org/download.html) ※
 	・Ruby 処理系 (http://www.ruby-lang.org/ja/downloads/)
 	・ruby-lzmaが使えない場合、 Python 処理系 (http://www.python.jp/download/)
-	・libogg/libvorbis (http://www.xiph.org/downloads/)
+	・libogg/libvorbis (http://www.xiph.org/downloads/) ※
 	・GuruGuruSMF (http://gurugurusmf.migmig.net/)
+	※Visual C++の場合はスタティックリンクします
 
 
 ■ ライセンスについて
