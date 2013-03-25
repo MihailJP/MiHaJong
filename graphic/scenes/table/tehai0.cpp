@@ -19,6 +19,9 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 	int tilePos, x, y;
 	std::tie(x, y) = coordFunc(direction);
 	/* Žè”v */
+	TileSide tileStat =
+		(gameStat->Player[targetPlayer].HandStat == handUpright) ? Upright :
+		(gameStat->Player[targetPlayer].HandStat == handHidden) ? Reverse : Obverse;
 	switch (direction) {
 	case sOpposite: /* ‘Î–Ê‚ÌŽè”v */
 		tilePos = 0;
@@ -28,7 +31,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 				gameStat->Player[targetPlayer].Hand[i].tile,
 				gameStat->Player[targetPlayer].Hand[i].red,
 				x + ShowTile::VertTileWidth * (HandLength - (tilePos++)) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
-				y, UpsideDown, Obverse);
+				y, UpsideDown, tileStat);
 			else TileTexture->DelTile(i);
 		break;
 	case sLeft: /* ã‰Æ‚ÌŽè”v */
@@ -40,7 +43,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 				gameStat->Player[targetPlayer].Hand[i].red,
 				x,
 				y + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
-				Clockwise, Obverse);
+				Clockwise, tileStat);
 			else TileTexture->DelTile(i + NumOfTilesInHand);
 		break;
 	case sRight: /* ‰º‰Æ‚ÌŽè”v */
@@ -55,7 +58,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 				gameStat->Player[targetPlayer].Hand[i].red,
 				x,
 				y + ShowTile::VertTileWidth * (HandLength - (--tilePos)) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
-				Withershins, Obverse);
+				Withershins, tileStat);
 			else TileTexture->DelTile((NumOfTilesInHand - 1 - i) + NumOfTilesInHand * 2);
 		break;
 	case sSelf: /* Ž©•ª‚ÌŽè”v */
@@ -68,7 +71,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 				TileTexture->NewTile(i + NumOfTilesInHand * 3,
 					gameStat->Player[targetPlayer].Hand[i].tile,
 					gameStat->Player[targetPlayer].Hand[i].red,
-					tileX, tileY, Portrait, Obverse, tileColor);
+					tileX, tileY, Portrait, tileStat, tileColor);
 				regionFunc(&tileX, &tileY, i);
 			} else {
 				TileTexture->DelTile(i + NumOfTilesInHand * 3);
