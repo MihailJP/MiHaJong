@@ -40,7 +40,7 @@ void ResultScreen::Render() {
 		(myTimer.elapsed() < 1000000) ? (((unsigned int)(255 - (1000000 - myTimer.elapsed()) / 5000) << 24) | 0x00ffffff) : 0xffffffff);
 	titleRenderer->Render();
 
-	for (int i = 0; i < Players; ++i)
+	for (int i = (chkGameType(GameStatus::gameStat(), SanmaT) ? 1 : 0); i < Players; ++i)
 		if ((myTimer.elapsed() >= (1000000 + i * 500000)) && (rankRenderer[i] == nullptr))
 			rankRenderer[i] = new RankRenderer(caller->getDevice(), i);
 	for (auto k = rankRenderer.begin(); k != rankRenderer.end(); ++k)
