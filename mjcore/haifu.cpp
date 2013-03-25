@@ -15,9 +15,9 @@
 const CodeConv::tstring haifu::tilecodelabel =
 	_T("Hˆê“ñOlŒÜ˜Zµ”ª‹ãH‡@‡A‡B‡C‡D‡E‡F‡G‡HH‚P‚Q‚R‚S‚T‚U‚V‚W‚XH“Œ“ì¼–k”’á¢’†HHHˆë“óQãæŒŞ—¤½J‹èH‡J‡K‡L‡M‡N‡O‡P‡Q‡RH‡T‡U‡V‡W‡X‡Y‡Z‡[‡\H‚d‚r‚v‚m‚o‚e‚bHHHb‰³•¸’š•èŒÈMhpH‚¢‚ë‚Í‚É‚Ù‚Ö‚Æ‚¿‚èHú@úAúBúCúDúEúFúGúHH‚…‚“‚—‚‚‚†‚ƒHHHt‰ÄH“~•S”~—–‹e’|H");
 const CodeConv::tstring haifu::HTtilecodelabel1 =
-	_T(" qwertyuio zxcvbnm,. asdfghjkl 1234567   qwertyuio zxcvbnm,. asdfghjkl 1234567   qwertyuio zxcvbnm,. asdfghjkl 1234567   -^\\[5@;:]");
+	_T(" qwertyuio zxcvbnm,. asdfghjkl 1234567   qwertyuio zxcvbnm,. asdfghjkl 1234567   qwertyuio zxcvbnm,. asdfghjkl 1234567   @;:]/-^[\\");
 const CodeConv::tstring haifu::HTtilecodelabel2 =
-	_T(" QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   -^\\[%@;:]");
+	_T(" QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   QWERTYUIO ZXCVBNM<> ASDFGHJKL !\"#$%&'   `+*}?=~{|");
 
 const std::array<CodeConv::tstring, TileFlowerMax> haifu::Xtilerefcode = {
 	_T(""), _T("&m1;"),     _T("&m2;"),     _T("&m3;"),     _T("&m4;"),     _T("&m5;"),    _T("&m6;"),    _T("&m7;"),     _T("&m8;"),    _T("&m9;"),
@@ -47,7 +47,7 @@ void haifu::tools::haifuskip(
 	HaifuStreams* haifuP, HaifuStreams* HThaifuP,
 	PlayerID PassivePlayer, PlayerID ActivePlayer
 	) {
-		static CodeConv::tostringstream* p[] = {
+		CodeConv::tostringstream* p[] = {
 			&haifuP->streamDat[RelativePositionOf(ActivePlayer, sRight)].tsumo,
 			&haifuP->streamDat[RelativePositionOf(ActivePlayer, sRight)].tsumolabel,
 			&haifuP->streamDat[RelativePositionOf(ActivePlayer, sRight)].sutehai,
@@ -57,7 +57,7 @@ void haifu::tools::haifuskip(
 			&haifuP->streamDat[RelativePositionOf(ActivePlayer, sOpposite)].sutehai,
 			&haifuP->streamDat[RelativePositionOf(ActivePlayer, sOpposite)].sutehailabel,
 		};
-		static CodeConv::tostringstream* h[] = {
+		CodeConv::tostringstream* h[] = {
 			&HThaifuP->streamDat[RelativePositionOf(ActivePlayer, sRight)].tsumo,
 			&HThaifuP->streamDat[RelativePositionOf(ActivePlayer, sRight)].tsumolabel,
 			&HThaifuP->streamDat[RelativePositionOf(ActivePlayer, sRight)].sutehai,
@@ -195,7 +195,7 @@ void haifu::tools::haifuwritetsumohai(
 }
 
 void haifu::tools::haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, PlayerID PassivePlayer) {
-	static CodeConv::tostringstream* p[] = {
+	CodeConv::tostringstream* p[] = {
 		&haifuP->streamDat[RelativePositionOf(PassivePlayer, sRight)].tsumo,
 		&haifuP->streamDat[RelativePositionOf(PassivePlayer, sRight)].tsumolabel,
 		&haifuP->streamDat[RelativePositionOf(PassivePlayer, sRight)].sutehai,
@@ -209,7 +209,7 @@ void haifu::tools::haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, Pl
 		&haifuP->streamDat[RelativePositionOf(PassivePlayer, sLeft)].sutehai,
 		&haifuP->streamDat[RelativePositionOf(PassivePlayer, sLeft)].sutehailabel,
 	};
-	static CodeConv::tostringstream* h[] = {
+	CodeConv::tostringstream* h[] = {
 		&HThaifuP->streamDat[RelativePositionOf(PassivePlayer, sRight)].tsumo,
 		&HThaifuP->streamDat[RelativePositionOf(PassivePlayer, sRight)].tsumolabel,
 		&HThaifuP->streamDat[RelativePositionOf(PassivePlayer, sRight)].sutehai,
@@ -1070,8 +1070,8 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 	XhaifuBufferBody << _T("\t\t<final-hands>") << std::endl;
 	XhaifuBuffer << _T("\t\t\t<player-score>") << std::endl;
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
-		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << i << _T("\">") << std::endl;
 		PlayerID k = RelativePositionOf(i, OrigTurn % Players);
+		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << k << _T("\">") << std::endl;
 		if (chkGameType(gameStat, SanmaT))
 			if (((OrigTurn % Players) + i) >= ACTUAL_PLAYERS)
 				k = (k + 1) % Players;
