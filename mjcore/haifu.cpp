@@ -47,7 +47,7 @@ void haifu::tools::haifuskip(
 	HaifuStreams* haifuP, HaifuStreams* HThaifuP,
 	PlayerID PassivePlayer, PlayerID ActivePlayer
 	) {
-		static CodeConv::tostringstream* p[] = {
+		CodeConv::tostringstream* p[] = {
 			&haifuP->streamDat[RelativePositionOf(ActivePlayer, sRight)].tsumo,
 			&haifuP->streamDat[RelativePositionOf(ActivePlayer, sRight)].tsumolabel,
 			&haifuP->streamDat[RelativePositionOf(ActivePlayer, sRight)].sutehai,
@@ -57,7 +57,7 @@ void haifu::tools::haifuskip(
 			&haifuP->streamDat[RelativePositionOf(ActivePlayer, sOpposite)].sutehai,
 			&haifuP->streamDat[RelativePositionOf(ActivePlayer, sOpposite)].sutehailabel,
 		};
-		static CodeConv::tostringstream* h[] = {
+		CodeConv::tostringstream* h[] = {
 			&HThaifuP->streamDat[RelativePositionOf(ActivePlayer, sRight)].tsumo,
 			&HThaifuP->streamDat[RelativePositionOf(ActivePlayer, sRight)].tsumolabel,
 			&HThaifuP->streamDat[RelativePositionOf(ActivePlayer, sRight)].sutehai,
@@ -195,7 +195,7 @@ void haifu::tools::haifuwritetsumohai(
 }
 
 void haifu::tools::haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, PlayerID PassivePlayer) {
-	static CodeConv::tostringstream* p[] = {
+	CodeConv::tostringstream* p[] = {
 		&haifuP->streamDat[RelativePositionOf(PassivePlayer, sRight)].tsumo,
 		&haifuP->streamDat[RelativePositionOf(PassivePlayer, sRight)].tsumolabel,
 		&haifuP->streamDat[RelativePositionOf(PassivePlayer, sRight)].sutehai,
@@ -209,7 +209,7 @@ void haifu::tools::haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, Pl
 		&haifuP->streamDat[RelativePositionOf(PassivePlayer, sLeft)].sutehai,
 		&haifuP->streamDat[RelativePositionOf(PassivePlayer, sLeft)].sutehailabel,
 	};
-	static CodeConv::tostringstream* h[] = {
+	CodeConv::tostringstream* h[] = {
 		&HThaifuP->streamDat[RelativePositionOf(PassivePlayer, sRight)].tsumo,
 		&HThaifuP->streamDat[RelativePositionOf(PassivePlayer, sRight)].tsumolabel,
 		&HThaifuP->streamDat[RelativePositionOf(PassivePlayer, sRight)].sutehai,
