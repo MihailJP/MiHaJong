@@ -1070,8 +1070,8 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 	XhaifuBufferBody << _T("\t\t<final-hands>") << std::endl;
 	XhaifuBuffer << _T("\t\t\t<player-score>") << std::endl;
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
-		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << i << _T("\">") << std::endl;
 		PlayerID k = RelativePositionOf(i, OrigTurn % Players);
+		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << k << _T("\">") << std::endl;
 		if (chkGameType(gameStat, SanmaT))
 			if (((OrigTurn % Players) + i) >= ACTUAL_PLAYERS)
 				k = (k + 1) % Players;
