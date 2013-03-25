@@ -13,6 +13,7 @@
 	<xsl:template match="/">
 		<html lang="ja-JP">
 			<head>
+				<title><xsl:value-of select="haifu/match-description/title" /></title>
 				<link rel="stylesheet" href="haifu.css" type="text/css" />
 			</head>
 			<body>
