@@ -9,6 +9,8 @@
 #include "../rule.h"
 #include <cassert>
 #include <cstdlib>
+#include "../../sound/sound.h"
+#include "../../common/bgmid.h"
 
 namespace mihajong_graphic {
 
@@ -113,6 +115,23 @@ D3DCOLOR TableProtoScene::roundColor() {
 		return     D3DCOLOR_XRGB(128,  96,  96);
 	default:
 		return     D3DCOLOR_XRGB(  0,   0,   0);
+	}
+}
+
+void TableProtoScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	const int scaledX = (int)((float)X / Geometry::WindowScale());
+	const int scaledY = (int)((float)Y / Geometry::WindowScale());
+	const int region = whichRegion(scaledX, scaledY);
+	const bool isCheckBox = (region >= CheckboxRegionOffset) &&
+		(region < (CheckboxRegionOffset + NumOfCheckBoxes));
+	switch (od->dwOfs) {
+	case DIMOFS_BUTTON0: // マウスクリック
+		if ((isCheckBox) && (od->dwData)) {
+			checkBoxes[region - CheckboxRegionOffset]->check(
+				!(checkBoxes[region - CheckboxRegionOffset]->isChecked()));
+			sound::Play(sound::IDs::sndClick);
+		}
+		break;
 	}
 }
 

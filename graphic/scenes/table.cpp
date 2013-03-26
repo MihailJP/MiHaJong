@@ -402,6 +402,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 }
 
 void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	TableProtoScene::MouseInput(od, X, Y);
 	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 	const int scaledX = (int)((float)X / Geometry::WindowScale());
 	const int scaledY = (int)((float)Y / Geometry::WindowScale());
