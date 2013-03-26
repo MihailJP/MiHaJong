@@ -26,6 +26,7 @@ protected:
 	enum CheckBoxNames {ChkBoxAutoAgari, ChkBoxAutoDiscard, ChkBoxAutoPass, NumOfCheckBoxes,};
 	static const std::array<CodeConv::tstring, NumOfCheckBoxes> labels;
 	std::array<CheckBox*, NumOfCheckBoxes> checkBoxes;
+	static const unsigned CheckboxRegionOffset = 60;
 public:
 	TableProtoScene(ScreenManipulator* const manipulator);
 	virtual ~TableProtoScene();

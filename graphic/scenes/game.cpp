@@ -25,8 +25,15 @@ const std::array<CodeConv::tstring, TableProtoScene::NumOfCheckBoxes> TableProto
 TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR), 960, 1080);
 	InitScorePanel();
-	for (int i = 0; i < NumOfCheckBoxes; ++i)
+	const Region nullRegion = {0, 0, -1, -1};
+	for (int i = 0; i < NumOfCheckBoxes; ++i) {
 		checkBoxes[i] = new CheckBox(manipulator->getDevice(), labels[i], Geometry::BaseSize + 20, 940 + i * 40);
+		if (regions.size() <= (i + CheckboxRegionOffset)) regions.resize(i + CheckboxRegionOffset + 1, nullRegion);
+		regions[i + CheckboxRegionOffset].Left   = Geometry::BaseSize + 20;
+		regions[i + CheckboxRegionOffset].Right  = Geometry::BaseSize + 20 + 36 + checkBoxes[i]->captionWidthPx();
+		regions[i + CheckboxRegionOffset].Top    = 940 + i * 40;
+		regions[i + CheckboxRegionOffset].Bottom = 940 + i * 40 + 36;
+	}
 }
 
 TableProtoScene::~TableProtoScene() {
