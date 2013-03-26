@@ -20,7 +20,11 @@ CheckBox::~CheckBox() {
 }
 
 void CheckBox::Render() {
-	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, myX, myY, 36, 36);
+	RECT rect = {
+		0  + 36 * (checkFlag ? 1 : 0), 0,
+		36 + 36 * (checkFlag ? 1 : 0), 36,
+	};
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, myX, myY, 36, 36, 0xffffffff, &rect);
 	myTextRenderer->NewText(0, myCaption, myX + 36, myY);
 	myTextRenderer->Render();
 }
