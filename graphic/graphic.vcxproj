@@ -140,10 +140,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="button.cpp" />
+    <ClCompile Include="widgets\button.cpp" />
     <ClCompile Include="calltext.cpp" />
     <ClCompile Include="chrwidth.cpp" />
-    <ClCompile Include="editbox.cpp" />
+    <ClCompile Include="widgets\editbox.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="finscore.cpp" />
     <ClCompile Include="font.cpp" />
@@ -152,7 +152,7 @@
     <ClCompile Include="init.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="loadtex.cpp" />
-    <ClCompile Include="logwnd.cpp" />
+    <ClCompile Include="widgets\logwnd.cpp" />
     <ClCompile Include="rule.cpp" />
     <ClCompile Include="scenes\result.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
@@ -192,10 +192,10 @@
     <ClCompile Include="yakustat.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="button.h" />
+    <ClInclude Include="widgets\button.h" />
     <ClInclude Include="calltext.h" />
     <ClInclude Include="chrwidth.h" />
-    <ClInclude Include="editbox.h" />
+    <ClInclude Include="widgets\editbox.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="exports.h" />
     <ClInclude Include="extchar.h" />
@@ -206,7 +206,7 @@
     <ClInclude Include="init.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="loadtex.h" />
-    <ClInclude Include="logwnd.h" />
+    <ClInclude Include="widgets\logwnd.h" />
     <ClInclude Include="pi.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="rule.h" />

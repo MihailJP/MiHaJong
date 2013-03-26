@@ -1,9 +1,9 @@
 #include "button.h"
-#include "loadtex.h"
-#include "resource.h"
+#include "../loadtex.h"
+#include "../resource.h"
 #include <cassert>
-#include "sprite.h"
-#include "../common/strcode.h"
+#include "../sprite.h"
+#include "../../common/strcode.h"
 
 namespace mihajong_graphic {
 

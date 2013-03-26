@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../table.h"
-#include "../../button.h"
+#include "../../widgets/button.h"
 #include <bitset>
 #include <Windows.h>
 #include "../../../common/mutex.h"

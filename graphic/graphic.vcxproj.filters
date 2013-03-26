@@ -31,6 +31,12 @@
     <Filter Include="ヘッダー ファイル\scenes\table">
       <UniqueIdentifier>{b6472560-96c3-416a-a7e7-1c22205928db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\widgets">
+      <UniqueIdentifier>{2489d12b-3730-4913-9867-d59eccbdc6a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\widgets">
+      <UniqueIdentifier>{7a57851c-121d-453d-b306-d5f286265e37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="scrmanip.cpp">
@@ -96,16 +102,7 @@
     <ClCompile Include="scenes\proto.cpp">
       <Filter>ソース ファイル\scenes</Filter>
     </ClCompile>
-    <ClCompile Include="button.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="editbox.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="utils.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="logwnd.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="chrwidth.cpp">
@@ -186,6 +183,15 @@
     <ClCompile Include="finscore.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\button.cpp">
+      <Filter>ソース ファイル\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\editbox.cpp">
+      <Filter>ソース ファイル\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\logwnd.cpp">
+      <Filter>ソース ファイル\widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scrmanip.h">
@@ -263,19 +269,10 @@
     <ClInclude Include="rule.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="button.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="editbox.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="extchar.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="utils.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="logwnd.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="chrwidth.h">
@@ -370,6 +367,15 @@
     </ClInclude>
     <ClInclude Include="pi.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\button.h">
+      <Filter>ヘッダー ファイル\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\editbox.h">
+      <Filter>ヘッダー ファイル\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\logwnd.h">
+      <Filter>ヘッダー ファイル\widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
