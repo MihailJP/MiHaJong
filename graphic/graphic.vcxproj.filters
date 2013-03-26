@@ -192,6 +192,9 @@
     <ClCompile Include="widgets\logwnd.cpp">
       <Filter>ソース ファイル\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\checkbox.cpp">
+      <Filter>ソース ファイル\widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scrmanip.h">
@@ -375,6 +378,9 @@
       <Filter>ヘッダー ファイル\widgets</Filter>
     </ClInclude>
     <ClInclude Include="widgets\logwnd.h">
+      <Filter>ヘッダー ファイル\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\checkbox.h">
       <Filter>ヘッダー ファイル\widgets</Filter>
     </ClInclude>
   </ItemGroup>
