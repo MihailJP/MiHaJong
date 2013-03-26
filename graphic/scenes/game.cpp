@@ -18,12 +18,20 @@ void TableProtoScene::LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource,
 	mihajong_graphic::LoadTexture(caller->getDevice(), texture, resource, width, height);
 }
 
+const std::array<CodeConv::tstring, TableProtoScene::NumOfCheckBoxes> TableProtoScene::labels = {
+	_T("自動和了"), _T("ツモ切り"), _T("オートパス"),
+};
+
 TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR), 960, 1080);
 	InitScorePanel();
+	for (int i = 0; i < NumOfCheckBoxes; ++i)
+		checkBoxes[i] = new CheckBox(manipulator->getDevice(), labels[i], Geometry::BaseSize + 20, 940 + i * 40);
 }
 
 TableProtoScene::~TableProtoScene() {
+	for (int i = 0; i < NumOfCheckBoxes; ++i)
+		delete checkBoxes[i];
 	for (auto k = scorePanel.begin(); k != scorePanel.end(); ++k)
 		delete *k;
 	if (tSideBar) tSideBar->Release();
@@ -32,6 +40,8 @@ TableProtoScene::~TableProtoScene() {
 void TableProtoScene::ShowSidebar() {
 	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
 		tSideBar, Geometry::BaseSize, 0, Geometry::SidebarWidth(), 1080);
+	for (int i = 0; i < NumOfCheckBoxes; ++i)
+		checkBoxes[i]->Render();
 }
 
 void TableProtoScene::InitScorePanel() {
