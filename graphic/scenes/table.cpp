@@ -145,6 +145,7 @@ void GameTableScreen::RenderTable() {
 	sutehaiReconst->Render(); // 264
 	gariReconst->Render();
 	buttonReconst->Render();
+	tileTipReconst->Render();
 }
 
 void GameTableScreen::RenderSideBar() {
