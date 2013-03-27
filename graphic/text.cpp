@@ -170,10 +170,10 @@ unsigned ITextRenderer::strWidthByCols(const std::string& str) {
 	return strWidthByCols(wstr);
 }
 unsigned ITextRenderer::strWidthByPix(const std::wstring& str) {
-	return strWidthByCols(str) * FontWidth();
+	return strWidthByCols(str) * FontWidth() / 2;
 }
 unsigned ITextRenderer::strWidthByPix(const std::string& str) {
-	return strWidthByCols(str) * FontWidth();
+	return strWidthByCols(str) * FontWidth() / 2;
 }
 
 }
