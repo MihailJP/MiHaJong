@@ -1,11 +1,11 @@
 #include "logwnd.h"
-#include "resource.h"
-#include "loadtex.h"
-#include "sprite.h"
+#include "../resource.h"
+#include "../loadtex.h"
+#include "../sprite.h"
 #include <cassert>
 #include <algorithm>
-#include "chrwidth.h"
-#include "../common/mutex.h"
+#include "../chrwidth.h"
+#include "../../common/mutex.h"
 
 namespace mihajong_graphic {
 namespace logwnd {

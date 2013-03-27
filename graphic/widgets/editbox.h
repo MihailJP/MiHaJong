@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../common/strcode.h"
+#include "../../common/strcode.h"
 #include <d3dx9.h>
 #include <dxerr.h>
 #include <WinUser.h>
 #include <Imm.h>
 #include <tuple>
-#include "text.h"
+#include "../text.h"
 #include <vector>
 #include <functional>
-#include "timer.h"
+#include "../timer.h"
 
 namespace mihajong_graphic {
 

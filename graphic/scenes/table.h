@@ -4,7 +4,7 @@
 #include "../geometry.h"
 #include <tuple>
 #include <functional>
-#include "../logwnd.h"
+#include "../widgets/logwnd.h"
 #include "tablesub/tblsubs.h"
 #include "../text.h"
 #include "../../common/mutex.h"
