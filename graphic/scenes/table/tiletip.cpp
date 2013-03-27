@@ -1,5 +1,6 @@
 #include "tiletip.h"
 #include "tehai.h"
+#include "nakibtn.h"
 #include "../../gametbl.h"
 #include <cstring>
 #include "../../utils.h"
@@ -62,6 +63,30 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 		MachihaiInfo machiInfo = utils::chkFuriten(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 		if (machiInfo.FuritenFlag || GameStatus::gameStat()->statOfMine().DoujunFuriten)
 			tipText = _T("[U’®]");
+		if (caller->buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) {
+			TileCode discardTile = GameStatus::gameStat()->CurrentDiscard.tile;
+			auto render = [this, &tipText] (unsigned tileID, TileCode tileCode) -> void {
+				myTileRenderer->NewTile(tileID, tileCode, Normal,
+					TipX + myTextRenderer->strWidthByPix(tipText) + 20 + tileID * (ShowTile::VertTileWidth + 2),
+					TipY + (ShowTile::VertTileHeight / 2) - 6,
+					Portrait, Obverse, 0xffffffff);
+			};
+			auto chkCursor = [this](ButtonReconst::ButtonID buttonID) -> bool {
+				return (caller->buttonReconst->isEnabled(buttonID) &&
+					(caller->buttonReconst->getCursor() == buttonID));
+			};
+			if (chkCursor(ButtonReconst::btnChii1)) {
+				tipText += _T("•›˜I"); render(0, discardTile); render(1, TileCode(discardTile + 1)); render(2, TileCode(discardTile + 2));
+			} else if (chkCursor(ButtonReconst::btnChii2)) {
+				tipText += _T("•›˜I"); render(0, TileCode(discardTile - 1)); render(1, discardTile); render(2, TileCode(discardTile + 1));
+			} else if (chkCursor(ButtonReconst::btnChii3)) {
+				tipText += _T("•›˜I"); render(0, TileCode(discardTile - 2)); render(1, TileCode(discardTile - 1)); render(2, discardTile);
+			} else if (chkCursor(ButtonReconst::btnPon)) {
+				tipText += _T("•›˜I"); render(0, discardTile); render(1, discardTile); render(2, discardTile);
+			} else if (chkCursor(ButtonReconst::btnKan)) {
+				tipText += _T("•›˜I"); render(0, discardTile); render(1, discardTile); render(2, discardTile); render(3, discardTile);
+			}
+		}
 	}
 	myTextRenderer->NewText(0, tipText, TipX, TipY);
 }
