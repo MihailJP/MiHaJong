@@ -19,6 +19,7 @@
 #include "table/chicha.h"
 #include "table/nakibtn.h"
 #include "table/gari.h"
+#include "table/tiletip.h"
 
 #include "table/naki_id.h"
 
@@ -36,6 +37,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	nakihaiReconst = new NakihaiReconst(this);
 	sutehaiReconst = new SutehaiReconst(this);
 	gariReconst = new GariReconst(this);
+	tileTipReconst = new TileTipReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
 	const unsigned logWidth = (unsigned)std::floor(0.5f + // VC++2010‚Å‚Íround()‚ªŽg‚¦‚È‚¢
 		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
@@ -49,6 +51,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 GameTableScreen::~GameTableScreen() {
 	delete mySubScene;
 	delete logWindow;
+	delete tileTipReconst;
 	delete gariReconst;
 	delete sutehaiReconst;
 	delete nakihaiReconst;

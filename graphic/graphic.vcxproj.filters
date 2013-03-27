@@ -195,6 +195,9 @@
     <ClCompile Include="widgets\checkbox.cpp">
       <Filter>ソース ファイル\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="scenes\table\tiletip.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scrmanip.h">
@@ -382,6 +385,9 @@
     </ClInclude>
     <ClInclude Include="widgets\checkbox.h">
       <Filter>ヘッダー ファイル\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\tiletip.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
