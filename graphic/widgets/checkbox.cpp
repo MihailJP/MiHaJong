@@ -11,6 +11,7 @@ CheckBox::CheckBox(LPDIRECT3DDEVICE9 device, const CodeConv::tstring& caption, i
 	myTextRenderer = new TextRenderer(device);
 	myCaption = caption;
 	checkFlag = checked;
+	focused = false;
 	myX = x; myY = y;
 }
 
@@ -21,11 +22,12 @@ CheckBox::~CheckBox() {
 
 void CheckBox::Render() {
 	RECT rect = {
-		0  + 36 * (checkFlag ? 1 : 0), 0,
-		36 + 36 * (checkFlag ? 1 : 0), 36,
+		0  + 36 * (checkFlag ? 1 : 0), 0  + 36 * (focused ? 1 : 0),
+		36 + 36 * (checkFlag ? 1 : 0), 36 + 36 * (focused ? 1 : 0),
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, myX, myY, 36, 36, 0xffffffff, &rect);
-	myTextRenderer->NewText(0, myCaption, myX + 36, myY);
+	myTextRenderer->NewText(0, myCaption, myX + 36, myY, 1.0f, 1.0f,
+		focused ? 0xffffffff : 0xccffffff);
 	myTextRenderer->Render();
 }
 

@@ -125,6 +125,15 @@ void TableProtoScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	const bool isCheckBox = (region >= CheckboxRegionOffset) &&
 		(region < (CheckboxRegionOffset + NumOfCheckBoxes));
 	switch (od->dwOfs) {
+	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
+		if ((isCheckBox) && (!checkBoxes[region - CheckboxRegionOffset]->isFocused())) {
+			checkBoxes[region - CheckboxRegionOffset]->focus(true);
+			sound::Play(sound::IDs::sndCursor);
+		}
+		for (int i = 0; i < NumOfCheckBoxes; ++i)
+			if (region != i + CheckboxRegionOffset)
+				checkBoxes[i]->focus(false);
+		break;
 	case DIMOFS_BUTTON0: // マウスクリック
 		if ((isCheckBox) && (od->dwData)) {
 			checkBoxes[region - CheckboxRegionOffset]->check(
