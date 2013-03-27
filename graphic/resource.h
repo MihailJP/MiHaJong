@@ -21,6 +21,7 @@
 #define IDB_PNG_CALL_DIGITS                  115
 #define IDB_PNG_AGARI_WINDOW                 116
 #define IDB_PNG_SCORE_DIGITS                 117
+#define IDB_PNG_CHECKBOX                     118
 
 #define CHARMAP_FILE                         257
 #define IDB_CHARMAP_FONT                     120

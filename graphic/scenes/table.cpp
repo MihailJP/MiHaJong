@@ -281,6 +281,12 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			if ((GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag) &&
 				buttonReconst->areEnabled().none())
 				ui::UIEvent->set(NumOfTilesInHand - 1);
+			else if (checkBoxes[ChkBoxAutoDiscard]->isChecked() && // 自動ツモ切り
+				buttonReconst->areEnabled().none())
+				ui::UIEvent->set(NumOfTilesInHand - 1);
+			else if ((buttonReconst->isEnabled(buttonReconst->btnTsumo)) &&
+				(checkBoxes[ChkBoxAutoAgari]->isChecked())) // オート和了
+				CallTsumoAgari();
 			else // 自摸番が来たら音を鳴らす
 				sound::Play(sound::IDs::sndBell);
 			break;
@@ -295,8 +301,14 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			buttonReconst->btnSetForNaki();
 			buttonReconst->setCursor(buttonReconst->isEnabled(GameTableScreen::ButtonReconst::btnRon) ? GameTableScreen::ButtonReconst::btnRon : GameTableScreen::ButtonReconst::btnPass);
 			buttonReconst->reconstruct();
-			if (buttonReconst->areEnabled().none())
+			if (buttonReconst->areEnabled().none()) // 該当する牌がないならスルー
 				ui::UIEvent->set(naki::nakiNone);
+			else if ((!(buttonReconst->isEnabled(buttonReconst->btnRon))) && /* ButtonReconst::btnRon だと何故かエラーになる */
+				(checkBoxes[ChkBoxAutoPass]->isChecked())) // オートパス
+				ui::UIEvent->set(naki::nakiNone);
+			else if ((buttonReconst->isEnabled(buttonReconst->btnRon)) &&
+				(checkBoxes[ChkBoxAutoAgari]->isChecked())) // オート和了
+				ui::UIEvent->set(naki::nakiRon);
 			else // 音を鳴らす
 				sound::Play(sound::IDs::sndSignal);
 			break;
@@ -402,6 +414,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 }
 
 void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	TableProtoScene::MouseInput(od, X, Y);
 	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 	const int scaledX = (int)((float)X / Geometry::WindowScale());
 	const int scaledY = (int)((float)Y / Geometry::WindowScale());

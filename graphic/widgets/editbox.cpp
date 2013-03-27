@@ -1,10 +1,10 @@
 #include "editbox.h"
 #include <cmath>
-#include "extchar.h"
-#include "resource.h"
-#include "loadtex.h"
-#include "sprite.h"
-#include "chrwidth.h"
+#include "../extchar.h"
+#include "../resource.h"
+#include "../loadtex.h"
+#include "../sprite.h"
+#include "../chrwidth.h"
 #include <cassert>
 #include <algorithm>
 

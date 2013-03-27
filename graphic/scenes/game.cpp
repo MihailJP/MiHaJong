@@ -9,6 +9,8 @@
 #include "../rule.h"
 #include <cassert>
 #include <cstdlib>
+#include "../../sound/sound.h"
+#include "../../common/bgmid.h"
 
 namespace mihajong_graphic {
 
@@ -18,12 +20,27 @@ void TableProtoScene::LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource,
 	mihajong_graphic::LoadTexture(caller->getDevice(), texture, resource, width, height);
 }
 
+const std::array<CodeConv::tstring, TableProtoScene::NumOfCheckBoxes> TableProtoScene::labels = {
+	_T("自動和了"), _T("ツモ切り"), _T("オートパス"),
+};
+
 TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR), 960, 1080);
 	InitScorePanel();
+	const Region nullRegion = {0, 0, -1, -1};
+	for (int i = 0; i < NumOfCheckBoxes; ++i) {
+		checkBoxes[i] = new CheckBox(manipulator->getDevice(), labels[i], Geometry::BaseSize + 20, 940 + i * 40);
+		if (regions.size() <= (i + CheckboxRegionOffset)) regions.resize(i + CheckboxRegionOffset + 1, nullRegion);
+		regions[i + CheckboxRegionOffset].Left   = Geometry::BaseSize + 20;
+		regions[i + CheckboxRegionOffset].Right  = Geometry::BaseSize + 20 + 36 + checkBoxes[i]->captionWidthPx();
+		regions[i + CheckboxRegionOffset].Top    = 940 + i * 40;
+		regions[i + CheckboxRegionOffset].Bottom = 940 + i * 40 + 36;
+	}
 }
 
 TableProtoScene::~TableProtoScene() {
+	for (int i = 0; i < NumOfCheckBoxes; ++i)
+		delete checkBoxes[i];
 	for (auto k = scorePanel.begin(); k != scorePanel.end(); ++k)
 		delete *k;
 	if (tSideBar) tSideBar->Release();
@@ -32,6 +49,8 @@ TableProtoScene::~TableProtoScene() {
 void TableProtoScene::ShowSidebar() {
 	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(
 		tSideBar, Geometry::BaseSize, 0, Geometry::SidebarWidth(), 1080);
+	for (int i = 0; i < NumOfCheckBoxes; ++i)
+		checkBoxes[i]->Render();
 }
 
 void TableProtoScene::InitScorePanel() {
@@ -96,6 +115,32 @@ D3DCOLOR TableProtoScene::roundColor() {
 		return     D3DCOLOR_XRGB(128,  96,  96);
 	default:
 		return     D3DCOLOR_XRGB(  0,   0,   0);
+	}
+}
+
+void TableProtoScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	const int scaledX = (int)((float)X / Geometry::WindowScale());
+	const int scaledY = (int)((float)Y / Geometry::WindowScale());
+	const int region = whichRegion(scaledX, scaledY);
+	const bool isCheckBox = (region >= CheckboxRegionOffset) &&
+		(region < (CheckboxRegionOffset + NumOfCheckBoxes));
+	switch (od->dwOfs) {
+	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
+		if ((isCheckBox) && (!checkBoxes[region - CheckboxRegionOffset]->isFocused())) {
+			checkBoxes[region - CheckboxRegionOffset]->focus(true);
+			sound::Play(sound::IDs::sndCursor);
+		}
+		for (int i = 0; i < NumOfCheckBoxes; ++i)
+			if (region != i + CheckboxRegionOffset)
+				checkBoxes[i]->focus(false);
+		break;
+	case DIMOFS_BUTTON0: // マウスクリック
+		if ((isCheckBox) && (od->dwData)) {
+			checkBoxes[region - CheckboxRegionOffset]->check(
+				!(checkBoxes[region - CheckboxRegionOffset]->isChecked()));
+			sound::Play(sound::IDs::sndClick);
+		}
+		break;
 	}
 }
 
