@@ -250,7 +250,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 		if (shanten < 0) // 出た牌が当たり牌
 			buttonEnabled[btnRon] = true; // 和了ボタン（フリテンの場合なども点灯）
 
-		if (!playerStat->RichiFlag.RichiFlag) { // リーチしてないとき……
+		if ((!playerStat->RichiFlag.RichiFlag) && tilesMoreThan(0)) { // リーチしてなくて河底でないとき……
 			const Int8ByTile TileCount = utils::countTilesInHand(gameStat, PassivePlayer);
 			const int kanLim = rules::chkRule("fifth_kong", "no") ? 4 : 5;
 
