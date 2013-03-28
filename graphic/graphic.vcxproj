@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="scenes\table\tiletip.cpp" />
     <ClCompile Include="widgets\button.cpp" />
     <ClCompile Include="calltext.cpp" />
     <ClCompile Include="chrwidth.cpp" />
@@ -193,6 +194,7 @@
     <ClCompile Include="yakustat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="scenes\table\tiletip.h" />
     <ClInclude Include="widgets\button.h" />
     <ClInclude Include="calltext.h" />
     <ClInclude Include="chrwidth.h" />
