@@ -1,11 +1,11 @@
 #pragma once
 
-#include "exports.h"
-#include "../common/strcode.h"
+#include "../exports.h"
+#include "../../common/strcode.h"
 #ifdef GRAPHIC_EXPORTS
 #include "directx.h"
 #include <vector>
-#include "text.h"
+#include "../text.h"
 #endif
 
 namespace mihajong_graphic {

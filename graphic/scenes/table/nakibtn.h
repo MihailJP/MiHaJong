@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../table.h"
-#include "../../button.h"
+#include "../../widgets/button.h"
 #include <bitset>
 #include <Windows.h>
 #include "../../../common/mutex.h"
@@ -19,7 +19,7 @@ public: // ボタン番号
 	enum ButtonID {
 		btnChii1, btnChii2, btnChii3, btnPon, btnKan, btnPass, btnRon,
 		btnMAXIMUM,
-		btnKyuushu = 2, btnFlower, btnRiichi = 5, btnTsumo,
+		btnOpenRiichi = 0, btnRiichi, btnKyuushu, btnFlower, btnTsumo = btnRon,
 	};
 private: // ボタン属性
 	struct BtnData { // ボタンの属性格納

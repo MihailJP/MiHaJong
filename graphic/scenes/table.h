@@ -4,7 +4,7 @@
 #include "../geometry.h"
 #include <tuple>
 #include <functional>
-#include "../logwnd.h"
+#include "../widgets/logwnd.h"
 #include "tablesub/tblsubs.h"
 #include "../text.h"
 #include "../../common/mutex.h"
@@ -55,6 +55,9 @@ protected: /**** 鳴き選択用ボタン ****/
 	ButtonReconst* buttonReconst;
 protected: /**** 情報表示 ****/
 	void ShowStatus(const GameTable* gameStat); // 供託点棒などの情報を表示
+protected: /**** 捨牌ツールチップ(というのだろうか) ****/
+	class TileTipReconst;
+	TileTipReconst* tileTipReconst;
 protected:
 	void ReconstructPlayer(const GameTable* gameStat, PlayerID targetPlayer, PlayerID trueTargetPlayer); // プレイヤー関係の画面の再構築
 	void Reconstruct(const GameTable* gameStat); // 画面の再描画

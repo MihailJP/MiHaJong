@@ -28,12 +28,12 @@ const GameTableScreen::ButtonReconst::BtnData
 			{_T("パス"),     5 + 117 * 5, Geometry::BaseSize - 40, 0xffcccccc},
 			{_T("ロン"),     5 + 117 * 6, Geometry::BaseSize - 40, 0xffffcc66},
 		}, {
-			{_T(""),         5 + 117 * 0, Geometry::BaseSize - 40, 0xff666666},
-			{_T(""),         5 + 117 * 1, Geometry::BaseSize - 40, 0xff666666},
+			{_T("開立直"),   5 + 117 * 0, Geometry::BaseSize - 40, 0xffff6666},
+			{_T("リーチ"),   5 + 117 * 1, Geometry::BaseSize - 40, 0xffff66ff},
 			{_T("九種九牌"), 5 + 117 * 2, Geometry::BaseSize - 40, 0xff99ffff},
 			{_T("花牌"),     5 + 117 * 3, Geometry::BaseSize - 40, 0xff99ccff},
 			{_T("カン"),     5 + 117 * 4, Geometry::BaseSize - 40, 0xff9966ff},
-			{_T("リーチ"),   5 + 117 * 5, Geometry::BaseSize - 40, 0xffff66ff},
+			{_T(""),         5 + 117 * 5, Geometry::BaseSize - 40, 0xff666666},
 			{_T("ツモ"),     5 + 117 * 6, Geometry::BaseSize - 40, 0xffffff66},
 		},
 };
@@ -168,8 +168,11 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 			(shanten <= 0) && // テンパイしている
 			(playerStat->MenzenFlag || (!rules::chkRule("riichi_shibari", "no"))) && // 門前であるか、リーチ縛りルールである
 			(!playerStat->RichiFlag.RichiFlag) && // まだリーチしていない
-			(tilesMoreThan((gameStat->gameType & AllSanma) ? 2 : 3))) // 残りツモ牌が十分あるなら
-			buttonEnabled[btnRiichi] = true; // リーチボタンを有効に
+			(tilesMoreThan((gameStat->gameType & AllSanma) ? 2 : 3))) { // 残りツモ牌が十分あるなら
+				buttonEnabled[btnRiichi] = true; // リーチボタンを有効に
+				if ((!rules::chkRule("open_riichi", "no")) && playerStat->MenzenFlag) // オープンリーチありの場合で門前の場合
+					buttonEnabled[btnOpenRiichi] = true; // ボタンを有効に
+		}
 
 		const bool DaoPaiAbilityFlag = utils::chkdaopaiability(gameStat, ActivePlayer);
 		if ((DaoPaiAbilityFlag) && (playerStat->FirstDrawFlag))
@@ -247,7 +250,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 		if (shanten < 0) // 出た牌が当たり牌
 			buttonEnabled[btnRon] = true; // 和了ボタン（フリテンの場合なども点灯）
 
-		if (!playerStat->RichiFlag.RichiFlag) { // リーチしてないとき……
+		if ((!playerStat->RichiFlag.RichiFlag) && tilesMoreThan(0)) { // リーチしてなくて河底でないとき……
 			const Int8ByTile TileCount = utils::countTilesInHand(gameStat, PassivePlayer);
 			const int kanLim = rules::chkRule("fifth_kong", "no") ? 4 : 5;
 
@@ -323,6 +326,11 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		if (!this->isEnabled((ButtonID)this->getCursor())) {
 			sound::Play(sound::IDs::sndCuohu);
 		} else if (this->getButtonSet() == btnSetTsumo) {
+			auto isTenpaiTile = [](int i, GameTable* tmpStat) -> bool {
+				tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile = NoTile;
+				Shanten shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, shantenAll);
+				return (shanten > 0);
+			};
 			switch (this->getCursor()) {
 			case btnTsumo:
 				caller->CallTsumoAgari();
@@ -331,12 +339,10 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 				caller->CallKyuushuKyuuhai();
 				break;
 			case btnRiichi: // 立直
-				setMode(DiscardTileNum::Riichi, btnRiichi,
-					[](int i, GameTable* tmpStat) -> bool {
-						tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile = NoTile;
-						Shanten shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, shantenAll);
-						return (shanten > 0);
-					});
+				setMode(DiscardTileNum::Riichi, btnRiichi, isTenpaiTile);
+				break;
+			case btnOpenRiichi: // オープン立直
+				setMode(DiscardTileNum::OpenRiichi, btnOpenRiichi, isTenpaiTile);
 				break;
 			case btnKan: // カン
 				setMode(DiscardTileNum::Ankan, btnKan,

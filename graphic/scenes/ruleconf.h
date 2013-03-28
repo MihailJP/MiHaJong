@@ -5,7 +5,7 @@
 #include "../../common/strcode.h"
 #include "../rule.h"
 #include "../../common/nmrules.h"
-#include "../button.h"
+#include "../widgets/button.h"
 
 namespace mihajong_graphic {
 
