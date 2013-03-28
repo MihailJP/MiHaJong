@@ -6,6 +6,7 @@
 #include <tuple>
 #include "../text.h"
 #include "../timer.h"
+#include "../widgets/checkbox.h"
 
 namespace mihajong_graphic {
 
@@ -21,9 +22,15 @@ protected:
 	void InitScorePanel();
 	void ShowScorePanel();
 	D3DCOLOR roundColor(); // èÍÇ≤Ç∆ÇÃêFï™ÇØ
+protected:
+	enum CheckBoxNames {ChkBoxAutoAgari, ChkBoxAutoDiscard, ChkBoxAutoPass, NumOfCheckBoxes,};
+	static const std::array<CodeConv::tstring, NumOfCheckBoxes> labels;
+	std::array<CheckBox*, NumOfCheckBoxes> checkBoxes;
+	static const unsigned CheckboxRegionOffset = 50;
 public:
 	TableProtoScene(ScreenManipulator* const manipulator);
 	virtual ~TableProtoScene();
+	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 };
 
 class TableProtoScene::ScoreBoard {

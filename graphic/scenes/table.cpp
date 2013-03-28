@@ -19,6 +19,7 @@
 #include "table/chicha.h"
 #include "table/nakibtn.h"
 #include "table/gari.h"
+#include "table/tiletip.h"
 
 #include "table/naki_id.h"
 
@@ -36,6 +37,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	nakihaiReconst = new NakihaiReconst(this);
 	sutehaiReconst = new SutehaiReconst(this);
 	gariReconst = new GariReconst(this);
+	tileTipReconst = new TileTipReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
 	const unsigned logWidth = (unsigned)floor(0.5f + // VC++2010ではround()が使えない
 		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
@@ -49,6 +51,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 GameTableScreen::~GameTableScreen() {
 	delete mySubScene;
 	delete logWindow;
+	delete tileTipReconst;
 	delete gariReconst;
 	delete sutehaiReconst;
 	delete nakihaiReconst;
@@ -142,6 +145,7 @@ void GameTableScreen::RenderTable() {
 	sutehaiReconst->Render(); // 264
 	gariReconst->Render();
 	buttonReconst->Render();
+	tileTipReconst->Render();
 }
 
 void GameTableScreen::RenderSideBar() {
@@ -152,7 +156,7 @@ void GameTableScreen::RenderSideBar() {
 }
 
 void GameTableScreen::checkTimeout() {
-	if ((mySubScene) && (mySubScene->timeout() <= 0) && (buttonReconst->areEnabled().any() || tehaiReconst->isCursorEnabled())) { /* タイムアウトの処理 */
+	if ((mySubScene) && (mySubScene->timeout() <= 0) && (buttonReconst->areEnabled().any() || tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled())) { /* タイムアウトの処理 */
 		const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 		if (isNakiSel) { // 鳴き選択中の時
 			ui::UIEvent->set(naki::nakiNone); // 牌の番号を設定
@@ -163,6 +167,7 @@ void GameTableScreen::checkTimeout() {
 		}
 		tehaiReconst->setTileCursor();
 		buttonReconst->setCursor();
+		tileTipReconst->reconstruct();
 	}
 }
 
@@ -182,6 +187,7 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		tehaiReconst->enable();
 		tileSelectMode = 0;
 		delete mySubScene; tehaiReconst->setTileCursor();
+		tileTipReconst->reconstruct();
 		switch (static_cast<TableSubsceneID>(scene_ID)) {
 		case tblSubsceneBeginning:
 			mySubScene = new TableSubsceneBeginning(caller->getDevice());
@@ -281,8 +287,15 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			if ((GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag) &&
 				buttonReconst->areEnabled().none())
 				ui::UIEvent->set(NumOfTilesInHand - 1);
+			else if (checkBoxes[ChkBoxAutoDiscard]->isChecked() && // 自動ツモ切り
+				buttonReconst->areEnabled().none())
+				ui::UIEvent->set(NumOfTilesInHand - 1);
+			else if ((buttonReconst->isEnabled(buttonReconst->btnTsumo)) &&
+				(checkBoxes[ChkBoxAutoAgari]->isChecked())) // オート和了
+				CallTsumoAgari();
 			else // 自摸番が来たら音を鳴らす
 				sound::Play(sound::IDs::sndBell);
+			tileTipReconst->reconstruct();
 			break;
 		case tblSubscenePlayerNaki:
 			mySubScene = new TableSubscenePlayerNaki(caller->getDevice());
@@ -295,10 +308,17 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			buttonReconst->btnSetForNaki();
 			buttonReconst->setCursor(buttonReconst->isEnabled(GameTableScreen::ButtonReconst::btnRon) ? GameTableScreen::ButtonReconst::btnRon : GameTableScreen::ButtonReconst::btnPass);
 			buttonReconst->reconstruct();
-			if (buttonReconst->areEnabled().none())
+			if (buttonReconst->areEnabled().none()) // 該当する牌がないならスルー
 				ui::UIEvent->set(naki::nakiNone);
+			else if ((!(buttonReconst->isEnabled(buttonReconst->btnRon))) && /* ButtonReconst::btnRon だと何故かエラーになる */
+				(checkBoxes[ChkBoxAutoPass]->isChecked())) // オートパス
+				ui::UIEvent->set(naki::nakiNone);
+			else if ((buttonReconst->isEnabled(buttonReconst->btnRon)) &&
+				(checkBoxes[ChkBoxAutoAgari]->isChecked())) // オート和了
+				ui::UIEvent->set(naki::nakiRon);
 			else // 音を鳴らす
 				sound::Play(sound::IDs::sndSignal);
+			tileTipReconst->reconstruct();
 			break;
 		case tblSubsceneAgari:
 			mySubScene = new TableSubsceneAgariScreen(caller->getDevice());
@@ -321,6 +341,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		sound::Play(sound::IDs::sndCursor);
 		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 		buttonReconst->reconstruct();
+		tileTipReconst->reconstruct();
 	};
 	const PlayerTable* const plDat = &(GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID]);
 	auto directTileCursor = [&](int cursorPos) -> void {
@@ -402,6 +423,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 }
 
 void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+	TableProtoScene::MouseInput(od, X, Y);
 	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 	const int scaledX = (int)((float)X / Geometry::WindowScale());
 	const int scaledY = (int)((float)Y / Geometry::WindowScale());
@@ -421,12 +443,14 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 			sound::Play(sound::IDs::sndCursor);
 			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 			buttonReconst->reconstruct();
+			tileTipReconst->reconstruct();
 		} else if ((region != (ButtonReconst::ButtonRegionNum + buttonReconst->getCursor())) && (isButton)) {
 			tehaiReconst->setTileCursor();
 			buttonReconst->setCursor(region - ButtonReconst::ButtonRegionNum);
 			sound::Play(sound::IDs::sndCursor);
 			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 			buttonReconst->reconstruct();
+			tileTipReconst->reconstruct();
 		}
 		break;
 	case DIMOFS_BUTTON0: // マウスクリック
