@@ -389,6 +389,9 @@
     <ClInclude Include="scenes\table\tiletip.h">
       <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
+    <ClInclude Include="graphic.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="graphic.rc">
