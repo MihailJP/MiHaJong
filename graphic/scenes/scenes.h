@@ -8,3 +8,4 @@
 #include "result.h"
 #include "table.h"
 #include "ruleconf.h"
+#include "setting.h"

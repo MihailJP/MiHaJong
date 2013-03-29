@@ -133,6 +133,10 @@ void startgame(GameTypeID gameType) {
 			mihajong_graphic::Transit(mihajong_graphic::sceneConfig);
 			mihajong_graphic::ui::WaitUI();
 			goto start;
+		case 5:
+			mihajong_graphic::Transit(mihajong_graphic::sceneSetting);
+			mihajong_graphic::ui::WaitUI();
+			goto start;
 		case 6:
 			return;
 		}
