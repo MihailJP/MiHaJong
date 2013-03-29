@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug(Wide)|Win32">
@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="scenes\confmenu.cpp" />
     <ClCompile Include="scenes\setting.cpp" />
     <ClCompile Include="scenes\table\tiletip.cpp" />
     <ClCompile Include="widgets\button.cpp" />
@@ -196,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphic.h" />
+    <ClInclude Include="scenes\confmenu.h" />
     <ClInclude Include="scenes\setting.h" />
     <ClInclude Include="scenes\table\tiletip.h" />
     <ClInclude Include="widgets\button.h" />

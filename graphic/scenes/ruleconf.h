@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sysscr.h"
+#include "confmenu.h"
 #include "../text.h"
 #include "../../common/strcode.h"
 #include "../rule.h"
@@ -9,7 +9,7 @@
 
 namespace mihajong_graphic {
 
-class RuleConfigScene : public SystemScreen {
+class RuleConfigScene : public ConfigMenuProto {
 private:
 	static const unsigned btnRegionStart = 50u;
 	static const unsigned buttons = 4u;

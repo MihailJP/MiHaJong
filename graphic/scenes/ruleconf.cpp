@@ -10,7 +10,7 @@
 
 namespace mihajong_graphic {
 
-RuleConfigScene::RuleConfigScene(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
+RuleConfigScene::RuleConfigScene(ScreenManipulator* const manipulator) : ConfigMenuProto(manipulator) {
 	myButtonPic = new ButtonPic(manipulator->getDevice());
 	for (unsigned short i = 0; i < RULESIZE; i++)
 		rulestat[i] = rules::getRule(i);

@@ -2,7 +2,7 @@
 
 namespace mihajong_graphic {
 
-PreferenceConfigScene::PreferenceConfigScene(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
+PreferenceConfigScene::PreferenceConfigScene(ScreenManipulator* const manipulator) : ConfigMenuProto(manipulator) {
 }
 
 PreferenceConfigScene::~PreferenceConfigScene() {
