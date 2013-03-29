@@ -11,37 +11,19 @@
 namespace mihajong_graphic {
 
 RuleConfigScene::RuleConfigScene(ScreenManipulator* const manipulator) : ConfigMenuProto(manipulator) {
-	myButtonPic = new ButtonPic(manipulator->getDevice());
 	for (unsigned short i = 0; i < RULESIZE; i++)
 		rulestat[i] = rules::getRule(i);
-	menuCursor = 0; buttonCursor = -1; buttonDown = -1;
 	char* RuleConfPtr[RULE_LINES];
 	for (int i = 0; i < RULE_LINES; i++) RuleConfPtr[i] = RuleConf[i];
 	rules::exportRule(RuleConfPtr);
-	redrawItems();
 	CreateButton(0, 1240, 1000, 156, 48, _T("Ｏ Ｋ"));
 	CreateButton(1, 1060, 1000, 156, 48, _T("CANCEL"));
 	CreateButton(2, 880, 1000, 156, 48, _T("NEXT →"));
 	CreateButton(3, 700, 1000, 156, 48, _T("← PREV"));
+	redrawItems();
 }
 
 RuleConfigScene::~RuleConfigScene() {
-	delete myButtonPic;
-}
-
-void RuleConfigScene::CreateButton(unsigned btnID, int X, int Y, unsigned Width, unsigned Height, const CodeConv::tstring& caption) {
-	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
-	myButtonPic->setButton(btnID, ButtonPic::clear,
-		X * (WidthRate * Geometry::WindowScale()), Y * Geometry::WindowScale(),
-		Width * (WidthRate * Geometry::WindowScale()), Height * Geometry::WindowScale(),
-		0xffffffff, caption, true);
-	if (regions.size() <= (btnID + btnRegionStart + 1)) {
-		Region nullRegion = {0, 0, -1, -1};
-		regions.resize(btnID + btnRegionStart + 1, Region(nullRegion));
-	}
-	regions[btnID + btnRegionStart].Left = X; regions[btnID + btnRegionStart].Top = Y; 
-	regions[btnID + btnRegionStart].Right = X + Width;
-	regions[btnID + btnRegionStart].Bottom = Y + Height; 
 }
 
 void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName, const CodeConv::tstring& prmContent) {
@@ -169,18 +151,6 @@ void RuleConfigScene::ShowMessageBelow() {
 		(720 - 9 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 955, 1.0f,
 		(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate,
 		((t % 5000000u) < 500000u) ? (55u + ((t % 5000000u) / 2500u)) << 24 | 0x00ffffff : 0xffffffff);
-}
-
-void RuleConfigScene::Render() {
-	clearWithGameTypeColor(); // バッファクリア
-	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
-	{
-		myTextRenderer->NewText(123, _T("ルール設定"), 540 * WidthRate, 25, 2.0f, WidthRate, 0xffffffff);
-	}
-	ShowMessageBelow();
-	ShowPageCaption();
-	myTextRenderer->Render();
-	myButtonPic->Render();
 }
 
 void RuleConfigScene::saveRule() {

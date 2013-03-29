@@ -11,18 +11,13 @@ namespace mihajong_graphic {
 
 class PreferenceConfigScene : public ConfigMenuProto {
 private:
-	static const unsigned btnRegionStart = 50u;
+	const CodeConv::tstring Caption() {return _T("ä¬ã´ê›íË");}
 	static const unsigned buttons = 4u;
 	void itemText(unsigned prmID, const CodeConv::tstring& prmName, const CodeConv::tstring& prmContent);
 	void redrawItems();
-	signed short int menuCursor;
-	signed short int buttonCursor;
-	signed short int buttonDown;
 	//int rulestat[RULESIZE];
 	//char RuleConf[RULE_LINES][RULE_IN_LINE + 4];
-	ButtonPic* myButtonPic;
 	void saveRule();
-	void CreateButton(unsigned btnID, int X, int Y, unsigned Width, unsigned Height, const CodeConv::tstring& caption);
 	void ShowPageCaption();
 	void ShowMessageBelow();
 	void BtnEvent_OK_Down();
@@ -39,7 +34,6 @@ private:
 public:
 	PreferenceConfigScene(ScreenManipulator* const manipulator);
 	virtual ~PreferenceConfigScene();
-	void Render();
 	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 };
