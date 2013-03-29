@@ -19,9 +19,9 @@ libmihajong_graphic_la_SOURCES = \
 	widgets/button.cpp widgets/checkbox.cpp widgets/editbox.cpp \
 	widgets/logwnd.cpp \
 	calltext.h chrwidth.h directx.h event.h exports.h extchar.h finscore.h \
-	font.h gametbl.h geometry.h init.h input.h loadtex.h pi.h resource.h \
-	rule.h scrmanip.h showtile.h sprite.h text.h tiletip.h timer.h utils.h \
-	window.h yakustat.h \
+	font.h gametbl.h geometry.h graphic.h init.h input.h loadtex.h pi.h \
+	resource.h rule.h scrmanip.h showtile.h sprite.h text.h tiletip.h timer.h \
+	utils.h window.h yakustat.h \
 	scenes/fps.h scenes/game.h scenes/proto.h scenes/result.h \
 	scenes/ruleconf.h scenes/scenes.h scenes/splash.h scenes/scene_id.h \
 	scenes/sysscr.h scenes/table.h scenes/title.h \

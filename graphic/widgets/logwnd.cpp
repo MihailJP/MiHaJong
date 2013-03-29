@@ -114,11 +114,16 @@ void LogWindow::Render() {
 void LogWindow::reconstruct_lines() { // çsÇ…ï™äÑ
 	lines.clear();
 	unsigned startPos = 0, currentDigit = 0;
-	CodeConv::tstring tmplog(logwnd::getlog());
+	CodeConv::tstring tmplog;
+	{
+		const CodeConv::tstring tmplog1(logwnd::getlog());
+		for (auto k = tmplog1.begin(); k != tmplog1.end(); ++k)
+			if (*k != _T('\r'))
+				tmplog += *k;
+	}
 	for (unsigned i = 0; i < tmplog.size(); ++i) {
 		if (tmplog[i] == _T('\n')) {
-			lines.push_back(tmplog.substr(startPos, i - startPos -
-				(((i > 0) && (tmplog[i - 1] == _T('\r'))) ? 1 : 0)));
+			lines.push_back(tmplog.substr(startPos, i - startPos));
 			startPos = i + 1; currentDigit = 0;
 		} else {
 			currentDigit += (isFullWidth(tmplog[i]) ? 2 : 1);

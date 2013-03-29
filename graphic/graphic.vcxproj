@@ -194,6 +194,7 @@
     <ClCompile Include="yakustat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="graphic.h" />
     <ClInclude Include="scenes\table\tiletip.h" />
     <ClInclude Include="widgets\button.h" />
     <ClInclude Include="calltext.h" />

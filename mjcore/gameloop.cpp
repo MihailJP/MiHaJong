@@ -123,6 +123,12 @@ void startgame(GameTypeID gameType) {
 		unsigned ClientNumber = 0u;
 		start:
 		switch (titlescreen()) { // ƒ^ƒCƒgƒ‹‰æ–Ê
+		case 1:
+			EnvTable::Instantiate()->PlayerDat[0].PlayerName = _T("[A]FOOBAR");
+			EnvTable::Instantiate()->PlayerDat[1].PlayerName = _T("[b]COM1");
+			EnvTable::Instantiate()->PlayerDat[2].PlayerName = _T("[c]COM2");
+			EnvTable::Instantiate()->PlayerDat[3].PlayerName = _T("[d]COM3");
+			break;
 		case 4:
 			mihajong_graphic::Transit(mihajong_graphic::sceneConfig);
 			mihajong_graphic::ui::WaitUI();
