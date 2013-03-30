@@ -33,6 +33,12 @@ public:
 	__declspec(dllexport) static void exportPref(char** ruleTxt);
 	__declspec(dllexport) static int loadPreferenceFile(const char* const filename);
 	__declspec(dllexport) static int savePreferenceFile(const char* const filename);
+	__declspec(dllexport) static void getPreferenceName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID);
+	__declspec(dllexport) static void getPreferenceDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID);
+	__declspec(dllexport) static void getPreferenceTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index);
+	static int getPreference(std::string RuleTag);
+	static int getPreference(uint16_t RuleID);
+	__declspec(dllexport) static int getPreferenceSize(uint16_t RuleID);
 };
 
 __declspec(dllexport) int getRule(int RuleID);

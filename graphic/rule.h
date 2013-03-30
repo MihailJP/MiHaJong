@@ -20,11 +20,11 @@ typedef int (*ConfSave)(const char* const /*filename*/);
 typedef BOOL (*CheckRule)(const char* /*RuleTag*/, const char* /*Expectation*/);
 
 #ifdef GRAPHIC_EXPORTS
-extern RetrieveTxt getRuleName;
-extern RetrieveTxt getRuleDescription;
-extern RetrieveTxtIndex getRuleTxt;
-extern RetrieveInt getRule;
-extern RetrieveInt getRuleSize;
+extern RetrieveTxt getRuleName, getPreferenceName;
+extern RetrieveTxt getRuleDescription, getPreferenceDescription;
+extern RetrieveTxtIndex getRuleTxt, getPreferenceTxt;
+extern RetrieveInt getRule, getPreference;
+extern RetrieveInt getRuleSize, getPreferenceSize;
 extern CheckDep reqFailed;
 extern RetrieveCaption getPageCaption;
 extern RuleWrite storeRule, storePref;
@@ -40,7 +40,9 @@ EXPORT void setfunc(
 	RetrieveInt fpGetRule, RetrieveInt fpGetRuleSize, CheckDep fpReqFailed,
 	RetrieveCaption fpGetPageCaption, RuleWrite fpStoreRule, RuleRead fpExportRule,
 	ConfSave fpSaveConfigFile, CheckRule fpChkRule, const char* pDigit,
-	RuleWrite fpStorePref, RuleRead fpExportPref, ConfSave fpSavePreferenceFile);
+	RuleWrite fpStorePref, RuleRead fpExportPref, ConfSave fpSavePreferenceFile,
+	RetrieveTxt fpGetPreferenceName, RetrieveTxt fpGetPreferenceDesc, RetrieveTxtIndex fpGetPreferenceTxt,
+	RetrieveInt fpGetPreference, RetrieveInt fpGetPreferenceSize);
 
 EXPORT void setconffile(const char* filename, const char* filename2);
 

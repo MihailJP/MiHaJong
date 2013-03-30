@@ -177,16 +177,31 @@ int RuleData::getRule(std::string RuleTag) {
 int RuleData::getRule(uint16_t RuleID) { // ルール設定を取得する(旧仕様)
 	return ruleTableData.getRule(RuleID);
 }
+int RuleData::getPreference(std::string RuleTag) {
+	return preferenceTableData.getRule(RuleTag);
+}
+int RuleData::getPreference(uint16_t RuleID) { // 環境設定を取得する(旧仕様)
+	return preferenceTableData.getRule(RuleID);
+}
 __declspec(dllexport) int RuleData::getRuleSize(uint16_t RuleID) { // ルール項目のアイテム数
 	return ruleTableData.getRuleSize(RuleID);
+}
+__declspec(dllexport) int RuleData::getPreferenceSize(uint16_t RuleID) { // 環境項目のアイテム数
+	return preferenceTableData.getRuleSize(RuleID);
 }
 
 __declspec(dllexport) void RuleData::getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	ruleTableData.getRuleName(txt, bufsize, RuleID);
 }
+__declspec(dllexport) void RuleData::getPreferenceName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
+	preferenceTableData.getRuleName(txt, bufsize, RuleID);
+}
 
 __declspec(dllexport) void RuleData::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	ruleTableData.getRuleDescription(txt, bufsize, RuleID);
+}
+__declspec(dllexport) void RuleData::getPreferenceDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
+	preferenceTableData.getRuleDescription(txt, bufsize, RuleID);
 }
 
 std::string RuleData::getRuleItemTag(uint16_t RuleID, int index) {
@@ -198,6 +213,9 @@ std::string RuleData::getRuleItemTag(std::string RuleTag, int index) {
 
 __declspec(dllexport) void RuleData::getRuleTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index) {
 	ruleTableData.getRuleTxt(txt, bufsize, RuleID, index);
+}
+__declspec(dllexport) void RuleData::getPreferenceTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index) {
+	preferenceTableData.getRuleTxt(txt, bufsize, RuleID, index);
 }
 
 __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {

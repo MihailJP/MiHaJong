@@ -3,11 +3,11 @@
 namespace mihajong_graphic {
 namespace rules {
 
-RetrieveTxt getRuleName = nullptr;
-RetrieveTxt getRuleDescription = nullptr;
-RetrieveTxtIndex getRuleTxt = nullptr;
-RetrieveInt getRule = nullptr;
-RetrieveInt getRuleSize = nullptr;
+RetrieveTxt getRuleName = nullptr, getPreferenceName = nullptr;
+RetrieveTxt getRuleDescription = nullptr, getPreferenceDescription = nullptr;
+RetrieveTxtIndex getRuleTxt = nullptr, getPreferenceTxt = nullptr;
+RetrieveInt getRule = nullptr, getPreference = nullptr;
+RetrieveInt getRuleSize = nullptr, getPreferenceSize = nullptr;
 CheckDep reqFailed = nullptr;
 RetrieveCaption getPageCaption = nullptr;
 RuleWrite storeRule = nullptr, storePref = nullptr;
@@ -22,7 +22,9 @@ EXPORT void setfunc(
 	RetrieveInt fpGetRule, RetrieveInt fpGetRuleSize, CheckDep fpReqFailed,
 	RetrieveCaption fpGetPageCaption, RuleWrite fpStoreRule, RuleRead fpExportRule,
 	ConfSave fpSaveConfigFile, CheckRule fpChkRule, const char* pDigit,
-	RuleWrite fpStorePref, RuleRead fpExportPref, ConfSave fpSavePreferenceFile)
+	RuleWrite fpStorePref, RuleRead fpExportPref, ConfSave fpSavePreferenceFile,
+	RetrieveTxt fpGetPreferenceName, RetrieveTxt fpGetPreferenceDesc, RetrieveTxtIndex fpGetPreferenceTxt,
+	RetrieveInt fpGetPreference, RetrieveInt fpGetPreferenceSize)
 {
 	getRuleName = fpGetRuleName;
 	getRuleDescription = fpGetRuleDesc;
@@ -40,6 +42,11 @@ EXPORT void setfunc(
 	storePref = fpStorePref;
 	exportPref = fpExportPref;
 	savePreferenceFile = fpSavePreferenceFile;
+	getPreferenceName = fpGetPreferenceName;
+	getPreferenceDescription = fpGetPreferenceDesc;
+	getPreferenceTxt = fpGetPreferenceTxt;
+	getPreference = fpGetPreference;
+	getPreferenceSize = fpGetPreferenceSize;
 }
 
 EXPORT void setconffile(const char* filename, const char* filename2) {
