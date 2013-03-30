@@ -21,6 +21,7 @@ private:
 	char PrefConf[PREFERENCE_LINES][RULE_IN_LINE + 4];
 	void ShowPageCaption();
 	void ShowMessageBelow();
+	void savePreference();
 	void BtnEvent_OK_Up();
 	void BtnEvent_Content_Roll_Up();
 	void BtnEvent_Content_Roll_Down();

@@ -52,6 +52,22 @@ void PreferenceConfigScene::ShowPageCaption() {
 void PreferenceConfigScene::ShowMessageBelow() {
 }
 
+void PreferenceConfigScene::savePreference() {
+	std::memset(&PrefConf[0][0], 0, sizeof(PrefConf));
+	for (unsigned i = 0; i < PREFERENCE_ITEMS; i++) {
+		TCHAR preftxt[128]; rules::getPreferenceTxt(preftxt, 128, i, 0);
+		if ((CodeConv::tstring(preftxt) == _T("")) || (CodeConv::tstring(preftxt) == _T("‚m^‚`")))
+			PrefConf[i / RULE_IN_LINE][i % RULE_IN_LINE] = '-';
+		else
+			PrefConf[i / RULE_IN_LINE][i % RULE_IN_LINE] = rules::digit[prefstat[i]];
+	}
+	const char* prefLine[PREFERENCE_LINES];
+	for (unsigned i = 0; i < PREFERENCE_LINES; i++) prefLine[i] = PrefConf[i];
+	rules::storePref(prefLine);
+	rules::savePreferenceFile(rules::preffile.c_str());
+	return;
+}
+
 void PreferenceConfigScene::BtnEvent_OK_Up() {
 	if ((buttonCursor != -1) && (buttonDown == buttonCursor)) {
 		switch (buttonCursor) {
@@ -59,7 +75,7 @@ void PreferenceConfigScene::BtnEvent_OK_Up() {
 			ui::UIEvent->set(1);
 			break;
 		case 0:
-			// TODO: Ý’è‚ð•Û‘¶
+			savePreference();
 			ui::UIEvent->set(0);
 			break;
 		}
