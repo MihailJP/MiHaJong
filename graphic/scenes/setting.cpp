@@ -1,4 +1,5 @@
 #include "setting.h"
+#include "../event.h"
 
 namespace mihajong_graphic {
 
@@ -18,9 +19,26 @@ void PreferenceConfigScene::ShowPageCaption() {
 void PreferenceConfigScene::ShowMessageBelow() {
 }
 
-void PreferenceConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+void PreferenceConfigScene::BtnEvent_OK_Up() {
+	if ((buttonCursor != -1) && (buttonDown == buttonCursor)) {
+		switch (buttonCursor) {
+		case 1:
+			ui::UIEvent->set(1);
+			break;
+		case 0:
+			// TODO: Ý’è‚ð•Û‘¶
+			ui::UIEvent->set(0);
+			break;
+		}
+		buttonDown = -1;
+		for (unsigned i = 0; i < numberOfButtons(); i++)
+			myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
+	}
 }
-void PreferenceConfigScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+
+void PreferenceConfigScene::BtnEvent_Content_Roll_Up() {
+}
+void PreferenceConfigScene::BtnEvent_Content_Roll_Down() {
 }
 
 }

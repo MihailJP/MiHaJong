@@ -169,14 +169,6 @@ void RuleConfigScene::saveRule() {
 	return;
 }
 
-void RuleConfigScene::BtnEvent_OK_Down() {
-	if (buttonCursor != -1) {
-		sound::Play(sound::IDs::sndButton);
-		buttonDown = buttonCursor;
-		myButtonPic->setButton(buttonCursor, ButtonPic::sunken);
-		redrawItems();
-	}
-}
 void RuleConfigScene::BtnEvent_OK_Up() {
 	if ((buttonCursor != -1) && (buttonDown == buttonCursor)) {
 		switch (buttonCursor) {
@@ -195,20 +187,9 @@ void RuleConfigScene::BtnEvent_OK_Up() {
 			break;
 		}
 		buttonDown = -1;
-		for (unsigned i = 0; i < buttons; i++)
+		for (unsigned i = 0; i < numberOfButtons(); i++)
 			myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
 	}
-}
-void RuleConfigScene::BtnEvent_Cancel_Down() {
-	sound::Play(sound::IDs::sndCursor);
-	if (buttonCursor == -1) {
-		buttonCursor = 0;
-	} else {
-		buttonCursor = -1;
-	}
-	for (unsigned i = 0; i < buttons; i++)
-		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
-		myTimer.skipTo(0); redrawItems();
 }
 
 void RuleConfigScene::BtnEvent_Content_Roll_Up() {
@@ -228,157 +209,6 @@ void RuleConfigScene::BtnEvent_Content_Roll_Down() {
 		if (CodeConv::tstring(menuitem) != CodeConv::tstring(_T(">>>"))) break;
 	}
 	redrawItems();
-}
-
-void RuleConfigScene::BtnEvent_Content_Item_Prev(unsigned short val) {
-	sound::Play(sound::IDs::sndCursor);
-	if ((menuCursor -= val) < 0) menuCursor = 0;
-	myTimer.skipTo(0); redrawItems();
-}
-void RuleConfigScene::BtnEvent_Content_Item_Next(unsigned short val) {
-	sound::Play(sound::IDs::sndCursor);
-	if ((menuCursor += val) >= RULESIZE) menuCursor = RULESIZE - 1;
-	myTimer.skipTo(0); redrawItems();
-}
-void RuleConfigScene::BtnEvent_Content_Page_Prev() {
-	sound::Play(sound::IDs::sndClick);
-	if ((menuCursor -= RULES_IN_PAGE) < 0) menuCursor += RULES_IN_PAGE;
-	myTimer.skipTo(0); redrawItems();
-}
-void RuleConfigScene::BtnEvent_Content_Page_Next() {
-	sound::Play(sound::IDs::sndClick);
-	if ((menuCursor += RULES_IN_PAGE) >= RULESIZE) menuCursor -= RULES_IN_PAGE;
-	myTimer.skipTo(0); redrawItems();
-}
-
-void RuleConfigScene::BtnEvent_Button_Prev() {
-	sound::Play(sound::IDs::sndCursor);
-	if ((--buttonCursor) < 0) buttonCursor = buttons - 1;
-	for (unsigned i = 0; i < buttons; i++)
-		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
-	myTimer.skipTo(0); redrawItems();
-}
-void RuleConfigScene::BtnEvent_Button_Next() {
-	sound::Play(sound::IDs::sndCursor);
-	if ((++buttonCursor) >= buttons) buttonCursor = 0;
-	for (unsigned i = 0; i < buttons; i++)
-		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
-	myTimer.skipTo(0); redrawItems();
-}
-
-void RuleConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
-	switch (od->dwOfs) {
-	case DIK_UP: case DIK_K: // 前の項目
-		if ((od->dwData) && (buttonCursor == -1))
-			BtnEvent_Content_Item_Prev(1);
-		break;
-	case DIK_DOWN: case DIK_J: // 次の項目
-		if ((od->dwData) && (buttonCursor == -1))
-			BtnEvent_Content_Item_Next(1);
-		break;
-	case DIK_LEFT: case DIK_H: // 前の選択肢
-		if (od->dwData) {
-			if (buttonCursor == -1)
-				BtnEvent_Content_Roll_Down();
-			else
-				BtnEvent_Button_Next();
-		}
-		break;
-	case DIK_RIGHT: case DIK_L: // 次の選択肢
-		if (od->dwData) {
-			if (buttonCursor == -1)
-				BtnEvent_Content_Roll_Up();
-			else
-				BtnEvent_Button_Prev();
-		}
-		break;
-	case DIK_HOME: // 前のカラム
-		if ((od->dwData) && (buttonCursor == -1))
-			BtnEvent_Content_Item_Prev(20);
-		break;
-	case DIK_END: // 次のカラム
-		if ((od->dwData) && (buttonCursor == -1))
-			BtnEvent_Content_Item_Next(20);
-		break;
-	case DIK_PRIOR: // 前のページ
-		if ((od->dwData) && (buttonCursor == -1))
-			BtnEvent_Content_Item_Prev(RULES_IN_PAGE);
-		break;
-	case DIK_NEXT: // 次のページ
-		if ((od->dwData) && (buttonCursor == -1))
-			BtnEvent_Content_Item_Next(RULES_IN_PAGE);
-		break;
-	case DIK_ESCAPE: case DIK_X: // キャンセルキー
-		if (od->dwData) BtnEvent_Cancel_Down();
-		break;
-	case DIK_RETURN: case DIK_SPACE: case DIK_Z: // 決定キー
-		if (od->dwData) BtnEvent_OK_Down();
-		else BtnEvent_OK_Up();
-		break;
-	}
-}
-
-void RuleConfigScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
-	const int scaledX = (int)((float)X / Geometry::WindowScale() / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight));
-	const int scaledY = (int)((float)Y / Geometry::WindowScale());
-	const int region = whichRegion(scaledX, scaledY);
-#if 0
-	{
-		CodeConv::tostringstream o;
-		o << _T("(") << scaledX << _T(", ") << scaledY << _T(") ");
-		if (region != -1) o << _T("Region ") << region;
-		else o << _T("No Region");
-		myTextRenderer->NewText(144, o.str(), 0, 1000);
-	}
-#endif
-	auto setcursor = [&]() -> void {
-		if ((region >= 0) && (region <= (RULES_IN_PAGE - 1))) {
-			if ((region != menuCursor % RULES_IN_PAGE) || (buttonCursor != -1)) {
-				sound::Play(sound::IDs::sndCursor);
-				menuCursor = menuCursor / RULES_IN_PAGE * RULES_IN_PAGE + region;
-				buttonCursor = -1;
-				for (unsigned i = 0; i < buttons; i++) myButtonPic->setButton(i, ButtonPic::clear);
-				myTimer.skipTo(0); redrawItems();
-			}
-		}
-		else if ((region >= btnRegionStart) && (region <= (btnRegionStart + buttons - 1))) {
-			if (region != (buttonCursor + btnRegionStart)) {
-				sound::Play(sound::IDs::sndCursor);
-				buttonCursor = region - btnRegionStart;
-				for (unsigned i = 0; i < buttons; i++)
-					myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
-				myTimer.skipTo(0); redrawItems();
-			}
-		}
-	};
-	switch (od->dwOfs) {
-	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
-		setcursor();
-		break;
-	case DIMOFS_Z: // ホイールの操作
-		if ((region >= 0) && (region <= (RULES_IN_PAGE - 1))) {
-			setcursor();
-			if ((LONG)od->dwData > 0) BtnEvent_Content_Roll_Up();
-			else if ((LONG)od->dwData < 0) BtnEvent_Content_Roll_Down();
-		} else if (region == 40) {
-			if ((LONG)od->dwData > 0)
-				BtnEvent_Content_Page_Next();
-			else if ((LONG)od->dwData < 0)
-				BtnEvent_Content_Page_Prev();
-		}
-		break;
-	case DIMOFS_BUTTON0: // 左クリック
-		if ((od->dwData) && (region >= 0) && (region <= (RULES_IN_PAGE - 1))) {
-			setcursor();
-			BtnEvent_Content_Roll_Up();
-		}
-		else if ((region >= btnRegionStart) && (region < (btnRegionStart + buttons))) {
-			setcursor();
-			if (od->dwData) BtnEvent_OK_Down();
-			else BtnEvent_OK_Up();
-		}
-		break;
-	}
 }
 
 }
