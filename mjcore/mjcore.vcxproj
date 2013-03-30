@@ -202,6 +202,8 @@
     <ClCompile Include="chat.cpp" />
     <ClCompile Include="data\confitem_csv.cpp" />
     <ClCompile Include="data\confitem_ini.cpp" />
+    <ClCompile Include="data\prefitem_csv.cpp" />
+    <ClCompile Include="data\prefitem_ini.cpp" />
     <ClCompile Include="data\rankval_csv.cpp" />
     <ClCompile Include="decomp.cpp" />
     <ClCompile Include="discard.cpp" />
@@ -266,6 +268,8 @@
     <ClInclude Include="chat.h" />
     <ClInclude Include="data\confitem_csv.h" />
     <ClInclude Include="data\confitem_ini.h" />
+    <ClInclude Include="data\prefitem_csv.h" />
+    <ClInclude Include="data\prefitem_ini.h" />
     <ClInclude Include="data\rankval_csv.h" />
     <ClInclude Include="decomp.h" />
     <ClInclude Include="discard.h" />
