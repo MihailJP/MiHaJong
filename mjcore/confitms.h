@@ -97,7 +97,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 		nametbl[numerusPartisRegulae] = nomenPartisRegulae; // ‡•ûŒü
 		inverse_nametbl[nomenPartisRegulae] = numerusPartisRegulae; // ‹t•ûŒü
 
-		if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) { // GameType‡’v‚µ‚½ê‡
+		if (((*k)[1].empty()) || (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str())))) { // GameType‡’v‚µ‚½ê‡
 			if ((_ttoi((*k)[0].c_str()) % PageBatch) == 0)
 				pageCaption[_ttoi((*k)[0].c_str()) / PageBatch] = tstring((*k)[4]);
 			ruletags[nomenPartisRegulae].clear(); inverse_ruletags[nomenPartisRegulae].clear();
@@ -111,7 +111,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 				}
 			}
 		}
-		else if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str()))) { // N/Aw’è‚ª‚ ‚Á‚½ê‡
+		else if ((!(*k)[1].empty()) && (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str())))) { // N/Aw’è‚ª‚ ‚Á‚½ê‡
 			nonapplicable.insert(nomenPartisRegulae); // ƒŠƒXƒg‚É’Ç‰Á
 		}
 

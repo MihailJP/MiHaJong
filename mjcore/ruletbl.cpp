@@ -50,6 +50,31 @@ void RuleConfigData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
 
 // -------------------------------------------------------------------------
 
+template class ConfigData<PREFERENCE_ITEMS, RULES_IN_PAGE, RULE_IN_LINE>;
+class PreferenceData : public ConfigData<PREFERENCE_ITEMS, RULES_IN_PAGE, RULE_IN_LINE> {
+	friend class ReqChecker;
+private:
+	void configinit_csv();
+	void configinit_ini();
+};
+namespace {
+	PreferenceData preferenceTableData;
+}
+
+void PreferenceData::configinit_csv() { // コンフィグ用CSVを読み込む
+	Compressed::file_prefitem_csv* csvfile = new Compressed::file_prefitem_csv();
+	ConfigData::configinit_csv(csvfile);
+	delete csvfile;
+}
+
+void PreferenceData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
+	Compressed::file_prefitem_ini* inifile = new Compressed::file_prefitem_ini();
+	ConfigData::configinit_ini(inifile);
+	delete inifile;
+}
+
+// -------------------------------------------------------------------------
+
 class ReqChecker {
 private:
 	lua_State* myState;
@@ -117,14 +142,21 @@ bool RuleConfigData::reqFailed(uint16_t ruleID, const int* const ruleStat) {
 
 __declspec(dllexport) void RuleData::configinit() { // コンフィグ用CSVを読み込む
 	ruleTableData.configinit();
+	preferenceTableData.configinit();
 }
 
 __declspec(dllexport) void RuleData::storeRule(const char** ruleTxt) { // UI→Core ルール設定転送
 	ruleTableData.storeRule(ruleTxt);
 }
-
 __declspec(dllexport) void RuleData::exportRule(char** ruleTxt) { // Core→UI ルール設定転送
 	ruleTableData.exportRule(ruleTxt);
+}
+
+__declspec(dllexport) void RuleData::storePref(const char** ruleTxt) { // UI→Core 環境設定転送
+	preferenceTableData.storeRule(ruleTxt);
+}
+__declspec(dllexport) void RuleData::exportPref(char** ruleTxt) { // Core→UI 環境設定転送
+	preferenceTableData.exportRule(ruleTxt);
 }
 
 std::string RuleData::chkRule(std::string RuleTag) { // ルール設定タグを取得する
@@ -171,11 +203,17 @@ __declspec(dllexport) void RuleData::getRuleTxt(LPTSTR const txt, unsigned bufsi
 __declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
 	return ruleTableData.loadConfigFile(filename);
 }
-
-
 __declspec(dllexport) int RuleData::saveConfigFile(const char* const filename) {
 	return ruleTableData.saveConfigFile(filename);
 }
+
+__declspec(dllexport) int RuleData::loadPreferenceFile(const char* const filename) {
+	return preferenceTableData.loadConfigFile(filename);
+}
+__declspec(dllexport) int RuleData::savePreferenceFile(const char* const filename) {
+	return preferenceTableData.saveConfigFile(filename);
+}
+
 std::string RuleData::getRuleMaskExpr(const std::string& RuleTag) {
 	return ruleTableData.getRuleMaskExpr(RuleTag);
 }

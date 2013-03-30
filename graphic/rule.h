@@ -27,21 +27,22 @@ extern RetrieveInt getRule;
 extern RetrieveInt getRuleSize;
 extern CheckDep reqFailed;
 extern RetrieveCaption getPageCaption;
-extern RuleWrite storeRule;
-extern RuleRead exportRule;
-extern ConfSave saveConfigFile;
+extern RuleWrite storeRule, storePref;
+extern RuleRead exportRule, exportPref;
+extern ConfSave saveConfigFile, savePreferenceFile;
 extern CheckRule chkRule;
 extern const char* digit;
-extern std::string conffile;
+extern std::string conffile, preffile;
 #endif
 
 EXPORT void setfunc(
 	RetrieveTxt fpGetRuleName, RetrieveTxt fpGetRuleDesc, RetrieveTxtIndex fpGetRuleTxt,
 	RetrieveInt fpGetRule, RetrieveInt fpGetRuleSize, CheckDep fpReqFailed,
 	RetrieveCaption fpGetPageCaption, RuleWrite fpStoreRule, RuleRead fpExportRule,
-	ConfSave fpSaveConfigFile, CheckRule fpChkRule, const char* pDigit);
+	ConfSave fpSaveConfigFile, CheckRule fpChkRule, const char* pDigit,
+	RuleWrite fpStorePref, RuleRead fpExportPref, ConfSave fpSavePreferenceFile);
 
-EXPORT void setconffile(const char* filename);
+EXPORT void setconffile(const char* filename, const char* filename2);
 
 }
 }

@@ -28,6 +28,11 @@ public:
 	__declspec(dllexport) static void getPageCaption(LPTSTR const caption, unsigned bufsize, uint8_t page);
 	static const char* ruleDigit();
 	static void forEachRule(std::function<void (std::string, std::string)> f);
+public:
+	__declspec(dllexport) static void storePref(const char** ruleTxt);
+	__declspec(dllexport) static void exportPref(char** ruleTxt);
+	__declspec(dllexport) static int loadPreferenceFile(const char* const filename);
+	__declspec(dllexport) static int savePreferenceFile(const char* const filename);
 };
 
 __declspec(dllexport) int getRule(int RuleID);
