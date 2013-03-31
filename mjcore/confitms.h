@@ -190,7 +190,8 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::getRuleSize(uint16_t RuleID) { // ルール項目
 CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
-		if ((chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) ||
+		if (((*k)[1].empty()) || ((*k)[2].empty()) ||
+			(chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) ||
 			(chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str())))) {
 				_tcscpy_s(txt, bufsize, ((*k)[9]).c_str());
 				return;
@@ -201,7 +202,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleName(LPTSTR const txt, unsigned bufs
 CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
-		if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) {
+		if (((*k)[1].empty()) || (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str())))) {
 			_tcscpy_s(txt, bufsize, ((*k)[10]).c_str()); return;
 		}
 		else if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str()))) {
