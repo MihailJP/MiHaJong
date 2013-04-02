@@ -35,6 +35,7 @@ protected:
 	virtual void redrawItems() = 0;
 	virtual void ShowPageCaption() = 0;
 	virtual void ShowMessageBelow() = 0;
+	virtual CodeConv::tstring verInfoText();
 public:
 	ConfigMenuProto(ScreenManipulator* const manipulator);
 	virtual ~ConfigMenuProto() = 0;

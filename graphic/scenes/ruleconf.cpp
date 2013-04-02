@@ -4,7 +4,6 @@
 #include "../geometry.h"
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
-#include "../../common/version.h"
 #include "../event.h"
 #include <iomanip>
 
@@ -92,17 +91,8 @@ void RuleConfigScene::ShowMessageBelow() {
 		case 0:
 			TCHAR menuitem[128]; rules::getRuleDescription(menuitem, 128, menuCursor);
 			caption = CodeConv::tstring(menuitem);
-			if (caption.empty()) {
-				CodeConv::tostringstream o; SYSTEMTIME Zeit; GetLocalTime(&Zeit);
-				o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / 現在日時 ") <<
-					std::setw(4) << Zeit.wYear << _T("年") <<
-					std::setw(2) << Zeit.wMonth << _T("月") <<
-					std::setw(2) << Zeit.wDay << _T("日 ") <<
-					((Zeit.wHour / 12 == 0) ? _T("午前") : _T("午後")) <<
-					std::setw(2) << (Zeit.wHour % 12) << _T("時") <<
-					std::setw(2) << std::setfill(_T('0')) << Zeit.wMinute << _T("分");
-				caption = o.str();
-			}
+			if (caption.empty())
+				caption = verInfoText();
 			break;
 		case 1:
 			caption = CodeConv::tstring(_T("キーボード操作  ↑/↓:カーソル移動  ←/→:選択中の項目を変更  Esc/X:ボタン選択へ"));

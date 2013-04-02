@@ -1,8 +1,6 @@
 #pragma once
 
 #include "confmenu.h"
-//#include "../text.h"
-//#include "../../common/strcode.h"
 #include <array>
 #include "../rule.h"
 #include "../../common/nmrules.h"

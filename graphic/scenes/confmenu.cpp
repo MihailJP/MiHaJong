@@ -1,7 +1,9 @@
 #include "confmenu.h"
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
+#include "../../common/version.h"
 #include "../event.h"
+#include <iomanip>
 
 namespace mihajong_graphic {
 
@@ -58,7 +60,7 @@ void ConfigMenuProto::BtnEvent_Cancel_Down() {
 	}
 	for (unsigned i = 0; i < numberOfButtons(); i++)
 		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
-		myTimer.skipTo(0); redrawItems();
+	myTimer.skipTo(0); redrawItems();
 }
 
 void ConfigMenuProto::BtnEvent_Content_Item_Prev(unsigned short val) {
@@ -211,4 +213,17 @@ void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		break;
 	}
 }
+
+CodeConv::tstring ConfigMenuProto::verInfoText() {
+	CodeConv::tostringstream o; SYSTEMTIME Zeit; GetLocalTime(&Zeit);
+	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / Œ»Ý“úŽž ") <<
+		std::setw(4) << Zeit.wYear << _T("”N") <<
+		std::setw(2) << Zeit.wMonth << _T("ŒŽ") <<
+		std::setw(2) << Zeit.wDay << _T("“ú ") <<
+		((Zeit.wHour / 12 == 0) ? _T("Œß‘O") : _T("ŒßŒã")) <<
+		std::setw(2) << (Zeit.wHour % 12) << _T("Žž") <<
+		std::setw(2) << std::setfill(_T('0')) << Zeit.wMinute << _T("•ª");
+	return o.str();
+}
+
 }

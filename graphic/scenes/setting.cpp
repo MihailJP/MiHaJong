@@ -3,6 +3,7 @@
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
 #include "../extchar.h"
+#include <iomanip>
 
 namespace mihajong_graphic {
 
@@ -69,6 +70,70 @@ void PreferenceConfigScene::redrawItems() {
 void PreferenceConfigScene::ShowPageCaption() {
 }
 void PreferenceConfigScene::ShowMessageBelow() {
+	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
+	TimerMicrosec t = myTimer.elapsed();
+	CodeConv::tstring caption = _T("");
+	if (getActiveTextbox() != -1) {
+		switch ((t / 5000000u) % 2) {
+		case 0:
+			caption = CodeConv::tstring(_T("文字入力中  Esc/Tab/Enter:戻る"));
+			break;
+		case 1:
+			caption = verInfoText();
+			break;
+		}
+	} else if (buttonCursor == -1) {
+		switch ((t / 5000000u) % 5) {
+		case 0:
+			TCHAR menuitem[128]; rules::getPreferenceDescription(menuitem, 128, menuCursor);
+			caption = CodeConv::tstring(menuitem);
+			if (caption.empty())
+				caption = verInfoText();
+			break;
+		case 1:
+			caption = CodeConv::tstring(_T("キーボード操作  ↑/↓:カーソル移動  ←/→:選択中の項目を変更  Esc/X:ボタン選択へ"));
+			break;
+		case 2:
+			caption = CodeConv::tstring(_T("キーボード操作  Home/End:左右カラム間の移動  PageUp/PageDown:ページ間の移動"));
+			break;
+		case 3:
+			caption = CodeConv::tstring(_T("キーボード操作  Tab/Enter/Space/Z：文字入力モード"));
+			break;
+		case 4:
+			caption = CodeConv::tstring(_T("マウス操作  項目上で左クリック/ホイール回転:選択中の項目を変更/文字入力モード"));
+			break;
+		}
+	} else {
+		switch ((t / 5000000u) % 3) {
+		case 0:
+			switch (buttonCursor) {
+			case 0:
+				caption = _T("設定を保存し、タイトル画面に戻ります");
+				break;
+			case 1:
+				caption = _T("設定を破棄し、タイトル画面に戻ります");
+				break;
+			case 2:
+				caption = _T("次のページに移動します");
+				break;
+			case 3:
+				caption = _T("前のページに移動します");
+				break;
+			}
+			break;
+		case 1:
+			caption = CodeConv::tstring(_T("キーボード操作  ←/→:カーソル移動  Enter/Space/Z:決定  Esc/X:ルール設定に戻る"));
+			break;
+		case 2:
+			caption = CodeConv::tstring(_T("通信対戦時のルール設定はホスト側の設定が適用されます"));
+			break;
+		}
+	}
+	unsigned captionCols = strwidth(caption); // 桁数(日本語は2桁)
+	myTextRenderer->NewText(120, caption,
+		(720 - 9 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 955, 1.0f,
+		(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate,
+		((t % 5000000u) < 500000u) ? (55u + ((t % 5000000u) / 2500u)) << 24 | 0x00ffffff : 0xffffffff);
 }
 
 void PreferenceConfigScene::Render() {
@@ -167,10 +232,12 @@ void PreferenceConfigScene::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 		((wParam == CHARDAT_CURSOR_ENTER) || (wParam == 'z') || (wParam == 'Z') || (wParam == ' ') || (wParam == '\t'))) {
 			sound::Play(sound::IDs::sndClick);
 			setActiveTextbox(menuCursor);
+			myTimer.skipTo(0);
 	} else if ((activeTxtBox >= 0) && editBoxes[activeTxtBox]) {
 		if ((wParam == CHARDAT_CURSOR_ENTER) || (wParam == CHARDAT_CURSOR_ESCAPE) || (wParam == '\t')) {
 			sound::Play(sound::IDs::sndClick);
 			editBoxes[activeTxtBox]->deactivate();
+			myTimer.skipTo(0);
 		} else {
 			editBoxes[activeTxtBox]->KeyboardInput(wParam, lParam);
 		}
