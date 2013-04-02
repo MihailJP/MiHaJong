@@ -48,6 +48,7 @@ public:
 	void activate() {isActive = true;}
 	void deactivate() {isActive = false;}
 	bool is_Active() {return isActive;}
+	void setText(const CodeConv::tstring& newstr);
 };
 
 class EditBox::IMStat { // IME‚Ìó‘Ô

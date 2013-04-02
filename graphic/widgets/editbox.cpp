@@ -311,6 +311,12 @@ void EditBox::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 	}
 }
 
+void EditBox::setText(const CodeConv::tstring& newstr) {
+	myText = newstr;
+	cursorPos = myText.length();
+	scrollPos = 0;
+}
+
 // -------------------------------------------------------------------------
 
 EditBox::IMStat::IMStat(HWND hWnd) {

@@ -45,9 +45,12 @@ void PreferenceConfigScene::itemText(unsigned prmID, const CodeConv::tstring& pr
 	regions[prmID].Left = (prmID / 20 * 720 + 50); regions[prmID].Top = 135 + (prmID % 20) * 40;
 	regions[prmID].Right = (prmID / 20 * 720 + 670); regions[prmID].Bottom = regions[prmID].Top + 35;
 	if (rules::getPreferenceInputSize(ItemNum)) { // エディットボックス
-		if (editBoxes[prmID] == nullptr)
+		if (editBoxes[prmID] == nullptr) {
 			editBoxes[prmID] = new EditBox(caller->getHWnd(), caller->getDevice(),
-			(xPos + 162 + 4) * WidthRate, yPos + 6, 32, 1.5f);
+				(xPos + 162 + 4) * WidthRate, yPos + 6, 32, 1.5f);
+			const CodeConv::tstring txt(CodeConv::EnsureTStr(rules::getPreferenceRawStr(prmID)));
+			editBoxes[prmID]->setText(txt);
+		}
 	} else {
 		if (editBoxes[prmID] != nullptr)
 			delete editBoxes[prmID];
