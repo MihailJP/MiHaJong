@@ -8,34 +8,49 @@ namespace mihajong_graphic {
 PreferenceConfigScene::PreferenceConfigScene(ScreenManipulator* const manipulator) : ConfigMenuProto(manipulator) {
 	for (unsigned short i = 0; i < PREFERENCE_ITEMS; i++)
 		prefstat[i] = rules::getPreference(i);
+	for (unsigned short i = 0; i < RULES_IN_PAGE; i++)
+		editBoxes[i] = nullptr;
 	CreateButton(0, 1240, 1000, 156, 48, _T("‚n ‚j"));
 	CreateButton(1, 1060, 1000, 156, 48, _T("CANCEL"));
 	redrawItems();
 }
 
 PreferenceConfigScene::~PreferenceConfigScene() {
+	for (unsigned short i = 0; i < RULES_IN_PAGE; i++)
+		if (editBoxes[i])
+			delete editBoxes[i];
 }
 
 void PreferenceConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName, const CodeConv::tstring& prmContent) {
 	// €–Ú‚ð•\Ž¦
 	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ƒAƒX”ä~0.75(‰¡•’²®—p)
+	const unsigned ItemNum = (menuCursor / RULES_IN_PAGE * RULES_IN_PAGE) + prmID;
 	unsigned itmNameCols = strwidth(prmName); // Œ…”(“ú–{Œê‚Í2Œ…)
-	D3DCOLOR baseColor = ((prmContent == _T("‚m^‚`")) || (prmContent.empty())) ? 0x00bfbfbf : 0x00ffffff;
+	D3DCOLOR baseColor = ((prmContent == _T("‚m^‚`")) || ((prmContent.empty()) && (rules::getPreferenceInputSize(ItemNum) == 0))) ? 0x00bfbfbf : 0x00ffffff;
 	D3DCOLOR menuColor = ((menuCursor % RULES_IN_PAGE == prmID) && (buttonCursor == -1)) ? 0xff000000 : 0x7f000000;
+	const int xPos = (prmID / 20 * 720 + 50), yPos = 135 + (prmID % 20) * 40;
 	myTextRenderer->NewText(prmID * 3, prmName,
-		(prmID / 20 * 720 + 50) * WidthRate, 135 + (prmID % 20) * 40, 1.0f,
+		xPos * WidthRate, yPos, 1.0f,
 		WidthRate * ((itmNameCols <= 8) ? 1.0f : 8.0f / (float)itmNameCols),
 		menuColor | baseColor);
 	myTextRenderer->NewText(prmID * 3 + 1, _T(":"),
-		(prmID / 20 * 720 + 50 + 144) * WidthRate, 135 + (prmID % 20) * 40, 1.0, WidthRate, menuColor | baseColor);
+		(xPos + 144) * WidthRate, yPos, 1.0, WidthRate, menuColor | baseColor);
 	myTextRenderer->NewText(prmID * 3 + 2, prmContent,
-		(prmID / 20 * 720 + 50 + 162) * WidthRate, 135 + (prmID % 20) * 40, 1.0, WidthRate, menuColor | baseColor);
+		(xPos + 162) * WidthRate, yPos, 1.0, WidthRate, menuColor | baseColor);
 	if (regions.size() <= prmID) {
 		Region nullRegion = {0, 0, -1, -1};
 		regions.resize(prmID + 1, Region(nullRegion));
 	}
-	regions[prmID].Left = (prmID / 20 * 720 + 50); regions[prmID].Top = 135 + (prmID % 20) * 40; 
-	regions[prmID].Right = (prmID / 20 * 720 + 670); regions[prmID].Bottom = regions[prmID].Top + 35; 
+	regions[prmID].Left = (prmID / 20 * 720 + 50); regions[prmID].Top = 135 + (prmID % 20) * 40;
+	regions[prmID].Right = (prmID / 20 * 720 + 670); regions[prmID].Bottom = regions[prmID].Top + 35;
+	if (rules::getPreferenceInputSize(ItemNum)) { // ƒGƒfƒBƒbƒgƒ{ƒbƒNƒX
+		if (editBoxes[prmID] == nullptr)
+			editBoxes[prmID] = new EditBox(caller->getHWnd(), caller->getDevice(),
+			(xPos + 162) * WidthRate, yPos, 20);
+	} else {
+		if (editBoxes[prmID] != nullptr)
+			delete editBoxes[prmID];
+	}
 }
 
 void PreferenceConfigScene::redrawItems() {
@@ -50,6 +65,12 @@ void PreferenceConfigScene::redrawItems() {
 void PreferenceConfigScene::ShowPageCaption() {
 }
 void PreferenceConfigScene::ShowMessageBelow() {
+}
+
+void PreferenceConfigScene::Render() {
+	ConfigMenuProto::Render();
+	for (unsigned short i = 0; i < RULES_IN_PAGE; i++)
+		if (editBoxes[i]) editBoxes[i]->Render();
 }
 
 void PreferenceConfigScene::savePreference() {

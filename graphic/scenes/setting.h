@@ -3,9 +3,11 @@
 #include "confmenu.h"
 //#include "../text.h"
 //#include "../../common/strcode.h"
+#include <array>
 #include "../rule.h"
 #include "../../common/nmrules.h"
 #include "../widgets/button.h"
+#include "../widgets/editbox.h"
 
 namespace mihajong_graphic {
 
@@ -15,6 +17,9 @@ private:
 	const unsigned itemsPerPage() {return RULES_IN_PAGE;}
 	const unsigned numberOfItems() {return PREFERENCE_ITEMS;}
 	const unsigned numberOfButtons() {return 2u;}
+private:
+	std::array<EditBox*, RULES_IN_PAGE> editBoxes;
+private:
 	void itemText(unsigned prmID, const CodeConv::tstring& prmName, const CodeConv::tstring& prmContent);
 	void redrawItems();
 	int prefstat[PREFERENCE_ITEMS];
@@ -28,6 +33,7 @@ private:
 public:
 	PreferenceConfigScene(ScreenManipulator* const manipulator);
 	virtual ~PreferenceConfigScene();
+	void Render();
 };
 
 }
