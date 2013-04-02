@@ -81,6 +81,9 @@ public:
 	unsigned getRuleStrBufLen(uint16_t RuleID);
 	unsigned getRuleStrBufLen(std::string RuleTag);
 public:
+	void setFreeStr(std::string RuleTag, std::string data);
+	void setFreeStr(uint16_t RuleID, std::string data);
+public:
 	virtual ~ConfigData() {}
 };
 
@@ -398,4 +401,13 @@ CONFDAT_TEMPLATE unsigned CONFDAT_CLASS::getRuleStrBufLen(std::string RuleTag) {
 		return getRuleStrBufLen(inverse_nametbl[RuleTag]);
 	else
 		return 0;
+}
+
+CONFDAT_TEMPLATE void CONFDAT_CLASS::setFreeStr(std::string RuleTag, std::string data) {
+	if (freeval_expr.find(RuleTag) != freeval_expr.end()) // é©óRì¸óÕÇÃéû
+		freeval_expr[RuleTag] = data.substr(0, getRuleStrBufLen(RuleTag));
+	// é©óRì¸óÕçÄñ⁄Ç≈Ç»ÇØÇÍÇŒâΩÇ‡ÇµÇ»Ç¢
+}
+CONFDAT_TEMPLATE void CONFDAT_CLASS::setFreeStr(uint16_t RuleID, std::string data) {
+	setFreeStr(nametbl[RuleID], data);
 }

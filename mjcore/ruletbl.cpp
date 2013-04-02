@@ -266,4 +266,8 @@ __declspec(dllexport) unsigned RuleData::getPreferenceInputSize(uint16_t RuleID)
 	return preferenceTableData.getRuleStrBufLen(RuleID);
 }
 
+void RuleData::setPreferenceFreeStr(uint16_t RuleID, const char* str) {
+	preferenceTableData.setFreeStr(RuleID, str);
+}
+
 // -------------------------------------------------------------------------

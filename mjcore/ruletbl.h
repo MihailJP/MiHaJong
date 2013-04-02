@@ -42,6 +42,7 @@ public:
 	static const char* getPreferenceRawStr(uint16_t RuleID);
 	__declspec(dllexport) static int getPreferenceSize(uint16_t RuleID);
 	__declspec(dllexport) static unsigned getPreferenceInputSize(uint16_t RuleID);
+	static void setPreferenceFreeStr(uint16_t RuleID, const char* str);
 };
 
 __declspec(dllexport) int getRule(int RuleID);
