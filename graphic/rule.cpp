@@ -15,6 +15,7 @@ RuleRead exportRule = nullptr, exportPref = nullptr;
 ConfSave saveConfigFile = nullptr, savePreferenceFile = nullptr;
 CheckRule chkRule = nullptr;
 RetrieveUInt getPreferenceInputSize = nullptr;
+RetrieveStr getPreferenceRawStr = nullptr;
 extern const char* digit = nullptr;
 std::string conffile = "", preffile = "";
 
@@ -26,7 +27,7 @@ EXPORT void setfunc(
 	RuleWrite fpStorePref, RuleRead fpExportPref, ConfSave fpSavePreferenceFile,
 	RetrieveTxt fpGetPreferenceName, RetrieveTxt fpGetPreferenceDesc, RetrieveTxtIndex fpGetPreferenceTxt,
 	RetrieveInt fpGetPreference, RetrieveInt fpGetPreferenceSize,
-	RetrieveUInt fpGetPreferenceInputSize)
+	RetrieveUInt fpGetPreferenceInputSize, RetrieveStr fpGetPreferenceRawStr)
 {
 	getRuleName = fpGetRuleName;
 	getRuleDescription = fpGetRuleDesc;
@@ -50,6 +51,7 @@ EXPORT void setfunc(
 	getPreference = fpGetPreference;
 	getPreferenceSize = fpGetPreferenceSize;
 	getPreferenceInputSize = fpGetPreferenceInputSize;
+	getPreferenceRawStr = fpGetPreferenceRawStr;
 }
 
 EXPORT void setconffile(const char* filename, const char* filename2) {

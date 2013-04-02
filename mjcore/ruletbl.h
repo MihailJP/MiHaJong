@@ -15,6 +15,7 @@ public:
 	static std::string getRuleItemTag(uint16_t RuleID, int index);
 	static std::string getRuleItemTag(std::string RuleTag, int index);
 	static std::string chkRule(std::string RuleTag);
+	static const char* chkRule(const char* RuleTag);
 	static bool chkRule(std::string RuleTag, std::string Expectation);
 	static BOOL chkRule(const char* RuleTag, const char* Expectation);
 	static bool chkRuleApplied(std::string RuleTag);
@@ -38,6 +39,7 @@ public:
 	__declspec(dllexport) static void getPreferenceTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index);
 	static int getPreference(std::string RuleTag);
 	static int getPreference(uint16_t RuleID);
+	static const char* getPreferenceRawStr(uint16_t RuleID);
 	__declspec(dllexport) static int getPreferenceSize(uint16_t RuleID);
 	__declspec(dllexport) static unsigned getPreferenceInputSize(uint16_t RuleID);
 };

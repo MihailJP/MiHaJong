@@ -40,6 +40,7 @@ protected:
 	std::set<std::string> nonapplicable;
 	std::map<std::string, std::string> rulemask_expr;
 	std::array<CodeConv::tstring, Pages> pageCaption;
+	std::map<std::string, std::string> freeval_expr;
 	static const char digit[];
 protected:
 	virtual void configinit_csv() = 0;
@@ -54,6 +55,7 @@ public:
 	void exportRule(char** ruleTxt);
 public:
 	std::string chkRule(std::string RuleTag);
+	std::string chkRule(uint16_t RuleID);
 	bool chkRule(std::string RuleTag, std::string Expectation);
 	bool chkRuleApplied(std::string RuleTag);
 	inline int getRule(std::string RuleTag) {return Rules[RuleTag];}
@@ -99,6 +101,9 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 		unsigned int numerusPartisRegulae = _ttoi((*k)[0].c_str()); // ルールタグ
 		nametbl[numerusPartisRegulae] = nomenPartisRegulae; // 順方向
 		inverse_nametbl[nomenPartisRegulae] = numerusPartisRegulae; // 逆方向
+
+		if (_ttoi((*k)[7].c_str())) // 自由入力
+			freeval_expr.insert(std::make_pair(nomenPartisRegulae, std::string(toANSI((*k)[11]))));
 
 		if (((*k)[1].empty()) || (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str())))) { // GameType合致した場合
 			if ((_ttoi((*k)[0].c_str()) % PageBatch) == 0)
@@ -175,7 +180,13 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::exportRule(char** ruleTxt) { // Core→UI ル
 }
 
 CONFDAT_TEMPLATE std::string CONFDAT_CLASS::chkRule(std::string RuleTag) { // ルール設定タグを取得する
-	return getRuleItemTag(RuleTag, Rules[RuleTag]);
+	if (freeval_expr.find(RuleTag) != freeval_expr.end()) // 自由入力の時
+		return freeval_expr[RuleTag];
+	else // 選択項目の時
+		return getRuleItemTag(RuleTag, Rules[RuleTag]);
+}
+CONFDAT_TEMPLATE std::string CONFDAT_CLASS::chkRule(uint16_t RuleID) { // ルール設定タグを取得する
+	return chkRule(nametbl[RuleID]);
 }
 CONFDAT_TEMPLATE bool CONFDAT_CLASS::chkRule(std::string RuleTag, std::string Expectation) { // ルール設定
 	return getRuleItemTag(RuleTag, Rules[RuleTag]) == Expectation;
@@ -275,6 +286,16 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 					if (nonapplicable.find(rulename) != nonapplicable.end()) { // N/Aだったばあい
 						tostringstream o; o << _T("キー [") << EnsureTStr(rulename) << _T("] は設定できません。無視します。");
 						warn(o.str().c_str());
+					}
+					else if (freeval_expr.find(rulename) != freeval_expr.end()) { // 自由入力の時
+						CodeConv::tstring val(k->second);
+						std::string s =
+#ifdef _UNICODE
+							CodeConv::toANSI(val);
+#else
+							val;
+#endif
+						freeval_expr[rulename] = s.substr(0, getRuleStrBufLen(rulename));
 					}
 					else if(inverse_ruletags[rulename].find(toANSI(k->second)) != inverse_ruletags[rulename].end()) { // 実装されている設定なら
 						ruleConf[ruleid / LineBatch][ruleid % LineBatch] =

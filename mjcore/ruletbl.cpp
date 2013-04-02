@@ -162,6 +162,11 @@ __declspec(dllexport) void RuleData::exportPref(char** ruleTxt) { // Core→UI 環
 std::string RuleData::chkRule(std::string RuleTag) { // ルール設定タグを取得する
 	return ruleTableData.chkRule(RuleTag);
 }
+const char* RuleData::chkRule(const char* RuleTag) { // ルール設定タグを取得する
+	static std::string ruledat;
+	ruledat = chkRule(std::string(RuleTag));
+	return ruledat.c_str();
+}
 bool RuleData::chkRule(std::string RuleTag, std::string Expectation) { // ルール設定
 	return ruleTableData.chkRule(RuleTag, Expectation);
 }
@@ -182,6 +187,11 @@ int RuleData::getPreference(std::string RuleTag) {
 }
 int RuleData::getPreference(uint16_t RuleID) { // 環境設定を取得する(旧仕様)
 	return preferenceTableData.getRule(RuleID);
+}
+const char* RuleData::getPreferenceRawStr(uint16_t RuleID) { // 環境設定を取得する(旧仕様)
+	static std::string ruletag;
+	ruletag = preferenceTableData.chkRule(RuleID);
+	return ruletag.c_str();
 }
 __declspec(dllexport) int RuleData::getRuleSize(uint16_t RuleID) { // ルール項目のアイテム数
 	return ruleTableData.getRuleSize(RuleID);
