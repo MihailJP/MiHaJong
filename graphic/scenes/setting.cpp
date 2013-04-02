@@ -2,6 +2,7 @@
 #include "../event.h"
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
+#include "../extchar.h"
 
 namespace mihajong_graphic {
 
@@ -149,7 +150,12 @@ void PreferenceConfigScene::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) 
 void PreferenceConfigScene::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 	int activeTxtBox = getActiveTextbox();
 	if ((activeTxtBox >= 0) && editBoxes[activeTxtBox]) {
-		editBoxes[activeTxtBox]->KeyboardInput(wParam, lParam);
+		if ((wParam == CHARDAT_CURSOR_ENTER) || (wParam == CHARDAT_CURSOR_ESCAPE)) {
+			sound::Play(sound::IDs::sndClick);
+			editBoxes[activeTxtBox]->deactivate();
+		} else {
+			editBoxes[activeTxtBox]->KeyboardInput(wParam, lParam);
+		}
 	}
 }
 void PreferenceConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {

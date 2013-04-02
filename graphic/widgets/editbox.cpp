@@ -276,6 +276,10 @@ void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 			if (isLeadingByte(myText, cursorPos)) ++cursorPos;
 			if (cursorPos < myText.size()) ++cursorPos;
 		} catch (std::out_of_range&) {}
+	} else if (wParam == CHARDAT_CURSOR_ENTER) { // Enter key
+		/* Do nothing */
+	} else if (wParam == CHARDAT_CURSOR_ESCAPE) { // Escape key
+		/* Do nothing */
 	} else {
 		WCHAR Letter[2] = {(WCHAR)wParam, 0};
 		if (Letter[0] >= L' ') { // Ordinary

@@ -19,6 +19,12 @@ LRESULT MainWindow::keyev(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case VK_RIGHT:
 		if (myMainWindow) myMainWindow->myScreenManipulator->inputProc(CHARDAT_CURSOR_RIGHT, lParam);
 		break;
+	case VK_RETURN:
+		if (myMainWindow) myMainWindow->myScreenManipulator->inputProc(CHARDAT_CURSOR_ENTER, lParam);
+		break;
+	case VK_ESCAPE:
+		if (myMainWindow) myMainWindow->myScreenManipulator->inputProc(CHARDAT_CURSOR_ESCAPE, lParam);
+		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
