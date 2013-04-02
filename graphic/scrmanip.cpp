@@ -77,6 +77,9 @@ void ScreenManipulator::transit(sceneID scene) {
 		case sceneConfig:
 			myScene = new RuleConfigScene(this); redrawFlag = true;
 			break;
+		case sceneSetting:
+			myScene = new PreferenceConfigScene(this); redrawFlag = true;
+			break;
 		case sceneGameTable:
 			myScene = new GameTableScreen(this); redrawFlag = true;
 			break;
