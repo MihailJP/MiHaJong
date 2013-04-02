@@ -166,7 +166,7 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 	for (int i = 0; i < Players; i++) {
 		if (i < ACTUAL_PLAYERS) {
 			gameStat->Player[i].PlayerScore =
-				(LNum)std::atoi(RuleData::chkRule("starting_point").c_str());
+				(LNum)std::atoi(RuleData::chkRule("starting_point"));
 		} else {
 			gameStat->Player[i].PlayerScore = (LNum)0;
 		}

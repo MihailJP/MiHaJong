@@ -4,9 +4,9 @@ libmihajong_graphic_la_SOURCES = \
 	geometry.cpp init.cpp input.cpp loadtex.cpp rule.cpp scrmanip.cpp \
 	showtile.cpp sprite.cpp text.cpp tiletip.cpp timer.cpp utils.cpp \
 	window.cpp yakustat.cpp \
-	scenes/fps.cpp scenes/game.cpp scenes/proto.cpp scenes/result.cpp \
-	scenes/ruleconf.cpp scenes/splash.cpp scenes/sysscr.cpp scenes/table.cpp \
-	scenes/title.cpp \
+	scenes/confmenu.cpp scenes/fps.cpp scenes/game.cpp scenes/proto.cpp \
+	scenes/result.cpp scenes/ruleconf.cpp graphic/scenes/setting.cpp \
+	scenes/splash.cpp scenes/sysscr.cpp scenes/table.cpp scenes/title.cpp \
 	scenes/tablesub/agariscr.cpp scenes/tablesub/call.cpp \
 	scenes/tablesub/callval.cpp scenes/tablesub/chktnpai.cpp \
 	scenes/tablesub/player.cpp scenes/tablesub/rndstart.cpp \
@@ -22,9 +22,10 @@ libmihajong_graphic_la_SOURCES = \
 	font.h gametbl.h geometry.h graphic.h init.h input.h loadtex.h pi.h \
 	resource.h rule.h scrmanip.h showtile.h sprite.h text.h tiletip.h timer.h \
 	utils.h window.h yakustat.h \
-	scenes/fps.h scenes/game.h scenes/proto.h scenes/result.h \
-	scenes/ruleconf.h scenes/scenes.h scenes/splash.h scenes/scene_id.h \
-	scenes/sysscr.h scenes/table.h scenes/title.h \
+	scenes/confmenu.h scenes/fps.h scenes/game.h scenes/proto.h \
+	scenes/result.h scenes/ruleconf.h graphic/scenes/setting.h scenes/scenes.h \
+	scenes/splash.h scenes/scene_id.h scenes/sysscr.h scenes/table.h \
+	scenes/title.h \
 	scenes/tablesub/agariscr.h scenes/tablesub/call.h \
 	scenes/tablesub/callval.h scenes/tablesub/chktnpai.h \
 	scenes/tablesub/player.h scenes/tablesub/rndstart.h \
