@@ -89,6 +89,17 @@ void PreferenceConfigScene::savePreference() {
 	const char* prefLine[PREFERENCE_LINES];
 	for (unsigned i = 0; i < PREFERENCE_LINES; i++) prefLine[i] = PrefConf[i];
 	rules::storePref(prefLine);
+	for (unsigned i = 0; i < PREFERENCE_ITEMS; i++) {
+		if (editBoxes[i]) {
+			CodeConv::tstring ttxt = editBoxes[i]->getText();
+			std::string txt =
+#ifdef _UNICODE
+				CodeConv::toANSI
+#endif
+				(ttxt);
+			rules::setPreferenceFreeStr(i, txt.c_str());
+		}
+	}
 	rules::savePreferenceFile(rules::preffile.c_str());
 	return;
 }
