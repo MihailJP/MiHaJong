@@ -163,7 +163,7 @@ void PreferenceConfigScene::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) 
 }
 void PreferenceConfigScene::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 	int activeTxtBox = getActiveTextbox();
-	if ((menuCursor >= 0) && (editBoxes[menuCursor]) && (activeTxtBox != menuCursor) &&
+	if ((buttonCursor == -1) && (menuCursor >= 0) && (editBoxes[menuCursor]) && (activeTxtBox != menuCursor) &&
 		((wParam == CHARDAT_CURSOR_ENTER) || (wParam == 'z') || (wParam == 'Z') || (wParam == ' ') || (wParam == '\t'))) {
 			sound::Play(sound::IDs::sndClick);
 			setActiveTextbox(menuCursor);
