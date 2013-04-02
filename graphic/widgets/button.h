@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Windows.h>
-#include "directx.h"
+#include "../directx.h"
 #include <vector>
 #include <tuple>
 #include "../../common/strcode.h"

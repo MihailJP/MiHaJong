@@ -3,7 +3,7 @@
 #include "../exports.h"
 #include "../../common/strcode.h"
 #ifdef GRAPHIC_EXPORTS
-#include "directx.h"
+#include "../directx.h"
 #include <vector>
 #include "../text.h"
 #endif

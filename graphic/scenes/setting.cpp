@@ -144,7 +144,7 @@ void PreferenceConfigScene::Render() {
 }
 
 void PreferenceConfigScene::savePreference() {
-	std::memset(&PrefConf[0][0], 0, sizeof(PrefConf));
+	memset(&PrefConf[0][0], 0, sizeof(PrefConf));
 	for (unsigned i = 0; i < PREFERENCE_ITEMS; i++) {
 		TCHAR preftxt[128]; rules::getPreferenceTxt(preftxt, 128, i, 0);
 		if ((CodeConv::tstring(preftxt) == _T("")) || (CodeConv::tstring(preftxt) == _T("‚m^‚`")))
