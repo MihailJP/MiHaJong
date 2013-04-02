@@ -12,7 +12,7 @@ namespace mihajong_graphic {
 
 using namespace character_width;
 
-EditBox::EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width) {
+EditBox::EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width, float scale) {
 	assert(width >= 8);
 	myHWnd = hwnd; myDevice = device;
 	myRegion = std::make_tuple(X, Y, width);
@@ -21,6 +21,7 @@ EditBox::EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned wid
 	maxStr = 0u; cursorPos = 0u; scrollPos = 0u;
 	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX), 88, 56);
 	isActive = false;
+	myScale = scale;
 }
 
 EditBox::~EditBox() {
@@ -34,6 +35,8 @@ D3DXMATRIX EditBox::getMatrix(int X, int Y, unsigned width) {
 	D3DXMatrixTranslation(&mat, -X, -Y, 0.0f);
 	D3DXMatrixScaling(&mat1, (float)(width * halffontsz) / 77.0f, 1.0f, 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
+	D3DXMatrixScaling(&mat1, myScale, myScale, 0.0f);
+	D3DXMatrixMultiply(&mat, &mat, &mat1);
 	D3DXMatrixTranslation(&mat1, X, Y, 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
 	D3DXMatrixScaling(&mat1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
@@ -42,15 +45,21 @@ D3DXMATRIX EditBox::getMatrix(int X, int Y, unsigned width) {
 }
 
 void EditBox::renderFrame(int X, int Y, unsigned width) {
+	D3DXMATRIX matrixScale; D3DXMatrixIdentity(&matrixScale); D3DXMATRIX matrixScale1; D3DXMatrixIdentity(&matrixScale1);
+	D3DXMatrixTranslation(&matrixScale, (float)(-X), (float)(-Y), 0.0f);
+	D3DXMatrixScaling(&matrixScale1, myScale, myScale, 1.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
+	D3DXMatrixTranslation(&matrixScale1, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
+	D3DXMatrixScaling(&matrixScale1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
+
 	RECT rect; rect.left = 0; rect.right = 5;
 	if (isActive) {rect.top = 28; rect.bottom = 56;}
 	else {rect.top = 0; rect.bottom = 28;}
-	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X - 5, Y - 5, 5, 28, 0xffffffff, &rect);
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X - 5, Y - 5, 5, 28, 0xffffffff, &rect, 0, 0, &matrixScale);
 	rect.left = 5; rect.right = 82;
 	D3DXMATRIX mat = getMatrix(X, Y, width);
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y - 5, width * halffontsz, 28, 0xffffffff, &rect, 0, 0, &mat);
 	rect.left = 82; rect.right = 87;
-	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X + width * halffontsz, Y - 5, 5, 28, 0xffffffff, &rect);
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X + width * halffontsz, Y - 5, 5, 28, 0xffffffff, &rect, 0, 0, &matrixScale);
 }
 
 void EditBox::renderIMCandidateFrame(int X, int Y, unsigned width, unsigned lines) {
@@ -58,13 +67,19 @@ void EditBox::renderIMCandidateFrame(int X, int Y, unsigned width, unsigned line
 	RECT rect;
 	unsigned spriteNum = 0u;
 	auto drawLine = [&rect, &spriteNum, X, Y, width, this](int y) -> void {
+		D3DXMATRIX matrixScale; D3DXMatrixIdentity(&matrixScale); D3DXMATRIX matrixScale1; D3DXMatrixIdentity(&matrixScale1);
+		D3DXMatrixTranslation(&matrixScale, (float)(-X), (float)(-Y), 0.0f);
+		D3DXMatrixScaling(&matrixScale1, myScale, myScale, 1.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
+		D3DXMatrixTranslation(&matrixScale1, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
+		D3DXMatrixScaling(&matrixScale1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
+
 		rect.left = 0; rect.right = 5;
-		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X - 5, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect);
+		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X - 5, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &matrixScale);
 		rect.left = 5; rect.right = 82;
 		D3DXMATRIX mat = getMatrix(X, Y, width);
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y + y, width * halffontsz, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &mat);
 		rect.left = 82; rect.right = 87;
-		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X + width * halffontsz, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect);
+		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X + width * halffontsz, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &matrixScale);
 	};
 	rect.top = 28 + 0; rect.bottom = 28 + 5; drawLine(-5);
 	rect.top = 28 + 4; rect.bottom = 28 + 24;
@@ -101,7 +116,7 @@ void EditBox::renderNormalText(IMStat& imStat, unsigned start, unsigned end, int
 		else if (cols == width) end_ = i + 1;
 	}
 	if (isLeadingByte(myText, end_ - 1)) --end_;
-	myTextRenderer->NewText(TextID++, myText.substr(start_, end_ - start_), X + startcol * halffontsz, Y, 1.0f, 1.0f, 0xff333333);
+	myTextRenderer->NewText(TextID++, myText.substr(start_, end_ - start_), X + startcol * myScale * halffontsz, Y, myScale, 1.0f, 0xffffffff);
 }
 
 void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol) {
@@ -121,7 +136,7 @@ void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsig
 			D3DCOLOR color;
 			switch (tmpInfo) {
 			case ATTR_INPUT:
-				color = 0xff0000ff; break;
+				color = 0xff00ccff; break;
 			case ATTR_CONVERTED:
 				color = 0xff00cc33; break;
 			case ATTR_TARGET_CONVERTED:
@@ -132,7 +147,7 @@ void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsig
 				color = 0xffff0000; break;
 			}
 			if (isLeadingByte(convStr, i - 1)) --i;
-			myTextRenderer->NewText(TextID++, convStr.substr(startchr, i - startchr), X + startcol * halffontsz, Y, 1.0f, 1.0f, color);
+			myTextRenderer->NewText(TextID++, convStr.substr(startchr, i - startchr), X + startcol * myScale * halffontsz, Y, myScale, 1.0f, color);
 			startcol = cols; startchr = i;
 			if ((cols >= width) || (i == convStr.size())) break;
 		}
@@ -157,20 +172,20 @@ void EditBox::renderIMCandidates(IMStat& imStat, int X, int Y, unsigned& TextID)
 		CodeConv::tostringstream o; o << _T("(") << (candidateNum + 1) << _T(" / ") << candidates.size() << _T(")");
 		if ((wndcols + 4) < o.str().size()) wndcols = o.str().size() - 4;
 		renderIMCandidateFrame(X, Y, wndcols + 4, pageSize + 1);
-		myTextRenderer->NewText(TextID++, o.str(), X, Y, 1.0f, 1.0f, 0xff666666);
+		myTextRenderer->NewText(TextID++, o.str(), X, Y, myScale, 1.0f, 0xffcccccc);
 	}
 	for (unsigned i = pageStart; (i < candidates.size()) && (i < (pageStart + pageSize)); i++) {
 		CodeConv::tostringstream o;
 		o << (i - pageStart + 1) << ". " << candidates[i];
-		myTextRenderer->NewText(TextID++, o.str(), X, Y + 20 * (i - pageStart + 1), 1.0f, 1.0f,
-			(candidateNum == i) ? 0xffff6600 : 0xff333333);
+		myTextRenderer->NewText(TextID++, o.str(), X, Y + 20 * myScale * (i - pageStart + 1), myScale, 1.0f,
+			(candidateNum == i) ? 0xffff6600 : 0xffffffff);
 	}
 }
 
 void EditBox::renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol) {
 	D3DXVECTOR2 vec[] = {
-		D3DXVECTOR2(Geometry::WindowScale() * (X + cursorcol * halffontsz), Geometry::WindowScale() * Y),
-		D3DXVECTOR2(Geometry::WindowScale() * (X + cursorcol * halffontsz), Geometry::WindowScale() * (Y + 18)),
+		D3DXVECTOR2(Geometry::WindowScale() * (X + cursorcol * myScale * halffontsz), Geometry::WindowScale() * Y),
+		D3DXVECTOR2(Geometry::WindowScale() * (X + cursorcol * myScale * halffontsz), Geometry::WindowScale() * (Y + int(18.0f * myScale))),
 	};
 	cursorLine->SetWidth(2);
 	cursorLine->Begin();
@@ -236,7 +251,7 @@ void EditBox::Render() {
 	if (cursorcol == -1) cursorcol = cols;
 
 	/* Candidate words */
-	renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + 20, TextID);
+	renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + 20 * myScale, TextID);
 
 	/* Commit */
 	for (unsigned i = TextID; i < maxStr; i++)
@@ -261,6 +276,10 @@ void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 			if (isLeadingByte(myText, cursorPos)) ++cursorPos;
 			if (cursorPos < myText.size()) ++cursorPos;
 		} catch (std::out_of_range&) {}
+	} else if (wParam == CHARDAT_CURSOR_ENTER) { // Enter key
+		/* Do nothing */
+	} else if (wParam == CHARDAT_CURSOR_ESCAPE) { // Escape key
+		/* Do nothing */
 	} else {
 		WCHAR Letter[2] = {(WCHAR)wParam, 0};
 		if (Letter[0] >= L' ') { // Ordinary
@@ -290,6 +309,12 @@ void EditBox::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 		myText = myText.substr(0, cursorPos) + resultStr + myText.substr(cursorPos, myText.size());
 		cursorPos += resultStr.size();
 	}
+}
+
+void EditBox::setText(const CodeConv::tstring& newstr) {
+	myText = newstr;
+	cursorPos = myText.length();
+	scrollPos = 0;
 }
 
 // -------------------------------------------------------------------------
