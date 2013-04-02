@@ -140,6 +140,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="scenes\confmenu.cpp" />
+    <ClCompile Include="scenes\setting.cpp" />
     <ClCompile Include="scenes\table\tiletip.cpp" />
     <ClCompile Include="widgets\button.cpp" />
     <ClCompile Include="calltext.cpp" />
@@ -194,6 +196,9 @@
     <ClCompile Include="yakustat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="graphic.h" />
+    <ClInclude Include="scenes\confmenu.h" />
+    <ClInclude Include="scenes\setting.h" />
     <ClInclude Include="scenes\table\tiletip.h" />
     <ClInclude Include="widgets\button.h" />
     <ClInclude Include="calltext.h" />

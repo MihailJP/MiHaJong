@@ -12,6 +12,7 @@
 #include "prepare.h"
 #include "../graphic/graphic.h"
 #include "result.h"
+#include "ruletbl.h"
 
 /* 半荘の進行 */
 EndType doTableTurn(GameTable* const gameStat) {
@@ -123,8 +124,19 @@ void startgame(GameTypeID gameType) {
 		unsigned ClientNumber = 0u;
 		start:
 		switch (titlescreen()) { // タイトル画面
+		case 1:
+			EnvTable::Instantiate()->PlayerDat[0].PlayerName =
+				CodeConv::tstring(_T("[A]")) + CodeConv::EnsureTStr(RuleData::chkPreference("name"));
+			EnvTable::Instantiate()->PlayerDat[1].PlayerName = _T("[b]COM1");
+			EnvTable::Instantiate()->PlayerDat[2].PlayerName = _T("[c]COM2");
+			EnvTable::Instantiate()->PlayerDat[3].PlayerName = _T("[d]COM3");
+			break;
 		case 4:
 			mihajong_graphic::Transit(mihajong_graphic::sceneConfig);
+			mihajong_graphic::ui::WaitUI();
+			goto start;
+		case 5:
+			mihajong_graphic::Transit(mihajong_graphic::sceneSetting);
 			mihajong_graphic::ui::WaitUI();
 			goto start;
 		case 6:

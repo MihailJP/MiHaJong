@@ -29,6 +29,7 @@ private:
 	class IMStat;
 	unsigned scrollRBound(IMStat& imStat);
 	void scroll(IMStat& imStat);
+	float myScale;
 	D3DXMATRIX getMatrix(int X, int Y, unsigned width);
 	void renderFrame(int X, int Y, unsigned width);
 	void renderIMCandidateFrame(int X, int Y, unsigned width, unsigned lines);
@@ -38,13 +39,16 @@ private:
 	void renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol);
 	bool isActive;
 public:
-	EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width);
+	EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width, float scale = 1.0f);
 	~EditBox();
 	void Render();
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 	void activate() {isActive = true;}
 	void deactivate() {isActive = false;}
+	bool is_Active() {return isActive;}
+	void setText(const CodeConv::tstring& newstr);
+	CodeConv::tstring getText() {return myText;}
 };
 
 class EditBox::IMStat { // IMEÇÃèÛë‘
