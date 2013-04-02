@@ -76,6 +76,9 @@ public:
 	const char* ruleDigit() {return digit;}
 	void forEachRule(std::function<void (std::string, std::string)> f);
 public:
+	unsigned getRuleStrBufLen(uint16_t RuleID);
+	unsigned getRuleStrBufLen(std::string RuleTag);
+public:
 	virtual ~ConfigData() {}
 };
 
@@ -357,4 +360,21 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::getPageCaption(LPTSTR const caption, unsign
 CONFDAT_TEMPLATE void CONFDAT_CLASS::forEachRule(std::function<void (std::string, std::string)> f) {
 	for (auto k = inverse_nametbl.begin(); k != inverse_nametbl.end(); ++k)
 		f(k->first, chkRule(k->first));
+}
+
+CONFDAT_TEMPLATE unsigned CONFDAT_CLASS::getRuleStrBufLen(uint16_t RuleID) {
+	for (auto k = confdat.begin(); k != confdat.end(); k++) { // ï∂éöóÒì¸óÕÇÃïù
+		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
+		if (((*k)[1].empty()) || ((*k)[2].empty()) ||
+			(chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) ||
+			(chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str()))))
+			return _ttoi(((*k)[7]).c_str());
+	}
+	return 0;
+}
+CONFDAT_TEMPLATE unsigned CONFDAT_CLASS::getRuleStrBufLen(std::string RuleTag) {
+	if (inverse_nametbl.find(RuleTag) != inverse_nametbl.end())
+		return getRuleStrBufLen(inverse_nametbl[RuleTag]);
+	else
+		return 0;
 }

@@ -18,6 +18,7 @@ typedef void (*RuleWrite)(const char** /*ruleTxt*/);
 typedef void (*RuleRead)(char** /*ruleTxt*/);
 typedef int (*ConfSave)(const char* const /*filename*/);
 typedef BOOL (*CheckRule)(const char* /*RuleTag*/, const char* /*Expectation*/);
+typedef unsigned int (*RetrieveUInt)(uint16_t /*RuleID*/);
 
 #ifdef GRAPHIC_EXPORTS
 extern RetrieveTxt getRuleName, getPreferenceName;
@@ -31,6 +32,7 @@ extern RuleWrite storeRule, storePref;
 extern RuleRead exportRule, exportPref;
 extern ConfSave saveConfigFile, savePreferenceFile;
 extern CheckRule chkRule;
+extern RetrieveUInt getPreferenceInputSize;
 extern const char* digit;
 extern std::string conffile, preffile;
 #endif
@@ -42,7 +44,8 @@ EXPORT void setfunc(
 	ConfSave fpSaveConfigFile, CheckRule fpChkRule, const char* pDigit,
 	RuleWrite fpStorePref, RuleRead fpExportPref, ConfSave fpSavePreferenceFile,
 	RetrieveTxt fpGetPreferenceName, RetrieveTxt fpGetPreferenceDesc, RetrieveTxtIndex fpGetPreferenceTxt,
-	RetrieveInt fpGetPreference, RetrieveInt fpGetPreferenceSize);
+	RetrieveInt fpGetPreference, RetrieveInt fpGetPreferenceSize,
+	RetrieveUInt fpGetPreferenceInputSize);
 
 EXPORT void setconffile(const char* filename, const char* filename2);
 

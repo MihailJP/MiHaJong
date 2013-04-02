@@ -108,7 +108,8 @@ MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
 			RuleData::saveConfigFile, RuleData::chkRule, RuleData::ruleDigit(),
 			RuleData::storePref, RuleData::exportPref, RuleData::savePreferenceFile,
 			RuleData::getPreferenceName, RuleData::getPreferenceDescription, RuleData::getPreferenceTxt,
-			RuleData::getPreference, RuleData::getPreferenceSize);
+			RuleData::getPreference, RuleData::getPreferenceSize,
+			RuleData::getPreferenceInputSize);
 		mihajong_graphic::utils::setfunc(
 			playerwind, playerRelative, RelativePositionOf, tilesLeft, calcRank, chkFuriten,
 			isTenpai, isRichiReqSatisfied, ShantenAnalyzer::calcShanten, chkdaopaiability,

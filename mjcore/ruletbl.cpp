@@ -252,4 +252,8 @@ const char* RuleData::ruleDigit() {
 	return ruleTableData.ruleDigit();
 }
 
+__declspec(dllexport) unsigned RuleData::getPreferenceInputSize(uint16_t RuleID) {
+	return preferenceTableData.getRuleStrBufLen(RuleID);
+}
+
 // -------------------------------------------------------------------------

@@ -39,6 +39,7 @@ public:
 	static int getPreference(std::string RuleTag);
 	static int getPreference(uint16_t RuleID);
 	__declspec(dllexport) static int getPreferenceSize(uint16_t RuleID);
+	__declspec(dllexport) static unsigned getPreferenceInputSize(uint16_t RuleID);
 };
 
 __declspec(dllexport) int getRule(int RuleID);
