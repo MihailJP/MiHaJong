@@ -12,6 +12,7 @@
 #include "prepare.h"
 #include "../graphic/graphic.h"
 #include "result.h"
+#include "ruletbl.h"
 
 /* 半荘の進行 */
 EndType doTableTurn(GameTable* const gameStat) {
@@ -124,7 +125,8 @@ void startgame(GameTypeID gameType) {
 		start:
 		switch (titlescreen()) { // タイトル画面
 		case 1:
-			EnvTable::Instantiate()->PlayerDat[0].PlayerName = _T("[A]FOOBAR");
+			EnvTable::Instantiate()->PlayerDat[0].PlayerName =
+				CodeConv::tstring(_T("[A]")) + CodeConv::EnsureTStr(RuleData::chkPreference("name"));
 			EnvTable::Instantiate()->PlayerDat[1].PlayerName = _T("[b]COM1");
 			EnvTable::Instantiate()->PlayerDat[2].PlayerName = _T("[c]COM2");
 			EnvTable::Instantiate()->PlayerDat[3].PlayerName = _T("[d]COM3");
