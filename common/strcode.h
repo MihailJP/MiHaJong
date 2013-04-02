@@ -17,7 +17,7 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 	int bufsize = WideCharToMultiByte(CodePage, 0, str.c_str(), -1, nullptr, 0, nullptr, nullptr);
 	char* buf = new char[bufsize];
-	WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, buf, bufsize, nullptr, nullptr);
+	WideCharToMultiByte(CodePage, 0, str.c_str(), -1, buf, bufsize, nullptr, nullptr);
 	std::string ans(buf); delete[] buf;
 	return ans;
 }
