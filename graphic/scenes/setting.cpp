@@ -46,7 +46,7 @@ void PreferenceConfigScene::itemText(unsigned prmID, const CodeConv::tstring& pr
 	if (rules::getPreferenceInputSize(ItemNum)) { // エディットボックス
 		if (editBoxes[prmID] == nullptr)
 			editBoxes[prmID] = new EditBox(caller->getHWnd(), caller->getDevice(),
-			(xPos + 162) * WidthRate, yPos, 20);
+			(xPos + 162 + 4) * WidthRate, yPos + 6, 32, 1.5f);
 	} else {
 		if (editBoxes[prmID] != nullptr)
 			delete editBoxes[prmID];
@@ -113,6 +113,7 @@ void PreferenceConfigScene::BtnEvent_Content_Roll_Up() {
 		TCHAR menuitem[128]; rules::getPreferenceTxt(menuitem, 128, menuCursor, prefstat[menuCursor]);
 		if (CodeConv::tstring(menuitem) != CodeConv::tstring(_T(">>>"))) break;
 	}
+	setActiveTextbox(menuCursor);
 	redrawItems();
 }
 void PreferenceConfigScene::BtnEvent_Content_Roll_Down() {
@@ -122,7 +123,38 @@ void PreferenceConfigScene::BtnEvent_Content_Roll_Down() {
 		TCHAR menuitem[128]; rules::getPreferenceTxt(menuitem, 128, menuCursor, prefstat[menuCursor]);
 		if (CodeConv::tstring(menuitem) != CodeConv::tstring(_T(">>>"))) break;
 	}
+	setActiveTextbox(menuCursor);
 	redrawItems();
+}
+
+void PreferenceConfigScene::setActiveTextbox(int textBoxID) {
+	for (unsigned short i = 0; i < RULES_IN_PAGE; i++)
+		if (editBoxes[i])
+			editBoxes[i]->deactivate();
+	if (editBoxes[textBoxID])
+		editBoxes[textBoxID]->activate();
+}
+int PreferenceConfigScene::getActiveTextbox() {
+	for (unsigned short i = 0; i < RULES_IN_PAGE; i++)
+		if ((editBoxes[i]) && (editBoxes[i]->is_Active()))
+			return i;
+	return -1;
+}
+
+void PreferenceConfigScene::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
+	int activeTxtBox = getActiveTextbox();
+	if ((activeTxtBox >= 0) && editBoxes[activeTxtBox])
+		editBoxes[activeTxtBox]->IMEvent(message, wParam, lParam);
+}
+void PreferenceConfigScene::KeyboardInput(WPARAM wParam, LPARAM lParam) {
+	int activeTxtBox = getActiveTextbox();
+	if ((activeTxtBox >= 0) && editBoxes[activeTxtBox]) {
+		editBoxes[activeTxtBox]->KeyboardInput(wParam, lParam);
+	}
+}
+void PreferenceConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+	if (getActiveTextbox() == -1)
+		ConfigMenuProto::KeyboardInput(od);
 }
 
 }

@@ -30,10 +30,16 @@ private:
 	void BtnEvent_OK_Up();
 	void BtnEvent_Content_Roll_Up();
 	void BtnEvent_Content_Roll_Down();
+private:
+	void setActiveTextbox(int textBoxID);
+	int getActiveTextbox();
 public:
 	PreferenceConfigScene(ScreenManipulator* const manipulator);
 	virtual ~PreferenceConfigScene();
 	void Render();
+	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
+	void KeyboardInput(WPARAM wParam, LPARAM lParam);
+	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 };
 
 }
