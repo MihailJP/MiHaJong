@@ -56,6 +56,8 @@ class PreferenceData : public ConfigData<PREFERENCE_ITEMS, RULES_IN_PAGE, RULE_I
 private:
 	void configinit_csv();
 	void configinit_ini();
+public:
+	PreferenceData() : ConfigData<PREFERENCE_ITEMS, RULES_IN_PAGE, RULE_IN_LINE>(_T("preferences")) {}
 };
 namespace {
 	PreferenceData preferenceTableData;

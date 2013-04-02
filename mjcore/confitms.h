@@ -10,6 +10,7 @@
 #include "reader/csv2arry.h"
 #include "reader/ini2map.h"
 #include "logging.h"
+#include "../common/strcode.h"
 
 // -------------------------------------------------------------------------
 
@@ -28,6 +29,8 @@ CONFDAT_TEMPLATE class ConfigData {
 protected:
 	static const unsigned Pages = (NumOfItems + PageBatch - 1) / PageBatch;
 	static const unsigned Lines = (NumOfItems + LineBatch - 1) / LineBatch;
+protected:
+	CodeConv::tstring mySectionName;
 protected:
 	char ruleConf[Lines][LineBatch + 1];
 	RULETBL Rules;
@@ -84,6 +87,9 @@ public:
 	void setFreeStr(std::string RuleTag, std::string data);
 	void setFreeStr(uint16_t RuleID, std::string data);
 public:
+	CONFDAT_CLASS(CodeConv::tstring sectionName = _T("rules")) {
+		mySectionName = sectionName;
+	}
 	virtual ~ConfigData() {}
 };
 
@@ -281,7 +287,7 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 				else
 					memset(ruleConf[i], _T('-'), LineBatch);
 			}
-			auto& config_rules = config_ini[_T("rules")];
+			auto& config_rules = config_ini[mySectionName];
 			for (auto k = config_rules.begin(); k != config_rules.end(); ++k) { // rulesセクションについて
 				if (inverse_nametbl.find(toANSI(k->first)) != inverse_nametbl.end()) { // キーがあったら
 					const std::string& rulename = toANSI(k->first); // 別名をつける
@@ -350,7 +356,7 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::saveConfigFile(const char* const filename) {
 		file.open(filename, std::ios::out | std::ios::trunc); // 上書きテキストモードで、開く
 		if (!file) throw std::runtime_error(std::string("ファイル [") + std::string(filename) +
 			std::string("] を書き込みモードで開けません。設定は保存されません。")); // 失敗したら例外を投げる
-		file << toUTF8(_T("[rules]")) << std::endl; // セクション名
+		file << toUTF8(_T("[")) << toUTF8(mySectionName) << toUTF8(_T("]")) << std::endl; // セクション名
 		chkerr(file, filename); // 失敗したら例外を投げる
 		for (auto k = nametbl.begin(); k != nametbl.end(); ++k) {
 			if ((!(k->empty())) && (nonapplicable.find(*k) == nonapplicable.end())) { // 有効なら
