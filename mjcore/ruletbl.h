@@ -39,6 +39,8 @@ public:
 	__declspec(dllexport) static void getPreferenceTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index);
 	static int getPreference(std::string RuleTag);
 	static int getPreference(uint16_t RuleID);
+	static std::string chkPreference(std::string RuleTag);
+	static const char* chkPreference(const char* RuleTag);
 	static const char* getPreferenceRawStr(uint16_t RuleID);
 	__declspec(dllexport) static int getPreferenceSize(uint16_t RuleID);
 	__declspec(dllexport) static unsigned getPreferenceInputSize(uint16_t RuleID);

@@ -169,6 +169,14 @@ const char* RuleData::chkRule(const char* RuleTag) { // ルール設定タグを取得する
 	ruledat = chkRule(std::string(RuleTag));
 	return ruledat.c_str();
 }
+std::string RuleData::chkPreference(std::string RuleTag) { // ルール設定タグを取得する
+	return preferenceTableData.chkRule(RuleTag);
+}
+const char* RuleData::chkPreference(const char* RuleTag) { // ルール設定タグを取得する
+	static std::string ruledat;
+	ruledat = chkPreference(std::string(RuleTag));
+	return ruledat.c_str();
+}
 bool RuleData::chkRule(std::string RuleTag, std::string Expectation) { // ルール設定
 	return ruleTableData.chkRule(RuleTag, Expectation);
 }
