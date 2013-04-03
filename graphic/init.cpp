@@ -11,6 +11,7 @@ EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hw
 	try {
 		myMainWindow = new MainWindow(hInstance, nCmdShow, icon);
 		ui::UIEvent = new ui::UI_Event();
+		ui::cancellableWait = new ui::CancellableWait();
 		if (hwndPtr) *hwndPtr = myMainWindow->gethwnd();
 	}
 	catch (LPTSTR e) {
@@ -47,6 +48,7 @@ catch (LPTSTR e) {
 EXPORT void CleanupWindow() {
 	delete myMainWindow;
 	delete ui::UIEvent;
+	delete ui::cancellableWait;
 }
 
 }

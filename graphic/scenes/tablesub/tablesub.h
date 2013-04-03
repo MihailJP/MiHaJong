@@ -21,6 +21,7 @@ public:
 	virtual void Render() = 0;
 	static const std::int32_t NoTimeout = 0x7fffffff;
 	virtual std::int32_t timeout() {return NoTimeout;} // タイムアウト判定用
+	virtual void skipEvent() {} // ボタンを押してスキップした場合
 };
 
 }

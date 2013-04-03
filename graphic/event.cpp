@@ -1,9 +1,12 @@
 #include "event.h"
+#include "../sound/sound.h"
+#include "../common/bgmid.h"
 
 namespace mihajong_graphic {
 namespace ui {
 
 UI_Event* UIEvent = nullptr;
+CancellableWait* cancellableWait = nullptr;
 
 Event::Event(bool initialStat, bool automatic) {
 	myEvent = CreateEvent(nullptr, !automatic, initialStat, nullptr);
@@ -16,6 +19,10 @@ Event::~Event() {
 
 void Event::set() {
 	SetEvent(myEvent);
+}
+
+void Event::reset() {
+	ResetEvent(myEvent);
 }
 
 DWORD Event::wait(DWORD timeout) {
@@ -34,8 +41,25 @@ DWORD UI_Event::wait() {
 	return retValue;
 }
 
+void CancellableWait::set(DWORD retval) {
+	retValue = retval;
+	Event::set();
+}
+
+DWORD CancellableWait::wait(DWORD timeout) {
+	DWORD result = Event::wait(timeout);
+	if (result == WAIT_OBJECT_0)
+		sound::Play(sound::IDs::sndClick);
+	return retValue;
+}
+
 EXPORT DWORD WaitUI() {
 	if (UIEvent) return UIEvent->wait();
+	else return 0xcccccccc;
+}
+
+EXPORT DWORD WaitUIWithTimeout(DWORD timeout) {
+	if (cancellableWait) return cancellableWait->wait(timeout);
 	else return 0xcccccccc;
 }
 
