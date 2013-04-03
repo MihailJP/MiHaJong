@@ -48,9 +48,12 @@ void CancellableWait::set(DWORD retval) {
 
 DWORD CancellableWait::wait(DWORD timeout) {
 	DWORD result = Event::wait(timeout);
-	if (result == WAIT_OBJECT_0)
+	if (result == WAIT_OBJECT_0) {
 		sound::Play(sound::IDs::sndClick);
-	return retValue;
+		return retValue;
+	} else {
+		return 0xffffffff;
+	}
 }
 
 EXPORT DWORD WaitUI() {
