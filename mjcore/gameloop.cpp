@@ -120,6 +120,7 @@ void startgame(GameTypeID gameType) {
 		/* TODO: 画面初期化 vanish */
 		info(_T("ゲーム情報を初期化しました。"));
 		mihajong_socket::server::rotation_reset();
+		RuleData::applyPreference(); // 環境設定を反映
 		sound::Play(sound::IDs::musTitle); // タイトル曲を流す
 		unsigned ClientNumber = 0u;
 		start:
@@ -138,6 +139,7 @@ void startgame(GameTypeID gameType) {
 		case 5:
 			mihajong_graphic::Transit(mihajong_graphic::sceneSetting);
 			mihajong_graphic::ui::WaitUI();
+			RuleData::applyPreference(); // 環境設定を反映
 			goto start;
 		case 6:
 			return;

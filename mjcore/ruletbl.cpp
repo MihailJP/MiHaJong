@@ -14,6 +14,7 @@
 #include "../common/strcode.h"
 #include "gametbl.h"
 #include "../common/nmrules.h"
+#include "sound.h"
 
 // -------------------------------------------------------------------------
 
@@ -278,6 +279,10 @@ __declspec(dllexport) unsigned RuleData::getPreferenceInputSize(uint16_t RuleID)
 
 void RuleData::setPreferenceFreeStr(uint16_t RuleID, const char* str) {
 	preferenceTableData.setFreeStr(RuleID, str);
+}
+
+void RuleData::applyPreference() {
+	sound::util::setvolume();
 }
 
 // -------------------------------------------------------------------------
