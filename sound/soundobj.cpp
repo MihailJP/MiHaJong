@@ -137,3 +137,12 @@ void sound::SoundManipulator::stop(unsigned ID) {
 	}
 	sounds[ID]->Stop();
 }
+
+/* âπó ê›íË */
+void sound::SoundManipulator::setVolume(unsigned ID, double volume) {
+	if ((sounds.size() <= ID) || (!sounds[ID])) {
+		CodeConv::tostringstream o; o << _T("ÉTÉEÉìÉh ID [") << ID << _T("] ÇÕì«Ç›çûÇ‹ÇÍÇƒÇ»Ç¢Ç≈Ç∑");
+		throw o.str();
+	}
+	sounds[ID]->setVolume(volume);
+}

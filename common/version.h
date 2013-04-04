@@ -25,10 +25,10 @@
 #define SOCKET_PATCH_VER 0
 #define SOCKET_VER "2.0.0-devel"
 
-#define SOUND_MAJOR_VER 1
-#define SOUND_MINOR_VER 9
-#define SOUND_PATCH_VER 2
-#define SOUND_VER "1.9.2"
+#define SOUND_MAJOR_VER 2
+#define SOUND_MINOR_VER 0
+#define SOUND_PATCH_VER 0
+#define SOUND_VER "2.0.0-devel"
 
 #define GRAPHIC_MAJOR_VER 2
 #define GRAPHIC_MINOR_VER 0
