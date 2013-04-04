@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <cmath>
 #include "logger.h"
 #include "../common/strcode.h"
 
@@ -92,7 +93,7 @@ void sound::SoundData::PrepareBuffer(LPDIRECTSOUND8* Engine, bool looped) {
 	DSBUFFERDESC dsbd;
 	memset(&dsbd, 0, sizeof(DSBUFFERDESC));
 	dsbd.dwSize = sizeof(DSBUFFERDESC);
-	dsbd.dwFlags = 0;
+	dsbd.dwFlags = DSBCAPS_CTRLVOLUME;
 	dsbd.dwBufferBytes = buffer.size();
 	dsbd.lpwfxFormat = &format;
 	dsbd.guid3DAlgorithm = GUID_NULL;
@@ -161,6 +162,21 @@ void sound::SoundData::Stop() {
 	if (FAILED(hr = voice->SetCurrentPosition(0))) {
 		CodeConv::tostringstream o; o << _T("SetCurrentPositionŽ¸”sII (0x") <<
 #endif
+			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
+		throw o.str();
+	}
+}
+
+/* ‰¹—ÊÝ’è */
+void sound::SoundData::setVolume(double volume) {
+	HRESULT hr;
+#if defined(USE_XAUDIO2)
+	if (FAILED(hr = voice->SetVolume(volume))) {
+#else
+	double vol_dB = 10.0 * log(abs(volume)) / log(2.0);
+	if (FAILED(hr = voice->SetVolume((volume == 0.0) ? DSBVOLUME_MIN : vol_dB))) {
+#endif
+		CodeConv::tostringstream o; o << _T("SetVolumeŽ¸”sII (0x") <<
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}

@@ -26,4 +26,6 @@ namespace sound {
 
 	SOUNDDLL_EXPORT int Play(unsigned ID); // çƒê∂
 	SOUNDDLL_EXPORT int Stop(unsigned ID); // í‚é~
+
+	SOUNDDLL_EXPORT int SetVolume(unsigned ID, double volume); // âπó ê›íË
 }
