@@ -214,7 +214,7 @@ void PreferenceConfigScene::setVolume() {
 	/* XXX: ここはコンフィグ番号をハードコーディング */
 	using namespace sound;
 	auto getvolume = [this] (unsigned index) -> double {
-		int volperc = ((10 + prefstat[index]) % 11) * 10;
+		int volperc = ((20 + prefstat[index]) % 21) * 5;
 		return (double)volperc / 100.0;
 	};
 	for (unsigned i = IDs::BgmStart; i <= IDs::BgmEnd; i++)
