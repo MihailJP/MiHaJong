@@ -98,7 +98,7 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 	} while ((roundEndType == DrawRinshan) || (roundEndType == Continuing));
 	OrigHonba = gameStat->Honba; OrigTurn = gameStat->GameRound;
 	endround::endround(gameStat, roundEndType, OrigTurn, OrigHonba);
-	Sleep(5000);
+	mihajong_graphic::ui::WaitUIWithTimeout(5000);
 	// ”¼‘‘I—¹”»’è
 	return endround::nextRound(gameStat, roundEndType, OrigTurn);
 }
