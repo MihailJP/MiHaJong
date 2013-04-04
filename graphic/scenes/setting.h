@@ -31,6 +31,8 @@ private:
 private:
 	void setActiveTextbox(int textBoxID);
 	int getActiveTextbox();
+private:
+	void setVolume();
 public:
 	PreferenceConfigScene(ScreenManipulator* const manipulator);
 	virtual ~PreferenceConfigScene();
