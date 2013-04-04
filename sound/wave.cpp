@@ -171,10 +171,21 @@ void sound::SoundData::Stop() {
 void sound::SoundData::setVolume(double volume) {
 	HRESULT hr;
 #if defined(USE_XAUDIO2)
-	if (FAILED(hr = voice->SetVolume(volume))) {
+	double ampvol;
+	if (volume == 0.0)
+		ampvol = 0.0;
+	else
+		ampvol = pow(10.0, (abs(volume) - 1.0) * 100.0 / 40.0);
+	if (FAILED(hr = voice->SetVolume(ampvol))) {
 #else
-	double vol_dB = 10.0 * log(abs(volume)) / log(2.0);
-	if (FAILED(hr = voice->SetVolume((volume == 0.0) ? DSBVOLUME_MIN : vol_dB))) {
+	int dBvol;
+	if (volume == 0.0)
+		dBvol = DSBVOLUME_MIN;
+	else if (abs(volume) >= 1.0)
+		dBvol = DSBVOLUME_MAX;
+	else
+		dBvol = (int)((abs(volume) - 1.0) * 5000.0);
+	if (FAILED(hr = voice->SetVolume(dBvol))) {
 #endif
 		CodeConv::tostringstream o; o << _T("SetVolumeŽ¸”sII (0x") <<
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
