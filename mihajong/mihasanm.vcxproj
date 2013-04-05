@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C808268F-5339-46B2-A811-1DECCEE1191D}</ProjectGuid>
-    <RootNamespace>mihajong</RootNamespace>
+    <ProjectGuid>{17AF237F-8B6D-406A-8A56-987D03D3397F}</ProjectGuid>
+    <RootNamespace>mihasanm</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -114,14 +114,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="mihajong.cpp" />
+    <ClCompile Include="mihasanm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="mihajong.rc" />
+    <ResourceCompile Include="mihasanm.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

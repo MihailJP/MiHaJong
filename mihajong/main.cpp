@@ -5,6 +5,8 @@
 #include "../graphic/graphic.h"
 #include "resource.h"
 
+extern const GameTypeID myGameType;
+
 #ifdef MINGW_UNICODE /* Workaround for MinGW */
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow) {
 #else
@@ -22,7 +24,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 		exit(1); // 失敗したら終了
 	
 	/* スタート */
-	StartGame(Yonma, hwnd);
+	StartGame(myGameType, hwnd);
 
 	/* メインループ */
 	while (true) {
