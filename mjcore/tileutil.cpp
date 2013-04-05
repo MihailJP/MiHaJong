@@ -132,7 +132,9 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 	for (int i = 0; i < Players; i++) {
 		if (gameStat->Player[i].DiscardPointer == 0) continue;
 		for (int j = 1; j <= gameStat->Player[i].DiscardPointer; j++)
-			seenTiles[gameStat->Player[i].Discard[j].tcode.tile]++;
+			if ((gameStat->Player[i].Discard[j].dstat != discardTaken) && // 鳴かれた牌をここで数えると
+				(gameStat->Player[i].Discard[j].dstat != discardRiichiTaken)) // 二重にカウントされることになるので数えない
+				seenTiles[gameStat->Player[i].Discard[j].tcode.tile]++;
 	}
 
 	// 誰かの副露で見えてる枚数
