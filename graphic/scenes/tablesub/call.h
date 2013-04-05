@@ -15,6 +15,7 @@ protected:
 public:
 	TableSubsceneCallProto(LPDIRECT3DDEVICE9 device);
 	virtual ~TableSubsceneCallProto();
+	virtual void skipEvent();
 };
 
 class TableSubsceneCallChankanRon;

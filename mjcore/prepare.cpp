@@ -319,6 +319,13 @@ void gameinit(GameTable* gameStat, GameTypeID gameType, const std::string& Serve
 
 /* 卓の初期化 */
 namespace {
+	void skippableWait(unsigned milliseconds) {
+		static bool reallyWait = true;
+		if (milliseconds == 0) // フラグをリセット
+			reallyWait = true;
+		if ((milliseconds) && (reallyWait) && (mihajong_graphic::ui::WaitUIWithTimeout(milliseconds) != 0xffffffff)) // 待機する
+			reallyWait = false;
+	}
 	void init_ai(const GameTable* const gameStat) {
 		aiscript::initephemeral(); // AIのephemeralテーブルを初期化
 		for (PlayerID i = 0; i < Players; i++)
@@ -422,6 +429,7 @@ namespace {
 			sound::util::bgmplay(sound::IDs::BgmStart + gameStat->GameRound);
 	}
 	void screen(const GameTable* const gameStat) {
+		skippableWait(0);
 		CodeConv::tstring tmpStatus;
 		if (gameStat->Honba) {
 			CodeConv::tostringstream o;
@@ -554,7 +562,7 @@ namespace {
 				gameStat->Dice[i].Direction = RndNum::rnd(4);
 			}
 			sound::Play(sound::IDs::sndSaikoro);
-			mihajong_graphic::GameStatus::updateGameStat(gameStat); Sleep(80);
+			mihajong_graphic::GameStatus::updateGameStat(gameStat); skippableWait(80);
 		}
 		sound::Play(sound::IDs::sndSaikoro);
 		/* サイコロの出目を送信 */
@@ -591,7 +599,7 @@ namespace {
 			if (i % 4 == 3) {
 				calcdoukasen(gameStat);
 				sound::Play(sound::IDs::sndTsumo);
-				mihajong_graphic::GameStatus::updateGameStat(gameStat); Sleep(250);
+				mihajong_graphic::GameStatus::updateGameStat(gameStat); skippableWait(250);
 			}
 		}
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
@@ -609,7 +617,7 @@ namespace {
 			++gameStat->TilePointer;
 			calcdoukasen(gameStat);
 			sound::Play(sound::IDs::sndTsumo);
-			mihajong_graphic::GameStatus::updateGameStat(gameStat); Sleep(250);
+			mihajong_graphic::GameStatus::updateGameStat(gameStat); skippableWait(250);
 		}
 
 		initdora(gameStat); // ドラをめくる

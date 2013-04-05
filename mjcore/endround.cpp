@@ -70,9 +70,9 @@ namespace { // 内部処理に使う関数
 					logKuikae(gameStat, false);
 					for (unsigned i = 0; i < 2; ++i) {
 						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Kuikae);
-						mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); Sleep(1500);
+						mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
 						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::AgariHouki);
-						mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); Sleep(1500);
+						mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
 					}
 					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
 					mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
@@ -85,7 +85,7 @@ namespace { // 内部処理に使う関数
 					/* 直ちに錯和とする設定 */
 					logKuikae(gameStat, true);
 					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Chonbo);
-					mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); Sleep(1500);
+					mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
 					/* 局を打ち切り、満貫罰符の支払いに進む */
 					return true;
 				}
@@ -112,9 +112,9 @@ namespace { // 内部処理に使う関数
 					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Tahai);
 				else
 					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Shouhai);
-				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); Sleep(1500);
+				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
 				mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::AgariHouki);
-				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); Sleep(1500);
+				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
 			}
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
 			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
@@ -180,14 +180,14 @@ namespace {
 			sound::Play(soundNum);
 			writeChat(*ResultDesc);
 			Subscene(subsceneCode);
-			Sleep(3000);
+			mihajong_graphic::ui::WaitUIWithTimeout(3000);
 		}
 		for (PlayerID i = 0; i < Players; ++i)
 			calltext::setCall(i, calltext::None);
 		sound::Play(sound::IDs::sndPingju);
 		sound::util::bgmplay(bgmNum);
 		Subscene(tblSubsceneRyuukyoku);
-		Sleep(waittime);
+		mihajong_graphic::ui::WaitUIWithTimeout(waittime);
 	}
 
 	unsigned checkTenpai(GameTable* gameStat, CodeConv::tstring& ResultDesc, unsigned OrigTurn) {
@@ -216,7 +216,7 @@ namespace {
 		writeChat(ResultDesc + _T("です"));
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChkTenpai);
-		Sleep(5000);
+		mihajong_graphic::ui::WaitUIWithTimeout(5000);
 		return TenpaiCnt;
 	}
 
@@ -300,7 +300,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 			// 錯和立直（不聴立直）の者がいた場合
 			if ((!isTenpai(gameStat, cnt)) && (gameStat->Player[cnt].RichiFlag.RichiFlag)) {
 				transferChonboPenalty(gameStat, cnt);
-				Sleep(500);
+				mihajong_graphic::ui::WaitUIWithTimeout(500);
 			}
 		}
 		
@@ -379,7 +379,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/* 三家和の時 */
 	/**************/
 	case TripleRon:
-		Sleep(1300);
+		mihajong_graphic::ui::WaitUIWithTimeout(1300);
 		/* TODO: こいつらの処分を決めてください
 		statmes "流局(二家和)"
 		statmes "流局(三家和)"
@@ -426,7 +426,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 			// 錯和立直（不聴立直）の者がいた場合
 			if (!isTenpai(gameStat, cnt)) {
 				transferChonboPenalty(gameStat, cnt);
-				Sleep(500);
+				mihajong_graphic::ui::WaitUIWithTimeout(500);
 			}
 		}
 		ryuukyokuProc(gameStat, !RuleData::chkRule("four_riichi_ryuukyoku", "next_dealer"));
@@ -470,7 +470,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		}
 		sound::Play(sound::IDs::sndPage);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall);
-		Sleep(1500);
+		mihajong_graphic::ui::WaitUIWithTimeout(1500);
 		transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValNagashiMangan, 1500);
 		ryuukyokuProc(gameStat, true);
 	}
@@ -650,7 +650,7 @@ void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, 
 	setTransferParam();
 	mihajong_graphic::Subscene(subscene);
 	sound::Play(sound::IDs::sndPage);
-	Sleep(wait);
+	mihajong_graphic::ui::WaitUIWithTimeout(wait);
 	for (PlayerID i = 0; i < Players; ++i)
 		gameStat->Player[i].PlayerScore += delta[i];
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
@@ -659,7 +659,7 @@ void endround::transfer::transferChip(GameTable* gameStat, unsigned subscene, un
 	setTransferParam();
 	mihajong_graphic::Subscene(subscene);
 	sound::Play(sound::IDs::sndPage);
-	Sleep(wait);
+	mihajong_graphic::ui::WaitUIWithTimeout(wait);
 	for (PlayerID i = 0; i < Players; ++i)
 		gameStat->Player[i].playerChip += delta[i];
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);

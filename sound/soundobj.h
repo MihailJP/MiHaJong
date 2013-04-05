@@ -34,6 +34,7 @@ namespace sound {
 		void readMidiData(unsigned ID, const std::string& filename, bool looped = false);
 		void play(unsigned ID);
 		void stop(unsigned ID);
+		void setVolume(unsigned ID, double volume);
 	};
 
 }

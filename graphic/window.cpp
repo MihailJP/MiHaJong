@@ -90,10 +90,11 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode) {
 	return;
 }
 
-MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon) {
+MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen) {
+	Geometry::WindowWidth = width; Geometry::WindowHeight = height;
 	initWindowClass(hThisInst, icon);
 	initWindow(hThisInst, nWinMode);
-	myScreenManipulator = new ScreenManipulator(hWnd);
+	myScreenManipulator = new ScreenManipulator(hWnd, fullscreen);
 	myInputManipulator = new input::InputManipulator(hWnd);
 }
 
