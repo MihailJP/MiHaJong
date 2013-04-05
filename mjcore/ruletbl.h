@@ -1,5 +1,6 @@
 #pragma once
 
+#include "mjexport.h"
 #include "confitms.h"
 
 #ifdef MJCORE_EXPORTS
@@ -7,6 +8,7 @@
 class RuleData {
 public:
 	__declspec(dllexport) static void configinit();
+	__declspec(dllexport) static void preference_init();
 	__declspec(dllexport) static void storeRule(const char** ruleTxt);
 	__declspec(dllexport) static void exportRule(char** ruleTxt);
 	__declspec(dllexport) static void getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID);
@@ -50,3 +52,6 @@ public:
 
 __declspec(dllexport) int getRule(int RuleID);
 #endif
+
+MJCORE void preferenceInit();
+MJCORE void getWindowSize(unsigned* width, unsigned* height, bool* fullscreen);

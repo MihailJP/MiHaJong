@@ -6,10 +6,10 @@ namespace mihajong_graphic {
 HINSTANCE GraphicDLL = nullptr;
 MainWindow* myMainWindow = nullptr;
 
-EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr) {
+EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr, unsigned width, unsigned height, bool fullscreen) {
 	/* ウィンドウの初期化 */
 	try {
-		myMainWindow = new MainWindow(hInstance, nCmdShow, icon);
+		myMainWindow = new MainWindow(hInstance, nCmdShow, icon, width, height, fullscreen);
 		ui::UIEvent = new ui::UI_Event();
 		if (hwndPtr) *hwndPtr = myMainWindow->gethwnd();
 	}

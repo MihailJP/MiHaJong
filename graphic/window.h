@@ -21,7 +21,7 @@ private:
 	void initWindowClass(HINSTANCE hThisInst, LPCTSTR icon); // ウィンドウクラスの初期化
 	void initWindow(HINSTANCE hThisInst, int nWinMode); // ウィンドウの生成
 public:
-	MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon);
+	MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen);
 	~MainWindow();
 	void Render();
 	void transit(sceneID scene);

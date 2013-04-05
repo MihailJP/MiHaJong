@@ -8,6 +8,7 @@
 #include <exception>
 #include <Windows.h>
 #include <cassert>
+#include <regex>
 #include "logging.h"
 #include "decomp.h"
 #include "reader/readrsrc.h"
@@ -15,6 +16,7 @@
 #include "gametbl.h"
 #include "../common/nmrules.h"
 #include "sound.h"
+#include "func.h"
 
 // -------------------------------------------------------------------------
 
@@ -145,6 +147,9 @@ bool RuleConfigData::reqFailed(uint16_t ruleID, const int* const ruleStat) {
 
 __declspec(dllexport) void RuleData::configinit() { // コンフィグ用CSVを読み込む
 	ruleTableData.configinit();
+}
+
+__declspec(dllexport) void RuleData::preference_init() { // コンフィグ用CSVを読み込む
 	preferenceTableData.configinit();
 }
 
@@ -286,3 +291,22 @@ void RuleData::applyPreference() {
 }
 
 // -------------------------------------------------------------------------
+
+MJCORE void preferenceInit() {
+	std::string preferenceFile = confpath::confPath() + "config.ini";
+	RuleData::preference_init();
+	RuleData::loadPreferenceFile(preferenceFile.c_str());
+}
+
+MJCORE void getWindowSize(unsigned* width, unsigned* height, bool* fullscreen) {
+	std::string sizeConf(RuleData::chkPreference("scrsize"));
+	std::smatch matchDat;
+	if (std::regex_match(sizeConf, matchDat, std::regex("scr_(\\d+)_(\\d+)"))) {
+		*width = atoi(matchDat[1].str().c_str());
+		*height = atoi(matchDat[2].str().c_str());
+	} else {
+		*width = 1024; *height = 768;
+	}
+	std::string fsConf(RuleData::chkPreference((std::string)"screen"));
+	*fullscreen = (fsConf == std::string("fullscreen"));
+}
