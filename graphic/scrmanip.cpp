@@ -4,7 +4,7 @@
 
 namespace mihajong_graphic {
 
-void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
+void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初期化
 	/* Direct3D オブジェクト生成 */
 	pd3d = Direct3DCreate9(D3D_SDK_VERSION);
 	if (!pd3d) // 生成失敗
@@ -13,10 +13,12 @@ void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
 	/* D3Dデバイスオブジェクト生成 */
 	D3DPRESENT_PARAMETERS d3dpp;
 	ZeroMemory(&d3dpp, sizeof(d3dpp));
-	d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+	d3dpp.BackBufferWidth = Geometry::WindowWidth;
+	d3dpp.BackBufferHeight = Geometry::WindowHeight;
+	d3dpp.BackBufferFormat = fullscreen ? D3DFMT_X8R8G8B8 : D3DFMT_UNKNOWN;
 	d3dpp.BackBufferCount = 1;
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	d3dpp.Windowed = TRUE;
+	d3dpp.Windowed = !fullscreen;
 
 	if (SUCCEEDED(pd3d->CreateDevice( // HAL
 		D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED, &d3dpp, &pDevice
@@ -33,11 +35,11 @@ void ScreenManipulator::InitDevice() { // Direct3D オブジェクト初期化
 	else // All the four failed
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
 }
-ScreenManipulator::ScreenManipulator(HWND windowHandle) {
-	CS_SceneAccess.syncDo<void>([this, windowHandle]() -> void {
+ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
+	CS_SceneAccess.syncDo<void>([this, windowHandle, fullscreen]() -> void {
 		redrawFlag = false;
 		pDevice = nullptr; hWnd = windowHandle;
-		InitDevice();
+		InitDevice(fullscreen);
 		myScene = new SplashScreen(this);
 		myFPSIndicator = new FPSIndicator(this);
 		lastRedrawTime = 0;

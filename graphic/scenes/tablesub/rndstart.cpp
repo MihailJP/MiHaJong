@@ -1,6 +1,7 @@
 #include "rndstart.h"
 #include "../../rule.h"
 #include "../../gametbl.h"
+#include "../../event.h"
 #include "../../../common/strcode.h"
 
 namespace mihajong_graphic {
@@ -70,6 +71,10 @@ void TableSubsceneBeginning::Render() {
 		myTextRenderer->DelText(3);
 	}
 	myTextRenderer->Render();
+}
+
+void TableSubsceneBeginning::skipEvent() {
+	ui::cancellableWait->set(1);
 }
 
 }

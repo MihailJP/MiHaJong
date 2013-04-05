@@ -19,6 +19,7 @@ namespace sound {
 		virtual ~AudioData() {};
 		virtual void Play() = 0;
 		virtual void Stop() = 0;
+		virtual void setVolume(double volume) = 0;
 	};
 	class SoundData : public AudioData {
 	protected:
@@ -40,6 +41,7 @@ namespace sound {
 	public:
 		virtual void Play();
 		virtual void Stop();
+		virtual void setVolume(double volume);
 		explicit SoundData();
 		virtual ~SoundData() = 0;
 	};
@@ -90,6 +92,7 @@ namespace sound {
 		explicit MidiData(unsigned ID, const std::string& filename, bool looped = false);
 		void Play();
 		void Stop();
+		virtual void setVolume(double volume);
 		virtual ~MidiData();
 #else
 	public:

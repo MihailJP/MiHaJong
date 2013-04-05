@@ -88,3 +88,13 @@ SOUNDDLL_EXPORT int sound::Stop(unsigned ID) try {
 	error(e.c_str());
 	return -1;
 }
+
+/* ‰¹—ÊÝ’è */
+SOUNDDLL_EXPORT int sound::SetVolume(unsigned ID, double volume) try {
+	if (!soundManipulator) throw CodeConv::tstring(_T("‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñIII"));
+	soundManipulator->setVolume(ID, volume);
+	return 0;
+} catch (CodeConv::tstring& e) {
+	error(e.c_str());
+	return -1;
+}

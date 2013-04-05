@@ -575,7 +575,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	ResultDesc += tmpResultDesc;
 	writeChat(tmpResultDesc);
 	/* TODO: ‚±‚ê‚ğ”p~‚·‚é‚©‚ÌŒˆ’è statmes tmpResultDesc */
-	Sleep(1500);
+	mihajong_graphic::ui::WaitUIWithTimeout(1500);
 	std::uint16_t tmpDoraPointer = origDoraPointer;
 	const int AlicePointer = tmpDoraPointer - yakuInfo.AliceDora * 2 - 2;
 
@@ -585,7 +585,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 			gameStat->DoraPointer -= 2;
 			sound::Play(sound::IDs::sndMekuri);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
-			Sleep(1200);
+			mihajong_graphic::ui::WaitUIWithTimeout(1200);
 		}
 		gameStat->DoraPointer = tmpDoraPointer;
 		tmpAliceFlag = true;
@@ -686,7 +686,7 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 	ResultDesc += tmpResultDesc + _T("‚Å‚·");
 	writeChat(tmpResultDesc);
 	/* TODO: ‚±‚ê‚ğ”p~‚·‚é‚©‚ÌŒˆ’è statmes tmpResultDesc */
-	Sleep(1500);
+	mihajong_graphic::ui::WaitUIWithTimeout(1500);
 	sound::util::bgmplay(sound::IDs::musRyuukyoku);
 	/* Œëƒƒ“‚Ü‚½‚ÍŒëƒcƒ‚ */
 	if ((gameStat->AgariSpecialStat == 0) || (gameStat->AgariSpecialStat == 1)) {
@@ -717,7 +717,7 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 		sound::Play(sound::IDs::sndPage);
 	}
 	mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChonbo);
-	Sleep(5000);
+	mihajong_graphic::ui::WaitUIWithTimeout(5000);
 
 	transferChonboPenalty(gameStat, gameStat->CurrentPlayer.Agari);
 	return;

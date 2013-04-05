@@ -188,6 +188,7 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		tileSelectMode = 0;
 		delete mySubScene; tehaiReconst->setTileCursor();
 		tileTipReconst->reconstruct();
+		ui::UIEvent->reset(); ui::cancellableWait->reset();
 		switch (static_cast<TableSubsceneID>(scene_ID)) {
 		case tblSubsceneBeginning:
 			mySubScene = new TableSubsceneBeginning(caller->getDevice());
@@ -414,6 +415,10 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_BACK:       directTileCursor(13); break;
 	/* 決定キー */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
+		if (od->dwData)
+			subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
+				mySubScene->skipEvent();
+			});
 		if ((od->dwData) && (tehaiReconst->isCursorEnabled()))
 			FinishTileChoice();
 		else if ((od->dwData) && (buttonReconst->isCursorEnabled()))
@@ -454,6 +459,10 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		}
 		break;
 	case DIMOFS_BUTTON0: // マウスクリック
+		if (od->dwData)
+			subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
+				mySubScene->skipEvent();
+			});
 		if ((isValidTile) && (od->dwData))
 			FinishTileChoice();
 		else if ((isButton) && (od->dwData))

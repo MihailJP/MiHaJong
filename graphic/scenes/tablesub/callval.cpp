@@ -3,6 +3,7 @@
 #include "../../calltext.h"
 #include <cmath>
 #include <cassert>
+#include "../../event.h"
 
 namespace mihajong_graphic {
 
@@ -83,6 +84,10 @@ void TableSubsceneCallValue::Render() {
 	captionRenderer->Render();
 	ShowAllCall();
 	fontRenderer->Render();
+}
+
+void TableSubsceneCallValue::skipEvent() {
+	ui::cancellableWait->set(1);
 }
 
 }
