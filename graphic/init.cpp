@@ -6,11 +6,12 @@ namespace mihajong_graphic {
 HINSTANCE GraphicDLL = nullptr;
 MainWindow* myMainWindow = nullptr;
 
-EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr) {
+EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr, unsigned width, unsigned height, bool fullscreen) {
 	/* ウィンドウの初期化 */
 	try {
-		myMainWindow = new MainWindow(hInstance, nCmdShow, icon);
+		myMainWindow = new MainWindow(hInstance, nCmdShow, icon, width, height, fullscreen);
 		ui::UIEvent = new ui::UI_Event();
+		ui::cancellableWait = new ui::CancellableWait();
 		if (hwndPtr) *hwndPtr = myMainWindow->gethwnd();
 	}
 	catch (LPTSTR e) {
@@ -47,6 +48,7 @@ catch (LPTSTR e) {
 EXPORT void CleanupWindow() {
 	delete myMainWindow;
 	delete ui::UIEvent;
+	delete ui::cancellableWait;
 }
 
 }

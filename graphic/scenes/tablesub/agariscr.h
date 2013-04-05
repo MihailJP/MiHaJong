@@ -50,6 +50,7 @@ protected:
 public:
 	TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 device);
 	virtual ~TableSubsceneAgariScreenProto();
+	virtual void skipEvent();
 };
 
 class TableSubsceneAgariScreen : public TableSubsceneAgariScreenProto {

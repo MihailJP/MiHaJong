@@ -1,5 +1,6 @@
 #include "titling.h"
 #include "../../gametbl.h"
+#include "../../event.h"
 
 namespace mihajong_graphic {
 
@@ -25,6 +26,9 @@ void TableSubsceneTitling::FadeinStr(const std::wstring& str) {
 	}
 }
 
+void TableSubsceneTitling::skipEvent() {
+	ui::cancellableWait->set(1);
+}
 
 // -------------------------------------------------------------------------
 

@@ -17,6 +17,7 @@ public:
 	TableSubsceneBeginning(LPDIRECT3DDEVICE9 device);
 	~TableSubsceneBeginning();
 	void Render();
+	virtual void skipEvent();
 };
 
 }

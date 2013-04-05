@@ -20,6 +20,7 @@ public:
 	TableSubsceneCallValue(LPDIRECT3DDEVICE9 device, const CodeConv::tstring& caption = _T(""));
 	~TableSubsceneCallValue();
 	void Render();
+	virtual void skipEvent();
 };
 
 }

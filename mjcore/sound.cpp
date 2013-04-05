@@ -3,7 +3,9 @@
 #include "../common/bgmid.h"
 #include "../common/strcode.h"
 #include "func.h"
+#include "ruletbl.h"
 #include <vector>
+#include <regex>
 
 namespace {
 	enum bgmMode {None, Vorbis, Midi,};
@@ -74,4 +76,23 @@ void sound::util::bgmplay(unsigned ID) {
 		warn(o.str().c_str());
 	}
 	return;
+}
+
+/* ‰¹—Êİ’è‚ğ”½‰f */
+void sound::util::setvolume() {
+	using namespace sound;
+	auto getvolume = [] (std::string ruleTag) -> double {
+		const std::string chipRule(RuleData::chkPreference(ruleTag));
+		std::smatch matchDat; int volperc = 100;
+		if (std::regex_match(chipRule, matchDat, std::regex("vol_(\\d+)")))
+			volperc = atoi(matchDat[1].str().c_str()); // ƒ‹[ƒ‹İ’è•¶š—ñ‚©‚ç®”‚ğ’Šo
+		return (double)volperc / 100.0;
+	};
+	for (unsigned i = IDs::BgmStart; i <= IDs::BgmEnd; i++)
+		if (BGM_Mode[i] != None)
+			SetVolume(i, getvolume("bgmvolume"));
+	for (unsigned i = IDs::SndStart; i <= IDs::SndEnd; i++)
+		SetVolume(i, getvolume("sndvolume"));
+	for (unsigned i = IDs::VoxStart; i <= IDs::VoxEnd; i++)
+		SetVolume(i, getvolume("sndvolume"));
 }

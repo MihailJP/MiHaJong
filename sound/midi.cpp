@@ -24,6 +24,16 @@ void sound::MidiData::Stop() {
 	GGS->Stop(0);
 }
 
+/* 音量設定 */
+void sound::MidiData::setVolume(double volume) {
+	int vol;
+	if (abs(volume) >= 1.0)
+		vol = 0;
+	else
+		vol = (int)(-(abs(volume - 1) * 127));
+	GGS->SetMasterVolume(vol);
+}
+
 /* デストラクタ */
 sound::MidiData::~MidiData() {
 	GGS->DeleteListItem(myID);
