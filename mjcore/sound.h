@@ -9,6 +9,7 @@ void bgmload(unsigned ID, LPCSTR filename, bool looped); /* BGM“Ç‚İ‚İ */
 void soundload(unsigned ID, LPCSTR filename, bool looped); /* ƒTƒEƒ“ƒh“Ç‚İ‚İ */
 void bgmstop(); /* BGM’â~ */
 void bgmplay(unsigned ID); /* ‚a‚f‚lÄ¶ */
+void setvolume(); /* ‰¹—Êİ’è‚ğ”½‰f */
 
 }
 }

@@ -2,6 +2,7 @@
 #include "../../resource.h"
 #include "../../sprite.h"
 #include "../../utils.h"
+#include "../../event.h"
 #include "../table.h"
 
 namespace mihajong_graphic {
@@ -21,6 +22,10 @@ void TableSubsceneCallProto::ShowAllCall() {
 	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sLeft    ),                 256, TableSize / 2      );
 	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sRight   ), TableSize     - 256, TableSize / 2      );
 	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sSelf    ), TableSize / 2      , TableSize     - 192);
+}
+
+void TableSubsceneCallProto::skipEvent() {
+	ui::cancellableWait->set(1);
 }
 
 // -------------------------------------------------------------------------

@@ -194,6 +194,7 @@ void PreferenceConfigScene::BtnEvent_Content_Roll_Up() {
 		TCHAR menuitem[128]; rules::getPreferenceTxt(menuitem, 128, menuCursor, prefstat[menuCursor]);
 		if (CodeConv::tstring(menuitem) != CodeConv::tstring(_T(">>>"))) break;
 	}
+	setVolume();
 	setActiveTextbox(menuCursor);
 	redrawItems();
 }
@@ -204,8 +205,24 @@ void PreferenceConfigScene::BtnEvent_Content_Roll_Down() {
 		TCHAR menuitem[128]; rules::getPreferenceTxt(menuitem, 128, menuCursor, prefstat[menuCursor]);
 		if (CodeConv::tstring(menuitem) != CodeConv::tstring(_T(">>>"))) break;
 	}
+	setVolume();
 	setActiveTextbox(menuCursor);
 	redrawItems();
+}
+
+void PreferenceConfigScene::setVolume() {
+	/* XXX: ここはコンフィグ番号をハードコーディング */
+	using namespace sound;
+	auto getvolume = [this] (unsigned index) -> double {
+		int volperc = ((20 + prefstat[index]) % 21) * 5;
+		return (double)volperc / 100.0;
+	};
+	for (unsigned i = IDs::BgmStart; i <= IDs::BgmEnd; i++)
+		SetVolume(i, getvolume(5));
+	for (unsigned i = IDs::SndStart; i <= IDs::SndEnd; i++)
+		SetVolume(i, getvolume(4));
+	for (unsigned i = IDs::VoxStart; i <= IDs::VoxEnd; i++)
+		SetVolume(i, getvolume(4));
 }
 
 void PreferenceConfigScene::setActiveTextbox(int textBoxID) {

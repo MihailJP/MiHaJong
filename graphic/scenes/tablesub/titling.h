@@ -15,6 +15,7 @@ protected:
 public:
 	TableSubsceneTitling(LPDIRECT3DDEVICE9 device);
 	virtual ~TableSubsceneTitling();
+	virtual void skipEvent();
 };
 
 class TableSubsceneTitlingHonba : public TableSubsceneTitling {
