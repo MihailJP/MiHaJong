@@ -1,101 +1,97 @@
 ==============================================================================
-�yMiHaJong�z          Japanese Mahjong with a lot of local rules implemented
+【MiHaJong】          Japanese Mahjong with a lot of local rules implemented
                    Copyright (c) 2008-2013 MihailJP, Part of rights reserved
 ==============================================================================
 
-�� �͂��߂�
+■ はじめに
 
-	�@���̃Q�[���́A�������ʂ̖����Q�[���ł��B
-	�@���{�ň�ʓI�ɍs�Ȃ��Ă��郊�[�`�����ōs�Ȃ��܂����A�u�򂢒f�̗L���v
-	�u��|����̗L���v�Ƃ��������[�J�����[����A�u��ԗցv�u���A���v�u�\�O�s
-	���v�Ȃǃ��[�J�����Ȃǂ̐ݒ荀�ڂ��������݂��܂��B�ݒ�ł��鍀�ڂ̒��ɂ�
-	�u����������v�u�o������v�u�e���ځv�u�V�䃋�[���v�ƌ������A�\�t�g�E�F�A
-	�Ƃ��Ď��������̂��H�Ȃ��̂��܂܂�܂��B
-	�@�܂��A�v���o�͋@�\������A�C���^�[�l�b�g���o�R�����ʐM�ΐ���\�ł��B
-	�@�Ȃ��A�����̋�̓I�ȗV�ѕ��ɂ��Ă͕ʓr�������发�Ȃǂ��������������B
-
-
-�� �����
-
-	�@Windows XP/Vista/7�ADirect X 9 (June 2010) �ȍ~
-	�@HTML�`���̔v�����{������ꍇ�͕ʓr�t�H���g�̃C���X�g�[�����K�v
+	　このゲームは、ごく普通の麻雀ゲームです。
+	　日本で一般的に行なわれているリーチ麻雀で行なわれますが、「喰い断の有無」
+	「二翻縛りの有無」といったローカルルールや、「大車輪」「八連荘」「十三不
+	塔」などローカル役などの設定項目が多数存在します。設定できる項目の中には
+	「西中島南方」「双龍争珠」「覇王鞭」「青天井ルール」と言った、ソフトウェア
+	として実装されるのが稀なものも含まれます。
+	　また、牌譜出力機能もあり、インターネットを経由した通信対戦も可能です。
+	　なお、麻雀の具体的な遊び方については別途麻雀入門書などをご覧ください。
 
 
-�� �C���X�g�[���̂�����
+■ 動作環境
 
-	�@�_�E�����[�h�����A�[�J�C�u�t�@�C���̒��g��K���ȏꏊ�ɉ𓀂��Ă��������B
-	Vista �ȍ~�����g���̏ꍇ�� C:\Program Files �ȉ��ɃC���X�g�[�������ꍇ�A��
-	���I�ɔF�����ݒ��v���̃t�@�C���̏o�͐���Đݒ肵�܂�(Program Files�ւ̃C
-	���X�g�[�����̂͊Ǘ��Ҍ������K�v�ł����A�v���C���ɂ͊Ǘ��Ҍ����͕s�v�ł�)�B
+	　Windows XP/Vista/7、Direct X 9 (June 2010) 以降
+	　HTML形式の牌譜を閲覧する場合は別途フォントのインストールが必要
 
 
-�� �A���C���X�g�[���̂�����
+■ インストールのしかた
 
-	�@���W�X�g���͎g��Ȃ��̂ŁA�C���X�g�[����������t�H���_�[���ƍ폜���邾��
-	�ł��B�v��������Ă��������ꍇ�� haifu �t�H���_�[���o�b�N�A�b�v���Ă�����
-	���B
-	�@Vista �ȍ~�����g���̏ꍇ�� C:\Program Files �ȉ��ɃC���X�g�[�������ꍇ�A
-	�ݒ�Ɣv���� C:\Users\(���[�U�[��)\AppData\Roaming\MiHaJong �ȉ��ɏo�͂���
-	�܂��̂ŁA�K�v�̂Ȃ����͂�����폜���܂��B
+	　ダウンロードしたアーカイブファイルの中身を適当な場所に解凍してください。
+	Vista 以降をお使いの場合で C:\Program Files 以下にインストールした場合、自
+	動的に認識し設定や牌譜のファイルの出力先を再設定します(Program Filesへのイ
+	ンストール自体は管理者権限が必要ですが、プレイ時には管理者権限は不要です)。
 
 
-�� �����т���
+■ アンインストールのしかた
 
-	�@playing.txt ���������������B
+	　レジストリは使わないので、インストールした先をフォルダーごと削除するだけ
+	です。牌譜を取っておきたい場合は haifu フォルダーをバックアップしておきま
+	す。
+	　Vista 以降をお使いの場合で C:\Program Files 以下にインストールした場合、
+	設定と牌譜は C:\Users\(ユーザー名)\AppData\Roaming\MiHaJong 以下に出力され
+	ますので、必要のない方はこれも削除します。
 
 
-�� ������������
+■ あそびかた
 
-	�@�o�O���|�[�g��p�b�`�A�𖞘a�������Ȃǂ̕񍐂́A���̘A����ɂǂ����B
-	�E���[���F mihailjp@gmail.com
-	�ETwitter�F @MihailJP
+	　playing.txt をご覧ください。
+
+
+■ 何かあったら
+
+	　バグレポートやパッチ、役満和了ったなどの報告は、次の連絡先にどうぞ。
+	・メール： mihailjp@gmail.com
+	・Twitter： @MihailJP
 	
-	�@�܂��A�o�O���|�[�g��v�]�͊J����(Wiki)�ł��󂯕t���Ă��܂��B
+	　また、バグレポートや要望は開発室(Wiki)でも受け付けています。
 	http://www14.atwiki.jp/mihajong/
-	�@�܂��A�ŐV�̊J���ł�GitHub�̃��|�W�g���Ō��J����Ă��܂��B
+	　また、最新の開発版はGitHubのリポジトリで公開されています。
 	https://github.com/MihailJP/MiHaJong/
 
 
-�� ���m�̖��_
+■ ベータ版の制限
 
-	�EOS�̐ݒ�ō��E�̃{�^�������ւ��Ă���ƃ}�E�X�{�^���Ő���ɑŔv�ł��Ȃ��B
-	�E�|�����܂��͋h���̒���A��ʉ��̑҂��v�\���ɕςȂ��̂��\�������B
-	�E��Ƃ��e�̂Ƃ��T�C�R���̏�ɕ������\�������B
-
-
-�� MihailJP�̊J����
-
-	�EOS�FWindows 7 Home Premium 32bit (Service Pack 1)
-	�E�����������F4GB�i3.2GB�g�p�\�j
-	�ECPU�FIntel Core i5 760 2.80GHz�i�ꍇ�ɂ��2.66GHz�Ƀ_�E���N���b�N�j
-	�E�J�����FHot Soup Processor ver3.3�AVisual C++ 2010 Express
-	�E�摜�ҏW�c�[���FGIMP 2.6
-	�E�e�L�X�g�G�f�B�^�FMery�ANotepad++�AKate
-	�EGit�N���C�A���g�FCygwin GIT
+	・通信対局が未実装。
+	・チャットが未実装。
+	・終了した時、稀にMiHaJongのプロセスが残ることがある。
 
 
-�� �r���h�ɕʓr�K�v�Ȃ���
+■ MihailJPの開発環境
 
-	�EHot Soup Processor �{�� (http://hsp.tv/)
-	�Ep2b.dll (http://www.geocities.jp/anachronism128/)
-	�El_tooltips.as (http://lhsp.s206.xrea.com/hsp_object6.html)
-	�Emod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
-	�EcHspComp (http://lldev.jp/others/freeware.html#chspcomp)
-	�ELua �X�^�e�B�b�N���C�u���� (http://luabinaries.sourceforge.net/download.html)
-	�ERuby �����n (http://www.ruby-lang.org/ja/downloads/)
-	�Eruby-lzma���g���Ȃ��ꍇ�A Python �����n (http://www.python.jp/download/)
-	�Elibogg/libvorbis (http://www.xiph.org/downloads/)
-	�EGuruGuruSMF (http://gurugurusmf.migmig.net/)
+	・OS：Windows 7 Home Premium 32bit (Service Pack 1)
+	・物理メモリ：4GB（3.2GB使用可能）
+	・CPU：Intel Core i5 760 2.80GHz（場合により2.66GHzにダウンクロック）
+	・開発環境：Visual C++ 2010 Express
+	・画像編集ツール：GIMP 2.6
+	・テキストエディタ：Mery、Notepad++、Kate
+	・Gitクライアント：Cygwin GIT
 
 
-�� ���C�Z���X�ɂ���
+■ ビルドに別途必要なもの
 
-	�@license.txt ���������������B
+	・liblua (http://www.lua.org/download.html) ※
+	・Ruby 処理系 (http://www.ruby-lang.org/ja/downloads/)
+	・ruby-lzmaが使えない場合、 Python 処理系 (http://www.python.jp/download/)
+	・libogg/libvorbis (http://www.xiph.org/downloads/) ※
+	・GuruGuruSMF (http://gurugurusmf.migmig.net/)
+	※Visual C++の場合はスタティックリンクします
 
 
-�� �o�[�W��������
+■ ライセンスについて
 
-	�@history.txt ���������������B
+	　license.txt をご覧ください。
+
+
+■ バージョン履歴
+
+	　history.txt をご覧ください。
 
 
 ==============================================================================

@@ -1,853 +1,853 @@
 ==============================================================================
-�yMiHaJong�z          Japanese Mahjong with a lot of local rules implemented
-AI�p�X�N���v�g���� Copyright (c) 2008-2013 MihailJP, Part of rights reserved
+【MiHaJong】          Japanese Mahjong with a lot of local rules implemented
+AI用スクリプト説明 Copyright (c) 2008-2013 MihailJP, Part of rights reserved
 ==============================================================================
 
-�� �͂��߂�
+■ はじめに
 
-	�@MiHaJong�ł́A�o�[�W����1.7���AAI�̎v�l���[�`����Lua�X�N���v�g�ŏ�����
-	�Ƃ��ł��܂��B���̕����ł́AMiHaJong�p�ɒǉ����ꂽ�v�f��������Ă��܂��B
-	Lua����̊�{�I�Ȃ��Ƃ́A�ʓrLua����̃��t�@�����X�}�j���A���Ȃǂ���������
-	�����B
+	　MiHaJongでは、バージョン1.7より、AIの思考ルーチンをLuaスクリプトで書くこ
+	とができます。この文書では、MiHaJong用に追加された要素を説明しています。
+	Lua言語の基本的なことは、別途Lua言語のリファレンスマニュアルなどをご覧くだ
+	さい。
 
 
-�� AI�X�N���v�g�t�@�C���̒u���ꏊ
+■ AIスクリプトファイルの置き場所
 
-	�@Vista �ȍ~�����g���̏ꍇ�� C:\Program Files �ȉ��ɃC���X�g�[�������ꍇ�A
-	AI�X�N���v�g�t�@�C���͂� C:\Users\(���[�U�[��)\AppData\Roaming\MiHaJong\ai
-	�ɒu����܂��B�����łȂ��ꍇ�A�C���X�g�[����̃t�H���_�[�� ai �Ƃ����T�u
-	�t�H���_�[������܂��̂ł����ɃX�N���v�g��u���܂��B
-	�@�������n�߂�Ƃ��ɋK��̃t�H���_�[���� *.lua �t�@�C������������A����
-	�������X�N���v�g�t�@�C���̒����烉���_���ɑI������ă��[�h����܂��B
+	　Vista 以降をお使いの場合で C:\Program Files 以下にインストールした場合、
+	AIスクリプトファイルはは C:\Users\(ユーザー名)\AppData\Roaming\MiHaJong\ai
+	に置かれます。そうでない場合、インストール先のフォルダーに ai というサブ
+	フォルダーがありますのでそこにスクリプトを置きます。
+	　半荘を始めるときに規定のフォルダーから *.lua ファイルが検索され、見つ
+	かったスクリプトファイルの中からランダムに選択されてロードされます。
 
 
-�� �g�p�\�ȕW�����C�u����
+■ 使用可能な標準ライブラリ
 
-	�@MiHaJong�ł́A��{���C�u����(�R���[�`�����C�u�������܂�)�݂̂��I�[�v����
-	��Ă��܂��B
+	　MiHaJongでは、基本ライブラリ(コルーチンライブラリを含む)のみがオープンさ
+	れています。
 
 
-�� MiHaJong�p�X�N���v�g�Œ�`���Ȃ���΂Ȃ�Ȃ��֐�
+■ MiHaJong用スクリプトで定義しなければならない関数
 
-	�@MiHaJong�Ŏg�p����Lua�X�N���v�g�ł́A���̊֐����O���[�o�����ɒ�`����
-	����΂Ȃ�܂���B��`����Ă��Ȃ��ꍇ�A���̃X�N���v�g�𖳌��Ƃ݂Ȃ��c����
-	����s���܂��B
+	　MiHaJongで使用するLuaスクリプトでは、次の関数をグローバル環境に定義しな
+	ければなりません。定義されていない場合、そのスクリプトを無効とみなしツモ切
+	りを行います。
 
-	�� ontsumo(gametbl)
+	▼ ontsumo(gametbl)
 
-		�@�c���ԂɂȂ邲�ƂɁA(�R����1�����̂�����Ԃ�)���̊֐����Ă΂�܂��B
-		���̊֐��͈�����1���A2�̒l��Ԃ��܂��B
-		�@���� gametbl �́A��̏��������e�[�u���ŁA�y�ʃ��[�U�[�f�[�^�ƃ�
-		�\�b�h���i�[����Ă��܂��B
-		�@1�Ԗڂ̕Ԃ�l�́A�̂Ĕv�̕t�я��(�ÞȂ���A���[�`����c�c)��\����
-		���ł��B����ɂ��ẮA��q���� mihajong.DiscardType ���Q�Ƃ��Ă�����
-		���B
-		�@2�Ԗڂ̕Ԃ�l�́A��v�̔ԍ���\���C���f�b�N�X�ŁA1����14�Ŏw�肵�܂��B
-		14���w�肷��ƁA�c���؂肵�����ƂɂȂ�܂�(���I���Ă�����͕ς��܂�
-		��)�B���݂��Ȃ��v�̃C���f�b�N�X���w�肵���ꍇ�A���v�ŃA�K�������ƂȂ�
-		�܂��B
-		�@�Ȃ��A1�Ԗڂ̕Ԃ�l�� mihajong.DiscardType.Agari �� mihajong.
-		DiscardType.Kyuushu ���w�肵���ꍇ�̔v���s�v�ł��̂ŁA���̏ꍇ��2�Ԗ�
-		�̕Ԃ�l�� nil �ɂ��Ă����܂��܂���B
+		　ツモ番になるごとに、(山から1枚自摸った状態で)この関数が呼ばれます。
+		この関数は引数を1つ取り、2つの値を返します。
+		　引数 gametbl は、卓の情報を示すテーブルで、軽量ユーザーデータとメ
+		ソッドが格納されています。
+		　1番目の返り値は、捨て牌の付帯情報(暗槓する、リーチする……)を表す番
+		号です。これについては、後述する mihajong.DiscardType を参照してくださ
+		い。
+		　2番目の返り値は、手牌の番号を表すインデックスで、1から14で指定します。
+		14を指定すると、ツモ切りしたことになります(副露してもこれは変わりませ
+		ん)。存在しない牌のインデックスを指定した場合、多牌でアガリ放棄となり
+		ます。
+		　なお、1番目の返り値に mihajong.DiscardType.Agari か mihajong.
+		DiscardType.Kyuushu を指定した場合捨牌が不要ですので、この場合は2番目
+		の返り値を nil にしてもかまいません。
 
 
-	�� ondiscard(gametbl)
+	▼ ondiscard(gametbl)
 
-		�@�N���̑Ŕv�����邲�ƂɁA���̊֐����Ă΂�܂��B���̊֐��͈�����1��
-		��A1�̒l��Ԃ��܂��B
-		�@���� gametbl �́A��̏��������e�[�u���ŁA�y�ʃ��[�U�[�f�[�^�ƃ�
-		�\�b�h���i�[����Ă��܂��B
-		�@�Ԃ�l�͖��̎�ނ�\���ԍ��ł��B����ɂ��ẮA��q���� mihajong.
-		Call ���Q�Ƃ��Ă��������B
+		　誰かの打牌があるごとに、この関数が呼ばれます。この関数は引数を1つ取
+		り、1つの値を返します。
+		　引数 gametbl は、卓の情報を示すテーブルで、軽量ユーザーデータとメ
+		ソッドが格納されています。
+		　返り値は鳴きの種類を表す番号です。これについては、後述する mihajong.
+		Call を参照してください。
 
 
-�� MiHaJong�{�̂���Ăяo����邻�̑��̊֐�
+■ MiHaJong本体から呼び出されるその他の関数
 
-	�@MiHaJong�Ŏg�p����Lua�X�N���v�g�ł́A�O�q�����K�{�̊֐��̂ق��A���̊֐�
-	���Ă΂�邱�Ƃ�����܂��B��`����Ă��Ȃ��ꍇ�A�������Ȃ��������̂Ƃ݂Ȃ�
-	��܂��i�X�N���v�g���̂������Ƃ݂Ȃ��ꂽ��͂��܂���j�B
+	　MiHaJongで使用するLuaスクリプトでは、前述した必須の関数のほか、次の関数
+	が呼ばれることがあります。定義されていない場合、何もしなかったものとみなさ
+	れます（スクリプト自体が無効とみなされたりはしません）。
 
-	�� onkakan(gametbl)
+	▼ onkakan(gametbl)
 
-		�@�N���̉��Ȃ�����ƁA���̊֐����Ă΂�܂��B�����E�Ԃ�l�� ondiscard
-		�Ɠ��l�ł��B���̊֐��́A���Ȃ�a���邽�߂ɒ�`����Ă��܂��B
+		　誰かの加槓があると、この関数が呼ばれます。引数・返り値は ondiscard
+		と同様です。この関数は、槍槓を和了るために定義されています。
 
-	�� onankan(gametbl)
+	▼ onankan(gametbl)
 
-		�@�N���̈ÞȂ�����ƁA���̊֐����Ă΂�܂��B�����E�Ԃ�l�� ondiscard
-		�Ɠ��l�ł��B���̊֐��́A���m���o�𑄞ȂŘa���邽�߂ɒ�`����Ă��܂��B
+		　誰かの暗槓があると、この関数が呼ばれます。引数・返り値は ondiscard
+		と同様です。この関数は、国士無双を槍槓で和了るために定義されています。
 
-	�� init(gametbl)
+	▼ init(gametbl)
 
-		�@�ǂ��J�n����Aephemeral�e�[�u��(��q)�������������ƌĂ΂�܂��B��
-		����ontsumo��ondiscard�Ɠ��l�ł��B�߂�l�͂���܂���Bephemeral�e�[�u
-		���ɃT�u�e�[�u�����K�v�ȏꍇ�Ȃǂ́A���̊֐����ŏ��������s�Ȃ��Ă�����
-		���B
+		　局が開始され、ephemeralテーブル(後述)が初期化されると呼ばれます。引
+		数はontsumoやondiscardと同様です。戻り値はありません。ephemeralテーブ
+		ルにサブテーブルが必要な場合などは、この関数内で初期化を行なってくださ
+		い。
 
 
-�� �\�񂳂�Ă��閼�O
+■ 予約されている名前
 
-	�@MiHaJong�Ŏg�p����Lua�X�N���v�g�ł́A�O���[�o�����ɂ����鎟�̖��O����
-	���̊g���̂��߂ɗ\�񂳂�Ă��܂��B
+	　MiHaJongで使用するLuaスクリプトでは、グローバル環境における次の名前が将
+	来の拡張のために予約されています。
 
-	�E name
-	�E onhaipaistart
-	�E onhaipaiend
-	�E onmyagari
-	�E onfurikomi
-	�E onothersagari
-	�E onryuukyoku
-	�E onendgame
+	・ name
+	・ onhaipaistart
+	・ onhaipaiend
+	・ onmyagari
+	・ onfurikomi
+	・ onothersagari
+	・ onryuukyoku
+	・ onendgame
 
 
-�� ontsumo�Aondiscard �̈����ɂ���
+■ ontsumo、ondiscard の引数について
 
-	�@ontsumo()��ondiscard()�̈����ɂ́A��̏�Ԃ��n����܂��B������1�̃e�[
-	�u���ŁA���̃t�B�[���h�A���\�b�h���܂܂�Ă��܂��B
+	　ontsumo()やondiscard()の引数には、卓の状態が渡されます。引数は1つのテー
+	ブルで、次のフィールド、メソッドが含まれています。
 
-	�� gametbl.addr
+	▼ gametbl.addr
 
-		�@����̃A�h���X�������y�ʃ��[�U�[�f�[�^�ł��B
+		　卓情報のアドレスを示す軽量ユーザーデータです。
 
 
-	�� gametbl.playerid
+	▼ gametbl.playerid
 
-		�@�������g��\���v���C���[�ԍ��ł��B
+		　自分自身を表すプレイヤー番号です。
 
 
-	�� gametbl:evaluate(tsumoflag, [tiletbl])
+	▼ gametbl:evaluate(tsumoflag, [tiletbl])
 
-		�@���݂̎肪�a���ɂȂ��Ă���Ȃ�A���̓_���𒲂ׂ܂��B
-		gametbl:gethand()�`���̈������w�肵���ꍇ�A���̎�v�œ_�����v�Z���܂��B
-		�@tsumoflag�ɂ́A�c���a���Ƃ��Čv�Z����Ȃ�true�A�����a���Ƃ��Čv�Z��
-		��Ȃ�false���w�肵�܂��B
-		�@�Ԃ�l�͈ȉ��̃t�B�[���h���܂܂��e�[�u���ƂȂ�܂��B
+		　現在の手が和了になっているなら、その点数を調べます。
+		gametbl:gethand()形式の引数を指定した場合、その手牌で点数を計算します。
+		　tsumoflagには、ツモ和了として計算するならtrue、ロン和了として計算す
+		るならfalseを指定します。
+		　返り値は以下のフィールドが含まれるテーブルとなります。
 
-		�� ismahjong �t�B�[���h
+		● ismahjong フィールド
 
-			�@�a���`�ɂȂ��Ă���Ȃ�true�A�����łȂ����false���i�[����܂��B
-			�@�Ȃ��A���̃t�B�[���h�̒l��false�̏ꍇ�A�ق��̃t�B�[���h�͑��݂�
-			�܂���B
+			　和了形になっているならtrue、そうでなければfalseが格納されます。
+			　なお、このフィールドの値がfalseの場合、ほかのフィールドは存在し
+			ません。
 
-		�� isvalid �t�B�[���h
+		● isvalid フィールド
 
-			�@����𖞂����Ă���Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　縛りを満たしているならtrue、そうでなければfalseが格納されます。
 
-		�� fu �t�B�[���h
+		● fu フィールド
 
-			�@�]�����ʂ̕����i�[����܂��B
+			　評価結果の符が格納されます。
 
-		�� han �t�B�[���h
+		● han フィールド
 
-			�@�]�����ʂ̍��v�|���i�[����܂��B�Ⴆ�΁A�u�O�F�E�c���E�h��1�v��
-			�����4�ł��B
+			　評価結果の合計翻が格納されます。例えば、「三色・ツモ・ドラ1」で
+			あれば4です。
 
-		�� mangan �t�B�[���h
+		● mangan フィールド
 
-			�@�]�����ʂ̍��v���т��i�[����܂��B�Ⴆ�΁A�𖞂Ȃ�4�A�_�u����
-			�Ȃ�8�ł��B
+			　評価結果の合計満貫が格納されます。例えば、役満なら4、ダブル役満
+			なら8です。
 
-		�� points �t�B�[���h
+		● points フィールド
 
-			�@�]�����ʂ̊�{�_�����i�[����܂��B����́A�q���c���a���������ɑ�
-			�̎q���x�����_���ɑ������܂��B�܂��A100�_�P�ʂ̐؂�グ�͍s����
-			����B�Ⴆ�΁A30��1�|�́u�S�~��v�ł����240�A���тł����2000�Ƃ�
-			��܂��B
+			　評価結果の基本点数が格納されます。これは、子がツモ和了した時に他
+			の子が支払う点数に相当します。また、100点単位の切り上げは行われま
+			せん。例えば、30符1翻の「ゴミ手」であれば240、満貫であれば2000とな
+			ります。
 
 
-	�� gametbl:getactiveplayer()
+	▼ gametbl:getactiveplayer()
 
-		�@���݂̃c���Ԃ̃v���C���[�ԍ���1�`4(�O�l�ł��̏ꍇ��1�`3)�̐��l�ŕԂ�
-		�܂��B
+		　現在のツモ番のプレイヤー番号を1～4(三人打ちの場合は1～3)の数値で返し
+		ます。
 
 
-	�� gametbl:getbakaze()
+	▼ gametbl:getbakaze()
 
-		�@�ꕗ�v��Ԃ��܂��B�Ԃ�l�� mihajong.Tile.Wind �e�[�u���̒萔�̂ǂꂩ
-		�ł�(��������̃��[���ł� mihajong.Tile.Dragon �e�[�u���̒l�ɂȂ邱��
-		������܂�)�B
+		　場風牌を返します。返り値は mihajong.Tile.Wind テーブルの定数のどれか
+		です(白入ありのルールでは mihajong.Tile.Dragon テーブルの値になること
+		もあります)。
 
 
-	�� gametbl:getbasepoint()
+	▼ gametbl:getbasepoint()
 
-		�@���_(�Ԃ��_)��Ԃ��܂��B
+		　原点(返し点)を返します。
 
 
-	�� gametbl:getchip([playerid])
+	▼ gametbl:getchip([playerid])
 
-		�@playerid�Ŏw�肵���v���C���[(�ȗ������A�܂���nil���w�肵���ꍇ�͎���
-		���g)�̃`�b�v�̎��x��Ԃ��܂��B�A���A�`�b�v�����̃��[���̏ꍇ��nil���
-		���܂��B
+		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
+		自身)のチップの収支を返します。但し、チップ無しのルールの場合はnilを返
+		します。
 
 
-	�� gametbl:getcurrentdiscard()
+	▼ gametbl:getcurrentdiscard()
 
-		�@���݂̎̔v��\���e�[�u���ŕԂ��܂��Bontsumo()�֐����ł͈Ӗ���������
-		����B���̃e�[�u���͎��̃t�B�[���h�������܂��B
+		　現在の捨牌を表すテーブルで返します。ontsumo()関数内では意味を持ちま
+		せん。このテーブルは次のフィールドをもちます。
 
-		�� tile �t�B�[���h
+		● tile フィールド
 
-			�@�v�̎�ނ�\���ԍ�������܂��B
+			　牌の種類を表す番号が入ります。
 
-		�� red �t�B�[���h
+		● red フィールド
 
-			�@�ԃh�����ǂ����������ԍ�������܂��B
+			　赤ドラかどうかを示す番号が入ります。
 
 
-	�� gametbl:getdeckleft()
+	▼ gametbl:getdeckleft()
 
-		�@�R�v�̎c�薇����Ԃ��܂�(���v�͐����܂���)�B
+		　山牌の残り枚数を返します(王牌は数えません)。
 
 
-	�� gametbl:getdeposit()
+	▼ gametbl:getdeposit()
 
-		�@���݂̋����_�_�̐���Ԃ��܂��B
+		　現在の供託点棒の数を返します。
 
 
-	�� gametbl:getdiscard([playerid])
+	▼ gametbl:getdiscard([playerid])
 
-		�@playerid�Ŏw�肵���v���C���[(�ȗ������A�܂���nil���w�肵���ꍇ�͎���
-		���g)�̔v���e�[�u���ŕԂ��܂��B���̃e�[�u���͂��ꂼ��̎̔v�̏�񂪃T
-		�u�e�[�u���Ƃ��ď��ԂɊi�[����Ă���A����ɂ͎��̃t�B�[���h������܂��B
+		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
+		自身)捨牌をテーブルで返します。このテーブルはそれぞれの捨牌の情報がサ
+		ブテーブルとして順番に格納されており、これには次のフィールドがあります。
 
-		�� tile �t�B�[���h
+		● tile フィールド
 
-			�@�v�̎�ނ�\���ԍ�������܂��B
+			　牌の種類を表す番号が入ります。
 
-		�� red �t�B�[���h
+		● red フィールド
 
-			�@�ԃh�����ǂ����������ԍ�������܂��B
+			　赤ドラかどうかを示す番号が入ります。
 
-		�� through �t�B�[���h
+		● through フィールド
 
-			�@�c���؂肵���v�ł����true���A�����łȂ����false������܂��B
+			　ツモ切りした牌であればtrueが、そうでなければfalseが入ります。
 
-		�� riichi �t�B�[���h
+		● riichi フィールド
 
-			�@���[�`�錾�v�ł����true���A�����łȂ����false������܂��B
+			　リーチ宣言牌であればtrueが、そうでなければfalseが入ります。
 
-		�� taken �t�B�[���h
+		● taken フィールド
 
-			�@���ꂽ�v�ł����true���A�����łȂ����false������܂��B
+			　鳴かれた牌であればtrueが、そうでなければfalseが入ります。
 
 
-	�� gametbl:getdorainfo()
+	▼ gametbl:getdorainfo()
 
-		�@�v�̎�ނ��ƂɃh���ɂȂ��Ă��邩�ǂ���(�Ȃ��Ă���ꍇ�͉��d�Ƀh����
-		�Ȃ��Ă��邩��)���i�[�����e�[�u����Ԃ��܂��B���̃e�[�u���̃L�[��
-		mihajong.Tile �ɒ�`���ꂽ���l�ŁA�L�[�Ɋ֘A�t������l�́A�Ⴆ�΃h��
-		�ł͂Ȃ��Ƃ���0�A�_�u���h���ɂȂ��Ă���Ƃ���2�c�c�Ƃ������l�ɂȂ�܂��B
-		�@�Ȃ��A�ȃh��(���h���͂������܂܂�܂���)�̂ق��A�i�c�����[���ɂ���
-		��T�C�R���ɂ��h�����܂܂�܂��B
+		　牌の種類ごとにドラになっているかどうか(なっている場合は何重にドラに
+		なっているかも)を格納したテーブルを返します。このテーブルのキーは
+		mihajong.Tile に定義された数値で、キーに関連付けられる値は、例えばドラ
+		ではないときは0、ダブルドラになっているときは2……という数値になります。
+		　なお、槓ドラ(裏ドラはもちろん含まれません)のほか、永田町ルールにおけ
+		るサイコロによるドラも含まれます。
 
-		�@���ӁI�@���̊֐��ŕԂ����e�[�u���̓L�[����є�т̐��l�ɂȂ��Ă���
-		���B
+		　注意！　この関数で返されるテーブルはキーが飛び飛びの数値になっていま
+		す。
 
-		�@���ӁI�@Lua�̌���d�l�ł́A0��true�ɕ]������܂��B����v���h���ł͂�
-		�����Ƃ𔻒肵�����Ȃ�΁A
+		　注意！　Luaの言語仕様では、0はtrueに評価されます。ある牌がドラではな
+		いことを判定したいならば、
 		(gametbl:getdorainfo())[mihajong.Tile.Wind.East] == 0
-		�̂悤�ɂ��܂��B
+		のようにします。
 
 
-	�� gametbl:getdoukasen()
+	▼ gametbl:getdoukasen()
 
-		�@���ΐ�(���̔v�̈ʒu)�ɂ�����v���C���[�̔ԍ���1�`4(�O�l�ł��̏ꍇ��1
-		�`3)�̐��l�ŕԂ��܂��B���ΐ��Ȃ��̎���nil��Ԃ��܂��B
+		　導火線(自摸牌の位置)にあたるプレイヤーの番号を1～4(三人打ちの場合は1
+		～3)の数値で返します。導火線なしの時はnilを返します。
 
 
-	�� gametbl:getflower([playerid])
+	▼ gametbl:getflower([playerid])
 
-		�@playerid�Ŏw�肵���v���C���[(�ȗ������A�܂���nil���w�肵���ꍇ�͎���
-		���g)�̉Ԕv�A�܂��͎O���̔����h���̐���Ԃ��܂��B
+		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
+		自身)の花牌、または三麻の抜きドラの数を返します。
 
 
-	�� gametbl:gethand([playerid])
+	▼ gametbl:gethand([playerid])
 
-		�@������(playerid���w�肵���ꍇ�͎w�肵���v���C���[�A�A�����Ƃ��w�肷
-		��ꍇ�̓I�[�v���������Ă���ꍇ�Ɍ���)��v���e�[�u���ŕԂ��܂��B����
-		�e�[�u����1�`14�̃C���f�b�N�X�������܂����A���̔v�̃C���f�b�N�X�͏��
-		14�ƂȂ�܂��B���̂��߁A��O�łȂ��Ƃ���sparse �Ȕz��ɂȂ邱�Ƃ�����
-		�܂��B���݂���v�̈ʒu�ɂ͔v�̏����i�[�����T�u�e�[�u��������A�v����
-		�݂��Ȃ��ʒu��nil�ƂȂ�܂��B
-		�@�e�̔z�v���͎��̔v�Ɋ֌W�Ȃ����v���ꂽ��Ԃ�1�`14�ɔv�̃f�[�^���i�[
-		����Ă��܂��B�܂��A��������̎̔v�ɂ��Ă̓C���f�b�N�X14��nil��
-		�Ȃ��Ă��܂��B
+		　自分の(playeridを指定した場合は指定したプレイヤー、但し他家を指定す
+		る場合はオープン立直している場合に限る)手牌をテーブルで返します。この
+		テーブルは1～14のインデックスを持ちますが、自摸牌のインデックスは常に
+		14となります。このため、門前でないときはsparse な配列になることがあり
+		ます。存在する牌の位置には牌の情報を格納したサブテーブルが入り、牌が存
+		在しない位置はnilとなります。
+		　親の配牌時は自摸牌に関係なく理牌された状態で1～14に牌のデータが格納
+		されています。また、鳴いた直後の捨牌についてはインデックス14がnilと
+		なっています。
 
-		�� tile �t�B�[���h
+		● tile フィールド
 
-			�@�v�̎�ނ�\���ԍ�������܂��B
+			　牌の種類を表す番号が入ります。
 
-		�� red �t�B�[���h
+		● red フィールド
 
-			�@�ԃh�����ǂ����������ԍ�������܂��B
+			　赤ドラかどうかを示す番号が入ります。
 
 
-	�� gametbl:getjikaze()
+	▼ gametbl:getjikaze()
 
-		�@�����v��Ԃ��܂��B�Ԃ�l�� mihajong.Tile.Wind �e�[�u���̒萔�̂ǂꂩ
-		�ł��B
+		　自風牌を返します。返り値は mihajong.Tile.Wind テーブルの定数のどれか
+		です。
 
 
-	�� gametbl:getmeld([playerid])
+	▼ gametbl:getmeld([playerid])
 
-		�@playerid�Ŏw�肵���v���C���[(�ȗ������A�܂���nil���w�肵���ꍇ�͎���
-		���g)�̖��ʎq���i�[�����e�[�u���ŕԂ��܂��B���̃e�[�u���͖�����
-		�ɉ�����1�`4�̃C���f�b�N�X�������܂��B��O���ÞȂ��s�Ȃ��Ă��Ȃ��ꍇ
-		�͋�̃e�[�u�����Ԃ�܂��B�ʂ̖��ʎq�̏��̓T�u�e�[�u���ŕ\����A
-		���̃t�B�[���h���܂܂�܂��B
+		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
+		自身)の鳴き面子を格納したテーブルで返します。このテーブルは鳴いた回数
+		に応じて1～4のインデックスを持ちます。門前かつ暗槓も行なっていない場合
+		は空のテーブルが返ります。個別の鳴き面子の情報はサブテーブルで表され、
+		次のフィールドが含まれます。
 
-		�� tile �t�B�[���h
+		● tile フィールド
 
-			�@�v�̎�ނ�\���ԍ�������܂��B�����������q(�`�[)�̏ꍇ�A��Ԑ���
-			�̒Ⴂ�v������܂��B
+			　牌の種類を表す番号が入ります。ただし明順子(チー)の場合、一番数字
+			の低い牌が入ります。
 
-		�� red �t�B�[���h
+		● red フィールド
 
-			�@���ꂼ��̔v�ɂ��Đԃh�����ǂ����������ԍ����i�[�����z�񂪓���
-			�܂��B
+			　それぞれの牌について赤ドラかどうかを示す番号を格納した配列が入り
+			ます。
 
-		�� type �t�B�[���h
+		● type フィールド
 
-			�@�ʎq�̎��(���q�A���q�c�c)�������ԍ�������܂��B
+			　面子の種類(順子、刻子……)を示す番号が入ります。
 
 
-	�� gametbl:getopenwait()
+	▼ gametbl:getopenwait()
 
-		�@�v�̎�ނ��ƂɃI�[�v�����[�`�̑҂��v�ɂȂ��Ă��邩�ǂ������i�[����
-		�e�[�u����Ԃ��܂��B���̃e�[�u���̃L�[�� mihajong.Tile �ɒ�`���ꂽ��
-		�l�ŁA�L�[�Ɋ֘A�t������l�́A���̔v���I�[�v�����[�`�̑҂��v�ɂȂ���
-		�����true�A�����łȂ����false�ɂȂ�܂��B
+		　牌の種類ごとにオープンリーチの待ち牌になっているかどうかを格納した
+		テーブルを返します。このテーブルのキーは mihajong.Tile に定義された数
+		値で、キーに関連付けられる値は、その牌がオープンリーチの待ち牌になって
+		いればtrue、そうでなければfalseになります。
 
-		�@���ӁI�@���̊֐��ŕԂ����e�[�u���̓L�[����є�т̐��l�ɂȂ��Ă���
-		���B
+		　注意！　この関数で返されるテーブルはキーが飛び飛びの数値になっていま
+		す。
 
 
-	�� gametbl:getpreviousdiscard()
+	▼ gametbl:getpreviousdiscard()
 
-		�@���̊֐��͕Ԃ�l��2����܂��B��������̎̔v�ł���ꍇ�A���O�ɖ�
-		�����v�̎�ނ�\���ԍ���Ԃ��܂��B���̊֐��́A�H���ς��ɂȂ�Ȃ��悤��
-		���邽�߂̔���Ɏg�p�ł��܂��B
-		�@1�Ԗڂ̕Ԃ�l�͖����v�̌�����\���ԍ��ŁA2�Ԃ߂�(�`�[�̒���ł���
-		�ꍇ�̂�)�ؐH���ς��ɂȂ�悤�Ȕv�̔ԍ��ł��B
-		�@�Y������v���Ȃ���΁Anil���Ԃ�܂��B
+		　この関数は返り値が2つあります。鳴いた直後の捨牌である場合、直前に鳴
+		いた牌の種類を表す番号を返します。この関数は、食い変えにならないように
+		するための判定に使用できます。
+		　1番目の返り値は鳴いた牌の現物を表す番号で、2番めは(チーの直後である
+		場合のみ)筋食い変えになるような牌の番号です。
+		　該当する牌がなければ、nilが返ります。
 
 
-	�� gametbl:getrank([playerid])
+	▼ gametbl:getrank([playerid])
 
-		�@playerid�Ŏw�肵���v���C���[(�ȗ������A�܂���nil���w�肵���ꍇ�͎���
-		���g)�̏��ʂ�Ԃ��܂��B
+		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
+		自身)の順位を返します。
 
 
-	�� gametbl:getround()
+	▼ gametbl:getround()
 
-		�@���݂̋ǔԍ���Ԃ��܂��B����́A��1�ǂ�1�Ƃ��A��2�ǂ�2�A�ȉ����l�ɂ�
-		�Ėk4�ǂ�16�ƂȂ�A�Ԃ蓌1�ǂ�17(��������̃��[���ł͔�1�ǂ�17�A�ȉ���
-		�l�ɂ��Ē�4�ǂ�28�A�Ԃ蓌1�ǂ�29)�Ƃ����ʂ��ԍ��ł��B�Ȃ��A�O�l�ł���
-		��4�A8�A12(�ȉ����l)�����ԂƂȂ�܂�(�l���E�O����킸��1�ǂ�5�ɂȂ��
-		��������)�B����݂̂��s�����[���̏ꍇ�A��5�ǂ�5�A��6�ǂ�6�c�c�̂悤�ɁA
-		�u��n�ǁv��n�̕��������̂܂ܕԂ���܂��B
+		　現在の局番号を返します。これは、東1局を1とし、東2局を2、以下同様にし
+		て北4局が16となり、返り東1局が17(白入ありのルールでは白1局が17、以下同
+		様にして中4局が28、返り東1局が29)とした通し番号です。なお、三人打ちで
+		は4、8、12(以下同様)が欠番となります(四麻・三麻問わず南1局は5になると
+		いうこと)。東場のみを行うルールの場合、東5局は5、東6局は6……のように、
+		「東n局」のnの部分がそのまま返されます。
 
 
-	�� gametbl:getrule(ruletag)
+	▼ gametbl:getrule(ruletag)
 
-		�@ruletag�Ŏw�肳�ꂽ������ɑΉ����郋�[���ݒ��Ԃ��܂��B
+		　ruletagで指定された文字列に対応するルール設定を返します。
 
 
-	�� gametbl:getscore([playerid])
+	▼ gametbl:getscore([playerid])
 
-		�@playerid�Ŏw�肵���v���C���[(�ȗ������A�܂���nil���w�肵���ꍇ�͎���
-		���g)�̎����_��Ԃ��܂��B
-		�@�ő��ɔ������Ȃ����Ƃł����A��������̐V�䃋�[���ł��܂�ɐ�Βl��
-		�傫���_���̏ꍇ�A���m�Ȓl���擾�ł��Ȃ��ꍇ������܂��B
+		　playeridで指定したプレイヤー(省略した、またはnilを指定した場合は自分
+		自身)の持ち点を返します。
+		　滅多に発生しないことですが、箱下ありの青天井ルールであまりに絶対値の
+		大きい点数の場合、正確な値が取得できない場合があります。
 
 
-	�� gametbl:getseentiles()
+	▼ gametbl:getseentiles()
 
-		�@�v�̎�ނ��Ƃɏ�Ɍ����Ă��閇�����i�[�����e�[�u����Ԃ��܂��B����
-		�e�[�u���̃L�[�� mihajong.Tile �ɒ�`���ꂽ���l�ł��B
+		　牌の種類ごとに場に見えている枚数を格納したテーブルを返します。この
+		テーブルのキーは mihajong.Tile に定義された数値です。
 
-		�@���ӁI�@���̊֐��ŕԂ����e�[�u���̓L�[����є�т̐��l�ɂȂ��Ă���
-		���B
+		　注意！　この関数で返されるテーブルはキーが飛び飛びの数値になっていま
+		す。
 
 
-	�� gametbl:getshanten([tiletbl][, type])
+	▼ gametbl:getshanten([tiletbl][, type])
 
-		�@���݂̌�������Ԃ��܂��Bgametbl:gethand()�`���̈������w�肵���ꍇ�A
-		���̎�v�̌��������v�Z���܂��B
-		�@type���w�肵���ꍇ�A�a���`�������肵����������Ԃ��܂��Btype�ɂ́A
-		mihajong.AgariType�̃t�B�[���h�̂ǂꂩ���w�肵�܂��B
-		�@���v�ɂȂ��Ă���ꍇ��0�ƂȂ�A�a�����Ă���ꍇ��-1���Ԃ���܂��B
-		�@��O�łȂ��̂Ɏ��Ύq�ɑ΂�������������߂悤�Ƃ����ꍇ�Ȃǂ��̂悤��
-		�a��������s�\�ȏꍇ��A��k�푈�Ȃ��̃��[���œ�k�푈�ɑ΂��������
-		�����߂悤�Ƃ����ꍇ�Ȃǂ��̂悤�Șa����������[����F�߂��Ă��Ȃ���
-		���A�Ԃ�l��nil�ɂȂ�܂��B
+		　現在の向聴数を返します。gametbl:gethand()形式の引数を指定した場合、
+		その手牌の向聴数を計算します。
+		　typeを指定した場合、和了形式を限定した向聴数を返します。typeには、
+		mihajong.AgariTypeのフィールドのどれかを指定します。
+		　聴牌になっている場合は0となり、和了っている場合は-1が返されます。
+		　門前でないのに七対子に対する向聴数を求めようとした場合などそのような
+		和了り方が不可能な場合や、南北戦争なしのルールで南北戦争に対する向聴数
+		を求めようとした場合などそのような和了り方がルール上認められていない場
+		合、返り値はnilになります。
 
 
-	�� gametbl:gettenpaistat([tiletbl])
+	▼ gametbl:gettenpaistat([tiletbl])
 
-		�@���v�Ɋւ�������e�[�u���ŕԂ��܂��Bgametbl:gethand()�`���̈�����
-		�w�肵���ꍇ�A���̎�v�ɂ��Čv�Z���܂��B���̃e�[�u���ɂ͎��̃t�B�[��
-		�h������܂��B
+		　聴牌に関する情報をテーブルで返します。gametbl:gethand()形式の引数を
+		指定した場合、その手牌について計算します。このテーブルには次のフィール
+		ドがあります。
 
-		�� isfuriten �t�B�[���h
+		● isfuriten フィールド
 
-			�@�t���e���ł����true���A�����łȂ����false������܂��B
+			　フリテンであればtrueが、そうでなければfalseが入ります。
 
-		�� total �t�B�[���h
+		● total フィールド
 
-			�@�҂��v�̎c�薇��������܂��B
+			　待ち牌の残り枚数が入ります。
 
-		�� kinds �t�B�[���h
+		● kinds フィールド
 
-			�@�҂��v�̎�ސ�(2�ʑ҂��Ȃ�2�A3�ʑ҂��Ȃ�3�̂悤��)������܂��B
+			　待ち牌の種類数(2面待ちなら2、3面待ちなら3のように)が入ります。
 
-		�� bytile �t�B�[���h
+		● bytile フィールド
 
-			�@�v���ƂɎ��̏����i�[�����T�u�e�[�u���ł��B���̃e�[�u���̃L�[��
-			mihajong.Tile �ɒ�`���ꂽ���l�ł��B
+			　牌ごとに次の情報を格納したサブテーブルです。このテーブルのキーは
+			mihajong.Tile に定義された数値です。
 
-			�Eflag�c�c���̔v���҂��ɂȂ��Ă�����true�A�����łȂ����false�ł��B
-			�Ecount�c�c���̔v�̎c�薇���ł��B
+			・flag……その牌が待ちになっていたらtrue、そうでなければfalseです。
+			・count……その牌の残り枚数です。
 
 
-	�� gametbl:gettilecontext()
+	▼ gametbl:gettilecontext()
 
-		�@��v�̒��̂���v�ɂ��āA�ʎq���\�����Ă��邩�ǂ������f���邽�߂̏�
-		����i�[�����e�[�u����Ԃ��܂��B�C���f�b�N�X�� gametbl:gethand() �̕�
-		��l�Ɠ��l�ŁA���̃t�B�[���h�����T�u�e�[�u�����i�[����Ă��܂��B
+		　手牌の中のある牌について、面子を構成しているかどうか判断するための情
+		報を格納したテーブルを返します。インデックスは gametbl:gethand() の返
+		り値と同様で、次のフィールドを持つサブテーブルが格納されています。
 
-		�� isexistent �t�B�[���h
+		● isexistent フィールド
 
-			�@���̃C���f�b�N�X�̔v�����݂����true�A�����łȂ����false���i�[
-			����܂��B
+			　そのインデックスの牌が存在すればtrue、そうでなければfalseが格納
+			されます。
 
-		�� formstriplet �t�B�[���h
+		● formstriplet フィールド
 
-			�@���q���Ȃ��Ă���v�Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　刻子をなしている牌ならtrue、そうでなければfalseが格納されます。
 
-		�� formssequence �t�B�[���h
+		● formssequence フィールド
 
-			�@���q���Ȃ��Ă���v�Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　順子をなしている牌ならtrue、そうでなければfalseが格納されます。
 
-		�� canformquad �t�B�[���h
+		● canformquad フィールド
 
-			�@��̓���4������Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　手の内に4枚あるならtrue、そうでなければfalseが格納されます。
 
-		�� formspair �t�B�[���h
+		● formspair フィールド
 
-			�@�Ύq���Ȃ��Ă���v�Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　対子をなしている牌ならtrue、そうでなければfalseが格納されます。
 
-		�� formsryanmen �t�B�[���h
+		● formsryanmen フィールド
 
-			�@���ʓ��q���Ȃ��Ă���v�Ȃ�true�A�����łȂ����false���i�[�����
-			���B
+			　両面搭子をなしている牌ならtrue、そうでなければfalseが格納されま
+			す。
 
-		�� formskanchan �t�B�[���h
+		● formskanchan フィールド
 
-			�@�Ɠ��q���Ȃ��Ă���v�Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　嵌搭子をなしている牌ならtrue、そうでなければfalseが格納されます。
 
-		�� formspenchan �t�B�[���h
+		● formspenchan フィールド
 
-			�@�ӓ��q���Ȃ��Ă���v�Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　辺搭子をなしている牌ならtrue、そうでなければfalseが格納されます。
 
 
-	�� gametbl:gettilerisk()
+	▼ gametbl:gettilerisk()
 
-		�@��v�̒��̂��ꂼ��̔v�ɂ��āA���v���ǂ������f���邽�߂̏����i�[
-		�����e�[�u���Ԃ��܂��B�C���f�b�N�X�� gametbl:gethand() �̕Ԃ�l�Ɠ��l
-		�ŁA���̃t�B�[���h�����T�u�e�[�u�����i�[����Ă��܂��B
+		　手牌の中のそれぞれの牌について、安牌かどうか判断するための情報を格納
+		したテーブル返します。インデックスは gametbl:gethand() の返り値と同様
+		で、次のフィールドを持つサブテーブルが格納されています。
 
-		�� issameasprevious �t�B�[���h
+		● issameasprevious フィールド
 
-			�@���킹�ł��ɂȂ�v�Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　合わせ打ちになる牌ならtrue、そうでなければfalseが格納されます。
 
-		�� isdora �t�B�[���h
+		● isdora フィールド
 
-			�@�h���̌����Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　ドラの現物ならtrue、そうでなければfalseが格納されます。
 
-		�� isdorasuji �t�B�[���h
+		● isdorasuji フィールド
 
-			�@�h���؂ɂ�����v�Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　ドラ筋にあたる牌ならtrue、そうでなければfalseが格納されます。
 
-		�� isdorasoba �t�B�[���h
+		● isdorasoba フィールド
 
-			�@�h������(���h���ׂ̌���)�̔v�Ȃ�true�A�����łȂ����false���i�[
-			����܂��B
+			　ドラそば(＝ドラの跨ぎ筋)の牌ならtrue、そうでなければfalseが格納
+			されます。
 
-		�� isnochance �t�B�[���h
+		● isnochance フィールド
 
-			�@�m�[�`�����X�̔v�Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　ノーチャンスの牌ならtrue、そうでなければfalseが格納されます。
 
-		�� isonechance �t�B�[���h
+		● isonechance フィールド
 
-			�@�����`�����X�̔v�Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　ワンチャンスの牌ならtrue、そうでなければfalseが格納されます。
 
-		�� isneverdiscarded �t�B�[���h
+		● isneverdiscarded フィールド
 
-			�@���v�Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　生牌ならtrue、そうでなければfalseが格納されます。
 
-		�� isseenfour �t�B�[���h
+		● isseenfour フィールド
 
-			�@���4�������Ă���Ȃ�true�A�����łȂ����false���i�[����܂��B
+			　場に4枚見えているならtrue、そうでなければfalseが格納されます。
 
-		�� kamicha/toimen/shimocha �t�B�[���h
+		● kamicha/toimen/shimocha フィールド
 
-			�@��ƁA�ΖʁA���Ƃɑ΂��ʂ肻�����ǂ����𔻒f����ޗ���񋟂��܂��B
-			����̓T�u�e�[�u���ł���A���̂悤�ȃu�[���l�̃t�B�[���h�������Ă�
-			�܂��B
-			�@�Ȃ��A�O�l�ł��ő��݂��Ȃ��v���C���[�̈ʒu�ɂ��Ă̓t�B�[���h��
-			�̂�����܂���(��e�[�u���ł͂Ȃ�nil�ƂȂ�܂�)�B
+			　上家、対面、下家に対し通りそうかどうかを判断する材料を提供します。
+			これはサブテーブルであり、次のようなブール値のフィールドを持ってい
+			ます。
+			　なお、三人打ちで存在しないプレイヤーの位置についてはフィールド自
+			体がありません(空テーブルではなくnilとなります)。
 
-			�Eisgembutsu�c�c�������ǂ���
-			�Eissuji�c�c�\�؂��ǂ���
-			�Eisurasuji�c�c���؂��ǂ���
-			�Eisaida4ken�c�c��4�P�����ǂ���
-			�Eismatagisuji�c�c�ׂ��؂��ǂ���
-			�Eissenkisuji�c�c�l�C�؂��ǂ���
-			�Eisnamakurasuji�c�c�݋�(�Ȃ܂��炷��)���ǂ���
-			�Eisnakasuji�c�c���؂��ǂ���
+			・isgembutsu……現物かどうか
+			・issuji……表筋かどうか
+			・isurasuji……裏筋かどうか
+			・isaida4ken……間4ケンかどうか
+			・ismatagisuji……跨ぎ筋かどうか
+			・issenkisuji……疝気筋かどうか
+			・isnamakurasuji……鈍筋(なまくらすじ)かどうか
+			・isnakasuji……中筋かどうか
 
 
-	�� gametbl:gettilesinhand()
+	▼ gametbl:gettilesinhand()
 
-		�@�v�̎�ނ��ƂɎ�v�Ɏ����Ă��閇�����i�[�����e�[�u����Ԃ��܂��B����
-		�e�[�u���̃L�[�� mihajong.Tile �ɒ�`���ꂽ���l�ł��B
+		　牌の種類ごとに手牌に持っている枚数を格納したテーブルを返します。この
+		テーブルのキーは mihajong.Tile に定義された数値です。
 
-		�@���ӁI�@���̊֐��ŕԂ����e�[�u���̓L�[����є�т̐��l�ɂȂ��Ă���
-		���B
+		　注意！　この関数で返されるテーブルはキーが飛び飛びの数値になっていま
+		す。
 
-	�� gametbl:gettsumibou()
+	▼ gametbl:gettsumibou()
 
-		�@���݂̐ςݖ_�̐���Ԃ��܂��B
+		　現在の積み棒の数を返します。
 
 
-	�� gametbl:getwareme()
+	▼ gametbl:getwareme()
 
-		�@�����(�J��̈ʒu)�ɂ�����v���C���[�̔ԍ���1�`4(�O�l�ł��̏ꍇ��1�`
-		3)�̐��l�ŕԂ��܂��B����ڂȂ��̎���nil��Ԃ��܂��B
+		　割れ目(開門の位置)にあたるプレイヤーの番号を1～4(三人打ちの場合は1～
+		3)の数値で返します。割れ目なしの時はnilを返します。
 
 
-	�� gametbl:getyakuhaiwind()
+	▼ gametbl:getyakuhaiwind()
 
-		�@���ꂼ��̕��v�ɂ��Ė�v�ɂȂ��Ă��邩�ǂ������i�[�����e�[�u�����
-		���܂��B�����East�ASouth�AWest�ANorth�̃t�B�[���h�������A���̔v����v
-		�ɂȂ��Ă����true���A�����łȂ����false���ݒ肳��Ă��܂��B
+		　それぞれの風牌について役牌になっているかどうかを格納したテーブルを返
+		します。これはEast、South、West、Northのフィールドをもち、その牌が役牌
+		になっていればtrueが、そうでなければfalseが設定されています。
 
 
-	�� gametbl:isabovebase([player])
+	▼ gametbl:isabovebase([player])
 
-		�@player�ɂ͒��ׂ����v���C���[�̔ԍ����w�肵�܂��Bnil���n���ꂽ�ꍇ��
-		���͏ȗ����ꂽ�ꍇ�́A���g�̏�Ԃ𒲂ׂ܂��B
-		�@�����Ă���(�����_���Ԃ��_�ȏ�)�Ȃ�true���A�����łȂ����false��Ԃ�
-		�܂��B
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　浮いている(持ち点が返し点以上)ならtrueを、そうでなければfalseを返し
+		ます。
 
 
-	�� gametbl:isankanallowed()
+	▼ gametbl:isankanallowed()
 
-		�@���[�`��ɈÞȏo�����ԂȂ�true���A�����łȂ����false��Ԃ��܂��B
-		�@�Ȃ��A���̊֐��̓��[�`���Ă��Ȃ���Ԃł��g�p�ł��܂����A���̏ꍇ�͈�
-		�����Ȃ��܂���B
+		　リーチ後に暗槓出来る状態ならtrueを、そうでなければfalseを返します。
+		　なお、この関数はリーチしていない状態でも使用できますが、その場合は意
+		味をなしません。
 
 
-	�� gametbl:isdoujunfuriten()
+	▼ gametbl:isdoujunfuriten()
 
-		�@�������t���e�����A���[�`�㌩�����ɂ��t���e���ł����true���A������
-		�Ȃ����false��Ԃ��܂��B
-		�@�����t���e�����ǂ������ׂ�ɂ́Agametbl:gettenpaistat()���g�p���܂��B
+		　同巡内フリテンか、リーチ後見逃しによるフリテンであればtrueを、そうで
+		なければfalseを返します。
+		　現物フリテンかどうか調べるには、gametbl:gettenpaistat()を使用します。
 
 
-	�� gametbl:isfinalround()
+	▼ gametbl:isfinalround()
 
-		�@�I�[���X�܂��͉�����(������ł���ΐ����ȍ~)�ł����true���A�����ł�
-		�����false��Ԃ��܂��B
+		　オーラスまたは延長戦(半荘戦であれば西入以降)であればtrueを、そうでな
+		ければfalseを返します。
 
 
-	�� gametbl:isfirstdraw()
+	▼ gametbl:isfirstdraw()
 
-		�@���̂Ȃ���1�c��(�e�ɂ��Ă͔z�v����)�ł����true���A�����łȂ���
-		��false��Ԃ��܂��B
+		　鳴きのない第1ツモ(親については配牌直後)であればtrueを、そうでなけれ
+		ばfalseを返します。
 
 
-	�� gametbl:isippatsu([player])
+	▼ gametbl:isippatsu([player])
 
-		�@player�ɂ͒��ׂ����v���C���[�̔ԍ����w�肵�܂��Bnil���n���ꂽ�ꍇ��
-		���͏ȗ����ꂽ�ꍇ�́A���g�̏�Ԃ𒲂ׂ܂��B
-		�@�����ꔭ�������������ԂȂ�true���A�����łȂ����false��Ԃ��܂��B
-		�A���A�ꔭ�Ȃ��̃��[���̎���nil��Ԃ��܂��B
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　立直一発が成立しうる状態ならtrueを、そうでなければfalseを返します。
+		但し、一発なしのルールの時はnilを返します。
 
 
-	�� gametbl:iskyuushu()
+	▼ gametbl:iskyuushu()
 
-		�@����v�̏����𖞂����Ă����true���A�����łȂ����false��Ԃ��܂��B
-		�A���A����v�ŗ����Ȃ����[���̎���nil��Ԃ��܂��B
+		　九種九牌の条件を満たしていればtrueを、そうでなければfalseを返します。
+		但し、九種九牌で流せないルールの時はnilを返します。
 
 
-	�� gametbl:ismenzen([player])
+	▼ gametbl:ismenzen([player])
 
-		�@player�ɂ͒��ׂ����v���C���[�̔ԍ����w�肵�܂��Bnil���n���ꂽ�ꍇ��
-		���͏ȗ����ꂽ�ꍇ�́A���g�̏�Ԃ𒲂ׂ܂��B
-		�@��O�ł����true���A�����łȂ����false��Ԃ��܂��B
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　門前であればtrueを、そうでなければfalseを返します。
 
 
-	�� gametbl:isopenriichideclared([player])
+	▼ gametbl:isopenriichideclared([player])
 
-		�@player�ɂ͒��ׂ����v���C���[�̔ԍ����w�肵�܂��Bnil���n���ꂽ�ꍇ��
-		���͏ȗ����ꂽ�ꍇ�́A���g�̏�Ԃ𒲂ׂ܂��B
-		�@�I�[�v���������Ă���Ȃ�true���A�����łȂ����false��Ԃ��܂��B
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　オープン立直しているならtrueを、そうでなければfalseを返します。
 
 
-	�� gametbl:ispenultimateround()
+	▼ gametbl:ispenultimateround()
 
-		�@���X�O(������ł���Γ�3�ǁA������ł���Γ�3��)�ł����true���A����
-		�łȂ����false��Ԃ��܂��B
+		　ラス前(半荘戦であれば南3局、東風戦であれば東3局)であればtrueを、そう
+		でなければfalseを返します。
 
 
-	�� gametbl:isriichideclared([player])
+	▼ gametbl:isriichideclared([player])
 
-		�@player�ɂ͒��ׂ����v���C���[�̔ԍ����w�肵�܂��Bnil���n���ꂽ�ꍇ��
-		���͏ȗ����ꂽ�ꍇ�́A���g�̏�Ԃ𒲂ׂ܂��B
-		�@�������Ă���Ȃ�true���A�����łȂ����false��Ԃ��܂��B
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　立直しているならtrueを、そうでなければfalseを返します。
 
 
-	�� gametbl:isshisanbuda()
+	▼ gametbl:isshisanbuda()
 
-		�@�\�O�s���ɂȂ��Ă����true���A�����łȂ����false��Ԃ��܂��B�A���A
-		�\�O�s���Ȃ��̃��[���̎���nil��Ԃ��܂��B
+		　十三不塔になっていればtrueを、そうでなければfalseを返します。但し、
+		十三不塔なしのルールの時はnilを返します。
 
 
-	�� gametbl:isshisibuda()
+	▼ gametbl:isshisibuda()
 
-		�@�\�O����(�\�l�s��)�ɂȂ��Ă����true���A�����łȂ����false��Ԃ���
-		���B�A���A�\�O����(�\�l�s��)�Ȃ��̃��[���̎���nil��Ԃ��܂��B
+		　十三無靠(十四不塔)になっていればtrueを、そうでなければfalseを返しま
+		す。但し、十三無靠(十四不塔)なしのルールの時はnilを返します。
 
 
-	�� gametbl:issumaroallowed()
+	▼ gametbl:issumaroallowed()
 
-		�@�l�n�H�a���̂��߂̎��O����(���шȏ�̘a��)�𖞂����Ă���ꍇtrue���A
-		�����łȂ����false��Ԃ��܂��B�A���A�l�n�H���̂��Ȃ����[���̎���nil��
-		�Ԃ��܂��B
+		　四馬路和了のための事前条件(満貫以上の和了)を満たしている場合trueを、
+		そうでなければfalseを返します。但し、四馬路自体がないルールの時はnilを
+		返します。
 
 
-	�� gametbl:isyakitori([player])
+	▼ gametbl:isyakitori([player])
 
-		�@player�ɂ͒��ׂ����v���C���[�̔ԍ����w�肵�܂��Bnil���n���ꂽ�ꍇ��
-		���͏ȗ����ꂽ�ꍇ�́A���g�̏�Ԃ𒲂ׂ܂��B
-		�@�w�肵���v���C���[���Ă����Ȃ�true���A�����łȂ����false��Ԃ��܂��B
-		�A���A�Ă����Ȃ��̃��[���̎���nil��Ԃ��܂��B
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　指定したプレイヤーが焼き鳥ならtrueを、そうでなければfalseを返します。
+		但し、焼き鳥なしのルールの時はnilを返します。
 
 
-�� mihajong�e�[�u��
+■ mihajongテーブル
 
-	�@MiHaJong�Ŏg�p����(���݂̃V�����e���������߂�A�ȂǂƂ�����)�֐��A���邢
-	��(�ÞȂ���A���[�`����Ƃ������̔v�̕t�я��̔ԍ��Ƃ�����)�G�C���A�X���A
-	mihajong�e�[�u���Ɋi�[����Ă��܂��B
+	　MiHaJongで使用する(現在のシャンテン数を求める、などといった)関数、あるい
+	は(暗槓する、リーチするといった捨牌の付帯情報の番号といった)エイリアスが、
+	mihajongテーブルに格納されています。
 
-	�@���ӁI�@�����̃T�u�e�[�u���͂��ׂăv���L�V�e�[�u���ɂȂ��Ă��邽�߁A�P
-	�� pairs(mihajong.Tile.Wind)�Ƃ��������ł͐������C�e���[�^���Ԃ�܂���B
-	�������C�e���[�^���擾����ɂ́A
-	pairs(getmetatable(mihajong.Tile.Wind).__index) �̂悤�ɂ��܂��B
+	　注意！　これらのサブテーブルはすべてプロキシテーブルになっているため、単
+	に pairs(mihajong.Tile.Wind)としただけでは正しいイテレータが返りません。
+	正しいイテレータを取得するには、
+	pairs(getmetatable(mihajong.Tile.Wind).__index) のようにします。
 
-	�� mihajong.DiscardType
+	▼ mihajong.DiscardType
 
-		�@�ÞȂ���A���[�`����Ƃ������̔v�̕t�я���\�����l���i�[�����e�[�u
-		���ł��B�����́Adetermine_discard �֐��̖߂�l�Ƃ��āA�ureturn
-		mihajong.DiscardType.Riichi, 7�v�̂悤�Ɏg�p���܂��B���̃e�[�u���ɂ́A
-		�ȉ��̃t�B�[���h���i�[����Ă��܂��B
+		　暗槓する、リーチするといった捨牌の付帯情報を表す数値を格納したテーブ
+		ルです。これらは、determine_discard 関数の戻り値として、「return
+		mihajong.DiscardType.Riichi, 7」のように使用します。このテーブルには、
+		以下のフィールドが格納されています。
 
-		�ENormal �c�c ���ɉ��������A���ʂ̎̔v���s���܂��B
-		�EAnkan �c�c �̔v�ł͂Ȃ��A�ÞȂ��s���܂��B
-		�EKakan �c�c �̔v�ł͂Ȃ��A���Ȃ��s���܂��B
-		�ERiichi �c�c ���̎̔v�ŗ�����錾���܂��B
-		�EFlower �c�c �̔v�̑���ɁA�Ԕv�A�O���̖k���N���܂��B
-		�EOpenRiichi �c�c ���̎̔v�ŃI�[�v��������錾���܂��B��1
-		�EAgari �c�c �c���A�K����錾���܂��B��2
-		�EKyuushu �c�c ����v��錾���܂��B
+		・Normal …… 特に何もせず、普通の捨牌を行います。
+		・Ankan …… 捨牌ではなく、暗槓を行います。
+		・Kakan …… 捨牌ではなく、加槓を行います。
+		・Riichi …… この捨牌で立直を宣言します。
+		・Flower …… 捨牌の代わりに、花牌、三麻の北を晒します。
+		・OpenRiichi …… この捨牌でオープン立直を宣言します。※1
+		・Agari …… ツモアガリを宣言します。※2
+		・Kyuushu …… 九種九牌を宣言します。
 
-		��1 �I�[�v�����[�`�Ȃ��̎��� mihajong.DiscardType.OpenRiichi ���w�肵
-		�@�@���ꍇ�Amihajong.DiscardType.Riichi ���w�肵�����̂Ƃ݂Ȃ���܂��B
-		��2 �a����Ȃ��󋵂� mihajong.DiscardType.Agari ���w�肵���ꍇ�A�`����
-		�@�@�{�ɂȂ�܂��B
+		※1 オープンリーチなしの時に mihajong.DiscardType.OpenRiichi を指定し
+		　　た場合、mihajong.DiscardType.Riichi を指定したものとみなされます。
+		※2 和了れない状況で mihajong.DiscardType.Agari を指定した場合、チョン
+		　　ボになります。
 
-		�@�Ȃ����̑��ɐؒf���ꂽ�����[�g�v���C���[���Ԃ������ȃR�[�h�������I
-		�ɂ͑��݂��܂����A���̃X�N���v�g�d�l���炻��͏Ȃ���Ă��܂��B
+		　なおこの他に切断されたリモートプレイヤーが返すを特殊なコードも内部的
+		には存在しますが、このスクリプト仕様からそれは省かれています。
 
 
-	�� mihajong.Call
+	▼ mihajong.Call
 
-		�@�`�[�A�|���Ƃ��������̎�ނ�\�����l���i�[�����e�[�u���ł��B�����
-		�́Adetermine_call �֐��̖߂�l�Ƃ��āA�ureturn mihajong.Call.Ron�v��
-		�悤�Ɏg�p���܂��B���̃e�[�u���ɂ́A�ȉ��̃t�B�[���h���i�[����Ă��܂��B
+		　チー、ポンといった鳴きの種類を表す数値を格納したテーブルです。これら
+		は、determine_call 関数の戻り値として、「return mihajong.Call.Ron」の
+		ように使用します。このテーブルには、以下のフィールドが格納されています。
 
-		�ENone �c�c �̔v���������܂��B
-		�ERon �c�c �̔v�Ń������܂��B��1
-		�EKan �c�c �̔v�𖾞Ȃ��܂��B
-		�EPon �c�c �̔v���|�����܂��B
-		�EChii.Lower �c�c �̔v�𗼖ʂ̏��������A�܂��͕Ӓ���7�Ƃ��ă`�[���܂��B
-		�EChii.Middle �c�c �̔v��ƒ��Ƃ��ă`�[���܂��B
-		�EChii.Upper �c�c �̔v�𗼖ʂ̑傫�����A�܂��͕Ӓ���3�Ƃ��ă`�[���܂��B
+		・None …… 捨牌を見逃します。
+		・Ron …… 捨牌でロンします。※1
+		・Kan …… 捨牌を明槓します。
+		・Pon …… 捨牌をポンします。
+		・Chii.Lower …… 捨牌を両面の小さい側、または辺張の7としてチーします。
+		・Chii.Middle …… 捨牌を嵌張としてチーします。
+		・Chii.Upper …… 捨牌を両面の大きい側、または辺張の3としてチーします。
 
-		��1 �a����Ȃ��󋵂� mihajong.Call.Ron ���w�肵���ꍇ�A�`�����{�ɂȂ�
-		�@�@�܂��B
+		※1 和了れない状況で mihajong.Call.Ron を指定した場合、チョンボになり
+		　　ます。
 
 
-	�� mihajong.MeldType
+	▼ mihajong.MeldType
 
-		�@�����A�ÞȂƂ��������ʎq�̎�ނ�\�����l���i�[�����e�[�u���ł��B��
-		�̃e�[�u���ɂ́A�ȉ��̃t�B�[���h���i�[����Ă��܂��B
+		　明刻、暗槓といった鳴き面子の種類を表す数値を格納したテーブルです。こ
+		のテーブルには、以下のフィールドが格納されています。
 
-		�ESequence.Lower �c�c ���ʂ̏��������A�܂��͕Ӓ���7�̃`�[�B
-		�ESequence.Middle �c�c �ƒ���7�̃`�[�B
-		�ESequence.Upper �c�c ���ʂ̑傫�����A�܂��͕Ӓ���3�̃`�[�B
-		�ETriplet.Kamicha �c�c ��Ƃ���̃|���B
-		�ETriplet.Toimen �c�c �Ζʂ���̃|���B
-		�ETriplet.Shimocha �c�c ���Ƃ���̃|���B
-		�EQuad.Concealed �c�c �ÞȁB
-		�EQuad.Exposed.Kamicha �c�c ��Ƃ���̑喾�ȁB
-		�EQuad.Exposed.Toimen �c�c �Ζʂ���̑喾�ȁB
-		�EQuad.Exposed.Shimocha �c�c ���Ƃ���̑喾�ȁB
-		�EQuad.Added.Kamicha �c�c ��Ƃ���̃|���ւ̉��ȁB
-		�EQuad.Added.Toimen �c�c �Ζʂ���̃|���ւ̉��ȁB
-		�EQuad.Added.Shimocha �c�c ���Ƃ���̃|���ւ̉��ȁB
+		・Sequence.Lower …… 両面の小さい側、または辺張の7のチー。
+		・Sequence.Middle …… 嵌張の7のチー。
+		・Sequence.Upper …… 両面の大きい側、または辺張の3のチー。
+		・Triplet.Kamicha …… 上家からのポン。
+		・Triplet.Toimen …… 対面からのポン。
+		・Triplet.Shimocha …… 下家からのポン。
+		・Quad.Concealed …… 暗槓。
+		・Quad.Exposed.Kamicha …… 上家からの大明槓。
+		・Quad.Exposed.Toimen …… 対面からの大明槓。
+		・Quad.Exposed.Shimocha …… 下家からの大明槓。
+		・Quad.Added.Kamicha …… 上家からのポンへの加槓。
+		・Quad.Added.Toimen …… 対面からのポンへの加槓。
+		・Quad.Added.Shimocha …… 下家からのポンへの加槓。
 
-		�@�Ȃ��A�Ï��q�A�Í��q��\���R�[�h�������I�ɂ͑��݂��܂����A�𔻒菈��
-		�ɂ̂ݎg���Ă���AAI�C���^�[�t�F�C�X�ɏo�Ă��邱�Ƃ͂���܂���B����
-		���߁A���̃X�N���v�g�d�l����������̃R�[�h�͏Ȃ���Ă��܂��B
+		　なお、暗順子、暗刻子を表すコードも内部的には存在しますが、役判定処理
+		にのみ使われており、AIインターフェイスに出てくることはありません。その
+		ため、このスクリプト仕様からもそれらのコードは省かれています。
 
 
-	�� mihajong.AgariType
+	▼ mihajong.AgariType
 
-		�@���Ύq�A���m���o�Ƃ������a���̌`����\�����l���i�[�����e�[�u���ł��B
-		����́Agametbl:getshanten()�֐��̈����Ɏg�p���܂��B���̃e�[�u���ɂ́A
-		�ȉ��̃t�B�[���h���i�[����Ă��܂��B
+		　七対子、国士無双といった和了の形式を表す数値を格納したテーブルです。
+		これは、gametbl:getshanten()関数の引数に使用します。このテーブルには、
+		以下のフィールドが格納されています。
 
-		�EAll �c�c �a���̌`������Ȃ����Ƃ��w�肵�܂��B
-		�ERegular �c�c �ʏ��4�ʎq1�����̘a���B
-		�EPairs �c�c ���Ύq�B
-		�EOrphans �c�c ���m���o�B
-		�EStellar �c�c ��������(���̂悤�Ȗ������݂��郋�[���̂݁B�ȉ����l)�B
-		�ECivilWar �c�c ��k�푈�B
-		�ESyzygy �c�c �f������B
-		�EQuanbukao �c�c �S�s�ρB
-		�ESevenUp �c�c �Z�u���A�b�v�B
-		�EZuheLong �c�c �g�����B
+		・All …… 和了の形式を問わないことを指定します。
+		・Regular …… 通常の4面子1雀頭の和了。
+		・Pairs …… 七対子。
+		・Orphans …… 国士無双。
+		・Stellar …… 七星無靠(そのような役が存在するルールのみ。以下同様)。
+		・CivilWar …… 南北戦争。
+		・Syzygy …… 惑星直列。
+		・Quanbukao …… 全不靠。
+		・SevenUp …… セブンアップ。
+		・ZuheLong …… 組合龍。
 
 
-	�� mihajong.Tile
+	▼ mihajong.Tile
 
-		�@����A�ܓ��Ƃ������v�̎�ނ�\�����l���i�[�����e�[�u���ł��B���̃e�[
-		�u���ɂ́A�ȉ��̃t�B�[���h���i�[����Ă��܂��B
+		　一索、五筒といった牌の種類を表す数値を格納したテーブルです。このテー
+		ブルには、以下のフィールドが格納されています。
 
-		�ECharacter �c�c �ݎq��\���T�u�e�[�u���ł��B
-		�@�@�@�@�@�@�@�@ ���̒��ɂ́AOne����Nine�܂ł̒萔������܂��B������1
-		�@�@�@�@�@�@�@�@ ����9���g�p�ł��܂��B
-		�ECircle �c�c ���q��\���T�u�e�[�u���ł��B
-		�@�@�@�@�@�@�@���̒��ɂ́AOne����Nine�܂ł̒萔������܂��B������1����
-		�@�@�@�@�@�@�@9���g�p�ł��܂��B
-		�EBamboo �c�c ���q��\���T�u�e�[�u���ł��B
-		�@�@�@�@�@�@�@���̒��ɂ́AOne����Nine�܂ł̒萔������܂��B������1����
-		�@�@�@�@�@�@�@9���g�p�ł��܂��B
-		�EWind �c�c ���v��\���T�u�e�[�u���ł��B
-		�@�@�@�@�@�@���̒��ɂ́AEast�ASouth�AWest�ANorth�Ƃ����萔������܂��B
-		�EDragon �c�c �O���v��\���T�u�e�[�u���ł��B
-		�@�@�@�@�@�@�@���̒��ɂ́AWhite�AGreen�ARed�Ƃ����萔������܂��B
-		�EFlower �c�c �Ԕv��\���T�u�e�[�u���ł��B
-		�@�@�@�@�@�@�@���̒��ɂ́A�G�ߔv��\��Spring�ASummer�AAutumn�AFall�A
-		�@�@�@�@�@�@�@Winter�A����ё��ؔv��\��Plum�AOrchid�AChrysanthemum�A
-		�@�@�@�@�@�@�@Chrys�ABamboo�Ƃ����萔������܂��B�Ȃ��AFall��Autumn��
-		�@�@�@�@�@�@�@���`�ŁAChrys��Chrysanthemum�Ɠ��`�ł��B
-		�@�@�@�@�@�@�@���̑���Flower�Ƃ����萔������܂����Agametbl:
-		�@�@�@�@�@�@�@getdorainfo() �Ȃǂ̕Ԃ�l�e�[�u���̃C���f�b�N�X�Ɏg�p���A
-		�@�@�@�@�@�@�@��v�f�[�^�ɂ͌���܂���B
+		・Character …… 萬子を表すサブテーブルです。
+		　　　　　　　　 この中には、OneからNineまでの定数があります。数字の1
+		　　　　　　　　 から9も使用できます。
+		・Circle …… 筒子を表すサブテーブルです。
+		　　　　　　　この中には、OneからNineまでの定数があります。数字の1から
+		　　　　　　　9も使用できます。
+		・Bamboo …… 索子を表すサブテーブルです。
+		　　　　　　　この中には、OneからNineまでの定数があります。数字の1から
+		　　　　　　　9も使用できます。
+		・Wind …… 風牌を表すサブテーブルです。
+		　　　　　　この中には、East、South、West、Northという定数があります。
+		・Dragon …… 三元牌を表すサブテーブルです。
+		　　　　　　　この中には、White、Green、Redという定数があります。
+		・Flower …… 花牌を表すサブテーブルです。
+		　　　　　　　この中には、季節牌を表すSpring、Summer、Autumn、Fall、
+		　　　　　　　Winter、および草木牌を表すPlum、Orchid、Chrysanthemum、
+		　　　　　　　Chrys、Bambooという定数があります。なお、FallはAutumnと
+		　　　　　　　同義で、ChrysはChrysanthemumと同義です。
+		　　　　　　　この他にFlowerという定数がありますが、gametbl:
+		　　　　　　　getdorainfo() などの返り値テーブルのインデックスに使用し、
+		　　　　　　　手牌データには現れません。
 
 
-	�� mihajong.DoraColor
+	▼ mihajong.DoraColor
 
-		�@�ԃh�����ǂ�����\�����l���i�[�����e�[�u���ł��B���̃e�[�u���ɂ́A��
-		���̃t�B�[���h���i�[����Ă��܂��B
+		　赤ドラかどうかを表す数値を格納したテーブルです。このテーブルには、以
+		下のフィールドが格納されています。
 
-		�ENormal �c�c ���v�B�ԃh����h���ł͂Ȃ��v�ł��B
-		�ERed �c�c �Ԕv�B�ԃh���Ƃ������܂��B
-		�EBlue �c�c �v�B�h������̃��[���ɂ̂݌���܂��B
+		・Normal …… 黒牌。赤ドラや青ドラではない牌です。
+		・Red …… 赤牌。赤ドラともいいます。
+		・Blue …… 青牌。青ドラありのルールにのみ現れます。
 
 
-	�� mihajong.gametbl
+	▼ mihajong.gametbl
 
-		�@determine_discard�Adetermine_call �̈����Ƃ��ēn�����e�[�u���̃v��
-		�g�^�C�v�ł��B�ڍׂ͑O�q���Ă��܂��B
+		　determine_discard、determine_call の引数として渡されるテーブルのプロ
+		トタイプです。詳細は前述しています。
 
 
-	�� mihajong.random
+	▼ mihajong.random
 
-		�@MiHaJong��Lua�C���^�v���^�ł�math���C�u�������I�[�v������Ă��Ȃ���
-		�ŁA�������K�v�ȏꍇ�� mihajong.random() �֐����g���܂��BC++11��
-		<random>���C�u�����Ŏ�������Ă��āALua�W�����C�u������ math.random
-		(�����C�����rand()�ł�)�������i�ʂȗ����������܂��B
-		�@���̊֐��͖{���̗����ł͂Ȃ������܂ŋ[�������ł����AMiHaJong�̃V�X�e
-		�����ŗ����̎�͗\���s�\�Ȓl�ɐݒ肳��܂��B
-		�@�Ȃ��A���̊֐��͈����̗^�����ɂ���ĈقȂ鋓���������܂��B
+		　MiHaJongのLuaインタプリタではmathライブラリがオープンされていないの
+		で、乱数が必要な場合は mihajong.random() 関数を使います。C++11の
+		<random>ライブラリで実装されていて、Lua標準ライブラリの math.random
+		(これはC言語のrand()です)よりも高品位な乱数が得られます。
+		　この関数は本物の乱数ではなくあくまで擬似乱数ですが、MiHaJongのシステ
+		ム側で乱数の種は予測不能な値に設定されます。
+		　なお、この関数は引数の与え方によって異なる挙動を示します。
 
-		�� mihajong.random()�Amihajong.random(nil)�Amihajong.random(nil, nil)
+		● mihajong.random()、mihajong.random(nil)、mihajong.random(nil, nil)
 
-			�@mihajong.random �������Ȃ��ŌĂяo�����ꍇ�A���J��� [0, 1) �̘A
-			����l������Ԃ��܂��B
+			　mihajong.random を引数なしで呼び出した場合、半開区間 [0, 1) の連
+			続一様乱数を返します。
 
-		�� mihajong.random(n)�Amihajong.random(n, nil)
+		● mihajong.random(n)、mihajong.random(n, nil)
 
-			�@mihajong.random ��1�̐����̈����ŌĂяo�����ꍇ�A��� [1, n]
-			�̗��U��l������Ԃ��܂�(�Ԃ�l�͐����ɂȂ�܂�)�B���Ƃ��� n == 6
-			�̏ꍇ�A�T�C�R����1�U��̂Ɠ����ɂȂ�܂��B
+			　mihajong.random を1つの整数の引数で呼び出した場合、閉区間 [1, n]
+			の離散一様乱数を返します(返り値は整数になります)。たとえば n == 6
+			の場合、サイコロを1つ振るのと同じになります。
 
-		�� mihajong.random(mean, var)
+		● mihajong.random(mean, var)
 
-			�@mihajong.random ��2�̈����ŌĂяo�����ꍇ�ŁA2�ڂ̈���������
-			�ꍇ�A���� �� == mean�A���U ��^2 == var �̐��K������Ԃ��܂��B
+			　mihajong.random を2つの引数で呼び出した場合で、2つ目の引数が正の
+			場合、平均 μ == mean、分散 σ^2 == var の正規乱数を返します。
 
-		�� mihajong.random(n, -faces)
+		● mihajong.random(n, -faces)
 
-			�@mihajong.random ��2�̈����ŌĂяo�����ꍇ�ŁA2�ڂ̈���������
-			�ꍇ�A|faces| �ʂ̃T�C�R���� n �U�����o�ڂ̍��v��Ԃ��܂��B
+			　mihajong.random を2つの引数で呼び出した場合で、2つ目の引数が負の
+			場合、|faces| 面のサイコロを n 個振った出目の合計を返します。
 
 
-	�� mihajong.gametype
+	▼ mihajong.gametype
 
-		�@MiHaJong�̎�ʂ�\��������ł��B�Ӗ��͎��̂Ƃ���ł��B
+		　MiHaJongの種別を表す文字列です。意味は次のとおりです。
 
-		�E"yonma" �c�c �l�l�ł��B
-		�E"sanma" �c�c �O�l�ł��B
-		�E"sanma_with_four_players" �c�c �l�l�O���B
-		�E"sanma_without_honors" �c�c ���v�O���B
+		・"yonma" …… 四人打ち。
+		・"sanma" …… 三人打ち。
+		・"sanma_with_four_players" …… 四人三麻。
+		・"sanma_without_honors" …… 数牌三麻。
 
 
-	�� mihajong.version
+	▼ mihajong.version
 
-		�@MiHaJong�̃o�[�W�����ł��B���̃e�[�u���ɂ́A�ȉ��̃t�B�[���h���i�[��
-		��Ă��܂��B�܂��Atostring(mihajong.version)�Ƃ���ƁA"1.7.0"�̂悤��
-		�����񂪕Ԃ�܂����B
+		　MiHaJongのバージョンです。このテーブルには、以下のフィールドが格納さ
+		れています。また、tostring(mihajong.version)とすると、"1.7.0"のような
+		文字列が返りますす。
 
-		�Emajor �c�c ���W���[�o�[�W�����B
-		�Eminor �c�c �}�C�i�[�o�[�W�����B
-		�Epatch �c�c �p�b�`�o�[�W�����B
+		・major …… メジャーバージョン。
+		・minor …… マイナーバージョン。
+		・patch …… パッチバージョン。
 
 
-	�� mihajong.say(message)
+	▼ mihajong.say(message)
 
-		�@MiHaJong�̃`���b�g�E�B���h�E�Ƀ��b�Z�[�W���o�͂��܂��B����́A�`���b
-		�g�ł̔����Ƃ��ĕ\������܂��B
-		�@���̊֐��͕�����̈������ЂƂȏ���܂��B�����̈�����^�����ꍇ�A
-		����炪�X�y�[�X�łȂ���ďo�͂���܂��B������������łȂ��ꍇ�A�Ö�
-		�� tostring ���Ăяo����܂��B
-		�@���̊֐��ɂ́A�߂�l�͂���܂���B
-		�@AI�̃f�o�b�O���s�Ȃ��Ă���̂łȂ�����A��̓��̏�����������΂炵
-		�Ă��܂�Ȃ��悤�ɒ��ӂ��܂��傤�B
+		　MiHaJongのチャットウィンドウにメッセージを出力します。これは、チャッ
+		トでの発言として表示されます。
+		　この関数は文字列の引数をひとつ以上取ります。複数の引数を与えた場合、
+		それらがスペースでつながれて出力されます。引数が文字列でない場合、暗黙
+		に tostring が呼び出されます。
+		　この関数には、戻り値はありません。
+		　AIのデバッグを行なっているのでない限り、手の内の情報をうっかりばらし
+		てしまわないように注意しましょう。
 
 
-�� ephemeral�e�[�u��
+■ ephemeralテーブル
 
-	�@����͋�̃e�[�u���ŁAAI��҂��]�ނ��̂����ł��i�[���邱�Ƃ��ł��܂��B��
-	���́A���ǊJ�n���Ƀ��Z�b�g����܂��B�v���C���[���ƂɕʁX��Lua�����p��
-	����Ă���̂ŁA�������邱�Ƃ͂���܂���B
-	�@�����������ƕێ����������́Aephemeral�e�[�u���́u�O�́v�O���[�o����
-	�ɕێ����܂��B
+	　これは空のテーブルで、AI作者が望むものを何でも格納することができます。こ
+	れらは、毎局開始時にリセットされます。プレイヤーごとに別々のLua環境が用意
+	されているので、混線することはありません。
+	　半荘中ずっと保持したい情報は、ephemeralテーブルの「外の」グローバル環境
+	に保持します。
 
 
 ==============================================================================

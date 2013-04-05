@@ -330,6 +330,15 @@ namespace confpath {
 				CopyFileA(".\\haifu\\haifu.css",
 					(std::string(appdata) + std::string("\\MiHaJong\\haifu\\haifu.css")).c_str(),
 					TRUE);
+				CopyFileA(".\\haifu\\haifu.dtd",
+					(std::string(appdata) + std::string("\\MiHaJong\\haifu\\haifu.dtd")).c_str(),
+					TRUE);
+				CopyFileA(".\\haifu\\haifu.xsd",
+					(std::string(appdata) + std::string("\\MiHaJong\\haifu\\haifu.xsd")).c_str(),
+					TRUE);
+				CopyFileA(".\\haifu\\haifu.xsl",
+					(std::string(appdata) + std::string("\\MiHaJong\\haifu\\haifu.xsl")).c_str(),
+					TRUE);
 				MakeSureDirectoryPathExists((std::string(appdata) + std::string("\\MiHaJong\\ai\\")).c_str());
 				CopyFileA(".\\ai\\default.lua",
 					(std::string(appdata) + std::string("\\MiHaJong\\ai\\default.lua")).c_str(),
