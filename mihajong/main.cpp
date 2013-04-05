@@ -18,7 +18,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	getWindowSize(&width, &height, &fullscreen);
 
 	/* ウィンドウを初期化する */
-	if (!mihajong_graphic::InitWindow(hInstance, nCmdShow, MAKEINTRESOURCE(IDI_ICON1), &hwnd))
+	if (!mihajong_graphic::InitWindow(hInstance, nCmdShow, MAKEINTRESOURCE(IDI_ICON1), &hwnd, width, height, fullscreen))
 		exit(1); // 失敗したら終了
 	
 	/* スタート */
