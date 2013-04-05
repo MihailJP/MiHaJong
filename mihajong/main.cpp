@@ -1,11 +1,21 @@
 #include "main.h"
 
+#include <cstdlib>
+#include "../mjcore/mjimport.h"
+#include "../graphic/graphic.h"
+#include "resource.h"
+
 #ifdef MINGW_UNICODE /* Workaround for MinGW */
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow) {
 #else
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 #endif
 	MSG msg; HWND hwnd;
+	unsigned width, height; bool fullscreen;
+
+	/* ウィンドウ設定情報を先行読み込み */
+	preferenceInit();
+	getWindowSize(&width, &height, &fullscreen);
 
 	/* ウィンドウを初期化する */
 	if (!mihajong_graphic::InitWindow(hInstance, nCmdShow, MAKEINTRESOURCE(IDI_ICON1), &hwnd))
