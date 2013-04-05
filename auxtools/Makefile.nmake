@@ -1,19 +1,19 @@
 DATAPATH=$(SolutionDir)mjcore\data\ 
-EXEPATH=$(SolutionDir)mihajong_legacy\ 
+DOCPATH=$(SolutionDir)doc\ 
 
 TARGETS_COMPRESS_CONFITEM_CSV=$(DATAPATH)confitem.csv.lzma $(DATAPATH)confitem_csv.cpp $(DATAPATH)confitem_csv.h
 TARGETS_COMPRESS_CONFITEM_INI=$(DATAPATH)confitem.ini.lzma $(DATAPATH)confitem_ini.cpp $(DATAPATH)confitem_ini.h
 TARGETS_COMPRESS_PREFITEM_CSV=$(DATAPATH)prefitem.csv.lzma $(DATAPATH)prefitem_csv.cpp $(DATAPATH)prefitem_csv.h
 TARGETS_COMPRESS_PREFITEM_INI=$(DATAPATH)prefitem.ini.lzma $(DATAPATH)prefitem_ini.cpp $(DATAPATH)prefitem_ini.h
 TARGETS_COMPRESS_RANKVAL_CSV=$(DATAPATH)rankval.csv.lzma $(DATAPATH)rankval_csv.cpp $(DATAPATH)rankval_csv.h
-TARGETS_PARSE_RULESYMS_TXT=$(EXEPATH)rulesyms.txt
+TARGETS_PARSE_RULESYMS_TXT=$(DOCPATH)rulesyms.txt
 
 TARGETS=$(TARGETS_COMPRESS_CONFITEM_CSV) $(TARGETS_COMPRESS_CONFITEM_INI) \
 	$(TARGETS_COMPRESS_PREFITEM_CSV) $(TARGETS_COMPRESS_PREFITEM_INI) \
 	$(TARGETS_COMPRESS_RANKVAL_CSV) $(TARGETS_PARSE_RULESYMS_TXT)
 all: $(TARGETS)
 
-$(EXEPATH)rulesyms.txt: $(DATAPATH)confitem.csv
+$(DOCPATH)rulesyms.txt: $(DATAPATH)confitem.csv
 	ruby rulesyms.rb
 
 $(DATAPATH)confitem.csv.lzma: $(DATAPATH)confitem.csv

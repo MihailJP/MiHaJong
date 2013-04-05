@@ -347,6 +347,8 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			case btnKan: // カン
 				setMode(DiscardTileNum::Ankan, btnKan,
 					[](int i, GameTable* tmpStat) -> bool {
+						if ((tmpStat->statOfMine().RichiFlag.RichiFlag) && (i != TsumohaiIndex))
+							return false; // リーチ時は自摸牌以外選択できないようにする
 						bool flag = false;
 						const PlayerID ActivePlayer = tmpStat->CurrentPlayer.Active;
 						const Int8ByTile TileCount = utils::countTilesInHand(tmpStat, ActivePlayer);
@@ -366,6 +368,8 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			case btnFlower: // 花牌
 				setMode(DiscardTileNum::Flower, btnFlower,
 					[](int i, GameTable* tmpStat) -> bool {
+						if ((tmpStat->statOfMine().RichiFlag.RichiFlag) && (i != TsumohaiIndex))
+							return false; // リーチ時は自摸牌以外選択できないようにする
 						if (tmpStat->gameType & SanmaX)
 							return tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
 								NorthWind;
