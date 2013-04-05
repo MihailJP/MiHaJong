@@ -56,11 +56,11 @@
 	https://github.com/MihailJP/MiHaJong/
 
 
-■ 既知の問題点
+■ ベータ版の制限
 
-	・OSの設定で左右のボタンを入れ替えているとマウスボタンで正常に打牌できない。
-	・ポン聴または吃聴の直後、画面下の待ち牌表示に変なものが表示される。
-	・上家が親のときサイコロの上に文字が表示される。
+	・通信対局が未実装。
+	・チャットが未実装。
+	・終了した時、稀にMiHaJongのプロセスが残ることがある。
 
 
 ■ MihailJPの開発環境
@@ -68,7 +68,7 @@
 	・OS：Windows 7 Home Premium 32bit (Service Pack 1)
 	・物理メモリ：4GB（3.2GB使用可能）
 	・CPU：Intel Core i5 760 2.80GHz（場合により2.66GHzにダウンクロック）
-	・開発環境：Hot Soup Processor ver3.3、Visual C++ 2010 Express
+	・開発環境：Visual C++ 2010 Express
 	・画像編集ツール：GIMP 2.6
 	・テキストエディタ：Mery、Notepad++、Kate
 	・Gitクライアント：Cygwin GIT
@@ -76,16 +76,12 @@
 
 ■ ビルドに別途必要なもの
 
-	・Hot Soup Processor 本体 (http://hsp.tv/)
-	・p2b.dll (http://www.geocities.jp/anachronism128/)
-	・l_tooltips.as (http://lhsp.s206.xrea.com/hsp_object6.html)
-	・mod_customizebutton.hsp (http://hspdev-wiki.net/?Module/mod_customizebutton_v2)
-	・cHspComp (http://lldev.jp/others/freeware.html#chspcomp)
-	・Lua スタティックライブラリ (http://luabinaries.sourceforge.net/download.html)
+	・liblua (http://www.lua.org/download.html) ※
 	・Ruby 処理系 (http://www.ruby-lang.org/ja/downloads/)
 	・ruby-lzmaが使えない場合、 Python 処理系 (http://www.python.jp/download/)
-	・libogg/libvorbis (http://www.xiph.org/downloads/)
+	・libogg/libvorbis (http://www.xiph.org/downloads/) ※
 	・GuruGuruSMF (http://gurugurusmf.migmig.net/)
+	※Visual C++の場合はスタティックリンクします
 
 
 ■ ライセンスについて
