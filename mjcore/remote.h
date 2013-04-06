@@ -38,5 +38,6 @@ namespace RemoteAction {
 namespace RemoteConnection {
 
 void startServer(std::string& serverAddr);
+void startClient(std::string& serverAddr, unsigned& ClientNumber);
 
 }

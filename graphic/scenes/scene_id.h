@@ -9,6 +9,7 @@ enum sceneID { // ƒV[ƒ“”Ô†
 	sceneSetting, // ŠÂ‹«İ’è‰æ–Ê
 	sceneServerWaiting, // ƒT[ƒo[‘Ò‹@‰æ–Ê
 	sceneClientWaiting, // ƒNƒ‰ƒCƒAƒ“ƒg‘Ò‹@‰æ–Ê
+	sceneWaitingError, // Ú‘±¸”s
 	sceneGameTable, // ‘ì‚Ì‰æ–Ê
 	sceneResult, // Œ‹‰Ê‰æ–Ê
 };
@@ -57,6 +58,12 @@ enum ServerWaitingSubsceneID : unsigned int { // ƒT[ƒo[‘Ò‹@‰æ–Ê‚ÌƒTƒuƒV[ƒ“”Ô
 	srvwSubscene3of4, //      V
 	srvwSubscene3of3, //      V
 	srvwSubscene4of4, //      V
+};
+
+enum ClientWaitingSubsceneID : unsigned int { // ƒNƒ‰ƒCƒAƒ“ƒg‘Ò‹@‰æ–Ê‚ÌƒTƒuƒV[ƒ“”Ô†
+	cliwSubsceneNone, // ’Êí
+	cliwSubsceneConnecting, // Ú‘±s’†
+	cliwSubsceneWaiting, // ‘Ò‹@’†
 };
 
 }

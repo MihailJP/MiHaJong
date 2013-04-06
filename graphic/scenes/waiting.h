@@ -33,10 +33,21 @@ public:
 
 class ClientWait : public ConnectionWaitingProto {
 private:
+	ClientWaitingSubsceneID subsceneID;
 	CodeConv::tstring waiting_desc_str();
 public:
 	ClientWait(ScreenManipulator* const manipulator);
 	~ClientWait();
+	void Render();
+	void SetSubscene(unsigned int scene_ID);
+};
+
+class ConnectionWaitFailed : public ConnectionWaitingProto {
+private:
+	CodeConv::tstring waiting_desc_str();
+public:
+	ConnectionWaitFailed(ScreenManipulator* const manipulator);
+	~ConnectionWaitFailed();
 	void Render();
 };
 

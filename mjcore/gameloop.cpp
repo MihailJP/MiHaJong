@@ -139,8 +139,9 @@ void startgame(GameTypeID gameType) {
 			RemoteConnection::startServer(serverAddr);
 			break;
 		case 3:
-			mihajong_graphic::Transit(mihajong_graphic::sceneClientWaiting);
-			Sleep(INFINITE); // ‰¼’u‚«
+			RemoteConnection::startClient(serverAddr, ClientNumber);
+			if (EnvTable::Instantiate()->GameMode == EnvTable::Standalone)
+				goto start; // Ú‘±¸”s‚Ì‚Í–ß‚é
 			break;
 		case 4:
 			mihajong_graphic::Transit(mihajong_graphic::sceneConfig);

@@ -88,6 +88,9 @@ void ScreenManipulator::transit(sceneID scene) {
 		case sceneClientWaiting:
 			myScene = new ClientWait(this); redrawFlag = true;
 			break;
+		case sceneWaitingError:
+			myScene = new ConnectionWaitFailed(this); redrawFlag = true;
+			break;
 		case sceneGameTable:
 			myScene = new GameTableScreen(this); redrawFlag = true;
 			break;

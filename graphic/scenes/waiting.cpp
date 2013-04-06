@@ -1,5 +1,6 @@
 #include "waiting.h"
 #include "../event.h"
+#include "../rule.h"
 
 namespace mihajong_graphic {
 
@@ -87,9 +88,38 @@ void ClientWait::Render() {
 	clearWithGameTypeColor();
 	waiting_title();
 	waiting_desc();
+	showCentered(2, _T("しばらくお待ちください"), 900, 1.0f, false);
 	myTextRenderer->Render();
 }
+void ClientWait::SetSubscene(unsigned int scene_ID) {
+	subsceneID = static_cast<ClientWaitingSubsceneID>(scene_ID);
+};
 CodeConv::tstring ClientWait::waiting_desc_str() {
+	switch (subsceneID) {
+	case cliwSubsceneConnecting:
+		return _T("サーバーに接続しています");
+	case cliwSubsceneWaiting:
+		return _T("面子が揃うのを待っています");
+	default:
+		return _T("処理中です");
+	}
+}
+
+// -------------------------------------------------------------------------
+
+ConnectionWaitFailed::ConnectionWaitFailed(ScreenManipulator* const manipulator) : ConnectionWaitingProto(manipulator) {
+}
+ConnectionWaitFailed::~ConnectionWaitFailed() {
+}
+void ConnectionWaitFailed::Render() {
+	const std::string addr(rules::getPreferenceRawStr(1 /*hardcoded*/));
+	const CodeConv::tstring errmsg(CodeConv::EnsureTStr(addr) + _T("に接続できませんでした"));
+	clearWithGameTypeColor();
+	showCentered(0, _T("接続失敗"), 300, 3.0f, false);
+	showCentered(1, errmsg, 660, 1.5f, false);
+	myTextRenderer->Render();
+}
+CodeConv::tstring ConnectionWaitFailed::waiting_desc_str() {
 	return _T("");
 }
 

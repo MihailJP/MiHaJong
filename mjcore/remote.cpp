@@ -303,4 +303,48 @@ void startServer(std::string& serverAddr) {
 	mihajong_socket::server::releaseobj();
 }
 
+void startClient(std::string& serverAddr, unsigned& ClientNumber) {
+	mihajong_graphic::Transit(mihajong_graphic::sceneClientWaiting);
+	serverAddr = RuleData::chkPreference((std::string)"server");
+	EnvTable::Instantiate()->GameMode = EnvTable::Client;
+
+	const std::string nomen(RuleData::chkPreference((std::string)"name"));
+	const CodeConv::tstring Nomen(CodeConv::EnsureTStr(nomen));
+
+	mihajong_graphic::Subscene(mihajong_graphic::cliwSubsceneConnecting);
+	mihajong_socket::client::start(Nomen.c_str(), serverAddr.c_str(), /*PORT_GAME*/50000, ACTUAL_PLAYERS);
+
+	while (true) {
+		if (mihajong_socket::client::isConnectionSucceded()) {
+			mihajong_graphic::Subscene(mihajong_graphic::cliwSubsceneWaiting);
+			break;
+		} else if (mihajong_socket::client::isConnectionFailed()) {
+			mihajong_graphic::Transit(mihajong_graphic::sceneWaitingError);
+			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
+			Sleep(1500);
+			return;
+		}
+		Sleep(50);
+	}
+	while (!mihajong_socket::client::isStartingFinished())
+		Sleep(50);
+	ClientNumber = mihajong_socket::client::getClientNumber();
+
+	TCHAR playerName[4][256];
+	mihajong_socket::client::getPlayerNames(playerName[0], playerName[1], playerName[2], playerName[3], 256);
+	for (int i = 0; i < 4; ++i)
+		EnvTable::Instantiate()->PlayerDat[i].PlayerName = playerName[i];
+	for (int i = 0; i < ACTUAL_PLAYERS; ++i)
+		if (ClientNumber != i) EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = 1;
+
+	char RuleConf[RULE_LINES][RULE_IN_LINE + 4];
+	char* RuleConfPtr[RULE_LINES];
+	for (int i = 0; i < RULE_LINES; i++) RuleConfPtr[i] = RuleConf[i];
+	mihajong_socket::client::checkout_rules(RuleConfPtr);
+	RuleData::storeRule(const_cast<const char**>(RuleConfPtr) /* constを付けてないと何故かエラーに…… */);
+
+	mihajong_socket::client::releaseobj();
+	return;
+}
+
 } /* namespace */
