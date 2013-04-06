@@ -48,4 +48,15 @@ enum TableSubsceneID : unsigned int { // 卓画面のサブシーン番号
 	tblSubsceneAgariUradora, // 和了役表示画面(裏ドラあり)
 };
 
+enum ServerWaitingSubsceneID : unsigned int { // サーバー待機画面のサブシーン番号
+	srvwSubsceneNone, // 通常
+	srvwSubscene1of4, // 待機中の人数
+	srvwSubscene1of3, //      〃
+	srvwSubscene2of4, //      〃
+	srvwSubscene2of3, //      〃
+	srvwSubscene3of4, //      〃
+	srvwSubscene3of3, //      〃
+	srvwSubscene4of4, //      〃
+};
+
 }
