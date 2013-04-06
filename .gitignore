@@ -85,3 +85,8 @@ socket/Makefile
 sound/.deps/
 sound/Makefile
 stamp-h1
+.libs
+*.lo
+*.la
+*.o
+mihajong-*.tar.*
