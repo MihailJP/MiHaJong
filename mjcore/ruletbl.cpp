@@ -295,7 +295,10 @@ void RuleData::applyPreference() {
 MJCORE void preferenceInit() {
 	std::string preferenceFile = confpath::confPath() + "config.ini";
 	RuleData::preference_init();
-	RuleData::loadPreferenceFile(preferenceFile.c_str());
+	const bool prefFileExists = exist(preferenceFile.c_str()); // 設定ファイルがあるかどうか調べる
+	if (prefFileExists) {
+		RuleData::loadPreferenceFile(preferenceFile.c_str()); // 設定ファイル読み込み
+	}
 }
 
 MJCORE void getWindowSize(unsigned* width, unsigned* height, bool* fullscreen) {

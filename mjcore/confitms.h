@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdio>
 #include <cstdint>
 #include <string>
 #include <map>
@@ -319,7 +320,7 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 		o << _T("エラーコード [") << err << _T("]");
 #endif
 		error(o.str().c_str());
-		fclose(conffile); // ファイルを閉じる
+		//fclose(conffile); // ファイルを閉じる ←ここではconffileはぬるぽなので不要
 		return -1;
 	} else { // 正しくオープンされたら
 		fseek(conffile, 0, SEEK_END); long filesize = ftell(conffile); rewind(conffile); // ファイルサイズを取得
