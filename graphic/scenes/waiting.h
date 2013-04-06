@@ -1,10 +1,14 @@
 #pragma once
 
 #include "sysscr.h"
+#include "../text.h"
 
 namespace mihajong_graphic {
 
 class ConnectionWaitingProto : public SystemScreen {
+protected:
+	TextRenderer* myTextRenderer;
+	void waiting_title();
 public:
 	ConnectionWaitingProto(ScreenManipulator* const manipulator);
 	virtual ~ConnectionWaitingProto();
