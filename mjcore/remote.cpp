@@ -289,7 +289,8 @@ void startServer(std::string& serverAddr) {
 			}
 			numOfClientsPrev = numOfClients;
 		}
-		Sleep(50);
+		if (mihajong_graphic::ui::WaitUIWithTimeout(50) != 0xffffffff)
+			mihajong_socket::server::doStart();
 		if (mihajong_socket::server::isStartingFinished()) break;
 	}
 	TCHAR playerName[4][256];

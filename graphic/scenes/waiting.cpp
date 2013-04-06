@@ -1,4 +1,5 @@
 #include "waiting.h"
+#include "../event.h"
 
 namespace mihajong_graphic {
 
@@ -40,11 +41,21 @@ void ServerWait::Render() {
 	clearWithGameTypeColor();
 	waiting_title();
 	waiting_desc();
+	showCentered(2, _T("XキーまたはESCキーを押すと現在の面子にCOMプレイヤーを入れて開始します"), 900, 1.0f, false);
 	myTextRenderer->Render();
 }
 void ServerWait::SetSubscene(unsigned int scene_ID) {
 	subsceneID = static_cast<ServerWaitingSubsceneID>(scene_ID);
 };
+void ServerWait::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+	switch (od->dwOfs) {
+	case DIK_ESCAPE: case DIK_X: // キャンセル
+		if (od->dwData) {
+			ui::cancellableWait->set(1);
+		}
+		break;
+	}
+}
 CodeConv::tstring ServerWait::waiting_desc_str() {
 	switch (subsceneID) {
 	case srvwSubscene1of4:

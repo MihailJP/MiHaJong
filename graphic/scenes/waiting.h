@@ -27,6 +27,7 @@ public:
 	ServerWait(ScreenManipulator* const manipulator);
 	~ServerWait();
 	void Render();
+	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 	void SetSubscene(unsigned int scene_ID);
 };
 
