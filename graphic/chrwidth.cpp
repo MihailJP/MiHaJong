@@ -1,6 +1,6 @@
 #include "chrwidth.h"
 
-#include <Windows.h>
+#include <windows.h>
 #include <stdexcept>
 #include "../common/strcode.h"
 

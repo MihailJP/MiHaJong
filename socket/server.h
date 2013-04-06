@@ -5,7 +5,7 @@
 #ifdef SOCKET_EXPORTS
 #include "except.h"
 #include "../common/nmrules.h"
-#include <Windows.h>
+#include <windows.h>
 #include <array>
 #include <string>
 #include <cstdint>

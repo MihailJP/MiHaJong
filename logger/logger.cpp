@@ -1,5 +1,5 @@
 #include "logger.h"
-#include <Windows.h>
+#include <windows.h>
 #include <process.h>
 #include <string>
 #include <deque>

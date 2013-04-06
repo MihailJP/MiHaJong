@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Windows.h>
+#include <windows.h>
 #include <lua.hpp>
 #include "../discard.h"
 #include "../gametbl.h"

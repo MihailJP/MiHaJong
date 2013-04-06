@@ -1,7 +1,7 @@
 #include "dllmain.h"
 
 #ifdef _MSC_VER
-#include <DbgHelp.h>
+#include <dbghelp.h>
 #endif
 #include <cstdlib>
 #include <sstream>

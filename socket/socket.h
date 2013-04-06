@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef _WINSOCKAPI_
-#include <WinSock2.h>
+#include <winsock2.h>
 #endif
 #include <cstdarg>
 #include "../common/strcode.h"

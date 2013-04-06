@@ -4,8 +4,8 @@
 #include <memory>
 #include <cstring>
 #include <sstream>
-#include <Windows.h>
-#include <ImageHlp.h>
+#include <windows.h>
+#include <imagehlp.h>
 #include <direct.h>
 #include "../common/strcode.h"
 #include "../sound/sound.h"

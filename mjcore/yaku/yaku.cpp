@@ -9,7 +9,7 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
-#include <Windows.h>
+#include <windows.h>
 #include "../largenum.h"
 #include "../except.h"
 #include "../logging.h"

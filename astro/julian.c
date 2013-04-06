@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <Windows.h>
+#include <windows.h>
 
 double time_to_julian(int year, int month, int day, int hour, int min, int sec, int msec)
 { /* Calculate Julian day from given date and time */

@@ -1,7 +1,7 @@
 #include "filesel.h"
 
 #include <sstream>
-#include <Windows.h>
+#include <windows.h>
 #include "../func.h"
 #include "../random.h"
 

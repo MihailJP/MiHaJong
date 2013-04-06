@@ -2,7 +2,7 @@
 
 #include "mjexport.h"
 #include "gametbl.h"
-#include <Windows.h>
+#include <windows.h>
 
 #ifdef MJCORE_EXPORTS
 

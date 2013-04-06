@@ -4,7 +4,7 @@
 #  include <d3dx9.h>
 #  include <dxerr.h>
 #else
-#  include <Windows.h>
+#  include <windows.h>
 #  ifndef DECLARE_INTERFACE_IID_
 #    define DECLARE_INTERFACE_IID_(i,b,d) DECLARE_INTERFACE_(i,b)
 #  endif

@@ -8,7 +8,7 @@ AC_DEFUN([MH_OGG_VORBIS_HEADERS], [
 	AC_CHECK_HEADER([vorbis/codec.h], $1, $2)
 	AC_CHECK_HEADER([vorbis/vorbisfile.h], $1, $2, [[
 #ifdef __MINGW32__
-#include <Windows.h>
+#include <windows.h>
 #undef __MINGW32__
 #undef _WIN32
 #endif
