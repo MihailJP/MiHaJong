@@ -34,7 +34,7 @@ libmihajong_graphic_la_SOURCES = \
 	scenes/table/color.h scenes/table/gari.h scenes/table/nakibtn.h \
 	scenes/table/nakihai.h scenes/table/nakihai0.h scenes/table/naki_id.h \
 	scenes/table/richibou.h scenes/table/showdice.h scenes/table/sutehai.h \
-	scenes/table/tehai.h scenes/table/tehai0.h scenes.table/tiletip.h \
+	scenes/table/tehai.h scenes/table/tehai0.h scenes/table/tiletip.h \
 	scenes/table/yamahai.h \
 	widgets/button.h widgets/checkbox.h widgets/editbox.h widgets/logwnd.h \
 	graphic.rc
