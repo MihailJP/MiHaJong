@@ -57,9 +57,9 @@ CLEANFILES = $(libmihajong_la_BUILT_SOURCES) \
 	data/confitem.csv.lzma data/confitem.ini.lzma data/rankval.csv.lzma
 
 .rc.o:
-	windres $^ -o $@ -l 0411
+	$(WINDRES) $^ -o $@ -l 0411
 %.o: %.rc
-	windres $^ -o $@ -l 0411
+	$(WINDRES) $^ -o $@ -l 0411
 
 data/confitem.csv.lzma: data/confitem.csv
 	../auxtools/compress.rb data/confitem.csv

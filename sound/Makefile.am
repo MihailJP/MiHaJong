@@ -19,6 +19,6 @@ EXTRA_DIST = \
 	GuruGuruSMF/README libogg/Readme.txt libvorbis/Readme.txt
 
 .rc.o:
-	windres $^ -o $@ -l 0411
+	$(WINDRES) $^ -o $@ -l 0411
 %.o: %.rc
-	windres $^ -o $@ -l 0411
+	$(WINDRES) $^ -o $@ -l 0411

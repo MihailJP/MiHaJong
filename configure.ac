@@ -20,6 +20,7 @@ AC_PROG_CXX
 AX_CXX_COMPILE_STDCXX_11([noext])
 AC_PROG_CC
 AX_PROG_LUA([5.1])
+MH_CHECK_WINDRES
 
 # Checks for Win32
 AC_CHECK_HEADER([windows.h], [using_winapi=yes], [using_winapi=no])

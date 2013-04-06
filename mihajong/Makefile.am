@@ -30,6 +30,6 @@ EXTRA_DIST = \
 	icons/mihaysnm.ico
 
 .rc.o:
-	windres $^ -o $@ -l 0411
+	$(WINDRES) $^ -o $@ -l 0411
 %.o: %.rc
-	windres $^ -o $@ -l 0411
+	$(WINDRES) $^ -o $@ -l 0411
