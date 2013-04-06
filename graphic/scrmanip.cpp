@@ -82,6 +82,12 @@ void ScreenManipulator::transit(sceneID scene) {
 		case sceneSetting:
 			myScene = new PreferenceConfigScene(this); redrawFlag = true;
 			break;
+		case sceneServerWaiting:
+			myScene = new ServerWait(this); redrawFlag = true;
+			break;
+		case sceneClientWaiting:
+			myScene = new ClientWait(this); redrawFlag = true;
+			break;
 		case sceneGameTable:
 			myScene = new GameTableScreen(this); redrawFlag = true;
 			break;

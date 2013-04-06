@@ -132,6 +132,14 @@ void startgame(GameTypeID gameType) {
 			EnvTable::Instantiate()->PlayerDat[2].PlayerName = _T("[c]COM2");
 			EnvTable::Instantiate()->PlayerDat[3].PlayerName = _T("[d]COM3");
 			break;
+		case 2:
+			mihajong_graphic::Transit(mihajong_graphic::sceneServerWaiting);
+			Sleep(INFINITE); // ‰¼’u‚«
+			break;
+		case 3:
+			mihajong_graphic::Transit(mihajong_graphic::sceneClientWaiting);
+			Sleep(INFINITE); // ‰¼’u‚«
+			break;
 		case 4:
 			mihajong_graphic::Transit(mihajong_graphic::sceneConfig);
 			mihajong_graphic::ui::WaitUI();

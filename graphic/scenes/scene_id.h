@@ -7,6 +7,8 @@ enum sceneID { // シーン番号
 	sceneTitle, // タイトル画面
 	sceneConfig, // コンフィグ画面
 	sceneSetting, // 環境設定画面
+	sceneServerWaiting, // サーバー待機画面
+	sceneClientWaiting, // クライアント待機画面
 	sceneGameTable, // 卓の画面
 	sceneResult, // 結果画面
 };

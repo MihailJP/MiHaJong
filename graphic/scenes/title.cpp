@@ -135,12 +135,8 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // 決定
 		if (flag) {
-			if ((menuCursor == 1) || (menuCursor == 4) || (menuCursor == 5) || (menuCursor == 6)) {
-				sound::Play(sound::IDs::sndButton);
-				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
-			} else {
-				sound::Play(sound::IDs::sndCuohu); // 未実装
-			}
+			sound::Play(sound::IDs::sndButton);
+			ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
 		} else if (od->dwData) {
 			sound::Play(sound::IDs::sndClick);
 			myTimer.skipTo(180 * timePerFrame);
@@ -189,12 +185,8 @@ void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	case DIMOFS_BUTTON0: // マウスの左ボタン
 		if (od->dwData) {
 			if ((flag1) && (region != -1))  {
-				if ((menuCursor == 1) || (menuCursor == 4) || (menuCursor == 5) || (menuCursor == 6)) {
-					sound::Play(sound::IDs::sndButton);
-					ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
-				} else {
-					sound::Play(sound::IDs::sndCuohu); // 未実装
-				}
+				sound::Play(sound::IDs::sndButton);
+				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
 			} else if (!flag1) {
 				sound::Play(sound::IDs::sndClick);
 				myTimer.skipTo(180 * timePerFrame);
