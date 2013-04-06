@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Windows.h>
-#include "directx.h"
+#include "../../directx.h"
 #include <dinput.h>
 #include "../../geometry.h"
 #include <cstdint>

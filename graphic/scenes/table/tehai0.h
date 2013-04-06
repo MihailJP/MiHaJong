@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <tuple>
-#include "directx.h"
+#include "../../directx.h"
 #include "../../showtile.h"
 #include "../../../common/seatrank.h"
 

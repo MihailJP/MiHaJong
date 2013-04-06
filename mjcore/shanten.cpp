@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "shanten.h"
 
 #include <windows.h>

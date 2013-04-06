@@ -404,6 +404,9 @@
     <ClInclude Include="scenes\confmenu.h">
       <Filter>ヘッダー ファイル\scenes</Filter>
     </ClInclude>
+    <ClInclude Include="directx.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="graphic.rc">

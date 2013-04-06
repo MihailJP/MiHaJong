@@ -196,6 +196,7 @@
     <ClCompile Include="yakustat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="directx.h" />
     <ClInclude Include="graphic.h" />
     <ClInclude Include="scenes\confmenu.h" />
     <ClInclude Include="scenes\setting.h" />
