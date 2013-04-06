@@ -59,7 +59,7 @@ protected: /**** 捨牌ツールチップ(というのだろうか) ****/
 	class TileTipReconst;
 	TileTipReconst* tileTipReconst;
 protected:
-	void ReconstructPlayer(const GameTable* gameStat, PlayerID targetPlayer, PlayerID trueTargetPlayer); // プレイヤー関係の画面の再構築
+	void ReconstructPlayer(const GameTable* gameStat, PlayerID deckTargetPlayer, PlayerID targetPlayer); // プレイヤー関係の画面の再構築
 	void Reconstruct(const GameTable* gameStat); // 画面の再描画
 protected:
 	void cls(); // 画面をクリア

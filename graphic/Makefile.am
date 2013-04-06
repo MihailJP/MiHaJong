@@ -43,8 +43,8 @@ libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS --input-charset=cp932
 libmihajong_graphic_la_LIBADD = graphic.o ../sound/libmihajong-sound.la
 dist_data_DATA = \
 	data/agariwnd.png data/baize.png data/button.png data/call.png \
-	data/cdigits.chr data/cdigits.png data/checkbox.png data/chiicha.png \
-	data/dice.png data/editbox.png data/font.chr data/font.png data/frame.png \
+	data/cdigits.chr data/cdigits.png data/chiicha.png data/dice.png \
+	data/editbox.png data/font.chr data/font.png data/frame.png \
 	data/largechr.chr data/largechr.png data/score.png data/sdigits.chr \
 	data/sdigits.png data/sidebar.png data/smallchr.chr data/smallchr.png \
 	data/tenbou.png data/tiles.png data/title.png
