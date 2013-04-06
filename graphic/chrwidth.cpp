@@ -1,6 +1,7 @@
 #include "chrwidth.h"
 
 #include <Windows.h>
+#include <stdexcept>
 #include "../common/strcode.h"
 
 namespace mihajong_graphic {

@@ -75,7 +75,11 @@ catch (socket_error& err) { // 受信失敗時
 }
 
 DLL int gets (int sock_id, LPTSTR const stringline, int bufsize) try { // 1行受信
+#if defined(_MSC_VER)
 	_tcscpy_s(stringline, bufsize, sockets[sock_id]->gets().c_str());
+#else
+	_tcsncpy(stringline, sockets[sock_id]->gets().c_str(), bufsize);
+#endif
 	return 0;
 }
 catch (queue_empty&) { // まだ受信するデータがない場合

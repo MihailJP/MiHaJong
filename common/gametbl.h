@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <climits>
+#include <cstdlib>
 #include <type_traits>
 #include "tilecode.h"
 #include "gametype.h"
@@ -41,7 +43,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した型による情報
 			o << _T("InfoByPlayer:添字が範囲外です (") << (int)playerID << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
-			terminate();
+			abort();
 		}
 	}
 	const T& operator[](const int playerID) const {
@@ -57,7 +59,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した型による情報
 			o << _T("InfoByPlayer:添字が範囲外です (") << (int)playerID << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
-			terminate();
+			abort();
 		}
 	}
 	T& operator[](const int playerID) {
@@ -221,6 +223,8 @@ static_assert(std::is_pod<PlayerTable>::value, "PlayerTable is not POD");
 
 template struct InfoByPlayer<PlayerTable>;
 typedef InfoByPlayer<PlayerTable> StatusByPlayer;
+typedef PlayerID Player_ID;
+typedef Dice Dice_Struct;
 struct GameTable { // 卓の情報を格納する
 	StatusByPlayer Player;
 	DeckBuf Deck; // 壁牌の配列
@@ -234,20 +238,20 @@ struct GameTable { // 卓の情報を格納する
 	int Deposit;
 	int AgariChain;
 	CurrPlayer CurrentPlayer;
-	PlayerID PlayerID;
-	mihajong_structs::PlayerID LastAgariPlayer;
+	Player_ID PlayerID;
+	Player_ID LastAgariPlayer;
 	GameTypeID gameType;
 	bool TsumoAgariFlag; // ツモアガリ？
 	int16_t AgariSpecialStat; // 今のところ食い変えでチョンボになる場合だけ使ってる？
 	PrevMeldBook PreviousMeld; // 先ほど鳴いた牌（喰い替えの判定に使う）
 	KangStat KangFlag; // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
-	Dice Dice[2]; // サイコロ
+	Dice_Struct Dice[2]; // サイコロ
 	uint8_t TurnRound; // 現在の巡目
 	uint8_t KangNum; // 四槓流局、四槓子などの判定に使う
 	bool RichiCounter; // リーチをカウンター(宣言牌をロン)
 	bool DoubleRichiCounter; // ダブルリーチをカウンター(宣言牌をロン)
-	mihajong_structs::PlayerID WaremePlayer; // 割れ目の位置(-1で割れ目なし)
-	mihajong_structs::PlayerID DoukasenPlayer; // 導火線の位置(-1で導火線なし)
+	Player_ID WaremePlayer; // 割れ目の位置(-1で割れ目なし)
+	Player_ID DoukasenPlayer; // 導火線の位置(-1で導火線なし)
 	uint8_t DeadTiles; // 王牌の数
 	uint8_t ExtraRinshan; // 追加の嶺上牌の数
 	bool ShibariFlag; //二飜縛り

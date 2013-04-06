@@ -39,7 +39,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	gariReconst = new GariReconst(this);
 	tileTipReconst = new TileTipReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
-	const unsigned logWidth = (unsigned)std::floor(0.5f + // VC++2010‚Å‚Íround()‚ªŽg‚¦‚È‚¢
+	const unsigned logWidth = (unsigned)floor(0.5f + // VC++2010‚Å‚Íround()‚ªŽg‚¦‚È‚¢
 		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
 	logWindow = new logwnd::LogWindow(caller->getHWnd(), caller->getDevice(),
 		1100, 100, logWidth, 20);

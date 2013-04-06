@@ -65,6 +65,9 @@ FontMapClass::charAttr FontMapClass::map(wchar_t c) {
 	else return std::make_pair(true, Default_Chr());
 }
 
+FontMapClass::~FontMapClass() {
+}
+
 FontMap::FontMap() {
 	readCharMap(IDB_CHARMAP_FONT);
 }

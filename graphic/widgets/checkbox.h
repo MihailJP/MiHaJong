@@ -1,7 +1,6 @@
 #pragma once
 
-#include <d3dx9.h>
-#include <dxerr.h>
+#include "../directx.h"
 #include "../../common/strcode.h"
 #include "../text.h"
 

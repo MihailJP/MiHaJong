@@ -81,6 +81,9 @@ namespace sound {
 		}
 		void Play() {throw CodeConv::tstring(_T("Vorbisはサポートされていません"));}
 		void Stop() {throw CodeConv::tstring(_T("Vorbisはサポートされていません"));}
+		virtual void setVolume(double volume) {
+			throw CodeConv::tstring(_T("Vorbisはサポートされていません"));
+		}
 #endif
 	};
 	class MidiData : public AudioData {
@@ -101,6 +104,9 @@ namespace sound {
 		}
 		void Play() {throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));}
 		void Stop() {throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));}
+		virtual void setVolume(double volume) {
+			throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));
+		}
 #endif
 	};
 

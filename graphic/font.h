@@ -11,7 +11,7 @@ protected:
 	typedef fMap::value_type fMapDat;
 	FontMapClass() {};
 	FontMapClass(const FontMapClass&) {}
-	virtual ~FontMapClass() = 0 {};
+	virtual ~FontMapClass() = 0;
 	FontMapClass& operator=(const FontMapClass&) {return *this;}
 	fMap m;
 	virtual const unsigned short Default_Chr() = 0;

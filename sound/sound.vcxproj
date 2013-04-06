@@ -88,7 +88,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>
@@ -105,7 +105,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>
@@ -127,7 +127,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>
@@ -149,7 +149,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>

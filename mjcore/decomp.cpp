@@ -7,6 +7,9 @@
 #include "reader/readrsrc.h"
 #include "../common/strcode.h"
 #include "except.h"
+#ifndef _MSC_VER
+#include <cstdlib>
+#endif
 
 using std::min;
 
@@ -90,12 +93,20 @@ Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDiges
 			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
 			MessageBox(nullptr, CodeConv::EnsureTStr(errStat->msg).c_str(), _T("LZMA decompression error"),
 				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
+#ifdef _MSC_VER
 			terminate();
+#else
+			abort();
+#endif
 		case EXCEPTION_MJCORE_HASH_MISMATCH:
 			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
 			MessageBox(nullptr, CodeConv::EnsureTStr(errStat->msg).c_str(), _T("SHA256 verification error"),
 				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
+#ifdef _MSC_VER
 			terminate();
+#else
+			abort();
+#endif
 		default:
 			throw;
 		}

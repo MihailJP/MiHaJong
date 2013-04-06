@@ -6,13 +6,17 @@
 #include <set>
 #include <array>
 #include <functional>
+#include <fstream>
 #include "decomp.h"
 #include "reader/csv2arry.h"
 #include "reader/ini2map.h"
 #include "logging.h"
 #include "../common/strcode.h"
+#include "gametbl.h"
 
 // -------------------------------------------------------------------------
+
+extern GameTable GameStat;
 
 typedef std::map<std::string, int8_t> RULETBL;
 
@@ -101,7 +105,11 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 	using namespace CodeConv;
 	DWORD size = 0; const uint8_t* csv = nullptr;
 	char *csvdat = new char[csvfile->getDataSize() + 4]; memset(csvdat, 0, csvfile->getDataSize()+4);
+#ifdef _MSC_VER
 	memcpy_s(csvdat, csvfile->getDataSize()+4, csvfile->getData(), csvfile->getDataSize());
+#else
+	memcpy(csvdat, csvfile->getData(), csvfile->getDataSize());
+#endif
 	CSVReader::parsecsv(confdat, fromUTF8(csvdat).c_str());
 	delete[] csvdat;
 
@@ -143,7 +151,11 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_ini(Compressed::Data* inifile) {
 	using namespace CodeConv;
 	DWORD size = 0; const uint8_t* ini = nullptr;
 	char *inidat = new char[inifile->getDataSize() + 4]; memset(inidat, 0, inifile->getDataSize()+4);
+#ifdef _MSC_VER
 	memcpy_s(inidat, inifile->getDataSize()+4, inifile->getData(), inifile->getDataSize());
+#else
+	memcpy(inidat, inifile->getData(), inifile->getDataSize());
+#endif
 	INIParser::parseini(confdict, fromUTF8(inidat).c_str());
 	delete[] inidat;
 }
@@ -216,35 +228,63 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleName(LPTSTR const txt, unsigned bufs
 		if (((*k)[1].empty()) || ((*k)[2].empty()) ||
 			(chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) ||
 			(chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str())))) {
+#ifdef _MSC_VER
 				_tcscpy_s(txt, bufsize, ((*k)[9]).c_str());
+#else
+				_tcsncpy(txt, ((*k)[9]).c_str(), bufsize);
+#endif
 				return;
 		}
 	}
+#ifdef _MSC_VER
 	_tcscpy_s(txt, bufsize, _T(""));
+#else
+	_tcsncpy(txt, _T(""), bufsize);
+#endif
 }
 CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
 		if (((*k)[1].empty()) || (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str())))) {
+#ifdef _MSC_VER
 			_tcscpy_s(txt, bufsize, ((*k)[10]).c_str()); return;
+#else
+			_tcsncpy(txt, ((*k)[10]).c_str(), bufsize); return;
+#endif
 		}
 		else if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str()))) {
+#ifdef _MSC_VER
 			if (chkGameType(&GameStat, SanmaS)) _tcscpy_s(txt, bufsize, _T("数牌三麻では設定できません"));
 			else if (chkGameType(&GameStat, SanmaX)) _tcscpy_s(txt, bufsize, _T("三人打ちでは設定できません"));
 			else if (chkGameType(&GameStat, Yonma)) _tcscpy_s(txt, bufsize, _T("四人打ちでは設定できません"));
 			else _tcscpy_s(txt, bufsize, _T(""));
+#else
+			if (chkGameType(&GameStat, SanmaS)) _tcsncpy(txt, _T("数牌三麻では設定できません"), bufsize);
+			else if (chkGameType(&GameStat, SanmaX)) _tcsncpy(txt, _T("三人打ちでは設定できません"), bufsize);
+			else if (chkGameType(&GameStat, Yonma)) _tcsncpy(txt, _T("四人打ちでは設定できません"), bufsize);
+			else _tcsncpy(txt, _T(""), bufsize);
+#endif
 			return;
 		}
 	}
+#ifdef _MSC_VER
 	_tcscpy_s(txt, bufsize, _T(""));
+#else
+	_tcsncpy(txt, _T(""), bufsize);
+#endif
 }
 CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index) {
 	using namespace CodeConv;
 	const std::string tag = getRuleItemTag(RuleID, index);
 	if ((confdict.find(_T("dictionary")) != confdict.end()) &&
 		(confdict[_T("dictionary")].find(EnsureTStr(tag)) != confdict[_T("dictionary")].end()))
+#ifdef _MSC_VER
 		_tcscpy_s(txt, bufsize, confdict[_T("dictionary")][EnsureTStr(tag)].c_str());
 	else _tcscpy_s(txt, bufsize, EnsureTStr(tag).c_str());
+#else
+		_tcsncpy(txt, confdict[_T("dictionary")][EnsureTStr(tag)].c_str(), bufsize);
+	else _tcsncpy(txt, EnsureTStr(tag).c_str(), bufsize);
+#endif
 }
 CONFDAT_TEMPLATE std::string CONFDAT_CLASS::getRuleItemTag(uint16_t RuleID, int index) {
 	return getRuleItemTag(nametbl[RuleID], index);
@@ -264,10 +304,20 @@ CONFDAT_TEMPLATE std::string CONFDAT_CLASS::getRuleItemTag(std::string RuleTag, 
 
 CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 	using namespace CodeConv;
-	errno_t err; FILE* conffile;
+#ifdef _MSC_VER
+	errno_t err;
+#endif
+	FILE* conffile;
+#ifdef _MSC_VER
 	if (err = fopen_s(&conffile, filename, "r")) { // オープンし、失敗したら
+#else
+	if ((conffile = fopen(filename, "r")) == nullptr) { // オープンし、失敗したら
+#endif
 		tostringstream o;
-		o << _T("設定ファイルのオープンに失敗しました。エラーコード [") << err << _T("]");
+		o << _T("設定ファイルのオープンに失敗しました。");
+#ifdef _MSC_VER
+		o << _T("エラーコード [") << err << _T("]");
+#endif
 		error(o.str().c_str());
 		fclose(conffile); // ファイルを閉じる
 		return -1;
@@ -276,7 +326,11 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 		long bufsize = (filesize | (sizeof(int) - 1)) + 1;
 		char* const filedat = new char[bufsize]; // バッファを確保
 		memset(filedat, 0, bufsize); // バッファをゼロクリア
+#ifdef _MSC_VER
 		fread_s(filedat, bufsize, sizeof(char), filesize, conffile); // 読み込み
+#else
+		fread(filedat, sizeof(char), filesize, conffile); // 読み込み
+#endif
 		{
 			INIParser::IniMapMap config_ini; // INIパース結果を格納する「マップのマップ」
 			INIParser::parseini(config_ini, fromUTF8(filedat).c_str()); // INIをパースする
@@ -385,7 +439,11 @@ CONFDAT_TEMPLATE bool CONFDAT_CLASS::reqFailed(uint16_t ruleID, const int* const
 }
 
 CONFDAT_TEMPLATE void CONFDAT_CLASS::getPageCaption(LPTSTR const caption, unsigned bufsize, uint8_t page) {
+#ifdef _MSC_VER
 	_tcscpy_s(caption, bufsize, pageCaption[page].c_str());
+#else
+	_tcsncpy(caption, pageCaption[page].c_str(), bufsize);
+#endif
 }
 CONFDAT_TEMPLATE void CONFDAT_CLASS::forEachRule(std::function<void (std::string, std::string)> f) {
 	for (auto k = inverse_nametbl.begin(); k != inverse_nametbl.end(); ++k)

@@ -40,6 +40,9 @@ void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF
 
 void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, int X, int Y, unsigned startF, unsigned endF) {
 	const auto hsv2rgb = [](double Hue, double Saturation, double Value) -> uint32_t {
+#ifndef _MSC_VER
+		using std::max; using std::min;
+#endif
 		const double circleAngle = 360.0;
 		const double h = Hue - floor(Hue / circleAngle) * circleAngle;
 		const double s = max(0.0, min(1.0, Saturation));

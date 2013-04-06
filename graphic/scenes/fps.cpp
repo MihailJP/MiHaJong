@@ -1,6 +1,9 @@
 #include "fps.h"
 #include "../scrmanip.h"
 #include "../text.h"
+#if !defined(_MSC_VER)
+#include <stdio.h>
+#endif
 
 namespace mihajong_graphic {
 
@@ -24,10 +27,18 @@ void FPSIndicator::Render() {
 		LastRecalcTime = RedrawTime.back();
 		if ((RedrawTime.size() < 3) || (RedrawTime.back() == RedrawTime.front())) {
 			currentFPS = 0;
+#if defined(_MSC_VER)
 			_stprintf_s(fpsstr, fpsstr_size, _T("--.-- FPS"));
+#else
+			_sntprintf(fpsstr, fpsstr_size, _T("--.-- FPS"));
+#endif
 		} else {
 			currentFPS = 1000000.0f / ((float)(RedrawTime.back() - RedrawTime.front()) / (float)(RedrawTime.size() - 1));
+#if defined(_MSC_VER)
 			_stprintf_s(fpsstr, fpsstr_size, _T("%5.2f FPS"), currentFPS);
+#else
+			_sntprintf(fpsstr, fpsstr_size, _T("%5.2f FPS"), currentFPS);
+#endif
 		}
 	}
 	/* •\Ž¦‚·‚é */

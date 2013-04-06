@@ -41,10 +41,10 @@ void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType
 	if (callType == calltext::None) return;
 	const std::uint64_t curr = myTimer.elapsed();
 	const int animationLength = 250000;
-	const float scale = (curr >= + animationLength) ? 1.0f : std::pow((float)(animationLength - (signed)curr) / 2.5e5f + 1.0f, 2);
+	const float scale = (curr >= animationLength) ? 1.0f : pow((float)(animationLength - (signed)curr) / 2.5e5f + 1.0f, 2);
 	const D3DCOLOR col = D3DCOLOR_ARGB(
 		(curr >= animationLength) ? 255 :
-		(int)std::pow((float)(curr * 255) / animationLength / 16.0f, 2),
+		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2),
 		0xff, 0xff, 0xff);
 	D3DXMATRIX matrix, matrix1;
 	D3DXMatrixIdentity(&matrix); D3DXMatrixIdentity(&matrix1);
@@ -90,7 +90,7 @@ void TableSubsceneCallFadeProto::ShowCallMsg(PlayerID player, calltext::CallType
 	const int animationLength = 250000;
 	const D3DCOLOR col = D3DCOLOR_ARGB(
 		(curr >= animationLength) ? 255 :
-		(int)std::pow((float)(curr * 255) / animationLength / 16.0f, 2),
+		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2),
 		0xff, 0xff, 0xff);
 	RECT rect = {
 		0  , 96 * (callType    ),

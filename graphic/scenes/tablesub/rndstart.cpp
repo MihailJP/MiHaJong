@@ -20,7 +20,7 @@ const std::wstring TableSubsceneBeginning::Numeral = L"ˆê“ñŽOŽlŒÜ˜ZŽµ”ª‹ã\";
 void TableSubsceneBeginning::ZoomChar(unsigned ID, const std::wstring& str, int xOffset, uint64_t Anfang, uint64_t Ende) {
 	const uint64_t Zeit = myTimer.elapsed();
 	if ((Zeit >= Anfang) && (Zeit < Ende)) {
-		float size = std::pow(3.0f - ((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 2.0f), 2);
+		float size = pow(3.0f - ((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 2.0f), 2);
 		myTextRenderer->NewText(ID, CodeConv::EnsureTStr(str),
 			TableSize / 2 - (224 * size) / 2 + xOffset, TableSize / 2 - 192 + 112 - (224 * size) / 2,
 			size, 1.0f, D3DCOLOR_ARGB((int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f), 255, 255, 255));
