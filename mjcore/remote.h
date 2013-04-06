@@ -34,3 +34,9 @@ namespace RemoteAction {
 	DiscardTileNum remotedahai (GameTable* const gameStat);
 	void remotenaki (GameTable* const gameStat);
 }
+
+namespace RemoteConnection {
+
+void startServer(std::string& serverAddr);
+
+}

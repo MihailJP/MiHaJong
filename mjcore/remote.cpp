@@ -7,6 +7,8 @@
 #include "chat.h"
 #include <sstream>
 #include <iomanip>
+#include "../common/nmrules.h"
+#include "../graphic/graphic.h"
 
 namespace RemoteAction {
 
@@ -248,6 +250,56 @@ void remotenaki (GameTable* const gameStat) {
 	while (!rNaki->isFinished())
 		Sleep(1);
 	delete rNaki; rNaki = nullptr;
+}
+
+} /* namespace */
+
+namespace RemoteConnection {
+
+void startServer(std::string& serverAddr) {
+	mihajong_graphic::Transit(mihajong_graphic::sceneServerWaiting);
+
+	char RuleConf[RULE_LINES][RULE_IN_LINE + 4];
+	char* RuleConfPtr[RULE_LINES];
+	for (int i = 0; i < RULE_LINES; i++) RuleConfPtr[i] = RuleConf[i];
+
+	EnvTable::Instantiate()->GameMode = EnvTable::Server;
+	serverAddr = "";
+	RuleData::exportRule(RuleConfPtr);
+
+	const std::string nomen(RuleData::chkPreference((std::string)"name"));
+	const CodeConv::tstring Nomen(CodeConv::EnsureTStr(nomen));
+	mihajong_socket::server::start(Nomen.c_str(), /*PORT_GAME*/50000, ACTUAL_PLAYERS, RuleConfPtr);
+
+	int numOfClientsPrev = 0; int numOfClients = 0;
+	while (true) {
+		numOfClients = mihajong_socket::server::chkCurrentConnection();
+		if (numOfClients != numOfClientsPrev) {
+			if (ACTUAL_PLAYERS == 3) {
+				if      (numOfClients == 1) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene1of3);
+				else if (numOfClients == 2) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene2of3);
+				else if (numOfClients == 3) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene3of3);
+				else                        mihajong_graphic::Subscene(mihajong_graphic::srvwSubsceneNone);
+			} else {
+				if      (numOfClients == 1) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene1of4);
+				else if (numOfClients == 2) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene2of4);
+				else if (numOfClients == 3) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene3of4);
+				else if (numOfClients == 4) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene4of4);
+				else                        mihajong_graphic::Subscene(mihajong_graphic::srvwSubsceneNone);
+			}
+			numOfClientsPrev = numOfClients;
+		}
+		Sleep(50);
+		if (mihajong_socket::server::isStartingFinished()) break;
+	}
+	TCHAR playerName[4][256];
+	mihajong_socket::server::getPlayerNames(playerName[0], playerName[1], playerName[2], playerName[3], 256);
+	for (int i = 0; i < 4; ++i)
+		EnvTable::Instantiate()->PlayerDat[i].PlayerName = playerName[i];
+	if (numOfClients >= 2) EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag = 1;
+	if (numOfClients >= 3) EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag = 1;
+	if (numOfClients >= 4) EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag = 1;
+	mihajong_socket::server::releaseobj();
 }
 
 } /* namespace */
