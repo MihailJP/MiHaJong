@@ -20,9 +20,10 @@ AC_PROG_CXX
 AX_CXX_COMPILE_STDCXX_11([noext])
 AC_PROG_CC
 AX_PROG_LUA([5.1])
+MH_CHECK_WINDRES
 
 # Checks for Win32
-AC_CHECK_HEADER([Windows.h], [using_winapi=yes], [using_winapi=no])
+AC_CHECK_HEADER([windows.h], [using_winapi=yes], [using_winapi=no])
 
 # Checks for libraries.
 AX_LUA_LIBS([], [AC_MSG_ERROR([liblua is not installed.])])
@@ -46,19 +47,20 @@ AS_IF([test "x$using_winapi" != xno],
 AC_CHECK_HEADERS([float.h limits.h stddef.h stdlib.h string.h sys/timeb.h])
 AX_LUA_HEADERS([], [AC_MSG_ERROR([liblua headers unavailable.])])
 AS_IF([test "x$using_winapi" != xno],
-	[AC_CHECK_HEADER([WinSock2.h], [], AC_MSG_ERROR([WinSock2.h is unavailable]))
+	[AC_CHECK_HEADER([winsock2.h], [], AC_MSG_ERROR([winSock2.h is unavailable]))
 	 AC_CHECK_HEADER([dsound.h], [], AC_MSG_ERROR([dsound.h is unavailable]))
 	 MH_CHECK_DIRECT3D
 	 AC_CHECK_HEADER([dinput.h], [], AC_MSG_ERROR([dinput.h is unavailable]))
 	 AC_CHECK_HEADER([imm.h], [], AC_MSG_ERROR([imm.h is unavailable]), [[
 #include <windef.h>
-#include <Wingdi.h>
+#include <wingdi.h>
 ]]
 	 )
 	 AC_CHECK_HEADER([imagehlp.h], [], AC_MSG_ERROR([imagehlp.h is unavailable]), [[
 #include <windef.h>
 #include <stdarg.h>
-#include <Winbase.h>
+#include <winbase.h>
+#include <winver.h>
 ]]
 	 )]
 )

@@ -1,5 +1,5 @@
 #include "timer.h"
-#include <Windows.h>
+#include <windows.h>
 
 namespace mihajong_graphic {
 

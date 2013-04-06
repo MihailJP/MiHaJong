@@ -27,7 +27,7 @@
 #define _USE_MATH_DEFINES
 #endif /* _MSC_VER */
 
-#include <Windows.h>
+#include <windows.h>
 
 struct MOONPHASE
 {

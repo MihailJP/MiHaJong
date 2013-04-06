@@ -11,7 +11,7 @@ AC_DEFUN([MH_CHECK_DIRECT3D], [
 	 )
 	AC_CHECK_HEADER([dxerr9.h], [], [AC_MSG_ERROR([dxerr9.h is unavailable])],
 	                [[
-#include <Windows.h>
+#include <windows.h>
 ]]
 	 )]
 )

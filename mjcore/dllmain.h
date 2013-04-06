@@ -2,7 +2,7 @@
 
 #define WINDOWS_LEAN_AND_MEAN
 #define WINDOWS_EXTRA_MEAN
-#include <Windows.h>
+#include <windows.h>
 #include "except.h"
 
 extern HINSTANCE dllInst;

@@ -8,7 +8,7 @@
 #include "mjexport.h"
 #include "except.h"
 
-#include "../common/TileCode.h"
+#include "../common/tilecode.h"
 
 // ”v‚ÌŽí—Þ
 #define TileCodeMaximum      mihajong_structs::TileCodeMaximum

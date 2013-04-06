@@ -6,7 +6,7 @@
 #include <sstream>
 #include <iomanip>
 #ifndef _WINSOCKAPI_
-#include <WinSock2.h>
+#include <winsock2.h>
 #endif
 #include "except.h"
 #include "logger.h"

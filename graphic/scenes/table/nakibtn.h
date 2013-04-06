@@ -3,7 +3,7 @@
 #include "../table.h"
 #include "../../widgets/button.h"
 #include <bitset>
-#include <Windows.h>
+#include <windows.h>
 #include "../../../common/mutex.h"
 #include "../../timer.h"
 

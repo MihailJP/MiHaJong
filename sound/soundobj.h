@@ -1,7 +1,7 @@
 #pragma once
 
 #if defined(USE_XAUDIO2)
-#include <XAudio2.h>
+#include <xaudio2.h>
 #else
 #include <dsound.h>
 #endif

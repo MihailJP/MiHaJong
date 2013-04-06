@@ -8,7 +8,7 @@
 #define WINDOWS_EXTRA_LEAN
 #endif
 
-#include <Windows.h>
+#include <windows.h>
 #include "../common/strcode.h"
 
 namespace logger {

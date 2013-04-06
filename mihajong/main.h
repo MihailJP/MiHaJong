@@ -3,7 +3,7 @@
 #define STRICT
 #define WIN32_LEAN_AND_MEAN
 
-#include <Windows.h>
+#include <windows.h>
 
 #if defined(__GNUC__) && defined(_WIN32) && defined(_UNICODE) /* Workaround for MinGW */
 #define MINGW_UNICODE

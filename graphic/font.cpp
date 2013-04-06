@@ -1,7 +1,7 @@
 #include "font.h"
 #include "init.h"
 #include "resource.h"
-#include <Windows.h>
+#include <windows.h>
 #include <cstdint>
 #include <sstream>
 #include <cassert>

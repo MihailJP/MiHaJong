@@ -10,6 +10,6 @@ EXTRA_DIST = \
 	socket.vcxproj socket.vcxproj.filters socket.vcxproj.user
 
 .rc.o:
-	windres $^ -o $@ -l 0411
+	$(WINDRES) $^ -o $@ -l 0411
 %.o: %.rc
-	windres $^ -o $@ -l 0411
+	$(WINDRES) $^ -o $@ -l 0411

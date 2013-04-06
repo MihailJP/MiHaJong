@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
-#include <Windows.h>
+#include <windows.h>
 #include "largenum.h"
 #include "envtbl.h"
 #include "../common/version.h"

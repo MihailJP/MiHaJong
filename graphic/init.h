@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Windows.h>
+#include <windows.h>
 #include <tchar.h>
 #include "exports.h"
 #include "scenes/scene_id.h"

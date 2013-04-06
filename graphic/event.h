@@ -1,7 +1,7 @@
 #pragma once
 
 #include "exports.h"
-#include <Windows.h>
+#include <windows.h>
 #include <tchar.h>
 
 namespace mihajong_graphic {

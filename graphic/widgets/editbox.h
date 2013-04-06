@@ -2,8 +2,8 @@
 
 #include "../../common/strcode.h"
 #include "../directx.h"
-#include <WinUser.h>
-#include <Imm.h>
+#include <winuser.h>
+#include <imm.h>
 #include <tuple>
 #include "../text.h"
 #include <vector>

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "socket.h"
-#include <Windows.h>
+#include <windows.h>
 
 #ifndef DLL
 #ifdef SOCKET_EXPORTS

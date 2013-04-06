@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <cassert>
 #include "except.h"
-#include "TileCode.h"
+#include "tilecode.h"
 #include "func.h"
 #include "logging.h"
 #include "reader/readrsrc.h"

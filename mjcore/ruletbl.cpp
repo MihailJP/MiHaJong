@@ -6,7 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <exception>
-#include <Windows.h>
+#include <windows.h>
 #include <cassert>
 #include <regex>
 #include "logging.h"
