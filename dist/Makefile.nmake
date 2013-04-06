@@ -18,10 +18,10 @@ $(ARCHIVE): $(ARCHIVE_CONTENT)
 	copy $(SolutionDir)mihajong\sound\*.* $(TMPPATH)sound
 	cd $(OBJPATH) && zip -9r $(ARCHIVENAME) $(ZIPNAME)
 
-$(TMPPATH)GuruGuruSMF4.dll: $(OBJPATH)GuruGuruSMF4.dll
+$(TMPPATH)astro.dll: $(OBJPATH)astro.dll
 	- mkdir $(TMPPATH)
 	copy $** $@
-$(TMPPATH)graphic.dll: $(OBJPATH)graphic.dll
+$(TMPPATH)GuruGuruSMF4.dll: $(OBJPATH)GuruGuruSMF4.dll
 	- mkdir $(TMPPATH)
 	copy $** $@
 $(TMPPATH)graphic.dll: $(OBJPATH)graphic.dll
