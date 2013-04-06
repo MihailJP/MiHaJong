@@ -59,6 +59,7 @@ AS_IF([test "x$using_winapi" != xno],
 #include <windef.h>
 #include <stdarg.h>
 #include <winbase.h>
+#include <winver.h>
 ]]
 	 )]
 )

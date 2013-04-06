@@ -6,14 +6,8 @@
 AC_DEFUN([MH_OGG_VORBIS_HEADERS], [
 	AC_CHECK_HEADER([ogg/ogg.h], $1, $2)
 	AC_CHECK_HEADER([vorbis/codec.h], $1, $2)
-	AC_CHECK_HEADER([vorbis/vorbisfile.h], $1, $2, [[
-#ifdef __MINGW32__
-#include <windows.h>
-#undef __MINGW32__
-#undef _WIN32
-#endif
-]]
-	)]
+	AC_CHECK_HEADER([vorbis/vorbisfile.h], $1, $2)
+	]
 )
 
 #
