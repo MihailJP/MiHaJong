@@ -1,5 +1,8 @@
 #pragma once
 
+#ifdef _MSC_VER
+#include <eh.h>
+#endif
 #include <cstdint>
 #include <climits>
 #include <cstdlib>
@@ -43,7 +46,11 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した型による情報
 			o << _T("InfoByPlayer:添字が範囲外です (") << (int)playerID << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
+#ifdef _MSC_VER
+			terminate();
+#else
 			abort();
+#endif
 		}
 	}
 	const T& operator[](const int playerID) const {
@@ -59,7 +66,11 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した型による情報
 			o << _T("InfoByPlayer:添字が範囲外です (") << (int)playerID << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
+#ifdef _MSC_VER
+			terminate();
+#else
 			abort();
+#endif
 		}
 	}
 	T& operator[](const int playerID) {
