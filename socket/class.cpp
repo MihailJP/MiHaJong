@@ -239,22 +239,22 @@ void mihajong_socket::Sock::network_thread::chkError () { // ƒGƒ‰[‚ğƒ`ƒFƒbƒN‚µ
 	case errNone: // ƒGƒ‰[‚È‚µ
 		break;
 	case errListen: // listen¸”s
-		o << "listen‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
+		o << _T("listen‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [") << errcode << _T(']'); error(o.str().c_str());
 		throw listen_failure(errcode);
 	case errAccept: // accept¸”s
-		o << "Ú‘±ó‚¯“ü‚ê‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
+		o << _T("Ú‘±ó‚¯“ü‚ê‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [") << errcode << _T(']'); error(o.str().c_str());
 		throw accept_failure(errcode);
 	case errConnection: // Ú‘±¸”s
-		o << "Ú‘±‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
+		o << _T("Ú‘±‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [") << errcode << _T(']'); error(o.str().c_str());
 		throw connection_failure(errcode);
 	case errRecv: // óM¸”s
-		o << "óM‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
+		o << _T("óM‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [") << errcode << _T(']'); error(o.str().c_str());
 		throw recv_error(errcode);
 	case errSend: // ‘—M¸”s
-		o << "‘—M‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
+		o << _T("‘—M‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [") << errcode << _T(']'); error(o.str().c_str());
 		throw send_error(errcode);
 	default: // ‚Ù‚©‚ÌƒGƒ‰[
-		o << "ƒ\ƒPƒbƒgƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
+		o << _T("ƒ\ƒPƒbƒgƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [") << errcode << _T(']'); error(o.str().c_str());
 		throw socket_error(errcode);
 	}
 }
@@ -265,7 +265,7 @@ int mihajong_socket::Sock::network_thread::reader() { // óMˆ—
 	DWORD recvsz; DWORD flag = 0;
 	if (WSARecv(*mySock, &buffer, 1, &recvsz, &flag, nullptr, nullptr) == 0) { // óM‚·‚é
 		CodeConv::tostringstream o;
-		o << "ƒf[ƒ^óM ƒ|[ƒg [" << myCaller->portnum << "] ƒXƒgƒŠ[ƒ€ [";
+		o << _T("ƒf[ƒ^óM ƒ|[ƒg [") << myCaller->portnum << _T("] ƒXƒgƒŠ[ƒ€ [");
 		myRecvQueueCS.syncDo<void>([this, recvsz, &buf, &o]() -> void { // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
 			unsigned count = 0;
 			for (unsigned int i = 0; i < recvsz; ++i) {
@@ -391,7 +391,8 @@ void mihajong_socket::Sock::network_thread::setsock (SOCKET* const socket) { // 
 
 void mihajong_socket::Sock::network_thread::wait_until_sent() { // ‘—MƒLƒ…[‚ª‹ó‚É‚È‚é‚Ü‚Å‘Ò‚Â
 	{
-		CodeConv::tostringstream o; o << "ƒ|[ƒg [" << myCaller->portnum << "] ‚Ì‘—Mƒf[ƒ^‚Í‚±‚±‚Ü‚Å‚ç‚µ‚¢A‘S•”‘—‚èI‚í‚é‚Ü‚Å‘Ò‚¿‚Ü‚·";
+		CodeConv::tostringstream o;
+		o << _T("ƒ|[ƒg [") << myCaller->portnum << _T("] ‚Ì‘—Mƒf[ƒ^‚Í‚±‚±‚Ü‚Å‚ç‚µ‚¢A‘S•”‘—‚èI‚í‚é‚Ü‚Å‘Ò‚¿‚Ü‚·");
 		debug(o.str().c_str());
 	}
 	while (true) { // ‘—M‚ªŠ®—¹‚·‚é‚Ü‚Å‘Ò‚Â
@@ -404,7 +405,7 @@ void mihajong_socket::Sock::network_thread::wait_until_sent() { // ‘—MƒLƒ…[‚ª‹
 		Sleep(500);
 	}
 	{
-		CodeConv::tostringstream o; o << "ƒ|[ƒg [" << myCaller->portnum << "] ‚Ì‘—M‚ÍI‚í‚Á‚½‚ñ‚¶‚á‚È‚¢‚©‚ÈH";
+		CodeConv::tostringstream o; o << _T("ƒ|[ƒg [") << myCaller->portnum << _T("] ‚Ì‘—M‚ÍI‚í‚Á‚½‚ñ‚¶‚á‚È‚¢‚©‚ÈH");
 		debug(o.str().c_str());
 	}
 }
