@@ -19,12 +19,35 @@
 
 namespace {
 	DiscardTileNum playerdahai(const GameTable* gameStat) { // プレイヤーの打牌
-		/* TODO: ここでイベントフラグをリセット */
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubscenePlayerDahai);
 		DWORD result = mihajong_graphic::ui::WaitUI();
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 		DiscardTileNum discardTile(DiscardTileNum::fromSingleInt(result));
+
+		uint8_t dahaiStreamCode = 0x00;
+		if (discardTile.type == DiscardTileNum::Agari)
+			dahaiStreamCode = mihajong_socket::protocol::Dahai_Tsumo;
+		else if (discardTile.type == DiscardTileNum::Kyuushu)
+			dahaiStreamCode = mihajong_socket::protocol::Dahai_Kyuushu;
+		else if (discardTile.type == DiscardTileNum::Normal)
+			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_Normal_Offset + discardTile.id;
+		else if (discardTile.type == DiscardTileNum::Ankan)
+			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_Ankan_Offset + discardTile.id;
+		else if (discardTile.type == DiscardTileNum::Kakan)
+			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_Kakan_Offset + discardTile.id;
+		else if (discardTile.type == DiscardTileNum::Riichi)
+			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_Riichi_Offset + discardTile.id;
+		else if (discardTile.type == DiscardTileNum::Flower)
+			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_Flower_Offset + discardTile.id;
+		else if (discardTile.type == DiscardTileNum::OpenRiichi)
+			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_ORiichi_Offset + discardTile.id;
+
+		if      (EnvTable::Instantiate()->GameMode == EnvTable::Server)
+			mihajong_socket::server::send(dahaiStreamCode);
+		else if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+			mihajong_socket::client::send(dahaiStreamCode);
+
 		return discardTile;
 	}
 }
