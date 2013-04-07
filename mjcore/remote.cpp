@@ -14,13 +14,20 @@ namespace RemoteAction {
 
 /* 接続先の打牌 */
 void proc_abrupt_disconnect(GameTable* const gameStat, PlayerID player) {
-	{
+	if (player == -1) {
+		CodeConv::tostringstream o; o << _T("サーバーからの切断を検知しました。");
+		warn(o.str().c_str());
+	} else {
 		gameStat->Player[player].ConnectionLost = true;
 		CodeConv::tostringstream o; o << _T("プレイヤー [") << static_cast<int>(player) << _T("] の回線切断を検知しました。");
 		warn(o.str().c_str());
 	}
 	{
-		CodeConv::tostringstream o; o << _T("*** ") << EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
+		CodeConv::tostringstream o; 
+		if (player == -1)
+			o << _T("*** サーバーとの接続が切れました。");
+		else
+			o << _T("*** ") << EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
 			_T("(") << windName(playerwind(gameStat, player, gameStat->GameRound)) << _T(") の接続が切れました。");
 		chat::appendchat(o.str().c_str());
 		chat::appendchat(_T("*** この局はツモ切り、次局からCPUが代走します。"));
@@ -43,6 +50,19 @@ DWORD WINAPI RemoteDahai::thread () {
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
 			if (ClientReceived) break;
 			Sleep(20); // ポーリング
+		}
+		// 受信失敗の時
+		if (ReceivedMsg == 1023) {
+			bool flag = false;
+			for (int i = 0; i < Players; i++) {
+				if ((EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 0) &&
+					(!gameStat->Player[i].ConnectionLost)) {
+						gameStat->Player[i].ConnectionLost = true;
+						flag = true;
+				}
+			}
+			if (flag) proc_abrupt_disconnect(gameStat, -1);
+			ReceivedMsg = mihajong_socket::protocol::Dahai_Remote_Disconnect;
 		}
 		if ((ReceivedMsg == mihajong_socket::protocol::Dahai_Remote_Disconnect) &&
 			(!gameStat->statOfActive().ConnectionLost))
@@ -106,7 +126,7 @@ DWORD WINAPI RemoteDahai::thread () {
 		} else if (ReceivedMsg == Dahai_Tsumo) {
 			remoteDahai.type = DiscardTileNum::Agari; remoteDahai.id = 0;
 		} else if (ReceivedMsg == Dahai_Remote_Disconnect) {
-			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = NumOfTilesInHand - 1;
+			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = TsumohaiIndex;
 		}
 	}
 	finished = true;

@@ -124,8 +124,12 @@ namespace client {
 		sockets[0]->putc(SendingMsg);
 		// かつてはここでログ出力していた
 	}
-	DLL void send (int SendingMsg) { // サーバーにメッセージを送る [Transitional API]
+	DLL void send (int SendingMsg) try { // サーバーにメッセージを送る [Transitional API]
 		send((unsigned char)SendingMsg);
+	} catch (socket_error& err) {
+		CodeConv::tostringstream o;
+		o << _T("サーバーへの送信に失敗 エラーコード [") << err.error_code() << _T(']');
+		error(o.str().c_str());
 	}
 
 	// ---------------------------------------------------------------------
@@ -136,8 +140,12 @@ namespace client {
 			*ReceivedMsg = sockets[0]->getc();
 			*ClientReceived = 1;
 		}
-		catch (queue_empty) { // Falling back if empty...
+		catch (queue_empty&) { // Falling back if empty...
 			*ClientReceived = 0;
+			*ReceivedMsg = 1023;
+		}
+		catch (socket_error&) { // Sorry, you are disconnected.
+			*ClientReceived = 1;
 			*ReceivedMsg = 1023;
 		}
 		// かつてはここでログ出力していた
