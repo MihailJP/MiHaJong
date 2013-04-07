@@ -2,13 +2,13 @@
 
 #define MIHAJONG_MAJOR_VER 1
 #define MIHAJONG_MINOR_VER 99
-#define MIHAJONG_PATCH_VER 1
-#define MIHAJONG_VER "2.0beta1"
+#define MIHAJONG_PATCH_VER 2
+#define MIHAJONG_VER "2.0beta2"
 
 #define MJCORE_MAJOR_VER 1
 #define MJCORE_MINOR_VER 99
-#define MJCORE_PATCH_VER 1
-#define MJCORE_VER "2.0beta1"
+#define MJCORE_PATCH_VER 2
+#define MJCORE_VER "2.0beta2"
 
 #define LOGGER_MAJOR_VER 2
 #define LOGGER_MINOR_VER 0
