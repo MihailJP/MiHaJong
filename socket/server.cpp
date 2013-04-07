@@ -21,7 +21,7 @@ namespace server {
 	}
 	void putString(unsigned int socketID, const CodeConv::tstring& sendingStr) { // •¶Žš—ñ‚ð‘—M
 		sockets[socketID]->putc(protocol::StartString_Signature);
-		unsigned strsz = sendingStr.length();
+		unsigned strsz = CodeConv::EncodeStr(sendingStr).length();
 		if (strsz > UCHAR_MAX) {
 			sockets[socketID]->putc(UCHAR_MAX);
 			sockets[socketID]->puts(sendingStr.substr(0, UCHAR_MAX));
