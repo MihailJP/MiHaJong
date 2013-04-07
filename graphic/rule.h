@@ -33,7 +33,7 @@ extern RetrieveCaption getPageCaption;
 extern RuleWrite storeRule, storePref;
 extern RuleRead exportRule, exportPref;
 extern ConfSave saveConfigFile, savePreferenceFile;
-extern CheckRule chkRule;
+extern CheckRule chkRule, chkPreference;
 extern RetrieveUInt getPreferenceInputSize;
 extern RetrieveStr getPreferenceRawStr;
 extern SetStr setPreferenceFreeStr;
@@ -49,7 +49,8 @@ EXPORT void setfunc(
 	RuleWrite fpStorePref, RuleRead fpExportPref, ConfSave fpSavePreferenceFile,
 	RetrieveTxt fpGetPreferenceName, RetrieveTxt fpGetPreferenceDesc, RetrieveTxtIndex fpGetPreferenceTxt,
 	RetrieveInt fpGetPreference, RetrieveInt fpGetPreferenceSize,
-	RetrieveUInt fpGetPreferenceInputSize, RetrieveStr fpGetPreferenceRawStr, SetStr fpSetPreferenceFreeStr);
+	RetrieveUInt fpGetPreferenceInputSize, RetrieveStr fpGetPreferenceRawStr, SetStr fpSetPreferenceFreeStr,
+	CheckRule fpChkPreference);
 
 EXPORT void setconffile(const char* filename, const char* filename2);
 

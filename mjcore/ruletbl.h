@@ -48,6 +48,8 @@ public:
 	__declspec(dllexport) static unsigned getPreferenceInputSize(uint16_t RuleID);
 	static void setPreferenceFreeStr(uint16_t RuleID, const char* str);
 	static void applyPreference();
+	static bool chkPreference(std::string RuleTag, std::string Expectation);
+	static BOOL chkPreference(const char* RuleTag, const char* Expectation);
 };
 
 __declspec(dllexport) int getRule(int RuleID);

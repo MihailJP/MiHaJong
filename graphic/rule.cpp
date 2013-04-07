@@ -13,7 +13,7 @@ RetrieveCaption getPageCaption = nullptr;
 RuleWrite storeRule = nullptr, storePref = nullptr;
 RuleRead exportRule = nullptr, exportPref = nullptr;
 ConfSave saveConfigFile = nullptr, savePreferenceFile = nullptr;
-CheckRule chkRule = nullptr;
+CheckRule chkRule = nullptr, chkPreference = nullptr;
 RetrieveUInt getPreferenceInputSize = nullptr;
 RetrieveStr getPreferenceRawStr = nullptr;
 SetStr setPreferenceFreeStr = nullptr;
@@ -28,7 +28,8 @@ EXPORT void setfunc(
 	RuleWrite fpStorePref, RuleRead fpExportPref, ConfSave fpSavePreferenceFile,
 	RetrieveTxt fpGetPreferenceName, RetrieveTxt fpGetPreferenceDesc, RetrieveTxtIndex fpGetPreferenceTxt,
 	RetrieveInt fpGetPreference, RetrieveInt fpGetPreferenceSize,
-	RetrieveUInt fpGetPreferenceInputSize, RetrieveStr fpGetPreferenceRawStr, SetStr fpSetPreferenceFreeStr)
+	RetrieveUInt fpGetPreferenceInputSize, RetrieveStr fpGetPreferenceRawStr, SetStr fpSetPreferenceFreeStr,
+	CheckRule fpChkPreference)
 {
 	getRuleName = fpGetRuleName;
 	getRuleDescription = fpGetRuleDesc;
@@ -54,6 +55,7 @@ EXPORT void setfunc(
 	getPreferenceInputSize = fpGetPreferenceInputSize;
 	getPreferenceRawStr = fpGetPreferenceRawStr;
 	setPreferenceFreeStr = fpSetPreferenceFreeStr;
+	chkPreference = fpChkPreference;
 }
 
 EXPORT void setconffile(const char* filename, const char* filename2) {
