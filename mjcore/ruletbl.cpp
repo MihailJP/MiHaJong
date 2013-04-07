@@ -189,6 +189,12 @@ bool RuleData::chkRule(std::string RuleTag, std::string Expectation) { // ルール
 BOOL RuleData::chkRule(const char* RuleTag, const char* Expectation) { // ルール設定
 	return chkRule(std::string(RuleTag), std::string(Expectation)) ? TRUE : FALSE;
 }
+bool RuleData::chkPreference(std::string RuleTag, std::string Expectation) { // ルール設定
+	return preferenceTableData.chkRule(RuleTag, Expectation);
+}
+BOOL RuleData::chkPreference(const char* RuleTag, const char* Expectation) { // ルール設定
+	return chkPreference(std::string(RuleTag), std::string(Expectation)) ? TRUE : FALSE;
+}
 bool RuleData::chkRuleApplied(std::string RuleTag) { // ルール設定
 	return ruleTableData.chkRuleApplied(RuleTag);
 }

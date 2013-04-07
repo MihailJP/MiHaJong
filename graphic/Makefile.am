@@ -47,7 +47,7 @@ dist_data_DATA = \
 	data/editbox.png data/font.chr data/font.png data/frame.png \
 	data/largechr.chr data/largechr.png data/score.png data/sdigits.chr \
 	data/sdigits.png data/sidebar.png data/smallchr.chr data/smallchr.png \
-	data/tenbou.png data/tiles.png data/title.png
+	data/tenbou.png data/tiles.png data/tiles_bk.png data/title.png
 EXTRA_DIST = \
 	graphic.vcxproj graphic.vcxproj.filters graphic.vcxproj.user
 
