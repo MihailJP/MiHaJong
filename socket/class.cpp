@@ -1,4 +1,5 @@
 #include "class.h"
+#include <ctime>
 
 uint32_t mihajong_socket::Sock::addr2var(const std::string& address) { // アドレスを取得
 	uint32_t addr = inet_addr(address.c_str()); // まずは xxx.xxx.xxx.xxx 形式であると仮定する
@@ -422,12 +423,17 @@ void mihajong_socket::Sock::network_thread::terminate () { // 切断する
 
 int mihajong_socket::Sock::client_thread::establishConnection() { // 接続を確立する
 	info(_T("クライアント接続処理を開始します"));
+	const time_t startTime(time(nullptr)); // 開始時刻(秒単位)
 	while (true) {
 		if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == SOCKET_ERROR) { // 接続
 			errcode = WSAGetLastError();
 			if (errcode == WSAEISCONN) {
 				break; // 正常に接続完了したとみなす
 			} else if ((errcode != WSAEWOULDBLOCK) && (errcode != WSAEALREADY)) {
+				errtype = errConnection; return -((int)errtype);
+			} else if (difftime(time(nullptr), startTime) >= 20) {
+				/* connect()はタイムアウトしてくれないので自力のタイムアウト */
+				errcode = WSAETIMEDOUT; // 10060 Connection timed out
 				errtype = errConnection; return -((int)errtype);
 			}
 		} else break;

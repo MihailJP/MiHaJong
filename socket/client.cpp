@@ -17,15 +17,30 @@ namespace client {
 	// ---------------------------------------------------------------------
 
 	DWORD WINAPI starter::preparationThread () { // 接続を待ち、接続処理をする
-		sockets[0] = new Sock(serveraddr, portnum);
+		try {
+			sockets[0] = new Sock(serveraddr, portnum);
+		}
+		catch (socket_error& e) { // Connection failed...
+			failed = true;
+			errordlg(e);
+			//MessageBox(nullptr, _T("サーバーに接続できません\r\nオフラインモードで開始します"), _T("接続失敗"), MB_ICONERROR | MB_TOPMOST | MB_OK);
+			playerName[0] = CodeConv::tstring(_T("[A]")) + myName;
+			playerName[1] = CodeConv::tstring(_T("[b]COM"));
+			playerName[2] = CodeConv::tstring(_T("[c]COM"));
+			playerName[3] = CodeConv::tstring(_T("[d]COM"));
+			finished = true;
+			return S_OK;
+		}
 		while (true) {
 			try {
-				if (!sockets[0]->connected()) Sleep(50);
+				if (!sockets[0]->connected()) {
+					Sleep(50); continue;
+				}
 			}
 			catch (socket_error& e) { // Connection failed...
 				failed = true;
 				errordlg(e);
-				MessageBox(nullptr, _T("サーバーに接続できません\r\nオフラインモードで開始します"), _T("接続失敗"), MB_ICONERROR | MB_TOPMOST | MB_OK);
+				//MessageBox(nullptr, _T("サーバーに接続できません\r\nオフラインモードで開始します"), _T("接続失敗"), MB_ICONERROR | MB_TOPMOST | MB_OK);
 				playerName[0] = CodeConv::tstring(_T("[A]")) + myName;
 				playerName[1] = CodeConv::tstring(_T("[b]COM"));
 				playerName[2] = CodeConv::tstring(_T("[c]COM"));

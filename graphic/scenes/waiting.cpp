@@ -1,6 +1,8 @@
 #include "waiting.h"
 #include "../event.h"
 #include "../rule.h"
+#include "../../sound/sound.h"
+#include "../../common/bgmid.h"
 
 namespace mihajong_graphic {
 
@@ -97,7 +99,11 @@ void ClientWait::SetSubscene(unsigned int scene_ID) {
 CodeConv::tstring ClientWait::waiting_desc_str() {
 	switch (subsceneID) {
 	case cliwSubsceneConnecting:
-		return _T("サーバーに接続しています");
+		{
+			const std::string addr(rules::getPreferenceRawStr(1 /*hardcoded*/));
+			const CodeConv::tstring msg(CodeConv::EnsureTStr(addr) + _T("に接続しています"));
+			return msg;
+		}
 	case cliwSubsceneWaiting:
 		return _T("面子が揃うのを待っています");
 	default:
@@ -108,6 +114,7 @@ CodeConv::tstring ClientWait::waiting_desc_str() {
 // -------------------------------------------------------------------------
 
 ConnectionWaitFailed::ConnectionWaitFailed(ScreenManipulator* const manipulator) : ConnectionWaitingProto(manipulator) {
+	sound::Play(sound::IDs::sndCuohu);
 }
 ConnectionWaitFailed::~ConnectionWaitFailed() {
 }
