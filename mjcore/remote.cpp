@@ -42,7 +42,7 @@ DWORD WINAPI RemoteDahai::thread () {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
 			if (ClientReceived) break;
-			Sleep(0); // ポーリング
+			Sleep(20); // ポーリング
 		}
 		if ((ReceivedMsg == mihajong_socket::protocol::Dahai_Remote_Disconnect) &&
 			(!gameStat->statOfActive().ConnectionLost))
@@ -56,7 +56,7 @@ DWORD WINAPI RemoteDahai::thread () {
 			if (ServerReceived == EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag) {
 				break;
 			}
-			Sleep(0);
+			Sleep(20);
 		}
 		// 受信失敗の時
 		if (ReceivedMsg == 1023) {
@@ -114,7 +114,7 @@ DWORD WINAPI RemoteDahai::thread () {
 }
 DiscardTileNum remotedahai (GameTable* const gameStat) {
 	RemoteDahai* rDahai = new RemoteDahai(gameStat);
-	while (!rDahai->isFinished()) Sleep(1);
+	while (!rDahai->isFinished()) Sleep(50);
 	DiscardTileNum d = rDahai->get();
 	delete rDahai; rDahai = nullptr;
 	return d;

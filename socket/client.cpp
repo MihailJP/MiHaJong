@@ -20,7 +20,7 @@ namespace client {
 		sockets[0] = new Sock(serveraddr, portnum);
 		while (true) {
 			try {
-				if (!sockets[0]->connected()) Sleep(0);
+				if (!sockets[0]->connected()) Sleep(50);
 			}
 			catch (socket_error& e) { // Connection failed...
 				failed = true;
@@ -36,7 +36,7 @@ namespace client {
 			ClientNumber = sockets[0]->syncgetc() - 1;
 			sockets[0]->disconnect();
 			sockets[0]->connect(serveraddr, portnum + ClientNumber);
-			while (!sockets[0]->connected()) Sleep(0);
+			while (!sockets[0]->connected()) Sleep(50);
 			connected = true;
 			putString(0, myName);
 			while (sockets[0]->syncgetc() != protocol::Server_StartGame_Signature) Sleep(10); // ŠJŽn‚ð‘Ò‚Â

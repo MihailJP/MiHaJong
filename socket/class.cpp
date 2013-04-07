@@ -336,7 +336,7 @@ DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッド
 			CodeConv::tostringstream o; o << _T("送信ポートをシャットダウン ポート[") << myCaller->portnum << _T("]"); debug(o.str().c_str());
 			shutdown(*mySock, SD_SEND); sender_closed = true; send_ended = false;
 		}
-		Sleep(0);
+		Sleep(20);
 	}
 	{CodeConv::tostringstream o; o << _T("送受信スレッドループの終了 ポート[") << myCaller->portnum << _T("]"); debug(o.str().c_str());}
 	finished = true;
