@@ -59,7 +59,7 @@ void GameTableScreen::DiceReconst::Render() {
 
 GameTableScreen::DiceReconst::DiceReconst(GameTableScreen* parent) {
 	caller = parent;
-	caller->LoadTexture(&tDice, MAKEINTRESOURCE(IDB_PNG_DICE), 156, 144);
+	caller->LoadTexture(&tDice, MAKEINTRESOURCE(IDB_PNG_DICE));
 }
 
 GameTableScreen::DiceReconst::~DiceReconst() {

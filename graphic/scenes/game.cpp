@@ -16,8 +16,8 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
-void TableProtoScene::LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource, unsigned width, unsigned height) {
-	mihajong_graphic::LoadTexture(caller->getDevice(), texture, resource, width, height);
+void TableProtoScene::LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource) {
+	mihajong_graphic::LoadTexture(caller->getDevice(), texture, resource);
 }
 
 const std::array<CodeConv::tstring, TableProtoScene::NumOfCheckBoxes> TableProtoScene::labels = {
@@ -25,7 +25,7 @@ const std::array<CodeConv::tstring, TableProtoScene::NumOfCheckBoxes> TableProto
 };
 
 TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
-	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR), 960, 1080);
+	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR));
 	InitScorePanel();
 	const Region nullRegion = {0, 0, -1, -1};
 	for (int i = 0; i < NumOfCheckBoxes; ++i) {
@@ -152,7 +152,7 @@ PlayerID TableProtoScene::ScoreBoard::playerID() {
 
 TableProtoScene::ScoreBoard::ScoreBoard(LPDIRECT3DDEVICE9 device, seatRelative relativePos, int x, int y, float widthScale) {
 	myDevice = device; relativePlayerID = relativePos; xpos = x; ypos = y; wScale = widthScale;
-	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR), 860, 120);
+	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR));
 	nameText = new SmallTextRenderer(device);
 	// s—ñ‚Ì\’z
 	D3DXMATRIX tmpmtx;

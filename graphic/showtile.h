@@ -18,8 +18,6 @@ enum TileDirection {Portrait, Withershins, UpsideDown, Clockwise,};
 
 class ShowTile {
 public:
-	static const unsigned int TextureWidth   = 1050;
-	static const unsigned int TextureHeight  = 1313;
 	static const unsigned int VertTileWidth  = 32;
 	static const unsigned int VertTileHeight = 54;
 	static const unsigned int SideTileWidth  = 20;

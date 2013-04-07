@@ -9,7 +9,7 @@ namespace mihajong_graphic {
 
 ButtonPic::ButtonPic(LPDIRECT3DDEVICE9 device) {
 	myDevice = device;
-	LoadTexture(myDevice, &myTexture, MAKEINTRESOURCE(IDB_PNG_BUTTON), 160, 156);
+	LoadTexture(myDevice, &myTexture, MAKEINTRESOURCE(IDB_PNG_BUTTON));
 	myTextRenderer = new TextRenderer(myDevice);
 }
 

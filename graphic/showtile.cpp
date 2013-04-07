@@ -10,8 +10,7 @@ namespace mihajong_graphic {
 ShowTile::ShowTile(LPDIRECT3DDEVICE9 device) {
 	myDevice = device;
 	LoadTexture(myDevice, &TileTexture,
-		rules::chkPreference("tile", "black_tile") ? MAKEINTRESOURCE(IDB_PNG_TILE_BLACK) : MAKEINTRESOURCE(IDB_PNG_TILE),
-		TextureWidth, TextureHeight);
+		rules::chkPreference("tile", "black_tile") ? MAKEINTRESOURCE(IDB_PNG_TILE_BLACK) : MAKEINTRESOURCE(IDB_PNG_TILE));
 }
 ShowTile::~ShowTile() {
 	if (TileTexture) TileTexture->Release();

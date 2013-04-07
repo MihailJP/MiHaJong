@@ -209,7 +209,7 @@ void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 LPDIRECT3DTEXTURE9 TitleScreen::TitleSprite::texture = nullptr;
 
 void TitleScreen::TitleSprite::LoadTexture(LPDIRECT3DDEVICE9 device) {
-	mihajong_graphic::LoadTexture(device, &texture, MAKEINTRESOURCE(IDB_PNG_TITLE), 1700, 300);
+	mihajong_graphic::LoadTexture(device, &texture, MAKEINTRESOURCE(IDB_PNG_TITLE));
 }
 void TitleScreen::TitleSprite::DisposeTexture() {
 	if (texture) texture->Release();
