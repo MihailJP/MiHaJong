@@ -17,7 +17,7 @@ namespace server {
 			tmpchr[0] = sockets[socketID]->syncgetc();
 			tmpString += std::string(reinterpret_cast<char*>(tmpchr));
 		}
-		return CodeConv::EnsureTStr(tmpString);
+		return CodeConv::DecodeStr(tmpString);
 	}
 	void putString(unsigned int socketID, const CodeConv::tstring& sendingStr) { // •¶Žš—ñ‚ð‘—M
 		sockets[socketID]->putc(protocol::StartString_Signature);
