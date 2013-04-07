@@ -53,7 +53,7 @@ CodeConv::tstring getlog() {
 LogWindow::LogWindow(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned Width, unsigned Height) {
 	assert(Width >= 8); assert(Height >= 1);
 	myHWnd = hwnd; myDevice = device; x = X; y = Y; width = Width; height = Height;
-	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX), 88, 56);
+	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX));
 	myTextRenderer = new SmallTextRenderer(myDevice);
 	reconstruct_lines();
 }

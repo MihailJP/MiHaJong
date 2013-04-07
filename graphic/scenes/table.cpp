@@ -26,8 +26,8 @@
 namespace mihajong_graphic {
 	
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
-	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER), 1080, 1080);
-	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE), 1080, 1080);
+	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER));
+	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE));
 	buttonReconst = new ButtonReconst(this);
 	trayReconst = new TrayReconst(this);
 	richibouReconst = new RichibouReconst(this);

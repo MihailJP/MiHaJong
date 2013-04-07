@@ -7,7 +7,7 @@ namespace mihajong_graphic {
 
 CheckBox::CheckBox(LPDIRECT3DDEVICE9 device, const CodeConv::tstring& caption, int x, int y, bool checked) {
 	myDevice = device;
-	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_CHECKBOX), 72, 72);
+	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_CHECKBOX));
 	myTextRenderer = new TextRenderer(device);
 	myCaption = caption;
 	checkFlag = checked;

@@ -45,7 +45,7 @@ void GameTableScreen::RichibouReconst::Render() {
 
 GameTableScreen::RichibouReconst::RichibouReconst(GameTableScreen* parent) {
 	caller = parent;
-	caller->LoadTexture(&tRichi, MAKEINTRESOURCE(IDB_PNG_TENBOU), 218, 148);
+	caller->LoadTexture(&tRichi, MAKEINTRESOURCE(IDB_PNG_TENBOU));
 }
 
 GameTableScreen::RichibouReconst::~RichibouReconst() {

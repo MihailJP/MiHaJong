@@ -10,7 +10,7 @@ namespace {
 	std::map<int, LPDIRECT3DTEXTURE9> Textures;
 }
 
-void LoadTexture(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9* texture, LPCTSTR resource, unsigned width, unsigned height) {
+void LoadTexture(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9* texture, LPCTSTR resource) {
 	assert(((int)resource & 0xffff0000) == 0); // 上位ワードが0なら文字列ではなくリソース番号とみなされる(Win32APIの仕様)
 	if (Textures.find((int)resource) != Textures.end()) { // 既にロード済みのテクスチャ
 		Textures[(int)resource]->AddRef();
@@ -23,7 +23,7 @@ void LoadTexture(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9* texture, LPCTSTR 
 		void* pngData = LockResource(ResourceMem);
 		Textures[(int)resource] = nullptr;
 		HRESULT result = 
-			D3DXCreateTextureFromFileInMemoryEx(device, pngData, pngSize, width, height, 0, 0,
+			D3DXCreateTextureFromFileInMemoryEx(device, pngData, pngSize, D3DX_DEFAULT, D3DX_DEFAULT, 0, 0,
 			D3DFMT_UNKNOWN, D3DPOOL_MANAGED, D3DX_FILTER_TRIANGLE | D3DX_FILTER_DITHER, D3DX_DEFAULT,
 			0x00000000, nullptr, nullptr, &(Textures[(int)resource]));
 		UnlockResource(ResourceMem);

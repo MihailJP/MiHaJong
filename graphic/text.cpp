@@ -11,23 +11,23 @@ ITextRenderer::ITextRenderer(LPDIRECT3DDEVICE9 device) {
 }
 TextRenderer::TextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
 	fontmap = FontMap::instantiate();
-	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT), 1280, 3240);
+	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT));
 }
 HugeTextRenderer::HugeTextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
 	fontmap = FontMapLargeChr::instantiate();
-	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_HUGE), 1792, 2240);
+	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_HUGE));
 }
 SmallTextRenderer::SmallTextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
 	fontmap = FontMapSmallChr::instantiate();
-	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_SMALL), 1880, 1920);
+	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_SMALL));
 }
 CallDigitRenderer::CallDigitRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
 	fontmap = FontMapCallDigits::instantiate();
-	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_CALL_DIGITS), 1872, 96);
+	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_CALL_DIGITS));
 }
 ScoreDigitRenderer::ScoreDigitRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
 	fontmap = FontMapScoreDigits::instantiate();
-	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_SCORE_DIGITS), 960, 640);
+	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_SCORE_DIGITS));
 }
 
 ITextRenderer::~ITextRenderer() {

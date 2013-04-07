@@ -17,7 +17,7 @@ private:
 	static const unsigned int panelPosY = 550;
 protected:
 	LPDIRECT3DTEXTURE9 tSideBar; // サイドバー
-	void LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource, unsigned width, unsigned height); // テクスチャ読み込み
+	void LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource); // テクスチャ読み込み
 	void ShowSidebar();
 	void InitScorePanel();
 	void ShowScorePanel();

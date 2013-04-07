@@ -125,7 +125,7 @@ void GameTableScreen::TrayReconst::Render() {
 
 GameTableScreen::TrayReconst::TrayReconst(GameTableScreen* parent) {
 	caller = parent;
-	caller->LoadTexture(&tChiicha, MAKEINTRESOURCE(IDB_PNG_CHICHAMARK), 419, 174);
+	caller->LoadTexture(&tChiicha, MAKEINTRESOURCE(IDB_PNG_CHICHAMARK));
 }
 
 GameTableScreen::TrayReconst::~TrayReconst() {

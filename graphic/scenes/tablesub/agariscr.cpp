@@ -26,7 +26,7 @@ const double TableSubsceneAgariScreenProto::yakuAnimStartSecond = 2.0;
 
 TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
 	myDevice = device;
-	LoadTexture(device, &windowTexture, MAKEINTRESOURCE(IDB_PNG_AGARI_WINDOW), yakuWndWidth, yakuWndHeight);
+	LoadTexture(device, &windowTexture, MAKEINTRESOURCE(IDB_PNG_AGARI_WINDOW));
 	yakuData = YakuResult::getYakuStat();
 	parseYakuList();
 	myTextRenderer = new TextRenderer(device);

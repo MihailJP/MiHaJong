@@ -20,7 +20,7 @@ EditBox::EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned wid
 	myTextRenderer = new SmallTextRenderer(device);
 	D3DXCreateLine(device, &cursorLine);
 	maxStr = 0u; cursorPos = 0u; scrollPos = 0u;
-	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX), 88, 56);
+	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX));
 	isActive = false;
 	myScale = scale;
 }
