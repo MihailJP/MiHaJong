@@ -19,12 +19,13 @@
 #include "client.h"
 #include "logger.h"
 #endif
+#include <array>
 
 namespace mihajong_socket {
 #ifdef SOCKET_EXPORTS
 class Sock;
 const unsigned int numOfSockets = 32u;
-extern Sock* sockets[numOfSockets];
+extern std::array<Sock*, numOfSockets> sockets;
 extern WSADATA SocketInfo;
 extern HINSTANCE dllInst;
 

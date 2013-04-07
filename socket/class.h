@@ -74,7 +74,7 @@ protected:
 	volatile bool terminated; // 接続済みかのフラグ[親スレッドから書き込み]
 	volatile bool send_ended; // 送信が全て終わったかのフラグ
 	volatile bool sender_closed; // 送信が全て終わったかのフラグ
-	bool receive_ended; // 受信が全て終わったかのフラグ
+	volatile bool receive_ended; // 受信が全て終わったかのフラグ
 	volatile bool receiver_closed; // 受信が全て終わったかのフラグ
 	volatile bool finished; // 終了済みかのフラグ[ワーカースレッドから書き込み]
 	sockaddr_in myAddr; // アドレス情報[親スレッドから書き込み]
