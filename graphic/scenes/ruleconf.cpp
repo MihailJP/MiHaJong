@@ -39,12 +39,9 @@ void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName,
 		(prmID / 20 * 720 + 50 + 144) * WidthRate, 135 + (prmID % 20) * 40, 1.0, WidthRate, menuColor | baseColor);
 	myTextRenderer->NewText(prmID * 3 + 2, prmContent,
 		(prmID / 20 * 720 + 50 + 162) * WidthRate, 135 + (prmID % 20) * 40, 1.0, WidthRate, menuColor | baseColor);
-	if (regions.size() <= prmID) {
-		Region nullRegion = {0, 0, -1, -1};
-		regions.resize(prmID + 1, Region(nullRegion));
-	}
-	regions[prmID].Left = (prmID / 20 * 720 + 50); regions[prmID].Top = 135 + (prmID % 20) * 40; 
-	regions[prmID].Right = (prmID / 20 * 720 + 670); regions[prmID].Bottom = regions[prmID].Top + 35; 
+	setRegion(prmID,
+		(prmID / 20 * 720 + 50) , 135 + (prmID % 20) * 40,
+		(prmID / 20 * 720 + 670), 135 + (prmID % 20) * 40 + 35);
 }
 
 void RuleConfigScene::redrawItems() {
@@ -74,12 +71,7 @@ void RuleConfigScene::ShowPageCaption() {
 		myTextRenderer->NewText(122, pagecaption,
 			(1400 - 15 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 75, 0.833333f,
 			(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate, 0xffffffff);
-		if (regions.size() <= 40) {
-			Region nullRegion = {0, 0, -1, -1};
-			regions.resize(40 + 1, Region(nullRegion));
-		}
-		regions[40].Left = (1400 - 15 * ((captionCols > 76) ? 76 : captionCols));
-		regions[40].Top = 45; regions[40].Right = 1400; regions[40].Bottom = 104; 
+		setRegion(40, (1400 - 15 * ((captionCols > 76) ? 76 : captionCols)), 45, 1400, 104);
 	}
 }
 void RuleConfigScene::ShowMessageBelow() {

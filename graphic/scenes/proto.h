@@ -11,12 +11,16 @@ class ScreenManipulator;
 
 /* シーン オブジェクトのスーパークラス */
 class Scene {
-
+protected:
+	struct Region {int Left, Top, Right, Bottom;}; // クリック位置判定用
+	static const Region NullRegion;
+	void setRegion(unsigned regionID, int Left, int Top, int Right, int Bottom);
+	void setRegion(unsigned regionID, const Region& region);
+	int whichRegion(int X, int Y); // どの領域にマウスがあるかを取得
+private:
+	std::vector<Region> regions; // クリック位置判定用
 protected:
 	ScreenManipulator* caller; // 呼び出し元へのポインタ
-	struct Region {int Left, Top, Right, Bottom;}; // クリック位置判定用
-	std::vector<Region> regions; // クリック位置判定用
-	int whichRegion(int X, int Y); // どの領域にマウスがあるかを取得
 public:
 	virtual void Render() = 0; // 描画処理
 	Scene(ScreenManipulator* const manipulator) {

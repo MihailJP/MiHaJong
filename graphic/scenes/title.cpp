@@ -87,14 +87,8 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 			1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
 			0x33ffffff);
 	}
-	if (regions.size() <= ID) {
-		Region nullRegion = {0, 0, -1, -1};
-		regions.resize(ID + 1, Region(nullRegion));
-	}
-	regions[ID].Left = X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight);
-	regions[ID].Top = Y;
-	regions[ID].Right = (Geometry::BaseSize * 4 / 3) - X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight);
-	regions[ID].Bottom = Y + 71;
+	setRegion(ID, X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight), Y,
+		(Geometry::BaseSize * 4 / 3) - X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight), Y + 71);
 }
 
 void TitleScreen::menuLabels() {

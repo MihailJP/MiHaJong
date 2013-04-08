@@ -22,13 +22,7 @@ void ConfigMenuProto::CreateButton(unsigned btnID, int X, int Y, unsigned Width,
 		X * (WidthRate * Geometry::WindowScale()), Y * Geometry::WindowScale(),
 		Width * (WidthRate * Geometry::WindowScale()), Height * Geometry::WindowScale(),
 		0xffffffff, caption, true);
-	if (regions.size() <= (btnID + btnRegionStart + 1)) {
-		Region nullRegion = {0, 0, -1, -1};
-		regions.resize(btnID + btnRegionStart + 1, Region(nullRegion));
-	}
-	regions[btnID + btnRegionStart].Left = X; regions[btnID + btnRegionStart].Top = Y; 
-	regions[btnID + btnRegionStart].Right = X + Width;
-	regions[btnID + btnRegionStart].Bottom = Y + Height; 
+	setRegion(btnID + btnRegionStart, X, Y, X + Width, Y + Height);
 }
 
 void ConfigMenuProto::Render() {
