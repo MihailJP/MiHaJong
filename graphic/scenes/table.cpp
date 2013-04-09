@@ -45,7 +45,9 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 		1100, 100, logWidth, 20);
 	chatInput = new EditBox(caller->getHWnd(), caller->getDevice(),
 		1100, 100 + 20 * 20 + 10, logWidth);
-	setRegion(ChatInputRegion, 1100, 100 + 20 * 20 + 10, logWidth, 20);
+	setRegion(ChatInputRegion,
+		1100               , 100 + 20 * 20 + 10,
+		1100 + logWidth * 9, 100 + 20 * 20 + 10 + 20);
 	mySubScene = new TableSubsceneNormal(manipulator->getDevice());
 	myTextRenderer = new TextRenderer(manipulator->getDevice());
 	tileSelectMode = 0;
@@ -447,14 +449,14 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		isCursorEnabled;
 	switch (od->dwOfs) {
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
-		if ((region != tehaiReconst->getTileCursor()) && (isValidTile)) {
+		if ((!chatInput->is_Active()) && (region != tehaiReconst->getTileCursor()) && (isValidTile)) {
 			tehaiReconst->setTileCursor(region);
 			buttonReconst->setCursor();
 			sound::Play(sound::IDs::sndCursor);
 			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 			buttonReconst->reconstruct();
 			tileTipReconst->reconstruct();
-		} else if ((region != (ButtonReconst::ButtonRegionNum + buttonReconst->getCursor())) && (isButton)) {
+		} else if ((!chatInput->is_Active()) && (region != (ButtonReconst::ButtonRegionNum + buttonReconst->getCursor())) && (isButton)) {
 			tehaiReconst->setTileCursor();
 			buttonReconst->setCursor(region - ButtonReconst::ButtonRegionNum);
 			sound::Play(sound::IDs::sndCursor);
@@ -468,13 +470,21 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 			subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
 				mySubScene->skipEvent();
 			});
-		if ((isValidTile) && (od->dwData))
+		if ((!chatInput->is_Active()) && (isValidTile) && (od->dwData))
 			FinishTileChoice();
-		else if ((isButton) && (od->dwData))
+		else if ((!chatInput->is_Active()) && (isButton) && (od->dwData))
 			buttonReconst->ButtonPressed();
+		else if ((!chatInput->is_Active()) && (region == ChatInputRegion) && (od->dwData)) {
+			sound::Play(sound::IDs::sndClick);
+			chatInput->activate();
+		}
+		else if ((chatInput->is_Active()) && (region != ChatInputRegion) && (od->dwData)) {
+			sound::Play(sound::IDs::sndClick);
+			chatInput->deactivate();
+		}
 		break;
 	case DIMOFS_BUTTON1: // マウス右クリック
-		if ((od->dwData) && isNakiSel) { // 鳴き選択中の時
+		if ((!chatInput->is_Active()) && (od->dwData) && isNakiSel) { // 鳴き選択中の時
 			sound::Play(sound::IDs::sndClick);
 			ui::UIEvent->set(naki::nakiNone); // 牌の番号を設定
 		}
