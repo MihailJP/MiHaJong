@@ -43,6 +43,9 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
 	logWindow = new logwnd::LogWindow(caller->getHWnd(), caller->getDevice(),
 		1100, 100, logWidth, 20);
+	chatInput = new EditBox(caller->getHWnd(), caller->getDevice(),
+		1100, 100 + 20 * 20 + 10, logWidth);
+	setRegion(ChatInputRegion, 1100, 100 + 20 * 20 + 10, logWidth, 20);
 	mySubScene = new TableSubsceneNormal(manipulator->getDevice());
 	myTextRenderer = new TextRenderer(manipulator->getDevice());
 	tileSelectMode = 0;
@@ -50,6 +53,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 
 GameTableScreen::~GameTableScreen() {
 	delete mySubScene;
+	delete chatInput;
 	delete logWindow;
 	delete tileTipReconst;
 	delete gariReconst;
@@ -153,6 +157,7 @@ void GameTableScreen::RenderSideBar() {
 	ShowStatus(GameStatus::gameStat());
 	ShowScorePanel();
 	logWindow->Render();
+	chatInput->Render();
 }
 
 void GameTableScreen::checkTimeout() {
