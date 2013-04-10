@@ -29,6 +29,7 @@ typedef bool (*isPao_type)(const GameTable*, PlayerID, PlayerID);
 typedef bool (*isPaoAgari_type)(const GameTable*, PlayerID);
 typedef void (*bgmplay_type)(unsigned);
 typedef LPCTSTR (*getName_type)(PlayerID);
+typedef void (*sendchat_type)(LPCTSTR);
 
 #ifdef GRAPHIC_EXPORTS
 extern playerwind_type playerwind;
@@ -49,6 +50,7 @@ extern isPao_type isPao;
 extern isPaoAgari_type isPaoAgari;
 extern bgmplay_type bgmplay;
 extern getName_type getName;
+extern sendchat_type sendchat;
 #endif
 
 EXPORT void setfunc(
@@ -69,7 +71,8 @@ EXPORT void setfunc(
 	isPao_type ptr_isPao,
 	isPaoAgari_type ptr_isPaoAgari,
 	bgmplay_type ptr_bgmplay,
-	getName_type ptr_getName);
+	getName_type ptr_getName,
+	sendchat_type ptr_sendchat);
 
 }
 }
