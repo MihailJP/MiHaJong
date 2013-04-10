@@ -8,6 +8,7 @@
 #include "../event.h"
 #include "../../common/discard.h"
 #include "../utils.h"
+#include "../extchar.h"
 #include <functional>
 
 #include "table/yamahai.h"
@@ -343,7 +344,33 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 
 // -------------------------------------------------------------------------
 
+void GameTableScreen::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
+	if (chatInput->is_Active())
+		chatInput->IMEvent(message, wParam, lParam);
+}
+void GameTableScreen::KeyboardInput(WPARAM wParam, LPARAM lParam) {
+	if (chatInput->is_Active()) {
+		if (wParam == CHARDAT_CURSOR_ENTER) {
+			/* TODO: ‘—Mˆ— */
+			sound::Play(sound::IDs::sndClick);
+			chatInput->setText(_T(""));
+		} else if ((wParam == CHARDAT_CURSOR_ESCAPE) || (wParam == '\t')) {
+			sound::Play(sound::IDs::sndClick);
+			chatInput->deactivate();
+		} else {
+			chatInput->KeyboardInput(wParam, lParam);
+		}
+	} else {
+		if (wParam == '\t') {
+			sound::Play(sound::IDs::sndClick);
+			chatInput->activate();
+		}
+	}
+}
+
 void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+	if (chatInput->is_Active()) return; // “ü—Í’†‚Í–³Ž‹
+
 	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 	auto cursorMoved = [&]() -> void {
 		sound::Play(sound::IDs::sndCursor);

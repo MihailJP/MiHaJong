@@ -72,7 +72,9 @@ public:
 	GameTableScreen(ScreenManipulator* const manipulator);
 	~GameTableScreen();
 	void Render();
+	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
+	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 private:
 	void checkTimeout();
