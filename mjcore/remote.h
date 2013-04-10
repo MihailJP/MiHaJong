@@ -37,7 +37,7 @@ namespace RemoteAction {
 
 namespace RemoteConnection {
 
-void startServer(std::string& serverAddr);
-void startClient(std::string& serverAddr, unsigned& ClientNumber);
+void startServer(std::string& serverAddr, unsigned short gamePort);
+void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short gamePort);
 
 }

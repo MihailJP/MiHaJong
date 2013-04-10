@@ -276,7 +276,7 @@ void remotenaki (GameTable* const gameStat) {
 
 namespace RemoteConnection {
 
-void startServer(std::string& serverAddr) {
+void startServer(std::string& serverAddr, unsigned short gamePort) {
 	mihajong_graphic::Transit(mihajong_graphic::sceneServerWaiting);
 
 	char RuleConf[RULE_LINES][RULE_IN_LINE + 4];
@@ -289,7 +289,7 @@ void startServer(std::string& serverAddr) {
 
 	const std::string nomen(RuleData::chkPreference((std::string)"name"));
 	const CodeConv::tstring Nomen(CodeConv::EnsureTStr(nomen));
-	mihajong_socket::server::start(Nomen.c_str(), /*PORT_GAME*/50000, ACTUAL_PLAYERS, RuleConfPtr);
+	mihajong_socket::server::start(Nomen.c_str(), gamePort, ACTUAL_PLAYERS, RuleConfPtr);
 
 	int numOfClientsPrev = 0; int numOfClients = 0;
 	while (true) {
@@ -323,7 +323,7 @@ void startServer(std::string& serverAddr) {
 	mihajong_socket::server::releaseobj();
 }
 
-void startClient(std::string& serverAddr, unsigned& ClientNumber) {
+void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short gamePort) {
 	mihajong_graphic::Transit(mihajong_graphic::sceneClientWaiting);
 	serverAddr = RuleData::chkPreference((std::string)"server");
 	EnvTable::Instantiate()->GameMode = EnvTable::Client;
@@ -332,7 +332,7 @@ void startClient(std::string& serverAddr, unsigned& ClientNumber) {
 	const CodeConv::tstring Nomen(CodeConv::EnsureTStr(nomen));
 
 	mihajong_graphic::Subscene(mihajong_graphic::cliwSubsceneConnecting);
-	mihajong_socket::client::start(Nomen.c_str(), serverAddr.c_str(), /*PORT_GAME*/50000, ACTUAL_PLAYERS);
+	mihajong_socket::client::start(Nomen.c_str(), serverAddr.c_str(), gamePort, ACTUAL_PLAYERS);
 
 	while (true) {
 		if (mihajong_socket::client::isConnectionSucceded()) {

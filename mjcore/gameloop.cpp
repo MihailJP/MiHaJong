@@ -126,6 +126,10 @@ void startgame(GameTypeID gameType) {
 		unsigned ClientNumber = 0u;
 	start:
 		std::string serverAddr;
+		const unsigned short gamePort =
+			chkGameType(gameStat, Sanma) ? 50010 :
+			chkGameType(gameStat, Sanma4) ? 50030 :
+			chkGameType(gameStat, SanmaS) ? 50060 : 50000;
 		switch (titlescreen()) { // ƒ^ƒCƒgƒ‹‰æ–Ê
 		case 1:
 			EnvTable::Instantiate()->PlayerDat[0].PlayerName =
@@ -136,10 +140,10 @@ void startgame(GameTypeID gameType) {
 			serverAddr = "";
 			break;
 		case 2:
-			RemoteConnection::startServer(serverAddr);
+			RemoteConnection::startServer(serverAddr, gamePort);
 			break;
 		case 3:
-			RemoteConnection::startClient(serverAddr, ClientNumber);
+			RemoteConnection::startClient(serverAddr, ClientNumber, gamePort);
 			if (EnvTable::Instantiate()->GameMode == EnvTable::Standalone)
 				goto start; // Ú‘±¸”s‚Ì‚Í–ß‚é
 			break;
