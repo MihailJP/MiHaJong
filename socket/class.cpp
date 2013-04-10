@@ -224,7 +224,7 @@ void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
 mihajong_socket::Sock::network_thread::network_thread(Sock* caller) {
 	myCaller = caller;
 	errtype = errNone; errcode = 0;
-	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = false;
+	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting = false;
 }
 
 mihajong_socket::Sock::network_thread::~network_thread() {
@@ -324,7 +324,12 @@ int mihajong_socket::Sock::network_thread::writer() { // ‘—Mˆ—
 
 DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // ƒXƒŒƒbƒh‚Ìˆ—
 	u_long arg = 1; ioctlsocket(*mySock, FIONBIO, &arg); // non-blocking ƒ‚[ƒh‚Éİ’è
-	if (int err = establishConnection()) return err; // Ú‘±
+	connecting = true;
+	if (int err = establishConnection()) { // Ú‘±
+		connecting = false;
+		return err;
+	}
+	connecting = false;
 	while ((!sender_closed) || (!receiver_closed)) { // I—¹‚·‚é‚Ü‚Å
 		int err = 0;
 		if ((!receiver_closed) && (err = reader())) return err; // “Ç‚İ‚İ
@@ -414,8 +419,8 @@ void mihajong_socket::Sock::network_thread::wait_until_sent() { // ‘—MƒLƒ…[‚ª‹
 void mihajong_socket::Sock::network_thread::terminate () { // Ø’f‚·‚é
 	terminated = true; // ƒtƒ‰ƒO‚ğ—§‚Ä‚é
 	wait_until_sent(); // ‘—M‚ªŠ®—¹‚·‚é‚Ü‚Å‘Ò‚Â
-	while ((!finished) && (connected)) Sleep(10); // ƒXƒŒƒbƒh‚ªI—¹‚·‚é‚Ü‚Å‘Ò‚Â
-	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = false; // ƒtƒ‰ƒO‚ÌŒãn––
+	while ((!finished) && (connected || connecting)) Sleep(10); // ƒXƒŒƒbƒh‚ªI—¹‚·‚é‚Ü‚Å‘Ò‚Â
+	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting =  false; // ƒtƒ‰ƒO‚ÌŒãn––
 	errtype = errNone; errcode = 0;
 }
 

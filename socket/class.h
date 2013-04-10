@@ -70,6 +70,7 @@ protected:
 	SOCKET* listenerSock; // ソケット(ポインタ)
 	errorType errtype; // エラーの種類
 	int errcode; // エラーコード
+	volatile bool connecting; // 接続中かのフラグ[ワーカースレッドから書き込み]
 	volatile bool connected; // 接続済みかのフラグ[ワーカースレッドから書き込み]
 	volatile bool terminated; // 接続済みかのフラグ[親スレッドから書き込み]
 	volatile bool send_ended; // 送信が全て終わったかのフラグ
