@@ -243,7 +243,9 @@ __declspec(dllexport) void appendchat (LPCTSTR const chatstr) {
 	chatobj->sysmsg(chatstr);
 }
 __declspec(dllexport) void sendchat (LPCTSTR const chatstr) {
-	chatobj->sendstr(chatstr);
+	static CodeConv::tstring ChatStr;
+	ChatStr = chatstr;
+	chatobj->sendstr(ChatStr.c_str());
 }
 void sendchatx (int player, LPCTSTR const chatstr) {
 	chatobj->sendstrx(player, chatstr);

@@ -14,6 +14,7 @@
 #include "../graphic/graphic.h"
 #include "yaku/yaku.h"
 #include "ruletbl.h"
+#include "chat.h"
 
 MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
 	/* コンフィグファイルのパスを設定する */
@@ -116,7 +117,7 @@ MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
 			isTenpai, isRichiReqSatisfied, ShantenAnalyzer::calcShanten, chkdaopaiability,
 			yaku::yakuCalculator::chkShisanBuDa, yaku::yakuCalculator::chkShisiBuDa,
 			countTilesInHand, chkAnkanAbility, isPao, isPaoAgari, sound::util::bgmplay,
-			getName);
+			getName, chat::sendchat);
 	}
 
 	/* 音源を初期化 */

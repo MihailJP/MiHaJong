@@ -351,8 +351,8 @@ void GameTableScreen::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 void GameTableScreen::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 	if (chatInput->is_Active()) {
 		if (wParam == CHARDAT_CURSOR_ENTER) {
-			/* TODO: ‘—Mˆ— */
 			sound::Play(sound::IDs::sndClick);
+			utils::sendchat(chatInput->getText().c_str());
 			chatInput->setText(_T(""));
 		} else if ((wParam == CHARDAT_CURSOR_ESCAPE) || (wParam == '\t')) {
 			sound::Play(sound::IDs::sndClick);
