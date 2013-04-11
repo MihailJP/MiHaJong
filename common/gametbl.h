@@ -287,6 +287,9 @@ struct GameTable { // 卓の情報を格納する
 	      PlayerTable& statOfMine   ()       {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (mutable) */
 
 	bool chkGameType(GameTypeID gameType) const {return ((this->gameType) & gameType);}
+	uint8_t diceSum() { // サイコロの出目を取得
+		return Dice[0].Number + Dice[1].Number;
+	}
 
 	seatAbsolute playerwind(Player_ID player, int currentRound) const { // プレイヤーの自風がどれか調べる
 		if (chkGameType(SanmaT))

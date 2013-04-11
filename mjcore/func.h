@@ -25,11 +25,6 @@ using mihajong_structs::PlayerRankList;
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
-/* サイコロの出目を取得 */
-extern "C" inline uint8_t diceSum(const GameTable* const gameStat) {
-	return (gameStat->Dice[0].Number + gameStat->Dice[1].Number);
-}
-
 /* あるプレイヤーに対して指定したプレイヤーがどこ(下家、対面、上家)にいるか調べる */
 seatRelative inline playerRelative(PlayerID targetPlayer, PlayerID basePlayer) {
 	return (seatRelative)((Players + targetPlayer - basePlayer) % Players);

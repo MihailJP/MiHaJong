@@ -19,15 +19,15 @@ __declspec(dllexport) void calcWareme(GameTable* const gameStat) {
 	if (gameStat->chkGameType(AllSanma)) {
 		if (RuleData::chkRuleApplied("wareme") || RuleData::chkRuleApplied("kaimenkaze")) {
 			gameStat->WaremePlayer = ((gameStat->GameRound-(gameStat->GameRound/4))+24
-				+diceSum(gameStat)-1) % 3;
+				+gameStat->diceSum()-1) % 3;
 			if (gameStat->chkGameType(Sanma4)) {
 				gameStat->WaremePlayer =
-					tobePlayed(gameStat, (24+diceSum(gameStat)-1) % 3);
+					tobePlayed(gameStat, (24+gameStat->diceSum()-1) % 3);
 			}
 		}
 	} else {
 		if (RuleData::chkRuleApplied("wareme") || RuleData::chkRuleApplied("kaimenkaze"))
-			gameStat->WaremePlayer = ((gameStat->GameRound % 4)+32+diceSum(gameStat)-1) % 4;
+			gameStat->WaremePlayer = ((gameStat->GameRound % 4)+32+gameStat->diceSum()-1) % 4;
 	}
 	return;
 }
