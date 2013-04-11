@@ -16,11 +16,11 @@ GameTable GameStat, StatSandBox;
 
 __declspec(dllexport) void calcWareme(GameTable* const gameStat) {
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-	if (chkGameType(gameStat, AllSanma)) {
+	if (gameStat->chkGameType(AllSanma)) {
 		if (RuleData::chkRuleApplied("wareme") || RuleData::chkRuleApplied("kaimenkaze")) {
 			gameStat->WaremePlayer = ((gameStat->GameRound-(gameStat->GameRound/4))+24
 				+diceSum(gameStat)-1) % 3;
-			if (chkGameType(gameStat, Sanma4)) {
+			if (gameStat->chkGameType(Sanma4)) {
 				gameStat->WaremePlayer =
 					tobePlayed(gameStat, (24+diceSum(gameStat)-1) % 3);
 			}
@@ -62,7 +62,7 @@ __declspec(dllexport) void inittable(GameTable* const gameStat) { /* ‹Ç’PˆÊ‚Å‚Ì
 		gameStat->Deck[i].red = Normal;
 	}
 
-	if (chkGameType(gameStat, AllSanma)) {
+	if (gameStat->chkGameType(AllSanma)) {
 		gameStat->DeadTiles = 14; // ‰¤”v‚Ì”
 		gameStat->ExtraRinshan = RuleData::chkRuleApplied("flower_tiles") ? 4 : 0;
 	} else {
@@ -87,7 +87,7 @@ __declspec(dllexport) void inittable(GameTable* const gameStat) { /* ‹Ç’PˆÊ‚Å‚Ì
 	gameStat->Dice[0].Direction = gameStat->Dice[1].Direction = 0;
 	gameStat->TilePointer = 0;
 
-	if (chkGameType(gameStat, AllSanma)) {
+	if (gameStat->chkGameType(AllSanma)) {
 		gameStat->RinshanPointer = 107;
 	} else {
 		if (RuleData::chkRule("flower_tiles", "no")) gameStat->RinshanPointer = 135;
@@ -173,23 +173,23 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 	}
 
 	if (RuleData::chkRule("game_length", "east_south_game"))
-		gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 6 : 7;
+		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 6 : 7;
 	else if (RuleData::chkRule("game_length", "east_wind_game") ||
 		RuleData::chkRule("game_length", "east_only_game"))
-		gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 2 : 3;
+		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 2 : 3;
 	else if (RuleData::chkRule("game_length", "full_round_game") ||
 		RuleData::chkRule("game_length", "east_north_game"))
-		gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 14 : 15;
+		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 14 : 15;
 	else if (RuleData::chkRule("game_length", "single_round_game"))
 		gameStat->GameLength = 0;
 	else if (RuleData::chkRule("game_length", "twice_east_game"))
-		gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 18 : 19;
+		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 18 : 19;
 	else if (RuleData::chkRule("game_length", "east_south_west_game") ||
 		RuleData::chkRule("game_length", "east_west_game"))
-		gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 10 : 11;
+		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 10 : 11;
 	else {
 		error(_T("game_lengthˆÙí’lB”¼‘‘í‚Æ‚Ý‚È‚µ‚Ü‚·B"));
-		gameStat->GameLength = chkGameType(&GameStat, SanmaT) ? 6 : 7;
+		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 6 : 7;
 	}
 	gameStat->GameRound = gameStat->Honba = gameStat->PlayerID =
 		gameStat->Deposit = gameStat->LoopRound = gameStat->AgariChain = 0;
@@ -280,7 +280,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 	sandbox->Dice[0].Direction = gameStat->Dice[0].Direction;
 	sandbox->Dice[1].Direction = gameStat->Dice[1].Direction;
 	for (int i = 0; i < 6; i++) {
-		if (chkGameType(gameStat, AllSanma)) {
+		if (gameStat->chkGameType(AllSanma)) {
 			if (gameStat->DoraPointer <= (102 - gameStat->ExtraRinshan - i * 2))
 				sandbox->Deck[102 - gameStat->ExtraRinshan - i * 2].tile =
 				gameStat->Deck[102 - gameStat->ExtraRinshan - i * 2].tile;

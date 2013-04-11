@@ -93,9 +93,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 						(!*analysis->TsumoAgariFlag) && // ロンである
 						(
 							(analysis->GameStat->CurrentPlayer.Furikomi == RelativePositionOf(analysis->player, sRight)) || // 下家から和了った
-							((chkGameType(analysis->GameStat, SanmaT)) &&
+							((analysis->GameStat->chkGameType(SanmaT)) &&
 								(analysis->GameStat->CurrentPlayer.Furikomi == 0) && (analysis->player == 2)) || // 三麻の特例
-							((chkGameType(analysis->GameStat, Sanma4)) &&
+							((analysis->GameStat->chkGameType(Sanma4)) &&
 								(analysis->GameStat->CurrentPlayer.Furikomi == RelativePositionOf(analysis->player, sOpposite)) &&
 								(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) == sWest)) // 四人三麻の特例
 						));

@@ -809,7 +809,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 	} else if (!gameStat->KangFlag.kangFlag) { // ”²‚«–k‚Å”v•ˆ‚ª‚¸‚ê‚é‚Ì‚ð—}Ž~
 		haifu::haifurecfurikomi(gameStat);
 	}
-	if (chkGameType(gameStat, AllSanma)) {
+	if (gameStat->chkGameType(AllSanma)) {
 		// “ñ‰Æ˜a‚Ì”»’è
 		if ((RonPlayers(gameStat) >= 2) && RuleData::chkRule("multiple_mahjong", "aborted"))
 			return TripleRon;
@@ -856,7 +856,7 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 			++gameStat->TurnRound;
 		gameStat->CurrentPlayer.Active = gameStat->CurrentPlayer.Passive;
 		return true;
-	} else if (!chkGameType(gameStat, AllSanma)) {
+	} else if (!gameStat->chkGameType(AllSanma)) {
 		/* ‹h‚Ìˆ— */
 		/* ŽOl‘Å‚¿‚Å‚Í‹h‚È‚µ */
 		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Active, sRight)].DeclarationFlag.Chi > 0) {

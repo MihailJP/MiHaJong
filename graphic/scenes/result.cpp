@@ -40,7 +40,7 @@ void ResultScreen::Render() {
 		(myTimer.elapsed() < 1000000) ? (((unsigned int)(255 - (1000000 - myTimer.elapsed()) / 5000) << 24) | 0x00ffffff) : 0xffffffff);
 	titleRenderer->Render();
 
-	for (int i = (chkGameType(GameStatus::gameStat(), SanmaT) ? 1 : 0); i < Players; ++i)
+	for (int i = (GameStatus::gameStat()->chkGameType(SanmaT) ? 1 : 0); i < Players; ++i)
 		if ((myTimer.elapsed() >= (1000000 + i * 500000)) && (rankRenderer[i] == nullptr))
 			rankRenderer[i] = new RankRenderer(caller->getDevice(), i);
 	for (auto k = rankRenderer.begin(); k != rankRenderer.end(); ++k)
@@ -85,7 +85,7 @@ ResultScreen::RankRenderer::RankRenderer(LPDIRECT3DDEVICE9 device, int id) {
 	BaseY = (3 - id) * 150 + 350;
 	PlayerRankList rank = utils::calcRank(GameStatus::retrGameStat());
 	player = -1;
-	for (PlayerID i = 0; i < (utils::chkGameType(GameStatus::retrGameStat(), SanmaT) ? 3 : 4); ++i)
+	for (PlayerID i = 0; i < (GameStatus::retrGameStat()->chkGameType(SanmaT) ? 3 : 4); ++i)
 		if (rank[i] == (4 - id)) player = i;
 	nameRenderer = new SmallTextRenderer(device);
 	rankRenderer = new HugeTextRenderer(device);
@@ -100,7 +100,7 @@ ResultScreen::RankRenderer::RankRenderer(LPDIRECT3DDEVICE9 device, int id) {
 	if ((4 - id) == 1)
 		if (rank[GameStatus::gameStat()->PlayerID] == 1)
 			sound::util::bgmplay(sound::IDs::musEnding);
-		else if (rank[GameStatus::gameStat()->PlayerID] == (chkGameType(GameStatus::gameStat(), SanmaT) ? 3 : 4))
+		else if (rank[GameStatus::gameStat()->PlayerID] == (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4))
 			sound::util::bgmplay(sound::IDs::musEnding3);
 		else
 			sound::util::bgmplay(sound::IDs::musEnding2);

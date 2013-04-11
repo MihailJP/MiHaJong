@@ -371,7 +371,7 @@ TableSubsceneAgariScreenProto::DoraTiles::~DoraTiles() {
 void TableSubsceneAgariScreenProto::DoraTiles::Reconstruct() {
 	const GameTable* const gameStat = GameStatus::gameStat();
 	const int numberOfTiles = [gameStat]() -> int {
-		if (chkGameType(gameStat, AllSanma))
+		if (gameStat->chkGameType(AllSanma))
 			return 108;
 		else if (rules::chkRule("flower_tiles", "no"))
 			return 136;
@@ -382,7 +382,7 @@ void TableSubsceneAgariScreenProto::DoraTiles::Reconstruct() {
 	}();
 	const int DoraPosStart = numberOfTiles - tileIdOffset() - 4 - gameStat->ExtraRinshan -
 		[gameStat]() -> int {
-			if (chkGameType(gameStat, AllSanma))
+			if (gameStat->chkGameType(AllSanma))
 				return 0;
 			else if (rules::chkRule("flower_tiles", "no"))
 				return 0;
@@ -531,7 +531,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructChipAmount() {
 	CodeConv::tostringstream o;
 	o << _T("ƒ`ƒbƒv") << std::setw(2) << std::setfill(_T(' ')) << YakuResult::getChipVal();
 	if (GameStatus::gameStat()->TsumoAgariFlag) {
-		if (chkGameType(GameStatus::gameStat(), SanmaT))
+		if (GameStatus::gameStat()->chkGameType(SanmaT))
 			o << _T("‚˜‚Q");
 		else
 			o << _T("‚˜‚R");

@@ -19,7 +19,7 @@ PlayerID* tobePlayed(const GameTable* const gameStat) {
 		((gameStat->GameRound + 1) % Players),
 		((gameStat->GameRound + 2) % Players)
 	};
-	if (chkGameType(gameStat, Sanma4)) return tp;
+	if (gameStat->chkGameType(Sanma4)) return tp;
 	else return nullptr;
 }
 PlayerID tobePlayed(const GameTable* const gameStat, int id) {
@@ -180,7 +180,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 
 	// ドラ表示牌で見えてる枚数
 	for (int i = 0; i < 6; i++) {
-		if (chkGameType(gameStat, AllSanma)) {
+		if (gameStat->chkGameType(AllSanma)) {
 			if (gameStat->DoraPointer <= (102 - gameStat->ExtraRinshan - i * 2))
 				seenTiles[gameStat->Deck[102 - gameStat->ExtraRinshan - i * 2].tile]++;
 		} else {
@@ -431,7 +431,7 @@ __declspec(dllexport) int chkdaopaiability(const GameTable* const gameStat, int 
 namespace setdora_tools {
 	TileCode getNextOf(const GameTable* const gameStat, TileCode tc) { // ネクスト牌
 		TileCode ans = (TileCode)((int)tc + 1);
-		if ((chkGameType(gameStat, SanmaX))&&(ans == CharacterTwo)) ans = CharacterNine;
+		if ((gameStat->chkGameType(SanmaX))&&(ans == CharacterTwo)) ans = CharacterNine;
 		else if (ans == (TileCode)10) ans = CharacterOne;
 		else if (ans == (TileCode)20) ans = CircleOne;
 		else if (ans == (TileCode)30) ans = BambooOne;
@@ -442,7 +442,7 @@ namespace setdora_tools {
 
 	TileCode getPrevOf(const GameTable* const gameStat, TileCode tc) { // 前の牌
 		TileCode ans = (TileCode)((int)tc - 1);
-		if ((chkGameType(gameStat, SanmaX))&&(ans == CharacterEight)) ans = CharacterOne;
+		if ((gameStat->chkGameType(SanmaX))&&(ans == CharacterEight)) ans = CharacterOne;
 		else if (ans == (TileCode)0) ans = CharacterNine;
 		else if (ans == (TileCode)10) ans = CircleNine;
 		else if (ans == (TileCode)20) ans = BambooNine;
@@ -479,7 +479,7 @@ __declspec(dllexport) void setdora(GameTable* const gameStat, int Mode) {
 		if (RuleData::chkRule("dora_indicator", "dora_around_indicator")) {
 			// 前の牌がドラ（超インフレ用）
 			if ((gameStat->Deck[gameStat->DoraPointer + Mode].tile >= 10) ||
-				(!chkGameType(gameStat, SanmaX)))
+				(!gameStat->chkGameType(SanmaX)))
 					setdora_tools::addDora(gameStat,
 						setdora_tools::getPrevOf(gameStat, gameStat->Deck[gameStat->DoraPointer + Mode].tile),
 						Mode);
@@ -660,13 +660,13 @@ __declspec(dllexport) int chkAnkanAbility(const GameTable* const gameStat, int t
 __declspec(dllexport) void calcdoukasen(GameTable* const gameStat) {
 	/* 導火線の位置を計算する */
 	if (RuleData::chkRuleApplied("doukasen")) {
-		if (chkGameType(gameStat, Sanma4)) {
+		if (gameStat->chkGameType(Sanma4)) {
 			PlayerID* tmpDoukasen = new PlayerID(
 				((30 - ((diceSum(gameStat) - 1) * 36 * 2 + 
 				diceSum(gameStat) * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3);
 			gameStat->DoukasenPlayer = tobePlayed(gameStat, *tmpDoukasen);
 			delete tmpDoukasen;
-		} else if (chkGameType(gameStat, SanmaT)) {
+		} else if (gameStat->chkGameType(SanmaT)) {
 			gameStat->DoukasenPlayer =
 				((30 - ((diceSum(gameStat) - 1 +
 				(gameStat->GameRound - (gameStat->GameRound / 4))) * 36 * 2 +

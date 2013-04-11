@@ -334,7 +334,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	// ---------------------------------------------------------------------
 
 	/* 三麻の萬子ホンイツ */
-	if ((RuleData::chkRuleApplied("characters_mahjong")) && chkGameType(&GameStat, SanmaT))
+	if ((RuleData::chkRuleApplied("characters_mahjong")) && GameStat.chkGameType(SanmaT))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("萬和"), get_yaku_han("characters_mahjong"),
 			_T("混一色"), _T("混老頭"),

@@ -123,7 +123,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 		if (_ttoi((*k)[7].c_str())) // 自由入力
 			freeval_expr.insert(std::make_pair(nomenPartisRegulae, std::string(toANSI((*k)[11]))));
 
-		if (((*k)[1].empty()) || (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str())))) { // GameType合致した場合
+		if (((*k)[1].empty()) || (GameStat.chkGameType((GameTypeID)_ttoi((*k)[1].c_str())))) { // GameType合致した場合
 			if ((_ttoi((*k)[0].c_str()) % PageBatch) == 0)
 				pageCaption[_ttoi((*k)[0].c_str()) / PageBatch] = tstring((*k)[4]);
 			ruletags[nomenPartisRegulae].clear(); inverse_ruletags[nomenPartisRegulae].clear();
@@ -137,14 +137,14 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 				}
 			}
 		}
-		else if ((!(*k)[1].empty()) && (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str())))) { // N/A指定があった場合
+		else if ((!(*k)[1].empty()) && (GameStat.chkGameType((GameTypeID)_ttoi((*k)[2].c_str())))) { // N/A指定があった場合
 			nonapplicable.insert(nomenPartisRegulae); // リストに追加
 		}
 
 		// ルール設定画面のマスクデータ
-		if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str())))
+		if (GameStat.chkGameType((GameTypeID)_ttoi((*k)[1].c_str())))
 			rulemask_expr[nomenPartisRegulae] = toANSI((*k)[3]);
-		else if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str())))
+		else if (GameStat.chkGameType((GameTypeID)_ttoi((*k)[2].c_str())))
 			rulemask_expr[nomenPartisRegulae] = "";
 	}
 }
@@ -227,8 +227,8 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleName(LPTSTR const txt, unsigned bufs
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
 		if (((*k)[1].empty()) || ((*k)[2].empty()) ||
-			(chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) ||
-			(chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str())))) {
+			(GameStat.chkGameType((GameTypeID)_ttoi((*k)[1].c_str()))) ||
+			(GameStat.chkGameType((GameTypeID)_ttoi((*k)[2].c_str())))) {
 #ifdef _MSC_VER
 				_tcscpy_s(txt, bufsize, ((*k)[9]).c_str());
 #else
@@ -246,23 +246,23 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleName(LPTSTR const txt, unsigned bufs
 CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
 		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
-		if (((*k)[1].empty()) || (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str())))) {
+		if (((*k)[1].empty()) || (GameStat.chkGameType((GameTypeID)_ttoi((*k)[1].c_str())))) {
 #ifdef _MSC_VER
 			_tcscpy_s(txt, bufsize, ((*k)[10]).c_str()); return;
 #else
 			_tcsncpy(txt, ((*k)[10]).c_str(), bufsize); return;
 #endif
 		}
-		else if (chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str()))) {
+		else if (GameStat.chkGameType((GameTypeID)_ttoi((*k)[2].c_str()))) {
 #ifdef _MSC_VER
-			if (chkGameType(&GameStat, SanmaS)) _tcscpy_s(txt, bufsize, _T("数牌三麻では設定できません"));
-			else if (chkGameType(&GameStat, SanmaX)) _tcscpy_s(txt, bufsize, _T("三人打ちでは設定できません"));
-			else if (chkGameType(&GameStat, Yonma)) _tcscpy_s(txt, bufsize, _T("四人打ちでは設定できません"));
+			if (GameStat.chkGameType(SanmaS)) _tcscpy_s(txt, bufsize, _T("数牌三麻では設定できません"));
+			else if (GameStat.chkGameType(SanmaX)) _tcscpy_s(txt, bufsize, _T("三人打ちでは設定できません"));
+			else if (GameStat.chkGameType(Yonma)) _tcscpy_s(txt, bufsize, _T("四人打ちでは設定できません"));
 			else _tcscpy_s(txt, bufsize, _T(""));
 #else
-			if (chkGameType(&GameStat, SanmaS)) _tcsncpy(txt, _T("数牌三麻では設定できません"), bufsize);
-			else if (chkGameType(&GameStat, SanmaX)) _tcsncpy(txt, _T("三人打ちでは設定できません"), bufsize);
-			else if (chkGameType(&GameStat, Yonma)) _tcsncpy(txt, _T("四人打ちでは設定できません"), bufsize);
+			if (GameStat.chkGameType(SanmaS)) _tcsncpy(txt, _T("数牌三麻では設定できません"), bufsize);
+			else if (GameStat.chkGameType(SanmaX)) _tcsncpy(txt, _T("三人打ちでは設定できません"), bufsize);
+			else if (GameStat.chkGameType(Yonma)) _tcsncpy(txt, _T("四人打ちでは設定できません"), bufsize);
 			else _tcsncpy(txt, _T(""), bufsize);
 #endif
 			return;
@@ -455,8 +455,8 @@ CONFDAT_TEMPLATE unsigned CONFDAT_CLASS::getRuleStrBufLen(uint16_t RuleID) {
 	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 文字列入力の幅
 		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
 		if (((*k)[1].empty()) || ((*k)[2].empty()) ||
-			(chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[1].c_str()))) ||
-			(chkGameType(&GameStat, (GameTypeID)_ttoi((*k)[2].c_str()))))
+			(GameStat.chkGameType((GameTypeID)_ttoi((*k)[1].c_str()))) ||
+			(GameStat.chkGameType((GameTypeID)_ttoi((*k)[2].c_str()))))
 			return _ttoi(((*k)[7]).c_str());
 	}
 	return 0;

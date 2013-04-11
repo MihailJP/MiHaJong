@@ -26,7 +26,7 @@ static_assert(std::is_pod<Tile>::value, "Tile is not POD");
 
 const unsigned int Players = 4;
 #ifdef MJCORE_EXPORTS
-#define ACTUAL_PLAYERS (chkGameType(&GameStat, SanmaT) ? 3 : 4)
+#define ACTUAL_PLAYERS (GameStat.chkGameType(SanmaT) ? 3 : 4)
 #endif
 const unsigned int NumOfTilesInHand = 14;
 const unsigned int TsumohaiIndex = NumOfTilesInHand - 1;
@@ -280,6 +280,8 @@ struct GameTable { // 卓の情報を格納する
 	      PlayerTable& statOfAgari  ()       {return Player[CurrentPlayer.Agari  ];} /* 和了ったプレイヤーの情報 (mutable) */
 	const PlayerTable& statOfMine   () const {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (immutable) */
 	      PlayerTable& statOfMine   ()       {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (mutable) */
+
+	bool chkGameType(GameTypeID gameType) const {return ((this->gameType) & gameType);}
 };
 static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 
@@ -287,12 +289,6 @@ static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 
 // 食い変え判定用の gameStat->AgariSpecialStat 番号
 const unsigned int agariKuikae = 999;
-
-// -------------------------------------------------------------------------
-
-inline bool chkGameType(const GameTable* const gameStat, GameTypeID gameType) {
-	return ((gameStat->gameType) & gameType);
-}
 
 // -------------------------------------------------------------------------
 

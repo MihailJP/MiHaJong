@@ -32,7 +32,7 @@ extern "C" inline uint8_t diceSum(const GameTable* const gameStat) {
 
 /* ƒvƒŒƒCƒ„[‚Ì©•—‚ª‚Ç‚ê‚©’²‚×‚é */
 seatAbsolute inline playerwind(const GameTable* const gameStat, PlayerID player, int currentRound) {
-	if (chkGameType(gameStat, SanmaT))
+	if (gameStat->chkGameType(SanmaT))
 		return (seatAbsolute)((player + 24 - (currentRound - ( currentRound / 4))) % 3);
 	else return (seatAbsolute)((player + 32 - currentRound) % 4);
 }

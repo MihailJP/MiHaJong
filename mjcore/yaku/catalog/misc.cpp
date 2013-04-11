@@ -45,7 +45,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					return allgrean(analysis) && (analysis->TileCount[GreenDragon] > 0);
 				}
 			));
-		else if (chkGameType(&GameStat, SanmaS))
+		else if (GameStat.chkGameType(SanmaS))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("óŒàÍêF"), yaku::yakuCalculator::Yaku::yval_yakuman,
 				_T("ç¨àÍêF"), _T("ê¥àÍêF"), _T("íÉàÍêF"), _T("ífçgòa"), _T("ê¥ífçg"),
@@ -59,7 +59,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			));
 		if (RuleData::chkRule("dragonless_all_green", "double_yakuman")) // ·¢Ç»ÇµÇ™É_ÉuÉãññûÇ…Ç»ÇÈÉãÅ[Éã
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				chkGameType(&GameStat, SanmaS) ? _T("ê¥óŒàÍêF") : _T("óŒàÍêF"), yaku::yakuCalculator::Yaku::yval_double_yakuman,
+				GameStat.chkGameType(SanmaS) ? _T("ê¥óŒàÍêF") : _T("óŒàÍêF"), yaku::yakuCalculator::Yaku::yval_double_yakuman,
 				_T("ê¥àÍêF"), _T("íÉàÍêF"), _T("ífçgòa"), _T("ê¥ífçg"),
 				[allgrean](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return allgrean(analysis) && (analysis->TileCount[GreenDragon] == 0);
@@ -188,7 +188,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return chktiles(analysis, kezi, 5, kezi, 1, true) &&
 					(analysis->MianziDat[0].tile == BambooFive);
 			};
-		if (chkGameType(&GameStat, SanmaS))
+		if (GameStat.chkGameType(SanmaS))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("óŒàÍêFó÷"), get_yaku_han("ryuuiisohrin"),
 				_T("ê¥àÍêF"),
@@ -315,13 +315,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return chktiles(analysis, kezi, 8, kezi, 1, false);
 			};
 		if (RuleData::chkRule("no_red", "hon3han_chin6han") || RuleData::chkRule("no_red", "6han")) {
-			if (!chkGameType(&GameStat, SanmaS))
+			if (!GameStat.chkGameType(SanmaS))
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 					_T("ç¨ífçg"), yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
 					hontanhon
 				));
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				chkGameType(&GameStat, SanmaS) ? _T("ê¥ífçg") : _T("ífçgòa"), yaku::yakuCalculator::Yaku::yval_6han_kuisagari,
+				GameStat.chkGameType(SanmaS) ? _T("ê¥ífçg") : _T("ífçgòa"), yaku::yakuCalculator::Yaku::yval_6han_kuisagari,
 				_T("ç¨ífçg"),
 				chintanhon
 			));

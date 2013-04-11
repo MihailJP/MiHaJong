@@ -195,7 +195,7 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 		}
 		if (DiscardTileIndex.type == DiscardTileNum::Flower) {
 			EndType RoundEndType;
-			if (chkGameType(gameStat, SanmaX)) {
+			if (gameStat->chkGameType(SanmaX)) {
 				/* ƒKƒŠŽO–ƒƒ‹[ƒ‹‚Å–k•—”v‚ð”²‚¢‚½‚Æ‚«‚Ìˆ— */
 				/* ‚±‚ÌƒQ[ƒ€‚Å‚Í‚Ç‚ñ‚ÈŽè‚Å‚à(‘Žm‚â‘åŽlŠì‚Å‚È‚­‚Ä‚à‚¢‚¢)
 					”²‚«–k‚ðƒƒ“‚Å‚«‚éƒ‹[ƒ‹ */
@@ -363,7 +363,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		if (RoundEndType != Continuing) return RoundEndType;
 	}
 	/* ‹ãŽí‹ã”v‚ªéŒ¾‚³‚ê‚½ê‡ */
-	if ((!chkGameType(gameStat, SanmaS)) && (DiscardTileIndex.type == DiscardTileNum::Kyuushu)) {
+	if ((!gameStat->chkGameType(SanmaS)) && (DiscardTileIndex.type == DiscardTileNum::Kyuushu)) {
 		RoundEndType = procDahaiSubKyuushu(gameStat, DiscardTileIndex);
 		if (RoundEndType != Continuing) return RoundEndType;
 	}
@@ -373,7 +373,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		(DiscardTileIndex.type == DiscardTileNum::OpenRiichi))
 		haifu::haifurecmota(gameStat, DiscardTileIndex);
 	/* ‰Ô”v‚ð”²‚¢‚½ê‡‚Ìˆ— */
-	if (!chkGameType(gameStat, SanmaS)) {
+	if (!gameStat->chkGameType(SanmaS)) {
 		RoundEndType = procDahaiSubFlower(gameStat, DiscardTileIndex);
 		if (RoundEndType != Continuing) return RoundEndType;
 	}
@@ -396,10 +396,10 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 void tsumoproc(GameTable* const gameStat) {
 	/* ŽŸ‚ÌƒvƒŒƒCƒ„[‚ª”v‚ðŽ©–Ì‚é */
 	gameStat->TianHuFlag = false;
-	if (chkGameType(gameStat, SanmaT)) {
+	if (gameStat->chkGameType(SanmaT)) {
 		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % ACTUAL_PLAYERS;
 	} else {
-		if (chkGameType(gameStat, Sanma4) && (playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound) == sWest)) /* ŽllŽO–ƒ‚Ìê‡‚Í–k‰Æ‚ðƒXƒLƒbƒv */
+		if (gameStat->chkGameType(Sanma4) && (playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound) == sWest)) /* ŽllŽO–ƒ‚Ìê‡‚Í–k‰Æ‚ðƒXƒLƒbƒv */
 			gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % Players;
 		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % Players;
 	}

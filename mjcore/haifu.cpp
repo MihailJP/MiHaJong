@@ -44,8 +44,8 @@ haifu::HaifuStreams haifu::haifuP, haifu::HThaifuP, haifu::XhaifuP;
 
 /* 牌譜記録用の補助ルーチン */
 void haifu::tools::haifuskipX(PlayerID targetPlayer) {
-	if (chkGameType(&GameStat, SanmaT) && (targetPlayer == 3)) return; // 三麻で北家にあたる位置だったら帰る
-	if (chkGameType(&GameStat, Sanma4) && (playerwind(&GameStat, targetPlayer, GameStat.GameRound) == sNorth)) return; // 四人三麻で北家だったら帰る
+	if (GameStat.chkGameType(SanmaT) && (targetPlayer == 3)) return; // 三麻で北家にあたる位置だったら帰る
+	if (GameStat.chkGameType(Sanma4) && (playerwind(&GameStat, targetPlayer, GameStat.GameRound) == sNorth)) return; // 四人三麻で北家だったら帰る
 	checkCycle();
 	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << (int)targetPlayer << _T("\" />") << std::endl;
 }
@@ -292,10 +292,10 @@ __declspec(dllexport) void haifu::haifubufinit() {
 		_T("\t\t<title>") << headerTxt.str() << _T("</title>") << std::endl;
 	tools::haifuRecTime(_T("time-began"));
 	XhaifuBuffer << _T("\t\t<ruleset system=\"") <<
-		(chkGameType(&GameStat, Yonma) ? _T("richi") :
-		chkGameType(&GameStat, Sanma) ? _T("sanma") :
-		chkGameType(&GameStat, Sanma4) ? _T("sanma-4players") :
-		chkGameType(&GameStat, SanmaS) ? _T("sanma-numerals") : _T(""))
+		(GameStat.chkGameType(Yonma) ? _T("richi") :
+		GameStat.chkGameType(Sanma) ? _T("sanma") :
+		GameStat.chkGameType(Sanma4) ? _T("sanma-4players") :
+		GameStat.chkGameType(SanmaS) ? _T("sanma-numerals") : _T(""))
 		<< _T("\">") << std::endl;
 	RuleData::forEachRule([&](std::string key, std::string val) -> void {
 		XhaifuBuffer << _T("\t\t\t<rule key=\"") << CodeConv::EnsureTStr(key) << _T("\" val=\"") <<
@@ -543,7 +543,7 @@ void haifu::tools::checkCycle(bool reset) {
 		cycle = 1; turn = 0;
 		XhaifuBufferBody << _T("\t\t\t<cycle ord=\"1\">") << std::endl;
 	} else {
-		if ((++turn) >= (chkGameType(&GameStat, AllSanma) ? 3 : 4)) {
+		if ((++turn) >= (GameStat.chkGameType(AllSanma) ? 3 : 4)) {
 			++cycle; turn = 0;
 			XhaifuBufferBody << _T("\t\t\t</cycle>") << std::endl <<
 				_T("\t\t\t<cycle ord=\"") << cycle << _T("\">") << std::endl;
@@ -1066,7 +1066,7 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		PlayerID k = RelativePositionOf(i, OrigTurn % Players);
 		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << k << _T("\">") << std::endl;
-		if (chkGameType(gameStat, SanmaT))
+		if (gameStat->chkGameType(SanmaT))
 			if (((OrigTurn % Players) + i) >= ACTUAL_PLAYERS)
 				k = (k + 1) % Players;
 		// 副露面子を出力する
@@ -1076,7 +1076,7 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 		// 点棒状況を書き出す
 		hfScoreWriteOut(gameStat, k, (seatAbsolute)i);
 		// 色々書き出し
-		if ((!chkGameType(gameStat, Sanma4))||(i < 3))
+		if ((!gameStat->chkGameType(Sanma4))||(i < 3))
 			hfWriteOut(gameStat, k);
 		else haifuBuffer << std::endl;
 		XhaifuBufferBody << _T("\t\t\t</final-hand>") << std::endl;

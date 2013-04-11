@@ -120,7 +120,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 
 void GameTableScreen::GariReconst::Render() {
 	for (PlayerID i = 0; i < Players; ++i)
-		if (chkGameType(GameStatus::gameStat(), AllSanma))
+		if (GameStatus::gameStat()->chkGameType(AllSanma))
 			RenderNorth(i);
 		else
 			RenderFlower(i);

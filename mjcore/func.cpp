@@ -141,7 +141,7 @@ TileCode Wind2Tile(uint8_t wind) {
 
 /* Œ´“_(•Ô‚µ“_) */
 int BasePoint() {
-	if (chkGameType(&GameStat, SanmaT)) {
+	if (GameStat.chkGameType(SanmaT)) {
 		const char rulestat[6][16] = {
 			"35000pts_oka15", "40000pts_oka0", "45000pts_oka-15", "50000pts_oka-30", "25000pts_oka45", "30000pts_oka30",
 		};

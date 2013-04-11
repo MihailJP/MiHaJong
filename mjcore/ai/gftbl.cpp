@@ -199,7 +199,7 @@ int aiscript::table::functable::gametbl::luafunc::getflower(lua_State* const L) 
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	if (chkGameType(gameStat, Yonma)) { // Žl–ƒ‚Í‰Ô”v
+	if (gameStat->chkGameType(Yonma)) { // Žl–ƒ‚Í‰Ô”v
 		int k = 0;
 		if (gameStat->Player[player].FlowerFlag.Spring) ++k;
 		if (gameStat->Player[player].FlowerFlag.Summer) ++k;

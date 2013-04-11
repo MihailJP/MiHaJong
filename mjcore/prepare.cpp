@@ -21,7 +21,7 @@
 #define settile(TileCode, pos) {tilepos[TileCode] = pos; for (unsigned int i = 0; i < 4u; ++i) {gameStat->Deck[pos++].tile = TileCode;}}
 inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // ”v‚ð•À‚×‚é
 	unsigned int p = 0; // ”v‚ÌˆÊ’uID
-	if (chkGameType(gameStat, SanmaX)) {
+	if (gameStat->chkGameType(SanmaX)) {
 		settile(CharacterOne, p); // äÝŽq
 		settile(CharacterNine, p); // äÝŽq
 	} else {
@@ -32,7 +32,7 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 		settile((TileCode)(TileSuitCircles + k), p); // “›Žq
 	for (unsigned int k = 1u; k <= 9u; ++k)
 		settile((TileCode)(TileSuitBamboos + k), p); // õŽq
-	if (!chkGameType(gameStat, SanmaS)) {
+	if (!gameStat->chkGameType(SanmaS)) {
 		for (unsigned int k = 1u; k <= 7u; ++k)
 			settile((TileCode)(TileSuitHonors + k), p); // Žš”v
 		if (RuleData::chkRule("flower_tiles", "seasons") || RuleData::chkRule("flower_tiles", "8tiles")) {
@@ -72,7 +72,7 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Ôƒhƒ
 		}
 	}
 	// 5‚Ìƒhƒ‰‚Í“ÁŽê
-	if (chkGameType(gameStat, SanmaX)) { // ŽO–ƒ
+	if (gameStat->chkGameType(SanmaX)) { // ŽO–ƒ
 		if (RuleData::chkRule("red_five", "2tiles")) {
 			gameStat->Deck[tilepos[CircleFive]].red = AkaDora;
 			gameStat->Deck[tilepos[BambooFive]].red = AkaDora;
@@ -190,14 +190,14 @@ inline void DoraAdding(GameTable* const gameStat) {
 }
 
 __declspec(dllexport) void initdora(GameTable* const gameStat) { // ƒhƒ‰‚ÌÝ’è
-	if (chkGameType(gameStat, AllSanma))
+	if (gameStat->chkGameType(AllSanma))
 		gameStat->DoraPointer = 102 - gameStat->ExtraRinshan; // ƒhƒ‰•\Ž¦”v‚Ìƒ|ƒCƒ“ƒ^
 	else gameStat->DoraPointer = 130; // ƒhƒ‰•\Ž¦”v‚Ìƒ|ƒCƒ“ƒ^
 	if (RuleData::chkRuleApplied("nagatacho")) { // ‰i“c’¬ƒ‹[ƒ‹
 		nagatadora(BambooSeven); // Žµõ‚Íí‚Éƒhƒ‰
 		unsigned int dice = gameStat->Dice[0].Number + gameStat->Dice[1].Number;
 		if (dice <= 8) { // 2`8‚Í‚»‚Ì””v‚ªƒhƒ‰@ŽO–ƒ‚Å‚ÍäÝŽq‚ª‚È‚¢‚Ì‚Å•Êˆ—
-			if (!chkGameType(gameStat, SanmaX)) nagatadora(TileSuitCharacters + dice);
+			if (!gameStat->chkGameType(SanmaX)) nagatadora(TileSuitCharacters + dice);
 			nagatadora(TileSuitCircles + dice); nagatadora(TileSuitBamboos + dice);
 		} else if (dice == 9) { // 9‚Í‚»‚Ì‚Ü‚Ü9‚ªƒhƒ‰
 			nagatadora(CharacterNine); nagatadora(CircleNine); nagatadora(BambooNine);
@@ -526,7 +526,7 @@ namespace {
 	}
 	void tileshuffle(GameTable* const gameStat) {
 		shuffle(gameStat); unsigned tmpNumberOfTiles;
-		if (chkGameType(gameStat, AllSanma))
+		if (gameStat->chkGameType(AllSanma))
 			tmpNumberOfTiles = 108;
 		else if (RuleData::chkRule("flower_tiles", "no"))
 			tmpNumberOfTiles = 136;
@@ -582,19 +582,19 @@ namespace {
 		/* TODO vanish2@ */
 	}
 	void haipai(GameTable* const gameStat) { // ”z”v
-		for (int i = 0; i < (chkGameType(gameStat, AllSanma) ? 36 : 48); i++) { // ‚Q›ï‚¸‚Â‚ð‚R‰ñ
-			unsigned handIndex = i % 4 + (i / (chkGameType(gameStat, AllSanma) ? 12 : 16)) * 4;
+		for (int i = 0; i < (gameStat->chkGameType(AllSanma) ? 36 : 48); i++) { // ‚Q›ï‚¸‚Â‚ð‚R‰ñ
+			unsigned handIndex = i % 4 + (i / (gameStat->chkGameType(AllSanma) ? 12 : 16)) * 4;
 			PlayerID player;
-			if (chkGameType(gameStat, Sanma4))
+			if (gameStat->chkGameType(Sanma4))
 				player = ((i % 12 / 4) + gameStat->GameRound) % 4;
-			else if (chkGameType(gameStat, SanmaT))
+			else if (gameStat->chkGameType(SanmaT))
 				player = ((i % 12 / 4) + (gameStat->GameRound - (gameStat->GameRound / 4))) % 3;
 			else
 				player = ((i % 16 / 4) + gameStat->GameRound) % 4;
 			gameStat->Player[player].Hand[handIndex].tile = gameStat->Deck[gameStat->TilePointer].tile;
 			gameStat->Player[player].Hand[handIndex].red  = gameStat->Deck[gameStat->TilePointer].red;
 			++gameStat->TilePointer;
-			if ((i == (chkGameType(gameStat, AllSanma) ? 24 : 18)) && (gameStat->Honba > 0))
+			if ((i == (gameStat->chkGameType(AllSanma) ? 24 : 18)) && (gameStat->Honba > 0))
 				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneHonba);
 			if (i % 4 == 3) {
 				calcdoukasen(gameStat);
@@ -603,12 +603,12 @@ namespace {
 			}
 		}
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
-		for (int i = 0; i < (chkGameType(gameStat, AllSanma) ? 4 : 5); i++) { // ‚P–‡‚¸‚Â‚ð‚P‰ñAe‚Ìƒ`ƒ‡ƒ“ƒ`ƒ‡ƒ“
-			unsigned handIndex = i / (chkGameType(gameStat, AllSanma) ? 3 : 4) + 12;
+		for (int i = 0; i < (gameStat->chkGameType(AllSanma) ? 4 : 5); i++) { // ‚P–‡‚¸‚Â‚ð‚P‰ñAe‚Ìƒ`ƒ‡ƒ“ƒ`ƒ‡ƒ“
+			unsigned handIndex = i / (gameStat->chkGameType(AllSanma) ? 3 : 4) + 12;
 			PlayerID player;
-			if (chkGameType(gameStat, Sanma4))
+			if (gameStat->chkGameType(Sanma4))
 				player = (i % 3 + gameStat->GameRound) % 4;
-			else if (chkGameType(gameStat, SanmaT))
+			else if (gameStat->chkGameType(SanmaT))
 				player = (i + (gameStat->GameRound - (gameStat->GameRound / 4))) % 3;
 			else
 				player = (i + gameStat->GameRound) % 4;
