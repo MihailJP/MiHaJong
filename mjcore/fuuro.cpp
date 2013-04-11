@@ -406,7 +406,7 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 		gameStat->Player[kangPlayer].Tsumohai().red = gameStat->Deck[gameStat->RinshanPointer].red;
 		--gameStat->RinshanPointer;
 		sound::Play(sound::IDs::sndTsumo);
-		if (tilesLeft(gameStat) < 10)
+		if (gameStat->tilesLeft() < 10)
 			sound::Play(sound::IDs::sndCountdown);
 		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
 			/* žÈƒhƒ‰‚ð‚ß‚­‚é */
@@ -809,7 +809,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 	} else if (!gameStat->KangFlag.kangFlag) { // ”²‚«–k‚Å”v•ˆ‚ª‚¸‚ê‚é‚Ì‚ð—}Ž~
 		haifu::haifurecfurikomi(gameStat);
 	}
-	if (chkGameType(gameStat, AllSanma)) {
+	if (gameStat->chkGameType(AllSanma)) {
 		// “ñ‰Æ˜a‚Ì”»’è
 		if ((RonPlayers(gameStat) >= 2) && RuleData::chkRule("multiple_mahjong", "aborted"))
 			return TripleRon;
@@ -852,17 +852,17 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 	/* ‹h‚Æƒ|ƒ“‚ª“¯Žž‚É‹N‚±‚Á‚½ê‡Aƒ|ƒ“‚ð—Dæ‚·‚é */
 	if (declCount > 0) {
 		/* ƒ|ƒ“‚âžÈ‚ÌŽž‚Íƒcƒ‚‡‚ð”ò‚Î‚µ‚½‚Æ‚Ý‚È‚µ‚Ä”‚¦A–k‰Æ¨“Œ‰Æ‚ð‚Ü‚½‚¢‚¾ê‡‚ÍŽŸ‚Ì„–Ú‚Æ‚µ‚Äˆµ‚¤ */
-		if (playerwind(gameStat, gameStat->CurrentPlayer.Passive, gameStat->GameRound) < playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound))
+		if (gameStat->playerwind(gameStat->CurrentPlayer.Passive) < gameStat->playerwind(gameStat->CurrentPlayer.Active))
 			++gameStat->TurnRound;
 		gameStat->CurrentPlayer.Active = gameStat->CurrentPlayer.Passive;
 		return true;
-	} else if (!chkGameType(gameStat, AllSanma)) {
+	} else if (!gameStat->chkGameType(AllSanma)) {
 		/* ‹h‚Ìˆ— */
 		/* ŽOl‘Å‚¿‚Å‚Í‹h‚È‚µ */
 		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Active, sRight)].DeclarationFlag.Chi > 0) {
 			/* ƒ|ƒ“‚âžÈ‚ÌŽž‚Íƒcƒ‚‡‚ð”ò‚Î‚µ‚½‚Æ‚Ý‚È‚µ‚Ä”‚¦A–k‰Æ¨“Œ‰Æ‚ð‚Ü‚½‚¢‚¾ê‡‚ÍŽŸ‚Ì„–Ú‚Æ‚µ‚Äˆµ‚¤ */
 			gameStat->CurrentPlayer.Passive = RelativePositionOf(gameStat->CurrentPlayer.Active, sRight); // ‹h‚ª‚Å‚«‚é‚Ì‚Íã‰Æ‚ÌŽÌ”v‚Ì‚Ý
-			if (playerwind(gameStat, gameStat->CurrentPlayer.Passive, gameStat->GameRound) < playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound))
+			if (gameStat->playerwind(gameStat->CurrentPlayer.Passive) < gameStat->playerwind(gameStat->CurrentPlayer.Active))
 				++gameStat->TurnRound;
 			fuuroproc(gameStat, &roundEndType, DiscardTileIndex, FuuroChii);
 			gameStat->CurrentPlayer.Active = gameStat->CurrentPlayer.Passive;

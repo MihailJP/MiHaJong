@@ -125,13 +125,13 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 			Wind2Tile((uint8_t)(gameStat->GameRound / 4))) // ê•—”v
 			fu += 2;
 		if (analysis->MianziDat[0].tile ==
-			Wind2Tile(playerwind(gameStat, analysis->player, gameStat->GameRound))) // Ž©•—”v
+			Wind2Tile(gameStat->playerwind(analysis->player))) // Ž©•—”v
 			fu += 2;
 		if ((RuleData::chkRuleApplied("kaimenkaze")) && (analysis->MianziDat[0].tile == // ŠJ–å•—”v
-			Wind2Tile(playerwind(gameStat, gameStat->WaremePlayer, gameStat->GameRound))))
+			Wind2Tile(gameStat->playerwind(gameStat->WaremePlayer))))
 			fu += 2;
 		if ((RuleData::chkRuleApplied("urakaze")) && (analysis->MianziDat[0].tile == // — •—”v
-			Wind2Tile(playerwind(gameStat, analysis->player + 2, gameStat->GameRound))))
+			Wind2Tile(gameStat->playerwind(analysis->player + 2))))
 			fu += 2;
 		if ((!RuleData::chkRuleApplied("double_yaku_wind_pair")) && (fu > 22)) fu = 22; // ƒ_ƒu•—“ª‚ð2•„‚ÆŒ©‚È‚·ƒ‹[ƒ‹‚Ìê‡
 		break;
@@ -328,7 +328,7 @@ void yaku::yakuCalculator::countDora
 	}
 	/* ‰Ô”vEŽO–ƒ‚ÌƒKƒŠ */
 	if (RuleData::chkRuleApplied("flower_tiles")) {
-		if (chkGameType(gameStat, AllSanma)) {
+		if (gameStat->chkGameType(AllSanma)) {
 			north = gameStat->Player[targetPlayer].NorthFlag;
 			omote += north * (gameStat->DoraFlag.Omote[NorthWind] + 1);
 			if (uradoraEnabled) ura += north * gameStat->DoraFlag.Ura[NorthWind];

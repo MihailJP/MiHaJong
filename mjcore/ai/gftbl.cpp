@@ -145,7 +145,7 @@ int aiscript::table::functable::gametbl::luafunc::getcurrentdiscard(lua_State* c
 /* R”v‚Ìc‚è–‡” */
 int aiscript::table::functable::gametbl::luafunc::getdeckleft(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
-	lua_pushinteger(L, tilesLeft(getGameStatAddr(L)));
+	lua_pushinteger(L, getGameStatAddr(L)->tilesLeft());
 	return 1;
 }
 
@@ -199,7 +199,7 @@ int aiscript::table::functable::gametbl::luafunc::getflower(lua_State* const L) 
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	if (chkGameType(gameStat, Yonma)) { // l–ƒ‚Í‰Ô”v
+	if (gameStat->chkGameType(Yonma)) { // l–ƒ‚Í‰Ô”v
 		int k = 0;
 		if (gameStat->Player[player].FlowerFlag.Spring) ++k;
 		if (gameStat->Player[player].FlowerFlag.Summer) ++k;
@@ -240,7 +240,7 @@ int aiscript::table::functable::gametbl::luafunc::getjikaze(lua_State* const L) 
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
-	lua_pushinteger(L, (int)Wind2Tile((uint8_t)playerwind(gameStat, player, gameStat->GameRound)));
+	lua_pushinteger(L, (int)Wind2Tile((uint8_t)gameStat->playerwind(player)));
 	return 1;
 }
 
@@ -466,13 +466,13 @@ int aiscript::table::functable::gametbl::luafunc::getyakuhaiwind(lua_State* cons
 			Wind2Tile((uint8_t)(gameStat->GameRound / 4))) // ê•—”v
 			flag = true;
 		else if (windtiles[i] ==
-			Wind2Tile(playerwind(gameStat, player, gameStat->GameRound))) // ©•—”v
+			Wind2Tile(gameStat->playerwind(player))) // ©•—”v
 			flag = true;
 		else if ((RuleData::chkRuleApplied("kaimenkaze")) && (windtiles[i] == // ŠJ–å•—”v
-			Wind2Tile(playerwind(gameStat, gameStat->WaremePlayer, gameStat->GameRound))))
+			Wind2Tile(gameStat->playerwind(gameStat->WaremePlayer))))
 			flag = true;
 		else if ((RuleData::chkRuleApplied("urakaze")) && (windtiles[i] == // — •—”v
-			Wind2Tile(playerwind(gameStat, player + 2, gameStat->GameRound))))
+			Wind2Tile(gameStat->playerwind(player + 2))))
 			flag = true;
 		TableAdd(L, windname[i], flag); // Œ‹‰Ê‚ğŠi”[
 	}

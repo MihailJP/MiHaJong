@@ -143,10 +143,10 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 
 /* ‘ì‚ÌŽí•Ê */
 inline void aiscript::table::functable::gametype(lua_State* const L) {
-	if (chkGameType(&GameStat, Yonma)) lua_pushstring(L, "yonma");
-	else if (chkGameType(&GameStat, Sanma)) lua_pushstring(L, "sanma");
-	else if (chkGameType(&GameStat, Sanma4)) lua_pushstring(L, "sanma_with_four_players");
-	else if (chkGameType(&GameStat, SanmaS)) lua_pushstring(L, "sanma_without_honors");
+	if (GameStat.chkGameType(Yonma)) lua_pushstring(L, "yonma");
+	else if (GameStat.chkGameType(Sanma)) lua_pushstring(L, "sanma");
+	else if (GameStat.chkGameType(Sanma4)) lua_pushstring(L, "sanma_with_four_players");
+	else if (GameStat.chkGameType(SanmaS)) lua_pushstring(L, "sanma_without_honors");
 	else lua_pushnil(L);
 	lua_setfield(L, -2, "gametype");
 }

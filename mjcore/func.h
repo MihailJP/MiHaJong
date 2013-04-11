@@ -25,21 +25,6 @@ using mihajong_structs::PlayerRankList;
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
-/* サイコロの出目を取得 */
-extern "C" inline uint8_t diceSum(const GameTable* const gameStat) {
-	return (gameStat->Dice[0].Number + gameStat->Dice[1].Number);
-}
-
-/* プレイヤーの自風がどれか調べる */
-seatAbsolute inline playerwind(const GameTable* const gameStat, PlayerID player, int currentRound) {
-	if (chkGameType(gameStat, SanmaT))
-		return (seatAbsolute)((player + 24 - (currentRound - ( currentRound / 4))) % 3);
-	else return (seatAbsolute)((player + 32 - currentRound) % 4);
-}
-__declspec(dllexport) inline int playerwind(int player, int currentRound) {
-	return (int)playerwind(&GameStat, (PlayerID)player, (int)currentRound);
-}
-
 /* あるプレイヤーに対して指定したプレイヤーがどこ(下家、対面、上家)にいるか調べる */
 seatRelative inline playerRelative(PlayerID targetPlayer, PlayerID basePlayer) {
 	return (seatRelative)((Players + targetPlayer - basePlayer) % Players);
@@ -60,13 +45,6 @@ __declspec(dllexport) inline int RelativePositionOf(int targetPlayer, int relati
 __declspec(dllexport) inline int roundLoopRate() {
 	if (RuleData::chkRule("sudden_death_type", "continue_into_white")) return 28;
 	else return 16;
-}
-
-/* 王牌を除いた山牌の残り枚数 */
-__declspec(dllexport) inline int tilesLeft(const GameTable* const gameStat) {
-	return ((int)gameStat->RinshanPointer -
-		((int)gameStat->DeadTiles - 1) -
-		(int)gameStat->TilePointer);
 }
 
 /* 順位を計算する */

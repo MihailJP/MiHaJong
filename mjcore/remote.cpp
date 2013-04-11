@@ -28,7 +28,7 @@ void proc_abrupt_disconnect(GameTable* const gameStat, PlayerID player) {
 			o << _T("*** サーバーとの接続が切れました。");
 		else
 			o << _T("*** ") << EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
-			_T("(") << windName(playerwind(gameStat, player, gameStat->GameRound)) << _T(") の接続が切れました。");
+			_T("(") << windName(gameStat->playerwind(player)) << _T(") の接続が切れました。");
 		chat::appendchat(o.str().c_str());
 		chat::appendchat(_T("*** この局はツモ切り、次局からCPUが代走します。"));
 	}
@@ -93,7 +93,7 @@ DWORD WINAPI RemoteDahai::thread () {
 				((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == i + 2) ||
 				(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == i + 2) ||
 				(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == i + 2) ||
-				((!chkGameType(gameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == i + 2)))) {
+				((!gameStat->chkGameType(SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == i + 2)))) {
 					int stat = mihajong_socket::putc(i + 1, ReceivedMsg);
 					CodeConv::tostringstream o;
 					if (stat) {
@@ -193,7 +193,7 @@ void RemoteNaki::thread_server() {
 		if (((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag != i + 1) &&
 			(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag != i + 1) &&
 			(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag != i + 1) &&
-			((!chkGameType(gameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag != i + 1))))
+			((!gameStat->chkGameType(SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag != i + 1))))
 			Received[i] = true;
 	while (true) {
 		//chatrecv GameStat, GameEnv
@@ -208,7 +208,7 @@ void RemoteNaki::thread_server() {
 				}
 			}
 		}
-		if ((Received[0]) && (Received[1]) && (chkGameType(gameStat, SanmaT) || Received[2]))
+		if ((Received[0]) && (Received[1]) && (gameStat->chkGameType(SanmaT) || Received[2]))
 			break;
 		Sleep(0);
 	}

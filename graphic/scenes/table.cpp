@@ -81,10 +81,10 @@ void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PlayerID deck
 }
 
 void GameTableScreen::Reconstruct(const GameTable* gameStat) {
-	if (chkGameType(gameStat, Yonma)) {
+	if (gameStat->chkGameType(Yonma)) {
 		for (PlayerID i = 0; i < 4; i++)
 			ReconstructPlayer(gameStat, i, i);
-	} else if (chkGameType(gameStat, Sanma4)) {
+	} else if (gameStat->chkGameType(Sanma4)) {
 		const PlayerID tobePlayed[4][4] = {
 			{0, 1, 2, 3}, {3, 1, 2, 0}, {1, 3, 2, 0}, {1, 2, 3, 0},
 		};

@@ -26,7 +26,7 @@ static_assert(std::is_pod<Tile>::value, "Tile is not POD");
 
 const unsigned int Players = 4;
 #ifdef MJCORE_EXPORTS
-#define ACTUAL_PLAYERS (chkGameType(&GameStat, SanmaT) ? 3 : 4)
+#define ACTUAL_PLAYERS (GameStat.chkGameType(SanmaT) ? 3 : 4)
 #endif
 const unsigned int NumOfTilesInHand = 14;
 const unsigned int TsumohaiIndex = NumOfTilesInHand - 1;
@@ -232,6 +232,11 @@ static_assert(std::is_pod<PlayerTable>::value, "PlayerTable is not POD");
 
 // -------------------------------------------------------------------------
 
+enum seatAbsolute : uint8_t { sEast, sSouth, sWest, sNorth };
+enum seatRelative : uint8_t { sSelf, sRight, sOpposite, sLeft };
+
+// -------------------------------------------------------------------------
+
 template struct InfoByPlayer<PlayerTable>;
 typedef InfoByPlayer<PlayerTable> StatusByPlayer;
 typedef PlayerID Player_ID;
@@ -280,6 +285,25 @@ struct GameTable { // 卓の情報を格納する
 	      PlayerTable& statOfAgari  ()       {return Player[CurrentPlayer.Agari  ];} /* 和了ったプレイヤーの情報 (mutable) */
 	const PlayerTable& statOfMine   () const {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (immutable) */
 	      PlayerTable& statOfMine   ()       {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (mutable) */
+
+	bool chkGameType(GameTypeID gameType) const {return ((this->gameType) & gameType);}
+	uint8_t diceSum() { // サイコロの出目を取得
+		return Dice[0].Number + Dice[1].Number;
+	}
+
+	seatAbsolute playerwind(Player_ID player, int currentRound) const { // プレイヤーの自風がどれか調べる
+		if (chkGameType(SanmaT))
+			return (seatAbsolute)((player + 24 - (currentRound - ( currentRound / 4))) % 3);
+		else return (seatAbsolute)((player + 32 - currentRound) % 4);
+	}
+	seatAbsolute playerwind(Player_ID player) const { // プレイヤーの自風がどれか調べる
+		return playerwind(player, GameRound);
+	}
+
+	int tilesLeft() const { // 王牌を除いた山牌の残り枚数
+		return ((int)RinshanPointer - ((int)DeadTiles - 1) - (int)TilePointer);
+	}
+
 };
 static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 
@@ -287,12 +311,6 @@ static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 
 // 食い変え判定用の gameStat->AgariSpecialStat 番号
 const unsigned int agariKuikae = 999;
-
-// -------------------------------------------------------------------------
-
-inline bool chkGameType(const GameTable* const gameStat, GameTypeID gameType) {
-	return ((gameStat->gameType) & gameType);
-}
 
 // -------------------------------------------------------------------------
 

@@ -127,9 +127,9 @@ void startgame(GameTypeID gameType) {
 	start:
 		std::string serverAddr;
 		const unsigned short gamePort =
-			chkGameType(gameStat, Sanma) ? 50010 :
-			chkGameType(gameStat, Sanma4) ? 50030 :
-			chkGameType(gameStat, SanmaS) ? 50060 : 50000;
+			gameStat->chkGameType(Sanma) ? 50010 :
+			gameStat->chkGameType(Sanma4) ? 50030 :
+			gameStat->chkGameType(SanmaS) ? 50060 : 50000;
 		switch (titlescreen()) { // ƒ^ƒCƒgƒ‹‰æ–Ê
 		case 1:
 			EnvTable::Instantiate()->PlayerDat[0].PlayerName =

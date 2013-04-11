@@ -38,7 +38,7 @@ RankVal* RankVal::Instantiate() {
 int RankVal::getRankVal(const GameTable* gameStat, const std::string& ruletag, unsigned playersAboveBase, unsigned rank) const {
 	using namespace CodeConv;
 	const std::string ruleTagVal =
-		std::string(chkGameType(gameStat, SanmaT) ? "T:" : "Q:") + ruletag;
+		std::string(gameStat->chkGameType(SanmaT) ? "T:" : "Q:") + ruletag;
 	if (rankValueMap.find(ruleTagVal) == rankValueMap.end()) { /* Index error */
 		tstring msg =
 			tstring(_T("getRankVal: ‘Î‰‚µ‚Ä‚¢‚È‚¢ƒ‹[ƒ‹ƒ^ƒO‚Å‚· [")) +

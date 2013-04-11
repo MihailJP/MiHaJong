@@ -174,7 +174,7 @@ void TableProtoScene::ScoreBoard::Render() {
 	RECT rect = {0, 0, PanelWidth, PanelHeight};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos, (int)ypos,
 		PanelWidth, PanelHeight, 0xffffffff, &rect, 0, 0, &myMatrix);
-	if ((playerID() >= 0) && (playerID() < (chkGameType(GameStatus::gameStat(), SanmaT) ? 3 : 4))) {
+	if ((playerID() >= 0) && (playerID() < (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4))) {
 		renderWind();
 		renderRank();
 		renderScore();
@@ -184,8 +184,8 @@ void TableProtoScene::ScoreBoard::Render() {
 
 void TableProtoScene::ScoreBoard::renderWind() {
 	if ((myTimer.currTime() % 1000000 >= 500000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return; // ツモ番の時は表示を点滅させる
-	const seatAbsolute wind = utils::playerwind(GameStatus::gameStat(), playerID(), GameStatus::gameStat()->GameRound);
-	if (chkGameType(GameStatus::gameStat(), Sanma4) && (wind == sNorth)) return; // 四人三麻の時の抜け番は何も表示しないようにする
+	const seatAbsolute wind = GameStatus::gameStat()->playerwind(playerID());
+	if (GameStatus::gameStat()->chkGameType(Sanma4) && (wind == sNorth)) return; // 四人三麻の時の抜け番は何も表示しないようにする
 	RECT rect = {
 		WindCharX + WindCharWidth * ((int)wind    ), WindCharY,
 		WindCharX + WindCharWidth * ((int)wind + 1), WindCharY + WindCharHeight
@@ -209,7 +209,7 @@ void TableProtoScene::ScoreBoard::renderRank() {
 	PlayerRankList rankList = utils::calcRank(GameStatus::gameStat());
 	const D3DCOLOR color =
 		(rankList[playerID()] == 1) ? ledColorRed : // トップは赤
-		(rankList[playerID()] == (chkGameType(GameStatus::gameStat(), SanmaT) ? 3 : 4) ? ledColorOrange : // ラスはオレンジ
+		(rankList[playerID()] == (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4) ? ledColorOrange : // ラスはオレンジ
 		ledColorGreen); // その他は緑で表示
 
 	renderNumeral(RankPosX, RankPosY, rankList[playerID()], color); // その他は緑で表示
@@ -276,7 +276,7 @@ void TableProtoScene::ScoreBoard::renderScore() {
 			color = ledColorRed;
 		else if (digits >= 400) // 4万以上は浮き
 			color = ledColorRed;
-		else if ((digits >= 300) && (!chkGameType(GameStatus::gameStat(), SanmaT))) // 三人打ち以外で3万以上は浮き
+		else if ((digits >= 300) && (!GameStatus::gameStat()->chkGameType(SanmaT))) // 三人打ち以外で3万以上は浮き
 			color = ledColorRed;
 		else if ((digits >= 300) && (// 30000点返しの浮きの場合
 			rules::chkRule("starting_point", "25000pts_oka15") ||

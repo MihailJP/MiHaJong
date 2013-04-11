@@ -113,7 +113,7 @@ MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
 			RuleData::getPreferenceInputSize, RuleData::getPreferenceRawStr, RuleData::setPreferenceFreeStr,
 			RuleData::chkPreference);
 		mihajong_graphic::utils::setfunc(
-			playerwind, playerRelative, RelativePositionOf, tilesLeft, calcRank, chkFuriten,
+			playerRelative, RelativePositionOf, calcRank, chkFuriten,
 			isTenpai, isRichiReqSatisfied, ShantenAnalyzer::calcShanten, chkdaopaiability,
 			yaku::yakuCalculator::chkShisanBuDa, yaku::yakuCalculator::chkShisiBuDa,
 			countTilesInHand, chkAnkanAbility, isPao, isPaoAgari, sound::util::bgmplay,

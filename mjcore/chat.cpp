@@ -74,7 +74,7 @@ void ChatThread::receive() {
 						if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
 							(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
 							(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
-							((!chkGameType(&GameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
+							((!GameStat.chkGameType(SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
 								if (buf[_tcslen(buf) - 1] != _T('\n'))
 #if defined(_MSC_VER)
 									_tcscat_s(buf, bufsize, _T("\r\n"));
@@ -103,7 +103,7 @@ CodeConv::tstring StreamLog::chatstr(const CodeConv::tstring& buf) {
 	int tmpPlayer = static_cast<int>(buf[0] - _T('0'));
 	if ((tmpPlayer >= 0) && (tmpPlayer <= ACTUAL_PLAYERS)) {
 		o << EnvTable::Instantiate()->PlayerDat[tmpPlayer].PlayerName <<
-			_T("(") << windName(playerwind(&GameStat, tmpPlayer, GameStat.GameRound)) << _T(") : ") <<
+			_T("(") << windName(GameStat.playerwind(tmpPlayer)) << _T(") : ") <<
 			CodeConv::tstring(buf.begin() + 1, buf.end());
 		if (buf[buf.length() - 1] != _T('\n'))
 			o <<
@@ -136,7 +136,7 @@ void ChatThread::send() {
 					if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
 						(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
 						(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
-						((!chkGameType(&GameStat, SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
+						((!GameStat.chkGameType(SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
 #if defined(_MSC_VER)
 							_tcscat_s(buf, bufsize, sendQueue.front().c_str());
 #else

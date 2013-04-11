@@ -195,7 +195,7 @@ namespace { /* 内部処理分割用 */
 		}
 		if (DiscardTileIndex.type == DiscardTileNum::Flower) {
 			EndType RoundEndType;
-			if (chkGameType(gameStat, SanmaX)) {
+			if (gameStat->chkGameType(SanmaX)) {
 				/* ガリ三麻ルールで北風牌を抜いたときの処理 */
 				/* このゲームではどんな手でも(国士や大四喜でなくてもいい)
 					抜き北をロンできるルール */
@@ -234,7 +234,7 @@ namespace { /* 内部処理分割用 */
 		return Continuing;
 	}
 	void procDahaiSubRiichi(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 立直をするときの処理 */
-		if (tilesLeft(gameStat) < ACTUAL_PLAYERS) {
+		if (gameStat->tilesLeft() < ACTUAL_PLAYERS) {
 			// 残り４枚未満の時はリーチ無効
 			DiscardTileIndex.type = DiscardTileNum::Normal;
 			warn(_T("山牌の残数要件を満たしていません。通常の打牌とみなします。"));
@@ -363,7 +363,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		if (RoundEndType != Continuing) return RoundEndType;
 	}
 	/* 九種九牌が宣言された場合 */
-	if ((!chkGameType(gameStat, SanmaS)) && (DiscardTileIndex.type == DiscardTileNum::Kyuushu)) {
+	if ((!gameStat->chkGameType(SanmaS)) && (DiscardTileIndex.type == DiscardTileNum::Kyuushu)) {
 		RoundEndType = procDahaiSubKyuushu(gameStat, DiscardTileIndex);
 		if (RoundEndType != Continuing) return RoundEndType;
 	}
@@ -373,7 +373,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		(DiscardTileIndex.type == DiscardTileNum::OpenRiichi))
 		haifu::haifurecmota(gameStat, DiscardTileIndex);
 	/* 花牌を抜いた場合の処理 */
-	if (!chkGameType(gameStat, SanmaS)) {
+	if (!gameStat->chkGameType(SanmaS)) {
 		RoundEndType = procDahaiSubFlower(gameStat, DiscardTileIndex);
 		if (RoundEndType != Continuing) return RoundEndType;
 	}
@@ -396,15 +396,15 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 void tsumoproc(GameTable* const gameStat) {
 	/* 次のプレイヤーが牌を自摸る */
 	gameStat->TianHuFlag = false;
-	if (chkGameType(gameStat, SanmaT)) {
+	if (gameStat->chkGameType(SanmaT)) {
 		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % ACTUAL_PLAYERS;
 	} else {
-		if (chkGameType(gameStat, Sanma4) && (playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound) == sWest)) /* 四人三麻の場合は北家をスキップ */
+		if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(gameStat->CurrentPlayer.Active) == sWest)) /* 四人三麻の場合は北家をスキップ */
 			gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % Players;
 		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % Players;
 	}
 	/* 東家の順番が回ってきたら次の巡目となる */
-	if (playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound) == sEast)
+	if (gameStat->playerwind(gameStat->CurrentPlayer.Active) == sEast)
 		++gameStat->TurnRound;
 	gameStat->statOfActive().Tsumohai().tile =
 		gameStat->Deck[gameStat->TilePointer].tile;
@@ -413,7 +413,7 @@ void tsumoproc(GameTable* const gameStat) {
 	gameStat->PreviousMeld.Discard = gameStat->PreviousMeld.Stepped = NoTile;
 	++gameStat->TilePointer;
 	sound::Play(sound::IDs::sndTsumo);
-	if (tilesLeft(gameStat) < 10)
+	if (gameStat->tilesLeft() < 10)
 		sound::Play(sound::IDs::sndCountdown);
 	return;
 }
