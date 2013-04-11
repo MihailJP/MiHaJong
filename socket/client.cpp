@@ -17,15 +17,30 @@ namespace client {
 	// ---------------------------------------------------------------------
 
 	DWORD WINAPI starter::preparationThread () { // 接続を待ち、接続処理をする
-		sockets[0] = new Sock(serveraddr, portnum);
+		try {
+			sockets[0] = new Sock(serveraddr, portnum);
+		}
+		catch (socket_error& e) { // Connection failed...
+			failed = true;
+			errordlg(e);
+			//MessageBox(nullptr, _T("サーバーに接続できません\r\nオフラインモードで開始します"), _T("接続失敗"), MB_ICONERROR | MB_TOPMOST | MB_OK);
+			playerName[0] = CodeConv::tstring(_T("[A]")) + myName;
+			playerName[1] = CodeConv::tstring(_T("[b]COM"));
+			playerName[2] = CodeConv::tstring(_T("[c]COM"));
+			playerName[3] = CodeConv::tstring(_T("[d]COM"));
+			finished = true;
+			return S_OK;
+		}
 		while (true) {
 			try {
-				if (!sockets[0]->connected()) Sleep(0);
+				if (!sockets[0]->connected()) {
+					Sleep(50); continue;
+				}
 			}
 			catch (socket_error& e) { // Connection failed...
 				failed = true;
 				errordlg(e);
-				MessageBox(nullptr, _T("サーバーに接続できません\r\nオフラインモードで開始します"), _T("接続失敗"), MB_ICONERROR | MB_TOPMOST | MB_OK);
+				//MessageBox(nullptr, _T("サーバーに接続できません\r\nオフラインモードで開始します"), _T("接続失敗"), MB_ICONERROR | MB_TOPMOST | MB_OK);
 				playerName[0] = CodeConv::tstring(_T("[A]")) + myName;
 				playerName[1] = CodeConv::tstring(_T("[b]COM"));
 				playerName[2] = CodeConv::tstring(_T("[c]COM"));
@@ -36,7 +51,7 @@ namespace client {
 			ClientNumber = sockets[0]->syncgetc() - 1;
 			sockets[0]->disconnect();
 			sockets[0]->connect(serveraddr, portnum + ClientNumber);
-			while (!sockets[0]->connected()) Sleep(0);
+			while (!sockets[0]->connected()) Sleep(50);
 			connected = true;
 			putString(0, myName);
 			while (sockets[0]->syncgetc() != protocol::Server_StartGame_Signature) Sleep(10); // 開始を待つ
@@ -124,8 +139,12 @@ namespace client {
 		sockets[0]->putc(SendingMsg);
 		// かつてはここでログ出力していた
 	}
-	DLL void send (int SendingMsg) { // サーバーにメッセージを送る [Transitional API]
+	DLL void send (int SendingMsg) try { // サーバーにメッセージを送る [Transitional API]
 		send((unsigned char)SendingMsg);
+	} catch (socket_error& err) {
+		CodeConv::tostringstream o;
+		o << _T("サーバーへの送信に失敗 エラーコード [") << err.error_code() << _T(']');
+		error(o.str().c_str());
 	}
 
 	// ---------------------------------------------------------------------
@@ -136,8 +155,12 @@ namespace client {
 			*ReceivedMsg = sockets[0]->getc();
 			*ClientReceived = 1;
 		}
-		catch (queue_empty) { // Falling back if empty...
+		catch (queue_empty&) { // Falling back if empty...
 			*ClientReceived = 0;
+			*ReceivedMsg = 1023;
+		}
+		catch (socket_error&) { // Sorry, you are disconnected.
+			*ClientReceived = 1;
 			*ReceivedMsg = 1023;
 		}
 		// かつてはここでログ出力していた

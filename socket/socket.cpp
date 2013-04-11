@@ -4,10 +4,10 @@ namespace mihajong_socket {
 
 WSADATA SocketInfo;
 HINSTANCE dllInst;
-Sock* sockets[numOfSockets] = {nullptr,};
+std::array<Sock*, numOfSockets> sockets = {nullptr,};
 
-void errordlg (socket_error& err) { // エラーダイアログ
-	MessageBox(nullptr, CodeConv::EnsureTStr(err.what()).c_str(), _T("Socket Error"), MB_ICONERROR | MB_TOPMOST | MB_OK);
+void errordlg (socket_error& err) { // エラーダイアログ【廃止】
+	//MessageBox(nullptr, CodeConv::EnsureTStr(err.what()).c_str(), _T("Socket Error"), MB_ICONERROR | MB_TOPMOST | MB_OK);
 }
 
 DLL int init () try { // ソケットを初期化する

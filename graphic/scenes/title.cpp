@@ -87,14 +87,8 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 			1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
 			0x33ffffff);
 	}
-	if (regions.size() <= ID) {
-		Region nullRegion = {0, 0, -1, -1};
-		regions.resize(ID + 1, Region(nullRegion));
-	}
-	regions[ID].Left = X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight);
-	regions[ID].Top = Y;
-	regions[ID].Right = (Geometry::BaseSize * 4 / 3) - X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight);
-	regions[ID].Bottom = Y + 71;
+	setRegion(ID, X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight), Y,
+		(Geometry::BaseSize * 4 / 3) - X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight), Y + 71);
 }
 
 void TitleScreen::menuLabels() {
@@ -135,12 +129,8 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // 決定
 		if (flag) {
-			if ((menuCursor == 1) || (menuCursor == 4) || (menuCursor == 5) || (menuCursor == 6)) {
-				sound::Play(sound::IDs::sndButton);
-				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
-			} else {
-				sound::Play(sound::IDs::sndCuohu); // 未実装
-			}
+			sound::Play(sound::IDs::sndButton);
+			ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
 		} else if (od->dwData) {
 			sound::Play(sound::IDs::sndClick);
 			myTimer.skipTo(180 * timePerFrame);
@@ -189,12 +179,8 @@ void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	case DIMOFS_BUTTON0: // マウスの左ボタン
 		if (od->dwData) {
 			if ((flag1) && (region != -1))  {
-				if ((menuCursor == 1) || (menuCursor == 4) || (menuCursor == 5) || (menuCursor == 6)) {
-					sound::Play(sound::IDs::sndButton);
-					ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
-				} else {
-					sound::Play(sound::IDs::sndCuohu); // 未実装
-				}
+				sound::Play(sound::IDs::sndButton);
+				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
 			} else if (!flag1) {
 				sound::Play(sound::IDs::sndClick);
 				myTimer.skipTo(180 * timePerFrame);

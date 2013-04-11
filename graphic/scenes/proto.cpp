@@ -10,4 +10,18 @@ int Scene::whichRegion(int X, int Y) {
 	return regionNum;
 }
 
+const Scene::Region Scene::NullRegion = {0, 0, -1, -1};
+
+void Scene::setRegion(unsigned regionID, int Left, int Top, int Right, int Bottom) {
+	if (regions.size() <= regionID)
+		regions.resize(regionID + 1, NullRegion);
+	regions[regionID].Left = Left;
+	regions[regionID].Top = Top;
+	regions[regionID].Right = Right;
+	regions[regionID].Bottom = Bottom;
+}
+void Scene::setRegion(unsigned regionID, const Region& region) {
+	setRegion(regionID, region.Left, region.Top, region.Right, region.Bottom);
+}
+
 }

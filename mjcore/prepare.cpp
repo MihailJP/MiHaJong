@@ -331,7 +331,7 @@ namespace {
 		for (PlayerID i = 0; i < Players; i++)
 			aiscript::initcall(makesandBox(gameStat, i), i);
 	}
-	void statsync(GameTable* const gameStat, std::uint8_t serverMsg, std::function<bool (GameTable* const, std::uint8_t)> f) {
+	void statsync(GameTable* const gameStat, std::uint8_t serverMsg, std::function<bool (GameTable* const, int)> f) {
 		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
 			mihajong_socket::server::send(serverMsg);
 		}
@@ -350,26 +350,26 @@ namespace {
 	void syncTableStat(GameTable* const gameStat) {
 		// 場風のデータを送信。とりあえず１６周目の北四局まで対応
 		statsync(gameStat, gameStat->LoopRound * roundLoopRate() + gameStat->GameRound,
-			[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+			[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 				gameStat->LoopRound = ReceivedMsg / roundLoopRate();
 				gameStat->GameRound = ReceivedMsg % roundLoopRate();
 				return true;
 			});
 		// 積み棒のデータを送信。とりあえず２５５本場まで対応
 		statsync(gameStat, gameStat->Honba,
-			[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+			[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 				gameStat->Honba = ReceivedMsg;
 				return true;
 			});
 		// 供託本数のデータを送信。とりあえず２５５０００点まで対応
 		statsync(gameStat, gameStat->Deposit,
-			[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+			[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 				gameStat->Deposit = ReceivedMsg;
 				return true;
 			});
 		// 八連荘の判定に使うデータを送信
 		statsync(gameStat, ((gameStat->LastAgariPlayer + 1) << 4) + gameStat->AgariChain,
-			[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+			[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 				gameStat->LastAgariPlayer = (ReceivedMsg + 1) / 16 - 1;
 				gameStat->AgariChain = (ReceivedMsg + 1) % 16 - 1;
 				return true;
@@ -379,20 +379,20 @@ namespace {
 			for (int i = 0; i < DIGIT_GROUPS; i++)
 				for (int j = 0; j < 4; j++)
 					statsync(gameStat, (gameStat->Player[player].PlayerScore.digitGroup[i] >> (j * 8)) & 0xff,
-						[player, i, j](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+						[player, i, j](GameTable* const gameStat, int ReceivedMsg) -> bool {
 							if (!j) gameStat->Player[player].PlayerScore.digitGroup[i] = 0;
 							gameStat->Player[player].PlayerScore.digitGroup[i] |= (int)ReceivedMsg << (j * 8);
 							return true;
 						});
 			statsync(gameStat, (gameStat->Player[player].PlayerScore < (LNum)0) ? 0x01 : 0x00,
-				[player](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+				[player](GameTable* const gameStat, int ReceivedMsg) -> bool {
 					if (ReceivedMsg) gameStat->Player[player].PlayerScore *= -1;
 					return true;
 				});
 		}
 		// 焼鳥のデータを送信
 		statsync(gameStat, (gameStat->Player[0].YakitoriFlag ? 8 : 0) + (gameStat->Player[1].YakitoriFlag ? 4 : 0) + (gameStat->Player[2].YakitoriFlag ? 2 : 0) + (gameStat->Player[3].YakitoriFlag ? 1 : 0),
-			[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+			[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 				gameStat->Player[0].YakitoriFlag = ReceivedMsg & 0x08;
 				gameStat->Player[1].YakitoriFlag = ReceivedMsg & 0x04;
 				gameStat->Player[2].YakitoriFlag = ReceivedMsg & 0x02;
@@ -403,13 +403,13 @@ namespace {
 		for (PlayerID player = 0; player < Players; player++)
 			/* Excess-128 */
 			statsync(gameStat, gameStat->Player[player].playerChip + 128,
-				[player](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+				[player](GameTable* const gameStat, int ReceivedMsg) -> bool {
 					gameStat->Player[player].playerChip = (int)ReceivedMsg - 128;
 					return true;
 				});
 		// 四馬路解禁フラグを送信
 		statsync(gameStat, (gameStat->Player[0].SumaroFlag ? 8 : 0) + (gameStat->Player[1].SumaroFlag ? 4 : 0) + (gameStat->Player[2].SumaroFlag ? 2 : 0) + (gameStat->Player[3].SumaroFlag ? 1 : 0),
-			[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+			[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 				gameStat->Player[0].SumaroFlag = ReceivedMsg & 0x08;
 				gameStat->Player[1].SumaroFlag = ReceivedMsg & 0x04;
 				gameStat->Player[2].SumaroFlag = ReceivedMsg & 0x02;
@@ -536,7 +536,7 @@ namespace {
 			tmpNumberOfTiles = 140;
 		for (unsigned i = 0; i < tmpNumberOfTiles; i++) // サーバーの場合、牌山のデータを送信
 			statsync(gameStat, gameStat->Deck[i].tile + (gameStat->Deck[i].red * TileNonflowerMax) + mihajong_socket::protocol::StartRound_Tile_Excess,
-				[i](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool { // クライアントの場合、データを受信
+				[i](GameTable* const gameStat, int ReceivedMsg) -> bool { // クライアントの場合、データを受信
 					if ( ((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) > TileNonflowerMax) &&
 						((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) < TileSuitFlowers) ) {
 							gameStat->Deck[i].tile = (TileCode)((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) % TileNonflowerMax);
@@ -568,7 +568,7 @@ namespace {
 		/* サイコロの出目を送信 */
 		for (unsigned i = 0; i < 2; i++)
 			statsync(gameStat, gameStat->Dice[i].Number + mihajong_socket::protocol::StartRound_Dice_Excess,
-				[i](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
+				[i](GameTable* const gameStat, int ReceivedMsg) -> bool {
 					gameStat->Dice[i].Number = ReceivedMsg - mihajong_socket::protocol::StartRound_Dice_Excess;
 					gameStat->Dice[i].Direction = RndNum::rnd(4);
 					return true;
@@ -631,26 +631,28 @@ namespace {
 	}
 }
 void tableinit(GameTable* const gameStat) {
+	for (int i = 0; i < Players; ++i) { // 代走させる処理
+		if (gameStat->Player[i].ConnectionLost) {
+			EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = 0;
+			gameStat->Player[i].ConnectionLost = false;
+		}
+	}
 	init_ai(gameStat);
 	/* TODO: ifaceinit */ // 押しボタン類のステータス初期化
 	inittable(gameStat);
 	// 局の開始で同期する。1.7系列まではこのとき落ち戻りが可能(落ち戻り機能は1.8で廃止されました)
 	statsync(gameStat, mihajong_socket::protocol::Server_StartRound_Signature,
-		[](GameTable* const gameStat, std::uint8_t ReceivedMsg) -> bool {
-			if (ReceivedMsg == mihajong_socket::protocol::Server_StartRound_Signature)
+		[](GameTable* const gameStat, int ReceivedMsg) -> bool {
+			if (ReceivedMsg == mihajong_socket::protocol::Server_StartRound_Signature) {
 				return true;
-			/* TODO: ここを移植する
-			if ((ClientReceived == 1)&&(ReceivedMsg == 1023)) {
-				chatappend "*** ホストとの接続が切れました。\n"
-				chatappend "*** この局はツモ切り、次局からCPUが代走します。\n"
-				repeat NUM_OF_PLAYERS
-					if (cnt != getPlayer(GameStat)) {
-						setDisconnectFlag GameStat, cnt, 1
-					}
-				loop
+			} else if (ReceivedMsg == 1023) { // 回線が切れてたら
+				EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
+				for (int i = 0; i < Players; ++i)
+					EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = 0;
+				return true;
+			} else {
+				return false;
 			}
-			*/
-			return false;
 		});
 	// 牌譜バッファの初期化
 	haifu::haifuinit();

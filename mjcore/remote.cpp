@@ -7,18 +7,27 @@
 #include "chat.h"
 #include <sstream>
 #include <iomanip>
+#include "../common/nmrules.h"
+#include "../graphic/graphic.h"
 
 namespace RemoteAction {
 
 /* 接続先の打牌 */
 void proc_abrupt_disconnect(GameTable* const gameStat, PlayerID player) {
-	{
+	if (player == -1) {
+		CodeConv::tostringstream o; o << _T("サーバーからの切断を検知しました。");
+		warn(o.str().c_str());
+	} else {
 		gameStat->Player[player].ConnectionLost = true;
 		CodeConv::tostringstream o; o << _T("プレイヤー [") << static_cast<int>(player) << _T("] の回線切断を検知しました。");
 		warn(o.str().c_str());
 	}
 	{
-		CodeConv::tostringstream o; o << _T("*** ") << EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
+		CodeConv::tostringstream o; 
+		if (player == -1)
+			o << _T("*** サーバーとの接続が切れました。");
+		else
+			o << _T("*** ") << EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
 			_T("(") << windName(playerwind(gameStat, player, gameStat->GameRound)) << _T(") の接続が切れました。");
 		chat::appendchat(o.str().c_str());
 		chat::appendchat(_T("*** この局はツモ切り、次局からCPUが代走します。"));
@@ -40,7 +49,20 @@ DWORD WINAPI RemoteDahai::thread () {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
 			if (ClientReceived) break;
-			Sleep(0); // ポーリング
+			Sleep(20); // ポーリング
+		}
+		// 受信失敗の時
+		if (ReceivedMsg == 1023) {
+			bool flag = false;
+			for (int i = 0; i < Players; i++) {
+				if ((EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 0) &&
+					(!gameStat->Player[i].ConnectionLost)) {
+						gameStat->Player[i].ConnectionLost = true;
+						flag = true;
+				}
+			}
+			if (flag) proc_abrupt_disconnect(gameStat, -1);
+			ReceivedMsg = mihajong_socket::protocol::Dahai_Remote_Disconnect;
 		}
 		if ((ReceivedMsg == mihajong_socket::protocol::Dahai_Remote_Disconnect) &&
 			(!gameStat->statOfActive().ConnectionLost))
@@ -54,7 +76,7 @@ DWORD WINAPI RemoteDahai::thread () {
 			if (ServerReceived == EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag) {
 				break;
 			}
-			Sleep(0);
+			Sleep(20);
 		}
 		// 受信失敗の時
 		if (ReceivedMsg == 1023) {
@@ -104,7 +126,7 @@ DWORD WINAPI RemoteDahai::thread () {
 		} else if (ReceivedMsg == Dahai_Tsumo) {
 			remoteDahai.type = DiscardTileNum::Agari; remoteDahai.id = 0;
 		} else if (ReceivedMsg == Dahai_Remote_Disconnect) {
-			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = NumOfTilesInHand - 1;
+			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = TsumohaiIndex;
 		}
 	}
 	finished = true;
@@ -112,7 +134,7 @@ DWORD WINAPI RemoteDahai::thread () {
 }
 DiscardTileNum remotedahai (GameTable* const gameStat) {
 	RemoteDahai* rDahai = new RemoteDahai(gameStat);
-	while (!rDahai->isFinished()) Sleep(1);
+	while (!rDahai->isFinished()) Sleep(50);
 	DiscardTileNum d = rDahai->get();
 	delete rDahai; rDahai = nullptr;
 	return d;
@@ -248,6 +270,101 @@ void remotenaki (GameTable* const gameStat) {
 	while (!rNaki->isFinished())
 		Sleep(1);
 	delete rNaki; rNaki = nullptr;
+}
+
+} /* namespace */
+
+namespace RemoteConnection {
+
+void startServer(std::string& serverAddr, unsigned short gamePort) {
+	mihajong_graphic::Transit(mihajong_graphic::sceneServerWaiting);
+
+	char RuleConf[RULE_LINES][RULE_IN_LINE + 4];
+	char* RuleConfPtr[RULE_LINES];
+	for (int i = 0; i < RULE_LINES; i++) RuleConfPtr[i] = RuleConf[i];
+
+	EnvTable::Instantiate()->GameMode = EnvTable::Server;
+	serverAddr = "";
+	RuleData::exportRule(RuleConfPtr);
+
+	const std::string nomen(RuleData::chkPreference((std::string)"name"));
+	const CodeConv::tstring Nomen(CodeConv::EnsureTStr(nomen));
+	mihajong_socket::server::start(Nomen.c_str(), gamePort, ACTUAL_PLAYERS, RuleConfPtr);
+
+	int numOfClientsPrev = 0; int numOfClients = 0;
+	while (true) {
+		numOfClients = mihajong_socket::server::chkCurrentConnection();
+		if (numOfClients != numOfClientsPrev) {
+			if (ACTUAL_PLAYERS == 3) {
+				if      (numOfClients == 1) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene1of3);
+				else if (numOfClients == 2) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene2of3);
+				else if (numOfClients == 3) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene3of3);
+				else                        mihajong_graphic::Subscene(mihajong_graphic::srvwSubsceneNone);
+			} else {
+				if      (numOfClients == 1) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene1of4);
+				else if (numOfClients == 2) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene2of4);
+				else if (numOfClients == 3) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene3of4);
+				else if (numOfClients == 4) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene4of4);
+				else                        mihajong_graphic::Subscene(mihajong_graphic::srvwSubsceneNone);
+			}
+			numOfClientsPrev = numOfClients;
+		}
+		if (mihajong_graphic::ui::WaitUIWithTimeout(50) != 0xffffffff)
+			mihajong_socket::server::doStart();
+		if (mihajong_socket::server::isStartingFinished()) break;
+	}
+	TCHAR playerName[4][256];
+	mihajong_socket::server::getPlayerNames(playerName[0], playerName[1], playerName[2], playerName[3], 256);
+	for (int i = 0; i < 4; ++i)
+		EnvTable::Instantiate()->PlayerDat[i].PlayerName = playerName[i];
+	if (numOfClients >= 2) EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag = 1;
+	if (numOfClients >= 3) EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag = 1;
+	if (numOfClients >= 4) EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag = 1;
+	mihajong_socket::server::releaseobj();
+}
+
+void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short gamePort) {
+	mihajong_graphic::Transit(mihajong_graphic::sceneClientWaiting);
+	serverAddr = RuleData::chkPreference((std::string)"server");
+	EnvTable::Instantiate()->GameMode = EnvTable::Client;
+
+	const std::string nomen(RuleData::chkPreference((std::string)"name"));
+	const CodeConv::tstring Nomen(CodeConv::EnsureTStr(nomen));
+
+	mihajong_graphic::Subscene(mihajong_graphic::cliwSubsceneConnecting);
+	mihajong_socket::client::start(Nomen.c_str(), serverAddr.c_str(), gamePort, ACTUAL_PLAYERS);
+
+	while (true) {
+		if (mihajong_socket::client::isConnectionSucceded()) {
+			mihajong_graphic::Subscene(mihajong_graphic::cliwSubsceneWaiting);
+			break;
+		} else if (mihajong_socket::client::isConnectionFailed()) {
+			mihajong_graphic::Transit(mihajong_graphic::sceneWaitingError);
+			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
+			Sleep(1500);
+			return;
+		}
+		Sleep(50);
+	}
+	while (!mihajong_socket::client::isStartingFinished())
+		Sleep(50);
+	ClientNumber = mihajong_socket::client::getClientNumber();
+
+	TCHAR playerName[4][256];
+	mihajong_socket::client::getPlayerNames(playerName[0], playerName[1], playerName[2], playerName[3], 256);
+	for (int i = 0; i < 4; ++i)
+		EnvTable::Instantiate()->PlayerDat[i].PlayerName = playerName[i];
+	for (int i = 0; i < ACTUAL_PLAYERS; ++i)
+		if (ClientNumber != i) EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = 1;
+
+	char RuleConf[RULE_LINES][RULE_IN_LINE + 4];
+	char* RuleConfPtr[RULE_LINES];
+	for (int i = 0; i < RULE_LINES; i++) RuleConfPtr[i] = RuleConf[i];
+	mihajong_socket::client::checkout_rules(RuleConfPtr);
+	RuleData::storeRule(const_cast<const char**>(RuleConfPtr) /* constを付けてないと何故かエラーに…… */);
+
+	mihajong_socket::client::releaseobj();
+	return;
 }
 
 } /* namespace */

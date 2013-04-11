@@ -9,3 +9,4 @@
 #include "table.h"
 #include "ruleconf.h"
 #include "setting.h"
+#include "waiting.h"

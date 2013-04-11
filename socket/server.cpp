@@ -17,11 +17,11 @@ namespace server {
 			tmpchr[0] = sockets[socketID]->syncgetc();
 			tmpString += std::string(reinterpret_cast<char*>(tmpchr));
 		}
-		return CodeConv::EnsureTStr(tmpString);
+		return CodeConv::DecodeStr(tmpString);
 	}
 	void putString(unsigned int socketID, const CodeConv::tstring& sendingStr) { // 文字列を送信
 		sockets[socketID]->putc(protocol::StartString_Signature);
-		unsigned strsz = sendingStr.length();
+		unsigned strsz = CodeConv::EncodeStr(sendingStr).length();
 		if (strsz > UCHAR_MAX) {
 			sockets[socketID]->putc(UCHAR_MAX);
 			sockets[socketID]->puts(sendingStr.substr(0, UCHAR_MAX));
@@ -127,8 +127,16 @@ namespace server {
 	// ---------------------------------------------------------------------
 
 	DLL void send (unsigned char SendingMsg) { // サーバーからの送信
-		for (unsigned int i = 1; i < NumberOfPlayers; ++i)
-			if (sockets[i]&&(sockets[i]->connected())) sockets[i]->putc(SendingMsg);
+		for (unsigned int i = 1; i < NumberOfPlayers; ++i) {
+			try {
+				if (sockets[i]&&(sockets[i]->connected()))
+					sockets[i]->putc(SendingMsg);
+			} catch (socket_error& err) {
+				CodeConv::tostringstream o;
+				o << _T("クライアント [") << i << _T("] への送信に失敗 エラーコード [") << err.error_code() << _T(']');
+				error(o.str().c_str());
+			}
+		}
 	}
 	void sendstr (const CodeConv::tstring& sendingStr) { // サーバーからの文字列送信
 		for (unsigned int i = 1; i < NumberOfPlayers; ++i)
@@ -158,6 +166,11 @@ namespace server {
 					*ServerReceived = 0;
 					*ReceivedMsg = 1023;
 					finished = false;
+				}
+				catch (socket_error) { // Sorry, you are disconnected.
+					*ServerReceived = ServerCheckRotation[i];
+					*ReceivedMsg = 1023;
+					finished = true;
 				}
 				// かつてはここでログを送っていた
 			}

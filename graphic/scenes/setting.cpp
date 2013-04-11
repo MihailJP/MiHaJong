@@ -40,12 +40,9 @@ void PreferenceConfigScene::itemText(unsigned prmID, const CodeConv::tstring& pr
 	if (!rules::getPreferenceInputSize(ItemNum))
 		myTextRenderer->NewText(prmID * 3 + 2, prmContent,
 		(xPos + 162) * WidthRate, yPos, 1.0, WidthRate, menuColor | baseColor);
-	if (regions.size() <= prmID) {
-		Region nullRegion = {0, 0, -1, -1};
-		regions.resize(prmID + 1, Region(nullRegion));
-	}
-	regions[prmID].Left = (prmID / 20 * 720 + 50); regions[prmID].Top = 135 + (prmID % 20) * 40;
-	regions[prmID].Right = (prmID / 20 * 720 + 670); regions[prmID].Bottom = regions[prmID].Top + 35;
+	setRegion(prmID,
+		(prmID / 20 * 720 + 50) , 135 + (prmID % 20) * 40,
+		(prmID / 20 * 720 + 670), 135 + (prmID % 20) * 40 + 35);
 	if (rules::getPreferenceInputSize(ItemNum)) { // エディットボックス
 		if (editBoxes[prmID] == nullptr) {
 			editBoxes[prmID] = new EditBox(caller->getHWnd(), caller->getDevice(),

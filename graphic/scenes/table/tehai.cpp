@@ -36,17 +36,12 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, Playe
 			}
 			return tileColor.rgbaAsOneValue;
 		}, [this](const int* x, const int* y, int i) -> void {
-			const Region nullRegion = {0, 0, -1, -1};
-			if (caller->regions.size() <= i) caller->regions.resize(i + 1, nullRegion);
-			if ((x != nullptr) && (y != nullptr)) {
-				const Region newRegion = {
-					(*x) - ShowTile::VertTileWidth / 2, (*y) - ShowTile::VertTileHeight / 2,
-					(*x) + ShowTile::VertTileWidth / 2, (*y) + ShowTile::VertTileHeight / 2,
-				};
-				caller->regions[i] = newRegion;
-			} else {
-				caller->regions[i] = nullRegion;
-			}
+			if ((x != nullptr) && (y != nullptr))
+				caller->setRegion(i,
+				(*x) - ShowTile::VertTileWidth / 2, (*y) - ShowTile::VertTileHeight / 2,
+				(*x) + ShowTile::VertTileWidth / 2, (*y) + ShowTile::VertTileHeight / 2);
+			else
+				caller->setRegion(i, NullRegion);
 		});
 }
 

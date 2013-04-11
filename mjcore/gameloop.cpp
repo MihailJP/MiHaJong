@@ -13,6 +13,7 @@
 #include "../graphic/graphic.h"
 #include "result.h"
 #include "ruletbl.h"
+#include "remote.h"
 
 /* 半荘の進行 */
 EndType doTableTurn(GameTable* const gameStat) {
@@ -123,7 +124,12 @@ void startgame(GameTypeID gameType) {
 		RuleData::applyPreference(); // 環境設定を反映
 		sound::Play(sound::IDs::musTitle); // タイトル曲を流す
 		unsigned ClientNumber = 0u;
-		start:
+	start:
+		std::string serverAddr;
+		const unsigned short gamePort =
+			chkGameType(gameStat, Sanma) ? 50010 :
+			chkGameType(gameStat, Sanma4) ? 50030 :
+			chkGameType(gameStat, SanmaS) ? 50060 : 50000;
 		switch (titlescreen()) { // タイトル画面
 		case 1:
 			EnvTable::Instantiate()->PlayerDat[0].PlayerName =
@@ -131,6 +137,15 @@ void startgame(GameTypeID gameType) {
 			EnvTable::Instantiate()->PlayerDat[1].PlayerName = _T("[b]COM1");
 			EnvTable::Instantiate()->PlayerDat[2].PlayerName = _T("[c]COM2");
 			EnvTable::Instantiate()->PlayerDat[3].PlayerName = _T("[d]COM3");
+			serverAddr = "";
+			break;
+		case 2:
+			RemoteConnection::startServer(serverAddr, gamePort);
+			break;
+		case 3:
+			RemoteConnection::startClient(serverAddr, ClientNumber, gamePort);
+			if (EnvTable::Instantiate()->GameMode == EnvTable::Standalone)
+				goto start; // 接続失敗の時は戻る
 			break;
 		case 4:
 			mihajong_graphic::Transit(mihajong_graphic::sceneConfig);
@@ -145,7 +160,7 @@ void startgame(GameTypeID gameType) {
 			return;
 		}
 		auto PositionArray = SeatShuffler::shuffle(ClientNumber); // 親決めの処理
-		gameinit(&GameStat, gameType, ""/* TODO: 通信対戦の時は接続先サーバーIPにすること */, PositionArray, ClientNumber); // 半荘の初期化処理
+		gameinit(&GameStat, gameType, serverAddr, PositionArray, ClientNumber); // 半荘の初期化処理
 
 		/* 半荘の進行 */
 		bool endFlag = false; int OrigTurn = 0, OrigHonba = 0;

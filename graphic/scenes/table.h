@@ -5,6 +5,7 @@
 #include <tuple>
 #include <functional>
 #include "../widgets/logwnd.h"
+#include "../widgets/editbox.h"
 #include "tablesub/tblsubs.h"
 #include "../text.h"
 #include "../../common/mutex.h"
@@ -21,6 +22,8 @@ protected:
 	LPDIRECT3DTEXTURE9 tBorder; // 卓の枠
 	LPDIRECT3DTEXTURE9 tBaize; // 羅紗地
 	logwnd::LogWindow* logWindow; // ログウィンドウ
+	EditBox* chatInput; // チャット入力欄
+	static const unsigned ChatInputRegion = 99;
 	TextRenderer* myTextRenderer; // 文字表示
 protected:
 	TableSubscene* mySubScene; // サブシーンオブジェクト
@@ -69,7 +72,9 @@ public:
 	GameTableScreen(ScreenManipulator* const manipulator);
 	~GameTableScreen();
 	void Render();
+	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
+	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 private:
 	void checkTimeout();

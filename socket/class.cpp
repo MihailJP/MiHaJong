@@ -1,4 +1,5 @@
 #include "class.h"
+#include <ctime>
 
 uint32_t mihajong_socket::Sock::addr2var(const std::string& address) { // ƒAƒhƒŒƒX‚ğæ“¾
 	uint32_t addr = inet_addr(address.c_str()); // ‚Ü‚¸‚Í xxx.xxx.xxx.xxx Œ`®‚Å‚ ‚é‚Æ‰¼’è‚·‚é
@@ -223,7 +224,7 @@ void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
 mihajong_socket::Sock::network_thread::network_thread(Sock* caller) {
 	myCaller = caller;
 	errtype = errNone; errcode = 0;
-	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = false;
+	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting = false;
 }
 
 mihajong_socket::Sock::network_thread::~network_thread() {
@@ -239,22 +240,22 @@ void mihajong_socket::Sock::network_thread::chkError () { // ƒGƒ‰[‚ğƒ`ƒFƒbƒN‚µ
 	case errNone: // ƒGƒ‰[‚È‚µ
 		break;
 	case errListen: // listen¸”s
-		o << "listen‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
+		o << _T("listen‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [") << errcode << _T(']'); error(o.str().c_str());
 		throw listen_failure(errcode);
 	case errAccept: // accept¸”s
-		o << "Ú‘±ó‚¯“ü‚ê‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
+		o << _T("Ú‘±ó‚¯“ü‚ê‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [") << errcode << _T(']'); error(o.str().c_str());
 		throw accept_failure(errcode);
 	case errConnection: // Ú‘±¸”s
-		o << "Ú‘±‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
+		o << _T("Ú‘±‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [") << errcode << _T(']'); error(o.str().c_str());
 		throw connection_failure(errcode);
 	case errRecv: // óM¸”s
-		o << "óM‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
+		o << _T("óM‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [") << errcode << _T(']'); error(o.str().c_str());
 		throw recv_error(errcode);
 	case errSend: // ‘—M¸”s
-		o << "‘—M‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
+		o << _T("‘—M‚ÌƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [") << errcode << _T(']'); error(o.str().c_str());
 		throw send_error(errcode);
 	default: // ‚Ù‚©‚ÌƒGƒ‰[
-		o << "ƒ\ƒPƒbƒgƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [" << errcode << "]"; error(o.str().c_str());
+		o << _T("ƒ\ƒPƒbƒgƒGƒ‰[‚Å‚·BƒGƒ‰[ƒR[ƒh [") << errcode << _T(']'); error(o.str().c_str());
 		throw socket_error(errcode);
 	}
 }
@@ -265,7 +266,7 @@ int mihajong_socket::Sock::network_thread::reader() { // óMˆ—
 	DWORD recvsz; DWORD flag = 0;
 	if (WSARecv(*mySock, &buffer, 1, &recvsz, &flag, nullptr, nullptr) == 0) { // óM‚·‚é
 		CodeConv::tostringstream o;
-		o << "ƒf[ƒ^óM ƒ|[ƒg [" << myCaller->portnum << "] ƒXƒgƒŠ[ƒ€ [";
+		o << _T("ƒf[ƒ^óM ƒ|[ƒg [") << myCaller->portnum << _T("] ƒXƒgƒŠ[ƒ€ [");
 		myRecvQueueCS.syncDo<void>([this, recvsz, &buf, &o]() -> void { // óM—pƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾
 			unsigned count = 0;
 			for (unsigned int i = 0; i < recvsz; ++i) {
@@ -323,7 +324,12 @@ int mihajong_socket::Sock::network_thread::writer() { // ‘—Mˆ—
 
 DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // ƒXƒŒƒbƒh‚Ìˆ—
 	u_long arg = 1; ioctlsocket(*mySock, FIONBIO, &arg); // non-blocking ƒ‚[ƒh‚Éİ’è
-	if (int err = establishConnection()) return err; // Ú‘±
+	connecting = true;
+	if (int err = establishConnection()) { // Ú‘±
+		connecting = false;
+		return err;
+	}
+	connecting = false;
 	while ((!sender_closed) || (!receiver_closed)) { // I—¹‚·‚é‚Ü‚Å
 		int err = 0;
 		if ((!receiver_closed) && (err = reader())) return err; // “Ç‚İ‚İ
@@ -336,7 +342,7 @@ DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // ƒXƒŒƒbƒh
 			CodeConv::tostringstream o; o << _T("‘—Mƒ|[ƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“ ƒ|[ƒg[") << myCaller->portnum << _T("]"); debug(o.str().c_str());
 			shutdown(*mySock, SD_SEND); sender_closed = true; send_ended = false;
 		}
-		Sleep(0);
+		Sleep(20);
 	}
 	{CodeConv::tostringstream o; o << _T("‘—óMƒXƒŒƒbƒhƒ‹[ƒv‚ÌI—¹ ƒ|[ƒg[") << myCaller->portnum << _T("]"); debug(o.str().c_str());}
 	finished = true;
@@ -391,7 +397,8 @@ void mihajong_socket::Sock::network_thread::setsock (SOCKET* const socket) { // 
 
 void mihajong_socket::Sock::network_thread::wait_until_sent() { // ‘—MƒLƒ…[‚ª‹ó‚É‚È‚é‚Ü‚Å‘Ò‚Â
 	{
-		CodeConv::tostringstream o; o << "ƒ|[ƒg [" << myCaller->portnum << "] ‚Ì‘—Mƒf[ƒ^‚Í‚±‚±‚Ü‚Å‚ç‚µ‚¢A‘S•”‘—‚èI‚í‚é‚Ü‚Å‘Ò‚¿‚Ü‚·";
+		CodeConv::tostringstream o;
+		o << _T("ƒ|[ƒg [") << myCaller->portnum << _T("] ‚Ì‘—Mƒf[ƒ^‚Í‚±‚±‚Ü‚Å‚ç‚µ‚¢A‘S•”‘—‚èI‚í‚é‚Ü‚Å‘Ò‚¿‚Ü‚·");
 		debug(o.str().c_str());
 	}
 	while (true) { // ‘—M‚ªŠ®—¹‚·‚é‚Ü‚Å‘Ò‚Â
@@ -404,7 +411,7 @@ void mihajong_socket::Sock::network_thread::wait_until_sent() { // ‘—MƒLƒ…[‚ª‹
 		Sleep(500);
 	}
 	{
-		CodeConv::tostringstream o; o << "ƒ|[ƒg [" << myCaller->portnum << "] ‚Ì‘—M‚ÍI‚í‚Á‚½‚ñ‚¶‚á‚È‚¢‚©‚ÈH";
+		CodeConv::tostringstream o; o << _T("ƒ|[ƒg [") << myCaller->portnum << _T("] ‚Ì‘—M‚ÍI‚í‚Á‚½‚ñ‚¶‚á‚È‚¢‚©‚ÈH");
 		debug(o.str().c_str());
 	}
 }
@@ -412,8 +419,8 @@ void mihajong_socket::Sock::network_thread::wait_until_sent() { // ‘—MƒLƒ…[‚ª‹
 void mihajong_socket::Sock::network_thread::terminate () { // Ø’f‚·‚é
 	terminated = true; // ƒtƒ‰ƒO‚ğ—§‚Ä‚é
 	wait_until_sent(); // ‘—M‚ªŠ®—¹‚·‚é‚Ü‚Å‘Ò‚Â
-	while (!finished) Sleep(10); // ƒXƒŒƒbƒh‚ªI—¹‚·‚é‚Ü‚Å‘Ò‚Â
-	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = false; // ƒtƒ‰ƒO‚ÌŒãn––
+	while ((!finished) && (connected || connecting)) Sleep(10); // ƒXƒŒƒbƒh‚ªI—¹‚·‚é‚Ü‚Å‘Ò‚Â
+	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting =  false; // ƒtƒ‰ƒO‚ÌŒãn––
 	errtype = errNone; errcode = 0;
 }
 
@@ -421,12 +428,17 @@ void mihajong_socket::Sock::network_thread::terminate () { // Ø’f‚·‚é
 
 int mihajong_socket::Sock::client_thread::establishConnection() { // Ú‘±‚ğŠm—§‚·‚é
 	info(_T("ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±ˆ—‚ğŠJn‚µ‚Ü‚·"));
+	const time_t startTime(time(nullptr)); // ŠJn(•b’PˆÊ)
 	while (true) {
 		if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == SOCKET_ERROR) { // Ú‘±
 			errcode = WSAGetLastError();
 			if (errcode == WSAEISCONN) {
 				break; // ³í‚ÉÚ‘±Š®—¹‚µ‚½‚Æ‚İ‚È‚·
 			} else if ((errcode != WSAEWOULDBLOCK) && (errcode != WSAEALREADY)) {
+				errtype = errConnection; return -((int)errtype);
+			} else if (difftime(time(nullptr), startTime) >= 20) {
+				/* connect()‚Íƒ^ƒCƒ€ƒAƒEƒg‚µ‚Ä‚­‚ê‚È‚¢‚Ì‚Å©—Í‚Ìƒ^ƒCƒ€ƒAƒEƒg */
+				errcode = WSAETIMEDOUT; // 10060 Connection timed out
 				errtype = errConnection; return -((int)errtype);
 			}
 		} else break;

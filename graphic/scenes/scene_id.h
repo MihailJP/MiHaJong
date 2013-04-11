@@ -7,6 +7,9 @@ enum sceneID { // シーン番号
 	sceneTitle, // タイトル画面
 	sceneConfig, // コンフィグ画面
 	sceneSetting, // 環境設定画面
+	sceneServerWaiting, // サーバー待機画面
+	sceneClientWaiting, // クライアント待機画面
+	sceneWaitingError, // 接続失敗
 	sceneGameTable, // 卓の画面
 	sceneResult, // 結果画面
 };
@@ -44,6 +47,23 @@ enum TableSubsceneID : unsigned int { // 卓画面のサブシーン番号
 	tblSubscenePlayerChankan, // プレイヤーの副露選択用(槍槓)
 	tblSubsceneAgari, // 和了役表示画面
 	tblSubsceneAgariUradora, // 和了役表示画面(裏ドラあり)
+};
+
+enum ServerWaitingSubsceneID : unsigned int { // サーバー待機画面のサブシーン番号
+	srvwSubsceneNone, // 通常
+	srvwSubscene1of4, // 待機中の人数
+	srvwSubscene1of3, //      〃
+	srvwSubscene2of4, //      〃
+	srvwSubscene2of3, //      〃
+	srvwSubscene3of4, //      〃
+	srvwSubscene3of3, //      〃
+	srvwSubscene4of4, //      〃
+};
+
+enum ClientWaitingSubsceneID : unsigned int { // クライアント待機画面のサブシーン番号
+	cliwSubsceneNone, // 通常
+	cliwSubsceneConnecting, // 接続試行中
+	cliwSubsceneWaiting, // 待機中
 };
 
 }

@@ -21,6 +21,7 @@ isPao_type isPao = nullptr;
 isPaoAgari_type isPaoAgari = nullptr;
 bgmplay_type bgmplay = nullptr;
 getName_type getName = nullptr;
+sendchat_type sendchat = nullptr;
 
 EXPORT void setfunc(
 	playerwind_type ptr_playerwind,
@@ -40,7 +41,8 @@ EXPORT void setfunc(
 	isPao_type ptr_isPao,
 	isPaoAgari_type ptr_isPaoAgari,
 	bgmplay_type ptr_bgmplay,
-	getName_type ptr_getName)
+	getName_type ptr_getName,
+	sendchat_type ptr_sendchat)
 {
 	playerwind = ptr_playerwind;
 	playerRelative = ptr_playerRelative;
@@ -60,6 +62,7 @@ EXPORT void setfunc(
 	isPaoAgari = ptr_isPaoAgari;
 	bgmplay = ptr_bgmplay;
 	getName = ptr_getName;
+	sendchat = ptr_sendchat;
 }
 
 }

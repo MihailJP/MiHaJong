@@ -42,5 +42,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	
 	/* I—¹ˆ— */
 	TerminateGame();
+	ExitProcess(0);
 	return msg.wParam;
 }
