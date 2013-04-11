@@ -145,7 +145,7 @@ int aiscript::table::functable::gametbl::luafunc::getcurrentdiscard(lua_State* c
 /* R”v‚Ìc‚è–‡” */
 int aiscript::table::functable::gametbl::luafunc::getdeckleft(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
-	lua_pushinteger(L, tilesLeft(getGameStatAddr(L)));
+	lua_pushinteger(L, getGameStatAddr(L)->tilesLeft());
 	return 1;
 }
 

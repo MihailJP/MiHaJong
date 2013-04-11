@@ -299,6 +299,11 @@ struct GameTable { // ‘ì‚Ìî•ñ‚ğŠi”[‚·‚é
 	seatAbsolute playerwind(Player_ID player) const { // ƒvƒŒƒCƒ„[‚Ì©•—‚ª‚Ç‚ê‚©’²‚×‚é
 		return playerwind(player, GameRound);
 	}
+
+	int tilesLeft() const { // ‰¤”v‚ğœ‚¢‚½R”v‚Ìc‚è–‡”
+		return ((int)RinshanPointer - ((int)DeadTiles - 1) - (int)TilePointer);
+	}
+
 };
 static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 

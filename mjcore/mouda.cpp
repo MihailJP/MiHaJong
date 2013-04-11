@@ -234,7 +234,7 @@ namespace { /* 内部処理分割用 */
 		return Continuing;
 	}
 	void procDahaiSubRiichi(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 立直をするときの処理 */
-		if (tilesLeft(gameStat) < ACTUAL_PLAYERS) {
+		if (gameStat->tilesLeft() < ACTUAL_PLAYERS) {
 			// 残り４枚未満の時はリーチ無効
 			DiscardTileIndex.type = DiscardTileNum::Normal;
 			warn(_T("山牌の残数要件を満たしていません。通常の打牌とみなします。"));
@@ -413,7 +413,7 @@ void tsumoproc(GameTable* const gameStat) {
 	gameStat->PreviousMeld.Discard = gameStat->PreviousMeld.Stepped = NoTile;
 	++gameStat->TilePointer;
 	sound::Play(sound::IDs::sndTsumo);
-	if (tilesLeft(gameStat) < 10)
+	if (gameStat->tilesLeft() < 10)
 		sound::Play(sound::IDs::sndCountdown);
 	return;
 }

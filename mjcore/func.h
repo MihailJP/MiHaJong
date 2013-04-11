@@ -47,13 +47,6 @@ __declspec(dllexport) inline int roundLoopRate() {
 	else return 16;
 }
 
-/* ‰¤”v‚ğœ‚¢‚½R”v‚Ìc‚è–‡” */
-__declspec(dllexport) inline int tilesLeft(const GameTable* const gameStat) {
-	return ((int)gameStat->RinshanPointer -
-		((int)gameStat->DeadTiles - 1) -
-		(int)gameStat->TilePointer);
-}
-
 /* ‡ˆÊ‚ğŒvZ‚·‚é */
 PlayerRankList calcRank(const GameTable* const gameStat);
 __declspec(dllexport) void calcRank(int* Rank, const GameTable* const gameStat);

@@ -406,7 +406,7 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 		gameStat->Player[kangPlayer].Tsumohai().red = gameStat->Deck[gameStat->RinshanPointer].red;
 		--gameStat->RinshanPointer;
 		sound::Play(sound::IDs::sndTsumo);
-		if (tilesLeft(gameStat) < 10)
+		if (gameStat->tilesLeft() < 10)
 			sound::Play(sound::IDs::sndCountdown);
 		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
 			/* žÈƒhƒ‰‚ð‚ß‚­‚é */
