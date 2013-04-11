@@ -18,7 +18,7 @@
 ■ 動作環境
 
 	　Windows XP/Vista/7、Direct X 9 (June 2010) 以降
-	　HTML形式の牌譜を閲覧する場合は別途フォントのインストールが必要
+	　HTML形式、XML形式の牌譜を閲覧する場合は別途フォントのインストールが必要
 
 
 ■ インストールのしかた
@@ -54,13 +54,6 @@
 	http://www14.atwiki.jp/mihajong/
 	　また、最新の開発版はGitHubのリポジトリで公開されています。
 	https://github.com/MihailJP/MiHaJong/
-
-
-■ ベータ版の制限
-
-	・通信対局が未実装。
-	・チャットが未実装。
-	・終了した時、稀にMiHaJongのプロセスが残ることがある。
 
 
 ■ MihailJPの開発環境
