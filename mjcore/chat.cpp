@@ -103,7 +103,7 @@ CodeConv::tstring StreamLog::chatstr(const CodeConv::tstring& buf) {
 	int tmpPlayer = static_cast<int>(buf[0] - _T('0'));
 	if ((tmpPlayer >= 0) && (tmpPlayer <= ACTUAL_PLAYERS)) {
 		o << EnvTable::Instantiate()->PlayerDat[tmpPlayer].PlayerName <<
-			_T("(") << windName(playerwind(&GameStat, tmpPlayer, GameStat.GameRound)) << _T(") : ") <<
+			_T("(") << windName(GameStat.playerwind(tmpPlayer)) << _T(") : ") <<
 			CodeConv::tstring(buf.begin() + 1, buf.end());
 		if (buf[buf.length() - 1] != _T('\n'))
 			o <<

@@ -287,8 +287,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("‘ÎX˜a"), _T("¬˜V“ª"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (Wind2Tile(analysis->GameStat->GameRound / 4) != // ƒ_ƒu•—‚Å‚È‚­‚Ä
-					Wind2Tile((uint8_t)playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound))) &&
-					(analysis->DuiziCount[Wind2Tile((uint8_t)playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound))] >= 1) && // Ž©•—‚ª‚ ‚è
+					Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->player))) &&
+					(analysis->DuiziCount[Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->player))] >= 1) && // Ž©•—‚ª‚ ‚è
 					(analysis->DuiziCount[Wind2Tile(analysis->GameStat->GameRound / 4)] >= 1) && // ê•—‚ª‚ ‚è
 					(analysis->DuiziCount[CircleOne] >= 1) && (analysis->DuiziCount[BambooOne] >= 1) &&
 					(analysis->DuiziCount[WhiteDragon] >= 1);

@@ -97,7 +97,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 								(analysis->GameStat->CurrentPlayer.Furikomi == 0) && (analysis->player == 2)) || // 三麻の特例
 							((analysis->GameStat->chkGameType(Sanma4)) &&
 								(analysis->GameStat->CurrentPlayer.Furikomi == RelativePositionOf(analysis->player, sOpposite)) &&
-								(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) == sWest)) // 四人三麻の特例
+								(analysis->GameStat->playerwind(analysis->player) == sWest)) // 四人三麻の特例
 						));
 				}
 			));
@@ -130,7 +130,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		_T("門前清自摸和"),
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
-				(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) == sEast) && // 親である(東家として決め打ち……)
+				(analysis->GameStat->playerwind(analysis->player) == sEast) && // 親である(東家として決め打ち……)
 				(analysis->PlayerStat->FirstDrawFlag)); // 天和・地和フラグが立っている
 		}
 	));
@@ -140,7 +140,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		_T("門前清自摸和"),
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
-				(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) != sEast) && // 親である(東家として決め打ち……)
+				(analysis->GameStat->playerwind(analysis->player) != sEast) && // 親である(東家として決め打ち……)
 				(analysis->PlayerStat->FirstDrawFlag) && // 天和・地和フラグが立っている
 				(*analysis->TsumoAgariFlag)); // ツモアガリ
 		}
@@ -151,7 +151,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			_T("人和"), get_yaku_han("renhoh"), _T("門前清自摸和"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
-					(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) != sEast) && // 親である(東家として決め打ち……)
+					(analysis->GameStat->playerwind(analysis->player) != sEast) && // 親である(東家として決め打ち……)
 					(analysis->PlayerStat->FirstDrawFlag) && // 天和・地和フラグが立っている
 					(!*analysis->TsumoAgariFlag)); // ロンアガリ
 			}
@@ -305,7 +305,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
 					(analysis->GameStat->GameRound / 4 == 0) && // 東場
-					(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) == sEast) && // 東家
+					(analysis->GameStat->playerwind(analysis->player) == sEast) && // 東家
 					(analysis->KangziCount[EastWind] >= 1)); // 東の槓子がある
 			}
 		));
@@ -604,15 +604,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				switch (TileCode tc = analysis->TsumoHai->tile) {
 				case EastWind: case SouthWind: case WestWind: case NorthWind: // 風牌だった
 					yakuFlag = (!*analysis->TsumoAgariFlag); // 仮にフラグ設定
-					if (tc == Wind2Tile((uint8_t)playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound))) // 自風だった
+					if (tc == Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->player))) // 自風だった
 						yakuFlag = false;
 					if (tc == Wind2Tile(analysis->GameStat->GameRound / 4)) // 場風だった
 							yakuFlag = false;
 					if (RuleData::chkRuleApplied("kaimenkaze") &&
-						(tc == Wind2Tile((uint8_t)playerwind(analysis->GameStat, analysis->GameStat->WaremePlayer, analysis->GameStat->GameRound)))) // 開門風だった
+						(tc == Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer)))) // 開門風だった
 							yakuFlag = false;
 					if (RuleData::chkRuleApplied("urakaze") &&
-						(tc == Wind2Tile((uint8_t)playerwind(analysis->GameStat, RelativePositionOf(analysis->player, sOpposite), analysis->GameStat->GameRound)))) // 裏風だった
+						(tc == Wind2Tile((uint8_t)analysis->GameStat->playerwind(RelativePositionOf(analysis->player, sOpposite))))) // 裏風だった
 							yakuFlag = false;
 					break;
 				default: // 風牌じゃなかった

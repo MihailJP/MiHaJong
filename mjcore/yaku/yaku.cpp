@@ -125,13 +125,13 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 			Wind2Tile((uint8_t)(gameStat->GameRound / 4))) // 場風牌
 			fu += 2;
 		if (analysis->MianziDat[0].tile ==
-			Wind2Tile(playerwind(gameStat, analysis->player, gameStat->GameRound))) // 自風牌
+			Wind2Tile(gameStat->playerwind(analysis->player))) // 自風牌
 			fu += 2;
 		if ((RuleData::chkRuleApplied("kaimenkaze")) && (analysis->MianziDat[0].tile == // 開門風牌
-			Wind2Tile(playerwind(gameStat, gameStat->WaremePlayer, gameStat->GameRound))))
+			Wind2Tile(gameStat->playerwind(gameStat->WaremePlayer))))
 			fu += 2;
 		if ((RuleData::chkRuleApplied("urakaze")) && (analysis->MianziDat[0].tile == // 裏風牌
-			Wind2Tile(playerwind(gameStat, analysis->player + 2, gameStat->GameRound))))
+			Wind2Tile(gameStat->playerwind(analysis->player + 2))))
 			fu += 2;
 		if ((!RuleData::chkRuleApplied("double_yaku_wind_pair")) && (fu > 22)) fu = 22; // ダブ風雀頭を2符と見なすルールの場合
 		break;

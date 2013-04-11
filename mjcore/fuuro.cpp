@@ -852,7 +852,7 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 	/* ‹h‚Æƒ|ƒ“‚ª“¯Žž‚É‹N‚±‚Á‚½ê‡Aƒ|ƒ“‚ð—Dæ‚·‚é */
 	if (declCount > 0) {
 		/* ƒ|ƒ“‚âžÈ‚ÌŽž‚Íƒcƒ‚‡‚ð”ò‚Î‚µ‚½‚Æ‚Ý‚È‚µ‚Ä”‚¦A–k‰Æ¨“Œ‰Æ‚ð‚Ü‚½‚¢‚¾ê‡‚ÍŽŸ‚Ì„–Ú‚Æ‚µ‚Äˆµ‚¤ */
-		if (playerwind(gameStat, gameStat->CurrentPlayer.Passive, gameStat->GameRound) < playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound))
+		if (gameStat->playerwind(gameStat->CurrentPlayer.Passive) < gameStat->playerwind(gameStat->CurrentPlayer.Active))
 			++gameStat->TurnRound;
 		gameStat->CurrentPlayer.Active = gameStat->CurrentPlayer.Passive;
 		return true;
@@ -862,7 +862,7 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Active, sRight)].DeclarationFlag.Chi > 0) {
 			/* ƒ|ƒ“‚âžÈ‚ÌŽž‚Íƒcƒ‚‡‚ð”ò‚Î‚µ‚½‚Æ‚Ý‚È‚µ‚Ä”‚¦A–k‰Æ¨“Œ‰Æ‚ð‚Ü‚½‚¢‚¾ê‡‚ÍŽŸ‚Ì„–Ú‚Æ‚µ‚Äˆµ‚¤ */
 			gameStat->CurrentPlayer.Passive = RelativePositionOf(gameStat->CurrentPlayer.Active, sRight); // ‹h‚ª‚Å‚«‚é‚Ì‚Íã‰Æ‚ÌŽÌ”v‚Ì‚Ý
-			if (playerwind(gameStat, gameStat->CurrentPlayer.Passive, gameStat->GameRound) < playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound))
+			if (gameStat->playerwind(gameStat->CurrentPlayer.Passive) < gameStat->playerwind(gameStat->CurrentPlayer.Active))
 				++gameStat->TurnRound;
 			fuuroproc(gameStat, &roundEndType, DiscardTileIndex, FuuroChii);
 			gameStat->CurrentPlayer.Active = gameStat->CurrentPlayer.Passive;

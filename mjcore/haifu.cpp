@@ -45,7 +45,7 @@ haifu::HaifuStreams haifu::haifuP, haifu::HThaifuP, haifu::XhaifuP;
 /* 牌譜記録用の補助ルーチン */
 void haifu::tools::haifuskipX(PlayerID targetPlayer) {
 	if (GameStat.chkGameType(SanmaT) && (targetPlayer == 3)) return; // 三麻で北家にあたる位置だったら帰る
-	if (GameStat.chkGameType(Sanma4) && (playerwind(&GameStat, targetPlayer, GameStat.GameRound) == sNorth)) return; // 四人三麻で北家だったら帰る
+	if (GameStat.chkGameType(Sanma4) && (GameStat.playerwind(targetPlayer) == sNorth)) return; // 四人三麻で北家だったら帰る
 	checkCycle();
 	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << (int)targetPlayer << _T("\" />") << std::endl;
 }

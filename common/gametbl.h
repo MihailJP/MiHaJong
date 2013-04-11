@@ -232,6 +232,11 @@ static_assert(std::is_pod<PlayerTable>::value, "PlayerTable is not POD");
 
 // -------------------------------------------------------------------------
 
+enum seatAbsolute : uint8_t { sEast, sSouth, sWest, sNorth };
+enum seatRelative : uint8_t { sSelf, sRight, sOpposite, sLeft };
+
+// -------------------------------------------------------------------------
+
 template struct InfoByPlayer<PlayerTable>;
 typedef InfoByPlayer<PlayerTable> StatusByPlayer;
 typedef PlayerID Player_ID;
@@ -282,6 +287,15 @@ struct GameTable { // 卓の情報を格納する
 	      PlayerTable& statOfMine   ()       {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (mutable) */
 
 	bool chkGameType(GameTypeID gameType) const {return ((this->gameType) & gameType);}
+
+	seatAbsolute playerwind(Player_ID player, int currentRound) const { // プレイヤーの自風がどれか調べる
+		if (chkGameType(SanmaT))
+			return (seatAbsolute)((player + 24 - (currentRound - ( currentRound / 4))) % 3);
+		else return (seatAbsolute)((player + 32 - currentRound) % 4);
+	}
+	seatAbsolute playerwind(Player_ID player) const { // プレイヤーの自風がどれか調べる
+		return playerwind(player, GameRound);
+	}
 };
 static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 

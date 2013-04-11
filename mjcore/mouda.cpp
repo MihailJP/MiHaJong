@@ -399,12 +399,12 @@ void tsumoproc(GameTable* const gameStat) {
 	if (gameStat->chkGameType(SanmaT)) {
 		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % ACTUAL_PLAYERS;
 	} else {
-		if (gameStat->chkGameType(Sanma4) && (playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound) == sWest)) /* 四人三麻の場合は北家をスキップ */
+		if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(gameStat->CurrentPlayer.Active) == sWest)) /* 四人三麻の場合は北家をスキップ */
 			gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % Players;
 		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % Players;
 	}
 	/* 東家の順番が回ってきたら次の巡目となる */
-	if (playerwind(gameStat, gameStat->CurrentPlayer.Active, gameStat->GameRound) == sEast)
+	if (gameStat->playerwind(gameStat->CurrentPlayer.Active) == sEast)
 		++gameStat->TurnRound;
 	gameStat->statOfActive().Tsumohai().tile =
 		gameStat->Deck[gameStat->TilePointer].tile;

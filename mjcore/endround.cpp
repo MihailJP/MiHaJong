@@ -23,7 +23,7 @@ namespace { // 内部処理に使う関数
 		bool flag = true;
 		if (gameStat->chkGameType(Sanma4)) {
 			for (PlayerID i = 0; i < Players; ++i)
-				flag = flag && ((playerwind(gameStat, i, gameStat->GameRound) == sNorth) || f(&(gameStat->Player[i])));
+				flag = flag && ((gameStat->playerwind(i) == sNorth) || f(&(gameStat->Player[i])));
 		} else if (gameStat->chkGameType(SanmaT)) {
 			for (PlayerID i = 0; i < 3; ++i)
 				flag = flag && f(&(gameStat->Player[i]));
@@ -40,7 +40,7 @@ namespace { // 内部処理に使う関数
 			bool tmpflag = true;
 			if (gameStat->chkGameType(Sanma4)) {
 				for (PlayerID i = 0; i < Players; ++i)
-					tmpflag = tmpflag && ((playerwind(gameStat, i, gameStat->GameRound) == sNorth) || (gameStat->Player[i].Discard[1].tcode.tile == *k));
+					tmpflag = tmpflag && ((gameStat->playerwind(i) == sNorth) || (gameStat->Player[i].Discard[1].tcode.tile == *k));
 			} else if (gameStat->chkGameType(SanmaT)) {
 				for (PlayerID i = 0; i < 3; ++i)
 					tmpflag = tmpflag && (gameStat->Player[i].Discard[1].tcode.tile == *k);
@@ -164,7 +164,7 @@ namespace {
 		std::array<bool, Players> NagashiManganFlag = {false,};
 		if (RoundEndType == Ryuukyoku) {
 			for (unsigned i = 0; i < ACTUAL_PLAYERS; ++i) {
-				if (gameStat->chkGameType(Sanma4) && (playerwind(gameStat, i, gameStat->GameRound) == sNorth))
+				if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(i) == sNorth))
 					continue; // 四人三麻の場合北家は無視
 				if (RuleData::chkRuleApplied("nagashi_mangan") && isNagashiMangan(gameStat, i)) {
 					NagashiManganFlag[i] = true; RoundEndType = NagashiMangan;
@@ -194,7 +194,7 @@ namespace {
 	unsigned checkTenpai(GameTable* gameStat, CodeConv::tstring& ResultDesc, unsigned OrigTurn) {
 		unsigned TenpaiCnt = 0;
 		for (PlayerID i = 0; i < Players; ++i) {
-			if (gameStat->chkGameType(Sanma4) && (playerwind(gameStat, i, OrigTurn) == sNorth))
+			if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(i, OrigTurn) == sNorth))
 				continue; // 四人三麻の北家は無視
 			if (isTenpai(gameStat, i)) { // 聴牌の時
 				++TenpaiCnt; gameStat->Player[i].HandStat = handExposed;
@@ -225,7 +225,7 @@ namespace {
 		using namespace endround::transfer;
 		resetDelta();
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i) {
-			if (gameStat->chkGameType(Sanma4) && (playerwind(gameStat, i, OrigTurn) == sNorth))
+			if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(i, OrigTurn) == sNorth))
 				continue; // 四人三麻の北家は無視
 			if (gameStat->chkGameType(AllSanma)) { // 三麻の場合
 				if ((TenpaiCnt > 0) && (TenpaiCnt < 3)) {
@@ -325,7 +325,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	case Agari: {
 		const bool RenchanFlag =
-			(playerwind(gameStat, gameStat->CurrentPlayer.Agari, gameStat->GameRound) == sEast) &&
+			(gameStat->playerwind(gameStat->CurrentPlayer.Agari) == sEast) &&
 			(!RuleData::chkRule("round_continuation", "renchan_never"));
 		showRenchanFlag(gameStat, RenchanFlag);
 		if (RenchanFlag) {
@@ -422,7 +422,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::tblSubsceneFourRiichi, 1500u);
 		checkTenpai(gameStat, ResultDesc, OrigTurn);
 		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
-			if (gameStat->chkGameType(Sanma4) && (playerwind(gameStat, cnt, gameStat->GameRound) == sNorth))
+			if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(cnt) == sNorth))
 				continue;
 			// 錯和立直（不聴立直）の者がいた場合
 			if (!isTenpai(gameStat, cnt)) {
@@ -451,7 +451,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 				if (isNagashiMangan(gameStat, cnt)) {
 					mihajong_graphic::calltext::setCall(cnt, mihajong_graphic::calltext::NagashiMangan);
 					if (!ResultDesc.empty()) ResultDesc += _T("、");
-					switch (playerwind(gameStat, cnt, gameStat->GameRound)) {
+					switch (gameStat->playerwind(cnt)) {
 						case sEast:  ResultDesc += _T("東家"); break;
 						case sSouth: ResultDesc += _T("南家"); break;
 						case sWest:  ResultDesc += _T("西家"); break;

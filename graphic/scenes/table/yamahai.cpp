@@ -60,7 +60,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 	};
 	auto getRinshanFlag2 = getRinshanFlag(2);
 	auto getRinshanFlag1 = getRinshanFlag(1);
-	const bool shorterWall = (std::get<0>(yamahaiAttr) == 2) && (utils::playerwind(gameStat, trueTargetPlayer, gameStat->GameRound) % 2 == 1);
+	const bool shorterWall = (std::get<0>(yamahaiAttr) == 2) && (gameStat->playerwind(trueTargetPlayer) % 2 == 1);
 	switch (tmpPlayerCode) {
 	case sOpposite:
 		for (int i = (18 - std::get<2>(yamahaiAttr) + (shorterWall ? 1 : 0)) * 2; i < 36; i += 2) { /* ‘Î–Ê‘¤‚ÌŽR */

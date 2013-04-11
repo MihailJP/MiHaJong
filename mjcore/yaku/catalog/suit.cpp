@@ -508,7 +508,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			[uumenchii](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (uumenchii(analysis) &&
 					(analysis->GameStat->GameRound / 4 == sEast) &&
-					(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) == sEast) &&
+					(analysis->GameStat->playerwind(analysis->player) == sEast) &&
 					(analysis->KeziCount[EastWind] >= 1)
 					);
 			}

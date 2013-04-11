@@ -11,7 +11,6 @@ namespace utils {
 
 using namespace mihajong_structs;
 
-typedef seatAbsolute (*playerwind_type)(const GameTable*, PlayerID, int);
 typedef seatRelative (*playerRelative_type)(PlayerID, PlayerID);
 typedef PlayerID (*RelativePositionOf_type)(PlayerID, seatRelative);
 typedef int (*tilesLeft_type)(const GameTable*);
@@ -32,7 +31,6 @@ typedef LPCTSTR (*getName_type)(PlayerID);
 typedef void (*sendchat_type)(LPCTSTR);
 
 #ifdef GRAPHIC_EXPORTS
-extern playerwind_type playerwind;
 extern playerRelative_type playerRelative;
 extern RelativePositionOf_type RelativePositionOf;
 extern tilesLeft_type tilesLeft;
@@ -54,7 +52,6 @@ extern sendchat_type sendchat;
 #endif
 
 EXPORT void setfunc(
-	playerwind_type ptr_playerwind,
 	playerRelative_type ptr_playerRelative,
 	RelativePositionOf_type ptr_RelativePositionOf,
 	tilesLeft_type ptr_tilesLeft,

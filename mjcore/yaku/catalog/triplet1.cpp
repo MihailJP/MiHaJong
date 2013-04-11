@@ -349,8 +349,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	));
 	auto jikaze =
 		[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return (chkYakuhai(analysis)[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
-				analysis->player, analysis->GameStat->GameRound))] >= 1);
+			return (chkYakuhai(analysis)[Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->player))] >= 1);
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("–ð”vEŽ©•—"), yaku::yakuCalculator::Yaku::yval_1han,
@@ -360,8 +359,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRuleApplied("kaimenkaze")) {
 		kaimenkaze =
 			[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (chkYakuhai(analysis)[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
-					analysis->GameStat->WaremePlayer, analysis->GameStat->GameRound))] >= 1);
+				return (chkYakuhai(analysis)[Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("–ð”vEŠJ–å•—"), get_yaku_han("kaimenkaze"),
@@ -376,8 +374,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRuleApplied("urakaze")) {
 		urakaze =
 			[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (chkYakuhai(analysis)[Wind2Tile((uint8_t)playerwind(analysis->GameStat,
-					RelativePositionOf(analysis->player, sOpposite), analysis->GameStat->GameRound))] >= 1);
+				return (chkYakuhai(analysis)[Wind2Tile((uint8_t)analysis->GameStat->playerwind(
+					RelativePositionOf(analysis->player, sOpposite)))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("–ð”vE— •—"), get_yaku_han("urakaze"),
@@ -484,10 +482,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				if ((analysis->GameStat->GameRound / 4 == sWest) &&
-					(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) == sSouth))
+					(analysis->GameStat->playerwind(analysis->player) == sSouth))
 					yakuFlag = true;
 				if ((analysis->GameStat->GameRound / 4 == sSouth) &&
-					(playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound) == sWest))
+					(analysis->GameStat->playerwind(analysis->player) == sWest))
 					yakuFlag = true;
 				return ((analysis->KeziCount[SouthWind] >= 1) &&
 					(analysis->KeziCount[WestWind] >= 1) &&

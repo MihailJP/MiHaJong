@@ -6,7 +6,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::issameasprevious
 	(const GameTable* const gameStat, PlayerID player, int index) { // ‡‚í‚¹‘Å‚¿‚Å‚«‚é‚©‚Ç‚¤‚©
 		PlayerID prev_p = RelativePositionOf(player, sLeft); // ã‰Æ‚ÌƒvƒŒƒCƒ„[”Ô†
 		if (gameStat->chkGameType(SanmaT) && (prev_p == 3)) prev_p = 2;
-		else if (gameStat->chkGameType(Sanma4) && (playerwind(gameStat, prev_p, gameStat->GameRound) == sNorth))
+		else if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(prev_p) == sNorth))
 			prev_p = RelativePositionOf(player, sOpposite);
 		if (gameStat->Player[prev_p].Discard[gameStat->Player[prev_p].DiscardPointer].tcode.tile ==
 			gameStat->Player[player].Hand[index].tile)

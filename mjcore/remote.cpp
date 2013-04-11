@@ -28,7 +28,7 @@ void proc_abrupt_disconnect(GameTable* const gameStat, PlayerID player) {
 			o << _T("*** サーバーとの接続が切れました。");
 		else
 			o << _T("*** ") << EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
-			_T("(") << windName(playerwind(gameStat, player, gameStat->GameRound)) << _T(") の接続が切れました。");
+			_T("(") << windName(gameStat->playerwind(player)) << _T(") の接続が切れました。");
 		chat::appendchat(o.str().c_str());
 		chat::appendchat(_T("*** この局はツモ切り、次局からCPUが代走します。"));
 	}

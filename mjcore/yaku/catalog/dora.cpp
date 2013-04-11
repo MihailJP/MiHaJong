@@ -63,7 +63,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			_T("–{‰Ô‹Gß”v"), get_yaku_han("own_flower"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[shantenAll] != -1) return false; // ˜a—¹‚Á‚Ä‚È‚¢‚È‚ç–ß‚é
-				switch (playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound)) {
+				switch (analysis->GameStat->playerwind(analysis->player)) {
 					case sEast: return analysis->PlayerStat->FlowerFlag.Spring;
 					case sSouth: return analysis->PlayerStat->FlowerFlag.Summer;
 					case sWest: return analysis->PlayerStat->FlowerFlag.Autumn;
@@ -78,7 +78,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			_T("–{‰Ô‘–Ø”v"), get_yaku_han("own_flower"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[shantenAll] != -1) return false; // ˜a—¹‚Á‚Ä‚È‚¢‚È‚ç–ß‚é
-				switch (playerwind(analysis->GameStat, analysis->player, analysis->GameStat->GameRound)) {
+				switch (analysis->GameStat->playerwind(analysis->player)) {
 					case sEast: return analysis->PlayerStat->FlowerFlag.Plum;
 					case sSouth: return analysis->PlayerStat->FlowerFlag.Orchid;
 					case sWest: return analysis->PlayerStat->FlowerFlag.Chrys;

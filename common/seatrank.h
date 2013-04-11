@@ -6,9 +6,6 @@
 
 namespace mihajong_structs {
 
-enum seatAbsolute : uint8_t { sEast, sSouth, sWest, sNorth };
-enum seatRelative : uint8_t { sSelf, sRight, sOpposite, sLeft };
-
 typedef uint8_t PlayerRank;
 template struct InfoByPlayer<PlayerRank>;
 typedef InfoByPlayer<PlayerRank> PlayerRankList;

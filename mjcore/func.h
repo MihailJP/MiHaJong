@@ -30,16 +30,6 @@ extern "C" inline uint8_t diceSum(const GameTable* const gameStat) {
 	return (gameStat->Dice[0].Number + gameStat->Dice[1].Number);
 }
 
-/* プレイヤーの自風がどれか調べる */
-seatAbsolute inline playerwind(const GameTable* const gameStat, PlayerID player, int currentRound) {
-	if (gameStat->chkGameType(SanmaT))
-		return (seatAbsolute)((player + 24 - (currentRound - ( currentRound / 4))) % 3);
-	else return (seatAbsolute)((player + 32 - currentRound) % 4);
-}
-__declspec(dllexport) inline int playerwind(int player, int currentRound) {
-	return (int)playerwind(&GameStat, (PlayerID)player, (int)currentRound);
-}
-
 /* あるプレイヤーに対して指定したプレイヤーがどこ(下家、対面、上家)にいるか調べる */
 seatRelative inline playerRelative(PlayerID targetPlayer, PlayerID basePlayer) {
 	return (seatRelative)((Players + targetPlayer - basePlayer) % Players);

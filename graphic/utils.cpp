@@ -3,7 +3,6 @@
 namespace mihajong_graphic {
 namespace utils {
 
-playerwind_type playerwind = nullptr;
 playerRelative_type playerRelative = nullptr;
 RelativePositionOf_type RelativePositionOf = nullptr;
 tilesLeft_type tilesLeft = nullptr;
@@ -24,7 +23,6 @@ getName_type getName = nullptr;
 sendchat_type sendchat = nullptr;
 
 EXPORT void setfunc(
-	playerwind_type ptr_playerwind,
 	playerRelative_type ptr_playerRelative,
 	RelativePositionOf_type ptr_RelativePositionOf,
 	tilesLeft_type ptr_tilesLeft,
@@ -44,7 +42,6 @@ EXPORT void setfunc(
 	getName_type ptr_getName,
 	sendchat_type ptr_sendchat)
 {
-	playerwind = ptr_playerwind;
 	playerRelative = ptr_playerRelative;
 	RelativePositionOf = ptr_RelativePositionOf;
 	tilesLeft = ptr_tilesLeft;
