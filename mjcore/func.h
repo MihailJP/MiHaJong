@@ -29,43 +29,29 @@ using mihajong_structs::PlayerRankList;
 seatRelative inline playerRelative(PlayerID targetPlayer, PlayerID basePlayer) {
 	return (seatRelative)((Players + targetPlayer - basePlayer) % Players);
 }
-__declspec(dllexport) inline int playerRelative(int targetPlayer, int basePlayer) {
-	return (int)playerRelative((PlayerID)targetPlayer, (PlayerID)basePlayer);
-}
 
 /* あるプレイヤーの(下家、対面、上家)を調べる */
 PlayerID inline RelativePositionOf(PlayerID targetPlayer, seatRelative relative) {
 	return (PlayerID)(((int)targetPlayer + (int)relative) % Players);
 }
-__declspec(dllexport) inline int RelativePositionOf(int targetPlayer, int relative) {
-	return (int)RelativePositionOf((PlayerID)targetPlayer, (seatRelative)relative);
-}
 
 /* 一周するまでに必要な場の数 */
-__declspec(dllexport) inline int roundLoopRate() {
+inline int roundLoopRate() {
 	if (RuleData::chkRule("sudden_death_type", "continue_into_white")) return 28;
 	else return 16;
 }
 
 /* 順位を計算する */
 PlayerRankList calcRank(const GameTable* const gameStat);
-__declspec(dllexport) void calcRank(int* Rank, const GameTable* const gameStat);
 
 /* 包かどうかの判定 */
 bool isPao(const GameTable* const gameStat, PlayerID agariPlayer, PlayerID paoPlayer);
-__declspec(dllexport) int isPao(const GameTable* const gameStat, int agariPlayer, int paoPlayer);
-
 bool isPaoAgari(const GameTable* const gameStat, PlayerID agariPlayer);
-__declspec(dllexport) int isPaoAgari(const GameTable* const gameStat, int agariPlayer);
-
 bool isGotPao(const GameTable* const gameStat, PlayerID paoPlayer);
-__declspec(dllexport) int isGotPao(const GameTable* const gameStat, int paoPlayer);
-
 PlayerID getPaoPlayer(const GameTable* const gameStat, PlayerID agariPlayer);
-__declspec(dllexport) int getPaoPlayer(const GameTable* const gameStat, int agariPlayer);
 
 /* ロンしたプレイヤーの数 */
-__declspec(dllexport) int RonPlayers(const GameTable* const gameStat);
+int RonPlayers(const GameTable* const gameStat);
 
 /* 「東家」「南家」「西家」「北家」の文字列を返す */
 CodeConv::tstring inline windName(seatAbsolute wind) {
@@ -79,7 +65,6 @@ CodeConv::tstring inline windName(seatAbsolute wind) {
 			return CodeConv::tstring(_T("????")); break;
 	}
 }
-__declspec(dllexport) void windName(LPTSTR str, int bufsz, int wind);
 
 /* 「東○局」などの文字列を返す */
 CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat) {
@@ -123,7 +108,6 @@ CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat
 	}
 	return CodeConv::tstring(roundNameTxt.str());
 }
-__declspec(dllexport) void roundName(LPTSTR str, int bufsz, int roundNum);
 
 /* 牌の名前の文字列を返す */
 CodeConv::tstring inline TileName(TileCode tile) {
@@ -167,15 +151,11 @@ CodeConv::tstring inline TileName(TileCode tile) {
 			return CodeConv::tstring(_T("????"));
 	}
 }
-__declspec(dllexport) void TileName(LPTSTR str, int bufsz, int tile);
 
 TileCode Wind2Tile(uint8_t wind);
 
 int BasePoint();
-__declspec(dllexport) int BasePointHSP();
-
 bool isAboveBase(const GameTable* const gameStat, PlayerID player);
-__declspec(dllexport) int isAboveBase(const GameTable* const gameStat, int player);
 
 CodeConv::tstring intstr(int val);
 
@@ -183,17 +163,12 @@ namespace confpath {
 	bool isVista();
 
 	std::string confPath();
-	__declspec(dllexport) void confPath(char* path, int bufsz);
 }
 
 bool isRichiReqSatisfied (const GameTable* const gameStat, PlayerID targetPlayer);
-__declspec(dllexport) int isRichiReqSatisfied (const GameTable* const gameStat, int targetPlayer);
 
 bool isDobon (const GameTable* const gameStat, PlayerID targetPlayer);
-__declspec(dllexport) int isDobon (const GameTable* const gameStat, int targetPlayer);
-
 bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer);
-__declspec(dllexport) int isTeppen (const GameTable* const gameStat, int targetPlayer);
 
 inline bool exist (LPCSTR filename) {
 	return (GetFileAttributesA(filename) != -1);

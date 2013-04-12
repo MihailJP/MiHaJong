@@ -30,11 +30,6 @@ PlayerRankList calcRank(const GameTable* const gameStat) {
 	}
 	return rankList;
 }
-__declspec(dllexport) void calcRank(int* const Rank, const GameTable* const gameStat) {
-	const PlayerRankList rankList = calcRank(gameStat);
-	assert(rankList[0] > 0); assert(rankList[1] > 0);
-	for (int i = 0; i < Players; i++) *(Rank + i) = rankList[i];
-}
 
 /* 包かどうかの判定 */
 bool isPao(const GameTable* const gameStat, PlayerID agariPlayer, PlayerID paoPlayer) {
@@ -46,10 +41,6 @@ bool isPao(const GameTable* const gameStat, PlayerID agariPlayer, PlayerID paoPl
 	}
 	return paoFlag;
 }
-__declspec(dllexport) int isPao(const GameTable* const gameStat, int agariPlayer, int paoPlayer) {
-	return (int)isPao(gameStat, (PlayerID)agariPlayer, (PlayerID)paoPlayer);
-}
-
 bool isPaoAgari(const GameTable* const gameStat, PlayerID agariPlayer) {
 	bool paoFlag = false;
 	for (int i = 0; i < PaoYakuPages; i++) {
@@ -58,10 +49,6 @@ bool isPaoAgari(const GameTable* const gameStat, PlayerID agariPlayer) {
 	}
 	return paoFlag;
 }
-__declspec(dllexport) int isPaoAgari(const GameTable* const gameStat, int agariPlayer) {
-	return (int)isPaoAgari(gameStat, (PlayerID)agariPlayer);
-}
-
 bool isGotPao(const GameTable* const gameStat, PlayerID paoPlayer) {
 	bool paoFlag = false;
 	for (int i = 0; i < PaoYakuPages; i++) {
@@ -70,10 +57,6 @@ bool isGotPao(const GameTable* const gameStat, PlayerID paoPlayer) {
 	}
 	return paoFlag;
 }
-__declspec(dllexport) int isGotPao(const GameTable* const gameStat, int paoPlayer) {
-	return (int)isGotPao(gameStat, (PlayerID)paoPlayer);
-}
-
 PlayerID getPaoPlayer(const GameTable* const gameStat, PlayerID agariPlayer) {
 	PlayerID paoPlayer = -1;
 	for (int i = 0; i < PaoYakuPages; i++) {
@@ -83,44 +66,14 @@ PlayerID getPaoPlayer(const GameTable* const gameStat, PlayerID agariPlayer) {
 	}
 	return paoPlayer;
 }
-__declspec(dllexport) int getPaoPlayer(const GameTable* const gameStat, int agariPlayer) {
-	return (int)getPaoPlayer(gameStat, (PlayerID)agariPlayer);
-}
 
 /* ロンしたプレイヤーの数 */
-__declspec(dllexport) int RonPlayers(const GameTable* const gameStat) {
+int RonPlayers(const GameTable* const gameStat) {
 	int qualified = 0;
 	for (int i = 0; i < Players; i++)
 		if (gameStat->Player[i].DeclarationFlag.Ron)
 			qualified++;
 	return qualified;
-}
-
-/* 「東家」「南家」「西家」「北家」の文字列を返す */
-__declspec(dllexport) void windName(LPTSTR str, int bufsz, int wind) {
-#if defined(_MSC_VER)
-	_tcscpy_s(str, bufsz, windName((seatAbsolute)wind).c_str());
-#else
-	_tcsncpy(str, windName((seatAbsolute)wind).c_str(), bufsz);
-#endif
-}
-
-/* 「東○局」などの文字列を返す */
-__declspec(dllexport) void roundName(LPTSTR str, int bufsz, int roundNum) {
-#if defined(_MSC_VER)
-	_tcscpy_s(str, bufsz, roundName(roundNum, &GameStat).c_str());
-#else
-	_tcsncpy(str, roundName(roundNum, &GameStat).c_str(), bufsz);
-#endif
-}
-
-/* 牌の名前の文字列を返す */
-__declspec(dllexport) void TileName(LPTSTR str, int bufsz, int tile) {
-#if defined(_MSC_VER)
-	_tcscpy_s(str, bufsz, TileName((TileCode)tile).c_str());
-#else
-	_tcsncpy(str, TileName((TileCode)tile).c_str(), bufsz);
-#endif
 }
 
 /* 場風牌のリスト */
@@ -151,16 +104,10 @@ int BasePoint() {
 	}
 	return 30000;
 }
-__declspec(dllexport) int BasePointHSP() {
-	return BasePoint() / 100;
-}
 
 /* 浮いているか判定する関数 */
 bool isAboveBase(const GameTable* const gameStat, PlayerID player) {
 	return gameStat->Player[player].PlayerScore >= (LNum)BasePoint();
-}
-__declspec(dllexport) int isAboveBase(const GameTable* const gameStat, int player) {
-	return isAboveBase(gameStat, (PlayerID)player) ? 1 : 0;
 }
 
 /* 非負整数1桁なら全角・それ以外は半角 */
@@ -234,13 +181,6 @@ namespace confpath {
 		}
 		return configpath;
 	}
-	__declspec(dllexport) void confPath(char* path, int bufsz) {
-#if defined(_MSC_VER)
-		strcpy_s(path, bufsz, confPath().c_str());
-#else
-		strncpy(path, confPath().c_str(), bufsz);
-#endif
-	}
 
 }
 
@@ -254,9 +194,6 @@ bool isRichiReqSatisfied (const GameTable* const gameStat, PlayerID targetPlayer
 	if (RuleData::chkRule("buttobi_border", "no")) Flag = true;
 	return Flag;
 }
-__declspec(dllexport) int isRichiReqSatisfied (const GameTable* const gameStat, int targetPlayer) {
-	return isRichiReqSatisfied(gameStat, (PlayerID)targetPlayer) ? 1 : 0;
-}
 
 /* 飛びになっているかどうか */
 bool isDobon (const GameTable* const gameStat, PlayerID targetPlayer) {
@@ -268,9 +205,6 @@ bool isDobon (const GameTable* const gameStat, PlayerID targetPlayer) {
 		RuleData::chkRule("buttobi_border", "nonpositive"))
 		return true;
 	else return false;
-}
-__declspec(dllexport) int isDobon (const GameTable* const gameStat, int targetPlayer) {
-	return isDobon(gameStat, (PlayerID)targetPlayer) ? 1 : 0;
 }
 
 /* 天辺になっているかどうか */
@@ -291,9 +225,6 @@ bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer) {
 		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)70000))
 		return true;
 	else return false;
-}
-__declspec(dllexport) int isTeppen (const GameTable* const gameStat, int targetPlayer) {
-	return isTeppen(gameStat, (PlayerID)targetPlayer) ? 1 : 0;
 }
 
 MJCORE void cleanup() {

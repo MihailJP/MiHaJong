@@ -19,12 +19,11 @@ private:
 
 public:
 #ifdef MJCORE_EXPORTS
-	static __declspec(dllexport) void initMentsuAnalysisDat();
+	static void initMentsuAnalysisDat();
 #endif
 
 	static MJCORE Shanten calcShanten(const GameTable* const gameStat, PlayerID playerID, ShantenType mode);
 #ifdef MJCORE_EXPORTS
-	static __declspec(dllexport) int calcShanten(const GameTable* const gameStat, int playerID, int mode);
 private:
 	static void setQixingTilePattern(TileCode* const QixingPai, unsigned int pattern);
 	static unsigned int chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit);

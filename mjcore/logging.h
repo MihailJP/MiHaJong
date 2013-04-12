@@ -15,17 +15,17 @@ namespace logger {
 	typedef int (__cdecl *CHRPPROC)(LPCSTR a);
 	typedef int (__cdecl *TCHRPPROC)(LPCTSTR a);
 
-	__declspec(dllexport) int initLogger();
+	int initLogger();
 
 	CodeConv::tstring posPrefix(const char* file, int line, CodeConv::tstring msg);
 	CodeConv::tstring posPrefix(const char* file, int line, LPCTSTR msg);
 
-	__declspec(dllexport) void trace_msg(LPCTSTR msg);
-	__declspec(dllexport) void debug_msg(LPCTSTR msg);
-	__declspec(dllexport) void info_msg(LPCTSTR msg);
-	__declspec(dllexport) void warn_msg(LPCTSTR msg);
-	__declspec(dllexport) void error_msg(LPCTSTR msg);
-	__declspec(dllexport) void fatal_msg(LPCTSTR msg);
+	void trace_msg(LPCTSTR msg);
+	void debug_msg(LPCTSTR msg);
+	void info_msg(LPCTSTR msg);
+	void warn_msg(LPCTSTR msg);
+	void error_msg(LPCTSTR msg);
+	void fatal_msg(LPCTSTR msg);
 }
 
 #define trace(msg) ::logger::trace_msg(::logger::posPrefix(__FILE__, __LINE__, (msg)).c_str())

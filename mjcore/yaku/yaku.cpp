@@ -827,11 +827,6 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 	/* おわり */
 	return yakuInfo;
 }
-__declspec(dllexport) void yaku::yakuCalculator::countyaku(const GameTable* const gameStat,
-	YAKUSTAT* const yakuInfo, int targetPlayer)
-{
-	*yakuInfo = countyaku(gameStat, (PlayerID)targetPlayer);
-}
 
 /* 縛りを満たしているか調べる */
 bool yaku::yakuCalculator::checkShibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat) {
@@ -844,7 +839,4 @@ bool yaku::yakuCalculator::checkShibari(const GameTable* const gameStat, const Y
 	else if ((yakuStat->CoreHan == 1) && (gameStat->Honba < 4) && (RuleData::chkRule("ryanshiba", "from_4honba")))
 		return true; // 4本場からリャンシバだが3本場までで1翻
 	else return false; // 縛りを満たしていない場合
-}
-__declspec(dllexport) int yaku::yakuCalculator::check_shibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat) {
-	return checkShibari(gameStat, yakuStat) ? 1 : 0;
 }

@@ -21,11 +21,10 @@ private:
 	static detCallThread* meld_worker;
 	static bool callFunc(const GameTable* const gameStat, PlayerID PlayerID, const char* const function_name, bool is_mandatory);
 public:
-	__declspec(dllexport) static void initscript();
-	__declspec(dllexport) static void initephemeral();
+	static void initscript();
+	static void initephemeral();
 	static void initcall(const GameTable* const gameStat, PlayerID player);
-	__declspec(dllexport) static void initcall(const GameTable* const gameStat, int player);
-	__declspec(dllexport) static void closescript();
+	static void closescript();
 	static void GameStatToLuaTable(lua_State* const L, const GameTable* const gameStat);
 	static DiscardTileNum compdahai(const GameTable* const gameStat);
 	static DiscardTileNum determine_discard(const GameTable* const gameStat);

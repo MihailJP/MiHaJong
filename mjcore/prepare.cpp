@@ -173,7 +173,7 @@ inline void shuffletiles(GameTable* const gameStat, UInt8ByTile& tilepos, unsign
 	}
 }
 
-__declspec(dllexport) void shuffle(GameTable* const gameStat) { // 牌をバッファに並べて、洗牌
+void shuffle(GameTable* const gameStat) { // 牌をバッファに並べて、洗牌
 	UInt8ByTile tilepos;
 	unsigned int tiles = inittiles(gameStat, tilepos);
 	redtiles(gameStat, tilepos);
@@ -189,7 +189,7 @@ inline void DoraAdding(GameTable* const gameStat) {
 	haifu::haifurecdorap();
 }
 
-__declspec(dllexport) void initdora(GameTable* const gameStat) { // ドラの設定
+void initdora(GameTable* const gameStat) { // ドラの設定
 	if (gameStat->chkGameType(AllSanma))
 		gameStat->DoraPointer = 102 - gameStat->ExtraRinshan; // ドラ表示牌のポインタ
 	else gameStat->DoraPointer = 130; // ドラ表示牌のポインタ
@@ -197,8 +197,10 @@ __declspec(dllexport) void initdora(GameTable* const gameStat) { // ドラの設定
 		nagatadora(BambooSeven); // 七索は常にドラ
 		unsigned int dice = gameStat->Dice[0].Number + gameStat->Dice[1].Number;
 		if (dice <= 8) { // 2～8はその数牌がドラ　三麻では萬子がないので別処理
-			if (!gameStat->chkGameType(SanmaX)) nagatadora(TileSuitCharacters + dice);
-			nagatadora(TileSuitCircles + dice); nagatadora(TileSuitBamboos + dice);
+			if (!gameStat->chkGameType(SanmaX))
+				nagatadora(static_cast<TileCode>(TileSuitCharacters + dice));
+			nagatadora(    static_cast<TileCode>(TileSuitCircles    + dice));
+			nagatadora(    static_cast<TileCode>(TileSuitBamboos    + dice));
 		} else if (dice == 9) { // 9はそのまま9がドラ
 			nagatadora(CharacterNine); nagatadora(CircleNine); nagatadora(BambooNine);
 		} else if (dice == 10) { // 10は三元牌がドラ

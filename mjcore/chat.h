@@ -51,13 +51,13 @@ namespace chat {
 	
 	extern StreamLog* chatobj;
 
-	__declspec(dllexport) void initchat (const char* const server_addr, int clientNum);
-	__declspec(dllexport) void appendchat (LPCTSTR const chatstr);
-	__declspec(dllexport) void sendchat (LPCTSTR const chatstr);
+	void initchat (const char* const server_addr, int clientNum);
+	void appendchat (LPCTSTR const chatstr);
+	void sendchat (LPCTSTR const chatstr);
 #ifdef MJCORE_EXPORTS
 	void sendchatx (int player, LPCTSTR const chatstr);
 #endif
-	__declspec(dllexport) void closechat ();
+	void closechat ();
 }
 
 inline void writeChat(const CodeConv::tstring& ResultDesc) {

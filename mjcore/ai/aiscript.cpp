@@ -69,7 +69,7 @@ bool aiscript::callFunc(const GameTable* const gameStat, PlayerID PlayerID, cons
 	}
 }
 
-__declspec(dllexport) void aiscript::initscript() {
+void aiscript::initscript() {
 	info(_T("AI用のスクリプトを初期化します"));
 	FileSelector::filelist();
 	// Lua初期化
@@ -82,7 +82,7 @@ __declspec(dllexport) void aiscript::initscript() {
 	info(_T("スクリプトの初期化が完了しました"));
 }
 
-__declspec(dllexport) void aiscript::initephemeral() {
+void aiscript::initephemeral() {
 	// ephemeralテーブル初期化
 	for (int i = 0; i < Players; i++) {
 		lua_newtable(status[i].state);
@@ -94,11 +94,8 @@ __declspec(dllexport) void aiscript::initephemeral() {
 void aiscript::initcall(const GameTable* const gameStat, PlayerID player) {
 	callFunc(gameStat, player, "init", false);
 }
-__declspec(dllexport) void aiscript::initcall(const GameTable* const gameStat, int player) {
-	initcall(gameStat, (PlayerID)player);
-}
 
-__declspec(dllexport) void aiscript::closescript() {
+void aiscript::closescript() {
 	// Luaクリンナップ
 	for (int i = 0; i < Players; i++) {
 		lua_close(status[i].state); // Luaステートをクローズする

@@ -23,7 +23,7 @@ using std::min;
 
 uint8_t* ShantenAnalyzer::mentsuAnalysisDat = nullptr;
 
-__declspec(dllexport) void ShantenAnalyzer::initMentsuAnalysisDat() { // 面子データ初期化
+void ShantenAnalyzer::initMentsuAnalysisDat() { // 面子データ初期化
 	Compressed::file_mentz_dat* mnzdat = new Compressed::file_mentz_dat();
 	mentsuAnalysisDat = new uint8_t[mnzdat->getDataSize()+4];
 #ifdef _MSC_VER
@@ -75,11 +75,6 @@ MJCORE Shanten ShantenAnalyzer::calcShanten(const GameTable* const gameStat, Pla
 		tmpShanten = calcShantenZuhelong(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		return shanten;
 	}
-}
-__declspec(dllexport) int ShantenAnalyzer::calcShanten(const GameTable* const gameStat, int playerID, int mode)
-{
-	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-	return (int)calcShanten(gameStat, (PlayerID)playerID, (ShantenType)mode);
 }
 
 unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit) {

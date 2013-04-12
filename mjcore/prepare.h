@@ -3,8 +3,8 @@
 #include <array>
 #include "gametbl.h"
 
-__declspec(dllexport) void shuffle(GameTable* const gameStat); // 牌をバッファに並べて、洗牌
-__declspec(dllexport) void initdora(GameTable* const gameStat); // ドラの設定
+void shuffle(GameTable* const gameStat); // 牌をバッファに並べて、洗牌
+void initdora(GameTable* const gameStat); // ドラの設定
 
 class SeatShuffler { // 場決め処理
 private:
