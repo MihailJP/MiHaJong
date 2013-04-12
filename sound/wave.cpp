@@ -84,6 +84,7 @@ void sound::SoundData::PrepareBuffer(void* Engine, bool looped) {
 	alBufferData(myBuffer, bufFormat, &buffer[0], buffer.size(), format.nSamplesPerSec);
 	alGenSources(1, &mySource);
 	alSourcei(mySource, AL_BUFFER, myBuffer);
+	alSourcei(mySource, AL_LOOPING, looped ? AL_TRUE : AL_FALSE);
 }
 #elif defined(USE_XAUDIO2)
 void sound::SoundData::PrepareBuffer(IXAudio2** Engine, bool looped) {
@@ -193,7 +194,7 @@ void sound::SoundData::Stop() {
 /* âπó ê›íË */
 void sound::SoundData::setVolume(double volume) {
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
-	/* OpenAL instructions */
+	alSourcef(mySource, AL_GAIN, volume);
 #else
 	HRESULT hr;
 #if defined(USE_XAUDIO2)
