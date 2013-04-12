@@ -114,11 +114,6 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 	/* 理牌完了！ */
 	return;
 }
-__declspec(dllexport) void lipai(GameTable* const gameStat, int targetPlayer) {
-	// 理牌する(HSP互換用)
-	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-	lipai(gameStat, (PlayerID)targetPlayer);
-}
 
 /* 場に見えてる個数 */
 MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
@@ -202,11 +197,6 @@ MJCORE Int8ByTile countTilesInHand(const GameTable* const gameStat, PlayerID pla
 			count[tmpTC]++;
 	}
 	return count;
-}
-__declspec(dllexport) void countTilesInHand(int* const tileCount, const GameTable* const gameStat, int playerID) {
-	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-	Int8ByTile tCount = countTilesInHand(gameStat, (PlayerID)playerID);
-	for (int i = 0; i < TileNonflowerMax; i++) tileCount[i] = (int)tCount[i];
 }
 
 /* 手牌に存在する赤ドラを種類別にカウントする */
@@ -370,21 +360,6 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 	/* 計算完了、値を返しましょう */
 	return machihaiInfo;
 }
-__declspec(dllexport) void chkFuriten(
-	int* const furitenFlag, int* const machihaiFlag, int* const machihaiCount,
-	int* const machihaiTotal, int* const machiMen, const GameTable* const gameStat,
-	int targetPlayer) {
-		assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-		MachihaiInfo machihaiInfo = chkFuriten(gameStat, (PlayerID)targetPlayer);
-		*furitenFlag = machihaiInfo.FuritenFlag ? 1 : 0;
-		for (int i = 0; i < TileNonflowerMax; i++) {
-			machihaiFlag[i] = machihaiInfo.Machihai[i].MachihaiFlag ? 1 : 0;
-			machihaiCount[i] = machihaiInfo.Machihai[i].MachihaiFlag ?
-				(int)machihaiInfo.Machihai[i].MachihaiCount : (-1);
-		}
-		*machihaiTotal = (int)machihaiInfo.MachihaiTotal;
-		*machiMen = (int)machihaiInfo.MachiMen;
-}
 
 /* オープン立直の待ち牌 */
 void chkOpenMachi(GameTable* const gameStat, PlayerID targetPlayer) {
@@ -407,11 +382,6 @@ void chkOpenMachi(GameTable* const gameStat, PlayerID targetPlayer) {
 	/* これで処理が終わりました。戻りましょう */
 	return;
 }
-__declspec(dllexport) void chkOpenMachi(GameTable* const gameStat, int targetPlayer) {
-	// オープンリーチの待ち牌情報を更新する(HSP互換用)
-	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-	chkOpenMachi(gameStat, (PlayerID)targetPlayer);
-}
 
 /* 九種九牌流しが可能かどうかのチェック */
 MJCORE bool chkdaopaiability(const GameTable* const gameStat, PlayerID targetPlayer) {
@@ -421,10 +391,6 @@ MJCORE bool chkdaopaiability(const GameTable* const gameStat, PlayerID targetPla
 	for (int i = 0; i < 13; i++) // ヤオ九牌１種類につき、１をカウントする。
 		if (TileCount[Honor_Major_Tiles(i)] >= 1) YaojiuCount++;
 	return (YaojiuCount >= 9);
-}
-__declspec(dllexport) int chkdaopaiability(const GameTable* const gameStat, int targetPlayer) {
-	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-	return chkdaopaiability(gameStat, (PlayerID)targetPlayer) ? 1 : 0;
 }
 
 /* ドラを設定する */
@@ -466,7 +432,7 @@ namespace setdora_tools {
 	}
 }
 
-__declspec(dllexport) void setdora(GameTable* const gameStat, int Mode) {
+void setdora(GameTable* const gameStat, int Mode) {
 	CodeConv::tostringstream o;
 	o << _T("ドラの追加 ポインタ [") << gameStat->DoraPointer <<
 		_T("] 牌コード [") << (int)gameStat->Deck[gameStat->DoraPointer + Mode].tile <<
@@ -651,13 +617,9 @@ MJCORE bool chkAnkanAbility(const GameTable* const gameStat, PlayerID targetPlay
 	/* 待ち牌が一致するかどうか調べる */
 	return (chkAnkanAbilityTools::CheckIfMachihaiMatches(gameStat, targetPlayer));
 }
-__declspec(dllexport) int chkAnkanAbility(const GameTable* const gameStat, int targetPlayer) {
-	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-	return chkAnkanAbility(gameStat, (PlayerID)targetPlayer) ? 1 : 0;
-}
 
 /* 導火線の位置を調べる */
-__declspec(dllexport) void calcdoukasen(GameTable* const gameStat) {
+void calcdoukasen(GameTable* const gameStat) {
 	/* 導火線の位置を計算する */
 	if (RuleData::chkRuleApplied("doukasen")) {
 		if (gameStat->chkGameType(Sanma4)) {
@@ -711,9 +673,6 @@ bool isTenpai(const GameTable* const gameStat, PlayerID targetPlayer) {
 		return false;
 	return (shanten <= 0);
 }
-__declspec(dllexport) int isTenpai(const GameTable* const gameStat, void *, int targetPlayer) {
-	return isTenpai(gameStat, (PlayerID)targetPlayer) ? 1 : 0;
-}
 
 /* 流し満貫かどうか調べる */
 bool isNagashiMangan(const GameTable* const gameStat, PlayerID targetPlayer) {
@@ -730,7 +689,4 @@ bool isNagashiMangan(const GameTable* const gameStat, PlayerID targetPlayer) {
 	}
 	// 全部該当する牌だったらtrue
 	return (YaojiuSutehai == gameStat->Player[targetPlayer].DiscardPointer);
-}
-__declspec(dllexport) int isNagashiMangan(const GameTable* const gameStat, void *, int targetPlayer) {
-	return isNagashiMangan(gameStat, (PlayerID)targetPlayer) ? 1 : 0;
 }
