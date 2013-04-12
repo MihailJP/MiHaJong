@@ -232,15 +232,10 @@ private:
 		YAKUSTAT* const result, PlayerID targetPlayer);
 
 public:
-	static __declspec(dllexport) void init();
+	static void init();
 
 	static YAKUSTAT countyaku(const GameTable* const gameStat, PlayerID targetPlayer);
-	static __declspec(dllexport) void countyaku(const GameTable* const gameStat,
-		YAKUSTAT* const yakuInfo, int targetPlayer);
 	static bool chkShisanBuDa(const GameTable* const gameStat, PlayerID targetPlayer);
-	static __declspec(dllexport) int chkShisanBuDa(const GameTable* const gameStat, int targetPlayer);
 	static bool chkShisiBuDa(const GameTable* const gameStat, PlayerID targetPlayer);
-	static __declspec(dllexport) int chkShisiBuDa(const GameTable* const gameStat, int targetPlayer);
 	static bool checkShibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat);
-	static __declspec(dllexport) int check_shibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat);
 };
