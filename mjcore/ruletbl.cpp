@@ -145,25 +145,25 @@ bool RuleConfigData::reqFailed(uint16_t ruleID, const int* const ruleStat) {
 
 // -------------------------------------------------------------------------
 
-__declspec(dllexport) void RuleData::configinit() { // コンフィグ用CSVを読み込む
+void RuleData::configinit() { // コンフィグ用CSVを読み込む
 	ruleTableData.configinit();
 }
 
-__declspec(dllexport) void RuleData::preference_init() { // コンフィグ用CSVを読み込む
+void RuleData::preference_init() { // コンフィグ用CSVを読み込む
 	preferenceTableData.configinit();
 }
 
-__declspec(dllexport) void RuleData::storeRule(const char** ruleTxt) { // UI→Core ルール設定転送
+void RuleData::storeRule(const char** ruleTxt) { // UI→Core ルール設定転送
 	ruleTableData.storeRule(ruleTxt);
 }
-__declspec(dllexport) void RuleData::exportRule(char** ruleTxt) { // Core→UI ルール設定転送
+void RuleData::exportRule(char** ruleTxt) { // Core→UI ルール設定転送
 	ruleTableData.exportRule(ruleTxt);
 }
 
-__declspec(dllexport) void RuleData::storePref(const char** ruleTxt) { // UI→Core 環境設定転送
+void RuleData::storePref(const char** ruleTxt) { // UI→Core 環境設定転送
 	preferenceTableData.storeRule(ruleTxt);
 }
-__declspec(dllexport) void RuleData::exportPref(char** ruleTxt) { // Core→UI 環境設定転送
+void RuleData::exportPref(char** ruleTxt) { // Core→UI 環境設定転送
 	preferenceTableData.exportRule(ruleTxt);
 }
 
@@ -215,24 +215,24 @@ const char* RuleData::getPreferenceRawStr(uint16_t RuleID) { // 環境設定を取得す
 	ruletag = preferenceTableData.chkRule(RuleID);
 	return ruletag.c_str();
 }
-__declspec(dllexport) int RuleData::getRuleSize(uint16_t RuleID) { // ルール項目のアイテム数
+int RuleData::getRuleSize(uint16_t RuleID) { // ルール項目のアイテム数
 	return ruleTableData.getRuleSize(RuleID);
 }
-__declspec(dllexport) int RuleData::getPreferenceSize(uint16_t RuleID) { // 環境項目のアイテム数
+int RuleData::getPreferenceSize(uint16_t RuleID) { // 環境項目のアイテム数
 	return preferenceTableData.getRuleSize(RuleID);
 }
 
-__declspec(dllexport) void RuleData::getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
+void RuleData::getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	ruleTableData.getRuleName(txt, bufsize, RuleID);
 }
-__declspec(dllexport) void RuleData::getPreferenceName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
+void RuleData::getPreferenceName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	preferenceTableData.getRuleName(txt, bufsize, RuleID);
 }
 
-__declspec(dllexport) void RuleData::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
+void RuleData::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	ruleTableData.getRuleDescription(txt, bufsize, RuleID);
 }
-__declspec(dllexport) void RuleData::getPreferenceDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
+void RuleData::getPreferenceDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	preferenceTableData.getRuleDescription(txt, bufsize, RuleID);
 }
 
@@ -243,24 +243,24 @@ std::string RuleData::getRuleItemTag(std::string RuleTag, int index) {
 	return ruleTableData.getRuleItemTag(RuleTag, index);
 }
 
-__declspec(dllexport) void RuleData::getRuleTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index) {
+void RuleData::getRuleTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index) {
 	ruleTableData.getRuleTxt(txt, bufsize, RuleID, index);
 }
-__declspec(dllexport) void RuleData::getPreferenceTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index) {
+void RuleData::getPreferenceTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index) {
 	preferenceTableData.getRuleTxt(txt, bufsize, RuleID, index);
 }
 
-__declspec(dllexport) int RuleData::loadConfigFile(const char* const filename) {
+int RuleData::loadConfigFile(const char* const filename) {
 	return ruleTableData.loadConfigFile(filename);
 }
-__declspec(dllexport) int RuleData::saveConfigFile(const char* const filename) {
+int RuleData::saveConfigFile(const char* const filename) {
 	return ruleTableData.saveConfigFile(filename);
 }
 
-__declspec(dllexport) int RuleData::loadPreferenceFile(const char* const filename) {
+int RuleData::loadPreferenceFile(const char* const filename) {
 	return preferenceTableData.loadConfigFile(filename);
 }
-__declspec(dllexport) int RuleData::savePreferenceFile(const char* const filename) {
+int RuleData::savePreferenceFile(const char* const filename) {
 	return preferenceTableData.saveConfigFile(filename);
 }
 
@@ -268,7 +268,7 @@ std::string RuleData::getRuleMaskExpr(const std::string& RuleTag) {
 	return ruleTableData.getRuleMaskExpr(RuleTag);
 }
 
-__declspec(dllexport) BOOL RuleData::reqFailed(uint16_t RuleID, const int* const ruleStat) {
+BOOL RuleData::reqFailed(uint16_t RuleID, const int* const ruleStat) {
 	return ruleTableData.reqFailed(RuleID, ruleStat) ? TRUE : FALSE;
 }
 
@@ -276,7 +276,7 @@ void RuleData::forEachRule(std::function<void (std::string, std::string)> f) {
 	ruleTableData.forEachRule(f);
 }
 
-__declspec(dllexport) void RuleData::getPageCaption(LPTSTR const caption, unsigned bufsize, uint8_t page) {
+void RuleData::getPageCaption(LPTSTR const caption, unsigned bufsize, uint8_t page) {
 	ruleTableData.getPageCaption(caption, bufsize, page);
 }
 
@@ -284,7 +284,7 @@ const char* RuleData::ruleDigit() {
 	return ruleTableData.ruleDigit();
 }
 
-__declspec(dllexport) unsigned RuleData::getPreferenceInputSize(uint16_t RuleID) {
+unsigned RuleData::getPreferenceInputSize(uint16_t RuleID) {
 	return preferenceTableData.getRuleStrBufLen(RuleID);
 }
 
