@@ -14,6 +14,7 @@
 #include "result.h"
 #include "ruletbl.h"
 #include "remote.h"
+#include "chat.h"
 
 /* 半荘の進行 */
 EndType doTableTurn(GameTable* const gameStat) {
@@ -71,11 +72,14 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 		o << _T("局番号 [") << gameStat->GameRound << _T("] を開始しました。");
 		info(o.str().c_str());
 	}
-	/* TODO: チャットの同期
-	if (getGameMode(GameEnv) == GAMEMODE_CLIENT) {
-		//sockput "8\n", SOCK_CHAT+0 // チャットを同期
-	}
-	*/
+	/* チャットの同期 */
+	if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+		mihajong_socket::puts(SOCK_CHAT,
+#if defined(_WIN32)
+			_T("8\r\n"));
+#else
+			_T("8\n"));
+#endif
 	/* ウォッチモードの時は視点を親に移す */
 	gameStat->CurrentPlayer.Active = -1;
 	if (EnvTable::Instantiate()->WatchModeFlag)
