@@ -1,14 +1,18 @@
 #pragma once
 
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 #include <windows.h>
 #ifdef SOUND_EXPORTS
 #include <dsound.h>
+#endif /* SOUND_EXPORTS */
+#endif /* defined(_WIN32) && defined(WITH_DIRECTX) */
 
+#ifdef SOUND_EXPORTS
 #define SOUNDDLL_EXPORT __declspec(dllexport)
 #include "soundobj.h"
 #else
 #define SOUNDDLL_EXPORT __declspec(dllimport)
-#endif
+#endif /* SOUND_EXPORTS */
 
 namespace sound {
 

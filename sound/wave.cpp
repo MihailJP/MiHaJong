@@ -73,7 +73,9 @@ void sound::WaveData::Prepare(const std::string& filename) {
 }
 
 /* バッファの準備 */
-#if defined(USE_XAUDIO2)
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	/* OpenAL instructions */
+#elif defined(USE_XAUDIO2)
 void sound::SoundData::PrepareBuffer(IXAudio2** Engine, bool looped) {
 	HRESULT hr;
 	std::memset(&bufInfo, 0, sizeof(bufInfo));
@@ -105,7 +107,9 @@ void sound::SoundData::PrepareBuffer(LPDIRECTSOUND8* Engine, bool looped) {
 }
 #endif
 
-#if defined(USE_XAUDIO2)
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	/* OpenAL instructions */
+#elif defined(USE_XAUDIO2)
 sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool looped) {
 #else
 sound::WaveData::WaveData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped) {
@@ -118,7 +122,9 @@ sound::WaveData::WaveData(LPDIRECTSOUND8* Engine, const std::string& filename, b
 void sound::SoundData::Play() {
 	Stop();
 	HRESULT hr;
-#if defined(USE_XAUDIO2)
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	/* OpenAL instructions */
+#elif defined(USE_XAUDIO2)
 	if (FAILED(hr = voice->SubmitSourceBuffer(&bufInfo))) {
 		CodeConv::tostringstream o; o << _T("SubmitSourceBuffer失敗！！ (0x") <<
 #else
@@ -129,13 +135,17 @@ void sound::SoundData::Play() {
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
-#if !defined(USE_XAUDIO2)
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	/* OpenAL instructions */
+#elif !defined(USE_XAUDIO2)
 	else { // 書き込み
 		memcpy(writePtr, &buffer[0], bufLen);
 		voice->Unlock(writePtr, bufLen, nullptr, 0);
 	}
 #endif
-#if defined(USE_XAUDIO2)
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	/* OpenAL instructions */
+#elif defined(USE_XAUDIO2)
 	if (FAILED(hr = voice->Start(0, XAUDIO2_COMMIT_NOW))) {
 		CodeConv::tostringstream o; o << _T("Start失敗！！ (0x") <<
 #else
@@ -155,7 +165,9 @@ void sound::SoundData::Stop() {
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
-#if defined(USE_XAUDIO2)
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	/* OpenAL instructions */
+#elif defined(USE_XAUDIO2)
 	if (FAILED(hr = voice->FlushSourceBuffers())) {
 		CodeConv::tostringstream o; o << _T("FlushSourceBuffers失敗！！ (0x") <<
 #else
@@ -170,7 +182,9 @@ void sound::SoundData::Stop() {
 /* 音量設定 */
 void sound::SoundData::setVolume(double volume) {
 	HRESULT hr;
-#if defined(USE_XAUDIO2)
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	/* OpenAL instructions */
+#elif defined(USE_XAUDIO2)
 	double ampvol;
 	if (volume == 0.0)
 		ampvol = 0.0;
@@ -197,7 +211,9 @@ void sound::SoundData::setVolume(double volume) {
 sound::SoundData::~SoundData() {
 	if (voice) {
 		voice->Stop();
-#if defined(USE_XAUDIO2)
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	/* OpenAL instructions */
+#elif defined(USE_XAUDIO2)
 		voice->DestroyVoice();
 #else
 		voice->Release();

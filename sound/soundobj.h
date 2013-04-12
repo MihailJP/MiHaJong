@@ -1,6 +1,9 @@
 #pragma once
 
-#if defined(USE_XAUDIO2)
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+#include <al.h>
+#include <alc.h>
+#elif defined(USE_XAUDIO2)
 #include <xaudio2.h>
 #else
 #include <dsound.h>
@@ -16,7 +19,10 @@ namespace sound {
 	/* サウンド操作用クラス */
 	class SoundManipulator {
 	private:
-#if defined(USE_XAUDIO2)
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+		ALCdevice* myDevice;
+		ALCcontext* myContext;
+#elif defined(USE_XAUDIO2)
 		IXAudio2* xAudio;
 		IXAudio2MasteringVoice* mVoice;
 #else
