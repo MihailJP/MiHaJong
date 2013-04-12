@@ -59,7 +59,7 @@ void sound::OggData::Prepare(const std::string& filename) {
 }
 
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
-	/* OpenAL instructions */
+sound::OggData::OggData(void* Engine, const std::string& filename, bool looped) {
 #elif defined(USE_XAUDIO2)
 sound::OggData::OggData(IXAudio2** Engine, const std::string& filename, bool looped) {
 #else

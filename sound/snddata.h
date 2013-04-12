@@ -1,7 +1,8 @@
 #pragma once
 
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
-/* OpenAL include */
+#include <al.h>
+#include <alc.h>
 #elif defined(USE_XAUDIO2)
 #include <xaudio2.h>
 #else
@@ -28,7 +29,7 @@ namespace sound {
 		WAVEFORMATEX format;
 		std::vector<char> buffer;
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
-		/* OpenAL buffer */
+		ALuint mySource, myBuffer;
 #elif defined(USE_XAUDIO2)
 		XAUDIO2_BUFFER bufInfo;
 		IXAudio2SourceVoice* voice;
@@ -38,7 +39,7 @@ namespace sound {
 #endif
 		virtual void Prepare(const std::string& filename) = 0;
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
-		/* OpenAL buffer */
+		void PrepareBuffer(void*, bool looped = false);
 #elif defined(USE_XAUDIO2)
 		void PrepareBuffer(IXAudio2** Engine, bool looped = false);
 #else
@@ -59,7 +60,7 @@ namespace sound {
 		void Prepare(const std::string& filename);
 	public:
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
-		/* OpenAL buffer */
+		explicit WaveData(void*, const std::string& filename, bool looped = false);
 #elif defined(USE_XAUDIO2)
 		explicit WaveData(IXAudio2** Engine, const std::string& filename, bool looped = false);
 #else
@@ -72,7 +73,7 @@ namespace sound {
 		void Prepare(const std::string& filename);
 	public:
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
-		/* OpenAL buffer */
+		explicit OggData(void*, const std::string& filename, bool looped = false);
 #elif defined(USE_XAUDIO2)
 		explicit OggData(IXAudio2** Engine, const std::string& filename, bool looped = false);
 #else

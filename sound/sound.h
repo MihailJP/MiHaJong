@@ -1,7 +1,9 @@
 #pragma once
 
-#if defined(_WIN32) && defined(WITH_DIRECTX)
+#ifdef _WIN32
 #include <windows.h>
+#endif
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 #ifdef SOUND_EXPORTS
 #include <dsound.h>
 #endif /* SOUND_EXPORTS */
