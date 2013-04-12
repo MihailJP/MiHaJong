@@ -119,7 +119,7 @@ sound::SoundManipulator::~SoundManipulator() {
 void sound::SoundManipulator::readWaveData(unsigned ID, const std::string& filename, bool looped) {
 	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // ”z—ñ‚ðŠg’£
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
-	/* OpenAL instructions */
+	sounds[ID] = new WaveData(nullptr, filename, looped);
 #elif defined(USE_XAUDIO2)
 	sounds[ID] = new WaveData(&xAudio, filename, looped);
 #else
@@ -129,7 +129,7 @@ void sound::SoundManipulator::readWaveData(unsigned ID, const std::string& filen
 void sound::SoundManipulator::readVorbisData(unsigned ID, const std::string& filename, bool looped) {
 	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // ”z—ñ‚ðŠg’£
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
-	/* OpenAL instructions */
+	sounds[ID] = new OggData(nullptr, filename, looped);
 #elif defined(USE_XAUDIO2)
 	sounds[ID] = new OggData(&xAudio, filename, looped);
 #else
