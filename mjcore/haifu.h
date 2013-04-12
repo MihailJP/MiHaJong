@@ -103,52 +103,43 @@ private:
 	};
 
 public:
-	static __declspec(dllexport) void haifubufinit();
-	static __declspec(dllexport) void haifuinit();
+	static void haifubufinit();
+	static void haifuinit();
 
-	static __declspec(dllexport) void haifurechaipai(const GameTable* const gameStat);
+	static void haifurechaipai(const GameTable* const gameStat);
 
 	static void haifurecdora(TileCode tmpDora);
-	static __declspec(dllexport) void haifurecdora(int tmpDora);
-
 	static void haifurecuradora(TileCode tmpDora);
 
 	static void haifurecalicedora(TileCode tmpDora);
-
-	static __declspec(dllexport) void haifualicedoraupd();
-
+	static void haifualicedoraupd();
 	static void haifuresetalicedora();
 
-	static __declspec(dllexport) void haifurecdorap();
+	static void haifurecdorap();
 
-	static __declspec(dllexport) void haifurecmota(const GameTable* const gameStat, int DiscardTileIndex);
 	static void haifurecmota(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);
 
-	static __declspec(dllexport) void haifurecfurikomi(const GameTable* const gameStat);
+	static void haifurecfurikomi(const GameTable* const gameStat);
 
-	static __declspec(dllexport) void haifurecchi(const GameTable* const gameStat);
-	static __declspec(dllexport) void haifurecpon(const GameTable* const gameStat);
-	static __declspec(dllexport) void haifurectsumo(const GameTable* const gameStat);
-	static __declspec(dllexport) void haifurecminkan(const GameTable* const gameStat);
+	static void haifurecchi(const GameTable* const gameStat);
+	static void haifurecpon(const GameTable* const gameStat);
+	static void haifurectsumo(const GameTable* const gameStat);
+	static void haifurecminkan(const GameTable* const gameStat);
 
-	static __declspec(dllexport) void haifurecnorth(const GameTable* const gameStat, int DiscardTileIndex);
 	static void haifurecnorth(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);
-	static __declspec(dllexport) void haifurecchanpei(const GameTable* const gameStat);
-	static __declspec(dllexport) void haifurecnorthproc(const GameTable* const gameStat);
+	static void haifurecchanpei(const GameTable* const gameStat);
+	static void haifurecnorthproc(const GameTable* const gameStat);
 
-	static __declspec(dllexport) void haifurecankan(const GameTable* const gameStat, int DiscardTileIndex);
 	static void haifurecankan(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);
-	static __declspec(dllexport) void haifurecchankan(const GameTable* const gameStat);
-	static __declspec(dllexport) void haifureckanproc(const GameTable* const gameStat);
+	static void haifurecchankan(const GameTable* const gameStat);
+	static void haifureckanproc(const GameTable* const gameStat);
 
-	static __declspec(dllexport) void haifurecflower(const GameTable* const gameStat, int DiscardTileIndex);
 	static void haifurecflower(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);
 
-	static __declspec(dllexport) void haifuwritebuffer(
+	static void haifuwritebuffer(
 		const GameTable* const gameStat,
 		int OrigTurn, int OrigHonba, bool tmpUraFlag, bool tmpAliceFlag,
 		LPCTSTR ResultDesc, EndType RoundEndType);
 
 	static void haifusave(const GameTable* const gameStat);
-	static __declspec(dllexport) void haifusave();
 };

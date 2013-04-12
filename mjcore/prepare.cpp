@@ -197,8 +197,10 @@ __declspec(dllexport) void initdora(GameTable* const gameStat) { // ドラの設定
 		nagatadora(BambooSeven); // 七索は常にドラ
 		unsigned int dice = gameStat->Dice[0].Number + gameStat->Dice[1].Number;
 		if (dice <= 8) { // 2～8はその数牌がドラ　三麻では萬子がないので別処理
-			if (!gameStat->chkGameType(SanmaX)) nagatadora(TileSuitCharacters + dice);
-			nagatadora(TileSuitCircles + dice); nagatadora(TileSuitBamboos + dice);
+			if (!gameStat->chkGameType(SanmaX))
+				nagatadora(static_cast<TileCode>(TileSuitCharacters + dice));
+			nagatadora(    static_cast<TileCode>(TileSuitCircles    + dice));
+			nagatadora(    static_cast<TileCode>(TileSuitBamboos    + dice));
 		} else if (dice == 9) { // 9はそのまま9がドラ
 			nagatadora(CharacterNine); nagatadora(CircleNine); nagatadora(BambooNine);
 		} else if (dice == 10) { // 10は三元牌がドラ
