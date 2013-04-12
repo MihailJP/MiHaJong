@@ -173,7 +173,7 @@ inline void shuffletiles(GameTable* const gameStat, UInt8ByTile& tilepos, unsign
 	}
 }
 
-__declspec(dllexport) void shuffle(GameTable* const gameStat) { // 牌をバッファに並べて、洗牌
+void shuffle(GameTable* const gameStat) { // 牌をバッファに並べて、洗牌
 	UInt8ByTile tilepos;
 	unsigned int tiles = inittiles(gameStat, tilepos);
 	redtiles(gameStat, tilepos);
@@ -189,7 +189,7 @@ inline void DoraAdding(GameTable* const gameStat) {
 	haifu::haifurecdorap();
 }
 
-__declspec(dllexport) void initdora(GameTable* const gameStat) { // ドラの設定
+void initdora(GameTable* const gameStat) { // ドラの設定
 	if (gameStat->chkGameType(AllSanma))
 		gameStat->DoraPointer = 102 - gameStat->ExtraRinshan; // ドラ表示牌のポインタ
 	else gameStat->DoraPointer = 130; // ドラ表示牌のポインタ

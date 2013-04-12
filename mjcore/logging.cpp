@@ -13,7 +13,7 @@ namespace logger {
 	static CHRPPROC fpInitLogger = nullptr;
 	static TCHRPPROC fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC = nullptr;
 
-	__declspec(dllexport) int initLogger() {
+	int initLogger() {
 		HMODULE lg = nullptr;
 		lg = LoadLibrary(_T("logger.dll"));
 		if (lg == nullptr) return (-1);
@@ -55,11 +55,11 @@ namespace logger {
 		return tstring(o.str());
 	}
 
-	__declspec(dllexport) void trace_msg(LPCTSTR msg) { if (logger) (*fpTraceC)(msg); }
-	__declspec(dllexport) void debug_msg(LPCTSTR msg) { if (logger) (*fpDebugC)(msg); }
-	__declspec(dllexport) void info_msg(LPCTSTR msg) { if (logger) (*fpInfoC)(msg); }
-	__declspec(dllexport) void warn_msg(LPCTSTR msg) { if (logger) (*fpWarnC)(msg); }
-	__declspec(dllexport) void error_msg(LPCTSTR msg) { if (logger) (*fpErrorC)(msg); }
-	__declspec(dllexport) void fatal_msg(LPCTSTR msg) { if (logger) (*fpFatalC)(msg); }
+	void trace_msg(LPCTSTR msg) { if (logger) (*fpTraceC)(msg); }
+	void debug_msg(LPCTSTR msg) { if (logger) (*fpDebugC)(msg); }
+	void info_msg(LPCTSTR msg) { if (logger) (*fpInfoC)(msg); }
+	void warn_msg(LPCTSTR msg) { if (logger) (*fpWarnC)(msg); }
+	void error_msg(LPCTSTR msg) { if (logger) (*fpErrorC)(msg); }
+	void fatal_msg(LPCTSTR msg) { if (logger) (*fpFatalC)(msg); }
 
 }

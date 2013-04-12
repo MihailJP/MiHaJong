@@ -14,7 +14,7 @@ using namespace mihajong_structs;
 
 GameTable GameStat, StatSandBox;
 
-__declspec(dllexport) void calcWareme(GameTable* const gameStat) {
+void calcWareme(GameTable* const gameStat) {
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 	if (gameStat->chkGameType(AllSanma)) {
 		if (RuleData::chkRuleApplied("wareme") || RuleData::chkRuleApplied("kaimenkaze")) {
@@ -37,7 +37,7 @@ __declspec(dllexport) void calcWareme(GameTable* const gameStat) {
 **  èâä˙âªèàóù
 ** --------------------------------------------------------------------- */
 
-__declspec(dllexport) void resetDeclarationFlag(GameTable* const gameStat) {
+void resetDeclarationFlag(GameTable* const gameStat) {
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 	for (int pl = 0; pl < Players; pl++) {
 		gameStat->Player[pl].DeclarationFlag.Ron =
@@ -48,7 +48,7 @@ __declspec(dllexport) void resetDeclarationFlag(GameTable* const gameStat) {
 	return;
 }
 
-__declspec(dllexport) void inittable(GameTable* const gameStat) { /* ã«íPà Ç≈ÇÃèâä˙âª */
+void inittable(GameTable* const gameStat) { /* ã«íPà Ç≈ÇÃèâä˙âª */
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 	gameStat->ShibariFlag = //ìÒ„ îõÇË
 		((gameStat->Honba >= 5)&&(RuleData::chkRule("ryanshiba", "from_5honba"))) ||

@@ -232,17 +232,17 @@ void ChatThread::sendstrx (PlayerID player, const CodeConv::tstring& msg) {
 
 StreamLog* chatobj = nullptr;
 
-__declspec(dllexport) void initchat (const char* const server_addr, int clientNum) {
+void initchat (const char* const server_addr, int clientNum) {
 	std::string serverAddr(server_addr);
 	if ((EnvTable::Instantiate()->GameMode == EnvTable::Server) ||
 		(EnvTable::Instantiate()->GameMode == EnvTable::Client))
 		chatobj = new ChatThread(serverAddr, clientNum);
 	else chatobj = new StreamLog();
 }
-__declspec(dllexport) void appendchat (LPCTSTR const chatstr) {
+void appendchat (LPCTSTR const chatstr) {
 	chatobj->sysmsg(chatstr);
 }
-__declspec(dllexport) void sendchat (LPCTSTR const chatstr) {
+void sendchat (LPCTSTR const chatstr) {
 	static CodeConv::tstring ChatStr;
 	ChatStr = chatstr;
 	chatobj->sendstr(ChatStr.c_str());
@@ -250,7 +250,7 @@ __declspec(dllexport) void sendchat (LPCTSTR const chatstr) {
 void sendchatx (int player, LPCTSTR const chatstr) {
 	chatobj->sendstrx(player, chatstr);
 }
-__declspec(dllexport) void closechat () {
+void closechat () {
 	delete chatobj; chatobj = nullptr;
 }
 
