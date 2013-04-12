@@ -80,8 +80,6 @@ namespace { // 内部処理に使う関数
 					mihajong_graphic::GameStatus::updateGameStat(gameStat);
 					/* 和了り放棄は以降強制ツモ切り、強制不聴扱いとなります */
 					gameStat->statOfActive().AgariHouki = true;
-					/* TODO: 移植するかもしれないし廃止するかもしれない if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"}*/
-					/* TODO: これについて確認すること vanish2@ */
 				} else if (RuleData::chkRule("kuikae", "chombo") || RuleData::chkRule("kuikae", "chombo_if_in_kind")) {
 					/* 直ちに錯和とする設定 */
 					logKuikae(gameStat, true);
@@ -121,8 +119,6 @@ namespace { // 内部処理に使う関数
 			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			gameStat->statOfActive().AgariHouki = true;
-			/* TODO: 移植するかもしれないし廃止するかもしれない if (GetWatchModeFlag(GameEnv) == 0) {statmes "和了り放棄：強制ツモ切りされます"} */
-			/* TODO: これについて確認すること vanish2@ */
 		}
 		return;
 	}
@@ -213,7 +209,6 @@ namespace {
 			case 4: TenpaiCountTxt = _T("４人聴牌"); break;
 		}
 		ResultDesc = _T("荒牌流局、") + TenpaiCountTxt;
-		/* TODO: これいらないか確認 statmes "流局 "+TenpaiCountTxt */
 		writeChat(ResultDesc + _T("です"));
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChkTenpai);
@@ -275,9 +270,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		CodeConv::tostringstream o;
 		o << _T("局を終了 終了コード [") << (int)RoundEndType << _T(']');
 	}
-	/* TODO: この辺確認
-	statmes ""
-	vanish2@ */
 	/* 流し満貫の判定 */
 	auto NagashiManganFlag = chkNagashiMangan(gameStat, RoundEndType);
 	/************/
@@ -291,7 +283,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/* 荒牌流局時 */
 	/**************/
 	case Ryuukyoku:
-		/* TODO: これ多分いらない statmes "流局です" */
 		ResultDesc = _T("荒牌流局");
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
 		transferNotenBappu(gameStat, OrigTurn,
@@ -371,7 +362,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/* 四槓流局時 */
 	/**************/
 	case Suukaikan:
-		/* TODO: これの是非を確認 statmes "流局(四開槓)" */
 		ResultDesc = _T("四開槓");
 		ryuukyokuScreen(sound::IDs::voxSikang, &ResultDesc, mihajong_graphic::tblSubsceneSikang);
 		ryuukyokuProc(gameStat, !RuleData::chkRule("four_kong_ryuukyoku", "next_dealer"));
@@ -381,10 +371,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	case TripleRon:
 		mihajong_graphic::ui::WaitUIWithTimeout(1300);
-		/* TODO: こいつらの処分を決めてください
-		statmes "流局(二家和)"
-		statmes "流局(三家和)"
-		*/
 		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("二家和") : _T("三家和");
 		ryuukyokuScreen(sound::IDs::voxSanjiahu, &ResultDesc, mihajong_graphic::tblSubsceneTripleRon);
 
@@ -402,10 +388,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/* 四風流局時 */
 	/**************/
 	case SuufonRenda:
-		/* TODO: こいつらの進退を決めてあげてください
-		statmes "流局(三風連打)"
-		statmes "流局(四風連打)"
-		*/
 		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("三風連打") : _T("四風連打");
 		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::tblSubsceneSifeng);
 		ryuukyokuProc(gameStat, !RuleData::chkRule("four_wind_ryuukyoku", "next_dealer"));
@@ -414,10 +396,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/* 四人立直時 */
 	/**************/
 	case SuuchaRiichi:
-		/* TODO: これの処分がまだ保留中
-		statmes "流局(三家立直)"
-		statmes "流局(四家立直)"
-		*/
 		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("三家立直") : _T("四家立直");
 		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::tblSubsceneFourRiichi, 1500u);
 		checkTenpai(gameStat, ResultDesc, OrigTurn);
@@ -437,13 +415,11 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	case NagashiMangan:
 	{
-		/* TODO: 本当にいらないか確認 statmes "流局です" */
 		const bool agariBgmSet = !(NagashiManganFlag[gameStat->PlayerID] || EnvTable::Instantiate()->WatchModeFlag); // 自分の流し満貫ならtrue
 		const unsigned bgmNum =
 			RuleData::chkRule("nagashi_mangan", "yakuman") ? (agariBgmSet ? sound::IDs::musAgariSelf3 : sound::IDs::musAgariFurikomi3)
 			: (agariBgmSet ? sound::IDs::musAgariSelf2 : sound::IDs::musAgariFurikomi2);
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u, bgmNum);
-		/* TODO: これは本当にいらないのかどうか statmes "流し満貫が成立しました" */
 		transfer::resetDelta();
 		{
 			CodeConv::tstring ResultDesc(_T(""));
@@ -480,7 +456,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/* 四槓流局時 */
 	/**************/
 	case Uukaikan:
-		/* TODO: こいつをリストラするかどうか決めること statmes "流局(四開槓)" */
 		ResultDesc = _T("四開槓(５回目の槓での流局)");
 		ryuukyokuScreen(sound::IDs::voxSikang, &ResultDesc, mihajong_graphic::tblSubsceneSikang);
 		ryuukyokuProc(gameStat, !RuleData::chkRule("fifth_kong", "next_dealer"));

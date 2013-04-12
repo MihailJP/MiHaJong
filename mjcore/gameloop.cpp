@@ -118,7 +118,6 @@ void startgame(GameTypeID gameType) {
 	while (true) {
 		/* •Ï”—Ş‚Ì‰Šú‰» */
 		GameTable* gameStat = initializeGameTable(gameType);
-		/* TODO: ‰æ–Ê‰Šú‰» vanish */
 		info(_T("ƒQ[ƒ€î•ñ‚ğ‰Šú‰»‚µ‚Ü‚µ‚½B"));
 		mihajong_socket::server::rotation_reset();
 		RuleData::applyPreference(); // ŠÂ‹«İ’è‚ğ”½‰f

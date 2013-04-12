@@ -574,7 +574,6 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	}
 	ResultDesc += tmpResultDesc;
 	writeChat(tmpResultDesc);
-	/* TODO: ‚±‚ê‚ğ”p~‚·‚é‚©‚ÌŒˆ’è statmes tmpResultDesc */
 	mihajong_graphic::ui::WaitUIWithTimeout(1500);
 	std::uint16_t tmpDoraPointer = origDoraPointer;
 	const int AlicePointer = tmpDoraPointer - yakuInfo.AliceDora * 2 - 2;
@@ -685,7 +684,6 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 	}
 	ResultDesc += tmpResultDesc + _T("‚Å‚·");
 	writeChat(tmpResultDesc);
-	/* TODO: ‚±‚ê‚ğ”p~‚·‚é‚©‚ÌŒˆ’è statmes tmpResultDesc */
 	mihajong_graphic::ui::WaitUIWithTimeout(1500);
 	sound::util::bgmplay(sound::IDs::musRyuukyoku);
 	/* Œëƒƒ“‚Ü‚½‚ÍŒëƒcƒ‚ */

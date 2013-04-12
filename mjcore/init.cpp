@@ -43,35 +43,6 @@ MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
 		o << _T("ビルド日時は ") << _T(__DATE__) << _T(" ") << _T(__TIME__) << _T(" です。"); info(o.str().c_str());
 	}
 
-	/* 解像度をチェックする */ // TODO: ここを作りなおす
-	/*info "画面の解像度は "+ginfo_dispx+" x "+ginfo_dispy+" です。"
-	if ((ginfo_dispx < 1024)||(ginfo_dispy < 768)) {
-		errordlg "画面解像度が足りません\nXGA(1024x768)以上で起動してください", "画面が小さすぎます"
-		error "解像度要件を満たしていません。終了します。"
-		end 1
-	}*/
-
-	/* 画面を初期化 */
-	/* screen SCR_CHAT, 160, 630, 14, ((ginfo_dispx-840)/2)+840-76, (ginfo_dispy-630)/2-20
-	info "チャット用のウィンドウを仮初期化しました。"
-	gsel 0, -1: await 0*/
-
-	/* スプラッシュスクリーン */ // TODO: スプラッシュスクリーン的なものを作りなおす
-	/*buffer SCR_SPLASH_BUF: pngload "img\\splash.png"
-	bgscr SCR_SPLASH_WINDOW, 320, 240, , (ginfo_dispx-320)/2, (ginfo_dispy-240)/2
-	gsel SCR_SPLASH_WINDOW, 2
-	menubgcolor
-	boxf 0, 0, 319, 239
-	gmode 7: pos 0, 0: gcopy SCR_SPLASH_BUF, 0, 0, 320, 240
-	color 0, 0, 0: line 319, 0, 0, 0: line 319, 239: line 0, 239: line 0, 0
-	tmptxt = "Version "+VERSION_MAJ+"."+VERSION_MED+"."+VERSION_MIN+VERSION_MIC
-	borderedtxt2 tmptxt, 160-(strlen(tmptxt)*4), 130, 255, 255, 255, 0, 16, 192, 192, 192
-	tmptxt = "Copyright (c) 2008-2012 MihailJP"
-	borderedtxt2 tmptxt, 160-(strlen(tmptxt)*4), 160, 255, 255, 255, 0, 16, 192, 192, 192
-	tmptxt = "Part of rights reserved"
-	borderedtxt2 tmptxt, 160-(strlen(tmptxt)*4), 180, 255, 255, 255, 0, 16, 192, 192, 192
-	gsel 0, 0: await 0*/
-
 	/* 卓の環境を初期化 */
 	{
 		EnvTable::Instantiate()->bgColorR =
@@ -126,13 +97,6 @@ MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
 	else
 		error(_T("サウンドDLLの初期化に失敗しました。"));
 
-	/* 終了時に音源をクリンナップするための処理 */
-	/* TODO: これを移植
-	onexit *cleanup
-#ifndef _debug
-	onerror goto *errorproc
-#endif*/
-
 	/* 面子構成データベースの読み込み */
 	/* 向聴数の計算に使用：構築には１ヶ月必要 */
 	ShantenAnalyzer::initMentsuAnalysisDat();
@@ -140,25 +104,6 @@ MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
 	/* 擬似乱数を初期化 */
 	RndNum::init();
 	info(_T("疑似乱数を初期化しました。"));
-
-	/* 牌やサイコロの画像を読み込む */ // TODO: これは多分もういらない。あとで確認すること
-	/*gmode gmode_mem
-	buffer SCR_TILE_PIC: picload "img\\tileset.gif": info "牌の画像を読み込みました。"
-	buffer SCR_TILE_BLOCK, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
-	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X, TILE_BLOCK_SCREEN_Y, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
-	buffer SCR_TILE_SHADE, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
-	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X+TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_Y, TILE_BLOCK_SCREEN_WIDTH, TILE_BLOCK_SCREEN_HEIGHT
-	buffer SCR_DICE_PIC, TILE_DICE_SCREEN_WIDTH, TILE_DICE_SCREEN_HEIGHT
-	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X+TILE_BLOCK_SCREEN_WIDTH*2+TILE_DICE_SCREEN_WIDTH, TILE_BLOCK_SCREEN_Y, TILE_DICE_SCREEN_WIDTH, TILE_DICE_SCREEN_HEIGHT
-	buffer SCR_DICE_SHADE, TILE_DICE_SCREEN_WIDTH, TILE_DICE_SCREEN_HEIGHT
-	gcopy SCR_TILE_PIC, TILE_BLOCK_SCREEN_X+TILE_BLOCK_SCREEN_WIDTH*2, TILE_BLOCK_SCREEN_Y, TILE_DICE_SCREEN_WIDTH, TILE_DICE_SCREEN_HEIGHT
-	info "牌の画像の処理が完了しました。"*/
-
-	/* タイトルロゴや画像の読み込み */ // TODO: これは多分もういらない。あとで確認すること
-	/*buffer SCR_MAIN_LOGO: pngload "img\\logo.png": info "闘牌時の右上ロゴを読み込みました。"
-	buffer SCR_MAIN_BACKGROUND: pngload "img\\mainbg.png": info "闘牌時の背景画像を読み込みました。"
-	buffer SCR_TITLE_BACKGROUND: pngload "img\\background.png": info "タイトルロゴを読み込みました。"
-	buffer SCR_TITLE_LOGO: pngload "img\\title.png": info "タイトル画面の背景画像を読み込みました。"*/
 
 	/* ＢＧＭを読み込み */
 	for (unsigned i = sound::IDs::BgmStart; i < (sound::IDs::BgmRounds - sound::IDs::BgmStart); i++) {
@@ -223,11 +168,5 @@ MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
 	sound::util::soundload(sound::IDs::voxSanjiahu, "sound\\kyuushu.wav", false);
 	sound::util::soundload(sound::IDs::voxSijiarichi, "sound\\kyuushu.wav", false);
 	sound::util::soundload(sound::IDs::voxRonFurikomi, "sound\\agari2.wav", false);
-
-	/* スプラッシュスクリーンをしまう */ // TODO: ここを作りなおす
-	/*gsel SCR_SPLASH_WINDOW, -1
-	screen 0, 840, 630, , (ginfo_dispx-840)/2, (ginfo_dispy-630)/2-20
-	info "ウィンドウを初期化しました。"
-	gsel 0, 1*/
 
 }

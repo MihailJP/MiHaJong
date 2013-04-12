@@ -260,7 +260,6 @@ namespace { /* 内部処理分割用 */
 			Sleep(1000);
 			gameStat->statOfActive().HandStat = handOpenRiichi;
 			gameStat->statOfActive().RichiFlag.OpenFlag = true;
-			/* TODO: 一部ボタンの無効化 vanish2@ */
 		}
 		if (DiscardTileIndex.type == DiscardTileNum::Riichi) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Riichi);
@@ -281,7 +280,6 @@ namespace { /* 内部処理分割用 */
 			}
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			Sleep(1000);
-			/* TODO: 一部ボタンの無効化 vanish2@ */
 		}
 	}
 	void procDahaiSubPost(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) { /* 事後処理 */

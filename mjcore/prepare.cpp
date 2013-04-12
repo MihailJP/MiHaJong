@@ -307,12 +307,9 @@ std::array<int, Players> SeatShuffler::shuffle (unsigned cNumber) {
 
 /* 半荘の初期化 */
 void gameinit(GameTable* gameStat, GameTypeID gameType, const std::string& ServerAddress, const std::array<int, 4>& PositionArray, unsigned ClientNumber) {
-	/* TODO: チャットウィンドウ初期化 closingchat */
 	gameStat = initializeGameTable(gameType);
 	gameStat->PlayerID = PositionArray[ClientNumber];
-	/* TODO: 多分これは不要。詳細を確認すること dim MachihaiCount, TILE_NONFLOWER_STRICT_MAX+1 */ // 起家でのバグ防止用に仮初期化
 	haifu::haifubufinit();
-	/* TODO: statmes "" */ // 情報窓への表示
 	chat::initchat(ServerAddress.c_str(), ClientNumber);
 	yaku::yakuCalculator::init(); // 役カタログの初期化
 	aiscript::initscript(); // AIの初期化
@@ -441,25 +438,6 @@ namespace {
 			tmpStatus = roundName(gameStat->GameRound, gameStat);
 		}
 		chat::appendchat((CodeConv::tstring(_T("-------------\n*** ")) + tmpStatus + CodeConv::tstring(_T("\n"))).c_str());
-		/* TODO: これを移植する。画面表示関係
-		if (GetWatchModeFlag(GameEnv) == 1) {
-			tmpStatus += " Watch Mode"
-		} else {
-			switch playerWind(getPlayer(GameStat), getRound(GameStat))
-				case PLAYER_EAST: tmpStatus += " あなたが親です": swbreak
-				case PLAYER_SOUTH: tmpStatus += " あなたは南家です": swbreak
-				case PLAYER_WEST: tmpStatus += " あなたは西家です": swbreak
-	#ifdef SANMA4
-				case PLAYER_NORTH: tmpStatus += " あなたは抜け番です": swbreak
-	#else
-				case PLAYER_NORTH: tmpStatus += " あなたは北家です": swbreak
-	#endif
-			swend
-		}
-		statmes tmpStatus
-		await 100
-		setCenterTitle "" // 画面中央に大書する文字列
-		*/
 		for (PlayerID i = 0; i < Players; ++i)
 			mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::None); /* 発声文字列を消去 */
 		EnvTable* env = EnvTable::Instantiate();
@@ -513,15 +491,6 @@ namespace {
 			env->bgColorR = 160; env->bgColorG = 120; env->bgColorB = 120;
 			break;
 		}
-		/* TODO: これ
-		if ((getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat)) >= (getGameLength(GameStat)+1)) {
-			setCenterTitle "延長戦"
-		} else: if ((getRoundLoop(GameStat)*roundLoopRate()+getRound(GameStat)) == getGameLength(GameStat)) {
-			setCenterTitle "オーラス"
-		} else {
-			setCenterTitle roundName(getRound(GameStat))
-		}
-		*/
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::Transit(mihajong_graphic::sceneGameTable);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneBeginning);
@@ -549,7 +518,6 @@ namespace {
 					}
 					return true;
 				});
-		/* TODO 画面更新 vanish */
 	}
 	void rolldice(GameTable* const gameStat) {
 		// 賽を振る
@@ -557,7 +525,7 @@ namespace {
 			gameStat->Dice[i].Number = RndNum::dice();
 			gameStat->Dice[i].Direction = RndNum::rnd(4);
 		}
-		mihajong_graphic::GameStatus::updateGameStat(gameStat); /* TODO: 画面更新 redrscreen: commonswitch GameStat, GameEnv */
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		for (unsigned k = 0; k < 10; k++) { // 賽を振る
 			for (unsigned i = 0; i < 2; i++) {
 				gameStat->Dice[i].Number = RndNum::dice();
@@ -580,8 +548,6 @@ namespace {
 			(RuleData::chkRule("dora_twice", "only_when_doublets") && (gameStat->Dice[0].Number == gameStat->Dice[1].Number)))
 			gameStat->DeadTiles += 2; /* ドラドラ卓なら王牌の数を増やす */
 		calcWareme(gameStat); // 割れ目
-		// 通常機能の表示
-		/* TODO vanish2@ */
 	}
 	void haipai(GameTable* const gameStat) { // 配牌
 		for (int i = 0; i < (gameStat->chkGameType(AllSanma) ? 36 : 48); i++) { // ２幢ずつを３回
@@ -626,7 +592,6 @@ namespace {
 
 		sound::Play(sound::IDs::sndMekuri);
 		haifu::haifurechaipai(gameStat);
-		/* TODO: ステータス表示 statmes "" */
 		for (PlayerID i = 0; i < Players; i++)
 			lipai(gameStat, i);
 		sound::Play(sound::IDs::sndBell);
@@ -640,7 +605,6 @@ void tableinit(GameTable* const gameStat) {
 		}
 	}
 	init_ai(gameStat);
-	/* TODO: ifaceinit */ // 押しボタン類のステータス初期化
 	inittable(gameStat);
 	// 局の開始で同期する。1.7系列まではこのとき落ち戻りが可能(落ち戻り機能は1.8で廃止されました)
 	statsync(gameStat, mihajong_socket::protocol::Server_StartRound_Signature,
