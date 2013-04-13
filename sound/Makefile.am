@@ -14,6 +14,9 @@ libmihajong_sound_la_CXXFLAGS = -DSOUND_EXPORTS --input-charset=cp932
 if VORBIS_SUPPORT
 libmihajong_sound_la_CXXFLAGS += -DVORBIS_SUPPORT
 endif
+if WITH_DIRECTX
+libmihajong_sound_la_CXXFLAGS += -DWITH_DIRECTX
+endif
 EXTRA_DIST = \
 	sound.vcxproj sound.vcxproj.filters sound.vcxproj.user \
 	GuruGuruSMF/README libogg/Readme.txt libvorbis/Readme.txt

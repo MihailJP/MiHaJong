@@ -58,7 +58,9 @@ void sound::OggData::Prepare(const std::string& filename) {
 	free(buf); buf = nullptr;
 }
 
-#if defined(USE_XAUDIO2)
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+sound::OggData::OggData(void* Engine, const std::string& filename, bool looped) {
+#elif defined(USE_XAUDIO2)
 sound::OggData::OggData(IXAudio2** Engine, const std::string& filename, bool looped) {
 #else
 sound::OggData::OggData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped) {
