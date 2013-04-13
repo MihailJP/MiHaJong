@@ -57,7 +57,11 @@ void MainWindow::initWindowClass(HINSTANCE hThisInst, LPCTSTR icon) { // ƒEƒBƒ“ƒ
 	myWindowClass.hInstance = hThisInst;
 	myWindowClass.lpszClassName = myWindowClassName;
 	myWindowClass.lpfnWndProc = WinProc;
+#ifdef WITH_DIRECTX
 	myWindowClass.style = 0;
+#else
+	myWindowClass.style = 0;
+#endif
 	myWindowClass.cbSize = sizeof(WNDCLASSEX);
 	myWindowClass.hIcon = (HICON)LoadImage(hThisInst, icon, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
 	myWindowClass.hIconSm = (HICON)LoadImage(hThisInst, icon, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);

@@ -17,8 +17,8 @@ SystemScreen::~SystemScreen() {
 }
 
 void SystemScreen::clearWithGameTypeColor() {
-#if defined(_WIN32) && defined(WITH_DIRECTX)
 	// バッファクリア
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	switch (GameStatus::gameStat()->gameType) {
 	case Yonma:
 		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
@@ -40,7 +40,23 @@ void SystemScreen::clearWithGameTypeColor() {
 		assert(false); // This may not occur.
 	}
 #else
-	/* TODO: OpenGLで再実装 */
+	switch (GameStatus::gameStat()->gameType) {
+	case Yonma:
+		glClearColor(0, .25, 0, 1);
+		break;
+	case Sanma:
+		glClearColor(0, 0, .25, 1);
+		break;
+	case Sanma4:
+		glClearColor(0, .25, .25, 1);
+		break;
+	case SanmaS:
+		glClearColor(.25, 0, .25, 1);
+		break;
+	default:
+		assert(false); // This may not occur.
+	}
+	glClear(GL_COLOR_BUFFER_BIT);
 #endif
 }
 

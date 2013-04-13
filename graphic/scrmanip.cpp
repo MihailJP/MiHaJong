@@ -37,6 +37,18 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
 #else
 	/* TODO: OpenGLで再実装 */
+	pDevice = GetDC(hWnd);
+	PIXELFORMATDESCRIPTOR pfd;
+	ZeroMemory(&pfd, sizeof(pfd));
+	pfd.nSize = sizeof(pfd);
+	pfd.nVersion = 1;
+	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+	pfd.iPixelType = PFD_TYPE_RGBA;
+	pfd.cColorBits = 24;
+	pfd.cDepthBits = 16;
+	pfd.iLayerType = PFD_MAIN_PLANE;
+	int iFormat = ChoosePixelFormat(pDevice, &pfd);
+	SetPixelFormat(pDevice, iFormat, &pfd);
 #endif
 }
 ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
@@ -67,6 +79,19 @@ void ScreenManipulator::Render() {
 			}
 #else
 			/* TODO: OpenGLで再実装 */
+			HGLRC rContext = wglCreateContext(pDevice);
+			wglMakeCurrent(pDevice, rContext);
+
+			glClearColor(1, 1, 1, 1); glClear(GL_COLOR_BUFFER_BIT); // バッファクリア
+			SpriteRenderer::instantiate(pDevice)->Start(); // スプライト描画開始
+			if (myScene) myScene->Render(); // 再描画処理
+			if (myFPSIndicator) myFPSIndicator->Render(); // FPS表示
+			SpriteRenderer::instantiate(pDevice)->End(); // スプライト描画終了
+			glFlush();
+			SwapBuffers(pDevice); // 画面の更新
+
+			wglMakeCurrent(nullptr, nullptr);
+			wglDeleteContext(rContext);
 #endif
 		}
 	});
@@ -125,6 +150,8 @@ ScreenManipulator::~ScreenManipulator() {
 	SpriteRenderer::delInstance(pDevice);
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
+#else
+	ReleaseDC(hWnd, pDevice);
 #endif
 }
 
