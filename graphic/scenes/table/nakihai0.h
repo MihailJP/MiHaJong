@@ -9,7 +9,7 @@ namespace mihajong_graphic {
 
 class ShowNakihai {
 private:
-	LPDIRECT3DDEVICE9 myDevice;
+	DevicePtr myDevice;
 protected:
 	ShowTile* TileTexture;
 protected:
@@ -35,7 +35,7 @@ protected:
 	void NakihaiSelRoutine(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID);
 public:
 	virtual void Render() = 0;
-	explicit ShowNakihai(LPDIRECT3DDEVICE9 device);
+	explicit ShowNakihai(DevicePtr device);
 	virtual ~ShowNakihai();
 };
 

@@ -8,7 +8,7 @@ namespace mihajong_graphic {
 std::map<int, SpriteRenderer*> SpriteRenderer::renderer;
 
 /* コンストラクタ */
-SpriteRenderer::SpriteRenderer(LPDIRECT3DDEVICE9 device) {
+SpriteRenderer::SpriteRenderer(DevicePtr device) {
 	if (FAILED(D3DXCreateSprite(device, &sprite)))
 		throw _T("スプライトの生成に失敗しました");
 }
@@ -19,7 +19,7 @@ SpriteRenderer::~SpriteRenderer() {
 }
 
 /* インスタンス化 */
-SpriteRenderer* SpriteRenderer::instantiate(LPDIRECT3DDEVICE9 device) {
+SpriteRenderer* SpriteRenderer::instantiate(DevicePtr device) {
 	if (renderer.find((int)device) != renderer.end()) { // デバイスに対応するスプライトがすでにある
 		return renderer[(int)device];
 	} else { // デバイスに対応するスプライトは初回の使用(初期化が必要)
@@ -28,7 +28,7 @@ SpriteRenderer* SpriteRenderer::instantiate(LPDIRECT3DDEVICE9 device) {
 	}
 }
 
-void SpriteRenderer::delInstance(LPDIRECT3DDEVICE9 device) {
+void SpriteRenderer::delInstance(DevicePtr device) {
 	if (renderer.find((int)device) != renderer.end()) {
 		delete renderer[(int)device];
 		renderer.erase((int)device);
@@ -47,12 +47,12 @@ void SpriteRenderer::End() {
 
 /* スプライト描画 */
 void SpriteRenderer::ShowSprite(
-	LPDIRECT3DTEXTURE9 texture, int X, int Y, int Width, int Height,
-	D3DCOLOR color, RECT* rect, int CenterX, int CenterY, LPD3DXMATRIX matrix)
+	TexturePtr texture, int X, int Y, int Width, int Height,
+	ArgbColor color, RECT* rect, int CenterX, int CenterY, TransformMatrix* matrix)
 {
 	if ((!sprite) || (!texture)) return; // ぬるぽは(・∀・)ｶｴﾚ!!
 	RECT defaultRect = {0, 0, Width, Height};
-	D3DXMATRIX defaultMatrix; D3DXMatrixIdentity(&defaultMatrix);
+	TransformMatrix defaultMatrix; D3DXMatrixIdentity(&defaultMatrix);
 	D3DXMatrixScaling(&defaultMatrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXVECTOR3 Center(CenterX, CenterY, 0);
 	D3DXVECTOR3 Pos((float)X, (float)Y, 0);

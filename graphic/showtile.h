@@ -29,18 +29,18 @@ public:
 	static const unsigned int TexturePadding = 3;
 private:
 	struct TileDescriptor;
-	LPDIRECT3DDEVICE9 myDevice;
-	LPDIRECT3DTEXTURE9 TileTexture;
+	DevicePtr myDevice;
+	TexturePtr TileTexture;
 	std::vector<TileDescriptor> mySprites;
 	void RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY);
 	void RenderVert(TileDescriptor* tile, RECT* rect);
 	void RenderHori(TileDescriptor* tile, RECT* rect);
 	void RenderSide(TileDescriptor* tile, RECT* rect);
 public:
-	void NewTile(unsigned int ID, TileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, D3DCOLOR filterCol = 0xffffffff);
+	void NewTile(unsigned int ID, TileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, ArgbColor filterCol = 0xffffffff);
 	void DelTile(unsigned int ID);
 	void Render();
-	ShowTile(LPDIRECT3DDEVICE9 device);
+	ShowTile(DevicePtr device);
 	~ShowTile();
 };
 
@@ -51,7 +51,7 @@ struct ShowTile::TileDescriptor {
 	int X, Y;
 	TileDirection direction;
 	TileSide side;
-	D3DCOLOR color;
+	ArgbColor color;
 };
 
 }

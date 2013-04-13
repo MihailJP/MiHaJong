@@ -29,8 +29,8 @@ void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName,
 	// €–Ú‚ð•\Ž¦
 	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ƒAƒX”ä~0.75(‰¡•’²®—p)
 	unsigned itmNameCols = strwidth(prmName); // Œ…”(“ú–{Œê‚Í2Œ…)
-	D3DCOLOR baseColor = ((prmContent == _T("‚m^‚`")) || (prmContent.empty()) || (rules::reqFailed(menuCursor / RULES_IN_PAGE * RULES_IN_PAGE + prmID, rulestat))) ? 0x00bfbfbf : 0x00ffffff;
-	D3DCOLOR menuColor = ((menuCursor % RULES_IN_PAGE == prmID) && (buttonCursor == -1)) ? 0xff000000 : 0x7f000000;
+	ArgbColor baseColor = ((prmContent == _T("‚m^‚`")) || (prmContent.empty()) || (rules::reqFailed(menuCursor / RULES_IN_PAGE * RULES_IN_PAGE + prmID, rulestat))) ? 0x00bfbfbf : 0x00ffffff;
+	ArgbColor menuColor = ((menuCursor % RULES_IN_PAGE == prmID) && (buttonCursor == -1)) ? 0xff000000 : 0x7f000000;
 	myTextRenderer->NewText(prmID * 3, prmName,
 		(prmID / 20 * 720 + 50) * WidthRate, 135 + (prmID % 20) * 40, 1.0f,
 		WidthRate * ((itmNameCols <= 8) ? 1.0f : 8.0f / (float)itmNameCols),

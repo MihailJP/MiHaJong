@@ -22,7 +22,7 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, Playe
 				default:        return std::make_tuple(0                   , 0                   );
 			}
 		}, playerRelative(targetPlayer, gameStat->PlayerID),
-		[this](int i) -> D3DCOLOR {
+		[this](int i) -> ArgbColor {
 			Color tileColor; tileColor.rgbaAsOneValue = 0xffffffff;
 			if (tileCursor == i) {
 				const double Zeit = (double)(myTimer.currTime() % 9000000ULL);

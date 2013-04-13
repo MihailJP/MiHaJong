@@ -15,27 +15,27 @@ protected:
 	int timeout_val; /* 制限時間をミリ秒で */
 	void showTimeout();
 public:
-	TableSubscenePlayerProto(LPDIRECT3DDEVICE9 device);
+	TableSubscenePlayerProto(DevicePtr device);
 	virtual ~TableSubscenePlayerProto();
 	std::int32_t timeout(); // タイムアウト判定用（オーバーライド）
 };
 
 class TableSubscenePlayerDahai : public TableSubscenePlayerProto {
 public:
-	TableSubscenePlayerDahai(LPDIRECT3DDEVICE9 device);
+	TableSubscenePlayerDahai(DevicePtr device);
 	~TableSubscenePlayerDahai();
 	void Render();
 };
 
 class TableSubscenePlayerNakiProto : public TableSubscenePlayerProto {
 public:
-	TableSubscenePlayerNakiProto(LPDIRECT3DDEVICE9 device);
+	TableSubscenePlayerNakiProto(DevicePtr device);
 	~TableSubscenePlayerNakiProto();
 };
 
 class TableSubscenePlayerNaki : public TableSubscenePlayerNakiProto {
 public:
-	TableSubscenePlayerNaki(LPDIRECT3DDEVICE9 device);
+	TableSubscenePlayerNaki(DevicePtr device);
 	~TableSubscenePlayerNaki();
 	void Render();
 };
@@ -44,7 +44,7 @@ class TableSubscenePlayerNakiChankan : public TableSubscenePlayerNakiProto {
 private:
 	TableSubsceneCallCut* callScreen;
 public:
-	TableSubscenePlayerNakiChankan(LPDIRECT3DDEVICE9 device);
+	TableSubscenePlayerNakiChankan(DevicePtr device);
 	~TableSubscenePlayerNakiChankan();
 	void Render();
 };

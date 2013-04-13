@@ -9,7 +9,7 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
-TableSubscenePlayerProto::TableSubscenePlayerProto(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
+TableSubscenePlayerProto::TableSubscenePlayerProto(DevicePtr device) : TableSubscene(device) {
 	myTextRenderer = new TextRenderer(device);
 }
 
@@ -35,7 +35,7 @@ void TableSubscenePlayerProto::showTimeout() {
 
 // -------------------------------------------------------------------------
 
-TableSubscenePlayerDahai::TableSubscenePlayerDahai(LPDIRECT3DDEVICE9 device) : TableSubscenePlayerProto(device) {
+TableSubscenePlayerDahai::TableSubscenePlayerDahai(DevicePtr device) : TableSubscenePlayerProto(device) {
 	timeout_val = 15000;
 }
 
@@ -48,7 +48,7 @@ void TableSubscenePlayerDahai::Render() {
 
 // -------------------------------------------------------------------------
 
-TableSubscenePlayerNakiProto::TableSubscenePlayerNakiProto(LPDIRECT3DDEVICE9 device) : TableSubscenePlayerProto(device) {
+TableSubscenePlayerNakiProto::TableSubscenePlayerNakiProto(DevicePtr device) : TableSubscenePlayerProto(device) {
 	timeout_val = 10000;
 }
 
@@ -57,7 +57,7 @@ TableSubscenePlayerNakiProto::~TableSubscenePlayerNakiProto() {
 
 // -------------------------------------------------------------------------
 
-TableSubscenePlayerNaki::TableSubscenePlayerNaki(LPDIRECT3DDEVICE9 device) : TableSubscenePlayerNakiProto(device) {
+TableSubscenePlayerNaki::TableSubscenePlayerNaki(DevicePtr device) : TableSubscenePlayerNakiProto(device) {
 }
 
 TableSubscenePlayerNaki::~TableSubscenePlayerNaki() {
@@ -69,7 +69,7 @@ void TableSubscenePlayerNaki::Render() {
 
 // -------------------------------------------------------------------------
 
-TableSubscenePlayerNakiChankan::TableSubscenePlayerNakiChankan(LPDIRECT3DDEVICE9 device) : TableSubscenePlayerNakiProto(device) {
+TableSubscenePlayerNakiChankan::TableSubscenePlayerNakiChankan(DevicePtr device) : TableSubscenePlayerNakiProto(device) {
 	callScreen = new TableSubsceneCallCut(device);
 }
 

@@ -16,7 +16,7 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
-void TableProtoScene::LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource) {
+void TableProtoScene::LoadTexture(TexturePtr* texture, LPCTSTR resource) {
 	mihajong_graphic::LoadTexture(caller->getDevice(), texture, resource);
 }
 
@@ -79,7 +79,7 @@ void TableProtoScene::ShowScorePanel() {
 		(*k)->Render();
 }
 
-D3DCOLOR TableProtoScene::roundColor() {
+ArgbColor TableProtoScene::roundColor() {
 	switch (GameStatus::gameStat()->GameRound / Players) { // 場風で分岐
 	case 0: // 東場
 		if (GameStatus::gameStat()->LoopRound == 0)
@@ -148,12 +148,12 @@ PlayerID TableProtoScene::ScoreBoard::playerID() {
 	return utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, relativePlayerID);
 }
 
-TableProtoScene::ScoreBoard::ScoreBoard(LPDIRECT3DDEVICE9 device, seatRelative relativePos, int x, int y, float widthScale) {
+TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativePos, int x, int y, float widthScale) {
 	myDevice = device; relativePlayerID = relativePos; xpos = x; ypos = y; wScale = widthScale;
 	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR));
 	nameText = new SmallTextRenderer(device);
 	// 行列の構築
-	D3DXMATRIX tmpmtx;
+	TransformMatrix tmpmtx;
 	D3DXMatrixIdentity(&myMatrix); D3DXMatrixIdentity(&tmpmtx);
 	D3DXMatrixScaling(&tmpmtx, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
 	D3DXMatrixTranslation(&tmpmtx, (float)(-x) * Geometry::WindowScale(), (float)(-y) * Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
@@ -196,7 +196,7 @@ void TableProtoScene::ScoreBoard::renderWind() {
 		&rect, 0, 0, &myMatrix);
 }
 
-void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, D3DCOLOR color) {
+void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, ArgbColor color) {
 	RECT rect = {
 		NumCharX + NumCharWidth * (num    ), NumCharY,
 		NumCharX + NumCharWidth * (num + 1), NumCharY + NumCharHeight
@@ -207,7 +207,7 @@ void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, D3DC
 
 void TableProtoScene::ScoreBoard::renderRank() {
 	PlayerRankList rankList = utils::calcRank(GameStatus::gameStat());
-	const D3DCOLOR color =
+	const ArgbColor color =
 		(rankList[playerID()] == 1) ? ledColorRed : // トップは赤
 		(rankList[playerID()] == (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4) ? ledColorOrange : // ラスはオレンジ
 		ledColorGreen); // その他は緑で表示
@@ -264,7 +264,7 @@ std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scor
 
 void TableProtoScene::ScoreBoard::renderScore() {
 	unsigned digits, unitcode; signed decimalPos, sign;
-	D3DCOLOR color;
+	ArgbColor color;
 	ScoreMode scoreMode = getScoreMode();
 
 	std::tie(digits, unitcode, decimalPos, sign) = scoreInfo(scoreMode);
@@ -311,7 +311,7 @@ void TableProtoScene::ScoreBoard::renderScore() {
 	}
 }
 
-void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum, D3DCOLOR color) {
+void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum, ArgbColor color) {
 	RECT rect = {
 		ScoreUnitCharX + ScoreUnitCharWidth * (unitnum    ), ScoreUnitCharY,
 		ScoreUnitCharX + ScoreUnitCharWidth * (unitnum + 1), ScoreUnitCharY + ScoreUnitCharHeight

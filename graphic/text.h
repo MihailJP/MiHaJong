@@ -18,8 +18,8 @@ protected:
 	struct StringAttr;
 	struct SpriteAttr;
 	FontMapClass* fontmap;
-	LPDIRECT3DDEVICE9 myDevice;
-	LPDIRECT3DTEXTURE9 font;
+	DevicePtr myDevice;
+	TexturePtr font;
 	std::vector<StringAttr*> StringData;
 	std::vector<std::vector<SpriteAttr*> > SpriteData;
 	void spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrAdvance, float cursorPos);
@@ -28,12 +28,12 @@ protected:
 	void deleteSprite();
 	void deleteSprite(unsigned int ID);
 public:
-	explicit ITextRenderer(LPDIRECT3DDEVICE9 device);
+	explicit ITextRenderer(DevicePtr device);
 	virtual ~ITextRenderer() = 0;
 	void NewText(unsigned int ID, const std::wstring& str, int x, int y,
-		float scale = 1.0, float width = 1.0, D3DCOLOR color = 0xffffffff);
+		float scale = 1.0, float width = 1.0, ArgbColor color = 0xffffffff);
 	void NewText(unsigned int ID, const std::string& str, int x, int y,
-		float scale = 1.0, float width = 1.0, D3DCOLOR color = 0xffffffff);
+		float scale = 1.0, float width = 1.0, ArgbColor color = 0xffffffff);
 	void DelText(unsigned int ID);
 	void Render();
 	virtual unsigned strWidthByCols(const std::wstring& str);
@@ -49,7 +49,7 @@ private:
 	const unsigned int FontCols() {return 32;}
 	const unsigned int FontPadding() {return 2;}
 public:
-	explicit TextRenderer(LPDIRECT3DDEVICE9 device);
+	explicit TextRenderer(DevicePtr device);
 	~TextRenderer();
 };
 
@@ -60,7 +60,7 @@ private:
 	const unsigned int FontCols() {return 8;}
 	const unsigned int FontPadding() {return 0;}
 public:
-	explicit HugeTextRenderer(LPDIRECT3DDEVICE9 device);
+	explicit HugeTextRenderer(DevicePtr device);
 	~HugeTextRenderer();
 };
 
@@ -71,7 +71,7 @@ private:
 	const unsigned int FontCols() {return 94;}
 	const unsigned int FontPadding() {return 1;}
 public:
-	explicit SmallTextRenderer(LPDIRECT3DDEVICE9 device);
+	explicit SmallTextRenderer(DevicePtr device);
 	~SmallTextRenderer();
 };
 
@@ -82,7 +82,7 @@ private:
 	const unsigned int FontCols() {return 39;}
 	const unsigned int FontPadding() {return 0;}
 public:
-	explicit CallDigitRenderer(LPDIRECT3DDEVICE9 device);
+	explicit CallDigitRenderer(DevicePtr device);
 	~CallDigitRenderer();
 };
 
@@ -93,7 +93,7 @@ private:
 	const unsigned int FontCols() {return 10;}
 	const unsigned int FontPadding() {return 0;}
 public:
-	explicit ScoreDigitRenderer(LPDIRECT3DDEVICE9 device);
+	explicit ScoreDigitRenderer(DevicePtr device);
 	~ScoreDigitRenderer();
 };
 
@@ -101,7 +101,7 @@ struct ITextRenderer::StringAttr {
 	std::wstring str;
 	int X, Y;
 	float scale, width;
-	D3DCOLOR color;
+	ArgbColor color;
 };
 
 struct ITextRenderer::SpriteAttr {
@@ -109,8 +109,8 @@ struct ITextRenderer::SpriteAttr {
 	bool isFullWidth;
 	int X, Y;
 	float widthScale, heightScale;
-	D3DCOLOR color;
-	D3DXMATRIX matrix;
+	ArgbColor color;
+	TransformMatrix matrix;
 };
 
 }

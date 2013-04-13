@@ -22,18 +22,18 @@ class LogWindow {
 private:
 	static unsigned const halffontsz = 9; // îºäpÇÃâ°ïù
 	HWND myHWnd;
-	LPDIRECT3DDEVICE9 myDevice;
-	LPDIRECT3DTEXTURE9 myTexture;
+	DevicePtr myDevice;
+	TexturePtr myTexture;
 	SmallTextRenderer* myTextRenderer;
 	int x, y; unsigned width, height;
 	void renderFrame();
-	D3DXMATRIX getMatrix(int X, int Y, unsigned Width);
+	TransformMatrix getMatrix(int X, int Y, unsigned Width);
 private:
 	static unsigned const lineheight = 20;
 	std::vector<CodeConv::tstring> lines;
 	void reconstruct_lines();
 public:
-	LogWindow(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned Width, unsigned Height);
+	LogWindow(HWND hwnd, DevicePtr device, int X, int Y, unsigned Width, unsigned Height);
 	~LogWindow();
 	void Render();
 };

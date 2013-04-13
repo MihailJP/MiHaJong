@@ -25,7 +25,7 @@ private: // ボタン属性
 	struct BtnData { // ボタンの属性格納
 		LPCTSTR label;
 		const int x, y;
-		const D3DCOLOR color;
+		const ArgbColor color;
 	};
 	static const BtnData buttonDat[2][btnMAXIMUM];
 public:

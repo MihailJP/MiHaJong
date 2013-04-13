@@ -6,7 +6,7 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneTitling::TableSubsceneTitling(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
+TableSubsceneTitling::TableSubsceneTitling(DevicePtr device) : TableSubscene(device) {
 	myTextRenderer = new HugeTextRenderer(device);
 }
 
@@ -32,10 +32,10 @@ void TableSubsceneTitling::skipEvent() {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneMsg::TableSubsceneMsg(LPDIRECT3DDEVICE9 device, const std::wstring& str) : TableSubsceneTitling(device) {
+TableSubsceneMsg::TableSubsceneMsg(DevicePtr device, const std::wstring& str) : TableSubsceneTitling(device) {
 	myString = str;
 }
-TableSubsceneMsg::TableSubsceneMsg(LPDIRECT3DDEVICE9 device, const std::string& str) : TableSubsceneTitling(device) {
+TableSubsceneMsg::TableSubsceneMsg(DevicePtr device, const std::string& str) : TableSubsceneTitling(device) {
 	myString = CodeConv::ANSItoWIDE(str);
 }
 
@@ -49,7 +49,7 @@ void TableSubsceneMsg::Render() {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneTitlingHonba::TableSubsceneTitlingHonba(LPDIRECT3DDEVICE9 device) : TableSubsceneTitling(device) {
+TableSubsceneTitlingHonba::TableSubsceneTitlingHonba(DevicePtr device) : TableSubsceneTitling(device) {
 }
 TableSubsceneTitlingHonba::~TableSubsceneTitlingHonba() {
 }

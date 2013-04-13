@@ -8,14 +8,14 @@ namespace mihajong_graphic {
 
 class CheckBox {
 private:
-	LPDIRECT3DTEXTURE9 myTexture;
-	LPDIRECT3DDEVICE9 myDevice;
+	TexturePtr myTexture;
+	DevicePtr myDevice;
 	TextRenderer* myTextRenderer;
 	CodeConv::tstring myCaption;
 	bool checkFlag, focused;
 	int myX, myY;
 public:
-	explicit CheckBox(LPDIRECT3DDEVICE9 device,
+	explicit CheckBox(DevicePtr device,
 		const CodeConv::tstring& caption,
 		int x, int y, bool checked = false);
 	~CheckBox();

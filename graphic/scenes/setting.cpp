@@ -28,8 +28,8 @@ void PreferenceConfigScene::itemText(unsigned prmID, const CodeConv::tstring& pr
 	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ƒAƒX”ä~0.75(‰¡•’²®—p)
 	const unsigned ItemNum = (menuCursor / RULES_IN_PAGE * RULES_IN_PAGE) + prmID;
 	unsigned itmNameCols = strwidth(prmName); // Œ…”(“ú–{Œê‚Í2Œ…)
-	D3DCOLOR baseColor = ((prmContent == _T("‚m^‚`")) || ((prmContent.empty()) && (rules::getPreferenceInputSize(ItemNum) == 0))) ? 0x00bfbfbf : 0x00ffffff;
-	D3DCOLOR menuColor = ((menuCursor % RULES_IN_PAGE == prmID) && (buttonCursor == -1)) ? 0xff000000 : 0x7f000000;
+	ArgbColor baseColor = ((prmContent == _T("‚m^‚`")) || ((prmContent.empty()) && (rules::getPreferenceInputSize(ItemNum) == 0))) ? 0x00bfbfbf : 0x00ffffff;
+	ArgbColor menuColor = ((menuCursor % RULES_IN_PAGE == prmID) && (buttonCursor == -1)) ? 0xff000000 : 0x7f000000;
 	const int xPos = (prmID / 20 * 720 + 50), yPos = 135 + (prmID % 20) * 40;
 	myTextRenderer->NewText(prmID * 3, prmName,
 		xPos * WidthRate, yPos, 1.0f,

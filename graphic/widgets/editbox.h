@@ -16,11 +16,11 @@ class EditBox { // 自前のエディットボックスもどき
 private:
 	static unsigned const halffontsz = 9; // 半角の横幅
 	HWND myHWnd;
-	LPDIRECT3DTEXTURE9 myTexture;
+	TexturePtr myTexture;
 	CodeConv::tstring myText;
 	std::tuple<int, int, unsigned> myRegion;
 	SmallTextRenderer* myTextRenderer;
-	LPDIRECT3DDEVICE9 myDevice;
+	DevicePtr myDevice;
 	unsigned maxStr;
 	LPD3DXLINE cursorLine;
 	unsigned cursorPos;
@@ -30,7 +30,7 @@ private:
 	unsigned scrollRBound(IMStat& imStat);
 	void scroll(IMStat& imStat);
 	float myScale;
-	D3DXMATRIX getMatrix(int X, int Y, unsigned width);
+	TransformMatrix getMatrix(int X, int Y, unsigned width);
 	void renderFrame(int X, int Y, unsigned width);
 	void renderIMCandidateFrame(int X, int Y, unsigned width, unsigned lines);
 	void renderNormalText(IMStat& imStat, unsigned start, unsigned end, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol);
@@ -39,7 +39,7 @@ private:
 	void renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol);
 	bool isActive;
 public:
-	EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width, float scale = 1.0f);
+	EditBox(HWND hwnd, DevicePtr device, int X, int Y, unsigned width, float scale = 1.0f);
 	~EditBox();
 	void Render();
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);

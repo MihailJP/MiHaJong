@@ -6,26 +6,26 @@
 
 namespace mihajong_graphic {
 
-ITextRenderer::ITextRenderer(LPDIRECT3DDEVICE9 device) {
+ITextRenderer::ITextRenderer(DevicePtr device) {
 	myDevice = device;
 }
-TextRenderer::TextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
+TextRenderer::TextRenderer(DevicePtr device) : ITextRenderer(device) {
 	fontmap = FontMap::instantiate();
 	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT));
 }
-HugeTextRenderer::HugeTextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
+HugeTextRenderer::HugeTextRenderer(DevicePtr device) : ITextRenderer(device) {
 	fontmap = FontMapLargeChr::instantiate();
 	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_HUGE));
 }
-SmallTextRenderer::SmallTextRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
+SmallTextRenderer::SmallTextRenderer(DevicePtr device) : ITextRenderer(device) {
 	fontmap = FontMapSmallChr::instantiate();
 	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_FONT_SMALL));
 }
-CallDigitRenderer::CallDigitRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
+CallDigitRenderer::CallDigitRenderer(DevicePtr device) : ITextRenderer(device) {
 	fontmap = FontMapCallDigits::instantiate();
 	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_CALL_DIGITS));
 }
-ScoreDigitRenderer::ScoreDigitRenderer(LPDIRECT3DDEVICE9 device) : ITextRenderer(device) {
+ScoreDigitRenderer::ScoreDigitRenderer(DevicePtr device) : ITextRenderer(device) {
 	fontmap = FontMapScoreDigits::instantiate();
 	LoadTexture(device, &font, MAKEINTRESOURCE(IDB_PNG_SCORE_DIGITS));
 }
@@ -51,7 +51,7 @@ ScoreDigitRenderer::~ScoreDigitRenderer() {
 }
 
 /* 新規の文字列オブジェクトを作成する */
-void ITextRenderer::NewText(unsigned int ID, const std::wstring& str, int x, int y, float scale, float width, D3DCOLOR color) {
+void ITextRenderer::NewText(unsigned int ID, const std::wstring& str, int x, int y, float scale, float width, ArgbColor color) {
 	if (StringData.size() <= ID) StringData.resize(ID + 1, nullptr); // 配列の拡張
 	bool TextChanged = (!StringData[ID]) || (StringData[ID]->str != str);
 	if (StringData[ID] && TextChanged) delete StringData[ID]; // 既に存在した場合
@@ -66,7 +66,7 @@ void ITextRenderer::NewText(unsigned int ID, const std::wstring& str, int x, int
 		reconstruct(ID, false);
 	}
 }
-void ITextRenderer::NewText(unsigned int ID, const std::string& str, int x, int y, float scale, float width, D3DCOLOR color) {
+void ITextRenderer::NewText(unsigned int ID, const std::string& str, int x, int y, float scale, float width, ArgbColor color) {
 	NewText(ID, CodeConv::ANSItoWIDE(str), x, y, scale, width, color);
 }
 
@@ -85,7 +85,7 @@ void ITextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrA
 	sprite->heightScale = StringData[ID]->scale;
 	sprite->color = StringData[ID]->color;
 	/* 行列を計算する */
-	D3DXMATRIX m; D3DXMatrixIdentity(&m);
+	TransformMatrix m; D3DXMatrixIdentity(&m);
 	D3DXMatrixIdentity(&sprite->matrix);
 	D3DXMatrixTranslation(&m, (float)-(sprite->X), (float)-(sprite->Y), 0);
 	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);

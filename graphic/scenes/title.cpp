@@ -192,16 +192,16 @@ void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 
 // -------------------------------------------------------------------------
 
-LPDIRECT3DTEXTURE9 TitleScreen::TitleSprite::texture = nullptr;
+TexturePtr TitleScreen::TitleSprite::texture = nullptr;
 
-void TitleScreen::TitleSprite::LoadTexture(LPDIRECT3DDEVICE9 device) {
+void TitleScreen::TitleSprite::LoadTexture(DevicePtr device) {
 	mihajong_graphic::LoadTexture(device, &texture, MAKEINTRESOURCE(IDB_PNG_TITLE));
 }
 void TitleScreen::TitleSprite::DisposeTexture() {
 	if (texture) texture->Release();
 }
 
-TitleScreen::TitleSprite::TitleSprite(LPDIRECT3DDEVICE9 device, int X, int Y, int Width, int Height) {
+TitleScreen::TitleSprite::TitleSprite(DevicePtr device, int X, int Y, int Width, int Height) {
 	rect.left = X; rect.top = Y; rect.right = X + Width; rect.bottom = Y + Height;
 	width = Width; height = Height;
 	myDevice = device;
@@ -209,7 +209,7 @@ TitleScreen::TitleSprite::TitleSprite(LPDIRECT3DDEVICE9 device, int X, int Y, in
 TitleScreen::TitleSprite::~TitleSprite() {
 }
 void TitleScreen::TitleSprite::show(int X, int Y, float scale, uint8_t opacity) {
-	D3DXMATRIX matrix, matrix1;
+	TransformMatrix matrix, matrix1;
 	D3DXMatrixIdentity(&matrix);
 	D3DXMatrixTranslation(&matrix1, (float)(-X), (float)(-Y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1, scale, scale, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);

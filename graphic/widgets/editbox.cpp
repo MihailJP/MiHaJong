@@ -13,7 +13,7 @@ namespace mihajong_graphic {
 
 using namespace character_width;
 
-EditBox::EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width, float scale) {
+EditBox::EditBox(HWND hwnd, DevicePtr device, int X, int Y, unsigned width, float scale) {
 	assert(width >= 8);
 	myHWnd = hwnd; myDevice = device;
 	myRegion = std::make_tuple(X, Y, width);
@@ -31,8 +31,8 @@ EditBox::~EditBox() {
 	if (myTextRenderer) delete myTextRenderer;
 }
 
-D3DXMATRIX EditBox::getMatrix(int X, int Y, unsigned width) {
-	D3DXMATRIX mat, mat1; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat1);
+TransformMatrix EditBox::getMatrix(int X, int Y, unsigned width) {
+	TransformMatrix mat, mat1; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat1);
 	D3DXMatrixTranslation(&mat, -X, -Y, 0.0f);
 	D3DXMatrixScaling(&mat1, (float)(width * halffontsz) / 77.0f, 1.0f, 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
@@ -46,7 +46,7 @@ D3DXMATRIX EditBox::getMatrix(int X, int Y, unsigned width) {
 }
 
 void EditBox::renderFrame(int X, int Y, unsigned width) {
-	D3DXMATRIX matrixScale; D3DXMatrixIdentity(&matrixScale); D3DXMATRIX matrixScale1; D3DXMatrixIdentity(&matrixScale1);
+	TransformMatrix matrixScale; D3DXMatrixIdentity(&matrixScale); TransformMatrix matrixScale1; D3DXMatrixIdentity(&matrixScale1);
 	D3DXMatrixTranslation(&matrixScale, (float)(-X), (float)(-Y), 0.0f);
 	D3DXMatrixScaling(&matrixScale1, myScale, myScale, 1.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
 	D3DXMatrixTranslation(&matrixScale1, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
@@ -57,7 +57,7 @@ void EditBox::renderFrame(int X, int Y, unsigned width) {
 	else {rect.top = 0; rect.bottom = 28;}
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X - 5, Y - 5, 5, 28, 0xffffffff, &rect, 0, 0, &matrixScale);
 	rect.left = 5; rect.right = 82;
-	D3DXMATRIX mat = getMatrix(X, Y, width);
+	TransformMatrix mat = getMatrix(X, Y, width);
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y - 5, width * halffontsz, 28, 0xffffffff, &rect, 0, 0, &mat);
 	rect.left = 82; rect.right = 87;
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X + width * halffontsz, Y - 5, 5, 28, 0xffffffff, &rect, 0, 0, &matrixScale);
@@ -68,7 +68,7 @@ void EditBox::renderIMCandidateFrame(int X, int Y, unsigned width, unsigned line
 	RECT rect;
 	unsigned spriteNum = 0u;
 	auto drawLine = [&rect, &spriteNum, X, Y, width, this](int y) -> void {
-		D3DXMATRIX matrixScale; D3DXMatrixIdentity(&matrixScale); D3DXMATRIX matrixScale1; D3DXMatrixIdentity(&matrixScale1);
+		TransformMatrix matrixScale; D3DXMatrixIdentity(&matrixScale); TransformMatrix matrixScale1; D3DXMatrixIdentity(&matrixScale1);
 		D3DXMatrixTranslation(&matrixScale, (float)(-X), (float)(-Y), 0.0f);
 		D3DXMatrixScaling(&matrixScale1, myScale, myScale, 1.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
 		D3DXMatrixTranslation(&matrixScale1, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
@@ -77,7 +77,7 @@ void EditBox::renderIMCandidateFrame(int X, int Y, unsigned width, unsigned line
 		rect.left = 0; rect.right = 5;
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X - 5, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &matrixScale);
 		rect.left = 5; rect.right = 82;
-		D3DXMATRIX mat = getMatrix(X, Y, width);
+		TransformMatrix mat = getMatrix(X, Y, width);
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y + y, width * halffontsz, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &mat);
 		rect.left = 82; rect.right = 87;
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X + width * halffontsz, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &matrixScale);
@@ -134,7 +134,7 @@ void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsig
 		if (convStr.empty()) break;
 		if (i == imCursor) cursorcol = cols;
 		if ((cols >= width) || (i == convStr.size()) || ((i > strStartPos) && (i < charInfo.size()) && (tmpInfo != charInfo[i]))) {
-			D3DCOLOR color;
+			ArgbColor color;
 			switch (tmpInfo) {
 			case ATTR_INPUT:
 				color = 0xff00ccff; break;

@@ -24,7 +24,7 @@ namespace mihajong_graphic {
 const double TableSubsceneAgariScreenProto::yakuInterval = 0.75;
 const double TableSubsceneAgariScreenProto::yakuAnimStartSecond = 2.0;
 
-TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
+TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(DevicePtr device) : TableSubscene(device) {
 	myDevice = device;
 	LoadTexture(device, &windowTexture, MAKEINTRESOURCE(IDB_PNG_AGARI_WINDOW));
 	yakuData = YakuResult::getYakuStat();
@@ -95,7 +95,7 @@ TableSubsceneAgariScreenProto::AgariStyle TableSubsceneAgariScreenProto::getAgar
 		}
 	}
 }
-D3DCOLOR TableSubsceneAgariScreenProto::baseColor() {
+ArgbColor TableSubsceneAgariScreenProto::baseColor() {
 	switch (getAgariStyle()) {
 		case agariMine:     return 0xffffdf00;
 		case agariFurikomi: return 0xffff7f7f;
@@ -209,7 +209,7 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 			return (cols > 12) ? (8.0f / (float)cols) : 1.0f;
 		} (yakuList[yakuNum].first);
 		// •\Ž¦
-		const D3DCOLOR color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (baseColor() & 0x00ffffff));
+		const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (baseColor() & 0x00ffffff));
 		const int x = BaseX + ((yakuNum % 2 == 0) ? 50 : 390);
 		const int y = BaseY + 200;
 		myTextRenderer->NewText(yakuNum * 2, yakuList[yakuNum].first,
@@ -234,7 +234,7 @@ void TableSubsceneAgariScreenProto::renderYakuName() {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneAgariScreen::TableSubsceneAgariScreen(LPDIRECT3DDEVICE9 device) : TableSubsceneAgariScreenProto(device) {
+TableSubsceneAgariScreen::TableSubsceneAgariScreen(DevicePtr device) : TableSubsceneAgariScreenProto(device) {
 }
 TableSubsceneAgariScreen::~TableSubsceneAgariScreen() {
 }
@@ -250,7 +250,7 @@ void TableSubsceneAgariScreen::Render() {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneAgariScreenUradora::TableSubsceneAgariScreenUradora(LPDIRECT3DDEVICE9 device) : TableSubsceneAgariScreenProto(device) {
+TableSubsceneAgariScreenUradora::TableSubsceneAgariScreenUradora(DevicePtr device) : TableSubsceneAgariScreenProto(device) {
 	doraTilesUra = new DoraTilesUra(this);
 }
 TableSubsceneAgariScreenUradora::~TableSubsceneAgariScreenUradora() {
@@ -283,7 +283,7 @@ void TableSubsceneAgariScreenProto::AgariTehai::Reconstruct(const GameTable* gam
 			const int yOffset = (Zeit >= 1.0) ? 0 : (int)(pow(1.0 - Zeit, 2) * (double)Geometry::BaseSize);
 			return std::make_tuple(BaseX + 28, handPosY - yOffset);
 		},
-		sSelf, [](int){return (D3DCOLOR)0xffffffff;},
+		sSelf, [](int){return (ArgbColor)0xffffffff;},
 		[](const int*, const int*, int){});
 }
 
@@ -396,7 +396,7 @@ void TableSubsceneAgariScreenProto::DoraTiles::Reconstruct() {
 		const int tileIndex = (i - DoraPosStart) / (-2);
 		const double Zeit = myCaller->seconds() - (startTime() + (double)tileIndex * 0.0625);
 		if (Zeit >= 0.0) {
-			const D3DCOLOR color = (Zeit >= 0.325) ? 0xffffffff : ((255 - (int)((0.325 - Zeit) * 700)) << 24 | 0x00ffffff);
+			const ArgbColor color = (Zeit >= 0.325) ? 0xffffffff : ((255 - (int)((0.325 - Zeit) * 700)) << 24 | 0x00ffffff);
 			tileObj->NewTile(tileIndex,
 				(gameStat->DoraPointer <= i) ? gameStat->Deck[i].tile : BackSide,
 				(gameStat->DoraPointer <= i) ? gameStat->Deck[i].red : Normal,
@@ -449,7 +449,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
 		std::setw(2) << std::setfill(_T(' ')) << han << _T("ãÊ");
 	const int x = BaseX + yakuWndWidth - 32 - 27 * 9;
 	const int y = BaseY + 650;
-	const D3DCOLOR color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
+	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
 	txtRenderer->NewText(0, o.str(), x, y, 1.0f, (han >= 100) ? (1.5f * 0.9f) : 1.5f, color);
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
@@ -463,7 +463,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 	const int x = BaseX + yakuWndWidth - 24 - 72 * txtWidth;
 	const int y = BaseY + 700;
 	const float scale = (Zeit >= anmTime) ? 1.0f : (pow(2.5f * (float)(anmTime - Zeit), 2) + 1.0f);
-	const D3DCOLOR color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
+	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
 	digitRenderer->NewText(0, scoreTxt,
 		x - (int)(36.0f * (float)txtWidth * (scale - 1.0f)),
 		y - (int)(48.0f * (scale - 1.0f)),
@@ -514,7 +514,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
 			const int x = BaseX + 30;
 			const int y = BaseY + 720;
 			const float scale = (Zeit >= anmTime) ? 1.0f : (pow(2.5f * (float)(anmTime - Zeit), 2) + 1.0f);
-			const D3DCOLOR color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
+			const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
 			txtRenderer->NewText(1, tmptxt,
 				x - (int)(54.0f * (scale - 1.0f)),
 				y - (int)(36.0f * (scale - 1.0f)),
@@ -539,7 +539,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructChipAmount() {
 	o << _T("–‡");
 	const int x = BaseX + yakuWndWidth - 32 - 27 * 10;
 	const int y = BaseY + yakuWndHeight - 70;
-	const D3DCOLOR color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
+	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
 	txtRenderer->NewText(2, o.str(), x, y, 1.0f, (GameStatus::gameStat()->TsumoAgariFlag) ? (1.5f * 5.0f / 7.0f) : 1.5f, color);
 }
 void TableSubsceneAgariScreenProto::ShowScore::Reconstruct() {

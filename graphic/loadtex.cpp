@@ -7,10 +7,10 @@
 namespace mihajong_graphic {
 
 namespace {
-	std::map<int, LPDIRECT3DTEXTURE9> Textures;
+	std::map<int, TexturePtr> Textures;
 }
 
-void LoadTexture(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9* texture, LPCTSTR resource) {
+void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 	assert(((int)resource & 0xffff0000) == 0); // 上位ワードが0なら文字列ではなくリソース番号とみなされる(Win32APIの仕様)
 	if (Textures.find((int)resource) != Textures.end()) { // 既にロード済みのテクスチャ
 		Textures[(int)resource]->AddRef();

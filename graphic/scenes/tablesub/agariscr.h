@@ -26,10 +26,10 @@ protected:
 	bool YakumanMode();
 	enum AgariStyle {agariMine, agariFurikomi, agariOthers,};
 	static AgariStyle getAgariStyle();
-	static D3DCOLOR baseColor();
+	static ArgbColor baseColor();
 protected:
-	LPDIRECT3DDEVICE9 myDevice;
-	LPDIRECT3DTEXTURE9 windowTexture;
+	DevicePtr myDevice;
+	TexturePtr windowTexture;
 	TextRenderer* myTextRenderer;
 protected:
 	mihajong_structs::YakuResult yakuData;
@@ -48,14 +48,14 @@ protected:
 	bool bgmFlag;
 	int maxShown;
 public:
-	TableSubsceneAgariScreenProto(LPDIRECT3DDEVICE9 device);
+	TableSubsceneAgariScreenProto(DevicePtr device);
 	virtual ~TableSubsceneAgariScreenProto();
 	virtual void skipEvent();
 };
 
 class TableSubsceneAgariScreen : public TableSubsceneAgariScreenProto {
 public:
-	TableSubsceneAgariScreen(LPDIRECT3DDEVICE9 device);
+	TableSubsceneAgariScreen(DevicePtr device);
 	~TableSubsceneAgariScreen();
 	void Render();
 };
@@ -65,7 +65,7 @@ private:
 	class DoraTilesUra;
 	DoraTilesUra* doraTilesUra;
 public:
-	TableSubsceneAgariScreenUradora(LPDIRECT3DDEVICE9 device);
+	TableSubsceneAgariScreenUradora(DevicePtr device);
 	~TableSubsceneAgariScreenUradora();
 	void Render();
 };

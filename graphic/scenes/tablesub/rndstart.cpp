@@ -6,7 +6,7 @@
 
 namespace mihajong_graphic {
 
-TableSubsceneBeginning::TableSubsceneBeginning(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
+TableSubsceneBeginning::TableSubsceneBeginning(DevicePtr device) : TableSubscene(device) {
 	myTextRenderer = new HugeTextRenderer(device);
 }
 

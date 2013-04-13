@@ -79,7 +79,7 @@ void ResultScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 
 // -------------------------------------------------------------------------
 
-ResultScreen::RankRenderer::RankRenderer(LPDIRECT3DDEVICE9 device, int id) {
+ResultScreen::RankRenderer::RankRenderer(DevicePtr device, int id) {
 	myDevice = device;
 	myID = id;
 	BaseY = (3 - id) * 150 + 350;
@@ -115,7 +115,7 @@ ResultScreen::RankRenderer::~RankRenderer() {
 void ResultScreen::RankRenderer::RenderRank() {
 	const float widthScale = (float)Geometry::WindowWidth * 0.75 / (float)Geometry::WindowHeight;
 	CodeConv::tostringstream o; o << (4 - myID);
-	D3DCOLOR txtcolor;
+	ArgbColor txtcolor;
 	switch (4 - myID) {
 		case 1:  txtcolor = 0xffffd700; break;
 		case 2:  txtcolor = 0xffffffff; break;
@@ -129,10 +129,10 @@ void ResultScreen::RankRenderer::RenderRank() {
 void ResultScreen::RankRenderer::RenderNameScore() {
 	const float widthScale = (float)Geometry::WindowWidth * 0.75 / (float)Geometry::WindowHeight;
 	const uint64_t tempus = myTimer.elapsed();
-	const D3DCOLOR aColor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
+	const ArgbColor aColor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
 		(255 - (int)(200.0 - ((double)tempus / (double)animTime * 200.0))),
 		255, 255, 255);
-	const D3DCOLOR color = (player != GameStatus::gameStat()->PlayerID) ? 0xffffffff :
+	const ArgbColor color = (player != GameStatus::gameStat()->PlayerID) ? 0xffffffff :
 		D3DCOLOR_ARGB(255, 255,
 		(int)(200.0 - sin((double)myTimer.elapsed() * M_PI / 500000.0) * 50.0),
 		(int)(200.0 - sin((double)myTimer.elapsed() * M_PI / 500000.0) * 50.0)
@@ -171,14 +171,14 @@ void ResultScreen::RankRenderer::RenderScore() {
 	const float widthScale = (float)Geometry::WindowWidth * 0.75 / (float)Geometry::WindowHeight;
 	const unsigned widthLimit = 4u;
 	const uint64_t tempus = myTimer.elapsed();
-	const D3DCOLOR aColor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
+	const ArgbColor aColor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
 		(255 - (int)(200.0 - ((double)tempus / ((double)animTime / 200.0)))),
 		255, 255, 255);
 	const float scale = (tempus >= animTime) ? 1.0f :
 		1.0f + pow((float)(animTime - tempus) / (float)animTime * 3.5f, 2);
 	const LargeNum point(FinalScoreDat::getData(player));
 	const CodeConv::tstring scoreTxt(point.bignumtotext(_T("+"), _T("¢")));
-	const D3DCOLOR color =
+	const ArgbColor color =
 		(point > LargeNum::fromInt(0)) ? 0xffccffcc :
 		(point < LargeNum::fromInt(0)) ? 0xffffcccc : 0xffffffcc;
 	const unsigned strWidth = scoreRenderer->strWidthByCols(scoreTxt) / 2u;

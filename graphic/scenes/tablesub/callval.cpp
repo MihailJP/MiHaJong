@@ -7,7 +7,7 @@
 
 namespace mihajong_graphic {
 
-TableSubsceneCallValue::TableSubsceneCallValue(LPDIRECT3DDEVICE9 device, const CodeConv::tstring& caption) : TableSubscene(device) {
+TableSubsceneCallValue::TableSubsceneCallValue(DevicePtr device, const CodeConv::tstring& caption) : TableSubscene(device) {
 	fontRenderer = new CallDigitRenderer(device);
 	captionRenderer = nullptr;
 	if (!caption.empty()) captionRenderer = new TableSubsceneMsg(device, caption);
@@ -34,7 +34,7 @@ void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 
 	const std::uint64_t curr = myTimer.elapsed();
 	const int animationLength = 250000;
-	const D3DCOLOR col = D3DCOLOR_ARGB(
+	const ArgbColor col = D3DCOLOR_ARGB(
 		(curr >= animationLength) ? 255 :
 		(int)std::pow((float)(curr * 255) / animationLength / 16.0f, 2),
 		c_val.Mantissa > 0 ? 0xcc : 0xff,
