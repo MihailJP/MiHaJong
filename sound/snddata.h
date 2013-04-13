@@ -1,8 +1,8 @@
 #pragma once
 
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
-#include <al.h>
-#include <alc.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 #elif defined(USE_XAUDIO2)
 #include <xaudio2.h>
 #else
