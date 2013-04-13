@@ -1,5 +1,6 @@
 #pragma once
 
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 #ifdef _MSC_VER
 #  include <d3dx9.h>
 #  include <dxerr.h>
@@ -10,4 +11,7 @@
 #  endif
 #  include <d3dx9.h>
 #  include <dxerr9.h>
-#endif
+#endif /* _MSC_VER */
+#else
+#include <GL/gl.h>
+#endif /* defined(_WIN32) && defined(WITH_DIRECTX) */
