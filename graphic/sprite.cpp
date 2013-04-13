@@ -1,5 +1,6 @@
 #include "sprite.h"
 #include "geometry.h"
+#include "loadtex.h"
 
 /* スプライト表示処理 */
 
@@ -78,6 +79,36 @@ void SpriteRenderer::ShowSprite(
 	sprite->Flush();
 #else
 	/* TODO: OpenGLで再実装 */
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, Geometry::WindowWidth, 0, Geometry::WindowHeight, 0, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	RECT* txRect = rect ? rect : &defaultRect;
+
+	glBegin(GL_QUADS);
+	glColor4d(
+		(double)((color & 0x00ff0000) >> 16) / 255.0,
+		(double)((color & 0x0000ff00) >>  8) / 255.0,
+		(double)((color & 0x000000ff)      ) / 255.0,
+		(double)((color & 0xff000000) >> 24) / 255.0);
+	const double lpos = (double)txRect->left   / (double)getTextureWidth (nullptr, texture);
+	const double rpos = (double)txRect->right  / (double)getTextureWidth (nullptr, texture);
+	const double tpos = (double)txRect->top    / (double)getTextureHeight(nullptr, texture);
+	const double bpos = (double)txRect->bottom / (double)getTextureHeight(nullptr, texture);
+	glTexCoord2d(lpos, bpos); glVertex2i(X        , Geometry::WindowHeight - (Y + Height));
+	glTexCoord2d(rpos, bpos); glVertex2i(X + Width, Geometry::WindowHeight - (Y + Height));
+	glTexCoord2d(rpos, tpos); glVertex2i(X + Width, Geometry::WindowHeight -  Y          );
+	glTexCoord2d(lpos, tpos); glVertex2i(X        , Geometry::WindowHeight -  Y          );
+	glEnd();
+	glFlush();
+
+	glDisable(GL_TEXTURE_2D);
 #endif
 }
 

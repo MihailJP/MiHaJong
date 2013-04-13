@@ -49,6 +49,9 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 	pfd.iLayerType = PFD_MAIN_PLANE;
 	int iFormat = ChoosePixelFormat(pDevice, &pfd);
 	SetPixelFormat(pDevice, iFormat, &pfd);
+
+	HGLRC rContext = wglCreateContext(pDevice);
+	wglMakeCurrent(pDevice, rContext);
 #endif
 }
 ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
@@ -79,8 +82,8 @@ void ScreenManipulator::Render() {
 			}
 #else
 			/* TODO: OpenGLで再実装 */
-			HGLRC rContext = wglCreateContext(pDevice);
-			wglMakeCurrent(pDevice, rContext);
+			//HGLRC rContext = wglCreateContext(pDevice);
+			//wglMakeCurrent(pDevice, rContext);
 
 			glClearColor(1, 1, 1, 1); glClear(GL_COLOR_BUFFER_BIT); // バッファクリア
 			SpriteRenderer::instantiate(pDevice)->Start(); // スプライト描画開始
@@ -90,8 +93,8 @@ void ScreenManipulator::Render() {
 			glFlush();
 			SwapBuffers(pDevice); // 画面の更新
 
-			wglMakeCurrent(nullptr, nullptr);
-			wglDeleteContext(rContext);
+			//wglMakeCurrent(nullptr, nullptr);
+			//wglDeleteContext(rContext);
 #endif
 		}
 	});

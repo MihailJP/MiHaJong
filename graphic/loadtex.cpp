@@ -9,9 +9,13 @@
 
 namespace mihajong_graphic {
 
-namespace {
+//namespace {
 	std::map<int, TexturePtr> Textures;
-}
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	std::map<TexturePtr, unsigned> TextureWidth;
+	std::map<TexturePtr, unsigned> TextureHeight;
+#endif
+//}
 
 void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
@@ -57,29 +61,46 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 #else
 		/* TODO: OpenGLÇ≈çƒé¿ëï */
 		Textures[(int)resource] = 0;
+		glEnable(GL_TEXTURE_2D);
 		glGenTextures(1, &Textures[(int)resource]);
+		TextureWidth[Textures[(int)resource]] =
+		TextureHeight[Textures[(int)resource]] = 0;
 		glBindTexture(GL_TEXTURE_2D, Textures[(int)resource]);
 		HGLOBAL resBuf = GlobalAlloc(GMEM_MOVEABLE, pngSize);
 		void* pResBuf = GlobalLock(resBuf);
 		Bitmap* bitmap = nullptr;
 		BitmapData data;
+		IStream* stream = nullptr;
 		if (pResBuf) {
 			CopyMemory(pResBuf, pngData, pngSize);
-			IStream* stream = nullptr;
 			if (SUCCEEDED(CreateStreamOnHGlobal(resBuf, false, &stream))) {
 				bitmap = Bitmap::FromStream(stream);
 				Rect rect(0, 0, bitmap->GetWidth(), bitmap->GetHeight());
 				bitmap->LockBits(&rect, ImageLockModeRead, PixelFormat32bppARGB, &data);
-				stream->Release();
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap->GetWidth(), bitmap->GetHeight(), 0,
-					GL_RGBA, GL_UNSIGNED_INT, data.Scan0);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+				/*uint8_t test[] = {
+					0, 255, 255, 255, 0, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255,
+				};
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0,
+					GL_BGRA_EXT, GL_UNSIGNED_BYTE, test);*/
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data.Width, data.Height, 0,
+					GL_BGRA_EXT, GL_UNSIGNED_BYTE, data.Scan0);
 				bitmap->UnlockBits(&data);
+				TextureWidth[Textures[(int)resource]] = data.Width;
+				TextureHeight[Textures[(int)resource]] = data.Height;
 			}
 		}
+		glBindTexture(GL_TEXTURE_2D, 0);
 		GlobalUnlock(resBuf);
 		GlobalFree(resBuf);
 		UnlockResource(ResourceMem);
+		if (stream) stream->Release();
 		delete bitmap;
+		*texture = Textures[(int)resource];
+		return;
 #endif
 	}
 }
@@ -96,6 +117,23 @@ void UnloadAllTextures() {
 	/* TODO: OpenGLÇ≈çƒé¿ëï */
 #endif
 	Textures.clear();
+	TextureWidth.clear();
+	TextureHeight.clear();
 }
+
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+int getTextureWidth(DevicePtr device, TexturePtr texture) {
+	if (TextureWidth.find(texture) != TextureWidth.end())
+		return TextureWidth[texture];
+	else
+		return 0;
+}
+int getTextureHeight(DevicePtr device, TexturePtr texture) {
+	if (TextureHeight.find(texture) != TextureHeight.end())
+		return TextureHeight[texture];
+	else
+		return 0;
+}
+#endif
 
 }
