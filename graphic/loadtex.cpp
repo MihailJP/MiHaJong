@@ -1,5 +1,8 @@
 #include "loadtex.h"
 #include "resource.h"
+#if defined(_WIN32) && !defined(WITH_DIRECTX)
+#include <gdiplus.h>
+#endif
 #include <map>
 #include <cassert>
 #include "../common/strcode.h"
@@ -11,6 +14,9 @@ namespace {
 }
 
 void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
+#if defined(_WIN32) && !defined(WITH_DIRECTX)
+	using namespace Gdiplus;
+#endif
 	assert(((int)resource & 0xffff0000) == 0); // 上位ワードが0なら文字列ではなくリソース番号とみなされる(Win32APIの仕様)
 	if (Textures.find((int)resource) != Textures.end()) { // 既にロード済みのテクスチャ
 #if defined(_WIN32) && defined(WITH_DIRECTX)
@@ -19,11 +25,11 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		*texture = Textures[(int)resource];
 		return;
 	} else { // ロードされていない場合
-#if defined(_WIN32) && defined(WITH_DIRECTX)
 		HRSRC Resource = FindResource(GraphicDLL, resource, MAKEINTRESOURCE(PNG_FILE));
 		HGLOBAL ResourceMem = LoadResource(GraphicDLL, Resource);
 		DWORD pngSize = SizeofResource(GraphicDLL, Resource);
 		void* pngData = LockResource(ResourceMem);
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 		Textures[(int)resource] = nullptr;
 		HRESULT result = 
 			D3DXCreateTextureFromFileInMemoryEx(device, pngData, pngSize, D3DX_DEFAULT, D3DX_DEFAULT, 0, 0,
@@ -49,7 +55,31 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 			throw _T("テクスチャの生成に失敗しました。原因不明のエラーです。");
 		}
 #else
-	/* TODO: OpenGLで再実装 */
+		/* TODO: OpenGLで再実装 */
+		Textures[(int)resource] = 0;
+		glGenTextures(1, &Textures[(int)resource]);
+		glBindTexture(GL_TEXTURE_2D, Textures[(int)resource]);
+		HGLOBAL resBuf = GlobalAlloc(GMEM_MOVEABLE, pngSize);
+		void* pResBuf = GlobalLock(resBuf);
+		Bitmap* bitmap = nullptr;
+		BitmapData data;
+		if (pResBuf) {
+			CopyMemory(pResBuf, pngData, pngSize);
+			IStream* stream = nullptr;
+			if (SUCCEEDED(CreateStreamOnHGlobal(resBuf, false, &stream))) {
+				bitmap = Bitmap::FromStream(stream);
+				Rect rect(0, 0, bitmap->GetWidth(), bitmap->GetHeight());
+				bitmap->LockBits(&rect, ImageLockModeRead, PixelFormat32bppARGB, &data);
+				stream->Release();
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap->GetWidth(), bitmap->GetHeight(), 0,
+					GL_RGBA, GL_UNSIGNED_INT, data.Scan0);
+				bitmap->UnlockBits(&data);
+			}
+		}
+		GlobalUnlock(resBuf);
+		GlobalFree(resBuf);
+		UnlockResource(ResourceMem);
+		delete bitmap;
 #endif
 	}
 }
