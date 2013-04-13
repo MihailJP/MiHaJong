@@ -83,7 +83,9 @@ namespace sound {
 	private:
 		void Prepare(const std::string&) {}
 	public:
-#if defined(USE_XAUDIO2)
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+		explicit OggData(void*, const std::string& filename, bool looped = false) {
+#elif defined(USE_XAUDIO2)
 		explicit OggData(IXAudio2** Engine, const std::string& filename, bool looped = false) {
 #else
 		explicit OggData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped = false) {
