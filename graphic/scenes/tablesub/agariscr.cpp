@@ -43,7 +43,9 @@ TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
 	delete agariNaki;
 	delete agariTehai;
 	delete myTextRenderer;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	windowTexture->Release();
+#endif
 }
 
 bool TableSubsceneAgariScreenProto::YakumanMode() {

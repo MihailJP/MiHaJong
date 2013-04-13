@@ -49,7 +49,9 @@ GameTableScreen::RichibouReconst::RichibouReconst(GameTableScreen* parent) {
 }
 
 GameTableScreen::RichibouReconst::~RichibouReconst() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (tRichi) tRichi->Release();
+#endif
 }
 
 }

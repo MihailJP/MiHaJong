@@ -9,13 +9,21 @@ std::map<int, SpriteRenderer*> SpriteRenderer::renderer;
 
 /* コンストラクタ */
 SpriteRenderer::SpriteRenderer(DevicePtr device) {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (FAILED(D3DXCreateSprite(device, &sprite)))
 		throw _T("スプライトの生成に失敗しました");
+#else
+	/* TODO: OpenGLで再実装 */
+#endif
 }
 
 /* デストラクタ */
 SpriteRenderer::~SpriteRenderer() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (sprite) sprite->Release();
+#else
+	/* TODO: OpenGLで再実装 */
+#endif
 }
 
 /* インスタンス化 */
@@ -37,12 +45,20 @@ void SpriteRenderer::delInstance(DevicePtr device) {
 
 /* スプライト描画開始 */
 void SpriteRenderer::Start() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	sprite->Begin(D3DXSPRITE_ALPHABLEND);
+#else
+	/* TODO: OpenGLで再実装 */
+#endif
 }
 
 /* スプライト描画終了 */
 void SpriteRenderer::End() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	sprite->End();
+#else
+	/* TODO: OpenGLで再実装 */
+#endif
 }
 
 /* スプライト描画 */
@@ -52,6 +68,7 @@ void SpriteRenderer::ShowSprite(
 {
 	if ((!sprite) || (!texture)) return; // ぬるぽは(・∀・)ｶｴﾚ!!
 	RECT defaultRect = {0, 0, Width, Height};
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix defaultMatrix; D3DXMatrixIdentity(&defaultMatrix);
 	D3DXMatrixScaling(&defaultMatrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXVECTOR3 Center(CenterX, CenterY, 0);
@@ -59,6 +76,9 @@ void SpriteRenderer::ShowSprite(
 	sprite->SetTransform(matrix ? matrix : &defaultMatrix);
 	sprite->Draw(texture, rect ? rect : &defaultRect, &Center, &Pos, color);
 	sprite->Flush();
+#else
+	/* TODO: OpenGLで再実装 */
+#endif
 }
 
 }

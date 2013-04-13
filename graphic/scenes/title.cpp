@@ -192,13 +192,19 @@ void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 
 // -------------------------------------------------------------------------
 
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 TexturePtr TitleScreen::TitleSprite::texture = nullptr;
+#else
+TexturePtr TitleScreen::TitleSprite::texture = 0;
+#endif
 
 void TitleScreen::TitleSprite::LoadTexture(DevicePtr device) {
 	mihajong_graphic::LoadTexture(device, &texture, MAKEINTRESOURCE(IDB_PNG_TITLE));
 }
 void TitleScreen::TitleSprite::DisposeTexture() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (texture) texture->Release();
+#endif
 }
 
 TitleScreen::TitleSprite::TitleSprite(DevicePtr device, int X, int Y, int Width, int Height) {
@@ -209,6 +215,7 @@ TitleScreen::TitleSprite::TitleSprite(DevicePtr device, int X, int Y, int Width,
 TitleScreen::TitleSprite::~TitleSprite() {
 }
 void TitleScreen::TitleSprite::show(int X, int Y, float scale, uint8_t opacity) {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix matrix, matrix1;
 	D3DXMatrixIdentity(&matrix);
 	D3DXMatrixTranslation(&matrix1, (float)(-X), (float)(-Y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
@@ -221,6 +228,9 @@ void TitleScreen::TitleSprite::show(int X, int Y, float scale, uint8_t opacity) 
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(
 		texture, X, Y, width, height,
 		(opacity << 24) | 0xffffff, &rect, width/2, height/3, &matrix);
+#else
+	/* TODO: OpenGL‚ÅÄŽÀ‘• */
+#endif
 }
 
 // -------------------------------------------------------------------------

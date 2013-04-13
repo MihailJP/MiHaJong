@@ -14,7 +14,9 @@ ButtonPic::ButtonPic(DevicePtr device) {
 }
 
 ButtonPic::~ButtonPic() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	myTexture->Release();
+#endif
 	delete myTextRenderer;
 }
 
@@ -57,12 +59,16 @@ void ButtonPic::Render() {
 		if (std::get<0>(*k) == absent) continue;
 		int X = std::get<1>(*k), Y = std::get<2>(*k);
 		unsigned width = std::get<3>(*k), height = std::get<4>(*k);
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 		TransformMatrix mat, mat2; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat2);
 		D3DXMatrixTranslation(&mat2, (float)(-X), (float)(-Y), 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
 		D3DXMatrixScaling(&mat2, (float)width / 156.0f, (float)height / 48.0f, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
 		D3DXMatrixTranslation(&mat2, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
 		RECT rect = {0, 52 * (std::get<0>(*k) - 1), 156, 52 * (std::get<0>(*k) - 1) + 48};
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y, width, height, std::get<5>(*k) | 0xff000000, &rect, 0, 0, &mat);
+#else
+		/* TODO: ‚±‚± */
+#endif
 	}
 	myTextRenderer->Render();
 }

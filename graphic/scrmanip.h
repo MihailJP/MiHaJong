@@ -1,6 +1,5 @@
 #pragma once
 
-#include "directx.h"
 #include <tchar.h>
 #include <functional>
 #include "scenes/scene_id.h"
@@ -8,6 +7,7 @@
 #include "scenes/fps.h"
 #include "input.h"
 #include "../common/mutex.h"
+#include "directx.h"
 
 namespace mihajong_graphic {
 

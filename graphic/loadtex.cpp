@@ -13,10 +13,13 @@ namespace {
 void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 	assert(((int)resource & 0xffff0000) == 0); // 上位ワードが0なら文字列ではなくリソース番号とみなされる(Win32APIの仕様)
 	if (Textures.find((int)resource) != Textures.end()) { // 既にロード済みのテクスチャ
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 		Textures[(int)resource]->AddRef();
+#endif
 		*texture = Textures[(int)resource];
 		return;
 	} else { // ロードされていない場合
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 		HRSRC Resource = FindResource(GraphicDLL, resource, MAKEINTRESOURCE(PNG_FILE));
 		HGLOBAL ResourceMem = LoadResource(GraphicDLL, Resource);
 		DWORD pngSize = SizeofResource(GraphicDLL, Resource);
@@ -45,16 +48,23 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		default: // This may not happen...
 			throw _T("テクスチャの生成に失敗しました。原因不明のエラーです。");
 		}
+#else
+	/* TODO: OpenGLで再実装 */
+#endif
 	}
 }
 
 void UnloadAllTextures() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	for (auto k = Textures.begin(); k != Textures.end(); ++k) {
 		ULONG refs = (*k).second->Release();
 		CodeConv::tostringstream o;
 		o << _T("UnloadAllTextures(): Texture resource #") << (*k).first << _T(": remaining number of refs is ") << refs << std::endl;
 		OutputDebugString(o.str().c_str());
 	}
+#else
+	/* TODO: OpenGLで再実装 */
+#endif
 	Textures.clear();
 }
 

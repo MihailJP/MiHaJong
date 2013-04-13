@@ -17,6 +17,8 @@ typedef LPDIRECT3D9 RenderingSysPtr;
 typedef LPDIRECT3DDEVICE9 DevicePtr;
 typedef LPDIRECT3DTEXTURE9 TexturePtr;
 typedef D3DXMATRIX TransformMatrix;
+typedef LPD3DXSPRITE SpritePtr;
+typedef LPD3DXLINE LinePtr;
 #else
 #  include <cstdint>
 #  include <GL/gl.h>
@@ -24,5 +26,7 @@ typedef uint32_t ArgbColor;
 typedef void* RenderingSysPtr; // OpenGLではたぶん未使用
 typedef void* DevicePtr; // OpenGLでは未使用
 typedef GLuint TexturePtr;
-typedef GLfloat TransformMatrix[16];
+typedef GLfloat TransformMatrix;
+typedef void* SpritePtr; // OpenGLではたぶん未使用
+typedef void* LinePtr; // OpenGLではたぶん未使用
 #endif /* defined(_WIN32) && defined(WITH_DIRECTX) */

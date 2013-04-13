@@ -17,6 +17,7 @@ SystemScreen::~SystemScreen() {
 }
 
 void SystemScreen::clearWithGameTypeColor() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	// バッファクリア
 	switch (GameStatus::gameStat()->gameType) {
 	case Yonma:
@@ -38,6 +39,9 @@ void SystemScreen::clearWithGameTypeColor() {
 	default:
 		assert(false); // This may not occur.
 	}
+#else
+	/* TODO: OpenGLで再実装 */
+#endif
 }
 
 unsigned SystemScreen::strwidth(const std::wstring& str) {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../directx.h"
 #include "../../common/strcode.h"
 #include "../text.h"
+#include "../directx.h"
 
 namespace mihajong_graphic {
 

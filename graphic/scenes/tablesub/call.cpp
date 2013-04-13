@@ -14,7 +14,9 @@ TableSubsceneCallProto::TableSubsceneCallProto(DevicePtr device) : TableSubscene
 }
 
 TableSubsceneCallProto::~TableSubsceneCallProto() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (tCall) tCall->Release();
+#endif
 }
 
 void TableSubsceneCallProto::ShowAllCall() {
@@ -42,6 +44,7 @@ void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType
 	const std::uint64_t curr = myTimer.elapsed();
 	const int animationLength = 250000;
 	const float scale = (curr >= animationLength) ? 1.0f : pow((float)(animationLength - (signed)curr) / 2.5e5f + 1.0f, 2);
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	const ArgbColor col = D3DCOLOR_ARGB(
 		(curr >= animationLength) ? 255 :
 		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2),
@@ -57,6 +60,9 @@ void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType
 		384, 96 * (callType + 1),
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, col, &rect, 192, 48, &matrix);
+#else
+	/* TODO: OpenGLÇ≈çƒé¿ëï */
+#endif
 }
 
 void TableSubsceneCallZoomProto::ShowCall(PlayerID player, int x, int y) {
@@ -88,6 +94,7 @@ void TableSubsceneCallFadeProto::ShowCallMsg(PlayerID player, calltext::CallType
 	if (callType == calltext::None) return;
 	const std::uint64_t curr = myTimer.elapsed();
 	const int animationLength = 250000;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	const ArgbColor col = D3DCOLOR_ARGB(
 		(curr >= animationLength) ? 255 :
 		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2),
@@ -97,6 +104,9 @@ void TableSubsceneCallFadeProto::ShowCallMsg(PlayerID player, calltext::CallType
 		384, 96 * (callType + 1),
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, col, &rect, 192, 48);
+#else
+	/* TODO: OpenGLÇ≈çƒé¿ëï */
+#endif
 }
 
 void TableSubsceneCallFadeProto::ShowCall(PlayerID player, int x, int y) {

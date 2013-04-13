@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../directx.h"
 #include <tuple>
 #include <functional>
 #include "../../showtile.h"
+#include "../../directx.h"
 
 namespace mihajong_graphic {
 

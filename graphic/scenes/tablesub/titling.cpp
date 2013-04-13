@@ -17,6 +17,7 @@ TableSubsceneTitling::~TableSubsceneTitling() {
 void TableSubsceneTitling::FadeinStr(const std::wstring& str) {
 	const uint64_t Zeit = myTimer.elapsed(), Anfang = 0, Ende = 500000;
 	const unsigned len = myTextRenderer->strWidthByCols(str);
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if ((Zeit >= Anfang) && (Zeit < Ende)) {
 		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * (len > 8 ? 8 :len)), TableSize / 2 - 192,
 			1.0f, (len > 8 ? 8.0f / (float)len : 1.0f), D3DCOLOR_ARGB((int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f), 255, 255, 255));
@@ -24,6 +25,9 @@ void TableSubsceneTitling::FadeinStr(const std::wstring& str) {
 		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * (len > 8 ? 8 :len)), TableSize / 2 - 192,
 			1.0f, (len > 8 ? 8.0f / (float)len : 1.0f));
 	}
+#else
+	/* TODO: OpenGL‚ÅÄÀ‘• */
+#endif
 }
 
 void TableSubsceneTitling::skipEvent() {

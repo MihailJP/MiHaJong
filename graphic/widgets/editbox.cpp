@@ -18,7 +18,9 @@ EditBox::EditBox(HWND hwnd, DevicePtr device, int X, int Y, unsigned width, floa
 	myHWnd = hwnd; myDevice = device;
 	myRegion = std::make_tuple(X, Y, width);
 	myTextRenderer = new SmallTextRenderer(device);
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	D3DXCreateLine(device, &cursorLine);
+#endif
 	maxStr = 0u; cursorPos = 0u; scrollPos = 0u;
 	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX));
 	isActive = false;
@@ -26,12 +28,15 @@ EditBox::EditBox(HWND hwnd, DevicePtr device, int X, int Y, unsigned width, floa
 }
 
 EditBox::~EditBox() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (myTexture) myTexture->Release();
 	if (cursorLine) cursorLine->Release();
+#endif
 	if (myTextRenderer) delete myTextRenderer;
 }
 
 TransformMatrix EditBox::getMatrix(int X, int Y, unsigned width) {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix mat, mat1; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat1);
 	D3DXMatrixTranslation(&mat, -X, -Y, 0.0f);
 	D3DXMatrixScaling(&mat1, (float)(width * halffontsz) / 77.0f, 1.0f, 0.0f);
@@ -43,9 +48,14 @@ TransformMatrix EditBox::getMatrix(int X, int Y, unsigned width) {
 	D3DXMatrixScaling(&mat1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
 	return mat;
+#else
+	/* TODO: OpenGL変換行列 */
+	return 0;
+#endif
 }
 
 void EditBox::renderFrame(int X, int Y, unsigned width) {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix matrixScale; D3DXMatrixIdentity(&matrixScale); TransformMatrix matrixScale1; D3DXMatrixIdentity(&matrixScale1);
 	D3DXMatrixTranslation(&matrixScale, (float)(-X), (float)(-Y), 0.0f);
 	D3DXMatrixScaling(&matrixScale1, myScale, myScale, 1.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
@@ -61,6 +71,9 @@ void EditBox::renderFrame(int X, int Y, unsigned width) {
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y - 5, width * halffontsz, 28, 0xffffffff, &rect, 0, 0, &mat);
 	rect.left = 82; rect.right = 87;
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X + width * halffontsz, Y - 5, 5, 28, 0xffffffff, &rect, 0, 0, &matrixScale);
+#else
+	/* TODO: OpenGL変換行列 */
+#endif
 }
 
 void EditBox::renderIMCandidateFrame(int X, int Y, unsigned width, unsigned lines) {
@@ -68,6 +81,7 @@ void EditBox::renderIMCandidateFrame(int X, int Y, unsigned width, unsigned line
 	RECT rect;
 	unsigned spriteNum = 0u;
 	auto drawLine = [&rect, &spriteNum, X, Y, width, this](int y) -> void {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 		TransformMatrix matrixScale; D3DXMatrixIdentity(&matrixScale); TransformMatrix matrixScale1; D3DXMatrixIdentity(&matrixScale1);
 		D3DXMatrixTranslation(&matrixScale, (float)(-X), (float)(-Y), 0.0f);
 		D3DXMatrixScaling(&matrixScale1, myScale, myScale, 1.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
@@ -81,6 +95,9 @@ void EditBox::renderIMCandidateFrame(int X, int Y, unsigned width, unsigned line
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y + y, width * halffontsz, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &mat);
 		rect.left = 82; rect.right = 87;
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X + width * halffontsz, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &matrixScale);
+#else
+	/* TODO: OpenGL変換行列 */
+#endif
 	};
 	rect.top = 28 + 0; rect.bottom = 28 + 5; drawLine(-5);
 	rect.top = 28 + 4; rect.bottom = 28 + 24;
@@ -184,6 +201,7 @@ void EditBox::renderIMCandidates(IMStat& imStat, int X, int Y, unsigned& TextID)
 }
 
 void EditBox::renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol) {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	D3DXVECTOR2 vec[] = {
 		D3DXVECTOR2(Geometry::WindowScale() * (X + cursorcol * myScale * halffontsz), Geometry::WindowScale() * Y),
 		D3DXVECTOR2(Geometry::WindowScale() * (X + cursorcol * myScale * halffontsz), Geometry::WindowScale() * (Y + int(18.0f * myScale))),
@@ -195,6 +213,9 @@ void EditBox::renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol) {
 		((int)(sin((double)myTimer.elapsed() / 200000.0) * 96.0 + 120.0) << 8)
 		);
 	cursorLine->End();
+#else
+	/* TODO: カーソル描画 */
+#endif
 }
 
 void EditBox::scroll(IMStat& imStat) {

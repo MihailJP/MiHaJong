@@ -13,7 +13,7 @@ private: /* Singleton class idioms */
 	SpriteRenderer& operator=(const SpriteRenderer&) {throw _T("Attempt to copy singleton instance");}
 	SpriteRenderer(DevicePtr device);
 private:
-	LPD3DXSPRITE sprite;
+	SpritePtr sprite;
 	static std::map<int, SpriteRenderer*> renderer;
 public:
 	void ShowSprite(TexturePtr texture, int X, int Y, int Width, int Height,

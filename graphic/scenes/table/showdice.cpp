@@ -63,7 +63,9 @@ GameTableScreen::DiceReconst::DiceReconst(GameTableScreen* parent) {
 }
 
 GameTableScreen::DiceReconst::~DiceReconst() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (tDice) tDice->Release();
+#endif
 }
 
 }

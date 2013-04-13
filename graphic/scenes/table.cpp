@@ -69,8 +69,10 @@ GameTableScreen::~GameTableScreen() {
 	delete trayReconst;
 	delete buttonReconst;
 	delete myTextRenderer;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (tBorder) tBorder->Release();
 	if (tBaize) tBaize->Release();
+#endif
 }
 
 void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PlayerID deckTargetPlayer, PlayerID targetPlayer) {
@@ -135,8 +137,10 @@ void GameTableScreen::ShowStatus(const GameTable* gameStat) {
 
 /* 卓を表示 ここから */
 void GameTableScreen::cls() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 		roundColor(), 1.0f, 0); // バッファクリア
+#endif
 }
 
 void GameTableScreen::RenderTable() {

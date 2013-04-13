@@ -17,7 +17,9 @@ CheckBox::CheckBox(DevicePtr device, const CodeConv::tstring& caption, int x, in
 
 CheckBox::~CheckBox() {
 	delete myTextRenderer;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (myTexture) myTexture->Release();
+#endif
 }
 
 void CheckBox::Render() {

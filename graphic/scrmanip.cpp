@@ -5,6 +5,7 @@
 namespace mihajong_graphic {
 
 void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初期化
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	/* Direct3D オブジェクト生成 */
 	pd3d = Direct3DCreate9(D3D_SDK_VERSION);
 	if (!pd3d) // 生成失敗
@@ -34,6 +35,9 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 		return;
 	else // All the four failed
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
+#else
+	/* TODO: OpenGLで再実装 */
+#endif
 }
 ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 	CS_SceneAccess.syncDo<void>([this, windowHandle, fullscreen]() -> void {
@@ -50,6 +54,7 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 void ScreenManipulator::Render() {
 	CS_SceneAccess.syncDo<void>([this]() -> void {
 		if (redrawFlag) {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 			pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
 				D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // バッファクリア
 			if (SUCCEEDED(pDevice->BeginScene())) { // シーン開始
@@ -60,6 +65,9 @@ void ScreenManipulator::Render() {
 				pDevice->EndScene(); // シーン終了
 				pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 			}
+#else
+			/* TODO: OpenGLで再実装 */
+#endif
 		}
 	});
 	return;
@@ -111,9 +119,13 @@ void ScreenManipulator::subscene(unsigned int subsceneID) {
 ScreenManipulator::~ScreenManipulator() {
 	if (myScene) delete myScene;
 	if (myFPSIndicator) delete myFPSIndicator;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (pd3d) {pd3d->Release(); pd3d = nullptr;}
+#endif
 	SpriteRenderer::delInstance(pDevice);
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
+#endif
 }
 
 void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f) {

@@ -59,10 +59,13 @@ LogWindow::LogWindow(HWND hwnd, DevicePtr device, int X, int Y, unsigned Width, 
 }
 LogWindow::~LogWindow() {
 	if (myTextRenderer) delete myTextRenderer;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (myTexture) myTexture->Release();
+#endif
 }
 
 TransformMatrix LogWindow::getMatrix(int X, int Y, unsigned width) {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix mat, mat1; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat1);
 	D3DXMatrixTranslation(&mat, -X, -Y, 0.0f);
 	D3DXMatrixScaling(&mat1, (float)(width * halffontsz) / 77.0f, 1.0f, 0.0f);
@@ -72,6 +75,10 @@ TransformMatrix LogWindow::getMatrix(int X, int Y, unsigned width) {
 	D3DXMatrixScaling(&mat1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
 	return mat;
+#else
+	/* TODO: OpenGLïœä∑çsóÒ */
+	return 0;
+#endif
 }
 
 void LogWindow::renderFrame() {

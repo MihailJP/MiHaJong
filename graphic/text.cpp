@@ -37,7 +37,9 @@ ITextRenderer::~ITextRenderer() {
 			delete (*k); (*k) = nullptr;
 		}
 	}
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (font) font->Release();
+#endif
 }
 TextRenderer::~TextRenderer() {
 }
@@ -85,6 +87,7 @@ void ITextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrA
 	sprite->heightScale = StringData[ID]->scale;
 	sprite->color = StringData[ID]->color;
 	/* s—ñ‚ğŒvZ‚·‚é */
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix m; D3DXMatrixIdentity(&m);
 	D3DXMatrixIdentity(&sprite->matrix);
 	D3DXMatrixTranslation(&m, (float)-(sprite->X), (float)-(sprite->Y), 0);
@@ -95,6 +98,9 @@ void ITextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrA
 	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);
 	D3DXMatrixScaling(&m, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);
+#else
+	/* TODO: OpenGL•ÏŠ·s—ñ */
+#endif
 	/* ‚±‚±‚Ü‚Å */
 }
 void ITextRenderer::reconstruct(unsigned int ID, bool rescanStr) {

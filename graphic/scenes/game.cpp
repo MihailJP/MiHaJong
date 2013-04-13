@@ -41,7 +41,9 @@ TableProtoScene::~TableProtoScene() {
 		delete checkBoxes[i];
 	for (auto k = scorePanel.begin(); k != scorePanel.end(); ++k)
 		delete *k;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (tSideBar) tSideBar->Release();
+#endif
 }
 
 void TableProtoScene::ShowSidebar() {
@@ -80,6 +82,7 @@ void TableProtoScene::ShowScorePanel() {
 }
 
 ArgbColor TableProtoScene::roundColor() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	switch (GameStatus::gameStat()->GameRound / Players) { // ê•—‚Å•ªŠò
 	case 0: // “Œê
 		if (GameStatus::gameStat()->LoopRound == 0)
@@ -114,6 +117,10 @@ ArgbColor TableProtoScene::roundColor() {
 	default:
 		return     D3DCOLOR_XRGB(  0,   0,   0);
 	}
+#else
+	/* TODO: OpenGL‚ÅÄŽÀ‘• */
+	return 0;
+#endif
 }
 
 void TableProtoScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
@@ -153,16 +160,22 @@ TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativeP
 	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR));
 	nameText = new SmallTextRenderer(device);
 	// s—ñ‚Ì\’z
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix tmpmtx;
 	D3DXMatrixIdentity(&myMatrix); D3DXMatrixIdentity(&tmpmtx);
 	D3DXMatrixScaling(&tmpmtx, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
 	D3DXMatrixTranslation(&tmpmtx, (float)(-x) * Geometry::WindowScale(), (float)(-y) * Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
 	D3DXMatrixScaling(&tmpmtx, wScale, 1.0f, 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
 	D3DXMatrixTranslation(&tmpmtx, (float)x * Geometry::WindowScale(), (float)y * Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
+#else
+	/* TODO: OpenGL‚ÅÄŽÀ‘• */
+#endif
 }
 
 TableProtoScene::ScoreBoard::~ScoreBoard() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (texture) texture->Release();
+#endif
 	delete nameText;
 }
 

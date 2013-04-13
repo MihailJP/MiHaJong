@@ -2,9 +2,9 @@
 
 #include <functional>
 #include <tuple>
-#include "../../directx.h"
 #include "../../showtile.h"
 #include "../../../common/seatrank.h"
+#include "../../directx.h"
 
 namespace mihajong_graphic {
 

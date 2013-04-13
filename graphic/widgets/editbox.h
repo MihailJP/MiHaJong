@@ -22,7 +22,7 @@ private:
 	SmallTextRenderer* myTextRenderer;
 	DevicePtr myDevice;
 	unsigned maxStr;
-	LPD3DXLINE cursorLine;
+	LinePtr cursorLine;
 	unsigned cursorPos;
 	unsigned scrollPos;
 	Timer myTimer;

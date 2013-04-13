@@ -13,7 +13,9 @@ ShowTile::ShowTile(DevicePtr device) {
 		rules::chkPreference("tile", "black_tile") ? MAKEINTRESOURCE(IDB_PNG_TILE_BLACK) : MAKEINTRESOURCE(IDB_PNG_TILE));
 }
 ShowTile::~ShowTile() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (TileTexture) TileTexture->Release();
+#endif
 }
 
 /* 新規の牌オブジェクトを作成する */

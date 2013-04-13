@@ -34,12 +34,17 @@ void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 
 	const std::uint64_t curr = myTimer.elapsed();
 	const int animationLength = 250000;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	const ArgbColor col = D3DCOLOR_ARGB(
 		(curr >= animationLength) ? 255 :
 		(int)std::pow((float)(curr * 255) / animationLength / 16.0f, 2),
 		c_val.Mantissa > 0 ? 0xcc : 0xff,
 		c_val.Mantissa < 0 ? 0xcc : 0xff,
 		0xcc);
+#else
+	/* TODO: OpenGL‚ÅÄŽÀ‘• */
+	const ArgbColor col = 0xffffffff;
+#endif
 
 	CodeConv::tostringstream o; unsigned callLen = 0u;
 	if (c_val.Mantissa != 0) {
