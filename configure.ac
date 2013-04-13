@@ -32,7 +32,7 @@ AC_ARG_WITH([directx],
 	[],
 	[with_directx=using_winapi]
 )
-AS_IF([test "x$using_winapi" != xno],
+AS_IF([test "x$using_winapi" = xno],
 	[AS_IF([test "x$with_directx" != xno],
 		[AC_MSG_WARN(--with-directx is specified on non-Windows system)
 		 with_directx=no]
@@ -58,7 +58,7 @@ AS_IF([test "x$using_winapi" != xno],
 	 AC_CHECK_LIB([imm32], [main], [], AC_MSG_ERROR([imm32 is unavailable]))
 	 AC_CHECK_LIB([imagehlp], [main], [], AC_MSG_ERROR([imagehlp is unavailable]))]
 )
-AS_IF([test "x$with_directx" == xno],
+AS_IF([test "x$with_directx" = xno],
 	[AC_CHECK_LIB([OpenAL32], [main], [], AC_MSG_ERROR([OpenAL32 is unavailable]))]
 )
 
@@ -86,8 +86,10 @@ AS_IF([test "x$using_winapi" != xno],
 ]]
 	 )]
 )
-AC_CHECK_HEADER([AL/al.h], [], AC_MSG_ERROR([AL/al.h is unavailable]))
-AC_CHECK_HEADER([AL/alc.h], [], AC_MSG_ERROR([AL/alc.h is unavailable]))
+AS_IF([test "x$with_directx" = xno],
+	[AC_CHECK_HEADER([AL/al.h], [], AC_MSG_ERROR([AL/al.h is unavailable]))
+	 AC_CHECK_HEADER([AL/alc.h], [], AC_MSG_ERROR([AL/alc.h is unavailable]))]
+)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
