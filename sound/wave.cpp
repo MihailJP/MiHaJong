@@ -171,6 +171,7 @@ void sound::SoundData::Play() {
 void sound::SoundData::Stop() {
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	alSourceStop(mySource);
+	alSourceRewind(mySource);
 #else
 	HRESULT hr;
 	if (FAILED(hr = voice->Stop())) {

@@ -95,6 +95,7 @@ sound::SoundManipulator::~SoundManipulator() {
 		alcCloseDevice(myDevice); myDevice = nullptr;
 	}
 	if (myContext) {
+		alcMakeContextCurrent(nullptr);
 		alcDestroyContext(myContext); myContext = nullptr;
 	}
 #elif defined(USE_XAUDIO2)
@@ -104,6 +105,7 @@ sound::SoundManipulator::~SoundManipulator() {
 	if (xAudio) {
 		xAudio->Release(); xAudio = nullptr;
 	}
+	CoUninitialize();
 #else
 	if (mVoice) {
 		mVoice->Release(); mVoice = nullptr;
@@ -111,8 +113,8 @@ sound::SoundManipulator::~SoundManipulator() {
 	if (pDSound) {
 		pDSound->Release(); pDSound = nullptr;
 	}
-#endif
 	CoUninitialize();
+#endif
 }
 
 /* ƒtƒ@ƒCƒ‹“Ç‚İ‚İ */
