@@ -108,10 +108,10 @@ void SpriteRenderer::ShowSprite(
 	const double rpos = (double)txRect->right  / (double)getTextureWidth (nullptr, texture);
 	const double tpos = (double)txRect->top    / (double)getTextureHeight(nullptr, texture);
 	const double bpos = (double)txRect->bottom / (double)getTextureHeight(nullptr, texture);
-	glTexCoord2d(lpos, bpos); glVertex2i(X        , Geometry::WindowHeight - (Y + Height));
-	glTexCoord2d(rpos, bpos); glVertex2i(X + Width, Geometry::WindowHeight - (Y + Height));
-	glTexCoord2d(rpos, tpos); glVertex2i(X + Width, Geometry::WindowHeight -  Y          );
-	glTexCoord2d(lpos, tpos); glVertex2i(X        , Geometry::WindowHeight -  Y          );
+	glTexCoord2d(lpos, bpos); glVertex2i(X         - CenterX, Geometry::WindowHeight - (Y + Height - CenterY));
+	glTexCoord2d(rpos, bpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y + Height - CenterY));
+	glTexCoord2d(rpos, tpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y          - CenterY));
+	glTexCoord2d(lpos, tpos); glVertex2i(X         - CenterX, Geometry::WindowHeight - (Y          - CenterY));
 	glEnd();
 	glFlush();
 
