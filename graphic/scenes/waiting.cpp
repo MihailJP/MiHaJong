@@ -1,4 +1,5 @@
 #include "waiting.h"
+#include <cmath>
 #include "../event.h"
 #include "../rule.h"
 #include "../../sound/sound.h"

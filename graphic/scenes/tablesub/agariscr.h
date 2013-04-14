@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include "tablesub.h"
 #include "../../../common/yakurslt.h"
 #include <vector>

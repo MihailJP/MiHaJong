@@ -1,4 +1,5 @@
 #include "rndstart.h"
+#include <cmath>
 #include "../../rule.h"
 #include "../../gametbl.h"
 #include "../../event.h"
