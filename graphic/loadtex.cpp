@@ -59,7 +59,6 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 			throw _T("テクスチャの生成に失敗しました。原因不明のエラーです。");
 		}
 #else
-		/* TODO: OpenGLで再実装 */
 		Textures[(int)resource] = 0;
 		glEnable(GL_TEXTURE_2D);
 		glGenTextures(1, &Textures[(int)resource]);
@@ -81,11 +80,6 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-				/*uint8_t test[] = {
-					0, 255, 255, 255, 0, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255,
-				};
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0,
-					GL_BGRA_EXT, GL_UNSIGNED_BYTE, test);*/
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data.Width, data.Height, 0,
 					GL_BGRA_EXT, GL_UNSIGNED_BYTE, data.Scan0);
 				bitmap->UnlockBits(&data);

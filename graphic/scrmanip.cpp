@@ -37,7 +37,6 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 	else // All the four failed
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
 #else
-	/* TODO: OpenGLで再実装 */
 	pDevice = GetDC(hWnd);
 	PIXELFORMATDESCRIPTOR pfd;
 	ZeroMemory(&pfd, sizeof(pfd));

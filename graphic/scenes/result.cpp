@@ -129,20 +129,13 @@ void ResultScreen::RankRenderer::RenderRank() {
 void ResultScreen::RankRenderer::RenderNameScore() {
 	const float widthScale = (float)Geometry::WindowWidth * 0.75 / (float)Geometry::WindowHeight;
 	const uint64_t tempus = myTimer.elapsed();
-#if defined(_WIN32) && defined(WITH_DIRECTX)
-	const ArgbColor aColor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
-		(255 - (int)(200.0 - ((double)tempus / (double)animTime * 200.0))),
-		255, 255, 255);
+	const ArgbColor aColor = (uint32_t)((tempus >= animTime) ? 255 :
+		(255 - (int)(200.0 - ((double)tempus / (double)animTime * 200.0))))
+		<< 24 | 0x00ffffff;
 	const ArgbColor color = (player != GameStatus::gameStat()->PlayerID) ? 0xffffffff :
-		D3DCOLOR_ARGB(255, 255,
-		(int)(200.0 - sin((double)myTimer.elapsed() * M_PI / 500000.0) * 50.0),
-		(int)(200.0 - sin((double)myTimer.elapsed() * M_PI / 500000.0) * 50.0)
-		);
-#else
-	/* TODO: OpenGLÇ≈çƒé¿ëï */
-	const ArgbColor aColor = 0xffffffff;
-	const ArgbColor color = 0xffffffff;
-#endif
+		0xffff0000 |
+		((uint32_t)(200.0 - sin((double)myTimer.elapsed() * M_PI / 500000.0) * 50.0) << 8) |
+		(uint32_t)(200.0 - sin((double)myTimer.elapsed() * M_PI / 500000.0) * 50.0);
 	const CodeConv::tstring nomen(utils::getName(player));
 	const unsigned latitudoNominis = nameRenderer->strWidthByCols(nomen);
 	nameRenderer->NewText(0, nomen, 150 * widthScale, BaseY + 10, 3.0f,
@@ -177,14 +170,9 @@ void ResultScreen::RankRenderer::RenderScore() {
 	const float widthScale = (float)Geometry::WindowWidth * 0.75 / (float)Geometry::WindowHeight;
 	const unsigned widthLimit = 4u;
 	const uint64_t tempus = myTimer.elapsed();
-#if defined(_WIN32) && defined(WITH_DIRECTX)
-	const ArgbColor aColor = D3DCOLOR_ARGB((tempus >= animTime) ? 255 :
-		(255 - (int)(200.0 - ((double)tempus / ((double)animTime / 200.0)))),
-		255, 255, 255);
-#else
-	/* TODO: OpenGLÇ≈çƒé¿ëï */
-	const ArgbColor aColor = 0xffffffff;
-#endif
+	const ArgbColor aColor = (uint32_t)((tempus >= animTime) ? 255 :
+		(255 - (int)(200.0 - ((double)tempus / ((double)animTime / 200.0)))))
+		<< 24 | 0x00ffffff;
 	const float scale = (tempus >= animTime) ? 1.0f :
 		1.0f + pow((float)(animTime - tempus) / (float)animTime * 3.5f, 2);
 	const LargeNum point(FinalScoreDat::getData(player));

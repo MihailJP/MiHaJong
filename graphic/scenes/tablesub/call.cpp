@@ -44,25 +44,33 @@ void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType
 	const std::uint64_t curr = myTimer.elapsed();
 	const int animationLength = 250000;
 	const float scale = (curr >= animationLength) ? 1.0f : pow((float)(animationLength - (signed)curr) / 2.5e5f + 1.0f, 2);
-#if defined(_WIN32) && defined(WITH_DIRECTX)
-	const ArgbColor col = D3DCOLOR_ARGB(
+	const ArgbColor col = (uint32_t)(
 		(curr >= animationLength) ? 255 :
-		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2),
-		0xff, 0xff, 0xff);
+		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2))
+		<< 24 | 0x00ffffff;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix matrix, matrix1;
 	D3DXMatrixIdentity(&matrix); D3DXMatrixIdentity(&matrix1);
 	D3DXMatrixTranslation(&matrix1, (float)(-x), (float)(-y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1, scale, scale, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixTranslation(&matrix1, (float)x, (float)y, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
+#else
+	glPushMatrix(); glLoadIdentity();
+	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
+	glTranslatef((float)x * Geometry::WindowScale(), -(float)y * Geometry::WindowScale(), 0.0f);
+	glScalef(scale, scale, 1.0f);
+	glTranslatef(-(float)x * Geometry::WindowScale(), (float)y * Geometry::WindowScale(), 0.0f);
+	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
+	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	TransformMatrix matrix; glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);
+	glPopMatrix();
+#endif
 	RECT rect = {
 		0  , 96 * (callType    ),
 		384, 96 * (callType + 1),
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, col, &rect, 192, 48, &matrix);
-#else
-	/* TODO: OpenGLÇ≈çƒé¿ëï */
-#endif
 }
 
 void TableSubsceneCallZoomProto::ShowCall(PlayerID player, int x, int y) {
@@ -94,19 +102,15 @@ void TableSubsceneCallFadeProto::ShowCallMsg(PlayerID player, calltext::CallType
 	if (callType == calltext::None) return;
 	const std::uint64_t curr = myTimer.elapsed();
 	const int animationLength = 250000;
-#if defined(_WIN32) && defined(WITH_DIRECTX)
-	const ArgbColor col = D3DCOLOR_ARGB(
+	const ArgbColor col = (uint32_t)(
 		(curr >= animationLength) ? 255 :
-		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2),
-		0xff, 0xff, 0xff);
+		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2))
+		<< 24 | 0x00ffffff;
 	RECT rect = {
 		0  , 96 * (callType    ),
 		384, 96 * (callType + 1),
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, col, &rect, 192, 48);
-#else
-	/* TODO: OpenGLÇ≈çƒé¿ëï */
-#endif
 }
 
 void TableSubsceneCallFadeProto::ShowCall(PlayerID player, int x, int y) {

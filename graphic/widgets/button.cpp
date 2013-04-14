@@ -64,11 +64,14 @@ void ButtonPic::Render() {
 		D3DXMatrixTranslation(&mat2, (float)(-X), (float)(-Y), 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
 		D3DXMatrixScaling(&mat2, (float)width / 156.0f, (float)height / 48.0f, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
 		D3DXMatrixTranslation(&mat2, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
+#else
+		glPushMatrix(); glLoadIdentity();
+		// DirectXとは基準が異なる？　OpenGLの場合ここは単位行列のままでよい
+		TransformMatrix mat; glGetFloatv(GL_MODELVIEW_MATRIX, &mat[0]);
+		glPopMatrix();
+#endif
 		RECT rect = {0, 52 * (std::get<0>(*k) - 1), 156, 52 * (std::get<0>(*k) - 1) + 48};
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y, width, height, std::get<5>(*k) | 0xff000000, &rect, 0, 0, &mat);
-#else
-		/* TODO: ここ */
-#endif
 	}
 	myTextRenderer->Render();
 }

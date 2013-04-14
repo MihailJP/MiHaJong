@@ -82,45 +82,40 @@ void TableProtoScene::ShowScorePanel() {
 }
 
 ArgbColor TableProtoScene::roundColor() {
-#if defined(_WIN32) && defined(WITH_DIRECTX)
 	switch (GameStatus::gameStat()->GameRound / Players) { // èÍïóÇ≈ï™äÚ
 	case 0: // ìåèÍ
 		if (GameStatus::gameStat()->LoopRound == 0)
-			return D3DCOLOR_XRGB(  0, 128,   0);
+			return 0xff008000;
 		else if ((GameStatus::gameStat()->LoopRound % 2) == 0)
-			return D3DCOLOR_XRGB( 64, 128,   0);
+			return 0xff408000;
 		else
-			return D3DCOLOR_XRGB(128, 128, 128);
+			return 0xff808080;
 	case 1: // ìÏèÍ
 		if (GameStatus::gameStat()->LoopRound == 0)
-			return D3DCOLOR_XRGB(  0, 128, 128);
+			return 0xff008080;
 		else if ((GameStatus::gameStat()->LoopRound % 2) == 0)
-			return D3DCOLOR_XRGB(128, 128,  64);
+			return 0xff808040;
 		else
-			return D3DCOLOR_XRGB(128, 128,   0);
+			return 0xff808000;
 	case 2: // êºèÍ
 		if ((GameStatus::gameStat()->LoopRound % 2) == 0)
-			return D3DCOLOR_XRGB( 64,  64, 128);
+			return 0xff404080;
 		else
-			return D3DCOLOR_XRGB(128,   0,   0);
+			return 0xff800000;
 	case 3: // ñkèÍ
 		if ((GameStatus::gameStat()->LoopRound % 2) == 0)
-			return D3DCOLOR_XRGB(128,   0, 128);
+			return 0xff800080;
 		else
-			return D3DCOLOR_XRGB( 64,  64,  64);
+			return 0xff404040;
 	case 4: // îíèÍ
-		return     D3DCOLOR_XRGB( 96,  96, 128);
+		return     0xff606080;
 	case 5: // ·¢èÍ
-		return     D3DCOLOR_XRGB( 96, 128,  96);
+		return     0xff608060;
 	case 6: // íÜèÍ
-		return     D3DCOLOR_XRGB(128,  96,  96);
+		return     0xff806060;
 	default:
-		return     D3DCOLOR_XRGB(  0,   0,   0);
+		return     0xff000000;
 	}
-#else
-	/* TODO: OpenGLÇ≈çƒé¿ëï */
-	return 0;
-#endif
 }
 
 void TableProtoScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
@@ -168,7 +163,15 @@ TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativeP
 	D3DXMatrixScaling(&tmpmtx, wScale, 1.0f, 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
 	D3DXMatrixTranslation(&tmpmtx, (float)x * Geometry::WindowScale(), (float)y * Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
 #else
-	/* TODO: OpenGLÇ≈çƒé¿ëï */
+	glPushMatrix(); glLoadIdentity();
+	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
+	glTranslatef((float)x * Geometry::WindowScale(), -(float)y * Geometry::WindowScale(), 0.0f);
+	glScalef(wScale, 1.0f, 1.0f);
+	glTranslatef(-(float)x * Geometry::WindowScale(), (float)y * Geometry::WindowScale(), 0.0f);
+	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
+	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	glGetFloatv(GL_MODELVIEW_MATRIX, &myMatrix[0]);
+	glPopMatrix();
 #endif
 }
 

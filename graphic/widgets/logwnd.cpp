@@ -74,11 +74,16 @@ TransformMatrix LogWindow::getMatrix(int X, int Y, unsigned width) {
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
 	D3DXMatrixScaling(&mat1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
-	return mat;
 #else
-	/* TODO: OpenGLïœä∑çsóÒ */
-	return TransformMatrix();
+	glPushMatrix(); glLoadIdentity();
+	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
+	// â°ïùägëÂÇÕïsóv
+	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
+	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	TransformMatrix mat; glGetFloatv(GL_MODELVIEW_MATRIX, &mat[0]);
+	glPopMatrix();
 #endif
+	return mat;
 }
 
 void LogWindow::renderFrame() {

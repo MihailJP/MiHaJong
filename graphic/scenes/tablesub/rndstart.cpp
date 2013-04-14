@@ -19,20 +19,16 @@ const std::wstring TableSubsceneBeginning::Numeral = L"àÍìÒéOélå‹òZéµî™ã„è\";
 
 void TableSubsceneBeginning::ZoomChar(unsigned ID, const std::wstring& str, int xOffset, uint64_t Anfang, uint64_t Ende) {
 	const uint64_t Zeit = myTimer.elapsed();
-#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if ((Zeit >= Anfang) && (Zeit < Ende)) {
 		float size = pow(3.0f - ((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 2.0f), 2);
 		myTextRenderer->NewText(ID, CodeConv::EnsureTStr(str),
 			TableSize / 2 - (224 * size) / 2 + xOffset, TableSize / 2 - 192 + 112 - (224 * size) / 2,
-			size, 1.0f, D3DCOLOR_ARGB((int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f), 255, 255, 255));
+			size, 1.0f, (unsigned int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f) << 24 | 0x00ffffff);
 	} else if (Zeit >= Ende) {
 		myTextRenderer->NewText(ID, CodeConv::EnsureTStr(str), TableSize / 2 - 112 + xOffset, TableSize / 2 - 192);
 	} else {
 		myTextRenderer->DelText(ID);
 	}
-#else
-	/* TODO: OpenGLÇ≈çƒé¿ëï */
-#endif
 }
 
 void TableSubsceneBeginning::Render() {

@@ -225,12 +225,22 @@ void TitleScreen::TitleSprite::show(int X, int Y, float scale, uint8_t opacity) 
 		(float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight * Geometry::WindowScale(),
 		Geometry::WindowScale(),
 		0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
+#else
+	glPushMatrix(); glLoadIdentity();
+	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
+	glTranslatef((float)X * Geometry::WindowScale(), -(float)Y * Geometry::WindowScale(), 0.0f);
+	glScalef(scale, scale, 1.0f);
+	glTranslatef(-(float)X * Geometry::WindowScale(), (float)Y * Geometry::WindowScale(), 0.0f);
+	glScalef(
+		(float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight * Geometry::WindowScale(),
+		Geometry::WindowScale(), 1.0f);
+	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	TransformMatrix matrix; glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);
+	glPopMatrix();
+#endif
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(
 		texture, X, Y, width, height,
 		(opacity << 24) | 0xffffff, &rect, width/2, height/3, &matrix);
-#else
-	/* TODO: OpenGL‚ÅÄŽÀ‘• */
-#endif
 }
 
 // -------------------------------------------------------------------------
