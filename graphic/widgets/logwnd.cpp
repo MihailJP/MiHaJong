@@ -77,7 +77,7 @@ TransformMatrix LogWindow::getMatrix(int X, int Y, unsigned width) {
 	return mat;
 #else
 	/* TODO: OpenGL•ÏŠ·s—ñ */
-	return 0;
+	return TransformMatrix();
 #endif
 }
 

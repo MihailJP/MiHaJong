@@ -21,12 +21,13 @@ typedef LPD3DXSPRITE SpritePtr;
 typedef LPD3DXLINE LinePtr;
 #else
 #  include <cstdint>
+#  include <array>
 #  include <GL/gl.h>
 typedef uint32_t ArgbColor;
 typedef void* RenderingSysPtr; // OpenGLではたぶん未使用
 typedef HDC DevicePtr;
 typedef GLuint TexturePtr;
-typedef GLfloat TransformMatrix;
+typedef std::array<GLfloat, 16> TransformMatrix;
 typedef void* SpritePtr; // OpenGLではたぶん未使用
 typedef void* LinePtr; // OpenGLではたぶん未使用
 #endif /* defined(_WIN32) && defined(WITH_DIRECTX) */

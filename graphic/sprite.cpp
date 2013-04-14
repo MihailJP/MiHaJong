@@ -78,7 +78,13 @@ void SpriteRenderer::ShowSprite(
 	sprite->Draw(texture, rect ? rect : &defaultRect, &Center, &Pos, color);
 	sprite->Flush();
 #else
-	/* TODO: OpenGLÇ≈çƒé¿ëï */
+	const TransformMatrix defaultMatrix = {
+		Geometry::WindowScale(), 0,                       0, 0,
+		0,                       Geometry::WindowScale(), 0, 0,
+		0,                       0,                       1, 0,
+		0,                       0,                       0, 1,
+	};
+
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -87,6 +93,7 @@ void SpriteRenderer::ShowSprite(
 	glOrtho(0, Geometry::WindowWidth, 0, Geometry::WindowHeight, 0, 1);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	glLoadMatrixf(matrix ? &((*matrix)[0]) : &defaultMatrix[0]);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	RECT* txRect = rect ? rect : &defaultRect;

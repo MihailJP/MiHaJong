@@ -99,7 +99,18 @@ void ITextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrA
 	D3DXMatrixScaling(&m, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);
 #else
-	/* TODO: OpenGL•ÏŠ·s—ñ */
+	/* DirectX‚ÆOpenGL‚¾‚ÆÀ•WŒ´“_‚ªˆá‚¤ */
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix(); glLoadIdentity();
+	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
+	glTranslatef((float)(sprite->X) * Geometry::WindowScale(), -(float)(sprite->Y) * Geometry::WindowScale(), 0.0f);
+	glScalef(sprite->widthScale, sprite->heightScale, 1.0f);
+	glTranslatef(-(float)(sprite->X) * Geometry::WindowScale(), (float)(sprite->Y) * Geometry::WindowScale(), 0.0f);
+	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
+	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	TransformMatrix matrix; glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);
+	glPopMatrix();
+	sprite->matrix = matrix;
 #endif
 	/* ‚±‚±‚Ü‚Å */
 }
