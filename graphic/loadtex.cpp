@@ -111,8 +111,10 @@ void UnloadAllTextures() {
 	/* TODO: OpenGLÇ≈çƒé¿ëï */
 #endif
 	Textures.clear();
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	TextureWidth.clear();
 	TextureHeight.clear();
+#endif
 }
 
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
