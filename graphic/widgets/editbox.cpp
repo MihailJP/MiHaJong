@@ -220,7 +220,7 @@ void EditBox::renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol) {
 
 void EditBox::scroll(IMStat& imStat) {
 	unsigned width; std::tie(std::ignore, std::ignore, width) = myRegion;
-	const CodeConv::tstring s(myText.substr(0, cursorPos) + imStat.getGCSCompStr() + myText.substr(cursorPos, myText.size()));
+	const CodeConv::tstring s(myText.substr(0, cursorPos) + (isActive ? imStat.getGCSCompStr() : CodeConv::tstring()) + myText.substr(cursorPos, myText.size()));
 	const auto compAttr(imStat.getGCSCompAttr());
 	const int paragraphLength =
 		std::count_if(compAttr.begin(), compAttr.end(), [](BYTE p) {
@@ -273,7 +273,10 @@ void EditBox::Render() {
 	if (cursorcol == -1) cursorcol = cols;
 
 	/* Candidate words */
-	renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + 20 * myScale, TextID);
+	if (isActive) {
+		renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + 20 * myScale, TextID);
+		renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + 20 * myScale, TextID);
+	}
 
 	/* Commit */
 	for (unsigned i = TextID; i < maxStr; i++)
