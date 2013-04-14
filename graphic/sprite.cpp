@@ -79,10 +79,10 @@ void SpriteRenderer::ShowSprite(
 	sprite->Flush();
 #else
 	const TransformMatrix defaultMatrix = {
-		Geometry::WindowScale(), 0,                       0, 0,
-		0,                       Geometry::WindowScale(), 0, 0,
-		0,                       0,                       1, 0,
-		0,                       0,                       0, 1,
+		Geometry::WindowScale(), 0,                                                         0, 0,
+		0,                       Geometry::WindowScale(),                                   0, 0,
+		0,                       0,                                                         1, 0,
+		0,                       Geometry::WindowHeight * (1.0f - Geometry::WindowScale()), 0, 1,
 	};
 
 	glDisable(GL_DEPTH_TEST);
