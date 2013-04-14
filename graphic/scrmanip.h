@@ -16,6 +16,9 @@ private:
 	HWND hWnd;
 	RenderingSysPtr pd3d; // Direct3D
 	DevicePtr pDevice; // Direct3Dデバイス/OpenGLデバイスコンテキスト
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	HGLRC rContext;
+#endif
 	Scene* myScene; // シーン管理用のクラス
 	FPSIndicator* myFPSIndicator; // FPS計算・表示
 	UINT64 lastRedrawTime;

@@ -1,6 +1,7 @@
 #include "scrmanip.h"
 #include "scenes/scenes.h"
 #include "sprite.h"
+#include "resource.h"
 
 namespace mihajong_graphic {
 
@@ -50,8 +51,35 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 	int iFormat = ChoosePixelFormat(pDevice, &pfd);
 	SetPixelFormat(pDevice, iFormat, &pfd);
 
-	HGLRC rContext = wglCreateContext(pDevice);
+	rContext = wglCreateContext(pDevice);
 	wglMakeCurrent(pDevice, rContext);
+
+	const int textureList[] = { // テクスチャの先行読み込み
+		IDB_PNG_TBLBAIZE,
+		IDB_PNG_TBLBORDER,
+		IDB_PNG_SDBAR,
+		IDB_PNG_TILE,
+		IDB_PNG_FONT,
+		IDB_PNG_TITLE,
+		IDB_PNG_BUTTON,
+		IDB_PNG_FONT_HUGE,
+		IDB_PNG_DICE,
+		IDB_PNG_FONT_SMALL,
+		IDB_PNG_TEXTBOX,
+		IDB_PNG_TENBOU,
+		IDB_PNG_CHICHAMARK,
+		IDB_PNG_SCORE_INDICATOR,
+		IDB_PNG_CALL_TEXT,
+		IDB_PNG_CALL_DIGITS,
+		IDB_PNG_AGARI_WINDOW,
+		IDB_PNG_SCORE_DIGITS,
+		IDB_PNG_CHECKBOX,
+		IDB_PNG_TILE_BLACK,
+		0, // sentinel
+	};
+	TexturePtr dummyTexture;
+	for (const int* i = textureList; *i != 0; ++i)
+		LoadTexture(pDevice, &dummyTexture, MAKEINTRESOURCE(*i));
 #endif
 }
 ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
@@ -82,9 +110,7 @@ void ScreenManipulator::Render() {
 			}
 #else
 			/* TODO: OpenGLで再実装 */
-			//HGLRC rContext = wglCreateContext(pDevice);
-			//wglMakeCurrent(pDevice, rContext);
-
+			wglMakeCurrent(pDevice, rContext);
 			glClearColor(1, 1, 1, 1); glClear(GL_COLOR_BUFFER_BIT); // バッファクリア
 			SpriteRenderer::instantiate(pDevice)->Start(); // スプライト描画開始
 			if (myScene) myScene->Render(); // 再描画処理
@@ -92,9 +118,6 @@ void ScreenManipulator::Render() {
 			SpriteRenderer::instantiate(pDevice)->End(); // スプライト描画終了
 			glFlush();
 			SwapBuffers(pDevice); // 画面の更新
-
-			//wglMakeCurrent(nullptr, nullptr);
-			//wglDeleteContext(rContext);
 #endif
 		}
 	});
@@ -154,6 +177,8 @@ ScreenManipulator::~ScreenManipulator() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
 #else
+	wglMakeCurrent(nullptr, nullptr);
+	wglDeleteContext(rContext);
 	ReleaseDC(hWnd, pDevice);
 #endif
 }
