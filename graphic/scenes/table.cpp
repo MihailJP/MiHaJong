@@ -140,6 +140,13 @@ void GameTableScreen::cls() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 		roundColor(), 1.0f, 0); // バッファクリア
+#else
+	glClearColor(
+		(double)((roundColor() & 0x00ff0000) >> 16) / 255.0,
+		(double)((roundColor() & 0x0000ff00) >>  8) / 255.0,
+		(double)((roundColor() & 0x000000ff)      ) / 255.0,
+		(double)((roundColor() & 0xff000000) >> 24) / 255.0);
+	glClear(GL_COLOR_BUFFER_BIT);
 #endif
 }
 
