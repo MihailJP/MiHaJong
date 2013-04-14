@@ -109,7 +109,6 @@ void ScreenManipulator::Render() {
 				pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 			}
 #else
-			/* TODO: OpenGLで再実装 */
 			wglMakeCurrent(pDevice, rContext);
 			glClearColor(1, 1, 1, 1); glClear(GL_COLOR_BUFFER_BIT); // バッファクリア
 			SpriteRenderer::instantiate(pDevice)->Start(); // スプライト描画開始
@@ -126,6 +125,11 @@ void ScreenManipulator::Render() {
 
 void ScreenManipulator::transit(sceneID scene) {
 	CS_SceneAccess.syncDo<void>([this, scene]() -> void {
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+		HGLRC context = wglCreateContext(pDevice);
+		wglShareLists(rContext, context);
+		wglMakeCurrent(pDevice, context);
+#endif
 		redrawFlag = false;
 		delete myScene; myScene = nullptr;
 		switch (scene) {
@@ -157,14 +161,31 @@ void ScreenManipulator::transit(sceneID scene) {
 			myScene = new ResultScreen(this); redrawFlag = true;
 			break;
 		default:
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+			wglMakeCurrent(nullptr, nullptr);
+			wglDeleteContext(context);
+#endif
 			throw _T("正しくないシーン番号が指定されました");
 		}
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+		wglMakeCurrent(nullptr, nullptr);
+		wglDeleteContext(context);
+#endif
 	});
 }
 
 void ScreenManipulator::subscene(unsigned int subsceneID) {
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	HGLRC context = wglCreateContext(pDevice);
+	wglShareLists(rContext, context);
+	wglMakeCurrent(pDevice, context);
+#endif
 	if (myScene)
 		myScene->SetSubscene(subsceneID);
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	wglMakeCurrent(nullptr, nullptr);
+	wglDeleteContext(context);
+#endif
 }
 
 ScreenManipulator::~ScreenManipulator() {
