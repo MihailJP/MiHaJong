@@ -113,7 +113,7 @@ void SpriteRenderer::ShowSprite(
 	glTexCoord2d(rpos, tpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y          - CenterY));
 	glTexCoord2d(lpos, tpos); glVertex2i(X         - CenterX, Geometry::WindowHeight - (Y          - CenterY));
 	glEnd();
-	glFlush();
+	//glFlush(); // ←[20130415]ボトルネックになることが判明。これを外したら26FPSが40FPSまで改善(デバッグビルド)。リリースだと50FPS→60FPS達成。(GeForce GT240で)
 
 	glDisable(GL_TEXTURE_2D);
 #endif
