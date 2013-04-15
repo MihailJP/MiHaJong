@@ -60,7 +60,7 @@ void MainWindow::initWindowClass(HINSTANCE hThisInst, LPCTSTR icon) { // ÉEÉBÉìÉ
 #ifdef WITH_DIRECTX
 	myWindowClass.style = 0;
 #else
-	myWindowClass.style = 0;
+	myWindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 #endif
 	myWindowClass.cbSize = sizeof(WNDCLASSEX);
 	myWindowClass.hIcon = (HICON)LoadImage(hThisInst, icon, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
@@ -76,28 +76,56 @@ void MainWindow::initWindowClass(HINSTANCE hThisInst, LPCTSTR icon) { // ÉEÉBÉìÉ
 	else return;
 }
 
-void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode) {
+void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen) {
 	RECT WindowRect;
 	WindowRect.left = 0; WindowRect.right = WindowWidth;
 	WindowRect.top = 0; WindowRect.bottom = WindowHeight;
 	DWORD ExStyle = 0;
-	DWORD Style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
-	AdjustWindowRectEx(&WindowRect, Style, FALSE, ExStyle);
+	DWORD Style;
+#ifndef WITH_DIRECTX
+	if (fullscreen) {
+		Style = WS_POPUP;
+	} else {
+#endif
+		Style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+		AdjustWindowRectEx(&WindowRect, Style, FALSE, ExStyle);
+#ifndef WITH_DIRECTX
+	}
+#endif
 	hWnd = CreateWindowEx(
 		ExStyle, myWindowClassName, WindowCaption, Style,
+#ifdef WITH_DIRECTX
 		CW_USEDEFAULT, CW_USEDEFAULT,
+#else
+		fullscreen ? 0 : CW_USEDEFAULT,
+		fullscreen ? 0 : CW_USEDEFAULT,
+#endif
 		WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
 		nullptr, nullptr, hThisInst, nullptr);
 	if (!hWnd) throw _T("ÉEÉBÉìÉhÉEÇÃê∂ê¨Ç…é∏îsÇµÇ‹ÇµÇΩ");
 	ShowWindow(hWnd, nWinMode);
 	UpdateWindow(hWnd);
+
+#ifndef WITH_DIRECTX
+	/* ÉtÉãÉXÉNÉäÅ[ÉìÇ…Ç∑ÇÈèàóù(WinAPI) */
+	/* DirectXÇÃèÍçáÇÕDirectXë§ÇÃê›íËÇ≈Ç≈Ç´ÇÈÇ™ÅAOpenGLÇÃèÍçáÇÕWinAPIÇ≈ê›íËÇ™ïKóv(GLUTÇÕégópÇµÇ»Ç¢) */
+	if (fullscreen) {
+		DEVMODE dMode; ZeroMemory(&dMode, sizeof dMode);
+		dMode.dmSize = sizeof dMode;
+		dMode.dmPelsWidth = WindowWidth;
+		dMode.dmPelsHeight = WindowHeight;
+		dMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT;
+		if (FAILED(ChangeDisplaySettings(&dMode, CDS_FULLSCREEN)))
+			throw _T("ÉtÉãÉXÉNÉäÅ[ÉìÇ…Ç≈Ç´Ç‹ÇπÇÒÇ≈ÇµÇΩ");
+	}
+#endif
 	return;
 }
 
 MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen) {
 	Geometry::WindowWidth = width; Geometry::WindowHeight = height;
 	initWindowClass(hThisInst, icon);
-	initWindow(hThisInst, nWinMode);
+	initWindow(hThisInst, nWinMode, fullscreen);
 	myScreenManipulator = new ScreenManipulator(hWnd, fullscreen);
 	myInputManipulator = new input::InputManipulator(hWnd);
 }
