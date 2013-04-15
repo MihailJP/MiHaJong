@@ -50,7 +50,7 @@ CodeConv::tstring getlog() {
 
 // -------------------------------------------------------------------------
 
-LogWindow::LogWindow(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned Width, unsigned Height) {
+LogWindow::LogWindow(HWND hwnd, DevicePtr device, int X, int Y, unsigned Width, unsigned Height) {
 	assert(Width >= 8); assert(Height >= 1);
 	myHWnd = hwnd; myDevice = device; x = X; y = Y; width = Width; height = Height;
 	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX));
@@ -59,11 +59,14 @@ LogWindow::LogWindow(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned
 }
 LogWindow::~LogWindow() {
 	if (myTextRenderer) delete myTextRenderer;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (myTexture) myTexture->Release();
+#endif
 }
 
-D3DXMATRIX LogWindow::getMatrix(int X, int Y, unsigned width) {
-	D3DXMATRIX mat, mat1; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat1);
+TransformMatrix LogWindow::getMatrix(int X, int Y, unsigned width) {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
+	TransformMatrix mat, mat1; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat1);
 	D3DXMatrixTranslation(&mat, -X, -Y, 0.0f);
 	D3DXMatrixScaling(&mat1, (float)(width * halffontsz) / 77.0f, 1.0f, 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
@@ -71,6 +74,15 @@ D3DXMATRIX LogWindow::getMatrix(int X, int Y, unsigned width) {
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
 	D3DXMatrixScaling(&mat1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
+#else
+	glPushMatrix(); glLoadIdentity();
+	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
+	// ‰¡•Šg‘å‚Í•s—v
+	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
+	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	TransformMatrix mat; glGetFloatv(GL_MODELVIEW_MATRIX, &mat[0]);
+	glPopMatrix();
+#endif
 	return mat;
 }
 
@@ -81,7 +93,7 @@ void LogWindow::renderFrame() {
 		rect.left = 0; rect.right = 5;
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, x - 5, y + Y, 5, rect.bottom - rect.top, 0xffffffff, &rect);
 		rect.left = 5; rect.right = 82;
-		D3DXMATRIX mat = getMatrix(x, y, width);
+		TransformMatrix mat = getMatrix(x, y, width);
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, x, y + Y, width * halffontsz, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &mat);
 		rect.left = 82; rect.right = 87;
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, x + width * halffontsz, y + Y, 5, rect.bottom - rect.top, 0xffffffff, &rect);

@@ -1,10 +1,12 @@
 #include "scrmanip.h"
 #include "scenes/scenes.h"
 #include "sprite.h"
+#include "resource.h"
 
 namespace mihajong_graphic {
 
 void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初期化
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	/* Direct3D オブジェクト生成 */
 	pd3d = Direct3DCreate9(D3D_SDK_VERSION);
 	if (!pd3d) // 生成失敗
@@ -34,6 +36,50 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 		return;
 	else // All the four failed
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
+#else
+	pDevice = GetDC(hWnd);
+	PIXELFORMATDESCRIPTOR pfd;
+	ZeroMemory(&pfd, sizeof(pfd));
+	pfd.nSize = sizeof(pfd);
+	pfd.nVersion = 1;
+	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+	pfd.iPixelType = PFD_TYPE_RGBA;
+	pfd.cColorBits = 24;
+	pfd.cDepthBits = 16;
+	pfd.iLayerType = PFD_MAIN_PLANE;
+	int iFormat = ChoosePixelFormat(pDevice, &pfd);
+	SetPixelFormat(pDevice, iFormat, &pfd);
+
+	rContext = wglCreateContext(pDevice);
+	wglMakeCurrent(pDevice, rContext);
+
+	const int textureList[] = { // テクスチャの先行読み込み
+		IDB_PNG_TBLBAIZE,
+		IDB_PNG_TBLBORDER,
+		IDB_PNG_SDBAR,
+		IDB_PNG_TILE,
+		IDB_PNG_FONT,
+		IDB_PNG_TITLE,
+		IDB_PNG_BUTTON,
+		IDB_PNG_FONT_HUGE,
+		IDB_PNG_DICE,
+		IDB_PNG_FONT_SMALL,
+		IDB_PNG_TEXTBOX,
+		IDB_PNG_TENBOU,
+		IDB_PNG_CHICHAMARK,
+		IDB_PNG_SCORE_INDICATOR,
+		IDB_PNG_CALL_TEXT,
+		IDB_PNG_CALL_DIGITS,
+		IDB_PNG_AGARI_WINDOW,
+		IDB_PNG_SCORE_DIGITS,
+		IDB_PNG_CHECKBOX,
+		IDB_PNG_TILE_BLACK,
+		0, // sentinel
+	};
+	TexturePtr dummyTexture;
+	for (const int* i = textureList; *i != 0; ++i)
+		LoadTexture(pDevice, &dummyTexture, MAKEINTRESOURCE(*i));
+#endif
 }
 ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 	CS_SceneAccess.syncDo<void>([this, windowHandle, fullscreen]() -> void {
@@ -50,6 +96,7 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 void ScreenManipulator::Render() {
 	CS_SceneAccess.syncDo<void>([this]() -> void {
 		if (redrawFlag) {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 			pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
 				D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // バッファクリア
 			if (SUCCEEDED(pDevice->BeginScene())) { // シーン開始
@@ -60,6 +107,16 @@ void ScreenManipulator::Render() {
 				pDevice->EndScene(); // シーン終了
 				pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 			}
+#else
+			wglMakeCurrent(pDevice, rContext);
+			glClearColor(1, 1, 1, 1); glClear(GL_COLOR_BUFFER_BIT); // バッファクリア
+			SpriteRenderer::instantiate(pDevice)->Start(); // スプライト描画開始
+			if (myScene) myScene->Render(); // 再描画処理
+			if (myFPSIndicator) myFPSIndicator->Render(); // FPS表示
+			SpriteRenderer::instantiate(pDevice)->End(); // スプライト描画終了
+			glFlush();
+			SwapBuffers(pDevice); // 画面の更新
+#endif
 		}
 	});
 	return;
@@ -67,6 +124,11 @@ void ScreenManipulator::Render() {
 
 void ScreenManipulator::transit(sceneID scene) {
 	CS_SceneAccess.syncDo<void>([this, scene]() -> void {
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+		HGLRC context = wglCreateContext(pDevice);
+		wglShareLists(rContext, context);
+		wglMakeCurrent(pDevice, context);
+#endif
 		redrawFlag = false;
 		delete myScene; myScene = nullptr;
 		switch (scene) {
@@ -98,22 +160,47 @@ void ScreenManipulator::transit(sceneID scene) {
 			myScene = new ResultScreen(this); redrawFlag = true;
 			break;
 		default:
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+			wglMakeCurrent(nullptr, nullptr);
+			wglDeleteContext(context);
+#endif
 			throw _T("正しくないシーン番号が指定されました");
 		}
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+		wglMakeCurrent(nullptr, nullptr);
+		wglDeleteContext(context);
+#endif
 	});
 }
 
 void ScreenManipulator::subscene(unsigned int subsceneID) {
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	HGLRC context = wglCreateContext(pDevice);
+	wglShareLists(rContext, context);
+	wglMakeCurrent(pDevice, context);
+#endif
 	if (myScene)
 		myScene->SetSubscene(subsceneID);
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	wglMakeCurrent(nullptr, nullptr);
+	wglDeleteContext(context);
+#endif
 }
 
 ScreenManipulator::~ScreenManipulator() {
 	if (myScene) delete myScene;
 	if (myFPSIndicator) delete myFPSIndicator;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (pd3d) {pd3d->Release(); pd3d = nullptr;}
+#endif
 	SpriteRenderer::delInstance(pDevice);
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
+#else
+	wglMakeCurrent(nullptr, nullptr);
+	wglDeleteContext(rContext);
+	ReleaseDC(hWnd, pDevice);
+#endif
 }
 
 void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f) {

@@ -17,7 +17,7 @@ private:
 	void CalculateTenpaiFlag(PlayerID player, int x, int y);
 	void ShowTenpaiFlag(PlayerID player, int x, int y);
 public:
-	TableSubsceneCheckTenpai(LPDIRECT3DDEVICE9 device);
+	TableSubsceneCheckTenpai(DevicePtr device);
 	~TableSubsceneCheckTenpai();
 	void Render();
 };

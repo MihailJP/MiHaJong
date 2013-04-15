@@ -1,6 +1,6 @@
 /* Include within a function. */
 union Color { // ‚Æ‚è‚ ‚¦‚¸‚±‚±‚É‰¼’u‚«
-	D3DCOLOR rgbaAsOneValue;
+	ArgbColor rgbaAsOneValue;
 #if defined(__BIG_ENDIAN__) || defined(WORDS_BIGENDIAN)
 	struct {std::uint8_t a, r, g, b;} rgbaAsStruct;
 #else

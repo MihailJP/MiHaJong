@@ -12,10 +12,10 @@ namespace mihajong_graphic {
 class TableSubscene {
 protected:
 	static const unsigned int TableSize = Geometry::BaseSize;
-	LPDIRECT3DDEVICE9 myDevice;
+	DevicePtr myDevice;
 	Timer myTimer;
 public:
-	TableSubscene(LPDIRECT3DDEVICE9 device);
+	TableSubscene(DevicePtr device);
 	virtual ~TableSubscene() {}
 	virtual void Render() = 0;
 	static const std::int32_t NoTimeout = 0x7fffffff;

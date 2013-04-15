@@ -13,12 +13,14 @@ namespace mihajong_graphic {
 
 using namespace character_width;
 
-EditBox::EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned width, float scale) {
+EditBox::EditBox(HWND hwnd, DevicePtr device, int X, int Y, unsigned width, float scale) {
 	assert(width >= 8);
 	myHWnd = hwnd; myDevice = device;
 	myRegion = std::make_tuple(X, Y, width);
 	myTextRenderer = new SmallTextRenderer(device);
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	D3DXCreateLine(device, &cursorLine);
+#endif
 	maxStr = 0u; cursorPos = 0u; scrollPos = 0u;
 	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX));
 	isActive = false;
@@ -26,13 +28,16 @@ EditBox::EditBox(HWND hwnd, LPDIRECT3DDEVICE9 device, int X, int Y, unsigned wid
 }
 
 EditBox::~EditBox() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (myTexture) myTexture->Release();
 	if (cursorLine) cursorLine->Release();
+#endif
 	if (myTextRenderer) delete myTextRenderer;
 }
 
-D3DXMATRIX EditBox::getMatrix(int X, int Y, unsigned width) {
-	D3DXMATRIX mat, mat1; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat1);
+TransformMatrix EditBox::getMatrix(int X, int Y, unsigned width) {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
+	TransformMatrix mat, mat1; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat1);
 	D3DXMatrixTranslation(&mat, -X, -Y, 0.0f);
 	D3DXMatrixScaling(&mat1, (float)(width * halffontsz) / 77.0f, 1.0f, 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
@@ -42,22 +47,45 @@ D3DXMATRIX EditBox::getMatrix(int X, int Y, unsigned width) {
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
 	D3DXMatrixScaling(&mat1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
+#else
+	glPushMatrix(); glLoadIdentity();
+	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
+	glTranslatef((float)X * Geometry::WindowScale(), -(float)Y * Geometry::WindowScale(), 0.0f);
+	glScalef(myScale, myScale, 1.0f);
+	glTranslatef(-(float)X * Geometry::WindowScale(), (float)Y * Geometry::WindowScale(), 0.0f);
+	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
+	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	TransformMatrix mat; glGetFloatv(GL_MODELVIEW_MATRIX, &mat[0]);
+	glPopMatrix();
+#endif
 	return mat;
 }
 
 void EditBox::renderFrame(int X, int Y, unsigned width) {
-	D3DXMATRIX matrixScale; D3DXMatrixIdentity(&matrixScale); D3DXMATRIX matrixScale1; D3DXMatrixIdentity(&matrixScale1);
+#if defined(_WIN32) && defined(WITH_DIRECTX)
+	TransformMatrix matrixScale; D3DXMatrixIdentity(&matrixScale); TransformMatrix matrixScale1; D3DXMatrixIdentity(&matrixScale1);
 	D3DXMatrixTranslation(&matrixScale, (float)(-X), (float)(-Y), 0.0f);
 	D3DXMatrixScaling(&matrixScale1, myScale, myScale, 1.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
 	D3DXMatrixTranslation(&matrixScale1, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
 	D3DXMatrixScaling(&matrixScale1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
+#else
+	glPushMatrix(); glLoadIdentity();
+	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
+	glTranslatef((float)X * Geometry::WindowScale(), -(float)Y * Geometry::WindowScale(), 0.0f);
+	glScalef(myScale, myScale, 1.0f);
+	glTranslatef(-(float)X * Geometry::WindowScale(), (float)Y * Geometry::WindowScale(), 0.0f);
+	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
+	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	TransformMatrix matrixScale; glGetFloatv(GL_MODELVIEW_MATRIX, &matrixScale[0]);
+	glPopMatrix();
+#endif
 
 	RECT rect; rect.left = 0; rect.right = 5;
 	if (isActive) {rect.top = 28; rect.bottom = 56;}
 	else {rect.top = 0; rect.bottom = 28;}
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X - 5, Y - 5, 5, 28, 0xffffffff, &rect, 0, 0, &matrixScale);
 	rect.left = 5; rect.right = 82;
-	D3DXMATRIX mat = getMatrix(X, Y, width);
+	TransformMatrix mat = getMatrix(X, Y, width);
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y - 5, width * halffontsz, 28, 0xffffffff, &rect, 0, 0, &mat);
 	rect.left = 82; rect.right = 87;
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X + width * halffontsz, Y - 5, 5, 28, 0xffffffff, &rect, 0, 0, &matrixScale);
@@ -68,16 +96,28 @@ void EditBox::renderIMCandidateFrame(int X, int Y, unsigned width, unsigned line
 	RECT rect;
 	unsigned spriteNum = 0u;
 	auto drawLine = [&rect, &spriteNum, X, Y, width, this](int y) -> void {
-		D3DXMATRIX matrixScale; D3DXMatrixIdentity(&matrixScale); D3DXMATRIX matrixScale1; D3DXMatrixIdentity(&matrixScale1);
+#if defined(_WIN32) && defined(WITH_DIRECTX)
+		TransformMatrix matrixScale; D3DXMatrixIdentity(&matrixScale); TransformMatrix matrixScale1; D3DXMatrixIdentity(&matrixScale1);
 		D3DXMatrixTranslation(&matrixScale, (float)(-X), (float)(-Y), 0.0f);
 		D3DXMatrixScaling(&matrixScale1, myScale, myScale, 1.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
 		D3DXMatrixTranslation(&matrixScale1, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
 		D3DXMatrixScaling(&matrixScale1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
+#else
+		glPushMatrix(); glLoadIdentity();
+		glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
+		glTranslatef((float)X * Geometry::WindowScale(), -(float)Y * Geometry::WindowScale(), 0.0f);
+		glScalef(myScale, myScale, 1.0f);
+		glTranslatef(-(float)X * Geometry::WindowScale(), (float)Y * Geometry::WindowScale(), 0.0f);
+		glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
+		glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+		TransformMatrix matrixScale; glGetFloatv(GL_MODELVIEW_MATRIX, &matrixScale[0]);
+		glPopMatrix();
+#endif
 
 		rect.left = 0; rect.right = 5;
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X - 5, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &matrixScale);
 		rect.left = 5; rect.right = 82;
-		D3DXMATRIX mat = getMatrix(X, Y, width);
+		TransformMatrix mat = getMatrix(X, Y, width);
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y + y, width * halffontsz, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &mat);
 		rect.left = 82; rect.right = 87;
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X + width * halffontsz, Y + y, 5, rect.bottom - rect.top, 0xffffffff, &rect, 0, 0, &matrixScale);
@@ -134,7 +174,7 @@ void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsig
 		if (convStr.empty()) break;
 		if (i == imCursor) cursorcol = cols;
 		if ((cols >= width) || (i == convStr.size()) || ((i > strStartPos) && (i < charInfo.size()) && (tmpInfo != charInfo[i]))) {
-			D3DCOLOR color;
+			ArgbColor color;
 			switch (tmpInfo) {
 			case ATTR_INPUT:
 				color = 0xff00ccff; break;
@@ -184,22 +224,39 @@ void EditBox::renderIMCandidates(IMStat& imStat, int X, int Y, unsigned& TextID)
 }
 
 void EditBox::renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol) {
+	ArgbColor color =
+		(imStat.isOpened() ? 0xffcc0000 : 0xff000066) |
+		((int)(sin((double)myTimer.elapsed() / 200000.0) * 96.0 + 120.0) << 8);
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	D3DXVECTOR2 vec[] = {
 		D3DXVECTOR2(Geometry::WindowScale() * (X + cursorcol * myScale * halffontsz), Geometry::WindowScale() * Y),
 		D3DXVECTOR2(Geometry::WindowScale() * (X + cursorcol * myScale * halffontsz), Geometry::WindowScale() * (Y + int(18.0f * myScale))),
 	};
 	cursorLine->SetWidth(2);
 	cursorLine->Begin();
-	cursorLine->Draw(vec, 2,
-		(imStat.isOpened() ? 0xffcc0000 : 0xff000066) |
-		((int)(sin((double)myTimer.elapsed() / 200000.0) * 96.0 + 120.0) << 8)
-		);
+	cursorLine->Draw(vec, 2, color);
 	cursorLine->End();
+#else
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix(); glLoadIdentity(); // ここで行列をリセットしておかないとおかしな事になる
+	glLineWidth(2);
+	glColor4d(
+		(double)((color & 0x00ff0000) >> 16) / 255.0,
+		(double)((color & 0x0000ff00) >>  8) / 255.0,
+		(double)((color & 0x000000ff)      ) / 255.0,
+		(double)((color & 0xff000000) >> 24) / 255.0);
+	glBegin(GL_LINES);
+	glVertex2f((X + (float)cursorcol * myScale * (float)halffontsz) * Geometry::WindowScale(), Geometry::WindowHeight - Y * Geometry::WindowScale());
+	glVertex2f((X + (float)cursorcol * myScale * (float)halffontsz) * Geometry::WindowScale(), Geometry::WindowHeight - (Y + int(18.0f * myScale)) * Geometry::WindowScale());
+	glEnd();
+	glFlush();
+	glPopMatrix();
+#endif
 }
 
 void EditBox::scroll(IMStat& imStat) {
 	unsigned width; std::tie(std::ignore, std::ignore, width) = myRegion;
-	const CodeConv::tstring s(myText.substr(0, cursorPos) + imStat.getGCSCompStr() + myText.substr(cursorPos, myText.size()));
+	const CodeConv::tstring s(myText.substr(0, cursorPos) + (isActive ? imStat.getGCSCompStr() : CodeConv::tstring()) + myText.substr(cursorPos, myText.size()));
 	const auto compAttr(imStat.getGCSCompAttr());
 	const int paragraphLength =
 		std::count_if(compAttr.begin(), compAttr.end(), [](BYTE p) {
@@ -252,7 +309,10 @@ void EditBox::Render() {
 	if (cursorcol == -1) cursorcol = cols;
 
 	/* Candidate words */
-	renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + 20 * myScale, TextID);
+	if (isActive) {
+		renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + 20 * myScale, TextID);
+		renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + 20 * myScale, TextID);
+	}
 
 	/* Commit */
 	for (unsigned i = TextID; i < maxStr; i++)

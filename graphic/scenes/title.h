@@ -27,14 +27,14 @@ public:
 
 class TitleScreen::TitleSprite {
 private:
-	static LPDIRECT3DTEXTURE9 texture;
+	static TexturePtr texture;
 	RECT rect;
 	int width, height;
-	LPDIRECT3DDEVICE9 myDevice;
+	DevicePtr myDevice;
 public:
-	static void LoadTexture(LPDIRECT3DDEVICE9 device);
+	static void LoadTexture(DevicePtr device);
 	static void DisposeTexture();
-	TitleSprite(LPDIRECT3DDEVICE9 device, int X, int Y, int Width, int Height);
+	TitleSprite(DevicePtr device, int X, int Y, int Width, int Height);
 	~TitleSprite();
 	void show(int X, int Y, float scale = 1.0f, uint8_t opacity = 0xff);
 };

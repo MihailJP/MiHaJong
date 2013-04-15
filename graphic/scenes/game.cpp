@@ -16,7 +16,7 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
-void TableProtoScene::LoadTexture(LPDIRECT3DTEXTURE9* texture, LPCTSTR resource) {
+void TableProtoScene::LoadTexture(TexturePtr* texture, LPCTSTR resource) {
 	mihajong_graphic::LoadTexture(caller->getDevice(), texture, resource);
 }
 
@@ -41,7 +41,9 @@ TableProtoScene::~TableProtoScene() {
 		delete checkBoxes[i];
 	for (auto k = scorePanel.begin(); k != scorePanel.end(); ++k)
 		delete *k;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (tSideBar) tSideBar->Release();
+#endif
 }
 
 void TableProtoScene::ShowSidebar() {
@@ -79,40 +81,40 @@ void TableProtoScene::ShowScorePanel() {
 		(*k)->Render();
 }
 
-D3DCOLOR TableProtoScene::roundColor() {
+ArgbColor TableProtoScene::roundColor() {
 	switch (GameStatus::gameStat()->GameRound / Players) { // 場風で分岐
 	case 0: // 東場
 		if (GameStatus::gameStat()->LoopRound == 0)
-			return D3DCOLOR_XRGB(  0, 128,   0);
+			return 0xff008000;
 		else if ((GameStatus::gameStat()->LoopRound % 2) == 0)
-			return D3DCOLOR_XRGB( 64, 128,   0);
+			return 0xff408000;
 		else
-			return D3DCOLOR_XRGB(128, 128, 128);
+			return 0xff808080;
 	case 1: // 南場
 		if (GameStatus::gameStat()->LoopRound == 0)
-			return D3DCOLOR_XRGB(  0, 128, 128);
+			return 0xff008080;
 		else if ((GameStatus::gameStat()->LoopRound % 2) == 0)
-			return D3DCOLOR_XRGB(128, 128,  64);
+			return 0xff808040;
 		else
-			return D3DCOLOR_XRGB(128, 128,   0);
+			return 0xff808000;
 	case 2: // 西場
 		if ((GameStatus::gameStat()->LoopRound % 2) == 0)
-			return D3DCOLOR_XRGB( 64,  64, 128);
+			return 0xff404080;
 		else
-			return D3DCOLOR_XRGB(128,   0,   0);
+			return 0xff800000;
 	case 3: // 北場
 		if ((GameStatus::gameStat()->LoopRound % 2) == 0)
-			return D3DCOLOR_XRGB(128,   0, 128);
+			return 0xff800080;
 		else
-			return D3DCOLOR_XRGB( 64,  64,  64);
+			return 0xff404040;
 	case 4: // 白場
-		return     D3DCOLOR_XRGB( 96,  96, 128);
+		return     0xff606080;
 	case 5: // 發場
-		return     D3DCOLOR_XRGB( 96, 128,  96);
+		return     0xff608060;
 	case 6: // 中場
-		return     D3DCOLOR_XRGB(128,  96,  96);
+		return     0xff806060;
 	default:
-		return     D3DCOLOR_XRGB(  0,   0,   0);
+		return     0xff000000;
 	}
 }
 
@@ -148,21 +150,35 @@ PlayerID TableProtoScene::ScoreBoard::playerID() {
 	return utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, relativePlayerID);
 }
 
-TableProtoScene::ScoreBoard::ScoreBoard(LPDIRECT3DDEVICE9 device, seatRelative relativePos, int x, int y, float widthScale) {
+TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativePos, int x, int y, float widthScale) {
 	myDevice = device; relativePlayerID = relativePos; xpos = x; ypos = y; wScale = widthScale;
 	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR));
 	nameText = new SmallTextRenderer(device);
 	// 行列の構築
-	D3DXMATRIX tmpmtx;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
+	TransformMatrix tmpmtx;
 	D3DXMatrixIdentity(&myMatrix); D3DXMatrixIdentity(&tmpmtx);
 	D3DXMatrixScaling(&tmpmtx, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
 	D3DXMatrixTranslation(&tmpmtx, (float)(-x) * Geometry::WindowScale(), (float)(-y) * Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
 	D3DXMatrixScaling(&tmpmtx, wScale, 1.0f, 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
 	D3DXMatrixTranslation(&tmpmtx, (float)x * Geometry::WindowScale(), (float)y * Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
+#else
+	glPushMatrix(); glLoadIdentity();
+	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
+	glTranslatef((float)x * Geometry::WindowScale(), -(float)y * Geometry::WindowScale(), 0.0f);
+	glScalef(wScale, 1.0f, 1.0f);
+	glTranslatef(-(float)x * Geometry::WindowScale(), (float)y * Geometry::WindowScale(), 0.0f);
+	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
+	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	glGetFloatv(GL_MODELVIEW_MATRIX, &myMatrix[0]);
+	glPopMatrix();
+#endif
 }
 
 TableProtoScene::ScoreBoard::~ScoreBoard() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (texture) texture->Release();
+#endif
 	delete nameText;
 }
 
@@ -196,7 +212,7 @@ void TableProtoScene::ScoreBoard::renderWind() {
 		&rect, 0, 0, &myMatrix);
 }
 
-void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, D3DCOLOR color) {
+void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, ArgbColor color) {
 	RECT rect = {
 		NumCharX + NumCharWidth * (num    ), NumCharY,
 		NumCharX + NumCharWidth * (num + 1), NumCharY + NumCharHeight
@@ -207,7 +223,7 @@ void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, D3DC
 
 void TableProtoScene::ScoreBoard::renderRank() {
 	PlayerRankList rankList = utils::calcRank(GameStatus::gameStat());
-	const D3DCOLOR color =
+	const ArgbColor color =
 		(rankList[playerID()] == 1) ? ledColorRed : // トップは赤
 		(rankList[playerID()] == (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4) ? ledColorOrange : // ラスはオレンジ
 		ledColorGreen); // その他は緑で表示
@@ -264,7 +280,7 @@ std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scor
 
 void TableProtoScene::ScoreBoard::renderScore() {
 	unsigned digits, unitcode; signed decimalPos, sign;
-	D3DCOLOR color;
+	ArgbColor color;
 	ScoreMode scoreMode = getScoreMode();
 
 	std::tie(digits, unitcode, decimalPos, sign) = scoreInfo(scoreMode);
@@ -311,7 +327,7 @@ void TableProtoScene::ScoreBoard::renderScore() {
 	}
 }
 
-void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum, D3DCOLOR color) {
+void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum, ArgbColor color) {
 	RECT rect = {
 		ScoreUnitCharX + ScoreUnitCharWidth * (unitnum    ), ScoreUnitCharY,
 		ScoreUnitCharX + ScoreUnitCharWidth * (unitnum + 1), ScoreUnitCharY + ScoreUnitCharHeight

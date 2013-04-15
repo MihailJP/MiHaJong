@@ -144,7 +144,7 @@ void ShowNakihai::NakihaiSelRoutine(const GameTable* gameStat, PlayerID targetPl
 	}
 }
 
-ShowNakihai::ShowNakihai(LPDIRECT3DDEVICE9 device) {
+ShowNakihai::ShowNakihai(DevicePtr device) {
 	myDevice = device;
 	TileTexture = new ShowTile(device);
 }

@@ -5,7 +5,7 @@
 
 namespace mihajong_graphic {
 
-CheckBox::CheckBox(LPDIRECT3DDEVICE9 device, const CodeConv::tstring& caption, int x, int y, bool checked) {
+CheckBox::CheckBox(DevicePtr device, const CodeConv::tstring& caption, int x, int y, bool checked) {
 	myDevice = device;
 	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_CHECKBOX));
 	myTextRenderer = new TextRenderer(device);
@@ -17,7 +17,9 @@ CheckBox::CheckBox(LPDIRECT3DDEVICE9 device, const CodeConv::tstring& caption, i
 
 CheckBox::~CheckBox() {
 	delete myTextRenderer;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (myTexture) myTexture->Release();
+#endif
 }
 
 void CheckBox::Render() {

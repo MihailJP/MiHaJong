@@ -40,6 +40,9 @@ libmihajong_graphic_la_SOURCES = \
 	graphic.rc
 libmihajong_graphic_la_LDFLAGS = -no-undefined
 libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS --input-charset=cp932
+if WITH_DIRECTX
+libmihajong_graphic_la_CXXFLAGS += -DWITH_DIRECTX
+endif
 libmihajong_graphic_la_LIBADD = graphic.o ../sound/libmihajong-sound.la
 dist_data_DATA = \
 	data/agariwnd.png data/baize.png data/button.png data/call.png \

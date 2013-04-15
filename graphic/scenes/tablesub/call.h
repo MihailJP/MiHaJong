@@ -8,12 +8,12 @@ namespace mihajong_graphic {
 
 class TableSubsceneCallProto : public TableSubscene {
 protected:
-	LPDIRECT3DTEXTURE9 tCall;
+	TexturePtr tCall;
 	virtual void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) = 0;
 	virtual void ShowCall(PlayerID player, int x, int y) = 0;
 	virtual void ShowAllCall();
 public:
-	TableSubsceneCallProto(LPDIRECT3DDEVICE9 device);
+	TableSubsceneCallProto(DevicePtr device);
 	virtual ~TableSubsceneCallProto();
 	virtual void skipEvent();
 };
@@ -25,14 +25,14 @@ protected:
 	void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y);
 	void ShowCall(PlayerID player, int x, int y);
 public:
-	TableSubsceneCallZoomProto(LPDIRECT3DDEVICE9 device);
+	TableSubsceneCallZoomProto(DevicePtr device);
 	virtual ~TableSubsceneCallZoomProto();
 };
 
 class TableSubsceneCall : public TableSubsceneCallZoomProto {
 	friend class TableSubsceneCallChankanRon;
 public:
-	TableSubsceneCall(LPDIRECT3DDEVICE9 device);
+	TableSubsceneCall(DevicePtr device);
 	~TableSubsceneCall();
 	void Render();
 };
@@ -42,13 +42,13 @@ protected:
 	void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y);
 	void ShowCall(PlayerID player, int x, int y);
 public:
-	TableSubsceneCallFadeProto(LPDIRECT3DDEVICE9 device);
+	TableSubsceneCallFadeProto(DevicePtr device);
 	virtual ~TableSubsceneCallFadeProto();
 };
 
 class TableSubsceneCallFade : public TableSubsceneCallFadeProto {
 public:
-	TableSubsceneCallFade(LPDIRECT3DDEVICE9 device);
+	TableSubsceneCallFade(DevicePtr device);
 	~TableSubsceneCallFade();
 	void Render();
 };
@@ -58,14 +58,14 @@ protected:
 	virtual void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y);
 	void ShowCall(PlayerID player, int x, int y);
 public:
-	TableSubsceneCallCutProto(LPDIRECT3DDEVICE9 device);
+	TableSubsceneCallCutProto(DevicePtr device);
 	virtual ~TableSubsceneCallCutProto();
 };
 
 class TableSubsceneCallCut : public TableSubsceneCallCutProto {
 	friend class TableSubsceneCallChankanRon;
 public:
-	TableSubsceneCallCut(LPDIRECT3DDEVICE9 device);
+	TableSubsceneCallCut(DevicePtr device);
 	~TableSubsceneCallCut();
 	void Render();
 };
@@ -74,7 +74,7 @@ class TableSubsceneCallChankanPre : public TableSubsceneCallCutProto {
 protected:
 	void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y);
 public:
-	TableSubsceneCallChankanPre(LPDIRECT3DDEVICE9 device);
+	TableSubsceneCallChankanPre(DevicePtr device);
 	~TableSubsceneCallChankanPre();
 	void Render();
 };
@@ -87,7 +87,7 @@ protected:
 	void ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y);
 	void ShowCall(PlayerID player, int x, int y);
 public:
-	TableSubsceneCallChankanRon(LPDIRECT3DDEVICE9 device);
+	TableSubsceneCallChankanRon(DevicePtr device);
 	~TableSubsceneCallChankanRon();
 	void Render();
 };

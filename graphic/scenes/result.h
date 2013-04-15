@@ -26,7 +26,7 @@ class ResultScreen::RankRenderer {
 private:
 	static const unsigned animTime = 500000u;
 private:
-	LPDIRECT3DDEVICE9 myDevice;
+	DevicePtr myDevice;
 	Timer myTimer;
 	int myID;
 	int BaseY;
@@ -41,7 +41,7 @@ private:
 	ScoreDigitRenderer* scoreRenderer;
 	void RenderScore();
 public:
-	RankRenderer(LPDIRECT3DDEVICE9 device, int id);
+	RankRenderer(DevicePtr device, int id);
 	~RankRenderer();
 	void Render();
 };

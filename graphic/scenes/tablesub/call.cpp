@@ -9,12 +9,14 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneCallProto::TableSubsceneCallProto(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
+TableSubsceneCallProto::TableSubsceneCallProto(DevicePtr device) : TableSubscene(device) {
 	LoadTexture(device, &tCall, MAKEINTRESOURCE(IDB_PNG_CALL_TEXT));
 }
 
 TableSubsceneCallProto::~TableSubsceneCallProto() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (tCall) tCall->Release();
+#endif
 }
 
 void TableSubsceneCallProto::ShowAllCall() {
@@ -30,7 +32,7 @@ void TableSubsceneCallProto::skipEvent() {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneCallZoomProto::TableSubsceneCallZoomProto(LPDIRECT3DDEVICE9 device) : TableSubsceneCallProto(device) {
+TableSubsceneCallZoomProto::TableSubsceneCallZoomProto(DevicePtr device) : TableSubsceneCallProto(device) {
 }
 
 TableSubsceneCallZoomProto::~TableSubsceneCallZoomProto() {
@@ -42,16 +44,28 @@ void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType
 	const std::uint64_t curr = myTimer.elapsed();
 	const int animationLength = 250000;
 	const float scale = (curr >= animationLength) ? 1.0f : pow((float)(animationLength - (signed)curr) / 2.5e5f + 1.0f, 2);
-	const D3DCOLOR col = D3DCOLOR_ARGB(
+	const ArgbColor col = (uint32_t)(
 		(curr >= animationLength) ? 255 :
-		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2),
-		0xff, 0xff, 0xff);
-	D3DXMATRIX matrix, matrix1;
+		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2))
+		<< 24 | 0x00ffffff;
+#if defined(_WIN32) && defined(WITH_DIRECTX)
+	TransformMatrix matrix, matrix1;
 	D3DXMatrixIdentity(&matrix); D3DXMatrixIdentity(&matrix1);
 	D3DXMatrixTranslation(&matrix1, (float)(-x), (float)(-y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1, scale, scale, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixTranslation(&matrix1, (float)x, (float)y, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
+#else
+	glPushMatrix(); glLoadIdentity();
+	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
+	glTranslatef((float)x * Geometry::WindowScale(), -(float)y * Geometry::WindowScale(), 0.0f);
+	glScalef(scale, scale, 1.0f);
+	glTranslatef(-(float)x * Geometry::WindowScale(), (float)y * Geometry::WindowScale(), 0.0f);
+	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
+	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	TransformMatrix matrix; glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);
+	glPopMatrix();
+#endif
 	RECT rect = {
 		0  , 96 * (callType    ),
 		384, 96 * (callType + 1),
@@ -65,7 +79,7 @@ void TableSubsceneCallZoomProto::ShowCall(PlayerID player, int x, int y) {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneCall::TableSubsceneCall(LPDIRECT3DDEVICE9 device) : TableSubsceneCallZoomProto(device) {
+TableSubsceneCall::TableSubsceneCall(DevicePtr device) : TableSubsceneCallZoomProto(device) {
 }
 
 TableSubsceneCall::~TableSubsceneCall() {
@@ -77,7 +91,7 @@ void TableSubsceneCall::Render() {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneCallFadeProto::TableSubsceneCallFadeProto(LPDIRECT3DDEVICE9 device) : TableSubsceneCallProto(device) {
+TableSubsceneCallFadeProto::TableSubsceneCallFadeProto(DevicePtr device) : TableSubsceneCallProto(device) {
 }
 
 TableSubsceneCallFadeProto::~TableSubsceneCallFadeProto() {
@@ -88,10 +102,10 @@ void TableSubsceneCallFadeProto::ShowCallMsg(PlayerID player, calltext::CallType
 	if (callType == calltext::None) return;
 	const std::uint64_t curr = myTimer.elapsed();
 	const int animationLength = 250000;
-	const D3DCOLOR col = D3DCOLOR_ARGB(
+	const ArgbColor col = (uint32_t)(
 		(curr >= animationLength) ? 255 :
-		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2),
-		0xff, 0xff, 0xff);
+		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2))
+		<< 24 | 0x00ffffff;
 	RECT rect = {
 		0  , 96 * (callType    ),
 		384, 96 * (callType + 1),
@@ -105,7 +119,7 @@ void TableSubsceneCallFadeProto::ShowCall(PlayerID player, int x, int y) {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneCallFade::TableSubsceneCallFade(LPDIRECT3DDEVICE9 device) : TableSubsceneCallFadeProto(device) {
+TableSubsceneCallFade::TableSubsceneCallFade(DevicePtr device) : TableSubsceneCallFadeProto(device) {
 }
 
 TableSubsceneCallFade::~TableSubsceneCallFade() {
@@ -117,7 +131,7 @@ void TableSubsceneCallFade::Render() {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneCallCutProto::TableSubsceneCallCutProto(LPDIRECT3DDEVICE9 device) : TableSubsceneCallProto(device) {
+TableSubsceneCallCutProto::TableSubsceneCallCutProto(DevicePtr device) : TableSubsceneCallProto(device) {
 }
 
 TableSubsceneCallCutProto::~TableSubsceneCallCutProto() {
@@ -139,7 +153,7 @@ void TableSubsceneCallCutProto::ShowCall(PlayerID player, int x, int y) {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneCallCut::TableSubsceneCallCut(LPDIRECT3DDEVICE9 device) : TableSubsceneCallCutProto(device) {
+TableSubsceneCallCut::TableSubsceneCallCut(DevicePtr device) : TableSubsceneCallCutProto(device) {
 }
 
 TableSubsceneCallCut::~TableSubsceneCallCut() {
@@ -151,7 +165,7 @@ void TableSubsceneCallCut::Render() {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneCallChankanPre::TableSubsceneCallChankanPre(LPDIRECT3DDEVICE9 device) : TableSubsceneCallCutProto(device) {
+TableSubsceneCallChankanPre::TableSubsceneCallChankanPre(DevicePtr device) : TableSubsceneCallCutProto(device) {
 }
 
 TableSubsceneCallChankanPre::~TableSubsceneCallChankanPre() {
@@ -169,7 +183,7 @@ void TableSubsceneCallChankanPre::Render() {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneCallChankanRon::TableSubsceneCallChankanRon(LPDIRECT3DDEVICE9 device) : TableSubsceneCallProto(device) {
+TableSubsceneCallChankanRon::TableSubsceneCallChankanRon(DevicePtr device) : TableSubsceneCallProto(device) {
 	zoomCall = new TableSubsceneCall(device);
 	cutCall = new TableSubsceneCallCut(device);
 }

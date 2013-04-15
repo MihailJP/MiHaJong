@@ -6,7 +6,7 @@ namespace mihajong_graphic {
 
 class TableSubsceneNormal : public TableSubscene {
 public:
-	TableSubsceneNormal(LPDIRECT3DDEVICE9 device);
+	TableSubsceneNormal(DevicePtr device);
 	~TableSubsceneNormal();
 	void Render();
 };

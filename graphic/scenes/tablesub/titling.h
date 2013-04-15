@@ -13,7 +13,7 @@ protected:
 	HugeTextRenderer* myTextRenderer;
 	void FadeinStr(const std::wstring& str);
 public:
-	TableSubsceneTitling(LPDIRECT3DDEVICE9 device);
+	TableSubsceneTitling(DevicePtr device);
 	virtual ~TableSubsceneTitling();
 	virtual void skipEvent();
 };
@@ -22,7 +22,7 @@ class TableSubsceneTitlingHonba : public TableSubsceneTitling {
 private:
 	static const std::wstring Numeral;
 public:
-	TableSubsceneTitlingHonba(LPDIRECT3DDEVICE9 device);
+	TableSubsceneTitlingHonba(DevicePtr device);
 	~TableSubsceneTitlingHonba();
 	void Render();
 };
@@ -31,8 +31,8 @@ class TableSubsceneMsg : public TableSubsceneTitling {
 private:
 	std::wstring myString;
 public:
-	TableSubsceneMsg(LPDIRECT3DDEVICE9 device, const std::wstring& str = L"");
-	TableSubsceneMsg(LPDIRECT3DDEVICE9 device, const std::string& str);
+	TableSubsceneMsg(DevicePtr device, const std::wstring& str = L"");
+	TableSubsceneMsg(DevicePtr device, const std::string& str);
 	~TableSubsceneMsg();
 	void Render();
 };

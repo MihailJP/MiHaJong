@@ -1,4 +1,5 @@
 #include "rndstart.h"
+#include <cmath>
 #include "../../rule.h"
 #include "../../gametbl.h"
 #include "../../event.h"
@@ -6,7 +7,7 @@
 
 namespace mihajong_graphic {
 
-TableSubsceneBeginning::TableSubsceneBeginning(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
+TableSubsceneBeginning::TableSubsceneBeginning(DevicePtr device) : TableSubscene(device) {
 	myTextRenderer = new HugeTextRenderer(device);
 }
 
@@ -23,7 +24,7 @@ void TableSubsceneBeginning::ZoomChar(unsigned ID, const std::wstring& str, int 
 		float size = pow(3.0f - ((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 2.0f), 2);
 		myTextRenderer->NewText(ID, CodeConv::EnsureTStr(str),
 			TableSize / 2 - (224 * size) / 2 + xOffset, TableSize / 2 - 192 + 112 - (224 * size) / 2,
-			size, 1.0f, D3DCOLOR_ARGB((int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f), 255, 255, 255));
+			size, 1.0f, (unsigned int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f) << 24 | 0x00ffffff);
 	} else if (Zeit >= Ende) {
 		myTextRenderer->NewText(ID, CodeConv::EnsureTStr(str), TableSize / 2 - 112 + xOffset, TableSize / 2 - 192);
 	} else {

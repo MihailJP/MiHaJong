@@ -1,6 +1,5 @@
 #pragma once
 
-#include "directx.h"
 #include <tchar.h>
 #include <functional>
 #include "scenes/scene_id.h"
@@ -8,14 +7,18 @@
 #include "scenes/fps.h"
 #include "input.h"
 #include "../common/mutex.h"
+#include "directx.h"
 
 namespace mihajong_graphic {
 
 class ScreenManipulator {
 private:
 	HWND hWnd;
-	LPDIRECT3D9 pd3d; // Direct3D
-	LPDIRECT3DDEVICE9 pDevice; // Direct3Dデバイス
+	RenderingSysPtr pd3d; // Direct3D
+	DevicePtr pDevice; // Direct3Dデバイス/OpenGLデバイスコンテキスト
+#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	HGLRC rContext;
+#endif
 	Scene* myScene; // シーン管理用のクラス
 	FPSIndicator* myFPSIndicator; // FPS計算・表示
 	UINT64 lastRedrawTime;
@@ -30,7 +33,7 @@ public:
 	ScreenManipulator(HWND windowHandle, bool fullscreen);
 	~ScreenManipulator();
 	HWND getHWnd() {return hWnd;}
-	LPDIRECT3DDEVICE9 getDevice() {return pDevice;}
+	DevicePtr getDevice() {return pDevice;}
 	void inputProc(input::InputManipulator* iManip);
 	void transit(sceneID scene);
 	void subscene(unsigned int subsceneID);

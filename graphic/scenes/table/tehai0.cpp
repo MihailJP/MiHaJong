@@ -13,7 +13,7 @@ using utils::playerRelative;
 /* Žè”v‚ð•\Ž¦‚·‚é */
 void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 	std::function<std::tuple<int, int> (seatRelative)> coordFunc,
-	seatRelative direction, std::function<D3DCOLOR (int)> colorFunc,
+	seatRelative direction, std::function<ArgbColor (int)> colorFunc,
 	std::function<void (const int*, const int*, int)> regionFunc)
 {
 	int tilePos, x, y;
@@ -65,7 +65,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i) {
 			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile) {
-				const D3DCOLOR tileColor = colorFunc(i);
+				const ArgbColor tileColor = colorFunc(i);
 				const int tileX = x + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0);
 				const int tileY = y;
 				TileTexture->NewTile(i + NumOfTilesInHand * 3,
@@ -82,7 +82,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 	}
 }
 
-ShowTehai::ShowTehai(LPDIRECT3DDEVICE9 device) {
+ShowTehai::ShowTehai(DevicePtr device) {
 	myDevice = device;
 	TileTexture = new ShowTile(device);
 }

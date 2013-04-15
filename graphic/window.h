@@ -19,7 +19,7 @@ private:
 	static LRESULT keyev(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam); // ウィンドウプロシージャ
 	void initWindowClass(HINSTANCE hThisInst, LPCTSTR icon); // ウィンドウクラスの初期化
-	void initWindow(HINSTANCE hThisInst, int nWinMode); // ウィンドウの生成
+	void initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen); // ウィンドウの生成
 public:
 	MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen);
 	~MainWindow();

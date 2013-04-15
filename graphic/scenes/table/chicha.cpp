@@ -129,7 +129,9 @@ GameTableScreen::TrayReconst::TrayReconst(GameTableScreen* parent) {
 }
 
 GameTableScreen::TrayReconst::~TrayReconst() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (tChiicha) tChiicha->Release();
+#endif
 }
 
 }

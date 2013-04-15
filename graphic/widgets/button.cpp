@@ -7,14 +7,16 @@
 
 namespace mihajong_graphic {
 
-ButtonPic::ButtonPic(LPDIRECT3DDEVICE9 device) {
+ButtonPic::ButtonPic(DevicePtr device) {
 	myDevice = device;
 	LoadTexture(myDevice, &myTexture, MAKEINTRESOURCE(IDB_PNG_BUTTON));
 	myTextRenderer = new TextRenderer(myDevice);
 }
 
 ButtonPic::~ButtonPic() {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	myTexture->Release();
+#endif
 	delete myTextRenderer;
 }
 
@@ -33,7 +35,7 @@ void ButtonPic::setText(unsigned ButtonID) {
 		(std::get<0>(mySprites[ButtonID]) == clear) ? 0x3fffffff : 0xffffffff);
 }
 
-void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat, int X, int Y, unsigned Width, unsigned Height, D3DCOLOR color, const CodeConv::tstring& caption, bool adjustWidth) {
+void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat, int X, int Y, unsigned Width, unsigned Height, ArgbColor color, const CodeConv::tstring& caption, bool adjustWidth) {
 	if (mySprites.size() <= ButtonID)
 		mySprites.resize(ButtonID + 1, std::make_tuple(absent, 0, 0, 0, 0, 0, _T(""), false));
 	assert(stat != absent);
@@ -57,10 +59,17 @@ void ButtonPic::Render() {
 		if (std::get<0>(*k) == absent) continue;
 		int X = std::get<1>(*k), Y = std::get<2>(*k);
 		unsigned width = std::get<3>(*k), height = std::get<4>(*k);
-		D3DXMATRIX mat, mat2; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat2);
+#if defined(_WIN32) && defined(WITH_DIRECTX)
+		TransformMatrix mat, mat2; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat2);
 		D3DXMatrixTranslation(&mat2, (float)(-X), (float)(-Y), 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
 		D3DXMatrixScaling(&mat2, (float)width / 156.0f, (float)height / 48.0f, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
 		D3DXMatrixTranslation(&mat2, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
+#else
+		glPushMatrix(); glLoadIdentity();
+		// DirectXとは基準が異なる？　OpenGLの場合ここは単位行列のままでよい
+		TransformMatrix mat; glGetFloatv(GL_MODELVIEW_MATRIX, &mat[0]);
+		glPopMatrix();
+#endif
 		RECT rect = {0, 52 * (std::get<0>(*k) - 1), 156, 52 * (std::get<0>(*k) - 1) + 48};
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y, width, height, std::get<5>(*k) | 0xff000000, &rect, 0, 0, &mat);
 	}

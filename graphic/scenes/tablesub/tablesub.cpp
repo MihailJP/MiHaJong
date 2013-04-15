@@ -3,11 +3,11 @@
 
 namespace mihajong_graphic {
 
-TableSubscene::TableSubscene(LPDIRECT3DDEVICE9 device) {
+TableSubscene::TableSubscene(DevicePtr device) {
 	myDevice = device;
 };
 
-TableSubsceneNormal::TableSubsceneNormal(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
+TableSubsceneNormal::TableSubsceneNormal(DevicePtr device) : TableSubscene(device) {
 }
 TableSubsceneNormal::~TableSubsceneNormal() {
 }

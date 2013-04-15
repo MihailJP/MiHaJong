@@ -19,8 +19,8 @@ protected:
 	static const unsigned int DeckChainLength = 17;
 	static const unsigned int DeckPosH = (TableSize - ShowTile::VertTileWidth * (DeckChainLength - 1)) / 2;
 	static const unsigned int DeckPosV = (TableSize / 2) - 300;
-	LPDIRECT3DTEXTURE9 tBorder; // 卓の枠
-	LPDIRECT3DTEXTURE9 tBaize; // 羅紗地
+	TexturePtr tBorder; // 卓の枠
+	TexturePtr tBaize; // 羅紗地
 	logwnd::LogWindow* logWindow; // ログウィンドウ
 	EditBox* chatInput; // チャット入力欄
 	static const unsigned ChatInputRegion = 99;

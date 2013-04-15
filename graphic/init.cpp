@@ -1,13 +1,25 @@
 #include "init.h"
 #include "event.h"
+#if defined(_WIN32) && !defined(WITH_DIRECTX)
+#include <gdiplus.h>
+using namespace Gdiplus;
+#endif
 
 namespace mihajong_graphic {
 
 HINSTANCE GraphicDLL = nullptr;
 MainWindow* myMainWindow = nullptr;
 
+#if defined(_WIN32) && !defined(WITH_DIRECTX)
+GdiplusStartupInput gdiplusInput;
+ULONG_PTR gdiplusToken;
+#endif
+
 EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr, unsigned width, unsigned height, bool fullscreen) {
 	/* ウィンドウの初期化 */
+#if defined(_WIN32) && !defined(WITH_DIRECTX)
+	GdiplusStartup(&gdiplusToken, &gdiplusInput, nullptr);
+#endif
 	try {
 		myMainWindow = new MainWindow(hInstance, nCmdShow, icon, width, height, fullscreen);
 		ui::UIEvent = new ui::UI_Event();
@@ -46,6 +58,9 @@ catch (LPTSTR e) {
 }
 
 EXPORT void CleanupWindow() {
+#if defined(_WIN32) && !defined(WITH_DIRECTX)
+	GdiplusShutdown(gdiplusToken);
+#endif
 	delete myMainWindow;
 	delete ui::UIEvent;
 	delete ui::cancellableWait;

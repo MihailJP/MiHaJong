@@ -28,7 +28,7 @@ AC_CHECK_HEADER([windows.h], [using_winapi=yes], [using_winapi=no])
 # DirectX option
 AC_ARG_WITH([directx],
 	[AS_HELP_STRING([--without-directx],
-		[use OpenAL in lieu of DirectSound (default on non-Windows systems)])],
+		[use OpenAL and OpenGL in lieu of DirectX (default on non-Windows systems)])],
 	[],
 	[with_directx=using_winapi]
 )
@@ -48,18 +48,23 @@ AS_IF([test "x$using_winapi" != xno],
 	 AC_CHECK_LIB([ole32], [main], [], AC_MSG_ERROR([ole32 is unavailable]))
 	 AC_CHECK_LIB([uuid], [main], [], AC_MSG_ERROR([uuid is unavailable]))
 	 AS_IF([test "x$with_directx" != xno],
-		[AC_CHECK_LIB([dsound], [main], [], AC_MSG_ERROR([dsound is unavailable]))]
+		[AC_CHECK_LIB([dsound], [main], [], AC_MSG_ERROR([dsound is unavailable]))
+		 AC_CHECK_LIB([d3d9], [main], [], AC_MSG_ERROR([d3d9 is unavailable]))
+		 AC_CHECK_LIB([d3dx9d], [main], [], AC_MSG_ERROR([d3dx9d is unavailable]))
+		 AC_CHECK_LIB([dxerr9], [main], [], AC_MSG_ERROR([dxerr9 is unavailable]))]
 	 )
-	 AC_CHECK_LIB([d3d9], [main], [], AC_MSG_ERROR([d3d9 is unavailable]))
-	 AC_CHECK_LIB([d3dx9d], [main], [], AC_MSG_ERROR([d3dx9d is unavailable]))
-	 AC_CHECK_LIB([dxerr9], [main], [], AC_MSG_ERROR([dxerr9 is unavailable]))
 	 AC_CHECK_LIB([dxguid], [main], [], AC_MSG_ERROR([dxguid is unavailable]))
 	 AC_CHECK_LIB([dinput8], [main], [], AC_MSG_ERROR([dinput8 is unavailable]))
 	 AC_CHECK_LIB([imm32], [main], [], AC_MSG_ERROR([imm32 is unavailable]))
 	 AC_CHECK_LIB([imagehlp], [main], [], AC_MSG_ERROR([imagehlp is unavailable]))]
 )
 AS_IF([test "x$with_directx" = xno],
-	[AC_CHECK_LIB([OpenAL32], [main], [], AC_MSG_ERROR([OpenAL32 is unavailable]))]
+	[AC_CHECK_LIB([OpenAL32], [main], [], AC_MSG_ERROR([OpenAL32 is unavailable]))
+	 AS_IF([test "x$using_winapi" != xno],
+		[AC_CHECK_LIB([gdiplus], [main], [], AC_MSG_ERROR([gdiplus is unavailable]))
+		 AC_CHECK_LIB([gdi32], [main], [], AC_MSG_ERROR([gdi32 is unavailable]))]
+	 )
+	 AC_CHECK_LIB([opengl32], [main], [], AC_MSG_ERROR([opengl32 is unavailable]))]
 )
 
 
@@ -69,9 +74,9 @@ AX_LUA_HEADERS([], [AC_MSG_ERROR([liblua headers unavailable.])])
 AS_IF([test "x$using_winapi" != xno],
 	[AC_CHECK_HEADER([winsock2.h], [], AC_MSG_ERROR([winSock2.h is unavailable]))
 	 AS_IF([test "x$with_directx" != xno],
-		[AC_CHECK_HEADER([dsound.h], [], AC_MSG_ERROR([dsound.h is unavailable]))]
+		[AC_CHECK_HEADER([dsound.h], [], AC_MSG_ERROR([dsound.h is unavailable]))
+		 MH_CHECK_DIRECT3D]
 	 )
-	 MH_CHECK_DIRECT3D
 	 AC_CHECK_HEADER([dinput.h], [], AC_MSG_ERROR([dinput.h is unavailable]))
 	 AC_CHECK_HEADER([imm.h], [], AC_MSG_ERROR([imm.h is unavailable]), [[
 #include <windef.h>
@@ -88,7 +93,18 @@ AS_IF([test "x$using_winapi" != xno],
 )
 AS_IF([test "x$with_directx" = xno],
 	[AC_CHECK_HEADER([AL/al.h], [], AC_MSG_ERROR([AL/al.h is unavailable]))
-	 AC_CHECK_HEADER([AL/alc.h], [], AC_MSG_ERROR([AL/alc.h is unavailable]))]
+	 AC_CHECK_HEADER([AL/alc.h], [], AC_MSG_ERROR([AL/alc.h is unavailable]))
+	 AS_IF([test "x$using_winapi" != xno],
+		[AC_CHECK_HEADER([gdiplus.h], [], AC_MSG_ERROR([gdiplus.h is unavailable]), [[
+#include <propidl.h>
+]]
+		 )
+		 AC_CHECK_HEADER([wingdi.h], [], AC_MSG_ERROR([wingdi.h is unavailable]), [[
+#include <windef.h>
+]]
+		 )]
+	 )
+	 AC_CHECK_HEADER([GL/gl.h], [], AC_MSG_ERROR([GL/gl.h is unavailable]))]
 )
 
 # Checks for typedefs, structures, and compiler characteristics.

@@ -6,7 +6,7 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneTitling::TableSubsceneTitling(LPDIRECT3DDEVICE9 device) : TableSubscene(device) {
+TableSubsceneTitling::TableSubsceneTitling(DevicePtr device) : TableSubscene(device) {
 	myTextRenderer = new HugeTextRenderer(device);
 }
 
@@ -19,7 +19,8 @@ void TableSubsceneTitling::FadeinStr(const std::wstring& str) {
 	const unsigned len = myTextRenderer->strWidthByCols(str);
 	if ((Zeit >= Anfang) && (Zeit < Ende)) {
 		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * (len > 8 ? 8 :len)), TableSize / 2 - 192,
-			1.0f, (len > 8 ? 8.0f / (float)len : 1.0f), D3DCOLOR_ARGB((int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f), 255, 255, 255));
+			1.0f, (len > 8 ? 8.0f / (float)len : 1.0f),
+			(uint32_t)((int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f)) << 24 | 0x00ffffff);
 	} else if (Zeit >= Ende) {
 		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * (len > 8 ? 8 :len)), TableSize / 2 - 192,
 			1.0f, (len > 8 ? 8.0f / (float)len : 1.0f));
@@ -32,10 +33,10 @@ void TableSubsceneTitling::skipEvent() {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneMsg::TableSubsceneMsg(LPDIRECT3DDEVICE9 device, const std::wstring& str) : TableSubsceneTitling(device) {
+TableSubsceneMsg::TableSubsceneMsg(DevicePtr device, const std::wstring& str) : TableSubsceneTitling(device) {
 	myString = str;
 }
-TableSubsceneMsg::TableSubsceneMsg(LPDIRECT3DDEVICE9 device, const std::string& str) : TableSubsceneTitling(device) {
+TableSubsceneMsg::TableSubsceneMsg(DevicePtr device, const std::string& str) : TableSubsceneTitling(device) {
 	myString = CodeConv::ANSItoWIDE(str);
 }
 
@@ -49,7 +50,7 @@ void TableSubsceneMsg::Render() {
 
 // -------------------------------------------------------------------------
 
-TableSubsceneTitlingHonba::TableSubsceneTitlingHonba(LPDIRECT3DDEVICE9 device) : TableSubsceneTitling(device) {
+TableSubsceneTitlingHonba::TableSubsceneTitlingHonba(DevicePtr device) : TableSubsceneTitling(device) {
 }
 TableSubsceneTitlingHonba::~TableSubsceneTitlingHonba() {
 }

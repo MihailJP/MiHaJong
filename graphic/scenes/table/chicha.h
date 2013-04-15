@@ -31,7 +31,7 @@ private: /**** 起家マーク ****/
 	static const unsigned int PlatePadding = 1;
 	static const unsigned int PlatePosH = TrayPosH + (PlateWidthH / 2) + (PlatePadding * 2);
 	static const unsigned int PlatePosV = TrayPosV;
-	LPDIRECT3DTEXTURE9 tChiicha; // 起家マーク
+	TexturePtr tChiicha; // 起家マーク
 	void ShowChiicha(const GameTable* gameStat); // 起家マークを表示する
 private: /**** ヤキトリマーク ****/
 	static const unsigned int PlateID_Yakitori = 7;
