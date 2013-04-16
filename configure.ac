@@ -23,6 +23,7 @@ AX_PROG_LUA([5.1])
 
 # Checks for Win32
 AC_CHECK_HEADER([windows.h], [using_winapi=yes], [using_winapi=no])
+AM_CONDITIONAL(WITH_WINAPI, test x$using_winapi != xno)
 
 # Resource editor
 AS_IF([test "x$using_winapi" != xno],

@@ -2,7 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#ifdef _WIN32
 #include <windows.h>
+#else /* _WIN32 */
+#include <time.h>
+#include <sys/time.h>
+#endif /* _WIN32 */
 
 double time_to_julian(int year, int month, int day, int hour, int min, int sec, int msec)
 { /* Calculate Julian day from given date and time */
@@ -18,6 +23,7 @@ double time_to_julian(int year, int month, int day, int hour, int min, int sec, 
 		(double)msec / 24.0 / 3600000.0;
 }
 
+#ifdef _WIN32
 EXPORT double systime_to_julian(const LPSYSTEMTIME sysTime)
 { /* Calculate Julian day from given SYSTEMTIME struct */
 	SYSTEMTIME time_utc;
@@ -30,3 +36,20 @@ EXPORT double systime_to_julian(const LPSYSTEMTIME sysTime)
 		time_utc.wHour, time_utc.wMinute, time_utc.wSecond,
 		time_utc.wMilliseconds);
 }
+#else /* _WIN32 */
+EXPORT double systime_to_julian(const struct timeval* sysTime)
+{ /* Calculate Julian day from given SYSTEMTIME struct */
+	struct timeval target_time;
+	struct tm time_utc;
+
+	if (sysTime == NULL) gettimeofday(&target_time, NULL);
+	else memcpy(&target_time, sysTime, sizeof(struct timeval));
+
+	memcpy(&time_utc, gmtime(&target_time.tv_sec), sizeof(struct tm));
+
+	return time_to_julian(
+		time_utc.tm_year + 1900, time_utc.tm_mon + 1, time_utc.tm_mday,
+		time_utc.tm_hour, time_utc.tm_min, time_utc.tm_sec,
+		target_time.tv_usec / 1000);
+}
+#endif /* _WIN32 */
