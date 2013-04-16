@@ -56,19 +56,15 @@ extern "C" {
 
 	/* julian.c */
 	EXPORT double systime_to_julian(const LPSYSTEMTIME);
-	EXPORT void time_to_julian_hsp(double*, int, int, int, int, int, int, int);
 
 	/* ecllong.c */
 	EXPORT double sun_ecliptic_longitude (double);
-	EXPORT void sun_ecliptic_longitude_hsp (double*, double);
 
 	/* mphase.c */
 	EXPORT struct MOONPHASE calc_moon_phase (double);
-	EXPORT void calc_moon_phase_hsp (double*, double);
 
 	/* sunrise.c */
 	EXPORT struct RISE_SET_HOUR sunrise (int, int, int, double, double, double, int, double);
-	EXPORT void sunrise_hsp (int*, int, int, int, double, int, double, double, double);
 
 #ifdef __cplusplus
 }

@@ -30,9 +30,3 @@ EXPORT double systime_to_julian(const LPSYSTEMTIME sysTime)
 		time_utc.wHour, time_utc.wMinute, time_utc.wSecond,
 		time_utc.wMilliseconds);
 }
-
-EXPORT void time_to_julian_hsp(double* jday, int year, int month, int day, int hour, int min, int sec, int msec)
-{ /* Calculate Julian day from given date and time (HSP interface) */
-	*jday = time_to_julian(year, month, day, hour, min, sec, msec);
-	return;
-}

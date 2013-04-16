@@ -11,9 +11,3 @@ EXPORT double sun_ecliptic_longitude (double jday)
 		/ 1296000.0 * 2.0 * M_PI;
 	return fixangle(rad2deg(L));
 }
-
-EXPORT void sun_ecliptic_longitude_hsp (double* l, double jday)
-{
-	*l = sun_ecliptic_longitude(jday);
-	return;
-}
