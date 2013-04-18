@@ -1,6 +1,8 @@
 #include "chrwidth.h"
 
+#ifdef _WIN32
 #include <windows.h>
+#endif /*_WIN32*/
 #include <stdexcept>
 #include "../common/strcode.h"
 
@@ -22,9 +24,13 @@ bool isLeadingByte(wchar_t chr) {
 		return false;
 }
 bool isLeadingByte(char chr) {
+#ifdef _WIN32
 	if (GetACP() == 932) // CP932 aka SJIS
+#endif /*_WIN32*/
 		return ((chr >= (char)0x81) && (chr <= (char)0x9f)) || ((chr >= (char)0xe0) && (chr <= (char)0xfc));
+#ifdef _WIN32
 	else return false; // Other codepages are not supported
+#endif /*_WIN32*/
 }
 bool isLeadingByte(const CodeConv::tstring& str, unsigned pos) {
 	bool flag = false;
