@@ -4,6 +4,10 @@
 #include "../common/strcode.h"
 #include "sprite.h"
 
+#ifndef _WIN32
+#define MAKEINTRESOURCE(r) ((LPTSTR)r)
+#endif /*_WIN32*/
+
 namespace mihajong_graphic {
 
 ITextRenderer::ITextRenderer(DevicePtr device) {
