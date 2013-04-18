@@ -31,9 +31,13 @@ void Data::decompress(int FileID_) {
 	compressedData[size] = 0;
 	decompressedSize = *((size_t *)(compressedData+5));
 	DecompressedData = (uint8_t *)malloc(decompressedSize);
+#ifdef _WIN32
 	result = LzmaUncompress(DecompressedData, &decompressedSize,
 		(const uint8_t *)(compressedData+13),
 		(SizeT *)&size, (const uint8_t *)compressedData, 5);
+#else /*_WIN32*/
+	/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 	free(compressedData); compressedData = nullptr;
 	if (result != SZ_OK) {
 		CodeConv::tostringstream o;
@@ -48,10 +52,14 @@ void Data::decompress(int FileID_) {
 }
 
 void Data::calcSHA256() {
+#ifdef _WIN32
 	CSha256 p;
 	Sha256_Init(&p);
 	Sha256_Update(&p, DecompressedData, decompressedSize);
 	Sha256_Final(&p, actualDigest);
+#else /*_WIN32*/
+	/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 }
 
 std::string Data::bytesToHexString(std::vector<uint8_t> byteStr) {
