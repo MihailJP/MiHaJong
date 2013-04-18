@@ -19,7 +19,11 @@ public:
 	static std::string chkRule(std::string RuleTag);
 	static const char* chkRule(const char* RuleTag);
 	static bool chkRule(std::string RuleTag, std::string Expectation);
+#ifdef _WIN32
 	static BOOL chkRule(const char* RuleTag, const char* Expectation);
+#else /*_WIN32*/
+	static bool chkRule(const char* RuleTag, const char* Expectation);
+#endif /*_WIN32*/
 	static bool chkRuleApplied(std::string RuleTag);
 	static int getRule(std::string RuleTag);
 	static int getRule(uint16_t RuleID);
@@ -27,7 +31,11 @@ public:
 	static int loadConfigFile(const char* const filename);
 	static int saveConfigFile(const char* const filename);
 	static std::string getRuleMaskExpr(const std::string& RuleTag);
+#ifdef _WIN32
 	static BOOL reqFailed(uint16_t ruleID, const int* const ruleStat);
+#else /*_WIN32*/
+	static bool reqFailed(uint16_t ruleID, const int* const ruleStat);
+#endif /*_WIN32*/
 	static void getPageCaption(LPTSTR const caption, unsigned bufsize, uint8_t page);
 	static const char* ruleDigit();
 	static void forEachRule(std::function<void (std::string, std::string)> f);
@@ -49,7 +57,11 @@ public:
 	static void setPreferenceFreeStr(uint16_t RuleID, const char* str);
 	static void applyPreference();
 	static bool chkPreference(std::string RuleTag, std::string Expectation);
+#ifdef _WIN32
 	static BOOL chkPreference(const char* RuleTag, const char* Expectation);
+#else /*_WIN32*/
+	static bool chkPreference(const char* RuleTag, const char* Expectation);
+#endif /*_WIN32*/
 };
 
 int getRule(int RuleID);
