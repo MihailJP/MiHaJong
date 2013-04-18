@@ -6,7 +6,11 @@
 #include <iomanip>
 #include "../common/strcode.h"
 
+#ifdef _WIN32
 void sound::SoundManipulator::InitXAudio(HWND hWnd) {
+#else /* _WIN32 */
+void sound::SoundManipulator::InitXAudio(void* hWnd) {
+#endif /* _WIN32 */
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	HRESULT hr;
 
@@ -72,7 +76,11 @@ sound::SoundManipulator::SoundManipulator() {
 		throw CodeConv::tstring(_T("GGS->OpenDeviceé∏îsÅIÅI"));
 #endif
 }
+#ifdef _WIN32
 sound::SoundManipulator::SoundManipulator(HWND hWnd) {
+#else /* _WIN32 */
+sound::SoundManipulator::SoundManipulator(void* hWnd) {
+#endif /* _WIN32 */
 	InitXAudio(hWnd);
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)

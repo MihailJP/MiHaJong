@@ -6,11 +6,13 @@
 #endif /* _WIN32 */
 
 #ifndef DLL
-#ifdef SOCKET_EXPORTS
+#if !defined(_WIN32)
+#define DLL /* */
+#elif defined(SOCKET_EXPORTS)
 #define DLL __declspec(dllexport)
 #else
 #define DLL __declspec(dllimport)
-#endif /*SOCKET_EXPORTS*/
+#endif
 #endif /*DLL*/
 
 #ifdef _WIN32
@@ -53,11 +55,13 @@ void fatal_msg(LPCTSTR msg);
 
 #else /* _WIN32 */
 
+#ifdef SOCKET_EXPORTS
 #define trace(msg) /* Not supported */
 #define debug(msg) /* Not supported */
 #define info(msg) /* Not supported */
 #define warn(msg) /* Not supported */
 #define error(msg) /* Not supported */
 #define fatal(msg) /* Not supported */
+#endif
 
 #endif /* _WIN32 */

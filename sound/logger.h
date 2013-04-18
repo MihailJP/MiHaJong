@@ -1,17 +1,22 @@
 #pragma once
 
+#ifdef _WIN32
 #include <windows.h>
+#endif /* _WIN32 */
 #include <string>
 #include "../common/strcode.h"
 
 #ifndef DLL
-#ifdef SOUND_EXPORTS
+#if !defined(_WIN32)
+#define DLL /* */
+#elif defined(SOUND_EXPORTS)
 #define DLL __declspec(dllexport)
 #else
 #define DLL __declspec(dllimport)
-#endif /*SOUND_EXPORTS*/
+#endif
 #endif /*DLL*/
 
+#ifdef _WIN32
 namespace sound {
 namespace logger {
 
@@ -48,3 +53,16 @@ void fatal_msg(LPCTSTR msg);
 #define error(msg) sound::logger::error_msg(logger::posPrefix(_T(__FILE__), __LINE__, (msg)).c_str())
 #define fatal(msg) sound::logger::fatal_msg(logger::posPrefix(_T(__FILE__), __LINE__, (msg)).c_str())
 #endif
+
+#else /* _WIN32 */
+
+#ifdef SOUND_EXPORTS
+#define trace(msg) /* Not supported */
+#define debug(msg) /* Not supported */
+#define info(msg) /* Not supported */
+#define warn(msg) /* Not supported */
+#define error(msg) /* Not supported */
+#define fatal(msg) /* Not supported */
+#endif
+
+#endif /* _WIN32 */
