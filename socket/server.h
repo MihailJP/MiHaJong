@@ -39,6 +39,7 @@ namespace server {
 #else /* _WIN32 */
 		static void* initiate (void* param); // CreateThread()に渡す引数用
 #endif /* _WIN32 */
+		void startThread ();
 		starter (const CodeConv::tstring& InputPlayerName, unsigned short port, const char* const * const rule); // コンストラクタ
 		void terminate (); // すぐに開始
 		bool isFinished (); // 待機用スレッドが終わったかどうか
