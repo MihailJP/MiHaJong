@@ -25,7 +25,9 @@ typedef LPD3DXLINE LinePtr;
 #  include <GL/gl.h>
 typedef uint32_t ArgbColor;
 typedef void* RenderingSysPtr; // OpenGLではたぶん未使用
+#  ifdef _WIN32
 typedef HDC DevicePtr;
+#  endif /* _WIN32 */
 typedef GLuint TexturePtr;
 typedef std::array<GLfloat, 16> TransformMatrix;
 typedef void* SpritePtr; // OpenGLではたぶん未使用
