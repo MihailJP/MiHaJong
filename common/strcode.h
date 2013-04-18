@@ -10,12 +10,16 @@
 #ifdef UNICODE
 #define _T(str) L##str
 #define _tcsncpy wcsncpy
+#define _tcslen wcslen
+#define _tcsncat wcsncat
 #define _sntprintf wsnprintf
 typedef wchar_t TCHAR;
 typedef const wchar_t* LPCTSTR;
 #else
 #define _T(str) str
 #define _tcsncpy strncpy
+#define _tcslen strlen
+#define _tcsncat strncat
 #define _sntprintf snprintf
 typedef char TCHAR;
 typedef char* LPTSTR;
