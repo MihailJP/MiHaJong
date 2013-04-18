@@ -7,6 +7,8 @@
 
 extern const GameTypeID myGameType;
 
+#ifdef _WIN32
+
 #ifdef MINGW_UNICODE /* Workaround for MinGW */
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow) {
 #else
@@ -45,3 +47,12 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	ExitProcess(0);
 	return msg.wParam;
 }
+
+
+#else /*_WIN32*/
+
+int main(int argc, char* argv) {
+	/* TODO: ñ¢é¿ëïâ”èä */
+}
+
+#endif /*_WIN32*/
