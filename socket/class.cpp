@@ -82,11 +82,7 @@ void mihajong_socket::Sock::listen () { // ƒT[ƒo[ŠJn
 	threadPtr.server = new server_thread(this);
 	threadPtr.server->setaddr(addr);
 	threadPtr.server->setsock(&sock, &lsock);
-#ifdef _WIN32
-	CreateThread(nullptr, 0, server_thread::thread, (LPVOID)threadPtr.server, 0, nullptr);
-#else /* _WIN32 */
-	/* TODO: pthread */
-#endif /* _WIN32 */
+	threadPtr.server->startThread();
 }
 
 void mihajong_socket::Sock::connect (const std::string& destination, uint16_t port) { // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
@@ -118,11 +114,7 @@ void mihajong_socket::Sock::connect () { // ƒNƒ‰ƒCƒAƒ“ƒgÄÚ‘±
 	threadPtr.client = new client_thread(this);
 	threadPtr.client->setaddr(addr);
 	threadPtr.client->setsock(&sock);
-#ifdef _WIN32
-	CreateThread(nullptr, 0, client_thread::thread, (LPVOID)threadPtr.client, 0, nullptr);
-#else /* _WIN32 */
-	/* TODO: pthread */
-#endif /* _WIN32 */
+	threadPtr.client->startThread();
 }
 
 bool mihajong_socket::Sock::connected () { // Ú‘±‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
@@ -286,7 +278,10 @@ DWORD WINAPI mihajong_socket::Sock::network_thread::thread(LPVOID lp) { // ƒXƒŒƒ
 	return ((client_thread*)lp)->myThreadFunc();
 }
 #else /* _WIN32 */
-/* TODO: pthread */
+void* mihajong_socket::Sock::network_thread::thread(void* lp) { // ƒXƒŒƒbƒh‚ğ‹N“®‚·‚é‚½‚ß‚Ìˆ—
+	((client_thread*)lp)->myThreadFunc();
+	return nullptr;
+}
 #endif /* _WIN32 */
 
 void mihajong_socket::Sock::network_thread::chkError () { // ƒGƒ‰[‚ğƒ`ƒFƒbƒN‚µA‚à‚µƒGƒ‰[‚¾‚Á‚½‚ç—áŠO‚ğ“Š‚°‚é
@@ -411,6 +406,11 @@ int mihajong_socket::Sock::network_thread::writer() { // ‘—Mˆ—
 #ifdef _WIN32
 DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // ƒXƒŒƒbƒh‚Ìˆ—
 	u_long arg = 1; ioctlsocket(*mySock, FIONBIO, &arg); // non-blocking ƒ‚[ƒh‚Éİ’è
+#else /* _WIN32 */
+int mihajong_socket::Sock::network_thread::myThreadFunc() { // ƒXƒŒƒbƒh‚Ìˆ—
+	int socketFlag = fcntl(*listenerSock, F_GETFL, 0);
+	fcntl(*listenerSock, F_SETFL, socketFlag | O_NONBLOCK); // non-blocking ƒ‚[ƒh‚Éİ’è
+#endif /* _WIN32 */
 	connecting = true;
 	if (int err = establishConnection()) { // Ú‘±
 		connecting = false;
@@ -422,22 +422,37 @@ DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // ƒXƒŒƒbƒh
 		if ((!receiver_closed) && (err = reader())) return err; // “Ç‚İ‚İ
 		if (receive_ended) { // I—¹‚È‚çƒ\ƒPƒbƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“
 			CodeConv::tostringstream o; o << _T("óMƒ|[ƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“ ƒ|[ƒg[") << myCaller->portnum << _T("]"); debug(o.str().c_str());
-			shutdown(*mySock, SD_RECEIVE); receiver_closed = true; receive_ended = false;
+#ifdef _WIN32
+			shutdown(*mySock, SD_RECEIVE);
+#else /* _WIN32 */
+			shutdown(*mySock, SHUT_RD);
+#endif /* _WIN32 */
+			receiver_closed = true; receive_ended = false;
 		}
 		if ((!sender_closed) && (err = writer())) return err; // ‘‚«‚İ
 		if (send_ended) { // I—¹‚È‚çƒ\ƒPƒbƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“
 			CodeConv::tostringstream o; o << _T("‘—Mƒ|[ƒg‚ğƒVƒƒƒbƒgƒ_ƒEƒ“ ƒ|[ƒg[") << myCaller->portnum << _T("]"); debug(o.str().c_str());
-			shutdown(*mySock, SD_SEND); sender_closed = true; send_ended = false;
+#ifdef _WIN32
+			shutdown(*mySock, SD_SEND);
+#else /* _WIN32 */
+			shutdown(*mySock, SHUT_WR);
+#endif /* _WIN32 */
+			sender_closed = true; send_ended = false;
 		}
+#ifdef _WIN32
 		Sleep(20);
+#else /* _WIN32 */
+		usleep(20000);
+#endif /* _WIN32 */
 	}
 	{CodeConv::tostringstream o; o << _T("‘—óMƒXƒŒƒbƒhƒ‹[ƒv‚ÌI—¹ ƒ|[ƒg[") << myCaller->portnum << _T("]"); debug(o.str().c_str());}
 	finished = true;
+#ifdef _WIN32
 	return S_OK;
-}
 #else /* _WIN32 */
-/* TODO: pthread */
+	return 0;
 #endif /* _WIN32 */
+}
 
 unsigned char mihajong_socket::Sock::network_thread::read () { // 1ƒoƒCƒg“Ç‚İ‚İ
 	unsigned char byte; bool empty = false;
@@ -524,6 +539,24 @@ void mihajong_socket::Sock::network_thread::terminate () { // Ø’f‚·‚é
 }
 
 // -------------------------------------------------------------------------
+
+void mihajong_socket::Sock::client_thread::startThread () { // ƒXƒŒƒbƒh‚ğŠJn‚·‚é
+#ifdef _WIN32
+	CreateThread(nullptr, 0, thread, (LPVOID)this, 0, nullptr);
+#else /* _WIN32 */
+	pthread_create(&myThread, nullptr, thread, this);
+	pthread_detach(myThread);
+#endif /* _WIN32 */
+}
+void mihajong_socket::Sock::server_thread::startThread () { // ƒXƒŒƒbƒh‚ğŠJn‚·‚é
+#ifdef _WIN32
+	CreateThread(nullptr, 0, thread, (LPVOID)this, 0, nullptr);
+#else /* _WIN32 */
+	pthread_create(&myThread, nullptr, thread, this);
+	pthread_detach(myThread);
+#endif /* _WIN32 */
+}
+
 
 int mihajong_socket::Sock::client_thread::establishConnection() { // Ú‘±‚ğŠm—§‚·‚é
 	info(_T("ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±ˆ—‚ğŠJn‚µ‚Ü‚·"));

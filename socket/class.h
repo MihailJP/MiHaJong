@@ -12,6 +12,7 @@
 #else /* _WIN32 */
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <pthread.h>
 #endif /* _WIN32 */
 #include "except.h"
 #include "logger.h"
@@ -68,7 +69,9 @@ public:
 #ifdef _WIN32
 	static DWORD WINAPI thread(LPVOID lp); // スレッドを起動するための処理
 #else /* _WIN32 */
+	static void* thread(void* lp); // スレッドを起動するための処理
 #endif /* _WIN32 */
+	virtual void startThread () = 0; // スレッドを開始する
 	bool isConnected (); // 接続済かを返す関数
 	void setaddr (const sockaddr_in destination); // 接続先を設定する
 	void setsock (SocketDescriptor* const socket); // ソケットを設定する
@@ -104,6 +107,8 @@ protected:
 #ifdef _WIN32
 	DWORD WINAPI myThreadFunc(); // スレッドの処理
 #else /* _WIN32 */
+	pthread_t myThread;
+	int myThreadFunc(); // スレッドの処理
 #endif /* _WIN32 */
 	void wait_until_sent(); // 送信キューが空になるまで待つ
 };
@@ -111,6 +116,7 @@ protected:
 class Sock::client_thread : public network_thread { // クライアントのスレッド
 public:
 	client_thread(Sock* callee) : network_thread(callee) {}
+	void startThread (); // スレッドを開始する
 protected:
 	int establishConnection (); // 接続を確立する
 };
@@ -118,6 +124,7 @@ protected:
 class Sock::server_thread : public network_thread { // サーバーのスレッド
 public:
 	server_thread(Sock* callee) : network_thread(callee) {}
+	void startThread (); // スレッドを開始する
 	void setsock (SocketDescriptor* const socket, SocketDescriptor* const lsocket); // ソケットを設定する
 protected:
 	int establishConnection (); // 接続を確立する
