@@ -37,9 +37,13 @@ public:
 	PreferenceConfigScene(ScreenManipulator* const manipulator);
 	virtual ~PreferenceConfigScene();
 	void Render();
+#ifdef _WIN32
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
+#else /*_WIN32*/
+	/* TODO: –¢ŽÀ‘• */
+#endif /*_WIN32*/
 };
 
 }

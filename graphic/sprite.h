@@ -1,6 +1,8 @@
 #pragma once
 
+#ifdef _WIN32
 #include <windows.h>
+#endif /*_WIN32*/
 #include "directx.h"
 #include "../common/strcode.h"
 #include <map>
