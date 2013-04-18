@@ -7,6 +7,7 @@
 
 namespace chat {
 
+#ifdef _WIN32
 DWORD WINAPI ChatThread::thread_loop (LPVOID param) {
 	reinterpret_cast<ChatThread*>(param)->init();
 	while (!(reinterpret_cast<ChatThread*>(param)->terminate)) {
@@ -17,24 +18,35 @@ DWORD WINAPI ChatThread::thread_loop (LPVOID param) {
 	reinterpret_cast<ChatThread*>(param)->cleanup();
 	return S_OK;
 }
+#else /*_WIN32*/
+/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 StreamLog::StreamLog () {
 	mihajong_graphic::logwnd::reset();
 }
 ChatThread::ChatThread (std::string& server_addr, int clientNum) : StreamLog() {
 	terminate = false;
 	myServerAddr = server_addr; myClientNum = clientNum;
+#ifdef _WIN32
 	myHandle = CreateThread(nullptr, 0, thread_loop, this, 0, nullptr);
+#else /*_WIN32*/
+	/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 }
 StreamLog::~StreamLog () {
 }
 ChatThread::~ChatThread () {
 	terminate = true;
+#ifdef _WIN32
 	while (true) {
 		DWORD exitcode;
 		GetExitCodeThread(myHandle, &exitcode);
 		if (exitcode != STILL_ACTIVE) break;
 		else Sleep(0);
 	}
+#else /*_WIN32*/
+	/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 }
 
 void ChatThread::init() {
@@ -52,12 +64,20 @@ void ChatThread::init() {
 					(mihajong_socket::connected(
 					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag)))
 					tmpClientWaiting[i] = false;
+#ifdef _WIN32
 			Sleep(0);
+#else /*_WIN32*/
+			/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 		}
 	}
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 		mihajong_socket::connect(SOCK_CHAT+0, myServerAddr.c_str(), PORT_CHAT-1+myClientNum);
+#ifdef _WIN32
 		while (!mihajong_socket::connected(SOCK_CHAT+0)) Sleep(0); // Wait until connection established
+#else /*_WIN32*/
+		/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 	}
 }
 
@@ -81,7 +101,7 @@ void ChatThread::receive() {
 #elif defined(_WIN32)
 									_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
 #else
-									_tcscat_s(buf, bufsize, _T("\n"));
+									_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
 #endif
 								mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
 								chatappend(buf);
@@ -148,8 +168,7 @@ void ChatThread::send() {
 #elif defined(_WIN32)
 								_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
 #else
-								/* TODO: Linuxà⁄êA */
-								_tcscat_s(buf, bufsize, _T("\n"));
+								_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
 #endif
 							mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
 							chatappend(buf);
@@ -167,8 +186,7 @@ void ChatThread::send() {
 #elif defined(_WIN32)
 					_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
 #else
-					/* TODO: Linuxà⁄êA */
-					_tcscat_s(buf, bufsize, _T("\n"));
+					_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
 #endif
 				mihajong_socket::puts(SOCK_CHAT, buf);
 			}
