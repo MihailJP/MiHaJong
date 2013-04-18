@@ -4,7 +4,9 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
+#ifdef _WIN32
 #include <windows.h>
+#endif /*_WIN32*/
 #include "largenum.h"
 #include "envtbl.h"
 #include "../common/version.h"
@@ -314,6 +316,7 @@ void haifu::haifubufinit() {
 }
 
 void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // 現在時刻タグ
+#ifdef _WIN32
 	SYSTEMTIME currTime; GetLocalTime(&currTime);
 	TIME_ZONE_INFORMATION tz; GetTimeZoneInformation(&tz);
 	XMLhaifuBuffer << _T("\t\t<") << tagName << _T(">") <<
@@ -327,6 +330,9 @@ void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // 現在時刻タグ
 		std::showpos << std::setw(3) << std::setfill(_T('0')) << std::internal << ((-tz.Bias) / 60) << _T(":") <<
 		std::noshowpos << std::setw(2) << std::setfill(_T('0')) << ((-tz.Bias) % 60) <<
 		_T("</") << tagName << _T(">") << std::endl;
+#else /*_WIN32*/
+	/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 }
 
 /* 一局分の牌譜バッファを初期化 */
@@ -1114,12 +1120,16 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	filename1 << "_" << MIHAJONG_MAJOR_VER << "_" <<
 		MIHAJONG_MINOR_VER << "_" << MIHAJONG_PATCH_VER;
 
+#ifdef _WIN32
 	SYSTEMTIME ltime; GetLocalTime(&ltime);
 	filename2 << std::setw(4) << std::setfill('0') << ltime.wYear;
 	filename2 << std::setw(2) << std::setfill('0') << ltime.wMonth;
 	filename2 << std::setw(2) << std::setfill('0') << ltime.wDay << "_";
 	filename2 << std::setw(2) << std::setfill('0') << ltime.wHour;
 	filename2 << std::setw(2) << std::setfill('0') << ltime.wMinute;
+#else /*_WIN32*/
+	/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 
 	/* ファイル書き出し */
 	std::ofstream fileout;
