@@ -81,7 +81,23 @@ public:
 	std::tuple<unsigned, std::vector<CodeConv::tstring>, unsigned, unsigned> getCandidateList();
 };
 #else /*_WIN32*/
-/* TODO: 未実装 */
+/* TODO: ダミー実装 */
+class EditBox::IMStat { // IMEの状態(ダミー)
+private:
+	IMStat(const IMStat&) {}; // disable copy constructor
+public:
+	IMStat(void*) {}
+	~IMStat() {}
+	bool isOpened() {return false;}
+	std::tuple<uint32_t, uint32_t> getConvStat() {return std::make_tuple(0u, 0u);}
+	CodeConv::tstring getGCSCompStr() {return _T("");}
+	std::vector<char> getGCSCompAttr() {return std::vector<char>();}
+	CodeConv::tstring getGCSResultStr() {return _T("");}
+	int getGCSCursorPos() {return 0;}
+	std::tuple<unsigned, std::vector<CodeConv::tstring>, unsigned, unsigned> getCandidateList() {
+		return std::make_tuple(0u, std::vector<CodeConv::tstring>(), 0u, 0u);
+	}
+};
 #endif /*_WIN32*/
 
 }
