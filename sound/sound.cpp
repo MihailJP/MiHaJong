@@ -14,7 +14,11 @@ SOUNDDLL_EXPORT int sound::Initialize() try {
 	return -1;
 }
 
+#ifdef _WIN32
 SOUNDDLL_EXPORT int sound::Initialize(HWND hWnd) try {
+#else /* _WIN32 */
+SOUNDDLL_EXPORT int sound::Initialize(void* hWnd) try {
+#endif /* _WIN32 */
 	soundManipulator = new SoundManipulator(hWnd);
 	return 0;
 } catch (CodeConv::tstring& e) {
@@ -28,7 +32,7 @@ SOUNDDLL_EXPORT void sound::Cleanup() {
 }
 
 /* サウンドデータ読み込み */
-SOUNDDLL_EXPORT int sound::LoadWave(unsigned ID, LPCSTR filename, int looped) try {
+SOUNDDLL_EXPORT int sound::LoadWave(unsigned ID, const char* filename, int looped) try {
 	{
 		CodeConv::tostringstream o; o << _T("WAVE ファイル読み込み ID [") << ID << _T("] ファイル名 [") << filename << _T("]");
 		debug(o.str().c_str());
@@ -40,7 +44,7 @@ SOUNDDLL_EXPORT int sound::LoadWave(unsigned ID, LPCSTR filename, int looped) tr
 	error(e.c_str());
 	return -1;
 }
-SOUNDDLL_EXPORT int sound::LoadVorbis(unsigned ID, LPCSTR filename, int looped) try {
+SOUNDDLL_EXPORT int sound::LoadVorbis(unsigned ID, const char* filename, int looped) try {
 	{
 		CodeConv::tostringstream o; o << _T("Ogg Vorbis ファイル読み込み ID [") << ID << _T("] ファイル名 [") << filename << _T("]");
 		debug(o.str().c_str());
@@ -52,7 +56,7 @@ SOUNDDLL_EXPORT int sound::LoadVorbis(unsigned ID, LPCSTR filename, int looped) 
 	error(e.c_str());
 	return -1;
 }
-SOUNDDLL_EXPORT int sound::LoadMidi(unsigned ID, LPCSTR filename, int looped) try {
+SOUNDDLL_EXPORT int sound::LoadMidi(unsigned ID, const char* filename, int looped) try {
 	{
 		CodeConv::tostringstream o; o << _T("MIDI ファイル読み込み ID [") << ID << _T("] ファイル名 [") << filename << _T("]");
 		debug(o.str().c_str());

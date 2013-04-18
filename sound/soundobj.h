@@ -30,10 +30,18 @@ namespace sound {
 		LPDIRECTSOUNDBUFFER mVoice;
 #endif
 		std::vector<AudioData*> sounds;
+#ifdef _WIN32
 		void InitXAudio(HWND hWnd = nullptr);
+#else /* _WIN32 */
+		void InitXAudio(void* = nullptr);
+#endif /* _WIN32 */
 	public:
 		SoundManipulator();
+#ifdef _WIN32
 		SoundManipulator(HWND hWnd);
+#else /* _WIN32 */
+		SoundManipulator(void*);
+#endif /* _WIN32 */
 		~SoundManipulator();
 		void readWaveData(unsigned ID, const std::string& filename, bool looped = false);
 		void readVorbisData(unsigned ID, const std::string& filename, bool looped = false);
