@@ -5,14 +5,26 @@
 #include <queue>
 #include <sstream>
 #include <iomanip>
+#ifdef _WIN32
 #ifndef _WINSOCKAPI_
 #include <winsock2.h>
 #endif
+#else /* _WIN32 */
+#include <sys/socket.h>
+#include <netinet/in.h>
+#endif /* _WIN32 */
 #include "except.h"
 #include "logger.h"
 #include "../common/mutex.h"
 
 namespace mihajong_socket {
+
+
+#ifdef _WIN32
+typedef SOCKET SocketDescriptor;
+#else /* _WIN32 */
+typedef int SocketDescriptor;
+#endif /* _WIN32 */
 
 class Sock {
 private:
@@ -27,7 +39,7 @@ private:
 	static uint32_t addr2var(const std::string& address); // アドレスを取得
 	bool isServer;
 	sockaddr_in addr;
-	SOCKET sock, lsock;
+	SocketDescriptor sock, lsock;
 	Thread threadPtr;
 	uint16_t portnum;
 public:
@@ -53,10 +65,13 @@ class Sock::network_thread { // スレッド(スーパークラス)
 public:
 	network_thread(Sock* caller);
 	virtual ~network_thread();
+#ifdef _WIN32
 	static DWORD WINAPI thread(LPVOID lp); // スレッドを起動するための処理
+#else /* _WIN32 */
+#endif /* _WIN32 */
 	bool isConnected (); // 接続済かを返す関数
 	void setaddr (const sockaddr_in destination); // 接続先を設定する
-	void setsock (SOCKET* const socket); // ソケットを設定する
+	void setsock (SocketDescriptor* const socket); // ソケットを設定する
 	void terminate (); // 切断する
 	void chkError (); // エラーをチェックし、もしエラーだったら例外を投げる
 	unsigned char read (); // 1バイト読み込み
@@ -66,8 +81,8 @@ protected:
 	Sock* myCaller;
 	enum errorType {errNone, errListen, errAccept, errConnection, errRecv, errSend};
 	static const unsigned int bufsize = 65536;
-	SOCKET* mySock; // ソケット(ポインタ)
-	SOCKET* listenerSock; // ソケット(ポインタ)
+	SocketDescriptor* mySock; // ソケット(ポインタ)
+	SocketDescriptor* listenerSock; // ソケット(ポインタ)
 	errorType errtype; // エラーの種類
 	int errcode; // エラーコード
 	volatile bool connecting; // 接続中かのフラグ[ワーカースレッドから書き込み]
@@ -86,7 +101,10 @@ protected:
 	virtual int establishConnection () = 0; // 接続を確立する
 	int reader (); // 読み込み
 	int writer (); // 書き込み
+#ifdef _WIN32
 	DWORD WINAPI myThreadFunc(); // スレッドの処理
+#else /* _WIN32 */
+#endif /* _WIN32 */
 	void wait_until_sent(); // 送信キューが空になるまで待つ
 };
 
@@ -100,11 +118,11 @@ protected:
 class Sock::server_thread : public network_thread { // サーバーのスレッド
 public:
 	server_thread(Sock* callee) : network_thread(callee) {}
-	void setsock (SOCKET* const socket, SOCKET* const lsocket); // ソケットを設定する
+	void setsock (SocketDescriptor* const socket, SocketDescriptor* const lsocket); // ソケットを設定する
 protected:
 	int establishConnection (); // 接続を確立する
 private:
-	void setsock (SOCKET* const socket); // ソケットを設定する
+	void setsock (SocketDescriptor* const socket); // ソケットを設定する
 };
 
 }
