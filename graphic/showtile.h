@@ -1,8 +1,12 @@
 #pragma once
 
+#ifdef _WIN32
 #include <windows.h>
-#include "directx.h"
 #include <tchar.h>
+#else /*_WIN32*/
+#include "../common/strcode.h"
+#endif /*_WIN32*/
+#include "directx.h"
 #include <vector>
 #include "../common/tilecode.h"
 #include "../common/gametbl.h"

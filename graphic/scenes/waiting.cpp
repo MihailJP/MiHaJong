@@ -51,6 +51,7 @@ void ServerWait::Render() {
 void ServerWait::SetSubscene(unsigned int scene_ID) {
 	subsceneID = static_cast<ServerWaitingSubsceneID>(scene_ID);
 };
+#ifdef _WIN32
 void ServerWait::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	switch (od->dwOfs) {
 	case DIK_ESCAPE: case DIK_X: // ƒLƒƒƒ“ƒZƒ‹
@@ -60,6 +61,9 @@ void ServerWait::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	}
 }
+#else /*_WIN32*/
+/* TODO: –¢À‘•‰ÓŠ */
+#endif /*_WIN32*/
 CodeConv::tstring ServerWait::waiting_desc_str() {
 	switch (subsceneID) {
 	case srvwSubscene1of4:

@@ -1,6 +1,8 @@
 #pragma once
 
+#ifdef _WIN32
 #include <windows.h>
+#endif /*_WIN32*/
 #include <cstdint>
 #include <string>
 #include "../common/strcode.h"
@@ -12,12 +14,20 @@ namespace rules {
 typedef void (*RetrieveTxt)(LPTSTR const /*txt*/, unsigned /*bufsize*/, uint16_t /*RuleID*/);
 typedef void (*RetrieveTxtIndex)(LPTSTR const /*txt*/, unsigned /*bufsize*/, uint16_t /*RuleID*/, uint8_t /*index*/);
 typedef int (*RetrieveInt)(uint16_t /*RuleID*/);
+#ifdef _WIN32
 typedef BOOL (*CheckDep)(uint16_t /*RuleID*/, const int* const /* ruleStat */);
+#else /*_WIN32*/
+typedef bool (*CheckDep)(uint16_t /*RuleID*/, const int* const /* ruleStat */);
+#endif /*_WIN32*/
 typedef void (*RetrieveCaption)(LPTSTR const /*txt*/, unsigned /*bufsize*/, uint8_t /*page*/);
 typedef void (*RuleWrite)(const char** /*ruleTxt*/);
 typedef void (*RuleRead)(char** /*ruleTxt*/);
 typedef int (*ConfSave)(const char* const /*filename*/);
+#ifdef _WIN32
 typedef BOOL (*CheckRule)(const char* /*RuleTag*/, const char* /*Expectation*/);
+#else /*_WIN32*/
+typedef bool (*CheckRule)(const char* /*RuleTag*/, const char* /*Expectation*/);
+#endif /*_WIN32*/
 typedef unsigned int (*RetrieveUInt)(uint16_t /*RuleID*/);
 typedef const char* (*RetrieveStr)(uint16_t /*RuleID*/);
 typedef void (*SetStr)(uint16_t /*RuleID*/, const char* /*str*/);

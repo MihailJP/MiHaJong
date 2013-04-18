@@ -42,10 +42,18 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	Reconstruct(GameStatus::retrGameStat());
 	const unsigned logWidth = (unsigned)floor(0.5f + // VC++2010‚Å‚Íround()‚ªg‚¦‚È‚¢
 		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
+#ifdef _WIN32
 	logWindow = new logwnd::LogWindow(caller->getHWnd(), caller->getDevice(),
 		1100, 100, logWidth, 20);
 	chatInput = new EditBox(caller->getHWnd(), caller->getDevice(),
 		1100, 100 + 20 * 20 + 10, logWidth);
+#else /*_WIN32*/
+	/* TODO: b’è */
+	logWindow = new logwnd::LogWindow(nullptr, caller->getDevice(),
+		1100, 100, logWidth, 20);
+	chatInput = new EditBox(nullptr, caller->getDevice(),
+		1100, 100 + 20 * 20 + 10, logWidth);
+#endif /*_WIN32*/
 	setRegion(ChatInputRegion,
 		1100               , 100 + 20 * 20 + 10,
 		1100 + logWidth * 9, 100 + 20 * 20 + 10 + 20);
@@ -355,6 +363,7 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 
 // -------------------------------------------------------------------------
 
+#ifdef _WIN32
 void GameTableScreen::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 	if (chatInput->is_Active())
 		chatInput->IMEvent(message, wParam, lParam);
@@ -529,6 +538,9 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		break;
 	}
 }
+#else /*_WIN32*/
+/* TODO: –¢À‘•‰ÓŠ */
+#endif /*_WIN32*/
 
 /* Ì”v‚ğŒˆ’è‚·‚é */
 void GameTableScreen::FinishTileChoice() {

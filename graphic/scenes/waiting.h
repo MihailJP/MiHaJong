@@ -27,7 +27,11 @@ public:
 	ServerWait(ScreenManipulator* const manipulator);
 	~ServerWait();
 	void Render();
+#ifdef _WIN32
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
+#else /*_WIN32*/
+	/* TODO: –¢ŽÀ‘• */
+#endif /*_WIN32*/
 	void SetSubscene(unsigned int scene_ID);
 };
 

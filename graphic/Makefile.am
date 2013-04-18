@@ -36,14 +36,16 @@ libmihajong_graphic_la_SOURCES = \
 	scenes/table/richibou.h scenes/table/showdice.h scenes/table/sutehai.h \
 	scenes/table/tehai.h scenes/table/tehai0.h scenes/table/tiletip.h \
 	scenes/table/yamahai.h \
-	widgets/button.h widgets/checkbox.h widgets/editbox.h widgets/logwnd.h \
-	graphic.rc
+	widgets/button.h widgets/checkbox.h widgets/editbox.h widgets/logwnd.h
 libmihajong_graphic_la_LDFLAGS = -no-undefined
 libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS --input-charset=cp932
 if WITH_DIRECTX
 libmihajong_graphic_la_CXXFLAGS += -DWITH_DIRECTX
 endif
-libmihajong_graphic_la_LIBADD = graphic.o ../sound/libmihajong-sound.la
+libmihajong_graphic_la_LIBADD = ../sound/libmihajong-sound.la
+if WITH_WINAPI
+libmihajong_graphic_la_LIBADD += graphic.o 
+endif
 dist_data_DATA = \
 	data/agariwnd.png data/baize.png data/button.png data/call.png \
 	data/cdigits.chr data/cdigits.png data/chiicha.png data/dice.png \
@@ -53,6 +55,11 @@ dist_data_DATA = \
 	data/tenbou.png data/tiles.png data/tiles_bk.png data/title.png
 EXTRA_DIST = \
 	graphic.vcxproj graphic.vcxproj.filters graphic.vcxproj.user
+if WITH_WINAPI
+libmihajong_graphic_la_SOURCES += graphic.rc
+else
+EXTRA_DIST += graphic.rc
+endif
 
 .rc.o:
 	$(WINDRES) $^ -o $@ -l 0411

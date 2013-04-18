@@ -30,6 +30,7 @@ public:
 	void acquire() {pthread_mutex_lock(&myCS);} // ミューテックスを獲得
 	bool tryAcquire() {return pthread_mutex_trylock(&myCS) == 0;} // ミューテックスを獲得(ロックしない)
 	void release() {pthread_mutex_unlock(&myCS);} // ミューテックスを解放
+	pthread_mutex_t* getMutex() {return &myCS;} // pthread_mutex_t* の直接使用が必要なAPIに使うアクセサ
 #endif /* _WIN32 */
 
 	template <typename T> T syncDo(std::function<T (void)> f) { // 相互排他的に関数オブジェクトを実行

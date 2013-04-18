@@ -1,7 +1,9 @@
 #include "font.h"
 #include "init.h"
 #include "resource.h"
+#ifdef _WIN32
 #include <windows.h>
+#endif /*_WIN32*/
 #include <cstdint>
 #include <sstream>
 #include <cassert>
@@ -11,6 +13,7 @@ using std::uint8_t;
 namespace mihajong_graphic {
 
 namespace {
+#ifdef _WIN32
 	void LoadFileInResource(int name, int type, DWORD& size, const uint8_t*& data) {
 		HRSRC rc = FindResource(GraphicDLL, MAKEINTRESOURCE(name), MAKEINTRESOURCE(type));
 		DWORD err = GetLastError();
@@ -21,6 +24,11 @@ namespace {
 		assert(size != 0);
 		data = static_cast<const uint8_t*>(::LockResource(rcData));
 	}
+#else /*_WIN32*/
+	/* TODO: Linux‚Å“™‰¿‚Ì‚à‚Ì‚ðŽÀ‘•‚·‚é‚±‚Æ */
+	void LoadFileInResource(int name, int type, size_t& size, const uint8_t*& data) {
+	}
+#endif /*_WIN32*/
 }
 
 FontMap* FontMap::instantiate() {
@@ -49,7 +57,12 @@ FontMapScoreDigits* FontMapScoreDigits::instantiate() {
 }
 
 void FontMapClass::readCharMap(int ResourceNum) {
-	DWORD size; const uint8_t* data;
+#ifdef _WIN32
+	DWORD size;
+#else /*_WIN32*/
+	size_t size;
+#endif /*_WIN32*/
+	const uint8_t* data;
 	LoadFileInResource(ResourceNum, CHARMAP_FILE, size, data);
 	std::istringstream charmap(std::string(reinterpret_cast<const char*>(data), static_cast<size_t>(size)));
 	while (true) {

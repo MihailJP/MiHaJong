@@ -72,10 +72,14 @@ public:
 	GameTableScreen(ScreenManipulator* const manipulator);
 	~GameTableScreen();
 	void Render();
+#ifdef _WIN32
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
+#else /*_WIN32*/
+	/* TODO: –¢ŽÀ‘• */
+#endif /*_WIN32*/
 private:
 	void checkTimeout();
 	int tileSelectMode;

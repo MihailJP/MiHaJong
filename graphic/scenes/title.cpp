@@ -112,6 +112,7 @@ void TitleScreen::Render() {
 	zoomingLogo(sTitleLogo[2], 1120, 168,  60, 90);
 }
 
+#ifdef _WIN32
 void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	const bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->dwData));
 	switch (od->dwOfs) {
@@ -189,6 +190,9 @@ void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		break;
 	}
 }
+#else /*_WIN32*/
+/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 
 // -------------------------------------------------------------------------
 

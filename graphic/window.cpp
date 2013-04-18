@@ -11,6 +11,7 @@ unsigned& MainWindow::WindowWidth = Geometry::WindowWidth;
 unsigned& MainWindow::WindowHeight = Geometry::WindowHeight;
 extern MainWindow* myMainWindow;
 
+#ifdef _WIN32
 LRESULT MainWindow::keyev(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (wParam) {
 	case VK_LEFT:
@@ -121,7 +122,11 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen) 
 #endif
 	return;
 }
+#else /*_WIN32*/
+/* TODO: 未実装です…… */
+#endif /*_WIN32*/
 
+#ifdef _WIN32
 MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen) {
 	Geometry::WindowWidth = width; Geometry::WindowHeight = height;
 	initWindowClass(hThisInst, icon);
@@ -129,6 +134,10 @@ MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned
 	myScreenManipulator = new ScreenManipulator(hWnd, fullscreen);
 	myInputManipulator = new input::InputManipulator(hWnd);
 }
+#else /*_WIN32*/
+MainWindow::MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen) {
+}
+#endif /*_WIN32*/
 
 MainWindow::~MainWindow() {
 	delete myScreenManipulator; myScreenManipulator = nullptr;
@@ -138,9 +147,13 @@ MainWindow::~MainWindow() {
 void MainWindow::Render() { // ウィンドウの再描画
 	if (myScreenManipulator) {
 		myScreenManipulator->Render();
+#ifdef _WIN32
 		ValidateRect(hWnd, nullptr);
 		if (myInputManipulator)
 			myScreenManipulator->inputProc(myInputManipulator);
+#else /*_WIN32*/
+		/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 	}
 	return;
 }

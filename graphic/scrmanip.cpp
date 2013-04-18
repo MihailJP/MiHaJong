@@ -36,7 +36,8 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 		return;
 	else // All the four failed
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
-#else
+#elif defined(_WIN32)
+	/* TODO: Linux移植 */
 	pDevice = GetDC(hWnd);
 	PIXELFORMATDESCRIPTOR pfd;
 	ZeroMemory(&pfd, sizeof(pfd));
@@ -81,6 +82,7 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 		LoadTexture(pDevice, &dummyTexture, MAKEINTRESOURCE(*i));
 #endif
 }
+#ifdef _WIN32
 ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 	CS_SceneAccess.syncDo<void>([this, windowHandle, fullscreen]() -> void {
 		redrawFlag = false;
@@ -92,6 +94,9 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 		redrawFlag = true;
 	});
 }
+#else /*_WIN32*/
+/* TODO: 未実装 */
+#endif /*_WIN32*/
 
 void ScreenManipulator::Render() {
 	CS_SceneAccess.syncDo<void>([this]() -> void {
@@ -107,7 +112,8 @@ void ScreenManipulator::Render() {
 				pDevice->EndScene(); // シーン終了
 				pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 			}
-#else
+#elif defined(_WIN32)
+			/* TODO: Linux移植 */
 			wglMakeCurrent(pDevice, rContext);
 			glClearColor(1, 1, 1, 1); glClear(GL_COLOR_BUFFER_BIT); // バッファクリア
 			SpriteRenderer::instantiate(pDevice)->Start(); // スプライト描画開始
@@ -125,9 +131,13 @@ void ScreenManipulator::Render() {
 void ScreenManipulator::transit(sceneID scene) {
 	CS_SceneAccess.syncDo<void>([this, scene]() -> void {
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
+#ifdef _WIN32
 		HGLRC context = wglCreateContext(pDevice);
 		wglShareLists(rContext, context);
 		wglMakeCurrent(pDevice, context);
+#else /*_WIN32*/
+		/* TODO: 未実装 */
+#endif /*_WIN32*/
 #endif
 		redrawFlag = false;
 		delete myScene; myScene = nullptr;
@@ -161,33 +171,50 @@ void ScreenManipulator::transit(sceneID scene) {
 			break;
 		default:
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
+#ifdef _WIN32
 			wglMakeCurrent(nullptr, nullptr);
 			wglDeleteContext(context);
+#else /*_WIN32*/
+			/* TODO: 未実装 */
+#endif /*_WIN32*/
 #endif
 			throw _T("正しくないシーン番号が指定されました");
 		}
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
+#ifdef _WIN32
 		wglMakeCurrent(nullptr, nullptr);
 		wglDeleteContext(context);
+#else /*_WIN32*/
+		/* TODO: 未実装 */
+#endif /*_WIN32*/
 #endif
 	});
 }
 
 void ScreenManipulator::subscene(unsigned int subsceneID) {
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
+#ifdef _WIN32
 	HGLRC context = wglCreateContext(pDevice);
 	wglShareLists(rContext, context);
 	wglMakeCurrent(pDevice, context);
+#else /*_WIN32*/
+	/* TODO: 未実装 */
+#endif /*_WIN32*/
 #endif
 	if (myScene)
 		myScene->SetSubscene(subsceneID);
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
+#ifdef _WIN32
 	wglMakeCurrent(nullptr, nullptr);
 	wglDeleteContext(context);
+#else /*_WIN32*/
+	/* TODO: 未実装 */
+#endif /*_WIN32*/
 #endif
 }
 
 ScreenManipulator::~ScreenManipulator() {
+#ifdef _WIN32
 	if (myScene) delete myScene;
 	if (myFPSIndicator) delete myFPSIndicator;
 #if defined(_WIN32) && defined(WITH_DIRECTX)
@@ -201,8 +228,12 @@ ScreenManipulator::~ScreenManipulator() {
 	wglDeleteContext(rContext);
 	ReleaseDC(hWnd, pDevice);
 #endif
+#else /*_WIN32*/
+	/* TODO: 未実装 */
+#endif /*_WIN32*/
 }
 
+#ifdef _WIN32
 void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f) {
 	while (true) {
 		DIDEVICEOBJECTDATA objDat; DWORD items = 1;
@@ -246,5 +277,8 @@ void ScreenManipulator::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 		if (myScene) myScene->IMEvent(message, wParam, lParam);
 	});
 }
+#else /*_WIN32*/
+/* TODO: 未実装 */
+#endif /*_WIN32*/
 
 }

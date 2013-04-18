@@ -50,9 +50,16 @@ CodeConv::tstring getlog() {
 
 // -------------------------------------------------------------------------
 
+#ifdef _WIN32
 LogWindow::LogWindow(HWND hwnd, DevicePtr device, int X, int Y, unsigned Width, unsigned Height) {
+#else /*_WIN32*/
+LogWindow::LogWindow(void* hwnd, DevicePtr device, int X, int Y, unsigned Width, unsigned Height) {
+#endif /*_WIN32*/
 	assert(Width >= 8); assert(Height >= 1);
-	myHWnd = hwnd; myDevice = device; x = X; y = Y; width = Width; height = Height;
+#ifdef _WIN32
+	myHWnd = hwnd;
+#endif /*_WIN32*/
+	myDevice = device; x = X; y = Y; width = Width; height = Height;
 	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX));
 	myTextRenderer = new SmallTextRenderer(myDevice);
 	reconstruct_lines();

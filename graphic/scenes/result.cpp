@@ -47,6 +47,7 @@ void ResultScreen::Render() {
 		if (*k) (*k)->Render();
 }
 
+#ifdef _WIN32
 void ResultScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	const bool flag = ((myTimer.elapsed() > 3000000u) && (od->dwData));
 	switch (od->dwOfs) {
@@ -76,6 +77,9 @@ void ResultScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		break;
 	}
 }
+#else /*_WIN32*/
+/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 
 // -------------------------------------------------------------------------
 

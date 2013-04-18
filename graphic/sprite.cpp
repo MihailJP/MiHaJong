@@ -6,7 +6,7 @@
 
 namespace mihajong_graphic {
 
-std::map<int, SpriteRenderer*> SpriteRenderer::renderer;
+std::map<intptr_t, SpriteRenderer*> SpriteRenderer::renderer;
 
 /* コンストラクタ */
 SpriteRenderer::SpriteRenderer(DevicePtr device) {
@@ -29,18 +29,18 @@ SpriteRenderer::~SpriteRenderer() {
 
 /* インスタンス化 */
 SpriteRenderer* SpriteRenderer::instantiate(DevicePtr device) {
-	if (renderer.find((int)device) != renderer.end()) { // デバイスに対応するスプライトがすでにある
-		return renderer[(int)device];
+	if (renderer.find((intptr_t)device) != renderer.end()) { // デバイスに対応するスプライトがすでにある
+		return renderer[(intptr_t)device];
 	} else { // デバイスに対応するスプライトは初回の使用(初期化が必要)
-		renderer[(int)device] = new SpriteRenderer(device);
-		return renderer[(int)device];
+		renderer[(intptr_t)device] = new SpriteRenderer(device);
+		return renderer[(intptr_t)device];
 	}
 }
 
 void SpriteRenderer::delInstance(DevicePtr device) {
-	if (renderer.find((int)device) != renderer.end()) {
-		delete renderer[(int)device];
-		renderer.erase((int)device);
+	if (renderer.find((intptr_t)device) != renderer.end()) {
+		delete renderer[(intptr_t)device];
+		renderer.erase((intptr_t)device);
 	}
 }
 
