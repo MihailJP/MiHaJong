@@ -16,7 +16,7 @@ private: /* Singleton class idioms */
 	SpriteRenderer(DevicePtr device);
 private:
 	SpritePtr sprite;
-	static std::map<int, SpriteRenderer*> renderer;
+	static std::map<intptr_t, SpriteRenderer*> renderer;
 public:
 	void ShowSprite(TexturePtr texture, int X, int Y, int Width, int Height,
 		ArgbColor color = 0xffffffff, RECT* rect = nullptr, int CenterX = 0, int CenterY = 0, TransformMatrix* matrix = nullptr);
