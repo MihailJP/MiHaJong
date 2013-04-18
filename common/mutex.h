@@ -1,18 +1,36 @@
 #pragma once
 
+#ifdef _WIN32
 #include <windows.h>
+#else /* _WIN32 */
+#include <pthread.h>
+#endif /* _WIN32 */
 #include <functional>
 #include "finally.h"
 
 class MHJMutex { // ミューテックスのラッパーオブジェクト
 private:
+#ifdef _WIN32
 	CRITICAL_SECTION myCS;
+#else /* _WIN32 */
+	pthread_mutex_t myCS;
+#endif /* _WIN32 */
 public:
+#ifdef _WIN32
 	MHJMutex() {InitializeCriticalSection(&myCS);}
 	~MHJMutex() {DeleteCriticalSection(&myCS);}
 	void acquire() {EnterCriticalSection(&myCS);} // ミューテックスを獲得
 	bool tryAcquire() {return (bool)TryEnterCriticalSection(&myCS);} // ミューテックスを獲得(ロックしない)
 	void release() {LeaveCriticalSection(&myCS);} // ミューテックスを解放
+#else /* _WIN32 */
+	MHJMutex() {
+		myCS = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+	}
+	~MHJMutex() {pthread_mutex_destroy(&myCS);}
+	void acquire() {pthread_mutex_lock(&myCS);} // ミューテックスを獲得
+	bool tryAcquire() {return pthread_mutex_trylock(&myCS) == 0;} // ミューテックスを獲得(ロックしない)
+	void release() {pthread_mutex_unlock(&myCS);} // ミューテックスを解放
+#endif /* _WIN32 */
 
 	template <typename T> T syncDo(std::function<T (void)> f) { // 相互排他的に関数オブジェクトを実行
 		DoFinally<T> myFunc(
