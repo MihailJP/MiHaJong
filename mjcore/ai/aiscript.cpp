@@ -166,9 +166,13 @@ DiscardTileNum aiscript::compdahai(const GameTable* const gameStat) {
 	discard = DiscardTileNum(); finished = false;
 	discard_worker = new detDiscardThread();
 	discard_worker->setprm(gameStat, &discard, &finished);
+#ifdef _WIN32
 	DWORD threadID;
 	HANDLE hThread = CreateThread(nullptr, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
 	while (!finished) Sleep(1);
+#else /*_WIN32*/
+	/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 	delete discard_worker; discard_worker = nullptr;
 	return discard;
 }
@@ -176,9 +180,13 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 	discard = DiscardTileNum(); finished = false;
 	discard_worker = new detDiscardThread();
 	discard_worker->setprm(gameStat, &discard, &finished);
+#ifdef _WIN32
 	DWORD threadID;
 	HANDLE hThread = CreateThread(nullptr, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
 	while (!finished) Sleep(0);
+#else /*_WIN32*/
+	/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 	delete discard_worker; discard_worker = nullptr;
 	return discard;
 }
@@ -190,6 +198,7 @@ aiscript::detDiscardThread::~detDiscardThread() {
 void aiscript::detDiscardThread::setprm(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished) {
 	i_gameStat = gameStat; i_discard = discard; i_finished = finished;
 }
+#ifdef _WIN32
 DWORD WINAPI aiscript::detDiscardThread::execute(LPVOID param) {
 	return ((detDiscardThread *)param)->calculate(
 		((detDiscardThread *)param)->i_gameStat,
@@ -234,6 +243,9 @@ DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameSt
 		*finished = true; return S_OK;
 	}
 }
+#else /*_WIN32*/
+/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 
 // -------------------------------------------------------------------------
 
@@ -242,19 +254,27 @@ void aiscript::compfuuro(GameTable* const gameStat) {
 	finished = false;
 	meld_worker = new detCallThread();
 	meld_worker->setprm(gameStat, &finished);
+#ifdef _WIN32
 	DWORD threadID;
 	HANDLE hThread = CreateThread(nullptr, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
 	while (!finished)
 		Sleep(1);
+#else /*_WIN32*/
+	/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 	delete meld_worker; meld_worker = nullptr;
 }
 void aiscript::determine_meld(GameTable* const gameStat) {
 	finished = false;
 	meld_worker = new detCallThread();
 	meld_worker->setprm(gameStat, &finished);
+#ifdef _WIN32
 	DWORD threadID;
 	HANDLE hThread = CreateThread(nullptr, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
 	while (!finished) Sleep(0);
+#else /*_WIN32*/
+	/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 	delete meld_worker; meld_worker = nullptr;
 }
 aiscript::detCallThread::detCallThread() {
@@ -265,6 +285,7 @@ aiscript::detCallThread::~detCallThread() {
 void aiscript::detCallThread::setprm(GameTable* const gameStat, bool* const finished) {
 	i_gameStat = gameStat; i_finished = finished;
 }
+#ifdef _WIN32
 DWORD WINAPI aiscript::detCallThread::execute(LPVOID param) {
 	return ((detCallThread *)param)->calculate(
 		((detCallThread *)param)->i_gameStat,
@@ -303,3 +324,6 @@ DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool*
 		*finished = true; return S_OK;
 	}
 }
+#else /*_WIN32*/
+/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
