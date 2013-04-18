@@ -6,7 +6,9 @@
 #include <sstream>
 #include <fstream>
 #include <exception>
+#ifdef _WIN32
 #include <windows.h>
+#endif /*_WIN32*/
 #include <cassert>
 #include <regex>
 #include "logging.h"
@@ -186,15 +188,27 @@ const char* RuleData::chkPreference(const char* RuleTag) { // ルール設定タグを取
 bool RuleData::chkRule(std::string RuleTag, std::string Expectation) { // ルール設定
 	return ruleTableData.chkRule(RuleTag, Expectation);
 }
+#ifdef _WIN32
 BOOL RuleData::chkRule(const char* RuleTag, const char* Expectation) { // ルール設定
 	return chkRule(std::string(RuleTag), std::string(Expectation)) ? TRUE : FALSE;
 }
+#else /*_WIN32*/
+bool RuleData::chkRule(const char* RuleTag, const char* Expectation) { // ルール設定
+	return chkRule(std::string(RuleTag), std::string(Expectation));
+}
+#endif /*_WIN32*/
 bool RuleData::chkPreference(std::string RuleTag, std::string Expectation) { // ルール設定
 	return preferenceTableData.chkRule(RuleTag, Expectation);
 }
+#ifdef _WIN32
 BOOL RuleData::chkPreference(const char* RuleTag, const char* Expectation) { // ルール設定
 	return chkPreference(std::string(RuleTag), std::string(Expectation)) ? TRUE : FALSE;
 }
+#else /*_WIN32*/
+bool RuleData::chkPreference(const char* RuleTag, const char* Expectation) { // ルール設定
+	return chkPreference(std::string(RuleTag), std::string(Expectation));
+}
+#endif /*_WIN32*/
 bool RuleData::chkRuleApplied(std::string RuleTag) { // ルール設定
 	return ruleTableData.chkRuleApplied(RuleTag);
 }
@@ -268,9 +282,15 @@ std::string RuleData::getRuleMaskExpr(const std::string& RuleTag) {
 	return ruleTableData.getRuleMaskExpr(RuleTag);
 }
 
+#ifdef _WIN32
 BOOL RuleData::reqFailed(uint16_t RuleID, const int* const ruleStat) {
 	return ruleTableData.reqFailed(RuleID, ruleStat) ? TRUE : FALSE;
 }
+#else /*_WIN32*/
+bool RuleData::reqFailed(uint16_t RuleID, const int* const ruleStat) {
+	return ruleTableData.reqFailed(RuleID, ruleStat);
+}
+#endif /*_WIN32*/
 
 void RuleData::forEachRule(std::function<void (std::string, std::string)> f) {
 	ruleTableData.forEachRule(f);
