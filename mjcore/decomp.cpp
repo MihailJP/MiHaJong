@@ -17,7 +17,11 @@ using std::min;
 namespace Compressed {
 
 void Data::decompress(int FileID_) {
+#ifdef _WIN32
 	DWORD size = 0;
+#else /*_WIN32*/
+	size_t size = 0;
+#endif /*_WIN32*/
 	const uint8_t* compressedBuf = nullptr;
 	int result;
 	LoadFileInResource(FileID_, LZMA_STREAM, size, compressedBuf);
@@ -86,6 +90,7 @@ Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDiges
 		decompress(FileID_);
 		verify(Description_, expectedDigest_);
 	}
+#ifdef _WIN32
 	catch (_EXCEPTION_POINTERS* e) {
 		ErrorInfo *errStat = nullptr;
 		switch (e->ExceptionRecord->ExceptionCode) {
@@ -111,6 +116,12 @@ Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDiges
 			throw;
 		}
 	}
+#else /*_WIN32*/
+	catch (...) {
+		/* TODO: ñ¢é¿ëïâ”èä */
+		throw;
+	}
+#endif /*_WIN32*/
 }
 
 Data::~Data() {
