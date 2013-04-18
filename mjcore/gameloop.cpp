@@ -42,15 +42,27 @@ EndType doTableTurn(GameTable* const gameStat) {
 	if (DiscardTileIndex.type == DiscardTileNum::Disconnect)
 		return Disconnect;
 	/* ウェイトを入れる */
+#ifdef _WIN32
 	Sleep(1);
+#else /*_WIN32*/
+	/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 	EndType RoundEndType = procdahai(gameStat, DiscardTileIndex);
 	if (RoundEndType != Continuing)
 		return RoundEndType;
+#ifdef _WIN32
 	Sleep(80);
+#else /*_WIN32*/
+	/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 	/* 栄和の処理 */
 	RoundEndType = ronhuproc(gameStat); // 栄和の処理
 	if (RoundEndType != Continuing) return RoundEndType;
+#ifdef _WIN32
 	Sleep(1);
+#else /*_WIN32*/
+	/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 	/* 途中流局の判定 */
 	EndType round_abort_type = endround::checkroundabort(gameStat);
 	if (round_abort_type != Continuing) return round_abort_type;
@@ -58,7 +70,11 @@ EndType doTableTurn(GameTable* const gameStat) {
 	if (executeFuuro(gameStat, DiscardTileIndex))
 		return Continuing; /* 鳴きがあった場合、鳴いたプレーヤーに順番を移して戻る */
 	/* ウェイトを入れる */
+#ifdef _WIN32
 	Sleep(100);
+#else /*_WIN32*/
+	/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 	/* 次のプレイヤーが牌を自摸る */
 	tsumoproc(gameStat);
 	// 打牌へ戻る
@@ -110,7 +126,11 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 
 namespace {
 
+#ifdef _WIN32
 DWORD titlescreen() {
+#else /*_WIN32*/
+uint32_t titlescreen() {
+#endif /*_WIN32*/
 	mihajong_graphic::Transit(mihajong_graphic::sceneTitle);
 	return mihajong_graphic::ui::WaitUI();
 }

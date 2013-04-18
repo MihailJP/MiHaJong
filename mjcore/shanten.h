@@ -7,7 +7,11 @@
 
 #define SHANTEN_PAGES mihajong_structs::ShantenPages
 
+#ifdef _WIN32
 void LoadFileInResource(int name, int type, DWORD& size, const char*& data);
+#else /*_WIN32*/
+void LoadFileInResource(int name, int type, size_t& size, const char*& data);
+#endif /*_WIN32*/
 
 #ifdef MJCORE_EXPORTS
 MJCORE Int8ByTile countTilesInHand(const GameTable* const gameStat, PlayerID playerID); // External

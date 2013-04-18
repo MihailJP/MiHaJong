@@ -1,5 +1,7 @@
 #include "dllmain.h"
 
+#ifdef _WIN32
+
 #ifdef _MSC_VER
 #include <dbghelp.h>
 #endif
@@ -193,3 +195,5 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 
 	return TRUE;
 }
+
+#endif /*_WIN32*/

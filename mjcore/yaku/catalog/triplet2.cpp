@@ -644,8 +644,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			};
 		auto chrisday = 
 			[]() -> bool {
+#ifdef _WIN32
 				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
 				return (nowTime.wMonth == 12) && (nowTime.wDay == 25);
+#else /*_WIN32*/
+				/* TODO: 未実装箇所 */
+				return false;
+#endif /*_WIN32*/
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("クリスマス"), yaku::yakuCalculator::Yaku::HANFUNC(
@@ -677,8 +682,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	if (RuleData::chkRuleApplied("newyear_dream")) {
 		auto isnewyeardays = 
 			[]() -> bool {
+#ifdef _WIN32
 				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
 				return (nowTime.wMonth == 1) && (nowTime.wDay <= 2);
+#else /*_WIN32*/
+				/* TODO: 未実装箇所 */
+				return false;
+#endif /*_WIN32*/
 			};
 		auto newyrdrm =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {

@@ -152,6 +152,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("鬼は外"), get_yaku_han("setsubun"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+#ifdef _WIN32
 				TIME_ZONE_INFORMATION Zeitzone; SYSTEMTIME Zeit; // 宣言。こんな変数名付ける私は厨二病かもしれない
 				GetTimeZoneInformation(&Zeitzone); // タイムゾーンを取得する
 				GetLocalTime(&Zeit); // WINAPIを使ってローカル時刻を取得
@@ -161,6 +162,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 					(sun_ecliptic_longitude(JulianischeDatum + 1.0) <= 315.0) &&
 					(sun_ecliptic_longitude(JulianischeDatum + 2.0) >= 315.0) &&
 					(analysis->KangziCount[CircleNine] >= 1); /* 手牌自体は九筒の槓子だけが条件 */
+#else /*_WIN32*/
+				/* TODO: 未実装箇所 */
+				return false;
+#endif /*_WIN32*/
 			}
 		));
 	/* 草加 */

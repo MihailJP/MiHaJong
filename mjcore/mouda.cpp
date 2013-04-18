@@ -21,7 +21,11 @@ namespace {
 	DiscardTileNum playerdahai(const GameTable* gameStat) { // プレイヤーの打牌
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubscenePlayerDahai);
+#ifdef _WIN32
 		DWORD result = mihajong_graphic::ui::WaitUI();
+#else /*_WIN32*/
+		uint32_t result = mihajong_graphic::ui::WaitUI();
+#endif /*_WIN32*/
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 		DiscardTileNum discardTile(DiscardTileNum::fromSingleInt(result));
 
@@ -244,7 +248,11 @@ namespace { /* 内部処理分割用 */
 				gameStat->Player[2].RichiFlag.OpenFlag || gameStat->Player[3].RichiFlag.OpenFlag))
 				sound::util::bgmplay(sound::IDs::musOpenrichi);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
+#ifdef _WIN32
 			Sleep(1000);
+#else /*_WIN32*/
+			/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 			gameStat->statOfActive().HandStat = handOpenRiichi;
 			gameStat->statOfActive().RichiFlag.OpenFlag = true;
 		}
@@ -266,7 +274,11 @@ namespace { /* 内部処理分割用 */
 					}
 			}
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
+#ifdef _WIN32
 			Sleep(1000);
+#else /*_WIN32*/
+			/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 		}
 	}
 	void procDahaiSubPost(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) { /* 事後処理 */

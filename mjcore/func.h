@@ -170,9 +170,16 @@ bool isRichiReqSatisfied (const GameTable* const gameStat, PlayerID targetPlayer
 bool isDobon (const GameTable* const gameStat, PlayerID targetPlayer);
 bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer);
 
+#ifdef _WIN32
 inline bool exist (LPCSTR filename) {
 	return (GetFileAttributesA(filename) != -1);
 }
+#else /*_WIN32*/
+inline bool exist (const char* filename) {
+	/* TODO: ñ¢é¿ëïâ”èä */
+	return true;
+}
+#endif /*_WIN32*/
 #endif
 
 MJCORE void cleanup();

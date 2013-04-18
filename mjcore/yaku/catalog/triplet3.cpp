@@ -51,8 +51,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 	if (RuleData::chkRuleApplied("april_fool")) {
 		auto isApril1st =
 			[]() -> bool {
+#ifdef _WIN32
 				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
 				return (nowTime.wMonth == 4) && (nowTime.wDay == 1);
+#else /*_WIN32*/
+				/* TODO: –¢À‘•‰ÓŠ */
+				return false;
+#endif /*_WIN32*/
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("lŒ”n­"), get_yaku_han("april_fool"),
@@ -504,12 +509,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("‰[”N–ğ–"),
 			yaku::yakuCalculator::Yaku::HANFUNC(
 				[](const MENTSU_ANALYSIS* const analysis) -> yaku::yakuCalculator::Yaku::YAKU_HAN {
+#ifdef _WIN32
 					SYSTEMTIME nowTime; GetLocalTime(&nowTime);
 					if ((nowTime.wMonth == 2) && (nowTime.wDay == 29))
 						return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman;
 					else return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman;
+#else /*_WIN32*/
+					/* TODO: –¢À‘•‰ÓŠ */
+					return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman;
+#endif /*_WIN32*/
 				}),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+#ifdef _WIN32
 				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
 				bool isLeapYear = (nowTime.wYear % 400 == 0) || ((nowTime.wYear % 4 == 0) && (nowTime.wYear % 100 != 0));
 				if (!isLeapYear) return false;
@@ -519,6 +530,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 						(analysis->KeziCount[((*k)[1] - _T('0')) * TileSuitStep + 9] >= 1))
 						return true;
 				return false;
+#else /*_WIN32*/
+				/* TODO: –¢À‘•‰ÓŠ */
+				return false;
+#endif /*_WIN32*/
 			}
 		));
 	/* Windows8 */

@@ -1,5 +1,7 @@
 #include "logging.h"
 
+#ifdef _WIN32
+
 #include <string>
 #include <sstream>
 #include "../socket/logger.h"
@@ -63,3 +65,5 @@ namespace logger {
 	void fatal_msg(LPCTSTR msg) { if (logger) (*fpFatalC)(msg); }
 
 }
+
+#endif /*_WIN32*/

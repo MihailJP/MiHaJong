@@ -12,6 +12,7 @@
 #define _tcsncpy wcsncpy
 #define _tcslen wcslen
 #define _tcsncat wcsncat
+#define _ttoi(str) wcstol(str, nullptr, 10)
 #define _sntprintf wsnprintf
 typedef wchar_t TCHAR;
 typedef const wchar_t* LPCTSTR;
@@ -20,6 +21,7 @@ typedef const wchar_t* LPCTSTR;
 #define _tcsncpy strncpy
 #define _tcslen strlen
 #define _tcsncat strncat
+#define _ttoi(str) strtol(str, nullptr, 10)
 #define _sntprintf snprintf
 typedef char TCHAR;
 typedef char* LPTSTR;

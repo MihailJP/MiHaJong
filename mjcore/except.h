@@ -1,9 +1,11 @@
 #pragma once
 
 #ifdef MJCORE_EXPORTS
+#ifdef _WIN32
 #define WINDOWS_LEAN_AND_MEAN
 #define WINDOWS_EXTRA_MEAN
 #include <windows.h>
+#endif /*_WIN32*/
 #include <string.h>
 #include "logging.h"
 #endif
@@ -27,7 +29,11 @@ static_assert(std::is_pod<ErrorInfo>::value, "ErrorInfo is not POD");
 void StackTraceToArray();
 #ifdef MJCORE_EXPORTS
 extern ErrorInfo errorInfo;
+#ifdef _WIN32
 extern const ULONG_PTR errorInfoPtr[1];
+#else /*_WIN32*/
+extern const uintptr_t errorInfoPtr[1];
+#endif /*_WIN32*/
 #if defined(_MSC_VER)
 #define setStruct(message) {\
 	strcpy_s(errorInfo.msg, STRINGBUF, CodeConv::toANSI(message).c_str()); \
@@ -40,12 +46,17 @@ extern const ULONG_PTR errorInfoPtr[1];
 	strncpy(errorInfo.file, __FILE__, STRINGBUF); errorInfo.line = __LINE__; \
 	strncpy(errorInfo.func, __FUNCTION__, STRINGBUF);}
 #endif
+#ifdef _WIN32
 #define Raise(exceptionCode,message) {fatal(message); \
 	setStruct(message); \
 	RaiseException(exceptionCode, EXCEPTION_NONCONTINUABLE, 1, errorInfoPtr);}
 #define RaiseTolerant(exceptionCode,message) {error(message); \
 	setStruct(message); \
 	RaiseException(exceptionCode, 0, 1, errorInfoPtr);}
+#else /*_WIN32*/
+#define Raise(exceptionCode,message) /* Not implemented */
+#define RaiseTolerant(exceptionCode,message) /* Not implemented */
+#endif /*_WIN32*/
 #endif
 
 

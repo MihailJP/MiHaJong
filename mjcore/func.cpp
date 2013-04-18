@@ -4,9 +4,12 @@
 #include <memory>
 #include <cstring>
 #include <sstream>
+#ifdef _WIN32
 #include <windows.h>
 #include <imagehlp.h>
 #include <direct.h>
+#else /*_WIN32*/
+#endif /*_WIN32*/
 #include "../common/strcode.h"
 #include "../sound/sound.h"
 #include "../socket/socket.h"
@@ -126,17 +129,24 @@ namespace confpath {
 	using CodeConv::tstring;
 
 	/* Vista/7を使っているかどうか */
+#ifdef _WIN32
 	bool isVista() {
 		OSVERSIONINFO versionInfo;
 		versionInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 		if (GetVersionEx(&versionInfo) == 0) return false;
 		return ((versionInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)&&(versionInfo.dwMajorVersion >= 6));
 	}
+#else /*_WIN32*/
+	bool isVista() { /* Windowsじゃない */
+		return false;
+	}
+#endif /*_WIN32*/
 
 	/* コンフィグのパスを自動設定 */
 	/* Vista以降でRoamingに準備できていなければ作る */
 	std::string confPath() {
 		std::string configpath = "";
+#ifdef _WIN32
 		if (isVista()) {
 			char* cur = new char[1024];
 			GetCurrentDirectoryA(1024, cur);
@@ -179,6 +189,10 @@ namespace confpath {
 			delete sz;
 #endif
 		}
+#else /*_WIN32*/
+		/* TODO: 未実装箇所 */
+		/* ~/.mihajong あたりが妥当か。環境変数を参照せよ */
+#endif /*_WIN32*/
 		return configpath;
 	}
 

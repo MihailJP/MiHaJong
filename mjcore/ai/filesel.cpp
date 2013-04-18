@@ -1,7 +1,9 @@
 #include "filesel.h"
 
 #include <sstream>
+#ifdef _WIN32
 #include <windows.h>
+#endif /*_WIN32*/
 #include "../func.h"
 #include "../random.h"
 
@@ -9,6 +11,7 @@ std::vector<std::string> aiscript::FileSelector::files; // AI‚ÌƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ
 
 /* ƒtƒ@ƒCƒ‹ƒŠƒXƒg‘–¸ */
 void aiscript::FileSelector::filelist() {
+#ifdef _WIN32
 	std::string confPath = confpath::confPath();
 	if (confPath.empty()) confPath = ".";
 	std::string scriptPath = confPath + std::string("\\ai");
@@ -30,6 +33,9 @@ void aiscript::FileSelector::filelist() {
 	} while (FindNextFileA(h, &finddat));
 	/* ŒŸõŠ®—¹I */
 	FindClose(h);
+#else /*_WIN32*/
+	/* TODO: –¢À‘•‰ÓŠ */
+#endif /*_WIN32*/
 }
 
 /* ƒtƒ@ƒCƒ‹‚ğƒ‰ƒ“ƒ_ƒ€‚É‘I‘ğ */

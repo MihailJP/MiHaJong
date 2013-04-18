@@ -29,11 +29,19 @@ namespace chat {
 		std::queue<CodeConv::tstring> sendQueue;
 		MHJMutex streamLock;
 		MHJMutex sendQueueLock;
+#ifdef _WIN32
 		HANDLE myHandle;
+#else /*_WIN32*/
+		/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 		volatile bool terminate;
 		std::string myServerAddr;
 		int myClientNum;
+#ifdef _WIN32
 		static DWORD WINAPI thread_loop (LPVOID param);
+#else /*_WIN32*/
+		/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 		void chatappend(const CodeConv::tstring& buf);
 		void init();
 		void receive();

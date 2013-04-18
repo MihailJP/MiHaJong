@@ -249,7 +249,11 @@ void SeatShuffler::shuffleSeat () {
 		// クライアントであれば受信する
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++) {
 			int receivedByte;
+#ifdef _WIN32
 			while ((receivedByte = mihajong_socket::getc(0)) == -1) Sleep(0); // 受信待ち
+#else /*_WIN32*/
+			/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 			TmpPosition[i] = receivedByte;
 		}
 	}
@@ -342,7 +346,11 @@ namespace {
 				if (ClientReceived == 1)
 					if (f(gameStat, ReceivedMsg))
 						break;
+#ifdef _WIN32
 				Sleep(1);
+#else /*_WIN32*/
+				/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 			}
 		}
 	}
