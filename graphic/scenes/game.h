@@ -29,8 +29,8 @@ protected:
 	static const unsigned CheckboxRegionOffset = 50;
 public:
 	TableProtoScene(ScreenManipulator* const manipulator);
+	virtual ~TableProtoScene();
 #ifdef _WIN32
-	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 #else /*_WIN32*/
 	/* TODO: –¢ŽÀ‘• */

@@ -62,6 +62,7 @@ public:
 	void inputProc(input::InputManipulator* iManip);
 #else /*_WIN32*/
 	/* TODO: –¢ŽÀ‘• */
+	DevicePtr getDevice() {return nullptr;}
 #endif /*_WIN32*/
 	void transit(sceneID scene);
 	void subscene(unsigned int subsceneID);

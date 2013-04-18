@@ -93,6 +93,7 @@ void ConfigMenuProto::BtnEvent_Button_Next() {
 	myTimer.skipTo(0); redrawItems();
 }
 
+#ifdef _WIN32
 void ConfigMenuProto::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	switch (od->dwOfs) {
 	case DIK_UP: case DIK_K: // ëOÇÃçÄñ⁄
@@ -207,8 +208,12 @@ void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		break;
 	}
 }
+#else /*_WIN32*/
+/* TODO: ñ¢é¿ëï */
+#endif /*_WIN32*/
 
 CodeConv::tstring ConfigMenuProto::verInfoText() {
+#ifdef _WIN32
 	CodeConv::tostringstream o; SYSTEMTIME Zeit; GetLocalTime(&Zeit);
 	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / åªç›ì˙éû ") <<
 		std::setw(4) << Zeit.wYear << _T("îN") <<
@@ -218,6 +223,10 @@ CodeConv::tstring ConfigMenuProto::verInfoText() {
 		std::setw(2) << (Zeit.wHour % 12) << _T("éû") <<
 		std::setw(2) << std::setfill(_T('0')) << Zeit.wMinute << _T("ï™");
 	return o.str();
+#else /*_WIN32*/
+	/* TODO: ñ¢é¿ëïâ”èä */
+	return _T("");
+#endif /*_WIN32*/
 }
 
 }

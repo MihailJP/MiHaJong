@@ -18,7 +18,7 @@ FPSIndicator::~FPSIndicator() {
 
 void FPSIndicator::Render() {
 	{ // Žž‚ðŽæ“¾
-		UINT64 tempus = myTimer.currTime();
+		uint64_t tempus = myTimer.currTime();
 		RedrawTime.push_back(tempus);
 		while ((tempus - RedrawTime.front()) > 1000000) RedrawTime.pop_front();
 	}

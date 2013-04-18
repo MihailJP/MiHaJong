@@ -118,6 +118,7 @@ ArgbColor TableProtoScene::roundColor() {
 	}
 }
 
+#ifdef _WIN32
 void TableProtoScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	const int scaledX = (int)((float)X / Geometry::WindowScale());
 	const int scaledY = (int)((float)Y / Geometry::WindowScale());
@@ -143,6 +144,9 @@ void TableProtoScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		break;
 	}
 }
+#else /*_WIN32*/
+/* TODO: ñ¢é¿ëïâ”èä */
+#endif /*_WIN32*/
 
 // -------------------------------------------------------------------------
 
