@@ -27,6 +27,8 @@ typedef uint32_t ArgbColor;
 typedef void* RenderingSysPtr; // OpenGL‚Å‚Í‚½‚Ô‚ñ–¢Žg—p
 #  ifdef _WIN32
 typedef HDC DevicePtr;
+#  else /* _WIN32 */
+typedef void* DevicePtr; // Žb’è
 #  endif /* _WIN32 */
 typedef GLuint TexturePtr;
 typedef std::array<GLfloat, 16> TransformMatrix;
