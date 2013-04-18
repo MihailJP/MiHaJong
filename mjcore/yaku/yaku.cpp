@@ -9,7 +9,9 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
+#ifdef _WIN32
 #include <windows.h>
+#endif /*_WIN32*/
 #include "../largenum.h"
 #include "../except.h"
 #include "../logging.h"
@@ -20,6 +22,7 @@
 #include "../ruletbl.h"
 
 // ŒvZ‚ğÀs(ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚Åcc‘åä•v‚©‚È‚Ÿ)
+#ifdef _WIN32
 DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) {
 	((CalculatorParam*)lpParam)->instance->recordThreadStart();
 	return ((CalculatorParam*)lpParam)->instance->calculate(
@@ -28,6 +31,9 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) 
 		&(((CalculatorParam*)lpParam)->pMode),
 		&(((CalculatorParam*)lpParam)->result));
 }
+#else /*_WIN32*/
+/* TODO: –¢À‘•‰ÓŠ */
+#endif /*_WIN32*/
 
 /* “®‚¢‚Ä‚¢‚éƒXƒŒƒbƒh”‚ÌŠÇ——p */
 int yaku::yakuCalculator::CalculatorThread::numOfFinishedThreads() { // I‚í‚Á‚½ƒXƒŒƒbƒh‚Ì”
@@ -37,8 +43,12 @@ int yaku::yakuCalculator::CalculatorThread::numOfStartedThreads() { // ŠJn‚µ‚½ƒ
 	return this->startedThreads;
 }
 void yaku::yakuCalculator::CalculatorThread::sync(int threads) { // ƒXƒŒƒbƒh‚ğ“¯Šú
+#ifdef _WIN32
 	while (this->startedThreads < threads) Sleep(0); // ‹K’è”‚ÌƒXƒŒƒbƒh‚ªŠJn‚·‚é‚Ì‚ğ‘Ò‚Á‚Ä‚©‚ç
 	while (this->finishedThreads < threads) Sleep(0); // I—¹‚·‚é‚Ì‚ğ‘Ò‚Â
+#else /*_WIN32*/
+	/* TODO: –¢À‘•‰ÓŠ */
+#endif /*_WIN32*/
 }
 
 void yaku::yakuCalculator::CalculatorThread::recordThreadStart() {
@@ -249,12 +259,11 @@ void yaku::yakuCalculator::countDora
 			_tcsncat(result->yakuNameList, _T("\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
 			_tcsncat(result->yakuValList, _T("\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #else
-			/* TODO: LinuxˆÚA */
-			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, label);
-			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T(" "));
-			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, intstr(quantity).c_str());
-			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T("\n"));
-			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("\n"));
+			_tcsncat(result->yakuNameList, label, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
+			_tcsncat(result->yakuNameList, _T(" "), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
+			_tcsncat(result->yakuNameList, intstr(quantity).c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
+			_tcsncat(result->yakuNameList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
+			_tcsncat(result->yakuValList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #endif
 		};
 	const bool uradoraEnabled = ((RuleData::chkRuleApplied("uradora")) && // — ƒhƒ‰‚ ‚è‚Ìƒ‹[ƒ‹‚ÅA
@@ -466,12 +475,12 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 					yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 			_tcsncat(result->yakuValList, _T("ãÊ\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #else
-			/* TODO: LinuxˆÚA */
-			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
-			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T("\n"));
-			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
-				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str());
-			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("ãÊ\n"));
+			_tcsncat(result->yakuNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
+			_tcsncat(result->yakuNameList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
+			_tcsncat(result->yakuValList,
+				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str(),
+					yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+			_tcsncat(result->yakuValList, _T("ãÊ\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #endif
 		}
 		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].coreHan.getHan() == 0)) &&
@@ -490,12 +499,11 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
 			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
 #else
-			/* TODO: LinuxˆÚA */
-			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
-			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, _T("\n"));
-			TCHAR hstr[16]; _stprintf_s(hstr, 16, _T("%d\r\n"),
+			_tcsncat(result->yakumanNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
+			_tcsncat(result->yakumanNameList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
+			TCHAR hstr[16]; _sntprintf(hstr, 15, _T("%d\n"),
 				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
-			_tcscat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
+			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
 #endif
 		}
 		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].coreHan.getHan() == 0)) &&
@@ -514,18 +522,18 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
 			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
 #else
-			/* TODO: LinuxˆÚA */
-			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
-			strcat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, _T("\n"));
-			TCHAR hstr[16]; _stprintf_s(hstr, 16, _T("%d\n"),
+			_tcsncat(result->yakumanNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
+			_tcsncat(result->yakumanNameList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
+			TCHAR hstr[16]; _sntprintf(hstr, 15, _T("%d\n"),
 				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
-			_tcscat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
+			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
 #endif
 		}
 	}
 }
 
 /* ŒvZƒ‹[ƒ`ƒ“ */
+#ifdef _WIN32
 DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
 	const ParseMode* const pMode, YAKUSTAT* const result)
@@ -621,6 +629,9 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 	recordThreadFinish(); // ƒXƒŒƒbƒh‚ªI‚í‚Á‚½‚±‚Æ‚ğ‹L˜^
 	return S_OK;
 }
+#else /*_WIN32*/
+/* TODO: –¢À‘•‰ÓŠ */
+#endif /*_WIN32*/
 
 /* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^ */
 yaku::yakuCalculator::CalculatorThread::CalculatorThread() {
@@ -654,8 +665,12 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	memcpy(&calcprm->analysis, &analysis, sizeof(MENTSU_ANALYSIS));
 	YAKUSTAT::Init(&calcprm->result);
 	// ŒvZ‚ğÀs
+#ifdef _WIN32
 	DWORD ThreadID;
 	HANDLE Thread = CreateThread(nullptr, 0, CalculatorThread::calculator, (LPVOID)calcprm, 0, &ThreadID);
+#else /*_WIN32*/
+	/* TODO: –¢À‘•‰ÓŠ */
+#endif /*_WIN32*/
 	calculator->sync(1); // “¯Šú(ŠÈ—ª‚ÈÀ‘•)
 	// ‚“_–@‚Ìˆ—
 	memcpy(yakuInfo, &calcprm->result, sizeof(YAKUSTAT));
@@ -682,6 +697,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	// ŒvZƒ‹[ƒ`ƒ“‚É“n‚·ƒpƒ‰ƒ[ƒ^‚Ì€”õ
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
+#ifdef _WIN32
 	DWORD ThreadID[160]; HANDLE Thread[160];
 	for (int i = 0; i < 160; i++) {
 		calcprm[i].instance = calculator;
@@ -691,11 +707,19 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 		memcpy(&calcprm[i].analysis, &analysis, sizeof(MENTSU_ANALYSIS));
 		YAKUSTAT::Init(&calcprm[i].result);
 	}
+#else /*_WIN32*/
+	/* TODO: –¢À‘•‰ÓŠ */
+#endif /*_WIN32*/
 	// ŒvZ‚ğÀs
 	for (int i = 4; i < 160; i++) { // 0`3‚ÍNoTile‚È‚Ì‚Å‚â‚ç‚È‚­‚Ä‚¢‚¢
+#ifdef _WIN32
 		while (calculator->numOfFinishedThreads() - calculator->numOfStartedThreads() >= CalculatorThread::threadLimit)
 			Sleep(1); // ƒXƒŒƒbƒh”§ŒÀ‚Ìƒ`ƒFƒbƒN
+#else /*_WIN32*/
+		/* TODO: –¢À‘•‰ÓŠ */
+#endif /*_WIN32*/
 		do {
+#ifdef _WIN32
 			Thread[i] = CreateThread(nullptr, 0, CalculatorThread::calculator, (LPVOID)(&(calcprm[i])), 0, &(ThreadID[i]));
 			if (Thread[i]) break; // ¬Œ÷‚µ‚½‚ç‚»‚ê‚Å‚æ‚µ
 			{ // ‚È‚ñ‚Å¸”s‚·‚ñ‚Ë‚ñ‚±‚ÌƒhƒAƒzcc
@@ -705,8 +729,15 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 				error(o.str().c_str());
 				Sleep(100);
 			}
+#else /*_WIN32*/
+		/* TODO: –¢À‘•‰ÓŠ */
+#endif /*_WIN32*/
 		} while (true);
+#ifdef _WIN32
 		Sleep(1);
+#else /*_WIN32*/
+		/* TODO: –¢À‘•‰ÓŠ */
+#endif /*_WIN32*/
 	}
 	calculator->sync(156); // “¯Šú(ŠÈ—ª‚ÈÀ‘•)
 	// ‚“_–@‚Ìˆ—
@@ -759,13 +790,13 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("‚TãÊ\r\n") : _T("13ãÊ\r\n"),
 					YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
 #else
-			/* TODO: LinuxˆÚA */
-				_tcscat_s((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
-					yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
-					YAKUSTAT::nameBufSize, _T("\O•s“‹\n"));
+				LPTSTR target = (RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
+					yakuInfo.yakuNameList : yakuInfo.yakumanNameList;
+				_tcsncat(target, _T("\O•s“‹\n"), YAKUSTAT::nameBufSize - _tcslen(target));
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					_tcscat_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
-					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("‚TãÊ\n") : _T("13ãÊ\n"));
+					_tcsncat(yakuInfo.yakuValList,
+					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("‚TãÊ\n") : _T("13ãÊ\n"),
+					YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
 #endif
 				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ƒhƒ‰‚Í”‚¦‚Ä‚ ‚°‚Ü‚µ‚å‚¤‚Ë
 			}
@@ -789,12 +820,11 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
 					_tcsncat(yakuInfo.yakuValList, _T("13ãÊ\r\n"), YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
 #else
-			/* TODO: LinuxˆÚA */
-				_tcscat_s((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
-					yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
-					YAKUSTAT::nameBufSize, _T("\O–³èÏ\n"));
+				LPTSTR target = (RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
+					yakuInfo.yakuNameList : yakuInfo.yakumanNameList;
+				_tcsncat(target, _T("\O–³èÏ\n"), YAKUSTAT::nameBufSize - _tcslen(target));
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					_tcscat_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize, _T("13ãÊ\n"));
+					_tcsncat(yakuInfo.yakuValList, _T("13ãÊ\n"), YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
 #endif
 				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ƒhƒ‰‚ğ”‚¦‚é‚Ì‚Å‚·
 			}
