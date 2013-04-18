@@ -3,6 +3,8 @@
 #include <cstdint>
 #ifdef _WIN32
 #include <windows.h>
+#else /*_WIN32*/
+#include <cstddef>
 #endif /*_WIN32*/
 
 #ifdef _WIN32
