@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <tchar.h>
 #else /*_WIN32*/
+#include <X11/Xlib.h>
 #include "../common/strcode.h"
 #endif /*_WIN32*/
 #include "scrmanip.h"
@@ -18,7 +19,8 @@ private:
 #ifdef _WIN32
 	HWND hWnd;
 #else /*_WIN32*/
-	/* TODO: 未実装 */
+	Display* disp;
+	Window hWnd;
 #endif /*_WIN32*/
 	ScreenManipulator* myScreenManipulator; // DirectX オブジェクト
 #ifdef _WIN32
@@ -35,6 +37,7 @@ private:
 	void initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen); // ウィンドウの生成
 #else /*_WIN32*/
 	/* TODO: 未実装 */
+	void initWindow(void* hThisInst, int nWinMode, bool fullscreen); // ウィンドウの生成
 #endif /*_WIN32*/
 public:
 #ifdef _WIN32
@@ -49,7 +52,7 @@ public:
 #ifdef _WIN32
 	HWND gethwnd() {return hWnd;}
 #else /*_WIN32*/
-	/* TODO: 未実装 */
+	Window gethwnd() {return hWnd;}
 #endif /*_WIN32*/
 };
 

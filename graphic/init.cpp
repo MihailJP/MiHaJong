@@ -4,6 +4,9 @@
 #include <gdiplus.h>
 using namespace Gdiplus;
 #endif
+#ifndef _WIN32
+#include <iostream>
+#endif
 
 namespace mihajong_graphic {
 
@@ -30,11 +33,7 @@ EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwnd
 		myMainWindow = new MainWindow(hInstance, nCmdShow, icon, width, height, fullscreen);
 		ui::UIEvent = new ui::UI_Event();
 		ui::cancellableWait = new ui::CancellableWait();
-#ifdef _WIN32
 		if (hwndPtr) *hwndPtr = myMainWindow->gethwnd();
-#else /*_WIN32*/
-		/* TODO: ‚±‚±‚ÌŽÀ‘• */
-#endif /*_WIN32*/
 	}
 #ifdef _WIN32
 	catch (LPTSTR e) {
@@ -44,6 +43,7 @@ EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwnd
 	return TRUE;
 #else /*_WIN32*/
 	catch (LPTSTR e) {
+		std::cerr << e << std::endl;
 		return false;
 	}
 	return true;

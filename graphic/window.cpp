@@ -2,6 +2,9 @@
 #include "../common/version.h"
 #include "extchar.h"
 #include "loadtex.h"
+#ifndef _WIN32
+#include <X11/Xutil.h>
+#endif /*_WIN32*/
 
 namespace mihajong_graphic {
 
@@ -123,7 +126,32 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen) 
 	return;
 }
 #else /*_WIN32*/
-/* TODO: 未実装です…… */
+void MainWindow::initWindow(void* hThisInst, int nWinMode, bool fullscreen) {
+	/* TODO: 未実装です…… */
+	disp = XOpenDisplay(nullptr); // 接続先ディスプレイは DISPLAY で指定
+	if (disp == nullptr) throw _T("ディスプレイに接続出来ません。Cannot connect to display.");
+	int screen = DefaultScreen(disp);
+	hWnd = XCreateSimpleWindow(
+		disp,
+		RootWindow(disp, screen),
+		0, 0,
+		WindowWidth, WindowHeight,
+		1, BlackPixel(disp, screen),
+		WhitePixel(disp, screen));
+	
+	std::string wName(CodeConv::toANSI(WindowCaption));
+	XStoreName(disp, hWnd, wName.c_str()); // ウィンドウキャプションを設定
+
+	XSizeHints hints;
+	hints.flags = PMinSize|PMaxSize; // ウィンドウサイズを固定
+	hints.min_width = hints.max_width = WindowWidth;
+	hints.min_height = hints.max_height = WindowHeight;
+	XSetWMNormalHints(disp, hWnd, &hints);
+
+	XMapWindow(disp, hWnd);
+	XFlush(disp);
+	return;
+}
 #endif /*_WIN32*/
 
 #ifdef _WIN32
@@ -136,12 +164,18 @@ MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned
 }
 #else /*_WIN32*/
 MainWindow::MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen) {
+	Geometry::WindowWidth = width; Geometry::WindowHeight = height;
+	initWindow(hThisInst, nWinMode, fullscreen);
 }
 #endif /*_WIN32*/
 
 MainWindow::~MainWindow() {
 	delete myScreenManipulator; myScreenManipulator = nullptr;
 	UnloadAllTextures();
+#ifndef _WIN32
+	XDestroyWindow(disp, hWnd);
+	XCloseDisplay(disp);
+#endif /*_WIN32*/
 }
 
 void MainWindow::Render() { // ウィンドウの再描画
