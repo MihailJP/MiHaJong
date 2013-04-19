@@ -1,6 +1,9 @@
 #include "mouda.h"
 
 #include <cassert>
+#ifndef _WIN32
+#include <unistd.h>
+#endif /*_WIN32*/
 #include "../common/strcode.h"
 #include "logging.h"
 #include "haifu.h"
@@ -251,7 +254,7 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 #ifdef _WIN32
 			Sleep(1000);
 #else /*_WIN32*/
-			/* TODO: –¢À‘•‰ÓŠ */
+			usleep(1000000);
 #endif /*_WIN32*/
 			gameStat->statOfActive().HandStat = handOpenRiichi;
 			gameStat->statOfActive().RichiFlag.OpenFlag = true;
@@ -277,7 +280,7 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 #ifdef _WIN32
 			Sleep(1000);
 #else /*_WIN32*/
-			/* TODO: –¢À‘•‰ÓŠ */
+			usleep(1000000);
 #endif /*_WIN32*/
 		}
 	}

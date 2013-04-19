@@ -1,5 +1,8 @@
 #include "remote.h"
 
+#ifndef _WIN32
+#include <unistd.h>
+#endif /*_WIN32*/
 #include "../socket/socket.h"
 #include "envtbl.h"
 #include "tileutil.h"
@@ -142,10 +145,11 @@ DWORD WINAPI RemoteDahai::thread () {
 #endif /*_WIN32*/
 DiscardTileNum remotedahai (GameTable* const gameStat) {
 	RemoteDahai* rDahai = new RemoteDahai(gameStat);
+	while (!rDahai->isFinished())
 #ifdef _WIN32
-	while (!rDahai->isFinished()) Sleep(50);
+		Sleep(50);
 #else /*_WIN32*/
-	/* TODO: –¢À‘•‰ÓŠ */
+		usleep(50000);
 #endif /*_WIN32*/
 	DiscardTileNum d = rDahai->get();
 	delete rDahai; rDahai = nullptr;
@@ -233,7 +237,7 @@ void RemoteNaki::thread_server() {
 #ifdef _WIN32
 		Sleep(0);
 #else /*_WIN32*/
-		/* TODO: –¢À‘•‰ÓŠ */
+		usleep(100);
 #endif /*_WIN32*/
 	}
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
@@ -295,11 +299,11 @@ void RemoteNaki::checkremotenaki(PlayerID player, int& ReceivedMsg) {
 
 void remotenaki (GameTable* const gameStat) {
 	RemoteNaki* rNaki = new RemoteNaki(gameStat);
-#ifdef _WIN32
 	while (!rNaki->isFinished())
+#ifdef _WIN32
 		Sleep(1);
 #else /*_WIN32*/
-	/* TODO: –¢À‘•‰ÓŠ */
+		usleep(1000);
 #endif /*_WIN32*/
 	delete rNaki; rNaki = nullptr;
 }
@@ -376,21 +380,21 @@ void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short
 #ifdef _WIN32
 			Sleep(1500);
 #else /*_WIN32*/
-			/* TODO: –¢À‘•‰ÓŠ */
+			usleep(1500000);
 #endif /*_WIN32*/
 			return;
 		}
 #ifdef _WIN32
 		Sleep(50);
 #else /*_WIN32*/
-		/* TODO: –¢À‘•‰ÓŠ */
+		usleep(50000);
 #endif /*_WIN32*/
 	}
-#ifdef _WIN32
 	while (!mihajong_socket::client::isStartingFinished())
+#ifdef _WIN32
 		Sleep(50);
 #else /*_WIN32*/
-	/* TODO: –¢À‘•‰ÓŠ */
+		usleep(50000);
 #endif /*_WIN32*/
 	ClientNumber = mihajong_socket::client::getClientNumber();
 

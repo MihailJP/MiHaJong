@@ -1,5 +1,8 @@
 #include "gameloop.h"
 
+#ifndef _WIN32
+#include <unistd.h>
+#endif /*_WIN32*/
 #include "../common/strcode.h"
 #include "logging.h"
 #include "envtbl.h"
@@ -45,7 +48,7 @@ EndType doTableTurn(GameTable* const gameStat) {
 #ifdef _WIN32
 	Sleep(1);
 #else /*_WIN32*/
-	/* TODO: –¢À‘•‰ÓŠ */
+	usleep(1000);
 #endif /*_WIN32*/
 	EndType RoundEndType = procdahai(gameStat, DiscardTileIndex);
 	if (RoundEndType != Continuing)
@@ -53,7 +56,7 @@ EndType doTableTurn(GameTable* const gameStat) {
 #ifdef _WIN32
 	Sleep(80);
 #else /*_WIN32*/
-	/* TODO: –¢À‘•‰ÓŠ */
+	usleep(80000);
 #endif /*_WIN32*/
 	/* ‰h˜a‚Ìˆ— */
 	RoundEndType = ronhuproc(gameStat); // ‰h˜a‚Ìˆ—
@@ -61,7 +64,7 @@ EndType doTableTurn(GameTable* const gameStat) {
 #ifdef _WIN32
 	Sleep(1);
 #else /*_WIN32*/
-	/* TODO: –¢À‘•‰ÓŠ */
+	usleep(1000);
 #endif /*_WIN32*/
 	/* “r’†—¬‹Ç‚Ì”»’è */
 	EndType round_abort_type = endround::checkroundabort(gameStat);
@@ -73,7 +76,7 @@ EndType doTableTurn(GameTable* const gameStat) {
 #ifdef _WIN32
 	Sleep(100);
 #else /*_WIN32*/
-	/* TODO: –¢À‘•‰ÓŠ */
+	usleep(100000);
 #endif /*_WIN32*/
 	/* Ÿ‚ÌƒvƒŒƒCƒ„[‚ª”v‚ğ©–Ì‚é */
 	tsumoproc(gameStat);

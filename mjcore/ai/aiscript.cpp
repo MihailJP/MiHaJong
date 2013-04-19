@@ -1,5 +1,8 @@
 #include "aiscript.h"
 
+#ifndef _WIN32
+#include <unistd.h>
+#endif /*_WIN32*/
 #include <lua.hpp>
 #include <sstream>
 #include "functbl.h"
@@ -172,6 +175,7 @@ DiscardTileNum aiscript::compdahai(const GameTable* const gameStat) {
 	while (!finished) Sleep(1);
 #else /*_WIN32*/
 	/* TODO: ñ¢é¿ëïâ”èä */
+	while (!finished) usleep(1000);
 #endif /*_WIN32*/
 	delete discard_worker; discard_worker = nullptr;
 	return discard;
@@ -186,6 +190,7 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 	while (!finished) Sleep(0);
 #else /*_WIN32*/
 	/* TODO: ñ¢é¿ëïâ”èä */
+	while (!finished) usleep(100);
 #endif /*_WIN32*/
 	delete discard_worker; discard_worker = nullptr;
 	return discard;
@@ -261,6 +266,8 @@ void aiscript::compfuuro(GameTable* const gameStat) {
 		Sleep(1);
 #else /*_WIN32*/
 	/* TODO: ñ¢é¿ëïâ”èä */
+	while (!finished)
+		usleep(1000);
 #endif /*_WIN32*/
 	delete meld_worker; meld_worker = nullptr;
 }
@@ -274,6 +281,7 @@ void aiscript::determine_meld(GameTable* const gameStat) {
 	while (!finished) Sleep(0);
 #else /*_WIN32*/
 	/* TODO: ñ¢é¿ëïâ”èä */
+	while (!finished) usleep(100);
 #endif /*_WIN32*/
 	delete meld_worker; meld_worker = nullptr;
 }

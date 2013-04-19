@@ -4,6 +4,9 @@
 #include "envtbl.h"
 #include "func.h"
 #include "../graphic/graphic.h"
+#ifndef _WIN32
+#include <unistd.h>
+#endif /*_WIN32*/
 
 namespace chat {
 
@@ -67,16 +70,17 @@ void ChatThread::init() {
 #ifdef _WIN32
 			Sleep(0);
 #else /*_WIN32*/
-			/* TODO: ñ¢é¿ëïâ”èä */
+			usleep(100);
 #endif /*_WIN32*/
 		}
 	}
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 		mihajong_socket::connect(SOCK_CHAT+0, myServerAddr.c_str(), PORT_CHAT-1+myClientNum);
+		while (!mihajong_socket::connected(SOCK_CHAT+0)) // Wait until connection established
 #ifdef _WIN32
-		while (!mihajong_socket::connected(SOCK_CHAT+0)) Sleep(0); // Wait until connection established
+			Sleep(0);
 #else /*_WIN32*/
-		/* TODO: ñ¢é¿ëïâ”èä */
+			usleep(100);
 #endif /*_WIN32*/
 	}
 }

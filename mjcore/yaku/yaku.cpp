@@ -11,6 +11,8 @@
 #include <algorithm>
 #ifdef _WIN32
 #include <windows.h>
+#else /*_WIN32*/
+#include <unistd.h>
 #endif /*_WIN32*/
 #include "../largenum.h"
 #include "../except.h"
@@ -47,7 +49,8 @@ void yaku::yakuCalculator::CalculatorThread::sync(int threads) { // スレッドを同
 	while (this->startedThreads < threads) Sleep(0); // 規定数のスレッドが開始するのを待ってから
 	while (this->finishedThreads < threads) Sleep(0); // 終了するのを待つ
 #else /*_WIN32*/
-	/* TODO: 未実装箇所 */
+	while (this->startedThreads < threads) usleep(100); // 規定数のスレッドが開始するのを待ってから
+	while (this->finishedThreads < threads) usleep(100); // 終了するのを待つ
 #endif /*_WIN32*/
 }
 
@@ -712,11 +715,11 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 #endif /*_WIN32*/
 	// 計算を実行
 	for (int i = 4; i < 160; i++) { // 0～3はNoTileなのでやらなくていい
-#ifdef _WIN32
 		while (calculator->numOfFinishedThreads() - calculator->numOfStartedThreads() >= CalculatorThread::threadLimit)
+#ifdef _WIN32
 			Sleep(1); // スレッド数制限のチェック
 #else /*_WIN32*/
-		/* TODO: 未実装箇所 */
+			usleep(1000); // スレッド数制限のチェック
 #endif /*_WIN32*/
 		do {
 #ifdef _WIN32
@@ -736,7 +739,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 #ifdef _WIN32
 		Sleep(1);
 #else /*_WIN32*/
-		/* TODO: 未実装箇所 */
+		usleep(1000);
 #endif /*_WIN32*/
 	}
 	calculator->sync(156); // 同期(簡略な実装)

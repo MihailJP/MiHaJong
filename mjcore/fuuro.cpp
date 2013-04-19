@@ -2,6 +2,9 @@
 
 #include <sstream>
 #include <cassert>
+#ifndef _WIN32
+#include <unistd.h>
+#endif /*_WIN32*/
 #include "../sound/sound.h"
 #include "../common/strcode.h"
 #include "logging.h"
@@ -459,7 +462,7 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 #ifdef _WIN32
 	Sleep((gameStat->KangFlag.chankanFlag != chankanNone) ? 500 : 1000);
 #else /*_WIN32*/
-	/* TODO: –¢ŽÀ‘•‰ÓŠ */
+	usleep((gameStat->KangFlag.chankanFlag != chankanNone) ? 500000 : 1000000);
 #endif /*_WIN32*/
 	if (ProcRinshan(gameStat, RoundEndType, Mode, fuuroPlayer)) return true;
 	/* Ž–Œãˆ— */
@@ -530,7 +533,7 @@ namespace {
 #ifdef _WIN32
 			Sleep(500);
 #else /*_WIN32*/
-			/* TODO: –¢ŽÀ‘•‰ÓŠ */
+			usleep(500000);
 #endif /*_WIN32*/
 			Subscene(tblSubscenePlayerChankan);
 		} else {
@@ -726,7 +729,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 #ifdef _WIN32
 		Sleep(1);
 #else /*_WIN32*/
-		/* TODO: –¢ŽÀ‘•‰ÓŠ */
+		usleep(1000);
 #endif /*_WIN32*/
 		PlayerID pl = RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1));
 		if (gameStat->Player[pl].DeclarationFlag.Ron) {
@@ -841,7 +844,7 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 #ifdef _WIN32
 		Sleep(1);
 #else /*_WIN32*/
-		/* TODO: –¢ŽÀ‘•‰ÓŠ */
+		usleep(1000);
 #endif /*_WIN32*/
 		/* ŽÌ”v‚ðƒ|ƒ“‚·‚éê‡ */
 		if (gameStat->Player[i].DeclarationFlag.Pon) {
