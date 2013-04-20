@@ -103,6 +103,12 @@ EXPORT void CleanupWindow() {
 	delete ui::cancellableWait;
 }
 
+#ifndef _WIN32
+EXPORT bool Event() {
+	return MainWindow::WinProc(myMainWindow); // TODO: ‰¼’u‚«
+}
+#endif /*_WIN32*/
+
 }
 
 #ifdef _WIN32

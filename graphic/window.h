@@ -21,6 +21,7 @@ private:
 #else /*_WIN32*/
 	Display* disp;
 	Window hWnd;
+	Atom wmDelMsg;
 #endif /*_WIN32*/
 	ScreenManipulator* myScreenManipulator; // DirectX オブジェクト
 #ifdef _WIN32
@@ -38,6 +39,8 @@ private:
 #else /*_WIN32*/
 	/* TODO: 未実装 */
 	void initWindow(void* hThisInst, int nWinMode, bool fullscreen); // ウィンドウの生成
+public:
+	static bool WinProc(MainWindow* mainWindow); // ウィンドウプロシージャ
 #endif /*_WIN32*/
 public:
 #ifdef _WIN32

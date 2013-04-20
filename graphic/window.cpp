@@ -4,6 +4,7 @@
 #include "loadtex.h"
 #ifndef _WIN32
 #include <X11/Xutil.h>
+#include <iostream>
 #endif /*_WIN32*/
 
 namespace mihajong_graphic {
@@ -126,6 +127,25 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen) 
 	return;
 }
 #else /*_WIN32*/
+bool MainWindow::WinProc(MainWindow* mainWindow) { // ウィンドウプロシージャ
+	XEvent event;
+	XNextEvent(mainWindow->disp, &event); // イベント待機
+	
+	switch (event.type) {
+	case ClientMessage:
+		if (event.xclient.data.l[0] == mainWindow->wmDelMsg) { // ウィンドウを閉じた時
+			XFlush(mainWindow->disp);
+			return false;
+		}
+		break;
+	default:
+		/* TODO: これは実験用コードです */
+		std::cerr << "Event type " << event.type << std::endl;
+		break;
+	}
+	return true;
+}
+
 void MainWindow::initWindow(void* hThisInst, int nWinMode, bool fullscreen) {
 	/* TODO: 未実装です…… */
 	disp = XOpenDisplay(nullptr); // 接続先ディスプレイは DISPLAY で指定
@@ -147,8 +167,12 @@ void MainWindow::initWindow(void* hThisInst, int nWinMode, bool fullscreen) {
 	hints.min_width = hints.max_width = WindowWidth;
 	hints.min_height = hints.max_height = WindowHeight;
 	XSetWMNormalHints(disp, hWnd, &hints);
+	
+	XSelectInput(disp, hWnd, StructureNotifyMask);
 
+	wmDelMsg = XInternAtom(disp, "WM_DELETE_WINDOW", False);
 	XMapWindow(disp, hWnd);
+	XSetWMProtocols(disp, hWnd, &wmDelMsg, 1);
 	XFlush(disp);
 	return;
 }

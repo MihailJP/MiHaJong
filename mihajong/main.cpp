@@ -75,21 +75,14 @@ int main(int argc, char* argv) {
 
 	/* メインループ */
 	while (true) {
-	//	if (PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE)) {
-	//		// メッセージがあればメッセージの処理
-	//		if (!GetMessage(&msg, nullptr, 0, 0)) break;
-	//		TranslateMessage(&msg);
-	//		DispatchMessage(&msg);
-	//	} else {
-	//		// アイドル時に再描画
-	//		mihajong_graphic::RefreshWindow();
-	//		Sleep(1);
-	//	}
-		usleep(1000000);
+		if (!mihajong_graphic::Event()) // イベント処理
+			break; // 終了ならfalseが返ってくる
+		usleep(100);
 	}
 	
 	/* 終了処理 */
-	TerminateGame();
+	mihajong_graphic::CleanupWindow(); // TODO: 暫定実装。TerminateGame()でやること
+	//TerminateGame();
 	//ExitProcess(0);
 	//return msg.wParam;
 }

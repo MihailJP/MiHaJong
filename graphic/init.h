@@ -34,6 +34,7 @@ EXPORT void RefreshWindow();
 EXPORT bool Transit(sceneID scene);
 EXPORT bool Subscene(unsigned int subsceneID);
 EXPORT void CleanupWindow();
+EXPORT bool Event();
 #endif /*_WIN32*/
 
 }
