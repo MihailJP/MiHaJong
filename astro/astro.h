@@ -68,8 +68,8 @@ extern "C" {
 	/* julian.c */
 #ifdef _WIN32
 	EXPORT double systime_to_julian(const LPSYSTEMTIME);
-else /* _WIN32 */
-	EXPORT double systime_to_julian(const struct timeval* sysTime);
+#else /* _WIN32 */
+	EXPORT double systime_to_julian(const struct timespec* sysTime);
 #endif /* _WIN32 */
 
 	/* ecllong.c */

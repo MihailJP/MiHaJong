@@ -55,8 +55,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
 				return (nowTime.wMonth == 4) && (nowTime.wDay == 1);
 #else /*_WIN32*/
-				/* TODO: –¢À‘•‰ÓŠ */
-				return false;
+				time_t nowTimeVal = time(nullptr);
+				tm nowTime = *localtime(&nowTimeVal);
+				return ((nowTime.tm_mon + 1) == 4) && (nowTime.tm_mday == 1);
 #endif /*_WIN32*/
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -512,17 +513,24 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 #ifdef _WIN32
 					SYSTEMTIME nowTime; GetLocalTime(&nowTime);
 					if ((nowTime.wMonth == 2) && (nowTime.wDay == 29))
+#else /*_WIN32*/
+					time_t nowTimeVal = time(nullptr);
+					tm nowTime = *localtime(&nowTimeVal);
+					if (((nowTime.tm_mon + 1) == 2) && (nowTime.tm_mday == 29))
+#endif /*_WIN32*/
 						return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman;
 					else return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman;
-#else /*_WIN32*/
-					/* TODO: –¢À‘•‰ÓŠ */
-					return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman;
-#endif /*_WIN32*/
 				}),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 #ifdef _WIN32
 				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
 				bool isLeapYear = (nowTime.wYear % 400 == 0) || ((nowTime.wYear % 4 == 0) && (nowTime.wYear % 100 != 0));
+#else /*_WIN32*/
+				time_t nowTimeVal = time(nullptr);
+				tm nowTime = *localtime(&nowTimeVal);
+				const int year = nowTime.tm_year + 1900;
+				bool isLeapYear = (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
+#endif /*_WIN32*/
 				if (!isLeapYear) return false;
 				for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); ++k)
 					if ((analysis->KeziCount[((*k)[0] - _T('0')) * TileSuitStep + 2] >= 1) &&
@@ -530,10 +538,6 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 						(analysis->KeziCount[((*k)[1] - _T('0')) * TileSuitStep + 9] >= 1))
 						return true;
 				return false;
-#else /*_WIN32*/
-				/* TODO: –¢À‘•‰ÓŠ */
-				return false;
-#endif /*_WIN32*/
 			}
 		));
 	/* Windows8 */
