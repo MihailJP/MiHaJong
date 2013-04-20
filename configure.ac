@@ -69,7 +69,8 @@ AS_IF([test "x$with_directx" = xno],
 		 AC_CHECK_LIB([gdiplus], [main], [], AC_MSG_ERROR([gdiplus is unavailable]))
 		 AC_CHECK_LIB([gdi32], [main], [], AC_MSG_ERROR([gdi32 is unavailable]))
 		 AC_CHECK_LIB([opengl32], [main], [], AC_MSG_ERROR([opengl32 is unavailable]))],
-		[AC_CHECK_LIB([openal], [main], [], AC_MSG_ERROR([openal is unavailable]))
+		[AX_PTHREAD([], AC_MSG_ERROR([pthread is unavailable]))
+		 AC_CHECK_LIB([openal], [main], [], AC_MSG_ERROR([openal is unavailable]))
 		 AC_CHECK_LIB([GL], [main], [], AC_MSG_ERROR([GL is unavailable]))]
 	 )]
 )
@@ -109,7 +110,15 @@ AS_IF([test "x$with_directx" = xno],
 		 AC_CHECK_HEADER([wingdi.h], [], AC_MSG_ERROR([wingdi.h is unavailable]), [[
 #include <windef.h>
 ]]
-		 )]
+		 )],
+		[AC_CHECK_HEADER([unistd.h], [], AC_MSG_ERROR([unistd.h is unavailable]))
+		 AC_CHECK_HEADER([sys/socket.h], [], AC_MSG_ERROR([sys/socket.h is unavailable]))
+		 AC_CHECK_HEADER([arpa/inet.h], [], AC_MSG_ERROR([arpa/inet.h is unavailable]))
+		 AC_CHECK_HEADER([netinet/in.h], [], AC_MSG_ERROR([netinet/in.h is unavailable]))
+		 AC_CHECK_HEADER([netdb.h], [], AC_MSG_ERROR([netdb.h is unavailable]))
+		 AC_CHECK_HEADER([fcntl.h], [], AC_MSG_ERROR([fcntl.h is unavailable]))
+		 AC_CHECK_HEADER([X11/Xlib.h], [], AC_MSG_ERROR([X11/Xlib.h is unavailable]))
+		 AC_CHECK_HEADER([X11/Xutil.h], [], AC_MSG_ERROR([X11/Xutil.h is unavailable]))]
 	 )
 	 AC_CHECK_HEADER([GL/gl.h], [], AC_MSG_ERROR([GL/gl.h is unavailable]))]
 )
