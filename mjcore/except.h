@@ -54,8 +54,12 @@ extern const uintptr_t errorInfoPtr[1];
 	setStruct(message); \
 	RaiseException(exceptionCode, 0, 1, errorInfoPtr);}
 #else /*_WIN32*/
-#define Raise(exceptionCode,message) /* Not implemented */
-#define RaiseTolerant(exceptionCode,message) /* Not implemented */
+#define Raise(exceptionCode,message) {fatal(message); \
+	setStruct(message); \
+	throw (unsigned long)exceptionCode;}
+#define RaiseTolerant(exceptionCode,message) {error(message); \
+	setStruct(message); \
+	throw (unsigned long)exceptionCode;}
 #endif /*_WIN32*/
 #endif
 
