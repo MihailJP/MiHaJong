@@ -4,6 +4,8 @@
 #include "gametbl.h"
 #ifdef _WIN32
 #include <windows.h>
+#else /*_WIN32*/
+#include <X11/Xlib.h>
 #endif /*_WIN32*/
 
 #ifdef MJCORE_EXPORTS
@@ -17,12 +19,13 @@ private:
 	static DWORD WINAPI ThreadMain(LPVOID lpParam);
 #else /*_WIN32*/
 	/* TODO: ñ¢é¿ëïâ”èä */
+	Window hWnd;
 #endif /*_WIN32*/
 public:
 #ifdef _WIN32
 	explicit GameThread(GameTypeID gameType, HWND hWnd);
 #else /*_WIN32*/
-	explicit GameThread(GameTypeID gameType, void* hWnd); // TODO: ébíË
+	explicit GameThread(GameTypeID gameType, Window hWnd);
 #endif /*_WIN32*/
 	~GameThread();
 };
@@ -33,6 +36,6 @@ extern GameThread* gameThread;
 #ifdef _WIN32
 MJCORE void StartGame (GameTypeID gameType, HWND hwnd);
 #else /*_WIN32*/
-MJCORE void StartGame (GameTypeID gameType, void* hwnd); // TODO: ébíË
+MJCORE void StartGame (GameTypeID gameType, Window hWnd);
 #endif /*_WIN32*/
 MJCORE void TerminateGame ();

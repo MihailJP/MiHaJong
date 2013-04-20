@@ -71,7 +71,7 @@ int main(int argc, char* argv) {
 		exit(1); // 失敗したら終了
 
 	/* スタート */
-	//StartGame(myGameType, hwnd);
+	StartGame(myGameType, hwnd);
 
 	/* メインループ */
 	while (true) {

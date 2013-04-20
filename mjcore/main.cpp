@@ -16,8 +16,10 @@ GameThread::GameThread(GameTypeID gameType, HWND hwnd) {
 	hThread = CreateThread(nullptr, 0, ThreadMain, this, 0, nullptr);
 }
 #else /*_WIN32*/
-GameThread::GameThread(GameTypeID gameType, void* hwnd) {
+GameThread::GameThread(GameTypeID gameType, Window hwnd) {
 	/* TODO: ñ¢é¿ëïâ”èä */
+	myGameType = gameType;
+	hWnd = hwnd;
 }
 #endif /*_WIN32*/
 
@@ -52,15 +54,13 @@ DWORD WINAPI GameThread::ThreadMain(LPVOID lpParam) {
 #endif /*_WIN32*/
 
 #ifdef _WIN32
-MJCORE void StartGame (GameTypeID gameType, HWND hwnd) {
+MJCORE void StartGame (GameTypeID gameType, HWND hwnd)
+#else /*_WIN32*/
+MJCORE void StartGame (GameTypeID gameType, Window hwnd)
+#endif /*_WIN32*/
+{
 	gameThread = new GameThread(gameType, hwnd);
 }
-#else /*_WIN32*/
-MJCORE void StartGame (GameTypeID gameType, void* hwnd) {
-	/* TODO: ébíËé¿ëï */
-	gameThread = new GameThread(gameType, nullptr);
-}
-#endif /*_WIN32*/
 
 MJCORE void TerminateGame () {
 	delete gameThread;
