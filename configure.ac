@@ -14,6 +14,8 @@ AC_CONFIG_SRCDIR([astro/astro.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
+AC_DEFINE_UNQUOTED([PKGDATADIR], ["$pkgdatadir"], [Package data directory.])
+
 # Checks for programs.
 AC_LANG([C++])
 AC_PROG_CXX

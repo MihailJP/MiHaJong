@@ -31,6 +31,10 @@ nodist_libmihajong_la_SOURCES = \
 BUILT_SOURCES = $(nodist_libmihajong_la_SOURCES)
 libmihajong_la_LDFLAGS = -no-undefined
 libmihajong_la_CXXFLAGS = -DMJCORE_EXPORTS --input-charset=cp932
+if WITH_WINAPI
+else
+libmihajong_la_CXXFLAGS += -DPKGDATADIR='$(pkgdatadir)'
+endif
 libmihajong_la_LIBADD = \
 	$(LUA_LIB) \
 	../sound/libmihajong-sound.la \
@@ -40,9 +44,9 @@ libmihajong_la_LIBADD = \
 if WITH_WINAPI
 libmihajong_la_LIBADD += mjcore.o 
 endif
-dist_data_DATA = \
+dist_pkgdata_DATA = \
 	data/mentz.dat.lzma
-nodist_data_DATA = \
+nodist_pkgdata_DATA = \
 	data/confitem.csv.lzma data/confitem.ini.lzma data/prefitem.csv.lzma \
 	data/prefitem.ini.lzma data/rankval.csv.lzma
 EXTRA_DIST = \

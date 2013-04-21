@@ -42,11 +42,15 @@ libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS --input-charset=cp932
 if WITH_DIRECTX
 libmihajong_graphic_la_CXXFLAGS += -DWITH_DIRECTX
 endif
+if WITH_WINAPI
+else
+libmihajong_graphic_la_CXXFLAGS += -DPKGDATADIR='$(pkgdatadir)'
+endif
 libmihajong_graphic_la_LIBADD = ../sound/libmihajong-sound.la
 if WITH_WINAPI
 libmihajong_graphic_la_LIBADD += graphic.o 
 endif
-dist_data_DATA = \
+dist_pkgdata_DATA = \
 	data/agariwnd.png data/baize.png data/button.png data/call.png \
 	data/cdigits.chr data/cdigits.png data/chiicha.png data/dice.png \
 	data/editbox.png data/font.chr data/font.png data/frame.png \
