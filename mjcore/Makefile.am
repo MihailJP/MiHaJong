@@ -33,7 +33,7 @@ libmihajong_la_LDFLAGS = -no-undefined
 libmihajong_la_CXXFLAGS = -DMJCORE_EXPORTS --input-charset=cp932
 if WITH_WINAPI
 else
-libmihajong_la_CXXFLAGS += -DPKGDATADIR='$(pkgdatadir)'
+libmihajong_la_CXXFLAGS += -DPKGDATADIR='"$(pkgdatadir)"'
 endif
 libmihajong_la_LIBADD = \
 	$(LUA_LIB) \
@@ -61,6 +61,8 @@ libmihajong_la_SOURCES += \
 	lzma/Alloc.h lzma/LzFind.h lzma/LzFindMt.h lzma/LzHash.h lzma/LzmaDec.h \
 	lzma/LzmaLib.h lzma/RotateDefs.h lzma/Sha256.h lzma/Threads.h lzma/Types.h \
 	mjcore.rc
+EXTRA_DIST += \
+	filenum.cpp filenum.h
 else
 EXTRA_DIST += \
 	lzma/Alloc.c lzma/LzFind.c lzma/LzFindMt.c lzma/LzmaDec.c lzma/LzmaLib.c \
@@ -68,6 +70,8 @@ EXTRA_DIST += \
 	lzma/Alloc.h lzma/LzFind.h lzma/LzFindMt.h lzma/LzHash.h lzma/LzmaDec.h \
 	lzma/LzmaLib.h lzma/RotateDefs.h lzma/Sha256.h lzma/Threads.h lzma/Types.h \
 	mjcore.rc
+libmihajong_la_SOURCES += \
+	filenum.cpp filenum.h
 endif
 
 CLEANFILES = $(libmihajong_la_BUILT_SOURCES) \
