@@ -118,7 +118,8 @@ AS_IF([test "x$with_directx" = xno],
 		 AC_CHECK_HEADER([netdb.h], [], AC_MSG_ERROR([netdb.h is unavailable]))
 		 AC_CHECK_HEADER([fcntl.h], [], AC_MSG_ERROR([fcntl.h is unavailable]))
 		 AC_CHECK_HEADER([X11/Xlib.h], [], AC_MSG_ERROR([X11/Xlib.h is unavailable]))
-		 AC_CHECK_HEADER([X11/Xutil.h], [], AC_MSG_ERROR([X11/Xutil.h is unavailable]))]
+		 AC_CHECK_HEADER([X11/Xutil.h], [], AC_MSG_ERROR([X11/Xutil.h is unavailable]))
+		 AC_CHECK_HEADER([sys/stat.h], [], AC_MSG_ERROR([sys/stat.h is unavailable]))]
 	 )
 	 AC_CHECK_HEADER([GL/gl.h], [], AC_MSG_ERROR([GL/gl.h is unavailable]))]
 )

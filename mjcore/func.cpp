@@ -9,6 +9,7 @@
 #include <imagehlp.h>
 #include <direct.h>
 #else /*_WIN32*/
+#include <sys/stat.h>
 #endif /*_WIN32*/
 #include "../common/strcode.h"
 #include "../sound/sound.h"
@@ -192,6 +193,10 @@ namespace confpath {
 #else /*_WIN32*/
 		/* TODO: –¢À‘•‰ÓŠ */
 		/* ~/.mihajong ‚ ‚½‚è‚ª‘Ã“–‚©BŠÂ‹«•Ï”‚ğQÆ‚¹‚æ */
+		std::string homedir(getenv("HOME"));
+		configpath = homedir + std::string("/.mihajong");
+		mkdir(configpath.c_str(), 0755);
+		configpath += std::string("/");
 #endif /*_WIN32*/
 		return configpath;
 	}
