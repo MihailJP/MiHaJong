@@ -31,13 +31,9 @@ void Data::decompress(int FileID_) {
 	compressedData[size] = 0;
 	decompressedSize = *((size_t *)(compressedData+5));
 	DecompressedData = (uint8_t *)malloc(decompressedSize);
-#ifdef _WIN32
 	result = LzmaUncompress(DecompressedData, &decompressedSize,
 		(const uint8_t *)(compressedData+13),
 		(SizeT *)&size, (const uint8_t *)compressedData, 5);
-#else /*_WIN32*/
-	/* TODO: 未実装箇所 */
-#endif /*_WIN32*/
 	free(compressedData); compressedData = nullptr;
 	if (result != SZ_OK) {
 		CodeConv::tostringstream o;
@@ -52,22 +48,21 @@ void Data::decompress(int FileID_) {
 }
 
 void Data::calcSHA256() {
-#ifdef _WIN32
 	CSha256 p;
 	Sha256_Init(&p);
 	Sha256_Update(&p, DecompressedData, decompressedSize);
 	Sha256_Final(&p, actualDigest);
-#else /*_WIN32*/
-	/* TODO: 未実装箇所 */
-#endif /*_WIN32*/
 }
 
 std::string Data::bytesToHexString(std::vector<uint8_t> byteStr) {
 	std::string hx = std::string();
-	std::ostringstream o;
-	o.setf(std::ios::right); o.fill('0'); o.width(2);
-	for (unsigned int i = 0; i < byteStr.size(); i++) o << byteStr[i];
-	return o.str();
+	for (unsigned int i = 0; i < byteStr.size(); i++) {
+		std::ostringstream o;
+		o.setf(std::ios::right); o.fill('0'); o.width(2);
+		o << std::hex << (int)byteStr[i];
+		hx += o.str();
+	}
+	return hx;
 }
 
 void Data::verify(LPCTSTR Description_, const uint8_t* const expectedDigest_) {
@@ -81,9 +76,9 @@ void Data::verify(LPCTSTR Description_, const uint8_t* const expectedDigest_) {
 		o << Description_ << _T("のSHA256ハッシュ値が一致しませんでした。") <<
 			_T("ファイルが壊れている虞があります。") << std::endl <<
 			_T("期待されるハッシュ値: ") <<
-			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(expectedDigest_[0], expectedDigest_[31]))) <<
+			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(expectedDigest_, expectedDigest_ + 32))) << std::endl <<
 			_T("実際のハッシュ値: ") <<
-			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(actualDigest[0], actualDigest[31])));
+			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(actualDigest, actualDigest + 32)));
 		Raise(EXCEPTION_MJCORE_HASH_MISMATCH, o.str().c_str());
 	}
 	else {

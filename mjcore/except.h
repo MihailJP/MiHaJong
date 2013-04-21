@@ -6,6 +6,7 @@
 #define WINDOWS_EXTRA_MEAN
 #include <windows.h>
 #endif /*_WIN32*/
+#include <iostream>
 #include <string.h>
 #include "logging.h"
 #endif
@@ -56,9 +57,11 @@ extern const uintptr_t errorInfoPtr[1];
 #else /*_WIN32*/
 #define Raise(exceptionCode,message) {fatal(message); \
 	setStruct(message); \
+	std::cerr << __FILE__ << ' ' << __LINE__ << ':' << CodeConv::toANSI(message) << std::endl; \
 	throw (unsigned long)exceptionCode;}
 #define RaiseTolerant(exceptionCode,message) {error(message); \
 	setStruct(message); \
+	std::cerr << __FILE__ << ' ' << __LINE__ << ':' << CodeConv::toANSI(message) << std::endl; \
 	throw (unsigned long)exceptionCode;}
 #endif /*_WIN32*/
 #endif
