@@ -21,6 +21,9 @@ libmihajong_la_SOURCES = \
 	random.h rankval.h rational.h remote.h result.h shanten.h resource.h \
 	ruletbl.h socknum.h sound.h tilecode.h tileutil.h \
 	ai/aiscript.h ai/class.h ai/functbl.h ai/filesel.h \
+	lzma/Alloc.c lzma/LzFind.c lzma/LzmaDec.c lzma/LzmaLib.c lzma/Sha256.c \
+	lzma/Alloc.h lzma/LzFind.h lzma/LzHash.h lzma/LzmaDec.h lzma/LzmaLib.h \
+	lzma/RotateDefs.h lzma/Sha256.h lzma/Types.h \
 	reader/csv2arry.h reader/ini2map.h reader/readrsrc.h \
 	yaku/catalog.h yaku/yaku.h yaku/yvalue.h yaku/ykclass.h yaku/yk_tools.h
 nodist_libmihajong_la_SOURCES = \
@@ -56,19 +59,13 @@ EXTRA_DIST = \
 	data/rankval.csv
 if WITH_WINAPI
 libmihajong_la_SOURCES += \
-	lzma/Alloc.c lzma/LzFind.c lzma/LzFindMt.c lzma/LzmaDec.c lzma/LzmaLib.c \
-	lzma/Sha256.c lzma/Threads.c \
-	lzma/Alloc.h lzma/LzFind.h lzma/LzFindMt.h lzma/LzHash.h lzma/LzmaDec.h \
-	lzma/LzmaLib.h lzma/RotateDefs.h lzma/Sha256.h lzma/Threads.h lzma/Types.h \
+	lzma/LzFindMt.c lzma/Threads.c lzma/LzFindMt.h lzma/Threads.h \
 	mjcore.rc
 EXTRA_DIST += \
 	filenum.cpp filenum.h
 else
 EXTRA_DIST += \
-	lzma/Alloc.c lzma/LzFind.c lzma/LzFindMt.c lzma/LzmaDec.c lzma/LzmaLib.c \
-	lzma/Sha256.c lzma/Threads.c \
-	lzma/Alloc.h lzma/LzFind.h lzma/LzFindMt.h lzma/LzHash.h lzma/LzmaDec.h \
-	lzma/LzmaLib.h lzma/RotateDefs.h lzma/Sha256.h lzma/Threads.h lzma/Types.h \
+	lzma/LzFindMt.c lzma/Threads.c lzma/LzFindMt.h lzma/Threads.h \
 	mjcore.rc
 libmihajong_la_SOURCES += \
 	filenum.cpp filenum.h
