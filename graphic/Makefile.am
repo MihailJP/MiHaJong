@@ -44,7 +44,7 @@ libmihajong_graphic_la_CXXFLAGS += -DWITH_DIRECTX
 endif
 if WITH_WINAPI
 else
-libmihajong_graphic_la_CXXFLAGS += -DPKGDATADIR='$(pkgdatadir)'
+libmihajong_graphic_la_CXXFLAGS += -DPKGDATADIR='$(pkgdatadir)' -DUNICODE -D_UNICODE
 endif
 libmihajong_graphic_la_LIBADD = ../sound/libmihajong-sound.la
 if WITH_WINAPI

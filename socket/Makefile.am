@@ -13,6 +13,7 @@ if WITH_WINAPI
 libmihajong_socket_la_SOURCES += ver.rc
 else
 EXTRA_DIST += ver.rc
+libmihajong_socket_la_CXXFLAGS += -DUNICODE -D_UNICODE
 endif
 
 .rc.o:

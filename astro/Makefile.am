@@ -13,6 +13,7 @@ if WITH_WINAPI
 libmihajong_astro_la_SOURCES += ver.rc
 else
 EXTRA_DIST += ver.rc
+libmihajong_astro_la_CFLAGS += -DUNICODE -D_UNICODE
 endif
 
 .rc.o:

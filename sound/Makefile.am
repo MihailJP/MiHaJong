@@ -27,6 +27,7 @@ if WITH_WINAPI
 libmihajong_sound_la_SOURCES += ver.rc
 else
 EXTRA_DIST += ver.rc
+libmihajong_sound_la_CXXFLAGS += -DUNICODE -D_UNICODE
 endif
 
 .rc.o:

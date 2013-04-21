@@ -36,6 +36,10 @@ mihaysnm_SOURCES += mihaysnm.rc
 mihassnm_SOURCES += mihassnm.rc
 else
 EXTRA_DIST += mihajong.rc mihasanm.rc mihaysnm.rc mihassnm.rc
+mihajong_CXXFLAGS += -DUNICODE -D_UNICODE
+mihasanm_CXXFLAGS += -DUNICODE -D_UNICODE
+mihaysnm_CXXFLAGS += -DUNICODE -D_UNICODE
+mihassnm_CXXFLAGS += -DUNICODE -D_UNICODE
 endif
 
 

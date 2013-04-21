@@ -36,7 +36,7 @@ libmihajong_la_LDFLAGS = -no-undefined
 libmihajong_la_CXXFLAGS = -DMJCORE_EXPORTS --input-charset=cp932
 if WITH_WINAPI
 else
-libmihajong_la_CXXFLAGS += -DPKGDATADIR='"$(pkgdatadir)"'
+libmihajong_la_CXXFLAGS += -DPKGDATADIR='"$(pkgdatadir)"' -DUNICODE -D_UNICODE
 endif
 libmihajong_la_LIBADD = \
 	$(LUA_LIB) \

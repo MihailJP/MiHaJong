@@ -12,16 +12,19 @@
 #include <iomanip>
 #include "mutex.h"
 #ifdef UNICODE
-#define _T(str) L##str
+#define UNI_TEXT(str) L##str
+#define _T(str) UNI_TEXT(str)
 #define _tcsncpy wcsncpy
 #define _tcslen wcslen
 #define _tcsncat wcsncat
 #define _ttoi(str) wcstol(str, nullptr, 10)
-#define _sntprintf wsnprintf
+#define _sntprintf swprintf
 typedef wchar_t TCHAR;
+typedef wchar_t* LPTSTR;
 typedef const wchar_t* LPCTSTR;
 #else
-#define _T(str) str
+#define UNI_TEXT(str) str
+#define _T(str) UNI_TEXT(str)
 #define _tcsncpy strncpy
 #define _tcslen strlen
 #define _tcsncat strncat
