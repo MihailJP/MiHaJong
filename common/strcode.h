@@ -7,6 +7,10 @@
 #include <cstring>
 #include <cwchar>
 #include <clocale>
+#include <climits>
+#include <iostream>
+#include <iomanip>
+#include "mutex.h"
 #ifdef UNICODE
 #define _T(str) L##str
 #define _tcsncpy wcsncpy
@@ -35,15 +39,36 @@ namespace CodeConv {
 
 #ifndef _WIN32
 inline void setCP(unsigned int CodePage) {
-	if (CodePage == 932u) /* Japanese SJIS code page */
-		setlocale(LC_CTYPE, "ja_JP.cp932") || /* Linux */
-		setlocale(LC_CTYPE, "ja_JP.sjis"); /* returns nullptr if failed */
-	else if (CodePage == 65001u) /* UTF-8 code page */
-		setlocale(LC_CTYPE, "ja_JP.utf8"); /* Linux */
+	char teststr[MB_CUR_MAX];
+	if (CodePage == 932u) { /* Japanese SJIS code page */
+		if (setlocale(LC_CTYPE, "ja_JP.cp932")) { /* Linux */
+			if (wctomb(teststr, L'‚ ') != -1) return;
+		}
+		if (setlocale(LC_CTYPE, "ja_JP.shiftjisx0213")) { /* Linux */
+			if (wctomb(teststr, L'‚ ') != -1) return;
+		}
+		if (setlocale(LC_CTYPE, "ja_JP.sjis")) { /* returns nullptr if failed */
+			if (wctomb(teststr, L'‚ ') != -1) return;
+		}
+	}
+	else if (CodePage == 65001u) { /* UTF-8 code page */
+		if (setlocale(LC_CTYPE, "ja_JP.utf8")) return; /* Linux */
+	}
+	else { /* Unsupported code page */
+		std::cerr << "Unsupported code page " << CodePage << " ignored" << std::endl;
+		return;
+	}
+	std::cerr << "Failed to set code page to " << CodePage << std::endl;
 }
 
-const unsigned CP_UTF8 = 65501u;
+const unsigned CP_UTF8 = 65001u;
 const unsigned CP_ACP = 932u;
+
+inline void criticalSection(bool flag) {
+	static MHJMutex conversionMutex;
+	if (flag) conversionMutex.acquire();
+	else conversionMutex.release();
+}
 #endif /* _WIN32 */
 
 inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
@@ -52,17 +77,30 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	wchar_t* buf = new wchar_t[bufsize];
 	MultiByteToWideChar(CodePage, 0, str.c_str(), -1, buf, bufsize);
 #else /* _WIN32 */
+	criticalSection(true);
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
-	const char* srcPtr = str.c_str();
+	char* srcBuf = new char[str.length() + 1]; /* source buffer */
+	memset(srcBuf, 0, str.length() + 1); strncpy(srcBuf, str.c_str(), str.length());
+	const char* srcPtr = srcBuf;
 	const size_t bufsize = mbsrtowcs(nullptr, &srcPtr, 0, &mbStat);
+	if (bufsize == (size_t)-1) {
+		setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
+		delete[] srcBuf;
+		std::cerr << "Failed to convert into wide string" << std::endl;
+		criticalSection(false);
+		throw _T("ƒƒCƒh•¶Žš‚Ö‚Ì•ÏŠ·‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+	}
 	wchar_t* buf = new wchar_t[bufsize + 1 /* Do not forget the trailing null */];
-	srcPtr = str.c_str();
+	srcPtr = srcBuf;
 	mbsrtowcs(buf, &srcPtr, bufsize, &mbStat);
 	setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
 #endif /* _WIN32 */
-	std::wstring ans(buf); delete[] buf;
+	std::wstring ans(buf); delete[] buf; delete[] srcBuf;
+#ifndef _WIN32
+	criticalSection(false);
+#endif /* _WIN32 */
 	return ans;
 }
 inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
@@ -71,17 +109,65 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 	char* buf = new char[bufsize];
 	WideCharToMultiByte(CodePage, 0, str.c_str(), -1, buf, bufsize, nullptr, nullptr);
 #else /* _WIN32 */
+	criticalSection(true);
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
-	const wchar_t* srcPtr = str.c_str();
-	const size_t bufsize = wcsrtombs(nullptr, &srcPtr, 0, &mbStat);
-	char* buf = new char[bufsize + 1 /* Do not forget the trailing null */];
-	srcPtr = str.c_str();
-	wcsrtombs(buf, &srcPtr, bufsize, &mbStat);
+	wchar_t* srcBuf = new wchar_t[str.length() + 1]; /* source buffer */
+	memset(srcBuf, 0, (str.length() + 1) * sizeof (wchar_t)); wcsncpy(srcBuf, str.c_str(), str.length());
+
+	std::string buf;
+	for (int pos = 0; pos < str.size(); ++pos) {
+		wctomb(nullptr, str[pos]);
+		char tmpstr[MB_LEN_MAX];
+		memset(tmpstr, 0, MB_LEN_MAX);
+		int rslt = wctomb(tmpstr, str[pos]);
+		if (str[pos] <= 0x007f) { // Keep 7bit ASCII
+			tmpstr[0] = (char)(int)(str[pos]); tmpstr[1] = 0;
+			buf += std::string(tmpstr);
+		} else if (rslt != -1) {
+			buf += std::string(tmpstr);
+		} else if (CodePage == 932) {
+			switch (str[pos]) {
+			case 0xff5e: // FULLWIDTH TILDE
+				tmpstr[0] = 0x81; tmpstr[1] = 0x60; tmpstr[2] = 0; break;
+			case 0x2460: // CIRCLED DIGIT ONE
+				tmpstr[0] = 0x87; tmpstr[1] = 0x40; tmpstr[2] = 0; break;
+			case 0x2461: // CIRCLED DIGIT TWO
+				tmpstr[0] = 0x87; tmpstr[1] = 0x41; tmpstr[2] = 0; break;
+			case 0x2462: // CIRCLED DIGIT THREE
+				tmpstr[0] = 0x87; tmpstr[1] = 0x42; tmpstr[2] = 0; break;
+			case 0x2463: // CIRCLED DIGIT FOUR
+				tmpstr[0] = 0x87; tmpstr[1] = 0x43; tmpstr[2] = 0; break;
+			case 0x2464: // CIRCLED DIGIT FIVE
+				tmpstr[0] = 0x87; tmpstr[1] = 0x44; tmpstr[2] = 0; break;
+			case 0x2465: // CIRCLED DIGIT SIX
+				tmpstr[0] = 0x87; tmpstr[1] = 0x45; tmpstr[2] = 0; break;
+			case 0x2466: // CIRCLED DIGIT SEVEN
+				tmpstr[0] = 0x87; tmpstr[1] = 0x46; tmpstr[2] = 0; break;
+			case 0x2467: // CIRCLED DIGIT EIGHT
+				tmpstr[0] = 0x87; tmpstr[1] = 0x47; tmpstr[2] = 0; break;
+			case 0x2468: // CIRCLED DIGIT NINE
+				tmpstr[0] = 0x87; tmpstr[1] = 0x48; tmpstr[2] = 0; break;
+			case 0x2469: // CIRCLED DIGIT TEN
+				tmpstr[0] = 0x87; tmpstr[1] = 0x49; tmpstr[2] = 0; break;
+			default:
+				tmpstr[0] = '?'; tmpstr[1] = '\0'; break;
+			}
+			buf += std::string(tmpstr);
+		} else {
+			buf += std::string("?");
+		}
+	}
+
 	setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
 #endif /* _WIN32 */
-	std::string ans(buf); delete[] buf;
+	std::string ans(buf); delete[] srcBuf;
+#ifdef _WIN32
+	delete[] buf;
+#else /* _WIN32 */
+	criticalSection(false);
+#endif /* _WIN32 */
 	return ans;
 }
 inline std::wstring UTF8toWIDE(std::string str) {
