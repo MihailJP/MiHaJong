@@ -15,10 +15,11 @@ SOUNDDLL_EXPORT int sound::Initialize() try {
 }
 
 #ifdef _WIN32
-SOUNDDLL_EXPORT int sound::Initialize(HWND hWnd) try {
+SOUNDDLL_EXPORT int sound::Initialize(HWND hWnd)
 #else /* _WIN32 */
-SOUNDDLL_EXPORT int sound::Initialize(void* hWnd) try {
+SOUNDDLL_EXPORT int sound::Initialize(Window hWnd)
 #endif /* _WIN32 */
+try {
 	soundManipulator = new SoundManipulator(hWnd);
 	return 0;
 } catch (CodeConv::tstring& e) {

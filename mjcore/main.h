@@ -18,8 +18,9 @@ private:
 	HWND hWnd;
 	static DWORD WINAPI ThreadMain(LPVOID lpParam);
 #else /*_WIN32*/
-	/* TODO: ñ¢é¿ëïâ”èä */
+	pthread_t hThread;
 	Window hWnd;
+	static void* ThreadMain(void* lpParam);
 #endif /*_WIN32*/
 public:
 #ifdef _WIN32

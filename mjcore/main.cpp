@@ -17,9 +17,10 @@ GameThread::GameThread(GameTypeID gameType, HWND hwnd) {
 }
 #else /*_WIN32*/
 GameThread::GameThread(GameTypeID gameType, Window hwnd) {
-	/* TODO: 未実装箇所 */
 	myGameType = gameType;
 	hWnd = hwnd;
+	pthread_create(&hThread, nullptr, ThreadMain, this);
+	pthread_detach(hThread);
 }
 #endif /*_WIN32*/
 
@@ -35,7 +36,8 @@ GameThread::~GameThread() {
 		TerminateThread(hThread, S_OK);
 	}
 #else /*_WIN32*/
-	/* TODO: 未実装箇所 */
+	warn(_T("スレッドを強制終了します！"));
+	pthread_cancel(hThread);
 #endif /*_WIN32*/
 }
 
@@ -50,7 +52,14 @@ DWORD WINAPI GameThread::ThreadMain(LPVOID lpParam) {
 	return S_OK;
 }
 #else /*_WIN32*/
-/* TODO: 未実装箇所 */
+void* GameThread::ThreadMain(void* lpParam) {
+	GameTypeID gameType = reinterpret_cast<GameThread*>(lpParam)->myGameType;
+	Window hwnd = reinterpret_cast<GameThread*>(lpParam)->hWnd;
+	initapp(gameType, hwnd);
+	startgame(gameType);
+	cleanup();
+	return nullptr;
+}
 #endif /*_WIN32*/
 
 #ifdef _WIN32

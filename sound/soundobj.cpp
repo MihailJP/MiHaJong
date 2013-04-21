@@ -7,10 +7,11 @@
 #include "../common/strcode.h"
 
 #ifdef _WIN32
-void sound::SoundManipulator::InitXAudio(HWND hWnd) {
+void sound::SoundManipulator::InitXAudio(HWND hWnd)
 #else /* _WIN32 */
-void sound::SoundManipulator::InitXAudio(void* hWnd) {
+void sound::SoundManipulator::InitXAudio(Window hWnd)
 #endif /* _WIN32 */
+{
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	HRESULT hr;
 
@@ -77,10 +78,11 @@ sound::SoundManipulator::SoundManipulator() {
 #endif
 }
 #ifdef _WIN32
-sound::SoundManipulator::SoundManipulator(HWND hWnd) {
+sound::SoundManipulator::SoundManipulator(HWND hWnd)
 #else /* _WIN32 */
-sound::SoundManipulator::SoundManipulator(void* hWnd) {
+sound::SoundManipulator::SoundManipulator(Window hWnd)
 #endif /* _WIN32 */
+{
 	InitXAudio(hWnd);
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)

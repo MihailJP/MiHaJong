@@ -7,6 +7,10 @@
 #include <vector>
 #include <regex>
 
+#ifdef None
+#undef None
+#endif
+
 namespace {
 	enum bgmMode {None, Vorbis, Midi,};
 	std::vector<bgmMode> BGM_Mode;

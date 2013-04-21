@@ -17,10 +17,11 @@
 #include "chat.h"
 
 #ifdef _WIN32
-MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
+MJCORE void initapp(GameTypeID gameType, HWND hwnd)
 #else /*_WIN32*/
-MJCORE void initapp(GameTypeID gameType, void* hwnd) {
+MJCORE void initapp(GameTypeID gameType, Window hwnd)
 #endif /*_WIN32*/
+{
 	/* コンフィグファイルのパスを設定する */
 	/* Vista以降、Program Files以下にファイルを作れないので自分で調整する */
 	std::string configFile;

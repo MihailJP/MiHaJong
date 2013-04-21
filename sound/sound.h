@@ -2,6 +2,8 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#else
+#include <X11/Xlib.h>
 #endif
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 #ifdef SOUND_EXPORTS
@@ -31,7 +33,7 @@ namespace sound {
 #ifdef _WIN32
 	SOUNDDLL_EXPORT int Initialize(HWND hWnd); // ‰Šú‰»
 #else /* _WIN32 */
-	SOUNDDLL_EXPORT int Initialize(void*); // ‰Šú‰»
+	SOUNDDLL_EXPORT int Initialize(Window hWnd); // ‰Šú‰»
 #endif /* _WIN32 */
 	SOUNDDLL_EXPORT void Cleanup(); // Œãn––
 
