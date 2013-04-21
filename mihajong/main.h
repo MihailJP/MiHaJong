@@ -16,6 +16,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 
 #else /*_WIN32*/
 
-int main(int argc, char* argv);
+int main(int argc, char** argv);
 
 #endif /*_WIN32*/
