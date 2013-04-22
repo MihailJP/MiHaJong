@@ -62,9 +62,8 @@ int main(int argc, char** argv) {
 	unsigned width, height; bool fullscreen;
 
 	/* ウィンドウ設定情報を先行読み込み */
-	//preferenceInit();
-	//getWindowSize(&width, &height, &fullscreen);
-	width=800; height=600; fullscreen=false;
+	preferenceInit();
+	getWindowSize(&width, &height, &fullscreen);
 
 	/* ウィンドウを初期化する */
 	if (!mihajong_graphic::InitWindow(nullptr, 0, MAKEINTRESOURCE(IDI_ICON1), &hwnd, width, height, fullscreen))
