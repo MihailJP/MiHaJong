@@ -74,7 +74,8 @@ AS_IF([test "x$with_directx" = xno],
 		 AC_CHECK_LIB([opengl32], [main], [], AC_MSG_ERROR([opengl32 is unavailable]))],
 		[AX_PTHREAD([], AC_MSG_ERROR([pthread is unavailable]))
 		 AC_CHECK_LIB([openal], [main], [], AC_MSG_ERROR([openal is unavailable]))
-		 AC_CHECK_LIB([GL], [main], [], AC_MSG_ERROR([GL is unavailable]))]
+		 AC_CHECK_LIB([GL], [main], [], AC_MSG_ERROR([GL is unavailable]))
+		 AC_CHECK_LIB([png], [main], [], AC_MSG_ERROR([libpng is unavailable]))]
 	 )]
 )
 
@@ -122,6 +123,7 @@ AS_IF([test "x$with_directx" = xno],
 		 AC_CHECK_HEADER([fcntl.h], [], AC_MSG_ERROR([fcntl.h is unavailable]))
 		 AC_CHECK_HEADER([X11/Xlib.h], [], AC_MSG_ERROR([X11/Xlib.h is unavailable]))
 		 AC_CHECK_HEADER([X11/Xutil.h], [], AC_MSG_ERROR([X11/Xutil.h is unavailable]))
+		 AC_CHECK_HEADER([png.h], [], AC_MSG_ERROR([png.h is unavailable]))
 		 AC_CHECK_HEADER([sys/stat.h], [], AC_MSG_ERROR([sys/stat.h is unavailable]))]
 	 )
 	 AC_CHECK_HEADER([GL/gl.h], [], AC_MSG_ERROR([GL/gl.h is unavailable]))]

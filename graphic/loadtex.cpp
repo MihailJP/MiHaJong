@@ -2,6 +2,11 @@
 #include "resource.h"
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 #include <gdiplus.h>
+#elif !defined(_WIN32)
+#include "filenum.h"
+#include <png.h>
+#include <cstdio>
+#include <csetjmp>
 #endif
 #include <map>
 #include <cassert>
@@ -84,8 +89,8 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data.Width, data.Height, 0,
 					GL_BGRA_EXT, GL_UNSIGNED_BYTE, data.Scan0);
 				bitmap->UnlockBits(&data);
-				TextureWidth[Textures[(int)resource]] = data.Width;
-				TextureHeight[Textures[(int)resource]] = data.Height;
+				TextureWidth[Textures[(intptr_t)resource]] = data.Width;
+				TextureHeight[Textures[(intptr_t)resource]] = data.Height;
 			}
 		}
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -94,11 +99,69 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		UnlockResource(ResourceMem);
 		if (stream) stream->Release();
 		delete bitmap;
-		*texture = Textures[(int)resource];
+		*texture = Textures[(intptr_t)resource];
 		return;
 #endif
 #else /* _WIN32 */
-		/* TODO: ここの実装。libpngが必要と思われる */
+		/* ファイルをオープン */
+		std::string fileName = dataFileName((intptr_t)resource);
+		CodeConv::tstring fileNameT = CodeConv::EnsureTStr(fileName);
+		FILE* pngFile = fopen(fileName.c_str(), "rb");
+		if (!pngFile)
+			throw (CodeConv::tstring(_T("fopen()失敗。テクスチャ画像 ")) + fileNameT + CodeConv::tstring(_T(" が読み込めませんでした。"))).c_str();
+		/* シグネチャの確認 */
+		unsigned char header[8];
+		fread(header, 1, 8, pngFile);
+		if (!png_sig_cmp(header, 0, 8)) {
+			fclose(pngFile);
+			throw (fileNameT + CodeConv::tstring(_T(" はPNGファイルではありません！"))).c_str();
+		}
+		/* 読み込み準備 */
+		png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+		if (!pngPtr) {
+			fclose(pngFile);
+			throw _T("png_create_read_struct失敗！！");
+		}
+		png_infop infoPtr = png_create_info_struct(pngPtr);
+		if (!infoPtr) {
+			png_destroy_read_struct(&pngPtr, nullptr, nullptr);
+			fclose(pngFile);
+			throw _T("png_create_info_struct失敗！！");
+		}
+		if (setjmp(png_jmpbuf(pngPtr))) { /* C++なのにsetjmpとか勘弁してくれ。 */
+			png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
+			fclose(pngFile);
+			throw (fileNameT + CodeConv::tstring(_T(" の読み込みに失敗しました"))).c_str();
+		}
+		/* ファイルポインタを渡す */
+		png_init_io(pngPtr, pngFile);
+		png_set_sig_bytes(pngPtr, 8);
+		/* 読み込み */
+		png_read_png(pngPtr, infoPtr, PNG_TRANSFORM_IDENTITY, nullptr);
+		png_byte** rows = png_get_rows(pngPtr, infoPtr);
+		unsigned pngWidth = png_get_image_width(pngPtr, infoPtr);
+		unsigned pngHeight = png_get_image_height(pngPtr, infoPtr);
+		unsigned pngChannels = png_get_channels(pngPtr, infoPtr);
+		char* imageDat = new char[pngWidth * pngHeight * pngChannels];
+		for (int y = 0; y < pngHeight; ++y) {
+			memcpy(
+				imageDat + y * pngWidth * pngChannels,
+				rows[pngHeight - y - 1],
+				pngWidth * pngChannels);
+		}
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pngWidth, pngHeight, 0,
+			GL_BGRA_EXT, GL_UNSIGNED_BYTE, imageDat);
+		TextureWidth[Textures[(intptr_t)resource]] = pngWidth;
+		TextureHeight[Textures[(intptr_t)resource]] = pngHeight;
+		/* 解放 */
+		delete[] imageDat;
+		png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
+		fclose(pngFile);
+		return;
 #endif /* _WIN32 */
 	}
 }

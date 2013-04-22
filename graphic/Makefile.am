@@ -44,7 +44,7 @@ libmihajong_graphic_la_CXXFLAGS += -DWITH_DIRECTX
 endif
 if WITH_WINAPI
 else
-libmihajong_graphic_la_CXXFLAGS += -DPKGDATADIR='$(pkgdatadir)' -DUNICODE -D_UNICODE
+libmihajong_graphic_la_CXXFLAGS += -DPKGDATADIR='"$(pkgdatadir)"' -DUNICODE -D_UNICODE
 endif
 libmihajong_graphic_la_LIBADD = ../sound/libmihajong-sound.la
 if WITH_WINAPI
@@ -61,8 +61,10 @@ EXTRA_DIST = \
 	graphic.vcxproj graphic.vcxproj.filters graphic.vcxproj.user
 if WITH_WINAPI
 libmihajong_graphic_la_SOURCES += graphic.rc
+EXTRA_DIST += filenum.cpp filenum.h
 else
 EXTRA_DIST += graphic.rc
+libmihajong_graphic_la_SOURCES += filenum.cpp filenum.h
 endif
 
 .rc.o:
