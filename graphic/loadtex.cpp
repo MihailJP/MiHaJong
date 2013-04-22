@@ -112,7 +112,7 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		/* シグネチャの確認 */
 		unsigned char header[8];
 		fread(header, 1, 8, pngFile);
-		if (!png_sig_cmp(header, 0, 8)) {
+		if (png_sig_cmp(header, 0, 8)) {
 			fclose(pngFile);
 			throw (fileNameT + CodeConv::tstring(_T(" はPNGファイルではありません！"))).c_str();
 		}
