@@ -190,6 +190,7 @@ MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned
 MainWindow::MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen) {
 	Geometry::WindowWidth = width; Geometry::WindowHeight = height;
 	initWindow(hThisInst, nWinMode, fullscreen);
+	myScreenManipulator = new ScreenManipulator(hWnd, fullscreen);
 }
 #endif /*_WIN32*/
 

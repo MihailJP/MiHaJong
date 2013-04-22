@@ -95,7 +95,17 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 	});
 }
 #else /*_WIN32*/
-/* TODO: –¢ŽÀ‘• */
+ScreenManipulator::ScreenManipulator(Window windowHandle, bool fullscreen) {
+	CS_SceneAccess.syncDo<void>([this, windowHandle, fullscreen]() -> void {
+		redrawFlag = false;
+		pDevice = nullptr; hWnd = windowHandle;
+		InitDevice(fullscreen);
+		myScene = new SplashScreen(this);
+		myFPSIndicator = new FPSIndicator(this);
+		lastRedrawTime = 0;
+		redrawFlag = true;
+	});
+}
 #endif /*_WIN32*/
 
 void ScreenManipulator::Render() {

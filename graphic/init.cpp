@@ -21,10 +21,11 @@ ULONG_PTR gdiplusToken;
 #endif
 
 #ifdef _WIN32
-EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr, unsigned width, unsigned height, bool fullscreen) {
+EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr, unsigned width, unsigned height, bool fullscreen)
 #else /*_WIN32*/
-EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwndPtr, unsigned width, unsigned height, bool fullscreen) {
+EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwndPtr, unsigned width, unsigned height, bool fullscreen)
 #endif /*_WIN32*/
+{
 	/* ウィンドウの初期化 */
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 	GdiplusStartup(&gdiplusToken, &gdiplusInput, nullptr);

@@ -4,6 +4,7 @@
 #include <tchar.h>
 #else /*_WIN32*/
 #include "../common/strcode.h"
+#include <X11/Xlib.h>
 #endif /*_WIN32*/
 #include <functional>
 #include "scenes/scene_id.h"
@@ -20,11 +21,11 @@ private:
 #ifdef _WIN32
 	HWND hWnd;
 #else /*_WIN32*/
-	/* TODO: 未実装 */
+	Window hWnd;
 #endif /*_WIN32*/
 	RenderingSysPtr pd3d; // Direct3D
-#ifdef _WIN32
 	DevicePtr pDevice; // Direct3Dデバイス/OpenGLデバイスコンテキスト
+#ifdef _WIN32
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	HGLRC rContext;
 #endif
@@ -53,7 +54,7 @@ public:
 #ifdef _WIN32
 	ScreenManipulator(HWND windowHandle, bool fullscreen);
 #else /*_WIN32*/
-	/* TODO: 未実装 */
+	ScreenManipulator(Window windowHandle, bool fullscreen);
 #endif /*_WIN32*/
 	~ScreenManipulator();
 #ifdef _WIN32
