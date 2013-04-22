@@ -14,6 +14,7 @@ private:
 	CRITICAL_SECTION myCS;
 #else /* _WIN32 */
 	pthread_mutex_t myCS;
+	pthread_mutexattr_t attr;
 #endif /* _WIN32 */
 public:
 #ifdef _WIN32
@@ -24,9 +25,14 @@ public:
 	void release() {LeaveCriticalSection(&myCS);} // ミューテックスを解放
 #else /* _WIN32 */
 	MHJMutex() {
-		myCS = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+		pthread_mutexattr_init(&attr);
+		pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE_NP);
+		pthread_mutex_init(&myCS, &attr);
 	}
-	~MHJMutex() {pthread_mutex_destroy(&myCS);}
+	~MHJMutex() {
+		pthread_mutex_destroy(&myCS);
+		pthread_mutexattr_destroy(&attr);
+	}
 	void acquire() {pthread_mutex_lock(&myCS);} // ミューテックスを獲得
 	bool tryAcquire() {return pthread_mutex_trylock(&myCS) == 0;} // ミューテックスを獲得(ロックしない)
 	void release() {pthread_mutex_unlock(&myCS);} // ミューテックスを解放
