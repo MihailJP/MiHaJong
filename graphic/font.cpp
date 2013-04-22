@@ -3,6 +3,10 @@
 #include "resource.h"
 #ifdef _WIN32
 #include <windows.h>
+#else /*_WIN32*/
+#include "filenum.h"
+#include <cstdio>
+#include <iostream>
 #endif /*_WIN32*/
 #include <cstdint>
 #include <sstream>
@@ -25,8 +29,23 @@ namespace {
 		data = static_cast<const uint8_t*>(::LockResource(rcData));
 	}
 #else /*_WIN32*/
-	/* TODO: Linuxで等価のものを実装すること */
 	void LoadFileInResource(int name, int type, size_t& size, const uint8_t*& data) {
+		static uint8_t* dat = nullptr;
+		std::string fileName = dataFileName(name);
+		FILE* file = fopen(fileName.c_str(), "rt");
+		if (!file) {
+			std::cerr << "Cannot open " << fileName << std::endl;
+			throw _T("フォントマップの読み込みに失敗しました");
+		}
+		fseek(file, 0, SEEK_END);
+		size = ftell(file);
+		fseek(file, 0, SEEK_SET);
+		dat = reinterpret_cast<uint8_t*>(realloc(dat, size + 1));
+		assert(dat != nullptr); // If realloc() fails, then die!
+		fread(dat, 1, size, file);
+		dat[size] = 0;
+		fclose(file);
+		data = dat;
 	}
 #endif /*_WIN32*/
 }
