@@ -14,6 +14,9 @@
 #include "logging.h"
 #include "../common/strcode.h"
 #include "gametbl.h"
+#ifndef _WIN32
+#include <cassert>
+#endif
 
 // -------------------------------------------------------------------------
 
@@ -120,6 +123,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 	delete[] csvdat;
 
 	for (auto k = confdat.begin(); k != confdat.end(); ++k) { // 名前テーブル
+		if ((*k).size() < 11) continue; // Invalid record!!
 		std::string nomenPartisRegulae(toANSI((*k)[8])); // ルールタグ
 		unsigned int numerusPartisRegulae = _ttoi((*k)[0].c_str()); // ルールタグ
 		nametbl[numerusPartisRegulae] = nomenPartisRegulae; // 順方向
