@@ -5,7 +5,13 @@
 #include "func.h"
 #include "ruletbl.h"
 #include <vector>
+#ifdef WITH_BOOST_REGEX
+#include <boost/regex.hpp>
+#define REGEX boost
+#else /*WITH_BOOST_REGEX*/
 #include <regex>
+#define REGEX std
+#endif /*WITH_BOOST_REGEX*/
 
 #ifdef None
 #undef None
@@ -87,8 +93,8 @@ void sound::util::setvolume() {
 	using namespace sound;
 	auto getvolume = [] (std::string ruleTag) -> double {
 		const std::string chipRule(RuleData::chkPreference(ruleTag));
-		std::smatch matchDat; int volperc = 100;
-		if (std::regex_match(chipRule, matchDat, std::regex("vol_(\\d+)")))
+		REGEX::smatch matchDat; int volperc = 100;
+		if (REGEX::regex_match(chipRule, matchDat, REGEX::regex("vol_(\\d+)")))
 			volperc = atoi(matchDat[1].str().c_str()); // ƒ‹[ƒ‹İ’è•¶š—ñ‚©‚ç®”‚ğ’Šo
 		return (double)volperc / 100.0;
 	};

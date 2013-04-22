@@ -166,6 +166,9 @@ AS_IF([test "x$with_oggvorbis" != xno],
 	 MH_OGG_VORBIS_HEADERS]
 )
 
+AX_BOOST_REGEX
+AM_CONDITIONAL(WITH_BOOST_REGEX, test x$want_boost != xno)
+
 AC_CONFIG_FILES([Makefile
                  astro/Makefile
                  graphic/Makefile

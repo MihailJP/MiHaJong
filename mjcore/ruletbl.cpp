@@ -10,7 +10,13 @@
 #include <windows.h>
 #endif /*_WIN32*/
 #include <cassert>
+#ifdef WITH_BOOST_REGEX
+#include <boost/regex.hpp>
+#define REGEX boost
+#else /*WITH_BOOST_REGEX*/
 #include <regex>
+#define REGEX std
+#endif /*WITH_BOOST_REGEX*/
 #include "logging.h"
 #include "decomp.h"
 #include "reader/readrsrc.h"
@@ -329,8 +335,8 @@ MJCORE void preferenceInit() {
 
 MJCORE void getWindowSize(unsigned* width, unsigned* height, bool* fullscreen) {
 	std::string sizeConf(RuleData::chkPreference("scrsize"));
-	std::smatch matchDat;
-	if (std::regex_match(sizeConf, matchDat, std::regex("scr_(\\d+)_(\\d+)"))) {
+	REGEX::smatch matchDat;
+	if (REGEX::regex_match(sizeConf, matchDat, REGEX::regex("scr_(\\d+)_(\\d+)"))) {
 		*width = atoi(matchDat[1].str().c_str());
 		*height = atoi(matchDat[2].str().c_str());
 	} else {
