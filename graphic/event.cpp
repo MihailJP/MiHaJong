@@ -4,6 +4,7 @@
 #ifndef _WIN32
 #include <ctime>
 #include <unistd.h>
+#include <sched.h>
 #endif /*_WIN32*/
 
 namespace mihajong_graphic {
@@ -42,6 +43,9 @@ void Event::set() {
 	myEventMutex.syncDo<void> ([this] {
 		isSignaled = true;
 		pthread_cond_broadcast(&myEvent);
+	});
+	sched_yield();
+	myEventMutex.syncDo<void> ([this] {
 		if (autoResetFlag && waitingThreads)
 			isSignaled = false;
 		waitingThreads = 0;
@@ -69,7 +73,11 @@ DWORD Event::wait(DWORD timeout) {
 uint32_t Event::wait(int32_t timeout) {
 	bool result;
 	if (timeout == 0x7fffffff) {
-		pthread_cond_wait(&myEvent, myEventMutex.getMutex());
+		myEventMutex.syncDo<void> ([this] {
+			while (!isSignaled)
+				pthread_cond_wait(&myEvent, myEventMutex.getMutex());
+		});
+		sched_yield();
 		result = true;
 	} else {
 		timespec destTime;
@@ -80,6 +88,7 @@ uint32_t Event::wait(int32_t timeout) {
 			destTime.tv_sec += 1; destTime.tv_nsec -= 1000000000;
 		}
 		int res = pthread_cond_timedwait(&myEvent, myEventMutex.getMutex(), &destTime);
+		sched_yield();
 		result = (res == 0);
 	}
 	myEventMutex.syncDo<void> ([this] {
