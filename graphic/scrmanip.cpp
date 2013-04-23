@@ -180,6 +180,7 @@ void ScreenManipulator::transit(sceneID scene) {
 		wglMakeCurrent(pDevice, context);
 #else /*_WIN32*/
 		/* TODO: –¢ŽÀ‘• */
+		glXMakeCurrent(disp, hWnd, pDevice);
 #endif /*_WIN32*/
 #endif
 		redrawFlag = false;
@@ -242,6 +243,7 @@ void ScreenManipulator::subscene(unsigned int subsceneID) {
 	wglMakeCurrent(pDevice, context);
 #else /*_WIN32*/
 	/* TODO: –¢ŽÀ‘• */
+	glXMakeCurrent(disp, hWnd, pDevice);
 #endif /*_WIN32*/
 #endif
 	if (myScene)

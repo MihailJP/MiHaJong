@@ -152,7 +152,7 @@ bool MainWindow::WinProc(MainWindow* mainWindow) { // ウィンドウプロシージャ
 }
 
 void MainWindow::initWindow(void* hThisInst, int nWinMode, bool fullscreen) {
-	/* TODO: 未実装です…… */
+	XInitThreads();
 	disp = XOpenDisplay(nullptr); // 接続先ディスプレイは DISPLAY で指定
 	if (disp == nullptr) throw _T("ディスプレイに接続出来ません。Cannot connect to display.");
 	int screen = DefaultScreen(disp);
