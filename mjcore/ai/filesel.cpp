@@ -3,6 +3,8 @@
 #include <sstream>
 #ifdef _WIN32
 #include <windows.h>
+#else  /*_WIN32*/
+#include <dirent.h>
 #endif /*_WIN32*/
 #include "../func.h"
 #include "../random.h"
@@ -11,9 +13,9 @@ std::vector<std::string> aiscript::FileSelector::files; // AIÇÃÉXÉNÉäÉvÉgÉtÉ@ÉCÉ
 
 /* ÉtÉ@ÉCÉãÉäÉXÉgëñç∏ */
 void aiscript::FileSelector::filelist() {
-#ifdef _WIN32
 	std::string confPath = confpath::confPath();
 	if (confPath.empty()) confPath = ".";
+#ifdef _WIN32
 	std::string scriptPath = confPath + std::string("\\ai");
 	std::string scriptFiles = scriptPath + std::string("\\*.lua");
 	files.clear();
@@ -34,7 +36,24 @@ void aiscript::FileSelector::filelist() {
 	/* åüçıäÆóπÅI */
 	FindClose(h);
 #else /*_WIN32*/
-	/* TODO: ñ¢é¿ëïâ”èä */
+	std::string scriptPath = confPath + std::string("/ai");
+	files.clear();
+	info(_T("AIÉXÉNÉäÉvÉgÇåüçıÇµÇ‹Ç∑"));
+
+	/* åüçıäJén */
+	DIR* dir = opendir(scriptPath.c_str());
+	dirent* dirp;
+	if (!dir) {
+		error(_T("ÉtÉ@ÉCÉãåüçıÇ≈Ç´Ç‹ÇπÇÒÅIÅI")); return;
+	}
+	while (dirp = readdir(dir)) { // åüçı
+		if (!strcmp(dirp->d_name + strlen(dirp->d_name) - 4, ".lua")) {
+			CodeConv::tostringstream o; o << _T("åüèo: ") << (dirp->d_name); info(o.str().c_str());
+			files.push_back(scriptPath + std::string("/") + std::string(dirp->d_name));
+		}
+	}
+	/* åüçıäÆóπÅI */
+	closedir(dir);
 #endif /*_WIN32*/
 }
 
