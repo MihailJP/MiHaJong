@@ -10,6 +10,7 @@
 #include <direct.h>
 #else /*_WIN32*/
 #include <sys/stat.h>
+#include <unistd.h>
 #endif /*_WIN32*/
 #include "../common/strcode.h"
 #include "../sound/sound.h"
@@ -191,12 +192,24 @@ namespace confpath {
 #endif
 		}
 #else /*_WIN32*/
-		/* TODO: –¢À‘•‰ÓŠ */
-		/* ~/.mihajong ‚ ‚½‚è‚ª‘Ã“–‚©BŠÂ‹«•Ï”‚ğQÆ‚¹‚æ */
+		/* Linux ‚Å‚ÍA~/.mihajong ‚Éİ’è‚È‚Ç‚ğ•Û‘¶‚·‚é */
 		std::string homedir(getenv("HOME"));
 		configpath = homedir + std::string("/.mihajong");
 		mkdir(configpath.c_str(), 0755);
 		configpath += std::string("/");
+		mkdir((configpath + std::string("haifu")).c_str(), 0755);
+		mkdir((configpath + std::string("ai")).c_str(), 0755);
+
+		symlink(PKGDATADIR "/haifu/haifu.css",
+			(configpath + std::string("/haifu/haifu.css")).c_str());
+		symlink(PKGDATADIR "/haifu/haifu.dtd",
+			(configpath + std::string("/haifu/haifu.dtd")).c_str());
+		symlink(PKGDATADIR "/haifu/haifu.xsd",
+			(configpath + std::string("/haifu/haifu.xsd")).c_str());
+		symlink(PKGDATADIR "/haifu/haifu.xsl",
+			(configpath + std::string("/haifu/haifu.xsl")).c_str());
+		symlink(PKGDATADIR "/ai/default.lua",
+			(configpath + std::string("/ai/default.lua")).c_str());
 #endif /*_WIN32*/
 		return configpath;
 	}
