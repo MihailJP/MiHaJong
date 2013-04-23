@@ -23,12 +23,15 @@ typedef LPD3DXLINE LinePtr;
 #  include <cstdint>
 #  include <array>
 #  include <GL/gl.h>
+#  ifndef _WIN32
+#    include <GL/glx.h>
+#  endif /* _WIN32 */
 typedef uint32_t ArgbColor;
 typedef void* RenderingSysPtr; // OpenGL‚Å‚Í‚½‚Ô‚ñ–¢Žg—p
 #  ifdef _WIN32
 typedef HDC DevicePtr;
 #  else /* _WIN32 */
-typedef void* DevicePtr; // Žb’è
+typedef GLXContext DevicePtr;
 #  endif /* _WIN32 */
 typedef GLuint TexturePtr;
 typedef std::array<GLfloat, 16> TransformMatrix;

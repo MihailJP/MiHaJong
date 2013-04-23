@@ -128,22 +128,27 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen) 
 }
 #else /*_WIN32*/
 bool MainWindow::WinProc(MainWindow* mainWindow) { // ウィンドウプロシージャ
-	XEvent event;
-	XNextEvent(mainWindow->disp, &event); // イベント待機
-	
-	switch (event.type) {
-	case ClientMessage:
-		if (event.xclient.data.l[0] == mainWindow->wmDelMsg) { // ウィンドウを閉じた時
-			XFlush(mainWindow->disp);
-			return false;
+	if (XPending(mainWindow->disp)) { // イベントあり
+		XEvent event;
+		XNextEvent(mainWindow->disp, &event); // イベント待機
+		
+		switch (event.type) {
+		case ClientMessage:
+			if (event.xclient.data.l[0] == mainWindow->wmDelMsg) { // ウィンドウを閉じた時
+				XFlush(mainWindow->disp);
+				return false;
+			}
+			break;
+		default:
+			/* TODO: これは実験用コードです */
+			std::cerr << "Event type " << event.type << std::endl;
+			break;
 		}
-		break;
-	default:
-		/* TODO: これは実験用コードです */
-		std::cerr << "Event type " << event.type << std::endl;
-		break;
+		return true;
+	} else { // イベントなし
+		mainWindow->Render();
+		return true;
 	}
-	return true;
 }
 
 void MainWindow::initWindow(void* hThisInst, int nWinMode, bool fullscreen) {
@@ -190,7 +195,7 @@ MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned
 MainWindow::MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen) {
 	Geometry::WindowWidth = width; Geometry::WindowHeight = height;
 	initWindow(hThisInst, nWinMode, fullscreen);
-	myScreenManipulator = new ScreenManipulator(hWnd, fullscreen);
+	myScreenManipulator = new ScreenManipulator(disp, hWnd, fullscreen);
 }
 #endif /*_WIN32*/
 

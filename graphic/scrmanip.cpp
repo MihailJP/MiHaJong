@@ -36,8 +36,8 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 		return;
 	else // All the four failed
 		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
-#elif defined(_WIN32)
-	/* TODO: Linux移植 */
+#else
+#ifdef _WIN32
 	pDevice = GetDC(hWnd);
 	PIXELFORMATDESCRIPTOR pfd;
 	ZeroMemory(&pfd, sizeof(pfd));
@@ -53,6 +53,32 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 
 	rContext = wglCreateContext(pDevice);
 	wglMakeCurrent(pDevice, rContext);
+#else
+	int numOfElements;
+	
+	int attribs[] = {
+		GLX_RGBA, GLX_DOUBLEBUFFER,
+		GLX_RED_SIZE, 1,
+		GLX_GREEN_SIZE, 1,
+		GLX_BLUE_SIZE, 1,
+		0 /* sentinel */
+	};
+	XVisualInfo* vi = glXChooseVisual(disp, DefaultScreen(disp), attribs);
+	pDevice = glXCreateContext(disp, vi, nullptr, true);
+	XFree(vi);
+#if 0
+	/* glXCreateContextAttribsARB() not supported */
+	GLXFBConfig* fbc = glXChooseFBConfig(disp, DefaultScreen(disp), nullptr, &numOfElements);
+	int attribs[] = {
+		GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
+		GLX_CONTEXT_MINOR_VERSION_ARB, 0,
+		0
+	};
+	pDevice = glXCreateContextAttribsARB(disp, *fbc, 0, true, attribs);
+#endif
+
+	glXMakeCurrent(disp, hWnd, pDevice);
+#endif
 
 	const int textureList[] = { // テクスチャの先行読み込み
 		IDB_PNG_TBLBAIZE,
@@ -95,10 +121,10 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 	});
 }
 #else /*_WIN32*/
-ScreenManipulator::ScreenManipulator(Window windowHandle, bool fullscreen) {
-	CS_SceneAccess.syncDo<void>([this, windowHandle, fullscreen]() -> void {
+ScreenManipulator::ScreenManipulator(Display* displayPtr, Window windowHandle, bool fullscreen) {
+	CS_SceneAccess.syncDo<void>([this, displayPtr, windowHandle, fullscreen]() -> void {
 		redrawFlag = false;
-		pDevice = nullptr; hWnd = windowHandle;
+		pDevice = nullptr; disp = displayPtr; hWnd = windowHandle;
 		InitDevice(fullscreen);
 		myScene = new SplashScreen(this);
 		myFPSIndicator = new FPSIndicator(this);
@@ -122,16 +148,23 @@ void ScreenManipulator::Render() {
 				pDevice->EndScene(); // シーン終了
 				pDevice->Present(nullptr, nullptr, nullptr, nullptr); // 画面の更新
 			}
-#elif defined(_WIN32)
-			/* TODO: Linux移植 */
+#else
+#ifdef _WIN32
 			wglMakeCurrent(pDevice, rContext);
+#else /*_WIN32*/
+			glXMakeCurrent(disp, hWnd, pDevice);
+#endif /*_WIN32*/
 			glClearColor(1, 1, 1, 1); glClear(GL_COLOR_BUFFER_BIT); // バッファクリア
 			SpriteRenderer::instantiate(pDevice)->Start(); // スプライト描画開始
 			if (myScene) myScene->Render(); // 再描画処理
 			if (myFPSIndicator) myFPSIndicator->Render(); // FPS表示
 			SpriteRenderer::instantiate(pDevice)->End(); // スプライト描画終了
 			glFlush();
+#ifdef _WIN32
 			SwapBuffers(pDevice); // 画面の更新
+#else /*_WIN32*/
+			glXSwapBuffers(disp, hWnd); // 画面の更新
+#endif /*_WIN32*/
 #endif
 		}
 	});
@@ -240,6 +273,8 @@ ScreenManipulator::~ScreenManipulator() {
 #endif
 #else /*_WIN32*/
 	/* TODO: 未実装 */
+	glXMakeCurrent(disp, 0, nullptr);
+	glXDestroyContext(disp, pDevice);
 #endif /*_WIN32*/
 }
 

@@ -25,13 +25,11 @@ private:
 #endif /*_WIN32*/
 	RenderingSysPtr pd3d; // Direct3D
 	DevicePtr pDevice; // Direct3Dデバイス/OpenGLデバイスコンテキスト
-#ifdef _WIN32
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+#if defined(_WIN32) && !defined(WITH_DIRECTX)
 	HGLRC rContext;
+#elif !defined(_WIN32)
+	Display* disp;
 #endif
-#else /*_WIN32*/
-	/* TODO: 未実装 */
-#endif /*_WIN32*/
 	Scene* myScene; // シーン管理用のクラス
 	FPSIndicator* myFPSIndicator; // FPS計算・表示
 	uint64_t lastRedrawTime;
@@ -54,7 +52,7 @@ public:
 #ifdef _WIN32
 	ScreenManipulator(HWND windowHandle, bool fullscreen);
 #else /*_WIN32*/
-	ScreenManipulator(Window windowHandle, bool fullscreen);
+	ScreenManipulator(Display* displayPtr, Window windowHandle, bool fullscreen);
 #endif /*_WIN32*/
 	~ScreenManipulator();
 #ifdef _WIN32
