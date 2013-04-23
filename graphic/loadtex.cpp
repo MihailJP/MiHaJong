@@ -144,11 +144,15 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		png_init_io(pngPtr, pngFile);
 		png_set_sig_bytes(pngPtr, 8);
 		/* ì«Ç›çûÇ› */
-		png_read_png(pngPtr, infoPtr, PNG_TRANSFORM_IDENTITY, nullptr);
+		png_read_png(pngPtr, infoPtr,
+			PNG_TRANSFORM_PACKING | PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_EXPAND,
+			nullptr);
 		png_byte** rows = png_get_rows(pngPtr, infoPtr);
-		unsigned pngWidth = png_get_image_width(pngPtr, infoPtr);
-		unsigned pngHeight = png_get_image_height(pngPtr, infoPtr);
+		const unsigned pngWidth = png_get_image_width(pngPtr, infoPtr);
+		const unsigned pngHeight = png_get_image_height(pngPtr, infoPtr);
 		unsigned pngChannels = png_get_channels(pngPtr, infoPtr);
+		if (pngChannels <= 2) pngChannels += 2; /* expanded */
+		assert(pngChannels == 4);
 		char* imageDat = new char[pngWidth * pngHeight * pngChannels];
 		for (int y = 0; y < pngHeight; ++y) {
 			memcpy(
@@ -161,7 +165,7 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pngWidth, pngHeight, 0,
-			GL_BGRA_EXT, GL_UNSIGNED_BYTE, imageDat);
+			GL_BGRA, GL_UNSIGNED_BYTE, imageDat);
 		TextureWidth[Textures[(intptr_t)resource]] = pngWidth;
 		TextureHeight[Textures[(intptr_t)resource]] = pngHeight;
 		/* âï˙ */
