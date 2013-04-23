@@ -145,27 +145,40 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		png_set_sig_bytes(pngPtr, 8);
 		/* 読み込み */
 		png_read_png(pngPtr, infoPtr,
-			PNG_TRANSFORM_PACKING | PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_EXPAND,
+			PNG_TRANSFORM_PACKING | PNG_TRANSFORM_STRIP_16,
 			nullptr);
 		png_byte** rows = png_get_rows(pngPtr, infoPtr);
 		const unsigned pngWidth = png_get_image_width(pngPtr, infoPtr);
 		const unsigned pngHeight = png_get_image_height(pngPtr, infoPtr);
 		unsigned pngChannels = png_get_channels(pngPtr, infoPtr);
-		if (pngChannels <= 2) pngChannels += 2; /* expanded */
-		assert(pngChannels == 4);
-		char* imageDat = new char[pngWidth * pngHeight * pngChannels];
+		char* imageDat = new char[pngWidth * pngHeight * 4];
 		for (int y = 0; y < pngHeight; ++y) {
-			memcpy(
-				imageDat + y * pngWidth * pngChannels,
-				rows[pngHeight - y - 1],
-				pngWidth * pngChannels);
+			switch (pngChannels) {
+			case 4: /* RGBAカラー */
+				memcpy(
+					imageDat + y * pngWidth * pngChannels,
+					rows[y /* Linux/libpngだと逆にする必要がない？ */],
+					pngWidth * pngChannels);
+				break;
+			case 2: /* アルファ付きグレースケール */
+				for (int x = 0; x < pngWidth; ++x) {
+					/* RGBAの順に格納 */
+					imageDat[    (y * pngWidth + x) * 4] =
+						imageDat[(y * pngWidth + x) * 4 + 1] =
+						imageDat[(y * pngWidth + x) * 4 + 2] = rows[y][x * 2];
+					imageDat[    (y * pngWidth + x) * 4 + 3] = rows[y][x * 2 + 1];
+				}
+				break;
+			default:
+				assert(false); // アルファチャンネル無きものスプライト画像の資格なし！
+			}
 		}
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pngWidth, pngHeight, 0,
-			GL_BGRA, GL_UNSIGNED_BYTE, imageDat);
+			GL_RGBA, GL_UNSIGNED_BYTE, imageDat);
 		TextureWidth[Textures[(intptr_t)resource]] = pngWidth;
 		TextureHeight[Textures[(intptr_t)resource]] = pngHeight;
 		/* 解放 */
