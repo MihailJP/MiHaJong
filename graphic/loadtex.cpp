@@ -82,10 +82,10 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 				bitmap = Bitmap::FromStream(stream);
 				Rect rect(0, 0, bitmap->GetWidth(), bitmap->GetHeight());
 				bitmap->LockBits(&rect, ImageLockModeRead, PixelFormat32bppARGB, &data);
-				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data.Width, data.Height, 0,
 					GL_BGRA_EXT, GL_UNSIGNED_BYTE, data.Scan0);
 				bitmap->UnlockBits(&data);
@@ -103,6 +103,13 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		return;
 #endif
 #else /* _WIN32 */
+		/* テクスチャの仮初期化 */
+		Textures[(intptr_t)resource] = 0;
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &Textures[(intptr_t)resource]);
+		TextureWidth[Textures[(intptr_t)resource]] =
+		TextureHeight[Textures[(intptr_t)resource]] = 0;
+		glBindTexture(GL_TEXTURE_2D, Textures[(intptr_t)resource]);
 		/* ファイルをオープン */
 		std::string fileName = dataFileName((intptr_t)resource);
 		CodeConv::tstring fileNameT = CodeConv::EnsureTStr(fileName);
@@ -149,10 +156,10 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 				rows[pngHeight - y - 1],
 				pngWidth * pngChannels);
 		}
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pngWidth, pngHeight, 0,
 			GL_BGRA_EXT, GL_UNSIGNED_BYTE, imageDat);
 		TextureWidth[Textures[(intptr_t)resource]] = pngWidth;
