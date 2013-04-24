@@ -12,6 +12,10 @@ PreferenceConfigScene::PreferenceConfigScene(ScreenManipulator* const manipulato
 		prefstat[i] = rules::getPreference(i);
 	for (unsigned short i = 0; i < RULES_IN_PAGE; i++)
 		editBoxes[i] = nullptr;
+#ifndef _WIN32
+}
+void PreferenceConfigScene::objInit() {
+#endif /*_WIN32*/
 	CreateButton(0, 1240, 1000, 156, 48, _T("‚n ‚j"));
 	CreateButton(1, 1060, 1000, 156, 48, _T("CANCEL"));
 	redrawItems();

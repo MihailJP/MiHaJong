@@ -32,6 +32,10 @@ protected:
 	virtual void BtnEvent_Button_Next();
 protected:
 	signed short int menuCursor;
+#ifndef _WIN32
+	bool menuInitFlag;
+	virtual void objInit() = 0;
+#endif /*_WIN32*/
 	virtual void redrawItems() = 0;
 	virtual void ShowPageCaption() = 0;
 	virtual void ShowMessageBelow() = 0;
@@ -45,6 +49,7 @@ public:
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 #else /*_WIN32*/
 	/* TODO: –¢ŽÀ‘• */
+	virtual void MouseInput(const XEvent* od, int X, int Y);
 #endif /*_WIN32*/
 };
 

@@ -20,6 +20,9 @@ private:
 private:
 	void itemText(unsigned prmID, const CodeConv::tstring& prmName, const CodeConv::tstring& prmContent);
 	void redrawItems();
+#ifndef _WIN32
+	void objInit();
+#endif /*_WIN32*/
 	int prefstat[PREFERENCE_ITEMS];
 	char PrefConf[PREFERENCE_LINES][RULE_IN_LINE + 4];
 	void ShowPageCaption();

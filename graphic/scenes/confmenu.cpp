@@ -10,6 +10,9 @@ namespace mihajong_graphic {
 ConfigMenuProto::ConfigMenuProto(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
 	myButtonPic = new ButtonPic(manipulator->getDevice());
 	menuCursor = 0; buttonCursor = -1; buttonDown = -1;
+#ifndef _WIN32
+	menuInitFlag = false;
+#endif /*_WIN32*/
 }
 
 ConfigMenuProto::~ConfigMenuProto() {
@@ -28,6 +31,12 @@ void ConfigMenuProto::CreateButton(unsigned btnID, int X, int Y, unsigned Width,
 void ConfigMenuProto::Render() {
 	clearWithGameTypeColor(); // バッファクリア
 	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
+#ifndef _WIN32
+	if (!menuInitFlag) {
+		objInit();
+		menuInitFlag = true;
+	}
+#endif /*_WIN32*/
 	{
 		myTextRenderer->NewText(123, Caption(), 540 * WidthRate, 25, 2.0f, WidthRate, 0xffffffff);
 	}
@@ -145,8 +154,16 @@ void ConfigMenuProto::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	}
 }
+#else /*_WIN32*/
+/* TODO: 未実装 */
+#endif /*_WIN32*/
 
-void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+#ifdef _WIN32
+void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)
+#else /*_WIN32*/
+void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
+#endif /*_WIN32*/
+{
 	const int scaledX = (int)((float)X / Geometry::WindowScale() / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight));
 	const int scaledY = (int)((float)Y / Geometry::WindowScale());
 	const int region = whichRegion(scaledX, scaledY);
@@ -179,10 +196,20 @@ void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 			}
 		}
 	};
-	switch (od->dwOfs) {
+#ifdef _WIN32
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	switch (od->type)
+#endif /*_WIN32*/
+	{
+#ifdef _WIN32
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
+#else /*_WIN32*/
+	case MotionNotify: // マウスカーソルを動かした場合
+#endif /*_WIN32*/
 		setcursor();
 		break;
+#ifdef _WIN32
 	case DIMOFS_Z: // ホイールの操作
 		if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
 			setcursor();
@@ -196,21 +223,51 @@ void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		}
 		break;
 	case DIMOFS_BUTTON0: // 左クリック
-		if ((od->dwData) && (region >= 0) && (region <= (itemsPerPage() - 1))) {
+		if ((od->dwData) && (region >= 0) && (region <= (itemsPerPage() - 1)))
+#else /*_WIN32*/
+	case ButtonPress: // マウスの左ボタン
+		if ((od->xbutton.button == Button1) && (region >= 0) && (region <= (itemsPerPage() - 1)))
+#endif /*_WIN32*/
+		{
 			setcursor();
 			BtnEvent_Content_Roll_Up();
 		}
+#ifdef _WIN32
 		else if ((region >= btnRegionStart) && (region < (btnRegionStart + numberOfButtons()))) {
 			setcursor();
 			if (od->dwData) BtnEvent_OK_Down();
 			else BtnEvent_OK_Up();
 		}
 		break;
+#else /*_WIN32*/
+		else if ((od->xbutton.button == Button1) && (region >= btnRegionStart) && (region < (btnRegionStart + numberOfButtons()))) {
+			setcursor();
+			BtnEvent_OK_Down();
+		} else if (od->xbutton.button == Button4) { // ホイールの操作（プラス方向）
+			if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
+				setcursor();
+				BtnEvent_Content_Roll_Up();
+			} else if (region == 40) {
+				BtnEvent_Content_Page_Next();
+			}
+		} else if (od->xbutton.button == Button5) { // ホイールの操作（マイナス方向）
+			if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
+				setcursor();
+				BtnEvent_Content_Roll_Down();
+			} else if (region == 40) {
+				BtnEvent_Content_Page_Prev();
+			}
+		}
+		break;
+	case ButtonRelease: // マウスの左ボタン
+		if ((od->xbutton.button == Button1) && (region >= btnRegionStart) && (region < (btnRegionStart + numberOfButtons()))) {
+			setcursor();
+			BtnEvent_OK_Up();
+		}
+		break;
+#endif /*_WIN32*/
 	}
 }
-#else /*_WIN32*/
-/* TODO: 未実装 */
-#endif /*_WIN32*/
 
 CodeConv::tstring ConfigMenuProto::verInfoText() {
 #ifdef _WIN32
