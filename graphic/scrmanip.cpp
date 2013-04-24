@@ -326,6 +326,17 @@ void ScreenManipulator::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 }
 #else /*_WIN32*/
 /* TODO: –¢ŽÀ‘• */
+
+void ScreenManipulator::mouseInputProc(const XEvent* event) {
+	CS_SceneAccess.syncDo<void>([this, event]() -> void {
+		Window rtw, chw; // ©Žæ“¾‚µ‚ÄŽÌ‚Ä‚é
+		int rtx, rty; // ©Žæ“¾‚µ‚ÄŽÌ‚Ä‚é
+		unsigned mask; // ©Žæ“¾‚µ‚ÄŽÌ‚Ä‚é
+		int x, y; // ©‚±‚ê‚¾‚¯Žg‚¤
+		XQueryPointer(disp, hWnd, &rtw, &chw, &rtx, &rty, &x, &y, &mask);
+		if (myScene) myScene->MouseInput(event, x, y);
+	});
+}
 #endif /*_WIN32*/
 
 }

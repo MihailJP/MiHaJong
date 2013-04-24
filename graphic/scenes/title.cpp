@@ -149,8 +149,16 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	}
 }
+#else /*_WIN32*/
+/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 
-void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+#ifdef _WIN32
+void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)
+#else /*_WIN32*/
+void TitleScreen::MouseInput(const XEvent* od, int X, int Y)
+#endif /*_WIN32*/
+{
 	const bool flag1 = (myTimer.elapsed() > 180u * timePerFrame);
 	const int scaledX = (int)((float)X / Geometry::WindowScale() / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight));
 	const int scaledY = (int)((float)Y / Geometry::WindowScale());
@@ -164,8 +172,17 @@ void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		myTextRenderer->NewText(9, o.str(), 0, 1000);
 	}
 #endif
-	switch (od->dwOfs) {
+#ifdef _WIN32
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	switch (od->type)
+#endif /*_WIN32*/
+	{
+#ifdef _WIN32
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
+#else /*_WIN32*/
+	case MotionNotify: // マウスカーソルを動かした場合
+#endif /*_WIN32*/
 		if (flag1) {
 			switch (region) {
 			case 0: case 1: case 2: case 3: case 4: case 5:
@@ -177,8 +194,14 @@ void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 			}
 		}
 		break;
+#ifdef _WIN32
 	case DIMOFS_BUTTON0: // マウスの左ボタン
-		if (od->dwData) {
+		if (od->dwData)
+#else /*_WIN32*/
+	case ButtonPress: // マウスの左ボタン
+		if (od->xbutton.button == Button1)
+#endif /*_WIN32*/
+		{
 			if ((flag1) && (region != -1))  {
 				sound::Play(sound::IDs::sndButton);
 				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
@@ -190,9 +213,6 @@ void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		break;
 	}
 }
-#else /*_WIN32*/
-/* TODO: 未実装箇所 */
-#endif /*_WIN32*/
 
 // -------------------------------------------------------------------------
 

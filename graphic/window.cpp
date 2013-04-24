@@ -139,6 +139,11 @@ bool MainWindow::WinProc(MainWindow* mainWindow) { // ウィンドウプロシージャ
 				return false;
 			}
 			break;
+		case MotionNotify: // マウスポインタの移動
+		case ButtonPress: // マウスボタンを押した時
+		case ButtonRelease: // マウスボタンを離した時
+			mainWindow->myScreenManipulator->mouseInputProc(&event);
+			break;
 		default:
 			/* TODO: これは実験用コードです */
 			std::cerr << "Event type " << event.type << std::endl;
@@ -173,7 +178,9 @@ void MainWindow::initWindow(void* hThisInst, int nWinMode, bool fullscreen) {
 	hints.min_height = hints.max_height = WindowHeight;
 	XSetWMNormalHints(disp, hWnd, &hints);
 	
-	XSelectInput(disp, hWnd, StructureNotifyMask);
+	XSelectInput(disp, hWnd,
+		PointerMotionMask | ButtonPressMask | ButtonReleaseMask
+		);
 
 	wmDelMsg = XInternAtom(disp, "WM_DELETE_WINDOW", False);
 	XMapWindow(disp, hWnd);

@@ -36,6 +36,7 @@ public:
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {}
 #else /*_WIN32*/
 	/* TODO: Linux‚Å“™‰¿‚Ì‚à‚Ì‚ðŽÀ‘•‚·‚é‚±‚Æ */
+	virtual void MouseInput(const XEvent* od, int X, int Y) {}
 #endif /*_WIN32*/
 	virtual void SetSubscene(unsigned int scene_ID) {}
 };

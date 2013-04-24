@@ -26,6 +26,7 @@ public:
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 #else /*_WIN32*/
 	/* TODO: –¢ŽÀ‘• */
+	virtual void MouseInput(const XEvent* od, int X, int Y);
 #endif /*_WIN32*/
 };
 

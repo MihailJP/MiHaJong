@@ -62,6 +62,7 @@ public:
 #else /*_WIN32*/
 	/* TODO: –¢ŽÀ‘• */
 	DevicePtr getDevice() {return nullptr;}
+	void mouseInputProc(const XEvent* event);
 #endif /*_WIN32*/
 	void transit(sceneID scene);
 	void subscene(unsigned int subsceneID);
