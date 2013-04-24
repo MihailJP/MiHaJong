@@ -281,8 +281,16 @@ CodeConv::tstring ConfigMenuProto::verInfoText() {
 		std::setw(2) << std::setfill(_T('0')) << Zeit.wMinute << _T("•ª");
 	return o.str();
 #else /*_WIN32*/
-	/* TODO: –¢ŽÀ‘•‰ÓŠ */
-	return _T("");
+	CodeConv::tostringstream o;
+	time_t Zeitzahl = time(nullptr); tm Zeit = *localtime(&Zeitzahl);
+	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / Œ»Ý“úŽž ") <<
+		std::setw(4) << (Zeit.tm_year + 1900) << _T("”N") <<
+		std::setw(2) << (Zeit.tm_mon + 1) << _T("ŒŽ") <<
+		std::setw(2) << Zeit.tm_mday << _T("“ú ") <<
+		((Zeit.tm_hour / 12 == 0) ? _T("Œß‘O") : _T("ŒßŒã")) <<
+		std::setw(2) << (Zeit.tm_hour % 12) << _T("Žž") <<
+		std::setw(2) << std::setfill(_T('0')) << Zeit.tm_min << _T("•ª");
+	return o.str();
 #endif /*_WIN32*/
 }
 
