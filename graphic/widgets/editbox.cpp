@@ -14,16 +14,13 @@ namespace mihajong_graphic {
 using namespace character_width;
 
 #ifdef _WIN32
-EditBox::EditBox(HWND hwnd, DevicePtr device, int X, int Y, unsigned width, float scale) {
+EditBox::EditBox(HWND hwnd, DevicePtr device, int X, int Y, unsigned width, float scale)
 #else /*_WIN32*/
-EditBox::EditBox(void* hwnd, DevicePtr device, int X, int Y, unsigned width, float scale) {
+EditBox::EditBox(Window hwnd, DevicePtr device, int X, int Y, unsigned width, float scale)
 #endif /*_WIN32*/
+{
 	assert(width >= 8);
-#ifdef _WIN32
 	myHWnd = hwnd; myDevice = device;
-#else /*_WIN32*/
-	myDevice = device;
-#endif /*_WIN32*/
 	myRegion = std::make_tuple(X, Y, width);
 	myTextRenderer = new SmallTextRenderer(device);
 #if defined(_WIN32) && defined(WITH_DIRECTX)

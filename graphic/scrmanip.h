@@ -61,6 +61,7 @@ public:
 	void inputProc(input::InputManipulator* iManip);
 #else /*_WIN32*/
 	/* TODO: –¢ŽÀ‘• */
+	Window getHWnd() {return hWnd;}
 	DevicePtr getDevice() {return nullptr;}
 	void mouseInputProc(const XEvent* event);
 #endif /*_WIN32*/

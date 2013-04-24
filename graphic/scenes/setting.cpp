@@ -49,11 +49,7 @@ void PreferenceConfigScene::itemText(unsigned prmID, const CodeConv::tstring& pr
 		(prmID / 20 * 720 + 670), 135 + (prmID % 20) * 40 + 35);
 	if (rules::getPreferenceInputSize(ItemNum)) { // エディットボックス
 		if (editBoxes[prmID] == nullptr) {
-#ifdef _WIN32
 			editBoxes[prmID] = new EditBox(caller->getHWnd(), caller->getDevice(),
-#else /*_WIN32*/
-			editBoxes[prmID] = new EditBox(nullptr/*TODO:暫定 */, caller->getDevice(),
-#endif /*_WIN32*/
 				(xPos + 162 + 4) * WidthRate, yPos + 6, 32, 1.5f);
 			const CodeConv::tstring txt(CodeConv::EnsureTStr(rules::getPreferenceRawStr(prmID)));
 			editBoxes[prmID]->setText(txt);

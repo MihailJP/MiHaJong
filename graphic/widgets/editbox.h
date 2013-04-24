@@ -19,6 +19,8 @@ private:
 	static unsigned const halffontsz = 9; // îºäpÇÃâ°ïù
 #ifdef _WIN32
 	HWND myHWnd;
+#else /*_WIN32*/
+	Window myHWnd;
 #endif /*_WIN32*/
 	TexturePtr myTexture;
 	CodeConv::tstring myText;
@@ -46,7 +48,7 @@ public:
 #ifdef _WIN32
 	EditBox(HWND hwnd, DevicePtr device, int X, int Y, unsigned width, float scale = 1.0f);
 #else /*_WIN32*/
-	EditBox(void* hwnd, DevicePtr device, int X, int Y, unsigned width, float scale = 1.0f);
+	EditBox(Window hwnd, DevicePtr device, int X, int Y, unsigned width, float scale = 1.0f);
 #endif /*_WIN32*/
 	~EditBox();
 	void Render();

@@ -42,18 +42,10 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	Reconstruct(GameStatus::retrGameStat());
 	const unsigned logWidth = (unsigned)floor(0.5f + // VC++2010‚Å‚Íround()‚ªŽg‚¦‚È‚¢
 		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
-#ifdef _WIN32
 	logWindow = new logwnd::LogWindow(caller->getHWnd(), caller->getDevice(),
 		1100, 100, logWidth, 20);
 	chatInput = new EditBox(caller->getHWnd(), caller->getDevice(),
 		1100, 100 + 20 * 20 + 10, logWidth);
-#else /*_WIN32*/
-	/* TODO: Žb’è */
-	logWindow = new logwnd::LogWindow(nullptr, caller->getDevice(),
-		1100, 100, logWidth, 20);
-	chatInput = new EditBox(nullptr, caller->getDevice(),
-		1100, 100 + 20 * 20 + 10, logWidth);
-#endif /*_WIN32*/
 	setRegion(ChatInputRegion,
 		1100               , 100 + 20 * 20 + 10,
 		1100 + logWidth * 9, 100 + 20 * 20 + 10 + 20);
