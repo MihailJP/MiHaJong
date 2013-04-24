@@ -84,9 +84,10 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
-	char* srcBuf = new char[str.length() + 1]; /* source buffer */
-	memset(srcBuf, 0, str.length() + 1); strncpy(srcBuf, str.c_str(), str.length());
-	const char* srcPtr = srcBuf;
+	volatile /* Do not optimize memset() out asshole!!! */
+		char* srcBuf = new char[str.length() + 1]; /* source buffer */
+	memset(const_cast<char*>(srcBuf), 0, str.length() + 1); strncpy(const_cast<char*>(srcBuf), str.c_str(), str.length());
+	const char* srcPtr = const_cast<char*>(srcBuf);
 	const size_t bufsize = mbsrtowcs(nullptr, &srcPtr, 0, &mbStat);
 	if (bufsize == (size_t)-1) {
 		setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
@@ -96,7 +97,8 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 		throw _T("ÉèÉCÉhï∂éöÇ÷ÇÃïœä∑Ç…é∏îsÇµÇ‹ÇµÇΩ");
 	}
 	wchar_t* buf = new wchar_t[bufsize + 1 /* Do not forget the trailing null */];
-	srcPtr = srcBuf;
+	memset(buf, 0, (bufsize + 1) * sizeof (wchar_t));
+	srcPtr = const_cast<char*>(srcBuf);
 	mbsrtowcs(buf, &srcPtr, bufsize, &mbStat);
 	setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
 #endif /* _WIN32 */
