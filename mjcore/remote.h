@@ -13,7 +13,8 @@ namespace RemoteAction {
 		DWORD WINAPI thread();
 		static DWORD WINAPI startthread(LPVOID param);
 #else /*_WIN32*/
-		/* TODO: ñ¢é¿ëïâ”èä */
+		void* thread();
+		static void* startthread(void* param);
 #endif /*_WIN32*/
 	public:
 		RemoteDahai(GameTable* const gStat);
@@ -31,7 +32,8 @@ namespace RemoteAction {
 		DWORD WINAPI thread();
 		static DWORD WINAPI startthread(LPVOID param);
 #else /*_WIN32*/
-		/* TODO: ñ¢é¿ëïâ”èä */
+		void* thread();
+		static void* startthread(void* param);
 #endif /*_WIN32*/
 		void checkremotenaki(PlayerID player, int& ReceivedMsg);
 	public:
