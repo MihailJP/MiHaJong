@@ -81,13 +81,18 @@ uint32_t Event::wait(int32_t timeout) {
 		result = true;
 	} else {
 		timespec destTime;
-		clock_gettime(CLOCK_MONOTONIC, &destTime); // 絶対指定なので現在時刻を取得しなければならない
+		clock_gettime(CLOCK_REALTIME, &destTime); // 絶対指定なので現在時刻を取得しなければならない
 		destTime.tv_sec += timeout / 1000; // 引数の単位はミリ秒
 		destTime.tv_nsec += (timeout % 1000) * 1000000;
 		if (destTime.tv_nsec >= 1000000000) { // 繰り上がりの処理
 			destTime.tv_sec += 1; destTime.tv_nsec -= 1000000000;
 		}
-		int res = pthread_cond_timedwait(&myEvent, myEventMutex.getMutex(), &destTime);
+		int res = myEventMutex.syncDo<int> ([this, &destTime] {
+			int r = 0;
+			while ((!isSignaled) && (r == 0))
+				r = pthread_cond_timedwait(&myEvent, myEventMutex.getMutex(), &destTime);
+			return r;
+		});
 		sched_yield();
 		result = (res == 0);
 	}
