@@ -480,8 +480,16 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	}
 }
+#else /*_WIN32*/
+/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 
-void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+#ifdef _WIN32
+void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)
+#else /*_WIN32*/
+void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
+#endif /*_WIN32*/
+{
 	TableProtoScene::MouseInput(od, X, Y);
 	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 	const int scaledX = (int)((float)X / Geometry::WindowScale());
@@ -494,8 +502,17 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	const bool isButton = (region >= ButtonReconst::ButtonRegionNum) &&
 		(region < ButtonReconst::ButtonRegionNum + ButtonReconst::btnMAXIMUM) &&
 		isCursorEnabled;
-	switch (od->dwOfs) {
+#ifdef _WIN32
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	switch (od->type)
+#endif /*_WIN32*/
+	{
+#ifdef _WIN32
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
+#else /*_WIN32*/
+	case MotionNotify: // マウスカーソルを動かした場合
+#endif /*_WIN32*/
 		if ((!chatInput->is_Active()) && (region != tehaiReconst->getTileCursor()) && (isValidTile)) {
 			tehaiReconst->setTileCursor(region);
 			buttonReconst->setCursor();
@@ -512,35 +529,65 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 			tileTipReconst->reconstruct();
 		}
 		break;
+#ifdef _WIN32
 	case DIMOFS_BUTTON0: // マウスクリック
 		if (od->dwData)
+#else /*_WIN32*/
+	case ButtonPress: // マウスクリック
+		if (od->xbutton.button == Button1) {
+#endif /*_WIN32*/
 			subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
 				mySubScene->skipEvent();
 			});
-		if ((!chatInput->is_Active()) && (isValidTile) && (od->dwData))
+		if ((!chatInput->is_Active()) && (isValidTile)
+#ifdef _WIN32
+			&& (od->dwData)
+#endif /*_WIN32*/
+		)
 			FinishTileChoice();
-		else if ((!chatInput->is_Active()) && (isButton) && (od->dwData))
+		else if ((!chatInput->is_Active()) && (isButton)
+#ifdef _WIN32
+			&& (od->dwData)
+#endif /*_WIN32*/
+		)
 			buttonReconst->ButtonPressed();
-		else if ((!chatInput->is_Active()) && (region == ChatInputRegion) && (od->dwData)) {
+		else if ((!chatInput->is_Active()) && (region == ChatInputRegion)
+#ifdef _WIN32
+			&& (od->dwData)
+#endif /*_WIN32*/
+		) {
 			sound::Play(sound::IDs::sndClick);
 			chatInput->activate();
 		}
-		else if ((chatInput->is_Active()) && (region != ChatInputRegion) && (od->dwData)) {
+		else if ((chatInput->is_Active()) && (region != ChatInputRegion)
+#ifdef _WIN32
+			&& (od->dwData)
+#endif /*_WIN32*/
+		) {
 			sound::Play(sound::IDs::sndClick);
 			chatInput->deactivate();
 		}
+#ifdef _WIN32
 		break;
 	case DIMOFS_BUTTON1: // マウス右クリック
-		if ((!chatInput->is_Active()) && (od->dwData) && isNakiSel) { // 鳴き選択中の時
+#else /*_WIN32*/
+		} else if (od->xbutton.button == Button3) {
+#endif /*_WIN32*/
+		if ((!chatInput->is_Active())
+#ifdef _WIN32
+			&& (od->dwData)
+#endif /*_WIN32*/
+			&& isNakiSel
+		) { // 鳴き選択中の時
 			sound::Play(sound::IDs::sndClick);
 			ui::UIEvent->set(naki::nakiNone); // 牌の番号を設定
 		}
+#ifndef _WIN32
+		}
+#endif /*_WIN32*/
 		break;
 	}
 }
-#else /*_WIN32*/
-/* TODO: 未実装箇所 */
-#endif /*_WIN32*/
 
 /* 捨牌を決定する */
 void GameTableScreen::FinishTileChoice() {

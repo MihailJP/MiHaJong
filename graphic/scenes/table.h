@@ -79,6 +79,7 @@ public:
 	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 #else /*_WIN32*/
 	/* TODO: –¢ŽÀ‘• */
+	void MouseInput(const XEvent* od, int X, int Y);
 #endif /*_WIN32*/
 private:
 	void checkTimeout();

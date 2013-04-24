@@ -196,7 +196,7 @@ private:
 #ifdef _WIN32
 		static DWORD WINAPI calculator(LPVOID lpParam);
 #else /*_WIN32*/
-		/* TODO: 未実装箇所 */
+		static void* calculator(void* lpParam);
 #endif /*_WIN32*/
 		int numOfFinishedThreads(); // 終わったスレッドの数
 		static const int threadLimit = 4; // 同時に起動する最大のスレッド数
@@ -213,11 +213,11 @@ private:
 		static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
 #ifdef _WIN32
 		DWORD WINAPI calculate(
+#else /*_WIN32*/
+		void* calculate(
+#endif /*_WIN32*/
 			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
 			const ParseMode* const pMode, YAKUSTAT* const result);
-#else /*_WIN32*/
-		/* TODO: 未実装箇所 */
-#endif /*_WIN32*/
 		static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result);
 		static void checkPostponedYaku(
 			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result,

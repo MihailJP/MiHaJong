@@ -25,7 +25,11 @@
 
 // 計算を実行(マルチスレッドで……大丈夫かなぁ)
 #ifdef _WIN32
-DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) {
+DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam)
+#else /*_WIN32*/
+void* yaku::yakuCalculator::CalculatorThread::calculator(void* lpParam)
+#endif /*_WIN32*/
+{
 	((CalculatorParam*)lpParam)->instance->recordThreadStart();
 	return ((CalculatorParam*)lpParam)->instance->calculate(
 		((CalculatorParam*)lpParam)->gameStat,
@@ -33,9 +37,6 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam) 
 		&(((CalculatorParam*)lpParam)->pMode),
 		&(((CalculatorParam*)lpParam)->result));
 }
-#else /*_WIN32*/
-/* TODO: 未実装箇所 */
-#endif /*_WIN32*/
 
 /* 動いているスレッド数の管理用 */
 int yaku::yakuCalculator::CalculatorThread::numOfFinishedThreads() { // 終わったスレッドの数
@@ -538,6 +539,9 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 /* 計算ルーチン */
 #ifdef _WIN32
 DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
+#else /*_WIN32*/
+void* yaku::yakuCalculator::CalculatorThread::calculate
+#endif /*_WIN32*/
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
 	const ParseMode* const pMode, YAKUSTAT* const result)
 {
@@ -546,7 +550,12 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 		int NumOfMelds = 0;
 		mentsuParser::makementsu(gameStat, analysis->player, *pMode, &NumOfMelds, analysis->MianziDat);
 		if (NumOfMelds < SizeOfMeldBuffer) { // 条件を満たしてないなら抜けます
-			this->recordThreadFinish(); return S_OK;
+			this->recordThreadFinish();
+#ifdef _WIN32
+			return S_OK;
+#else /*_WIN32*/
+			return nullptr;
+#endif /*_WIN32*/
 		}
 		calcbasepoints(gameStat, analysis); // 符を計算する
 		analysis->DuiziCount = countingFacility::countDuiz(analysis->MianziDat);
@@ -630,11 +639,12 @@ DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
 			result->AgariPoints = (LNum)2000; // 満貫にする
 	/* 終了処理 */
 	recordThreadFinish(); // スレッドが終わったことを記録
+#ifdef _WIN32
 	return S_OK;
-}
 #else /*_WIN32*/
-/* TODO: 未実装箇所 */
+	return nullptr;
 #endif /*_WIN32*/
+}
 
 /* コンストラクタとデストラクタ */
 yaku::yakuCalculator::CalculatorThread::CalculatorThread() {
@@ -672,7 +682,9 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	DWORD ThreadID;
 	HANDLE Thread = CreateThread(nullptr, 0, CalculatorThread::calculator, (LPVOID)calcprm, 0, &ThreadID);
 #else /*_WIN32*/
-	/* TODO: 未実装箇所 */
+	pthread_t hThread;
+	pthread_create(&hThread, nullptr, CalculatorThread::calculator, (void*)calcprm);
+	pthread_detach(hThread);
 #endif /*_WIN32*/
 	calculator->sync(1); // 同期(簡略な実装)
 	// 高点法の処理
@@ -702,6 +714,9 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
 #ifdef _WIN32
 	DWORD ThreadID[160]; HANDLE Thread[160];
+#else /*_WIN32*/
+	pthread_t Thread[160];
+#endif /*_WIN32*/
 	for (int i = 0; i < 160; i++) {
 		calcprm[i].instance = calculator;
 		calcprm[i].gameStat = gameStat; calcprm[i].instance = calculator;
@@ -710,9 +725,6 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 		memcpy(&calcprm[i].analysis, &analysis, sizeof(MENTSU_ANALYSIS));
 		YAKUSTAT::Init(&calcprm[i].result);
 	}
-#else /*_WIN32*/
-	/* TODO: 未実装箇所 */
-#endif /*_WIN32*/
 	// 計算を実行
 	for (int i = 4; i < 160; i++) { // 0～3はNoTileなのでやらなくていい
 		while (calculator->numOfFinishedThreads() - calculator->numOfStartedThreads() >= CalculatorThread::threadLimit)
@@ -725,16 +737,27 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 #ifdef _WIN32
 			Thread[i] = CreateThread(nullptr, 0, CalculatorThread::calculator, (LPVOID)(&(calcprm[i])), 0, &(ThreadID[i]));
 			if (Thread[i]) break; // 成功したらそれでよし
+#else /*_WIN32*/
+			if (!pthread_create(Thread + i, nullptr, CalculatorThread::calculator, (void*)(calcprm + i))) {
+				pthread_detach(Thread[i]);
+				break;
+			}
+#endif /*_WIN32*/
 			{ // なんで失敗すんねんこのドアホ……
 				CodeConv::tostringstream o;
-				o << _T("スレッドの開始に失敗しました。 ループ[") << i << _T("] エラーコード [") <<
-					std::hex << std::setw(8) << std::setfill(_T('0')) << GetLastError() << _T(']');
-				error(o.str().c_str());
-				Sleep(100);
-			}
-#else /*_WIN32*/
-		/* TODO: 未実装箇所 */
+				o << _T("スレッドの開始に失敗しました。 ループ [") << i <<
+#ifdef _WIN32
+					_T("] エラーコード [") <<
+					std::hex << std::setw(8) << std::setfill(_T('0')) << GetLastError() <<
 #endif /*_WIN32*/
+					_T(']');
+				error(o.str().c_str());
+#ifdef _WIN32
+				Sleep(100);
+#else /*_WIN32*/
+				usleep(100000);
+#endif /*_WIN32*/
+			}
 		} while (true);
 #ifdef _WIN32
 		Sleep(1);
