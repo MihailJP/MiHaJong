@@ -42,7 +42,7 @@ public:
 #ifdef _WIN32
 	static DWORD WINAPI execute(LPVOID param);
 #else /*_WIN32*/
-	/* TODO: ñ¢é¿ëïâ”èä */
+	static void* execute(void* param);
 #endif /*_WIN32*/
 private:
 	const GameTable* i_gameStat;
@@ -51,7 +51,7 @@ private:
 #ifdef _WIN32
 	static DWORD WINAPI calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished);
 #else /*_WIN32*/
-	/* TODO: ñ¢é¿ëïâ”èä */
+	static void* calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished);
 #endif /*_WIN32*/
 };
 
@@ -63,7 +63,7 @@ public:
 #ifdef _WIN32
 	static DWORD WINAPI execute(LPVOID param);
 #else /*_WIN32*/
-	/* TODO: ñ¢é¿ëïâ”èä */
+	static void* execute(void* param);
 #endif /*_WIN32*/
 private:
 	GameTable* i_gameStat;
@@ -71,7 +71,7 @@ private:
 #ifdef _WIN32
 	static DWORD WINAPI calculate(GameTable* const gameStat, bool* const finished);
 #else /*_WIN32*/
-	/* TODO: ñ¢é¿ëïâ”èä */
+	static void* calculate(GameTable* const gameStat, bool* const finished);
 #endif /*_WIN32*/
 };
 
