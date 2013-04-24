@@ -174,6 +174,12 @@ TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativeP
 	myDevice = device; relativePlayerID = relativePos; xpos = x; ypos = y; wScale = widthScale;
 	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR));
 	nameText = new SmallTextRenderer(device);
+#ifndef _WIN32
+	initialized = false;
+}
+void TableProtoScene::ScoreBoard::objInit() {
+	const int x = xpos, y = ypos;
+#endif /*_WIN32*/
 	// s—ñ‚Ì\’z
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix tmpmtx;
@@ -207,6 +213,12 @@ TableProtoScene::ScoreBoard::ScoreMode TableProtoScene::ScoreBoard::getScoreMode
 }
 
 void TableProtoScene::ScoreBoard::Render() {
+#ifndef _WIN32
+	if (!initialized) {
+		objInit();
+		initialized = true;
+	}
+#endif /*_WIN32*/
 	RECT rect = {0, 0, PanelWidth, PanelHeight};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos, (int)ypos,
 		PanelWidth, PanelHeight, 0xffffffff, &rect, 0, 0, &myMatrix);

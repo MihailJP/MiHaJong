@@ -52,6 +52,9 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	mySubScene = new TableSubsceneNormal(manipulator->getDevice());
 	myTextRenderer = new TextRenderer(manipulator->getDevice());
 	tileSelectMode = 0;
+#ifndef _WIN32
+	reconstructFlag = true;
+#endif /*_WIN32*/
 }
 
 GameTableScreen::~GameTableScreen() {
@@ -194,6 +197,12 @@ void GameTableScreen::Render() {
 	cls();
 	RenderTable();
 	subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
+#ifndef _WIN32
+		if (reconstructFlag) {
+			tileTipReconst->reconstruct();
+			reconstructFlag = false;
+		}
+#endif /*_WIN32*/
 		checkTimeout();
 		mySubScene->Render();
 	});
@@ -207,6 +216,9 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		tileSelectMode = 0;
 		delete mySubScene; tehaiReconst->setTileCursor();
 		tileTipReconst->reconstruct();
+#ifndef _WIN32
+		reconstructFlag = true;
+#endif /*_WIN32*/
 		ui::UIEvent->reset(); ui::cancellableWait->reset();
 		switch (static_cast<TableSubsceneID>(scene_ID)) {
 		case tblSubsceneBeginning:

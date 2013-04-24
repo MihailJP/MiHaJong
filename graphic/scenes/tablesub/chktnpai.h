@@ -13,6 +13,9 @@ private:
 	bool tenpaiflag[Players];
 	MachihaiInfo machiInfo[Players];
 private:
+#ifndef _WIN32
+	bool initialized;
+#endif /*_WIN32*/
 	void RecalcTenpaiFlag();
 	void CalculateTenpaiFlag(PlayerID player, int x, int y);
 	void ShowTenpaiFlag(PlayerID player, int x, int y);

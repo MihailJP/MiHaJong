@@ -38,6 +38,11 @@ public:
 };
 
 class TableProtoScene::ScoreBoard {
+#ifndef _WIN32
+private:
+	bool initialized;
+	void objInit();
+#endif /*_WIN32*/
 private:
 	Timer myTimer;
 private:

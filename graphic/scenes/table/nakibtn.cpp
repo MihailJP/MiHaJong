@@ -76,6 +76,12 @@ int GameTableScreen::ButtonReconst::decCursor() {
 
 void GameTableScreen::ButtonReconst::Render() {
 	reconstructionCS.syncDo<void>([this]() -> void {
+#ifndef _WIN32
+		if (!initialized) {
+			reconstruct();
+			initialized = true;
+		}
+#endif /*_WIN32*/
 		if (cursor != CursorDisabled) {
 #include "color.h"
 			Color btnColor; btnColor.rgbaAsOneValue = buttonDat[currentButtonSet][cursor].color;
@@ -130,6 +136,9 @@ void GameTableScreen::ButtonReconst::ChangeButtonSet(ButtonSet btnSet) {
 		sunkenButton = NoSunkenButton;
 		buttonEnabled.reset();
 		reconstruct();
+#ifndef _WIN32
+		initialized = false;
+#endif /*_WIN32*/
 	});
 }
 

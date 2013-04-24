@@ -25,6 +25,9 @@ protected:
 	EditBox* chatInput; // チャット入力欄
 	static const unsigned ChatInputRegion = 99;
 	TextRenderer* myTextRenderer; // 文字表示
+#ifndef _WIN32
+	bool reconstructFlag;
+#endif /*_WIN32*/
 protected:
 	TableSubscene* mySubScene; // サブシーンオブジェクト
 	MHJMutex subSceneCS; // サブシーン切り替え用クリティカルセクション
