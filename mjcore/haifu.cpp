@@ -331,7 +331,25 @@ void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // 現在時刻タグ
 		std::noshowpos << std::setw(2) << std::setfill(_T('0')) << ((-tz.Bias) % 60) <<
 		_T("</") << tagName << _T(">") << std::endl;
 #else /*_WIN32*/
-	/* TODO: 未実装箇所 */
+	timespec tempus; clock_gettime(CLOCK_REALTIME, &tempus);
+	tm currTime = *localtime(&tempus.tv_sec);
+	const signed long tz = []() -> signed long {
+		time_t t1 = 86400; // GNU Cはそうではないが、time_tがunsignedの処理系を見たことがあるので86400とする
+		tm* tmDat = gmtime(&t1); // 協定世界時を算出
+		time_t t2 = mktime(tmDat); // わざと地方時と解釈することで時差を求める
+		return t1 - t2; // 秒単位で時差を返す。日本時間だったら32400となる
+	}();
+	XMLhaifuBuffer << _T("\t\t<") << tagName << _T(">") <<
+		std::setw(4) << std::setfill(_T('0')) << (currTime.tm_year + 1900) << _T("-") <<
+		std::setw(2) << std::setfill(_T('0')) << (currTime.tm_mon + 1) << _T("-") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.tm_mday << _T("T") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.tm_hour << _T(":") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.tm_min << _T(":") <<
+		std::setw(2) << std::setfill(_T('0')) << currTime.tm_sec << _T(".") <<
+		std::setw(3) << std::setfill(_T('0')) << (tempus.tv_nsec / 1000000) <<
+		std::showpos << std::setw(3) << std::setfill(_T('0')) << std::internal << ((tz + 86400) / 3600 - 86400) << _T(":") <<
+		std::noshowpos << std::setw(2) << std::setfill(_T('0')) << ((tz + 86400) % 3600 / 60 - 86400) <<
+		_T("</") << tagName << _T(">") << std::endl;
 #endif /*_WIN32*/
 }
 
@@ -1128,7 +1146,13 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	filename2 << std::setw(2) << std::setfill('0') << ltime.wHour;
 	filename2 << std::setw(2) << std::setfill('0') << ltime.wMinute;
 #else /*_WIN32*/
-	/* TODO: 未実装箇所 */
+	time_t tempus = time(nullptr);
+	tm ltime = *localtime(&tempus);
+	filename2 << std::setw(4) << std::setfill('0') << (ltime.tm_year + 1900);
+	filename2 << std::setw(2) << std::setfill('0') << (ltime.tm_mon + 1);
+	filename2 << std::setw(2) << std::setfill('0') << ltime.tm_mday << "_";
+	filename2 << std::setw(2) << std::setfill('0') << ltime.tm_hour;
+	filename2 << std::setw(2) << std::setfill('0') << ltime.tm_min;
 #endif /*_WIN32*/
 
 	/* ファイル書き出し */
