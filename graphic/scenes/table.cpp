@@ -377,6 +377,7 @@ void GameTableScreen::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 }
 void GameTableScreen::KeyboardInput(WPARAM wParam, LPARAM lParam)
 #else /*_WIN32*/
+/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢ŽÀ‘• */
 void GameTableScreen::KeyboardInput(const XEvent* od)
 #endif /*_WIN32*/
 {

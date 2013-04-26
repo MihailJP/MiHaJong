@@ -1,12 +1,11 @@
 #include "input.h"
+#ifdef _WIN32
 #include "init.h"
 #include "../common/strcode.h"
 
 namespace mihajong_graphic {
 namespace input {
 
-/* TODO: Linux‚Å“™‰¿‚Ì‚à‚Ì‚ðŽÀ‘•‚·‚é‚±‚Æ */
-#ifdef _WIN32
 // -------------------------------------------------------------------------
 
 InputManipulator::InputManipulator(HWND hwnd) {
@@ -88,9 +87,9 @@ Mouse::Position Mouse::pos() {
 	ScreenToClient(hWnd, &mpos);
 	return Position(mpos.x, mpos.y);
 }
-#endif /*_WIN32*/
 
 // -------------------------------------------------------------------------
 
 }
 }
+#endif /*_WIN32*/

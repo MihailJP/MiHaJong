@@ -179,7 +179,7 @@ void ScreenManipulator::transit(sceneID scene) {
 		wglShareLists(rContext, context);
 		wglMakeCurrent(pDevice, context);
 #else /*_WIN32*/
-		/* TODO: 未実装 */
+		// Linuxでは別のコンテキストにする必要なし？
 		glXMakeCurrent(disp, hWnd, pDevice);
 #endif /*_WIN32*/
 #endif
@@ -214,23 +214,15 @@ void ScreenManipulator::transit(sceneID scene) {
 			myScene = new ResultScreen(this); redrawFlag = true;
 			break;
 		default:
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(WITH_DIRECTX)
 			wglMakeCurrent(nullptr, nullptr);
 			wglDeleteContext(context);
-#else /*_WIN32*/
-			/* TODO: 未実装 */
-#endif /*_WIN32*/
 #endif
 			throw _T("正しくないシーン番号が指定されました");
 		}
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(WITH_DIRECTX)
 		wglMakeCurrent(nullptr, nullptr);
 		wglDeleteContext(context);
-#else /*_WIN32*/
-		/* TODO: 未実装 */
-#endif /*_WIN32*/
 #endif
 	});
 }
@@ -242,19 +234,15 @@ void ScreenManipulator::subscene(unsigned int subsceneID) {
 	wglShareLists(rContext, context);
 	wglMakeCurrent(pDevice, context);
 #else /*_WIN32*/
-	/* TODO: 未実装 */
+	
 	glXMakeCurrent(disp, hWnd, pDevice);
 #endif /*_WIN32*/
 #endif
 	if (myScene)
 		myScene->SetSubscene(subsceneID);
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(WITH_DIRECTX)
 	wglMakeCurrent(nullptr, nullptr);
 	wglDeleteContext(context);
-#else /*_WIN32*/
-	/* TODO: 未実装 */
-#endif /*_WIN32*/
 #endif
 }
 
@@ -274,7 +262,6 @@ ScreenManipulator::~ScreenManipulator() {
 	ReleaseDC(hWnd, pDevice);
 #endif
 #else /*_WIN32*/
-	/* TODO: 未実装 */
 	glXMakeCurrent(disp, 0, nullptr);
 	glXDestroyContext(disp, pDevice);
 #endif /*_WIN32*/
@@ -325,7 +312,7 @@ void ScreenManipulator::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 	});
 }
 #else /*_WIN32*/
-/* TODO: 未実装 */
+/* TODO: Linuxでは日本語入力が未実装 */
 
 void ScreenManipulator::kbdInputProc(const XEvent* event) {
 	CS_SceneAccess.syncDo<void>([this, event]() -> void {

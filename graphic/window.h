@@ -26,8 +26,7 @@ private:
 	ScreenManipulator* myScreenManipulator; // DirectX オブジェクト
 #ifdef _WIN32
 	input::InputManipulator* myInputManipulator; // DirectInput
-#else /*_WIN32*/
-	/* TODO: 未実装 */
+	// Linuxでは別の箇所で入力イベントを処理するため不要
 #endif /*_WIN32*/
 	static const LPTSTR myWindowClassName, WindowCaption;
 	static unsigned& WindowWidth, & WindowHeight;
@@ -37,7 +36,6 @@ private:
 	void initWindowClass(HINSTANCE hThisInst, LPCTSTR icon); // ウィンドウクラスの初期化
 	void initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen); // ウィンドウの生成
 #else /*_WIN32*/
-	/* TODO: 未実装 */
 	void initWindow(void* hThisInst, int nWinMode, bool fullscreen); // ウィンドウの生成
 public:
 	static bool WinProc(MainWindow* mainWindow); // ウィンドウプロシージャ

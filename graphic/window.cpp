@@ -220,11 +220,10 @@ void MainWindow::Render() { // ウィンドウの再描画
 	if (myScreenManipulator) {
 		myScreenManipulator->Render();
 #ifdef _WIN32
+		// Windowsのみ。Linuxでは別の箇所で入力イベントを扱うので不要
 		ValidateRect(hWnd, nullptr);
 		if (myInputManipulator)
 			myScreenManipulator->inputProc(myInputManipulator);
-#else /*_WIN32*/
-		/* TODO: 未実装箇所 */
 #endif /*_WIN32*/
 	}
 	return;

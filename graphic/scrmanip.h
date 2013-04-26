@@ -37,8 +37,7 @@ private:
 	void InitDevice(bool fullscreen); // Direct3D オブジェクト初期化
 #ifdef _WIN32
 	void inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f);
-#else /*_WIN32*/
-	/* TODO: 未実装 */
+	// Linuxでは別の箇所で入力イベントを処理するため不要
 #endif /*_WIN32*/
 	MHJMutex CS_SceneAccess; // シーンアクセスのクリティカルセクション
 public:
@@ -46,7 +45,7 @@ public:
 	void inputProc(WPARAM wParam, LPARAM lParam);
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 #else /*_WIN32*/
-	/* TODO: 未実装 */
+	/* TODO: Linuxでは日本語入力が未実装 */
 	void kbdInputProc(const XEvent* event);
 #endif /*_WIN32*/
 	void Render(); // 画面の再描画
@@ -61,7 +60,6 @@ public:
 	DevicePtr getDevice() {return pDevice;}
 	void inputProc(input::InputManipulator* iManip);
 #else /*_WIN32*/
-	/* TODO: 未実装 */
 	Window getHWnd() {return hWnd;}
 	DevicePtr getDevice() {return nullptr;}
 	void mouseInputProc(const XEvent* event);

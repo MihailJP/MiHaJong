@@ -3,14 +3,11 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <dinput.h>
-#endif /*_WIN32*/
 #include <utility>
 
 namespace mihajong_graphic {
 namespace input {
 
-/* TODO: Linux‚Å“™‰¿‚Ì‚à‚Ì‚ðŽÀ‘•‚·‚é‚±‚Æ */
-#ifdef _WIN32
 class InputDevice {
 protected:
 	LPDIRECTINPUTDEVICE8 myInputDevice;
@@ -44,7 +41,7 @@ public:
 	Keyboard* kbd() {return myKeyboard;}
 	Mouse* mouse() {return myMouse;}
 };
-#endif /*_WIN32*/
 
 }
 }
+#endif /*_WIN32*/

@@ -106,7 +106,7 @@ EXPORT void CleanupWindow() {
 
 #ifndef _WIN32
 EXPORT bool Event() {
-	return MainWindow::WinProc(myMainWindow); // TODO: ‰¼’u‚«
+	return MainWindow::WinProc(myMainWindow);
 }
 #endif /*_WIN32*/
 

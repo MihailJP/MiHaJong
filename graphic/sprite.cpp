@@ -11,19 +11,17 @@ std::map<intptr_t, SpriteRenderer*> SpriteRenderer::renderer;
 /* コンストラクタ */
 SpriteRenderer::SpriteRenderer(DevicePtr device) {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
+	// Direct3Dのみ。OpenGLでは不要？
 	if (FAILED(D3DXCreateSprite(device, &sprite)))
 		throw _T("スプライトの生成に失敗しました");
-#else
-	/* TODO: OpenGLで再実装 */
 #endif
 }
 
 /* デストラクタ */
 SpriteRenderer::~SpriteRenderer() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
+	// Direct3Dのみ。OpenGLでは不要？
 	if (sprite) sprite->Release();
-#else
-	/* TODO: OpenGLで再実装 */
 #endif
 }
 
@@ -47,18 +45,16 @@ void SpriteRenderer::delInstance(DevicePtr device) {
 /* スプライト描画開始 */
 void SpriteRenderer::Start() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
+	// Direct3Dのみ。OpenGLでは不要？
 	sprite->Begin(D3DXSPRITE_ALPHABLEND);
-#else
-	/* TODO: OpenGLで再実装 */
 #endif
 }
 
 /* スプライト描画終了 */
 void SpriteRenderer::End() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
+	// Direct3Dのみ。OpenGLでは不要？
 	sprite->End();
-#else
-	/* TODO: OpenGLで再実装 */
 #endif
 }
 

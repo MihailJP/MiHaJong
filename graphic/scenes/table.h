@@ -81,6 +81,7 @@ public:
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 #else /*_WIN32*/
+	/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢ŽÀ‘• */
 	void KeyboardInput(const XEvent* od);
 	void MouseInput(const XEvent* od, int X, int Y);
 #endif /*_WIN32*/

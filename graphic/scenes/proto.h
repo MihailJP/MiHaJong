@@ -35,7 +35,7 @@ public:
 	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od) {}
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {}
 #else /*_WIN32*/
-	/* TODO: Linux‚Å“™‰¿‚Ì‚à‚Ì‚ðŽÀ‘•‚·‚é‚±‚Æ */
+	/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢ŽÀ‘• */
 	virtual void KeyboardInput(const XEvent* od) {}
 	virtual void MouseInput(const XEvent* od, int X, int Y) {}
 #endif /*_WIN32*/

@@ -451,7 +451,7 @@ void EditBox::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 	}
 }
 #else /*_WIN32*/
-/* TODO: –¢À‘•‰ÓŠ */
+/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢À‘• */
 #endif /*_WIN32*/
 
 void EditBox::setText(const CodeConv::tstring& newstr) {

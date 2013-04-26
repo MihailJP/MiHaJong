@@ -56,7 +56,7 @@ public:
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 #else /*_WIN32*/
-	/* TODO: 未実装 */
+	/* TODO: Linuxでは日本語入力が未実装 */
 	void KeyboardInput(const XEvent* od);
 #endif /*_WIN32*/
 	void activate() {isActive = true;}
@@ -84,7 +84,7 @@ public:
 	std::tuple<unsigned, std::vector<CodeConv::tstring>, unsigned, unsigned> getCandidateList();
 };
 #else /*_WIN32*/
-/* TODO: ダミー実装 */
+/* TODO: Linuxでは日本語入力が未実装（この実装はダミー） */
 class EditBox::IMStat { // IMEの状態(ダミー)
 private:
 	IMStat(const IMStat&) {}; // disable copy constructor

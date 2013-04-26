@@ -251,6 +251,7 @@ void PreferenceConfigScene::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) 
 }
 void PreferenceConfigScene::KeyboardInput(WPARAM wParam, LPARAM lParam)
 #else /*_WIN32*/
+/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢ŽÀ‘• */
 void PreferenceConfigScene::KeyboardInput(const XEvent* od)
 #endif /*_WIN32*/
 {
