@@ -9,6 +9,9 @@
 #include "../common/seatrank.h"
 #ifdef MJCORE_EXPORTS
 #include "ruletbl.h"
+#ifndef _WIN32
+#include <sys/stat.h>
+#endif
 #endif
 
 // -------------------------------------------------------------------------
@@ -176,8 +179,8 @@ inline bool exist (LPCSTR filename) {
 }
 #else /*_WIN32*/
 inline bool exist (const char* filename) {
-	/* TODO: ñ¢é¿ëïâ”èä */
-	return true;
+	struct stat st;
+	return stat(filename, &st) == 0;
 }
 #endif /*_WIN32*/
 #endif
