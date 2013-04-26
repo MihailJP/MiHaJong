@@ -10,6 +10,9 @@
 #include "../event.h"
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
+#ifndef _WIN32
+#include "../keycode.h"
+#endif /*_WIN32*/
 
 namespace mihajong_graphic {
 
@@ -113,9 +116,19 @@ void TitleScreen::Render() {
 }
 
 #ifdef _WIN32
-void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od)
+#else /*_WIN32*/
+void TitleScreen::KeyboardInput(const XEvent* od)
+#endif /*_WIN32*/
+{
+#ifdef _WIN32
 	const bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->dwData));
-	switch (od->dwOfs) {
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	const bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->type == KeyPress));
+	switch (od->xkey.keycode)
+#endif /*_WIN32*/
+	{
 	case DIK_UP: case DIK_K: // カーソル上
 		if (flag) {
 			sound::Play(sound::IDs::sndCursor);
@@ -132,7 +145,11 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		if (flag) {
 			sound::Play(sound::IDs::sndButton);
 			ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+#ifdef _WIN32
 		} else if (od->dwData) {
+#else /*_WIN32*/
+		} else if (od->type == KeyPress) {
+#endif /*_WIN32*/
 			sound::Play(sound::IDs::sndClick);
 			myTimer.skipTo(180 * timePerFrame);
 		}
@@ -149,9 +166,6 @@ void TitleScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	}
 }
-#else /*_WIN32*/
-/* TODO: 未実装箇所 */
-#endif /*_WIN32*/
 
 #ifdef _WIN32
 void TitleScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)

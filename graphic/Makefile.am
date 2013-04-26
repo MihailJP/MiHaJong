@@ -61,10 +61,10 @@ EXTRA_DIST = \
 	graphic.vcxproj graphic.vcxproj.filters graphic.vcxproj.user
 if WITH_WINAPI
 libmihajong_graphic_la_SOURCES += graphic.rc
-EXTRA_DIST += filenum.cpp filenum.h
+EXTRA_DIST += filenum.cpp filenum.h keycode.h
 else
 EXTRA_DIST += graphic.rc
-libmihajong_graphic_la_SOURCES += filenum.cpp filenum.h
+libmihajong_graphic_la_SOURCES += filenum.cpp filenum.h keycode.h
 endif
 
 .rc.o:
