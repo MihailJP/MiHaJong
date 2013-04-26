@@ -123,6 +123,7 @@ AS_IF([test "x$with_directx" = xno],
 		 AC_CHECK_HEADER([fcntl.h], [], AC_MSG_ERROR([fcntl.h is unavailable]))
 		 AC_CHECK_HEADER([X11/Xlib.h], [], AC_MSG_ERROR([X11/Xlib.h is unavailable]))
 		 AC_CHECK_HEADER([X11/Xutil.h], [], AC_MSG_ERROR([X11/Xutil.h is unavailable]))
+		 AC_CHECK_HEADER([X11/keysym.h], [], AC_MSG_ERROR([X11/keysym.h is unavailable]))
 		 AC_CHECK_HEADER([GL/glx.h], [], AC_MSG_ERROR([GL/glx.h is unavailable]))
 		 AC_CHECK_HEADER([png.h], [], AC_MSG_ERROR([png.h is unavailable]))
 		 AC_CHECK_HEADER([sys/stat.h], [], AC_MSG_ERROR([sys/stat.h is unavailable]))

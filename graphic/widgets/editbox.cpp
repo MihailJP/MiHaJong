@@ -8,6 +8,10 @@
 #include <cassert>
 #include <algorithm>
 #include <stdexcept>
+#ifndef _WIN32
+#include <X11/keysym.h>
+#include "../keycode.h"
+#endif /*_WIN32*/
 
 namespace mihajong_graphic {
 
@@ -350,29 +354,74 @@ void EditBox::Render() {
 }
 
 #ifdef _WIN32
-void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
+void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam)
+#else /*_WIN32*/
+void EditBox::KeyboardInput(const XEvent* od)
+#endif /*_WIN32*/
+{
 	if (!isActive) return;
-	if (wParam == CHARDAT_CURSOR_LEFT) { // Cursor key
+#ifdef _WIN32
+	if (wParam == CHARDAT_CURSOR_LEFT)
+#else /*_WIN32*/
+	if (od->type != KeyPress) return;
+	if (od->xkey.keycode == DIK_LEFT)
+#endif /*_WIN32*/
+	{ // Cursor key
 		if (cursorPos > 0) --cursorPos;
 		try {
 			if (isLeadingByte(myText, cursorPos - 1)) --cursorPos;
 		} catch (std::out_of_range&) {}
-	} else if (wParam == CHARDAT_CURSOR_RIGHT) { // Cursor key
+	}
+#ifdef _WIN32
+	else if (wParam == CHARDAT_CURSOR_RIGHT)
+#else /*_WIN32*/
+	else if (od->xkey.keycode == DIK_RIGHT)
+#endif /*_WIN32*/
+	{ // Cursor key
 		try {
 			if (isLeadingByte(myText, cursorPos)) ++cursorPos;
 			if (cursorPos < myText.size()) ++cursorPos;
 		} catch (std::out_of_range&) {}
-	} else if (wParam == CHARDAT_CURSOR_ENTER) { // Enter key
+	}
+#ifdef _WIN32
+	else if (wParam == CHARDAT_CURSOR_ENTER)
+#else /*_WIN32*/
+	else if (od->xkey.keycode == DIK_RETURN)
+#endif /*_WIN32*/
+	{ // Enter key
 		/* Do nothing */
-	} else if (wParam == CHARDAT_CURSOR_ESCAPE) { // Escape key
+	}
+#ifdef _WIN32
+	else if (wParam == CHARDAT_CURSOR_ESCAPE)
+#else /*_WIN32*/
+	else if (od->xkey.keycode == DIK_ESCAPE)
+#endif /*_WIN32*/
+	{ // Escape key
 		/* Do nothing */
 	} else {
+#ifdef _WIN32
 		WCHAR Letter[2] = {(WCHAR)wParam, 0};
-		if (Letter[0] >= L' ') { // Ordinary
+#else /*_WIN32*/
+		volatile char keyStr[256];
+		memset(const_cast<char*>(keyStr), 0, 256);
+		XLookupString(const_cast<XKeyEvent*>(reinterpret_cast<const XKeyEvent*>(od)),
+			const_cast<char*>(keyStr), 256, nullptr, nullptr);
+		std::wstring wst([](char* s) -> std::wstring {
+			try {
+				return CodeConv::UTF8toWIDE(s);
+			} catch (...) {
+				return std::wstring();
+			}
+		}(const_cast<char*>(keyStr)));
+		wchar_t* Letter_ = new wchar_t[wst.size() + 1];
+		wcsncpy(Letter_, wst.c_str(), wst.size() + 1);
+		for (wchar_t* Letter = Letter_; *Letter != L'\0'; ++Letter) {
+#endif /*_WIN32*/
+		if ((*Letter >= L' ') && (*Letter != L'\x7f')) { // Ordinary
 			CodeConv::tstring currentInput = CodeConv::EnsureTStr(std::wstring(Letter));
 			myText = myText.substr(0, cursorPos) + currentInput + myText.substr(cursorPos, myText.size());
 			++cursorPos;
-		} else if ((Letter[0] == L'\b') && (!myText.empty())) { // Backspace
+		} else if ((*Letter == L'\b') && (!myText.empty())) { // Backspace
 			if (cursorPos > 0) {
 				try {
 					myText = myText.substr(0, cursorPos - 1) + myText.substr(cursorPos, myText.size());
@@ -384,9 +433,14 @@ void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 				} catch (std::out_of_range&) {}
 			}
 		}
+#ifndef _WIN32
+		}
+		delete[] Letter_;
+#endif /*_WIN32*/
 	}
 }
 
+#ifdef _WIN32
 void EditBox::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 	if (!isActive) return;
 	if ((message == WM_IME_COMPOSITION) && (lParam & GCS_RESULTSTR)) {

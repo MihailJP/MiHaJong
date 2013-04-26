@@ -4,6 +4,9 @@
 #include "../../common/bgmid.h"
 #include "../extchar.h"
 #include <iomanip>
+#ifndef _WIN32
+#include "../keycode.h"
+#endif /*_WIN32*/
 
 namespace mihajong_graphic {
 
@@ -246,29 +249,51 @@ void PreferenceConfigScene::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) 
 	if ((activeTxtBox >= 0) && editBoxes[activeTxtBox])
 		editBoxes[activeTxtBox]->IMEvent(message, wParam, lParam);
 }
-void PreferenceConfigScene::KeyboardInput(WPARAM wParam, LPARAM lParam) {
+void PreferenceConfigScene::KeyboardInput(WPARAM wParam, LPARAM lParam)
+#else /*_WIN32*/
+void PreferenceConfigScene::KeyboardInput(const XEvent* od)
+#endif /*_WIN32*/
+{
+#ifndef _WIN32
+	if (od->type != KeyPress) return;
+#endif /*_WIN32*/
 	int activeTxtBox = getActiveTextbox();
 	if ((buttonCursor == -1) && (menuCursor >= 0) && (editBoxes[menuCursor]) && (activeTxtBox != menuCursor) &&
-		((wParam == CHARDAT_CURSOR_ENTER) || (wParam == 'z') || (wParam == 'Z') || (wParam == ' ') || (wParam == '\t'))) {
+#ifdef _WIN32
+		((wParam == CHARDAT_CURSOR_ENTER) || (wParam == 'z') || (wParam == 'Z') || (wParam == ' ') || (wParam == '\t')))
+#else /*_WIN32*/
+		((od->xkey.keycode == DIK_RETURN) || (od->xkey.keycode == DIK_Z) || (od->xkey.keycode == DIK_SPACE) || (od->xkey.keycode == DIK_TAB)))
+#endif /*_WIN32*/
+		{
 			sound::Play(sound::IDs::sndClick);
 			setActiveTextbox(menuCursor);
 			myTimer.skipTo(0);
 	} else if ((activeTxtBox >= 0) && editBoxes[activeTxtBox]) {
-		if ((wParam == CHARDAT_CURSOR_ENTER) || (wParam == CHARDAT_CURSOR_ESCAPE) || (wParam == '\t')) {
+#ifdef _WIN32
+		if ((wParam == CHARDAT_CURSOR_ENTER) || (wParam == CHARDAT_CURSOR_ESCAPE) || (wParam == '\t'))
+#else /*_WIN32*/
+		if ((od->xkey.keycode == DIK_RETURN) || (od->xkey.keycode == DIK_ESCAPE) || (od->xkey.keycode == DIK_TAB))
+#endif /*_WIN32*/
+		{
 			sound::Play(sound::IDs::sndClick);
 			editBoxes[activeTxtBox]->deactivate();
 			myTimer.skipTo(0);
 		} else {
+#ifdef _WIN32
 			editBoxes[activeTxtBox]->KeyboardInput(wParam, lParam);
+#else /*_WIN32*/
+			editBoxes[activeTxtBox]->KeyboardInput(od);
+#endif /*_WIN32*/
 		}
 	}
+#ifdef _WIN32
 }
 void PreferenceConfigScene::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+#else /*_WIN32*/
+	else
+#endif /*_WIN32*/
 	if (getActiveTextbox() == -1)
 		ConfigMenuProto::KeyboardInput(od);
 }
-#else /*_WIN32*/
-/* TODO: ñ¢é¿ëïâ”èä */
-#endif /*_WIN32*/
 
 }

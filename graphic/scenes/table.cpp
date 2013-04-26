@@ -375,36 +375,56 @@ void GameTableScreen::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 	if (chatInput->is_Active())
 		chatInput->IMEvent(message, wParam, lParam);
 }
-void GameTableScreen::KeyboardInput(WPARAM wParam, LPARAM lParam) {
-	if (chatInput->is_Active()) {
-		if (wParam == CHARDAT_CURSOR_ENTER) {
-			sound::Play(sound::IDs::sndClick);
-			utils::sendchat(chatInput->getText().c_str());
-			chatInput->setText(_T(""));
-		} else if ((wParam == CHARDAT_CURSOR_ESCAPE) || (wParam == '\t')) {
-			sound::Play(sound::IDs::sndClick);
-			chatInput->deactivate();
-		} else {
-			chatInput->KeyboardInput(wParam, lParam);
-		}
-	} else {
-		if (wParam == '\t') {
-			sound::Play(sound::IDs::sndClick);
-			chatInput->activate();
-		}
-	}
-}
-#else /*_WIN32*/
-/* TODO: –¢ŽÀ‘•‰ÓŠ */
-#endif /*_WIN32*/
-
-#ifdef _WIN32
-void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od)
+void GameTableScreen::KeyboardInput(WPARAM wParam, LPARAM lParam)
 #else /*_WIN32*/
 void GameTableScreen::KeyboardInput(const XEvent* od)
 #endif /*_WIN32*/
 {
+	if (chatInput->is_Active()) {
 #ifdef _WIN32
+		if (wParam == CHARDAT_CURSOR_ENTER)
+#else /*_WIN32*/
+		if (od->type != KeyPress) return;
+		if (od->xkey.keycode == DIK_RETURN)
+#endif /*_WIN32*/
+		{
+			sound::Play(sound::IDs::sndClick);
+			utils::sendchat(chatInput->getText().c_str());
+			chatInput->setText(_T(""));
+		}
+#ifdef _WIN32
+		else if ((wParam == CHARDAT_CURSOR_ESCAPE) || (wParam == '\t'))
+#else /*_WIN32*/
+		else if ((od->xkey.keycode == DIK_ESCAPE) || (od->xkey.keycode == DIK_TAB))
+#endif /*_WIN32*/
+		{
+			sound::Play(sound::IDs::sndClick);
+			chatInput->deactivate();
+		} else {
+#ifdef _WIN32
+			chatInput->KeyboardInput(wParam, lParam);
+#else /*_WIN32*/
+			chatInput->KeyboardInput(od);
+#endif /*_WIN32*/
+		}
+#ifndef _WIN32
+		return;
+#endif /*_WIN32*/
+	} else {
+#ifdef _WIN32
+		if (wParam == '\t')
+#else /*_WIN32*/
+		if ((od->type == KeyPress) && (od->xkey.keycode == DIK_TAB))
+#endif /*_WIN32*/
+		{
+			sound::Play(sound::IDs::sndClick);
+			chatInput->activate();
+		}
+	}
+#ifdef _WIN32
+}
+
+void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	const bool keyDown = od->dwData;
 #else /*_WIN32*/
 	const bool keyDown = od->type == KeyPress;

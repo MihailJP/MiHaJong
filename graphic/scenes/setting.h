@@ -45,7 +45,7 @@ public:
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 #else /*_WIN32*/
-	/* TODO: –¢ŽÀ‘• */
+	void KeyboardInput(const XEvent* od);
 #endif /*_WIN32*/
 };
 

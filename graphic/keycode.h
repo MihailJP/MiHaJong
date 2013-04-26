@@ -34,4 +34,5 @@
 #define DIK_Z            52
 #define DIK_ESCAPE        9
 #define DIK_X            53
+#define DIK_TAB          23
 #endif /*_WIN32*/
