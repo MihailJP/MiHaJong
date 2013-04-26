@@ -4,6 +4,9 @@
 #include "../../common/version.h"
 #include "../event.h"
 #include <iomanip>
+#ifndef _WIN32
+#include "../keycode.h"
+#endif /*_WIN32*/
 
 namespace mihajong_graphic {
 
@@ -103,18 +106,29 @@ void ConfigMenuProto::BtnEvent_Button_Next() {
 }
 
 #ifdef _WIN32
-void ConfigMenuProto::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
-	switch (od->dwOfs) {
+void ConfigMenuProto::KeyboardInput(LPDIDEVICEOBJECTDATA od)
+#else /*_WIN32*/
+void ConfigMenuProto::KeyboardInput(const XEvent* od)
+#endif /*_WIN32*/
+{
+#ifdef _WIN32
+	const bool keyDown = od->dwData;
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	const bool keyDown = od->type == KeyPress;
+	switch (od->xkey.keycode)
+#endif /*_WIN32*/
+	{
 	case DIK_UP: case DIK_K: // 前の項目
-		if ((od->dwData) && (buttonCursor == -1))
+		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Prev(1);
 		break;
 	case DIK_DOWN: case DIK_J: // 次の項目
-		if ((od->dwData) && (buttonCursor == -1))
+		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Next(1);
 		break;
 	case DIK_LEFT: case DIK_H: // 前の選択肢
-		if (od->dwData) {
+		if (keyDown) {
 			if (buttonCursor == -1)
 				BtnEvent_Content_Roll_Down();
 			else
@@ -122,7 +136,7 @@ void ConfigMenuProto::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		}
 		break;
 	case DIK_RIGHT: case DIK_L: // 次の選択肢
-		if (od->dwData) {
+		if (keyDown) {
 			if (buttonCursor == -1)
 				BtnEvent_Content_Roll_Up();
 			else
@@ -130,33 +144,30 @@ void ConfigMenuProto::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		}
 		break;
 	case DIK_HOME: // 前のカラム
-		if ((od->dwData) && (buttonCursor == -1))
+		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Prev(20);
 		break;
 	case DIK_END: // 次のカラム
-		if ((od->dwData) && (buttonCursor == -1))
+		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Next(20);
 		break;
 	case DIK_PRIOR: // 前のページ
-		if ((od->dwData) && (buttonCursor == -1))
+		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Prev(itemsPerPage());
 		break;
 	case DIK_NEXT: // 次のページ
-		if ((od->dwData) && (buttonCursor == -1))
+		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Next(itemsPerPage());
 		break;
 	case DIK_ESCAPE: case DIK_X: // キャンセルキー
-		if (od->dwData) BtnEvent_Cancel_Down();
+		if (keyDown) BtnEvent_Cancel_Down();
 		break;
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z: // 決定キー
-		if (od->dwData) BtnEvent_OK_Down();
+		if (keyDown) BtnEvent_OK_Down();
 		else BtnEvent_OK_Up();
 		break;
 	}
 }
-#else /*_WIN32*/
-/* TODO: 未実装 */
-#endif /*_WIN32*/
 
 #ifdef _WIN32
 void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)

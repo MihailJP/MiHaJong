@@ -11,6 +11,10 @@
 #define DIK_K         45
 #define DIK_RIGHT    114
 #define DIK_L         46
+#define DIK_HOME     110
+#define DIK_END      115
+#define DIK_PRIOR    112
+#define DIK_NEXT     117
 #define DIK_RETURN    36
 #define DIK_SPACE     65
 #define DIK_Z         52
