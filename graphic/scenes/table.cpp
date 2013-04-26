@@ -10,6 +10,9 @@
 #include "../utils.h"
 #include "../extchar.h"
 #include <functional>
+#ifndef _WIN32
+#include "../keycode.h"
+#endif /*_WIN32*/
 
 #include "table/yamahai.h"
 #include "table/tehai.h"
@@ -391,8 +394,21 @@ void GameTableScreen::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 		}
 	}
 }
+#else /*_WIN32*/
+/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 
-void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+#ifdef _WIN32
+void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od)
+#else /*_WIN32*/
+void GameTableScreen::KeyboardInput(const XEvent* od)
+#endif /*_WIN32*/
+{
+#ifdef _WIN32
+	const bool keyDown = od->dwData;
+#else /*_WIN32*/
+	const bool keyDown = od->type == KeyPress;
+#endif /*_WIN32*/
 	if (chatInput->is_Active()) return; // 入力中は無視
 
 	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
@@ -404,7 +420,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	};
 	const PlayerTable* const plDat = &(GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID]);
 	auto directTileCursor = [&](int cursorPos) -> void {
-		if ((od->dwData) && ((tehaiReconst->isCursorEnabled()) || (buttonReconst->isCursorEnabled())) && (plDat->Hand[cursorPos].tile != NoTile)) {
+		if (keyDown && ((tehaiReconst->isCursorEnabled()) || (buttonReconst->isCursorEnabled())) && (plDat->Hand[cursorPos].tile != NoTile)) {
 			if (tehaiReconst->getTileCursor() == cursorPos) {
 				FinishTileChoice();
 			} else {
@@ -414,17 +430,22 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 			}
 		}
 	};
-	switch (od->dwOfs) {
+#ifdef _WIN32
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	switch (od->xkey.keycode)
+#endif /*_WIN32*/
+	{
 	/* ボタン選択/牌選択 モード切り替え */
 	case DIK_UP: case DIK_K: // 牌選択モードに切り替え
-		if ((od->dwData) && (buttonReconst->isCursorEnabled()) && (!isNakiSel)) {
+		if (keyDown && (buttonReconst->isCursorEnabled()) && (!isNakiSel)) {
 			tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
 			buttonReconst->setCursor();
 			cursorMoved();
 		}
 		break;
 	case DIK_DOWN: case DIK_J: // ボタン選択モードに切り替え
-		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
+		if (keyDown && (tehaiReconst->isCursorEnabled())) {
 			tehaiReconst->setTileCursor();
 			buttonReconst->setCursor(ButtonReconst::btnMAXIMUM - 1);
 			cursorMoved();
@@ -432,25 +453,25 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	/* カーソル移動 */
 	case DIK_LEFT: case DIK_H:
-		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
+		if (keyDown && (tehaiReconst->isCursorEnabled())) {
 			do {
 				if (tehaiReconst->decrTileCursor() < 0) tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
 			} while (plDat->Hand[tehaiReconst->getTileCursor()].tile == NoTile);
 			cursorMoved();
 		}
-		else if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
+		else if (keyDown && (buttonReconst->isCursorEnabled())) {
 			if (buttonReconst->decCursor() < 0) buttonReconst->setCursor(ButtonReconst::btnMAXIMUM - 1);
 			cursorMoved();
 		}
 		break;
 	case DIK_RIGHT: case DIK_L:
-		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
+		if (keyDown && (tehaiReconst->isCursorEnabled())) {
 			do {
 				if (tehaiReconst->incrTileCursor() >= NumOfTilesInHand) tehaiReconst->setTileCursor(0);
 			} while (plDat->Hand[tehaiReconst->getTileCursor()].tile == NoTile);
 			cursorMoved();
 		}
-		if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
+		if (keyDown && (buttonReconst->isCursorEnabled())) {
 			if (buttonReconst->incCursor() >= ButtonReconst::btnMAXIMUM) buttonReconst->setCursor(0);
 			cursorMoved();
 		}
@@ -473,20 +494,17 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_BACK:       directTileCursor(13); break;
 	/* 決定キー */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
-		if (od->dwData)
+		if (keyDown)
 			subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
 				mySubScene->skipEvent();
 			});
-		if ((od->dwData) && (tehaiReconst->isCursorEnabled()))
+		if (keyDown && (tehaiReconst->isCursorEnabled()))
 			FinishTileChoice();
-		else if ((od->dwData) && (buttonReconst->isCursorEnabled()))
+		else if (keyDown && (buttonReconst->isCursorEnabled()))
 			buttonReconst->ButtonPressed();
 		break;
 	}
 }
-#else /*_WIN32*/
-/* TODO: 未実装箇所 */
-#endif /*_WIN32*/
 
 #ifdef _WIN32
 void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)
