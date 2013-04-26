@@ -56,8 +56,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 #else /*_WIN32*/
 
 int main(int argc, char** argv) {
-	/* TODO: –¢À‘•‰ÓŠ */
-	//MSG msg; HWND hwnd;
 	Window hwnd;
 	unsigned width, height; bool fullscreen;
 
@@ -80,10 +78,8 @@ int main(int argc, char** argv) {
 	}
 	
 	/* I—¹ˆ— */
-	mihajong_graphic::CleanupWindow(); // TODO: b’èÀ‘•BTerminateGame()‚Å‚â‚é‚±‚Æ
-	//TerminateGame();
-	//ExitProcess(0);
-	//return msg.wParam;
+	TerminateGame();
+	exit(0);
 }
 
 #endif /*_WIN32*/

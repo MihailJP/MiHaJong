@@ -6,6 +6,11 @@
 #include "func.h"
 #include "../graphic/graphic.h"
 #include "gameloop.h"
+#ifndef _WIN32
+#include <sys/types.h>
+#include <unistd.h>
+#include <signal.h>
+#endif /*_WIN32*/
 
 GameThread* gameThread = nullptr;
 
@@ -58,6 +63,10 @@ void* GameThread::ThreadMain(void* lpParam) {
 	initapp(gameType, hwnd);
 	startgame(gameType);
 	cleanup();
+	/* WORKAROUND: タイトルメニューからExitを選択しても終了してくれない件  */
+	pid_t myPid = getpid();
+	kill(myPid, SIGINT);
+	/* WORKAROUND ここまで */
 	return nullptr;
 }
 #endif /*_WIN32*/
