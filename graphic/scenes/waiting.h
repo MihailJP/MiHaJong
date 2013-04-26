@@ -30,7 +30,7 @@ public:
 #ifdef _WIN32
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 #else /*_WIN32*/
-	/* TODO: –¢ŽÀ‘• */
+	void KeyboardInput(const XEvent* od);
 #endif /*_WIN32*/
 	void SetSubscene(unsigned int scene_ID);
 };
