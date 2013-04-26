@@ -47,6 +47,7 @@ public:
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 #else /*_WIN32*/
 	/* TODO: –¢À‘• */
+	void kbdInputProc(const XEvent* event);
 #endif /*_WIN32*/
 	void Render(); // ‰æ–Ê‚ÌÄ•`‰æ
 #ifdef _WIN32

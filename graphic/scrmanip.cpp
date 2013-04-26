@@ -327,6 +327,12 @@ void ScreenManipulator::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 #else /*_WIN32*/
 /* TODO: –¢À‘• */
 
+void ScreenManipulator::kbdInputProc(const XEvent* event) {
+	CS_SceneAccess.syncDo<void>([this, event]() -> void {
+		if (myScene) myScene->KeyboardInput(event);
+	});
+}
+
 void ScreenManipulator::mouseInputProc(const XEvent* event) {
 	CS_SceneAccess.syncDo<void>([this, event]() -> void {
 		Window rtw, chw; // ©æ“¾‚µ‚ÄÌ‚Ä‚é
