@@ -107,13 +107,15 @@ enumerateMelds f l nums mlds = let (_, melds, semimelds) = mlds
 calculate :: Int -> NumsOfTile -> NumsOfMeld -> (NumsOfTile, NumsOfMeld) -- 計算（再帰処理）
 calculate mode nums mlds = if isEmpty $ dropIsolates nums
                               then (nums, mlds)
-                              else foldl (maxMeld mode) (nums, mlds) (
-                                          [calculate mode (fst p) (snd p) | p <- enumerateMelds takeTriplet [1..9] (dropIsolates nums) mlds] ++
-                                          [calculate mode (fst p) (snd p) | p <- enumerateMelds takeSequence [1..7] (dropIsolates nums) mlds] ++
-                                          [calculate mode (fst p) (snd p) | p <- enumerateMelds takePair [1..9] (dropIsolates nums) mlds] ++
-                                          [calculate mode (fst p) (snd p) | p <- enumerateMelds takeStep1 [1..8] (dropIsolates nums) mlds] ++
-                                          [calculate mode (fst p) (snd p) | p <- enumerateMelds takeStep2 [1..7] (dropIsolates nums) mlds] )
-
+                              else if n1 == 0
+                                      then calculate mode (n2,n3,n4,n5,n6,n7,n8,n9,0) mlds
+                                      else foldl (maxMeld mode) (nums, mlds) (
+                                                  [calculate mode (fst p) (snd p) | p <- enumerateMelds takeTriplet [1..9] (dropIsolates nums) mlds] ++
+                                                  [calculate mode (fst p) (snd p) | p <- enumerateMelds takeSequence [1..7] (dropIsolates nums) mlds] ++
+                                                  [calculate mode (fst p) (snd p) | p <- enumerateMelds takePair [1..9] (dropIsolates nums) mlds] ++
+                                                  [calculate mode (fst p) (snd p) | p <- enumerateMelds takeStep1 [1..8] (dropIsolates nums) mlds] ++
+                                                  [calculate mode (fst p) (snd p) | p <- enumerateMelds takeStep2 [1..7] (dropIsolates nums) mlds] )
+    where (n1,n2,n3,n4,n5,n6,n7,n8,n9) = nums
 
 calcMentz :: Int -> NumsOfTile -> Maybe NumsOfMeld
 calcMentz mode nums = if isTooMany nums then Nothing
@@ -130,13 +132,19 @@ idToMentzDat i = ((i `mod`      5),
                   (i `mod` 390625) `div`  78125,
                   (i             ) `div` 390625 )
 
-meldToWord :: Maybe NumsOfMeld -> Int
-meldToWord Nothing = 255
-meldToWord (Just (True, p, q)) = 128 + p * 16 + q
-meldToWord (Just (False, p, q)) = p * 16 + q
+meldToByte :: Maybe NumsOfMeld -> Int -- byteに直す
+meldToByte Nothing = 255
+meldToByte (Just (True, p, q)) = 128 + p * 16 + q
+meldToByte (Just (False, p, q)) = p * 16 + q
 
-putChr :: Int -> IO ()
-putChr chrCode = do system ("./putchr " ++ (show chrCode))
-                    return ()
+putChrs :: [Int] -> IO () -- まとめて出力
+putChrs chrCode = do system ("./putchr " ++ (unwords [show i | i <- chrCode]))
+                     return ()
 
-main = sequence [putChr $ meldToWord $ (calcMentz n) $ idToMentzDat i | i <- [0..(5*5*5*5*5*5*5*5*5-1)], n <- [2, 10]]
+totalPatterns = 5*5*5*5*5*5*5*5*5 :: Int -- パターン合計
+batch = 5*5*5 :: Int -- この件数だけまとめて出力
+
+outputJob :: Int -> IO ()
+outputJob j = putChrs [meldToByte $ (calcMentz n) $ idToMentzDat (i + j) | i <- [0..(batch - 1)], n <- [2, 10]]
+
+main = sequence [outputJob k | k <- [0, batch .. (totalPatterns - 1)]]
