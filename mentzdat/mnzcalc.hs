@@ -1,6 +1,6 @@
 -- 向聴計算用 面子計算表構築プログラム
 
-module Main where -- 検証のため全部エクスポート
+import System.Process
 
 type NumsOfTile = (Int, Int, Int, Int, Int, Int, Int, Int, Int) -- 牌式にあたる型
 type NumsOfMeld = (Bool, Int, Int) -- 対子フラグ、面子数、面子候補数
@@ -119,9 +119,24 @@ calcMentz :: NumsOfTile -> Maybe NumsOfMeld
 calcMentz nums = if isTooMany nums then Nothing
                                    else Just (snd (calculate nums (False, 0, 0)))
 
-main = do
-       print (calcMentz testVal)
-       print (calcMentz testVal2)
-       print (calcMentz testVal3)
-       print (calcMentz testVal4)
-       print (calcMentz testVal5)
+idToMentzDat :: Int -> NumsOfTile -- 通し番号から変換
+idToMentzDat i = ((i `mod`      5),
+                  (i `mod`     25) `div`      5,
+                  (i `mod`    125) `div`     25,
+                  (i `mod`    625) `div`    125,
+                  (i `mod`   3125) `div`    625,
+                  (i `mod`  15625) `div`   3125,
+                  (i `mod`  78125) `div`  15625,
+                  (i `mod` 390625) `div`  78125,
+                  (i             ) `div` 390625 )
+
+meldToWord :: Maybe NumsOfMeld -> Int
+meldToWord Nothing = 255
+meldToWord (Just (True, p, q)) = 128 + p * 16 + q
+meldToWord (Just (False, p, q)) = p * 16 + q
+
+putChr :: Int -> IO ()
+putChr chrCode = do system ("./putchr " ++ (show chrCode))
+                    return ()
+
+main = sequence [putChr $ meldToWord $ calcMentz $ idToMentzDat i | i <- [0..125]]
