@@ -1,6 +1,8 @@
 -- 向聴計算用 面子計算表構築プログラム
 
 import System.Process
+import System.Environment
+import System.Exit
 
 type NumsOfTile = (Int, Int, Int, Int, Int, Int, Int, Int, Int) -- 牌式にあたる型
 type NumsOfMeld = (Bool, Int, Int) -- 対子フラグ、面子数、面子候補数
@@ -142,9 +144,17 @@ putChrs chrCode = do system ("./putchr " ++ (unwords [show i | i <- chrCode]))
                      return ()
 
 totalPatterns = 5*5*5*5*5*5*5*5*5 :: Int -- パターン合計
+fileBatch = 5*5*5*5*5*5*5 :: Int -- 1ファイルに出力する数
 batch = 5*5*5 :: Int -- この件数だけまとめて出力
 
 outputJob :: Int -> IO ()
 outputJob j = putChrs [meldToByte $ (calcMentz n) $ idToMentzDat (i + j) | i <- [0..(batch - 1)], n <- [2, 10]]
 
-main = sequence [outputJob k | k <- [0, batch .. (totalPatterns - 1)]]
+fileOutput :: Int -> IO [()]
+fileOutput i = sequence [outputJob (k + i) | k <- [0, batch .. (fileBatch - 1)]]
+
+main = do argv <- getArgs
+          if (length argv) >= 1
+             then fileOutput (fileBatch * (read (argv !! 0)))
+             else exitWith $ ExitFailure 1
+          exitWith ExitSuccess
