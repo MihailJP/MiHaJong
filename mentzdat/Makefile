@@ -1,4 +1,4 @@
-TARGETS = putchr mnzcalc
+TARGETS = putchr mnzcalc mentz.dat
 CC = gcc
 CCPARAM = -O2
 GHC = ghc
@@ -12,6 +12,9 @@ putchr: putchr.c
 
 mnzcalc: mnzcalc.hs
 	$(GHC) $(GHCPARAM) -o $@ $^
+
+mentz.dat: putchr mnzcalc
+	./mnzcalc > $@
 
 .PHONY: clean
 clean:

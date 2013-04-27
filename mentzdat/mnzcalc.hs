@@ -139,4 +139,4 @@ putChr :: Int -> IO ()
 putChr chrCode = do system ("./putchr " ++ (show chrCode))
                     return ()
 
-main = sequence [putChr $ meldToWord $ (calcMentz n) $ idToMentzDat i | i <- [0..125], n <- [2, 10]]
+main = sequence [putChr $ meldToWord $ (calcMentz n) $ idToMentzDat i | i <- [0..(5*5*5*5*5*5*5*5*5-1)], n <- [2, 10]]
