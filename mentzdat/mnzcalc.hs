@@ -80,10 +80,48 @@ takePair nums mlds i = let (pairFlag, melds, semimelds) = mlds
                        in if nums # i >= 2
                              then (filterNums nums (\p q -> if q == i then p # q - 2 else p # q), (True, melds, semimelds + 1))
                              else (nums, mlds)
+takeStep1 :: NumsOfTile -> NumsOfMeld -> Int -> (NumsOfTile, NumsOfMeld) -- 両面と辺張を取る
+takeStep1 nums mlds i = let (pairFlag, melds, semimelds) = mlds
+                        in if (nums # i >= 1) && (nums # (i + 1) >= 1)
+                              then (filterNums nums (\p q -> if (q >= i) && (q <= (i + 1)) then p # q - 1 else p # q), (pairFlag, melds, semimelds + 1))
+                              else (nums, mlds)
+takeStep2 :: NumsOfTile -> NumsOfMeld -> Int -> (NumsOfTile, NumsOfMeld) -- 嵌張を取る
+takeStep2 nums mlds i = let (pairFlag, melds, semimelds) = mlds
+                        in if (nums # i >= 1) && (nums # (i + 2) >= 1)
+                              then (filterNums nums (\p q -> if (q == i) || (q == (i + 2)) then p # q - 1 else p # q), (pairFlag, melds, semimelds + 1))
+                              else (nums, mlds)
+
+maxMeld :: (NumsOfTile, NumsOfMeld) -> (NumsOfTile, NumsOfMeld) -> (NumsOfTile, NumsOfMeld) -- 最大のものを計算する
+maxMeld (nums1, mlds1) (nums2, mlds2) = let (pairFlag1, melds1, semimelds1) = mlds1
+                                            (pairFlag2, melds2, semimelds2) = mlds2
+                                        in if (melds1 * 2 + semimelds1) < (melds2 * 2 + semimelds2)
+                                              then (nums2, mlds2)
+                                              else if ((melds1 * 2 + semimelds1) == (melds2 * 2 + semimelds2)) && (not pairFlag1) && pairFlag2
+                                                      then (nums2, mlds2)
+                                                      else (nums1, mlds1)
+
+enumerateMelds :: (NumsOfTile -> NumsOfMeld -> Int -> (NumsOfTile, NumsOfMeld)) -> [Int] -> NumsOfTile -> NumsOfMeld -> [(NumsOfTile, NumsOfMeld)] -- 面子列挙
+enumerateMelds f l nums mlds = let (_, melds, semimelds) = mlds
+                               in filter (\(_, (_, m, s)) -> (m /= melds) || (s /= semimelds)) [f (dropIsolates nums) mlds k | k <- l]
+
+calculate :: NumsOfTile -> NumsOfMeld -> (NumsOfTile, NumsOfMeld) -- 計算（再帰処理）
+calculate nums mlds = if isEmpty $ dropIsolates nums
+                           then (nums, mlds)
+                           else foldl maxMeld (nums, mlds) (
+                                      [calculate (fst p) (snd p) | p <- enumerateMelds takeTriplet [1..9] (dropIsolates nums) mlds] ++
+                                      [calculate (fst p) (snd p) | p <- enumerateMelds takeSequence [1..7] (dropIsolates nums) mlds] ++
+                                      [calculate (fst p) (snd p) | p <- enumerateMelds takePair [1..9] (dropIsolates nums) mlds] ++
+                                      [calculate (fst p) (snd p) | p <- enumerateMelds takeStep1 [1..8] (dropIsolates nums) mlds] ++
+                                      [calculate (fst p) (snd p) | p <- enumerateMelds takeStep2 [1..7] (dropIsolates nums) mlds] )
+
 
 calcMentz :: NumsOfTile -> Maybe NumsOfMeld
 calcMentz nums = if isTooMany nums then Nothing
-                                   else Just (snd (takeSequence (dropIsolates nums) (False, 0, 0) 3))
+                                   else Just (snd (calculate nums (False, 0, 0)))
 
 main = do
        print (calcMentz testVal)
+       print (calcMentz testVal2)
+       print (calcMentz testVal3)
+       print (calcMentz testVal4)
+       print (calcMentz testVal5)
