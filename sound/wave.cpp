@@ -23,11 +23,16 @@ void sound::WaveData::GetFormat(std::ifstream& file) {
 	std::uint32_t format_size; file.read(reinterpret_cast<char*>(&format_size), 4);
 	// データフォーマット
 	std::uint16_t id; file.read(reinterpret_cast<char*>(&id), 2);
+#ifdef _WIN32
 	if (id == 1) format.wFormatTag = WAVE_FORMAT_PCM;
 #if defined(USE_XAUDIO2)
 	else if (id == 2) format.wFormatTag = WAVE_FORMAT_ADPCM;
 #endif
 	else throw CodeConv::tstring(_T("対応していないフォーマットです"));
+#else /* _WIN32 */
+	if (id != 1)
+		throw CodeConv::tstring(_T("対応していないフォーマットです"));
+#endif /* _WIN32 */
 	// ヘッダ読み込み
 	file.read(reinterpret_cast<char*>(&format.nChannels), sizeof(format.nChannels));
 	file.read(reinterpret_cast<char*>(&format.nSamplesPerSec), sizeof(format.nSamplesPerSec));

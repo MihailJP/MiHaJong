@@ -17,6 +17,9 @@ private:
 	const unsigned numberOfButtons() {return 4u;}
 	void itemText(unsigned prmID, const CodeConv::tstring& prmName, const CodeConv::tstring& prmContent);
 	void redrawItems();
+#ifndef _WIN32
+	void objInit();
+#endif /*_WIN32*/
 	int rulestat[RULESIZE];
 	char RuleConf[RULE_LINES][RULE_IN_LINE + 4];
 	void saveRule();

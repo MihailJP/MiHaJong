@@ -36,23 +36,36 @@ libmihajong_graphic_la_SOURCES = \
 	scenes/table/richibou.h scenes/table/showdice.h scenes/table/sutehai.h \
 	scenes/table/tehai.h scenes/table/tehai0.h scenes/table/tiletip.h \
 	scenes/table/yamahai.h \
-	widgets/button.h widgets/checkbox.h widgets/editbox.h widgets/logwnd.h \
-	graphic.rc
+	widgets/button.h widgets/checkbox.h widgets/editbox.h widgets/logwnd.h
 libmihajong_graphic_la_LDFLAGS = -no-undefined
 libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS --input-charset=cp932
 if WITH_DIRECTX
 libmihajong_graphic_la_CXXFLAGS += -DWITH_DIRECTX
 endif
-libmihajong_graphic_la_LIBADD = graphic.o ../sound/libmihajong-sound.la
-dist_data_DATA = \
+if WITH_WINAPI
+else
+libmihajong_graphic_la_CXXFLAGS += -DPKGDATADIR='"$(pkgdatadir)"' -DUNICODE -D_UNICODE
+endif
+libmihajong_graphic_la_LIBADD = ../sound/libmihajong-sound.la
+if WITH_WINAPI
+libmihajong_graphic_la_LIBADD += graphic.o 
+endif
+dist_pkgdata_DATA = \
 	data/agariwnd.png data/baize.png data/button.png data/call.png \
-	data/cdigits.chr data/cdigits.png data/chiicha.png data/dice.png \
-	data/editbox.png data/font.chr data/font.png data/frame.png \
+	data/cdigits.chr data/cdigits.png data/checkbox.png data/chiicha.png \
+	data/dice.png data/editbox.png data/font.chr data/font.png data/frame.png \
 	data/largechr.chr data/largechr.png data/score.png data/sdigits.chr \
 	data/sdigits.png data/sidebar.png data/smallchr.chr data/smallchr.png \
 	data/tenbou.png data/tiles.png data/tiles_bk.png data/title.png
 EXTRA_DIST = \
 	graphic.vcxproj graphic.vcxproj.filters graphic.vcxproj.user
+if WITH_WINAPI
+libmihajong_graphic_la_SOURCES += graphic.rc
+EXTRA_DIST += filenum.cpp filenum.h keycode.h
+else
+EXTRA_DIST += graphic.rc
+libmihajong_graphic_la_SOURCES += filenum.cpp filenum.h keycode.h
+endif
 
 .rc.o:
 	$(WINDRES) $^ -o $@ -l 0411

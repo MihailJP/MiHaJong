@@ -25,6 +25,9 @@ protected:
 	EditBox* chatInput; // チャット入力欄
 	static const unsigned ChatInputRegion = 99;
 	TextRenderer* myTextRenderer; // 文字表示
+#ifndef _WIN32
+	bool reconstructFlag;
+#endif /*_WIN32*/
 protected:
 	TableSubscene* mySubScene; // サブシーンオブジェクト
 	MHJMutex subSceneCS; // サブシーン切り替え用クリティカルセクション
@@ -72,10 +75,16 @@ public:
 	GameTableScreen(ScreenManipulator* const manipulator);
 	~GameTableScreen();
 	void Render();
+#ifdef _WIN32
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
+#else /*_WIN32*/
+	/* TODO: Linuxでは日本語入力が未実装 */
+	void KeyboardInput(const XEvent* od);
+	void MouseInput(const XEvent* od, int X, int Y);
+#endif /*_WIN32*/
 private:
 	void checkTimeout();
 	int tileSelectMode;

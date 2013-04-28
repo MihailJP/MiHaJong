@@ -3,6 +3,9 @@
 #include <cstdint>
 #include <algorithm>
 #include <functional>
+#ifndef _WIN32
+#include <unistd.h>
+#endif /*_WIN32*/
 #include "../socket/socket.h"
 #include "envtbl.h"
 #include "random.h"
@@ -249,7 +252,12 @@ void SeatShuffler::shuffleSeat () {
 		// クライアントであれば受信する
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++) {
 			int receivedByte;
-			while ((receivedByte = mihajong_socket::getc(0)) == -1) Sleep(0); // 受信待ち
+			while ((receivedByte = mihajong_socket::getc(0)) == -1) // 受信待ち
+#ifdef _WIN32
+				Sleep(0);
+#else /*_WIN32*/
+				usleep(100);
+#endif /*_WIN32*/
 			TmpPosition[i] = receivedByte;
 		}
 	}
@@ -342,7 +350,11 @@ namespace {
 				if (ClientReceived == 1)
 					if (f(gameStat, ReceivedMsg))
 						break;
+#ifdef _WIN32
 				Sleep(1);
+#else /*_WIN32*/
+				usleep(1000);
+#endif /*_WIN32*/
 			}
 		}
 	}

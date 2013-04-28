@@ -4,9 +4,14 @@
 #include <memory>
 #include <cstring>
 #include <sstream>
+#ifdef _WIN32
 #include <windows.h>
 #include <imagehlp.h>
 #include <direct.h>
+#else /*_WIN32*/
+#include <sys/stat.h>
+#include <unistd.h>
+#endif /*_WIN32*/
 #include "../common/strcode.h"
 #include "../sound/sound.h"
 #include "../socket/socket.h"
@@ -126,17 +131,24 @@ namespace confpath {
 	using CodeConv::tstring;
 
 	/* Vista/7を使っているかどうか */
+#ifdef _WIN32
 	bool isVista() {
 		OSVERSIONINFO versionInfo;
 		versionInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 		if (GetVersionEx(&versionInfo) == 0) return false;
 		return ((versionInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)&&(versionInfo.dwMajorVersion >= 6));
 	}
+#else /*_WIN32*/
+	bool isVista() { /* Windowsじゃない */
+		return false;
+	}
+#endif /*_WIN32*/
 
 	/* コンフィグのパスを自動設定 */
 	/* Vista以降でRoamingに準備できていなければ作る */
 	std::string confPath() {
 		std::string configpath = "";
+#ifdef _WIN32
 		if (isVista()) {
 			char* cur = new char[1024];
 			GetCurrentDirectoryA(1024, cur);
@@ -179,6 +191,26 @@ namespace confpath {
 			delete sz;
 #endif
 		}
+#else /*_WIN32*/
+		/* Linux では、~/.mihajong に設定などを保存する */
+		std::string homedir(getenv("HOME"));
+		configpath = homedir + std::string("/.mihajong");
+		mkdir(configpath.c_str(), 0755);
+		configpath += std::string("/");
+		mkdir((configpath + std::string("haifu")).c_str(), 0755);
+		mkdir((configpath + std::string("ai")).c_str(), 0755);
+
+		symlink(PKGDATADIR "/haifu/haifu.css",
+			(configpath + std::string("/haifu/haifu.css")).c_str());
+		symlink(PKGDATADIR "/haifu/haifu.dtd",
+			(configpath + std::string("/haifu/haifu.dtd")).c_str());
+		symlink(PKGDATADIR "/haifu/haifu.xsd",
+			(configpath + std::string("/haifu/haifu.xsd")).c_str());
+		symlink(PKGDATADIR "/haifu/haifu.xsl",
+			(configpath + std::string("/haifu/haifu.xsl")).c_str());
+		symlink(PKGDATADIR "/ai/default.lua",
+			(configpath + std::string("/ai/default.lua")).c_str());
+#endif /*_WIN32*/
 		return configpath;
 	}
 

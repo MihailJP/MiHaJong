@@ -1,5 +1,9 @@
 #include "aiscript.h"
 
+#ifndef _WIN32
+#include <unistd.h>
+#include <pthread.h>
+#endif /*_WIN32*/
 #include <lua.hpp>
 #include <sstream>
 #include "functbl.h"
@@ -166,9 +170,15 @@ DiscardTileNum aiscript::compdahai(const GameTable* const gameStat) {
 	discard = DiscardTileNum(); finished = false;
 	discard_worker = new detDiscardThread();
 	discard_worker->setprm(gameStat, &discard, &finished);
+#ifdef _WIN32
 	DWORD threadID;
 	HANDLE hThread = CreateThread(nullptr, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
 	while (!finished) Sleep(1);
+#else /*_WIN32*/
+	pthread_t hThread; void* resultPtr;
+	pthread_create(&hThread, nullptr, detDiscardThread::execute, (void*)discard_worker);
+	pthread_join(hThread, &resultPtr);
+#endif /*_WIN32*/
 	delete discard_worker; discard_worker = nullptr;
 	return discard;
 }
@@ -176,9 +186,15 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 	discard = DiscardTileNum(); finished = false;
 	discard_worker = new detDiscardThread();
 	discard_worker->setprm(gameStat, &discard, &finished);
+#ifdef _WIN32
 	DWORD threadID;
 	HANDLE hThread = CreateThread(nullptr, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
 	while (!finished) Sleep(0);
+#else /*_WIN32*/
+	pthread_t hThread; void* resultPtr;
+	pthread_create(&hThread, nullptr, detDiscardThread::execute, (void*)discard_worker);
+	pthread_join(hThread, &resultPtr);
+#endif /*_WIN32*/
 	delete discard_worker; discard_worker = nullptr;
 	return discard;
 }
@@ -190,18 +206,33 @@ aiscript::detDiscardThread::~detDiscardThread() {
 void aiscript::detDiscardThread::setprm(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished) {
 	i_gameStat = gameStat; i_discard = discard; i_finished = finished;
 }
-DWORD WINAPI aiscript::detDiscardThread::execute(LPVOID param) {
+#ifdef _WIN32
+DWORD WINAPI aiscript::detDiscardThread::execute(LPVOID param)
+#else /*_WIN32*/
+void* aiscript::detDiscardThread::execute(void* param)
+#endif /*_WIN32*/
+{
 	return ((detDiscardThread *)param)->calculate(
 		((detDiscardThread *)param)->i_gameStat,
 		((detDiscardThread *)param)->i_discard,
 		((detDiscardThread *)param)->i_finished);
 }
-DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished) {
+#ifdef _WIN32
+DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished)
+#else /*_WIN32*/
+void* aiscript::detDiscardThread::calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished)
+#endif /*_WIN32*/
+{
 	CodeConv::tostringstream o;
 	o << _T("AIの打牌処理に入ります。プレイヤー [") << (int)gameStat->CurrentPlayer.Active << _T("]");
 	info(o.str().c_str());
 	if (callFunc(gameStat, gameStat->CurrentPlayer.Active, fncname_discard, true)) {
-		*discard = DiscardThrough; *finished = true; return S_OK;
+		*discard = DiscardThrough; *finished = true;
+#ifdef _WIN32
+		return S_OK;
+#else /*_WIN32*/
+		return nullptr;
+#endif /*_WIN32*/
 	} else {
 		/* 実行完了 */
 		int flag;
@@ -231,7 +262,12 @@ DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameSt
 			}
 		}
 		lua_pop(status[gameStat->CurrentPlayer.Active].state, 2);
-		*finished = true; return S_OK;
+		*finished = true;
+#ifdef _WIN32
+		return S_OK;
+#else /*_WIN32*/
+		return nullptr;
+#endif /*_WIN32*/
 	}
 }
 
@@ -242,19 +278,31 @@ void aiscript::compfuuro(GameTable* const gameStat) {
 	finished = false;
 	meld_worker = new detCallThread();
 	meld_worker->setprm(gameStat, &finished);
+#ifdef _WIN32
 	DWORD threadID;
 	HANDLE hThread = CreateThread(nullptr, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
 	while (!finished)
 		Sleep(1);
+#else /*_WIN32*/
+	pthread_t hThread; void* resultPtr;
+	pthread_create(&hThread, nullptr, detCallThread::execute, (void*)meld_worker);
+	pthread_join(hThread, &resultPtr);
+#endif /*_WIN32*/
 	delete meld_worker; meld_worker = nullptr;
 }
 void aiscript::determine_meld(GameTable* const gameStat) {
 	finished = false;
 	meld_worker = new detCallThread();
 	meld_worker->setprm(gameStat, &finished);
+#ifdef _WIN32
 	DWORD threadID;
 	HANDLE hThread = CreateThread(nullptr, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
 	while (!finished) Sleep(0);
+#else /*_WIN32*/
+	pthread_t hThread; void* resultPtr;
+	pthread_create(&hThread, nullptr, detCallThread::execute, (void*)meld_worker);
+	pthread_join(hThread, &resultPtr);
+#endif /*_WIN32*/
 	delete meld_worker; meld_worker = nullptr;
 }
 aiscript::detCallThread::detCallThread() {
@@ -265,13 +313,23 @@ aiscript::detCallThread::~detCallThread() {
 void aiscript::detCallThread::setprm(GameTable* const gameStat, bool* const finished) {
 	i_gameStat = gameStat; i_finished = finished;
 }
-DWORD WINAPI aiscript::detCallThread::execute(LPVOID param) {
+#ifdef _WIN32
+DWORD WINAPI aiscript::detCallThread::execute(LPVOID param)
+#else /*_WIN32*/
+void* aiscript::detCallThread::execute(void* param)
+#endif /*_WIN32*/
+{
 	return ((detCallThread *)param)->calculate(
 		((detCallThread *)param)->i_gameStat,
 		((detCallThread *)param)->i_finished);
 }
 
-DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool* const finished) {
+#ifdef _WIN32
+DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool* const finished)
+#else /*_WIN32*/
+void* aiscript::detCallThread::calculate(GameTable* const gameStat, bool* const finished)
+#endif /*_WIN32*/
+{
 	CodeConv::tostringstream o;
 	o << _T("AIの副露判定に入ります。プレイヤー [") << (int)gameStat->CurrentPlayer.Passive << _T("]");
 	info(o.str().c_str());
@@ -280,7 +338,12 @@ DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool*
 		gameStat->statOfPassive().DeclarationFlag.Kan =
 		gameStat->statOfPassive().DeclarationFlag.Ron = false;
 	if (callFunc(gameStat, gameStat->CurrentPlayer.Passive, fncname_call[gameStat->KangFlag.chankanFlag], (gameStat->KangFlag.chankanFlag == 0))) {
-		*finished = true; return S_OK;
+		*finished = true;
+#ifdef _WIN32
+		return S_OK;
+#else /*_WIN32*/
+		return nullptr;
+#endif /*_WIN32*/
 	} else {
 		/* 実行完了 */
 		int flag = 0;
@@ -300,6 +363,11 @@ DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool*
 			}
 		}
 		lua_pop(status[gameStat->CurrentPlayer.Passive].state, 1);
-		*finished = true; return S_OK;
+		*finished = true;
+#ifdef _WIN32
+		return S_OK;
+#else /*_WIN32*/
+		return nullptr;
+#endif /*_WIN32*/
 	}
 }

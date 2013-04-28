@@ -1,6 +1,8 @@
 #pragma once
 
+#ifdef _WIN32
 #include <windows.h>
+#endif /*_WIN32*/
 #include <lua.hpp>
 #include "../discard.h"
 #include "../gametbl.h"
@@ -37,12 +39,20 @@ public:
 	detDiscardThread();
 	~detDiscardThread();
 	void setprm(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished);
+#ifdef _WIN32
 	static DWORD WINAPI execute(LPVOID param);
+#else /*_WIN32*/
+	static void* execute(void* param);
+#endif /*_WIN32*/
 private:
 	const GameTable* i_gameStat;
 	DiscardTileNum* i_discard;
 	bool* i_finished;
+#ifdef _WIN32
 	static DWORD WINAPI calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished);
+#else /*_WIN32*/
+	static void* calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished);
+#endif /*_WIN32*/
 };
 
 class aiscript::detCallThread {
@@ -50,11 +60,19 @@ public:
 	detCallThread();
 	~detCallThread();
 	void setprm(GameTable* const gameStat, bool* const finished);
+#ifdef _WIN32
 	static DWORD WINAPI execute(LPVOID param);
+#else /*_WIN32*/
+	static void* execute(void* param);
+#endif /*_WIN32*/
 private:
 	GameTable* i_gameStat;
 	bool* i_finished;
+#ifdef _WIN32
 	static DWORD WINAPI calculate(GameTable* const gameStat, bool* const finished);
+#else /*_WIN32*/
+	static void* calculate(GameTable* const gameStat, bool* const finished);
+#endif /*_WIN32*/
 };
 
 struct aiscript::ScriptStates {

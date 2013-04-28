@@ -18,10 +18,20 @@ namespace client {
 		char ruleConf[RULE_LINES][RULE_IN_LINE + 1];
 		std::string serveraddr;
 		CodeConv::tstring myName;
+#ifdef _WIN32
 		DWORD WINAPI preparationThread (); // 接続を待ち、接続処理をする
+#else /* _WIN32 */
+		pthread_t myThread;
+		int preparationThread (); // 接続を待ち、接続処理をする
+#endif /* _WIN32 */
 		int ClientNumber;
 	public:
+#ifdef _WIN32
 		static DWORD WINAPI initiate (LPVOID param); // CreateThread()に渡す引数用
+#else /* _WIN32 */
+		static void* initiate (void* param); // CreateThread()に渡す引数用
+#endif /* _WIN32 */
+		void startThread (); // スレッドを開始する
 		starter (const CodeConv::tstring& InputPlayerName, const std::string& server, unsigned short port); // コンストラクタ
 		bool isConnected (); // 接続成功したかどうか
 		bool isFailed (); // 接続失敗したかどうか
@@ -34,7 +44,7 @@ namespace client {
 	extern starter* starterThread;
 	void send (unsigned char SendingMsg); // サーバーにメッセージを送る
 #endif
-	DLL void start (LPCTSTR const name, LPCSTR const server, int port, int players); // クライアントを開始させる(DLL)
+	DLL void start (LPCTSTR const name, const char* const server, int port, int players); // クライアントを開始させる(DLL)
 	DLL int isStartingFinished (); // 待機用スレッドが終わったかどうか
 	DLL int isConnectionSucceded (); // 接続成功か
 	DLL int isConnectionFailed (); // 接続失敗か

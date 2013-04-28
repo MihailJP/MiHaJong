@@ -1,6 +1,7 @@
 #include "logger.h"
 #include <sstream>
 
+#ifdef _WIN32
 namespace sound {
 namespace logger {
 
@@ -39,3 +40,4 @@ void fatal_msg(LPCTSTR msg) { if (fpFatalC) (*fpFatalC)(msg); }
 
 }
 }
+#endif /* _WIN32 */

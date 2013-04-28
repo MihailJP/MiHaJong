@@ -1,5 +1,8 @@
 #include "remote.h"
 
+#ifndef _WIN32
+#include <unistd.h>
+#endif /*_WIN32*/
 #include "../socket/socket.h"
 #include "envtbl.h"
 #include "tileutil.h"
@@ -36,12 +39,28 @@ void proc_abrupt_disconnect(GameTable* const gameStat, PlayerID player) {
 RemoteDahai::RemoteDahai (GameTable* const gStat) {
 	gameStat = gStat; finished = false;
 	remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = 0;
+#ifdef _WIN32
 	CreateThread(nullptr, 0, startthread, this, 0, nullptr);
+#else /*_WIN32*/
+	pthread_t hThread;
+	pthread_create(&hThread, nullptr, startthread, (void*)this);
+	pthread_detach(hThread);
+#endif /*_WIN32*/
 }
-DWORD WINAPI RemoteDahai::startthread(LPVOID param) {
+#ifdef _WIN32
+DWORD WINAPI RemoteDahai::startthread(LPVOID param)
+#else /*_WIN32*/
+void* RemoteDahai::startthread(void* param)
+#endif /*_WIN32*/
+{
 	return reinterpret_cast<RemoteDahai*>(param)->thread();
 }
-DWORD WINAPI RemoteDahai::thread () {
+#ifdef _WIN32
+DWORD WINAPI RemoteDahai::thread ()
+#else /*_WIN32*/
+void* RemoteDahai::thread ()
+#endif /*_WIN32*/
+{
 	int ReceivedMsg;
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 		volatile int ClientReceived = 0;
@@ -49,7 +68,11 @@ DWORD WINAPI RemoteDahai::thread () {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
 			if (ClientReceived) break;
+#ifdef _WIN32
 			Sleep(20); // É|Å[ÉäÉìÉO
+#else /*_WIN32*/
+			usleep(20000); // É|Å[ÉäÉìÉO
+#endif /*_WIN32*/
 		}
 		// éÛêMé∏îsÇÃéû
 		if (ReceivedMsg == 1023) {
@@ -76,7 +99,11 @@ DWORD WINAPI RemoteDahai::thread () {
 			if (ServerReceived == EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag) {
 				break;
 			}
+#ifdef _WIN32
 			Sleep(20);
+#else /*_WIN32*/
+			usleep(20000);
+#endif /*_WIN32*/
 		}
 		// éÛêMé∏îsÇÃéû
 		if (ReceivedMsg == 1023) {
@@ -130,11 +157,20 @@ DWORD WINAPI RemoteDahai::thread () {
 		}
 	}
 	finished = true;
+#ifdef _WIN32
 	return S_OK;
+#else /*_WIN32*/
+	return nullptr;
+#endif /*_WIN32*/
 }
 DiscardTileNum remotedahai (GameTable* const gameStat) {
 	RemoteDahai* rDahai = new RemoteDahai(gameStat);
-	while (!rDahai->isFinished()) Sleep(50);
+	while (!rDahai->isFinished())
+#ifdef _WIN32
+		Sleep(50);
+#else /*_WIN32*/
+		usleep(50000);
+#endif /*_WIN32*/
 	DiscardTileNum d = rDahai->get();
 	delete rDahai; rDahai = nullptr;
 	return d;
@@ -143,9 +179,20 @@ DiscardTileNum remotedahai (GameTable* const gameStat) {
 /* ê⁄ë±êÊÇÃñ¬Ç´ */
 RemoteNaki::RemoteNaki (GameTable* const gStat) {
 	gameStat = gStat; finished = false;
+#ifdef _WIN32
 	CreateThread(nullptr, 0, startthread, this, 0, nullptr);
+#else /*_WIN32*/
+	pthread_t hThread;
+	pthread_create(&hThread, nullptr, startthread, (void*)this);
+	pthread_detach(hThread);
+#endif /*_WIN32*/
 }
-DWORD WINAPI RemoteNaki::startthread(LPVOID param) {
+#ifdef _WIN32
+DWORD WINAPI RemoteNaki::startthread(LPVOID param)
+#else /*_WIN32*/
+void* RemoteNaki::startthread(void* param)
+#endif /*_WIN32*/
+{
 	return reinterpret_cast<RemoteNaki*>(param)->thread();
 }
 void RemoteNaki::thread_client() {
@@ -155,7 +202,11 @@ void RemoteNaki::thread_client() {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
 			if (ClientReceived) break;
+#ifdef _WIN32
 			Sleep(0);
+#else /*_WIN32*/
+			usleep(100);
+#endif /*_WIN32*/
 		}
 		if (tmp != gameStat->PlayerID) {
 			using namespace mihajong_socket::protocol;
@@ -210,7 +261,11 @@ void RemoteNaki::thread_server() {
 		}
 		if ((Received[0]) && (Received[1]) && (gameStat->chkGameType(SanmaT) || Received[2]))
 			break;
+#ifdef _WIN32
 		Sleep(0);
+#else /*_WIN32*/
+		usleep(100);
+#endif /*_WIN32*/
 	}
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		using namespace mihajong_socket::protocol;
@@ -224,7 +279,12 @@ void RemoteNaki::thread_server() {
 		else mihajong_socket::server::send(Naki_Ignore);
 	}
 }
-DWORD WINAPI RemoteNaki::thread() {
+#ifdef _WIN32
+DWORD WINAPI RemoteNaki::thread()
+#else /*_WIN32*/
+void* RemoteNaki::thread()
+#endif /*_WIN32*/
+{
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 		thread_client();
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
@@ -233,7 +293,11 @@ DWORD WINAPI RemoteNaki::thread() {
 		if (gameStat->Player[i].DeclarationFlag.Ron) // ÉçÉìÇµÇΩÇÁé©ñÃîvà íuÇ…ÉçÉìîvÇê›íË(é¿ëïè„ÇÃìsçá)
 			gameStat->Player[i].Tsumohai() = gameStat->CurrentDiscard;
 	finished = true;
+#ifdef _WIN32
 	return S_OK;
+#else /*_WIN32*/
+	return nullptr;
+#endif /*_WIN32*/
 }
 void RemoteNaki::checkremotenaki(PlayerID player, int& ReceivedMsg) {
 	using namespace mihajong_socket::protocol;
@@ -268,7 +332,11 @@ void RemoteNaki::checkremotenaki(PlayerID player, int& ReceivedMsg) {
 void remotenaki (GameTable* const gameStat) {
 	RemoteNaki* rNaki = new RemoteNaki(gameStat);
 	while (!rNaki->isFinished())
+#ifdef _WIN32
 		Sleep(1);
+#else /*_WIN32*/
+		usleep(1000);
+#endif /*_WIN32*/
 	delete rNaki; rNaki = nullptr;
 }
 
@@ -341,13 +409,25 @@ void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short
 		} else if (mihajong_socket::client::isConnectionFailed()) {
 			mihajong_graphic::Transit(mihajong_graphic::sceneWaitingError);
 			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
+#ifdef _WIN32
 			Sleep(1500);
+#else /*_WIN32*/
+			usleep(1500000);
+#endif /*_WIN32*/
 			return;
 		}
+#ifdef _WIN32
 		Sleep(50);
+#else /*_WIN32*/
+		usleep(50000);
+#endif /*_WIN32*/
 	}
 	while (!mihajong_socket::client::isStartingFinished())
+#ifdef _WIN32
 		Sleep(50);
+#else /*_WIN32*/
+		usleep(50000);
+#endif /*_WIN32*/
 	ClientNumber = mihajong_socket::client::getClientNumber();
 
 	TCHAR playerName[4][256];

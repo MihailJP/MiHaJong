@@ -239,7 +239,7 @@
 		> POSSIBILITY OF SUCH DAMAGE.
 
 
-■ GuruGuruSMF4.dllについて
+■ GuruGuruSMF4.dllについて（Windows版のみ）
 
 	　Ver1.9.0以降、MIDI再生ルーチンは GuruGuruSMF4.dll に依存しています。ライ
 	センスは次の通りです。

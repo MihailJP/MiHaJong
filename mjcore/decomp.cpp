@@ -17,7 +17,11 @@ using std::min;
 namespace Compressed {
 
 void Data::decompress(int FileID_) {
+#ifdef _WIN32
 	DWORD size = 0;
+#else /*_WIN32*/
+	size_t size = 0;
+#endif /*_WIN32*/
 	const uint8_t* compressedBuf = nullptr;
 	int result;
 	LoadFileInResource(FileID_, LZMA_STREAM, size, compressedBuf);
@@ -52,10 +56,13 @@ void Data::calcSHA256() {
 
 std::string Data::bytesToHexString(std::vector<uint8_t> byteStr) {
 	std::string hx = std::string();
-	std::ostringstream o;
-	o.setf(std::ios::right); o.fill('0'); o.width(2);
-	for (unsigned int i = 0; i < byteStr.size(); i++) o << byteStr[i];
-	return o.str();
+	for (unsigned int i = 0; i < byteStr.size(); i++) {
+		std::ostringstream o;
+		o.setf(std::ios::right); o.fill('0'); o.width(2);
+		o << std::hex << (int)byteStr[i];
+		hx += o.str();
+	}
+	return hx;
 }
 
 void Data::verify(LPCTSTR Description_, const uint8_t* const expectedDigest_) {
@@ -69,9 +76,9 @@ void Data::verify(LPCTSTR Description_, const uint8_t* const expectedDigest_) {
 		o << Description_ << _T("のSHA256ハッシュ値が一致しませんでした。") <<
 			_T("ファイルが壊れている虞があります。") << std::endl <<
 			_T("期待されるハッシュ値: ") <<
-			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(expectedDigest_[0], expectedDigest_[31]))) <<
+			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(expectedDigest_, expectedDigest_ + 32))) << std::endl <<
 			_T("実際のハッシュ値: ") <<
-			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(actualDigest[0], actualDigest[31])));
+			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(actualDigest, actualDigest + 32)));
 		Raise(EXCEPTION_MJCORE_HASH_MISMATCH, o.str().c_str());
 	}
 	else {
@@ -86,6 +93,7 @@ Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDiges
 		decompress(FileID_);
 		verify(Description_, expectedDigest_);
 	}
+#ifdef _WIN32
 	catch (_EXCEPTION_POINTERS* e) {
 		ErrorInfo *errStat = nullptr;
 		switch (e->ExceptionRecord->ExceptionCode) {
@@ -111,6 +119,12 @@ Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDiges
 			throw;
 		}
 	}
+#else /*_WIN32*/
+	catch (...) {
+		/* TODO: 未実装箇所 */
+		throw;
+	}
+#endif /*_WIN32*/
 }
 
 Data::~Data() {

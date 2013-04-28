@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef _WIN32
 #include <windows.h>
 #include <dinput.h>
 #include <utility>
@@ -43,3 +44,4 @@ public:
 
 }
 }
+#endif /*_WIN32*/

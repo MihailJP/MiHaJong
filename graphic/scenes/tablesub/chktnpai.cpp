@@ -8,6 +8,9 @@ TableSubsceneCheckTenpai::TableSubsceneCheckTenpai(DevicePtr device) : TableSubs
 	txtRenderer = new TextRenderer(device);
 	tileRenderer = new ShowTile(device);
 	RecalcTenpaiFlag();
+#ifndef _WIN32
+	initialized = false;
+#endif /*_WIN32*/
 }
 
 TableSubsceneCheckTenpai::~TableSubsceneCheckTenpai() {
@@ -49,6 +52,12 @@ void TableSubsceneCheckTenpai::RecalcTenpaiFlag() {
 }
 
 void TableSubsceneCheckTenpai::Render() {
+#ifndef _WIN32
+	if (!initialized) {
+		RecalcTenpaiFlag();
+		initialized = true;
+	}
+#endif /*_WIN32*/
 	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sOpposite), TableSize / 2      ,                 192);
 	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sLeft    ),                 256, TableSize / 2      );
 	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sRight   ), TableSize     - 256, TableSize / 2      );

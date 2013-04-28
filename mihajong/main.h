@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef _WIN32
+
 #define STRICT
 #define WIN32_LEAN_AND_MEAN
 
@@ -11,3 +13,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 #else
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow);
 #endif
+
+#else /*_WIN32*/
+
+int main(int argc, char** argv);
+
+#endif /*_WIN32*/

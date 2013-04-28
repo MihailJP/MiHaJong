@@ -5,7 +5,17 @@
 #include "func.h"
 #include "ruletbl.h"
 #include <vector>
+#ifdef WITH_BOOST_REGEX
+#include <boost/regex.hpp>
+#define REGEX boost
+#else /*WITH_BOOST_REGEX*/
 #include <regex>
+#define REGEX std
+#endif /*WITH_BOOST_REGEX*/
+
+#ifdef None
+#undef None
+#endif
 
 namespace {
 	enum bgmMode {None, Vorbis, Midi,};
@@ -13,7 +23,7 @@ namespace {
 }
 
 /* BGM読み込み */
-void sound::util::bgmload(unsigned ID, LPCSTR filename, bool looped) {
+void sound::util::bgmload(unsigned ID, const char* filename, bool looped) {
 	if (BGM_Mode.size() <= ID) BGM_Mode.resize(ID + 1, None);
 	CodeConv::tostringstream o;
 	std::string oggfile = std::string("bgm\\") + std::string(filename) + std::string(".ogg");
@@ -43,7 +53,7 @@ void sound::util::bgmload(unsigned ID, LPCSTR filename, bool looped) {
 }
 
 /* サウンド読み込み */
-void sound::util::soundload(unsigned ID, LPCSTR filename, bool looped) {
+void sound::util::soundload(unsigned ID, const char* filename, bool looped) {
 	CodeConv::tostringstream o;
 	if (sound::LoadWave(ID, filename, looped ? 1 : 0) == 0) {
 		o << _T("音声ファイル [") << CodeConv::EnsureTStr(filename) << _T("] を読み込みました。");
@@ -83,8 +93,8 @@ void sound::util::setvolume() {
 	using namespace sound;
 	auto getvolume = [] (std::string ruleTag) -> double {
 		const std::string chipRule(RuleData::chkPreference(ruleTag));
-		std::smatch matchDat; int volperc = 100;
-		if (std::regex_match(chipRule, matchDat, std::regex("vol_(\\d+)")))
+		REGEX::smatch matchDat; int volperc = 100;
+		if (REGEX::regex_match(chipRule, matchDat, REGEX::regex("vol_(\\d+)")))
 			volperc = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
 		return (double)volperc / 100.0;
 	};

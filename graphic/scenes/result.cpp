@@ -13,6 +13,9 @@
 #include "../geometry.h"
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
+#ifndef _WIN32
+#include "../keycode.h"
+#endif /*_WIN32*/
 
 namespace mihajong_graphic {
 
@@ -47,11 +50,27 @@ void ResultScreen::Render() {
 		if (*k) (*k)->Render();
 }
 
-void ResultScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+#ifdef _WIN32
+void ResultScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od)
+#else /*_WIN32*/
+void ResultScreen::KeyboardInput(const XEvent* od)
+#endif /*_WIN32*/
+{
+#ifdef _WIN32
 	const bool flag = ((myTimer.elapsed() > 3000000u) && (od->dwData));
-	switch (od->dwOfs) {
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	const bool flag = ((myTimer.elapsed() > 3000000u) && (od->type == KeyPress));
+	switch (od->xkey.keycode)
+#endif /*_WIN32*/
+	{
 	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // 決定
-		if (od->dwData) {
+#ifdef _WIN32
+		if (od->dwData)
+#else /*_WIN32*/
+		if (od->type == KeyPress)
+#endif /*_WIN32*/
+		{
 			sound::Play(sound::IDs::sndClick);
 			if (flag)
 				ui::UIEvent->set(0); // イベントをセット
@@ -62,11 +81,28 @@ void ResultScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	}
 }
 
-void ResultScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+
+#ifdef _WIN32
+void ResultScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)
+#else /*_WIN32*/
+void ResultScreen::MouseInput(const XEvent* od, int X, int Y)
+#endif /*_WIN32*/
+{
 	const bool flag = (myTimer.elapsed() > 3000000u);
-	switch (od->dwOfs) {
+#ifdef _WIN32
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	switch (od->type)
+#endif /*_WIN32*/
+	{
+#ifdef _WIN32
 	case DIMOFS_BUTTON0: // マウスの左ボタン
-		if (od->dwData) {
+		if (od->dwData)
+#else /*_WIN32*/
+	case ButtonPress: // マウスクリック
+		if (od->xbutton.button == Button1)
+#endif /*_WIN32*/
+		{
 			sound::Play(sound::IDs::sndClick);
 			if (flag)
 				ui::UIEvent->set(0); // イベントをセット

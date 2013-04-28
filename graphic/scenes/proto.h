@@ -1,6 +1,8 @@
 #pragma once
 
+#ifdef _WIN32
 #include <windows.h>
+#endif /*_WIN32*/
 #include "../directx.h"
 #include <vector>
 #include "../input.h"
@@ -27,10 +29,16 @@ public:
 		caller = manipulator;
 	}
 	virtual ~Scene() {}
+#ifdef _WIN32
 	virtual void IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {}
 	virtual void KeyboardInput(WPARAM wParam, LPARAM lParam) {}
 	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od) {}
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {}
+#else /*_WIN32*/
+	/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢ŽÀ‘• */
+	virtual void KeyboardInput(const XEvent* od) {}
+	virtual void MouseInput(const XEvent* od, int X, int Y) {}
+#endif /*_WIN32*/
 	virtual void SetSubscene(unsigned int scene_ID) {}
 };
 

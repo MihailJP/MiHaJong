@@ -2,6 +2,9 @@
 
 #include <sstream>
 #include <cassert>
+#ifndef _WIN32
+#include <unistd.h>
+#endif /*_WIN32*/
 #include "../sound/sound.h"
 #include "../common/strcode.h"
 #include "logging.h"
@@ -456,7 +459,11 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	if (CheckChankan(gameStat, RoundEndType, Mode)) return true;
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
+#ifdef _WIN32
 	Sleep((gameStat->KangFlag.chankanFlag != chankanNone) ? 500 : 1000);
+#else /*_WIN32*/
+	usleep((gameStat->KangFlag.chankanFlag != chankanNone) ? 500000 : 1000000);
+#endif /*_WIN32*/
 	if (ProcRinshan(gameStat, RoundEndType, Mode, fuuroPlayer)) return true;
 	/* 事後処理 */
 	for (PlayerID i = 0; i < Players; ++i)
@@ -523,12 +530,20 @@ namespace {
 		using namespace mihajong_graphic;
 		using namespace mihajong_graphic::naki;
 		if (gameStat->KangFlag.chankanFlag != chankanNone) {
+#ifdef _WIN32
 			Sleep(500);
+#else /*_WIN32*/
+			usleep(500000);
+#endif /*_WIN32*/
 			Subscene(tblSubscenePlayerChankan);
 		} else {
 			Subscene(tblSubscenePlayerNaki);
 		}
+#ifdef _WIN32
 		DWORD result = ui::WaitUI();
+#else /*_WIN32*/
+		uint32_t result = ui::WaitUI();
+#endif /*_WIN32*/
 		if (gameStat->KangFlag.chankanFlag != chankanNone) {
 			Subscene(tblSubsceneCallChankanPre);
 		} else {
@@ -711,7 +726,12 @@ EndType ronhuproc(GameTable* const gameStat) {
 	}
 	/* 実際に栄和を行なう処理 */
 	for (int i = 0; i < (Players - 1); i++) {
-		Sleep(1); PlayerID pl = RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1));
+#ifdef _WIN32
+		Sleep(1);
+#else /*_WIN32*/
+		usleep(1000);
+#endif /*_WIN32*/
+		PlayerID pl = RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1));
 		if (gameStat->Player[pl].DeclarationFlag.Ron) {
 			/* ウォッチモードの場合は和了った人に視点を向ける */
 			if (EnvTable::Instantiate()->WatchModeFlag)
@@ -821,7 +841,11 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 	if (declCount > 1)
 		error(_T("複数同時のポン・槓が宣言されています。"));
 	for (PlayerID i = 0; i < Players; i++) {
+#ifdef _WIN32
 		Sleep(1);
+#else /*_WIN32*/
+		usleep(1000);
+#endif /*_WIN32*/
 		/* 捨牌をポンする場合 */
 		if (gameStat->Player[i].DeclarationFlag.Pon) {
 			gameStat->CurrentPlayer.Passive = i; // 鳴いたプレイヤーを設定

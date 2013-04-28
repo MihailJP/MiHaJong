@@ -21,8 +21,13 @@ public:
 	TitleScreen(ScreenManipulator* const manipulator);
 	~TitleScreen();
 	void Render();
+#ifdef _WIN32
 	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
+#else /*_WIN32*/
+	virtual void KeyboardInput(const XEvent* od);
+	virtual void MouseInput(const XEvent* od, int X, int Y);
+#endif /*_WIN32*/
 };
 
 class TitleScreen::TitleSprite {

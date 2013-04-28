@@ -16,7 +16,12 @@
 #include "ruletbl.h"
 #include "chat.h"
 
-MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
+#ifdef _WIN32
+MJCORE void initapp(GameTypeID gameType, HWND hwnd)
+#else /*_WIN32*/
+MJCORE void initapp(GameTypeID gameType, Window hwnd)
+#endif /*_WIN32*/
+{
 	/* コンフィグファイルのパスを設定する */
 	/* Vista以降、Program Files以下にファイルを作れないので自分で調整する */
 	std::string configFile;
@@ -36,12 +41,14 @@ MJCORE void initapp(GameTypeID gameType, HWND hwnd) {
 	}
 	std::string preferenceFile = confpath::confPath() + "config.ini";
 
+#ifdef _WIN32 /* Windows版でのみ実装 */
 	/* ログ初期化 */
 	{
 		logger::initLogger(); CodeConv::tostringstream o;
 		o << _T("MiHaJong Ver. ") << MIHAJONG_VER; info(o.str().c_str()); o.str(_T(""));
 		o << _T("ビルド日時は ") << _T(__DATE__) << _T(" ") << _T(__TIME__) << _T(" です。"); info(o.str().c_str());
 	}
+#endif /*_WIN32*/
 
 	/* 卓の環境を初期化 */
 	{

@@ -4,6 +4,9 @@
 #include "../rule.h"
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
+#ifndef _WIN32
+#include "../keycode.h"
+#endif /*_WIN32*/
 
 namespace mihajong_graphic {
 
@@ -51,10 +54,25 @@ void ServerWait::Render() {
 void ServerWait::SetSubscene(unsigned int scene_ID) {
 	subsceneID = static_cast<ServerWaitingSubsceneID>(scene_ID);
 };
-void ServerWait::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
-	switch (od->dwOfs) {
+#ifdef _WIN32
+void ServerWait::KeyboardInput(LPDIDEVICEOBJECTDATA od)
+#else /*_WIN32*/
+void ServerWait::KeyboardInput(const XEvent* od)
+#endif /*_WIN32*/
+{
+#ifdef _WIN32
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	switch (od->xkey.keycode)
+#endif /*_WIN32*/
+	{
 	case DIK_ESCAPE: case DIK_X: // ƒLƒƒƒ“ƒZƒ‹
-		if (od->dwData) {
+#ifdef _WIN32
+		if (od->dwData)
+#else /*_WIN32*/
+		if (od->type == KeyPress)
+#endif /*_WIN32*/
+		{
 			ui::cancellableWait->set(1);
 		}
 		break;

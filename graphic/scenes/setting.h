@@ -20,6 +20,9 @@ private:
 private:
 	void itemText(unsigned prmID, const CodeConv::tstring& prmName, const CodeConv::tstring& prmContent);
 	void redrawItems();
+#ifndef _WIN32
+	void objInit();
+#endif /*_WIN32*/
 	int prefstat[PREFERENCE_ITEMS];
 	char PrefConf[PREFERENCE_LINES][RULE_IN_LINE + 4];
 	void ShowPageCaption();
@@ -37,9 +40,14 @@ public:
 	PreferenceConfigScene(ScreenManipulator* const manipulator);
 	virtual ~PreferenceConfigScene();
 	void Render();
+#ifdef _WIN32
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
+#else /*_WIN32*/
+	/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢ŽÀ‘• */
+	void KeyboardInput(const XEvent* od);
+#endif /*_WIN32*/
 };
 
 }

@@ -1,16 +1,21 @@
 #pragma once
 
 #include "socket.h"
+#ifdef _WIN32
 #include <windows.h>
+#endif /* _WIN32 */
 
 #ifndef DLL
-#ifdef SOCKET_EXPORTS
+#if !defined(_WIN32)
+#define DLL /* */
+#elif defined(SOCKET_EXPORTS)
 #define DLL __declspec(dllexport)
 #else
 #define DLL __declspec(dllimport)
-#endif /*SOCKET_EXPORTS*/
+#endif
 #endif /*DLL*/
 
+#ifdef _WIN32
 namespace mihajong_socket {
 namespace logger {
 
@@ -47,3 +52,16 @@ void fatal_msg(LPCTSTR msg);
 #define error(msg) mihajong_socket::logger::error_msg(logger::posPrefix(_T(__FILE__), __LINE__, (msg)).c_str())
 #define fatal(msg) mihajong_socket::logger::fatal_msg(logger::posPrefix(_T(__FILE__), __LINE__, (msg)).c_str())
 #endif
+
+#else /* _WIN32 */
+
+#ifdef SOCKET_EXPORTS
+#define trace(msg) /* Not supported */
+#define debug(msg) /* Not supported */
+#define info(msg) /* Not supported */
+#define warn(msg) /* Not supported */
+#define error(msg) /* Not supported */
+#define fatal(msg) /* Not supported */
+#endif
+
+#endif /* _WIN32 */

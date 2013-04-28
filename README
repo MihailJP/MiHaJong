@@ -2,10 +2,12 @@ MiHaJong - Japanese Mahjong with a lot of local rules implemented
 Copyright (c) 2008-2013 MihailJP, Part of rights reserved
 
 Run on Windows XP/Vista/7 with Direct X 9+
+with Linux port
 
 Compiler:
 - Visual C++ 2010 Express Edition (tested)
 - GNU C++ 4.7 MinGW/MSYS (NOT tested)
+- GNU C++ 4.7 Linux (tested)
 
 Build-time requirements:
 - Ruby interpreter with ruby-lzma gem
@@ -13,13 +15,20 @@ Build-time requirements:
 
 Dependencies:
 - liblua (v5.1 or later, http://www.lua.org/download.html) [*1]
+- openal (http://connect.creativelabs.com/openal/default.aspx) [*2]
+- libpng (http://www.libpng.org/pub/png/libpng.html) [*3]
 [*1] Statically linked when compiled with VC++.
+[*2] Mandatory on Linux, but optional on Windows.
+[*3] Linux only. Not used on Windows.
 
 Optional dependencies:
 - libogg and libvorbis (http://www.xiph.org/downloads/) [*1]
 - GuruGuruSMF (http://gurugurusmf.migmig.net/) [*2]
+- boost::regex (http://www.boost.org/) [*3]
 [*1] Statically linked when compiled with VC++.
 [*2] Windows only.
+[*3] You need this on GCC because std::regex in GNU C++ library is broken.
+     Unneeded on VC++.
 
 See readme.txt for more (written in Japanese)
 See playing.txt for how to play (written in Japanese)

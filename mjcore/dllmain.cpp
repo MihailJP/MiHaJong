@@ -1,5 +1,7 @@
 #include "dllmain.h"
 
+#ifdef _WIN32
+
 #ifdef _MSC_VER
 #include <dbghelp.h>
 #endif
@@ -193,3 +195,12 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 
 	return TRUE;
 }
+
+#else /*_WIN32*/
+
+#include "except.h"
+
+ErrorInfo errorInfo;
+const uintptr_t errorInfoPtr[1] = {(uintptr_t)(&errorInfo)};
+
+#endif /*_WIN32*/

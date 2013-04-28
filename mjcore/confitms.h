@@ -14,6 +14,9 @@
 #include "logging.h"
 #include "../common/strcode.h"
 #include "gametbl.h"
+#ifndef _WIN32
+#include <cassert>
+#endif
 
 // -------------------------------------------------------------------------
 
@@ -104,7 +107,12 @@ CONFDAT_TEMPLATE const char CONFDAT_CLASS::digit[] = "0123456789ABCDEFGHIJKLMNOP
 
 CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) { // コンフィグ用CSVを読み込む
 	using namespace CodeConv;
-	DWORD size = 0; const uint8_t* csv = nullptr;
+#ifdef _WIN32
+	DWORD size = 0;
+#else /*_WIN32*/
+	size_t size = 0;
+#endif /*_WIN32*/
+	const uint8_t* csv = nullptr;
 	char *csvdat = new char[csvfile->getDataSize() + 4]; memset(csvdat, 0, csvfile->getDataSize()+4);
 #ifdef _MSC_VER
 	memcpy_s(csvdat, csvfile->getDataSize()+4, csvfile->getData(), csvfile->getDataSize());
@@ -115,6 +123,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 	delete[] csvdat;
 
 	for (auto k = confdat.begin(); k != confdat.end(); ++k) { // 名前テーブル
+		if ((*k).size() < 11) continue; // Invalid record!!
 		std::string nomenPartisRegulae(toANSI((*k)[8])); // ルールタグ
 		unsigned int numerusPartisRegulae = _ttoi((*k)[0].c_str()); // ルールタグ
 		nametbl[numerusPartisRegulae] = nomenPartisRegulae; // 順方向
@@ -150,7 +159,12 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 }
 CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_ini(Compressed::Data* inifile) { // コンフィグ文字列変換用INIを読み込む
 	using namespace CodeConv;
-	DWORD size = 0; const uint8_t* ini = nullptr;
+#ifdef _WIN32
+	DWORD size = 0;
+#else /*_WIN32*/
+	size_t size = 0;
+#endif /*_WIN32*/
+	const uint8_t* ini = nullptr;
 	char *inidat = new char[inifile->getDataSize() + 4]; memset(inidat, 0, inifile->getDataSize()+4);
 #ifdef _MSC_VER
 	memcpy_s(inidat, inifile->getDataSize()+4, inifile->getData(), inifile->getDataSize());
@@ -424,7 +438,11 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::saveConfigFile(const char* const filename) {
 	}
 	catch (std::runtime_error& e) { // 書き込み失敗！！
 		error(EnsureTStr(e.what()));
+#ifdef _WIN32
 		MessageBox(nullptr, EnsureTStr(e.what()).c_str(), _T("書き込み失敗"), MB_OK | MB_ICONERROR | MB_TASKMODAL | MB_TOPMOST);
+#else /*_WIN32*/
+		/* TODO: 未実装箇所 */
+#endif /*_WIN32*/
 		return -1;
 	}
 }
