@@ -121,6 +121,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				else return false;
 			}
 		));
+	/* リリーホワイト */
+	if (RuleData::chkRuleApplied("lily_white"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("リリーホワイト"), yaku::yakuCalculator::Yaku::yval_1han_menzen,
+			/* ダブル立直に追加する役 */
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
+					(analysis->PlayerStat->RichiFlag.DoubleFlag) && // ダブル立直フラグが立っている
+					(analysis->TsumoHai->tile == WhiteDragon)); // 和了牌が白
+			}
+		));
 
 	// ---------------------------------------------------------------------
 
