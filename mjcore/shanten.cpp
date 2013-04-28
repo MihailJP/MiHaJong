@@ -1,7 +1,9 @@
 #define NOMINMAX
 #include "shanten.h"
 
+#ifdef _WIN32
 #include <windows.h>
+#endif /*_WIN32*/
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>

@@ -2,8 +2,10 @@
 
 namespace mihajong_socket {
 
+#ifdef _WIN32
 WSADATA SocketInfo;
 HINSTANCE dllInst;
+#endif /* _WIN32 */
 std::array<Sock*, numOfSockets> sockets = {nullptr,};
 
 void errordlg (socket_error& err) { // エラーダイアログ【廃止】
@@ -11,7 +13,9 @@ void errordlg (socket_error& err) { // エラーダイアログ【廃止】
 }
 
 DLL int init () try { // ソケットを初期化する
+#ifdef _WIN32 // Linuxでは初期化不要
 	if (int err = WSAStartup(MAKEWORD(2, 0), &SocketInfo)) throw socket_initialization_error(err);
+#endif /* _WIN32 */
 	return 0;
 }
 catch (socket_error& err) {
@@ -28,7 +32,7 @@ catch (socket_error& err) {
 	return err.error_code();
 }
 
-DLL int connect (int sock_id, LPCSTR const addr, int port) try { // クライアント接続開始
+DLL int connect (int sock_id, const char* const addr, int port) try { // クライアント接続開始
 	sockets[sock_id] = new Sock(addr, port); // 接続する
 	return 0;
 }
@@ -97,12 +101,15 @@ DLL int hangup (int sock_id) { // 接続を切る
 }
 
 DLL int bye () { // ソケットのクリンナップ
+#ifdef _WIN32 // Linuxでは不要
 	return WSACleanup();
+#endif /* _WIN32 */
 }
 
 }
 // -------------------------------------------------------------------------
 
+#ifdef _WIN32 // Linuxでは不要
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) { // 初期化などを行う
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
@@ -120,3 +127,4 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) { /
 
 	return TRUE;
 }
+#endif /* _WIN32 */

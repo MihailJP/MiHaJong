@@ -9,8 +9,13 @@ namespace RemoteAction {
 		volatile bool finished;
 		volatile DiscardTileNum remoteDahai;
 		GameTable* gameStat;
+#ifdef _WIN32
 		DWORD WINAPI thread();
 		static DWORD WINAPI startthread(LPVOID param);
+#else /*_WIN32*/
+		void* thread();
+		static void* startthread(void* param);
+#endif /*_WIN32*/
 	public:
 		RemoteDahai(GameTable* const gStat);
 		bool isFinished () {return finished;}
@@ -23,9 +28,14 @@ namespace RemoteAction {
 		GameTable* gameStat;
 		void thread_client();
 		void thread_server();
+#ifdef _WIN32
 		DWORD WINAPI thread();
-		void checkremotenaki(PlayerID player, int& ReceivedMsg);
 		static DWORD WINAPI startthread(LPVOID param);
+#else /*_WIN32*/
+		void* thread();
+		static void* startthread(void* param);
+#endif /*_WIN32*/
+		void checkremotenaki(PlayerID player, int& ReceivedMsg);
 	public:
 		RemoteNaki(GameTable* const gStat);
 		bool isFinished () {return finished;}

@@ -5,6 +5,7 @@
 #include <functional>
 #include <cstdint>
 #include <cmath>
+#include <cassert>
 
 std::seed_seq RndNum::seed;
 std::mt19937 RndNum::engine;
@@ -19,7 +20,8 @@ void RndNum::init() {
 
 /* 一様分布整乱数 */
 unsigned int RndNum::rnd(unsigned int k) {
-	std::uniform_int_distribution<int> distrib(0, k-1);
+	assert(k > 0);
+	std::uniform_int_distribution<unsigned int> distrib(0, k-1);
 	return distrib(engine);
 }
 
@@ -27,10 +29,6 @@ unsigned int RndNum::rnd(unsigned int k) {
 double RndNum::rnd() {
 	std::uniform_real_distribution<double> distrib(0.0, 1.0); // 半開区間 [0,1)
 	return distrib(engine);
-}
-void RndNum::frnd(double* const ans) {
-	std::uniform_real_distribution<double> distrib(0.0, 1.0); // 半開区間 [0,1)
-	*ans = distrib(engine);
 }
 
 /* 正規分布乱数 */
@@ -41,6 +39,6 @@ double RndNum::rnd(double mean, double var) {
 
 /* サイコロ */
 unsigned int RndNum::dice() {
-	std::uniform_int_distribution<int> distrib(1, 6);
+	std::uniform_int_distribution<unsigned int> distrib(1u, 6u);
 	return distrib(engine);
 }

@@ -1,7 +1,13 @@
 #include "agari.h"
 
 #include <functional>
+#ifdef WITH_BOOST_REGEX
+#include <boost/regex.hpp>
+#define REGEX boost
+#else /*WITH_BOOST_REGEX*/
 #include <regex>
+#define REGEX std
+#endif /*WITH_BOOST_REGEX*/
 #include "../graphic/graphic.h"
 #include "../sound/sound.h"
 #include "../common/bgmid.h"
@@ -328,14 +334,14 @@ namespace {
 	void dobonPenalty(GameTable* gameStat, PlayerID AgariPlayerPriority) {
 		int penalty = 0;
 		std::string penaConf(RuleData::chkRule("penalty_negative"));
-		std::smatch matchDat;
-		if (std::regex_match(penaConf, matchDat, std::regex("(\\d+)pts"))) { // “_–_‚Å¸ŽZ
+		REGEX::smatch matchDat;
+		if (REGEX::regex_match(penaConf, matchDat, REGEX::regex("(\\d+)pts"))) { // “_–_‚Å¸ŽZ
 			penalty = atoi(matchDat[1].str().c_str()); // ƒ‹[ƒ‹Ý’è•¶Žš—ñ‚©‚ç®”‚ð’Šo
 			if (isSomeoneDobon(gameStat)) {
 				calcDobonDelta(gameStat, AgariPlayerPriority, penalty);
 				endround::transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValDobon, 3000);
 			}
-		} else if (std::regex_match(penaConf, matchDat, std::regex("chip(\\d+)"))) { // ƒ`ƒbƒv‚Å¸ŽZ
+		} else if (REGEX::regex_match(penaConf, matchDat, REGEX::regex("chip(\\d+)"))) { // ƒ`ƒbƒv‚Å¸ŽZ
 			if (RuleData::chkRuleApplied("chip")) {
 				penalty = atoi(matchDat[1].str().c_str()); // ƒ‹[ƒ‹Ý’è•¶Žš—ñ‚©‚ç®”‚ð’Šo
 				if (isSomeoneDobon(gameStat)) {
@@ -458,10 +464,10 @@ namespace {
 
 	void calculateTsumibouDelta(const GameTable* gameStat) { // Ï‚Ý–_‚ÌŒvŽZ
 		int tsumiboh_rate = 0;
-		std::smatch matchDat;
+		REGEX::smatch matchDat;
 		std::string tsumiboh_rate_str(RuleData::chkRule("tsumiboh_rate"));
 		// MEMORANDUM: ŒŸõ‘ÎÛ•¶Žš—ñ‚ðin-situ‚Åì‚Á‚Ä‚Íƒ_ƒ •K‚¸ˆø”‚É“n‚·‘O‚ÉƒIƒuƒWƒFƒNƒg‚ðì‚Á‚Ä‚¨‚­‚±‚Æ
-		if (std::regex_match(tsumiboh_rate_str, matchDat, std::regex("counter_(\\d+)")))
+		if (REGEX::regex_match(tsumiboh_rate_str, matchDat, REGEX::regex("counter_(\\d+)")))
 			tsumiboh_rate = std::atoi(matchDat[1].str().c_str()) / (ACTUAL_PLAYERS - 1);
 		endround::transfer::resetDelta();
 		if (gameStat->TsumoAgariFlag) {
@@ -485,7 +491,7 @@ namespace {
 		if ((ChipAmount <= 0) || (!RuleData::chkRuleApplied("chip"))) return;
 		endround::transfer::resetDelta();
 		std::string limithand_bonus(RuleData::chkRule("limithand_bonus"));
-		if ((!gameStat->TsumoAgariFlag) && (!std::regex_match(limithand_bonus, std::regex("chip_\\d+_each")))) {
+		if ((!gameStat->TsumoAgariFlag) && (!REGEX::regex_match(limithand_bonus, REGEX::regex("chip_\\d+_each")))) {
 			endround::transfer::addDelta(gameStat->CurrentPlayer.Furikomi, -ChipAmount);
 			endround::transfer::addDelta(gameStat->CurrentPlayer.Agari   ,  ChipAmount);
 		} else {
@@ -644,13 +650,13 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	
 	ChipAmount = 0;
 	if ((yakuInfo.CoreSemiMangan + yakuInfo.BonusSemiMangan) >= 8) { // –ð–žj‹V
-		std::smatch vals;
+		REGEX::smatch vals;
 		std::string limithand_bonus(RuleData::chkRule("limithand_bonus"));
-		if (std::regex_match(limithand_bonus, vals, std::regex("chip(\\d+)")))
+		if (REGEX::regex_match(limithand_bonus, vals, REGEX::regex("chip(\\d+)")))
 			ChipAmount = std::atoi(vals[1].str().c_str());
-		else if (std::regex_match(limithand_bonus, vals, std::regex("chip_tsumo(\\d+)each_ron(\\d)")))
+		else if (REGEX::regex_match(limithand_bonus, vals, REGEX::regex("chip_tsumo(\\d+)each_ron(\\d)")))
 			ChipAmount = std::atoi(vals[gameStat->TsumoAgariFlag ? 1 : 2].str().c_str());
-		else if (std::regex_match(limithand_bonus, vals, std::regex("chip_(\\d+)_each")))
+		else if (REGEX::regex_match(limithand_bonus, vals, REGEX::regex("chip_(\\d+)_each")))
 			ChipAmount = std::atoi(vals[1].str().c_str());
 	}
 	chipTransfer(gameStat, mihajong_graphic::tblSubsceneCallValYakuman, ChipAmount);
@@ -658,7 +664,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	/* Žl”n˜H‚ª–k‰Æ‚Ì•úe‚¾‚Á‚½ê‡ */
 	if (!gameStat->chkGameType(SanmaT)) {
 		if (gameStat->playerwind(gameStat->CurrentPlayer.Furikomi) == sNorth) {
-			if (std::regex_search(yakuInfo.yakuNameList, std::basic_regex<TCHAR>(_T("(^|\\r?\\n)Žl”n˜H(\r?\n|$)")))) {
+			if (REGEX::regex_search(yakuInfo.yakuNameList, REGEX::basic_regex<TCHAR>(_T("(^|\\r?\\n)Žl”n˜H(\r?\n|$)")))) {
 				transfer::resetDelta();
 				for (PlayerID i = 0; i < Players; ++i)
 					transfer::addDelta(i, 1000);

@@ -4,12 +4,18 @@
 #include "../../common/version.h"
 #include "../event.h"
 #include <iomanip>
+#ifndef _WIN32
+#include "../keycode.h"
+#endif /*_WIN32*/
 
 namespace mihajong_graphic {
 
 ConfigMenuProto::ConfigMenuProto(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
 	myButtonPic = new ButtonPic(manipulator->getDevice());
 	menuCursor = 0; buttonCursor = -1; buttonDown = -1;
+#ifndef _WIN32
+	menuInitFlag = false;
+#endif /*_WIN32*/
 }
 
 ConfigMenuProto::~ConfigMenuProto() {
@@ -28,6 +34,12 @@ void ConfigMenuProto::CreateButton(unsigned btnID, int X, int Y, unsigned Width,
 void ConfigMenuProto::Render() {
 	clearWithGameTypeColor(); // バッファクリア
 	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
+#ifndef _WIN32
+	if (!menuInitFlag) {
+		objInit();
+		menuInitFlag = true;
+	}
+#endif /*_WIN32*/
 	{
 		myTextRenderer->NewText(123, Caption(), 540 * WidthRate, 25, 2.0f, WidthRate, 0xffffffff);
 	}
@@ -93,18 +105,30 @@ void ConfigMenuProto::BtnEvent_Button_Next() {
 	myTimer.skipTo(0); redrawItems();
 }
 
-void ConfigMenuProto::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
-	switch (od->dwOfs) {
+#ifdef _WIN32
+void ConfigMenuProto::KeyboardInput(LPDIDEVICEOBJECTDATA od)
+#else /*_WIN32*/
+void ConfigMenuProto::KeyboardInput(const XEvent* od)
+#endif /*_WIN32*/
+{
+#ifdef _WIN32
+	const bool keyDown = od->dwData;
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	const bool keyDown = od->type == KeyPress;
+	switch (od->xkey.keycode)
+#endif /*_WIN32*/
+	{
 	case DIK_UP: case DIK_K: // 前の項目
-		if ((od->dwData) && (buttonCursor == -1))
+		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Prev(1);
 		break;
 	case DIK_DOWN: case DIK_J: // 次の項目
-		if ((od->dwData) && (buttonCursor == -1))
+		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Next(1);
 		break;
 	case DIK_LEFT: case DIK_H: // 前の選択肢
-		if (od->dwData) {
+		if (keyDown) {
 			if (buttonCursor == -1)
 				BtnEvent_Content_Roll_Down();
 			else
@@ -112,7 +136,7 @@ void ConfigMenuProto::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		}
 		break;
 	case DIK_RIGHT: case DIK_L: // 次の選択肢
-		if (od->dwData) {
+		if (keyDown) {
 			if (buttonCursor == -1)
 				BtnEvent_Content_Roll_Up();
 			else
@@ -120,32 +144,37 @@ void ConfigMenuProto::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		}
 		break;
 	case DIK_HOME: // 前のカラム
-		if ((od->dwData) && (buttonCursor == -1))
+		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Prev(20);
 		break;
 	case DIK_END: // 次のカラム
-		if ((od->dwData) && (buttonCursor == -1))
+		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Next(20);
 		break;
 	case DIK_PRIOR: // 前のページ
-		if ((od->dwData) && (buttonCursor == -1))
+		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Prev(itemsPerPage());
 		break;
 	case DIK_NEXT: // 次のページ
-		if ((od->dwData) && (buttonCursor == -1))
+		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Next(itemsPerPage());
 		break;
 	case DIK_ESCAPE: case DIK_X: // キャンセルキー
-		if (od->dwData) BtnEvent_Cancel_Down();
+		if (keyDown) BtnEvent_Cancel_Down();
 		break;
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z: // 決定キー
-		if (od->dwData) BtnEvent_OK_Down();
+		if (keyDown) BtnEvent_OK_Down();
 		else BtnEvent_OK_Up();
 		break;
 	}
 }
 
-void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+#ifdef _WIN32
+void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)
+#else /*_WIN32*/
+void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
+#endif /*_WIN32*/
+{
 	const int scaledX = (int)((float)X / Geometry::WindowScale() / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight));
 	const int scaledY = (int)((float)Y / Geometry::WindowScale());
 	const int region = whichRegion(scaledX, scaledY);
@@ -178,10 +207,20 @@ void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 			}
 		}
 	};
-	switch (od->dwOfs) {
+#ifdef _WIN32
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	switch (od->type)
+#endif /*_WIN32*/
+	{
+#ifdef _WIN32
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
+#else /*_WIN32*/
+	case MotionNotify: // マウスカーソルを動かした場合
+#endif /*_WIN32*/
 		setcursor();
 		break;
+#ifdef _WIN32
 	case DIMOFS_Z: // ホイールの操作
 		if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
 			setcursor();
@@ -195,20 +234,54 @@ void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 		}
 		break;
 	case DIMOFS_BUTTON0: // 左クリック
-		if ((od->dwData) && (region >= 0) && (region <= (itemsPerPage() - 1))) {
+		if ((od->dwData) && (region >= 0) && (region <= (itemsPerPage() - 1)))
+#else /*_WIN32*/
+	case ButtonPress: // マウスの左ボタン
+		if ((od->xbutton.button == Button1) && (region >= 0) && (region <= (itemsPerPage() - 1)))
+#endif /*_WIN32*/
+		{
 			setcursor();
 			BtnEvent_Content_Roll_Up();
 		}
+#ifdef _WIN32
 		else if ((region >= btnRegionStart) && (region < (btnRegionStart + numberOfButtons()))) {
 			setcursor();
 			if (od->dwData) BtnEvent_OK_Down();
 			else BtnEvent_OK_Up();
 		}
 		break;
+#else /*_WIN32*/
+		else if ((od->xbutton.button == Button1) && (region >= btnRegionStart) && (region < (btnRegionStart + numberOfButtons()))) {
+			setcursor();
+			BtnEvent_OK_Down();
+		} else if (od->xbutton.button == Button4) { // ホイールの操作（プラス方向）
+			if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
+				setcursor();
+				BtnEvent_Content_Roll_Up();
+			} else if (region == 40) {
+				BtnEvent_Content_Page_Next();
+			}
+		} else if (od->xbutton.button == Button5) { // ホイールの操作（マイナス方向）
+			if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
+				setcursor();
+				BtnEvent_Content_Roll_Down();
+			} else if (region == 40) {
+				BtnEvent_Content_Page_Prev();
+			}
+		}
+		break;
+	case ButtonRelease: // マウスの左ボタン
+		if ((od->xbutton.button == Button1) && (region >= btnRegionStart) && (region < (btnRegionStart + numberOfButtons()))) {
+			setcursor();
+			BtnEvent_OK_Up();
+		}
+		break;
+#endif /*_WIN32*/
 	}
 }
 
 CodeConv::tstring ConfigMenuProto::verInfoText() {
+#ifdef _WIN32
 	CodeConv::tostringstream o; SYSTEMTIME Zeit; GetLocalTime(&Zeit);
 	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / 現在日時 ") <<
 		std::setw(4) << Zeit.wYear << _T("年") <<
@@ -218,6 +291,18 @@ CodeConv::tstring ConfigMenuProto::verInfoText() {
 		std::setw(2) << (Zeit.wHour % 12) << _T("時") <<
 		std::setw(2) << std::setfill(_T('0')) << Zeit.wMinute << _T("分");
 	return o.str();
+#else /*_WIN32*/
+	CodeConv::tostringstream o;
+	time_t Zeitzahl = time(nullptr); tm Zeit = *localtime(&Zeitzahl);
+	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / 現在日時 ") <<
+		std::setw(4) << (Zeit.tm_year + 1900) << _T("年") <<
+		std::setw(2) << (Zeit.tm_mon + 1) << _T("月") <<
+		std::setw(2) << Zeit.tm_mday << _T("日 ") <<
+		((Zeit.tm_hour / 12 == 0) ? _T("午前") : _T("午後")) <<
+		std::setw(2) << (Zeit.tm_hour % 12) << _T("時") <<
+		std::setw(2) << std::setfill(_T('0')) << Zeit.tm_min << _T("分");
+	return o.str();
+#endif /*_WIN32*/
 }
 
 }

@@ -4,18 +4,34 @@
 #include "envtbl.h"
 #include "func.h"
 #include "../graphic/graphic.h"
+#ifndef _WIN32
+#include <unistd.h>
+#endif /*_WIN32*/
 
 namespace chat {
 
-DWORD WINAPI ChatThread::thread_loop (LPVOID param) {
+#ifdef _WIN32
+DWORD WINAPI ChatThread::thread_loop (LPVOID param)
+#else /*_WIN32*/
+void* ChatThread::thread_loop (void* param)
+#endif /*_WIN32*/
+{
 	reinterpret_cast<ChatThread*>(param)->init();
 	while (!(reinterpret_cast<ChatThread*>(param)->terminate)) {
 		reinterpret_cast<ChatThread*>(param)->receive();
 		reinterpret_cast<ChatThread*>(param)->send();
+#ifdef _WIN32
 		Sleep(0);
+#else /*_WIN32*/
+		usleep(100);
+#endif /*_WIN32*/
 	}
 	reinterpret_cast<ChatThread*>(param)->cleanup();
+#ifdef _WIN32
 	return S_OK;
+#else /*_WIN32*/
+	return nullptr;
+#endif /*_WIN32*/
 }
 StreamLog::StreamLog () {
 	mihajong_graphic::logwnd::reset();
@@ -23,18 +39,27 @@ StreamLog::StreamLog () {
 ChatThread::ChatThread (std::string& server_addr, int clientNum) : StreamLog() {
 	terminate = false;
 	myServerAddr = server_addr; myClientNum = clientNum;
+#ifdef _WIN32
 	myHandle = CreateThread(nullptr, 0, thread_loop, this, 0, nullptr);
+#else /*_WIN32*/
+	pthread_create(&myHandle, nullptr, thread_loop, (void*)this);
+#endif /*_WIN32*/
 }
 StreamLog::~StreamLog () {
 }
 ChatThread::~ChatThread () {
 	terminate = true;
+#ifdef _WIN32
 	while (true) {
 		DWORD exitcode;
 		GetExitCodeThread(myHandle, &exitcode);
 		if (exitcode != STILL_ACTIVE) break;
 		else Sleep(0);
 	}
+#else /*_WIN32*/
+	void* resultPtr;
+	pthread_join(myHandle, &resultPtr);
+#endif /*_WIN32*/
 }
 
 void ChatThread::init() {
@@ -52,12 +77,21 @@ void ChatThread::init() {
 					(mihajong_socket::connected(
 					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag)))
 					tmpClientWaiting[i] = false;
+#ifdef _WIN32
 			Sleep(0);
+#else /*_WIN32*/
+			usleep(100);
+#endif /*_WIN32*/
 		}
 	}
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 		mihajong_socket::connect(SOCK_CHAT+0, myServerAddr.c_str(), PORT_CHAT-1+myClientNum);
-		while (!mihajong_socket::connected(SOCK_CHAT+0)) Sleep(0); // Wait until connection established
+		while (!mihajong_socket::connected(SOCK_CHAT+0)) // Wait until connection established
+#ifdef _WIN32
+			Sleep(0);
+#else /*_WIN32*/
+			usleep(100);
+#endif /*_WIN32*/
 	}
 }
 
@@ -81,7 +115,7 @@ void ChatThread::receive() {
 #elif defined(_WIN32)
 									_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
 #else
-									_tcscat_s(buf, bufsize, _T("\n"));
+									_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
 #endif
 								mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
 								chatappend(buf);
@@ -148,8 +182,7 @@ void ChatThread::send() {
 #elif defined(_WIN32)
 								_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
 #else
-								/* TODO: Linuxà⁄êA */
-								_tcscat_s(buf, bufsize, _T("\n"));
+								_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
 #endif
 							mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
 							chatappend(buf);
@@ -167,8 +200,7 @@ void ChatThread::send() {
 #elif defined(_WIN32)
 					_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
 #else
-					/* TODO: Linuxà⁄êA */
-					_tcscat_s(buf, bufsize, _T("\n"));
+					_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
 #endif
 				mihajong_socket::puts(SOCK_CHAT, buf);
 			}

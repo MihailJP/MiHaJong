@@ -2,7 +2,11 @@
 
 #include "proto.h"
 #include <deque>
+#include <cstdint>
 #include "../timer.h"
+#ifndef _WIN32
+#include "../../common/strcode.h"
+#endif /*_WIN32*/
 
 namespace mihajong_graphic {
 
@@ -11,7 +15,7 @@ class TextRenderer;
 class FPSIndicator : public Scene {
 private:
 	TextRenderer* textRenderer;
-	std::deque<UINT64> RedrawTime;
+	std::deque<uint64_t> RedrawTime;
 	Timer myTimer;
 	TimerMicrosec LastRecalcTime;
 	float currentFPS;

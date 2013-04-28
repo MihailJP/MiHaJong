@@ -1,7 +1,9 @@
 #pragma once
 
 #include <type_traits>
+#ifdef _WIN32
 #include <tchar.h>
+#endif /*_WIN32*/
 #include "largenum.h"
 #include "gametbl.h"
 

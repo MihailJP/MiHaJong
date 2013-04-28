@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <climits>
 #include <type_traits>
 #ifdef MJCORE_EXPORTS
 #include "../mjcore/except.h"

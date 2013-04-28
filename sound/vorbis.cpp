@@ -36,11 +36,16 @@ void sound::OggData::Prepare(const std::string& filename) {
 	const vorbis_info *info(ov_info(ovFile, -1));
 	if (!info) throw CodeConv::tstring(_T("Ogg Vorbis フォーマットが取得できません"));
 	std::memset(&format, 0, sizeof(format));
+#ifdef _WIN32
 	format.wFormatTag = WAVE_FORMAT_PCM;
 	format.nChannels = static_cast<WORD>(info->channels);
+	format.nBlockAlign = static_cast<WORD>(info->channels * 2);
+#else /* _WIN32 */
+	format.nChannels = static_cast<uint16_t>(info->channels);
+	format.nBlockAlign = static_cast<uint16_t>(info->channels * 2);
+#endif /* _WIN32 */
 	format.nSamplesPerSec = info->rate;
 	format.wBitsPerSample = 16;
-	format.nBlockAlign = static_cast<WORD>(info->channels * 2);
 	format.nAvgBytesPerSec = format.nSamplesPerSec * format.nBlockAlign;
 	// データ読み込み
 	char* buf = (char*)calloc(1, 1 << 22 /* 4 MiB */);

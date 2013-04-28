@@ -5,6 +5,10 @@
 #include "gametbl.h"
 #endif
 
+#ifdef None
+#undef None // [Workaround]‰½ŒÌ‚©Linux‚¾‚Æ’è‹`‚³‚ê‚Ä‚éHH
+#endif
+
 namespace mihajong_graphic {
 namespace calltext {
 

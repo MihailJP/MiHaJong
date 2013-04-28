@@ -6,8 +6,6 @@ libmihajong_la_SOURCES = \
 	rankval.cpp remote.cpp result.cpp shanten.cpp ruletbl.cpp sound.cpp \
 	tileutil.cpp \
 	ai/aiscript.cpp ai/functbl.cpp ai/filesel.cpp ai/gftbl.cpp ai/riskchk.cpp \
-	lzma/Alloc.c lzma/LzFind.c lzma/LzFindMt.c lzma/LzmaDec.c lzma/LzmaLib.c \
-	lzma/Sha256.c lzma/Threads.c \
 	reader/csv2arry.cpp reader/ini2map.cpp reader/readrsrc.cpp \
 	yaku/catalog.cpp yaku/suittbl.cpp yaku/yaku.cpp yaku/ykclass.cpp \
 	yaku/yk_tools.cpp \
@@ -23,11 +21,11 @@ libmihajong_la_SOURCES = \
 	random.h rankval.h rational.h remote.h result.h shanten.h resource.h \
 	ruletbl.h socknum.h sound.h tilecode.h tileutil.h \
 	ai/aiscript.h ai/class.h ai/functbl.h ai/filesel.h \
-	lzma/Alloc.h lzma/LzFind.h lzma/LzFindMt.h lzma/LzHash.h lzma/LzmaDec.h \
-	lzma/LzmaLib.h lzma/RotateDefs.h lzma/Sha256.h lzma/Threads.h lzma/Types.h \
+	lzma/Alloc.c lzma/LzFind.c lzma/LzmaDec.c lzma/LzmaLib.c lzma/Sha256.c \
+	lzma/Alloc.h lzma/LzFind.h lzma/LzHash.h lzma/LzmaDec.h lzma/LzmaLib.h \
+	lzma/RotateDefs.h lzma/Sha256.h lzma/Types.h \
 	reader/csv2arry.h reader/ini2map.h reader/readrsrc.h \
-	yaku/catalog.h yaku/yaku.h yaku/yvalue.h yaku/ykclass.h yaku/yk_tools.h \
-	mjcore.rc
+	yaku/catalog.h yaku/yaku.h yaku/yvalue.h yaku/ykclass.h yaku/yk_tools.h
 nodist_libmihajong_la_SOURCES = \
 	data/confitem_csv.cpp data/confitem_ini.cpp data/prefitem_csv.cpp \
 	data/prefitem_ini.cpp data/rankval_csv.cpp \
@@ -36,15 +34,25 @@ nodist_libmihajong_la_SOURCES = \
 BUILT_SOURCES = $(nodist_libmihajong_la_SOURCES)
 libmihajong_la_LDFLAGS = -no-undefined
 libmihajong_la_CXXFLAGS = -DMJCORE_EXPORTS --input-charset=cp932
+if WITH_BOOST_REGEX
+libmihajong_la_CXXFLAGS += -DWITH_BOOST_REGEX $(BOOST_REGEX_LIB)
+endif
+if WITH_WINAPI
+else
+libmihajong_la_CXXFLAGS += -DPKGDATADIR='"$(pkgdatadir)"' -DUNICODE -D_UNICODE
+endif
 libmihajong_la_LIBADD = \
-	$(LUA_LIB) mjcore.o \
+	$(LUA_LIB) \
 	../sound/libmihajong-sound.la \
 	../graphic/libmihajong-graphic.la \
 	../socket/libmihajong-socket.la \
 	../astro/libmihajong-astro.la
-dist_data_DATA = \
+if WITH_WINAPI
+libmihajong_la_LIBADD += mjcore.o 
+endif
+dist_pkgdata_DATA = \
 	data/mentz.dat.lzma
-nodist_data_DATA = \
+nodist_pkgdata_DATA = \
 	data/confitem.csv.lzma data/confitem.ini.lzma data/prefitem.csv.lzma \
 	data/prefitem.ini.lzma data/rankval.csv.lzma
 EXTRA_DIST = \
@@ -52,6 +60,19 @@ EXTRA_DIST = \
 	lua/README \
 	data/confitem.csv data/confitem.ini data/prefitem.csv data/prefitem.ini \
 	data/rankval.csv
+if WITH_WINAPI
+libmihajong_la_SOURCES += \
+	lzma/LzFindMt.c lzma/Threads.c lzma/LzFindMt.h lzma/Threads.h \
+	mjcore.rc
+EXTRA_DIST += \
+	filenum.cpp filenum.h
+else
+EXTRA_DIST += \
+	lzma/LzFindMt.c lzma/Threads.c lzma/LzFindMt.h lzma/Threads.h \
+	mjcore.rc
+libmihajong_la_SOURCES += \
+	filenum.cpp filenum.h
+endif
 
 CLEANFILES = $(libmihajong_la_BUILT_SOURCES) \
 	data/confitem.csv.lzma data/confitem.ini.lzma data/rankval.csv.lzma

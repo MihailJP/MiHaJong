@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef _WIN32
+
 #define WINDOWS_LEAN_AND_MEAN
 #define WINDOWS_EXTRA_MEAN
 #include <windows.h>
@@ -15,3 +17,5 @@ void traceLog(CONTEXT* ex, int*  addrList, int addrListSize);
 LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex);
 //void MJCore_Terminate_Handler();
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
+
+#endif /*_WIN32*/

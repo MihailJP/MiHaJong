@@ -21,7 +21,11 @@ CodeConv::tstring getlog();
 class LogWindow {
 private:
 	static unsigned const halffontsz = 9; // îºäpÇÃâ°ïù
+#ifdef _WIN32
 	HWND myHWnd;
+#else /*_WIN32*/
+	Window myHWnd;
+#endif /*_WIN32*/
 	DevicePtr myDevice;
 	TexturePtr myTexture;
 	SmallTextRenderer* myTextRenderer;
@@ -33,7 +37,11 @@ private:
 	std::vector<CodeConv::tstring> lines;
 	void reconstruct_lines();
 public:
+#ifdef _WIN32
 	LogWindow(HWND hwnd, DevicePtr device, int X, int Y, unsigned Width, unsigned Height);
+#else /*_WIN32*/
+	LogWindow(Window hwnd, DevicePtr device, int X, int Y, unsigned Width, unsigned Height);
+#endif /*_WIN32*/
 	~LogWindow();
 	void Render();
 };

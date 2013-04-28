@@ -5,6 +5,10 @@
 #include "../../event.h"
 #include "../table.h"
 
+#ifdef None
+#undef None
+#endif
+
 namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------

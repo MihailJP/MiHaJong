@@ -15,6 +15,16 @@
 
 namespace sound {
 
+#ifndef _WIN32
+	struct WaveFormat {
+		uint32_t nSamplesPerSec;
+		uint32_t nAvgBytesPerSec;
+		uint16_t nBlockAlign;
+		uint16_t wBitsPerSample;
+		uint16_t nChannels;
+	};
+#endif /* _WIN32 */
+
 	/* サウンドデータクラス */
 	class AudioData {
 		/* 未実装 */
@@ -26,7 +36,11 @@ namespace sound {
 	};
 	class SoundData : public AudioData {
 	protected:
+#ifdef _WIN32
 		WAVEFORMATEX format;
+#else /* _WIN32 */
+		WaveFormat format;
+#endif /* _WIN32 */
 		std::vector<char> buffer;
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 		ALuint mySource, myBuffer;

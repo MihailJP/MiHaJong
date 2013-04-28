@@ -158,16 +158,3 @@ EXPORT struct MOONPHASE calc_moon_phase (double pdate)
 	answer.MoonIllum = fixangle(MoonAge) / 360.0;
 	return answer;
 }
-
-EXPORT void calc_moon_phase_hsp (double* Answer, double pdate)
-{ /* Calculate the moon phase of given day (HSP interface) */
-	struct MOONPHASE mp = calc_moon_phase(pdate);
-	Answer[0] = mp.MoonIllum;
-	Answer[1] = mp.MoonPhase;
-	Answer[2] = mp.MoonAge;
-	Answer[3] = mp.MoonDist;
-	Answer[4] = mp.MoonAng;
-	Answer[5] = mp.SunDist;
-	Answer[6] = mp.SunAng;
-	return;
-}

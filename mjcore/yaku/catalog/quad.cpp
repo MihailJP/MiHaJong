@@ -152,11 +152,30 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("鬼は外"), get_yaku_han("setsubun"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+#ifdef _WIN32
 				TIME_ZONE_INFORMATION Zeitzone; SYSTEMTIME Zeit; // 宣言。こんな変数名付ける私は厨二病かもしれない
 				GetTimeZoneInformation(&Zeitzone); // タイムゾーンを取得する
 				GetLocalTime(&Zeit); // WINAPIを使ってローカル時刻を取得
 				SYSTEMTIME HeuteMitternacht = {Zeit.wYear, Zeit.wMonth, Zeit.wDayOfWeek, Zeit.wDay, 0, 0, 0, 0}; // 当日0時のSYSTEMTIME
 				double JulianischeDatum = systime_to_julian(&HeuteMitternacht) - ((double)Zeitzone.Bias / 1440.0); // ローカル時間で当日0時のユリウス日
+#else /*_WIN32*/
+				const signed long Zeitzone = []() -> signed long {
+					time_t t1 = 86400; // GNU Cはそうではないが、time_tがunsignedの処理系を見たことがあるので86400とする
+					tm* tmDat = gmtime(&t1); // 協定世界時を算出
+					time_t t2 = mktime(tmDat); // わざと地方時と解釈することで時差を求める
+					return t1 - t2; // 秒単位で時差を返す。日本時間だったら32400となる
+				}();
+				timespec Zeitzahl; tm Zeit, ZeitMitternacht;
+				clock_gettime(CLOCK_REALTIME, &Zeitzahl);
+				memcpy(&Zeit, localtime(&Zeitzahl.tv_sec), sizeof (tm));
+				memcpy(&ZeitMitternacht, localtime(&Zeitzahl.tv_sec), sizeof (tm));
+				timespec HeuteMitternacht; memset (&HeuteMitternacht, 0, sizeof (timespec));
+				ZeitMitternacht.tm_year = Zeit.tm_year;
+				ZeitMitternacht.tm_mon = Zeit.tm_mon;
+				ZeitMitternacht.tm_mday = Zeit.tm_mday;
+				HeuteMitternacht.tv_sec = mktime(&ZeitMitternacht);
+				double JulianischeDatum = systime_to_julian(&HeuteMitternacht) - ((double)(Zeitzone / 60) / 1440.0);
+#endif /*_WIN32*/
 				return /* 翌日が立春か判定する。立春とは太陽が黄経315度の子午線を通過する日である。 */
 					(sun_ecliptic_longitude(JulianischeDatum + 1.0) <= 315.0) &&
 					(sun_ecliptic_longitude(JulianischeDatum + 2.0) >= 315.0) &&

@@ -15,6 +15,10 @@ RuleConfigScene::RuleConfigScene(ScreenManipulator* const manipulator) : ConfigM
 	char* RuleConfPtr[RULE_LINES];
 	for (int i = 0; i < RULE_LINES; i++) RuleConfPtr[i] = RuleConf[i];
 	rules::exportRule(RuleConfPtr);
+#ifndef _WIN32
+}
+void RuleConfigScene::objInit() {
+#endif /*_WIN32*/
 	CreateButton(0, 1240, 1000, 156, 48, _T("‚n ‚j"));
 	CreateButton(1, 1060, 1000, 156, 48, _T("CANCEL"));
 	CreateButton(2, 880, 1000, 156, 48, _T("NEXT ¨"));

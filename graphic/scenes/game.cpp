@@ -118,14 +118,28 @@ ArgbColor TableProtoScene::roundColor() {
 	}
 }
 
-void TableProtoScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+#ifdef _WIN32
+void TableProtoScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)
+#else /*_WIN32*/
+void TableProtoScene::MouseInput(const XEvent* od, int X, int Y)
+#endif /*_WIN32*/
+{
 	const int scaledX = (int)((float)X / Geometry::WindowScale());
 	const int scaledY = (int)((float)Y / Geometry::WindowScale());
 	const int region = whichRegion(scaledX, scaledY);
 	const bool isCheckBox = (region >= CheckboxRegionOffset) &&
 		(region < (CheckboxRegionOffset + NumOfCheckBoxes));
-	switch (od->dwOfs) {
+#ifdef _WIN32
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	switch (od->type)
+#endif /*_WIN32*/
+	{
+#ifdef _WIN32
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
+#else /*_WIN32*/
+	case MotionNotify: // マウスカーソルを動かした場合
+#endif /*_WIN32*/
 		if ((isCheckBox) && (!checkBoxes[region - CheckboxRegionOffset]->isFocused())) {
 			checkBoxes[region - CheckboxRegionOffset]->focus(true);
 			sound::Play(sound::IDs::sndCursor);
@@ -134,8 +148,14 @@ void TableProtoScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 			if (region != i + CheckboxRegionOffset)
 				checkBoxes[i]->focus(false);
 		break;
+#ifdef _WIN32
 	case DIMOFS_BUTTON0: // マウスクリック
-		if ((isCheckBox) && (od->dwData)) {
+		if ((isCheckBox) && (od->dwData))
+#else /*_WIN32*/
+	case ButtonPress: // マウスクリック
+		if ((isCheckBox) && (od->xbutton.button == Button1))
+#endif /*_WIN32*/
+		{
 			checkBoxes[region - CheckboxRegionOffset]->check(
 				!(checkBoxes[region - CheckboxRegionOffset]->isChecked()));
 			sound::Play(sound::IDs::sndClick);
@@ -154,6 +174,12 @@ TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativeP
 	myDevice = device; relativePlayerID = relativePos; xpos = x; ypos = y; wScale = widthScale;
 	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR));
 	nameText = new SmallTextRenderer(device);
+#ifndef _WIN32
+	initialized = false;
+}
+void TableProtoScene::ScoreBoard::objInit() {
+	const int x = xpos, y = ypos;
+#endif /*_WIN32*/
 	// 行列の構築
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix tmpmtx;
@@ -187,6 +213,12 @@ TableProtoScene::ScoreBoard::ScoreMode TableProtoScene::ScoreBoard::getScoreMode
 }
 
 void TableProtoScene::ScoreBoard::Render() {
+#ifndef _WIN32
+	if (!initialized) {
+		objInit();
+		initialized = true;
+	}
+#endif /*_WIN32*/
 	RECT rect = {0, 0, PanelWidth, PanelHeight};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos, (int)ypos,
 		PanelWidth, PanelHeight, 0xffffffff, &rect, 0, 0, &myMatrix);

@@ -8,12 +8,21 @@
 #include <cassert>
 #include <algorithm>
 #include <stdexcept>
+#ifndef _WIN32
+#include <X11/keysym.h>
+#include "../keycode.h"
+#endif /*_WIN32*/
 
 namespace mihajong_graphic {
 
 using namespace character_width;
 
-EditBox::EditBox(HWND hwnd, DevicePtr device, int X, int Y, unsigned width, float scale) {
+#ifdef _WIN32
+EditBox::EditBox(HWND hwnd, DevicePtr device, int X, int Y, unsigned width, float scale)
+#else /*_WIN32*/
+EditBox::EditBox(Window hwnd, DevicePtr device, int X, int Y, unsigned width, float scale)
+#endif /*_WIN32*/
+{
 	assert(width >= 8);
 	myHWnd = hwnd; myDevice = device;
 	myRegion = std::make_tuple(X, Y, width);
@@ -161,10 +170,19 @@ void EditBox::renderNormalText(IMStat& imStat, unsigned start, unsigned end, int
 }
 
 void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol) {
-	unsigned startcol = 0u, startchr = 0u; BYTE tmpInfo;
+	unsigned startcol = 0u, startchr = 0u;
+#ifdef _WIN32
+	BYTE tmpInfo;
+#else /*_WIN32*/
+	char tmpInfo;
+#endif /*_WIN32*/
 	unsigned width; std::tie(std::ignore, std::ignore, width) = myRegion;
 	CodeConv::tstring convStr(imStat.getGCSCompStr());
+#ifdef _WIN32
 	std::vector<BYTE> charInfo(imStat.getGCSCompAttr());
+#else /*_WIN32*/
+	std::vector<char> charInfo(imStat.getGCSCompAttr());
+#endif /*_WIN32*/
 	int imCursor(imStat.getGCSCursorPos());
 	startcol = cols;
 	if (!convStr.empty()) cursorcol = -1;
@@ -176,6 +194,7 @@ void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsig
 		if ((cols >= width) || (i == convStr.size()) || ((i > strStartPos) && (i < charInfo.size()) && (tmpInfo != charInfo[i]))) {
 			ArgbColor color;
 			switch (tmpInfo) {
+#ifdef _WIN32
 			case ATTR_INPUT:
 				color = 0xff00ccff; break;
 			case ATTR_CONVERTED:
@@ -184,6 +203,7 @@ void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsig
 				color = 0xffff6600; break;
 			case ATTR_TARGET_NOTCONVERTED:
 				color = 0xff9900ff; break;
+#endif /*_WIN32*/
 			default:
 				color = 0xffff0000; break;
 			}
@@ -259,10 +279,14 @@ void EditBox::scroll(IMStat& imStat) {
 	const CodeConv::tstring s(myText.substr(0, cursorPos) + (isActive ? imStat.getGCSCompStr() : CodeConv::tstring()) + myText.substr(cursorPos, myText.size()));
 	const auto compAttr(imStat.getGCSCompAttr());
 	const int paragraphLength =
+#ifdef _WIN32
 		std::count_if(compAttr.begin(), compAttr.end(), [](BYTE p) {
 			return ((p == ATTR_TARGET_CONVERTED) || (p == ATTR_TARGET_NOTCONVERTED));
 		}
 	);
+#else /*_WIN32*/
+		0;
+#endif /*_WIN32*/
 	const unsigned trueRBound = (scrollRBound(imStat) < paragraphLength) ? 0 : (scrollRBound(imStat) - paragraphLength);
 	unsigned textRightmostToFill = s.size(), fillCols = 0u;
 	for (; textRightmostToFill > 0; textRightmostToFill--) {
@@ -296,7 +320,11 @@ void EditBox::Render() {
 	/* Initialize */
 	int X, Y; unsigned width; std::tie(X, Y, width) = myRegion;
 	unsigned TextID = 0u, cols = 0u; signed cursorcol = -1;
+#ifdef _WIN32
 	IMStat imStat(myHWnd);
+#else /*_WIN32*/
+	IMStat imStat(nullptr);
+#endif /*_WIN32*/
 
 	/* Textbox */
 	renderFrame(X, Y, width);
@@ -325,29 +353,75 @@ void EditBox::Render() {
 		renderCursor(imStat, X, Y, cursorcol);
 }
 
-void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
+#ifdef _WIN32
+void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam)
+#else /*_WIN32*/
+void EditBox::KeyboardInput(const XEvent* od)
+#endif /*_WIN32*/
+{
 	if (!isActive) return;
-	if (wParam == CHARDAT_CURSOR_LEFT) { // Cursor key
+#ifdef _WIN32
+	if (wParam == CHARDAT_CURSOR_LEFT)
+#else /*_WIN32*/
+	if (od->type != KeyPress) return;
+	if (od->xkey.keycode == DIK_LEFT)
+#endif /*_WIN32*/
+	{ // Cursor key
 		if (cursorPos > 0) --cursorPos;
 		try {
 			if (isLeadingByte(myText, cursorPos - 1)) --cursorPos;
 		} catch (std::out_of_range&) {}
-	} else if (wParam == CHARDAT_CURSOR_RIGHT) { // Cursor key
+	}
+#ifdef _WIN32
+	else if (wParam == CHARDAT_CURSOR_RIGHT)
+#else /*_WIN32*/
+	else if (od->xkey.keycode == DIK_RIGHT)
+#endif /*_WIN32*/
+	{ // Cursor key
 		try {
 			if (isLeadingByte(myText, cursorPos)) ++cursorPos;
 			if (cursorPos < myText.size()) ++cursorPos;
 		} catch (std::out_of_range&) {}
-	} else if (wParam == CHARDAT_CURSOR_ENTER) { // Enter key
+	}
+#ifdef _WIN32
+	else if (wParam == CHARDAT_CURSOR_ENTER)
+#else /*_WIN32*/
+	else if (od->xkey.keycode == DIK_RETURN)
+#endif /*_WIN32*/
+	{ // Enter key
 		/* Do nothing */
-	} else if (wParam == CHARDAT_CURSOR_ESCAPE) { // Escape key
+	}
+#ifdef _WIN32
+	else if (wParam == CHARDAT_CURSOR_ESCAPE)
+#else /*_WIN32*/
+	else if (od->xkey.keycode == DIK_ESCAPE)
+#endif /*_WIN32*/
+	{ // Escape key
 		/* Do nothing */
 	} else {
+#ifdef _WIN32
 		WCHAR Letter[2] = {(WCHAR)wParam, 0};
-		if (Letter[0] >= L' ') { // Ordinary
+#else /*_WIN32*/
+		volatile char keyStr[256];
+		memset(const_cast<char*>(keyStr), 0, 256);
+		XLookupString(const_cast<XKeyEvent*>(reinterpret_cast<const XKeyEvent*>(od)),
+			const_cast<char*>(keyStr), 256, nullptr, nullptr);
+		std::wstring wst([](char* s) -> std::wstring {
+			try {
+				return CodeConv::UTF8toWIDE(s);
+			} catch (...) {
+				return std::wstring();
+			}
+		}(const_cast<char*>(keyStr)));
+		wchar_t* Letter_ = new wchar_t[wst.size() + 1];
+		wcsncpy(Letter_, wst.c_str(), wst.size() + 1);
+		for (wchar_t* Letter = Letter_; *Letter != L'\0'; ++Letter) {
+#endif /*_WIN32*/
+		if ((*Letter >= L' ') && (*Letter != L'\x7f')) { // Ordinary
 			CodeConv::tstring currentInput = CodeConv::EnsureTStr(std::wstring(Letter));
 			myText = myText.substr(0, cursorPos) + currentInput + myText.substr(cursorPos, myText.size());
 			++cursorPos;
-		} else if ((Letter[0] == L'\b') && (!myText.empty())) { // Backspace
+		} else if ((*Letter == L'\b') && (!myText.empty())) { // Backspace
 			if (cursorPos > 0) {
 				try {
 					myText = myText.substr(0, cursorPos - 1) + myText.substr(cursorPos, myText.size());
@@ -359,9 +433,14 @@ void EditBox::KeyboardInput(WPARAM wParam, LPARAM lParam) {
 				} catch (std::out_of_range&) {}
 			}
 		}
+#ifndef _WIN32
+		}
+		delete[] Letter_;
+#endif /*_WIN32*/
 	}
 }
 
+#ifdef _WIN32
 void EditBox::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 	if (!isActive) return;
 	if ((message == WM_IME_COMPOSITION) && (lParam & GCS_RESULTSTR)) {
@@ -371,6 +450,9 @@ void EditBox::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 		cursorPos += resultStr.size();
 	}
 }
+#else /*_WIN32*/
+/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢ŽÀ‘• */
+#endif /*_WIN32*/
 
 void EditBox::setText(const CodeConv::tstring& newstr) {
 	myText = newstr;
@@ -380,6 +462,7 @@ void EditBox::setText(const CodeConv::tstring& newstr) {
 
 // -------------------------------------------------------------------------
 
+#ifdef _WIN32
 EditBox::IMStat::IMStat(HWND hWnd) {
 	hwnd = hWnd;
 	hIMC = ImmGetContext(hwnd);
@@ -451,5 +534,6 @@ std::tuple<unsigned, std::vector<CodeConv::tstring>, unsigned, unsigned> EditBox
 		return std::make_tuple(0, std::vector<CodeConv::tstring>(), 0, 0);
 	}
 }
+#endif /*_WIN32*/
 
 }

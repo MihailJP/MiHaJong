@@ -17,7 +17,8 @@
 
 ■ 動作環境
 
-	　Windows XP/Vista/7、Direct X 9 (June 2010) 以降
+	　Windows版はWindows XP/Vista/7、Direct X 9 (June 2010) 以降
+	　Linux版はX11(xlib)、OpenGL(GLX)、OpenAL、libpng、libluaが必要
 	　HTML形式、XML形式の牌譜を閲覧する場合は別途フォントのインストールが必要
 
 
@@ -27,6 +28,9 @@
 	Vista 以降をお使いの場合で C:\Program Files 以下にインストールした場合、自
 	動的に認識し設定や牌譜のファイルの出力先を再設定します(Program Filesへのイ
 	ンストール自体は管理者権限が必要ですが、プレイ時には管理者権限は不要です)。
+	　Linux版は ./configure --with-boost-regex=boost_regex && make && sudo
+	make install して下さい。
+	※GCCのstd::regexは壊れているため、boost::regexを使用して下さい。
 
 
 ■ アンインストールのしかた
@@ -37,6 +41,8 @@
 	　Vista 以降をお使いの場合で C:\Program Files 以下にインストールした場合、
 	設定と牌譜は C:\Users\(ユーザー名)\AppData\Roaming\MiHaJong 以下に出力され
 	ますので、必要のない方はこれも削除します。
+	　なお、Linux版では設定ファイルや牌譜は /home/(ユーザー名)/.mihajong 以下
+	に出力されます。
 
 
 ■ あそびかた
@@ -59,12 +65,13 @@
 ■ MihailJPの開発環境
 
 	・OS：Windows 7 Home Premium 32bit (Service Pack 1)
-	・物理メモリ：4GB（3.2GB使用可能）
+	・OS：OpenSUSE 12.3 x86_64
+	・物理メモリ：4GB（32bit OSでは3.2GB使用可能）
 	・CPU：Intel Core i5 760 2.80GHz（場合により2.66GHzにダウンクロック）
-	・開発環境：Visual C++ 2010 Express
+	・開発環境：Visual C++ 2010 Express (Windows)、GCC 4.7 (Linux)
 	・画像編集ツール：GIMP 2.6
 	・テキストエディタ：Mery、Notepad++、Kate
-	・Gitクライアント：Cygwin GIT
+	・Gitクライアント：Cygwin GIT (Windows)、GIT (Linux)
 
 
 ■ ビルドに別途必要なもの
@@ -74,7 +81,20 @@
 	・ruby-lzmaが使えない場合、 Python 処理系 (http://www.python.jp/download/)
 	・libogg/libvorbis (http://www.xiph.org/downloads/) ※
 	・GuruGuruSMF (http://gurugurusmf.migmig.net/)
+	・boost::regex (http://www.boost.org/) ※※
+	・OpenAL (http://connect.creativelabs.com/openal/default.aspx) ※※※
+	・libpng (http://www.libpng.org/pub/png/libpng.html) ※※※
 	※Visual C++の場合はスタティックリンクします
+	※※GCCはstd::regexが壊れているため必要。Visual C++の場合は不要
+	※※※Linuxのみ
+
+
+■ Linux版の制限
+
+	・チャットウィンドウや名前設定で日本語の入力ができません。
+	・フルスクリーンにできません。
+	・効果音が鳴りません。
+	・BGMが鳴りません。
 
 
 ■ ライセンスについて

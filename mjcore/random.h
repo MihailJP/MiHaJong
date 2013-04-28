@@ -11,6 +11,5 @@ public:
 	static unsigned int rnd(unsigned int);
 	static double rnd();
 	static double rnd(double mean, double var);
-	static void frnd(double* const);
 	static unsigned int dice();
 };

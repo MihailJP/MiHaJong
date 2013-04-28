@@ -30,10 +30,19 @@ protected:
 public:
 	TableProtoScene(ScreenManipulator* const manipulator);
 	virtual ~TableProtoScene();
+#ifdef _WIN32
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
+#else /*_WIN32*/
+	virtual void MouseInput(const XEvent* od, int X, int Y);
+#endif /*_WIN32*/
 };
 
 class TableProtoScene::ScoreBoard {
+#ifndef _WIN32
+private:
+	bool initialized;
+	void objInit();
+#endif /*_WIN32*/
 private:
 	Timer myTimer;
 private:

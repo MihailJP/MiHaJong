@@ -1,7 +1,13 @@
 #include "font.h"
 #include "init.h"
 #include "resource.h"
+#ifdef _WIN32
 #include <windows.h>
+#else /*_WIN32*/
+#include "filenum.h"
+#include <cstdio>
+#include <iostream>
+#endif /*_WIN32*/
 #include <cstdint>
 #include <sstream>
 #include <cassert>
@@ -11,6 +17,7 @@ using std::uint8_t;
 namespace mihajong_graphic {
 
 namespace {
+#ifdef _WIN32
 	void LoadFileInResource(int name, int type, DWORD& size, const uint8_t*& data) {
 		HRSRC rc = FindResource(GraphicDLL, MAKEINTRESOURCE(name), MAKEINTRESOURCE(type));
 		DWORD err = GetLastError();
@@ -21,6 +28,26 @@ namespace {
 		assert(size != 0);
 		data = static_cast<const uint8_t*>(::LockResource(rcData));
 	}
+#else /*_WIN32*/
+	void LoadFileInResource(int name, int type, size_t& size, const uint8_t*& data) {
+		static uint8_t* dat = nullptr;
+		std::string fileName = dataFileName(name);
+		FILE* file = fopen(fileName.c_str(), "rt");
+		if (!file) {
+			std::cerr << "Cannot open " << fileName << std::endl;
+			throw _T("フォントマップの読み込みに失敗しました");
+		}
+		fseek(file, 0, SEEK_END);
+		size = ftell(file);
+		fseek(file, 0, SEEK_SET);
+		dat = reinterpret_cast<uint8_t*>(realloc(dat, size + 1));
+		assert(dat != nullptr); // If realloc() fails, then die!
+		fread(dat, 1, size, file);
+		dat[size] = 0;
+		fclose(file);
+		data = dat;
+	}
+#endif /*_WIN32*/
 }
 
 FontMap* FontMap::instantiate() {
@@ -49,7 +76,12 @@ FontMapScoreDigits* FontMapScoreDigits::instantiate() {
 }
 
 void FontMapClass::readCharMap(int ResourceNum) {
-	DWORD size; const uint8_t* data;
+#ifdef _WIN32
+	DWORD size;
+#else /*_WIN32*/
+	size_t size;
+#endif /*_WIN32*/
+	const uint8_t* data;
 	LoadFileInResource(ResourceNum, CHARMAP_FILE, size, data);
 	std::istringstream charmap(std::string(reinterpret_cast<const char*>(data), static_cast<size_t>(size)));
 	while (true) {

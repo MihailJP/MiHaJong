@@ -10,6 +10,9 @@
 #include "../utils.h"
 #include "../extchar.h"
 #include <functional>
+#ifndef _WIN32
+#include "../keycode.h"
+#endif /*_WIN32*/
 
 #include "table/yamahai.h"
 #include "table/tehai.h"
@@ -52,6 +55,9 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	mySubScene = new TableSubsceneNormal(manipulator->getDevice());
 	myTextRenderer = new TextRenderer(manipulator->getDevice());
 	tileSelectMode = 0;
+#ifndef _WIN32
+	reconstructFlag = true;
+#endif /*_WIN32*/
 }
 
 GameTableScreen::~GameTableScreen() {
@@ -194,6 +200,12 @@ void GameTableScreen::Render() {
 	cls();
 	RenderTable();
 	subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
+#ifndef _WIN32
+		if (reconstructFlag) {
+			tileTipReconst->reconstruct();
+			reconstructFlag = false;
+		}
+#endif /*_WIN32*/
 		checkTimeout();
 		mySubScene->Render();
 	});
@@ -207,6 +219,9 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		tileSelectMode = 0;
 		delete mySubScene; tehaiReconst->setTileCursor();
 		tileTipReconst->reconstruct();
+#ifndef _WIN32
+		reconstructFlag = true;
+#endif /*_WIN32*/
 		ui::UIEvent->reset(); ui::cancellableWait->reset();
 		switch (static_cast<TableSubsceneID>(scene_ID)) {
 		case tblSubsceneBeginning:
@@ -355,31 +370,66 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 
 // -------------------------------------------------------------------------
 
+#ifdef _WIN32
 void GameTableScreen::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 	if (chatInput->is_Active())
 		chatInput->IMEvent(message, wParam, lParam);
 }
-void GameTableScreen::KeyboardInput(WPARAM wParam, LPARAM lParam) {
+void GameTableScreen::KeyboardInput(WPARAM wParam, LPARAM lParam)
+#else /*_WIN32*/
+/* TODO: Linuxでは日本語入力が未実装 */
+void GameTableScreen::KeyboardInput(const XEvent* od)
+#endif /*_WIN32*/
+{
 	if (chatInput->is_Active()) {
-		if (wParam == CHARDAT_CURSOR_ENTER) {
+#ifdef _WIN32
+		if (wParam == CHARDAT_CURSOR_ENTER)
+#else /*_WIN32*/
+		if (od->type != KeyPress) return;
+		if (od->xkey.keycode == DIK_RETURN)
+#endif /*_WIN32*/
+		{
 			sound::Play(sound::IDs::sndClick);
 			utils::sendchat(chatInput->getText().c_str());
 			chatInput->setText(_T(""));
-		} else if ((wParam == CHARDAT_CURSOR_ESCAPE) || (wParam == '\t')) {
+		}
+#ifdef _WIN32
+		else if ((wParam == CHARDAT_CURSOR_ESCAPE) || (wParam == '\t'))
+#else /*_WIN32*/
+		else if ((od->xkey.keycode == DIK_ESCAPE) || (od->xkey.keycode == DIK_TAB))
+#endif /*_WIN32*/
+		{
 			sound::Play(sound::IDs::sndClick);
 			chatInput->deactivate();
 		} else {
+#ifdef _WIN32
 			chatInput->KeyboardInput(wParam, lParam);
+#else /*_WIN32*/
+			chatInput->KeyboardInput(od);
+#endif /*_WIN32*/
 		}
+#ifndef _WIN32
+		return;
+#endif /*_WIN32*/
 	} else {
-		if (wParam == '\t') {
+#ifdef _WIN32
+		if (wParam == '\t')
+#else /*_WIN32*/
+		if ((od->type == KeyPress) && (od->xkey.keycode == DIK_TAB))
+#endif /*_WIN32*/
+		{
 			sound::Play(sound::IDs::sndClick);
 			chatInput->activate();
 		}
 	}
+#ifdef _WIN32
 }
 
 void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
+	const bool keyDown = od->dwData;
+#else /*_WIN32*/
+	const bool keyDown = od->type == KeyPress;
+#endif /*_WIN32*/
 	if (chatInput->is_Active()) return; // 入力中は無視
 
 	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
@@ -391,7 +441,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	};
 	const PlayerTable* const plDat = &(GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID]);
 	auto directTileCursor = [&](int cursorPos) -> void {
-		if ((od->dwData) && ((tehaiReconst->isCursorEnabled()) || (buttonReconst->isCursorEnabled())) && (plDat->Hand[cursorPos].tile != NoTile)) {
+		if (keyDown && ((tehaiReconst->isCursorEnabled()) || (buttonReconst->isCursorEnabled())) && (plDat->Hand[cursorPos].tile != NoTile)) {
 			if (tehaiReconst->getTileCursor() == cursorPos) {
 				FinishTileChoice();
 			} else {
@@ -401,17 +451,22 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 			}
 		}
 	};
-	switch (od->dwOfs) {
+#ifdef _WIN32
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	switch (od->xkey.keycode)
+#endif /*_WIN32*/
+	{
 	/* ボタン選択/牌選択 モード切り替え */
 	case DIK_UP: case DIK_K: // 牌選択モードに切り替え
-		if ((od->dwData) && (buttonReconst->isCursorEnabled()) && (!isNakiSel)) {
+		if (keyDown && (buttonReconst->isCursorEnabled()) && (!isNakiSel)) {
 			tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
 			buttonReconst->setCursor();
 			cursorMoved();
 		}
 		break;
 	case DIK_DOWN: case DIK_J: // ボタン選択モードに切り替え
-		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
+		if (keyDown && (tehaiReconst->isCursorEnabled())) {
 			tehaiReconst->setTileCursor();
 			buttonReconst->setCursor(ButtonReconst::btnMAXIMUM - 1);
 			cursorMoved();
@@ -419,25 +474,25 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	/* カーソル移動 */
 	case DIK_LEFT: case DIK_H:
-		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
+		if (keyDown && (tehaiReconst->isCursorEnabled())) {
 			do {
 				if (tehaiReconst->decrTileCursor() < 0) tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
 			} while (plDat->Hand[tehaiReconst->getTileCursor()].tile == NoTile);
 			cursorMoved();
 		}
-		else if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
+		else if (keyDown && (buttonReconst->isCursorEnabled())) {
 			if (buttonReconst->decCursor() < 0) buttonReconst->setCursor(ButtonReconst::btnMAXIMUM - 1);
 			cursorMoved();
 		}
 		break;
 	case DIK_RIGHT: case DIK_L:
-		if ((od->dwData) && (tehaiReconst->isCursorEnabled())) {
+		if (keyDown && (tehaiReconst->isCursorEnabled())) {
 			do {
 				if (tehaiReconst->incrTileCursor() >= NumOfTilesInHand) tehaiReconst->setTileCursor(0);
 			} while (plDat->Hand[tehaiReconst->getTileCursor()].tile == NoTile);
 			cursorMoved();
 		}
-		if ((od->dwData) && (buttonReconst->isCursorEnabled())) {
+		if (keyDown && (buttonReconst->isCursorEnabled())) {
 			if (buttonReconst->incCursor() >= ButtonReconst::btnMAXIMUM) buttonReconst->setCursor(0);
 			cursorMoved();
 		}
@@ -460,19 +515,24 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_BACK:       directTileCursor(13); break;
 	/* 決定キー */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
-		if (od->dwData)
+		if (keyDown)
 			subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
 				mySubScene->skipEvent();
 			});
-		if ((od->dwData) && (tehaiReconst->isCursorEnabled()))
+		if (keyDown && (tehaiReconst->isCursorEnabled()))
 			FinishTileChoice();
-		else if ((od->dwData) && (buttonReconst->isCursorEnabled()))
+		else if (keyDown && (buttonReconst->isCursorEnabled()))
 			buttonReconst->ButtonPressed();
 		break;
 	}
 }
 
-void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
+#ifdef _WIN32
+void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)
+#else /*_WIN32*/
+void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
+#endif /*_WIN32*/
+{
 	TableProtoScene::MouseInput(od, X, Y);
 	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 	const int scaledX = (int)((float)X / Geometry::WindowScale());
@@ -485,8 +545,17 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 	const bool isButton = (region >= ButtonReconst::ButtonRegionNum) &&
 		(region < ButtonReconst::ButtonRegionNum + ButtonReconst::btnMAXIMUM) &&
 		isCursorEnabled;
-	switch (od->dwOfs) {
+#ifdef _WIN32
+	switch (od->dwOfs)
+#else /*_WIN32*/
+	switch (od->type)
+#endif /*_WIN32*/
+	{
+#ifdef _WIN32
 	case DIMOFS_X: case DIMOFS_Y: // マウスカーソルを動かした場合
+#else /*_WIN32*/
+	case MotionNotify: // マウスカーソルを動かした場合
+#endif /*_WIN32*/
 		if ((!chatInput->is_Active()) && (region != tehaiReconst->getTileCursor()) && (isValidTile)) {
 			tehaiReconst->setTileCursor(region);
 			buttonReconst->setCursor();
@@ -503,29 +572,62 @@ void GameTableScreen::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {
 			tileTipReconst->reconstruct();
 		}
 		break;
+#ifdef _WIN32
 	case DIMOFS_BUTTON0: // マウスクリック
 		if (od->dwData)
+#else /*_WIN32*/
+	case ButtonPress: // マウスクリック
+		if (od->xbutton.button == Button1) {
+#endif /*_WIN32*/
 			subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
 				mySubScene->skipEvent();
 			});
-		if ((!chatInput->is_Active()) && (isValidTile) && (od->dwData))
+		if ((!chatInput->is_Active()) && (isValidTile)
+#ifdef _WIN32
+			&& (od->dwData)
+#endif /*_WIN32*/
+		)
 			FinishTileChoice();
-		else if ((!chatInput->is_Active()) && (isButton) && (od->dwData))
+		else if ((!chatInput->is_Active()) && (isButton)
+#ifdef _WIN32
+			&& (od->dwData)
+#endif /*_WIN32*/
+		)
 			buttonReconst->ButtonPressed();
-		else if ((!chatInput->is_Active()) && (region == ChatInputRegion) && (od->dwData)) {
+		else if ((!chatInput->is_Active()) && (region == ChatInputRegion)
+#ifdef _WIN32
+			&& (od->dwData)
+#endif /*_WIN32*/
+		) {
 			sound::Play(sound::IDs::sndClick);
 			chatInput->activate();
 		}
-		else if ((chatInput->is_Active()) && (region != ChatInputRegion) && (od->dwData)) {
+		else if ((chatInput->is_Active()) && (region != ChatInputRegion)
+#ifdef _WIN32
+			&& (od->dwData)
+#endif /*_WIN32*/
+		) {
 			sound::Play(sound::IDs::sndClick);
 			chatInput->deactivate();
 		}
+#ifdef _WIN32
 		break;
 	case DIMOFS_BUTTON1: // マウス右クリック
-		if ((!chatInput->is_Active()) && (od->dwData) && isNakiSel) { // 鳴き選択中の時
+#else /*_WIN32*/
+		} else if (od->xbutton.button == Button3) {
+#endif /*_WIN32*/
+		if ((!chatInput->is_Active())
+#ifdef _WIN32
+			&& (od->dwData)
+#endif /*_WIN32*/
+			&& isNakiSel
+		) { // 鳴き選択中の時
 			sound::Play(sound::IDs::sndClick);
 			ui::UIEvent->set(naki::nakiNone); // 牌の番号を設定
 		}
+#ifndef _WIN32
+		}
+#endif /*_WIN32*/
 		break;
 	}
 }

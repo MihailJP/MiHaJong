@@ -130,7 +130,7 @@ void TableSubsceneAgariScreenProto::parseYakuList() {
 #elif defined(_WIN32)
 				_tcsncat(yakuValUnified, _T("\r\n"), bufsz - _tcslen(yakuValUnified));
 #else
-				_tcscat_s(yakuValUnified, bufsz, _T("\n"));
+				_tcsncat(yakuValUnified, _T("\n"), bufsz - _tcslen(yakuValUnified));
 #endif
 #if defined(_MSC_VER)
 		_tcscat_s(yakuNameUnified, bufsz, yakuData.yakuNameList);

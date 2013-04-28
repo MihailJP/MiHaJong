@@ -1,4 +1,5 @@
 #include "input.h"
+#ifdef _WIN32
 #include "init.h"
 #include "../common/strcode.h"
 
@@ -91,3 +92,4 @@ Mouse::Position Mouse::pos() {
 
 }
 }
+#endif /*_WIN32*/

@@ -1,8 +1,10 @@
 #pragma once
 
+#ifdef _WIN32
 #include <windows.h>
-#include "../../directx.h"
 #include <dinput.h>
+#endif /*_WIN32*/
+#include "../../directx.h"
 #include "../../geometry.h"
 #include <cstdint>
 #include "../../timer.h"

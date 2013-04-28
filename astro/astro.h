@@ -1,8 +1,11 @@
 #pragma once
 
 #ifdef ASTRO_EXPORTS
-#pragma once
+#ifdef _WIN32
 #define EXPORT __declspec(dllexport)
+#else /* _WIN32 */
+#define EXPORT /**/
+#endif /* _WIN32 */
 
 #ifndef deg2rad
 #include <math.h>
@@ -20,14 +23,22 @@
 #endif /* fixangle */
 
 #else /* ASTRO_EXPORTS */
+#ifdef _WIN32
 #define EXPORT __declspec(dllimport)
+#else /* _WIN32 */
+#define EXPORT /**/
+#endif /* _WIN32 */
 #endif /* ASTRO_EXPORTS */
 
 #ifdef _MSC_VER
 #define _USE_MATH_DEFINES
 #endif /* _MSC_VER */
 
+#ifdef _WIN32
 #include <windows.h>
+#else /* _WIN32 */
+#include <sys/time.h>
+#endif /* _WIN32 */
 
 struct MOONPHASE
 {
@@ -55,20 +66,20 @@ extern "C" {
 #endif
 
 	/* julian.c */
+#ifdef _WIN32
 	EXPORT double systime_to_julian(const LPSYSTEMTIME);
-	EXPORT void time_to_julian_hsp(double*, int, int, int, int, int, int, int);
+#else /* _WIN32 */
+	EXPORT double systime_to_julian(const struct timespec* sysTime);
+#endif /* _WIN32 */
 
 	/* ecllong.c */
 	EXPORT double sun_ecliptic_longitude (double);
-	EXPORT void sun_ecliptic_longitude_hsp (double*, double);
 
 	/* mphase.c */
 	EXPORT struct MOONPHASE calc_moon_phase (double);
-	EXPORT void calc_moon_phase_hsp (double*, double);
 
 	/* sunrise.c */
 	EXPORT struct RISE_SET_HOUR sunrise (int, int, int, double, double, double, int, double);
-	EXPORT void sunrise_hsp (int*, int, int, int, double, int, double, double, double);
 
 #ifdef __cplusplus
 }

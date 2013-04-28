@@ -1,6 +1,9 @@
 #pragma once
 
-#ifdef MJCORE_EXPORTS
+#if !defined(_WIN32)
+#define MJCORE /* */
+#define MJCEXTERN /* */
+#elif defined(MJCORE_EXPORTS)
 #define MJCORE __declspec(dllexport)
 #define MJCEXTERN
 #else

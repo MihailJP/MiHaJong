@@ -2,6 +2,10 @@
 #include "../common/version.h"
 #include "extchar.h"
 #include "loadtex.h"
+#ifndef _WIN32
+#include <X11/Xutil.h>
+#include <iostream>
+#endif /*_WIN32*/
 
 namespace mihajong_graphic {
 
@@ -11,6 +15,7 @@ unsigned& MainWindow::WindowWidth = Geometry::WindowWidth;
 unsigned& MainWindow::WindowHeight = Geometry::WindowHeight;
 extern MainWindow* myMainWindow;
 
+#ifdef _WIN32
 LRESULT MainWindow::keyev(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (wParam) {
 	case VK_LEFT:
@@ -121,7 +126,72 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen) 
 #endif
 	return;
 }
+#else /*_WIN32*/
+bool MainWindow::WinProc(MainWindow* mainWindow) { // ウィンドウプロシージャ
+	if (XPending(mainWindow->disp)) { // イベントあり
+		XEvent event;
+		XNextEvent(mainWindow->disp, &event); // イベント待機
+		
+		switch (event.type) {
+		case ClientMessage:
+			if (event.xclient.data.l[0] == mainWindow->wmDelMsg) { // ウィンドウを閉じた時
+				XFlush(mainWindow->disp);
+				return false;
+			}
+			break;
+		case MotionNotify: // マウスポインタの移動
+		case ButtonPress: // マウスボタンを押した時
+		case ButtonRelease: // マウスボタンを離した時
+			mainWindow->myScreenManipulator->mouseInputProc(&event);
+			break;
+		case KeyPress: // キーを押した時
+		case KeyRelease: // キーを離した時
+			mainWindow->myScreenManipulator->kbdInputProc(&event);
+			break;
+		}
+		return true;
+	} else { // イベントなし
+		mainWindow->Render();
+		return true;
+	}
+}
 
+void MainWindow::initWindow(void* hThisInst, int nWinMode, bool fullscreen) {
+	XInitThreads();
+	disp = XOpenDisplay(nullptr); // 接続先ディスプレイは DISPLAY で指定
+	if (disp == nullptr) throw _T("ディスプレイに接続出来ません。Cannot connect to display.");
+	int screen = DefaultScreen(disp);
+	hWnd = XCreateSimpleWindow(
+		disp,
+		RootWindow(disp, screen),
+		0, 0,
+		WindowWidth, WindowHeight,
+		1, BlackPixel(disp, screen),
+		WhitePixel(disp, screen));
+	
+	std::string wName(CodeConv::toANSI(WindowCaption));
+	XStoreName(disp, hWnd, wName.c_str()); // ウィンドウキャプションを設定
+
+	XSizeHints hints;
+	hints.flags = PMinSize|PMaxSize; // ウィンドウサイズを固定
+	hints.min_width = hints.max_width = WindowWidth;
+	hints.min_height = hints.max_height = WindowHeight;
+	XSetWMNormalHints(disp, hWnd, &hints);
+	
+	XSelectInput(disp, hWnd,
+		PointerMotionMask | ButtonPressMask | ButtonReleaseMask |
+		KeyPressMask | KeyReleaseMask
+		);
+
+	wmDelMsg = XInternAtom(disp, "WM_DELETE_WINDOW", False);
+	XMapWindow(disp, hWnd);
+	XSetWMProtocols(disp, hWnd, &wmDelMsg, 1);
+	XFlush(disp);
+	return;
+}
+#endif /*_WIN32*/
+
+#ifdef _WIN32
 MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen) {
 	Geometry::WindowWidth = width; Geometry::WindowHeight = height;
 	initWindowClass(hThisInst, icon);
@@ -129,18 +199,32 @@ MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned
 	myScreenManipulator = new ScreenManipulator(hWnd, fullscreen);
 	myInputManipulator = new input::InputManipulator(hWnd);
 }
+#else /*_WIN32*/
+MainWindow::MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen) {
+	Geometry::WindowWidth = width; Geometry::WindowHeight = height;
+	initWindow(hThisInst, nWinMode, fullscreen);
+	myScreenManipulator = new ScreenManipulator(disp, hWnd, fullscreen);
+}
+#endif /*_WIN32*/
 
 MainWindow::~MainWindow() {
 	delete myScreenManipulator; myScreenManipulator = nullptr;
 	UnloadAllTextures();
+#ifndef _WIN32
+	XDestroyWindow(disp, hWnd);
+	XCloseDisplay(disp);
+#endif /*_WIN32*/
 }
 
 void MainWindow::Render() { // ウィンドウの再描画
 	if (myScreenManipulator) {
 		myScreenManipulator->Render();
+#ifdef _WIN32
+		// Windowsのみ。Linuxでは別の箇所で入力イベントを扱うので不要
 		ValidateRect(hWnd, nullptr);
 		if (myInputManipulator)
 			myScreenManipulator->inputProc(myInputManipulator);
+#endif /*_WIN32*/
 	}
 	return;
 }

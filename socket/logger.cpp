@@ -1,5 +1,6 @@
 #include "logger.h"
 
+#ifdef _WIN32
 namespace mihajong_socket {
 namespace logger {
 
@@ -38,3 +39,4 @@ void fatal_msg(LPCTSTR msg) { if (fpFatalC) (*fpFatalC)(msg); }
 
 }
 }
+#endif /* _WIN32 */

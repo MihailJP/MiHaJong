@@ -4,10 +4,15 @@
 #include <gdiplus.h>
 using namespace Gdiplus;
 #endif
+#ifndef _WIN32
+#include <iostream>
+#endif
 
 namespace mihajong_graphic {
 
+#ifdef _WIN32
 HINSTANCE GraphicDLL = nullptr;
+#endif /*_WIN32*/
 MainWindow* myMainWindow = nullptr;
 
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
@@ -15,7 +20,12 @@ GdiplusStartupInput gdiplusInput;
 ULONG_PTR gdiplusToken;
 #endif
 
-EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr, unsigned width, unsigned height, bool fullscreen) {
+#ifdef _WIN32
+EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr, unsigned width, unsigned height, bool fullscreen)
+#else /*_WIN32*/
+EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwndPtr, unsigned width, unsigned height, bool fullscreen)
+#endif /*_WIN32*/
+{
 	/* ウィンドウの初期化 */
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 	GdiplusStartup(&gdiplusToken, &gdiplusInput, nullptr);
@@ -26,17 +36,26 @@ EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hw
 		ui::cancellableWait = new ui::CancellableWait();
 		if (hwndPtr) *hwndPtr = myMainWindow->gethwnd();
 	}
+#ifdef _WIN32
 	catch (LPTSTR e) {
 		MessageBox(nullptr, e, _T("Error"), MB_OK | MB_ICONERROR);
 		return FALSE;
 	}
 	return TRUE;
+#else /*_WIN32*/
+	catch (LPTSTR e) {
+		std::cerr << e << std::endl;
+		return false;
+	}
+	return true;
+#endif /*_WIN32*/
 }
 
 EXPORT void RefreshWindow() {
 	myMainWindow->Render();
 }
 
+#ifdef _WIN32
 EXPORT BOOL Transit(sceneID scene) try {
 	if (!myMainWindow) throw _T("ウィンドウが初期化されていません");
 	myMainWindow->transit(scene);
@@ -56,6 +75,25 @@ catch (LPTSTR e) {
 	MessageBox(nullptr, e, _T("Error"), MB_OK | MB_ICONERROR);
 	return FALSE;
 }
+#else /*_WIN32*/
+EXPORT bool Transit(sceneID scene) try {
+	if (!myMainWindow) throw _T("ウィンドウが初期化されていません");
+	myMainWindow->transit(scene);
+	return true;
+}
+catch (LPTSTR e) {
+	return false;
+}
+
+EXPORT bool Subscene(unsigned int subsceneID) try {
+	if (!myMainWindow) throw _T("ウィンドウが初期化されていません");
+	myMainWindow->subscene(subsceneID);
+	return true;
+}
+catch (LPTSTR e) {
+	return false;
+}
+#endif /*_WIN32*/
 
 EXPORT void CleanupWindow() {
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
@@ -66,8 +104,15 @@ EXPORT void CleanupWindow() {
 	delete ui::cancellableWait;
 }
 
+#ifndef _WIN32
+EXPORT bool Event() {
+	return MainWindow::WinProc(myMainWindow);
+}
+#endif /*_WIN32*/
+
 }
 
+#ifdef _WIN32
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
@@ -83,3 +128,4 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 
 	return TRUE;
 }
+#endif /*_WIN32*/

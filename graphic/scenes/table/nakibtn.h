@@ -3,7 +3,9 @@
 #include "../table.h"
 #include "../../widgets/button.h"
 #include <bitset>
+#ifdef _WIN32
 #include <windows.h>
+#endif /*_WIN32*/
 #include "../../../common/mutex.h"
 #include "../../timer.h"
 
@@ -15,6 +17,9 @@ public:
 private:
 	GameTableScreen* caller;
 	ButtonPic* buttons;
+#ifndef _WIN32
+	bool initialized;
+#endif /*_WIN32*/
 public: // É{É^Éìî‘çÜ
 	enum ButtonID {
 		btnChii1, btnChii2, btnChii3, btnPon, btnKan, btnPass, btnRon,
