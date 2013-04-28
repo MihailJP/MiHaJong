@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Ruby">
+      <UniqueIdentifier>{320d31b0-dd91-49c4-8b57-521dfded462e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Python">
+      <UniqueIdentifier>{10bb9b7d-288b-43c0-b72a-1ca9081c3cc3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="compress.py">
+      <Filter>Python</Filter>
+    </None>
+    <None Include="compress.rb">
+      <Filter>Ruby</Filter>
+    </None>
+    <None Include="rulesyms.rb">
+      <Filter>Ruby</Filter>
+    </None>
+    <None Include="Makefile.nmake" />
+  </ItemGroup>
+</Project>

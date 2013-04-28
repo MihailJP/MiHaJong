@@ -1,0 +1,25 @@
+#pragma once
+
+#include <windows.h>
+#include <tchar.h>
+#include "exports.h"
+#include "scenes/scene_id.h"
+
+#ifdef GRAPHIC_EXPORTS
+#include "window.h"
+namespace mihajong_graphic {
+	extern HINSTANCE GraphicDLL;
+}
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
+#endif
+
+namespace mihajong_graphic {
+
+EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr,
+	unsigned width, unsigned height, bool fullscreen);
+EXPORT void RefreshWindow();
+EXPORT BOOL Transit(sceneID scene);
+EXPORT BOOL Subscene(unsigned int subsceneID);
+EXPORT void CleanupWindow();
+
+}

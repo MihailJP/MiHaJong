@@ -1,0 +1,88 @@
+OBJPATH=$(SolutionDir)$(IntDir)
+ZIPNAME=mihajong
+TMPPATH=$(OBJPATH)$(ZIPNAME)\ 
+ARCHIVENAME=$(ZIPNAME).zip
+ARCHIVE=$(OBJPATH)$(ARCHIVENAME)
+DOCPATH=$(SolutionDir)doc\ 
+DATAPATH=$(SolutionDir)data\ 
+ARCHIVE_CONTENT=$(TMPPATH)astro.dll $(TMPPATH)GuruGuruSMF4.dll $(TMPPATH)graphic.dll $(TMPPATH)mjcore.dll $(TMPPATH)socket.dll $(TMPPATH)sound.dll \
+	$(TMPPATH)mihajong.exe $(TMPPATH)mihasanm.exe $(TMPPATH)mihassnm.exe $(TMPPATH)mihaysnm.exe \
+	$(TMPPATH)history.txt $(TMPPATH)license.txt $(TMPPATH)playing.txt $(TMPPATH)readme.txt $(TMPPATH)rulesyms.txt $(TMPPATH)script.txt \
+	$(TMPPATH)ai\default.lua $(TMPPATH)haifu\haifu.css $(TMPPATH)haifu\haifu.dtd $(TMPPATH)haifu\haifu.xsd $(TMPPATH)haifu\haifu.xsl
+
+all: $(ARCHIVE)
+
+$(ARCHIVE): $(ARCHIVE_CONTENT)
+	- mkdir $(TMPPATH)bgm
+	- mkdir $(TMPPATH)sound
+	copy $(SolutionDir)mihajong\sound\*.* $(TMPPATH)sound
+	cd $(OBJPATH) && zip -9r $(ARCHIVENAME) $(ZIPNAME)
+
+$(TMPPATH)astro.dll: $(OBJPATH)astro.dll
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)GuruGuruSMF4.dll: $(OBJPATH)GuruGuruSMF4.dll
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)graphic.dll: $(OBJPATH)graphic.dll
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)mjcore.dll: $(OBJPATH)mjcore.dll
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)socket.dll: $(OBJPATH)socket.dll
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)sound.dll: $(OBJPATH)sound.dll
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)history.txt: $(DOCPATH)history.txt
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)license.txt: $(DOCPATH)license.txt
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)playing.txt: $(DOCPATH)playing.txt
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)readme.txt: $(DOCPATH)readme.txt
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)rulesyms.txt: $(DOCPATH)rulesyms.txt
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)script.txt: $(DOCPATH)script.txt
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)ai\default.lua: $(DATAPATH)ai\default.lua
+	- mkdir $(TMPPATH)ai
+	copy $** $@
+$(TMPPATH)haifu\haifu.css: $(DATAPATH)haifu\haifu.css
+	- mkdir $(TMPPATH)haifu
+	copy $** $@
+$(TMPPATH)haifu\haifu.dtd: $(DATAPATH)haifu\haifu.dtd
+	- mkdir $(TMPPATH)haifu
+	copy $** $@
+$(TMPPATH)haifu\haifu.xsd: $(DATAPATH)haifu\haifu.xsd
+	- mkdir $(TMPPATH)haifu
+	copy $** $@
+$(TMPPATH)haifu\haifu.xsl: $(DATAPATH)haifu\haifu.xsl
+	- mkdir $(TMPPATH)haifu
+	copy $** $@
+	
+$(TMPPATH)mihajong.exe: $(OBJPATH)mihajong.exe
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)mihasanm.exe: $(OBJPATH)mihasanm.exe
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)mihassnm.exe: $(OBJPATH)mihassnm.exe
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)mihaysnm.exe: $(OBJPATH)mihaysnm.exe
+	- mkdir $(TMPPATH)
+	copy $** $@
+
+clean:
+	-rmdir /s /q $(TMPPATH) || rmdir -s -q $(TMPPATH)
+	-del $(ARCHIVE)
