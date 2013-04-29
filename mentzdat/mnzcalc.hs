@@ -93,35 +93,46 @@ takeStep2 nums mlds i = let (pairFlag, melds, semimelds) = mlds
                               then (filterNums nums (\p q -> if (q == i) || (q == (i + 2)) then p # q - 1 else p # q), (pairFlag, melds, semimelds + 1))
                               else (nums, mlds)
 
-maxMeld :: Int -> (NumsOfTile, NumsOfMeld) -> (NumsOfTile, NumsOfMeld) -> (NumsOfTile, NumsOfMeld) -- 最大のものを計算する
-maxMeld mode (nums1, mlds1) (nums2, mlds2) = let (pairFlag1, melds1, semimelds1) = mlds1
-                                                 (pairFlag2, melds2, semimelds2) = mlds2
-                                             in if (melds1 * mode + semimelds1) < (melds2 * mode + semimelds2)
-                                                   then (nums2, mlds2)
-                                                   else if ((melds1 * mode + semimelds1) == (melds2 * mode + semimelds2)) && (not pairFlag1) && pairFlag2
-                                                           then (nums2, mlds2)
-                                                           else (nums1, mlds1)
+eqv :: Bool -> Bool -> Bool
+eqv True  a =     a
+eqv False a = not a
+
+maxMeld :: Int -> Bool-> (NumsOfTile, NumsOfMeld) -> (NumsOfTile, NumsOfMeld) -> (NumsOfTile, NumsOfMeld) -- 最大のものを計算する
+maxMeld mode False (nums1, mlds1) (nums2, mlds2) = let (pairFlag1, melds1, semimelds1) = mlds1
+                                                       (pairFlag2, melds2, semimelds2) = mlds2
+                                                   in if (melds1 * mode + semimelds1) < (melds2 * mode + semimelds2)
+                                                         then (nums2, mlds2)
+                                                         else if ((melds1 * mode + semimelds1) == (melds2 * mode + semimelds2)) && (not pairFlag1) && pairFlag2
+                                                                 then (nums2, mlds2)
+                                                                 else (nums1, mlds1)
+maxMeld mode True  (nums1, mlds1) (nums2, mlds2) = let (pairFlag1, melds1, semimelds1) = mlds1
+                                                       (pairFlag2, melds2, semimelds2) = mlds2
+                                                   in if (not pairFlag1) && pairFlag2
+                                                         then (nums2, mlds2)
+                                                         else if ((melds1 * mode + semimelds1) < (melds2 * mode + semimelds2)) && (pairFlag1 `eqv` pairFlag2)
+                                                                 then (nums2, mlds2)
+                                                                 else (nums1, mlds1)
 
 enumerateMelds :: (NumsOfTile -> NumsOfMeld -> Int -> (NumsOfTile, NumsOfMeld)) -> [Int] -> NumsOfTile -> NumsOfMeld -> [(NumsOfTile, NumsOfMeld)] -- 面子列挙
 enumerateMelds f l nums mlds = let (_, melds, semimelds) = mlds
                                in filter (\(_, (_, m, s)) -> (m /= melds) || (s /= semimelds)) [f (dropIsolates nums) mlds k | k <- l]
 
-calculate :: Int -> NumsOfTile -> NumsOfMeld -> (NumsOfTile, NumsOfMeld) -- 計算（再帰処理）
-calculate mode nums mlds = if isEmpty $ dropIsolates nums
-                              then (nums, mlds)
-                              else if n1 == 0
-                                      then calculate mode (n2,n3,n4,n5,n6,n7,n8,n9,0) mlds
-                                      else foldl (maxMeld mode) (nums, mlds) (
-                                                  [calculate mode (fst p) (snd p) | p <- enumerateMelds takeTriplet [1..9] (dropIsolates nums) mlds] ++
-                                                  [calculate mode (fst p) (snd p) | p <- enumerateMelds takeSequence [1..7] (dropIsolates nums) mlds] ++
-                                                  [calculate mode (fst p) (snd p) | p <- enumerateMelds takePair [1..9] (dropIsolates nums) mlds] ++
-                                                  [calculate mode (fst p) (snd p) | p <- enumerateMelds takeStep1 [1..8] (dropIsolates nums) mlds] ++
-                                                  [calculate mode (fst p) (snd p) | p <- enumerateMelds takeStep2 [1..7] (dropIsolates nums) mlds] )
+calculate :: Int -> Bool -> NumsOfTile -> NumsOfMeld -> (NumsOfTile, NumsOfMeld) -- 計算（再帰処理）
+calculate mode caput nums mlds = if isEmpty $ dropIsolates nums
+                                    then (nums, mlds)
+                                    else if n1 == 0
+                                            then calculate mode caput (n2,n3,n4,n5,n6,n7,n8,n9,0) mlds
+                                            else foldl (maxMeld mode caput) (nums, mlds) (
+                                                       [calculate mode caput (fst p) (snd p) | p <- enumerateMelds takeTriplet [1..9] (dropIsolates nums) mlds] ++
+                                                       [calculate mode caput (fst p) (snd p) | p <- enumerateMelds takeSequence [1..7] (dropIsolates nums) mlds] ++
+                                                       [calculate mode caput (fst p) (snd p) | p <- enumerateMelds takePair [1..9] (dropIsolates nums) mlds] ++
+                                                       [calculate mode caput (fst p) (snd p) | p <- enumerateMelds takeStep1 [1..8] (dropIsolates nums) mlds] ++
+                                                       [calculate mode caput (fst p) (snd p) | p <- enumerateMelds takeStep2 [1..7] (dropIsolates nums) mlds] )
     where (n1,n2,n3,n4,n5,n6,n7,n8,n9) = nums
 
-calcMentz :: Int -> NumsOfTile -> Maybe NumsOfMeld
-calcMentz mode nums = if isTooMany nums then Nothing
-                                        else Just (snd (calculate mode nums (False, 0, 0)))
+calcMentz :: Int -> Bool -> NumsOfTile -> Maybe NumsOfMeld
+calcMentz mode caput nums = if isTooMany nums then Nothing
+                                              else Just (snd (calculate mode caput nums (False, 0, 0)))
 
 idToMentzDat :: Int -> NumsOfTile -- 通し番号から変換
 idToMentzDat i = ((i `mod`      5),
@@ -144,11 +155,11 @@ putChrs chrCode = do system ("./putchr " ++ (unwords [show i | i <- chrCode]))
                      return ()
 
 totalPatterns = 5*5*5*5*5*5*5*5*5 :: Int -- パターン合計
-fileBatch = 5*5*5*5*5*5*5 :: Int -- 1ファイルに出力する数
+fileBatch = 5*5*5*5*5*5 :: Int -- 1ファイルに出力する数
 batch = 5*5*5 :: Int -- この件数だけまとめて出力
 
 outputJob :: Int -> IO ()
-outputJob j = putChrs [meldToByte $ (calcMentz n) $ idToMentzDat (i + j) | i <- [0..(batch - 1)], n <- [2, 10]]
+outputJob j = putChrs [meldToByte $ (calcMentz n caput) $ idToMentzDat (i + j) | i <- [0..(batch - 1)], n <- [2, 10], caput <- [False, True]]
 
 fileOutput :: Int -> IO [()]
 fileOutput i = sequence [outputJob (k + i) | k <- [0, batch .. (fileBatch - 1)]]
