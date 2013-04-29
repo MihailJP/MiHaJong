@@ -105,7 +105,7 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 		error(_T("サウンドDLLの初期化に失敗しました。"));
 
 	/* 面子構成データベースの読み込み */
-	/* 向聴数の計算に使用：構築には１ヶ月必要 */
+	/* 向聴数の計算に使用：構築にはクアッドコアで一昼夜必要 */
 	ShantenAnalyzer::initMentsuAnalysisDat();
 
 	/* 擬似乱数を初期化 */
@@ -176,4 +176,10 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 	sound::util::soundload(sound::IDs::voxSijiarichi, "sound\\kyuushu.wav", false);
 	sound::util::soundload(sound::IDs::voxRonFurikomi, "sound\\agari2.wav", false);
 
+}
+
+MJCORE void testInit() {
+	setGameType(Yonma);
+	RuleData::configinit();
+	ShantenAnalyzer::initMentsuAnalysisDat();
 }

@@ -11,3 +11,5 @@ MJCORE void initapp(GameTypeID gameType, HWND hwnd);
 #else /*_WIN32*/
 MJCORE void initapp(GameTypeID gameType, Window hwnd);
 #endif /*_WIN32*/
+
+MJCORE void testInit();
