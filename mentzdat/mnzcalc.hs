@@ -155,6 +155,6 @@ fileOutput i = sequence [outputJob (k + i) | k <- [0, batch .. (fileBatch - 1)]]
 
 main = do argv <- getArgs
           if (length argv) >= 1
-             then fileOutput (fileBatch * (read (argv !! 0)))
+             then fileOutput (fileBatch * ((subtract 1) $ read (argv !! 0)))
              else exitWith $ ExitFailure 1
           exitWith ExitSuccess
