@@ -9,7 +9,7 @@ nodist_libmihajong_sound_la_SOURCES = \
 	GuruGuruSMF/GuruGuruSMF4_Cpp.h
 endif
 endif
-libmihajong_sound_la_LDFLAGS = -no-undefined
+libmihajong_sound_la_LDFLAGS = -no-undefined -version-info 0:0:0
 if WITH_WINAPI
 libmihajong_sound_la_LIBADD = ver.o
 endif
