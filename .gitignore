@@ -99,3 +99,7 @@ mentzdat/putchr
 mentzdat/mentz.dat
 mentzdat/mentz.dat.*
 *.hi
+!mentzdat/Makefile
+!mentzdat/test/Makefile
+mentzdat/test/*.txt
+mentzdat/test/testprog
