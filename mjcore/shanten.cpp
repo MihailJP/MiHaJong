@@ -90,7 +90,7 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerI
 			statcode += std::min((int)tileCount[suit * TileSuitStep + i], 4) * qDigit;
 			qDigit *= 5;
 		}
-		uint8_t tmpdat = mentsuAnalysisDat[statcode * 2 + ((mode & (1 << suit)) ? 1 : 0)];
+		uint8_t tmpdat = mentsuAnalysisDat[statcode * 4 + ((mode & (3 << (2 * suit))) >> (2 * suit))];
 		mianzi += (tmpdat & 0x70) >> 4;
 		tarzi += tmpdat & 0x0f;
 		if (tmpdat & 0x80) atama = true;
@@ -120,7 +120,7 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerI
 }
 unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit) {
 	unsigned int melds = 0u;
-	for (unsigned i = 0; i < 8; ++i)
+	for (unsigned i = 0; i < 64; ++i)
 		melds = std::max(melds, chkMianzi(gameStat, playerID, tileCount, limit, i));
 	return melds;
 }
