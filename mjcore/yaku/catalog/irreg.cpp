@@ -131,6 +131,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 				return isQiDui(analysis) && chktiles(analysis, tc, 7);
 			}
 		));
+	/* ニコニコ七対子 */
+	if (RuleData::chkRuleApplied("nikoniko_pairs"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("ニコニコ七対子"), get_yaku_han("nikoniko_pairs"),
+			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const TileCode tc[6] = {
+					CharacterTwo, CharacterFive,
+					CircleTwo, CircleFive, BambooTwo, BambooFive,
+				};
+				return isQiDui(analysis) && chktiles(analysis, tc, 6);
+			}
+		));
 
 	// ---------------------------------------------------------------------
 

@@ -274,6 +274,63 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return chktiles(analysis, kezi, 7, nullptr, 0, false);
 			}
 		));
+	/* ”½—ÎˆêF */
+	if (RuleData::chkRuleApplied("reverse_green"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("”½—ÎˆêF"), get_yaku_han("reverse_green"),
+			_T("¬ˆêF"), _T("‘ÎX˜a"), _T("’fg˜a"), _T("¬’fg"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				if (analysis->shanten[shantenRegular] == -1) {
+					const TileCode kezi[] = {
+						BambooSeven,
+						BambooTwo, BambooFour, BambooSix, BambooEight,
+						GreenDragon,
+					};
+					return (yaku::countingFacility::countSpecMentz
+						(analysis->MianziDat, kezi, 6, nullptr, 0, false) == SizeOfMeldBuffer) &&
+						(yaku::countingFacility::countSpecMentz
+						(analysis->MianziDat, kezi, 1, nullptr, 0, false) == 1);
+				}
+				else return false;
+			}
+		));
+	/* ”½—ÎˆêF—Ö */
+	if (RuleData::chkRuleApplied("reverse_ryuuiisohrin"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("”½—ÎˆêF—Ö"), get_yaku_han("reverse_ryuuiisohrin"),
+			_T("¬ˆêF"), _T("‘ÎX˜a"), _T("’fg˜a"), _T("¬’fg"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				if (analysis->shanten[shantenRegular] == -1) {
+					const TileCode kezi[] = {
+						BambooSeven,
+						BambooTwo, BambooFour, BambooSix, BambooEight,
+					};
+					return (yaku::countingFacility::countSpecMentz
+						(analysis->MianziDat, kezi, 5, nullptr, 0, false) == SizeOfMeldBuffer) &&
+						(yaku::countingFacility::countSpecMentz
+						(analysis->MianziDat, kezi, 1, nullptr, 0, false) == 1) &&
+						(analysis->MianziDat[0].tile == BambooFive);
+				}
+				else return false;
+			}
+		));
+	/* ”½•ˆêF */
+	if (RuleData::chkRuleApplied("reverse_black"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("”½•ˆêF"), get_yaku_han("reverse_black"),
+			_T("¬ˆêF"), _T("‘ÎX˜a"), _T("’fg˜a"), _T("¬’fg"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const TileCode kezi[] = {
+					CircleSix,
+					CircleTwo, CircleEight,
+					EastWind, SouthWind, WestWind, NorthWind,
+				};
+				return (yaku::countingFacility::countSpecMentz
+					(analysis->MianziDat, kezi, 7, nullptr, 0, false) == SizeOfMeldBuffer) &&
+					(yaku::countingFacility::countSpecMentz
+					(analysis->MianziDat, kezi, 1, nullptr, 0, false) == 1);
+			}
+		));
 	/* Â“´–å */
 	if (RuleData::chkRuleApplied("ao_no_domon"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(

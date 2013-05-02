@@ -37,6 +37,10 @@ namespace { // 内部処理に使う関数
 		bool flag = false;
 		std::array<TileCode, 4> winds = {EastWind, SouthWind, WestWind, NorthWind,};
 		for (auto k = winds.begin(); k != winds.end(); ++k) {
+			if ((RuleData::chkRule("four_wind_ryuukyoku", "same_dealer_west") ||
+				RuleData::chkRule("four_wind_ryuukyoku", "next_dealer_west")) &&
+				(*k != WestWind))
+				continue; // 西以外は無視するルールの場合
 			bool tmpflag = true;
 			if (gameStat->chkGameType(Sanma4)) {
 				for (PlayerID i = 0; i < Players; ++i)
@@ -390,7 +394,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	case SuufonRenda:
 		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("三風連打") : _T("四風連打");
 		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::tblSubsceneSifeng);
-		ryuukyokuProc(gameStat, !RuleData::chkRule("four_wind_ryuukyoku", "next_dealer"));
+		ryuukyokuProc(gameStat, !(RuleData::chkRule("four_wind_ryuukyoku", "next_dealer") || RuleData::chkRule("four_wind_ryuukyoku", "next_dealer_west")));
 		break;
 	/**************/
 	/* 四人立直時 */
