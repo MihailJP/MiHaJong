@@ -57,7 +57,7 @@ void mihajong_socket::Sock::listen (uint16_t port) { // ƒT[ƒo[ŠJn
 	portnum = port;
 	lsock = socket(AF_INET, SOCK_STREAM, 0); // ƒ\ƒPƒbƒg‚ğ‰Šú‰»
 #ifdef _WIN32
-	if (lsock == INVALID_SocketDescriptor) throw socket_creation_error(WSAGetLastError()); // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”s‚µ‚½‚ç—áŠO
+	if (lsock == INVALID_SOCKET) throw socket_creation_error(WSAGetLastError()); // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”s‚µ‚½‚ç—áŠO
 #else /* _WIN32 */
 	if (lsock < 0) throw socket_creation_error(errno); // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”s‚µ‚½‚ç—áŠO
 #endif /* _WIN32 */
@@ -94,7 +94,7 @@ void mihajong_socket::Sock::connect (const std::string& destination, uint16_t po
 	portnum = port;
 	sock = socket(AF_INET, SOCK_STREAM, 0); // ƒ\ƒPƒbƒg‚ğ‰Šú‰»
 #ifdef _WIN32
-	if (sock == INVALID_SocketDescriptor) throw socket_creation_error(WSAGetLastError()); // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”s‚µ‚½‚ç—áŠO
+	if (sock == INVALID_SOCKET) throw socket_creation_error(WSAGetLastError()); // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”s‚µ‚½‚ç—áŠO
 #else /* _WIN32 */
 	if (sock < 0) throw socket_creation_error(errno); // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”s‚µ‚½‚ç—áŠO
 #endif /* _WIN32 */
@@ -563,7 +563,7 @@ int mihajong_socket::Sock::client_thread::establishConnection() { // Ú‘±‚ğŠm—§‚
 	const time_t startTime(time(nullptr)); // ŠJn(•b’PˆÊ)
 	while (true) {
 #ifdef _WIN32
-		if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == SocketDescriptor_ERROR) { // Ú‘±
+		if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == SOCKET_ERROR) { // Ú‘±
 			errcode = WSAGetLastError();
 			if (errcode == WSAEISCONN) {
 				break; // ³í‚ÉÚ‘±Š®—¹‚µ‚½‚Æ‚İ‚È‚·
@@ -605,7 +605,7 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // Ú‘±‚ğŠm—§‚
 	info(_T("ƒT[ƒo‘Òóˆ—‚ğŠJn‚µ‚Ü‚·"));
 #ifdef _WIN32
 	u_long arg = 1; ioctlsocket(*listenerSock, FIONBIO, &arg); // non-blocking ƒ‚[ƒh‚Éİ’è
-	if (::listen(*listenerSock, SOMAXCONN) == SocketDescriptor_ERROR) { // ‘Ò‹@
+	if (::listen(*listenerSock, SOMAXCONN) == SOCKET_ERROR) { // ‘Ò‹@
 		errtype = errListen; errcode = WSAGetLastError(); return -((int)errtype);
 	}
 #else /* _WIN32 */
@@ -618,7 +618,7 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // Ú‘±‚ğŠm—§‚
 	while (true) {
 #ifdef _WIN32
 		*mySock = accept(*listenerSock, nullptr, 0);
-		if (*mySock == INVALID_SocketDescriptor) { // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”sê‡
+		if (*mySock == INVALID_SOCKET) { // ƒ\ƒPƒbƒg‚Ìì¬‚É¸”sê‡
 			errcode = WSAGetLastError();
 			if (errcode != WSAEWOULDBLOCK) {
 				errtype = errAccept;

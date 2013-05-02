@@ -102,8 +102,9 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	mbsrtowcs(buf, &srcPtr, bufsize, &mbStat);
 	setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
 #endif /* _WIN32 */
-	std::wstring ans(buf); delete[] buf; delete[] srcBuf;
+	std::wstring ans(buf); delete[] buf;
 #ifndef _WIN32
+	delete[] srcBuf;
 	criticalSection(false);
 #endif /* _WIN32 */
 	return ans;
@@ -167,10 +168,11 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 
 	setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
 #endif /* _WIN32 */
-	std::string ans(buf); delete[] srcBuf;
+	std::string ans(buf);
 #ifdef _WIN32
 	delete[] buf;
 #else /* _WIN32 */
+	delete[] srcBuf;
 	criticalSection(false);
 #endif /* _WIN32 */
 	return ans;
