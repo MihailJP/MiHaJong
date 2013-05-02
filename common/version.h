@@ -2,13 +2,13 @@
 
 #define MIHAJONG_MAJOR_VER 2
 #define MIHAJONG_MINOR_VER 0
-#define MIHAJONG_PATCH_VER 0
-#define MIHAJONG_VER "2.0.0"
+#define MIHAJONG_PATCH_VER 1
+#define MIHAJONG_VER "2.0.1"
 
 #define MJCORE_MAJOR_VER 2
 #define MJCORE_MINOR_VER 0
-#define MJCORE_PATCH_VER 0
-#define MJCORE_VER "2.0.0"
+#define MJCORE_PATCH_VER 1
+#define MJCORE_VER "2.0.1"
 
 #define LOGGER_MAJOR_VER 2
 #define LOGGER_MINOR_VER 0
@@ -17,20 +17,20 @@
 
 #define ASTRO_MAJOR_VER 2
 #define ASTRO_MINOR_VER 0
-#define ASTRO_PATCH_VER 0
-#define ASTRO_VER "2.0.0"
+#define ASTRO_PATCH_VER 1
+#define ASTRO_VER "2.0.1"
 
 #define SOCKET_MAJOR_VER 2
 #define SOCKET_MINOR_VER 0
-#define SOCKET_PATCH_VER 0
-#define SOCKET_VER "2.0.0"
+#define SOCKET_PATCH_VER 1
+#define SOCKET_VER "2.0.1"
 
 #define SOUND_MAJOR_VER 2
 #define SOUND_MINOR_VER 0
-#define SOUND_PATCH_VER 0
-#define SOUND_VER "2.0.0"
+#define SOUND_PATCH_VER 1
+#define SOUND_VER "2.0.1"
 
 #define GRAPHIC_MAJOR_VER 2
 #define GRAPHIC_MINOR_VER 0
-#define GRAPHIC_PATCH_VER 0
-#define GRAPHIC_VER "2.0.0"
+#define GRAPHIC_PATCH_VER 1
+#define GRAPHIC_VER "2.0.1"
