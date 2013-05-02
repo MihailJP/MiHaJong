@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+#include <functional>
 #include "mjexport.h"
 #include "../common/strcode.h"
 
