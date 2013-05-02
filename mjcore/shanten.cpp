@@ -79,7 +79,7 @@ MJCORE Shanten ShantenAnalyzer::calcShanten(const GameTable* const gameStat, Pla
 	}
 }
 
-unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit) {
+unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit, unsigned mode) {
 	// 面子を2、対子・塔子を1とした数値
 	unsigned int ans = 0;
 	// 数牌
@@ -90,7 +90,7 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerI
 			statcode += std::min((int)tileCount[suit * TileSuitStep + i], 4) * qDigit;
 			qDigit *= 5;
 		}
-		uint8_t tmpdat = mentsuAnalysisDat[statcode];
+		uint8_t tmpdat = mentsuAnalysisDat[statcode * 4 + ((mode & (3 << (2 * suit))) >> (2 * suit))];
 		mianzi += (tmpdat & 0x70) >> 4;
 		tarzi += tmpdat & 0x0f;
 		if (tmpdat & 0x80) atama = true;
@@ -117,6 +117,12 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerI
 	}
 
 	return ans;
+}
+unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit) {
+	unsigned int melds = 0u;
+	for (unsigned i = 0; i < 64; ++i)
+		melds = std::max(melds, chkMianzi(gameStat, playerID, tileCount, limit, i));
+	return melds;
 }
 
 Shanten ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)

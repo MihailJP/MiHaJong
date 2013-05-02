@@ -1,7 +1,7 @@
 #pragma once
 
 #include "mjexport.h"
-#include "confitms.h"
+#include "../common/strcode.h"
 
 #ifdef MJCORE_EXPORTS
 
@@ -69,3 +69,4 @@ int getRule(int RuleID);
 
 MJCORE void preferenceInit();
 MJCORE void getWindowSize(unsigned* width, unsigned* height, bool* fullscreen);
+

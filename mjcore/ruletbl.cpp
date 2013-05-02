@@ -26,6 +26,9 @@
 #include "sound.h"
 #include "func.h"
 
+#include "confitms.h"
+#include "shanten.h"
+
 // -------------------------------------------------------------------------
 
 typedef std::map<std::string, int8_t> RULETBL;

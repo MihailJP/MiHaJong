@@ -30,6 +30,7 @@ public:
 #ifdef MJCORE_EXPORTS
 private:
 	static void setQixingTilePattern(TileCode* const QixingPai, unsigned int pattern);
+	static unsigned int chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit, unsigned mode);
 	static unsigned int chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit);
 	static Shanten calcShantenRegular(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount);
 	static Shanten calcShantenChiitoi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount);
