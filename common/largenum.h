@@ -27,6 +27,23 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 				this->digitGroup[i] %= 100000000;
 			}
 		}
+		int sign = 0;
+		for (int i = (DigitGroups - 1); i >= 0; --i) {
+			if (sign == 0) {
+				if      (digitGroup[i] > 0) sign = +1;
+				else if (digitGroup[i] < 0) sign = -1;
+			}
+			if ((sign == +1) && (digitGroup[i] < 0)) {
+				this->digitGroup[i + 1] -= 1;
+				this->digitGroup[i] += 100000000;
+				i = DigitGroups; sign = 0; continue;
+			}
+			if ((sign == -1) && (digitGroup[i] > 0)) {
+				this->digitGroup[i + 1] += 1;
+				this->digitGroup[i] -= 100000000;
+				i = DigitGroups; sign = 0; continue;
+			}
+		}
 	}
 	signed int compare(const LargeNum& cmp) const { // 比較用
 		signed int ans = 0;
