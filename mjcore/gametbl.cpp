@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cassert>
 #endif
+#include "regex.h"
 #include "except.h"
 #include "func.h"
 #include "tileutil.h"
@@ -163,13 +164,27 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 	memset(gameStat, 0, sizeof(GameTable));
 	gameStat->gameType = (GameTypeID)gameType;
 
+	LNum initialPoints; /* 初期点数 */
+	if (RuleData::chkRule("starting_point", "custom")) {
+		initialPoints = // 仮数部
+			std::atoi(RuleData::chkRule("starting_point_mantissa_tens")) * 10 +
+			std::atoi(RuleData::chkRule("starting_point_mantissa_ones"));
+		/* 指数部の処理 */
+		REGEX::smatch matchDat; int exponent = 0;
+		std::string expConf(RuleData::chkRule("starting_point_exponent"));
+		if (REGEX::regex_match(expConf, matchDat, REGEX::regex("exp_(\\d+)")))
+			exponent = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
+		for (int j = 0; j < exponent; ++j)
+			initialPoints *= 10;
+	} else {
+		initialPoints = (LNum)std::atoi(RuleData::chkRule("starting_point"));
+	}
+
 	for (int i = 0; i < Players; i++) {
-		if (i < ACTUAL_PLAYERS) {
-			gameStat->Player[i].PlayerScore =
-				(LNum)std::atoi(RuleData::chkRule("starting_point"));
-		} else {
+		if (i < ACTUAL_PLAYERS)
+			gameStat->Player[i].PlayerScore = initialPoints;
+		else
 			gameStat->Player[i].PlayerScore = (LNum)0;
-		}
 	}
 
 	if (RuleData::chkRule("game_length", "east_south_game"))

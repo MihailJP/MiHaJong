@@ -20,6 +20,7 @@ isPaoAgari_type isPaoAgari = nullptr;
 bgmplay_type bgmplay = nullptr;
 getName_type getName = nullptr;
 sendchat_type sendchat = nullptr;
+isAboveBase_type isAboveBase = nullptr;
 
 EXPORT void setfunc(
 	playerRelative_type ptr_playerRelative,
@@ -38,7 +39,8 @@ EXPORT void setfunc(
 	isPaoAgari_type ptr_isPaoAgari,
 	bgmplay_type ptr_bgmplay,
 	getName_type ptr_getName,
-	sendchat_type ptr_sendchat)
+	sendchat_type ptr_sendchat,
+	isAboveBase_type ptr_isAboveBase)
 {
 	playerRelative = ptr_playerRelative;
 	RelativePositionOf = ptr_RelativePositionOf;
@@ -57,6 +59,7 @@ EXPORT void setfunc(
 	bgmplay = ptr_bgmplay;
 	getName = ptr_getName;
 	sendchat = ptr_sendchat;
+	isAboveBase = ptr_isAboveBase;
 }
 
 }

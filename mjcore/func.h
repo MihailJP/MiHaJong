@@ -12,6 +12,7 @@
 #ifndef _WIN32
 #include <sys/stat.h>
 #endif
+#include "largenum.h"
 #endif
 
 // -------------------------------------------------------------------------
@@ -157,7 +158,7 @@ CodeConv::tstring inline TileName(TileCode tile) {
 
 TileCode Wind2Tile(uint8_t wind);
 
-int BasePoint();
+LNum BasePoint();
 bool isAboveBase(const GameTable* const gameStat, PlayerID player);
 
 CodeConv::tstring intstr(int val);
