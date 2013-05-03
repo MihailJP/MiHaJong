@@ -5,13 +5,7 @@
 #include "func.h"
 #include "ruletbl.h"
 #include <vector>
-#ifdef WITH_BOOST_REGEX
-#include <boost/regex.hpp>
-#define REGEX boost
-#else /*WITH_BOOST_REGEX*/
-#include <regex>
-#define REGEX std
-#endif /*WITH_BOOST_REGEX*/
+#include "regex.h"
 
 #ifdef None
 #undef None

@@ -1,11 +1,5 @@
 #include "result.h"
-#ifdef WITH_BOOST_REGEX
-#include <boost/regex.hpp>
-#define REGEX boost
-#else /*WITH_BOOST_REGEX*/
-#include <regex>
-#define REGEX std
-#endif /*WITH_BOOST_REGEX*/
+#include "regex.h"
 #include "../graphic/graphic.h"
 #include "../sound/sound.h"
 #include "sound.h"

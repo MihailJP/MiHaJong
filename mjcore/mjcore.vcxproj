@@ -307,6 +307,7 @@
     <ClInclude Include="reader\csv2arry.h" />
     <ClInclude Include="reader\ini2map.h" />
     <ClInclude Include="reader\readrsrc.h" />
+    <ClInclude Include="regex.h" />
     <ClInclude Include="remote.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="shanten.h" />
