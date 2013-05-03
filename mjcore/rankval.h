@@ -4,6 +4,7 @@
 #include <map>
 #include <array>
 #include "gametbl.h"
+#include "largenum.h"
 
 class RankVal {
 private: /* Singleton class idiom */
@@ -15,5 +16,5 @@ private:
 	std::map<std::string, RankValSet> rankValueMap; // ƒEƒ}İ’èˆê——
 public:
 	static RankVal* Instantiate(); // Singleton instance accessor
-	int getRankVal(const GameTable* gameStat, const std::string& ruletag, unsigned playersAboveBase, unsigned rank) const;
+	LNum getRankVal(const GameTable* gameStat, const std::string& ruletag, unsigned playersAboveBase, unsigned rank) const;
 };
