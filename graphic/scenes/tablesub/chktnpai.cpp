@@ -1,6 +1,7 @@
 #include "chktnpai.h"
 #include "../../gametbl.h"
 #include "../../utils.h"
+#include "../../rule.h"
 
 namespace mihajong_graphic {
 
@@ -37,6 +38,8 @@ void TableSubsceneCheckTenpai::CalculateTenpaiFlag(PlayerID player, int x, int y
 }
 
 void TableSubsceneCheckTenpai::ShowTenpaiFlag(PlayerID player, int x, int y) {
+	if (rules::chkRule("furiten_riichi", "no") && GameStatus::gameStat()->Player[player].RichiFlag.RichiFlag && machiInfo[player].FuritenFlag)
+		ShowCallMsg(player, calltext::Chonbo, x, y - 40); // フリテン立直がチョンボになる場合
 	if (tenpaiflag[player]) // 聴牌
 		ShowCallMsg(player, calltext::Tenpai, x, y - 40);
 	else if (GameStatus::gameStat()->Player[player].RichiFlag.RichiFlag)

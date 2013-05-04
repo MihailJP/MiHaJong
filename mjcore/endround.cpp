@@ -293,8 +293,15 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 			checkTenpai(gameStat, ResultDesc, OrigTurn));
 
 		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
-			// 錯和立直（不聴立直）の者がいた場合
-			if ((!isTenpai(gameStat, cnt)) && (gameStat->Player[cnt].RichiFlag.RichiFlag)) {
+			MachihaiInfo machiInfo = chkFuriten(gameStat, cnt);
+			bool chonboFlag = false;
+			if (gameStat->Player[cnt].RichiFlag.RichiFlag) {
+				if (!isTenpai(gameStat, cnt))
+					chonboFlag = true; // 錯和立直（不聴立直）の場合
+				if (RuleData::chkRule("furiten_riichi", "no") && machiInfo.FuritenFlag)
+					chonboFlag = true; // 振聴立直の場合
+			}
+			if (chonboFlag) {
 				transferChonboPenalty(gameStat, cnt);
 				mihajong_graphic::ui::WaitUIWithTimeout(500);
 			}
