@@ -80,7 +80,7 @@ LNum RankVal::getRankVal(const GameTable* gameStat, const std::string& ruletag, 
 			return -(
 				getCustomVal(abvBase, 2) +
 				getCustomVal(abvBase, 3) +
-				(gameStat->chkGameType(SanmaT) ? 0 : getCustomVal(abvBase, 4)));
+				(gameStat->chkGameType(SanmaT) ? (LNum)0 : getCustomVal(abvBase, 4)));
 		} else { /* トップ以外の場合 */
 			return getCustomVal(abvBase, rank);
 		}
