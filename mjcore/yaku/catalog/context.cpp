@@ -212,6 +212,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 
 	// ---------------------------------------------------------------------
 
+	/* 不死鳥 */
+	if (RuleData::chkRuleApplied("phoenix"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("不死鳥"), get_yaku_han("phoenix"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(analysis->PlayerStat->YakitoriFlag) && // 焼き鳥である
+					(isFinalRound(analysis->GameStat))); // オーラスである
+			}
+		));
+
+	// ---------------------------------------------------------------------
+
 	/* リンシャンツモ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("嶺上開花"), yaku::yakuCalculator::Yaku::yval_1han,
