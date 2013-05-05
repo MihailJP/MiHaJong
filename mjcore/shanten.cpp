@@ -82,7 +82,7 @@ MJCORE Shanten ShantenAnalyzer::calcShanten(const GameTable* const gameStat, Pla
 	}
 }
 
-unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit, unsigned mode) {
+unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount, unsigned limit, unsigned mode) {
 	// 面子を2、対子・塔子を1とした数値
 	unsigned int ans = 0;
 	// 数牌
@@ -121,7 +121,7 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerI
 
 	return ans;
 }
-unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit) {
+unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount, unsigned limit) {
 	unsigned int melds = 0u;
 	for (unsigned i = 0; i < 64; ++i)
 		melds = std::max(melds, chkMianzi(gameStat, playerID, tileCount, limit, i));
@@ -155,13 +155,13 @@ void ShantenAnalyzer::addExposedMeld(const GameTable* const gameStat, PlayerID p
 	}
 }
 
-Shanten ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 面子手の向聴数を求める
 	return 8 - // 全く揃ってないてんでバラバラだったら面子手に対して8向聴（七対子に対してなら6向聴になる）
 		chkMianzi(gameStat, playerID, tileCount, 4);
 }
 
-Shanten ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 七対子に対する向聴数を求める。
 	Shanten shanten = 6;
 	for (int i = 0; i < TileNonflowerMax; i++)
@@ -177,7 +177,7 @@ Shanten ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, Pla
 	return shanten;
 }
 
-Shanten ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 国士無双に対する向聴数を求める。
 	if (gameStat->chkGameType(SanmaS)) return ShantenImpossible; // 数牌三麻では不可能
 
@@ -235,7 +235,7 @@ void ShantenAnalyzer::setQixingTilePattern(TileCode* const QixingPai, unsigned i
 	}
 }
 
-Shanten ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, bool qixing)
+Shanten ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount, bool qixing)
 { // 特殊：七星不靠/全不靠の向聴数を求める
 	if ((!RuleData::chkRuleApplied("stellar_uushii"))&&(qixing)) return ShantenImpossible;
 	else if ((!RuleData::chkRuleApplied("quanbukao"))&&(!qixing)) return ShantenImpossible;
@@ -264,7 +264,7 @@ Shanten ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, Pla
 	return shanten;
 }
 
-Shanten ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：南北戦争の向聴数を求める
 	if (!RuleData::chkRuleApplied("civil_war")) return ShantenImpossible;
 
@@ -317,7 +317,7 @@ Shanten ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, Pl
 	return shanten;
 }
 
-Shanten ShantenAnalyzer::calcShantenTohokuGreen(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenTohokuGreen(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：東北新幹線グリーン車の向聴数を求める
 	if (!RuleData::chkRuleApplied("tohoku_shinkansen_green")) return ShantenImpossible;
 
@@ -361,7 +361,7 @@ Shanten ShantenAnalyzer::calcShantenTohokuGreen(const GameTable* const gameStat,
 	return shanten;
 }
 
-Shanten ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：惑星直列の向聴数を求める
 	if (!RuleData::chkRuleApplied("syzygy")) return ShantenImpossible;
 
@@ -387,7 +387,7 @@ Shanten ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, Play
 	return (gameStat->Player[playerID].MeldPointer > 0) ? ShantenImpossible : (13 - syzygyPaiCount);
 }
 
-Shanten ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：セブンアップの向聴数を求める
 	if (!RuleData::chkRuleApplied("sevenup")) return ShantenImpossible;
 
@@ -421,7 +421,7 @@ Shanten ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, Pla
 	return shanten;
 }
 
-Shanten ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：組合龍の向聴数を求める
 	if (!RuleData::chkRuleApplied("zuhelong")) return ShantenImpossible;
 

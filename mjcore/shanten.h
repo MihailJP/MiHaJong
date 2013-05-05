@@ -30,18 +30,18 @@ public:
 #ifdef MJCORE_EXPORTS
 private:
 	static void setQixingTilePattern(TileCode* const QixingPai, unsigned int pattern);
-	static unsigned int chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit, unsigned mode);
-	static unsigned int chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit);
+	static unsigned int chkMianzi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount, unsigned limit, unsigned mode);
+	static unsigned int chkMianzi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount, unsigned limit);
 	static void addExposedMeld(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount);
-	static Shanten calcShantenRegular(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount);
-	static Shanten calcShantenChiitoi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount);
-	static Shanten calcShantenKokushi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount);
-	static Shanten calcShantenStellar(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, bool qixing);
-	static Shanten calcShantenCivilWar(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount);
-	static Shanten calcShantenTohokuGreen(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount);
-	static Shanten calcShantenSyzygy(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount);
-	static Shanten calcShantenSevenup(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount);
-	static Shanten calcShantenZuhelong(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount);
+	static Shanten calcShantenRegular(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
+	static Shanten calcShantenChiitoi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
+	static Shanten calcShantenKokushi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
+	static Shanten calcShantenStellar(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount, bool qixing);
+	static Shanten calcShantenCivilWar(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
+	static Shanten calcShantenTohokuGreen(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
+	static Shanten calcShantenSyzygy(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
+	static Shanten calcShantenSevenup(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
+	static Shanten calcShantenZuhelong(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
 #endif
 
 };
