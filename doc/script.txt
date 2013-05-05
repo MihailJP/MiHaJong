@@ -576,6 +576,14 @@ AI用スクリプト説明 Copyright (c) 2008-2013 MihailJP, Part of rights rese
 		但し、一発なしのルールの時はnilを返します。
 
 
+	▼ gametbl:iskansanjunqualified([player])
+
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　3巡目に槓をしている場合はtrueを、そうでなければfalseを返します。但
+		し、槓三巡なしのルールの時はnilを返します。
+
+
 	▼ gametbl:iskyuushu()
 
 		　九種九牌の条件を満たしていればtrueを、そうでなければfalseを返します。
@@ -619,6 +627,14 @@ AI用スクリプト説明 Copyright (c) 2008-2013 MihailJP, Part of rights rese
 
 		　十三無靠(十四不塔)になっていればtrueを、そうでなければfalseを返しま
 		す。但し、十三無靠(十四不塔)なしのルールの時はnilを返します。
+
+
+	▼ gametbl:isshokanqualified([player])
+
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　1巡目に槓をしている場合はtrueを、そうでなければfalseを返します。但
+		し、初槓なしのルールの時はnilを返します。
 
 
 	▼ gametbl:issumaroallowed()

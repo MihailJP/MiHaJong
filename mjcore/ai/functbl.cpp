@@ -286,6 +286,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::isfinalround); lua_setfield(L, -2, "isfinalround");
 	lua_pushcfunction(L, luafunc::isfirstdraw); lua_setfield(L, -2, "isfirstdraw");
 	lua_pushcfunction(L, luafunc::isippatsu); lua_setfield(L, -2, "isippatsu");
+	lua_pushcfunction(L, luafunc::iskansanjunqualified); lua_setfield(L, -2, "iskansanjunqualified");
 	lua_pushcfunction(L, luafunc::iskyuushu); lua_setfield(L, -2, "iskyuushu");
 	lua_pushcfunction(L, luafunc::ismenzen); lua_setfield(L, -2, "ismenzen");
 	lua_pushcfunction(L, luafunc::isopenriichideclared); lua_setfield(L, -2, "isopenriichideclared");
@@ -293,6 +294,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::isriichideclared); lua_setfield(L, -2, "isriichideclared");
 	lua_pushcfunction(L, luafunc::isshisanbuda); lua_setfield(L, -2, "isshisanbuda");
 	lua_pushcfunction(L, luafunc::isshisibuda); lua_setfield(L, -2, "isshisibuda");
+	lua_pushcfunction(L, luafunc::isshokanqualified); lua_setfield(L, -2, "isshokanqualified");
 	lua_pushcfunction(L, luafunc::issumaroallowed); lua_setfield(L, -2, "issumaroallowed");
 	lua_pushcfunction(L, luafunc::isyakitori); lua_setfield(L, -2, "isyakitori");
 	/* メソッド定義ここまで */

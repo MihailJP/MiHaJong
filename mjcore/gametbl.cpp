@@ -154,6 +154,8 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 			gameStat->Player[pl].FlowerFlag.Chrys =
 			gameStat->Player[pl].FlowerFlag.Bamboo = false;
 		gameStat->Player[pl].NorthFlag = 0; // 晒している北風牌を格納するフラグ
+		gameStat->Player[pl].shokanFlag = // 初槓フラグ
+			gameStat->Player[pl].kansanjunFlag = false; // 槓三巡フラグ
 	}
 	assert(gameStat->Player[0].DiscardPointer == 0); // 初期化できてるかチェック（デバッグ用）
 }
@@ -233,6 +235,8 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 		sandbox->Player[p].PlayerScore = (LNum)gameStat->Player[p].PlayerScore;
 		sandbox->Player[p].playerChip = gameStat->Player[p].playerChip;
 		sandbox->Player[p].SumaroFlag = gameStat->Player[p].SumaroFlag;
+		sandbox->Player[p].shokanFlag = gameStat->Player[p].shokanFlag;
+		sandbox->Player[p].kansanjunFlag = gameStat->Player[p].kansanjunFlag;
 		sandbox->Player[p].YakitoriFlag = gameStat->Player[p].YakitoriFlag;
 		if ((gameStat->Player[p].RichiFlag.OpenFlag)||(p == targetPlayer)) {
 			for (int i = 0; i < NumOfTilesInHand; i++) {

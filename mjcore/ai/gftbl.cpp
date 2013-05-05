@@ -530,6 +530,15 @@ int aiscript::table::functable::gametbl::luafunc::isippatsu(lua_State* const L) 
 	return 1;
 }
 
+/* 槓三巡？ */
+int aiscript::table::functable::gametbl::luafunc::iskansanjunqualified(lua_State* const L) {
+	int n = chkargnum(L, 1, 2);
+	PlayerID player = getPlayerID(L, 2);
+	if (RuleData::chkRuleApplied("kansanjun")) lua_pushnil(L);
+	else lua_pushboolean(L, getGameStatAddr(L)->Player[player].kansanjunFlag);
+	return 1;
+}
+
 /* 九種九牌？ */
 int aiscript::table::functable::gametbl::luafunc::iskyuushu(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
@@ -583,6 +592,15 @@ int aiscript::table::functable::gametbl::luafunc::isshisibuda(lua_State* const L
 	int n = chkargnum(L, 1, 1);
 	if (RuleData::chkRuleApplied("shiisan_uushii")) lua_pushnil(L);
 	else lua_pushboolean(L, yaku::yakuCalculator::chkShisiBuDa(getGameStatAddr(L), getPlayerID(L, 0)));
+	return 1;
+}
+
+/* 初槓？ */
+int aiscript::table::functable::gametbl::luafunc::isshokanqualified(lua_State* const L) {
+	int n = chkargnum(L, 1, 2);
+	PlayerID player = getPlayerID(L, 2);
+	if (RuleData::chkRuleApplied("shokan")) lua_pushnil(L);
+	else lua_pushboolean(L, getGameStatAddr(L)->Player[player].shokanFlag);
 	return 1;
 }
 

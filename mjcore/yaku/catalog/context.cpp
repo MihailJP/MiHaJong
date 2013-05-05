@@ -767,4 +767,25 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(analysis->MachiInfo.MachiMen == 1)); // 1面待ち(移植時変更：ノベ単とかでは成立しないようにした)
 			}
 		));
+
+	// ---------------------------------------------------------------------
+
+	/* 初槓 */
+	if (RuleData::chkRuleApplied("shokan"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("初槓"), get_yaku_han("shokan"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(analysis->PlayerStat->shokanFlag)); // フラグが立っている
+			}
+		));
+	/* 槓三巡 */
+	if (RuleData::chkRuleApplied("kansanjun"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("槓三巡"), get_yaku_han("kansanjun"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(analysis->PlayerStat->kansanjunFlag)); // フラグが立っている
+			}
+		));
 }

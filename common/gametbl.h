@@ -223,6 +223,8 @@ struct PlayerTable { // プレイヤーの状態を格納
 	uint8_t NorthFlag; // 晒している北風牌を格納するフラグ
 	bool SumaroFlag; // 四馬路解禁フラグ
 	bool YakitoriFlag; // 焼き鳥フラグ
+	bool shokanFlag; // 初槓フラグ
+	bool kansanjunFlag; // 槓三巡フラグ
 	bool ConnectionLost;
 
 	const Tile& Tsumohai() const {return Hand[TsumohaiIndex];} /* 自摸牌 (immutable) */
