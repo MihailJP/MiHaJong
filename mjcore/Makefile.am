@@ -32,7 +32,7 @@ nodist_libmihajong_la_SOURCES = \
 	data/confitem_csv.h data/confitem_ini.h data/prefitem_csv.h \
 	data/prefitem_ini.h data/rankval_csv.h
 BUILT_SOURCES = $(nodist_libmihajong_la_SOURCES)
-libmihajong_la_LDFLAGS = -no-undefined -version-info 1:0:1
+libmihajong_la_LDFLAGS = -no-undefined -release $(VERSION)
 libmihajong_la_CXXFLAGS = -DMJCORE_EXPORTS --input-charset=cp932
 if WITH_BOOST_REGEX
 libmihajong_la_CXXFLAGS += -DWITH_BOOST_REGEX $(BOOST_REGEX_LIB)
