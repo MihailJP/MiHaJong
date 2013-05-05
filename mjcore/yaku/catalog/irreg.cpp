@@ -240,6 +240,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 				return (analysis->shanten[shantenCivilWar] == -1);
 			}
 		));
+	/* “Œ–kVŠ²üƒOƒŠ[ƒ“ŽÔ */
+	if (RuleData::chkRuleApplied("tohoku_shinkansen_green"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("“Œ–kVŠ²üƒOƒŠ[ƒ“ŽÔ"), get_yaku_han("tohoku_shinkansen_green"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->shanten[shantenTohokuGreen] == -1);
+			}
+		));
 	/* ˜f¯’¼—ñ */
 	if (RuleData::chkRuleApplied("syzygy"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(

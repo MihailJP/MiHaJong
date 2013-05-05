@@ -726,6 +726,7 @@ AI用スクリプト説明 Copyright (c) 2008-2013 MihailJP, Part of rights rese
 		・Orphans …… 国士無双。
 		・Stellar …… 七星無靠(そのような役が存在するルールのみ。以下同様)。
 		・CivilWar …… 南北戦争。
+		・TohokuGreen …… 東北新幹線グリーン車。
 		・Syzygy …… 惑星直列。
 		・Quanbukao …… 全不靠。
 		・SevenUp …… セブンアップ。

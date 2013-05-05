@@ -55,6 +55,8 @@ MJCORE Shanten ShantenAnalyzer::calcShanten(const GameTable* const gameStat, Pla
 		return calcShantenStellar(gameStat, playerID, tileCount, true);
 	case shantenCivilWar:
 		return calcShantenCivilWar(gameStat, playerID, tileCount);
+	case shantenTohokuGreen:
+		return calcShantenTohokuGreen(gameStat, playerID, tileCount);
 	case shantenSyzygy:
 		return calcShantenSyzygy(gameStat, playerID, tileCount);
 	case shantenQuanbukao:
@@ -71,6 +73,7 @@ MJCORE Shanten ShantenAnalyzer::calcShanten(const GameTable* const gameStat, Pla
 		tmpShanten = calcShantenKokushi(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenStellar(gameStat, playerID, tileCount, true); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenCivilWar(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
+		tmpShanten = calcShantenTohokuGreen(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenSyzygy(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenStellar(gameStat, playerID, tileCount, false); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenSevenup(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
@@ -123,6 +126,33 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerI
 	for (unsigned i = 0; i < 64; ++i)
 		melds = std::max(melds, chkMianzi(gameStat, playerID, tileCount, limit, i));
 	return melds;
+}
+
+void ShantenAnalyzer::addExposedMeld(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount) {
+	// 鳴き面子を数える
+	for (int i = 1; i < gameStat->Player[playerID].MeldPointer; i++) {
+		switch (gameStat->Player[playerID].Meld[i].mstat) {
+		case meldSequenceExposedLower: case meldSequenceExposedMiddle:
+		case meldSequenceExposedUpper:
+			// 順子の時
+			tileCount[gameStat->Player[playerID].Meld[i].tile]++;
+			tileCount[gameStat->Player[playerID].Meld[i].tile + 1]++;
+			tileCount[gameStat->Player[playerID].Meld[i].tile + 2]++;
+			break;
+		case meldQuadExposedLeft: case meldQuadAddedLeft:
+		case meldQuadExposedCenter: case meldQuadAddedCenter:
+		case meldQuadExposedRight: case meldQuadAddedRight:
+		case meldQuadConcealed: // 暗槓も数えてあげましょう……
+		case meldTripletExposedLeft: case meldTripletExposedCenter:
+		case meldTripletExposedRight:
+			// 刻子の時(槓子も含む)
+			tileCount[gameStat->Player[playerID].Meld[i].tile] += 3;
+			break;
+		default:
+			// 異常データ
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("副露データに暗順子、暗刻子、または不明な種類の面子が検出されました"));
+		}
+	}
 }
 
 Shanten ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
@@ -281,6 +311,50 @@ Shanten ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, Pl
 		Shanten tmpShanten = 13 - civilWarPaiCount;
 		// 鳴き面子や暗槓がある場合は考えない
 		if (gameStat->Player[playerID].MeldPointer > 0) shanten = ShantenImpossible;
+		if (tmpShanten < shanten) shanten = tmpShanten;
+	}
+
+	return shanten;
+}
+
+Shanten ShantenAnalyzer::calcShantenTohokuGreen(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+{ // 特殊：東北新幹線グリーン車の向聴数を求める
+	if (!RuleData::chkRuleApplied("tohoku_shinkansen_green")) return ShantenImpossible;
+
+	Shanten shanten = 13;
+	// 以下、一枚ずつ調べる
+	for (int i = 0; i < 10; i++) {
+		Int8ByTile tileCountTmp;
+		for (int j = 0; j < TileNonflowerMax; j++) tileCountTmp[j] = tileCount[j];
+		addExposedMeld(gameStat, playerID, tileCountTmp); // 鳴き有効
+		TileCode TohokuGreenPai[NumOfTilesInHand] = {
+			CharacterOne,   CharacterTwo,   CharacterThree,
+			CharacterFour,  CharacterFive,  CharacterSix,
+			CharacterSeven, CharacterEight, CharacterNine,
+			EastWind,       EastWind,       NoTile,
+			NorthWind,      NorthWind
+		};
+		switch (i) {
+		case 0: case 1:
+			TohokuGreenPai[1] = BambooTwo; break;
+		case 2: case 3:
+			TohokuGreenPai[2] = BambooThree; break;
+		case 4: case 5:
+			TohokuGreenPai[3] = BambooFour; break;
+		case 6: case 7:
+			TohokuGreenPai[5] = BambooSix; break;
+		case 8: case 9:
+			TohokuGreenPai[7] = BambooEight; break;
+		}
+		TohokuGreenPai[11] = (i % 2 == 0) ? EastWind : NorthWind;
+		int tohokuGreenPaiCount = 0;
+		for (int j = 0; j < NumOfTilesInHand; j++) {
+			if (tileCountTmp[TohokuGreenPai[j]] >= 1) {
+				tohokuGreenPaiCount++;
+				tileCountTmp[TohokuGreenPai[j]]--;
+			}
+		}
+		Shanten tmpShanten = 13 - tohokuGreenPaiCount;
 		if (tmpShanten < shanten) shanten = tmpShanten;
 	}
 

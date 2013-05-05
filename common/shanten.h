@@ -14,6 +14,7 @@ enum ShantenType : uint8_t { // getShantenに渡すスイッチ用
 	shantenOrphans, // 国士無双
 	shantenStellar, // 七星無靠
 	shantenCivilWar, // 南北戦争
+	shantenTohokuGreen, // 東北新幹線グリーン車
 	shantenSyzygy, // 惑星直列
 	shantenQuanbukao, // 全不靠
 	shantenSevenup, // セブンアップ

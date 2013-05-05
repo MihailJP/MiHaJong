@@ -308,6 +308,7 @@ inline void aiscript::table::functable::agariTypeCode(lua_State* const L) {
 	TableAdd(L, "Orphans", (lua_Integer)shantenOrphans);
 	TableAdd(L, "Stellar", (lua_Integer)shantenStellar);
 	TableAdd(L, "CivilWar", (lua_Integer)shantenCivilWar);
+	TableAdd(L, "TohokuGreen", (lua_Integer)shantenTohokuGreen);
 	TableAdd(L, "Syzygy", (lua_Integer)shantenSyzygy);
 	TableAdd(L, "Quanbukao", (lua_Integer)shantenQuanbukao);
 	TableAdd(L, "SevenUp", (lua_Integer)shantenSevenup);
