@@ -133,6 +133,17 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(analysis->TsumoHai->tile == WhiteDragon)); // òaóπîvÇ™îí
 			}
 		));
+	/* ñkélèÑ(óßíºé©ñÃ) */
+	if (RuleData::chkRuleApplied("pei4jun_riichi"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("ñkélèÑ"), get_yaku_han("pei4jun_riichi"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // âΩÇ©ÇÃéËÇ≈òaóπÇ…Ç»Ç¡ÇƒÇ¢ÇÈ
+					(analysis->PlayerStat->RichiFlag.RichiFlag) && // óßíºÇµÇƒÇ¢ÇÈ
+					(analysis->TsumoHai->tile == NorthWind) && // òaóπîvÇ™ñk
+					(analysis->GameStat->TurnRound == 4)); // 4èÑñ⁄Ç≈Ç†ÇÈ
+			}
+		));
 
 	// ---------------------------------------------------------------------
 

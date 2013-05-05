@@ -112,6 +112,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return (yakuFlagCount == 2);
 			}
 		));
+	/* 北四巡(一色四順) */
+	if (RuleData::chkRuleApplied("pei4jun_isshoku_suujun"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("北四巡 "), get_yaku_han("pei4jun_isshoku_suujun"),
+			_T("一色四順"), _T("一色三順"), _T("一盃口"), _T("二盃口"), _T("鳴き二盃口"), _T("重四帰四"), _T("四帰四"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				for (int i = 1; i < TileSuitHonors; i++)
+					if (analysis->ShunziCount[i] == 4) yakuFlag = true;
+				return yakuFlag && (analysis->MianziDat[0].tile == NorthWind);
+			}
+		));
 
 	// ---------------------------------------------------------------------
 
