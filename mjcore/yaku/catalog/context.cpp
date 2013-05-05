@@ -788,4 +788,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(analysis->PlayerStat->kansanjunFlag)); // フラグが立っている
 			}
 		));
+	/* 戻牌天和 */
+	if (RuleData::chkRuleApplied("renpai_tenhoh"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("戻牌天和"), get_yaku_han("renpai_tenhoh"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					(analysis->PlayerStat->renpaiTenhohStat > 0)); // フラグが立っている
+			}
+		));
 }

@@ -571,6 +571,20 @@ int aiscript::table::functable::gametbl::luafunc::ispenultimateround(lua_State* 
 	return 1;
 }
 
+/* 戻牌天和？ */
+int aiscript::table::functable::gametbl::luafunc::isrenpaitenhohqualified(lua_State* const L) {
+	int n = chkargnum(L, 1, 1);
+	PlayerID player = getPlayerID(L, 0);
+	if (RuleData::chkRuleApplied("renpai_tenhoh")) {
+		lua_pushnil(L);
+		lua_pushnil(L);
+	} else {
+		lua_pushboolean(L, getGameStatAddr(L)->Player[player].renpaiTenhohStat > 0);
+		lua_pushboolean(L, getGameStatAddr(L)->Player[player].renpaiTenhohStat >= 0);
+	}
+	return 2;
+}
+
 /* 立直している？ */
 int aiscript::table::functable::gametbl::luafunc::isriichideclared(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
@@ -578,7 +592,6 @@ int aiscript::table::functable::gametbl::luafunc::isriichideclared(lua_State* co
 	lua_pushboolean(L, getGameStatAddr(L)->Player[player].RichiFlag.RichiFlag);
 	return 1;
 }
-
 /* 十三不塔？ */
 int aiscript::table::functable::gametbl::luafunc::isshisanbuda(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);

@@ -156,6 +156,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 		gameStat->Player[pl].NorthFlag = 0; // 晒している北風牌を格納するフラグ
 		gameStat->Player[pl].shokanFlag = // 初槓フラグ
 			gameStat->Player[pl].kansanjunFlag = false; // 槓三巡フラグ
+		gameStat->Player[pl].renpaiTenhohStat = 0; // 戻牌天和判定用
 	}
 	assert(gameStat->Player[0].DiscardPointer == 0); // 初期化できてるかチェック（デバッグ用）
 }
@@ -243,6 +244,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 				sandbox->Player[p].Hand[i].tile = gameStat->Player[p].Hand[i].tile;
 				sandbox->Player[p].Hand[i].red = gameStat->Player[p].Hand[i].red;
 			}
+			sandbox->Player[p].renpaiTenhohStat = gameStat->Player[p].renpaiTenhohStat;
 		}
 		sandbox->Player[p].RichiFlag = gameStat->Player[p].RichiFlag;
 		for (int i = 0; i < SizeOfDiscardBuffer; i++) {

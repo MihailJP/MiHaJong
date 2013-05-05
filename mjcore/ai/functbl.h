@@ -98,6 +98,7 @@ public:
 	static int ismenzen(lua_State* const L);
 	static int isopenriichideclared(lua_State* const L);
 	static int ispenultimateround(lua_State* const L);
+	static int isrenpaitenhohqualified(lua_State* const L);
 	static int isriichideclared(lua_State* const L);
 	static int isshisanbuda(lua_State* const L);
 	static int isshisibuda(lua_State* const L);

@@ -292,6 +292,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::isopenriichideclared); lua_setfield(L, -2, "isopenriichideclared");
 	lua_pushcfunction(L, luafunc::ispenultimateround); lua_setfield(L, -2, "ispenultimateround");
 	lua_pushcfunction(L, luafunc::isriichideclared); lua_setfield(L, -2, "isriichideclared");
+	lua_pushcfunction(L, luafunc::isrenpaitenhohqualified); lua_setfield(L, -2, "isrenpaitenhohqualified");
 	lua_pushcfunction(L, luafunc::isshisanbuda); lua_setfield(L, -2, "isshisanbuda");
 	lua_pushcfunction(L, luafunc::isshisibuda); lua_setfield(L, -2, "isshisibuda");
 	lua_pushcfunction(L, luafunc::isshokanqualified); lua_setfield(L, -2, "isshokanqualified");

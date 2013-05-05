@@ -610,6 +610,15 @@ AI用スクリプト説明 Copyright (c) 2008-2013 MihailJP, Part of rights rese
 		でなければfalseを返します。
 
 
+	▼ gametbl:isrenpaitenhohqualified()
+
+		　この関数は2つのブール値を返します。
+		　1つめの返り値は戻牌天和の条件を満たしているかどうかで、満たしている
+		ならtrueを、そうでなければfalseを返します。
+		　2つめの返り値はその局で戻牌天和の条件を満たしたことがあるかどうかで、
+		満たしたことがないならtrueを、そうでなければfalseを返します。
+
+
 	▼ gametbl:isriichideclared([player])
 
 		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま

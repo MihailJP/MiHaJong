@@ -225,6 +225,7 @@ struct PlayerTable { // プレイヤーの状態を格納
 	bool YakitoriFlag; // 焼き鳥フラグ
 	bool shokanFlag; // 初槓フラグ
 	bool kansanjunFlag; // 槓三巡フラグ
+	int8_t renpaiTenhohStat; // 戻牌天和判定用
 	bool ConnectionLost;
 
 	const Tile& Tsumohai() const {return Hand[TsumohaiIndex];} /* 自摸牌 (immutable) */
