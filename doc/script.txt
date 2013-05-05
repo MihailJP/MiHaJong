@@ -637,8 +637,10 @@ AI用スクリプト説明 Copyright (c) 2008-2013 MihailJP, Part of rights rese
 		し、初槓なしのルールの時はnilを返します。
 
 
-	▼ gametbl:issumaroallowed()
+	▼ gametbl:issumaroallowed([player])
 
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
 		　四馬路和了のための事前条件(満貫以上の和了)を満たしている場合trueを、
 		そうでなければfalseを返します。但し、四馬路自体がないルールの時はnilを
 		返します。
