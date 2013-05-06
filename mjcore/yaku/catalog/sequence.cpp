@@ -547,18 +547,29 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	// ---------------------------------------------------------------------
 
 	/* ゴールデンゲートブリッジ */
+	auto chkGoldenGateBridge =
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			bool yakuFlag = false;
+			for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
+				if ((analysis->ShunziCount[i + 1] >= 1) &&
+					(analysis->ShunziCount[i + 3] >= 1) &&
+					(analysis->ShunziCount[i + 5] >= 1) &&
+					(analysis->ShunziCount[i + 7] >= 1)) yakuFlag = true;
+			return yakuFlag;
+		};
 	if (RuleData::chkRuleApplied("golden_gate_bridge"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("金門橋"), get_yaku_han("golden_gate_bridge"),
 			_T("清連環套"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				bool yakuFlag = false;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
-					if ((analysis->ShunziCount[i + 1] >= 1) &&
-						(analysis->ShunziCount[i + 3] >= 1) &&
-						(analysis->ShunziCount[i + 5] >= 1) &&
-						(analysis->ShunziCount[i + 7] >= 1)) yakuFlag = true;
-				return yakuFlag;
+			chkGoldenGateBridge
+		));
+	/* ゴールデンゲートブリッジ */
+	if (RuleData::chkRuleApplied("naruto_bridge"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("鳴門大橋"), get_yaku_han("naruto_bridge"),
+			_T("清連環套"), _T("金門橋"),
+			[chkGoldenGateBridge](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return chkGoldenGateBridge(analysis) && (analysis->MianziDat[0].tile == CircleOne);
 			}
 		));
 	/* Arc de Triomphe */
