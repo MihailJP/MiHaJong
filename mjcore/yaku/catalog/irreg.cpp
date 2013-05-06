@@ -143,6 +143,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 				return isQiDui(analysis) && chktiles(analysis, tc, 6);
 			}
 		));
+	/* ˆê‹x‚³‚ñŽµ‘ÎŽq */
+	if (RuleData::chkRuleApplied("ikkyuusan_pairs"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("ˆê‹x‚³‚ñŽµ‘ÎŽq"), get_yaku_han("ikkyuusan_pairs"),
+			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const TileCode tc[9] = {
+					CharacterOne, CharacterThree, CharacterNine,
+					CircleOne, CircleThree, CircleNine,
+					BambooOne, BambooThree, BambooNine,
+				};
+				return isQiDui(analysis) && chktiles(analysis, tc, 9);
+			}
+		));
 
 	// ---------------------------------------------------------------------
 
