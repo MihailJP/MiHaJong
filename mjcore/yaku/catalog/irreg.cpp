@@ -16,7 +16,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		[isQiDui](const MENTSU_ANALYSIS* const analysis, const TileCode* const targetDuiz, int numOfDuiz) -> bool {
 			if (isQiDui(analysis))
 				return (yaku::countingFacility::countPairs(analysis->TileCount, targetDuiz, numOfDuiz)
-					== NumOfTilesInHand / 2);
+					== (numOfDuiz > (NumOfTilesInHand / 2) ? (NumOfTilesInHand / 2) : numOfDuiz));
 			else return false;
 		};
 	// ---------------------------------------------------------------------
