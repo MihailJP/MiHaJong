@@ -77,7 +77,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	if (RuleData::chkRuleApplied("chinpeikou"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("´”uŒû"), get_yaku_han("chinpeikou"),
-			_T("“ñ”uŒû"),
+			_T("“ñ”uŒû"), _T("”ú”iŒÎ‚Ì—d¸"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlagCount = false;
 				for (int i = 1; i <= 7; i++) {
@@ -91,6 +91,24 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 						(analysis->ShunziCount[i + TileSuitBamboos] == 2))
 						yakuFlagCount = true;
 				}
+				return yakuFlagCount;
+			}
+		));
+	/* ”ú”iŒÎ‚Ì—d¸ */
+	if (RuleData::chkRuleApplied("biwakonoyousei"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("”ú”iŒÎ‚Ì—d¸"), get_yaku_han("biwakonoyousei"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlagCount = false;
+				if ((analysis->ShunziCount[CharacterOne] == 2) &&
+					(analysis->ShunziCount[CircleOne] == 2))
+					yakuFlagCount = true;
+				if ((analysis->ShunziCount[CharacterOne] == 2) &&
+					(analysis->ShunziCount[BambooOne] == 2))
+					yakuFlagCount = true;
+				if ((analysis->ShunziCount[CircleOne] == 2) &&
+					(analysis->ShunziCount[BambooOne] == 2))
+					yakuFlagCount = true;
 				return yakuFlagCount;
 			}
 		));
