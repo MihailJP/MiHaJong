@@ -38,6 +38,9 @@ if WITH_BOOST_REGEX
 libmihajong_la_CXXFLAGS += -DWITH_BOOST_REGEX $(BOOST_REGEX_LIB)
 endif
 if WITH_WINAPI
+if WITH_DIRECTX
+libmihajong_la_CXXFLAGS += -DWITH_DIRECTX
+endif
 else
 libmihajong_la_CXXFLAGS += -DPKGDATADIR='"$(pkgdatadir)"' -DUNICODE -D_UNICODE
 endif

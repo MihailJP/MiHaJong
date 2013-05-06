@@ -34,6 +34,12 @@ mihajong_SOURCES += mihajong.rc
 mihasanm_SOURCES += mihasanm.rc
 mihaysnm_SOURCES += mihaysnm.rc
 mihassnm_SOURCES += mihassnm.rc
+if WITH_DIRECTX
+mihajong_CXXFLAGS += -DWITH_DIRECTX
+mihasanm_CXXFLAGS += -DWITH_DIRECTX
+mihaysnm_CXXFLAGS += -DWITH_DIRECTX
+mihassnm_CXXFLAGS += -DWITH_DIRECTX
+endif
 else
 EXTRA_DIST += mihajong.rc mihasanm.rc mihaysnm.rc mihassnm.rc
 mihajong_CXXFLAGS += -DUNICODE -D_UNICODE
