@@ -48,7 +48,7 @@ class TextRenderer : public ITextRenderer {
 private:
 	const unsigned int FontBaseSize() {return 40;}
 	const unsigned int FontWidth() {return FontBaseSize();}
-	const unsigned int FontCols() {return 32;}
+	const unsigned int FontCols() {return 48;}
 	const unsigned int FontPadding() {return 2;}
 public:
 	explicit TextRenderer(DevicePtr device);
