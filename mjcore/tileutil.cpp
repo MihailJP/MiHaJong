@@ -15,9 +15,9 @@
 /* 四人三麻用 */
 PlayerID* tobePlayed(const GameTable* const gameStat) {
 	static PlayerID tp[] = {
-		(gameStat->GameRound % Players),
-		((gameStat->GameRound + 1) % Players),
-		((gameStat->GameRound + 2) % Players)
+		static_cast<PlayerID>(gameStat->GameRound % Players),
+		static_cast<PlayerID>((gameStat->GameRound + 1) % Players),
+		static_cast<PlayerID>((gameStat->GameRound + 2) % Players)
 	};
 	if (gameStat->chkGameType(Sanma4)) return tp;
 	else return nullptr;

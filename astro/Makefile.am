@@ -2,7 +2,7 @@ lib_LTLIBRARIES = libmihajong-astro.la
 libmihajong_astro_la_SOURCES = \
 	ecllong.c julian.c mphase.c sunrise.c \
 	astro.h resource.h
-libmihajong_astro_la_LDFLAGS = -no-undefined -version-info 0:0:0
+libmihajong_astro_la_LDFLAGS = -no-undefined -release $(VERSION)
 if WITH_WINAPI
 libmihajong_astro_la_LIBADD = ver.o
 endif

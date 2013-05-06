@@ -2,7 +2,7 @@ lib_LTLIBRARIES = libmihajong-socket.la
 libmihajong_socket_la_SOURCES = \
 	class.cpp client.cpp logger.cpp server.cpp socket.cpp \
 	class.h client.h except.h logger.h protocol.h resource.h server.h socket.h
-libmihajong_socket_la_LDFLAGS = -no-undefined -version-info 0:0:0
+libmihajong_socket_la_LDFLAGS = -no-undefined -release $(VERSION)
 if WITH_WINAPI
 libmihajong_socket_la_LIBADD = ver.o
 endif

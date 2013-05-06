@@ -235,8 +235,8 @@ void TableProtoScene::ScoreBoard::renderWind() {
 	const seatAbsolute wind = GameStatus::gameStat()->playerwind(playerID());
 	if (GameStatus::gameStat()->chkGameType(Sanma4) && (wind == sNorth)) return; // 四人三麻の時の抜け番は何も表示しないようにする
 	RECT rect = {
-		WindCharX + WindCharWidth * ((int)wind    ), WindCharY,
-		WindCharX + WindCharWidth * ((int)wind + 1), WindCharY + WindCharHeight
+		static_cast<long>(WindCharX + WindCharWidth * ((int)wind    )), WindCharY,
+		static_cast<long>(WindCharX + WindCharWidth * ((int)wind + 1)), WindCharY + WindCharHeight
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + WindPosX, (int)ypos + WindPosY,
 		WindCharWidth, WindCharHeight,
@@ -246,8 +246,8 @@ void TableProtoScene::ScoreBoard::renderWind() {
 
 void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, ArgbColor color) {
 	RECT rect = {
-		NumCharX + NumCharWidth * (num    ), NumCharY,
-		NumCharX + NumCharWidth * (num + 1), NumCharY + NumCharHeight
+		static_cast<long>(NumCharX + NumCharWidth * (num    )), NumCharY,
+		static_cast<long>(NumCharX + NumCharWidth * (num + 1)), NumCharY + NumCharHeight
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + x, (int)ypos + y,
 		NumCharWidth, NumCharHeight, color, &rect, 0, 0, &myMatrix);
@@ -349,8 +349,8 @@ void TableProtoScene::ScoreBoard::renderScore() {
 
 void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum, ArgbColor color) {
 	RECT rect = {
-		ScoreUnitCharX + ScoreUnitCharWidth * (unitnum    ), ScoreUnitCharY,
-		ScoreUnitCharX + ScoreUnitCharWidth * (unitnum + 1), ScoreUnitCharY + ScoreUnitCharHeight
+		static_cast<long>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum    )), ScoreUnitCharY,
+		static_cast<long>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum + 1)), ScoreUnitCharY + ScoreUnitCharHeight
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + ScoreUnitPosX, (int)ypos + ScoreUnitPosY,
 		ScoreUnitCharWidth, ScoreUnitCharHeight, color, &rect, 0, 0, &myMatrix);

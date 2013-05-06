@@ -1,8 +1,8 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
-AC_INIT(mihajong, 2.0.1, mihailjp@gmail.com)
+AC_PREREQ([2.68])
+AC_INIT(mihajong, 2.0.2, mihailjp@gmail.com)
 AC_LIBTOOL_WIN32_DLL
 AC_DISABLE_STATIC
 lt_cv_deplibs_check_method='pass_all'
@@ -134,7 +134,7 @@ AS_IF([test "x$with_directx" = xno],
 )
 
 # Checks for typedefs, structures, and compiler characteristics.
-AC_CHECK_HEADER_STDBOOL
+AC_HEADER_STDBOOL
 AC_C_INLINE
 AC_TYPE_INT16_T
 AC_TYPE_INT32_T
@@ -145,12 +145,20 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 AC_TYPE_UINT8_T
+AS_IF([test "x$using_winapi" = xno],
+	[AC_TYPE_PID_T]
+)
 AC_CHECK_TYPES([ptrdiff_t])
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
-AC_CHECK_FUNCS([floor gethostbyname memmove memset pow socket sqrt strstr])
+AC_FUNC_REALLOC
+AC_FUNC_MKTIME
+AS_IF([test "x$using_winapi" = xno],
+	[AC_PATH_X]
+)
+AC_CHECK_FUNCS([clock_gettime floor gethostbyname memmove memset mkdir pow setlocale socket sqrt strstr])
 
 AC_ARG_ENABLE([midi],
 	[AS_HELP_STRING([--enable-midi],
