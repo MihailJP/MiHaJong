@@ -465,6 +465,50 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 					(analysis->MianziDat[0].tile == NorthWind) ); // 雀頭が北
 			}
 		));
+	/* 五爪の龍 */
+	if (RuleData::chkRuleApplied("five_claw_dragon"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("五爪の龍"), get_yaku_han("five_claw_dragon"),
+			_T("一気通貫"), _T("混一色"),
+			[ittsuu_monotonic](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; int yakuCol;
+				ittsuu_monotonic(analysis, &yakuFlag, &yakuCol);
+				return (yakuFlag && // 一気通貫かつ一色で
+					(analysis->DuiziCount[RedDragon] >= 1) && // 中の雀頭
+					(analysis->KeziCount[BambooFive] >= 1) && // 五索の刻子
+					(analysis->Machi == yaku::yakuCalculator::machiShanpon) // シャンポン待ち
+					);
+			}
+		));
+	/* 琉球四爪龍 */
+	if (RuleData::chkRuleApplied("ryukyu_four_claw_dragon"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("琉球四爪龍"), get_yaku_han("ryukyu_four_claw_dragon"),
+			_T("一気通貫"), _T("清一色"),
+			[ittsuu_monotonic](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; int yakuCol;
+				ittsuu_monotonic(analysis, &yakuFlag, &yakuCol);
+				return (yakuFlag && // 一気通貫かつ一色で
+					(analysis->DuiziCount[BambooNine] >= 1) && // 九索の雀頭
+					(analysis->KeziCount[BambooFour] >= 1) && // 四索の刻子
+					(analysis->Machi == yaku::yakuCalculator::machiShanpon) // シャンポン待ち
+					);
+			}
+		));
+	/* 南天全星 */
+	if (RuleData::chkRuleApplied("southern_stars"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("南天全星"), get_yaku_han("southern_stars"),
+			_T("一気通貫"), _T("混一色"),
+			[ittsuu_monotonic](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; int yakuCol;
+				ittsuu_monotonic(analysis, &yakuFlag, &yakuCol);
+				return (yakuFlag && // 一気通貫かつ一色で
+					(analysis->DuiziCount[CircleThree] >= 1) && // 三筒の雀頭
+					(analysis->KeziCount[SouthWind] >= 1) // 南の刻子
+					);
+			}
+		));
 
 	// ---------------------------------------------------------------------
 
