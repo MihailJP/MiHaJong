@@ -509,6 +509,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 					);
 			}
 		));
+	/* ìåäCìπêVä≤ê¸ìÒäKåö */
+	if (RuleData::chkRuleApplied("tokaido_shinkansen_double"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("ìåäCìπêVä≤ê¸ìÒäKåö"), get_yaku_han("tokaido_shinkansen_double"),
+			_T("àÍãCí ä—"), _T("ç¨àÍêF"),
+			[ittsuu_monotonic](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag; int yakuCol;
+				ittsuu_monotonic(analysis, &yakuFlag, &yakuCol);
+				return (yakuFlag && // àÍãCí ä—Ç©Ç¬àÍêFÇ≈
+					(analysis->DuiziCount[EastWind] >= 1) && // ìåÇÃêùì™
+					((analysis->ShunziCount[CharacterTwo] >= 1) || // ÇQÇRÇSÇÃèáéq
+					(analysis->ShunziCount[CircleTwo] >= 1) || // ÇQÇRÇSÇÃèáéq
+					(analysis->ShunziCount[BambooTwo] >= 1)) // ÇQÇRÇSÇÃèáéq
+					);
+			}
+		));
 
 	// ---------------------------------------------------------------------
 
