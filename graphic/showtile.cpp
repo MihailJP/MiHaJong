@@ -56,10 +56,10 @@ void ShowTile::Render() {
 			if ((k->direction == Portrait) || (k->direction == UpsideDown)) {
 				/* Portrait alignment */
 				RECT rect = {
-					((k->tile + k->red * TileNonflowerMax) % 10) * (VertTileWidth + TexturePadding),
-					((k->tile + k->red * TileNonflowerMax) / 10) * (VertTileHeight + TexturePadding),
-					((k->tile + k->red * TileNonflowerMax) % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding,
-					((k->tile + k->red * TileNonflowerMax) / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding,
+					static_cast<long>(((k->tile + k->red * TileNonflowerMax) % 10) * (VertTileWidth + TexturePadding)),
+					static_cast<long>(((k->tile + k->red * TileNonflowerMax) / 10) * (VertTileHeight + TexturePadding)),
+					static_cast<long>(((k->tile + k->red * TileNonflowerMax) % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding),
+					static_cast<long>(((k->tile + k->red * TileNonflowerMax) / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding),
 				};
 				RECT rectrev = {
 					((int)BackSide % 10) * (VertTileWidth + TexturePadding),
@@ -94,10 +94,10 @@ void ShowTile::Render() {
 			else {
 				/* Landscape alignment */
 				RECT rect = {
-					((k->tile + k->red * TileNonflowerMax) % 10) * (HoriTileWidth + TexturePadding),
-					((k->tile + k->red * TileNonflowerMax) / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows,
-					((k->tile + k->red * TileNonflowerMax) % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding,
-					((k->tile + k->red * TileNonflowerMax) / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding,
+					static_cast<long>(((k->tile + k->red * TileNonflowerMax) % 10) * (HoriTileWidth + TexturePadding)),
+					static_cast<long>(((k->tile + k->red * TileNonflowerMax) / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows),
+					static_cast<long>(((k->tile + k->red * TileNonflowerMax) % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding),
+					static_cast<long>(((k->tile + k->red * TileNonflowerMax) / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding),
 				};
 				RECT rectrev = {
 					((int)BackSide % 10) * (HoriTileWidth + TexturePadding),

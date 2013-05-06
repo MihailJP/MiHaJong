@@ -28,7 +28,7 @@ private:
 	input::InputManipulator* myInputManipulator; // DirectInput
 	// Linuxでは別の箇所で入力イベントを処理するため不要
 #endif /*_WIN32*/
-	static const LPTSTR myWindowClassName, WindowCaption;
+	static const LPCTSTR myWindowClassName, WindowCaption;
 	static unsigned& WindowWidth, & WindowHeight;
 #ifdef _WIN32
 	static LRESULT keyev(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
