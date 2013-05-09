@@ -101,6 +101,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 						));
 				}
 			));
+		/* 南単 */
+		if (RuleData::chkRuleApplied("minamityan"))
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				_T("南単"), get_yaku_han("minamityan"),
+				/* 必ず立直、一発、ツモと複合する */
+				[](const MENTSU_ANALYSIS* const analysis) -> bool {
+					return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+						(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
+						(analysis->PlayerStat->RichiFlag.IppatsuFlag) && // 一発フラグが立っている
+						(*analysis->TsumoAgariFlag) && // ツモである
+						(analysis->TsumoHai->tile == SouthWind)); // 南で和了
+				}
+			));
 	}
 	/* 鳥リーチ */
 	if (RuleData::chkRuleApplied("bird_riichi"))
