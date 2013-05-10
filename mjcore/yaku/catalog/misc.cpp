@@ -979,10 +979,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 
 	/* “Œ‘åŒn */
 	{
-		const int rules = 4;
-		const char ruleCodeList[rules][16] = {"univ_tokyo", "univ_hokkaido", "univ_chuo", "univ_hakuoh"};
-		const TileCode tileCodeList[rules] = {EastWind, NorthWind, RedDragon, WhiteDragon};
-		const TCHAR yakuNameList[rules][16] = {_T("“Œ‘å–ğ–"), _T("–k‘å–ğ–"), _T("’†‘å–ğ–"), _T("”’cŠw‰@")};
+		const int rules = 10;
+		const char ruleCodeList[rules][16] = {
+			"univ_tokyo", "univ_hokkaido", "univ_chuo", "univ_hakuoh",
+			"univ_osaka", "univ_osaka", "univ_osaka",
+			"univ_kyushu", "univ_kyushu", "univ_kyushu",
+		};
+		const TileCode tileCodeList[rules] = {
+			EastWind, NorthWind, RedDragon, WhiteDragon,
+			CharacterEight, CircleEight, BambooEight,
+			CharacterNine, CircleNine, BambooNine,
+		};
+		const TCHAR yakuNameList[rules][16] = {
+			_T("“Œ‘å–ğ–"), _T("–k‘å–ğ–"), _T("’†‘å–ğ–"), _T("”’cŠw‰@"),
+			_T("ã‘å–ğ–"), _T("ã‘å–ğ–"), _T("ã‘å–ğ–"),
+			_T("‹ã‘å–ğ–"), _T("‹ã‘å–ğ–"), _T("‹ã‘å–ğ–"),
+		};
 		for (int i = 0; i < rules; i++) {
 			const TileCode targetTile = tileCodeList[i];
 			if (RuleData::chkRuleApplied(ruleCodeList[i]))
