@@ -981,7 +981,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	{
 		const int rules = 10;
 		const char ruleCodeList[rules][16] = {
-			"univ_tokyo", "univ_hokkaido", "univ_chuo", "univ_hakuoh",
+			"univ_tokyo", "univ_hokkaido", "univ_chuo", "hakuoh_gakuen",
 			"univ_osaka", "univ_osaka", "univ_osaka",
 			"univ_kyushu", "univ_kyushu", "univ_kyushu",
 		};
