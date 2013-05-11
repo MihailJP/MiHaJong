@@ -19,6 +19,7 @@ enum ShantenType : uint8_t { // getShantenに渡すスイッチ用
 	shantenQuanbukao, // 全不靠
 	shantenSevenup, // セブンアップ
 	shantenZuhelong, // 組合龍
+	shantenNinnaji, // 仁和寺
 	ShantenPages,
 };
 

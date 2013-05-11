@@ -295,4 +295,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 				return (analysis->shanten[shantenZuhelong] == -1);
 			}
 		));
+	/* m˜a› */
+	if (RuleData::chkRuleApplied("ninnaji"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("m˜a›"), get_yaku_han("ninnaji"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->shanten[shantenNinnaji] == -1);
+			}
+		));
 }

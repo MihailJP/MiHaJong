@@ -42,6 +42,7 @@ private:
 	static Shanten calcShantenSyzygy(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
 	static Shanten calcShantenSevenup(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
 	static Shanten calcShantenZuhelong(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
+	static Shanten calcShantenNinnaji(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
 #endif
 
 };

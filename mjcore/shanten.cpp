@@ -65,6 +65,8 @@ MJCORE Shanten ShantenAnalyzer::calcShanten(const GameTable* const gameStat, Pla
 		return calcShantenSevenup(gameStat, playerID, tileCount);
 	case shantenZuhelong:
 		return calcShantenZuhelong(gameStat, playerID, tileCount);
+	case shantenNinnaji:
+		return calcShantenNinnaji(gameStat, playerID, tileCount);
 	default:
 		/* 全部求めて一番和了に近いやつを返す */
 		Shanten shanten, tmpShanten;
@@ -78,6 +80,7 @@ MJCORE Shanten ShantenAnalyzer::calcShanten(const GameTable* const gameStat, Pla
 		tmpShanten = calcShantenStellar(gameStat, playerID, tileCount, false); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenSevenup(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenZuhelong(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
+		tmpShanten = calcShantenNinnaji(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		return shanten;
 	}
 }
@@ -440,6 +443,39 @@ Shanten ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, Pl
 		Shanten tmpShanten = 11 - qTileCount - chkMianzi(gameStat, playerID, tmpTileCount, 1);
 		// 鳴き面子や暗槓が2つ以上ある場合は不可能
 		if (gameStat->Player[playerID].MeldPointer > 1) shanten = ShantenImpossible;
+		if (tmpShanten < shanten) shanten = tmpShanten;
+	}
+
+	return shanten;
+}
+
+Shanten ShantenAnalyzer::calcShantenNinnaji(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
+{ // 特殊：仁和寺の向聴数を求める
+	if (!RuleData::chkRuleApplied("ninnaji")) return ShantenImpossible;
+
+	Shanten shanten = 13;
+	// 以下、一枚ずつ調べる
+	for (int i = 0; i < 2; i++) {
+		Int8ByTile tileCountTmp;
+		for (int j = 0; j < TileNonflowerMax; j++) tileCountTmp[j] = tileCount[j];
+		TileCode tileArrange[NumOfTilesInHand] = {
+			CharacterTwo, SouthWind, CharacterFour,
+			CircleTwo,    SouthWind, CircleFour,
+			BambooTwo,    SouthWind, BambooFour,
+			EastWind, SouthWind, WestWind, NorthWind,
+			i == 0 ? CircleEight : WhiteDragon,
+		};
+
+		int yakuTileCount = 0;
+		for (int j = 0; j < NumOfTilesInHand; j++) {
+			if (tileCountTmp[tileArrange[j]] >= 1) {
+				yakuTileCount++;
+				tileCountTmp[tileArrange[j]]--;
+			}
+		}
+		Shanten tmpShanten = 13 - yakuTileCount;
+		// 鳴き面子や暗槓がある場合は考えない
+		if (gameStat->Player[playerID].MeldPointer > 0) shanten = ShantenImpossible;
 		if (tmpShanten < shanten) shanten = tmpShanten;
 	}
 
