@@ -163,10 +163,10 @@ void ITextRenderer::Render() {
 		for (auto k = (*i).begin(); k != (*i).end(); ++k) {
 			if (!(*k)) continue;
 			RECT rect = {
-				static_cast<long>(((*k)->chr_id % FontCols()) * FontWidth()),
-				static_cast<long>(((*k)->chr_id / FontCols()) * FontBaseSize()),
-				static_cast<long>(((*k)->chr_id % FontCols() + 1) * FontWidth()),
-				static_cast<long>(((*k)->chr_id / FontCols() + 1) * FontBaseSize()),
+				static_cast<int32_t>(((*k)->chr_id % FontCols()) * FontWidth()),
+				static_cast<int32_t>(((*k)->chr_id / FontCols()) * FontBaseSize()),
+				static_cast<int32_t>(((*k)->chr_id % FontCols() + 1) * FontWidth()),
+				static_cast<int32_t>(((*k)->chr_id / FontCols() + 1) * FontBaseSize()),
 			};
 			SpriteRenderer::instantiate(myDevice)->ShowSprite(
 				font, (*k)->X, (*k)->Y, FontWidth(), FontBaseSize(),
