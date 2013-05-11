@@ -1075,6 +1075,25 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 
 	// ---------------------------------------------------------------------
 
+	/* “ì¼”“‡ */
+	if (RuleData::chkRuleApplied("nansei_islands"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("“ì¼”“‡"), get_yaku_han("nansei_islands"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				if ((analysis->ShunziCount[CharacterOne] >= 1) &&
+					(analysis->ShunziCount[CircleOne] >= 1) && (analysis->ShunziCount[BambooOne] >= 1))
+					yakuFlag = true;
+				else if ((analysis->ShunziCount[CharacterSeven] >= 1) &&
+					(analysis->ShunziCount[CircleSeven] >= 1) && (analysis->ShunziCount[BambooSeven] >= 1))
+					yakuFlag = true;
+				return (yakuFlag && (analysis->DuiziCount[SouthWind] >= 1) &&
+					(analysis->DuiziCount[WestWind] >= 1));
+			}
+		));
+
+	// ---------------------------------------------------------------------
+
 	/* ã‹‰’f›ô‹ã */
 	if (RuleData::chkRuleApplied("high_tanyao"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
