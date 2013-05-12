@@ -745,6 +745,33 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					(analysis->MianziDat[0].tile == CircleOne);
 			}
 		));
+	/* –k‚Ì‹™ê */
+	if (RuleData::chkRuleApplied("kitanogyojou"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("–k‚Ì‹™ê"), get_yaku_han("kitanogyojou"),
+			_T("Žl‹Aˆê"), _T("¬ˆêF"),
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool flag = false;
+				for (unsigned i = 0; i < TileSuitHonors; i += TileSuitStep) {
+					const TileCode kezi[] = {
+						static_cast<TileCode>(i + 3), static_cast<TileCode>(i + 6), NorthWind,
+					};
+					const TileCode shunzi[] = {
+						static_cast<TileCode>(i + 3),
+						static_cast<TileCode>(i + 4)
+					};
+					if (chktiles(analysis, kezi, 3, shunzi, 1, true) &&
+						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 3)) &&
+						(analysis->MianziDat[0].tile > TileSuitHonors))
+						flag = true;
+					if (chktiles(analysis, kezi, 3, shunzi + 1, 1, true) &&
+						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 6)) &&
+						(analysis->MianziDat[0].tile > TileSuitHonors))
+						flag = true;
+				}
+				return flag;
+			}
+		));
 	/* ‹ð—”“{‹ê˜I| */
 	if (RuleData::chkRuleApplied("grand_cross"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
