@@ -358,6 +358,21 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(analysis->KangziCount[EastWind] >= 1)); // “‚ΜΘq‚ª‚ ‚ι
 			}
 		));
+	/* ‰Τ© */
+	if (RuleData::chkRuleApplied("hanami"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("‰Τ©"), get_yaku_han("hanami"),
+			_T("—δγJ‰Τ"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚Μθ‚Εa—Ή‚Ι‚Θ‚Α‚Δ‚Ά‚ι
+					(analysis->GameStat->KangFlag.kangFlag) && // Θ‚π‚µ‚½’Όγ‚Ε‚ ‚ι
+					(*analysis->TsumoAgariFlag) && // ƒcƒ‚ƒAƒKƒ
+					((analysis->TsumoHai->tile == CharacterThree) || // a—Ή”v‚ªOδέ‚©
+					(analysis->TsumoHai->tile == CircleThree) || // O“›‚©
+					(analysis->TsumoHai->tile == BambooThree)) && // Oυ
+					(analysis->KangziCount[CircleFive] >= 1)); // ά“›‚πΘ‚µ‚Δ‚Ά‚ι
+			}
+		));
 
 	// ---------------------------------------------------------------------
 
