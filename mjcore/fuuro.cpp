@@ -64,6 +64,10 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 			gameStat->Deposit++;
 			gameStat->Player[fuuroPlayer].PlayerScore -= 1000;
 		}
+		if (gameStat->TurnRound == 1)
+			gameStat->Player[fuuroPlayer].shokanFlag = true; /* 初槓のフラグ */
+		else if (gameStat->TurnRound == 3)
+			gameStat->Player[fuuroPlayer].kansanjunFlag = true; /* 槓三巡のフラグ */
 		break;
 	case FuuroAnkan:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
@@ -77,6 +81,10 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 		gameStat->KangFlag.chainFlag++; // 連続槓の回数を記録
 		if (gameStat->Player[fuuroPlayer].FirstDrawFlag)
 			gameStat->KangFlag.topFlag = true; /* 頭槓和のフラグ */
+		if (gameStat->TurnRound == 1)
+			gameStat->Player[fuuroPlayer].shokanFlag = true; /* 初槓のフラグ */
+		else if (gameStat->TurnRound == 3)
+			gameStat->Player[fuuroPlayer].kansanjunFlag = true; /* 槓三巡のフラグ */
 		break;
 	default:
 		fuuroPlayer = -1;

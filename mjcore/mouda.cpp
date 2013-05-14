@@ -388,6 +388,12 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 	if ((DiscardTileIndex.type == DiscardTileNum::Riichi) ||
 		(DiscardTileIndex.type == DiscardTileNum::OpenRiichi))
 		procDahaiSubRiichi(gameStat, DiscardTileIndex);
+	/* –ß”v“V˜aƒtƒ‰ƒO */
+	if ((gameStat->statOfActive().renpaiTenhohStat == 0) &&
+		(ShantenAnalyzer::calcShanten(gameStat, gameStat->CurrentPlayer.Active, shantenAll) == -1))
+		gameStat->statOfActive().renpaiTenhohStat = 1;
+	else if (gameStat->statOfActive().renpaiTenhohStat == 1)
+		gameStat->statOfActive().renpaiTenhohStat = -1;
 	/* –Œãˆ— */
 	procDahaiSubPost(gameStat, DiscardTileIndex);
 	return Continuing;

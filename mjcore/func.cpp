@@ -19,6 +19,7 @@
 #include "except.h"
 #include "ruletbl.h"
 #include "largenum.h"
+#include "regex.h"
 
 /* 順位を計算する */
 PlayerRankList calcRank(const GameTable* const gameStat) {
@@ -98,8 +99,20 @@ TileCode Wind2Tile(uint8_t wind) {
 }
 
 /* 原点(返し点) */
-int BasePoint() {
-	if (GameStat.chkGameType(SanmaT)) {
+LNum BasePoint() {
+	if (RuleData::chkRule("starting_point", "custom")) {
+		LNum basePoint = // 仮数部
+		std::atoi(RuleData::chkRule("base_point_mantissa_tens")) * 10 +
+		std::atoi(RuleData::chkRule("base_point_mantissa_ones"));
+		/* 指数部の処理 */
+		REGEX::smatch matchDat; int exponent = 0;
+		std::string expConf(RuleData::chkRule("base_point_exponent"));
+		if (REGEX::regex_match(expConf, matchDat, REGEX::regex("exp_(\\d+)")))
+			exponent = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
+		for (int j = 0; j < exponent; ++j)
+			basePoint *= 10;
+		return basePoint;
+	} else if (GameStat.chkGameType(SanmaT)) {
 		const char rulestat[6][16] = {
 			"35000pts_oka15", "40000pts_oka0", "45000pts_oka-15", "50000pts_oka-30", "25000pts_oka45", "30000pts_oka30",
 		};

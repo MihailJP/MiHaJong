@@ -15,7 +15,9 @@ EXTRA_DIST = \
 	mentzdat \
 	mihajong.sln
 dist_doc_DATA = \
-	README doc/history.txt doc/license.txt doc/playing.txt doc/readme.txt \
+	README \
+	doc/addyaku.md \
+	doc/history.txt doc/license.txt doc/playing.txt doc/readme.txt \
 	doc/script.txt
 
 aidir = $(pkgdatadir)/ai

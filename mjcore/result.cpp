@@ -75,7 +75,7 @@ namespace {
 	void calcScore(const GameTable* gameStat) {
 		InfoByPlayer<LNum> playerScore;
 		for (PlayerID i = 0; i < Players; ++i) // 点数処理
-			playerScore[i] = gameStat->Player[i].PlayerScore - BasePoint();
+			playerScore[i] = gameStat->Player[i].PlayerScore - (LargeNum)BasePoint();
 		for (PlayerID i = 0; i < Players; ++i) // チップを反映
 			playerScore[i] += gameStat->Player[i].playerChip * (signed)chipRate();
 		calcUma(gameStat, playerScore); // ウマを加算する

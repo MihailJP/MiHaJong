@@ -93,13 +93,16 @@ public:
 	static int isfinalround(lua_State* const L);
 	static int isfirstdraw(lua_State* const L);
 	static int isippatsu(lua_State* const L);
+	static int iskansanjunqualified(lua_State* const L);
 	static int iskyuushu(lua_State* const L);
 	static int ismenzen(lua_State* const L);
 	static int isopenriichideclared(lua_State* const L);
 	static int ispenultimateround(lua_State* const L);
+	static int isrenpaitenhohqualified(lua_State* const L);
 	static int isriichideclared(lua_State* const L);
 	static int isshisanbuda(lua_State* const L);
 	static int isshisibuda(lua_State* const L);
+	static int isshokanqualified(lua_State* const L);
 	static int issumaroallowed(lua_State* const L);
 	static int isyakitori(lua_State* const L);
 };

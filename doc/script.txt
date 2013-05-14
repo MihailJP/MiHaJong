@@ -576,6 +576,14 @@ AI用スクリプト説明 Copyright (c) 2008-2013 MihailJP, Part of rights rese
 		但し、一発なしのルールの時はnilを返します。
 
 
+	▼ gametbl:iskansanjunqualified([player])
+
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　3巡目に槓をしている場合はtrueを、そうでなければfalseを返します。但
+		し、槓三巡なしのルールの時はnilを返します。
+
+
 	▼ gametbl:iskyuushu()
 
 		　九種九牌の条件を満たしていればtrueを、そうでなければfalseを返します。
@@ -602,6 +610,15 @@ AI用スクリプト説明 Copyright (c) 2008-2013 MihailJP, Part of rights rese
 		でなければfalseを返します。
 
 
+	▼ gametbl:isrenpaitenhohqualified()
+
+		　この関数は2つのブール値を返します。
+		　1つめの返り値は戻牌天和の条件を満たしているかどうかで、満たしている
+		ならtrueを、そうでなければfalseを返します。
+		　2つめの返り値はその局で戻牌天和の条件を満たしたことがあるかどうかで、
+		満たしたことがないならtrueを、そうでなければfalseを返します。
+
+
 	▼ gametbl:isriichideclared([player])
 
 		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
@@ -621,8 +638,18 @@ AI用スクリプト説明 Copyright (c) 2008-2013 MihailJP, Part of rights rese
 		す。但し、十三無靠(十四不塔)なしのルールの時はnilを返します。
 
 
-	▼ gametbl:issumaroallowed()
+	▼ gametbl:isshokanqualified([player])
 
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
+		　1巡目に槓をしている場合はtrueを、そうでなければfalseを返します。但
+		し、初槓なしのルールの時はnilを返します。
+
+
+	▼ gametbl:issumaroallowed([player])
+
+		　playerには調べたいプレイヤーの番号を指定します。nilが渡された場合ま
+		たは省略された場合は、自身の状態を調べます。
 		　四馬路和了のための事前条件(満貫以上の和了)を満たしている場合trueを、
 		そうでなければfalseを返します。但し、四馬路自体がないルールの時はnilを
 		返します。
@@ -726,10 +753,12 @@ AI用スクリプト説明 Copyright (c) 2008-2013 MihailJP, Part of rights rese
 		・Orphans …… 国士無双。
 		・Stellar …… 七星無靠(そのような役が存在するルールのみ。以下同様)。
 		・CivilWar …… 南北戦争。
+		・TohokuGreen …… 東北新幹線グリーン車。
 		・Syzygy …… 惑星直列。
 		・Quanbukao …… 全不靠。
 		・SevenUp …… セブンアップ。
 		・ZuheLong …… 組合龍。
+		・Ninnaji …… 仁和寺。
 
 
 	▼ mihajong.Tile

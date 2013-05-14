@@ -1,6 +1,6 @@
 #pragma once
 
-#define RULESIZE 680
+#define RULESIZE 760
 #define RULES_IN_PAGE 40
 #define RULE_IN_LINE 80
 #define RULE_LINES ((RULESIZE+RULE_IN_LINE-1)/RULE_IN_LINE)

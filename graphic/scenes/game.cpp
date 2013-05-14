@@ -235,8 +235,8 @@ void TableProtoScene::ScoreBoard::renderWind() {
 	const seatAbsolute wind = GameStatus::gameStat()->playerwind(playerID());
 	if (GameStatus::gameStat()->chkGameType(Sanma4) && (wind == sNorth)) return; // 四人三麻の時の抜け番は何も表示しないようにする
 	RECT rect = {
-		static_cast<long>(WindCharX + WindCharWidth * ((int)wind    )), WindCharY,
-		static_cast<long>(WindCharX + WindCharWidth * ((int)wind + 1)), WindCharY + WindCharHeight
+		static_cast<int32_t>(WindCharX + WindCharWidth * ((int)wind    )), WindCharY,
+		static_cast<int32_t>(WindCharX + WindCharWidth * ((int)wind + 1)), WindCharY + WindCharHeight
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + WindPosX, (int)ypos + WindPosY,
 		WindCharWidth, WindCharHeight,
@@ -246,8 +246,8 @@ void TableProtoScene::ScoreBoard::renderWind() {
 
 void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, ArgbColor color) {
 	RECT rect = {
-		static_cast<long>(NumCharX + NumCharWidth * (num    )), NumCharY,
-		static_cast<long>(NumCharX + NumCharWidth * (num + 1)), NumCharY + NumCharHeight
+		static_cast<int32_t>(NumCharX + NumCharWidth * (num    )), NumCharY,
+		static_cast<int32_t>(NumCharX + NumCharWidth * (num + 1)), NumCharY + NumCharHeight
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + x, (int)ypos + y,
 		NumCharWidth, NumCharHeight, color, &rect, 0, 0, &myMatrix);
@@ -318,22 +318,10 @@ void TableProtoScene::ScoreBoard::renderScore() {
 	std::tie(digits, unitcode, decimalPos, sign) = scoreInfo(scoreMode);
 	switch (scoreMode) {
 	case scorePoints:
-		if (sign < 1) // プラスじゃなかったら緑
-			color = ledColorGreen;
-		else if (unitcode != 0) // 万単位以上の表示だったら赤
-			color = ledColorRed;
-		else if (digits >= 400) // 4万以上は浮き
-			color = ledColorRed;
-		else if ((digits >= 300) && (!GameStatus::gameStat()->chkGameType(SanmaT))) // 三人打ち以外で3万以上は浮き
-			color = ledColorRed;
-		else if ((digits >= 300) && (// 30000点返しの浮きの場合
-			rules::chkRule("starting_point", "25000pts_oka15") ||
-			rules::chkRule("starting_point", "27000pts_oka9") ||
-			rules::chkRule("starting_point", "30000pts_oka0")
-			))
-			color = ledColorRed;
+		if (utils::isAboveBase(GameStatus::gameStat(), playerID()))
+			color = ledColorRed; // 浮いていれば赤
 		else
-			color = ledColorGreen;
+			color = ledColorGreen; // 沈みは緑
 		break;
 	case scoreDiff: case scoreChip:
 		if      (sign ==  1) color = ledColorRed;
@@ -361,8 +349,8 @@ void TableProtoScene::ScoreBoard::renderScore() {
 
 void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum, ArgbColor color) {
 	RECT rect = {
-		static_cast<long>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum    )), ScoreUnitCharY,
-		static_cast<long>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum + 1)), ScoreUnitCharY + ScoreUnitCharHeight
+		static_cast<int32_t>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum    )), ScoreUnitCharY,
+		static_cast<int32_t>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum + 1)), ScoreUnitCharY + ScoreUnitCharHeight
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + ScoreUnitPosX, (int)ypos + ScoreUnitPosY,
 		ScoreUnitCharWidth, ScoreUnitCharHeight, color, &rect, 0, 0, &myMatrix);

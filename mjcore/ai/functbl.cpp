@@ -286,13 +286,16 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::isfinalround); lua_setfield(L, -2, "isfinalround");
 	lua_pushcfunction(L, luafunc::isfirstdraw); lua_setfield(L, -2, "isfirstdraw");
 	lua_pushcfunction(L, luafunc::isippatsu); lua_setfield(L, -2, "isippatsu");
+	lua_pushcfunction(L, luafunc::iskansanjunqualified); lua_setfield(L, -2, "iskansanjunqualified");
 	lua_pushcfunction(L, luafunc::iskyuushu); lua_setfield(L, -2, "iskyuushu");
 	lua_pushcfunction(L, luafunc::ismenzen); lua_setfield(L, -2, "ismenzen");
 	lua_pushcfunction(L, luafunc::isopenriichideclared); lua_setfield(L, -2, "isopenriichideclared");
 	lua_pushcfunction(L, luafunc::ispenultimateround); lua_setfield(L, -2, "ispenultimateround");
 	lua_pushcfunction(L, luafunc::isriichideclared); lua_setfield(L, -2, "isriichideclared");
+	lua_pushcfunction(L, luafunc::isrenpaitenhohqualified); lua_setfield(L, -2, "isrenpaitenhohqualified");
 	lua_pushcfunction(L, luafunc::isshisanbuda); lua_setfield(L, -2, "isshisanbuda");
 	lua_pushcfunction(L, luafunc::isshisibuda); lua_setfield(L, -2, "isshisibuda");
+	lua_pushcfunction(L, luafunc::isshokanqualified); lua_setfield(L, -2, "isshokanqualified");
 	lua_pushcfunction(L, luafunc::issumaroallowed); lua_setfield(L, -2, "issumaroallowed");
 	lua_pushcfunction(L, luafunc::isyakitori); lua_setfield(L, -2, "isyakitori");
 	/* メソッド定義ここまで */
@@ -308,10 +311,12 @@ inline void aiscript::table::functable::agariTypeCode(lua_State* const L) {
 	TableAdd(L, "Orphans", (lua_Integer)shantenOrphans);
 	TableAdd(L, "Stellar", (lua_Integer)shantenStellar);
 	TableAdd(L, "CivilWar", (lua_Integer)shantenCivilWar);
+	TableAdd(L, "TohokuGreen", (lua_Integer)shantenTohokuGreen);
 	TableAdd(L, "Syzygy", (lua_Integer)shantenSyzygy);
 	TableAdd(L, "Quanbukao", (lua_Integer)shantenQuanbukao);
 	TableAdd(L, "SevenUp", (lua_Integer)shantenSevenup);
 	TableAdd(L, "ZuheLong", (lua_Integer)shantenZuhelong);
+	TableAdd(L, "Ninnaji", (lua_Integer)shantenNinnaji);
 	lockTable(L); lua_setfield(L, -2, "AgariType");
 }
 

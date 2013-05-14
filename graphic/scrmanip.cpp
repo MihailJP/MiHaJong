@@ -80,7 +80,7 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 	glXMakeCurrent(disp, hWnd, pDevice);
 #endif
 
-	const int textureList[] = { // テクスチャの先行読み込み
+	const intptr_t textureList[] = { // テクスチャの先行読み込み
 		IDB_PNG_TBLBAIZE,
 		IDB_PNG_TBLBORDER,
 		IDB_PNG_SDBAR,
@@ -104,7 +104,7 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 		0, // sentinel
 	};
 	TexturePtr dummyTexture;
-	for (const int* i = textureList; *i != 0; ++i)
+	for (const intptr_t* i = textureList; *i != 0; ++i)
 		LoadTexture(pDevice, &dummyTexture, MAKEINTRESOURCE(*i));
 #endif
 }

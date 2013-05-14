@@ -55,6 +55,8 @@ MJCORE Shanten ShantenAnalyzer::calcShanten(const GameTable* const gameStat, Pla
 		return calcShantenStellar(gameStat, playerID, tileCount, true);
 	case shantenCivilWar:
 		return calcShantenCivilWar(gameStat, playerID, tileCount);
+	case shantenTohokuGreen:
+		return calcShantenTohokuGreen(gameStat, playerID, tileCount);
 	case shantenSyzygy:
 		return calcShantenSyzygy(gameStat, playerID, tileCount);
 	case shantenQuanbukao:
@@ -63,6 +65,8 @@ MJCORE Shanten ShantenAnalyzer::calcShanten(const GameTable* const gameStat, Pla
 		return calcShantenSevenup(gameStat, playerID, tileCount);
 	case shantenZuhelong:
 		return calcShantenZuhelong(gameStat, playerID, tileCount);
+	case shantenNinnaji:
+		return calcShantenNinnaji(gameStat, playerID, tileCount);
 	default:
 		/* 全部求めて一番和了に近いやつを返す */
 		Shanten shanten, tmpShanten;
@@ -71,15 +75,17 @@ MJCORE Shanten ShantenAnalyzer::calcShanten(const GameTable* const gameStat, Pla
 		tmpShanten = calcShantenKokushi(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenStellar(gameStat, playerID, tileCount, true); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenCivilWar(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
+		tmpShanten = calcShantenTohokuGreen(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenSyzygy(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenStellar(gameStat, playerID, tileCount, false); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenSevenup(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		tmpShanten = calcShantenZuhelong(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
+		tmpShanten = calcShantenNinnaji(gameStat, playerID, tileCount); if (tmpShanten < shanten) shanten = tmpShanten;
 		return shanten;
 	}
 }
 
-unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit, unsigned mode) {
+unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount, unsigned limit, unsigned mode) {
 	// 面子を2、対子・塔子を1とした数値
 	unsigned int ans = 0;
 	// 数牌
@@ -118,20 +124,47 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerI
 
 	return ans;
 }
-unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, unsigned limit) {
+unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount, unsigned limit) {
 	unsigned int melds = 0u;
 	for (unsigned i = 0; i < 64; ++i)
 		melds = std::max(melds, chkMianzi(gameStat, playerID, tileCount, limit, i));
 	return melds;
 }
 
-Shanten ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+void ShantenAnalyzer::addExposedMeld(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount) {
+	// 鳴き面子を数える
+	for (int i = 1; i < gameStat->Player[playerID].MeldPointer; i++) {
+		switch (gameStat->Player[playerID].Meld[i].mstat) {
+		case meldSequenceExposedLower: case meldSequenceExposedMiddle:
+		case meldSequenceExposedUpper:
+			// 順子の時
+			tileCount[gameStat->Player[playerID].Meld[i].tile]++;
+			tileCount[gameStat->Player[playerID].Meld[i].tile + 1]++;
+			tileCount[gameStat->Player[playerID].Meld[i].tile + 2]++;
+			break;
+		case meldQuadExposedLeft: case meldQuadAddedLeft:
+		case meldQuadExposedCenter: case meldQuadAddedCenter:
+		case meldQuadExposedRight: case meldQuadAddedRight:
+		case meldQuadConcealed: // 暗槓も数えてあげましょう……
+		case meldTripletExposedLeft: case meldTripletExposedCenter:
+		case meldTripletExposedRight:
+			// 刻子の時(槓子も含む)
+			tileCount[gameStat->Player[playerID].Meld[i].tile] += 3;
+			break;
+		default:
+			// 異常データ
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("副露データに暗順子、暗刻子、または不明な種類の面子が検出されました"));
+		}
+	}
+}
+
+Shanten ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 面子手の向聴数を求める
 	return 8 - // 全く揃ってないてんでバラバラだったら面子手に対して8向聴（七対子に対してなら6向聴になる）
 		chkMianzi(gameStat, playerID, tileCount, 4);
 }
 
-Shanten ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 七対子に対する向聴数を求める。
 	Shanten shanten = 6;
 	for (int i = 0; i < TileNonflowerMax; i++)
@@ -147,7 +180,7 @@ Shanten ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, Pla
 	return shanten;
 }
 
-Shanten ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 国士無双に対する向聴数を求める。
 	if (gameStat->chkGameType(SanmaS)) return ShantenImpossible; // 数牌三麻では不可能
 
@@ -205,7 +238,7 @@ void ShantenAnalyzer::setQixingTilePattern(TileCode* const QixingPai, unsigned i
 	}
 }
 
-Shanten ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount, bool qixing)
+Shanten ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount, bool qixing)
 { // 特殊：七星不靠/全不靠の向聴数を求める
 	if ((!RuleData::chkRuleApplied("stellar_uushii"))&&(qixing)) return ShantenImpossible;
 	else if ((!RuleData::chkRuleApplied("quanbukao"))&&(!qixing)) return ShantenImpossible;
@@ -234,7 +267,7 @@ Shanten ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, Pla
 	return shanten;
 }
 
-Shanten ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：南北戦争の向聴数を求める
 	if (!RuleData::chkRuleApplied("civil_war")) return ShantenImpossible;
 
@@ -287,7 +320,51 @@ Shanten ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, Pl
 	return shanten;
 }
 
-Shanten ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenTohokuGreen(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
+{ // 特殊：東北新幹線グリーン車の向聴数を求める
+	if (!RuleData::chkRuleApplied("tohoku_shinkansen_green")) return ShantenImpossible;
+
+	Shanten shanten = 13;
+	// 以下、一枚ずつ調べる
+	for (int i = 0; i < 10; i++) {
+		Int8ByTile tileCountTmp;
+		for (int j = 0; j < TileNonflowerMax; j++) tileCountTmp[j] = tileCount[j];
+		addExposedMeld(gameStat, playerID, tileCountTmp); // 鳴き有効
+		TileCode TohokuGreenPai[NumOfTilesInHand] = {
+			CharacterOne,   CharacterTwo,   CharacterThree,
+			CharacterFour,  CharacterFive,  CharacterSix,
+			CharacterSeven, CharacterEight, CharacterNine,
+			EastWind,       EastWind,       NoTile,
+			NorthWind,      NorthWind
+		};
+		switch (i) {
+		case 0: case 1:
+			TohokuGreenPai[1] = BambooTwo; break;
+		case 2: case 3:
+			TohokuGreenPai[2] = BambooThree; break;
+		case 4: case 5:
+			TohokuGreenPai[3] = BambooFour; break;
+		case 6: case 7:
+			TohokuGreenPai[5] = BambooSix; break;
+		case 8: case 9:
+			TohokuGreenPai[7] = BambooEight; break;
+		}
+		TohokuGreenPai[11] = (i % 2 == 0) ? EastWind : NorthWind;
+		int tohokuGreenPaiCount = 0;
+		for (int j = 0; j < NumOfTilesInHand; j++) {
+			if (tileCountTmp[TohokuGreenPai[j]] >= 1) {
+				tohokuGreenPaiCount++;
+				tileCountTmp[TohokuGreenPai[j]]--;
+			}
+		}
+		Shanten tmpShanten = 13 - tohokuGreenPaiCount;
+		if (tmpShanten < shanten) shanten = tmpShanten;
+	}
+
+	return shanten;
+}
+
+Shanten ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：惑星直列の向聴数を求める
 	if (!RuleData::chkRuleApplied("syzygy")) return ShantenImpossible;
 
@@ -313,7 +390,7 @@ Shanten ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, Play
 	return (gameStat->Player[playerID].MeldPointer > 0) ? ShantenImpossible : (13 - syzygyPaiCount);
 }
 
-Shanten ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：セブンアップの向聴数を求める
 	if (!RuleData::chkRuleApplied("sevenup")) return ShantenImpossible;
 
@@ -347,7 +424,7 @@ Shanten ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, Pla
 	return shanten;
 }
 
-Shanten ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, PlayerID playerID, Int8ByTile& tileCount)
+Shanten ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：組合龍の向聴数を求める
 	if (!RuleData::chkRuleApplied("zuhelong")) return ShantenImpossible;
 
@@ -366,6 +443,39 @@ Shanten ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, Pl
 		Shanten tmpShanten = 11 - qTileCount - chkMianzi(gameStat, playerID, tmpTileCount, 1);
 		// 鳴き面子や暗槓が2つ以上ある場合は不可能
 		if (gameStat->Player[playerID].MeldPointer > 1) shanten = ShantenImpossible;
+		if (tmpShanten < shanten) shanten = tmpShanten;
+	}
+
+	return shanten;
+}
+
+Shanten ShantenAnalyzer::calcShantenNinnaji(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
+{ // 特殊：仁和寺の向聴数を求める
+	if (!RuleData::chkRuleApplied("ninnaji")) return ShantenImpossible;
+
+	Shanten shanten = 13;
+	// 以下、一枚ずつ調べる
+	for (int i = 0; i < 2; i++) {
+		Int8ByTile tileCountTmp;
+		for (int j = 0; j < TileNonflowerMax; j++) tileCountTmp[j] = tileCount[j];
+		TileCode tileArrange[NumOfTilesInHand] = {
+			CharacterTwo, SouthWind, CharacterFour,
+			CircleTwo,    SouthWind, CircleFour,
+			BambooTwo,    SouthWind, BambooFour,
+			EastWind, SouthWind, WestWind, NorthWind,
+			i == 0 ? CircleEight : WhiteDragon,
+		};
+
+		int yakuTileCount = 0;
+		for (int j = 0; j < NumOfTilesInHand; j++) {
+			if (tileCountTmp[tileArrange[j]] >= 1) {
+				yakuTileCount++;
+				tileCountTmp[tileArrange[j]]--;
+			}
+		}
+		Shanten tmpShanten = 13 - yakuTileCount;
+		// 鳴き面子や暗槓がある場合は考えない
+		if (gameStat->Player[playerID].MeldPointer > 0) shanten = ShantenImpossible;
 		if (tmpShanten < shanten) shanten = tmpShanten;
 	}
 

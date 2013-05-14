@@ -16,7 +16,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		[isQiDui](const MENTSU_ANALYSIS* const analysis, const TileCode* const targetDuiz, int numOfDuiz) -> bool {
 			if (isQiDui(analysis))
 				return (yaku::countingFacility::countPairs(analysis->TileCount, targetDuiz, numOfDuiz)
-					== NumOfTilesInHand / 2);
+					== (numOfDuiz > (NumOfTilesInHand / 2) ? (NumOfTilesInHand / 2) : numOfDuiz));
 			else return false;
 		};
 	// ---------------------------------------------------------------------
@@ -143,6 +143,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 				return isQiDui(analysis) && chktiles(analysis, tc, 6);
 			}
 		));
+	/* ˆê‹x‚³‚ñµ‘Îq */
+	if (RuleData::chkRuleApplied("ikkyuusan_pairs"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("ˆê‹x‚³‚ñµ‘Îq"), get_yaku_han("ikkyuusan_pairs"),
+			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				const TileCode tc[9] = {
+					CharacterOne, CharacterThree, CharacterNine,
+					CircleOne, CircleThree, CircleNine,
+					BambooOne, BambooThree, BambooNine,
+				};
+				return isQiDui(analysis) && chktiles(analysis, tc, 9);
+			}
+		));
 
 	// ---------------------------------------------------------------------
 
@@ -240,6 +253,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 				return (analysis->shanten[shantenCivilWar] == -1);
 			}
 		));
+	/* “Œ–kVŠ²üƒOƒŠ[ƒ“Ô */
+	if (RuleData::chkRuleApplied("tohoku_shinkansen_green"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("“Œ–kVŠ²üƒOƒŠ[ƒ“Ô"), get_yaku_han("tohoku_shinkansen_green"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->shanten[shantenTohokuGreen] == -1);
+			}
+		));
 	/* ˜f¯’¼—ñ */
 	if (RuleData::chkRuleApplied("syzygy"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -272,6 +293,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("‘g‡—´"), get_yaku_han("zuhelong"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->shanten[shantenZuhelong] == -1);
+			}
+		));
+	/* m˜a› */
+	if (RuleData::chkRuleApplied("ninnaji"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("m˜a›"), get_yaku_han("ninnaji"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (analysis->shanten[shantenNinnaji] == -1);
 			}
 		));
 }

@@ -28,8 +28,8 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 	case sSelf:
 		{
 			RECT rect = {
-				static_cast<long>((PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding), static_cast<long>((PlateHeightH + PlatePadding * 2) * (0    ) + PlatePadding),
-				static_cast<long>((PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players + 1) - PlatePadding), static_cast<long>((PlateHeightH + PlatePadding * 2) * (0 + 1) - PlatePadding),
+				static_cast<int32_t>((PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding), static_cast<int32_t>((PlateHeightH + PlatePadding * 2) * (0    ) + PlatePadding),
+				static_cast<int32_t>((PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players + 1) - PlatePadding), static_cast<int32_t>((PlateHeightH + PlatePadding * 2) * (0 + 1) - PlatePadding),
 			};
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(tChiicha, PlatePosH, PlatePosV,
 				PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
@@ -38,8 +38,8 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 	case sOpposite:
 		{
 			RECT rect = {
-				static_cast<long>((PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding), static_cast<long>((PlateHeightH + PlatePadding * 2) * (1    ) + PlatePadding),
-				static_cast<long>((PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players + 1) - PlatePadding), static_cast<long>((PlateHeightH + PlatePadding * 2) * (1 + 1) - PlatePadding),
+				static_cast<int32_t>((PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding), static_cast<int32_t>((PlateHeightH + PlatePadding * 2) * (1    ) + PlatePadding),
+				static_cast<int32_t>((PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players + 1) - PlatePadding), static_cast<int32_t>((PlateHeightH + PlatePadding * 2) * (1 + 1) - PlatePadding),
 			};
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(tChiicha, TableSize - PlatePosH, TableSize - PlatePosV,
 				PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
@@ -48,8 +48,8 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 	case sRight:
 		{
 			RECT rect = {
-				static_cast<long>((PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding), static_cast<long>((PlateHeightV + PlatePadding * 2) * (0    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2),
-				static_cast<long>((PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players + 1) - PlatePadding), static_cast<long>((PlateHeightV + PlatePadding * 2) * (0 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2),
+				static_cast<int32_t>((PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding), static_cast<int32_t>((PlateHeightV + PlatePadding * 2) * (0    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2),
+				static_cast<int32_t>((PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players + 1) - PlatePadding), static_cast<int32_t>((PlateHeightV + PlatePadding * 2) * (0 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2),
 			};
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(tChiicha, PlatePosV, TableSize - PlatePosH,
 				PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
@@ -58,8 +58,8 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 	case sLeft:
 		{
 			RECT rect = {
-				static_cast<long>((PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding), static_cast<long>((PlateHeightV + PlatePadding * 2) * (1    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2),
-				static_cast<long>((PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players + 1) - PlatePadding), static_cast<long>((PlateHeightV + PlatePadding * 2) * (1 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2),
+				static_cast<int32_t>((PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding), static_cast<int32_t>((PlateHeightV + PlatePadding * 2) * (1    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2),
+				static_cast<int32_t>((PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players + 1) - PlatePadding), static_cast<int32_t>((PlateHeightV + PlatePadding * 2) * (1 + 1) - PlatePadding + (PlateHeightH + PlatePadding * 2) * 2),
 			};
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(tChiicha, TableSize - PlatePosV, PlatePosH,
 				PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);

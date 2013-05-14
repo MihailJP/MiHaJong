@@ -282,6 +282,13 @@ namespace {
 			RoundEndType = Chonbo; // チョンボにする
 	}
 
+	void chonboIfAgariForbidden(const GameTable* gameStat, const yaku::YAKUSTAT& yakuInfo, const MachihaiInfo& machiInfo, EndType& RoundEndType) {
+		if (RuleData::chkRule("furiten_riichi", "no") && // フリテン立直無しで
+			gameStat->statOfAgari().RichiFlag.RichiFlag && // 立直していて
+			machiInfo.FuritenFlag) // フリテンだった場合
+			RoundEndType = Chonbo; // チョンボにする
+	}
+
 	void verifyAgari(GameTable* gameStat, EndType& RoundEndType) {
 		if (!gameStat->TsumoAgariFlag) {
 			gameStat->statOfAgari().Tsumohai().tile = gameStat->CurrentDiscard.tile;
@@ -291,6 +298,8 @@ namespace {
 		MachihaiInfo machiInfo = chkFuriten(gameStat, gameStat->CurrentPlayer.Agari);
 		// 縛りを満たさないか、振聴のときは錯和
 		chonboIfShibariUnmet(gameStat, yakuInfo, machiInfo, RoundEndType);
+		// 和了れない状況
+		chonboIfAgariForbidden(gameStat, yakuInfo, machiInfo, RoundEndType);
 	}
 
 	enum OptionBool {oFalse, oTrue, oNull,};

@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cassert>
 #endif
+#include "regex.h"
 #include "except.h"
 #include "func.h"
 #include "tileutil.h"
@@ -153,6 +154,9 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 			gameStat->Player[pl].FlowerFlag.Chrys =
 			gameStat->Player[pl].FlowerFlag.Bamboo = false;
 		gameStat->Player[pl].NorthFlag = 0; // 晒している北風牌を格納するフラグ
+		gameStat->Player[pl].shokanFlag = // 初槓フラグ
+			gameStat->Player[pl].kansanjunFlag = false; // 槓三巡フラグ
+		gameStat->Player[pl].renpaiTenhohStat = 0; // 戻牌天和判定用
 	}
 	assert(gameStat->Player[0].DiscardPointer == 0); // 初期化できてるかチェック（デバッグ用）
 }
@@ -163,13 +167,27 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 	memset(gameStat, 0, sizeof(GameTable));
 	gameStat->gameType = (GameTypeID)gameType;
 
+	LNum initialPoints; /* 初期点数 */
+	if (RuleData::chkRule("starting_point", "custom")) {
+		initialPoints = // 仮数部
+			std::atoi(RuleData::chkRule("starting_point_mantissa_tens")) * 10 +
+			std::atoi(RuleData::chkRule("starting_point_mantissa_ones"));
+		/* 指数部の処理 */
+		REGEX::smatch matchDat; int exponent = 0;
+		std::string expConf(RuleData::chkRule("starting_point_exponent"));
+		if (REGEX::regex_match(expConf, matchDat, REGEX::regex("exp_(\\d+)")))
+			exponent = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
+		for (int j = 0; j < exponent; ++j)
+			initialPoints *= 10;
+	} else {
+		initialPoints = (LNum)std::atoi(RuleData::chkRule("starting_point"));
+	}
+
 	for (int i = 0; i < Players; i++) {
-		if (i < ACTUAL_PLAYERS) {
-			gameStat->Player[i].PlayerScore =
-				(LNum)std::atoi(RuleData::chkRule("starting_point"));
-		} else {
+		if (i < ACTUAL_PLAYERS)
+			gameStat->Player[i].PlayerScore = initialPoints;
+		else
 			gameStat->Player[i].PlayerScore = (LNum)0;
-		}
 	}
 
 	if (RuleData::chkRule("game_length", "east_south_game"))
@@ -218,12 +236,15 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 		sandbox->Player[p].PlayerScore = (LNum)gameStat->Player[p].PlayerScore;
 		sandbox->Player[p].playerChip = gameStat->Player[p].playerChip;
 		sandbox->Player[p].SumaroFlag = gameStat->Player[p].SumaroFlag;
+		sandbox->Player[p].shokanFlag = gameStat->Player[p].shokanFlag;
+		sandbox->Player[p].kansanjunFlag = gameStat->Player[p].kansanjunFlag;
 		sandbox->Player[p].YakitoriFlag = gameStat->Player[p].YakitoriFlag;
 		if ((gameStat->Player[p].RichiFlag.OpenFlag)||(p == targetPlayer)) {
 			for (int i = 0; i < NumOfTilesInHand; i++) {
 				sandbox->Player[p].Hand[i].tile = gameStat->Player[p].Hand[i].tile;
 				sandbox->Player[p].Hand[i].red = gameStat->Player[p].Hand[i].red;
 			}
+			sandbox->Player[p].renpaiTenhohStat = gameStat->Player[p].renpaiTenhohStat;
 		}
 		sandbox->Player[p].RichiFlag = gameStat->Player[p].RichiFlag;
 		for (int i = 0; i < SizeOfDiscardBuffer; i++) {

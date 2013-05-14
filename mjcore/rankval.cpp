@@ -5,6 +5,8 @@
 #include "decomp.h"
 #include "reader/csv2arry.h"
 #include "../common/strcode.h"
+#include "ruletbl.h"
+#include "regex.h"
 
 /* コンストラクタ(シングルトン) */
 RankVal::RankVal() {
@@ -35,11 +37,30 @@ RankVal* RankVal::Instantiate() {
 }
 
 /* 値を取得 */
-int RankVal::getRankVal(const GameTable* gameStat, const std::string& ruletag, unsigned playersAboveBase, unsigned rank) const {
+static LNum getCustomVal(unsigned playersAboveBase, unsigned rank) {
+	std::ostringstream tagNameStream;
+	tagNameStream << "point_basis_" << (char)('a' + ((playersAboveBase + 3) % 4)) << (char)('0' + rank);
+	LNum point(
+		(RuleData::chkRule(tagNameStream.str() + "_mantissa_tens")[0] == '-' ? (-1) : 1) *
+		(abs(std::atoi(RuleData::chkRule(tagNameStream.str() + "_mantissa_tens").c_str())) * 10 +
+		std::atoi(RuleData::chkRule(tagNameStream.str() + "_mantissa_ones").c_str()))
+		);
+	/* 指数部の処理 */
+	REGEX::smatch matchDat; int exponent = 0;
+	std::string expConf(RuleData::chkRule(tagNameStream.str() + "_exponent"));
+	if (REGEX::regex_match(expConf, matchDat, REGEX::regex("exp_(\\d+)")))
+		exponent = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
+	for (int j = 0; j < exponent; ++j)
+		point *= 10;
+	/* リターン */
+	return point;
+}
+
+LNum RankVal::getRankVal(const GameTable* gameStat, const std::string& ruletag, unsigned playersAboveBase, unsigned rank) const {
 	using namespace CodeConv;
 	const std::string ruleTagVal =
 		std::string(gameStat->chkGameType(SanmaT) ? "T:" : "Q:") + ruletag;
-	if (rankValueMap.find(ruleTagVal) == rankValueMap.end()) { /* Index error */
+	if ((rankValueMap.find(ruleTagVal) == rankValueMap.end()) && (ruletag != "custom")) { /* Index error */
 		tstring msg =
 			tstring(_T("getRankVal: 対応していないルールタグです [")) +
 			EnsureTStr(ruletag) + tstring(_T("]"));
@@ -53,13 +74,25 @@ int RankVal::getRankVal(const GameTable* gameStat, const std::string& ruletag, u
 		tostringstream o; o << _T("getRankVal: rank 引数が正しくありません [") << rank << _T(']');
 		warn(o.str().c_str());
 		return 0;
-	} else if (rank == 1) { /* トップの場合 */
-		return -1 * (
-			rankValueMap.at(ruleTagVal)[playersAboveBase][0] +
-			rankValueMap.at(ruleTagVal)[playersAboveBase][1] +
-			rankValueMap.at(ruleTagVal)[playersAboveBase][2]);
-	} else { /* トップ以外の場合 */
-		//return rankValueMap[ruleTagVal][playersAboveBase][rank - 2]; // なぜかoperator[]だとエラーになる。意味不明。
-		return rankValueMap.at(ruleTagVal)[playersAboveBase][rank - 2];
+	} else if (ruletag == "custom") {
+		const unsigned abvBase = (gameStat->chkGameType(SanmaT) && (playersAboveBase == 3)) ? 4 : playersAboveBase;
+		if (rank == 1) { /* トップの場合 */
+			return -(
+				getCustomVal(abvBase, 2) +
+				getCustomVal(abvBase, 3) +
+				(gameStat->chkGameType(SanmaT) ? (LNum)0 : getCustomVal(abvBase, 4)));
+		} else { /* トップ以外の場合 */
+			return getCustomVal(abvBase, rank);
+		}
+	} else {
+		if (rank == 1) { /* トップの場合 */
+			return -1 * (
+				rankValueMap.at(ruleTagVal)[playersAboveBase][0] +
+				rankValueMap.at(ruleTagVal)[playersAboveBase][1] +
+				rankValueMap.at(ruleTagVal)[playersAboveBase][2]);
+		} else { /* トップ以外の場合 */
+			//return rankValueMap[ruleTagVal][playersAboveBase][rank - 2]; // なぜかoperator[]だとエラーになる。意味不明。
+			return rankValueMap.at(ruleTagVal)[playersAboveBase][rank - 2];
+		}
 	}
 }

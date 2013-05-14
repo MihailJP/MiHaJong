@@ -745,6 +745,33 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					(analysis->MianziDat[0].tile == CircleOne);
 			}
 		));
+	/* –k‚Ì‹™ê */
+	if (RuleData::chkRuleApplied("kitanogyojou"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("–k‚Ì‹™ê"), get_yaku_han("kitanogyojou"),
+			_T("l‹Aˆê"), _T("¬ˆêF"),
+			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool flag = false;
+				for (unsigned i = 0; i < TileSuitHonors; i += TileSuitStep) {
+					const TileCode kezi[] = {
+						static_cast<TileCode>(i + 3), static_cast<TileCode>(i + 6), NorthWind,
+					};
+					const TileCode shunzi[] = {
+						static_cast<TileCode>(i + 3),
+						static_cast<TileCode>(i + 4)
+					};
+					if (chktiles(analysis, kezi, 3, shunzi, 1, true) &&
+						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 3)) &&
+						(analysis->MianziDat[0].tile > TileSuitHonors))
+						flag = true;
+					if (chktiles(analysis, kezi, 3, shunzi + 1, 1, true) &&
+						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 6)) &&
+						(analysis->MianziDat[0].tile > TileSuitHonors))
+						flag = true;
+				}
+				return flag;
+			}
+		));
 	/* ‹ğ—”“{‹ê˜I| */
 	if (RuleData::chkRuleApplied("grand_cross"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -826,6 +853,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					analysis->DuiziCount[CircleEight] >= 3));
 			}
 		));
+	/* ‡Ši‹FŠè(“Œq) */
+	if (RuleData::chkRuleApplied("goukaku_kigan_east"))
+		for (int i = 1; i <= 4; ++i)
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				_T("‡Ši‹FŠè "), yaku::yakuCalculator::Yaku::FixedHan(
+				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(i, Han),
+				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null),
+				[i](const MENTSU_ANALYSIS* const analysis) -> bool {
+					unsigned tileCount = (unsigned)analysis->TileCount[CircleFive];
+					tileCount += 3 * (analysis->KeziCount[CircleFive] - analysis->AnKeziCount[CircleFive]);
+					tileCount += (analysis->KangziCount[CircleFive] - analysis->AnKangziCount[CircleFive]);
+					for (unsigned int j = 3; j <= 5; ++j)
+						tileCount += (analysis->ShunziCount[(TileCode)(TileSuitCircles + j)] - analysis->AnShunziCount[(TileCode)(TileSuitCircles + j)]);
+					return ((analysis->KeziCount[EastWind] >= 1) && (tileCount == i));
+				}
+			));
 
 	// ---------------------------------------------------------------------
 
@@ -979,10 +1022,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 
 	/* “Œ‘åŒn */
 	{
-		const int rules = 4;
-		const char ruleCodeList[rules][16] = {"univ_tokyo", "univ_hokkaido", "univ_chuo", "univ_hakuoh"};
-		const TileCode tileCodeList[rules] = {EastWind, NorthWind, RedDragon, WhiteDragon};
-		const TCHAR yakuNameList[rules][16] = {_T("“Œ‘å–ğ–"), _T("–k‘å–ğ–"), _T("’†‘å–ğ–"), _T("”’cŠw‰@")};
+		const int rules = 10;
+		const char ruleCodeList[rules][16] = {
+			"univ_tokyo", "univ_hokkaido", "univ_chuo", "hakuoh_gakuen",
+			"univ_osaka", "univ_osaka", "univ_osaka",
+			"univ_kyushu", "univ_kyushu", "univ_kyushu",
+		};
+		const TileCode tileCodeList[rules] = {
+			EastWind, NorthWind, RedDragon, WhiteDragon,
+			CharacterEight, CircleEight, BambooEight,
+			CharacterNine, CircleNine, BambooNine,
+		};
+		const TCHAR yakuNameList[rules][16] = {
+			_T("“Œ‘å–ğ–"), _T("–k‘å–ğ–"), _T("’†‘å–ğ–"), _T("”’cŠw‰@"),
+			_T("ã‘å–ğ–"), _T("ã‘å–ğ–"), _T("ã‘å–ğ–"),
+			_T("‹ã‘å–ğ–"), _T("‹ã‘å–ğ–"), _T("‹ã‘å–ğ–"),
+		};
 		for (int i = 0; i < rules; i++) {
 			const TileCode targetTile = tileCodeList[i];
 			if (RuleData::chkRuleApplied(ruleCodeList[i]))
@@ -1058,6 +1113,25 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					(analysis->KeziCount[CharacterTwo] + analysis->KeziCount[CircleTwo] + analysis->KeziCount[BambooTwo] >= 1) &&
 					(analysis->KeziCount[RedDragon] >= 1) &&
 					(analysis->MianziDat[0].tile == NorthWind));
+			}
+		));
+
+	// ---------------------------------------------------------------------
+
+	/* “ì¼”“‡ */
+	if (RuleData::chkRuleApplied("nansei_islands"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("“ì¼”“‡"), get_yaku_han("nansei_islands"),
+			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				bool yakuFlag = false;
+				if ((analysis->ShunziCount[CharacterOne] >= 1) &&
+					(analysis->ShunziCount[CircleOne] >= 1) && (analysis->ShunziCount[BambooOne] >= 1))
+					yakuFlag = true;
+				else if ((analysis->ShunziCount[CharacterSeven] >= 1) &&
+					(analysis->ShunziCount[CircleSeven] >= 1) && (analysis->ShunziCount[BambooSeven] >= 1))
+					yakuFlag = true;
+				return (yakuFlag && (analysis->DuiziCount[SouthWind] >= 1) &&
+					(analysis->DuiziCount[WestWind] >= 1));
 			}
 		));
 
