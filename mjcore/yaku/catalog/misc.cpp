@@ -853,6 +853,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					analysis->DuiziCount[CircleEight] >= 3));
 			}
 		));
+	/* ‡Ši‹FŠè(“Œq) */
+	if (RuleData::chkRuleApplied("goukaku_kigan_east"))
+		for (int i = 1; i <= 4; ++i)
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				_T("‡Ši‹FŠè "), yaku::yakuCalculator::Yaku::FixedHan(
+				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(i, Han),
+				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null),
+				[i](const MENTSU_ANALYSIS* const analysis) -> bool {
+					unsigned tileCount = (unsigned)analysis->TileCount[CircleFive];
+					tileCount += 3 * (analysis->KeziCount[CircleFive] - analysis->AnKeziCount[CircleFive]);
+					tileCount += (analysis->KangziCount[CircleFive] - analysis->AnKangziCount[CircleFive]);
+					for (unsigned int j = 3; j <= 5; ++j)
+						tileCount += (analysis->ShunziCount[(TileCode)(TileSuitCircles + j)] - analysis->AnShunziCount[(TileCode)(TileSuitCircles + j)]);
+					return ((analysis->KeziCount[EastWind] >= 1) && (tileCount == i));
+				}
+			));
 
 	// ---------------------------------------------------------------------
 
