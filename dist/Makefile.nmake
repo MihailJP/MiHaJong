@@ -54,6 +54,9 @@ $(TMPPATH)rulesyms.txt: $(DOCPATH)rulesyms.txt
 $(TMPPATH)script.txt: $(DOCPATH)script.txt
 	- mkdir $(TMPPATH)
 	copy $** $@
+$(TMPPATH)addyaku.md: $(DOCPATH)addyaku.md
+	- mkdir $(TMPPATH)
+	copy $** $@
 $(TMPPATH)ai\default.lua: $(DATAPATH)ai\default.lua
 	- mkdir $(TMPPATH)ai
 	copy $** $@
