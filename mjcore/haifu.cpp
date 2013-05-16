@@ -347,8 +347,8 @@ void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // Œ»İƒ^ƒO
 		std::setw(2) << std::setfill(_T('0')) << currTime.tm_min << _T(":") <<
 		std::setw(2) << std::setfill(_T('0')) << currTime.tm_sec << _T(".") <<
 		std::setw(3) << std::setfill(_T('0')) << (tempus.tv_nsec / 1000000) <<
-		std::showpos << std::setw(3) << std::setfill(_T('0')) << std::internal << ((tz + 86400) / 3600 - 86400) << _T(":") <<
-		std::noshowpos << std::setw(2) << std::setfill(_T('0')) << ((tz + 86400) % 3600 / 60 - 86400) <<
+		std::showpos << std::setw(3) << std::setfill(_T('0')) << std::internal << ((tz + 86400) / 3600 - (86400 / 3600)) << _T(":") <<
+		std::noshowpos << std::setw(2) << std::setfill(_T('0')) << ((tz + 86400) % 3600 / 60) <<
 		_T("</") << tagName << _T(">") << std::endl;
 #endif /*_WIN32*/
 }
