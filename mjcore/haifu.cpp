@@ -1128,7 +1128,7 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	/* ƒtƒ@ƒCƒ‹–¼‚ÌŽ©“®Œˆ’è */
 	std::string configPath = confpath::confPath();
 	std::ostringstream filename1, filename2;
-	filename1 << configPath << "haifu\\";
+	filename1 << configPath << "haifu/";
 	switch (gameStat->gameType) {
 		case Yonma: filename1 << "mihajong"; break;
 		case Sanma: filename1 << "mihasanm"; break;
