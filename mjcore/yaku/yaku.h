@@ -98,13 +98,20 @@ private:
 				HAN(int8_t h, hanUnit u);
 				int8_t getHan() const;
 				hanUnit getUnit() const;
+#ifdef GUOBIAO
+				static const HAN
+					yv_1, yv_2, yv_4, yv_6, yv_8, yv_12, yv_16, yv_24, yv_32, yv_48, yv_64, yv_88;
+#else /* GUOBIAO */
 				static const HAN
 					yv_null, yv_1han, yv_2han, yv_3han, yv_4han, yv_5han, yv_6han, yv_7han, yv_8han, 
 					yv_mangan, yv_haneman, yv_baiman, yv_3baiman, yv_yakuman, yv_double_yakuman,
 					yv_triple_yakuman, yv_quad_yakuman;
+#endif /* GUOBIAO */
 			private:
 				int8_t han; // 数値
+#ifndef GUOBIAO
 				hanUnit unit; // 単位
+#endif /* GUOBIAO */
 			};
 			HAN coreHan; // 縛りを満たす翻
 			HAN bonusHan; // 縛りを満たさない翻
@@ -127,6 +134,11 @@ private:
 			FixedHan (YAKU_HAN bHan);
 			FixedHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan);
 		};
+#ifdef GUOBIAO
+		static const FixedHan
+			yval_1, yval_2, yval_4, yval_6, yval_8, yval_12, yval_16,
+			yval_24, yval_32, yval_48, yval_64, yval_88;
+#else /* GUOBIAO */
 		class MenzenHan : public HANFUNC {
 		public:
 			MenzenHan () : HANFUNC () {}
@@ -149,6 +161,7 @@ private:
 			yval_1han_menzen_dependent, yval_2han_menzen_dependent, yval_yakuman_menzen_dependent;
 		static const KuisagariHan yval_1han_kuisagari, yval_2han_kuisagari, yval_3han_kuisagari,
 			yval_4han_kuisagari, yval_5han_kuisagari, yval_6han_kuisagari;
+#endif /* GUOBIAO */
 	private:
 		HANFUNC han;
 		CodeConv::tstring yakuName; // 役の名前（文字列）
