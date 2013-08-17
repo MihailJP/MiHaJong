@@ -146,7 +146,8 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 		yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Active);
 		if ((!yaku::yakuCalculator::checkShibari(gameStat, &yakuInfo)) ||
 			(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->statOfActive().RichiFlag.RichiFlag)) ||
-			((gameStat->PaoFlag[pyMinkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong")))
+			((gameStat->PaoFlag[pyMinkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong")) ||
+			((!RuleData::chkRuleApplied("kataagari")) && (!isKataagari(gameStat, gameStat->CurrentPlayer.Active))))
 			RoundEndType = Chonbo; /* ”›‚è‚ğ–‚½‚µ‚Ä‚¢‚È‚¢ê‡(–ğ‚ª–³‚¢‚È‚Ç)cö˜a‚Æ‚µ‚Ä‹Ç‚ğI—¹‚·‚é */
 		else
 			RoundEndType = Agari; /* ”›‚è‚ğ–‚½‚·‚È‚ç˜a—¹‚è‚Æ‚µ‚Ä¬—§ */

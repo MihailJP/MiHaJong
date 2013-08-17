@@ -61,4 +61,6 @@ void calcdoukasen(GameTable* const gameStat);
 bool isTenpai(const GameTable* const gameStat, PlayerID targetPlayer);
 
 bool isNagashiMangan(const GameTable* const gameStat, PlayerID targetPlayer);
+
+bool isKataagari(const GameTable* gameStat, PlayerID targetPlayer);
 #endif

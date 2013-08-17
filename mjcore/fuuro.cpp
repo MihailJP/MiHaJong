@@ -785,7 +785,8 @@ EndType ronhuproc(GameTable* const gameStat) {
 			// 縛りを満たさないか、振聴のとき
 			if ((!yaku::yakuCalculator::checkShibari(gameStat, &yakuInfo)) ||
 				(mInfo.FuritenFlag) || (gameStat->Player[pl].DoujunFuriten) ||
-				(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->Player[pl].RichiFlag.RichiFlag))) {
+				(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->Player[pl].RichiFlag.RichiFlag)) ||
+				((!RuleData::chkRuleApplied("kataagari")) && (!isKataagari(gameStat, gameStat->CurrentPlayer.Active)))) {
 					trace(_T("縛りを満たさないか振聴です。次の処理をチョンボ用に切り替えます。"));
 					RoundEndType = Chonbo; // チョンボにする
 			}

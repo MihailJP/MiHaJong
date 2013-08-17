@@ -11,6 +11,7 @@
 #include "func.h"
 #include "envtbl.h"
 #include "haifu.h"
+#include "yaku/yaku.h"
 
 /* ŽllŽO–ƒ—p */
 PlayerID* tobePlayed(const GameTable* const gameStat) {
@@ -689,4 +690,19 @@ bool isNagashiMangan(const GameTable* const gameStat, PlayerID targetPlayer) {
 	}
 	// ‘S•”ŠY“–‚·‚é”v‚¾‚Á‚½‚çtrue
 	return (YaojiuSutehai == gameStat->Player[targetPlayer].DiscardPointer);
+}
+
+/* •Ð˜a‚è‚©‚Ç‚¤‚©’²‚×‚é */
+bool isKataagari(const GameTable* gameStat, PlayerID targetPlayer) {
+	MachihaiInfo machiInfo = chkFuriten(gameStat, targetPlayer);
+	GameTable tmpStat; memcpy(&tmpStat, gameStat, sizeof tmpStat);
+	for (int i = 0; i < TileNonflowerMax; ++i) {
+		if (machiInfo.Machihai[i].MachihaiFlag) {
+			tmpStat.Player[targetPlayer].Hand[TsumohaiIndex].tile = static_cast<TileCode>(i);
+			yaku::YAKUSTAT yakuStat = yaku::yakuCalculator::countyaku(&tmpStat, targetPlayer);
+			if (!yaku::yakuCalculator::checkShibari(&tmpStat, &yakuStat))
+				return true;
+		}
+	}
+	return false;
 }
