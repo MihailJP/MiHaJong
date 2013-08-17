@@ -783,7 +783,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 			yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, pl);
 			MachihaiInfo mInfo = chkFuriten(gameStat, pl);
 			// 縛りを満たさないか、振聴のとき
-			if (((yakuInfo.CoreHan < (gameStat->ShibariFlag ? 2 : 1)) && (yakuInfo.CoreSemiMangan == 0)) ||
+			if ((!yaku::yakuCalculator::checkShibari(gameStat, &yakuInfo)) ||
 				(mInfo.FuritenFlag) || (gameStat->Player[pl].DoujunFuriten) ||
 				(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->Player[pl].RichiFlag.RichiFlag))) {
 					trace(_T("縛りを満たさないか振聴です。次の処理をチョンボ用に切り替えます。"));
