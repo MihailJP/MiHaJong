@@ -8,6 +8,8 @@ const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU
 	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(1);
 const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_2 =
 	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(2);
+const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_3 =
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(3);
 const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_4 =
 	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(4);
 const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_6 =

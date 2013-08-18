@@ -100,7 +100,7 @@ private:
 				hanUnit getUnit() const;
 #ifdef GUOBIAO
 				static const HAN
-					yv_1, yv_2, yv_4, yv_6, yv_8, yv_12, yv_16, yv_24, yv_32, yv_48, yv_64, yv_88;
+					yv_1, yv_2, yv_3, yv_4, yv_6, yv_8, yv_12, yv_16, yv_24, yv_32, yv_48, yv_64, yv_88;
 #else /* GUOBIAO */
 				static const HAN
 					yv_null, yv_1han, yv_2han, yv_3han, yv_4han, yv_5han, yv_6han, yv_7han, yv_8han, 
@@ -136,7 +136,7 @@ private:
 		};
 #ifdef GUOBIAO
 		static const FixedHan
-			yval_1, yval_2, yval_4, yval_6, yval_8, yval_12, yval_16,
+			yval_1, yval_2, yval_3, yval_4, yval_6, yval_8, yval_12, yval_16,
 			yval_24, yval_32, yval_48, yval_64, yval_88;
 #else /* GUOBIAO */
 		class MenzenHan : public HANFUNC {

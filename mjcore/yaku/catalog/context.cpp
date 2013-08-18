@@ -898,4 +898,36 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			}
 		));
 #endif /* GUOBIAO */
+
+	// ---------------------------------------------------------------------
+
+#ifdef GUOBIAO
+	/* šª’£ */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("šª’£"), yaku::yakuCalculator::Yaku::yval_1,
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return ((analysis->shanten[shantenRegular] == -1) && // –ÊŽqŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+				(analysis->Machi == yaku::yakuCalculator::machiKanchan) && // ›Æ’£‘Ò‚¿‚Å
+				(analysis->MachiInfo.MachiMen == 1)); // 1–Ê‘Ò‚¿
+		}
+	));
+	/* •Ó’£ */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("•Ó’£"), yaku::yakuCalculator::Yaku::yval_1,
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return ((analysis->shanten[shantenRegular] == -1) && // –ÊŽqŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+				(analysis->Machi == yaku::yakuCalculator::machiPenchan) && // •Ó’£‘Ò‚¿‚Å
+				(analysis->MachiInfo.MachiMen == 1)); // 1–Ê‘Ò‚¿
+		}
+	));
+	/* ’P’²« */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("’P’²«"), yaku::yakuCalculator::Yaku::yval_1,
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return ((analysis->shanten[shantenRegular] == -1) && // –ÊŽqŽè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+				(analysis->Machi == yaku::yakuCalculator::machiTanki) && // ’P‹R‘Ò‚¿‚Å
+				(analysis->MachiInfo.MachiMen == 1)); // 1–Ê‘Ò‚¿
+		}
+	));
+#endif /* GUOBIAO */
 }

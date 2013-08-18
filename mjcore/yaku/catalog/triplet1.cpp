@@ -365,7 +365,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("‘åŽl•—‰ï"), yaku::yakuCalculator::Yaku::yval_88,
-		_T("Œ—•—"), _T("–å•—"), _T("ŽO•—"), _T("\u78b0\u78b0˜a"), _T("›ô‹ã"),
+		_T("Œ—•—"), _T("–å•—"), _T("ŽO•—"), _T("\u78b0\u78b0˜a"), _T("›ô‹ã"), _T("›ô‹ãx2"), _T("›ô‹ãx3"), _T("›ô‹ãx4"),
 #else /* GUOBIAO */
 		_T("‘åŽlŠì"), (RuleData::chkRuleApplied("double_yakuman")) ?
 		yaku::yakuCalculator::Yaku::yval_double_yakuman : yaku::yakuCalculator::Yaku::yval_yakuman,
@@ -413,12 +413,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	// ---------------------------------------------------------------------
 
 	/* –ð”v */
+#ifdef GUOBIAO
+	auto chkYakuhai = [](const MENTSU_ANALYSIS* const analysis) -> const Int8ByTile& {return analysis->KeziCount;};
+#else /* GUOBIAO */
 	auto chkYakuhai = RuleData::chkRuleApplied("exposed_yakuhai") ?
 #ifdef _MSC_VER
 		(std::function<const Int8ByTile& (const MENTSU_ANALYSIS* const)>)
 #endif
 		[](const MENTSU_ANALYSIS* const analysis) -> const Int8ByTile& {return analysis->KeziCount;} :
 		[](const MENTSU_ANALYSIS* const analysis) -> const Int8ByTile& {return analysis->AnKeziCount;};
+#endif /* GUOBIAO */
 	auto bakaze =
 		[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->GameRound / 4)] >= 1);
@@ -509,6 +513,43 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		_T("–ð”vE’†"), yaku::yakuCalculator::Yaku::yval_1han,
 		[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (chkYakuhai(analysis)[RedDragon] >= 1);
+		}
+	));
+#endif /* GUOBIAO */
+
+#ifdef GUOBIAO
+	/* ›ô‹ã */
+	auto YaoJiuKe =
+		[chkYakuhai, bakaze, jikaze](const MENTSU_ANALYSIS* const analysis) -> int {
+			return chkYakuhai(analysis)[CharacterOne] + chkYakuhai(analysis)[CharacterNine] +
+				chkYakuhai(analysis)[CircleOne] + chkYakuhai(analysis)[CircleNine] +
+				chkYakuhai(analysis)[BambooOne] + chkYakuhai(analysis)[BambooNine] +
+				chkYakuhai(analysis)[EastWind] + chkYakuhai(analysis)[SouthWind] +
+				chkYakuhai(analysis)[WestWind] + chkYakuhai(analysis)[NorthWind] -
+				(bakaze(analysis) ? 1 : 0) - (jikaze(analysis) ? 1 : 0);
+		};
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("›ô‹ã"), yaku::yakuCalculator::Yaku::yval_1,
+		[YaoJiuKe](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return YaoJiuKe(analysis) == 1;
+		}
+	));
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("›ô‹ãx2"), yaku::yakuCalculator::Yaku::yval_2,
+		[YaoJiuKe](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return YaoJiuKe(analysis) == 2;
+		}
+	));
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("›ô‹ãx3"), yaku::yakuCalculator::Yaku::yval_3,
+		[YaoJiuKe](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return YaoJiuKe(analysis) == 3;
+		}
+	));
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("›ô‹ãx4"), yaku::yakuCalculator::Yaku::yval_4,
+		[YaoJiuKe](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return YaoJiuKe(analysis) == 4;
 		}
 	));
 #endif /* GUOBIAO */

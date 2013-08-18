@@ -178,6 +178,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("ŽOFŽO“¯‡"), yaku::yakuCalculator::Yaku::yval_8,
+		_T("Šì‘Šˆ§"), _T("Šì‘Šˆ§x2"),
 #else /* GUOBIAO */
 		_T("ŽOF“¯‡"), yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
 #endif /* GUOBIAO */
@@ -190,6 +191,40 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			return yakuFlag;
 		}
 	));
+#ifdef GUOBIAO
+	/* Šì‘Šˆ§ */
+	auto XiXiangFeng =
+		[](const MENTSU_ANALYSIS* const analysis) -> int {
+			int yakuCnt = 0;
+			for (int i = 1; i <= 7; i++) {
+				if ((analysis->ShunziCount[i + TileSuitCharacters] >= 2) &&
+					(analysis->ShunziCount[i + TileSuitCircles] >= 2)) yakuCnt += 2;
+				else if ((analysis->ShunziCount[i + TileSuitCharacters] >= 2) &&
+					(analysis->ShunziCount[i + TileSuitBamboos] >= 2)) yakuCnt += 2;
+				else if ((analysis->ShunziCount[i + TileSuitCircles] >= 2) &&
+					(analysis->ShunziCount[i + TileSuitBamboos] >= 2)) yakuCnt += 2;
+				else if ((analysis->ShunziCount[i + TileSuitCharacters] >= 1) &&
+					(analysis->ShunziCount[i + TileSuitCircles] >= 1)) ++yakuCnt;
+				else if ((analysis->ShunziCount[i + TileSuitCharacters] >= 1) &&
+					(analysis->ShunziCount[i + TileSuitBamboos] >= 1)) ++yakuCnt;
+				else if ((analysis->ShunziCount[i + TileSuitCircles] >= 1) &&
+					(analysis->ShunziCount[i + TileSuitBamboos] >= 1)) ++yakuCnt;
+			}
+			return yakuCnt;
+		};
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("Šì‘Šˆ§"), yaku::yakuCalculator::Yaku::yval_1,
+		[XiXiangFeng](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return XiXiangFeng(analysis) == 1;
+		}
+	));
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("Šì‘Šˆ§x2"), yaku::yakuCalculator::Yaku::yval_2,
+		[XiXiangFeng](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return XiXiangFeng(analysis) == 2;
+		}
+	));
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
@@ -222,6 +257,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("´—´"), yaku::yakuCalculator::Yaku::yval_24,
+		_T("˜A˜Z"), _T("˜A˜Zx2"), _T("˜V­•›"), _T("˜V­•›x2"),
 #else /* GUOBIAO */
 		_T("ˆê‹C’ÊŠÑ"), yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
 #endif /* GUOBIAO */
@@ -853,6 +889,56 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 
 	// ---------------------------------------------------------------------
 
+#ifdef GUOBIAO
+	/* ˜A˜Z */
+	auto LianLiu =
+		[](const MENTSU_ANALYSIS* const analysis) -> int {
+			int yakuCnt = 0;
+			for (int j = 0; j < TileSuitHonors; j += TileSuitStep)
+				for (int i = 1; i <= 4; i++)
+					if ((analysis->ShunziCount[j + i] >= 1) &&
+						(analysis->ShunziCount[j + i + 3] >= 1))
+						++yakuCnt;
+			return yakuCnt;
+		};
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("˜A˜Z"), yaku::yakuCalculator::Yaku::yval_1,
+		[LianLiu](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return LianLiu(analysis) == 1;
+		}
+	));
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("˜A˜Zx2"), yaku::yakuCalculator::Yaku::yval_2,
+		[LianLiu](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return LianLiu(analysis) == 2;
+		}
+	));
+	/* ˜V­•› */
+	auto LaoShaoFu =
+		[](const MENTSU_ANALYSIS* const analysis) -> int {
+			int yakuCnt = 0;
+			for (int j = 0; j < TileSuitHonors; j += TileSuitStep)
+				if ((analysis->ShunziCount[j + 1] >= 1) &&
+					(analysis->ShunziCount[j + 7] >= 1))
+					++yakuCnt;
+			return yakuCnt;
+		};
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("˜V­•›"), yaku::yakuCalculator::Yaku::yval_1,
+		[LaoShaoFu](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return LaoShaoFu(analysis) == 1;
+		}
+	));
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("˜V­•›x2"), yaku::yakuCalculator::Yaku::yval_2,
+		[LaoShaoFu](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return LaoShaoFu(analysis) == 2;
+		}
+	));
+#endif /* GUOBIAO */
+
+	// ---------------------------------------------------------------------
+
 #ifndef GUOBIAO
 	/* ‘o—´‘ˆŽì */
 	if (RuleData::chkRuleApplied("shanron_chonchuu"))
@@ -1136,5 +1222,21 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return (daShunCount(analysis) == 4);
 			}
 		));
+#endif /* GUOBIAO */
+
+	// ---------------------------------------------------------------------
+
+#ifdef GUOBIAO
+	/* ’†‘ƒ‹[ƒ‹‚Ì•½˜a */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("•½˜a"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("–³Žš"),
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (analysis->TotalShunzi == 4) &&
+				(analysis->TileCount[EastWind] + analysis->TileCount[SouthWind] + analysis->TileCount[WestWind] +
+				analysis->TileCount[NorthWind] + analysis->TileCount[WhiteDragon] + analysis->TileCount[GreenDragon] +
+				analysis->TileCount[RedDragon] == 0);
+		}
+	));
 #endif /* GUOBIAO */
 }

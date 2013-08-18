@@ -38,7 +38,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("‹ã˜@•ó“•"), yaku::yakuCalculator::Yaku::yval_88,
-		_T("´ˆêF"), _T("›ô‹ã"), _T("–³š"),
+		_T("´ˆêF"), _T("›ô‹ã"), _T("›ô‹ãx2"), _T("›ô‹ãx3"), _T("›ô‹ãx4"), _T("–³š"),
 #else /* GUOBIAO */
 		_T("‹ã˜@•ó“•"), yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 		_T("´ˆêF"), _T("‹ã˜@‰Ô“•"),
