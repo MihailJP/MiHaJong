@@ -37,6 +37,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				const TileCode kezi[] = {BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight, GreenDragon};
 				return chktiles(analysis, kezi, 6, kezi, 1, false);
 			};
+#ifdef GUOBIAO
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("緑一色"), yaku::yakuCalculator::Yaku::yval_88,
+			allgrean
+		));
+#else /* GUOBIAO */
 		if (RuleData::chkRuleApplied("dragonless_all_green"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("緑一色"), yaku::yakuCalculator::Yaku::yval_yakuman,
@@ -65,6 +71,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					return allgrean(analysis) && (analysis->TileCount[GreenDragon] == 0);
 				}
 			));
+#endif /* GUOBIAO */
 	}
 
 	// ---------------------------------------------------------------------
@@ -80,6 +87,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 						(analysis->MianziDat[i].mstat != meldQuadConcealed)) ++count;
 				return (count == SizeOfMeldBuffer - 1);
 			};
+#ifndef GUOBIAO
 		if (RuleData::chkRuleApplied("shiiaru_raotai")) {
 			if (!RuleData::chkRule("shiiaru_raotai", "1han_ron_only"))
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -88,12 +96,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 						return chkHadakaTanki(analysis) && analysis->GameStat->TsumoAgariFlag;
 					}
 				));
+#endif /* GUOBIAO */
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+				_T("全求人"), yaku::yakuCalculator::Yaku::yval_6,
+#else /* GUOBIAO */
 				_T("全求人"), yaku::yakuCalculator::Yaku::yval_1han,
+#endif /* GUOBIAO */
 				[chkHadakaTanki](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return chkHadakaTanki(analysis) && (!analysis->GameStat->TsumoAgariFlag);
 				}
 			));
+#ifndef GUOBIAO
 		}
 		// 金鶏独立…一索待ち
 		if (RuleData::chkRuleApplied("kinkei_dokuritsu"))
@@ -113,15 +127,23 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					return chkHadakaTanki(analysis) && (analysis->TsumoHai->tile == WhiteDragon);
 				}
 			));
+#endif /* GUOBIAO */
 	}
 
 	// ---------------------------------------------------------------------
 
 	/* 推不倒 */
+#ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("toipuutao")) {
+#endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+			_T("推不倒"), yaku::yakuCalculator::Yaku::yval_8,
+			_T("欠一門"),
+#else /* GUOBIAO */
 			_T("推不倒"), get_yaku_han("toipuutao"),
 			_T("絶一門"),
+#endif /* GUOBIAO */
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const TileCode kezi[] = {
 					CircleOne, CircleTwo, CircleThree, BambooFour, CircleFour, CircleFive, CircleEight,
@@ -130,6 +152,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return chktiles(analysis, kezi, 14, kezi, 4, false);
 			}
 		));
+#ifndef GUOBIAO
 	}
 	/* 紅孔雀 */
 	if (RuleData::chkRuleApplied("benikujaku"))
@@ -431,9 +454,41 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return chktiles(analysis, kezi, 7, nullptr, 0, false);
 			}
 		));
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
+#ifdef GUOBIAO
+	{
+		auto suukuiyii =
+			[](const MENTSU_ANALYSIS* const analysis) -> int {
+				int count = 0;
+				for (int i = 1; i < TileNonflowerMax; ++i)
+					if ((analysis->TileCount[i] == 4)&&(analysis->KangziCount[i] == 0))
+						++count;
+				return count;
+			};
+		/* 四帰一 */
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("四帰一"), yaku::yakuCalculator::Yaku::yval_2,
+			[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (suukuiyii(analysis) == 1);
+			}
+		));
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("四帰一x2"), yaku::yakuCalculator::Yaku::yval_4,
+			[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (suukuiyii(analysis) == 2);
+			}
+		));
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("四帰一x3"), yaku::yakuCalculator::Yaku::yval_6,
+			[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return (suukuiyii(analysis) == 3);
+			}
+		));
+	}
+#else /* GUOBIAO */
 	// 四帰四絡みで考えられるパターンと牌式表記
 	// 123 123 123 123: 牌式44440 ←これは一色四順
 	// 123 123 123 234: 牌式34410
@@ -647,9 +702,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				}
 			));
 	}
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
+#ifndef GUOBIAO
 	/* 九蓮花燈 */
 	if (RuleData::chkRuleApplied("chuuren_hwaton"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -869,11 +926,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					return ((analysis->KeziCount[EastWind] >= 1) && (tileCount == i));
 				}
 			));
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
 	/* 満園花 */
 	{
+#ifdef GUOBIAO
+		const int i = 5;
+#else /* GUOBIAO */
 		const char ruleCodeList[10][16] = { "",
 			"all_one", "all_two", "all_three", "all_four", "all_five",
 			"all_six", "all_seven", "all_eight", "all_nine"};
@@ -881,6 +942,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("全帯一"), _T("全帯二"), _T("全帯三"), _T("全帯四"), _T("全帯五"), _T("全帯六"), _T("全帯七"), _T("全帯八"), _T("全帯九")};
 		for (int i = 1; i <= 9; i++) {
 			if (RuleData::chkRuleApplied(ruleCodeList[i])) {
+#endif /* GUOBIAO */
 				auto f =
 					[chktiles, i](const MENTSU_ANALYSIS* const analysis) -> bool {
 						const TileCode kezi[] = {
@@ -901,6 +963,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 							i > 7 ? 3 * (10 - i) : (i < 3 ? i * 3 : 9),
 							false);
 					};
+#ifdef GUOBIAO
+				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+					_T("全帯五"), yaku::yakuCalculator::Yaku::yval_16, _T("断幺"), f));
+#else /* GUOBIAO */
 				switch (i) {
 				case 4: case 5: case 6:
 					yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -917,14 +983,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				}
 			}
 		}
+#endif /* GUOBIAO */
 	}
 
 	// ---------------------------------------------------------------------
 
 	/* 小於五 */
+#ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("xiaoyuwu"))
+#endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+			_T("小於五"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("無字"),
+#else /* GUOBIAO */
 			_T("小於五"), get_yaku_han("xiaoyuwu"),
+#endif /* GUOBIAO */
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const TileCode kezi[] = {
 					CharacterOne, CircleOne, BambooOne,
@@ -936,9 +1010,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 大於五 */
+#ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("dayuwu"))
+#endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+			_T("大於五"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("無字"),
+#else /* GUOBIAO */
 			_T("大於五"), get_yaku_han("dayuwu"),
+#endif /* GUOBIAO */
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const TileCode kezi[] = {
 					CharacterSix, CircleSix, BambooSix,
@@ -950,9 +1031,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 全小 */
+#ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("all_small"))
+#endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+			_T("全小"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("無字"),
+#else /* GUOBIAO */
 			_T("全小"), get_yaku_han("all_small"),
+#endif /* GUOBIAO */
 			_T("小於五"),
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const TileCode kezi[] = {
@@ -964,10 +1052,17 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 全中 */
+#ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("all_middle"))
+#endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+			_T("全中"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("無字"), _T("断幺"),
+#else /* GUOBIAO */
 			_T("全中"), get_yaku_han("all_middle"),
 			_T("断幺九"), _T("上級断幺九"),
+#endif /* GUOBIAO */
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const TileCode kezi[] = {
 					CharacterFour, CircleFour, BambooFour,
@@ -978,9 +1073,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	/* 全大 */
+#ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("all_large"))
+#endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+			_T("全大"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("無字"),
+#else /* GUOBIAO */
 			_T("全大"), get_yaku_han("all_large"),
+#endif /* GUOBIAO */
 			_T("大於五"),
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const TileCode kezi[] = {
@@ -994,6 +1096,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 
 	// ---------------------------------------------------------------------
 
+#ifndef GUOBIAO
 	/* 黒衣騎士 */
 	if (RuleData::chkRuleApplied("blackjack"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -1191,4 +1294,5 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return false;
 			}
 		));
+#endif /* GUOBIAO */
 }

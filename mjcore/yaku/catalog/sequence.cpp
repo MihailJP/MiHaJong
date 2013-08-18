@@ -27,7 +27,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 #ifdef GUOBIAO
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("一色四同順"), yaku::yakuCalculator::Yaku::yval_48,
-			_T("一般高"), _T("一般高x2"), _T("一色三同順"), _T("四帰一"),
+			_T("一般高"), _T("一般高x2"), _T("一色三同順"), _T("四帰一"), _T("四帰一x2"), _T("四帰一x3"),
 #else /* GUOBIAO */
 	if (RuleData::chkRuleApplied("isshoku_suujun"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
