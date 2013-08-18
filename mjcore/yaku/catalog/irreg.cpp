@@ -10,6 +10,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("七対子"), yaku::yakuCalculator::Yaku::yval_24,
+		_T("門前清"), _T("単調将"),
 #else /* GUOBIAO */
 		_T("七対子"), get_yaku_han("seven_pairs"), /* 1翻50符のルールと2翻25符のルールがある。符はここでは設定できないです…… */
 #endif /* GUOBIAO */
@@ -228,7 +229,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("国士無双"), yaku::yakuCalculator::Yaku::yval_88,
-		_T("五門斉"), _T("不求人"), _T("門前清"), _T("単調将"),
+		_T("五門斉"), _T("門前清"), _T("単調将"),
 #else /* GUOBIAO */
 		_T("国士無双"), yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 		_T("十三不塔"), _T("五門斎"),
@@ -254,7 +255,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 			_T("七星不靠"), yaku::yakuCalculator::Yaku::yval_24,
-			_T("全不靠"), _T("五門斉"), _T("不求人"), _T("門前清"), _T("単調将"),
+			_T("全不靠"), _T("五門斉"), _T("門前清"), _T("単調将"),
 #else /* GUOBIAO */
 			_T("七星無靠"), get_yaku_han("stellar_uushii"),
 			_T("全不靠"),
@@ -295,7 +296,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 			_T("全不靠"), yaku::yakuCalculator::Yaku::yval_12,
-			_T("五門斉"), _T("不求人"), _T("単調将"), _T("七星不靠"),
+			_T("五門斉"), _T("門前清"), _T("単調将"), _T("七星不靠"),
 #else /* GUOBIAO */
 			_T("全不靠"), get_yaku_han("quanbukao"),
 #endif /* GUOBIAO */
