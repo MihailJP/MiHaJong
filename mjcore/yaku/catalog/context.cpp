@@ -8,6 +8,7 @@ inline bool isFinalRound(const GameTable* const gameStat) { // オーラスである？
 }
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
+#ifndef GUOBIAO
 	/* リーチ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("立直"), yaku::yakuCalculator::Yaku::yval_1han_menzen,
@@ -193,6 +194,35 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			}
 		));
 	}
+#endif /* GUOBIAO */
+#ifdef GUOBIAO
+	/* 不求人 */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("不求人"), yaku::yakuCalculator::Yaku::yval_4,
+		_T("自摸"), _T("門前清"),
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return ((analysis->shanten[shantenAll] == -1) && // 和了になっている
+				(*analysis->MenzenFlag) && // 門前である
+				(*analysis->TsumoAgariFlag)); // ツモアガリ
+		}
+	));
+	/* 門前清 */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("門前清"), yaku::yakuCalculator::Yaku::yval_2,
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return ((analysis->shanten[shantenAll] == -1) && // 和了になっている
+				(*analysis->MenzenFlag)); // 門前である
+		}
+	));
+	/* 自摸 */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("自摸"), yaku::yakuCalculator::Yaku::yval_1,
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return ((analysis->shanten[shantenAll] == -1) && // 和了になっている
+				(*analysis->TsumoAgariFlag)); // ツモアガリ
+		}
+	));
+#else /* GUOBIAO */
 	/* ツモ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("門前清自摸和"), yaku::yakuCalculator::Yaku::yval_1han_menzen,
@@ -202,9 +232,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				(*analysis->TsumoAgariFlag)); // ツモアガリ
 		}
 	));
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
+#ifndef GUOBIAO
 	/* 三隻転覆 */
 	if (RuleData::chkRuleApplied("sanseki_tempuku"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -246,18 +278,25 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(isFinalRound(analysis->GameStat))); // オーラスである
 			}
 		));
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
 	/* リンシャンツモ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+		_T("槓上開花"), yaku::yakuCalculator::Yaku::yval_8,
+		_T("自摸"),
+#else /* GUOBIAO */
 		_T("嶺上開花"), yaku::yakuCalculator::Yaku::yval_1han,
+#endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 				(*analysis->TsumoAgariFlag)); // ツモアガリ
 		}
 	));
+#ifndef GUOBIAO
 	/* 明槓開花 */
 	if (RuleData::chkRule("minkan_pao", "no_but_2han") ||
 		RuleData::chkRule("minkan_pao", "yes_2han") ||
@@ -373,12 +412,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(analysis->KangziCount[CircleFive] >= 1)); // 五筒を槓している
 			}
 		));
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
 	/* 海底ツモ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+		_T("妙手回春"), yaku::yakuCalculator::Yaku::yval_8,
+		_T("自摸"),
+#else /* GUOBIAO */
 		_T("海底摸月"), yaku::yakuCalculator::Yaku::yval_1han,
+#endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
@@ -386,6 +431,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				(analysis->GameStat->tilesLeft() == 0)); // ハイテイである
 		}
 	));
+#ifndef GUOBIAO
 	/* 一筒摸月 */
 	if (RuleData::chkRuleApplied("iipin_moyue"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -449,9 +495,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(isFinalRound(analysis->GameStat))); // オーラスである
 			}
 		));
+#endif /* GUOBIAO */
 	/* 河底ロン */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+		_T("海底撈月"), yaku::yakuCalculator::Yaku::yval_8,
+#else /* GUOBIAO */
 		_T("河底撈魚"), yaku::yakuCalculator::Yaku::yval_1han,
+#endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
@@ -459,6 +510,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				(analysis->GameStat->tilesLeft() == 0)); // ハイテイである
 		}
 	));
+#ifndef GUOBIAO
 	/* 九筒撈魚 */
 	if (RuleData::chkRuleApplied("chuupin_raoyui"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -533,9 +585,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(analysis->PlayerStat->RichiFlag.DoubleFlag)); // ダブル立直している
 			}
 		));
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
+#ifndef GUOBIAO
 	/* 槓振り */
 	if (RuleData::chkRuleApplied("kamburi"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -546,15 +600,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(!*analysis->TsumoAgariFlag)); // ロンアガリ
 			}
 		));
+#endif /* GUOBIAO */
 	/* 槍槓は正確には木偏ではなく手偏 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+		_T("搶槓和"), yaku::yakuCalculator::Yaku::yval_8,
+		_T("和絶張"),
+#else /* GUOBIAO */
 		_T("搶槓"), yaku::yakuCalculator::Yaku::yval_1han,
 		_T("欠牌和"), _T("槓振り") /* 槓振りは本来下位役ではないが下位役判定のシステムを使って複合しないようにする */,
+#endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(analysis->GameStat->KangFlag.chankanFlag)); // 槍槓フラグが立っている
 		}
 	));
+#ifndef GUOBIAO
 	/* 二索搶槓 */
 	if (RuleData::chkRuleApplied("ryanzoh_chankan"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -776,13 +837,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(analysis->Machi == yaku::yakuCalculator::machiKanchan)); // 嵌張待ち
 			}
 		));
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
 	/* 欠牌和(元々はchk-post.hspに書いてたけど後回しにする必要なんてなかった) */
+#ifdef GUOBIAO
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("和絶張"), yaku::yakuCalculator::Yaku::yval_4,
+#else /* GUOBIAO */
 	if (RuleData::chkRuleApplied("keppaihoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("欠牌和"), get_yaku_han("keppaihoh"),
+#endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag =
 					*analysis->TsumoAgariFlag ? // ツモアガリだったら、
@@ -791,13 +858,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					: // ロンだったら、
 					(analysis->SeenTiles[analysis->TsumoHai->tile] + // 見えてる牌と
 					analysis->TileCount[analysis->TsumoHai->tile] > 4); // 手の内の牌を足して4枚
+#ifdef GUOBIAO
+				return yakuFlag;
+#else /* GUOBIAO */
 				return (yakuFlag && // 条件を満たしていて、
 					(analysis->MachiInfo.MachiMen == 1)); // 1面待ち(移植時変更：ノベ単とかでは成立しないようにした)
+#endif /* GUOBIAO */
 			}
 		));
 
 	// ---------------------------------------------------------------------
 
+#ifndef GUOBIAO
 	/* 初槓 */
 	if (RuleData::chkRuleApplied("shokan"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -825,4 +897,5 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(analysis->PlayerStat->renpaiTenhohStat > 0)); // フラグが立っている
 			}
 		));
+#endif /* GUOBIAO */
 }
