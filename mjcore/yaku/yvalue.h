@@ -4,32 +4,25 @@
 
 #ifdef GUOBIAO
 
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(1);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_2 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(2);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_3 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(3);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_4 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(4);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_6 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(6);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_8 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(8);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_12 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(12);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_16 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(16);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_24 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(24);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_32 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(32);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_48 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(48);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_64 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(64);
-const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_88 =
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(88);
+#define DEF_YAKU_VAL(i) const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_##i = \
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(i); \
+	const yaku::yakuCalculator::Yaku::FixedHan yaku::yakuCalculator::Yaku::yval_##i = \
+	yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_##i, \
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN());
+
+DEF_YAKU_VAL(1);
+DEF_YAKU_VAL(2);
+DEF_YAKU_VAL(3);
+DEF_YAKU_VAL(4);
+DEF_YAKU_VAL(6);
+DEF_YAKU_VAL(8);
+DEF_YAKU_VAL(12);
+DEF_YAKU_VAL(16);
+DEF_YAKU_VAL(24);
+DEF_YAKU_VAL(32);
+DEF_YAKU_VAL(48);
+DEF_YAKU_VAL(64);
+DEF_YAKU_VAL(88);
 
 #else /* GUOBIAO */
 
