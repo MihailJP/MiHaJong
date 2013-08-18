@@ -8,10 +8,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			return ((analysis->shanten[shantenPairs] == -1)&&(analysis->shanten[shantenRegular] >= 0));
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+		_T("七対子"), yaku::yakuCalculator::Yaku::yval_24,
+#else /* GUOBIAO */
 		_T("七対子"), get_yaku_han("seven_pairs"), /* 1翻50符のルールと2翻25符のルールがある。符はここでは設定できないです…… */
+#endif /* GUOBIAO */
 		isQiDui
 	));
 
+#ifndef GUOBIAO
 	auto chktiles = // 判定関数オブジェクト
 		[isQiDui](const MENTSU_ANALYSIS* const analysis, const TileCode* const targetDuiz, int numOfDuiz) -> bool {
 			if (isQiDui(analysis))
@@ -215,17 +220,24 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 				}
 			));
 	}
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
 	/* 国士 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+		_T("国士無双"), yaku::yakuCalculator::Yaku::yval_88,
+		_T("五門斉"), _T("不求人"), _T("門前清"), _T("単調将"),
+#else /* GUOBIAO */
 		_T("国士無双"), yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 		_T("十三不塔"), _T("五門斎"),
+#endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->shanten[shantenOrphans] == -1);
 		}
 	));
+#ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("double_yakuman")) /* 国士13面待ち（ダブル役満） */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("国士無双十三面"), yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen,
@@ -238,13 +250,20 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		));
 	/* 七星無靠 */
 	if (RuleData::chkRuleApplied("stellar_uushii"))
+#endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+			_T("七星不靠"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("全不靠"), _T("五門斉"), _T("不求人"), _T("門前清"), _T("単調将"),
+#else /* GUOBIAO */
 			_T("七星無靠"), get_yaku_han("stellar_uushii"),
 			_T("全不靠"),
+#endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->shanten[shantenStellar] == -1);
 			}
 		));
+#ifndef GUOBIAO
 	/* 南北戦争 */
 	if (RuleData::chkRuleApplied("civil_war"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -272,12 +291,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		));
 	/* 全不靠 */
 	if (RuleData::chkRuleApplied("quanbukao"))
+#endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+			_T("全不靠"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("五門斉"), _T("不求人"), _T("単調将"), _T("七星不靠"),
+#else /* GUOBIAO */
 			_T("全不靠"), get_yaku_han("quanbukao"),
+#endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->shanten[shantenQuanbukao] == -1);
 			}
 		));
+#ifndef GUOBIAO
 	/* セブンアップ */
 	if (RuleData::chkRuleApplied("sevenup"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -289,12 +315,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		));
 	/* 組合龍 */
 	if (RuleData::chkRuleApplied("zuhelong"))
+#endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+			_T("組合龍"), yaku::yakuCalculator::Yaku::yval_12,
+#else /* GUOBIAO */
 			_T("組合龍"), get_yaku_han("zuhelong"),
+#endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->shanten[shantenZuhelong] == -1);
 			}
 		));
+#ifndef GUOBIAO
 	/* 仁和寺 */
 	if (RuleData::chkRuleApplied("ninnaji"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -303,4 +335,5 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 				return (analysis->shanten[shantenNinnaji] == -1);
 			}
 		));
+#endif /* GUOBIAO */
 }
