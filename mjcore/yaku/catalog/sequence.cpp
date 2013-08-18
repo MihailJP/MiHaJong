@@ -766,9 +766,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	/* 三色山三順 */
-	if (RuleData::chkRuleApplied("nishoku_yamasanjun"))
+	if (RuleData::chkRuleApplied("sanshoku_yamasanjun"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("混連環套"), get_yaku_han("nishoku_yamasanjun"),
+			_T("混連環套"), get_yaku_han("sanshoku_yamasanjun"),
 			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 2, false);
 			}
