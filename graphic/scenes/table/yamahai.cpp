@@ -10,7 +10,9 @@ using utils::playerRelative;
 /* ŽR”v‚Ì•\Ž¦ */
 void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer, PlayerID trueTargetPlayer) {
 	std::tuple<unsigned, unsigned, unsigned, unsigned> yamahaiAttr;
-	if (gameStat->gameType & AllSanma)
+	if (gameStat->gameType & GuobiaoMJ)
+		yamahaiAttr = std::make_tuple(1, 144, 18, 130);
+	else if (gameStat->gameType & AllSanma)
 		yamahaiAttr = std::make_tuple(3, 108, 18, 102 - gameStat->ExtraRinshan);
 	else if (rules::chkRule("flower_tiles", "no"))
 		yamahaiAttr = std::make_tuple(0, 136, 17, 130);

@@ -35,6 +35,7 @@ namespace { // 内部処理に使う関数
 	}
 	bool chksifeng(const GameTable* gameStat) {
 		bool flag = false;
+#ifndef GUOBIAO
 		std::array<TileCode, 4> winds = {EastWind, SouthWind, WestWind, NorthWind,};
 		for (auto k = winds.begin(); k != winds.end(); ++k) {
 			if ((RuleData::chkRule("four_wind_ryuukyoku", "same_dealer_west") ||
@@ -54,6 +55,7 @@ namespace { // 内部処理に使う関数
 			}
 			flag = flag || tmpflag;
 		}
+#endif /* GUOBIAO */
 		return flag;
 	}
 
@@ -67,6 +69,7 @@ namespace { // 内部処理に使う関数
 		sound::Play(sound::IDs::sndCuohu);
 	}
 	bool chkKuikae(GameTable* gameStat) { // 喰い替えの場合の処理
+#ifndef GUOBIAO
 		if (((gameStat->CurrentDiscard.tile == gameStat->PreviousMeld.Discard) || // 現物の食い変えになっている場合か
 			(gameStat->CurrentDiscard.tile == gameStat->PreviousMeld.Stepped)) && // 筋食い変えになっている場合で
 			(!gameStat->statOfActive().AgariHouki)) { // まだアガリ放棄になっていないなら
@@ -93,6 +96,7 @@ namespace { // 内部処理に使う関数
 					return true;
 				}
 		}
+#endif /* GUOBIAO */
 		return false;
 	}
 
@@ -129,6 +133,7 @@ namespace { // 内部処理に使う関数
 }
 
 EndType endround::checkroundabort(GameTable* gameStat) { // 局終了条件の判定
+#ifndef GUOBIAO
 	/* 四開槓なら流す */
 	if (RuleData::chkRuleApplied("four_kong_ryuukyoku") && (gameStat->KangNum == 4) &&
 		(all_player(gameStat, [](const PlayerTable* plDat) {return plDat->NumberOfQuads < 4;})))
@@ -142,12 +147,15 @@ EndType endround::checkroundabort(GameTable* gameStat) { // 局終了条件の判定
 		(all_player(gameStat, [](const PlayerTable* plDat) {return plDat->DiscardPointer == 1;})) &&
 		(chksifeng(gameStat)))
 		return SuufonRenda;
+#endif /* GUOBIAO */
 
 	for (PlayerID i = 0; i < Players; ++i) gameStat->Player[i].Tsumohai().tile = NoTile; // バグ防止のため
+#ifndef GUOBIAO
 	if (chkKuikae(gameStat)) { // 喰い替えの場合の処理
 		gameStat->AgariSpecialStat = agariKuikae;
 		return Chonbo;
 	}
+#endif /* GUOBIAO */
 	/* 多牌や少牌をしていないかのチェック */
 	chkTahai(gameStat);
 	/* 荒牌の場合ここで終了する(河底牌は吃ポンできないがロンはできる) */
@@ -162,6 +170,7 @@ EndType endround::checkroundabort(GameTable* gameStat) { // 局終了条件の判定
 namespace {
 	std::array<bool, Players> chkNagashiMangan(const GameTable* gameStat, EndType& RoundEndType) { /* 流し満貫の判定 */
 		std::array<bool, Players> NagashiManganFlag = {false,};
+#ifndef GUOBIAO
 		if (RoundEndType == Ryuukyoku) {
 			for (unsigned i = 0; i < ACTUAL_PLAYERS; ++i) {
 				if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(i) == sNorth))
@@ -171,6 +180,7 @@ namespace {
 				}
 			}
 		}
+#endif /* GUOBIAO */
 		return NagashiManganFlag;
 	}
 
@@ -292,6 +302,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		transferNotenBappu(gameStat, OrigTurn,
 			checkTenpai(gameStat, ResultDesc, OrigTurn));
 
+#ifndef GUOBIAO
 		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 			MachihaiInfo machiInfo = chkFuriten(gameStat, cnt);
 			bool chonboFlag = false;
@@ -306,7 +317,11 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 				mihajong_graphic::ui::WaitUIWithTimeout(500);
 			}
 		}
+#endif /* GUOBIAO */
 		
+#ifdef GUOBIAO
+		RenchanFlag = false;
+#else /* GUOBIAO */
 		if (RuleData::chkRule("round_continuation", "renchan_if_ready")) {
 			if (isTenpai(gameStat, gameStat->GameRound % Players)) RenchanFlag = true;
 		} else if (RuleData::chkRule("round_continuation", "renchan_always")) {
@@ -320,15 +335,20 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 				((gameStat->GameLength / ACTUAL_PLAYERS) <= (gameStat->LoopRound * roundLoopRate() + gameStat->GameRound) / ACTUAL_PLAYERS))
 				RenchanFlag = true;
 		}
+#endif /* GUOBIAO */
 		ryuukyokuProc(gameStat, RenchanFlag);
 		break;
 	/**************/
 	/* 和了成立時 */
 	/**************/
 	case Agari: {
+#ifdef GUOBIAO
+		const bool RenchanFlag = false;
+#else /* GUOBIAO */
 		const bool RenchanFlag =
 			(gameStat->playerwind(gameStat->CurrentPlayer.Agari) == sEast) &&
 			(!RuleData::chkRule("round_continuation", "renchan_never"));
+#endif /* GUOBIAO */
 		showRenchanFlag(gameStat, RenchanFlag);
 		if (RenchanFlag) {
 			++(gameStat->Honba);
@@ -347,6 +367,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	case Chonbo:
 		gameStat->AgariChain = 0; gameStat->LastAgariPlayer = -1;
 		break;
+#ifndef GUOBIAO
 	/**************/
 	/* 九種流局時 */
 	/**************/
@@ -471,6 +492,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ryuukyokuScreen(sound::IDs::voxSikang, &ResultDesc, mihajong_graphic::tblSubsceneSikang);
 		ryuukyokuProc(gameStat, !RuleData::chkRule("fifth_kong", "next_dealer"));
 		break;
+#endif /* GUOBIAO */
 	}
 	haifu::haifuwritebuffer(gameStat, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc.c_str(), RoundEndType);
 	return;
@@ -493,6 +515,7 @@ void endround::transferChonboPenalty(GameTable* gameStat, PlayerID targetPlayer)
 // -------------------------------------------------------------------------
 
 bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int OrigTurn) { // 次の局へ(終了する場合はtrue)
+#ifndef GUOBIAO
 	// ハコ割れ終了
 	if (RuleData::chkRuleApplied("buttobi_border"))
 		for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
@@ -516,7 +539,11 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 	if (gameStat->chkGameType(SanmaT) &&
 		((gameStat->GameRound % Players) == 3))
 		++(gameStat->GameRound);
+#endif /* GUOBIAO */
 	// 南入した場合……
+#ifdef GUOBIAO
+	/* TODO: 席替え処理 */
+#else /* GUOBIAO */
 	if (gameStat->GameRound == 4) {
 		if (RuleData::chkRule("game_length", "east_north_game")) // 東北廻しのとき
 			gameStat->GameRound = 12;
@@ -525,15 +552,21 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 		else if (RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game")) // 東々廻しのとき
 			gameStat->GameRound = 16;
 	}
+#endif /* GUOBIAO */
 	// 通常の半荘終了時（トップが３００００点未満だと西入サドンデス）
 	if ((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) > gameStat->GameLength) {
+#ifdef GUOBIAO
+		return true;
+#else /* GUOBIAO */
 		for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
 			if (gameStat->Player[i].PlayerScore >= (LNum)BasePoint())
 				return true;
 		// 延長戦なし設定
 		if (RuleData::chkRule("sudden_death_length", "no")) return true;
+#endif /* GUOBIAO */
 	}
 	// 延長戦の長さに制限がある場合
+#ifndef GUOBIAO
 	if (RuleData::chkRule("sudden_death_length", "one_extra_round")) {
 		if ((gameStat->GameRound == 16) && // 東々廻しのとき
 			(RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game"))) {
@@ -544,14 +577,20 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 				return true;
 		}
 	}
+#endif /* GUOBIAO */
 	// 北場終了の場合は帰り東へ
 	if (gameStat->GameRound == roundLoopRate()) {
+#ifndef GUOBIAO
 		if (RuleData::chkRule("sudden_death_length", "no")) { // 延長戦無しで終了
+#endif /* GUOBIAO */
 			return true;
+#ifndef GUOBIAO
 		} else { // 返り東
 			++(gameStat->LoopRound); gameStat->GameRound = 0;
 		}
+#endif /* GUOBIAO */
 	}
+#ifndef GUOBIAO
 	// 焼き鳥復活ルールの場合
 	if (RuleData::chkRuleApplied("yakitori") && RuleData::chkRuleApplied("yakitori_again")) {
 		bool flag = true;
@@ -561,6 +600,7 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 			for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
 				gameStat->Player[i].YakitoriFlag = true;
 	}
+#endif /* GUOBIAO */
 	return false;
 }
 

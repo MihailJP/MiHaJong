@@ -100,6 +100,9 @@ TileCode Wind2Tile(uint8_t wind) {
 
 /* 原点(返し点) */
 LNum BasePoint() {
+#ifdef GUOBIAO
+	return 500;
+#else /* GUOBIAO */
 	if (RuleData::chkRule("starting_point", "custom")) {
 		LNum basePoint = // 仮数部
 		std::atoi(RuleData::chkRule("base_point_mantissa_tens")) * 10 +
@@ -121,6 +124,7 @@ LNum BasePoint() {
 				return 40000;
 	}
 	return 30000;
+#endif /* GUOBIAO */
 }
 
 /* 浮いているか判定する関数 */
@@ -231,6 +235,9 @@ namespace confpath {
 
 /* リーチするのに持ち点が足りているかどうか */
 bool isRichiReqSatisfied (const GameTable* const gameStat, PlayerID targetPlayer) {
+#ifdef GUOBIAO
+	return false;
+#else /* GUOBIAO */
 	bool Flag = true;
 	if (gameStat->Player[targetPlayer].PlayerScore < (LNum)1000) Flag = false;
 	else if ((gameStat->Player[targetPlayer].PlayerScore == (LNum)1000) &&
@@ -238,10 +245,14 @@ bool isRichiReqSatisfied (const GameTable* const gameStat, PlayerID targetPlayer
 	if (RuleData::chkRule("riichi_requisite", "no")) Flag = true;
 	if (RuleData::chkRule("buttobi_border", "no")) Flag = true;
 	return Flag;
+#endif /* GUOBIAO */
 }
 
 /* 飛びになっているかどうか */
 bool isDobon (const GameTable* const gameStat, PlayerID targetPlayer) {
+#ifdef GUOBIAO
+	return false;
+#else /* GUOBIAO */
 	if (!RuleData::chkRuleApplied("buttobi_border"))
 		return false;
 	else if (gameStat->Player[targetPlayer].PlayerScore < (LNum)0)
@@ -250,10 +261,14 @@ bool isDobon (const GameTable* const gameStat, PlayerID targetPlayer) {
 		RuleData::chkRule("buttobi_border", "nonpositive"))
 		return true;
 	else return false;
+#endif /* GUOBIAO */
 }
 
 /* 天辺になっているかどうか */
 bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer) {
+#ifdef GUOBIAO
+	return false;
+#else /* GUOBIAO */
 	if (RuleData::chkRule("teppen", "50000pts") &&
 		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)50000))
 		return true;
@@ -270,6 +285,7 @@ bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer) {
 		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)70000))
 		return true;
 	else return false;
+#endif /* GUOBIAO */
 }
 
 MJCORE void cleanup() {

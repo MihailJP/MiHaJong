@@ -171,6 +171,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		const Shanten shanten = utils::calcShanten(gameStat, ActivePlayer, shantenAll);
 		if (utils::isRichiReqSatisfied(gameStat, ActivePlayer) && // 点棒要件を満たしている（点棒が足りている）
 			(shanten <= 0) && // テンパイしている
+			(gameStat->gameType & RichiMJ) && // 日麻である
 			(playerStat->MenzenFlag || (!rules::chkRule("riichi_shibari", "no"))) && // 門前であるか、リーチ縛りルールである
 			(!playerStat->RichiFlag.RichiFlag) && // まだリーチしていない
 			(tilesMoreThan((gameStat->gameType & AllSanma) ? 2 : 3))) { // 残りツモ牌が十分あるなら
@@ -179,18 +180,18 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 					buttonEnabled[btnOpenRiichi] = true; // ボタンを有効に
 		}
 
-		const bool DaoPaiAbilityFlag = utils::chkdaopaiability(gameStat, ActivePlayer);
+		const bool DaoPaiAbilityFlag = (gameStat->gameType & RichiMJ) && utils::chkdaopaiability(gameStat, ActivePlayer);
 		if ((DaoPaiAbilityFlag) && (playerStat->FirstDrawFlag))
 			buttonEnabled[btnKyuushu] = true; // 九種九牌ボタン
 
-		const bool ShisanBuDa = utils::chkShisanBuDa(gameStat, ActivePlayer);
-		const bool ShisiBuDa = utils::chkShisiBuDa(gameStat, ActivePlayer);
+		const bool ShisanBuDa = (gameStat->gameType & RichiMJ) && utils::chkShisanBuDa(gameStat, ActivePlayer);
+		const bool ShisiBuDa = (gameStat->gameType & RichiMJ) && utils::chkShisiBuDa(gameStat, ActivePlayer);
 		if (((shanten <= -1) && (playerStat->Tsumohai().tile != NoTile)) || // 和了になっているか
 			ShisanBuDa || ShisiBuDa) // 十三不塔の場合（十三不塔なしの場合この変数はfalseになる）
 			buttonEnabled[btnTsumo] = true; // 和了ボタン
 
 		const Int8ByTile TileCount = utils::countTilesInHand(gameStat, ActivePlayer);
-		const int kanLim = rules::chkRule("fifth_kong", "no") ? 4 : 5;
+		const int kanLim = (gameStat->gameType & GuobiaoMJ) ? 16 : rules::chkRule("fifth_kong", "no") ? 4 : 5;
 		const bool KanFlag = [tilesMoreThan, gameStat, TileCount, playerStat, kanLim]() -> bool {
 			for (int i = 1; i < TileNonflowerMax; ++i) {
 				if (tilesMoreThan(0) && (gameStat->KangNum < kanLim)) {
@@ -249,6 +250,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 		if (gameStat->CurrentDiscard.tile > TileSuitFlowers) goto end; /* 花牌の場合は残りの判定をスキップ */
 		if (playerStat->AgariHouki) goto end; /* 和了り放棄だったら残りの判定をスキップ */
 		if ((gameStat->KangFlag.chankanFlag == chankanOfAnkan) && // 暗槓に対する搶槓判定のときで、
+			(gameStat->gameType & RichiMJ) && // 中国ルール以外で
 			(utils::calcShanten(gameStat, PassivePlayer, shantenOrphans) >= 0)) // 国士聴牌でない場合は
 			goto end; // 残りの判定をスキップ
 
@@ -257,7 +259,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 
 		if ((!playerStat->RichiFlag.RichiFlag) && tilesMoreThan(0)) { // リーチしてなくて河底でないとき……
 			const Int8ByTile TileCount = utils::countTilesInHand(gameStat, PassivePlayer);
-			const int kanLim = rules::chkRule("fifth_kong", "no") ? 4 : 5;
+			const int kanLim = (gameStat->gameType & GuobiaoMJ) ? 16 : rules::chkRule("fifth_kong", "no") ? 4 : 5;
 
 			if (TileCount[gameStat->CurrentDiscard.tile] >= 2)
 				buttonEnabled[btnPon] = true; // ポン
@@ -267,7 +269,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 				buttonEnabled[btnKan] = true; // カン
 
 			// チーできる条件：上家の捨牌であること、かつ、数牌であること
-			if ((gameStat->gameType & Yonma) && // 四麻である
+			if ((gameStat->gameType & (Yonma | GuobiaoMJ)) && // 四麻である
 				(gameStat->CurrentDiscard.tile < TileSuitHonors) && // 数牌で
 				(gameStat->KangFlag.chankanFlag == chankanNone) && // 槍槓の判定中ではなくて
 				(gameStat->CurrentPlayer.Active == ((gameStat->CurrentPlayer.Passive + 3) % 4))) { // 捨てたのが上家

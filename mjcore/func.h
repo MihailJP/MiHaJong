@@ -41,8 +41,12 @@ PlayerID inline RelativePositionOf(PlayerID targetPlayer, seatRelative relative)
 
 /* 一周するまでに必要な場の数 */
 inline int roundLoopRate() {
+#ifdef GUOBIAO
+	return 16;
+#else /* GUOBIAO */
 	if (RuleData::chkRule("sudden_death_type", "continue_into_white")) return 28;
 	else return 16;
+#endif /* GUOBIAO */
 }
 
 /* 順位を計算する */
@@ -85,6 +89,7 @@ CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("異常な引数です。場風を解析できません。"));
 			roundNameTxt << _T("??");
 	}
+#ifndef GUOBIAO
 	if (RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game")) {
 		switch (int k = (gameStat->LoopRound * ACTUAL_PLAYERS + roundNum % Players)) {
 			case 0: roundNameTxt << _T("一局"); break;
@@ -100,6 +105,7 @@ CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat
 			default: roundNameTxt << (k+1) << _T("局"); break;
 		}
 	} else {
+#endif /* GUOBIAO */
 		switch (roundNum % Players) {
 			case 0: roundNameTxt << _T("一局"); break;
 			case 1: roundNameTxt << _T("二局"); break;
@@ -109,7 +115,9 @@ CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat
 				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("異常な引数です。同一場の5局目以降です。"));
 				roundNameTxt << _T("??局"); break;
 		}
+#ifndef GUOBIAO
 	}
+#endif /* GUOBIAO */
 	return CodeConv::tstring(roundNameTxt.str());
 }
 

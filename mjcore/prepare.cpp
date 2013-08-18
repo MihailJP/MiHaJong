@@ -444,10 +444,12 @@ namespace {
 		if (((gameStat->LoopRound * roundLoopRate() + gameStat->GameRound) == gameStat->GameLength) &&
 			(gameStat->GameLength > 0))
 			sound::util::bgmplay(sound::IDs::musFinal); // オーラスだけ特別
+#ifndef GUOBIAO
 		else if ((gameStat->Honba >= 5) && RuleData::chkRule("ryanshiba", "from_5honba"))
 			sound::util::bgmplay(sound::IDs::musShibari); // リャンシバ時専用BGM
 		else if ((gameStat->Honba >= 4) && RuleData::chkRule("ryanshiba", "from_4honba"))
 			sound::util::bgmplay(sound::IDs::musShibari); // リャンシバ時専用BGM
+#endif /* GUOBIAO */
 		else
 			sound::util::bgmplay(sound::IDs::BgmStart + gameStat->GameRound);
 	}
@@ -521,6 +523,9 @@ namespace {
 	}
 	void tileshuffle(GameTable* const gameStat) {
 		shuffle(gameStat); unsigned tmpNumberOfTiles;
+#ifdef GUOBIAO
+		tmpNumberOfTiles = 144;
+#else /* GUOBIAO */
 		if (gameStat->chkGameType(AllSanma))
 			tmpNumberOfTiles = 108;
 		else if (RuleData::chkRule("flower_tiles", "no"))
@@ -529,6 +534,7 @@ namespace {
 			tmpNumberOfTiles = 144;
 		else
 			tmpNumberOfTiles = 140;
+#endif /* GUOBIAO */
 		for (unsigned i = 0; i < tmpNumberOfTiles; i++) // サーバーの場合、牌山のデータを送信
 			statsync(gameStat, gameStat->Deck[i].tile + (gameStat->Deck[i].red * TileNonflowerMax) + mihajong_socket::protocol::StartRound_Tile_Excess,
 				[i](GameTable* const gameStat, int ReceivedMsg) -> bool { // クライアントの場合、データを受信

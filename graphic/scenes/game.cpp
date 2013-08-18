@@ -209,7 +209,7 @@ TableProtoScene::ScoreBoard::~ScoreBoard() {
 }
 
 TableProtoScene::ScoreBoard::ScoreMode TableProtoScene::ScoreBoard::getScoreMode() {
-	return (ScoreMode)((myTimer.currTime() / 2000000) % ((rules::chkRule("chip", "no")) ? 2 : 3));
+	return (ScoreMode)((myTimer.currTime() / 2000000) % (((GameStatus::gameStat()->gameType & GuobiaoMJ) || rules::chkRule("chip", "no")) ? 2 : 3));
 }
 
 void TableProtoScene::ScoreBoard::Render() {

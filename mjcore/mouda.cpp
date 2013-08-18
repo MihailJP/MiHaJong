@@ -144,12 +144,14 @@ namespace { /* 内部処理分割用 */
 		/* 自摸和したことを変数に設定 */
 		gameStat->TsumoAgariFlag = true;
 		yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Active);
+#ifndef GUOBIAO
 		if ((!yaku::yakuCalculator::checkShibari(gameStat, &yakuInfo)) ||
 			(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->statOfActive().RichiFlag.RichiFlag)) ||
 			((gameStat->PaoFlag[pyMinkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong")) ||
 			((!RuleData::chkRuleApplied("kataagari")) && (!isKataagari(gameStat, gameStat->CurrentPlayer.Active))))
 			RoundEndType = Chonbo; /* 縛りを満たしていない場合(役が無いなど)…錯和として局を終了する */
 		else
+#endif /* GUOBIAO */
 			RoundEndType = Agari; /* 縛りを満たすなら和了りとして成立 */
 		gameStat->TsumoAgariFlag = true;
 		gameStat->CurrentPlayer.Agari = gameStat->CurrentPlayer.Active;
@@ -213,10 +215,12 @@ namespace { /* 内部処理分割用 */
 			(gameStat->KangNum < kanLim)) { // 合計数の制限内である
 				if ((DiscardTileIndex.type == DiscardTileNum::Ankan) ||
 					(DiscardTileIndex.type == DiscardTileNum::Kakan)) {
+#ifndef GUOBIAO
 						if (RuleData::chkRule("minkan_pao", "yes") || RuleData::chkRule("minkan_pao", "yes_2han")) {
 							gameStat->PaoFlag[pyMinkan].paoPlayer =
 								gameStat->PaoFlag[pyMinkan].agariPlayer = -1;
 						}
+#endif /* GUOBIAO */
 						/* 槓をすると嶺上牌の分自摸が増えるので次の打牌へ */
 						EndType roundEndType;
 						if (fuuroproc(gameStat, &roundEndType, DiscardTileIndex,
@@ -328,6 +332,7 @@ namespace { /* 内部処理分割用 */
 			gameStat->TianHuFlag = false;
 		/* 打牌するときの音を鳴らす */
 		/* ドラを捨てる時は強打の音にする */
+#ifndef GUOBIAO
 		if (gameStat->CurrentDiscard.tile > TileSuitFlowers)
 			sound::Play(sound::IDs::sndDahai2);
 		else if ((gameStat->CurrentDiscard.red == AkaDora) || (gameStat->DoraFlag.Omote[gameStat->CurrentDiscard.tile] > 0))
@@ -335,6 +340,7 @@ namespace { /* 内部処理分割用 */
 		else if ((gameStat->CurrentDiscard.red == AoDora) && (!RuleData::chkRule("blue_tiles", "-1han")))
 			sound::Play(sound::IDs::sndDahai2);
 		else
+#endif /* GUOBIAO */
 			sound::Play(sound::IDs::sndDahai1);
 		/* このとき牌を捨てているはずなので、バグ防止のための処理 */
 		for (PlayerID i = 0; i < Players; i++) {
