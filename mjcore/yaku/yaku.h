@@ -223,7 +223,9 @@ private:
 		int finishedThreads;
 		MHJMutex cs;
 		int startedThreads;
+#ifndef GUOBIAO
 		static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
+#endif /* GUOBIAO */
 #ifdef _WIN32
 		DWORD WINAPI calculate(
 #else /*_WIN32*/
@@ -241,7 +243,9 @@ private:
 			std::map<CodeConv::tstring, Yaku::YAKU_HAN> &yakuHan, std::vector<CodeConv::tstring> &yakuOrd, YAKUSTAT* const result);
 	};
 
+#ifndef GUOBIAO
 	static void doubling(yaku::YAKUSTAT* const yStat);
+#endif /* GUOBIAO */
 	static void calculateScore(yaku::YAKUSTAT* const yStat);
 
 	static void analysisNonLoop(const GameTable* const gameStat, PlayerID targetPlayer,

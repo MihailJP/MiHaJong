@@ -67,6 +67,7 @@ void yaku::yakuCalculator::CalculatorThread::recordThreadFinish() {
 }
 
 /* 翻を計算する */
+#ifndef GUOBIAO
 void yaku::yakuCalculator::doubling(yaku::YAKUSTAT* const yStat) {
 	int totalHan = yStat->CoreHan + yStat->BonusHan; // 合計翻
 	yStat->AgariPoints = (LNum)yStat->BasePoints; // 原点
@@ -77,9 +78,14 @@ void yaku::yakuCalculator::doubling(yaku::YAKUSTAT* const yStat) {
 	}
 	if (yStat->AgariPoints <= (LNum)0) yStat->AgariPoints = (LNum)1; // 最低1点にはなるようにする
 }
+#endif /* GUOBIAO */
 
 /* 符と翻から点数を計算する */
 void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
+#ifdef GUOBIAO
+	/* 中国ルールでは単に足し算するだけ、複雑な計算は不要 */
+	yStat->AgariPoints = (LNum)yStat->CoreHan;
+#else /* GUOBIAO */
 	/* 縛りを満たしてなかったら0を返す
 	   点数が0ならコア部分で錯和と判断される……はず */
 	if ((yStat->CoreHan <= 0)&&(yStat->CoreSemiMangan <= 0)) {
@@ -123,9 +129,11 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 		o << _T("]");
 		trace(o.str().c_str());
 	}
+#endif /* GUOBIAO */
 }
 
 /* 符を計算する */
+#ifndef GUOBIAO
 void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis)
 {
@@ -242,12 +250,14 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	CodeConv::tostringstream o; o << _T("この手牌は [") << fu << _T("] 符です。"); trace(o.str().c_str());
 	analysis->BasePoint = (uint8_t)fu;
 }
+#endif /* GUOBIAO */
 
 /* ドラ計数 */
 void yaku::yakuCalculator::countDora
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
 	YAKUSTAT* const result, PlayerID targetPlayer)
 {
+#ifndef GUOBIAO
 	auto doraText =
 		[](YAKUSTAT* const result, LPCTSTR const label, int quantity) {
 #if defined(_MSC_VER)
@@ -339,7 +349,11 @@ void yaku::yakuCalculator::countDora
 			}
 		}
 	}
+#endif /* GUOBIAO */
 	/* 花牌・三麻のガリ */
+#ifdef GUOBIAO
+	int omote = 0, flower = 0;
+#else /* GUOBIAO */
 	if (RuleData::chkRuleApplied("flower_tiles")) {
 		if (gameStat->chkGameType(AllSanma)) {
 			north = gameStat->Player[targetPlayer].NorthFlag;
@@ -347,6 +361,7 @@ void yaku::yakuCalculator::countDora
 			if (uradoraEnabled) ura += north * gameStat->DoraFlag.Ura[NorthWind];
 			result->FlowerQuantity = north;
 		} else {
+#endif /* GUOBIAO */
 			if (gameStat->Player[targetPlayer].FlowerFlag.Spring) ++flower;
 			if (gameStat->Player[targetPlayer].FlowerFlag.Summer) ++flower;
 			if (gameStat->Player[targetPlayer].FlowerFlag.Autumn) ++flower;
@@ -356,8 +371,11 @@ void yaku::yakuCalculator::countDora
 			if (gameStat->Player[targetPlayer].FlowerFlag.Chrys) ++flower;
 			if (gameStat->Player[targetPlayer].FlowerFlag.Bamboo) ++flower;
 			omote += flower * (gameStat->DoraFlag.Omote[Flower] + 1);
+#ifndef GUOBIAO
 			if (uradoraEnabled) ura += flower * gameStat->DoraFlag.Ura[Flower];
+#endif /* GUOBIAO */
 			result->FlowerQuantity = flower;
+#ifndef GUOBIAO
 		}
 	}
 	/* 計数結果を反映 */
@@ -395,6 +413,7 @@ void yaku::yakuCalculator::countDora
 		result->AliceDora = alice;
 		doraText(result, _T("アリス祝儀"), alice);
 	}
+#endif /* GUOBIAO */
 }
 
 /* ドラ計数 */
@@ -412,6 +431,9 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 	totalHan = totalSemiMangan = totalBonusHan = totalBonusSemiMangan = 0; // こっちで初期化してあげよう
 	for (auto yNameIter = yakuOrd.begin(); yNameIter != yakuOrd.end(); yNameIter++) {
 		CodeConv::tstring yName = *yNameIter;
+#ifdef GUOBIAO
+		totalHan += yakuHan[yName].coreHan.getHan();
+#else /* GUOBIAO */
 		if (RuleData::chkRule("limitless", "yakuman_considered_13han")) { /* 青点ルールで役満を13飜扱いとする場合 */
 			switch (yakuHan[yName].coreHan.getUnit()) {
 				case yaku::yakuCalculator::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
@@ -455,8 +477,10 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
 		}
+#endif /* GUOBIAO */
 		/* 役の名前を書き込む */
 		if (result == nullptr) continue; // 役の名前の出力がいらないなら次へ
+#ifndef GUOBIAO
 		if ((yakuHan[yName].coreHan.getUnit() != yakuHan[yName].bonusHan.getUnit()) &&
 			(yakuHan[yName].coreHan.getHan() * yakuHan[yName].bonusHan.getHan() != 0))
 		{ /* 単位が混在！ */
@@ -465,6 +489,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].coreHan.getHan() == 0)) &&
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 普通の役の時 */
+#endif /* GUOBIAO */
 #if defined(_MSC_VER)
 			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
@@ -486,6 +511,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 					yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 			_tcsncat(result->yakuValList, _T("飜\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #endif
+#ifndef GUOBIAO
 		}
 		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].coreHan.getHan() == 0)) &&
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].bonusHan.getHan() == 0)))
@@ -533,6 +559,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
 #endif
 		}
+#endif /* GUOBIAO */
 	}
 }
 
@@ -557,7 +584,9 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 			return nullptr;
 #endif /*_WIN32*/
 		}
+#ifndef GUOBIAO
 		calcbasepoints(gameStat, analysis); // 符を計算する
+#endif /* GUOBIAO */
 		analysis->DuiziCount = countingFacility::countDuiz(analysis->MianziDat);
 		analysis->KeziCount = countingFacility::countKez(analysis->MianziDat, &analysis->TotalKezi);
 		analysis->AnKeziCount = countingFacility::countAnKez(analysis->MianziDat, &analysis->TotalAnKezi);
@@ -566,6 +595,7 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 		analysis->KangziCount = countingFacility::countKangz(analysis->MianziDat, &analysis->TotalKangzi);
 		analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, &analysis->TotalAnKangzi);
 		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, &analysis->TotalKaKangzi);
+#ifndef GUOBIAO
 	} else {
 		if (analysis->shanten[shantenPairs] == -1) { // 七対子
 			if (RuleData::chkRule("seven_pairs", "1han_50fu")) analysis->BasePoint = 50; // 1翻50符
@@ -577,12 +607,15 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 				analysis->BasePoint = 30;
 			else if (RuleData::chkRule("quanbukao", "3han_40fu") || RuleData::chkRule("quanbukao", "4han_40fu"))
 				analysis->BasePoint = 40;
+#endif /* GUOBIAO */
 		}
 		else if (analysis->shanten[shantenZuhelong] == -1) { // 組合龍
 			mentsuParser::makementsu(gameStat, analysis->player, *pMode, nullptr, analysis->MianziDat);
+#ifndef GUOBIAO
 			calcbasepoints(gameStat, analysis); // 符を計算する
 		}
 		else analysis->BasePoint = 30;
+#endif /* GUOBIAO */
 	}
 	/* 役判定ループ */
 	std::map<CodeConv::tstring, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
@@ -619,24 +652,31 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 	int totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan;
 	hanSummation(totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan, yakuHan, yakuOrd, result);
 	/* 飜数を計算した結果を書き込む */
-	result->CoreHan = totalHan; result->CoreSemiMangan = totalSemiMangan;
+	result->CoreHan = totalHan;
+#ifndef GUOBIAO
+	result->CoreSemiMangan = totalSemiMangan;
 	result->BonusHan = totalBonusHan; result->BonusSemiMangan = totalBonusSemiMangan;
 	if (analysis->BasePoint == 25) result->BasePoints = 25; // チートイの25符はそのまま
 	else result->BasePoints = analysis->BasePoint + ((10 - analysis->BasePoint % 10) % 10); // 符ハネして反映
+#endif /* GUOBIAO */
 	/* ドラの数を数える */
 	countDora(gameStat, analysis, result);
+#ifndef GUOBIAO
 	/* 簡略ルール(全部30符)の場合 */
 	if (RuleData::chkRule("simplified_scoring", "simplified")) {
 		trace(_T("簡略計算ルールのため30符として扱います。"));
 		result->BasePoints = 30;
 	}
+#endif /* GUOBIAO */
 	/* 点数を計算する */
 	calculateScore(result);
+#ifndef GUOBIAO
 	/* 切り上げ満貫の処理 */
 	if ((RuleData::chkRuleApplied("round_to_mangan")) && // 切り上げ満貫ルールがONで
 		(!RuleData::chkRuleApplied("limitless")) && // 青天井ルールでない場合
 		(result->AgariPoints == (LNum)1920)) // 子の7700・親の11600なら
 			result->AgariPoints = (LNum)2000; // 満貫にする
+#endif /* GUOBIAO */
 	/* 終了処理 */
 	recordThreadFinish(); // スレッドが終わったことを記録
 #ifdef _WIN32
@@ -791,6 +831,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 		shanten[i] = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, (ShantenType)i);
 	// 和了ってるか判定(和了ってなかった場合十三不塔か判定する)
 	if (shanten[shantenAll] > -1) {
+#ifndef GUOBIAO
 		/* 十三不塔 */
 		if (gameStat->Player[targetPlayer].FirstDrawFlag) { // 鳴きがなくて一巡目の時だけ判定する
 			if (chkShisanBuDa(gameStat, targetPlayer)) { // 十三不塔になってる
@@ -855,6 +896,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ドラを数えるのです
 			}
 		}
+#endif /* GUOBIAO */
 		trace(_T("和了っていないので抜けます"));
 		return yakuInfo;
 	}
@@ -864,6 +906,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 	else // 七対子、国士無双、その他特殊な和了
 		analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);
 	yakuInfo.isValid = true; // 有効であることをマーク（縛りを満たしているかはチェックしていない）
+#ifndef GUOBIAO
 	/* アリスドラの牌譜記録 */
 	if ((RuleData::chkRuleApplied("alice")) && (gameStat->Player[targetPlayer].MenzenFlag)) {
 		uint16_t AlicePointer = gameStat->DoraPointer;
@@ -880,12 +923,16 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 			++(yakuInfo.AliceDora);
 		}
 	}
+#endif /* GUOBIAO */
 	/* おわり */
 	return yakuInfo;
 }
 
 /* 縛りを満たしているか調べる */
 bool yaku::yakuCalculator::checkShibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat) {
+#ifdef GUOBIAO
+	return yakuStat->CoreHan >= 8;
+#else /* GUOBIAO */
 	if ((yakuStat->CoreHan >= 2) || (yakuStat->CoreSemiMangan >= 1))
 		return true; // 2翻以上あったら縛りを満たす
 	else if ((yakuStat->CoreHan == 1) && (RuleData::chkRule("ryanshiba", "no")))
@@ -895,4 +942,5 @@ bool yaku::yakuCalculator::checkShibari(const GameTable* const gameStat, const Y
 	else if ((yakuStat->CoreHan == 1) && (gameStat->Honba < 4) && (RuleData::chkRule("ryanshiba", "from_4honba")))
 		return true; // 4本場からリャンシバだが3本場までで1翻
 	else return false; // 縛りを満たしていない場合
+#endif /* GUOBIAO */
 }
