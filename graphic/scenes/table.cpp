@@ -89,7 +89,7 @@ void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PlayerID deck
 }
 
 void GameTableScreen::Reconstruct(const GameTable* gameStat) {
-	if (gameStat->chkGameType(Yonma)) {
+	if (gameStat->chkGameType(Yonma) || gameStat->chkGameType(GuobiaoMJ)) {
 		for (PlayerID i = 0; i < 4; i++)
 			ReconstructPlayer(gameStat, i, i);
 	} else if (gameStat->chkGameType(Sanma4)) {
