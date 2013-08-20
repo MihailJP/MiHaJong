@@ -42,7 +42,9 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 		break;
 	case FuuroFlower:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
-		gameStat->KangFlag.kangFlag = 1; // 嶺上開花のフラグを立てる
+#ifndef GUOBIAO
+		gameStat->KangFlag.kangFlag = true; // 嶺上開花のフラグを立てる
+#endif /* GUOBIAO */
 		haifu::haifurecflower(gameStat, DiscardTileIndex); // 牌譜に記録
 		break;
 #ifndef GUOBIAO
@@ -54,7 +56,7 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 #endif /* GUOBIAO */
 	case FuuroDaiminkan:
 		fuuroPlayer = gameStat->CurrentPlayer.Passive;
-		gameStat->KangFlag.kangFlag = 1; // 嶺上開花のフラグを立てる
+		gameStat->KangFlag.kangFlag = true; // 嶺上開花のフラグを立てる
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
 			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
 		haifu::haifurecminkan(gameStat);
@@ -423,12 +425,14 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 	if ((Mode != FuuroPon) && (Mode != FuuroChii)) {
 		/* 四槓子の聴牌者がいて、５回目の槓があると流局とするルールの場合
 		   その条件を判定する*/
+#ifndef GUOBIAO
 		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
 			if (gameStat->KangNum >= 4) {
 				debug(_T("5個目の槓なので直ちに流局とし、ループから出ます。"));
 				*RoundEndType = Uukaikan; return true;
 			}
 		}
+#endif /* GUOBIAO */
 		if (gameStat->TilePointer >= (gameStat->RinshanPointer - (gameStat->DeadTiles - 1))) {
 			*RoundEndType = Ryuukyoku; return true; /* 荒牌なら終了 */
 		}
@@ -439,6 +443,7 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 		sound::Play(sound::IDs::sndTsumo);
 		if (gameStat->tilesLeft() < 10)
 			sound::Play(sound::IDs::sndCountdown);
+#ifndef GUOBIAO
 		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
 			/* 槓ドラをめくる */
 			if (RuleData::chkRuleApplied("kandora")) {
@@ -463,6 +468,7 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 				(int)gameStat->KangNum << _T("] 回開槓しています。");
 			debug(o.str().c_str());
 		}
+#endif /* GUOBIAO */
 	}
 	return false;
 }
@@ -704,6 +710,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 		}
 	}
 	/* 当たり牌見逃しを同順フリテンにする処理 */
+#ifndef GUOBIAO
 	for (PlayerID i = 0; i < Players; ++i) {
 		const TileCode xTile = gameStat->Player[i].Tsumohai().tile;
 		gameStat->Player[i].Tsumohai().tile = gameStat->CurrentDiscard.tile;
@@ -712,6 +719,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 			gameStat->Player[i].DoujunFuriten = true;
 		gameStat->Player[i].Tsumohai().tile = xTile;
 	}
+#endif /* GUOBIAO */
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */
 	for (PlayerID i = 0; i < Players; i++) {
 		if (gameStat->Player[i].DeclarationFlag.Ron) {
@@ -776,6 +784,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 			gameStat->CurrentPlayer.Furikomi = gameStat->CurrentPlayer.Active;
 			gameStat->CurrentPlayer.Agari = pl;
 			/* 八連荘の判定に使う変数 */
+#ifndef GUOBIAO
 			if (RuleData::chkRuleApplied("paarenchan")) {
 				if (gameStat->LastAgariPlayer == gameStat->CurrentPlayer.Agari) {
 					++gameStat->AgariChain;
@@ -787,10 +796,12 @@ EndType ronhuproc(GameTable* const gameStat) {
 					gameStat->LastAgariPlayer = gameStat->CurrentPlayer.Agari;
 				}
 			}
+#endif /* GUOBIAO */
 			/* 和了り牌を設定 */
 			gameStat->statOfAgari().Tsumohai().tile = gameStat->CurrentDiscard.tile;
 			gameStat->statOfAgari().Tsumohai().red = gameStat->CurrentDiscard.red;
 			/* 立直宣言牌での放銃の場合、立直を無効とし供託点棒を返却する */
+#ifndef GUOBIAO
 			if (gameStat->statOfActive().RichiFlag.IppatsuFlag) {
 				if (gameStat->statOfActive().RichiFlag.DoubleFlag) {
 					gameStat->DoubleRichiCounter = true;
@@ -806,15 +817,21 @@ EndType ronhuproc(GameTable* const gameStat) {
 				--gameStat->Deposit;
 				gameStat->statOfActive().PlayerScore += 1000;
 			}
+#endif /* GUOBIAO */
 			/* 役や振聴の判定 */
 			yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, pl);
 			MachihaiInfo mInfo = chkFuriten(gameStat, pl);
 			// 縛りを満たさないか、振聴のとき
+#ifdef GUOBIAO
+			if (!yaku::yakuCalculator::checkShibari(gameStat, &yakuInfo)) {
+					trace(_T("縛りを満たさない和了です。次の処理をチョンボ用に切り替えます。"));
+#else /* GUOBIAO */
 			if ((!yaku::yakuCalculator::checkShibari(gameStat, &yakuInfo)) ||
 				(mInfo.FuritenFlag) || (gameStat->Player[pl].DoujunFuriten) ||
 				(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->Player[pl].RichiFlag.RichiFlag)) ||
 				((!RuleData::chkRuleApplied("kataagari")) && (!isKataagari(gameStat, gameStat->CurrentPlayer.Active)))) {
 					trace(_T("縛りを満たさないか振聴です。次の処理をチョンボ用に切り替えます。"));
+#endif /* GUOBIAO */
 					RoundEndType = Chonbo; // チョンボにする
 			}
 			// ロンをしたことを表示

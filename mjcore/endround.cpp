@@ -59,6 +59,7 @@ namespace { // 内部処理に使う関数
 		return flag;
 	}
 
+#ifndef GUOBIAO
 	void logKuikae(const GameTable* gameStat, bool chonbo) {
 		CodeConv::tostringstream o;
 		o << _T("喰い変えを検出しました。") <<
@@ -68,6 +69,7 @@ namespace { // 内部処理に使う関数
 		info(o.str().c_str());
 		sound::Play(sound::IDs::sndCuohu);
 	}
+#endif /* GUOBIAO */
 	bool chkKuikae(GameTable* gameStat) { // 喰い替えの場合の処理
 #ifndef GUOBIAO
 		if (((gameStat->CurrentDiscard.tile == gameStat->PreviousMeld.Discard) || // 現物の食い変えになっている場合か
@@ -230,6 +232,7 @@ namespace {
 		return TenpaiCnt;
 	}
 
+#ifndef GUOBIAO
 	void transferNotenBappu(GameTable* gameStat, unsigned OrigTurn, unsigned TenpaiCnt) {
 		using namespace endround::transfer;
 		resetDelta();
@@ -266,11 +269,15 @@ namespace {
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade);
 		return;
 	}
+#endif /* GUOBIAO */
 
 	void ryuukyokuProc(GameTable* gameStat, bool RenchanFlag) {
+#ifndef GUOBIAO
 		showRenchanFlag(gameStat, RenchanFlag);
 		++(gameStat->Honba);
-		if (!RenchanFlag) ++(gameStat->GameRound);
+		if (!RenchanFlag)
+#endif /* GUOBIAO */
+			++(gameStat->GameRound);
 		gameStat->AgariChain = 0; gameStat->LastAgariPlayer = -1;
 		return;
 	}
@@ -299,8 +306,10 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	case Ryuukyoku:
 		ResultDesc = _T("荒牌流局");
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
+#ifndef GUOBIAO
 		transferNotenBappu(gameStat, OrigTurn,
 			checkTenpai(gameStat, ResultDesc, OrigTurn));
+#endif /* GUOBIAO */
 
 #ifndef GUOBIAO
 		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
@@ -349,12 +358,16 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 			(gameStat->playerwind(gameStat->CurrentPlayer.Agari) == sEast) &&
 			(!RuleData::chkRule("round_continuation", "renchan_never"));
 #endif /* GUOBIAO */
+#ifndef GUOBIAO
 		showRenchanFlag(gameStat, RenchanFlag);
 		if (RenchanFlag) {
 			++(gameStat->Honba);
 		} else {
+#endif /* GUOBIAO */
 			++(gameStat->GameRound); gameStat->Honba = 0;
+#ifndef GUOBIAO
 		}
+#endif /* GUOBIAO */
 		gameStat->Deposit = 0;
 		// 八連荘成立時、カウンタをリセット
 		if (gameStat->AgariChain == 8)

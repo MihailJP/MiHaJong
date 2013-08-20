@@ -167,10 +167,14 @@ Shanten ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, Pla
 Shanten ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 七対子に対する向聴数を求める。
 	Shanten shanten = 6;
-	for (int i = 0; i < TileNonflowerMax; i++)
+	for (int i = 0; i < TileNonflowerMax; i++) {
 		// 単純に対子の数を調べればよい
 		// ただし、同じ牌４枚を対子２つとして使ってはならない
 		if (tileCount[i] >= 2) shanten--;
+#ifdef GUOBIAO
+		if (tileCount[i] >= 4) shanten--; // 中国ルールでは4枚使いしてよい
+#endif /* GUOBIAO */
+	}
 	// 暗刻がある場合に聴牌とみなさないようにする
 	for (int i = 0; i < TileNonflowerMax; i++)
 		if ((tileCount[i] >= 3)&&(shanten < 1)) shanten++;
@@ -240,8 +244,10 @@ void ShantenAnalyzer::setQixingTilePattern(TileCode* const QixingPai, unsigned i
 
 Shanten ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount, bool qixing)
 { // 特殊：七星不靠/全不靠の向聴数を求める
+#ifndef GUOBIAO
 	if ((!RuleData::chkRuleApplied("stellar_uushii"))&&(qixing)) return ShantenImpossible;
 	else if ((!RuleData::chkRuleApplied("quanbukao"))&&(!qixing)) return ShantenImpossible;
+#endif /* GUOBIAO */
 
 	Shanten shanten = ShantenImpossible;
 	TileCode QixingZiPai[7] = {
@@ -269,6 +275,9 @@ Shanten ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, Pla
 
 Shanten ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：南北戦争の向聴数を求める
+#ifdef GUOBIAO
+	return ShantenImpossible;
+#else /* GUOBIAO */
 	if (!RuleData::chkRuleApplied("civil_war")) return ShantenImpossible;
 
 	Shanten shanten = 13;
@@ -318,10 +327,14 @@ Shanten ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, Pl
 	}
 
 	return shanten;
+#endif /* GUOBIAO */
 }
 
 Shanten ShantenAnalyzer::calcShantenTohokuGreen(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：東北新幹線グリーン車の向聴数を求める
+#ifdef GUOBIAO
+	return ShantenImpossible;
+#else /* GUOBIAO */
 	if (!RuleData::chkRuleApplied("tohoku_shinkansen_green")) return ShantenImpossible;
 
 	Shanten shanten = 13;
@@ -362,10 +375,14 @@ Shanten ShantenAnalyzer::calcShantenTohokuGreen(const GameTable* const gameStat,
 	}
 
 	return shanten;
+#endif /* GUOBIAO */
 }
 
 Shanten ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：惑星直列の向聴数を求める
+#ifdef GUOBIAO
+	return ShantenImpossible;
+#else /* GUOBIAO */
 	if (!RuleData::chkRuleApplied("syzygy")) return ShantenImpossible;
 
 	// 以下、一枚ずつ調べる
@@ -388,10 +405,14 @@ Shanten ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, Play
 	// 鳴き面子や暗槓がある場合は考えない
 
 	return (gameStat->Player[playerID].MeldPointer > 0) ? ShantenImpossible : (13 - syzygyPaiCount);
+#endif /* GUOBIAO */
 }
 
 Shanten ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：セブンアップの向聴数を求める
+#ifdef GUOBIAO
+	return ShantenImpossible;
+#else /* GUOBIAO */
 	if (!RuleData::chkRuleApplied("sevenup")) return ShantenImpossible;
 
 	Shanten shanten = 13;
@@ -422,11 +443,14 @@ Shanten ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, Pla
 	}
 
 	return shanten;
+#endif /* GUOBIAO */
 }
 
 Shanten ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：組合龍の向聴数を求める
+#ifndef GUOBIAO
 	if (!RuleData::chkRuleApplied("zuhelong")) return ShantenImpossible;
+#endif /* GUOBIAO */
 
 	Shanten shanten = ShantenImpossible;
 	int qixingZiPaiCount = 0;
@@ -451,6 +475,9 @@ Shanten ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, Pl
 
 Shanten ShantenAnalyzer::calcShantenNinnaji(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 特殊：仁和寺の向聴数を求める
+#ifdef GUOBIAO
+	return ShantenImpossible;
+#else /* GUOBIAO */
 	if (!RuleData::chkRuleApplied("ninnaji")) return ShantenImpossible;
 
 	Shanten shanten = 13;
@@ -480,4 +507,5 @@ Shanten ShantenAnalyzer::calcShantenNinnaji(const GameTable* const gameStat, Pla
 	}
 
 	return shanten;
+#endif /* GUOBIAO */
 }

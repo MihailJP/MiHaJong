@@ -181,7 +181,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		}
 
 		const bool DaoPaiAbilityFlag = (gameStat->gameType & RichiMJ) && utils::chkdaopaiability(gameStat, ActivePlayer);
-		if ((DaoPaiAbilityFlag) && (playerStat->FirstDrawFlag))
+		if ((gameStat->gameType & RichiMJ) && (DaoPaiAbilityFlag) && (playerStat->FirstDrawFlag))
 			buttonEnabled[btnKyuushu] = true; // 九種九牌ボタン
 
 		const bool ShisanBuDa = (gameStat->gameType & RichiMJ) && utils::chkShisanBuDa(gameStat, ActivePlayer);
@@ -222,7 +222,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 			else
 				return playerStat->Tsumohai().tile > TileSuitFlowers;
 		} ();
-		if ((!rules::chkRule("flower_tiles", "no")) &&
+		if (((gameStat->gameType & GuobiaoMJ) || (!rules::chkRule("flower_tiles", "no"))) &&
 			(playerStat->Tsumohai().tile != NoTile) &&
 			(TileCount[flowerTile] >= 1) &&
 			((!playerStat->RichiFlag.RichiFlag) || Flowerabilityflag))

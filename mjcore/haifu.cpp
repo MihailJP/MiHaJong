@@ -709,16 +709,19 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 	int OrigTurn, int OrigHonba, bool tmpUraFlag, bool tmpAliceFlag,
 	CodeConv::tstring ResultDesc, EndType RoundEndType) {
 		haifuBuffer << ::roundName(OrigTurn, gameStat);
+#ifndef GUOBIAO
 		if (OrigHonba > 0) haifuBuffer << _T(" ") << OrigHonba << _T("本場");
 		haifuBuffer << _T(" ドラ：") << haifuP.dora.str();
 		if ((RoundEndType == Agari)&&(tmpUraFlag)&&(RuleData::chkRuleApplied("uradora")))
 			haifuBuffer << _T("裏ドラ：") << haifuP.uraDora.str();
 		if ((RoundEndType == Agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
 			haifuBuffer << _T("アリス：") << haifuP.aliceDoraMax.str();
+#endif /* GUOBIAO */
 		haifuBuffer << std::endl << std::endl <<
 			_T("結果：") << ResultDesc << std::endl << std::endl;
 
 		HThaifuBuffer << _T("<h2>") << ::roundName(OrigTurn, gameStat);
+#ifndef GUOBIAO
 		if (OrigHonba > 0) HThaifuBuffer << _T(" ") << OrigHonba <<_T("本場");
 		HThaifuBuffer << _T(" ドラ：<span class=\"tile\">") <<
 			HThaifuP.dora.str() << _T("</span>");
@@ -728,6 +731,7 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 		if ((RoundEndType == Agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
 			HThaifuBuffer << _T("アリス：<span class=\"tile\">") <<
 			HThaifuP.aliceDoraMax.str() << _T("</span>");
+#endif /* GUOBIAO */
 		HThaifuBuffer << _T("</h2>") << std::endl <<
 			_T("<p>結果：") << ResultDesc << _T("</p>") << std::endl <<
 			_T("<table>") << std::endl << _T("<tr>");
@@ -739,11 +743,19 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 		const CodeConv::tstring windName[7] = {
 			_T("east"), _T("south"), _T("west"), _T("north"), _T("white"), _T("green"), _T("red"),
 		};
+#ifdef GUOBIAO
+		const bool eastOnly = false;
+#else /* GUOBIAO */
 		const bool eastOnly = RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game");
+#endif /* GUOBIAO */
 		XhaifuBuffer << _T("\t\t\t<round-number prevailing-wind=\"") << windName[OrigTurn / Players] <<
 			_T("\" rotation=\"") << ((eastOnly ? gameStat->LoopRound : 0) * Players + (OrigTurn % Players) + 1) <<
-			_T("\" counter=\"") << OrigHonba << _T("\" />") << std::endl;
+#ifndef GUOBIAO
+			_T("\" counter=\"") << OrigHonba <<
+#endif /* GUOBIAO */
+			_T("\" />") << std::endl;
 		XhaifuBuffer << _T("\t\t\t<result>") << ResultDesc << _T("</result>") << std::endl;
+#ifndef GUOBIAO
 		XhaifuBuffer << _T("\t\t\t<dora>") << std::endl <<
 			XhaifuP.dora.str() << _T("\t\t\t</dora>") << std::endl;
 		if ((RoundEndType == Agari)&&(tmpUraFlag)&&(RuleData::chkRuleApplied("uradora")))
@@ -752,6 +764,7 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 		if ((RoundEndType == Agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
 			XhaifuBuffer << _T("\t\t\t<alice>") << std::endl <<
 			XhaifuP.aliceDoraMax.str() << _T("\t\t\t</alice>") << std::endl;
+#endif /* GUOBIAO */
 }
 
 // 最終牌姿
@@ -1000,11 +1013,13 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 			((LNum)gameStat->Player[player].PlayerScore -
 			origPoint[player]).to_str(_T("+"), _T("-")) <<
 			_T(")");
+#ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("chip")) // チップありの時
 		o << _T(" チップ: ") <<
 			((gameStat->Player[player].playerChip >= 0) ? _T("+") : _T("")) <<
 			(int)gameStat->Player[player].playerChip;
 
+#endif /* GUOBIAO */
 	{
 		CodeConv::tostringstream p;
 		p << _T("*** ") << EnvTable::Instantiate()->PlayerDat[player].PlayerName << _T("(") <<
@@ -1031,9 +1046,11 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 			gameStat->Player[player].PlayerScore.bignumtoplaintext() << _T("\" delta=\"") <<
 			((LNum)gameStat->Player[player].PlayerScore -
 			origPoint[player]).to_str_plain() << _T('"');
+#ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("chip")) // チップありの時
 		XhaifuBuffer << _T(" chip=\"") <<
 			(int)gameStat->Player[player].playerChip << _T('"');
+#endif /* GUOBIAO */
 	XhaifuBuffer << _T(" />") << std::endl;
 }
 

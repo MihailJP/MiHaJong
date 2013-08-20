@@ -84,7 +84,7 @@ void yaku::yakuCalculator::doubling(yaku::YAKUSTAT* const yStat) {
 void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 #ifdef GUOBIAO
 	/* 中国ルールでは単に足し算するだけ、複雑な計算は不要 */
-	yStat->AgariPoints = (LNum)yStat->CoreHan;
+	yStat->AgariPoints = (LNum)yStat->CoreHan + yStat->FlowerQuantity;
 #else /* GUOBIAO */
 	/* 縛りを満たしてなかったら0を返す
 	   点数が0ならコア部分で錯和と判断される……はず */
@@ -257,7 +257,6 @@ void yaku::yakuCalculator::countDora
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
 	YAKUSTAT* const result, PlayerID targetPlayer)
 {
-#ifndef GUOBIAO
 	auto doraText =
 		[](YAKUSTAT* const result, LPCTSTR const label, int quantity) {
 #if defined(_MSC_VER)
@@ -280,6 +279,7 @@ void yaku::yakuCalculator::countDora
 			_tcsncat(result->yakuValList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #endif
 		};
+#ifndef GUOBIAO
 	const bool uradoraEnabled = ((RuleData::chkRuleApplied("uradora")) && // 裏ドラありのルールで、
 		(gameStat->Player[targetPlayer].MenzenFlag) && // 門前であり、
 		(gameStat->Player[targetPlayer].RichiFlag.RichiFlag)); // 立直をかけているなら
@@ -414,6 +414,10 @@ void yaku::yakuCalculator::countDora
 		doraText(result, _T("アリス祝儀"), alice);
 	}
 #endif /* GUOBIAO */
+	if (flower) {
+		result->DoraQuantity += omote; result->BonusHan += omote;
+		doraText(result, _T("花牌"), omote);
+	}
 }
 
 /* ドラ計数 */
@@ -495,21 +499,33 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
 			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
 				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str());
+#ifdef GUOBIAO
+			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("点\r\n"));
+#else /* GUOBIAO */
 			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("飜\r\n"));
+#endif /* GUOBIAO */
 #elif defined(_WIN32)
 			_tcsncat(result->yakuNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
 			_tcsncat(result->yakuNameList, _T("\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
 			_tcsncat(result->yakuValList,
 				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str(),
 					yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+#ifdef GUOBIAO
+			_tcsncat(result->yakuValList, _T("点\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+#else /* GUOBIAO */
 			_tcsncat(result->yakuValList, _T("飜\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+#endif /* GUOBIAO */
 #else
 			_tcsncat(result->yakuNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
 			_tcsncat(result->yakuNameList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
 			_tcsncat(result->yakuValList,
 				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str(),
 					yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+#ifdef GUOBIAO
+			_tcsncat(result->yakuValList, _T("点\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+#else /* GUOBIAO */
 			_tcsncat(result->yakuValList, _T("飜\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+#endif /* GUOBIAO */
 #endif
 #ifndef GUOBIAO
 		}

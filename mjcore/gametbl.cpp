@@ -234,7 +234,11 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 	gameStat->LastAgariPlayer = -1;
 	for (int i = 0; i < Players; i++) {
 		gameStat->Player[i].SumaroFlag = false;
+#ifdef GUOBIAO
+		gameStat->Player[i].YakitoriFlag = false;
+#else /* GUOBIAO */
 		gameStat->Player[i].YakitoriFlag = RuleData::chkRuleApplied("yakitori");
+#endif /* GUOBIAO */
 		gameStat->Player[i].playerChip = 0;
 	}
 

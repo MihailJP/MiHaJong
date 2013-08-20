@@ -132,6 +132,7 @@ namespace { /* 内部処理分割用 */
 		EndType RoundEndType = Continuing;
 		haifu::haifurectsumo(gameStat); // 牌譜に記録
 		/* 八連荘判定用の変数 */
+#ifndef GUOBIAO
 		if (RuleData::chkRuleApplied("paarenchan")) {
 			if (gameStat->LastAgariPlayer == gameStat->CurrentPlayer.Active) {
 				++gameStat->AgariChain;
@@ -141,6 +142,7 @@ namespace { /* 内部処理分割用 */
 				gameStat->AgariChain = 1; gameStat->LastAgariPlayer = gameStat->CurrentPlayer.Active;
 			}
 		}
+#endif /* GUOBIAO */
 		/* 自摸和したことを変数に設定 */
 		gameStat->TsumoAgariFlag = true;
 		yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Active);
@@ -168,6 +170,7 @@ namespace { /* 内部処理分割用 */
 		return RoundEndType;
 	}
 	EndType procDahaiSubKyuushu(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 九種九牌が宣言された場合 */
+#ifndef GUOBIAO
 		DiscardTileIndex.type = DiscardTileNum::Normal;
 		DiscardTileIndex.id = NumOfTilesInHand; // 九種流しができない時はツモ切りとみなす
 		if (RuleData::chkRuleApplied("nine_terminals") &&
@@ -180,9 +183,12 @@ namespace { /* 内部処理分割用 */
 				mihajong_graphic::GameStatus::updateGameStat(gameStat);
 				return KyuushuKyuuhai;
 		} else {
+#endif /* GUOBIAO */
 			warn(_T("九種九牌はできません。ツモ切りとみなします。"));
 			return Continuing;
+#ifndef GUOBIAO
 		}
+#endif /* GUOBIAO */
 	}
 	EndType procDahaiSubFlower(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 花牌を抜いた場合の処理 */
 		if ((DiscardTileIndex.type == DiscardTileNum::Ankan) &&
@@ -210,7 +216,11 @@ namespace { /* 内部処理分割用 */
 		return Continuing;
 	}
 	EndType procDahaiSubKan(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 暗槓・加槓するときの処理 */
+#ifdef GUOBIAO
+		const unsigned kanLim = 16;
+#else /* GUOBIAO */
 		const unsigned kanLim = (RuleData::chkRuleApplied("fifth_kong") ? 5 : 4);
+#endif /* GUOBIAO */
 		if ((gameStat->TilePointer < (gameStat->RinshanPointer - (gameStat->DeadTiles - 1))) && // ハイテイでない
 			(gameStat->KangNum < kanLim)) { // 合計数の制限内である
 				if ((DiscardTileIndex.type == DiscardTileNum::Ankan) ||
@@ -233,6 +243,10 @@ namespace { /* 内部処理分割用 */
 		return Continuing;
 	}
 	void procDahaiSubRiichi(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 立直をするときの処理 */
+#ifdef GUOBIAO
+		DiscardTileIndex.type = DiscardTileNum::Normal;
+		warn(_T("リーチが指定されましたが、これを無視します。"));
+#else /* GUOBIAO */
 		if (gameStat->tilesLeft() < ACTUAL_PLAYERS) {
 			// 残り４枚未満の時はリーチ無効
 			DiscardTileIndex.type = DiscardTileNum::Normal;
@@ -288,6 +302,7 @@ namespace { /* 内部処理分割用 */
 			usleep(1000000);
 #endif /*_WIN32*/
 		}
+#endif /* GUOBIAO */
 	}
 	void procDahaiSubPost(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) { /* 事後処理 */
 		/* 打牌を記録する */
@@ -312,6 +327,7 @@ namespace { /* 内部処理分割用 */
 			gameStat->Player[i].Tsumohai().tile = NoTile;
 			gameStat->Player[i].Tsumohai().red  = Normal;
 		}
+#ifndef GUOBIAO
 		/* 立直をした直後の場合、千点を供託し一発のフラグを立てる */
 		if ((DiscardTileIndex.type == DiscardTileNum::Riichi) || (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
@@ -330,6 +346,7 @@ namespace { /* 内部処理分割用 */
 		/* 天和や地和のフラグを降ろす */
 		gameStat->statOfActive().FirstDrawFlag =
 			gameStat->TianHuFlag = false;
+#endif /* GUOBIAO */
 		/* 打牌するときの音を鳴らす */
 		/* ドラを捨てる時は強打の音にする */
 #ifndef GUOBIAO
@@ -391,6 +408,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 	}
 	gameStat->KangFlag.kangFlag = false; // 嶺上開花のフラグを降ろす
 	gameStat->PaoFlag[pyMinkan].paoPlayer = gameStat->PaoFlag[pyMinkan].agariPlayer = -1;
+#ifndef GUOBIAO
 	/* 立直をするときの処理 */
 	if ((DiscardTileIndex.type == DiscardTileNum::Riichi) ||
 		(DiscardTileIndex.type == DiscardTileNum::OpenRiichi))
@@ -401,6 +419,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		gameStat->statOfActive().renpaiTenhohStat = 1;
 	else if (gameStat->statOfActive().renpaiTenhohStat == 1)
 		gameStat->statOfActive().renpaiTenhohStat = -1;
+#endif /* GUOBIAO */
 	/* 事後処理 */
 	procDahaiSubPost(gameStat, DiscardTileIndex);
 	return Continuing;

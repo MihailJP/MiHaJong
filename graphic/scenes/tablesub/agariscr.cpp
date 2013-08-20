@@ -50,7 +50,7 @@ TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
 
 bool TableSubsceneAgariScreenProto::YakumanMode() {
 	bool agariScreenMode = false;
-	{
+	if (GameStatus::gameStat()->gameType & GuobiaoMJ) {
 		const mihajong_structs::YakuResult yakuInfo = YakuResult::getYakuStat();
 		const int tmpTotalHan = yakuInfo.CoreHan + yakuInfo.BonusHan;
 		const int tmpTotalMangan = yakuInfo.CoreSemiMangan + yakuInfo.BonusSemiMangan;
@@ -114,7 +114,7 @@ void TableSubsceneAgariScreenProto::parseYakuList() {
 	LPTSTR yakuNameUnified = nullptr, yakuValUnified = nullptr;
 	LPCTSTR yakuName = YakumanMode() ? yakuData.yakumanNameList : yakuData.yakuNameList;
 	LPCTSTR yakuVal  = YakumanMode() ? yakuData.yakumanValList  : yakuData.yakuValList;
-	if (!rules::chkRule("limitless", "no")) {
+	if ((GameStatus::gameStat()->gameType & RichiMJ)&&(!rules::chkRule("limitless", "no"))) {
 		const size_t bufsz = yakuData.nameBufSize * 2;
 		yakuNameUnified = new TCHAR[bufsz]; yakuNameUnified[0] = _T('\0');
 		yakuValUnified = new TCHAR[bufsz]; yakuValUnified[0] = _T('\0');
@@ -161,7 +161,7 @@ void TableSubsceneAgariScreenProto::parseYakuList() {
 			yakuList.push_back(std::make_pair(yakuNameList[i], _T("")));
 		else
 			yakuList.push_back(std::make_pair(yakuNameList[i], yakuValList[i]));
-	if (!rules::chkRule("limitless", "no")) {
+	if ((GameStatus::gameStat()->gameType & RichiMJ)&&(!rules::chkRule("limitless", "no"))) {
 		delete[] yakuNameUnified;
 		delete[] yakuValUnified;
 	}
@@ -372,6 +372,7 @@ TableSubsceneAgariScreenProto::DoraTiles::~DoraTiles() {
 }
 void TableSubsceneAgariScreenProto::DoraTiles::Reconstruct() {
 	const GameTable* const gameStat = GameStatus::gameStat();
+	if (gameStat->chkGameType(GuobiaoMJ)) return;
 	const int numberOfTiles = [gameStat]() -> int {
 		if (gameStat->chkGameType(AllSanma))
 			return 108;
@@ -444,6 +445,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
 		soundFlag = false;
 	}
 	if (myCaller->YakumanMode()) return;
+	if (GameStatus::gameStat()->gameType & GuobiaoMJ) return; // ’†‘ƒ‹[ƒ‹‚Å‚Í•s—v‚Èî•ñ‚È‚Ì‚Å
 	const double anmTime = 0.75;
 	const int han = (YakuResult::getYakuStat().CoreHan + YakuResult::getYakuStat().BonusHan);
 	CodeConv::tostringstream o;
@@ -478,7 +480,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 	}
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
-	if (rules::chkRule("limitless", "no")) {
+	if ((GameStatus::gameStat()->gameType & RichiMJ) && rules::chkRule("limitless", "no")) {
 		const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 		if (Zeit <= 0.0) return;
 		const double anmTime = 0.75;
@@ -525,6 +527,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
 	}
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructChipAmount() {
+	if (GameStatus::gameStat()->gameType & GuobiaoMJ) return;
 	if (rules::chkRule("chip", "no")) return;
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 	if (Zeit <= 0.0) return;

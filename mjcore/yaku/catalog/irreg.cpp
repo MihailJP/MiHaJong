@@ -5,12 +5,17 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	/* チートイ */
 	auto isQiDui =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+#ifdef GUOBIAO
+			return analysis->shanten[shantenPairs] == -1;
+#else /* GUOBIAO */
 			return ((analysis->shanten[shantenPairs] == -1)&&(analysis->shanten[shantenRegular] >= 0));
+#endif /* GUOBIAO */
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("七対子"), yaku::yakuCalculator::Yaku::yval_24,
+		_T("七対"), yaku::yakuCalculator::Yaku::yval_24,
 		_T("門前清"), _T("単調将"),
+		_T("連六"), _T("連六x2"), _T("老少副"), _T("老少副x2"), _T("一般高"), _T("一般高x2"), _T("平和"),
 #else /* GUOBIAO */
 		_T("七対子"), get_yaku_han("seven_pairs"), /* 1翻50符のルールと2翻25符のルールがある。符はここでは設定できないです…… */
 #endif /* GUOBIAO */
