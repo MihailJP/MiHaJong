@@ -309,11 +309,13 @@ namespace { /* 内部処理分割用 */
 		DiscardTile* const newDiscard = &(gameStat->statOfActive().Discard[++gameStat->statOfActive().DiscardPointer]);
 		newDiscard->tcode.tile = gameStat->CurrentDiscard.tile = gameStat->statOfActive().Hand[DiscardTileIndex.id].tile;
 		newDiscard->tcode.red  = gameStat->CurrentDiscard.red  = gameStat->statOfActive().Hand[DiscardTileIndex.id].red;
+#ifndef GUOBIAO
 		if (DiscardTileIndex.type == DiscardTileNum::Riichi) /* 立直宣言牌の場合 */
 			newDiscard->dstat = discardRiichi;
 		else if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi) /* オープン立直宣言牌の場合 */
 			newDiscard->dstat = discardRiichi;
 		else /* それ以外の場合 */
+#endif /* GUOBIAO */
 			newDiscard->dstat = discardNormal;
 		newDiscard->isDiscardThrough = (DiscardTileIndex.id == NumOfTilesInHand - 1) && (!gameStat->TianHuFlag);
 		gameStat->statOfActive().Hand[DiscardTileIndex.id].tile = NoTile;
