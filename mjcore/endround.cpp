@@ -527,6 +527,28 @@ void endround::transferChonboPenalty(GameTable* gameStat, PlayerID targetPlayer)
 
 // -------------------------------------------------------------------------
 
+#ifdef GUOBIAO
+namespace { /* 中国ルール用の席替え処理 */
+	void swapSeat(GameTable* gameStat, std::array<int, Players>& swapSeatList) {
+		// 退避
+		InfoByPlayer<EnvTable::PlayerLabel> TmpPlayerDat;
+		InfoByPlayer<PlayerTable> TmpPlayerTable;
+		for (PlayerID i = 0; i < Players; i++) {
+			TmpPlayerDat[i].PlayerName = EnvTable::Instantiate()->PlayerDat[i].PlayerName;
+			TmpPlayerDat[i].RemotePlayerFlag = EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag;
+			memcpy(&(TmpPlayerTable[i]), &(gameStat->Player[i]), sizeof (PlayerTable));
+		}
+		// 並べ替え結果を書き込み
+		for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++) {
+			EnvTable::Instantiate()->PlayerDat[swapSeatList[i]].PlayerName = TmpPlayerDat[i].PlayerName;
+			EnvTable::Instantiate()->PlayerDat[swapSeatList[i]].RemotePlayerFlag = TmpPlayerDat[i].RemotePlayerFlag;
+			memcpy(&(gameStat->Player[swapSeatList[i]]), &(TmpPlayerTable[i]), sizeof (PlayerTable));
+		}
+		gameStat->PlayerID = swapSeatList[gameStat->PlayerID];
+	}
+}
+#endif /* GUOBIAO */
+
 bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int OrigTurn) { // 次の局へ(終了する場合はtrue)
 #ifndef GUOBIAO
 	// ハコ割れ終了
@@ -555,7 +577,21 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 #endif /* GUOBIAO */
 	// 南入した場合……
 #ifdef GUOBIAO
-	/* TODO: 席替え処理 */
+	/* 席替え処理 */
+	switch (gameStat->GameRound) {
+	case 4: case 12: // 南入・北入
+		{
+			std::array<int, Players> playerSwitch = {1, 0, 3, 2};
+			swapSeat(gameStat, playerSwitch);
+		}
+		break;
+	case 8: // 西入
+		{
+			std::array<int, Players> playerSwitch = {3, 2, 0, 1};
+			swapSeat(gameStat, playerSwitch);
+		}
+		break;
+	}
 #else /* GUOBIAO */
 	if (gameStat->GameRound == 4) {
 		if (RuleData::chkRule("game_length", "east_north_game")) // 東北廻しのとき
