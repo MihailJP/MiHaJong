@@ -291,8 +291,10 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		CodeConv::tostringstream o;
 		o << _T("局を終了 終了コード [") << (int)RoundEndType << _T(']');
 	}
+#ifndef GUOBIAO
 	/* 流し満貫の判定 */
 	auto NagashiManganFlag = chkNagashiMangan(gameStat, RoundEndType);
+#endif /* GUOBIAO */
 	/************/
 	/* 和了処理 */
 	/************/
