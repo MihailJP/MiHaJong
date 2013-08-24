@@ -200,6 +200,10 @@ namespace confpath {
 				CopyFileA(".\\ai\\default.lua",
 					(std::string(appdata) + std::string("\\MiHaJong\\ai\\default.lua")).c_str(),
 					TRUE);
+				MakeSureDirectoryPathExists((std::string(appdata) + std::string("\\MiHaJong\\gbai\\")).c_str());
+				CopyFileA(".\\gbai\\default.lua",
+					(std::string(appdata) + std::string("\\MiHaJong\\gbai\\default.lua")).c_str(),
+					TRUE);
 				configpath = std::string(appdata) + std::string("\\MiHaJong\\");
 			}
 			
@@ -216,6 +220,7 @@ namespace confpath {
 		configpath += std::string("/");
 		mkdir((configpath + std::string("haifu")).c_str(), 0755);
 		mkdir((configpath + std::string("ai")).c_str(), 0755);
+		mkdir((configpath + std::string("gbai")).c_str(), 0755);
 
 		symlink(PKGDATADIR "/haifu/haifu.css",
 			(configpath + std::string("/haifu/haifu.css")).c_str());
@@ -227,6 +232,8 @@ namespace confpath {
 			(configpath + std::string("/haifu/haifu.xsl")).c_str());
 		symlink(PKGDATADIR "/ai/default.lua",
 			(configpath + std::string("/ai/default.lua")).c_str());
+		symlink(PKGDATADIR "/gbai/default.lua",
+			(configpath + std::string("/gbai/default.lua")).c_str());
 #endif /*_WIN32*/
 		return configpath;
 	}

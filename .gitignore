@@ -4,6 +4,7 @@ mihajong/*.dll
 mihajong/*.i
 mihajong/ai/
 mihajong/bgm/
+mihajong/gbai/
 mihajong/sound/
 mihajong/debug*.log
 mihajong/haifu/

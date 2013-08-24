@@ -8,7 +8,7 @@ DATAPATH=$(SolutionDir)data\
 ARCHIVE_CONTENT=$(TMPPATH)astro.dll $(TMPPATH)GuruGuruSMF4.dll $(TMPPATH)graphic.dll $(TMPPATH)mjcore.dll $(TMPPATH)socket.dll $(TMPPATH)sound.dll \
 	$(TMPPATH)mihajong.exe $(TMPPATH)mihasanm.exe $(TMPPATH)mihassnm.exe $(TMPPATH)mihaysnm.exe \
 	$(TMPPATH)history.txt $(TMPPATH)license.txt $(TMPPATH)playing.txt $(TMPPATH)readme.txt $(TMPPATH)rulesyms.txt $(TMPPATH)script.txt $(TMPPATH)addyaku.md \
-	$(TMPPATH)ai\default.lua $(TMPPATH)haifu\haifu.css $(TMPPATH)haifu\haifu.dtd $(TMPPATH)haifu\haifu.xsd $(TMPPATH)haifu\haifu.xsl
+	$(TMPPATH)ai\default.lua $(TMPPATH)gbai\default.lua $(TMPPATH)haifu\haifu.css $(TMPPATH)haifu\haifu.dtd $(TMPPATH)haifu\haifu.xsd $(TMPPATH)haifu\haifu.xsl
 
 all: $(ARCHIVE)
 
@@ -59,6 +59,9 @@ $(TMPPATH)addyaku.md: $(DOCPATH)addyaku.md
 	copy $** $@
 $(TMPPATH)ai\default.lua: $(DATAPATH)ai\default.lua
 	- mkdir $(TMPPATH)ai
+	copy $** $@
+$(TMPPATH)gbai\default.lua: $(DATAPATH)gbai\default.lua
+	- mkdir $(TMPPATH)gbai
 	copy $** $@
 $(TMPPATH)haifu\haifu.css: $(DATAPATH)haifu\haifu.css
 	- mkdir $(TMPPATH)haifu
