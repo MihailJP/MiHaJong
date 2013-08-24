@@ -133,10 +133,10 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 }
 
 /* 符を計算する */
-#ifndef GUOBIAO
 void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis)
 {
+#ifndef GUOBIAO
 	trace(_T("符計算の処理に入ります。"));
 	int fu = 20; // 副底２０符
 
@@ -183,8 +183,12 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	/* 役牌が雀頭ではなく、刻子や槓子がない場合、フラグを立てる */
 	bool NoTriplets = (fu == 20); bool LiangMianFlag = false;
 
+#endif /* GUOBIAO */
 	/* 聴牌形加符 */
 	analysis->Machi = machiInvalid; // 初期化
+#ifdef GUOBIAO
+	bool LiangMianFlag; // ダミー
+#endif /* GUOBIAO */
 	const TileCode* tsumoTile = &(gameStat->Player[analysis->player].Tsumohai().tile); // shorthand
 	if (analysis->MianziDat[0].tile == *tsumoTile) analysis->Machi = machiTanki; // 単騎待ち
 	for (int i = 1; i < SizeOfMeldBuffer; i++) { // 待ちの種類を調べる……
@@ -206,6 +210,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 			break;
 		}
 	}
+#ifndef GUOBIAO
 	/* 嵌張、辺張、単騎は＋２符「不利な待ちには２点付く」 */
 	switch (analysis->Machi) {
 	case machiKanchan: case machiPenchan: case machiTanki:
@@ -249,8 +254,8 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	/* 終了処理 */
 	CodeConv::tostringstream o; o << _T("この手牌は [") << fu << _T("] 符です。"); trace(o.str().c_str());
 	analysis->BasePoint = (uint8_t)fu;
-}
 #endif /* GUOBIAO */
+}
 
 /* ドラ計数 */
 void yaku::yakuCalculator::countDora
@@ -600,9 +605,7 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 			return nullptr;
 #endif /*_WIN32*/
 		}
-#ifndef GUOBIAO
 		calcbasepoints(gameStat, analysis); // 符を計算する
-#endif /* GUOBIAO */
 		analysis->DuiziCount = countingFacility::countDuiz(analysis->MianziDat);
 		analysis->KeziCount = countingFacility::countKez(analysis->MianziDat, &analysis->TotalKezi);
 		analysis->AnKeziCount = countingFacility::countAnKez(analysis->MianziDat, &analysis->TotalAnKezi);
@@ -611,8 +614,8 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 		analysis->KangziCount = countingFacility::countKangz(analysis->MianziDat, &analysis->TotalKangzi);
 		analysis->AnKangziCount = countingFacility::countAnKangz(analysis->MianziDat, &analysis->TotalAnKangzi);
 		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, &analysis->TotalKaKangzi);
-#ifndef GUOBIAO
 	} else {
+#ifndef GUOBIAO
 		if (analysis->shanten[shantenPairs] == -1) { // 七対子
 			if (RuleData::chkRule("seven_pairs", "1han_50fu")) analysis->BasePoint = 50; // 1翻50符
 			else analysis->BasePoint = 25; // 2翻25符
@@ -623,13 +626,13 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 				analysis->BasePoint = 30;
 			else if (RuleData::chkRule("quanbukao", "3han_40fu") || RuleData::chkRule("quanbukao", "4han_40fu"))
 				analysis->BasePoint = 40;
+		} else
 #endif /* GUOBIAO */
-		}
-		else if (analysis->shanten[shantenZuhelong] == -1) { // 組合龍
+		if (analysis->shanten[shantenZuhelong] == -1) { // 組合龍
 			mentsuParser::makementsu(gameStat, analysis->player, *pMode, nullptr, analysis->MianziDat);
-#ifndef GUOBIAO
 			calcbasepoints(gameStat, analysis); // 符を計算する
 		}
+#ifndef GUOBIAO
 		else analysis->BasePoint = 30;
 #endif /* GUOBIAO */
 	}

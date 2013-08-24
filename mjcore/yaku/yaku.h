@@ -223,9 +223,7 @@ private:
 		int finishedThreads;
 		MHJMutex cs;
 		int startedThreads;
-#ifndef GUOBIAO
 		static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
-#endif /* GUOBIAO */
 #ifdef _WIN32
 		DWORD WINAPI calculate(
 #else /*_WIN32*/
