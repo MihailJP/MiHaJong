@@ -626,37 +626,37 @@ void calcdoukasen(GameTable* const gameStat) {
 		if (gameStat->chkGameType(Sanma4)) {
 			PlayerID* tmpDoukasen = new PlayerID(
 				((30 - ((gameStat->diceSum() - 1) * 36 * 2 + 
-				gameStat->diceSum() * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3);
+				(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3);
 			gameStat->DoukasenPlayer = tobePlayed(gameStat, *tmpDoukasen);
 			delete tmpDoukasen;
 		} else if (gameStat->chkGameType(SanmaT)) {
 			gameStat->DoukasenPlayer =
 				((30 - ((gameStat->diceSum() - 1 +
 				(gameStat->GameRound - (gameStat->GameRound / 4))) * 36 * 2 +
-				gameStat->diceSum() * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3;
+				(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3;
 		} else {
 			int* tmp;
 			if (RuleData::chkRule("flower_tiles", "8tiles"))
 				gameStat->DoukasenPlayer =
 					((40 - ((gameStat->diceSum() - 1 +
 					(gameStat->GameRound % Players)) * 36 * 3 + 
-					gameStat->diceSum() * 2 + gameStat->TilePointer - 1) / 36) + 40)
+					(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) / 36) + 40)
 					% Players;
 			else if (RuleData::chkRule("flower_tiles", "no"))
 				gameStat->DoukasenPlayer =
 					((40 - ((gameStat->diceSum() - 1 +
 					(gameStat->GameRound % Players)) * 34 * 3 +
-					gameStat->diceSum() * 2 + gameStat->TilePointer - 1) / 34) + 40)
+					(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) / 34) + 40)
 					% Players;
 			else {
 				gameStat->DoukasenPlayer =
 					((40 - ((gameStat->diceSum() - 1 +
 					(gameStat->GameRound % Players)) * 70 * 3 / 2 +
-					gameStat->diceSum() * 2 + gameStat->TilePointer - 1) / 35) + 40)
+					(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) / 35) + 40)
 					% Players;
 				tmp = new int(
 					((gameStat->diceSum() - 1 + (gameStat->GameRound % Players)) * 70 * 3 / 2 +
-					gameStat->diceSum() * 2 + gameStat->TilePointer - 1) % 70
+					(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) % 70
 					);
 				if (*tmp == (((gameStat->diceSum() + gameStat->GameRound) % 2) * 35))
 					gameStat->DoukasenPlayer = (40 + gameStat->DoukasenPlayer + 1) % Players;
