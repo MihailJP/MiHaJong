@@ -515,7 +515,9 @@ namespace {
 	void calculateWaremeDelta(const GameTable* gameStat) { // 割れ目とか
 		if (RuleData::chkRuleApplied("wareme"))
 			calculateWareme(gameStat); // 割れ目ルール
-		if ((RuleData::chkRule("wareme", "greater_wareme")) && (gameStat->Dice[0].Number == gameStat->Dice[1].Number))
+		if ((RuleData::chkRule("wareme", "greater_wareme")) &&
+			((gameStat->Dice[0].Number == gameStat->Dice[1].Number) || 
+			((gameStat->Dice[2].Number != 0) && (gameStat->Dice[2].Number == gameStat->Dice[3].Number))))
 			calculateWareme(gameStat); // サイコロがゾロ目の時はさらに倍
 		if (RuleData::chkRuleApplied("doukasen"))
 			calculateDoukasen(gameStat); // 導火線ルール

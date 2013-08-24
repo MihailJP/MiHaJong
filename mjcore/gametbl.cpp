@@ -18,18 +18,32 @@ GameTable GameStat, StatSandBox;
 void calcWareme(GameTable* const gameStat) {
 #ifndef GUOBIAO
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-	if (gameStat->chkGameType(AllSanma)) {
-		if (RuleData::chkRuleApplied("wareme") || RuleData::chkRuleApplied("kaimenkaze")) {
+	if (RuleData::chkRuleApplied("wareme") || RuleData::chkRuleApplied("kaimenkaze")) {
+		if (gameStat->chkGameType(AllSanma)) {
 			gameStat->WaremePlayer = ((gameStat->GameRound-(gameStat->GameRound/4))+24
 				+gameStat->diceSum()-1) % 3;
-			if (gameStat->chkGameType(Sanma4)) {
-				gameStat->WaremePlayer =
-					tobePlayed(gameStat, (24+gameStat->diceSum()-1) % 3);
+		} else {
+			gameStat->WaremePlayer = ((gameStat->GameRound % 4)+32+gameStat->diceSum()-1) % 4;
+		}
+		if (RuleData::chkRule("dice_roll", "roll_twice")) { // 二度振り修正用
+			if (gameStat->chkGameType(AllSanma)) {
+				if (gameStat->diceSum() + gameStat->diceSum2() > 18)
+					gameStat->WaremePlayer = (gameStat->WaremePlayer + 24 - 1) % 3;
+			} else if (RuleData::chkRule("flower_tiles", "8tiles")) {
+				if (gameStat->diceSum() + gameStat->diceSum2() > 18)
+					gameStat->WaremePlayer = (gameStat->WaremePlayer + 32 - 1) % 4;
+			} else if (RuleData::chkRule("flower_tiles", "no")) {
+				if (gameStat->diceSum() + gameStat->diceSum2() > 17)
+					gameStat->WaremePlayer = (gameStat->WaremePlayer + 32 - 1) % 4;
+			} else {
+				if (gameStat->diceSum() + gameStat->diceSum2() > 18)
+					gameStat->WaremePlayer = (gameStat->WaremePlayer + 32 - 1) % 4;
+				else if ((gameStat->diceSum() + gameStat->diceSum2() == 18) && (gameStat->WaremePlayer % 2 == 1))
+					gameStat->WaremePlayer = (gameStat->WaremePlayer + 32 - 1) % 4;
 			}
 		}
-	} else {
-		if (RuleData::chkRuleApplied("wareme") || RuleData::chkRuleApplied("kaimenkaze"))
-			gameStat->WaremePlayer = ((gameStat->GameRound % 4)+32+gameStat->diceSum()-1) % 4;
+		if (gameStat->chkGameType(Sanma4))
+			gameStat->WaremePlayer = tobePlayed(gameStat, (24+gameStat->diceSum()-1) % 3);
 	}
 #endif /* GUOBIAO */
 	return;
@@ -94,8 +108,10 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 	gameStat->WaremePlayer = // 割れ目の位置(-1で割れ目なし)
 		gameStat->DoukasenPlayer = -1; // 導火線の位置(-1で導火線なし)
 	gameStat->DoraPointer = 999;
-	gameStat->Dice[0].Number = gameStat->Dice[1].Number = 0;
-	gameStat->Dice[0].Direction = gameStat->Dice[1].Direction = 0;
+	gameStat->Dice[0].Number = gameStat->Dice[1].Number =
+		gameStat->Dice[2].Number = gameStat->Dice[3].Number = 0;
+	gameStat->Dice[0].Direction = gameStat->Dice[1].Direction = 
+		gameStat->Dice[2].Direction = gameStat->Dice[3].Direction = 0;
 	gameStat->TilePointer = 0;
 
 #ifdef GUOBIAO
@@ -320,10 +336,10 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 		sandbox->PaoFlag[i].paoPlayer = gameStat->PaoFlag[i].paoPlayer;
 		sandbox->PaoFlag[i].agariPlayer = gameStat->PaoFlag[i].agariPlayer;
 	}
-	sandbox->Dice[0].Number = gameStat->Dice[0].Number;
-	sandbox->Dice[1].Number = gameStat->Dice[1].Number;
-	sandbox->Dice[0].Direction = gameStat->Dice[0].Direction;
-	sandbox->Dice[1].Direction = gameStat->Dice[1].Direction;
+	for (int i = 0; i < 4; i++) {
+		sandbox->Dice[i].Number = gameStat->Dice[i].Number;
+		sandbox->Dice[i].Direction = gameStat->Dice[i].Direction;
+	}
 	for (int i = 0; i < 6; i++) {
 		if (gameStat->chkGameType(AllSanma)) {
 			if (gameStat->DoraPointer <= (102 - gameStat->ExtraRinshan - i * 2))

@@ -24,25 +24,26 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 	auto calcTileNum = [&gameStat, &targetPlayer, &yamahaiAttr](unsigned j) -> unsigned {
 		const unsigned yamahaiMode = std::get<0>(yamahaiAttr);
 		const unsigned dice = gameStat->Dice[0].Number + gameStat->Dice[1].Number;
+		const unsigned dice2 = gameStat->Dice[2].Number + gameStat->Dice[3].Number;
 		if ((gameStat->Dice[0].Number == 0) && (gameStat->Dice[1].Number == 0)) return 0; // –¢Ý’è
 		assert((dice >= 2) && (dice <= 12));
 		switch (yamahaiMode) {
 		case 0:
 			return
-				((((targetPlayer + 3) % Players) * 34) + j * 2 + (104 * dice + 34) +
+				((((targetPlayer + 3) % Players) * 34) + j * 2 + (104 * dice + 2 * dice2 + 34) +
 				((gameStat->GameRound % Players)                        * 102)) % 136;
 		case 1:
 			return
-				((((targetPlayer + 3) % Players) * 36) + j * 2 + (110 * dice + 36) +
+				((((targetPlayer + 3) % Players) * 36) + j * 2 + (110 * dice + 2 * dice2 + 36) +
 				((gameStat->GameRound % Players)                        * 108)) % 144;
 		case 2:
 			return (
-				((((targetPlayer + 3) % Players) * 35) + j * 2 + (107 * dice + 35) +
+				((((targetPlayer + 3) % Players) * 35) + j * 2 + (107 * dice + 2 * dice2 + 35) +
 				((gameStat->GameRound % Players)                        * 105)) % 140
 				) / 2 * 2;
 		case 3:
 			return
-				((((targetPlayer + 2) % 3      ) * 36) + j * 2 + (74 * dice + 36) +
+				((((targetPlayer + 2) % 3      ) * 36) + j * 2 + (74 * dice + 2 * dice2 + 36) +
 				(((gameStat->GameRound - (gameStat->GameRound / 4)) % 3)*  72)) % 108;
 		default:
 			throw _T("calcTileNum: Invalid mode!");

@@ -209,20 +209,22 @@ void initdora(GameTable* const gameStat) { // ドラの設定
 	else gameStat->DoraPointer = 130; // ドラ表示牌のポインタ
 	if (RuleData::chkRuleApplied("nagatacho")) { // 永田町ルール
 		nagatadora(BambooSeven); // 七索は常にドラ
-		unsigned int dice = gameStat->Dice[0].Number + gameStat->Dice[1].Number;
-		if (dice <= 8) { // 2～8はその数牌がドラ　三麻では萬子がないので別処理
-			if (!gameStat->chkGameType(SanmaX))
-				nagatadora(static_cast<TileCode>(TileSuitCharacters + dice));
-			nagatadora(    static_cast<TileCode>(TileSuitCircles    + dice));
-			nagatadora(    static_cast<TileCode>(TileSuitBamboos    + dice));
-		} else if (dice == 9) { // 9はそのまま9がドラ
-			nagatadora(CharacterNine); nagatadora(CircleNine); nagatadora(BambooNine);
-		} else if (dice == 10) { // 10は三元牌がドラ
-			nagatadora(WhiteDragon); nagatadora(GreenDragon); nagatadora(RedDragon);
-		} else if (dice == 11) { // 11は数牌の1がドラ
-			nagatadora(CharacterOne); nagatadora(CircleOne); nagatadora(BambooOne);
-		} else if (dice == 12) { // 12は風牌全てドラ
-			nagatadora(EastWind); nagatadora(SouthWind); nagatadora(WestWind); nagatadora(NorthWind);
+		for (int i = 0; i <= (RuleData::chkRule("dice_roll", "roll_twice") ? 0 : 2); i += 2) {
+			unsigned int dice = gameStat->Dice[i + 0].Number + gameStat->Dice[i + 1].Number;
+			if (dice <= 8) { // 2～8はその数牌がドラ　三麻では萬子がないので別処理
+				if (!gameStat->chkGameType(SanmaX))
+					nagatadora(static_cast<TileCode>(TileSuitCharacters + dice));
+				nagatadora(    static_cast<TileCode>(TileSuitCircles    + dice));
+				nagatadora(    static_cast<TileCode>(TileSuitBamboos    + dice));
+			} else if (dice == 9) { // 9はそのまま9がドラ
+				nagatadora(CharacterNine); nagatadora(CircleNine); nagatadora(BambooNine);
+			} else if (dice == 10) { // 10は三元牌がドラ
+				nagatadora(WhiteDragon); nagatadora(GreenDragon); nagatadora(RedDragon);
+			} else if (dice == 11) { // 11は数牌の1がドラ
+				nagatadora(CharacterOne); nagatadora(CircleOne); nagatadora(BambooOne);
+			} else if (dice == 12) { // 12は風牌全てドラ
+				nagatadora(EastWind); nagatadora(SouthWind); nagatadora(WestWind); nagatadora(NorthWind);
+			}
 		}
 		haifu::haifurecdorap();
 	}
@@ -549,17 +551,18 @@ namespace {
 					return true;
 				});
 	}
-	void rolldice(GameTable* const gameStat) {
+	bool rolldice(GameTable* const gameStat, bool doraAlreadyAdded, unsigned diceOffset) {
+		uint8_t tmpDeadTiles = gameStat->DeadTiles;
 		// 賽を振る
 		for (unsigned i = 0; i < 2; i++) {
-			gameStat->Dice[i].Number = RndNum::dice();
-			gameStat->Dice[i].Direction = RndNum::rnd(4);
+			gameStat->Dice[i + diceOffset].Number = RndNum::dice();
+			gameStat->Dice[i + diceOffset].Direction = RndNum::rnd(4);
 		}
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		for (unsigned k = 0; k < 10; k++) { // 賽を振る
 			for (unsigned i = 0; i < 2; i++) {
-				gameStat->Dice[i].Number = RndNum::dice();
-				gameStat->Dice[i].Direction = RndNum::rnd(4);
+				gameStat->Dice[i + diceOffset].Number = RndNum::dice();
+				gameStat->Dice[i + diceOffset].Direction = RndNum::rnd(4);
 			}
 			sound::Play(sound::IDs::sndSaikoro);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat); skippableWait(80);
@@ -567,19 +570,25 @@ namespace {
 		sound::Play(sound::IDs::sndSaikoro);
 		/* サイコロの出目を送信 */
 		for (unsigned i = 0; i < 2; i++)
-			statsync(gameStat, gameStat->Dice[i].Number + mihajong_socket::protocol::StartRound_Dice_Excess,
-				[i](GameTable* const gameStat, int ReceivedMsg) -> bool {
-					gameStat->Dice[i].Number = ReceivedMsg - mihajong_socket::protocol::StartRound_Dice_Excess;
-					gameStat->Dice[i].Direction = RndNum::rnd(4);
+			statsync(gameStat, gameStat->Dice[i + diceOffset].Number + mihajong_socket::protocol::StartRound_Dice_Excess,
+				[i, diceOffset](GameTable* const gameStat, int ReceivedMsg) -> bool {
+					gameStat->Dice[i + diceOffset].Number = ReceivedMsg - mihajong_socket::protocol::StartRound_Dice_Excess;
+					gameStat->Dice[i + diceOffset].Direction = RndNum::rnd(4);
 					return true;
 				});
 		// --
 #ifndef GUOBIAO
-		if (RuleData::chkRule("dora_twice", "yes") ||
-			(RuleData::chkRule("dora_twice", "only_when_doublets") && (gameStat->Dice[0].Number == gameStat->Dice[1].Number)))
+		if ((!doraAlreadyAdded) && (RuleData::chkRule("dora_twice", "yes") ||
+			(RuleData::chkRule("dora_twice", "only_when_doublets") &&
+			(gameStat->Dice[0 + diceOffset].Number == gameStat->Dice[1 + diceOffset].Number))))
 			gameStat->DeadTiles += 2; /* ドラドラ卓なら王牌の数を増やす */
 		calcWareme(gameStat); // 割れ目
 #endif /* GUOBIAO */
+		if (RuleData::chkRule("dice_roll", "roll_twice")) {
+			mihajong_graphic::GameStatus::updateGameStat(gameStat);
+			skippableWait(500);
+		}
+		return tmpDeadTiles != gameStat->DeadTiles;
 	}
 	void haipai(GameTable* const gameStat) { // 配牌
 		for (int i = 0; i < (gameStat->chkGameType(AllSanma) ? 36 : 48); i++) { // ２幢ずつを３回
@@ -665,7 +674,9 @@ void tableinit(GameTable* const gameStat) {
 	// 洗牌
 	tileshuffle(gameStat);
 	// 賽を振る
-	rolldice(gameStat);
+	bool doraFlag = rolldice(gameStat, false, 0);
+	if (RuleData::chkRule("dice_roll", "roll_twice"))
+		(void)rolldice(gameStat, doraFlag, 2); // 二度振りの2回目
 	// 配牌
 	haipai(gameStat);
 	return;
