@@ -509,6 +509,9 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		break;
 #endif /* GUOBIAO */
 	}
+#ifdef GUOBIAO
+	if (RoundEndType != Chonbo)
+#endif /* GUOBIAO */
 	haifu::haifuwritebuffer(gameStat, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc.c_str(), RoundEndType);
 	return;
 }
@@ -517,7 +520,11 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 
 void endround::transferChonboPenalty(GameTable* gameStat, PlayerID targetPlayer) {
 	transfer::resetDelta();
+#ifdef GUOBIAO
+	LNum AgariPoint = 0, AgariPointRaw = 10 - 8;
+#else /* GUOBIAO */
 	LNum AgariPoint = 0, AgariPointRaw = 2000;
+#endif /* GUOBIAO */
 	agari::calcAgariPoints(gameStat, AgariPoint, AgariPointRaw, transfer::getDelta(), targetPlayer);
 	transfer::negateDelta();
 	/* ‚È‚º‚í‚´‚í‚´ˆê’Uƒvƒ‰ƒX‚Å‹‚ß‚Ä•„†‚ğ”½“]‚·‚é‚Æ‚¢‚¤‰ñ‚è‚­‚Ç‚¢‚±‚Æ‚ğ‚µ‚Ä‚¢‚é‚Ì‚©‚Æ‚¢‚¤‚Æ
