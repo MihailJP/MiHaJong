@@ -583,11 +583,13 @@ namespace {
 			(gameStat->Dice[0 + diceOffset].Number == gameStat->Dice[1 + diceOffset].Number))))
 			gameStat->DeadTiles += 2; /* ƒhƒ‰ƒhƒ‰‘ì‚È‚ç‰¤”v‚Ì”‚ğ‘‚â‚· */
 		calcWareme(gameStat); // Š„‚ê–Ú
-#endif /* GUOBIAO */
 		if (RuleData::chkRule("dice_roll", "roll_twice")) {
+#endif /* GUOBIAO */
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			skippableWait(500);
+#ifndef GUOBIAO
 		}
+#endif /* GUOBIAO */
 		return tmpDeadTiles != gameStat->DeadTiles;
 	}
 	void haipai(GameTable* const gameStat) { // ”z”v
@@ -675,7 +677,9 @@ void tableinit(GameTable* const gameStat) {
 	tileshuffle(gameStat);
 	// æÎ‚ğU‚é
 	bool doraFlag = rolldice(gameStat, false, 0);
+#ifndef GUOBIAO
 	if (RuleData::chkRule("dice_roll", "roll_twice"))
+#endif /* GUOBIAO */
 		(void)rolldice(gameStat, doraFlag, 2); // “ñ“xU‚è‚Ì2‰ñ–Ú
 	// ”z”v
 	haipai(gameStat);
