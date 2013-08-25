@@ -124,7 +124,10 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 		OrigHonba = gameStat->Honba; OrigTurn = gameStat->GameRound;
 		endround::endround(gameStat, roundEndType, OrigTurn, OrigHonba);
 #ifdef GUOBIAO
-		if (roundEndType == Chonbo) tsumoproc(gameStat);
+		if (roundEndType == Chonbo) {
+			roundEndType = Continuing;
+			tsumoproc(gameStat);
+		}
 #endif /* GUOBIAO */
 	}
 #ifdef GUOBIAO

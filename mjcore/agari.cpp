@@ -759,6 +759,7 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 	sound::Play(sound::IDs::sndCuohu);
 	mihajong_graphic::ui::WaitUIWithTimeout(1500);
 	gameStat->statOfAgari().AgariHouki = true;
+	mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::None);
 #else /* GUOBIAO */
 	if (!ResultDesc.empty()) ResultDesc += _T("\n");
 	CodeConv::tstring tmpResultDesc;
