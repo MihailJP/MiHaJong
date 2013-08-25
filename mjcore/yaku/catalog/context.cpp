@@ -426,7 +426,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+#ifndef GUOBIAO
 				(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
+#endif /* GUOBIAO */
 				(*analysis->TsumoAgariFlag) && // ツモアガリ
 				(analysis->GameStat->tilesLeft() == 0)); // ハイテイである
 		}
