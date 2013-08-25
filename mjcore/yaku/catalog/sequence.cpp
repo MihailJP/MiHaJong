@@ -778,32 +778,33 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return puukao(analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 1, true);
 			}
 		));
-	/* 三歩高 */
 #ifdef GUOBIAO
+	/* 一色三歩高 */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("一色三歩高"), yaku::yakuCalculator::Yaku::yval_16,
+			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
+				return puukao(analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 1, false) ||
+					puukao(analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 2, false);
+			}
+		));
 #else /* GUOBIAO */
+	/* 三歩高 */
 	if (RuleData::chkRuleApplied("okasanjun"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("一色三歩高"), get_yaku_han("okasanjun"),
-#endif /* GUOBIAO */
+			_T("三歩高"), get_yaku_han("okasanjun"),
 			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 1, false);
 			}
 		));
 	/* 山三順 */
-#ifdef GUOBIAO
-		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("一色三歩高"), yaku::yakuCalculator::Yaku::yval_16,
-#else /* GUOBIAO */
 	if (RuleData::chkRuleApplied("yamasanjun"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("清連環套"), get_yaku_han("yamasanjun"),
-#endif /* GUOBIAO */
 			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 2, false);
 			}
 		));
+#endif /* GUOBIAO */
 #ifndef GUOBIAO
 	/* 二色四歩高 */
 	if (RuleData::chkRuleApplied("nishoku_okasuujun"))
