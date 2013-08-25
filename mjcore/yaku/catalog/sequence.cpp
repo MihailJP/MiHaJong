@@ -872,20 +872,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return puukao(analysis, (const char*)&parsedat_trichrome4[0], 36, 8, 2, true);
 			}
 		));
-#endif /* GUOBIAO */
 	/* 三色山三順 */
-#ifdef GUOBIAO
-		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("三色三歩高"), yaku::yakuCalculator::Yaku::yval_6,
-#else /* GUOBIAO */
 	if (RuleData::chkRuleApplied("sanshoku_yamasanjun"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("混連環套"), get_yaku_han("sanshoku_yamasanjun"),
-#endif /* GUOBIAO */
 			[puukao](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return puukao(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 2, false);
 			}
 		));
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
