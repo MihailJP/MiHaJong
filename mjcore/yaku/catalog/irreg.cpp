@@ -233,7 +233,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	/* ‘m */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("‘m–³‘o"), yaku::yakuCalculator::Yaku::yval_88,
+		_T("\O›ô"), yaku::yakuCalculator::Yaku::yval_88,
 		_T("ŒÜ–åÄ"), _T("–å‘O´"), _T("’P’²«"),
 #else /* GUOBIAO */
 		_T("‘m–³‘o"), yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
