@@ -285,7 +285,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* ƒŠƒ“ƒVƒƒƒ“ƒcƒ‚ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("ÈãŠJ‰Ô"), yaku::yakuCalculator::Yaku::yval_8,
+		_T("YãŠJ‰Ô"), yaku::yakuCalculator::Yaku::yval_8,
 		_T("©–Ì"),
 #else /* GUOBIAO */
 		_T("—äãŠJ‰Ô"), yaku::yakuCalculator::Yaku::yval_1han,
@@ -604,7 +604,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* ‘„È‚Í³Šm‚É‚Í–Ø•Î‚Å‚Í‚È‚­è•Î */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("È˜a"), yaku::yakuCalculator::Yaku::yval_8,
+		_T("Y˜a"), yaku::yakuCalculator::Yaku::yval_8,
 		_T("˜aâ’£"),
 #else /* GUOBIAO */
 		_T("È"), yaku::yakuCalculator::Yaku::yval_1han,

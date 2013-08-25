@@ -7,7 +7,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("清一色"), yaku::yakuCalculator::Yaku::yval_24,
-		_T("混一色"), _T("無字"),
+		_T("混一色"), _T("无字"),
 #else /* GUOBIAO */
 		_T("清一色"), get_yaku_han("chiniisoh"),
 		_T("混一色"), _T("純一気通貫全帯幺九"),
@@ -38,7 +38,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("九蓮宝燈"), yaku::yakuCalculator::Yaku::yval_88,
-		_T("清一色"), _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"), _T("無字"),
+		_T("清一色"), _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"), _T("无字"),
 #else /* GUOBIAO */
 		_T("九蓮宝燈"), yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 		_T("清一色"), _T("九蓮花燈"),
@@ -480,7 +480,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		};
 #ifdef GUOBIAO
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("欠一門"), yaku::yakuCalculator::Yaku::yval_1,
+		_T("缺一門"), yaku::yakuCalculator::Yaku::yval_1,
 		chueiimen1
 	));
 #else /* GUOBIAO */

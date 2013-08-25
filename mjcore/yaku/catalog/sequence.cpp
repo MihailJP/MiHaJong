@@ -1226,7 +1226,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	/* ’†‘ƒ‹[ƒ‹‚Ì•½˜a */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("•½˜a"), yaku::yakuCalculator::Yaku::yval_2,
-		_T("–³Žš"),
+		_T("ÙŽš"),
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalShunzi == 4) &&
 				(analysis->TileCount[EastWind] + analysis->TileCount[SouthWind] + analysis->TileCount[WestWind] +

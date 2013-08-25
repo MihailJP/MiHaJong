@@ -41,9 +41,9 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	// ---------------------------------------------------------------------
 
 #ifdef GUOBIAO
-	/* –³”Ô˜a */
+	/* Ù”Ô˜a */
 	if (totalHan <= 0) {
-		LPCTSTR name = _T("–³”Ô˜a");
+		LPCTSTR name = _T("Ù”Ô˜a");
 		yakuHan[name] = yaku::yakuCalculator::Yaku::yval_8(analysis);
 		yakuOrd.push_back(name);
 	}

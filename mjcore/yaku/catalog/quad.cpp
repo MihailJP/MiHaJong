@@ -19,7 +19,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 	/* ŽlžÈŽq */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("ŽlžÈ"), yaku::yakuCalculator::Yaku::yval_88,
+		_T("ŽlžY"), yaku::yakuCalculator::Yaku::yval_88,
 		_T("\u78b0\u78b0˜a"),
 #else /* GUOBIAO */
 		_T("ŽlžÈŽq"), get_yaku_han("suukantsu"),
@@ -92,7 +92,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 	/* ŽOžÈŽq */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("ŽOžÈ"), yaku::yakuCalculator::Yaku::yval_32,
+		_T("ŽOžY"), yaku::yakuCalculator::Yaku::yval_32,
 #else /* GUOBIAO */
 		_T("ŽOžÈŽq"), get_yaku_han("sankantsu"),
 #endif /* GUOBIAO */
@@ -101,30 +101,30 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 		}
 	));
 #ifdef GUOBIAO
-	/* ‘oˆÃžÈ */
+	/* ‘oˆÃžY */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("‘oˆÃžÈ"), yaku::yakuCalculator::Yaku::yval_8,
+		_T("‘oˆÃžY"), yaku::yakuCalculator::Yaku::yval_8,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalKangzi == 2) && (analysis->TotalAnKangzi == 2);
 		}
 	));
-	/* ‘o–¾žÈ */
+	/* ‘o–¾žY */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("‘o–¾žÈ"), yaku::yakuCalculator::Yaku::yval_4,
+		_T("‘o–¾žY"), yaku::yakuCalculator::Yaku::yval_4,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalKangzi == 2) && (analysis->TotalAnKangzi < 2);
 		}
 	));
-	/* ˆÃžÈ */
+	/* ˆÃžY */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("ˆÃžÈ"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("ˆÃžY"), yaku::yakuCalculator::Yaku::yval_2,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalKangzi == 1) && (analysis->TotalAnKangzi == 1);
 		}
 	));
-	/* –¾žÈ */
+	/* –¾žY */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("–¾žÈ"), yaku::yakuCalculator::Yaku::yval_1,
+		_T("–¾žY"), yaku::yakuCalculator::Yaku::yval_1,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalKangzi == 1) && (analysis->TotalAnKangzi == 0);
 		}

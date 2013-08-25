@@ -16,7 +16,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("’f›ô"), yaku::yakuCalculator::Yaku::yval_2,
-		_T("–³Žš"),
+		_T("ÙŽš"),
 #else /* GUOBIAO */
 		_T("’f›ô‹ã"), (RuleData::chkRule("kuitan") == "yes_but_unbound") ? /* –å‘O‚È‚ç”›‚è‚ð–ž‚½‚µA‹ò‚¢’f‚Í”›‚è‚ð–ž‚½‚³‚È‚¢ƒ‹[ƒ‹ */
 		yaku::yakuCalculator::Yaku::HANFUNC(
@@ -106,7 +106,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("´›ô‹ã"), yaku::yakuCalculator::Yaku::yval_32,
-		_T("–³Žš"), _T("‘o“¯"), _T("ŽO“¯"), _T("›ô‹ã"), _T("›ô‹ãx2"), _T("›ô‹ãx3"), _T("›ô‹ãx4"), _T("\u78b0\u78b0˜a"), _T("‘S‘Ñ›ô"),
+		_T("ÙŽš"), _T("‘o“¯"), _T("ŽO“¯"), _T("›ô‹ã"), _T("›ô‹ãx2"), _T("›ô‹ãx3"), _T("›ô‹ãx4"), _T("\u78b0\u78b0˜a"), _T("‘S‘Ñ›ô"),
 #else /* GUOBIAO */
 		_T("´˜V“ª"), yaku::yakuCalculator::Yaku::yval_yakuman,
 		_T("¬‘S‘Ñ›ô‹ã"), _T("ƒ‘S‘Ñ›ô‹ã"), _T("¬˜V“ª"), _T("‘ÎX˜a"),
@@ -147,9 +147,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		));
 #endif /* GUOBIAO */
 #ifdef GUOBIAO
-	/* –³Žš */
+	/* ÙŽš */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("–³Žš"), yaku::yakuCalculator::Yaku::yval_1,
+		_T("ÙŽš"), yaku::yakuCalculator::Yaku::yval_1,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[shantenRegular] == -1)
 				return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles()+6, 7, nullptr, 0, false) == 0);

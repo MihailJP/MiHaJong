@@ -139,7 +139,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 			_T("„•s“|"), yaku::yakuCalculator::Yaku::yval_8,
-			_T("Œ‡ˆê–å"),
+			_T("ãžˆê–å"),
 #else /* GUOBIAO */
 			_T("„•s“|"), get_yaku_han("toipuutao"),
 			_T("âˆê–å"),
@@ -994,8 +994,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("¬‰—ŒÜ"), yaku::yakuCalculator::Yaku::yval_12,
-			_T("–³Žš"),
+			_T("¬˜°ŒÜ"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("ÙŽš"),
 #else /* GUOBIAO */
 			_T("¬‰—ŒÜ"), get_yaku_han("xiaoyuwu"),
 #endif /* GUOBIAO */
@@ -1015,8 +1015,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("‘å‰—ŒÜ"), yaku::yakuCalculator::Yaku::yval_12,
-			_T("–³Žš"),
+			_T("‘å˜°ŒÜ"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("ÙŽš"),
 #else /* GUOBIAO */
 			_T("‘å‰—ŒÜ"), get_yaku_han("dayuwu"),
 #endif /* GUOBIAO */
@@ -1037,11 +1037,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 			_T("‘S¬"), yaku::yakuCalculator::Yaku::yval_24,
-			_T("–³Žš"),
+			_T("ÙŽš"), _T("¬˜°ŒÜ"),
 #else /* GUOBIAO */
 			_T("‘S¬"), get_yaku_han("all_small"),
-#endif /* GUOBIAO */
 			_T("¬‰—ŒÜ"),
+#endif /* GUOBIAO */
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const TileCode kezi[] = {
 					CharacterOne, CircleOne, BambooOne,
@@ -1058,7 +1058,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 			_T("‘S’†"), yaku::yakuCalculator::Yaku::yval_24,
-			_T("–³Žš"), _T("’f›ô"),
+			_T("ÙŽš"), _T("’f›ô"),
 #else /* GUOBIAO */
 			_T("‘S’†"), get_yaku_han("all_middle"),
 			_T("’f›ô‹ã"), _T("ã‹‰’f›ô‹ã"),
@@ -1079,11 +1079,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 			_T("‘S‘å"), yaku::yakuCalculator::Yaku::yval_24,
-			_T("–³Žš"),
+			_T("ÙŽš"), _T("‘å˜°ŒÜ"),
 #else /* GUOBIAO */
 			_T("‘S‘å"), get_yaku_han("all_large"),
-#endif /* GUOBIAO */
 			_T("‘å‰—ŒÜ"),
+#endif /* GUOBIAO */
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const TileCode kezi[] = {
 					CharacterSeven, CircleSeven, BambooSeven,
