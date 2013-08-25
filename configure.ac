@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT(mihajong, 2.0.3, mihailjp@gmail.com)
+AC_INIT(mihajong, 2.0.4, mihailjp@gmail.com)
 AC_LIBTOOL_WIN32_DLL
 AC_DISABLE_STATIC
 lt_cv_deplibs_check_method='pass_all'
