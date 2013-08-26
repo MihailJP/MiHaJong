@@ -5,8 +5,8 @@ ARCHIVENAME=$(ZIPNAME).zip
 ARCHIVE=$(OBJPATH)$(ARCHIVENAME)
 DOCPATH=$(SolutionDir)doc\ 
 DATAPATH=$(SolutionDir)data\ 
-ARCHIVE_CONTENT=$(TMPPATH)astro.dll $(TMPPATH)GuruGuruSMF4.dll $(TMPPATH)graphic.dll $(TMPPATH)mjcore.dll $(TMPPATH)socket.dll $(TMPPATH)sound.dll \
-	$(TMPPATH)mihajong.exe $(TMPPATH)mihasanm.exe $(TMPPATH)mihassnm.exe $(TMPPATH)mihaysnm.exe \
+ARCHIVE_CONTENT=$(TMPPATH)astro.dll $(TMPPATH)GuruGuruSMF4.dll $(TMPPATH)graphic.dll $(TMPPATH)mjcore.dll $(TMPPATH)mjcoregb.dll $(TMPPATH)socket.dll $(TMPPATH)sound.dll \
+	$(TMPPATH)mihajong.exe $(TMPPATH)mihasanm.exe $(TMPPATH)mihassnm.exe $(TMPPATH)mihaysnm.exe $(TMPPATH)mihagbmj.exe \
 	$(TMPPATH)history.txt $(TMPPATH)license.txt $(TMPPATH)playing.txt $(TMPPATH)readme.txt $(TMPPATH)rulesyms.txt $(TMPPATH)script.txt $(TMPPATH)addyaku.md \
 	$(TMPPATH)ai\default.lua $(TMPPATH)gbai\default.lua $(TMPPATH)haifu\haifu.css $(TMPPATH)haifu\haifu.dtd $(TMPPATH)haifu\haifu.xsd $(TMPPATH)haifu\haifu.xsl
 
@@ -28,6 +28,9 @@ $(TMPPATH)graphic.dll: $(OBJPATH)graphic.dll
 	- mkdir $(TMPPATH)
 	copy $** $@
 $(TMPPATH)mjcore.dll: $(OBJPATH)mjcore.dll
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)mjcoregb.dll: $(OBJPATH)mjcoregb.dll
 	- mkdir $(TMPPATH)
 	copy $** $@
 $(TMPPATH)socket.dll: $(OBJPATH)socket.dll
@@ -86,6 +89,9 @@ $(TMPPATH)mihassnm.exe: $(OBJPATH)mihassnm.exe
 	- mkdir $(TMPPATH)
 	copy $** $@
 $(TMPPATH)mihaysnm.exe: $(OBJPATH)mihaysnm.exe
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)mihagbmj.exe: $(OBJPATH)mihagbmj.exe
 	- mkdir $(TMPPATH)
 	copy $** $@
 
