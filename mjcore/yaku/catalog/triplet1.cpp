@@ -322,7 +322,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("小四風会"), yaku::yakuCalculator::Yaku::yval_64,
-		_T("三風刻"),
+		_T("三風刻"), _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"),
 #else /* GUOBIAO */
 		_T("小四喜"), yaku::yakuCalculator::Yaku::yval_yakuman,
 		_T("混一色"), _T("盗難車"),

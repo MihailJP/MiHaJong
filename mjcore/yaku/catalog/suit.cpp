@@ -68,7 +68,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	/* 連七対 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("連七対"), yaku::yakuCalculator::Yaku::yval_88,
-		_T("七対"), _T("清一色"), _T("不求人"), _T("単調将"),
+		_T("七対"), _T("清一色"), _T("門前清"), _T("単調将"),
 		[chkHaishiki](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return chkHaishiki(analysis, "022222220") ||
 				chkHaishiki(analysis, "222222200") ||

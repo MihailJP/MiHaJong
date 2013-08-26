@@ -5,7 +5,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 #ifdef GUOBIAO
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("ˆêF‘o—´‰ï"), yaku::yakuCalculator::Yaku::yval_64,
-			_T("´ˆêF"), _T("•½˜a"), _T("ˆê”Ê‚"), _T("ˆê”Ê‚x2"),
+			_T("´ˆêF"), _T("•½˜a"), _T("ˆê”Ê‚"), _T("ˆê”Ê‚x2"), _T("˜V­•›"), _T("˜V­•›x2"), _T("Žµ‘Î"),
 #else /* GUOBIAO */
 	if (RuleData::chkRuleApplied("isshoku_souryuu"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -1051,7 +1051,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 #ifdef GUOBIAO
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("ŽOF‘o—´‰ï"), yaku::yakuCalculator::Yaku::yval_16,
-			_T("•½˜a"),
+			_T("•½˜a"), _T("ÙŽš"), _T("Šì‘Šˆ§"), _T("Šì‘Šˆ§x2"), _T("˜V­•›"), _T("˜V­•›x2"),
 #else /* GUOBIAO */
 	if (RuleData::chkRuleApplied("sanshoku_souryuu"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
