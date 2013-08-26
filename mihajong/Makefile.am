@@ -1,44 +1,51 @@
-bin_PROGRAMS = mihajong mihasanm mihaysnm mihassnm
+bin_PROGRAMS = mihajong mihasanm mihaysnm mihassnm mihagbmj
 
-libraries = \
-	../graphic/libmihajong-graphic.la \
-	../mjcore/libmihajong.la
+libraries = ../graphic/libmihajong-graphic.la
+richilib = ../mjcore/libmihajong.la
+guobiaolib = ../mjcore/libmihagbmj.la
 common_sources = main.cpp main.h resource.h
 
 mihajong_SOURCES = ${common_sources} mihajong.cpp
 mihajong_CXXFLAGS = --input-charset=cp932
-mihajong_LDADD = ${libraries}
+mihajong_LDADD = ${libraries} ${richilib}
 
 mihasanm_SOURCES = ${common_sources} mihasanm.cpp
 mihasanm_CXXFLAGS = --input-charset=cp932
-mihasanm_LDADD = ${libraries}
+mihasanm_LDADD = ${libraries} ${richilib}
 
 mihaysnm_SOURCES = ${common_sources} mihaysnm.cpp
 mihaysnm_CXXFLAGS = --input-charset=cp932
-mihaysnm_LDADD = ${libraries}
+mihaysnm_LDADD = ${libraries} ${richilib}
 
 mihassnm_SOURCES = ${common_sources} mihassnm.cpp
 mihassnm_CXXFLAGS = --input-charset=cp932
-mihassnm_LDADD = ${libraries}
+mihassnm_LDADD = ${libraries} ${richilib}
+
+mihagbmj_SOURCES = ${common_sources} mihagbmj.cpp
+mihagbmj_CXXFLAGS = --input-charset=cp932
+mihagbmj_LDADD = ${libraries} ${guobiaolib}
 
 EXTRA_DIST = \
 	mihajong.vcxproj mihajong.vcxproj.filters mihajong.vcxproj.user \
 	mihasanm.vcxproj mihasanm.vcxproj.filters mihasanm.vcxproj.user \
 	mihaysnm.vcxproj mihaysnm.vcxproj.filters mihaysnm.vcxproj.user \
 	mihassnm.vcxproj mihassnm.vcxproj.filters mihassnm.vcxproj.user \
+	mihagbmj.vcxproj mihagbmj.vcxproj.filters mihagbmj.vcxproj.user \
 	icons/mihajong.ico icons/mihasanm.ico icons/mihassnm.ico \
-	icons/mihaysnm.ico
+	icons/mihaysnm.ico icons/mihagbmj.ico
 
 if WITH_WINAPI
 mihajong_SOURCES += mihajong.rc
 mihasanm_SOURCES += mihasanm.rc
 mihaysnm_SOURCES += mihaysnm.rc
 mihassnm_SOURCES += mihassnm.rc
+mihagbmj_SOURCES += mihagbmj.rc
 if WITH_DIRECTX
 mihajong_CXXFLAGS += -DWITH_DIRECTX
 mihasanm_CXXFLAGS += -DWITH_DIRECTX
 mihaysnm_CXXFLAGS += -DWITH_DIRECTX
 mihassnm_CXXFLAGS += -DWITH_DIRECTX
+mihagbmj_CXXFLAGS += -DWITH_DIRECTX
 endif
 else
 EXTRA_DIST += mihajong.rc mihasanm.rc mihaysnm.rc mihassnm.rc
@@ -46,6 +53,7 @@ mihajong_CXXFLAGS += -DUNICODE -D_UNICODE
 mihasanm_CXXFLAGS += -DUNICODE -D_UNICODE
 mihaysnm_CXXFLAGS += -DUNICODE -D_UNICODE
 mihassnm_CXXFLAGS += -DUNICODE -D_UNICODE
+mihagbmj_CXXFLAGS += -DUNICODE -D_UNICODE
 endif
 
 
