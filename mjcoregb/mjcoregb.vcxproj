@@ -324,7 +324,7 @@
     <ClInclude Include="..\mjcore\yaku\yk_tools.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\mjcore\mjcore.rc" />
+    <ResourceCompile Include="mjcoregb.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

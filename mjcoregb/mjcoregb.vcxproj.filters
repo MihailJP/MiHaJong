@@ -436,7 +436,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\mjcore\mjcore.rc">
+    <ResourceCompile Include="mjcoregb.rc">
       <Filter>リソース ファイル</Filter>
     </ResourceCompile>
   </ItemGroup>
