@@ -11,6 +11,7 @@
 #include "func.h"
 #include "envtbl.h"
 #include "haifu.h"
+#include "yaku/yaku.h"
 
 /* ŽllŽO–ƒ—p */
 PlayerID* tobePlayed(const GameTable* const gameStat) {
@@ -625,37 +626,37 @@ void calcdoukasen(GameTable* const gameStat) {
 		if (gameStat->chkGameType(Sanma4)) {
 			PlayerID* tmpDoukasen = new PlayerID(
 				((30 - ((gameStat->diceSum() - 1) * 36 * 2 + 
-				gameStat->diceSum() * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3);
+				(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3);
 			gameStat->DoukasenPlayer = tobePlayed(gameStat, *tmpDoukasen);
 			delete tmpDoukasen;
 		} else if (gameStat->chkGameType(SanmaT)) {
 			gameStat->DoukasenPlayer =
 				((30 - ((gameStat->diceSum() - 1 +
 				(gameStat->GameRound - (gameStat->GameRound / 4))) * 36 * 2 +
-				gameStat->diceSum() * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3;
+				(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3;
 		} else {
 			int* tmp;
 			if (RuleData::chkRule("flower_tiles", "8tiles"))
 				gameStat->DoukasenPlayer =
 					((40 - ((gameStat->diceSum() - 1 +
 					(gameStat->GameRound % Players)) * 36 * 3 + 
-					gameStat->diceSum() * 2 + gameStat->TilePointer - 1) / 36) + 40)
+					(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) / 36) + 40)
 					% Players;
 			else if (RuleData::chkRule("flower_tiles", "no"))
 				gameStat->DoukasenPlayer =
 					((40 - ((gameStat->diceSum() - 1 +
 					(gameStat->GameRound % Players)) * 34 * 3 +
-					gameStat->diceSum() * 2 + gameStat->TilePointer - 1) / 34) + 40)
+					(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) / 34) + 40)
 					% Players;
 			else {
 				gameStat->DoukasenPlayer =
 					((40 - ((gameStat->diceSum() - 1 +
 					(gameStat->GameRound % Players)) * 70 * 3 / 2 +
-					gameStat->diceSum() * 2 + gameStat->TilePointer - 1) / 35) + 40)
+					(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) / 35) + 40)
 					% Players;
 				tmp = new int(
 					((gameStat->diceSum() - 1 + (gameStat->GameRound % Players)) * 70 * 3 / 2 +
-					gameStat->diceSum() * 2 + gameStat->TilePointer - 1) % 70
+					(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) % 70
 					);
 				if (*tmp == (((gameStat->diceSum() + gameStat->GameRound) % 2) * 35))
 					gameStat->DoukasenPlayer = (40 + gameStat->DoukasenPlayer + 1) % Players;
@@ -689,4 +690,19 @@ bool isNagashiMangan(const GameTable* const gameStat, PlayerID targetPlayer) {
 	}
 	// ‘S•”ŠY“–‚·‚é”v‚¾‚Á‚½‚çtrue
 	return (YaojiuSutehai == gameStat->Player[targetPlayer].DiscardPointer);
+}
+
+/* •Ð˜a‚è‚©‚Ç‚¤‚©’²‚×‚é */
+bool isKataagari(const GameTable* gameStat, PlayerID targetPlayer) {
+	MachihaiInfo machiInfo = chkFuriten(gameStat, targetPlayer);
+	GameTable tmpStat; memcpy(&tmpStat, gameStat, sizeof tmpStat);
+	for (int i = 0; i < TileNonflowerMax; ++i) {
+		if (machiInfo.Machihai[i].MachihaiFlag) {
+			tmpStat.Player[targetPlayer].Hand[TsumohaiIndex].tile = static_cast<TileCode>(i);
+			yaku::YAKUSTAT yakuStat = yaku::yakuCalculator::countyaku(&tmpStat, targetPlayer);
+			if (!yaku::yakuCalculator::checkShibari(&tmpStat, &yakuStat))
+				return true;
+		}
+	}
+	return false;
 }

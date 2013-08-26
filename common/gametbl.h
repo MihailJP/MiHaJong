@@ -264,7 +264,7 @@ struct GameTable { // 卓の情報を格納する
 	int16_t AgariSpecialStat; // 今のところ食い変えでチョンボになる場合だけ使ってる？
 	PrevMeldBook PreviousMeld; // 先ほど鳴いた牌（喰い替えの判定に使う）
 	KangStat KangFlag; // 嶺上開花；連開花と槓振り；頭槓和；搶槓の判定に使う
-	Dice_Struct Dice[2]; // サイコロ
+	Dice_Struct Dice[4]; // サイコロ
 	uint8_t TurnRound; // 現在の巡目
 	uint8_t KangNum; // 四槓流局、四槓子などの判定に使う
 	bool RichiCounter; // リーチをカウンター(宣言牌をロン)
@@ -292,6 +292,9 @@ struct GameTable { // 卓の情報を格納する
 	bool chkGameType(GameTypeID gameType) const {return ((this->gameType) & gameType);}
 	uint8_t diceSum() { // サイコロの出目を取得
 		return Dice[0].Number + Dice[1].Number;
+	}
+	uint8_t diceSum2() { // 二度振りの2回目のサイコロの出目を取得
+		return Dice[2].Number + Dice[3].Number;
 	}
 
 	seatAbsolute playerwind(Player_ID player, int currentRound) const { // プレイヤーの自風がどれか調べる
