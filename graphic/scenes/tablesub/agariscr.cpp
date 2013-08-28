@@ -184,13 +184,13 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 		return false;
 	} else {
 		if (bgmFlag) {
-			if (YakuResult::getYakuStat().AgariPoints < LargeNum::fromInt(2000)) {
+			if (YakuResult::getYakuStat().AgariPoints < LargeNum::fromInt(GameStatus::gameStat()->chkGameType(GuobiaoMJ) ? 24 : 2000)) {
 				switch (getAgariStyle()) {
 					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf1); break;
 					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi1); break;
 					case agariOthers:   sound::util::bgmplay(sound::IDs::musAgariOther1); break;
 				}
-			} else if (YakuResult::getYakuStat().AgariPoints < LargeNum::fromInt(8000)) {
+			} else if (YakuResult::getYakuStat().AgariPoints < LargeNum::fromInt(GameStatus::gameStat()->chkGameType(GuobiaoMJ) ? 64 :8000)) {
 				switch (getAgariStyle()) {
 					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf2); break;
 					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi2); break;
