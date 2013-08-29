@@ -160,8 +160,12 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 				break;
 			case meldQuadConcealed:
 				// 暗槓
+#ifdef GUOBIAO
+				break;
+#else /* GUOBIAO */
 				if (RuleData::chkRule("ankan_conceal", "closed")) break; // 暗槓非開示ルールだったらカウントしない
 				/* FALLTHRU */
+#endif /* GUOBIAO */
 			case meldQuadExposedLeft:   case meldQuadAddedLeft:
 			case meldQuadExposedCenter: case meldQuadAddedCenter:
 			case meldQuadExposedRight:  case meldQuadAddedRight:
@@ -174,6 +178,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 		}
 	}
 
+#ifndef GUOBIAO
 	// ドラ表示牌で見えてる枚数
 	for (int i = 0; i < 6; i++) {
 		if (gameStat->chkGameType(AllSanma)) {
@@ -184,6 +189,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 				seenTiles[gameStat->Deck[130 - i * 2].tile]++;
 		}
 	}
+#endif /* GUOBIAO */
 
 	return seenTiles;
 }
