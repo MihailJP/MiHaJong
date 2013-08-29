@@ -429,7 +429,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("šŸ•—"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("Œ—•—"), yaku::yakuCalculator::Yaku::yval_2,
 #else /* GUOBIAO */
 		_T("–ğ”vEê•—"), yaku::yakuCalculator::Yaku::yval_1han,
 #endif /* GUOBIAO */
