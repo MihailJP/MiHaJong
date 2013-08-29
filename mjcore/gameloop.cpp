@@ -131,7 +131,7 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 #endif /* GUOBIAO */
 	}
 #ifdef GUOBIAO
-	while (roundEndType == Chonbo);
+	while ((roundEndType == Chonbo) || (roundEndType == Continuing));
 #else /* GUOBIAO */
 	while (false);
 #endif /* GUOBIAO */
