@@ -64,6 +64,11 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 	auto getRinshanFlag2 = getRinshanFlag(2);
 	auto getRinshanFlag1 = getRinshanFlag(1);
 	const bool shorterWall = (std::get<0>(yamahaiAttr) == 2) && (gameStat->playerwind(trueTargetPlayer) % 2 == 1);
+	if (gameStat->chkGameType(GuobiaoMJ) && (gameStat->tilesLeft() == 0)) { // ’†‘ƒ‹[ƒ‹‚ÅÅŒã‚Ì”v‚Ü‚Å©–Ì‚Á‚½ê‡
+		for (int i = 0; i < 144; ++i)
+			TileTexture->DelTile(i);
+		return;
+	}
 	switch (tmpPlayerCode) {
 	case sOpposite:
 		for (int i = (18 - std::get<2>(yamahaiAttr) + (shorterWall ? 1 : 0)) * 2; i < 36; i += 2) { /* ‘Î–Ê‘¤‚ÌR */
