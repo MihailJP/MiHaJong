@@ -16,7 +16,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 			TileTexture->NewTile(32 - tileID,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
-				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
+				TableSize - DiscardPosH() - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
 				UpsideDown, Obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
@@ -26,7 +26,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
-				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
+				DiscardPosH() + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				Clockwise, Obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
@@ -35,7 +35,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
-				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
+				TableSize - DiscardPosH() - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				Withershins, Obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
@@ -43,13 +43,13 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 			TileTexture->NewTile(99 + tileID,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
-				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
+				DiscardPosH() + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
 				Portrait, Obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
 		}
-		if ((tilePosCol >= DiscardLineLength) && (tilePosRow < 2)) {
+		if ((tilePosCol >= DiscardLineLength()) && (tilePosRow < 2)) {
 			tilePosCol = 0; ++tilePosRow; shiftPos = false;
 		}
 }
@@ -61,7 +61,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 			TileTexture->NewTile(32 - tileID,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
-				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
+				TableSize - DiscardPosH() - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
 				Clockwise, Obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
@@ -71,7 +71,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
-				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
+				DiscardPosH() + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
 				Portrait, Obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
@@ -80,7 +80,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
-				TableSize - DiscardPosH - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
+				TableSize - DiscardPosH() - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
 				UpsideDown, Obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
@@ -88,14 +88,14 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 			TileTexture->NewTile(99 + tileID,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
-				DiscardPosH + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
+				DiscardPosH() + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
 				Withershins, Obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
 		}
 		shiftPos = true;
-		if ((tilePosCol >= DiscardLineLength) && (tilePosRow < 2)) {
+		if ((tilePosCol >= DiscardLineLength()) && (tilePosRow < 2)) {
 			tilePosCol = 0; ++tilePosRow; shiftPos = false;
 		}
 }
