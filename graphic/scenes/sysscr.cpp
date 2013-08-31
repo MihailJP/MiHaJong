@@ -58,7 +58,6 @@ void SystemScreen::clearWithGameTypeColor() {
 		glClearColor(.25, 0, .25, 1);
 		break;
 	case GuobiaoMJ:
-	case SanmaS:
 		glClearColor(.25, .25, 0, 1);
 		break;
 	default:
