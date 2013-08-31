@@ -584,7 +584,6 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 		((gameStat->GameRound % Players) == 3))
 		++(gameStat->GameRound);
 #endif /* GUOBIAO */
-	// 南入した場合……
 #ifdef GUOBIAO
 	/* 席替え処理 */
 	switch (gameStat->GameRound) {
@@ -602,6 +601,7 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 		break;
 	}
 #else /* GUOBIAO */
+	// 南入した場合……
 	if (gameStat->GameRound == 4) {
 		if (RuleData::chkRule("game_length", "east_north_game")) // 東北廻しのとき
 			gameStat->GameRound = 12;
