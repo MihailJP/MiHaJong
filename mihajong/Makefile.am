@@ -2,7 +2,7 @@ bin_PROGRAMS = mihajong mihasanm mihaysnm mihassnm mihagbmj
 
 libraries = ../graphic/libmihajong-graphic.la
 richilib = ../mjcore/libmihajong.la
-guobiaolib = ../mjcore/libmihagbmj.la
+guobiaolib = ../mjcoregb/libmihagbmj.la
 common_sources = main.cpp main.h resource.h
 
 mihajong_SOURCES = ${common_sources} mihajong.cpp
