@@ -596,7 +596,7 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 		break;
 	case 8: // ¼“ü
 		{
-			std::array<int, Players> playerSwitch = {3, 2, 0, 1};
+			std::array<int, Players> playerSwitch = {2, 3, 1, 0};
 			swapSeat(gameStat, playerSwitch);
 		}
 		break;
