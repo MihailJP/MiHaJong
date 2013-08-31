@@ -46,10 +46,10 @@ libmihagbmj_la_CXXFLAGS += -DPKGDATADIR='"$(pkgdatadir)"' -DUNICODE -D_UNICODE
 endif
 libmihagbmj_la_LIBADD = \
 	$(LUA_LIB) \
-	../sound/libmihagbmj-sound.la \
-	../graphic/libmihagbmj-graphic.la \
-	../socket/libmihagbmj-socket.la \
-	../astro/libmihagbmj-astro.la
+	../sound/libmihajong-sound.la \
+	../graphic/libmihajong-graphic.la \
+	../socket/libmihajong-socket.la \
+	../astro/libmihajong-astro.la
 if WITH_WINAPI
 libmihagbmj_la_LIBADD += mjcore.o 
 endif
