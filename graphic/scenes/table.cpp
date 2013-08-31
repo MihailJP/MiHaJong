@@ -124,18 +124,22 @@ void GameTableScreen::ShowStatus(const GameTable* gameStat) {
 		o << CodeConv::EnsureTStr(std::wstring(Numeral + roundnum, Numeral + roundnum + 1));
 	}
 	o << _T("局 ");
-	if (gameStat->Honba >= 10) o << std::setw(2) << (gameStat->Honba) << _T("本場");
-	else if (gameStat->Honba > 0) o << CodeConv::EnsureTStr(std::wstring(FWDigit + gameStat->Honba, FWDigit + gameStat->Honba + 1)) << _T("本場");
-	else o << _T("平　場");
+	if (!gameStat->chkGameType(GuobiaoMJ)) {
+		if (gameStat->Honba >= 10) o << std::setw(2) << (gameStat->Honba) << _T("本場");
+		else if (gameStat->Honba > 0) o << CodeConv::EnsureTStr(std::wstring(FWDigit + gameStat->Honba, FWDigit + gameStat->Honba + 1)) << _T("本場");
+		else o << _T("平　場");
+	}
 	myTextRenderer->NewText(0, o.str(), Geometry::BaseSize + 5, 5, 0.875f);
 
 	o.str(_T(""));
 	const int tiles = gameStat->RinshanPointer - gameStat->TilePointer - gameStat->ExtraRinshan - gameStat->DeadTiles + 1;
 	if (tiles >= 100) o << _T("残--牌");
 	else o << _T("残") << std::setw(2) << tiles << _T("牌");
-	o << _T(" 供託");
-	if (gameStat->Deposit) o << std::setw(2) << gameStat->Deposit << _T("本");
-	else o << _T("なし");
+	if (!gameStat->chkGameType(GuobiaoMJ)) {
+		o << _T(" 供託");
+		if (gameStat->Deposit) o << std::setw(2) << gameStat->Deposit << _T("本");
+		else o << _T("なし");
+	}
 	myTextRenderer->NewText(1, o.str(), Geometry::BaseSize + 5, 35, 0.875f);
 
 	myTextRenderer->Render();
