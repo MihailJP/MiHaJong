@@ -18,12 +18,14 @@ EXTRA_DIST = \
 dist_doc_DATA = \
 	README \
 	doc/addyaku.md doc/history.md doc/license.md doc/playing.md \
-	doc/readme.md doc/script.md \
+	doc/readme.md doc/rulesyms.md doc/script.md \
 	doc/addyaku.html doc/history.html doc/license.html doc/playing.html \
-	doc/readme.html doc/script.html
+	doc/readme.html doc/rulesyms.html doc/script.html
 
 SUFFIXES = .md .html
 .md.html:
+	cd $(@D)&&make $(@F)
+doc/rulesyms.md:
 	cd $(@D)&&make $(@F)
 
 aidir = $(pkgdatadir)/ai

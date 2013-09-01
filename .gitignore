@@ -7,7 +7,7 @@ mihajong/bgm/
 mihajong/sound/
 mihajong/debug*.log
 mihajong/haifu/
-doc/rulesyms.txt
+doc/rulesyms.md
 logger/Debug/
 logger/Release/
 logger/ipch/
