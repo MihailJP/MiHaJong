@@ -4,7 +4,7 @@ SUBDIRS = astro socket sound graphic mjcore mihajong
 EXTRA_DIST = \
 	auxtools/auxtools.vcxproj auxtools/auxtools.vcxproj.filters \
 	auxtools/auxtools.vcxproj.user auxtools/compress.py auxtools/compress.rb \
-	auxtools/Makefile.nmake auxtools/rulesyms.rb \
+	auxtools/Makefile.nmake auxtools/md2html.py auxtools/rulesyms.rb \
 	common/*.h \
 	data \
 	dist/dist.vcxproj dist/dist.vcxproj.filters dist/dist.vcxproj.user \
