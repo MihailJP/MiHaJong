@@ -4,7 +4,9 @@
 #include <d3d9types.h>
 #include <cassert>
 #include <cmath>
+#undef EXPORT
 #include "../../../astro/astro.h"
+#include <ctime>
 
 namespace mihajong_graphic {
 
@@ -16,11 +18,17 @@ TableProtoScene::Clock::Clock(TableProtoScene* caller) {
 TableProtoScene::Clock::~Clock() {
 }
 
-void TableProtoScene::Clock::setClockMatrix(TransformMatrix* matrix) {
+void TableProtoScene::Clock::setClockMatrix(TransformMatrix* matrix, float angle) {
 	D3DXMatrixIdentity(matrix); TransformMatrix tmpMatrix; D3DXMatrixIdentity(&tmpMatrix);
 	D3DXMatrixScaling(&tmpMatrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
 	D3DXMatrixTranslation(&tmpMatrix, -clockPosX * Geometry::WindowScale(), -clockPosY * Geometry::WindowScale(), 0);
+	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
+	D3DXMatrixTranslation(&tmpMatrix, -256 * Geometry::WindowScale(), -256 * Geometry::WindowScale(), 0);
+	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
+	D3DXMatrixRotationZ(&tmpMatrix, angle);
+	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
+	D3DXMatrixTranslation(&tmpMatrix, 256 * Geometry::WindowScale(), 256 * Geometry::WindowScale(), 0);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
 	D3DXMatrixScaling(&tmpMatrix, 0.625f, 0.625f, 0.0f);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
@@ -38,7 +46,7 @@ void TableProtoScene::Clock::renderMoon() {
 		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
 }
 
-void TableProtoScene::Clock::renderShadowL() {
+void TableProtoScene::Clock::renderShadow() {
 	struct Vertex {float x, y, z; uint32_t color;};
 
 	const float Top = ((float)clockPosY + 2.0f) * Geometry::WindowScale(),
@@ -77,8 +85,61 @@ void TableProtoScene::Clock::renderShadowL() {
 	parent->caller->getDevice()->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, vertices - 2, circleVert, sizeof (Vertex));
 }
 
+void TableProtoScene::Clock::renderPanel() {
+	RECT rect = {0, 512, 512, 1024};
+
+	TransformMatrix matrix;
+	setClockMatrix(&matrix);
+
+	SpriteRenderer::instantiate(parent->caller->getDevice())->ShowSprite(
+		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
+}
+
+void TableProtoScene::Clock::renderHour() {
+	time_t Zeit = time(nullptr);
+	tm* lt = localtime(&Zeit);
+
+	RECT rect = {1024, 512, 1536, 1024};
+
+	const float pi = atan2(1.0f, 1.0f) * 4.0f;
+	const float angle = (float)((lt->tm_hour % 12) * 60 + lt->tm_min) * pi / 360.0f;
+
+	TransformMatrix matrix;
+	setClockMatrix(&matrix, angle);
+
+	SpriteRenderer::instantiate(parent->caller->getDevice())->ShowSprite(
+		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
+}
+
+void TableProtoScene::Clock::renderMinute() {
+	time_t Zeit = time(nullptr);
+	tm* lt = localtime(&Zeit);
+
+	RECT rect = {1024, 0, 1536, 512};
+
+	const float pi = atan2(1.0f, 1.0f) * 4.0f;
+	const float angle = (float)((lt->tm_min % 60) * 60 + lt->tm_sec) * pi / 1800.0f;
+
+	TransformMatrix matrix;
+	setClockMatrix(&matrix, angle);
+
+	SpriteRenderer::instantiate(parent->caller->getDevice())->ShowSprite(
+		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
+}
+
+void TableProtoScene::Clock::renderPin() {
+	RECT rect = {512, 512, 1024, 1024};
+
+	TransformMatrix matrix;
+	setClockMatrix(&matrix);
+
+	SpriteRenderer::instantiate(parent->caller->getDevice())->ShowSprite(
+		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
+}
+
 void TableProtoScene::Clock::Render() {
-	renderMoon(); renderShadowL();
+	renderMoon(); renderShadow();
+	renderPanel(); renderHour(); renderMinute(); renderPin();
 }
 
 }
