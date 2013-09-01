@@ -4,6 +4,7 @@
 #include <d3d9types.h>
 #include <cassert>
 #include <cmath>
+#include "../../../astro/astro.h"
 
 namespace mihajong_graphic {
 
@@ -50,22 +51,24 @@ void TableProtoScene::Clock::renderShadowL() {
 
 	const float pi = atan2(1.0f, 1.0f) * 4.0f;
 
+	SYSTEMTIME st; GetSystemTime(&st);
+	MOONPHASE mp = calc_moon_phase(systime_to_julian(&st));
+
 	const unsigned vertices = 60;
-	const int moonPhase = 30;
 	Vertex circleVert[vertices];
 	for (unsigned i = 0; i < vertices; ++i) {
 		const float angle = (float)((i + 1) / 2) / (float)(vertices / 2) * pi * (i % 2 == 0 ? 1.0f : -1.0f);
 		const float x1 = CenterX - Radius * sin(angle), x2 = CenterX - Radius * sin(-angle);
 		circleVert[i].x = CenterX - Radius * sin(angle);
 		circleVert[i].y = CenterY - Radius * cos(angle);
-		if ((moonPhase >= 0 && moonPhase < 180) && (i % 2 == 1))
+		if ((mp.MoonIllum >= 0) && (i % 2 == 1))
 			circleVert[i].x
-			= x1 * ((cos(((float)       moonPhase  / 180.0f) * pi) + 1.0f) / 2.0f)
-			+ x2 * ((cos(((float)(180 - moonPhase) / 180.0f) * pi) + 1.0f) / 2.0f);
-		else if ((moonPhase >= 180 && moonPhase < 360) && (i % 2 == 0))
+			= x1 * (0.5f - mp.MoonIllum) * 2.0f
+			+ x2 *         mp.MoonIllum  * 2.0f;
+		else if ((mp.MoonIllum < 0) && (i % 2 == 0))
 			circleVert[i].x
-			= x1 * ((cos(((float)(360 - moonPhase) / 180.0f) * pi) + 1.0f) / 2.0f)
-			+ x2 * ((cos(((float)(moonPhase - 180) / 180.0f) * pi) + 1.0f) / 2.0f);
+			= x1 * (0.5f - (-mp.MoonIllum)) * 2.0f
+			+ x2 *         (-mp.MoonIllum)  * 2.0f;
 		circleVert[i].z = 0; circleVert[i].color = 0x7f000000;
 	}
 
