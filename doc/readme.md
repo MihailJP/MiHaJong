@@ -77,9 +77,10 @@ MihailJPの開発環境
 ----------------------
 - [liblua](http://www.lua.org/download.html) (Visual C++の場合はスタティックリンクします)
 - [Ruby 処理系](http://www.ruby-lang.org/ja/downloads/)
-- ruby-lzmaが使えない場合、[Python 処理系](http://www.python.jp/download/)
+- [Python 処理系](http://www.python.jp/download/)
+- [markdown_py](https://pypi.python.org/pypi/Markdown)
 - [libogg/libvorbis](http://www.xiph.org/downloads/) (Visual C++の場合はスタティックリンクします)
-- [GuruGuruSMF](http://gurugurusmf.migmig.net/)
+- [GuruGuruSMF](http://gurugurusmf.migmig.net/) (Windowsのみ)
 - [boost::regex](http://www.boost.org/) (GCCはstd::regexが壊れているため必要。Visual C++の場合は不要)
 - [OpenAL](http://connect.creativelabs.com/openal/default.aspx) (Linuxのみ)
 - [libpng](http://www.libpng.org/pub/png/libpng.html) (Linuxのみ)
