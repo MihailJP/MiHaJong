@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="scenes\confmenu.cpp" />
     <ClCompile Include="scenes\setting.cpp" />
+    <ClCompile Include="scenes\table\clock.cpp" />
     <ClCompile Include="scenes\table\tiletip.cpp" />
     <ClCompile Include="scenes\waiting.cpp" />
     <ClCompile Include="widgets\button.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="graphic.h" />
     <ClInclude Include="scenes\confmenu.h" />
     <ClInclude Include="scenes\setting.h" />
+    <ClInclude Include="scenes\table\clock.h" />
     <ClInclude Include="scenes\table\tiletip.h" />
     <ClInclude Include="scenes\waiting.h" />
     <ClInclude Include="widgets\button.h" />
