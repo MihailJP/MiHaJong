@@ -23,10 +23,11 @@
 #define IDB_PNG_SCORE_DIGITS                 117
 #define IDB_PNG_CHECKBOX                     118
 #define IDB_PNG_TILE_BLACK                   119
+#define IDB_PNG_MOON_CLOCK                   120
 
 #define CHARMAP_FILE                         257
-#define IDB_CHARMAP_FONT                     120
-#define IDB_CHARMAP_FONT_HUGE                121
-#define IDB_CHARMAP_FONT_SMALL               122
-#define IDB_CHARMAP_CALL_DIGITS              123
-#define IDB_CHARMAP_SCORE_DIGITS             124
+#define IDB_CHARMAP_FONT                     130
+#define IDB_CHARMAP_FONT_HUGE                131
+#define IDB_CHARMAP_FONT_SMALL               132
+#define IDB_CHARMAP_CALL_DIGITS              133
+#define IDB_CHARMAP_SCORE_DIGITS             134
