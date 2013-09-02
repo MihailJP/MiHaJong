@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
+#include "table/clock.h"
 
 namespace mihajong_graphic {
 
@@ -34,9 +35,11 @@ TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(m
 			Geometry::BaseSize + 20,                                        940 + i * 40,
 			Geometry::BaseSize + 20 + 36 + checkBoxes[i]->captionWidthPx(), 940 + i * 40 + 36);
 	}
+	clockPanel = new Clock(this);
 }
 
 TableProtoScene::~TableProtoScene() {
+	delete clockPanel;
 	for (int i = 0; i < NumOfCheckBoxes; ++i)
 		delete checkBoxes[i];
 	for (auto k = scorePanel.begin(); k != scorePanel.end(); ++k)
@@ -79,6 +82,7 @@ void TableProtoScene::InitScorePanel() {
 void TableProtoScene::ShowScorePanel() {
 	for (auto k = scorePanel.begin(); k != scorePanel.end(); ++k)
 		(*k)->Render();
+	clockPanel->Render();
 }
 
 ArgbColor TableProtoScene::roundColor() {
