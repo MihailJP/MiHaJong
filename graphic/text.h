@@ -8,6 +8,7 @@
 #include <vector>
 #include "loadtex.h"
 #include "font.h"
+#include "../common/mutex.h"
 
 namespace mihajong_graphic {
 
@@ -29,6 +30,7 @@ protected:
 	void reconstruct(unsigned int ID, bool rescanStr = true);
 	void deleteSprite();
 	void deleteSprite(unsigned int ID);
+	MHJMutex SpriteMutex;
 public:
 	explicit ITextRenderer(DevicePtr device);
 	virtual ~ITextRenderer() = 0;
