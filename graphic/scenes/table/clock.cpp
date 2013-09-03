@@ -10,15 +10,15 @@
 
 namespace mihajong_graphic {
 
-TableProtoScene::Clock::Clock(TableProtoScene* caller) {
+GameTableScreen::Clock::Clock(GameTableScreen* caller) {
 	parent = caller;
 	mihajong_graphic::LoadTexture(parent->caller->getDevice(), &myTexture, MAKEINTRESOURCE(IDB_PNG_MOON_CLOCK));
 }
 
-TableProtoScene::Clock::~Clock() {
+GameTableScreen::Clock::~Clock() {
 }
 
-void TableProtoScene::Clock::setClockMatrix(TransformMatrix* matrix, float angle) {
+void GameTableScreen::Clock::setClockMatrix(TransformMatrix* matrix, float angle) {
 	D3DXMatrixIdentity(matrix); TransformMatrix tmpMatrix; D3DXMatrixIdentity(&tmpMatrix);
 	D3DXMatrixScaling(&tmpMatrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
@@ -36,7 +36,7 @@ void TableProtoScene::Clock::setClockMatrix(TransformMatrix* matrix, float angle
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
 }
 
-void TableProtoScene::Clock::renderMoon() {
+void GameTableScreen::Clock::renderMoon() {
 	RECT rect = {0, 0, 512, 512};
 
 	TransformMatrix matrix;
@@ -46,7 +46,7 @@ void TableProtoScene::Clock::renderMoon() {
 		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
 }
 
-void TableProtoScene::Clock::renderShadow() {
+void GameTableScreen::Clock::renderShadow() {
 	struct Vertex {float x, y, z; uint32_t color;};
 
 	const float Top = ((float)clockPosY + 2.0f) * Geometry::WindowScale(),
@@ -85,7 +85,7 @@ void TableProtoScene::Clock::renderShadow() {
 	parent->caller->getDevice()->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, vertices - 2, circleVert, sizeof (Vertex));
 }
 
-void TableProtoScene::Clock::renderPanel() {
+void GameTableScreen::Clock::renderPanel() {
 	RECT rect = {0, 512, 512, 1024};
 
 	TransformMatrix matrix;
@@ -95,7 +95,7 @@ void TableProtoScene::Clock::renderPanel() {
 		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
 }
 
-void TableProtoScene::Clock::renderHour() {
+void GameTableScreen::Clock::renderHour() {
 	time_t Zeit = time(nullptr);
 	tm* lt = localtime(&Zeit);
 
@@ -111,7 +111,7 @@ void TableProtoScene::Clock::renderHour() {
 		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
 }
 
-void TableProtoScene::Clock::renderMinute() {
+void GameTableScreen::Clock::renderMinute() {
 	time_t Zeit = time(nullptr);
 	tm* lt = localtime(&Zeit);
 
@@ -127,7 +127,7 @@ void TableProtoScene::Clock::renderMinute() {
 		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
 }
 
-void TableProtoScene::Clock::renderPin() {
+void GameTableScreen::Clock::renderPin() {
 	RECT rect = {512, 512, 1024, 1024};
 
 	TransformMatrix matrix;
@@ -137,7 +137,7 @@ void TableProtoScene::Clock::renderPin() {
 		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
 }
 
-void TableProtoScene::Clock::Render() {
+void GameTableScreen::Clock::Render() {
 	renderMoon(); renderShadow();
 	renderPanel(); renderHour(); renderMinute(); renderPin();
 }

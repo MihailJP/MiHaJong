@@ -15,9 +15,6 @@ private:
 	class ScoreBoard; // 持ち点表示用のクラス
 	std::array<ScoreBoard*, Players> scorePanel;
 	static const unsigned int panelPosY = 550;
-private:
-	class Clock; // 時計表示用のクラス
-	Clock* clockPanel;
 protected:
 	TexturePtr tSideBar; // サイドバー
 	void LoadTexture(TexturePtr* texture, LPCTSTR resource); // テクスチャ読み込み

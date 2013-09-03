@@ -1,15 +1,14 @@
 #pragma once
 
 #include "../table.h"
-#include "../game.h"
 #include "../../loadtex.h"
 #include "../../geometry.h"
 
 namespace mihajong_graphic {
 
-class TableProtoScene::Clock {
+class GameTableScreen::Clock {
 private:
-	TableProtoScene* parent;
+	GameTableScreen* parent;
 	TexturePtr myTexture;
 	void setClockMatrix(TransformMatrix* matrix, float angle = 0.0f);
 private:
@@ -23,7 +22,7 @@ private:
 	void renderMinute();
 	void renderPin();
 public:
-	Clock(TableProtoScene* caller);
+	Clock(GameTableScreen* caller);
 	~Clock();
 	void Render();
 };
