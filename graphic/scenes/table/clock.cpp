@@ -24,13 +24,13 @@ void GameTableScreen::Clock::setClockMatrix(TransformMatrix* matrix, float angle
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
 	D3DXMatrixTranslation(&tmpMatrix, -clockPosX * Geometry::WindowScale(), -clockPosY * Geometry::WindowScale(), 0);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-	D3DXMatrixTranslation(&tmpMatrix, -256 * Geometry::WindowScale(), -256 * Geometry::WindowScale(), 0);
+	D3DXMatrixTranslation(&tmpMatrix, -((float)clockDiameter / 2.0f) * Geometry::WindowScale(), -((float)clockDiameter / 2.0f) * Geometry::WindowScale(), 0);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
 	D3DXMatrixRotationZ(&tmpMatrix, angle);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-	D3DXMatrixTranslation(&tmpMatrix, 256 * Geometry::WindowScale(), 256 * Geometry::WindowScale(), 0);
+	D3DXMatrixTranslation(&tmpMatrix, ((float)clockDiameter / 2.0f) * Geometry::WindowScale(), ((float)clockDiameter / 2.0f) * Geometry::WindowScale(), 0);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-	D3DXMatrixScaling(&tmpMatrix, 0.625f, 0.625f, 0.0f);
+	D3DXMatrixScaling(&tmpMatrix, (float)scaledClockDiameter / (float)clockDiameter, (float)scaledClockDiameter / (float)clockDiameter, 0.0f);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
 	D3DXMatrixTranslation(&tmpMatrix, clockPosX * Geometry::WindowScale(), clockPosY * Geometry::WindowScale(), 0);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
@@ -43,16 +43,16 @@ void GameTableScreen::Clock::renderMoon() {
 	setClockMatrix(&matrix);
 
 	SpriteRenderer::instantiate(parent->caller->getDevice())->ShowSprite(
-		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
+		myTexture, clockPosX, clockPosY, clockDiameter, clockDiameter, 0xffffffff, &rect, 0, 0, &matrix);
 }
 
 void GameTableScreen::Clock::renderShadow() {
 	struct Vertex {float x, y, z; uint32_t color;};
 
 	const float Top = ((float)clockPosY + 2.0f) * Geometry::WindowScale(),
-		Bottom = ((float)clockPosY + 512.0f * 0.625f - 2.0f) * Geometry::WindowScale(),
+		Bottom = ((float)clockPosY + (float)clockDiameter * ((float)scaledClockDiameter / (float)clockDiameter) - 2.0f) * Geometry::WindowScale(),
 		Left = ((float)clockPosX + 2.0f) * Geometry::WindowScale(),
-		Right = ((float)clockPosX + 512.0f * 0.625f - 2.0f) * Geometry::WindowScale(),
+		Right = ((float)clockPosX + (float)clockDiameter * ((float)scaledClockDiameter / (float)clockDiameter) - 2.0f) * Geometry::WindowScale(),
 		CenterX = (Left + Right) / 2.0f,
 		CenterY = (Top + Bottom) / 2.0f,
 		Radius = CenterX - Left;
@@ -92,7 +92,7 @@ void GameTableScreen::Clock::renderPanel() {
 	setClockMatrix(&matrix);
 
 	SpriteRenderer::instantiate(parent->caller->getDevice())->ShowSprite(
-		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
+		myTexture, clockPosX, clockPosY, clockDiameter, clockDiameter, 0xffffffff, &rect, 0, 0, &matrix);
 }
 
 void GameTableScreen::Clock::renderHour() {
@@ -108,7 +108,7 @@ void GameTableScreen::Clock::renderHour() {
 	setClockMatrix(&matrix, angle);
 
 	SpriteRenderer::instantiate(parent->caller->getDevice())->ShowSprite(
-		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
+		myTexture, clockPosX, clockPosY, clockDiameter, clockDiameter, 0xffffffff, &rect, 0, 0, &matrix);
 }
 
 void GameTableScreen::Clock::renderMinute() {
@@ -124,7 +124,7 @@ void GameTableScreen::Clock::renderMinute() {
 	setClockMatrix(&matrix, angle);
 
 	SpriteRenderer::instantiate(parent->caller->getDevice())->ShowSprite(
-		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
+		myTexture, clockPosX, clockPosY, clockDiameter, clockDiameter, 0xffffffff, &rect, 0, 0, &matrix);
 }
 
 void GameTableScreen::Clock::renderPin() {
@@ -134,12 +134,23 @@ void GameTableScreen::Clock::renderPin() {
 	setClockMatrix(&matrix);
 
 	SpriteRenderer::instantiate(parent->caller->getDevice())->ShowSprite(
-		myTexture, clockPosX, clockPosY, 512, 512, 0xffffffff, &rect, 0, 0, &matrix);
+		myTexture, clockPosX, clockPosY, clockDiameter, clockDiameter, 0xffffffff, &rect, 0, 0, &matrix);
+}
+
+void GameTableScreen::Clock::renderFrame() {
+	RECT rect = {512, 0, 1024, 512};
+
+	TransformMatrix matrix;
+	setClockMatrix(&matrix);
+
+	SpriteRenderer::instantiate(parent->caller->getDevice())->ShowSprite(
+		myTexture, clockPosX, clockPosY, clockDiameter, clockDiameter, 0xffffffff, &rect, 0, 0, &matrix);
 }
 
 void GameTableScreen::Clock::Render() {
 	renderMoon(); renderShadow();
 	renderPanel(); renderHour(); renderMinute(); renderPin();
+	renderFrame();
 }
 
 }
