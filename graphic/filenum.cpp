@@ -45,6 +45,8 @@ std::string dataFileName(int fileID) {
 		return PKGDATADIR "/checkbox.png";
 	case IDB_PNG_TILE_BLACK:
 		return PKGDATADIR "/tiles_bk.png";
+	case IDB_PNG_MOON_CLOCK:
+		return PKGDATADIR "/clock.png";
 	case IDB_CHARMAP_FONT:
 		return PKGDATADIR "/font.chr";
 	case IDB_CHARMAP_FONT_HUGE:
