@@ -197,7 +197,7 @@ MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned
 	initWindowClass(hThisInst, icon);
 	initWindow(hThisInst, nWinMode, fullscreen);
 	myScreenManipulator = new ScreenManipulator(hWnd, fullscreen);
-	myInputManipulator = new input::InputManipulator(hWnd);
+	myInputManipulator = new input::InputManipulator(hWnd, fullscreen);
 }
 #else /*_WIN32*/
 MainWindow::MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen) {

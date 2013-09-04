@@ -8,12 +8,12 @@ namespace input {
 
 // -------------------------------------------------------------------------
 
-InputManipulator::InputManipulator(HWND hwnd) {
+InputManipulator::InputManipulator(HWND hwnd, bool fullscreen) {
 	if (FAILED(DirectInput8Create(
 		GraphicDLL, 0x0800, IID_IDirectInput8, reinterpret_cast<void**>(&myInterface), nullptr)))
 		throw CodeConv::tstring(_T("DirectInput8CreateŽ¸”sII"));
 	myKeyboard = new Keyboard(myInterface, hwnd);
-	myMouse = new Mouse(myInterface, hwnd);
+	myMouse = new Mouse(myInterface, hwnd, fullscreen);
 }
 
 InputManipulator::~InputManipulator() {
@@ -55,8 +55,8 @@ Keyboard::~Keyboard() {
 
 // -------------------------------------------------------------------------
 
-Mouse::Mouse(LPDIRECTINPUT8 inputInterface, HWND hwnd) {
-	hWnd = hwnd;
+Mouse::Mouse(LPDIRECTINPUT8 inputInterface, HWND hwnd, bool fullscreen) {
+	hWnd = hwnd; fullScreenFlag = fullscreen;
 	if (FAILED(inputInterface->CreateDevice(GUID_SysMouse, &myInputDevice, nullptr)))
 		throw CodeConv::tstring(_T("CreateDeviceŽ¸”sII"));
 	if (FAILED(myInputDevice->SetDataFormat(&c_dfDIMouse2)))
@@ -84,7 +84,7 @@ Mouse::~Mouse() {
 Mouse::Position Mouse::pos() {
 	POINT mpos;
 	GetCursorPos(&mpos);
-	ScreenToClient(hWnd, &mpos);
+	if (!fullScreenFlag) ScreenToClient(hWnd, &mpos);
 	return Position(mpos.x, mpos.y);
 }
 
