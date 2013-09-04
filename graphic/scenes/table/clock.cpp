@@ -1,7 +1,9 @@
 #include "clock.h"
 #include "../../sprite.h"
 #include "../../resource.h"
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 #include <d3d9types.h>
+#endif
 #include <cassert>
 #include <cmath>
 #undef EXPORT
@@ -12,13 +14,14 @@ namespace mihajong_graphic {
 
 GameTableScreen::Clock::Clock(GameTableScreen* caller) {
 	parent = caller;
-	mihajong_graphic::LoadTexture(parent->caller->getDevice(), &myTexture, MAKEINTRESOURCE(IDB_PNG_MOON_CLOCK));
+	parent->LoadTexture(&myTexture, MAKEINTRESOURCE(IDB_PNG_MOON_CLOCK));
 }
 
 GameTableScreen::Clock::~Clock() {
 }
 
 void GameTableScreen::Clock::setClockMatrix(TransformMatrix* matrix, float angle) {
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	D3DXMatrixIdentity(matrix); TransformMatrix tmpMatrix; D3DXMatrixIdentity(&tmpMatrix);
 	D3DXMatrixScaling(&tmpMatrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
@@ -34,6 +37,50 @@ void GameTableScreen::Clock::setClockMatrix(TransformMatrix* matrix, float angle
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
 	D3DXMatrixTranslation(&tmpMatrix, clockPosX * Geometry::WindowScale(), clockPosY * Geometry::WindowScale(), 0);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
+#else
+	const float
+		phi = (float)scaledClockDiameter,
+		h = Geometry::WindowHeight,
+		s = Geometry::WindowScale(),
+		r = ((float)clockDiameter / 2.0f),
+		x = clockPosX, y = clockPosY,
+		theta = angle;
+
+	(*matrix)[ 0] =  (phi * s * cos(theta)) / (2.0f * r);
+	(*matrix)[ 1] = -(phi * s * sin(theta)) / (2.0f * r);
+	(*matrix)[ 2] = 0.0f;
+	(*matrix)[ 3] = 0.0f;
+
+	(*matrix)[ 4] = (phi * s * sin(theta)) / (2.0f * r);
+	(*matrix)[ 5] = (phi * s * cos(theta)) / (2.0f * r);
+	(*matrix)[ 6] = 0.0f;
+	(*matrix)[ 7] = 0.0f;
+
+	(*matrix)[ 8] = 0.0f;
+	(*matrix)[ 9] = 0.0f;
+	(*matrix)[10] = 0.0f;
+	(*matrix)[11] = 0.0f;
+
+	(*matrix)[12] =
+		  (phi * y * s * sin(theta)) / (2.0f * r)
+		- (phi * x * s * cos(theta)) / (2.0f * r)
+		+ x * s
+		- (phi * h * s * sin(theta)) / (2.0f * r)
+		+ (phi * r * s * sin(theta)) / (2.0f * r)
+		- (phi * r * s * cos(theta)) / (2.0f * r)
+		+ (phi * r * s             ) / (2.0f * r);
+	(*matrix)[13] =
+		  (phi * y * s * cos(theta)) / (2.0f * r)
+		- y * s
+		+ (phi * x * s * sin(theta)) / (2.0f * r)
+		+ (phi * r * s * sin(theta)) / (2.0f * r)
+		- (phi * h * s * cos(theta)) / (2.0f * r)
+		+ (phi * r * s * cos(theta)) / (2.0f * r)
+		- (phi * r * s             ) / (2.0f * r)
+		+ h;
+	(*matrix)[14] = 0.0f;
+	(*matrix)[15] = 1.0f;
+#endif
 }
 
 void GameTableScreen::Clock::renderMoon() {
@@ -59,7 +106,11 @@ void GameTableScreen::Clock::renderShadow() {
 
 	const float pi = atan2(1.0f, 1.0f) * 4.0f;
 
+#ifdef _WIN32
 	SYSTEMTIME st; GetSystemTime(&st);
+#else /* _WIN32 */
+	timespec st; clock_gettime(CLOCK_REALTIME, &st);
+#endif /* _WIN32 */
 	MOONPHASE mp = calc_moon_phase(systime_to_julian(&st));
 
 	const unsigned vertices = 60;
@@ -80,9 +131,30 @@ void GameTableScreen::Clock::renderShadow() {
 		circleVert[i].z = 0; circleVert[i].color = 0x7f000000;
 	}
 
+#if defined(_WIN32) && defined(WITH_DIRECTX)
 	parent->caller->getDevice()->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
 	parent->caller->getDevice()->SetTexture(0, nullptr);
 	parent->caller->getDevice()->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, vertices - 2, circleVert, sizeof (Vertex));
+#else /* _WIN32 */
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix(); glLoadIdentity();
+	glDisable(GL_TEXTURE_2D);
+
+	glBegin(GL_TRIANGLE_STRIP);
+	for (unsigned i = 0; i < vertices; ++i) {
+		glColor4d(
+			(double)((circleVert[i].color & 0x00ff0000) >> 16) / 255.0,
+			(double)((circleVert[i].color & 0x0000ff00) >>  8) / 255.0,
+			(double)((circleVert[i].color & 0x000000ff)      ) / 255.0,
+			(double)((circleVert[i].color & 0xff000000) >> 24) / 255.0);
+		glVertex2f(circleVert[i].x, circleVert[i].y);
+	}
+	glEnd();
+	glPopMatrix();
+#endif /* _WIN32 */
 }
 
 void GameTableScreen::Clock::renderPanel() {

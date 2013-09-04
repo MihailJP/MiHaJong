@@ -101,6 +101,7 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初
 		IDB_PNG_SCORE_DIGITS,
 		IDB_PNG_CHECKBOX,
 		IDB_PNG_TILE_BLACK,
+		IDB_PNG_MOON_CLOCK,
 		0, // sentinel
 	};
 	TexturePtr dummyTexture;
