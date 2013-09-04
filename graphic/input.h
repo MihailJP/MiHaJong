@@ -23,8 +23,9 @@ public:
 class Mouse : public InputDevice {
 private:
 	HWND hWnd;
+	bool fullScreenFlag;
 public:
-	Mouse(LPDIRECTINPUT8 inputInterface, HWND hwnd);
+	Mouse(LPDIRECTINPUT8 inputInterface, HWND hwnd, bool fullscreen);
 	~Mouse();
 	typedef std::pair<int, int> Position;
 	Position pos();
@@ -36,7 +37,7 @@ private:
 	Keyboard* myKeyboard;
 	Mouse* myMouse;
 public:
-	InputManipulator(HWND hwnd);
+	InputManipulator(HWND hwnd, bool fullscreen);
 	~InputManipulator();
 	Keyboard* kbd() {return myKeyboard;}
 	Mouse* mouse() {return myMouse;}
