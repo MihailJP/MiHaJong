@@ -24,6 +24,7 @@
 #include "table/nakibtn.h"
 #include "table/gari.h"
 #include "table/tiletip.h"
+#include "table/clock.h"
 
 #include "table/naki_id.h"
 
@@ -41,6 +42,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	nakihaiReconst = new NakihaiReconst(this);
 	sutehaiReconst = new SutehaiReconst(this);
 	gariReconst = new GariReconst(this);
+	clockPanel = new Clock(this);
 	tileTipReconst = new TileTipReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
 	const unsigned logWidth = (unsigned)floor(0.5f + // VC++2010‚Å‚Íround()‚ªg‚¦‚È‚¢
@@ -74,6 +76,7 @@ GameTableScreen::~GameTableScreen() {
 	delete richibouReconst;
 	delete trayReconst;
 	delete buttonReconst;
+	delete clockPanel;
 	delete myTextRenderer;
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (tBorder) tBorder->Release();
@@ -164,6 +167,7 @@ void GameTableScreen::RenderTable() {
 	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tBaize, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	Reconstruct(GameStatus::retrGameStat());
+	clockPanel->Render();
 	richibouReconst->Render();
 	diceReconst->Render();
 	trayReconst->Render();

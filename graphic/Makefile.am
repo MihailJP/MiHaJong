@@ -11,11 +11,11 @@ libmihajong_graphic_la_SOURCES = \
 	scenes/tablesub/callval.cpp scenes/tablesub/chktnpai.cpp \
 	scenes/tablesub/player.cpp scenes/tablesub/rndstart.cpp \
 	scenes/tablesub/tablesub.cpp scenes/tablesub/titling.cpp \
-	scenes/table/chicha.cpp scenes/table/gari.cpp scenes/table/nakibtn.cpp \
-	scenes/table/nakihai.cpp scenes/table/nakihai0.cpp \
-	scenes/table/richibou.cpp scenes/table/showdice.cpp \
-	scenes/table/sutehai.cpp scenes/table/tehai.cpp scenes/table/tehai0.cpp \
-	scenes/table/tiletip.cpp scenes/table/yamahai.cpp \
+	scenes/table/chicha.cpp scenes/table/clock.cpp scenes/table/gari.cpp \
+	scenes/table/nakibtn.cpp scenes/table/nakihai.cpp \
+	scenes/table/nakihai0.cpp scenes/table/richibou.cpp \
+	scenes/table/showdice.cpp scenes/table/sutehai.cpp scenes/table/tehai.cpp \
+	scenes/table/tehai0.cpp scenes/table/tiletip.cpp scenes/table/yamahai.cpp \
 	widgets/button.cpp widgets/checkbox.cpp widgets/editbox.cpp \
 	widgets/logwnd.cpp \
 	calltext.h chrwidth.h directx.h event.h exports.h extchar.h finscore.h \
@@ -31,11 +31,11 @@ libmihajong_graphic_la_SOURCES = \
 	scenes/tablesub/player.h scenes/tablesub/rndstart.h \
 	scenes/tablesub/tablesub.h scenes/tablesub/tblnorm.h \
 	scenes/tablesub/tblsubs.h scenes/tablesub/titling.h scenes/table/chicha.h \
-	scenes/table/color.h scenes/table/gari.h scenes/table/nakibtn.h \
-	scenes/table/nakihai.h scenes/table/nakihai0.h scenes/table/naki_id.h \
-	scenes/table/richibou.h scenes/table/showdice.h scenes/table/sutehai.h \
-	scenes/table/tehai.h scenes/table/tehai0.h scenes/table/tiletip.h \
-	scenes/table/yamahai.h \
+	scenes/table/clock.h scenes/table/color.h scenes/table/gari.h \
+	scenes/table/nakibtn.h scenes/table/nakihai.h scenes/table/nakihai0.h \
+	scenes/table/naki_id.h scenes/table/richibou.h scenes/table/showdice.h \
+	scenes/table/sutehai.h scenes/table/tehai.h scenes/table/tehai0.h \
+	scenes/table/tiletip.h scenes/table/yamahai.h \
 	widgets/button.h widgets/checkbox.h widgets/editbox.h widgets/logwnd.h
 libmihajong_graphic_la_LDFLAGS = -no-undefined -release $(VERSION)
 libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS --input-charset=cp932
@@ -46,13 +46,14 @@ if WITH_WINAPI
 else
 libmihajong_graphic_la_CXXFLAGS += -DPKGDATADIR='"$(pkgdatadir)"' -DUNICODE -D_UNICODE
 endif
-libmihajong_graphic_la_LIBADD = ../sound/libmihajong-sound.la
+libmihajong_graphic_la_LIBADD = ../sound/libmihajong-sound.la ../astro/libmihajong-astro.la
 if WITH_WINAPI
 libmihajong_graphic_la_LIBADD += graphic.o 
 endif
 dist_pkgdata_DATA = \
 	data/agariwnd.png data/baize.png data/button.png data/call.png \
 	data/cdigits.chr data/cdigits.png data/checkbox.png data/chiicha.png \
+	data/clock.png \
 	data/dice.png data/editbox.png data/font.chr data/font.png data/frame.png \
 	data/largechr.chr data/largechr.png data/score.png data/sdigits.chr \
 	data/sdigits.png data/sidebar.png data/smallchr.chr data/smallchr.png \
