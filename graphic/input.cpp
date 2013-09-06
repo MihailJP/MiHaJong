@@ -138,6 +138,7 @@ void Joystick::init_finally() {
 	myMutex.release();
 }
 Joystick::Joystick(LPDIRECTINPUT8 inputInterface, HWND hwnd) {
+	myInputDevice = nullptr;
 	myMutex.acquire();
 	currentInstance = this;
 	currentInterface = inputInterface;
