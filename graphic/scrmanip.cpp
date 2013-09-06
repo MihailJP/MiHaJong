@@ -269,6 +269,7 @@ ScreenManipulator::~ScreenManipulator() {
 
 #ifdef _WIN32
 void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f) {
+	if (inputDev == nullptr) return;
 	while (true) {
 		DIDEVICEOBJECTDATA objDat; DWORD items = 1;
 		HRESULT hr = inputDev->getDevice()->GetDeviceData(
@@ -291,6 +292,9 @@ void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 			input::InputManipulator* iManip_ = iManip;
 			inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
 				if (sc) sc->KeyboardInput(od);
+			});
+			inputProc(iManip->pad(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
+				if (sc) sc->PadInput(od);
 			});
 			inputProc(iManip->mouse(), [iManip_](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
 				input::Mouse::Position mousepos = iManip_->mouse()->pos();

@@ -14,11 +14,17 @@ InputManipulator::InputManipulator(HWND hwnd, bool fullscreen) {
 		throw CodeConv::tstring(_T("DirectInput8Create失敗！！"));
 	myKeyboard = new Keyboard(myInterface, hwnd);
 	myMouse = new Mouse(myInterface, hwnd, fullscreen);
+	try {
+		myJoystick = new Joystick(myInterface, hwnd);
+	} catch (...) {
+		myJoystick = nullptr;
+	}
 }
 
 InputManipulator::~InputManipulator() {
 	if (myKeyboard) delete myKeyboard;
 	if (myMouse) delete myMouse;
+	if (myJoystick) delete myJoystick;
 	myInterface->Release();
 }
 
@@ -86,6 +92,66 @@ Mouse::Position Mouse::pos() {
 	GetCursorPos(&mpos);
 	if (!fullScreenFlag) ScreenToClient(hWnd, &mpos);
 	return Position(mpos.x, mpos.y);
+}
+
+// -------------------------------------------------------------------------
+
+MHJMutex Joystick::myMutex;
+Joystick* Joystick::currentInstance;
+LPDIRECTINPUT8 Joystick::currentInterface;
+
+BOOL CALLBACK Joystick::enumerationCallback(const DIDEVICEINSTANCE *pdidInstance, LPVOID pContext) {
+	return myMutex.syncDo<BOOL>([&]() {
+		return (FAILED(currentInterface->CreateDevice(pdidInstance->guidInstance, &(currentInstance->myInputDevice), nullptr)))
+			? DIENUM_CONTINUE : DIENUM_STOP;
+	});
+}
+
+void Joystick::init_main() {
+	currentInterface->EnumDevices(DI8DEVCLASS_GAMECTRL, enumerationCallback, nullptr, DIEDFL_ATTACHEDONLY);
+	if (!currentInstance->myInputDevice)
+		throw CodeConv::tstring(_T("ジョイスティックがありません"));
+	if (FAILED(currentInstance->myInputDevice->SetDataFormat(&c_dfDIJoystick)))
+		throw CodeConv::tstring(_T("SetDataFormat失敗！！"));
+	if (FAILED(currentInstance->myInputDevice->SetCooperativeLevel(currentInstance->myHWnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
+		throw CodeConv::tstring(_T("SetCooperativeLevel失敗！！"));
+	DIPROPDWORD diProp;
+	diProp.diph.dwSize = sizeof(diProp);
+	diProp.diph.dwHeaderSize = sizeof(diProp.diph);
+	diProp.diph.dwObj = 0;
+	diProp.diph.dwHow = DIPH_DEVICE;
+	diProp.dwData = 1000;
+	if (FAILED(reinterpret_cast<Joystick*>(currentInstance)->myInputDevice->SetProperty(DIPROP_BUFFERSIZE, &diProp.diph)))
+		throw CodeConv::tstring(_T("SetProperty(DIPROP_BUFFERSIZE)失敗！！"));
+	DIPROPRANGE diRange;
+	diRange.diph.dwSize = sizeof(diRange);
+	diRange.diph.dwHeaderSize = sizeof(diRange.diph);
+	diRange.diph.dwObj = 0;
+	diRange.diph.dwHow = DIPH_DEVICE;
+	diRange.lMin = -32767;
+	diRange.lMax = 32767;
+	if (FAILED(reinterpret_cast<Joystick*>(currentInstance)->myInputDevice->SetProperty(DIPROP_RANGE, &diRange.diph)))
+		throw CodeConv::tstring(_T("SetProperty(DIPROP_RANGE)失敗！！"));
+	reinterpret_cast<Joystick*>(currentInstance)->myInputDevice->Acquire();
+}
+void Joystick::init_finally() {
+	myMutex.release();
+}
+Joystick::Joystick(LPDIRECTINPUT8 inputInterface, HWND hwnd) {
+	myMutex.acquire();
+	currentInstance = this;
+	currentInterface = inputInterface;
+	myHWnd = hwnd;
+
+	auto initFunc = DoFinally<void>(init_main, init_finally);
+	initFunc();
+}
+
+Joystick::~Joystick() {
+	if (myInputDevice) {
+		myInputDevice->Unacquire();
+		myInputDevice->Release();
+	}
 }
 
 // -------------------------------------------------------------------------
