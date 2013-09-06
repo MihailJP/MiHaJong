@@ -34,6 +34,7 @@ public:
 	virtual void KeyboardInput(WPARAM wParam, LPARAM lParam) {}
 	virtual void KeyboardInput(LPDIDEVICEOBJECTDATA od) {}
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {}
+	virtual void PadInput(LPDIDEVICEOBJECTDATA od);
 #else /*_WIN32*/
 	/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢ŽÀ‘• */
 	virtual void KeyboardInput(const XEvent* od) {}

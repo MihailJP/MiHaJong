@@ -1,9 +1,9 @@
 #pragma once
 
 #define MIHAJONG_MAJOR_VER 2
-#define MIHAJONG_MINOR_VER 0
-#define MIHAJONG_PATCH_VER 5
-#define MIHAJONG_VER "2.0.5"
+#define MIHAJONG_MINOR_VER 1
+#define MIHAJONG_PATCH_VER 0
+#define MIHAJONG_VER "2.1.0"
 
 #define MJCORE_MAJOR_VER 2
 #define MJCORE_MINOR_VER 0
@@ -31,6 +31,6 @@
 #define SOUND_VER "2.0.1"
 
 #define GRAPHIC_MAJOR_VER 2
-#define GRAPHIC_MINOR_VER 0
-#define GRAPHIC_PATCH_VER 5
-#define GRAPHIC_VER "2.0.5"
+#define GRAPHIC_MINOR_VER 1
+#define GRAPHIC_PATCH_VER 0
+#define GRAPHIC_VER "2.1.0"

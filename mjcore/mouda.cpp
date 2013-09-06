@@ -132,6 +132,7 @@ namespace { /* 内部処理分割用 */
 		EndType RoundEndType = Continuing;
 		haifu::haifurectsumo(gameStat); // 牌譜に記録
 		/* 八連荘判定用の変数 */
+#ifndef GUOBIAO
 		if (RuleData::chkRuleApplied("paarenchan")) {
 			if (gameStat->LastAgariPlayer == gameStat->CurrentPlayer.Active) {
 				++gameStat->AgariChain;
@@ -141,15 +142,18 @@ namespace { /* 内部処理分割用 */
 				gameStat->AgariChain = 1; gameStat->LastAgariPlayer = gameStat->CurrentPlayer.Active;
 			}
 		}
+#endif /* GUOBIAO */
 		/* 自摸和したことを変数に設定 */
 		gameStat->TsumoAgariFlag = true;
 		yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Active);
+#ifndef GUOBIAO
 		if ((!yaku::yakuCalculator::checkShibari(gameStat, &yakuInfo)) ||
 			(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->statOfActive().RichiFlag.RichiFlag)) ||
 			((gameStat->PaoFlag[pyMinkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong")) ||
 			((!RuleData::chkRuleApplied("kataagari")) && (!isKataagari(gameStat, gameStat->CurrentPlayer.Active))))
 			RoundEndType = Chonbo; /* 縛りを満たしていない場合(役が無いなど)…錯和として局を終了する */
 		else
+#endif /* GUOBIAO */
 			RoundEndType = Agari; /* 縛りを満たすなら和了りとして成立 */
 		gameStat->TsumoAgariFlag = true;
 		gameStat->CurrentPlayer.Agari = gameStat->CurrentPlayer.Active;
@@ -166,6 +170,7 @@ namespace { /* 内部処理分割用 */
 		return RoundEndType;
 	}
 	EndType procDahaiSubKyuushu(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 九種九牌が宣言された場合 */
+#ifndef GUOBIAO
 		DiscardTileIndex.type = DiscardTileNum::Normal;
 		DiscardTileIndex.id = NumOfTilesInHand; // 九種流しができない時はツモ切りとみなす
 		if (RuleData::chkRuleApplied("nine_terminals") &&
@@ -178,9 +183,12 @@ namespace { /* 内部処理分割用 */
 				mihajong_graphic::GameStatus::updateGameStat(gameStat);
 				return KyuushuKyuuhai;
 		} else {
+#endif /* GUOBIAO */
 			warn(_T("九種九牌はできません。ツモ切りとみなします。"));
 			return Continuing;
+#ifndef GUOBIAO
 		}
+#endif /* GUOBIAO */
 	}
 	EndType procDahaiSubFlower(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 花牌を抜いた場合の処理 */
 		if ((DiscardTileIndex.type == DiscardTileNum::Ankan) &&
@@ -208,15 +216,21 @@ namespace { /* 内部処理分割用 */
 		return Continuing;
 	}
 	EndType procDahaiSubKan(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 暗槓・加槓するときの処理 */
+#ifdef GUOBIAO
+		const unsigned kanLim = 16;
+#else /* GUOBIAO */
 		const unsigned kanLim = (RuleData::chkRuleApplied("fifth_kong") ? 5 : 4);
+#endif /* GUOBIAO */
 		if ((gameStat->TilePointer < (gameStat->RinshanPointer - (gameStat->DeadTiles - 1))) && // ハイテイでない
 			(gameStat->KangNum < kanLim)) { // 合計数の制限内である
 				if ((DiscardTileIndex.type == DiscardTileNum::Ankan) ||
 					(DiscardTileIndex.type == DiscardTileNum::Kakan)) {
+#ifndef GUOBIAO
 						if (RuleData::chkRule("minkan_pao", "yes") || RuleData::chkRule("minkan_pao", "yes_2han")) {
 							gameStat->PaoFlag[pyMinkan].paoPlayer =
 								gameStat->PaoFlag[pyMinkan].agariPlayer = -1;
 						}
+#endif /* GUOBIAO */
 						/* 槓をすると嶺上牌の分自摸が増えるので次の打牌へ */
 						EndType roundEndType;
 						if (fuuroproc(gameStat, &roundEndType, DiscardTileIndex,
@@ -229,6 +243,10 @@ namespace { /* 内部処理分割用 */
 		return Continuing;
 	}
 	void procDahaiSubRiichi(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 立直をするときの処理 */
+#ifdef GUOBIAO
+		DiscardTileIndex.type = DiscardTileNum::Normal;
+		warn(_T("リーチが指定されましたが、これを無視します。"));
+#else /* GUOBIAO */
 		if (gameStat->tilesLeft() < ACTUAL_PLAYERS) {
 			// 残り４枚未満の時はリーチ無効
 			DiscardTileIndex.type = DiscardTileNum::Normal;
@@ -284,17 +302,20 @@ namespace { /* 内部処理分割用 */
 			usleep(1000000);
 #endif /*_WIN32*/
 		}
+#endif /* GUOBIAO */
 	}
 	void procDahaiSubPost(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) { /* 事後処理 */
 		/* 打牌を記録する */
 		DiscardTile* const newDiscard = &(gameStat->statOfActive().Discard[++gameStat->statOfActive().DiscardPointer]);
 		newDiscard->tcode.tile = gameStat->CurrentDiscard.tile = gameStat->statOfActive().Hand[DiscardTileIndex.id].tile;
 		newDiscard->tcode.red  = gameStat->CurrentDiscard.red  = gameStat->statOfActive().Hand[DiscardTileIndex.id].red;
+#ifndef GUOBIAO
 		if (DiscardTileIndex.type == DiscardTileNum::Riichi) /* 立直宣言牌の場合 */
 			newDiscard->dstat = discardRiichi;
 		else if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi) /* オープン立直宣言牌の場合 */
 			newDiscard->dstat = discardRiichi;
 		else /* それ以外の場合 */
+#endif /* GUOBIAO */
 			newDiscard->dstat = discardNormal;
 		newDiscard->isDiscardThrough = (DiscardTileIndex.id == NumOfTilesInHand - 1) && (!gameStat->TianHuFlag);
 		gameStat->statOfActive().Hand[DiscardTileIndex.id].tile = NoTile;
@@ -308,6 +329,7 @@ namespace { /* 内部処理分割用 */
 			gameStat->Player[i].Tsumohai().tile = NoTile;
 			gameStat->Player[i].Tsumohai().red  = Normal;
 		}
+#ifndef GUOBIAO
 		/* 立直をした直後の場合、千点を供託し一発のフラグを立てる */
 		if ((DiscardTileIndex.type == DiscardTileNum::Riichi) || (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
@@ -326,8 +348,10 @@ namespace { /* 内部処理分割用 */
 		/* 天和や地和のフラグを降ろす */
 		gameStat->statOfActive().FirstDrawFlag =
 			gameStat->TianHuFlag = false;
+#endif /* GUOBIAO */
 		/* 打牌するときの音を鳴らす */
 		/* ドラを捨てる時は強打の音にする */
+#ifndef GUOBIAO
 		if (gameStat->CurrentDiscard.tile > TileSuitFlowers)
 			sound::Play(sound::IDs::sndDahai2);
 		else if ((gameStat->CurrentDiscard.red == AkaDora) || (gameStat->DoraFlag.Omote[gameStat->CurrentDiscard.tile] > 0))
@@ -335,6 +359,7 @@ namespace { /* 内部処理分割用 */
 		else if ((gameStat->CurrentDiscard.red == AoDora) && (!RuleData::chkRule("blue_tiles", "-1han")))
 			sound::Play(sound::IDs::sndDahai2);
 		else
+#endif /* GUOBIAO */
 			sound::Play(sound::IDs::sndDahai1);
 		/* このとき牌を捨てているはずなので、バグ防止のための処理 */
 		for (PlayerID i = 0; i < Players; i++) {
@@ -385,6 +410,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 	}
 	gameStat->KangFlag.kangFlag = false; // 嶺上開花のフラグを降ろす
 	gameStat->PaoFlag[pyMinkan].paoPlayer = gameStat->PaoFlag[pyMinkan].agariPlayer = -1;
+#ifndef GUOBIAO
 	/* 立直をするときの処理 */
 	if ((DiscardTileIndex.type == DiscardTileNum::Riichi) ||
 		(DiscardTileIndex.type == DiscardTileNum::OpenRiichi))
@@ -395,6 +421,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		gameStat->statOfActive().renpaiTenhohStat = 1;
 	else if (gameStat->statOfActive().renpaiTenhohStat == 1)
 		gameStat->statOfActive().renpaiTenhohStat = -1;
+#endif /* GUOBIAO */
 	/* 事後処理 */
 	procDahaiSubPost(gameStat, DiscardTileIndex);
 	return Continuing;

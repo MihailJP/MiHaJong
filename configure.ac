@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT(mihajong, 2.0.5, mihailjp@gmail.com)
+AC_INIT(mihajong, 2.1.0, mihailjp@gmail.com)
 AC_LIBTOOL_WIN32_DLL
 AC_DISABLE_STATIC
 lt_cv_deplibs_check_method='pass_all'
@@ -188,6 +188,7 @@ AC_CONFIG_FILES([Makefile
                  graphic/Makefile
                  mihajong/Makefile
                  mjcore/Makefile
+                 mjcoregb/Makefile
                  socket/Makefile
                  sound/Makefile])
 AC_OUTPUT

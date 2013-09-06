@@ -2,6 +2,30 @@
 
 #include "yaku.h"
 
+#ifdef GUOBIAO
+
+#define DEF_YAKU_VAL(i) const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_##i = \
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(i); \
+	const yaku::yakuCalculator::Yaku::FixedHan yaku::yakuCalculator::Yaku::yval_##i = \
+	yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_##i, \
+	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN());
+
+DEF_YAKU_VAL(1);
+DEF_YAKU_VAL(2);
+DEF_YAKU_VAL(3);
+DEF_YAKU_VAL(4);
+DEF_YAKU_VAL(6);
+DEF_YAKU_VAL(8);
+DEF_YAKU_VAL(12);
+DEF_YAKU_VAL(16);
+DEF_YAKU_VAL(24);
+DEF_YAKU_VAL(32);
+DEF_YAKU_VAL(48);
+DEF_YAKU_VAL(64);
+DEF_YAKU_VAL(88);
+
+#else /* GUOBIAO */
+
 const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null =
 	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN();
 const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han =
@@ -151,3 +175,5 @@ const yaku::yakuCalculator::Yaku::MenzenHan yaku::yakuCalculator::Yaku::yval_2ha
 const yaku::yakuCalculator::Yaku::MenzenHan yaku::yakuCalculator::Yaku::yval_yakuman_menzen_dependent =
 	yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
 	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
+
+#endif /* GUOBIAO */

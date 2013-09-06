@@ -6,7 +6,9 @@
 
 class yaku::yakuCalculator::YakuCatalog::catalogInit {
 private:
+#ifndef GUOBIAO
 	static yaku::yakuCalculator::Yaku::HANFUNC get_yaku_han(const std::string& RuleTag);
+#endif /* GUOBIAO */
 	static bool isshoku (const MENTSU_ANALYSIS* const analysis, bool chin_itsu);
 	static const std::array<char[8], 3> parsedat_monochrome5;
 	static const std::array<char[8], 3> parsedat_monochrome4;

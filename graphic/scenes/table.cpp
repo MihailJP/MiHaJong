@@ -24,6 +24,7 @@
 #include "table/nakibtn.h"
 #include "table/gari.h"
 #include "table/tiletip.h"
+#include "table/clock.h"
 
 #include "table/naki_id.h"
 
@@ -41,6 +42,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	nakihaiReconst = new NakihaiReconst(this);
 	sutehaiReconst = new SutehaiReconst(this);
 	gariReconst = new GariReconst(this);
+	clockPanel = new Clock(this);
 	tileTipReconst = new TileTipReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
 	const unsigned logWidth = (unsigned)floor(0.5f + // VC++2010ではround()が使えない
@@ -74,6 +76,7 @@ GameTableScreen::~GameTableScreen() {
 	delete richibouReconst;
 	delete trayReconst;
 	delete buttonReconst;
+	delete clockPanel;
 	delete myTextRenderer;
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (tBorder) tBorder->Release();
@@ -89,7 +92,7 @@ void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PlayerID deck
 }
 
 void GameTableScreen::Reconstruct(const GameTable* gameStat) {
-	if (gameStat->chkGameType(Yonma)) {
+	if (gameStat->chkGameType(Yonma) || gameStat->chkGameType(GuobiaoMJ)) {
 		for (PlayerID i = 0; i < 4; i++)
 			ReconstructPlayer(gameStat, i, i);
 	} else if (gameStat->chkGameType(Sanma4)) {
@@ -124,18 +127,22 @@ void GameTableScreen::ShowStatus(const GameTable* gameStat) {
 		o << CodeConv::EnsureTStr(std::wstring(Numeral + roundnum, Numeral + roundnum + 1));
 	}
 	o << _T("局 ");
-	if (gameStat->Honba >= 10) o << std::setw(2) << (gameStat->Honba) << _T("本場");
-	else if (gameStat->Honba > 0) o << CodeConv::EnsureTStr(std::wstring(FWDigit + gameStat->Honba, FWDigit + gameStat->Honba + 1)) << _T("本場");
-	else o << _T("平　場");
+	if (!gameStat->chkGameType(GuobiaoMJ)) {
+		if (gameStat->Honba >= 10) o << std::setw(2) << (gameStat->Honba) << _T("本場");
+		else if (gameStat->Honba > 0) o << CodeConv::EnsureTStr(std::wstring(FWDigit + gameStat->Honba, FWDigit + gameStat->Honba + 1)) << _T("本場");
+		else o << _T("平　場");
+	}
 	myTextRenderer->NewText(0, o.str(), Geometry::BaseSize + 5, 5, 0.875f);
 
 	o.str(_T(""));
 	const int tiles = gameStat->RinshanPointer - gameStat->TilePointer - gameStat->ExtraRinshan - gameStat->DeadTiles + 1;
 	if (tiles >= 100) o << _T("残--牌");
 	else o << _T("残") << std::setw(2) << tiles << _T("牌");
-	o << _T(" 供託");
-	if (gameStat->Deposit) o << std::setw(2) << gameStat->Deposit << _T("本");
-	else o << _T("なし");
+	if (!gameStat->chkGameType(GuobiaoMJ)) {
+		o << _T(" 供託");
+		if (gameStat->Deposit) o << std::setw(2) << gameStat->Deposit << _T("本");
+		else o << _T("なし");
+	}
 	myTextRenderer->NewText(1, o.str(), Geometry::BaseSize + 5, 35, 0.875f);
 
 	myTextRenderer->Render();
@@ -160,6 +167,7 @@ void GameTableScreen::RenderTable() {
 	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tBaize, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	Reconstruct(GameStatus::retrGameStat());
+	clockPanel->Render();
 	richibouReconst->Render();
 	diceReconst->Render();
 	trayReconst->Render();
@@ -523,6 +531,13 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 			FinishTileChoice();
 		else if (keyDown && (buttonReconst->isCursorEnabled()))
 			buttonReconst->ButtonPressed();
+		break;
+	/* キャンセルキー */
+	case DIK_ESCAPE: case DIK_X:
+		if (keyDown && isNakiSel && (buttonReconst->isCursorEnabled())) {
+			buttonReconst->setCursor(ButtonReconst::btnPass);
+			buttonReconst->ButtonPressed();
+		}
 		break;
 	}
 }

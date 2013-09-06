@@ -39,7 +39,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 		} else {
 			/* 待ち牌の数を表示 */
 			MachihaiInfo machiInfo = utils::chkFuriten(&tmpGameStat, tmpGameStat.PlayerID);
-			if (machiInfo.FuritenFlag)
+			if ((tmpGameStat.gameType & RichiMJ) && (machiInfo.FuritenFlag))
 				o << _T("[振聴]");
 			if (machiInfo.MachihaiTotal == 0)
 				o << _T("純 カ ラ");
@@ -61,7 +61,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 		tipText = o.str();
 	} else { // 牌選択時以外のフリテン表示
 		MachihaiInfo machiInfo = utils::chkFuriten(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
-		if (machiInfo.FuritenFlag || GameStatus::gameStat()->statOfMine().DoujunFuriten)
+		if ((GameStatus::gameStat()->gameType & RichiMJ) && (machiInfo.FuritenFlag || GameStatus::gameStat()->statOfMine().DoujunFuriten))
 			tipText = _T("[振聴]");
 		if (caller->buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) {
 			TileCode discardTile = GameStatus::gameStat()->CurrentDiscard.tile;

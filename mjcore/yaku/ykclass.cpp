@@ -23,6 +23,7 @@ yaku::yakuCalculator::Yaku::FixedHan::FixedHan(YAKU_HAN::HAN cHan, YAKU_HAN::HAN
 	hFunc = [=](const MENTSU_ANALYSIS* const) {return yaku::yakuCalculator::Yaku::YAKU_HAN(cHan, dHan);};
 }
 
+#ifndef GUOBIAO
 yaku::yakuCalculator::Yaku::MenzenHan::MenzenHan(YAKU_HAN bHan)
 {
 	hFunc = [=](const MENTSU_ANALYSIS* const analysisDat) {
@@ -57,15 +58,24 @@ yaku::yakuCalculator::Yaku::KuisagariHan::KuisagariHan(YAKU_HAN::HAN cHan, YAKU_
 			);
 	};
 }
+#endif /* GUOBIAO */
 
 
 // -------------------------------------------------------------------------
 
+#ifdef GUOBIAO
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN() { han = 0; }
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h) { han = h; }
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h, hanUnit) { han = h; } // Compatibility
+int8_t yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getHan() const {return this->han;}
+yaku::yakuCalculator::hanUnit yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getUnit() const {return Han;} // Compatibility
+#else /* GUOBIAO */
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN() { han = 0; unit = Han; }
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h) { han = h; unit = Han; }
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h, hanUnit u) { han = h; unit = u; }
 int8_t yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getHan() const {return this->han;}
 yaku::yakuCalculator::hanUnit yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getUnit() const {return this->unit;}
+#endif /* GUOBIAO */
 
 yaku::yakuCalculator::Yaku::YAKU_HAN::YAKU_HAN() {coreHan = HAN(); bonusHan = HAN();}
 yaku::yakuCalculator::Yaku::YAKU_HAN::YAKU_HAN(HAN han) {coreHan = han; bonusHan = HAN();}

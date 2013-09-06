@@ -16,6 +16,7 @@ using namespace mihajong_structs;
 GameTable GameStat, StatSandBox;
 
 void calcWareme(GameTable* const gameStat) {
+#ifndef GUOBIAO
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 	if (RuleData::chkRuleApplied("wareme") || RuleData::chkRuleApplied("kaimenkaze")) {
 		if (gameStat->chkGameType(AllSanma)) {
@@ -44,6 +45,7 @@ void calcWareme(GameTable* const gameStat) {
 		if (gameStat->chkGameType(Sanma4))
 			gameStat->WaremePlayer = tobePlayed(gameStat, (24+gameStat->diceSum()-1) % 3);
 	}
+#endif /* GUOBIAO */
 	return;
 }
 
@@ -65,9 +67,13 @@ void resetDeclarationFlag(GameTable* const gameStat) {
 
 void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
+#ifdef GUOBIAO
+	gameStat->ShibariFlag = false;
+#else /* GUOBIAO */
 	gameStat->ShibariFlag = //二飜縛り
 		((gameStat->Honba >= 5)&&(RuleData::chkRule("ryanshiba", "from_5honba"))) ||
 		((gameStat->Honba >= 4)&&(RuleData::chkRule("ryanshiba", "from_4honba")));
+#endif /* GUOBIAO */
 
 	for (int i = 0; i < PaoYakuPages; i++) // 包フラグ（-1…なし、0～3…該当プレイヤー）
 		gameStat->PaoFlag[i].agariPlayer = gameStat->PaoFlag[i].paoPlayer = -1;
@@ -77,6 +83,9 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 		gameStat->Deck[i].red = Normal;
 	}
 
+#ifdef GUOBIAO
+	gameStat->DeadTiles = gameStat->ExtraRinshan = 0; // 王牌なんてあると思った？　残念！
+#else /* GUOBIAO */
 	if (gameStat->chkGameType(AllSanma)) {
 		gameStat->DeadTiles = 14; // 王牌の数
 		gameStat->ExtraRinshan = RuleData::chkRuleApplied("flower_tiles") ? 4 : 0;
@@ -85,6 +94,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 		else if (RuleData::chkRule("flower_tiles", "8tiles")) gameStat->DeadTiles = 22; // 王牌の数(花牌を入れる時は特別に２２枚残しとする)
 		else gameStat->DeadTiles = 18; // 王牌の数
 	}
+#endif /* GUOBIAO */
 
 	for (int i = 0; i < TileNonflowerMax; i++) // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
 		gameStat->OpenRichiWait[i] = false;
@@ -104,6 +114,9 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 		gameStat->Dice[2].Direction = gameStat->Dice[3].Direction = 0;
 	gameStat->TilePointer = 0;
 
+#ifdef GUOBIAO
+	gameStat->RinshanPointer = 143;
+#else /* GUOBIAO */
 	if (gameStat->chkGameType(AllSanma)) {
 		gameStat->RinshanPointer = 107;
 	} else {
@@ -116,6 +129,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 			gameStat->RinshanPointer = 135; // 設定異常時のフォールバック
 		}
 	}
+#endif /* GUOBIAO */
 
 	gameStat->TianHuFlag = true; // 親の第一打牌がまだ（天和の判定などに使う）
 	gameStat->PreviousMeld.Discard = // 先ほど鳴いた牌（喰い替えの判定に使う）
@@ -183,6 +197,11 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 	memset(gameStat, 0, sizeof(GameTable));
 	gameStat->gameType = (GameTypeID)gameType;
 
+#ifdef GUOBIAO
+	for (int i = 0; i < Players; i++)
+		gameStat->Player[i].PlayerScore = (LNum)500; // 持ち点500点とする
+	gameStat->GameLength = 15; // 中国ルールは一荘行う
+#else /* GUOBIAO */
 	LNum initialPoints; /* 初期点数 */
 	if (RuleData::chkRule("starting_point", "custom")) {
 		initialPoints = // 仮数部
@@ -225,12 +244,17 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 		error(_T("game_length異常値。半荘戦とみなします。"));
 		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 6 : 7;
 	}
+#endif /* GUOBIAO */
 	gameStat->GameRound = gameStat->Honba = gameStat->PlayerID =
 		gameStat->Deposit = gameStat->LoopRound = gameStat->AgariChain = 0;
 	gameStat->LastAgariPlayer = -1;
 	for (int i = 0; i < Players; i++) {
 		gameStat->Player[i].SumaroFlag = false;
+#ifdef GUOBIAO
+		gameStat->Player[i].YakitoriFlag = false;
+#else /* GUOBIAO */
 		gameStat->Player[i].YakitoriFlag = RuleData::chkRuleApplied("yakitori");
+#endif /* GUOBIAO */
 		gameStat->Player[i].playerChip = 0;
 	}
 

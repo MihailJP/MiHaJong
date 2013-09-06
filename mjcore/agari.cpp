@@ -18,6 +18,7 @@
 // -------------------------------------------------------------------------
 
 /* 青天井対応の点棒処理 */
+#ifndef GUOBIAO
 LNum endround::agari::agaricalc(const LNum& AgariPointRaw, int agariBairitsu, int agariBairitsu2, unsigned agariCount) {
 	LNum agariPointArray = (AgariPointRaw * agariBairitsu + 99) / 100 * 100;
 	for (unsigned i = 0; i < agariCount; ++i)
@@ -32,11 +33,42 @@ LNum endround::agari::agaricalc(const LNum& AgariPointRaw, rat agariBairitsu, ra
 		agariPointArray += (AgariPointRaw * agariBairitsu3.getNumerator() / agariBairitsu3.getDenominator() + 99) / 100 * 100;
 	return agariPointArray;
 }
+#endif /* GUOBIAO */
 
 // -------------------------------------------------------------------------
 
 namespace {
 	using namespace endround::agari;
+
+#ifdef GUOBIAO
+
+	void calcAgariPoints_Tsumo( // 中国ルール：ツモ
+		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PlayerID AgariPlayer)
+	{
+		agariPoint = AgariPointRaw;
+		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			if (cnt == AgariPlayer)
+				PointDelta[cnt] += (AgariPointRaw + 8) * 3;
+			else
+				PointDelta[cnt] -= AgariPointRaw + 8;
+		}
+	}
+
+	void calcAgariPoints_Ron( // 中国ルール：ロン
+		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PlayerID AgariPlayer)
+	{
+		agariPoint = AgariPointRaw;
+		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
+			if (cnt == AgariPlayer)
+				PointDelta[cnt] += AgariPointRaw + (8 * 3);
+			else if (cnt == gameStat->CurrentPlayer.Furikomi)
+				PointDelta[cnt] -= AgariPointRaw + 8;
+			else
+				PointDelta[cnt] -= 8;
+		}
+	}
+
+#else /* GUOBIAO */
 
 	void calcAgariPoints_Pao( // 包適用時
 		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, int Mode)
@@ -239,6 +271,7 @@ namespace {
 			}
 		}
 	}
+#endif /* GUOBIAO */
 }
 
 void endround::agari::calcAgariPoints(
@@ -247,12 +280,17 @@ void endround::agari::calcAgariPoints(
 {
 	const PlayerID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : (PlayerID)Mode;
 	const bool TsumoAgari = (Mode == CAP_normal) ? gameStat->TsumoAgariFlag : true;
+#ifdef GUOBIAO
+	if (TsumoAgari) // 中国ルール：ツモアガリ
+		calcAgariPoints_Tsumo(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer);
+#else /* GUOBIAO */
 	if (isPaoAgari(gameStat, AgariPlayer)) // 包適用時
 		calcAgariPoints_Pao(gameStat, agariPoint, AgariPointRaw, PointDelta, Mode);
 	else if ((TsumoAgari) && (gameStat->playerwind(AgariPlayer) == sEast)) // 通常時：親のツモアガリ
 		calcAgariPoints_Tsumo_Dealer(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer);
 	else if (TsumoAgari) // 通常時：子のツモアガリ
 		calcAgariPoints_Tsumo_NonDealer(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer);
+#endif /* GUOBIAO */
 	else // 通常時：ロンアガリ
 		calcAgariPoints_Ron(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer);
 	return;
@@ -263,30 +301,41 @@ void endround::agari::calcAgariPoints(
 namespace {
 	void forEachAgariPlayers(std::function<bool (int&)> f) {
 		for (int cnt = 0; cnt < Players - 1; ++cnt) {
+#ifndef GUOBIAO
 			if (RuleData::chkRule("multiple_mahjong", "single_mahjong_with_draw") || RuleData::chkRule("multiple_mahjong", "single_mahjong")) {
+#endif /* GUOBIAO */
 				if (cnt > 0) break; // 頭ハネ(ダブロンなし)ルールの場合
+#ifndef GUOBIAO
 			} else if (RuleData::chkRule("multiple_mahjong", "dual_mahjong_with_draw") || RuleData::chkRule("multiple_mahjong", "dual_mahjong")) {
 				if (cnt > 1) break; // ダブロンあり・トリロンなしの場合
 			}
+#endif /* GUOBIAO */
 			if (!f(cnt)) break;
 		}
 	}
 
 	void chonboIfShibariUnmet(const GameTable* gameStat, const yaku::YAKUSTAT& yakuInfo, const MachihaiInfo& machiInfo, EndType& RoundEndType) {
 		// 縛りを満たさないか、振聴のとき
+#ifdef GUOBIAO
+		if (yakuInfo.CoreHan < 8) // 中国ルールは和了に8点以上必要
+			RoundEndType = Chonbo;
+#else /* GUOBIAO */
 		if (((yakuInfo.CoreHan <= (gameStat->ShibariFlag ? 1 : 0)) && (yakuInfo.CoreSemiMangan <= 0)) || // 縛りを満たしていないか、
 			(!gameStat->TsumoAgariFlag && ( // 「ロンの時で
 			machiInfo.FuritenFlag || // フリテンか
 			gameStat->statOfAgari().DoujunFuriten)) || // 同順フリテンの時」、もしくは
 			(RuleData::chkRule("riichi_shibari", "yes") && (!gameStat->statOfAgari().RichiFlag.RichiFlag))) // リーチ縛りを満たしていないならば
 			RoundEndType = Chonbo; // チョンボにする
+#endif /* GUOBIAO */
 	}
 
 	void chonboIfAgariForbidden(const GameTable* gameStat, const yaku::YAKUSTAT& yakuInfo, const MachihaiInfo& machiInfo, EndType& RoundEndType) {
+#ifndef GUOBIAO
 		if (RuleData::chkRule("furiten_riichi", "no") && // フリテン立直無しで
 			gameStat->statOfAgari().RichiFlag.RichiFlag && // 立直していて
 			machiInfo.FuritenFlag) // フリテンだった場合
 			RoundEndType = Chonbo; // チョンボにする
+#endif /* GUOBIAO */
 	}
 
 	void verifyAgari(GameTable* gameStat, EndType& RoundEndType) {
@@ -335,6 +384,7 @@ namespace {
 
 
 	void dobonPenalty(GameTable* gameStat, PlayerID AgariPlayerPriority) {
+#ifndef GUOBIAO
 		int penalty = 0;
 		std::string penaConf(RuleData::chkRule("penalty_negative"));
 		REGEX::smatch matchDat;
@@ -353,6 +403,7 @@ namespace {
 				}
 			}
 		}
+#endif /* GUOBIAO */
 		return;
 	}
 
@@ -409,19 +460,23 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 			endround_chonboproc(gameStat, ResultDesc);
 
 		if (gameStat->TsumoAgariFlag) return false; /* ツモ和了りの時は終了 */
+#ifndef GUOBIAO
 		if ((!RuleData::chkRule("getting_deposit", "riichidori")) || gameStat->statOfAgari().RichiFlag.RichiFlag)
 			gameStat->Deposit = 0;
+#endif /* GUOBIAO */
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		return true;
 	});
 	RoundEndType = tmpagariflag ? Agari : Chonbo;
 	/* 連荘判定用のプレイヤー番号設定 */
+#ifndef GUOBIAO
 	if (RuleData::chkRule("simultaneous_mahjong", "renchan_if_dealer_mahjong"))
 		gameStat->CurrentPlayer.Agari = (OyaAgari == -1) ? FirstAgariPlayer : OyaAgari;
 	else if (RuleData::chkRule("simultaneous_mahjong", "renchan_if_dealer_upstream"))
 		gameStat->CurrentPlayer.Agari = FirstAgariPlayer;
 	else if (RuleData::chkRule("simultaneous_mahjong", "next_dealer"))
 		gameStat->CurrentPlayer.Agari = FirstAgariPlayer + ((OyaAgari == FirstAgariPlayer) ? 1 : 0) % Players;
+#endif /* GUOBIAO */
 
 	dobonPenalty(gameStat, AgariPlayerPriority);
 	return;
@@ -430,6 +485,7 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 // -------------------------------------------------------------------------
 
 namespace {
+#ifndef GUOBIAO
 	void deltawareme(PlayerID agariTmpPlayer, PlayerID agariTmpWareme) {
 		LNum subtrahend = endround::transfer::getDelta()[agariTmpWareme];
 		endround::transfer::addDelta(agariTmpPlayer, -subtrahend);
@@ -541,18 +597,23 @@ namespace {
 		/* 合計を返す */
 		return ChipAmount;
 	}
+#endif /* GUOBIAO */
 
 	void agariscrproc(const GameTable* gameStat, const YakuResult* yakuInfo,
 		const LNum* agariPointArray, int& ChipAmount, const CodeConv::tstring& ResultDesc, bool& tmpUraFlag)
 	{
 		sound::util::bgmstop();
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
+#ifdef GUOBIAO
+		mihajong_graphic::YakuResult::setYakuStat(yakuInfo, static_cast<LargeNum>(*agariPointArray), 0);
+#else /* GUOBIAO */
 		ChipAmount = getChipAmount(gameStat, yakuInfo);
 		mihajong_graphic::YakuResult::setYakuStat(yakuInfo, static_cast<LargeNum>(*agariPointArray), ChipAmount);
 		tmpUraFlag = gameStat->statOfAgari().MenzenFlag && gameStat->statOfAgari().RichiFlag.RichiFlag && (!RuleData::chkRule("uradora", "no"));
 		if (tmpUraFlag)
 			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgariUradora);
 		else
+#endif /* GUOBIAO */
 			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgari);
 		(void)mihajong_graphic::ui::WaitUI();
 	}
@@ -589,6 +650,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	std::uint16_t tmpDoraPointer = origDoraPointer;
 	const int AlicePointer = tmpDoraPointer - yakuInfo.AliceDora * 2 - 2;
 
+#ifndef GUOBIAO
 	if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice")) { // めくっていく処理
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAlice); // 表示
 		while (gameStat->DoraPointer > AlicePointer) {
@@ -600,6 +662,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 		gameStat->DoraPointer = tmpDoraPointer;
 		tmpAliceFlag = true;
 	}
+#endif /* GUOBIAO */
 
 	sound::util::bgmstop();
 
@@ -609,7 +672,9 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	LNum agariPoint;
 	calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), -1);
 	assert(agariPoint > (LNum)0);
+#ifndef GUOBIAO
 	calculateWaremeDelta(gameStat);
+#endif /* GUOBIAO */
 	int ChipAmount;
 	agariscrproc(gameStat, &yakuInfo, &agariPoint, ChipAmount, ResultDesc, tmpUraFlag); /* 和了画面 */
 	gameStat->statOfAgari().YakitoriFlag = false; // 焼き鳥フラグを下ろす
@@ -617,6 +682,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 		gameStat->DoraPointer = AlicePointer;*/
 	transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValAgariten, 1500);
 	
+#ifndef GUOBIAO
 	if ((gameStat->Honba > 0) && RuleData::chkRuleApplied("tsumiboh_rate")) {
 		calculateTsumibouDelta(gameStat);
 		// 割れ目で積み棒も２倍になる
@@ -678,6 +744,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 			}
 		}
 	}
+#endif /* GUOBIAO */
 	return;
 }
 
@@ -685,6 +752,15 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 
 /* 錯和発生時の処理 */
 void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring& ResultDesc) {
+#ifdef GUOBIAO
+	/* 中国ルールでの処理。基本的にアガリ放棄で続行する */
+	mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::Chonbo);
+	mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade);
+	sound::Play(sound::IDs::sndCuohu);
+	mihajong_graphic::ui::WaitUIWithTimeout(1500);
+	gameStat->statOfAgari().AgariHouki = true;
+	mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::None);
+#else /* GUOBIAO */
 	if (!ResultDesc.empty()) ResultDesc += _T("\n");
 	CodeConv::tstring tmpResultDesc;
 	switch (gameStat->playerwind(gameStat->CurrentPlayer.Agari)) {
@@ -727,6 +803,7 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 	}
 	mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChonbo);
 	mihajong_graphic::ui::WaitUIWithTimeout(5000);
+#endif /* GUOBIAO */
 
 	transferChonboPenalty(gameStat, gameStat->CurrentPlayer.Agari);
 	return;

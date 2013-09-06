@@ -3,6 +3,7 @@
 #include "../../func.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
+#ifndef GUOBIAO
 	/* ƒhƒ‰‚Å˜a—¹‚Á‚½‚ç1ãÊ */
 	if (RuleData::chkRuleApplied("dorahoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -136,4 +137,5 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 				}
 			));
 	}
+#endif /* GUOBIAO */
 }

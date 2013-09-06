@@ -209,7 +209,7 @@ TableProtoScene::ScoreBoard::~ScoreBoard() {
 }
 
 TableProtoScene::ScoreBoard::ScoreMode TableProtoScene::ScoreBoard::getScoreMode() {
-	return (ScoreMode)((myTimer.currTime() / 2000000) % ((rules::chkRule("chip", "no")) ? 2 : 3));
+	return (ScoreMode)((myTimer.currTime() / 2000000) % (((GameStatus::gameStat()->gameType & GuobiaoMJ) || rules::chkRule("chip", "no")) ? 2 : 3));
 }
 
 void TableProtoScene::ScoreBoard::Render() {
@@ -288,8 +288,11 @@ std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scor
 		else                                    sign =  0;
 		for (int i = DigitGroups - 1; i >= 0; --i) {
 			for (int j = ((i == DigitGroups - 1) ? 9 : 7); j >= 0; --j) {
-				if ((i == 0) && (j == 4)) {
+				if ((GameStatus::gameStat()->gameType & RichiMJ) && (i == 0) && (j == 4)) {
 					return std::make_tuple(abs(score->digitGroup[0] / 100), 0, 0, sign);
+				}
+				else if ((GameStatus::gameStat()->gameType & GuobiaoMJ) && (i == 0) && (j == 2)) {
+					return std::make_tuple(abs(score->digitGroup[0]), 0, 0, sign);
 				}
 				else if (score->digitGroup[i] / digit[j]) {
 					unsigned digitCode = i * 8 + j; unsigned digits;
@@ -342,7 +345,7 @@ void TableProtoScene::ScoreBoard::renderScore() {
 		renderNumeral(    ScorePosX + NumCharWidth * 2, ScorePosY, digits % 10       , color);
 		if (unitcode != 0)
 			renderNumeral(ScorePosX + NumCharWidth * decimalPos, ScorePosY, digitDecimal, color);
-		if (scoreMode != scoreChip)
+		if ((GameStatus::gameStat()->gameType & RichiMJ) && (scoreMode != scoreChip))
 			renderScoreUnit(unitcode, color);
 	}
 }

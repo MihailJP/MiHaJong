@@ -25,12 +25,17 @@ namespace {
 
 	/* 1000で割って丸める */
 	LNum roundScore(LNum val) {
+#ifdef GUOBIAO
+		return val;
+#else /* GUOBIAO */
 		/* TODO: ここに丸め処理を書く */
 		return val / 1000;
+#endif /* GUOBIAO */
 	}
 
 	/* ウマ計算 */
 	void calcUma(const GameTable* gameStat, InfoByPlayer<LNum>& score) {
+#ifndef GUOBIAO
 		const PlayerRankList rank(calcRank(gameStat));
 		int plusCount = 0;
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i)
@@ -39,6 +44,7 @@ namespace {
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i)
 			score[i] += RankVal::Instantiate()->getRankVal(gameStat,
 			RuleData::chkRule("point_basis"), plusCount, rank[i]) * 1000;
+#endif /* GUOBIAO */
 	}
 
 	/* オカ計算 */
@@ -57,6 +63,9 @@ namespace {
 
 	/* チップレート */
 	unsigned int chipRate() {
+#ifdef GUOBIAO
+		return 0;
+#else /* GUOBIAO */
 		if (RuleData::chkRule("chip", "no")) return 0; // チップなしルール
 		const std::string chipRule(RuleData::chkRule("chip"));
 		REGEX::smatch matchDat;
@@ -69,6 +78,7 @@ namespace {
 			warn(o.str().c_str());
 			return 0;
 		}
+#endif /* GUOBIAO */
 	}
 
 	/* 得点計算 */
@@ -88,6 +98,7 @@ namespace {
 
 	/* 焼き鳥 */
 	void yakitori(GameTable* gameStat) {
+#ifndef GUOBIAO
 		const PlayerRankList rank(calcRank(gameStat));
 		const std::string yakitoriRule(RuleData::chkRule("yakitori"));
 		const PlayerID winner = [rank]() -> PlayerID {
@@ -114,6 +125,7 @@ namespace {
 				}
 			}
 		}
+#endif /* GUOBIAO */
 	}
 
 }

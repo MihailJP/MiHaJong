@@ -6,15 +6,22 @@ TARGETS_COMPRESS_CONFITEM_INI=$(DATAPATH)confitem.ini.lzma $(DATAPATH)confitem_i
 TARGETS_COMPRESS_PREFITEM_CSV=$(DATAPATH)prefitem.csv.lzma $(DATAPATH)prefitem_csv.cpp $(DATAPATH)prefitem_csv.h
 TARGETS_COMPRESS_PREFITEM_INI=$(DATAPATH)prefitem.ini.lzma $(DATAPATH)prefitem_ini.cpp $(DATAPATH)prefitem_ini.h
 TARGETS_COMPRESS_RANKVAL_CSV=$(DATAPATH)rankval.csv.lzma $(DATAPATH)rankval_csv.cpp $(DATAPATH)rankval_csv.h
-TARGETS_PARSE_RULESYMS_TXT=$(DOCPATH)rulesyms.txt
+TARGETS_PARSE_RULESYMS_TXT=$(DOCPATH)rulesyms.md
+TARGETS_PARSE_HTML=$(DOCPATH)addyaku.html $(DOCPATH)history.html $(DOCPATH)license.html $(DOCPATH)playing.html \
+	$(DOCPATH)readme.html $(DOCPATH)rulesyms.html $(DOCPATH)script.html
 
 TARGETS=$(TARGETS_COMPRESS_CONFITEM_CSV) $(TARGETS_COMPRESS_CONFITEM_INI) \
 	$(TARGETS_COMPRESS_PREFITEM_CSV) $(TARGETS_COMPRESS_PREFITEM_INI) \
-	$(TARGETS_COMPRESS_RANKVAL_CSV) $(TARGETS_PARSE_RULESYMS_TXT)
+	$(TARGETS_COMPRESS_RANKVAL_CSV) $(TARGETS_PARSE_RULESYMS_TXT) \
+	$(TARGETS_PARSE_HTML)
 all: $(TARGETS)
 
-$(DOCPATH)rulesyms.txt: $(DATAPATH)confitem.csv
+$(DOCPATH)rulesyms.md: $(DATAPATH)confitem.csv
 	ruby rulesyms.rb
+
+.SUFFIXES: .md .html
+.md.html:
+	type $** | python ./md2html.py > $@
 
 $(DATAPATH)confitem.csv.lzma: $(DATAPATH)confitem.csv
 	ruby compress.rb $**

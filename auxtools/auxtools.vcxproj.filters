@@ -19,5 +19,8 @@
       <Filter>Ruby</Filter>
     </None>
     <None Include="Makefile.nmake" />
+    <None Include="md2html.py">
+      <Filter>Python</Filter>
+    </None>
   </ItemGroup>
 </Project>

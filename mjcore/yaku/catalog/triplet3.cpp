@@ -3,6 +3,7 @@
 #include "../../func.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
+#ifndef GUOBIAO
 	auto countTilesOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
 			return analysis->TileCount[TileSuitCharacters + numeral] +
@@ -796,4 +797,5 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(analysis->KeziCount[NorthWind] >= 1);
 			}
 		));
+#endif /* GUOBIAO */
 }

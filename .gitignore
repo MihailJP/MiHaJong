@@ -4,10 +4,11 @@ mihajong/*.dll
 mihajong/*.i
 mihajong/ai/
 mihajong/bgm/
+mihajong/gbai/
 mihajong/sound/
 mihajong/debug*.log
 mihajong/haifu/
-doc/rulesyms.txt
+doc/rulesyms.md
 logger/Debug/
 logger/Release/
 logger/ipch/
@@ -80,6 +81,8 @@ mihajong/.deps/
 mihajong/Makefile
 mjcore/.deps/
 mjcore/Makefile
+mjcoregb/.deps/
+mjcoregb/Makefile
 socket/.deps/
 socket/Makefile
 sound/.deps/
@@ -93,6 +96,7 @@ mihajong/mihajong
 mihajong/mihasanm
 mihajong/mihassnm
 mihajong/mihaysnm
+mihajong/mihagbmj
 mihajong-*.tar.*
 mentzdat/mnzcalc
 mentzdat/putchr
@@ -103,3 +107,5 @@ mentzdat/mentz.dat.*
 !mentzdat/test/Makefile
 mentzdat/test/*.txt
 mentzdat/test/testprog
+!doc/Makefile
+doc/*.html

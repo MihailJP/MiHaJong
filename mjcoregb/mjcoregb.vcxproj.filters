@@ -1,0 +1,443 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="LZMA">
+      <UniqueIdentifier>{cd9321f6-a546-487a-a553-e780e63334f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LZMA\ヘッダー ファイル">
+      <UniqueIdentifier>{378d515f-480d-4172-8461-72e8e95172f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LZMA\ソース ファイル">
+      <UniqueIdentifier>{b5ebce8c-f087-4055-8254-b9102fdef396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\yaku">
+      <UniqueIdentifier>{c0c621df-89bb-4093-8748-6c1fdf7f143c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\yaku">
+      <UniqueIdentifier>{146e2973-e275-427d-a818-aa073037e6b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\yaku\catalog">
+      <UniqueIdentifier>{3a8419f7-f9b5-4bd7-9adb-a351378bdffa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ai">
+      <UniqueIdentifier>{092a85c1-700c-41c1-a0c6-26b1799b5ccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ai">
+      <UniqueIdentifier>{b7ca120c-5fa2-4b8c-91e3-a79f698f4207}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\reader">
+      <UniqueIdentifier>{e01f1a96-ad3c-4827-bb5d-54f007e86b93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\reader">
+      <UniqueIdentifier>{59fd9a29-e230-4765-93b1-b631d763ed04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\data">
+      <UniqueIdentifier>{91ee4bd7-caf7-4df1-bd2b-7d2a2775274f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\data">
+      <UniqueIdentifier>{f747bb56-455a-4436-b2eb-7c02e3fc5af2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\mjcore\agari.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\chat.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\decomp.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\discard.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\dllmain.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\endround.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\envtbl.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\func.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\fuuro.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\gameloop.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\gametbl.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\haifu.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\init.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\largenum.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\logging.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\mouda.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\prepare.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\random.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\rankval.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\remote.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\result.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\shanten.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\ruletbl.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\sound.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\tileutil.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\lzma\Alloc.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\lzma\LzFind.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\lzma\LzFindMt.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\lzma\LzmaDec.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\lzma\LzmaLib.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\lzma\Threads.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\lzma\Sha256.c">
+      <Filter>LZMA\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\ai\aiscript.cpp">
+      <Filter>ソース ファイル\ai</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\ai\filesel.cpp">
+      <Filter>ソース ファイル\ai</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\ai\functbl.cpp">
+      <Filter>ソース ファイル\ai</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\ai\gftbl.cpp">
+      <Filter>ソース ファイル\ai</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\ai\riskchk.cpp">
+      <Filter>ソース ファイル\ai</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\data\confitem_csv.cpp">
+      <Filter>ソース ファイル\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\data\confitem_ini.cpp">
+      <Filter>ソース ファイル\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\data\prefitem_csv.cpp">
+      <Filter>ソース ファイル\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\data\prefitem_ini.cpp">
+      <Filter>ソース ファイル\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\data\rankval_csv.cpp">
+      <Filter>ソース ファイル\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\reader\csv2arry.cpp">
+      <Filter>ソース ファイル\reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\reader\ini2map.cpp">
+      <Filter>ソース ファイル\reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\reader\readrsrc.cpp">
+      <Filter>ソース ファイル\reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\suittbl.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\yaku.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\yk_tools.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\ykclass.cpp">
+      <Filter>ソース ファイル\yaku</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\context.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\dora.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\irreg.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\misc.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\pinhu.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\post.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\quad.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\sequence.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\shisanbd.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\suit.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\triplet1.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\triplet2.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\triplet3.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\yaku\catalog\yaojiu.cpp">
+      <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\mjcore\agari.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\chat.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\confitms.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\decomp.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\discard.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\dllmain.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\endround.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\endtype.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\envtbl.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\except.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\func.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\fuuro.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\gameloop.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\gametbl.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\haifu.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\init.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\largenum.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\logging.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\main.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\mjexport.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\mouda.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\prepare.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\random.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\rankval.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\rational.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\regex.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\remote.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\result.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\shanten.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\ruletbl.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\socknum.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\sound.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\tilecode.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\tileutil.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\lzma\Alloc.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\lzma\LzFind.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\lzma\LzFindMt.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\lzma\LzHash.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\lzma\LzmaDec.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\lzma\LzmaLib.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\lzma\RotateDefs.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\lzma\Sha256.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\lzma\Types.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\lzma\Threads.h">
+      <Filter>LZMA\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\ai\aiscript.h">
+      <Filter>ヘッダー ファイル\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\ai\class.h">
+      <Filter>ヘッダー ファイル\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\ai\filesel.h">
+      <Filter>ヘッダー ファイル\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\ai\functbl.h">
+      <Filter>ヘッダー ファイル\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\data\confitem_csv.h">
+      <Filter>ヘッダー ファイル\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\data\confitem_ini.h">
+      <Filter>ヘッダー ファイル\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\data\prefitem_csv.h">
+      <Filter>ヘッダー ファイル\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\data\prefitem_ini.h">
+      <Filter>ヘッダー ファイル\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\data\rankval_csv.h">
+      <Filter>ヘッダー ファイル\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\reader\csv2arry.h">
+      <Filter>ヘッダー ファイル\reader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\reader\ini2map.h">
+      <Filter>ヘッダー ファイル\reader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\reader\readrsrc.h">
+      <Filter>ヘッダー ファイル\reader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\yaku\catalog.h">
+      <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\yaku\yaku.h">
+      <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\yaku\yk_tools.h">
+      <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\yaku\ykclass.h">
+      <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\yaku\yvalue.h">
+      <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="mjcoregb.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
