@@ -2,6 +2,7 @@
 #include "../../../astro/astro.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
+#ifndef GUOBIAO
 	/* ’´ŽlŠì */
 	if (RuleData::chkRuleApplied("chousixi"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -14,14 +15,21 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 					(analysis->KangziCount[NorthWind] >= 1));
 			}
 		));
+#endif /* GUOBIAO */
 	/* ŽlžÈŽq */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+		_T("ŽlžY"), yaku::yakuCalculator::Yaku::yval_88,
+		_T("\u78b0\u78b0˜a"), _T("’P’²«"),
+#else /* GUOBIAO */
 		_T("ŽlžÈŽq"), get_yaku_han("suukantsu"),
 		_T("‘ÎX˜a"),
+#endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return analysis->TotalKangzi == 4;
 		}
 	));
+#ifndef GUOBIAO
 	/* ŽOˆÃžÈ */
 	if (RuleData::chkRuleApplied("sanankan"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -80,13 +88,48 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 					(analysis->KangziCount[RedDragon] >= 1));
 			}
 		));
+#endif /* GUOBIAO */
 	/* ŽOžÈŽq */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+		_T("ŽOžY"), yaku::yakuCalculator::Yaku::yval_32,
+#else /* GUOBIAO */
 		_T("ŽOžÈŽq"), get_yaku_han("sankantsu"),
+#endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return analysis->TotalKangzi == 3;
 		}
 	));
+#ifdef GUOBIAO
+	/* ‘oˆÃžY */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("‘oˆÃžY"), yaku::yakuCalculator::Yaku::yval_8,
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (analysis->TotalKangzi >= 2) && (analysis->TotalAnKangzi == 2);
+		}
+	));
+	/* ‘o–¾žY */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("‘o–¾žY"), yaku::yakuCalculator::Yaku::yval_4,
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (analysis->TotalKangzi == 2) && (analysis->TotalAnKangzi < 2);
+		}
+	));
+	/* ˆÃžY */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("ˆÃžY"), yaku::yakuCalculator::Yaku::yval_2,
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (analysis->TotalKangzi >= 1) && (analysis->TotalAnKangzi == 1);
+		}
+	));
+	/* –¾žY */
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("–¾žY"), yaku::yakuCalculator::Yaku::yval_1,
+		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			return (analysis->TotalKangzi == 1) && (analysis->TotalAnKangzi == 0);
+		}
+	));
+#else /* GUOBIAO */
 	/* “ñˆÃžÈ */
 	if (RuleData::chkRuleApplied("ryanankan"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -217,4 +260,5 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 					(analysis->KangziCount[CharacterEight] + analysis->KangziCount[CircleEight] + analysis->KangziCount[BambooEight] >= 1);
 			}
 		));
+#endif /* GUOBIAO */
 }

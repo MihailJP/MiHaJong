@@ -144,7 +144,10 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // 決定
 		if (flag) {
 			sound::Play(sound::IDs::sndButton);
-			ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+			if ((GameStatus::gameStat()->gameType != GuobiaoMJ) || (menuCursor != 4))
+				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+			else
+				sound::Play(sound::IDs::sndCuohu);
 #ifdef _WIN32
 		} else if (od->dwData) {
 #else /*_WIN32*/
@@ -218,7 +221,10 @@ void TitleScreen::MouseInput(const XEvent* od, int X, int Y)
 		{
 			if ((flag1) && (region != -1))  {
 				sound::Play(sound::IDs::sndButton);
-				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+				if ((GameStatus::gameStat()->gameType != GuobiaoMJ) || (region != 3))
+					ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
+				else
+					sound::Play(sound::IDs::sndCuohu);
 			} else if (!flag1) {
 				sound::Play(sound::IDs::sndClick);
 				myTimer.skipTo(180 * timePerFrame);

@@ -42,6 +42,11 @@ namespace {
 	RuleConfigData ruleTableData;
 }
 
+#ifdef GUOBIAO
+void RuleConfigData::configinit_csv() {}
+void RuleConfigData::configinit_ini() {}
+#else /* GUOBIAO */
+
 void RuleConfigData::configinit_csv() { // コンフィグ用CSVを読み込む
 	Compressed::file_confitem_csv* csvfile = new Compressed::file_confitem_csv();
 	ConfigData::configinit_csv(csvfile);
@@ -55,6 +60,7 @@ void RuleConfigData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
 	ConfigData::configinit_ini(inifile);
 	delete inifile;
 }
+#endif /* GUOBIAO */
 
 // -------------------------------------------------------------------------
 
@@ -268,10 +274,18 @@ void RuleData::getPreferenceTxt(LPTSTR const txt, unsigned bufsize, uint16_t Rul
 }
 
 int RuleData::loadConfigFile(const char* const filename) {
+#ifdef GUOBIAO
+	return 0;
+#else /* GUOBIAO */
 	return ruleTableData.loadConfigFile(filename);
+#endif /* GUOBIAO */
 }
 int RuleData::saveConfigFile(const char* const filename) {
+#ifdef GUOBIAO
+	return 0;
+#else /* GUOBIAO */
 	return ruleTableData.saveConfigFile(filename);
+#endif /* GUOBIAO */
 }
 
 int RuleData::loadPreferenceFile(const char* const filename) {

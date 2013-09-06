@@ -1,6 +1,7 @@
 #include "../catalog.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
+#ifndef GUOBIAO
 	/* Šï”‘ÎX˜a */
 	if (RuleData::chkRuleApplied("odd_toitoi"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -15,9 +16,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 		));
 	/* ‹ô”‘ÎX˜a */
 	if (RuleData::chkRuleApplied("even_toitoi"))
+#endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+			_T("‘S‘o"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("\u78b0\u78b0˜a"), _T("’f›ô"),
+#else /* GUOBIAO */
 			_T("‹ô”‘ÎX˜a"), get_yaku_han("even_toitoi"),
 			_T("‘ÎX˜a"), _T("’f›ô‹ã"),
+#endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int count = 0;
 				for (int i = 2; i < TileSuitHonors; i += 2)
@@ -28,6 +35,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 
 	// ---------------------------------------------------------------------
 
+#ifndef GUOBIAO
 	/* ’†Œ´’€Ž­ */
 	if (RuleData::chkRuleApplied("chuugen_chikuroku"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -1052,4 +1060,5 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 					analysis->DuiziCount[WestWind] + analysis->DuiziCount[NorthWind]>= 1));
 			}
 		));
+#endif /* GUOBIAO */
 }

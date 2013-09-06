@@ -54,7 +54,7 @@ void TableSubsceneBeginning::Render() {
 			ZoomChar(3, L"ƒX",  336, 0, 250000);
 		}
 	} else {
-		if (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game")) {
+		if ((GameStatus::gameStat()->gameType & RichiMJ) && (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game"))) {
 			// “Œê‚Ì‚İ‚Ìƒ‹[ƒ‹
 			ZoomChar(    0, WindName.substr(0                 , 1), -256,      0 + timeOffset, 250000 + timeOffset);
 			if (roundnum < 10) {

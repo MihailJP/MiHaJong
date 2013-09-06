@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = astro socket sound graphic mjcore mihajong
+SUBDIRS = astro socket sound graphic mjcore mjcoregb mihajong
 EXTRA_DIST = \
 	auxtools/auxtools.vcxproj auxtools/auxtools.vcxproj.filters \
 	auxtools/auxtools.vcxproj.user auxtools/compress.py auxtools/compress.rb \
@@ -30,6 +30,9 @@ doc/rulesyms.md:
 
 aidir = $(pkgdatadir)/ai
 dist_ai_DATA = data/ai/default.lua
+
+gbaidir = $(pkgdatadir)/gbai
+dist_gbai_DATA = data/gbai/default.lua
 
 haifudatdir = $(pkgdatadir)/haifu
 dist_haifudat_DATA = \

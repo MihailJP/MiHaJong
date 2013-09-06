@@ -30,6 +30,7 @@ void yaku::yakuCalculator::init() {
 }
 
 // ƒ‹[ƒ‹•¶š—ñ‚©‚çãÊ‚ğİ’è‚·‚é—p
+#ifndef GUOBIAO
 yaku::yakuCalculator::Yaku::HANFUNC
 	yaku::yakuCalculator::YakuCatalog::catalogInit::get_yaku_han
 	(const std::string& RuleTag)
@@ -91,6 +92,7 @@ yaku::yakuCalculator::Yaku::HANFUNC
 		);
 	else return yaku::yakuCalculator::Yaku::HANFUNC();
 }
+#endif /* GUOBIAO */
 
 /* ˆêF‚Ì”»’è */
 bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALYSIS* const analysis, bool chin_itsu) {

@@ -1,0 +1,332 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug(Wide)|Win32">
+      <Configuration>Debug(Wide)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release(Wide)|Win32">
+      <Configuration>Release(Wide)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B8BE6218-14FF-4C17-9213-3D99E093EF86}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>mjcore</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug(Wide)|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release(Wide)|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug(Wide)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release(Wide)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug(Wide)|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release(Wide)|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>GUOBIAO;WIN32;_DEBUG;_WINDOWS;_USRDLL;MJCORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>
+      </MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <CompileAsManaged>false</CompileAsManaged>
+      <TreatSpecificWarningsAsErrors>4717;4700;4172;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+      <AdditionalIncludeDirectories>..\mjcore\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ShowProgress>NotSet</ShowProgress>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <MapExports>false</MapExports>
+      <AdditionalDependencies>DbgHelp.lib;Shlwapi.lib;imagehlp.lib;..\mjcore\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug(Wide)|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>GUOBIAO;WIN32;_DEBUG;_WINDOWS;_USRDLL;MJCORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>
+      </MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <CompileAsManaged>false</CompileAsManaged>
+      <TreatSpecificWarningsAsErrors>4717;4700;4172;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+      <AdditionalIncludeDirectories>..\mjcore\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ShowProgress>NotSet</ShowProgress>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <MapExports>false</MapExports>
+      <AdditionalDependencies>DbgHelp.lib;Shlwapi.lib;imagehlp.lib;..\mjcore\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>GUOBIAO;WIN32;NDEBUG;_WINDOWS;_USRDLL;MJCORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <CompileAsManaged>false</CompileAsManaged>
+      <AdditionalIncludeDirectories>..\mjcore\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatSpecificWarningsAsErrors>4717;4700;4172;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Shlwapi.lib;imagehlp.lib;..\mjcore\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release(Wide)|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>GUOBIAO;WIN32;NDEBUG;_WINDOWS;_USRDLL;MJCORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <CompileAsManaged>false</CompileAsManaged>
+      <AdditionalIncludeDirectories>..\mjcore\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatSpecificWarningsAsErrors>4717;4700;4172;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Shlwapi.lib;imagehlp.lib;..\mjcore\lua\lua52.lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\mjcore\agari.cpp" />
+    <ClCompile Include="..\mjcore\ai\aiscript.cpp" />
+    <ClCompile Include="..\mjcore\ai\functbl.cpp" />
+    <ClCompile Include="..\mjcore\ai\filesel.cpp" />
+    <ClCompile Include="..\mjcore\ai\gftbl.cpp" />
+    <ClCompile Include="..\mjcore\ai\riskchk.cpp" />
+    <ClCompile Include="..\mjcore\chat.cpp" />
+    <ClCompile Include="..\mjcore\data\confitem_csv.cpp" />
+    <ClCompile Include="..\mjcore\data\confitem_ini.cpp" />
+    <ClCompile Include="..\mjcore\data\prefitem_csv.cpp" />
+    <ClCompile Include="..\mjcore\data\prefitem_ini.cpp" />
+    <ClCompile Include="..\mjcore\data\rankval_csv.cpp" />
+    <ClCompile Include="..\mjcore\decomp.cpp" />
+    <ClCompile Include="..\mjcore\discard.cpp" />
+    <ClCompile Include="..\mjcore\dllmain.cpp" />
+    <ClCompile Include="..\mjcore\endround.cpp" />
+    <ClCompile Include="..\mjcore\envtbl.cpp" />
+    <ClCompile Include="..\mjcore\func.cpp" />
+    <ClCompile Include="..\mjcore\fuuro.cpp" />
+    <ClCompile Include="..\mjcore\gameloop.cpp" />
+    <ClCompile Include="..\mjcore\gametbl.cpp" />
+    <ClCompile Include="..\mjcore\haifu.cpp" />
+    <ClCompile Include="..\mjcore\init.cpp" />
+    <ClCompile Include="..\mjcore\largenum.cpp" />
+    <ClCompile Include="..\mjcore\logging.cpp" />
+    <ClCompile Include="..\mjcore\lzma\Alloc.c" />
+    <ClCompile Include="..\mjcore\lzma\LzFind.c" />
+    <ClCompile Include="..\mjcore\lzma\LzFindMt.c" />
+    <ClCompile Include="..\mjcore\lzma\LzmaDec.c" />
+    <ClCompile Include="..\mjcore\lzma\LzmaLib.c" />
+    <ClCompile Include="..\mjcore\lzma\Sha256.c" />
+    <ClCompile Include="..\mjcore\lzma\Threads.c" />
+    <ClCompile Include="..\mjcore\main.cpp" />
+    <ClCompile Include="..\mjcore\mouda.cpp" />
+    <ClCompile Include="..\mjcore\prepare.cpp" />
+    <ClCompile Include="..\mjcore\random.cpp" />
+    <ClCompile Include="..\mjcore\rankval.cpp" />
+    <ClCompile Include="..\mjcore\reader\csv2arry.cpp" />
+    <ClCompile Include="..\mjcore\reader\ini2map.cpp" />
+    <ClCompile Include="..\mjcore\reader\readrsrc.cpp" />
+    <ClCompile Include="..\mjcore\remote.cpp" />
+    <ClCompile Include="..\mjcore\result.cpp" />
+    <ClCompile Include="..\mjcore\shanten.cpp" />
+    <ClCompile Include="..\mjcore\ruletbl.cpp" />
+    <ClCompile Include="..\mjcore\sound.cpp" />
+    <ClCompile Include="..\mjcore\tileutil.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\context.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\dora.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\irreg.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\misc.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\pinhu.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\post.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\quad.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\sequence.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\suit.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\triplet1.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\triplet2.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\triplet3.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\yaojiu.cpp" />
+    <ClCompile Include="..\mjcore\yaku\catalog\shisanbd.cpp" />
+    <ClCompile Include="..\mjcore\yaku\suittbl.cpp" />
+    <ClCompile Include="..\mjcore\yaku\yaku.cpp" />
+    <ClCompile Include="..\mjcore\yaku\ykclass.cpp" />
+    <ClCompile Include="..\mjcore\yaku\yk_tools.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\mjcore\agari.h" />
+    <ClInclude Include="..\mjcore\ai\aiscript.h" />
+    <ClInclude Include="..\mjcore\ai\class.h" />
+    <ClInclude Include="..\mjcore\ai\functbl.h" />
+    <ClInclude Include="..\mjcore\ai\filesel.h" />
+    <ClInclude Include="..\mjcore\chat.h" />
+    <ClInclude Include="..\mjcore\confitms.h" />
+    <ClInclude Include="..\mjcore\data\confitem_csv.h" />
+    <ClInclude Include="..\mjcore\data\confitem_ini.h" />
+    <ClInclude Include="..\mjcore\data\prefitem_csv.h" />
+    <ClInclude Include="..\mjcore\data\prefitem_ini.h" />
+    <ClInclude Include="..\mjcore\data\rankval_csv.h" />
+    <ClInclude Include="..\mjcore\decomp.h" />
+    <ClInclude Include="..\mjcore\discard.h" />
+    <ClInclude Include="..\mjcore\dllmain.h" />
+    <ClInclude Include="..\mjcore\endround.h" />
+    <ClInclude Include="..\mjcore\endtype.h" />
+    <ClInclude Include="..\mjcore\envtbl.h" />
+    <ClInclude Include="..\mjcore\except.h" />
+    <ClInclude Include="..\mjcore\func.h" />
+    <ClInclude Include="..\mjcore\fuuro.h" />
+    <ClInclude Include="..\mjcore\gameloop.h" />
+    <ClInclude Include="..\mjcore\gametbl.h" />
+    <ClInclude Include="..\mjcore\haifu.h" />
+    <ClInclude Include="..\mjcore\init.h" />
+    <ClInclude Include="..\mjcore\largenum.h" />
+    <ClInclude Include="..\mjcore\logging.h" />
+    <ClInclude Include="..\mjcore\lzma\Alloc.h" />
+    <ClInclude Include="..\mjcore\lzma\LzFind.h" />
+    <ClInclude Include="..\mjcore\lzma\LzFindMt.h" />
+    <ClInclude Include="..\mjcore\lzma\LzHash.h" />
+    <ClInclude Include="..\mjcore\lzma\LzmaDec.h" />
+    <ClInclude Include="..\mjcore\lzma\LzmaLib.h" />
+    <ClInclude Include="..\mjcore\lzma\RotateDefs.h" />
+    <ClInclude Include="..\mjcore\lzma\Sha256.h" />
+    <ClInclude Include="..\mjcore\lzma\Threads.h" />
+    <ClInclude Include="..\mjcore\lzma\Types.h" />
+    <ClInclude Include="..\mjcore\main.h" />
+    <ClInclude Include="..\mjcore\mjexport.h" />
+    <ClInclude Include="..\mjcore\mouda.h" />
+    <ClInclude Include="..\mjcore\prepare.h" />
+    <ClInclude Include="..\mjcore\random.h" />
+    <ClInclude Include="..\mjcore\rankval.h" />
+    <ClInclude Include="..\mjcore\rational.h" />
+    <ClInclude Include="..\mjcore\reader\csv2arry.h" />
+    <ClInclude Include="..\mjcore\reader\ini2map.h" />
+    <ClInclude Include="..\mjcore\reader\readrsrc.h" />
+    <ClInclude Include="..\mjcore\regex.h" />
+    <ClInclude Include="..\mjcore\remote.h" />
+    <ClInclude Include="..\mjcore\result.h" />
+    <ClInclude Include="..\mjcore\shanten.h" />
+    <ClInclude Include="..\mjcore\resource.h" />
+    <ClInclude Include="..\mjcore\ruletbl.h" />
+    <ClInclude Include="..\mjcore\socknum.h" />
+    <ClInclude Include="..\mjcore\sound.h" />
+    <ClInclude Include="..\mjcore\tilecode.h" />
+    <ClInclude Include="..\mjcore\tileutil.h" />
+    <ClInclude Include="..\mjcore\yaku\catalog.h" />
+    <ClInclude Include="..\mjcore\yaku\yaku.h" />
+    <ClInclude Include="..\mjcore\yaku\yvalue.h" />
+    <ClInclude Include="..\mjcore\yaku\ykclass.h" />
+    <ClInclude Include="..\mjcore\yaku\yk_tools.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="mjcoregb.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

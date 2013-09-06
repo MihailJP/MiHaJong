@@ -16,7 +16,11 @@ void aiscript::FileSelector::filelist() {
 	std::string confPath = confpath::confPath();
 	if (confPath.empty()) confPath = ".";
 #ifdef _WIN32
+#ifdef GUOBIAO
+	std::string scriptPath = confPath + std::string("\\gbai");
+#else /* GUOBIAO */
 	std::string scriptPath = confPath + std::string("\\ai");
+#endif /* GUOBIAO */
 	std::string scriptFiles = scriptPath + std::string("\\*.lua");
 	files.clear();
 	WIN32_FIND_DATAA finddat;
@@ -36,7 +40,11 @@ void aiscript::FileSelector::filelist() {
 	/* 検索完了！ */
 	FindClose(h);
 #else /*_WIN32*/
+#ifdef GUOBIAO
+	std::string scriptPath = confPath + std::string("/gbai");
+#else /* GUOBIAO */
 	std::string scriptPath = confPath + std::string("/ai");
+#endif /* GUOBIAO */
 	files.clear();
 	info(_T("AIスクリプトを検索します"));
 

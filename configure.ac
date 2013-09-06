@@ -188,6 +188,7 @@ AC_CONFIG_FILES([Makefile
                  graphic/Makefile
                  mihajong/Makefile
                  mjcore/Makefile
+                 mjcoregb/Makefile
                  socket/Makefile
                  sound/Makefile])
 AC_OUTPUT

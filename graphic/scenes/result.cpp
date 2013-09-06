@@ -182,7 +182,7 @@ void ResultScreen::RankRenderer::RenderNameScore() {
 	punctaticum_ << _T("素点：") <<
 		(GameStatus::gameStat()->Player[player].PlayerScore.bignumtotext(_T(""), _T("△")));
 	const int chipVal = GameStatus::gameStat()->Player[player].playerChip;
-	if (!rules::chkRule("chip", "no")) {
+	if ((GameStatus::gameStat()->gameType & RichiMJ) && (!rules::chkRule("chip", "no"))) {
 		if (chipVal > 0)
 			punctaticum_ << _T(" チップ：＋") << chipVal;
 		else if (chipVal < 0)
@@ -190,7 +190,7 @@ void ResultScreen::RankRenderer::RenderNameScore() {
 		else
 			punctaticum_ << _T(" チップ：0");
 	}
-	if (!rules::chkRule("yakitori", "no")) {
+	if ((GameStatus::gameStat()->gameType & RichiMJ) && (!rules::chkRule("yakitori", "no"))) {
 		if (GameStatus::gameStat()->Player[player].YakitoriFlag)
 			punctaticum_ << _T(" 焼鳥");
 	}

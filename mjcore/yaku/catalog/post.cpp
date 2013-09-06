@@ -16,6 +16,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 
 	// ---------------------------------------------------------------------
 
+#ifndef GUOBIAO
 	/* アリス・マーガトロイド */
 	if (RuleData::chkRuleApplied("alice_margatroid")) {
 		/*	制限事項
@@ -35,9 +36,18 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 				suppression.insert(_T("五門斎"));
 		}
 	}
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
+#ifdef GUOBIAO
+	/* 无番和 */
+	if (totalHan <= 0) {
+		LPCTSTR name = _T("无番和");
+		yakuHan[name] = yaku::yakuCalculator::Yaku::yval_8(analysis);
+		yakuOrd.push_back(name);
+	}
+#else /* GUOBIAO */
 	/* カラス */
 	if (RuleData::chkRuleApplied("karasu")) {
 		if (((analysis->Machi == yaku::yakuCalculator::machiKanchan) ||
@@ -62,9 +72,11 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 				yakuOrd.push_back(name);
 		}
 	}
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
+#ifndef GUOBIAO
 	/* 北枕 */
 	if (RuleData::chkRuleApplied("kitamakura")) {
 		if ((totalHan >= 2) && /* 2飜以上あるか？ */
@@ -81,4 +93,5 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 				yakuOrd.push_back(name);
 		}
 	}
+#endif /* GUOBIAO */
 }

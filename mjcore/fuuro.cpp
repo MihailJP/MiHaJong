@@ -42,20 +42,25 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 		break;
 	case FuuroFlower:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
-		gameStat->KangFlag.kangFlag = 1; // 嶺上開花のフラグを立てる
+#ifndef GUOBIAO
+		gameStat->KangFlag.kangFlag = true; // 嶺上開花のフラグを立てる
+#endif /* GUOBIAO */
 		haifu::haifurecflower(gameStat, DiscardTileIndex); // 牌譜に記録
 		break;
+#ifndef GUOBIAO
 	case FuuroNorth:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
 		gameStat->KangFlag.kangFlag = 1; // 嶺上開花のフラグを立てる
 		haifu::haifurecnorth(gameStat, DiscardTileIndex); // 牌譜に記録
 		break;
+#endif /* GUOBIAO */
 	case FuuroDaiminkan:
 		fuuroPlayer = gameStat->CurrentPlayer.Passive;
-		gameStat->KangFlag.kangFlag = 1; // 嶺上開花のフラグを立てる
+		gameStat->KangFlag.kangFlag = true; // 嶺上開花のフラグを立てる
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
 			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
 		haifu::haifurecminkan(gameStat);
+#ifndef GUOBIAO
 		gameStat->KangFlag.chainFlag++; // 連続槓の回数を記録
 		if (gameStat->Player[fuuroPlayer].FirstDrawFlag)
 			gameStat->KangFlag.topFlag = 1; /* 頭槓和のフラグ */
@@ -68,6 +73,7 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 			gameStat->Player[fuuroPlayer].shokanFlag = true; /* 初槓のフラグ */
 		else if (gameStat->TurnRound == 3)
 			gameStat->Player[fuuroPlayer].kansanjunFlag = true; /* 槓三巡のフラグ */
+#endif /* GUOBIAO */
 		break;
 	case FuuroAnkan:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
@@ -78,6 +84,7 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
 		gameStat->KangFlag.kangFlag = true; // 嶺上開花のフラグを立てる
 		haifu::haifurecankan(gameStat, DiscardTileIndex); // 暗槓を仮に牌譜に記録
+#ifndef GUOBIAO
 		gameStat->KangFlag.chainFlag++; // 連続槓の回数を記録
 		if (gameStat->Player[fuuroPlayer].FirstDrawFlag)
 			gameStat->KangFlag.topFlag = true; /* 頭槓和のフラグ */
@@ -85,6 +92,7 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 			gameStat->Player[fuuroPlayer].shokanFlag = true; /* 初槓のフラグ */
 		else if (gameStat->TurnRound == 3)
 			gameStat->Player[fuuroPlayer].kansanjunFlag = true; /* 槓三巡のフラグ */
+#endif /* GUOBIAO */
 		break;
 	default:
 		fuuroPlayer = -1;
@@ -183,6 +191,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		/* 理牌する */
 		lipai(gameStat, kangPlayer);
 		break;
+#ifndef GUOBIAO
 	case FuuroNorth: /* 三麻抜きドラ */
 		sound::Play(sound::IDs::voxFlower);
 		++(gameStat->Player[kangPlayer].NorthFlag);
@@ -195,6 +204,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		for (PlayerID i = 0; i < Players; i++)
 			gameStat->Player[i].FirstDrawFlag = false;
 		break;
+#endif /* GUOBIAO */
 	case FuuroFlower: /* 花牌 */
 		sound::Play(sound::IDs::voxFlower);
 		switch (gameStat->CurrentDiscard.tile) {
@@ -259,10 +269,12 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Passive, mihajong_graphic::calltext::Pon);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
 		/* 喰い替えの判定に使う変数を設定 */
+#ifndef GUOBIAO
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
 		gameStat->PreviousMeld.Stepped = NoTile;
 		/* 包の判定 */
 		checkpao(gameStat);
+#endif /* GUOBIAO */
 		break;
 	case FuuroChii: /* チー */
 		/* チーする牌を設定 */
@@ -302,6 +314,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		sound::Play(sound::IDs::voxChi);
 		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Passive, mihajong_graphic::calltext::Chii);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+#ifndef GUOBIAO
 		/* 喰い替え判定用の変数を指定 */
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
 		if (RuleData::chkRule("kuikae", "agari_houki") || RuleData::chkRule("kuikae", "chombo")) {
@@ -313,6 +326,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		} else {
 			gameStat->PreviousMeld.Stepped = NoTile;
 		}
+#endif /* GUOBIAO */
 		break;
 	default:
 		{
@@ -355,9 +369,13 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 		/* 搶槓の判定 ここから */
 		/* 搶槓の際の注意事項。元々のポンが自分の捨牌のものの場合
 		   振聴となるので搶槓はできません */
+#ifdef GUOBIAO
+		if (Mode == FuuroKakan) {
+#else /* GUOBIAO */
 		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroNorth)) {
 			if ((Mode == FuuroKakan) || (Mode == FuuroNorth) ||
 				(RuleData::chkRule("ankan_conceal", "open") && RuleData::chkRule("ankan_chankan", "yes"))) {
+#endif /* GUOBIAO */
 					debug(_T("搶槓の判定をします。"));
 					if (Mode == FuuroAnkan) gameStat->KangFlag.chankanFlag = chankanOfAnkan;
 					else if (Mode == FuuroNorth) gameStat->KangFlag.chankanFlag = chankanOfNorth;
@@ -370,7 +388,9 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 						return true;
 					}
 					gameStat->KangFlag.chankanFlag = chankanNone;
+#ifndef GUOBIAO
 			}
+#endif /* GUOBIAO */
 		}
 		/* 搶槓の判定 ここまで */
 		debug(_T("副露に成功しました。"));
@@ -389,11 +409,13 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 			gameStat->Player[i].Hand[NumOfTilesInHand].tile = NoTile;
 			gameStat->Player[i].Hand[NumOfTilesInHand].red = Normal;
 		}
+#ifndef GUOBIAO
 		/* 大明槓の包判定用 */
 		if ((!RuleData::chkRule("minkan_pao", "no")) && (!RuleData::chkRule("minkan_pao", "no_but_2han"))) {
 			gameStat->PaoFlag[pyMinkan].paoPlayer = gameStat->CurrentPlayer.Active;
 			gameStat->PaoFlag[pyMinkan].agariPlayer = gameStat->CurrentPlayer.Passive;
 		}
+#endif /* GUOBIAO */
 	}
 	return false;
 }
@@ -403,12 +425,14 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 	if ((Mode != FuuroPon) && (Mode != FuuroChii)) {
 		/* 四槓子の聴牌者がいて、５回目の槓があると流局とするルールの場合
 		   その条件を判定する*/
+#ifndef GUOBIAO
 		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
 			if (gameStat->KangNum >= 4) {
 				debug(_T("5個目の槓なので直ちに流局とし、ループから出ます。"));
 				*RoundEndType = Uukaikan; return true;
 			}
 		}
+#endif /* GUOBIAO */
 		if (gameStat->TilePointer >= (gameStat->RinshanPointer - (gameStat->DeadTiles - 1))) {
 			*RoundEndType = Ryuukyoku; return true; /* 荒牌なら終了 */
 		}
@@ -419,6 +443,7 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 		sound::Play(sound::IDs::sndTsumo);
 		if (gameStat->tilesLeft() < 10)
 			sound::Play(sound::IDs::sndCountdown);
+#ifndef GUOBIAO
 		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
 			/* 槓ドラをめくる */
 			if (RuleData::chkRuleApplied("kandora")) {
@@ -443,6 +468,7 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 				(int)gameStat->KangNum << _T("] 回開槓しています。");
 			debug(o.str().c_str());
 		}
+#endif /* GUOBIAO */
 	}
 	return false;
 }
@@ -488,6 +514,7 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 
 /* 包を判定する */
 void checkpao(GameTable* const gameStat) {
+#ifndef GUOBIAO
 	// 包の判定 ここから
 	debug(_T("包の条件を判定します。"));
 	unsigned DragonPons = 0, WindPons = 0, NumOfKangs = 0;
@@ -530,6 +557,7 @@ void checkpao(GameTable* const gameStat) {
 	}
 	// 包の判定 ここまで
 	return;
+#endif /* GUOBIAO */
 }
 
 namespace {
@@ -682,6 +710,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 		}
 	}
 	/* 当たり牌見逃しを同順フリテンにする処理 */
+#ifndef GUOBIAO
 	for (PlayerID i = 0; i < Players; ++i) {
 		const TileCode xTile = gameStat->Player[i].Tsumohai().tile;
 		gameStat->Player[i].Tsumohai().tile = gameStat->CurrentDiscard.tile;
@@ -690,6 +719,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 			gameStat->Player[i].DoujunFuriten = true;
 		gameStat->Player[i].Tsumohai().tile = xTile;
 	}
+#endif /* GUOBIAO */
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */
 	for (PlayerID i = 0; i < Players; i++) {
 		if (gameStat->Player[i].DeclarationFlag.Ron) {
@@ -711,6 +741,10 @@ EndType ronhuproc(GameTable* const gameStat) {
 			switch (roncount) {
 			case 0:
 				accept = true; break;
+#ifdef GUOBIAO
+			default:
+				accept = false; break;
+#else /* GUOBIAO */
 			case 1:
 				accept =
 					RuleData::chkRule("multiple_mahjong", "dual_mahjong_with_draw") ||
@@ -720,6 +754,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 			case 2:
 				accept = RuleData::chkRule("multiple_mahjong", "trial_mahjong");
 				break;
+#endif /* GUOBIAO */
 			}
 			if (accept) {
 				CodeConv::tostringstream o;
@@ -749,6 +784,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 			gameStat->CurrentPlayer.Furikomi = gameStat->CurrentPlayer.Active;
 			gameStat->CurrentPlayer.Agari = pl;
 			/* 八連荘の判定に使う変数 */
+#ifndef GUOBIAO
 			if (RuleData::chkRuleApplied("paarenchan")) {
 				if (gameStat->LastAgariPlayer == gameStat->CurrentPlayer.Agari) {
 					++gameStat->AgariChain;
@@ -760,10 +796,12 @@ EndType ronhuproc(GameTable* const gameStat) {
 					gameStat->LastAgariPlayer = gameStat->CurrentPlayer.Agari;
 				}
 			}
+#endif /* GUOBIAO */
 			/* 和了り牌を設定 */
 			gameStat->statOfAgari().Tsumohai().tile = gameStat->CurrentDiscard.tile;
 			gameStat->statOfAgari().Tsumohai().red = gameStat->CurrentDiscard.red;
 			/* 立直宣言牌での放銃の場合、立直を無効とし供託点棒を返却する */
+#ifndef GUOBIAO
 			if (gameStat->statOfActive().RichiFlag.IppatsuFlag) {
 				if (gameStat->statOfActive().RichiFlag.DoubleFlag) {
 					gameStat->DoubleRichiCounter = true;
@@ -779,15 +817,21 @@ EndType ronhuproc(GameTable* const gameStat) {
 				--gameStat->Deposit;
 				gameStat->statOfActive().PlayerScore += 1000;
 			}
+#endif /* GUOBIAO */
 			/* 役や振聴の判定 */
 			yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, pl);
 			MachihaiInfo mInfo = chkFuriten(gameStat, pl);
 			// 縛りを満たさないか、振聴のとき
+#ifdef GUOBIAO
+			if (!yaku::yakuCalculator::checkShibari(gameStat, &yakuInfo)) {
+					trace(_T("縛りを満たさない和了です。次の処理をチョンボ用に切り替えます。"));
+#else /* GUOBIAO */
 			if ((!yaku::yakuCalculator::checkShibari(gameStat, &yakuInfo)) ||
 				(mInfo.FuritenFlag) || (gameStat->Player[pl].DoujunFuriten) ||
 				(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->Player[pl].RichiFlag.RichiFlag)) ||
 				((!RuleData::chkRuleApplied("kataagari")) && (!isKataagari(gameStat, gameStat->CurrentPlayer.Active)))) {
 					trace(_T("縛りを満たさないか振聴です。次の処理をチョンボ用に切り替えます。"));
+#endif /* GUOBIAO */
 					RoundEndType = Chonbo; // チョンボにする
 			}
 			// ロンをしたことを表示
@@ -825,6 +869,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 	} else if (!gameStat->KangFlag.kangFlag) { // 抜き北で牌譜がずれるのを抑止
 		haifu::haifurecfurikomi(gameStat);
 	}
+#ifndef GUOBIAO
 	if (gameStat->chkGameType(AllSanma)) {
 		// 二家和の判定
 		if ((RonPlayers(gameStat) >= 2) && RuleData::chkRule("multiple_mahjong", "aborted"))
@@ -836,6 +881,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 			RuleData::chkRule("multiple_mahjong", "dual_mahjong_with_draw")))
 			return TripleRon;
 	}
+#endif /* GUOBIAO */
 	return RoundEndType;
 }
 

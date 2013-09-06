@@ -38,18 +38,25 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 	if (!gameStat->chkGameType(SanmaS)) {
 		for (unsigned int k = 1u; k <= 7u; ++k)
 			settile((TileCode)(TileSuitHonors + k), p); // 字牌
+#ifndef GUOBIAO
 		if (RuleData::chkRule("flower_tiles", "seasons") || RuleData::chkRule("flower_tiles", "8tiles")) {
+#endif /* GUOBIAO */
 			gameStat->Deck[p++].tile = Spring; gameStat->Deck[p++].tile = Summer;
 			gameStat->Deck[p++].tile = Autumn; gameStat->Deck[p++].tile = Winter;
+#ifndef GUOBIAO
 		}
 		if (RuleData::chkRule("flower_tiles", "flowers") || RuleData::chkRule("flower_tiles", "8tiles")) {
+#endif /* GUOBIAO */
 			gameStat->Deck[p++].tile = Plum; gameStat->Deck[p++].tile = Orchid;
 			gameStat->Deck[p++].tile = Chrysanthemum; gameStat->Deck[p++].tile = Bamboo;
+#ifndef GUOBIAO
 		}
+#endif /* GUOBIAO */
 	}
 	return p;
 }
 
+#ifndef GUOBIAO
 inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 赤ドラを設定する
 	{
 		const char tileRules[9][16] = {
@@ -164,6 +171,7 @@ inline void bluetiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 青ド
 			gameStat->Deck[tilepos[GreenDragon] + 3].red = AoDora;
 	}
 }
+#endif /* GUOBIAO */
 
 inline void shuffletiles(GameTable* const gameStat, UInt8ByTile& tilepos, unsigned int tiles) { // 洗牌する
 	if (EnvTable::Instantiate()->GameMode != EnvTable::Client) {
@@ -179,11 +187,14 @@ inline void shuffletiles(GameTable* const gameStat, UInt8ByTile& tilepos, unsign
 void shuffle(GameTable* const gameStat) { // 牌をバッファに並べて、洗牌
 	UInt8ByTile tilepos;
 	unsigned int tiles = inittiles(gameStat, tilepos);
+#ifndef GUOBIAO
 	redtiles(gameStat, tilepos);
 	bluetiles(gameStat, tilepos);
+#endif /* GUOBIAO */
 	shuffletiles(gameStat, tilepos, tiles);
 }
 
+#ifndef GUOBIAO
 #define nagatadora(TileCode) {++gameStat->DoraFlag.Omote[TileCode]; haifu::haifurecdora(TileCode);}
 inline void DoraAdding(GameTable* const gameStat) {
 	setdora(gameStat, 0); // 表ドラを設定する
@@ -224,6 +235,7 @@ void initdora(GameTable* const gameStat) { // ドラの設定
 			DoraAdding(gameStat);
 	}
 }
+#endif /* GUOBIAO */
 
 // -------------------------------------------------------------------------
 
@@ -434,10 +446,12 @@ namespace {
 		if (((gameStat->LoopRound * roundLoopRate() + gameStat->GameRound) == gameStat->GameLength) &&
 			(gameStat->GameLength > 0))
 			sound::util::bgmplay(sound::IDs::musFinal); // オーラスだけ特別
+#ifndef GUOBIAO
 		else if ((gameStat->Honba >= 5) && RuleData::chkRule("ryanshiba", "from_5honba"))
 			sound::util::bgmplay(sound::IDs::musShibari); // リャンシバ時専用BGM
 		else if ((gameStat->Honba >= 4) && RuleData::chkRule("ryanshiba", "from_4honba"))
 			sound::util::bgmplay(sound::IDs::musShibari); // リャンシバ時専用BGM
+#endif /* GUOBIAO */
 		else
 			sound::util::bgmplay(sound::IDs::BgmStart + gameStat->GameRound);
 	}
@@ -511,6 +525,9 @@ namespace {
 	}
 	void tileshuffle(GameTable* const gameStat) {
 		shuffle(gameStat); unsigned tmpNumberOfTiles;
+#ifdef GUOBIAO
+		tmpNumberOfTiles = 144;
+#else /* GUOBIAO */
 		if (gameStat->chkGameType(AllSanma))
 			tmpNumberOfTiles = 108;
 		else if (RuleData::chkRule("flower_tiles", "no"))
@@ -519,6 +536,7 @@ namespace {
 			tmpNumberOfTiles = 144;
 		else
 			tmpNumberOfTiles = 140;
+#endif /* GUOBIAO */
 		for (unsigned i = 0; i < tmpNumberOfTiles; i++) // サーバーの場合、牌山のデータを送信
 			statsync(gameStat, gameStat->Deck[i].tile + (gameStat->Deck[i].red * TileNonflowerMax) + mihajong_socket::protocol::StartRound_Tile_Excess,
 				[i](GameTable* const gameStat, int ReceivedMsg) -> bool { // クライアントの場合、データを受信
@@ -559,15 +577,19 @@ namespace {
 					return true;
 				});
 		// --
+#ifndef GUOBIAO
 		if ((!doraAlreadyAdded) && (RuleData::chkRule("dora_twice", "yes") ||
 			(RuleData::chkRule("dora_twice", "only_when_doublets") &&
 			(gameStat->Dice[0 + diceOffset].Number == gameStat->Dice[1 + diceOffset].Number))))
 			gameStat->DeadTiles += 2; /* ドラドラ卓なら王牌の数を増やす */
 		calcWareme(gameStat); // 割れ目
 		if (RuleData::chkRule("dice_roll", "roll_twice")) {
+#endif /* GUOBIAO */
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			skippableWait(500);
+#ifndef GUOBIAO
 		}
+#endif /* GUOBIAO */
 		return tmpDeadTiles != gameStat->DeadTiles;
 	}
 	void haipai(GameTable* const gameStat) { // 配牌
@@ -609,9 +631,11 @@ namespace {
 			mihajong_graphic::GameStatus::updateGameStat(gameStat); skippableWait(250);
 		}
 
+#ifndef GUOBIAO
 		initdora(gameStat); // ドラをめくる
 
 		sound::Play(sound::IDs::sndMekuri);
+#endif /* GUOBIAO */
 		haifu::haifurechaipai(gameStat);
 		for (PlayerID i = 0; i < Players; i++)
 			lipai(gameStat, i);
@@ -653,7 +677,9 @@ void tableinit(GameTable* const gameStat) {
 	tileshuffle(gameStat);
 	// 賽を振る
 	bool doraFlag = rolldice(gameStat, false, 0);
+#ifndef GUOBIAO
 	if (RuleData::chkRule("dice_roll", "roll_twice"))
+#endif /* GUOBIAO */
 		(void)rolldice(gameStat, doraFlag, 2); // 二度振りの2回目
 	// 配牌
 	haipai(gameStat);

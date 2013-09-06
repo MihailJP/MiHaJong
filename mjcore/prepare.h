@@ -4,7 +4,9 @@
 #include "gametbl.h"
 
 void shuffle(GameTable* const gameStat); // 牌をバッファに並べて、洗牌
+#ifndef GUOBIAO
 void initdora(GameTable* const gameStat); // ドラの設定
+#endif /* GUOBIAO */
 
 class SeatShuffler { // 場決め処理
 private:

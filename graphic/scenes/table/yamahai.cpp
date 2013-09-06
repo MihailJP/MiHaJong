@@ -10,7 +10,9 @@ using utils::playerRelative;
 /* 山牌の表示 */
 void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer, PlayerID trueTargetPlayer) {
 	std::tuple<unsigned, unsigned, unsigned, unsigned> yamahaiAttr;
-	if (gameStat->gameType & AllSanma)
+	if (gameStat->gameType & GuobiaoMJ)
+		yamahaiAttr = std::make_tuple(1, 144, 18, 130);
+	else if (gameStat->gameType & AllSanma)
 		yamahaiAttr = std::make_tuple(3, 108, 18, 102 - gameStat->ExtraRinshan);
 	else if (rules::chkRule("flower_tiles", "no"))
 		yamahaiAttr = std::make_tuple(0, 136, 17, 130);
@@ -62,6 +64,11 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 	auto getRinshanFlag2 = getRinshanFlag(2);
 	auto getRinshanFlag1 = getRinshanFlag(1);
 	const bool shorterWall = (std::get<0>(yamahaiAttr) == 2) && (gameStat->playerwind(trueTargetPlayer) % 2 == 1);
+	if (gameStat->chkGameType(GuobiaoMJ) && (gameStat->tilesLeft() == 0)) { // 中国ルールで最後の牌まで自摸った場合
+		for (int i = 0; i < 144; ++i)
+			TileTexture->DelTile(i);
+		return;
+	}
 	switch (tmpPlayerCode) {
 	case sOpposite:
 		for (int i = (18 - std::get<2>(yamahaiAttr) + (shorterWall ? 1 : 0)) * 2; i < 36; i += 2) { /* 対面側の山 */
