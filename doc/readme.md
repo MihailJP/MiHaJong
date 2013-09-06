@@ -15,6 +15,8 @@ Copyright (c) 2008-2013 MihailJP, Part of rights reserved
 
 　なお、麻雀の具体的な遊び方については別途麻雀入門書などをご覧ください。
 
+　Ver2.1.0以降、中国麻雀版 MiHaJong も同梱されています。
+
 
 動作環境
 --------
@@ -48,6 +50,20 @@ Vista 以降をお使いの場合で C:\Program Files 以下にインストー�
 あそびかた
 ----------
 　[playing.md](playing.md) をご覧ください。
+
+
+中国麻将について
+----------------
+　MiHaJong 2.1.0 より、中国麻将版の実行ファイル・コアDLLを同梱しています。
+
+　中国麻将とは、中国政府公認の国際ルールにより行われる麻雀です。
+MiHaJongでは、基本的に2006年版のルールに準拠していますが、なにかおかしい点があるかもしれません。
+
+　中国麻将の詳しい遊び方については、次のサイトが参考になるでしょう。
+
+* [Wikipedia: 中国麻雀](http://ja.wikipedia.org/wiki/%E4%B8%AD%E5%9B%BD%E9%BA%BB%E9%9B%80)
+* [東方キャラによる中国麻将の紹介ページ（仮）](http://www.green.dti.ne.jp/maisan/c_mahjong/)
+* [中国式麻将（中国式麻雀） ルールと戦略](http://www.flowstones.com/mj/Cmj/China-index.html)
 
 
 何かあったら
@@ -92,6 +108,7 @@ Linux版の制限
 - フルスクリーンにできません。
 - 効果音が鳴りません。
 - BGMが鳴りません。
+- ジョイスティックは使えません。
 
 
 ライセンスについて

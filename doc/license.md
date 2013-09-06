@@ -45,7 +45,24 @@ Copyright (c) 2008-2013 MihailJP, Part of rights reserved
 > あらゆる改変の有無に関わらず、また商業的な利用であっても、自由にご利用、
 > 複製、再配布することができますが、全て無保証とさせていただきます。
 
-　参照：http://gutenberg.sourceforge.jp/ja/license.html
+　参照：[http://gutenberg.sourceforge.jp/ja/license.html](http://gutenberg.sourceforge.jp/ja/license.html)
+
+
+時計の文字盤画像について
+------------------------
+　時計の文字盤に使用した写真は、2011年3月19日にドイツで撮影された満月の写真であり、 
+Wikimedia Commons ユーザーの Enceladus 氏により撮影され、MihailJP により回転・透明化処理・トリミングを行ったものです。
+ライセンスは次のとおりです。
+
+> This file is made available under the Creative Commons [CC0 1.0 Universal Public Domain Dedication](https://creativecommons.org/publicdomain/zero/1.0/deed.en).
+>
+> The person who associated a work with this deed has dedicated the work to the public domain
+> by waiving all of his or her rights to the work worldwide under copyright law,
+> including all related and neighboring rights, to the extent allowed by law.
+> You can copy, modify, distribute and perform the work, even for commercial purposes,
+> all without asking permission.
+
+参照：[https://commons.wikimedia.org/wiki/File:20110319_Supermoon.jpg](https://commons.wikimedia.org/wiki/File:20110319_Supermoon.jpg)
 
 
 使用した効果音のデータについて
@@ -64,7 +81,7 @@ Copyright (c) 2008-2013 MihailJP, Part of rights reserved
 > 
 > ＊素材ファイルへの直リンクは一切禁止いたします
 
-参照：http://osabisi.sakura.ne.jp/m2/
+参照：[http://osabisi.sakura.ne.jp/m2/](http://osabisi.sakura.ne.jp/m2/)
 
 
 Perlからの移植コードについて
@@ -102,7 +119,7 @@ Perlからの移植コードについて
 >     Christopher J. Madsen http://www.cjmweb.net/
 >     Added phaselist function, March 2007
 
-参照：http://search.cpan.org/~brett/Astro-MoonPhase/MoonPhase.pm
+参照：[http://search.cpan.org/~brett/Astro-MoonPhase/MoonPhase.pm](http://search.cpan.org/~brett/Astro-MoonPhase/MoonPhase.pm)
 
 ### Astro::Sunrise ###
 
@@ -135,7 +152,7 @@ Perlからの移植コードについて
 > TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 > SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-参照：http://search.cpan.org/~rkhill/Astro-Sunrise-0.91/Sunrise.pm
+参照：[http://search.cpan.org/~rkhill/Astro-Sunrise-0.91/Sunrise.pm](http://search.cpan.org/~rkhill/Astro-Sunrise-0.91/Sunrise.pm)
 
 
 Luaインタプリタについて
@@ -163,7 +180,7 @@ Luaインタプリタについて
 > TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 > SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-参照：http://www.lua.org/manual/5.2/readme.html#license
+参照：[http://www.lua.org/manual/5.2/readme.html#license](http://www.lua.org/manual/5.2/readme.html#license)
 
 
 libogg/libvorbisについて
