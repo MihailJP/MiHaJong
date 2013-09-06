@@ -524,6 +524,13 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		else if (keyDown && (buttonReconst->isCursorEnabled()))
 			buttonReconst->ButtonPressed();
 		break;
+	/* キャンセルキー */
+	case DIK_ESCAPE: case DIK_X:
+		if (keyDown && isNakiSel && (buttonReconst->isCursorEnabled())) {
+			buttonReconst->setCursor(ButtonReconst::btnPass);
+			buttonReconst->ButtonPressed();
+		}
+		break;
 	}
 }
 
