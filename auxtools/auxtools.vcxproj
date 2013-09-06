@@ -22,6 +22,7 @@
     <None Include="compress.py" />
     <None Include="compress.rb" />
     <None Include="Makefile.nmake" />
+    <None Include="md2html.py" />
     <None Include="rulesyms.rb" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

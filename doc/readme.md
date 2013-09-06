@@ -29,9 +29,9 @@ Copyright (c) 2008-2013 MihailJP, Part of rights reserved
 Vista 以降をお使いの場合で C:\Program Files 以下にインストールした場合、自動的に認識し設定や牌譜のファイルの出力先を再設定します
 (Program Filesへのインストール自体は管理者権限が必要ですが、プレイ時には管理者権限は不要です)。
 
-　Linux版は ./configure --with-boost-regex=boost_regex && make && sudo make install して下さい。
+　Linux版は `./configure --with-boost-regex=boost_regex && make && sudo make install` して下さい。
 
-※GCCのstd::regexは壊れているため、boost::regexを使用して下さい。
+**※GCCのstd::regexは壊れているため、boost::regexを使用して下さい。**
 
 
 アンインストールのしかた
@@ -40,14 +40,14 @@ Vista 以降をお使いの場合で C:\Program Files 以下にインストー�
 牌譜を取っておきたい場合は haifu フォルダーをバックアップしておきます。
  
 　Vista 以降をお使いの場合で C:\Program Files 以下にインストールした場合、
-設定と牌譜は C:\Users\(ユーザー名)\AppData\Roaming\MiHaJong 以下に出力されますので、必要のない方はこれも削除します。
+設定と牌譜は C:\Users\\(ユーザー名)\AppData\Roaming\MiHaJong 以下に出力されますので、必要のない方はこれも削除します。
 
 　なお、Linux版では設定ファイルや牌譜は /home/(ユーザー名)/.mihajong 以下に出力されます。
 
 
 あそびかた
 ----------
-　playing.md をご覧ください。
+　[playing.md](playing.md) をご覧ください。
 
 
 何かあったら
@@ -56,11 +56,10 @@ Vista 以降をお使いの場合で C:\Program Files 以下にインストー�
 - メール： mihailjp@gmail.com
 - Twitter： @MihailJP
 
-　また、バグレポートや要望は開発室(Wiki)でも受け付けています。
-- URL: http://www14.atwiki.jp/mihajong/
+　また、バグレポートや要望は[開発室(Wiki)](http://www14.atwiki.jp/mihajong/)でも受け付けています。
 
-　最新の開発版はGitHubのリポジトリで公開されています。
-- URL: https://github.com/MihailJP/MiHaJong/
+　最新の開発版は[GitHubのリポジトリ](https://github.com/MihailJP/MiHaJong/)で公開されています。
+
 
 MihailJPの開発環境
 ------------------
@@ -76,15 +75,15 @@ MihailJPの開発環境
 
 ビルドに別途必要なもの
 ----------------------
-- liblua (http://www.lua.org/download.html) (Visual C++の場合はスタティックリンクします)
-- Ruby 処理系 (http://www.ruby-lang.org/ja/downloads/)
-- Python 処理系 (http://www.python.jp/download/)
-- markdown_py (https://pypi.python.org/pypi/Markdown)
-- libogg/libvorbis (http://www.xiph.org/downloads/) (Visual C++の場合はスタティックリンクします)
-- GuruGuruSMF (http://gurugurusmf.migmig.net/) (Windowsのみ)
-- boost::regex (http://www.boost.org/) (GCCはstd::regexが壊れているため必要。Visual C++の場合は不要)
-- OpenAL (http://connect.creativelabs.com/openal/default.aspx) (Linuxのみ)
-- libpng (http://www.libpng.org/pub/png/libpng.html) (Linuxのみ)
+- [liblua](http://www.lua.org/download.html) (Visual C++の場合はスタティックリンクします)
+- [Ruby 処理系](http://www.ruby-lang.org/ja/downloads/)
+- [Python 処理系](http://www.python.jp/download/)
+- [markdown_py](https://pypi.python.org/pypi/Markdown)
+- [libogg/libvorbis](http://www.xiph.org/downloads/) (Visual C++の場合はスタティックリンクします)
+- [GuruGuruSMF](http://gurugurusmf.migmig.net/) (Windowsのみ)
+- [boost::regex](http://www.boost.org/) (GCCはstd::regexが壊れているため必要。Visual C++の場合は不要)
+- [OpenAL](http://connect.creativelabs.com/openal/default.aspx) (Linuxのみ)
+- [libpng](http://www.libpng.org/pub/png/libpng.html) (Linuxのみ)
 
 
 Linux版の制限
@@ -97,14 +96,14 @@ Linux版の制限
 
 ライセンスについて
 ------------------
-　license.md をご覧ください。
+　[license.md](./license.md) をご覧ください。
 
 
 バージョン履歴
 --------------
-　history.md をご覧ください。
+　[history.md](./history.md) をご覧ください。
 
 
 ------------------------------------------------------------------------------
 
-Finis
+_Finis_

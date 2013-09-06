@@ -7,7 +7,7 @@ mihajong/bgm/
 mihajong/sound/
 mihajong/debug*.log
 mihajong/haifu/
-doc/rulesyms.txt
+doc/rulesyms.md
 logger/Debug/
 logger/Release/
 logger/ipch/
@@ -103,3 +103,5 @@ mentzdat/mentz.dat.*
 !mentzdat/test/Makefile
 mentzdat/test/*.txt
 mentzdat/test/testprog
+!doc/Makefile
+doc/*.html

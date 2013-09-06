@@ -7,7 +7,9 @@ DOCPATH=$(SolutionDir)doc\
 DATAPATH=$(SolutionDir)data\ 
 ARCHIVE_CONTENT=$(TMPPATH)astro.dll $(TMPPATH)GuruGuruSMF4.dll $(TMPPATH)graphic.dll $(TMPPATH)mjcore.dll $(TMPPATH)socket.dll $(TMPPATH)sound.dll \
 	$(TMPPATH)mihajong.exe $(TMPPATH)mihasanm.exe $(TMPPATH)mihassnm.exe $(TMPPATH)mihaysnm.exe \
-	$(TMPPATH)history.txt $(TMPPATH)license.txt $(TMPPATH)playing.txt $(TMPPATH)readme.txt $(TMPPATH)rulesyms.txt $(TMPPATH)script.txt $(TMPPATH)addyaku.md \
+	$(TMPPATH)readme.txt $(TMPPATH)manual.css \
+	$(TMPPATH)history.md $(TMPPATH)license.md $(TMPPATH)playing.md $(TMPPATH)readme.md $(TMPPATH)rulesyms.md $(TMPPATH)script.md $(TMPPATH)addyaku.md \
+	$(TMPPATH)history.html $(TMPPATH)license.html $(TMPPATH)playing.html $(TMPPATH)readme.html $(TMPPATH)rulesyms.html $(TMPPATH)script.html $(TMPPATH)addyaku.html \
 	$(TMPPATH)ai\default.lua $(TMPPATH)haifu\haifu.css $(TMPPATH)haifu\haifu.dtd $(TMPPATH)haifu\haifu.xsd $(TMPPATH)haifu\haifu.xsl
 
 all: $(ARCHIVE)
@@ -36,25 +38,52 @@ $(TMPPATH)socket.dll: $(OBJPATH)socket.dll
 $(TMPPATH)sound.dll: $(OBJPATH)sound.dll
 	- mkdir $(TMPPATH)
 	copy $** $@
-$(TMPPATH)history.txt: $(DOCPATH)history.txt
+$(TMPPATH)readme.txt: $(SolutionDir)README
 	- mkdir $(TMPPATH)
 	copy $** $@
-$(TMPPATH)license.txt: $(DOCPATH)license.txt
+$(TMPPATH)manual.css: $(DOCPATH)manual.css
 	- mkdir $(TMPPATH)
 	copy $** $@
-$(TMPPATH)playing.txt: $(DOCPATH)playing.txt
+$(TMPPATH)history.md: $(DOCPATH)history.md
 	- mkdir $(TMPPATH)
 	copy $** $@
-$(TMPPATH)readme.txt: $(DOCPATH)readme.txt
+$(TMPPATH)license.md: $(DOCPATH)license.md
 	- mkdir $(TMPPATH)
 	copy $** $@
-$(TMPPATH)rulesyms.txt: $(DOCPATH)rulesyms.txt
+$(TMPPATH)playing.md: $(DOCPATH)playing.md
 	- mkdir $(TMPPATH)
 	copy $** $@
-$(TMPPATH)script.txt: $(DOCPATH)script.txt
+$(TMPPATH)readme.md: $(DOCPATH)readme.md
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)rulesyms.md: $(DOCPATH)rulesyms.md
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)script.md: $(DOCPATH)script.md
 	- mkdir $(TMPPATH)
 	copy $** $@
 $(TMPPATH)addyaku.md: $(DOCPATH)addyaku.md
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)history.html: $(DOCPATH)history.html
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)license.html: $(DOCPATH)license.html
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)playing.html: $(DOCPATH)playing.html
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)readme.html: $(DOCPATH)readme.html
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)rulesyms.html: $(DOCPATH)rulesyms.html
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)script.html: $(DOCPATH)script.html
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)addyaku.html: $(DOCPATH)addyaku.html
 	- mkdir $(TMPPATH)
 	copy $** $@
 $(TMPPATH)ai\default.lua: $(DATAPATH)ai\default.lua

@@ -17,12 +17,27 @@ Dir::chdir(File.expand_path(File.dirname(__FILE__))) # このスクリプトの�
 
 require "csv"
 csvdat = CSV.read("../mjcore/data/confitem.csv", encoding: "UTF-8") # 設定を記述したCSVを開く
-target = open("../doc/rulesyms.txt", mode_enc = "wt") # 出力先
+target = open("../doc/rulesyms.md", mode_enc = "wt") # 出力先
+
+target.print <<FINIS
+MiHaJong ルール設定取得用シンボルリスト
+======================================
+
+これは、AIスクリプトから現在のルール設定を取得するときに使う文字列シンボルのリストです。
+
+
+FINIS
 
 for row in csvdat # 各項目ごとに出力する
-	target.print "【", row[8], "】", row[9], gametype(row[1]), "\n"
-	target.print "\t", row[10], "\n"
-	target.print "\t設定値: ", row[11..-1].keep_if{|s| s}.delete_if{|s| s == ">>>"}.join(", "), "\n\n"
+	target.print "## 【\`", row[8], "\`】 ", row[9], gametype(row[1]), " ##\n"
+	target.print "", row[10], "\n\n"
+	target.print "* 設定値: \`", row[11..-1].keep_if{|s| s}.delete_if{|s| s == ">>>"}.join("\`, \`"), "`\n\n\n"
 end
+
+target.print <<FINIS
+----------------------------------------------------------------------------
+
+_Finis_
+FINIS
 
 Dir::chdir(dir) # 作業ディレクトリを元に戻す
