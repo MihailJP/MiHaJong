@@ -207,6 +207,9 @@
     <ClCompile Include="scenes\waiting.cpp">
       <Filter>ソース ファイル\scenes</Filter>
     </ClCompile>
+    <ClCompile Include="scenes\table\clock.cpp">
+      <Filter>ソース ファイル\scenes\table</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scrmanip.h">
@@ -412,6 +415,9 @@
     </ClInclude>
     <ClInclude Include="scenes\waiting.h">
       <Filter>ヘッダー ファイル\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\table\clock.h">
+      <Filter>ヘッダー ファイル\scenes\table</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

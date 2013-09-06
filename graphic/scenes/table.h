@@ -59,6 +59,9 @@ protected: /**** 抜き北・花牌 ****/
 protected: /**** 鳴き選択用ボタン ****/
 	class ButtonReconst;
 	ButtonReconst* buttonReconst;
+protected: /**** 時計 ****/
+	class Clock;
+	Clock* clockPanel;
 protected: /**** 情報表示 ****/
 	void ShowStatus(const GameTable* gameStat); // 供託点棒などの情報を表示
 protected: /**** 捨牌ツールチップ(というのだろうか) ****/
