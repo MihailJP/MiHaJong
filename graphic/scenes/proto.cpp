@@ -24,6 +24,7 @@ void Scene::setRegion(unsigned regionID, const Region& region) {
 	setRegion(regionID, region.Left, region.Top, region.Right, region.Bottom);
 }
 
+#ifdef _WIN32
 void Scene::PadInput(LPDIDEVICEOBJECTDATA od) {
 	DIDEVICEOBJECTDATA tmpObjDat;
 	tmpObjDat.dwData = od->dwData;
@@ -63,5 +64,6 @@ void Scene::PadInput(LPDIDEVICEOBJECTDATA od) {
 		break;
 	}
 }
+#endif /* _WIN32 */
 
 }
