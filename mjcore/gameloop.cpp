@@ -116,7 +116,7 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 	info(_T("配牌を完了しました。"));
 	gameStat->TurnRound = 1; // 配牌が終わったら1巡目
 	/* 摸打ループ */
-	EndType roundEndType = Continuing;
+	volatile EndType roundEndType = Continuing;
 	do {
 		do {
 			roundEndType = doTableTurn(gameStat);
