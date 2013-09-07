@@ -1,36 +1,36 @@
 lib_LTLIBRARIES = libmihagbmj.la
 libmihagbmj_la_SOURCES = \
-	agari.cpp chat.cpp decomp.cpp discard.cpp dllmain.cpp endround.cpp \
-	envtbl.cpp func.cpp fuuro.cpp gameloop.cpp gametbl.cpp haifu.cpp init.cpp \
-	largenum.cpp logging.cpp main.cpp mouda.cpp prepare.cpp random.cpp \
-	rankval.cpp remote.cpp result.cpp shanten.cpp ruletbl.cpp sound.cpp \
-	tileutil.cpp \
-	ai/aiscript.cpp ai/functbl.cpp ai/filesel.cpp ai/gftbl.cpp ai/riskchk.cpp \
-	reader/csv2arry.cpp reader/ini2map.cpp reader/readrsrc.cpp \
-	yaku/catalog.cpp yaku/suittbl.cpp yaku/yaku.cpp yaku/ykclass.cpp \
-	yaku/yk_tools.cpp \
-	yaku/catalog/context.cpp yaku/catalog/dora.cpp yaku/catalog/irreg.cpp \
-	yaku/catalog/misc.cpp yaku/catalog/pinhu.cpp yaku/catalog/post.cpp \
-	yaku/catalog/quad.cpp yaku/catalog/sequence.cpp yaku/catalog/suit.cpp \
-	yaku/catalog/triplet1.cpp yaku/catalog/triplet2.cpp \
-	yaku/catalog/triplet3.cpp yaku/catalog/yaojiu.cpp \
-	yaku/catalog/shisanbd.cpp \
-	agari.h chat.h confitms.h decomp.h discard.h dllmain.h endround.h \
-	endtype.h envtbl.h except.h func.h fuuro.h gameloop.h gametbl.h haifu.h \
-	init.h largenum.h logging.h main.h mjexport.h mjimport.h mouda.h prepare.h \
-	random.h rankval.h rational.h regex.h remote.h result.h shanten.h \
-	resource.h ruletbl.h socknum.h sound.h tilecode.h tileutil.h \
-	ai/aiscript.h ai/class.h ai/functbl.h ai/filesel.h \
-	lzma/Alloc.c lzma/LzFind.c lzma/LzmaDec.c lzma/LzmaLib.c lzma/Sha256.c \
-	lzma/Alloc.h lzma/LzFind.h lzma/LzHash.h lzma/LzmaDec.h lzma/LzmaLib.h \
-	lzma/RotateDefs.h lzma/Sha256.h lzma/Types.h \
-	reader/csv2arry.h reader/ini2map.h reader/readrsrc.h \
-	yaku/catalog.h yaku/yaku.h yaku/yvalue.h yaku/ykclass.h yaku/yk_tools.h
+	../mjcore/agari.cpp ../mjcore/chat.cpp ../mjcore/decomp.cpp ../mjcore/discard.cpp ../mjcore/dllmain.cpp ../mjcore/endround.cpp \
+	../mjcore/envtbl.cpp ../mjcore/func.cpp ../mjcore/fuuro.cpp ../mjcore/gameloop.cpp ../mjcore/gametbl.cpp ../mjcore/haifu.cpp ../mjcore/init.cpp \
+	../mjcore/largenum.cpp ../mjcore/logging.cpp ../mjcore/main.cpp ../mjcore/mouda.cpp ../mjcore/prepare.cpp ../mjcore/random.cpp \
+	../mjcore/rankval.cpp ../mjcore/remote.cpp ../mjcore/result.cpp ../mjcore/shanten.cpp ../mjcore/ruletbl.cpp ../mjcore/sound.cpp \
+	../mjcore/tileutil.cpp \
+	../mjcore/ai/aiscript.cpp ../mjcore/ai/functbl.cpp ../mjcore/ai/filesel.cpp ../mjcore/ai/gftbl.cpp ../mjcore/ai/riskchk.cpp \
+	../mjcore/reader/csv2arry.cpp ../mjcore/reader/ini2map.cpp ../mjcore/reader/readrsrc.cpp \
+	../mjcore/yaku/catalog.cpp ../mjcore/yaku/suittbl.cpp ../mjcore/yaku/yaku.cpp ../mjcore/yaku/ykclass.cpp \
+	../mjcore/yaku/yk_tools.cpp \
+	../mjcore/yaku/catalog/context.cpp ../mjcore/yaku/catalog/dora.cpp ../mjcore/yaku/catalog/irreg.cpp \
+	../mjcore/yaku/catalog/misc.cpp ../mjcore/yaku/catalog/pinhu.cpp ../mjcore/yaku/catalog/post.cpp \
+	../mjcore/yaku/catalog/quad.cpp ../mjcore/yaku/catalog/sequence.cpp ../mjcore/yaku/catalog/suit.cpp \
+	../mjcore/yaku/catalog/triplet1.cpp ../mjcore/yaku/catalog/triplet2.cpp \
+	../mjcore/yaku/catalog/triplet3.cpp ../mjcore/yaku/catalog/yaojiu.cpp \
+	../mjcore/yaku/catalog/shisanbd.cpp \
+	../mjcore/agari.h ../mjcore/chat.h ../mjcore/confitms.h ../mjcore/decomp.h ../mjcore/discard.h ../mjcore/dllmain.h ../mjcore/endround.h \
+	../mjcore/endtype.h ../mjcore/envtbl.h ../mjcore/except.h ../mjcore/func.h ../mjcore/fuuro.h ../mjcore/gameloop.h ../mjcore/gametbl.h ../mjcore/haifu.h \
+	../mjcore/init.h ../mjcore/largenum.h ../mjcore/logging.h ../mjcore/main.h ../mjcore/mjexport.h ../mjcore/mjimport.h ../mjcore/mouda.h ../mjcore/prepare.h \
+	../mjcore/random.h ../mjcore/rankval.h ../mjcore/rational.h ../mjcore/regex.h ../mjcore/remote.h ../mjcore/result.h ../mjcore/shanten.h \
+	../mjcore/resource.h ../mjcore/ruletbl.h ../mjcore/socknum.h ../mjcore/sound.h ../mjcore/tilecode.h ../mjcore/tileutil.h \
+	../mjcore/ai/aiscript.h ../mjcore/ai/class.h ../mjcore/ai/functbl.h ../mjcore/ai/filesel.h \
+	../mjcore/lzma/Alloc.c ../mjcore/lzma/LzFind.c ../mjcore/lzma/LzmaDec.c ../mjcore/lzma/LzmaLib.c ../mjcore/lzma/Sha256.c \
+	../mjcore/lzma/Alloc.h ../mjcore/lzma/LzFind.h ../mjcore/lzma/LzHash.h ../mjcore/lzma/LzmaDec.h ../mjcore/lzma/LzmaLib.h \
+	../mjcore/lzma/RotateDefs.h ../mjcore/lzma/Sha256.h ../mjcore/lzma/Types.h \
+	../mjcore/reader/csv2arry.h ../mjcore/reader/ini2map.h ../mjcore/reader/readrsrc.h \
+	../mjcore/yaku/catalog.h ../mjcore/yaku/yaku.h ../mjcore/yaku/yvalue.h ../mjcore/yaku/ykclass.h ../mjcore/yaku/yk_tools.h
 nodist_libmihagbmj_la_SOURCES = \
-	data/confitem_csv.cpp data/confitem_ini.cpp data/prefitem_csv.cpp \
-	data/prefitem_ini.cpp data/rankval_csv.cpp \
-	data/confitem_csv.h data/confitem_ini.h data/prefitem_csv.h \
-	data/prefitem_ini.h data/rankval_csv.h
+	../mjcore/data/confitem_csv.cpp ../mjcore/data/confitem_ini.cpp ../mjcore/data/prefitem_csv.cpp \
+	../mjcore/data/prefitem_ini.cpp ../mjcore/data/rankval_csv.cpp \
+	../mjcore/data/confitem_csv.h ../mjcore/data/confitem_ini.h ../mjcore/data/prefitem_csv.h \
+	../mjcore/data/prefitem_ini.h ../mjcore/data/rankval_csv.h
 BUILT_SOURCES = $(nodist_libmihagbmj_la_SOURCES)
 libmihagbmj_la_LDFLAGS = -no-undefined -release $(VERSION)
 libmihagbmj_la_CXXFLAGS = -DGUOBIAO -DMJCORE_EXPORTS --input-charset=cp932
@@ -51,71 +51,71 @@ libmihagbmj_la_LIBADD = \
 	../socket/libmihajong-socket.la \
 	../astro/libmihajong-astro.la
 if WITH_WINAPI
-libmihagbmj_la_LIBADD += mjcore.o 
+libmihagbmj_la_LIBADD += mjcoregb.o 
 endif
 dist_pkgdata_DATA = \
-	data/mentz.dat.lzma
+	../mjcore/data/mentz.dat.lzma
 nodist_pkgdata_DATA = \
-	data/confitem.csv.lzma data/confitem.ini.lzma data/prefitem.csv.lzma \
-	data/prefitem.ini.lzma data/rankval.csv.lzma
+	../mjcore/data/confitem.csv.lzma ../mjcore/data/confitem.ini.lzma ../mjcore/data/prefitem.csv.lzma \
+	../mjcore/data/prefitem.ini.lzma ../mjcore/data/rankval.csv.lzma
 EXTRA_DIST = \
 	mjcoregb.vcxproj mjcoregb.vcxproj.filters mjcoregb.vcxproj.user \
-	lua/README \
-	data/confitem.csv data/confitem.ini data/prefitem.csv data/prefitem.ini \
-	data/rankval.csv
+	../mjcore/lua/README \
+	../mjcore/data/confitem.csv ../mjcore/data/confitem.ini ../mjcore/data/prefitem.csv ../mjcore/data/prefitem.ini \
+	../mjcore/data/rankval.csv
 if WITH_WINAPI
 libmihagbmj_la_SOURCES += \
-	lzma/LzFindMt.c lzma/Threads.c lzma/LzFindMt.h lzma/Threads.h \
+	../mjcore/lzma/LzFindMt.c ../mjcore/lzma/Threads.c ../mjcore/lzma/LzFindMt.h ../mjcore/lzma/Threads.h \
 	mjcoregb.rc
 EXTRA_DIST += \
-	filenum.cpp filenum.h
+	../mjcore/filenum.cpp ../mjcore/filenum.h
 else
 EXTRA_DIST += \
-	lzma/LzFindMt.c lzma/Threads.c lzma/LzFindMt.h lzma/Threads.h \
+	../mjcore/lzma/LzFindMt.c ../mjcore/lzma/Threads.c ../mjcore/lzma/LzFindMt.h ../mjcore/lzma/Threads.h \
 	mjcoregb.rc
 libmihagbmj_la_SOURCES += \
-	filenum.cpp filenum.h
+	../mjcore/filenum.cpp ../mjcore/filenum.h
 endif
 
 CLEANFILES = $(libmihagbmj_la_BUILT_SOURCES) \
-	data/confitem.csv.lzma data/confitem.ini.lzma data/rankval.csv.lzma
+	../mjcore/data/confitem.csv.lzma ../mjcore/data/confitem.ini.lzma ../mjcore/data/rankval.csv.lzma
 
 .rc.o:
 	$(WINDRES) $^ -o $@ -l 0411
 %.o: %.rc
 	$(WINDRES) $^ -o $@ -l 0411
 
-data/confitem.csv.lzma: data/confitem.csv
-	../auxtools/compress.rb data/confitem.csv
-data/confitem_csv.h: data/confitem.csv.lzma
+../mjcore/data/confitem.csv.lzma: ../mjcore/data/confitem.csv
+	../auxtools/compress.rb ../mjcore/data/confitem.csv
+../mjcore/data/confitem_csv.h: ../mjcore/data/confitem.csv.lzma
 	true
-data/confitem_csv.cpp: data/confitem.csv.lzma
-	true
-
-data/confitem.ini.lzma: data/confitem.ini
-	../auxtools/compress.rb data/confitem.ini
-data/confitem_ini.h: data/confitem.ini.lzma
-	true
-data/confitem_ini.cpp: data/confitem.ini.lzma
+../mjcore/data/confitem_csv.cpp: ../mjcore/data/confitem.csv.lzma
 	true
 
-data/prefitem.csv.lzma: data/prefitem.csv
-	../auxtools/compress.rb data/prefitem.csv
-data/prefitem_csv.h: data/prefitem.csv.lzma
+../mjcore/data/confitem.ini.lzma: ../mjcore/data/confitem.ini
+	../auxtools/compress.rb ../mjcore/data/confitem.ini
+../mjcore/data/confitem_ini.h: ../mjcore/data/confitem.ini.lzma
 	true
-data/prefitem_csv.cpp: data/prefitem.csv.lzma
-	true
-
-data/prefitem.ini.lzma: data/prefitem.ini
-	../auxtools/compress.rb data/prefitem.ini
-data/prefitem_ini.h: data/prefitem.ini.lzma
-	true
-data/prefitem_ini.cpp: data/prefitem.ini.lzma
+../mjcore/data/confitem_ini.cpp: ../mjcore/data/confitem.ini.lzma
 	true
 
-data/rankval.csv.lzma: data/rankval.csv
-	../auxtools/compress.rb data/rankval.csv
-data/rankval_csv.h: data/rankval.csv.lzma
+../mjcore/data/prefitem.csv.lzma: ../mjcore/data/prefitem.csv
+	../auxtools/compress.rb ../mjcore/data/prefitem.csv
+../mjcore/data/prefitem_csv.h: ../mjcore/data/prefitem.csv.lzma
 	true
-data/rankval_csv.cpp: data/rankval.csv.lzma
+../mjcore/data/prefitem_csv.cpp: ../mjcore/data/prefitem.csv.lzma
+	true
+
+../mjcore/data/prefitem.ini.lzma: ../mjcore/data/prefitem.ini
+	../auxtools/compress.rb ../mjcore/data/prefitem.ini
+../mjcore/data/prefitem_ini.h: ../mjcore/data/prefitem.ini.lzma
+	true
+../mjcore/data/prefitem_ini.cpp: ../mjcore/data/prefitem.ini.lzma
+	true
+
+../mjcore/data/rankval.csv.lzma: ../mjcore/data/rankval.csv
+	../auxtools/compress.rb ../mjcore/data/rankval.csv
+../mjcore/data/rankval_csv.h: ../mjcore/data/rankval.csv.lzma
+	true
+../mjcore/data/rankval_csv.cpp: ../mjcore/data/rankval.csv.lzma
 	true

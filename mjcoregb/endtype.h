@@ -1,1 +1,0 @@
-../mjcore/endtype.h

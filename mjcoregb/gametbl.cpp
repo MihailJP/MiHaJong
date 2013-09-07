@@ -1,1 +1,0 @@
-../mjcore/gametbl.cpp
