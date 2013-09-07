@@ -59,7 +59,7 @@ nodist_pkgdata_DATA = \
 	data/confitem.csv.lzma data/confitem.ini.lzma data/prefitem.csv.lzma \
 	data/prefitem.ini.lzma data/rankval.csv.lzma
 EXTRA_DIST = \
-	mjcore.vcxproj mjcore.vcxproj.filters mjcore.vcxproj.user \
+	mjcoregb.vcxproj mjcoregb.vcxproj.filters mjcoregb.vcxproj.user \
 	lua/README \
 	data/confitem.csv data/confitem.ini data/prefitem.csv data/prefitem.ini \
 	data/rankval.csv
