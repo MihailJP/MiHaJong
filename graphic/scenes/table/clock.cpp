@@ -116,18 +116,24 @@ void GameTableScreen::Clock::renderShadow() {
 	const unsigned vertices = 60;
 	Vertex circleVert[vertices];
 	for (unsigned i = 0; i < vertices; ++i) {
-		const float angle = (float)((i + 1) / 2) / (float)(vertices / 2) * pi * (i % 2 == 0 ? 1.0f : -1.0f);
-		const float x1 = CenterX - Radius * sin(angle), x2 = CenterX - Radius * sin(-angle);
+		const float angleNum = (float)((i + 1) / 2) / (float)(vertices / 2);
+		const float angle = angleNum * pi * (i % 2 == 0 ? 1.0f : -1.0f);
 		circleVert[i].x = CenterX - Radius * sin(angle);
 		circleVert[i].y = CenterY - Radius * cos(angle);
-		if ((mp.MoonIllum >= 0) && (i % 2 == 1))
+		const float x1 = (angleNum - 0.5f) * 2.0f * Radius;
+		if ((mp.MoonIllum >= 0) && (i % 2 == 1)) {
+			const float x2 = 1.0f - mp.MoonIllum * 4.0f;
 			circleVert[i].x
-			= x1 * (0.5f - mp.MoonIllum) * 2.0f
-			+ x2 *         mp.MoonIllum  * 2.0f;
-		else if ((mp.MoonIllum < 0) && (i % 2 == 0))
+				= sqrt(Radius * Radius - x1 * x1)
+				* sin(x2 * pi / 2.0f) + CenterX;
+			circleVert[i].y = angleNum * Radius * 2.0f + Top;
+		} else if ((mp.MoonIllum < 0) && (i % 2 == 0)) {
+			const float x2 = mp.MoonIllum * 4.0f - 1.0f;
 			circleVert[i].x
-			= x1 * (0.5f - (-mp.MoonIllum)) * 2.0f
-			+ x2 *         (-mp.MoonIllum)  * 2.0f;
+				= sqrt(Radius * Radius - x1 * x1)
+				* sin(x2 * pi / 2.0f) + CenterX;
+			circleVert[i].y = angleNum * Radius * 2.0f + Top;
+		}
 		circleVert[i].z = 0; circleVert[i].color = 0x7f000000;
 	}
 
