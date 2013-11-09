@@ -1,4 +1,5 @@
 #include "yaku.h"
+#include <algorithm>
 using std::max;
 
 yaku::yakuCalculator::Yaku::HANFUNC::HANFUNC() {

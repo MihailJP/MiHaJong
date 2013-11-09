@@ -7,14 +7,13 @@
 #include <cmath>
 #include <cassert>
 
-std::seed_seq RndNum::seed;
 std::mt19937 RndNum::engine;
 
 void RndNum::init() {
 	std::random_device rnd;
 	std::vector<std::uint32_t> v(624);
 	std::generate(v.begin(), v.end(), std::ref(rnd));
-	seed = std::seed_seq(v.begin(), v.end());
+	std::seed_seq& seed(std::seed_seq(v.begin(), v.end()));
 	engine = std::mt19937(seed);
 }
 

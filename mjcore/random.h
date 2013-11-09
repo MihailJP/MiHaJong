@@ -4,7 +4,6 @@
 
 class RndNum {
 private:
-	static std::seed_seq seed;
 	static std::mt19937 engine;
 public:
 	static void init();

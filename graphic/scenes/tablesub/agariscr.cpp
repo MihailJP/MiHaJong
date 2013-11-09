@@ -16,6 +16,7 @@
 #include <iomanip>
 #include "../../utils.h"
 #include "../../event.h"
+#include <algorithm>
 
 namespace mihajong_graphic {
 

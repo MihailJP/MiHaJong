@@ -10,6 +10,7 @@
 #ifndef _MSC_VER
 #include <cstdlib>
 #endif
+#include <algorithm>
 
 using std::min;
 
