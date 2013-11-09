@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifndef _WIN32
 #include <X11/Xlib.h>
@@ -19,7 +19,7 @@
 
 namespace sound {
 
-	/* ƒTƒEƒ“ƒh‘€ì—pƒNƒ‰ƒX */
+	/* ã‚µã‚¦ãƒ³ãƒ‰æ“ä½œç”¨ã‚¯ãƒ©ã‚¹ */
 	class SoundManipulator {
 	private:
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)

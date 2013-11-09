@@ -1,4 +1,4 @@
-#include "sysscr.h"
+ï»¿#include "sysscr.h"
 
 #include <cassert>
 #include "../gametbl.h"
@@ -17,7 +17,7 @@ SystemScreen::~SystemScreen() {
 }
 
 void SystemScreen::clearWithGameTypeColor() {
-	// ƒoƒbƒtƒ@ƒNƒŠƒA
+	// ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	switch (GameStatus::gameStat()->gameType) {
 	case Yonma:

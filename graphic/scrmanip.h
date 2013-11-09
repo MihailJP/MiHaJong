@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef _WIN32
 #include <tchar.h>
@@ -24,31 +24,31 @@ private:
 	Window hWnd;
 #endif /*_WIN32*/
 	RenderingSysPtr pd3d; // Direct3D
-	DevicePtr pDevice; // Direct3DƒfƒoƒCƒX/OpenGLƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg
+	DevicePtr pDevice; // Direct3Dãƒ‡ãƒã‚¤ã‚¹/OpenGLãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 	HGLRC rContext;
 #elif !defined(_WIN32)
 	Display* disp;
 #endif
-	Scene* myScene; // ƒV[ƒ“ŠÇ——p‚ÌƒNƒ‰ƒX
-	FPSIndicator* myFPSIndicator; // FPSŒvZE•\¦
+	Scene* myScene; // ã‚·ãƒ¼ãƒ³ç®¡ç†ç”¨ã®ã‚¯ãƒ©ã‚¹
+	FPSIndicator* myFPSIndicator; // FPSè¨ˆç®—ãƒ»è¡¨ç¤º
 	uint64_t lastRedrawTime;
-	bool redrawFlag; // ‰æ–Ê‚ÌÄ•`‰æ‚ğ‚·‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
-	void InitDevice(bool fullscreen); // Direct3D ƒIƒuƒWƒFƒNƒg‰Šú‰»
+	bool redrawFlag; // ç”»é¢ã®å†æç”»ã‚’ã™ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
+	void InitDevice(bool fullscreen); // Direct3D ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
 #ifdef _WIN32
 	void inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f);
-	// Linux‚Å‚Í•Ê‚Ì‰ÓŠ‚Å“ü—ÍƒCƒxƒ“ƒg‚ğˆ—‚·‚é‚½‚ß•s—v
+	// Linuxã§ã¯åˆ¥ã®ç®‡æ‰€ã§å…¥åŠ›ã‚¤ãƒ™ãƒ³ãƒˆã‚’å‡¦ç†ã™ã‚‹ãŸã‚ä¸è¦
 #endif /*_WIN32*/
-	MHJMutex CS_SceneAccess; // ƒV[ƒ“ƒAƒNƒZƒX‚ÌƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“
+	MHJMutex CS_SceneAccess; // ã‚·ãƒ¼ãƒ³ã‚¢ã‚¯ã‚»ã‚¹ã®ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³
 public:
 #ifdef _WIN32
 	void inputProc(WPARAM wParam, LPARAM lParam);
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 #else /*_WIN32*/
-	/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢À‘• */
+	/* TODO: Linuxã§ã¯æ—¥æœ¬èªå…¥åŠ›ãŒæœªå®Ÿè£… */
 	void kbdInputProc(const XEvent* event);
 #endif /*_WIN32*/
-	void Render(); // ‰æ–Ê‚ÌÄ•`‰æ
+	void Render(); // ç”»é¢ã®å†æç”»
 #ifdef _WIN32
 	ScreenManipulator(HWND windowHandle, bool fullscreen);
 #else /*_WIN32*/

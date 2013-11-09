@@ -1,11 +1,11 @@
-#include "largenum.h"
+ï»¿#include "largenum.h"
 
 #include <cstdlib>
 #include <memory>
 #include "except.h"
 
-// Â“Vƒ‹[ƒ‹‘Îô
-// ˆê‰21•s‰Âv‹c‚Ü‚Å•\Œ»‰Â”\cc
+// é’å¤©ãƒ«ãƒ¼ãƒ«å¯¾ç­–
+// ä¸€å¿œ21ä¸å¯æ€è­°ã¾ã§è¡¨ç¾å¯èƒ½â€¦â€¦
 
 /* non-POD wrapper */
 LNum::LNum() {

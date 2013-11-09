@@ -1,4 +1,4 @@
-#include "dllmain.h"
+Ôªø#include "dllmain.h"
 
 #ifdef _WIN32
 
@@ -18,9 +18,9 @@ const ULONG_PTR errorInfoPtr[1] = {(ULONG_PTR)(&errorInfo)};
 #ifdef _MSC_VER
 void translateException(unsigned int code, _EXCEPTION_POINTERS* ep) {
 	CodeConv::tostringstream lmsg;
-	lmsg << _T("ç\ë¢âªó·äO ") <<
+	lmsg << _T("ÊßãÈÄ†Âåñ‰æãÂ§ñ ") <<
 	std::hex << std::setw(8) << std::setfill(_T('0')) << ep->ExceptionRecord->ExceptionCode <<
-	_T(" ÇC++ó·äOÇ…ïœä∑ÇµÇ‹Ç∑ÅB");
+	_T(" „ÇíC++‰æãÂ§ñ„Å´Â§âÊèõ„Åó„Åæ„Åô„ÄÇ");
 	info(lmsg.str().c_str());
 
 	CONTEXT context; memcpy(&context, ep->ContextRecord, sizeof(CONTEXT));
@@ -43,7 +43,7 @@ void StackTraceToArray() {
 void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
 #ifdef _DEBUG
 #ifdef _M_IX86
-	/* ÉXÉ^ÉbÉNÉgÉåÅ[ÉX(I386êÍópÇ≈Ç∑) */
+	/* „Çπ„Çø„ÉÉ„ÇØ„Éà„É¨„Éº„Çπ(I386Â∞ÇÁî®„Åß„Åô) */
 	CodeConv::tostringstream lmsg;
 	if (addrList != nullptr) memset(addrList, 0, addrListSize);
 
@@ -100,9 +100,9 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 	DWORD disp;
 	ErrorInfo *errinf = nullptr;
 
-	lmsg << _T("ÉnÉìÉhÉãÇ≥ÇÍÇƒÇ¢Ç»Ç¢ó·äO ") <<
+	lmsg << _T("„Éè„É≥„Éâ„É´„Åï„Çå„Å¶„ÅÑ„Å™„ÅÑ‰æãÂ§ñ ") <<
 	std::hex << std::setw(8) << std::setfill(_T('0')) << ex->ExceptionRecord->ExceptionCode <<
-	_T(" Ç™î≠ê∂ÇµÇΩÇΩÇﬂÅAã≠êßèIóπÇ≥ÇÍÇ‹Ç∑ÅB");
+	_T(" „ÅåÁô∫Áîü„Åó„Åü„Åü„ÇÅ„ÄÅÂº∑Âà∂ÁµÇ‰∫Ü„Åï„Çå„Åæ„Åô„ÄÇ");
 	fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str(_T(""));
 
 	CONTEXT context; memcpy(&context, ex->ContextRecord, sizeof(CONTEXT));
@@ -117,9 +117,9 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 		lmsg << _T(">>> ") << errinf->msg;
 		fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str(_T(""));
 #if defined(_MSC_VER) && defined(_DEBUG)
-		lmsg << _T(">>> ÉtÉ@ÉCÉã: ") << errinf->file <<
-		_T(" çs: ") << errinf->line <<
-		_T(" ä÷êîñº: ") << errinf->func;
+		lmsg << _T(">>> „Éï„Ç°„Ç§„É´: ") << errinf->file <<
+		_T(" Ë°å: ") << errinf->line <<
+		_T(" Èñ¢Êï∞Âêç: ") << errinf->func;
 		fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str(_T(""));
 
 		pSymbol = (PIMAGEHLP_SYMBOL)GlobalAlloc(GMEM_FIXED, 16384);
@@ -156,20 +156,20 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 #if 0
 void MJCore_Terminate_Handler() {
 	try {throw;}
-	catch (std::exception& e) { // ó·äOÉNÉâÉXÇÃÉCÉìÉXÉ^ÉìÉXÇæÇ¡ÇΩèÍçá
+	catch (std::exception& e) { // ‰æãÂ§ñ„ÇØ„É©„Çπ„ÅÆ„Ç§„É≥„Çπ„Çø„É≥„Çπ„Å†„Å£„ÅüÂ†¥Âêà
 		const type_info& exceptionType = typeid(e);
 		CodeConv::tostringstream dmsg, lmsg;
-		dmsg << _T("ÉnÉìÉhÉãÇ≥ÇÍÇ»Ç¢ó·äO ") << exceptionType.name() <<
-			_T(" Ç™î≠ê∂ÇµÇΩÇΩÇﬂã≠êßèIóπÇ≥ÇÍÇ‹Ç∑ÅB") << std::endl <<
+		dmsg << _T("„Éè„É≥„Éâ„É´„Åï„Çå„Å™„ÅÑ‰æãÂ§ñ ") << exceptionType.name() <<
+			_T(" „ÅåÁô∫Áîü„Åó„Åü„Åü„ÇÅÂº∑Âà∂ÁµÇ‰∫Ü„Åï„Çå„Åæ„Åô„ÄÇ") << std::endl <<
 			e.what();
-		lmsg << _T("ÉnÉìÉhÉãÇ≥ÇÍÇ»Ç¢ó·äO ") << exceptionType.name() <<
-			_T(" Ç™î≠ê∂ÇµÇΩÇΩÇﬂã≠êßèIóπÇ≥ÇÍÇ‹Ç∑ÅF") <<
+		lmsg << _T("„Éè„É≥„Éâ„É´„Åï„Çå„Å™„ÅÑ‰æãÂ§ñ ") << exceptionType.name() <<
+			_T(" „ÅåÁô∫Áîü„Åó„Åü„Åü„ÇÅÂº∑Âà∂ÁµÇ‰∫Ü„Åï„Çå„Åæ„ÅôÔºö") <<
 			e.what();
 		fatal(lmsg.str());
-		/* ÉXÉ^ÉbÉNÉgÉåÅ[ÉXÇ∆Ç©ÇÃägí£ÇÕÇ‹ÇΩç°ìxèëÇ≠ */
+		/* „Çπ„Çø„ÉÉ„ÇØ„Éà„É¨„Éº„Çπ„Å®„Åã„ÅÆÊã°Âºµ„ÅØ„Åæ„Åü‰ªäÂ∫¶Êõ∏„Åè */
 	}
-	catch (...) { // ÇªÇÍà»äOÇæÇ¡ÇΩèÍçá
-		fatal(_T("ÉnÉìÉhÉãÇ≥ÇÍÇ»Ç¢ó·äOÇ™î≠ê∂ÇµÇΩÇΩÇﬂã≠êßèIóπÇ≥ÇÍÇ‹Ç∑ÅBí«â¡ÇÃèÓïÒÇÕÇ†ÇËÇ‹ÇπÇÒÅB"));
+	catch (...) { // „Åù„Çå‰ª•Â§ñ„Å†„Å£„ÅüÂ†¥Âêà
+		fatal(_T("„Éè„É≥„Éâ„É´„Åï„Çå„Å™„ÅÑ‰æãÂ§ñ„ÅåÁô∫Áîü„Åó„Åü„Åü„ÇÅÂº∑Âà∂ÁµÇ‰∫Ü„Åï„Çå„Åæ„Åô„ÄÇËøΩÂä†„ÅÆÊÉÖÂ†±„ÅØ„ÅÇ„Çä„Åæ„Åõ„Çì„ÄÇ"));
 	}
 	abort();
 }

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef _WIN32
 #include <windows.h>
@@ -7,8 +7,8 @@
 #include "init.h"
 
 namespace mihajong_graphic {
-	void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource); // ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
-	void UnloadAllTextures(); // ƒeƒNƒXƒ`ƒƒ‚Ì‰ğ•ú(ƒAƒvƒŠƒP[ƒVƒ‡ƒ“I—¹‚É‚¾‚¯ŒÄ‚Ô‚±‚ÆI)
+	void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource); // ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
+	void UnloadAllTextures(); // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è§£æ”¾(ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†æ™‚ã«ã ã‘å‘¼ã¶ã“ã¨ï¼)
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	int getTextureWidth(DevicePtr device, TexturePtr texture);
 	int getTextureHeight(DevicePtr device, TexturePtr texture);

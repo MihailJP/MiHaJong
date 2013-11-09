@@ -1,4 +1,4 @@
-#include "endround.h"
+ï»¿#include "endround.h"
 
 #include "ruletbl.h"
 #include "func.h"
@@ -18,7 +18,7 @@
 #include "envtbl.h"
 #include <cmath>
 
-namespace { // “à•”ˆ—‚Ég‚¤ŠÖ”
+namespace { // å†…éƒ¨å‡¦ç†ã«ä½¿ã†é–¢æ•°
 	bool all_player(const GameTable* gameStat, std::function<bool (const PlayerTable*)> f) {
 		bool flag = true;
 		if (gameStat->chkGameType(Sanma4)) {
@@ -41,7 +41,7 @@ namespace { // “à•”ˆ—‚Ég‚¤ŠÖ”
 			if ((RuleData::chkRule("four_wind_ryuukyoku", "same_dealer_west") ||
 				RuleData::chkRule("four_wind_ryuukyoku", "next_dealer_west")) &&
 				(k != WestWind))
-				continue; // ¼ˆÈŠO‚Í–³‹‚·‚éƒ‹[ƒ‹‚Ìê‡
+				continue; // è¥¿ä»¥å¤–ã¯ç„¡è¦–ã™ã‚‹ãƒ«ãƒ¼ãƒ«ã®å ´åˆ
 			bool tmpflag = true;
 			if (gameStat->chkGameType(Sanma4)) {
 				for (PlayerID i = 0; i < Players; ++i)
@@ -62,21 +62,21 @@ namespace { // “à•”ˆ—‚Ég‚¤ŠÖ”
 #ifndef GUOBIAO
 	void logKuikae(const GameTable* gameStat, bool chonbo) {
 		CodeConv::tostringstream o;
-		o << _T("‹ò‚¢•Ï‚¦‚ğŒŸo‚µ‚Ü‚µ‚½B") <<
-			(chonbo ? _T("ƒ`ƒ‡ƒ“ƒ{") : _T("˜a—¹‚è•úŠü")) << _T("‚Æ‚µ‚Äˆµ‚¢‚Ü‚·B‘Å”v [") <<
-			(int)gameStat->CurrentDiscard.tile << _T("] –Â‚¢‚½”v [") <<
+		o << _T("å–°ã„å¤‰ãˆã‚’æ¤œå‡ºã—ã¾ã—ãŸã€‚") <<
+			(chonbo ? _T("ãƒãƒ§ãƒ³ãƒœ") : _T("å’Œäº†ã‚Šæ”¾æ£„")) << _T("ã¨ã—ã¦æ‰±ã„ã¾ã™ã€‚æ‰“ç‰Œ [") <<
+			(int)gameStat->CurrentDiscard.tile << _T("] é³´ã„ãŸç‰Œ [") <<
 			(int)gameStat->PreviousMeld.Discard << _T("]");
 		info(o.str().c_str());
 		sound::Play(sound::IDs::sndCuohu);
 	}
 #endif /* GUOBIAO */
-	bool chkKuikae(GameTable* gameStat) { // ‹ò‚¢‘Ö‚¦‚Ìê‡‚Ìˆ—
+	bool chkKuikae(GameTable* gameStat) { // å–°ã„æ›¿ãˆã®å ´åˆã®å‡¦ç†
 #ifndef GUOBIAO
-		if (((gameStat->CurrentDiscard.tile == gameStat->PreviousMeld.Discard) || // Œ»•¨‚ÌH‚¢•Ï‚¦‚É‚È‚Á‚Ä‚¢‚éê‡‚©
-			(gameStat->CurrentDiscard.tile == gameStat->PreviousMeld.Stepped)) && // ‹ØH‚¢•Ï‚¦‚É‚È‚Á‚Ä‚¢‚éê‡‚Å
-			(!gameStat->statOfActive().AgariHouki)) { // ‚Ü‚¾ƒAƒKƒŠ•úŠü‚É‚È‚Á‚Ä‚¢‚È‚¢‚È‚ç
+		if (((gameStat->CurrentDiscard.tile == gameStat->PreviousMeld.Discard) || // ç¾ç‰©ã®é£Ÿã„å¤‰ãˆã«ãªã£ã¦ã„ã‚‹å ´åˆã‹
+			(gameStat->CurrentDiscard.tile == gameStat->PreviousMeld.Stepped)) && // ç­‹é£Ÿã„å¤‰ãˆã«ãªã£ã¦ã„ã‚‹å ´åˆã§
+			(!gameStat->statOfActive().AgariHouki)) { // ã¾ã ã‚¢ã‚¬ãƒªæ”¾æ£„ã«ãªã£ã¦ã„ãªã„ãªã‚‰
 				if (RuleData::chkRule("kuikae", "agari_houki") || RuleData::chkRule("kuikae", "agari_houki_if_in_kind")) {
-					/* ˜a—¹‚è•úŠü‚Æ‚·‚éİ’è */
+					/* å’Œäº†ã‚Šæ”¾æ£„ã¨ã™ã‚‹è¨­å®š */
 					logKuikae(gameStat, false);
 					for (unsigned i = 0; i < 2; ++i) {
 						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Kuikae);
@@ -87,14 +87,14 @@ namespace { // “à•”ˆ—‚Ég‚¤ŠÖ”
 					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
 					mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
 					mihajong_graphic::GameStatus::updateGameStat(gameStat);
-					/* ˜a—¹‚è•úŠü‚ÍˆÈ~‹­§ƒcƒ‚Ø‚èA‹­§•s’®ˆµ‚¢‚Æ‚È‚è‚Ü‚· */
+					/* å’Œäº†ã‚Šæ”¾æ£„ã¯ä»¥é™å¼·åˆ¶ãƒ„ãƒ¢åˆ‡ã‚Šã€å¼·åˆ¶ä¸è´æ‰±ã„ã¨ãªã‚Šã¾ã™ */
 					gameStat->statOfActive().AgariHouki = true;
 				} else if (RuleData::chkRule("kuikae", "chombo") || RuleData::chkRule("kuikae", "chombo_if_in_kind")) {
-					/* ’¼‚¿‚Éö˜a‚Æ‚·‚éİ’è */
+					/* ç›´ã¡ã«éŒ¯å’Œã¨ã™ã‚‹è¨­å®š */
 					logKuikae(gameStat, true);
 					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Chonbo);
 					mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
-					/* ‹Ç‚ğ‘Å‚¿Ø‚èA–ŠÑ”±•„‚Ìx•¥‚¢‚Éi‚Ş */
+					/* å±€ã‚’æ‰“ã¡åˆ‡ã‚Šã€æº€è²«ç½°ç¬¦ã®æ”¯æ‰•ã„ã«é€²ã‚€ */
 					return true;
 				}
 		}
@@ -103,18 +103,18 @@ namespace { // “à•”ˆ—‚Ég‚¤ŠÖ”
 	}
 
 	void chkTahai(GameTable* gameStat) {
-		/* ‘½”v‚â­”v‚ğ‚µ‚Ä‚¢‚È‚¢‚©‚Ìƒ`ƒFƒbƒN */
+		/* å¤šç‰Œã‚„å°‘ç‰Œã‚’ã—ã¦ã„ãªã„ã‹ã®ãƒã‚§ãƒƒã‚¯ */
 		unsigned tmptilecnt = 0;
 		for (unsigned i = 0; i < NumOfTilesInHand; ++i)
 			if (gameStat->statOfActive().Hand[i].tile != NoTile)
 				++tmptilecnt;
 		tmptilecnt += gameStat->statOfActive().MeldPointer * 3;
 		if ((tmptilecnt != (NumOfTilesInHand - 1)) && (!gameStat->statOfActive().AgariHouki)) {
-			// ‘½”v‚â­”v‚Ìê‡‚Ìˆ—(’Êí‹N‚«‚é‚±‚Æ‚Í‚È‚¢‚Í‚¸‚¾‚ªc)
+			// å¤šç‰Œã‚„å°‘ç‰Œã®å ´åˆã®å‡¦ç†(é€šå¸¸èµ·ãã‚‹ã“ã¨ã¯ãªã„ã¯ãšã ãŒâ€¦)
 			if (tmptilecnt > (NumOfTilesInHand - 1))
-				warn(_T("‘½”v‚ğŒŸo‚µ‚Ü‚µ‚½B˜a—¹‚è•úŠü‚Æ‚µ‚Äˆµ‚¢‚Ü‚·‚ªA–Ì‘Å‚Ìˆ—‚Å•s®‡‚ª‹N‚«‚Ä‚¢‚½‰Â”\«‚ª‚ ‚è‚Ü‚·B"));
+				warn(_T("å¤šç‰Œã‚’æ¤œå‡ºã—ã¾ã—ãŸã€‚å’Œäº†ã‚Šæ”¾æ£„ã¨ã—ã¦æ‰±ã„ã¾ã™ãŒã€æ‘¸æ‰“ã®å‡¦ç†ã§ä¸æ•´åˆãŒèµ·ãã¦ã„ãŸå¯èƒ½æ€§ãŒã‚ã‚Šã¾ã™ã€‚"));
 			else
-				warn(_T("­”v‚ğŒŸo‚µ‚Ü‚µ‚½B˜a—¹‚è•úŠü‚Æ‚µ‚Äˆµ‚¢‚Ü‚·‚ªA–Ì‘Å‚Ìˆ—‚Å•s®‡‚ª‹N‚«‚Ä‚¢‚½‰Â”\«‚ª‚ ‚è‚Ü‚·B"));
+				warn(_T("å°‘ç‰Œã‚’æ¤œå‡ºã—ã¾ã—ãŸã€‚å’Œäº†ã‚Šæ”¾æ£„ã¨ã—ã¦æ‰±ã„ã¾ã™ãŒã€æ‘¸æ‰“ã®å‡¦ç†ã§ä¸æ•´åˆãŒèµ·ãã¦ã„ãŸå¯èƒ½æ€§ãŒã‚ã‚Šã¾ã™ã€‚"));
 			sound::Play(sound::IDs::sndCuohu);
 			for (unsigned i = 0; i < 2; ++i) {
 				if (tmptilecnt > (NumOfTilesInHand - 1))
@@ -134,49 +134,49 @@ namespace { // “à•”ˆ—‚Ég‚¤ŠÖ”
 	}
 }
 
-EndType endround::checkroundabort(GameTable* gameStat) { // ‹ÇI—¹ğŒ‚Ì”»’è
+EndType endround::checkroundabort(GameTable* gameStat) { // å±€çµ‚äº†æ¡ä»¶ã®åˆ¤å®š
 #ifndef GUOBIAO
-	/* lŠJÈ‚È‚ç—¬‚· */
+	/* å››é–‹æ§“ãªã‚‰æµã™ */
 	if (RuleData::chkRuleApplied("four_kong_ryuukyoku") && (gameStat->KangNum == 4) &&
 		(all_player(gameStat, [](const PlayerTable* plDat) {return plDat->NumberOfQuads < 4;})))
 		return Suukaikan;
-	// ll—§’¼EOl—§’¼‚Ì”»’è
+	// å››äººç«‹ç›´ãƒ»ä¸‰äººç«‹ç›´ã®åˆ¤å®š
 	if (RuleData::chkRuleApplied("four_riichi_ryuukyoku") &&
 		(all_player(gameStat, [](const PlayerTable* plDat) {return plDat->RichiFlag.RichiFlag;})))
 		return SuuchaRiichi;
-	// l•—˜A‘ÅEO•—˜A‘Å‚Ì”»’è
+	// å››é¢¨é€£æ‰“ãƒ»ä¸‰é¢¨é€£æ‰“ã®åˆ¤å®š
 	if (RuleData::chkRuleApplied("four_wind_ryuukyoku") &&
 		(all_player(gameStat, [](const PlayerTable* plDat) {return plDat->DiscardPointer == 1;})) &&
 		(chksifeng(gameStat)))
 		return SuufonRenda;
 #endif /* GUOBIAO */
 
-	for (PlayerID i = 0; i < Players; ++i) gameStat->Player[i].Tsumohai().tile = NoTile; // ƒoƒO–h~‚Ì‚½‚ß
+	for (PlayerID i = 0; i < Players; ++i) gameStat->Player[i].Tsumohai().tile = NoTile; // ãƒã‚°é˜²æ­¢ã®ãŸã‚
 #ifndef GUOBIAO
-	if (chkKuikae(gameStat)) { // ‹ò‚¢‘Ö‚¦‚Ìê‡‚Ìˆ—
+	if (chkKuikae(gameStat)) { // å–°ã„æ›¿ãˆã®å ´åˆã®å‡¦ç†
 		gameStat->AgariSpecialStat = agariKuikae;
 		return Chonbo;
 	}
 #endif /* GUOBIAO */
-	/* ‘½”v‚â­”v‚ğ‚µ‚Ä‚¢‚È‚¢‚©‚Ìƒ`ƒFƒbƒN */
+	/* å¤šç‰Œã‚„å°‘ç‰Œã‚’ã—ã¦ã„ãªã„ã‹ã®ãƒã‚§ãƒƒã‚¯ */
 	chkTahai(gameStat);
-	/* r”v‚Ìê‡‚±‚±‚ÅI—¹‚·‚é(‰Í’ê”v‚Í‹hƒ|ƒ“‚Å‚«‚È‚¢‚ªƒƒ“‚Í‚Å‚«‚é) */
+	/* è’ç‰Œã®å ´åˆã“ã“ã§çµ‚äº†ã™ã‚‹(æ²³åº•ç‰Œã¯åƒãƒãƒ³ã§ããªã„ãŒãƒ­ãƒ³ã¯ã§ãã‚‹) */
 	if (gameStat->TilePointer == (gameStat->RinshanPointer - (gameStat->DeadTiles - 1)))
 		return Ryuukyoku;
-	/* ‰½–‚à‚È‚©‚Á‚½ê‡ */
+	/* ä½•äº‹ã‚‚ãªã‹ã£ãŸå ´åˆ */
 	return Continuing;
 }
 
 // -------------------------------------------------------------------------
 
 namespace {
-	std::array<bool, Players> chkNagashiMangan(const GameTable* gameStat, EndType& RoundEndType) { /* —¬‚µ–ŠÑ‚Ì”»’è */
+	std::array<bool, Players> chkNagashiMangan(const GameTable* gameStat, EndType& RoundEndType) { /* æµã—æº€è²«ã®åˆ¤å®š */
 		std::array<bool, Players> NagashiManganFlag = {false,};
 #ifndef GUOBIAO
 		if (RoundEndType == Ryuukyoku) {
 			for (unsigned i = 0; i < ACTUAL_PLAYERS; ++i) {
 				if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(i) == sNorth))
-					continue; // llO–ƒ‚Ìê‡–k‰Æ‚Í–³‹
+					continue; // å››äººä¸‰éº»ã®å ´åˆåŒ—å®¶ã¯ç„¡è¦–
 				if (RuleData::chkRuleApplied("nagashi_mangan") && isNagashiMangan(gameStat, i)) {
 					NagashiManganFlag[i] = true; RoundEndType = NagashiMangan;
 				}
@@ -207,25 +207,25 @@ namespace {
 		unsigned TenpaiCnt = 0;
 		for (PlayerID i = 0; i < Players; ++i) {
 			if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(i, OrigTurn) == sNorth))
-				continue; // llO–ƒ‚Ì–k‰Æ‚Í–³‹
-			if (isTenpai(gameStat, i)) { // ’®”v‚Ì
+				continue; // å››äººä¸‰éº»ã®åŒ—å®¶ã¯ç„¡è¦–
+			if (isTenpai(gameStat, i)) { // è´ç‰Œã®æ™‚
 				++TenpaiCnt; gameStat->Player[i].HandStat = handExposed;
-			} else if (gameStat->Player[i].RichiFlag.RichiFlag) { // ö˜a(•s’®)ƒŠ[ƒ`‚Ì
+			} else if (gameStat->Player[i].RichiFlag.RichiFlag) { // éŒ¯å’Œ(ä¸è´)ãƒªãƒ¼ãƒã®æ™‚
 				gameStat->Player[i].HandStat = handExposed;
-			} else { // •s’®‚Ì‚Í•š‚¹‚é
+			} else { // ä¸è´ã®æ™‚ã¯ä¼ã›ã‚‹
 				gameStat->Player[i].HandStat = handHidden;
 			}
 		}
 		CodeConv::tstring TenpaiCountTxt;
 		switch (TenpaiCnt) {
-			case 0: TenpaiCountTxt = _T("‘Sˆõ•s’®"); break;
-			case 1: TenpaiCountTxt = _T("‚Pl’®”v"); break;
-			case 2: TenpaiCountTxt = _T("‚Ql’®”v"); break;
-			case 3: TenpaiCountTxt = _T("‚Rl’®”v"); break;
-			case 4: TenpaiCountTxt = _T("‚Sl’®”v"); break;
+			case 0: TenpaiCountTxt = _T("å…¨å“¡ä¸è´"); break;
+			case 1: TenpaiCountTxt = _T("ï¼‘äººè´ç‰Œ"); break;
+			case 2: TenpaiCountTxt = _T("ï¼’äººè´ç‰Œ"); break;
+			case 3: TenpaiCountTxt = _T("ï¼“äººè´ç‰Œ"); break;
+			case 4: TenpaiCountTxt = _T("ï¼”äººè´ç‰Œ"); break;
 		}
-		ResultDesc = _T("r”v—¬‹ÇA") + TenpaiCountTxt;
-		writeChat(ResultDesc + _T("‚Å‚·"));
+		ResultDesc = _T("è’ç‰Œæµå±€ã€") + TenpaiCountTxt;
+		writeChat(ResultDesc + _T("ã§ã™"));
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChkTenpai);
 		mihajong_graphic::ui::WaitUIWithTimeout(5000);
@@ -238,14 +238,14 @@ namespace {
 		resetDelta();
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i) {
 			if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(i, OrigTurn) == sNorth))
-				continue; // llO–ƒ‚Ì–k‰Æ‚Í–³‹
-			if (gameStat->chkGameType(AllSanma)) { // O–ƒ‚Ìê‡
+				continue; // å››äººä¸‰éº»ã®åŒ—å®¶ã¯ç„¡è¦–
+			if (gameStat->chkGameType(AllSanma)) { // ä¸‰éº»ã®å ´åˆ
 				if ((TenpaiCnt > 0) && (TenpaiCnt < 3)) {
 					if (isTenpai(gameStat, i))
 						addDelta(i, 3000 / TenpaiCnt);
 					else addDelta(i, -3000 / (signed)(3 - TenpaiCnt));
 				}
-			} else { // l–ƒ‚Ìê‡
+			} else { // å››éº»ã®å ´åˆ
 				if ((TenpaiCnt > 0) && (TenpaiCnt < 4)) {
 					if (isTenpai(gameStat, i))
 						addDelta(i, 3000 / TenpaiCnt);
@@ -289,24 +289,24 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	CodeConv::tstring ResultDesc; 
 	{
 		CodeConv::tostringstream o;
-		o << _T("‹Ç‚ğI—¹ I—¹ƒR[ƒh [") << (int)RoundEndType << _T(']');
+		o << _T("å±€ã‚’çµ‚äº† çµ‚äº†ã‚³ãƒ¼ãƒ‰ [") << (int)RoundEndType << _T(']');
 	}
 #ifndef GUOBIAO
-	/* —¬‚µ–ŠÑ‚Ì”»’è */
+	/* æµã—æº€è²«ã®åˆ¤å®š */
 	auto NagashiManganFlag = chkNagashiMangan(gameStat, RoundEndType);
 #endif /* GUOBIAO */
 	/************/
-	/* ˜a—¹ˆ— */
+	/* å’Œäº†å‡¦ç† */
 	/************/
 	if ((RoundEndType == Agari) || (RoundEndType == Chonbo))
 		agari::agariproc(RoundEndType, gameStat, tmpUraFlag, tmpAliceFlag, ResultDesc);
 	bool RenchanFlag = false;
 	switch (RoundEndType) {
 	/**************/
-	/* r”v—¬‹Ç */
+	/* è’ç‰Œæµå±€æ™‚ */
 	/**************/
 	case Ryuukyoku:
-		ResultDesc = _T("r”v—¬‹Ç");
+		ResultDesc = _T("è’ç‰Œæµå±€");
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
 #ifndef GUOBIAO
 		transferNotenBappu(gameStat, OrigTurn,
@@ -319,9 +319,9 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 			bool chonboFlag = false;
 			if (gameStat->Player[cnt].RichiFlag.RichiFlag) {
 				if (!isTenpai(gameStat, cnt))
-					chonboFlag = true; // ö˜a—§’¼i•s’®—§’¼j‚Ìê‡
+					chonboFlag = true; // éŒ¯å’Œç«‹ç›´ï¼ˆä¸è´ç«‹ç›´ï¼‰ã®å ´åˆ
 				if (RuleData::chkRule("furiten_riichi", "no") && machiInfo.FuritenFlag)
-					chonboFlag = true; // U’®—§’¼‚Ìê‡
+					chonboFlag = true; // æŒ¯è´ç«‹ç›´ã®å ´åˆ
 			}
 			if (chonboFlag) {
 				transferChonboPenalty(gameStat, cnt);
@@ -350,7 +350,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ryuukyokuProc(gameStat, RenchanFlag);
 		break;
 	/**************/
-	/* ˜a—¹¬—§ */
+	/* å’Œäº†æˆç«‹æ™‚ */
 	/**************/
 	case Agari: {
 #ifdef GUOBIAO
@@ -371,31 +371,31 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		}
 #endif /* GUOBIAO */
 		gameStat->Deposit = 0;
-		// ”ª˜A‘‘¬—§AƒJƒEƒ“ƒ^‚ğƒŠƒZƒbƒg
+		// å…«é€£è˜æˆç«‹æ™‚ã€ã‚«ã‚¦ãƒ³ã‚¿ã‚’ãƒªã‚»ãƒƒãƒˆ
 		if (gameStat->AgariChain == 8)
 			gameStat->AgariChain = 0;
 	}
 		break;
 	/**************/
-	/* ö˜a”­¶ */
+	/* éŒ¯å’Œç™ºç”Ÿæ™‚ */
 	/**************/
 	case Chonbo:
 		gameStat->AgariChain = 0; gameStat->LastAgariPlayer = -1;
 		break;
 #ifndef GUOBIAO
 	/**************/
-	/* ‹ãí—¬‹Ç */
+	/* ä¹ç¨®æµå±€æ™‚ */
 	/**************/
 	case KyuushuKyuuhai:
 		if      (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sEast ) % Players))
-			ResultDesc = _T("“Œ‰Æ‚Ì‹ãí‹ã”v");
+			ResultDesc = _T("æ±å®¶ã®ä¹ç¨®ä¹ç‰Œ");
 		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sSouth) % Players))
-			ResultDesc = _T("“ì‰Æ‚Ì‹ãí‹ã”v");
+			ResultDesc = _T("å—å®¶ã®ä¹ç¨®ä¹ç‰Œ");
 		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sWest ) % Players))
-			ResultDesc = _T("¼‰Æ‚Ì‹ãí‹ã”v");
+			ResultDesc = _T("è¥¿å®¶ã®ä¹ç¨®ä¹ç‰Œ");
 		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sNorth) % Players))
-			ResultDesc = _T("–k‰Æ‚Ì‹ãí‹ã”v");
-		else ResultDesc = _T("‹ãí‹ã”v"); // ©Œˆ‚µ‚ÄÀs‚³‚ê‚È‚¢‚Í‚¸
+			ResultDesc = _T("åŒ—å®¶ã®ä¹ç¨®ä¹ç‰Œ");
+		else ResultDesc = _T("ä¹ç¨®ä¹ç‰Œ"); // â†æ±ºã—ã¦å®Ÿè¡Œã•ã‚Œãªã„ã¯ãš
 		writeChat(ResultDesc);
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
 
@@ -406,19 +406,19 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ryuukyokuProc(gameStat, RenchanFlag);
 		break;
 	/**************/
-	/* lÈ—¬‹Ç */
+	/* å››æ§“æµå±€æ™‚ */
 	/**************/
 	case Suukaikan:
-		ResultDesc = _T("lŠJÈ");
+		ResultDesc = _T("å››é–‹æ§“");
 		ryuukyokuScreen(sound::IDs::voxSikang, &ResultDesc, mihajong_graphic::tblSubsceneSikang);
 		ryuukyokuProc(gameStat, !RuleData::chkRule("four_kong_ryuukyoku", "next_dealer"));
 		break;
 	/**************/
-	/* O‰Æ˜a‚Ì */
+	/* ä¸‰å®¶å’Œã®æ™‚ */
 	/**************/
 	case TripleRon:
 		mihajong_graphic::ui::WaitUIWithTimeout(1300);
-		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("“ñ‰Æ˜a") : _T("O‰Æ˜a");
+		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("äºŒå®¶å’Œ") : _T("ä¸‰å®¶å’Œ");
 		ryuukyokuScreen(sound::IDs::voxSanjiahu, &ResultDesc, mihajong_graphic::tblSubsceneTripleRon);
 
 		if (RuleData::chkRule("triple_mahjong", "renchan_if_nondealer_furikomi"))
@@ -432,24 +432,24 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ryuukyokuProc(gameStat, RenchanFlag);
 		break;
 	/**************/
-	/* l•——¬‹Ç */
+	/* å››é¢¨æµå±€æ™‚ */
 	/**************/
 	case SuufonRenda:
-		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("O•—˜A‘Å") : _T("l•—˜A‘Å");
+		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("ä¸‰é¢¨é€£æ‰“") : _T("å››é¢¨é€£æ‰“");
 		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::tblSubsceneSifeng);
 		ryuukyokuProc(gameStat, !(RuleData::chkRule("four_wind_ryuukyoku", "next_dealer") || RuleData::chkRule("four_wind_ryuukyoku", "next_dealer_west")));
 		break;
 	/**************/
-	/* ll—§’¼ */
+	/* å››äººç«‹ç›´æ™‚ */
 	/**************/
 	case SuuchaRiichi:
-		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("O‰Æ—§’¼") : _T("l‰Æ—§’¼");
+		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("ä¸‰å®¶ç«‹ç›´") : _T("å››å®¶ç«‹ç›´");
 		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::tblSubsceneFourRiichi, 1500u);
 		checkTenpai(gameStat, ResultDesc, OrigTurn);
 		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 			if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(cnt) == sNorth))
 				continue;
-			// ö˜a—§’¼i•s’®—§’¼j‚ÌÒ‚ª‚¢‚½ê‡
+			// éŒ¯å’Œç«‹ç›´ï¼ˆä¸è´ç«‹ç›´ï¼‰ã®è€…ãŒã„ãŸå ´åˆ
 			if (!isTenpai(gameStat, cnt)) {
 				transferChonboPenalty(gameStat, cnt);
 				mihajong_graphic::ui::WaitUIWithTimeout(500);
@@ -458,11 +458,11 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		ryuukyokuProc(gameStat, !RuleData::chkRule("four_riichi_ryuukyoku", "next_dealer"));
 		break;
 	/**************/
-	/* —¬‚µ–ŠÑ */
+	/* æµã—æº€è²«æ™‚ */
 	/**************/
 	case NagashiMangan:
 	{
-		const bool agariBgmSet = !(NagashiManganFlag[gameStat->PlayerID] || EnvTable::Instantiate()->WatchModeFlag); // ©•ª‚Ì—¬‚µ–ŠÑ‚È‚çtrue
+		const bool agariBgmSet = !(NagashiManganFlag[gameStat->PlayerID] || EnvTable::Instantiate()->WatchModeFlag); // è‡ªåˆ†ã®æµã—æº€è²«ãªã‚‰true
 		const unsigned bgmNum =
 			RuleData::chkRule("nagashi_mangan", "yakuman") ? (agariBgmSet ? sound::IDs::musAgariSelf3 : sound::IDs::musAgariFurikomi3)
 			: (agariBgmSet ? sound::IDs::musAgariSelf2 : sound::IDs::musAgariFurikomi2);
@@ -473,23 +473,23 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (isNagashiMangan(gameStat, cnt)) {
 					mihajong_graphic::calltext::setCall(cnt, mihajong_graphic::calltext::NagashiMangan);
-					if (!ResultDesc.empty()) ResultDesc += _T("A");
+					if (!ResultDesc.empty()) ResultDesc += _T("ã€");
 					switch (gameStat->playerwind(cnt)) {
-						case sEast:  ResultDesc += _T("“Œ‰Æ"); break;
-						case sSouth: ResultDesc += _T("“ì‰Æ"); break;
-						case sWest:  ResultDesc += _T("¼‰Æ"); break;
-						case sNorth: ResultDesc += _T("–k‰Æ"); break;
+						case sEast:  ResultDesc += _T("æ±å®¶"); break;
+						case sSouth: ResultDesc += _T("å—å®¶"); break;
+						case sWest:  ResultDesc += _T("è¥¿å®¶"); break;
+						case sNorth: ResultDesc += _T("åŒ—å®¶"); break;
 					}
 					LNum AgariPointRaw = 0;
 					if      (RuleData::chkRule("nagashi_mangan", "mangan"))  AgariPointRaw = 2000;
 					else if (RuleData::chkRule("nagashi_mangan", "haneman")) AgariPointRaw = 3000;
 					else if (RuleData::chkRule("nagashi_mangan", "baiman"))  AgariPointRaw = 4000;
 					else if (RuleData::chkRule("nagashi_mangan", "yakuman")) AgariPointRaw = 8000;
-					LNum agariPoint; // ƒ_ƒ~[B‚±‚Ì•Ï”‚Íg—p‚µ‚È‚¢B
+					LNum agariPoint; // ãƒ€ãƒŸãƒ¼ã€‚ã“ã®å¤‰æ•°ã¯ä½¿ç”¨ã—ãªã„ã€‚
 					agari::calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), cnt);
 				}
 			}
-			ResultDesc += _T("‚Ì—¬‚µ–ŠÑ");
+			ResultDesc += _T("ã®æµã—æº€è²«");
 			writeChat(ResultDesc);
 		}
 		sound::Play(sound::IDs::sndPage);
@@ -500,10 +500,10 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	}
 		break;
 	/**************/
-	/* lÈ—¬‹Ç */
+	/* å››æ§“æµå±€æ™‚ */
 	/**************/
 	case Uukaikan:
-		ResultDesc = _T("lŠJÈ(‚T‰ñ–Ú‚ÌÈ‚Å‚Ì—¬‹Ç)");
+		ResultDesc = _T("å››é–‹æ§“(ï¼•å›ç›®ã®æ§“ã§ã®æµå±€)");
 		ryuukyokuScreen(sound::IDs::voxSikang, &ResultDesc, mihajong_graphic::tblSubsceneSikang);
 		ryuukyokuProc(gameStat, !RuleData::chkRule("fifth_kong", "next_dealer"));
 		break;
@@ -527,9 +527,9 @@ void endround::transferChonboPenalty(GameTable* gameStat, PlayerID targetPlayer)
 #endif /* GUOBIAO */
 	agari::calcAgariPoints(gameStat, AgariPoint, AgariPointRaw, transfer::getDelta(), targetPlayer);
 	transfer::negateDelta();
-	/* ‚È‚º‚í‚´‚í‚´ˆê’Uƒvƒ‰ƒX‚Å‹‚ß‚Ä•„†‚ğ”½“]‚·‚é‚Æ‚¢‚¤‰ñ‚è‚­‚Ç‚¢‚±‚Æ‚ğ‚µ‚Ä‚¢‚é‚Ì‚©‚Æ‚¢‚¤‚Æ
-	   “_ƒpƒl‚ÌŒvZ‚É“Vˆä”Ÿ”(”’l‚Æ‚µ‚Ä‘å‚«‚¢•û‚ÉŠÛ‚ß‚é)“I‚Èˆ—‚ğs‚Á‚Ä‚¢‚é‚½‚ßA
-	   ˆø”‚ğƒ}ƒCƒiƒX‚Å—^‚¦‚é‚Æ(“Á‚ÉO–ƒ‚ÅŠÛæ‚èİ’è‚É‚µ‚Ä‚é‚Æ‚«‚Æ‚©)ƒ`ƒ‡ƒ“ƒ{—¿‚ªŒ¸‚é‹ñ‚ª‚ ‚é‚©‚ç‚Å‚· */
+	/* ãªãœã‚ã–ã‚ã–ä¸€æ—¦ãƒ—ãƒ©ã‚¹ã§æ±‚ã‚ã¦ç¬¦å·ã‚’åè»¢ã™ã‚‹ã¨ã„ã†å›ã‚Šãã©ã„ã“ã¨ã‚’ã—ã¦ã„ã‚‹ã®ã‹ã¨ã„ã†ã¨
+	   ç‚¹ãƒ‘ãƒã®è¨ˆç®—æ™‚ã«å¤©äº•å‡½æ•°(æ•°å€¤ã¨ã—ã¦å¤§ãã„æ–¹ã«ä¸¸ã‚ã‚‹)çš„ãªå‡¦ç†ã‚’è¡Œã£ã¦ã„ã‚‹ãŸã‚ã€
+	   å¼•æ•°ã‚’ãƒã‚¤ãƒŠã‚¹ã§ä¸ãˆã‚‹ã¨(ç‰¹ã«ä¸‰éº»ã§ä¸¸å–ã‚Šè¨­å®šã«ã—ã¦ã‚‹ã¨ãã¨ã‹)ãƒãƒ§ãƒ³ãƒœæ–™ãŒæ¸›ã‚‹è™ãŒã‚ã‚‹ã‹ã‚‰ã§ã™ */
 	transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValChonboBappu, 1500);
 	return;
 }
@@ -537,9 +537,9 @@ void endround::transferChonboPenalty(GameTable* gameStat, PlayerID targetPlayer)
 // -------------------------------------------------------------------------
 
 #ifdef GUOBIAO
-namespace { /* ’†‘ƒ‹[ƒ‹—p‚ÌÈ‘Ö‚¦ˆ— */
+namespace { /* ä¸­å›½ãƒ«ãƒ¼ãƒ«ç”¨ã®å¸­æ›¿ãˆå‡¦ç† */
 	void swapSeat(GameTable* gameStat, std::array<int, Players>& swapSeatList) {
-		// ‘Ş”ğ
+		// é€€é¿
 		InfoByPlayer<EnvTable::PlayerLabel> TmpPlayerDat;
 		InfoByPlayer<PlayerTable> TmpPlayerTable;
 		for (PlayerID i = 0; i < Players; i++) {
@@ -547,7 +547,7 @@ namespace { /* ’†‘ƒ‹[ƒ‹—p‚ÌÈ‘Ö‚¦ˆ— */
 			TmpPlayerDat[i].RemotePlayerFlag = EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag;
 			memcpy(&(TmpPlayerTable[i]), &(gameStat->Player[i]), sizeof (PlayerTable));
 		}
-		// •À‚×‘Ö‚¦Œ‹‰Ê‚ğ‘‚«‚İ
+		// ä¸¦ã¹æ›¿ãˆçµæœã‚’æ›¸ãè¾¼ã¿
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++) {
 			EnvTable::Instantiate()->PlayerDat[swapSeatList[i]].PlayerName = TmpPlayerDat[i].PlayerName;
 			EnvTable::Instantiate()->PlayerDat[swapSeatList[i]].RemotePlayerFlag = TmpPlayerDat[i].RemotePlayerFlag;
@@ -558,17 +558,17 @@ namespace { /* ’†‘ƒ‹[ƒ‹—p‚ÌÈ‘Ö‚¦ˆ— */
 }
 #endif /* GUOBIAO */
 
-bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int OrigTurn) { // Ÿ‚Ì‹Ç‚Ö(I—¹‚·‚éê‡‚Ítrue)
+bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int OrigTurn) { // æ¬¡ã®å±€ã¸(çµ‚äº†ã™ã‚‹å ´åˆã¯true)
 #ifndef GUOBIAO
-	// ƒnƒRŠ„‚êI—¹
+	// ãƒã‚³å‰²ã‚Œçµ‚äº†
 	if (RuleData::chkRuleApplied("buttobi_border"))
 		for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
 			if (isDobon(gameStat, i)) return true;
-	// “V•ÓI—¹
+	// å¤©è¾ºçµ‚äº†
 	if (RuleData::chkRuleApplied("teppen"))
 		for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
 			if (isTeppen(gameStat, i)) return true;
-	// ˜a—¹‚è~‚ß
+	// å’Œäº†ã‚Šæ­¢ã‚
 	if (RuleData::chkRuleApplied("agariyame")) {
 		if (((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) == gameStat->GameLength) &&
 			((OrigTurn + gameStat->LoopRound * roundLoopRate()) == gameStat->GameLength) &&
@@ -579,21 +579,21 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 					return true;
 		}
 	}
-	// O–ƒ‚Ìê‡
+	// ä¸‰éº»ã®å ´åˆ
 	if (gameStat->chkGameType(SanmaT) &&
 		((gameStat->GameRound % Players) == 3))
 		++(gameStat->GameRound);
 #endif /* GUOBIAO */
 #ifdef GUOBIAO
-	/* È‘Ö‚¦ˆ— */
+	/* å¸­æ›¿ãˆå‡¦ç† */
 	switch (gameStat->GameRound) {
-	case 4: case 12: // “ì“üE–k“ü
+	case 4: case 12: // å—å…¥ãƒ»åŒ—å…¥
 		{
 			std::array<int, Players> playerSwitch = {1, 0, 3, 2};
 			swapSeat(gameStat, playerSwitch);
 		}
 		break;
-	case 8: // ¼“ü
+	case 8: // è¥¿å…¥
 		{
 			std::array<int, Players> playerSwitch = {2, 3, 1, 0};
 			swapSeat(gameStat, playerSwitch);
@@ -601,17 +601,17 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 		break;
 	}
 #else /* GUOBIAO */
-	// “ì“ü‚µ‚½ê‡cc
+	// å—å…¥ã—ãŸå ´åˆâ€¦â€¦
 	if (gameStat->GameRound == 4) {
-		if (RuleData::chkRule("game_length", "east_north_game")) // “Œ–k‰ô‚µ‚Ì‚Æ‚«
+		if (RuleData::chkRule("game_length", "east_north_game")) // æ±åŒ—å»»ã—ã®ã¨ã
 			gameStat->GameRound = 12;
-		else if (RuleData::chkRule("game_length", "east_west_game")) // “Œ¼‰ô‚µ‚Ì‚Æ‚«
+		else if (RuleData::chkRule("game_length", "east_west_game")) // æ±è¥¿å»»ã—ã®ã¨ã
 			gameStat->GameRound = 8;
-		else if (RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game")) // “ŒX‰ô‚µ‚Ì‚Æ‚«
+		else if (RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game")) // æ±ã€…å»»ã—ã®ã¨ã
 			gameStat->GameRound = 16;
 	}
 #endif /* GUOBIAO */
-	// ’Êí‚Ì”¼‘‘I—¹iƒgƒbƒv‚ª‚R‚O‚O‚O‚O“_–¢–‚¾‚Æ¼“üƒTƒhƒ“ƒfƒXj
+	// é€šå¸¸ã®åŠè˜çµ‚äº†æ™‚ï¼ˆãƒˆãƒƒãƒ—ãŒï¼“ï¼ï¼ï¼ï¼ç‚¹æœªæº€ã ã¨è¥¿å…¥ã‚µãƒ‰ãƒ³ãƒ‡ã‚¹ï¼‰
 	if ((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) > gameStat->GameLength) {
 #ifdef GUOBIAO
 		return true;
@@ -619,37 +619,37 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 		for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
 			if (gameStat->Player[i].PlayerScore >= (LNum)BasePoint())
 				return true;
-		// ‰„’·í‚È‚µİ’è
+		// å»¶é•·æˆ¦ãªã—è¨­å®š
 		if (RuleData::chkRule("sudden_death_length", "no")) return true;
 #endif /* GUOBIAO */
 	}
-	// ‰„’·í‚Ì’·‚³‚É§ŒÀ‚ª‚ ‚éê‡
+	// å»¶é•·æˆ¦ã®é•·ã•ã«åˆ¶é™ãŒã‚ã‚‹å ´åˆ
 #ifndef GUOBIAO
 	if (RuleData::chkRule("sudden_death_length", "one_extra_round")) {
-		if ((gameStat->GameRound == 16) && // “ŒX‰ô‚µ‚Ì‚Æ‚«
+		if ((gameStat->GameRound == 16) && // æ±ã€…å»»ã—ã®ã¨ã
 			(RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game"))) {
 				if (((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) >= (gameStat->GameLength + roundLoopRate())))
 					return true;
-		} else { // ‚»‚êˆÈŠO‚Ì‚Æ‚«
+		} else { // ãã‚Œä»¥å¤–ã®ã¨ã
 			if (((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) >= (gameStat->GameLength + 5)))
 				return true;
 		}
 	}
 #endif /* GUOBIAO */
-	// –kêI—¹‚Ìê‡‚Í‹A‚è“Œ‚Ö
+	// åŒ—å ´çµ‚äº†ã®å ´åˆã¯å¸°ã‚Šæ±ã¸
 	if (gameStat->GameRound == roundLoopRate()) {
 #ifndef GUOBIAO
-		if (RuleData::chkRule("sudden_death_length", "no")) { // ‰„’·í–³‚µ‚ÅI—¹
+		if (RuleData::chkRule("sudden_death_length", "no")) { // å»¶é•·æˆ¦ç„¡ã—ã§çµ‚äº†
 #endif /* GUOBIAO */
 			return true;
 #ifndef GUOBIAO
-		} else { // •Ô‚è“Œ
+		} else { // è¿”ã‚Šæ±
 			++(gameStat->LoopRound); gameStat->GameRound = 0;
 		}
 #endif /* GUOBIAO */
 	}
 #ifndef GUOBIAO
-	// Ä‚«’¹•œŠˆƒ‹[ƒ‹‚Ìê‡
+	// ç„¼ãé³¥å¾©æ´»ãƒ«ãƒ¼ãƒ«ã®å ´åˆ
 	if (RuleData::chkRuleApplied("yakitori") && RuleData::chkRuleApplied("yakitori_again")) {
 		bool flag = true;
 		for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)

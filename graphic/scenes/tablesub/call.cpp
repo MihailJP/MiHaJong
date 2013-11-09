@@ -1,4 +1,4 @@
-#include "call.h"
+ï»¿#include "call.h"
 #include "../../resource.h"
 #include "../../sprite.h"
 #include "../../utils.h"
@@ -42,7 +42,7 @@ TableSubsceneCallZoomProto::TableSubsceneCallZoomProto(DevicePtr device) : Table
 TableSubsceneCallZoomProto::~TableSubsceneCallZoomProto() {
 }
 
-/* •\Ž¦ˆ— */
+/* è¡¨ç¤ºå‡¦ç† */
 void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
 	if (callType == calltext::None) return;
 	const std::uint64_t curr = myTimer.elapsed();
@@ -101,7 +101,7 @@ TableSubsceneCallFadeProto::TableSubsceneCallFadeProto(DevicePtr device) : Table
 TableSubsceneCallFadeProto::~TableSubsceneCallFadeProto() {
 }
 
-/* •\Ž¦ˆ— */
+/* è¡¨ç¤ºå‡¦ç† */
 void TableSubsceneCallFadeProto::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
 	if (callType == calltext::None) return;
 	const std::uint64_t curr = myTimer.elapsed();
@@ -141,7 +141,7 @@ TableSubsceneCallCutProto::TableSubsceneCallCutProto(DevicePtr device) : TableSu
 TableSubsceneCallCutProto::~TableSubsceneCallCutProto() {
 }
 
-/* •\Ž¦ˆ— */
+/* è¡¨ç¤ºå‡¦ç† */
 void TableSubsceneCallCutProto::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
 	if (callType == calltext::None) return;
 	RECT rect = {
@@ -175,7 +175,7 @@ TableSubsceneCallChankanPre::TableSubsceneCallChankanPre(DevicePtr device) : Tab
 TableSubsceneCallChankanPre::~TableSubsceneCallChankanPre() {
 }
 
-/* •\Ž¦ˆ— */
+/* è¡¨ç¤ºå‡¦ç† */
 void TableSubsceneCallChankanPre::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
 	if ((callType != calltext::Ron) && (callType != calltext::RonQualified))
 		TableSubsceneCallCutProto::ShowCallMsg(player, callType, x, y);
@@ -197,7 +197,7 @@ TableSubsceneCallChankanRon::~TableSubsceneCallChankanRon() {
 	delete cutCall;
 }
 
-/* •\Ž¦ˆ— */
+/* è¡¨ç¤ºå‡¦ç† */
 void TableSubsceneCallChankanRon::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
 	if ((callType == calltext::Ron) || (callType == calltext::RonQualified))
 		zoomCall->ShowCallMsg(player, callType, x, y);

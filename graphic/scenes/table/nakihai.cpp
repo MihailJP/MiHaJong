@@ -1,11 +1,11 @@
-#include "nakihai.h"
+ï»¿#include "nakihai.h"
 #include "../../utils.h"
 
 namespace mihajong_graphic {
 
 using utils::playerRelative;
 
-/* –Â‚¢‚½”v‚ğ•\¦‚·‚é */
+/* é³´ã„ãŸç‰Œã‚’è¡¨ç¤ºã™ã‚‹ */
 std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, std::function<int (unsigned)>, TileDirection, TileDirection, TileDirection>
 	GameTableScreen::NakihaiReconst::playerPosition(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID,
 	unsigned h1, unsigned h2, unsigned h3, unsigned h4, unsigned v1, unsigned v2, unsigned v3, unsigned v4,

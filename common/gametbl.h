@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef _MSC_VER
 #include <eh.h>
@@ -16,7 +16,7 @@ namespace mihajong_structs {
 // -------------------------------------------------------------------------
 
 enum doraCol : uint8_t { Normal, AkaDora, AoDora };
-struct Tile { // Ôƒhƒ‰ƒf[ƒ^‚ğŠÜ‚ß‚½”v‚Ìƒf[ƒ^
+struct Tile { // èµ¤ãƒ‰ãƒ©ãƒ‡ãƒ¼ã‚¿ã‚’å«ã‚ãŸç‰Œã®ãƒ‡ãƒ¼ã‚¿
 	TileCode tile;
 	doraCol red;
 };
@@ -32,9 +32,9 @@ const unsigned int NumOfTilesInHand = 14;
 const unsigned int TsumohaiIndex = NumOfTilesInHand - 1;
 const unsigned int SizeOfDiscardBuffer = 33;
 
-typedef int8_t PlayerID; // ƒvƒŒƒCƒ„[”Ô†
+typedef int8_t PlayerID; // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·
 
-template <class T> struct InfoByPlayer { // ƒvƒŒƒCƒ„[‚²‚Æ‚Éw’è‚µ‚½Œ^‚É‚æ‚éî•ñ(ƒeƒ“ƒvƒŒ[ƒg)
+template <class T> struct InfoByPlayer { // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã”ã¨ã«æŒ‡å®šã—ãŸå‹ã«ã‚ˆã‚‹æƒ…å ±(ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ)
 	T val[Players];
 	const T& operator[](const PlayerID playerID) const {
 		if ((playerID >= 0)&&(playerID < Players)) {
@@ -43,7 +43,7 @@ template <class T> struct InfoByPlayer { // ƒvƒŒƒCƒ„[‚²‚Æ‚Éw’è‚µ‚½Œ^‚É‚æ‚éî•ñ
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByPlayer:“Yš‚ª”ÍˆÍŠO‚Å‚· (") << (int)playerID << _T(")");
+			o << _T("InfoByPlayer:æ·»å­—ãŒç¯„å›²å¤–ã§ã™ (") << (int)playerID << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 #ifdef _MSC_VER
@@ -63,7 +63,7 @@ template <class T> struct InfoByPlayer { // ƒvƒŒƒCƒ„[‚²‚Æ‚Éw’è‚µ‚½Œ^‚É‚æ‚éî•ñ
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByPlayer:“Yš‚ª”ÍˆÍŠO‚Å‚· (") << (int)playerID << _T(")");
+			o << _T("InfoByPlayer:æ·»å­—ãŒç¯„å›²å¤–ã§ã™ (") << (int)playerID << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 #ifdef _MSC_VER
@@ -94,7 +94,7 @@ enum DiscardStat : uint8_t {
 struct DiscardTile {
 	Tile tcode;
 	DiscardStat dstat;
-	bool isDiscardThrough; // ƒcƒ‚Ø‚èƒtƒ‰ƒO
+	bool isDiscardThrough; // ãƒ„ãƒ¢åˆ‡ã‚Šãƒ•ãƒ©ã‚°
 };
 typedef DiscardTile DiscardBuf[SizeOfDiscardBuffer];
 static_assert(std::is_pod<DiscardTile>::value, "DiscardTile is not POD");
@@ -104,21 +104,21 @@ static_assert(std::is_pod<DiscardTile>::value, "DiscardTile is not POD");
 const unsigned int SizeOfMeldBuffer = 5;
 const unsigned int MeldTypeStep = 1000;
 enum MeldStat : uint8_t {
-	meldSequenceConcealed,      // è‚Ì“à‚Ì‡q
-	meldSequenceExposedLower,   // ¬‚³‚¢•û‚ğƒ`[
-	meldSequenceExposedMiddle,  // ›Æ’£‚ğƒ`[
-	meldSequenceExposedUpper,   // ‘å‚«‚¢•û‚ğƒ`[
-	meldTripletConcealed,       // ˆÃ
-	meldTripletExposedLeft,     // ã‰Æ‚©‚çƒ|ƒ“
-	meldTripletExposedCenter,   // ‘Î–Ê‚©‚çƒ|ƒ“
-	meldTripletExposedRight,    // ‰º‰Æ‚©‚çƒ|ƒ“
-	meldQuadConcealed,          // ˆÃÈ
-	meldQuadExposedLeft,        // ã‰Æ‚©‚ç–¾È
-	meldQuadExposedCenter,      // ‘Î–Ê‚©‚ç–¾È
-	meldQuadExposedRight,       // ‰º‰Æ‚©‚ç–¾È
-	meldQuadAddedLeft,          // ã‰Æ‚©‚çƒ|ƒ“‚ÌŒãƒJƒ“
-	meldQuadAddedCenter,        // ‘Î–Ê‚©‚çƒ|ƒ“‚ÌŒãƒJƒ“
-	meldQuadAddedRight,         // ‰º‰Æ‚©‚çƒ|ƒ“‚ÌŒãƒJƒ“
+	meldSequenceConcealed,      // æ‰‹ã®å†…ã®é †å­
+	meldSequenceExposedLower,   // å°ã•ã„æ–¹ã‚’ãƒãƒ¼
+	meldSequenceExposedMiddle,  // åµŒå¼µã‚’ãƒãƒ¼
+	meldSequenceExposedUpper,   // å¤§ãã„æ–¹ã‚’ãƒãƒ¼
+	meldTripletConcealed,       // æš—åˆ»
+	meldTripletExposedLeft,     // ä¸Šå®¶ã‹ã‚‰ãƒãƒ³
+	meldTripletExposedCenter,   // å¯¾é¢ã‹ã‚‰ãƒãƒ³
+	meldTripletExposedRight,    // ä¸‹å®¶ã‹ã‚‰ãƒãƒ³
+	meldQuadConcealed,          // æš—æ§“
+	meldQuadExposedLeft,        // ä¸Šå®¶ã‹ã‚‰æ˜æ§“
+	meldQuadExposedCenter,      // å¯¾é¢ã‹ã‚‰æ˜æ§“
+	meldQuadExposedRight,       // ä¸‹å®¶ã‹ã‚‰æ˜æ§“
+	meldQuadAddedLeft,          // ä¸Šå®¶ã‹ã‚‰ãƒãƒ³ã®å¾Œã‚«ãƒ³
+	meldQuadAddedCenter,        // å¯¾é¢ã‹ã‚‰ãƒãƒ³ã®å¾Œã‚«ãƒ³
+	meldQuadAddedRight,         // ä¸‹å®¶ã‹ã‚‰ãƒãƒ³ã®å¾Œã‚«ãƒ³
 };
 struct MeldCode {
 	TileCode tile;
@@ -153,7 +153,7 @@ static_assert(std::is_pod<PaoStat>::value, "PaoStat is not POD");
 // -------------------------------------------------------------------------
 
 const unsigned SizeOfDeckBuf = 144;
-typedef Tile DeckBuf[SizeOfDeckBuf]; // Å‰‚Íunion‚Å‚â‚ë‚¤‚Æv‚Á‚½‚¯‚Ç‚¨‚©‚µ‚­‚È‚é‚Ì‚Å‚â‚ß‚½
+typedef Tile DeckBuf[SizeOfDeckBuf]; // æœ€åˆã¯unionã§ã‚„ã‚ã†ã¨æ€ã£ãŸã‘ã©ãŠã‹ã—ããªã‚‹ã®ã§ã‚„ã‚ãŸ
 
 // -------------------------------------------------------------------------
 
@@ -183,16 +183,16 @@ static_assert(std::is_pod<CurrPlayer>::value, "CurrPlayer is not POD");
 
 // -------------------------------------------------------------------------
 
-struct Flowers { // ‰Ô”vƒtƒ‰ƒO—p
+struct Flowers { // èŠ±ç‰Œãƒ•ãƒ©ã‚°ç”¨
 	bool Spring, Summer, Autumn, Winter,
 		Plum, Orchid, Chrys, Bamboo;
-	/* Chrysanthemum ‚Í’Ô‚è‚ª’·‚¢‚Ì‚ÅÈ—ªcc */
+	/* Chrysanthemum ã¯ç¶´ã‚ŠãŒé•·ã„ã®ã§çœç•¥â€¦â€¦ */
 };
 static_assert(std::is_pod<Flowers>::value, "Flowers is not POD");
 
 // -------------------------------------------------------------------------
 
-struct Dice { // ƒTƒCƒRƒ
+struct Dice { // ã‚µã‚¤ã‚³ãƒ­
 	uint8_t Number;
 	uint8_t Direction;
 };
@@ -203,33 +203,33 @@ static_assert(std::is_pod<Dice>::value, "Dice is not POD");
 enum handStatCode : int8_t {
 	handUpright, handExposed, handHidden, handOpenRiichi,
 };
-struct PlayerTable { // ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ğŠi”[
+struct PlayerTable { // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ã‚’æ ¼ç´
 	LargeNum PlayerScore;
-	int playerChip; // ƒ`ƒbƒv‚Ìûx
-	HandTiles Hand; // è”v‚Ì”z—ñ
-	DiscardBuf Discard; // Ì”v‚Ì”z—ñ
-	MeldBuf Meld; // –Â‚«–Êq‚ğŠi”[
+	int playerChip; // ãƒãƒƒãƒ—ã®åæ”¯
+	HandTiles Hand; // æ‰‹ç‰Œã®é…åˆ—
+	DiscardBuf Discard; // æ¨ç‰Œã®é…åˆ—
+	MeldBuf Meld; // é³´ãé¢å­ã‚’æ ¼ç´
 	uint8_t DiscardPointer;
 	uint8_t MeldPointer;
-	bool MenzenFlag; // –å‘Oƒtƒ‰ƒO
-	handStatCode HandStat; // è”v‚Ìó‘Ôi—§‚Ä‚éEŒ©‚¹‚éE•š‚¹‚éj
-	int8_t NumberOfQuads; // Èq‚Ì”ilÈ—¬‹ÇAOÈqAlÈq‚È‚Ç‚Ì”»’è‚Ég‚¤j
-	bool FirstDrawFlag; // ‚P„–Ú‚Å‚ ‚éi’n˜aAƒ_ƒuƒ‹—§’¼‚Ì”»’è‚Ég‚¤j
-	bool DoujunFuriten; // “¯‡U’®‚Å‚ ‚é
-	bool AgariHouki; // ˜a—¹‚è•úŠü‚Ì”±‘¥’†‚©‚Ç‚¤‚©
-	RichiStat RichiFlag; // ƒŠ[ƒ`‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
-	DeclFlag DeclarationFlag; // –Â‚«‚ÌéŒ¾
-	Flowers FlowerFlag; // N‚µ‚Ä‚¢‚é‰Ô”v‚ğŠi”[‚·‚éƒtƒ‰ƒO
-	uint8_t NorthFlag; // N‚µ‚Ä‚¢‚é–k•—”v‚ğŠi”[‚·‚éƒtƒ‰ƒO
-	bool SumaroFlag; // l”n˜H‰ğ‹Öƒtƒ‰ƒO
-	bool YakitoriFlag; // Ä‚«’¹ƒtƒ‰ƒO
-	bool shokanFlag; // ‰Èƒtƒ‰ƒO
-	bool kansanjunFlag; // ÈO„ƒtƒ‰ƒO
-	int8_t renpaiTenhohStat; // –ß”v“V˜a”»’è—p
+	bool MenzenFlag; // é–€å‰ãƒ•ãƒ©ã‚°
+	handStatCode HandStat; // æ‰‹ç‰Œã®çŠ¶æ…‹ï¼ˆç«‹ã¦ã‚‹ãƒ»è¦‹ã›ã‚‹ãƒ»ä¼ã›ã‚‹ï¼‰
+	int8_t NumberOfQuads; // æ§“å­ã®æ•°ï¼ˆå››æ§“æµå±€ã€ä¸‰æ§“å­ã€å››æ§“å­ãªã©ã®åˆ¤å®šã«ä½¿ã†ï¼‰
+	bool FirstDrawFlag; // ï¼‘å·¡ç›®ã§ã‚ã‚‹ï¼ˆåœ°å’Œã€ãƒ€ãƒ–ãƒ«ç«‹ç›´ã®åˆ¤å®šã«ä½¿ã†ï¼‰
+	bool DoujunFuriten; // åŒé †æŒ¯è´ã§ã‚ã‚‹
+	bool AgariHouki; // å’Œäº†ã‚Šæ”¾æ£„ã®ç½°å‰‡ä¸­ã‹ã©ã†ã‹
+	RichiStat RichiFlag; // ãƒªãƒ¼ãƒã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
+	DeclFlag DeclarationFlag; // é³´ãã®å®£è¨€
+	Flowers FlowerFlag; // æ™’ã—ã¦ã„ã‚‹èŠ±ç‰Œã‚’æ ¼ç´ã™ã‚‹ãƒ•ãƒ©ã‚°
+	uint8_t NorthFlag; // æ™’ã—ã¦ã„ã‚‹åŒ—é¢¨ç‰Œã‚’æ ¼ç´ã™ã‚‹ãƒ•ãƒ©ã‚°
+	bool SumaroFlag; // å››é¦¬è·¯è§£ç¦ãƒ•ãƒ©ã‚°
+	bool YakitoriFlag; // ç„¼ãé³¥ãƒ•ãƒ©ã‚°
+	bool shokanFlag; // åˆæ§“ãƒ•ãƒ©ã‚°
+	bool kansanjunFlag; // æ§“ä¸‰å·¡ãƒ•ãƒ©ã‚°
+	int8_t renpaiTenhohStat; // æˆ»ç‰Œå¤©å’Œåˆ¤å®šç”¨
 	bool ConnectionLost;
 
-	const Tile& Tsumohai() const {return Hand[TsumohaiIndex];} /* ©–Ì”v (immutable) */
-	      Tile& Tsumohai()       {return Hand[TsumohaiIndex];} /* ©–Ì”v (mutable) */
+	const Tile& Tsumohai() const {return Hand[TsumohaiIndex];} /* è‡ªæ‘¸ç‰Œ (immutable) */
+	      Tile& Tsumohai()       {return Hand[TsumohaiIndex];} /* è‡ªæ‘¸ç‰Œ (mutable) */
 };
 static_assert(std::is_pod<PlayerTable>::value, "PlayerTable is not POD");
 
@@ -244,12 +244,12 @@ template struct InfoByPlayer<PlayerTable>;
 typedef InfoByPlayer<PlayerTable> StatusByPlayer;
 typedef PlayerID Player_ID;
 typedef Dice Dice_Struct;
-struct GameTable { // ‘ì‚Ìî•ñ‚ğŠi”[‚·‚é
+struct GameTable { // å“ã®æƒ…å ±ã‚’æ ¼ç´ã™ã‚‹
 	StatusByPlayer Player;
-	DeckBuf Deck; // •Ç”v‚Ì”z—ñ
-	DoraStatBook DoraFlag; // ƒhƒ‰”»’è‚Ì”z—ñ
-	FlagByTile OpenRichiWait; // ƒvƒ“ƒŠ[‚Ì‘Ò‚¿”v(‚b‚n‚l‚ÉˆÓ}“I‚È•úe‚ğ‹N‚±‚³‚¹‚È‚¢‚½‚ß‚Ég—p)
-	PaoStatBook PaoFlag; // •ïƒtƒ‰ƒOi-1c‚È‚µA0`3cŠY“–ƒvƒŒƒCƒ„[j
+	DeckBuf Deck; // å£ç‰Œã®é…åˆ—
+	DoraStatBook DoraFlag; // ãƒ‰ãƒ©åˆ¤å®šã®é…åˆ—
+	FlagByTile OpenRichiWait; // ãƒ—ãƒ³ãƒªãƒ¼ã®å¾…ã¡ç‰Œ(ï¼£ï¼¯ï¼­ã«æ„å›³çš„ãªæ”¾éŠƒã‚’èµ·ã“ã•ã›ãªã„ãŸã‚ã«ä½¿ç”¨)
+	PaoStatBook PaoFlag; // åŒ…ãƒ•ãƒ©ã‚°ï¼ˆ-1â€¦ãªã—ã€0ã€œ3â€¦è©²å½“ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ï¼‰
 	int GameLength;
 	int GameRound;
 	int LoopRound;
@@ -260,53 +260,53 @@ struct GameTable { // ‘ì‚Ìî•ñ‚ğŠi”[‚·‚é
 	Player_ID PlayerID;
 	Player_ID LastAgariPlayer;
 	GameTypeID gameType;
-	bool TsumoAgariFlag; // ƒcƒ‚ƒAƒKƒŠH
-	int16_t AgariSpecialStat; // ¡‚Ì‚Æ‚±‚ëH‚¢•Ï‚¦‚Åƒ`ƒ‡ƒ“ƒ{‚É‚È‚éê‡‚¾‚¯g‚Á‚Ä‚éH
-	PrevMeldBook PreviousMeld; // æ‚Ù‚Ç–Â‚¢‚½”vi‹ò‚¢‘Ö‚¦‚Ì”»’è‚Ég‚¤j
-	KangStat KangFlag; // —äãŠJ‰ÔG˜AŠJ‰Ô‚ÆÈU‚èG“ªÈ˜aGÈ‚Ì”»’è‚Ég‚¤
-	Dice_Struct Dice[4]; // ƒTƒCƒRƒ
-	uint8_t TurnRound; // Œ»İ‚Ì„–Ú
-	uint8_t KangNum; // lÈ—¬‹ÇAlÈq‚È‚Ç‚Ì”»’è‚Ég‚¤
-	bool RichiCounter; // ƒŠ[ƒ`‚ğƒJƒEƒ“ƒ^[(éŒ¾”v‚ğƒƒ“)
-	bool DoubleRichiCounter; // ƒ_ƒuƒ‹ƒŠ[ƒ`‚ğƒJƒEƒ“ƒ^[(éŒ¾”v‚ğƒƒ“)
-	Player_ID WaremePlayer; // Š„‚ê–Ú‚ÌˆÊ’u(-1‚ÅŠ„‚ê–Ú‚È‚µ)
-	Player_ID DoukasenPlayer; // “±‰Îü‚ÌˆÊ’u(-1‚Å“±‰Îü‚È‚µ)
-	uint8_t DeadTiles; // ‰¤”v‚Ì”
-	uint8_t ExtraRinshan; // ’Ç‰Á‚Ì—äã”v‚Ì”
-	bool ShibariFlag; //“ñãÊ”›‚è
-	uint8_t TilePointer; // ƒcƒ‚”v‚Ìƒ|ƒCƒ“ƒ^
+	bool TsumoAgariFlag; // ãƒ„ãƒ¢ã‚¢ã‚¬ãƒªï¼Ÿ
+	int16_t AgariSpecialStat; // ä»Šã®ã¨ã“ã‚é£Ÿã„å¤‰ãˆã§ãƒãƒ§ãƒ³ãƒœã«ãªã‚‹å ´åˆã ã‘ä½¿ã£ã¦ã‚‹ï¼Ÿ
+	PrevMeldBook PreviousMeld; // å…ˆã»ã©é³´ã„ãŸç‰Œï¼ˆå–°ã„æ›¿ãˆã®åˆ¤å®šã«ä½¿ã†ï¼‰
+	KangStat KangFlag; // å¶ºä¸Šé–‹èŠ±ï¼›é€£é–‹èŠ±ã¨æ§“æŒ¯ã‚Šï¼›é ­æ§“å’Œï¼›æ¶æ§“ã®åˆ¤å®šã«ä½¿ã†
+	Dice_Struct Dice[4]; // ã‚µã‚¤ã‚³ãƒ­
+	uint8_t TurnRound; // ç¾åœ¨ã®å·¡ç›®
+	uint8_t KangNum; // å››æ§“æµå±€ã€å››æ§“å­ãªã©ã®åˆ¤å®šã«ä½¿ã†
+	bool RichiCounter; // ãƒªãƒ¼ãƒã‚’ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼(å®£è¨€ç‰Œã‚’ãƒ­ãƒ³)
+	bool DoubleRichiCounter; // ãƒ€ãƒ–ãƒ«ãƒªãƒ¼ãƒã‚’ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼(å®£è¨€ç‰Œã‚’ãƒ­ãƒ³)
+	Player_ID WaremePlayer; // å‰²ã‚Œç›®ã®ä½ç½®(-1ã§å‰²ã‚Œç›®ãªã—)
+	Player_ID DoukasenPlayer; // å°ç«ç·šã®ä½ç½®(-1ã§å°ç«ç·šãªã—)
+	uint8_t DeadTiles; // ç‹ç‰Œã®æ•°
+	uint8_t ExtraRinshan; // è¿½åŠ ã®å¶ºä¸Šç‰Œã®æ•°
+	bool ShibariFlag; //äºŒé£œç¸›ã‚Š
+	uint8_t TilePointer; // ãƒ„ãƒ¢ç‰Œã®ãƒã‚¤ãƒ³ã‚¿
 	uint16_t DoraPointer;
-	uint8_t RinshanPointer; // —äã”v‚Ìƒ|ƒCƒ“ƒ^
-	bool TianHuFlag; // e‚Ì‘æˆê‘Å”v‚ª‚Ü‚¾i“V˜a‚Ì”»’è‚È‚Ç‚Ég‚¤j
+	uint8_t RinshanPointer; // å¶ºä¸Šç‰Œã®ãƒã‚¤ãƒ³ã‚¿
+	bool TianHuFlag; // è¦ªã®ç¬¬ä¸€æ‰“ç‰ŒãŒã¾ã ï¼ˆå¤©å’Œã®åˆ¤å®šãªã©ã«ä½¿ã†ï¼‰
 	Tile CurrentDiscard;
 
-	const PlayerTable& statOfActive () const {return Player[CurrentPlayer.Active ];} /* ©–Ì”Ô‚ÌƒvƒŒƒCƒ„[‚Ìî•ñ (immutable) */
-	      PlayerTable& statOfActive ()       {return Player[CurrentPlayer.Active ];} /* ©–Ì”Ô‚ÌƒvƒŒƒCƒ„[‚Ìî•ñ (mutable) */
-	const PlayerTable& statOfPassive() const {return Player[CurrentPlayer.Passive];} /* –Â‚«”»’è’†‚ÌƒvƒŒƒCƒ„[‚Ìî•ñ (immutable) */
-	      PlayerTable& statOfPassive()       {return Player[CurrentPlayer.Passive];} /* –Â‚«”»’è’†‚ÌƒvƒŒƒCƒ„[‚Ìî•ñ (mutable) */
-	const PlayerTable& statOfAgari  () const {return Player[CurrentPlayer.Agari  ];} /* ˜a—¹‚Á‚½ƒvƒŒƒCƒ„[‚Ìî•ñ (immutable) */
-	      PlayerTable& statOfAgari  ()       {return Player[CurrentPlayer.Agari  ];} /* ˜a—¹‚Á‚½ƒvƒŒƒCƒ„[‚Ìî•ñ (mutable) */
-	const PlayerTable& statOfMine   () const {return Player[PlayerID             ];} /* ©•ª‚ÌƒvƒŒƒCƒ„[‚Ìî•ñ (immutable) */
-	      PlayerTable& statOfMine   ()       {return Player[PlayerID             ];} /* ©•ª‚ÌƒvƒŒƒCƒ„[‚Ìî•ñ (mutable) */
+	const PlayerTable& statOfActive () const {return Player[CurrentPlayer.Active ];} /* è‡ªæ‘¸ç•ªã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ± (immutable) */
+	      PlayerTable& statOfActive ()       {return Player[CurrentPlayer.Active ];} /* è‡ªæ‘¸ç•ªã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ± (mutable) */
+	const PlayerTable& statOfPassive() const {return Player[CurrentPlayer.Passive];} /* é³´ãåˆ¤å®šä¸­ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ± (immutable) */
+	      PlayerTable& statOfPassive()       {return Player[CurrentPlayer.Passive];} /* é³´ãåˆ¤å®šä¸­ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ± (mutable) */
+	const PlayerTable& statOfAgari  () const {return Player[CurrentPlayer.Agari  ];} /* å’Œäº†ã£ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ± (immutable) */
+	      PlayerTable& statOfAgari  ()       {return Player[CurrentPlayer.Agari  ];} /* å’Œäº†ã£ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ± (mutable) */
+	const PlayerTable& statOfMine   () const {return Player[PlayerID             ];} /* è‡ªåˆ†ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ± (immutable) */
+	      PlayerTable& statOfMine   ()       {return Player[PlayerID             ];} /* è‡ªåˆ†ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ± (mutable) */
 
 	bool chkGameType(GameTypeID gameType) const {return ((this->gameType) & gameType);}
-	uint8_t diceSum() { // ƒTƒCƒRƒ‚Ìo–Ú‚ğæ“¾
+	uint8_t diceSum() { // ã‚µã‚¤ã‚³ãƒ­ã®å‡ºç›®ã‚’å–å¾—
 		return Dice[0].Number + Dice[1].Number;
 	}
-	uint8_t diceSum2() { // “ñ“xU‚è‚Ì2‰ñ–Ú‚ÌƒTƒCƒRƒ‚Ìo–Ú‚ğæ“¾
+	uint8_t diceSum2() { // äºŒåº¦æŒ¯ã‚Šã®2å›ç›®ã®ã‚µã‚¤ã‚³ãƒ­ã®å‡ºç›®ã‚’å–å¾—
 		return Dice[2].Number + Dice[3].Number;
 	}
 
-	seatAbsolute playerwind(Player_ID player, int currentRound) const { // ƒvƒŒƒCƒ„[‚Ì©•—‚ª‚Ç‚ê‚©’²‚×‚é
+	seatAbsolute playerwind(Player_ID player, int currentRound) const { // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è‡ªé¢¨ãŒã©ã‚Œã‹èª¿ã¹ã‚‹
 		if (chkGameType(SanmaT))
 			return (seatAbsolute)((player + 24 - (currentRound - ( currentRound / 4))) % 3);
 		else return (seatAbsolute)((player + 32 - currentRound) % 4);
 	}
-	seatAbsolute playerwind(Player_ID player) const { // ƒvƒŒƒCƒ„[‚Ì©•—‚ª‚Ç‚ê‚©’²‚×‚é
+	seatAbsolute playerwind(Player_ID player) const { // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è‡ªé¢¨ãŒã©ã‚Œã‹èª¿ã¹ã‚‹
 		return playerwind(player, GameRound);
 	}
 
-	int tilesLeft() const { // ‰¤”v‚ğœ‚¢‚½R”v‚Ìc‚è–‡”
+	int tilesLeft() const { // ç‹ç‰Œã‚’é™¤ã„ãŸå±±ç‰Œã®æ®‹ã‚Šæšæ•°
 		return ((int)RinshanPointer - ((int)DeadTiles - 1) - (int)TilePointer);
 	}
 
@@ -315,7 +315,7 @@ static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
 
 // -------------------------------------------------------------------------
 
-// H‚¢•Ï‚¦”»’è—p‚Ì gameStat->AgariSpecialStat ”Ô†
+// é£Ÿã„å¤‰ãˆåˆ¤å®šç”¨ã® gameStat->AgariSpecialStat ç•ªå·
 const unsigned int agariKuikae = 999;
 
 // -------------------------------------------------------------------------

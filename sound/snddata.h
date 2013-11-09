@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 #include <AL/al.h>
@@ -25,9 +25,9 @@ namespace sound {
 	};
 #endif /* _WIN32 */
 
-	/* ƒTƒEƒ“ƒhƒf[ƒ^ƒNƒ‰ƒX */
+	/* ã‚µã‚¦ãƒ³ãƒ‰ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹ */
 	class AudioData {
-		/* –¢À‘• */
+		/* æœªå®Ÿè£… */
 	public:
 		virtual ~AudioData() {};
 		virtual void Play() = 0;
@@ -110,12 +110,12 @@ namespace sound {
 #else
 		explicit OggData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped = false) {
 #endif
-			throw CodeConv::tstring(_T("Vorbis‚ÍƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ"));
+			throw CodeConv::tstring(_T("Vorbisã¯ã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã¾ã›ã‚“"));
 		}
-		void Play() {throw CodeConv::tstring(_T("Vorbis‚ÍƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ"));}
-		void Stop() {throw CodeConv::tstring(_T("Vorbis‚ÍƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ"));}
+		void Play() {throw CodeConv::tstring(_T("Vorbisã¯ã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã¾ã›ã‚“"));}
+		void Stop() {throw CodeConv::tstring(_T("Vorbisã¯ã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã¾ã›ã‚“"));}
 		virtual void setVolume(double volume) {
-			throw CodeConv::tstring(_T("Vorbis‚ÍƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ"));
+			throw CodeConv::tstring(_T("Vorbisã¯ã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã¾ã›ã‚“"));
 		}
 #endif
 	};
@@ -135,14 +135,14 @@ namespace sound {
 #else
 	public:
 		explicit MidiData(unsigned ID, const std::string& filename, bool looped = false) {
-			throw CodeConv::tstring(_T("‚±‚Ìƒo[ƒWƒ‡ƒ“‚ÍMIDIƒtƒ@ƒCƒ‹‚ÌÄ¶‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ"));
+			throw CodeConv::tstring(_T("ã“ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã¯MIDIãƒ•ã‚¡ã‚¤ãƒ«ã®å†ç”Ÿã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“"));
 		}
 		MidiData(const MidiData&) = delete; // Delete unexpected copy constructor
 		MidiData& operator= (const MidiData&) = delete; // Delete unexpected assign operator
-		void Play() {throw CodeConv::tstring(_T("‚±‚Ìƒo[ƒWƒ‡ƒ“‚ÍMIDIƒtƒ@ƒCƒ‹‚ÌÄ¶‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ"));}
-		void Stop() {throw CodeConv::tstring(_T("‚±‚Ìƒo[ƒWƒ‡ƒ“‚ÍMIDIƒtƒ@ƒCƒ‹‚ÌÄ¶‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ"));}
+		void Play() {throw CodeConv::tstring(_T("ã“ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã¯MIDIãƒ•ã‚¡ã‚¤ãƒ«ã®å†ç”Ÿã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“"));}
+		void Stop() {throw CodeConv::tstring(_T("ã“ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã¯MIDIãƒ•ã‚¡ã‚¤ãƒ«ã®å†ç”Ÿã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“"));}
 		virtual void setVolume(double volume) {
-			throw CodeConv::tstring(_T("‚±‚Ìƒo[ƒWƒ‡ƒ“‚ÍMIDIƒtƒ@ƒCƒ‹‚ÌÄ¶‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ"));
+			throw CodeConv::tstring(_T("ã“ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã¯MIDIãƒ•ã‚¡ã‚¤ãƒ«ã®å†ç”Ÿã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“"));
 		}
 #endif
 	};

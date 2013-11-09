@@ -6,7 +6,7 @@ libmihajong_socket_la_LDFLAGS = -no-undefined -release $(VERSION)
 if WITH_WINAPI
 libmihajong_socket_la_LIBADD = ver.o
 endif
-libmihajong_socket_la_CXXFLAGS = -DSOCKET_EXPORTS --input-charset=cp932
+libmihajong_socket_la_CXXFLAGS = -DSOCKET_EXPORTS
 EXTRA_DIST = \
 	socket.vcxproj socket.vcxproj.filters socket.vcxproj.user
 if WITH_WINAPI

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../common/strcode.h"
 #include "gametbl.h"
@@ -8,7 +8,7 @@
 #include "largenum.h"
 #include <array>
 
-// ”v•ˆŠÖŒW‚ÌƒR[ƒh‚ÍƒNƒ‰ƒX‚ÉŠu—£‚µ‚Ä‚¨‚«‚Ü‚µ‚å‚¤‚©B
+// ç‰Œè­œé–¢ä¿‚ã®ã‚³ãƒ¼ãƒ‰ã¯ã‚¯ãƒ©ã‚¹ã«éš”é›¢ã—ã¦ãŠãã¾ã—ã‚‡ã†ã‹ã€‚
 class haifu {
 private:
 	static const unsigned StringElemSize =
@@ -18,7 +18,7 @@ private:
 		2u;
 #endif
 
-	/* ”v‚Ì–¼‘Oƒf[ƒ^ */
+	/* é›€ç‰Œã®åå‰ãƒ‡ãƒ¼ã‚¿ */
 	static const CodeConv::tstring tilecodelabel, HTtilecodelabel1, HTtilecodelabel2;
 	static const std::array<CodeConv::tstring, TileFlowerMax> Xtilerefcode;
 

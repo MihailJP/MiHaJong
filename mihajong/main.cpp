@@ -1,4 +1,4 @@
-#include "main.h"
+ï»¿#include "main.h"
 
 #include <cstdlib>
 #ifndef _WIN32
@@ -21,32 +21,32 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	MSG msg; HWND hwnd;
 	unsigned width, height; bool fullscreen;
 
-	/* ƒEƒBƒ“ƒhƒEİ’èî•ñ‚ğæs“Ç‚İ‚İ */
+	/* ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦è¨­å®šæƒ…å ±ã‚’å…ˆè¡Œèª­ã¿è¾¼ã¿ */
 	preferenceInit();
 	getWindowSize(&width, &height, &fullscreen);
 
-	/* ƒEƒBƒ“ƒhƒE‚ğ‰Šú‰»‚·‚é */
+	/* ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’åˆæœŸåŒ–ã™ã‚‹ */
 	if (!mihajong_graphic::InitWindow(hInstance, nCmdShow, MAKEINTRESOURCE(IDI_ICON1), &hwnd, width, height, fullscreen))
-		exit(1); // ¸”s‚µ‚½‚çI—¹
+		exit(1); // å¤±æ•—ã—ãŸã‚‰çµ‚äº†
 	
-	/* ƒXƒ^[ƒg */
+	/* ã‚¹ã‚¿ãƒ¼ãƒˆ */
 	StartGame(myGameType, hwnd);
 
-	/* ƒƒCƒ“ƒ‹[ƒv */
+	/* ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒ— */
 	while (true) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE)) {
-			// ƒƒbƒZ[ƒW‚ª‚ ‚ê‚ÎƒƒbƒZ[ƒW‚Ìˆ—
+			// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒã‚ã‚Œã°ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡¦ç†
 			if (!GetMessage(&msg, nullptr, 0, 0)) break;
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		} else {
-			// ƒAƒCƒhƒ‹‚ÉÄ•`‰æ
+			// ã‚¢ã‚¤ãƒ‰ãƒ«æ™‚ã«å†æç”»
 			mihajong_graphic::RefreshWindow();
 			Sleep(1);
 		}
 	}
 	
-	/* I—¹ˆ— */
+	/* çµ‚äº†å‡¦ç† */
 	TerminateGame();
 	ExitProcess(0);
 	return msg.wParam;
@@ -59,25 +59,25 @@ int main(int argc, char** argv) {
 	Window hwnd;
 	unsigned width, height; bool fullscreen;
 
-	/* ƒEƒBƒ“ƒhƒEİ’èî•ñ‚ğæs“Ç‚İ‚İ */
+	/* ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦è¨­å®šæƒ…å ±ã‚’å…ˆè¡Œèª­ã¿è¾¼ã¿ */
 	preferenceInit();
 	getWindowSize(&width, &height, &fullscreen);
 
-	/* ƒEƒBƒ“ƒhƒE‚ğ‰Šú‰»‚·‚é */
+	/* ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’åˆæœŸåŒ–ã™ã‚‹ */
 	if (!mihajong_graphic::InitWindow(nullptr, 0, MAKEINTRESOURCE(IDI_ICON1), &hwnd, width, height, fullscreen))
-		exit(1); // ¸”s‚µ‚½‚çI—¹
+		exit(1); // å¤±æ•—ã—ãŸã‚‰çµ‚äº†
 
-	/* ƒXƒ^[ƒg */
+	/* ã‚¹ã‚¿ãƒ¼ãƒˆ */
 	StartGame(myGameType, hwnd);
 
-	/* ƒƒCƒ“ƒ‹[ƒv */
+	/* ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒ— */
 	while (true) {
-		if (!mihajong_graphic::Event()) // ƒCƒxƒ“ƒgˆ—
-			break; // I—¹‚È‚çfalse‚ª•Ô‚Á‚Ä‚­‚é
+		if (!mihajong_graphic::Event()) // ã‚¤ãƒ™ãƒ³ãƒˆå‡¦ç†
+			break; // çµ‚äº†ãªã‚‰falseãŒè¿”ã£ã¦ãã‚‹
 		usleep(100);
 	}
 	
-	/* I—¹ˆ— */
+	/* çµ‚äº†å‡¦ç† */
 	TerminateGame();
 	exit(0);
 }

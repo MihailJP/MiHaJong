@@ -1,4 +1,4 @@
-#include "chktnpai.h"
+ï»¿#include "chktnpai.h"
 #include "../../gametbl.h"
 #include "../../utils.h"
 #include "../../rule.h"
@@ -22,29 +22,29 @@ TableSubsceneCheckTenpai::~TableSubsceneCheckTenpai() {
 void TableSubsceneCheckTenpai::CalculateTenpaiFlag(PlayerID player, int x, int y) {
 	tenpaiflag[player] = utils::isTenpai(GameStatus::gameStat(), player);
 	machiInfo[player] = utils::chkFuriten(GameStatus::gameStat(), player);
-	if (tenpaiflag[player]) { // ’®”v
+	if (tenpaiflag[player]) { // è´ç‰Œ
 		int tile = 0;
 		for (TileCode k = CharacterOne; k <= RedDragon; k = (TileCode)(k + 1)) {
-			if (machiInfo[player].Machihai[k].MachihaiFlag) // ‘Ò‚¿”v‚É‚È‚Á‚Ä‚¢‚éê‡
+			if (machiInfo[player].Machihai[k].MachihaiFlag) // å¾…ã¡ç‰Œã«ãªã£ã¦ã„ã‚‹å ´åˆ
 				tileRenderer->NewTile(player * 9 + tile, k, Normal,
 				x - 20 * (machiInfo[player].MachiMen - 1) + 40 * (tile++),
-				y + 20, Portrait, Obverse); // ‚»‚Ì”v‚ğ•\¦
+				y + 20, Portrait, Obverse); // ãã®ç‰Œã‚’è¡¨ç¤º
 		}
 		if (machiInfo[player].FuritenFlag)
-			txtRenderer->NewText(player, _T("(ƒtƒŠƒeƒ“)"), x - 90, y + 40);
+			txtRenderer->NewText(player, _T("(ãƒ•ãƒªãƒ†ãƒ³)"), x - 90, y + 40);
 		else
-			txtRenderer->NewText(player, _T("‘Ò‚¿"), x - 36, y + 40);
+			txtRenderer->NewText(player, _T("å¾…ã¡"), x - 36, y + 40);
 	}
 }
 
 void TableSubsceneCheckTenpai::ShowTenpaiFlag(PlayerID player, int x, int y) {
 	if ((GameStatus::gameStat()->gameType & RichiMJ) && rules::chkRule("furiten_riichi", "no") && GameStatus::gameStat()->Player[player].RichiFlag.RichiFlag && machiInfo[player].FuritenFlag)
-		ShowCallMsg(player, calltext::Chonbo, x, y - 40); // ƒtƒŠƒeƒ“—§’¼‚ªƒ`ƒ‡ƒ“ƒ{‚É‚È‚éê‡
-	if (tenpaiflag[player]) // ’®”v
+		ShowCallMsg(player, calltext::Chonbo, x, y - 40); // ãƒ•ãƒªãƒ†ãƒ³ç«‹ç›´ãŒãƒãƒ§ãƒ³ãƒœã«ãªã‚‹å ´åˆ
+	if (tenpaiflag[player]) // è´ç‰Œ
 		ShowCallMsg(player, calltext::Tenpai, x, y - 40);
 	else if (GameStatus::gameStat()->Player[player].RichiFlag.RichiFlag)
-		ShowCallMsg(player, calltext::Chonbo, x, y); // ƒm[ƒeƒ“ƒŠ[ƒ`‚µ‚Ä‚½ê‡‚Íö˜a‚Æ•\¦
-	else ShowCallMsg(player, calltext::Noten, x, y); // •s’®
+		ShowCallMsg(player, calltext::Chonbo, x, y); // ãƒãƒ¼ãƒ†ãƒ³ãƒªãƒ¼ãƒã—ã¦ãŸå ´åˆã¯éŒ¯å’Œã¨è¡¨ç¤º
+	else ShowCallMsg(player, calltext::Noten, x, y); // ä¸è´
 }
 
 void TableSubsceneCheckTenpai::RecalcTenpaiFlag() {

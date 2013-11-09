@@ -1,4 +1,4 @@
-#include "remote.h"
+ï»¿#include "remote.h"
 
 #ifndef _WIN32
 #include <unistd.h>
@@ -15,25 +15,25 @@
 
 namespace RemoteAction {
 
-/* Ú‘±æ‚Ì‘Å”v */
+/* æ¥ç¶šå…ˆã®æ‰“ç‰Œ */
 void proc_abrupt_disconnect(GameTable* const gameStat, PlayerID player) {
 	if (player == -1) {
-		CodeConv::tostringstream o; o << _T("ƒT[ƒo[‚©‚ç‚ÌØ’f‚ğŒŸ’m‚µ‚Ü‚µ‚½B");
+		CodeConv::tostringstream o; o << _T("ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ã®åˆ‡æ–­ã‚’æ¤œçŸ¥ã—ã¾ã—ãŸã€‚");
 		warn(o.str().c_str());
 	} else {
 		gameStat->Player[player].ConnectionLost = true;
-		CodeConv::tostringstream o; o << _T("ƒvƒŒƒCƒ„[ [") << static_cast<int>(player) << _T("] ‚Ì‰ñüØ’f‚ğŒŸ’m‚µ‚Ü‚µ‚½B");
+		CodeConv::tostringstream o; o << _T("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ [") << static_cast<int>(player) << _T("] ã®å›ç·šåˆ‡æ–­ã‚’æ¤œçŸ¥ã—ã¾ã—ãŸã€‚");
 		warn(o.str().c_str());
 	}
 	{
 		CodeConv::tostringstream o; 
 		if (player == -1)
-			o << _T("*** ƒT[ƒo[‚Æ‚ÌÚ‘±‚ªØ‚ê‚Ü‚µ‚½B");
+			o << _T("*** ã‚µãƒ¼ãƒãƒ¼ã¨ã®æ¥ç¶šãŒåˆ‡ã‚Œã¾ã—ãŸã€‚");
 		else
 			o << _T("*** ") << EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
-			_T("(") << windName(gameStat->playerwind(player)) << _T(") ‚ÌÚ‘±‚ªØ‚ê‚Ü‚µ‚½B");
+			_T("(") << windName(gameStat->playerwind(player)) << _T(") ã®æ¥ç¶šãŒåˆ‡ã‚Œã¾ã—ãŸã€‚");
 		chat::appendchat(o.str().c_str());
-		chat::appendchat(_T("*** ‚±‚Ì‹Ç‚Íƒcƒ‚Ø‚èAŸ‹Ç‚©‚çCPU‚ª‘ã‘–‚µ‚Ü‚·B"));
+		chat::appendchat(_T("*** ã“ã®å±€ã¯ãƒ„ãƒ¢åˆ‡ã‚Šã€æ¬¡å±€ã‹ã‚‰CPUãŒä»£èµ°ã—ã¾ã™ã€‚"));
 	}
 }
 RemoteDahai::RemoteDahai (GameTable* const gStat) {
@@ -69,12 +69,12 @@ void* RemoteDahai::thread ()
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
 			if (ClientReceived) break;
 #ifdef _WIN32
-			Sleep(20); // ƒ|[ƒŠƒ“ƒO
+			Sleep(20); // ãƒãƒ¼ãƒªãƒ³ã‚°
 #else /*_WIN32*/
-			usleep(20000); // ƒ|[ƒŠƒ“ƒO
+			usleep(20000); // ãƒãƒ¼ãƒªãƒ³ã‚°
 #endif /*_WIN32*/
 		}
-		// óM¸”s‚Ì
+		// å—ä¿¡å¤±æ•—ã®æ™‚
 		if (ReceivedMsg == 1023) {
 			bool flag = false;
 			for (int i = 0; i < Players; i++) {
@@ -105,7 +105,7 @@ void* RemoteDahai::thread ()
 			usleep(20000);
 #endif /*_WIN32*/
 		}
-		// óM¸”s‚Ì
+		// å—ä¿¡å¤±æ•—ã®æ™‚
 		if (ReceivedMsg == 1023) {
 			for (int i = 0; i < Players; i++) {
 				if ((EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag == ServerReceived) &&
@@ -114,7 +114,7 @@ void* RemoteDahai::thread ()
 			}
 			ReceivedMsg = mihajong_socket::protocol::Dahai_Remote_Disconnect;
 		}
-		// ƒNƒ‰ƒCƒAƒ“ƒg‚É‘—M
+		// ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã«é€ä¿¡
 		for (int i = 0; i < ACTUAL_PLAYERS - 1; i++) {
 			if ((ServerReceived != i + 1) &&
 				((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == i + 2) ||
@@ -124,10 +124,10 @@ void* RemoteDahai::thread ()
 					int stat = mihajong_socket::putc(i + 1, ReceivedMsg);
 					CodeConv::tostringstream o;
 					if (stat) {
-						o << _T("ƒf[ƒ^‚Ì‘—M‚É¸”s‚µ‚Ü‚µ‚½BƒNƒ‰ƒCƒAƒ“ƒg [") << (i + 1) << _T("] ƒXƒe[ƒ^ƒXƒR[ƒh [") << stat << _T("]");
+						o << _T("ãƒ‡ãƒ¼ã‚¿ã®é€ä¿¡ã«å¤±æ•—ã—ã¾ã—ãŸã€‚ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆ [") << (i + 1) << _T("] ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã‚³ãƒ¼ãƒ‰ [") << stat << _T("]");
 						error(o.str().c_str());
 					} else {
-						o << _T("ƒNƒ‰ƒCƒAƒ“ƒg [") << (i + 1) << _T("] ‚Éƒf[ƒ^‚ğ‘—M [0x") <<
+						o << _T("ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆ [") << (i + 1) << _T("] ã«ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡ [0x") <<
 							std::hex << std::setw(2) << std::setfill(_T('0')) << ReceivedMsg << _T("]");
 						trace(o.str().c_str());
 					}
@@ -176,7 +176,7 @@ DiscardTileNum remotedahai (GameTable* const gameStat) {
 	return d;
 }
 
-/* Ú‘±æ‚Ì–Â‚« */
+/* æ¥ç¶šå…ˆã®é³´ã */
 RemoteNaki::RemoteNaki (GameTable* const gStat) {
 	gameStat = gStat; finished = false;
 #ifdef _WIN32
@@ -290,7 +290,7 @@ void* RemoteNaki::thread()
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
 		thread_server();
 	for (int i = 0; i < Players; i++)
-		if (gameStat->Player[i].DeclarationFlag.Ron) // ƒƒ“‚µ‚½‚ç©–Ì”vˆÊ’u‚Éƒƒ“”v‚ğİ’è(À‘•ã‚Ì“s‡)
+		if (gameStat->Player[i].DeclarationFlag.Ron) // ãƒ­ãƒ³ã—ãŸã‚‰è‡ªæ‘¸ç‰Œä½ç½®ã«ãƒ­ãƒ³ç‰Œã‚’è¨­å®š(å®Ÿè£…ä¸Šã®éƒ½åˆ)
 			gameStat->Player[i].Tsumohai() = gameStat->CurrentDiscard;
 	finished = true;
 #ifdef _WIN32
@@ -441,7 +441,7 @@ void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short
 	char* RuleConfPtr[RULE_LINES];
 	for (int i = 0; i < RULE_LINES; i++) RuleConfPtr[i] = RuleConf[i];
 	mihajong_socket::client::checkout_rules(RuleConfPtr);
-	RuleData::storeRule(const_cast<const char**>(RuleConfPtr) /* const‚ğ•t‚¯‚Ä‚È‚¢‚Æ‰½ŒÌ‚©ƒGƒ‰[‚Écc */);
+	RuleData::storeRule(const_cast<const char**>(RuleConfPtr) /* constã‚’ä»˜ã‘ã¦ãªã„ã¨ä½•æ•…ã‹ã‚¨ãƒ©ãƒ¼ã«â€¦â€¦ */);
 
 	mihajong_socket::client::releaseobj();
 	return;

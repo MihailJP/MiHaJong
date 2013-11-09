@@ -1,4 +1,4 @@
-#include "table.h"
+ï»¿#include "table.h"
 #include "../resource.h"
 #include "../rule.h"
 #include "../sprite.h"
@@ -45,7 +45,7 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	clockPanel = new Clock(this);
 	tileTipReconst = new TileTipReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
-	const unsigned logWidth = (unsigned)floor(0.5f + // VC++2010‚Å‚Íround()‚ªg‚¦‚È‚¢
+	const unsigned logWidth = (unsigned)floor(0.5f + // VC++2010ã§ã¯round()ãŒä½¿ãˆãªã„
 		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
 	logWindow = new logwnd::LogWindow(caller->getHWnd(), caller->getDevice(),
 		1100, 100, logWidth, 20);
@@ -109,50 +109,50 @@ void GameTableScreen::Reconstruct(const GameTable* gameStat) {
 	}
 }
 
-/* ‹Ÿ‘õ“_–_‚È‚Ç‚Ìî•ñ‚ğ•\¦ */
+/* ä¾›è¨—ç‚¹æ£’ãªã©ã®æƒ…å ±ã‚’è¡¨ç¤º */
 void GameTableScreen::ShowStatus(const GameTable* gameStat) {
-	const wchar_t* const WindName = L"“Œ“ì¼–k”’á¢’†";
-	const wchar_t* const Numeral = L"ˆê“ñOlŒÜ˜Zµ”ª‹ã\";
-	const wchar_t* const FWDigit = L"‚O‚P‚Q‚R‚S‚T‚U‚V‚W‚X";
+	const wchar_t* const WindName = L"æ±å—è¥¿åŒ—ç™½ç™¼ä¸­";
+	const wchar_t* const Numeral = L"ä¸€äºŒä¸‰å››äº”å…­ä¸ƒå…«ä¹å";
+	const wchar_t* const FWDigit = L"ï¼ï¼‘ï¼’ï¼“ï¼”ï¼•ï¼–ï¼—ï¼˜ï¼™";
 	CodeConv::tostringstream o;
 	o << CodeConv::EnsureTStr(std::wstring(WindName + gameStat->GameRound / 4, WindName + gameStat->GameRound / 4 + 1));
-	if (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game")) { // “Œê‚Ì‚İ‚Ìƒ‹[ƒ‹
+	if (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game")) { // æ±å ´ã®ã¿ã®ãƒ«ãƒ¼ãƒ«
 		const unsigned roundnum = gameStat->LoopRound * 4 + gameStat->GameRound;
 		if (roundnum < 10)
 			o << CodeConv::EnsureTStr(std::wstring(Numeral + roundnum, Numeral + roundnum + 1));
 		else
 			o << (roundnum + 1);
-	} else { // ˆê”Ê‚Ìƒ‹[ƒ‹
+	} else { // ä¸€èˆ¬ã®ãƒ«ãƒ¼ãƒ«
 		const unsigned roundnum = gameStat->GameRound % 4;
 		o << CodeConv::EnsureTStr(std::wstring(Numeral + roundnum, Numeral + roundnum + 1));
 	}
-	o << _T("‹Ç ");
+	o << _T("å±€ ");
 	if (!gameStat->chkGameType(GuobiaoMJ)) {
-		if (gameStat->Honba >= 10) o << std::setw(2) << (gameStat->Honba) << _T("–{ê");
-		else if (gameStat->Honba > 0) o << CodeConv::EnsureTStr(std::wstring(FWDigit + gameStat->Honba, FWDigit + gameStat->Honba + 1)) << _T("–{ê");
-		else o << _T("•½@ê");
+		if (gameStat->Honba >= 10) o << std::setw(2) << (gameStat->Honba) << _T("æœ¬å ´");
+		else if (gameStat->Honba > 0) o << CodeConv::EnsureTStr(std::wstring(FWDigit + gameStat->Honba, FWDigit + gameStat->Honba + 1)) << _T("æœ¬å ´");
+		else o << _T("å¹³ã€€å ´");
 	}
 	myTextRenderer->NewText(0, o.str(), Geometry::BaseSize + 5, 5, 0.875f);
 
 	o.str(_T(""));
 	const int tiles = gameStat->RinshanPointer - gameStat->TilePointer - gameStat->ExtraRinshan - gameStat->DeadTiles + 1;
-	if (tiles >= 100) o << _T("c--”v");
-	else o << _T("c") << std::setw(2) << tiles << _T("”v");
+	if (tiles >= 100) o << _T("æ®‹--ç‰Œ");
+	else o << _T("æ®‹") << std::setw(2) << tiles << _T("ç‰Œ");
 	if (!gameStat->chkGameType(GuobiaoMJ)) {
-		o << _T(" ‹Ÿ‘õ");
-		if (gameStat->Deposit) o << std::setw(2) << gameStat->Deposit << _T("–{");
-		else o << _T("‚È‚µ");
+		o << _T(" ä¾›è¨—");
+		if (gameStat->Deposit) o << std::setw(2) << gameStat->Deposit << _T("æœ¬");
+		else o << _T("ãªã—");
 	}
 	myTextRenderer->NewText(1, o.str(), Geometry::BaseSize + 5, 35, 0.875f);
 
 	myTextRenderer->Render();
 }
 
-/* ‘ì‚ğ•\¦ ‚±‚±‚©‚ç */
+/* å“ã‚’è¡¨ç¤º ã“ã“ã‹ã‚‰ */
 void GameTableScreen::cls() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
-		roundColor(), 1.0f, 0); // ƒoƒbƒtƒ@ƒNƒŠƒA
+		roundColor(), 1.0f, 0); // ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 #else
 	glClearColor(
 		(double)((roundColor() & 0x00ff0000) >> 16) / 255.0,
@@ -189,14 +189,14 @@ void GameTableScreen::RenderSideBar() {
 }
 
 void GameTableScreen::checkTimeout() {
-	if ((mySubScene) && (mySubScene->timeout() <= 0) && (buttonReconst->areEnabled().any() || tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled())) { /* ƒ^ƒCƒ€ƒAƒEƒg‚Ìˆ— */
+	if ((mySubScene) && (mySubScene->timeout() <= 0) && (buttonReconst->areEnabled().any() || tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled())) { /* ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆã®å‡¦ç† */
 		const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
-		if (isNakiSel) { // –Â‚«‘I‘ğ’†‚Ì
-			ui::UIEvent->set(naki::nakiNone); // ”v‚Ì”Ô†‚ğİ’è
+		if (isNakiSel) { // é³´ãé¸æŠä¸­ã®æ™‚
+			ui::UIEvent->set(naki::nakiNone); // ç‰Œã®ç•ªå·ã‚’è¨­å®š
 		} else if (buttonReconst->getButtonSet() == ButtonReconst::btnSetTsumo) {
 			if (GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].Tsumohai().tile != NoTile)
-				ui::UIEvent->set(NumOfTilesInHand - 1); // ƒcƒ‚Ø‚è
-			else ui::UIEvent->set(0); // –Â‚¢‚½’¼Œã‚Ìê‡
+				ui::UIEvent->set(NumOfTilesInHand - 1); // ãƒ„ãƒ¢åˆ‡ã‚Š
+			else ui::UIEvent->set(0); // é³´ã„ãŸç›´å¾Œã®å ´åˆ
 		}
 		tehaiReconst->setTileCursor();
 		buttonReconst->setCursor();
@@ -239,28 +239,28 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			mySubScene = new TableSubsceneTitlingHonba(caller->getDevice());
 			break;
 		case tblSubsceneRyuukyoku:
-			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("—¬‹Ç"));
+			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("æµå±€"));
 			break;
 		case tblSubsceneSifeng:
 			mySubScene = new TableSubsceneMsg(caller->getDevice(),
-				(GameStatus::gameStat()->gameType & AllSanma) ? _T("O•—˜A‘Å") : _T("l•—˜A‘Å"));
+				(GameStatus::gameStat()->gameType & AllSanma) ? _T("ä¸‰é¢¨é€£æ‰“") : _T("å››é¢¨é€£æ‰“"));
 			break;
 		case tblSubsceneTripleRon:
 			mySubScene = new TableSubsceneMsg(caller->getDevice(),
-				(GameStatus::gameStat()->gameType & AllSanma) ? _T("“ñ‰Æ˜a") : _T("O‰Æ˜a"));
+				(GameStatus::gameStat()->gameType & AllSanma) ? _T("äºŒå®¶å’Œ") : _T("ä¸‰å®¶å’Œ"));
 			break;
 		case tblSubsceneSikang:
-			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("lŠJÈ"));
+			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("å››é–‹æ§“"));
 			break;
 		case tblSubsceneFourRiichi:
 			mySubScene = new TableSubsceneMsg(caller->getDevice(),
-				(GameStatus::gameStat()->gameType & AllSanma) ? _T("O‰Æ—§’¼") : _T("l‰Æ—§’¼"));
+				(GameStatus::gameStat()->gameType & AllSanma) ? _T("ä¸‰å®¶ç«‹ç›´") : _T("å››å®¶ç«‹ç›´"));
 			break;
 		case tblSubsceneChonbo:
-			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("ö˜a"));
+			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("éŒ¯å’Œ"));
 			break;
 		case tblSubsceneAlice:
-			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("ƒAƒŠƒX”»’è"));
+			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("ã‚¢ãƒªã‚¹åˆ¤å®š"));
 			break;
 		case tblSubsceneCall:
 			mySubScene = new TableSubsceneCall(caller->getDevice());
@@ -281,34 +281,34 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			mySubScene = new TableSubsceneCallValue(caller->getDevice());
 			break;
 		case tblSubsceneCallValNotenBappu:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("•s’®”±•„"));
+			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("ä¸è´ç½°ç¬¦"));
 			break;
 		case tblSubsceneCallValAgariten:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("˜a—¹“_"));
+			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("å’Œäº†ç‚¹"));
 			break;
 		case tblSubsceneCallValTsumibou:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("Ï–_¸Z"));
+			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("ç©æ£’ç²¾ç®—"));
 			break;
 		case tblSubsceneCallValChip:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("j‹V¸Z"));
+			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("ç¥å„€ç²¾ç®—"));
 			break;
 		case tblSubsceneCallValKyoutaku:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("‹Ÿ‘õ¸Z"));
+			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("ä¾›è¨—ç²¾ç®—"));
 			break;
 		case tblSubsceneCallValChonboBappu:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("ö˜a”±•„"));
+			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("éŒ¯å’Œç½°ç¬¦"));
 			break;
 		case tblSubsceneCallValNagashiMangan:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("—¬‚µ–ŠÑ"));
+			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("æµã—æº€è²«"));
 			break;
 		case tblSubsceneCallValDobon:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("”ò‚Ñ”±•„"));
+			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("é£›ã³ç½°ç¬¦"));
 			break;
 		case tblSubsceneCallValKitamakura:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("–k–”±•„"));
+			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("åŒ—æ•ç½°ç¬¦"));
 			break;
 		case tblSubsceneCallValYakuman:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("–ğ–j‹V"));
+			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("å½¹æº€ç¥å„€"));
 			break;
 		case tblSubsceneChkTenpai:
 			mySubScene = new TableSubsceneCheckTenpai(caller->getDevice());
@@ -316,27 +316,27 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 		case tblSubscenePlayerDahai:
 			mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
 			(void)GameStatus::retrGameStat();
-			// ƒJ[ƒ\ƒ‹‚Æƒ{ƒ^ƒ“‚Ìİ’è
+			// ã‚«ãƒ¼ã‚½ãƒ«ã¨ãƒœã‚¿ãƒ³ã®è¨­å®š
 			tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
 			while (GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].Hand[tehaiReconst->getTileCursor()].tile == NoTile)
-				tehaiReconst->decrTileCursor(); // –Â‚¢‚½’¼Œã‚Ì‚ÌƒJ[ƒ\ƒ‹‰ŠúˆÊ’u
+				tehaiReconst->decrTileCursor(); // é³´ã„ãŸç›´å¾Œã®æ™‚ã®ã‚«ãƒ¼ã‚½ãƒ«åˆæœŸä½ç½®
 			buttonReconst->btnSetForDahai();
 			tehaiReconst->enable();
 			if (GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag)
 				for (int i = 0; i < (NumOfTilesInHand - 1); ++i)
 					tehaiReconst->disable(i);
 			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
-			// ƒŠ[ƒ`ŒãƒI[ƒgƒcƒ‚Ø‚è
+			// ãƒªãƒ¼ãƒå¾Œã‚ªãƒ¼ãƒˆãƒ„ãƒ¢åˆ‡ã‚Š
 			if ((GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag) &&
 				buttonReconst->areEnabled().none())
 				ui::UIEvent->set(NumOfTilesInHand - 1);
-			else if (checkBoxes[ChkBoxAutoDiscard]->isChecked() && // ©“®ƒcƒ‚Ø‚è
+			else if (checkBoxes[ChkBoxAutoDiscard]->isChecked() && // è‡ªå‹•ãƒ„ãƒ¢åˆ‡ã‚Š
 				buttonReconst->areEnabled().none())
 				ui::UIEvent->set(NumOfTilesInHand - 1);
 			else if ((buttonReconst->isEnabled(buttonReconst->btnTsumo)) &&
-				(checkBoxes[ChkBoxAutoAgari]->isChecked())) // ƒI[ƒg˜a—¹
+				(checkBoxes[ChkBoxAutoAgari]->isChecked())) // ã‚ªãƒ¼ãƒˆå’Œäº†
 				CallTsumoAgari();
-			else // ©–Ì”Ô‚ª—ˆ‚½‚ç‰¹‚ğ–Â‚ç‚·
+			else // è‡ªæ‘¸ç•ªãŒæ¥ãŸã‚‰éŸ³ã‚’é³´ã‚‰ã™
 				sound::Play(sound::IDs::sndBell);
 			tileTipReconst->reconstruct();
 			break;
@@ -347,19 +347,19 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			mySubScene = new TableSubscenePlayerNakiChankan(caller->getDevice());
 			goto setNakiButton;
 		setNakiButton:
-			// ƒJ[ƒ\ƒ‹‚Æƒ{ƒ^ƒ“‚Ìİ’è
+			// ã‚«ãƒ¼ã‚½ãƒ«ã¨ãƒœã‚¿ãƒ³ã®è¨­å®š
 			buttonReconst->btnSetForNaki();
 			buttonReconst->setCursor(buttonReconst->isEnabled(GameTableScreen::ButtonReconst::btnRon) ? GameTableScreen::ButtonReconst::btnRon : GameTableScreen::ButtonReconst::btnPass);
 			buttonReconst->reconstruct();
-			if (buttonReconst->areEnabled().none()) // ŠY“–‚·‚é”v‚ª‚È‚¢‚È‚çƒXƒ‹[
+			if (buttonReconst->areEnabled().none()) // è©²å½“ã™ã‚‹ç‰ŒãŒãªã„ãªã‚‰ã‚¹ãƒ«ãƒ¼
 				ui::UIEvent->set(naki::nakiNone);
-			else if ((!(buttonReconst->isEnabled(buttonReconst->btnRon))) && /* ButtonReconst::btnRon ‚¾‚Æ‰½ŒÌ‚©ƒGƒ‰[‚É‚È‚é */
-				(checkBoxes[ChkBoxAutoPass]->isChecked())) // ƒI[ƒgƒpƒX
+			else if ((!(buttonReconst->isEnabled(buttonReconst->btnRon))) && /* ButtonReconst::btnRon ã ã¨ä½•æ•…ã‹ã‚¨ãƒ©ãƒ¼ã«ãªã‚‹ */
+				(checkBoxes[ChkBoxAutoPass]->isChecked())) // ã‚ªãƒ¼ãƒˆãƒ‘ã‚¹
 				ui::UIEvent->set(naki::nakiNone);
 			else if ((buttonReconst->isEnabled(buttonReconst->btnRon)) &&
-				(checkBoxes[ChkBoxAutoAgari]->isChecked())) // ƒI[ƒg˜a—¹
+				(checkBoxes[ChkBoxAutoAgari]->isChecked())) // ã‚ªãƒ¼ãƒˆå’Œäº†
 				ui::UIEvent->set(naki::nakiRon);
-			else // ‰¹‚ğ–Â‚ç‚·
+			else // éŸ³ã‚’é³´ã‚‰ã™
 				sound::Play(sound::IDs::sndSignal);
 			tileTipReconst->reconstruct();
 			break;
@@ -385,7 +385,7 @@ void GameTableScreen::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 }
 void GameTableScreen::KeyboardInput(WPARAM wParam, LPARAM lParam)
 #else /*_WIN32*/
-/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢À‘• */
+/* TODO: Linuxã§ã¯æ—¥æœ¬èªå…¥åŠ›ãŒæœªå®Ÿè£… */
 void GameTableScreen::KeyboardInput(const XEvent* od)
 #endif /*_WIN32*/
 {
@@ -438,7 +438,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 #else /*_WIN32*/
 	const bool keyDown = od->type == KeyPress;
 #endif /*_WIN32*/
-	if (chatInput->is_Active()) return; // “ü—Í’†‚Í–³‹
+	if (chatInput->is_Active()) return; // å…¥åŠ›ä¸­ã¯ç„¡è¦–
 
 	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
 	auto cursorMoved = [&]() -> void {
@@ -465,22 +465,22 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{
-	/* ƒ{ƒ^ƒ“‘I‘ğ/”v‘I‘ğ ƒ‚[ƒhØ‚è‘Ö‚¦ */
-	case DIK_UP: case DIK_K: // ”v‘I‘ğƒ‚[ƒh‚ÉØ‚è‘Ö‚¦
+	/* ãƒœã‚¿ãƒ³é¸æŠ/ç‰Œé¸æŠ ãƒ¢ãƒ¼ãƒ‰åˆ‡ã‚Šæ›¿ãˆ */
+	case DIK_UP: case DIK_K: // ç‰Œé¸æŠãƒ¢ãƒ¼ãƒ‰ã«åˆ‡ã‚Šæ›¿ãˆ
 		if (keyDown && (buttonReconst->isCursorEnabled()) && (!isNakiSel)) {
 			tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
 			buttonReconst->setCursor();
 			cursorMoved();
 		}
 		break;
-	case DIK_DOWN: case DIK_J: // ƒ{ƒ^ƒ“‘I‘ğƒ‚[ƒh‚ÉØ‚è‘Ö‚¦
+	case DIK_DOWN: case DIK_J: // ãƒœã‚¿ãƒ³é¸æŠãƒ¢ãƒ¼ãƒ‰ã«åˆ‡ã‚Šæ›¿ãˆ
 		if (keyDown && (tehaiReconst->isCursorEnabled())) {
 			tehaiReconst->setTileCursor();
 			buttonReconst->setCursor(ButtonReconst::btnMAXIMUM - 1);
 			cursorMoved();
 		}
 		break;
-	/* ƒJ[ƒ\ƒ‹ˆÚ“® */
+	/* ã‚«ãƒ¼ã‚½ãƒ«ç§»å‹• */
 	case DIK_LEFT: case DIK_H:
 		if (keyDown && (tehaiReconst->isCursorEnabled())) {
 			do {
@@ -505,8 +505,8 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 			cursorMoved();
 		}
 		break;
-	/* ƒJ[ƒ\ƒ‹ˆÊ’u‚Ì’¼Bw’è */
-	/* ASSUMING JAPANESE KEYBOARD: 1 2 3 4 5 6 7 8 9 0 - ^  BS */
+	/* ã‚«ãƒ¼ã‚½ãƒ«ä½ç½®ã®ç›´æˆªæŒ‡å®š */
+	/* ASSUMING JAPANESE KEYBOARD: 1 2 3 4 5 6 7 8 9 0 - ^ ï¿¥ BS */
 	case DIK_1:          directTileCursor( 0); break;
 	case DIK_2:          directTileCursor( 1); break;
 	case DIK_3:          directTileCursor( 2); break;
@@ -521,7 +521,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_CIRCUMFLEX: directTileCursor(11); break;
 	case DIK_YEN:        directTileCursor(12); break;
 	case DIK_BACK:       directTileCursor(13); break;
-	/* Œˆ’èƒL[ */
+	/* æ±ºå®šã‚­ãƒ¼ */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
 		if (keyDown)
 			subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
@@ -532,7 +532,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 		else if (keyDown && (buttonReconst->isCursorEnabled()))
 			buttonReconst->ButtonPressed();
 		break;
-	/* ƒLƒƒƒ“ƒZƒ‹ƒL[ */
+	/* ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã‚­ãƒ¼ */
 	case DIK_ESCAPE: case DIK_X:
 		if (keyDown && isNakiSel && (buttonReconst->isCursorEnabled())) {
 			buttonReconst->setCursor(ButtonReconst::btnPass);
@@ -567,9 +567,9 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 #endif /*_WIN32*/
 	{
 #ifdef _WIN32
-	case DIMOFS_X: case DIMOFS_Y: // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ“®‚©‚µ‚½ê‡
+	case DIMOFS_X: case DIMOFS_Y: // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’å‹•ã‹ã—ãŸå ´åˆ
 #else /*_WIN32*/
-	case MotionNotify: // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ“®‚©‚µ‚½ê‡
+	case MotionNotify: // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’å‹•ã‹ã—ãŸå ´åˆ
 #endif /*_WIN32*/
 		if ((!chatInput->is_Active()) && (region != tehaiReconst->getTileCursor()) && (isValidTile)) {
 			tehaiReconst->setTileCursor(region);
@@ -588,10 +588,10 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 		}
 		break;
 #ifdef _WIN32
-	case DIMOFS_BUTTON0: // ƒ}ƒEƒXƒNƒŠƒbƒN
+	case DIMOFS_BUTTON0: // ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯
 		if (od->dwData)
 #else /*_WIN32*/
-	case ButtonPress: // ƒ}ƒEƒXƒNƒŠƒbƒN
+	case ButtonPress: // ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯
 		if (od->xbutton.button == Button1) {
 #endif /*_WIN32*/
 			subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
@@ -627,7 +627,7 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 		}
 #ifdef _WIN32
 		break;
-	case DIMOFS_BUTTON1: // ƒ}ƒEƒX‰EƒNƒŠƒbƒN
+	case DIMOFS_BUTTON1: // ãƒã‚¦ã‚¹å³ã‚¯ãƒªãƒƒã‚¯
 #else /*_WIN32*/
 		} else if (od->xbutton.button == Button3) {
 #endif /*_WIN32*/
@@ -636,9 +636,9 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 			&& (od->dwData)
 #endif /*_WIN32*/
 			&& isNakiSel
-		) { // –Â‚«‘I‘ğ’†‚Ì
+		) { // é³´ãé¸æŠä¸­ã®æ™‚
 			sound::Play(sound::IDs::sndClick);
-			ui::UIEvent->set(naki::nakiNone); // ”v‚Ì”Ô†‚ğİ’è
+			ui::UIEvent->set(naki::nakiNone); // ç‰Œã®ç•ªå·ã‚’è¨­å®š
 		}
 #ifndef _WIN32
 		}
@@ -647,24 +647,24 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 	}
 }
 
-/* Ì”v‚ğŒˆ’è‚·‚é */
+/* æ¨ç‰Œã‚’æ±ºå®šã™ã‚‹ */
 void GameTableScreen::FinishTileChoice() {
 	sound::Play(sound::IDs::sndClick);
 	if (tehaiReconst->isCursorEnabled() && tehaiReconst->isEnabled(tehaiReconst->getTileCursor())) {
 		const Int8ByTile TileCount = utils::countTilesInHand(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
 		if ((tileSelectMode == DiscardTileNum::Ankan) && (TileCount[GameStatus::gameStat()->statOfActive().Hand[tehaiReconst->getTileCursor()].tile] == 1))
-			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(DiscardTileNum::Kakan * DiscardTileNum::TypeStep)); // ‰ÁÈ‚Ìê‡
+			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(DiscardTileNum::Kakan * DiscardTileNum::TypeStep)); // åŠ æ§“ã®å ´åˆ
 		else
-			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // ”v‚Ì”Ô†‚ğİ’è
+			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // ç‰Œã®ç•ªå·ã‚’è¨­å®š
 	} else {
 		sound::Play(sound::IDs::sndCuohu);
 	}
 }
 
-void GameTableScreen::CallTsumoAgari() { // ƒcƒ‚ƒAƒKƒŠ
+void GameTableScreen::CallTsumoAgari() { // ãƒ„ãƒ¢ã‚¢ã‚¬ãƒª
 	ui::UIEvent->set(0xffffffff);
 }
-void GameTableScreen::CallKyuushuKyuuhai() { // ‹ãí‹ã”v
+void GameTableScreen::CallKyuushuKyuuhai() { // ä¹ç¨®ä¹ç‰Œ
 	ui::UIEvent->set(0xfffffffe);
 }
 

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "exports.h"
 #ifdef _WIN32
@@ -14,7 +14,7 @@ namespace mihajong_graphic {
 namespace ui {
 	
 #ifdef GRAPHIC_EXPORTS
-class Event { // ƒCƒxƒ“ƒg‚ÌŠî’êƒNƒ‰ƒX
+class Event { // ã‚¤ãƒ™ãƒ³ãƒˆã®åŸºåº•ã‚¯ãƒ©ã‚¹
 protected:
 #ifdef _WIN32
 	HANDLE myEvent;
@@ -38,7 +38,7 @@ public:
 #endif /*_WIN32*/
 };
 
-class UI_Event : public Event { // UI‚Ì“ü—Í‚ªŠ®—¹‚µ‚½‚©‚Ç‚¤‚©‚ğ•\‚·ƒCƒxƒ“ƒg
+class UI_Event : public Event { // UIã®å…¥åŠ›ãŒå®Œäº†ã—ãŸã‹ã©ã†ã‹ã‚’è¡¨ã™ã‚¤ãƒ™ãƒ³ãƒˆ
 private:
 #ifdef _WIN32
 	DWORD retValue;
@@ -59,7 +59,7 @@ public:
 #endif /*_WIN32*/
 };
 
-class CancellableWait : public Event { // UI‚Ì“ü—Í‚ªŠ®—¹‚µ‚½‚©‚Ç‚¤‚©‚ğ•\‚·ƒCƒxƒ“ƒg
+class CancellableWait : public Event { // UIã®å…¥åŠ›ãŒå®Œäº†ã—ãŸã‹ã©ã†ã‹ã‚’è¡¨ã™ã‚¤ãƒ™ãƒ³ãƒˆ
 private:
 #ifdef _WIN32
 	DWORD retValue;

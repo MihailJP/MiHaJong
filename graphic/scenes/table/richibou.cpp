@@ -1,4 +1,4 @@
-#include "richibou.h"
+Ôªø#include "richibou.h"
 #include "../../resource.h"
 #include "../../sprite.h"
 //#include "../../rule.h"
@@ -9,7 +9,7 @@ namespace mihajong_graphic {
 
 using utils::playerRelative;
 
-/* ÉäÅ[É`ñ_ï\é¶Ç∑ÇÈ */
+/* „É™„Éº„ÉÅÊ£íË°®Á§∫„Åô„Çã */
 void GameTableScreen::RichibouReconst::ShowRiichibou(const GameTable* gameStat) {
 	RECT rectH = {72, 30, 216, 42,}, rectV = {30, 2, 42, 146,};
 	for (PlayerID i = 0; i < Players; ++i) {

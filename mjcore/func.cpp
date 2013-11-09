@@ -1,4 +1,4 @@
-#include "func.h"
+ï»¿#include "func.h"
 
 #include <cassert>
 #include <memory>
@@ -21,7 +21,7 @@
 #include "largenum.h"
 #include "regex.h"
 
-/* ‡ˆÊ‚ğŒvZ‚·‚é */
+/* é †ä½ã‚’è¨ˆç®—ã™ã‚‹ */
 PlayerRankList calcRank(const GameTable* const gameStat) {
 	PlayerRankList rankList;
 	memset(&rankList, 0, sizeof(rankList));
@@ -31,13 +31,13 @@ PlayerRankList calcRank(const GameTable* const gameStat) {
 			if ((LNum)gameStat->Player[j].PlayerScore > gameStat->Player[i].PlayerScore)
 				rankList[i]++;
 			if (((LNum)gameStat->Player[j].PlayerScore == gameStat->Player[i].PlayerScore) &&
-				(i > j)) rankList[i]++; // “¯’…‚Ìê‡‚Í‹N‰Æ‚É‹ß‚¢‘¤‚ªãˆÊ
+				(i > j)) rankList[i]++; // åŒç€ã®å ´åˆã¯èµ·å®¶ã«è¿‘ã„å´ãŒä¸Šä½
 		}
 	}
 	return rankList;
 }
 
-/* •ï‚©‚Ç‚¤‚©‚Ì”»’è */
+/* åŒ…ã‹ã©ã†ã‹ã®åˆ¤å®š */
 bool isPao(const GameTable* const gameStat, PlayerID agariPlayer, PlayerID paoPlayer) {
 	bool paoFlag = false;
 	for (int i = 0; i < PaoYakuPages; i++) {
@@ -73,7 +73,7 @@ PlayerID getPaoPlayer(const GameTable* const gameStat, PlayerID agariPlayer) {
 	return paoPlayer;
 }
 
-/* ƒƒ“‚µ‚½ƒvƒŒƒCƒ„[‚Ì” */
+/* ãƒ­ãƒ³ã—ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ•° */
 int RonPlayers(const GameTable* const gameStat) {
 	int qualified = 0;
 	for (int i = 0; i < Players; i++)
@@ -82,7 +82,7 @@ int RonPlayers(const GameTable* const gameStat) {
 	return qualified;
 }
 
-/* ê•—”v‚ÌƒŠƒXƒg */
+/* å ´é¢¨ç‰Œã®ãƒªã‚¹ãƒˆ */
 TileCode Wind2Tile(uint8_t wind) {
 	switch (wind) {
 		case 0: return EastWind;
@@ -93,25 +93,25 @@ TileCode Wind2Tile(uint8_t wind) {
 		case 5: return GreenDragon;
 		case 6: return RedDragon;
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ˆÙí‚Èˆø”‚Å‚·"));
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ç•°å¸¸ãªå¼•æ•°ã§ã™"));
 			return NoTile;
 	}
 }
 
-/* Œ´“_(•Ô‚µ“_) */
+/* åŸç‚¹(è¿”ã—ç‚¹) */
 LNum BasePoint() {
 #ifdef GUOBIAO
 	return 500;
 #else /* GUOBIAO */
 	if (RuleData::chkRule("starting_point", "custom")) {
-		LNum basePoint = // ‰¼”•”
+		LNum basePoint = // ä»®æ•°éƒ¨
 		std::atoi(RuleData::chkRule("base_point_mantissa_tens")) * 10 +
 		std::atoi(RuleData::chkRule("base_point_mantissa_ones"));
-		/* w”•”‚Ìˆ— */
+		/* æŒ‡æ•°éƒ¨ã®å‡¦ç† */
 		REGEX::smatch matchDat; int exponent = 0;
 		std::string expConf(RuleData::chkRule("base_point_exponent"));
 		if (REGEX::regex_match(expConf, matchDat, REGEX::regex("exp_(\\d+)")))
-			exponent = atoi(matchDat[1].str().c_str()); // ƒ‹[ƒ‹İ’è•¶š—ñ‚©‚ç®”‚ğ’Šo
+			exponent = atoi(matchDat[1].str().c_str()); // ãƒ«ãƒ¼ãƒ«è¨­å®šæ–‡å­—åˆ—ã‹ã‚‰æ•´æ•°ã‚’æŠ½å‡º
 		for (int j = 0; j < exponent; ++j)
 			basePoint *= 10;
 		return basePoint;
@@ -127,16 +127,16 @@ LNum BasePoint() {
 #endif /* GUOBIAO */
 }
 
-/* •‚‚¢‚Ä‚¢‚é‚©”»’è‚·‚éŠÖ” */
+/* æµ®ã„ã¦ã„ã‚‹ã‹åˆ¤å®šã™ã‚‹é–¢æ•° */
 bool isAboveBase(const GameTable* const gameStat, PlayerID player) {
 	return gameStat->Player[player].PlayerScore >= (LNum)BasePoint();
 }
 
-/* ”ñ•‰®”1Œ…‚È‚ç‘SŠpE‚»‚êˆÈŠO‚Í”¼Šp */
+/* éè² æ•´æ•°1æ¡ãªã‚‰å…¨è§’ãƒ»ãã‚Œä»¥å¤–ã¯åŠè§’ */
 CodeConv::tstring intstr(int val) {
 	LPCTSTR hanstr[10] = {
-		_T("‚O"), _T("‚P"), _T("‚Q"), _T("‚R"), _T("‚S"),
-		_T("‚T"), _T("‚U"), _T("‚V"), _T("‚W"), _T("‚X"),
+		_T("ï¼"), _T("ï¼‘"), _T("ï¼’"), _T("ï¼“"), _T("ï¼”"),
+		_T("ï¼•"), _T("ï¼–"), _T("ï¼—"), _T("ï¼˜"), _T("ï¼™"),
 	};
 	CodeConv::tostringstream o;
 	if ((val <= 9) && (val >= 0)) o << hanstr[val];
@@ -147,7 +147,7 @@ CodeConv::tstring intstr(int val) {
 namespace confpath {
 	using CodeConv::tstring;
 
-	/* Vista/7‚ğg‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚© */
+	/* Vista/7ã‚’ä½¿ã£ã¦ã„ã‚‹ã‹ã©ã†ã‹ */
 #ifdef _WIN32
 	bool isVista() {
 		OSVERSIONINFO versionInfo;
@@ -156,13 +156,13 @@ namespace confpath {
 		return ((versionInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)&&(versionInfo.dwMajorVersion >= 6));
 	}
 #else /*_WIN32*/
-	bool isVista() { /* Windows‚¶‚á‚È‚¢ */
+	bool isVista() { /* Windowsã˜ã‚ƒãªã„ */
 		return false;
 	}
 #endif /*_WIN32*/
 
-	/* ƒRƒ“ƒtƒBƒO‚ÌƒpƒX‚ğ©“®İ’è */
-	/* VistaˆÈ~‚ÅRoaming‚É€”õ‚Å‚«‚Ä‚¢‚È‚¯‚ê‚Îì‚é */
+	/* ã‚³ãƒ³ãƒ•ã‚£ã‚°ã®ãƒ‘ã‚¹ã‚’è‡ªå‹•è¨­å®š */
+	/* Vistaä»¥é™ã§Roamingã«æº–å‚™ã§ãã¦ã„ãªã‘ã‚Œã°ä½œã‚‹ */
 	std::string confPath() {
 		std::string configpath = "";
 #ifdef _WIN32
@@ -182,7 +182,7 @@ namespace confpath {
 #endif
 
 			if (strstr(cur, progfiles) == cur) {
-				// MakeSureDirectoryPathExists‚ªƒƒCƒh•¶š‘Î‰‚µ‚Ä‚È‚¢‚Ì‚Åd•û‚È‚­ANSI•¶š”Å
+				// MakeSureDirectoryPathExistsãŒãƒ¯ã‚¤ãƒ‰æ–‡å­—å¯¾å¿œã—ã¦ãªã„ã®ã§ä»•æ–¹ãªãANSIæ–‡å­—ç‰ˆ
 				MakeSureDirectoryPathExists((std::string(appdata) + std::string("\\MiHaJong\\haifu\\")).c_str());
 				CopyFileA(".\\haifu\\haifu.css",
 					(std::string(appdata) + std::string("\\MiHaJong\\haifu\\haifu.css")).c_str(),
@@ -213,7 +213,7 @@ namespace confpath {
 #endif
 		}
 #else /*_WIN32*/
-		/* Linux ‚Å‚ÍA~/.mihajong ‚Éİ’è‚È‚Ç‚ğ•Û‘¶‚·‚é */
+		/* Linux ã§ã¯ã€~/.mihajong ã«è¨­å®šãªã©ã‚’ä¿å­˜ã™ã‚‹ */
 		std::string homedir(getenv("HOME"));
 		configpath = homedir + std::string("/.mihajong");
 		mkdir(configpath.c_str(), 0755);
@@ -240,7 +240,7 @@ namespace confpath {
 
 }
 
-/* ƒŠ[ƒ`‚·‚é‚Ì‚É‚¿“_‚ª‘«‚è‚Ä‚¢‚é‚©‚Ç‚¤‚© */
+/* ãƒªãƒ¼ãƒã™ã‚‹ã®ã«æŒã¡ç‚¹ãŒè¶³ã‚Šã¦ã„ã‚‹ã‹ã©ã†ã‹ */
 bool isRichiReqSatisfied (const GameTable* const gameStat, PlayerID targetPlayer) {
 #ifdef GUOBIAO
 	return false;
@@ -255,7 +255,7 @@ bool isRichiReqSatisfied (const GameTable* const gameStat, PlayerID targetPlayer
 #endif /* GUOBIAO */
 }
 
-/* ”ò‚Ñ‚É‚È‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚© */
+/* é£›ã³ã«ãªã£ã¦ã„ã‚‹ã‹ã©ã†ã‹ */
 bool isDobon (const GameTable* const gameStat, PlayerID targetPlayer) {
 #ifdef GUOBIAO
 	return false;
@@ -271,7 +271,7 @@ bool isDobon (const GameTable* const gameStat, PlayerID targetPlayer) {
 #endif /* GUOBIAO */
 }
 
-/* “V•Ó‚É‚È‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚© */
+/* å¤©è¾ºã«ãªã£ã¦ã„ã‚‹ã‹ã©ã†ã‹ */
 bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer) {
 #ifdef GUOBIAO
 	return false;
@@ -297,11 +297,11 @@ bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer) {
 
 MJCORE void cleanup() {
 	sound::Cleanup();
-	info(_T("ƒTƒEƒ“ƒhDLL‚ğ‰ğ•ú‚µ‚Ü‚µ‚½B"));
+	info(_T("ã‚µã‚¦ãƒ³ãƒ‰DLLã‚’è§£æ”¾ã—ã¾ã—ãŸã€‚"));
 	for (int i = 0; i < Players; i++) {
 		mihajong_socket::hangup(SOCK_GAME + i);
 		mihajong_socket::hangup(SOCK_CHAT + i);
 	}
 	mihajong_socket::bye();
-	info(_T("ƒ\ƒPƒbƒgDLL‚ğ‰ğ•ú‚µ‚Ü‚µ‚½B"));
+	info(_T("ã‚½ã‚±ãƒƒãƒˆDLLã‚’è§£æ”¾ã—ã¾ã—ãŸã€‚"));
 }

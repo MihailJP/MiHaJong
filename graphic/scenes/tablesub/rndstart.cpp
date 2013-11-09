@@ -1,4 +1,4 @@
-#include "rndstart.h"
+ï»¿#include "rndstart.h"
 #include <cmath>
 #include "../../rule.h"
 #include "../../gametbl.h"
@@ -15,8 +15,8 @@ TableSubsceneBeginning::~TableSubsceneBeginning() {
 	delete myTextRenderer;
 }
 
-const std::wstring TableSubsceneBeginning::WindName = L"“Œ“ì¼–k”’á¢’†";
-const std::wstring TableSubsceneBeginning::Numeral = L"ˆê“ñOlŒÜ˜Zµ”ª‹ã\";
+const std::wstring TableSubsceneBeginning::WindName = L"æ±å—è¥¿åŒ—ç™½ç™¼ä¸­";
+const std::wstring TableSubsceneBeginning::Numeral = L"ä¸€äºŒä¸‰å››äº”å…­ä¸ƒå…«ä¹å";
 
 void TableSubsceneBeginning::ZoomChar(unsigned ID, const std::wstring& str, int xOffset, uint64_t Anfang, uint64_t Ende) {
 	const uint64_t Zeit = myTimer.elapsed();
@@ -39,23 +39,23 @@ void TableSubsceneBeginning::Render() {
 
 	if (myTimer.elapsed() < timeOffset) {
 		if (roundcode > GameStatus::gameStat()->GameLength) {
-			ZoomChar(0, L"‰„", -256, 0, 250000);
-			ZoomChar(1, L"’·",    0, 0, 250000);
-			ZoomChar(2, L"í",  256, 0, 250000);
+			ZoomChar(0, L"å»¶", -256, 0, 250000);
+			ZoomChar(1, L"é•·",    0, 0, 250000);
+			ZoomChar(2, L"æˆ¦",  256, 0, 250000);
 		} else if (roundcode == 0) {
-			ZoomChar(0, L"ˆê", -336, 0, 250000);
-			ZoomChar(1, L"‹Ç", -112, 0, 250000);
-			ZoomChar(2, L"¸",  112, 0, 250000);
-			ZoomChar(3, L"Z",  336, 0, 250000);
+			ZoomChar(0, L"ä¸€", -336, 0, 250000);
+			ZoomChar(1, L"å±€", -112, 0, 250000);
+			ZoomChar(2, L"ç²¾",  112, 0, 250000);
+			ZoomChar(3, L"ç®—",  336, 0, 250000);
 		} else {
-			ZoomChar(0, L"ƒI", -336, 0, 250000);
-			ZoomChar(1, L"[", -112, 0, 250000);
-			ZoomChar(2, L"ƒ‰",  112, 0, 250000);
-			ZoomChar(3, L"ƒX",  336, 0, 250000);
+			ZoomChar(0, L"ã‚ª", -336, 0, 250000);
+			ZoomChar(1, L"ãƒ¼", -112, 0, 250000);
+			ZoomChar(2, L"ãƒ©",  112, 0, 250000);
+			ZoomChar(3, L"ã‚¹",  336, 0, 250000);
 		}
 	} else {
 		if ((GameStatus::gameStat()->gameType & RichiMJ) && (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game"))) {
-			// “Œê‚Ì‚İ‚Ìƒ‹[ƒ‹
+			// æ±å ´ã®ã¿ã®ãƒ«ãƒ¼ãƒ«
 			ZoomChar(    0, WindName.substr(0                 , 1), -256,      0 + timeOffset, 250000 + timeOffset);
 			if (roundnum < 10) {
 				ZoomChar(1, Numeral.substr( roundnum          , 1),    0, 250000 + timeOffset, 500000 + timeOffset);
@@ -64,11 +64,11 @@ void TableSubsceneBeginning::Render() {
 				ZoomChar(1, o.str()                               ,    0, 250000 + timeOffset, 500000 + timeOffset);
 			}
 		} else {
-			// ˆê”Ê‚Ìƒ‹[ƒ‹
+			// ä¸€èˆ¬ã®ãƒ«ãƒ¼ãƒ«
 			ZoomChar(    0, WindName.substr(roundnum / Players, 1), -256,      0 + timeOffset, 250000 + timeOffset);
 			ZoomChar(    1, Numeral.substr( roundnum % Players, 1),    0, 250000 + timeOffset, 500000 + timeOffset);
 		}
-		ZoomChar(        2, L"‹Ç"                                 ,  256, 500000 + timeOffset, 750000 + timeOffset);
+		ZoomChar(        2, L"å±€"                                 ,  256, 500000 + timeOffset, 750000 + timeOffset);
 		myTextRenderer->DelText(3);
 	}
 	myTextRenderer->Render();

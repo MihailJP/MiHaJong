@@ -1,4 +1,4 @@
-#include "main.h"
+ï»¿#include "main.h"
 
 #include <tuple>
 #include "logging.h"
@@ -32,16 +32,16 @@ GameThread::GameThread(GameTypeID gameType, Window hwnd) {
 GameThread::~GameThread() {
 	/* WE ASSUME THAT THIS DESTRUCTOR GETS CALLED ONLY WHEN THE PROGRAM IS ABOUT TO END. */
 	/* DO NOT CALL THIS DESTRUCTOR ELSEWHEN, OR IT MAY CAUSE SOME LEAKS!!! */
-	/* ƒvƒƒOƒ‰ƒ€I—¹‚É‚Ì‚İŒÄ‚Ño‚³‚ê‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚Ü‚· */
-	/* ‚»‚êˆÈŠO‚Ì‚É‚Íâ‘Î‚ÉŒÄ‚Ño‚³‚È‚¢‚±‚ÆIII */
+	/* ãƒ—ãƒ­ã‚°ãƒ©ãƒ çµ‚äº†æ™‚ã«ã®ã¿å‘¼ã³å‡ºã•ã‚Œã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã¾ã™ */
+	/* ãã‚Œä»¥å¤–ã®æ™‚ã«ã¯çµ¶å¯¾ã«å‘¼ã³å‡ºã•ãªã„ã“ã¨ï¼ï¼ï¼ */
 #ifdef _WIN32
 	DWORD exitCode; GetExitCodeThread(hThread, &exitCode);
 	if (exitCode == STILL_ACTIVE) {
-		warn(_T("ƒXƒŒƒbƒh‚ğ‹­§I—¹‚µ‚Ü‚·I"));
+		warn(_T("ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’å¼·åˆ¶çµ‚äº†ã—ã¾ã™ï¼"));
 		TerminateThread(hThread, S_OK);
 	}
 #else /*_WIN32*/
-	warn(_T("ƒXƒŒƒbƒh‚ğ‹­§I—¹‚µ‚Ü‚·I"));
+	warn(_T("ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’å¼·åˆ¶çµ‚äº†ã—ã¾ã™ï¼"));
 	pthread_cancel(hThread);
 #endif /*_WIN32*/
 }
@@ -63,10 +63,10 @@ void* GameThread::ThreadMain(void* lpParam) {
 	initapp(gameType, hwnd);
 	startgame(gameType);
 	cleanup();
-	/* WORKAROUND: ƒ^ƒCƒgƒ‹ƒƒjƒ…[‚©‚çExit‚ğ‘I‘ğ‚µ‚Ä‚àI—¹‚µ‚Ä‚­‚ê‚È‚¢Œ  */
+	/* WORKAROUND: ã‚¿ã‚¤ãƒˆãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‹ã‚‰Exitã‚’é¸æŠã—ã¦ã‚‚çµ‚äº†ã—ã¦ãã‚Œãªã„ä»¶  */
 	pid_t myPid = getpid();
 	kill(myPid, SIGINT);
-	/* WORKAROUND ‚±‚±‚Ü‚Å */
+	/* WORKAROUND ã“ã“ã¾ã§ */
 	return nullptr;
 }
 #endif /*_WIN32*/

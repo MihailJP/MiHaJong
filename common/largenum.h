@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <type_traits>
 #include <cstdint>
@@ -6,8 +6,8 @@
 #include <iomanip>
 #include "strcode.h"
 
-// Â“Vƒ‹[ƒ‹‘Îô
-// ˆê‰21•s‰Âv‹c‚Ü‚Å•\Œ»‰Â”\cc
+// é’å¤©ãƒ«ãƒ¼ãƒ«å¯¾ç­–
+// ä¸€å¿œ21ä¸å¯æ€è­°ã¾ã§è¡¨ç¾å¯èƒ½â€¦â€¦
 
 #ifdef MJCORE_EXPORTS
 #include "../mjcore/except.h"
@@ -17,10 +17,10 @@ namespace mihajong_structs {
 
 const unsigned int DigitGroups = 8;
 
-struct LargeNum { // }21•s‰Âv‹c‚Ü‚Å•\Œ»‰Â”\‚È”‚ÌƒNƒ‰ƒX
+struct LargeNum { // Â±21ä¸å¯æ€è­°ã¾ã§è¡¨ç¾å¯èƒ½ãªæ•°ã®ã‚¯ãƒ©ã‚¹
 	int32_t digitGroup[DigitGroups];
 
-	void fix() { // ³‹KŒ`‚É’¼‚·
+	void fix() { // æ­£è¦å½¢ã«ç›´ã™
 		for (int i = 0; i < (DigitGroups - 1); i++) {
 			if ((this->digitGroup[i] > 99999999)||(this->digitGroup[i] < -99999999)) {
 				this->digitGroup[i + 1] += this->digitGroup[i] / 100000000;
@@ -45,7 +45,7 @@ struct LargeNum { // }21•s‰Âv‹c‚Ü‚Å•\Œ»‰Â”\‚È”‚ÌƒNƒ‰ƒX
 			}
 		}
 	}
-	signed int compare(const LargeNum& cmp) const { // ”äŠr—p
+	signed int compare(const LargeNum& cmp) const { // æ¯”è¼ƒç”¨
 		signed int ans = 0;
 		for (int i = DigitGroups - 1; i >= 0; i--) {
 			if (this->digitGroup[i] > cmp.digitGroup[i]) {ans = 1; break;}
@@ -54,21 +54,21 @@ struct LargeNum { // }21•s‰Âv‹c‚Ü‚Å•\Œ»‰Â”\‚È”‚ÌƒNƒ‰ƒX
 		return ans;
 	}
 	CodeConv::tstring bignumtotext(CodeConv::tstring plusSign, CodeConv::tstring minusSign) const {
-		// •¶š—ñ•\Œ»‚É’¼‚·
+		// æ–‡å­—åˆ—è¡¨ç¾ã«ç›´ã™
 		static const CodeConv::tstring unitname[] = {
-			_T(""), _T("–œ"), _T("‰­"),_T("’›"), 
-			_T("‹"), _T("š´"), _T("`"), _T("õ"),
-			_T("a"), _T("ŠÀ"), _T("³"), _T("Ú"),
-			_T("‹É"), _T("P‰Í¹"), _T("ˆ¢‘m‹_"), _T("“ß—R‘¼"),
+			_T(""), _T("ä¸‡"), _T("å„„"),_T("å…†"), 
+			_T("äº¬"), _T("å“"), _T("æ¼"), _T("ç©£"),
+			_T("æº"), _T("æ¾—"), _T("æ­£"), _T("è¼‰"),
+			_T("æ¥µ"), _T("æ’æ²³æ²™"), _T("é˜¿åƒ§ç¥‡"), _T("é‚£ç”±ä»–"),
 		};
 		CodeConv::tostringstream o;
-		// •„†
+		// ç¬¦å·
 		if ((LargeNum)*this == fromInt(0)) return _T("0");
 		else if ((LargeNum)*this < fromInt(0)) o << minusSign;
 		else if ((LargeNum)*this > fromInt(0)) o << plusSign;
-		// o—Í
+		// å‡ºåŠ›
 		if (this->digitGroup[7] / 100000000)
-			o << abs(this->digitGroup[7] / 100000000) << _T("•s‰Âv‹c");
+			o << abs(this->digitGroup[7] / 100000000) << _T("ä¸å¯æ€è­°");
 		for (int i = 7; i >= 0; i--) {
 			if (this->digitGroup[i] % 100000000 / 10000)
 				o << abs(this->digitGroup[i] % 100000000 / 10000) << unitname[i * 2 + 1];
@@ -78,13 +78,13 @@ struct LargeNum { // }21•s‰Âv‹c‚Ü‚Å•\Œ»‰Â”\‚È”‚ÌƒNƒ‰ƒX
 		return o.str();
 	}
 	CodeConv::tstring bignumtoplaintext(CodeConv::tstring plusSign = _T(""), CodeConv::tstring minusSign = _T("-")) const {
-		// •¶š—ñ•\Œ»‚É’¼‚·
+		// æ–‡å­—åˆ—è¡¨ç¾ã«ç›´ã™
 		CodeConv::tostringstream o;
-		// •„†
+		// ç¬¦å·
 		if ((LargeNum)*this == fromInt(0)) return _T("0");
 		else if ((LargeNum)*this < fromInt(0)) o << minusSign;
 		else if ((LargeNum)*this > fromInt(0)) o << plusSign;
-		// o—Í
+		// å‡ºåŠ›
 		bool valFlag = false;
 		for (int i = DigitGroups - 1; i >= 0; i--) {
 			if (valFlag) {
@@ -96,7 +96,7 @@ struct LargeNum { // }21•s‰Âv‹c‚Ü‚Å•\Œ»‰Â”\‚È”‚ÌƒNƒ‰ƒX
 		return o.str();
 	}
 	double bignumtodbl() const {
-		// •‚“®¬”“_Œ^‚É’¼‚·
+		// æµ®å‹•å°æ•°ç‚¹å‹ã«ç›´ã™
 		double ans = 0.0;
 		for (int i = 7; i >= 0; i--) {
 			ans *= 1e8; ans += this->digitGroup[i];
@@ -110,14 +110,14 @@ struct LargeNum { // }21•s‰Âv‹c‚Ü‚Å•\Œ»‰Â”\‚È”‚ÌƒNƒ‰ƒX
 		num.digitGroup[1] = (val / 100000000);
 		return num;
 	}
-	void ceilHundred() { // 100“_’PˆÊ‚ÉØ‚èã‚°
+	void ceilHundred() { // 100ç‚¹å˜ä½ã«åˆ‡ã‚Šä¸Šã’
 		if (this->digitGroup[0] % 100 != 0) {
 			this->digitGroup[0] += 100 - this->digitGroup[0] % 100;
 			this->fix();
 		}
 	}
 
-	/* ‚±‚±‚©‚ç‰‰Zq‚ğƒI[ƒo[ƒ[ƒh */
+	/* ã“ã“ã‹ã‚‰æ¼”ç®—å­ã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ */
 
 	const LargeNum operator+(const LargeNum& addend) const {
 		LargeNum ans;
@@ -173,14 +173,14 @@ struct LargeNum { // }21•s‰Âv‹c‚Ü‚Å•\Œ»‰Â”\‚È”‚ÌƒNƒ‰ƒX
 		return *this;
 	}
 
-	const LargeNum operator*(const int32_t multiplier) const { // ‚ß‚ñ‚Ç‚­‚³‚¢‚Ì‚Å32bit®””{‚¾‚¯cc
+	const LargeNum operator*(const int32_t multiplier) const { // ã‚ã‚“ã©ãã•ã„ã®ã§32bitæ•´æ•°å€ã ã‘â€¦â€¦
 		LargeNum ans = LargeNum();
 		for (int i = 0; i < DigitGroups; i++) {
 			int64_t tmpdigit = static_cast<int64_t>(digitGroup[i]) * static_cast<int64_t>(multiplier);
 			if ((i == (DigitGroups - 1))
 				&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN))) {
 #ifdef MJCORE_EXPORTS
-					Raise(EXCEPTION_MJCORE_OVERFLOW, _T("ƒI[ƒo[ƒtƒ[‚µ‚Ü‚µ‚½"));
+					Raise(EXCEPTION_MJCORE_OVERFLOW, _T("ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã—ã¾ã—ãŸ"));
 #else
 					abort(); // ABEND by overflow
 #endif
@@ -201,7 +201,7 @@ struct LargeNum { // }21•s‰Âv‹c‚Ü‚Å•\Œ»‰Â”\‚È”‚ÌƒNƒ‰ƒX
 			if ((i == (DigitGroups - 1))
 				&& ((tmpdigit > INT_MAX) || (tmpdigit < INT_MIN))) {
 #ifdef MJCORE_EXPORTS
-					Raise(EXCEPTION_MJCORE_OVERFLOW, _T("ƒI[ƒo[ƒtƒ[‚µ‚Ü‚µ‚½"));
+					Raise(EXCEPTION_MJCORE_OVERFLOW, _T("ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã—ã¾ã—ãŸ"));
 #else
 					abort(); // ABEND by overflow
 #endif

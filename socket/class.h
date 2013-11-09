@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <string>
 #include <cstdint>
@@ -29,115 +29,115 @@ typedef int SocketDescriptor;
 
 class Sock {
 private:
-	class network_thread; // ƒXƒŒƒbƒh(ƒX[ƒp[ƒNƒ‰ƒX)
-	class client_thread; // ƒNƒ‰ƒCƒAƒ“ƒg‚ÌƒXƒŒƒbƒh
-	class server_thread; // ƒT[ƒo[‚ÌƒXƒŒƒbƒh
-	union Thread { // ƒXƒŒƒbƒhƒIƒuƒWƒFƒNƒg‚Ìƒ|ƒCƒ“ƒ^(‹¤—p‘Ì)
+	class network_thread; // ã‚¹ãƒ¬ãƒƒãƒ‰(ã‚¹ãƒ¼ãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹)
+	class client_thread; // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã®ã‚¹ãƒ¬ãƒƒãƒ‰
+	class server_thread; // ã‚µãƒ¼ãƒãƒ¼ã®ã‚¹ãƒ¬ãƒƒãƒ‰
+	union Thread { // ã‚¹ãƒ¬ãƒƒãƒ‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ã‚¿(å…±ç”¨ä½“)
 	public:
 		client_thread* client;
 		server_thread* server;
 	};
-	static uint32_t addr2var(const std::string& address); // ƒAƒhƒŒƒX‚ğæ“¾
+	static uint32_t addr2var(const std::string& address); // ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—
 	bool isServer;
 	sockaddr_in addr;
 	SocketDescriptor sock, lsock;
 	Thread threadPtr;
 	uint16_t portnum;
 public:
-	Sock () {} // ƒ\ƒPƒbƒg‰Šú‰»
-	explicit Sock (uint16_t port); // ƒT[ƒo[ŠJn
-	Sock (const std::string& destination, uint16_t port); // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
+	Sock () {} // ã‚½ã‚±ãƒƒãƒˆåˆæœŸåŒ–
+	explicit Sock (uint16_t port); // ã‚µãƒ¼ãƒãƒ¼é–‹å§‹
+	Sock (const std::string& destination, uint16_t port); // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆæ¥ç¶š
 	Sock (const Sock&) = delete; // Delete unexpected copy constructor
 	Sock& operator= (const Sock&) = delete; // Delete unexpected assign operator
-	~Sock(); // Ú‘±‚ğØ‚é
-	void listen (uint16_t port); // ƒT[ƒo[ŠJn
-	void listen (); // ƒT[ƒo[ŠJn
-	void connect (const std::string& destination, uint16_t port); // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
-	void connect (); // ƒNƒ‰ƒCƒAƒ“ƒgÄÚ‘±
-	bool connected (); // Ú‘±‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
-	void wait_until_connected (); // •¶š’Ê‚è‚Ì‚±‚Æ‚ğ‚â‚é
-	unsigned char getc (); // “Ç‚İ‚İ(”ñ“¯Šú)
-	unsigned char syncgetc (); // “Ç‚İ‚İ(“¯Šú)
-	CodeConv::tstring gets (); // ˆês“Ç‚İ‚İ
-	void putc (unsigned char byte); // ‘‚«‚İ
-	void puts (const CodeConv::tstring& str); // •¶š—ñ‘‚«‚İ
-	void disconnect (); // Ú‘±‚ğØ‚é
+	~Sock(); // æ¥ç¶šã‚’åˆ‡ã‚‹
+	void listen (uint16_t port); // ã‚µãƒ¼ãƒãƒ¼é–‹å§‹
+	void listen (); // ã‚µãƒ¼ãƒãƒ¼é–‹å§‹
+	void connect (const std::string& destination, uint16_t port); // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆæ¥ç¶š
+	void connect (); // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå†æ¥ç¶š
+	bool connected (); // æ¥ç¶šã•ã‚Œã¦ã„ã‚‹ã‹ã‚’ç¢ºèª
+	void wait_until_connected (); // æ–‡å­—é€šã‚Šã®ã“ã¨ã‚’ã‚„ã‚‹
+	unsigned char getc (); // èª­ã¿è¾¼ã¿(éåŒæœŸ)
+	unsigned char syncgetc (); // èª­ã¿è¾¼ã¿(åŒæœŸ)
+	CodeConv::tstring gets (); // ä¸€è¡Œèª­ã¿è¾¼ã¿
+	void putc (unsigned char byte); // æ›¸ãè¾¼ã¿
+	void puts (const CodeConv::tstring& str); // æ–‡å­—åˆ—æ›¸ãè¾¼ã¿
+	void disconnect (); // æ¥ç¶šã‚’åˆ‡ã‚‹
 };
 
-class Sock::network_thread { // ƒXƒŒƒbƒh(ƒX[ƒp[ƒNƒ‰ƒX)
+class Sock::network_thread { // ã‚¹ãƒ¬ãƒƒãƒ‰(ã‚¹ãƒ¼ãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹)
 public:
 	explicit network_thread(Sock* caller);
 	network_thread(const network_thread&) = delete; // Delete unexpected copy constructor
 	network_thread& operator= (const network_thread&) = delete; // Delete unexpected assign operator
 	virtual ~network_thread();
 #ifdef _WIN32
-	static DWORD WINAPI thread(LPVOID lp); // ƒXƒŒƒbƒh‚ğ‹N“®‚·‚é‚½‚ß‚Ìˆ—
+	static DWORD WINAPI thread(LPVOID lp); // ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’èµ·å‹•ã™ã‚‹ãŸã‚ã®å‡¦ç†
 #else /* _WIN32 */
-	static void* thread(void* lp); // ƒXƒŒƒbƒh‚ğ‹N“®‚·‚é‚½‚ß‚Ìˆ—
+	static void* thread(void* lp); // ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’èµ·å‹•ã™ã‚‹ãŸã‚ã®å‡¦ç†
 #endif /* _WIN32 */
-	virtual void startThread () = 0; // ƒXƒŒƒbƒh‚ğŠJn‚·‚é
-	bool isConnected (); // Ú‘±Ï‚©‚ğ•Ô‚·ŠÖ”
-	void setaddr (const sockaddr_in destination); // Ú‘±æ‚ğİ’è‚·‚é
-	void setsock (SocketDescriptor* const socket); // ƒ\ƒPƒbƒg‚ğİ’è‚·‚é
-	void terminate (); // Ø’f‚·‚é
-	void chkError (); // ƒGƒ‰[‚ğƒ`ƒFƒbƒN‚µA‚à‚µƒGƒ‰[‚¾‚Á‚½‚ç—áŠO‚ğ“Š‚°‚é
-	unsigned char read (); // 1ƒoƒCƒg“Ç‚İ‚İ
-	void write (unsigned char byte); // 1ƒoƒCƒg‘‚«‚İ
-	CodeConv::tstring readline (); // 1s“Ç‚İ‚İ
+	virtual void startThread () = 0; // ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’é–‹å§‹ã™ã‚‹
+	bool isConnected (); // æ¥ç¶šæ¸ˆã‹ã‚’è¿”ã™é–¢æ•°
+	void setaddr (const sockaddr_in destination); // æ¥ç¶šå…ˆã‚’è¨­å®šã™ã‚‹
+	void setsock (SocketDescriptor* const socket); // ã‚½ã‚±ãƒƒãƒˆã‚’è¨­å®šã™ã‚‹
+	void terminate (); // åˆ‡æ–­ã™ã‚‹
+	void chkError (); // ã‚¨ãƒ©ãƒ¼ã‚’ãƒã‚§ãƒƒã‚¯ã—ã€ã‚‚ã—ã‚¨ãƒ©ãƒ¼ã ã£ãŸã‚‰ä¾‹å¤–ã‚’æŠ•ã’ã‚‹
+	unsigned char read (); // 1ãƒã‚¤ãƒˆèª­ã¿è¾¼ã¿
+	void write (unsigned char byte); // 1ãƒã‚¤ãƒˆæ›¸ãè¾¼ã¿
+	CodeConv::tstring readline (); // 1è¡Œèª­ã¿è¾¼ã¿
 protected:
 	Sock* myCaller;
 	enum errorType {errNone, errListen, errAccept, errConnection, errRecv, errSend};
 	static const unsigned int bufsize = 65536;
-	SocketDescriptor* mySock; // ƒ\ƒPƒbƒg(ƒ|ƒCƒ“ƒ^)
-	SocketDescriptor* listenerSock; // ƒ\ƒPƒbƒg(ƒ|ƒCƒ“ƒ^)
-	errorType errtype; // ƒGƒ‰[‚Ìí—Ş
-	int errcode; // ƒGƒ‰[ƒR[ƒh
-	volatile bool connecting; // Ú‘±’†‚©‚Ìƒtƒ‰ƒO[ƒ[ƒJ[ƒXƒŒƒbƒh‚©‚ç‘‚«‚İ]
-	volatile bool connected; // Ú‘±Ï‚İ‚©‚Ìƒtƒ‰ƒO[ƒ[ƒJ[ƒXƒŒƒbƒh‚©‚ç‘‚«‚İ]
-	volatile bool terminated; // Ú‘±Ï‚İ‚©‚Ìƒtƒ‰ƒO[eƒXƒŒƒbƒh‚©‚ç‘‚«‚İ]
-	volatile bool send_ended; // ‘—M‚ª‘S‚ÄI‚í‚Á‚½‚©‚Ìƒtƒ‰ƒO
-	volatile bool sender_closed; // ‘—M‚ª‘S‚ÄI‚í‚Á‚½‚©‚Ìƒtƒ‰ƒO
-	volatile bool receive_ended; // óM‚ª‘S‚ÄI‚í‚Á‚½‚©‚Ìƒtƒ‰ƒO
-	volatile bool receiver_closed; // óM‚ª‘S‚ÄI‚í‚Á‚½‚©‚Ìƒtƒ‰ƒO
-	volatile bool finished; // I—¹Ï‚İ‚©‚Ìƒtƒ‰ƒO[ƒ[ƒJ[ƒXƒŒƒbƒh‚©‚ç‘‚«‚İ]
-	sockaddr_in myAddr; // ƒAƒhƒŒƒXî•ñ[eƒXƒŒƒbƒh‚©‚ç‘‚«‚İ]
-	std::queue<unsigned char> myMailBox; // ó‚¯æ‚Á‚½ƒoƒCƒg—ñ
-	MHJMutex myRecvQueueCS; // óMƒoƒbƒtƒ@—pƒ~ƒ…[ƒeƒbƒNƒX(ƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“‚É•ÏX)
-	std::queue<unsigned char> mySendBox; // ‘—‚é—\’è‚ÌƒoƒCƒg—ñ
-	MHJMutex mySendQueueCS; // ‘—Mƒoƒbƒtƒ@—pƒ~ƒ…[ƒeƒbƒNƒX(ƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“‚É•ÏX)
-	virtual int establishConnection () = 0; // Ú‘±‚ğŠm—§‚·‚é
-	int reader (); // “Ç‚İ‚İ
-	int writer (); // ‘‚«‚İ
+	SocketDescriptor* mySock; // ã‚½ã‚±ãƒƒãƒˆ(ãƒã‚¤ãƒ³ã‚¿)
+	SocketDescriptor* listenerSock; // ã‚½ã‚±ãƒƒãƒˆ(ãƒã‚¤ãƒ³ã‚¿)
+	errorType errtype; // ã‚¨ãƒ©ãƒ¼ã®ç¨®é¡
+	int errcode; // ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰
+	volatile bool connecting; // æ¥ç¶šä¸­ã‹ã®ãƒ•ãƒ©ã‚°[ãƒ¯ãƒ¼ã‚«ãƒ¼ã‚¹ãƒ¬ãƒƒãƒ‰ã‹ã‚‰æ›¸ãè¾¼ã¿]
+	volatile bool connected; // æ¥ç¶šæ¸ˆã¿ã‹ã®ãƒ•ãƒ©ã‚°[ãƒ¯ãƒ¼ã‚«ãƒ¼ã‚¹ãƒ¬ãƒƒãƒ‰ã‹ã‚‰æ›¸ãè¾¼ã¿]
+	volatile bool terminated; // æ¥ç¶šæ¸ˆã¿ã‹ã®ãƒ•ãƒ©ã‚°[è¦ªã‚¹ãƒ¬ãƒƒãƒ‰ã‹ã‚‰æ›¸ãè¾¼ã¿]
+	volatile bool send_ended; // é€ä¿¡ãŒå…¨ã¦çµ‚ã‚ã£ãŸã‹ã®ãƒ•ãƒ©ã‚°
+	volatile bool sender_closed; // é€ä¿¡ãŒå…¨ã¦çµ‚ã‚ã£ãŸã‹ã®ãƒ•ãƒ©ã‚°
+	volatile bool receive_ended; // å—ä¿¡ãŒå…¨ã¦çµ‚ã‚ã£ãŸã‹ã®ãƒ•ãƒ©ã‚°
+	volatile bool receiver_closed; // å—ä¿¡ãŒå…¨ã¦çµ‚ã‚ã£ãŸã‹ã®ãƒ•ãƒ©ã‚°
+	volatile bool finished; // çµ‚äº†æ¸ˆã¿ã‹ã®ãƒ•ãƒ©ã‚°[ãƒ¯ãƒ¼ã‚«ãƒ¼ã‚¹ãƒ¬ãƒƒãƒ‰ã‹ã‚‰æ›¸ãè¾¼ã¿]
+	sockaddr_in myAddr; // ã‚¢ãƒ‰ãƒ¬ã‚¹æƒ…å ±[è¦ªã‚¹ãƒ¬ãƒƒãƒ‰ã‹ã‚‰æ›¸ãè¾¼ã¿]
+	std::queue<unsigned char> myMailBox; // å—ã‘å–ã£ãŸãƒã‚¤ãƒˆåˆ—
+	MHJMutex myRecvQueueCS; // å—ä¿¡ãƒãƒƒãƒ•ã‚¡ç”¨ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹(ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã«å¤‰æ›´)
+	std::queue<unsigned char> mySendBox; // é€ã‚‹äºˆå®šã®ãƒã‚¤ãƒˆåˆ—
+	MHJMutex mySendQueueCS; // é€ä¿¡ãƒãƒƒãƒ•ã‚¡ç”¨ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹(ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã«å¤‰æ›´)
+	virtual int establishConnection () = 0; // æ¥ç¶šã‚’ç¢ºç«‹ã™ã‚‹
+	int reader (); // èª­ã¿è¾¼ã¿
+	int writer (); // æ›¸ãè¾¼ã¿
 #ifdef _WIN32
-	DWORD WINAPI myThreadFunc(); // ƒXƒŒƒbƒh‚Ìˆ—
+	DWORD WINAPI myThreadFunc(); // ã‚¹ãƒ¬ãƒƒãƒ‰ã®å‡¦ç†
 #else /* _WIN32 */
 	pthread_t myThread;
-	int myThreadFunc(); // ƒXƒŒƒbƒh‚Ìˆ—
+	int myThreadFunc(); // ã‚¹ãƒ¬ãƒƒãƒ‰ã®å‡¦ç†
 #endif /* _WIN32 */
-	void wait_until_sent(); // ‘—MƒLƒ…[‚ª‹ó‚É‚È‚é‚Ü‚Å‘Ò‚Â
+	void wait_until_sent(); // é€ä¿¡ã‚­ãƒ¥ãƒ¼ãŒç©ºã«ãªã‚‹ã¾ã§å¾…ã¤
 };
 
-class Sock::client_thread : public network_thread { // ƒNƒ‰ƒCƒAƒ“ƒg‚ÌƒXƒŒƒbƒh
+class Sock::client_thread : public network_thread { // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã®ã‚¹ãƒ¬ãƒƒãƒ‰
 public:
 	client_thread(Sock* callee) : network_thread(callee) {}
 	client_thread(const client_thread&) = delete; // Delete unexpected copy constructor
 	client_thread& operator= (const client_thread&) = delete; // Delete unexpected assign operator
-	void startThread(); // ƒXƒŒƒbƒh‚ğŠJn‚·‚é
+	void startThread(); // ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’é–‹å§‹ã™ã‚‹
 protected:
-	int establishConnection (); // Ú‘±‚ğŠm—§‚·‚é
+	int establishConnection (); // æ¥ç¶šã‚’ç¢ºç«‹ã™ã‚‹
 };
 
-class Sock::server_thread : public network_thread { // ƒT[ƒo[‚ÌƒXƒŒƒbƒh
+class Sock::server_thread : public network_thread { // ã‚µãƒ¼ãƒãƒ¼ã®ã‚¹ãƒ¬ãƒƒãƒ‰
 public:
 	server_thread(Sock* callee) : network_thread(callee) {}
 	server_thread(const server_thread&) = delete; // Delete unexpected copy constructor
 	server_thread& operator= (const server_thread&) = delete; // Delete unexpected assign operator
-	void startThread(); // ƒXƒŒƒbƒh‚ğŠJn‚·‚é
-	void setsock (SocketDescriptor* const socket, SocketDescriptor* const lsocket); // ƒ\ƒPƒbƒg‚ğİ’è‚·‚é
+	void startThread(); // ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’é–‹å§‹ã™ã‚‹
+	void setsock (SocketDescriptor* const socket, SocketDescriptor* const lsocket); // ã‚½ã‚±ãƒƒãƒˆã‚’è¨­å®šã™ã‚‹
 protected:
-	int establishConnection (); // Ú‘±‚ğŠm—§‚·‚é
+	int establishConnection (); // æ¥ç¶šã‚’ç¢ºç«‹ã™ã‚‹
 private:
-	void setsock (SocketDescriptor* const socket); // ƒ\ƒPƒbƒg‚ğİ’è‚·‚é
+	void setsock (SocketDescriptor* const socket); // ã‚½ã‚±ãƒƒãƒˆã‚’è¨­å®šã™ã‚‹
 };
 
 }

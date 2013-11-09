@@ -1,6 +1,6 @@
-#include "catalog.h"
+ï»¿#include "catalog.h"
 
-/* ˆêF‘g‚İ‡‚í‚¹•\ */
+/* ä¸€è‰²çµ„ã¿åˆã‚ã›è¡¨ */
 const std::array<char[8], 3> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_monochrome5 = {
 	"00000","11111","22222",
 };
@@ -11,7 +11,7 @@ const std::array<char[4], 3> yaku::yakuCalculator::YakuCatalog::catalogInit::par
 	"000","111","222",
 };
 
-/* “ñF‘g‚İ‡‚í‚¹•\ */
+/* äºŒè‰²çµ„ã¿åˆã‚ã›è¡¨ */
 const std::array<char[8], 90> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_bichrome5 = {
 	"00001","00002","00010","00011","00020","00022","00100","00101","00110","00111",
 	"00200","00202","00220","00222","01000","01001","01010","01011","01100","01101",
@@ -37,7 +37,7 @@ const std::array<char[4], 18> yaku::yakuCalculator::YakuCatalog::catalogInit::pa
 	"200","202","211","212","220","221",
 };
 
-/* OF‘g‚İ‡‚í‚¹•\ */
+/* ä¸‰è‰²çµ„ã¿åˆã‚ã›è¡¨ */
 const std::array<char[8], 150> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_trichrome5 = {
 	"00012","00021","00102","00112","00120","00121","00122","00201","00210","00211",
 	"00212","00221","01002","01012","01020","01021","01022","01102","01112","01120",

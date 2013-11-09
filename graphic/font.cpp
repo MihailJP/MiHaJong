@@ -1,4 +1,4 @@
-#include "font.h"
+ï»¿#include "font.h"
 #include "init.h"
 #include "resource.h"
 #ifdef _WIN32
@@ -35,7 +35,7 @@ namespace {
 		FILE* file = fopen(fileName.c_str(), "rt");
 		if (!file) {
 			std::cerr << "Cannot open " << fileName << std::endl;
-			throw _T("ƒtƒHƒ“ƒgƒ}ƒbƒv‚Ì“Ç‚Ýž‚Ý‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+			throw _T("ãƒ•ã‚©ãƒ³ãƒˆãƒžãƒƒãƒ—ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ");
 		}
 		fseek(file, 0, SEEK_END);
 		size = ftell(file);

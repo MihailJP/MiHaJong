@@ -1,4 +1,4 @@
-#include "chicha.h"
+ï»¿#include "chicha.h"
 #include "../../resource.h"
 #include "../../sprite.h"
 #include "../../gametbl.h"
@@ -8,7 +8,7 @@ namespace mihajong_graphic {
 
 using utils::playerRelative;
 
-/* ‹N‰Æƒ}[ƒN‚ğ’u‚­‰š‚İ */
+/* èµ·å®¶ãƒãƒ¼ã‚¯ã‚’ç½®ãå‡¹ã¿ */
 void GameTableScreen::TrayReconst::ShowTray() {
 	RECT rect1 = {TrayHLeft, TrayHTop, TrayHRight, TrayHBottom,};
 	RECT rect2 = {TrayVLeft, TrayVTop, TrayVRight, TrayVBottom,};
@@ -22,7 +22,7 @@ void GameTableScreen::TrayReconst::ShowTray() {
 		TrayVWidth, TrayVHeight, 0xffffffff, &rect2, TrayVWidth / 2, TrayVHeight / 2);
 }
 
-/* ‹N‰Æƒ}[ƒN‚Ì•\¦ */
+/* èµ·å®¶ãƒãƒ¼ã‚¯ã®è¡¨ç¤º */
 void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 	switch (playerRelative(0, gameStat->PlayerID)) {
 	case sSelf:
@@ -68,7 +68,7 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 	}
 }
 
-/* ƒ„ƒLƒgƒŠƒ}[ƒN‚Ì•\¦ */
+/* ãƒ¤ã‚­ãƒˆãƒªãƒãƒ¼ã‚¯ã®è¡¨ç¤º */
 void GameTableScreen::TrayReconst::ShowYakitori(const GameTable* gameStat) {
 	for (PlayerID i = 0; i < Players; ++i) {
 		if (!gameStat->Player[i].YakitoriFlag) continue;

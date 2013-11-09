@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #ifdef _WIN32
 #include <windows.h>
@@ -45,13 +45,13 @@ inline void setCP(unsigned int CodePage) {
 	char teststr[MB_CUR_MAX];
 	if (CodePage == 932u) { /* Japanese SJIS code page */
 		if (setlocale(LC_CTYPE, "ja_JP.cp932")) { /* Linux */
-			if (wctomb(teststr, L'Ç†') != -1) return;
+			if (wctomb(teststr, L'„ÅÇ') != -1) return;
 		}
 		if (setlocale(LC_CTYPE, "ja_JP.shiftjisx0213")) { /* Linux */
-			if (wctomb(teststr, L'Ç†') != -1) return;
+			if (wctomb(teststr, L'„ÅÇ') != -1) return;
 		}
 		if (setlocale(LC_CTYPE, "ja_JP.sjis")) { /* returns nullptr if failed */
-			if (wctomb(teststr, L'Ç†') != -1) return;
+			if (wctomb(teststr, L'„ÅÇ') != -1) return;
 		}
 	}
 	else if (CodePage == 65001u) { /* UTF-8 code page */
@@ -94,7 +94,7 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 		delete[] srcBuf;
 		std::cerr << "Failed to convert into wide string" << std::endl;
 		criticalSection(false);
-		throw _T("ÉèÉCÉhï∂éöÇ÷ÇÃïœä∑Ç…é∏îsÇµÇ‹ÇµÇΩ");
+		throw _T("„ÉØ„Ç§„ÉâÊñáÂ≠ó„Å∏„ÅÆÂ§âÊèõ„Å´Â§±Êïó„Åó„Åæ„Åó„Åü");
 	}
 	wchar_t* buf = new wchar_t[bufsize + 1 /* Do not forget the trailing null */];
 	memset(buf, 0, (bufsize + 1) * sizeof (wchar_t));

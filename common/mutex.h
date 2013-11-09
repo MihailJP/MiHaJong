@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef _WIN32
 #include <windows.h>
@@ -8,7 +8,7 @@
 #include <functional>
 #include "finally.h"
 
-class MHJMutex { // ƒ~ƒ…[ƒeƒbƒNƒX‚Ìƒ‰ƒbƒp[ƒIƒuƒWƒFƒNƒg
+class MHJMutex { // ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹ã®ãƒ©ãƒƒãƒ‘ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 private:
 #ifdef _WIN32
 	CRITICAL_SECTION myCS;
@@ -20,9 +20,9 @@ public:
 #ifdef _WIN32
 	MHJMutex() {InitializeCriticalSection(&myCS);}
 	~MHJMutex() {DeleteCriticalSection(&myCS);}
-	void acquire() {EnterCriticalSection(&myCS);} // ƒ~ƒ…[ƒeƒbƒNƒX‚ğŠl“¾
-	bool tryAcquire() {return (bool)TryEnterCriticalSection(&myCS);} // ƒ~ƒ…[ƒeƒbƒNƒX‚ğŠl“¾(ƒƒbƒN‚µ‚È‚¢)
-	void release() {LeaveCriticalSection(&myCS);} // ƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
+	void acquire() {EnterCriticalSection(&myCS);} // ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹ã‚’ç²å¾—
+	bool tryAcquire() {return (bool)TryEnterCriticalSection(&myCS);} // ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹ã‚’ç²å¾—(ãƒ­ãƒƒã‚¯ã—ãªã„)
+	void release() {LeaveCriticalSection(&myCS);} // ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹ã‚’è§£æ”¾
 #else /* _WIN32 */
 	MHJMutex() {
 		pthread_mutexattr_init(&attr);
@@ -33,13 +33,13 @@ public:
 		pthread_mutex_destroy(&myCS);
 		pthread_mutexattr_destroy(&attr);
 	}
-	void acquire() {pthread_mutex_lock(&myCS);} // ƒ~ƒ…[ƒeƒbƒNƒX‚ğŠl“¾
-	bool tryAcquire() {return pthread_mutex_trylock(&myCS) == 0;} // ƒ~ƒ…[ƒeƒbƒNƒX‚ğŠl“¾(ƒƒbƒN‚µ‚È‚¢)
-	void release() {pthread_mutex_unlock(&myCS);} // ƒ~ƒ…[ƒeƒbƒNƒX‚ğ‰ğ•ú
-	pthread_mutex_t* getMutex() {return &myCS;} // pthread_mutex_t* ‚Ì’¼Úg—p‚ª•K—v‚ÈAPI‚Ég‚¤ƒAƒNƒZƒT
+	void acquire() {pthread_mutex_lock(&myCS);} // ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹ã‚’ç²å¾—
+	bool tryAcquire() {return pthread_mutex_trylock(&myCS) == 0;} // ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹ã‚’ç²å¾—(ãƒ­ãƒƒã‚¯ã—ãªã„)
+	void release() {pthread_mutex_unlock(&myCS);} // ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹ã‚’è§£æ”¾
+	pthread_mutex_t* getMutex() {return &myCS;} // pthread_mutex_t* ã®ç›´æ¥ä½¿ç”¨ãŒå¿…è¦ãªAPIã«ä½¿ã†ã‚¢ã‚¯ã‚»ã‚µ
 #endif /* _WIN32 */
 
-	template <typename T> T syncDo(std::function<T (void)> f) { // ‘ŠŒİ”r‘¼“I‚ÉŠÖ”ƒIƒuƒWƒFƒNƒg‚ğÀs
+	template <typename T> T syncDo(std::function<T (void)> f) { // ç›¸äº’æ’ä»–çš„ã«é–¢æ•°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å®Ÿè¡Œ
 		DoFinally<T> myFunc(
 			[f, this]() -> T    {this->acquire(); return f();},
 			[   this]() -> void {this->release();} );
@@ -47,7 +47,7 @@ public:
 	}
 
 private:
-	template <typename T, typename dummy_type=void> class trySyncDo_obj { // ‘ŠŒİ”r‘¼“I‚ÉŠÖ”ƒIƒuƒWƒFƒNƒg‚ğÀs(ƒƒbƒN‚µ‚È‚¢)
+	template <typename T, typename dummy_type=void> class trySyncDo_obj { // ç›¸äº’æ’ä»–çš„ã«é–¢æ•°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å®Ÿè¡Œ(ãƒ­ãƒƒã‚¯ã—ãªã„)
 	private:
 		MHJMutex* caller;
 	public:
@@ -64,7 +64,7 @@ private:
 			}
 		}
 	};
-	template <typename T2> class trySyncDo_obj<void, T2> { // ‘ŠŒİ”r‘¼“I‚ÉŠÖ”ƒIƒuƒWƒFƒNƒg‚ğÀs(ƒƒbƒN‚µ‚È‚¢)
+	template <typename T2> class trySyncDo_obj<void, T2> { // ç›¸äº’æ’ä»–çš„ã«é–¢æ•°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å®Ÿè¡Œ(ãƒ­ãƒƒã‚¯ã—ãªã„)
 	private:
 		MHJMutex* caller;
 	public:
@@ -82,7 +82,7 @@ private:
 		}
 	};
 public:
-	template <typename T> bool trySyncDo(T* ans, std::function<T (void)> f) { // ‘ŠŒİ”r‘¼“I‚ÉŠÖ”ƒIƒuƒWƒFƒNƒg‚ğÀs(ƒƒbƒN‚µ‚È‚¢)
+	template <typename T> bool trySyncDo(T* ans, std::function<T (void)> f) { // ç›¸äº’æ’ä»–çš„ã«é–¢æ•°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å®Ÿè¡Œ(ãƒ­ãƒƒã‚¯ã—ãªã„)
 		trySyncDo_obj<T> trySyncDo_func(this);
 		return trySyncDo_func(ans, f);
 	}

@@ -1,4 +1,4 @@
-#include "event.h"
+ï»¿#include "event.h"
 #include "../sound/sound.h"
 #include "../common/bgmid.h"
 #ifndef _WIN32
@@ -16,7 +16,7 @@ CancellableWait* cancellableWait = nullptr;
 Event::Event(bool initialStat, bool automatic) {
 #ifdef _WIN32
 	myEvent = CreateEvent(nullptr, !automatic, initialStat, nullptr);
-	if (!myEvent) throw _T("ƒCƒxƒ“ƒgƒIƒuƒWƒFƒNƒg‚Ì‰Šú‰»‚É¸”s‚µ‚Ü‚µ‚½");
+	if (!myEvent) throw _T("ã‚¤ãƒ™ãƒ³ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åˆæœŸåŒ–ã«å¤±æ•—ã—ã¾ã—ãŸ");
 #else /*_WIN32*/
 	isSignaled = initialStat;
 	autoResetFlag = automatic;
@@ -30,7 +30,7 @@ Event::~Event() {
 	CloseHandle(myEvent);
 #else /*_WIN32*/
 	myEventMutex.syncDo<void> ([this] {
-		pthread_cond_broadcast(&myEvent); // æ‚É‘SƒXƒŒƒbƒh‚ğÄŠJ‚³‚¹‚È‚¯‚ê‚Î‚È‚ç‚È‚¢
+		pthread_cond_broadcast(&myEvent); // å…ˆã«å…¨ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’å†é–‹ã•ã›ãªã‘ã‚Œã°ãªã‚‰ãªã„
 		pthread_cond_destroy(&myEvent);
 	});
 #endif /*_WIN32*/
@@ -81,10 +81,10 @@ uint32_t Event::wait(int32_t timeout) {
 		result = true;
 	} else {
 		timespec destTime;
-		clock_gettime(CLOCK_REALTIME, &destTime); // â‘Îw’è‚È‚Ì‚ÅŒ»İ‚ğæ“¾‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢
-		destTime.tv_sec += timeout / 1000; // ˆø”‚Ì’PˆÊ‚Íƒ~ƒŠ•b
+		clock_gettime(CLOCK_REALTIME, &destTime); // çµ¶å¯¾æŒ‡å®šãªã®ã§ç¾åœ¨æ™‚åˆ»ã‚’å–å¾—ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„
+		destTime.tv_sec += timeout / 1000; // å¼•æ•°ã®å˜ä½ã¯ãƒŸãƒªç§’
 		destTime.tv_nsec += (timeout % 1000) * 1000000;
-		if (destTime.tv_nsec >= 1000000000) { // ŒJ‚èã‚ª‚è‚Ìˆ—
+		if (destTime.tv_nsec >= 1000000000) { // ç¹°ã‚Šä¸ŠãŒã‚Šã®å‡¦ç†
 			destTime.tv_sec += 1; destTime.tv_nsec -= 1000000000;
 		}
 		int res = myEventMutex.syncDo<int> ([this, &destTime] {

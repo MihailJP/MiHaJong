@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef _WIN32
 #ifndef _WINSOCKAPI_
@@ -41,18 +41,18 @@ extern WSADATA SocketInfo;
 extern HINSTANCE dllInst;
 #endif /* _WIN32 */
 
-void errordlg (socket_error& err); // ƒGƒ‰[ƒ_ƒCƒAƒƒO
+void errordlg (socket_error& err); // ã‚¨ãƒ©ãƒ¼ãƒ€ã‚¤ã‚¢ãƒ­ã‚°
 #endif
 
-DLL int init (); // ƒ\ƒPƒbƒg‚ğ‰Šú‰»‚·‚é
-DLL int listen (int sock_id, int port); // ƒT[ƒo[‘Ò‚¿ó‚¯ŠJn
-DLL int connect (int sock_id, const char* const addr, int port); // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±ŠJn
-DLL int connected (int sock_id); // Ú‘±‚³‚ê‚Ä‚¢‚é‚©Šm”F
-DLL int putc (int sock_id, int byte); // 1ƒoƒCƒg‘—M
-DLL int puts (int sock_id, LPCTSTR const str); // •¶š—ñ‘—M
-DLL int getc (int sock_id); // 1ƒoƒCƒgóM
-DLL int gets (int sock_id, LPTSTR stringline, int bufsize); // 1sóM
-DLL int hangup (int sock_id); // Ú‘±‚ğØ‚é
-DLL int bye (); // ƒ\ƒPƒbƒg‚ÌƒNƒŠƒ“ƒiƒbƒv
+DLL int init (); // ã‚½ã‚±ãƒƒãƒˆã‚’åˆæœŸåŒ–ã™ã‚‹
+DLL int listen (int sock_id, int port); // ã‚µãƒ¼ãƒãƒ¼å¾…ã¡å—ã‘é–‹å§‹
+DLL int connect (int sock_id, const char* const addr, int port); // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆæ¥ç¶šé–‹å§‹
+DLL int connected (int sock_id); // æ¥ç¶šã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèª
+DLL int putc (int sock_id, int byte); // 1ãƒã‚¤ãƒˆé€ä¿¡
+DLL int puts (int sock_id, LPCTSTR const str); // æ–‡å­—åˆ—é€ä¿¡
+DLL int getc (int sock_id); // 1ãƒã‚¤ãƒˆå—ä¿¡
+DLL int gets (int sock_id, LPTSTR stringline, int bufsize); // 1è¡Œå—ä¿¡
+DLL int hangup (int sock_id); // æ¥ç¶šã‚’åˆ‡ã‚‹
+DLL int bye (); // ã‚½ã‚±ãƒƒãƒˆã®ã‚¯ãƒªãƒ³ãƒŠãƒƒãƒ—
 
 }

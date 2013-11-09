@@ -1,4 +1,4 @@
-#include <cmath>
+ï»¿#include <cmath>
 #include "../../pi.h"
 
 #include "nakibtn.h"
@@ -20,21 +20,21 @@ namespace mihajong_graphic {
 const GameTableScreen::ButtonReconst::BtnData
 	GameTableScreen::ButtonReconst::buttonDat[2][GameTableScreen::ButtonReconst::btnMAXIMUM] = {
 		{
-			{_T("¶ƒ`["),   5 + 117 * 0, Geometry::BaseSize - 40, 0xffccff66},
-			{_T("›Æƒ`["),   5 + 117 * 1, Geometry::BaseSize - 40, 0xff99ff99},
-			{_T("‰Eƒ`["),   5 + 117 * 2, Geometry::BaseSize - 40, 0xff66ff99},
-			{_T("ƒ|ƒ“"),     5 + 117 * 3, Geometry::BaseSize - 40, 0xff99ccff},
-			{_T("ƒJƒ“"),     5 + 117 * 4, Geometry::BaseSize - 40, 0xff9966ff},
-			{_T("ƒpƒX"),     5 + 117 * 5, Geometry::BaseSize - 40, 0xffcccccc},
-			{_T("ƒƒ“"),     5 + 117 * 6, Geometry::BaseSize - 40, 0xffffcc66},
+			{_T("å·¦ãƒãƒ¼"),   5 + 117 * 0, Geometry::BaseSize - 40, 0xffccff66},
+			{_T("åµŒãƒãƒ¼"),   5 + 117 * 1, Geometry::BaseSize - 40, 0xff99ff99},
+			{_T("å³ãƒãƒ¼"),   5 + 117 * 2, Geometry::BaseSize - 40, 0xff66ff99},
+			{_T("ãƒãƒ³"),     5 + 117 * 3, Geometry::BaseSize - 40, 0xff99ccff},
+			{_T("ã‚«ãƒ³"),     5 + 117 * 4, Geometry::BaseSize - 40, 0xff9966ff},
+			{_T("ãƒ‘ã‚¹"),     5 + 117 * 5, Geometry::BaseSize - 40, 0xffcccccc},
+			{_T("ãƒ­ãƒ³"),     5 + 117 * 6, Geometry::BaseSize - 40, 0xffffcc66},
 		}, {
-			{_T("ŠJ—§’¼"),   5 + 117 * 0, Geometry::BaseSize - 40, 0xffff6666},
-			{_T("ƒŠ[ƒ`"),   5 + 117 * 1, Geometry::BaseSize - 40, 0xffff66ff},
-			{_T("‹ãí‹ã”v"), 5 + 117 * 2, Geometry::BaseSize - 40, 0xff99ffff},
-			{_T("‰Ô”v"),     5 + 117 * 3, Geometry::BaseSize - 40, 0xff99ccff},
-			{_T("ƒJƒ“"),     5 + 117 * 4, Geometry::BaseSize - 40, 0xff9966ff},
+			{_T("é–‹ç«‹ç›´"),   5 + 117 * 0, Geometry::BaseSize - 40, 0xffff6666},
+			{_T("ãƒªãƒ¼ãƒ"),   5 + 117 * 1, Geometry::BaseSize - 40, 0xffff66ff},
+			{_T("ä¹ç¨®ä¹ç‰Œ"), 5 + 117 * 2, Geometry::BaseSize - 40, 0xff99ffff},
+			{_T("èŠ±ç‰Œ"),     5 + 117 * 3, Geometry::BaseSize - 40, 0xff99ccff},
+			{_T("ã‚«ãƒ³"),     5 + 117 * 4, Geometry::BaseSize - 40, 0xff9966ff},
 			{_T(""),         5 + 117 * 5, Geometry::BaseSize - 40, 0xff666666},
-			{_T("ƒcƒ‚"),     5 + 117 * 6, Geometry::BaseSize - 40, 0xffffff66},
+			{_T("ãƒ„ãƒ¢"),     5 + 117 * 6, Geometry::BaseSize - 40, 0xffffff66},
 		},
 };
 
@@ -106,7 +106,7 @@ void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 	reconstructionCS.syncDo<void>([this, buttonID]() -> void {
 #include "color.h"
 		Color btnColor; btnColor.rgbaAsOneValue = buttonDat[currentButtonSet][buttonID].color;
-		/*if (!buttonEnabled[buttonID]) { // ˆÃ“]ˆ—
+		/*if (!buttonEnabled[buttonID]) { // æš—è»¢å‡¦ç†
 			btnColor.rgbaAsStruct.r /= 3;
 			btnColor.rgbaAsStruct.g /= 3;
 			btnColor.rgbaAsStruct.b /= 3;
@@ -159,9 +159,9 @@ void GameTableScreen::ButtonReconst::enable(const std::bitset<btnMAXIMUM>& flags
 	});
 }
 
-void GameTableScreen::ButtonReconst::btnSetForDahai() { // ƒcƒ‚”Ô‚Ì—p‚Ì
+void GameTableScreen::ButtonReconst::btnSetForDahai() { // ãƒ„ãƒ¢ç•ªã®æ™‚ç”¨ã®
 	reconstructionCS.syncDo<void>([this]() -> void {
-		currentButtonSet = btnSetTsumo; buttonEnabled.reset(); // ó‘Ô‚ğƒŠƒZƒbƒg
+		currentButtonSet = btnSetTsumo; buttonEnabled.reset(); // çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆ
 		const GameTable* const gameStat = GameStatus::retrGameStat();
 		auto tilesMoreThan = [gameStat](int tiles) {
 			return (gameStat->TilePointer + tiles) < (gameStat->RinshanPointer - gameStat->DeadTiles - 1);
@@ -169,36 +169,36 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ƒcƒ‚”Ô‚Ì—p‚Ì
 		const PlayerID ActivePlayer = gameStat->CurrentPlayer.Active;
 		const PlayerTable* const playerStat = &(gameStat->Player[ActivePlayer]);
 		const Shanten shanten = utils::calcShanten(gameStat, ActivePlayer, shantenAll);
-		if (utils::isRichiReqSatisfied(gameStat, ActivePlayer) && // “_–_—vŒ‚ğ–‚½‚µ‚Ä‚¢‚éi“_–_‚ª‘«‚è‚Ä‚¢‚éj
-			(shanten <= 0) && // ƒeƒ“ƒpƒC‚µ‚Ä‚¢‚é
-			(gameStat->gameType & RichiMJ) && // “ú–ƒ‚Å‚ ‚é
-			(playerStat->MenzenFlag || (!rules::chkRule("riichi_shibari", "no"))) && // –å‘O‚Å‚ ‚é‚©AƒŠ[ƒ`”›‚èƒ‹[ƒ‹‚Å‚ ‚é
-			(!playerStat->RichiFlag.RichiFlag) && // ‚Ü‚¾ƒŠ[ƒ`‚µ‚Ä‚¢‚È‚¢
-			(tilesMoreThan((gameStat->gameType & AllSanma) ? 2 : 3))) { // c‚èƒcƒ‚”v‚ª\•ª‚ ‚é‚È‚ç
-				buttonEnabled[btnRiichi] = true; // ƒŠ[ƒ`ƒ{ƒ^ƒ“‚ğ—LŒø‚É
-				if ((!rules::chkRule("open_riichi", "no")) && playerStat->MenzenFlag) // ƒI[ƒvƒ“ƒŠ[ƒ`‚ ‚è‚Ìê‡‚Å–å‘O‚Ìê‡
-					buttonEnabled[btnOpenRiichi] = true; // ƒ{ƒ^ƒ“‚ğ—LŒø‚É
+		if (utils::isRichiReqSatisfied(gameStat, ActivePlayer) && // ç‚¹æ£’è¦ä»¶ã‚’æº€ãŸã—ã¦ã„ã‚‹ï¼ˆç‚¹æ£’ãŒè¶³ã‚Šã¦ã„ã‚‹ï¼‰
+			(shanten <= 0) && // ãƒ†ãƒ³ãƒ‘ã‚¤ã—ã¦ã„ã‚‹
+			(gameStat->gameType & RichiMJ) && // æ—¥éº»ã§ã‚ã‚‹
+			(playerStat->MenzenFlag || (!rules::chkRule("riichi_shibari", "no"))) && // é–€å‰ã§ã‚ã‚‹ã‹ã€ãƒªãƒ¼ãƒç¸›ã‚Šãƒ«ãƒ¼ãƒ«ã§ã‚ã‚‹
+			(!playerStat->RichiFlag.RichiFlag) && // ã¾ã ãƒªãƒ¼ãƒã—ã¦ã„ãªã„
+			(tilesMoreThan((gameStat->gameType & AllSanma) ? 2 : 3))) { // æ®‹ã‚Šãƒ„ãƒ¢ç‰ŒãŒååˆ†ã‚ã‚‹ãªã‚‰
+				buttonEnabled[btnRiichi] = true; // ãƒªãƒ¼ãƒãƒœã‚¿ãƒ³ã‚’æœ‰åŠ¹ã«
+				if ((!rules::chkRule("open_riichi", "no")) && playerStat->MenzenFlag) // ã‚ªãƒ¼ãƒ—ãƒ³ãƒªãƒ¼ãƒã‚ã‚Šã®å ´åˆã§é–€å‰ã®å ´åˆ
+					buttonEnabled[btnOpenRiichi] = true; // ãƒœã‚¿ãƒ³ã‚’æœ‰åŠ¹ã«
 		}
 
 		const bool DaoPaiAbilityFlag = (gameStat->gameType & RichiMJ) && utils::chkdaopaiability(gameStat, ActivePlayer);
 		if ((gameStat->gameType & RichiMJ) && (DaoPaiAbilityFlag) && (playerStat->FirstDrawFlag))
-			buttonEnabled[btnKyuushu] = true; // ‹ãí‹ã”vƒ{ƒ^ƒ“
+			buttonEnabled[btnKyuushu] = true; // ä¹ç¨®ä¹ç‰Œãƒœã‚¿ãƒ³
 
 		const bool ShisanBuDa = (gameStat->gameType & RichiMJ) && utils::chkShisanBuDa(gameStat, ActivePlayer);
 		const bool ShisiBuDa = (gameStat->gameType & RichiMJ) && utils::chkShisiBuDa(gameStat, ActivePlayer);
-		if (((shanten <= -1) && (playerStat->Tsumohai().tile != NoTile)) || // ˜a—¹‚É‚È‚Á‚Ä‚¢‚é‚©
-			ShisanBuDa || ShisiBuDa) // \O•s“ƒ‚Ìê‡i\O•s“ƒ‚È‚µ‚Ìê‡‚±‚Ì•Ï”‚Ífalse‚É‚È‚éj
-			buttonEnabled[btnTsumo] = true; // ˜a—¹ƒ{ƒ^ƒ“
+		if (((shanten <= -1) && (playerStat->Tsumohai().tile != NoTile)) || // å’Œäº†ã«ãªã£ã¦ã„ã‚‹ã‹
+			ShisanBuDa || ShisiBuDa) // åä¸‰ä¸å¡”ã®å ´åˆï¼ˆåä¸‰ä¸å¡”ãªã—ã®å ´åˆã“ã®å¤‰æ•°ã¯falseã«ãªã‚‹ï¼‰
+			buttonEnabled[btnTsumo] = true; // å’Œäº†ãƒœã‚¿ãƒ³
 
 		const Int8ByTile TileCount = utils::countTilesInHand(gameStat, ActivePlayer);
 		const int kanLim = (gameStat->gameType & GuobiaoMJ) ? 16 : rules::chkRule("fifth_kong", "no") ? 4 : 5;
 		const bool KanFlag = [tilesMoreThan, gameStat, TileCount, playerStat, kanLim]() -> bool {
 			for (int i = 1; i < TileNonflowerMax; ++i) {
 				if (tilesMoreThan(0) && (gameStat->KangNum < kanLim)) {
-					// ˆÃÈ‚Å‚«‚éê‡
+					// æš—æ§“ã§ãã‚‹å ´åˆ
 					if (TileCount[i] == 4)
 						return true;
-					// ‰ÁÈ‚Å‚«‚éê‡
+					// åŠ æ§“ã§ãã‚‹å ´åˆ
 					else if (TileCount[i] == 1) {
 						for (int j = 1; j <= playerStat->MeldPointer; ++j)
 							if ((playerStat->Meld[j].tile == i) &&
@@ -232,9 +232,9 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ƒcƒ‚”Ô‚Ì—p‚Ì
 	});
 }
 
-void GameTableScreen::ButtonReconst::btnSetForNaki() { // –Â‚«‚Ì—p‚Ì
+void GameTableScreen::ButtonReconst::btnSetForNaki() { // é³´ãã®æ™‚ç”¨ã®
 	reconstructionCS.syncDo<void>([this]() -> void {
-		currentButtonSet = btnSetNormal; buttonEnabled.reset(); // ó‘Ô‚ğƒŠƒZƒbƒg
+		currentButtonSet = btnSetNormal; buttonEnabled.reset(); // çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆ
 		GameTable* const gameStat = new GameTable;
 		memcpy(gameStat, GameStatus::retrGameStat(), sizeof (GameTable));
 		auto tilesMoreThan = [gameStat](int tiles) {
@@ -247,48 +247,48 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // –Â‚«‚Ì—p‚Ì
 		const Shanten shanten = utils::calcShanten(gameStat, gameStat->PlayerID, shantenAll);
 		playerStat->Tsumohai().tile = NoTile;
 
-		if (gameStat->CurrentDiscard.tile > TileSuitFlowers) goto end; /* ‰Ô”v‚Ìê‡‚Íc‚è‚Ì”»’è‚ğƒXƒLƒbƒv */
-		if (playerStat->AgariHouki) goto end; /* ˜a—¹‚è•úŠü‚¾‚Á‚½‚çc‚è‚Ì”»’è‚ğƒXƒLƒbƒv */
-		if ((gameStat->KangFlag.chankanFlag == chankanOfAnkan) && // ˆÃÈ‚É‘Î‚·‚éÈ”»’è‚Ì‚Æ‚«‚ÅA
-			(gameStat->gameType & RichiMJ) && // ’†‘ƒ‹[ƒ‹ˆÈŠO‚Å
-			(utils::calcShanten(gameStat, PassivePlayer, shantenOrphans) >= 0)) // ‘m’®”v‚Å‚È‚¢ê‡‚Í
-			goto end; // c‚è‚Ì”»’è‚ğƒXƒLƒbƒv
+		if (gameStat->CurrentDiscard.tile > TileSuitFlowers) goto end; /* èŠ±ç‰Œã®å ´åˆã¯æ®‹ã‚Šã®åˆ¤å®šã‚’ã‚¹ã‚­ãƒƒãƒ— */
+		if (playerStat->AgariHouki) goto end; /* å’Œäº†ã‚Šæ”¾æ£„ã ã£ãŸã‚‰æ®‹ã‚Šã®åˆ¤å®šã‚’ã‚¹ã‚­ãƒƒãƒ— */
+		if ((gameStat->KangFlag.chankanFlag == chankanOfAnkan) && // æš—æ§“ã«å¯¾ã™ã‚‹æ¶æ§“åˆ¤å®šã®ã¨ãã§ã€
+			(gameStat->gameType & RichiMJ) && // ä¸­å›½ãƒ«ãƒ¼ãƒ«ä»¥å¤–ã§
+			(utils::calcShanten(gameStat, PassivePlayer, shantenOrphans) >= 0)) // å›½å£«è´ç‰Œã§ãªã„å ´åˆã¯
+			goto end; // æ®‹ã‚Šã®åˆ¤å®šã‚’ã‚¹ã‚­ãƒƒãƒ—
 
-		if (shanten < 0) // o‚½”v‚ª“–‚½‚è”v
-			buttonEnabled[btnRon] = true; // ˜a—¹ƒ{ƒ^ƒ“iƒtƒŠƒeƒ“‚Ìê‡‚È‚Ç‚à“_“”j
+		if (shanten < 0) // å‡ºãŸç‰ŒãŒå½“ãŸã‚Šç‰Œ
+			buttonEnabled[btnRon] = true; // å’Œäº†ãƒœã‚¿ãƒ³ï¼ˆãƒ•ãƒªãƒ†ãƒ³ã®å ´åˆãªã©ã‚‚ç‚¹ç¯ï¼‰
 
-		if ((!playerStat->RichiFlag.RichiFlag) && tilesMoreThan(0)) { // ƒŠ[ƒ`‚µ‚Ä‚È‚­‚Ä‰Í’ê‚Å‚È‚¢‚Æ‚«cc
+		if ((!playerStat->RichiFlag.RichiFlag) && tilesMoreThan(0)) { // ãƒªãƒ¼ãƒã—ã¦ãªãã¦æ²³åº•ã§ãªã„ã¨ãâ€¦â€¦
 			const Int8ByTile TileCount = utils::countTilesInHand(gameStat, PassivePlayer);
 			const int kanLim = (gameStat->gameType & GuobiaoMJ) ? 16 : rules::chkRule("fifth_kong", "no") ? 4 : 5;
 
 			if (TileCount[gameStat->CurrentDiscard.tile] >= 2)
-				buttonEnabled[btnPon] = true; // ƒ|ƒ“
-			if ((TileCount[gameStat->CurrentDiscard.tile] >= 3) && // o‚Ä‚«‚½”v‚ğˆÃ‚Å‚Á‚Ä‚¢‚Ä
-				(gameStat->KangFlag.chankanFlag == chankanNone) && // ‘„È‚Ì”»’è’†‚Å‚Í‚È‚­‚Ä
-				(gameStat->KangNum < kanLim)) // ŒÀ“xˆÈ“à‚Ìê‡
-				buttonEnabled[btnKan] = true; // ƒJƒ“
+				buttonEnabled[btnPon] = true; // ãƒãƒ³
+			if ((TileCount[gameStat->CurrentDiscard.tile] >= 3) && // å‡ºã¦ããŸç‰Œã‚’æš—åˆ»ã§æŒã£ã¦ã„ã¦
+				(gameStat->KangFlag.chankanFlag == chankanNone) && // æ§æ§“ã®åˆ¤å®šä¸­ã§ã¯ãªãã¦
+				(gameStat->KangNum < kanLim)) // é™åº¦ä»¥å†…ã®å ´åˆ
+				buttonEnabled[btnKan] = true; // ã‚«ãƒ³
 
-			// ƒ`[‚Å‚«‚éğŒFã‰Æ‚ÌÌ”v‚Å‚ ‚é‚±‚ÆA‚©‚ÂA””v‚Å‚ ‚é‚±‚Æ
-			if ((gameStat->gameType & (Yonma | GuobiaoMJ)) && // l–ƒ‚Å‚ ‚é
-				(gameStat->CurrentDiscard.tile < TileSuitHonors) && // ””v‚Å
-				(gameStat->KangFlag.chankanFlag == chankanNone) && // ‘„È‚Ì”»’è’†‚Å‚Í‚È‚­‚Ä
-				(gameStat->CurrentPlayer.Active == ((gameStat->CurrentPlayer.Passive + 3) % 4))) { // Ì‚Ä‚½‚Ì‚ªã‰Æ
+			// ãƒãƒ¼ã§ãã‚‹æ¡ä»¶ï¼šä¸Šå®¶ã®æ¨ç‰Œã§ã‚ã‚‹ã“ã¨ã€ã‹ã¤ã€æ•°ç‰Œã§ã‚ã‚‹ã“ã¨
+			if ((gameStat->gameType & (Yonma | GuobiaoMJ)) && // å››éº»ã§ã‚ã‚‹
+				(gameStat->CurrentDiscard.tile < TileSuitHonors) && // æ•°ç‰Œã§
+				(gameStat->KangFlag.chankanFlag == chankanNone) && // æ§æ§“ã®åˆ¤å®šä¸­ã§ã¯ãªãã¦
+				(gameStat->CurrentPlayer.Active == ((gameStat->CurrentPlayer.Passive + 3) % 4))) { // æ¨ã¦ãŸã®ãŒä¸Šå®¶
 					if ((gameStat->CurrentDiscard.tile >= 1) &&
-						(TileCount[gameStat->CurrentDiscard.tile + 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 2] >= 1)) { // ‰º‹h
+						(TileCount[gameStat->CurrentDiscard.tile + 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 2] >= 1)) { // ä¸‹åƒ
 							buttonEnabled[btnChii1] = true;
 					}
 					if ((gameStat->CurrentDiscard.tile >= 2) &&
-						(TileCount[gameStat->CurrentDiscard.tile - 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 1] >= 1)) { // ›Æ’£‹h
+						(TileCount[gameStat->CurrentDiscard.tile - 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 1] >= 1)) { // åµŒå¼µåƒ
 							buttonEnabled[btnChii2] = true;
 					}
 					if ((gameStat->CurrentDiscard.tile >= 3) &&
-						(TileCount[gameStat->CurrentDiscard.tile - 2] >= 1) && (TileCount[gameStat->CurrentDiscard.tile - 1] >= 1)) { // ã‹h
+						(TileCount[gameStat->CurrentDiscard.tile - 2] >= 1) && (TileCount[gameStat->CurrentDiscard.tile - 1] >= 1)) { // ä¸Šåƒ
 							buttonEnabled[btnChii3] = true;
 					}
 			}
 		}
 
-		if (buttonEnabled.any()) // ‰½‚ç‚©‚Ìƒ{ƒ^ƒ“‚ª“_“”‚µ‚Ä‚¢‚½‚ç–³‹‚·‚éƒ{ƒ^ƒ“‚à“_“”‚·‚é
+		if (buttonEnabled.any()) // ä½•ã‚‰ã‹ã®ãƒœã‚¿ãƒ³ãŒç‚¹ç¯ã—ã¦ã„ãŸã‚‰ç„¡è¦–ã™ã‚‹ãƒœã‚¿ãƒ³ã‚‚ç‚¹ç¯ã™ã‚‹
 			buttonEnabled[btnPass] = true;
 
 	end:
@@ -309,7 +309,7 @@ GameTableScreen::ButtonReconst::~ButtonReconst() {
 	delete buttons;
 }
 
-/* ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Ìˆ— */
+/* ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®å‡¦ç† */
 void GameTableScreen::ButtonReconst::ButtonPressed() {
 	auto setMode = [&](DiscardTileNum::discardType mode, ButtonID button, std::function<bool(int, GameTable*)> f) -> void {
 		reconstructionCS.acquire();
@@ -345,17 +345,17 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			case btnKyuushu:
 				caller->CallKyuushuKyuuhai();
 				break;
-			case btnRiichi: // —§’¼
+			case btnRiichi: // ç«‹ç›´
 				setMode(DiscardTileNum::Riichi, btnRiichi, isTenpaiTile);
 				break;
-			case btnOpenRiichi: // ƒI[ƒvƒ“—§’¼
+			case btnOpenRiichi: // ã‚ªãƒ¼ãƒ—ãƒ³ç«‹ç›´
 				setMode(DiscardTileNum::OpenRiichi, btnOpenRiichi, isTenpaiTile);
 				break;
-			case btnKan: // ƒJƒ“
+			case btnKan: // ã‚«ãƒ³
 				setMode(DiscardTileNum::Ankan, btnKan,
 					[](int i, GameTable* tmpStat) -> bool {
 						if ((tmpStat->statOfMine().RichiFlag.RichiFlag) && (i != TsumohaiIndex))
-							return false; // ƒŠ[ƒ`‚Í©–Ì”vˆÈŠO‘I‘ğ‚Å‚«‚È‚¢‚æ‚¤‚É‚·‚é
+							return false; // ãƒªãƒ¼ãƒæ™‚ã¯è‡ªæ‘¸ç‰Œä»¥å¤–é¸æŠã§ããªã„ã‚ˆã†ã«ã™ã‚‹
 						bool flag = false;
 						const PlayerID ActivePlayer = tmpStat->CurrentPlayer.Active;
 						const Int8ByTile TileCount = utils::countTilesInHand(tmpStat, ActivePlayer);
@@ -372,11 +372,11 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 						return flag;
 					});
 				break;
-			case btnFlower: // ‰Ô”v
+			case btnFlower: // èŠ±ç‰Œ
 				setMode(DiscardTileNum::Flower, btnFlower,
 					[](int i, GameTable* tmpStat) -> bool {
 						if ((tmpStat->statOfMine().RichiFlag.RichiFlag) && (i != TsumohaiIndex))
-							return false; // ƒŠ[ƒ`‚Í©–Ì”vˆÈŠO‘I‘ğ‚Å‚«‚È‚¢‚æ‚¤‚É‚·‚é
+							return false; // ãƒªãƒ¼ãƒæ™‚ã¯è‡ªæ‘¸ç‰Œä»¥å¤–é¸æŠã§ããªã„ã‚ˆã†ã«ã™ã‚‹
 						if (tmpStat->gameType & SanmaX)
 							return tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
 								NorthWind;

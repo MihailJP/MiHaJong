@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "socket.h"
 #include "server.h"
@@ -19,42 +19,42 @@ namespace client {
 		std::string serveraddr;
 		CodeConv::tstring myName;
 #ifdef _WIN32
-		DWORD WINAPI preparationThread (); // Ú‘±‚ğ‘Ò‚¿AÚ‘±ˆ—‚ğ‚·‚é
+		DWORD WINAPI preparationThread (); // æ¥ç¶šã‚’å¾…ã¡ã€æ¥ç¶šå‡¦ç†ã‚’ã™ã‚‹
 #else /* _WIN32 */
 		pthread_t myThread;
-		int preparationThread (); // Ú‘±‚ğ‘Ò‚¿AÚ‘±ˆ—‚ğ‚·‚é
+		int preparationThread (); // æ¥ç¶šã‚’å¾…ã¡ã€æ¥ç¶šå‡¦ç†ã‚’ã™ã‚‹
 #endif /* _WIN32 */
 		int ClientNumber;
 	public:
 #ifdef _WIN32
-		static DWORD WINAPI initiate (LPVOID param); // CreateThread()‚É“n‚·ˆø”—p
+		static DWORD WINAPI initiate (LPVOID param); // CreateThread()ã«æ¸¡ã™å¼•æ•°ç”¨
 #else /* _WIN32 */
-		static void* initiate (void* param); // CreateThread()‚É“n‚·ˆø”—p
+		static void* initiate (void* param); // CreateThread()ã«æ¸¡ã™å¼•æ•°ç”¨
 #endif /* _WIN32 */
-		void startThread (); // ƒXƒŒƒbƒh‚ğŠJn‚·‚é
-		starter (const CodeConv::tstring& InputPlayerName, const std::string& server, unsigned short port); // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		void startThread (); // ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’é–‹å§‹ã™ã‚‹
+		starter (const CodeConv::tstring& InputPlayerName, const std::string& server, unsigned short port); // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		starter (const Sock&) = delete; // Delete unexpected copy constructor
 		starter& operator= (const Sock&) = delete; // Delete unexpected assign operator
-		bool isConnected(); // Ú‘±¬Œ÷‚µ‚½‚©‚Ç‚¤‚©
-		bool isFailed (); // Ú‘±¸”s‚µ‚½‚©‚Ç‚¤‚©
-		bool isFinished (); // ‘Ò‹@—pƒXƒŒƒbƒh‚ªI‚í‚Á‚½‚©‚Ç‚¤‚©
-		CodeConv::tstring getPlayerName (unsigned id); // ƒvƒŒƒCƒ„[–¼
+		bool isConnected(); // æ¥ç¶šæˆåŠŸã—ãŸã‹ã©ã†ã‹
+		bool isFailed (); // æ¥ç¶šå¤±æ•—ã—ãŸã‹ã©ã†ã‹
+		bool isFinished (); // å¾…æ©Ÿç”¨ã‚¹ãƒ¬ãƒƒãƒ‰ãŒçµ‚ã‚ã£ãŸã‹ã©ã†ã‹
+		CodeConv::tstring getPlayerName (unsigned id); // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å
 		const char* getRules (unsigned line);
-		int getClientNumber (); // ƒNƒ‰ƒCƒAƒ“ƒg”Ô†
+		int getClientNumber (); // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç•ªå·
 	};
 	
 	extern starter* starterThread;
-	void send (unsigned char SendingMsg); // ƒT[ƒo[‚ÉƒƒbƒZ[ƒW‚ğ‘—‚é
+	void send (unsigned char SendingMsg); // ã‚µãƒ¼ãƒãƒ¼ã«ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’é€ã‚‹
 #endif
-	DLL void start (LPCTSTR const name, const char* const server, int port, int players); // ƒNƒ‰ƒCƒAƒ“ƒg‚ğŠJn‚³‚¹‚é(DLL)
-	DLL int isStartingFinished (); // ‘Ò‹@—pƒXƒŒƒbƒh‚ªI‚í‚Á‚½‚©‚Ç‚¤‚©
-	DLL int isConnectionSucceded (); // Ú‘±¬Œ÷‚©
-	DLL int isConnectionFailed (); // Ú‘±¸”s‚©
-	DLL int getClientNumber (); // ƒNƒ‰ƒCƒAƒ“ƒg”Ô†
+	DLL void start (LPCTSTR const name, const char* const server, int port, int players); // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‚’é–‹å§‹ã•ã›ã‚‹(DLL)
+	DLL int isStartingFinished (); // å¾…æ©Ÿç”¨ã‚¹ãƒ¬ãƒƒãƒ‰ãŒçµ‚ã‚ã£ãŸã‹ã©ã†ã‹
+	DLL int isConnectionSucceded (); // æ¥ç¶šæˆåŠŸã‹
+	DLL int isConnectionFailed (); // æ¥ç¶šå¤±æ•—ã‹
+	DLL int getClientNumber (); // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç•ªå·
 	DLL void getPlayerNames (LPTSTR playerName1, LPTSTR playerName2, LPTSTR playerName3, LPTSTR playerName4, unsigned bufsz);
-	DLL void checkout_rules (char** rules); // ƒ‹[ƒ‹‚ğƒ`ƒFƒbƒNƒAƒEƒg
-	DLL void releaseobj (); // ƒfƒXƒgƒ‰ƒNƒ^‚ğŒÄ‚Ô‚¾‚¯
-	DLL void send (int SendingMsg); // ƒT[ƒo[‚ÉƒƒbƒZ[ƒW‚ğ‘—‚é [Transitional API]
-	DLL void receive (volatile int* const ClientReceived, int* const ReceivedMsg); // ƒT[ƒo[‚ÌƒƒbƒZ[ƒW‚ğóM‚·‚é
+	DLL void checkout_rules (char** rules); // ãƒ«ãƒ¼ãƒ«ã‚’ãƒã‚§ãƒƒã‚¯ã‚¢ã‚¦ãƒˆ
+	DLL void releaseobj (); // ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’å‘¼ã¶ã ã‘
+	DLL void send (int SendingMsg); // ã‚µãƒ¼ãƒãƒ¼ã«ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’é€ã‚‹ [Transitional API]
+	DLL void receive (volatile int* const ClientReceived, int* const ReceivedMsg); // ã‚µãƒ¼ãƒãƒ¼ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å—ä¿¡ã™ã‚‹
 }
 }

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <sys/timeb.h>
 #include <iomanip>
@@ -32,7 +32,7 @@ public:
 	tstring toString() {
 		tm tempus; _localtime64_s(&tempus, &(this->issueTime.time));
 		tostringstream o;
-		// “ú•t
+		// æ—¥ä»˜
 		o << setw(4) << setfill(_T('0')) << (tempus.tm_year + 1900);
 		o << _T("-") << setw(2) << setfill(_T('0')) << (tempus.tm_mon + 1);
 		o << _T("-") << setw(2) << setfill(_T('0')) << tempus.tm_mday;
@@ -40,7 +40,7 @@ public:
 		o << _T(":") << setw(2) << setfill(_T('0')) << tempus.tm_min;
 		o << _T(":") << setw(2) << setfill(_T('0')) << tempus.tm_sec;
 		o << _T(".") << setw(3) << setfill(_T('0')) << this->issueTime.millitm;
-		// ƒƒOƒŒƒxƒ‹
+		// ãƒ­ã‚°ãƒ¬ãƒ™ãƒ«
 		switch (this->logLevel) {
 		case Trace:
 			o << _T(" TRACE "); break;
@@ -57,7 +57,7 @@ public:
 		default:
 			o << _T(" ????? "); break;
 		}
-		// ƒƒOƒƒbƒZ[ƒW
+		// ãƒ­ã‚°ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 		o << this->messageTxt.c_str() << flush;
 		return tstring(o.str());
 	}

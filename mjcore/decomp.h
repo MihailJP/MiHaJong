@@ -1,4 +1,4 @@
-#pragma once
+я╗┐#pragma once
 
 #include <cstdint>
 #include <vector>
@@ -49,11 +49,11 @@ public:
 #define FILEID_RANKVAL_CSV IDR_LZMA_STREA4
 #define FILEID_PREFITEM_CSV IDR_LZMA_STREA5
 #define FILEID_PREFITEM_INI IDR_LZMA_STREA6
-#define FILEDESC_CONFITEM_CSV _T("ГЛБ[ГЛТшЛ`ГtГ@ГCГЛ")
-#define FILEDESC_CONFITEM_INI _T("ГЛБ[ГЛГ^ГOЦ|ЦєГtГ@ГCГЛ")
-#define FILEDESC_RANKVAL_CSV _T("ГEГ}ТшЛ`ГtГ@ГCГЛ")
-#define FILEDESC_PREFITEM_CSV _T("К┬ЛлР▌ТшНАЦ┌ТшЛ`ГtГ@ГCГЛ")
-#define FILEDESC_PREFITEM_INI _T("К┬ЛлР▌ТшНАЦ┌Г^ГOЦ|ЦєГtГ@ГCГЛ")
+#define FILEDESC_CONFITEM_CSV _T("уГлуГ╝уГлхоЪч╛йуГХуВбуВдуГл")
+#define FILEDESC_CONFITEM_INI _T("уГлуГ╝уГлуВ┐уВ░ч┐╗ши│уГХуВбуВдуГл")
+#define FILEDESC_RANKVAL_CSV _T("уВжуГЮхоЪч╛йуГХуВбуВдуГл")
+#define FILEDESC_PREFITEM_CSV _T("чТ░хвГшинхоЪщаЕчЫохоЪч╛йуГХуВбуВдуГл")
+#define FILEDESC_PREFITEM_INI _T("чТ░хвГшинхоЪщаЕчЫоуВ┐уВ░ч┐╗ши│уГХуВбуВдуГл")
 #include "data/confitem_csv.h"
 #include "data/confitem_ini.h"
 #include "data/rankval_csv.h"

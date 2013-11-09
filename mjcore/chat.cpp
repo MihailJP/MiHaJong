@@ -1,4 +1,4 @@
-#include "chat.h"
+ï»¿#include "chat.h"
 
 #include "../socket/socket.h"
 #include "envtbl.h"
@@ -157,7 +157,7 @@ void StreamLog::chatappend(const CodeConv::tstring& buf) {
 }
 void ChatThread::chatappend(const CodeConv::tstring& buf) {
 	streamLock.acquire();
-	super::chatappend(buf); // ©ƒ‰ƒ€ƒ_‚ğg‚¤‚Æ‚±‚ê‚ªŒÄ‚Ño‚¹‚È‚¢
+	super::chatappend(buf); // â†ãƒ©ãƒ ãƒ€ã‚’ä½¿ã†ã¨ã“ã‚ŒãŒå‘¼ã³å‡ºã›ãªã„
 	streamLock.release();
 }
 
@@ -210,7 +210,7 @@ void ChatThread::send() {
 }
 
 void ChatThread::cleanup() {
-	for (int i = 0; i < Players; i++) // ŠJ‚¯‚Ä‚È‚¢ƒ\ƒPƒbƒg‚ğ•Â‚¶‚æ‚¤‚Æ‚µ‚Ä‚àˆÀ‘S‚É‚È‚é‚æ‚¤‚É‚µ‚Ä‚é
+	for (int i = 0; i < Players; i++) // é–‹ã‘ã¦ãªã„ã‚½ã‚±ãƒƒãƒˆã‚’é–‰ã˜ã‚ˆã†ã¨ã—ã¦ã‚‚å®‰å…¨ã«ãªã‚‹ã‚ˆã†ã«ã—ã¦ã‚‹
 		mihajong_socket::hangup(SOCK_CHAT + i);
 }
 
@@ -236,7 +236,7 @@ void StreamLog::sysmsg(const CodeConv::tstring& str) {
 }
 void ChatThread::sysmsg(const CodeConv::tstring& str) {
 	streamLock.acquire();
-	super::sysmsg(str); // ©ƒ‰ƒ€ƒ_‚ğg‚¤‚Æ‚±‚ê‚ªŒÄ‚Ño‚¹‚È‚¢
+	super::sysmsg(str); // â†ãƒ©ãƒ ãƒ€ã‚’ä½¿ã†ã¨ã“ã‚ŒãŒå‘¼ã³å‡ºã›ãªã„
 	streamLock.release();
 }
 

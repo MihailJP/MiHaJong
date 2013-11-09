@@ -13,7 +13,7 @@ libmihajong_sound_la_LDFLAGS = -no-undefined -release $(VERSION)
 if WITH_WINAPI
 libmihajong_sound_la_LIBADD = ver.o
 endif
-libmihajong_sound_la_CXXFLAGS = -DSOUND_EXPORTS --input-charset=cp932
+libmihajong_sound_la_CXXFLAGS = -DSOUND_EXPORTS
 if VORBIS_SUPPORT
 libmihajong_sound_la_CXXFLAGS += -DVORBIS_SUPPORT
 endif

@@ -1,4 +1,4 @@
-#ifdef _MSC_VER
+ï»¿#ifdef _MSC_VER
 #define NOMINMAX
 #endif
 #include "agariscr.h"
@@ -143,11 +143,11 @@ void TableSubsceneAgariScreenProto::parseYakuList() {
 		yakuName = yakuNameUnified; yakuVal = yakuValUnified;
 	}
 	CodeConv::tstring yakuNameTxt, yakuValTxt;
-	auto splitstr = [](LPCTSTR str) -> TStrList { // ‰üs‚Å•ªŠ„
+	auto splitstr = [](LPCTSTR str) -> TStrList { // æ”¹è¡Œã§åˆ†å‰²
 		TStrList txtlst;
 		LPCTSTR ssptr = str; LPCTSTR sptr = ssptr;
 		for (; *sptr != _T('\0'); ++sptr) {
-			if (*sptr == _T('\n')) { // ‰üs‚ªŒ»‚ê‚½‚ç
+			if (*sptr == _T('\n')) { // æ”¹è¡ŒãŒç¾ã‚ŒãŸã‚‰
 				txtlst.push_back(CodeConv::tstring(ssptr, sptr - (*(sptr - 1) == _T('\r') ? 1 : 0)));
 				ssptr = sptr + 1;
 			}
@@ -206,12 +206,12 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 			}
 			bgmFlag = false;
 		}
-		// •ŒvZ
+		// å¹…è¨ˆç®—
 		const float compressRate = [this](const CodeConv::tstring& str) -> float {
 			const int cols = myTextRenderer->strWidthByCols(str);
 			return (cols > 12) ? (8.0f / (float)cols) : 1.0f;
 		} (yakuList[yakuNum].first);
-		// •\¦
+		// è¡¨ç¤º
 		const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (baseColor() & 0x00ffffff));
 		const int x = BaseX + ((yakuNum % 2 == 0) ? 50 : 390);
 		const int y = BaseY + 200;
@@ -299,7 +299,7 @@ void TableSubsceneAgariScreenProto::AgariTehai::Render() {
 
 // -------------------------------------------------------------------------
 
-/* –Â‚¢‚½”v‚ğ•\¦‚·‚é */
+/* é³´ã„ãŸç‰Œã‚’è¡¨ç¤ºã™ã‚‹ */
 std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, std::function<int (unsigned)>, TileDirection, TileDirection, TileDirection>
 	TableSubsceneAgariScreenProto::AgariNaki::playerPosition(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID,
 	unsigned h1, unsigned h2, unsigned h3, unsigned h4, unsigned v1, unsigned v2, unsigned v3, unsigned v4,
@@ -441,17 +441,17 @@ TableSubsceneAgariScreenProto::ShowScore::~ShowScore() {
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 	if (Zeit <= 0.0) return;
-	if (soundFlag) { // Œø‰Ê‰¹‚ğ‚±‚±‚Å–Â‚ç‚·
+	if (soundFlag) { // åŠ¹æœéŸ³ã‚’ã“ã“ã§é³´ã‚‰ã™
 		sound::Play(sound::IDs::sndYakulst2);
 		soundFlag = false;
 	}
 	if (myCaller->YakumanMode()) return;
-	if (GameStatus::gameStat()->gameType & GuobiaoMJ) return; // ’†‘ƒ‹[ƒ‹‚Å‚Í•s—v‚Èî•ñ‚È‚Ì‚Å
+	if (GameStatus::gameStat()->gameType & GuobiaoMJ) return; // ä¸­å›½ãƒ«ãƒ¼ãƒ«ã§ã¯ä¸è¦ãªæƒ…å ±ãªã®ã§
 	const double anmTime = 0.75;
 	const int han = (YakuResult::getYakuStat().CoreHan + YakuResult::getYakuStat().BonusHan);
 	CodeConv::tostringstream o;
-	o << std::setw(3) << std::setfill(_T(' ')) << YakuResult::getYakuStat().BasePoints << _T("•„") <<
-		std::setw(2) << std::setfill(_T(' ')) << han << _T("ãÊ");
+	o << std::setw(3) << std::setfill(_T(' ')) << YakuResult::getYakuStat().BasePoints << _T("ç¬¦") <<
+		std::setw(2) << std::setfill(_T(' ')) << han << _T("é£œ");
 	const int x = BaseX + yakuWndWidth - 32 - 27 * 9;
 	const int y = BaseY + 650;
 	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
@@ -488,30 +488,30 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
 
 		const unsigned score = (unsigned)(YakuResult::getYakuStat().AgariPoints.bignumtodbl());
 		CodeConv::tstring tmptxt; unsigned strWidth = 0;
-		if      (score ==  2000) {tmptxt = _T("–ŠÑ");   strWidth = 4;}
-		else if (score ==  3000) {tmptxt = _T("’µ–");   strWidth = 4;}
-		else if (score ==  4000) {tmptxt = _T("”{–");   strWidth = 4;}
-		else if (score ==  6000) {tmptxt = _T("O”{–"); strWidth = 6;}
+		if      (score ==  2000) {tmptxt = _T("æº€è²«");   strWidth = 4;}
+		else if (score ==  3000) {tmptxt = _T("è·³æº€");   strWidth = 4;}
+		else if (score ==  4000) {tmptxt = _T("å€æº€");   strWidth = 4;}
+		else if (score ==  6000) {tmptxt = _T("ä¸‰å€æº€"); strWidth = 6;}
 		else if (score ==  8000) {
 			if (YakuResult::getYakuStat().CoreSemiMangan + YakuResult::getYakuStat().BonusSemiMangan >= 8) {
-				tmptxt = _T("–ğ–");     strWidth = 4;
+				tmptxt = _T("å½¹æº€");     strWidth = 4;
 			} else {
-				tmptxt = _T("”‚¦–ğ–"); strWidth = 8;
+				tmptxt = _T("æ•°ãˆå½¹æº€"); strWidth = 8;
 			}
 		}
-		else if (score == 16000) {tmptxt = _T("“ñ”{–ğ–"); strWidth = 8;}
-		else if (score == 24000) {tmptxt = _T("O”{–ğ–"); strWidth = 8;}
-		else if (score == 32000) {tmptxt = _T("l”{–ğ–"); strWidth = 8;}
-		else if (score == 40000) {tmptxt = _T("ŒÜ”{–ğ–"); strWidth = 8;}
-		else if (score == 48000) {tmptxt = _T("˜Z”{–ğ–"); strWidth = 8;}
-		else if (score == 56000) {tmptxt = _T("µ”{–ğ–"); strWidth = 8;}
-		else if (score == 64000) {tmptxt = _T("”ª”{–ğ–"); strWidth = 8;}
-		else if (score == 72000) {tmptxt = _T("‹ã”{–ğ–"); strWidth = 8;}
-		else if (score == 80000) {tmptxt = _T("\”{–ğ–"); strWidth = 8;}
+		else if (score == 16000) {tmptxt = _T("äºŒå€å½¹æº€"); strWidth = 8;}
+		else if (score == 24000) {tmptxt = _T("ä¸‰å€å½¹æº€"); strWidth = 8;}
+		else if (score == 32000) {tmptxt = _T("å››å€å½¹æº€"); strWidth = 8;}
+		else if (score == 40000) {tmptxt = _T("äº”å€å½¹æº€"); strWidth = 8;}
+		else if (score == 48000) {tmptxt = _T("å…­å€å½¹æº€"); strWidth = 8;}
+		else if (score == 56000) {tmptxt = _T("ä¸ƒå€å½¹æº€"); strWidth = 8;}
+		else if (score == 64000) {tmptxt = _T("å…«å€å½¹æº€"); strWidth = 8;}
+		else if (score == 72000) {tmptxt = _T("ä¹å€å½¹æº€"); strWidth = 8;}
+		else if (score == 80000) {tmptxt = _T("åå€å½¹æº€"); strWidth = 8;}
 		else if (score >= 88000) {
 			CodeConv::tostringstream o;
 			o << score / 8000; strWidth = o.str().length();
-			o << "”{–ğ–"; strWidth += 6;
+			o << "å€å½¹æº€"; strWidth += 6;
 			tmptxt = o.str();
 		}
 
@@ -535,14 +535,14 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructChipAmount() {
 	if (myCaller->YakumanMode()) return;
 	const double anmTime = 0.75;
 	CodeConv::tostringstream o;
-	o << _T("ƒ`ƒbƒv") << std::setw(2) << std::setfill(_T(' ')) << YakuResult::getChipVal();
+	o << _T("ãƒãƒƒãƒ—") << std::setw(2) << std::setfill(_T(' ')) << YakuResult::getChipVal();
 	if (GameStatus::gameStat()->TsumoAgariFlag) {
 		if (GameStatus::gameStat()->chkGameType(SanmaT))
-			o << _T("‚˜‚Q");
+			o << _T("ï½˜ï¼’");
 		else
-			o << _T("‚˜‚R");
+			o << _T("ï½˜ï¼“");
 	}
-	o << _T("–‡");
+	o << _T("æš");
 	const int x = BaseX + yakuWndWidth - 32 - 27 * 10;
 	const int y = BaseY + yakuWndHeight - 70;
 	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));

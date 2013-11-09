@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <string>
 #include <vector>
@@ -6,9 +6,9 @@
 
 class aiscript::FileSelector {
 private:
-	static std::vector<std::string> files; // AI‚ÌƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹ˆê——‚ğƒtƒ‹ƒpƒX‚ÅŠi”[
+	static std::vector<std::string> files; // AIã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§ã‚’ãƒ•ãƒ«ãƒ‘ã‚¹ã§æ ¼ç´
 public:
-	static void filelist(); // ƒtƒ@ƒCƒ‹ˆê——‚ğ—pˆÓI
+	static void filelist(); // ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§ã‚’ç”¨æ„ï¼
 	static std::string randomfile();
 public: /* Monostate class: cannot be instantiated */
 	FileSelector() = delete;

@@ -1,5 +1,5 @@
-/* Include within a function. */
-union Color { // ‚Æ‚è‚ ‚¦‚¸‚±‚±‚É‰¼’u‚«
+ï»¿/* Include within a function. */
+union Color { // ã¨ã‚Šã‚ãˆãšã“ã“ã«ä»®ç½®ã
 	ArgbColor rgbaAsOneValue;
 #if defined(__BIG_ENDIAN__) || defined(WORDS_BIGENDIAN)
 	struct {std::uint8_t a, r, g, b;} rgbaAsStruct;

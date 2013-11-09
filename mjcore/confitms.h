@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <cstdio>
 #include <cstdint>
@@ -107,7 +107,7 @@ public:
 
 CONFDAT_TEMPLATE const char CONFDAT_CLASS::digit[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) { // ƒRƒ“ƒtƒBƒO—pCSV‚ğ“Ç‚İ‚Ş
+CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) { // ã‚³ãƒ³ãƒ•ã‚£ã‚°ç”¨CSVã‚’èª­ã¿è¾¼ã‚€
 	using namespace CodeConv;
 #ifdef _WIN32
 	DWORD size = 0;
@@ -124,42 +124,42 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 	CSVReader::parsecsv(confdat, fromUTF8(csvdat).c_str());
 	delete[] csvdat;
 
-	for (const auto& k : confdat) { // –¼‘Oƒe[ƒuƒ‹
+	for (const auto& k : confdat) { // åå‰ãƒ†ãƒ¼ãƒ–ãƒ«
 		if (k.size() < 11) continue; // Invalid record!!
-		std::string nomenPartisRegulae(toANSI(k[8])); // ƒ‹[ƒ‹ƒ^ƒO
-		unsigned int numerusPartisRegulae = _ttoi(k[0].c_str()); // ƒ‹[ƒ‹ƒ^ƒO
-		nametbl[numerusPartisRegulae] = nomenPartisRegulae; // ‡•ûŒü
-		inverse_nametbl[nomenPartisRegulae] = numerusPartisRegulae; // ‹t•ûŒü
+		std::string nomenPartisRegulae(toANSI(k[8])); // ãƒ«ãƒ¼ãƒ«ã‚¿ã‚°
+		unsigned int numerusPartisRegulae = _ttoi(k[0].c_str()); // ãƒ«ãƒ¼ãƒ«ã‚¿ã‚°
+		nametbl[numerusPartisRegulae] = nomenPartisRegulae; // é †æ–¹å‘
+		inverse_nametbl[nomenPartisRegulae] = numerusPartisRegulae; // é€†æ–¹å‘
 
-		if (_ttoi(k[7].c_str())) // ©—R“ü—Í
+		if (_ttoi(k[7].c_str())) // è‡ªç”±å…¥åŠ›
 			freeval_expr.insert(std::make_pair(nomenPartisRegulae, std::string(toANSI(k[11]))));
 
-		if ((k[1].empty()) || (GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str())))) { // GameType‡’v‚µ‚½ê‡
+		if ((k[1].empty()) || (GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str())))) { // GameTypeåˆè‡´ã—ãŸå ´åˆ
 			if ((_ttoi(k[0].c_str()) % PageBatch) == 0)
 				pageCaption[_ttoi(k[0].c_str()) / PageBatch] = tstring(k[4]);
 			ruletags[nomenPartisRegulae].clear(); inverse_ruletags[nomenPartisRegulae].clear();
 			for (unsigned int index = 11; index < k.size(); ++index) {
-				/*if (k[index] == _T(">>>")) { // ”ò‚Î‚·‚æ‚¤‚Éw’è‚³‚ê‚Ä‚¢‚é‚È‚ç
+				/*if (k[index] == _T(">>>")) { // é£›ã°ã™ã‚ˆã†ã«æŒ‡å®šã•ã‚Œã¦ã„ã‚‹ãªã‚‰
 					ruletags[nomenPartisRegulae].push_back(_T(""));
 				}
-				else*/ if (!k[index].empty()) { // ‘¶İ‚·‚é‚È‚ç
-					ruletags[nomenPartisRegulae].push_back(toANSI(k[index])); // ‡•ûŒü
-					inverse_ruletags[nomenPartisRegulae][toANSI(k[index])] = index - 11; // ‹t•ûŒü
+				else*/ if (!k[index].empty()) { // å­˜åœ¨ã™ã‚‹ãªã‚‰
+					ruletags[nomenPartisRegulae].push_back(toANSI(k[index])); // é †æ–¹å‘
+					inverse_ruletags[nomenPartisRegulae][toANSI(k[index])] = index - 11; // é€†æ–¹å‘
 				}
 			}
 		}
-		else if ((!k[1].empty()) && (GameStat.chkGameType((GameTypeID)_ttoi(k[2].c_str())))) { // N/Aw’è‚ª‚ ‚Á‚½ê‡
-			nonapplicable.insert(nomenPartisRegulae); // ƒŠƒXƒg‚É’Ç‰Á
+		else if ((!k[1].empty()) && (GameStat.chkGameType((GameTypeID)_ttoi(k[2].c_str())))) { // N/AæŒ‡å®šãŒã‚ã£ãŸå ´åˆ
+			nonapplicable.insert(nomenPartisRegulae); // ãƒªã‚¹ãƒˆã«è¿½åŠ 
 		}
 
-		// ƒ‹[ƒ‹İ’è‰æ–Ê‚Ìƒ}ƒXƒNƒf[ƒ^
+		// ãƒ«ãƒ¼ãƒ«è¨­å®šç”»é¢ã®ãƒã‚¹ã‚¯ãƒ‡ãƒ¼ã‚¿
 		if (GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str())))
 			rulemask_expr[nomenPartisRegulae] = toANSI(k[3]);
 		else if (GameStat.chkGameType((GameTypeID)_ttoi(k[2].c_str())))
 			rulemask_expr[nomenPartisRegulae] = "";
 	}
 }
-CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_ini(Compressed::Data* inifile) { // ƒRƒ“ƒtƒBƒO•¶š—ñ•ÏŠ·—pINI‚ğ“Ç‚İ‚Ş
+CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_ini(Compressed::Data* inifile) { // ã‚³ãƒ³ãƒ•ã‚£ã‚°æ–‡å­—åˆ—å¤‰æ›ç”¨INIã‚’èª­ã¿è¾¼ã‚€
 	using namespace CodeConv;
 #ifdef _WIN32
 	DWORD size = 0;
@@ -176,26 +176,26 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_ini(Compressed::Data* inifile) {
 	INIParser::parseini(confdict, fromUTF8(inidat).c_str());
 	delete[] inidat;
 }
-CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit() { // ƒRƒ“ƒtƒBƒO—pCSV‚ğ“Ç‚İ‚Ş
+CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit() { // ã‚³ãƒ³ãƒ•ã‚£ã‚°ç”¨CSVã‚’èª­ã¿è¾¼ã‚€
 	configinit_csv(); configinit_ini();
-	for (int i = 0; i < Lines; i++) { // ‰Šú‰»
+	for (int i = 0; i < Lines; i++) { // åˆæœŸåŒ–
 		memset(ruleConf[i], 0, LineBatch + 1);
 		memset(ruleConf[i], _T('-'), LineBatch);
 		for (int j = 0; j < LineBatch; j++) {
-			if ((i * LineBatch + j) >= NumOfItems) { // ”Ô†‚±‚±‚Ü‚Å
+			if ((i * LineBatch + j) >= NumOfItems) { // ç•ªå·ã“ã“ã¾ã§
 				ruleConf[i][j] = _T('\0');
 				break;
 			}
-			if ((ruleConf[i][j] == _T('-')) && // –¢İ’è‚Ì‚Ü‚Ü‚Å
-				(!nametbl[i * LineBatch + j].empty()) && // ‹ó‚«”Ô‚Å‚Í‚È‚­‚Ä
-				(nonapplicable.find(nametbl[i * LineBatch + j]) == nonapplicable.end())) // N/A‚Å‚Í‚È‚¢‚È‚ç
-				ruleConf[i][j] = _T('0'); // ƒfƒtƒHƒ‹ƒgİ’è
+			if ((ruleConf[i][j] == _T('-')) && // æœªè¨­å®šã®ã¾ã¾ã§
+				(!nametbl[i * LineBatch + j].empty()) && // ç©ºãç•ªã§ã¯ãªãã¦
+				(nonapplicable.find(nametbl[i * LineBatch + j]) == nonapplicable.end())) // N/Aã§ã¯ãªã„ãªã‚‰
+				ruleConf[i][j] = _T('0'); // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆè¨­å®š
 		}
 	}
 }
-CONFDAT_TEMPLATE void CONFDAT_CLASS::parseRule() { // ƒ‹[ƒ‹İ’è‚ğ”’l‚É•ÏŠ·
+CONFDAT_TEMPLATE void CONFDAT_CLASS::parseRule() { // ãƒ«ãƒ¼ãƒ«è¨­å®šã‚’æ•°å€¤ã«å¤‰æ›
 	using namespace CodeConv;
-	debug(_T("ƒ‹[ƒ‹İ’è‚ğ˜A‘z”z—ñ‚É•ÏŠ·‚µ‚Ü‚·B"));
+	debug(_T("ãƒ«ãƒ¼ãƒ«è¨­å®šã‚’é€£æƒ³é…åˆ—ã«å¤‰æ›ã—ã¾ã™ã€‚"));
 	for (int i = 0; i < NumOfItems; i++) {
 		std::string::size_type idx = std::string(digit).find(
 			ruleConf[i / LineBatch][i % LineBatch] );
@@ -204,43 +204,43 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::parseRule() { // ƒ‹[ƒ‹İ’è‚ğ”’l‚É•ÏŠ·
 	}
 }
 
-CONFDAT_TEMPLATE void CONFDAT_CLASS::storeRule(const char** ruleTxt) { // UI¨Core ƒ‹[ƒ‹İ’è“]‘—
-	debug(_T("ƒ‹[ƒ‹İ’è‚ğƒRƒAƒ‚ƒWƒ…[ƒ‹‚É‘‚«‚İ"));
+CONFDAT_TEMPLATE void CONFDAT_CLASS::storeRule(const char** ruleTxt) { // UIâ†’Core ãƒ«ãƒ¼ãƒ«è¨­å®šè»¢é€
+	debug(_T("ãƒ«ãƒ¼ãƒ«è¨­å®šã‚’ã‚³ã‚¢ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã«æ›¸ãè¾¼ã¿"));
 	for (int i = 0; i < Lines; i++)
 		memcpy(ruleConf[i], ruleTxt[i], LineBatch);
 	parseRule();
-	info(_T("İ’è‚ªƒ[ƒh‚³‚ê‚Ü‚µ‚½B"));
+	info(_T("è¨­å®šãŒãƒ­ãƒ¼ãƒ‰ã•ã‚Œã¾ã—ãŸã€‚"));
 }
-CONFDAT_TEMPLATE void CONFDAT_CLASS::exportRule(char** ruleTxt) { // Core¨UI ƒ‹[ƒ‹İ’è“]‘—
-	debug(_T("ƒ‹[ƒ‹İ’è‚ğƒRƒAƒ‚ƒWƒ…[ƒ‹‚©‚ç“Ç‚İo‚µ"));
+CONFDAT_TEMPLATE void CONFDAT_CLASS::exportRule(char** ruleTxt) { // Coreâ†’UI ãƒ«ãƒ¼ãƒ«è¨­å®šè»¢é€
+	debug(_T("ãƒ«ãƒ¼ãƒ«è¨­å®šã‚’ã‚³ã‚¢ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‹ã‚‰èª­ã¿å‡ºã—"));
 	for (int i = 0; i < Lines; i++)
 		memcpy(ruleTxt[i], ruleConf[i], LineBatch);
 }
 
-CONFDAT_TEMPLATE std::string CONFDAT_CLASS::chkRule(std::string RuleTag) { // ƒ‹[ƒ‹İ’èƒ^ƒO‚ğæ“¾‚·‚é
-	if (freeval_expr.find(RuleTag) != freeval_expr.end()) // ©—R“ü—Í‚Ì
+CONFDAT_TEMPLATE std::string CONFDAT_CLASS::chkRule(std::string RuleTag) { // ãƒ«ãƒ¼ãƒ«è¨­å®šã‚¿ã‚°ã‚’å–å¾—ã™ã‚‹
+	if (freeval_expr.find(RuleTag) != freeval_expr.end()) // è‡ªç”±å…¥åŠ›ã®æ™‚
 		return freeval_expr[RuleTag];
-	else // ‘I‘ğ€–Ú‚Ì
+	else // é¸æŠé …ç›®ã®æ™‚
 		return getRuleItemTag(RuleTag, Rules[RuleTag]);
 }
-CONFDAT_TEMPLATE std::string CONFDAT_CLASS::chkRule(uint16_t RuleID) { // ƒ‹[ƒ‹İ’èƒ^ƒO‚ğæ“¾‚·‚é
+CONFDAT_TEMPLATE std::string CONFDAT_CLASS::chkRule(uint16_t RuleID) { // ãƒ«ãƒ¼ãƒ«è¨­å®šã‚¿ã‚°ã‚’å–å¾—ã™ã‚‹
 	return chkRule(nametbl[RuleID]);
 }
-CONFDAT_TEMPLATE bool CONFDAT_CLASS::chkRule(std::string RuleTag, std::string Expectation) { // ƒ‹[ƒ‹İ’è
+CONFDAT_TEMPLATE bool CONFDAT_CLASS::chkRule(std::string RuleTag, std::string Expectation) { // ãƒ«ãƒ¼ãƒ«è¨­å®š
 	return getRuleItemTag(RuleTag, Rules[RuleTag]) == Expectation;
 }
-CONFDAT_TEMPLATE bool CONFDAT_CLASS::chkRuleApplied(std::string RuleTag) { // ƒ‹[ƒ‹İ’è
+CONFDAT_TEMPLATE bool CONFDAT_CLASS::chkRuleApplied(std::string RuleTag) { // ãƒ«ãƒ¼ãƒ«è¨­å®š
 	return (!chkRule(RuleTag, "no")) && (!chkRule(RuleTag, "N/A")) && (!chkRule(RuleTag, "continue"));
 }
-CONFDAT_TEMPLATE int CONFDAT_CLASS::getRule(uint16_t RuleID) { // ƒ‹[ƒ‹İ’è‚ğæ“¾‚·‚é(‹Œd—l)
+CONFDAT_TEMPLATE int CONFDAT_CLASS::getRule(uint16_t RuleID) { // ãƒ«ãƒ¼ãƒ«è¨­å®šã‚’å–å¾—ã™ã‚‹(æ—§ä»•æ§˜)
 	return Rules[nametbl[RuleID]];
 }
-CONFDAT_TEMPLATE int CONFDAT_CLASS::getRuleSize(uint16_t RuleID) { // ƒ‹[ƒ‹€–Ú‚ÌƒAƒCƒeƒ€”
+CONFDAT_TEMPLATE int CONFDAT_CLASS::getRuleSize(uint16_t RuleID) { // ãƒ«ãƒ¼ãƒ«é …ç›®ã®ã‚¢ã‚¤ãƒ†ãƒ æ•°
 	return ruletags[nametbl[RuleID]].size();
 }
 
 CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
-	for (const auto& k : confdat) { // –¼‘Oƒe[ƒuƒ‹
+	for (const auto& k : confdat) { // åå‰ãƒ†ãƒ¼ãƒ–ãƒ«
 		if (_ttoi(k[0].c_str()) != RuleID) continue;
 		if ((k[1].empty()) || (k[2].empty()) ||
 			(GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str()))) ||
@@ -260,7 +260,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleName(LPTSTR const txt, unsigned bufs
 #endif
 }
 CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
-	for (const auto& k : confdat) { // –¼‘Oƒe[ƒuƒ‹
+	for (const auto& k : confdat) { // åå‰ãƒ†ãƒ¼ãƒ–ãƒ«
 		if (_ttoi(k[0].c_str()) != RuleID) continue;
 		if ((k[1].empty()) || (GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str())))) {
 #ifdef _MSC_VER
@@ -271,14 +271,14 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleDescription(LPTSTR const txt, unsign
 		}
 		else if (GameStat.chkGameType((GameTypeID)_ttoi(k[2].c_str()))) {
 #ifdef _MSC_VER
-			if (GameStat.chkGameType(SanmaS)) _tcscpy_s(txt, bufsize, _T("””vO–ƒ‚Å‚Íİ’è‚Å‚«‚Ü‚¹‚ñ"));
-			else if (GameStat.chkGameType(SanmaX)) _tcscpy_s(txt, bufsize, _T("Ol‘Å‚¿‚Å‚Íİ’è‚Å‚«‚Ü‚¹‚ñ"));
-			else if (GameStat.chkGameType(Yonma)) _tcscpy_s(txt, bufsize, _T("ll‘Å‚¿‚Å‚Íİ’è‚Å‚«‚Ü‚¹‚ñ"));
+			if (GameStat.chkGameType(SanmaS)) _tcscpy_s(txt, bufsize, _T("æ•°ç‰Œä¸‰éº»ã§ã¯è¨­å®šã§ãã¾ã›ã‚“"));
+			else if (GameStat.chkGameType(SanmaX)) _tcscpy_s(txt, bufsize, _T("ä¸‰äººæ‰“ã¡ã§ã¯è¨­å®šã§ãã¾ã›ã‚“"));
+			else if (GameStat.chkGameType(Yonma)) _tcscpy_s(txt, bufsize, _T("å››äººæ‰“ã¡ã§ã¯è¨­å®šã§ãã¾ã›ã‚“"));
 			else _tcscpy_s(txt, bufsize, _T(""));
 #else
-			if (GameStat.chkGameType(SanmaS)) _tcsncpy(txt, _T("””vO–ƒ‚Å‚Íİ’è‚Å‚«‚Ü‚¹‚ñ"), bufsize);
-			else if (GameStat.chkGameType(SanmaX)) _tcsncpy(txt, _T("Ol‘Å‚¿‚Å‚Íİ’è‚Å‚«‚Ü‚¹‚ñ"), bufsize);
-			else if (GameStat.chkGameType(Yonma)) _tcsncpy(txt, _T("ll‘Å‚¿‚Å‚Íİ’è‚Å‚«‚Ü‚¹‚ñ"), bufsize);
+			if (GameStat.chkGameType(SanmaS)) _tcsncpy(txt, _T("æ•°ç‰Œä¸‰éº»ã§ã¯è¨­å®šã§ãã¾ã›ã‚“"), bufsize);
+			else if (GameStat.chkGameType(SanmaX)) _tcsncpy(txt, _T("ä¸‰äººæ‰“ã¡ã§ã¯è¨­å®šã§ãã¾ã›ã‚“"), bufsize);
+			else if (GameStat.chkGameType(Yonma)) _tcsncpy(txt, _T("å››äººæ‰“ã¡ã§ã¯è¨­å®šã§ãã¾ã›ã‚“"), bufsize);
 			else _tcsncpy(txt, _T(""), bufsize);
 #endif
 			return;
@@ -307,15 +307,15 @@ CONFDAT_TEMPLATE std::string CONFDAT_CLASS::getRuleItemTag(uint16_t RuleID, int 
 	return getRuleItemTag(nametbl[RuleID], index);
 }
 CONFDAT_TEMPLATE std::string CONFDAT_CLASS::getRuleItemTag(std::string RuleTag, int index) {
-	if (RuleTag.empty()) // ‹ó•¶š—ñ‚È‚ç
+	if (RuleTag.empty()) // ç©ºæ–‡å­—åˆ—ãªã‚‰
 		return std::string("");
-	else if (nonapplicable.find(RuleTag) != nonapplicable.end()) // N/A‚Æ‚·‚éê‡
+	else if (nonapplicable.find(RuleTag) != nonapplicable.end()) // N/Aã¨ã™ã‚‹å ´åˆ
 		return std::string("N/A");
-	else if (ruletags.find(RuleTag) == ruletags.end()) // ƒ‹[ƒ‹€–Úƒ^ƒO‚ª‘¶İ‚µ‚È‚¢ê‡
+	else if (ruletags.find(RuleTag) == ruletags.end()) // ãƒ«ãƒ¼ãƒ«é …ç›®ã‚¿ã‚°ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return std::string("");
-	else if (ruletags[RuleTag].empty()) // ’†g‚ª‹ó‚È‚ç
+	else if (ruletags[RuleTag].empty()) // ä¸­èº«ãŒç©ºãªã‚‰
 		return std::string("");
-	else // ‚»‚¤‚Å‚È‚¯‚ê‚Î
+	else // ãã†ã§ãªã‘ã‚Œã°
 		return ruletags[RuleTag][index];
 }
 
@@ -326,32 +326,32 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 #endif
 	FILE* conffile;
 #ifdef _MSC_VER
-	if (err = fopen_s(&conffile, filename, "r")) { // ƒI[ƒvƒ“‚µA¸”s‚µ‚½‚ç
+	if (err = fopen_s(&conffile, filename, "r")) { // ã‚ªãƒ¼ãƒ—ãƒ³ã—ã€å¤±æ•—ã—ãŸã‚‰
 #else
-	if ((conffile = fopen(filename, "r")) == nullptr) { // ƒI[ƒvƒ“‚µA¸”s‚µ‚½‚ç
+	if ((conffile = fopen(filename, "r")) == nullptr) { // ã‚ªãƒ¼ãƒ—ãƒ³ã—ã€å¤±æ•—ã—ãŸã‚‰
 #endif
 		tostringstream o;
-		o << _T("İ’èƒtƒ@ƒCƒ‹‚ÌƒI[ƒvƒ“‚É¸”s‚µ‚Ü‚µ‚½B");
+		o << _T("è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚ªãƒ¼ãƒ—ãƒ³ã«å¤±æ•—ã—ã¾ã—ãŸã€‚");
 #ifdef _MSC_VER
-		o << _T("ƒGƒ‰[ƒR[ƒh [") << err << _T("]");
+		o << _T("ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ [") << err << _T("]");
 #endif
 		error(o.str().c_str());
-		//fclose(conffile); // ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é ©‚±‚±‚Å‚Íconffile‚Í‚Ê‚é‚Û‚È‚Ì‚Å•s—v
+		//fclose(conffile); // ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹ â†ã“ã“ã§ã¯conffileã¯ã¬ã‚‹ã½ãªã®ã§ä¸è¦
 		return -1;
-	} else { // ³‚µ‚­ƒI[ƒvƒ“‚³‚ê‚½‚ç
-		fseek(conffile, 0, SEEK_END); long filesize = ftell(conffile); rewind(conffile); // ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ğæ“¾
+	} else { // æ­£ã—ãã‚ªãƒ¼ãƒ—ãƒ³ã•ã‚ŒãŸã‚‰
+		fseek(conffile, 0, SEEK_END); long filesize = ftell(conffile); rewind(conffile); // ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã‚’å–å¾—
 		long bufsize = (filesize | (sizeof(int) - 1)) + 1;
-		char* const filedat = new char[bufsize]; // ƒoƒbƒtƒ@‚ğŠm•Û
-		memset(filedat, 0, bufsize); // ƒoƒbƒtƒ@‚ğƒ[ƒƒNƒŠƒA
+		char* const filedat = new char[bufsize]; // ãƒãƒƒãƒ•ã‚¡ã‚’ç¢ºä¿
+		memset(filedat, 0, bufsize); // ãƒãƒƒãƒ•ã‚¡ã‚’ã‚¼ãƒ­ã‚¯ãƒªã‚¢
 #ifdef _MSC_VER
-		fread_s(filedat, bufsize, sizeof(char), filesize, conffile); // “Ç‚İ‚İ
+		fread_s(filedat, bufsize, sizeof(char), filesize, conffile); // èª­ã¿è¾¼ã¿
 #else
-		fread(filedat, sizeof(char), filesize, conffile); // “Ç‚İ‚İ
+		fread(filedat, sizeof(char), filesize, conffile); // èª­ã¿è¾¼ã¿
 #endif
 		{
-			INIParser::IniMapMap config_ini; // INIƒp[ƒXŒ‹‰Ê‚ğŠi”[‚·‚éuƒ}ƒbƒv‚Ìƒ}ƒbƒvv
-			INIParser::parseini(config_ini, fromUTF8(filedat).c_str()); // INI‚ğƒp[ƒX‚·‚é
-			for (int i = 0; i < Lines; i++) { // ‰Šú‰»
+			INIParser::IniMapMap config_ini; // INIãƒ‘ãƒ¼ã‚¹çµæœã‚’æ ¼ç´ã™ã‚‹ã€Œãƒãƒƒãƒ—ã®ãƒãƒƒãƒ—ã€
+			INIParser::parseini(config_ini, fromUTF8(filedat).c_str()); // INIã‚’ãƒ‘ãƒ¼ã‚¹ã™ã‚‹
+			for (int i = 0; i < Lines; i++) { // åˆæœŸåŒ–
 				memset(ruleConf[i], 0, LineBatch + 1);
 				if (((i + 1) * Lines) > NumOfItems)
 					memset(ruleConf[i], _T('-'), NumOfItems % LineBatch);
@@ -359,15 +359,15 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 					memset(ruleConf[i], _T('-'), LineBatch);
 			}
 			auto& config_rules = config_ini[mySectionName];
-			for (const auto& k : config_rules) { // rulesƒZƒNƒVƒ‡ƒ“‚É‚Â‚¢‚Ä
-				if (inverse_nametbl.find(toANSI(k.first)) != inverse_nametbl.end()) { // ƒL[‚ª‚ ‚Á‚½‚ç
-					const std::string& rulename = toANSI(k.first); // •Ê–¼‚ğ‚Â‚¯‚é
-					const uint16_t ruleid = inverse_nametbl[rulename]; // ”Ô†‚É•ÏŠ·
-					if (nonapplicable.find(rulename) != nonapplicable.end()) { // N/A‚¾‚Á‚½‚Î‚ ‚¢
-						tostringstream o; o << _T("ƒL[ [") << EnsureTStr(rulename) << _T("] ‚Íİ’è‚Å‚«‚Ü‚¹‚ñB–³‹‚µ‚Ü‚·B");
+			for (const auto& k : config_rules) { // rulesã‚»ã‚¯ã‚·ãƒ§ãƒ³ã«ã¤ã„ã¦
+				if (inverse_nametbl.find(toANSI(k.first)) != inverse_nametbl.end()) { // ã‚­ãƒ¼ãŒã‚ã£ãŸã‚‰
+					const std::string& rulename = toANSI(k.first); // åˆ¥åã‚’ã¤ã‘ã‚‹
+					const uint16_t ruleid = inverse_nametbl[rulename]; // ç•ªå·ã«å¤‰æ›
+					if (nonapplicable.find(rulename) != nonapplicable.end()) { // N/Aã ã£ãŸã°ã‚ã„
+						tostringstream o; o << _T("ã‚­ãƒ¼ [") << EnsureTStr(rulename) << _T("] ã¯è¨­å®šã§ãã¾ã›ã‚“ã€‚ç„¡è¦–ã—ã¾ã™ã€‚");
 						warn(o.str().c_str());
 					}
-					else if (freeval_expr.find(rulename) != freeval_expr.end()) { // ©—R“ü—Í‚Ì
+					else if (freeval_expr.find(rulename) != freeval_expr.end()) { // è‡ªç”±å…¥åŠ›ã®æ™‚
 						CodeConv::tstring val(k.second);
 						std::string s =
 #ifdef _UNICODE
@@ -377,73 +377,73 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 #endif
 						freeval_expr[rulename] = s.substr(0, getRuleStrBufLen(rulename));
 					}
-					else if(inverse_ruletags[rulename].find(toANSI(k.second)) != inverse_ruletags[rulename].end()) { // À‘•‚³‚ê‚Ä‚¢‚éİ’è‚È‚ç
+					else if(inverse_ruletags[rulename].find(toANSI(k.second)) != inverse_ruletags[rulename].end()) { // å®Ÿè£…ã•ã‚Œã¦ã„ã‚‹è¨­å®šãªã‚‰
 						ruleConf[ruleid / LineBatch][ruleid % LineBatch] =
-							digit[inverse_ruletags[rulename][toANSI(k.second)]]; // İ’è‚·‚é
+							digit[inverse_ruletags[rulename][toANSI(k.second)]]; // è¨­å®šã™ã‚‹
 					}
 					else {
-						tostringstream o; o << _T("ƒL[ [") << EnsureTStr(rulename) << _T("] ‚É‘Î‚·‚é’l [") << k.second << 
-							_T("] ‚ÍÀ‘•‚³‚ê‚Ä‚¢‚Ü‚¹‚ñBƒfƒtƒHƒ‹ƒgİ’è‚ğg‚¢‚Ü‚·B");
+						tostringstream o; o << _T("ã‚­ãƒ¼ [") << EnsureTStr(rulename) << _T("] ã«å¯¾ã™ã‚‹å€¤ [") << k.second << 
+							_T("] ã¯å®Ÿè£…ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆè¨­å®šã‚’ä½¿ã„ã¾ã™ã€‚");
 						warn(o.str().c_str());
-						ruleConf[ruleid / LineBatch][ruleid % LineBatch] = digit[0]; // ƒfƒtƒHƒ‹ƒgİ’è‚Æ‚·‚é
+						ruleConf[ruleid / LineBatch][ruleid % LineBatch] = digit[0]; // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆè¨­å®šã¨ã™ã‚‹
 					}
-				} else { // ‚È‚©‚Á‚½‚ç
-					tostringstream o; o << _T("ƒL[ [") << k.first << _T("] ‚Í–³‹‚³‚ê‚Ü‚·");
+				} else { // ãªã‹ã£ãŸã‚‰
+					tostringstream o; o << _T("ã‚­ãƒ¼ [") << k.first << _T("] ã¯ç„¡è¦–ã•ã‚Œã¾ã™");
 					warn(o.str().c_str());
 				}
 			}
-			for (int i = 0; i < Lines; i++) { // Äƒ`ƒFƒbƒN
+			for (int i = 0; i < Lines; i++) { // å†ãƒã‚§ãƒƒã‚¯
 				for (int j = 0; j < LineBatch; j++) {
-					if ((i * LineBatch + j) >= NumOfItems) { // ”Ô†‚±‚±‚Ü‚Å
+					if ((i * LineBatch + j) >= NumOfItems) { // ç•ªå·ã“ã“ã¾ã§
 						ruleConf[i][j] = _T('\0');
 						break;
 					}
-					if ((ruleConf[i][j] == _T('-')) && // –¢İ’è‚Ì‚Ü‚Ü‚Å
-						(!nametbl[i * LineBatch + j].empty()) && // ‹ó‚«”Ô‚Å‚Í‚È‚­‚Ä
-						(nonapplicable.find(nametbl[i * LineBatch + j]) == nonapplicable.end())) // N/A‚Å‚Í‚È‚¢‚È‚ç
-						ruleConf[i][j] = _T('0'); // ƒfƒtƒHƒ‹ƒgİ’è
+					if ((ruleConf[i][j] == _T('-')) && // æœªè¨­å®šã®ã¾ã¾ã§
+						(!nametbl[i * LineBatch + j].empty()) && // ç©ºãç•ªã§ã¯ãªãã¦
+						(nonapplicable.find(nametbl[i * LineBatch + j]) == nonapplicable.end())) // N/Aã§ã¯ãªã„ãªã‚‰
+						ruleConf[i][j] = _T('0'); // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆè¨­å®š
 				}
 			}
-			debug(_T("Œ»İ‚Ìİ’è‚Ì“à•”•\Œ»")); for (int i = 0; i < Lines; i++) debug(EnsureTStr(ruleConf[i]));
-			parseRule(); // ƒf[ƒ^•ÏŠ·
+			debug(_T("ç¾åœ¨ã®è¨­å®šã®å†…éƒ¨è¡¨ç¾")); for (int i = 0; i < Lines; i++) debug(EnsureTStr(ruleConf[i]));
+			parseRule(); // ãƒ‡ãƒ¼ã‚¿å¤‰æ›
 		}
-		delete[] filedat; // ƒoƒbƒtƒ@‚ğ‰ğ•ú
-		fclose(conffile); // ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
-		info(tstring(tstring(_T("İ’èƒtƒ@ƒCƒ‹ [")) + tstring(EnsureTStr(filename)) + tstring(_T("] ‚ğ“Ç‚İ‚İ‚Ü‚µ‚½B"))).c_str());
+		delete[] filedat; // ãƒãƒƒãƒ•ã‚¡ã‚’è§£æ”¾
+		fclose(conffile); // ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
+		info(tstring(tstring(_T("è¨­å®šãƒ•ã‚¡ã‚¤ãƒ« [")) + tstring(EnsureTStr(filename)) + tstring(_T("] ã‚’èª­ã¿è¾¼ã¿ã¾ã—ãŸã€‚"))).c_str());
 		return 0;
 	}
 }
 CONFDAT_TEMPLATE int CONFDAT_CLASS::saveConfigFile(const char* const filename) {
 	using namespace CodeConv;
-	debug(_T("Œ»İ‚Ìİ’è‚Ì“à•”•\Œ»")); for (int i = 0; i < Lines; i++) debug(EnsureTStr(ruleConf[i]));
-	std::ofstream file; // ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Å‰Šú‰»
+	debug(_T("ç¾åœ¨ã®è¨­å®šã®å†…éƒ¨è¡¨ç¾")); for (int i = 0; i < Lines; i++) debug(EnsureTStr(ruleConf[i]));
+	std::ofstream file; // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§åˆæœŸåŒ–
 	auto chkerr = [](std::ofstream& file, const char* const filename) -> void {
-		if (file.bad()) throw std::runtime_error(std::string("ƒtƒ@ƒCƒ‹ [") + std::string(filename) +
-			std::string("] ‚Ì‘‚«‚İ‚É’v–½“IƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½Bİ’è‚Í•Û‘¶‚³‚ê‚Ü‚¹‚ñB")); // ¸”s‚µ‚½‚ç—áŠO‚ğ“Š‚°‚é
-		else if (file.fail()) throw std::runtime_error(std::string("ƒtƒ@ƒCƒ‹ [") + std::string(filename) +
-			std::string("] ‚Ì‘‚«‚İ‚É¸”s‚µ‚Ü‚µ‚½Bİ’è‚Í•Û‘¶‚³‚ê‚Ü‚¹‚ñB")); // ¸”s‚µ‚½‚ç—áŠO‚ğ“Š‚°‚é
+		if (file.bad()) throw std::runtime_error(std::string("ãƒ•ã‚¡ã‚¤ãƒ« [") + std::string(filename) +
+			std::string("] ã®æ›¸ãè¾¼ã¿æ™‚ã«è‡´å‘½çš„ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚è¨­å®šã¯ä¿å­˜ã•ã‚Œã¾ã›ã‚“ã€‚")); // å¤±æ•—ã—ãŸã‚‰ä¾‹å¤–ã‚’æŠ•ã’ã‚‹
+		else if (file.fail()) throw std::runtime_error(std::string("ãƒ•ã‚¡ã‚¤ãƒ« [") + std::string(filename) +
+			std::string("] ã®æ›¸ãè¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸã€‚è¨­å®šã¯ä¿å­˜ã•ã‚Œã¾ã›ã‚“ã€‚")); // å¤±æ•—ã—ãŸã‚‰ä¾‹å¤–ã‚’æŠ•ã’ã‚‹
 	};
 	try {
-		file.open(filename, std::ios::out | std::ios::trunc); // ã‘‚«ƒeƒLƒXƒgƒ‚[ƒh‚ÅAŠJ‚­
-		if (!file) throw std::runtime_error(std::string("ƒtƒ@ƒCƒ‹ [") + std::string(filename) +
-			std::string("] ‚ğ‘‚«‚İƒ‚[ƒh‚ÅŠJ‚¯‚Ü‚¹‚ñBİ’è‚Í•Û‘¶‚³‚ê‚Ü‚¹‚ñB")); // ¸”s‚µ‚½‚ç—áŠO‚ğ“Š‚°‚é
-		file << toUTF8(_T("[")) << toUTF8(mySectionName) << toUTF8(_T("]")) << std::endl; // ƒZƒNƒVƒ‡ƒ“–¼
-		chkerr(file, filename); // ¸”s‚µ‚½‚ç—áŠO‚ğ“Š‚°‚é
+		file.open(filename, std::ios::out | std::ios::trunc); // ä¸Šæ›¸ããƒ†ã‚­ã‚¹ãƒˆãƒ¢ãƒ¼ãƒ‰ã§ã€é–‹ã
+		if (!file) throw std::runtime_error(std::string("ãƒ•ã‚¡ã‚¤ãƒ« [") + std::string(filename) +
+			std::string("] ã‚’æ›¸ãè¾¼ã¿ãƒ¢ãƒ¼ãƒ‰ã§é–‹ã‘ã¾ã›ã‚“ã€‚è¨­å®šã¯ä¿å­˜ã•ã‚Œã¾ã›ã‚“ã€‚")); // å¤±æ•—ã—ãŸã‚‰ä¾‹å¤–ã‚’æŠ•ã’ã‚‹
+		file << toUTF8(_T("[")) << toUTF8(mySectionName) << toUTF8(_T("]")) << std::endl; // ã‚»ã‚¯ã‚·ãƒ§ãƒ³å
+		chkerr(file, filename); // å¤±æ•—ã—ãŸã‚‰ä¾‹å¤–ã‚’æŠ•ã’ã‚‹
 		for (const auto& k : nametbl) {
-			if ((!(k.empty())) && (nonapplicable.find(k) == nonapplicable.end())) { // —LŒø‚È‚ç
-				file << toUTF8(EnsureTStr(k)) << toUTF8(_T("=")) << toUTF8(EnsureTStr(chkRule(k))) << std::endl; // İ’èƒf[ƒ^‚ğ‘‚«‚İ
-				chkerr(file, filename); // ¸”s‚µ‚½‚ç—áŠO‚ğ“Š‚°‚é
+			if ((!(k.empty())) && (nonapplicable.find(k) == nonapplicable.end())) { // æœ‰åŠ¹ãªã‚‰
+				file << toUTF8(EnsureTStr(k)) << toUTF8(_T("=")) << toUTF8(EnsureTStr(chkRule(k))) << std::endl; // è¨­å®šãƒ‡ãƒ¼ã‚¿ã‚’æ›¸ãè¾¼ã¿
+				chkerr(file, filename); // å¤±æ•—ã—ãŸã‚‰ä¾‹å¤–ã‚’æŠ•ã’ã‚‹
 			}
 		}
-		info(tstring(_T("ƒtƒ@ƒCƒ‹ [")) + tstring(EnsureTStr(filename)) + tstring(_T("] ‚Éİ’è‚ğ•Û‘¶‚µ‚Ü‚µ‚½B")).c_str());
+		info(tstring(_T("ãƒ•ã‚¡ã‚¤ãƒ« [")) + tstring(EnsureTStr(filename)) + tstring(_T("] ã«è¨­å®šã‚’ä¿å­˜ã—ã¾ã—ãŸã€‚")).c_str());
 		return 0;
 	}
-	catch (std::runtime_error& e) { // ‘‚«‚İ¸”sII
+	catch (std::runtime_error& e) { // æ›¸ãè¾¼ã¿å¤±æ•—ï¼ï¼
 		error(EnsureTStr(e.what()));
 #ifdef _WIN32
-		MessageBox(nullptr, EnsureTStr(e.what()).c_str(), _T("‘‚«‚İ¸”s"), MB_OK | MB_ICONERROR | MB_TASKMODAL | MB_TOPMOST);
+		MessageBox(nullptr, EnsureTStr(e.what()).c_str(), _T("æ›¸ãè¾¼ã¿å¤±æ•—"), MB_OK | MB_ICONERROR | MB_TASKMODAL | MB_TOPMOST);
 #else /*_WIN32*/
-		/* TODO: –¢À‘•‰ÓŠ */
+		/* TODO: æœªå®Ÿè£…ç®‡æ‰€ */
 #endif /*_WIN32*/
 		return -1;
 	}
@@ -472,7 +472,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::forEachRule(std::function<void (std::string
 }
 
 CONFDAT_TEMPLATE unsigned CONFDAT_CLASS::getRuleStrBufLen(uint16_t RuleID) {
-	for (const auto& k : confdat) { // •¶š—ñ“ü—Í‚Ì•
+	for (const auto& k : confdat) { // æ–‡å­—åˆ—å…¥åŠ›ã®å¹…
 		if (_ttoi(k[0].c_str()) != RuleID) continue;
 		if ((k[1].empty()) || (k[2].empty()) ||
 			(GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str()))) ||
@@ -489,9 +489,9 @@ CONFDAT_TEMPLATE unsigned CONFDAT_CLASS::getRuleStrBufLen(std::string RuleTag) {
 }
 
 CONFDAT_TEMPLATE void CONFDAT_CLASS::setFreeStr(std::string RuleTag, std::string data) {
-	if (freeval_expr.find(RuleTag) != freeval_expr.end()) // ©—R“ü—Í‚Ì
+	if (freeval_expr.find(RuleTag) != freeval_expr.end()) // è‡ªç”±å…¥åŠ›ã®æ™‚
 		freeval_expr[RuleTag] = data.substr(0, getRuleStrBufLen(RuleTag));
-	// ©—R“ü—Í€–Ú‚Å‚È‚¯‚ê‚Î‰½‚à‚µ‚È‚¢
+	// è‡ªç”±å…¥åŠ›é …ç›®ã§ãªã‘ã‚Œã°ä½•ã‚‚ã—ãªã„
 }
 CONFDAT_TEMPLATE void CONFDAT_CLASS::setFreeStr(uint16_t RuleID, std::string data) {
 	setFreeStr(nametbl[RuleID], data);

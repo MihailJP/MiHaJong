@@ -1,17 +1,17 @@
-#pragma once
+ï»¿#pragma once
 
 #include "gametbl.h"
 #include "endtype.h"
 #include "discard.h"
 
-enum FuuroType : unsigned { /* •›˜Iˆ—‚Ìí—Ş */
-	FuuroAnkan,     // ˆÃÈ
-	FuuroKakan,     // ‰ÁÈ
-	FuuroDaiminkan, // ‘å–¾È
-	FuuroNorth,     // ”²‚«–k(O–ƒ)
-	FuuroFlower,    // ‰Ô”v(l–ƒ)
-	FuuroPon,       // ƒ|ƒ“
-	FuuroChii,      // ƒ`[
+enum FuuroType : unsigned { /* å‰¯éœ²å‡¦ç†ã®ç¨®é¡ */
+	FuuroAnkan,     // æš—æ§“
+	FuuroKakan,     // åŠ æ§“
+	FuuroDaiminkan, // å¤§æ˜æ§“
+	FuuroNorth,     // æŠœãåŒ—(ä¸‰éº»)
+	FuuroFlower,    // èŠ±ç‰Œ(å››éº»)
+	FuuroPon,       // ãƒãƒ³
+	FuuroChii,      // ãƒãƒ¼
 };
 
 bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTileNum& DiscardTileIndex, FuuroType Mode);
