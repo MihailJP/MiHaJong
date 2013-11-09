@@ -74,6 +74,8 @@ public:
 	void reconstruct();
 	void Render();
 	explicit ButtonReconst(GameTableScreen* parent);
+	ButtonReconst(const ButtonReconst&) = delete; // Delete unexpected copy constructor
+	ButtonReconst& operator= (const ButtonReconst&) = delete; // Delete unexpected assign operator
 	~ButtonReconst();
 private: // ŽžŠÔŠÖŒW
 	Timer myTimer;

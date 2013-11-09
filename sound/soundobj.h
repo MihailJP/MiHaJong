@@ -45,6 +45,8 @@ namespace sound {
 #else /* _WIN32 */
 		SoundManipulator(Window hWnd);
 #endif /* _WIN32 */
+		SoundManipulator(const SoundManipulator&) = delete; // Delete unexpected copy constructor
+		SoundManipulator& operator= (const SoundManipulator&) = delete; // Delete unexpected assign operator
 		~SoundManipulator();
 		void readWaveData(unsigned ID, const std::string& filename, bool looped = false);
 		void readVorbisData(unsigned ID, const std::string& filename, bool looped = false);

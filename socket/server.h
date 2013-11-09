@@ -41,7 +41,9 @@ namespace server {
 #endif /* _WIN32 */
 		void startThread ();
 		starter (const CodeConv::tstring& InputPlayerName, unsigned short port, const char* const * const rule); // コンストラクタ
-		void terminate (); // すぐに開始
+		starter (const Sock&) = delete; // Delete unexpected copy constructor
+		starter& operator= (const Sock&) = delete; // Delete unexpected assign operator
+		void terminate(); // すぐに開始
 		bool isFinished (); // 待機用スレッドが終わったかどうか
 		unsigned int chkCurrentConnection (); // 現在の接続数
 		CodeConv::tstring getPlayerName (unsigned id); // プレイヤー名

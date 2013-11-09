@@ -30,6 +30,8 @@ private:
 	void BtnEvent_Content_Roll_Down();
 public:
 	RuleConfigScene(ScreenManipulator* const manipulator);
+	RuleConfigScene(const RuleConfigScene&) = delete; // Delete unexpected copy constructor
+	RuleConfigScene& operator= (const RuleConfigScene&) = delete; // Delete unexpected assign operator
 	virtual ~RuleConfigScene();
 };
 

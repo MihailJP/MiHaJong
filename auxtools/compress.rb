@@ -72,6 +72,8 @@ private:
 	static const uint8_t expectedDigest[32];
 public:
 	file_#{symbolname.downcase}() : Data(Description, FileID, expectedDigest) {}
+	file_#{symbolname.downcase}(const file_#{symbolname.downcase}&) = delete; // Delete unexpected copy constructor
+	file_#{symbolname.downcase}& operator= (const file_#{symbolname.downcase}&) = delete; // Delete unexpected assign operator
 	~file_#{symbolname.downcase}() {}
 };
 

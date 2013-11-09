@@ -15,8 +15,6 @@ namespace ui {
 	
 #ifdef GRAPHIC_EXPORTS
 class Event { // イベントの基底クラス
-private:
-	Event(const Event&) {}
 protected:
 #ifdef _WIN32
 	HANDLE myEvent;
@@ -28,6 +26,8 @@ protected:
 #endif /*_WIN32*/
 public:
 	Event(bool initialStat = false, bool automatic = false);
+	Event(const Event&) = delete; // Delete unexpected copy constructor
+	Event& operator= (const Event&) = delete; // Delete unexpected assign operator
 	virtual ~Event() = 0;
 	virtual void set();
 	void reset();
@@ -40,7 +40,6 @@ public:
 
 class UI_Event : public Event { // UIの入力が完了したかどうかを表すイベント
 private:
-	UI_Event(const UI_Event&) {}
 #ifdef _WIN32
 	DWORD retValue;
 #else /*_WIN32*/
@@ -48,6 +47,8 @@ private:
 #endif /*_WIN32*/
 public:
 	UI_Event() : Event(false, false) {}
+	UI_Event(const UI_Event&) = delete; // Delete unexpected copy constructor
+	UI_Event& operator= (const UI_Event&) = delete; // Delete unexpected assign operator
 	~UI_Event() {}
 #ifdef _WIN32
 	void set(DWORD retval);
@@ -60,7 +61,6 @@ public:
 
 class CancellableWait : public Event { // UIの入力が完了したかどうかを表すイベント
 private:
-	CancellableWait(const UI_Event&) {}
 #ifdef _WIN32
 	DWORD retValue;
 #else /*_WIN32*/
@@ -68,6 +68,8 @@ private:
 #endif /*_WIN32*/
 public:
 	CancellableWait() : Event(false, false) {}
+	CancellableWait(const CancellableWait&) = delete; // Delete unexpected copy constructor
+	CancellableWait& operator= (const CancellableWait&) = delete; // Delete unexpected assign operator
 	~CancellableWait() {}
 #ifdef _WIN32
 	void set(DWORD retval);

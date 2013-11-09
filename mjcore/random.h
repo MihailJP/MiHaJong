@@ -11,4 +11,9 @@ public:
 	static double rnd();
 	static double rnd(double mean, double var);
 	static unsigned int dice();
+public: /* Monostate class: cannot be instantiated */
+	RndNum() = delete;
+	RndNum(const RndNum&) = delete;
+	RndNum& operator= (const RndNum&) = delete;
+	~RndNum() = delete;
 };

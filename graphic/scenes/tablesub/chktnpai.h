@@ -21,6 +21,8 @@ private:
 	void ShowTenpaiFlag(PlayerID player, int x, int y);
 public:
 	TableSubsceneCheckTenpai(DevicePtr device);
+	TableSubsceneCheckTenpai(const TableSubsceneCheckTenpai&) = delete; // Delete unexpected copy constructor
+	TableSubsceneCheckTenpai& operator= (const TableSubsceneCheckTenpai&) = delete; // Delete unexpected assign operator
 	~TableSubsceneCheckTenpai();
 	void Render();
 };

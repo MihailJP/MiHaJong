@@ -15,6 +15,8 @@ class ButtonPic {
 public:
 	enum ButtonStat {absent, clear, raised, sunken,};
 	explicit ButtonPic(DevicePtr device);
+	ButtonPic(const ButtonPic&) = delete; // Delete unexpected copy constructor
+	ButtonPic& operator= (const ButtonPic&) = delete; // Delete unexpected assign operator
 	~ButtonPic();
 	void setText(unsigned ButtonID);
 	void setButton(unsigned ButtonID, ButtonStat stat, int X, int Y, unsigned Width, unsigned Height, ArgbColor color, const CodeConv::tstring& caption, bool adjustWidth = false);

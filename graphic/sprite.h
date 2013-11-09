@@ -11,8 +11,8 @@ namespace mihajong_graphic {
 
 class SpriteRenderer {
 private: /* Singleton class idioms */
-	SpriteRenderer(const SpriteRenderer&) {throw _T("Attempt to copy singleton instance");}
-	SpriteRenderer& operator=(const SpriteRenderer&) {throw _T("Attempt to copy singleton instance");}
+	SpriteRenderer(const SpriteRenderer&) = delete; // Delete unexpected copy constructor
+	SpriteRenderer& operator= (const SpriteRenderer&) = delete; // Delete unexpected assign operator
 	SpriteRenderer(DevicePtr device);
 private:
 	SpritePtr sprite;

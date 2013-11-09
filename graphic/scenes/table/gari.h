@@ -16,6 +16,8 @@ private: /**** î≤Ç´ñkÅEâ‘îv ****/
 public:
 	void Render();
 	explicit GariReconst(GameTableScreen* parent);
+	GariReconst(const GariReconst&) = delete; // Delete unexpected copy constructor
+	GariReconst& operator= (const GariReconst&) = delete; // Delete unexpected assign operator
 	~GariReconst();
 };
 

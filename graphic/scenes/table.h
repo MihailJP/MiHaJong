@@ -76,6 +76,8 @@ protected:
 	void RenderSideBar(); // サイドバー
 public:
 	GameTableScreen(ScreenManipulator* const manipulator);
+	GameTableScreen(const GameTableScreen&) = delete; // Delete unexpected copy constructor
+	GameTableScreen& operator= (const GameTableScreen&) = delete; // Delete unexpected assign operator
 	~GameTableScreen();
 	void Render();
 #ifdef _WIN32

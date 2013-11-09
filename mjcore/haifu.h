@@ -29,11 +29,17 @@ private:
 	class PlayerStream {
 	public:
 		CodeConv::tostringstream haipai, tsumo, tsumolabel, sutehai, sutehailabel, final;
+		PlayerStream() {};
+		PlayerStream(const PlayerStream&) = delete; // Delete unexpected copy constructor
+		PlayerStream& operator= (const PlayerStream&) = delete; // Delete unexpected assign operator
 	};
 	class HaifuStreams {
 	public:
 		InfoByPlayer<PlayerStream> streamDat;
 		CodeConv::tostringstream dora, uraDora, aliceDora, aliceDoraMax, resultDesc;
+		HaifuStreams() {}
+		HaifuStreams(const HaifuStreams&) = delete; // Delete unexpected copy constructor
+		HaifuStreams& operator= (const HaifuStreams&) = delete; // Delete unexpected assign operator
 	};
 	static HaifuStreams haifuP, HThaifuP, XhaifuP;
 
@@ -71,6 +77,11 @@ private:
 				);
 			static void inline recordChanKan(const GameTable* const gameStat, CodeConv::tstring pTxt, CodeConv::tstring hTxt, CodeConv::tstring XAttrA, CodeConv::tstring XAttrB);
 			static void inline recordKan(const GameTable* const gameStat, CodeConv::tstring pTxt, CodeConv::tstring hTxt, CodeConv::tstring XAttrA, CodeConv::tstring XAttrB);
+		public: /* Monostate class: cannot be instantiated */
+			kan_sub() = delete;
+			kan_sub(const kan_sub&) = delete;
+			kan_sub& operator= (const kan_sub&) = delete;
+			~kan_sub() = delete;
 		};
 
 		class hfwriter {
@@ -82,11 +93,21 @@ private:
 					static void hfChii(PlayerID player, MeldCode meld);
 					static inline void hfPon1(PlayerID player, MeldCode meld);
 					static void hfPon(PlayerID player, MeldCode meld);
+				public: /* Monostate class: cannot be instantiated */
+					MeldWriter() = delete;
+					MeldWriter(const MeldWriter&) = delete;
+					MeldWriter& operator= (const MeldWriter&) = delete;
+					~MeldWriter() = delete;
 				};
 			public:
 				static void hfFinalForm(const GameTable* const gameStat, PlayerID player, EndType RoundEndType);
 				static void hfFlower(const GameTable* const gameStat, PlayerID player);
 				static void hfExposedMeld(const GameTable* const gameStat, PlayerID player);
+			public: /* Monostate class: cannot be instantiated */
+				finalformWriter() = delete;
+				finalformWriter(const finalformWriter&) = delete;
+				finalformWriter& operator= (const finalformWriter&) = delete;
+				~finalformWriter() = delete;
 			};
 
 			static void hfScoreWriteOut(const GameTable* const gameStat, PlayerID player, seatAbsolute wind);
@@ -99,7 +120,17 @@ private:
 
 			static void hfWriteFinalForms(const GameTable* const gameStat, int OrigTurn, EndType RoundEndType);
 			static void hfWriteBottom();
+		public: /* Monostate class: cannot be instantiated */
+			hfwriter() = delete;
+			hfwriter(const hfwriter&) = delete;
+			hfwriter& operator= (const hfwriter&) = delete;
+			~hfwriter() = delete;
 		};
+	public: /* Monostate class: cannot be instantiated */
+		tools() = delete;
+		tools(const tools&) = delete;
+		tools& operator= (const tools&) = delete;
+		~tools() = delete;
 	};
 
 public:
@@ -142,4 +173,10 @@ public:
 		LPCTSTR ResultDesc, EndType RoundEndType);
 
 	static void haifusave(const GameTable* const gameStat);
+
+public: /* Monostate class: cannot be instantiated */
+	haifu() = delete;
+	haifu(const haifu&) = delete;
+	haifu& operator= (const haifu&) = delete;
+	~haifu() = delete;
 };

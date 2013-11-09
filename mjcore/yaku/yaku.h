@@ -23,8 +23,8 @@ private:
 		friend yaku::yakuCalculator;
 	private:
 		YakuCatalog() {}
-		YakuCatalog(const YakuCatalog&);
-		YakuCatalog& operator= (const YakuCatalog&);
+		YakuCatalog(const YakuCatalog&) = delete; // Delete unexpected copy constructor
+		YakuCatalog& operator= (const YakuCatalog&) = delete; // Delete unexpected copy constructor
 		class catalogInit;
 	public:
 		static YakuCatalog* Instantiate(); // Singleton instance accessor
@@ -216,6 +216,8 @@ private:
 		int numOfStartedThreads(); // 開始したスレッドの数
 		void sync(int threads); // スレッドを同期する
 		CalculatorThread(); // デフォルトコンストラクタ
+		CalculatorThread(const CalculatorThread&) = delete; // Delete unexpected copy constructor
+		CalculatorThread& operator= (const CalculatorThread&) = delete; // Delete unexpected assign operator
 		~CalculatorThread(); // デフォルトデストラクタ
 	private:
 		void recordThreadStart();

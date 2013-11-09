@@ -37,6 +37,9 @@ private:
 	void configinit_ini();
 public:
 	bool reqFailed(uint16_t ruleID, const int* const ruleStat);
+	RuleConfigData() = default;
+	RuleConfigData(const RuleConfigData&) = delete; // Delete unexpected copy constructor
+	RuleConfigData& operator= (const RuleConfigData&) = delete; // Delete unexpected assign operator
 };
 namespace {
 	RuleConfigData ruleTableData;
@@ -72,6 +75,8 @@ private:
 	void configinit_ini();
 public:
 	PreferenceData() : ConfigData<PREFERENCE_ITEMS, RULES_IN_PAGE, RULE_IN_LINE>(_T("preferences")) {}
+	PreferenceData(const PreferenceData&) = delete; // Delete unexpected copy constructor
+	PreferenceData& operator= (const PreferenceData&) = delete; // Delete unexpected assign operator
 };
 namespace {
 	PreferenceData preferenceTableData;
@@ -98,8 +103,8 @@ private:
 	static const int* ourRuleStat;
 	ReqChecker();
 	~ReqChecker();
-	ReqChecker(const ReqChecker&) {throw;}
-	ReqChecker& operator=(const ReqChecker&) {throw;}
+	ReqChecker(const ReqChecker&) = delete; // Delete unexpected copy constructor
+	ReqChecker& operator= (const ReqChecker&) = delete; // Delete unexpected assign operator
 public:
 	bool reqFailed (const std::string& expression, const int* const ruleStat);
 	static ReqChecker* instantiate();

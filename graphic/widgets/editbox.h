@@ -50,6 +50,8 @@ public:
 #else /*_WIN32*/
 	EditBox(Window hwnd, DevicePtr device, int X, int Y, unsigned width, float scale = 1.0f);
 #endif /*_WIN32*/
+	EditBox(const EditBox&) = delete; // Delete unexpected copy constructor
+	EditBox& operator= (const EditBox&) = delete; // Delete unexpected assign operator
 	~EditBox();
 	void Render();
 #ifdef _WIN32
@@ -70,10 +72,11 @@ public:
 class EditBox::IMStat { // IMEÇÃèÛë‘
 private:
 	HWND hwnd; HIMC hIMC;
-	IMStat(const IMStat&) {}; // disable copy constructor
 	std::vector<BYTE> getCompositionString(DWORD InfoType);
 public:
 	IMStat(HWND hWnd);
+	IMStat(const IMStat&) = delete; // Delete unexpected copy constructor
+	IMStat& operator= (const IMStat&) = delete; // Delete unexpected assign operator
 	~IMStat();
 	bool isOpened();
 	std::tuple<DWORD, DWORD> getConvStat();
@@ -90,6 +93,8 @@ private:
 	IMStat(const IMStat&) {}; // disable copy constructor
 public:
 	IMStat(void*) {}
+	IMStat(const IMStat&) = delete; // Delete unexpected copy constructor
+	IMStat& operator= (const IMStat&) = delete; // Delete unexpected assign operator
 	~IMStat() {}
 	bool isOpened() {return false;}
 	std::tuple<uint32_t, uint32_t> getConvStat() {return std::make_tuple(0u, 0u);}

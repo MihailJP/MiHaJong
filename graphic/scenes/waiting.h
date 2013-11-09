@@ -16,6 +16,8 @@ protected:
 	virtual void waiting_desc();
 public:
 	ConnectionWaitingProto(ScreenManipulator* const manipulator);
+	ConnectionWaitingProto(const ConnectionWaitingProto&) = delete; // Delete unexpected copy constructor
+	ConnectionWaitingProto& operator= (const ConnectionWaitingProto&) = delete; // Delete unexpected assign operator
 	virtual ~ConnectionWaitingProto();
 };
 
@@ -25,6 +27,8 @@ private:
 	CodeConv::tstring waiting_desc_str();
 public:
 	ServerWait(ScreenManipulator* const manipulator);
+	ServerWait(const ServerWait&) = delete; // Delete unexpected copy constructor
+	ServerWait& operator= (const ServerWait&) = delete; // Delete unexpected assign operator
 	~ServerWait();
 	void Render();
 #ifdef _WIN32
@@ -41,6 +45,8 @@ private:
 	CodeConv::tstring waiting_desc_str();
 public:
 	ClientWait(ScreenManipulator* const manipulator);
+	ClientWait(const ClientWait&) = delete; // Delete unexpected copy constructor
+	ClientWait& operator= (const ClientWait&) = delete; // Delete unexpected assign operator
 	~ClientWait();
 	void Render();
 	void SetSubscene(unsigned int scene_ID);
@@ -51,6 +57,8 @@ private:
 	CodeConv::tstring waiting_desc_str();
 public:
 	ConnectionWaitFailed(ScreenManipulator* const manipulator);
+	ConnectionWaitFailed(const ConnectionWaitFailed&) = delete; // Delete unexpected copy constructor
+	ConnectionWaitFailed& operator= (const ConnectionWaitFailed&) = delete; // Delete unexpected assign operator
 	~ConnectionWaitFailed();
 	void Render();
 };

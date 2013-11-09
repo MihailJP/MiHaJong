@@ -20,6 +20,8 @@ public:
 	void Reconstruct(const GameTable* gameStat, PlayerID targetPlayer); // Ì”v‚ÌÄ\’z
 	void Render();
 	explicit SutehaiReconst(GameTableScreen* parent);
+	SutehaiReconst(const SutehaiReconst&) = delete; // Delete unexpected copy constructor
+	SutehaiReconst& operator= (const SutehaiReconst&) = delete; // Delete unexpected assign operator
 	~SutehaiReconst();
 };
 

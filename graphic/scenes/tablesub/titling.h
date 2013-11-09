@@ -14,6 +14,8 @@ protected:
 	void FadeinStr(const std::wstring& str);
 public:
 	TableSubsceneTitling(DevicePtr device);
+	TableSubsceneTitling(const TableSubsceneTitling&) = delete; // Delete unexpected copy constructor
+	TableSubsceneTitling& operator= (const TableSubsceneTitling&) = delete; // Delete unexpected assign operator
 	virtual ~TableSubsceneTitling();
 	virtual void skipEvent();
 };
@@ -23,6 +25,8 @@ private:
 	static const std::wstring Numeral;
 public:
 	TableSubsceneTitlingHonba(DevicePtr device);
+	TableSubsceneTitlingHonba(const TableSubsceneTitlingHonba&) = delete; // Delete unexpected copy constructor
+	TableSubsceneTitlingHonba& operator= (const TableSubsceneTitlingHonba&) = delete; // Delete unexpected assign operator
 	~TableSubsceneTitlingHonba();
 	void Render();
 };
@@ -33,6 +37,8 @@ private:
 public:
 	TableSubsceneMsg(DevicePtr device, const std::wstring& str = L"");
 	TableSubsceneMsg(DevicePtr device, const std::string& str);
+	TableSubsceneMsg(const TableSubsceneMsg&) = delete; // Delete unexpected copy constructor
+	TableSubsceneMsg& operator= (const TableSubsceneMsg&) = delete; // Delete unexpected assign operator
 	~TableSubsceneMsg();
 	void Render();
 };

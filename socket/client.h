@@ -33,7 +33,9 @@ namespace client {
 #endif /* _WIN32 */
 		void startThread (); // スレッドを開始する
 		starter (const CodeConv::tstring& InputPlayerName, const std::string& server, unsigned short port); // コンストラクタ
-		bool isConnected (); // 接続成功したかどうか
+		starter (const Sock&) = delete; // Delete unexpected copy constructor
+		starter& operator= (const Sock&) = delete; // Delete unexpected assign operator
+		bool isConnected(); // 接続成功したかどうか
 		bool isFailed (); // 接続失敗したかどうか
 		bool isFinished (); // 待機用スレッドが終わったかどうか
 		CodeConv::tstring getPlayerName (unsigned id); // プレイヤー名

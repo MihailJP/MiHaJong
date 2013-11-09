@@ -17,7 +17,9 @@ namespace chat {
 		virtual void chatappend(const CodeConv::tstring& buf);
 	public:
 		StreamLog ();
-		virtual ~StreamLog ();
+		StreamLog(const StreamLog&) = delete; // Delete unexpected copy constructor
+		StreamLog& operator= (const StreamLog&) = delete; // Delete unexpected assign operator
+		virtual ~StreamLog();
 		virtual CodeConv::tstring getlog ();
 		virtual void sysmsg (const CodeConv::tstring& msg);
 		virtual void sendstr (const CodeConv::tstring& msg);
@@ -49,7 +51,9 @@ namespace chat {
 		void cleanup();
 	public:
 		ChatThread (std::string& server_addr, int clientNum);
-		~ChatThread ();
+		ChatThread(const ChatThread&) = delete; // Delete unexpected copy constructor
+		ChatThread& operator= (const ChatThread&) = delete; // Delete unexpected assign operator
+		~ChatThread();
 		CodeConv::tstring getlog ();
 		void sysmsg (const CodeConv::tstring& msg);
 		void sendstr (const CodeConv::tstring& msg);

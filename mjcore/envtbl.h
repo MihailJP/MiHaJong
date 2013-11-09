@@ -7,8 +7,8 @@
 class EnvTable { // 卓には直接関係ないデータ [singleton]
 private: // singleton
 	EnvTable();
-	EnvTable(const EnvTable&);
-	EnvTable& operator=(const EnvTable&);
+	EnvTable(const EnvTable&) = delete; // Delete unexpected copy constructor
+	EnvTable& operator= (const EnvTable&) = delete; // Delete unexpected assign operator
 
 public:
 	// 内部クラスとかを定義する

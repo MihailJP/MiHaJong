@@ -44,10 +44,12 @@ private:
 	Thread threadPtr;
 	uint16_t portnum;
 public:
-	Sock () {}; // ソケット初期化
-	Sock (uint16_t port); // サーバー開始
+	Sock () {} // ソケット初期化
+	explicit Sock (uint16_t port); // サーバー開始
 	Sock (const std::string& destination, uint16_t port); // クライアント接続
-	~Sock (); // 接続を切る
+	Sock (const Sock&) = delete; // Delete unexpected copy constructor
+	Sock& operator= (const Sock&) = delete; // Delete unexpected assign operator
+	~Sock(); // 接続を切る
 	void listen (uint16_t port); // サーバー開始
 	void listen (); // サーバー開始
 	void connect (const std::string& destination, uint16_t port); // クライアント接続
@@ -64,7 +66,9 @@ public:
 
 class Sock::network_thread { // スレッド(スーパークラス)
 public:
-	network_thread(Sock* caller);
+	explicit network_thread(Sock* caller);
+	network_thread(const network_thread&) = delete; // Delete unexpected copy constructor
+	network_thread& operator= (const network_thread&) = delete; // Delete unexpected assign operator
 	virtual ~network_thread();
 #ifdef _WIN32
 	static DWORD WINAPI thread(LPVOID lp); // スレッドを起動するための処理
@@ -116,7 +120,9 @@ protected:
 class Sock::client_thread : public network_thread { // クライアントのスレッド
 public:
 	client_thread(Sock* callee) : network_thread(callee) {}
-	void startThread (); // スレッドを開始する
+	client_thread(const client_thread&) = delete; // Delete unexpected copy constructor
+	client_thread& operator= (const client_thread&) = delete; // Delete unexpected assign operator
+	void startThread(); // スレッドを開始する
 protected:
 	int establishConnection (); // 接続を確立する
 };
@@ -124,7 +130,9 @@ protected:
 class Sock::server_thread : public network_thread { // サーバーのスレッド
 public:
 	server_thread(Sock* callee) : network_thread(callee) {}
-	void startThread (); // スレッドを開始する
+	server_thread(const server_thread&) = delete; // Delete unexpected copy constructor
+	server_thread& operator= (const server_thread&) = delete; // Delete unexpected assign operator
+	void startThread(); // スレッドを開始する
 	void setsock (SocketDescriptor* const socket, SocketDescriptor* const lsocket); // ソケットを設定する
 protected:
 	int establishConnection (); // 接続を確立する

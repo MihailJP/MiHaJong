@@ -33,4 +33,9 @@ private:
 	static void yakulst_dora();
 public:
 	static void init();
+public: /* Monostate class: cannot be instantiated */
+	catalogInit() = delete;
+	catalogInit(const catalogInit&) = delete;
+	catalogInit& operator= (const catalogInit&) = delete;
+	~catalogInit() = delete;
 };

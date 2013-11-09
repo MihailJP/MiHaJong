@@ -18,7 +18,9 @@ namespace RemoteAction {
 #endif /*_WIN32*/
 	public:
 		RemoteDahai(GameTable* const gStat);
-		bool isFinished () {return finished;}
+		RemoteDahai(const RemoteDahai&) = delete; // Delete unexpected copy constructor
+		RemoteDahai& operator= (const RemoteDahai&) = delete; // Delete unexpected assign operator
+		bool isFinished() { return finished; }
 		DiscardTileNum get () {return *const_cast<DiscardTileNum*>(&remoteDahai);}
 	};
 
@@ -38,7 +40,9 @@ namespace RemoteAction {
 		void checkremotenaki(PlayerID player, int& ReceivedMsg);
 	public:
 		RemoteNaki(GameTable* const gStat);
-		bool isFinished () {return finished;}
+		RemoteNaki(const RemoteNaki&) = delete; // Delete unexpected copy constructor
+		RemoteNaki& operator= (const RemoteNaki&) = delete; // Delete unexpected assign operator
+		bool isFinished() { return finished; }
 	};
 
 	DiscardTileNum remotedahai (GameTable* const gameStat);

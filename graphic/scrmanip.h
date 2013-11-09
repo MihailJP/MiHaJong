@@ -54,6 +54,8 @@ public:
 #else /*_WIN32*/
 	ScreenManipulator(Display* displayPtr, Window windowHandle, bool fullscreen);
 #endif /*_WIN32*/
+	ScreenManipulator(const ScreenManipulator&) = delete; // Delete unexpected copy constructor
+	ScreenManipulator& operator= (const ScreenManipulator&) = delete; // Delete unexpected assign operator
 	~ScreenManipulator();
 #ifdef _WIN32
 	HWND getHWnd() {return hWnd;}

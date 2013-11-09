@@ -19,6 +19,8 @@ private:
 public:
 	void Render();
 	explicit DiceReconst(GameTableScreen* parent);
+	DiceReconst(const DiceReconst&) = delete; // Delete unexpected copy constructor
+	DiceReconst& operator= (const DiceReconst&) = delete; // Delete unexpected assign operator
 	~DiceReconst();
 };
 

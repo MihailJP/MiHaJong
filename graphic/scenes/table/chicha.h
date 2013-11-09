@@ -41,6 +41,8 @@ private: /**** ヤキトリマーク ****/
 public:
 	void Render();
 	explicit TrayReconst(GameTableScreen* parent);
+	TrayReconst(const TrayReconst&) = delete; // Delete unexpected copy constructor
+	TrayReconst& operator= (const TrayReconst&) = delete; // Delete unexpected assign operator
 	~TrayReconst();
 };
 

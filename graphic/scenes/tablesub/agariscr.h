@@ -50,6 +50,8 @@ protected:
 	int maxShown;
 public:
 	TableSubsceneAgariScreenProto(DevicePtr device);
+	TableSubsceneAgariScreenProto(const TableSubsceneAgariScreenProto&) = delete; // Delete unexpected copy constructor
+	TableSubsceneAgariScreenProto& operator= (const TableSubsceneAgariScreenProto&) = delete; // Delete unexpected assign operator
 	virtual ~TableSubsceneAgariScreenProto();
 	virtual void skipEvent();
 };
@@ -57,6 +59,8 @@ public:
 class TableSubsceneAgariScreen : public TableSubsceneAgariScreenProto {
 public:
 	TableSubsceneAgariScreen(DevicePtr device);
+	TableSubsceneAgariScreen(const TableSubsceneAgariScreen&) = delete; // Delete unexpected copy constructor
+	TableSubsceneAgariScreen& operator= (const TableSubsceneAgariScreen&) = delete; // Delete unexpected assign operator
 	~TableSubsceneAgariScreen();
 	void Render();
 };
@@ -67,6 +71,8 @@ private:
 	DoraTilesUra* doraTilesUra;
 public:
 	TableSubsceneAgariScreenUradora(DevicePtr device);
+	TableSubsceneAgariScreenUradora(const TableSubsceneAgariScreenUradora&) = delete; // Delete unexpected copy constructor
+	TableSubsceneAgariScreenUradora& operator= (const TableSubsceneAgariScreenUradora&) = delete; // Delete unexpected assign operator
 	~TableSubsceneAgariScreenUradora();
 	void Render();
 };
@@ -81,6 +87,8 @@ private:
 public:
 	void Render();
 	explicit AgariTehai(TableSubsceneAgariScreenProto* caller);
+	AgariTehai(const AgariTehai&) = delete; // Delete unexpected copy constructor
+	AgariTehai& operator= (const AgariTehai&) = delete; // Delete unexpected assign operator
 	~AgariTehai();
 };
 
@@ -108,6 +116,8 @@ private:
 public:
 	void Render();
 	explicit AgariNaki(TableSubsceneAgariScreenProto* caller);
+	AgariNaki(const AgariNaki&) = delete; // Delete unexpected copy constructor
+	AgariNaki& operator= (const AgariNaki&) = delete; // Delete unexpected assign operator
 	~AgariNaki();
 };
 
@@ -125,6 +135,8 @@ protected:
 public:
 	virtual void Render();
 	explicit DoraTiles(TableSubsceneAgariScreenProto* caller);
+	DoraTiles(const DoraTiles&) = delete; // Delete unexpected copy constructor
+	DoraTiles& operator= (const DoraTiles&) = delete; // Delete unexpected assign operator
 	virtual ~DoraTiles() = 0;
 };
 
@@ -136,6 +148,8 @@ protected:
 	double startTime() {return 1.0;}
 public:
 	explicit DoraTilesOmote(TableSubsceneAgariScreenProto* caller);
+	DoraTilesOmote(const DoraTilesOmote&) = delete; // Delete unexpected copy constructor
+	DoraTilesOmote& operator= (const DoraTilesOmote&) = delete; // Delete unexpected assign operator
 	~DoraTilesOmote();
 };
 
@@ -147,6 +161,8 @@ protected:
 	double startTime() {return 1.0625;}
 public:
 	explicit DoraTilesUra(TableSubsceneAgariScreenProto* caller);
+	DoraTilesUra(const DoraTilesUra&) = delete; // Delete unexpected copy constructor
+	DoraTilesUra& operator= (const DoraTilesUra&) = delete; // Delete unexpected assign operator
 	~DoraTilesUra();
 };
 
@@ -168,6 +184,8 @@ private:
 public:
 	void Render();
 	explicit ShowScore(TableSubsceneAgariScreenProto* caller);
+	ShowScore(const ShowScore&) = delete; // Delete unexpected copy constructor
+	ShowScore& operator= (const ShowScore&) = delete; // Delete unexpected assign operator
 	~ShowScore();
 };
 

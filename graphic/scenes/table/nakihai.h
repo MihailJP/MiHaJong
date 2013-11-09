@@ -22,6 +22,8 @@ public:
 	void Reconstruct(const GameTable* gameStat, PlayerID targetPlayer); // –Â‚¢‚½”v‚ÌÄ\’z
 	void Render();
 	explicit NakihaiReconst(GameTableScreen* parent);
+	NakihaiReconst(const NakihaiReconst&) = delete; // Delete unexpected copy constructor
+	NakihaiReconst& operator= (const NakihaiReconst&) = delete; // Delete unexpected assign operator
 	~NakihaiReconst();
 };
 

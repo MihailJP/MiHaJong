@@ -12,6 +12,8 @@ public:
 	void Reconstruct(const GameTable* gameStat, PlayerID targetPlayer, PlayerID trueTargetPlayer); // R”v‚ÌÄ\’z
 	void Render();
 	explicit YamahaiReconst(GameTableScreen* parent);
+	YamahaiReconst(const YamahaiReconst&) = delete; // Delete unexpected copy constructor
+	YamahaiReconst& operator= (const YamahaiReconst&) = delete; // Delete unexpected assign operator
 	~YamahaiReconst();
 };
 

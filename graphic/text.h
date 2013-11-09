@@ -33,6 +33,8 @@ protected:
 	MHJMutex SpriteMutex;
 public:
 	explicit ITextRenderer(DevicePtr device);
+	ITextRenderer(const ITextRenderer&) = delete; // Delete unexpected copy constructor
+	ITextRenderer& operator= (const ITextRenderer&) = delete; // Delete unexpected assign operator
 	virtual ~ITextRenderer() = 0;
 	void NewText(unsigned int ID, const std::wstring& str, int x, int y,
 		float scale = 1.0, float width = 1.0, ArgbColor color = 0xffffffff);
@@ -54,6 +56,8 @@ private:
 	const unsigned int FontPadding() {return 2;}
 public:
 	explicit TextRenderer(DevicePtr device);
+	TextRenderer(const TextRenderer&) = delete; // Delete unexpected copy constructor
+	TextRenderer& operator= (const TextRenderer&) = delete; // Delete unexpected assign operator
 	~TextRenderer();
 };
 
@@ -65,6 +69,8 @@ private:
 	const unsigned int FontPadding() {return 0;}
 public:
 	explicit HugeTextRenderer(DevicePtr device);
+	HugeTextRenderer(const HugeTextRenderer&) = delete; // Delete unexpected copy constructor
+	HugeTextRenderer& operator= (const HugeTextRenderer&) = delete; // Delete unexpected assign operator
 	~HugeTextRenderer();
 };
 
@@ -76,6 +82,8 @@ private:
 	const unsigned int FontPadding() {return 1;}
 public:
 	explicit SmallTextRenderer(DevicePtr device);
+	SmallTextRenderer(const SmallTextRenderer&) = delete; // Delete unexpected copy constructor
+	SmallTextRenderer& operator= (const SmallTextRenderer&) = delete; // Delete unexpected assign operator
 	~SmallTextRenderer();
 };
 
@@ -87,6 +95,8 @@ private:
 	const unsigned int FontPadding() {return 0;}
 public:
 	explicit CallDigitRenderer(DevicePtr device);
+	CallDigitRenderer(const CallDigitRenderer&) = delete; // Delete unexpected copy constructor
+	CallDigitRenderer& operator= (const CallDigitRenderer&) = delete; // Delete unexpected assign operator
 	~CallDigitRenderer();
 };
 
@@ -98,6 +108,8 @@ private:
 	const unsigned int FontPadding() {return 0;}
 public:
 	explicit ScoreDigitRenderer(DevicePtr device);
+	ScoreDigitRenderer(const ScoreDigitRenderer&) = delete; // Delete unexpected copy constructor
+	ScoreDigitRenderer& operator= (const ScoreDigitRenderer&) = delete; // Delete unexpected assign operator
 	~ScoreDigitRenderer();
 };
 

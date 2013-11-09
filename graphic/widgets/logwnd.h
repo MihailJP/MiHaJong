@@ -42,6 +42,8 @@ public:
 #else /*_WIN32*/
 	LogWindow(Window hwnd, DevicePtr device, int X, int Y, unsigned Width, unsigned Height);
 #endif /*_WIN32*/
+	LogWindow(const LogWindow&) = delete; // Delete unexpected copy constructor
+	LogWindow& operator= (const LogWindow&) = delete; // Delete unexpected assign operator
 	~LogWindow();
 	void Render();
 };

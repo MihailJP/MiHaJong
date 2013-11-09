@@ -64,6 +64,8 @@ namespace sound {
 		virtual void Stop();
 		virtual void setVolume(double volume);
 		explicit SoundData();
+		SoundData(const SoundData&) = delete; // Delete unexpected copy constructor
+		SoundData& operator= (const SoundData&) = delete; // Delete unexpected assign operator
 		virtual ~SoundData() = 0;
 	};
 	class WaveData : public SoundData {
@@ -80,6 +82,8 @@ namespace sound {
 #else
 		explicit WaveData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped = false);
 #endif
+		WaveData(const WaveData&) = delete; // Delete unexpected copy constructor
+		WaveData& operator= (const WaveData&) = delete; // Delete unexpected assign operator
 	};
 	class OggData : public SoundData {
 #ifdef VORBIS_SUPPORT
@@ -93,6 +97,8 @@ namespace sound {
 #else
 		explicit OggData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped = false);
 #endif
+		OggData(const OggData&) = delete; // Delete unexpected copy constructor
+		OggData& operator= (const OggData&) = delete; // Delete unexpected assign operator
 #else
 	private:
 		void Prepare(const std::string&) {}
@@ -120,6 +126,8 @@ namespace sound {
 		bool loopFlag;
 	public:
 		explicit MidiData(unsigned ID, const std::string& filename, bool looped = false);
+		MidiData(const MidiData&) = delete; // Delete unexpected copy constructor
+		MidiData& operator= (const MidiData&) = delete; // Delete unexpected assign operator
 		void Play();
 		void Stop();
 		virtual void setVolume(double volume);
@@ -129,6 +137,8 @@ namespace sound {
 		explicit MidiData(unsigned ID, const std::string& filename, bool looped = false) {
 			throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));
 		}
+		MidiData(const MidiData&) = delete; // Delete unexpected copy constructor
+		MidiData& operator= (const MidiData&) = delete; // Delete unexpected assign operator
 		void Play() {throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));}
 		void Stop() {throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));}
 		virtual void setVolume(double volume) {

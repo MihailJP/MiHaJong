@@ -28,6 +28,8 @@ public:
 	Scene(ScreenManipulator* const manipulator) {
 		caller = manipulator;
 	}
+	Scene(const Scene&) = delete; // Delete unexpected copy constructor
+	Scene& operator= (const Scene&) = delete; // Delete unexpected assign operator
 	virtual ~Scene() {}
 #ifdef _WIN32
 	virtual void IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {}

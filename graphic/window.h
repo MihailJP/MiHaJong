@@ -46,6 +46,8 @@ public:
 #else /*_WIN32*/
 	MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen);
 #endif /*_WIN32*/
+	MainWindow(const MainWindow&) = delete; // Delete unexpected copy constructor
+	MainWindow& operator= (const MainWindow&) = delete; // Delete unexpected assign operator
 	~MainWindow();
 	void Render();
 	void transit(sceneID scene);

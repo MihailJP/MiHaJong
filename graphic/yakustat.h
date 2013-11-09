@@ -17,6 +17,11 @@ public:
 	static mihajong_structs::LargeNum getAgariScore();
 	static int getChipVal();
 	EXPORT static void setYakuStat(const mihajong_structs::YakuResult*, mihajong_structs::LargeNum, int);
+public: /* Monostate class: cannot be instantiated */
+	YakuResult() = delete;
+	YakuResult(const YakuResult&) = delete;
+	YakuResult& operator= (const YakuResult&) = delete;
+	~YakuResult() = delete;
 };
 
 }

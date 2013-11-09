@@ -16,6 +16,11 @@ private:
 public:
 	static mihajong_structs::LargeNum getData(mihajong_structs::PlayerID player);
 	static void setData(mihajong_structs::LargeNum, mihajong_structs::LargeNum, mihajong_structs::LargeNum, mihajong_structs::LargeNum);
+public: /* Monostate class: cannot be instantiated */
+	FinalScoreDat() = delete;
+	FinalScoreDat(const FinalScoreDat&) = delete;
+	FinalScoreDat& operator= (const FinalScoreDat&) = delete;
+	~FinalScoreDat() = delete;
 };
 #endif
 

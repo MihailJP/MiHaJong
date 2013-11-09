@@ -98,6 +98,8 @@ public:
 	CONFDAT_CLASS(CodeConv::tstring sectionName = _T("rules")) {
 		mySectionName = sectionName;
 	}
+	ConfigData(const ConfigData&) = delete; // Delete unexpected copy constructor
+	ConfigData& operator= (const ConfigData&) = delete; // Delete unexpected assign operator
 	virtual ~ConfigData() {}
 };
 

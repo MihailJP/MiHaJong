@@ -18,6 +18,8 @@ private:
 	void ShowAllCall();
 public:
 	TableSubsceneCallValue(DevicePtr device, const CodeConv::tstring& caption = _T(""));
+	TableSubsceneCallValue(const TableSubsceneCallValue&) = delete; // Delete unexpected copy constructor
+	TableSubsceneCallValue& operator= (const TableSubsceneCallValue&) = delete; // Delete unexpected assign operator
 	~TableSubsceneCallValue();
 	void Render();
 	virtual void skipEvent();

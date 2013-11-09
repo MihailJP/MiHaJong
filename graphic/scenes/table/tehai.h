@@ -19,6 +19,8 @@ public:
 	void Reconstruct(const GameTable* gameStat, PlayerID targetPlayer); // è”v‚ÌÄ\’z
 	void Render();
 	explicit TehaiReconst(GameTableScreen* parent);
+	TehaiReconst(const TehaiReconst&) = delete; // Delete unexpected copy constructor
+	TehaiReconst& operator= (const TehaiReconst&) = delete; // Delete unexpected assign operator
 	~TehaiReconst();
 public:
 	int getTileCursor() {return tileCursor;}

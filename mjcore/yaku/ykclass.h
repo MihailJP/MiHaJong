@@ -16,4 +16,9 @@ private:
 	struct ParseMode;
 	class mentsuParser;
 	class countingFacility;
+public: /* Monostate class: cannot be instantiated */
+	yaku() = delete;
+	yaku(const yaku&) = delete;
+	yaku& operator= (const yaku&) = delete;
+	~yaku() = delete;
 };

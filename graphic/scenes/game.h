@@ -29,6 +29,8 @@ protected:
 	static const unsigned CheckboxRegionOffset = 50;
 public:
 	TableProtoScene(ScreenManipulator* const manipulator);
+	TableProtoScene(const TableProtoScene&) = delete; // Delete unexpected copy constructor
+	TableProtoScene& operator= (const TableProtoScene&) = delete; // Delete unexpected assign operator
 	virtual ~TableProtoScene();
 #ifdef _WIN32
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
@@ -88,6 +90,8 @@ private:
 	void renderName();
 public:
 	ScoreBoard(DevicePtr device, seatRelative relativePos, int x, int y, float widthScale);
+	ScoreBoard(const ScoreBoard&) = delete; // Delete unexpected copy constructor
+	ScoreBoard& operator= (const ScoreBoard&) = delete; // Delete unexpected assign operator
 	~ScoreBoard();
 	void Render();
 };

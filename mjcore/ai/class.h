@@ -32,11 +32,18 @@ public:
 	static DiscardTileNum determine_discard(const GameTable* const gameStat);
 	static void compfuuro(GameTable* const gameStat);
 	static void determine_meld(GameTable* const gameStat);
+public: /* Monostate class: cannot be instantiated */
+	aiscript() = delete;
+	aiscript(const aiscript&) = delete;
+	aiscript& operator= (const aiscript&) = delete;
+	~aiscript() = delete;
 };
 
 class aiscript::detDiscardThread {
 public:
 	detDiscardThread();
+	detDiscardThread(const detDiscardThread&) = delete; // Delete unexpected copy constructor
+	detDiscardThread& operator= (const detDiscardThread&) = delete; // Delete unexpected assign operator
 	~detDiscardThread();
 	void setprm(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished);
 #ifdef _WIN32
@@ -58,6 +65,8 @@ private:
 class aiscript::detCallThread {
 public:
 	detCallThread();
+	detCallThread(const detCallThread&) = delete; // Delete unexpected copy constructor
+	detCallThread& operator= (const detCallThread&) = delete; // Delete unexpected assign operator
 	~detCallThread();
 	void setprm(GameTable* const gameStat, bool* const finished);
 #ifdef _WIN32
@@ -105,4 +114,9 @@ private:
 public:
 	class playertable;
 	class functable;
+public: /* Monostate class: cannot be instantiated */
+	table() = delete;
+	table(const table&) = delete;
+	table& operator= (const table&) = delete;
+	~table() = delete;
 };

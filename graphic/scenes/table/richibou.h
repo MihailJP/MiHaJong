@@ -15,6 +15,8 @@ private:
 public:
 	void Render();
 	explicit RichibouReconst(GameTableScreen* parent);
+	RichibouReconst(const RichibouReconst&) = delete; // Delete unexpected copy constructor
+	RichibouReconst& operator= (const RichibouReconst&) = delete; // Delete unexpected assign operator
 	~RichibouReconst();
 };
 

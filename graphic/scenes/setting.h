@@ -38,6 +38,8 @@ private:
 	void setVolume();
 public:
 	PreferenceConfigScene(ScreenManipulator* const manipulator);
+	PreferenceConfigScene(const PreferenceConfigScene&) = delete; // Delete unexpected copy constructor
+	PreferenceConfigScene& operator= (const PreferenceConfigScene&) = delete; // Delete unexpected assign operator
 	virtual ~PreferenceConfigScene();
 	void Render();
 #ifdef _WIN32

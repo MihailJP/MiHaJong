@@ -28,6 +28,8 @@ public:
 #else /*_WIN32*/
 	explicit GameThread(GameTypeID gameType, Window hWnd);
 #endif /*_WIN32*/
+	GameThread(const GameThread&) = delete; // Delete unexpected copy constructor
+	GameThread& operator= (const GameThread&) = delete; // Delete unexpected assign operator
 	~GameThread();
 };
 

@@ -26,6 +26,8 @@ private:
 	void renderFrame();
 public:
 	Clock(GameTableScreen* caller);
+	Clock(const Clock&) = delete; // Delete unexpected copy constructor
+	Clock& operator= (const Clock&) = delete; // Delete unexpected assign operator
 	~Clock();
 	void Render();
 };

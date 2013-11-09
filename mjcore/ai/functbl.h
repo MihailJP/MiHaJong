@@ -32,6 +32,11 @@ public:
 	static inline const char* getGTblName();
 	static inline const char* getTblName() {return tblname;}
 	static void inittable(lua_State* const L, int playerID);
+public: /* Monostate class: cannot be instantiated */
+	functable() = delete;
+	functable(const functable&) = delete;
+	functable& operator= (const functable&) = delete;
+	~functable() = delete;
 };
 
 class aiscript::table::functable::gametbl {
@@ -49,6 +54,11 @@ private:
 public:
 	static inline const char* getTblName() {return tblname;}
 	static inline void makeprototype(lua_State* const L, int playerID);
+public: /* Monostate class: cannot be instantiated */
+	gametbl() = delete;
+	gametbl(const gametbl&) = delete;
+	gametbl& operator= (const gametbl&) = delete;
+	~gametbl() = delete;
 };
 
 inline const char* aiscript::table::functable::getGTblName() {return gametbl::getTblName();}
@@ -105,6 +115,11 @@ public:
 	static int isshokanqualified(lua_State* const L);
 	static int issumaroallowed(lua_State* const L);
 	static int isyakitori(lua_State* const L);
+public: /* Monostate class: cannot be instantiated */
+	luafunc() = delete;
+	luafunc(const luafunc&) = delete;
+	luafunc& operator= (const luafunc&) = delete;
+	~luafunc() = delete;
 };
 
 class aiscript::table::functable::gametbl::luafunc::riskchk {
@@ -125,4 +140,9 @@ public:
 	static bool issenkisuji(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index);
 	static bool isnamakurasuji(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index);
 	static bool isnakasuji(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index);
+public: /* Monostate class: cannot be instantiated */
+	riskchk() = delete;
+	riskchk(const riskchk&) = delete;
+	riskchk& operator= (const riskchk&) = delete;
+	~riskchk() = delete;
 };

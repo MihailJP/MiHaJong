@@ -25,6 +25,11 @@ public:
 	static void makementsu(const GameTable* const gameStat,
 		PlayerID targetPlayer, ParseMode AtamaCode,
 		int* const ProcessedMelds, MeldBuf MianziDat); /* –ÊŽq‚É•ª‰ð‚·‚é */
+public: /* Monostate class: cannot be instantiated */
+	mentsuParser() = delete;
+	mentsuParser(const mentsuParser&) = delete;
+	mentsuParser& operator= (const mentsuParser&) = delete;
+	~mentsuParser() = delete;
 };
 
 // ---------------------------------------------------------------------
@@ -57,4 +62,9 @@ public:
 	static int countSpecMentzWithDup(const MeldBuf MianziDat, const TileCode* const targetKez, int numOfKez,
 		const TileCode* const targetShunz, int numOfShunz, bool Mode);
 	static int countMentzNumerals(const MeldBuf MianziDat);
+public: /* Monostate class: cannot be instantiated */
+	countingFacility() = delete;
+	countingFacility(const countingFacility&) = delete;
+	countingFacility& operator= (const countingFacility&) = delete;
+	~countingFacility() = delete;
 };

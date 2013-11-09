@@ -25,6 +25,8 @@ private:
 public:
 	virtual void Render() = 0;
 	explicit ShowTehai(DevicePtr device);
+	ShowTehai(const ShowTehai&) = delete; // Delete unexpected copy constructor
+	ShowTehai& operator= (const ShowTehai&) = delete; // Delete unexpected assign operator
 	virtual ~ShowTehai();
 };
 
