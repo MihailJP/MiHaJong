@@ -55,10 +55,10 @@ void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat) {
 }
 
 void ButtonPic::Render() {
-	for (auto k = mySprites.begin(); k != mySprites.end(); ++k) {
-		if (std::get<0>(*k) == absent) continue;
-		int X = std::get<1>(*k), Y = std::get<2>(*k);
-		unsigned width = std::get<3>(*k), height = std::get<4>(*k);
+	for (auto k : mySprites) {
+		if (std::get<0>(k) == absent) continue;
+		int X = std::get<1>(k), Y = std::get<2>(k);
+		unsigned width = std::get<3>(k), height = std::get<4>(k);
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 		TransformMatrix mat, mat2; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat2);
 		D3DXMatrixTranslation(&mat2, (float)(-X), (float)(-Y), 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
@@ -70,8 +70,8 @@ void ButtonPic::Render() {
 		TransformMatrix mat; glGetFloatv(GL_MODELVIEW_MATRIX, &mat[0]);
 		glPopMatrix();
 #endif
-		RECT rect = {0, 52 * (std::get<0>(*k) - 1), 156, 52 * (std::get<0>(*k) - 1) + 48};
-		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y, width, height, std::get<5>(*k) | 0xff000000, &rect, 0, 0, &mat);
+		RECT rect = {0, 52 * (std::get<0>(k) - 1), 156, 52 * (std::get<0>(k) - 1) + 48};
+		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y, width, height, std::get<5>(k) | 0xff000000, &rect, 0, 0, &mat);
 	}
 	myTextRenderer->Render();
 }

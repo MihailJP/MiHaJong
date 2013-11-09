@@ -97,8 +97,8 @@ sound::SoundManipulator::~SoundManipulator() {
 	GGS->CloseDevice();
 	GGSFREE();
 #endif
-	for (auto k = sounds.begin(); k != sounds.end(); ++k) {
-		delete (*k); (*k) = nullptr;
+	for (auto& k : sounds) {
+		delete k; k = nullptr;
 	}
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	if (myDevice) {

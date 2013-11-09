@@ -31,26 +31,26 @@ const std::array<TileCode, 35> aiscript::table::functable::gametbl::validTiles =
 };
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, Int8ByTile& tptr) {
 	lua_newtable(L); // テーブル
-	for (auto k = validTiles.begin(); k != validTiles.end(); k++)
-		TableAdd(L, (lua_Integer)*k, (lua_Integer)(tptr[*k]));
+	for (auto k : validTiles)
+		TableAdd(L, (lua_Integer)k, (lua_Integer)(tptr[k]));
 }
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, UInt8ByTile& tptr) {
 	lua_newtable(L); // テーブル
-	for (auto k = validTiles.begin(); k != validTiles.end(); k++)
-		TableAdd(L, (lua_Integer)*k, (lua_Integer)(tptr[*k]));
+	for (auto k : validTiles)
+		TableAdd(L, (lua_Integer)k, (lua_Integer)(tptr[k]));
 }
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, FlagByTile& tptr) {
 	lua_newtable(L); // テーブル
-	for (auto k = validTiles.begin(); k != validTiles.end(); k++)
-		TableAdd(L, (lua_Integer)*k, tptr[*k]);
+	for (auto k : validTiles)
+		TableAdd(L, (lua_Integer)k, tptr[k]);
 }
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, InfoByTile<MachihaiTileInfo>& tptr) {
 	lua_newtable(L); // テーブル
-	for (auto k = validTiles.begin(); k != validTiles.end(); k++) {
-		lua_pushinteger(L, (int)*k);
+	for (auto k : validTiles) {
+		lua_pushinteger(L, (int)k);
 		lua_newtable(L);
-		TableAdd(L, "flag", tptr[*k].MachihaiFlag);
-		if (tptr[*k].MachihaiFlag) TableAdd(L, "count", (lua_Integer)tptr[*k].MachihaiCount);
+		TableAdd(L, "flag", tptr[k].MachihaiFlag);
+		if (tptr[k].MachihaiFlag) TableAdd(L, "count", (lua_Integer)tptr[k].MachihaiCount);
 		lua_settable(L, -3);
 	}
 }

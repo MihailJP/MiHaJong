@@ -29,8 +29,8 @@ ResultScreen::ResultScreen(ScreenManipulator* const manipulator) : SystemScreen(
 }
 
 ResultScreen::~ResultScreen() {
-	for (auto k = rankRenderer.begin(); k != rankRenderer.end(); ++k)
-		if (*k) delete *k;
+	for (auto& k : rankRenderer)
+		if (k) delete k;
 	delete titleRenderer;
 }
 
@@ -46,8 +46,8 @@ void ResultScreen::Render() {
 	for (int i = (GameStatus::gameStat()->chkGameType(SanmaT) ? 1 : 0); i < Players; ++i)
 		if ((myTimer.elapsed() >= (1000000 + i * 500000)) && (rankRenderer[i] == nullptr))
 			rankRenderer[i] = new RankRenderer(caller->getDevice(), i);
-	for (auto k = rankRenderer.begin(); k != rankRenderer.end(); ++k)
-		if (*k) (*k)->Render();
+	for (auto k : rankRenderer)
+		if (k) k->Render();
 }
 
 #ifdef _WIN32

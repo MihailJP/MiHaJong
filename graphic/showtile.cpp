@@ -51,15 +51,15 @@ void ShowTile::RenderSide(TileDescriptor* tile, RECT* rect) {
 	RenderTile(tile, rect, SideTileWidth/2, SideTileHeight/2);
 }
 void ShowTile::Render() {
-	for (auto k = mySprites.begin(); k != mySprites.end(); ++k) {
-		if (k->exist) {
-			if ((k->direction == Portrait) || (k->direction == UpsideDown)) {
+	for (auto k : mySprites) {
+		if (k.exist) {
+			if ((k.direction == Portrait) || (k.direction == UpsideDown)) {
 				/* Portrait alignment */
 				RECT rect = {
-					static_cast<int32_t>(((k->tile + k->red * TileNonflowerMax) % 10) * (VertTileWidth + TexturePadding)),
-					static_cast<int32_t>(((k->tile + k->red * TileNonflowerMax) / 10) * (VertTileHeight + TexturePadding)),
-					static_cast<int32_t>(((k->tile + k->red * TileNonflowerMax) % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding),
-					static_cast<int32_t>(((k->tile + k->red * TileNonflowerMax) / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding),
+					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) % 10) * (VertTileWidth + TexturePadding)),
+					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) / 10) * (VertTileHeight + TexturePadding)),
+					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding),
+					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding),
 				};
 				RECT rectrev = {
 					((int)BackSide % 10) * (VertTileWidth + TexturePadding),
@@ -67,37 +67,37 @@ void ShowTile::Render() {
 					((int)BackSide % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding,
 					((int)BackSide / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding,
 				};
-				switch (k->side) {
+				switch (k.side) {
 				case Obverse:
-					if (k->direction == UpsideDown) {
+					if (k.direction == UpsideDown) {
 						rect.left += (VertTileWidth + TexturePadding) * TileCols;
 						rect.right += (VertTileWidth + TexturePadding) * TileCols;
 					}
-					RenderVert(&*k, &rect);
+					RenderVert(&k, &rect);
 					break;
 				case Upright:
-					if (k->direction == UpsideDown) {
+					if (k.direction == UpsideDown) {
 						rectrev.left += (VertTileWidth + TexturePadding) * TileCols * 2;
 						rectrev.right += (VertTileWidth + TexturePadding) * TileCols * 2;
-						RenderVert(&*k, &rectrev);
+						RenderVert(&k, &rectrev);
 					} else {
 						rect.left += (VertTileWidth + TexturePadding) * TileCols * 2;
 						rect.right += (VertTileWidth + TexturePadding) * TileCols * 2;
-						RenderVert(&*k, &rect);
+						RenderVert(&k, &rect);
 					}
 					break;
 				case Reverse:
-					RenderVert(&*k, &rectrev);
+					RenderVert(&k, &rectrev);
 					break;
 				}
 			}
 			else {
 				/* Landscape alignment */
 				RECT rect = {
-					static_cast<int32_t>(((k->tile + k->red * TileNonflowerMax) % 10) * (HoriTileWidth + TexturePadding)),
-					static_cast<int32_t>(((k->tile + k->red * TileNonflowerMax) / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows),
-					static_cast<int32_t>(((k->tile + k->red * TileNonflowerMax) % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding),
-					static_cast<int32_t>(((k->tile + k->red * TileNonflowerMax) / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding),
+					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) % 10) * (HoriTileWidth + TexturePadding)),
+					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows),
+					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding),
+					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding),
 				};
 				RECT rectrev = {
 					((int)BackSide % 10) * (HoriTileWidth + TexturePadding),
@@ -111,23 +111,23 @@ void ShowTile::Render() {
 					2 * TileCols * (HoriTileWidth + TexturePadding) + SideTileWidth,
 					(VertTileHeight + TexturePadding) * TileRows + SideTileHeight,
 				};
-				switch (k->side) {
+				switch (k.side) {
 				case Obverse:
-					if (k->direction == Clockwise) {
+					if (k.direction == Clockwise) {
 						rect.left += (HoriTileWidth + TexturePadding) * TileCols;
 						rect.right += (HoriTileWidth + TexturePadding) * TileCols;
 					}
-					RenderHori(&*k, &rect);
+					RenderHori(&k, &rect);
 					break;
 				case Upright:
-					if (k->direction == Clockwise) {
+					if (k.direction == Clockwise) {
 						rectside.left += SideTileWidth + TexturePadding;
 						rectside.right += SideTileWidth + TexturePadding;
 					}
-					RenderSide(&*k, &rectside);
+					RenderSide(&k, &rectside);
 					break;
 				case Reverse:
-					RenderHori(&*k, &rectrev);
+					RenderHori(&k, &rectrev);
 					break;
 				}
 			}

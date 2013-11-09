@@ -533,10 +533,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				bool isLeapYear = (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
 #endif /*_WIN32*/
 				if (!isLeapYear) return false;
-				for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); ++k)
-					if ((analysis->KeziCount[((*k)[0] - _T('0')) * TileSuitStep + 2] >= 1) &&
-						(analysis->KeziCount[((*k)[1] - _T('0')) * TileSuitStep + 2] >= 1) &&
-						(analysis->KeziCount[((*k)[1] - _T('0')) * TileSuitStep + 9] >= 1))
+				for (auto k : parsedat_trichrome3)
+					if ((analysis->KeziCount[(k[0] - _T('0')) * TileSuitStep + 2] >= 1) &&
+						(analysis->KeziCount[(k[1] - _T('0')) * TileSuitStep + 2] >= 1) &&
+						(analysis->KeziCount[(k[1] - _T('0')) * TileSuitStep + 9] >= 1))
 						return true;
 				return false;
 			}
@@ -707,10 +707,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("‘ÎX˜a"), _T("–ð”vE’†"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag = false;
-				for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); ++k)
-					if ((analysis->KeziCount[((*k)[0] - _T('0')) * TileSuitStep + 6] >= 1) &&
-						(analysis->KeziCount[((*k)[1] - _T('0')) * TileSuitStep + 4] >= 1) &&
-						(analysis->KeziCount[((*k)[2] - _T('0')) * TileSuitStep + 5] >= 1))
+				for (auto k : parsedat_trichrome3)
+					if ((analysis->KeziCount[(k[0] - _T('0')) * TileSuitStep + 6] >= 1) &&
+						(analysis->KeziCount[(k[1] - _T('0')) * TileSuitStep + 4] >= 1) &&
+						(analysis->KeziCount[(k[2] - _T('0')) * TileSuitStep + 5] >= 1))
 						flag = true;
 				return flag &&
 					(analysis->KeziCount[RedDragon] >= 1);
@@ -772,10 +772,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("‘ÎX˜a"),
 			[countKeziOf](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag1 = false; bool flag2 = false;
-				for (auto k = parsedat_trichrome3.begin(); k != parsedat_trichrome3.end(); ++k)
-					if ((analysis->KeziCount[((*k)[0] - _T('0')) * TileSuitStep + 3] >= 1) &&
-						(analysis->KeziCount[((*k)[1] - _T('0')) * TileSuitStep + 7] >= 1) &&
-						(analysis->KeziCount[((*k)[2] - _T('0')) * TileSuitStep + 3] >= 1))
+				for (auto k : parsedat_trichrome3)
+					if ((analysis->KeziCount[(k[0] - _T('0')) * TileSuitStep + 3] >= 1) &&
+						(analysis->KeziCount[(k[1] - _T('0')) * TileSuitStep + 7] >= 1) &&
+						(analysis->KeziCount[(k[2] - _T('0')) * TileSuitStep + 3] >= 1))
 						flag1 = true;
 				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
 					if ((analysis->KeziCount[i + 8] >= 1) &&

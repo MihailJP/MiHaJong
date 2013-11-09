@@ -232,12 +232,12 @@ void mihajong_socket::Sock::puts (const CodeConv::tstring& str) { // •¶Žš—ñ‘‚«
 	}
 	std::string encoded_str(CodeConv::EncodeStr(str));
 	if (isServer) {
-		for (auto k = encoded_str.begin(); k != encoded_str.end(); ++k)
-			threadPtr.server->write((unsigned char)*k);
+		for (auto k : encoded_str)
+			threadPtr.server->write((unsigned char)k);
 		threadPtr.server->chkError();
 	} else {
-		for (auto k = encoded_str.begin(); k != encoded_str.end(); ++k)
-			threadPtr.client->write((unsigned char)*k);
+		for (auto k : encoded_str)
+			threadPtr.client->write((unsigned char)k);
 		threadPtr.client->chkError();
 	}
 }

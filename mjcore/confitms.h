@@ -124,38 +124,38 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 	CSVReader::parsecsv(confdat, fromUTF8(csvdat).c_str());
 	delete[] csvdat;
 
-	for (auto k = confdat.begin(); k != confdat.end(); ++k) { // 名前テーブル
-		if ((*k).size() < 11) continue; // Invalid record!!
-		std::string nomenPartisRegulae(toANSI((*k)[8])); // ルールタグ
-		unsigned int numerusPartisRegulae = _ttoi((*k)[0].c_str()); // ルールタグ
+	for (auto k : confdat) { // 名前テーブル
+		if (k.size() < 11) continue; // Invalid record!!
+		std::string nomenPartisRegulae(toANSI(k[8])); // ルールタグ
+		unsigned int numerusPartisRegulae = _ttoi(k[0].c_str()); // ルールタグ
 		nametbl[numerusPartisRegulae] = nomenPartisRegulae; // 順方向
 		inverse_nametbl[nomenPartisRegulae] = numerusPartisRegulae; // 逆方向
 
-		if (_ttoi((*k)[7].c_str())) // 自由入力
-			freeval_expr.insert(std::make_pair(nomenPartisRegulae, std::string(toANSI((*k)[11]))));
+		if (_ttoi(k[7].c_str())) // 自由入力
+			freeval_expr.insert(std::make_pair(nomenPartisRegulae, std::string(toANSI(k[11]))));
 
-		if (((*k)[1].empty()) || (GameStat.chkGameType((GameTypeID)_ttoi((*k)[1].c_str())))) { // GameType合致した場合
-			if ((_ttoi((*k)[0].c_str()) % PageBatch) == 0)
-				pageCaption[_ttoi((*k)[0].c_str()) / PageBatch] = tstring((*k)[4]);
+		if ((k[1].empty()) || (GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str())))) { // GameType合致した場合
+			if ((_ttoi(k[0].c_str()) % PageBatch) == 0)
+				pageCaption[_ttoi(k[0].c_str()) / PageBatch] = tstring(k[4]);
 			ruletags[nomenPartisRegulae].clear(); inverse_ruletags[nomenPartisRegulae].clear();
-			for (unsigned int index = 11; index < (*k).size(); ++index) {
-				/*if ((*k)[index] == _T(">>>")) { // 飛ばすように指定されているなら
+			for (unsigned int index = 11; index < k.size(); ++index) {
+				/*if (k[index] == _T(">>>")) { // 飛ばすように指定されているなら
 					ruletags[nomenPartisRegulae].push_back(_T(""));
 				}
-				else*/ if (!(*k)[index].empty()) { // 存在するなら
-					ruletags[nomenPartisRegulae].push_back(toANSI((*k)[index])); // 順方向
-					inverse_ruletags[nomenPartisRegulae][toANSI((*k)[index])] = index - 11; // 逆方向
+				else*/ if (!k[index].empty()) { // 存在するなら
+					ruletags[nomenPartisRegulae].push_back(toANSI(k[index])); // 順方向
+					inverse_ruletags[nomenPartisRegulae][toANSI(k[index])] = index - 11; // 逆方向
 				}
 			}
 		}
-		else if ((!(*k)[1].empty()) && (GameStat.chkGameType((GameTypeID)_ttoi((*k)[2].c_str())))) { // N/A指定があった場合
+		else if ((!k[1].empty()) && (GameStat.chkGameType((GameTypeID)_ttoi(k[2].c_str())))) { // N/A指定があった場合
 			nonapplicable.insert(nomenPartisRegulae); // リストに追加
 		}
 
 		// ルール設定画面のマスクデータ
-		if (GameStat.chkGameType((GameTypeID)_ttoi((*k)[1].c_str())))
-			rulemask_expr[nomenPartisRegulae] = toANSI((*k)[3]);
-		else if (GameStat.chkGameType((GameTypeID)_ttoi((*k)[2].c_str())))
+		if (GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str())))
+			rulemask_expr[nomenPartisRegulae] = toANSI(k[3]);
+		else if (GameStat.chkGameType((GameTypeID)_ttoi(k[2].c_str())))
 			rulemask_expr[nomenPartisRegulae] = "";
 	}
 }
@@ -240,15 +240,15 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::getRuleSize(uint16_t RuleID) { // ルール項目
 }
 
 CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
-	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
-		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
-		if (((*k)[1].empty()) || ((*k)[2].empty()) ||
-			(GameStat.chkGameType((GameTypeID)_ttoi((*k)[1].c_str()))) ||
-			(GameStat.chkGameType((GameTypeID)_ttoi((*k)[2].c_str())))) {
+	for (auto k : confdat) { // 名前テーブル
+		if (_ttoi(k[0].c_str()) != RuleID) continue;
+		if ((k[1].empty()) || (k[2].empty()) ||
+			(GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str()))) ||
+			(GameStat.chkGameType((GameTypeID)_ttoi(k[2].c_str())))) {
 #ifdef _MSC_VER
-				_tcscpy_s(txt, bufsize, ((*k)[9]).c_str());
+				_tcscpy_s(txt, bufsize, (k[9]).c_str());
 #else
-				_tcsncpy(txt, ((*k)[9]).c_str(), bufsize);
+				_tcsncpy(txt, (k[9]).c_str(), bufsize);
 #endif
 				return;
 		}
@@ -260,16 +260,16 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleName(LPTSTR const txt, unsigned bufs
 #endif
 }
 CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
-	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 名前テーブル
-		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
-		if (((*k)[1].empty()) || (GameStat.chkGameType((GameTypeID)_ttoi((*k)[1].c_str())))) {
+	for (auto k : confdat) { // 名前テーブル
+		if (_ttoi(k[0].c_str()) != RuleID) continue;
+		if ((k[1].empty()) || (GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str())))) {
 #ifdef _MSC_VER
-			_tcscpy_s(txt, bufsize, ((*k)[10]).c_str()); return;
+			_tcscpy_s(txt, bufsize, (k[10]).c_str()); return;
 #else
-			_tcsncpy(txt, ((*k)[10]).c_str(), bufsize); return;
+			_tcsncpy(txt, (k[10]).c_str(), bufsize); return;
 #endif
 		}
-		else if (GameStat.chkGameType((GameTypeID)_ttoi((*k)[2].c_str()))) {
+		else if (GameStat.chkGameType((GameTypeID)_ttoi(k[2].c_str()))) {
 #ifdef _MSC_VER
 			if (GameStat.chkGameType(SanmaS)) _tcscpy_s(txt, bufsize, _T("数牌三麻では設定できません"));
 			else if (GameStat.chkGameType(SanmaX)) _tcscpy_s(txt, bufsize, _T("三人打ちでは設定できません"));
@@ -359,16 +359,16 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 					memset(ruleConf[i], _T('-'), LineBatch);
 			}
 			auto& config_rules = config_ini[mySectionName];
-			for (auto k = config_rules.begin(); k != config_rules.end(); ++k) { // rulesセクションについて
-				if (inverse_nametbl.find(toANSI(k->first)) != inverse_nametbl.end()) { // キーがあったら
-					const std::string& rulename = toANSI(k->first); // 別名をつける
+			for (auto k : config_rules) { // rulesセクションについて
+				if (inverse_nametbl.find(toANSI(k.first)) != inverse_nametbl.end()) { // キーがあったら
+					const std::string& rulename = toANSI(k.first); // 別名をつける
 					const uint16_t ruleid = inverse_nametbl[rulename]; // 番号に変換
 					if (nonapplicable.find(rulename) != nonapplicable.end()) { // N/Aだったばあい
 						tostringstream o; o << _T("キー [") << EnsureTStr(rulename) << _T("] は設定できません。無視します。");
 						warn(o.str().c_str());
 					}
 					else if (freeval_expr.find(rulename) != freeval_expr.end()) { // 自由入力の時
-						CodeConv::tstring val(k->second);
+						CodeConv::tstring val(k.second);
 						std::string s =
 #ifdef _UNICODE
 							CodeConv::toANSI(val);
@@ -377,18 +377,18 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 #endif
 						freeval_expr[rulename] = s.substr(0, getRuleStrBufLen(rulename));
 					}
-					else if(inverse_ruletags[rulename].find(toANSI(k->second)) != inverse_ruletags[rulename].end()) { // 実装されている設定なら
+					else if(inverse_ruletags[rulename].find(toANSI(k.second)) != inverse_ruletags[rulename].end()) { // 実装されている設定なら
 						ruleConf[ruleid / LineBatch][ruleid % LineBatch] =
-							digit[inverse_ruletags[rulename][toANSI(k->second)]]; // 設定する
+							digit[inverse_ruletags[rulename][toANSI(k.second)]]; // 設定する
 					}
 					else {
-						tostringstream o; o << _T("キー [") << EnsureTStr(rulename) << _T("] に対する値 [") << k->second << 
+						tostringstream o; o << _T("キー [") << EnsureTStr(rulename) << _T("] に対する値 [") << k.second << 
 							_T("] は実装されていません。デフォルト設定を使います。");
 						warn(o.str().c_str());
 						ruleConf[ruleid / LineBatch][ruleid % LineBatch] = digit[0]; // デフォルト設定とする
 					}
 				} else { // なかったら
-					tostringstream o; o << _T("キー [") << k->first << _T("] は無視されます");
+					tostringstream o; o << _T("キー [") << k.first << _T("] は無視されます");
 					warn(o.str().c_str());
 				}
 			}
@@ -429,9 +429,9 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::saveConfigFile(const char* const filename) {
 			std::string("] を書き込みモードで開けません。設定は保存されません。")); // 失敗したら例外を投げる
 		file << toUTF8(_T("[")) << toUTF8(mySectionName) << toUTF8(_T("]")) << std::endl; // セクション名
 		chkerr(file, filename); // 失敗したら例外を投げる
-		for (auto k = nametbl.begin(); k != nametbl.end(); ++k) {
-			if ((!(k->empty())) && (nonapplicable.find(*k) == nonapplicable.end())) { // 有効なら
-				file << toUTF8(EnsureTStr(*k)) << toUTF8(_T("=")) << toUTF8(EnsureTStr(chkRule(*k))) << std::endl; // 設定データを書き込み
+		for (auto& k : nametbl) {
+			if ((!(k.empty())) && (nonapplicable.find(k) == nonapplicable.end())) { // 有効なら
+				file << toUTF8(EnsureTStr(k)) << toUTF8(_T("=")) << toUTF8(EnsureTStr(chkRule(k))) << std::endl; // 設定データを書き込み
 				chkerr(file, filename); // 失敗したら例外を投げる
 			}
 		}
@@ -467,17 +467,17 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::getPageCaption(LPTSTR const caption, unsign
 #endif
 }
 CONFDAT_TEMPLATE void CONFDAT_CLASS::forEachRule(std::function<void (std::string, std::string)> f) {
-	for (auto k = inverse_nametbl.begin(); k != inverse_nametbl.end(); ++k)
-		f(k->first, chkRule(k->first));
+	for (auto k : inverse_nametbl)
+		f(k.first, chkRule(k.first));
 }
 
 CONFDAT_TEMPLATE unsigned CONFDAT_CLASS::getRuleStrBufLen(uint16_t RuleID) {
-	for (auto k = confdat.begin(); k != confdat.end(); k++) { // 文字列入力の幅
-		if (_ttoi((*k)[0].c_str()) != RuleID) continue;
-		if (((*k)[1].empty()) || ((*k)[2].empty()) ||
-			(GameStat.chkGameType((GameTypeID)_ttoi((*k)[1].c_str()))) ||
-			(GameStat.chkGameType((GameTypeID)_ttoi((*k)[2].c_str()))))
-			return _ttoi(((*k)[7]).c_str());
+	for (auto k : confdat) { // 文字列入力の幅
+		if (_ttoi(k[0].c_str()) != RuleID) continue;
+		if ((k[1].empty()) || (k[2].empty()) ||
+			(GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str()))) ||
+			(GameStat.chkGameType((GameTypeID)_ttoi(k[2].c_str()))))
+			return _ttoi((k[7]).c_str());
 	}
 	return 0;
 }

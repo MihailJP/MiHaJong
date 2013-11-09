@@ -39,8 +39,8 @@ TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(m
 TableProtoScene::~TableProtoScene() {
 	for (int i = 0; i < NumOfCheckBoxes; ++i)
 		delete checkBoxes[i];
-	for (auto k = scorePanel.begin(); k != scorePanel.end(); ++k)
-		delete *k;
+	for (auto& k : scorePanel)
+		delete k;
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (tSideBar) tSideBar->Release();
 #endif
@@ -77,8 +77,8 @@ void TableProtoScene::InitScorePanel() {
 }
 
 void TableProtoScene::ShowScorePanel() {
-	for (auto k = scorePanel.begin(); k != scorePanel.end(); ++k)
-		(*k)->Render();
+	for (auto k : scorePanel)
+		k->Render();
 }
 
 ArgbColor TableProtoScene::roundColor() {

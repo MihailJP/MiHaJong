@@ -37,21 +37,21 @@ namespace { // “à•”ˆ—‚Ég‚¤ŠÖ”
 		bool flag = false;
 #ifndef GUOBIAO
 		std::array<TileCode, 4> winds = {EastWind, SouthWind, WestWind, NorthWind,};
-		for (auto k = winds.begin(); k != winds.end(); ++k) {
+		for (auto k : winds) {
 			if ((RuleData::chkRule("four_wind_ryuukyoku", "same_dealer_west") ||
 				RuleData::chkRule("four_wind_ryuukyoku", "next_dealer_west")) &&
-				(*k != WestWind))
+				(k != WestWind))
 				continue; // ¼ˆÈŠO‚Í–³‹‚·‚éƒ‹[ƒ‹‚Ìê‡
 			bool tmpflag = true;
 			if (gameStat->chkGameType(Sanma4)) {
 				for (PlayerID i = 0; i < Players; ++i)
-					tmpflag = tmpflag && ((gameStat->playerwind(i) == sNorth) || (gameStat->Player[i].Discard[1].tcode.tile == *k));
+					tmpflag = tmpflag && ((gameStat->playerwind(i) == sNorth) || (gameStat->Player[i].Discard[1].tcode.tile == k));
 			} else if (gameStat->chkGameType(SanmaT)) {
 				for (PlayerID i = 0; i < 3; ++i)
-					tmpflag = tmpflag && (gameStat->Player[i].Discard[1].tcode.tile == *k);
+					tmpflag = tmpflag && (gameStat->Player[i].Discard[1].tcode.tile == k);
 			} else {
 				for (PlayerID i = 0; i < Players; ++i)
-					tmpflag = tmpflag && (gameStat->Player[i].Discard[1].tcode.tile == *k);
+					tmpflag = tmpflag && (gameStat->Player[i].Discard[1].tcode.tile == k);
 			}
 			flag = flag || tmpflag;
 		}

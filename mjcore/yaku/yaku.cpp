@@ -438,8 +438,8 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 	std::map<CodeConv::tstring, Yaku::YAKU_HAN> &yakuHan, std::vector<CodeConv::tstring> &yakuOrd, YAKUSTAT* const result)
 {
 	totalHan = totalSemiMangan = totalBonusHan = totalBonusSemiMangan = 0; // こっちで初期化してあげよう
-	for (auto yNameIter = yakuOrd.begin(); yNameIter != yakuOrd.end(); yNameIter++) {
-		CodeConv::tstring yName = *yNameIter;
+	for (auto yNameIter : yakuOrd) {
+		CodeConv::tstring yName = yNameIter;
 #ifdef GUOBIAO
 		totalHan += yakuHan[yName].coreHan.getHan();
 #else /* GUOBIAO */
@@ -640,18 +640,16 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 	std::map<CodeConv::tstring, Yaku::YAKU_HAN> yakuHan; // 受け皿初期化
 	std::set<CodeConv::tstring> suppression; // 無効化する役
 	std::vector<CodeConv::tstring> yakuOrd; // 順序保存用
-	std::for_each(YakuCatalog::Instantiate()->catalog.begin(), // 役カタログの最初から
-		YakuCatalog::Instantiate()->catalog.end(), // カタログの末尾まで
-		[&yakuHan, analysis, &suppression, &yakuOrd](Yaku& yaku) -> void { // 役ごとに判定処理
-			//trace(yaku.getName().c_str());
-			if (yaku.checkYaku(analysis)) { // 成立条件を満たしていたら
-				//trace(_T("...は、成立しています。"));
-				yakuHan[yaku.getName()] = yaku.getHan(analysis); // 飜数を記録
-				yakuOrd.push_back(yaku.getName()); // 順序も記録しておく
-				std::set<CodeConv::tstring> sup = yaku.getSuppression();
-				suppression.insert(sup.begin(), sup.end()); // 下位役のリストを結合
-			}
-	});
+	for (Yaku& yaku : YakuCatalog::Instantiate()->catalog) {// 役ごとに判定処理
+		//trace(yaku.getName().c_str());
+		if (yaku.checkYaku(analysis)) { // 成立条件を満たしていたら
+			//trace(_T("...は、成立しています。"));
+			yakuHan[yaku.getName()] = yaku.getHan(analysis); // 飜数を記録
+			yakuOrd.push_back(yaku.getName()); // 順序も記録しておく
+			std::set<CodeConv::tstring> sup = yaku.getSuppression();
+			suppression.insert(sup.begin(), sup.end()); // 下位役のリストを結合
+		}
+	}
 	/* 実は成立していない役を除去する */
 	for (auto k = yakuOrd.begin(); k != yakuOrd.end(); ) {
 		if ((yakuHan[*k].coreHan.getHan() == 0) && (yakuHan[*k].bonusHan.getHan() == 0)) // 実は成立してない役
@@ -661,12 +659,12 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 	/* 後回しで判定する役 */
 	checkPostponedYaku(gameStat, analysis, result, yakuHan, suppression, yakuOrd);
 	/* 下位役を除去する */
-	std::for_each(suppression.begin(), suppression.end(), [&yakuOrd](CodeConv::tstring yaku) {
+	for (CodeConv::tstring yaku : suppression) {
 		for (auto k = yakuOrd.begin(); k != yakuOrd.end(); ) {
 			if (*k == yaku) k = yakuOrd.erase(k);
 			else ++k;
 		}
-	});
+	}
 	/* 翻を合計する */
 	int totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan;
 	hanSummation(totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan, yakuHan, yakuOrd, result);
