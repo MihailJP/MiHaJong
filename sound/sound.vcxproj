@@ -93,6 +93,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>
@@ -110,6 +111,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>
@@ -132,6 +134,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>
@@ -154,6 +157,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\libogg_static.lib;$(ProjectDir)libvorbis\libvorbis_static.lib;$(ProjectDir)libvorbis\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>
