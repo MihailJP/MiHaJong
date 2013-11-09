@@ -194,7 +194,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 					EastWind, SouthWind, WestWind, NorthWind,
 					WhiteDragon, GreenDragon, RedDragon,
 				}; int count = 0;
-				for (auto k : honors)
+				for (const auto& k : honors)
 					if (analysis->TileCount[k] >= 2) ++count;
 				return isQiDui(analysis) &&
 					(analysis->TileCount[suit + 1] >= 2) &&

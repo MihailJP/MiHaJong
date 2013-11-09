@@ -124,7 +124,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 	CSVReader::parsecsv(confdat, fromUTF8(csvdat).c_str());
 	delete[] csvdat;
 
-	for (auto k : confdat) { // 名前テーブル
+	for (const auto& k : confdat) { // 名前テーブル
 		if (k.size() < 11) continue; // Invalid record!!
 		std::string nomenPartisRegulae(toANSI(k[8])); // ルールタグ
 		unsigned int numerusPartisRegulae = _ttoi(k[0].c_str()); // ルールタグ
@@ -240,7 +240,7 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::getRuleSize(uint16_t RuleID) { // ルール項目
 }
 
 CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
-	for (auto k : confdat) { // 名前テーブル
+	for (const auto& k : confdat) { // 名前テーブル
 		if (_ttoi(k[0].c_str()) != RuleID) continue;
 		if ((k[1].empty()) || (k[2].empty()) ||
 			(GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str()))) ||
@@ -260,7 +260,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleName(LPTSTR const txt, unsigned bufs
 #endif
 }
 CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
-	for (auto k : confdat) { // 名前テーブル
+	for (const auto& k : confdat) { // 名前テーブル
 		if (_ttoi(k[0].c_str()) != RuleID) continue;
 		if ((k[1].empty()) || (GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str())))) {
 #ifdef _MSC_VER
@@ -359,7 +359,7 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 					memset(ruleConf[i], _T('-'), LineBatch);
 			}
 			auto& config_rules = config_ini[mySectionName];
-			for (auto k : config_rules) { // rulesセクションについて
+			for (const auto& k : config_rules) { // rulesセクションについて
 				if (inverse_nametbl.find(toANSI(k.first)) != inverse_nametbl.end()) { // キーがあったら
 					const std::string& rulename = toANSI(k.first); // 別名をつける
 					const uint16_t ruleid = inverse_nametbl[rulename]; // 番号に変換
@@ -429,7 +429,7 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::saveConfigFile(const char* const filename) {
 			std::string("] を書き込みモードで開けません。設定は保存されません。")); // 失敗したら例外を投げる
 		file << toUTF8(_T("[")) << toUTF8(mySectionName) << toUTF8(_T("]")) << std::endl; // セクション名
 		chkerr(file, filename); // 失敗したら例外を投げる
-		for (auto& k : nametbl) {
+		for (const auto& k : nametbl) {
 			if ((!(k.empty())) && (nonapplicable.find(k) == nonapplicable.end())) { // 有効なら
 				file << toUTF8(EnsureTStr(k)) << toUTF8(_T("=")) << toUTF8(EnsureTStr(chkRule(k))) << std::endl; // 設定データを書き込み
 				chkerr(file, filename); // 失敗したら例外を投げる
@@ -467,12 +467,12 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::getPageCaption(LPTSTR const caption, unsign
 #endif
 }
 CONFDAT_TEMPLATE void CONFDAT_CLASS::forEachRule(std::function<void (std::string, std::string)> f) {
-	for (auto k : inverse_nametbl)
+	for (const auto& k : inverse_nametbl)
 		f(k.first, chkRule(k.first));
 }
 
 CONFDAT_TEMPLATE unsigned CONFDAT_CLASS::getRuleStrBufLen(uint16_t RuleID) {
-	for (auto k : confdat) { // 文字列入力の幅
+	for (const auto& k : confdat) { // 文字列入力の幅
 		if (_ttoi(k[0].c_str()) != RuleID) continue;
 		if ((k[1].empty()) || (k[2].empty()) ||
 			(GameStat.chkGameType((GameTypeID)_ttoi(k[1].c_str()))) ||

@@ -135,7 +135,7 @@ void LogWindow::reconstruct_lines() { // çsÇ…ï™äÑ
 	CodeConv::tstring tmplog;
 	{
 		const CodeConv::tstring tmplog1(logwnd::getlog());
-		for (auto k : tmplog1)
+		for (const auto& k : tmplog1)
 			if (k != _T('\r'))
 				tmplog += k;
 	}

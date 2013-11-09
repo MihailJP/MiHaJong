@@ -438,7 +438,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 	std::map<CodeConv::tstring, Yaku::YAKU_HAN> &yakuHan, std::vector<CodeConv::tstring> &yakuOrd, YAKUSTAT* const result)
 {
 	totalHan = totalSemiMangan = totalBonusHan = totalBonusSemiMangan = 0; // ‚±‚Á‚¿‚Å‰Šú‰»‚µ‚Ä‚ ‚°‚æ‚¤
-	for (auto yNameIter : yakuOrd) {
+	for (const auto& yNameIter : yakuOrd) {
 		CodeConv::tstring yName = yNameIter;
 #ifdef GUOBIAO
 		totalHan += yakuHan[yName].coreHan.getHan();
@@ -659,7 +659,7 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 	/* Œã‰ñ‚µ‚Å”»’è‚·‚é–ğ */
 	checkPostponedYaku(gameStat, analysis, result, yakuHan, suppression, yakuOrd);
 	/* ‰ºˆÊ–ğ‚ğœ‹‚·‚é */
-	for (CodeConv::tstring yaku : suppression) {
+	for (const CodeConv::tstring yaku : suppression) {
 		for (auto k = yakuOrd.begin(); k != yakuOrd.end(); ) {
 			if (*k == yaku) k = yakuOrd.erase(k);
 			else ++k;

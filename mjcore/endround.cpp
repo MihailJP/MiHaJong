@@ -37,7 +37,7 @@ namespace { // “à•”ˆ—‚Ég‚¤ŠÖ”
 		bool flag = false;
 #ifndef GUOBIAO
 		std::array<TileCode, 4> winds = {EastWind, SouthWind, WestWind, NorthWind,};
-		for (auto k : winds) {
+		for (const auto& k : winds) {
 			if ((RuleData::chkRule("four_wind_ryuukyoku", "same_dealer_west") ||
 				RuleData::chkRule("four_wind_ryuukyoku", "next_dealer_west")) &&
 				(k != WestWind))

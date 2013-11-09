@@ -31,22 +31,22 @@ const std::array<TileCode, 35> aiscript::table::functable::gametbl::validTiles =
 };
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, Int8ByTile& tptr) {
 	lua_newtable(L); // テーブル
-	for (auto k : validTiles)
+	for (const auto& k : validTiles)
 		TableAdd(L, (lua_Integer)k, (lua_Integer)(tptr[k]));
 }
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, UInt8ByTile& tptr) {
 	lua_newtable(L); // テーブル
-	for (auto k : validTiles)
+	for (const auto& k : validTiles)
 		TableAdd(L, (lua_Integer)k, (lua_Integer)(tptr[k]));
 }
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, FlagByTile& tptr) {
 	lua_newtable(L); // テーブル
-	for (auto k : validTiles)
+	for (const auto& k : validTiles)
 		TableAdd(L, (lua_Integer)k, tptr[k]);
 }
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, InfoByTile<MachihaiTileInfo>& tptr) {
 	lua_newtable(L); // テーブル
-	for (auto k : validTiles) {
+	for (const auto& k : validTiles) {
 		lua_pushinteger(L, (int)k);
 		lua_newtable(L);
 		TableAdd(L, "flag", tptr[k].MachihaiFlag);

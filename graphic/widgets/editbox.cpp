@@ -225,7 +225,7 @@ void EditBox::renderIMCandidates(IMStat& imStat, int X, int Y, unsigned& TextID)
 	unsigned wndcols = 0;
 	for (unsigned i = pageStart; (i < candidates.size()) && (i < (pageStart + pageSize)); i++) {
 		unsigned tmpcols = 0;
-		for (auto k : candidates[i])
+		for (const auto& k : candidates[i])
 			tmpcols += isFullWidth(k) ? 2: 1;
 		if (wndcols < tmpcols) wndcols = tmpcols;
 	}

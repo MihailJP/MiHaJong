@@ -961,7 +961,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	auto sanshoku_tsuukan =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			bool yakuFlag = false;
-			for (auto k : parsedat_trichrome3)
+			for (const auto& k : parsedat_trichrome3)
 				if ((analysis->ShunziCount[(int)(k[0] - _T('0')) * TileSuitStep + 1] >= 1) &&
 					(analysis->ShunziCount[(int)(k[1] - _T('0')) * TileSuitStep + 4] >= 1) &&
 					(analysis->ShunziCount[(int)(k[2] - _T('0')) * TileSuitStep + 7] >= 1))
@@ -1059,7 +1059,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			_T("‹¾“¯˜a"),
 #endif /* GUOBIAO */
 			[ShuangLong](const MENTSU_ANALYSIS* const analysis) -> bool {
-				for (auto k : parsedat_trichrome3)
+				for (const auto& k : parsedat_trichrome3)
 					if (ShuangLong(analysis, (int)(k[0] - _T('0')) * TileSuitStep,
 						(int)(k[1] - _T('0')) * TileSuitStep,
 						(TileCode)((int)(k[1] - _T('0')) * TileSuitStep + 5))) return true;

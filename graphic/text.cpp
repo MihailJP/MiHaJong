@@ -123,7 +123,7 @@ void ITextRenderer::reconstruct(unsigned int ID, bool rescanStr) {
 		float chrAdvance = (FontWidth() - FontPadding() * 2) * StringData[ID]->scale * StringData[ID]->width;
 		float cursorPos = 0;
 		if (rescanStr) {
-			for (auto k : StringData[ID]->str) {
+			for (const auto& k : StringData[ID]->str) {
 				SpriteData[ID].push_back(new SpriteAttr);
 				SpriteData[ID].back()->isFullWidth = fontmap->map(k).first;
 				SpriteData[ID].back()->chr_id = fontmap->map(k).second;
@@ -132,7 +132,7 @@ void ITextRenderer::reconstruct(unsigned int ID, bool rescanStr) {
 				else cursorPos += .5f;
 			}
 		} else {
-			for (auto k : SpriteData[ID]) {
+			for (const auto& k : SpriteData[ID]) {
 				spriteRecalc(ID, k, chrAdvance, cursorPos);
 				if (k->isFullWidth) cursorPos += 1.0f;
 				else cursorPos += .5f;
@@ -150,7 +150,7 @@ void ITextRenderer::reconstruct() {
 /* スプライトを削除する */
 void ITextRenderer::deleteSprite(unsigned int ID) {
 	SpriteMutex.syncDo<void>([&]() {
-		for (auto& k : SpriteData[ID])
+		for (const auto& k : SpriteData[ID])
 			delete k;
 		SpriteData[ID].clear();
 	});
@@ -166,8 +166,8 @@ void ITextRenderer::deleteSprite() {
 /* レンダリング */
 void ITextRenderer::Render() {
 	SpriteMutex.syncDo<void>([&]() {
-		for (auto i : SpriteData) {
-			for (auto k : i) {
+		for (const auto& i : SpriteData) {
+			for (const auto& k : i) {
 				if (!k) continue;
 				RECT rect = {
 					static_cast<int32_t>((k->chr_id % FontCols()) * FontWidth()),
@@ -186,7 +186,7 @@ void ITextRenderer::Render() {
 /* 文字列の幅を計算 */
 unsigned ITextRenderer::strWidthByCols(const std::wstring& str) {
 	unsigned cols = 0;
-	for (auto k : str)
+	for (const auto& k : str)
 		cols += (fontmap->map(k).first) ? /* 全角 */ 2 : /* 半角 */ 1;
 	return cols;
 }

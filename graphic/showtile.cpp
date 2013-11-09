@@ -51,7 +51,7 @@ void ShowTile::RenderSide(TileDescriptor* tile, RECT* rect) {
 	RenderTile(tile, rect, SideTileWidth/2, SideTileHeight/2);
 }
 void ShowTile::Render() {
-	for (auto k : mySprites) {
+	for (auto& k : mySprites) {
 		if (k.exist) {
 			if ((k.direction == Portrait) || (k.direction == UpsideDown)) {
 				/* Portrait alignment */

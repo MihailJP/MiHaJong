@@ -55,7 +55,7 @@ void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat) {
 }
 
 void ButtonPic::Render() {
-	for (auto k : mySprites) {
+	for (const auto& k : mySprites) {
 		if (std::get<0>(k) == absent) continue;
 		int X = std::get<1>(k), Y = std::get<2>(k);
 		unsigned width = std::get<3>(k), height = std::get<4>(k);
