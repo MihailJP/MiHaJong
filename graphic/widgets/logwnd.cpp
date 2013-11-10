@@ -62,6 +62,7 @@ LogWindow::LogWindow(Window hwnd, DevicePtr device, int X, int Y, unsigned Width
 	LoadTexture(device, &myTexture, MAKEINTRESOURCE(IDB_PNG_TEXTBOX));
 	myTextRenderer = new SmallTextRenderer(myDevice);
 	reconstruct_lines();
+	reconstFlag = true;
 }
 LogWindow::~LogWindow() {
 	if (myTextRenderer) delete myTextRenderer;
@@ -118,13 +119,17 @@ void LogWindow::Render() {
 	LogWindowMutex.syncDo<void>([this]() -> void {
 		if (updated) {
 			reconstruct_lines(); updated = false;
+			reconstFlag = true;
 		}
 	});
-	unsigned linenum = 0;
-	for (unsigned i = (unsigned)(max(0, (signed)lines.size() - (signed)height)); i < lines.size(); ++i) { // ログの最後の部分を表示
-	//for (unsigned i = 0; i < min(height, lines.size()); ++i) { // ログの最初の部分を表示
-		myTextRenderer->NewText(linenum, lines[i], x, y + lineheight * linenum);
-		++linenum;
+	if (reconstFlag) {
+		unsigned linenum = 0;
+		for (unsigned i = (unsigned)(max(0, (signed)lines.size() - (signed)height)); i < lines.size(); ++i) { // ログの最後の部分を表示
+		//for (unsigned i = 0; i < min(height, lines.size()); ++i) { // ログの最初の部分を表示
+			myTextRenderer->NewText(linenum, lines[i], x, y + lineheight * linenum);
+			++linenum;
+		}
+		reconstFlag = false;
 	}
 	myTextRenderer->Render();
 }

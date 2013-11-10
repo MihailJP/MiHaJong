@@ -32,6 +32,7 @@ private:
 	int x, y; unsigned width, height;
 	void renderFrame();
 	TransformMatrix getMatrix(int X, int Y, unsigned Width);
+	bool reconstFlag;
 private:
 	static unsigned const lineheight = 20;
 	std::vector<CodeConv::tstring> lines;
