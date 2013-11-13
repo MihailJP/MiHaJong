@@ -758,7 +758,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	/* 茴香ポン(非対々) */
 	if (RuleData::chkRuleApplied("uikyou_shuntsu"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("茴香ポン "), // 対々形と区別するために後ろにスペースを入れる
+			_T("茴香") PON _T(" "), // 対々形と区別するために後ろにスペースを入れる
 			get_yaku_han("uikyou_shuntsu"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;

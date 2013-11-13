@@ -38,6 +38,12 @@ typedef const char* LPCTSTR;
 #include <string>
 #include <sstream>
 
+#ifdef UNICODE
+#define PON L"碰"
+#else /* UNICODE */
+#define PON "ポン"
+#endif /* UNICODE */
+
 namespace CodeConv {
 
 #ifndef _WIN32
