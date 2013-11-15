@@ -18,3 +18,7 @@ EnvTable::EnvTable() {
 LPCTSTR getName(PlayerID playerID) {
 	return EnvTable::Instantiate()->PlayerDat[playerID].PlayerName.c_str();
 }
+
+bool isStandAlone() {
+	return EnvTable::Instantiate()->GameMode == EnvTable::Standalone;
+}
