@@ -29,6 +29,7 @@ typedef void (*bgmplay_type)(unsigned);
 typedef LPCTSTR (*getName_type)(PlayerID);
 typedef void (*sendchat_type)(LPCTSTR);
 typedef bool (*isAboveBase_type)(const GameTable*, PlayerID);
+typedef bool (*isStandAlone_type)();
 
 #ifdef GRAPHIC_EXPORTS
 extern playerRelative_type playerRelative;
@@ -49,6 +50,7 @@ extern bgmplay_type bgmplay;
 extern getName_type getName;
 extern sendchat_type sendchat;
 extern isAboveBase_type isAboveBase;
+extern isStandAlone_type isStandAlone;
 #endif
 
 EXPORT void setfunc(
@@ -69,7 +71,8 @@ EXPORT void setfunc(
 	bgmplay_type ptr_bgmplay,
 	getName_type ptr_getName,
 	sendchat_type ptr_sendchat,
-	isAboveBase_type ptr_isAboveBase);
+	isAboveBase_type ptr_isAboveBase,
+	isStandAlone_type ptr_isStandAlone);
 
 }
 }
