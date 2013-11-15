@@ -61,7 +61,7 @@ class HugeTextRenderer : public ITextRenderer {
 private:
 	const unsigned int FontBaseSize() {return 224;}
 	const unsigned int FontWidth() {return FontBaseSize();}
-	const unsigned int FontCols() {return 8;}
+	const unsigned int FontCols() {return 9;}
 	const unsigned int FontPadding() {return 0;}
 public:
 	explicit HugeTextRenderer(DevicePtr device);
