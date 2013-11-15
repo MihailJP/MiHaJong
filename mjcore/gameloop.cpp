@@ -171,6 +171,7 @@ void startgame(GameTypeID gameType) {
 			gameStat->chkGameType(SanmaS) ? 50060 : 50000;
 		switch (titlescreen()) { // タイトル画面
 		case 1:
+			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
 			EnvTable::Instantiate()->PlayerDat[0].PlayerName =
 				CodeConv::tstring(_T("[A]")) + CodeConv::EnsureTStr(RuleData::chkPreference("name"));
 			EnvTable::Instantiate()->PlayerDat[1].PlayerName = _T("[b]COM1");

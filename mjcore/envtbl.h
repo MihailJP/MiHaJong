@@ -32,3 +32,4 @@ public:
 };
 
 LPCTSTR getName(PlayerID playerID);
+bool isStandAlone();

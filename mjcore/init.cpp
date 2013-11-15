@@ -95,7 +95,7 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 			isTenpai, isRichiReqSatisfied, ShantenAnalyzer::calcShanten, chkdaopaiability,
 			yaku::yakuCalculator::chkShisanBuDa, yaku::yakuCalculator::chkShisiBuDa,
 			countTilesInHand, chkAnkanAbility, isPao, isPaoAgari, sound::util::bgmplay,
-			getName, chat::sendchat, isAboveBase);
+			getName, chat::sendchat, isAboveBase, isStandAlone);
 	}
 
 	/* 音源を初期化 */

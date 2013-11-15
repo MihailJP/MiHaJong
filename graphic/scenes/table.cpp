@@ -421,9 +421,9 @@ void GameTableScreen::KeyboardInput(const XEvent* od)
 #endif /*_WIN32*/
 	} else {
 #ifdef _WIN32
-		if (wParam == '\t')
+		if ((wParam == '\t') && (!(utils::isStandAlone())))
 #else /*_WIN32*/
-		if ((od->type == KeyPress) && (od->xkey.keycode == DIK_TAB))
+		if ((od->type == KeyPress) && (od->xkey.keycode == DIK_TAB) && (!(utils::isStandAlone())))
 #endif /*_WIN32*/
 		{
 			sound::Play(sound::IDs::sndClick);
@@ -613,6 +613,7 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 #ifdef _WIN32
 			&& (od->dwData)
 #endif /*_WIN32*/
+			&& (!(utils::isStandAlone()))
 		) {
 			sound::Play(sound::IDs::sndClick);
 			chatInput->activate();
