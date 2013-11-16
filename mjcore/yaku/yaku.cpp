@@ -23,47 +23,6 @@
 #include "yvalue.h"
 #include "../ruletbl.h"
 
-// 計算を実行(マルチスレッドで……大丈夫かなぁ)
-#ifdef _WIN32
-DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam)
-#else /*_WIN32*/
-void* yaku::yakuCalculator::CalculatorThread::calculator(void* lpParam)
-#endif /*_WIN32*/
-{
-	((CalculatorParam*)lpParam)->instance->recordThreadStart();
-	return ((CalculatorParam*)lpParam)->instance->calculate(
-		((CalculatorParam*)lpParam)->gameStat,
-		&(((CalculatorParam*)lpParam)->analysis),
-		&(((CalculatorParam*)lpParam)->pMode),
-		&(((CalculatorParam*)lpParam)->result));
-}
-
-/* 動いているスレッド数の管理用 */
-int yaku::yakuCalculator::CalculatorThread::numOfFinishedThreads() { // 終わったスレッドの数
-	return this->finishedThreads;
-}
-int yaku::yakuCalculator::CalculatorThread::numOfStartedThreads() { // 開始したスレッドの数
-	return this->startedThreads;
-}
-void yaku::yakuCalculator::CalculatorThread::sync(int threads) { // スレッドを同期
-#ifdef _WIN32
-	while (this->startedThreads < threads) Sleep(0); // 規定数のスレッドが開始するのを待ってから
-	while (this->finishedThreads < threads) Sleep(0); // 終了するのを待つ
-#else /*_WIN32*/
-	while (this->startedThreads < threads) usleep(100); // 規定数のスレッドが開始するのを待ってから
-	while (this->finishedThreads < threads) usleep(100); // 終了するのを待つ
-#endif /*_WIN32*/
-}
-
-void yaku::yakuCalculator::CalculatorThread::recordThreadStart() {
-	std::unique_lock<std::recursive_mutex> lock(cs);
-	++startedThreads; // 開始したスレッド数をインクリメント
-}
-void yaku::yakuCalculator::CalculatorThread::recordThreadFinish() {
-	std::unique_lock<std::recursive_mutex> lock(cs);
-	++finishedThreads; // 終了したスレッド数をインクリメント
-}
-
 /* 翻を計算する */
 #ifndef GUOBIAO
 void yaku::yakuCalculator::doubling(yaku::YAKUSTAT* const yStat) {
@@ -583,25 +542,13 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 }
 
 /* 計算ルーチン */
-#ifdef _WIN32
-DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
-#else /*_WIN32*/
-void* yaku::yakuCalculator::CalculatorThread::calculate
-#endif /*_WIN32*/
-	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
-	const ParseMode* const pMode, YAKUSTAT* const result)
-{
+void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const ParseMode* pMode, const GameTable* gameStat, MENTSU_ANALYSIS* analysis) {
 	/* 面子解析処理 */
 	if (analysis->shanten[shantenRegular] == -1) {
 		int NumOfMelds = 0;
 		mentsuParser::makementsu(gameStat, analysis->player, *pMode, &NumOfMelds, analysis->MianziDat);
 		if (NumOfMelds < SizeOfMeldBuffer) { // 条件を満たしてないなら抜けます
-			this->recordThreadFinish();
-#ifdef _WIN32
-			return S_OK;
-#else /*_WIN32*/
-			return nullptr;
-#endif /*_WIN32*/
+			return;
 		}
 		calcbasepoints(gameStat, analysis); // 符を計算する
 		analysis->DuiziCount = countingFacility::countDuiz(analysis->MianziDat);
@@ -693,27 +640,13 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 			result->AgariPoints = (LNum)2000; // 満貫にする
 #endif /* GUOBIAO */
 	/* 終了処理 */
-	recordThreadFinish(); // スレッドが終わったことを記録
-#ifdef _WIN32
-	return S_OK;
-#else /*_WIN32*/
-	return nullptr;
-#endif /*_WIN32*/
+	return;
 }
 
-/* コンストラクタとデストラクタ */
-yaku::yakuCalculator::CalculatorThread::CalculatorThread() {
-	finishedThreads = startedThreads = 0;
-}
-yaku::yakuCalculator::CalculatorThread::~CalculatorThread() {
-	/* 終了するときは必ず同期してから行うこと！！ */
-}
-		
 /* 引数の準備とか */
 void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PlayerID targetPlayer,
 	Shanten* const shanten, YAKUSTAT* const yakuInfo)
 {
-	CalculatorThread* calculator = new CalculatorThread; // インスタンスの準備
 	// 変数を用意
 	MENTSU_ANALYSIS analysis;
 	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
@@ -727,31 +660,17 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Tsumohai());
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
-	// 計算ルーチンに渡すパラメータの準備
-	CalculatorParam* calcprm = new CalculatorParam; memset(calcprm, 0, sizeof(CalculatorParam));
-	calcprm->gameStat = gameStat; calcprm->instance = calculator;
-	memcpy(&calcprm->analysis, &analysis, sizeof(MENTSU_ANALYSIS));
-	YAKUSTAT::Init(&calcprm->result);
+	YAKUSTAT result; YAKUSTAT::Init(&result);
+	const ParseMode pMode = {NoTile, Ke_Shun};
 	// 計算を実行
-#ifdef _WIN32
-	DWORD ThreadID;
-	HANDLE Thread = CreateThread(nullptr, 0, CalculatorThread::calculator, (LPVOID)calcprm, 0, &ThreadID);
-#else /*_WIN32*/
-	pthread_t hThread;
-	pthread_create(&hThread, nullptr, CalculatorThread::calculator, (void*)calcprm);
-	pthread_detach(hThread);
-#endif /*_WIN32*/
-	calculator->sync(1); // 同期(簡略な実装)
+	std::thread myThread(CalculatorThread::calculator, &result, &pMode, gameStat, &analysis);
+	myThread.join(); // 同期
 	// 高点法の処理
-	memcpy(yakuInfo, &calcprm->result, sizeof(YAKUSTAT));
-	assert(calculator->numOfStartedThreads() == 1);
-	assert(calculator->numOfFinishedThreads() == 1);
-	delete calcprm; delete calculator; // 用事が済んだら片づけましょう
+	memcpy(yakuInfo, &result, sizeof(YAKUSTAT));
 }
 void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerID targetPlayer,
 	Shanten* const shanten, YAKUSTAT* const yakuInfo)
 {
-	CalculatorThread* calculator = new CalculatorThread; // インスタンスの準備
 	// 変数を用意
 	MENTSU_ANALYSIS analysis;
 	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
@@ -767,14 +686,8 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
-#ifdef _WIN32
-	DWORD ThreadID[160]; HANDLE Thread[160];
-#else /*_WIN32*/
-	pthread_t Thread[160];
-#endif /*_WIN32*/
+	std::vector<std::thread> myThreads;
 	for (int i = 0; i < 160; i++) {
-		calcprm[i].instance = calculator;
-		calcprm[i].gameStat = gameStat; calcprm[i].instance = calculator;
 		calcprm[i].pMode.AtamaCode = (TileCode)(i / 4);
 		calcprm[i].pMode.Order = (ParseOrder)(i % 4);
 		memcpy(&calcprm[i].analysis, &analysis, sizeof(MENTSU_ANALYSIS));
@@ -782,54 +695,15 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	}
 	// 計算を実行
 	for (int i = 4; i < 160; i++) { // 0～3はNoTileなのでやらなくていい
-		while (calculator->numOfFinishedThreads() - calculator->numOfStartedThreads() >= CalculatorThread::threadLimit)
-#ifdef _WIN32
-			Sleep(1); // スレッド数制限のチェック
-#else /*_WIN32*/
-			usleep(1000); // スレッド数制限のチェック
-#endif /*_WIN32*/
-		do {
-#ifdef _WIN32
-			Thread[i] = CreateThread(nullptr, 0, CalculatorThread::calculator, (LPVOID)(&(calcprm[i])), 0, &(ThreadID[i]));
-			if (Thread[i]) break; // 成功したらそれでよし
-#else /*_WIN32*/
-			if (!pthread_create(Thread + i, nullptr, CalculatorThread::calculator, (void*)(calcprm + i))) {
-				pthread_detach(Thread[i]);
-				break;
-			}
-#endif /*_WIN32*/
-			{ // なんで失敗すんねんこのドアホ……
-				CodeConv::tostringstream o;
-				o << _T("スレッドの開始に失敗しました。 ループ [") << i <<
-#ifdef _WIN32
-					_T("] エラーコード [") <<
-					std::hex << std::setw(8) << std::setfill(_T('0')) << GetLastError() <<
-#endif /*_WIN32*/
-					_T(']');
-				error(o.str().c_str());
-#ifdef _WIN32
-				Sleep(100);
-#else /*_WIN32*/
-				usleep(100000);
-#endif /*_WIN32*/
-			}
-		} while (true);
-#ifdef _WIN32
-		Sleep(1);
-#else /*_WIN32*/
-		usleep(1000);
-#endif /*_WIN32*/
+		myThreads.push_back(std::thread(CalculatorThread::calculator, &calcprm[i].result, &calcprm[i].pMode, gameStat, &analysis));
 	}
-	calculator->sync(156); // 同期(簡略な実装)
+	for (auto& thread : myThreads)
+		thread.join(); // 同期
 	// 高点法の処理
 	for (int i = 4; i < 160; i++) {
 		if (yakuInfo->AgariPoints < calcprm[i].result.AgariPoints)
 			memcpy(yakuInfo, &calcprm[i].result, sizeof(YAKUSTAT));
 	}
-	// 用事が済んだら片づけましょう
-	assert(calculator->numOfStartedThreads() == 156);
-	assert(calculator->numOfFinishedThreads() == 156);
-	delete[] calcprm; delete calculator;
 }
 
 // 役が成立しているか判定する

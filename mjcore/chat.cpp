@@ -10,28 +10,18 @@
 
 namespace chat {
 
-#ifdef _WIN32
-DWORD WINAPI ChatThread::thread_loop (LPVOID param)
-#else /*_WIN32*/
-void* ChatThread::thread_loop (void* param)
-#endif /*_WIN32*/
-{
-	reinterpret_cast<ChatThread*>(param)->init();
-	while (!(reinterpret_cast<ChatThread*>(param)->terminate)) {
-		reinterpret_cast<ChatThread*>(param)->receive();
-		reinterpret_cast<ChatThread*>(param)->send();
+void ChatThread::thread_loop (ChatThread* inst) {
+	inst->init();
+	while (!(inst->terminate)) {
+		inst->receive();
+		inst->send();
 #ifdef _WIN32
 		Sleep(0);
 #else /*_WIN32*/
 		usleep(100);
 #endif /*_WIN32*/
 	}
-	reinterpret_cast<ChatThread*>(param)->cleanup();
-#ifdef _WIN32
-	return S_OK;
-#else /*_WIN32*/
-	return nullptr;
-#endif /*_WIN32*/
+	inst->cleanup();
 }
 StreamLog::StreamLog () {
 	mihajong_graphic::logwnd::reset();
@@ -39,27 +29,13 @@ StreamLog::StreamLog () {
 ChatThread::ChatThread (std::string& server_addr, int clientNum) : StreamLog() {
 	terminate = false;
 	myServerAddr = server_addr; myClientNum = clientNum;
-#ifdef _WIN32
-	myHandle = CreateThread(nullptr, 0, thread_loop, this, 0, nullptr);
-#else /*_WIN32*/
-	pthread_create(&myHandle, nullptr, thread_loop, (void*)this);
-#endif /*_WIN32*/
+	myThread = std::thread(thread_loop, this);
 }
 StreamLog::~StreamLog () {
 }
 ChatThread::~ChatThread () {
 	terminate = true;
-#ifdef _WIN32
-	while (true) {
-		DWORD exitcode;
-		GetExitCodeThread(myHandle, &exitcode);
-		if (exitcode != STILL_ACTIVE) break;
-		else Sleep(0);
-	}
-#else /*_WIN32*/
-	void* resultPtr;
-	pthread_join(myHandle, &resultPtr);
-#endif /*_WIN32*/
+	myThread.join();
 }
 
 void ChatThread::init() {

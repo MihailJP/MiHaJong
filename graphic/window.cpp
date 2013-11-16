@@ -6,6 +6,7 @@
 #include <X11/Xutil.h>
 #include <iostream>
 #endif /*_WIN32*/
+#include <cstdlib>
 
 namespace mihajong_graphic {
 
@@ -40,6 +41,7 @@ LRESULT CALLBACK MainWindow::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	switch (message) {
 	case WM_DESTROY: // ウィンドウを閉じた時
 		PostQuitMessage(0);
+		std::exit(0);
 		break;
 	case WM_KEYDOWN:
 		return keyev(hWnd, message, wParam, lParam);
@@ -213,6 +215,7 @@ MainWindow::~MainWindow() {
 #ifndef _WIN32
 	XDestroyWindow(disp, hWnd);
 	XCloseDisplay(disp);
+	std::exit(0);
 #endif /*_WIN32*/
 }
 

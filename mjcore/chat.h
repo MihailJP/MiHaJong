@@ -4,6 +4,7 @@
 #include "gametbl.h"
 #include "../common/strcode.h"
 #include <mutex>
+#include <thread>
 
 #define SOCK_CHAT 10
 #define PORT_CHAT 50020
@@ -31,19 +32,11 @@ namespace chat {
 		std::queue<CodeConv::tstring> sendQueue;
 		std::recursive_mutex streamLock;
 		std::recursive_mutex sendQueueLock;
-#ifdef _WIN32
-		HANDLE myHandle;
-#else /*_WIN32*/
-		pthread_t myHandle;
-#endif /*_WIN32*/
+		std::thread myThread;
 		volatile bool terminate;
 		std::string myServerAddr;
 		int myClientNum;
-#ifdef _WIN32
-		static DWORD WINAPI thread_loop (LPVOID param);
-#else /*_WIN32*/
-		static void* thread_loop (void* param);
-#endif /*_WIN32*/
+		static void thread_loop (ChatThread* inst);
 		void chatappend(const CodeConv::tstring& buf);
 		void init();
 		void receive();

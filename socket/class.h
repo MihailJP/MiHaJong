@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iomanip>
 #include <mutex>
+#include <thread>
 #ifdef _WIN32
 #ifndef _WINSOCKAPI_
 #include <winsock2.h>
@@ -13,7 +14,6 @@
 #else /* _WIN32 */
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <pthread.h>
 #endif /* _WIN32 */
 #include "except.h"
 #include "logger.h"
@@ -70,11 +70,7 @@ public:
 	network_thread(const network_thread&) = delete; // Delete unexpected copy constructor
 	network_thread& operator= (const network_thread&) = delete; // Delete unexpected assign operator
 	virtual ~network_thread();
-#ifdef _WIN32
-	static DWORD WINAPI thread(LPVOID lp); // スレッドを起動するための処理
-#else /* _WIN32 */
-	static void* thread(void* lp); // スレッドを起動するための処理
-#endif /* _WIN32 */
+	static void thread(network_thread* Instance); // スレッドを起動するための処理
 	virtual void startThread () = 0; // スレッドを開始する
 	bool isConnected (); // 接続済かを返す関数
 	void setaddr (const sockaddr_in destination); // 接続先を設定する
@@ -108,12 +104,8 @@ protected:
 	virtual int establishConnection () = 0; // 接続を確立する
 	int reader (); // 読み込み
 	int writer (); // 書き込み
-#ifdef _WIN32
-	DWORD WINAPI myThreadFunc(); // スレッドの処理
-#else /* _WIN32 */
-	pthread_t myThread;
+	std::thread myThread;
 	int myThreadFunc(); // スレッドの処理
-#endif /* _WIN32 */
 	void wait_until_sent(); // 送信キューが空になるまで待つ
 };
 

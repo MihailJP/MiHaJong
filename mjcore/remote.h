@@ -2,6 +2,7 @@
 
 #include "gametbl.h"
 #include "discard.h"
+#include <thread>
 
 namespace RemoteAction {
 	class RemoteDahai {
@@ -9,17 +10,14 @@ namespace RemoteAction {
 		volatile bool finished;
 		volatile DiscardTileNum remoteDahai;
 		GameTable* gameStat;
-#ifdef _WIN32
-		DWORD WINAPI thread();
-		static DWORD WINAPI startthread(LPVOID param);
-#else /*_WIN32*/
-		void* thread();
-		static void* startthread(void* param);
-#endif /*_WIN32*/
+		std::thread myThread;
+		void thread();
+		static void startthread(RemoteDahai* inst);
 	public:
 		RemoteDahai(GameTable* const gStat);
 		RemoteDahai(const RemoteDahai&) = delete; // Delete unexpected copy constructor
 		RemoteDahai& operator= (const RemoteDahai&) = delete; // Delete unexpected assign operator
+		~RemoteDahai();
 		bool isFinished() { return finished; }
 		DiscardTileNum get () {return *const_cast<DiscardTileNum*>(&remoteDahai);}
 	};
@@ -30,18 +28,15 @@ namespace RemoteAction {
 		GameTable* gameStat;
 		void thread_client();
 		void thread_server();
-#ifdef _WIN32
-		DWORD WINAPI thread();
-		static DWORD WINAPI startthread(LPVOID param);
-#else /*_WIN32*/
-		void* thread();
-		static void* startthread(void* param);
-#endif /*_WIN32*/
+		std::thread myThread;
+		void thread();
+		static void startthread(RemoteNaki* inst);
 		void checkremotenaki(PlayerID player, int& ReceivedMsg);
 	public:
 		RemoteNaki(GameTable* const gStat);
 		RemoteNaki(const RemoteNaki&) = delete; // Delete unexpected copy constructor
 		RemoteNaki& operator= (const RemoteNaki&) = delete; // Delete unexpected assign operator
+		~RemoteNaki();
 		bool isFinished() { return finished; }
 	};
 

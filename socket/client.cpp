@@ -16,14 +16,13 @@ namespace client {
 		memset(ruleConf, 0, sizeof(ruleConf));
 		ClientNumber = -1;
 	}
+	starter::~starter() {
+		if (myThread.joinable()) myThread.join();
+	}
 
 	// ---------------------------------------------------------------------
 
-#ifdef _WIN32
-	DWORD WINAPI starter::preparationThread () { // 接続を待ち、接続処理をする
-#else /* _WIN32 */
 	int starter::preparationThread () { // 接続を待ち、接続処理をする
-#endif /* _WIN32 */
 		try {
 			sockets[0] = new Sock(serveraddr, portnum);
 		}
@@ -36,11 +35,7 @@ namespace client {
 			playerName[2] = CodeConv::tstring(_T("[c]COM"));
 			playerName[3] = CodeConv::tstring(_T("[d]COM"));
 			finished = true;
-#ifdef _WIN32
-			return S_OK;
-#else /* _WIN32 */
 			return 0;
-#endif /* _WIN32 */
 		}
 		while (true) {
 			try {
@@ -61,11 +56,7 @@ namespace client {
 				playerName[2] = CodeConv::tstring(_T("[c]COM"));
 				playerName[3] = CodeConv::tstring(_T("[d]COM"));
 				finished = true;
-#ifdef _WIN32
-				return S_OK;
-#else /* _WIN32 */
 				return 0;
-#endif /* _WIN32 */
 			}
 			ClientNumber = sockets[0]->syncgetc() - 1;
 			sockets[0]->disconnect();
@@ -95,32 +86,16 @@ namespace client {
 			break;
 		}
 		finished = true;
-#ifdef _WIN32
-		return S_OK;
-#else /* _WIN32 */
 		return 0;
-#endif /* _WIN32 */
 	}
 
 	// ---------------------------------------------------------------------
 
-#ifdef _WIN32
-	DWORD WINAPI starter::initiate (LPVOID param) { // CreateThread()に渡す引数用
-		return ((starter*)param)->preparationThread();
+	void starter::initiate (starter* inst) { // CreateThread()に渡す引数用
+		inst->preparationThread();
 	}
-#else /* _WIN32 */
-	void* starter::initiate (void* param) { // CreateThread()に渡す引数用
-		((starter*)param)->preparationThread();
-		return nullptr;
-	}
-#endif /* _WIN32 */
 	void starter::startThread () { // スレッドを開始する
-#ifdef _WIN32
-		CreateThread(nullptr, 0, initiate, (LPVOID)this, 0, nullptr);
-#else /* _WIN32 */
-		pthread_create(&myThread, nullptr, initiate, this);
-		pthread_detach(myThread);
-#endif /* _WIN32 */
+		myThread = std::thread(initiate, this);
 	}
 	bool starter::isConnected () { // 接続成功したかどうか
 		return connected;

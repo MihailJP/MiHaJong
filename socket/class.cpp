@@ -271,18 +271,12 @@ mihajong_socket::Sock::network_thread::network_thread(Sock* caller) {
 }
 
 mihajong_socket::Sock::network_thread::~network_thread() {
+	if (myThread.joinable()) myThread.join();
 }
 
-#ifdef _WIN32
-DWORD WINAPI mihajong_socket::Sock::network_thread::thread(LPVOID lp) { // スレッドを起動するための処理
-	return ((client_thread*)lp)->myThreadFunc();
+void mihajong_socket::Sock::network_thread::thread(network_thread* inst) { // スレッドを起動するための処理
+	inst->myThreadFunc();
 }
-#else /* _WIN32 */
-void* mihajong_socket::Sock::network_thread::thread(void* lp) { // スレッドを起動するための処理
-	((client_thread*)lp)->myThreadFunc();
-	return nullptr;
-}
-#endif /* _WIN32 */
 
 void mihajong_socket::Sock::network_thread::chkError () { // エラーをチェックし、もしエラーだったら例外を投げる
 	CodeConv::tostringstream o;
@@ -403,11 +397,10 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 	return 0;
 }
 
+int mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの処理
 #ifdef _WIN32
-DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの処理
 	u_long arg = 1; ioctlsocket(*mySock, FIONBIO, &arg); // non-blocking モードに設定
 #else /* _WIN32 */
-int mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの処理
 	int socketFlag = fcntl(*listenerSock, F_GETFL, 0);
 	fcntl(*listenerSock, F_SETFL, socketFlag | O_NONBLOCK); // non-blocking モードに設定
 #endif /* _WIN32 */
@@ -447,11 +440,7 @@ int mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの処理
 	}
 	{CodeConv::tostringstream o; o << _T("送受信スレッドループの終了 ポート[") << myCaller->portnum << _T("]"); debug(o.str().c_str());}
 	finished = true;
-#ifdef _WIN32
-	return S_OK;
-#else /* _WIN32 */
 	return 0;
-#endif /* _WIN32 */
 }
 
 unsigned char mihajong_socket::Sock::network_thread::read () { // 1バイト読み込み
@@ -541,20 +530,10 @@ void mihajong_socket::Sock::network_thread::terminate () { // 切断する
 // -------------------------------------------------------------------------
 
 void mihajong_socket::Sock::client_thread::startThread () { // スレッドを開始する
-#ifdef _WIN32
-	CreateThread(nullptr, 0, thread, (LPVOID)this, 0, nullptr);
-#else /* _WIN32 */
-	pthread_create(&myThread, nullptr, thread, this);
-	pthread_detach(myThread);
-#endif /* _WIN32 */
+	myThread = std::thread(thread, this);
 }
 void mihajong_socket::Sock::server_thread::startThread () { // スレッドを開始する
-#ifdef _WIN32
-	CreateThread(nullptr, 0, thread, (LPVOID)this, 0, nullptr);
-#else /* _WIN32 */
-	pthread_create(&myThread, nullptr, thread, this);
-	pthread_detach(myThread);
-#endif /* _WIN32 */
+	myThread = std::thread(thread, this);
 }
 
 
