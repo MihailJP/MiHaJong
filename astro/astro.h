@@ -7,19 +7,19 @@
 #define EXPORT /**/
 #endif /* _WIN32 */
 
+#define PI 3.141592653589793238
+
 #ifndef deg2rad
-#include <math.h>
-#define deg2rad(deg) ((deg) * M_PI / 180.0)
+#define deg2rad(deg) ((deg) * PI / 180.0)
 #endif /* deg2rad */
 
 #ifndef rad2deg
-#include <math.h>
-#define rad2deg(rad) ((rad) * 180.0 / M_PI)
+#define rad2deg(rad) ((rad) * 180.0 / PI)
 #endif /* rad2deg */
 
 #ifndef fixangle
 #include <math.h>
-#define fixangle(deg) fmod(deg, 360.0)
+#define fixangle(deg) fmod(fmod(deg, 360.0) + 360.0, 360.0)
 #endif /* fixangle */
 
 #else /* ASTRO_EXPORTS */
