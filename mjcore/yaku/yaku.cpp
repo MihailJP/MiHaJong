@@ -56,14 +56,12 @@ void yaku::yakuCalculator::CalculatorThread::sync(int threads) { // スレッドを同
 }
 
 void yaku::yakuCalculator::CalculatorThread::recordThreadStart() {
-	cs.syncDo<void>([this]() -> void {
-		++startedThreads; // 開始したスレッド数をインクリメント
-	});
+	std::unique_lock<std::recursive_mutex> lock(cs);
+	++startedThreads; // 開始したスレッド数をインクリメント
 }
 void yaku::yakuCalculator::CalculatorThread::recordThreadFinish() {
-	cs.syncDo<void>([this]() -> void {
-		++finishedThreads; // 終了したスレッド数をインクリメント
-	});
+	std::unique_lock<std::recursive_mutex> lock(cs);
+	++finishedThreads; // 終了したスレッド数をインクリメント
 }
 
 /* 翻を計算する */

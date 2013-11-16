@@ -12,7 +12,7 @@
 #include "../gametbl.h"
 #include "../tileutil.h"
 #include "../shanten.h"
-#include "../../common/mutex.h"
+#include <mutex>
 
 class yaku::yakuCalculator {
 private:
@@ -223,7 +223,7 @@ private:
 		void recordThreadStart();
 		void recordThreadFinish();
 		int finishedThreads;
-		MHJMutex cs;
+		std::recursive_mutex cs;
 		int startedThreads;
 		static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
 #ifdef _WIN32

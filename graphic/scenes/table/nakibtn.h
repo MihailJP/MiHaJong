@@ -6,7 +6,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif /*_WIN32*/
-#include "../../../common/mutex.h"
+#include <mutex>
 #include "../../timer.h"
 
 namespace mihajong_graphic {
@@ -66,7 +66,7 @@ public:
 	int decCursor();
 private: // Ä\’zE•\¦ˆ—
 	void reconstruct(ButtonID buttonID);
-	MHJMutex reconstructionCS;
+	std::recursive_mutex reconstructionCS;
 public:
 	void btnSetForDahai();
 	void btnSetForNaki();

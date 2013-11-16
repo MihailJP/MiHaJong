@@ -7,7 +7,7 @@
 #else /*_WIN32*/
 #include "../common/strcode.h"
 #include <pthread.h>
-#include "../common/mutex.h"
+#include <mutex>
 #endif /*_WIN32*/
 
 namespace mihajong_graphic {
@@ -20,7 +20,7 @@ protected:
 	HANDLE myEvent;
 #else /*_WIN32*/
 	pthread_cond_t myEvent;
-	MHJMutex myEventMutex;
+	std::recursive_mutex myEventMutex;
 	bool isSignaled, autoResetFlag;
 	unsigned waitingThreads;
 #endif /*_WIN32*/

@@ -5,6 +5,7 @@
 #include <queue>
 #include <sstream>
 #include <iomanip>
+#include <mutex>
 #ifdef _WIN32
 #ifndef _WINSOCKAPI_
 #include <winsock2.h>
@@ -16,7 +17,6 @@
 #endif /* _WIN32 */
 #include "except.h"
 #include "logger.h"
-#include "../common/mutex.h"
 
 namespace mihajong_socket {
 
@@ -102,9 +102,9 @@ protected:
 	volatile bool finished; // 終了済みかのフラグ[ワーカースレッドから書き込み]
 	sockaddr_in myAddr; // アドレス情報[親スレッドから書き込み]
 	std::queue<unsigned char> myMailBox; // 受け取ったバイト列
-	MHJMutex myRecvQueueCS; // 受信バッファ用ミューテックス(クリティカルセクションに変更)
+	std::recursive_mutex myRecvQueueCS; // 受信バッファ用ミューテックス(クリティカルセクションに変更)
 	std::queue<unsigned char> mySendBox; // 送る予定のバイト列
-	MHJMutex mySendQueueCS; // 送信バッファ用ミューテックス(クリティカルセクションに変更)
+	std::recursive_mutex mySendQueueCS; // 送信バッファ用ミューテックス(クリティカルセクションに変更)
 	virtual int establishConnection () = 0; // 接続を確立する
 	int reader (); // 読み込み
 	int writer (); // 書き込み

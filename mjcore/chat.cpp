@@ -156,57 +156,55 @@ void StreamLog::chatappend(const CodeConv::tstring& buf) {
 	}
 }
 void ChatThread::chatappend(const CodeConv::tstring& buf) {
-	streamLock.acquire();
-	super::chatappend(buf); // ←ラムダを使うとこれが呼び出せない
-	streamLock.release();
+	std::unique_lock<std::recursive_mutex> lock(streamLock);
+	super::chatappend(buf);
 }
 
 void ChatThread::send() {
-	sendQueueLock.syncDo<void>([this]() -> void {
-		if (!sendQueue.empty()) {
-			TCHAR buf[bufsize] = {0}; //buf[0] = GameStat.PlayerID + _T('0');
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
-				for (int k = 1; k <= 3; k++) {
-					if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
-						(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
-						(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
-						((!GameStat.chkGameType(SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
+	std::unique_lock<std::recursive_mutex> lock(sendQueueLock);
+	if (!sendQueue.empty()) {
+		TCHAR buf[bufsize] = {0}; //buf[0] = GameStat.PlayerID + _T('0');
+		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
+			for (int k = 1; k <= 3; k++) {
+				if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
+					(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
+					(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
+					((!GameStat.chkGameType(SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
 #if defined(_MSC_VER)
-							_tcscat_s(buf, bufsize, sendQueue.front().c_str());
+						_tcscat_s(buf, bufsize, sendQueue.front().c_str());
 #else
-							_tcsncat(buf, sendQueue.front().c_str(), bufsize - _tcslen(buf));
+						_tcsncat(buf, sendQueue.front().c_str(), bufsize - _tcslen(buf));
 #endif
-							if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
+						if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
 #if defined(_MSC_VER)
-								_tcscat_s(buf, bufsize, _T("\r\n"));
+							_tcscat_s(buf, bufsize, _T("\r\n"));
 #elif defined(_WIN32)
-								_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
+							_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
 #else
-								_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
+							_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
 #endif
-							mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
-							chatappend(buf);
-					}
+						mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
+						chatappend(buf);
 				}
-			} else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
-#if defined(_MSC_VER)
-				_tcscat_s(buf, bufsize, sendQueue.front().c_str());
-#else
-				_tcsncat(buf, sendQueue.front().c_str(), bufsize - _tcslen(buf));
-#endif
-				if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
-#if defined(_MSC_VER)
-					_tcscat_s(buf, bufsize, _T("\r\n"));
-#elif defined(_WIN32)
-					_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
-#else
-					_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
-#endif
-				mihajong_socket::puts(SOCK_CHAT, buf);
 			}
-			sendQueue.pop();
+		} else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
+#if defined(_MSC_VER)
+			_tcscat_s(buf, bufsize, sendQueue.front().c_str());
+#else
+			_tcsncat(buf, sendQueue.front().c_str(), bufsize - _tcslen(buf));
+#endif
+			if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
+#if defined(_MSC_VER)
+				_tcscat_s(buf, bufsize, _T("\r\n"));
+#elif defined(_WIN32)
+				_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
+#else
+				_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
+#endif
+			mihajong_socket::puts(SOCK_CHAT, buf);
 		}
-	});
+		sendQueue.pop();
+	}
 }
 
 void ChatThread::cleanup() {
@@ -218,9 +216,8 @@ CodeConv::tstring StreamLog::getlog () {
 	return CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
 }
 CodeConv::tstring ChatThread::getlog () {
-	return streamLock.syncDo<CodeConv::tstring>([this]() {
-		return CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
-	});
+	std::unique_lock<std::recursive_mutex> lock(streamLock);
+	return CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
 }
 
 void StreamLog::sysmsg(const CodeConv::tstring& str) {
@@ -235,9 +232,8 @@ void StreamLog::sysmsg(const CodeConv::tstring& str) {
 	mihajong_graphic::logwnd::append(tmpstr.c_str());
 }
 void ChatThread::sysmsg(const CodeConv::tstring& str) {
-	streamLock.acquire();
-	super::sysmsg(str); // ←ラムダを使うとこれが呼び出せない
-	streamLock.release();
+	std::unique_lock<std::recursive_mutex> lock(streamLock);
+	super::sysmsg(str);
 }
 
 void StreamLog::sendstr (const CodeConv::tstring& msg) {
@@ -255,9 +251,8 @@ void ChatThread::sendstr (const CodeConv::tstring& msg) {
 }
 void ChatThread::sendstrx (PlayerID player, const CodeConv::tstring& msg) {
 	TCHAR tmpnum[2] = {0}; tmpnum[0] = player + _T('0');
-	sendQueueLock.syncDo<void>([this, &tmpnum, msg]() -> void {
-		sendQueue.push(CodeConv::tstring(tmpnum) + msg);
-	});
+	std::unique_lock<std::recursive_mutex> lock(sendQueueLock);
+	sendQueue.push(CodeConv::tstring(tmpnum) + msg);
 }
 
 // -------------------------------------------------------------------------

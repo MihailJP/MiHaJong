@@ -10,7 +10,7 @@
 #include <climits>
 #include <iostream>
 #include <iomanip>
-#include "mutex.h"
+#include <mutex>
 #ifdef UNICODE
 #define UNI_TEXT(str) L##str
 #define _T(str) UNI_TEXT(str)
@@ -67,11 +67,8 @@ inline void setCP(unsigned int CodePage) {
 const unsigned CP_UTF8 = 65001u;
 const unsigned CP_ACP = 932u;
 
-inline void criticalSection(bool flag) {
-	static MHJMutex conversionMutex;
-	if (flag) conversionMutex.acquire();
-	else conversionMutex.release();
-}
+std::recursive_mutex conversionMutex;
+
 #endif /* _WIN32 */
 
 inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
@@ -80,7 +77,7 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	wchar_t* buf = new wchar_t[bufsize];
 	MultiByteToWideChar(CodePage, 0, str.c_str(), -1, buf, bufsize);
 #else /* _WIN32 */
-	criticalSection(true);
+	std::unique_lock<std::recursive_mutex> lock(conversionMutex);
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
@@ -105,7 +102,6 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	std::wstring ans(buf); delete[] buf;
 #ifndef _WIN32
 	delete[] srcBuf;
-	criticalSection(false);
 #endif /* _WIN32 */
 	return ans;
 }
@@ -115,7 +111,7 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 	char* buf = new char[bufsize];
 	WideCharToMultiByte(CodePage, 0, str.c_str(), -1, buf, bufsize, nullptr, nullptr);
 #else /* _WIN32 */
-	criticalSection(true);
+	std::unique_lock<std::recursive_mutex> lock(conversionMutex);
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
@@ -173,7 +169,6 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 	delete[] buf;
 #else /* _WIN32 */
 	delete[] srcBuf;
-	criticalSection(false);
 #endif /* _WIN32 */
 	return ans;
 }

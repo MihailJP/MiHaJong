@@ -5,7 +5,7 @@
 #include <cassert>
 #include <algorithm>
 #include "../chrwidth.h"
-#include "../../common/mutex.h"
+#include <mutex>
 
 namespace mihajong_graphic {
 namespace logwnd {
@@ -16,36 +16,32 @@ using namespace character_width;
 
 namespace {
 	CodeConv::tostringstream logdata;
-	MHJMutex LogWindowMutex;
+	std::recursive_mutex LogWindowMutex;
 	bool updated = false;
 }
 
 EXPORT void reset() {
-	LogWindowMutex.syncDo<void>([]() -> void {
-		logdata.clear(); logdata.str(_T(""));
-		updated = true;
-	});
+	std::unique_lock<std::recursive_mutex> lock(LogWindowMutex);
+	logdata.clear(); logdata.str(_T(""));
+	updated = true;
 }
 
 EXPORT void append(LPCTSTR logstr) {
-	LogWindowMutex.syncDo<void>([logstr]() -> void {
-		logdata << logstr; logdata.flush();
-		updated = true;
-	});
+	std::unique_lock<std::recursive_mutex> lock(LogWindowMutex);
+	logdata << logstr; logdata.flush();
+	updated = true;
 }
 
 EXPORT LPCTSTR getlogptr() {
 	static CodeConv::tstring logstr;
-	return LogWindowMutex.syncDo<LPCTSTR>([]() -> LPCTSTR {
-		logstr = logdata.str();
-		return logstr.c_str();
-	});
+	std::unique_lock<std::recursive_mutex> lock(LogWindowMutex);
+	logstr = logdata.str();
+	return logstr.c_str();
 }
 
 CodeConv::tstring getlog() {
-	return LogWindowMutex.syncDo<CodeConv::tstring>([]() -> CodeConv::tstring {
-		return logdata.str();
-	});
+	std::unique_lock<std::recursive_mutex> lock(LogWindowMutex);
+	return logdata.str();
 }
 
 // -------------------------------------------------------------------------
@@ -116,12 +112,12 @@ void LogWindow::renderFrame() {
 void LogWindow::Render() {
 	using std::max;
 	renderFrame();
-	LogWindowMutex.syncDo<void>([this]() -> void {
+	{ std::unique_lock<std::recursive_mutex> lock(LogWindowMutex);
 		if (updated) {
 			reconstruct_lines(); updated = false;
 			reconstFlag = true;
 		}
-	});
+	}
 	if (reconstFlag) {
 		unsigned linenum = 0;
 		for (unsigned i = (unsigned)(max(0, (signed)lines.size() - (signed)height)); i < lines.size(); ++i) { // ƒƒO‚ÌÅŒã‚Ì•”•ª‚ð•\Ž¦

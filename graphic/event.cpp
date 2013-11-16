@@ -29,10 +29,9 @@ Event::~Event() {
 #ifdef _WIN32
 	CloseHandle(myEvent);
 #else /*_WIN32*/
-	myEventMutex.syncDo<void> ([this] {
-		pthread_cond_broadcast(&myEvent); // 先に全スレッドを再開させなければならない
-		pthread_cond_destroy(&myEvent);
-	});
+	std::unique_lock<std::recursive_mutex> lock(myEventMutex);
+	pthread_cond_broadcast(&myEvent); // 先に全スレッドを再開させなければならない
+	pthread_cond_destroy(&myEvent);
 #endif /*_WIN32*/
 }
 
@@ -40,16 +39,16 @@ void Event::set() {
 #ifdef _WIN32
 	SetEvent(myEvent);
 #else /*_WIN32*/
-	myEventMutex.syncDo<void> ([this] {
+	{ std::unique_lock<std::recursive_mutex> lock(myEventMutex);
 		isSignaled = true;
 		pthread_cond_broadcast(&myEvent);
-	});
+	}
 	sched_yield();
-	myEventMutex.syncDo<void> ([this] {
+	{ std::unique_lock<std::recursive_mutex> lock(myEventMutex);
 		if (autoResetFlag && waitingThreads)
 			isSignaled = false;
 		waitingThreads = 0;
-	});
+	}
 #endif /*_WIN32*/
 }
 
@@ -57,9 +56,8 @@ void Event::reset() {
 #ifdef _WIN32
 	ResetEvent(myEvent);
 #else /*_WIN32*/
-	myEventMutex.syncDo<void> ([this] {
-		isSignaled = false;
-	});
+	std::unique_lock<std::recursive_mutex> lock(myEventMutex);
+	isSignaled = false;
 #endif /*_WIN32*/
 }
 
@@ -73,10 +71,10 @@ DWORD Event::wait(DWORD timeout) {
 uint32_t Event::wait(int32_t timeout) {
 	bool result;
 	if (timeout == 0x7fffffff) {
-		myEventMutex.syncDo<void> ([this] {
+		{ std::unique_lock<std::recursive_mutex> lock(myEventMutex);
 			while (!isSignaled)
 				pthread_cond_wait(&myEvent, myEventMutex.getMutex());
-		});
+		}
 		sched_yield();
 		result = true;
 	} else {
@@ -87,18 +85,20 @@ uint32_t Event::wait(int32_t timeout) {
 		if (destTime.tv_nsec >= 1000000000) { // 繰り上がりの処理
 			destTime.tv_sec += 1; destTime.tv_nsec -= 1000000000;
 		}
-		int res = myEventMutex.syncDo<int> ([this, &destTime] {
+		std::unique_lock<std::recursive_mutex> lock(myEventMutex);
+		int res = [this, &destTime] {
 			int r = 0;
 			while ((!isSignaled) && (r == 0))
 				r = pthread_cond_timedwait(&myEvent, myEventMutex.getMutex(), &destTime);
 			return r;
-		});
+		} ();
+		lock.unlock();
 		sched_yield();
 		result = (res == 0);
 	}
-	myEventMutex.syncDo<void> ([this] {
+	{ std::unique_lock<std::recursive_mutex> lock(myEventMutex);
 		isSignaled = false;
-	});
+	}
 	return result ? 1 : 0;
 }
 #endif /*_WIN32*/

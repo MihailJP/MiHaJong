@@ -115,30 +115,29 @@ void ITextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrA
 	/* ここまで */
 }
 void ITextRenderer::reconstruct(unsigned int ID, bool rescanStr) {
-	SpriteMutex.syncDo<void>([&]() {
-		if (SpriteData.size() <= ID) SpriteData.resize(ID + 1, std::vector<SpriteAttr*>()); // 配列の拡張
-		if ((!SpriteData[ID].empty()) && rescanStr) deleteSprite(ID); // 既に存在した場合
-		if (!StringData[ID]) /* ぬるぽ */
-			return; /* ガッ */
-		float chrAdvance = (FontWidth() - FontPadding() * 2) * StringData[ID]->scale * StringData[ID]->width;
-		float cursorPos = 0;
-		if (rescanStr) {
-			for (const auto& k : StringData[ID]->str) {
-				SpriteData[ID].push_back(new SpriteAttr);
-				SpriteData[ID].back()->isFullWidth = fontmap->map(k).first;
-				SpriteData[ID].back()->chr_id = fontmap->map(k).second;
-				spriteRecalc(ID, SpriteData[ID].back(), chrAdvance, cursorPos);
-				if (SpriteData[ID].back()->isFullWidth) cursorPos += 1.0f;
-				else cursorPos += .5f;
-			}
-		} else {
-			for (const auto& k : SpriteData[ID]) {
-				spriteRecalc(ID, k, chrAdvance, cursorPos);
-				if (k->isFullWidth) cursorPos += 1.0f;
-				else cursorPos += .5f;
-			}
+	std::unique_lock<std::recursive_mutex> lock(SpriteMutex);
+	if (SpriteData.size() <= ID) SpriteData.resize(ID + 1, std::vector<SpriteAttr*>()); // 配列の拡張
+	if ((!SpriteData[ID].empty()) && rescanStr) deleteSprite(ID); // 既に存在した場合
+	if (!StringData[ID]) /* ぬるぽ */
+		return; /* ガッ */
+	float chrAdvance = (FontWidth() - FontPadding() * 2) * StringData[ID]->scale * StringData[ID]->width;
+	float cursorPos = 0;
+	if (rescanStr) {
+		for (const auto& k : StringData[ID]->str) {
+			SpriteData[ID].push_back(new SpriteAttr);
+			SpriteData[ID].back()->isFullWidth = fontmap->map(k).first;
+			SpriteData[ID].back()->chr_id = fontmap->map(k).second;
+			spriteRecalc(ID, SpriteData[ID].back(), chrAdvance, cursorPos);
+			if (SpriteData[ID].back()->isFullWidth) cursorPos += 1.0f;
+			else cursorPos += .5f;
 		}
-	});
+	} else {
+		for (const auto& k : SpriteData[ID]) {
+			spriteRecalc(ID, k, chrAdvance, cursorPos);
+			if (k->isFullWidth) cursorPos += 1.0f;
+			else cursorPos += .5f;
+		}
+	}
 }
 void ITextRenderer::reconstruct() {
 	// VERY SLOW. DO NOT USE.
@@ -149,38 +148,35 @@ void ITextRenderer::reconstruct() {
 
 /* スプライトを削除する */
 void ITextRenderer::deleteSprite(unsigned int ID) {
-	SpriteMutex.syncDo<void>([&]() {
-		for (const auto& k : SpriteData[ID])
-			delete k;
-		SpriteData[ID].clear();
-	});
+	std::unique_lock<std::recursive_mutex> lock(SpriteMutex);
+	for (const auto& k : SpriteData[ID])
+		delete k;
+	SpriteData[ID].clear();
 }
 void ITextRenderer::deleteSprite() {
-	SpriteMutex.syncDo<void>([&]() {
-		for (unsigned int i = 0; i < SpriteData.size(); i++)
-			deleteSprite(i);
-		SpriteData.clear();
-	});
+	std::unique_lock<std::recursive_mutex> lock(SpriteMutex);
+	for (unsigned int i = 0; i < SpriteData.size(); i++)
+		deleteSprite(i);
+	SpriteData.clear();
 }
 
 /* レンダリング */
 void ITextRenderer::Render() {
-	SpriteMutex.syncDo<void>([&]() {
-		for (const auto& i : SpriteData) {
-			for (const auto& k : i) {
-				if (!k) continue;
-				RECT rect = {
-					static_cast<int32_t>((k->chr_id % FontCols()) * FontWidth()),
-					static_cast<int32_t>((k->chr_id / FontCols()) * FontBaseSize()),
-					static_cast<int32_t>((k->chr_id % FontCols() + 1) * FontWidth()),
-					static_cast<int32_t>((k->chr_id / FontCols() + 1) * FontBaseSize()),
-				};
-				SpriteRenderer::instantiate(myDevice)->ShowSprite(
-					font, k->X, k->Y, FontWidth(), FontBaseSize(),
-					k->color, &rect, 0, 0, &(k->matrix));
-			}
+	std::unique_lock<std::recursive_mutex> lock(SpriteMutex);
+	for (const auto& i : SpriteData) {
+		for (const auto& k : i) {
+			if (!k) continue;
+			RECT rect = {
+				static_cast<int32_t>((k->chr_id % FontCols()) * FontWidth()),
+				static_cast<int32_t>((k->chr_id / FontCols()) * FontBaseSize()),
+				static_cast<int32_t>((k->chr_id % FontCols() + 1) * FontWidth()),
+				static_cast<int32_t>((k->chr_id / FontCols() + 1) * FontBaseSize()),
+			};
+			SpriteRenderer::instantiate(myDevice)->ShowSprite(
+				font, k->X, k->Y, FontWidth(), FontBaseSize(),
+				k->color, &rect, 0, 0, &(k->matrix));
 		}
-	});
+	}
 }
 
 /* 文字列の幅を計算 */

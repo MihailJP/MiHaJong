@@ -2,13 +2,13 @@
 
 #include "exports.h"
 #include "../common/yakurslt.h"
-#include "../common/mutex.h"
+#include <mutex>
 
 namespace mihajong_graphic {
 
 class YakuResult {
 private:
-	static MHJMutex myMutex;
+	static std::recursive_mutex myMutex;
 	static mihajong_structs::YakuResult myStat;
 	static mihajong_structs::LargeNum agariScore;
 	static int chipVal;

@@ -3,7 +3,7 @@
 #include <queue>
 #include "gametbl.h"
 #include "../common/strcode.h"
-#include "../common/mutex.h"
+#include <mutex>
 
 #define SOCK_CHAT 10
 #define PORT_CHAT 50020
@@ -29,8 +29,8 @@ namespace chat {
 		typedef StreamLog super;
 	private:
 		std::queue<CodeConv::tstring> sendQueue;
-		MHJMutex streamLock;
-		MHJMutex sendQueueLock;
+		std::recursive_mutex streamLock;
+		std::recursive_mutex sendQueueLock;
 #ifdef _WIN32
 		HANDLE myHandle;
 #else /*_WIN32*/
