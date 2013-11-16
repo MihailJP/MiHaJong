@@ -149,12 +149,12 @@ EXPORT struct MOONPHASE calc_moon_phase (double pdate)
 
 	MoonPar = Mparallax / MoonDFrac;
 
-	answer.MoonPhase = MoonPhase;
+	answer.MoonIllum = MoonPhase;
 	answer.MoonAge = Synmonth * (fixangle(MoonAge) / 360.0);
 	answer.MoonDist = MoonDist;
 	answer.MoonAng = MoonAng;
 	answer.SunDist = SunDist;
 	answer.SunAng = SunAng;
-	answer.MoonIllum = fixangle(MoonAge) / 360.0;
+	answer.MoonPhase = fixangle(MoonAge) / 360.0;
 	return answer;
 }
