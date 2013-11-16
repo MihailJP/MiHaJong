@@ -36,7 +36,7 @@ private:
 	FontMapLargeChr();
 	FontMapLargeChr(const FontMapLargeChr&) {}
 	virtual ~FontMapLargeChr() {}
-	const unsigned short Default_Chr() {return 79;}
+	const unsigned short Default_Chr() {return 89;}
 public:
 	static FontMapLargeChr* instantiate();
 };
