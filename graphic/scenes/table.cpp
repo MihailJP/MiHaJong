@@ -299,7 +299,7 @@ void GameTableScreen::SetSubscene(unsigned int scene_ID) {
 			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("錯和罰符"));
 			break;
 		case tblSubsceneCallValNagashiMangan:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("流し満貫"));
+			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("幺九振切"));
 			break;
 		case tblSubsceneCallValDobon:
 			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("飛び罰符"));
