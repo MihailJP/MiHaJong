@@ -19,6 +19,8 @@
 #include "fuuro.h"
 #include "../graphic/graphic.h"
 #include "ruletbl.h"
+#include <chrono>
+#define SLEEP(msec) std::this_thread::sleep_for(std::chrono::milliseconds(msec));
 
 namespace {
 	DiscardTileNum playerdahai(const GameTable* gameStat) { // プレイヤーの打牌
@@ -270,11 +272,7 @@ namespace { /* 内部処理分割用 */
 				gameStat->Player[2].RichiFlag.OpenFlag || gameStat->Player[3].RichiFlag.OpenFlag))
 				sound::util::bgmplay(sound::IDs::musOpenrichi);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
-#ifdef _WIN32
-			Sleep(1000);
-#else /*_WIN32*/
-			usleep(1000000);
-#endif /*_WIN32*/
+			SLEEP(1000);
 			gameStat->statOfActive().HandStat = handOpenRiichi;
 			gameStat->statOfActive().RichiFlag.OpenFlag = true;
 		}
@@ -296,11 +294,7 @@ namespace { /* 内部処理分割用 */
 					}
 			}
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
-#ifdef _WIN32
-			Sleep(1000);
-#else /*_WIN32*/
-			usleep(1000000);
-#endif /*_WIN32*/
+			SLEEP(1000);
 		}
 #endif /* GUOBIAO */
 	}

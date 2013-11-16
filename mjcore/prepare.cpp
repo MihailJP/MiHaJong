@@ -267,11 +267,7 @@ void SeatShuffler::shuffleSeat () {
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++) {
 			int receivedByte;
 			while ((receivedByte = mihajong_socket::getc(0)) == -1) // ŽóM‘Ò‚¿
-#ifdef _WIN32
-				Sleep(0);
-#else /*_WIN32*/
-				usleep(100);
-#endif /*_WIN32*/
+				std::this_thread::yield();
 			TmpPosition[i] = receivedByte;
 		}
 	}
@@ -364,11 +360,7 @@ namespace {
 				if (ClientReceived == 1)
 					if (f(gameStat, ReceivedMsg))
 						break;
-#ifdef _WIN32
-				Sleep(1);
-#else /*_WIN32*/
-				usleep(1000);
-#endif /*_WIN32*/
+				std::this_thread::yield();
 			}
 		}
 	}

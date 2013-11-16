@@ -15,11 +15,7 @@ void ChatThread::thread_loop (ChatThread* inst) {
 	while (!(inst->terminate)) {
 		inst->receive();
 		inst->send();
-#ifdef _WIN32
-		Sleep(0);
-#else /*_WIN32*/
-		usleep(100);
-#endif /*_WIN32*/
+		std::this_thread::yield();
 	}
 	inst->cleanup();
 }
@@ -53,21 +49,13 @@ void ChatThread::init() {
 					(mihajong_socket::connected(
 					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag)))
 					tmpClientWaiting[i] = false;
-#ifdef _WIN32
-			Sleep(0);
-#else /*_WIN32*/
-			usleep(100);
-#endif /*_WIN32*/
+			std::this_thread::yield();
 		}
 	}
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 		mihajong_socket::connect(SOCK_CHAT+0, myServerAddr.c_str(), PORT_CHAT-1+myClientNum);
 		while (!mihajong_socket::connected(SOCK_CHAT+0)) // Wait until connection established
-#ifdef _WIN32
-			Sleep(0);
-#else /*_WIN32*/
-			usleep(100);
-#endif /*_WIN32*/
+			std::this_thread::yield();
 	}
 }
 

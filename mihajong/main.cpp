@@ -8,6 +8,7 @@
 #include "../mjcore/mjimport.h"
 #include "../graphic/graphic.h"
 #include "resource.h"
+#include <thread>
 
 extern const GameTypeID myGameType;
 
@@ -42,7 +43,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 		} else {
 			// ƒAƒCƒhƒ‹‚ÉÄ•`‰æ
 			mihajong_graphic::RefreshWindow();
-			Sleep(1);
+			std::this_thread::yield();
 		}
 	}
 	

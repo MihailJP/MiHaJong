@@ -3,6 +3,8 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif /* _WIN32 */
+#include <chrono>
+#define SLEEP(msec) std::this_thread::sleep_for(std::chrono::milliseconds(msec));
 
 namespace mihajong_socket {
 namespace server {
@@ -68,11 +70,7 @@ namespace server {
 				++CurrentConnection;
 			}
 			if (CurrentConnection >= NumberOfPlayers) break;
-#ifdef _WIN32
-			Sleep(50); // Yield
-#else /* _WIN32 */
-			usleep(50000); // Yield
-#endif /* _WIN32 */
+			SLEEP(50); // Yield
 		}
 		delete sockets[0]; sockets[0] = nullptr; // 待機用のソケットを閉じる
 		send(protocol::Server_StartGame_Signature);

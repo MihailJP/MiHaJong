@@ -2,6 +2,8 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif /* _WIN32 */
+#include <chrono>
+#define SLEEP(msec) std::this_thread::sleep_for(std::chrono::milliseconds(msec));
 
 namespace mihajong_socket {
 namespace client {
@@ -40,11 +42,7 @@ namespace client {
 		while (true) {
 			try {
 				if (!sockets[0]->connected()) {
-#ifdef _WIN32
-					Sleep(50); continue;
-#else /* _WIN32 */
-					usleep(50000); continue;
-#endif /* _WIN32 */
+					SLEEP(50); continue;
 				}
 			}
 			catch (socket_error& e) { // Connection failed...
@@ -62,19 +60,11 @@ namespace client {
 			sockets[0]->disconnect();
 			sockets[0]->connect(serveraddr, portnum + ClientNumber);
 			while (!sockets[0]->connected())
-#ifdef _WIN32
-				Sleep(50);
-#else /* _WIN32 */
-				usleep(50000);
-#endif /* _WIN32 */
+				SLEEP(50);
 			connected = true;
 			putString(0, myName);
 			while (sockets[0]->syncgetc() != protocol::Server_StartGame_Signature)
-#ifdef _WIN32
-				Sleep(10); // 開始を待つ
-#else /* _WIN32 */
-				usleep(10000); // 開始を待つ
-#endif /* _WIN32 */
+				SLEEP(10); // 開始を待つ
 			for (unsigned int i = 0; i < NumberOfPlayers; ++i)
 				playerName[i] = getString(0); // 名前を受信
 			for (unsigned i = 0; i < RULE_LINES; ++i)
