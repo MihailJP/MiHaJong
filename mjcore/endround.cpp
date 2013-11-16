@@ -462,7 +462,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	case NagashiMangan:
 	{
-		const bool agariBgmSet = !(NagashiManganFlag[gameStat->PlayerID] || EnvTable::Instantiate()->WatchModeFlag); // Ž©•ª‚Ì—¬‚µ–žŠÑ‚È‚çtrue
+		const bool agariBgmSet = NagashiManganFlag[gameStat->PlayerID] || EnvTable::Instantiate()->WatchModeFlag; // Ž©•ª‚Ì—¬‚µ–žŠÑ‚È‚çtrue
 		const unsigned bgmNum =
 			RuleData::chkRule("nagashi_mangan", "yakuman") ? (agariBgmSet ? sound::IDs::musAgariSelf3 : sound::IDs::musAgariFurikomi3)
 			: (agariBgmSet ? sound::IDs::musAgariSelf2 : sound::IDs::musAgariFurikomi2);
@@ -494,7 +494,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		}
 		sound::Play(sound::IDs::sndPage);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall);
-		mihajong_graphic::ui::WaitUIWithTimeout(1500);
+		mihajong_graphic::ui::WaitUIWithTimeout(5000);
 		transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValNagashiMangan, 1500);
 		ryuukyokuProc(gameStat, true);
 	}

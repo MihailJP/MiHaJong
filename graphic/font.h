@@ -38,7 +38,7 @@ private:
 	FontMapLargeChr(const FontMapLargeChr&) = delete; // Delete unexpected copy constructor
 	FontMapLargeChr& operator= (const FontMapLargeChr&) = delete; // Delete unexpected assign operator
 	virtual ~FontMapLargeChr() {}
-	const unsigned short Default_Chr() {return 79;}
+	const unsigned short Default_Chr() {return 89;}
 public:
 	static FontMapLargeChr* instantiate();
 };
