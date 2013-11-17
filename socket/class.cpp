@@ -6,8 +6,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #endif /* _WIN32 */
-#include <chrono>
-#define SLEEP(msec) std::this_thread::sleep_for(std::chrono::milliseconds(msec));
+#include "../common/chrono.h"
+#define SLEEP(msec) THREADLIB::this_thread::sleep_for(CHRONO::chrono::milliseconds(msec));
 
 uint32_t mihajong_socket::Sock::addr2var(const std::string& address) { // アドレスを取得
 	uint32_t addr = inet_addr(address.c_str()); // まずは xxx.xxx.xxx.xxx 形式であると仮定する
@@ -512,10 +512,10 @@ void mihajong_socket::Sock::network_thread::terminate () { // 切断する
 // -------------------------------------------------------------------------
 
 void mihajong_socket::Sock::client_thread::startThread () { // スレッドを開始する
-	myThread = std::thread(thread, this);
+	myThread = THREADLIB::thread(thread, this);
 }
 void mihajong_socket::Sock::server_thread::startThread () { // スレッドを開始する
-	myThread = std::thread(thread, this);
+	myThread = THREADLIB::thread(thread, this);
 }
 
 

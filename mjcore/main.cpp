@@ -22,7 +22,7 @@ GameThread::GameThread(GameTypeID gameType, Window hwnd)
 {
 	myGameType = gameType;
 	hWnd = hwnd;
-	myThread = std::thread(ThreadMain, this);
+	myThread = THREADLIB::thread(ThreadMain, this);
 }
 
 GameThread::~GameThread() {

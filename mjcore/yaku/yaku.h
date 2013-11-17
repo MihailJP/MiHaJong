@@ -12,7 +12,7 @@
 #include "../gametbl.h"
 #include "../tileutil.h"
 #include "../shanten.h"
-#include <thread>
+#include "../../common/thread.h"
 
 class yaku::yakuCalculator {
 private:

@@ -19,8 +19,8 @@
 #include "fuuro.h"
 #include "../graphic/graphic.h"
 #include "ruletbl.h"
-#include <chrono>
-#define SLEEP(msec) std::this_thread::sleep_for(std::chrono::milliseconds(msec));
+#include "../common/chrono.h"
+#define SLEEP(msec) THREADLIB::this_thread::sleep_for(CHRONO::chrono::milliseconds(msec));
 
 namespace {
 	DiscardTileNum playerdahai(const GameTable* gameStat) { // ÉvÉåÉCÉÑÅ[ÇÃë≈îv

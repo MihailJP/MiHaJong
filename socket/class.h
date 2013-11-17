@@ -6,7 +6,7 @@
 #include <sstream>
 #include <iomanip>
 #include <mutex>
-#include <thread>
+#include "../common/thread.h"
 #ifdef _WIN32
 #ifndef _WINSOCKAPI_
 #include <winsock2.h>
@@ -104,7 +104,7 @@ protected:
 	virtual int establishConnection () = 0; // 接続を確立する
 	int reader (); // 読み込み
 	int writer (); // 書き込み
-	std::thread myThread;
+	THREADLIB::thread myThread;
 	int myThreadFunc(); // スレッドの処理
 	void wait_until_sent(); // 送信キューが空になるまで待つ
 };

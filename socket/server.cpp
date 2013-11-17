@@ -3,8 +3,8 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif /* _WIN32 */
-#include <chrono>
-#define SLEEP(msec) std::this_thread::sleep_for(std::chrono::milliseconds(msec));
+#include "../common/chrono.h"
+#define SLEEP(msec) THREADLIB::this_thread::sleep_for(CHRONO::chrono::milliseconds(msec));
 
 namespace mihajong_socket {
 namespace server {
@@ -88,7 +88,7 @@ namespace server {
 		inst->preparationThread();
 	}
 	void starter::startThread () { // スレッドを開始する
-		myThread = std::thread(initiate, this);
+		myThread = THREADLIB::thread(initiate, this);
 	}
 
 	void starter::terminate () { // すぐに開始

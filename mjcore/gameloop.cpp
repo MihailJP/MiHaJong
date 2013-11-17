@@ -18,8 +18,8 @@
 #include "ruletbl.h"
 #include "remote.h"
 #include "chat.h"
-#include <chrono>
-#define SLEEP(msec) std::this_thread::sleep_for(std::chrono::milliseconds(msec));
+#include "../common/chrono.h"
+#define SLEEP(msec) THREADLIB::this_thread::sleep_for(CHRONO::chrono::milliseconds(msec));
 
 /* ”¼‘‘‚Ìis */
 EndType doTableTurn(GameTable* const gameStat) {
@@ -47,8 +47,8 @@ EndType doTableTurn(GameTable* const gameStat) {
 	if (DiscardTileIndex.type == DiscardTileNum::Disconnect)
 		return Disconnect;
 	/* ƒEƒFƒCƒg‚ğ“ü‚ê‚é */
-	std::this_thread::yield();
-	std::this_thread::yield();
+	THREADLIB::this_thread::yield();
+	THREADLIB::this_thread::yield();
 	EndType RoundEndType = procdahai(gameStat, DiscardTileIndex);
 	if (RoundEndType != Continuing)
 		return RoundEndType;
@@ -56,7 +56,7 @@ EndType doTableTurn(GameTable* const gameStat) {
 	/* ‰h˜a‚Ìˆ— */
 	RoundEndType = ronhuproc(gameStat); // ‰h˜a‚Ìˆ—
 	if (RoundEndType != Continuing) return RoundEndType;
-	std::this_thread::yield();
+	THREADLIB::this_thread::yield();
 	/* “r’†—¬‹Ç‚Ì”»’è */
 	EndType round_abort_type = endround::checkroundabort(gameStat);
 	if (round_abort_type != Continuing) return round_abort_type;

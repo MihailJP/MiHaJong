@@ -1,8 +1,8 @@
 #include "event.h"
 #include "../sound/sound.h"
 #include "../common/bgmid.h"
-#include <thread>
-#include <chrono>
+#include "../common/thread.h"
+#include "../common/chrono.h"
 
 namespace mihajong_graphic {
 namespace ui {
@@ -26,7 +26,7 @@ void Event::set() {
 		isSignaled = true;
 		myEvent.notify_all();
 	}
-	std::this_thread::yield();
+	THREADLIB::this_thread::yield();
 	{ std::unique_lock<std::mutex> lock(myEventMutex);
 		if (autoResetFlag && waitingThreads)
 			isSignaled = false;
@@ -46,17 +46,17 @@ uint32_t Event::wait(int32_t timeout) {
 			while (!isSignaled)
 				myEvent.wait(lock);
 		}
-		std::this_thread::yield();
+		THREADLIB::this_thread::yield();
 		result = true;
 	} else {
 		bool res = [this, timeout] {
 			bool r = false;
 			std::unique_lock<std::mutex> lock(myEventMutex);
 			while ((!isSignaled) && (r == false))
-				r = myEvent.wait_for(lock, std::chrono::milliseconds(timeout)) == std::cv_status::timeout;
+				r = myEvent.wait_for(lock, CHRONO::chrono::milliseconds(timeout)) == std::cv_status::timeout;
 			return r;
 		} ();
-		std::this_thread::yield();
+		THREADLIB::this_thread::yield();
 		result = (res == false);
 	}
 	{ std::unique_lock<std::mutex> lock(myEventMutex);

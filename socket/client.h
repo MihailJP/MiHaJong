@@ -2,7 +2,7 @@
 
 #include "socket.h"
 #include "server.h"
-#include <thread>
+#include "../common/thread.h"
 
 namespace mihajong_socket {
 namespace client {
@@ -19,7 +19,7 @@ namespace client {
 		char ruleConf[RULE_LINES][RULE_IN_LINE + 1];
 		std::string serveraddr;
 		CodeConv::tstring myName;
-		std::thread myThread;
+		THREADLIB::thread myThread;
 		int preparationThread (); // Ú‘±‚ğ‘Ò‚¿AÚ‘±ˆ—‚ğ‚·‚é
 		int ClientNumber;
 	public:

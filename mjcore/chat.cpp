@@ -15,7 +15,7 @@ void ChatThread::thread_loop (ChatThread* inst) {
 	while (!(inst->terminate)) {
 		inst->receive();
 		inst->send();
-		std::this_thread::yield();
+		THREADLIB::this_thread::yield();
 	}
 	inst->cleanup();
 }
@@ -25,7 +25,7 @@ StreamLog::StreamLog () {
 ChatThread::ChatThread (std::string& server_addr, int clientNum) : StreamLog() {
 	terminate = false;
 	myServerAddr = server_addr; myClientNum = clientNum;
-	myThread = std::thread(thread_loop, this);
+	myThread = THREADLIB::thread(thread_loop, this);
 }
 StreamLog::~StreamLog () {
 }
@@ -49,13 +49,13 @@ void ChatThread::init() {
 					(mihajong_socket::connected(
 					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag)))
 					tmpClientWaiting[i] = false;
-			std::this_thread::yield();
+			THREADLIB::this_thread::yield();
 		}
 	}
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 		mihajong_socket::connect(SOCK_CHAT+0, myServerAddr.c_str(), PORT_CHAT-1+myClientNum);
 		while (!mihajong_socket::connected(SOCK_CHAT+0)) // Wait until connection established
-			std::this_thread::yield();
+			THREADLIB::this_thread::yield();
 	}
 }
 

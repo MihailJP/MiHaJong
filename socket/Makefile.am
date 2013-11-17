@@ -15,6 +15,12 @@ else
 EXTRA_DIST += ver.rc
 libmihajong_socket_la_CXXFLAGS += -DUNICODE -D_UNICODE
 endif
+if WITH_BOOST_CHRONO
+libmihajong_socket_la_CXXFLAGS += -DWITH_BOOST_CHRONO $(BOOST_CHRONO_LIB)
+endif
+if WITH_BOOST_THREAD
+libmihajong_socket_la_CXXFLAGS += -DWITH_BOOST_THREAD $(BOOST_THREAD_LIB)
+endif
 
 .rc.o:
 	$(WINDRES) $^ -o $@ -l 0411

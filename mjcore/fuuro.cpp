@@ -21,8 +21,8 @@
 #include "remote.h"
 #include "../graphic/graphic.h"
 #include "../graphic/scenes/table/naki_id.h"
-#include <chrono>
-#define SLEEP(msec) std::this_thread::sleep_for(std::chrono::milliseconds(msec));
+#include "../common/chrono.h"
+#define SLEEP(msec) THREADLIB::this_thread::sleep_for(CHRONO::chrono::milliseconds(msec));
 
 namespace {
 
@@ -763,7 +763,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 	}
 	/* 実際に栄和を行なう処理 */
 	for (int i = 0; i < (Players - 1); i++) {
-		std::this_thread::yield();
+		THREADLIB::this_thread::yield();
 		PlayerID pl = RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1));
 		if (gameStat->Player[pl].DeclarationFlag.Ron) {
 			/* ウォッチモードの場合は和了った人に視点を向ける */
@@ -886,7 +886,7 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 	if (declCount > 1)
 		error(_T("複数同時のポン・槓が宣言されています。"));
 	for (PlayerID i = 0; i < Players; i++) {
-		std::this_thread::yield();
+		THREADLIB::this_thread::yield();
 		/* 捨牌をポンする場合 */
 		if (gameStat->Player[i].DeclarationFlag.Pon) {
 			gameStat->CurrentPlayer.Passive = i; // 鳴いたプレイヤーを設定

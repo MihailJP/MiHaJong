@@ -12,8 +12,8 @@
 #include <iomanip>
 #include "../common/nmrules.h"
 #include "../graphic/graphic.h"
-#include <chrono>
-#define SLEEP(msec) std::this_thread::sleep_for(std::chrono::milliseconds(msec));
+#include "../common/chrono.h"
+#define SLEEP(msec) THREADLIB::this_thread::sleep_for(CHRONO::chrono::milliseconds(msec));
 
 namespace RemoteAction {
 
@@ -41,7 +41,7 @@ void proc_abrupt_disconnect(GameTable* const gameStat, PlayerID player) {
 RemoteDahai::RemoteDahai (GameTable* const gStat) {
 	gameStat = gStat; finished = false;
 	remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = 0;
-	myThread = std::thread(startthread, this);
+	myThread = THREADLIB::thread(startthread, this);
 }
 RemoteDahai::~RemoteDahai() {
 	myThread.join();
@@ -57,7 +57,7 @@ void RemoteDahai::thread () {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
 			if (ClientReceived) break;
-			std::this_thread::yield(); // ポーリング
+			THREADLIB::this_thread::yield(); // ポーリング
 		}
 		// 受信失敗の時
 		if (ReceivedMsg == 1023) {
@@ -84,7 +84,7 @@ void RemoteDahai::thread () {
 			if (ServerReceived == EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag) {
 				break;
 			}
-			std::this_thread::yield();
+			THREADLIB::this_thread::yield();
 		}
 		// 受信失敗の時
 		if (ReceivedMsg == 1023) {
@@ -143,7 +143,7 @@ void RemoteDahai::thread () {
 DiscardTileNum remotedahai (GameTable* const gameStat) {
 	RemoteDahai* rDahai = new RemoteDahai(gameStat);
 	while (!rDahai->isFinished())
-		std::this_thread::yield();
+		THREADLIB::this_thread::yield();
 	DiscardTileNum d = rDahai->get();
 	delete rDahai; rDahai = nullptr;
 	return d;
@@ -152,7 +152,7 @@ DiscardTileNum remotedahai (GameTable* const gameStat) {
 /* 接続先の鳴き */
 RemoteNaki::RemoteNaki (GameTable* const gStat) {
 	gameStat = gStat; finished = false;
-	myThread = std::thread(startthread, this);
+	myThread = THREADLIB::thread(startthread, this);
 }
 RemoteNaki::~RemoteNaki() {
 	myThread.join();
@@ -167,7 +167,7 @@ void RemoteNaki::thread_client() {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
 			if (ClientReceived) break;
-			std::this_thread::yield();
+			THREADLIB::this_thread::yield();
 		}
 		if (tmp != gameStat->PlayerID) {
 			using namespace mihajong_socket::protocol;
@@ -222,7 +222,7 @@ void RemoteNaki::thread_server() {
 		}
 		if ((Received[0]) && (Received[1]) && (gameStat->chkGameType(SanmaT) || Received[2]))
 			break;
-		std::this_thread::yield();
+		THREADLIB::this_thread::yield();
 	}
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		using namespace mihajong_socket::protocol;
@@ -280,7 +280,7 @@ void RemoteNaki::checkremotenaki(PlayerID player, int& ReceivedMsg) {
 void remotenaki (GameTable* const gameStat) {
 	RemoteNaki* rNaki = new RemoteNaki(gameStat);
 	while (!rNaki->isFinished())
-		std::this_thread::yield();
+		THREADLIB::this_thread::yield();
 	delete rNaki; rNaki = nullptr;
 }
 
@@ -356,10 +356,10 @@ void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short
 			SLEEP(1500);
 			return;
 		}
-		std::this_thread::yield();
+		THREADLIB::this_thread::yield();
 	}
 	while (!mihajong_socket::client::isStartingFinished())
-		std::this_thread::yield();
+		THREADLIB::this_thread::yield();
 	ClientNumber = mihajong_socket::client::getClientNumber();
 
 	TCHAR playerName[4][256];

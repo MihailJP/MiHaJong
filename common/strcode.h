@@ -90,7 +90,6 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 		setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
 		delete[] srcBuf;
 		std::cerr << "Failed to convert into wide string" << std::endl;
-		criticalSection(false);
 		throw _T("ƒƒCƒh•¶Žš‚Ö‚Ì•ÏŠ·‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
 	}
 	wchar_t* buf = new wchar_t[bufsize + 1 /* Do not forget the trailing null */];

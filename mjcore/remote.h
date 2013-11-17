@@ -2,7 +2,7 @@
 
 #include "gametbl.h"
 #include "discard.h"
-#include <thread>
+#include "../common/thread.h"
 
 namespace RemoteAction {
 	class RemoteDahai {
@@ -10,7 +10,7 @@ namespace RemoteAction {
 		volatile bool finished;
 		volatile DiscardTileNum remoteDahai;
 		GameTable* gameStat;
-		std::thread myThread;
+		THREADLIB::thread myThread;
 		void thread();
 		static void startthread(RemoteDahai* inst);
 	public:
@@ -28,7 +28,7 @@ namespace RemoteAction {
 		GameTable* gameStat;
 		void thread_client();
 		void thread_server();
-		std::thread myThread;
+		THREADLIB::thread myThread;
 		void thread();
 		static void startthread(RemoteNaki* inst);
 		void checkremotenaki(PlayerID player, int& ReceivedMsg);
