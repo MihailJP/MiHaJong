@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include <mutex>
+#include "../common/mutex.h"
 #include "../common/largenum.h"
 #include "../common/gametbl.h"
 #include "exports.h"
@@ -11,7 +11,7 @@ namespace mihajong_graphic {
 #ifdef GRAPHIC_EXPORTS
 class FinalScoreDat {
 private:
-	static std::recursive_mutex myMutex;
+	static MUTEXLIB::recursive_mutex myMutex;
 	static std::array<mihajong_structs::LargeNum, mihajong_structs::Players> scoreDat;
 public:
 	static mihajong_structs::LargeNum getData(mihajong_structs::PlayerID player);

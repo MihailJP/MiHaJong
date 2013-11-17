@@ -10,7 +10,7 @@
 #include <climits>
 #include <iostream>
 #include <iomanip>
-#include <mutex>
+#include "mutex.h"
 #ifdef UNICODE
 #define UNI_TEXT(str) L##str
 #define _T(str) UNI_TEXT(str)
@@ -67,8 +67,8 @@ inline void setCP(unsigned int CodePage) {
 const unsigned CP_UTF8 = 65001u;
 const unsigned CP_ACP = 932u;
 
-inline std::recursive_mutex& conversionMutex() {
-	static std::recursive_mutex myMutex;
+inline MUTEXLIB::recursive_mutex& conversionMutex() {
+	static MUTEXLIB::recursive_mutex myMutex;
 	return myMutex;
 }
 
@@ -80,7 +80,7 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	wchar_t* buf = new wchar_t[bufsize];
 	MultiByteToWideChar(CodePage, 0, str.c_str(), -1, buf, bufsize);
 #else /* _WIN32 */
-	std::unique_lock<std::recursive_mutex> lock(conversionMutex());
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(conversionMutex());
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
@@ -113,7 +113,7 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 	char* buf = new char[bufsize];
 	WideCharToMultiByte(CodePage, 0, str.c_str(), -1, buf, bufsize, nullptr, nullptr);
 #else /* _WIN32 */
-	std::unique_lock<std::recursive_mutex> lock(conversionMutex());
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(conversionMutex());
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);

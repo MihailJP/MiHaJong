@@ -207,7 +207,7 @@ void GameTableScreen::checkTimeout() {
 void GameTableScreen::Render() {
 	cls();
 	RenderTable();
-	std::unique_lock<std::recursive_mutex> lock(subSceneCS, std::try_to_lock);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS, MUTEXLIB::try_to_lock);
 	if (lock.owns_lock()) {
 #ifndef _WIN32
 		if (reconstructFlag) {
@@ -224,7 +224,7 @@ void GameTableScreen::Render() {
 }
 
 void GameTableScreen::SetSubscene(unsigned int scene_ID) {
-	std::unique_lock<std::recursive_mutex> lock(subSceneCS);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS);
 	buttonReconst->ChangeButtonSet(GameTableScreen::ButtonReconst::btnSetNormal);
 	tehaiReconst->enable();
 	tileSelectMode = 0;
@@ -526,7 +526,7 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	/* 決定キー */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
 		if (keyDown) {
-			std::unique_lock<std::recursive_mutex> lock(subSceneCS, std::try_to_lock);
+			MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS, MUTEXLIB::try_to_lock);
 			if (lock.owns_lock())
 				mySubScene->skipEvent();
 		}
@@ -597,7 +597,7 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 	case ButtonPress: // マウスクリック
 		if (od->xbutton.button == Button1) {
 #endif /*_WIN32*/
-			{ std::unique_lock<std::recursive_mutex> lock(subSceneCS, std::try_to_lock);
+			{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS, MUTEXLIB::try_to_lock);
 				if (lock.owns_lock())
 					mySubScene->skipEvent();
 			}

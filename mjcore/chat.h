@@ -3,7 +3,7 @@
 #include <queue>
 #include "gametbl.h"
 #include "../common/strcode.h"
-#include <mutex>
+#include "../common/mutex.h"
 #include "../common/thread.h"
 
 #define SOCK_CHAT 10
@@ -30,8 +30,8 @@ namespace chat {
 		typedef StreamLog super;
 	private:
 		std::queue<CodeConv::tstring> sendQueue;
-		std::recursive_mutex streamLock;
-		std::recursive_mutex sendQueueLock;
+		MUTEXLIB::recursive_mutex streamLock;
+		MUTEXLIB::recursive_mutex sendQueueLock;
 		THREADLIB::thread myThread;
 		volatile bool terminate;
 		std::string myServerAddr;

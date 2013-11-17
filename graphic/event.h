@@ -3,7 +3,7 @@
 #include "exports.h"
 #include "../common/strcode.h"
 #include <cstdint>
-#include <mutex>
+#include "../common/mutex.h"
 #include <condition_variable>
 
 namespace mihajong_graphic {
@@ -13,7 +13,7 @@ namespace ui {
 class Event { // イベントの基底クラス
 protected:
 	std::condition_variable myEvent;
-	std::mutex myEventMutex;
+	MUTEXLIB::mutex myEventMutex;
 	bool isSignaled, autoResetFlag;
 	unsigned waitingThreads;
 public:

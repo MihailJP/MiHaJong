@@ -8,7 +8,7 @@ GameStatus::GStatModFlag GameStatus::myModFlag;
 bool GameStatus::isInitialized = false;
 
 void GameStatus::updateGameStat(const GameTable* const gameStat) {
-	std::unique_lock<std::recursive_mutex> lock(myModFlag.myCriticalSection);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myModFlag.myCriticalSection);
 	std::memcpy(&myGameStat, gameStat, sizeof(GameTable));
 	myModFlag.myModificationFlag = true;
 }
@@ -19,7 +19,7 @@ GameTable* GameStatus::gameStat() {
 }
 
 GameTable* GameStatus::retrGameStat() {
-	std::unique_lock<std::recursive_mutex> lock(myModFlag.myCriticalSection);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myModFlag.myCriticalSection);
 	myModFlag.myModificationFlag = false;
 	std::memcpy(&myGameStat1, &myGameStat, sizeof(GameTable));
 	lock.unlock();
@@ -28,7 +28,7 @@ GameTable* GameStatus::retrGameStat() {
 }
 
 bool GameStatus::isModified() {
-	std::unique_lock<std::recursive_mutex> lock(myModFlag.myCriticalSection);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myModFlag.myCriticalSection);
 	return myModFlag.myModificationFlag;
 }
 

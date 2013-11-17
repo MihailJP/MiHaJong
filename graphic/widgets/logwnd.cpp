@@ -5,7 +5,7 @@
 #include <cassert>
 #include <algorithm>
 #include "../chrwidth.h"
-#include <mutex>
+#include "../../common/mutex.h"
 
 namespace mihajong_graphic {
 namespace logwnd {
@@ -16,31 +16,31 @@ using namespace character_width;
 
 namespace {
 	CodeConv::tostringstream logdata;
-	std::recursive_mutex LogWindowMutex;
+	MUTEXLIB::recursive_mutex LogWindowMutex;
 	bool updated = false;
 }
 
 EXPORT void reset() {
-	std::unique_lock<std::recursive_mutex> lock(LogWindowMutex);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(LogWindowMutex);
 	logdata.clear(); logdata.str(_T(""));
 	updated = true;
 }
 
 EXPORT void append(LPCTSTR logstr) {
-	std::unique_lock<std::recursive_mutex> lock(LogWindowMutex);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(LogWindowMutex);
 	logdata << logstr; logdata.flush();
 	updated = true;
 }
 
 EXPORT LPCTSTR getlogptr() {
 	static CodeConv::tstring logstr;
-	std::unique_lock<std::recursive_mutex> lock(LogWindowMutex);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(LogWindowMutex);
 	logstr = logdata.str();
 	return logstr.c_str();
 }
 
 CodeConv::tstring getlog() {
-	std::unique_lock<std::recursive_mutex> lock(LogWindowMutex);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(LogWindowMutex);
 	return logdata.str();
 }
 
@@ -112,7 +112,7 @@ void LogWindow::renderFrame() {
 void LogWindow::Render() {
 	using std::max;
 	renderFrame();
-	{ std::unique_lock<std::recursive_mutex> lock(LogWindowMutex);
+	{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(LogWindowMutex);
 		if (updated) {
 			reconstruct_lines(); updated = false;
 			reconstFlag = true;

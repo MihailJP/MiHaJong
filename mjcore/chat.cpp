@@ -120,12 +120,12 @@ void StreamLog::chatappend(const CodeConv::tstring& buf) {
 	}
 }
 void ChatThread::chatappend(const CodeConv::tstring& buf) {
-	std::unique_lock<std::recursive_mutex> lock(streamLock);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(streamLock);
 	super::chatappend(buf);
 }
 
 void ChatThread::send() {
-	std::unique_lock<std::recursive_mutex> lock(sendQueueLock);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(sendQueueLock);
 	if (!sendQueue.empty()) {
 		TCHAR buf[bufsize] = {0}; //buf[0] = GameStat.PlayerID + _T('0');
 		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
@@ -180,7 +180,7 @@ CodeConv::tstring StreamLog::getlog () {
 	return CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
 }
 CodeConv::tstring ChatThread::getlog () {
-	std::unique_lock<std::recursive_mutex> lock(streamLock);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(streamLock);
 	return CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
 }
 
@@ -196,7 +196,7 @@ void StreamLog::sysmsg(const CodeConv::tstring& str) {
 	mihajong_graphic::logwnd::append(tmpstr.c_str());
 }
 void ChatThread::sysmsg(const CodeConv::tstring& str) {
-	std::unique_lock<std::recursive_mutex> lock(streamLock);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(streamLock);
 	super::sysmsg(str);
 }
 
@@ -215,7 +215,7 @@ void ChatThread::sendstr (const CodeConv::tstring& msg) {
 }
 void ChatThread::sendstrx (PlayerID player, const CodeConv::tstring& msg) {
 	TCHAR tmpnum[2] = {0}; tmpnum[0] = player + _T('0');
-	std::unique_lock<std::recursive_mutex> lock(sendQueueLock);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(sendQueueLock);
 	sendQueue.push(CodeConv::tstring(tmpnum) + msg);
 }
 

@@ -6,7 +6,7 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
-#include <mutex>
+#include "../common/mutex.h"
 
 /* 簡易ロギングツール */
 
@@ -17,7 +17,7 @@ using namespace std;
 static Logger* logger = NULL;
 static DWORD threadID;
 static HANDLE hThread;
-static std::recursive_mutex cs;
+static MUTEXLIB::recursive_mutex cs;
 static HANDLE hEvent;
 static ostream* logStream = &cout;
 static ofstream logFile;
@@ -34,7 +34,7 @@ DWORD Logger::LoggerThread(LPVOID lp) { // ロギング実行用スレッド
 		while (1) {
 			/* キューからpopする */
 			LogMsg currentLogMsg = TraceMsg(_T(""));
-			std::unique_lock<std::recursive_mutex> lock(cs);
+			MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(cs);
 			bool finished = [&currentLogMsg]() -> bool {
 				if (msgQueue.empty()) { // キューが空だったら抜ける
 #ifdef SYNCMODE
@@ -55,7 +55,7 @@ DWORD Logger::LoggerThread(LPVOID lp) { // ロギング実行用スレッド
 }
 
 void Logger::enqueue(LogMsg msgdat) { // キューにpushする
-	std::unique_lock<std::recursive_mutex> lock(cs);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(cs);
 	msgQueue.push_back(LogMsg(msgdat));
 	lock.unlock();
 	SetEvent(hEvent);

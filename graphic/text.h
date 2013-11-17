@@ -8,7 +8,7 @@
 #include <vector>
 #include "loadtex.h"
 #include "font.h"
-#include <mutex>
+#include "../common/mutex.h"
 
 namespace mihajong_graphic {
 
@@ -30,7 +30,7 @@ protected:
 	void reconstruct(unsigned int ID, bool rescanStr = true);
 	void deleteSprite();
 	void deleteSprite(unsigned int ID);
-	std::recursive_mutex SpriteMutex;
+	MUTEXLIB::recursive_mutex SpriteMutex;
 public:
 	explicit ITextRenderer(DevicePtr device);
 	ITextRenderer(const ITextRenderer&) = delete; // Delete unexpected copy constructor

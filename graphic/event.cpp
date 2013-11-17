@@ -22,12 +22,12 @@ Event::~Event() {
 }
 
 void Event::set() {
-	{ std::unique_lock<std::mutex> lock(myEventMutex);
+	{ MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
 		isSignaled = true;
 		myEvent.notify_all();
 	}
 	THREADLIB::this_thread::yield();
-	{ std::unique_lock<std::mutex> lock(myEventMutex);
+	{ MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
 		if (autoResetFlag && waitingThreads)
 			isSignaled = false;
 		waitingThreads = 0;
@@ -35,14 +35,14 @@ void Event::set() {
 }
 
 void Event::reset() {
-	std::unique_lock<std::mutex> lock(myEventMutex);
+	MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
 	isSignaled = false;
 }
 
 uint32_t Event::wait(int32_t timeout) {
 	bool result;
 	if (timeout == Infinite) {
-		{ std::unique_lock<std::mutex> lock(myEventMutex);
+		{ MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
 			while (!isSignaled)
 				myEvent.wait(lock);
 		}
@@ -51,7 +51,7 @@ uint32_t Event::wait(int32_t timeout) {
 	} else {
 		bool res = [this, timeout] {
 			bool r = false;
-			std::unique_lock<std::mutex> lock(myEventMutex);
+			MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
 			while ((!isSignaled) && (r == false))
 				r = myEvent.wait_for(lock, CHRONO::chrono::milliseconds(timeout)) == std::cv_status::timeout;
 			return r;
@@ -59,7 +59,7 @@ uint32_t Event::wait(int32_t timeout) {
 		THREADLIB::this_thread::yield();
 		result = (res == false);
 	}
-	{ std::unique_lock<std::mutex> lock(myEventMutex);
+	{ MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
 		isSignaled = false;
 	}
 	return result ? 1 : 0;
