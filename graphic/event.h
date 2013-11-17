@@ -4,7 +4,7 @@
 #include "../common/strcode.h"
 #include <cstdint>
 #include "../common/mutex.h"
-#include <condition_variable>
+#include "../common/condvar.h"
 
 namespace mihajong_graphic {
 namespace ui {
@@ -12,7 +12,7 @@ namespace ui {
 #ifdef GRAPHIC_EXPORTS
 class Event { // イベントの基底クラス
 protected:
-	std::condition_variable myEvent;
+	CONDVAR::condition_variable myEvent;
 	MUTEXLIB::mutex myEventMutex;
 	bool isSignaled, autoResetFlag;
 	unsigned waitingThreads;

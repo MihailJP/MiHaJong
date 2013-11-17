@@ -191,7 +191,9 @@ AX_BOOST_THREAD
 AM_CONDITIONAL(WITH_BOOST_THREAD, test x$want_boost != xno)
 AS_IF([test "x$want_boost" != xno],
 	[MH_TEST_SLEEP
-	 AM_CONDITIONAL(OLDER_BOOST_SLEEP, test x$sleep_func = xsleep)]
+	 AM_CONDITIONAL(OLDER_BOOST_SLEEP, test x$sleep_func = xsleep)
+	 MH_TEST_WAIT
+	 AM_CONDITIONAL(OLDER_BOOST_WAIT, test x$wait_func = xtimed_wait)]
 )
 
 AC_CONFIG_FILES([Makefile

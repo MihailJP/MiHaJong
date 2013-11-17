@@ -53,7 +53,11 @@ uint32_t Event::wait(int32_t timeout) {
 			bool r = false;
 			MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
 			while ((!isSignaled) && (r == false))
+#ifdef OLDER_BOOST_WAIT
+				r = myEvent.timed_wait(lock, CHRONO::posix_time::milliseconds(timeout)) == false;
+#else
 				r = myEvent.wait_for(lock, CHRONO::chrono::milliseconds(timeout)) == std::cv_status::timeout;
+#endif
 			return r;
 		} ();
 		THREADLIB::this_thread::yield();

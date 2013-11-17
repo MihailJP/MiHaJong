@@ -62,6 +62,9 @@ endif
 if OLDER_BOOST_SLEEP
 libmihajong_graphic_la_CXXFLAGS += -DOLDER_BOOST_SLEEP
 endif
+if OLDER_BOOST_WAIT
+libmihajong_graphic_la_CXXFLAGS += -DOLDER_BOOST_WAIT
+endif
 dist_pkgdata_DATA = \
 	data/agariwnd.png data/baize.png data/button.png data/call.png \
 	data/cdigits.chr data/cdigits.png data/checkbox.png data/chiicha.png \
