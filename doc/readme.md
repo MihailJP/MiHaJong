@@ -80,10 +80,10 @@ MiHaJongでは、基本的に2006年版のルールに準拠していますが�
 MihailJPの開発環境
 ------------------
 - OS：Windows 7 Home Premium 32bit (Service Pack 1)
-- OS：OpenSUSE 12.3 x86_64
+- OS：OpenSUSE 12.3 x86\_64
 - 物理メモリ：4GB（32bit OSでは3.2GB使用可能）
 - CPU：Intel Core i5 760 2.80GHz（場合により2.66GHzにダウンクロック）
-- 開発環境：Visual C++ 2010 Express (Windows)、GCC 4.7 (Linux)
+- 開発環境：Visual C++ 2013 Express (Windows)、GCC 4.7 (Linux)
 - 画像編集ツール：GIMP 2.6
 - テキストエディタ：Mery、Notepad++、Kate
 - Gitクライアント：Cygwin GIT (Windows)、GIT (Linux)

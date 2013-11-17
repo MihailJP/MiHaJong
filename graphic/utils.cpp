@@ -21,6 +21,7 @@ bgmplay_type bgmplay = nullptr;
 getName_type getName = nullptr;
 sendchat_type sendchat = nullptr;
 isAboveBase_type isAboveBase = nullptr;
+isStandAlone_type isStandAlone = nullptr;
 
 EXPORT void setfunc(
 	playerRelative_type ptr_playerRelative,
@@ -40,7 +41,8 @@ EXPORT void setfunc(
 	bgmplay_type ptr_bgmplay,
 	getName_type ptr_getName,
 	sendchat_type ptr_sendchat,
-	isAboveBase_type ptr_isAboveBase)
+	isAboveBase_type ptr_isAboveBase,
+	isStandAlone_type ptr_isStandAlone)
 {
 	playerRelative = ptr_playerRelative;
 	RelativePositionOf = ptr_RelativePositionOf;
@@ -60,6 +62,7 @@ EXPORT void setfunc(
 	getName = ptr_getName;
 	sendchat = ptr_sendchat;
 	isAboveBase = ptr_isAboveBase;
+	isStandAlone = ptr_isStandAlone;
 }
 
 }
