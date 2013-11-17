@@ -20,7 +20,6 @@
 #include "../graphic/graphic.h"
 #include "ruletbl.h"
 #include "../common/chrono.h"
-#define SLEEP(msec) THREADLIB::this_thread::sleep_for(CHRONO::chrono::milliseconds(msec));
 
 namespace {
 	DiscardTileNum playerdahai(const GameTable* gameStat) { // ÉvÉåÉCÉÑÅ[ÇÃë≈îv

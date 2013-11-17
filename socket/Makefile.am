@@ -18,8 +18,14 @@ endif
 if WITH_BOOST_CHRONO
 libmihajong_socket_la_CXXFLAGS += -DWITH_BOOST_CHRONO $(BOOST_CHRONO_LIB)
 endif
+if WITH_BOOST_DATE_TIME
+libmihajong_socket_la_CXXFLAGS += -DWITH_BOOST_DATE_TIME $(BOOST_DATE_TIME_LIB)
+endif
 if WITH_BOOST_THREAD
 libmihajong_socket_la_CXXFLAGS += -DWITH_BOOST_THREAD $(BOOST_THREAD_LIB)
+endif
+if OLDER_BOOST_SLEEP
+libmihajong_socket_la_CXXFLAGS += -DOLDER_BOOST_SLEEP
 endif
 
 .rc.o:

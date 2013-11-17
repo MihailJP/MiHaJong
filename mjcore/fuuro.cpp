@@ -22,7 +22,6 @@
 #include "../graphic/graphic.h"
 #include "../graphic/scenes/table/naki_id.h"
 #include "../common/chrono.h"
-#define SLEEP(msec) THREADLIB::this_thread::sleep_for(CHRONO::chrono::milliseconds(msec));
 
 namespace {
 

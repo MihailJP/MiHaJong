@@ -185,8 +185,14 @@ AX_BOOST_REGEX
 AM_CONDITIONAL(WITH_BOOST_REGEX, test x$want_boost != xno)
 AX_BOOST_CHRONO
 AM_CONDITIONAL(WITH_BOOST_CHRONO, test x$want_boost != xno)
+AX_BOOST_DATE_TIME
+AM_CONDITIONAL(WITH_BOOST_DATE_TIME, test x$want_boost != xno)
 AX_BOOST_THREAD
 AM_CONDITIONAL(WITH_BOOST_THREAD, test x$want_boost != xno)
+AS_IF([test "x$want_boost" != xno],
+	[MH_TEST_SLEEP
+	 AM_CONDITIONAL(OLDER_BOOST_SLEEP, test x$sleep_func = xsleep)]
+)
 
 AC_CONFIG_FILES([Makefile
                  astro/Makefile

@@ -19,7 +19,6 @@
 #include "remote.h"
 #include "chat.h"
 #include "../common/chrono.h"
-#define SLEEP(msec) THREADLIB::this_thread::sleep_for(CHRONO::chrono::milliseconds(msec));
 
 /* îºëëÇÃêiçs */
 EndType doTableTurn(GameTable* const gameStat) {
