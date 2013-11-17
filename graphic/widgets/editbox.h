@@ -89,8 +89,6 @@ public:
 #else /*_WIN32*/
 /* TODO: Linuxでは日本語入力が未実装（この実装はダミー） */
 class EditBox::IMStat { // IMEの状態(ダミー)
-private:
-	IMStat(const IMStat&) {}; // disable copy constructor
 public:
 	IMStat(void*) {}
 	IMStat(const IMStat&) = delete; // Delete unexpected copy constructor
