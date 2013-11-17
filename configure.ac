@@ -193,7 +193,8 @@ AS_IF([test "x$want_boost" != xno],
 	[MH_TEST_SLEEP
 	 AM_CONDITIONAL(OLDER_BOOST_SLEEP, test x$sleep_func = xsleep)
 	 MH_TEST_WAIT
-	 AM_CONDITIONAL(OLDER_BOOST_WAIT, test x$wait_func = xtimed_wait)]
+	 AM_CONDITIONAL(OLDER_BOOST_WAIT, test x$wait_func = xtimed_wait)
+	 AC_CHECK_HEADER([boost/container/vector.hpp], [], AC_MSG_ERROR([boost/container/vector.hpp is unavailable]))]
 )
 
 AC_CONFIG_FILES([Makefile

@@ -9,6 +9,9 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
+#ifdef WITH_BOOST_THREAD
+#include <boost/container/vector.hpp>
+#endif /*WITH_BOOST_THREAD*/
 #ifdef _WIN32
 #include <windows.h>
 #else /*_WIN32*/
@@ -686,7 +689,11 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
+#ifdef WITH_BOOST_THREAD
+	boost::container::vector<THREADLIB::thread> myThreads;
+#else
 	std::vector<THREADLIB::thread> myThreads;
+#endif
 	for (int i = 0; i < 160; i++) {
 		calcprm[i].pMode.AtamaCode = (TileCode)(i / 4);
 		calcprm[i].pMode.Order = (ParseOrder)(i % 4);
