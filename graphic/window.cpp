@@ -41,7 +41,6 @@ LRESULT CALLBACK MainWindow::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	switch (message) {
 	case WM_DESTROY: // ウィンドウを閉じた時
 		PostQuitMessage(0);
-		std::exit(0);
 		break;
 	case WM_KEYDOWN:
 		return keyev(hWnd, message, wParam, lParam);
