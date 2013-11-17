@@ -13,7 +13,7 @@ void RndNum::init() {
 	std::random_device rnd;
 	std::vector<std::uint32_t> v(624);
 	std::generate(v.begin(), v.end(), std::ref(rnd));
-	std::seed_seq& seed(std::seed_seq(v.begin(), v.end()));
+	std::seed_seq seed(v.begin(), v.end());
 	engine = std::mt19937(seed);
 }
 
