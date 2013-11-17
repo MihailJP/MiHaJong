@@ -22,6 +22,7 @@
 #include "../graphic/graphic.h"
 #include "../graphic/scenes/table/naki_id.h"
 #include "../common/chrono.h"
+#include "../common/sleep.h"
 
 namespace {
 

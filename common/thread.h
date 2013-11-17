@@ -11,4 +11,5 @@
 #else /*WITH_BOOST_THREAD*/
 #include <thread>
 #define THREADLIB std
+#define SLEEP_FOR sleep_for
 #endif /*WITH_BOOST_THREAD*/

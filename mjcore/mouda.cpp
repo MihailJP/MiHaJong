@@ -20,6 +20,7 @@
 #include "../graphic/graphic.h"
 #include "ruletbl.h"
 #include "../common/chrono.h"
+#include "../common/sleep.h"
 
 namespace {
 	DiscardTileNum playerdahai(const GameTable* gameStat) { // ƒvƒŒƒCƒ„[‚Ì‘Å”v

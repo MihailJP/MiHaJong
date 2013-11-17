@@ -4,6 +4,7 @@
 #include <unistd.h>
 #endif /* _WIN32 */
 #include "../common/chrono.h"
+#include "../common/sleep.h"
 
 namespace mihajong_socket {
 namespace server {

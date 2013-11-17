@@ -20,8 +20,3 @@
 #define DURATION posix_time
 #endif /*OLDER_BOOST_SLEEP*/
 #endif /*WITH_BOOST_DATE_TIME*/
-
-/* Utilities */
-#if defined(THREADLIB) && defined(SLEEP_FOR)
-#define SLEEP(msec) THREADLIB::this_thread::SLEEP_FOR(CHRONO::DURATION::milliseconds(msec));
-#endif /* defined(THREADLIB) && defined(SLEEP_FOR) */

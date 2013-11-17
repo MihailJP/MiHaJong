@@ -19,6 +19,7 @@
 #include "remote.h"
 #include "chat.h"
 #include "../common/chrono.h"
+#include "../common/sleep.h"
 
 /* ”¼‘‘‚Ìis */
 EndType doTableTurn(GameTable* const gameStat) {

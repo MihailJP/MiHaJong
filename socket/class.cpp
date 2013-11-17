@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #endif /* _WIN32 */
 #include "../common/chrono.h"
+#include "../common/sleep.h"
 
 uint32_t mihajong_socket::Sock::addr2var(const std::string& address) { // アドレスを取得
 	uint32_t addr = inet_addr(address.c_str()); // まずは xxx.xxx.xxx.xxx 形式であると仮定する

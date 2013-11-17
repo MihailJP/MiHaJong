@@ -13,6 +13,7 @@
 #include "../common/nmrules.h"
 #include "../graphic/graphic.h"
 #include "../common/chrono.h"
+#include "../common/sleep.h"
 
 namespace RemoteAction {
 
