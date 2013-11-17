@@ -26,7 +26,12 @@ GameThread::GameThread(GameTypeID gameType, Window hwnd)
 }
 
 GameThread::~GameThread() {
+	myThread.interrupt();
 	myThread.join();
+	cleanup();
+#ifdef _WIN32
+	SendMessage(hWnd, WM_CLOSE, 0, 0);
+#endif /*_WIN32*/
 }
 
 void GameThread::ThreadMain(GameThread* lpParam) {
@@ -39,14 +44,7 @@ void GameThread::ThreadMain(GameThread* lpParam) {
 	initapp(gameType, hwnd);
 	startgame(gameType);
 	cleanup();
-#ifdef _WIN32
-	SendMessage(hwnd, WM_CLOSE, 0, 0);
-#else /*_WIN32*/
-	/* WORKAROUND: タイトルメニューからExitを選択しても終了してくれない件  */
-	pid_t myPid = getpid();
-	kill(myPid, SIGINT);
-	/* WORKAROUND ここまで */
-#endif /*_WIN32*/
+	exit(0);
 }
 
 #ifdef _WIN32
