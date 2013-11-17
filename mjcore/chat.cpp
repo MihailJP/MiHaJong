@@ -7,6 +7,7 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif /*_WIN32*/
+#include "../common/sleep.h"
 
 namespace chat {
 
@@ -15,7 +16,7 @@ void ChatThread::thread_loop (ChatThread* inst) {
 	while (!(inst->terminate)) {
 		inst->receive();
 		inst->send();
-		THREADLIB::this_thread::yield();
+		threadYield();
 	}
 	inst->cleanup();
 }
@@ -49,13 +50,13 @@ void ChatThread::init() {
 					(mihajong_socket::connected(
 					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag)))
 					tmpClientWaiting[i] = false;
-			THREADLIB::this_thread::yield();
+			threadYield();
 		}
 	}
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 		mihajong_socket::connect(SOCK_CHAT+0, myServerAddr.c_str(), PORT_CHAT-1+myClientNum);
 		while (!mihajong_socket::connected(SOCK_CHAT+0)) // Wait until connection established
-			THREADLIB::this_thread::yield();
+			threadYield();
 	}
 }
 

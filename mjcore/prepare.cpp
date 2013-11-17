@@ -20,6 +20,7 @@
 #include "../graphic/graphic.h"
 #include "chat.h"
 #include "ruletbl.h"
+#include "../common/sleep.h"
 
 #define settile(TileCode, pos) {tilepos[TileCode] = pos; for (unsigned int i = 0; i < 4u; ++i) {gameStat->Deck[pos++].tile = TileCode;}}
 inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // ”v‚ð•À‚×‚é
@@ -267,7 +268,7 @@ void SeatShuffler::shuffleSeat () {
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++) {
 			int receivedByte;
 			while ((receivedByte = mihajong_socket::getc(0)) == -1) // ŽóM‘Ò‚¿
-				THREADLIB::this_thread::yield();
+				threadYield();
 			TmpPosition[i] = receivedByte;
 		}
 	}
@@ -360,7 +361,7 @@ namespace {
 				if (ClientReceived == 1)
 					if (f(gameStat, ReceivedMsg))
 						break;
-				THREADLIB::this_thread::yield();
+				threadYield();
 			}
 		}
 	}

@@ -42,7 +42,7 @@ namespace client {
 		while (true) {
 			try {
 				if (!sockets[0]->connected()) {
-					SLEEP(50); continue;
+					threadSleep(50); continue;
 				}
 			}
 			catch (socket_error& e) { // Connection failed...
@@ -60,11 +60,11 @@ namespace client {
 			sockets[0]->disconnect();
 			sockets[0]->connect(serveraddr, portnum + ClientNumber);
 			while (!sockets[0]->connected())
-				SLEEP(50);
+				threadSleep(50);
 			connected = true;
 			putString(0, myName);
 			while (sockets[0]->syncgetc() != protocol::Server_StartGame_Signature)
-				SLEEP(10); // 開始を待つ
+				threadSleep(10); // 開始を待つ
 			for (unsigned int i = 0; i < NumberOfPlayers; ++i)
 				playerName[i] = getString(0); // 名前を受信
 			for (unsigned i = 0; i < RULE_LINES; ++i)

@@ -9,6 +9,7 @@
 #include "../graphic/graphic.h"
 #include "resource.h"
 #include "../common/thread.h"
+#include "../common/sleep.h"
 
 extern const GameTypeID myGameType;
 
@@ -43,7 +44,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 		} else {
 			// アイドル時に再描画
 			mihajong_graphic::RefreshWindow();
-			THREADLIB::this_thread::yield();
+			threadYield();
 		}
 	}
 	
@@ -75,7 +76,7 @@ int main(int argc, char** argv) {
 	while (true) {
 		if (!mihajong_graphic::Event()) // イベント処理
 			break; // 終了ならfalseが返ってくる
-		THREADLIB::this_thread::yield();
+		threadYield();
 	}
 	
 	/* 終了処理 */

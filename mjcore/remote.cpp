@@ -57,7 +57,7 @@ void RemoteDahai::thread () {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
 			if (ClientReceived) break;
-			THREADLIB::this_thread::yield(); // ポーリング
+			threadYield(); // ポーリング
 		}
 		// 受信失敗の時
 		if (ReceivedMsg == 1023) {
@@ -84,7 +84,7 @@ void RemoteDahai::thread () {
 			if (ServerReceived == EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag) {
 				break;
 			}
-			THREADLIB::this_thread::yield();
+			threadYield();
 		}
 		// 受信失敗の時
 		if (ReceivedMsg == 1023) {
@@ -143,7 +143,7 @@ void RemoteDahai::thread () {
 DiscardTileNum remotedahai (GameTable* const gameStat) {
 	RemoteDahai* rDahai = new RemoteDahai(gameStat);
 	while (!rDahai->isFinished())
-		THREADLIB::this_thread::yield();
+		threadYield();
 	DiscardTileNum d = rDahai->get();
 	delete rDahai; rDahai = nullptr;
 	return d;
@@ -167,7 +167,7 @@ void RemoteNaki::thread_client() {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
 			if (ClientReceived) break;
-			THREADLIB::this_thread::yield();
+			threadYield();
 		}
 		if (tmp != gameStat->PlayerID) {
 			using namespace mihajong_socket::protocol;
@@ -222,7 +222,7 @@ void RemoteNaki::thread_server() {
 		}
 		if ((Received[0]) && (Received[1]) && (gameStat->chkGameType(SanmaT) || Received[2]))
 			break;
-		THREADLIB::this_thread::yield();
+		threadYield();
 	}
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		using namespace mihajong_socket::protocol;
@@ -280,7 +280,7 @@ void RemoteNaki::checkremotenaki(PlayerID player, int& ReceivedMsg) {
 void remotenaki (GameTable* const gameStat) {
 	RemoteNaki* rNaki = new RemoteNaki(gameStat);
 	while (!rNaki->isFinished())
-		THREADLIB::this_thread::yield();
+		threadYield();
 	delete rNaki; rNaki = nullptr;
 }
 
@@ -353,13 +353,13 @@ void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short
 		} else if (mihajong_socket::client::isConnectionFailed()) {
 			mihajong_graphic::Transit(mihajong_graphic::sceneWaitingError);
 			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
-			SLEEP(1500);
+			threadSleep(1500);
 			return;
 		}
-		THREADLIB::this_thread::yield();
+		threadYield();
 	}
 	while (!mihajong_socket::client::isStartingFinished())
-		THREADLIB::this_thread::yield();
+		threadYield();
 	ClientNumber = mihajong_socket::client::getClientNumber();
 
 	TCHAR playerName[4][256];

@@ -495,7 +495,7 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	if (CheckChankan(gameStat, RoundEndType, Mode)) return true;
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
-	SLEEP((gameStat->KangFlag.chankanFlag != chankanNone) ? 500 : 1000);
+	threadSleep((gameStat->KangFlag.chankanFlag != chankanNone) ? 500 : 1000);
 	if (ProcRinshan(gameStat, RoundEndType, Mode, fuuroPlayer)) return true;
 	/* 事後処理 */
 	for (PlayerID i = 0; i < Players; ++i)
@@ -564,7 +564,7 @@ namespace {
 		using namespace mihajong_graphic;
 		using namespace mihajong_graphic::naki;
 		if (gameStat->KangFlag.chankanFlag != chankanNone) {
-			SLEEP(500);
+			threadSleep(500);
 			Subscene(tblSubscenePlayerChankan);
 		} else {
 			Subscene(tblSubscenePlayerNaki);
@@ -763,7 +763,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 	}
 	/* 実際に栄和を行なう処理 */
 	for (int i = 0; i < (Players - 1); i++) {
-		THREADLIB::this_thread::yield();
+		threadYield();
 		PlayerID pl = RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1));
 		if (gameStat->Player[pl].DeclarationFlag.Ron) {
 			/* ウォッチモードの場合は和了った人に視点を向ける */
@@ -886,7 +886,7 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 	if (declCount > 1)
 		error(_T("複数同時のポン・槓が宣言されています。"));
 	for (PlayerID i = 0; i < Players; i++) {
-		THREADLIB::this_thread::yield();
+		threadYield();
 		/* 捨牌をポンする場合 */
 		if (gameStat->Player[i].DeclarationFlag.Pon) {
 			gameStat->CurrentPlayer.Passive = i; // 鳴いたプレイヤーを設定

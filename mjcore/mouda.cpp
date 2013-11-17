@@ -272,7 +272,7 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 				gameStat->Player[2].RichiFlag.OpenFlag || gameStat->Player[3].RichiFlag.OpenFlag))
 				sound::util::bgmplay(sound::IDs::musOpenrichi);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
-			SLEEP(1000);
+			threadSleep(1000);
 			gameStat->statOfActive().HandStat = handOpenRiichi;
 			gameStat->statOfActive().RichiFlag.OpenFlag = true;
 		}
@@ -294,7 +294,7 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 					}
 			}
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
-			SLEEP(1000);
+			threadSleep(1000);
 		}
 #endif /* GUOBIAO */
 	}

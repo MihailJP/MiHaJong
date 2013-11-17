@@ -135,7 +135,7 @@ void mihajong_socket::Sock::wait_until_connected () { // •¶Žš’Ê‚è‚Ì‚±‚Æ‚ð‚â‚é
 		o << _T("Ú‘±‘Ò‹@ ƒ|[ƒg [") << portnum << _T("]");
 		info(o.str().c_str());
 	}
-	while (!connected()) SLEEP(50);
+	while (!connected()) threadSleep(50);
 	{
 		CodeConv::tostringstream o;
 		o << _T("Ú‘±‘Ò‹@Š®—¹ ƒ|[ƒg [") << portnum << _T("]");
@@ -172,7 +172,7 @@ unsigned char mihajong_socket::Sock::syncgetc () { // “Ç‚Ýž‚Ý(“¯Šú)
 			byte = getc(); fini = true;
 		}
 		catch (queue_empty&) {
-			SLEEP(50); // Yield and try again
+			threadSleep(50); // Yield and try again
 		}
 	}
 	{
@@ -426,7 +426,7 @@ int mihajong_socket::Sock::network_thread::myThreadFunc() { // ƒXƒŒƒbƒh‚Ìˆ—
 #endif /* _WIN32 */
 			sender_closed = true; send_ended = false;
 		}
-		SLEEP(20);
+		threadSleep(20);
 	}
 	{CodeConv::tostringstream o; o << _T("‘—ŽóMƒXƒŒƒbƒhƒ‹[ƒv‚ÌI—¹ ƒ|[ƒg[") << myCaller->portnum << _T("]"); debug(o.str().c_str());}
 	finished = true;
@@ -492,7 +492,7 @@ void mihajong_socket::Sock::network_thread::wait_until_sent() { // ‘—MƒLƒ…[‚ª‹
 		if (flag) { // ‘—‚é‚×‚«ƒf[ƒ^‚ð‚·‚×‚Ä‘—‚èI‚¦‚½‚ç
 			send_ended = true; break; // ƒtƒ‰ƒO‚ð—§‚Ä‚ÄAƒ‹[ƒv‚ð”²‚¯‚é
 		}
-		SLEEP(500);
+		threadSleep(500);
 	}
 	{
 		CodeConv::tostringstream o; o << _T("ƒ|[ƒg [") << myCaller->portnum << _T("] ‚Ì‘—M‚ÍI‚í‚Á‚½‚ñ‚¶‚á‚È‚¢‚©‚ÈH");
@@ -504,7 +504,7 @@ void mihajong_socket::Sock::network_thread::terminate () { // Ø’f‚·‚é
 	terminated = true; // ƒtƒ‰ƒO‚ð—§‚Ä‚é
 	wait_until_sent(); // ‘—M‚ªŠ®—¹‚·‚é‚Ü‚Å‘Ò‚Â
 	while ((!finished) && (connected || connecting))
-		SLEEP(10); // ƒXƒŒƒbƒh‚ªI—¹‚·‚é‚Ü‚Å‘Ò‚Â
+		threadSleep(10); // ƒXƒŒƒbƒh‚ªI—¹‚·‚é‚Ü‚Å‘Ò‚Â
 	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting =  false; // ƒtƒ‰ƒO‚ÌŒãŽn––
 	errtype = errNone; errcode = 0;
 }
@@ -550,7 +550,7 @@ int mihajong_socket::Sock::client_thread::establishConnection() { // Ú‘±‚ðŠm—§‚
 			}
 		} else break;
 #endif /* _WIN32 */
-		SLEEP(50);
+		threadSleep(50);
 		if (terminated) { // ’†Ž~‚Ìê‡
 			info(_T("ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±ˆ—‚ð’†Ž~‚µ‚Ü‚µ‚½"));
 			return 0;
@@ -601,7 +601,7 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // Ú‘±‚ðŠm—§‚
 			info(_T("ƒT[ƒo‘ÒŽóˆ—‚ð’†Ž~‚µ‚Ü‚µ‚½"));
 			return 0;
 		}
-		SLEEP(50);
+		threadSleep(50);
 	}
 #ifdef _WIN32
 	shutdown(*listenerSock, SD_BOTH);

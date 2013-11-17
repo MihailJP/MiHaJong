@@ -3,6 +3,7 @@
 #include "../common/bgmid.h"
 #include "../common/thread.h"
 #include "../common/chrono.h"
+#include "../common/sleep.h"
 
 namespace mihajong_graphic {
 namespace ui {
@@ -26,7 +27,7 @@ void Event::set() {
 		isSignaled = true;
 		myEvent.notify_all();
 	}
-	THREADLIB::this_thread::yield();
+	threadYield();
 	{ MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
 		if (autoResetFlag && waitingThreads)
 			isSignaled = false;
@@ -46,7 +47,7 @@ uint32_t Event::wait(int32_t timeout) {
 			while (!isSignaled)
 				myEvent.wait(lock);
 		}
-		THREADLIB::this_thread::yield();
+		threadYield();
 		result = true;
 	} else {
 		bool res = [this, timeout] {
@@ -60,7 +61,7 @@ uint32_t Event::wait(int32_t timeout) {
 #endif
 			return r;
 		} ();
-		THREADLIB::this_thread::yield();
+		threadYield();
 		result = (res == false);
 	}
 	{ MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
