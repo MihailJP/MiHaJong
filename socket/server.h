@@ -12,6 +12,7 @@
 #include <string>
 #include <cstdint>
 #include "../common/strcode.h"
+#include "../common/thread.h"
 #endif
 
 namespace mihajong_socket {
@@ -27,22 +28,15 @@ namespace server {
 		unsigned int CurrentConnection;
 		std::array<CodeConv::tstring, 4> playerName;
 		char ruleConf[RULE_LINES][RULE_IN_LINE + 1];
-#ifdef _WIN32
-		DWORD WINAPI preparationThread (); // 接続を待ち、接続処理をする
-#else /* _WIN32 */
-		pthread_t myThread;
+		THREADLIB::thread myThread;
 		int preparationThread (); // 接続を待ち、接続処理をする
-#endif /* _WIN32 */
 	public:
-#ifdef _WIN32
-		static DWORD WINAPI initiate (LPVOID param); // CreateThread()に渡す引数用
-#else /* _WIN32 */
-		static void* initiate (void* param); // CreateThread()に渡す引数用
-#endif /* _WIN32 */
+		static void initiate (starter* inst); // CreateThread()に渡す引数用
 		void startThread ();
 		starter (const CodeConv::tstring& InputPlayerName, unsigned short port, const char* const * const rule); // コンストラクタ
 		starter (const Sock&) = delete; // Delete unexpected copy constructor
 		starter& operator= (const Sock&) = delete; // Delete unexpected assign operator
+		~starter();
 		void terminate(); // すぐに開始
 		bool isFinished (); // 待機用スレッドが終わったかどうか
 		unsigned int chkCurrentConnection (); // 現在の接続数

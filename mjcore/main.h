@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "mjexport.h"
 #include "gametbl.h"
@@ -7,21 +7,20 @@
 #else /*_WIN32*/
 #include <X11/Xlib.h>
 #endif /*_WIN32*/
+#include "../common/thread.h"
 
 #ifdef MJCORE_EXPORTS
 
 class GameThread {
 private:
 	GameTypeID myGameType;
+	THREADLIB::thread myThread;
 #ifdef _WIN32
-	HANDLE hThread;
 	HWND hWnd;
-	static DWORD WINAPI ThreadMain(LPVOID lpParam);
 #else /*_WIN32*/
-	pthread_t hThread;
 	Window hWnd;
-	static void* ThreadMain(void* lpParam);
 #endif /*_WIN32*/
+	static void ThreadMain(GameThread* lpParam);
 public:
 #ifdef _WIN32
 	explicit GameThread(GameTypeID gameType, HWND hWnd);

@@ -6,6 +6,7 @@
 #include <X11/Xutil.h>
 #include <iostream>
 #endif /*_WIN32*/
+#include <cstdlib>
 
 namespace mihajong_graphic {
 
@@ -213,6 +214,7 @@ MainWindow::~MainWindow() {
 #ifndef _WIN32
 	XDestroyWindow(disp, hWnd);
 	XCloseDisplay(disp);
+	std::exit(0);
 #endif /*_WIN32*/
 }
 

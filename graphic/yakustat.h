@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "exports.h"
 #include "../common/yakurslt.h"
@@ -8,7 +8,7 @@ namespace mihajong_graphic {
 
 class YakuResult {
 private:
-	static MHJMutex myMutex;
+	static MUTEXLIB::recursive_mutex myMutex;
 	static mihajong_structs::YakuResult myStat;
 	static mihajong_structs::LargeNum agariScore;
 	static int chipVal;

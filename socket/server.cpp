@@ -3,6 +3,8 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif /* _WIN32 */
+#include "../common/chrono.h"
+#include "../common/sleep.h"
 
 namespace mihajong_socket {
 namespace server {
@@ -47,14 +49,13 @@ namespace server {
 		for (unsigned i = 0; i < RULE_LINES; ++i)
 			memcpy(ruleConf[i], rule[i], RULE_IN_LINE);
 	}
+	starter::~starter() {
+		if (myThread.joinable()) myThread.join();
+	}
 
 	// ---------------------------------------------------------------------
 
-#ifdef _WIN32
-	DWORD WINAPI starter::preparationThread () { // 接続を待ち、接続処理をする
-#else /* _WIN32 */
 	int starter::preparationThread () { // 接続を待ち、接続処理をする
-#endif /* _WIN32 */
 		sockets[0] = new Sock(portnum);
 		CurrentConnection = 1;
 		while (!terminated) {
@@ -69,11 +70,7 @@ namespace server {
 				++CurrentConnection;
 			}
 			if (CurrentConnection >= NumberOfPlayers) break;
-#ifdef _WIN32
-			Sleep(50); // Yield
-#else /* _WIN32 */
-			usleep(50000); // Yield
-#endif /* _WIN32 */
+			threadSleep(50); // Yield
 		}
 		delete sockets[0]; sockets[0] = nullptr; // 待機用のソケットを閉じる
 		send(protocol::Server_StartGame_Signature);
@@ -82,32 +79,16 @@ namespace server {
 		for (unsigned i = 0; i < RULE_LINES; ++i)
 			sendstr(CodeConv::EnsureTStr(ruleConf[i])); // ルールを送信
 		finished = true;
-#ifdef _WIN32
-		return S_OK;
-#else /* _WIN32 */
 		return 0;
-#endif /* _WIN32 */
 	}
 
 	// ---------------------------------------------------------------------
 
-#ifdef _WIN32
-	DWORD WINAPI starter::initiate (LPVOID param) { // CreateThread()に渡す引数用
-		return ((starter*)param)->preparationThread();
+	void starter::initiate (starter* inst) { // CreateThread()に渡す引数用
+		inst->preparationThread();
 	}
-#else /* _WIN32 */
-	void* starter::initiate (void* param) { // CreateThread()に渡す引数用
-		((starter*)param)->preparationThread();
-		return nullptr;
-	}
-#endif /* _WIN32 */
 	void starter::startThread () { // スレッドを開始する
-#ifdef _WIN32
-		CreateThread(nullptr, 0, initiate, (LPVOID)this, 0, nullptr);
-#else /* _WIN32 */
-		pthread_create(&myThread, nullptr, initiate, this);
-		pthread_detach(myThread);
-#endif /* _WIN32 */
+		myThread = THREADLIB::thread(initiate, this);
 	}
 
 	void starter::terminate () { // すぐに開始

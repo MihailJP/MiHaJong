@@ -207,7 +207,8 @@ void GameTableScreen::checkTimeout() {
 void GameTableScreen::Render() {
 	cls();
 	RenderTable();
-	subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS, MUTEXLIB::try_to_lock);
+	if (lock.owns_lock()) {
 #ifndef _WIN32
 		if (reconstructFlag) {
 			tileTipReconst->reconstruct();
@@ -216,164 +217,165 @@ void GameTableScreen::Render() {
 #endif /*_WIN32*/
 		checkTimeout();
 		mySubScene->Render();
-	});
+
+		lock.unlock();
+	}
 	RenderSideBar();
 }
 
 void GameTableScreen::SetSubscene(unsigned int scene_ID) {
-	subSceneCS.syncDo<void>([this, scene_ID]() -> void {
-		buttonReconst->ChangeButtonSet(GameTableScreen::ButtonReconst::btnSetNormal);
-		tehaiReconst->enable();
-		tileSelectMode = 0;
-		delete mySubScene; tehaiReconst->setTileCursor();
-		tileTipReconst->reconstruct();
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS);
+	buttonReconst->ChangeButtonSet(GameTableScreen::ButtonReconst::btnSetNormal);
+	tehaiReconst->enable();
+	tileSelectMode = 0;
+	delete mySubScene; tehaiReconst->setTileCursor();
+	tileTipReconst->reconstruct();
 #ifndef _WIN32
-		reconstructFlag = true;
+	reconstructFlag = true;
 #endif /*_WIN32*/
-		ui::UIEvent->reset(); ui::cancellableWait->reset();
-		switch (static_cast<TableSubsceneID>(scene_ID)) {
-		case tblSubsceneBeginning:
-			mySubScene = new TableSubsceneBeginning(caller->getDevice());
-			break;
-		case tblSubsceneHonba:
-			mySubScene = new TableSubsceneTitlingHonba(caller->getDevice());
-			break;
-		case tblSubsceneRyuukyoku:
-			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("流局"));
-			break;
-		case tblSubsceneSifeng:
-			mySubScene = new TableSubsceneMsg(caller->getDevice(),
-				(GameStatus::gameStat()->gameType & AllSanma) ? _T("三風連打") : _T("四風連打"));
-			break;
-		case tblSubsceneTripleRon:
-			mySubScene = new TableSubsceneMsg(caller->getDevice(),
-				(GameStatus::gameStat()->gameType & AllSanma) ? _T("二家和") : _T("三家和"));
-			break;
-		case tblSubsceneSikang:
-			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("四開槓"));
-			break;
-		case tblSubsceneFourRiichi:
-			mySubScene = new TableSubsceneMsg(caller->getDevice(),
-				(GameStatus::gameStat()->gameType & AllSanma) ? _T("三家立直") : _T("四家立直"));
-			break;
-		case tblSubsceneChonbo:
-			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("錯和"));
-			break;
-		case tblSubsceneAlice:
-			mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("アリス判定"));
-			break;
-		case tblSubsceneCall:
-			mySubScene = new TableSubsceneCall(caller->getDevice());
-			break;
-		case tblSubsceneCallFade:
-			mySubScene = new TableSubsceneCallFade(caller->getDevice());
-			break;
-		case tblSubsceneCallCut:
-			mySubScene = new TableSubsceneCallCut(caller->getDevice());
-			break;
-		case tblSubsceneCallChankanPre:
-			mySubScene = new TableSubsceneCallChankanPre(caller->getDevice());
-			break;
-		case tblSubsceneCallChankan:
-			mySubScene = new TableSubsceneCallChankanRon(caller->getDevice());
-			break;
-		case tblSubsceneCallVal:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice());
-			break;
-		case tblSubsceneCallValNotenBappu:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("不聴罰符"));
-			break;
-		case tblSubsceneCallValAgariten:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("和了点"));
-			break;
-		case tblSubsceneCallValTsumibou:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("積棒精算"));
-			break;
-		case tblSubsceneCallValChip:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("祝儀精算"));
-			break;
-		case tblSubsceneCallValKyoutaku:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("供託精算"));
-			break;
-		case tblSubsceneCallValChonboBappu:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("錯和罰符"));
-			break;
-		case tblSubsceneCallValNagashiMangan:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("幺九振切"));
-			break;
-		case tblSubsceneCallValDobon:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("飛び罰符"));
-			break;
-		case tblSubsceneCallValKitamakura:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("北枕罰符"));
-			break;
-		case tblSubsceneCallValYakuman:
-			mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("役満祝儀"));
-			break;
-		case tblSubsceneChkTenpai:
-			mySubScene = new TableSubsceneCheckTenpai(caller->getDevice());
-			break;
-		case tblSubscenePlayerDahai:
-			mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
-			(void)GameStatus::retrGameStat();
-			// カーソルとボタンの設定
-			tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
-			while (GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].Hand[tehaiReconst->getTileCursor()].tile == NoTile)
-				tehaiReconst->decrTileCursor(); // 鳴いた直後の時のカーソル初期位置
-			buttonReconst->btnSetForDahai();
-			tehaiReconst->enable();
-			if (GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag)
-				for (int i = 0; i < (NumOfTilesInHand - 1); ++i)
-					tehaiReconst->disable(i);
-			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
-			// リーチ後オートツモ切り
-			if ((GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag) &&
-				buttonReconst->areEnabled().none())
-				ui::UIEvent->set(NumOfTilesInHand - 1);
-			else if (checkBoxes[ChkBoxAutoDiscard]->isChecked() && // 自動ツモ切り
-				buttonReconst->areEnabled().none())
-				ui::UIEvent->set(NumOfTilesInHand - 1);
-			else if ((buttonReconst->isEnabled(buttonReconst->btnTsumo)) &&
-				(checkBoxes[ChkBoxAutoAgari]->isChecked())) // オート和了
-				CallTsumoAgari();
-			else // 自摸番が来たら音を鳴らす
-				sound::Play(sound::IDs::sndBell);
-			tileTipReconst->reconstruct();
-			break;
-		case tblSubscenePlayerNaki:
-			mySubScene = new TableSubscenePlayerNaki(caller->getDevice());
-			goto setNakiButton;
-		case tblSubscenePlayerChankan:
-			mySubScene = new TableSubscenePlayerNakiChankan(caller->getDevice());
-			goto setNakiButton;
-		setNakiButton:
-			// カーソルとボタンの設定
-			buttonReconst->btnSetForNaki();
-			buttonReconst->setCursor(buttonReconst->isEnabled(GameTableScreen::ButtonReconst::btnRon) ? GameTableScreen::ButtonReconst::btnRon : GameTableScreen::ButtonReconst::btnPass);
-			buttonReconst->reconstruct();
-			if (buttonReconst->areEnabled().none()) // 該当する牌がないならスルー
-				ui::UIEvent->set(naki::nakiNone);
-			else if ((!(buttonReconst->isEnabled(buttonReconst->btnRon))) && /* ButtonReconst::btnRon だと何故かエラーになる */
-				(checkBoxes[ChkBoxAutoPass]->isChecked())) // オートパス
-				ui::UIEvent->set(naki::nakiNone);
-			else if ((buttonReconst->isEnabled(buttonReconst->btnRon)) &&
-				(checkBoxes[ChkBoxAutoAgari]->isChecked())) // オート和了
-				ui::UIEvent->set(naki::nakiRon);
-			else // 音を鳴らす
-				sound::Play(sound::IDs::sndSignal);
-			tileTipReconst->reconstruct();
-			break;
-		case tblSubsceneAgari:
-			mySubScene = new TableSubsceneAgariScreen(caller->getDevice());
-			break;
-		case tblSubsceneAgariUradora:
-			mySubScene = new TableSubsceneAgariScreenUradora(caller->getDevice());
-			break;
-		default:
-			mySubScene = new TableSubsceneNormal(caller->getDevice());
-			break;
-		}
-	});
+	ui::UIEvent->reset(); ui::cancellableWait->reset();
+	switch (static_cast<TableSubsceneID>(scene_ID)) {
+	case tblSubsceneBeginning:
+		mySubScene = new TableSubsceneBeginning(caller->getDevice());
+		break;
+	case tblSubsceneHonba:
+		mySubScene = new TableSubsceneTitlingHonba(caller->getDevice());
+		break;
+	case tblSubsceneRyuukyoku:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("流局"));
+		break;
+	case tblSubsceneSifeng:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(),
+			(GameStatus::gameStat()->gameType & AllSanma) ? _T("三風連打") : _T("四風連打"));
+		break;
+	case tblSubsceneTripleRon:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(),
+			(GameStatus::gameStat()->gameType & AllSanma) ? _T("二家和") : _T("三家和"));
+		break;
+	case tblSubsceneSikang:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("四開槓"));
+		break;
+	case tblSubsceneFourRiichi:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(),
+			(GameStatus::gameStat()->gameType & AllSanma) ? _T("三家立直") : _T("四家立直"));
+		break;
+	case tblSubsceneChonbo:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("錯和"));
+		break;
+	case tblSubsceneAlice:
+		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("アリス判定"));
+		break;
+	case tblSubsceneCall:
+		mySubScene = new TableSubsceneCall(caller->getDevice());
+		break;
+	case tblSubsceneCallFade:
+		mySubScene = new TableSubsceneCallFade(caller->getDevice());
+		break;
+	case tblSubsceneCallCut:
+		mySubScene = new TableSubsceneCallCut(caller->getDevice());
+		break;
+	case tblSubsceneCallChankanPre:
+		mySubScene = new TableSubsceneCallChankanPre(caller->getDevice());
+		break;
+	case tblSubsceneCallChankan:
+		mySubScene = new TableSubsceneCallChankanRon(caller->getDevice());
+		break;
+	case tblSubsceneCallVal:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice());
+		break;
+	case tblSubsceneCallValNotenBappu:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("不聴罰符"));
+		break;
+	case tblSubsceneCallValAgariten:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("和了点"));
+		break;
+	case tblSubsceneCallValTsumibou:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("積棒精算"));
+		break;
+	case tblSubsceneCallValChip:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("祝儀精算"));
+		break;
+	case tblSubsceneCallValKyoutaku:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("供託精算"));
+		break;
+	case tblSubsceneCallValChonboBappu:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("錯和罰符"));
+		break;
+	case tblSubsceneCallValNagashiMangan:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("幺九振切"));
+		break;
+	case tblSubsceneCallValDobon:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("飛び罰符"));
+		break;
+	case tblSubsceneCallValKitamakura:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("北枕罰符"));
+		break;
+	case tblSubsceneCallValYakuman:
+		mySubScene = new TableSubsceneCallValue(caller->getDevice(), _T("役満祝儀"));
+		break;
+	case tblSubsceneChkTenpai:
+		mySubScene = new TableSubsceneCheckTenpai(caller->getDevice());
+		break;
+	case tblSubscenePlayerDahai:
+		mySubScene = new TableSubscenePlayerDahai(caller->getDevice());
+		(void)GameStatus::retrGameStat();
+		// カーソルとボタンの設定
+		tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
+		while (GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].Hand[tehaiReconst->getTileCursor()].tile == NoTile)
+			tehaiReconst->decrTileCursor(); // 鳴いた直後の時のカーソル初期位置
+		buttonReconst->btnSetForDahai();
+		tehaiReconst->enable();
+		if (GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag)
+			for (int i = 0; i < (NumOfTilesInHand - 1); ++i)
+				tehaiReconst->disable(i);
+		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+		// リーチ後オートツモ切り
+		if ((GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].RichiFlag.RichiFlag) &&
+			buttonReconst->areEnabled().none())
+			ui::UIEvent->set(NumOfTilesInHand - 1);
+		else if (checkBoxes[ChkBoxAutoDiscard]->isChecked() && // 自動ツモ切り
+			buttonReconst->areEnabled().none())
+			ui::UIEvent->set(NumOfTilesInHand - 1);
+		else if ((buttonReconst->isEnabled(buttonReconst->btnTsumo)) &&
+			(checkBoxes[ChkBoxAutoAgari]->isChecked())) // オート和了
+			CallTsumoAgari();
+		else // 自摸番が来たら音を鳴らす
+			sound::Play(sound::IDs::sndBell);
+		tileTipReconst->reconstruct();
+		break;
+	case tblSubscenePlayerNaki:
+		mySubScene = new TableSubscenePlayerNaki(caller->getDevice());
+		goto setNakiButton;
+	case tblSubscenePlayerChankan:
+		mySubScene = new TableSubscenePlayerNakiChankan(caller->getDevice());
+		goto setNakiButton;
+	setNakiButton:
+		// カーソルとボタンの設定
+		buttonReconst->btnSetForNaki();
+		buttonReconst->setCursor(buttonReconst->isEnabled(GameTableScreen::ButtonReconst::btnRon) ? GameTableScreen::ButtonReconst::btnRon : GameTableScreen::ButtonReconst::btnPass);
+		buttonReconst->reconstruct();
+		if (buttonReconst->areEnabled().none()) // 該当する牌がないならスルー
+			ui::UIEvent->set(naki::nakiNone);
+		else if ((!(buttonReconst->isEnabled(buttonReconst->btnRon))) && /* ButtonReconst::btnRon だと何故かエラーになる */
+			(checkBoxes[ChkBoxAutoPass]->isChecked())) // オートパス
+			ui::UIEvent->set(naki::nakiNone);
+		else if ((buttonReconst->isEnabled(buttonReconst->btnRon)) &&
+			(checkBoxes[ChkBoxAutoAgari]->isChecked())) // オート和了
+			ui::UIEvent->set(naki::nakiRon);
+		else // 音を鳴らす
+			sound::Play(sound::IDs::sndSignal);
+		tileTipReconst->reconstruct();
+		break;
+	case tblSubsceneAgari:
+		mySubScene = new TableSubsceneAgariScreen(caller->getDevice());
+		break;
+	case tblSubsceneAgariUradora:
+		mySubScene = new TableSubsceneAgariScreenUradora(caller->getDevice());
+		break;
+	default:
+		mySubScene = new TableSubsceneNormal(caller->getDevice());
+		break;
+	}
 }
 
 // -------------------------------------------------------------------------
@@ -523,10 +525,11 @@ void GameTableScreen::KeyboardInput(LPDIDEVICEOBJECTDATA od) {
 	case DIK_BACK:       directTileCursor(13); break;
 	/* 決定キー */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
-		if (keyDown)
-			subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
+		if (keyDown) {
+			MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS, MUTEXLIB::try_to_lock);
+			if (lock.owns_lock())
 				mySubScene->skipEvent();
-			});
+		}
 		if (keyDown && (tehaiReconst->isCursorEnabled()))
 			FinishTileChoice();
 		else if (keyDown && (buttonReconst->isCursorEnabled()))
@@ -594,9 +597,10 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 	case ButtonPress: // マウスクリック
 		if (od->xbutton.button == Button1) {
 #endif /*_WIN32*/
-			subSceneCS.trySyncDo<void>(nullptr, [this]() -> void {
-				mySubScene->skipEvent();
-			});
+			{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS, MUTEXLIB::try_to_lock);
+				if (lock.owns_lock())
+					mySubScene->skipEvent();
+			}
 		if ((!chatInput->is_Active()) && (isValidTile)
 #ifdef _WIN32
 			&& (od->dwData)

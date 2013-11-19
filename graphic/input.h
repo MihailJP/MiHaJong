@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef _WIN32
 #include <windows.h>
@@ -40,14 +40,13 @@ public:
 };
 class Joystick : public InputDevice {
 private:
-	static MHJMutex myMutex;
+	static MUTEXLIB::recursive_mutex myMutex;
 	static Joystick* currentInstance;
 	static LPDIRECTINPUT8 currentInterface;
 	HWND myHWnd;
 private:
 	static BOOL CALLBACK enumerationCallback(const DIDEVICEINSTANCE *pdidInstance, LPVOID pContext);
 	static void init_main();
-	static void init_finally();
 public:
 	Joystick(LPDIRECTINPUT8 inputInterface, HWND hwnd);
 	Joystick(const Joystick&) = delete; // Delete unexpected copy constructor

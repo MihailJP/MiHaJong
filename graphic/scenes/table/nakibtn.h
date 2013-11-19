@@ -66,7 +66,7 @@ public:
 	int decCursor();
 private: // 再構築・表示処理
 	void reconstruct(ButtonID buttonID);
-	MHJMutex reconstructionCS;
+	MUTEXLIB::recursive_mutex reconstructionCS;
 public:
 	void btnSetForDahai();
 	void btnSetForNaki();

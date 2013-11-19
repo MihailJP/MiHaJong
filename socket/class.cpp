@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #endif /* _WIN32 */
+#include "../common/chrono.h"
+#include "../common/sleep.h"
 
 uint32_t mihajong_socket::Sock::addr2var(const std::string& address) { // アドレスを取得
 	uint32_t addr = inet_addr(address.c_str()); // まずは xxx.xxx.xxx.xxx 形式であると仮定する
@@ -133,11 +135,7 @@ void mihajong_socket::Sock::wait_until_connected () { // 文字通りのこと�
 		o << _T("接続待機 ポート [") << portnum << _T("]");
 		info(o.str().c_str());
 	}
-#ifdef _WIN32
-	while (!connected()) Sleep(50);
-#else /* _WIN32 */
-	while (!connected()) usleep(50000);
-#endif /* _WIN32 */
+	while (!connected()) threadSleep(50);
 	{
 		CodeConv::tostringstream o;
 		o << _T("接続待機完了 ポート [") << portnum << _T("]");
@@ -174,11 +172,7 @@ unsigned char mihajong_socket::Sock::syncgetc () { // 読み込み(同期)
 			byte = getc(); fini = true;
 		}
 		catch (queue_empty&) {
-#ifdef _WIN32
-			Sleep(50); // Yield and try again
-#else /* _WIN32 */
-			usleep(50000); // Yield and try again
-#endif /* _WIN32 */
+			threadSleep(50); // Yield and try again
 		}
 	}
 	{
@@ -271,18 +265,12 @@ mihajong_socket::Sock::network_thread::network_thread(Sock* caller) {
 }
 
 mihajong_socket::Sock::network_thread::~network_thread() {
+	if (myThread.joinable()) myThread.join();
 }
 
-#ifdef _WIN32
-DWORD WINAPI mihajong_socket::Sock::network_thread::thread(LPVOID lp) { // スレッドを起動するための処理
-	return ((client_thread*)lp)->myThreadFunc();
+void mihajong_socket::Sock::network_thread::thread(network_thread* inst) { // スレッドを起動するための処理
+	inst->myThreadFunc();
 }
-#else /* _WIN32 */
-void* mihajong_socket::Sock::network_thread::thread(void* lp) { // スレッドを起動するための処理
-	((client_thread*)lp)->myThreadFunc();
-	return nullptr;
-}
-#endif /* _WIN32 */
 
 void mihajong_socket::Sock::network_thread::chkError () { // エラーをチェックし、もしエラーだったら例外を投げる
 	CodeConv::tostringstream o;
@@ -322,7 +310,7 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 #endif /* _WIN32 */
 		CodeConv::tostringstream o;
 		o << _T("データ受信 ポート [") << myCaller->portnum << _T("] ストリーム [");
-		myRecvQueueCS.syncDo<void>([this, recvsz, &buf, &o]() -> void { // 受信用ミューテックスを取得
+		{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myRecvQueueCS); // 受信用ミューテックスを取得
 			unsigned count = 0;
 			for (unsigned int i = 0; i < recvsz; ++i) {
 				myMailBox.push(buf[i]); // キューに追加
@@ -331,7 +319,7 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 			}
 			o << _T("] サイズ [") << std::dec << recvsz << _T("]");
 			if (recvsz) trace(o.str().c_str());
-		}); // 受信用ミューテックスを解放
+		} // 受信用ミューテックスを解放
 		if (recvsz == 0) {receive_ended = true;} // 受信終了？
 	} else { // 受信できない時
 #ifdef _WIN32
@@ -367,7 +355,7 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 	{
 		CodeConv::tostringstream o;
 		o << _T("データ送信 ポート [") << myCaller->portnum << _T("] ストリーム [");
-		mySendQueueCS.syncDo<void>([this, &sendsz, &buf, &o]() -> void { // 送信用ミューテックスを取得
+		{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(mySendQueueCS);  // 送信用ミューテックスを取得
 			while (!mySendBox.empty()) {
 				buf[sendsz++] = mySendBox.front(); mySendBox.pop(); // キューから取り出し
 				if (sendsz > 1) o << _T(" ");
@@ -376,7 +364,7 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 			o << _T("] サイズ [") << std::dec << sendsz << _T("]");
 			if (sendsz) trace(o.str().c_str());
 			//if (receiver_closed) send_ended = true; // 受信ポートが閉じられていたら終了処理へ
-		}); // 送信用ミューテックスを解放
+		} // 送信用ミューテックスを解放
 	}
 #ifdef _WIN32
 	buffer.len = sendsz; // 送信サイズ
@@ -403,11 +391,10 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 	return 0;
 }
 
+int mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの処理
 #ifdef _WIN32
-DWORD WINAPI mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの処理
 	u_long arg = 1; ioctlsocket(*mySock, FIONBIO, &arg); // non-blocking モードに設定
 #else /* _WIN32 */
-int mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの処理
 	int socketFlag = fcntl(*listenerSock, F_GETFL, 0);
 	fcntl(*listenerSock, F_SETFL, socketFlag | O_NONBLOCK); // non-blocking モードに設定
 #endif /* _WIN32 */
@@ -439,34 +426,26 @@ int mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの�
 #endif /* _WIN32 */
 			sender_closed = true; send_ended = false;
 		}
-#ifdef _WIN32
-		Sleep(20);
-#else /* _WIN32 */
-		usleep(20000);
-#endif /* _WIN32 */
+		threadSleep(20);
 	}
 	{CodeConv::tostringstream o; o << _T("送受信スレッドループの終了 ポート[") << myCaller->portnum << _T("]"); debug(o.str().c_str());}
 	finished = true;
-#ifdef _WIN32
-	return S_OK;
-#else /* _WIN32 */
 	return 0;
-#endif /* _WIN32 */
 }
 
 unsigned char mihajong_socket::Sock::network_thread::read () { // 1バイト読み込み
 	unsigned char byte; bool empty = false;
-	myRecvQueueCS.syncDo<void>([this, &byte, &empty]() -> void { // 受信用ミューテックスを取得
+	{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myRecvQueueCS); // 受信用ミューテックスを取得
 		if (myMailBox.empty()) empty = true; // キューが空の場合
 		else {byte = myMailBox.front(); myMailBox.pop();} // 空でなければ取り出す
-	}); // 受信用ミューテックスを解放
+	} // 受信用ミューテックスを解放
 	if (empty) throw queue_empty(); // 空だったら例外
 	else return byte; // そうでなければ取り出した値を返す
 }
 
 CodeConv::tstring mihajong_socket::Sock::network_thread::readline () { // 1行読み込み
 	std::string line = ""; bool nwl_not_found = true;
-	myRecvQueueCS.syncDo<void>([this, &line, &nwl_not_found]() -> void { // 受信用ミューテックスを取得
+	{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myRecvQueueCS); // 受信用ミューテックスを取得
 		auto tmpMailBox = myMailBox; // キューを作業用コピー
 		while (!tmpMailBox.empty()) {
 			unsigned char tmpchr[sizeof(int)] = {0,};
@@ -478,15 +457,15 @@ CodeConv::tstring mihajong_socket::Sock::network_thread::readline () { // 1行�
 			}
 		}
 		if (!nwl_not_found) myMailBox = tmpMailBox; // キューをコミット
-	}); // 受信用ミューテックスを解放
+	} // 受信用ミューテックスを解放
 	if (nwl_not_found) throw queue_empty(); // 空だったら例外
 	else return CodeConv::DecodeStr(line); // そうでなければ結果を返す
 }
 
 void mihajong_socket::Sock::network_thread::write (unsigned char byte) { // 1バイト書き込み
-	mySendQueueCS.syncDo<void>([this, byte]() -> void { // 送信用ミューテックスを取得
-		mySendBox.push(byte); // キューに追加
-	}); // 送信用ミューテックスを解放
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(mySendQueueCS); // 送信用ミューテックスを取得
+	mySendBox.push(byte); // キューに追加
+	// 送信用ミューテックスを解放
 }
 
 bool mihajong_socket::Sock::network_thread::isConnected() { // 接続済かを返す関数
@@ -507,17 +486,13 @@ void mihajong_socket::Sock::network_thread::wait_until_sent() { // 送信キュ�
 		debug(o.str().c_str());
 	}
 	while (true) { // 送信が完了するまで待つ
-		bool flag = mySendQueueCS.syncDo<bool>([this]() { // 送信用ミューテックスを取得
-			return mySendBox.empty(); // 終了したかどうかのフラグ
-		}); // 送信用ミューテックスを解放
+		MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(mySendQueueCS); // 送信用ミューテックスを取得
+		bool flag = mySendBox.empty(); // 終了したかどうかのフラグ
+		lock.unlock(); // 送信用ミューテックスを解放
 		if (flag) { // 送るべきデータをすべて送り終えたら
 			send_ended = true; break; // フラグを立てて、ループを抜ける
 		}
-#ifdef _WIN32
-		Sleep(500);
-#else /* _WIN32 */
-		usleep(500000);
-#endif /* _WIN32 */
+		threadSleep(500);
 	}
 	{
 		CodeConv::tostringstream o; o << _T("ポート [") << myCaller->portnum << _T("] の送信は終わったんじゃないかな？");
@@ -529,11 +504,7 @@ void mihajong_socket::Sock::network_thread::terminate () { // 切断する
 	terminated = true; // フラグを立てる
 	wait_until_sent(); // 送信が完了するまで待つ
 	while ((!finished) && (connected || connecting))
-#ifdef _WIN32
-		Sleep(10); // スレッドが終了するまで待つ
-#else /* _WIN32 */
-		usleep(10000); // スレッドが終了するまで待つ
-#endif /* _WIN32 */
+		threadSleep(10); // スレッドが終了するまで待つ
 	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting =  false; // フラグの後始末
 	errtype = errNone; errcode = 0;
 }
@@ -541,20 +512,10 @@ void mihajong_socket::Sock::network_thread::terminate () { // 切断する
 // -------------------------------------------------------------------------
 
 void mihajong_socket::Sock::client_thread::startThread () { // スレッドを開始する
-#ifdef _WIN32
-	CreateThread(nullptr, 0, thread, (LPVOID)this, 0, nullptr);
-#else /* _WIN32 */
-	pthread_create(&myThread, nullptr, thread, this);
-	pthread_detach(myThread);
-#endif /* _WIN32 */
+	myThread = THREADLIB::thread(thread, this);
 }
 void mihajong_socket::Sock::server_thread::startThread () { // スレッドを開始する
-#ifdef _WIN32
-	CreateThread(nullptr, 0, thread, (LPVOID)this, 0, nullptr);
-#else /* _WIN32 */
-	pthread_create(&myThread, nullptr, thread, this);
-	pthread_detach(myThread);
-#endif /* _WIN32 */
+	myThread = THREADLIB::thread(thread, this);
 }
 
 
@@ -575,7 +536,6 @@ int mihajong_socket::Sock::client_thread::establishConnection() { // 接続を�
 				errtype = errConnection; return -((int)errtype);
 			}
 		} else break;
-		Sleep(50);
 #else /* _WIN32 */
 		if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == -1) { // 接続
 			errcode = errno;
@@ -589,8 +549,8 @@ int mihajong_socket::Sock::client_thread::establishConnection() { // 接続を�
 				errtype = errConnection; return -((int)errtype);
 			}
 		} else break;
-		usleep(50000);
 #endif /* _WIN32 */
+		threadSleep(50);
 		if (terminated) { // 中止の場合
 			info(_T("クライアント接続処理を中止しました"));
 			return 0;
@@ -641,11 +601,7 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // 接続を�
 			info(_T("サーバ待受処理を中止しました"));
 			return 0;
 		}
-#ifdef _WIN32
-		Sleep(50);
-#else /* _WIN32 */
-		usleep(50000);
-#endif /* _WIN32 */
+		threadSleep(50);
 	}
 #ifdef _WIN32
 	shutdown(*listenerSock, SD_BOTH);

@@ -17,7 +17,7 @@ using namespace std;
 static Logger* logger = NULL;
 static DWORD threadID;
 static HANDLE hThread;
-static MHJMutex cs;
+static MUTEXLIB::recursive_mutex cs;
 static HANDLE hEvent;
 static ostream* logStream = &cout;
 static ofstream logFile;
@@ -34,7 +34,8 @@ DWORD Logger::LoggerThread(LPVOID lp) { // ロギング実行用スレッド
 		while (1) {
 			/* キューからpopする */
 			LogMsg currentLogMsg = TraceMsg(_T(""));
-			bool finished = cs.syncDo<bool>([&currentLogMsg]() -> bool {
+			MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(cs);
+			bool finished = [&currentLogMsg]() -> bool {
 				if (msgQueue.empty()) { // キューが空だったら抜ける
 #ifdef SYNCMODE
 					SetEvent(hWriteFinishEvent);
@@ -44,7 +45,8 @@ DWORD Logger::LoggerThread(LPVOID lp) { // ロギング実行用スレッド
 				currentLogMsg = LogMsg(msgQueue[0]);
 				msgQueue.pop_front();
 				return false;
-			});
+			} ();
+			lock.unlock();
 			if (finished) break; // キューが空だったら抜ける
 			/* メッセージを書き出す */
 			*logStream << EncodeStr(currentLogMsg.toString()) << endl;
@@ -53,9 +55,9 @@ DWORD Logger::LoggerThread(LPVOID lp) { // ロギング実行用スレッド
 }
 
 void Logger::enqueue(LogMsg msgdat) { // キューにpushする
-	cs.syncDo<void>([&msgdat]() -> void {
-		msgQueue.push_back(LogMsg(msgdat));
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(cs);
+	msgQueue.push_back(LogMsg(msgdat));
+	lock.unlock();
 	SetEvent(hEvent);
 #ifdef SYNCMODE
 	WaitForSingleObject(hWriteFinishEvent, INFINITE);

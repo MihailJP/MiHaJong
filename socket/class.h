@@ -5,6 +5,8 @@
 #include <queue>
 #include <sstream>
 #include <iomanip>
+#include "../common/mutex.h"
+#include "../common/thread.h"
 #ifdef _WIN32
 #ifndef _WINSOCKAPI_
 #include <winsock2.h>
@@ -12,11 +14,9 @@
 #else /* _WIN32 */
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <pthread.h>
 #endif /* _WIN32 */
 #include "except.h"
 #include "logger.h"
-#include "../common/mutex.h"
 
 namespace mihajong_socket {
 
@@ -70,11 +70,7 @@ public:
 	network_thread(const network_thread&) = delete; // Delete unexpected copy constructor
 	network_thread& operator= (const network_thread&) = delete; // Delete unexpected assign operator
 	virtual ~network_thread();
-#ifdef _WIN32
-	static DWORD WINAPI thread(LPVOID lp); // スレッドを起動するための処理
-#else /* _WIN32 */
-	static void* thread(void* lp); // スレッドを起動するための処理
-#endif /* _WIN32 */
+	static void thread(network_thread* Instance); // スレッドを起動するための処理
 	virtual void startThread () = 0; // スレッドを開始する
 	bool isConnected (); // 接続済かを返す関数
 	void setaddr (const sockaddr_in destination); // 接続先を設定する
@@ -102,18 +98,14 @@ protected:
 	volatile bool finished; // 終了済みかのフラグ[ワーカースレッドから書き込み]
 	sockaddr_in myAddr; // アドレス情報[親スレッドから書き込み]
 	std::queue<unsigned char> myMailBox; // 受け取ったバイト列
-	MHJMutex myRecvQueueCS; // 受信バッファ用ミューテックス(クリティカルセクションに変更)
+	MUTEXLIB::recursive_mutex myRecvQueueCS; // 受信バッファ用ミューテックス(クリティカルセクションに変更)
 	std::queue<unsigned char> mySendBox; // 送る予定のバイト列
-	MHJMutex mySendQueueCS; // 送信バッファ用ミューテックス(クリティカルセクションに変更)
+	MUTEXLIB::recursive_mutex mySendQueueCS; // 送信バッファ用ミューテックス(クリティカルセクションに変更)
 	virtual int establishConnection () = 0; // 接続を確立する
 	int reader (); // 読み込み
 	int writer (); // 書き込み
-#ifdef _WIN32
-	DWORD WINAPI myThreadFunc(); // スレッドの処理
-#else /* _WIN32 */
-	pthread_t myThread;
+	THREADLIB::thread myThread;
 	int myThreadFunc(); // スレッドの処理
-#endif /* _WIN32 */
 	void wait_until_sent(); // 送信キューが空になるまで待つ
 };
 

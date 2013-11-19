@@ -180,8 +180,22 @@ AS_IF([test "x$with_oggvorbis" != xno],
 	 MH_OGG_VORBIS_HEADERS]
 )
 
+AX_BOOST_BASE
 AX_BOOST_REGEX
 AM_CONDITIONAL(WITH_BOOST_REGEX, test x$want_boost != xno)
+AX_BOOST_CHRONO
+AM_CONDITIONAL(WITH_BOOST_CHRONO, test x$want_boost != xno)
+AX_BOOST_DATE_TIME
+AM_CONDITIONAL(WITH_BOOST_DATE_TIME, test x$want_boost != xno)
+AX_BOOST_THREAD
+AM_CONDITIONAL(WITH_BOOST_THREAD, test x$want_boost != xno)
+AS_IF([test "x$want_boost" != xno],
+	[MH_TEST_SLEEP
+	 AM_CONDITIONAL(OLDER_BOOST_SLEEP, test x$sleep_func = xsleep)
+	 MH_TEST_WAIT
+	 AM_CONDITIONAL(OLDER_BOOST_WAIT, test x$wait_func = xtimed_wait)
+	 AC_CHECK_HEADER([boost/container/vector.hpp], [], AC_MSG_ERROR([boost/container/vector.hpp is unavailable]))]
+)
 
 AC_CONFIG_FILES([Makefile
                  astro/Makefile

@@ -1,9 +1,5 @@
 ﻿#include "aiscript.h"
 
-#ifndef _WIN32
-#include <unistd.h>
-#include <pthread.h>
-#endif /*_WIN32*/
 #include <lua.hpp>
 #include <sstream>
 #include "functbl.h"
@@ -163,173 +159,66 @@ void aiscript::GameStatToLuaTable(lua_State* const L, const GameTable* const gam
 
 // -------------------------------------------------------------------------
 
-aiscript::detDiscardThread* aiscript::discard_worker = nullptr;
-DiscardTileNum aiscript::discard;
-bool aiscript::finished = false;
 DiscardTileNum aiscript::compdahai(const GameTable* const gameStat) {
-	discard = DiscardTileNum(); finished = false;
-	discard_worker = new detDiscardThread();
-	discard_worker->setprm(gameStat, &discard, &finished);
-#ifdef _WIN32
-	DWORD threadID;
-	HANDLE hThread = CreateThread(nullptr, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
-	while (!finished) Sleep(1);
-#else /*_WIN32*/
-	pthread_t hThread; void* resultPtr;
-	pthread_create(&hThread, nullptr, detDiscardThread::execute, (void*)discard_worker);
-	pthread_join(hThread, &resultPtr);
-#endif /*_WIN32*/
-	delete discard_worker; discard_worker = nullptr;
-	return discard;
+	return determine_discard(gameStat);
 }
 DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
-	discard = DiscardTileNum(); finished = false;
-	discard_worker = new detDiscardThread();
-	discard_worker->setprm(gameStat, &discard, &finished);
-#ifdef _WIN32
-	DWORD threadID;
-	HANDLE hThread = CreateThread(nullptr, 0, detDiscardThread::execute, (LPVOID)discard_worker, 0, &threadID);
-	while (!finished) Sleep(0);
-#else /*_WIN32*/
-	pthread_t hThread; void* resultPtr;
-	pthread_create(&hThread, nullptr, detDiscardThread::execute, (void*)discard_worker);
-	pthread_join(hThread, &resultPtr);
-#endif /*_WIN32*/
-	delete discard_worker; discard_worker = nullptr;
+	DiscardTileNum discard = {DiscardTileNum::Normal, NumOfTilesInHand - 1};
+	THREADLIB::thread myThread(calcDiscard_threaded, std::ref(discard), gameStat);
+	myThread.join();
 	return discard;
 }
-aiscript::detDiscardThread::detDiscardThread() {
-	i_gameStat = nullptr; i_discard = nullptr; i_finished = nullptr;
-}
-aiscript::detDiscardThread::~detDiscardThread() {
-}
-void aiscript::detDiscardThread::setprm(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished) {
-	i_gameStat = gameStat; i_discard = discard; i_finished = finished;
-}
-#ifdef _WIN32
-DWORD WINAPI aiscript::detDiscardThread::execute(LPVOID param)
-#else /*_WIN32*/
-void* aiscript::detDiscardThread::execute(void* param)
-#endif /*_WIN32*/
-{
-	return ((detDiscardThread *)param)->calculate(
-		((detDiscardThread *)param)->i_gameStat,
-		((detDiscardThread *)param)->i_discard,
-		((detDiscardThread *)param)->i_finished);
-}
-#ifdef _WIN32
-DWORD WINAPI aiscript::detDiscardThread::calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished)
-#else /*_WIN32*/
-void* aiscript::detDiscardThread::calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished)
-#endif /*_WIN32*/
-{
+void aiscript::calcDiscard_threaded(DiscardTileNum& answer, const GameTable* gameStat) {
 	CodeConv::tostringstream o;
 	o << _T("AIの打牌処理に入ります。プレイヤー [") << (int)gameStat->CurrentPlayer.Active << _T("]");
 	info(o.str().c_str());
 	if (callFunc(gameStat, gameStat->CurrentPlayer.Active, fncname_discard, true)) {
-		*discard = DiscardThrough; *finished = true;
-#ifdef _WIN32
-		return S_OK;
-#else /*_WIN32*/
-		return nullptr;
-#endif /*_WIN32*/
+		answer = DiscardThrough;
+		return;
 	} else {
 		/* 実行完了 */
 		int flag;
-		discard->type = (DiscardTileNum::discardType)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
+		answer.type = (DiscardTileNum::discardType)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
 		if (!flag) {
 			warn(_T("1番目の返り値が数値ではありません。通常の打牌とみなします。"));
-			discard->type = DiscardTileNum::Normal; // fallback
-		} else if ((discard->type < DiscardTileNum::Normal) || (discard->type > DiscardTileNum::Disconnect)) {
+			answer.type = DiscardTileNum::Normal; // fallback
+		} else if ((answer.type < DiscardTileNum::Normal) || (answer.type > DiscardTileNum::Disconnect)) {
 			warn(_T("1番目の返り値が正しくありません。通常の打牌とみなします。"));
-			discard->type = DiscardTileNum::Normal; // fallback
+			answer.type = DiscardTileNum::Normal; // fallback
 		}
-		if ((discard->type == DiscardTileNum::Agari) || (discard->type == DiscardTileNum::Kyuushu) ||
-			(discard->type == DiscardTileNum::Disconnect)) { // 番号指定が不要な場合
-				discard->id = NumOfTilesInHand - 1; // 2番めの返り値は無視
+		if ((answer.type == DiscardTileNum::Agari) || (answer.type == DiscardTileNum::Kyuushu) ||
+			(answer.type == DiscardTileNum::Disconnect)) { // 番号指定が不要な場合
+				answer.id = NumOfTilesInHand - 1; // 2番めの返り値は無視
 		} else {
 			int i = lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -1, &flag);
 			if (!flag) {
 				warn(_T("2番目の返り値が数値ではありません。ツモ切りとみなします。"));
-				discard->id = NumOfTilesInHand - 1; // fallback
+				answer.id = NumOfTilesInHand - 1; // fallback
 			} else if ((i >= 1)&&(i <= NumOfTilesInHand)) {
-				discard->id = i - 1; // オリジンを1にする仕様……
+				answer.id = i - 1; // オリジンを1にする仕様……
 			} else if ((i <= -1)&&(i >= -((int)NumOfTilesInHand))) { // マイナスを指定した場合の処理
-				discard->id = NumOfTilesInHand + i;
+				answer.id = NumOfTilesInHand + i;
 			} else {
 				warn(_T("2番目の返り値が範囲外です。ツモ切りとみなします。"));
-				discard->id = NumOfTilesInHand - 1; // fallback
+				answer.id = NumOfTilesInHand - 1; // fallback
 			}
 		}
 		lua_pop(status[gameStat->CurrentPlayer.Active].state, 2);
-		*finished = true;
-#ifdef _WIN32
-		return S_OK;
-#else /*_WIN32*/
-		return nullptr;
-#endif /*_WIN32*/
+		return;
 	}
 }
 
 // -------------------------------------------------------------------------
 
-aiscript::detCallThread* aiscript::meld_worker = nullptr;
 void aiscript::compfuuro(GameTable* const gameStat) {
-	finished = false;
-	meld_worker = new detCallThread();
-	meld_worker->setprm(gameStat, &finished);
-#ifdef _WIN32
-	DWORD threadID;
-	HANDLE hThread = CreateThread(nullptr, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
-	while (!finished)
-		Sleep(1);
-#else /*_WIN32*/
-	pthread_t hThread; void* resultPtr;
-	pthread_create(&hThread, nullptr, detCallThread::execute, (void*)meld_worker);
-	pthread_join(hThread, &resultPtr);
-#endif /*_WIN32*/
-	delete meld_worker; meld_worker = nullptr;
+	determine_meld(gameStat);
 }
 void aiscript::determine_meld(GameTable* const gameStat) {
-	finished = false;
-	meld_worker = new detCallThread();
-	meld_worker->setprm(gameStat, &finished);
-#ifdef _WIN32
-	DWORD threadID;
-	HANDLE hThread = CreateThread(nullptr, 0, detCallThread::execute, (LPVOID)meld_worker, 0, &threadID);
-	while (!finished) Sleep(0);
-#else /*_WIN32*/
-	pthread_t hThread; void* resultPtr;
-	pthread_create(&hThread, nullptr, detCallThread::execute, (void*)meld_worker);
-	pthread_join(hThread, &resultPtr);
-#endif /*_WIN32*/
-	delete meld_worker; meld_worker = nullptr;
-}
-aiscript::detCallThread::detCallThread() {
-	i_gameStat = nullptr; i_finished = nullptr;
-}
-aiscript::detCallThread::~detCallThread() {
-}
-void aiscript::detCallThread::setprm(GameTable* const gameStat, bool* const finished) {
-	i_gameStat = gameStat; i_finished = finished;
-}
-#ifdef _WIN32
-DWORD WINAPI aiscript::detCallThread::execute(LPVOID param)
-#else /*_WIN32*/
-void* aiscript::detCallThread::execute(void* param)
-#endif /*_WIN32*/
-{
-	return ((detCallThread *)param)->calculate(
-		((detCallThread *)param)->i_gameStat,
-		((detCallThread *)param)->i_finished);
+	THREADLIB::thread myThread(calcCall_threaded, gameStat);
+	myThread.join();
 }
 
-#ifdef _WIN32
-DWORD WINAPI aiscript::detCallThread::calculate(GameTable* const gameStat, bool* const finished)
-#else /*_WIN32*/
-void* aiscript::detCallThread::calculate(GameTable* const gameStat, bool* const finished)
-#endif /*_WIN32*/
-{
+void aiscript::calcCall_threaded(GameTable* gameStat) {
 	CodeConv::tostringstream o;
 	o << _T("AIの副露判定に入ります。プレイヤー [") << (int)gameStat->CurrentPlayer.Passive << _T("]");
 	info(o.str().c_str());
@@ -338,12 +227,7 @@ void* aiscript::detCallThread::calculate(GameTable* const gameStat, bool* const 
 		gameStat->statOfPassive().DeclarationFlag.Kan =
 		gameStat->statOfPassive().DeclarationFlag.Ron = false;
 	if (callFunc(gameStat, gameStat->CurrentPlayer.Passive, fncname_call[gameStat->KangFlag.chankanFlag], (gameStat->KangFlag.chankanFlag == 0))) {
-		*finished = true;
-#ifdef _WIN32
-		return S_OK;
-#else /*_WIN32*/
-		return nullptr;
-#endif /*_WIN32*/
+		return;
 	} else {
 		/* 実行完了 */
 		int flag = 0;
@@ -363,11 +247,6 @@ void* aiscript::detCallThread::calculate(GameTable* const gameStat, bool* const 
 			}
 		}
 		lua_pop(status[gameStat->CurrentPlayer.Passive].state, 1);
-		*finished = true;
-#ifdef _WIN32
-		return S_OK;
-#else /*_WIN32*/
-		return nullptr;
-#endif /*_WIN32*/
+		return;
 	}
 }
