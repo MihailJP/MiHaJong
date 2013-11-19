@@ -96,15 +96,14 @@ Mouse::Position Mouse::pos() {
 
 // -------------------------------------------------------------------------
 
-MHJMutex Joystick::myMutex;
+MUTEXLIB::recursive_mutex Joystick::myMutex;
 Joystick* Joystick::currentInstance;
 LPDIRECTINPUT8 Joystick::currentInterface;
 
 BOOL CALLBACK Joystick::enumerationCallback(const DIDEVICEINSTANCE *pdidInstance, LPVOID pContext) {
-	return myMutex.syncDo<BOOL>([&]() {
-		return (FAILED(currentInterface->CreateDevice(pdidInstance->guidInstance, &(currentInstance->myInputDevice), nullptr)))
-			? DIENUM_CONTINUE : DIENUM_STOP;
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myMutex);
+	return (FAILED(currentInterface->CreateDevice(pdidInstance->guidInstance, &(currentInstance->myInputDevice), nullptr)))
+		? DIENUM_CONTINUE : DIENUM_STOP;
 }
 
 void Joystick::init_main() {
@@ -134,18 +133,14 @@ void Joystick::init_main() {
 		throw CodeConv::tstring(_T("SetProperty(DIPROP_RANGE)é∏îsÅIÅI"));
 	reinterpret_cast<Joystick*>(currentInstance)->myInputDevice->Acquire();
 }
-void Joystick::init_finally() {
-	myMutex.release();
-}
 Joystick::Joystick(LPDIRECTINPUT8 inputInterface, HWND hwnd) {
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myMutex);
 	myInputDevice = nullptr;
-	myMutex.acquire();
 	currentInstance = this;
 	currentInterface = inputInterface;
 	myHWnd = hwnd;
 
-	auto initFunc = DoFinally<void>(init_main, init_finally);
-	initFunc();
+	init_main();
 }
 
 Joystick::~Joystick() {

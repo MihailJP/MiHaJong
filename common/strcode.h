@@ -67,11 +67,11 @@ inline void setCP(unsigned int CodePage) {
 const unsigned CP_UTF8 = 65001u;
 const unsigned CP_ACP = 932u;
 
-inline void criticalSection(bool flag) {
-	static MHJMutex conversionMutex;
-	if (flag) conversionMutex.acquire();
-	else conversionMutex.release();
+inline MUTEXLIB::recursive_mutex& conversionMutex() {
+	static MUTEXLIB::recursive_mutex myMutex;
+	return myMutex;
 }
+
 #endif /* _WIN32 */
 
 inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
@@ -80,7 +80,7 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	wchar_t* buf = new wchar_t[bufsize];
 	MultiByteToWideChar(CodePage, 0, str.c_str(), -1, buf, bufsize);
 #else /* _WIN32 */
-	criticalSection(true);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(conversionMutex());
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
@@ -93,7 +93,6 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 		setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
 		delete[] srcBuf;
 		std::cerr << "Failed to convert into wide string" << std::endl;
-		criticalSection(false);
 		throw _T("ƒƒCƒh•¶Žš‚Ö‚Ì•ÏŠ·‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
 	}
 	wchar_t* buf = new wchar_t[bufsize + 1 /* Do not forget the trailing null */];
@@ -105,7 +104,6 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	std::wstring ans(buf); delete[] buf;
 #ifndef _WIN32
 	delete[] srcBuf;
-	criticalSection(false);
 #endif /* _WIN32 */
 	return ans;
 }
@@ -115,7 +113,7 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 	char* buf = new char[bufsize];
 	WideCharToMultiByte(CodePage, 0, str.c_str(), -1, buf, bufsize, nullptr, nullptr);
 #else /* _WIN32 */
-	criticalSection(true);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(conversionMutex());
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
@@ -173,7 +171,6 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 	delete[] buf;
 #else /* _WIN32 */
 	delete[] srcBuf;
-	criticalSection(false);
 #endif /* _WIN32 */
 	return ans;
 }

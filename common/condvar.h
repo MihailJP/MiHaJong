@@ -2,8 +2,8 @@
 
 #ifdef WITH_BOOST_THREAD
 #include <boost/thread.hpp>
-#define MUTEXLIB boost
+#define CONDVAR boost
 #else /*WITH_BOOST_THREAD*/
-#include <mutex>
-#define MUTEXLIB std
+#include <condition_variable>
+#define CONDVAR std
 #endif /*WITH_BOOST_THREAD*/

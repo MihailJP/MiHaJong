@@ -11,7 +11,6 @@
 #include "scenes/proto.h"
 #include "scenes/fps.h"
 #include "input.h"
-#include "../common/mutex.h"
 #include "directx.h"
 
 namespace mihajong_graphic {
@@ -39,7 +38,7 @@ private:
 	void inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f);
 	// Linuxでは別の箇所で入力イベントを処理するため不要
 #endif /*_WIN32*/
-	MHJMutex CS_SceneAccess; // シーンアクセスのクリティカルセクション
+	MUTEXLIB::recursive_mutex CS_SceneAccess; // シーンアクセスのクリティカルセクション
 public:
 #ifdef _WIN32
 	void inputProc(WPARAM wParam, LPARAM lParam);

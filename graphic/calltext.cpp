@@ -4,7 +4,7 @@
 namespace mihajong_graphic {
 
 namespace {
-	MHJMutex csMutex;
+	MUTEXLIB::recursive_mutex csMutex;
 }
 
 namespace calltext {
@@ -16,17 +16,15 @@ namespace {
 EXPORT CallType getCall(PlayerID playerID) {
 	if ((playerID < 0) || (playerID >= Players)) // 境界チェック
 		throw _T("playerIDの指定が正しくありません");
-	return csMutex.syncDo<CallType>([playerID]() {
-		return callStatus[playerID];
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(csMutex);
+	return callStatus[playerID];
 }
 
 EXPORT void setCall(PlayerID playerID, CallType callType) {
 	if ((playerID < 0) || (playerID >= Players)) // 境界チェック
 		throw _T("playerIDの指定が正しくありません");
-	csMutex.syncDo<void>([playerID, callType]() -> void {
-		callStatus[playerID] = callType;
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(csMutex);
+	callStatus[playerID] = callType;
 }
 
 }
@@ -39,18 +37,16 @@ namespace {
 EXPORT CallValue getVal(PlayerID playerID) {
 	if ((playerID < 0) || (playerID >= Players)) // 境界チェック
 		throw _T("playerIDの指定が正しくありません");
-	return csMutex.syncDo<CallValue>([playerID]() {
-		return callStatus[playerID];
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(csMutex);
+	return callStatus[playerID];
 }
 
 EXPORT void setVal(PlayerID playerID, signed short mantissa, unsigned short exponent) {
 	if ((playerID < 0) || (playerID >= Players)) // 境界チェック
 		throw _T("playerIDの指定が正しくありません");
-	csMutex.syncDo<void>([playerID, mantissa, exponent]() -> void {
-		callStatus[playerID].Mantissa = mantissa;
-		callStatus[playerID].Exponent = exponent;
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(csMutex);
+	callStatus[playerID].Mantissa = mantissa;
+	callStatus[playerID].Exponent = exponent;
 }
 
 }

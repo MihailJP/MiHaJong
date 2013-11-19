@@ -30,7 +30,7 @@ protected:
 	void reconstruct(unsigned int ID, bool rescanStr = true);
 	void deleteSprite();
 	void deleteSprite(unsigned int ID);
-	MHJMutex SpriteMutex;
+	MUTEXLIB::recursive_mutex SpriteMutex;
 public:
 	explicit ITextRenderer(DevicePtr device);
 	ITextRenderer(const ITextRenderer&) = delete; // Delete unexpected copy constructor

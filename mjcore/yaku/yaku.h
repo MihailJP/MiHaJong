@@ -12,7 +12,7 @@
 #include "../gametbl.h"
 #include "../tileutil.h"
 #include "../shanten.h"
-#include "../../common/mutex.h"
+#include "../../common/thread.h"
 
 class yaku::yakuCalculator {
 private:
@@ -75,11 +75,8 @@ private:
 #endif
 	typedef std::function<bool (const MENTSU_ANALYSIS* const)> YAKUFUNC;
 
-	class CalculatorThread; // 宣言だけ
 	struct CalculatorParam {
 		ParseMode pMode;
-		CalculatorThread* instance;
-		const GameTable* gameStat;
 		MENTSU_ANALYSIS analysis;
 		YAKUSTAT result;
 	};
@@ -206,33 +203,13 @@ private:
 
 	class CalculatorThread {
 	public:
-#ifdef _WIN32
-		static DWORD WINAPI calculator(LPVOID lpParam);
-#else /*_WIN32*/
-		static void* calculator(void* lpParam);
-#endif /*_WIN32*/
-		int numOfFinishedThreads(); // 終わったスレッドの数
-		static const int threadLimit = 4; // 同時に起動する最大のスレッド数
-		int numOfStartedThreads(); // 開始したスレッドの数
-		void sync(int threads); // スレッドを同期する
-		CalculatorThread(); // デフォルトコンストラクタ
-		CalculatorThread(const CalculatorThread&) = delete; // Delete unexpected copy constructor
-		CalculatorThread& operator= (const CalculatorThread&) = delete; // Delete unexpected assign operator
-		~CalculatorThread(); // デフォルトデストラクタ
+		static void calculator(YAKUSTAT* result, const ParseMode* pMode, const GameTable* gameStat, MENTSU_ANALYSIS* analysis);
+		CalculatorThread() = delete;
+		CalculatorThread(const CalculatorThread&) = delete;
+		CalculatorThread& operator= (const CalculatorThread&) = delete;
+		~CalculatorThread() = delete;
 	private:
-		void recordThreadStart();
-		void recordThreadFinish();
-		int finishedThreads;
-		MHJMutex cs;
-		int startedThreads;
 		static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
-#ifdef _WIN32
-		DWORD WINAPI calculate(
-#else /*_WIN32*/
-		void* calculate(
-#endif /*_WIN32*/
-			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
-			const ParseMode* const pMode, YAKUSTAT* const result);
 		static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result);
 		static void checkPostponedYaku(
 			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result,

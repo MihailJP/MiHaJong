@@ -13,7 +13,7 @@ class GameStatus {
 private:
 	class GStatModFlag {
 	public:
-		MHJMutex myCriticalSection;
+		MUTEXLIB::recursive_mutex myCriticalSection;
 		bool myModificationFlag;
 		GStatModFlag();
 		GStatModFlag(const GStatModFlag&) = delete; // Delete unexpected copy constructor

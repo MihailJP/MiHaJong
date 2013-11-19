@@ -18,6 +18,8 @@
 #include "ruletbl.h"
 #include "remote.h"
 #include "chat.h"
+#include "../common/chrono.h"
+#include "../common/sleep.h"
 
 /* 半荘の進行 */
 EndType doTableTurn(GameTable* const gameStat) {
@@ -45,27 +47,16 @@ EndType doTableTurn(GameTable* const gameStat) {
 	if (DiscardTileIndex.type == DiscardTileNum::Disconnect)
 		return Disconnect;
 	/* ウェイトを入れる */
-#ifdef _WIN32
-	Sleep(1);
-#else /*_WIN32*/
-	usleep(1000);
-#endif /*_WIN32*/
+	threadYield();
+	threadYield();
 	EndType RoundEndType = procdahai(gameStat, DiscardTileIndex);
 	if (RoundEndType != Continuing)
 		return RoundEndType;
-#ifdef _WIN32
-	Sleep(80);
-#else /*_WIN32*/
-	usleep(80000);
-#endif /*_WIN32*/
+	threadSleep(80);
 	/* 栄和の処理 */
 	RoundEndType = ronhuproc(gameStat); // 栄和の処理
 	if (RoundEndType != Continuing) return RoundEndType;
-#ifdef _WIN32
-	Sleep(1);
-#else /*_WIN32*/
-	usleep(1000);
-#endif /*_WIN32*/
+	threadYield();
 	/* 途中流局の判定 */
 	EndType round_abort_type = endround::checkroundabort(gameStat);
 	if (round_abort_type != Continuing) return round_abort_type;
@@ -73,11 +64,7 @@ EndType doTableTurn(GameTable* const gameStat) {
 	if (executeFuuro(gameStat, DiscardTileIndex))
 		return Continuing; /* 鳴きがあった場合、鳴いたプレーヤーに順番を移して戻る */
 	/* ウェイトを入れる */
-#ifdef _WIN32
-	Sleep(100);
-#else /*_WIN32*/
-	usleep(100000);
-#endif /*_WIN32*/
+	threadSleep(100);
 	/* 次のプレイヤーが牌を自摸る */
 	tsumoproc(gameStat);
 	// 打牌へ戻る

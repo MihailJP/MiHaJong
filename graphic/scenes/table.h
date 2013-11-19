@@ -30,7 +30,7 @@ protected:
 #endif /*_WIN32*/
 protected:
 	TableSubscene* mySubScene; // サブシーンオブジェクト
-	MHJMutex subSceneCS; // サブシーン切り替え用クリティカルセクション
+	MUTEXLIB::recursive_mutex subSceneCS; // サブシーン切り替え用クリティカルセクション
 	void SetSubscene(unsigned int scene_ID); // サブシーン切り替え
 protected: /**** 山牌 ****/
 	class YamahaiReconst;
