@@ -81,10 +81,10 @@ void mihajong_socket::Sock::listen (uint16_t port) { // ƒT[ƒo[ŠJn
 }
 
 void mihajong_socket::Sock::listen () { // ƒT[ƒo[ŠJn
-	threadPtr.server = new server_thread(this);
-	threadPtr.server->setaddr(addr);
-	threadPtr.server->setsock(&sock, &lsock);
-	threadPtr.server->startThread();
+	threadPtr = new server_thread(this);
+	threadPtr->setaddr(addr);
+	threadPtr->setsock(&sock, &lsock);
+	threadPtr->startThread();
 }
 
 void mihajong_socket::Sock::connect (const std::string& destination, uint16_t port) { // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±
@@ -113,21 +113,16 @@ void mihajong_socket::Sock::connect (const std::string& destination, uint16_t po
 }
 
 void mihajong_socket::Sock::connect () { // ƒNƒ‰ƒCƒAƒ“ƒgÄÚ‘±
-	threadPtr.client = new client_thread(this);
-	threadPtr.client->setaddr(addr);
-	threadPtr.client->setsock(&sock);
-	threadPtr.client->startThread();
+	threadPtr = new client_thread(this);
+	threadPtr->setaddr(addr);
+	threadPtr->setsock(&sock);
+	threadPtr->startThread();
 }
 
 bool mihajong_socket::Sock::connected () { // Ú‘±‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
-	if (isServer) {
-		threadPtr.server->chkError();
-		return threadPtr.server->isConnected();
-	} else {
-		threadPtr.client->chkError();
-		return threadPtr.client->isConnected();
-	}
-};
+	threadPtr->chkError();
+	return threadPtr->isConnected();
+}
 
 void mihajong_socket::Sock::wait_until_connected () { // •¶š’Ê‚è‚Ì‚±‚Æ‚ğ‚â‚é
 	{
@@ -144,13 +139,8 @@ void mihajong_socket::Sock::wait_until_connected () { // •¶š’Ê‚è‚Ì‚±‚Æ‚ğ‚â‚é
 };
 unsigned char mihajong_socket::Sock::getc () { // “Ç‚İ‚İ(”ñ“¯Šú)
 	unsigned char byte;
-	if (isServer) {
-		threadPtr.server->chkError();
-		byte = threadPtr.server->read();
-	} else {
-		threadPtr.client->chkError();
-		byte = threadPtr.client->read();
-	}
+	threadPtr->chkError();
+	byte = threadPtr->read();
 	{
 		CodeConv::tostringstream o;
 		o << _T("ƒoƒCƒgóM dequeue ƒ|[ƒg [") << portnum << _T("] ƒoƒCƒg [0x") <<
@@ -187,13 +177,8 @@ unsigned char mihajong_socket::Sock::syncgetc () { // “Ç‚İ‚İ(“¯Šú)
 CodeConv::tstring mihajong_socket::Sock::gets () { // NewLine‚Ü‚Å“Ç‚İ‚İ
 	//trace("•¶š—ñ‚ğNWL(0x0a)‚Ü‚Åæ“¾‚µ‚Ü‚·B");
 	CodeConv::tstring str;
-	if (isServer) {
-		threadPtr.server->chkError();
-		str = threadPtr.server->readline();
-	} else {
-		threadPtr.client->chkError();
-		str = threadPtr.client->readline();
-	}
+	threadPtr->chkError();
+	str = threadPtr->readline();
 	{
 		CodeConv::tostringstream o;
 		o << _T("•¶š—ñóMˆ— ƒ|[ƒg [") << portnum << _T("] ’·‚³ [") << str.length() << _T("] •¶š—ñ [") << str << _T("]");
@@ -209,13 +194,8 @@ void mihajong_socket::Sock::putc (unsigned char byte) { // ‘‚«‚İ
 			std::hex << std::setw(2) << std::setfill(_T('0')) << (unsigned int)byte << _T("]");
 		trace(o.str().c_str());
 	}
-	if (isServer) {
-		threadPtr.server->write(byte);
-		threadPtr.server->chkError();
-	} else {
-		threadPtr.client->write(byte);
-		threadPtr.client->chkError();
-	}
+	threadPtr->write(byte);
+	threadPtr->chkError();
 }
 
 void mihajong_socket::Sock::puts (const CodeConv::tstring& str) { // •¶š—ñ‘‚«‚İ
@@ -225,35 +205,20 @@ void mihajong_socket::Sock::puts (const CodeConv::tstring& str) { // •¶š—ñ‘‚«
 		trace(o.str().c_str());
 	}
 	std::string encoded_str(CodeConv::EncodeStr(str));
-	if (isServer) {
-		for (const auto& k : encoded_str)
-			threadPtr.server->write((unsigned char)k);
-		threadPtr.server->chkError();
-	} else {
-		for (const auto& k : encoded_str)
-			threadPtr.client->write((unsigned char)k);
-		threadPtr.client->chkError();
-	}
+	for (const auto& k : encoded_str)
+		threadPtr->write((unsigned char)k);
+	threadPtr->chkError();
 }
 
 void mihajong_socket::Sock::disconnect () { // Ú‘±‚ğØ‚é
-	if (isServer) {
-		threadPtr.server->terminate();
-	} else {
-		threadPtr.client->terminate();
-	}
+	threadPtr->terminate();
 #ifdef _WIN32
 	closesocket(sock);
 #else
 	close(sock);
 #endif
-	if (isServer) {
-		delete threadPtr.server;
-		threadPtr.server = nullptr;
-	} else {
-		delete threadPtr.client;
-		threadPtr.client = nullptr;
-	}
+	delete threadPtr;
+	threadPtr = nullptr;
 }
 
 // -------------------------------------------------------------------------
@@ -475,8 +440,9 @@ bool mihajong_socket::Sock::network_thread::isConnected() { // Ú‘±Ï‚©‚ğ•Ô‚·ŠÖ
 void mihajong_socket::Sock::network_thread::setaddr (const sockaddr_in destination) { // Ú‘±æ‚ğİ’è‚·‚é
 	myAddr = destination;
 }
-void mihajong_socket::Sock::network_thread::setsock (SocketDescriptor* const socket) { // ƒ\ƒPƒbƒg‚ğİ’è‚·‚é
+void mihajong_socket::Sock::network_thread::setsock (SocketDescriptor* const socket, SocketDescriptor* const lsocket) { // ƒ\ƒPƒbƒg‚ğİ’è‚·‚é
 	mySock = socket;
+	listenerSock = lsocket;
 }
 
 void mihajong_socket::Sock::network_thread::wait_until_sent() { // ‘—MƒLƒ…[‚ª‹ó‚É‚È‚é‚Ü‚Å‘Ò‚Â
@@ -613,8 +579,4 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // Ú‘±‚ğŠm—§‚
 	info(_T("ƒT[ƒo‘Òóˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½"));
 	connected = true; // Ú‘±Ï‚İƒtƒ‰ƒO‚ğ—§‚Ä‚é
 	return 0;
-}
-
-void mihajong_socket::Sock::server_thread::setsock (SocketDescriptor* const socket, SocketDescriptor* const lsocket) { // ƒ\ƒPƒbƒg‚ğİ’è‚·‚é
-	mySock = socket; listenerSock = lsocket;
 }
