@@ -81,10 +81,10 @@ void mihajong_socket::Sock::listen (uint16_t port) { // サーバー開始
 }
 
 void mihajong_socket::Sock::listen () { // サーバー開始
-	threadPtr.server = new server_thread(this);
-	threadPtr.server->setaddr(addr);
-	threadPtr.server->setsock(&sock, &lsock);
-	threadPtr.server->startThread();
+	threadPtr = new server_thread(this);
+	threadPtr->setaddr(addr);
+	threadPtr->setsock(&sock, &lsock);
+	threadPtr->startThread();
 }
 
 void mihajong_socket::Sock::connect (const std::string& destination, uint16_t port) { // クライアント接続
@@ -113,21 +113,16 @@ void mihajong_socket::Sock::connect (const std::string& destination, uint16_t po
 }
 
 void mihajong_socket::Sock::connect () { // クライアント再接続
-	threadPtr.client = new client_thread(this);
-	threadPtr.client->setaddr(addr);
-	threadPtr.client->setsock(&sock);
-	threadPtr.client->startThread();
+	threadPtr = new client_thread(this);
+	threadPtr->setaddr(addr);
+	threadPtr->setsock(&sock);
+	threadPtr->startThread();
 }
 
 bool mihajong_socket::Sock::connected () { // 接続されているかを確認
-	if (isServer) {
-		threadPtr.server->chkError();
-		return threadPtr.server->isConnected();
-	} else {
-		threadPtr.client->chkError();
-		return threadPtr.client->isConnected();
-	}
-};
+	threadPtr->chkError();
+	return threadPtr->isConnected();
+}
 
 void mihajong_socket::Sock::wait_until_connected () { // 文字通りのことをやる
 	{
@@ -144,13 +139,8 @@ void mihajong_socket::Sock::wait_until_connected () { // 文字通りのこと�
 };
 unsigned char mihajong_socket::Sock::getc () { // 読み込み(非同期)
 	unsigned char byte;
-	if (isServer) {
-		threadPtr.server->chkError();
-		byte = threadPtr.server->read();
-	} else {
-		threadPtr.client->chkError();
-		byte = threadPtr.client->read();
-	}
+	threadPtr->chkError();
+	byte = threadPtr->read();
 	{
 		CodeConv::tostringstream o;
 		o << _T("バイト受信 dequeue ポート [") << portnum << _T("] バイト [0x") <<
@@ -187,13 +177,8 @@ unsigned char mihajong_socket::Sock::syncgetc () { // 読み込み(同期)
 CodeConv::tstring mihajong_socket::Sock::gets () { // NewLineまで読み込み
 	//trace("文字列をNWL(0x0a)まで取得します。");
 	CodeConv::tstring str;
-	if (isServer) {
-		threadPtr.server->chkError();
-		str = threadPtr.server->readline();
-	} else {
-		threadPtr.client->chkError();
-		str = threadPtr.client->readline();
-	}
+	threadPtr->chkError();
+	str = threadPtr->readline();
 	{
 		CodeConv::tostringstream o;
 		o << _T("文字列受信処理 ポート [") << portnum << _T("] 長さ [") << str.length() << _T("] 文字列 [") << str << _T("]");
@@ -209,13 +194,8 @@ void mihajong_socket::Sock::putc (unsigned char byte) { // 書き込み
 			std::hex << std::setw(2) << std::setfill(_T('0')) << (unsigned int)byte << _T("]");
 		trace(o.str().c_str());
 	}
-	if (isServer) {
-		threadPtr.server->write(byte);
-		threadPtr.server->chkError();
-	} else {
-		threadPtr.client->write(byte);
-		threadPtr.client->chkError();
-	}
+	threadPtr->write(byte);
+	threadPtr->chkError();
 }
 
 void mihajong_socket::Sock::puts (const CodeConv::tstring& str) { // 文字列書き込み
@@ -225,35 +205,20 @@ void mihajong_socket::Sock::puts (const CodeConv::tstring& str) { // 文字列�
 		trace(o.str().c_str());
 	}
 	std::string encoded_str(CodeConv::EncodeStr(str));
-	if (isServer) {
-		for (const auto& k : encoded_str)
-			threadPtr.server->write((unsigned char)k);
-		threadPtr.server->chkError();
-	} else {
-		for (const auto& k : encoded_str)
-			threadPtr.client->write((unsigned char)k);
-		threadPtr.client->chkError();
-	}
+	for (const auto& k : encoded_str)
+		threadPtr->write((unsigned char)k);
+	threadPtr->chkError();
 }
 
 void mihajong_socket::Sock::disconnect () { // 接続を切る
-	if (isServer) {
-		threadPtr.server->terminate();
-	} else {
-		threadPtr.client->terminate();
-	}
+	threadPtr->terminate();
 #ifdef _WIN32
 	closesocket(sock);
 #else
 	close(sock);
 #endif
-	if (isServer) {
-		delete threadPtr.server;
-		threadPtr.server = nullptr;
-	} else {
-		delete threadPtr.client;
-		threadPtr.client = nullptr;
-	}
+	delete threadPtr;
+	threadPtr = nullptr;
 }
 
 // -------------------------------------------------------------------------
@@ -475,8 +440,9 @@ bool mihajong_socket::Sock::network_thread::isConnected() { // 接続済かを�
 void mihajong_socket::Sock::network_thread::setaddr (const sockaddr_in destination) { // 接続先を設定する
 	myAddr = destination;
 }
-void mihajong_socket::Sock::network_thread::setsock (SocketDescriptor* const socket) { // ソケットを設定する
+void mihajong_socket::Sock::network_thread::setsock (SocketDescriptor* const socket, SocketDescriptor* const lsocket) { // ソケットを設定する
 	mySock = socket;
+	listenerSock = lsocket;
 }
 
 void mihajong_socket::Sock::network_thread::wait_until_sent() { // 送信キューが空になるまで待つ
@@ -613,8 +579,4 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // 接続を�
 	info(_T("サーバ待受処理が完了しました"));
 	connected = true; // 接続済みフラグを立てる
 	return 0;
-}
-
-void mihajong_socket::Sock::server_thread::setsock (SocketDescriptor* const socket, SocketDescriptor* const lsocket) { // ソケットを設定する
-	mySock = socket; listenerSock = lsocket;
 }

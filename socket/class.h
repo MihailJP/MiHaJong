@@ -32,16 +32,11 @@ private:
 	class network_thread; // スレッド(スーパークラス)
 	class client_thread; // クライアントのスレッド
 	class server_thread; // サーバーのスレッド
-	union Thread { // スレッドオブジェクトのポインタ(共用体)
-	public:
-		client_thread* client;
-		server_thread* server;
-	};
 	static uint32_t addr2var(const std::string& address); // アドレスを取得
 	bool isServer;
 	sockaddr_in addr;
 	SocketDescriptor sock, lsock;
-	Thread threadPtr;
+	network_thread* threadPtr;
 	uint16_t portnum;
 public:
 	Sock () {} // ソケット初期化
@@ -74,7 +69,7 @@ public:
 	virtual void startThread () = 0; // スレッドを開始する
 	bool isConnected (); // 接続済かを返す関数
 	void setaddr (const sockaddr_in destination); // 接続先を設定する
-	void setsock (SocketDescriptor* const socket); // ソケットを設定する
+	void setsock (SocketDescriptor* const socket, SocketDescriptor* const lsocket = nullptr); // ソケットを設定する
 	void terminate (); // 切断する
 	void chkError (); // エラーをチェックし、もしエラーだったら例外を投げる
 	unsigned char read (); // 1バイト読み込み
@@ -116,7 +111,7 @@ public:
 	client_thread& operator= (const client_thread&) = delete; // Delete unexpected assign operator
 	void startThread(); // スレッドを開始する
 protected:
-	int establishConnection (); // 接続を確立する
+	int establishConnection () override; // 接続を確立する
 };
 
 class Sock::server_thread : public network_thread { // サーバーのスレッド
@@ -125,11 +120,8 @@ public:
 	server_thread(const server_thread&) = delete; // Delete unexpected copy constructor
 	server_thread& operator= (const server_thread&) = delete; // Delete unexpected assign operator
 	void startThread(); // スレッドを開始する
-	void setsock (SocketDescriptor* const socket, SocketDescriptor* const lsocket); // ソケットを設定する
 protected:
-	int establishConnection (); // 接続を確立する
-private:
-	void setsock (SocketDescriptor* const socket); // ソケットを設定する
+	int establishConnection () override; // 接続を確立する
 };
 
 }
