@@ -1,4 +1,4 @@
-#include "main.h"
+ï»¿#include "main.h"
 
 #include <tuple>
 #include "logging.h"
@@ -9,67 +9,47 @@
 #ifndef _WIN32
 #include <sys/types.h>
 #include <unistd.h>
-#include <signal.h>
 #endif /*_WIN32*/
 
 GameThread* gameThread = nullptr;
 
 #ifdef _WIN32
-GameThread::GameThread(GameTypeID gameType, HWND hwnd) {
-	myGameType = gameType;
-	hWnd = hwnd;
-	hThread = CreateThread(nullptr, 0, ThreadMain, this, 0, nullptr);
-}
+GameThread::GameThread(GameTypeID gameType, HWND hwnd)
 #else /*_WIN32*/
-GameThread::GameThread(GameTypeID gameType, Window hwnd) {
+GameThread::GameThread(GameTypeID gameType, Window hwnd)
+#endif /*_WIN32*/
+{
 	myGameType = gameType;
 	hWnd = hwnd;
-	pthread_create(&hThread, nullptr, ThreadMain, this);
-	pthread_detach(hThread);
+	myThread = THREADLIB::thread(ThreadMain, this);
 }
-#endif /*_WIN32*/
 
 GameThread::~GameThread() {
-	/* WE ASSUME THAT THIS DESTRUCTOR GETS CALLED ONLY WHEN THE PROGRAM IS ABOUT TO END. */
-	/* DO NOT CALL THIS DESTRUCTOR ELSEWHEN, OR IT MAY CAUSE SOME LEAKS!!! */
-	/* ƒvƒƒOƒ‰ƒ€I—¹‚É‚Ì‚İŒÄ‚Ño‚³‚ê‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚Ü‚· */
-	/* ‚»‚êˆÈŠO‚Ì‚É‚Íâ‘Î‚ÉŒÄ‚Ño‚³‚È‚¢‚±‚ÆIII */
+#ifdef WITH_BOOST_THREAD
+	myThread.interrupt();
+	myThread.join();
+	cleanup();
 #ifdef _WIN32
-	DWORD exitCode; GetExitCodeThread(hThread, &exitCode);
-	if (exitCode == STILL_ACTIVE) {
-		warn(_T("ƒXƒŒƒbƒh‚ğ‹­§I—¹‚µ‚Ü‚·I"));
-		TerminateThread(hThread, S_OK);
-	}
-#else /*_WIN32*/
-	warn(_T("ƒXƒŒƒbƒh‚ğ‹­§I—¹‚µ‚Ü‚·I"));
-	pthread_cancel(hThread);
+	SendMessage(hWnd, WM_CLOSE, 0, 0);
 #endif /*_WIN32*/
+#else
+	cleanup();
+	exit(0);
+#endif
 }
 
+void GameThread::ThreadMain(GameThread* lpParam) {
+	GameTypeID gameType = lpParam->myGameType;
 #ifdef _WIN32
-DWORD WINAPI GameThread::ThreadMain(LPVOID lpParam) {
-	GameTypeID gameType = reinterpret_cast<GameThread*>(lpParam)->myGameType;
-	HWND hwnd = reinterpret_cast<GameThread*>(lpParam)->hWnd;
-	initapp(gameType, hwnd);
-	startgame(gameType);
-	cleanup();
-	SendMessage(hwnd, WM_CLOSE, 0, 0);
-	return S_OK;
-}
+	HWND hwnd = lpParam->hWnd;
 #else /*_WIN32*/
-void* GameThread::ThreadMain(void* lpParam) {
-	GameTypeID gameType = reinterpret_cast<GameThread*>(lpParam)->myGameType;
-	Window hwnd = reinterpret_cast<GameThread*>(lpParam)->hWnd;
+	Window hwnd = lpParam->hWnd;
+#endif /*_WIN32*/
 	initapp(gameType, hwnd);
 	startgame(gameType);
 	cleanup();
-	/* WORKAROUND: ƒ^ƒCƒgƒ‹ƒƒjƒ…[‚©‚çExit‚ğ‘I‘ğ‚µ‚Ä‚àI—¹‚µ‚Ä‚­‚ê‚È‚¢Œ  */
-	pid_t myPid = getpid();
-	kill(myPid, SIGINT);
-	/* WORKAROUND ‚±‚±‚Ü‚Å */
-	return nullptr;
+	exit(0);
 }
-#endif /*_WIN32*/
 
 #ifdef _WIN32
 MJCORE void StartGame (GameTypeID gameType, HWND hwnd)

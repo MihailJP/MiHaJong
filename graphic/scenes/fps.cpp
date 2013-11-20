@@ -1,4 +1,4 @@
-#include "fps.h"
+ï»¿#include "fps.h"
 #include "../scrmanip.h"
 #include "../text.h"
 #if !defined(_MSC_VER)
@@ -17,12 +17,12 @@ FPSIndicator::~FPSIndicator() {
 }
 
 void FPSIndicator::Render() {
-	{ // Žž‚ðŽæ“¾
+	{ // æ™‚åˆ»ã‚’å–å¾—
 		uint64_t tempus = myTimer.currTime();
 		RedrawTime.push_back(tempus);
 		while ((tempus - RedrawTime.front()) > 1000000) RedrawTime.pop_front();
 	}
-	/* ŒvŽZ‚·‚é */
+	/* è¨ˆç®—ã™ã‚‹ */
 	if ((RedrawTime.back() - LastRecalcTime) >= 500000) {
 		LastRecalcTime = RedrawTime.back();
 		if ((RedrawTime.size() < 3) || (RedrawTime.back() == RedrawTime.front())) {
@@ -41,7 +41,7 @@ void FPSIndicator::Render() {
 #endif
 		}
 	}
-	/* •\Ž¦‚·‚é */
+	/* è¡¨ç¤ºã™ã‚‹ */
 	textRenderer->NewText(0, fpsstr, 0, 0, 0.75, 1.333333);
 	textRenderer->Render();
 }

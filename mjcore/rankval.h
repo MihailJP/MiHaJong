@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 #include <map>
@@ -9,11 +9,11 @@
 class RankVal {
 private: /* Singleton class idiom */
 	RankVal(); // INTERNAL USE ONLY
-	RankVal(const RankVal&); // DO NOT USE
-	RankVal& operator=(const RankVal&); // DO NOT USE
+	RankVal(const RankVal&) = delete; // DO NOT USE
+	RankVal& operator=(const RankVal&) = delete; // DO NOT USE
 private:
 	typedef std::array<std::array<int, Players - 1>, Players + 1> RankValSet;
-	std::map<std::string, RankValSet> rankValueMap; // �E�}�ݒ�ꗗ
+	std::map<std::string, RankValSet> rankValueMap; // ウマ設定一覧
 public:
 	static RankVal* Instantiate(); // Singleton instance accessor
 	LNum getRankVal(const GameTable* gameStat, const std::string& ruletag, unsigned playersAboveBase, unsigned rank) const;

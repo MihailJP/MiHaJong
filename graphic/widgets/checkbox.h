@@ -18,6 +18,8 @@ public:
 	explicit CheckBox(DevicePtr device,
 		const CodeConv::tstring& caption,
 		int x, int y, bool checked = false);
+	CheckBox(const CheckBox&) = delete; // Delete unexpected copy constructor
+	CheckBox& operator= (const CheckBox&) = delete; // Delete unexpected assign operator
 	~CheckBox();
 	const size_t captionWidth() {return myTextRenderer->strWidthByCols(myCaption);}
 	const size_t captionWidthPx() {return myTextRenderer->strWidthByPix(myCaption);}

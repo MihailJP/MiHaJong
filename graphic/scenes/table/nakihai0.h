@@ -36,6 +36,8 @@ protected:
 public:
 	virtual void Render() = 0;
 	explicit ShowNakihai(DevicePtr device);
+	ShowNakihai(const ShowNakihai&) = delete; // Delete unexpected copy constructor
+	ShowNakihai& operator= (const ShowNakihai&) = delete; // Delete unexpected assign operator
 	virtual ~ShowNakihai();
 };
 

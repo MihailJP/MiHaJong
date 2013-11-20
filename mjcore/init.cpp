@@ -1,4 +1,4 @@
-#include "init.h"
+ï»¿#include "init.h"
 
 #include "logging.h"
 #include "func.h"
@@ -22,8 +22,8 @@ MJCORE void initapp(GameTypeID gameType, HWND hwnd)
 MJCORE void initapp(GameTypeID gameType, Window hwnd)
 #endif /*_WIN32*/
 {
-	/* ƒRƒ“ƒtƒBƒOƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ğİ’è‚·‚é */
-	/* VistaˆÈ~AProgram FilesˆÈ‰º‚Éƒtƒ@ƒCƒ‹‚ğì‚ê‚È‚¢‚Ì‚Å©•ª‚Å’²®‚·‚é */
+	/* ã‚³ãƒ³ãƒ•ã‚£ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã‚’è¨­å®šã™ã‚‹ */
+	/* Vistaä»¥é™ã€Program Filesä»¥ä¸‹ã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œã‚Œãªã„ã®ã§è‡ªåˆ†ã§èª¿æ•´ã™ã‚‹ */
 	std::string configFile;
 	switch (gameType) {
 	case Yonma:
@@ -41,16 +41,16 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 	}
 	std::string preferenceFile = confpath::confPath() + "config.ini";
 
-#ifdef _WIN32 /* Windows”Å‚Å‚Ì‚İÀ‘• */
-	/* ƒƒO‰Šú‰» */
+#ifdef _WIN32 /* Windowsç‰ˆã§ã®ã¿å®Ÿè£… */
+	/* ãƒ­ã‚°åˆæœŸåŒ– */
 	{
 		logger::initLogger(); CodeConv::tostringstream o;
 		o << _T("MiHaJong Ver. ") << MIHAJONG_VER; info(o.str().c_str()); o.str(_T(""));
-		o << _T("ƒrƒ‹ƒh“ú‚Í ") << _T(__DATE__) << _T(" ") << _T(__TIME__) << _T(" ‚Å‚·B"); info(o.str().c_str());
+		o << _T("ãƒ“ãƒ«ãƒ‰æ—¥æ™‚ã¯ ") << _T(__DATE__) << _T(" ") << _T(__TIME__) << _T(" ã§ã™ã€‚"); info(o.str().c_str());
 	}
 #endif /*_WIN32*/
 
-	/* ‘ì‚ÌŠÂ‹«‚ğ‰Šú‰» */
+	/* å“ã®ç’°å¢ƒã‚’åˆæœŸåŒ– */
 	{
 		EnvTable::Instantiate()->bgColorR =
 			EnvTable::Instantiate()->bgColorG =
@@ -59,27 +59,27 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 		mihajong_graphic::GameStatus::updateGameStat(&GameStat);
 	}
 
-	/* İ’èƒtƒ@ƒCƒ‹“Ç‚İ‚İ */
+	/* è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ */
 	{
 		mihajong_graphic::rules::setconffile(configFile.c_str(), preferenceFile.c_str());
-		bool cnfFileExists = exist(configFile.c_str()); // İ’èƒtƒ@ƒCƒ‹‚ª‚ ‚é‚©‚Ç‚¤‚©’²‚×‚é
-		bool prefFileExists = exist(preferenceFile.c_str()); // İ’èƒtƒ@ƒCƒ‹‚ª‚ ‚é‚©‚Ç‚¤‚©’²‚×‚é
+		bool cnfFileExists = exist(configFile.c_str()); // è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹ã‹ã©ã†ã‹èª¿ã¹ã‚‹
+		bool prefFileExists = exist(preferenceFile.c_str()); // è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹ã‹ã©ã†ã‹èª¿ã¹ã‚‹
 		RuleData::configinit();
 		if (!cnfFileExists) {
-			info(_T("ƒ‹[ƒ‹İ’èƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñBƒfƒtƒHƒ‹ƒg‚Ìİ’è‚ğg—p‚µ‚Ü‚·B"));
-			RuleData::saveConfigFile(configFile.c_str()); // ƒfƒtƒHƒ‹ƒg‚ÌƒRƒ“ƒtƒBƒOƒf[ƒ^‚ğì¬
+			info(_T("ãƒ«ãƒ¼ãƒ«è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®è¨­å®šã‚’ä½¿ç”¨ã—ã¾ã™ã€‚"));
+			RuleData::saveConfigFile(configFile.c_str()); // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚³ãƒ³ãƒ•ã‚£ã‚°ãƒ‡ãƒ¼ã‚¿ã‚’ä½œæˆ
 		} else {
-			info(_T("ƒ‹[ƒ‹İ’èƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚µ‚½B“Ç‚İ‚İ‚ğŠJn‚µ‚Ü‚·B"));
-			RuleData::loadConfigFile(configFile.c_str()); // İ’èƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+			info(_T("ãƒ«ãƒ¼ãƒ«è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã—ãŸã€‚èª­ã¿è¾¼ã¿ã‚’é–‹å§‹ã—ã¾ã™ã€‚"));
+			RuleData::loadConfigFile(configFile.c_str()); // è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 		}
 		if (!prefFileExists) {
-			info(_T("ŠÂ‹«İ’èƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñBƒfƒtƒHƒ‹ƒg‚Ìİ’è‚ğg—p‚µ‚Ü‚·B"));
-			RuleData::savePreferenceFile(preferenceFile.c_str()); // ƒfƒtƒHƒ‹ƒg‚ÌƒRƒ“ƒtƒBƒOƒf[ƒ^‚ğì¬
+			info(_T("ç’°å¢ƒè¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®è¨­å®šã‚’ä½¿ç”¨ã—ã¾ã™ã€‚"));
+			RuleData::savePreferenceFile(preferenceFile.c_str()); // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚³ãƒ³ãƒ•ã‚£ã‚°ãƒ‡ãƒ¼ã‚¿ã‚’ä½œæˆ
 		} else {
-			info(_T("ŠÂ‹«İ’èƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚µ‚½B“Ç‚İ‚İ‚ğŠJn‚µ‚Ü‚·B"));
-			RuleData::loadPreferenceFile(preferenceFile.c_str()); // İ’èƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+			info(_T("ç’°å¢ƒè¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã—ãŸã€‚èª­ã¿è¾¼ã¿ã‚’é–‹å§‹ã—ã¾ã™ã€‚"));
+			RuleData::loadPreferenceFile(preferenceFile.c_str()); // è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 		}
-		// UI—p‚ÌDLL‚ÉŠÖ”‚ÌêŠ‚ğ‹³‚¦‚é
+		// UIç”¨ã®DLLã«é–¢æ•°ã®å ´æ‰€ã‚’æ•™ãˆã‚‹
 		mihajong_graphic::rules::setfunc(
 			RuleData::getRuleName, RuleData::getRuleDescription, RuleData::getRuleTxt,
 			RuleData::getRule, RuleData::getRuleSize, RuleData::reqFailed,
@@ -98,49 +98,49 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 			getName, chat::sendchat, isAboveBase, isStandAlone);
 	}
 
-	/* ‰¹Œ¹‚ğ‰Šú‰» */
+	/* éŸ³æºã‚’åˆæœŸåŒ– */
 	if (sound::Initialize(hwnd) == 0)
-		info(_T("ƒTƒEƒ“ƒhDLL‚ğ‰Šú‰»‚µ‚Ü‚µ‚½B"));
+		info(_T("ã‚µã‚¦ãƒ³ãƒ‰DLLã‚’åˆæœŸåŒ–ã—ã¾ã—ãŸã€‚"));
 	else
-		error(_T("ƒTƒEƒ“ƒhDLL‚Ì‰Šú‰»‚É¸”s‚µ‚Ü‚µ‚½B"));
+		error(_T("ã‚µã‚¦ãƒ³ãƒ‰DLLã®åˆæœŸåŒ–ã«å¤±æ•—ã—ã¾ã—ãŸã€‚"));
 
-	/* –Êq\¬ƒf[ƒ^ƒx[ƒX‚Ì“Ç‚İ‚İ */
-	/* Œü’®”‚ÌŒvZ‚Ég—pF\’z‚É‚ÍƒNƒAƒbƒhƒRƒA‚Åˆê’‹–é•K—v */
+	/* é¢å­æ§‹æˆãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®èª­ã¿è¾¼ã¿ */
+	/* å‘è´æ•°ã®è¨ˆç®—ã«ä½¿ç”¨ï¼šæ§‹ç¯‰ã«ã¯ã‚¯ã‚¢ãƒƒãƒ‰ã‚³ã‚¢ã§ä¸€æ˜¼å¤œå¿…è¦ */
 	ShantenAnalyzer::initMentsuAnalysisDat();
 
-	/* ‹[——”‚ğ‰Šú‰» */
+	/* æ“¬ä¼¼ä¹±æ•°ã‚’åˆæœŸåŒ– */
 	RndNum::init();
-	info(_T("‹^——”‚ğ‰Šú‰»‚µ‚Ü‚µ‚½B"));
+	info(_T("ç–‘ä¼¼ä¹±æ•°ã‚’åˆæœŸåŒ–ã—ã¾ã—ãŸã€‚"));
 
-	/* ‚a‚f‚l‚ğ“Ç‚İ‚İ */
+	/* ï¼¢ï¼§ï¼­ã‚’èª­ã¿è¾¼ã¿ */
 	for (unsigned i = sound::IDs::BgmStart; i < (sound::IDs::BgmRounds - sound::IDs::BgmStart); i++) {
 		std::ostringstream o; o << "bgm" << (i + 1);
 		sound::util::bgmload(i, o.str().c_str(), true);
 	}
 
-	/* ‚a‚f‚l‚ğ“Ç‚İ‚İi‘±‚«j */
-	sound::util::bgmload(sound::IDs::musRichi1, "richi1", true); // ‘¼‰ÆƒŠ[ƒ`
-	sound::util::bgmload(sound::IDs::musRichi2, "richi2", true); // ©‰ÆƒŠ[ƒ`
-	sound::util::bgmload(sound::IDs::musRichi3, "richi3", true); // ’Ç‚Á‚©‚¯ƒŠ[ƒ`
-	sound::util::bgmload(sound::IDs::musOpenrichi, "opnrichi", true); // ƒI[ƒvƒ“—§’¼
-	sound::util::bgmload(sound::IDs::musAgariSelf1, "agari1", false); // –ŠÑ–¢–A©•ª‚Ì˜a—¹
-	sound::util::bgmload(sound::IDs::musAgariSelf2, "agari2", false); // –ŠÑˆÈãA©•ª‚Ì˜a—¹
-	sound::util::bgmload(sound::IDs::musAgariSelf3, "agari3", false); // –ğ–A©•ª‚Ì˜a—¹
-	sound::util::bgmload(sound::IDs::musAgariFurikomi1, "agari4", false); // –ŠÑ–¢–A•úe‚Ü‚½‚Í”í©–Ì
-	sound::util::bgmload(sound::IDs::musAgariFurikomi2, "agari5", false); // –ŠÑˆÈãA•úe‚Ü‚½‚Í”í©–Ì
-	sound::util::bgmload(sound::IDs::musAgariFurikomi3, "agari6", false); // –ğ–A•úe‚Ü‚½‚Í”í©–Ì
-	sound::util::bgmload(sound::IDs::musAgariOther1, "agari7", false); // –ŠÑ–¢–A‘¼‰Æ‚Ì‰h˜a
-	sound::util::bgmload(sound::IDs::musAgariOther2, "agari8", false); // –ŠÑˆÈãA‘¼‰Æ‚Ì‰h˜a
-	sound::util::bgmload(sound::IDs::musAgariOther3, "agari9", false); // –ğ–A‘¼‰Æ‚Ì‰h˜a
-	sound::util::bgmload(sound::IDs::musRyuukyoku, "pingju", false); // —¬‹ÇEö˜a
-	sound::util::bgmload(sound::IDs::musFinal, "final", true); // ƒI[ƒ‰ƒX‹È
-	sound::util::bgmload(sound::IDs::musShibari, "shibari", true); // ƒŠƒƒƒ“ƒVƒo‚Ì‹È
+	/* ï¼¢ï¼§ï¼­ã‚’èª­ã¿è¾¼ã¿ï¼ˆç¶šãï¼‰ */
+	sound::util::bgmload(sound::IDs::musRichi1, "richi1", true); // ä»–å®¶ãƒªãƒ¼ãƒ
+	sound::util::bgmload(sound::IDs::musRichi2, "richi2", true); // è‡ªå®¶ãƒªãƒ¼ãƒ
+	sound::util::bgmload(sound::IDs::musRichi3, "richi3", true); // è¿½ã£ã‹ã‘ãƒªãƒ¼ãƒ
+	sound::util::bgmload(sound::IDs::musOpenrichi, "opnrichi", true); // ã‚ªãƒ¼ãƒ—ãƒ³ç«‹ç›´
+	sound::util::bgmload(sound::IDs::musAgariSelf1, "agari1", false); // æº€è²«æœªæº€ã€è‡ªåˆ†ã®å’Œäº†
+	sound::util::bgmload(sound::IDs::musAgariSelf2, "agari2", false); // æº€è²«ä»¥ä¸Šã€è‡ªåˆ†ã®å’Œäº†
+	sound::util::bgmload(sound::IDs::musAgariSelf3, "agari3", false); // å½¹æº€ã€è‡ªåˆ†ã®å’Œäº†
+	sound::util::bgmload(sound::IDs::musAgariFurikomi1, "agari4", false); // æº€è²«æœªæº€ã€æ”¾éŠƒã¾ãŸã¯è¢«è‡ªæ‘¸
+	sound::util::bgmload(sound::IDs::musAgariFurikomi2, "agari5", false); // æº€è²«ä»¥ä¸Šã€æ”¾éŠƒã¾ãŸã¯è¢«è‡ªæ‘¸
+	sound::util::bgmload(sound::IDs::musAgariFurikomi3, "agari6", false); // å½¹æº€ã€æ”¾éŠƒã¾ãŸã¯è¢«è‡ªæ‘¸
+	sound::util::bgmload(sound::IDs::musAgariOther1, "agari7", false); // æº€è²«æœªæº€ã€ä»–å®¶ã®æ „å’Œ
+	sound::util::bgmload(sound::IDs::musAgariOther2, "agari8", false); // æº€è²«ä»¥ä¸Šã€ä»–å®¶ã®æ „å’Œ
+	sound::util::bgmload(sound::IDs::musAgariOther3, "agari9", false); // å½¹æº€ã€ä»–å®¶ã®æ „å’Œ
+	sound::util::bgmload(sound::IDs::musRyuukyoku, "pingju", false); // æµå±€ãƒ»éŒ¯å’Œ
+	sound::util::bgmload(sound::IDs::musFinal, "final", true); // ã‚ªãƒ¼ãƒ©ã‚¹æ›²
+	sound::util::bgmload(sound::IDs::musShibari, "shibari", true); // ãƒªãƒ£ãƒ³ã‚·ãƒæ™‚ã®æ›²
 	sound::util::bgmload(sound::IDs::musTitle, "title", true);
 	sound::util::bgmload(sound::IDs::musEnding, "ending", true);
 	sound::util::bgmload(sound::IDs::musEnding2, "ending2", true);
 	sound::util::bgmload(sound::IDs::musEnding3, "ending3", true);
 
-	/* Œø‰Ê‰¹“Ç‚İ‚İ(DirectSoundg—p) */
+	/* åŠ¹æœéŸ³èª­ã¿è¾¼ã¿(DirectSoundä½¿ç”¨) */
 	sound::util::soundload(sound::IDs::sndDahai1, "sound\\dahai1.wav", false);
 	sound::util::soundload(sound::IDs::sndDahai2, "sound\\dahai2.wav", false);
 	sound::util::soundload(sound::IDs::sndTsumo, "sound\\tsumo.wav", false);
@@ -161,7 +161,7 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 	sound::util::soundload(sound::IDs::sndSignal, "sound\\signal.wav", false);
 	sound::util::soundload(sound::IDs::sndClock, "sound\\clock.wav", false);
 
-	/* –Â‚«dŠ|‚¯ŠÖŒW‚ÌŒø‰Ê‰¹‚ğ“Ç‚İ‚Ş */
+	/* é³´ãä»•æ›ã‘é–¢ä¿‚ã®åŠ¹æœéŸ³ã‚’èª­ã¿è¾¼ã‚€ */
 	sound::util::soundload(sound::IDs::voxChi, "sound\\chi.wav", false);
 	sound::util::soundload(sound::IDs::voxPon, "sound\\pon.wav", false);
 	sound::util::soundload(sound::IDs::voxKan, "sound\\kan.wav", false);

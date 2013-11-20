@@ -1,25 +1,25 @@
-#pragma once
+ï»¿#pragma once
 
 #include <cstdint>
 
 namespace mihajong_structs {
 
-typedef int8_t Shanten; // Œü’®”‚Ì‚½‚ß‚Ìƒf[ƒ^Œ^i0=’®”vA-1=˜a—¹A127=–³Œøj
+typedef int8_t Shanten; // å‘è´æ•°ã®ãŸã‚ã®ãƒ‡ãƒ¼ã‚¿å‹ï¼ˆ0=è´ç‰Œã€-1=å’Œäº†ã€127=ç„¡åŠ¹ï¼‰
 
 static const Shanten ShantenImpossible = SCHAR_MAX;
-enum ShantenType : uint8_t { // getShanten‚É“n‚·ƒXƒCƒbƒ`—p
-	shantenAll, // ‚·‚×‚Ä‹‚ß‚é
-	shantenRegular, // •’Ê‚Ì˜a—¹Œ`‚Ì‚İ
-	shantenPairs, // µ‘Îq
-	shantenOrphans, // ‘m–³‘o
-	shantenStellar, // µ¯–³èÏ
-	shantenCivilWar, // “ì–kí‘ˆ
-	shantenTohokuGreen, // “Œ–kVŠ²üƒOƒŠ[ƒ“Ô
-	shantenSyzygy, // ˜f¯’¼—ñ
-	shantenQuanbukao, // ‘S•sèÏ
-	shantenSevenup, // ƒZƒuƒ“ƒAƒbƒv
-	shantenZuhelong, // ‘g‡—´
-	shantenNinnaji, // m˜a›
+enum ShantenType : uint8_t { // getShantenã«æ¸¡ã™ã‚¹ã‚¤ãƒƒãƒç”¨
+	shantenAll, // ã™ã¹ã¦æ±‚ã‚ã‚‹
+	shantenRegular, // æ™®é€šã®å’Œäº†å½¢ã®ã¿
+	shantenPairs, // ä¸ƒå¯¾å­
+	shantenOrphans, // å›½å£«ç„¡åŒ
+	shantenStellar, // ä¸ƒæ˜Ÿç„¡é 
+	shantenCivilWar, // å—åŒ—æˆ¦äº‰
+	shantenTohokuGreen, // æ±åŒ—æ–°å¹¹ç·šã‚°ãƒªãƒ¼ãƒ³è»Š
+	shantenSyzygy, // æƒ‘æ˜Ÿç›´åˆ—
+	shantenQuanbukao, // å…¨ä¸é 
+	shantenSevenup, // ã‚»ãƒ–ãƒ³ã‚¢ãƒƒãƒ—
+	shantenZuhelong, // çµ„åˆé¾
+	shantenNinnaji, // ä»å’Œå¯º
 	ShantenPages,
 };
 

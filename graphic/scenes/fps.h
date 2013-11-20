@@ -23,6 +23,8 @@ private:
 	TCHAR fpsstr[fpsstr_size];
 public:
 	FPSIndicator(ScreenManipulator* const manipulator);
+	FPSIndicator(const FPSIndicator&) = delete; // Delete unexpected copy constructor
+	FPSIndicator& operator= (const FPSIndicator&) = delete; // Delete unexpected assign operator
 	~FPSIndicator();
 	void Render();
 };

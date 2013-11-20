@@ -1,4 +1,4 @@
-#ifdef _MSC_VER
+Ôªø#ifdef _MSC_VER
 #define NOMINMAX
 #endif
 #include "result.h"
@@ -29,8 +29,8 @@ ResultScreen::ResultScreen(ScreenManipulator* const manipulator) : SystemScreen(
 }
 
 ResultScreen::~ResultScreen() {
-	for (auto k = rankRenderer.begin(); k != rankRenderer.end(); ++k)
-		if (*k) delete *k;
+	for (const auto& k : rankRenderer)
+		if (k) delete k;
 	delete titleRenderer;
 }
 
@@ -39,15 +39,15 @@ void ResultScreen::Render() {
 
 	const float widthScale = (float)Geometry::WindowWidth * 0.75 / (float)Geometry::WindowHeight;
 
-	titleRenderer->NewText(0, _T("èIÅ@Å@ã«"), 272 * widthScale, 60, 1.0f, widthScale,
+	titleRenderer->NewText(0, _T("ÁµÇ„ÄÄ„ÄÄÂ±Ä"), 272 * widthScale, 60, 1.0f, widthScale,
 		(myTimer.elapsed() < 1000000) ? (((unsigned int)(255 - (1000000 - myTimer.elapsed()) / 5000) << 24) | 0x00ffffff) : 0xffffffff);
 	titleRenderer->Render();
 
 	for (int i = (GameStatus::gameStat()->chkGameType(SanmaT) ? 1 : 0); i < Players; ++i)
 		if ((myTimer.elapsed() >= (1000000 + i * 500000)) && (rankRenderer[i] == nullptr))
 			rankRenderer[i] = new RankRenderer(caller->getDevice(), i);
-	for (auto k = rankRenderer.begin(); k != rankRenderer.end(); ++k)
-		if (*k) (*k)->Render();
+	for (const auto& k : rankRenderer)
+		if (k) k->Render();
 }
 
 #ifdef _WIN32
@@ -64,7 +64,7 @@ void ResultScreen::KeyboardInput(const XEvent* od)
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{
-	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // åàíË
+	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // Ê±∫ÂÆö
 #ifdef _WIN32
 		if (od->dwData)
 #else /*_WIN32*/
@@ -73,7 +73,7 @@ void ResultScreen::KeyboardInput(const XEvent* od)
 		{
 			sound::Play(sound::IDs::sndClick);
 			if (flag)
-				ui::UIEvent->set(0); // ÉCÉxÉìÉgÇÉZÉbÉg
+				ui::UIEvent->set(0); // „Ç§„Éô„É≥„Éà„Çí„Çª„ÉÉ„Éà
 			else
 				myTimer.skipTo(3000000u);
 		}
@@ -96,16 +96,16 @@ void ResultScreen::MouseInput(const XEvent* od, int X, int Y)
 #endif /*_WIN32*/
 	{
 #ifdef _WIN32
-	case DIMOFS_BUTTON0: // É}ÉEÉXÇÃç∂É{É^Éì
+	case DIMOFS_BUTTON0: // „Éû„Ç¶„Çπ„ÅÆÂ∑¶„Éú„Çø„É≥
 		if (od->dwData)
 #else /*_WIN32*/
-	case ButtonPress: // É}ÉEÉXÉNÉäÉbÉN
+	case ButtonPress: // „Éû„Ç¶„Çπ„ÇØ„É™„ÉÉ„ÇØ
 		if (od->xbutton.button == Button1)
 #endif /*_WIN32*/
 		{
 			sound::Play(sound::IDs::sndClick);
 			if (flag)
-				ui::UIEvent->set(0); // ÉCÉxÉìÉgÇÉZÉbÉg
+				ui::UIEvent->set(0); // „Ç§„Éô„É≥„Éà„Çí„Çª„ÉÉ„Éà
 			else
 				myTimer.skipTo(3000000u);
 		}
@@ -179,20 +179,20 @@ void ResultScreen::RankRenderer::RenderNameScore() {
 		aColor & color);
 
 	CodeConv::tostringstream punctaticum_;
-	punctaticum_ << _T("ëfì_ÅF") <<
-		(GameStatus::gameStat()->Player[player].PlayerScore.bignumtotext(_T(""), _T("Å¢")));
+	punctaticum_ << _T("Á¥†ÁÇπÔºö") <<
+		(GameStatus::gameStat()->Player[player].PlayerScore.bignumtotext(_T(""), _T("‚ñ≥")));
 	const int chipVal = GameStatus::gameStat()->Player[player].playerChip;
 	if ((GameStatus::gameStat()->gameType & RichiMJ) && (!rules::chkRule("chip", "no"))) {
 		if (chipVal > 0)
-			punctaticum_ << _T(" É`ÉbÉvÅFÅ{") << chipVal;
+			punctaticum_ << _T(" „ÉÅ„ÉÉ„ÉóÔºöÔºã") << chipVal;
 		else if (chipVal < 0)
-			punctaticum_ << _T(" É`ÉbÉvÅFÅ¢") << (-chipVal);
+			punctaticum_ << _T(" „ÉÅ„ÉÉ„ÉóÔºö‚ñ≥") << (-chipVal);
 		else
-			punctaticum_ << _T(" É`ÉbÉvÅF0");
+			punctaticum_ << _T(" „ÉÅ„ÉÉ„ÉóÔºö0");
 	}
 	if ((GameStatus::gameStat()->gameType & RichiMJ) && (!rules::chkRule("yakitori", "no"))) {
 		if (GameStatus::gameStat()->Player[player].YakitoriFlag)
-			punctaticum_ << _T(" èƒíπ");
+			punctaticum_ << _T(" ÁÑºÈ≥•");
 	}
 	const CodeConv::tstring punctaticum(punctaticum_.str());
 	const unsigned latitudoPunctatici = nameRenderer->strWidthByCols(punctaticum);
@@ -212,7 +212,7 @@ void ResultScreen::RankRenderer::RenderScore() {
 	const float scale = (tempus >= animTime) ? 1.0f :
 		1.0f + pow((float)(animTime - tempus) / (float)animTime * 3.5f, 2);
 	const LargeNum point(FinalScoreDat::getData(player));
-	const CodeConv::tstring scoreTxt(point.bignumtotext(_T("+"), _T("Å¢")));
+	const CodeConv::tstring scoreTxt(point.bignumtotext(_T("+"), _T("‚ñ≥")));
 	const ArgbColor color =
 		(point > LargeNum::fromInt(0)) ? 0xffccffcc :
 		(point < LargeNum::fromInt(0)) ? 0xffffcccc : 0xffffffcc;

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef _WIN32
 #include <windows.h>
@@ -29,20 +29,20 @@ namespace sound {
 	extern SoundManipulator* soundManipulator;
 #endif
 
-	SOUNDDLL_EXPORT int Initialize(); // ‰Šú‰»
+	SOUNDDLL_EXPORT int Initialize(); // åˆæœŸåŒ–
 #ifdef _WIN32
-	SOUNDDLL_EXPORT int Initialize(HWND hWnd); // ‰Šú‰»
+	SOUNDDLL_EXPORT int Initialize(HWND hWnd); // åˆæœŸåŒ–
 #else /* _WIN32 */
-	SOUNDDLL_EXPORT int Initialize(Window hWnd); // ‰Šú‰»
+	SOUNDDLL_EXPORT int Initialize(Window hWnd); // åˆæœŸåŒ–
 #endif /* _WIN32 */
-	SOUNDDLL_EXPORT void Cleanup(); // Œãn––
+	SOUNDDLL_EXPORT void Cleanup(); // å¾Œå§‹æœ«
 
-	SOUNDDLL_EXPORT int LoadWave(unsigned ID, const char* filename, int looped); // WAVE“Ç‚İ‚İ
-	SOUNDDLL_EXPORT int LoadVorbis(unsigned ID, const char* filename, int looped); // Vorbis“Ç‚İ‚İ
-	SOUNDDLL_EXPORT int LoadMidi(unsigned ID, const char* filename, int looped); // MIDI“Ç‚İ‚İ
+	SOUNDDLL_EXPORT int LoadWave(unsigned ID, const char* filename, int looped); // WAVEèª­ã¿è¾¼ã¿
+	SOUNDDLL_EXPORT int LoadVorbis(unsigned ID, const char* filename, int looped); // Vorbisèª­ã¿è¾¼ã¿
+	SOUNDDLL_EXPORT int LoadMidi(unsigned ID, const char* filename, int looped); // MIDIèª­ã¿è¾¼ã¿
 
-	SOUNDDLL_EXPORT int Play(unsigned ID); // Ä¶
-	SOUNDDLL_EXPORT int Stop(unsigned ID); // ’â~
+	SOUNDDLL_EXPORT int Play(unsigned ID); // å†ç”Ÿ
+	SOUNDDLL_EXPORT int Stop(unsigned ID); // åœæ­¢
 
-	SOUNDDLL_EXPORT int SetVolume(unsigned ID, double volume); // ‰¹—Êİ’è
+	SOUNDDLL_EXPORT int SetVolume(unsigned ID, double volume); // éŸ³é‡è¨­å®š
 }

@@ -1,4 +1,4 @@
-#include "haifu.h"
+ï»¿#include "haifu.h"
 
 #include <sstream>
 #include <fstream>
@@ -13,9 +13,9 @@
 #include "chat.h"
 #include "ruletbl.h"
 
-/* ”v‚Ì–¼‘Oƒf[ƒ^ */
+/* é›€ç‰Œã®åå‰ãƒ‡ãƒ¼ã‚¿ */
 const CodeConv::tstring haifu::tilecodelabel =
-	_T("Hˆê“ñOlŒÜ˜Zµ”ª‹ãH‡@‡A‡B‡C‡D‡E‡F‡G‡HH‚P‚Q‚R‚S‚T‚U‚V‚W‚XH“Œ“ì¼–k”’á¢’†HHHˆë“óQãæŒŞ—¤½J‹èH‡J‡K‡L‡M‡N‡O‡P‡Q‡RH‡T‡U‡V‡W‡X‡Y‡Z‡[‡\H‚d‚r‚v‚m‚o‚e‚bHHHb‰³•¸’š•èŒÈMhpH‚¢‚ë‚Í‚É‚Ù‚Ö‚Æ‚¿‚èHú@úAúBúCúDúEúFúGúHH‚…‚“‚—‚‚‚†‚ƒHHHt‰ÄH“~•S”~—–‹e’|H");
+	_T("ï¼Ÿä¸€äºŒä¸‰å››äº”å…­ä¸ƒå…«ä¹ï¼Ÿâ‘ â‘¡â‘¢â‘£â‘¤â‘¥â‘¦â‘§â‘¨ï¼Ÿï¼‘ï¼’ï¼“ï¼”ï¼•ï¼–ï¼—ï¼˜ï¼™ï¼Ÿæ±å—è¥¿åŒ—ç™½ç™¼ä¸­ï¼Ÿï¼Ÿï¼Ÿå£±å¼å‚è‚†ä¼é™¸æ¼†æŒç–ï¼Ÿâ‘ªâ‘«â‘¬â‘­â‘®â‘¯â‘°â‘±â‘²ï¼Ÿâ… â…¡â…¢â…£â…¤â…¥â…¦â…§â…¨ï¼Ÿï¼¥ï¼³ï¼·ï¼®ï¼°ï¼¦ï¼£ï¼Ÿï¼Ÿï¼Ÿç”²ä¹™ä¸™ä¸æˆŠå·±åºšè¾›å£¬ï¼Ÿã„ã‚ã¯ã«ã»ã¸ã¨ã¡ã‚Šï¼Ÿâ…°â…±â…²â…³â…´â…µâ…¶â…·â…¸ï¼Ÿï½…ï½“ï½—ï½ï½ï½†ï½ƒï¼Ÿï¼Ÿï¼Ÿæ˜¥å¤ç§‹å†¬ç™¾æ¢…è˜­èŠç«¹ï¼Ÿ");
 const CodeConv::tstring haifu::HTtilecodelabel1 =
 	_T(" qwertyuio zxcvbnm,. asdfghjkl 1234567   qwertyuio zxcvbnm,. asdfghjkl 1234567   qwertyuio zxcvbnm,. asdfghjkl 1234567   @;:]/-^[\\");
 const CodeConv::tstring haifu::HTtilecodelabel2 =
@@ -45,7 +45,7 @@ bool haifu::haifukanflag = false;
 haifu::HaifuStreams haifu::haifuP, haifu::HThaifuP, haifu::XhaifuP;
 
 #ifdef GUOBIAO
-namespace { // È‘Ö‚¦Œã‚ÌƒvƒŒƒCƒ„[”Ô†‘ÎÆ
+namespace { // å¸­æ›¿ãˆå¾Œã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·å¯¾ç…§
 	unsigned currWindNum = 0;
 	const unsigned playerNumberList[4][4] = {
 		{0, 1, 2, 3}, {1, 0, 3, 2}, {2, 3, 1, 0}, {3, 2, 0, 1}
@@ -53,10 +53,10 @@ namespace { // È‘Ö‚¦Œã‚ÌƒvƒŒƒCƒ„[”Ô†‘ÎÆ
 }
 #endif /* GUOBIAO */
 
-/* ”v•ˆ‹L˜^—p‚Ì•â•ƒ‹[ƒ`ƒ“ */
+/* ç‰Œè­œè¨˜éŒ²ç”¨ã®è£œåŠ©ãƒ«ãƒ¼ãƒãƒ³ */
 void haifu::tools::haifuskipX(PlayerID targetPlayer) {
-	if (GameStat.chkGameType(SanmaT) && (targetPlayer == 3)) return; // O–ƒ‚Å–k‰Æ‚É‚ ‚½‚éˆÊ’u‚¾‚Á‚½‚ç‹A‚é
-	if (GameStat.chkGameType(Sanma4) && (GameStat.playerwind(targetPlayer) == sNorth)) return; // llO–ƒ‚Å–k‰Æ‚¾‚Á‚½‚ç‹A‚é
+	if (GameStat.chkGameType(SanmaT) && (targetPlayer == 3)) return; // ä¸‰éº»ã§åŒ—å®¶ã«ã‚ãŸã‚‹ä½ç½®ã ã£ãŸã‚‰å¸°ã‚‹
+	if (GameStat.chkGameType(Sanma4) && (GameStat.playerwind(targetPlayer) == sNorth)) return; // å››äººä¸‰éº»ã§åŒ—å®¶ã ã£ãŸã‚‰å¸°ã‚‹
 	checkCycle();
 #ifdef GUOBIAO
 	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][(int)targetPlayer] << _T("\" />") << std::endl;
@@ -89,23 +89,23 @@ void haifu::tools::haifuskip(
 			&HThaifuP->streamDat[RelativePositionOf(ActivePlayer, sOpposite)].sutehailabel,
 		};
 		if (playerRelative(ActivePlayer, PassivePlayer) == sOpposite) {
-			// ‘Î–Ê‚©‚çƒ|ƒ“‚µ‚½ê‡
+			// å¯¾é¢ã‹ã‚‰ãƒãƒ³ã—ãŸå ´åˆ
 			for (int i = 0; i < 4; i++) {
-				*p[i] << _T("@ "); *h[i] << _T("<td></td>");
+				*p[i] << _T("ã€€ "); *h[i] << _T("<td></td>");
 			}
 			haifuskipX(RelativePositionOf(ActivePlayer, sRight));
 		}
 		if (playerRelative(ActivePlayer, PassivePlayer) == sRight) {
-			// ‰º‰Æ‚©‚çƒ|ƒ“‚µ‚½ê‡
+			// ä¸‹å®¶ã‹ã‚‰ãƒãƒ³ã—ãŸå ´åˆ
 			for (int i = 0; i < 8; i++) {
-				*p[i] << _T("@ "); *h[i] << _T("<td></td>");
+				*p[i] << _T("ã€€ "); *h[i] << _T("<td></td>");
 			}
 			haifuskipX(RelativePositionOf(ActivePlayer, sRight));
 			haifuskipX(RelativePositionOf(ActivePlayer, sOpposite));
 		}
 }
 
-CodeConv::tstring haifu::tools::haifudoraClass(doraCol Akadora) { // Ô”v•”v‚Ì•Ê(HTML”v•ˆ)
+CodeConv::tstring haifu::tools::haifudoraClass(doraCol Akadora) { // èµ¤ç‰Œé»’ç‰Œã®åˆ¥(HTMLç‰Œè­œ)
 	switch (Akadora) {
 	case AkaDora:
 		return _T(" class=\"akadora\"");
@@ -115,7 +115,7 @@ CodeConv::tstring haifu::tools::haifudoraClass(doraCol Akadora) { // Ô”v•”v‚Ì•
 		return _T("");
 	}
 }
-CodeConv::tstring haifu::tools::haifudoraClassX(doraCol Akadora) { // Ô”v•”v‚Ì•Ê(XML”v•ˆ)
+CodeConv::tstring haifu::tools::haifudoraClassX(doraCol Akadora) { // èµ¤ç‰Œé»’ç‰Œã®åˆ¥(XMLç‰Œè­œ)
 	switch (Akadora) {
 	case AkaDora:
 		return _T(" dora=\"red\"");
@@ -132,7 +132,7 @@ void haifu::tools::recordDoraStream(CodeConv::tostringstream* const p, CodeConv:
 	*x << _T("\t\t\t\t<tile tile=\"") << Xtilerefcode[tmpDora] << _T("\" />") << std::endl;
 }
 
-/* ”v‚ğ‹L˜^‚·‚é */
+/* ç‰Œã‚’è¨˜éŒ²ã™ã‚‹ */
 void haifu::tools::recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, bool rotate) {
 	// plain-text
 	*p << (rotate ? _T("[") : _T("")) <<
@@ -188,7 +188,7 @@ void haifu::tools::recordTile_Table(CodeConv::tostringstream* const p, CodeConv:
 }
 
 void haifu::tools::recordBlank_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h) {
-	*p << _T("@ ");
+	*p << _T("ã€€ ");
 	*h << _T("<td></td>");
 }
 
@@ -243,14 +243,14 @@ void haifu::tools::haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, Pl
 		&HThaifuP->streamDat[RelativePositionOf(PassivePlayer, sLeft)].sutehailabel,
 	};
 	for (int i = 0; i < 12; i++) {
-		*p[i] << _T("@ "); *h[i] << _T("<td></td>");
+		*p[i] << _T("ã€€ "); *h[i] << _T("<td></td>");
 	}
 	haifuskipX(RelativePositionOf(PassivePlayer, sRight));
 	haifuskipX(RelativePositionOf(PassivePlayer, sOpposite));
 	haifuskipX(RelativePositionOf(PassivePlayer, sLeft));
 }
 
-/* ˆê”¼‘‘•ª‚Ì”v•ˆƒoƒbƒtƒ@‚ğ‰Šú‰» */
+/* ä¸€åŠè˜åˆ†ã®ç‰Œè­œãƒãƒƒãƒ•ã‚¡ã‚’åˆæœŸåŒ– */
 void haifu::haifubufinit() {
 #ifdef GUOBIAO
 	currWindNum = 0;
@@ -258,21 +258,21 @@ void haifu::haifubufinit() {
 	CodeConv::tostringstream headerTxt; headerTxt.str(_T(""));
 	headerTxt << _T("MiHaJong ");
 	switch (GameStat.gameType) {
-		case SanmaS:    headerTxt << _T("””vO–ƒ"); break;
-		case Sanma4:    headerTxt << _T("llO–ƒ"); break;
-		case Sanma:     headerTxt << _T("Ol‘Å‚¿"); break;
-		case Yonma:     headerTxt << _T("ll‘Å‚¿"); break;
-		case GuobiaoMJ: headerTxt << _T("‘•W–ƒ«"); break;
+		case SanmaS:    headerTxt << _T("æ•°ç‰Œä¸‰éº»"); break;
+		case Sanma4:    headerTxt << _T("å››äººä¸‰éº»"); break;
+		case Sanma:     headerTxt << _T("ä¸‰äººæ‰“ã¡"); break;
+		case Yonma:     headerTxt << _T("å››äººæ‰“ã¡"); break;
+		case GuobiaoMJ: headerTxt << _T("å›½æ¨™éº»å°†"); break;
 	}
-	headerTxt << _T("”v•ˆƒf[ƒ^ Ver. ") << MIHAJONG_VER;
+	headerTxt << _T("ç‰Œè­œãƒ‡ãƒ¼ã‚¿ Ver. ") << MIHAJONG_VER;
 
-	/* ƒvƒŒ[ƒ“ƒeƒLƒXƒg”v•ˆ */
+	/* ãƒ—ãƒ¬ãƒ¼ãƒ³ãƒ†ã‚­ã‚¹ãƒˆç‰Œè­œ */
 	haifuBuffer.str(_T(""));
 	haifuBuffer << headerTxt.str() << std::endl << std::endl <<
 		_T("------------------------------------------------------------------------------") <<
 		std::endl << std::endl;
 
-	/* HTML”v•ˆ */
+	/* HTMLç‰Œè­œ */
 	HThaifuBuffer.str(_T(""));
 	HThaifuBuffer <<  _T("<html>") << std::endl << _T("<head>") << std::endl <<
 		_T("<title>") << headerTxt.str() << _T("</title>") << std::endl <<
@@ -286,7 +286,7 @@ void haifu::haifubufinit() {
 		_T("</head>") << std::endl << _T("<body>") << std::endl <<
 		_T("<h1>") << headerTxt.str() << _T("</h1>") << std::endl << _T("<hr>") << std::endl;
 
-	/* XML”v•ˆ */
+	/* XMLç‰Œè­œ */
 	XMLhaifuBuffer.str(_T("")); XhaifuBuffer.str(_T(""));
 	XMLhaifuBuffer <<
 #ifdef UNICODE
@@ -341,7 +341,7 @@ void haifu::haifubufinit() {
 		_T("\t</match-description>") << std::endl;
 }
 
-void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // Œ»İƒ^ƒO
+void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // ç¾åœ¨æ™‚åˆ»ã‚¿ã‚°
 #ifdef _WIN32
 	SYSTEMTIME currTime; GetLocalTime(&currTime);
 	TIME_ZONE_INFORMATION tz; GetTimeZoneInformation(&tz);
@@ -360,10 +360,10 @@ void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // Œ»İƒ^ƒO
 	timespec tempus; clock_gettime(CLOCK_REALTIME, &tempus);
 	tm currTime = *localtime(&tempus.tv_sec);
 	const signed long tz = []() -> signed long {
-		time_t t1 = 86400; // GNU C‚Í‚»‚¤‚Å‚Í‚È‚¢‚ªAtime_t‚ªunsigned‚Ìˆ—Œn‚ğŒ©‚½‚±‚Æ‚ª‚ ‚é‚Ì‚Å86400‚Æ‚·‚é
-		tm* tmDat = gmtime(&t1); // ‹¦’è¢ŠE‚ğZo
-		time_t t2 = mktime(tmDat); // ‚í‚´‚Æ’n•û‚Æ‰ğß‚·‚é‚±‚Æ‚Å·‚ğ‹‚ß‚é
-		return t1 - t2; // •b’PˆÊ‚Å·‚ğ•Ô‚·B“ú–{ŠÔ‚¾‚Á‚½‚ç32400‚Æ‚È‚é
+		time_t t1 = 86400; // GNU Cã¯ãã†ã§ã¯ãªã„ãŒã€time_tãŒunsignedã®å‡¦ç†ç³»ã‚’è¦‹ãŸã“ã¨ãŒã‚ã‚‹ã®ã§86400ã¨ã™ã‚‹
+		tm* tmDat = gmtime(&t1); // å”å®šä¸–ç•Œæ™‚ã‚’ç®—å‡º
+		time_t t2 = mktime(tmDat); // ã‚ã–ã¨åœ°æ–¹æ™‚ã¨è§£é‡ˆã™ã‚‹ã“ã¨ã§æ™‚å·®ã‚’æ±‚ã‚ã‚‹
+		return t1 - t2; // ç§’å˜ä½ã§æ™‚å·®ã‚’è¿”ã™ã€‚æ—¥æœ¬æ™‚é–“ã ã£ãŸã‚‰32400ã¨ãªã‚‹
 	}();
 	XMLhaifuBuffer << _T("\t\t<") << tagName << _T(">") <<
 		std::setw(4) << std::setfill(_T('0')) << (currTime.tm_year + 1900) << _T("-") <<
@@ -379,7 +379,7 @@ void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // Œ»İƒ^ƒO
 #endif /*_WIN32*/
 }
 
-/* ˆê‹Ç•ª‚Ì”v•ˆƒoƒbƒtƒ@‚ğ‰Šú‰» */
+/* ä¸€å±€åˆ†ã®ç‰Œè­œãƒãƒƒãƒ•ã‚¡ã‚’åˆæœŸåŒ– */
 void haifu::haifuinit() {
 	static HaifuStreams* const bufs[] = {&haifuP, &HThaifuP, &XhaifuP};
 	for (int i = 0; i < 3; i++) {
@@ -400,7 +400,7 @@ void haifu::haifuinit() {
 	XhaifuBufferBody.str(_T(""));
 }
 
-/* ”z”v‚ğ”v•ˆ‚É‹L˜^ */
+/* é…ç‰Œã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurechaipai(const GameTable* const gameStat) {
 #ifdef GUOBIAO
 	currWindNum = gameStat->GameRound / Players;
@@ -431,22 +431,22 @@ void haifu::haifurechaipai(const GameTable* const gameStat) {
 	XhaifuBufferBody << _T("\t\t<progress>") << std::endl;
 }
 
-/* ƒhƒ‰‚ğ”v•ˆ‚É‹L˜^ */
+/* ãƒ‰ãƒ©ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecdora(TileCode tmpDora) {
 	tools::recordDoraStream(&haifuP.dora, &HThaifuP.dora, &XhaifuP.dora, tmpDora);
 }
 
-/* — ƒhƒ‰‚ğ”v•ˆ‚É‹L˜^ */
+/* è£ãƒ‰ãƒ©ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecuradora(TileCode tmpDora) {
 	tools::recordDoraStream(&haifuP.uraDora, &HThaifuP.uraDora, &XhaifuP.uraDora, tmpDora);
 }
 
-/* ƒAƒŠƒXƒhƒ‰‚ğ”v•ˆ‚É‹L˜^ */
+/* ã‚¢ãƒªã‚¹ãƒ‰ãƒ©ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecalicedora(TileCode tmpDora) {
 	tools::recordDoraStream(&haifuP.aliceDora, &HThaifuP.aliceDora, &XhaifuP.aliceDora, tmpDora);
 }
 
-/* ƒAƒŠƒXƒhƒ‰‚ğXV */
+/* ã‚¢ãƒªã‚¹ãƒ‰ãƒ©ã‚’æ›´æ–° */
 void haifu::haifualicedoraupd() {
 	if (haifuP.aliceDora.str().length() > haifuP.aliceDoraMax.str().length()) {
 		haifuP.aliceDoraMax.str(haifuP.aliceDora.str());
@@ -455,14 +455,14 @@ void haifu::haifualicedoraupd() {
 	}
 }
 
-/* ƒAƒŠƒXƒhƒ‰‰Šú‰» */
+/* ã‚¢ãƒªã‚¹ãƒ‰ãƒ©åˆæœŸåŒ– */
 void haifu::haifuresetalicedora() {
 	haifuP.aliceDora.str(_T(""));
 	HThaifuP.aliceDora.str(_T(""));
 	XhaifuP.aliceDora.str(_T(""));
 }
 
-/* ƒhƒ‰‚ÌƒZƒpƒŒ[ƒ^[ */
+/* ãƒ‰ãƒ©ã®ã‚»ãƒ‘ãƒ¬ãƒ¼ã‚¿ãƒ¼ */
 void haifu::haifurecdorap() {
 	haifuP.dora << _T(" ");
 	haifuP.uraDora << _T(" ");
@@ -472,12 +472,12 @@ void haifu::haifurecdorap() {
 	HThaifuP.aliceDora << _T("</span> <span class=\"tile\">");
 }
 
-/* –Ì‘Å‚ğ”v•ˆ‚É‹L˜^ */
+/* æ‘¸æ‰“ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) {
-	// ƒcƒ‚‚Á‚Ä‚«‚½”v‚ğ‹L˜^
+	// ãƒ„ãƒ¢ã£ã¦ããŸç‰Œã‚’è¨˜éŒ²
 	bool discard_through = false;
 	if (gameStat->TianHuFlag) {
-		// e‚Ì‚P„–Ú
+		// è¦ªã®ï¼‘å·¡ç›®
 		tools::recordBlank_Table(
 			&haifuP.streamDat[gameStat->CurrentPlayer.Active].tsumo,
 			&HThaifuP.streamDat[gameStat->CurrentPlayer.Active].tsumo);
@@ -491,14 +491,14 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << (int)gameStat->CurrentPlayer.Active << _T("\">") << std::endl;
 #endif /* GUOBIAO */
 	} else if (gameStat->statOfActive().Tsumohai().tile == NoTile) {
-		// –Â‚¢‚½’¼Œã (‰½‚à‚µ‚È‚¢)
+		// é³´ã„ãŸç›´å¾Œ (ä½•ã‚‚ã—ãªã„)
 	} else if ((DiscardTileIndex.id) == (NumOfTilesInHand - 1)) {
-		// ƒcƒ‚Ø‚è
+		// ãƒ„ãƒ¢åˆ‡ã‚Š
 		tools::recordBlank_Table(
 			&haifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel,
 			&HThaifuP.streamDat[gameStat->CurrentPlayer.Active].tsumolabel);
-		haifuP.streamDat[gameStat->CurrentPlayer.Active].tsumo << _T("« ");
-		HThaifuP.streamDat[gameStat->CurrentPlayer.Active].tsumo << _T("<td class=\"fallthru\">«</td>");
+		haifuP.streamDat[gameStat->CurrentPlayer.Active].tsumo << _T("â†“ ");
+		HThaifuP.streamDat[gameStat->CurrentPlayer.Active].tsumo << _T("<td class=\"fallthru\">â†“</td>");
 		discard_through = true;
 		tools::checkCycle();
 #ifdef GUOBIAO
@@ -510,9 +510,9 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 		tools::haifuwritetsumohai(
 			&haifuP, &HThaifuP, gameStat->CurrentPlayer.Active,
 			gameStat->statOfActive().Tsumohai(),
-			_T("@ "), _T("<td></td>"), _T(""));
+			_T("ã€€ "), _T("<td></td>"), _T(""));
 	}
-	// Ì‚Ä‚½”v‚ğ‹L˜^
+	// æ¨ã¦ãŸç‰Œã‚’è¨˜éŒ²
 	XhaifuBufferBody << _T("\t\t\t\t\t");
 	tools::recordTile_Table(
 		&haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehai,
@@ -521,31 +521,31 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 		discard_through ? _T("discard-through") : _T("discard"), true);
 }
 
-/* •úe‚µ‚½‚©”Û‚©‚ğ”v•ˆ‚É‹L˜^ */
+/* æ”¾éŠƒã—ãŸã‹å¦ã‹ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecfurikomi(const GameTable* const gameStat) {
 	if (gameStat->statOfActive().RichiFlag.IppatsuFlag) {
-		// —§’¼éŒ¾”v‚Ìê‡
+		// ç«‹ç›´å®£è¨€ç‰Œã®å ´åˆ
 		if (RonPlayers(gameStat) > 0) {
-			// —§’¼éŒ¾”v‚Å‚ÌU‚è‚İ
-			haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("ØX ");
-			HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("<td>ƒŠ[ƒ`<br>ƒEƒ`</td>");
+			// ç«‹ç›´å®£è¨€ç‰Œã§ã®æŒ¯ã‚Šè¾¼ã¿
+			haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("ï¾˜X ");
+			HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("<td>ãƒªãƒ¼ãƒ<br>ã‚¦ãƒ</td>");
 			XhaifuBufferBody << _T(" call=\"richi\" let-go=\"true\" />") << std::endl;
 		} else {
-			// —§’¼‚ª’Ê‚Á‚½ê‡
-			haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("Ø°Á");
-			HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("<td>ƒŠ[ƒ`</td>");
+			// ç«‹ç›´ãŒé€šã£ãŸå ´åˆ
+			haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("ï¾˜ï½°ï¾");
+			HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("<td>ãƒªãƒ¼ãƒ</td>");
 			XhaifuBufferBody << _T(" call=\"richi\" />") << std::endl;
 		}
 	} else {
-		// ‚»‚êˆÈŠO‚Ìê‡
+		// ãã‚Œä»¥å¤–ã®å ´åˆ
 		if (RonPlayers(gameStat) > 0) {
-			// ’Êí‚ÌU‚è‚İ
-			haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("³Á ");
-			HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("<td>ƒEƒ`</td>");
+			// é€šå¸¸ã®æŒ¯ã‚Šè¾¼ã¿
+			haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("ï½³ï¾ ");
+			HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("<td>ã‚¦ãƒ</td>");
 			XhaifuBufferBody << _T(" let-go=\"true\" />") << std::endl;
 		} else {
-			// ‰½‚à‚È‚©‚Á‚½ê‡
-			haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("@ ");
+			// ä½•ã‚‚ãªã‹ã£ãŸå ´åˆ
+			haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("ã€€ ");
 			HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << _T("<td></td>");
 			XhaifuBufferBody << _T(" />") << std::endl;
 		}
@@ -553,37 +553,37 @@ void haifu::haifurecfurikomi(const GameTable* const gameStat) {
 	XhaifuBufferBody << _T("\t\t\t\t</turn>") << std::endl;
 }
 
-/* ƒ`[‚µ‚½‚±‚Æ‚ğ”v•ˆ‚É‹L˜^ */
+/* ãƒãƒ¼ã—ãŸã“ã¨ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecchi(const GameTable* const gameStat) {
 	tools::haifuwritetsumohai(
 		&haifuP, &HThaifuP, gameStat->CurrentPlayer.Passive,
-		gameStat->CurrentDiscard, _T("Á° "), _T("<td>ƒ`[</td>"), _T(" meld=\"sequence\""));
+		gameStat->CurrentDiscard, _T("ï¾ï½° "), _T("<td>ãƒãƒ¼</td>"), _T(" meld=\"sequence\""));
 }
-/* ƒ|ƒ“‚µ‚½‚±‚Æ‚ğ”v•ˆ‚É‹L˜^ */
+/* ãƒãƒ³ã—ãŸã“ã¨ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecpon(const GameTable* const gameStat) {
 	tools::haifuskip(
 		&haifuP, &HThaifuP,
 		gameStat->CurrentPlayer.Passive, gameStat->CurrentPlayer.Active);
 	tools::haifuwritetsumohai(
 		&haifuP, &HThaifuP, gameStat->CurrentPlayer.Passive,
-		gameStat->CurrentDiscard, _T("Îßİ"), _T("<td>ƒ|ƒ“</td>"), _T(" meld=\"triplet\""));
+		gameStat->CurrentDiscard, _T("ï¾ï¾Ÿï¾"), _T("<td>ãƒãƒ³</td>"), _T(" meld=\"triplet\""));
 }
-/* ©–Ì˜a‚µ‚½‚±‚Æ‚ğ”v•ˆ‚É‹L˜^ */
+/* è‡ªæ‘¸å’Œã—ãŸã“ã¨ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurectsumo(const GameTable* const gameStat) {
 	tools::haifuwritetsumohai(
 		&haifuP, &HThaifuP, gameStat->CurrentPlayer.Active,
 		gameStat->statOfActive().Tsumohai(),
-		_T("ÂÓ "), _T("<td>ƒcƒ‚</td>"), _T(" meld=\"mahjong\""));
+		_T("ï¾‚ï¾“ "), _T("<td>ãƒ„ãƒ¢</td>"), _T(" meld=\"mahjong\""));
 		XhaifuBufferBody << _T("\t\t\t\t</turn>") << std::endl;
 }
-/* ‘å–¾È‚µ‚½‚±‚Æ‚ğ”v•ˆ‚É‹L˜^ */
+/* å¤§æ˜æ§“ã—ãŸã“ã¨ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecminkan(const GameTable* const gameStat) {
 	tools::haifuskip(
 		&haifuP, &HThaifuP,
 		gameStat->CurrentPlayer.Passive, gameStat->CurrentPlayer.Active);
 	tools::haifuwritetsumohai(
 		&haifuP, &HThaifuP, gameStat->CurrentPlayer.Passive,
-		gameStat->CurrentDiscard, _T("¶İ "), _T("<td>ƒJƒ“</td>"), _T(" meld=\"quad\""));
+		gameStat->CurrentDiscard, _T("ï½¶ï¾ "), _T("<td>ã‚«ãƒ³</td>"), _T(" meld=\"quad\""));
 	tools::recordBlank_Table(
 		&haifuP.streamDat[gameStat->CurrentPlayer.Passive].sutehai,
 		&HThaifuP.streamDat[gameStat->CurrentPlayer.Passive].sutehai);
@@ -591,11 +591,11 @@ void haifu::haifurecminkan(const GameTable* const gameStat) {
 		&haifuP.streamDat[gameStat->CurrentPlayer.Passive].sutehailabel,
 		&HThaifuP.streamDat[gameStat->CurrentPlayer.Passive].sutehailabel);
 	XhaifuBufferBody << _T("\t\t\t\t</turn>") << std::endl;
-	// ”v•ˆ‚Ì‹Lqã‚ÍA—äã”v‚Ìæ“¾‚ÍŸ„‚Æ‚µ‚Äˆµ‚¤
+	// ç‰Œè­œã®è¨˜è¿°ä¸Šã¯ã€å¶ºä¸Šç‰Œã®å–å¾—ã¯æ¬¡å·¡ã¨ã—ã¦æ‰±ã†
 	tools::haifuskipall(&haifuP, &HThaifuP, gameStat->CurrentPlayer.Passive);
 }
 
-/* „–Ú‹æØ‚è‚© */
+/* å·¡ç›®åŒºåˆ‡ã‚Šã‹ */
 void haifu::tools::checkCycle(bool reset) {
 	static int cycle = 1, turn = 0;
 	if (reset) {
@@ -610,13 +610,13 @@ void haifu::tools::checkCycle(bool reset) {
 	}
 }
 
-/* ƒJƒ“‚ª‚ ‚Á‚½ */
+/* ã‚«ãƒ³ãŒã‚ã£ãŸæ™‚ */
 void haifu::tools::kan_sub::recordKanOrFlower(
 	const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 	HaifuStreams* haifuP, HaifuStreams* HThaifuP
 	) {
 		if ((gameStat->TianHuFlag)||((DiscardTileIndex.id) != (NumOfTilesInHand - 1))) {
-			// e‚Ì‚P„–Ú‚Ìê‡‚©Aƒcƒ‚‚Á‚Ä‚«‚½”vˆÈŠO‚ğƒJƒ“‚µ‚½ê‡
+			// è¦ªã®ï¼‘å·¡ç›®ã®å ´åˆã‹ã€ãƒ„ãƒ¢ã£ã¦ããŸç‰Œä»¥å¤–ã‚’ã‚«ãƒ³ã—ãŸå ´åˆ
 			if (gameStat->TianHuFlag) {
 				checkCycle(true);
 #ifdef GUOBIAO
@@ -639,7 +639,7 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 				haifukanflag = true;
 			} else if (gameStat->statOfActive().Tsumohai().tile ==
 				gameStat->statOfActive().Hand[DiscardTileIndex.id].tile) {
-					// ƒcƒ‚‚Á‚Ä‚«‚½”v‚Æ“¯‚¶‚¾‚Á‚½
+					// ãƒ„ãƒ¢ã£ã¦ããŸç‰Œã¨åŒã˜ã ã£ãŸ
 					checkCycle();
 #ifdef GUOBIAO
 					XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][(int)gameStat->CurrentPlayer.Active] << _T("\">") << std::endl;
@@ -657,7 +657,7 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 				haifuwritetsumohai(
 					haifuP, HThaifuP, gameStat->CurrentPlayer.Active,
 					gameStat->statOfActive().Tsumohai(),
-					_T("@ "), _T("<td></td>"), _T(""));
+					_T("ã€€ "), _T("<td></td>"), _T(""));
 				XhaifuBufferBody << _T("\t\t\t\t\t");
 				recordTile_Table(
 					&haifuP->streamDat[gameStat->CurrentPlayer.Active].sutehai,
@@ -682,10 +682,10 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 			haifukanflag = false;
 		}
 }
-/* g–kh‚ğ”v•ˆ‚É‹L˜^ */
+/* æ¶â€œåŒ—â€ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void inline haifu::tools::kan_sub::recordChanKan(const GameTable* const gameStat, CodeConv::tstring pTxt, CodeConv::tstring hTxt, CodeConv::tstring XAttrA, CodeConv::tstring XAttrB) {
 	if (haifukanflag) {
-		// e‚Ì‚P„–Ú‚Ìê‡‚©Aƒcƒ‚‚Á‚Ä‚«‚½”vˆÈŠO‚ğƒJƒ“‚µ‚½ê‡
+		// è¦ªã®ï¼‘å·¡ç›®ã®å ´åˆã‹ã€ãƒ„ãƒ¢ã£ã¦ããŸç‰Œä»¥å¤–ã‚’ã‚«ãƒ³ã—ãŸå ´åˆ
 		haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << pTxt;
 		HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << hTxt;
 		XhaifuBufferBody << XAttrB << _T(" />") << std::endl;
@@ -696,10 +696,10 @@ void inline haifu::tools::kan_sub::recordChanKan(const GameTable* const gameStat
 	}
 	XhaifuBufferBody << _T("\t\t\t\t</turn>") << std::endl;
 }
-/* ”²‚«–k‚ª¬Œ÷‚µ‚½ê‡‚Ì”v•ˆˆ— */
+/* æŠœãåŒ—ãŒæˆåŠŸã—ãŸå ´åˆã®ç‰Œè­œå‡¦ç† */
 void inline haifu::tools::kan_sub::recordKan(const GameTable* const gameStat, CodeConv::tstring pTxt, CodeConv::tstring hTxt, CodeConv::tstring XAttrA, CodeConv::tstring XAttrB) {
 	if (haifukanflag == 1) {
-		// e‚Ì‚P„–Ú‚Ìê‡‚©Aƒcƒ‚‚Á‚Ä‚«‚½”vˆÈŠO‚ğƒJƒ“‚µ‚½ê‡
+		// è¦ªã®ï¼‘å·¡ç›®ã®å ´åˆã‹ã€ãƒ„ãƒ¢ã£ã¦ããŸç‰Œä»¥å¤–ã‚’ã‚«ãƒ³ã—ãŸå ´åˆ
 		haifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << pTxt;
 		HThaifuP.streamDat[gameStat->CurrentPlayer.Active].sutehailabel << hTxt;
 		XhaifuBufferBody << XAttrB << _T(" />") << std::endl;
@@ -716,44 +716,44 @@ void inline haifu::tools::kan_sub::recordKan(const GameTable* const gameStat, Co
 	}
 	XhaifuBufferBody << _T("\t\t\t\t</turn>") << std::endl;
 		
-	// ”v•ˆ‚Ì‹Lqã‚ÍA—äã”v‚Ìæ“¾‚ÍŸ„‚Æ‚µ‚Äˆµ‚¤
+	// ç‰Œè­œã®è¨˜è¿°ä¸Šã¯ã€å¶ºä¸Šç‰Œã®å–å¾—ã¯æ¬¡å·¡ã¨ã—ã¦æ‰±ã†
 	haifuskipall(&haifuP, &HThaifuP, gameStat->CurrentPlayer.Active);
 }
 
-/* ”²‚«–k‚ğ”v•ˆ‚É‹L˜^ */
+/* æŠœãåŒ—ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecnorth(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) {
 	tools::kan_sub::recordKanOrFlower(gameStat, DiscardTileIndex, &haifuP, &HThaifuP);
 }
-/* g–kh‚ğ”v•ˆ‚É‹L˜^ */
+/* æ¶â€œåŒ—â€ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecchanpei(const GameTable* const gameStat) {
-	tools::kan_sub::recordChanKan(gameStat, _T("”²X"), _T("<td>”²<br>ƒEƒ`</td>"),
+	tools::kan_sub::recordChanKan(gameStat, _T("æŠœX"), _T("<td>æŠœ<br>ã‚¦ãƒ</td>"),
 		_T(" meld=\"flower\" let-go=\"true\""), _T(" call=\"flower\" let-go=\"true\""));
 }
-/* ”²‚«–k‚ª¬Œ÷‚µ‚½ê‡‚Ì”v•ˆˆ— */
+/* æŠœãåŒ—ãŒæˆåŠŸã—ãŸå ´åˆã®ç‰Œè­œå‡¦ç† */
 void haifu::haifurecnorthproc(const GameTable* const gameStat) {
-	tools::kan_sub::recordKan(gameStat, _T("”² "), _T("<td>”²</td>"),
+	tools::kan_sub::recordKan(gameStat, _T("æŠœ "), _T("<td>æŠœ</td>"),
 		_T(" meld=\"flower\""), _T(" call=\"flower\""));
 }
 
-/* ˆÃÈ‚È‚¢‚µ‰ÁÈ‚ğ”v•ˆ‚É‹L˜^ */
+/* æš—æ§“ãªã„ã—åŠ æ§“ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecankan(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) {
 	tools::kan_sub::recordKanOrFlower(gameStat, DiscardTileIndex, &haifuP, &HThaifuP);
 }
-/* È‚ğ”v•ˆ‚É‹L˜^ */
+/* æ¶æ§“ã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecchankan(const GameTable* const gameStat) {
-	tools::kan_sub::recordChanKan(gameStat, _T("¶İX"), _T("<td>ƒJƒ“<br>ƒEƒ`</td>"),
+	tools::kan_sub::recordChanKan(gameStat, _T("ï½¶ï¾X"), _T("<td>ã‚«ãƒ³<br>ã‚¦ãƒ</td>"),
 		_T(" meld=\"quad\" let-go=\"true\""), _T(" call=\"quad\" let-go=\"true\""));
 }
-/* ƒJƒ“‚ª¬Œ÷‚µ‚½ê‡‚Ì”v•ˆˆ— */
+/* ã‚«ãƒ³ãŒæˆåŠŸã—ãŸå ´åˆã®ç‰Œè­œå‡¦ç† */
 void haifu::haifureckanproc(const GameTable* const gameStat) {
-	tools::kan_sub::recordKan(gameStat, _T("¶İ "), _T("<td>ƒJƒ“</td>"),
+	tools::kan_sub::recordKan(gameStat, _T("ï½¶ï¾ "), _T("<td>ã‚«ãƒ³</td>"),
 		_T(" meld=\"quad\""), _T(" call=\"quad\""));
 }
 
-/* ‰Ô”v‚ğ”v•ˆ‚É‹L˜^ */
+/* èŠ±ç‰Œã‚’ç‰Œè­œã«è¨˜éŒ² */
 void haifu::haifurecflower(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) {
 	tools::kan_sub::recordKanOrFlower(gameStat, DiscardTileIndex, &haifuP, &HThaifuP);
-	tools::kan_sub::recordKan(gameStat, _T("‰Ô "), _T("<td>‰Ô</td>"),
+	tools::kan_sub::recordKan(gameStat, _T("èŠ± "), _T("<td>èŠ±</td>"),
 		_T(" meld=\"flower\""), _T(" call=\"flower\""));
 }
 
@@ -763,30 +763,30 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 	CodeConv::tstring ResultDesc, EndType RoundEndType) {
 		haifuBuffer << ::roundName(OrigTurn, gameStat);
 #ifndef GUOBIAO
-		if (OrigHonba > 0) haifuBuffer << _T(" ") << OrigHonba << _T("–{ê");
-		haifuBuffer << _T(" ƒhƒ‰F") << haifuP.dora.str();
+		if (OrigHonba > 0) haifuBuffer << _T(" ") << OrigHonba << _T("æœ¬å ´");
+		haifuBuffer << _T(" ãƒ‰ãƒ©ï¼š") << haifuP.dora.str();
 		if ((RoundEndType == Agari)&&(tmpUraFlag)&&(RuleData::chkRuleApplied("uradora")))
-			haifuBuffer << _T("— ƒhƒ‰F") << haifuP.uraDora.str();
+			haifuBuffer << _T("è£ãƒ‰ãƒ©ï¼š") << haifuP.uraDora.str();
 		if ((RoundEndType == Agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
-			haifuBuffer << _T("ƒAƒŠƒXF") << haifuP.aliceDoraMax.str();
+			haifuBuffer << _T("ã‚¢ãƒªã‚¹ï¼š") << haifuP.aliceDoraMax.str();
 #endif /* GUOBIAO */
 		haifuBuffer << std::endl << std::endl <<
-			_T("Œ‹‰ÊF") << ResultDesc << std::endl << std::endl;
+			_T("çµæœï¼š") << ResultDesc << std::endl << std::endl;
 
 		HThaifuBuffer << _T("<h2>") << ::roundName(OrigTurn, gameStat);
 #ifndef GUOBIAO
-		if (OrigHonba > 0) HThaifuBuffer << _T(" ") << OrigHonba <<_T("–{ê");
-		HThaifuBuffer << _T(" ƒhƒ‰F<span class=\"tile\">") <<
+		if (OrigHonba > 0) HThaifuBuffer << _T(" ") << OrigHonba <<_T("æœ¬å ´");
+		HThaifuBuffer << _T(" ãƒ‰ãƒ©ï¼š<span class=\"tile\">") <<
 			HThaifuP.dora.str() << _T("</span>");
 		if ((RoundEndType == Agari)&&(tmpUraFlag)&&(RuleData::chkRuleApplied("uradora")))
-			HThaifuBuffer << _T("— ƒhƒ‰F<span class=\"tile\">") <<
+			HThaifuBuffer << _T("è£ãƒ‰ãƒ©ï¼š<span class=\"tile\">") <<
 			HThaifuP.uraDora.str() << _T("</span>");
 		if ((RoundEndType == Agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
-			HThaifuBuffer << _T("ƒAƒŠƒXF<span class=\"tile\">") <<
+			HThaifuBuffer << _T("ã‚¢ãƒªã‚¹ï¼š<span class=\"tile\">") <<
 			HThaifuP.aliceDoraMax.str() << _T("</span>");
 #endif /* GUOBIAO */
 		HThaifuBuffer << _T("</h2>") << std::endl <<
-			_T("<p>Œ‹‰ÊF") << ResultDesc << _T("</p>") << std::endl <<
+			_T("<p>çµæœï¼š") << ResultDesc << _T("</p>") << std::endl <<
 			_T("<table>") << std::endl << _T("<tr>");
 		for (unsigned int i = 0u; i < cols; i++)
 			HThaifuBuffer << _T("<td width=") << (100.0/((double)cols)) << _T("%></td>");
@@ -820,9 +820,9 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 #endif /* GUOBIAO */
 }
 
-// ÅI”vp
+// æœ€çµ‚ç‰Œå§¿
 void haifu::tools::hfwriter::finalformWriter::hfFinalForm(const GameTable* const gameStat, PlayerID player, EndType RoundEndType) {
-	// ÅI”vp(ƒè”v‚Ì‚İ)
+	// æœ€çµ‚ç‰Œå§¿(ç´”æ‰‹ç‰Œã®ã¿)
 	bool agariFlag = false;
 	XhaifuBufferBody << _T("\t\t\t\t<hand>") << std::endl;
 	for (int i = 0; i < NumOfTilesInHand; i++) {
@@ -830,13 +830,13 @@ void haifu::tools::hfwriter::finalformWriter::hfFinalForm(const GameTable* const
 			if (i == NumOfTilesInHand - 1) {
 				if ((RoundEndType == Ryuukyoku)||(RoundEndType == Agari)||(RoundEndType == Chonbo)) {
 					if (gameStat->TsumoAgariFlag) {
-						haifuP.streamDat[player].final << _T(" ƒcƒ‚");
-						HThaifuP.streamDat[player].final << _T("</span> ƒcƒ‚<span class=\"tile\">");
+						haifuP.streamDat[player].final << _T(" ãƒ„ãƒ¢");
+						HThaifuP.streamDat[player].final << _T("</span> ãƒ„ãƒ¢<span class=\"tile\">");
 						XhaifuBufferBody << _T("\t\t\t\t</hand>") << std::endl;
 						XhaifuBufferBody << _T("\t\t\t\t<finishing-tile finish-type=\"tsumo\">") << std::endl;
 					} else {
-						haifuP.streamDat[player].final << _T(" ƒƒ“");
-						HThaifuP.streamDat[player].final << _T("</span> ƒƒ“<span class=\"tile\">");
+						haifuP.streamDat[player].final << _T(" ãƒ­ãƒ³");
+						HThaifuP.streamDat[player].final << _T("</span> ãƒ­ãƒ³<span class=\"tile\">");
 						XhaifuBufferBody << _T("\t\t\t\t</hand>") << std::endl;
 						XhaifuBufferBody << _T("\t\t\t\t<finishing-tile finish-type=\"ron\">") << std::endl;
 					}
@@ -869,22 +869,22 @@ void haifu::tools::hfwriter::finalformWriter::hfFlower(const GameTable* const ga
 			haifuP.streamDat[player].final << _T(" ");
 			HThaifuP.streamDat[player].final << _T("</span> <span class=\"tile\">");
 			if (gameStat->Player[player].FlowerFlag.Spring) {
-				haifuP.streamDat[player].final << _T("t");
+				haifuP.streamDat[player].final << _T("æ˜¥");
 				HThaifuP.streamDat[player].final << _T("@");
 				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&spring;\" />") << std::endl;
 			}
 			if (gameStat->Player[player].FlowerFlag.Summer) {
-				haifuP.streamDat[player].final << _T("‰Ä");
+				haifuP.streamDat[player].final << _T("å¤");
 				HThaifuP.streamDat[player].final << _T(";");
 				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&summer;\" />") << std::endl;
 			}
 			if (gameStat->Player[player].FlowerFlag.Autumn) {
-				haifuP.streamDat[player].final << _T("H");
+				haifuP.streamDat[player].final << _T("ç§‹");
 				HThaifuP.streamDat[player].final << _T(":");
 				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&autumn;\" />") << std::endl;
 			}
 			if (gameStat->Player[player].FlowerFlag.Winter) {
-				haifuP.streamDat[player].final << _T("“~");
+				haifuP.streamDat[player].final << _T("å†¬");
 				HThaifuP.streamDat[player].final << _T("]");
 				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&winter;\" />") << std::endl;
 			}
@@ -896,22 +896,22 @@ void haifu::tools::hfwriter::finalformWriter::hfFlower(const GameTable* const ga
 			haifuP.streamDat[player].final << _T(" ");
 			HThaifuP.streamDat[player].final << _T("</span> <span class=\"tile\">");
 			if (gameStat->Player[player].FlowerFlag.Plum) {
-				haifuP.streamDat[player].final << _T("”~");
+				haifuP.streamDat[player].final << _T("æ¢…");
 				HThaifuP.streamDat[player].final << _T("-");
 				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&plum;\" />") << std::endl;
 			}
 			if (gameStat->Player[player].FlowerFlag.Orchid) {
-				haifuP.streamDat[player].final << _T("—–");
+				haifuP.streamDat[player].final << _T("è˜­");
 				HThaifuP.streamDat[player].final << _T("^");
 				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&orchid;\" />") << std::endl;
 			}
 			if (gameStat->Player[player].FlowerFlag.Chrys) {
-				haifuP.streamDat[player].final << _T("‹e");
+				haifuP.streamDat[player].final << _T("èŠ");
 				HThaifuP.streamDat[player].final << _T("[");
 				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&chrys;\" />") << std::endl;
 			}
 			if (gameStat->Player[player].FlowerFlag.Bamboo) {
-				haifuP.streamDat[player].final << _T("’|");
+				haifuP.streamDat[player].final << _T("ç«¹");
 				HThaifuP.streamDat[player].final << _T("\\");
 				XhaifuBufferBody << _T("\t\t\t\t\t<tile tile=\"&bamboo;\" />") << std::endl;
 			}
@@ -924,9 +924,9 @@ void haifu::tools::hfwriter::finalformWriter::hfFlower(const GameTable* const ga
 }
 
 void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player, MeldCode meld) {
-	// ƒ`[
-	haifuP.streamDat[player].final << _T(" ƒƒ`[");
-	HThaifuP.streamDat[player].final << _T("</span> ƒ`[<span class=\"tile\">");
+	// ãƒãƒ¼
+	haifuP.streamDat[player].final << _T(" ï¼œãƒãƒ¼");
+	HThaifuP.streamDat[player].final << _T("</span> ãƒãƒ¼<span class=\"tile\">");
 	XhaifuBufferBody << _T("\t\t\t\t<sequence>") << std::endl;
 	Tile meldTile[3];
 	switch (meld.mstat) {
@@ -975,22 +975,22 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 	switch (meld.mstat) {
 	case meldTripletExposedLeft: case meldQuadExposedLeft: case meldQuadAddedLeft:
 		meldDirection = _T(" meld-direction=\"left\"");
-		haifuP.streamDat[player].final << _T(" ƒ"); interrupt = 1; break;
+		haifuP.streamDat[player].final << _T(" ï¼œ"); interrupt = 1; break;
 	case meldTripletExposedCenter: case meldQuadExposedCenter: case meldQuadAddedCenter:
 		meldDirection = _T(" meld-direction=\"opposite\"");
-		haifuP.streamDat[player].final << _T(" È"); interrupt = 2; break;
+		haifuP.streamDat[player].final << _T(" âˆ§"); interrupt = 2; break;
 	case meldTripletExposedRight: case meldQuadExposedRight: case meldQuadAddedRight:
 		meldDirection = _T(" meld-direction=\"right\"");
-		haifuP.streamDat[player].final << _T(" „"); interrupt = 8; break;
+		haifuP.streamDat[player].final << _T(" ï¼"); interrupt = 8; break;
 	case meldQuadConcealed:
-		haifuP.streamDat[player].final << _T(" "); interrupt = 7; break;
+		haifuP.streamDat[player].final << _T(" â—‡"); interrupt = 7; break;
 	}
 	switch (meld.mstat) {
 	case meldTripletExposedLeft: case meldTripletExposedCenter:
 	case meldTripletExposedRight:
 		tiles = 3;
-		haifuP.streamDat[player].final << _T("ƒ|ƒ“");
-		HThaifuP.streamDat[player].final << _T("</span> ƒ|ƒ“<span class=\"tile\">");
+		haifuP.streamDat[player].final << _T("ãƒãƒ³");
+		HThaifuP.streamDat[player].final << _T("</span> ãƒãƒ³<span class=\"tile\">");
 		XhaifuBufferBody << _T("\t\t\t\t<triplet") << meldDirection << _T('>') << std::endl;
 		break;
 	case meldQuadExposedLeft: case meldQuadExposedCenter:
@@ -1002,14 +1002,14 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 		goto quad_4tiles;
 	quad_4tiles:
 		tiles = 4;
-		haifuP.streamDat[player].final << _T("ƒJƒ“");
-		HThaifuP.streamDat[player].final << _T("</span> ƒJƒ“<span class=\"tile\">");
+		haifuP.streamDat[player].final << _T("ã‚«ãƒ³");
+		HThaifuP.streamDat[player].final << _T("</span> ã‚«ãƒ³<span class=\"tile\">");
 		break;
 	case meldQuadAddedLeft: case meldQuadAddedCenter:
 	case meldQuadAddedRight:
 		tiles = 3;
-		haifuP.streamDat[player].final << _T("¤ƒJƒ“");
-		HThaifuP.streamDat[player].final << _T("</span> ƒJƒ“<span class=\"tile\">");
+		haifuP.streamDat[player].final << _T("â–½ã‚«ãƒ³");
+		HThaifuP.streamDat[player].final << _T("</span> ã‚«ãƒ³<span class=\"tile\">");
 		XhaifuBufferBody << _T("\t\t\t\t<quad-exposed") << meldDirection << _T(" added=\"true\">") << std::endl;
 		break;
 	}
@@ -1057,18 +1057,18 @@ void haifu::tools::hfwriter::finalformWriter::hfExposedMeld(const GameTable* con
 }
 
 void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, PlayerID player, seatAbsolute wind) {
-	// “_”‚Ì•Ï“®
+	// ç‚¹æ•°ã®å¤‰å‹•
 	CodeConv::tostringstream o;
-	o << _T(" ") << origPoint[player].to_str(_T(""), _T("¢"));
-	if (origPoint[player] != gameStat->Player[player].PlayerScore) // “_”‚ªˆê’v‚µ‚È‚¢‚È‚ç
-		o << _T(" ¨ ") <<
-			gameStat->Player[player].PlayerScore.bignumtotext(_T(""), _T("¢")) << _T(" (") <<
+	o << _T(" ") << origPoint[player].to_str(_T(""), _T("â–³"));
+	if (origPoint[player] != gameStat->Player[player].PlayerScore) // ç‚¹æ•°ãŒä¸€è‡´ã—ãªã„ãªã‚‰
+		o << _T(" â†’ ") <<
+			gameStat->Player[player].PlayerScore.bignumtotext(_T(""), _T("â–³")) << _T(" (") <<
 			((LNum)gameStat->Player[player].PlayerScore -
 			origPoint[player]).to_str(_T("+"), _T("-")) <<
 			_T(")");
 #ifndef GUOBIAO
-	if (RuleData::chkRuleApplied("chip")) // ƒ`ƒbƒv‚ ‚è‚Ì
-		o << _T(" ƒ`ƒbƒv: ") <<
+	if (RuleData::chkRuleApplied("chip")) // ãƒãƒƒãƒ—ã‚ã‚Šã®æ™‚
+		o << _T(" ãƒãƒƒãƒ—: ") <<
 			((gameStat->Player[player].playerChip >= 0) ? _T("+") : _T("")) <<
 			(int)gameStat->Player[player].playerChip;
 
@@ -1080,7 +1080,7 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 		chat::chatobj->sysmsg(p.str());
 	}
 					
-	// o—Í
+	// å‡ºåŠ›
 	haifuBuffer << windName(wind) << _T(" ") <<
 		EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
 		o.str() << std::endl;
@@ -1089,7 +1089,7 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 		EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
 		o.str() << _T("</td></tr>") << std::endl;
 
-	// XML—po—Í
+	// XMLç”¨å‡ºåŠ›
 	const CodeConv::tstring nomDeVent[4] = {_T("east"), _T("south"), _T("west"), _T("north")};
 #ifdef GUOBIAO
 	XhaifuBuffer << _T("\t\t\t\t<player ref=\"player") << playerNumberList[currWindNum][(int)player] << _T("\" wind=\"") <<
@@ -1098,13 +1098,13 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 #endif /* GUOBIAO */
 		nomDeVent[wind] << _T("\" score=\"")
 		<< origPoint[player].to_str_plain() << _T('"');
-	if (origPoint[player] != gameStat->Player[player].PlayerScore) // “_”‚ªˆê’v‚µ‚È‚¢‚È‚ç
+	if (origPoint[player] != gameStat->Player[player].PlayerScore) // ç‚¹æ•°ãŒä¸€è‡´ã—ãªã„ãªã‚‰
 		XhaifuBuffer << _T(" score-after=\"") <<
 			gameStat->Player[player].PlayerScore.bignumtoplaintext() << _T("\" delta=\"") <<
 			((LNum)gameStat->Player[player].PlayerScore -
 			origPoint[player]).to_str_plain() << _T('"');
 #ifndef GUOBIAO
-	if (RuleData::chkRuleApplied("chip")) // ƒ`ƒbƒv‚ ‚è‚Ì
+	if (RuleData::chkRuleApplied("chip")) // ãƒãƒƒãƒ—ã‚ã‚Šã®æ™‚
 		XhaifuBuffer << _T(" chip=\"") <<
 			(int)gameStat->Player[player].playerChip << _T('"');
 #endif /* GUOBIAO */
@@ -1112,29 +1112,29 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 }
 
 void haifu::tools::hfwriter::hfWriteOut(const GameTable* const gameStat, PlayerID player) {
-	haifuBuffer << _T("”z”vF") << haifuP.streamDat[player].haipai.str() <<
+	haifuBuffer << _T("é…ç‰Œï¼š") << haifuP.streamDat[player].haipai.str() <<
 		std::endl << std::endl;
-	HThaifuBuffer << _T("<tr><td class=\"label\">”z”v</td><td colspan=") << (cols - 1) <<
+	HThaifuBuffer << _T("<tr><td class=\"label\">é…ç‰Œ</td><td colspan=") << (cols - 1) <<
 		_T("><span class=\"tile\">") << HThaifuP.streamDat[player].haipai.str() <<
 		_T("</span></td></tr>") << std::endl << std::endl;
-	if (!gameStat->TianHuFlag) { // “V˜a(‚Ü‚½‚Íe‚Ì\O•s“ƒ‚â‹ãí‹ã”v)‚Ìê‡‚ÍÈ—ª
+	if (!gameStat->TianHuFlag) { // å¤©å’Œ(ã¾ãŸã¯è¦ªã®åä¸‰ä¸å¡”ã‚„ä¹ç¨®ä¹ç‰Œ)ã®å ´åˆã¯çœç•¥
 		haifuBuffer <<
-			_T("©–ÌF") << haifuP.streamDat[player].tsumo.str() << std::endl <<
-			_T("@@@") << haifuP.streamDat[player].tsumolabel.str() << std::endl <<
-			_T("‘Å”vF") << haifuP.streamDat[player].sutehai.str() << std::endl <<
-			_T("@@@") << haifuP.streamDat[player].sutehailabel.str() << std::endl <<
-			_T("”vpF") << haifuP.streamDat[player].final.str() << std::endl <<
+			_T("è‡ªæ‘¸ï¼š") << haifuP.streamDat[player].tsumo.str() << std::endl <<
+			_T("ã€€ã€€ã€€") << haifuP.streamDat[player].tsumolabel.str() << std::endl <<
+			_T("æ‰“ç‰Œï¼š") << haifuP.streamDat[player].sutehai.str() << std::endl <<
+			_T("ã€€ã€€ã€€") << haifuP.streamDat[player].sutehailabel.str() << std::endl <<
+			_T("ç‰Œå§¿ï¼š") << haifuP.streamDat[player].final.str() << std::endl <<
 			std::endl;
 		HThaifuBuffer <<
-			_T("<tr class=\"tile\"><td class=\"label\" rowspan=2>©–Ì</td>") <<
+			_T("<tr class=\"tile\"><td class=\"label\" rowspan=2>è‡ªæ‘¸</td>") <<
 			HThaifuP.streamDat[player].tsumo.str() << _T("</tr>") << std::endl <<
 			_T("<tr class=\"notice\">") <<
 			HThaifuP.streamDat[player].tsumolabel.str() << _T("</tr>") << std::endl <<
-			_T("<tr class=\"tile\"><td class=\"label\" rowspan=2>‘Å”v</td>") <<
+			_T("<tr class=\"tile\"><td class=\"label\" rowspan=2>æ‰“ç‰Œ</td>") <<
 			HThaifuP.streamDat[player].sutehai.str() << _T("</tr>") << std::endl <<
 			_T("<tr class=\"notice\">") <<
 			HThaifuP.streamDat[player].sutehailabel.str() << _T("</tr>") << std::endl <<
-			_T("<tr><td class=\"label\">”vp</td><td colspan=") << (cols - 1) <<
+			_T("<tr><td class=\"label\">ç‰Œå§¿</td><td colspan=") << (cols - 1) <<
 			_T(" class=\"hand\"><span class=\"tile\">") <<
 			HThaifuP.streamDat[player].final.str() << _T("</span></td></tr>") << std::endl <<
 			std::endl;
@@ -1156,13 +1156,13 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 		if (gameStat->chkGameType(SanmaT))
 			if (((OrigTurn % Players) + i) >= ACTUAL_PLAYERS)
 				k = (k + 1) % Players;
-		// •›˜I–Êq‚ğo—Í‚·‚é
+		// å‰¯éœ²é¢å­ã‚’å‡ºåŠ›ã™ã‚‹
 		finalformWriter::hfFinalForm(gameStat, k, RoundEndType);
 		finalformWriter::hfFlower(gameStat, k);
 		finalformWriter::hfExposedMeld(gameStat, k);
-		// “_–_ó‹µ‚ğ‘‚«o‚·
+		// ç‚¹æ£’çŠ¶æ³ã‚’æ›¸ãå‡ºã™
 		hfScoreWriteOut(gameStat, k, (seatAbsolute)i);
-		// FX‘‚«o‚µ
+		// è‰²ã€…æ›¸ãå‡ºã—
 		if ((!gameStat->chkGameType(Sanma4))||(i < 3))
 			hfWriteOut(gameStat, k);
 		else haifuBuffer << std::endl;
@@ -1181,12 +1181,12 @@ void haifu::tools::hfwriter::hfWriteBottom() {
 		XhaifuBufferBody.str() << _T("\t</round>") << std::endl;
 }
 
-/* ”z”v‚ğƒoƒbƒtƒ@‚Éo—Í */
+/* é…ç‰Œã‚’ãƒãƒƒãƒ•ã‚¡ã«å‡ºåŠ› */
 void haifu::haifuwritebuffer(
 	const GameTable* const gameStat,
 	int OrigTurn, int OrigHonba, bool tmpUraFlag, bool tmpAliceFlag,
 	LPCTSTR ResultDesc, EndType RoundEndType
-	) { /* ”z”v‚ğƒoƒbƒtƒ@‚Éo—Í */
+	) { /* é…ç‰Œã‚’ãƒãƒƒãƒ•ã‚¡ã«å‡ºåŠ› */
 		tools::hfwriter::hfWriteHead(
 			gameStat, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag,
 			ResultDesc, RoundEndType);
@@ -1195,7 +1195,7 @@ void haifu::haifuwritebuffer(
 		tools::hfwriter::hfWriteBottom();
 }
 
-/* ”v•ˆ‚ğ•Û‘¶ */
+/* ç‰Œè­œã‚’ä¿å­˜ */
 void haifu::haifusave(const GameTable* const gameStat) {
 	HThaifuBuffer << _T("</body>") << std::endl << _T("</html>") << std::endl; // Finalize HTML
 	XhaifuBuffer << _T("</haifu>") << std::endl; // Finalize XML
@@ -1203,7 +1203,7 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	tools::haifuRecTime(_T("time-finished"));
 	XMLhaifuBuffer << XhaifuBuffer.str();
 
-	/* ƒtƒ@ƒCƒ‹–¼‚Ì©“®Œˆ’è */
+	/* ãƒ•ã‚¡ã‚¤ãƒ«åã®è‡ªå‹•æ±ºå®š */
 	std::string configPath = confpath::confPath();
 	std::ostringstream filename1, filename2;
 	filename1 << configPath << "haifu/";
@@ -1234,18 +1234,18 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	filename2 << std::setw(2) << std::setfill('0') << ltime.tm_min;
 #endif /*_WIN32*/
 
-	/* ƒtƒ@ƒCƒ‹‘‚«o‚µ */
+	/* ãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãå‡ºã— */
 	std::ofstream fileout;
-	fileout.open((filename1.str() + std::string("_haifu_") + // ƒvƒŒ[ƒ“ƒeƒLƒXƒgŒ`®”v•ˆ
+	fileout.open((filename1.str() + std::string("_haifu_") + // ãƒ—ãƒ¬ãƒ¼ãƒ³ãƒ†ã‚­ã‚¹ãƒˆå½¢å¼ç‰Œè­œ
 		filename2.str() + std::string(".txt")).c_str());
 	fileout << CodeConv::EncodeStr(haifuBuffer.str()); fileout.close();
-	fileout.open((filename1.str() + std::string("_chat_") + // ƒ`ƒƒƒbƒgƒƒO
+	fileout.open((filename1.str() + std::string("_chat_") + // ãƒãƒ£ãƒƒãƒˆãƒ­ã‚°
 		filename2.str() + std::string(".txt")).c_str());
 	fileout << CodeConv::EncodeStr(chat::chatobj->getlog()); fileout.close();
-	fileout.open((filename1.str() + std::string("_haifu_") + // HTMLŒ`®”v•ˆ
+	fileout.open((filename1.str() + std::string("_haifu_") + // HTMLå½¢å¼ç‰Œè­œ
 		filename2.str() + std::string(".htm")).c_str());
 	fileout << CodeConv::EncodeStr(HThaifuBuffer.str()); fileout.close();
-	fileout.open((filename1.str() + std::string("_haifu_") + // XMLŒ`®”v•ˆ
+	fileout.open((filename1.str() + std::string("_haifu_") + // XMLå½¢å¼ç‰Œè­œ
 		filename2.str() + std::string(".xml")).c_str());
 	fileout << CodeConv::EncodeStr(XMLhaifuBuffer.str()); fileout.close();
 }

@@ -1,18 +1,18 @@
-#include "scrmanip.h"
+ï»¿#include "scrmanip.h"
 #include "scenes/scenes.h"
 #include "sprite.h"
 #include "resource.h"
 
 namespace mihajong_graphic {
 
-void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D ƒIƒuƒWƒFƒNƒg‰Šú‰»
+void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-	/* Direct3D ƒIƒuƒWƒFƒNƒg¶¬ */
+	/* Direct3D ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ */
 	pd3d = Direct3DCreate9(D3D_SDK_VERSION);
-	if (!pd3d) // ¶¬¸”s
-		throw _T("Direct3D ƒIƒuƒWƒFƒNƒg‚Ì¶¬‚É¸”s‚µ‚Ü‚µ‚½");
+	if (!pd3d) // ç”Ÿæˆå¤±æ•—
+		throw _T("Direct3D ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸ");
 
-	/* D3DƒfƒoƒCƒXƒIƒuƒWƒFƒNƒg¶¬ */
+	/* D3Dãƒ‡ãƒã‚¤ã‚¹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ */
 	D3DPRESENT_PARAMETERS d3dpp;
 	ZeroMemory(&d3dpp, sizeof(d3dpp));
 	d3dpp.BackBufferWidth = Geometry::WindowWidth;
@@ -35,7 +35,7 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D ƒIƒuƒWƒFƒNƒg‰
 		)))
 		return;
 	else // All the four failed
-		throw _T("Direct3D ƒfƒoƒCƒXƒIƒuƒWƒFƒNƒg‚Ì¶¬‚É¸”s‚µ‚Ü‚µ‚½");
+		throw _T("Direct3D ãƒ‡ãƒã‚¤ã‚¹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸ");
 #else
 #ifdef _WIN32
 	pDevice = GetDC(hWnd);
@@ -80,7 +80,7 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D ƒIƒuƒWƒFƒNƒg‰
 	glXMakeCurrent(disp, hWnd, pDevice);
 #endif
 
-	const intptr_t textureList[] = { // ƒeƒNƒXƒ`ƒƒ‚Ìæs“Ç‚İ‚İ
+	const intptr_t textureList[] = { // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®å…ˆè¡Œèª­ã¿è¾¼ã¿
 		IDB_PNG_TBLBAIZE,
 		IDB_PNG_TBLBORDER,
 		IDB_PNG_SDBAR,
@@ -111,121 +111,117 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D ƒIƒuƒWƒFƒNƒg‰
 }
 #ifdef _WIN32
 ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
-	CS_SceneAccess.syncDo<void>([this, windowHandle, fullscreen]() -> void {
-		redrawFlag = false;
-		pDevice = nullptr; hWnd = windowHandle;
-		InitDevice(fullscreen);
-		myScene = new SplashScreen(this);
-		myFPSIndicator = new FPSIndicator(this);
-		lastRedrawTime = 0;
-		redrawFlag = true;
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	redrawFlag = false;
+	pDevice = nullptr; hWnd = windowHandle;
+	InitDevice(fullscreen);
+	myScene = new SplashScreen(this);
+	myFPSIndicator = new FPSIndicator(this);
+	lastRedrawTime = 0;
+	redrawFlag = true;
 }
 #else /*_WIN32*/
 ScreenManipulator::ScreenManipulator(Display* displayPtr, Window windowHandle, bool fullscreen) {
-	CS_SceneAccess.syncDo<void>([this, displayPtr, windowHandle, fullscreen]() -> void {
-		redrawFlag = false;
-		pDevice = nullptr; disp = displayPtr; hWnd = windowHandle;
-		InitDevice(fullscreen);
-		myScene = new SplashScreen(this);
-		myFPSIndicator = new FPSIndicator(this);
-		lastRedrawTime = 0;
-		redrawFlag = true;
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	redrawFlag = false;
+	pDevice = nullptr; disp = displayPtr; hWnd = windowHandle;
+	InitDevice(fullscreen);
+	myScene = new SplashScreen(this);
+	myFPSIndicator = new FPSIndicator(this);
+	lastRedrawTime = 0;
+	redrawFlag = true;
 }
 #endif /*_WIN32*/
 
 void ScreenManipulator::Render() {
-	CS_SceneAccess.syncDo<void>([this]() -> void {
-		if (redrawFlag) {
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	if (redrawFlag) {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-			pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
-				D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // ƒoƒbƒtƒ@ƒNƒŠƒA
-			if (SUCCEEDED(pDevice->BeginScene())) { // ƒV[ƒ“ŠJn
-				SpriteRenderer::instantiate(pDevice)->Start(); // ƒXƒvƒ‰ƒCƒg•`‰æŠJn
-				if (myScene) myScene->Render(); // Ä•`‰æˆ—
-				if (myFPSIndicator) myFPSIndicator->Render(); // FPS•\¦
-				SpriteRenderer::instantiate(pDevice)->End(); // ƒXƒvƒ‰ƒCƒg•`‰æI—¹
-				pDevice->EndScene(); // ƒV[ƒ“I—¹
-				pDevice->Present(nullptr, nullptr, nullptr, nullptr); // ‰æ–Ê‚ÌXV
-			}
+		pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
+			D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0); // ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
+		if (SUCCEEDED(pDevice->BeginScene())) { // ã‚·ãƒ¼ãƒ³é–‹å§‹
+			SpriteRenderer::instantiate(pDevice)->Start(); // ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»é–‹å§‹
+			if (myScene) myScene->Render(); // å†æç”»å‡¦ç†
+			if (myFPSIndicator) myFPSIndicator->Render(); // FPSè¡¨ç¤º
+			SpriteRenderer::instantiate(pDevice)->End(); // ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»çµ‚äº†
+			pDevice->EndScene(); // ã‚·ãƒ¼ãƒ³çµ‚äº†
+			pDevice->Present(nullptr, nullptr, nullptr, nullptr); // ç”»é¢ã®æ›´æ–°
+		}
 #else
 #ifdef _WIN32
-			wglMakeCurrent(pDevice, rContext);
+		wglMakeCurrent(pDevice, rContext);
 #else /*_WIN32*/
-			glXMakeCurrent(disp, hWnd, pDevice);
+		glXMakeCurrent(disp, hWnd, pDevice);
 #endif /*_WIN32*/
-			glClearColor(1, 1, 1, 1); glClear(GL_COLOR_BUFFER_BIT); // ƒoƒbƒtƒ@ƒNƒŠƒA
-			SpriteRenderer::instantiate(pDevice)->Start(); // ƒXƒvƒ‰ƒCƒg•`‰æŠJn
-			if (myScene) myScene->Render(); // Ä•`‰æˆ—
-			if (myFPSIndicator) myFPSIndicator->Render(); // FPS•\¦
-			SpriteRenderer::instantiate(pDevice)->End(); // ƒXƒvƒ‰ƒCƒg•`‰æI—¹
-			glFlush();
+		glClearColor(1, 1, 1, 1); glClear(GL_COLOR_BUFFER_BIT); // ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
+		SpriteRenderer::instantiate(pDevice)->Start(); // ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»é–‹å§‹
+		if (myScene) myScene->Render(); // å†æç”»å‡¦ç†
+		if (myFPSIndicator) myFPSIndicator->Render(); // FPSè¡¨ç¤º
+		SpriteRenderer::instantiate(pDevice)->End(); // ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»çµ‚äº†
+		glFlush();
 #ifdef _WIN32
-			SwapBuffers(pDevice); // ‰æ–Ê‚ÌXV
+		SwapBuffers(pDevice); // ç”»é¢ã®æ›´æ–°
 #else /*_WIN32*/
-			glXSwapBuffers(disp, hWnd); // ‰æ–Ê‚ÌXV
+		glXSwapBuffers(disp, hWnd); // ç”»é¢ã®æ›´æ–°
 #endif /*_WIN32*/
 #endif
-		}
-	});
+	}
 	return;
 }
 
 void ScreenManipulator::transit(sceneID scene) {
-	CS_SceneAccess.syncDo<void>([this, scene]() -> void {
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 #ifdef _WIN32
-		HGLRC context = wglCreateContext(pDevice);
-		wglShareLists(rContext, context);
-		wglMakeCurrent(pDevice, context);
+	HGLRC context = wglCreateContext(pDevice);
+	wglShareLists(rContext, context);
+	wglMakeCurrent(pDevice, context);
 #else /*_WIN32*/
-		// Linux‚Å‚Í•Ê‚ÌƒRƒ“ƒeƒLƒXƒg‚É‚·‚é•K—v‚È‚µH
-		glXMakeCurrent(disp, hWnd, pDevice);
+	// Linuxã§ã¯åˆ¥ã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã«ã™ã‚‹å¿…è¦ãªã—ï¼Ÿ
+	glXMakeCurrent(disp, hWnd, pDevice);
 #endif /*_WIN32*/
 #endif
-		redrawFlag = false;
-		delete myScene; myScene = nullptr;
-		switch (scene) {
-		case sceneSplash:
-			myScene = new SplashScreen(this); redrawFlag = true;
-			break;
-		case sceneTitle:
-			myScene = new TitleScreen(this); redrawFlag = true;
-			break;
-		case sceneConfig:
-			myScene = new RuleConfigScene(this); redrawFlag = true;
-			break;
-		case sceneSetting:
-			myScene = new PreferenceConfigScene(this); redrawFlag = true;
-			break;
-		case sceneServerWaiting:
-			myScene = new ServerWait(this); redrawFlag = true;
-			break;
-		case sceneClientWaiting:
-			myScene = new ClientWait(this); redrawFlag = true;
-			break;
-		case sceneWaitingError:
-			myScene = new ConnectionWaitFailed(this); redrawFlag = true;
-			break;
-		case sceneGameTable:
-			myScene = new GameTableScreen(this); redrawFlag = true;
-			break;
-		case sceneResult:
-			myScene = new ResultScreen(this); redrawFlag = true;
-			break;
-		default:
-#if defined(_WIN32) && !defined(WITH_DIRECTX)
-			wglMakeCurrent(nullptr, nullptr);
-			wglDeleteContext(context);
-#endif
-			throw _T("³‚µ‚­‚È‚¢ƒV[ƒ“”Ô†‚ªw’è‚³‚ê‚Ü‚µ‚½");
-		}
+	redrawFlag = false;
+	delete myScene; myScene = nullptr;
+	switch (scene) {
+	case sceneSplash:
+		myScene = new SplashScreen(this); redrawFlag = true;
+		break;
+	case sceneTitle:
+		myScene = new TitleScreen(this); redrawFlag = true;
+		break;
+	case sceneConfig:
+		myScene = new RuleConfigScene(this); redrawFlag = true;
+		break;
+	case sceneSetting:
+		myScene = new PreferenceConfigScene(this); redrawFlag = true;
+		break;
+	case sceneServerWaiting:
+		myScene = new ServerWait(this); redrawFlag = true;
+		break;
+	case sceneClientWaiting:
+		myScene = new ClientWait(this); redrawFlag = true;
+		break;
+	case sceneWaitingError:
+		myScene = new ConnectionWaitFailed(this); redrawFlag = true;
+		break;
+	case sceneGameTable:
+		myScene = new GameTableScreen(this); redrawFlag = true;
+		break;
+	case sceneResult:
+		myScene = new ResultScreen(this); redrawFlag = true;
+		break;
+	default:
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 		wglMakeCurrent(nullptr, nullptr);
 		wglDeleteContext(context);
 #endif
-	});
+		throw _T("æ­£ã—ããªã„ã‚·ãƒ¼ãƒ³ç•ªå·ãŒæŒ‡å®šã•ã‚Œã¾ã—ãŸ");
+	}
+#if defined(_WIN32) && !defined(WITH_DIRECTX)
+	wglMakeCurrent(nullptr, nullptr);
+	wglDeleteContext(context);
+#endif
 }
 
 void ScreenManipulator::subscene(unsigned int subsceneID) {
@@ -289,51 +285,46 @@ void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<vo
 }
 void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 	if (iManip) {
-		CS_SceneAccess.syncDo<void>([this, iManip]() -> void {
-			input::InputManipulator* iManip_ = iManip;
-			inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
-				if (sc) sc->KeyboardInput(od);
-			});
-			inputProc(iManip->pad(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
-				if (sc) sc->PadInput(od);
-			});
-			inputProc(iManip->mouse(), [iManip_](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
-				input::Mouse::Position mousepos = iManip_->mouse()->pos();
-				if (sc) sc->MouseInput(od, mousepos.first, mousepos.second);
-			});
+		MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+		input::InputManipulator* iManip_ = iManip;
+		inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
+			if (sc) sc->KeyboardInput(od);
+		});
+		inputProc(iManip->pad(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
+			if (sc) sc->PadInput(od);
+		});
+		inputProc(iManip->mouse(), [iManip_](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
+			input::Mouse::Position mousepos = iManip_->mouse()->pos();
+			if (sc) sc->MouseInput(od, mousepos.first, mousepos.second);
 		});
 	}
 }
 
 void ScreenManipulator::inputProc(WPARAM wParam, LPARAM lParam) {
-	CS_SceneAccess.syncDo<void>([this, wParam, lParam]() -> void {
-		if (myScene) myScene->KeyboardInput(wParam, lParam);
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	if (myScene) myScene->KeyboardInput(wParam, lParam);
 }
 
 void ScreenManipulator::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
-	CS_SceneAccess.syncDo<void>([this, message, wParam, lParam]() -> void {
-		if (myScene) myScene->IMEvent(message, wParam, lParam);
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	if (myScene) myScene->IMEvent(message, wParam, lParam);
 }
 #else /*_WIN32*/
-/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢À‘• */
+/* TODO: Linuxã§ã¯æ—¥æœ¬èªå…¥åŠ›ãŒæœªå®Ÿè£… */
 
 void ScreenManipulator::kbdInputProc(const XEvent* event) {
-	CS_SceneAccess.syncDo<void>([this, event]() -> void {
-		if (myScene) myScene->KeyboardInput(event);
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	if (myScene) myScene->KeyboardInput(event);
 }
 
 void ScreenManipulator::mouseInputProc(const XEvent* event) {
-	CS_SceneAccess.syncDo<void>([this, event]() -> void {
-		Window rtw, chw; // ©æ“¾‚µ‚ÄÌ‚Ä‚é
-		int rtx, rty; // ©æ“¾‚µ‚ÄÌ‚Ä‚é
-		unsigned mask; // ©æ“¾‚µ‚ÄÌ‚Ä‚é
-		int x, y; // ©‚±‚ê‚¾‚¯g‚¤
-		XQueryPointer(disp, hWnd, &rtw, &chw, &rtx, &rty, &x, &y, &mask);
-		if (myScene) myScene->MouseInput(event, x, y);
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	Window rtw, chw; // â†å–å¾—ã—ã¦æ¨ã¦ã‚‹
+	int rtx, rty; // â†å–å¾—ã—ã¦æ¨ã¦ã‚‹
+	unsigned mask; // â†å–å¾—ã—ã¦æ¨ã¦ã‚‹
+	int x, y; // â†ã“ã‚Œã ã‘ä½¿ã†
+	XQueryPointer(disp, hWnd, &rtw, &chw, &rtx, &rty, &x, &y, &mask);
+	if (myScene) myScene->MouseInput(event, x, y);
 }
 #endif /*_WIN32*/
 

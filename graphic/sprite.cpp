@@ -1,35 +1,35 @@
-#include "sprite.h"
+ï»¿#include "sprite.h"
 #include "geometry.h"
 #include "loadtex.h"
 
-/* ƒXƒvƒ‰ƒCƒg•\¦ˆ— */
+/* ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆè¡¨ç¤ºå‡¦ç† */
 
 namespace mihajong_graphic {
 
 std::map<intptr_t, SpriteRenderer*> SpriteRenderer::renderer;
 
-/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^ */
+/* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
 SpriteRenderer::SpriteRenderer(DevicePtr device) {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-	// Direct3D‚Ì‚İBOpenGL‚Å‚Í•s—vH
+	// Direct3Dã®ã¿ã€‚OpenGLã§ã¯ä¸è¦ï¼Ÿ
 	if (FAILED(D3DXCreateSprite(device, &sprite)))
-		throw _T("ƒXƒvƒ‰ƒCƒg‚Ì¶¬‚É¸”s‚µ‚Ü‚µ‚½");
+		throw _T("ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸ");
 #endif
 }
 
-/* ƒfƒXƒgƒ‰ƒNƒ^ */
+/* ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
 SpriteRenderer::~SpriteRenderer() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-	// Direct3D‚Ì‚İBOpenGL‚Å‚Í•s—vH
+	// Direct3Dã®ã¿ã€‚OpenGLã§ã¯ä¸è¦ï¼Ÿ
 	if (sprite) sprite->Release();
 #endif
 }
 
-/* ƒCƒ“ƒXƒ^ƒ“ƒX‰» */
+/* ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ– */
 SpriteRenderer* SpriteRenderer::instantiate(DevicePtr device) {
-	if (renderer.find((intptr_t)device) != renderer.end()) { // ƒfƒoƒCƒX‚É‘Î‰‚·‚éƒXƒvƒ‰ƒCƒg‚ª‚·‚Å‚É‚ ‚é
+	if (renderer.find((intptr_t)device) != renderer.end()) { // ãƒ‡ãƒã‚¤ã‚¹ã«å¯¾å¿œã™ã‚‹ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãŒã™ã§ã«ã‚ã‚‹
 		return renderer[(intptr_t)device];
-	} else { // ƒfƒoƒCƒX‚É‘Î‰‚·‚éƒXƒvƒ‰ƒCƒg‚Í‰‰ñ‚Ìg—p(‰Šú‰»‚ª•K—v)
+	} else { // ãƒ‡ãƒã‚¤ã‚¹ã«å¯¾å¿œã™ã‚‹ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã¯åˆå›ã®ä½¿ç”¨(åˆæœŸåŒ–ãŒå¿…è¦)
 		renderer[(intptr_t)device] = new SpriteRenderer(device);
 		return renderer[(intptr_t)device];
 	}
@@ -42,28 +42,28 @@ void SpriteRenderer::delInstance(DevicePtr device) {
 	}
 }
 
-/* ƒXƒvƒ‰ƒCƒg•`‰æŠJn */
+/* ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»é–‹å§‹ */
 void SpriteRenderer::Start() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-	// Direct3D‚Ì‚İBOpenGL‚Å‚Í•s—vH
+	// Direct3Dã®ã¿ã€‚OpenGLã§ã¯ä¸è¦ï¼Ÿ
 	sprite->Begin(D3DXSPRITE_ALPHABLEND);
 #endif
 }
 
-/* ƒXƒvƒ‰ƒCƒg•`‰æI—¹ */
+/* ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»çµ‚äº† */
 void SpriteRenderer::End() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-	// Direct3D‚Ì‚İBOpenGL‚Å‚Í•s—vH
+	// Direct3Dã®ã¿ã€‚OpenGLã§ã¯ä¸è¦ï¼Ÿ
 	sprite->End();
 #endif
 }
 
-/* ƒXƒvƒ‰ƒCƒg•`‰æ */
+/* ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”» */
 void SpriteRenderer::ShowSprite(
 	TexturePtr texture, int X, int Y, int Width, int Height,
 	ArgbColor color, RECT* rect, int CenterX, int CenterY, TransformMatrix* matrix)
 {
-	if ((!sprite) || (!texture)) return; // ‚Ê‚é‚Û‚Í(EÍE)¶´Ú!!
+	if ((!sprite) || (!texture)) return; // ã¬ã‚‹ã½ã¯(ãƒ»âˆ€ãƒ»)ï½¶ï½´ï¾š!!
 	RECT defaultRect = {0, 0, Width, Height};
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix defaultMatrix; D3DXMatrixIdentity(&defaultMatrix);
@@ -109,7 +109,7 @@ void SpriteRenderer::ShowSprite(
 	glTexCoord2d(rpos, tpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y          - CenterY));
 	glTexCoord2d(lpos, tpos); glVertex2i(X         - CenterX, Geometry::WindowHeight - (Y          - CenterY));
 	glEnd();
-	//glFlush(); // ©[20130415]ƒ{ƒgƒ‹ƒlƒbƒN‚É‚È‚é‚±‚Æ‚ª”»–¾B‚±‚ê‚ğŠO‚µ‚½‚ç26FPS‚ª40FPS‚Ü‚Å‰ü‘P(ƒfƒoƒbƒOƒrƒ‹ƒh)BƒŠƒŠ[ƒX‚¾‚Æ50FPS¨60FPS’B¬B(GeForce GT240‚Å)
+	//glFlush(); // â†[20130415]ãƒœãƒˆãƒ«ãƒãƒƒã‚¯ã«ãªã‚‹ã“ã¨ãŒåˆ¤æ˜ã€‚ã“ã‚Œã‚’å¤–ã—ãŸã‚‰26FPSãŒ40FPSã¾ã§æ”¹å–„(ãƒ‡ãƒãƒƒã‚°ãƒ“ãƒ«ãƒ‰)ã€‚ãƒªãƒªãƒ¼ã‚¹ã ã¨50FPSâ†’60FPSé”æˆã€‚(GeForce GT240ã§)
 
 	glDisable(GL_TEXTURE_2D);
 #endif

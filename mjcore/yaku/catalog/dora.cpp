@@ -1,97 +1,97 @@
-#include "../catalog.h"
+ï»¿#include "../catalog.h"
 
 #include "../../func.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 #ifndef GUOBIAO
-	/* ƒhƒ‰‚Å˜a—¹‚Á‚½‚ç1ãÊ */
+	/* ãƒ‰ãƒ©ã§å’Œäº†ã£ãŸã‚‰1é£œ */
 	if (RuleData::chkRuleApplied("dorahoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("“ºèt˜a"), get_yaku_han("dorahoh"),
+			_T("éŠ…é‘¼å’Œ"), get_yaku_han("dorahoh"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚Ìè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
-					((analysis->GameStat->DoraFlag.Omote[analysis->TsumoHai->tile] > 0) || // ƒcƒ‚”v‚ª•\ƒhƒ‰‚É‚È‚Á‚Ä‚¢‚é(— ƒhƒ‰‚Í‘ÎÛŠO)
-					(analysis->TsumoHai->red != Normal))); // Ôƒhƒ‰‚©Âƒhƒ‰‚É‚È‚Á‚Ä‚¢‚é
+				return ((analysis->shanten[shantenAll] == -1) && // ä½•ã‹ã®æ‰‹ã§å’Œäº†ã«ãªã£ã¦ã„ã‚‹
+					((analysis->GameStat->DoraFlag.Omote[analysis->TsumoHai->tile] > 0) || // ãƒ„ãƒ¢ç‰ŒãŒè¡¨ãƒ‰ãƒ©ã«ãªã£ã¦ã„ã‚‹(è£ãƒ‰ãƒ©ã¯å¯¾è±¡å¤–)
+					(analysis->TsumoHai->red != Normal))); // èµ¤ãƒ‰ãƒ©ã‹é’ãƒ‰ãƒ©ã«ãªã£ã¦ã„ã‚‹
 			}
 		));
-	/* –kl–‡”²‚« */
+	/* åŒ—å››æšæŠœã */
 	if (RuleData::chkRuleApplied("four_northes"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("–kl–‡”²‚«"), get_yaku_han("four_northes"),
+			_T("åŒ—å››æšæŠœã"), get_yaku_han("four_northes"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚Ìè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
-					(analysis->PlayerStat->NorthFlag == 4)); // –k4–‡
+				return ((analysis->shanten[shantenAll] == -1) && // ä½•ã‹ã®æ‰‹ã§å’Œäº†ã«ãªã£ã¦ã„ã‚‹
+					(analysis->PlayerStat->NorthFlag == 4)); // åŒ—4æš
 			}
 		));
-	/* ”ªå‰ßŠC */
+	/* å…«ä»™éæµ· */
 	if (RuleData::chkRuleApplied("eight_flowers"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("”ªå‰ßŠC"), get_yaku_han("eight_flowers"),
-			_T("t‰ÄH“~"), _T("l‰ØŠJ—ä"), _T("–{‰Ô‹Gß”v"), _T("–{‰Ô‘–Ø”v"),
+			_T("å…«ä»™éæµ·"), get_yaku_han("eight_flowers"),
+			_T("æ˜¥å¤ç§‹å†¬"), _T("å››è¯é–‹å¶º"), _T("æœ¬èŠ±å­£ç¯€ç‰Œ"), _T("æœ¬èŠ±è‰æœ¨ç‰Œ"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚Ìè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+				return ((analysis->shanten[shantenAll] == -1) && // ä½•ã‹ã®æ‰‹ã§å’Œäº†ã«ãªã£ã¦ã„ã‚‹
 					(analysis->PlayerStat->FlowerFlag.Spring) && (analysis->PlayerStat->FlowerFlag.Summer) &&
 					(analysis->PlayerStat->FlowerFlag.Autumn) && (analysis->PlayerStat->FlowerFlag.Winter) &&
 					(analysis->PlayerStat->FlowerFlag.Plum) && (analysis->PlayerStat->FlowerFlag.Orchid) &&
 					(analysis->PlayerStat->FlowerFlag.Chrys) && (analysis->PlayerStat->FlowerFlag.Bamboo));
 			}
 		));
-	/* t‰ÄH“~ */
+	/* æ˜¥å¤ç§‹å†¬ */
 	if (RuleData::chkRuleApplied("four_seasons"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("t‰ÄH“~"), get_yaku_han("four_seasons"),
-			_T("–{‰Ô‹Gß”v"),
+			_T("æ˜¥å¤ç§‹å†¬"), get_yaku_han("four_seasons"),
+			_T("æœ¬èŠ±å­£ç¯€ç‰Œ"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚Ìè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+				return ((analysis->shanten[shantenAll] == -1) && // ä½•ã‹ã®æ‰‹ã§å’Œäº†ã«ãªã£ã¦ã„ã‚‹
 					(analysis->PlayerStat->FlowerFlag.Spring) && (analysis->PlayerStat->FlowerFlag.Summer) &&
 					(analysis->PlayerStat->FlowerFlag.Autumn) && (analysis->PlayerStat->FlowerFlag.Winter));
 			}
 		));
-	/* l‰ØŠJ—ä */
+	/* å››è¯é–‹å¶º */
 	if (RuleData::chkRuleApplied("four_flowers"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("l‰ØŠJ—ä"), get_yaku_han("four_flowers"),
-			_T("–{‰Ô‘–Ø”v"),
+			_T("å››è¯é–‹å¶º"), get_yaku_han("four_flowers"),
+			_T("æœ¬èŠ±è‰æœ¨ç‰Œ"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // ‰½‚©‚Ìè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
+				return ((analysis->shanten[shantenAll] == -1) && // ä½•ã‹ã®æ‰‹ã§å’Œäº†ã«ãªã£ã¦ã„ã‚‹
 					(analysis->PlayerStat->FlowerFlag.Plum) && (analysis->PlayerStat->FlowerFlag.Orchid) &&
 					(analysis->PlayerStat->FlowerFlag.Chrys) && (analysis->PlayerStat->FlowerFlag.Bamboo));
 			}
 		));
-	/* –{‰Ô */
+	/* æœ¬èŠ± */
 	if (RuleData::chkRuleApplied("own_flower")) {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("–{‰Ô‹Gß”v"), get_yaku_han("own_flower"),
+			_T("æœ¬èŠ±å­£ç¯€ç‰Œ"), get_yaku_han("own_flower"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				if (analysis->shanten[shantenAll] != -1) return false; // ˜a—¹‚Á‚Ä‚È‚¢‚È‚ç–ß‚é
+				if (analysis->shanten[shantenAll] != -1) return false; // å’Œäº†ã£ã¦ãªã„ãªã‚‰æˆ»ã‚‹
 				switch (analysis->GameStat->playerwind(analysis->player)) {
 					case sEast: return analysis->PlayerStat->FlowerFlag.Spring;
 					case sSouth: return analysis->PlayerStat->FlowerFlag.Summer;
 					case sWest: return analysis->PlayerStat->FlowerFlag.Autumn;
 					case sNorth: return analysis->PlayerStat->FlowerFlag.Winter;
 					default:
-						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("©•—‚ª“Œ“ì¼–k‚Ì‚Ç‚ê‚Å‚à‚ ‚è‚Ü‚¹‚ñ"));
+						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("è‡ªé¢¨ãŒæ±å—è¥¿åŒ—ã®ã©ã‚Œã§ã‚‚ã‚ã‚Šã¾ã›ã‚“"));
 						return false;
 				}
 			}
 		));
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("–{‰Ô‘–Ø”v"), get_yaku_han("own_flower"),
+			_T("æœ¬èŠ±è‰æœ¨ç‰Œ"), get_yaku_han("own_flower"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				if (analysis->shanten[shantenAll] != -1) return false; // ˜a—¹‚Á‚Ä‚È‚¢‚È‚ç–ß‚é
+				if (analysis->shanten[shantenAll] != -1) return false; // å’Œäº†ã£ã¦ãªã„ãªã‚‰æˆ»ã‚‹
 				switch (analysis->GameStat->playerwind(analysis->player)) {
 					case sEast: return analysis->PlayerStat->FlowerFlag.Plum;
 					case sSouth: return analysis->PlayerStat->FlowerFlag.Orchid;
 					case sWest: return analysis->PlayerStat->FlowerFlag.Chrys;
 					case sNorth: return analysis->PlayerStat->FlowerFlag.Bamboo;
 					default:
-						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("©•—‚ª“Œ“ì¼–k‚Ì‚Ç‚ê‚Å‚à‚ ‚è‚Ü‚¹‚ñ"));
+						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("è‡ªé¢¨ãŒæ±å—è¥¿åŒ—ã®ã©ã‚Œã§ã‚‚ã‚ã‚Šã¾ã›ã‚“"));
 						return false;
 				}
 			}
 		));
 	}
-	/* Ôƒhƒ‰‚ğ‘µ‚¦‚éŒn‚Ì–ğ */
+	/* èµ¤ãƒ‰ãƒ©ã‚’æƒãˆã‚‹ç³»ã®å½¹ */
 	if (RuleData::chkRuleApplied("akadora_all")) {
 		auto countRed = [](const MENTSU_ANALYSIS* const analysis) -> unsigned {
 			unsigned red = 0;
@@ -108,7 +108,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 			return red;
 		};
-		/* Ôƒhƒ‰OF */
+		/* èµ¤ãƒ‰ãƒ©ä¸‰è‰² */
 		if (RuleData::chkRule("red_one", "no") && RuleData::chkRule("red_two", "no") &&
 			RuleData::chkRule("red_three", "no") && RuleData::chkRule("red_four", "no") &&
 			RuleData::chkRule("red_five", "3tiles") &&
@@ -116,13 +116,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			RuleData::chkRule("red_eight", "no") && RuleData::chkRule("red_nine", "no") &&
 			RuleData::chkRule("red_west", "no") && RuleData::chkRule("red_north", "no"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("Ôƒhƒ‰OF"), get_yaku_han("akadora_all"),
+				_T("èµ¤ãƒ‰ãƒ©ä¸‰è‰²"), get_yaku_han("akadora_all"),
 				[countRed](const MENTSU_ANALYSIS* const analysis) -> bool {
-					return (analysis->shanten[shantenAll] == -1) && // ‰½‚©‚Ìè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
-						(countRed(analysis) == 3u); // Ôƒhƒ‰‚ª3–‡‚Å‚ ‚é
+					return (analysis->shanten[shantenAll] == -1) && // ä½•ã‹ã®æ‰‹ã§å’Œäº†ã«ãªã£ã¦ã„ã‚‹
+						(countRed(analysis) == 3u); // èµ¤ãƒ‰ãƒ©ãŒ3æšã§ã‚ã‚‹
 				}
 			));
-		/* –å“DŒö */
+		/* é–€æ³¥å…¬ */
 		if (RuleData::chkRule("red_one", "no") && RuleData::chkRule("red_two", "no") &&
 			RuleData::chkRule("red_three", "no") && RuleData::chkRule("red_four", "no") &&
 			RuleData::chkRule("red_five", "4tiles") &&
@@ -130,10 +130,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			RuleData::chkRule("red_eight", "no") && RuleData::chkRule("red_nine", "no") &&
 			RuleData::chkRule("red_west", "no") && RuleData::chkRule("red_north", "no"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("–å“DŒö"), get_yaku_han("akadora_all"),
+				_T("é–€æ³¥å…¬"), get_yaku_han("akadora_all"),
 				[countRed](const MENTSU_ANALYSIS* const analysis) -> bool {
-					return (analysis->shanten[shantenAll] == -1) && // ‰½‚©‚Ìè‚Å˜a—¹‚É‚È‚Á‚Ä‚¢‚é
-						(countRed(analysis) == 4u); // Ôƒhƒ‰‚ª4–‡‚Å‚ ‚é
+					return (analysis->shanten[shantenAll] == -1) && // ä½•ã‹ã®æ‰‹ã§å’Œäº†ã«ãªã£ã¦ã„ã‚‹
+						(countRed(analysis) == 4u); // èµ¤ãƒ‰ãƒ©ãŒ4æšã§ã‚ã‚‹
 				}
 			));
 	}

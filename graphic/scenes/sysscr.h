@@ -19,6 +19,8 @@ protected:
 	unsigned strwidth(const std::string& str);
 public:
 	SystemScreen(ScreenManipulator* const manipulator);
+	SystemScreen(const SystemScreen&) = delete; // Delete unexpected copy constructor
+	SystemScreen& operator= (const SystemScreen&) = delete; // Delete unexpected assign operator
 	virtual ~SystemScreen();
 };
 

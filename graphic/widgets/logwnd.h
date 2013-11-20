@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "../exports.h"
 #include "../../common/strcode.h"
@@ -20,7 +20,7 @@ CodeConv::tstring getlog();
 
 class LogWindow {
 private:
-	static unsigned const halffontsz = 9; // îºäpÇÃâ°ïù
+	static unsigned const halffontsz = 9; // ÂçäËßí„ÅÆÊ®™ÂπÖ
 #ifdef _WIN32
 	HWND myHWnd;
 #else /*_WIN32*/
@@ -43,6 +43,8 @@ public:
 #else /*_WIN32*/
 	LogWindow(Window hwnd, DevicePtr device, int X, int Y, unsigned Width, unsigned Height);
 #endif /*_WIN32*/
+	LogWindow(const LogWindow&) = delete; // Delete unexpected copy constructor
+	LogWindow& operator= (const LogWindow&) = delete; // Delete unexpected assign operator
 	~LogWindow();
 	void Render();
 };

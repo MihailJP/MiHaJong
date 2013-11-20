@@ -1,4 +1,4 @@
-#include <cmath>
+ï»¿#include <cmath>
 #include "../../pi.h"
 
 #include "tehai.h"
@@ -10,7 +10,7 @@ namespace mihajong_graphic {
 
 using utils::playerRelative;
 
-/* è”v‚ğ•\¦‚·‚é */
+/* æ‰‹ç‰Œã‚’è¡¨ç¤ºã™ã‚‹ */
 void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer) {
 	ShowTehai::Reconstruct(gameStat, targetPlayer,
 		[](seatRelative seat) -> std::tuple<int, int> {
@@ -29,7 +29,7 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, Playe
 				tileColor.rgbaAsStruct.g = (unsigned)((double)tileColor.rgbaAsStruct.g * (sin(Zeit / 450000.0 * M_PI) / 5.0 + 0.75));
 				tileColor.rgbaAsStruct.b = (unsigned)((double)tileColor.rgbaAsStruct.b * (sin(Zeit / 450000.0 * M_PI) / 5.0 + 0.75));
 			}
-			if (!tileEnabled[i]) { // ˆÃ“]ˆ—
+			if (!tileEnabled[i]) { // æš—è»¢å‡¦ç†
 				tileColor.rgbaAsStruct.r /= 3;
 				tileColor.rgbaAsStruct.g /= 3;
 				tileColor.rgbaAsStruct.b /= 3;

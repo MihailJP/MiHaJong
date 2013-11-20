@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef _WIN32
 #include <windows.h>
@@ -23,22 +23,22 @@ private:
 	Window hWnd;
 	Atom wmDelMsg;
 #endif /*_WIN32*/
-	ScreenManipulator* myScreenManipulator; // DirectX ƒIƒuƒWƒFƒNƒg
+	ScreenManipulator* myScreenManipulator; // DirectX ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 #ifdef _WIN32
 	input::InputManipulator* myInputManipulator; // DirectInput
-	// Linux‚Å‚Í•Ê‚Ì‰ÓŠ‚Å“ü—ÍƒCƒxƒ“ƒg‚ğˆ—‚·‚é‚½‚ß•s—v
+	// Linuxã§ã¯åˆ¥ã®ç®‡æ‰€ã§å…¥åŠ›ã‚¤ãƒ™ãƒ³ãƒˆã‚’å‡¦ç†ã™ã‚‹ãŸã‚ä¸è¦
 #endif /*_WIN32*/
 	static const LPCTSTR myWindowClassName, WindowCaption;
 	static unsigned& WindowWidth, & WindowHeight;
 #ifdef _WIN32
 	static LRESULT keyev(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-	static LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam); // ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
-	void initWindowClass(HINSTANCE hThisInst, LPCTSTR icon); // ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX‚Ì‰Šú‰»
-	void initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen); // ƒEƒBƒ“ƒhƒE‚Ì¶¬
+	static LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam); // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
+	void initWindowClass(HINSTANCE hThisInst, LPCTSTR icon); // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®åˆæœŸåŒ–
+	void initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen); // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ç”Ÿæˆ
 #else /*_WIN32*/
-	void initWindow(void* hThisInst, int nWinMode, bool fullscreen); // ƒEƒBƒ“ƒhƒE‚Ì¶¬
+	void initWindow(void* hThisInst, int nWinMode, bool fullscreen); // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ç”Ÿæˆ
 public:
-	static bool WinProc(MainWindow* mainWindow); // ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
+	static bool WinProc(MainWindow* mainWindow); // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
 #endif /*_WIN32*/
 public:
 #ifdef _WIN32
@@ -46,6 +46,8 @@ public:
 #else /*_WIN32*/
 	MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen);
 #endif /*_WIN32*/
+	MainWindow(const MainWindow&) = delete; // Delete unexpected copy constructor
+	MainWindow& operator= (const MainWindow&) = delete; // Delete unexpected assign operator
 	~MainWindow();
 	void Render();
 	void transit(sceneID scene);

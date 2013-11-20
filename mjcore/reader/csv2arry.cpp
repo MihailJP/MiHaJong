@@ -1,22 +1,22 @@
-#include "csv2arry.h"
+ï»¿#include "csv2arry.h"
 
 #include <cstring>
 
 void CSVReader::parsecsv (CsvVecVec& arr, LPCTSTR csv) {
 	/*
-	 *  CSV‚ğƒp[ƒX‚µ‚Ä”z—ñ‚Ì”z—ñƒIƒuƒWƒFƒNƒg‚É‘ã“ü‚·‚é
+	 *  CSVã‚’ãƒ‘ãƒ¼ã‚¹ã—ã¦é…åˆ—ã®é…åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ä»£å…¥ã™ã‚‹
 	 *
-	 *  §ŒÀ–€
-	 *  ECR‚ğ–³‹‚µ‚Ü‚·
-	 *  E‰üs‚âˆø—p•„‚ÌƒNƒH[ƒg‚Í‚Å‚«‚Ü‚·
-	 *  E#‚Ån‚Ü‚és‚ÍƒRƒƒ“ƒg‚Æ‚µ‚Ä–³‹‚³‚ê‚Ü‚·
+	 *  åˆ¶é™äº‹é …
+	 *  ãƒ»CRã‚’ç„¡è¦–ã—ã¾ã™
+	 *  ãƒ»æ”¹è¡Œã‚„å¼•ç”¨ç¬¦ã®ã‚¯ã‚©ãƒ¼ãƒˆã¯ã§ãã¾ã™
+	 *  ãƒ»#ã§å§‹ã¾ã‚‹è¡Œã¯ã‚³ãƒ¡ãƒ³ãƒˆã¨ã—ã¦ç„¡è¦–ã•ã‚Œã¾ã™
 	 */
-	arr.clear(); // ƒŠƒZƒbƒg
-	CodeConv::tstring tmpstr; // ì‹Æ—p•¶š—ñ
+	arr.clear(); // ãƒªã‚»ãƒƒãƒˆ
+	CodeConv::tstring tmpstr; // ä½œæ¥­ç”¨æ–‡å­—åˆ—
 	TCHAR tmpletter[2] = {0, 0};
-	RECORD record; // ƒŒƒR[ƒhƒf[ƒ^
-	bool firstchr = true; bool quoted = false; bool iscomment = false; // ƒtƒ‰ƒO
-	for (LPCTSTR ptr = csv; *ptr != _T('\0'); ptr++) { // ƒ|ƒCƒ“ƒ^‚Ìfor‚Æ‚©g‚Á‚½‚±‚Æ‚ ‚ê‚Ö‚ñcc
+	RECORD record; // ãƒ¬ã‚³ãƒ¼ãƒ‰ãƒ‡ãƒ¼ã‚¿
+	bool firstchr = true; bool quoted = false; bool iscomment = false; // ãƒ•ãƒ©ã‚°
+	for (LPCTSTR ptr = csv; *ptr != _T('\0'); ptr++) { // ãƒã‚¤ãƒ³ã‚¿ã®forã¨ã‹ä½¿ã£ãŸã“ã¨ã‚ã‚Œã¸ã‚“â€¦â€¦
 		if (*ptr == _T('\r')) continue; // just ignore a CR
 		else if ((*ptr == _T('\n')) && (!quoted)) { // new line
 			if (!iscomment) { // End of the record

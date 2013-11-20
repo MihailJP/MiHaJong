@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "exports.h"
 #include "../common/mutex.h"
@@ -13,9 +13,11 @@ class GameStatus {
 private:
 	class GStatModFlag {
 	public:
-		MHJMutex myCriticalSection;
+		MUTEXLIB::recursive_mutex myCriticalSection;
 		bool myModificationFlag;
 		GStatModFlag();
+		GStatModFlag(const GStatModFlag&) = delete; // Delete unexpected copy constructor
+		GStatModFlag& operator= (const GStatModFlag&) = delete; // Delete unexpected assign operator
 		~GStatModFlag();
 	};
 	static GStatModFlag myModFlag;
@@ -29,6 +31,11 @@ public:
 	static bool isModified();
 #endif
 	EXPORT static void updateGameStat(const GameTable* const gameStat);
+public: /* Monostate class: cannot be instantiated */
+	GameStatus() = delete;
+	GameStatus(const GameStatus&) = delete;
+	GameStatus& operator= (const GameStatus&) = delete;
+	~GameStatus() = delete;
 };
 
 }

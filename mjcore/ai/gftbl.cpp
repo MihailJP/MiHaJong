@@ -1,16 +1,16 @@
-#include "functbl.h"
+ï»¿#include "functbl.h"
 
 #include "../func.h"
 #include "../yaku/yaku.h"
 #include "../ruletbl.h"
 
-/* gameStat‚ÌƒAƒhƒŒƒX‚ğæ“¾iˆÃ–Ù‚Ìˆø”j */
+/* gameStatã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—ï¼ˆæš—é»™ã®å¼•æ•°ï¼‰ */
 GameTable* aiscript::table::functable::gametbl::getGameStatAddr(lua_State* const L) {
 	lua_getfield(L, 1, "addr"); GameTable* addr = (GameTable*)lua_touserdata(L, -1); lua_pop(L, 1);
 	return addr;
 }
 
-/* ƒvƒŒƒCƒ„[”Ô†‚ğæ“¾ */
+/* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·ã‚’å–å¾— */
 PlayerID aiscript::table::functable::gametbl::getPlayerID(lua_State* const L, int index) {
 	PlayerID player; int n = lua_gettop(L);
 	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) player = lua_tointeger(L, index);
@@ -18,7 +18,7 @@ PlayerID aiscript::table::functable::gametbl::getPlayerID(lua_State* const L, in
 	return player - 1;
 }
 
-/* ”v‚Ìí—Ş‚²‚Æ‚Ì•\‚ğƒXƒ^ƒbƒN‚ÉÏ‚Ş */
+/* ç‰Œã®ç¨®é¡ã”ã¨ã®è¡¨ã‚’ã‚¹ã‚¿ãƒƒã‚¯ã«ç©ã‚€ */
 const std::array<TileCode, 35> aiscript::table::functable::gametbl::validTiles = {
 	CharacterOne, CharacterTwo, CharacterThree, CharacterFour, CharacterFive,
 	CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
@@ -30,55 +30,55 @@ const std::array<TileCode, 35> aiscript::table::functable::gametbl::validTiles =
 	Flower,
 };
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, Int8ByTile& tptr) {
-	lua_newtable(L); // ƒe[ƒuƒ‹
-	for (auto k = validTiles.begin(); k != validTiles.end(); k++)
-		TableAdd(L, (lua_Integer)*k, (lua_Integer)(tptr[*k]));
+	lua_newtable(L); // ãƒ†ãƒ¼ãƒ–ãƒ«
+	for (const auto& k : validTiles)
+		TableAdd(L, (lua_Integer)k, (lua_Integer)(tptr[k]));
 }
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, UInt8ByTile& tptr) {
-	lua_newtable(L); // ƒe[ƒuƒ‹
-	for (auto k = validTiles.begin(); k != validTiles.end(); k++)
-		TableAdd(L, (lua_Integer)*k, (lua_Integer)(tptr[*k]));
+	lua_newtable(L); // ãƒ†ãƒ¼ãƒ–ãƒ«
+	for (const auto& k : validTiles)
+		TableAdd(L, (lua_Integer)k, (lua_Integer)(tptr[k]));
 }
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, FlagByTile& tptr) {
-	lua_newtable(L); // ƒe[ƒuƒ‹
-	for (auto k = validTiles.begin(); k != validTiles.end(); k++)
-		TableAdd(L, (lua_Integer)*k, tptr[*k]);
+	lua_newtable(L); // ãƒ†ãƒ¼ãƒ–ãƒ«
+	for (const auto& k : validTiles)
+		TableAdd(L, (lua_Integer)k, tptr[k]);
 }
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, InfoByTile<MachihaiTileInfo>& tptr) {
-	lua_newtable(L); // ƒe[ƒuƒ‹
-	for (auto k = validTiles.begin(); k != validTiles.end(); k++) {
-		lua_pushinteger(L, (int)*k);
+	lua_newtable(L); // ãƒ†ãƒ¼ãƒ–ãƒ«
+	for (const auto& k : validTiles) {
+		lua_pushinteger(L, (int)k);
 		lua_newtable(L);
-		TableAdd(L, "flag", tptr[*k].MachihaiFlag);
-		if (tptr[*k].MachihaiFlag) TableAdd(L, "count", (lua_Integer)tptr[*k].MachihaiCount);
+		TableAdd(L, "flag", tptr[k].MachihaiFlag);
+		if (tptr[k].MachihaiFlag) TableAdd(L, "count", (lua_Integer)tptr[k].MachihaiCount);
 		lua_settable(L, -3);
 	}
 }
 
-/* è”v‚ğæ“¾ */
+/* æ‰‹ç‰Œã‚’å–å¾— */
 void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable* const tmpGameStat, int index) {
 	int n = lua_gettop(L);
 	PlayerID player = getPlayerID(L, 0);
-	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) { // ”vp‚ğw’è‚µ‚½ê‡
+	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) { // ç‰Œå§¿ã‚’æŒ‡å®šã—ãŸå ´åˆ
 		for (int i = 0; i < NumOfTilesInHand; i++) {
 			lua_pushnumber(L, i + 1); lua_gettable(L, index);
-			if (lua_isnil(L, -1)) { // ‚»‚±‚É”v‚Í‚È‚©‚Á‚½
+			if (lua_isnil(L, -1)) { // ãã“ã«ç‰Œã¯ãªã‹ã£ãŸ
 				tmpGameStat->Player[player].Hand[i].tile = NoTile;
 				tmpGameStat->Player[player].Hand[i].red = Normal;
-			} else if (lua_istable(L, -1)) { // ”v‚ª‚ ‚Á‚½
+			} else if (lua_istable(L, -1)) { // ç‰ŒãŒã‚ã£ãŸ
 				lua_getfield(L, -1, "tile");
 				tmpGameStat->Player[player].Hand[i].tile = (TileCode)lua_tointeger(L, -1);
 				lua_pop(L, 1);
 				lua_getfield(L, -1, "red");
 				tmpGameStat->Player[player].Hand[i].red = (doraCol)lua_tointeger(L, -1);
 				lua_pop(L, 1);
-			} // •Ï‚È‚±‚Æ‚É‚È‚Á‚Ä‚¢‚½‚ç–³‹
+			} // å¤‰ãªã“ã¨ã«ãªã£ã¦ã„ãŸã‚‰ç„¡è¦–
 			lua_pop(L, 1);
 		}
 	}
 }
 
-/* è‚ğ•]‰¿‚·‚é */
+/* æ‰‹ã‚’è©•ä¾¡ã™ã‚‹ */
 int aiscript::table::functable::gametbl::luafunc::evaluate(lua_State* const L) {
 	int n = chkargnum(L, 2, 3);
 	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
@@ -86,26 +86,26 @@ int aiscript::table::functable::gametbl::luafunc::evaluate(lua_State* const L) {
 	PlayerID player = getPlayerID(L, 0);
 	setHand(L, &tmpGameStat, 3);
 	yaku::YAKUSTAT evaluation = yaku::yakuCalculator::countyaku(&tmpGameStat, player);
-	lua_newtable(L); // •Ô‚è’l‚ğŠi”[
-	TableAdd(L, "ismahjong", evaluation.isValid); // ‚ ‚ª‚Á‚Ä‚¢‚ê‚Îtrue
+	lua_newtable(L); // è¿”ã‚Šå€¤ã‚’æ ¼ç´
+	TableAdd(L, "ismahjong", evaluation.isValid); // ã‚ãŒã£ã¦ã„ã‚Œã°true
 	if (evaluation.isValid) {
-		TableAdd(L, "isvalid", yaku::yakuCalculator::checkShibari(&tmpGameStat, &evaluation)); // ”›‚è‚ğ–‚½‚µ‚Ä‚¢‚é‚©
-		TableAdd(L, "fu", (lua_Integer)evaluation.BasePoints); // •„
-		TableAdd(L, "han", (lua_Integer)(evaluation.CoreHan + evaluation.BonusHan)); // ãÊ
-		TableAdd(L, "mangan", (double)(evaluation.CoreSemiMangan + evaluation.BonusSemiMangan) / 2.0); // –ŠÑ
-		TableAdd(L, "points", evaluation.AgariPoints.bignumtodbl()); // “_”
+		TableAdd(L, "isvalid", yaku::yakuCalculator::checkShibari(&tmpGameStat, &evaluation)); // ç¸›ã‚Šã‚’æº€ãŸã—ã¦ã„ã‚‹ã‹
+		TableAdd(L, "fu", (lua_Integer)evaluation.BasePoints); // ç¬¦
+		TableAdd(L, "han", (lua_Integer)(evaluation.CoreHan + evaluation.BonusHan)); // é£œ
+		TableAdd(L, "mangan", (double)(evaluation.CoreSemiMangan + evaluation.BonusSemiMangan) / 2.0); // æº€è²«
+		TableAdd(L, "points", evaluation.AgariPoints.bignumtodbl()); // ç‚¹æ•°
 	}
 	return 1;
 }
 
-/* ƒcƒ‚”Ô‚ÌƒvƒŒƒCƒ„[”Ô† */
+/* ãƒ„ãƒ¢ç•ªã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå· */
 int aiscript::table::functable::gametbl::luafunc::getactiveplayer(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	lua_pushinteger(L, (int)getGameStatAddr(L)->CurrentPlayer.Active + 1);
 	return 1;
 }
 
-/* ê•—”v */
+/* å ´é¢¨ç‰Œ */
 int aiscript::table::functable::gametbl::luafunc::getbakaze(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
@@ -114,7 +114,7 @@ int aiscript::table::functable::gametbl::luafunc::getbakaze(lua_State* const L) 
 	return 1;
 }
 
-/* Œ´“_(•Ô‚µ“_) */
+/* åŸç‚¹(è¿”ã—ç‚¹) */
 int aiscript::table::functable::gametbl::luafunc::getbasepoint(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L); // dummy
@@ -122,46 +122,46 @@ int aiscript::table::functable::gametbl::luafunc::getbasepoint(lua_State* const 
 	return 1;
 }
 
-/* ƒ`ƒbƒvæ“¾ */
+/* ãƒãƒƒãƒ—å–å¾— */
 int aiscript::table::functable::gametbl::luafunc::getchip(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	if (RuleData::chkRuleApplied("chip")) lua_pushnil(L); // ƒ`ƒbƒv–³‚µƒ‹[ƒ‹‚È‚çnil
-	else lua_pushinteger(L, gameStat->Player[player].playerChip); // ƒ`ƒbƒv‚Ìûx‚ğƒXƒ^ƒbƒN‚ÉÏ‚Ş
+	if (RuleData::chkRuleApplied("chip")) lua_pushnil(L); // ãƒãƒƒãƒ—ç„¡ã—ãƒ«ãƒ¼ãƒ«ãªã‚‰nil
+	else lua_pushinteger(L, gameStat->Player[player].playerChip); // ãƒãƒƒãƒ—ã®åæ”¯ã‚’ã‚¹ã‚¿ãƒƒã‚¯ã«ç©ã‚€
 	return 1;
 }
 
-/* Œ»İ‚ÌÌ”v */
+/* ç¾åœ¨ã®æ¨ç‰Œ */
 int aiscript::table::functable::gametbl::luafunc::getcurrentdiscard(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
-	lua_newtable(L); // –ß‚è’l‚ğŠi”[‚·‚éƒe[ƒuƒ‹
+	lua_newtable(L); // æˆ»ã‚Šå€¤ã‚’æ ¼ç´ã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«
 	TableAdd(L, "tile", (lua_Integer)gameStat->CurrentDiscard.tile);
 	TableAdd(L, "red", (lua_Integer)gameStat->CurrentDiscard.red);
 	return 1;
 }
 
-/* R”v‚Ìc‚è–‡” */
+/* å±±ç‰Œã®æ®‹ã‚Šæšæ•° */
 int aiscript::table::functable::gametbl::luafunc::getdeckleft(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	lua_pushinteger(L, getGameStatAddr(L)->tilesLeft());
 	return 1;
 }
 
-/* ‹Ÿ‘õ“_–_‚Ì” */
+/* ä¾›è¨—ç‚¹æ£’ã®æ•° */
 int aiscript::table::functable::gametbl::luafunc::getdeposit(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	lua_pushinteger(L, getGameStatAddr(L)->Deposit);
 	return 1;
 }
 
-/* Ì”vƒe[ƒuƒ‹ */
+/* æ¨ç‰Œãƒ†ãƒ¼ãƒ–ãƒ« */
 int aiscript::table::functable::gametbl::luafunc::getdiscard(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	lua_newtable(L); // –ß‚è’l‚ğŠi”[‚·‚éƒe[ƒuƒ‹
+	lua_newtable(L); // æˆ»ã‚Šå€¤ã‚’æ ¼ç´ã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«
 	for (uint8_t i = 1; i <= gameStat->Player[player].DiscardPointer; i++) {
 		lua_pushnumber(L, i);
 		lua_newtable(L);
@@ -177,7 +177,7 @@ int aiscript::table::functable::gametbl::luafunc::getdiscard(lua_State* const L)
 	return 1;
 }
 
-/* ƒhƒ‰î•ñ‚Ì”z—ñ */
+/* ãƒ‰ãƒ©æƒ…å ±ã®é…åˆ— */
 int aiscript::table::functable::gametbl::luafunc::getdorainfo(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
@@ -185,21 +185,21 @@ int aiscript::table::functable::gametbl::luafunc::getdorainfo(lua_State* const L
 	return 1;
 }
 
-/* “±‰Îü */
+/* å°ç«ç·š */
 int aiscript::table::functable::gametbl::luafunc::getdoukasen(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	if (getGameStatAddr(L)->DoukasenPlayer == -1)
-		lua_pushnil(L); // “±‰Îü‚È‚µ‚Ì‚Ínil
+		lua_pushnil(L); // å°ç«ç·šãªã—ã®æ™‚ã¯nil
 	else lua_pushinteger(L, (int)getGameStatAddr(L)->DoukasenPlayer + 1);
 	return 1;
 }
 
-/* ‰Ô”v‚Ì” */
+/* èŠ±ç‰Œã®æ•° */
 int aiscript::table::functable::gametbl::luafunc::getflower(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	if (gameStat->chkGameType(Yonma)) { // l–ƒ‚Í‰Ô”v
+	if (gameStat->chkGameType(Yonma)) { // å››éº»ã¯èŠ±ç‰Œ
 		int k = 0;
 		if (gameStat->Player[player].FlowerFlag.Spring) ++k;
 		if (gameStat->Player[player].FlowerFlag.Summer) ++k;
@@ -210,21 +210,21 @@ int aiscript::table::functable::gametbl::luafunc::getflower(lua_State* const L) 
 		if (gameStat->Player[player].FlowerFlag.Chrys) ++k;
 		if (gameStat->Player[player].FlowerFlag.Bamboo) ++k;
 		lua_pushinteger(L, k);
-	} else { // O–ƒ‚Í”²‚«–k
+	} else { // ä¸‰éº»ã¯æŠœãåŒ—
 		lua_pushinteger(L, (int)gameStat->Player[player].NorthFlag);
 	}
 	return 1;
 }
 
-/* ƒè”vƒe[ƒuƒ‹ */
+/* ç´”æ‰‹ç‰Œãƒ†ãƒ¼ãƒ–ãƒ« */
 int aiscript::table::functable::gametbl::luafunc::gethand(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	lua_newtable(L); // –ß‚è’l‚ğŠi”[‚·‚éƒe[ƒuƒ‹
+	lua_newtable(L); // æˆ»ã‚Šå€¤ã‚’æ ¼ç´ã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[player].Hand[i].tile != NoTile) {
-			/* ”v‚ª‚ ‚Á‚½‚çƒTƒvƒe[ƒuƒ‹‚É•ÏŠ·A‚È‚©‚Á‚½‚çnil‚Ì‚Ü‚Ü•ú’u */
+			/* ç‰ŒãŒã‚ã£ãŸã‚‰ã‚µãƒ—ãƒ†ãƒ¼ãƒ–ãƒ«ã«å¤‰æ›ã€ãªã‹ã£ãŸã‚‰nilã®ã¾ã¾æ”¾ç½® */
 			lua_pushnumber(L, i + 1);
 			lua_newtable(L);
 			TableAdd(L, "tile", (lua_Integer)gameStat->Player[player].Hand[i].tile);
@@ -235,7 +235,7 @@ int aiscript::table::functable::gametbl::luafunc::gethand(lua_State* const L) {
 	return 1;
 }
 
-/* ê•—”v */
+/* å ´é¢¨ç‰Œ */
 int aiscript::table::functable::gametbl::luafunc::getjikaze(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
@@ -244,12 +244,12 @@ int aiscript::table::functable::gametbl::luafunc::getjikaze(lua_State* const L) 
 	return 1;
 }
 
-/* •›˜I–Êq */
+/* å‰¯éœ²é¢å­ */
 int aiscript::table::functable::gametbl::luafunc::getmeld(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	lua_newtable(L); // –ß‚è’l‚ğŠi”[‚·‚éƒe[ƒuƒ‹
+	lua_newtable(L); // æˆ»ã‚Šå€¤ã‚’æ ¼ç´ã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«
 	for (uint8_t i = 1; i <= gameStat->Player[player].MeldPointer; i++) {
 		lua_pushinteger(L, i); lua_newtable(L);
 		TableAdd(L, "tile", (lua_Integer)gameStat->Player[player].Meld[i].tile);
@@ -263,7 +263,7 @@ int aiscript::table::functable::gametbl::luafunc::getmeld(lua_State* const L) {
 	return 1;
 }
 
-/* ƒI[ƒvƒ“ƒŠ[ƒ`‚Ì‘Ò‚¿”vî•ñ */
+/* ã‚ªãƒ¼ãƒ—ãƒ³ãƒªãƒ¼ãƒã®å¾…ã¡ç‰Œæƒ…å ± */
 int aiscript::table::functable::gametbl::luafunc::getopenwait(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
@@ -271,7 +271,7 @@ int aiscript::table::functable::gametbl::luafunc::getopenwait(lua_State* const L
 	return 1;
 }
 
-/* ’¼‘O‚ÌÌ”vî•ñ(H‚¢•Ï‚¦–h~—p) */
+/* ç›´å‰ã®æ¨ç‰Œæƒ…å ±(é£Ÿã„å¤‰ãˆé˜²æ­¢ç”¨) */
 int aiscript::table::functable::gametbl::luafunc::getpreviousdiscard(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
@@ -280,28 +280,28 @@ int aiscript::table::functable::gametbl::luafunc::getpreviousdiscard(lua_State* 
 	return 2;
 }
 
-/* ‡ˆÊæ“¾ */
+/* é †ä½å–å¾— */
 int aiscript::table::functable::gametbl::luafunc::getrank(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	lua_pushinteger(L, calcRank(gameStat)[player]); // ‡ˆÊ‚ğƒXƒ^ƒbƒN‚ÉÏ‚Ş
+	lua_pushinteger(L, calcRank(gameStat)[player]); // é †ä½ã‚’ã‚¹ã‚¿ãƒƒã‚¯ã«ç©ã‚€
 	return 1;
 }
 
-/* Œ»İ‚Ì‹Ç”Ô† */
+/* ç¾åœ¨ã®å±€ç•ªå· */
 int aiscript::table::functable::gametbl::luafunc::getround(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
 	if (RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game"))
-		// “Œê‚µ‚©‚È‚¢ƒ‹[ƒ‹
+		// æ±å ´ã—ã‹ãªã„ãƒ«ãƒ¼ãƒ«
 		lua_pushinteger(L, gameStat->LoopRound * 4 + gameStat->GameRound + 1);
-	else // •’Ê‚Ìƒ‹[ƒ‹
+	else // æ™®é€šã®ãƒ«ãƒ¼ãƒ«
 		lua_pushinteger(L, gameStat->LoopRound * roundLoopRate() + gameStat->GameRound + 1);
 	return 1;
 }
 
-/* ƒ‹[ƒ‹İ’èæ“¾ */
+/* ãƒ«ãƒ¼ãƒ«è¨­å®šå–å¾— */
 int aiscript::table::functable::gametbl::luafunc::getrule(lua_State* const L) {
 	int n = chkargnum(L, 2, 2);
 	const char* fieldname = lua_tostring(L, 2);
@@ -310,16 +310,16 @@ int aiscript::table::functable::gametbl::luafunc::getrule(lua_State* const L) {
 	return 1;
 }
 
-/* ‚¿“_æ“¾ */
+/* æŒã¡ç‚¹å–å¾— */
 int aiscript::table::functable::gametbl::luafunc::getscore(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	lua_pushnumber(L, gameStat->Player[player].PlayerScore.bignumtodbl()); // ‚¿“_‚ğdouble‚É‚µ‚ÄƒXƒ^ƒbƒN‚ÉÏ‚Ş
+	lua_pushnumber(L, gameStat->Player[player].PlayerScore.bignumtodbl()); // æŒã¡ç‚¹ã‚’doubleã«ã—ã¦ã‚¹ã‚¿ãƒƒã‚¯ã«ç©ã‚€
 	return 1;
 }
 
-/* Œ©‚¦‚Ä‚¢‚é”v‚Ì”‚Ì”z—ñ */
+/* è¦‹ãˆã¦ã„ã‚‹ç‰Œã®æ•°ã®é…åˆ— */
 int aiscript::table::functable::gametbl::luafunc::getseentiles(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
@@ -328,7 +328,7 @@ int aiscript::table::functable::gametbl::luafunc::getseentiles(lua_State* const 
 	return 1;
 }
 
-/* Œü’®”‚ğæ“¾ */
+/* å‘è´æ•°ã‚’å–å¾— */
 int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L) {
 	int n = chkargnum(L, 1, 3);
 	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
@@ -342,7 +342,7 @@ int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L)
 	return 1;
 }
 
-/* ’®”v‚ÉŠÖ‚·‚éî•ñ */
+/* è´ç‰Œã«é–¢ã™ã‚‹æƒ…å ± */
 int aiscript::table::functable::gametbl::luafunc::gettenpaistat(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
@@ -357,12 +357,12 @@ int aiscript::table::functable::gametbl::luafunc::gettenpaistat(lua_State* const
 	return 1;
 }
 
-/* ”v‚É‚Â‚¢‚Ä‚Ìî•ñ */
+/* ç‰Œã«ã¤ã„ã¦ã®æƒ…å ± */
 int aiscript::table::functable::gametbl::luafunc::gettilecontext(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	lua_newtable(L); // –ß‚è’l‚ğŠi”[‚·‚éƒe[ƒuƒ‹
+	lua_newtable(L); // æˆ»ã‚Šå€¤ã‚’æ ¼ç´ã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		lua_pushnumber(L, i + 1);
 		lua_newtable(L);
@@ -382,12 +382,12 @@ int aiscript::table::functable::gametbl::luafunc::gettilecontext(lua_State* cons
 	return 1;
 }
 
-/* ˆÀ”v‚©‚Ç‚¤‚©”»’f‚·‚éè‚ª‚©‚è */
+/* å®‰ç‰Œã‹ã©ã†ã‹åˆ¤æ–­ã™ã‚‹æ‰‹ãŒã‹ã‚Š */
 int aiscript::table::functable::gametbl::luafunc::gettilerisk(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
-	lua_newtable(L); // –ß‚è’l‚ğŠi”[‚·‚éƒe[ƒuƒ‹
+	lua_newtable(L); // æˆ»ã‚Šå€¤ã‚’æ ¼ç´ã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[player].Hand[i].tile != NoTile) {
 			lua_pushnumber(L, i + 1);
@@ -426,7 +426,7 @@ int aiscript::table::functable::gametbl::luafunc::gettilerisk(lua_State* const L
 	return 1;
 }
 
-/* è”v‚É‚Á‚Ä‚¢‚é–‡”‚Ì”z—ñ */
+/* æ‰‹ç‰Œã«æŒã£ã¦ã„ã‚‹æšæ•°ã®é…åˆ— */
 int aiscript::table::functable::gametbl::luafunc::gettilesinhand(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
@@ -436,50 +436,50 @@ int aiscript::table::functable::gametbl::luafunc::gettilesinhand(lua_State* cons
 	return 1;
 }
 
-/* Ï‚İ–_ */
+/* ç©ã¿æ£’ */
 int aiscript::table::functable::gametbl::luafunc::gettsumibou(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	lua_pushinteger(L, getGameStatAddr(L)->Honba);
 	return 1;
 }
 
-/* Š„‚ê–Ú */
+/* å‰²ã‚Œç›® */
 int aiscript::table::functable::gametbl::luafunc::getwareme(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	if (getGameStatAddr(L)->WaremePlayer == -1)
-		lua_pushnil(L); // Š„‚ê–Ú‚È‚µ‚Ì‚Ínil
+		lua_pushnil(L); // å‰²ã‚Œç›®ãªã—ã®æ™‚ã¯nil
 	else lua_pushinteger(L, (int)getGameStatAddr(L)->WaremePlayer + 1);
 	return 1;
 }
 
-/* –ğ”v‚©‚Ç‚¤‚©‚ÌƒŠƒXƒg */
+/* å½¹ç‰Œã‹ã©ã†ã‹ã®ãƒªã‚¹ãƒˆ */
 int aiscript::table::functable::gametbl::luafunc::getyakuhaiwind(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
-	lua_newtable(L); // •Ô‚è’l‚ğŠi”[
+	lua_newtable(L); // è¿”ã‚Šå€¤ã‚’æ ¼ç´
 	const TileCode windtiles[4] = {EastWind, SouthWind, WestWind, NorthWind,};
 	const char windname[4][8] = {"East", "South", "West", "North",};
 	for (int i = 0; i < 4; i++) {
 		bool flag = false;
 		if (windtiles[i] ==
-			Wind2Tile((uint8_t)(gameStat->GameRound / 4))) // ê•—”v
+			Wind2Tile((uint8_t)(gameStat->GameRound / 4))) // å ´é¢¨ç‰Œ
 			flag = true;
 		else if (windtiles[i] ==
-			Wind2Tile(gameStat->playerwind(player))) // ©•—”v
+			Wind2Tile(gameStat->playerwind(player))) // è‡ªé¢¨ç‰Œ
 			flag = true;
-		else if ((RuleData::chkRuleApplied("kaimenkaze")) && (windtiles[i] == // ŠJ–å•—”v
+		else if ((RuleData::chkRuleApplied("kaimenkaze")) && (windtiles[i] == // é–‹é–€é¢¨ç‰Œ
 			Wind2Tile(gameStat->playerwind(gameStat->WaremePlayer))))
 			flag = true;
-		else if ((RuleData::chkRuleApplied("urakaze")) && (windtiles[i] == // — •—”v
+		else if ((RuleData::chkRuleApplied("urakaze")) && (windtiles[i] == // è£é¢¨ç‰Œ
 			Wind2Tile(gameStat->playerwind(player + 2))))
 			flag = true;
-		TableAdd(L, windname[i], flag); // Œ‹‰Ê‚ğŠi”[
+		TableAdd(L, windname[i], flag); // çµæœã‚’æ ¼ç´
 	}
 	return 1;
 }
 
-/* •‚‚¢‚Ä‚¢‚é‚©H */
+/* æµ®ã„ã¦ã„ã‚‹ã‹ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isabovebase(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	const GameTable* gameStat = getGameStatAddr(L);
@@ -488,7 +488,7 @@ int aiscript::table::functable::gametbl::luafunc::isabovebase(lua_State* const L
 	return 1;
 }
 
-/* ƒŠ[ƒ`ŒãˆÃÈ‚Å‚«‚é‚©H */
+/* ãƒªãƒ¼ãƒå¾Œæš—æ§“ã§ãã‚‹ã‹ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isankanallowed(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	const GameTable* gameStat = getGameStatAddr(L);
@@ -497,7 +497,7 @@ int aiscript::table::functable::gametbl::luafunc::isankanallowed(lua_State* cons
 	return 1;
 }
 
-/* “¯„“àƒtƒŠƒeƒ“‚©H */
+/* åŒå·¡å†…ãƒ•ãƒªãƒ†ãƒ³ã‹ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isdoujunfuriten(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	const GameTable* gameStat = getGameStatAddr(L);
@@ -506,7 +506,7 @@ int aiscript::table::functable::gametbl::luafunc::isdoujunfuriten(lua_State* con
 	return 1;
 }
 
-/* ƒI[ƒ‰ƒX‚©H */
+/* ã‚ªãƒ¼ãƒ©ã‚¹ã‹ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isfinalround(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	const GameTable* gameStat = getGameStatAddr(L);
@@ -514,14 +514,14 @@ int aiscript::table::functable::gametbl::luafunc::isfinalround(lua_State* const 
 	return 1;
 }
 
-/* ‘æˆê©–Ì‚©H */
+/* ç¬¬ä¸€è‡ªæ‘¸ã‹ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isfirstdraw(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	lua_pushboolean(L, getGameStatAddr(L)->Player[getPlayerID(L, 0)].FirstDrawFlag);
 	return 1;
 }
 
-/* ˆê”­Œ—“àH */
+/* ä¸€ç™ºåœå†…ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isippatsu(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	PlayerID player = getPlayerID(L, 2);
@@ -530,7 +530,7 @@ int aiscript::table::functable::gametbl::luafunc::isippatsu(lua_State* const L) 
 	return 1;
 }
 
-/* ÈO„H */
+/* æ§“ä¸‰å·¡ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::iskansanjunqualified(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	PlayerID player = getPlayerID(L, 2);
@@ -539,7 +539,7 @@ int aiscript::table::functable::gametbl::luafunc::iskansanjunqualified(lua_State
 	return 1;
 }
 
-/* ‹ãí‹ã”vH */
+/* ä¹ç¨®ä¹ç‰Œï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::iskyuushu(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	if (RuleData::chkRuleApplied("nine_terminals")) lua_pushnil(L);
@@ -547,7 +547,7 @@ int aiscript::table::functable::gametbl::luafunc::iskyuushu(lua_State* const L) 
 	return 1;
 }
 
-/* –å‘OH */
+/* é–€å‰ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::ismenzen(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	PlayerID player = getPlayerID(L, 2);
@@ -555,7 +555,7 @@ int aiscript::table::functable::gametbl::luafunc::ismenzen(lua_State* const L) {
 	return 1;
 }
 
-/* ƒI[ƒvƒ“—§’¼‚µ‚Ä‚¢‚éH */
+/* ã‚ªãƒ¼ãƒ—ãƒ³ç«‹ç›´ã—ã¦ã„ã‚‹ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isopenriichideclared(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	PlayerID player = getPlayerID(L, 2);
@@ -563,7 +563,7 @@ int aiscript::table::functable::gametbl::luafunc::isopenriichideclared(lua_State
 	return 1;
 }
 
-/* ƒ‰ƒX‘O‚©H */
+/* ãƒ©ã‚¹å‰ã‹ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::ispenultimateround(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	const GameTable* gameStat = getGameStatAddr(L);
@@ -571,7 +571,7 @@ int aiscript::table::functable::gametbl::luafunc::ispenultimateround(lua_State* 
 	return 1;
 }
 
-/* –ß”v“V˜aH */
+/* æˆ»ç‰Œå¤©å’Œï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isrenpaitenhohqualified(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	PlayerID player = getPlayerID(L, 0);
@@ -585,14 +585,14 @@ int aiscript::table::functable::gametbl::luafunc::isrenpaitenhohqualified(lua_St
 	return 2;
 }
 
-/* —§’¼‚µ‚Ä‚¢‚éH */
+/* ç«‹ç›´ã—ã¦ã„ã‚‹ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isriichideclared(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	PlayerID player = getPlayerID(L, 2);
 	lua_pushboolean(L, getGameStatAddr(L)->Player[player].RichiFlag.RichiFlag);
 	return 1;
 }
-/* \O•s“ƒH */
+/* åä¸‰ä¸å¡”ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isshisanbuda(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	if (RuleData::chkRuleApplied("shiisan_puutaa")) lua_pushnil(L);
@@ -600,7 +600,7 @@ int aiscript::table::functable::gametbl::luafunc::isshisanbuda(lua_State* const 
 	return 1;
 }
 
-/* \O–³èÏH */
+/* åä¸‰ç„¡é ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isshisibuda(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	if (RuleData::chkRuleApplied("shiisan_uushii")) lua_pushnil(L);
@@ -608,7 +608,7 @@ int aiscript::table::functable::gametbl::luafunc::isshisibuda(lua_State* const L
 	return 1;
 }
 
-/* ‰ÈH */
+/* åˆæ§“ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isshokanqualified(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	PlayerID player = getPlayerID(L, 2);
@@ -617,7 +617,7 @@ int aiscript::table::functable::gametbl::luafunc::isshokanqualified(lua_State* c
 	return 1;
 }
 
-/* l”n˜H‰ğ‹ÖH */
+/* å››é¦¬è·¯è§£ç¦ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::issumaroallowed(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	PlayerID player = getPlayerID(L, 2);
@@ -626,7 +626,7 @@ int aiscript::table::functable::gametbl::luafunc::issumaroallowed(lua_State* con
 	return 1;
 }
 
-/* Ä‚«’¹H */
+/* ç„¼ãé³¥ï¼Ÿ */
 int aiscript::table::functable::gametbl::luafunc::isyakitori(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	PlayerID player = getPlayerID(L, 2);

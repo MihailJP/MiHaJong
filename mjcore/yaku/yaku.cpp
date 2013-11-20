@@ -1,4 +1,4 @@
-#include "yaku.h"
+ï»¿#include "yaku.h"
 
 #include <string>
 #include <map>
@@ -9,6 +9,9 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
+#ifdef WITH_BOOST_THREAD
+#include <boost/container/vector.hpp>
+#endif /*WITH_BOOST_THREAD*/
 #ifdef _WIN32
 #include <windows.h>
 #else /*_WIN32*/
@@ -23,106 +26,63 @@
 #include "yvalue.h"
 #include "../ruletbl.h"
 
-// ŒvZ‚ğÀs(ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚Åcc‘åä•v‚©‚È‚Ÿ)
-#ifdef _WIN32
-DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculator(LPVOID lpParam)
-#else /*_WIN32*/
-void* yaku::yakuCalculator::CalculatorThread::calculator(void* lpParam)
-#endif /*_WIN32*/
-{
-	((CalculatorParam*)lpParam)->instance->recordThreadStart();
-	return ((CalculatorParam*)lpParam)->instance->calculate(
-		((CalculatorParam*)lpParam)->gameStat,
-		&(((CalculatorParam*)lpParam)->analysis),
-		&(((CalculatorParam*)lpParam)->pMode),
-		&(((CalculatorParam*)lpParam)->result));
-}
-
-/* “®‚¢‚Ä‚¢‚éƒXƒŒƒbƒh”‚ÌŠÇ——p */
-int yaku::yakuCalculator::CalculatorThread::numOfFinishedThreads() { // I‚í‚Á‚½ƒXƒŒƒbƒh‚Ì”
-	return this->finishedThreads;
-}
-int yaku::yakuCalculator::CalculatorThread::numOfStartedThreads() { // ŠJn‚µ‚½ƒXƒŒƒbƒh‚Ì”
-	return this->startedThreads;
-}
-void yaku::yakuCalculator::CalculatorThread::sync(int threads) { // ƒXƒŒƒbƒh‚ğ“¯Šú
-#ifdef _WIN32
-	while (this->startedThreads < threads) Sleep(0); // ‹K’è”‚ÌƒXƒŒƒbƒh‚ªŠJn‚·‚é‚Ì‚ğ‘Ò‚Á‚Ä‚©‚ç
-	while (this->finishedThreads < threads) Sleep(0); // I—¹‚·‚é‚Ì‚ğ‘Ò‚Â
-#else /*_WIN32*/
-	while (this->startedThreads < threads) usleep(100); // ‹K’è”‚ÌƒXƒŒƒbƒh‚ªŠJn‚·‚é‚Ì‚ğ‘Ò‚Á‚Ä‚©‚ç
-	while (this->finishedThreads < threads) usleep(100); // I—¹‚·‚é‚Ì‚ğ‘Ò‚Â
-#endif /*_WIN32*/
-}
-
-void yaku::yakuCalculator::CalculatorThread::recordThreadStart() {
-	cs.syncDo<void>([this]() -> void {
-		++startedThreads; // ŠJn‚µ‚½ƒXƒŒƒbƒh”‚ğƒCƒ“ƒNƒŠƒƒ“ƒg
-	});
-}
-void yaku::yakuCalculator::CalculatorThread::recordThreadFinish() {
-	cs.syncDo<void>([this]() -> void {
-		++finishedThreads; // I—¹‚µ‚½ƒXƒŒƒbƒh”‚ğƒCƒ“ƒNƒŠƒƒ“ƒg
-	});
-}
-
-/* –|‚ğŒvZ‚·‚é */
+/* ç¿»ã‚’è¨ˆç®—ã™ã‚‹ */
 #ifndef GUOBIAO
 void yaku::yakuCalculator::doubling(yaku::YAKUSTAT* const yStat) {
-	int totalHan = yStat->CoreHan + yStat->BonusHan; // ‡Œv–|
-	yStat->AgariPoints = (LNum)yStat->BasePoints; // Œ´“_
+	int totalHan = yStat->CoreHan + yStat->BonusHan; // åˆè¨ˆç¿»
+	yStat->AgariPoints = (LNum)yStat->BasePoints; // åŸç‚¹
 	if (totalHan >= -2) {
 		for (int i = 0; i < (totalHan + 2); i++) yStat->AgariPoints *= 2;
 	} else {
 		for (int i = 0; i < (totalHan + 2); i++) yStat->AgariPoints /= 2;
 	}
-	if (yStat->AgariPoints <= (LNum)0) yStat->AgariPoints = (LNum)1; // Å’á1“_‚É‚Í‚È‚é‚æ‚¤‚É‚·‚é
+	if (yStat->AgariPoints <= (LNum)0) yStat->AgariPoints = (LNum)1; // æœ€ä½1ç‚¹ã«ã¯ãªã‚‹ã‚ˆã†ã«ã™ã‚‹
 }
 #endif /* GUOBIAO */
 
-/* •„‚Æ–|‚©‚ç“_”‚ğŒvZ‚·‚é */
+/* ç¬¦ã¨ç¿»ã‹ã‚‰ç‚¹æ•°ã‚’è¨ˆç®—ã™ã‚‹ */
 void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 #ifdef GUOBIAO
-	/* ’†‘ƒ‹[ƒ‹‚Å‚Í’P‚É‘«‚µZ‚·‚é‚¾‚¯A•¡G‚ÈŒvZ‚Í•s—v */
+	/* ä¸­å›½ãƒ«ãƒ¼ãƒ«ã§ã¯å˜ã«è¶³ã—ç®—ã™ã‚‹ã ã‘ã€è¤‡é›‘ãªè¨ˆç®—ã¯ä¸è¦ */
 	yStat->AgariPoints = (LNum)yStat->CoreHan + yStat->FlowerQuantity;
 #else /* GUOBIAO */
-	/* ”›‚è‚ğ–‚½‚µ‚Ä‚È‚©‚Á‚½‚ç0‚ğ•Ô‚·
-	   “_”‚ª0‚È‚çƒRƒA•”•ª‚Åö˜a‚Æ”»’f‚³‚ê‚écc‚Í‚¸ */
+	/* ç¸›ã‚Šã‚’æº€ãŸã—ã¦ãªã‹ã£ãŸã‚‰0ã‚’è¿”ã™
+	   ç‚¹æ•°ãŒ0ãªã‚‰ã‚³ã‚¢éƒ¨åˆ†ã§éŒ¯å’Œã¨åˆ¤æ–­ã•ã‚Œã‚‹â€¦â€¦ã¯ãš */
 	if ((yStat->CoreHan <= 0)&&(yStat->CoreSemiMangan <= 0)) {
 		yStat->AgariPoints = (LNum)0;
 		return;
 	}
 
-	int totalHan = yStat->CoreHan + yStat->BonusHan; // ‡Œv–|
-	int totalSemiMangan = yStat->CoreSemiMangan + yStat->BonusSemiMangan; // –ŠÑ‚Ì”¼•ª’PˆÊ
+	int totalHan = yStat->CoreHan + yStat->BonusHan; // åˆè¨ˆç¿»
+	int totalSemiMangan = yStat->CoreSemiMangan + yStat->BonusSemiMangan; // æº€è²«ã®åŠåˆ†å˜ä½
 
-	if (!RuleData::chkRuleApplied("limitless")) { // ’Êíƒ‹[ƒ‹‚Ìê‡
-		if ((totalHan < 6) && (totalSemiMangan < 3)) { // –ŠÑˆÈ‰º
-			doubling(yStat); // ŒvZ‚ğÀs
-			if (yStat->AgariPoints > (LNum)2000) yStat->AgariPoints = (LNum)2000; // –ŠÑ
-			if (totalSemiMangan == 2) yStat->AgariPoints = (LNum)2000; // ŒÅ’è–ŠÑ‚Ìê‡
+	if (!RuleData::chkRuleApplied("limitless")) { // é€šå¸¸ãƒ«ãƒ¼ãƒ«ã®å ´åˆ
+		if ((totalHan < 6) && (totalSemiMangan < 3)) { // æº€è²«ä»¥ä¸‹
+			doubling(yStat); // è¨ˆç®—ã‚’å®Ÿè¡Œ
+			if (yStat->AgariPoints > (LNum)2000) yStat->AgariPoints = (LNum)2000; // æº€è²«
+			if (totalSemiMangan == 2) yStat->AgariPoints = (LNum)2000; // å›ºå®šæº€è²«ã®å ´åˆ
 		}
-		else if ((totalHan < 8) && (totalSemiMangan < 4)) yStat->AgariPoints = (LNum)3000; // ’µ–
+		else if ((totalHan < 8) && (totalSemiMangan < 4)) yStat->AgariPoints = (LNum)3000; // è·³æº€
 		else if (((totalHan < 10) || ((totalHan == 10) && (RuleData::chkRule("sanbaiman_border", "11han_or_more")))) &&
-			(totalSemiMangan < 6)) yStat->AgariPoints = (LNum)4000; // ”{–
+			(totalSemiMangan < 6)) yStat->AgariPoints = (LNum)4000; // å€æº€
 		else if (((totalHan < 12) || ((totalHan == 12) && (RuleData::chkRule("kazoe_border", "13han_or_more")))) &&
-			(totalSemiMangan < 8)) yStat->AgariPoints = (LNum)6000; // O”{–
+			(totalSemiMangan < 8)) yStat->AgariPoints = (LNum)6000; // ä¸‰å€æº€
 		else if ((totalSemiMangan < 8) && (RuleData::chkRule("kazoe_border", "no")))
-			yStat->AgariPoints = (LNum)6000; // O”{–
-		else if (totalSemiMangan < 16) yStat->AgariPoints = (LNum)8000; // –ğ– or ”‚¦
-		else yStat->AgariPoints = (LNum)(8000 * (totalSemiMangan / 8)); // ƒ_ƒuƒ‹–ğ–ˆÈã
-	} else { // Â“Vˆäƒ‹[ƒ‹‚Ìê‡
-		if (totalSemiMangan >= 8) yStat->AgariPoints = (LNum)2500000; // –ğ–‚ğŒÅ’è“_‚É‚·‚éƒ‹[ƒ‹
+			yStat->AgariPoints = (LNum)6000; // ä¸‰å€æº€
+		else if (totalSemiMangan < 16) yStat->AgariPoints = (LNum)8000; // å½¹æº€ or æ•°ãˆ
+		else yStat->AgariPoints = (LNum)(8000 * (totalSemiMangan / 8)); // ãƒ€ãƒ–ãƒ«å½¹æº€ä»¥ä¸Š
+	} else { // é’å¤©äº•ãƒ«ãƒ¼ãƒ«ã®å ´åˆ
+		if (totalSemiMangan >= 8) yStat->AgariPoints = (LNum)2500000; // å½¹æº€ã‚’å›ºå®šç‚¹ã«ã™ã‚‹ãƒ«ãƒ¼ãƒ«
 		else if (totalSemiMangan >= 6) yStat->AgariPoints = (LNum)1875000;
 		else if (totalSemiMangan >= 4) yStat->AgariPoints = (LNum)1250000;
 		else if (totalSemiMangan >= 3) yStat->AgariPoints = (LNum)937500;
 		else if (totalSemiMangan >= 2) yStat->AgariPoints = (LNum)625000;
-		else doubling(yStat); // ŒvZ‚·‚é
+		else doubling(yStat); // è¨ˆç®—ã™ã‚‹
 	}
 
-	{ // ƒgƒŒ[ƒX—p
+	{ // ãƒˆãƒ¬ãƒ¼ã‚¹ç”¨
 		CodeConv::tostringstream o;
-		o << _T("ŒvZŒ‹‰Ê‚Í [");
+		o << _T("è¨ˆç®—çµæœã¯ [");
 		for (int i = DIGIT_GROUPS - 1; i >= 0; i--)
 			o << std::setw(4) << std::dec << std::setfill(_T('0')) << yStat->AgariPoints.digitGroup[i] / 10000 <<
 			_T(" ") << std::setw(4) << std::dec << std::setfill(_T('0')) << yStat->AgariPoints.digitGroup[i] % 10000 << (i ? _T(" ") : _T(""));
@@ -132,132 +92,132 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 #endif /* GUOBIAO */
 }
 
-/* •„‚ğŒvZ‚·‚é */
+/* ç¬¦ã‚’è¨ˆç®—ã™ã‚‹ */
 void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis)
 {
 #ifndef GUOBIAO
-	trace(_T("•„ŒvZ‚Ìˆ—‚É“ü‚è‚Ü‚·B"));
-	int fu = 20; // •›’ê‚Q‚O•„
+	trace(_T("ç¬¦è¨ˆç®—ã®å‡¦ç†ã«å…¥ã‚Šã¾ã™ã€‚"));
+	int fu = 20; // å‰¯åº•ï¼’ï¼ç¬¦
 
-	/* “ª‰Á•„(–ğ”v‚Ì‚İ‚Q•„) */
-	switch (analysis->MianziDat[0].tile) { /* •—”v‚ÍğŒ‚É‚æ‚Á‚Ä–ğ”v */
+	/* é›€é ­åŠ ç¬¦(å½¹ç‰Œã®ã¿ï¼’ç¬¦) */
+	switch (analysis->MianziDat[0].tile) { /* é¢¨ç‰Œã¯æ¡ä»¶ã«ã‚ˆã£ã¦å½¹ç‰Œ */
 	case EastWind: case SouthWind: case WestWind: case NorthWind:
 		if (analysis->MianziDat[0].tile ==
-			Wind2Tile((uint8_t)(gameStat->GameRound / 4))) // ê•—”v
+			Wind2Tile((uint8_t)(gameStat->GameRound / 4))) // å ´é¢¨ç‰Œ
 			fu += 2;
 		if (analysis->MianziDat[0].tile ==
-			Wind2Tile(gameStat->playerwind(analysis->player))) // ©•—”v
+			Wind2Tile(gameStat->playerwind(analysis->player))) // è‡ªé¢¨ç‰Œ
 			fu += 2;
-		if ((RuleData::chkRuleApplied("kaimenkaze")) && (analysis->MianziDat[0].tile == // ŠJ–å•—”v
+		if ((RuleData::chkRuleApplied("kaimenkaze")) && (analysis->MianziDat[0].tile == // é–‹é–€é¢¨ç‰Œ
 			Wind2Tile(gameStat->playerwind(gameStat->WaremePlayer))))
 			fu += 2;
-		if ((RuleData::chkRuleApplied("urakaze")) && (analysis->MianziDat[0].tile == // — •—”v
+		if ((RuleData::chkRuleApplied("urakaze")) && (analysis->MianziDat[0].tile == // è£é¢¨ç‰Œ
 			Wind2Tile(gameStat->playerwind(analysis->player + 2))))
 			fu += 2;
-		if ((!RuleData::chkRuleApplied("double_yaku_wind_pair")) && (fu > 22)) fu = 22; // ƒ_ƒu•—“ª‚ğ2•„‚ÆŒ©‚È‚·ƒ‹[ƒ‹‚Ìê‡
+		if ((!RuleData::chkRuleApplied("double_yaku_wind_pair")) && (fu > 22)) fu = 22; // ãƒ€ãƒ–é¢¨é›€é ­ã‚’2ç¬¦ã¨è¦‹ãªã™ãƒ«ãƒ¼ãƒ«ã®å ´åˆ
 		break;
-	case WhiteDragon: case GreenDragon: case RedDragon: /* OŒ³”v‚Íí‚É–ğ”v */
+	case WhiteDragon: case GreenDragon: case RedDragon: /* ä¸‰å…ƒç‰Œã¯å¸¸ã«å½¹ç‰Œ */
 		fu += 2;
 		break;
 	}
 
-	/* –Êq‰Á•„ */
+	/* é¢å­åŠ ç¬¦ */
 	for (int i = 1; i < SizeOfMeldBuffer; i++) {
 		switch (analysis->MianziDat[i].mstat) {
 		case meldTripletExposedLeft: case meldTripletExposedCenter: case meldTripletExposedRight:
-			fu += isYaojiu(analysis->MianziDat[i].tile) ? 4 : 2; /* –¾q */
+			fu += isYaojiu(analysis->MianziDat[i].tile) ? 4 : 2; /* æ˜åˆ»å­ */
 			break;
 		case meldTripletConcealed:
-			fu += isYaojiu(analysis->MianziDat[i].tile) ? 8 : 4; /* ˆÃq */
+			fu += isYaojiu(analysis->MianziDat[i].tile) ? 8 : 4; /* æš—åˆ»å­ */
 			break;
 		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight:
 		case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight:
-			fu += isYaojiu(analysis->MianziDat[i].tile) ? 16 : 8; /* –¾Èq */
+			fu += isYaojiu(analysis->MianziDat[i].tile) ? 16 : 8; /* æ˜æ§“å­ */
 			break;
 		case meldQuadConcealed:
-			fu += isYaojiu(analysis->MianziDat[i].tile) ? 32 : 16; /* ˆÃÈq */
+			fu += isYaojiu(analysis->MianziDat[i].tile) ? 32 : 16; /* æš—æ§“å­ */
 			break;
 		}
 	}
-	/* –ğ”v‚ª“ª‚Å‚Í‚È‚­Aq‚âÈq‚ª‚È‚¢ê‡Aƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+	/* å½¹ç‰ŒãŒé›€é ­ã§ã¯ãªãã€åˆ»å­ã‚„æ§“å­ãŒãªã„å ´åˆã€ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹ */
 	bool NoTriplets = (fu == 20); bool LiangMianFlag = false;
 
 #endif /* GUOBIAO */
-	/* ’®”vŒ`‰Á•„ */
-	analysis->Machi = machiInvalid; // ‰Šú‰»
+	/* è´ç‰Œå½¢åŠ ç¬¦ */
+	analysis->Machi = machiInvalid; // åˆæœŸåŒ–
 #ifdef GUOBIAO
-	bool LiangMianFlag; // ƒ_ƒ~[
+	bool LiangMianFlag; // ãƒ€ãƒŸãƒ¼
 #endif /* GUOBIAO */
 	const TileCode* tsumoTile = &(gameStat->Player[analysis->player].Tsumohai().tile); // shorthand
-	if (analysis->MianziDat[0].tile == *tsumoTile) analysis->Machi = machiTanki; // ’P‹R‘Ò‚¿
-	for (int i = 1; i < SizeOfMeldBuffer; i++) { // ‘Ò‚¿‚Ìí—Ş‚ğ’²‚×‚écc
+	if (analysis->MianziDat[0].tile == *tsumoTile) analysis->Machi = machiTanki; // å˜é¨å¾…ã¡
+	for (int i = 1; i < SizeOfMeldBuffer; i++) { // å¾…ã¡ã®ç¨®é¡ã‚’èª¿ã¹ã‚‹â€¦â€¦
 		switch (analysis->MianziDat[i].mstat) {
 		case meldSequenceConcealed: case meldSequenceExposedLower:
-		case meldSequenceExposedMiddle: case meldSequenceExposedUpper: /* ‡q */
+		case meldSequenceExposedMiddle: case meldSequenceExposedUpper: /* é †å­ */
 			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 1)) analysis->Machi = machiKanchan;
 			if (analysis->MianziDat[i].tile == *tsumoTile) {
-				if (analysis->MianziDat[i].tile % TileSuitStep == 7) analysis->Machi = machiPenchan; // •Ó’£‘Ò‚¿
-				else {analysis->Machi = machiRyanmen; LiangMianFlag = true;} // —¼–Ê‘Ò‚¿
+				if (analysis->MianziDat[i].tile % TileSuitStep == 7) analysis->Machi = machiPenchan; // è¾ºå¼µå¾…ã¡
+				else {analysis->Machi = machiRyanmen; LiangMianFlag = true;} // ä¸¡é¢å¾…ã¡
 			}
 			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 2)) {
-				if (analysis->MianziDat[i].tile % TileSuitStep == 1) analysis->Machi = machiPenchan; // •Ó’£‘Ò‚¿
-				else {analysis->Machi = machiRyanmen; LiangMianFlag = true;} // —¼–Ê‘Ò‚¿
+				if (analysis->MianziDat[i].tile % TileSuitStep == 1) analysis->Machi = machiPenchan; // è¾ºå¼µå¾…ã¡
+				else {analysis->Machi = machiRyanmen; LiangMianFlag = true;} // ä¸¡é¢å¾…ã¡
 			}
 			break;
-		default: /* ‚»‚êˆÈŠO */
-			if (analysis->MianziDat[i].tile == *tsumoTile) analysis->Machi = machiShanpon; // ‘oƒ|ƒ“‘Ò‚¿
+		default: /* ãã‚Œä»¥å¤– */
+			if (analysis->MianziDat[i].tile == *tsumoTile) analysis->Machi = machiShanpon; // åŒãƒãƒ³å¾…ã¡
 			break;
 		}
 	}
 #ifndef GUOBIAO
-	/* ›Æ’£A•Ó’£A’P‹R‚Í{‚Q•„u•s—˜‚È‘Ò‚¿‚É‚Í‚Q“_•t‚­v */
+	/* åµŒå¼µã€è¾ºå¼µã€å˜é¨ã¯ï¼‹ï¼’ç¬¦ã€Œä¸åˆ©ãªå¾…ã¡ã«ã¯ï¼’ç‚¹ä»˜ãã€ */
 	switch (analysis->Machi) {
 	case machiKanchan: case machiPenchan: case machiTanki:
 		fu += 2; break;
 	}
-	/* ‘oƒ|ƒ“‘Ò‚¿‚Åƒƒ“‚µ‚½ê‡‚Ì—áŠOF–¾‚Æ‚µ‚Äˆµ‚¤‚½‚ß‚ÌŒ¸“_ */
+	/* åŒãƒãƒ³å¾…ã¡ã§ãƒ­ãƒ³ã—ãŸå ´åˆã®ä¾‹å¤–ï¼šæ˜åˆ»ã¨ã—ã¦æ‰±ã†ãŸã‚ã®æ¸›ç‚¹ */
 	if ((analysis->Machi == machiShanpon)&&(!gameStat->TsumoAgariFlag))
 		fu -= isYaojiu(*tsumoTile) ? 4 : 2;
 
-	/* •½˜a‚ª¬—§‚µ‚¤‚éê‡ */
-	analysis->isPinfu = false; // ”O‚Ìˆ×
+	/* å¹³å’ŒãŒæˆç«‹ã—ã†ã‚‹å ´åˆ */
+	analysis->isPinfu = false; // å¿µã®ç‚º
 	if (NoTriplets && LiangMianFlag) {
 		if (gameStat->Player[analysis->player].MenzenFlag) {
-			/* –å‘O‚Å‚ ‚ê‚ÎA–ğ‚Æ‚µ‚Ä•½˜a‚ª¬—§‚·‚é */
-			analysis->Machi = machiRyanmen; // ‹­§—¼–Êˆµ‚¢
-			if ((!(gameStat->TsumoAgariFlag) || (RuleData::chkRuleApplied("tsumo_pinfu")))) { // ƒcƒ‚ƒsƒ“‚ ‚è‚©Ao˜a—¹‚Ìê‡
+			/* é–€å‰ã§ã‚ã‚Œã°ã€å½¹ã¨ã—ã¦å¹³å’ŒãŒæˆç«‹ã™ã‚‹ */
+			analysis->Machi = machiRyanmen; // å¼·åˆ¶ä¸¡é¢æ‰±ã„
+			if ((!(gameStat->TsumoAgariFlag) || (RuleData::chkRuleApplied("tsumo_pinfu")))) { // ãƒ„ãƒ¢ãƒ”ãƒ³ã‚ã‚Šã‹ã€å‡ºå’Œäº†ã®å ´åˆ
 				analysis->isPinfu = true; fu = 20;
 			} else {
-				fu += 2; // ƒcƒ‚•„
+				fu += 2; // ãƒ„ãƒ¢ç¬¦
 			}
 		} else {
-			analysis->Machi = machiRyanmen; // ‹­§—¼–Êˆµ‚¢
+			analysis->Machi = machiRyanmen; // å¼·åˆ¶ä¸¡é¢æ‰±ã„
 			if (RuleData::chkRule("exposed_pinfu", "30fu")) {
-				fu = 30; /* –å‘O‚Å‚È‚¯‚ê‚ÎA‚R‚O•„‚Æ‚·‚é */
+				fu = 30; /* é–€å‰ã§ãªã‘ã‚Œã°ã€ï¼“ï¼ç¬¦ã¨ã™ã‚‹ */
 			}
 			else if (RuleData::chkRule("exposed_pinfu", "1han_30fu_unbound") || RuleData::chkRule("exposed_pinfu", "1han_30fu")) {
 				fu = 30; analysis->isPinfu = true;
 			}
 			else if (RuleData::chkRule("exposed_pinfu", "1han_20fu_unbound") || RuleData::chkRule("exposed_pinfu", "1han_20fu")) {
-				analysis->isPinfu = true; /* ‹ò‚¢•½‚ğ–ğ‚É‚·‚éê‡ */
+				analysis->isPinfu = true; /* å–°ã„å¹³ã‚’å½¹ã«ã™ã‚‹å ´åˆ */
 			}
 		}
 	} else if (gameStat->TsumoAgariFlag) {
-		fu += 2; /* •½˜a‚Å‚È‚¢ƒcƒ‚˜a—¹‚è‚Í‚Q•„ */
+		fu += 2; /* å¹³å’Œã§ãªã„ãƒ„ãƒ¢å’Œäº†ã‚Šã¯ï¼’ç¬¦ */
 	}
 
-	/* –å‘O‰Á•„(‚P‚O•„) */
+	/* é–€å‰åŠ ç¬¦(ï¼‘ï¼ç¬¦) */
 	if ((gameStat->Player[analysis->player].MenzenFlag) && (!(gameStat->TsumoAgariFlag)))
 		fu += 10;
 
-	/* I—¹ˆ— */
-	CodeConv::tostringstream o; o << _T("‚±‚Ìè”v‚Í [") << fu << _T("] •„‚Å‚·B"); trace(o.str().c_str());
+	/* çµ‚äº†å‡¦ç† */
+	CodeConv::tostringstream o; o << _T("ã“ã®æ‰‹ç‰Œã¯ [") << fu << _T("] ç¬¦ã§ã™ã€‚"); trace(o.str().c_str());
 	analysis->BasePoint = (uint8_t)fu;
 #endif /* GUOBIAO */
 }
 
-/* ƒhƒ‰Œv” */
+/* ãƒ‰ãƒ©è¨ˆæ•° */
 void yaku::yakuCalculator::countDora
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
 	YAKUSTAT* const result, PlayerID targetPlayer)
@@ -285,41 +245,41 @@ void yaku::yakuCalculator::countDora
 #endif
 		};
 #ifndef GUOBIAO
-	const bool uradoraEnabled = ((RuleData::chkRuleApplied("uradora")) && // — ƒhƒ‰‚ ‚è‚Ìƒ‹[ƒ‹‚ÅA
-		(gameStat->Player[targetPlayer].MenzenFlag) && // –å‘O‚Å‚ ‚èA
-		(gameStat->Player[targetPlayer].RichiFlag.RichiFlag)); // —§’¼‚ğ‚©‚¯‚Ä‚¢‚é‚È‚ç
+	const bool uradoraEnabled = ((RuleData::chkRuleApplied("uradora")) && // è£ãƒ‰ãƒ©ã‚ã‚Šã®ãƒ«ãƒ¼ãƒ«ã§ã€
+		(gameStat->Player[targetPlayer].MenzenFlag) && // é–€å‰ã§ã‚ã‚Šã€
+		(gameStat->Player[targetPlayer].RichiFlag.RichiFlag)); // ç«‹ç›´ã‚’ã‹ã‘ã¦ã„ã‚‹ãªã‚‰
 	int omote = 0; int ura = 0; int red = 0; int blue = 0; int alice = 0;
 	int flower = 0; int north = 0;
-	/* ƒhƒ‰‚ğŒvZ‚·‚é */
+	/* ãƒ‰ãƒ©ã‚’è¨ˆç®—ã™ã‚‹ */
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) continue;
 		omote += gameStat->DoraFlag.Omote[gameStat->Player[targetPlayer].Hand[i].tile];
-		if (uradoraEnabled) // — ƒhƒ‰“K—p
+		if (uradoraEnabled) // è£ãƒ‰ãƒ©é©ç”¨
 			ura += gameStat->DoraFlag.Ura[gameStat->Player[targetPlayer].Hand[i].tile];
 	}
-	/* –Â‚«–Êq‚Ìƒhƒ‰‚ğ”‚¦‚é */
+	/* é³´ãé¢å­ã®ãƒ‰ãƒ©ã‚’æ•°ãˆã‚‹ */
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
 		auto k = &gameStat->Player[targetPlayer].Meld[i];
 		switch (k->mstat) {
-		case meldSequenceExposedLower: case meldSequenceExposedMiddle: case meldSequenceExposedUpper: // ‡q
+		case meldSequenceExposedLower: case meldSequenceExposedMiddle: case meldSequenceExposedUpper: // é †å­
 			omote += gameStat->DoraFlag.Omote[k->tile] + gameStat->DoraFlag.Omote[k->tile + 1] +
 				gameStat->DoraFlag.Omote[k->tile + 2];
 			if (uradoraEnabled)
 				ura += gameStat->DoraFlag.Ura[k->tile] + gameStat->DoraFlag.Ura[k->tile + 1] +
 				gameStat->DoraFlag.Ura[k->tile + 2];
 			break;
-		case meldTripletExposedLeft: case meldTripletExposedCenter: case meldTripletExposedRight: // q
+		case meldTripletExposedLeft: case meldTripletExposedCenter: case meldTripletExposedRight: // åˆ»å­
 			omote += gameStat->DoraFlag.Omote[k->tile] * 3;
 			if (uradoraEnabled) ura += gameStat->DoraFlag.Ura[k->tile] * 3;
 			break;
-		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight: // Èq
+		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight: // æ§“å­
 		case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight: case meldQuadConcealed:
 			omote += gameStat->DoraFlag.Omote[k->tile] * 4;
 			if (uradoraEnabled) ura += gameStat->DoraFlag.Ura[k->tile] * 4;
 			break;
 		}
 	}
-	/* Ôƒhƒ‰EÂƒhƒ‰ */
+	/* èµ¤ãƒ‰ãƒ©ãƒ»é’ãƒ‰ãƒ© */
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) continue;
 		else if (gameStat->Player[targetPlayer].Hand[i].tile >= TileNonflowerMax) continue;
@@ -337,11 +297,11 @@ void yaku::yakuCalculator::countDora
 			}
 		}
 	}
-	/* ƒAƒŠƒXƒhƒ‰ */
+	/* ã‚¢ãƒªã‚¹ãƒ‰ãƒ© */
 	if ((RuleData::chkRuleApplied("alice")) && (gameStat->Player[targetPlayer].MenzenFlag)) {
-		// ƒAƒŠƒX‚ ‚èƒ‹[ƒ‹‚Å–å‘O‚Å‚È‚¢‚Æ‘Ê–Ú
+		// ã‚¢ãƒªã‚¹ã‚ã‚Šãƒ«ãƒ¼ãƒ«ã§é–€å‰ã§ãªã„ã¨é§„ç›®
 		auto AlicePointer = gameStat->DoraPointer;
-		// ”v•ˆ‹L˜^ƒ‹[ƒ`ƒ“‚ÍƒXƒŒƒbƒhƒZ[ƒt‚¶‚á‚È‚©‚Á‚½‚Í‚¸‚È‚Ì‚Å•Ê‚ÌêŠ‚Å‚â‚é
+		// ç‰Œè­œè¨˜éŒ²ãƒ«ãƒ¼ãƒãƒ³ã¯ã‚¹ãƒ¬ãƒƒãƒ‰ã‚»ãƒ¼ãƒ•ã˜ã‚ƒãªã‹ã£ãŸã¯ãšãªã®ã§åˆ¥ã®å ´æ‰€ã§ã‚„ã‚‹
 		while (AlicePointer >= gameStat->TilePointer) {
 			AlicePointer -= 2;
 			if (analysis != nullptr) {
@@ -355,7 +315,7 @@ void yaku::yakuCalculator::countDora
 		}
 	}
 #endif /* GUOBIAO */
-	/* ‰Ô”vEO–ƒ‚ÌƒKƒŠ */
+	/* èŠ±ç‰Œãƒ»ä¸‰éº»ã®ã‚¬ãƒª */
 #ifdef GUOBIAO
 	int omote = 0, flower = 0;
 #else /* GUOBIAO */
@@ -383,14 +343,14 @@ void yaku::yakuCalculator::countDora
 #ifndef GUOBIAO
 		}
 	}
-	/* Œv”Œ‹‰Ê‚ğ”½‰f */
+	/* è¨ˆæ•°çµæœã‚’åæ˜  */
 	if (omote) {
 		result->DoraQuantity += omote; result->BonusHan += omote;
-		doraText(result, _T("ƒhƒ‰"), omote);
+		doraText(result, _T("ãƒ‰ãƒ©"), omote);
 	}
 	if (ura) {
 		result->DoraQuantity += ura; result->BonusHan += ura; result->UraDoraQuantity = ura;
-		doraText(result, _T("— ƒhƒ‰"), ura);
+		doraText(result, _T("è£ãƒ‰ãƒ©"), ura);
 	}
 	if (red) {
 		if (RuleData::chkRule("redtile_chip", "menzen_only") ||
@@ -399,51 +359,51 @@ void yaku::yakuCalculator::countDora
 			result->DoraQuantity += red; result->BonusHan += red;
 		}
 		result->AkaDoraQuantity = red;
-		doraText(result, _T("Ôƒhƒ‰"), red);
+		doraText(result, _T("èµ¤ãƒ‰ãƒ©"), red);
 	}
 	if (blue) {
 		result->AoDoraQuantity = blue;
 		if (RuleData::chkRule("blue_tiles", "1han")) {
 			result->DoraQuantity += blue; result->BonusHan += blue;
-			doraText(result, _T("Âƒhƒ‰"), blue);
+			doraText(result, _T("é’ãƒ‰ãƒ©"), blue);
 		} else if (RuleData::chkRule("blue_tiles", "2han")) {
 			result->DoraQuantity += blue * 2; result->BonusHan += blue * 2;
-			doraText(result, _T("Âƒhƒ‰ 2x"), blue);
+			doraText(result, _T("é’ãƒ‰ãƒ© 2x"), blue);
 		} else if (RuleData::chkRule("blue_tiles", "-1han")) {
 			result->DoraQuantity -= blue; result->BonusHan -= blue;
-			doraText(result, _T("Âƒhƒ‰ -"), blue);
+			doraText(result, _T("é’ãƒ‰ãƒ© -"), blue);
 		}
 	}
 	if (alice) {
 		result->AliceDora = alice;
-		doraText(result, _T("ƒAƒŠƒXj‹V"), alice);
+		doraText(result, _T("ã‚¢ãƒªã‚¹ç¥å„€"), alice);
 	}
 #endif /* GUOBIAO */
 	if (flower) {
 		result->DoraQuantity += omote; result->BonusHan += omote;
-		doraText(result, _T("‰Ô”v"), omote);
+		doraText(result, _T("èŠ±ç‰Œ"), omote);
 	}
 }
 
-/* ƒhƒ‰Œv” */
+/* ãƒ‰ãƒ©è¨ˆæ•° */
 void yaku::yakuCalculator::CalculatorThread::countDora
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result)
 {
 	yaku::yakuCalculator::countDora(gameStat, analysis, result, analysis->player);
 }
 
-/* –|‚ğ‡Œv‚·‚é */
+/* ç¿»ã‚’åˆè¨ˆã™ã‚‹ */
 void yaku::yakuCalculator::CalculatorThread::hanSummation(
 	int& totalHan, int& totalSemiMangan, int& totalBonusHan, int& totalBonusSemiMangan,
 	std::map<CodeConv::tstring, Yaku::YAKU_HAN> &yakuHan, std::vector<CodeConv::tstring> &yakuOrd, YAKUSTAT* const result)
 {
-	totalHan = totalSemiMangan = totalBonusHan = totalBonusSemiMangan = 0; // ‚±‚Á‚¿‚Å‰Šú‰»‚µ‚Ä‚ ‚°‚æ‚¤
-	for (auto yNameIter = yakuOrd.begin(); yNameIter != yakuOrd.end(); yNameIter++) {
-		CodeConv::tstring yName = *yNameIter;
+	totalHan = totalSemiMangan = totalBonusHan = totalBonusSemiMangan = 0; // ã“ã£ã¡ã§åˆæœŸåŒ–ã—ã¦ã‚ã’ã‚ˆã†
+	for (const auto& yNameIter : yakuOrd) {
+		CodeConv::tstring yName = yNameIter;
 #ifdef GUOBIAO
 		totalHan += yakuHan[yName].coreHan.getHan();
 #else /* GUOBIAO */
-		if (RuleData::chkRule("limitless", "yakuman_considered_13han")) { /* Â“_ƒ‹[ƒ‹‚Å–ğ–‚ğ13ãÊˆµ‚¢‚Æ‚·‚éê‡ */
+		if (RuleData::chkRule("limitless", "yakuman_considered_13han")) { /* é’ç‚¹ãƒ«ãƒ¼ãƒ«ã§å½¹æº€ã‚’13é£œæ‰±ã„ã¨ã™ã‚‹å ´åˆ */
 			switch (yakuHan[yName].coreHan.getUnit()) {
 				case yaku::yakuCalculator::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
 				case yaku::yakuCalculator::SemiMangan:
@@ -455,7 +415,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 					break;
 				case yaku::yakuCalculator::Yakuman: totalHan += yakuHan[yName].coreHan.getHan() * 13; break;
 				default:
-					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("’PˆÊ‚ªˆÙí‚Å‚·"));
+					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("å˜ä½ãŒç•°å¸¸ã§ã™"));
 			}
 			switch (yakuHan[yName].bonusHan.getUnit()) {
 				case yaku::yakuCalculator::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
@@ -468,36 +428,36 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 					break;
 				case yaku::yakuCalculator::Yakuman: totalBonusHan += yakuHan[yName].bonusHan.getHan() * 13; break;
 				default:
-					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("’PˆÊ‚ªˆÙí‚Å‚·"));
+					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("å˜ä½ãŒç•°å¸¸ã§ã™"));
 			}
-		} else { /* ’Êí‚Ì–|ŒvZ */
+		} else { /* é€šå¸¸ã®ç¿»è¨ˆç®— */
 			switch (yakuHan[yName].coreHan.getUnit()) {
 				case yaku::yakuCalculator::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
 				case yaku::yakuCalculator::SemiMangan: totalSemiMangan += yakuHan[yName].coreHan.getHan(); break;
 				case yaku::yakuCalculator::Yakuman: totalSemiMangan += yakuHan[yName].coreHan.getHan() * 8; break;
 				default:
-					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("’PˆÊ‚ªˆÙí‚Å‚·"));
+					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("å˜ä½ãŒç•°å¸¸ã§ã™"));
 			}
 			switch (yakuHan[yName].bonusHan.getUnit()) {
 				case yaku::yakuCalculator::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
 				case yaku::yakuCalculator::SemiMangan: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan(); break;
 				case yaku::yakuCalculator::Yakuman: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan() * 8; break;
 				default:
-					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("’PˆÊ‚ªˆÙí‚Å‚·"));
+					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("å˜ä½ãŒç•°å¸¸ã§ã™"));
 			}
 		}
 #endif /* GUOBIAO */
-		/* –ğ‚Ì–¼‘O‚ğ‘‚«‚Ş */
-		if (result == nullptr) continue; // –ğ‚Ì–¼‘O‚Ìo—Í‚ª‚¢‚ç‚È‚¢‚È‚çŸ‚Ö
+		/* å½¹ã®åå‰ã‚’æ›¸ãè¾¼ã‚€ */
+		if (result == nullptr) continue; // å½¹ã®åå‰ã®å‡ºåŠ›ãŒã„ã‚‰ãªã„ãªã‚‰æ¬¡ã¸
 #ifndef GUOBIAO
 		if ((yakuHan[yName].coreHan.getUnit() != yakuHan[yName].bonusHan.getUnit()) &&
 			(yakuHan[yName].coreHan.getHan() * yakuHan[yName].bonusHan.getHan() != 0))
-		{ /* ’PˆÊ‚ª¬İI */
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("’PˆÊ‚ª¬İ‚µ‚Ä‚¢‚Ü‚·"));
+		{ /* å˜ä½ãŒæ··åœ¨ï¼ */
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("å˜ä½ãŒæ··åœ¨ã—ã¦ã„ã¾ã™"));
 		}
 		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].coreHan.getHan() == 0)) &&
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].bonusHan.getHan() == 0)))
-		{ /* •’Ê‚Ì–ğ‚Ì */
+		{ /* æ™®é€šã®å½¹ã®æ™‚ */
 #endif /* GUOBIAO */
 #if defined(_MSC_VER)
 			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
@@ -505,9 +465,9 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
 				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str());
 #ifdef GUOBIAO
-			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("“_\r\n"));
+			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("ç‚¹\r\n"));
 #else /* GUOBIAO */
-			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("ãÊ\r\n"));
+			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("é£œ\r\n"));
 #endif /* GUOBIAO */
 #elif defined(_WIN32)
 			_tcsncat(result->yakuNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
@@ -516,9 +476,9 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str(),
 					yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #ifdef GUOBIAO
-			_tcsncat(result->yakuValList, _T("“_\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+			_tcsncat(result->yakuValList, _T("ç‚¹\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #else /* GUOBIAO */
-			_tcsncat(result->yakuValList, _T("ãÊ\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+			_tcsncat(result->yakuValList, _T("é£œ\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #endif /* GUOBIAO */
 #else
 			_tcsncat(result->yakuNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
@@ -527,16 +487,16 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str(),
 					yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #ifdef GUOBIAO
-			_tcsncat(result->yakuValList, _T("“_\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+			_tcsncat(result->yakuValList, _T("ç‚¹\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #else /* GUOBIAO */
-			_tcsncat(result->yakuValList, _T("ãÊ\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+			_tcsncat(result->yakuValList, _T("é£œ\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #endif /* GUOBIAO */
 #endif
 #ifndef GUOBIAO
 		}
 		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].coreHan.getHan() == 0)) &&
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].bonusHan.getHan() == 0)))
-		{ /* –ŠÑ */
+		{ /* æº€è²« */
 #if defined(_MSC_VER)
 			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
@@ -559,7 +519,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 		}
 		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].coreHan.getHan() == 0)) &&
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].bonusHan.getHan() == 0)))
-		{ /* –ğ– */
+		{ /* å½¹æº€ */
 #if defined(_MSC_VER)
 			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
@@ -584,28 +544,16 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 	}
 }
 
-/* ŒvZƒ‹[ƒ`ƒ“ */
-#ifdef _WIN32
-DWORD WINAPI yaku::yakuCalculator::CalculatorThread::calculate
-#else /*_WIN32*/
-void* yaku::yakuCalculator::CalculatorThread::calculate
-#endif /*_WIN32*/
-	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
-	const ParseMode* const pMode, YAKUSTAT* const result)
-{
-	/* –Êq‰ğÍˆ— */
+/* è¨ˆç®—ãƒ«ãƒ¼ãƒãƒ³ */
+void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const ParseMode* pMode, const GameTable* gameStat, MENTSU_ANALYSIS* analysis) {
+	/* é¢å­è§£æå‡¦ç† */
 	if (analysis->shanten[shantenRegular] == -1) {
 		int NumOfMelds = 0;
 		mentsuParser::makementsu(gameStat, analysis->player, *pMode, &NumOfMelds, analysis->MianziDat);
-		if (NumOfMelds < SizeOfMeldBuffer) { // ğŒ‚ğ–‚½‚µ‚Ä‚È‚¢‚È‚ç”²‚¯‚Ü‚·
-			this->recordThreadFinish();
-#ifdef _WIN32
-			return S_OK;
-#else /*_WIN32*/
-			return nullptr;
-#endif /*_WIN32*/
+		if (NumOfMelds < SizeOfMeldBuffer) { // æ¡ä»¶ã‚’æº€ãŸã—ã¦ãªã„ãªã‚‰æŠœã‘ã¾ã™
+			return;
 		}
-		calcbasepoints(gameStat, analysis); // •„‚ğŒvZ‚·‚é
+		calcbasepoints(gameStat, analysis); // ç¬¦ã‚’è¨ˆç®—ã™ã‚‹
 		analysis->DuiziCount = countingFacility::countDuiz(analysis->MianziDat);
 		analysis->KeziCount = countingFacility::countKez(analysis->MianziDat, &analysis->TotalKezi);
 		analysis->AnKeziCount = countingFacility::countAnKez(analysis->MianziDat, &analysis->TotalAnKezi);
@@ -616,11 +564,11 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, &analysis->TotalKaKangzi);
 	} else {
 #ifndef GUOBIAO
-		if (analysis->shanten[shantenPairs] == -1) { // µ‘Îq
-			if (RuleData::chkRule("seven_pairs", "1han_50fu")) analysis->BasePoint = 50; // 1–|50•„
-			else analysis->BasePoint = 25; // 2–|25•„
+		if (analysis->shanten[shantenPairs] == -1) { // ä¸ƒå¯¾å­
+			if (RuleData::chkRule("seven_pairs", "1han_50fu")) analysis->BasePoint = 50; // 1ç¿»50ç¬¦
+			else analysis->BasePoint = 25; // 2ç¿»25ç¬¦
 		}
-		else if (analysis->shanten[shantenOrphans] == -1) analysis->BasePoint = 30; // ‘m‚Í–ğ–‚È‚Ì‚Å‚±‚ê‚ÍÂ“Vƒ‹[ƒ‹—p
+		else if (analysis->shanten[shantenOrphans] == -1) analysis->BasePoint = 30; // å›½å£«ã¯å½¹æº€ãªã®ã§ã“ã‚Œã¯é’å¤©ãƒ«ãƒ¼ãƒ«ç”¨
 		else if ((analysis->shanten[shantenQuanbukao] == -1)&&(analysis->shanten[shantenStellar] > -1)) {
 			if (RuleData::chkRule("quanbukao", "3han_30fu"))
 				analysis->BasePoint = 30;
@@ -628,97 +576,81 @@ void* yaku::yakuCalculator::CalculatorThread::calculate
 				analysis->BasePoint = 40;
 		} else
 #endif /* GUOBIAO */
-		if (analysis->shanten[shantenZuhelong] == -1) { // ‘g‡—´
+		if (analysis->shanten[shantenZuhelong] == -1) { // çµ„åˆé¾
 			mentsuParser::makementsu(gameStat, analysis->player, *pMode, nullptr, analysis->MianziDat);
-			calcbasepoints(gameStat, analysis); // •„‚ğŒvZ‚·‚é
+			calcbasepoints(gameStat, analysis); // ç¬¦ã‚’è¨ˆç®—ã™ã‚‹
 		}
 #ifndef GUOBIAO
 		else analysis->BasePoint = 30;
 #endif /* GUOBIAO */
 	}
-	/* –ğ”»’èƒ‹[ƒv */
-	std::map<CodeConv::tstring, Yaku::YAKU_HAN> yakuHan; // ó‚¯M‰Šú‰»
-	std::set<CodeConv::tstring> suppression; // –³Œø‰»‚·‚é–ğ
-	std::vector<CodeConv::tstring> yakuOrd; // ‡˜•Û‘¶—p
-	std::for_each(YakuCatalog::Instantiate()->catalog.begin(), // –ğƒJƒ^ƒƒO‚ÌÅ‰‚©‚ç
-		YakuCatalog::Instantiate()->catalog.end(), // ƒJƒ^ƒƒO‚Ì––”ö‚Ü‚Å
-		[&yakuHan, analysis, &suppression, &yakuOrd](Yaku& yaku) -> void { // –ğ‚²‚Æ‚É”»’èˆ—
-			//trace(yaku.getName().c_str());
-			if (yaku.checkYaku(analysis)) { // ¬—§ğŒ‚ğ–‚½‚µ‚Ä‚¢‚½‚ç
-				//trace(_T("...‚ÍA¬—§‚µ‚Ä‚¢‚Ü‚·B"));
-				yakuHan[yaku.getName()] = yaku.getHan(analysis); // ãÊ”‚ğ‹L˜^
-				yakuOrd.push_back(yaku.getName()); // ‡˜‚à‹L˜^‚µ‚Ä‚¨‚­
-				std::set<CodeConv::tstring> sup = yaku.getSuppression();
-				suppression.insert(sup.begin(), sup.end()); // ‰ºˆÊ–ğ‚ÌƒŠƒXƒg‚ğŒ‹‡
-			}
-	});
-	/* À‚Í¬—§‚µ‚Ä‚¢‚È‚¢–ğ‚ğœ‹‚·‚é */
+	/* å½¹åˆ¤å®šãƒ«ãƒ¼ãƒ— */
+	std::map<CodeConv::tstring, Yaku::YAKU_HAN> yakuHan; // å—ã‘çš¿åˆæœŸåŒ–
+	std::set<CodeConv::tstring> suppression; // ç„¡åŠ¹åŒ–ã™ã‚‹å½¹
+	std::vector<CodeConv::tstring> yakuOrd; // é †åºä¿å­˜ç”¨
+	for (Yaku& yaku : YakuCatalog::Instantiate()->catalog) {// å½¹ã”ã¨ã«åˆ¤å®šå‡¦ç†
+		//trace(yaku.getName().c_str());
+		if (yaku.checkYaku(analysis)) { // æˆç«‹æ¡ä»¶ã‚’æº€ãŸã—ã¦ã„ãŸã‚‰
+			//trace(_T("...ã¯ã€æˆç«‹ã—ã¦ã„ã¾ã™ã€‚"));
+			yakuHan[yaku.getName()] = yaku.getHan(analysis); // é£œæ•°ã‚’è¨˜éŒ²
+			yakuOrd.push_back(yaku.getName()); // é †åºã‚‚è¨˜éŒ²ã—ã¦ãŠã
+			std::set<CodeConv::tstring> sup = yaku.getSuppression();
+			suppression.insert(sup.begin(), sup.end()); // ä¸‹ä½å½¹ã®ãƒªã‚¹ãƒˆã‚’çµåˆ
+		}
+	}
+	/* å®Ÿã¯æˆç«‹ã—ã¦ã„ãªã„å½¹ã‚’é™¤å»ã™ã‚‹ */
 	for (auto k = yakuOrd.begin(); k != yakuOrd.end(); ) {
-		if ((yakuHan[*k].coreHan.getHan() == 0) && (yakuHan[*k].bonusHan.getHan() == 0)) // À‚Í¬—§‚µ‚Ä‚È‚¢–ğ
-			k = yakuOrd.erase(k); // ”‚É”‚¦‚È‚¢
+		if ((yakuHan[*k].coreHan.getHan() == 0) && (yakuHan[*k].bonusHan.getHan() == 0)) // å®Ÿã¯æˆç«‹ã—ã¦ãªã„å½¹
+			k = yakuOrd.erase(k); // æ•°ã«æ•°ãˆãªã„
 		else ++k;
 	}
-	/* Œã‰ñ‚µ‚Å”»’è‚·‚é–ğ */
+	/* å¾Œå›ã—ã§åˆ¤å®šã™ã‚‹å½¹ */
 	checkPostponedYaku(gameStat, analysis, result, yakuHan, suppression, yakuOrd);
-	/* ‰ºˆÊ–ğ‚ğœ‹‚·‚é */
-	std::for_each(suppression.begin(), suppression.end(), [&yakuOrd](CodeConv::tstring yaku) {
+	/* ä¸‹ä½å½¹ã‚’é™¤å»ã™ã‚‹ */
+	for (const CodeConv::tstring yaku : suppression) {
 		for (auto k = yakuOrd.begin(); k != yakuOrd.end(); ) {
 			if (*k == yaku) k = yakuOrd.erase(k);
 			else ++k;
 		}
-	});
-	/* –|‚ğ‡Œv‚·‚é */
+	}
+	/* ç¿»ã‚’åˆè¨ˆã™ã‚‹ */
 	int totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan;
 	hanSummation(totalHan, totalSemiMangan, totalBonusHan, totalBonusSemiMangan, yakuHan, yakuOrd, result);
-	/* ãÊ”‚ğŒvZ‚µ‚½Œ‹‰Ê‚ğ‘‚«‚Ş */
+	/* é£œæ•°ã‚’è¨ˆç®—ã—ãŸçµæœã‚’æ›¸ãè¾¼ã‚€ */
 	result->CoreHan = totalHan;
 #ifndef GUOBIAO
 	result->CoreSemiMangan = totalSemiMangan;
 	result->BonusHan = totalBonusHan; result->BonusSemiMangan = totalBonusSemiMangan;
-	if (analysis->BasePoint == 25) result->BasePoints = 25; // ƒ`[ƒgƒC‚Ì25•„‚Í‚»‚Ì‚Ü‚Ü
-	else result->BasePoints = analysis->BasePoint + ((10 - analysis->BasePoint % 10) % 10); // •„ƒnƒl‚µ‚Ä”½‰f
+	if (analysis->BasePoint == 25) result->BasePoints = 25; // ãƒãƒ¼ãƒˆã‚¤ã®25ç¬¦ã¯ãã®ã¾ã¾
+	else result->BasePoints = analysis->BasePoint + ((10 - analysis->BasePoint % 10) % 10); // ç¬¦ãƒãƒã—ã¦åæ˜ 
 #endif /* GUOBIAO */
-	/* ƒhƒ‰‚Ì”‚ğ”‚¦‚é */
+	/* ãƒ‰ãƒ©ã®æ•°ã‚’æ•°ãˆã‚‹ */
 	countDora(gameStat, analysis, result);
 #ifndef GUOBIAO
-	/* ŠÈ—ªƒ‹[ƒ‹(‘S•”30•„)‚Ìê‡ */
+	/* ç°¡ç•¥ãƒ«ãƒ¼ãƒ«(å…¨éƒ¨30ç¬¦)ã®å ´åˆ */
 	if (RuleData::chkRule("simplified_scoring", "simplified")) {
-		trace(_T("ŠÈ—ªŒvZƒ‹[ƒ‹‚Ì‚½‚ß30•„‚Æ‚µ‚Äˆµ‚¢‚Ü‚·B"));
+		trace(_T("ç°¡ç•¥è¨ˆç®—ãƒ«ãƒ¼ãƒ«ã®ãŸã‚30ç¬¦ã¨ã—ã¦æ‰±ã„ã¾ã™ã€‚"));
 		result->BasePoints = 30;
 	}
 #endif /* GUOBIAO */
-	/* “_”‚ğŒvZ‚·‚é */
+	/* ç‚¹æ•°ã‚’è¨ˆç®—ã™ã‚‹ */
 	calculateScore(result);
 #ifndef GUOBIAO
-	/* Ø‚èã‚°–ŠÑ‚Ìˆ— */
-	if ((RuleData::chkRuleApplied("round_to_mangan")) && // Ø‚èã‚°–ŠÑƒ‹[ƒ‹‚ªON‚Å
-		(!RuleData::chkRuleApplied("limitless")) && // Â“Vˆäƒ‹[ƒ‹‚Å‚È‚¢ê‡
-		(result->AgariPoints == (LNum)1920)) // q‚Ì7700Ee‚Ì11600‚È‚ç
-			result->AgariPoints = (LNum)2000; // –ŠÑ‚É‚·‚é
+	/* åˆ‡ã‚Šä¸Šã’æº€è²«ã®å‡¦ç† */
+	if ((RuleData::chkRuleApplied("round_to_mangan")) && // åˆ‡ã‚Šä¸Šã’æº€è²«ãƒ«ãƒ¼ãƒ«ãŒONã§
+		(!RuleData::chkRuleApplied("limitless")) && // é’å¤©äº•ãƒ«ãƒ¼ãƒ«ã§ãªã„å ´åˆ
+		(result->AgariPoints == (LNum)1920)) // å­ã®7700ãƒ»è¦ªã®11600ãªã‚‰
+			result->AgariPoints = (LNum)2000; // æº€è²«ã«ã™ã‚‹
 #endif /* GUOBIAO */
-	/* I—¹ˆ— */
-	recordThreadFinish(); // ƒXƒŒƒbƒh‚ªI‚í‚Á‚½‚±‚Æ‚ğ‹L˜^
-#ifdef _WIN32
-	return S_OK;
-#else /*_WIN32*/
-	return nullptr;
-#endif /*_WIN32*/
+	/* çµ‚äº†å‡¦ç† */
+	return;
 }
 
-/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^ */
-yaku::yakuCalculator::CalculatorThread::CalculatorThread() {
-	finishedThreads = startedThreads = 0;
-}
-yaku::yakuCalculator::CalculatorThread::~CalculatorThread() {
-	/* I—¹‚·‚é‚Æ‚«‚Í•K‚¸“¯Šú‚µ‚Ä‚©‚çs‚¤‚±‚ÆII */
-}
-		
-/* ˆø”‚Ì€”õ‚Æ‚© */
+/* å¼•æ•°ã®æº–å‚™ã¨ã‹ */
 void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PlayerID targetPlayer,
 	Shanten* const shanten, YAKUSTAT* const yakuInfo)
 {
-	CalculatorThread* calculator = new CalculatorThread; // ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì€”õ
-	// •Ï”‚ğ—pˆÓ
+	// å¤‰æ•°ã‚’ç”¨æ„
 	MENTSU_ANALYSIS analysis;
 	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
 	memcpy(analysis.shanten, shanten, sizeof(Shanten[SHANTEN_PAGES]));
@@ -731,32 +663,18 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Tsumohai());
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
-	// ŒvZƒ‹[ƒ`ƒ“‚É“n‚·ƒpƒ‰ƒ[ƒ^‚Ì€”õ
-	CalculatorParam* calcprm = new CalculatorParam; memset(calcprm, 0, sizeof(CalculatorParam));
-	calcprm->gameStat = gameStat; calcprm->instance = calculator;
-	memcpy(&calcprm->analysis, &analysis, sizeof(MENTSU_ANALYSIS));
-	YAKUSTAT::Init(&calcprm->result);
-	// ŒvZ‚ğÀs
-#ifdef _WIN32
-	DWORD ThreadID;
-	HANDLE Thread = CreateThread(nullptr, 0, CalculatorThread::calculator, (LPVOID)calcprm, 0, &ThreadID);
-#else /*_WIN32*/
-	pthread_t hThread;
-	pthread_create(&hThread, nullptr, CalculatorThread::calculator, (void*)calcprm);
-	pthread_detach(hThread);
-#endif /*_WIN32*/
-	calculator->sync(1); // “¯Šú(ŠÈ—ª‚ÈÀ‘•)
-	// ‚“_–@‚Ìˆ—
-	memcpy(yakuInfo, &calcprm->result, sizeof(YAKUSTAT));
-	assert(calculator->numOfStartedThreads() == 1);
-	assert(calculator->numOfFinishedThreads() == 1);
-	delete calcprm; delete calculator; // —p–‚ªÏ‚ñ‚¾‚ç•Ğ‚Ã‚¯‚Ü‚µ‚å‚¤
+	YAKUSTAT result; YAKUSTAT::Init(&result);
+	const ParseMode pMode = {NoTile, Ke_Shun};
+	// è¨ˆç®—ã‚’å®Ÿè¡Œ
+	THREADLIB::thread myThread(CalculatorThread::calculator, &result, &pMode, gameStat, &analysis);
+	myThread.join(); // åŒæœŸ
+	// é«˜ç‚¹æ³•ã®å‡¦ç†
+	memcpy(yakuInfo, &result, sizeof(YAKUSTAT));
 }
 void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerID targetPlayer,
 	Shanten* const shanten, YAKUSTAT* const yakuInfo)
 {
-	CalculatorThread* calculator = new CalculatorThread; // ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì€”õ
-	// •Ï”‚ğ—pˆÓ
+	// å¤‰æ•°ã‚’ç”¨æ„
 	MENTSU_ANALYSIS analysis;
 	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
 	memcpy(analysis.shanten, shanten, sizeof(Shanten[SHANTEN_PAGES]));
@@ -769,92 +687,51 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Tsumohai());
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
-	// ŒvZƒ‹[ƒ`ƒ“‚É“n‚·ƒpƒ‰ƒ[ƒ^‚Ì€”õ
+	// è¨ˆç®—ãƒ«ãƒ¼ãƒãƒ³ã«æ¸¡ã™ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®æº–å‚™
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
-#ifdef _WIN32
-	DWORD ThreadID[160]; HANDLE Thread[160];
-#else /*_WIN32*/
-	pthread_t Thread[160];
-#endif /*_WIN32*/
+#ifdef WITH_BOOST_THREAD
+	boost::container::vector<THREADLIB::thread> myThreads;
+#else
+	std::vector<THREADLIB::thread> myThreads;
+#endif
 	for (int i = 0; i < 160; i++) {
-		calcprm[i].instance = calculator;
-		calcprm[i].gameStat = gameStat; calcprm[i].instance = calculator;
 		calcprm[i].pMode.AtamaCode = (TileCode)(i / 4);
 		calcprm[i].pMode.Order = (ParseOrder)(i % 4);
 		memcpy(&calcprm[i].analysis, &analysis, sizeof(MENTSU_ANALYSIS));
 		YAKUSTAT::Init(&calcprm[i].result);
 	}
-	// ŒvZ‚ğÀs
-	for (int i = 4; i < 160; i++) { // 0`3‚ÍNoTile‚È‚Ì‚Å‚â‚ç‚È‚­‚Ä‚¢‚¢
-		while (calculator->numOfFinishedThreads() - calculator->numOfStartedThreads() >= CalculatorThread::threadLimit)
-#ifdef _WIN32
-			Sleep(1); // ƒXƒŒƒbƒh”§ŒÀ‚Ìƒ`ƒFƒbƒN
-#else /*_WIN32*/
-			usleep(1000); // ƒXƒŒƒbƒh”§ŒÀ‚Ìƒ`ƒFƒbƒN
-#endif /*_WIN32*/
-		do {
-#ifdef _WIN32
-			Thread[i] = CreateThread(nullptr, 0, CalculatorThread::calculator, (LPVOID)(&(calcprm[i])), 0, &(ThreadID[i]));
-			if (Thread[i]) break; // ¬Œ÷‚µ‚½‚ç‚»‚ê‚Å‚æ‚µ
-#else /*_WIN32*/
-			if (!pthread_create(Thread + i, nullptr, CalculatorThread::calculator, (void*)(calcprm + i))) {
-				pthread_detach(Thread[i]);
-				break;
-			}
-#endif /*_WIN32*/
-			{ // ‚È‚ñ‚Å¸”s‚·‚ñ‚Ë‚ñ‚±‚ÌƒhƒAƒzcc
-				CodeConv::tostringstream o;
-				o << _T("ƒXƒŒƒbƒh‚ÌŠJn‚É¸”s‚µ‚Ü‚µ‚½B ƒ‹[ƒv [") << i <<
-#ifdef _WIN32
-					_T("] ƒGƒ‰[ƒR[ƒh [") <<
-					std::hex << std::setw(8) << std::setfill(_T('0')) << GetLastError() <<
-#endif /*_WIN32*/
-					_T(']');
-				error(o.str().c_str());
-#ifdef _WIN32
-				Sleep(100);
-#else /*_WIN32*/
-				usleep(100000);
-#endif /*_WIN32*/
-			}
-		} while (true);
-#ifdef _WIN32
-		Sleep(1);
-#else /*_WIN32*/
-		usleep(1000);
-#endif /*_WIN32*/
+	// è¨ˆç®—ã‚’å®Ÿè¡Œ
+	for (int i = 4; i < 160; i++) { // 0ã€œ3ã¯NoTileãªã®ã§ã‚„ã‚‰ãªãã¦ã„ã„
+		myThreads.push_back(THREADLIB::thread(CalculatorThread::calculator, &calcprm[i].result, &calcprm[i].pMode, gameStat, &analysis));
 	}
-	calculator->sync(156); // “¯Šú(ŠÈ—ª‚ÈÀ‘•)
-	// ‚“_–@‚Ìˆ—
+	for (auto& thread : myThreads)
+		thread.join(); // åŒæœŸ
+	// é«˜ç‚¹æ³•ã®å‡¦ç†
 	for (int i = 4; i < 160; i++) {
 		if (yakuInfo->AgariPoints < calcprm[i].result.AgariPoints)
 			memcpy(yakuInfo, &calcprm[i].result, sizeof(YAKUSTAT));
 	}
-	// —p–‚ªÏ‚ñ‚¾‚ç•Ğ‚Ã‚¯‚Ü‚µ‚å‚¤
-	assert(calculator->numOfStartedThreads() == 156);
-	assert(calculator->numOfFinishedThreads() == 156);
-	delete[] calcprm; delete calculator;
 }
 
-// –ğ‚ª¬—§‚µ‚Ä‚¢‚é‚©”»’è‚·‚é
+// å½¹ãŒæˆç«‹ã—ã¦ã„ã‚‹ã‹åˆ¤å®šã™ã‚‹
 yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, PlayerID targetPlayer) {
-	// –ğ”»’è
+	// å½¹åˆ¤å®š
 	CodeConv::tostringstream o;
-	o << _T("–ğ”»’èˆ—‚ğŠJn ƒvƒŒƒCƒ„[ [") << (int)targetPlayer << _T("]");
+	o << _T("å½¹åˆ¤å®šå‡¦ç†ã‚’é–‹å§‹ ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ [") << (int)targetPlayer << _T("]");
 	debug(o.str().c_str());
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	YAKUSTAT yakuInfo; YAKUSTAT::Init(&yakuInfo);
-	// ƒVƒƒƒ“ƒeƒ“”‚ğƒ`ƒFƒbƒN
+	// ã‚·ãƒ£ãƒ³ãƒ†ãƒ³æ•°ã‚’ãƒã‚§ãƒƒã‚¯
 	Shanten shanten[SHANTEN_PAGES];
 	for (int i = 0; i < SHANTEN_PAGES; i++)
 		shanten[i] = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, (ShantenType)i);
-	// ˜a—¹‚Á‚Ä‚é‚©”»’è(˜a—¹‚Á‚Ä‚È‚©‚Á‚½ê‡\O•s“ƒ‚©”»’è‚·‚é)
+	// å’Œäº†ã£ã¦ã‚‹ã‹åˆ¤å®š(å’Œäº†ã£ã¦ãªã‹ã£ãŸå ´åˆåä¸‰ä¸å¡”ã‹åˆ¤å®šã™ã‚‹)
 	if (shanten[shantenAll] > -1) {
 #ifndef GUOBIAO
-		/* \O•s“ƒ */
-		if (gameStat->Player[targetPlayer].FirstDrawFlag) { // –Â‚«‚ª‚È‚­‚Äˆê„–Ú‚Ì‚¾‚¯”»’è‚·‚é
-			if (chkShisanBuDa(gameStat, targetPlayer)) { // \O•s“ƒ‚É‚È‚Á‚Ä‚é
-				trace(_T("\O•s“ƒ‚Å‚·II"));
+		/* åä¸‰ä¸å¡” */
+		if (gameStat->Player[targetPlayer].FirstDrawFlag) { // é³´ããŒãªãã¦ä¸€å·¡ç›®ã®æ™‚ã ã‘åˆ¤å®šã™ã‚‹
+			if (chkShisanBuDa(gameStat, targetPlayer)) { // åä¸‰ä¸å¡”ã«ãªã£ã¦ã‚‹
+				trace(_T("åä¸‰ä¸å¡”ã§ã™ï¼ï¼"));
 				yakuInfo.isValid = true; yakuInfo.BasePoints = 30;
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han")) 
 					yakuInfo.CoreHan = (RuleData::chkRule("shiisan_puutaa", "mangan")) ? 5 : 13;
@@ -863,32 +740,32 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 #if defined(_MSC_VER)
 				_tcscat_s((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
 					yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
-					YAKUSTAT::nameBufSize, _T("\O•s“‹\r\n"));
+					YAKUSTAT::nameBufSize, _T("åä¸‰ä¸æ­\r\n"));
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
 					_tcscat_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
-					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("‚TãÊ\r\n") : _T("13ãÊ\r\n"));
+					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("ï¼•é£œ\r\n") : _T("13é£œ\r\n"));
 #elif defined(_WIN32)
 				LPTSTR target = (RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
 					yakuInfo.yakuNameList : yakuInfo.yakumanNameList;
-				_tcsncat(target, _T("\O•s“‹\r\n"), YAKUSTAT::nameBufSize - _tcslen(target));
+				_tcsncat(target, _T("åä¸‰ä¸æ­\r\n"), YAKUSTAT::nameBufSize - _tcslen(target));
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
 					_tcsncat(yakuInfo.yakuValList,
-					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("‚TãÊ\r\n") : _T("13ãÊ\r\n"),
+					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("ï¼•é£œ\r\n") : _T("13é£œ\r\n"),
 					YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
 #else
 				LPTSTR target = (RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
 					yakuInfo.yakuNameList : yakuInfo.yakumanNameList;
-				_tcsncat(target, _T("\O•s“‹\n"), YAKUSTAT::nameBufSize - _tcslen(target));
+				_tcsncat(target, _T("åä¸‰ä¸æ­\n"), YAKUSTAT::nameBufSize - _tcslen(target));
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
 					_tcsncat(yakuInfo.yakuValList,
-					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("‚TãÊ\n") : _T("13ãÊ\n"),
+					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("ï¼•é£œ\n") : _T("13é£œ\n"),
 					YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
 #endif
-				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ƒhƒ‰‚Í”‚¦‚Ä‚ ‚°‚Ü‚µ‚å‚¤‚Ë
+				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ãƒ‰ãƒ©ã¯æ•°ãˆã¦ã‚ã’ã¾ã—ã‚‡ã†ã­
 			}
-			/* \l•s“ƒ */
-			else if (chkShisiBuDa(gameStat, targetPlayer)) { // \l•s“ƒ‚É‚È‚Á‚Ä‚é
-				trace(_T("\l•s“ƒ‚Å‚·II"));
+			/* åå››ä¸å¡” */
+			else if (chkShisiBuDa(gameStat, targetPlayer)) { // åå››ä¸å¡”ã«ãªã£ã¦ã‚‹
+				trace(_T("åå››ä¸å¡”ã§ã™ï¼ï¼"));
 				yakuInfo.isValid = true; yakuInfo.BasePoints = 30;
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han")) yakuInfo.CoreHan = 13;
 				else yakuInfo.CoreSemiMangan = 8;
@@ -896,37 +773,37 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 #if defined(_MSC_VER)
 				_tcscat_s((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
 					yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
-					YAKUSTAT::nameBufSize, _T("\O–³èÏ\r\n"));
+					YAKUSTAT::nameBufSize, _T("åä¸‰ç„¡é \r\n"));
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					_tcscat_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize, _T("13ãÊ\r\n"));
+					_tcscat_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize, _T("13é£œ\r\n"));
 #elif defined(_WIN32)
 				LPTSTR target = (RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
 					yakuInfo.yakuNameList : yakuInfo.yakumanNameList;
-				_tcsncat(target, _T("\O–³èÏ\r\n"), YAKUSTAT::nameBufSize - _tcslen(target));
+				_tcsncat(target, _T("åä¸‰ç„¡é \r\n"), YAKUSTAT::nameBufSize - _tcslen(target));
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					_tcsncat(yakuInfo.yakuValList, _T("13ãÊ\r\n"), YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
+					_tcsncat(yakuInfo.yakuValList, _T("13é£œ\r\n"), YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
 #else
 				LPTSTR target = (RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
 					yakuInfo.yakuNameList : yakuInfo.yakumanNameList;
-				_tcsncat(target, _T("\O–³èÏ\n"), YAKUSTAT::nameBufSize - _tcslen(target));
+				_tcsncat(target, _T("åä¸‰ç„¡é \n"), YAKUSTAT::nameBufSize - _tcslen(target));
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					_tcsncat(yakuInfo.yakuValList, _T("13ãÊ\n"), YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
+					_tcsncat(yakuInfo.yakuValList, _T("13é£œ\n"), YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
 #endif
-				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ƒhƒ‰‚ğ”‚¦‚é‚Ì‚Å‚·
+				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ãƒ‰ãƒ©ã‚’æ•°ãˆã‚‹ã®ã§ã™
 			}
 		}
 #endif /* GUOBIAO */
-		trace(_T("˜a—¹‚Á‚Ä‚¢‚È‚¢‚Ì‚Å”²‚¯‚Ü‚·"));
+		trace(_T("å’Œäº†ã£ã¦ã„ãªã„ã®ã§æŠœã‘ã¾ã™"));
 		return yakuInfo;
 	}
-	// ˜a—¹‚Á‚Ä‚¢‚é‚È‚ç
-	if (shanten[shantenRegular] == -1) // ˆê”ÊŒ`‚Ì˜a—¹
+	// å’Œäº†ã£ã¦ã„ã‚‹ãªã‚‰
+	if (shanten[shantenRegular] == -1) // ä¸€èˆ¬å½¢ã®å’Œäº†
 		analysisLoop(gameStat, targetPlayer, shanten, &yakuInfo);
-	else // µ‘ÎqA‘m–³‘oA‚»‚Ì‘¼“Áê‚È˜a—¹
+	else // ä¸ƒå¯¾å­ã€å›½å£«ç„¡åŒã€ãã®ä»–ç‰¹æ®Šãªå’Œäº†
 		analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);
-	yakuInfo.isValid = true; // —LŒø‚Å‚ ‚é‚±‚Æ‚ğƒ}[ƒNi”›‚è‚ğ–‚½‚µ‚Ä‚¢‚é‚©‚Íƒ`ƒFƒbƒN‚µ‚Ä‚¢‚È‚¢j
+	yakuInfo.isValid = true; // æœ‰åŠ¹ã§ã‚ã‚‹ã“ã¨ã‚’ãƒãƒ¼ã‚¯ï¼ˆç¸›ã‚Šã‚’æº€ãŸã—ã¦ã„ã‚‹ã‹ã¯ãƒã‚§ãƒƒã‚¯ã—ã¦ã„ãªã„ï¼‰
 #ifndef GUOBIAO
-	/* ƒAƒŠƒXƒhƒ‰‚Ì”v•ˆ‹L˜^ */
+	/* ã‚¢ãƒªã‚¹ãƒ‰ãƒ©ã®ç‰Œè­œè¨˜éŒ² */
 	if ((RuleData::chkRuleApplied("alice")) && (gameStat->Player[targetPlayer].MenzenFlag)) {
 		uint16_t AlicePointer = gameStat->DoraPointer;
 		auto tiles = countTilesInHand(gameStat, targetPlayer);
@@ -943,23 +820,23 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 		}
 	}
 #endif /* GUOBIAO */
-	/* ‚¨‚í‚è */
+	/* ãŠã‚ã‚Š */
 	return yakuInfo;
 }
 
-/* ”›‚è‚ğ–‚½‚µ‚Ä‚¢‚é‚©’²‚×‚é */
+/* ç¸›ã‚Šã‚’æº€ãŸã—ã¦ã„ã‚‹ã‹èª¿ã¹ã‚‹ */
 bool yaku::yakuCalculator::checkShibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat) {
 #ifdef GUOBIAO
 	return yakuStat->CoreHan >= 8;
 #else /* GUOBIAO */
 	if ((yakuStat->CoreHan >= 2) || (yakuStat->CoreSemiMangan >= 1))
-		return true; // 2–|ˆÈã‚ ‚Á‚½‚ç”›‚è‚ğ–‚½‚·
+		return true; // 2ç¿»ä»¥ä¸Šã‚ã£ãŸã‚‰ç¸›ã‚Šã‚’æº€ãŸã™
 	else if ((yakuStat->CoreHan == 1) && (RuleData::chkRule("ryanshiba", "no")))
-		return true; // ƒŠƒƒƒ“ƒVƒo‚È‚µ‚Ìƒ‹[ƒ‹‚Ìê‡‚Å1–|
+		return true; // ãƒªãƒ£ãƒ³ã‚·ãƒãªã—ã®ãƒ«ãƒ¼ãƒ«ã®å ´åˆã§1ç¿»
 	else if ((yakuStat->CoreHan == 1) && (gameStat->Honba < 5) && (RuleData::chkRule("ryanshiba", "from_5honba")))
-		return true; // 5–{ê‚©‚çƒŠƒƒƒ“ƒVƒo‚¾‚ª4–{ê‚Ü‚Å‚Å1–|
+		return true; // 5æœ¬å ´ã‹ã‚‰ãƒªãƒ£ãƒ³ã‚·ãƒã ãŒ4æœ¬å ´ã¾ã§ã§1ç¿»
 	else if ((yakuStat->CoreHan == 1) && (gameStat->Honba < 4) && (RuleData::chkRule("ryanshiba", "from_4honba")))
-		return true; // 4–{ê‚©‚çƒŠƒƒƒ“ƒVƒo‚¾‚ª3–{ê‚Ü‚Å‚Å1–|
-	else return false; // ”›‚è‚ğ–‚½‚µ‚Ä‚¢‚È‚¢ê‡
+		return true; // 4æœ¬å ´ã‹ã‚‰ãƒªãƒ£ãƒ³ã‚·ãƒã ãŒ3æœ¬å ´ã¾ã§ã§1ç¿»
+	else return false; // ç¸›ã‚Šã‚’æº€ãŸã—ã¦ã„ãªã„å ´åˆ
 #endif /* GUOBIAO */
 }

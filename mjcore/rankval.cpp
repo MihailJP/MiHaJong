@@ -1,4 +1,4 @@
-#include "rankval.h"
+ï»¿#include "rankval.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -8,19 +8,19 @@
 #include "ruletbl.h"
 #include "regex.h"
 
-/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^(ƒVƒ“ƒOƒ‹ƒgƒ“) */
+/* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿(ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³) */
 RankVal::RankVal() {
-	Compressed::file_rankval_csv rankvalCsv; // İ’èƒtƒ@ƒCƒ‹
-	char* csvDatUtf8 = new char[rankvalCsv.getDataSize() + 4]; // ƒf[ƒ^ƒoƒbƒtƒ@(UTF-8Œ`®)
+	Compressed::file_rankval_csv rankvalCsv; // è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«
+	char* csvDatUtf8 = new char[rankvalCsv.getDataSize() + 4]; // ãƒ‡ãƒ¼ã‚¿ãƒãƒƒãƒ•ã‚¡(UTF-8å½¢å¼)
 	memset(csvDatUtf8, 0, rankvalCsv.getDataSize() + 4);
-	memcpy(csvDatUtf8, reinterpret_cast<const char*>(rankvalCsv.getData()), rankvalCsv.getDataSize()); // ƒf[ƒ^“Ç‚İ‚İ
-	CSVReader::CsvVecVec parsedCsv; // ƒp[ƒX‚³‚ê‚½CSV‚ª‚±‚±‚É“ü‚é
-	CodeConv::tstring csvDat(CodeConv::fromUTF8(csvDatUtf8)); // •¶šƒR[ƒh•ÏŠ·(‚±‚Ìƒf[ƒ^‚Ìê‡‚ ‚Ü‚èˆÓ–¡‚ª–³‚¢‚ª)
+	memcpy(csvDatUtf8, reinterpret_cast<const char*>(rankvalCsv.getData()), rankvalCsv.getDataSize()); // ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
+	CSVReader::CsvVecVec parsedCsv; // ãƒ‘ãƒ¼ã‚¹ã•ã‚ŒãŸCSVãŒã“ã“ã«å…¥ã‚‹
+	CodeConv::tstring csvDat(CodeConv::fromUTF8(csvDatUtf8)); // æ–‡å­—ã‚³ãƒ¼ãƒ‰å¤‰æ›(ã“ã®ãƒ‡ãƒ¼ã‚¿ã®å ´åˆã‚ã¾ã‚Šæ„å‘³ãŒç„¡ã„ãŒ)
 	delete[] csvDatUtf8;
-	CSVReader::parsecsv(parsedCsv, csvDat.c_str()); // CSV‚ğƒp[ƒX
+	CSVReader::parsecsv(parsedCsv, csvDat.c_str()); // CSVã‚’ãƒ‘ãƒ¼ã‚¹
 
-	/* ”’l‚É’¼‚µ‚ÄŠi”[ */
-	for (int i = 1 /* Å‰‚Ìs‚ÍŒ©o‚µ‚È‚Ì‚Å”ò‚Î‚· */; i < parsedCsv.size(); ++i) {
+	/* æ•°å€¤ã«ç›´ã—ã¦æ ¼ç´ */
+	for (int i = 1 /* æœ€åˆã®è¡Œã¯è¦‹å‡ºã—ãªã®ã§é£›ã°ã™ */; i < parsedCsv.size(); ++i) {
 		RankValSet values;
 		for (int j = 0; j < Players + 1; ++j)
 			for (int k = 0; k < Players - 1; ++k)
@@ -30,13 +30,13 @@ RankVal::RankVal() {
 	}
 }
 
-/* ƒVƒ“ƒOƒ‹ƒgƒ“ ƒAƒNƒZƒT */
+/* ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ ã‚¢ã‚¯ã‚»ã‚µ */
 RankVal* RankVal::Instantiate() {
 	static RankVal myInstance;
 	return &myInstance;
 }
 
-/* ’l‚ğæ“¾ */
+/* å€¤ã‚’å–å¾— */
 static LNum getCustomVal(unsigned playersAboveBase, unsigned rank) {
 	std::ostringstream tagNameStream;
 	tagNameStream << "point_basis_" << (char)('a' + ((playersAboveBase + 3) % 4)) << (char)('0' + rank);
@@ -45,14 +45,14 @@ static LNum getCustomVal(unsigned playersAboveBase, unsigned rank) {
 		(abs(std::atoi(RuleData::chkRule(tagNameStream.str() + "_mantissa_tens").c_str())) * 10 +
 		std::atoi(RuleData::chkRule(tagNameStream.str() + "_mantissa_ones").c_str()))
 		);
-	/* w”•”‚Ìˆ— */
+	/* æŒ‡æ•°éƒ¨ã®å‡¦ç† */
 	REGEX::smatch matchDat; int exponent = 0;
 	std::string expConf(RuleData::chkRule(tagNameStream.str() + "_exponent"));
 	if (REGEX::regex_match(expConf, matchDat, REGEX::regex("exp_(\\d+)")))
-		exponent = atoi(matchDat[1].str().c_str()); // ƒ‹[ƒ‹İ’è•¶š—ñ‚©‚ç®”‚ğ’Šo
+		exponent = atoi(matchDat[1].str().c_str()); // ãƒ«ãƒ¼ãƒ«è¨­å®šæ–‡å­—åˆ—ã‹ã‚‰æ•´æ•°ã‚’æŠ½å‡º
 	for (int j = 0; j < exponent; ++j)
 		point *= 10;
-	/* ƒŠƒ^[ƒ“ */
+	/* ãƒªã‚¿ãƒ¼ãƒ³ */
 	return point;
 }
 
@@ -62,36 +62,36 @@ LNum RankVal::getRankVal(const GameTable* gameStat, const std::string& ruletag, 
 		std::string(gameStat->chkGameType(SanmaT) ? "T:" : "Q:") + ruletag;
 	if ((rankValueMap.find(ruleTagVal) == rankValueMap.end()) && (ruletag != "custom")) { /* Index error */
 		tstring msg =
-			tstring(_T("getRankVal: ‘Î‰‚µ‚Ä‚¢‚È‚¢ƒ‹[ƒ‹ƒ^ƒO‚Å‚· [")) +
+			tstring(_T("getRankVal: å¯¾å¿œã—ã¦ã„ãªã„ãƒ«ãƒ¼ãƒ«ã‚¿ã‚°ã§ã™ [")) +
 			EnsureTStr(ruletag) + tstring(_T("]"));
 		warn(msg.c_str());
 		return 0;
 	} else if (playersAboveBase > Players) { /* Index error */
-		tostringstream o; o << _T("getRankVal: playersAboveBase ˆø”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ [") << playersAboveBase << _T(']');
+		tostringstream o; o << _T("getRankVal: playersAboveBase å¼•æ•°ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“ [") << playersAboveBase << _T(']');
 		warn(o.str().c_str());
 		return 0;
 	} else if ((rank <= 0) || (rank > Players)) { /* Index error */
-		tostringstream o; o << _T("getRankVal: rank ˆø”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ [") << rank << _T(']');
+		tostringstream o; o << _T("getRankVal: rank å¼•æ•°ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“ [") << rank << _T(']');
 		warn(o.str().c_str());
 		return 0;
 	} else if (ruletag == "custom") {
 		const unsigned abvBase = (gameStat->chkGameType(SanmaT) && (playersAboveBase == 3)) ? 4 : playersAboveBase;
-		if (rank == 1) { /* ƒgƒbƒv‚Ìê‡ */
+		if (rank == 1) { /* ãƒˆãƒƒãƒ—ã®å ´åˆ */
 			return -(
 				getCustomVal(abvBase, 2) +
 				getCustomVal(abvBase, 3) +
 				(gameStat->chkGameType(SanmaT) ? (LNum)0 : getCustomVal(abvBase, 4)));
-		} else { /* ƒgƒbƒvˆÈŠO‚Ìê‡ */
+		} else { /* ãƒˆãƒƒãƒ—ä»¥å¤–ã®å ´åˆ */
 			return getCustomVal(abvBase, rank);
 		}
 	} else {
-		if (rank == 1) { /* ƒgƒbƒv‚Ìê‡ */
+		if (rank == 1) { /* ãƒˆãƒƒãƒ—ã®å ´åˆ */
 			return -1 * (
 				rankValueMap.at(ruleTagVal)[playersAboveBase][0] +
 				rankValueMap.at(ruleTagVal)[playersAboveBase][1] +
 				rankValueMap.at(ruleTagVal)[playersAboveBase][2]);
-		} else { /* ƒgƒbƒvˆÈŠO‚Ìê‡ */
-			//return rankValueMap[ruleTagVal][playersAboveBase][rank - 2]; // ‚È‚º‚©operator[]‚¾‚ÆƒGƒ‰[‚É‚È‚éBˆÓ–¡•s–¾B
+		} else { /* ãƒˆãƒƒãƒ—ä»¥å¤–ã®å ´åˆ */
+			//return rankValueMap[ruleTagVal][playersAboveBase][rank - 2]; // ãªãœã‹operator[]ã ã¨ã‚¨ãƒ©ãƒ¼ã«ãªã‚‹ã€‚æ„å‘³ä¸æ˜ã€‚
 			return rankValueMap.at(ruleTagVal)[playersAboveBase][rank - 2];
 		}
 	}

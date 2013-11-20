@@ -1,4 +1,4 @@
-#include "game.h"
+ï»¿#include "game.h"
 #include "../scrmanip.h"
 #include "../resource.h"
 #include "../init.h"
@@ -21,7 +21,7 @@ void TableProtoScene::LoadTexture(TexturePtr* texture, LPCTSTR resource) {
 }
 
 const std::array<CodeConv::tstring, TableProtoScene::NumOfCheckBoxes> TableProtoScene::labels = {
-	_T("©“®˜a—¹"), _T("ƒcƒ‚Ø‚è"), _T("ƒI[ƒgƒpƒX"),
+	_T("è‡ªå‹•å’Œäº†"), _T("ãƒ„ãƒ¢åˆ‡ã‚Š"), _T("ã‚ªãƒ¼ãƒˆãƒ‘ã‚¹"),
 };
 
 TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
@@ -39,8 +39,8 @@ TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(m
 TableProtoScene::~TableProtoScene() {
 	for (int i = 0; i < NumOfCheckBoxes; ++i)
 		delete checkBoxes[i];
-	for (auto k = scorePanel.begin(); k != scorePanel.end(); ++k)
-		delete *k;
+	for (const auto& k : scorePanel)
+		delete k;
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (tSideBar) tSideBar->Release();
 #endif
@@ -77,41 +77,41 @@ void TableProtoScene::InitScorePanel() {
 }
 
 void TableProtoScene::ShowScorePanel() {
-	for (auto k = scorePanel.begin(); k != scorePanel.end(); ++k)
-		(*k)->Render();
+	for (const auto& k : scorePanel)
+		k->Render();
 }
 
 ArgbColor TableProtoScene::roundColor() {
-	switch (GameStatus::gameStat()->GameRound / Players) { // ê•—‚Å•ªŠò
-	case 0: // “Œê
+	switch (GameStatus::gameStat()->GameRound / Players) { // å ´é¢¨ã§åˆ†å²
+	case 0: // æ±å ´
 		if (GameStatus::gameStat()->LoopRound == 0)
 			return 0xff008000;
 		else if ((GameStatus::gameStat()->LoopRound % 2) == 0)
 			return 0xff408000;
 		else
 			return 0xff808080;
-	case 1: // “ìê
+	case 1: // å—å ´
 		if (GameStatus::gameStat()->LoopRound == 0)
 			return 0xff008080;
 		else if ((GameStatus::gameStat()->LoopRound % 2) == 0)
 			return 0xff808040;
 		else
 			return 0xff808000;
-	case 2: // ¼ê
+	case 2: // è¥¿å ´
 		if ((GameStatus::gameStat()->LoopRound % 2) == 0)
 			return 0xff404080;
 		else
 			return 0xff800000;
-	case 3: // –kê
+	case 3: // åŒ—å ´
 		if ((GameStatus::gameStat()->LoopRound % 2) == 0)
 			return 0xff800080;
 		else
 			return 0xff404040;
-	case 4: // ”’ê
+	case 4: // ç™½å ´
 		return     0xff606080;
-	case 5: // á¢ê
+	case 5: // ç™¼å ´
 		return     0xff608060;
-	case 6: // ’†ê
+	case 6: // ä¸­å ´
 		return     0xff806060;
 	default:
 		return     0xff000000;
@@ -136,9 +136,9 @@ void TableProtoScene::MouseInput(const XEvent* od, int X, int Y)
 #endif /*_WIN32*/
 	{
 #ifdef _WIN32
-	case DIMOFS_X: case DIMOFS_Y: // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ“®‚©‚µ‚½ê‡
+	case DIMOFS_X: case DIMOFS_Y: // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’å‹•ã‹ã—ãŸå ´åˆ
 #else /*_WIN32*/
-	case MotionNotify: // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ“®‚©‚µ‚½ê‡
+	case MotionNotify: // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’å‹•ã‹ã—ãŸå ´åˆ
 #endif /*_WIN32*/
 		if ((isCheckBox) && (!checkBoxes[region - CheckboxRegionOffset]->isFocused())) {
 			checkBoxes[region - CheckboxRegionOffset]->focus(true);
@@ -149,10 +149,10 @@ void TableProtoScene::MouseInput(const XEvent* od, int X, int Y)
 				checkBoxes[i]->focus(false);
 		break;
 #ifdef _WIN32
-	case DIMOFS_BUTTON0: // ƒ}ƒEƒXƒNƒŠƒbƒN
+	case DIMOFS_BUTTON0: // ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯
 		if ((isCheckBox) && (od->dwData))
 #else /*_WIN32*/
-	case ButtonPress: // ƒ}ƒEƒXƒNƒŠƒbƒN
+	case ButtonPress: // ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯
 		if ((isCheckBox) && (od->xbutton.button == Button1))
 #endif /*_WIN32*/
 		{
@@ -180,7 +180,7 @@ TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativeP
 void TableProtoScene::ScoreBoard::objInit() {
 	const int x = xpos, y = ypos;
 #endif /*_WIN32*/
-	// s—ñ‚Ì\’z
+	// è¡Œåˆ—ã®æ§‹ç¯‰
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix tmpmtx;
 	D3DXMatrixIdentity(&myMatrix); D3DXMatrixIdentity(&tmpmtx);
@@ -231,16 +231,16 @@ void TableProtoScene::ScoreBoard::Render() {
 }
 
 void TableProtoScene::ScoreBoard::renderWind() {
-	if ((myTimer.currTime() % 1000000 >= 500000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return; // ƒcƒ‚”Ô‚Ì‚Í•\¦‚ğ“_–Å‚³‚¹‚é
+	if ((myTimer.currTime() % 1000000 >= 500000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return; // ãƒ„ãƒ¢ç•ªã®æ™‚ã¯è¡¨ç¤ºã‚’ç‚¹æ»…ã•ã›ã‚‹
 	const seatAbsolute wind = GameStatus::gameStat()->playerwind(playerID());
-	if (GameStatus::gameStat()->chkGameType(Sanma4) && (wind == sNorth)) return; // llO–ƒ‚Ì‚Ì”²‚¯”Ô‚Í‰½‚à•\¦‚µ‚È‚¢‚æ‚¤‚É‚·‚é
+	if (GameStatus::gameStat()->chkGameType(Sanma4) && (wind == sNorth)) return; // å››äººä¸‰éº»ã®æ™‚ã®æŠœã‘ç•ªã¯ä½•ã‚‚è¡¨ç¤ºã—ãªã„ã‚ˆã†ã«ã™ã‚‹
 	RECT rect = {
 		static_cast<int32_t>(WindCharX + WindCharWidth * ((int)wind    )), WindCharY,
 		static_cast<int32_t>(WindCharX + WindCharWidth * ((int)wind + 1)), WindCharY + WindCharHeight
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + WindPosX, (int)ypos + WindPosY,
 		WindCharWidth, WindCharHeight,
-		(wind == sEast) ? ledColorRed : ledColorGreen, // u“Œv‚Ì‚İÔ‚ÅA‚»‚êˆÈŠO‚ğ—Î‚Å•\¦‚·‚ê‚Î‚í‚©‚è‚â‚·‚¢‚Æv‚¤‚Ì‚Å‚»‚¤‚·‚é
+		(wind == sEast) ? ledColorRed : ledColorGreen, // ã€Œæ±ã€ã®ã¿èµ¤ã§ã€ãã‚Œä»¥å¤–ã‚’ç·‘ã§è¡¨ç¤ºã™ã‚Œã°ã‚ã‹ã‚Šã‚„ã™ã„ã¨æ€ã†ã®ã§ãã†ã™ã‚‹
 		&rect, 0, 0, &myMatrix);
 }
 
@@ -256,11 +256,11 @@ void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, Argb
 void TableProtoScene::ScoreBoard::renderRank() {
 	PlayerRankList rankList = utils::calcRank(GameStatus::gameStat());
 	const ArgbColor color =
-		(rankList[playerID()] == 1) ? ledColorRed : // ƒgƒbƒv‚ÍÔ
-		(rankList[playerID()] == (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4) ? ledColorOrange : // ƒ‰ƒX‚ÍƒIƒŒƒ“ƒW
-		ledColorGreen); // ‚»‚Ì‘¼‚Í—Î‚Å•\¦
+		(rankList[playerID()] == 1) ? ledColorRed : // ãƒˆãƒƒãƒ—ã¯èµ¤
+		(rankList[playerID()] == (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4) ? ledColorOrange : // ãƒ©ã‚¹ã¯ã‚ªãƒ¬ãƒ³ã‚¸
+		ledColorGreen); // ãã®ä»–ã¯ç·‘ã§è¡¨ç¤º
 
-	renderNumeral(RankPosX, RankPosY, rankList[playerID()], color); // ‚»‚Ì‘¼‚Í—Î‚Å•\¦
+	renderNumeral(RankPosX, RankPosY, rankList[playerID()], color); // ãã®ä»–ã¯ç·‘ã§è¡¨ç¤º
 	if ((myTimer.currTime() % 1000000 < 500000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID()))
 		renderNumeral(RankPosX, RankPosY, digitDecimal, color);
 }
@@ -322,9 +322,9 @@ void TableProtoScene::ScoreBoard::renderScore() {
 	switch (scoreMode) {
 	case scorePoints:
 		if (utils::isAboveBase(GameStatus::gameStat(), playerID()))
-			color = ledColorRed; // •‚‚¢‚Ä‚¢‚ê‚ÎÔ
+			color = ledColorRed; // æµ®ã„ã¦ã„ã‚Œã°èµ¤
 		else
-			color = ledColorGreen; // ’¾‚İ‚Í—Î
+			color = ledColorGreen; // æ²ˆã¿ã¯ç·‘
 		break;
 	case scoreDiff: case scoreChip:
 		if      (sign ==  1) color = ledColorRed;
@@ -363,7 +363,7 @@ void TableProtoScene::ScoreBoard::renderName() {
 	const CodeConv::tstring pName(utils::getName(playerID()));
 	const unsigned tmpWidth = nameText->strWidthByCols(pName);
 	nameText->NewText(0,
-		(getScoreMode() == scoreDiff) ? _T("“_·•\¦") : ((getScoreMode() == scoreChip) ? _T("ƒ`ƒbƒv•\¦") : pName),
+		(getScoreMode() == scoreDiff) ? _T("ç‚¹å·®è¡¨ç¤º") : ((getScoreMode() == scoreChip) ? _T("ãƒãƒƒãƒ—è¡¨ç¤º") : pName),
 		xpos + NamePosX, ypos + NamePosY, 1.0, ((tmpWidth > 18) ? (18.0f / (float)tmpWidth) : 1.0f) * wScale);
 	nameText->Render();
 }

@@ -1,4 +1,4 @@
-#include "title.h"
+ï»¿#include "title.h"
 #include <cassert>
 #include <cstdint>
 #include <cmath>
@@ -129,23 +129,23 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{
-	case DIK_UP: case DIK_K: // ƒJ[ƒ\ƒ‹ã
+	case DIK_UP: case DIK_K: // ã‚«ãƒ¼ã‚½ãƒ«ä¸Š
 		if (flag) {
 			sound::Play(sound::IDs::sndCursor);
 			if (--menuCursor == 0) menuCursor = 6;
 		}
 		break;
-	case DIK_DOWN: case DIK_J: // ƒJ[ƒ\ƒ‹‰º
+	case DIK_DOWN: case DIK_J: // ã‚«ãƒ¼ã‚½ãƒ«ä¸‹
 		if (flag) {
 			sound::Play(sound::IDs::sndCursor);
 			if (++menuCursor > 6) menuCursor = 1;
 		}
 		break;
-	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // Œˆ’è
+	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // æ±ºå®š
 		if (flag) {
 			sound::Play(sound::IDs::sndButton);
 			if ((GameStatus::gameStat()->gameType != GuobiaoMJ) || (menuCursor != 4))
-				ui::UIEvent->set(menuCursor); // ƒCƒxƒ“ƒg‚ğƒZƒbƒgAƒJ[ƒ\ƒ‹”Ô†‚ğƒƒbƒZ[ƒW‚Æ‚·‚é
+				ui::UIEvent->set(menuCursor); // ã‚¤ãƒ™ãƒ³ãƒˆã‚’ã‚»ãƒƒãƒˆã€ã‚«ãƒ¼ã‚½ãƒ«ç•ªå·ã‚’ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¨ã™ã‚‹
 			else
 				sound::Play(sound::IDs::sndCuohu);
 #ifdef _WIN32
@@ -157,13 +157,13 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 			myTimer.skipTo(180 * timePerFrame);
 		}
 		break;
-	case DIK_ESCAPE: case DIK_X: // ƒLƒƒƒ“ƒZƒ‹
+	case DIK_ESCAPE: case DIK_X: // ã‚­ãƒ£ãƒ³ã‚»ãƒ«
 		if (flag) {
 			sound::Play(sound::IDs::sndClick);
 			if (menuCursor != 6) {
-				menuCursor = 6; // Exit‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹‚é
+				menuCursor = 6; // Exitã«ã‚«ãƒ¼ã‚½ãƒ«ã‚’åˆã‚ã›ã‚‹
 			} else {
-				ui::UIEvent->set(menuCursor); // ƒCƒxƒ“ƒg‚ğƒZƒbƒgAƒJ[ƒ\ƒ‹”Ô†‚ğƒƒbƒZ[ƒW‚Æ‚·‚é
+				ui::UIEvent->set(menuCursor); // ã‚¤ãƒ™ãƒ³ãƒˆã‚’ã‚»ãƒƒãƒˆã€ã‚«ãƒ¼ã‚½ãƒ«ç•ªå·ã‚’ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¨ã™ã‚‹
 			}
 		}
 		break;
@@ -196,9 +196,9 @@ void TitleScreen::MouseInput(const XEvent* od, int X, int Y)
 #endif /*_WIN32*/
 	{
 #ifdef _WIN32
-	case DIMOFS_X: case DIMOFS_Y: // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ“®‚©‚µ‚½ê‡
+	case DIMOFS_X: case DIMOFS_Y: // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’å‹•ã‹ã—ãŸå ´åˆ
 #else /*_WIN32*/
-	case MotionNotify: // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ“®‚©‚µ‚½ê‡
+	case MotionNotify: // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’å‹•ã‹ã—ãŸå ´åˆ
 #endif /*_WIN32*/
 		if (flag1) {
 			switch (region) {
@@ -212,17 +212,17 @@ void TitleScreen::MouseInput(const XEvent* od, int X, int Y)
 		}
 		break;
 #ifdef _WIN32
-	case DIMOFS_BUTTON0: // ƒ}ƒEƒX‚Ì¶ƒ{ƒ^ƒ“
+	case DIMOFS_BUTTON0: // ãƒã‚¦ã‚¹ã®å·¦ãƒœã‚¿ãƒ³
 		if (od->dwData)
 #else /*_WIN32*/
-	case ButtonPress: // ƒ}ƒEƒX‚Ì¶ƒ{ƒ^ƒ“
+	case ButtonPress: // ãƒã‚¦ã‚¹ã®å·¦ãƒœã‚¿ãƒ³
 		if (od->xbutton.button == Button1)
 #endif /*_WIN32*/
 		{
 			if ((flag1) && (region != -1))  {
 				sound::Play(sound::IDs::sndButton);
 				if ((GameStatus::gameStat()->gameType != GuobiaoMJ) || (region != 3))
-					ui::UIEvent->set(menuCursor); // ƒCƒxƒ“ƒg‚ğƒZƒbƒgAƒJ[ƒ\ƒ‹”Ô†‚ğƒƒbƒZ[ƒW‚Æ‚·‚é
+					ui::UIEvent->set(menuCursor); // ã‚¤ãƒ™ãƒ³ãƒˆã‚’ã‚»ãƒƒãƒˆã€ã‚«ãƒ¼ã‚½ãƒ«ç•ªå·ã‚’ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¨ã™ã‚‹
 				else
 					sound::Play(sound::IDs::sndCuohu);
 			} else if (!flag1) {

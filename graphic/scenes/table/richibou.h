@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../table.h"
 
@@ -10,11 +10,13 @@ private:
 private:
 	static const unsigned int RiichiPosH = TableSize / 2;
 	static const unsigned int RiichiPosV = (TableSize / 2) + 86;
-	TexturePtr tRichi;  // ƒŠ[ƒ`–_
-	void ShowRiichibou(const GameTable* gameStat); // ƒŠ[ƒ`–_‚ÌÄ\’z
+	TexturePtr tRichi;  // ãƒªãƒ¼ãƒæ£’
+	void ShowRiichibou(const GameTable* gameStat); // ãƒªãƒ¼ãƒæ£’ã®å†æ§‹ç¯‰
 public:
 	void Render();
 	explicit RichibouReconst(GameTableScreen* parent);
+	RichibouReconst(const RichibouReconst&) = delete; // Delete unexpected copy constructor
+	RichibouReconst& operator= (const RichibouReconst&) = delete; // Delete unexpected assign operator
 	~RichibouReconst();
 };
 

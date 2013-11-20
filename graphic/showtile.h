@@ -45,6 +45,8 @@ public:
 	void DelTile(unsigned int ID);
 	void Render();
 	ShowTile(DevicePtr device);
+	ShowTile(const ShowTile&) = delete; // Delete unexpected copy constructor
+	ShowTile& operator= (const ShowTile&) = delete; // Delete unexpected assign operator
 	~ShowTile();
 };
 

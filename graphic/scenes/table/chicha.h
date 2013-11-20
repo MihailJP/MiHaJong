@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../table.h"
 
@@ -7,7 +7,7 @@ namespace mihajong_graphic {
 class GameTableScreen::TrayReconst {
 private:
 	GameTableScreen* caller;
-private: /**** ‹N‰Æƒ}[ƒNEƒ„ƒLƒgƒŠƒ}[ƒN‚ğ’u‚­‰š‚İ ****/
+private: /**** èµ·å®¶ãƒãƒ¼ã‚¯ãƒ»ãƒ¤ã‚­ãƒˆãƒªãƒãƒ¼ã‚¯ã‚’ç½®ãå‡¹ã¿ ****/
 	static const unsigned int TrayHLeft = 275;
 	static const unsigned int TrayHTop = 75;
 	static const unsigned int TrayHRight = 373;
@@ -22,8 +22,8 @@ private: /**** ‹N‰Æƒ}[ƒNEƒ„ƒLƒgƒŠƒ}[ƒN‚ğ’u‚­‰š‚İ ****/
 	static const unsigned int TrayVHeight = TrayVBottom - TrayVTop;
 	static const unsigned int TrayPosH = TableSize - 200;
 	static const unsigned int TrayPosV = TableSize - 24;
-	void ShowTray(); // ‹N‰Æƒ}[ƒN‚ğ’u‚­êŠ•\¦
-private: /**** ‹N‰Æƒ}[ƒN ****/
+	void ShowTray(); // èµ·å®¶ãƒãƒ¼ã‚¯ã‚’ç½®ãå ´æ‰€è¡¨ç¤º
+private: /**** èµ·å®¶ãƒãƒ¼ã‚¯ ****/
 	static const unsigned int PlateWidthH = 45;
 	static const unsigned int PlateHeightH = 35;
 	static const unsigned int PlateWidthV = 32;
@@ -31,16 +31,18 @@ private: /**** ‹N‰Æƒ}[ƒN ****/
 	static const unsigned int PlatePadding = 1;
 	static const unsigned int PlatePosH = TrayPosH + (PlateWidthH / 2) + (PlatePadding * 2);
 	static const unsigned int PlatePosV = TrayPosV;
-	TexturePtr tChiicha; // ‹N‰Æƒ}[ƒN
-	void ShowChiicha(const GameTable* gameStat); // ‹N‰Æƒ}[ƒN‚ğ•\¦‚·‚é
-private: /**** ƒ„ƒLƒgƒŠƒ}[ƒN ****/
+	TexturePtr tChiicha; // èµ·å®¶ãƒãƒ¼ã‚¯
+	void ShowChiicha(const GameTable* gameStat); // èµ·å®¶ãƒãƒ¼ã‚¯ã‚’è¡¨ç¤ºã™ã‚‹
+private: /**** ãƒ¤ã‚­ãƒˆãƒªãƒãƒ¼ã‚¯ ****/
 	static const unsigned int PlateID_Yakitori = 7;
 	static const unsigned int YakitoriPosH = TrayPosH - (PlateWidthH / 2) - (PlatePadding * 2);
 	static const unsigned int YakitoriPosV = TrayPosV;
-	void ShowYakitori(const GameTable* gameStat); // ƒ„ƒLƒgƒŠƒ}[ƒN‚ğ•\¦‚·‚é
+	void ShowYakitori(const GameTable* gameStat); // ãƒ¤ã‚­ãƒˆãƒªãƒãƒ¼ã‚¯ã‚’è¡¨ç¤ºã™ã‚‹
 public:
 	void Render();
 	explicit TrayReconst(GameTableScreen* parent);
+	TrayReconst(const TrayReconst&) = delete; // Delete unexpected copy constructor
+	TrayReconst& operator= (const TrayReconst&) = delete; // Delete unexpected assign operator
 	~TrayReconst();
 };
 

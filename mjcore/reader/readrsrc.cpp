@@ -1,4 +1,4 @@
-#include "readrsrc.h"
+ï»¿#include "readrsrc.h"
 
 #include <cassert>
 #include "../dllmain.h"
@@ -27,10 +27,10 @@ namespace {
 }
 
 void LoadFileInResource(int name, int type, size_t& size, const uint8_t*& data) {
-	if (filedat.find(name) != filedat.end()) { // Šù‚É“Ç‚İ‚Ü‚ê‚Ä‚¢‚½ê‡
+	if (filedat.find(name) != filedat.end()) { // æ—¢ã«èª­ã¿è¾¼ã¾ã‚Œã¦ã„ãŸå ´åˆ
 		size = filedat[name].size();
 		data = reinterpret_cast<const uint8_t*>(&filedat[name][0]);
-	} else { // ‚Ü‚¾“Ç‚İ‚Ü‚ê‚Ä‚¢‚È‚¢ê‡
+	} else { // ã¾ã èª­ã¿è¾¼ã¾ã‚Œã¦ã„ãªã„å ´åˆ
 		std::string dataFile(dataFileName(name));
 		std::ifstream ifs(dataFile.c_str(), std::ios::in | std::ios::binary);
 		ifs.seekg(0, ifs.end);

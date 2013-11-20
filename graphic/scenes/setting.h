@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "confmenu.h"
 #include <array>
@@ -11,7 +11,7 @@ namespace mihajong_graphic {
 
 class PreferenceConfigScene : public ConfigMenuProto {
 private:
-	const CodeConv::tstring Caption() {return _T("ŠÂ‹«İ’è");}
+	const CodeConv::tstring Caption() {return _T("ç’°å¢ƒè¨­å®š");}
 	const unsigned itemsPerPage() {return RULES_IN_PAGE;}
 	const unsigned numberOfItems() {return PREFERENCE_ITEMS;}
 	const unsigned numberOfButtons() {return 2u;}
@@ -38,6 +38,8 @@ private:
 	void setVolume();
 public:
 	PreferenceConfigScene(ScreenManipulator* const manipulator);
+	PreferenceConfigScene(const PreferenceConfigScene&) = delete; // Delete unexpected copy constructor
+	PreferenceConfigScene& operator= (const PreferenceConfigScene&) = delete; // Delete unexpected assign operator
 	virtual ~PreferenceConfigScene();
 	void Render();
 #ifdef _WIN32
@@ -45,7 +47,7 @@ public:
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 #else /*_WIN32*/
-	/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢À‘• */
+	/* TODO: Linuxã§ã¯æ—¥æœ¬èªå…¥åŠ›ãŒæœªå®Ÿè£… */
 	void KeyboardInput(const XEvent* od);
 #endif /*_WIN32*/
 };

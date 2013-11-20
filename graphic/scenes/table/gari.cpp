@@ -1,4 +1,4 @@
-#include "gari.h"
+ï»¿#include "gari.h"
 #include "../../gametbl.h"
 #include "../../utils.h"
 
@@ -10,7 +10,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 	const GameTable* const gameStat = GameStatus::gameStat();
 	const Flowers* const flowerFlag = &(gameStat->Player[playerID].FlowerFlag);
 
-	// ”»’è‚ÉŽg‚¤ƒpƒ‰ƒ[ƒ^
+	// åˆ¤å®šã«ä½¿ã†ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 	const struct {const bool& flag; TileCode tileCode;} flowerParam[8] = {
 		{flowerFlag->Spring, Spring       }, {flowerFlag->Summer, Summer},
 		{flowerFlag->Autumn, Autumn       }, {flowerFlag->Winter, Winter},
@@ -22,7 +22,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 		if (flowerParam[i].flag)
 			++numOfTiles;
 
-	// •\Ž¦ˆ—
+	// è¡¨ç¤ºå‡¦ç†
 	switch (playerRelative(playerID, gameStat->PlayerID)) {
 	case sOpposite:
 		for (int i = 0; i < 8; ++i)
@@ -70,10 +70,10 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 	const GameTable* const gameStat = GameStatus::gameStat();
 
-	// ”»’è‚ÉŽg‚¤ƒpƒ‰ƒ[ƒ^
+	// åˆ¤å®šã«ä½¿ã†ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 	int numOfTiles = gameStat->Player[playerID].NorthFlag, currentTile = 0;
 
-	// •\Ž¦ˆ—
+	// è¡¨ç¤ºå‡¦ç†
 	switch (playerRelative(playerID, gameStat->PlayerID)) {
 	case sOpposite:
 		for (int i = 0; i < 4; ++i)

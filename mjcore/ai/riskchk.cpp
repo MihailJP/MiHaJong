@@ -1,10 +1,10 @@
-#include "functbl.h"
+ï»¿#include "functbl.h"
 
 #include "../func.h"
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::issameasprevious
-	(const GameTable* const gameStat, PlayerID player, int index) { // ‡‚í‚¹‘Å‚¿‚Å‚«‚é‚©‚Ç‚¤‚©
-		PlayerID prev_p = RelativePositionOf(player, sLeft); // ã‰Æ‚ÌƒvƒŒƒCƒ„[”Ô†
+	(const GameTable* const gameStat, PlayerID player, int index) { // åˆã‚ã›æ‰“ã¡ã§ãã‚‹ã‹ã©ã†ã‹
+		PlayerID prev_p = RelativePositionOf(player, sLeft); // ä¸Šå®¶ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·
 		if (gameStat->chkGameType(SanmaT) && (prev_p == 3)) prev_p = 2;
 		else if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(prev_p) == sNorth))
 			prev_p = RelativePositionOf(player, sOpposite);
@@ -14,12 +14,12 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::issameasprevious
 		return false;
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isdora
-	(const GameTable* const gameStat, PlayerID player, int index) { // ƒhƒ‰‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, int index) { // ãƒ‰ãƒ©ã‹ã©ã†ã‹
 		TileCode t = gameStat->Player[player].Hand[index].tile;
 		return (t == NoTile) ? false : gameStat->DoraFlag.Omote[t];
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isdorasuji
-	(const GameTable* const gameStat, PlayerID player, int index) { // ƒhƒ‰‹Ø‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, int index) { // ãƒ‰ãƒ©ç­‹ã‹ã©ã†ã‹
 		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if ((t >= TileSuitHonors)||(t == NoTile)) {return false;}
 		else {
@@ -31,7 +31,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isdorasuji
 		return false;
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isdorasoba
-	(const GameTable* const gameStat, PlayerID player, int index) { // ƒhƒ‰‚»‚Î‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, int index) { // ãƒ‰ãƒ©ãã°ã‹ã©ã†ã‹
 		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if ((t >= TileSuitHonors)||(t == NoTile)) {return false;}
 		else {
@@ -47,7 +47,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isdorasoba
 		return false;
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isnochance
-	(const GameTable* const gameStat, PlayerID player, int index) { // ƒm[ƒ`ƒƒƒ“ƒX‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, int index) { // ãƒãƒ¼ãƒãƒ£ãƒ³ã‚¹ã‹ã©ã†ã‹
 		TileCode t = gameStat->Player[player].Hand[index].tile;
 		Int8ByTile s = countseentiles(gameStat);
 		Int8ByTile h = countTilesInHand(gameStat, player);
@@ -61,7 +61,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isnochance
 		return false;
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isonechance
-	(const GameTable* const gameStat, PlayerID player, int index) { // ƒƒ“ƒ`ƒƒƒ“ƒX‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, int index) { // ãƒ¯ãƒ³ãƒãƒ£ãƒ³ã‚¹ã‹ã©ã†ã‹
 		TileCode t = gameStat->Player[player].Hand[index].tile;
 		Int8ByTile s = countseentiles(gameStat);
 		Int8ByTile h = countTilesInHand(gameStat, player);
@@ -75,14 +75,14 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isonechance
 		return false;
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isneverdiscarded
-	(const GameTable* const gameStat, PlayerID player, int index) { // ¶”v‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, int index) { // ç”Ÿç‰Œã‹ã©ã†ã‹
 		TileCode t = gameStat->Player[player].Hand[index].tile;
 		Int8ByTile s = countseentiles(gameStat);
 		if (t == NoTile) return false;
 		else return (s[t] == 0);
 }
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isseenfour
-	(const GameTable* const gameStat, PlayerID player, int index) { // ê‚É4–‡Œ©‚¦‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, int index) { // å ´ã«4æšè¦‹ãˆã¦ã„ã‚‹ã‹ã©ã†ã‹
 		TileCode t = gameStat->Player[player].Hand[index].tile;
 		Int8ByTile s = countseentiles(gameStat);
 		Int8ByTile h = countTilesInHand(gameStat, player);
@@ -91,7 +91,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isseenfour
 }
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isgembutsu
-	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // Œ»•¨‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // ç¾ç‰©ã‹ã©ã†ã‹
 		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if (t == NoTile) return false;
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++)
@@ -101,10 +101,10 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isgembutsu
 }
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::issuji
-	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // ‹Ø‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // ç­‹ã‹ã©ã†ã‹
 		TileCode t = gameStat->Player[player].Hand[index].tile;
-		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // š”v‚Æ‹ó”’‚ÍœŠO
-		if (((t % TileSuitStep) >= 4) && ((t % TileSuitStep) <= 6)) return false; // ‹ØS”vˆÈŠO‚É‚Ì‚İ“K—p‰Â”\
+		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // å­—ç‰Œã¨ç©ºç™½ã¯é™¤å¤–
+		if (((t % TileSuitStep) >= 4) && ((t % TileSuitStep) <= 6)) return false; // ç­‹å¿ƒç‰Œä»¥å¤–ã«ã®ã¿é©ç”¨å¯èƒ½
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++)
 			if (((t % TileSuitStep) < 4) && (gameStat->Player[tplayer].Discard[i].tcode.tile == (t + 3)))
 				return true;
@@ -114,10 +114,10 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::issuji
 }
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isnakasuji
-	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // ’†‹Ø‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // ä¸­ç­‹ã‹ã©ã†ã‹
 		TileCode t = gameStat->Player[player].Hand[index].tile;
-		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // š”v‚Æ‹ó”’‚ÍœŠO
-		if (((t % TileSuitStep) < 4) || ((t % TileSuitStep) > 6)) return false; // ‹ØS”v‚É‚Ì‚İ“K—p‰Â”\
+		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // å­—ç‰Œã¨ç©ºç™½ã¯é™¤å¤–
+		if (((t % TileSuitStep) < 4) || ((t % TileSuitStep) > 6)) return false; // ç­‹å¿ƒç‰Œã«ã®ã¿é©ç”¨å¯èƒ½
 		bool flag1 = false; bool flag2 = false;
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++)
 			if (gameStat->Player[tplayer].Discard[i].tcode.tile == (t - 3))
@@ -128,15 +128,15 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isnakasuji
 }
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isurasuji
-	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // — ‹Ø‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // è£ç­‹ã‹ã©ã†ã‹
 		/*
-		 *  — ‹Ø‚Æ‚Ícc‚ ‚é”v‚É‘Î‚µA‚»‚Ì—×‚Ì‹Ø‚Å‚ ‚é
+		 *  è£ç­‹ã¨ã¯â€¦â€¦ã‚ã‚‹ç‰Œã«å¯¾ã—ã€ãã®éš£ã®ç­‹ã§ã‚ã‚‹
 		 *
-		 *  ‡@‚QEE‚T‡EEEE@/@E‡A‚REE‚U‡FEE@/@EE‡B‚SEE‚V‡GE
-		 *  EEE‡C‚TEE‚W‡H@/@‚PEE‚S‡D‚UEE‚X
+		 *  â‘ ï¼’ãƒ»ãƒ»ï¼•â‘¥ãƒ»ãƒ»ãƒ»ã€€/ã€€ãƒ»â‘¡ï¼“ãƒ»ãƒ»ï¼–â‘¦ãƒ»ãƒ»ã€€/ã€€ãƒ»ãƒ»â‘¢ï¼”ãƒ»ãƒ»ï¼—â‘§ãƒ»
+		 *  ãƒ»ãƒ»ãƒ»â‘£ï¼•ãƒ»ãƒ»ï¼˜â‘¨ã€€/ã€€ï¼‘ãƒ»ãƒ»ï¼”â‘¤ï¼–ãƒ»ãƒ»ï¼™
 		 */
 		TileCode t = gameStat->Player[player].Hand[index].tile;
-		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // š”v‚Æ‹ó”’‚ÍœŠO
+		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // å­—ç‰Œã¨ç©ºç™½ã¯é™¤å¤–
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((t % TileSuitStep) >= 2) && ((t % TileSuitStep) <= 6))
 				if (gameStat->Player[tplayer].Discard[i].tcode.tile == (t - 1))
@@ -156,13 +156,13 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isurasuji
 
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isaida4ken
-	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // ŠÔ4ƒPƒ“‚Ì‹Ø‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // é–“4ã‚±ãƒ³ã®ç­‹ã‹ã©ã†ã‹
 		/*
-		 *  ‡@‚QEE‚T‡EEEE@/@E‡A‚REE‚U‡FEE@/@EE‡B‚SEE‚V‡GE
-		 *  EEE‡C‚TEE‚W‡H
+		 *  â‘ ï¼’ãƒ»ãƒ»ï¼•â‘¥ãƒ»ãƒ»ãƒ»ã€€/ã€€ãƒ»â‘¡ï¼“ãƒ»ãƒ»ï¼–â‘¦ãƒ»ãƒ»ã€€/ã€€ãƒ»ãƒ»â‘¢ï¼”ãƒ»ãƒ»ï¼—â‘§ãƒ»
+		 *  ãƒ»ãƒ»ãƒ»â‘£ï¼•ãƒ»ãƒ»ï¼˜â‘¨
 		 */
 		TileCode t = gameStat->Player[player].Hand[index].tile;
-		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // š”v‚Æ‹ó”’‚ÍœŠO
+		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // å­—ç‰Œã¨ç©ºç™½ã¯é™¤å¤–
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((t % TileSuitStep) >= 2) && ((t % TileSuitStep) <= 5))
 				if (gameStat->Player[tplayer].Discard[i].tcode.tile == (t - 1))
@@ -177,15 +177,15 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isaida4ken
 }
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::issenkisuji
-	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // ál‹C‹Ø‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // ç–æ°—ç­‹ã‹ã©ã†ã‹
 		/*
-		 *  ál‹C‹Ø‚Æ‚Ícc‚ ‚é”v‚É‘Î‚µA‚»‚Ì—×‚Ì—×‚Ì‹Ø‚Å‚ ‚é
+		 *  ç–æ°—ç­‹ã¨ã¯â€¦â€¦ã‚ã‚‹ç‰Œã«å¯¾ã—ã€ãã®éš£ã®éš£ã®ç­‹ã§ã‚ã‚‹
 		 *
-		 *  ‚PEE‚SE‡EEEE@/@E‚QEE‚TE‡FEE@/@‡@E‚REE‚UE‡GE
-		 *  E‡AE‚SEE‚VE‡H@/@EE‡BE‚TEE‚WE@/@EEE‡CE‚UEE‚X
+		 *  ï¼‘ãƒ»ãƒ»ï¼”ãƒ»â‘¥ãƒ»ãƒ»ãƒ»ã€€/ã€€ãƒ»ï¼’ãƒ»ãƒ»ï¼•ãƒ»â‘¦ãƒ»ãƒ»ã€€/ã€€â‘ ãƒ»ï¼“ãƒ»ãƒ»ï¼–ãƒ»â‘§ãƒ»
+		 *  ãƒ»â‘¡ãƒ»ï¼”ãƒ»ãƒ»ï¼—ãƒ»â‘¨ã€€/ã€€ãƒ»ãƒ»â‘¢ãƒ»ï¼•ãƒ»ãƒ»ï¼˜ãƒ»ã€€/ã€€ãƒ»ãƒ»ãƒ»â‘£ãƒ»ï¼–ãƒ»ãƒ»ï¼™
 		 */
 		TileCode t = gameStat->Player[player].Hand[index].tile;
-		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // š”v‚Æ‹ó”’‚ÍœŠO
+		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // å­—ç‰Œã¨ç©ºç™½ã¯é™¤å¤–
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((t % TileSuitStep) >= 3) && ((t % TileSuitStep) <= 6))
 				if (gameStat->Player[tplayer].Discard[i].tcode.tile == (t - 2))
@@ -204,16 +204,16 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::issenkisuji
 }
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::ismatagisuji
-	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // Œ×‚¬‹Ø‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // è·¨ãç­‹ã‹ã©ã†ã‹
 		/*
-		 *  Œ×‚¬‹Ø
+		 *  è·¨ãç­‹
 		 *
-		 *  ‚P‡AE‚SEEEEE@/@‚P‚Q‡B‚S‚TEEEE@/@E‚Q‚R‡C‚T‚UEEE
-		 *  EE‚R‚S‡D‚U‚VEE@/@EEE‚S‚T‡E‚V‚WE@/@EEEE‚T‚U‡F‚W‚X
-		 *  EEEEE‚UE‡G‚X
+		 *  ï¼‘â‘¡ãƒ»ï¼”ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ã€€/ã€€ï¼‘ï¼’â‘¢ï¼”ï¼•ãƒ»ãƒ»ãƒ»ãƒ»ã€€/ã€€ãƒ»ï¼’ï¼“â‘£ï¼•ï¼–ãƒ»ãƒ»ãƒ»
+		 *  ãƒ»ãƒ»ï¼“ï¼”â‘¤ï¼–ï¼—ãƒ»ãƒ»ã€€/ã€€ãƒ»ãƒ»ãƒ»ï¼”ï¼•â‘¥ï¼—ï¼˜ãƒ»ã€€/ã€€ãƒ»ãƒ»ãƒ»ãƒ»ï¼•ï¼–â‘¦ï¼˜ï¼™
+		 *  ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ï¼–ãƒ»â‘§ï¼™
 		 */
 		TileCode t = gameStat->Player[player].Hand[index].tile;
-		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // š”v‚Æ‹ó”’‚ÍœŠO
+		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // å­—ç‰Œã¨ç©ºç™½ã¯é™¤å¤–
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((t % TileSuitStep) >= 2) && ((t % TileSuitStep) <= 7))
 				if (gameStat->Player[tplayer].Discard[i].tcode.tile == (t - 1))
@@ -230,15 +230,15 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::ismatagisuji
 }
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::isnamakurasuji
-	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // “İ‹Ø‚©‚Ç‚¤‚©
+	(const GameTable* const gameStat, PlayerID player, PlayerID tplayer, int index) { // éˆç­‹ã‹ã©ã†ã‹
 		/*
-		 *  “İ‹Ø
+		 *  éˆç­‹
 		 *
-		 *  ‡@EE‡CEE‚VEE@/@E‡AEE‡DEE‚WE@/@EE‡BEE‡EEE‚X
-		 *  ‚PEE‡CEE‡FEE@/@E‚QEE‡DEE‡GE@/@EE‚REE‡EEE‡H
+		 *  â‘ ãƒ»ãƒ»â‘£ãƒ»ãƒ»ï¼—ãƒ»ãƒ»ã€€/ã€€ãƒ»â‘¡ãƒ»ãƒ»â‘¤ãƒ»ãƒ»ï¼˜ãƒ»ã€€/ã€€ãƒ»ãƒ»â‘¢ãƒ»ãƒ»â‘¥ãƒ»ãƒ»ï¼™
+		 *  ï¼‘ãƒ»ãƒ»â‘£ãƒ»ãƒ»â‘¦ãƒ»ãƒ»ã€€/ã€€ãƒ»ï¼’ãƒ»ãƒ»â‘¤ãƒ»ãƒ»â‘§ãƒ»ã€€/ã€€ãƒ»ãƒ»ï¼“ãƒ»ãƒ»â‘¥ãƒ»ãƒ»â‘¨
 		 */
 		TileCode t = gameStat->Player[player].Hand[index].tile;
-		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // š”v‚Æ‹ó”’‚ÍœŠO
+		if ((t >= TileSuitHonors)||(t == NoTile)) return false; // å­—ç‰Œã¨ç©ºç™½ã¯é™¤å¤–
 		bool flag1 = false; bool flag2 = false;
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((t % TileSuitStep) >= 1) && ((t % TileSuitStep) <= 3)) {
@@ -260,7 +260,7 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isnamakurasuji
 					flag2 = true;
 			}
 			if (gameStat->Player[tplayer].Discard[i].tcode.tile == t)
-				flag2 = true; // Œ»•¨‚ª‚ ‚Á‚½‚ç‰ğœ
+				flag2 = true; // ç¾ç‰©ãŒã‚ã£ãŸã‚‰è§£é™¤
 		}
 		return flag1 && (!flag2);
 }

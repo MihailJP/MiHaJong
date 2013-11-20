@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../../common/strcode.h"
 #include "../directx.h"
@@ -14,9 +14,9 @@
 
 namespace mihajong_graphic {
 
-class EditBox { // ©‘O‚ÌƒGƒfƒBƒbƒgƒ{ƒbƒNƒX‚à‚Ç‚«
+class EditBox { // è‡ªå‰ã®ã‚¨ãƒ‡ã‚£ãƒƒãƒˆãƒœãƒƒã‚¯ã‚¹ã‚‚ã©ã
 private:
-	static unsigned const halffontsz = 9; // ”¼Šp‚Ì‰¡•
+	static unsigned const halffontsz = 9; // åŠè§’ã®æ¨ªå¹…
 #ifdef _WIN32
 	HWND myHWnd;
 #else /*_WIN32*/
@@ -50,13 +50,15 @@ public:
 #else /*_WIN32*/
 	EditBox(Window hwnd, DevicePtr device, int X, int Y, unsigned width, float scale = 1.0f);
 #endif /*_WIN32*/
+	EditBox(const EditBox&) = delete; // Delete unexpected copy constructor
+	EditBox& operator= (const EditBox&) = delete; // Delete unexpected assign operator
 	~EditBox();
 	void Render();
 #ifdef _WIN32
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 #else /*_WIN32*/
-	/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢À‘• */
+	/* TODO: Linuxã§ã¯æ—¥æœ¬èªå…¥åŠ›ãŒæœªå®Ÿè£… */
 	void KeyboardInput(const XEvent* od);
 #endif /*_WIN32*/
 	void activate() {isActive = true;}
@@ -67,13 +69,14 @@ public:
 };
 
 #ifdef _WIN32
-class EditBox::IMStat { // IME‚Ìó‘Ô
+class EditBox::IMStat { // IMEã®çŠ¶æ…‹
 private:
 	HWND hwnd; HIMC hIMC;
-	IMStat(const IMStat&) {}; // disable copy constructor
 	std::vector<BYTE> getCompositionString(DWORD InfoType);
 public:
 	IMStat(HWND hWnd);
+	IMStat(const IMStat&) = delete; // Delete unexpected copy constructor
+	IMStat& operator= (const IMStat&) = delete; // Delete unexpected assign operator
 	~IMStat();
 	bool isOpened();
 	std::tuple<DWORD, DWORD> getConvStat();
@@ -84,12 +87,12 @@ public:
 	std::tuple<unsigned, std::vector<CodeConv::tstring>, unsigned, unsigned> getCandidateList();
 };
 #else /*_WIN32*/
-/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢À‘•i‚±‚ÌÀ‘•‚Íƒ_ƒ~[j */
-class EditBox::IMStat { // IME‚Ìó‘Ô(ƒ_ƒ~[)
-private:
-	IMStat(const IMStat&) {}; // disable copy constructor
+/* TODO: Linuxã§ã¯æ—¥æœ¬èªå…¥åŠ›ãŒæœªå®Ÿè£…ï¼ˆã“ã®å®Ÿè£…ã¯ãƒ€ãƒŸãƒ¼ï¼‰ */
+class EditBox::IMStat { // IMEã®çŠ¶æ…‹(ãƒ€ãƒŸãƒ¼)
 public:
 	IMStat(void*) {}
+	IMStat(const IMStat&) = delete; // Delete unexpected copy constructor
+	IMStat& operator= (const IMStat&) = delete; // Delete unexpected assign operator
 	~IMStat() {}
 	bool isOpened() {return false;}
 	std::tuple<uint32_t, uint32_t> getConvStat() {return std::make_tuple(0u, 0u);}

@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #ifdef _WIN32
 #include <windows.h>
@@ -38,6 +38,12 @@ typedef const char* LPCTSTR;
 #include <string>
 #include <sstream>
 
+#ifdef UNICODE
+#define PON L"Á¢∞"
+#else /* UNICODE */
+#define PON "„Éù„É≥"
+#endif /* UNICODE */
+
 namespace CodeConv {
 
 #ifndef _WIN32
@@ -45,13 +51,13 @@ inline void setCP(unsigned int CodePage) {
 	char teststr[MB_CUR_MAX];
 	if (CodePage == 932u) { /* Japanese SJIS code page */
 		if (setlocale(LC_CTYPE, "ja_JP.cp932")) { /* Linux */
-			if (wctomb(teststr, L'Ç†') != -1) return;
+			if (wctomb(teststr, L'„ÅÇ') != -1) return;
 		}
 		if (setlocale(LC_CTYPE, "ja_JP.shiftjisx0213")) { /* Linux */
-			if (wctomb(teststr, L'Ç†') != -1) return;
+			if (wctomb(teststr, L'„ÅÇ') != -1) return;
 		}
 		if (setlocale(LC_CTYPE, "ja_JP.sjis")) { /* returns nullptr if failed */
-			if (wctomb(teststr, L'Ç†') != -1) return;
+			if (wctomb(teststr, L'„ÅÇ') != -1) return;
 		}
 	}
 	else if (CodePage == 65001u) { /* UTF-8 code page */
@@ -67,11 +73,11 @@ inline void setCP(unsigned int CodePage) {
 const unsigned CP_UTF8 = 65001u;
 const unsigned CP_ACP = 932u;
 
-inline void criticalSection(bool flag) {
-	static MHJMutex conversionMutex;
-	if (flag) conversionMutex.acquire();
-	else conversionMutex.release();
+inline MUTEXLIB::recursive_mutex& conversionMutex() {
+	static MUTEXLIB::recursive_mutex myMutex;
+	return myMutex;
 }
+
 #endif /* _WIN32 */
 
 inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
@@ -80,7 +86,7 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	wchar_t* buf = new wchar_t[bufsize];
 	MultiByteToWideChar(CodePage, 0, str.c_str(), -1, buf, bufsize);
 #else /* _WIN32 */
-	criticalSection(true);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(conversionMutex());
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
@@ -93,8 +99,7 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 		setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
 		delete[] srcBuf;
 		std::cerr << "Failed to convert into wide string" << std::endl;
-		criticalSection(false);
-		throw _T("ÉèÉCÉhï∂éöÇ÷ÇÃïœä∑Ç…é∏îsÇµÇ‹ÇµÇΩ");
+		throw _T("„ÉØ„Ç§„ÉâÊñáÂ≠ó„Å∏„ÅÆÂ§âÊèõ„Å´Â§±Êïó„Åó„Åæ„Åó„Åü");
 	}
 	wchar_t* buf = new wchar_t[bufsize + 1 /* Do not forget the trailing null */];
 	memset(buf, 0, (bufsize + 1) * sizeof (wchar_t));
@@ -105,7 +110,6 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	std::wstring ans(buf); delete[] buf;
 #ifndef _WIN32
 	delete[] srcBuf;
-	criticalSection(false);
 #endif /* _WIN32 */
 	return ans;
 }
@@ -115,7 +119,7 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 	char* buf = new char[bufsize];
 	WideCharToMultiByte(CodePage, 0, str.c_str(), -1, buf, bufsize, nullptr, nullptr);
 #else /* _WIN32 */
-	criticalSection(true);
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(conversionMutex());
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
@@ -173,7 +177,6 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 	delete[] buf;
 #else /* _WIN32 */
 	delete[] srcBuf;
-	criticalSection(false);
 #endif /* _WIN32 */
 	return ans;
 }

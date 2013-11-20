@@ -1,24 +1,24 @@
-#include "ini2map.h"
+ï»¿#include "ini2map.h"
 
 #include <cstring>
 
 void INIParser::parseini(IniMapMap& inimap, LPCTSTR ini) {
 	/*
-	 *  CSV‚ğƒp[ƒX‚µ‚Ä”z—ñ‚Ì”z—ñƒIƒuƒWƒFƒNƒg‚É‘ã“ü‚·‚é
+	 *  CSVã‚’ãƒ‘ãƒ¼ã‚¹ã—ã¦é…åˆ—ã®é…åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ä»£å…¥ã™ã‚‹
 	 *
-	 *  §ŒÀ–€
-	 *  ECR‚ğ–³‹‚µ‚Ü‚·
-	 *  EÅ‰‚ÌƒZƒNƒVƒ‡ƒ“éŒ¾‚Ü‚Å‚Í–³‹‚³‚ê‚Ü‚·
+	 *  åˆ¶é™äº‹é …
+	 *  ãƒ»CRã‚’ç„¡è¦–ã—ã¾ã™
+	 *  ãƒ»æœ€åˆã®ã‚»ã‚¯ã‚·ãƒ§ãƒ³å®£è¨€ã¾ã§ã¯ç„¡è¦–ã•ã‚Œã¾ã™
 	 */
-	inimap.clear(); // ‚Ü‚¸ƒŠƒZƒbƒg‚·‚é
-	CodeConv::tstring tmpstr; // ì‹Æ—p•¶š—ñ
-	CodeConv::tstring currentsection; // Œ»İ—LŒø‚ÈƒZƒNƒVƒ‡ƒ“–¼
-	CodeConv::tstring recordname; // Œ»İ—LŒø‚ÈƒŒƒR[ƒh–¼
+	inimap.clear(); // ã¾ãšãƒªã‚»ãƒƒãƒˆã™ã‚‹
+	CodeConv::tstring tmpstr; // ä½œæ¥­ç”¨æ–‡å­—åˆ—
+	CodeConv::tstring currentsection; // ç¾åœ¨æœ‰åŠ¹ãªã‚»ã‚¯ã‚·ãƒ§ãƒ³å
+	CodeConv::tstring recordname; // ç¾åœ¨æœ‰åŠ¹ãªãƒ¬ã‚³ãƒ¼ãƒ‰å
 	RECORD section;
 	TCHAR tmpletter[2] = {0, 0};
 	bool started = false; bool firstchr = true; bool iscomment = false;
 	bool issectionname = false; bool isrecordentity = false;
-	for (LPCTSTR ptr = ini; *ptr != _T('\0'); ptr++) { // ƒ|ƒCƒ“ƒ^‚Ìfor‚Æ‚©g‚Á‚½‚±‚Æ‚ ‚ê‚Ö‚ñcc
+	for (LPCTSTR ptr = ini; *ptr != _T('\0'); ptr++) { // ãƒã‚¤ãƒ³ã‚¿ã®forã¨ã‹ä½¿ã£ãŸã“ã¨ã‚ã‚Œã¸ã‚“â€¦â€¦
 		if (*ptr == _T('\r')) continue; // just ignore a CR
 		else if (*ptr == _T('\n')) { // new line
 			if (firstchr) continue; // null line

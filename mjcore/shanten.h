@@ -45,4 +45,9 @@ private:
 	static Shanten calcShantenNinnaji(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount);
 #endif
 
+public: /* Monostate class: cannot be instantiated */
+	ShantenAnalyzer() = delete;
+	ShantenAnalyzer(const ShantenAnalyzer&) = delete;
+	ShantenAnalyzer& operator= (const ShantenAnalyzer&) = delete;
+	~ShantenAnalyzer() = delete;
 };

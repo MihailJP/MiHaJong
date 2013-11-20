@@ -1,4 +1,4 @@
-#include "result.h"
+ï»¿#include "result.h"
 #include "regex.h"
 #include "../graphic/graphic.h"
 #include "../sound/sound.h"
@@ -11,7 +11,7 @@
 
 namespace {
 
-	/* ÅŒã‚Ü‚Åc‚Á‚Ä‚¢‚½‹Ÿ‘õ“_–_‚Íƒgƒbƒvæ‚è */
+	/* æœ€å¾Œã¾ã§æ®‹ã£ã¦ã„ãŸä¾›è¨—ç‚¹æ£’ã¯ãƒˆãƒƒãƒ—å–ã‚Š */
 	void withdrawDepoScore(GameTable* gameStat) {
 		const PlayerRankList rank(calcRank(gameStat));
 		for (PlayerID i = 0; i < Players; ++i) {
@@ -23,17 +23,17 @@ namespace {
 		return;
 	}
 
-	/* 1000‚ÅŠ„‚Á‚ÄŠÛ‚ß‚é */
+	/* 1000ã§å‰²ã£ã¦ä¸¸ã‚ã‚‹ */
 	LNum roundScore(LNum val) {
 #ifdef GUOBIAO
 		return val;
 #else /* GUOBIAO */
-		/* TODO: ‚±‚±‚ÉŠÛ‚ßˆ—‚ğ‘‚­ */
+		/* TODO: ã“ã“ã«ä¸¸ã‚å‡¦ç†ã‚’æ›¸ã */
 		return val / 1000;
 #endif /* GUOBIAO */
 	}
 
-	/* ƒEƒ}ŒvZ */
+	/* ã‚¦ãƒè¨ˆç®— */
 	void calcUma(const GameTable* gameStat, InfoByPlayer<LNum>& score) {
 #ifndef GUOBIAO
 		const PlayerRankList rank(calcRank(gameStat));
@@ -47,33 +47,33 @@ namespace {
 #endif /* GUOBIAO */
 	}
 
-	/* ƒIƒJŒvZ */
+	/* ã‚ªã‚«è¨ˆç®— */
 	void calcOka(const GameTable* gameStat, InfoByPlayer<LNum>& score) {
 		const PlayerRankList rank(calcRank(gameStat));
-		LNum sumOfScore = 0; // •s‘«•ª‚Ü‚½‚Í‰ßè•ª
+		LNum sumOfScore = 0; // ä¸è¶³åˆ†ã¾ãŸã¯éå‰°åˆ†
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i)
 			sumOfScore += score[i];
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i) {
-			if ((rank[i] == 1) && (sumOfScore <= (LNum)0)) // ƒgƒbƒvÜ
+			if ((rank[i] == 1) && (sumOfScore <= (LNum)0)) // ãƒˆãƒƒãƒ—è³
 				score[i] -= sumOfScore;
-			if ((rank[i] == ACTUAL_PLAYERS) && (sumOfScore > (LNum)0)) // ƒ}ƒCƒiƒXƒIƒJ
+			if ((rank[i] == ACTUAL_PLAYERS) && (sumOfScore > (LNum)0)) // ãƒã‚¤ãƒŠã‚¹ã‚ªã‚«
 				score[i] -= sumOfScore;
 		}
 	}
 
-	/* ƒ`ƒbƒvƒŒ[ƒg */
+	/* ãƒãƒƒãƒ—ãƒ¬ãƒ¼ãƒˆ */
 	unsigned int chipRate() {
 #ifdef GUOBIAO
 		return 0;
 #else /* GUOBIAO */
-		if (RuleData::chkRule("chip", "no")) return 0; // ƒ`ƒbƒv‚È‚µƒ‹[ƒ‹
+		if (RuleData::chkRule("chip", "no")) return 0; // ãƒãƒƒãƒ—ãªã—ãƒ«ãƒ¼ãƒ«
 		const std::string chipRule(RuleData::chkRule("chip"));
 		REGEX::smatch matchDat;
-		if (REGEX::regex_match(chipRule, matchDat, REGEX::regex("chip_rate_(\\d+)"))) { // ƒ`ƒbƒvƒŒ[ƒg
-			return atoi(matchDat[1].str().c_str()); // ƒ‹[ƒ‹İ’è•¶š—ñ‚©‚ç®”‚ğ’Šo
-		} else { // ˆÙíƒf[ƒ^H
+		if (REGEX::regex_match(chipRule, matchDat, REGEX::regex("chip_rate_(\\d+)"))) { // ãƒãƒƒãƒ—ãƒ¬ãƒ¼ãƒˆ
+			return atoi(matchDat[1].str().c_str()); // ãƒ«ãƒ¼ãƒ«è¨­å®šæ–‡å­—åˆ—ã‹ã‚‰æ•´æ•°ã‚’æŠ½å‡º
+		} else { // ç•°å¸¸ãƒ‡ãƒ¼ã‚¿ï¼Ÿ
 			CodeConv::tostringstream o;
-			o << _T("”F¯‚Å‚«‚È‚¢ƒ`ƒbƒvƒŒ[ƒgİ’è‚Å‚· [") <<
+			o << _T("èªè­˜ã§ããªã„ãƒãƒƒãƒ—ãƒ¬ãƒ¼ãƒˆè¨­å®šã§ã™ [") <<
 				CodeConv::EnsureTStr(chipRule) << _T(']');
 			warn(o.str().c_str());
 			return 0;
@@ -81,22 +81,22 @@ namespace {
 #endif /* GUOBIAO */
 	}
 
-	/* “¾“_ŒvZ */
+	/* å¾—ç‚¹è¨ˆç®— */
 	void calcScore(const GameTable* gameStat) {
 		InfoByPlayer<LNum> playerScore;
-		for (PlayerID i = 0; i < Players; ++i) // “_”ˆ—
+		for (PlayerID i = 0; i < Players; ++i) // ç‚¹æ•°å‡¦ç†
 			playerScore[i] = gameStat->Player[i].PlayerScore - (LargeNum)BasePoint();
-		for (PlayerID i = 0; i < Players; ++i) // ƒ`ƒbƒv‚ğ”½‰f
+		for (PlayerID i = 0; i < Players; ++i) // ãƒãƒƒãƒ—ã‚’åæ˜ 
 			playerScore[i] += gameStat->Player[i].playerChip * (signed)chipRate();
-		calcUma(gameStat, playerScore); // ƒEƒ}‚ğ‰ÁZ‚·‚é
-		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i) // ŠÛ‚ßˆ—
+		calcUma(gameStat, playerScore); // ã‚¦ãƒã‚’åŠ ç®—ã™ã‚‹
+		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i) // ä¸¸ã‚å‡¦ç†
 			playerScore[i] = roundScore(playerScore[i]);
-		calcOka(gameStat, playerScore); // ƒIƒJ‚ğ‰ÁZ‚·‚é
-		mihajong_graphic::setFinalScore( // •\¦ˆ——pDLL‚É“n‚·
+		calcOka(gameStat, playerScore); // ã‚ªã‚«ã‚’åŠ ç®—ã™ã‚‹
+		mihajong_graphic::setFinalScore( // è¡¨ç¤ºå‡¦ç†ç”¨DLLã«æ¸¡ã™
 			playerScore[0], playerScore[1], playerScore[2], playerScore[3]);
 	}
 
-	/* Ä‚«’¹ */
+	/* ç„¼ãé³¥ */
 	void yakitori(GameTable* gameStat) {
 #ifndef GUOBIAO
 		const PlayerRankList rank(calcRank(gameStat));
@@ -108,16 +108,16 @@ namespace {
 			return -1;                             // Nobody won: this shouldn't be occur...
 		} ();
 		REGEX::smatch matchDat;
-		if (REGEX::regex_match(yakitoriRule, matchDat, REGEX::regex("(\\d+)pts"))) { // “_–_‚Åx•¥‚¤ê‡
-			int yakitoriVal = atoi(matchDat[1].str().c_str()); // ƒ‹[ƒ‹İ’è•¶š—ñ‚©‚ç®”‚ğ’Šo
+		if (REGEX::regex_match(yakitoriRule, matchDat, REGEX::regex("(\\d+)pts"))) { // ç‚¹æ£’ã§æ”¯æ‰•ã†å ´åˆ
+			int yakitoriVal = atoi(matchDat[1].str().c_str()); // ãƒ«ãƒ¼ãƒ«è¨­å®šæ–‡å­—åˆ—ã‹ã‚‰æ•´æ•°ã‚’æŠ½å‡º
 			for (PlayerID i = 0; i < Players; ++i) {
 				if (gameStat->Player[i].YakitoriFlag) {
 					gameStat->Player[i].PlayerScore -= yakitoriVal;
 					gameStat->Player[winner].PlayerScore += yakitoriVal;
 				}
 			}
-		} else if (REGEX::regex_match(yakitoriRule, matchDat, REGEX::regex("chip(\\d+)"))) { // ƒ`ƒbƒv‚Åx•¥‚¤ê‡
-			int yakitoriVal = atoi(matchDat[1].str().c_str()); // ƒ‹[ƒ‹İ’è•¶š—ñ‚©‚ç®”‚ğ’Šo
+		} else if (REGEX::regex_match(yakitoriRule, matchDat, REGEX::regex("chip(\\d+)"))) { // ãƒãƒƒãƒ—ã§æ”¯æ‰•ã†å ´åˆ
+			int yakitoriVal = atoi(matchDat[1].str().c_str()); // ãƒ«ãƒ¼ãƒ«è¨­å®šæ–‡å­—åˆ—ã‹ã‚‰æ•´æ•°ã‚’æŠ½å‡º
 			for (PlayerID i = 0; i < Players; ++i) {
 				if (gameStat->Player[i].YakitoriFlag) {
 					gameStat->Player[i].playerChip -= yakitoriVal;
@@ -132,12 +132,12 @@ namespace {
 
 void gameResult(GameTable* gameStat, int origTurn, int origHonba) {
 	sound::util::bgmstop();
-	withdrawDepoScore(gameStat); // ‹Ÿ‘õ“_–_‚Ìˆ—
-	yakitori(gameStat); // Ä‚«’¹‚Ìˆ—
-	mihajong_graphic::GameStatus::updateGameStat(gameStat); // ”½‰f‚³‚¹‚é
+	withdrawDepoScore(gameStat); // ä¾›è¨—ç‚¹æ£’ã®å‡¦ç†
+	yakitori(gameStat); // ç„¼ãé³¥ã®å‡¦ç†
+	mihajong_graphic::GameStatus::updateGameStat(gameStat); // åæ˜ ã•ã›ã‚‹
 	calcScore(gameStat);
 	/*  */
 	mihajong_graphic::Transit(mihajong_graphic::sceneResult);
-	haifu::haifusave(gameStat); // ”v•ˆ‚ğ•Û‘¶‚·‚é
-	(void)mihajong_graphic::ui::WaitUI(); // “ü—Í‘Ò‚¿
+	haifu::haifusave(gameStat); // ç‰Œè­œã‚’ä¿å­˜ã™ã‚‹
+	(void)mihajong_graphic::ui::WaitUI(); // å…¥åŠ›å¾…ã¡
 }

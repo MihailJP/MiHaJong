@@ -15,6 +15,8 @@ protected:
 	void ZoomChar(unsigned ID, const std::wstring& str, int xOffset, uint64_t Anfang, uint64_t Ende);
 public:
 	TableSubsceneBeginning(DevicePtr device);
+	TableSubsceneBeginning(const TableSubsceneBeginning&) = delete; // Delete unexpected copy constructor
+	TableSubsceneBeginning& operator= (const TableSubsceneBeginning&) = delete; // Delete unexpected assign operator
 	~TableSubsceneBeginning();
 	void Render();
 	virtual void skipEvent();

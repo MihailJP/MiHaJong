@@ -1,4 +1,4 @@
-#include "player.h"
+ï»¿#include "player.h"
 
 #include "../../../common/strcode.h"
 #include <iomanip>
@@ -29,7 +29,7 @@ void TableSubscenePlayerProto::showTimeout() {
 	myTextRenderer->Render();
 	for (int i = 0; i <= 5; ++i)
 		if ((prevTime > (double)i) && (timeLeft <= (double)i))
-			sound::Play(sound::IDs::sndClock); // ƒJƒEƒ“ƒgƒ_ƒEƒ“‚Ì‰¹‚ð–Â‚ç‚·
+			sound::Play(sound::IDs::sndClock); // ã‚«ã‚¦ãƒ³ãƒˆãƒ€ã‚¦ãƒ³ã®éŸ³ã‚’é³´ã‚‰ã™
 	prevTime = timeLeft;
 }
 

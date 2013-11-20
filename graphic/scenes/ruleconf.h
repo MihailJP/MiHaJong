@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "confmenu.h"
 #include "../text.h"
@@ -11,7 +11,7 @@ namespace mihajong_graphic {
 
 class RuleConfigScene : public ConfigMenuProto {
 private:
-	const CodeConv::tstring Caption() {return _T("ÉãÅ[Éãê›íË");}
+	const CodeConv::tstring Caption() {return _T("„É´„Éº„É´Ë®≠ÂÆö");}
 	const unsigned itemsPerPage() {return RULES_IN_PAGE;}
 	const unsigned numberOfItems() {return RULESIZE;}
 	const unsigned numberOfButtons() {return 4u;}
@@ -30,6 +30,8 @@ private:
 	void BtnEvent_Content_Roll_Down();
 public:
 	RuleConfigScene(ScreenManipulator* const manipulator);
+	RuleConfigScene(const RuleConfigScene&) = delete; // Delete unexpected copy constructor
+	RuleConfigScene& operator= (const RuleConfigScene&) = delete; // Delete unexpected assign operator
 	virtual ~RuleConfigScene();
 };
 

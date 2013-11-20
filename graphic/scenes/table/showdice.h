@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "../table.h"
 
@@ -14,11 +14,13 @@ private:
 	static const unsigned int DicePosH = TableSize - 230;
 	static const unsigned int DicePosV = TableSize - 70;
 	static const unsigned int DicePosInterstice = DiceWidth / 3;
-	TexturePtr tDice; // ÉTÉCÉRÉç
-	void ShowDice(const GameTable* gameStat); // ÉTÉCÉRÉçÇï\é¶Ç∑ÇÈ
+	TexturePtr tDice; // „Çµ„Ç§„Ç≥„É≠
+	void ShowDice(const GameTable* gameStat); // „Çµ„Ç§„Ç≥„É≠„ÇíË°®Á§∫„Åô„Çã
 public:
 	void Render();
 	explicit DiceReconst(GameTableScreen* parent);
+	DiceReconst(const DiceReconst&) = delete; // Delete unexpected copy constructor
+	DiceReconst& operator= (const DiceReconst&) = delete; // Delete unexpected assign operator
 	~DiceReconst();
 };
 

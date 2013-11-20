@@ -1,20 +1,25 @@
-#pragma once
+ï»¿#pragma once
 
 #include <array>
 #include "gametbl.h"
 
-void shuffle(GameTable* const gameStat); // ”v‚ğƒoƒbƒtƒ@‚É•À‚×‚ÄAô”v
+void shuffle(GameTable* const gameStat); // ç‰Œã‚’ãƒãƒƒãƒ•ã‚¡ã«ä¸¦ã¹ã¦ã€æ´—ç‰Œ
 #ifndef GUOBIAO
-void initdora(GameTable* const gameStat); // ƒhƒ‰‚Ìİ’è
+void initdora(GameTable* const gameStat); // ãƒ‰ãƒ©ã®è¨­å®š
 #endif /* GUOBIAO */
 
-class SeatShuffler { // êŒˆ‚ßˆ—
+class SeatShuffler { // å ´æ±ºã‚å‡¦ç†
 private:
 	static int* posarry;
 	static unsigned ClientNumber;
 	static void shuffleSeat ();
 public:
 	static std::array<int, Players> shuffle(unsigned cNumber);
+public: /* Monostate class: cannot be instantiated */
+	SeatShuffler() = delete;
+	SeatShuffler(const SeatShuffler&) = delete;
+	SeatShuffler& operator= (const SeatShuffler&) = delete;
+	~SeatShuffler() = delete;
 };
 
 void gameinit(GameTable* gameStat, GameTypeID gameType, const std::string& ServerAddress,

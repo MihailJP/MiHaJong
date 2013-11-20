@@ -1,4 +1,4 @@
-#include "mouda.h"
+ï»¿#include "mouda.h"
 
 #include <cassert>
 #ifndef _WIN32
@@ -19,9 +19,11 @@
 #include "fuuro.h"
 #include "../graphic/graphic.h"
 #include "ruletbl.h"
+#include "../common/chrono.h"
+#include "../common/sleep.h"
 
 namespace {
-	DiscardTileNum playerdahai(const GameTable* gameStat) { // ƒvƒŒƒCƒ„[‚Ì‘Å”v
+	DiscardTileNum playerdahai(const GameTable* gameStat) { // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ‰“ç‰Œ
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubscenePlayerDahai);
 #ifdef _WIN32
@@ -61,33 +63,33 @@ namespace {
 
 DiscardTileNum getdahai(GameTable* const gameStat) {
 	DiscardTileNum DiscardTileIndex;
-	/* COM‚ªuƒJƒ“ƒjƒ“ƒOv‚µ‚È‚¢‚æ‚¤‚Éˆ— */
+	/* COMãŒã€Œã‚«ãƒ³ãƒ‹ãƒ³ã‚°ã€ã—ãªã„ã‚ˆã†ã«å‡¦ç† */
 	GameTable* sandbox = makesandBox(gameStat, gameStat->CurrentPlayer.Active);
-	/* ‘Å”v‚ğæ“¾‚·‚é */
+	/* æ‰“ç‰Œã‚’å–å¾—ã™ã‚‹ */
 	if (gameStat->CurrentPlayer.Active == gameStat->PlayerID) {
 		if (gameStat->statOfActive().AgariHouki) {
-			debug(_T("ƒvƒŒƒCƒ„[‚Ìƒcƒ‚”Ô‚Å‚·‚ªc”O‚È‚ª‚çƒAƒKƒŠ•úŠü‚Å‚·B"));
+			debug(_T("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ„ãƒ¢ç•ªã§ã™ãŒæ®‹å¿µãªãŒã‚‰ã‚¢ã‚¬ãƒªæ”¾æ£„ã§ã™ã€‚"));
 			DiscardTileIndex.type = DiscardTileNum::Normal;
 			DiscardTileIndex.id = NumOfTilesInHand - 1;
 		} else if (EnvTable::Instantiate()->WatchModeFlag) {
 			DiscardTileIndex = aiscript::compdahai(sandbox);
 		} else {
-			debug(_T("ƒvƒŒƒCƒ„[‚Ìƒcƒ‚”Ô‚Å‚·B"));
+			debug(_T("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ„ãƒ¢ç•ªã§ã™ã€‚"));
 			DiscardTileIndex = playerdahai(gameStat);
 		}
 	} else if (
 		(EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag == -1) ||
 		gameStat->statOfActive().AgariHouki) {
-			debug(_T("ƒAƒKƒŠ•úŠü‚©‰ñüØ’f‚µ‚½ƒvƒŒƒCƒ„[‚Ìƒcƒ‚”Ô‚Å‚·B"));
+			debug(_T("ã‚¢ã‚¬ãƒªæ”¾æ£„ã‹å›ç·šåˆ‡æ–­ã—ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ„ãƒ¢ç•ªã§ã™ã€‚"));
 			DiscardTileIndex.type = DiscardTileNum::Normal;
 			DiscardTileIndex.id = NumOfTilesInHand - 1;
 	} else if ((EnvTable::Instantiate()->GameMode == EnvTable::Client) ||
 		(EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag > 0)) {
-			/* ƒlƒbƒg‘Îí‚Ìˆ— */
-			debug(_T("ƒŠƒ‚[ƒgƒvƒŒƒCƒ„[‚Ìƒcƒ‚”Ô‚Å‚·B"));
+			/* ãƒãƒƒãƒˆå¯¾æˆ¦æ™‚ã®å‡¦ç† */
+			debug(_T("ãƒªãƒ¢ãƒ¼ãƒˆãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ„ãƒ¢ç•ªã§ã™ã€‚"));
 			DiscardTileIndex = RemoteAction::remotedahai(gameStat);
 	} else {
-		debug(_T("AI‚Ìƒcƒ‚”Ô‚Å‚·B"));
+		debug(_T("AIã®ãƒ„ãƒ¢ç•ªã§ã™ã€‚"));
 		DiscardTileIndex = aiscript::compdahai(sandbox);
 		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
 			assert((DiscardTileIndex.type == DiscardTileNum::Kyuushu) ||
@@ -119,7 +121,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 				mihajong_socket::server::send(mihajong_socket::protocol::Dahai_Type_Flower_Offset + DiscardTileIndex.id);
 				break;
 			default:
-				error(_T("CPU‚Ì‘Å”v”Ô†‚ª‚È‚ñ‚©‚¨‚©‚µ‚¢"));
+				error(_T("CPUã®æ‰“ç‰Œç•ªå·ãŒãªã‚“ã‹ãŠã‹ã—ã„"));
 				break;
 			}
 		}
@@ -127,11 +129,11 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 	return DiscardTileIndex;
 }
 
-namespace { /* “à•”ˆ—•ªŠ„—p */
-	EndType procDahaiSubAgari(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) { /* ©–Ì˜a‚Ìˆ— */
+namespace { /* å†…éƒ¨å‡¦ç†åˆ†å‰²ç”¨ */
+	EndType procDahaiSubAgari(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) { /* è‡ªæ‘¸å’Œã®å‡¦ç† */
 		EndType RoundEndType = Continuing;
-		haifu::haifurectsumo(gameStat); // ”v•ˆ‚É‹L˜^
-		/* ”ª˜A‘‘”»’è—p‚Ì•Ï” */
+		haifu::haifurectsumo(gameStat); // ç‰Œè­œã«è¨˜éŒ²
+		/* å…«é€£è˜åˆ¤å®šç”¨ã®å¤‰æ•° */
 #ifndef GUOBIAO
 		if (RuleData::chkRuleApplied("paarenchan")) {
 			if (gameStat->LastAgariPlayer == gameStat->CurrentPlayer.Active) {
@@ -143,7 +145,7 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 			}
 		}
 #endif /* GUOBIAO */
-		/* ©–Ì˜a‚µ‚½‚±‚Æ‚ğ•Ï”‚Éİ’è */
+		/* è‡ªæ‘¸å’Œã—ãŸã“ã¨ã‚’å¤‰æ•°ã«è¨­å®š */
 		gameStat->TsumoAgariFlag = true;
 		yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Active);
 #ifndef GUOBIAO
@@ -151,63 +153,63 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 			(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->statOfActive().RichiFlag.RichiFlag)) ||
 			((gameStat->PaoFlag[pyMinkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong")) ||
 			((!RuleData::chkRuleApplied("kataagari")) && (!isKataagari(gameStat, gameStat->CurrentPlayer.Active))))
-			RoundEndType = Chonbo; /* ”›‚è‚ğ–‚½‚µ‚Ä‚¢‚È‚¢ê‡(–ğ‚ª–³‚¢‚È‚Ç)cö˜a‚Æ‚µ‚Ä‹Ç‚ğI—¹‚·‚é */
+			RoundEndType = Chonbo; /* ç¸›ã‚Šã‚’æº€ãŸã—ã¦ã„ãªã„å ´åˆ(å½¹ãŒç„¡ã„ãªã©)â€¦éŒ¯å’Œã¨ã—ã¦å±€ã‚’çµ‚äº†ã™ã‚‹ */
 		else
 #endif /* GUOBIAO */
-			RoundEndType = Agari; /* ”›‚è‚ğ–‚½‚·‚È‚ç˜a—¹‚è‚Æ‚µ‚Ä¬—§ */
+			RoundEndType = Agari; /* ç¸›ã‚Šã‚’æº€ãŸã™ãªã‚‰å’Œäº†ã‚Šã¨ã—ã¦æˆç«‹ */
 		gameStat->TsumoAgariFlag = true;
 		gameStat->CurrentPlayer.Agari = gameStat->CurrentPlayer.Active;
 		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active,
 			gameStat->TianHuFlag ?
-			mihajong_graphic::calltext::RonQualified : //“V˜a‚Ì‚Íƒƒ“‚ÆŒ¾‚¤Šµ‚í‚µ
+			mihajong_graphic::calltext::RonQualified : //å¤©å’Œã®æ™‚ã¯ãƒ­ãƒ³ã¨è¨€ã†æ…£ã‚ã—
 			mihajong_graphic::calltext::Tsumo
 			);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // ”­º•\¦ˆ—
+		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // ç™ºå£°è¡¨ç¤ºå‡¦ç†
 		gameStat->statOfAgari().HandStat = handExposed;
 		if (gameStat->TianHuFlag) sound::Play(sound::IDs::voxRon);
 		else sound::Play(sound::IDs::voxTsumo);
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		return RoundEndType;
 	}
-	EndType procDahaiSubKyuushu(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* ‹ãí‹ã”v‚ªéŒ¾‚³‚ê‚½ê‡ */
+	EndType procDahaiSubKyuushu(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* ä¹ç¨®ä¹ç‰ŒãŒå®£è¨€ã•ã‚ŒãŸå ´åˆ */
 #ifndef GUOBIAO
 		DiscardTileIndex.type = DiscardTileNum::Normal;
-		DiscardTileIndex.id = NumOfTilesInHand; // ‹ãí—¬‚µ‚ª‚Å‚«‚È‚¢‚Íƒcƒ‚Ø‚è‚Æ‚İ‚È‚·
+		DiscardTileIndex.id = NumOfTilesInHand; // ä¹ç¨®æµã—ãŒã§ããªã„æ™‚ã¯ãƒ„ãƒ¢åˆ‡ã‚Šã¨ã¿ãªã™
 		if (RuleData::chkRuleApplied("nine_terminals") &&
 			chkdaopaiability(gameStat, gameStat->CurrentPlayer.Active) &&
 			gameStat->statOfActive().FirstDrawFlag) {
 				mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Kyuushu);
-				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // ”­º•\¦ˆ—
+				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // ç™ºå£°è¡¨ç¤ºå‡¦ç†
 				gameStat->statOfActive().HandStat = handExposed;
 				sound::Play(sound::IDs::voxKyuushu);
 				mihajong_graphic::GameStatus::updateGameStat(gameStat);
 				return KyuushuKyuuhai;
 		} else {
 #endif /* GUOBIAO */
-			warn(_T("‹ãí‹ã”v‚Í‚Å‚«‚Ü‚¹‚ñBƒcƒ‚Ø‚è‚Æ‚İ‚È‚µ‚Ü‚·B"));
+			warn(_T("ä¹ç¨®ä¹ç‰Œã¯ã§ãã¾ã›ã‚“ã€‚ãƒ„ãƒ¢åˆ‡ã‚Šã¨ã¿ãªã—ã¾ã™ã€‚"));
 			return Continuing;
 #ifndef GUOBIAO
 		}
 #endif /* GUOBIAO */
 	}
-	EndType procDahaiSubFlower(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* ‰Ô”v‚ğ”²‚¢‚½ê‡‚Ìˆ— */
+	EndType procDahaiSubFlower(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* èŠ±ç‰Œã‚’æŠœã„ãŸå ´åˆã®å‡¦ç† */
 		if ((DiscardTileIndex.type == DiscardTileNum::Ankan) &&
 			(gameStat->statOfActive().Hand[DiscardTileIndex.id].tile > TileSuitFlowers)) {
 				DiscardTileIndex.type = DiscardTileNum::Flower;
-				info(_T("‰Ô”v‚Ìˆ—‚ÉˆÚ‚è‚Ü‚·B‘Å”vƒR[ƒh‚ğ•â³‚µ‚Ü‚µ‚½B"));
+				info(_T("èŠ±ç‰Œã®å‡¦ç†ã«ç§»ã‚Šã¾ã™ã€‚æ‰“ç‰Œã‚³ãƒ¼ãƒ‰ã‚’è£œæ­£ã—ã¾ã—ãŸã€‚"));
 		}
 		if (DiscardTileIndex.type == DiscardTileNum::Flower) {
 			EndType RoundEndType;
 			if (gameStat->chkGameType(SanmaX)) {
-				/* ƒKƒŠO–ƒƒ‹[ƒ‹‚Å–k•—”v‚ğ”²‚¢‚½‚Æ‚«‚Ìˆ— */
-				/* ‚±‚ÌƒQ[ƒ€‚Å‚Í‚Ç‚ñ‚Èè‚Å‚à(‘m‚â‘ålŠì‚Å‚È‚­‚Ä‚à‚¢‚¢)
-					”²‚«–k‚ğƒƒ“‚Å‚«‚éƒ‹[ƒ‹ */
+				/* ã‚¬ãƒªä¸‰éº»ãƒ«ãƒ¼ãƒ«ã§åŒ—é¢¨ç‰Œã‚’æŠœã„ãŸã¨ãã®å‡¦ç† */
+				/* ã“ã®ã‚²ãƒ¼ãƒ ã§ã¯ã©ã‚“ãªæ‰‹ã§ã‚‚(å›½å£«ã‚„å¤§å››å–œã§ãªãã¦ã‚‚ã„ã„)
+					æŠœãåŒ—ã‚’ãƒ­ãƒ³ã§ãã‚‹ãƒ«ãƒ¼ãƒ« */
 				if (fuuroproc(gameStat, &RoundEndType, DiscardTileIndex, FuuroNorth))
 					return RoundEndType;
 				else return DrawRinshan;
 			} else {
-				/* ‰Ô”v‚ğ”²‚¢‚½‚Æ‚«‚Ìˆ— */
-				/* ‚±‚ÌƒQ[ƒ€‚Íµˆê‚ª‚È‚¢‚Ì‚Å‰Ô”v‚Åƒƒ“‚³‚ê‚é‚±‚Æ‚Í–³‚¢ */
+				/* èŠ±ç‰Œã‚’æŠœã„ãŸã¨ãã®å‡¦ç† */
+				/* ã“ã®ã‚²ãƒ¼ãƒ ã¯ä¸ƒæ¶ä¸€ãŒãªã„ã®ã§èŠ±ç‰Œã§ãƒ­ãƒ³ã•ã‚Œã‚‹ã“ã¨ã¯ç„¡ã„ */
 				if (fuuroproc(gameStat, &RoundEndType, DiscardTileIndex, FuuroFlower))
 					return RoundEndType;
 				else return DrawRinshan;
@@ -215,14 +217,14 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 		}
 		return Continuing;
 	}
-	EndType procDahaiSubKan(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* ˆÃÈE‰ÁÈ‚·‚é‚Æ‚«‚Ìˆ— */
+	EndType procDahaiSubKan(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* æš—æ§“ãƒ»åŠ æ§“ã™ã‚‹ã¨ãã®å‡¦ç† */
 #ifdef GUOBIAO
 		const unsigned kanLim = 16;
 #else /* GUOBIAO */
 		const unsigned kanLim = (RuleData::chkRuleApplied("fifth_kong") ? 5 : 4);
 #endif /* GUOBIAO */
-		if ((gameStat->TilePointer < (gameStat->RinshanPointer - (gameStat->DeadTiles - 1))) && // ƒnƒCƒeƒC‚Å‚È‚¢
-			(gameStat->KangNum < kanLim)) { // ‡Œv”‚Ì§ŒÀ“à‚Å‚ ‚é
+		if ((gameStat->TilePointer < (gameStat->RinshanPointer - (gameStat->DeadTiles - 1))) && // ãƒã‚¤ãƒ†ã‚¤ã§ãªã„
+			(gameStat->KangNum < kanLim)) { // åˆè¨ˆæ•°ã®åˆ¶é™å†…ã§ã‚ã‚‹
 				if ((DiscardTileIndex.type == DiscardTileNum::Ankan) ||
 					(DiscardTileIndex.type == DiscardTileNum::Kakan)) {
 #ifndef GUOBIAO
@@ -231,7 +233,7 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 								gameStat->PaoFlag[pyMinkan].agariPlayer = -1;
 						}
 #endif /* GUOBIAO */
-						/* È‚ğ‚·‚é‚Æ—äã”v‚Ì•ª©–Ì‚ª‘‚¦‚é‚Ì‚ÅŸ‚Ì‘Å”v‚Ö */
+						/* æ§“ã‚’ã™ã‚‹ã¨å¶ºä¸Šç‰Œã®åˆ†è‡ªæ‘¸ãŒå¢—ãˆã‚‹ã®ã§æ¬¡ã®æ‰“ç‰Œã¸ */
 						EndType roundEndType;
 						if (fuuroproc(gameStat, &roundEndType, DiscardTileIndex,
 							(DiscardTileIndex.type == DiscardTileNum::Ankan) ?
@@ -242,45 +244,41 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 		}
 		return Continuing;
 	}
-	void procDahaiSubRiichi(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* —§’¼‚ğ‚·‚é‚Æ‚«‚Ìˆ— */
+	void procDahaiSubRiichi(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* ç«‹ç›´ã‚’ã™ã‚‹ã¨ãã®å‡¦ç† */
 #ifdef GUOBIAO
 		DiscardTileIndex.type = DiscardTileNum::Normal;
-		warn(_T("ƒŠ[ƒ`‚ªw’è‚³‚ê‚Ü‚µ‚½‚ªA‚±‚ê‚ğ–³‹‚µ‚Ü‚·B"));
+		warn(_T("ãƒªãƒ¼ãƒãŒæŒ‡å®šã•ã‚Œã¾ã—ãŸãŒã€ã“ã‚Œã‚’ç„¡è¦–ã—ã¾ã™ã€‚"));
 #else /* GUOBIAO */
 		if (gameStat->tilesLeft() < ACTUAL_PLAYERS) {
-			// c‚è‚S–‡–¢–‚Ì‚ÍƒŠ[ƒ`–³Œø
+			// æ®‹ã‚Šï¼”æšæœªæº€ã®æ™‚ã¯ãƒªãƒ¼ãƒç„¡åŠ¹
 			DiscardTileIndex.type = DiscardTileNum::Normal;
-			warn(_T("R”v‚Ìc”—vŒ‚ğ–‚½‚µ‚Ä‚¢‚Ü‚¹‚ñB’Êí‚Ì‘Å”v‚Æ‚İ‚È‚µ‚Ü‚·B"));
+			warn(_T("å±±ç‰Œã®æ®‹æ•°è¦ä»¶ã‚’æº€ãŸã—ã¦ã„ã¾ã›ã‚“ã€‚é€šå¸¸ã®æ‰“ç‰Œã¨ã¿ãªã—ã¾ã™ã€‚"));
 		} else if (!isRichiReqSatisfied(gameStat, gameStat->CurrentPlayer.Active)) {
-			// “_–_ğŒ‚ğ–‚½‚µ‚Ä‚¢‚È‚¢‚ÍƒŠ[ƒ`–³Œø
+			// ç‚¹æ£’æ¡ä»¶ã‚’æº€ãŸã—ã¦ã„ãªã„æ™‚ã¯ãƒªãƒ¼ãƒç„¡åŠ¹
 			DiscardTileIndex.type = DiscardTileNum::Normal;
-			warn(_T("‚¿“_‚Ì—vŒ‚ğ–‚½‚µ‚Ä‚¢‚Ü‚¹‚ñB’Êí‚Ì‘Å”v‚Æ‚İ‚È‚µ‚Ü‚·B"));
+			warn(_T("æŒã¡ç‚¹ã®è¦ä»¶ã‚’æº€ãŸã—ã¦ã„ã¾ã›ã‚“ã€‚é€šå¸¸ã®æ‰“ç‰Œã¨ã¿ãªã—ã¾ã™ã€‚"));
 		}
 		if ((!RuleData::chkRuleApplied("open_riichi")) && (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)) {
-			// ƒI[ƒvƒ“—§’¼–³‚µ‚Ì
+			// ã‚ªãƒ¼ãƒ—ãƒ³ç«‹ç›´ç„¡ã—ã®æ™‚
 			DiscardTileIndex.type = DiscardTileNum::Riichi;
-			warn(_T("ƒI[ƒvƒ“—§’¼‚Í‚Å‚«‚Ü‚¹‚ñB’Êí‚Ì—§’¼‚Æ‚İ‚È‚µ‚Ü‚·B"));
+			warn(_T("ã‚ªãƒ¼ãƒ—ãƒ³ç«‹ç›´ã¯ã§ãã¾ã›ã‚“ã€‚é€šå¸¸ã®ç«‹ç›´ã¨ã¿ãªã—ã¾ã™ã€‚"));
 		}
-		/* —§’¼‚ğéŒ¾‚·‚é */
+		/* ç«‹ç›´ã‚’å®£è¨€ã™ã‚‹ */
 		if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Riichi);
-			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // ”­º•\¦ˆ—
+			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // ç™ºå£°è¡¨ç¤ºå‡¦ç†
 			sound::Play(sound::IDs::voxRichi);
 			if (!(gameStat->Player[0].RichiFlag.OpenFlag || gameStat->Player[1].RichiFlag.OpenFlag ||
 				gameStat->Player[2].RichiFlag.OpenFlag || gameStat->Player[3].RichiFlag.OpenFlag))
 				sound::util::bgmplay(sound::IDs::musOpenrichi);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
-#ifdef _WIN32
-			Sleep(1000);
-#else /*_WIN32*/
-			usleep(1000000);
-#endif /*_WIN32*/
+			threadSleep(1000);
 			gameStat->statOfActive().HandStat = handOpenRiichi;
 			gameStat->statOfActive().RichiFlag.OpenFlag = true;
 		}
 		if (DiscardTileIndex.type == DiscardTileNum::Riichi) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Riichi);
-			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // ”­º•\¦ˆ—
+			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // ç™ºå£°è¡¨ç¤ºå‡¦ç†
 			sound::Play(sound::IDs::voxRichi);
 			if (!(gameStat->Player[0].RichiFlag.OpenFlag || gameStat->Player[1].RichiFlag.OpenFlag ||
 				gameStat->Player[2].RichiFlag.OpenFlag || gameStat->Player[3].RichiFlag.OpenFlag)) {
@@ -296,44 +294,40 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 					}
 			}
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
-#ifdef _WIN32
-			Sleep(1000);
-#else /*_WIN32*/
-			usleep(1000000);
-#endif /*_WIN32*/
+			threadSleep(1000);
 		}
 #endif /* GUOBIAO */
 	}
-	void procDahaiSubPost(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) { /* –Œãˆ— */
-		/* ‘Å”v‚ğ‹L˜^‚·‚é */
+	void procDahaiSubPost(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) { /* äº‹å¾Œå‡¦ç† */
+		/* æ‰“ç‰Œã‚’è¨˜éŒ²ã™ã‚‹ */
 		DiscardTile* const newDiscard = &(gameStat->statOfActive().Discard[++gameStat->statOfActive().DiscardPointer]);
 		newDiscard->tcode.tile = gameStat->CurrentDiscard.tile = gameStat->statOfActive().Hand[DiscardTileIndex.id].tile;
 		newDiscard->tcode.red  = gameStat->CurrentDiscard.red  = gameStat->statOfActive().Hand[DiscardTileIndex.id].red;
 #ifndef GUOBIAO
-		if (DiscardTileIndex.type == DiscardTileNum::Riichi) /* —§’¼éŒ¾”v‚Ìê‡ */
+		if (DiscardTileIndex.type == DiscardTileNum::Riichi) /* ç«‹ç›´å®£è¨€ç‰Œã®å ´åˆ */
 			newDiscard->dstat = discardRiichi;
-		else if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi) /* ƒI[ƒvƒ“—§’¼éŒ¾”v‚Ìê‡ */
+		else if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi) /* ã‚ªãƒ¼ãƒ—ãƒ³ç«‹ç›´å®£è¨€ç‰Œã®å ´åˆ */
 			newDiscard->dstat = discardRiichi;
-		else /* ‚»‚êˆÈŠO‚Ìê‡ */
+		else /* ãã‚Œä»¥å¤–ã®å ´åˆ */
 #endif /* GUOBIAO */
 			newDiscard->dstat = discardNormal;
 		newDiscard->isDiscardThrough = (DiscardTileIndex.id == NumOfTilesInHand - 1) && (!gameStat->TianHuFlag);
 		gameStat->statOfActive().Hand[DiscardTileIndex.id].tile = NoTile;
 		gameStat->statOfActive().Hand[DiscardTileIndex.id].red  = Normal;
-		/* ˆê”­‚Ìƒtƒ‰ƒO‚ğ~‚ë‚· */
+		/* ä¸€ç™ºã®ãƒ•ãƒ©ã‚°ã‚’é™ã‚ã™ */
 		gameStat->statOfActive().RichiFlag.IppatsuFlag = false;
-		/* ©“®“I‚É—”v‚ğs‚È‚¤ */
+		/* è‡ªå‹•çš„ã«ç†ç‰Œã‚’è¡Œãªã† */
 		lipai(gameStat, gameStat->CurrentPlayer.Active);
-		// ‚±‚Ì‚Æ‚«”v‚ğÌ‚Ä‚Ä‚¢‚é‚Í‚¸ •\¦ƒoƒO–h~‚Ì‚½‚ß
+		// ã“ã®ã¨ãç‰Œã‚’æ¨ã¦ã¦ã„ã‚‹ã¯ãš è¡¨ç¤ºãƒã‚°é˜²æ­¢ã®ãŸã‚
 		for (PlayerID i = 0; i < Players; i++) {
 			gameStat->Player[i].Tsumohai().tile = NoTile;
 			gameStat->Player[i].Tsumohai().red  = Normal;
 		}
 #ifndef GUOBIAO
-		/* —§’¼‚ğ‚µ‚½’¼Œã‚Ìê‡Aç“_‚ğ‹Ÿ‘õ‚µˆê”­‚Ìƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+		/* ç«‹ç›´ã‚’ã—ãŸç›´å¾Œã®å ´åˆã€åƒç‚¹ã‚’ä¾›è¨—ã—ä¸€ç™ºã®ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹ */
 		if ((DiscardTileIndex.type == DiscardTileNum::Riichi) || (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
-			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone); // ”­º•¶š—ñ‚ğÁ‹
+			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone); // ç™ºå£°æ–‡å­—åˆ—ã‚’æ¶ˆå»
 			gameStat->statOfActive().RichiFlag.RichiFlag =
 				gameStat->statOfActive().RichiFlag.IppatsuFlag = true;
 			gameStat->statOfActive().RichiFlag.DoubleFlag =
@@ -345,12 +339,12 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 			if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)
 				chkOpenMachi(gameStat, gameStat->CurrentPlayer.Active);
 		}
-		/* “V˜a‚â’n˜a‚Ìƒtƒ‰ƒO‚ğ~‚ë‚· */
+		/* å¤©å’Œã‚„åœ°å’Œã®ãƒ•ãƒ©ã‚°ã‚’é™ã‚ã™ */
 		gameStat->statOfActive().FirstDrawFlag =
 			gameStat->TianHuFlag = false;
 #endif /* GUOBIAO */
-		/* ‘Å”v‚·‚é‚Æ‚«‚Ì‰¹‚ğ–Â‚ç‚· */
-		/* ƒhƒ‰‚ğÌ‚Ä‚é‚Í‹­‘Å‚Ì‰¹‚É‚·‚é */
+		/* æ‰“ç‰Œã™ã‚‹ã¨ãã®éŸ³ã‚’é³´ã‚‰ã™ */
+		/* ãƒ‰ãƒ©ã‚’æ¨ã¦ã‚‹æ™‚ã¯å¼·æ‰“ã®éŸ³ã«ã™ã‚‹ */
 #ifndef GUOBIAO
 		if (gameStat->CurrentDiscard.tile > TileSuitFlowers)
 			sound::Play(sound::IDs::sndDahai2);
@@ -361,12 +355,12 @@ namespace { /* “à•”ˆ—•ªŠ„—p */
 		else
 #endif /* GUOBIAO */
 			sound::Play(sound::IDs::sndDahai1);
-		/* ‚±‚Ì‚Æ‚«”v‚ğÌ‚Ä‚Ä‚¢‚é‚Í‚¸‚È‚Ì‚ÅAƒoƒO–h~‚Ì‚½‚ß‚Ìˆ— */
+		/* ã“ã®ã¨ãç‰Œã‚’æ¨ã¦ã¦ã„ã‚‹ã¯ãšãªã®ã§ã€ãƒã‚°é˜²æ­¢ã®ãŸã‚ã®å‡¦ç† */
 		for (PlayerID i = 0; i < Players; i++) {
 			gameStat->Player[i].Tsumohai().tile = NoTile;
 			gameStat->Player[i].Tsumohai().red  = Normal;
 		}
-		/* Ä•`‰æ */
+		/* å†æç”» */
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	}
 }
@@ -375,69 +369,69 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 	EndType RoundEndType = Continuing;
 	{
 		CodeConv::tostringstream o;
-		o << _T("ƒvƒŒƒCƒ„[ [") << (int)gameStat->CurrentPlayer.Active <<
-			_T("] ‘Å”vƒ^ƒCƒv [") << (int)DiscardTileIndex.type <<
-			_T("] è”v”Ô† [") << (int)DiscardTileIndex.id << _T("]");
+		o << _T("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ [") << (int)gameStat->CurrentPlayer.Active <<
+			_T("] æ‰“ç‰Œã‚¿ã‚¤ãƒ— [") << (int)DiscardTileIndex.type <<
+			_T("] æ‰‹ç‰Œç•ªå· [") << (int)DiscardTileIndex.id << _T("]");
 		info(o.str().c_str());
 	}
-	/* —§’¼‚µ‚Ä‚¢‚È‚¢“¯‡U’®‚È‚ç‚»‚ÌŠúŒÀ‚Ì‚½‚ßU’®‚ğ‰ğœ‚·‚é */
+	/* ç«‹ç›´ã—ã¦ã„ãªã„åŒé †æŒ¯è´ãªã‚‰ãã®æœŸé™ã®ãŸã‚æŒ¯è´ã‚’è§£é™¤ã™ã‚‹ */
 	if (!gameStat->statOfActive().RichiFlag.RichiFlag)
 		gameStat->statOfActive().DoujunFuriten = false;
-	/* ©–Ì˜a‚Ìˆ— */
+	/* è‡ªæ‘¸å’Œã®å‡¦ç† */
 	if (DiscardTileIndex.type == DiscardTileNum::Agari) {
 		RoundEndType = procDahaiSubAgari(gameStat, DiscardTileIndex);
 		if (RoundEndType != Continuing) return RoundEndType;
 	}
-	/* ‹ãí‹ã”v‚ªéŒ¾‚³‚ê‚½ê‡ */
+	/* ä¹ç¨®ä¹ç‰ŒãŒå®£è¨€ã•ã‚ŒãŸå ´åˆ */
 	if ((!gameStat->chkGameType(SanmaS)) && (DiscardTileIndex.type == DiscardTileNum::Kyuushu)) {
 		RoundEndType = procDahaiSubKyuushu(gameStat, DiscardTileIndex);
 		if (RoundEndType != Continuing) return RoundEndType;
 	}
-	/* ‘Å”v‚ğ”v•ˆ‚É‹L˜^‚·‚é */
+	/* æ‰“ç‰Œã‚’ç‰Œè­œã«è¨˜éŒ²ã™ã‚‹ */
 	if ((DiscardTileIndex.type == DiscardTileNum::Normal) ||
 		(DiscardTileIndex.type == DiscardTileNum::Riichi) ||
 		(DiscardTileIndex.type == DiscardTileNum::OpenRiichi))
 		haifu::haifurecmota(gameStat, DiscardTileIndex);
-	/* ‰Ô”v‚ğ”²‚¢‚½ê‡‚Ìˆ— */
+	/* èŠ±ç‰Œã‚’æŠœã„ãŸå ´åˆã®å‡¦ç† */
 	if (!gameStat->chkGameType(SanmaS)) {
 		RoundEndType = procDahaiSubFlower(gameStat, DiscardTileIndex);
 		if (RoundEndType != Continuing) return RoundEndType;
 	}
-	/* ˆÃÈE‰ÁÈ‚·‚é‚Æ‚«‚Ìˆ— */
+	/* æš—æ§“ãƒ»åŠ æ§“ã™ã‚‹ã¨ãã®å‡¦ç† */
 	{
 		RoundEndType = procDahaiSubKan(gameStat, DiscardTileIndex);
 		if (RoundEndType != Continuing) return RoundEndType;
 	}
-	gameStat->KangFlag.kangFlag = false; // —äãŠJ‰Ô‚Ìƒtƒ‰ƒO‚ğ~‚ë‚·
+	gameStat->KangFlag.kangFlag = false; // å¶ºä¸Šé–‹èŠ±ã®ãƒ•ãƒ©ã‚°ã‚’é™ã‚ã™
 	gameStat->PaoFlag[pyMinkan].paoPlayer = gameStat->PaoFlag[pyMinkan].agariPlayer = -1;
 #ifndef GUOBIAO
-	/* —§’¼‚ğ‚·‚é‚Æ‚«‚Ìˆ— */
+	/* ç«‹ç›´ã‚’ã™ã‚‹ã¨ãã®å‡¦ç† */
 	if ((DiscardTileIndex.type == DiscardTileNum::Riichi) ||
 		(DiscardTileIndex.type == DiscardTileNum::OpenRiichi))
 		procDahaiSubRiichi(gameStat, DiscardTileIndex);
-	/* –ß”v“V˜aƒtƒ‰ƒO */
+	/* æˆ»ç‰Œå¤©å’Œãƒ•ãƒ©ã‚° */
 	if ((gameStat->statOfActive().renpaiTenhohStat == 0) &&
 		(ShantenAnalyzer::calcShanten(gameStat, gameStat->CurrentPlayer.Active, shantenAll) == -1))
 		gameStat->statOfActive().renpaiTenhohStat = 1;
 	else if (gameStat->statOfActive().renpaiTenhohStat == 1)
 		gameStat->statOfActive().renpaiTenhohStat = -1;
 #endif /* GUOBIAO */
-	/* –Œãˆ— */
+	/* äº‹å¾Œå‡¦ç† */
 	procDahaiSubPost(gameStat, DiscardTileIndex);
 	return Continuing;
 }
 
 void tsumoproc(GameTable* const gameStat) {
-	/* Ÿ‚ÌƒvƒŒƒCƒ„[‚ª”v‚ğ©–Ì‚é */
+	/* æ¬¡ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒç‰Œã‚’è‡ªæ‘¸ã‚‹ */
 	gameStat->TianHuFlag = false;
 	if (gameStat->chkGameType(SanmaT)) {
 		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % ACTUAL_PLAYERS;
 	} else {
-		if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(gameStat->CurrentPlayer.Active) == sWest)) /* llO–ƒ‚Ìê‡‚Í–k‰Æ‚ğƒXƒLƒbƒv */
+		if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(gameStat->CurrentPlayer.Active) == sWest)) /* å››äººä¸‰éº»ã®å ´åˆã¯åŒ—å®¶ã‚’ã‚¹ã‚­ãƒƒãƒ— */
 			gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % Players;
 		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % Players;
 	}
-	/* “Œ‰Æ‚Ì‡”Ô‚ª‰ñ‚Á‚Ä‚«‚½‚çŸ‚Ì„–Ú‚Æ‚È‚é */
+	/* æ±å®¶ã®é †ç•ªãŒå›ã£ã¦ããŸã‚‰æ¬¡ã®å·¡ç›®ã¨ãªã‚‹ */
 	if (gameStat->playerwind(gameStat->CurrentPlayer.Active) == sEast)
 		++gameStat->TurnRound;
 	gameStat->statOfActive().Tsumohai().tile =

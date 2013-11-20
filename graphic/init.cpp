@@ -1,4 +1,4 @@
-#include "init.h"
+ï»¿#include "init.h"
 #include "event.h"
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 #include <gdiplus.h>
@@ -26,7 +26,7 @@ EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hw
 EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwndPtr, unsigned width, unsigned height, bool fullscreen)
 #endif /*_WIN32*/
 {
-	/* ƒEƒBƒ“ƒhƒE‚Ì‰Šú‰» */
+	/* ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®åˆæœŸåŒ– */
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 	GdiplusStartup(&gdiplusToken, &gdiplusInput, nullptr);
 #endif
@@ -57,7 +57,7 @@ EXPORT void RefreshWindow() {
 
 #ifdef _WIN32
 EXPORT BOOL Transit(sceneID scene) try {
-	if (!myMainWindow) throw _T("ƒEƒBƒ“ƒhƒE‚ª‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+	if (!myMainWindow) throw _T("ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãŒåˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã›ã‚“");
 	myMainWindow->transit(scene);
 	return TRUE;
 }
@@ -67,7 +67,7 @@ catch (LPTSTR e) {
 }
 
 EXPORT BOOL Subscene(unsigned int subsceneID) try {
-	if (!myMainWindow) throw _T("ƒEƒBƒ“ƒhƒE‚ª‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+	if (!myMainWindow) throw _T("ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãŒåˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã›ã‚“");
 	myMainWindow->subscene(subsceneID);
 	return TRUE;
 }
@@ -77,7 +77,7 @@ catch (LPTSTR e) {
 }
 #else /*_WIN32*/
 EXPORT bool Transit(sceneID scene) try {
-	if (!myMainWindow) throw _T("ƒEƒBƒ“ƒhƒE‚ª‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+	if (!myMainWindow) throw _T("ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãŒåˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã›ã‚“");
 	myMainWindow->transit(scene);
 	return true;
 }
@@ -86,7 +86,7 @@ catch (LPTSTR e) {
 }
 
 EXPORT bool Subscene(unsigned int subsceneID) try {
-	if (!myMainWindow) throw _T("ƒEƒBƒ“ƒhƒE‚ª‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+	if (!myMainWindow) throw _T("ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãŒåˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã›ã‚“");
 	myMainWindow->subscene(subsceneID);
 	return true;
 }

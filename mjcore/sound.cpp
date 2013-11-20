@@ -1,4 +1,4 @@
-#include "sound.h"
+ï»¿#include "sound.h"
 
 #include "../common/bgmid.h"
 #include "../common/strcode.h"
@@ -16,7 +16,7 @@ namespace {
 	std::vector<bgmMode> BGM_Mode;
 }
 
-/* BGM“Ç‚İ‚İ */
+/* BGMèª­ã¿è¾¼ã¿ */
 void sound::util::bgmload(unsigned ID, const char* filename, bool looped) {
 	if (BGM_Mode.size() <= ID) BGM_Mode.resize(ID + 1, None);
 	CodeConv::tostringstream o;
@@ -24,72 +24,72 @@ void sound::util::bgmload(unsigned ID, const char* filename, bool looped) {
 	std::string midifile = std::string("bgm\\") + std::string(filename) + std::string(".mid");
 	if (exist(oggfile.c_str())) {
 		if (LoadVorbis(ID, oggfile.c_str(), looped ? 1 : 0) == 0) {
-			o << _T("BGMƒtƒ@ƒCƒ‹ [") << CodeConv::EnsureTStr(filename) << _T(".ogg] ‚Ì“Ç‚İ‚İ‚ğŠ®—¹‚µ‚Ü‚µ‚½B");
+			o << _T("BGMãƒ•ã‚¡ã‚¤ãƒ« [") << CodeConv::EnsureTStr(filename) << _T(".ogg] ã®èª­ã¿è¾¼ã¿ã‚’å®Œäº†ã—ã¾ã—ãŸã€‚");
 			info(o.str().c_str());
 			BGM_Mode[ID] = Vorbis;
 		} else {
-			o << _T("BGMƒtƒ@ƒCƒ‹ [") << CodeConv::EnsureTStr(filename) << _T(".ogg] ‚Ì“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½B");
+			o << _T("BGMãƒ•ã‚¡ã‚¤ãƒ« [") << CodeConv::EnsureTStr(filename) << _T(".ogg] ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸã€‚");
 			warn(o.str().c_str());
 		}
 	}
 	else {
-		o << _T("BGMƒtƒ@ƒCƒ‹ [") << CodeConv::EnsureTStr(filename) << _T(".ogg] ‚Í‚ ‚è‚Ü‚¹‚ñB");
+		o << _T("BGMãƒ•ã‚¡ã‚¤ãƒ« [") << CodeConv::EnsureTStr(filename) << _T(".ogg] ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚");
 		if (LoadMidi(ID, midifile.c_str(), looped ? 1 : 0) == 0) {
-			o << _T("BGMƒtƒ@ƒCƒ‹ [") << CodeConv::EnsureTStr(filename) << _T(".mid] ‚ğ“Ç‚İ‚İ‚Ü‚µ‚½B");
+			o << _T("BGMãƒ•ã‚¡ã‚¤ãƒ« [") << CodeConv::EnsureTStr(filename) << _T(".mid] ã‚’èª­ã¿è¾¼ã¿ã¾ã—ãŸã€‚");
 			info(o.str().c_str());
 			BGM_Mode[ID] = Midi;
 		} else {
-			o << _T("BGMƒtƒ@ƒCƒ‹ [") << CodeConv::EnsureTStr(filename) << _T(".mid] ‚Ì“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½B");
+			o << _T("BGMãƒ•ã‚¡ã‚¤ãƒ« [") << CodeConv::EnsureTStr(filename) << _T(".mid] ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸã€‚");
 			warn(o.str().c_str());
 		}
 	}
 	return;
 }
 
-/* ƒTƒEƒ“ƒh“Ç‚İ‚İ */
+/* ã‚µã‚¦ãƒ³ãƒ‰èª­ã¿è¾¼ã¿ */
 void sound::util::soundload(unsigned ID, const char* filename, bool looped) {
 	CodeConv::tostringstream o;
 	if (sound::LoadWave(ID, filename, looped ? 1 : 0) == 0) {
-		o << _T("‰¹ºƒtƒ@ƒCƒ‹ [") << CodeConv::EnsureTStr(filename) << _T("] ‚ğ“Ç‚İ‚İ‚Ü‚µ‚½B");
+		o << _T("éŸ³å£°ãƒ•ã‚¡ã‚¤ãƒ« [") << CodeConv::EnsureTStr(filename) << _T("] ã‚’èª­ã¿è¾¼ã¿ã¾ã—ãŸã€‚");
 		info(o.str().c_str());
 	} else {
-		o << _T("‰¹ºƒtƒ@ƒCƒ‹ [") << CodeConv::EnsureTStr(filename) << _T("] ‚Ì“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½B");
+		o << _T("éŸ³å£°ãƒ•ã‚¡ã‚¤ãƒ« [") << CodeConv::EnsureTStr(filename) << _T("] ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸã€‚");
 		warn(o.str().c_str());
 	}
 	return;
 }
 
-/* BGM’â~ */
+/* BGMåœæ­¢ */
 void sound::util::bgmstop() {
-	info(_T("BGMÄ¶‚ğ’â~‚µ‚Ü‚·B"));
+	info(_T("BGMå†ç”Ÿã‚’åœæ­¢ã—ã¾ã™ã€‚"));
 	for (unsigned i = IDs::BgmStart; i <= IDs::BgmEnd; i++)
 		if (BGM_Mode[i] != None)
 			Stop(i);
 	return;
 }
 
-/* ‚a‚f‚lÄ¶ */
+/* ï¼¢ï¼§ï¼­å†ç”Ÿ */
 void sound::util::bgmplay(unsigned ID) {
 	CodeConv::tostringstream o;
 	bgmstop();
 	if (sound::Play(ID) == 0) {
-		o << _T("BGM [") << ID << _T("] ”Ô‚ğÄ¶‚µ‚Ü‚·B");
+		o << _T("BGM [") << ID << _T("] ç•ªã‚’å†ç”Ÿã—ã¾ã™ã€‚");
 		info(o.str().c_str());
 	} else {
-		o << _T("BGM [") << ID << _T("] ”Ô‚ğÄ¶‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½B");
+		o << _T("BGM [") << ID << _T("] ç•ªã‚’å†ç”Ÿã§ãã¾ã›ã‚“ã§ã—ãŸã€‚");
 		warn(o.str().c_str());
 	}
 	return;
 }
 
-/* ‰¹—Êİ’è‚ğ”½‰f */
+/* éŸ³é‡è¨­å®šã‚’åæ˜  */
 void sound::util::setvolume() {
 	using namespace sound;
 	auto getvolume = [] (std::string ruleTag) -> double {
 		const std::string chipRule(RuleData::chkPreference(ruleTag));
 		REGEX::smatch matchDat; int volperc = 100;
 		if (REGEX::regex_match(chipRule, matchDat, REGEX::regex("vol_(\\d+)")))
-			volperc = atoi(matchDat[1].str().c_str()); // ƒ‹[ƒ‹İ’è•¶š—ñ‚©‚ç®”‚ğ’Šo
+			volperc = atoi(matchDat[1].str().c_str()); // ãƒ«ãƒ¼ãƒ«è¨­å®šæ–‡å­—åˆ—ã‹ã‚‰æ•´æ•°ã‚’æŠ½å‡º
 		return (double)volperc / 100.0;
 	};
 	for (unsigned i = IDs::BgmStart; i <= IDs::BgmEnd; i++)

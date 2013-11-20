@@ -6,23 +6,23 @@ guobiaolib = ../mjcoregb/libmihagbmj.la
 common_sources = main.cpp main.h resource.h
 
 mihajong_SOURCES = ${common_sources} mihajong.cpp
-mihajong_CXXFLAGS = --input-charset=cp932
+mihajong_CXXFLAGS =
 mihajong_LDADD = ${libraries} ${richilib}
 
 mihasanm_SOURCES = ${common_sources} mihasanm.cpp
-mihasanm_CXXFLAGS = --input-charset=cp932
+mihasanm_CXXFLAGS =
 mihasanm_LDADD = ${libraries} ${richilib}
 
 mihaysnm_SOURCES = ${common_sources} mihaysnm.cpp
-mihaysnm_CXXFLAGS = --input-charset=cp932
+mihaysnm_CXXFLAGS =
 mihaysnm_LDADD = ${libraries} ${richilib}
 
 mihassnm_SOURCES = ${common_sources} mihassnm.cpp
-mihassnm_CXXFLAGS = --input-charset=cp932
+mihassnm_CXXFLAGS =
 mihassnm_LDADD = ${libraries} ${richilib}
 
 mihagbmj_SOURCES = ${common_sources} mihagbmj.cpp
-mihagbmj_CXXFLAGS = --input-charset=cp932
+mihagbmj_CXXFLAGS =
 mihagbmj_LDADD = ${libraries} ${guobiaolib}
 
 EXTRA_DIST = \
@@ -54,6 +54,20 @@ mihasanm_CXXFLAGS += -DUNICODE -D_UNICODE
 mihaysnm_CXXFLAGS += -DUNICODE -D_UNICODE
 mihassnm_CXXFLAGS += -DUNICODE -D_UNICODE
 mihagbmj_CXXFLAGS += -DUNICODE -D_UNICODE
+endif
+if WITH_BOOST_THREAD
+mihajong_CXXFLAGS += -DWITH_BOOST_THREAD $(BOOST_THREAD_LIB)
+mihasanm_CXXFLAGS += -DWITH_BOOST_THREAD $(BOOST_THREAD_LIB)
+mihaysnm_CXXFLAGS += -DWITH_BOOST_THREAD $(BOOST_THREAD_LIB)
+mihassnm_CXXFLAGS += -DWITH_BOOST_THREAD $(BOOST_THREAD_LIB)
+mihagbmj_CXXFLAGS += -DWITH_BOOST_THREAD $(BOOST_THREAD_LIB)
+endif
+if OLDER_BOOST_SLEEP
+mihajong_CXXFLAGS += -DOLDER_BOOST_SLEEP
+mihasanm_CXXFLAGS += -DOLDER_BOOST_SLEEP
+mihaysnm_CXXFLAGS += -DOLDER_BOOST_SLEEP
+mihassnm_CXXFLAGS += -DOLDER_BOOST_SLEEP
+mihagbmj_CXXFLAGS += -DOLDER_BOOST_SLEEP
 endif
 
 

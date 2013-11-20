@@ -1,13 +1,13 @@
-#include "../yaku.h"
+ï»¿#include "../yaku.h"
 #include "../../ruletbl.h"
 
-/* ”»’è‚ğŒã‰ñ‚µ‚É‚·‚é–ğ‚Ìˆ—(“Áê‚Èˆ—‚ª•K—v‚È‚à‚Ì) */
+/* åˆ¤å®šã‚’å¾Œå›ã—ã«ã™ã‚‹å½¹ã®å‡¦ç†(ç‰¹æ®Šãªå‡¦ç†ãŒå¿…è¦ãªã‚‚ã®) */
 void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result,
 	std::map<CodeConv::tstring, Yaku::YAKU_HAN> &yakuHan, std::set<CodeConv::tstring> &suppression,
 	std::vector<CodeConv::tstring> &yakuOrd)
 {
-	if (analysis->shanten[shantenAll] >= 0) return; // ˜a—¹‚Á‚Ä‚È‚¢‚È‚ç–ß‚é(ˆê‰cc)
+	if (analysis->shanten[shantenAll] >= 0) return; // å’Œäº†ã£ã¦ãªã„ãªã‚‰æˆ»ã‚‹(ä¸€å¿œâ€¦â€¦)
 
 	// ---------------------------------------------------------------------
 
@@ -17,10 +17,10 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	// ---------------------------------------------------------------------
 
 #ifndef GUOBIAO
-	/* ƒAƒŠƒXEƒ}[ƒKƒgƒƒCƒh */
+	/* ã‚¢ãƒªã‚¹ãƒ»ãƒãƒ¼ã‚¬ãƒˆãƒ­ã‚¤ãƒ‰ */
 	if (RuleData::chkRuleApplied("alice_margatroid")) {
-		/*	§ŒÀ–€
-			ŒÅ’è–ŠÑ–ğAŒÅ’è’µ––ğ‚ª¬—§‚µ‚Ä‚¢‚éê‡A‚±‚Ì–ğ‚Í¬—§‚µ‚Ü‚¹‚ñ */
+		/*	åˆ¶é™äº‹é …
+			å›ºå®šæº€è²«å½¹ã€å›ºå®šè·³æº€å½¹ãŒæˆç«‹ã—ã¦ã„ã‚‹å ´åˆã€ã“ã®å½¹ã¯æˆç«‹ã—ã¾ã›ã‚“ */
 		if ((analysis->TotalAnKezi < 3) && (analysis->DuiziCount[EastWind] >= 1) &&
 			(analysis->DuiziCount[WhiteDragon] + analysis->DuiziCount[GreenDragon] + analysis->DuiziCount[RedDragon] >= 1) &&
 			(analysis->KeziCount[CharacterSeven] >= 1) &&
@@ -28,12 +28,12 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 			(analysis->KeziCount[BambooSeven] >= 1) &&
 			(totalHan + totalBonusHan <= 7) &&
 			(totalSemiMangan + totalBonusSemiMangan == 0)) {
-				LPCTSTR name = _T("ƒAƒŠƒXEƒ}[ƒKƒgƒƒCƒh");
+				LPCTSTR name = _T("ã‚¢ãƒªã‚¹ãƒ»ãƒãƒ¼ã‚¬ãƒˆãƒ­ã‚¤ãƒ‰");
 				yakuHan[name] = yaku::yakuCalculator::Yaku::yval_baiman(analysis);
 				yakuOrd.push_back(name);
-				suppression.insert(_T("‘ÎX˜a"));
-				suppression.insert(_T("OF“¯"));
-				suppression.insert(_T("ŒÜ–åÖ"));
+				suppression.insert(_T("å¯¾ã€…å’Œ"));
+				suppression.insert(_T("ä¸‰è‰²åŒåˆ»"));
+				suppression.insert(_T("äº”é–€æ–"));
 		}
 	}
 #endif /* GUOBIAO */
@@ -41,33 +41,33 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	// ---------------------------------------------------------------------
 
 #ifdef GUOBIAO
-	/* Ù”Ô˜a */
+	/* æ— ç•ªå’Œ */
 	if (totalHan <= 0) {
-		LPCTSTR name = _T("Ù”Ô˜a");
+		LPCTSTR name = _T("æ— ç•ªå’Œ");
 		yakuHan[name] = yaku::yakuCalculator::Yaku::yval_8(analysis);
 		yakuOrd.push_back(name);
 	}
 #else /* GUOBIAO */
-	/* ƒJƒ‰ƒX */
+	/* ã‚«ãƒ©ã‚¹ */
 	if (RuleData::chkRuleApplied("karasu")) {
 		if (((analysis->Machi == yaku::yakuCalculator::machiKanchan) ||
 			(analysis->Machi == yaku::yakuCalculator::machiPenchan) ||
 			(analysis->Machi == yaku::yakuCalculator::machiTanki)) &&
 			(! analysis->PlayerStat->RichiFlag.RichiFlag) &&
 			(totalHan <= 0) && (totalSemiMangan == 0)) {
-				LPCTSTR name = _T("ƒJƒ‰ƒX");
+				LPCTSTR name = _T("ã‚«ãƒ©ã‚¹");
 				yakuHan[name] = yaku::yakuCalculator::Yaku::yval_1han(analysis);
 				yakuOrd.push_back(name);
 		}
 	}
-	/* ƒJƒ‰ƒX—§’¼ */
+	/* ã‚«ãƒ©ã‚¹ç«‹ç›´ */
 	if (RuleData::chkRuleApplied("karasu_riichi")) {
 		if (((analysis->Machi == yaku::yakuCalculator::machiKanchan) ||
 			(analysis->Machi == yaku::yakuCalculator::machiPenchan) ||
 			(analysis->Machi == yaku::yakuCalculator::machiTanki)) &&
 			(analysis->PlayerStat->RichiFlag.RichiFlag) &&
 			(totalHan == 1) && (totalSemiMangan == 0)) {
-				LPCTSTR name = _T("ƒJƒ‰ƒX—§’¼");
+				LPCTSTR name = _T("ã‚«ãƒ©ã‚¹ç«‹ç›´");
 				yakuHan[name] = yaku::yakuCalculator::Yaku::yval_1han(analysis);
 				yakuOrd.push_back(name);
 		}
@@ -77,16 +77,16 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	// ---------------------------------------------------------------------
 
 #ifndef GUOBIAO
-	/* –k– */
+	/* åŒ—æ• */
 	if (RuleData::chkRuleApplied("kitamakura")) {
-		if ((totalHan >= 2) && /* 2ãÊˆÈã‚ ‚é‚©H */
-			(totalSemiMangan == 0) && /* –ğ––¢–‚©H */
-			(analysis->GameStat->DoraFlag.Omote[NorthWind] == 0) && /* –k‚Íƒhƒ‰‚Å‚Í‚È‚¢‚©H */
+		if ((totalHan >= 2) && /* 2é£œä»¥ä¸Šã‚ã‚‹ã‹ï¼Ÿ */
+			(totalSemiMangan == 0) && /* å½¹æº€æœªæº€ã‹ï¼Ÿ */
+			(analysis->GameStat->DoraFlag.Omote[NorthWind] == 0) && /* åŒ—ã¯ãƒ‰ãƒ©ã§ã¯ãªã„ã‹ï¼Ÿ */
 			((!*analysis->MenzenFlag) || (!analysis->PlayerStat->RichiFlag.RichiFlag) ||
 			(RuleData::chkRuleApplied("uradora")) ||
-			(analysis->GameStat->DoraFlag.Ura[NorthWind] == 0)) && /* –k‚Í— ƒhƒ‰‚Å‚Í‚È‚¢‚©H */
-			(analysis->MianziDat[0].tile == NorthWind)) { /* “ª‚ª–k‚©H */
-				LPCTSTR name = _T("–k–");
+			(analysis->GameStat->DoraFlag.Ura[NorthWind] == 0)) && /* åŒ—ã¯è£ãƒ‰ãƒ©ã§ã¯ãªã„ã‹ï¼Ÿ */
+			(analysis->MianziDat[0].tile == NorthWind)) { /* é›€é ­ãŒåŒ—ã‹ï¼Ÿ */
+				LPCTSTR name = _T("åŒ—æ•");
 				yakuHan[name] = yaku::yakuCalculator::Yaku::YAKU_HAN(
 					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
 					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(-1));

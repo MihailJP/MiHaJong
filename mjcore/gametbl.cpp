@@ -1,4 +1,4 @@
-#include "gametbl.h"
+ï»¿#include "gametbl.h"
 
 #ifdef MJCORE_EXPORTS
 #include <algorithm>
@@ -25,7 +25,7 @@ void calcWareme(GameTable* const gameStat) {
 		} else {
 			gameStat->WaremePlayer = ((gameStat->GameRound % 4)+32+gameStat->diceSum()-1) % 4;
 		}
-		if (RuleData::chkRule("dice_roll", "roll_twice")) { // “ñ“xU‚èC³—p
+		if (RuleData::chkRule("dice_roll", "roll_twice")) { // äºŒåº¦æŒ¯ã‚Šä¿®æ­£ç”¨
 			if (gameStat->chkGameType(AllSanma)) {
 				if (gameStat->diceSum() + gameStat->diceSum2() > 18)
 					gameStat->WaremePlayer = (gameStat->WaremePlayer + 24 - 1) % 3;
@@ -51,7 +51,7 @@ void calcWareme(GameTable* const gameStat) {
 
 
 /* ---------------------------------------------------------------------
-**  ‰Šú‰»ˆ—
+**  åˆæœŸåŒ–å‡¦ç†
 ** --------------------------------------------------------------------- */
 
 void resetDeclarationFlag(GameTable* const gameStat) {
@@ -65,48 +65,48 @@ void resetDeclarationFlag(GameTable* const gameStat) {
 	return;
 }
 
-void inittable(GameTable* const gameStat) { /* ‹Ç’PˆÊ‚Å‚Ì‰Šú‰» */
+void inittable(GameTable* const gameStat) { /* å±€å˜ä½ã§ã®åˆæœŸåŒ– */
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 #ifdef GUOBIAO
 	gameStat->ShibariFlag = false;
 #else /* GUOBIAO */
-	gameStat->ShibariFlag = //“ñãÊ”›‚è
+	gameStat->ShibariFlag = //äºŒé£œç¸›ã‚Š
 		((gameStat->Honba >= 5)&&(RuleData::chkRule("ryanshiba", "from_5honba"))) ||
 		((gameStat->Honba >= 4)&&(RuleData::chkRule("ryanshiba", "from_4honba")));
 #endif /* GUOBIAO */
 
-	for (int i = 0; i < PaoYakuPages; i++) // •ïƒtƒ‰ƒOi-1c‚È‚µA0`3cŠY“–ƒvƒŒƒCƒ„[j
+	for (int i = 0; i < PaoYakuPages; i++) // åŒ…ãƒ•ãƒ©ã‚°ï¼ˆ-1â€¦ãªã—ã€0ã€œ3â€¦è©²å½“ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ï¼‰
 		gameStat->PaoFlag[i].agariPlayer = gameStat->PaoFlag[i].paoPlayer = -1;
 
-	for (int i = 0; i < SizeOfDeckBuf; i++) { // ‚¿‚á‚ñ‚Æ‰Šú‰»‚µ‚Ä‚ ‚°‚Ü‚µ‚å‚¤‚Ë
+	for (int i = 0; i < SizeOfDeckBuf; i++) { // ã¡ã‚ƒã‚“ã¨åˆæœŸåŒ–ã—ã¦ã‚ã’ã¾ã—ã‚‡ã†ã­
 		gameStat->Deck[i].tile = NoTile;
 		gameStat->Deck[i].red = Normal;
 	}
 
 #ifdef GUOBIAO
-	gameStat->DeadTiles = gameStat->ExtraRinshan = 0; // ‰¤”v‚È‚ñ‚Ä‚ ‚é‚Æv‚Á‚½H@c”OI
+	gameStat->DeadTiles = gameStat->ExtraRinshan = 0; // ç‹ç‰Œãªã‚“ã¦ã‚ã‚‹ã¨æ€ã£ãŸï¼Ÿã€€æ®‹å¿µï¼
 #else /* GUOBIAO */
 	if (gameStat->chkGameType(AllSanma)) {
-		gameStat->DeadTiles = 14; // ‰¤”v‚Ì”
+		gameStat->DeadTiles = 14; // ç‹ç‰Œã®æ•°
 		gameStat->ExtraRinshan = RuleData::chkRuleApplied("flower_tiles") ? 4 : 0;
 	} else {
-		if (RuleData::chkRule("flower_tiles", "no")) gameStat->DeadTiles = 14; // ‰¤”v‚Ì”
-		else if (RuleData::chkRule("flower_tiles", "8tiles")) gameStat->DeadTiles = 22; // ‰¤”v‚Ì”(‰Ô”v‚ğ“ü‚ê‚é‚Í“Á•Ê‚É‚Q‚Q–‡c‚µ‚Æ‚·‚é)
-		else gameStat->DeadTiles = 18; // ‰¤”v‚Ì”
+		if (RuleData::chkRule("flower_tiles", "no")) gameStat->DeadTiles = 14; // ç‹ç‰Œã®æ•°
+		else if (RuleData::chkRule("flower_tiles", "8tiles")) gameStat->DeadTiles = 22; // ç‹ç‰Œã®æ•°(èŠ±ç‰Œã‚’å…¥ã‚Œã‚‹æ™‚ã¯ç‰¹åˆ¥ã«ï¼’ï¼’æšæ®‹ã—ã¨ã™ã‚‹)
+		else gameStat->DeadTiles = 18; // ç‹ç‰Œã®æ•°
 	}
 #endif /* GUOBIAO */
 
-	for (int i = 0; i < TileNonflowerMax; i++) // ƒvƒ“ƒŠ[‚Ì‘Ò‚¿”v(‚b‚n‚l‚ÉˆÓ}“I‚È•úe‚ğ‹N‚±‚³‚¹‚È‚¢‚½‚ß‚Ég—p)
+	for (int i = 0; i < TileNonflowerMax; i++) // ãƒ—ãƒ³ãƒªãƒ¼ã®å¾…ã¡ç‰Œ(ï¼£ï¼¯ï¼­ã«æ„å›³çš„ãªæ”¾éŠƒã‚’èµ·ã“ã•ã›ãªã„ãŸã‚ã«ä½¿ç”¨)
 		gameStat->OpenRichiWait[i] = false;
-	gameStat->KangFlag.kangFlag = gameStat->KangFlag.topFlag = false; // —äãŠJ‰ÔG“ªÈ˜aG˜AŠJ‰Ô‚ÆÈU‚èGÈ‚Ì”»’è‚Ég‚¤
+	gameStat->KangFlag.kangFlag = gameStat->KangFlag.topFlag = false; // å¶ºä¸Šé–‹èŠ±ï¼›é ­æ§“å’Œï¼›é€£é–‹èŠ±ã¨æ§“æŒ¯ã‚Šï¼›æ¶æ§“ã®åˆ¤å®šã«ä½¿ã†
 	gameStat->KangFlag.chainFlag = 0;
 	gameStat->KangFlag.chankanFlag = chankanNone;
-	gameStat->TurnRound =  // Œ»İ‚Ì„–Ú
-		gameStat->KangNum = 0; // lÈ—¬‹ÇAlÈq‚È‚Ç‚Ì”»’è‚Ég‚¤
+	gameStat->TurnRound =  // ç¾åœ¨ã®å·¡ç›®
+		gameStat->KangNum = 0; // å››æ§“æµå±€ã€å››æ§“å­ãªã©ã®åˆ¤å®šã«ä½¿ã†
 	gameStat->RichiCounter =
-		gameStat->DoubleRichiCounter = false; // ƒŠ[ƒ`‚ğƒJƒEƒ“ƒ^[(éŒ¾”v‚ğƒƒ“)
-	gameStat->WaremePlayer = // Š„‚ê–Ú‚ÌˆÊ’u(-1‚ÅŠ„‚ê–Ú‚È‚µ)
-		gameStat->DoukasenPlayer = -1; // “±‰Îü‚ÌˆÊ’u(-1‚Å“±‰Îü‚È‚µ)
+		gameStat->DoubleRichiCounter = false; // ãƒªãƒ¼ãƒã‚’ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼(å®£è¨€ç‰Œã‚’ãƒ­ãƒ³)
+	gameStat->WaremePlayer = // å‰²ã‚Œç›®ã®ä½ç½®(-1ã§å‰²ã‚Œç›®ãªã—)
+		gameStat->DoukasenPlayer = -1; // å°ç«ç·šã®ä½ç½®(-1ã§å°ç«ç·šãªã—)
 	gameStat->DoraPointer = 999;
 	gameStat->Dice[0].Number = gameStat->Dice[1].Number =
 		gameStat->Dice[2].Number = gameStat->Dice[3].Number = 0;
@@ -125,16 +125,16 @@ void inittable(GameTable* const gameStat) { /* ‹Ç’PˆÊ‚Å‚Ì‰Šú‰» */
 			gameStat->RinshanPointer = 139;
 		else if (RuleData::chkRule("flower_tiles", "8tiles")) gameStat->RinshanPointer = 143;
 		else {
-			error(_T("flower_tilesˆÙíB‰Ô”v–³‚µƒ‹[ƒ‹‚Æ‚İ‚È‚µ‚Äˆ—‚µ‚Ü‚·B"));
-			gameStat->RinshanPointer = 135; // İ’èˆÙí‚ÌƒtƒH[ƒ‹ƒoƒbƒN
+			error(_T("flower_tilesç•°å¸¸ã€‚èŠ±ç‰Œç„¡ã—ãƒ«ãƒ¼ãƒ«ã¨ã¿ãªã—ã¦å‡¦ç†ã—ã¾ã™ã€‚"));
+			gameStat->RinshanPointer = 135; // è¨­å®šç•°å¸¸æ™‚ã®ãƒ•ã‚©ãƒ¼ãƒ«ãƒãƒƒã‚¯
 		}
 	}
 #endif /* GUOBIAO */
 
-	gameStat->TianHuFlag = true; // e‚Ì‘æˆê‘Å”v‚ª‚Ü‚¾i“V˜a‚Ì”»’è‚È‚Ç‚Ég‚¤j
-	gameStat->PreviousMeld.Discard = // æ‚Ù‚Ç–Â‚¢‚½”vi‹ò‚¢‘Ö‚¦‚Ì”»’è‚Ég‚¤j
+	gameStat->TianHuFlag = true; // è¦ªã®ç¬¬ä¸€æ‰“ç‰ŒãŒã¾ã ï¼ˆå¤©å’Œã®åˆ¤å®šãªã©ã«ä½¿ã†ï¼‰
+	gameStat->PreviousMeld.Discard = // å…ˆã»ã©é³´ã„ãŸç‰Œï¼ˆå–°ã„æ›¿ãˆã®åˆ¤å®šã«ä½¿ã†ï¼‰
 		gameStat->PreviousMeld.Stepped = NoTile;
-	for (int i = 0; i < TileNonflowerMax; i++) // ƒhƒ‰”»’è‚Ì”z—ñ
+	for (int i = 0; i < TileNonflowerMax; i++) // ãƒ‰ãƒ©åˆ¤å®šã®é…åˆ—
 		gameStat->DoraFlag.Omote[i] = gameStat->DoraFlag.Ura[i] = 0;
 	gameStat->TsumoAgariFlag = false;
 	gameStat->AgariSpecialStat = 0;
@@ -145,37 +145,37 @@ void inittable(GameTable* const gameStat) { /* ‹Ç’PˆÊ‚Å‚Ì‰Šú‰» */
 		gameStat->CurrentPlayer.Agari = gameStat->CurrentPlayer.Furikomi = (PlayerID)-1;
 
 	for (int pl = 0; pl < Players; pl++) {
-		gameStat->Player[pl].ConnectionLost = false; // ‰ñüØ’f‚É‚æ‚é˜a—¹‚è•úŠü
-		for (int i = 0; i < NumOfTilesInHand; i++) { // è”v‚Ì”z—ñ(‚Sl•ª)
+		gameStat->Player[pl].ConnectionLost = false; // å›ç·šåˆ‡æ–­ã«ã‚ˆã‚‹å’Œäº†ã‚Šæ”¾æ£„
+		for (int i = 0; i < NumOfTilesInHand; i++) { // æ‰‹ç‰Œã®é…åˆ—(ï¼”äººåˆ†)
 			gameStat->Player[pl].Hand[i].tile = NoTile;
 			gameStat->Player[pl].Hand[i].red = Normal;
 		}
-		gameStat->Player[pl].DiscardPointer = 0; // ‚¿‚á‚ñ‚ÆƒŠƒZƒbƒg‚µ‚Ä‚ ‚°‚Ü‚µ‚å‚¤‚Ë
+		gameStat->Player[pl].DiscardPointer = 0; // ã¡ã‚ƒã‚“ã¨ãƒªã‚»ãƒƒãƒˆã—ã¦ã‚ã’ã¾ã—ã‚‡ã†ã­
 		for (int i = 0; i < SizeOfDiscardBuffer; i++) {
-			// Ì”v‚Ì”z—ñ(‚Sl•ª)
+			// æ¨ç‰Œã®é…åˆ—(ï¼”äººåˆ†)
 			gameStat->Player[pl].Discard[i].tcode.tile = NoTile;
 			gameStat->Player[pl].Discard[i].tcode.red = Normal;
 			gameStat->Player[pl].Discard[i].dstat = discardNormal;
 			gameStat->Player[pl].Discard[i].isDiscardThrough = false;
 		}
-		gameStat->Player[pl].MenzenFlag = true; // –å‘Oƒtƒ‰ƒO
-		gameStat->Player[pl].HandStat = handUpright; // è”v‚Ìó‘Ôi—§‚Ä‚éEŒ©‚¹‚éE•š‚¹‚éj
-		gameStat->Player[pl].MeldPointer = 0; // Å‰•Ï‚È”š‚ª“ü‚Á‚Ä‚½‚è‚·‚é‚ñ‚Åcc
+		gameStat->Player[pl].MenzenFlag = true; // é–€å‰ãƒ•ãƒ©ã‚°
+		gameStat->Player[pl].HandStat = handUpright; // æ‰‹ç‰Œã®çŠ¶æ…‹ï¼ˆç«‹ã¦ã‚‹ãƒ»è¦‹ã›ã‚‹ãƒ»ä¼ã›ã‚‹ï¼‰
+		gameStat->Player[pl].MeldPointer = 0; // æœ€åˆå¤‰ãªæ•°å­—ãŒå…¥ã£ã¦ãŸã‚Šã™ã‚‹ã‚“ã§â€¦â€¦
 		for (int i = 0; i < SizeOfMeldBuffer; i++) {
-			// –Â‚«–Êq‚ğŠi”[
+			// é³´ãé¢å­ã‚’æ ¼ç´
 			gameStat->Player[pl].Meld[i].tile = NoTile;
 			for (int j = 0; j < 4; j++) gameStat->Player[pl].Meld[i].red[j] = Normal;
 			gameStat->Player[pl].Meld[i].mstat = (MeldStat)0;
 		}
-		gameStat->Player[pl].NumberOfQuads = 0; // Èq‚Ì”ilÈ—¬‹ÇAOÈqAlÈq‚È‚Ç‚Ì”»’è‚Ég‚¤j
-		gameStat->Player[pl].RichiFlag.RichiFlag = // ƒŠ[ƒ`‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
+		gameStat->Player[pl].NumberOfQuads = 0; // æ§“å­ã®æ•°ï¼ˆå››æ§“æµå±€ã€ä¸‰æ§“å­ã€å››æ§“å­ãªã©ã®åˆ¤å®šã«ä½¿ã†ï¼‰
+		gameStat->Player[pl].RichiFlag.RichiFlag = // ãƒªãƒ¼ãƒã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
 			gameStat->Player[pl].RichiFlag.IppatsuFlag =
 			gameStat->Player[pl].RichiFlag.DoubleFlag =
 			gameStat->Player[pl].RichiFlag.OpenFlag = false;
-		gameStat->Player[pl].FirstDrawFlag = true; // ‚P„–Ú‚Å‚ ‚éi’n˜aAƒ_ƒuƒ‹—§’¼‚Ì”»’è‚Ég‚¤j
-		gameStat->Player[pl].DoujunFuriten = // “¯‡U’®‚Å‚ ‚é
-			gameStat->Player[pl].AgariHouki = false; // ˜a—¹‚è•úŠü‚Ì”±‘¥’†‚©‚Ç‚¤‚©
-		gameStat->Player[pl].FlowerFlag.Spring = // N‚µ‚Ä‚¢‚é‰Ô”v‚ğŠi”[‚·‚éƒtƒ‰ƒO
+		gameStat->Player[pl].FirstDrawFlag = true; // ï¼‘å·¡ç›®ã§ã‚ã‚‹ï¼ˆåœ°å’Œã€ãƒ€ãƒ–ãƒ«ç«‹ç›´ã®åˆ¤å®šã«ä½¿ã†ï¼‰
+		gameStat->Player[pl].DoujunFuriten = // åŒé †æŒ¯è´ã§ã‚ã‚‹
+			gameStat->Player[pl].AgariHouki = false; // å’Œäº†ã‚Šæ”¾æ£„ã®ç½°å‰‡ä¸­ã‹ã©ã†ã‹
+		gameStat->Player[pl].FlowerFlag.Spring = // æ™’ã—ã¦ã„ã‚‹èŠ±ç‰Œã‚’æ ¼ç´ã™ã‚‹ãƒ•ãƒ©ã‚°
 			gameStat->Player[pl].FlowerFlag.Summer =
 			gameStat->Player[pl].FlowerFlag.Autumn =
 			gameStat->Player[pl].FlowerFlag.Winter =
@@ -183,35 +183,35 @@ void inittable(GameTable* const gameStat) { /* ‹Ç’PˆÊ‚Å‚Ì‰Šú‰» */
 			gameStat->Player[pl].FlowerFlag.Orchid =
 			gameStat->Player[pl].FlowerFlag.Chrys =
 			gameStat->Player[pl].FlowerFlag.Bamboo = false;
-		gameStat->Player[pl].NorthFlag = 0; // N‚µ‚Ä‚¢‚é–k•—”v‚ğŠi”[‚·‚éƒtƒ‰ƒO
-		gameStat->Player[pl].shokanFlag = // ‰Èƒtƒ‰ƒO
-			gameStat->Player[pl].kansanjunFlag = false; // ÈO„ƒtƒ‰ƒO
-		gameStat->Player[pl].renpaiTenhohStat = 0; // –ß”v“V˜a”»’è—p
+		gameStat->Player[pl].NorthFlag = 0; // æ™’ã—ã¦ã„ã‚‹åŒ—é¢¨ç‰Œã‚’æ ¼ç´ã™ã‚‹ãƒ•ãƒ©ã‚°
+		gameStat->Player[pl].shokanFlag = // åˆæ§“ãƒ•ãƒ©ã‚°
+			gameStat->Player[pl].kansanjunFlag = false; // æ§“ä¸‰å·¡ãƒ•ãƒ©ã‚°
+		gameStat->Player[pl].renpaiTenhohStat = 0; // æˆ»ç‰Œå¤©å’Œåˆ¤å®šç”¨
 	}
-	assert(gameStat->Player[0].DiscardPointer == 0); // ‰Šú‰»‚Å‚«‚Ä‚é‚©ƒ`ƒFƒbƒNiƒfƒoƒbƒO—pj
+	assert(gameStat->Player[0].DiscardPointer == 0); // åˆæœŸåŒ–ã§ãã¦ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
 }
 
-void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // ”¼‘‘’PˆÊ‚Ì‰Šú‰»ˆ—
+void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // åŠè˜å˜ä½ã®åˆæœŸåŒ–å‡¦ç†
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
-	/* “à•”ˆ——p‚ÅƒGƒNƒXƒ|[ƒg‚µ‚È‚¢ */
+	/* å†…éƒ¨å‡¦ç†ç”¨ã§ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã—ãªã„ */
 	memset(gameStat, 0, sizeof(GameTable));
 	gameStat->gameType = (GameTypeID)gameType;
 
 #ifdef GUOBIAO
 	for (int i = 0; i < Players; i++)
-		gameStat->Player[i].PlayerScore = (LNum)500; // ‚¿“_500“_‚Æ‚·‚é
-	gameStat->GameLength = 15; // ’†‘ƒ‹[ƒ‹‚Íˆê‘‘s‚¤
+		gameStat->Player[i].PlayerScore = (LNum)500; // æŒã¡ç‚¹500ç‚¹ã¨ã™ã‚‹
+	gameStat->GameLength = 15; // ä¸­å›½ãƒ«ãƒ¼ãƒ«ã¯ä¸€è˜è¡Œã†
 #else /* GUOBIAO */
-	LNum initialPoints; /* ‰Šú“_” */
+	LNum initialPoints; /* åˆæœŸç‚¹æ•° */
 	if (RuleData::chkRule("starting_point", "custom")) {
-		initialPoints = // ‰¼”•”
+		initialPoints = // ä»®æ•°éƒ¨
 			std::atoi(RuleData::chkRule("starting_point_mantissa_tens")) * 10 +
 			std::atoi(RuleData::chkRule("starting_point_mantissa_ones"));
-		/* w”•”‚Ìˆ— */
+		/* æŒ‡æ•°éƒ¨ã®å‡¦ç† */
 		REGEX::smatch matchDat; int exponent = 0;
 		std::string expConf(RuleData::chkRule("starting_point_exponent"));
 		if (REGEX::regex_match(expConf, matchDat, REGEX::regex("exp_(\\d+)")))
-			exponent = atoi(matchDat[1].str().c_str()); // ƒ‹[ƒ‹İ’è•¶š—ñ‚©‚ç®”‚ğ’Šo
+			exponent = atoi(matchDat[1].str().c_str()); // ãƒ«ãƒ¼ãƒ«è¨­å®šæ–‡å­—åˆ—ã‹ã‚‰æ•´æ•°ã‚’æŠ½å‡º
 		for (int j = 0; j < exponent; ++j)
 			initialPoints *= 10;
 	} else {
@@ -241,7 +241,7 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 		RuleData::chkRule("game_length", "east_west_game"))
 		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 10 : 11;
 	else {
-		error(_T("game_lengthˆÙí’lB”¼‘‘í‚Æ‚İ‚È‚µ‚Ü‚·B"));
+		error(_T("game_lengthç•°å¸¸å€¤ã€‚åŠè˜æˆ¦ã¨ã¿ãªã—ã¾ã™ã€‚"));
 		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 6 : 7;
 	}
 #endif /* GUOBIAO */
@@ -258,10 +258,10 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 		gameStat->Player[i].playerChip = 0;
 	}
 
-	inittable(gameStat); // ‹Ç‚²‚Æ‚Ì‰Šú‰»‚às‚¤
+	inittable(gameStat); // å±€ã”ã¨ã®åˆæœŸåŒ–ã‚‚è¡Œã†
 }
 
-GameTable* initializeGameTable(GameTypeID gameType) { // ”¼‘‘’PˆÊ‚Ì‰Šú‰»ˆ—
+GameTable* initializeGameTable(GameTypeID gameType) { // åŠè˜å˜ä½ã®åˆæœŸåŒ–å‡¦ç†
 	doInitializeGameTable(&GameStat, gameType);
 	return &GameStat;
 }
@@ -269,7 +269,7 @@ GameTable* initializeGameTable(GameTypeID gameType) { // ”¼‘‘’PˆÊ‚Ì‰Šú‰»ˆ—
 // ---------------------------------------------------------------------
 
 GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
-	/* ‘ì‚Ìó‘Ô‚ÌƒTƒ“ƒhƒ{ƒbƒNƒX‚ğì‚é */
+	/* å“ã®çŠ¶æ…‹ã®ã‚µãƒ³ãƒ‰ãƒœãƒƒã‚¯ã‚¹ã‚’ä½œã‚‹ */
 	GameTable* const sandbox = &StatSandBox;
 	doInitializeGameTable(sandbox, gameStat->gameType);
 	for (int p = 0; p < Players; p++) {

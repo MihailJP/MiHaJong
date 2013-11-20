@@ -1,4 +1,4 @@
-#include "callval.h"
+ï»¿#include "callval.h"
 #include "../../utils.h"
 #include "../../calltext.h"
 #include <cmath>
@@ -20,17 +20,17 @@ TableSubsceneCallValue::~TableSubsceneCallValue() {
 
 const std::array<CodeConv::tstring, 17> TableSubsceneCallValue::digitName = {
 	_T(""),
-	_T("–œ"),     _T("‰­"),     _T("’›"),     _T("‹"),
-	_T("š´"),     _T("`"),     _T("õ"),     _T("a"),
-	_T("ŠÀ"),     _T("³"),     _T("Ú"),     _T("‹É"),
-	_T("P‰Í¹"), _T("ˆ¢‘m‹_"), _T("“ß—R‘¼"), _T("•s‰Âv‹c"),
+	_T("ä¸‡"),     _T("å„„"),     _T("å…†"),     _T("äº¬"),
+	_T("å“"),     _T("æ¼"),     _T("ç©£"),     _T("æº"),
+	_T("æ¾—"),     _T("æ­£"),     _T("è¼‰"),     _T("æ¥µ"),
+	_T("æ’æ²³æ²™"), _T("é˜¿åƒ§ç¥‡"), _T("é‚£ç”±ä»–"), _T("ä¸å¯æ€è­°"),
 };
 
 void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 	fontRenderer->DelText(player);
 	callvalue::CallValue c_val = callvalue::getVal(player);
-	if ((c_val.Mantissa == 0) && (c_val.Exponent == 0)) return; // •\¦‚µ‚È‚¢ê‡
-	assert(c_val.Exponent >= 2u); // ¬”‚É‚Í‘Î‰‚µ‚È‚¢
+	if ((c_val.Mantissa == 0) && (c_val.Exponent == 0)) return; // è¡¨ç¤ºã—ãªã„å ´åˆ
+	assert(c_val.Exponent >= 2u); // å°æ•°ã«ã¯å¯¾å¿œã—ãªã„
 
 	const std::uint64_t curr = myTimer.elapsed();
 	const int animationLength = 250000;
@@ -43,13 +43,13 @@ void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 
 	CodeConv::tostringstream o; unsigned callLen = 0u;
 	if (c_val.Mantissa != 0) {
-		o << ((c_val.Mantissa > 0) ? _T('+') : _T('-')); // •„†
-		if (c_val.Exponent < 5u) { // 100`99900‚Ü‚Å
+		o << ((c_val.Mantissa > 0) ? _T('+') : _T('-')); // ç¬¦å·
+		if (c_val.Exponent < 5u) { // 100ã€œ99900ã¾ã§
 			o << std::abs(c_val.Mantissa);
 			if      (c_val.Exponent == 4u) o << _T("00");
 			else if (c_val.Exponent == 3u) o << _T("0");
 			callLen = o.str().size();
-		} else { // Â“Vƒ‹[ƒ‹—p
+		} else { // é’å¤©ãƒ«ãƒ¼ãƒ«ç”¨
 			switch (c_val.Exponent % 4) {
 			case 0:
 				o << ((int)std::abs(c_val.Mantissa) / 100) << _T('.') << ((int)std::abs(c_val.Mantissa) % 100);

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <functional>
 #include <tuple>
@@ -14,17 +14,19 @@ class ShowTehai {
 protected:
 	ShowTile* TileTexture;
 	static const unsigned int HandLength = 13;
-	static const int tileCursorOff = -3; // è”vƒJ[ƒ\ƒ‹–³Œø
+	static const int tileCursorOff = -3; // æ‰‹ç‰Œã‚«ãƒ¼ã‚½ãƒ«ç„¡åŠ¹æ™‚
 	void Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 		std::function<std::tuple<int, int> (seatRelative)> coordFunc,
 		seatRelative direction = (seatRelative)-1,
 		std::function<ArgbColor (int)> colorFunc = [](int){return (ArgbColor)0xffffffff;},
-		std::function<void (const int*, const int*, int)> regionFunc = [](const int*, const int*, int){}); // è”v‚ÌÄ\’z
+		std::function<void (const int*, const int*, int)> regionFunc = [](const int*, const int*, int){}); // æ‰‹ç‰Œã®å†æ§‹ç¯‰
 private:
 	DevicePtr myDevice;
 public:
 	virtual void Render() = 0;
 	explicit ShowTehai(DevicePtr device);
+	ShowTehai(const ShowTehai&) = delete; // Delete unexpected copy constructor
+	ShowTehai& operator= (const ShowTehai&) = delete; // Delete unexpected assign operator
 	virtual ~ShowTehai();
 };
 

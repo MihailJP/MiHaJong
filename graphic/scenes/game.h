@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "proto.h"
 #include "../showtile.h"
@@ -12,16 +12,16 @@ namespace mihajong_graphic {
 
 class TableProtoScene : public Scene {
 private:
-	class ScoreBoard; // ‚¿“_•\¦—p‚ÌƒNƒ‰ƒX
+	class ScoreBoard; // æŒã¡ç‚¹è¡¨ç¤ºç”¨ã®ã‚¯ãƒ©ã‚¹
 	std::array<ScoreBoard*, Players> scorePanel;
 	static const unsigned int panelPosY = 550;
 protected:
-	TexturePtr tSideBar; // ƒTƒCƒhƒo[
-	void LoadTexture(TexturePtr* texture, LPCTSTR resource); // ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	TexturePtr tSideBar; // ã‚µã‚¤ãƒ‰ãƒãƒ¼
+	void LoadTexture(TexturePtr* texture, LPCTSTR resource); // ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	void ShowSidebar();
 	void InitScorePanel();
 	void ShowScorePanel();
-	ArgbColor roundColor(); // ê‚²‚Æ‚ÌF•ª‚¯
+	ArgbColor roundColor(); // å ´ã”ã¨ã®è‰²åˆ†ã‘
 protected:
 	enum CheckBoxNames {ChkBoxAutoAgari, ChkBoxAutoDiscard, ChkBoxAutoPass, NumOfCheckBoxes,};
 	static const std::array<CodeConv::tstring, NumOfCheckBoxes> labels;
@@ -29,6 +29,8 @@ protected:
 	static const unsigned CheckboxRegionOffset = 50;
 public:
 	TableProtoScene(ScreenManipulator* const manipulator);
+	TableProtoScene(const TableProtoScene&) = delete; // Delete unexpected copy constructor
+	TableProtoScene& operator= (const TableProtoScene&) = delete; // Delete unexpected assign operator
 	virtual ~TableProtoScene();
 #ifdef _WIN32
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
@@ -54,7 +56,7 @@ private:
 	static const unsigned int PanelWidth = 175, PanelHeight = 120;
 	PlayerID playerID();
 private:
-	static const ArgbColor ledColorRed = 0xffff0000, // Ì‚È‚ª‚ç‚Ì3FLED•—‚ÌF
+	static const ArgbColor ledColorRed = 0xffff0000, // æ˜”ãªãŒã‚‰ã®3è‰²LEDé¢¨ã®è‰²
 		ledColorOrange = 0xffff9900,
 		ledColorGreen = 0xffccff00;
 	enum ScoreMode {scorePoints, scoreDiff, scoreChip};
@@ -88,6 +90,8 @@ private:
 	void renderName();
 public:
 	ScoreBoard(DevicePtr device, seatRelative relativePos, int x, int y, float widthScale);
+	ScoreBoard(const ScoreBoard&) = delete; // Delete unexpected copy constructor
+	ScoreBoard& operator= (const ScoreBoard&) = delete; // Delete unexpected assign operator
 	~ScoreBoard();
 	void Render();
 };

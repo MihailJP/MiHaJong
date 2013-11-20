@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef _WIN32
 #include <windows.h>
@@ -18,11 +18,13 @@ protected:
 	Timer myTimer;
 public:
 	TableSubscene(DevicePtr device);
+	TableSubscene(const TableSubscene&) = delete; // Delete unexpected copy constructor
+	TableSubscene& operator= (const TableSubscene&) = delete; // Delete unexpected assign operator
 	virtual ~TableSubscene() {}
 	virtual void Render() = 0;
 	static const std::int32_t NoTimeout = 0x7fffffff;
-	virtual std::int32_t timeout() {return NoTimeout;} // ƒ^ƒCƒ€ƒAƒEƒg”»’è—p
-	virtual void skipEvent() {} // ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚ÄƒXƒLƒbƒv‚µ‚½ê‡
+	virtual std::int32_t timeout() {return NoTimeout;} // ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆåˆ¤å®šç”¨
+	virtual void skipEvent() {} // ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ã‚¹ã‚­ãƒƒãƒ—ã—ãŸå ´åˆ
 };
 
 }

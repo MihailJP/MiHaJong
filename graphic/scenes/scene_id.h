@@ -1,69 +1,69 @@
-#pragma once
+ï»¿#pragma once
 
 namespace mihajong_graphic {
 
-enum sceneID { // ƒV[ƒ“”Ô†
-	sceneSplash, // ƒXƒvƒ‰ƒbƒVƒ…ƒXƒNƒŠ[ƒ““I‚ÈƒV[ƒ“
-	sceneTitle, // ƒ^ƒCƒgƒ‹‰æ–Ê
-	sceneConfig, // ƒRƒ“ƒtƒBƒO‰æ–Ê
-	sceneSetting, // ŠÂ‹«İ’è‰æ–Ê
-	sceneServerWaiting, // ƒT[ƒo[‘Ò‹@‰æ–Ê
-	sceneClientWaiting, // ƒNƒ‰ƒCƒAƒ“ƒg‘Ò‹@‰æ–Ê
-	sceneWaitingError, // Ú‘±¸”s
-	sceneGameTable, // ‘ì‚Ì‰æ–Ê
-	sceneResult, // Œ‹‰Ê‰æ–Ê
+enum sceneID { // ã‚·ãƒ¼ãƒ³ç•ªå·
+	sceneSplash, // ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ã‚¹ã‚¯ãƒªãƒ¼ãƒ³çš„ãªã‚·ãƒ¼ãƒ³
+	sceneTitle, // ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢
+	sceneConfig, // ã‚³ãƒ³ãƒ•ã‚£ã‚°ç”»é¢
+	sceneSetting, // ç’°å¢ƒè¨­å®šç”»é¢
+	sceneServerWaiting, // ã‚µãƒ¼ãƒãƒ¼å¾…æ©Ÿç”»é¢
+	sceneClientWaiting, // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå¾…æ©Ÿç”»é¢
+	sceneWaitingError, // æ¥ç¶šå¤±æ•—
+	sceneGameTable, // å“ã®ç”»é¢
+	sceneResult, // çµæœç”»é¢
 };
 
-enum TableSubsceneID : unsigned int { // ‘ì‰æ–Ê‚ÌƒTƒuƒV[ƒ“”Ô†
-	tblSubsceneNone, // ’Êí
-	tblSubsceneBeginning, // ‹ÇŠJn‰æ–Ê
-	tblSubsceneHonba, // u›–{êv
-	tblSubsceneRyuukyoku, // u—¬‹Çv
-	tblSubsceneSifeng, // ul•—˜A‘Åv
-	tblSubsceneTripleRon, // uO‰Æ˜av
-	tblSubsceneSikang, // ulŠJÈv
-	tblSubsceneFourRiichi, // ull—§’¼v
-	tblSubsceneChonbo, // uö˜av
-	tblSubsceneAlice, // uƒAƒŠƒX”»’èv
-	tblSubsceneCall, // ”­º•\¦‰æ–Ê
-	tblSubsceneCallFade, // ”­º•\¦‰æ–Ê(ƒtƒF[ƒh)
-	tblSubsceneCallCut, // ”­º•\¦‰æ–Ê(ƒJƒbƒg)
-	tblSubsceneCallChankanPre, // ”­º•\¦‰æ–Ê(‘„È—p“Áê)
-	tblSubsceneCallChankan, // ”­º•\¦‰æ–Ê(‘„È—p“Áê)
-	tblSubsceneCallVal, // “_”‚Ì‘•ª•\¦
-	tblSubsceneCallValNotenBappu, // “_”‚Ì‘•ª•\¦iƒm[ƒeƒ“”±•„j
-	tblSubsceneCallValAgariten, // “_”‚Ì‘•ª•\¦i˜a—¹‚è“_j
-	tblSubsceneCallValTsumibou, // “_”‚Ì‘•ª•\¦iÏ‚İ–_j
-	tblSubsceneCallValChip, // “_”‚Ì‘•ª•\¦iƒ`ƒbƒvj
-	tblSubsceneCallValKyoutaku, // “_”‚Ì‘•ª•\¦i‹Ÿ‘õj
-	tblSubsceneCallValChonboBappu, // “_”‚Ì‘•ª•\¦iö˜a”±•„j
-	tblSubsceneCallValNagashiMangan, // “_”‚Ì‘•ª•\¦i—¬‚µ–ŠÑj
-	tblSubsceneCallValDobon, // “_”‚Ì‘•ª•\¦i”ò‚Ñ”±•„j
-	tblSubsceneCallValKitamakura, // “_”‚Ì‘•ª•\¦i”ò‚Ñ”±•„j
-	tblSubsceneCallValYakuman, // “_”‚Ì‘•ª•\¦i–ğ–j‹Vj
-	tblSubsceneChkTenpai, // —¬‹Ç‚Ì’®”vŠm”F
-	tblSubscenePlayerDahai, // ƒvƒŒƒCƒ„[‚Ì‘Å”v‘I‘ğ—p
-	tblSubscenePlayerNaki, // ƒvƒŒƒCƒ„[‚Ì•›˜I‘I‘ğ—p
-	tblSubscenePlayerChankan, // ƒvƒŒƒCƒ„[‚Ì•›˜I‘I‘ğ—p(‘„È)
-	tblSubsceneAgari, // ˜a—¹–ğ•\¦‰æ–Ê
-	tblSubsceneAgariUradora, // ˜a—¹–ğ•\¦‰æ–Ê(— ƒhƒ‰‚ ‚è)
+enum TableSubsceneID : unsigned int { // å“ç”»é¢ã®ã‚µãƒ–ã‚·ãƒ¼ãƒ³ç•ªå·
+	tblSubsceneNone, // é€šå¸¸
+	tblSubsceneBeginning, // å±€é–‹å§‹ç”»é¢
+	tblSubsceneHonba, // ã€Œâ—‹æœ¬å ´ã€
+	tblSubsceneRyuukyoku, // ã€Œæµå±€ã€
+	tblSubsceneSifeng, // ã€Œå››é¢¨é€£æ‰“ã€
+	tblSubsceneTripleRon, // ã€Œä¸‰å®¶å’Œã€
+	tblSubsceneSikang, // ã€Œå››é–‹æ§“ã€
+	tblSubsceneFourRiichi, // ã€Œå››äººç«‹ç›´ã€
+	tblSubsceneChonbo, // ã€ŒéŒ¯å’Œã€
+	tblSubsceneAlice, // ã€Œã‚¢ãƒªã‚¹åˆ¤å®šã€
+	tblSubsceneCall, // ç™ºå£°è¡¨ç¤ºç”»é¢
+	tblSubsceneCallFade, // ç™ºå£°è¡¨ç¤ºç”»é¢(ãƒ•ã‚§ãƒ¼ãƒ‰)
+	tblSubsceneCallCut, // ç™ºå£°è¡¨ç¤ºç”»é¢(ã‚«ãƒƒãƒˆ)
+	tblSubsceneCallChankanPre, // ç™ºå£°è¡¨ç¤ºç”»é¢(æ§æ§“ç”¨ç‰¹æ®Š)
+	tblSubsceneCallChankan, // ç™ºå£°è¡¨ç¤ºç”»é¢(æ§æ§“ç”¨ç‰¹æ®Š)
+	tblSubsceneCallVal, // ç‚¹æ•°ã®å¢—åˆ†è¡¨ç¤º
+	tblSubsceneCallValNotenBappu, // ç‚¹æ•°ã®å¢—åˆ†è¡¨ç¤ºï¼ˆãƒãƒ¼ãƒ†ãƒ³ç½°ç¬¦ï¼‰
+	tblSubsceneCallValAgariten, // ç‚¹æ•°ã®å¢—åˆ†è¡¨ç¤ºï¼ˆå’Œäº†ã‚Šç‚¹ï¼‰
+	tblSubsceneCallValTsumibou, // ç‚¹æ•°ã®å¢—åˆ†è¡¨ç¤ºï¼ˆç©ã¿æ£’ï¼‰
+	tblSubsceneCallValChip, // ç‚¹æ•°ã®å¢—åˆ†è¡¨ç¤ºï¼ˆãƒãƒƒãƒ—ï¼‰
+	tblSubsceneCallValKyoutaku, // ç‚¹æ•°ã®å¢—åˆ†è¡¨ç¤ºï¼ˆä¾›è¨—ï¼‰
+	tblSubsceneCallValChonboBappu, // ç‚¹æ•°ã®å¢—åˆ†è¡¨ç¤ºï¼ˆéŒ¯å’Œç½°ç¬¦ï¼‰
+	tblSubsceneCallValNagashiMangan, // ç‚¹æ•°ã®å¢—åˆ†è¡¨ç¤ºï¼ˆæµã—æº€è²«ï¼‰
+	tblSubsceneCallValDobon, // ç‚¹æ•°ã®å¢—åˆ†è¡¨ç¤ºï¼ˆé£›ã³ç½°ç¬¦ï¼‰
+	tblSubsceneCallValKitamakura, // ç‚¹æ•°ã®å¢—åˆ†è¡¨ç¤ºï¼ˆé£›ã³ç½°ç¬¦ï¼‰
+	tblSubsceneCallValYakuman, // ç‚¹æ•°ã®å¢—åˆ†è¡¨ç¤ºï¼ˆå½¹æº€ç¥å„€ï¼‰
+	tblSubsceneChkTenpai, // æµå±€æ™‚ã®è´ç‰Œç¢ºèª
+	tblSubscenePlayerDahai, // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ‰“ç‰Œé¸æŠç”¨
+	tblSubscenePlayerNaki, // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‰¯éœ²é¸æŠç”¨
+	tblSubscenePlayerChankan, // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‰¯éœ²é¸æŠç”¨(æ§æ§“)
+	tblSubsceneAgari, // å’Œäº†å½¹è¡¨ç¤ºç”»é¢
+	tblSubsceneAgariUradora, // å’Œäº†å½¹è¡¨ç¤ºç”»é¢(è£ãƒ‰ãƒ©ã‚ã‚Š)
 };
 
-enum ServerWaitingSubsceneID : unsigned int { // ƒT[ƒo[‘Ò‹@‰æ–Ê‚ÌƒTƒuƒV[ƒ“”Ô†
-	srvwSubsceneNone, // ’Êí
-	srvwSubscene1of4, // ‘Ò‹@’†‚Ìl”
-	srvwSubscene1of3, //      V
-	srvwSubscene2of4, //      V
-	srvwSubscene2of3, //      V
-	srvwSubscene3of4, //      V
-	srvwSubscene3of3, //      V
-	srvwSubscene4of4, //      V
+enum ServerWaitingSubsceneID : unsigned int { // ã‚µãƒ¼ãƒãƒ¼å¾…æ©Ÿç”»é¢ã®ã‚µãƒ–ã‚·ãƒ¼ãƒ³ç•ªå·
+	srvwSubsceneNone, // é€šå¸¸
+	srvwSubscene1of4, // å¾…æ©Ÿä¸­ã®äººæ•°
+	srvwSubscene1of3, //      ã€ƒ
+	srvwSubscene2of4, //      ã€ƒ
+	srvwSubscene2of3, //      ã€ƒ
+	srvwSubscene3of4, //      ã€ƒ
+	srvwSubscene3of3, //      ã€ƒ
+	srvwSubscene4of4, //      ã€ƒ
 };
 
-enum ClientWaitingSubsceneID : unsigned int { // ƒNƒ‰ƒCƒAƒ“ƒg‘Ò‹@‰æ–Ê‚ÌƒTƒuƒV[ƒ“”Ô†
-	cliwSubsceneNone, // ’Êí
-	cliwSubsceneConnecting, // Ú‘±s’†
-	cliwSubsceneWaiting, // ‘Ò‹@’†
+enum ClientWaitingSubsceneID : unsigned int { // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå¾…æ©Ÿç”»é¢ã®ã‚µãƒ–ã‚·ãƒ¼ãƒ³ç•ªå·
+	cliwSubsceneNone, // é€šå¸¸
+	cliwSubsceneConnecting, // æ¥ç¶šè©¦è¡Œä¸­
+	cliwSubsceneWaiting, // å¾…æ©Ÿä¸­
 };
 
 }

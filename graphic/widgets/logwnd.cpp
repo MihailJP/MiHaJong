@@ -1,4 +1,4 @@
-#include "logwnd.h"
+Ôªø#include "logwnd.h"
 #include "../resource.h"
 #include "../loadtex.h"
 #include "../sprite.h"
@@ -16,36 +16,32 @@ using namespace character_width;
 
 namespace {
 	CodeConv::tostringstream logdata;
-	MHJMutex LogWindowMutex;
+	MUTEXLIB::recursive_mutex LogWindowMutex;
 	bool updated = false;
 }
 
 EXPORT void reset() {
-	LogWindowMutex.syncDo<void>([]() -> void {
-		logdata.clear(); logdata.str(_T(""));
-		updated = true;
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(LogWindowMutex);
+	logdata.clear(); logdata.str(_T(""));
+	updated = true;
 }
 
 EXPORT void append(LPCTSTR logstr) {
-	LogWindowMutex.syncDo<void>([logstr]() -> void {
-		logdata << logstr; logdata.flush();
-		updated = true;
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(LogWindowMutex);
+	logdata << logstr; logdata.flush();
+	updated = true;
 }
 
 EXPORT LPCTSTR getlogptr() {
 	static CodeConv::tstring logstr;
-	return LogWindowMutex.syncDo<LPCTSTR>([]() -> LPCTSTR {
-		logstr = logdata.str();
-		return logstr.c_str();
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(LogWindowMutex);
+	logstr = logdata.str();
+	return logstr.c_str();
 }
 
 CodeConv::tstring getlog() {
-	return LogWindowMutex.syncDo<CodeConv::tstring>([]() -> CodeConv::tstring {
-		return logdata.str();
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(LogWindowMutex);
+	return logdata.str();
 }
 
 // -------------------------------------------------------------------------
@@ -84,7 +80,7 @@ TransformMatrix LogWindow::getMatrix(int X, int Y, unsigned width) {
 #else
 	glPushMatrix(); glLoadIdentity();
 	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
-	// â°ïùägëÂÇÕïsóv
+	// Ê®™ÂπÖÊã°Â§ß„ÅØ‰∏çË¶Å
 	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
 	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
 	TransformMatrix mat; glGetFloatv(GL_MODELVIEW_MATRIX, &mat[0]);
@@ -116,16 +112,16 @@ void LogWindow::renderFrame() {
 void LogWindow::Render() {
 	using std::max;
 	renderFrame();
-	LogWindowMutex.syncDo<void>([this]() -> void {
+	{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(LogWindowMutex);
 		if (updated) {
 			reconstruct_lines(); updated = false;
 			reconstFlag = true;
 		}
-	});
+	}
 	if (reconstFlag) {
 		unsigned linenum = 0;
-		for (unsigned i = (unsigned)(max(0, (signed)lines.size() - (signed)height)); i < lines.size(); ++i) { // ÉçÉOÇÃç≈å„ÇÃïîï™Çï\é¶
-		//for (unsigned i = 0; i < min(height, lines.size()); ++i) { // ÉçÉOÇÃç≈èâÇÃïîï™Çï\é¶
+		for (unsigned i = (unsigned)(max(0, (signed)lines.size() - (signed)height)); i < lines.size(); ++i) { // „É≠„Ç∞„ÅÆÊúÄÂæå„ÅÆÈÉ®ÂàÜ„ÇíË°®Á§∫
+		//for (unsigned i = 0; i < min(height, lines.size()); ++i) { // „É≠„Ç∞„ÅÆÊúÄÂàù„ÅÆÈÉ®ÂàÜ„ÇíË°®Á§∫
 			myTextRenderer->NewText(linenum, lines[i], x, y + lineheight * linenum);
 			++linenum;
 		}
@@ -134,15 +130,15 @@ void LogWindow::Render() {
 	myTextRenderer->Render();
 }
 
-void LogWindow::reconstruct_lines() { // çsÇ…ï™äÑ
+void LogWindow::reconstruct_lines() { // Ë°å„Å´ÂàÜÂâ≤
 	lines.clear();
 	unsigned startPos = 0, currentDigit = 0;
 	CodeConv::tstring tmplog;
 	{
 		const CodeConv::tstring tmplog1(logwnd::getlog());
-		for (auto k = tmplog1.begin(); k != tmplog1.end(); ++k)
-			if (*k != _T('\r'))
-				tmplog += *k;
+		for (const auto& k : tmplog1)
+			if (k != _T('\r'))
+				tmplog += k;
 	}
 	for (unsigned i = 0; i < tmplog.size(); ++i) {
 		if (tmplog[i] == _T('\n')) {
@@ -153,21 +149,21 @@ void LogWindow::reconstruct_lines() { // çsÇ…ï™äÑ
 			if (currentDigit > width) {
 				/*  0    0    1    1   1|
 				**  0....5....0....5...9v
-				**  aÇ¢ÇÎÇÕÇ…ÇŸÇ÷Ç∆ÇøÇËÇ 
+				**  a„ÅÑ„Çç„ÅØ„Å´„Åª„Å∏„Å®„Å°„Çä„Å¨
 				**  01 2 3 4 5 6 7 8 9 10 */
 				lines.push_back(tmplog.substr(startPos, i - startPos));
 				startPos = i; currentDigit = 2;
 			} else if ((currentDigit == width) && (isLeadingByte(tmplog, i))) {
 				/*  0    0    1    1   1|
 				**  0....5....0....5...9v
-				**  aÇ¢ÇÎÇÕÇ…ÇŸÇ÷Ç∆ÇøÇËÇ 
+				**  a„ÅÑ„Çç„ÅØ„Å´„Åª„Å∏„Å®„Å°„Çä„Å¨
 				**  012345678901234567890 */
 				lines.push_back(tmplog.substr(startPos, i - startPos));
 				startPos = i; currentDigit = 1;
 			} else if (currentDigit == width) {
 				/*  0    0    1    1   1|
 				**  0....5....0....5...9v
-				**  Ç¢ÇÎÇÕÇ…ÇŸÇ÷Ç∆ÇøÇËÇ ÇÈ
+				**  „ÅÑ„Çç„ÅØ„Å´„Åª„Å∏„Å®„Å°„Çä„Å¨„Çã
 				**  0 1 2 3 4 5 6 7 8 9 10 */
 				lines.push_back(tmplog.substr(startPos, i - startPos + 1));
 				startPos = i + 1; currentDigit = (isFullWidth(tmplog[i]) ? 2 : 1);

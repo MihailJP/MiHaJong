@@ -1,8 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #ifdef _WIN32
 #include <windows.h>
 #endif /*_WIN32*/
+#include "../../common/thread.h"
 #include <lua.hpp>
 #include "../discard.h"
 #include "../gametbl.h"
@@ -15,12 +16,10 @@ private:
 	static ScriptStates status[Players];
 	class table;
 	class FileSelector;
-	class detDiscardThread;
-	class detCallThread;
+	static void calcDiscard_threaded(DiscardTileNum& answer, const GameTable* gameStat);
+	static void calcCall_threaded(GameTable* gameStat);
 	static const DiscardTileNum DiscardThrough;
 	static void readfile(aiscript::ScriptStates* const L, const char* const filename);
-	static DiscardTileNum discard; static bool finished; static detDiscardThread* discard_worker;
-	static detCallThread* meld_worker;
 	static bool callFunc(const GameTable* const gameStat, PlayerID PlayerID, const char* const function_name, bool is_mandatory);
 public:
 	static void initscript();
@@ -32,47 +31,11 @@ public:
 	static DiscardTileNum determine_discard(const GameTable* const gameStat);
 	static void compfuuro(GameTable* const gameStat);
 	static void determine_meld(GameTable* const gameStat);
-};
-
-class aiscript::detDiscardThread {
-public:
-	detDiscardThread();
-	~detDiscardThread();
-	void setprm(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished);
-#ifdef _WIN32
-	static DWORD WINAPI execute(LPVOID param);
-#else /*_WIN32*/
-	static void* execute(void* param);
-#endif /*_WIN32*/
-private:
-	const GameTable* i_gameStat;
-	DiscardTileNum* i_discard;
-	bool* i_finished;
-#ifdef _WIN32
-	static DWORD WINAPI calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished);
-#else /*_WIN32*/
-	static void* calculate(const GameTable* const gameStat, DiscardTileNum* const discard, bool* const finished);
-#endif /*_WIN32*/
-};
-
-class aiscript::detCallThread {
-public:
-	detCallThread();
-	~detCallThread();
-	void setprm(GameTable* const gameStat, bool* const finished);
-#ifdef _WIN32
-	static DWORD WINAPI execute(LPVOID param);
-#else /*_WIN32*/
-	static void* execute(void* param);
-#endif /*_WIN32*/
-private:
-	GameTable* i_gameStat;
-	bool* i_finished;
-#ifdef _WIN32
-	static DWORD WINAPI calculate(GameTable* const gameStat, bool* const finished);
-#else /*_WIN32*/
-	static void* calculate(GameTable* const gameStat, bool* const finished);
-#endif /*_WIN32*/
+public: /* Monostate class: cannot be instantiated */
+	aiscript() = delete;
+	aiscript(const aiscript&) = delete;
+	aiscript& operator= (const aiscript&) = delete;
+	~aiscript() = delete;
 };
 
 struct aiscript::ScriptStates {
@@ -105,4 +68,9 @@ private:
 public:
 	class playertable;
 	class functable;
+public: /* Monostate class: cannot be instantiated */
+	table() = delete;
+	table(const table&) = delete;
+	table& operator= (const table&) = delete;
+	~table() = delete;
 };

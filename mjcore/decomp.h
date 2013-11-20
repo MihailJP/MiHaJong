@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <cstdint>
 #include <vector>
@@ -22,6 +22,8 @@ protected:
 	void verify(LPCTSTR Description_, const uint8_t* const expectedDigest_);
 	Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDigest_); // Decompress within constructor
 public:
+	Data(const Data&) = delete; // Delete unexpected copy constructor
+	Data& operator= (const Data&) = delete; // Delete unexpected assign operator
 	virtual ~Data() = 0;
 	const uint8_t* getData() {return DecompressedData;}
 	size_t getDataSize() {return decompressedSize;}
@@ -34,6 +36,8 @@ private:
 	static const uint8_t expectedDigest[32];
 public:
 	file_mentz_dat() : Data(Description, FileID, expectedDigest) {}
+	file_mentz_dat(const file_mentz_dat&) = delete; // Delete unexpected copy constructor
+	file_mentz_dat& operator= (const file_mentz_dat&) = delete; // Delete unexpected assign operator
 	~file_mentz_dat() {}
 };
 
@@ -45,11 +49,11 @@ public:
 #define FILEID_RANKVAL_CSV IDR_LZMA_STREA4
 #define FILEID_PREFITEM_CSV IDR_LZMA_STREA5
 #define FILEID_PREFITEM_INI IDR_LZMA_STREA6
-#define FILEDESC_CONFITEM_CSV _T("ƒ‹[ƒ‹’è‹`ƒtƒ@ƒCƒ‹")
-#define FILEDESC_CONFITEM_INI _T("ƒ‹[ƒ‹ƒ^ƒO–|–óƒtƒ@ƒCƒ‹")
-#define FILEDESC_RANKVAL_CSV _T("ƒEƒ}’è‹`ƒtƒ@ƒCƒ‹")
-#define FILEDESC_PREFITEM_CSV _T("ŠÂ‹«İ’è€–Ú’è‹`ƒtƒ@ƒCƒ‹")
-#define FILEDESC_PREFITEM_INI _T("ŠÂ‹«İ’è€–Úƒ^ƒO–|–óƒtƒ@ƒCƒ‹")
+#define FILEDESC_CONFITEM_CSV _T("ãƒ«ãƒ¼ãƒ«å®šç¾©ãƒ•ã‚¡ã‚¤ãƒ«")
+#define FILEDESC_CONFITEM_INI _T("ãƒ«ãƒ¼ãƒ«ã‚¿ã‚°ç¿»è¨³ãƒ•ã‚¡ã‚¤ãƒ«")
+#define FILEDESC_RANKVAL_CSV _T("ã‚¦ãƒå®šç¾©ãƒ•ã‚¡ã‚¤ãƒ«")
+#define FILEDESC_PREFITEM_CSV _T("ç’°å¢ƒè¨­å®šé …ç›®å®šç¾©ãƒ•ã‚¡ã‚¤ãƒ«")
+#define FILEDESC_PREFITEM_INI _T("ç’°å¢ƒè¨­å®šé …ç›®ã‚¿ã‚°ç¿»è¨³ãƒ•ã‚¡ã‚¤ãƒ«")
 #include "data/confitem_csv.h"
 #include "data/confitem_ini.h"
 #include "data/rankval_csv.h"

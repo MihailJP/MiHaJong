@@ -1,4 +1,4 @@
-#include "random.h"
+ï»¿#include "random.h"
 
 #include <vector>
 #include <algorithm>
@@ -17,26 +17,26 @@ void RndNum::init() {
 	engine = std::mt19937(seed);
 }
 
-/* ˆê—l•ª•z®—” */
+/* ä¸€æ§˜åˆ†å¸ƒæ•´ä¹±æ•° */
 unsigned int RndNum::rnd(unsigned int k) {
 	assert(k > 0);
 	std::uniform_int_distribution<unsigned int> distrib(0, k-1);
 	return distrib(engine);
 }
 
-/* ˆê—l•ª•z•‚“®¬”“_—” */
+/* ä¸€æ§˜åˆ†å¸ƒæµ®å‹•å°æ•°ç‚¹ä¹±æ•° */
 double RndNum::rnd() {
-	std::uniform_real_distribution<double> distrib(0.0, 1.0); // ”¼ŠJ‹æŠÔ [0,1)
+	std::uniform_real_distribution<double> distrib(0.0, 1.0); // åŠé–‹åŒºé–“ [0,1)
 	return distrib(engine);
 }
 
-/* ³‹K•ª•z—” */
+/* æ­£è¦åˆ†å¸ƒä¹±æ•° */
 double RndNum::rnd(double mean, double var) {
 	std::normal_distribution<double> distrib(mean, std::sqrt(var));
 	return distrib(engine);
 }
 
-/* ƒTƒCƒRƒ */
+/* ã‚µã‚¤ã‚³ãƒ­ */
 unsigned int RndNum::dice() {
 	std::uniform_int_distribution<unsigned int> distrib(1u, 6u);
 	return distrib(engine);

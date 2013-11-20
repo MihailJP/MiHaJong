@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "exports.h"
 #ifdef GRAPHIC_EXPORTS
@@ -6,7 +6,7 @@
 #endif
 
 #ifdef None
-#undef None // [Workaround]‰½ŒÌ‚©Linux‚¾‚Æ’è‹`‚³‚ê‚Ä‚éHH
+#undef None // [Workaround]ä½•æ•…ã‹Linuxã ã¨å®šç¾©ã•ã‚Œã¦ã‚‹ï¼Ÿï¼Ÿ
 #endif
 
 namespace mihajong_graphic {

@@ -1,4 +1,4 @@
-#include "soundobj.h"
+ï»¿#include "soundobj.h"
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 #include "GuruGuruSMF/GuruGuruSMF4_Cpp.h"
 #endif
@@ -15,24 +15,24 @@ void sound::SoundManipulator::InitXAudio(Window hWnd)
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	HRESULT hr;
 
-	/* COM‰Šú‰» */
+	/* COMåˆæœŸåŒ– */
 	if (FAILED(hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED))) {
-		CodeConv::tostringstream o; o << _T("CoInitializeEx¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("CoInitializeExå¤±æ•—ï¼ï¼ (0x") <<
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
 
-	/* ƒfƒoƒCƒX‚Ì‰Šú‰» */
+	/* ãƒ‡ãƒã‚¤ã‚¹ã®åˆæœŸåŒ– */
 #if defined(USE_XAUDIO2)
 	UINT32 flags = 0;
 #ifdef _DEBUG
 	flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
 	if (FAILED(hr = XAudio2Create(&xAudio, flags))) {
-		CodeConv::tostringstream o; o << _T("XAudio2Create¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("XAudio2Createå¤±æ•—ï¼ï¼ (0x") <<
 #else
 	if (FAILED(hr = DirectSoundCreate8(nullptr, &pDSound, nullptr))) {
-		CodeConv::tostringstream o; o << _T("DirectSoundCreate8¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("DirectSoundCreate8å¤±æ•—ï¼ï¼ (0x") <<
 #endif
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
@@ -41,10 +41,10 @@ void sound::SoundManipulator::InitXAudio(Window hWnd)
 	pDSound->SetCooperativeLevel(hWnd, DSSCL_PRIORITY);
 #endif
 
-	/* ƒ}ƒXƒ^[ƒoƒbƒtƒ@‰Šú‰» */
+	/* ãƒã‚¹ã‚¿ãƒ¼ãƒãƒƒãƒ•ã‚¡åˆæœŸåŒ– */
 #if defined(USE_XAUDIO2)
 	if (FAILED(hr = xAudio->CreateMasteringVoice(&mVoice))) {
-		CodeConv::tostringstream o; o << _T("CreateMasteringVoice¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("CreateMasteringVoiceå¤±æ•—ï¼ï¼ (0x") <<
 #else
 	DSBUFFERDESC dsbd;
 	memset(&dsbd, 0, sizeof(DSBUFFERDESC));
@@ -52,18 +52,18 @@ void sound::SoundManipulator::InitXAudio(Window hWnd)
 	dsbd.dwFlags = DSBCAPS_PRIMARYBUFFER;
 	dsbd.dwBufferBytes = 0;
 	if (FAILED(hr = pDSound->CreateSoundBuffer(&dsbd, &mVoice, nullptr))) {
-		CodeConv::tostringstream o; o << _T("CreateMasteringVoice¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("CreateMasteringVoiceå¤±æ•—ï¼ï¼ (0x") <<
 #endif
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
 #else
-	/* OpenAL ‰Šú‰» */
+	/* OpenAL åˆæœŸåŒ– */
 	myDevice = alcOpenDevice(nullptr);
-	if (!myDevice) throw _T("alcOpenDevice¸”sII");
+	if (!myDevice) throw _T("alcOpenDeviceå¤±æ•—ï¼ï¼");
 
 	myContext = alcCreateContext(myDevice, nullptr);
-	if (!myContext) throw _T("alcCreateContext¸”sII");
+	if (!myContext) throw _T("alcCreateContextå¤±æ•—ï¼ï¼");
 	alcMakeContextCurrent(myContext);
 #endif /* defined(_WIN32) && defined(WITH_DIRECTX) */
 }
@@ -72,9 +72,9 @@ sound::SoundManipulator::SoundManipulator() {
 	InitXAudio();
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)
-		throw CodeConv::tstring(_T("GGSINITIALIZE¸”sII"));
+		throw CodeConv::tstring(_T("GGSINITIALIZEå¤±æ•—ï¼ï¼"));
 	if (GGS->OpenDevice(GuruGuruSmf::Device::DirectMusic, nullptr))
-		throw CodeConv::tstring(_T("GGS->OpenDevice¸”sII"));
+		throw CodeConv::tstring(_T("GGS->OpenDeviceå¤±æ•—ï¼ï¼"));
 #endif
 }
 #ifdef _WIN32
@@ -86,9 +86,9 @@ sound::SoundManipulator::SoundManipulator(Window hWnd)
 	InitXAudio(hWnd);
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)
-		throw CodeConv::tstring(_T("GGSINITIALIZE¸”sII"));
+		throw CodeConv::tstring(_T("GGSINITIALIZEå¤±æ•—ï¼ï¼"));
 	if (GGS->OpenDevice(GuruGuruSmf::Device::DirectMusic, hWnd))
-		throw CodeConv::tstring(_T("GGS->OpenDevice¸”sII"));
+		throw CodeConv::tstring(_T("GGS->OpenDeviceå¤±æ•—ï¼ï¼"));
 #endif
 }
 
@@ -97,8 +97,8 @@ sound::SoundManipulator::~SoundManipulator() {
 	GGS->CloseDevice();
 	GGSFREE();
 #endif
-	for (auto k = sounds.begin(); k != sounds.end(); ++k) {
-		delete (*k); (*k) = nullptr;
+	for (auto& k : sounds) {
+		delete k; k = nullptr;
 	}
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	if (myDevice) {
@@ -127,9 +127,9 @@ sound::SoundManipulator::~SoundManipulator() {
 #endif
 }
 
-/* ƒtƒ@ƒCƒ‹“Ç‚İ‚İ */
+/* ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ */
 void sound::SoundManipulator::readWaveData(unsigned ID, const std::string& filename, bool looped) {
-	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // ”z—ñ‚ğŠg’£
+	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // é…åˆ—ã‚’æ‹¡å¼µ
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	sounds[ID] = new WaveData(nullptr, filename, looped);
 #elif defined(USE_XAUDIO2)
@@ -139,7 +139,7 @@ void sound::SoundManipulator::readWaveData(unsigned ID, const std::string& filen
 #endif
 }
 void sound::SoundManipulator::readVorbisData(unsigned ID, const std::string& filename, bool looped) {
-	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // ”z—ñ‚ğŠg’£
+	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // é…åˆ—ã‚’æ‹¡å¼µ
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	sounds[ID] = new OggData(nullptr, filename, looped);
 #elif defined(USE_XAUDIO2)
@@ -149,32 +149,32 @@ void sound::SoundManipulator::readVorbisData(unsigned ID, const std::string& fil
 #endif
 }
 void sound::SoundManipulator::readMidiData(unsigned ID, const std::string& filename, bool looped) {
-	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // ”z—ñ‚ğŠg’£
+	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // é…åˆ—ã‚’æ‹¡å¼µ
 	sounds[ID] = new MidiData(ID, filename, looped);
 }
 
-/* Ä¶ */
+/* å†ç”Ÿ */
 void sound::SoundManipulator::play(unsigned ID) {
 	if ((sounds.size() <= ID) || (!sounds[ID])) {
-		CodeConv::tostringstream o; o << _T("ƒTƒEƒ“ƒh ID [") << ID << _T("] ‚Í“Ç‚İ‚Ü‚ê‚Ä‚È‚¢‚Å‚·");
+		CodeConv::tostringstream o; o << _T("ã‚µã‚¦ãƒ³ãƒ‰ ID [") << ID << _T("] ã¯èª­ã¿è¾¼ã¾ã‚Œã¦ãªã„ã§ã™");
 		throw o.str();
 	}
 	sounds[ID]->Play();
 }
 
-/* ’â~ */
+/* åœæ­¢ */
 void sound::SoundManipulator::stop(unsigned ID) {
 	if ((sounds.size() <= ID) || (!sounds[ID])) {
-		CodeConv::tostringstream o; o << _T("ƒTƒEƒ“ƒh ID [") << ID << _T("] ‚Í“Ç‚İ‚Ü‚ê‚Ä‚È‚¢‚Å‚·");
+		CodeConv::tostringstream o; o << _T("ã‚µã‚¦ãƒ³ãƒ‰ ID [") << ID << _T("] ã¯èª­ã¿è¾¼ã¾ã‚Œã¦ãªã„ã§ã™");
 		throw o.str();
 	}
 	sounds[ID]->Stop();
 }
 
-/* ‰¹—Êİ’è */
+/* éŸ³é‡è¨­å®š */
 void sound::SoundManipulator::setVolume(unsigned ID, double volume) {
 	if ((sounds.size() <= ID) || (!sounds[ID])) {
-		CodeConv::tostringstream o; o << _T("ƒTƒEƒ“ƒh ID [") << ID << _T("] ‚Í“Ç‚İ‚Ü‚ê‚Ä‚È‚¢‚Å‚·");
+		CodeConv::tostringstream o; o << _T("ã‚µã‚¦ãƒ³ãƒ‰ ID [") << ID << _T("] ã¯èª­ã¿è¾¼ã¾ã‚Œã¦ãªã„ã§ã™");
 		throw o.str();
 	}
 	sounds[ID]->setVolume(volume);

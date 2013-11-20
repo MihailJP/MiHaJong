@@ -1,4 +1,4 @@
-#include "snddata.h"
+ï»¿#include "snddata.h"
 
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 #include "GuruGuruSMF/GuruGuruSMF4_Cpp.h"
@@ -8,23 +8,23 @@
 sound::MidiData::MidiData(unsigned ID, const std::string& filename, bool looped) {
 	using namespace GuruGuruSmf;
 	if (GGS->AddListFromFileA(filename.c_str(), LoadOption::Buffered, ID) != GgsError::NoError)
-		throw CodeConv::tstring(_T("GGS->AddListFromFileAŽ¸”sII"));
+		throw CodeConv::tstring(_T("GGS->AddListFromFileAå¤±æ•—ï¼ï¼"));
 	loopFlag = looped; myID = ID;
 }
 
-/* Ä¶ */
+/* å†ç”Ÿ */
 void sound::MidiData::Play() {
 	using namespace GuruGuruSmf;
 	if (GGS->Play((loopFlag ? PlayOption::Loop : 0) | PlayOption::SkipBeginning, myID, 0, 0, 0))
-		throw CodeConv::tstring(_T("GGS->PlayŽ¸”sII"));
+		throw CodeConv::tstring(_T("GGS->Playå¤±æ•—ï¼ï¼"));
 }
 
-/* ’âŽ~ */
+/* åœæ­¢ */
 void sound::MidiData::Stop() {
 	GGS->Stop(0);
 }
 
-/* ‰¹—ÊÝ’è */
+/* éŸ³é‡è¨­å®š */
 void sound::MidiData::setVolume(double volume) {
 	int vol;
 	if (abs(volume) >= 1.0)
@@ -34,7 +34,7 @@ void sound::MidiData::setVolume(double volume) {
 	GGS->SetMasterVolume(vol);
 }
 
-/* ƒfƒXƒgƒ‰ƒNƒ^ */
+/* ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
 sound::MidiData::~MidiData() {
 	GGS->DeleteListItem(myID);
 }

@@ -1,4 +1,4 @@
-#include "chat.h"
+Ôªø#include "chat.h"
 
 #include "../socket/socket.h"
 #include "envtbl.h"
@@ -7,31 +7,18 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif /*_WIN32*/
+#include "../common/sleep.h"
 
 namespace chat {
 
-#ifdef _WIN32
-DWORD WINAPI ChatThread::thread_loop (LPVOID param)
-#else /*_WIN32*/
-void* ChatThread::thread_loop (void* param)
-#endif /*_WIN32*/
-{
-	reinterpret_cast<ChatThread*>(param)->init();
-	while (!(reinterpret_cast<ChatThread*>(param)->terminate)) {
-		reinterpret_cast<ChatThread*>(param)->receive();
-		reinterpret_cast<ChatThread*>(param)->send();
-#ifdef _WIN32
-		Sleep(0);
-#else /*_WIN32*/
-		usleep(100);
-#endif /*_WIN32*/
+void ChatThread::thread_loop (ChatThread* inst) {
+	inst->init();
+	while (!(inst->terminate)) {
+		inst->receive();
+		inst->send();
+		threadYield();
 	}
-	reinterpret_cast<ChatThread*>(param)->cleanup();
-#ifdef _WIN32
-	return S_OK;
-#else /*_WIN32*/
-	return nullptr;
-#endif /*_WIN32*/
+	inst->cleanup();
 }
 StreamLog::StreamLog () {
 	mihajong_graphic::logwnd::reset();
@@ -39,27 +26,13 @@ StreamLog::StreamLog () {
 ChatThread::ChatThread (std::string& server_addr, int clientNum) : StreamLog() {
 	terminate = false;
 	myServerAddr = server_addr; myClientNum = clientNum;
-#ifdef _WIN32
-	myHandle = CreateThread(nullptr, 0, thread_loop, this, 0, nullptr);
-#else /*_WIN32*/
-	pthread_create(&myHandle, nullptr, thread_loop, (void*)this);
-#endif /*_WIN32*/
+	myThread = THREADLIB::thread(thread_loop, this);
 }
 StreamLog::~StreamLog () {
 }
 ChatThread::~ChatThread () {
 	terminate = true;
-#ifdef _WIN32
-	while (true) {
-		DWORD exitcode;
-		GetExitCodeThread(myHandle, &exitcode);
-		if (exitcode != STILL_ACTIVE) break;
-		else Sleep(0);
-	}
-#else /*_WIN32*/
-	void* resultPtr;
-	pthread_join(myHandle, &resultPtr);
-#endif /*_WIN32*/
+	myThread.join();
 }
 
 void ChatThread::init() {
@@ -77,21 +50,13 @@ void ChatThread::init() {
 					(mihajong_socket::connected(
 					SOCK_CHAT-1+EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag)))
 					tmpClientWaiting[i] = false;
-#ifdef _WIN32
-			Sleep(0);
-#else /*_WIN32*/
-			usleep(100);
-#endif /*_WIN32*/
+			threadYield();
 		}
 	}
 	else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 		mihajong_socket::connect(SOCK_CHAT+0, myServerAddr.c_str(), PORT_CHAT-1+myClientNum);
 		while (!mihajong_socket::connected(SOCK_CHAT+0)) // Wait until connection established
-#ifdef _WIN32
-			Sleep(0);
-#else /*_WIN32*/
-			usleep(100);
-#endif /*_WIN32*/
+			threadYield();
 	}
 }
 
@@ -156,61 +121,59 @@ void StreamLog::chatappend(const CodeConv::tstring& buf) {
 	}
 }
 void ChatThread::chatappend(const CodeConv::tstring& buf) {
-	streamLock.acquire();
-	super::chatappend(buf); // Å©ÉâÉÄÉ_ÇégÇ§Ç∆Ç±ÇÍÇ™åƒÇ—èoÇπÇ»Ç¢
-	streamLock.release();
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(streamLock);
+	super::chatappend(buf);
 }
 
 void ChatThread::send() {
-	sendQueueLock.syncDo<void>([this]() -> void {
-		if (!sendQueue.empty()) {
-			TCHAR buf[bufsize] = {0}; //buf[0] = GameStat.PlayerID + _T('0');
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
-				for (int k = 1; k <= 3; k++) {
-					if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
-						(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
-						(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
-						((!GameStat.chkGameType(SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(sendQueueLock);
+	if (!sendQueue.empty()) {
+		TCHAR buf[bufsize] = {0}; //buf[0] = GameStat.PlayerID + _T('0');
+		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
+			for (int k = 1; k <= 3; k++) {
+				if ((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == k) ||
+					(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == k) ||
+					(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == k) ||
+					((!GameStat.chkGameType(SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == k))) {
 #if defined(_MSC_VER)
-							_tcscat_s(buf, bufsize, sendQueue.front().c_str());
+						_tcscat_s(buf, bufsize, sendQueue.front().c_str());
 #else
-							_tcsncat(buf, sendQueue.front().c_str(), bufsize - _tcslen(buf));
+						_tcsncat(buf, sendQueue.front().c_str(), bufsize - _tcslen(buf));
 #endif
-							if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
+						if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
 #if defined(_MSC_VER)
-								_tcscat_s(buf, bufsize, _T("\r\n"));
+							_tcscat_s(buf, bufsize, _T("\r\n"));
 #elif defined(_WIN32)
-								_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
+							_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
 #else
-								_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
+							_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
 #endif
-							mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
-							chatappend(buf);
-					}
+						mihajong_socket::puts(SOCK_CHAT + k - 1, buf);
+						chatappend(buf);
 				}
-			} else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
-#if defined(_MSC_VER)
-				_tcscat_s(buf, bufsize, sendQueue.front().c_str());
-#else
-				_tcsncat(buf, sendQueue.front().c_str(), bufsize - _tcslen(buf));
-#endif
-				if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
-#if defined(_MSC_VER)
-					_tcscat_s(buf, bufsize, _T("\r\n"));
-#elif defined(_WIN32)
-					_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
-#else
-					_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
-#endif
-				mihajong_socket::puts(SOCK_CHAT, buf);
 			}
-			sendQueue.pop();
+		} else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
+#if defined(_MSC_VER)
+			_tcscat_s(buf, bufsize, sendQueue.front().c_str());
+#else
+			_tcsncat(buf, sendQueue.front().c_str(), bufsize - _tcslen(buf));
+#endif
+			if ((_tcslen(buf)) && (buf[_tcslen(buf) - 1] != _T('\n')))
+#if defined(_MSC_VER)
+				_tcscat_s(buf, bufsize, _T("\r\n"));
+#elif defined(_WIN32)
+				_tcsncat(buf, _T("\r\n"), bufsize - _tcslen(buf));
+#else
+				_tcsncat(buf, _T("\n"), bufsize - _tcslen(buf));
+#endif
+			mihajong_socket::puts(SOCK_CHAT, buf);
 		}
-	});
+		sendQueue.pop();
+	}
 }
 
 void ChatThread::cleanup() {
-	for (int i = 0; i < Players; i++) // äJÇØÇƒÇ»Ç¢É\ÉPÉbÉgÇï¬Ç∂ÇÊÇ§Ç∆ÇµÇƒÇ‡à¿ëSÇ…Ç»ÇÈÇÊÇ§Ç…ÇµÇƒÇÈ
+	for (int i = 0; i < Players; i++) // Èñã„Åë„Å¶„Å™„ÅÑ„ÇΩ„Ç±„ÉÉ„Éà„ÇíÈñâ„Åò„Çà„ÅÜ„Å®„Åó„Å¶„ÇÇÂÆâÂÖ®„Å´„Å™„Çã„Çà„ÅÜ„Å´„Åó„Å¶„Çã
 		mihajong_socket::hangup(SOCK_CHAT + i);
 }
 
@@ -218,9 +181,8 @@ CodeConv::tstring StreamLog::getlog () {
 	return CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
 }
 CodeConv::tstring ChatThread::getlog () {
-	return streamLock.syncDo<CodeConv::tstring>([this]() {
-		return CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(streamLock);
+	return CodeConv::tstring(mihajong_graphic::logwnd::getlogptr());
 }
 
 void StreamLog::sysmsg(const CodeConv::tstring& str) {
@@ -235,9 +197,8 @@ void StreamLog::sysmsg(const CodeConv::tstring& str) {
 	mihajong_graphic::logwnd::append(tmpstr.c_str());
 }
 void ChatThread::sysmsg(const CodeConv::tstring& str) {
-	streamLock.acquire();
-	super::sysmsg(str); // Å©ÉâÉÄÉ_ÇégÇ§Ç∆Ç±ÇÍÇ™åƒÇ—èoÇπÇ»Ç¢
-	streamLock.release();
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(streamLock);
+	super::sysmsg(str);
 }
 
 void StreamLog::sendstr (const CodeConv::tstring& msg) {
@@ -255,9 +216,8 @@ void ChatThread::sendstr (const CodeConv::tstring& msg) {
 }
 void ChatThread::sendstrx (PlayerID player, const CodeConv::tstring& msg) {
 	TCHAR tmpnum[2] = {0}; tmpnum[0] = player + _T('0');
-	sendQueueLock.syncDo<void>([this, &tmpnum, msg]() -> void {
-		sendQueue.push(CodeConv::tstring(tmpnum) + msg);
-	});
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(sendQueueLock);
+	sendQueue.push(CodeConv::tstring(tmpnum) + msg);
 }
 
 // -------------------------------------------------------------------------

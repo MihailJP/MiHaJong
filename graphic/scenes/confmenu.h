@@ -42,6 +42,8 @@ protected:
 	virtual CodeConv::tstring verInfoText();
 public:
 	ConfigMenuProto(ScreenManipulator* const manipulator);
+	ConfigMenuProto(const ConfigMenuProto&) = delete; // Delete unexpected copy constructor
+	ConfigMenuProto& operator= (const ConfigMenuProto&) = delete; // Delete unexpected assign operator
 	virtual ~ConfigMenuProto() = 0;
 	virtual void Render();
 #ifdef _WIN32

@@ -64,6 +64,11 @@ public:
 #else /*_WIN32*/
 	static bool chkPreference(const char* RuleTag, const char* Expectation);
 #endif /*_WIN32*/
+public: /* Monostate class: cannot be instantiated */
+	RuleData() = delete;
+	RuleData(const RuleData&) = delete;
+	RuleData& operator= (const RuleData&) = delete;
+	~RuleData() = delete;
 };
 
 int getRule(int RuleID);

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "game.h"
 #include "../geometry.h"
@@ -19,63 +19,65 @@ protected:
 	static const unsigned int DeckChainLength = 17;
 	static const unsigned int DeckPosH = (TableSize - ShowTile::VertTileWidth * (DeckChainLength - 1)) / 2;
 	static const unsigned int DeckPosV = (TableSize / 2) - 300;
-	TexturePtr tBorder; // ‘ì‚Ì˜g
-	TexturePtr tBaize; // —…Ñ’n
-	logwnd::LogWindow* logWindow; // ƒƒOƒEƒBƒ“ƒhƒE
-	EditBox* chatInput; // ƒ`ƒƒƒbƒg“ü—Í—“
+	TexturePtr tBorder; // å“ã®æ 
+	TexturePtr tBaize; // ç¾…ç´—åœ°
+	logwnd::LogWindow* logWindow; // ãƒ­ã‚°ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
+	EditBox* chatInput; // ãƒãƒ£ãƒƒãƒˆå…¥åŠ›æ¬„
 	static const unsigned ChatInputRegion = 99;
-	TextRenderer* myTextRenderer; // •¶š•\¦
+	TextRenderer* myTextRenderer; // æ–‡å­—è¡¨ç¤º
 #ifndef _WIN32
 	bool reconstructFlag;
 #endif /*_WIN32*/
 protected:
-	TableSubscene* mySubScene; // ƒTƒuƒV[ƒ“ƒIƒuƒWƒFƒNƒg
-	MHJMutex subSceneCS; // ƒTƒuƒV[ƒ“Ø‚è‘Ö‚¦—pƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“
-	void SetSubscene(unsigned int scene_ID); // ƒTƒuƒV[ƒ“Ø‚è‘Ö‚¦
-protected: /**** R”v ****/
+	TableSubscene* mySubScene; // ã‚µãƒ–ã‚·ãƒ¼ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	MUTEXLIB::recursive_mutex subSceneCS; // ã‚µãƒ–ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆç”¨ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³
+	void SetSubscene(unsigned int scene_ID); // ã‚µãƒ–ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
+protected: /**** å±±ç‰Œ ****/
 	class YamahaiReconst;
 	YamahaiReconst* yamahaiReconst;
-protected: /**** è”v ****/
+protected: /**** æ‰‹ç‰Œ ****/
 	class TehaiReconst;
 	TehaiReconst* tehaiReconst;
-protected: /**** –Â‚«”v ****/
-	class NakihaiReconst; // ˆ—‚Í“à•”ƒNƒ‰ƒX‚É‚Ü‚Æ‚ß‚Ä‚ ‚é
+protected: /**** é³´ãç‰Œ ****/
+	class NakihaiReconst; // å‡¦ç†ã¯å†…éƒ¨ã‚¯ãƒ©ã‚¹ã«ã¾ã¨ã‚ã¦ã‚ã‚‹
 	NakihaiReconst* nakihaiReconst;
-protected: /**** Ì”v ****/
+protected: /**** æ¨ç‰Œ ****/
 	class SutehaiReconst;
 	SutehaiReconst* sutehaiReconst;
-protected: /**** ƒŠ[ƒ`–_ ****/
+protected: /**** ãƒªãƒ¼ãƒæ£’ ****/
 	class RichibouReconst;
 	RichibouReconst* richibouReconst;
-protected: /**** ƒTƒCƒRƒ ****/
+protected: /**** ã‚µã‚¤ã‚³ãƒ­ ****/
 	class DiceReconst;
 	DiceReconst* diceReconst;
-protected: /**** ‹N‰Æƒ}[ƒNEƒ„ƒLƒgƒŠƒ}[ƒN‚ğ’u‚­‰š‚İ ****/
+protected: /**** èµ·å®¶ãƒãƒ¼ã‚¯ãƒ»ãƒ¤ã‚­ãƒˆãƒªãƒãƒ¼ã‚¯ã‚’ç½®ãå‡¹ã¿ ****/
 	class TrayReconst;
 	TrayReconst* trayReconst;
-protected: /**** ”²‚«–kE‰Ô”v ****/
+protected: /**** æŠœãåŒ—ãƒ»èŠ±ç‰Œ ****/
 	class GariReconst;
 	GariReconst* gariReconst;
-protected: /**** –Â‚«‘I‘ğ—pƒ{ƒ^ƒ“ ****/
+protected: /**** é³´ãé¸æŠç”¨ãƒœã‚¿ãƒ³ ****/
 	class ButtonReconst;
 	ButtonReconst* buttonReconst;
-protected: /**** Œv ****/
+protected: /**** æ™‚è¨ˆ ****/
 	class Clock;
 	Clock* clockPanel;
-protected: /**** î•ñ•\¦ ****/
-	void ShowStatus(const GameTable* gameStat); // ‹Ÿ‘õ“_–_‚È‚Ç‚Ìî•ñ‚ğ•\¦
-protected: /**** Ì”vƒc[ƒ‹ƒ`ƒbƒv(‚Æ‚¢‚¤‚Ì‚¾‚ë‚¤‚©) ****/
+protected: /**** æƒ…å ±è¡¨ç¤º ****/
+	void ShowStatus(const GameTable* gameStat); // ä¾›è¨—ç‚¹æ£’ãªã©ã®æƒ…å ±ã‚’è¡¨ç¤º
+protected: /**** æ¨ç‰Œãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—(ã¨ã„ã†ã®ã ã‚ã†ã‹) ****/
 	class TileTipReconst;
 	TileTipReconst* tileTipReconst;
 protected:
-	void ReconstructPlayer(const GameTable* gameStat, PlayerID deckTargetPlayer, PlayerID targetPlayer); // ƒvƒŒƒCƒ„[ŠÖŒW‚Ì‰æ–Ê‚ÌÄ\’z
-	void Reconstruct(const GameTable* gameStat); // ‰æ–Ê‚ÌÄ•`‰æ
+	void ReconstructPlayer(const GameTable* gameStat, PlayerID deckTargetPlayer, PlayerID targetPlayer); // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼é–¢ä¿‚ã®ç”»é¢ã®å†æ§‹ç¯‰
+	void Reconstruct(const GameTable* gameStat); // ç”»é¢ã®å†æç”»
 protected:
-	void cls(); // ‰æ–Ê‚ğƒNƒŠƒA
-	void RenderTable(); // ‘ì‚ğ•\¦
-	void RenderSideBar(); // ƒTƒCƒhƒo[
+	void cls(); // ç”»é¢ã‚’ã‚¯ãƒªã‚¢
+	void RenderTable(); // å“ã‚’è¡¨ç¤º
+	void RenderSideBar(); // ã‚µã‚¤ãƒ‰ãƒãƒ¼
 public:
 	GameTableScreen(ScreenManipulator* const manipulator);
+	GameTableScreen(const GameTableScreen&) = delete; // Delete unexpected copy constructor
+	GameTableScreen& operator= (const GameTableScreen&) = delete; // Delete unexpected assign operator
 	~GameTableScreen();
 	void Render();
 #ifdef _WIN32
@@ -84,7 +86,7 @@ public:
 	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 #else /*_WIN32*/
-	/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢À‘• */
+	/* TODO: Linuxã§ã¯æ—¥æœ¬èªå…¥åŠ›ãŒæœªå®Ÿè£… */
 	void KeyboardInput(const XEvent* od);
 	void MouseInput(const XEvent* od, int X, int Y);
 #endif /*_WIN32*/

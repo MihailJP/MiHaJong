@@ -1,9 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include <queue>
 #include "gametbl.h"
 #include "../common/strcode.h"
 #include "../common/mutex.h"
+#include "../common/thread.h"
 
 #define SOCK_CHAT 10
 #define PORT_CHAT 50020
@@ -17,7 +18,9 @@ namespace chat {
 		virtual void chatappend(const CodeConv::tstring& buf);
 	public:
 		StreamLog ();
-		virtual ~StreamLog ();
+		StreamLog(const StreamLog&) = delete; // Delete unexpected copy constructor
+		StreamLog& operator= (const StreamLog&) = delete; // Delete unexpected assign operator
+		virtual ~StreamLog();
 		virtual CodeConv::tstring getlog ();
 		virtual void sysmsg (const CodeConv::tstring& msg);
 		virtual void sendstr (const CodeConv::tstring& msg);
@@ -27,21 +30,13 @@ namespace chat {
 		typedef StreamLog super;
 	private:
 		std::queue<CodeConv::tstring> sendQueue;
-		MHJMutex streamLock;
-		MHJMutex sendQueueLock;
-#ifdef _WIN32
-		HANDLE myHandle;
-#else /*_WIN32*/
-		pthread_t myHandle;
-#endif /*_WIN32*/
+		MUTEXLIB::recursive_mutex streamLock;
+		MUTEXLIB::recursive_mutex sendQueueLock;
+		THREADLIB::thread myThread;
 		volatile bool terminate;
 		std::string myServerAddr;
 		int myClientNum;
-#ifdef _WIN32
-		static DWORD WINAPI thread_loop (LPVOID param);
-#else /*_WIN32*/
-		static void* thread_loop (void* param);
-#endif /*_WIN32*/
+		static void thread_loop (ChatThread* inst);
 		void chatappend(const CodeConv::tstring& buf);
 		void init();
 		void receive();
@@ -49,7 +44,9 @@ namespace chat {
 		void cleanup();
 	public:
 		ChatThread (std::string& server_addr, int clientNum);
-		~ChatThread ();
+		ChatThread(const ChatThread&) = delete; // Delete unexpected copy constructor
+		ChatThread& operator= (const ChatThread&) = delete; // Delete unexpected assign operator
+		~ChatThread();
 		CodeConv::tstring getlog ();
 		void sysmsg (const CodeConv::tstring& msg);
 		void sendstr (const CodeConv::tstring& msg);

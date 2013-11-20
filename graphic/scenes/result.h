@@ -16,6 +16,8 @@ private:
 	Timer myTimer;
 public:
 	ResultScreen(ScreenManipulator* const manipulator);
+	ResultScreen(const ResultScreen&) = delete; // Delete unexpected copy constructor
+	ResultScreen& operator= (const ResultScreen&) = delete; // Delete unexpected assign operator
 	~ResultScreen();
 	void Render();
 #ifdef _WIN32
@@ -47,6 +49,8 @@ private:
 	void RenderScore();
 public:
 	RankRenderer(DevicePtr device, int id);
+	RankRenderer(const RankRenderer&) = delete; // Delete unexpected copy constructor
+	RankRenderer& operator= (const RankRenderer&) = delete; // Delete unexpected assign operator
 	~RankRenderer();
 	void Render();
 };

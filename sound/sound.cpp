@@ -1,4 +1,4 @@
-#include "sound.h"
+ï»¿#include "sound.h"
 #include "logger.h"
 #include <string>
 #include <sstream>
@@ -32,13 +32,13 @@ SOUNDDLL_EXPORT void sound::Cleanup() {
 	soundManipulator = nullptr;
 }
 
-/* ƒTƒEƒ“ƒhƒf[ƒ^“Ç‚İ‚İ */
+/* ã‚µã‚¦ãƒ³ãƒ‰ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿ */
 SOUNDDLL_EXPORT int sound::LoadWave(unsigned ID, const char* filename, int looped) try {
 	{
-		CodeConv::tostringstream o; o << _T("WAVE ƒtƒ@ƒCƒ‹“Ç‚İ‚İ ID [") << ID << _T("] ƒtƒ@ƒCƒ‹–¼ [") << filename << _T("]");
+		CodeConv::tostringstream o; o << _T("WAVE ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ ID [") << ID << _T("] ãƒ•ã‚¡ã‚¤ãƒ«å [") << filename << _T("]");
 		debug(o.str().c_str());
 	}
-	if (!soundManipulator) throw CodeConv::tstring(_T("‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñIII"));
+	if (!soundManipulator) throw CodeConv::tstring(_T("åˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã›ã‚“ï¼ï¼ï¼"));
 	soundManipulator->readWaveData(ID, filename, looped);
 	return 0;
 } catch (CodeConv::tstring& e) {
@@ -47,10 +47,10 @@ SOUNDDLL_EXPORT int sound::LoadWave(unsigned ID, const char* filename, int loope
 }
 SOUNDDLL_EXPORT int sound::LoadVorbis(unsigned ID, const char* filename, int looped) try {
 	{
-		CodeConv::tostringstream o; o << _T("Ogg Vorbis ƒtƒ@ƒCƒ‹“Ç‚İ‚İ ID [") << ID << _T("] ƒtƒ@ƒCƒ‹–¼ [") << filename << _T("]");
+		CodeConv::tostringstream o; o << _T("Ogg Vorbis ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ ID [") << ID << _T("] ãƒ•ã‚¡ã‚¤ãƒ«å [") << filename << _T("]");
 		debug(o.str().c_str());
 	}
-	if (!soundManipulator) throw CodeConv::tstring(_T("‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñIII"));
+	if (!soundManipulator) throw CodeConv::tstring(_T("åˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã›ã‚“ï¼ï¼ï¼"));
 	soundManipulator->readVorbisData(ID, filename, looped);
 	return 0;
 } catch (CodeConv::tstring& e) {
@@ -59,10 +59,10 @@ SOUNDDLL_EXPORT int sound::LoadVorbis(unsigned ID, const char* filename, int loo
 }
 SOUNDDLL_EXPORT int sound::LoadMidi(unsigned ID, const char* filename, int looped) try {
 	{
-		CodeConv::tostringstream o; o << _T("MIDI ƒtƒ@ƒCƒ‹“Ç‚İ‚İ ID [") << ID << _T("] ƒtƒ@ƒCƒ‹–¼ [") << filename << _T("]");
+		CodeConv::tostringstream o; o << _T("MIDI ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ ID [") << ID << _T("] ãƒ•ã‚¡ã‚¤ãƒ«å [") << filename << _T("]");
 		debug(o.str().c_str());
 	}
-	if (!soundManipulator) throw CodeConv::tstring(_T("‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñIII"));
+	if (!soundManipulator) throw CodeConv::tstring(_T("åˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã›ã‚“ï¼ï¼ï¼"));
 	soundManipulator->readMidiData(ID, filename, looped);
 	return 0;
 } catch (CodeConv::tstring& e) {
@@ -70,13 +70,13 @@ SOUNDDLL_EXPORT int sound::LoadMidi(unsigned ID, const char* filename, int loope
 	return -1;
 }
 
-/* ƒTƒEƒ“ƒhÄ¶ */
+/* ã‚µã‚¦ãƒ³ãƒ‰å†ç”Ÿ */
 SOUNDDLL_EXPORT int sound::Play(unsigned ID) try {
 	{
-		CodeConv::tostringstream o; o << _T("ƒTƒEƒ“ƒhÄ¶ ID [") << ID << _T("]");
+		CodeConv::tostringstream o; o << _T("ã‚µã‚¦ãƒ³ãƒ‰å†ç”Ÿ ID [") << ID << _T("]");
 		debug(o.str().c_str());
 	}
-	if (!soundManipulator) throw CodeConv::tstring(_T("‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñIII"));
+	if (!soundManipulator) throw CodeConv::tstring(_T("åˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã›ã‚“ï¼ï¼ï¼"));
 	soundManipulator->play(ID);
 	return 0;
 } catch (CodeConv::tstring& e) {
@@ -84,9 +84,9 @@ SOUNDDLL_EXPORT int sound::Play(unsigned ID) try {
 	return -1;
 }
 
-/* ƒTƒEƒ“ƒh’â~ */
+/* ã‚µã‚¦ãƒ³ãƒ‰åœæ­¢ */
 SOUNDDLL_EXPORT int sound::Stop(unsigned ID) try {
-	if (!soundManipulator) throw CodeConv::tstring(_T("‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñIII"));
+	if (!soundManipulator) throw CodeConv::tstring(_T("åˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã›ã‚“ï¼ï¼ï¼"));
 	soundManipulator->stop(ID);
 	return 0;
 } catch (CodeConv::tstring& e) {
@@ -94,9 +94,9 @@ SOUNDDLL_EXPORT int sound::Stop(unsigned ID) try {
 	return -1;
 }
 
-/* ‰¹—Êİ’è */
+/* éŸ³é‡è¨­å®š */
 SOUNDDLL_EXPORT int sound::SetVolume(unsigned ID, double volume) try {
-	if (!soundManipulator) throw CodeConv::tstring(_T("‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñIII"));
+	if (!soundManipulator) throw CodeConv::tstring(_T("åˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã›ã‚“ï¼ï¼ï¼"));
 	soundManipulator->setVolume(ID, volume);
 	return 0;
 } catch (CodeConv::tstring& e) {

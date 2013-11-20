@@ -19,6 +19,8 @@ private:
 	unsigned menuCursor;
 public:
 	TitleScreen(ScreenManipulator* const manipulator);
+	TitleScreen(const TitleScreen&) = delete; // Delete unexpected copy constructor
+	TitleScreen& operator= (const TitleScreen&) = delete; // Delete unexpected assign operator
 	~TitleScreen();
 	void Render();
 #ifdef _WIN32
@@ -40,6 +42,8 @@ public:
 	static void LoadTexture(DevicePtr device);
 	static void DisposeTexture();
 	TitleSprite(DevicePtr device, int X, int Y, int Width, int Height);
+	TitleSprite(const TitleSprite&) = delete; // Delete unexpected copy constructor
+	TitleSprite& operator= (const TitleSprite&) = delete; // Delete unexpected assign operator
 	~TitleSprite();
 	void show(int X, int Y, float scale = 1.0f, uint8_t opacity = 0xff);
 };

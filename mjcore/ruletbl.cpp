@@ -1,4 +1,4 @@
-#include "ruletbl.h"
+ï»¿#include "ruletbl.h"
 
 #include <lua.hpp>
 #include <cstdlib>
@@ -37,6 +37,9 @@ private:
 	void configinit_ini();
 public:
 	bool reqFailed(uint16_t ruleID, const int* const ruleStat);
+	RuleConfigData() = default;
+	RuleConfigData(const RuleConfigData&) = delete; // Delete unexpected copy constructor
+	RuleConfigData& operator= (const RuleConfigData&) = delete; // Delete unexpected assign operator
 };
 namespace {
 	RuleConfigData ruleTableData;
@@ -47,7 +50,7 @@ void RuleConfigData::configinit_csv() {}
 void RuleConfigData::configinit_ini() {}
 #else /* GUOBIAO */
 
-void RuleConfigData::configinit_csv() { // ƒRƒ“ƒtƒBƒO—pCSV‚ğ“Ç‚İ‚Ş
+void RuleConfigData::configinit_csv() { // ã‚³ãƒ³ãƒ•ã‚£ã‚°ç”¨CSVã‚’èª­ã¿è¾¼ã‚€
 	Compressed::file_confitem_csv* csvfile = new Compressed::file_confitem_csv();
 	ConfigData::configinit_csv(csvfile);
 	delete csvfile;
@@ -55,7 +58,7 @@ void RuleConfigData::configinit_csv() { // ƒRƒ“ƒtƒBƒO—pCSV‚ğ“Ç‚İ‚Ş
 	assert(ruletags["game_length"][1] == "east_wind_game");
 }
 
-void RuleConfigData::configinit_ini() { // ƒRƒ“ƒtƒBƒO•¶š—ñ•ÏŠ·—pINI‚ğ“Ç‚İ‚Ş
+void RuleConfigData::configinit_ini() { // ã‚³ãƒ³ãƒ•ã‚£ã‚°æ–‡å­—åˆ—å¤‰æ›ç”¨INIã‚’èª­ã¿è¾¼ã‚€
 	Compressed::file_confitem_ini* inifile = new Compressed::file_confitem_ini();
 	ConfigData::configinit_ini(inifile);
 	delete inifile;
@@ -72,18 +75,20 @@ private:
 	void configinit_ini();
 public:
 	PreferenceData() : ConfigData<PREFERENCE_ITEMS, RULES_IN_PAGE, RULE_IN_LINE>(_T("preferences")) {}
+	PreferenceData(const PreferenceData&) = delete; // Delete unexpected copy constructor
+	PreferenceData& operator= (const PreferenceData&) = delete; // Delete unexpected assign operator
 };
 namespace {
 	PreferenceData preferenceTableData;
 }
 
-void PreferenceData::configinit_csv() { // ƒRƒ“ƒtƒBƒO—pCSV‚ğ“Ç‚İ‚Ş
+void PreferenceData::configinit_csv() { // ã‚³ãƒ³ãƒ•ã‚£ã‚°ç”¨CSVã‚’èª­ã¿è¾¼ã‚€
 	Compressed::file_prefitem_csv* csvfile = new Compressed::file_prefitem_csv();
 	ConfigData::configinit_csv(csvfile);
 	delete csvfile;
 }
 
-void PreferenceData::configinit_ini() { // ƒRƒ“ƒtƒBƒO•¶š—ñ•ÏŠ·—pINI‚ğ“Ç‚İ‚Ş
+void PreferenceData::configinit_ini() { // ã‚³ãƒ³ãƒ•ã‚£ã‚°æ–‡å­—åˆ—å¤‰æ›ç”¨INIã‚’èª­ã¿è¾¼ã‚€
 	Compressed::file_prefitem_ini* inifile = new Compressed::file_prefitem_ini();
 	ConfigData::configinit_ini(inifile);
 	delete inifile;
@@ -98,8 +103,8 @@ private:
 	static const int* ourRuleStat;
 	ReqChecker();
 	~ReqChecker();
-	ReqChecker(const ReqChecker&) {throw;}
-	ReqChecker& operator=(const ReqChecker&) {throw;}
+	ReqChecker(const ReqChecker&) = delete; // Delete unexpected copy constructor
+	ReqChecker& operator= (const ReqChecker&) = delete; // Delete unexpected assign operator
 public:
 	bool reqFailed (const std::string& expression, const int* const ruleStat);
 	static ReqChecker* instantiate();
@@ -156,92 +161,92 @@ bool RuleConfigData::reqFailed(uint16_t ruleID, const int* const ruleStat) {
 
 // -------------------------------------------------------------------------
 
-void RuleData::configinit() { // ƒRƒ“ƒtƒBƒO—pCSV‚ğ“Ç‚İ‚Ş
+void RuleData::configinit() { // ã‚³ãƒ³ãƒ•ã‚£ã‚°ç”¨CSVã‚’èª­ã¿è¾¼ã‚€
 	ruleTableData.configinit();
 }
 
-void RuleData::preference_init() { // ƒRƒ“ƒtƒBƒO—pCSV‚ğ“Ç‚İ‚Ş
+void RuleData::preference_init() { // ã‚³ãƒ³ãƒ•ã‚£ã‚°ç”¨CSVã‚’èª­ã¿è¾¼ã‚€
 	preferenceTableData.configinit();
 }
 
-void RuleData::storeRule(const char** ruleTxt) { // UI¨Core ƒ‹[ƒ‹İ’è“]‘—
+void RuleData::storeRule(const char** ruleTxt) { // UIâ†’Core ãƒ«ãƒ¼ãƒ«è¨­å®šè»¢é€
 	ruleTableData.storeRule(ruleTxt);
 }
-void RuleData::exportRule(char** ruleTxt) { // Core¨UI ƒ‹[ƒ‹İ’è“]‘—
+void RuleData::exportRule(char** ruleTxt) { // Coreâ†’UI ãƒ«ãƒ¼ãƒ«è¨­å®šè»¢é€
 	ruleTableData.exportRule(ruleTxt);
 }
 
-void RuleData::storePref(const char** ruleTxt) { // UI¨Core ŠÂ‹«İ’è“]‘—
+void RuleData::storePref(const char** ruleTxt) { // UIâ†’Core ç’°å¢ƒè¨­å®šè»¢é€
 	preferenceTableData.storeRule(ruleTxt);
 }
-void RuleData::exportPref(char** ruleTxt) { // Core¨UI ŠÂ‹«İ’è“]‘—
+void RuleData::exportPref(char** ruleTxt) { // Coreâ†’UI ç’°å¢ƒè¨­å®šè»¢é€
 	preferenceTableData.exportRule(ruleTxt);
 }
 
-std::string RuleData::chkRule(std::string RuleTag) { // ƒ‹[ƒ‹İ’èƒ^ƒO‚ğæ“¾‚·‚é
+std::string RuleData::chkRule(std::string RuleTag) { // ãƒ«ãƒ¼ãƒ«è¨­å®šã‚¿ã‚°ã‚’å–å¾—ã™ã‚‹
 	return ruleTableData.chkRule(RuleTag);
 }
-const char* RuleData::chkRule(const char* RuleTag) { // ƒ‹[ƒ‹İ’èƒ^ƒO‚ğæ“¾‚·‚é
+const char* RuleData::chkRule(const char* RuleTag) { // ãƒ«ãƒ¼ãƒ«è¨­å®šã‚¿ã‚°ã‚’å–å¾—ã™ã‚‹
 	static std::string ruledat;
 	ruledat = chkRule(std::string(RuleTag));
 	return ruledat.c_str();
 }
-std::string RuleData::chkPreference(std::string RuleTag) { // ƒ‹[ƒ‹İ’èƒ^ƒO‚ğæ“¾‚·‚é
+std::string RuleData::chkPreference(std::string RuleTag) { // ãƒ«ãƒ¼ãƒ«è¨­å®šã‚¿ã‚°ã‚’å–å¾—ã™ã‚‹
 	return preferenceTableData.chkRule(RuleTag);
 }
-const char* RuleData::chkPreference(const char* RuleTag) { // ƒ‹[ƒ‹İ’èƒ^ƒO‚ğæ“¾‚·‚é
+const char* RuleData::chkPreference(const char* RuleTag) { // ãƒ«ãƒ¼ãƒ«è¨­å®šã‚¿ã‚°ã‚’å–å¾—ã™ã‚‹
 	static std::string ruledat;
 	ruledat = chkPreference(std::string(RuleTag));
 	return ruledat.c_str();
 }
-bool RuleData::chkRule(std::string RuleTag, std::string Expectation) { // ƒ‹[ƒ‹İ’è
+bool RuleData::chkRule(std::string RuleTag, std::string Expectation) { // ãƒ«ãƒ¼ãƒ«è¨­å®š
 	return ruleTableData.chkRule(RuleTag, Expectation);
 }
 #ifdef _WIN32
-BOOL RuleData::chkRule(const char* RuleTag, const char* Expectation) { // ƒ‹[ƒ‹İ’è
+BOOL RuleData::chkRule(const char* RuleTag, const char* Expectation) { // ãƒ«ãƒ¼ãƒ«è¨­å®š
 	return chkRule(std::string(RuleTag), std::string(Expectation)) ? TRUE : FALSE;
 }
 #else /*_WIN32*/
-bool RuleData::chkRule(const char* RuleTag, const char* Expectation) { // ƒ‹[ƒ‹İ’è
+bool RuleData::chkRule(const char* RuleTag, const char* Expectation) { // ãƒ«ãƒ¼ãƒ«è¨­å®š
 	return chkRule(std::string(RuleTag), std::string(Expectation));
 }
 #endif /*_WIN32*/
-bool RuleData::chkPreference(std::string RuleTag, std::string Expectation) { // ƒ‹[ƒ‹İ’è
+bool RuleData::chkPreference(std::string RuleTag, std::string Expectation) { // ãƒ«ãƒ¼ãƒ«è¨­å®š
 	return preferenceTableData.chkRule(RuleTag, Expectation);
 }
 #ifdef _WIN32
-BOOL RuleData::chkPreference(const char* RuleTag, const char* Expectation) { // ƒ‹[ƒ‹İ’è
+BOOL RuleData::chkPreference(const char* RuleTag, const char* Expectation) { // ãƒ«ãƒ¼ãƒ«è¨­å®š
 	return chkPreference(std::string(RuleTag), std::string(Expectation)) ? TRUE : FALSE;
 }
 #else /*_WIN32*/
-bool RuleData::chkPreference(const char* RuleTag, const char* Expectation) { // ƒ‹[ƒ‹İ’è
+bool RuleData::chkPreference(const char* RuleTag, const char* Expectation) { // ãƒ«ãƒ¼ãƒ«è¨­å®š
 	return chkPreference(std::string(RuleTag), std::string(Expectation));
 }
 #endif /*_WIN32*/
-bool RuleData::chkRuleApplied(std::string RuleTag) { // ƒ‹[ƒ‹İ’è
+bool RuleData::chkRuleApplied(std::string RuleTag) { // ãƒ«ãƒ¼ãƒ«è¨­å®š
 	return ruleTableData.chkRuleApplied(RuleTag);
 }
 int RuleData::getRule(std::string RuleTag) {
 	return ruleTableData.getRule(RuleTag);
 }
-int RuleData::getRule(uint16_t RuleID) { // ƒ‹[ƒ‹İ’è‚ğæ“¾‚·‚é(‹Œd—l)
+int RuleData::getRule(uint16_t RuleID) { // ãƒ«ãƒ¼ãƒ«è¨­å®šã‚’å–å¾—ã™ã‚‹(æ—§ä»•æ§˜)
 	return ruleTableData.getRule(RuleID);
 }
 int RuleData::getPreference(std::string RuleTag) {
 	return preferenceTableData.getRule(RuleTag);
 }
-int RuleData::getPreference(uint16_t RuleID) { // ŠÂ‹«İ’è‚ğæ“¾‚·‚é(‹Œd—l)
+int RuleData::getPreference(uint16_t RuleID) { // ç’°å¢ƒè¨­å®šã‚’å–å¾—ã™ã‚‹(æ—§ä»•æ§˜)
 	return preferenceTableData.getRule(RuleID);
 }
-const char* RuleData::getPreferenceRawStr(uint16_t RuleID) { // ŠÂ‹«İ’è‚ğæ“¾‚·‚é(‹Œd—l)
+const char* RuleData::getPreferenceRawStr(uint16_t RuleID) { // ç’°å¢ƒè¨­å®šã‚’å–å¾—ã™ã‚‹(æ—§ä»•æ§˜)
 	static std::string ruletag;
 	ruletag = preferenceTableData.chkRule(RuleID);
 	return ruletag.c_str();
 }
-int RuleData::getRuleSize(uint16_t RuleID) { // ƒ‹[ƒ‹€–Ú‚ÌƒAƒCƒeƒ€”
+int RuleData::getRuleSize(uint16_t RuleID) { // ãƒ«ãƒ¼ãƒ«é …ç›®ã®ã‚¢ã‚¤ãƒ†ãƒ æ•°
 	return ruleTableData.getRuleSize(RuleID);
 }
-int RuleData::getPreferenceSize(uint16_t RuleID) { // ŠÂ‹«€–Ú‚ÌƒAƒCƒeƒ€”
+int RuleData::getPreferenceSize(uint16_t RuleID) { // ç’°å¢ƒé …ç›®ã®ã‚¢ã‚¤ãƒ†ãƒ æ•°
 	return preferenceTableData.getRuleSize(RuleID);
 }
 
@@ -338,9 +343,9 @@ void RuleData::applyPreference() {
 MJCORE void preferenceInit() {
 	std::string preferenceFile = confpath::confPath() + "config.ini";
 	RuleData::preference_init();
-	const bool prefFileExists = exist(preferenceFile.c_str()); // İ’èƒtƒ@ƒCƒ‹‚ª‚ ‚é‚©‚Ç‚¤‚©’²‚×‚é
+	const bool prefFileExists = exist(preferenceFile.c_str()); // è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹ã‹ã©ã†ã‹èª¿ã¹ã‚‹
 	if (prefFileExists) {
-		RuleData::loadPreferenceFile(preferenceFile.c_str()); // İ’èƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+		RuleData::loadPreferenceFile(preferenceFile.c_str()); // è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	}
 }
 

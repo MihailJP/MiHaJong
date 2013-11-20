@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "tablesub.h"
 #include "../../text.h"
@@ -12,17 +12,21 @@ protected:
 	static const int timeY = 900;
 	static const unsigned timeResolution = 1000000u;
 	TextRenderer* myTextRenderer;
-	int timeout_val; /* §ŒÀŠÔ‚ğƒ~ƒŠ•b‚Å */
+	int timeout_val; /* åˆ¶é™æ™‚é–“ã‚’ãƒŸãƒªç§’ã§ */
 	void showTimeout();
 public:
 	TableSubscenePlayerProto(DevicePtr device);
+	TableSubscenePlayerProto(const TableSubscenePlayerProto&) = delete; // Delete unexpected copy constructor
+	TableSubscenePlayerProto& operator= (const TableSubscenePlayerProto&) = delete; // Delete unexpected assign operator
 	virtual ~TableSubscenePlayerProto();
-	std::int32_t timeout(); // ƒ^ƒCƒ€ƒAƒEƒg”»’è—piƒI[ƒo[ƒ‰ƒCƒhj
+	std::int32_t timeout(); // ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆåˆ¤å®šç”¨ï¼ˆã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ï¼‰
 };
 
 class TableSubscenePlayerDahai : public TableSubscenePlayerProto {
 public:
 	TableSubscenePlayerDahai(DevicePtr device);
+	TableSubscenePlayerDahai(const TableSubscenePlayerDahai&) = delete; // Delete unexpected copy constructor
+	TableSubscenePlayerDahai& operator= (const TableSubscenePlayerDahai&) = delete; // Delete unexpected assign operator
 	~TableSubscenePlayerDahai();
 	void Render();
 };
@@ -30,12 +34,16 @@ public:
 class TableSubscenePlayerNakiProto : public TableSubscenePlayerProto {
 public:
 	TableSubscenePlayerNakiProto(DevicePtr device);
+	TableSubscenePlayerNakiProto(const TableSubscenePlayerNakiProto&) = delete; // Delete unexpected copy constructor
+	TableSubscenePlayerNakiProto& operator= (const TableSubscenePlayerNakiProto&) = delete; // Delete unexpected assign operator
 	~TableSubscenePlayerNakiProto();
 };
 
 class TableSubscenePlayerNaki : public TableSubscenePlayerNakiProto {
 public:
 	TableSubscenePlayerNaki(DevicePtr device);
+	TableSubscenePlayerNaki(const TableSubscenePlayerNaki&) = delete; // Delete unexpected copy constructor
+	TableSubscenePlayerNaki& operator= (const TableSubscenePlayerNaki&) = delete; // Delete unexpected assign operator
 	~TableSubscenePlayerNaki();
 	void Render();
 };
@@ -45,6 +53,8 @@ private:
 	TableSubsceneCallCut* callScreen;
 public:
 	TableSubscenePlayerNakiChankan(DevicePtr device);
+	TableSubscenePlayerNakiChankan(const TableSubscenePlayerNakiChankan&) = delete; // Delete unexpected copy constructor
+	TableSubscenePlayerNakiChankan& operator= (const TableSubscenePlayerNakiChankan&) = delete; // Delete unexpected assign operator
 	~TableSubscenePlayerNakiChankan();
 	void Render();
 };

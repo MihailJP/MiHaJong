@@ -1,18 +1,18 @@
-#pragma once
+ï»¿#pragma once
 
-/* ‹ÇI—¹ƒR[ƒh */
-enum EndType : int { // ‹Ç‚ÌI—¹——R
-	DrawRinshan = -2,// —äã‚ğˆø‚­ˆ—‚É–ß‚é
-	Continuing,      // Œp‘±’†
-	Ryuukyoku,       // •’Ê‚Ì—¬‹Ç
-	Agari,           // ’N‚©‚Ì˜a—¹
-	Chonbo,          // ö˜a‚ÅI—¹
-	KyuushuKyuuhai,  // ‹ãí‹ã”v
-	Suukaikan,       // lŠJÈ
-	TripleRon,       // O‰Æ˜a
-	SuufonRenda,     // l•—˜A‘Å
-	SuuchaRiichi,    // ll—§’¼
-	NagashiMangan,   // —¬‚µ–ŠÑ
-	Disconnect,      // ’ÊM“râ(ƒlƒbƒgƒ[ƒN‘Îí‚Ì‚İ)
-	Uukaikan,        // ŒÜ‰ñ–Ú‚ÌÈ‚Å—¬‹Ç‚µ‚½ê‡(’N‚©‚ªlÈq’®”v‚Ìê‡‚Ì‚İ)
+/* å±€çµ‚äº†ã‚³ãƒ¼ãƒ‰ */
+enum EndType : int { // å±€ã®çµ‚äº†ç†ç”±
+	DrawRinshan = -2,// å¶ºä¸Šã‚’å¼•ãå‡¦ç†ã«æˆ»ã‚‹
+	Continuing,      // ç¶™ç¶šä¸­
+	Ryuukyoku,       // æ™®é€šã®æµå±€
+	Agari,           // èª°ã‹ã®å’Œäº†
+	Chonbo,          // éŒ¯å’Œã§çµ‚äº†
+	KyuushuKyuuhai,  // ä¹ç¨®ä¹ç‰Œ
+	Suukaikan,       // å››é–‹æ§“
+	TripleRon,       // ä¸‰å®¶å’Œ
+	SuufonRenda,     // å››é¢¨é€£æ‰“
+	SuuchaRiichi,    // å››äººç«‹ç›´
+	NagashiMangan,   // æµã—æº€è²«
+	Disconnect,      // é€šä¿¡é€”çµ¶(ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯å¯¾æˆ¦æ™‚ã®ã¿)
+	Uukaikan,        // äº”å›ç›®ã®æ§“ã§æµå±€ã—ãŸå ´åˆ(èª°ã‹ãŒå››æ§“å­è´ç‰Œã®å ´åˆã®ã¿)
 };

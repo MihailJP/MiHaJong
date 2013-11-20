@@ -1,18 +1,18 @@
-#include "catalog.h"
+ï»¿#include "catalog.h"
 
 #include "../../common/strcode.h"
 
-/* ƒVƒ“ƒOƒ‹ƒgƒ“ ƒCƒ“ƒXƒ^ƒ“ƒX ƒAƒNƒZƒT */
+/* ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ ã‚¢ã‚¯ã‚»ã‚µ */
 yaku::yakuCalculator::YakuCatalog* yaku::yakuCalculator::YakuCatalog::Instantiate() {
 	// Singleton instance accessor
 	static YakuCatalog instance;
 	return &instance;
 }
 
-// İ’è‚µ‚½ƒ‹[ƒ‹‚ÉŠî‚Ã‚¢‚Ä–ğƒCƒ“ƒXƒ^ƒ“ƒX‚ğ‰Šú‰»‚·‚é
+// è¨­å®šã—ãŸãƒ«ãƒ¼ãƒ«ã«åŸºã¥ã„ã¦å½¹ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’åˆæœŸåŒ–ã™ã‚‹
 void yaku::yakuCalculator::YakuCatalog::catalogInit::init() {
-	YakuCatalog::Instantiate()->catalog.clear(); // ƒŠƒZƒbƒg
-	info(_T("–ğƒJƒ^ƒƒO‚ğƒŠƒZƒbƒg‚µ‚Ü‚µ‚½B"));
+	YakuCatalog::Instantiate()->catalog.clear(); // ãƒªã‚»ãƒƒãƒˆ
+	info(_T("å½¹ã‚«ã‚¿ãƒ­ã‚°ã‚’ãƒªã‚»ãƒƒãƒˆã—ã¾ã—ãŸã€‚"));
 	yakulst_contextual();
 	yakulst_irregular();
 	yakulst_pinhu();
@@ -23,13 +23,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::init() {
 	yakulst_sequence();
 	yakulst_misc();
 	yakulst_dora();
-	info(_T("–ğƒJƒ^ƒƒO‚Ì\’z‚ğŠ®—¹‚µ‚Ü‚µ‚½B"));
+	info(_T("å½¹ã‚«ã‚¿ãƒ­ã‚°ã®æ§‹ç¯‰ã‚’å®Œäº†ã—ã¾ã—ãŸã€‚"));
 }
 void yaku::yakuCalculator::init() {
 	YakuCatalog::catalogInit::init();
 }
 
-// ƒ‹[ƒ‹•¶š—ñ‚©‚çãÊ‚ğİ’è‚·‚é—p
+// ãƒ«ãƒ¼ãƒ«æ–‡å­—åˆ—ã‹ã‚‰é£œã‚’è¨­å®šã™ã‚‹ç”¨
 #ifndef GUOBIAO
 yaku::yakuCalculator::Yaku::HANFUNC
 	yaku::yakuCalculator::YakuCatalog::catalogInit::get_yaku_han
@@ -94,9 +94,9 @@ yaku::yakuCalculator::Yaku::HANFUNC
 }
 #endif /* GUOBIAO */
 
-/* ˆêF‚Ì”»’è */
+/* ä¸€è‰²ã®åˆ¤å®š */
 bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALYSIS* const analysis, bool chin_itsu) {
-	if (analysis->shanten[shantenAll] >= 0) return false; // ‘«Ø‚è—vŒF˜a—¹‚Á‚Ä‚È‚¢
+	if (analysis->shanten[shantenAll] >= 0) return false; // è¶³åˆ‡ã‚Šè¦ä»¶ï¼šå’Œäº†ã£ã¦ãªã„
 	const TileCode Tiles[][9] = {
 		{
 			CharacterOne, CharacterTwo,   CharacterThree, CharacterFour, CharacterFive,

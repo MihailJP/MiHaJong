@@ -1,4 +1,4 @@
-#include "ruleconf.h"
+Ôªø#include "ruleconf.h"
 #include <cstring>
 #include "../scrmanip.h"
 #include "../geometry.h"
@@ -19,10 +19,10 @@ RuleConfigScene::RuleConfigScene(ScreenManipulator* const manipulator) : ConfigM
 }
 void RuleConfigScene::objInit() {
 #endif /*_WIN32*/
-	CreateButton(0, 1240, 1000, 156, 48, _T("Çn Çj"));
+	CreateButton(0, 1240, 1000, 156, 48, _T("ÔºØ Ôº´"));
 	CreateButton(1, 1060, 1000, 156, 48, _T("CANCEL"));
-	CreateButton(2, 880, 1000, 156, 48, _T("NEXT Å®"));
-	CreateButton(3, 700, 1000, 156, 48, _T("Å© PREV"));
+	CreateButton(2, 880, 1000, 156, 48, _T("NEXT ‚Üí"));
+	CreateButton(3, 700, 1000, 156, 48, _T("‚Üê PREV"));
 	redrawItems();
 }
 
@@ -30,10 +30,10 @@ RuleConfigScene::~RuleConfigScene() {
 }
 
 void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName, const CodeConv::tstring& prmContent) {
-	// çÄñ⁄Çï\é¶
-	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ÉAÉXî‰Å~0.75(â°ïùí≤êÆóp)
-	unsigned itmNameCols = strwidth(prmName); // åÖêî(ì˙ñ{åÍÇÕ2åÖ)
-	ArgbColor baseColor = ((prmContent == _T("ÇmÅ^Ç`")) || (prmContent.empty()) || (rules::reqFailed(menuCursor / RULES_IN_PAGE * RULES_IN_PAGE + prmID, rulestat))) ? 0x00bfbfbf : 0x00ffffff;
+	// È†ÖÁõÆ„ÇíË°®Á§∫
+	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // „Ç¢„ÇπÊØî√ó0.75(Ê®™ÂπÖË™øÊï¥Áî®)
+	unsigned itmNameCols = strwidth(prmName); // Ê°ÅÊï∞(Êó•Êú¨Ë™û„ÅØ2Ê°Å)
+	ArgbColor baseColor = ((prmContent == _T("ÔºÆÔºèÔº°")) || (prmContent.empty()) || (rules::reqFailed(menuCursor / RULES_IN_PAGE * RULES_IN_PAGE + prmID, rulestat))) ? 0x00bfbfbf : 0x00ffffff;
 	ArgbColor menuColor = ((menuCursor % RULES_IN_PAGE == prmID) && (buttonCursor == -1)) ? 0xff000000 : 0x7f000000;
 	myTextRenderer->NewText(prmID * 3, prmName,
 		(prmID / 20 * 720 + 50) * WidthRate, 135 + (prmID % 20) * 40, 1.0f,
@@ -49,7 +49,7 @@ void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName,
 }
 
 void RuleConfigScene::redrawItems() {
-	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ÉAÉXî‰Å~0.75(â°ïùí≤êÆóp)
+	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // „Ç¢„ÇπÊØî√ó0.75(Ê®™ÂπÖË™øÊï¥Áî®)
 	for (int i = 0; i < RULES_IN_PAGE; i++) {
 		const unsigned ItemNum = (menuCursor / RULES_IN_PAGE * RULES_IN_PAGE) + i;
 		TCHAR menuitem[128]; rules::getRuleName(menuitem, 128, ItemNum);
@@ -59,11 +59,11 @@ void RuleConfigScene::redrawItems() {
 }
 
 void RuleConfigScene::ShowPageCaption() {
-	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ÉAÉXî‰Å~0.75(â°ïùí≤êÆóp)
+	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // „Ç¢„ÇπÊØî√ó0.75(Ê®™ÂπÖË™øÊï¥Áî®)
 	{
 		CodeConv::tostringstream o; o << _T("Page ") << std::setw(2) << (menuCursor / RULES_IN_PAGE + 1) << _T("/") << RULE_PAGES;
 		CodeConv::tstring pagecaption(o.str());
-		unsigned captionCols = strwidth(pagecaption); // åÖêî(ì˙ñ{åÍÇÕ2åÖ)
+		unsigned captionCols = strwidth(pagecaption); // Ê°ÅÊï∞(Êó•Êú¨Ë™û„ÅØ2Ê°Å)
 		myTextRenderer->NewText(121, pagecaption,
 			(1400 - 15 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 45, 0.833333f,
 			(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate, 0xffffffff);
@@ -71,7 +71,7 @@ void RuleConfigScene::ShowPageCaption() {
 	{
 		TCHAR pagecap[128]; rules::getPageCaption(pagecap, 128, menuCursor / RULES_IN_PAGE);
 		CodeConv::tstring pagecaption(pagecap);
-		unsigned captionCols = strwidth(pagecaption); // åÖêî(ì˙ñ{åÍÇÕ2åÖ)
+		unsigned captionCols = strwidth(pagecaption); // Ê°ÅÊï∞(Êó•Êú¨Ë™û„ÅØ2Ê°Å)
 		myTextRenderer->NewText(122, pagecaption,
 			(1400 - 15 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 75, 0.833333f,
 			(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate, 0xffffffff);
@@ -79,7 +79,7 @@ void RuleConfigScene::ShowPageCaption() {
 	}
 }
 void RuleConfigScene::ShowMessageBelow() {
-	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ÉAÉXî‰Å~0.75(â°ïùí≤êÆóp)
+	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // „Ç¢„ÇπÊØî√ó0.75(Ê®™ÂπÖË™øÊï¥Áî®)
 	TimerMicrosec t = myTimer.elapsed();
 	CodeConv::tstring caption = _T("");
 	if (buttonCursor == -1) {
@@ -91,19 +91,19 @@ void RuleConfigScene::ShowMessageBelow() {
 				caption = verInfoText();
 			break;
 		case 1:
-			caption = CodeConv::tstring(_T("ÉLÅ[É{Å[ÉhëÄçÏ  Å™/Å´:ÉJÅ[É\Éãà⁄ìÆ  Å©/Å®:ëIëíÜÇÃçÄñ⁄ÇïœçX  Esc/X:É{É^ÉìëIëÇ÷"));
+			caption = CodeConv::tstring(_T("„Ç≠„Éº„Éú„Éº„ÉâÊìç‰Ωú  ‚Üë/‚Üì:„Ç´„Éº„ÇΩ„É´ÁßªÂãï  ‚Üê/‚Üí:ÈÅ∏Êäû‰∏≠„ÅÆÈ†ÖÁõÆ„ÇíÂ§âÊõ¥  Esc/X:„Éú„Çø„É≥ÈÅ∏Êäû„Å∏"));
 			break;
 		case 2:
-			caption = CodeConv::tstring(_T("ÉLÅ[É{Å[ÉhëÄçÏ  Home/End:ç∂âEÉJÉâÉÄä‘ÇÃà⁄ìÆ  PageUp/PageDown:ÉyÅ[ÉWä‘ÇÃà⁄ìÆ"));
+			caption = CodeConv::tstring(_T("„Ç≠„Éº„Éú„Éº„ÉâÊìç‰Ωú  Home/End:Â∑¶Âè≥„Ç´„É©„É†Èñì„ÅÆÁßªÂãï  PageUp/PageDown:„Éö„Éº„Ç∏Èñì„ÅÆÁßªÂãï"));
 			break;
 		case 3:
-			caption = CodeConv::tstring(_T("É}ÉEÉXëÄçÏ  çÄñ⁄è„Ç≈ç∂ÉNÉäÉbÉN/ÉzÉCÅ[ÉãâÒì]:ëIëíÜÇÃçÄñ⁄ÇïœçX"));
+			caption = CodeConv::tstring(_T("„Éû„Ç¶„ÇπÊìç‰Ωú  È†ÖÁõÆ‰∏ä„ÅßÂ∑¶„ÇØ„É™„ÉÉ„ÇØ/„Éõ„Ç§„Éº„É´ÂõûËª¢:ÈÅ∏Êäû‰∏≠„ÅÆÈ†ÖÁõÆ„ÇíÂ§âÊõ¥"));
 			break;
 		case 4:
-			caption = CodeConv::tstring(_T("É}ÉEÉXëÄçÏ  âEè„å©èoÇµè„Ç≈ÉzÉCÅ[ÉãâÒì]:ÉyÅ[ÉWä‘ÇÃà⁄ìÆ"));
+			caption = CodeConv::tstring(_T("„Éû„Ç¶„ÇπÊìç‰Ωú  Âè≥‰∏äË¶ãÂá∫„Åó‰∏ä„Åß„Éõ„Ç§„Éº„É´ÂõûËª¢:„Éö„Éº„Ç∏Èñì„ÅÆÁßªÂãï"));
 			break;
 		case 5:
-			caption = CodeConv::tstring(_T("í êMëŒêÌéûÇÃÉãÅ[Éãê›íËÇÕÉzÉXÉgë§ÇÃê›íËÇ™ìKópÇ≥ÇÍÇ‹Ç∑"));
+			caption = CodeConv::tstring(_T("ÈÄö‰ø°ÂØæÊà¶ÊôÇ„ÅÆ„É´„Éº„É´Ë®≠ÂÆö„ÅØ„Éõ„Çπ„ÉàÂÅ¥„ÅÆË®≠ÂÆö„ÅåÈÅ©Áî®„Åï„Çå„Åæ„Åô"));
 			break;
 		}
 	} else {
@@ -111,28 +111,28 @@ void RuleConfigScene::ShowMessageBelow() {
 		case 0:
 			switch (buttonCursor) {
 			case 0:
-				caption = _T("ê›íËÇï€ë∂ÇµÅAÉ^ÉCÉgÉãâÊñ Ç…ñﬂÇËÇ‹Ç∑");
+				caption = _T("Ë®≠ÂÆö„Çí‰øùÂ≠ò„Åó„ÄÅ„Çø„Ç§„Éà„É´ÁîªÈù¢„Å´Êàª„Çä„Åæ„Åô");
 				break;
 			case 1:
-				caption = _T("ê›íËÇîjä¸ÇµÅAÉ^ÉCÉgÉãâÊñ Ç…ñﬂÇËÇ‹Ç∑");
+				caption = _T("Ë®≠ÂÆö„ÇíÁ†¥Ê£Ñ„Åó„ÄÅ„Çø„Ç§„Éà„É´ÁîªÈù¢„Å´Êàª„Çä„Åæ„Åô");
 				break;
 			case 2:
-				caption = _T("éüÇÃÉyÅ[ÉWÇ…à⁄ìÆÇµÇ‹Ç∑");
+				caption = _T("Ê¨°„ÅÆ„Éö„Éº„Ç∏„Å´ÁßªÂãï„Åó„Åæ„Åô");
 				break;
 			case 3:
-				caption = _T("ëOÇÃÉyÅ[ÉWÇ…à⁄ìÆÇµÇ‹Ç∑");
+				caption = _T("Ââç„ÅÆ„Éö„Éº„Ç∏„Å´ÁßªÂãï„Åó„Åæ„Åô");
 				break;
 			}
 			break;
 		case 1:
-			caption = CodeConv::tstring(_T("ÉLÅ[É{Å[ÉhëÄçÏ  Å©/Å®:ÉJÅ[É\Éãà⁄ìÆ  Enter/Space/Z:åàíË  Esc/X:ÉãÅ[Éãê›íËÇ…ñﬂÇÈ"));
+			caption = CodeConv::tstring(_T("„Ç≠„Éº„Éú„Éº„ÉâÊìç‰Ωú  ‚Üê/‚Üí:„Ç´„Éº„ÇΩ„É´ÁßªÂãï  Enter/Space/Z:Ê±∫ÂÆö  Esc/X:„É´„Éº„É´Ë®≠ÂÆö„Å´Êàª„Çã"));
 			break;
 		case 2:
-			caption = CodeConv::tstring(_T("í êMëŒêÌéûÇÃÉãÅ[Éãê›íËÇÕÉzÉXÉgë§ÇÃê›íËÇ™ìKópÇ≥ÇÍÇ‹Ç∑"));
+			caption = CodeConv::tstring(_T("ÈÄö‰ø°ÂØæÊà¶ÊôÇ„ÅÆ„É´„Éº„É´Ë®≠ÂÆö„ÅØ„Éõ„Çπ„ÉàÂÅ¥„ÅÆË®≠ÂÆö„ÅåÈÅ©Áî®„Åï„Çå„Åæ„Åô"));
 			break;
 		}
 	}
-	unsigned captionCols = strwidth(caption); // åÖêî(ì˙ñ{åÍÇÕ2åÖ)
+	unsigned captionCols = strwidth(caption); // Ê°ÅÊï∞(Êó•Êú¨Ë™û„ÅØ2Ê°Å)
 	myTextRenderer->NewText(120, caption,
 		(720 - 9 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 955, 1.0f,
 		(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate,
@@ -143,7 +143,7 @@ void RuleConfigScene::saveRule() {
 	std::memset(&RuleConf[0][0], 0, sizeof(RuleConf));
 	for (unsigned i = 0; i < RULESIZE; i++) {
 		TCHAR ruletxt[128]; rules::getRuleTxt(ruletxt, 128, i, 0);
-		if ((CodeConv::tstring(ruletxt) == _T("")) || (CodeConv::tstring(ruletxt) == _T("ÇmÅ^Ç`")))
+		if ((CodeConv::tstring(ruletxt) == _T("")) || (CodeConv::tstring(ruletxt) == _T("ÔºÆÔºèÔº°")))
 			RuleConf[i / RULE_IN_LINE][i % RULE_IN_LINE] = '-';
 		else
 			RuleConf[i / RULE_IN_LINE][i % RULE_IN_LINE] = rules::digit[rulestat[i]];

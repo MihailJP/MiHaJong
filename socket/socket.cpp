@@ -1,4 +1,4 @@
-#include "socket.h"
+ï»¿#include "socket.h"
 
 namespace mihajong_socket {
 
@@ -8,77 +8,77 @@ HINSTANCE dllInst;
 #endif /* _WIN32 */
 std::array<Sock*, numOfSockets> sockets = {nullptr,};
 
-void errordlg (socket_error& err) { // ƒGƒ‰[ƒ_ƒCƒAƒƒOy”p~z
+void errordlg (socket_error& err) { // ã‚¨ãƒ©ãƒ¼ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã€å»ƒæ­¢ã€‘
 	//MessageBox(nullptr, CodeConv::EnsureTStr(err.what()).c_str(), _T("Socket Error"), MB_ICONERROR | MB_TOPMOST | MB_OK);
 }
 
-DLL int init () try { // ƒ\ƒPƒbƒg‚ğ‰Šú‰»‚·‚é
-#ifdef _WIN32 // Linux‚Å‚Í‰Šú‰»•s—v
+DLL int init () try { // ã‚½ã‚±ãƒƒãƒˆã‚’åˆæœŸåŒ–ã™ã‚‹
+#ifdef _WIN32 // Linuxã§ã¯åˆæœŸåŒ–ä¸è¦
 	if (int err = WSAStartup(MAKEWORD(2, 0), &SocketInfo)) throw socket_initialization_error(err);
 #endif /* _WIN32 */
 	return 0;
 }
 catch (socket_error& err) {
-	errordlg(err); // ƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
+	errordlg(err); // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
 	return err.error_code();
 }
 
-DLL int listen (int sock_id, int port) try { // ƒT[ƒo[‘Ò‚¿ó‚¯ŠJn
-	sockets[sock_id] = new Sock(port); // Ú‘±‚·‚é
+DLL int listen (int sock_id, int port) try { // ã‚µãƒ¼ãƒãƒ¼å¾…ã¡å—ã‘é–‹å§‹
+	sockets[sock_id] = new Sock(port); // æ¥ç¶šã™ã‚‹
 	return 0;
 }
 catch (socket_error& err) {
-	errordlg(err); // ƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
+	errordlg(err); // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
 	return err.error_code();
 }
 
-DLL int connect (int sock_id, const char* const addr, int port) try { // ƒNƒ‰ƒCƒAƒ“ƒgÚ‘±ŠJn
-	sockets[sock_id] = new Sock(addr, port); // Ú‘±‚·‚é
+DLL int connect (int sock_id, const char* const addr, int port) try { // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆæ¥ç¶šé–‹å§‹
+	sockets[sock_id] = new Sock(addr, port); // æ¥ç¶šã™ã‚‹
 	return 0;
 }
 catch (socket_error& err) {
-	errordlg(err); // ƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
+	errordlg(err); // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
 	return 1;
 }
 
-DLL int connected (int sock_id) try { // Ú‘±‚³‚ê‚Ä‚¢‚é‚©Šm”F
-	return sockets[sock_id]->connected() ? 1 : 0; // Ú‘±‚³‚ê‚Ä‚¢‚é‚©Šm”F
+DLL int connected (int sock_id) try { // æ¥ç¶šã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèª
+	return sockets[sock_id]->connected() ? 1 : 0; // æ¥ç¶šã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèª
 }
-catch (socket_error& err) { // ‘—M¸”s
-	errordlg(err); // ƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
+catch (socket_error& err) { // é€ä¿¡å¤±æ•—æ™‚
+	errordlg(err); // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
 	return -(err.error_code());
 }
 
-DLL int putc (int sock_id, int byte) try { // 1ƒoƒCƒg‘—M
-	sockets[sock_id]->putc((unsigned char)byte); // 1ƒoƒCƒg‘—M
+DLL int putc (int sock_id, int byte) try { // 1ãƒã‚¤ãƒˆé€ä¿¡
+	sockets[sock_id]->putc((unsigned char)byte); // 1ãƒã‚¤ãƒˆé€ä¿¡
 	return 0;
 }
-catch (socket_error& err) { // ‘—M¸”s
-	errordlg(err); // ƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
+catch (socket_error& err) { // é€ä¿¡å¤±æ•—æ™‚
+	errordlg(err); // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
 	return err.error_code();
 }
 
-DLL int puts (int sock_id, LPCTSTR const str) try { // •¶š—ñ‘—M
-	sockets[sock_id]->puts(CodeConv::tstring(str)); // null-terminated (C-style) string ‘—M
+DLL int puts (int sock_id, LPCTSTR const str) try { // æ–‡å­—åˆ—é€ä¿¡
+	sockets[sock_id]->puts(CodeConv::tstring(str)); // null-terminated (C-style) string é€ä¿¡
 	return 0;
 }
-catch (socket_error& err) { // ‘—M¸”s
-	errordlg(err); // ƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
+catch (socket_error& err) { // é€ä¿¡å¤±æ•—æ™‚
+	errordlg(err); // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
 	return err.error_code();
 }
 
-DLL int getc (int sock_id) try { // 1ƒoƒCƒgóM
-	return (int)sockets[sock_id]->getc(); // 1ƒoƒCƒgóM
+DLL int getc (int sock_id) try { // 1ãƒã‚¤ãƒˆå—ä¿¡
+	return (int)sockets[sock_id]->getc(); // 1ãƒã‚¤ãƒˆå—ä¿¡
 }
-catch (queue_empty&) { // ‚Ü‚¾óM‚·‚éƒf[ƒ^‚ª‚È‚¢ê‡
+catch (queue_empty&) { // ã¾ã å—ä¿¡ã™ã‚‹ãƒ‡ãƒ¼ã‚¿ãŒãªã„å ´åˆ
 	return -1;
 }
-catch (socket_error& err) { // óM¸”s
-	errordlg(err); // ƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
+catch (socket_error& err) { // å—ä¿¡å¤±æ•—æ™‚
+	errordlg(err); // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
 	return -(err.error_code());
 }
 
-DLL int gets (int sock_id, LPTSTR const stringline, int bufsize) try { // 1sóM
+DLL int gets (int sock_id, LPTSTR const stringline, int bufsize) try { // 1è¡Œå—ä¿¡
 #if defined(_MSC_VER)
 	_tcscpy_s(stringline, bufsize, sockets[sock_id]->gets().c_str());
 #else
@@ -86,22 +86,22 @@ DLL int gets (int sock_id, LPTSTR const stringline, int bufsize) try { // 1só
 #endif
 	return 0;
 }
-catch (queue_empty&) { // ‚Ü‚¾óM‚·‚éƒf[ƒ^‚ª‚È‚¢ê‡
+catch (queue_empty&) { // ã¾ã å—ä¿¡ã™ã‚‹ãƒ‡ãƒ¼ã‚¿ãŒãªã„å ´åˆ
 	return -1;
 }
-catch (socket_error& err) { // óM¸”s
-	errordlg(err); // ƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
+catch (socket_error& err) { // å—ä¿¡å¤±æ•—æ™‚
+	errordlg(err); // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
 	return -(err.error_code());
 }
 
-DLL int hangup (int sock_id) { // Ú‘±‚ğØ‚é
+DLL int hangup (int sock_id) { // æ¥ç¶šã‚’åˆ‡ã‚‹
 	delete sockets[sock_id];
 	sockets[sock_id] = nullptr;
 	return 0;
 }
 
-DLL int bye () { // ƒ\ƒPƒbƒg‚ÌƒNƒŠƒ“ƒiƒbƒv
-#ifdef _WIN32 // Linux‚Å‚Í•s—v
+DLL int bye () { // ã‚½ã‚±ãƒƒãƒˆã®ã‚¯ãƒªãƒ³ãƒŠãƒƒãƒ—
+#ifdef _WIN32 // Linuxã§ã¯ä¸è¦
 	return WSACleanup();
 #endif /* _WIN32 */
 }
@@ -109,8 +109,8 @@ DLL int bye () { // ƒ\ƒPƒbƒg‚ÌƒNƒŠƒ“ƒiƒbƒv
 }
 // -------------------------------------------------------------------------
 
-#ifdef _WIN32 // Linux‚Å‚Í•s—v
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) { // ‰Šú‰»‚È‚Ç‚ğs‚¤
+#ifdef _WIN32 // Linuxã§ã¯ä¸è¦
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) { // åˆæœŸåŒ–ãªã©ã‚’è¡Œã†
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
 		mihajong_socket::dllInst = hinstDLL;

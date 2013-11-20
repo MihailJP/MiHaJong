@@ -1,4 +1,4 @@
-#include "filesel.h"
+ï»¿#include "filesel.h"
 
 #include <sstream>
 #ifdef _WIN32
@@ -9,9 +9,9 @@
 #include "../func.h"
 #include "../random.h"
 
-std::vector<std::string> aiscript::FileSelector::files; // AI‚ÌƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹ˆê——‚ğƒtƒ‹ƒpƒX‚ÅŠi”[
+std::vector<std::string> aiscript::FileSelector::files; // AIã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§ã‚’ãƒ•ãƒ«ãƒ‘ã‚¹ã§æ ¼ç´
 
-/* ƒtƒ@ƒCƒ‹ƒŠƒXƒg‘–¸ */
+/* ãƒ•ã‚¡ã‚¤ãƒ«ãƒªã‚¹ãƒˆèµ°æŸ» */
 void aiscript::FileSelector::filelist() {
 	std::string confPath = confpath::confPath();
 	if (confPath.empty()) confPath = ".";
@@ -24,20 +24,20 @@ void aiscript::FileSelector::filelist() {
 	std::string scriptFiles = scriptPath + std::string("\\*.lua");
 	files.clear();
 	WIN32_FIND_DATAA finddat;
-	info(_T("AIƒXƒNƒŠƒvƒg‚ğŒŸõ‚µ‚Ü‚·"));
+	info(_T("AIã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’æ¤œç´¢ã—ã¾ã™"));
 
-	/* ŒŸõŠJn */
+	/* æ¤œç´¢é–‹å§‹ */
 	HANDLE h = FindFirstFileA(scriptFiles.c_str(), &finddat);
 	if (h == INVALID_HANDLE_VALUE) {
-		error(_T("ƒtƒ@ƒCƒ‹ŒŸõ‚Å‚«‚Ü‚¹‚ñII")); return;
+		error(_T("ãƒ•ã‚¡ã‚¤ãƒ«æ¤œç´¢ã§ãã¾ã›ã‚“ï¼ï¼")); return;
 	}
-	do { // ŒŸõ
+	do { // æ¤œç´¢
 		if (!strcmp(finddat.cFileName + strlen(finddat.cFileName) - 4, ".lua")) {
-			CodeConv::tostringstream o; o << _T("ŒŸo: ") << finddat.cFileName; info(o.str().c_str());
+			CodeConv::tostringstream o; o << _T("æ¤œå‡º: ") << finddat.cFileName; info(o.str().c_str());
 			files.push_back(scriptPath + std::string("\\") + std::string(finddat.cFileName));
 		}
 	} while (FindNextFileA(h, &finddat));
-	/* ŒŸõŠ®—¹I */
+	/* æ¤œç´¢å®Œäº†ï¼ */
 	FindClose(h);
 #else /*_WIN32*/
 #ifdef GUOBIAO
@@ -46,26 +46,26 @@ void aiscript::FileSelector::filelist() {
 	std::string scriptPath = confPath + std::string("/ai");
 #endif /* GUOBIAO */
 	files.clear();
-	info(_T("AIƒXƒNƒŠƒvƒg‚ğŒŸõ‚µ‚Ü‚·"));
+	info(_T("AIã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’æ¤œç´¢ã—ã¾ã™"));
 
-	/* ŒŸõŠJn */
+	/* æ¤œç´¢é–‹å§‹ */
 	DIR* dir = opendir(scriptPath.c_str());
 	dirent* dirp;
 	if (!dir) {
-		error(_T("ƒtƒ@ƒCƒ‹ŒŸõ‚Å‚«‚Ü‚¹‚ñII")); return;
+		error(_T("ãƒ•ã‚¡ã‚¤ãƒ«æ¤œç´¢ã§ãã¾ã›ã‚“ï¼ï¼")); return;
 	}
-	while (dirp = readdir(dir)) { // ŒŸõ
+	while (dirp = readdir(dir)) { // æ¤œç´¢
 		if (!strcmp(dirp->d_name + strlen(dirp->d_name) - 4, ".lua")) {
-			CodeConv::tostringstream o; o << _T("ŒŸo: ") << (dirp->d_name); info(o.str().c_str());
+			CodeConv::tostringstream o; o << _T("æ¤œå‡º: ") << (dirp->d_name); info(o.str().c_str());
 			files.push_back(scriptPath + std::string("/") + std::string(dirp->d_name));
 		}
 	}
-	/* ŒŸõŠ®—¹I */
+	/* æ¤œç´¢å®Œäº†ï¼ */
 	closedir(dir);
 #endif /*_WIN32*/
 }
 
-/* ƒtƒ@ƒCƒ‹‚ğƒ‰ƒ“ƒ_ƒ€‚É‘I‘ğ */
+/* ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ©ãƒ³ãƒ€ãƒ ã«é¸æŠ */
 std::string aiscript::FileSelector::randomfile() {
 	return files[RndNum::rnd(files.size())];
 }

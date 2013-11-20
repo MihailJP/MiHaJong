@@ -1,4 +1,4 @@
-#include "editbox.h"
+ï»¿#include "editbox.h"
 #include <cmath>
 #include "../extchar.h"
 #include "../resource.h"
@@ -225,8 +225,8 @@ void EditBox::renderIMCandidates(IMStat& imStat, int X, int Y, unsigned& TextID)
 	unsigned wndcols = 0;
 	for (unsigned i = pageStart; (i < candidates.size()) && (i < (pageStart + pageSize)); i++) {
 		unsigned tmpcols = 0;
-		for (auto k = candidates[i].begin(); k != candidates[i].end(); ++k)
-			tmpcols += isFullWidth(*k) ? 2: 1;
+		for (const auto& k : candidates[i])
+			tmpcols += isFullWidth(k) ? 2: 1;
 		if (wndcols < tmpcols) wndcols = tmpcols;
 	}
 	if (!candidates.empty()) {
@@ -258,7 +258,7 @@ void EditBox::renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol) {
 	cursorLine->End();
 #else
 	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix(); glLoadIdentity(); // ‚±‚±‚Ås—ñ‚ğƒŠƒZƒbƒg‚µ‚Ä‚¨‚©‚È‚¢‚Æ‚¨‚©‚µ‚È–‚É‚È‚é
+	glPushMatrix(); glLoadIdentity(); // ã“ã“ã§è¡Œåˆ—ã‚’ãƒªã‚»ãƒƒãƒˆã—ã¦ãŠã‹ãªã„ã¨ãŠã‹ã—ãªäº‹ã«ãªã‚‹
 	glLineWidth(2);
 	glColor4d(
 		(double)((color & 0x00ff0000) >> 16) / 255.0,
@@ -451,7 +451,7 @@ void EditBox::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 	}
 }
 #else /*_WIN32*/
-/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢À‘• */
+/* TODO: Linuxã§ã¯æ—¥æœ¬èªå…¥åŠ›ãŒæœªå®Ÿè£… */
 #endif /*_WIN32*/
 
 void EditBox::setText(const CodeConv::tstring& newstr) {
