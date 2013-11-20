@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef _WIN32
 #include <windows.h>
@@ -11,20 +11,20 @@ namespace mihajong_graphic {
 
 class ScreenManipulator;
 
-/* ƒV[ƒ“ ƒIƒuƒWƒFƒNƒg‚ÌƒX[ƒp[ƒNƒ‰ƒX */
+/* ã‚·ãƒ¼ãƒ³ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¹ãƒ¼ãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹ */
 class Scene {
 protected:
-	struct Region {int Left, Top, Right, Bottom;}; // ƒNƒŠƒbƒNˆÊ’u”»’è—p
+	struct Region {int Left, Top, Right, Bottom;}; // ã‚¯ãƒªãƒƒã‚¯ä½ç½®åˆ¤å®šç”¨
 	static const Region NullRegion;
 	void setRegion(unsigned regionID, int Left, int Top, int Right, int Bottom);
 	void setRegion(unsigned regionID, const Region& region);
-	int whichRegion(int X, int Y); // ‚Ç‚Ì—Ìˆæ‚Éƒ}ƒEƒX‚ª‚ ‚é‚©‚ğæ“¾
+	int whichRegion(int X, int Y); // ã©ã®é ˜åŸŸã«ãƒã‚¦ã‚¹ãŒã‚ã‚‹ã‹ã‚’å–å¾—
 private:
-	std::vector<Region> regions; // ƒNƒŠƒbƒNˆÊ’u”»’è—p
+	std::vector<Region> regions; // ã‚¯ãƒªãƒƒã‚¯ä½ç½®åˆ¤å®šç”¨
 protected:
-	ScreenManipulator* caller; // ŒÄ‚Ño‚µŒ³‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	ScreenManipulator* caller; // å‘¼ã³å‡ºã—å…ƒã¸ã®ãƒã‚¤ãƒ³ã‚¿
 public:
-	virtual void Render() = 0; // •`‰æˆ—
+	virtual void Render() = 0; // æç”»å‡¦ç†
 	Scene(ScreenManipulator* const manipulator) {
 		caller = manipulator;
 	}
@@ -38,7 +38,7 @@ public:
 	virtual void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) {}
 	virtual void PadInput(LPDIDEVICEOBJECTDATA od);
 #else /*_WIN32*/
-	/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢À‘• */
+	/* TODO: Linuxã§ã¯æ—¥æœ¬èªå…¥åŠ›ãŒæœªå®Ÿè£… */
 	virtual void KeyboardInput(const XEvent* od) {}
 	virtual void MouseInput(const XEvent* od, int X, int Y) {}
 #endif /*_WIN32*/

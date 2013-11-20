@@ -1,4 +1,4 @@
-#include "confmenu.h"
+ï»¿#include "confmenu.h"
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
 #include "../../common/version.h"
@@ -23,7 +23,7 @@ ConfigMenuProto::~ConfigMenuProto() {
 }
 
 void ConfigMenuProto::CreateButton(unsigned btnID, int X, int Y, unsigned Width, unsigned Height, const CodeConv::tstring& caption) {
-	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ƒAƒX”ä~0.75(‰¡•’²®—p)
+	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ã‚¢ã‚¹æ¯”Ã—0.75(æ¨ªå¹…èª¿æ•´ç”¨)
 	myButtonPic->setButton(btnID, ButtonPic::clear,
 		X * (WidthRate * Geometry::WindowScale()), Y * Geometry::WindowScale(),
 		Width * (WidthRate * Geometry::WindowScale()), Height * Geometry::WindowScale(),
@@ -32,8 +32,8 @@ void ConfigMenuProto::CreateButton(unsigned btnID, int X, int Y, unsigned Width,
 }
 
 void ConfigMenuProto::Render() {
-	clearWithGameTypeColor(); // ƒoƒbƒtƒ@ƒNƒŠƒA
-	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ƒAƒX”ä~0.75(‰¡•’²®—p)
+	clearWithGameTypeColor(); // ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
+	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ã‚¢ã‚¹æ¯”Ã—0.75(æ¨ªå¹…èª¿æ•´ç”¨)
 #ifndef _WIN32
 	if (!menuInitFlag) {
 		objInit();
@@ -119,15 +119,15 @@ void ConfigMenuProto::KeyboardInput(const XEvent* od)
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{
-	case DIK_UP: case DIK_K: // ‘O‚Ì€–Ú
+	case DIK_UP: case DIK_K: // å‰ã®é …ç›®
 		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Prev(1);
 		break;
-	case DIK_DOWN: case DIK_J: // ŽŸ‚Ì€–Ú
+	case DIK_DOWN: case DIK_J: // æ¬¡ã®é …ç›®
 		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Next(1);
 		break;
-	case DIK_LEFT: case DIK_H: // ‘O‚Ì‘I‘ðŽˆ
+	case DIK_LEFT: case DIK_H: // å‰ã®é¸æŠžè‚¢
 		if (keyDown) {
 			if (buttonCursor == -1)
 				BtnEvent_Content_Roll_Down();
@@ -135,7 +135,7 @@ void ConfigMenuProto::KeyboardInput(const XEvent* od)
 				BtnEvent_Button_Next();
 		}
 		break;
-	case DIK_RIGHT: case DIK_L: // ŽŸ‚Ì‘I‘ðŽˆ
+	case DIK_RIGHT: case DIK_L: // æ¬¡ã®é¸æŠžè‚¢
 		if (keyDown) {
 			if (buttonCursor == -1)
 				BtnEvent_Content_Roll_Up();
@@ -143,26 +143,26 @@ void ConfigMenuProto::KeyboardInput(const XEvent* od)
 				BtnEvent_Button_Prev();
 		}
 		break;
-	case DIK_HOME: // ‘O‚ÌƒJƒ‰ƒ€
+	case DIK_HOME: // å‰ã®ã‚«ãƒ©ãƒ 
 		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Prev(20);
 		break;
-	case DIK_END: // ŽŸ‚ÌƒJƒ‰ƒ€
+	case DIK_END: // æ¬¡ã®ã‚«ãƒ©ãƒ 
 		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Next(20);
 		break;
-	case DIK_PRIOR: // ‘O‚Ìƒy[ƒW
+	case DIK_PRIOR: // å‰ã®ãƒšãƒ¼ã‚¸
 		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Prev(itemsPerPage());
 		break;
-	case DIK_NEXT: // ŽŸ‚Ìƒy[ƒW
+	case DIK_NEXT: // æ¬¡ã®ãƒšãƒ¼ã‚¸
 		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Next(itemsPerPage());
 		break;
-	case DIK_ESCAPE: case DIK_X: // ƒLƒƒƒ“ƒZƒ‹ƒL[
+	case DIK_ESCAPE: case DIK_X: // ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã‚­ãƒ¼
 		if (keyDown) BtnEvent_Cancel_Down();
 		break;
-	case DIK_RETURN: case DIK_SPACE: case DIK_Z: // Œˆ’èƒL[
+	case DIK_RETURN: case DIK_SPACE: case DIK_Z: // æ±ºå®šã‚­ãƒ¼
 		if (keyDown) BtnEvent_OK_Down();
 		else BtnEvent_OK_Up();
 		break;
@@ -214,14 +214,14 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 #endif /*_WIN32*/
 	{
 #ifdef _WIN32
-	case DIMOFS_X: case DIMOFS_Y: // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ð“®‚©‚µ‚½ê‡
+	case DIMOFS_X: case DIMOFS_Y: // ãƒžã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’å‹•ã‹ã—ãŸå ´åˆ
 #else /*_WIN32*/
-	case MotionNotify: // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ð“®‚©‚µ‚½ê‡
+	case MotionNotify: // ãƒžã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’å‹•ã‹ã—ãŸå ´åˆ
 #endif /*_WIN32*/
 		setcursor();
 		break;
 #ifdef _WIN32
-	case DIMOFS_Z: // ƒzƒC[ƒ‹‚Ì‘€ì
+	case DIMOFS_Z: // ãƒ›ã‚¤ãƒ¼ãƒ«ã®æ“ä½œ
 		if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
 			setcursor();
 			if ((LONG)od->dwData > 0) BtnEvent_Content_Roll_Up();
@@ -233,10 +233,10 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 				BtnEvent_Content_Page_Prev();
 		}
 		break;
-	case DIMOFS_BUTTON0: // ¶ƒNƒŠƒbƒN
+	case DIMOFS_BUTTON0: // å·¦ã‚¯ãƒªãƒƒã‚¯
 		if ((od->dwData) && (region >= 0) && (region <= (itemsPerPage() - 1)))
 #else /*_WIN32*/
-	case ButtonPress: // ƒ}ƒEƒX‚Ì¶ƒ{ƒ^ƒ“
+	case ButtonPress: // ãƒžã‚¦ã‚¹ã®å·¦ãƒœã‚¿ãƒ³
 		if ((od->xbutton.button == Button1) && (region >= 0) && (region <= (itemsPerPage() - 1)))
 #endif /*_WIN32*/
 		{
@@ -254,14 +254,14 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 		else if ((od->xbutton.button == Button1) && (region >= btnRegionStart) && (region < (btnRegionStart + numberOfButtons()))) {
 			setcursor();
 			BtnEvent_OK_Down();
-		} else if (od->xbutton.button == Button4) { // ƒzƒC[ƒ‹‚Ì‘€ìiƒvƒ‰ƒX•ûŒüj
+		} else if (od->xbutton.button == Button4) { // ãƒ›ã‚¤ãƒ¼ãƒ«ã®æ“ä½œï¼ˆãƒ—ãƒ©ã‚¹æ–¹å‘ï¼‰
 			if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
 				setcursor();
 				BtnEvent_Content_Roll_Up();
 			} else if (region == 40) {
 				BtnEvent_Content_Page_Next();
 			}
-		} else if (od->xbutton.button == Button5) { // ƒzƒC[ƒ‹‚Ì‘€ìiƒ}ƒCƒiƒX•ûŒüj
+		} else if (od->xbutton.button == Button5) { // ãƒ›ã‚¤ãƒ¼ãƒ«ã®æ“ä½œï¼ˆãƒžã‚¤ãƒŠã‚¹æ–¹å‘ï¼‰
 			if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
 				setcursor();
 				BtnEvent_Content_Roll_Down();
@@ -270,7 +270,7 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 			}
 		}
 		break;
-	case ButtonRelease: // ƒ}ƒEƒX‚Ì¶ƒ{ƒ^ƒ“
+	case ButtonRelease: // ãƒžã‚¦ã‚¹ã®å·¦ãƒœã‚¿ãƒ³
 		if ((od->xbutton.button == Button1) && (region >= btnRegionStart) && (region < (btnRegionStart + numberOfButtons()))) {
 			setcursor();
 			BtnEvent_OK_Up();
@@ -283,24 +283,24 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 CodeConv::tstring ConfigMenuProto::verInfoText() {
 #ifdef _WIN32
 	CodeConv::tostringstream o; SYSTEMTIME Zeit; GetLocalTime(&Zeit);
-	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / Œ»Ý“úŽž ") <<
-		std::setw(4) << Zeit.wYear << _T("”N") <<
-		std::setw(2) << Zeit.wMonth << _T("ŒŽ") <<
-		std::setw(2) << Zeit.wDay << _T("“ú ") <<
-		((Zeit.wHour / 12 == 0) ? _T("Œß‘O") : _T("ŒßŒã")) <<
-		std::setw(2) << (Zeit.wHour % 12) << _T("Žž") <<
-		std::setw(2) << std::setfill(_T('0')) << Zeit.wMinute << _T("•ª");
+	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / ç¾åœ¨æ—¥æ™‚ ") <<
+		std::setw(4) << Zeit.wYear << _T("å¹´") <<
+		std::setw(2) << Zeit.wMonth << _T("æœˆ") <<
+		std::setw(2) << Zeit.wDay << _T("æ—¥ ") <<
+		((Zeit.wHour / 12 == 0) ? _T("åˆå‰") : _T("åˆå¾Œ")) <<
+		std::setw(2) << (Zeit.wHour % 12) << _T("æ™‚") <<
+		std::setw(2) << std::setfill(_T('0')) << Zeit.wMinute << _T("åˆ†");
 	return o.str();
 #else /*_WIN32*/
 	CodeConv::tostringstream o;
 	time_t Zeitzahl = time(nullptr); tm Zeit = *localtime(&Zeitzahl);
-	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / Œ»Ý“úŽž ") <<
-		std::setw(4) << (Zeit.tm_year + 1900) << _T("”N") <<
-		std::setw(2) << (Zeit.tm_mon + 1) << _T("ŒŽ") <<
-		std::setw(2) << Zeit.tm_mday << _T("“ú ") <<
-		((Zeit.tm_hour / 12 == 0) ? _T("Œß‘O") : _T("ŒßŒã")) <<
-		std::setw(2) << (Zeit.tm_hour % 12) << _T("Žž") <<
-		std::setw(2) << std::setfill(_T('0')) << Zeit.tm_min << _T("•ª");
+	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / ç¾åœ¨æ—¥æ™‚ ") <<
+		std::setw(4) << (Zeit.tm_year + 1900) << _T("å¹´") <<
+		std::setw(2) << (Zeit.tm_mon + 1) << _T("æœˆ") <<
+		std::setw(2) << Zeit.tm_mday << _T("æ—¥ ") <<
+		((Zeit.tm_hour / 12 == 0) ? _T("åˆå‰") : _T("åˆå¾Œ")) <<
+		std::setw(2) << (Zeit.tm_hour % 12) << _T("æ™‚") <<
+		std::setw(2) << std::setfill(_T('0')) << Zeit.tm_min << _T("åˆ†");
 	return o.str();
 #endif /*_WIN32*/
 }

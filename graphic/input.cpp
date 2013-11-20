@@ -1,4 +1,4 @@
-#include "input.h"
+Ôªø#include "input.h"
 #ifdef _WIN32
 #include "init.h"
 #include "../common/strcode.h"
@@ -11,7 +11,7 @@ namespace input {
 InputManipulator::InputManipulator(HWND hwnd, bool fullscreen) {
 	if (FAILED(DirectInput8Create(
 		GraphicDLL, 0x0800, IID_IDirectInput8, reinterpret_cast<void**>(&myInterface), nullptr)))
-		throw CodeConv::tstring(_T("DirectInput8Createé∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("DirectInput8CreateÂ§±ÊïóÔºÅÔºÅ"));
 	myKeyboard = new Keyboard(myInterface, hwnd);
 	myMouse = new Mouse(myInterface, hwnd, fullscreen);
 	try {
@@ -36,11 +36,11 @@ InputDevice::~InputDevice() {}
 
 Keyboard::Keyboard(LPDIRECTINPUT8 inputInterface, HWND hwnd) {
 	if (FAILED(inputInterface->CreateDevice(GUID_SysKeyboard, &myInputDevice, nullptr)))
-		throw CodeConv::tstring(_T("CreateDeviceé∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("CreateDeviceÂ§±ÊïóÔºÅÔºÅ"));
 	if (FAILED(myInputDevice->SetDataFormat(&c_dfDIKeyboard)))
-		throw CodeConv::tstring(_T("SetDataFormaté∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("SetDataFormatÂ§±ÊïóÔºÅÔºÅ"));
 	if (FAILED(myInputDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
-		throw CodeConv::tstring(_T("SetCooperativeLevelé∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("SetCooperativeLevelÂ§±ÊïóÔºÅÔºÅ"));
 	DIPROPDWORD diProp;
 	diProp.diph.dwSize = sizeof(diProp);
 	diProp.diph.dwHeaderSize = sizeof(diProp.diph);
@@ -48,7 +48,7 @@ Keyboard::Keyboard(LPDIRECTINPUT8 inputInterface, HWND hwnd) {
 	diProp.diph.dwHow = DIPH_DEVICE;
 	diProp.dwData = 1000;
 	if (FAILED(myInputDevice->SetProperty(DIPROP_BUFFERSIZE, &diProp.diph)))
-		throw CodeConv::tstring(_T("SetPropertyé∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("SetPropertyÂ§±ÊïóÔºÅÔºÅ"));
 	myInputDevice->Acquire();
 }
 
@@ -64,11 +64,11 @@ Keyboard::~Keyboard() {
 Mouse::Mouse(LPDIRECTINPUT8 inputInterface, HWND hwnd, bool fullscreen) {
 	hWnd = hwnd; fullScreenFlag = fullscreen;
 	if (FAILED(inputInterface->CreateDevice(GUID_SysMouse, &myInputDevice, nullptr)))
-		throw CodeConv::tstring(_T("CreateDeviceé∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("CreateDeviceÂ§±ÊïóÔºÅÔºÅ"));
 	if (FAILED(myInputDevice->SetDataFormat(&c_dfDIMouse2)))
-		throw CodeConv::tstring(_T("SetDataFormaté∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("SetDataFormatÂ§±ÊïóÔºÅÔºÅ"));
 	if (FAILED(myInputDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
-		throw CodeConv::tstring(_T("SetCooperativeLevelé∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("SetCooperativeLevelÂ§±ÊïóÔºÅÔºÅ"));
 	DIPROPDWORD diProp;
 	diProp.diph.dwSize = sizeof(diProp);
 	diProp.diph.dwHeaderSize = sizeof(diProp.diph);
@@ -76,7 +76,7 @@ Mouse::Mouse(LPDIRECTINPUT8 inputInterface, HWND hwnd, bool fullscreen) {
 	diProp.diph.dwHow = DIPH_DEVICE;
 	diProp.dwData = 1000;
 	if (FAILED(myInputDevice->SetProperty(DIPROP_BUFFERSIZE, &diProp.diph)))
-		throw CodeConv::tstring(_T("SetPropertyé∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("SetPropertyÂ§±ÊïóÔºÅÔºÅ"));
 	myInputDevice->Acquire();
 }
 
@@ -109,11 +109,11 @@ BOOL CALLBACK Joystick::enumerationCallback(const DIDEVICEINSTANCE *pdidInstance
 void Joystick::init_main() {
 	currentInterface->EnumDevices(DI8DEVCLASS_GAMECTRL, enumerationCallback, nullptr, DIEDFL_ATTACHEDONLY);
 	if (!currentInstance->myInputDevice)
-		throw CodeConv::tstring(_T("ÉWÉáÉCÉXÉeÉBÉbÉNÇ™Ç†ÇËÇ‹ÇπÇÒ"));
+		throw CodeConv::tstring(_T("„Ç∏„Éß„Ç§„Çπ„ÉÜ„Ç£„ÉÉ„ÇØ„Åå„ÅÇ„Çä„Åæ„Åõ„Çì"));
 	if (FAILED(currentInstance->myInputDevice->SetDataFormat(&c_dfDIJoystick)))
-		throw CodeConv::tstring(_T("SetDataFormaté∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("SetDataFormatÂ§±ÊïóÔºÅÔºÅ"));
 	if (FAILED(currentInstance->myInputDevice->SetCooperativeLevel(currentInstance->myHWnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
-		throw CodeConv::tstring(_T("SetCooperativeLevelé∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("SetCooperativeLevelÂ§±ÊïóÔºÅÔºÅ"));
 	DIPROPDWORD diProp;
 	diProp.diph.dwSize = sizeof(diProp);
 	diProp.diph.dwHeaderSize = sizeof(diProp.diph);
@@ -121,7 +121,7 @@ void Joystick::init_main() {
 	diProp.diph.dwHow = DIPH_DEVICE;
 	diProp.dwData = 1000;
 	if (FAILED(reinterpret_cast<Joystick*>(currentInstance)->myInputDevice->SetProperty(DIPROP_BUFFERSIZE, &diProp.diph)))
-		throw CodeConv::tstring(_T("SetProperty(DIPROP_BUFFERSIZE)é∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("SetProperty(DIPROP_BUFFERSIZE)Â§±ÊïóÔºÅÔºÅ"));
 	DIPROPRANGE diRange;
 	diRange.diph.dwSize = sizeof(diRange);
 	diRange.diph.dwHeaderSize = sizeof(diRange.diph);
@@ -130,7 +130,7 @@ void Joystick::init_main() {
 	diRange.lMin = -32767;
 	diRange.lMax = 32767;
 	if (FAILED(reinterpret_cast<Joystick*>(currentInstance)->myInputDevice->SetProperty(DIPROP_RANGE, &diRange.diph)))
-		throw CodeConv::tstring(_T("SetProperty(DIPROP_RANGE)é∏îsÅIÅI"));
+		throw CodeConv::tstring(_T("SetProperty(DIPROP_RANGE)Â§±ÊïóÔºÅÔºÅ"));
 	reinterpret_cast<Joystick*>(currentInstance)->myInputDevice->Acquire();
 }
 Joystick::Joystick(LPDIRECTINPUT8 inputInterface, HWND hwnd) {

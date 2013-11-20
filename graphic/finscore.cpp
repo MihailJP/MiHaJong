@@ -1,4 +1,4 @@
-#include "finscore.h"
+﻿#include "finscore.h"
 
 namespace mihajong_graphic {
 

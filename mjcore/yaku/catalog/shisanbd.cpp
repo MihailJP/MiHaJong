@@ -1,27 +1,27 @@
-#include "../catalog.h"
+ï»¿#include "../catalog.h"
 
 bool yaku::yakuCalculator::chkShisanBuDa(const GameTable* const gameStat, PlayerID targetPlayer) {
-	// \O•s“ƒ‚©‚Ç‚¤‚©”»’è‚·‚é
+	// åä¸‰ä¸å¡”ã‹ã©ã†ã‹åˆ¤å®šã™ã‚‹
 #ifdef GUOBIAO
-	return false; // ‚»‚ñ‚Èƒ‹[ƒ‹‚ ‚é‚Æ‚Å‚àv‚Á‚½H c”OI‚³y(ry
+	return false; // ãã‚“ãªãƒ«ãƒ¼ãƒ«ã‚ã‚‹ã¨ã§ã‚‚æ€ã£ãŸï¼Ÿ æ®‹å¿µï¼ã•y(ry
 #else /* GUOBIAO */
-	if (!RuleData::chkRuleApplied("shiisan_puutaa")) return false; // ‚»‚ñ‚Èƒ‹[ƒ‹‚ ‚é‚Æ‚Å‚àv‚Á‚½H c”OI‚³y(ry
-	if (gameStat->Player[targetPlayer].FirstDrawFlag) // –Â‚«‚ª‚È‚­‚Äˆê„–Ú‚Å‚ ‚é‚±‚Æ‚ª•K{ğŒ
+	if (!RuleData::chkRuleApplied("shiisan_puutaa")) return false; // ãã‚“ãªãƒ«ãƒ¼ãƒ«ã‚ã‚‹ã¨ã§ã‚‚æ€ã£ãŸï¼Ÿ æ®‹å¿µï¼ã•y(ry
+	if (gameStat->Player[targetPlayer].FirstDrawFlag) // é³´ããŒãªãã¦ä¸€å·¡ç›®ã§ã‚ã‚‹ã“ã¨ãŒå¿…é ˆæ¡ä»¶
 		return ((ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenRegular) == 7) &&
-		// ‘Îˆê”ÊŒ`7Œü’®‚Æ‚ÍA‘Îq‚Ü‚½‚Í“ƒq‚ª1‚Â‚¾‚¯‚ ‚éó‘Ô‚ÅA–Êq‚ª‚È‚¢ó‘Ô
-		(ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenPairs) == 5)); // ‘Îµ‘Îq5Œü’®‚Æ‚ÍA‘Îq‚ª1‚Â‚¾‚¯‚ ‚éó‘Ô
+		// å¯¾ä¸€èˆ¬å½¢7å‘è´ã¨ã¯ã€å¯¾å­ã¾ãŸã¯å¡”å­ãŒ1ã¤ã ã‘ã‚ã‚‹çŠ¶æ…‹ã§ã€é¢å­ãŒãªã„çŠ¶æ…‹
+		(ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenPairs) == 5)); // å¯¾ä¸ƒå¯¾å­5å‘è´ã¨ã¯ã€å¯¾å­ãŒ1ã¤ã ã‘ã‚ã‚‹çŠ¶æ…‹
 	else return false;
 #endif /* GUOBIAO */
 }
 
 bool yaku::yakuCalculator::chkShisiBuDa(const GameTable* const gameStat, PlayerID targetPlayer) {
-	// \l•s“ƒ‚©‚Ç‚¤‚©”»’è‚·‚é
+	// åå››ä¸å¡”ã‹ã©ã†ã‹åˆ¤å®šã™ã‚‹
 #ifdef GUOBIAO
-	return false; // ‚»‚ñ‚Èƒ‹[ƒ‹‚ ‚é‚Æ‚Å‚àv‚Á‚½H c”OI‚³y(ry
+	return false; // ãã‚“ãªãƒ«ãƒ¼ãƒ«ã‚ã‚‹ã¨ã§ã‚‚æ€ã£ãŸï¼Ÿ æ®‹å¿µï¼ã•y(ry
 #else /* GUOBIAO */
-	if (!RuleData::chkRuleApplied("shiisan_uushii")) return false; // ‚»‚ñ‚Èƒ‹[ƒ‹‚ ‚é‚Æ‚Å‚àv‚Á‚½H c”OI‚³y(ry
-	if (gameStat->Player[targetPlayer].FirstDrawFlag) // –Â‚«‚ª‚È‚­‚Äˆê„–Ú‚Å‚ ‚é‚±‚Æ‚ª•K{ğŒ
-		return (ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenRegular) == 8); // ‘Îˆê”ÊŒ`8Œü’®‚Æ‚ÍA‘Îq‚à“ƒq‚à‚È‚¢ó‘Ô
+	if (!RuleData::chkRuleApplied("shiisan_uushii")) return false; // ãã‚“ãªãƒ«ãƒ¼ãƒ«ã‚ã‚‹ã¨ã§ã‚‚æ€ã£ãŸï¼Ÿ æ®‹å¿µï¼ã•y(ry
+	if (gameStat->Player[targetPlayer].FirstDrawFlag) // é³´ããŒãªãã¦ä¸€å·¡ç›®ã§ã‚ã‚‹ã“ã¨ãŒå¿…é ˆæ¡ä»¶
+		return (ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenRegular) == 8); // å¯¾ä¸€èˆ¬å½¢8å‘è´ã¨ã¯ã€å¯¾å­ã‚‚å¡”å­ã‚‚ãªã„çŠ¶æ…‹
 	else return false;
 #endif /* GUOBIAO */
 }

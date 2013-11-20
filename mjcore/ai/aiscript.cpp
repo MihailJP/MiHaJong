@@ -1,4 +1,4 @@
-#include "aiscript.h"
+ï»¿#include "aiscript.h"
 
 #include <lua.hpp>
 #include <sstream>
@@ -12,83 +12,83 @@
 const DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NumOfTilesInHand - 1};
 
 aiscript::ScriptStates aiscript::status[Players] = {{nullptr, false}};
-const char aiscript::fncname_discard[8] = "ontsumo"; // Ì”vŒˆ’è—pŠÖ”‚Ì–¼‘O
-const char aiscript::fncname_call[3][12] = {"ondiscard", "onkakan", "onankan",}; // –Â‚«Œˆ’è—pŠÖ”‚Ì–¼‘O
+const char aiscript::fncname_discard[8] = "ontsumo"; // æ¨ç‰Œæ±ºå®šç”¨é–¢æ•°ã®åå‰
+const char aiscript::fncname_call[3][12] = {"ondiscard", "onkakan", "onankan",}; // é³´ãæ±ºå®šç”¨é–¢æ•°ã®åå‰
 
 bool aiscript::callFunc(const GameTable* const gameStat, PlayerID PlayerID, const char* const function_name, bool is_mandatory) {
-	if (status[PlayerID].scriptLoaded) { /* ³‚µ‚­“Ç‚İ‚Ü‚ê‚Ä‚¢‚é‚È‚ç */
-		try { /* ƒVƒ“ƒ{ƒ‹‚ª‚ ‚ê‚Î‚æ‚µA‚È‚©‚Á‚½‚ç—áŠOˆ— */
+	if (status[PlayerID].scriptLoaded) { /* æ­£ã—ãèª­ã¿è¾¼ã¾ã‚Œã¦ã„ã‚‹ãªã‚‰ */
+		try { /* ã‚·ãƒ³ãƒœãƒ«ãŒã‚ã‚Œã°ã‚ˆã—ã€ãªã‹ã£ãŸã‚‰ä¾‹å¤–å‡¦ç† */
 			lua_getglobal(status[PlayerID].state, function_name);
-		} catch (...) { /* ƒVƒ“ƒ{ƒ‹‚ª‚È‚©‚Á‚½‚çƒGƒ‰[‚É‚È‚é‚Ì‚Å—áŠOˆ—‚ğ‚·‚é */
+		} catch (...) { /* ã‚·ãƒ³ãƒœãƒ«ãŒãªã‹ã£ãŸã‚‰ã‚¨ãƒ©ãƒ¼ã«ãªã‚‹ã®ã§ä¾‹å¤–å‡¦ç†ã‚’ã™ã‚‹ */
 			CodeConv::tostringstream o;
 			if (is_mandatory) {
-				o << _T("ƒOƒ[ƒoƒ‹ƒVƒ“ƒ{ƒ‹ [") << CodeConv::EnsureTStr(function_name) << _T("] ‚Ìæ“¾‚É¸”s‚µ‚Ü‚µ‚½"); error(o.str().c_str());
-				info(_T("‚±‚ÌƒXƒNƒŠƒvƒg‚Íg—p‚Å‚«‚Ü‚¹‚ñBƒfƒtƒHƒ‹ƒgAI(ƒcƒ‚Ø‚è)‚ÉØ‚è‘Ö‚¦‚Ü‚·B"));
+				o << _T("ã‚°ãƒ­ãƒ¼ãƒãƒ«ã‚·ãƒ³ãƒœãƒ« [") << CodeConv::EnsureTStr(function_name) << _T("] ã®å–å¾—ã«å¤±æ•—ã—ã¾ã—ãŸ"); error(o.str().c_str());
+				info(_T("ã“ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã¯ä½¿ç”¨ã§ãã¾ã›ã‚“ã€‚ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆAI(ãƒ„ãƒ¢åˆ‡ã‚Š)ã«åˆ‡ã‚Šæ›¿ãˆã¾ã™ã€‚"));
 				status[PlayerID].scriptLoaded = false;
 				chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
 				return true;
 			} else {
-				o << _T("ƒOƒ[ƒoƒ‹ƒVƒ“ƒ{ƒ‹ [") << CodeConv::EnsureTStr(function_name) << _T("] ‚Ìæ“¾‚É¸”s‚µ‚Ü‚µ‚½B–³‹‚µ‚Ü‚·B");
+				o << _T("ã‚°ãƒ­ãƒ¼ãƒãƒ«ã‚·ãƒ³ãƒœãƒ« [") << CodeConv::EnsureTStr(function_name) << _T("] ã®å–å¾—ã«å¤±æ•—ã—ã¾ã—ãŸã€‚ç„¡è¦–ã—ã¾ã™ã€‚");
 				warn(o.str().c_str());
 				return true;
 			}
 		}
 		GameStatToLuaTable(status[PlayerID].state, gameStat);
 		if (int errcode = lua_pcall(status[PlayerID].state, 1, 2, 0)) {
-			/* Às¸”sI */
+			/* å®Ÿè¡Œå¤±æ•—ï¼ */
 			CodeConv::tostringstream o;
 			switch (errcode) {
 			case LUA_ERRRUN:
-				o << _T("ƒXƒNƒŠƒvƒg‚ÌÀsƒGƒ‰[ [") <<
-					CodeConv::DecodeStr(lua_tostring(status[PlayerID].state, -1)) /* ƒGƒ‰[ƒƒbƒZ[ƒW */ <<
+				o << _T("ã‚¹ã‚¯ãƒªãƒ—ãƒˆã®å®Ÿè¡Œæ™‚ã‚¨ãƒ©ãƒ¼ [") <<
+					CodeConv::DecodeStr(lua_tostring(status[PlayerID].state, -1)) /* ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ */ <<
 					_T("]");
 				lua_pop(status[PlayerID].state, 1);
 				break;
-			case LUA_ERRMEM: o << _T("ƒƒ‚ƒŠ‚ÌŠ„“–‚É¸”s‚µ‚Ü‚µ‚½B"); break;
-			case LUA_ERRERR: o << _T("ƒƒbƒZ[ƒWƒnƒ“ƒhƒ‰Às’†‚ÌƒGƒ‰[‚Å‚·B"); break;
-			case LUA_ERRGCMM: o << _T("ƒK[ƒxƒWƒRƒŒƒNƒVƒ‡ƒ“Às’†‚ÌƒGƒ‰[‚Å‚·B"); break;
+			case LUA_ERRMEM: o << _T("ãƒ¡ãƒ¢ãƒªã®å‰²å½“ã«å¤±æ•—ã—ã¾ã—ãŸã€‚"); break;
+			case LUA_ERRERR: o << _T("ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒãƒ³ãƒ‰ãƒ©å®Ÿè¡Œä¸­ã®ã‚¨ãƒ©ãƒ¼ã§ã™ã€‚"); break;
+			case LUA_ERRGCMM: o << _T("ã‚¬ãƒ¼ãƒ™ã‚¸ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³å®Ÿè¡Œä¸­ã®ã‚¨ãƒ©ãƒ¼ã§ã™ã€‚"); break;
 			}
 			error(o.str().c_str());
 			if (is_mandatory)
 				chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
 			if (std::string(function_name) == std::string(fncname_discard))
-				warn(_T("ŠÖ”ŒÄ‚Ño‚µ‚É¸”s‚µ‚½‚½‚ßAƒcƒ‚Ø‚è‚Æ‚İ‚È‚µ‚Ü‚·"));
+				warn(_T("é–¢æ•°å‘¼ã³å‡ºã—ã«å¤±æ•—ã—ãŸãŸã‚ã€ãƒ„ãƒ¢åˆ‡ã‚Šã¨ã¿ãªã—ã¾ã™"));
 			else
-				warn(_T("ŠÖ”ŒÄ‚Ño‚µ‚É¸”s‚µ‚½‚½‚ßA–³‹‚µ‚Ü‚·"));
+				warn(_T("é–¢æ•°å‘¼ã³å‡ºã—ã«å¤±æ•—ã—ãŸãŸã‚ã€ç„¡è¦–ã—ã¾ã™"));
 			return true;
 		} else {
-			/* ÀsŠ®—¹ */
+			/* å®Ÿè¡Œå®Œäº† */
 			return false;
 		}
 	} else {
 		if (std::string(function_name) == std::string(fncname_discard))
-			warn(_T("ƒXƒNƒŠƒvƒg‚ªƒ[ƒh‚³‚ê‚Ä‚¢‚È‚¢‚©Ag—p‚Å‚«‚È‚¢‚½‚ßAƒcƒ‚Ø‚è‚Æ‚İ‚È‚µ‚Ü‚·"));
+			warn(_T("ã‚¹ã‚¯ãƒªãƒ—ãƒˆãŒãƒ­ãƒ¼ãƒ‰ã•ã‚Œã¦ã„ãªã„ã‹ã€ä½¿ç”¨ã§ããªã„ãŸã‚ã€ãƒ„ãƒ¢åˆ‡ã‚Šã¨ã¿ãªã—ã¾ã™"));
 		else
-			warn(_T("ƒXƒNƒŠƒvƒg‚ªƒ[ƒh‚³‚ê‚Ä‚¢‚È‚¢‚©Ag—p‚Å‚«‚È‚¢‚½‚ßA–³‹‚µ‚Ü‚·"));
-		return true; // ƒXƒNƒŠƒvƒg‚Íg—p•s”\
+			warn(_T("ã‚¹ã‚¯ãƒªãƒ—ãƒˆãŒãƒ­ãƒ¼ãƒ‰ã•ã‚Œã¦ã„ãªã„ã‹ã€ä½¿ç”¨ã§ããªã„ãŸã‚ã€ç„¡è¦–ã—ã¾ã™"));
+		return true; // ã‚¹ã‚¯ãƒªãƒ—ãƒˆã¯ä½¿ç”¨ä¸èƒ½
 	}
 }
 
 void aiscript::initscript() {
-	info(_T("AI—p‚ÌƒXƒNƒŠƒvƒg‚ğ‰Šú‰»‚µ‚Ü‚·"));
+	info(_T("AIç”¨ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’åˆæœŸåŒ–ã—ã¾ã™"));
 	FileSelector::filelist();
-	// Lua‰Šú‰»
+	// LuaåˆæœŸåŒ–
 	for (int i = 0; i < Players; i++) {
 		status[i].state = luaL_newstate();
-		luaopen_base(status[i].state); // baseƒ‰ƒCƒuƒ‰ƒŠ‚¾‚¯‚ÍŠJ‚¢‚Ä‚¨‚«‚Ü‚µ‚å‚¤
+		luaopen_base(status[i].state); // baseãƒ©ã‚¤ãƒ–ãƒ©ãƒªã ã‘ã¯é–‹ã„ã¦ãŠãã¾ã—ã‚‡ã†
 		table::functable::inittable(status[i].state, i);
-		readfile(&status[i], FileSelector::randomfile().c_str()); /* ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İ */
+		readfile(&status[i], FileSelector::randomfile().c_str()); /* ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã¿ */
 	}
-	info(_T("ƒXƒNƒŠƒvƒg‚Ì‰Šú‰»‚ªŠ®—¹‚µ‚Ü‚µ‚½"));
+	info(_T("ã‚¹ã‚¯ãƒªãƒ—ãƒˆã®åˆæœŸåŒ–ãŒå®Œäº†ã—ã¾ã—ãŸ"));
 }
 
 void aiscript::initephemeral() {
-	// ephemeralƒe[ƒuƒ‹‰Šú‰»
+	// ephemeralãƒ†ãƒ¼ãƒ–ãƒ«åˆæœŸåŒ–
 	for (int i = 0; i < Players; i++) {
 		lua_newtable(status[i].state);
 		lua_setglobal(status[i].state, "ephemeral");
 	}
-	debug(_T("ephemeral ƒe[ƒuƒ‹‚ğ‰Šú‰»‚µ‚Ü‚µ‚½"));
+	debug(_T("ephemeral ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’åˆæœŸåŒ–ã—ã¾ã—ãŸ"));
 }
 
 void aiscript::initcall(const GameTable* const gameStat, PlayerID player) {
@@ -96,50 +96,50 @@ void aiscript::initcall(const GameTable* const gameStat, PlayerID player) {
 }
 
 void aiscript::closescript() {
-	// LuaƒNƒŠƒ“ƒiƒbƒv
+	// Luaã‚¯ãƒªãƒ³ãƒŠãƒƒãƒ—
 	for (int i = 0; i < Players; i++) {
-		lua_close(status[i].state); // LuaƒXƒe[ƒg‚ğƒNƒ[ƒY‚·‚é
+		lua_close(status[i].state); // Luaã‚¹ãƒ†ãƒ¼ãƒˆã‚’ã‚¯ãƒ­ãƒ¼ã‚ºã™ã‚‹
 		status[i].scriptLoaded = false;
 	}
-	info(_T("ƒXƒNƒŠƒvƒg‚ğ‰ğ•ú‚µ‚Ü‚µ‚½"));
+	info(_T("ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’è§£æ”¾ã—ã¾ã—ãŸ"));
 }
 
 void aiscript::readfile(aiscript::ScriptStates* const L, const char* const filename) {
-	if (int errcode = luaL_loadfile(L->state, filename)) { /* ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İB¬Œ÷‚µ‚½‚ç0‚ğ•Ô‚· */
-		/* “Ç‚İ‚İ¸”s‚µ‚½‚Ìˆ— */
+	if (int errcode = luaL_loadfile(L->state, filename)) { /* ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã¿ã€‚æˆåŠŸã—ãŸã‚‰0ã‚’è¿”ã™ */
+		/* èª­ã¿è¾¼ã¿å¤±æ•—ã—ãŸæ™‚ã®å‡¦ç† */
 		CodeConv::tostringstream o;
-		o << _T("ƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹ [") << CodeConv::EnsureTStr(filename) << _T("] ‚Ì“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½B");
+		o << _T("ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ« [") << CodeConv::EnsureTStr(filename) << _T("] ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸã€‚");
 		switch (errcode) {
-			case LUA_ERRFILE: o << _T("ƒtƒ@ƒCƒ‹‚ªŠJ‚¯‚Ü‚¹‚ñB"); break;
-			case LUA_ERRSYNTAX: o << _T("\•¶‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñB"); break;
-			case LUA_ERRMEM: o << _T("ƒƒ‚ƒŠ‚ÌŠ„“–‚É¸”s‚µ‚Ü‚µ‚½B"); break;
-			case LUA_ERRGCMM: o << _T("ƒK[ƒxƒWƒRƒŒƒNƒVƒ‡ƒ“Às’†‚ÌƒGƒ‰[‚Å‚·B"); break;
+			case LUA_ERRFILE: o << _T("ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã€‚"); break;
+			case LUA_ERRSYNTAX: o << _T("æ§‹æ–‡ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“ã€‚"); break;
+			case LUA_ERRMEM: o << _T("ãƒ¡ãƒ¢ãƒªã®å‰²å½“ã«å¤±æ•—ã—ã¾ã—ãŸã€‚"); break;
+			case LUA_ERRGCMM: o << _T("ã‚¬ãƒ¼ãƒ™ã‚¸ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³å®Ÿè¡Œä¸­ã®ã‚¨ãƒ©ãƒ¼ã§ã™ã€‚"); break;
 		}
 		error(o.str().c_str());
 		chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
 	} else {
 		CodeConv::tostringstream o;
-		o << _T("ƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹ [") << CodeConv::EnsureTStr(filename) << _T("] ‚ğ“Ç‚İ‚İ‚Ü‚µ‚½B");
+		o << _T("ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ« [") << CodeConv::EnsureTStr(filename) << _T("] ã‚’èª­ã¿è¾¼ã¿ã¾ã—ãŸã€‚");
 		info(o.str().c_str());
 		if (int errcode = lua_pcall(L->state, 0, LUA_MULTRET, 0)) {
-			/* Às¸”sI */
+			/* å®Ÿè¡Œå¤±æ•—ï¼ */
 			CodeConv::tostringstream o;
 			switch (errcode) {
 			case LUA_ERRRUN:
-				o << _T("ƒXƒNƒŠƒvƒg‚ÌÀsƒGƒ‰[ [") <<
-					lua_tostring(L->state, -1) /* ƒGƒ‰[ƒƒbƒZ[ƒW */ <<
+				o << _T("ã‚¹ã‚¯ãƒªãƒ—ãƒˆã®å®Ÿè¡Œæ™‚ã‚¨ãƒ©ãƒ¼ [") <<
+					lua_tostring(L->state, -1) /* ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ */ <<
 					_T("]");
 				lua_pop(L->state, 1);
 				break;
-			case LUA_ERRMEM: o << _T("ƒƒ‚ƒŠ‚ÌŠ„“–‚É¸”s‚µ‚Ü‚µ‚½B"); break;
-			case LUA_ERRERR: o << _T("ƒƒbƒZ[ƒWƒnƒ“ƒhƒ‰Às’†‚ÌƒGƒ‰[‚Å‚·B"); break;
-			case LUA_ERRGCMM: o << _T("ƒK[ƒxƒWƒRƒŒƒNƒVƒ‡ƒ“Às’†‚ÌƒGƒ‰[‚Å‚·B"); break;
+			case LUA_ERRMEM: o << _T("ãƒ¡ãƒ¢ãƒªã®å‰²å½“ã«å¤±æ•—ã—ã¾ã—ãŸã€‚"); break;
+			case LUA_ERRERR: o << _T("ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒãƒ³ãƒ‰ãƒ©å®Ÿè¡Œä¸­ã®ã‚¨ãƒ©ãƒ¼ã§ã™ã€‚"); break;
+			case LUA_ERRGCMM: o << _T("ã‚¬ãƒ¼ãƒ™ã‚¸ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³å®Ÿè¡Œä¸­ã®ã‚¨ãƒ©ãƒ¼ã§ã™ã€‚"); break;
 			}
 			error(o.str().c_str());
 			chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
 		} else {
-			/* ÀsŠ®—¹ */
-			info(_T("ƒXƒNƒŠƒvƒg‚ÌÀs‚É¬Œ÷‚µ‚Ü‚µ‚½"));
+			/* å®Ÿè¡Œå®Œäº† */
+			info(_T("ã‚¹ã‚¯ãƒªãƒ—ãƒˆã®å®Ÿè¡Œã«æˆåŠŸã—ã¾ã—ãŸ"));
 			L->scriptLoaded = true;
 		}
 	}
@@ -170,36 +170,36 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 }
 void aiscript::calcDiscard_threaded(DiscardTileNum& answer, const GameTable* gameStat) {
 	CodeConv::tostringstream o;
-	o << _T("AI‚Ì‘Å”vˆ—‚É“ü‚è‚Ü‚·BƒvƒŒƒCƒ„[ [") << (int)gameStat->CurrentPlayer.Active << _T("]");
+	o << _T("AIã®æ‰“ç‰Œå‡¦ç†ã«å…¥ã‚Šã¾ã™ã€‚ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ [") << (int)gameStat->CurrentPlayer.Active << _T("]");
 	info(o.str().c_str());
 	if (callFunc(gameStat, gameStat->CurrentPlayer.Active, fncname_discard, true)) {
 		answer = DiscardThrough;
 		return;
 	} else {
-		/* ÀsŠ®—¹ */
+		/* å®Ÿè¡Œå®Œäº† */
 		int flag;
 		answer.type = (DiscardTileNum::discardType)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
 		if (!flag) {
-			warn(_T("1”Ô–Ú‚Ì•Ô‚è’l‚ª”’l‚Å‚Í‚ ‚è‚Ü‚¹‚ñB’Êí‚Ì‘Å”v‚Æ‚İ‚È‚µ‚Ü‚·B"));
+			warn(_T("1ç•ªç›®ã®è¿”ã‚Šå€¤ãŒæ•°å€¤ã§ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚é€šå¸¸ã®æ‰“ç‰Œã¨ã¿ãªã—ã¾ã™ã€‚"));
 			answer.type = DiscardTileNum::Normal; // fallback
 		} else if ((answer.type < DiscardTileNum::Normal) || (answer.type > DiscardTileNum::Disconnect)) {
-			warn(_T("1”Ô–Ú‚Ì•Ô‚è’l‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñB’Êí‚Ì‘Å”v‚Æ‚İ‚È‚µ‚Ü‚·B"));
+			warn(_T("1ç•ªç›®ã®è¿”ã‚Šå€¤ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“ã€‚é€šå¸¸ã®æ‰“ç‰Œã¨ã¿ãªã—ã¾ã™ã€‚"));
 			answer.type = DiscardTileNum::Normal; // fallback
 		}
 		if ((answer.type == DiscardTileNum::Agari) || (answer.type == DiscardTileNum::Kyuushu) ||
-			(answer.type == DiscardTileNum::Disconnect)) { // ”Ô†w’è‚ª•s—v‚Èê‡
-				answer.id = NumOfTilesInHand - 1; // 2”Ô‚ß‚Ì•Ô‚è’l‚Í–³‹
+			(answer.type == DiscardTileNum::Disconnect)) { // ç•ªå·æŒ‡å®šãŒä¸è¦ãªå ´åˆ
+				answer.id = NumOfTilesInHand - 1; // 2ç•ªã‚ã®è¿”ã‚Šå€¤ã¯ç„¡è¦–
 		} else {
 			int i = lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -1, &flag);
 			if (!flag) {
-				warn(_T("2”Ô–Ú‚Ì•Ô‚è’l‚ª”’l‚Å‚Í‚ ‚è‚Ü‚¹‚ñBƒcƒ‚Ø‚è‚Æ‚İ‚È‚µ‚Ü‚·B"));
+				warn(_T("2ç•ªç›®ã®è¿”ã‚Šå€¤ãŒæ•°å€¤ã§ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚ãƒ„ãƒ¢åˆ‡ã‚Šã¨ã¿ãªã—ã¾ã™ã€‚"));
 				answer.id = NumOfTilesInHand - 1; // fallback
 			} else if ((i >= 1)&&(i <= NumOfTilesInHand)) {
-				answer.id = i - 1; // ƒIƒŠƒWƒ“‚ğ1‚É‚·‚éd—lcc
-			} else if ((i <= -1)&&(i >= -((int)NumOfTilesInHand))) { // ƒ}ƒCƒiƒX‚ğw’è‚µ‚½ê‡‚Ìˆ—
+				answer.id = i - 1; // ã‚ªãƒªã‚¸ãƒ³ã‚’1ã«ã™ã‚‹ä»•æ§˜â€¦â€¦
+			} else if ((i <= -1)&&(i >= -((int)NumOfTilesInHand))) { // ãƒã‚¤ãƒŠã‚¹ã‚’æŒ‡å®šã—ãŸå ´åˆã®å‡¦ç†
 				answer.id = NumOfTilesInHand + i;
 			} else {
-				warn(_T("2”Ô–Ú‚Ì•Ô‚è’l‚ª”ÍˆÍŠO‚Å‚·Bƒcƒ‚Ø‚è‚Æ‚İ‚È‚µ‚Ü‚·B"));
+				warn(_T("2ç•ªç›®ã®è¿”ã‚Šå€¤ãŒç¯„å›²å¤–ã§ã™ã€‚ãƒ„ãƒ¢åˆ‡ã‚Šã¨ã¿ãªã—ã¾ã™ã€‚"));
 				answer.id = NumOfTilesInHand - 1; // fallback
 			}
 		}
@@ -220,20 +220,20 @@ void aiscript::determine_meld(GameTable* const gameStat) {
 
 void aiscript::calcCall_threaded(GameTable* gameStat) {
 	CodeConv::tostringstream o;
-	o << _T("AI‚Ì•›˜I”»’è‚É“ü‚è‚Ü‚·BƒvƒŒƒCƒ„[ [") << (int)gameStat->CurrentPlayer.Passive << _T("]");
+	o << _T("AIã®å‰¯éœ²åˆ¤å®šã«å…¥ã‚Šã¾ã™ã€‚ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ [") << (int)gameStat->CurrentPlayer.Passive << _T("]");
 	info(o.str().c_str());
-	gameStat->statOfPassive().DeclarationFlag.Chi = chiiNone; // ƒŠƒZƒbƒg
+	gameStat->statOfPassive().DeclarationFlag.Chi = chiiNone; // ãƒªã‚»ãƒƒãƒˆ
 	gameStat->statOfPassive().DeclarationFlag.Pon =
 		gameStat->statOfPassive().DeclarationFlag.Kan =
 		gameStat->statOfPassive().DeclarationFlag.Ron = false;
 	if (callFunc(gameStat, gameStat->CurrentPlayer.Passive, fncname_call[gameStat->KangFlag.chankanFlag], (gameStat->KangFlag.chankanFlag == 0))) {
 		return;
 	} else {
-		/* ÀsŠ®—¹ */
+		/* å®Ÿè¡Œå®Œäº† */
 		int flag = 0;
 		MeldCallID meldtype = (MeldCallID)lua_tointegerx(status[gameStat->CurrentPlayer.Passive].state, -2, &flag);
 		if (!flag) {
-			warn(_T("1”Ô–Ú‚Ì•Ô‚è’l‚ª”’l‚Å‚Í‚ ‚è‚Ü‚¹‚ñB–³‹‚µ‚Ü‚·B"));
+			warn(_T("1ç•ªç›®ã®è¿”ã‚Šå€¤ãŒæ•°å€¤ã§ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚ç„¡è¦–ã—ã¾ã™ã€‚"));
 		} else {
 			switch (meldtype) {
 				case meldNone: break;
@@ -243,7 +243,7 @@ void aiscript::calcCall_threaded(GameTable* gameStat) {
 				case meldChiiLower: gameStat->statOfPassive().DeclarationFlag.Chi = chiiLower; break;
 				case meldChiiMiddle: gameStat->statOfPassive().DeclarationFlag.Chi = chiiMiddle; break;
 				case meldChiiUpper: gameStat->statOfPassive().DeclarationFlag.Chi = chiiUpper; break;
-				default: warn(_T("1”Ô–Ú‚Ì•Ô‚è’l‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñB–³‹‚µ‚Ü‚·B")); break;
+				default: warn(_T("1ç•ªç›®ã®è¿”ã‚Šå€¤ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“ã€‚ç„¡è¦–ã—ã¾ã™ã€‚")); break;
 			}
 		}
 		lua_pop(status[gameStat->CurrentPlayer.Passive].state, 1);

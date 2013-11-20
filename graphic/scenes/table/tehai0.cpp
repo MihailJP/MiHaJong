@@ -1,4 +1,4 @@
-#ifdef _MSC_VER
+ï»¿#ifdef _MSC_VER
 #define _USE_MATH_DEFINES /* required for M_PI by MS VC++ */
 #endif
 #include <cmath>
@@ -10,7 +10,7 @@ namespace mihajong_graphic {
 
 using utils::playerRelative;
 
-/* è”v‚ğ•\¦‚·‚é */
+/* æ‰‹ç‰Œã‚’è¡¨ç¤ºã™ã‚‹ */
 void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 	std::function<std::tuple<int, int> (seatRelative)> coordFunc,
 	seatRelative direction, std::function<ArgbColor (int)> colorFunc,
@@ -18,12 +18,12 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 {
 	int tilePos, x, y;
 	std::tie(x, y) = coordFunc(direction);
-	/* è”v */
+	/* æ‰‹ç‰Œ */
 	TileSide tileStat =
 		(gameStat->Player[targetPlayer].HandStat == handUpright) ? Upright :
 		(gameStat->Player[targetPlayer].HandStat == handHidden) ? Reverse : Obverse;
 	switch (direction) {
-	case sOpposite: /* ‘Î–Ê‚Ìè”v */
+	case sOpposite: /* å¯¾é¢ã®æ‰‹ç‰Œ */
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i)
 			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile)
@@ -34,7 +34,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 				y, UpsideDown, tileStat);
 			else TileTexture->DelTile(i);
 		break;
-	case sLeft: /* ã‰Æ‚Ìè”v */
+	case sLeft: /* ä¸Šå®¶ã®æ‰‹ç‰Œ */
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i)
 			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile)
@@ -46,7 +46,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 				Clockwise, tileStat);
 			else TileTexture->DelTile(i + NumOfTilesInHand);
 		break;
-	case sRight: /* ‰º‰Æ‚Ìè”v */
+	case sRight: /* ä¸‹å®¶ã®æ‰‹ç‰Œ */
 		tilePos = 0;
 		for (int i = HandLength; i >= 0; --i)
 			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile)
@@ -61,7 +61,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 				Withershins, tileStat);
 			else TileTexture->DelTile((NumOfTilesInHand - 1 - i) + NumOfTilesInHand * 2);
 		break;
-	case sSelf: /* ©•ª‚Ìè”v */
+	case sSelf: /* è‡ªåˆ†ã®æ‰‹ç‰Œ */
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i) {
 			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile) {

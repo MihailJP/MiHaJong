@@ -1,4 +1,4 @@
-#include "functbl.h"
+ï»¿#include "functbl.h"
 
 #include <lua.hpp>
 #include "../func.h"
@@ -30,19 +30,19 @@ void aiscript::table::functable::inittable(lua_State* const L, int playerID) {
 	lua_setglobal(L, tblname); // global table
 }
 
-int aiscript::table::functable::tableLockedErr(lua_State* const L) { // ƒƒbƒN‚³‚ê‚½ƒe[ƒuƒ‹‚ğ‘‚«Š·‚¦‚æ‚¤‚Æ‚µ‚½
+int aiscript::table::functable::tableLockedErr(lua_State* const L) { // ãƒ­ãƒƒã‚¯ã•ã‚ŒãŸãƒ†ãƒ¼ãƒ–ãƒ«ã‚’æ›¸ãæ›ãˆã‚ˆã†ã¨ã—ãŸæ™‚
 	return luaL_error(L, "Attempt to modify a read-only table");
 }
 
-void aiscript::table::functable::lockTable(lua_State* const L) { // ƒe[ƒuƒ‹‚ğƒƒbƒN‚·‚é
-	lua_newtable(L); // ƒƒ^ƒe[ƒuƒ‹‚Ì—pˆÓ
-	lua_pushcfunction(L, tableLockedErr); lua_setfield(L, -2, "__newindex"); // ‘‚«Š·‚¦‹Ö~—p
-	lua_insert(L, -2); lua_setfield(L, -2, "__index"); // –{—ˆ‚Ìƒe[ƒuƒ‹
-	lua_newtable(L); lua_insert(L, -2); // ƒvƒƒLƒVƒe[ƒuƒ‹
-	lua_setmetatable(L, -2); // ƒƒ^ƒe[ƒuƒ‹İ’è
+void aiscript::table::functable::lockTable(lua_State* const L) { // ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ãƒ­ãƒƒã‚¯ã™ã‚‹
+	lua_newtable(L); // ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®ç”¨æ„
+	lua_pushcfunction(L, tableLockedErr); lua_setfield(L, -2, "__newindex"); // æ›¸ãæ›ãˆç¦æ­¢ç”¨
+	lua_insert(L, -2); lua_setfield(L, -2, "__index"); // æœ¬æ¥ã®ãƒ†ãƒ¼ãƒ–ãƒ«
+	lua_newtable(L); lua_insert(L, -2); // ãƒ—ãƒ­ã‚­ã‚·ãƒ†ãƒ¼ãƒ–ãƒ«
+	lua_setmetatable(L, -2); // ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«è¨­å®š
 }
 
-/* Ì”v”Ô†‚Ì•t‘Ñî•ñ */
+/* æ¨ç‰Œç•ªå·ã®ä»˜å¸¯æƒ…å ± */
 inline void aiscript::table::functable::discardTileCode(lua_State* const L) {
 	lua_newtable(L);
 	TableAdd(L, "Normal", (lua_Integer)DiscardTileNum::Normal);
@@ -56,7 +56,7 @@ inline void aiscript::table::functable::discardTileCode(lua_State* const L) {
 	lockTable(L); lua_setfield(L, -2, "DiscardType");
 }
 
-/* –Â‚«‚Ìí•ÊƒR[ƒh */
+/* é³´ãã®ç¨®åˆ¥ã‚³ãƒ¼ãƒ‰ */
 inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 	lua_newtable(L);
 	TableAdd(L, "None", (lua_Integer)meldNone);
@@ -71,7 +71,7 @@ inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 	lockTable(L); lua_setfield(L, -2, "Call");
 }
 
-/* ƒhƒ‰‚ÌFƒR[ƒh */
+/* ãƒ‰ãƒ©ã®è‰²ã‚³ãƒ¼ãƒ‰ */
 inline void aiscript::table::functable::doraColorCode(lua_State* const L) {
 	lua_newtable(L);
 	TableAdd(L, "Normal", (lua_Integer)Normal);
@@ -80,7 +80,7 @@ inline void aiscript::table::functable::doraColorCode(lua_State* const L) {
 	lockTable(L); lua_setfield(L, -2, "DoraColor");
 }
 
-/* –Â‚«‚Ìí•ÊƒR[ƒh */
+/* é³´ãã®ç¨®åˆ¥ã‚³ãƒ¼ãƒ‰ */
 inline void aiscript::table::functable::meldTypeCode(lua_State* const L) {
 	lua_newtable(L); // MeldType
 	lua_newtable(L); // Sequence
@@ -109,12 +109,12 @@ inline void aiscript::table::functable::meldTypeCode(lua_State* const L) {
 	lockTable(L); lua_setfield(L, -2, "MeldType");
 }
 
-/* ”v‚Ì”Ô† */
+/* ç‰Œã®ç•ªå· */
 inline void aiscript::table::functable::tileCode(lua_State* const L) {
 	const char suitname[3][16] = {"Character","Circle","Bamboo",};
 	const char numeral[9][8] = {"One","Two","Three","Four","Five","Six","Seven","Eight","Nine",};
 	lua_newtable(L);
-	for (int suit = 0; suit < TileSuitHonors; suit += TileSuitStep) { // ””v(ƒ‹[ƒv)
+	for (int suit = 0; suit < TileSuitHonors; suit += TileSuitStep) { // æ•°ç‰Œ(ãƒ«ãƒ¼ãƒ—)
 		lua_newtable(L);
 		for (int num = 1; num <= 9; num++) {
 			TableAdd(L, numeral[num - 1], (lua_Integer)(suit + num));
@@ -141,7 +141,7 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 	lockTable(L); lua_setfield(L, -2, "Tile");
 }
 
-/* ‘ì‚Ìí•Ê */
+/* å“ã®ç¨®åˆ¥ */
 inline void aiscript::table::functable::gametype(lua_State* const L) {
 	if (GameStat.chkGameType(Yonma)) lua_pushstring(L, "yonma");
 	else if (GameStat.chkGameType(Sanma)) lua_pushstring(L, "sanma");
@@ -151,13 +151,13 @@ inline void aiscript::table::functable::gametype(lua_State* const L) {
 	lua_setfield(L, -2, "gametype");
 }
 
-/* ƒo[ƒWƒ‡ƒ“”Ô† tostring */
+/* ãƒãƒ¼ã‚¸ãƒ§ãƒ³ç•ªå· tostring */
 int aiscript::table::functable::version_tostring(lua_State* const L) {
 	lua_pushstring(L, MIHAJONG_VER);
 	return 1;
 }
 
-/* ƒo[ƒWƒ‡ƒ“”Ô† */
+/* ãƒãƒ¼ã‚¸ãƒ§ãƒ³ç•ªå· */
 inline void aiscript::table::functable::version(lua_State* const L) {
 	lua_newtable(L); // version
 	TableAdd(L, "major", (lua_Integer)MIHAJONG_MAJOR_VER);
@@ -170,23 +170,23 @@ inline void aiscript::table::functable::version(lua_State* const L) {
 	lua_setfield(L, -2, "version");
 }
 
-/* ˆø”‚Ì”‚ğ”‚¦‚é */
+/* å¼•æ•°ã®æ•°ã‚’æ•°ãˆã‚‹ */
 int aiscript::table::functable::chkargnum(lua_State* const L, int argmin, int argmax) {
 	int n = lua_gettop(L);
 	if ((n < argmin)||(n > argmax)) {luaL_error(L, "Invalid number of argument");}
 	return n;
 }
 
-/* —”‚ğ•Ô‚· */
+/* ä¹±æ•°ã‚’è¿”ã™ */
 int aiscript::table::functable::random(lua_State* const L) {
 	int n = chkargnum(L, 0, 2);
 	switch (n) {
 	case 0:
-		lua_pushnumber(L, RndNum::rnd()); break; // ˜A‘±ˆê—l—”
+		lua_pushnumber(L, RndNum::rnd()); break; // é€£ç¶šä¸€æ§˜ä¹±æ•°
 	case 1:
 		if (lua_isnil(L, 1)) {
-			lua_pushnumber(L, RndNum::rnd()); break; // ˜A‘±ˆê—l—”
-		} else if (lua_isnumber(L, 1)) { // —£Uˆê—l—”
+			lua_pushnumber(L, RndNum::rnd()); break; // é€£ç¶šä¸€æ§˜ä¹±æ•°
+		} else if (lua_isnumber(L, 1)) { // é›¢æ•£ä¸€æ§˜ä¹±æ•°
 			int i = lua_tointeger(L, 1);
 			if (i >= 1) lua_pushinteger(L, RndNum::rnd(i - 1) + 1);
 			else lua_pushnil(L);
@@ -194,17 +194,17 @@ int aiscript::table::functable::random(lua_State* const L) {
 		break;
 	case 2:
 		if ((lua_isnil(L, 1)) && (lua_isnil(L, 2))) {
-			lua_pushnumber(L, RndNum::rnd()); break; // ˜A‘±ˆê—l—”
-		} else if ((lua_isnumber(L, 1)) && (lua_isnil(L, 2))) { // —£Uˆê—l—”
+			lua_pushnumber(L, RndNum::rnd()); break; // é€£ç¶šä¸€æ§˜ä¹±æ•°
+		} else if ((lua_isnumber(L, 1)) && (lua_isnil(L, 2))) { // é›¢æ•£ä¸€æ§˜ä¹±æ•°
 			int i = lua_tointeger(L, 1);
 			if (i >= 1) lua_pushinteger(L, RndNum::rnd(i - 1) + 1);
 			else lua_pushnil(L);
 		} else if ((lua_isnumber(L, 1)) && (lua_isnumber(L, 2))) {
 			lua_Number arg1 = lua_tonumber(L, 1);
 			lua_Number arg2 = lua_tonumber(L, 2);
-			if (arg2 > 0) { // ³‹K—”
+			if (arg2 > 0) { // æ­£è¦ä¹±æ•°
 				lua_pushnumber(L, RndNum::rnd(arg1, arg2));
-			} else if ((arg1 >= 1) && (arg2 <= -1)) { // nDmŒ`®—”
+			} else if ((arg1 >= 1) && (arg2 <= -1)) { // nDmå½¢å¼ä¹±æ•°
 				lua_Integer ans = 0;
 				for (int i = 0; i < (int)arg1; i++)
 					ans += RndNum::rnd((unsigned int)(-arg2) - 1u);
@@ -213,12 +213,12 @@ int aiscript::table::functable::random(lua_State* const L) {
 		} else {lua_pushnil(L);}
 		break;
 	default:
-		lua_pushnil(L); break; // ‚±‚ÌƒR[ƒh‚ÍÀs‚³‚ê‚È‚¢‚Í‚¸‚Å‚ ‚é
+		lua_pushnil(L); break; // ã“ã®ã‚³ãƒ¼ãƒ‰ã¯å®Ÿè¡Œã•ã‚Œãªã„ã¯ãšã§ã‚ã‚‹
 	}
 	return 1;
 }
 
-/* ƒƒMƒ“ƒO—p */
+/* ãƒ­ã‚®ãƒ³ã‚°ç”¨ */
 int aiscript::table::functable::log(lua_State* const L) {
 #ifdef _WIN32
 	int n = lua_gettop(L); CodeConv::tstring logstr = _T(""); CodeConv::tstring linea = _T("");lua_Debug ar;
@@ -250,7 +250,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_newtable(L);
 	lua_pushlightuserdata(L, nullptr); lua_setfield(L, -2, "addr"); // pointer to C++ struct
 	lua_pushinteger(L, playerID + 1); lua_setfield(L, -2, "playerid"); // Player ID
-	/* ‚±‚±‚Éƒƒ\ƒbƒh‚ğ‘‚­ */
+	/* ã“ã“ã«ãƒ¡ã‚½ãƒƒãƒ‰ã‚’æ›¸ã */
 	lua_pushcfunction(L, luafunc::evaluate); lua_setfield(L, -2, "evaluate");
 	lua_pushcfunction(L, luafunc::getactiveplayer); lua_setfield(L, -2, "getactiveplayer");
 	lua_pushcfunction(L, luafunc::getbakaze); lua_setfield(L, -2, "getbakaze");
@@ -298,11 +298,11 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushcfunction(L, luafunc::isshokanqualified); lua_setfield(L, -2, "isshokanqualified");
 	lua_pushcfunction(L, luafunc::issumaroallowed); lua_setfield(L, -2, "issumaroallowed");
 	lua_pushcfunction(L, luafunc::isyakitori); lua_setfield(L, -2, "isyakitori");
-	/* ƒƒ\ƒbƒh’è‹`‚±‚±‚Ü‚Å */
+	/* ãƒ¡ã‚½ãƒƒãƒ‰å®šç¾©ã“ã“ã¾ã§ */
 	lockTable(L); lua_setfield(L, -2, tblname);
 }
 
-/* –Â‚«‚Ìí•ÊƒR[ƒh */
+/* é³´ãã®ç¨®åˆ¥ã‚³ãƒ¼ãƒ‰ */
 inline void aiscript::table::functable::agariTypeCode(lua_State* const L) {
 	lua_newtable(L); // AgariType
 	TableAdd(L, "All", (lua_Integer)shantenAll);
@@ -320,7 +320,7 @@ inline void aiscript::table::functable::agariTypeCode(lua_State* const L) {
 	lockTable(L); lua_setfield(L, -2, "AgariType");
 }
 
-/* ƒvƒŒƒCƒ„[”Ô†‚ğæ“¾ */
+/* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·ã‚’å–å¾— */
 PlayerID aiscript::table::functable::getPlayerID(lua_State* const L) {
 	PlayerID player;
 	lua_getglobal(L, tblname);
@@ -331,7 +331,7 @@ PlayerID aiscript::table::functable::getPlayerID(lua_State* const L) {
 	return player - 1;
 }
 
-/* ƒ`ƒƒƒbƒgo—Í */
+/* ãƒãƒ£ãƒƒãƒˆå‡ºåŠ› */
 int aiscript::table::functable::say(lua_State* const L) {
 	int n = lua_gettop(L); CodeConv::tstring msgstr = _T("");
 	if (n > 0) {

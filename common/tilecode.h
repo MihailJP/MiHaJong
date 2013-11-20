@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <cstdint>
 #include <climits>
@@ -10,7 +10,7 @@
 
 namespace mihajong_structs {
 
-// ”v‚Ìí—Ş
+// ç‰Œã®ç¨®é¡
 const unsigned int TileCodeMaximum    = 200;
 const unsigned int TileSuitStep       =  10;
 const unsigned int TileNumeralColors  =   3;
@@ -23,9 +23,9 @@ const unsigned int TileNonflowerMax   = TileSuitStep   + TileSuitHonors;
 const unsigned int TileSuitFlowers    = TileSuitStep * 12;
 const unsigned int TileFlowerMax      = TileSuitStep   + TileSuitFlowers;
 
-enum TileCode : uint8_t { // ”v‚ÌƒR[ƒh
+enum TileCode : uint8_t { // ç‰Œã®ã‚³ãƒ¼ãƒ‰
 	NoTile = 0,
-	/* äİq */
+	/* è¬å­ */
 	CharacterOne = TileSuitCharacters + 1,
 	CharacterTwo,
 	CharacterThree,
@@ -35,7 +35,7 @@ enum TileCode : uint8_t { // ”v‚ÌƒR[ƒh
 	CharacterSeven,
 	CharacterEight,
 	CharacterNine,
-	/* “›q */
+	/* ç­’å­ */
 	CircleOne = TileSuitCircles + 1,
 	CircleTwo,
 	CircleThree,
@@ -45,7 +45,7 @@ enum TileCode : uint8_t { // ”v‚ÌƒR[ƒh
 	CircleSeven,
 	CircleEight,
 	CircleNine,
-	/* õq */
+	/* ç´¢å­ */
 	BambooOne = TileSuitBamboos + 1,
 	BambooTwo,
 	BambooThree,
@@ -55,7 +55,7 @@ enum TileCode : uint8_t { // ”v‚ÌƒR[ƒh
 	BambooSeven,
 	BambooEight,
 	BambooNine,
-	/* š”v */
+	/* å­—ç‰Œ */
 	EastWind = TileSuitHonors + 1,
 	SouthWind,
 	WestWind,
@@ -63,7 +63,7 @@ enum TileCode : uint8_t { // ”v‚ÌƒR[ƒh
 	WhiteDragon,
 	GreenDragon,
 	RedDragon,
-	/* ‰Ô”v */
+	/* èŠ±ç‰Œ */
 	Spring = TileSuitFlowers + 1,
 	Summer,
 	Autumn,
@@ -72,7 +72,7 @@ enum TileCode : uint8_t { // ”v‚ÌƒR[ƒh
 	Orchid,
 	Chrysanthemum,
 	Bamboo,
-	/* “Áê */
+	/* ç‰¹æ®Š */
 	Flower = 38,
 	BackSide = 39,
 	TilePad = UCHAR_MAX,
@@ -80,7 +80,7 @@ enum TileCode : uint8_t { // ”v‚ÌƒR[ƒh
 
 // -------------------------------------------------------------------------
 
-template <class T> struct InfoByTile { // ”v‚²‚Æ‚Éw’è‚µ‚½Œ^‚É‚æ‚éî•ñ(ƒeƒ“ƒvƒŒ[ƒg)
+template <class T> struct InfoByTile { // ç‰Œã”ã¨ã«æŒ‡å®šã—ãŸå‹ã«ã‚ˆã‚‹æƒ…å ±(ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ)
 	T val[TileNonflowerMax];
 	const T& operator[](const TileCode tile) const {
 		if ((tile >= NoTile)&&(tile < TileNonflowerMax))
@@ -90,7 +90,7 @@ template <class T> struct InfoByTile { // ”v‚²‚Æ‚Éw’è‚µ‚½Œ^‚É‚æ‚éî•ñ(ƒeƒ“ƒvƒŒ
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByTile:“Yš‚ª”ÍˆÍŠO‚Å‚· (") << (int)tile << _T(")");
+			o << _T("InfoByTile:æ·»å­—ãŒç¯„å›²å¤–ã§ã™ (") << (int)tile << _T(")");
 			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 			return val[NoTile];
@@ -107,7 +107,7 @@ template <class T> struct InfoByTile { // ”v‚²‚Æ‚Éw’è‚µ‚½Œ^‚É‚æ‚éî•ñ(ƒeƒ“ƒvƒŒ
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByTile:“Yš‚ª”ÍˆÍŠO‚Å‚· (") << (int)tile << _T(")");
+			o << _T("InfoByTile:æ·»å­—ãŒç¯„å›²å¤–ã§ã™ (") << (int)tile << _T(")");
 			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 			return val[NoTile];

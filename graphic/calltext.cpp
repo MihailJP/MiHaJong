@@ -1,4 +1,4 @@
-#include "calltext.h"
+ï»¿#include "calltext.h"
 
 #include "../common/mutex.h"
 namespace mihajong_graphic {
@@ -14,15 +14,15 @@ namespace {
 }
 
 EXPORT CallType getCall(PlayerID playerID) {
-	if ((playerID < 0) || (playerID >= Players)) // ‹«ŠEƒ`ƒFƒbƒN
-		throw _T("playerID‚Ìw’è‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ");
+	if ((playerID < 0) || (playerID >= Players)) // å¢ƒç•Œãƒã‚§ãƒƒã‚¯
+		throw _T("playerIDã®æŒ‡å®šãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“");
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(csMutex);
 	return callStatus[playerID];
 }
 
 EXPORT void setCall(PlayerID playerID, CallType callType) {
-	if ((playerID < 0) || (playerID >= Players)) // ‹«ŠEƒ`ƒFƒbƒN
-		throw _T("playerID‚Ìw’è‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ");
+	if ((playerID < 0) || (playerID >= Players)) // å¢ƒç•Œãƒã‚§ãƒƒã‚¯
+		throw _T("playerIDã®æŒ‡å®šãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“");
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(csMutex);
 	callStatus[playerID] = callType;
 }
@@ -35,15 +35,15 @@ namespace {
 }
 
 EXPORT CallValue getVal(PlayerID playerID) {
-	if ((playerID < 0) || (playerID >= Players)) // ‹«ŠEƒ`ƒFƒbƒN
-		throw _T("playerID‚Ìw’è‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ");
+	if ((playerID < 0) || (playerID >= Players)) // å¢ƒç•Œãƒã‚§ãƒƒã‚¯
+		throw _T("playerIDã®æŒ‡å®šãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“");
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(csMutex);
 	return callStatus[playerID];
 }
 
 EXPORT void setVal(PlayerID playerID, signed short mantissa, unsigned short exponent) {
-	if ((playerID < 0) || (playerID >= Players)) // ‹«ŠEƒ`ƒFƒbƒN
-		throw _T("playerID‚Ìw’è‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ");
+	if ((playerID < 0) || (playerID >= Players)) // å¢ƒç•Œãƒã‚§ãƒƒã‚¯
+		throw _T("playerIDã®æŒ‡å®šãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“");
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(csMutex);
 	callStatus[playerID].Mantissa = mantissa;
 	callStatus[playerID].Exponent = exponent;

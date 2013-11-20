@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 #  ifdef _MSC_VER
@@ -27,7 +27,7 @@ typedef LPD3DXLINE LinePtr;
 #    include <GL/glx.h>
 #  endif /* _WIN32 */
 typedef uint32_t ArgbColor;
-typedef void* RenderingSysPtr; // OpenGL�ł͂��Ԃ񖢎g�p
+typedef void* RenderingSysPtr; // OpenGLではたぶん未使用
 #  ifdef _WIN32
 typedef HDC DevicePtr;
 #  else /* _WIN32 */
@@ -35,8 +35,8 @@ typedef GLXContext DevicePtr;
 #  endif /* _WIN32 */
 typedef GLuint TexturePtr;
 typedef std::array<GLfloat, 16> TransformMatrix;
-typedef void* SpritePtr; // OpenGL�ł͂��Ԃ񖢎g�p
-typedef void* LinePtr; // OpenGL�ł͂��Ԃ񖢎g�p
+typedef void* SpritePtr; // OpenGLではたぶん未使用
+typedef void* LinePtr; // OpenGLではたぶん未使用
 #  ifndef _WIN32
 #    define MAKEINTRESOURCE(r) ((LPTSTR)r)
 struct RECT {int left, top, right, bottom;};

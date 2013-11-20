@@ -1,4 +1,4 @@
-#include "showdice.h"
+ï»¿#include "showdice.h"
 #include "../../resource.h"
 #include "../../sprite.h"
 #include "../../utils.h"
@@ -8,7 +8,7 @@ namespace mihajong_graphic {
 
 using utils::playerRelative;
 
-/* ƒTƒCƒRƒ‚ð•\Ž¦‚·‚é */
+/* ã‚µã‚¤ã‚³ãƒ­ã‚’è¡¨ç¤ºã™ã‚‹ */
 void GameTableScreen::DiceReconst::ShowDice(const GameTable* gameStat) {
 	const int diceID = ((gameStat->Dice[2].Number == 0) || (gameStat->Dice[3].Number == 0)) ? 0 : 2;
 	const int dicePlayerOffset = ((gameStat->Dice[2].Number != 0) && (gameStat->Dice[3].Number != 0) && (gameStat->TilePointer == 0)) ?

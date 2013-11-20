@@ -1,18 +1,18 @@
-#include "../catalog.h"
+ï»¿#include "../catalog.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_pinhu()
 {
 #ifndef GUOBIAO
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("•½˜a"), yaku::yakuCalculator::Yaku::yval_1han /* –å‘O‚Å‚ ‚é‚©‚Ç‚¤‚©‚Ì”»’è‚ÍŠù‚És‚È‚Á‚Ä‚¢‚é‚Ì‚Å•s—v */,
+		_T("å¹³å’Œ"), yaku::yakuCalculator::Yaku::yval_1han /* é–€å‰ã§ã‚ã‚‹ã‹ã©ã†ã‹ã®åˆ¤å®šã¯æ—¢ã«è¡Œãªã£ã¦ã„ã‚‹ã®ã§ä¸è¦ */,
 		[](const MENTSU_ANALYSIS* const analysis) {
 			return analysis->isPinfu;
 		}
 	));
 	if (RuleData::chkRuleApplied("kofuku_gekijoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("ŒÛ• Œ‚ë"), get_yaku_han("kofuku_gekijoh") /* –å‘O‚Å‚ ‚é‚©‚Ç‚¤‚©‚Ì”»’è‚ÍŠù‚És‚È‚Á‚Ä‚¢‚é‚Ì‚Å•s—v */,
-			_T("•½˜a"),
+			_T("é¼“è…¹æ’ƒå£Œ"), get_yaku_han("kofuku_gekijoh") /* é–€å‰ã§ã‚ã‚‹ã‹ã©ã†ã‹ã®åˆ¤å®šã¯æ—¢ã«è¡Œãªã£ã¦ã„ã‚‹ã®ã§ä¸è¦ */,
+			_T("å¹³å’Œ"),
 			[](const MENTSU_ANALYSIS* const analysis) {
 				return (analysis->isPinfu &&
 					(analysis->TsumoHai->tile == CircleOne));

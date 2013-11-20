@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../table.h"
 #include "../../widgets/button.h"
@@ -20,14 +20,14 @@ private:
 #ifndef _WIN32
 	bool initialized;
 #endif /*_WIN32*/
-public: // ƒ{ƒ^ƒ“”Ô†
+public: // ãƒœã‚¿ãƒ³ç•ªå·
 	enum ButtonID {
 		btnChii1, btnChii2, btnChii3, btnPon, btnKan, btnPass, btnRon,
 		btnMAXIMUM,
 		btnOpenRiichi = 0, btnRiichi, btnKyuushu, btnFlower, btnTsumo = btnRon,
 	};
-private: // ƒ{ƒ^ƒ“‘®«
-	struct BtnData { // ƒ{ƒ^ƒ“‚Ì‘®«Ši”[
+private: // ãƒœã‚¿ãƒ³å±æ€§
+	struct BtnData { // ãƒœã‚¿ãƒ³ã®å±æ€§æ ¼ç´
 		LPCTSTR label;
 		const int x, y;
 		const ArgbColor color;
@@ -36,26 +36,26 @@ private: // ƒ{ƒ^ƒ“‘®«
 public:
 	enum ButtonSet {btnSetNormal, btnSetTsumo};
 	void ChangeButtonSet(ButtonSet btnSet);
-private: // ƒ{ƒ^ƒ“‚Ì—LŒøE–³Œø‚Ìó‘Ô
+private: // ãƒœã‚¿ãƒ³ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã®çŠ¶æ…‹
 	ButtonSet currentButtonSet;
 public:
 	ButtonSet getButtonSet();
 private:
-	std::bitset<btnMAXIMUM> buttonEnabled; // ƒ{ƒ^ƒ“—LŒøE–³Œø‚Ìó‘Ô
+	std::bitset<btnMAXIMUM> buttonEnabled; // ãƒœã‚¿ãƒ³æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã®çŠ¶æ…‹
 public:
 	std::bitset<btnMAXIMUM> areEnabled();
 	bool isEnabled(ButtonID buttonID);
 	void enable(ButtonID buttonID);
 	void disable(ButtonID buttonID);
 	void enable(const std::bitset<btnMAXIMUM>& flagset);
-private: // ƒ{ƒ^ƒ“‚Ì‰Ÿ‚µ‚İ
+private: // ãƒœã‚¿ãƒ³ã®æŠ¼ã—è¾¼ã¿
 	int sunkenButton;
 	static const int NoSunkenButton = -3;
 public:
 	bool isSunkenButtonExists();
 	int getSunkenButtonID();
 	void setSunkenButton(int buttonID = NoSunkenButton);
-private: // ƒJ[ƒ\ƒ‹
+private: // ã‚«ãƒ¼ã‚½ãƒ«
 	int cursor;
 	static const int CursorDisabled = -3;
 public:
@@ -64,7 +64,7 @@ public:
 	void setCursor(int cursorPos = CursorDisabled);
 	int incCursor();
 	int decCursor();
-private: // Ä\’zE•\¦ˆ—
+private: // å†æ§‹ç¯‰ãƒ»è¡¨ç¤ºå‡¦ç†
 	void reconstruct(ButtonID buttonID);
 	MUTEXLIB::recursive_mutex reconstructionCS;
 public:
@@ -77,7 +77,7 @@ public:
 	ButtonReconst(const ButtonReconst&) = delete; // Delete unexpected copy constructor
 	ButtonReconst& operator= (const ButtonReconst&) = delete; // Delete unexpected assign operator
 	~ButtonReconst();
-private: // ŠÔŠÖŒW
+private: // æ™‚é–“é–¢ä¿‚
 	Timer myTimer;
 };
 

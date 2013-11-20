@@ -1,4 +1,4 @@
-#include "tileutil.h"
+ï»¿#include "tileutil.h"
 
 #include <sstream>
 #include <iomanip>
@@ -13,7 +13,7 @@
 #include "haifu.h"
 #include "yaku/yaku.h"
 
-/* llO–ƒ—p */
+/* å››äººä¸‰éº»ç”¨ */
 PlayerID* tobePlayed(const GameTable* const gameStat) {
 	static PlayerID tp[] = {
 		static_cast<PlayerID>(gameStat->GameRound % Players),
@@ -29,7 +29,7 @@ PlayerID tobePlayed(const GameTable* const gameStat, int id) {
 	return tp[id];
 }
 
-/* ˆê‹ãš”v‚ÌƒR[ƒhˆê—— */
+/* ä¸€ä¹å­—ç‰Œã®ã‚³ãƒ¼ãƒ‰ä¸€è¦§ */
 const TileCode* Honor_Major_Tiles() {
 	static const TileCode YaojiuPai[] = {
 		CharacterOne, CharacterNine, CircleOne, CircleNine, BambooOne, BambooNine,
@@ -42,7 +42,7 @@ TileCode Honor_Major_Tiles(int code) {
 	static const TileCode* YaojiuPai = Honor_Major_Tiles();
 	return YaojiuPai[code];
 }
-/* ˆê‹ãš”v‚©‚Ç‚¤‚©’²‚×‚é */
+/* ä¸€ä¹å­—ç‰Œã‹ã©ã†ã‹èª¿ã¹ã‚‹ */
 bool isYaojiu(TileCode code) {
 	bool ans = false;
 	for (int i = 0; i < 13; i++)
@@ -50,21 +50,21 @@ bool isYaojiu(TileCode code) {
 	return ans;
 }
 
-/* —”v‚·‚é */
+/* ç†ç‰Œã™ã‚‹ */
 void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
-	// —”v‚·‚é
+	// ç†ç‰Œã™ã‚‹
 
 	CodeConv::tostringstream o;
-	o.str(_T("")); o << _T("—”v‚ğs‚¢‚Ü‚·BƒvƒŒƒCƒ„[ [") << (int)targetPlayer << _T("]"); debug(o.str());
+	o.str(_T("")); o << _T("ç†ç‰Œã‚’è¡Œã„ã¾ã™ã€‚ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ [") << (int)targetPlayer << _T("]"); debug(o.str());
 
-	/* è”vƒf[ƒ^‚ğƒfƒoƒbƒOƒƒO‚Éo—ÍFƒrƒtƒH[ */
-	o.str(_T("")); o << _T("—”v‘O‚Ìè”v [");
+	/* æ‰‹ç‰Œãƒ‡ãƒ¼ã‚¿ã‚’ãƒ‡ãƒãƒƒã‚°ãƒ­ã‚°ã«å‡ºåŠ›ï¼šãƒ“ãƒ•ã‚©ãƒ¼ */
+	o.str(_T("")); o << _T("ç†ç‰Œå‰ã®æ‰‹ç‰Œ [");
 	for (int i = 0; i < NumOfTilesInHand; i++)
 		o << std::setw(2) << std::setfill(_T('0')) << (int)gameStat->Player[targetPlayer].Hand[i].tile
 		<< ((i < (NumOfTilesInHand - 1)) ? _T(" ") : _T(""));
 	o << _T("]"); trace(o.str());
 
-	/* ƒ\[ƒg‚Ì€”õ‚Æ‚µ‚Ä”v‚Ì‚È‚¢˜g‚ğˆ— */
+	/* ã‚½ãƒ¼ãƒˆã®æº–å‚™ã¨ã—ã¦ç‰Œã®ãªã„æ ã‚’å‡¦ç† */
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) {
 			gameStat->Player[targetPlayer].Hand[i].tile = TilePad;
@@ -72,13 +72,13 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 		}
 	}
 
-	/* ‚±‚±‚©‚çƒ\[ƒgì‹Æ */
+	/* ã“ã“ã‹ã‚‰ã‚½ãƒ¼ãƒˆä½œæ¥­ */
 	Tile tmpTile;
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		for (int j = i + 1; j < NumOfTilesInHand; j++) {
 			if (gameStat->Player[targetPlayer].Hand[i].tile >
 				gameStat->Player[targetPlayer].Hand[j].tile) {
-					/* Tile\‘¢‘Ì‚ÍPOD‚¾‚©‚çAmemcpy‚µ‚¿‚á‚Á‚Ä‚à‚¢‚¢‚æ‚ËH */
+					/* Tileæ§‹é€ ä½“ã¯PODã ã‹ã‚‰ã€memcpyã—ã¡ã‚ƒã£ã¦ã‚‚ã„ã„ã‚ˆã­ï¼Ÿ */
 					memcpy(&tmpTile, &(gameStat->Player[targetPlayer].Hand[i]), sizeof(Tile));
 					memcpy( &(gameStat->Player[targetPlayer].Hand[i]),
 						&(gameStat->Player[targetPlayer].Hand[j]), sizeof(Tile));
@@ -88,7 +88,7 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 				gameStat->Player[targetPlayer].Hand[j].tile) &&
 				(gameStat->Player[targetPlayer].Hand[i].red <
 				gameStat->Player[targetPlayer].Hand[j].red)) {
-					/* “¯‚¶í—Ş‚Ì”v‚Å‚àÔƒhƒ‰‚©‚»‚¤‚Å‚È‚¢‚©‚Å•À‚×‘Ö‚¦‚é */
+					/* åŒã˜ç¨®é¡ã®ç‰Œã§ã‚‚èµ¤ãƒ‰ãƒ©ã‹ãã†ã§ãªã„ã‹ã§ä¸¦ã¹æ›¿ãˆã‚‹ */
 					memcpy(&tmpTile, &(gameStat->Player[targetPlayer].Hand[i]), sizeof(Tile));
 					memcpy( &(gameStat->Player[targetPlayer].Hand[i]),
 						&(gameStat->Player[targetPlayer].Hand[j]), sizeof(Tile));
@@ -97,7 +97,7 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 		}
 	}
 
-	/* ‹ó—“‚¾‚Á‚½‚Æ‚±‚ë‚ÍŒ³‚É–ß‚µ‚Ä‚ ‚°‚Ü‚µ‚å‚¤ */
+	/* ç©ºæ¬„ã ã£ãŸã¨ã“ã‚ã¯å…ƒã«æˆ»ã—ã¦ã‚ã’ã¾ã—ã‚‡ã† */
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[targetPlayer].Hand[i].tile == TilePad) {
 			gameStat->Player[targetPlayer].Hand[i].tile = NoTile;
@@ -105,35 +105,35 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 		}
 	}
 
-	/* è”vƒf[ƒ^‚ğƒfƒoƒbƒOƒƒO‚Éo—ÍFƒAƒtƒ^[ */
-	o.str(_T("")); o << _T("—”vŒã‚Ìè”v [");
+	/* æ‰‹ç‰Œãƒ‡ãƒ¼ã‚¿ã‚’ãƒ‡ãƒãƒƒã‚°ãƒ­ã‚°ã«å‡ºåŠ›ï¼šã‚¢ãƒ•ã‚¿ãƒ¼ */
+	o.str(_T("")); o << _T("ç†ç‰Œå¾Œã®æ‰‹ç‰Œ [");
 	for (int i = 0; i < NumOfTilesInHand; i++)
 		o << std::setw(2) << std::setfill(_T('0')) << (int)gameStat->Player[targetPlayer].Hand[i].tile
 		<< ((i < (NumOfTilesInHand - 1)) ? _T(" ") : _T(""));
 	o << _T("]"); trace(o.str());
 
-	/* —”vŠ®—¹I */
+	/* ç†ç‰Œå®Œäº†ï¼ */
 	return;
 }
 
-/* ê‚ÉŒ©‚¦‚Ä‚éŒÂ” */
+/* å ´ã«è¦‹ãˆã¦ã‚‹å€‹æ•° */
 MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
-	// ê‚ÉŒ©‚¦‚Ä‚¢‚é”v‚Ì”‚ğ”‚¦‚é
-	CodeConv::tostringstream o; // ƒGƒ‰[ƒƒbƒZ[ƒW—p
+	// å ´ã«è¦‹ãˆã¦ã„ã‚‹ç‰Œã®æ•°ã‚’æ•°ãˆã‚‹
+	CodeConv::tostringstream o; // ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ç”¨
 
-	Int8ByTile seenTiles; // ŒvZ‚·‚é”v
-	memset(&seenTiles, 0, sizeof(seenTiles)); // ‚Ü‚¸‚ÍA‰Šú‰»
+	Int8ByTile seenTiles; // è¨ˆç®—ã™ã‚‹ç‰Œ
+	memset(&seenTiles, 0, sizeof(seenTiles)); // ã¾ãšã¯ã€åˆæœŸåŒ–
 
-	// Ì”v‚ÅŒ©‚¦‚Ä‚é–‡”
+	// æ¨ç‰Œã§è¦‹ãˆã¦ã‚‹æšæ•°
 	for (int i = 0; i < Players; i++) {
 		if (gameStat->Player[i].DiscardPointer == 0) continue;
 		for (int j = 1; j <= gameStat->Player[i].DiscardPointer; j++)
-			if ((gameStat->Player[i].Discard[j].dstat != discardTaken) && // –Â‚©‚ê‚½”v‚ğ‚±‚±‚Å”‚¦‚é‚Æ
-				(gameStat->Player[i].Discard[j].dstat != discardRiichiTaken)) // “ñd‚ÉƒJƒEƒ“ƒg‚³‚ê‚é‚±‚Æ‚É‚È‚é‚Ì‚Å”‚¦‚È‚¢
+			if ((gameStat->Player[i].Discard[j].dstat != discardTaken) && // é³´ã‹ã‚ŒãŸç‰Œã‚’ã“ã“ã§æ•°ãˆã‚‹ã¨
+				(gameStat->Player[i].Discard[j].dstat != discardRiichiTaken)) // äºŒé‡ã«ã‚«ã‚¦ãƒ³ãƒˆã•ã‚Œã‚‹ã“ã¨ã«ãªã‚‹ã®ã§æ•°ãˆãªã„
 				seenTiles[gameStat->Player[i].Discard[j].tcode.tile]++;
 	}
 
-	// ’N‚©‚Ì•›˜I‚ÅŒ©‚¦‚Ä‚é–‡”
+	// èª°ã‹ã®å‰¯éœ²ã§è¦‹ãˆã¦ã‚‹æšæ•°
 	for (int i = 0; i < Players; i++) {
 		if (gameStat->Player[i].MeldPointer == 0) continue;
 		for (int j = 1; j <= gameStat->Player[i].MeldPointer; j++) {
@@ -141,45 +141,45 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 			case meldSequenceExposedLower:
 			case meldSequenceExposedMiddle:
 			case meldSequenceExposedUpper:
-				// –¾‡q(ƒ`[)
-				// ‚Ü‚¸A³‚µ‚¢ƒR[ƒh‚É‚È‚Á‚Ä‚¢‚é‚©‚ğŠm”F‚·‚é(ƒfƒoƒbƒO)
+				// æ˜é †å­(ãƒãƒ¼)
+				// ã¾ãšã€æ­£ã—ã„ã‚³ãƒ¼ãƒ‰ã«ãªã£ã¦ã„ã‚‹ã‹ã‚’ç¢ºèªã™ã‚‹(ãƒ‡ãƒãƒƒã‚°æ™‚)
 				assert(gameStat->Player[i].Meld[j].tile % TileSuitStep <= 7);
 				assert(gameStat->Player[i].Meld[j].tile % TileSuitStep > 0);
 				assert(gameStat->Player[i].Meld[j].tile < TileSuitHonors);
-				// ƒJƒEƒ“ƒgƒAƒbƒv
+				// ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—
 				for (int k = gameStat->Player[i].Meld[j].tile;
 					k <= gameStat->Player[i].Meld[j].tile + 2; k++)
 					seenTiles[gameStat->Player[i].Meld[j].tile]++;
-				// ‚±‚±‚Ü‚Å
+				// ã“ã“ã¾ã§
 				break;
 			case meldTripletExposedLeft:
 			case meldTripletExposedCenter:
 			case meldTripletExposedRight:
-				// –¾q(ƒ|ƒ“)
+				// æ˜åˆ»å­(ãƒãƒ³)
 				seenTiles[gameStat->Player[i].Meld[j].tile] += 3;
 				break;
 			case meldQuadConcealed:
-				// ˆÃÈ
+				// æš—æ§“
 #ifdef GUOBIAO
 				break;
 #else /* GUOBIAO */
-				if (RuleData::chkRule("ankan_conceal", "closed")) break; // ˆÃÈ”ñŠJ¦ƒ‹[ƒ‹‚¾‚Á‚½‚çƒJƒEƒ“ƒg‚µ‚È‚¢
+				if (RuleData::chkRule("ankan_conceal", "closed")) break; // æš—æ§“éé–‹ç¤ºãƒ«ãƒ¼ãƒ«ã ã£ãŸã‚‰ã‚«ã‚¦ãƒ³ãƒˆã—ãªã„
 				/* FALLTHRU */
 #endif /* GUOBIAO */
 			case meldQuadExposedLeft:   case meldQuadAddedLeft:
 			case meldQuadExposedCenter: case meldQuadAddedCenter:
 			case meldQuadExposedRight:  case meldQuadAddedRight:
-				// –¾È
+				// æ˜æ§“
 				seenTiles[gameStat->Player[i].Meld[j].tile] += 4;
 				break;
 			default:
-				RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("•›˜Iƒf[ƒ^‚ÉˆÃ‡qAˆÃqA‚Ü‚½‚Í•s–¾‚Èí—Ş‚Ì–Êq‚ªŒŸo‚³‚ê‚Ü‚µ‚½"));
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("å‰¯éœ²ãƒ‡ãƒ¼ã‚¿ã«æš—é †å­ã€æš—åˆ»å­ã€ã¾ãŸã¯ä¸æ˜ãªç¨®é¡ã®é¢å­ãŒæ¤œå‡ºã•ã‚Œã¾ã—ãŸ"));
 			}
 		}
 	}
 
 #ifndef GUOBIAO
-	// ƒhƒ‰•\¦”v‚ÅŒ©‚¦‚Ä‚é–‡”
+	// ãƒ‰ãƒ©è¡¨ç¤ºç‰Œã§è¦‹ãˆã¦ã‚‹æšæ•°
 	for (int i = 0; i < 6; i++) {
 		if (gameStat->chkGameType(AllSanma)) {
 			if (gameStat->DoraPointer <= (102 - gameStat->ExtraRinshan - i * 2))
@@ -194,9 +194,9 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 	return seenTiles;
 }
 
-/* è”v‚É‘¶İ‚·‚é”v‚ğí—Ş•Ê‚ÉƒJƒEƒ“ƒg‚·‚é */
+/* æ‰‹ç‰Œã«å­˜åœ¨ã™ã‚‹ç‰Œã‚’ç¨®é¡åˆ¥ã«ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹ */
 MJCORE Int8ByTile countTilesInHand(const GameTable* const gameStat, PlayerID playerID) {
-	// è”v‚É‘¶İ‚·‚é”v‚ğí—Ş•Ê‚ÉƒJƒEƒ“ƒg‚·‚éi–Â‚«–ÊqEˆÃÈ‚Íœ‚­j
+	// æ‰‹ç‰Œã«å­˜åœ¨ã™ã‚‹ç‰Œã‚’ç¨®é¡åˆ¥ã«ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹ï¼ˆé³´ãé¢å­ãƒ»æš—æ§“ã¯é™¤ãï¼‰
 	Int8ByTile count; memset(&count, 0, sizeof(count)); TileCode tmpTC;
 	if ((playerID < 0) || (playerID > Players)) return Int8ByTile();
 	for (int i = 0; i < NumOfTilesInHand; i++) {
@@ -206,22 +206,22 @@ MJCORE Int8ByTile countTilesInHand(const GameTable* const gameStat, PlayerID pla
 	return count;
 }
 
-/* è”v‚É‘¶İ‚·‚éÔƒhƒ‰‚ğí—Ş•Ê‚ÉƒJƒEƒ“ƒg‚·‚é */
+/* æ‰‹ç‰Œã«å­˜åœ¨ã™ã‚‹èµ¤ãƒ‰ãƒ©ã‚’ç¨®é¡åˆ¥ã«ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹ */
 MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID playerID, int doraCol) {
 	assert((doraCol == 1)||(doraCol == 2));
-	// è”v‚É‘¶İ‚·‚é”v‚ğí—Ş•Ê‚ÉƒJƒEƒ“ƒg‚·‚éi–Â‚«–ÊqEˆÃÈ‚Íœ‚­j
+	// æ‰‹ç‰Œã«å­˜åœ¨ã™ã‚‹ç‰Œã‚’ç¨®é¡åˆ¥ã«ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹ï¼ˆé³´ãé¢å­ãƒ»æš—æ§“ã¯é™¤ãï¼‰
 	Int8ByTile count; memset(&count, 0, sizeof(count)); TileCode tmpTC;
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if ((tmpTC = TileCode(gameStat->Player[playerID].Hand[i].tile)) != NoTile)
 			if (TileCode(gameStat->Player[playerID].Hand[i].red) == doraCol)
 				count[tmpTC]++;
 	}
-	// Ôƒhƒ‰‚Ì‚İ”‚¦‚é‚Æ‚«‚Í•Ö‹X‚Ì‚½‚ßA–Â‚«–Êq‚à”‚¦‚é
+	// èµ¤ãƒ‰ãƒ©ã®ã¿æ•°ãˆã‚‹ã¨ãã¯ä¾¿å®œã®ãŸã‚ã€é³´ãé¢å­ã‚‚æ•°ãˆã‚‹
 	for (int i = 1; i < gameStat->Player[playerID].MeldPointer; i++) {
 		switch (gameStat->Player[playerID].Meld[i].mstat) {
 		case meldSequenceExposedLower: case meldSequenceExposedMiddle:
 		case meldSequenceExposedUpper:
-			// ‡q‚Ì
+			// é †å­ã®æ™‚
 			if (gameStat->Player[playerID].Meld[i].red[0] == doraCol)
 				count[gameStat->Player[playerID].Meld[i].tile]++;
 			if (gameStat->Player[playerID].Meld[i].red[1] == doraCol)
@@ -232,14 +232,14 @@ MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID 
 		case meldQuadExposedLeft: case meldQuadAddedLeft:
 		case meldQuadExposedCenter: case meldQuadAddedCenter:
 		case meldQuadExposedRight: case meldQuadAddedRight:
-		case meldQuadConcealed: // ˆÃÈ‚à”‚¦‚Ä‚ ‚°‚Ü‚µ‚å‚¤cc
-			// Èq‚Ì
+		case meldQuadConcealed: // æš—æ§“ã‚‚æ•°ãˆã¦ã‚ã’ã¾ã—ã‚‡ã†â€¦â€¦
+			// æ§“å­ã®æ™‚
 			if (gameStat->Player[playerID].Meld[i].red[3] == doraCol)
 				count[gameStat->Player[playerID].Meld[i].tile]++;
 			/* FALLTHRU */
 		case meldTripletExposedLeft: case meldTripletExposedCenter:
 		case meldTripletExposedRight:
-			// q‚Ì(Èq‚àŠÜ‚Ş)
+			// åˆ»å­ã®æ™‚(æ§“å­ã‚‚å«ã‚€)
 			if (gameStat->Player[playerID].Meld[i].red[0] == doraCol)
 				count[gameStat->Player[playerID].Meld[i].tile]++;
 			if (gameStat->Player[playerID].Meld[i].red[1] == doraCol)
@@ -248,30 +248,30 @@ MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID 
 				count[gameStat->Player[playerID].Meld[i].tile]++;
 			break;
 		default:
-			// ˆÙíƒf[ƒ^
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("•›˜Iƒf[ƒ^‚ÉˆÃ‡qAˆÃqA‚Ü‚½‚Í•s–¾‚Èí—Ş‚Ì–Êq‚ªŒŸo‚³‚ê‚Ü‚µ‚½"));
+			// ç•°å¸¸ãƒ‡ãƒ¼ã‚¿
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("å‰¯éœ²ãƒ‡ãƒ¼ã‚¿ã«æš—é †å­ã€æš—åˆ»å­ã€ã¾ãŸã¯ä¸æ˜ãªç¨®é¡ã®é¢å­ãŒæ¤œå‡ºã•ã‚Œã¾ã—ãŸ"));
 		}
 	}
 	return count;
 }
 
 
-/* è”v‚Ì‚¤‚¿‚ ‚é‚P–‡‚É’–Ú‚·‚é */
+/* æ‰‹ç‰Œã®ã†ã¡ã‚ã‚‹ï¼‘æšã«æ³¨ç›®ã™ã‚‹ */
 MJCORE TileStatus gettilestatus(
 	const GameTable* const gameStat, PlayerID targetPlayer, int targetTile, bool CheckMode)
 {
 	const TileCode* const theTile = &gameStat->Player[targetPlayer].Hand[targetTile].tile;
 
-	TileStatus tlStat; memset(&tlStat, 0, sizeof(tlStat)); // ‰Šú‰»
-	if (*theTile == NoTile) return tlStat; // ‚È‚©‚Á‚½‚ç–ß‚é
+	TileStatus tlStat; memset(&tlStat, 0, sizeof(tlStat)); // åˆæœŸåŒ–
+	if (*theTile == NoTile) return tlStat; // ãªã‹ã£ãŸã‚‰æˆ»ã‚‹
 
-	tlStat.isExistent = true; // ‚±‚±‚É‚½‚Ç‚è’…‚¢‚½‚çA‚»‚ê‚Í‘¶İ‚·‚é”v‚Å‚·
-	auto tlCount = countTilesInHand(gameStat, targetPlayer); // ”v‚ğ”‚¦‚ëA˜b‚Í‚»‚ê‚©‚ç‚¾
+	tlStat.isExistent = true; // ã“ã“ã«ãŸã©ã‚Šç€ã„ãŸã‚‰ã€ãã‚Œã¯å­˜åœ¨ã™ã‚‹ç‰Œã§ã™
+	auto tlCount = countTilesInHand(gameStat, targetPlayer); // ç‰Œã‚’æ•°ãˆã‚ã€è©±ã¯ãã‚Œã‹ã‚‰ã 
 
-	if (tlCount[*theTile] == 4) tlStat.canFormQuad = true; // ˆÃÈ‚ª‰Â”\‚È”v
-	if (tlCount[*theTile] >= 3) tlStat.formsTriplet = true; // ˆÃ‚ğŒ`¬‚µ‚Ä‚¢‚éê‡
+	if (tlCount[*theTile] == 4) tlStat.canFormQuad = true; // æš—æ§“ãŒå¯èƒ½ãªç‰Œ
+	if (tlCount[*theTile] >= 3) tlStat.formsTriplet = true; // æš—åˆ»ã‚’å½¢æˆã—ã¦ã„ã‚‹å ´åˆ
 	
-	if (*theTile < TileSuitHonors) { // ‡q‚ğŒ`¬‚µ‚Ä‚¢‚éê‡
+	if (*theTile < TileSuitHonors) { // é †å­ã‚’å½¢æˆã—ã¦ã„ã‚‹å ´åˆ
 		if ((tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) + 1] >= 1)&&(tlCount[int(*theTile) + 2] >= 1))
 			tlStat.formsSequence = true;
 		else if ((tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) + 1] >= 1)&&(tlCount[int(*theTile) - 1] >= 1))
@@ -280,9 +280,9 @@ MJCORE TileStatus gettilestatus(
 			tlStat.formsSequence = true;
 	}
 
-	if ((tlCount[*theTile] >= 2)&&(!tlStat.formsTriplet)) tlStat.formsPair = true; // ‘Îq‚ğŒ`¬‚µ‚Ä‚¢‚éê‡
+	if ((tlCount[*theTile] >= 2)&&(!tlStat.formsTriplet)) tlStat.formsPair = true; // å¯¾å­ã‚’å½¢æˆã—ã¦ã„ã‚‹å ´åˆ
 
-	if (*theTile < TileSuitHonors) { // •Ó’£‚ğŒ`¬‚µ‚Ä‚¢‚éê‡
+	if (*theTile < TileSuitHonors) { // è¾ºå¼µã‚’å½¢æˆã—ã¦ã„ã‚‹å ´åˆ
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
 			if ((tlCount[int(*theTile) + 1] >= 1)&&(*theTile % TileSuitStep == 1))
 				tlStat.seqSingleSideWait = true;
@@ -295,7 +295,7 @@ MJCORE TileStatus gettilestatus(
 		}
 	}
 	
-	if (*theTile < TileSuitHonors) { // —¼–Ê“ƒq‚ğŒ`¬‚µ‚Ä‚¢‚éê‡
+	if (*theTile < TileSuitHonors) { // ä¸¡é¢å¡”å­ã‚’å½¢æˆã—ã¦ã„ã‚‹å ´åˆ
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
 			if ((tlCount[int(*theTile) + 1] >= 1)&&(*theTile % TileSuitStep != 1)&&
 				(*theTile % TileSuitStep != 8)) tlStat.seqDoubleSideWait = true;
@@ -304,7 +304,7 @@ MJCORE TileStatus gettilestatus(
 		}
 	}
 	
-	if (*theTile < TileSuitHonors) { // ›Æ’£‚ğŒ`¬‚µ‚Ä‚¢‚éê‡
+	if (*theTile < TileSuitHonors) { // åµŒå¼µã‚’å½¢æˆã—ã¦ã„ã‚‹å ´åˆ
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
 			if ((tlCount[int(*theTile) + 2] >= 1)&&(*theTile % TileSuitStep != 9))
 				tlStat.seqMidWait = true;
@@ -316,33 +316,33 @@ MJCORE TileStatus gettilestatus(
 	return tlStat;
 }
 
-/* U’®‚Å‚È‚¢‚©‚Ìƒ`ƒFƒbƒNE‘Ò‚¿”v‚ğ”‚¦‚éˆ—‚àŠÜ‚Ş */
+/* æŒ¯è´ã§ãªã„ã‹ã®ãƒã‚§ãƒƒã‚¯ãƒ»å¾…ã¡ç‰Œã‚’æ•°ãˆã‚‹å‡¦ç†ã‚‚å«ã‚€ */
 MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetPlayer) {
-	trace(_T("U’®‚©‚Ç‚¤‚©E‘Ò‚¿”v‚ğ’²‚×‚Ü‚·B"));
-	Int8ByTile seenTiles = countseentiles(gameStat); // Œ©‚¦‚Ä‚é”v‚Ì”‚ğ”‚¦‚é
-	Int8ByTile countTiles = countTilesInHand(gameStat, targetPlayer); // è‚Ì“à‚Ì”v‚Ì”‚ğ”‚¦‚é
-	MachihaiInfo machihaiInfo; memset(&machihaiInfo, 0, sizeof(machihaiInfo)); // ‰Šú‰»
-	GameTable tmpGameStat; memcpy(&tmpGameStat, gameStat, sizeof(GameTable)); // ƒeƒ“ƒ|ƒ‰ƒŠ‘ìî•ñƒIƒuƒWƒFƒNƒg(‚±‚±‚©‚ç‚Í‰¼’è–@‚Ì¢ŠEcc)
+	trace(_T("æŒ¯è´ã‹ã©ã†ã‹ãƒ»å¾…ã¡ç‰Œã‚’èª¿ã¹ã¾ã™ã€‚"));
+	Int8ByTile seenTiles = countseentiles(gameStat); // è¦‹ãˆã¦ã‚‹ç‰Œã®æ•°ã‚’æ•°ãˆã‚‹
+	Int8ByTile countTiles = countTilesInHand(gameStat, targetPlayer); // æ‰‹ã®å†…ã®ç‰Œã®æ•°ã‚’æ•°ãˆã‚‹
+	MachihaiInfo machihaiInfo; memset(&machihaiInfo, 0, sizeof(machihaiInfo)); // åˆæœŸåŒ–
+	GameTable tmpGameStat; memcpy(&tmpGameStat, gameStat, sizeof(GameTable)); // ãƒ†ãƒ³ãƒãƒ©ãƒªå“æƒ…å ±ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ(ã“ã“ã‹ã‚‰ã¯ä»®å®šæ³•ã®ä¸–ç•Œâ€¦â€¦)
 
 	for (TileCode i = CharacterOne; i < Flower; i = (TileCode)((int)i + 1)) {
-		if ((int)i % TileSuitStep == 0) continue; // ‚È‚¢”v‚¾‚Á‚½‚ç–ß‚é
+		if ((int)i % TileSuitStep == 0) continue; // ãªã„ç‰Œã ã£ãŸã‚‰æˆ»ã‚‹
 		tmpGameStat.Player[targetPlayer].Tsumohai().tile = i;
-		if (ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, shantenAll) == -1) { // ‘Ò‚¿‚É‚È‚Á‚Ä‚¢‚½‚ç
-			machihaiInfo.MachiMen++; machihaiInfo.Machihai[i].MachihaiFlag = true; // ƒtƒ‰ƒO‚ğƒZƒbƒg‚µ‚Ü‚µ‚å‚¤
-			machihaiInfo.MachihaiTotal += // ƒJƒEƒ“ƒg‚ğ‰ÁZ‚µ‚Ü‚µ‚å‚¤
+		if (ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, shantenAll) == -1) { // å¾…ã¡ã«ãªã£ã¦ã„ãŸã‚‰
+			machihaiInfo.MachiMen++; machihaiInfo.Machihai[i].MachihaiFlag = true; // ãƒ•ãƒ©ã‚°ã‚’ã‚»ãƒƒãƒˆã—ã¾ã—ã‚‡ã†
+			machihaiInfo.MachihaiTotal += // ã‚«ã‚¦ãƒ³ãƒˆã‚’åŠ ç®—ã—ã¾ã—ã‚‡ã†
 				(machihaiInfo.Machihai[i].MachihaiCount =
 				(4 - seenTiles[i] - countTiles[i]));
-			// ƒtƒŠƒeƒ“‚©‚Ç‚¤‚©‚ğ”»’f‚·‚é
+			// ãƒ•ãƒªãƒ†ãƒ³ã‹ã©ã†ã‹ã‚’åˆ¤æ–­ã™ã‚‹
 			for (int j = 1; j <= tmpGameStat.Player[targetPlayer].DiscardPointer; j++) {
-				if (tmpGameStat.Player[targetPlayer].Discard[j].tcode.tile == i) // “¯‚¶í—Ş‚ÌÌ‚Ä”v‚ªŒ©‚Â‚©‚Á‚½‚ç
-					machihaiInfo.FuritenFlag = true; // ƒtƒŠƒeƒ“‚Æ”»’f‚µ‚Ü‚·
+				if (tmpGameStat.Player[targetPlayer].Discard[j].tcode.tile == i) // åŒã˜ç¨®é¡ã®æ¨ã¦ç‰ŒãŒè¦‹ã¤ã‹ã£ãŸã‚‰
+					machihaiInfo.FuritenFlag = true; // ãƒ•ãƒªãƒ†ãƒ³ã¨åˆ¤æ–­ã—ã¾ã™
 			}
-			if (RuleData::chkRuleApplied("kakan_furiten")) { // ‰ÁÈ‚Ì”v‚ğƒtƒŠƒeƒ“‚Æ‚İ‚È‚·ƒ‹[ƒ‹‚È‚ç
+			if (RuleData::chkRuleApplied("kakan_furiten")) { // åŠ æ§“ã®ç‰Œã‚’ãƒ•ãƒªãƒ†ãƒ³ã¨ã¿ãªã™ãƒ«ãƒ¼ãƒ«ãªã‚‰
 				for (int j = 1; j <= tmpGameStat.Player[targetPlayer].MeldPointer; j++) {
 					switch (tmpGameStat.Player[targetPlayer].Meld[j].mstat) {
-					case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight: // ‰ÁÈ‚ÅA‚È‚¨‚©‚Â
-						if (tmpGameStat.Player[targetPlayer].Meld[j].tile == i) // “¯‚¶í—Ş‚ÌÌ‚Ä”v‚ªŒ©‚Â‚©‚Á‚½‚ç
-							machihaiInfo.FuritenFlag = true; // ƒtƒŠƒeƒ“‚Æ”»’f‚µ‚Ü‚·
+					case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight: // åŠ æ§“ã§ã€ãªãŠã‹ã¤
+						if (tmpGameStat.Player[targetPlayer].Meld[j].tile == i) // åŒã˜ç¨®é¡ã®æ¨ã¦ç‰ŒãŒè¦‹ã¤ã‹ã£ãŸã‚‰
+							machihaiInfo.FuritenFlag = true; // ãƒ•ãƒªãƒ†ãƒ³ã¨åˆ¤æ–­ã—ã¾ã™
 						break;
 					}
 				}
@@ -350,59 +350,59 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 		}
 	}
 
-	// ƒI[ƒvƒ“—§’¼Ò‚Ìè”v‚à”‚¦‚é
+	// ã‚ªãƒ¼ãƒ—ãƒ³ç«‹ç›´è€…ã®æ‰‹ç‰Œã‚‚æ•°ãˆã‚‹
 	for (int p = 0; p < Players; p++) {
-		if ((p != targetPlayer) && (gameStat->Player[p].RichiFlag.OpenFlag)) { // ©•ªˆÈŠO‚ÌƒI[ƒvƒ“ƒŠ[ƒ`Ò‚ÌA
-			for (int i = 0; i < NumOfTilesInHand; i++) { // ‚»‚ê‚¼‚ê‚Ìè”v‚É‚Â‚¢‚ÄA
-				if (gameStat->Player[p].Hand[i].tile != NoTile) { // ƒuƒ‰ƒ“ƒN‚Å‚Í‚È‚­‚ÄA
-					if (machihaiInfo.Machihai[gameStat->Player[p].Hand[i].tile].MachihaiCount > 0) { // 1–‡ˆÈã‚ ‚é‚Í‚¸‚Ì‘Ò‚¿”v‚Æ”F¯‚³‚ê‚Ä‚¢‚é
+		if ((p != targetPlayer) && (gameStat->Player[p].RichiFlag.OpenFlag)) { // è‡ªåˆ†ä»¥å¤–ã®ã‚ªãƒ¼ãƒ—ãƒ³ãƒªãƒ¼ãƒè€…ã®æ™‚ã€
+			for (int i = 0; i < NumOfTilesInHand; i++) { // ãã‚Œãã‚Œã®æ‰‹ç‰Œã«ã¤ã„ã¦ã€
+				if (gameStat->Player[p].Hand[i].tile != NoTile) { // ãƒ–ãƒ©ãƒ³ã‚¯ã§ã¯ãªãã¦ã€
+					if (machihaiInfo.Machihai[gameStat->Player[p].Hand[i].tile].MachihaiCount > 0) { // 1æšä»¥ä¸Šã‚ã‚‹ã¯ãšã®å¾…ã¡ç‰Œã¨èªè­˜ã•ã‚Œã¦ã„ã‚‹æ™‚
 						machihaiInfo.Machihai[gameStat->Player[p].Hand[i].tile].MachihaiCount--;
-						machihaiInfo.MachihaiTotal--; // ‘Ò‚¿”v‚Ì”‚ğŒ¸‚ç‚·
+						machihaiInfo.MachihaiTotal--; // å¾…ã¡ç‰Œã®æ•°ã‚’æ¸›ã‚‰ã™
 					}
 				}
 			}
 		}
 	}
 
-	/* ŒvZŠ®—¹A’l‚ğ•Ô‚µ‚Ü‚µ‚å‚¤ */
+	/* è¨ˆç®—å®Œäº†ã€å€¤ã‚’è¿”ã—ã¾ã—ã‚‡ã† */
 	return machihaiInfo;
 }
 
-/* ƒI[ƒvƒ“—§’¼‚Ì‘Ò‚¿”v */
+/* ã‚ªãƒ¼ãƒ—ãƒ³ç«‹ç›´ã®å¾…ã¡ç‰Œ */
 void chkOpenMachi(GameTable* const gameStat, PlayerID targetPlayer) {
-	// ƒI[ƒvƒ“ƒŠ[ƒ`‚Ì‘Ò‚¿”vî•ñ‚ğXV‚·‚é
+	// ã‚ªãƒ¼ãƒ—ãƒ³ãƒªãƒ¼ãƒã®å¾…ã¡ç‰Œæƒ…å ±ã‚’æ›´æ–°ã™ã‚‹
 	assert(gameStat->Player[targetPlayer].Tsumohai().tile == NoTile);
 	for (int i = 0; i < TileNonflowerMax; i++) {
-		/* •Ï‚È”v‚ÅŒvZ‚µ‚È‚¢‚æ‚¤‚É‚µ‚Ü‚µ‚å‚¤ */
+		/* å¤‰ãªç‰Œã§è¨ˆç®—ã—ãªã„ã‚ˆã†ã«ã—ã¾ã—ã‚‡ã† */
 		if (i % TileSuitStep == 0) continue;
 		if (i % TileSuitStep > RedDragon) continue;
-		/* ‚Ü‚¸‚ÍA‚ ‚é”v‚ğƒcƒ‚‚Á‚½‚Æ‰¼’è‚µ‚Ü‚· */
+		/* ã¾ãšã¯ã€ã‚ã‚‹ç‰Œã‚’ãƒ„ãƒ¢ã£ãŸã¨ä»®å®šã—ã¾ã™ */
 		gameStat->Player[targetPlayer].Tsumohai().tile = (TileCode)i;
-		/* ‚à‚µ‚»‚ê‚ª˜a—¹‚É‚È‚Á‚Ä‚¢‚½‚çAƒtƒ‰ƒO‚ğƒZƒbƒg‚µ‚Ü‚µ‚å‚¤ */
+		/* ã‚‚ã—ãã‚ŒãŒå’Œäº†ã«ãªã£ã¦ã„ãŸã‚‰ã€ãƒ•ãƒ©ã‚°ã‚’ã‚»ãƒƒãƒˆã—ã¾ã—ã‚‡ã† */
 		if (ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenAll) == -1)
 			gameStat->OpenRichiWait[i] = true;
-		/* ‚±‚ê‚ğ‚·‚×‚Ä‚Ì”v‚É‚Â‚¢‚Äs‚µ‚Ü‚µ‚å‚¤ */
+		/* ã“ã‚Œã‚’ã™ã¹ã¦ã®ç‰Œã«ã¤ã„ã¦è©¦è¡Œã—ã¾ã—ã‚‡ã† */
 	}
-	/* ‚à‚Æ‚É–ß‚·‚Ì‚ğ–Y‚ê‚È‚¢‚æ‚¤‚É‚µ‚Ü‚µ‚å‚¤B‚³‚à‚È‚­‚Î‘½”v‚É‚È‚Á‚Ä‚µ‚Ü‚¢‚Ü‚· */
+	/* ã‚‚ã¨ã«æˆ»ã™ã®ã‚’å¿˜ã‚Œãªã„ã‚ˆã†ã«ã—ã¾ã—ã‚‡ã†ã€‚ã•ã‚‚ãªãã°å¤šç‰Œã«ãªã£ã¦ã—ã¾ã„ã¾ã™ */
 	gameStat->Player[targetPlayer].Tsumohai().tile = NoTile;
 
-	/* ‚±‚ê‚Åˆ—‚ªI‚í‚è‚Ü‚µ‚½B–ß‚è‚Ü‚µ‚å‚¤ */
+	/* ã“ã‚Œã§å‡¦ç†ãŒçµ‚ã‚ã‚Šã¾ã—ãŸã€‚æˆ»ã‚Šã¾ã—ã‚‡ã† */
 	return;
 }
 
-/* ‹ãí‹ã”v—¬‚µ‚ª‰Â”\‚©‚Ç‚¤‚©‚Ìƒ`ƒFƒbƒN */
+/* ä¹ç¨®ä¹ç‰Œæµã—ãŒå¯èƒ½ã‹ã©ã†ã‹ã®ãƒã‚§ãƒƒã‚¯ */
 MJCORE bool chkdaopaiability(const GameTable* const gameStat, PlayerID targetPlayer) {
-	if (RuleData::chkRule("nine_terminals", "continue")) return false; // ‹ãí‹ã”v‚È‚µ‚Ìƒ‹[ƒ‹‚¾‚Á‚½‚ç–ß‚é
+	if (RuleData::chkRule("nine_terminals", "continue")) return false; // ä¹ç¨®ä¹ç‰Œãªã—ã®ãƒ«ãƒ¼ãƒ«ã ã£ãŸã‚‰æˆ»ã‚‹
 	Int8ByTile TileCount = countTilesInHand(gameStat, targetPlayer);
 	int YaojiuCount = 0; bool AtamaFlag = false;
-	for (int i = 0; i < 13; i++) // ƒ„ƒI‹ã”v‚Pí—Ş‚É‚Â‚«A‚P‚ğƒJƒEƒ“ƒg‚·‚éB
+	for (int i = 0; i < 13; i++) // ãƒ¤ã‚ªä¹ç‰Œï¼‘ç¨®é¡ã«ã¤ãã€ï¼‘ã‚’ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹ã€‚
 		if (TileCount[Honor_Major_Tiles(i)] >= 1) YaojiuCount++;
 	return (YaojiuCount >= 9);
 }
 
-/* ƒhƒ‰‚ğİ’è‚·‚é */
+/* ãƒ‰ãƒ©ã‚’è¨­å®šã™ã‚‹ */
 namespace setdora_tools {
-	TileCode getNextOf(const GameTable* const gameStat, TileCode tc) { // ƒlƒNƒXƒg”v
+	TileCode getNextOf(const GameTable* const gameStat, TileCode tc) { // ãƒã‚¯ã‚¹ãƒˆç‰Œ
 		TileCode ans = (TileCode)((int)tc + 1);
 		if ((gameStat->chkGameType(SanmaX))&&(ans == CharacterTwo)) ans = CharacterNine;
 		else if (ans == (TileCode)10) ans = CharacterOne;
@@ -413,7 +413,7 @@ namespace setdora_tools {
 		return ans;
 	}
 
-	TileCode getPrevOf(const GameTable* const gameStat, TileCode tc) { // ‘O‚Ì”v
+	TileCode getPrevOf(const GameTable* const gameStat, TileCode tc) { // å‰ã®ç‰Œ
 		TileCode ans = (TileCode)((int)tc - 1);
 		if ((gameStat->chkGameType(SanmaX))&&(ans == CharacterEight)) ans = CharacterOne;
 		else if (ans == (TileCode)0) ans = CharacterNine;
@@ -429,9 +429,9 @@ namespace setdora_tools {
 			i <= ((RuleData::chkRuleApplied("nagatacho") && (tc < TileSuitHonors)) ? TileSuitHonors : tc);
 			i += 10) {
 				CodeConv::tostringstream o;
-				if (Mode) gameStat->DoraFlag.Ura[i]++;	// ƒhƒ‰‚ğİ’è‚·‚é
-				else gameStat->DoraFlag.Omote[i]++;	// ƒhƒ‰‚ğİ’è‚·‚é
-				o << _T("”vƒR[ƒh [") << (int)tc << _T("] ‚ğƒhƒ‰‚É‚µ‚Ü‚µ‚½B");
+				if (Mode) gameStat->DoraFlag.Ura[i]++;	// ãƒ‰ãƒ©ã‚’è¨­å®šã™ã‚‹
+				else gameStat->DoraFlag.Omote[i]++;	// ãƒ‰ãƒ©ã‚’è¨­å®šã™ã‚‹
+				o << _T("ç‰Œã‚³ãƒ¼ãƒ‰ [") << (int)tc << _T("] ã‚’ãƒ‰ãƒ©ã«ã—ã¾ã—ãŸã€‚");
 				debug(o.str().c_str());
 				if (Mode) haifu::haifurecuradora((TileCode)i);
 				else haifu::haifurecdora((TileCode)i);
@@ -441,16 +441,16 @@ namespace setdora_tools {
 
 void setdora(GameTable* const gameStat, int Mode) {
 	CodeConv::tostringstream o;
-	o << _T("ƒhƒ‰‚Ì’Ç‰Á ƒ|ƒCƒ“ƒ^ [") << gameStat->DoraPointer <<
-		_T("] ”vƒR[ƒh [") << (int)gameStat->Deck[gameStat->DoraPointer + Mode].tile <<
-		_T("] ƒ‚[ƒh [") << Mode << _T("]");
+	o << _T("ãƒ‰ãƒ©ã®è¿½åŠ  ãƒã‚¤ãƒ³ã‚¿ [") << gameStat->DoraPointer <<
+		_T("] ç‰Œã‚³ãƒ¼ãƒ‰ [") << (int)gameStat->Deck[gameStat->DoraPointer + Mode].tile <<
+		_T("] ãƒ¢ãƒ¼ãƒ‰ [") << Mode << _T("]");
 	debug(o.str().c_str());
 	if (gameStat->Deck[gameStat->DoraPointer + Mode].tile > TileSuitFlowers) {
-		// ‰Ô”v‚ªƒhƒ‰•\¦”v‚É‚È‚Á‚½‚Æ‚«
+		// èŠ±ç‰ŒãŒãƒ‰ãƒ©è¡¨ç¤ºç‰Œã«ãªã£ãŸã¨ã
 		setdora_tools::addDora(gameStat, Flower, Mode);
 	} else {
 		if (RuleData::chkRule("dora_indicator", "dora_around_indicator")) {
-			// ‘O‚Ì”v‚ªƒhƒ‰i’´ƒCƒ“ƒtƒŒ—pj
+			// å‰ã®ç‰ŒãŒãƒ‰ãƒ©ï¼ˆè¶…ã‚¤ãƒ³ãƒ•ãƒ¬ç”¨ï¼‰
 			if ((gameStat->Deck[gameStat->DoraPointer + Mode].tile >= 10) ||
 				(!gameStat->chkGameType(SanmaX)))
 					setdora_tools::addDora(gameStat,
@@ -458,13 +458,13 @@ void setdora(GameTable* const gameStat, int Mode) {
 						Mode);
 		}
 		if ((RuleData::chkRule("dora_indicator", "dora_indicator_itself"))||(RuleData::chkRule("dora_indicator", "dora_around_indicator"))) {
-			// Œ»•¨ƒhƒ‰
+			// ç¾ç‰©ãƒ‰ãƒ©
 			setdora_tools::addDora(gameStat,
 				gameStat->Deck[gameStat->DoraPointer + Mode].tile,
 				Mode);
 		}
 		if (!RuleData::chkRule("dora_indicator", "dora_indicator_itself")) {
-			// ƒlƒNƒXƒgƒhƒ‰
+			// ãƒã‚¯ã‚¹ãƒˆãƒ‰ãƒ©
 			setdora_tools::addDora(gameStat,
 				setdora_tools::getNextOf(gameStat, gameStat->Deck[gameStat->DoraPointer + Mode].tile),
 				Mode);
@@ -472,55 +472,55 @@ void setdora(GameTable* const gameStat, int Mode) {
 	}
 }
 
-/* —§’¼Œã‚ÌˆÃÈ‚Ì‰Â”Û */
-namespace chkAnkanAbilityTools { // chkAnkanAbilityŠÖ”—p‚Ìˆ—
+/* ç«‹ç›´å¾Œã®æš—æ§“ã®å¯å¦ */
+namespace chkAnkanAbilityTools { // chkAnkanAbilityé–¢æ•°ç”¨ã®å‡¦ç†
 	bool CheckForNumOfTiles(const GameTable* const gameStat, PlayerID targetPlayer) {
-		/* ƒcƒ‚‚Á‚½”v‚ª‚S–‡‘µ‚Á‚Ä‚È‚¢‚È‚ç“–‘R‚ÉÈ‚Í•s‰Â”\ */
-		/* —§’¼Œã‚Å‚ ‚è‘—‚èÈ‚Í‚Å‚«‚È‚¢‚Ì‚Åƒcƒ‚‚Á‚½”v‚¾‚¯’²‚×‚ê‚Î‚æ‚¢ */
+		/* ãƒ„ãƒ¢ã£ãŸç‰ŒãŒï¼”æšæƒã£ã¦ãªã„ãªã‚‰å½“ç„¶ã«æ§“ã¯ä¸å¯èƒ½ */
+		/* ç«‹ç›´å¾Œã§ã‚ã‚Šé€ã‚Šæ§“ã¯ã§ããªã„ã®ã§ãƒ„ãƒ¢ã£ãŸç‰Œã ã‘èª¿ã¹ã‚Œã°ã‚ˆã„ */
 		CodeConv::tostringstream o;
 		Int8ByTile tlCount = countTilesInHand(gameStat, targetPlayer);
 		if (tlCount[gameStat->Player[targetPlayer].Tsumohai().tile] < 4) {
-			o.str(_T("")); o << _T("ƒcƒ‚”v [") << std::setw(2) << std::setfill(_T('0')) <<
+			o.str(_T("")); o << _T("ãƒ„ãƒ¢ç‰Œ [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
-				_T("] ‚ÍA4–‡‘µ‚Á‚Ä‚¢‚Ü‚¹‚ñB"); debug(o.str());
+				_T("] ã¯ã€4æšæƒã£ã¦ã„ã¾ã›ã‚“ã€‚"); debug(o.str());
 			return true;
 		} else {
-			o.str(_T("")); o << _T("ƒcƒ‚”v [") << std::setw(2) << std::setfill(_T('0')) <<
+			o.str(_T("")); o << _T("ãƒ„ãƒ¢ç‰Œ [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
-				_T("] ‚ÍAè”v‚É‡‚í‚¹‚Ä4–‡‚ ‚è‚Ü‚·B"); debug(o.str());
+				_T("] ã¯ã€æ‰‹ç‰Œã«åˆã‚ã›ã¦4æšã‚ã‚Šã¾ã™ã€‚"); debug(o.str());
 			return false;
 		}
 	}
 	int CheckForTileClass(const GameTable* const gameStat, PlayerID targetPlayer) {
-		/* š”v‚É‡q‚Í‚È‚¢‚Ì‚Å‚±‚êˆÈ~‚Ìƒ`ƒFƒbƒN‚ğ‚¹‚¸‚Æ‚àÈ‚ª‰Â”\‚Æ‚í‚©‚é */
+		/* å­—ç‰Œã«é †å­ã¯ãªã„ã®ã§ã“ã‚Œä»¥é™ã®ãƒã‚§ãƒƒã‚¯ã‚’ã›ãšã¨ã‚‚æ§“ãŒå¯èƒ½ã¨ã‚ã‹ã‚‹ */
 		CodeConv::tostringstream o;
 		switch (gameStat->Player[targetPlayer].Tsumohai().tile) {
 		case EastWind: case SouthWind: case WestWind: case NorthWind:
 		case WhiteDragon: case GreenDragon: case RedDragon:
-			o.str(_T("")); o << _T("ƒcƒ‚”v [") << std::setw(2) << std::setfill(_T('0')) <<
+			o.str(_T("")); o << _T("ãƒ„ãƒ¢ç‰Œ [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
-				_T("] ‚Íš”v‚Å‚·B"); debug(o.str());
+				_T("] ã¯å­—ç‰Œã§ã™ã€‚"); debug(o.str());
 			return 1;
 		case Spring: case Summer: case Autumn: case Winter:
 		case Plum: case Orchid: case Chrysanthemum: case Bamboo:
-			/* ‰Ô”v‚ğÈH@‚²ç’k‚ğ */
-			o.str(_T("")); o << _T("ƒcƒ‚”v [") << std::setw(2) << std::setfill(_T('0')) <<
+			/* èŠ±ç‰Œã‚’æ§“ï¼Ÿã€€ã”å†—è«‡ã‚’ */
+			o.str(_T("")); o << _T("ãƒ„ãƒ¢ç‰Œ [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
-				_T("] ‚Í‰Ô”v‚Å‚·B"); debug(o.str());
+				_T("] ã¯èŠ±ç‰Œã§ã™ã€‚"); debug(o.str());
 			return 2;
 		default:
-			o.str(_T("")); o << _T("ƒcƒ‚”v [") << std::setw(2) << std::setfill(_T('0')) <<
+			o.str(_T("")); o << _T("ãƒ„ãƒ¢ç‰Œ [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
-				_T("] ‚Í””v‚Å‚·B"); debug(o.str());
+				_T("] ã¯æ•°ç‰Œã§ã™ã€‚"); debug(o.str());
 			return 0;
 		}
 	}
 	bool CheckForAtama(const GameTable* const gameStat, PlayerID targetPlayer) {
-		/* ƒcƒ‚‚Á‚½”v‚ª“ª‚É‚È‚è‚¤‚é‚©’²‚×‚é */
+		/* ãƒ„ãƒ¢ã£ãŸç‰ŒãŒé›€é ­ã«ãªã‚Šã†ã‚‹ã‹èª¿ã¹ã‚‹ */
 		CodeConv::tostringstream o;
 		GameTable tmpGameStat; memcpy(&tmpGameStat, gameStat, sizeof(tmpGameStat));
 
-		// 2–‡œ‹
+		// 2æšé™¤å»
 		int tmpTakenCount = 0;
 		for (int i = 0; i < (NumOfTilesInHand-1); i++) {
 			if (tmpGameStat.Player[targetPlayer].Hand[i].tile ==
@@ -532,37 +532,37 @@ namespace chkAnkanAbilityTools { // chkAnkanAbilityŠÖ”—p‚Ìˆ—
 		}
 		tmpGameStat.Player[targetPlayer].Tsumohai().tile = NoTile;
 		/*	
-			—áF
-			–Êq‚ğ‚QA‘Îq‚â“ƒq‚ğ‚PA“ªŒó•â‚ğ‡@‚Æ’è‹`‚·‚éB
-			–ÊqƒI[ƒo[‚ÍœŠO‚·‚é‚±‚ÆB‡Œv‚ª‚W‚È‚ç’®”vA‚X‚È‚ç˜a—¹
-			‚P‚P‚P‚R‚S‚S‚S“Œ“Œ“Œ”­”­”­ ©‚±‚Ìê‡
-			+‡@++‚P++-‚Q-++-‚Q-++-‚Q-+ c ‚W(’®”v)
-			––‚P‚R‚S‚S‚S“Œ“Œ“Œ”­”­”­ ©‚P‚ğ“ª‚Éæ‚é‚Æ
-				+‚P++-‚Q-++-‚Q-++-‚Q-+ c ‚V(ˆêŒü’®)
-			‚P‚P‚P‚R‚S‚S‚S“Œ“Œ“Œ”­–– ©”­‚ğæ‚ë‚¤‚Æ‚·‚é‚Æ
-			+‡@++‚P++-‚Q-++-‚Q-+~     c ‚U(“ñŒü’®)
+			ä¾‹ï¼š
+			é¢å­ã‚’ï¼’ã€å¯¾å­ã‚„å¡”å­ã‚’ï¼‘ã€é›€é ­å€™è£œã‚’â‘ ã¨å®šç¾©ã™ã‚‹ã€‚
+			é¢å­ã‚ªãƒ¼ãƒãƒ¼ã¯é™¤å¤–ã™ã‚‹ã“ã¨ã€‚åˆè¨ˆãŒï¼˜ãªã‚‰è´ç‰Œã€ï¼™ãªã‚‰å’Œäº†
+			ï¼‘ï¼‘ï¼‘ï¼“ï¼”ï¼”ï¼”æ±æ±æ±ç™ºç™ºç™º â†ã“ã®å ´åˆ
+			+â‘ ++ï¼‘++-ï¼’-++-ï¼’-++-ï¼’-+ â€¦ ï¼˜(è´ç‰Œ)
+			ï¼Šï¼Šï¼‘ï¼“ï¼”ï¼”ï¼”æ±æ±æ±ç™ºç™ºç™º â†ï¼‘ã‚’é›€é ­ã«å–ã‚‹ã¨
+				+ï¼‘++-ï¼’-++-ï¼’-++-ï¼’-+ â€¦ ï¼—(ä¸€å‘è´)
+			ï¼‘ï¼‘ï¼‘ï¼“ï¼”ï¼”ï¼”æ±æ±æ±ç™ºï¼Šï¼Š â†ç™ºã‚’å–ã‚ã†ã¨ã™ã‚‹ã¨
+			+â‘ ++ï¼‘++-ï¼’-++-ï¼’-+Ã—     â€¦ ï¼–(äºŒå‘è´)
 		*/
 		Shanten shanten = ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, shantenAll);
 		if (shanten == 1) {
-			o.str(_T("")); o << _T("ƒcƒ‚”v [") << std::setw(2) << std::setfill(_T('0')) <<
+			o.str(_T("")); o << _T("ãƒ„ãƒ¢ç‰Œ [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
-				_T("] ‚ÍAƒAƒ^ƒ}Œó•â‚Å‚·B"); debug(o.str());
+				_T("] ã¯ã€ã‚¢ã‚¿ãƒå€™è£œã§ã™ã€‚"); debug(o.str());
 			return true;
 		} else {
-			o.str(_T("")); o << _T("ƒcƒ‚”v [") << std::setw(2) << std::setfill(_T('0')) <<
+			o.str(_T("")); o << _T("ãƒ„ãƒ¢ç‰Œ [") << std::setw(2) << std::setfill(_T('0')) <<
 				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
-				_T("] ‚ÍAƒAƒ^ƒ}Œó•â‚Å‚Í‚ ‚è‚Ü‚¹‚ñB"); debug(o.str());
+				_T("] ã¯ã€ã‚¢ã‚¿ãƒå€™è£œã§ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚"); debug(o.str());
 			return false;
 		}
 	}
 	bool CheckIfMachihaiMatches(const GameTable* const gameStat, PlayerID targetPlayer) {
-		/* ‘Ò‚¿”v‚ªˆê’v‚·‚é‚©‚Ç‚¤‚©’²‚×‚é */
+		/* å¾…ã¡ç‰ŒãŒä¸€è‡´ã™ã‚‹ã‹ã©ã†ã‹èª¿ã¹ã‚‹ */
 		CodeConv::tostringstream o;
 
-		/* ˆÃÈ‚·‚é‘O‚Ì‘Ò‚¿”v‚ğ’²‚×‚é */
+		/* æš—æ§“ã™ã‚‹å‰ã®å¾…ã¡ç‰Œã‚’èª¿ã¹ã‚‹ */
 		MachihaiInfo machiInfo_Before = chkFuriten(gameStat, targetPlayer);
-		/* ˆÃÈ‚µ‚½‚ ‚Æ‚Ì‘Ò‚¿”v‚ğ’²‚×‚é */
-		int tmpTakenCount = 0; // ”v‚Ì”‚ÌŠm”F—p
+		/* æš—æ§“ã—ãŸã‚ã¨ã®å¾…ã¡ç‰Œã‚’èª¿ã¹ã‚‹ */
+		int tmpTakenCount = 0; // ç‰Œã®æ•°ã®ç¢ºèªç”¨
 		GameTable tmpGameStat; memcpy(&tmpGameStat, gameStat, sizeof(GameTable));
 		for (int i = 0; i < NumOfTilesInHand; i++) {
 			if (tmpGameStat.Player[targetPlayer].Hand[i].tile ==
@@ -571,63 +571,63 @@ namespace chkAnkanAbilityTools { // chkAnkanAbilityŠÖ”—p‚Ìˆ—
 					tmpTakenCount++;
 			}
 		}
-		assert(tmpTakenCount == 4); // ƒfƒoƒbƒO—pF‚¿‚å‚¤‚Ç4–‡‚¾‚Á‚½‚©Šm”F
+		assert(tmpTakenCount == 4); // ãƒ‡ãƒãƒƒã‚°ç”¨ï¼šã¡ã‚‡ã†ã©4æšã ã£ãŸã‹ç¢ºèª
 		tmpGameStat.Player[targetPlayer].Meld[++ tmpGameStat.Player[targetPlayer].MeldPointer].tile =
-			gameStat->Player[targetPlayer].Tsumohai().tile; /* ƒcƒ‚‚Á‚½”v‚ğ */
+			gameStat->Player[targetPlayer].Tsumohai().tile; /* ãƒ„ãƒ¢ã£ãŸç‰Œã‚’ */
 		tmpGameStat.Player[targetPlayer].Meld[tmpGameStat.Player[targetPlayer].MeldPointer].mstat =
-			meldQuadConcealed; /* ˆÃÈ‚µ‚½‚Æ‚İ‚È‚· */
+			meldQuadConcealed; /* æš—æ§“ã—ãŸã¨ã¿ãªã™ */
 		MachihaiInfo machiInfo_After = chkFuriten(&tmpGameStat, targetPlayer);
 
-		/* ‘Ò‚¿”v‚Íˆê’v‚·‚é‚©H */
+		/* å¾…ã¡ç‰Œã¯ä¸€è‡´ã™ã‚‹ã‹ï¼Ÿ */
 		bool machihaiDiffers = false;
 		for (int i = 0; i < TileNonflowerMax; i++)
 			if (machiInfo_Before.Machihai[i].MachihaiFlag != machiInfo_After.Machihai[i].MachihaiFlag)
 				machihaiDiffers = true;
-		if (machihaiDiffers) { // ‘Ò‚¿”v‚ªˆê’v‚µ‚È‚¢‚È‚çAÈ‚Å‚«‚È‚¢
-			debug(_T("È‚Ì‘OŒã‚Å‘Ò‚¿”v‚ªˆê’v‚µ‚Ü‚¹‚ñB"));
+		if (machihaiDiffers) { // å¾…ã¡ç‰ŒãŒä¸€è‡´ã—ãªã„ãªã‚‰ã€æ§“ã§ããªã„
+			debug(_T("æ§“ã®å‰å¾Œã§å¾…ã¡ç‰ŒãŒä¸€è‡´ã—ã¾ã›ã‚“ã€‚"));
 			return false;
-		} else { // ğŒ‚ğ–‚½‚·ˆÃÈ
-			debug(_T("È‚Ì‘OŒã‚Å‘Ò‚¿”v‚ªˆê’v‚µ‚Ü‚µ‚½B"));
+		} else { // æ¡ä»¶ã‚’æº€ãŸã™æš—æ§“
+			debug(_T("æ§“ã®å‰å¾Œã§å¾…ã¡ç‰ŒãŒä¸€è‡´ã—ã¾ã—ãŸã€‚"));
 			return true;
 		}
 	}
 }
 
 MJCORE bool chkAnkanAbility(const GameTable* const gameStat, PlayerID targetPlayer) {
-	// ƒŠ[ƒ`Œã‚ÌˆÃÈ‚ª‚Å‚«‚é‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é
+	// ãƒªãƒ¼ãƒå¾Œã®æš—æ§“ãŒã§ãã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã™ã‚‹
 
 	/*
-	 * ƒŠ[ƒ`Œã‚ÌˆÃÈ‚ª‹–‚³‚ê‚éğŒF
-	 * 1) ‘—‚èÈ(—á‚¦‚Î555567‚Æ‚Á‚Ä‚¢‚é8‚ğ©–Ì‚Á‚Ä5‚ğÈ‚·‚é‚±‚Æ)‚ğ‚µ‚Ä‚Í‚¢‚¯‚È‚¢
-	 * 2) –Êq\¬‚ª•Ï‚í‚Á‚Ä‚Í‚¢‚¯‚È‚¢
-	 * ğŒ(2)‚ğÀ‘•‚µ‚â‚·‚¢‚æ‚¤‚É‘‚«Š·‚¦‚é‚ÆŸ‚Ì‚æ‚¤‚É‚È‚éF
-	 * 2a) “ªŒó•â‚Æ‚È‚é”v(—áF22234‚Æ‚¢‚¤Œ`‚É‚¨‚¯‚é2)‚ğˆÃÈ‚µ‚Ä‚Í‚¢‚¯‚È‚¢
-	 * 2b) ‘Ò‚¿‚ª•Ï‚í‚Á‚Ä‚Í‚¢‚¯‚È‚¢
+	 * ãƒªãƒ¼ãƒå¾Œã®æš—æ§“ãŒè¨±ã•ã‚Œã‚‹æ¡ä»¶ï¼š
+	 * 1) é€ã‚Šæ§“(ä¾‹ãˆã°555567ã¨æŒã£ã¦ã„ã‚‹æ™‚8ã‚’è‡ªæ‘¸ã£ã¦5ã‚’æ§“ã™ã‚‹ã“ã¨)ã‚’ã—ã¦ã¯ã„ã‘ãªã„
+	 * 2) é¢å­æ§‹æˆãŒå¤‰ã‚ã£ã¦ã¯ã„ã‘ãªã„
+	 * æ¡ä»¶(2)ã‚’å®Ÿè£…ã—ã‚„ã™ã„ã‚ˆã†ã«æ›¸ãæ›ãˆã‚‹ã¨æ¬¡ã®ã‚ˆã†ã«ãªã‚‹ï¼š
+	 * 2a) é›€é ­å€™è£œã¨ãªã‚‹ç‰Œ(ä¾‹ï¼š22234ã¨ã„ã†å½¢ã«ãŠã‘ã‚‹2)ã‚’æš—æ§“ã—ã¦ã¯ã„ã‘ãªã„
+	 * 2b) å¾…ã¡ãŒå¤‰ã‚ã£ã¦ã¯ã„ã‘ãªã„
 	 */
 
 	CodeConv::tostringstream o;
-	o.str(_T("")); o << _T("ˆÃÈ‚Ì‰Â”Û‚ğ”»’è‚µ‚Ü‚·BƒvƒŒƒCƒ„[ [") << (int)targetPlayer << _T("]"); debug(o.str());
+	o.str(_T("")); o << _T("æš—æ§“ã®å¯å¦ã‚’åˆ¤å®šã—ã¾ã™ã€‚ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ [") << (int)targetPlayer << _T("]"); debug(o.str());
 
-	/* ƒcƒ‚‚Á‚½”v‚ª‚S–‡‘µ‚Á‚Ä‚È‚¢‚È‚ç“–‘R‚ÉÈ‚Í•s‰Â”\ */
-	/* —§’¼Œã‚Å‚ ‚è‘—‚èÈ‚Í‚Å‚«‚È‚¢‚Ì‚Åƒcƒ‚‚Á‚½”v‚¾‚¯’²‚×‚ê‚Î‚æ‚¢ */
+	/* ãƒ„ãƒ¢ã£ãŸç‰ŒãŒï¼”æšæƒã£ã¦ãªã„ãªã‚‰å½“ç„¶ã«æ§“ã¯ä¸å¯èƒ½ */
+	/* ç«‹ç›´å¾Œã§ã‚ã‚Šé€ã‚Šæ§“ã¯ã§ããªã„ã®ã§ãƒ„ãƒ¢ã£ãŸç‰Œã ã‘èª¿ã¹ã‚Œã°ã‚ˆã„ */
 	if (chkAnkanAbilityTools::CheckForNumOfTiles(gameStat, targetPlayer)) return false;
 
-	/* š”v‚É‡q‚Í‚È‚¢‚Ì‚Å‚±‚êˆÈ~‚Ìƒ`ƒFƒbƒN‚ğ‚¹‚¸‚Æ‚àÈ‚ª‰Â”\‚Æ‚í‚©‚é */
+	/* å­—ç‰Œã«é †å­ã¯ãªã„ã®ã§ã“ã‚Œä»¥é™ã®ãƒã‚§ãƒƒã‚¯ã‚’ã›ãšã¨ã‚‚æ§“ãŒå¯èƒ½ã¨ã‚ã‹ã‚‹ */
 	switch (chkAnkanAbilityTools::CheckForTileClass(gameStat, targetPlayer)) {
-		case 1: return true; // š”v
-		case 2: return false; // ‰Ô”v
+		case 1: return true; // å­—ç‰Œ
+		case 2: return false; // èŠ±ç‰Œ
 	}
 
-	/* ƒcƒ‚‚Á‚½”v‚ª“ª‚É‚È‚è‚¤‚é‚È‚ç–ß‚é */
+	/* ãƒ„ãƒ¢ã£ãŸç‰ŒãŒé›€é ­ã«ãªã‚Šã†ã‚‹ãªã‚‰æˆ»ã‚‹ */
 	if (chkAnkanAbilityTools::CheckForAtama(gameStat, targetPlayer)) return false;
 
-	/* ‘Ò‚¿”v‚ªˆê’v‚·‚é‚©‚Ç‚¤‚©’²‚×‚é */
+	/* å¾…ã¡ç‰ŒãŒä¸€è‡´ã™ã‚‹ã‹ã©ã†ã‹èª¿ã¹ã‚‹ */
 	return (chkAnkanAbilityTools::CheckIfMachihaiMatches(gameStat, targetPlayer));
 }
 
-/* “±‰Îü‚ÌˆÊ’u‚ğ’²‚×‚é */
+/* å°ç«ç·šã®ä½ç½®ã‚’èª¿ã¹ã‚‹ */
 void calcdoukasen(GameTable* const gameStat) {
-	/* “±‰Îü‚ÌˆÊ’u‚ğŒvZ‚·‚é */
+	/* å°ç«ç·šã®ä½ç½®ã‚’è¨ˆç®—ã™ã‚‹ */
 	if (RuleData::chkRuleApplied("doukasen")) {
 		if (gameStat->chkGameType(Sanma4)) {
 			PlayerID* tmpDoukasen = new PlayerID(
@@ -672,33 +672,33 @@ void calcdoukasen(GameTable* const gameStat) {
 	}
 }
 
-/* ’®”v‚©‚Ç‚¤‚©’²‚×‚é */
+/* è´ç‰Œã‹ã©ã†ã‹èª¿ã¹ã‚‹ */
 bool isTenpai(const GameTable* const gameStat, PlayerID targetPlayer) {
 	Shanten shanten = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenAll);
-	if (gameStat->Player[targetPlayer].AgariHouki) shanten = 1; // ƒAƒKƒŠ•úŠü‚È‚ç‹­§•s’®
+	if (gameStat->Player[targetPlayer].AgariHouki) shanten = 1; // ã‚¢ã‚¬ãƒªæ”¾æ£„ãªã‚‰å¼·åˆ¶ä¸è´
 	if (EnvTable::Instantiate()->PlayerDat[targetPlayer].RemotePlayerFlag == -1)
 		return false;
 	return (shanten <= 0);
 }
 
-/* —¬‚µ–ŠÑ‚©‚Ç‚¤‚©’²‚×‚é */
+/* æµã—æº€è²«ã‹ã©ã†ã‹èª¿ã¹ã‚‹ */
 bool isNagashiMangan(const GameTable* const gameStat, PlayerID targetPlayer) {
-	if (gameStat->Player[targetPlayer].AgariHouki) return false; // ˜a—¹‚è•úŠü‚Ìˆ—¨—¬‚µ–ŠÑ‚ğ”F‚ß‚È‚¢
+	if (gameStat->Player[targetPlayer].AgariHouki) return false; // å’Œäº†ã‚Šæ”¾æ£„æ™‚ã®å‡¦ç†â†’æµã—æº€è²«ã‚’èªã‚ãªã„
 	if (EnvTable::Instantiate()->PlayerDat[targetPlayer].RemotePlayerFlag == -1)
 		return false;
 	int YaojiuSutehai = 0;
 	for (int i = 1; i <= gameStat->Player[targetPlayer].DiscardPointer; i++) {
-		// –Â‚©‚ê‚½”v‚¾‚Á‚½‚ç–³‹
+		// é³´ã‹ã‚ŒãŸç‰Œã ã£ãŸã‚‰ç„¡è¦–
 		if (gameStat->Player[targetPlayer].Discard[i].dstat == discardTaken) continue;
 		if (gameStat->Player[targetPlayer].Discard[i].dstat == discardRiichiTaken) continue;
-		// –Â‚©‚ê‚Ä‚¢‚È‚¢”v
+		// é³´ã‹ã‚Œã¦ã„ãªã„ç‰Œ
 		if (isYaojiu(gameStat->Player[targetPlayer].Discard[i].tcode.tile)) YaojiuSutehai++;
 	}
-	// ‘S•”ŠY“–‚·‚é”v‚¾‚Á‚½‚çtrue
+	// å…¨éƒ¨è©²å½“ã™ã‚‹ç‰Œã ã£ãŸã‚‰true
 	return (YaojiuSutehai == gameStat->Player[targetPlayer].DiscardPointer);
 }
 
-/* •Ğ˜a‚è‚©‚Ç‚¤‚©’²‚×‚é */
+/* ç‰‡å’Œã‚Šã‹ã©ã†ã‹èª¿ã¹ã‚‹ */
 bool isKataagari(const GameTable* gameStat, PlayerID targetPlayer) {
 	MachihaiInfo machiInfo = chkFuriten(gameStat, targetPlayer);
 	GameTable tmpStat; memcpy(&tmpStat, gameStat, sizeof tmpStat);

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "confmenu.h"
 #include "../text.h"
@@ -11,7 +11,7 @@ namespace mihajong_graphic {
 
 class RuleConfigScene : public ConfigMenuProto {
 private:
-	const CodeConv::tstring Caption() {return _T("ƒ‹[ƒ‹İ’è");}
+	const CodeConv::tstring Caption() {return _T("ãƒ«ãƒ¼ãƒ«è¨­å®š");}
 	const unsigned itemsPerPage() {return RULES_IN_PAGE;}
 	const unsigned numberOfItems() {return RULESIZE;}
 	const unsigned numberOfButtons() {return 4u;}

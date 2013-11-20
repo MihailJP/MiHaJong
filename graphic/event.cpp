@@ -1,4 +1,4 @@
-#include "event.h"
+﻿#include "event.h"
 #include "../sound/sound.h"
 #include "../common/bgmid.h"
 #include "../common/thread.h"

@@ -6,23 +6,23 @@ guobiaolib = ../mjcoregb/libmihagbmj.la
 common_sources = main.cpp main.h resource.h
 
 mihajong_SOURCES = ${common_sources} mihajong.cpp
-mihajong_CXXFLAGS = --input-charset=cp932
+mihajong_CXXFLAGS =
 mihajong_LDADD = ${libraries} ${richilib}
 
 mihasanm_SOURCES = ${common_sources} mihasanm.cpp
-mihasanm_CXXFLAGS = --input-charset=cp932
+mihasanm_CXXFLAGS =
 mihasanm_LDADD = ${libraries} ${richilib}
 
 mihaysnm_SOURCES = ${common_sources} mihaysnm.cpp
-mihaysnm_CXXFLAGS = --input-charset=cp932
+mihaysnm_CXXFLAGS =
 mihaysnm_LDADD = ${libraries} ${richilib}
 
 mihassnm_SOURCES = ${common_sources} mihassnm.cpp
-mihassnm_CXXFLAGS = --input-charset=cp932
+mihassnm_CXXFLAGS =
 mihassnm_LDADD = ${libraries} ${richilib}
 
 mihagbmj_SOURCES = ${common_sources} mihagbmj.cpp
-mihagbmj_CXXFLAGS = --input-charset=cp932
+mihagbmj_CXXFLAGS =
 mihagbmj_LDADD = ${libraries} ${guobiaolib}
 
 EXTRA_DIST = \

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "mjexport.h"
 #include "gametbl.h"

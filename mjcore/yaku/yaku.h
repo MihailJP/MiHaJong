@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <cstdint>
 #include <type_traits>
@@ -19,7 +19,7 @@ private:
 	enum hanUnit : uint8_t {Han, SemiMangan, Yakuman};
 	class Yaku;
 
-	class YakuCatalog { // –ğ‚Ìˆê—— [singleton]
+	class YakuCatalog { // å½¹ã®ä¸€è¦§ [singleton]
 		friend yaku::yakuCalculator;
 	private:
 		YakuCatalog() {}
@@ -31,44 +31,44 @@ private:
 		std::list<Yaku> catalog;
 	};
 
-	enum MachiType : uint8_t { // ŠX‚Ìí—Ş
-		machiInvalid, // –³Œø
-		machiRyanmen, // —¼–Ê
-		machiKanchan, // ›Æ’£
-		machiPenchan, // •Ó’£
-		machiShanpon, // ‘oƒ|ƒ“
-		machiTanki    // ’P‹R
+	enum MachiType : uint8_t { // è¡—ã®ç¨®é¡
+		machiInvalid, // ç„¡åŠ¹
+		machiRyanmen, // ä¸¡é¢
+		machiKanchan, // åµŒå¼µ
+		machiPenchan, // è¾ºå¼µ
+		machiShanpon, // åŒãƒãƒ³
+		machiTanki    // å˜é¨
 	};
-	struct MENTSU_ANALYSIS { // –Êq‰ğÍŒ‹‰Ê
+	struct MENTSU_ANALYSIS { // é¢å­è§£æçµæœ
 		PlayerID player;
 		Shanten shanten[SHANTEN_PAGES];
-		MeldBuf MianziDat; // –Êqƒp[ƒXŒ‹‰Ê
-		uint8_t BasePoint; // •„
-		MachiType Machi; // ‘Ò‚¿‚Ìí—Ş
-		MachihaiInfo MachiInfo; // ‘Ò‚¿”v‚Ì”‚Æ‚©
-		bool isPinfu; // •½˜a‚É‚È‚Á‚Ä‚é‚©‚Ç‚¤‚©
-		Int8ByTile KeziCount; // qEÈq‚Ì”
-		Int8ByTile AnKeziCount; // ˆÃEˆÃÈ‚Ì”
-		Int8ByTile DuiziCount; // ‘ÎqEqEÈq‚Ì”
-		Int8ByTile ShunziCount; // ‡q‚Ì”
-		Int8ByTile AnShunziCount; // –Â‚¢‚Ä‚¢‚È‚¢‡q‚Ì”
-		Int8ByTile KangziCount; // Èq‚Ì”
-		Int8ByTile AnKangziCount; // ˆÃÈ‚Ì”
-		Int8ByTile KaKangziCount; // ‰ÁÈ‚Ì”
-		Int8ByTile SeenTiles; // Œ©‚¦‚Ä‚¢‚é”v
-		Int8ByTile TileCount; // ”v‚Ì”
-		uint8_t TotalKezi; // qÈq‡Œv
-		uint8_t TotalAnKezi; // ˆÃˆÃÈ‡Œv
-		uint8_t TotalShunzi; // ‡q‡Œv
-		uint8_t TotalAnShunzi; // ˆÃ‡q‡Œv
-		uint8_t TotalKangzi; // Èq‡Œv
-		uint8_t TotalAnKangzi; // ˆÃÈ‡Œv
-		uint8_t TotalKaKangzi; // ‰ÁÈ‡Œv
-		const GameTable* GameStat; // ‘ìî•ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^
-		const PlayerTable* PlayerStat; // ƒvƒŒƒCƒ„[î•ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^
-		const Tile* TsumoHai; // ˜a—¹”v‚Ö‚Ìƒ|ƒCƒ“ƒ^
-		const bool* MenzenFlag; // –å‘O‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
-		const bool* TsumoAgariFlag; // ƒcƒ‚ƒAƒKƒŠ‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+		MeldBuf MianziDat; // é¢å­ãƒ‘ãƒ¼ã‚¹çµæœ
+		uint8_t BasePoint; // ç¬¦
+		MachiType Machi; // å¾…ã¡ã®ç¨®é¡
+		MachihaiInfo MachiInfo; // å¾…ã¡ç‰Œã®æ•°ã¨ã‹
+		bool isPinfu; // å¹³å’Œã«ãªã£ã¦ã‚‹ã‹ã©ã†ã‹
+		Int8ByTile KeziCount; // åˆ»å­ãƒ»æ§“å­ã®æ•°
+		Int8ByTile AnKeziCount; // æš—åˆ»ãƒ»æš—æ§“ã®æ•°
+		Int8ByTile DuiziCount; // å¯¾å­ãƒ»åˆ»å­ãƒ»æ§“å­ã®æ•°
+		Int8ByTile ShunziCount; // é †å­ã®æ•°
+		Int8ByTile AnShunziCount; // é³´ã„ã¦ã„ãªã„é †å­ã®æ•°
+		Int8ByTile KangziCount; // æ§“å­ã®æ•°
+		Int8ByTile AnKangziCount; // æš—æ§“ã®æ•°
+		Int8ByTile KaKangziCount; // åŠ æ§“ã®æ•°
+		Int8ByTile SeenTiles; // è¦‹ãˆã¦ã„ã‚‹ç‰Œ
+		Int8ByTile TileCount; // ç‰Œã®æ•°
+		uint8_t TotalKezi; // åˆ»å­æ§“å­åˆè¨ˆ
+		uint8_t TotalAnKezi; // æš—åˆ»æš—æ§“åˆè¨ˆ
+		uint8_t TotalShunzi; // é †å­åˆè¨ˆ
+		uint8_t TotalAnShunzi; // æš—é †å­åˆè¨ˆ
+		uint8_t TotalKangzi; // æ§“å­åˆè¨ˆ
+		uint8_t TotalAnKangzi; // æš—æ§“åˆè¨ˆ
+		uint8_t TotalKaKangzi; // åŠ æ§“åˆè¨ˆ
+		const GameTable* GameStat; // å“æƒ…å ±ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+		const PlayerTable* PlayerStat; // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æƒ…å ±ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+		const Tile* TsumoHai; // å’Œäº†ç‰Œã¸ã®ãƒã‚¤ãƒ³ã‚¿
+		const bool* MenzenFlag; // é–€å‰ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
+		const bool* TsumoAgariFlag; // ãƒ„ãƒ¢ã‚¢ã‚¬ãƒªã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
 	};
 #ifdef MJCORE_EXPORTS
 	static_assert(std::is_pod<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not POD");
@@ -88,7 +88,7 @@ private:
 	public:
 		class YAKU_HAN {
 		public:
-			class HAN { // –|
+			class HAN { // ç¿»
 			public:
 				HAN();
 				HAN(int8_t h);
@@ -105,13 +105,13 @@ private:
 					yv_triple_yakuman, yv_quad_yakuman;
 #endif /* GUOBIAO */
 			private:
-				int8_t han; // ”’l
+				int8_t han; // æ•°å€¤
 #ifndef GUOBIAO
-				hanUnit unit; // ’PˆÊ
+				hanUnit unit; // å˜ä½
 #endif /* GUOBIAO */
 			};
-			HAN coreHan; // ”›‚è‚ğ–‚½‚·–|
-			HAN bonusHan; // ”›‚è‚ğ–‚½‚³‚È‚¢–|
+			HAN coreHan; // ç¸›ã‚Šã‚’æº€ãŸã™ç¿»
+			HAN bonusHan; // ç¸›ã‚Šã‚’æº€ãŸã•ãªã„ç¿»
 			YAKU_HAN();
 			YAKU_HAN(HAN han);
 			YAKU_HAN(HAN han, HAN bonus);
@@ -161,13 +161,13 @@ private:
 #endif /* GUOBIAO */
 	private:
 		HANFUNC han;
-		CodeConv::tstring yakuName; // –ğ‚Ì–¼‘Oi•¶š—ñj
-		YAKUFUNC yakuProc; // –ğ‚Ì”»’è•û–@
-		std::set<CodeConv::tstring> suppressionList; // ‰ºˆÊ–ğ‚ÌƒŠƒXƒg
+		CodeConv::tstring yakuName; // å½¹ã®åå‰ï¼ˆæ–‡å­—åˆ—ï¼‰
+		YAKUFUNC yakuProc; // å½¹ã®åˆ¤å®šæ–¹æ³•
+		std::set<CodeConv::tstring> suppressionList; // ä¸‹ä½å½¹ã®ãƒªã‚¹ãƒˆ
 		Yaku() {} // Default constructor
 	public:
 		bool checkYaku(const MENTSU_ANALYSIS* const mentsu);
-		CodeConv::tstring getName(); // –ğ‚Ì–¼‘O‚ğæ“¾‚·‚é
+		CodeConv::tstring getName(); // å½¹ã®åå‰ã‚’å–å¾—ã™ã‚‹
 		HANFUNC getHan();
 		YAKU_HAN getHan(const MENTSU_ANALYSIS* const mentsu);
 		std::set<CodeConv::tstring> getSuppression();

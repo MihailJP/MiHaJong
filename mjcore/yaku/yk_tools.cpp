@@ -1,10 +1,10 @@
-#include "yaku.h"
+ï»¿#include "yaku.h"
 
 
-/* ‡q‚Ìˆ— */
+/* é †å­ã®å‡¦ç† */
 bool yaku::mentsuParser::makementsu_shuntsu(Int8ByTile& countForMentsu, MeldBuf MianziDat,
 	int* const ProcessedMelds, TileCode tile)
-{ /* ‡q‚Ìˆ— */
+{ /* é †å­ã®å‡¦ç† */
 	if ((countForMentsu[tile] >= 1)&&
 		(countForMentsu[tile+1] >= 1)&&
 		(countForMentsu[tile+2] >= 1)) {
@@ -17,10 +17,10 @@ bool yaku::mentsuParser::makementsu_shuntsu(Int8ByTile& countForMentsu, MeldBuf 
 	return false;
 }
 
-/* q‚Ìˆ— */
+/* åˆ»å­ã®å‡¦ç† */
 void yaku::mentsuParser::makementsu_koutsu(Int8ByTile& countForMentsu, MeldBuf MianziDat,
 	int* const ProcessedMelds, TileCode tile)
-{ /* q‚Ìˆ— */
+{ /* åˆ»å­ã®å‡¦ç† */
 	if (countForMentsu[tile] >= 3) {
 		MianziDat[*ProcessedMelds].mstat = meldTripletConcealed;
 		MianziDat[(*ProcessedMelds)++].tile = tile;
@@ -29,53 +29,53 @@ void yaku::mentsuParser::makementsu_koutsu(Int8ByTile& countForMentsu, MeldBuf M
 	return;
 }
 
-/* –Êq‚É•ª‰ğ‚·‚é */
+/* é¢å­ã«åˆ†è§£ã™ã‚‹ */
 void yaku::mentsuParser::makementsu(const GameTable* const gameStat,
 	PlayerID targetPlayer, ParseMode AtamaCode, int* const ProcessedMelds_, MeldBuf MianziDat)
-{ /* –Êq‚É•ª‰ğ‚·‚é */
-	memset(MianziDat, 0, sizeof(MeldBuf)); // ‰Šú‰»
+{ /* é¢å­ã«åˆ†è§£ã™ã‚‹ */
+	memset(MianziDat, 0, sizeof(MeldBuf)); // åˆæœŸåŒ–
 	auto countForMentsu = countTilesInHand(gameStat, targetPlayer);
 	int processedMelds;
 	int* const ProcessedMelds = ProcessedMelds_ ? ProcessedMelds_ : &processedMelds;
 	*ProcessedMelds = 0;
 
-	// “ª‚Æ‚È‚è“¾‚È‚¢”v‚È‚ç–ß‚é
+	// é›€é ­ã¨ãªã‚Šå¾—ãªã„ç‰Œãªã‚‰æˆ»ã‚‹
 	if (countForMentsu[AtamaCode.AtamaCode] < 2) return;
 	MianziDat[0].tile = AtamaCode.AtamaCode; (*ProcessedMelds)++;
 	countForMentsu[AtamaCode.AtamaCode] -= 2;
 
-	// ‡q(‡q—Dæ³‡ƒ‚[ƒh‚Ì)
+	// é †å­(é †å­å„ªå…ˆæ­£é †ãƒ¢ãƒ¼ãƒ‰ã®æ™‚)
 	if (AtamaCode.Order == Shun_Ke)
 		for (int i = 1; i < TileSuitHonors; i++)
 			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, (TileCode)i))
 				--i;
-	// ‡q(‡q—Dæ‹t‡ƒ‚[ƒh‚Ì)
+	// é †å­(é †å­å„ªå…ˆé€†é †ãƒ¢ãƒ¼ãƒ‰ã®æ™‚)
 	if (AtamaCode.Order == Shun_Ke_Rev)
 		for (int i = TileSuitHonors - 1; i > 0; i--)
 			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, (TileCode)i))
 				++i;
 
-	// ˆÃ(³‡ƒ‚[ƒh‚Ì)
+	// æš—åˆ»(æ­£é †ãƒ¢ãƒ¼ãƒ‰ã®æ™‚)
 	if ((AtamaCode.Order == Ke_Shun)||(AtamaCode.Order == Shun_Ke))
 		for (int i = 1; i < TileNonflowerMax; i++)
 			makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, (TileCode)i);
-	// ˆÃ(‹t‡ƒ‚[ƒh‚Ì)
+	// æš—åˆ»(é€†é †ãƒ¢ãƒ¼ãƒ‰ã®æ™‚)
 	if ((AtamaCode.Order == Ke_Shun_Rev)||(AtamaCode.Order == Shun_Ke_Rev))
 		for (int i = TileNonflowerMax - 1; i > 0; i--)
 			makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, (TileCode)i);
 
-	// ‡q(ˆÃ—Dæ³‡ƒ‚[ƒh‚Ì)
+	// é †å­(æš—åˆ»å„ªå…ˆæ­£é †ãƒ¢ãƒ¼ãƒ‰ã®æ™‚)
 	if (AtamaCode.Order == Ke_Shun)
 		for (int i = 1; i < TileSuitHonors; i++)
 			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, (TileCode)i))
 				--i;
-	// ‡q(ˆÃ—Dæ‹t‡ƒ‚[ƒh‚Ì)
+	// é †å­(æš—åˆ»å„ªå…ˆé€†é †ãƒ¢ãƒ¼ãƒ‰ã®æ™‚)
 	if (AtamaCode.Order == Ke_Shun_Rev)
 		for (int i = TileSuitHonors - 1; i > 0; i--)
 			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, (TileCode)i))
 				++i;
 
-	// –Â‚¢‚½–ÊqAˆÃÈ
+	// é³´ã„ãŸé¢å­ã€æš—æ§“
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
 		MianziDat[*ProcessedMelds].mstat = gameStat->Player[targetPlayer].Meld[i].mstat;
 		MianziDat[*ProcessedMelds].tile = gameStat->Player[targetPlayer].Meld[i].tile;
@@ -87,21 +87,21 @@ void yaku::mentsuParser::makementsu(const GameTable* const gameStat,
 
 // -------------------------------------------------------------------------
 
-/* w’è‚Ì‘Îq‚ª‚ ‚é‚©”‚¦‚é */
+/* æŒ‡å®šã®å¯¾å­ãŒã‚ã‚‹ã‹æ•°ãˆã‚‹ */
 int yaku::countingFacility::countPairs(
 	const Int8ByTile tileCount, const TileCode* const targetTiles, int numOfTiles)
 {
-	// w’è‚µ‚½í—Ş‚Ì‘Îq‚ğ”‚¦‚é
-	trace(_T("‘Îq‚Ìí—Ş‚ğ’²‚×‚Ü‚·B"));
+	// æŒ‡å®šã—ãŸç¨®é¡ã®å¯¾å­ã‚’æ•°ãˆã‚‹
+	trace(_T("å¯¾å­ã®ç¨®é¡ã‚’èª¿ã¹ã¾ã™ã€‚"));
 	int yakuflagcount = 0;
 	for (int i = 0; i < numOfTiles; i++)
 		if (tileCount[targetTiles[i]] >= 2) yakuflagcount++;
 	return yakuflagcount;
 }
 
-/* ”š‚Ì‡Œv‚ğ”‚¦‚é(µ‘Îq”Å) */
+/* æ•°å­—ã®åˆè¨ˆã‚’æ•°ãˆã‚‹(ä¸ƒå¯¾å­ç‰ˆ) */
 int yaku::countingFacility::countTileNumerals(const Int8ByTile tileCount) {
-	/* ”š‚Ì‡Œv‚ğ”‚¦‚é */
+	/* æ•°å­—ã®åˆè¨ˆã‚’æ•°ãˆã‚‹ */
 	int Cifr = 0;
 	for (int i = 1; i < (TileSuitHonors - 1); i++)
 		Cifr += tileCount[i] * (i % TileSuitStep);
@@ -110,11 +110,11 @@ int yaku::countingFacility::countTileNumerals(const Int8ByTile tileCount) {
 	
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-/* Œv”—pŠÖ” */
+/* è¨ˆæ•°ç”¨é–¢æ•° */
 Int8ByTile yaku::countingFacility::countByMelds(
 	const MeldBuf MianziDat, uint8_t* const hits,
 	std::function<bool (MeldStat)> f)
-{ // Œv”ƒ‹[ƒ`ƒ“
+{ // è¨ˆæ•°ãƒ«ãƒ¼ãƒãƒ³
 	Int8ByTile hitCount; memset(&hitCount, 0, sizeof(hitCount));
 	if (hits != nullptr) *hits = 0;
 	for (int i = 1; i < SizeOfMeldBuffer; i++) {
@@ -128,21 +128,21 @@ Int8ByTile yaku::countingFacility::countByMelds(
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-/* q‚Ì”‚ğ”‚¦‚é */
-Int8ByTile yaku::countingFacility::countKez(const MeldBuf MianziDat, uint8_t* const Kezi) { /* q‚Ì”‚ğ”‚¦‚é */
-	trace(_T("qEÈq‚Ìí—Ş‚ğ’²‚×‚Ü‚·B"));
+/* åˆ»å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+Int8ByTile yaku::countingFacility::countKez(const MeldBuf MianziDat, uint8_t* const Kezi) { /* åˆ»å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+	trace(_T("åˆ»å­ãƒ»æ§“å­ã®ç¨®é¡ã‚’èª¿ã¹ã¾ã™ã€‚"));
 	return countByMelds(MianziDat, Kezi, [](MeldStat x){return x >= meldTripletConcealed;});
 }
 
-/* ˆÃq‚Ì”‚ğ”‚¦‚é */
-Int8ByTile yaku::countingFacility::countAnKez(const MeldBuf MianziDat, uint8_t* const Kezi) { /* ˆÃq‚Ì”‚ğ”‚¦‚é */
-	trace(_T("ˆÃqEˆÃÈq‚Ìí—Ş‚ğ’²‚×‚Ü‚·B"));
+/* æš—åˆ»å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+Int8ByTile yaku::countingFacility::countAnKez(const MeldBuf MianziDat, uint8_t* const Kezi) { /* æš—åˆ»å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+	trace(_T("æš—åˆ»å­ãƒ»æš—æ§“å­ã®ç¨®é¡ã‚’èª¿ã¹ã¾ã™ã€‚"));
 	return countByMelds(MianziDat, Kezi, [](MeldStat x){return ((x == meldTripletConcealed)||(x == meldQuadConcealed));});
 }
 
-/* ‘ÎqEqEÈq‚Ì”‚ğ”‚¦‚é */
-Int8ByTile yaku::countingFacility::countDuiz(const MeldBuf MianziDat) { /* ‘ÎqEqEÈq‚Ì”‚ğ”‚¦‚é */
-	trace(_T("‘ÎqEqEÈq‚Ìí—Ş‚ğ’²‚×‚Ü‚·B"));
+/* å¯¾å­ãƒ»åˆ»å­ãƒ»æ§“å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+Int8ByTile yaku::countingFacility::countDuiz(const MeldBuf MianziDat) { /* å¯¾å­ãƒ»åˆ»å­ãƒ»æ§“å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+	trace(_T("å¯¾å­ãƒ»åˆ»å­ãƒ»æ§“å­ã®ç¨®é¡ã‚’èª¿ã¹ã¾ã™ã€‚"));
 	auto DuiCount = countKez(MianziDat, nullptr);
 	++(DuiCount[MianziDat[0].tile]);
 	return DuiCount;
@@ -150,44 +150,44 @@ Int8ByTile yaku::countingFacility::countDuiz(const MeldBuf MianziDat) { /* ‘Îq
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-/* ‡q‚Ì”‚ğ”‚¦‚é */
-Int8ByTile yaku::countingFacility::countShunz(const MeldBuf MianziDat, uint8_t* const Shunzi) { /* ‡q‚Ì”‚ğ”‚¦‚é */
-	trace(_T("‡q‚Ìí—Ş‚ğ’²‚×‚Ü‚·B"));
+/* é †å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+Int8ByTile yaku::countingFacility::countShunz(const MeldBuf MianziDat, uint8_t* const Shunzi) { /* é †å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+	trace(_T("é †å­ã®ç¨®é¡ã‚’èª¿ã¹ã¾ã™ã€‚"));
 	return countByMelds(MianziDat, Shunzi, [](MeldStat x){return x < meldTripletConcealed;});
 }
 
-/* ˆÃ‡q‚Ì”‚ğ”‚¦‚é */
-Int8ByTile yaku::countingFacility::countAnShunz(const MeldBuf MianziDat, uint8_t* const Shunzi) { /* ˆÃ‡q‚Ì”‚ğ”‚¦‚é */
-	trace(_T("ˆÃ‡q‚Ìí—Ş‚ğ’²‚×‚Ü‚·B"));
+/* æš—é †å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+Int8ByTile yaku::countingFacility::countAnShunz(const MeldBuf MianziDat, uint8_t* const Shunzi) { /* æš—é †å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+	trace(_T("æš—é †å­ã®ç¨®é¡ã‚’èª¿ã¹ã¾ã™ã€‚"));
 	return countByMelds(MianziDat, Shunzi, [](MeldStat x){return x == meldSequenceConcealed;});
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-/* Èq‚Ì”‚ğ”‚¦‚é */
-Int8ByTile yaku::countingFacility::countKangz(const MeldBuf MianziDat, uint8_t* const Kangzi) { /* Èq‚Ì”‚ğ”‚¦‚é */
-	trace(_T("Èq‚Ìí—Ş‚ğ’²‚×‚Ü‚·B"));
+/* æ§“å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+Int8ByTile yaku::countingFacility::countKangz(const MeldBuf MianziDat, uint8_t* const Kangzi) { /* æ§“å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+	trace(_T("æ§“å­ã®ç¨®é¡ã‚’èª¿ã¹ã¾ã™ã€‚"));
 	return countByMelds(MianziDat, Kangzi, [](MeldStat x){return x >= meldQuadConcealed;});
 }
 
-/* ˆÃÈq‚Ì”‚ğ”‚¦‚é */
-Int8ByTile yaku::countingFacility::countAnKangz(const MeldBuf MianziDat, uint8_t* const Kangzi) { /* ˆÃÈq‚Ì”‚ğ”‚¦‚é */
-	trace(_T("ˆÃÈq‚Ìí—Ş‚ğ’²‚×‚Ü‚·B"));
+/* æš—æ§“å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+Int8ByTile yaku::countingFacility::countAnKangz(const MeldBuf MianziDat, uint8_t* const Kangzi) { /* æš—æ§“å­ã®æ•°ã‚’æ•°ãˆã‚‹ */
+	trace(_T("æš—æ§“å­ã®ç¨®é¡ã‚’èª¿ã¹ã¾ã™ã€‚"));
 	return countByMelds(MianziDat, Kangzi, [](MeldStat x){return x == meldQuadConcealed;});
 }
 
-/* ‰ÁÈ‚Ì”‚ğ”‚¦‚é */
-Int8ByTile yaku::countingFacility::countKaKangz(const MeldBuf MianziDat, uint8_t* const Kangzi) { /* ‰ÁÈ‚Ì”‚ğ”‚¦‚é */
-	trace(_T("‰ÁÈ‚Ìí—Ş‚ğ’²‚×‚Ü‚·B"));
+/* åŠ æ§“ã®æ•°ã‚’æ•°ãˆã‚‹ */
+Int8ByTile yaku::countingFacility::countKaKangz(const MeldBuf MianziDat, uint8_t* const Kangzi) { /* åŠ æ§“ã®æ•°ã‚’æ•°ãˆã‚‹ */
+	trace(_T("åŠ æ§“ã®ç¨®é¡ã‚’èª¿ã¹ã¾ã™ã€‚"));
 	return countByMelds(MianziDat, Kangzi, [](MeldStat x){return x >= meldQuadAddedLeft;});
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-/* w’è‚ÌqE‡q‚ª‚ ‚é‚©”‚¦‚é */
+/* æŒ‡å®šã®åˆ»å­ãƒ»é †å­ãŒã‚ã‚‹ã‹æ•°ãˆã‚‹ */
 inline int yaku::countingFacility::countSpecMentz(const MeldBuf MianziDat, const TileCode* const targetKez, int numOfKez,
 	const TileCode* const targetShunz, int numOfShunz, bool Mode, bool allowDup)
-{ // w’è‚µ‚½í—Ş‚Ì–Êq‚ğ”‚¦‚é
+{ // æŒ‡å®šã—ãŸç¨®é¡ã®é¢å­ã‚’æ•°ãˆã‚‹
 	int kz = 0; int sz = 0;
 	auto DuiCount = Mode ? countKez(MianziDat, nullptr) : countDuiz(MianziDat);
 	auto ShunzCount = countShunz(MianziDat, nullptr);
@@ -214,25 +214,25 @@ int yaku::countingFacility::countSpecMentzWithDup(const MeldBuf MianziDat, const
 	return countSpecMentz(MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, Mode, true);
 }
 
-/* ”š‚Ì‡Œv‚ğ”‚¦‚é */
-int yaku::countingFacility::countMentzNumerals(const MeldBuf MianziDat) { /* ”š‚Ì‡Œv‚ğ”‚¦‚é */
+/* æ•°å­—ã®åˆè¨ˆã‚’æ•°ãˆã‚‹ */
+int yaku::countingFacility::countMentzNumerals(const MeldBuf MianziDat) { /* æ•°å­—ã®åˆè¨ˆã‚’æ•°ãˆã‚‹ */
 	int Cifr = 0;
 	for (int i = 0; i < SizeOfMeldBuffer; i++) {
 		if (MianziDat[i].tile % TileCodeMaximum < TileSuitHonors) {
-			if (i == 0) { // “ª
+			if (i == 0) { // é›€é ­
 				Cifr += (MianziDat[0].tile % TileSuitStep) * 2;
-			} else { // –Êq
+			} else { // é¢å­
 				switch (MianziDat[i].mstat) {
 				case meldSequenceConcealed: case meldSequenceExposedLower:
 				case meldSequenceExposedMiddle: case meldSequenceExposedUpper:
-					Cifr += (((MianziDat[i].tile % TileSuitStep)+1) * 3); // ‡q
+					Cifr += (((MianziDat[i].tile % TileSuitStep)+1) * 3); // é †å­
 					break;
 				case meldTripletConcealed: case meldTripletExposedLeft:
 				case meldTripletExposedCenter: case meldTripletExposedRight:
-					Cifr += ((MianziDat[i].tile % TileSuitStep) * 3); // q
+					Cifr += ((MianziDat[i].tile % TileSuitStep) * 3); // åˆ»å­
 					break;
 				default:
-					Cifr += ((MianziDat[i].tile % TileSuitStep) * 4); // Èq
+					Cifr += ((MianziDat[i].tile % TileSuitStep) * 4); // æ§“å­
 					break;
 				}
 			}

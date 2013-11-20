@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <exception>
 #include <stdexcept>
@@ -7,7 +7,7 @@
 
 namespace mihajong_socket {
 
-class socket_error : public std::runtime_error { // ƒ\ƒPƒbƒgƒGƒ‰[‚ÌŠî’êƒNƒ‰ƒX
+class socket_error : public std::runtime_error { // ã‚½ã‚±ãƒƒãƒˆã‚¨ãƒ©ãƒ¼ã®åŸºåº•ã‚¯ãƒ©ã‚¹
 private:
 	int myErrorCode;
 public:
@@ -26,52 +26,52 @@ public:
 	int error_code() {return myErrorCode;}
 };
 
-class socket_initialization_error : public socket_error { // WinSock2‰Šú‰»‚ÌƒGƒ‰[
+class socket_initialization_error : public socket_error { // WinSock2åˆæœŸåŒ–æ™‚ã®ã‚¨ãƒ©ãƒ¼
 public:
 	socket_initialization_error(const int err) : socket_error("Initialization failure", err) {};
 };
 
-class socket_creation_error : public socket_error { // ƒ\ƒPƒbƒgì¬‚ÌƒGƒ‰[
+class socket_creation_error : public socket_error { // ã‚½ã‚±ãƒƒãƒˆä½œæˆæ™‚ã®ã‚¨ãƒ©ãƒ¼
 public:
 	socket_creation_error(const int err) : socket_error("Socket creation failure", err) {};
 };
 
-class invalid_address : public socket_error { // ƒAƒhƒŒƒX‚ª³‚µ‚­‚È‚¢
+class invalid_address : public socket_error { // ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒæ­£ã—ããªã„
 public:
 	invalid_address(const int err) : socket_error("Invalid or nonexistent address", err) {};
 };
 
-class socket_bind_error : public socket_error { // ƒ\ƒPƒbƒgbind‚ÌƒGƒ‰[
+class socket_bind_error : public socket_error { // ã‚½ã‚±ãƒƒãƒˆbindæ™‚ã®ã‚¨ãƒ©ãƒ¼
 public:
 	socket_bind_error(const int err) : socket_error("Socket bind error", err) {};
 };
 
-class connection_failure : public socket_error { // Ú‘±‚É¸”s‚µ‚½
+class connection_failure : public socket_error { // æ¥ç¶šã«å¤±æ•—ã—ãŸ
 public:
 	connection_failure(const int err) : socket_error("Connection failed", err) {};
 };
 
-class listen_failure : public socket_error { // listen‚É¸”s‚µ‚½
+class listen_failure : public socket_error { // listenã«å¤±æ•—ã—ãŸ
 public:
 	listen_failure(const int err) : socket_error("Listen failed", err) {};
 };
 
-class accept_failure : public socket_error { // accept‚É¸”s‚µ‚½
+class accept_failure : public socket_error { // acceptã«å¤±æ•—ã—ãŸ
 public:
 	accept_failure(const int err) : socket_error("Connection acceptance failed", err) {};
 };
 
-class queue_empty : public socket_error { // ƒLƒ…[‚ª‹ó
+class queue_empty : public socket_error { // ã‚­ãƒ¥ãƒ¼ãŒç©º
 public:
 	queue_empty() : socket_error("Queue is empty") {};
 };
 
-class recv_error : public socket_error { // óM‚É¸”s‚µ‚½
+class recv_error : public socket_error { // å—ä¿¡ã«å¤±æ•—ã—ãŸ
 public:
 	recv_error(const int err) : socket_error("Receive error", err) {};
 };
 
-class send_error : public socket_error { // ‘—M‚É¸”s‚µ‚½
+class send_error : public socket_error { // é€ä¿¡ã«å¤±æ•—ã—ãŸ
 public:
 	send_error(const int err) : socket_error("Send error", err) {};
 };

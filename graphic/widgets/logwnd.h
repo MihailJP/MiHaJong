@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../exports.h"
 #include "../../common/strcode.h"
@@ -20,7 +20,7 @@ CodeConv::tstring getlog();
 
 class LogWindow {
 private:
-	static unsigned const halffontsz = 9; // ”¼Šp‚Ì‰¡•
+	static unsigned const halffontsz = 9; // åŠè§’ã®æ¨ªå¹…
 #ifdef _WIN32
 	HWND myHWnd;
 #else /*_WIN32*/

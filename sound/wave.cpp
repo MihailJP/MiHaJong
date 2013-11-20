@@ -1,4 +1,4 @@
-#include "snddata.h"
+ï»¿#include "snddata.h"
 #include <fstream>
 #include <sstream>
 #include <iomanip>
@@ -6,78 +6,78 @@
 #include "logger.h"
 #include "../common/strcode.h"
 
-/* 4ƒoƒCƒg’PˆÊ‚Ìƒ`ƒƒƒ“ƒN‚Ìƒ`ƒFƒbƒN */
+/* 4ãƒã‚¤ãƒˆå˜ä½ã®ãƒãƒ£ãƒ³ã‚¯ã®ãƒã‚§ãƒƒã‚¯ */
 bool sound::WaveData::checkTag(std::ifstream& file, const std::string& tag) {
 	char chkdat[8] = {0,};
 	file.read(chkdat, 4);
 	return std::string(chkdat).compare(tag) == 0;
 }
 
-/* ƒtƒH[ƒ}ƒbƒg“Ç‚İ‚İ */
+/* ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆèª­ã¿è¾¼ã¿ */
 void sound::WaveData::GetFormat(std::ifstream& file) {
 	static_assert(sizeof(std::uint32_t) == 4, "sizeof(uint32_t) is not 4");
 	static_assert(sizeof(std::uint16_t) == 2, "sizeof(uint16_t) is not 2");
-	if (!checkTag(file, "WAVE")) throw CodeConv::tstring(_T("WAVEƒ`ƒƒƒ“ƒN‚ª‚È‚¢‚Å‚·"));
-	if (!checkTag(file, "fmt ")) throw CodeConv::tstring(_T("fmt ƒ`ƒƒƒ“ƒN‚ª‚È‚¢‚Å‚·"));
-	// ƒwƒbƒ_ƒTƒCƒY
+	if (!checkTag(file, "WAVE")) throw CodeConv::tstring(_T("WAVEãƒãƒ£ãƒ³ã‚¯ãŒãªã„ã§ã™"));
+	if (!checkTag(file, "fmt ")) throw CodeConv::tstring(_T("fmt ãƒãƒ£ãƒ³ã‚¯ãŒãªã„ã§ã™"));
+	// ãƒ˜ãƒƒãƒ€ã‚µã‚¤ã‚º
 	std::uint32_t format_size; file.read(reinterpret_cast<char*>(&format_size), 4);
-	// ƒf[ƒ^ƒtƒH[ƒ}ƒbƒg
+	// ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
 	std::uint16_t id; file.read(reinterpret_cast<char*>(&id), 2);
 #ifdef _WIN32
 	if (id == 1) format.wFormatTag = WAVE_FORMAT_PCM;
 #if defined(USE_XAUDIO2)
 	else if (id == 2) format.wFormatTag = WAVE_FORMAT_ADPCM;
 #endif
-	else throw CodeConv::tstring(_T("‘Î‰‚µ‚Ä‚¢‚È‚¢ƒtƒH[ƒ}ƒbƒg‚Å‚·"));
+	else throw CodeConv::tstring(_T("å¯¾å¿œã—ã¦ã„ãªã„ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã§ã™"));
 #else /* _WIN32 */
 	if (id != 1)
-		throw CodeConv::tstring(_T("‘Î‰‚µ‚Ä‚¢‚È‚¢ƒtƒH[ƒ}ƒbƒg‚Å‚·"));
+		throw CodeConv::tstring(_T("å¯¾å¿œã—ã¦ã„ãªã„ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã§ã™"));
 #endif /* _WIN32 */
-	// ƒwƒbƒ_“Ç‚İ‚İ
+	// ãƒ˜ãƒƒãƒ€èª­ã¿è¾¼ã¿
 	file.read(reinterpret_cast<char*>(&format.nChannels), sizeof(format.nChannels));
 	file.read(reinterpret_cast<char*>(&format.nSamplesPerSec), sizeof(format.nSamplesPerSec));
 	file.read(reinterpret_cast<char*>(&format.nAvgBytesPerSec), sizeof(format.nAvgBytesPerSec));
 	file.read(reinterpret_cast<char*>(&format.nBlockAlign), sizeof(format.nBlockAlign));
 	file.read(reinterpret_cast<char*>(&format.wBitsPerSample), sizeof(format.wBitsPerSample));
-	// Šg’£ƒwƒbƒ_î•ñ‚Í–³‹
+	// æ‹¡å¼µãƒ˜ãƒƒãƒ€æƒ…å ±ã¯ç„¡è¦–
 	file.ignore(format_size - 16);
 }
 
-/* ”gŒ`ƒf[ƒ^“Ç‚İ‚İ */
+/* æ³¢å½¢ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿ */
 void sound::WaveData::ReadWaveData(std::ifstream& file) {
 	static_assert(sizeof(std::uint32_t) == 4, "sizeof(uint32_t) is not 4");
-	if (!checkTag(file, "data")) throw CodeConv::tstring(_T("dataƒ`ƒƒƒ“ƒN‚ª‚È‚¢‚Å‚·"));
+	if (!checkTag(file, "data")) throw CodeConv::tstring(_T("dataãƒãƒ£ãƒ³ã‚¯ãŒãªã„ã§ã™"));
 	std::uint32_t size; file.read(reinterpret_cast<char*>(&size), 4);
 	buffer.resize(size);
-	// “Ç‚İ‚İ
+	// èª­ã¿è¾¼ã¿
 	file.read(&buffer.front(), size);
 }
 
-/* WAVEƒtƒ@ƒCƒ‹“Ç‚İ‚İ */
+/* WAVEãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ */
 void sound::WaveData::Prepare(const std::string& filename) {
 	std::memset(&format, 0, sizeof(format));
 #if defined(USE_XAUDIO2)
 	std::memset(&bufInfo, 0, sizeof(buffer));
 #endif
 	std::ifstream file(filename, std::ios::in | std::ios::binary);
-	if (!file) throw CodeConv::tstring(_T("ƒtƒ@ƒCƒ‹‚ğŠJ‚¯‚Ü‚¹‚ñ‚Å‚µ‚½"));
-	if (!checkTag(file, "RIFF")) throw CodeConv::tstring(_T("RIFFƒ`ƒƒƒ“ƒN‚ª‚È‚¢‚Å‚·"));
+	if (!file) throw CodeConv::tstring(_T("ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã‘ã¾ã›ã‚“ã§ã—ãŸ"));
+	if (!checkTag(file, "RIFF")) throw CodeConv::tstring(_T("RIFFãƒãƒ£ãƒ³ã‚¯ãŒãªã„ã§ã™"));
 	file.ignore(4);
 	GetFormat(file);
 	try {
 		ReadWaveData(file);
 	} catch (CodeConv::tstring&) {
-		debug(_T("'fmt ' ƒ`ƒƒƒ“ƒN‚Ì’¼Œã‚ª 'data' ƒ`ƒƒƒ“ƒN‚Å‚Í‚ ‚è‚Ü‚¹‚ñ"));
+		debug(_T("'fmt ' ãƒãƒ£ãƒ³ã‚¯ã®ç›´å¾ŒãŒ 'data' ãƒãƒ£ãƒ³ã‚¯ã§ã¯ã‚ã‚Šã¾ã›ã‚“"));
 		file.seekg(-4, std::ios_base::cur);
-		if (!checkTag(file, "fact")) throw CodeConv::tstring(_T("factƒ`ƒƒƒ“ƒN‚ª‚È‚¢‚Å‚·"));
-		debug(_T("'fact' ƒ`ƒƒƒ“ƒN‚ğ–³‹‚µ‚Ü‚·"));
+		if (!checkTag(file, "fact")) throw CodeConv::tstring(_T("factãƒãƒ£ãƒ³ã‚¯ãŒãªã„ã§ã™"));
+		debug(_T("'fact' ãƒãƒ£ãƒ³ã‚¯ã‚’ç„¡è¦–ã—ã¾ã™"));
 		std::uint32_t fact_size; file.read(reinterpret_cast<char*>(&fact_size), 4);
 		file.ignore(fact_size);
 		ReadWaveData(file);
 	}
 }
 
-/* ƒoƒbƒtƒ@‚Ì€”õ */
+/* ãƒãƒƒãƒ•ã‚¡ã®æº–å‚™ */
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 void sound::SoundData::PrepareBuffer(void* Engine, bool looped) {
 	alGenBuffers(1, &myBuffer);
@@ -99,7 +99,7 @@ void sound::SoundData::PrepareBuffer(IXAudio2** Engine, bool looped) {
 	bufInfo.pAudioData = reinterpret_cast<BYTE*>(&buffer[0]);
 	bufInfo.LoopCount = (looped ? XAUDIO2_LOOP_INFINITE : 0);
 	if (FAILED(hr = (*Engine)->CreateSourceVoice(&voice, &format))) {
-		CodeConv::tostringstream o; o << _T("CreateSourceVoice¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("CreateSourceVoiceå¤±æ•—ï¼ï¼ (0x") <<
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
@@ -116,7 +116,7 @@ void sound::SoundData::PrepareBuffer(LPDIRECTSOUND8* Engine, bool looped) {
 	dsbd.lpwfxFormat = &format;
 	dsbd.guid3DAlgorithm = GUID_NULL;
 	if (FAILED(hr = (*Engine)->CreateSoundBuffer(&dsbd, &voice, nullptr))) {
-		CodeConv::tostringstream o; o << _T("CreateSoundBuffer¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("CreateSoundBufferå¤±æ•—ï¼ï¼ (0x") <<
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
@@ -134,7 +134,7 @@ sound::WaveData::WaveData(LPDIRECTSOUND8* Engine, const std::string& filename, b
 	PrepareBuffer(Engine, looped);
 }
 
-/* Ä¶ */
+/* å†ç”Ÿ */
 void sound::SoundData::Play() {
 	Stop();
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
@@ -143,28 +143,28 @@ void sound::SoundData::Play() {
 #if defined(USE_XAUDIO2)
 	HRESULT hr;
 	if (FAILED(hr = voice->SubmitSourceBuffer(&bufInfo))) {
-		CodeConv::tostringstream o; o << _T("SubmitSourceBuffer¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("SubmitSourceBufferå¤±æ•—ï¼ï¼ (0x") <<
 #else
 	HRESULT hr;
 	void* writePtr = nullptr; DWORD bufLen = 0;
 	if (FAILED(hr = voice->Lock(0, 0, &writePtr, &bufLen, nullptr, nullptr, DSBLOCK_ENTIREBUFFER))) {
-		CodeConv::tostringstream o; o << _T("Lock¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("Lockå¤±æ•—ï¼ï¼ (0x") <<
 #endif
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
 #if !defined(USE_XAUDIO2)
-	else { // ‘‚«‚İ
+	else { // æ›¸ãè¾¼ã¿
 		memcpy(writePtr, &buffer[0], bufLen);
 		voice->Unlock(writePtr, bufLen, nullptr, 0);
 	}
 #endif
 #if defined(USE_XAUDIO2)
 	if (FAILED(hr = voice->Start(0, XAUDIO2_COMMIT_NOW))) {
-		CodeConv::tostringstream o; o << _T("Start¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("Startå¤±æ•—ï¼ï¼ (0x") <<
 #else
 	if (FAILED(hr = voice->Play(0, 0, withLoop ? DSBPLAY_LOOPING : 0))) {
-		CodeConv::tostringstream o; o << _T("Play¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("Playå¤±æ•—ï¼ï¼ (0x") <<
 #endif
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
@@ -172,7 +172,7 @@ void sound::SoundData::Play() {
 #endif /* !defined(_WIN32) || !defined(WITH_DIRECTX) */
 }
 
-/* ’â~ */
+/* åœæ­¢ */
 void sound::SoundData::Stop() {
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	alSourceStop(mySource);
@@ -180,16 +180,16 @@ void sound::SoundData::Stop() {
 #else
 	HRESULT hr;
 	if (FAILED(hr = voice->Stop())) {
-		CodeConv::tostringstream o; o << _T("Stop¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("Stopå¤±æ•—ï¼ï¼ (0x") <<
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
 #if defined(USE_XAUDIO2)
 	if (FAILED(hr = voice->FlushSourceBuffers())) {
-		CodeConv::tostringstream o; o << _T("FlushSourceBuffers¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("FlushSourceBufferså¤±æ•—ï¼ï¼ (0x") <<
 #else
 	if (FAILED(hr = voice->SetCurrentPosition(0))) {
-		CodeConv::tostringstream o; o << _T("SetCurrentPosition¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("SetCurrentPositionå¤±æ•—ï¼ï¼ (0x") <<
 #endif
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
@@ -197,7 +197,7 @@ void sound::SoundData::Stop() {
 #endif /* !defined(_WIN32) || !defined(WITH_DIRECTX) */
 }
 
-/* ‰¹—Êİ’è */
+/* éŸ³é‡è¨­å®š */
 void sound::SoundData::setVolume(double volume) {
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	alSourcef(mySource, AL_GAIN, volume);
@@ -220,14 +220,14 @@ void sound::SoundData::setVolume(double volume) {
 		dBvol = (int)((abs(volume) - 1.0) * 5000.0);
 	if (FAILED(hr = voice->SetVolume(dBvol))) {
 #endif
-		CodeConv::tostringstream o; o << _T("SetVolume¸”sII (0x") <<
+		CodeConv::tostringstream o; o << _T("SetVolumeå¤±æ•—ï¼ï¼ (0x") <<
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
 #endif /* !defined(_WIN32) || !defined(WITH_DIRECTX) */
 }
 
-/* ƒfƒXƒgƒ‰ƒNƒ^ */
+/* ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
 sound::SoundData::~SoundData() {
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	alDeleteSources(1, &mySource);
@@ -244,7 +244,7 @@ sound::SoundData::~SoundData() {
 #endif /* !defined(_WIN32) || !defined(WITH_DIRECTX) */
 }
 
-/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^(ƒX[ƒp[ƒNƒ‰ƒX) */
+/* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿(ã‚¹ãƒ¼ãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹) */
 sound::SoundData::SoundData() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	voice = nullptr;

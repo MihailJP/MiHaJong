@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../table.h"
 #include "nakihai0.h"
@@ -19,7 +19,7 @@ private:
 		unsigned h1, unsigned h2, unsigned h3, unsigned h4, unsigned v1, unsigned v2, unsigned v3, unsigned v4,
 		bool r1, bool r2, bool r3, bool r4);
 public:
-	void Reconstruct(const GameTable* gameStat, PlayerID targetPlayer); // –Â‚¢‚½”v‚ÌÄ\’z
+	void Reconstruct(const GameTable* gameStat, PlayerID targetPlayer); // é³´ã„ãŸç‰Œã®å†æ§‹ç¯‰
 	void Render();
 	explicit NakihaiReconst(GameTableScreen* parent);
 	NakihaiReconst(const NakihaiReconst&) = delete; // Delete unexpected copy constructor

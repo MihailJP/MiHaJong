@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "socket.h"
 #include "protocol.h"
@@ -19,8 +19,8 @@ namespace mihajong_socket {
 namespace server {
 #ifdef SOCKET_EXPORTS
 	extern unsigned int NumberOfPlayers;
-	CodeConv::tstring getString(unsigned int socketID); // •¶š—ñ‚ğ•Ô‚·(“¯Šú)
-	void putString(unsigned int socketID, const CodeConv::tstring& sendingStr); // •¶š—ñ‚ğ‘—M
+	CodeConv::tstring getString(unsigned int socketID); // æ–‡å­—åˆ—ã‚’è¿”ã™(åŒæœŸ)
+	void putString(unsigned int socketID, const CodeConv::tstring& sendingStr); // æ–‡å­—åˆ—ã‚’é€ä¿¡
 	class starter {
 	private:
 		volatile bool terminated, finished;
@@ -29,32 +29,32 @@ namespace server {
 		std::array<CodeConv::tstring, 4> playerName;
 		char ruleConf[RULE_LINES][RULE_IN_LINE + 1];
 		THREADLIB::thread myThread;
-		int preparationThread (); // Ú‘±‚ğ‘Ò‚¿AÚ‘±ˆ—‚ğ‚·‚é
+		int preparationThread (); // æ¥ç¶šã‚’å¾…ã¡ã€æ¥ç¶šå‡¦ç†ã‚’ã™ã‚‹
 	public:
-		static void initiate (starter* inst); // CreateThread()‚É“n‚·ˆø”—p
+		static void initiate (starter* inst); // CreateThread()ã«æ¸¡ã™å¼•æ•°ç”¨
 		void startThread ();
-		starter (const CodeConv::tstring& InputPlayerName, unsigned short port, const char* const * const rule); // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		starter (const CodeConv::tstring& InputPlayerName, unsigned short port, const char* const * const rule); // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		starter (const Sock&) = delete; // Delete unexpected copy constructor
 		starter& operator= (const Sock&) = delete; // Delete unexpected assign operator
 		~starter();
-		void terminate(); // ‚·‚®‚ÉŠJn
-		bool isFinished (); // ‘Ò‹@—pƒXƒŒƒbƒh‚ªI‚í‚Á‚½‚©‚Ç‚¤‚©
-		unsigned int chkCurrentConnection (); // Œ»İ‚ÌÚ‘±”
-		CodeConv::tstring getPlayerName (unsigned id); // ƒvƒŒƒCƒ„[–¼
+		void terminate(); // ã™ãã«é–‹å§‹
+		bool isFinished (); // å¾…æ©Ÿç”¨ã‚¹ãƒ¬ãƒƒãƒ‰ãŒçµ‚ã‚ã£ãŸã‹ã©ã†ã‹
+		unsigned int chkCurrentConnection (); // ç¾åœ¨ã®æ¥ç¶šæ•°
+		CodeConv::tstring getPlayerName (unsigned id); // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å
 	};
 	extern starter* starterThread;
-	extern std::array<unsigned, 3> ServerCheckRotation; // ƒNƒ‰ƒCƒAƒ“ƒg‚Ì“Ç‚İo‚µ—Dæ‡ˆÊ
-	void sendstr (const CodeConv::tstring& sendingStr); // ƒT[ƒo[‚©‚ç‚Ì•¶š—ñ‘—M
+	extern std::array<unsigned, 3> ServerCheckRotation; // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã®èª­ã¿å‡ºã—å„ªå…ˆé †ä½
+	void sendstr (const CodeConv::tstring& sendingStr); // ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ã®æ–‡å­—åˆ—é€ä¿¡
 #endif
-	DLL void start (LPCTSTR const name, int port, int players, const char* const * const rule); // ƒT[ƒo[‚ğŠJn‚³‚¹‚é(DLL)
-	DLL void doStart(); // Ú‘±‘Ò‹@‚ğ‚â‚ßA’¼‚¿‚ÉŠJn‚·‚é
-	DLL int isStartingFinished (); // ‘Ò‹@—pƒXƒŒƒbƒh‚ªI‚í‚Á‚½‚©‚Ç‚¤‚©
-	DLL int chkCurrentConnection (); // Œ»İ‚ÌÚ‘±”
+	DLL void start (LPCTSTR const name, int port, int players, const char* const * const rule); // ã‚µãƒ¼ãƒãƒ¼ã‚’é–‹å§‹ã•ã›ã‚‹(DLL)
+	DLL void doStart(); // æ¥ç¶šå¾…æ©Ÿã‚’ã‚„ã‚ã€ç›´ã¡ã«é–‹å§‹ã™ã‚‹
+	DLL int isStartingFinished (); // å¾…æ©Ÿç”¨ã‚¹ãƒ¬ãƒƒãƒ‰ãŒçµ‚ã‚ã£ãŸã‹ã©ã†ã‹
+	DLL int chkCurrentConnection (); // ç¾åœ¨ã®æ¥ç¶šæ•°
 	DLL void getPlayerNames (LPTSTR playerName1, LPTSTR playerName2, LPTSTR playerName3, LPTSTR playerName4, unsigned bufsz);
-	DLL void releaseobj (); // ƒfƒXƒgƒ‰ƒNƒ^‚ğŒÄ‚Ô‚¾‚¯
-	DLL void send (unsigned char SendingMsg); // ƒT[ƒo[‚©‚ç‚Ì‘—M
-	DLL void send (int SendingMsg, void*); // ƒT[ƒo[‚©‚ç‚Ì‘—M(DLL)
-	DLL void rotation_reset (); // æ“¾—Dæ‡ˆÊ‚ÌƒŠƒZƒbƒg
-	DLL void receive (volatile int* const ServerReceived, int* const ReceivedMsg); // æ“¾‚·‚é
+	DLL void releaseobj (); // ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’å‘¼ã¶ã ã‘
+	DLL void send (unsigned char SendingMsg); // ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ã®é€ä¿¡
+	DLL void send (int SendingMsg, void*); // ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ã®é€ä¿¡(DLL)
+	DLL void rotation_reset (); // å–å¾—å„ªå…ˆé †ä½ã®ãƒªã‚»ãƒƒãƒˆ
+	DLL void receive (volatile int* const ServerReceived, int* const ReceivedMsg); // å–å¾—ã™ã‚‹
 }
 }

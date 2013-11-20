@@ -1,15 +1,15 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../sound/sound.h"
 
 namespace sound {
 namespace util {
 
-void bgmload(unsigned ID, const char* filename, bool looped); /* BGM“Ç‚İ‚İ */
-void soundload(unsigned ID, const char* filename, bool looped); /* ƒTƒEƒ“ƒh“Ç‚İ‚İ */
-void bgmstop(); /* BGM’â~ */
-void bgmplay(unsigned ID); /* ‚a‚f‚lÄ¶ */
-void setvolume(); /* ‰¹—Êİ’è‚ğ”½‰f */
+void bgmload(unsigned ID, const char* filename, bool looped); /* BGMèª­ã¿è¾¼ã¿ */
+void soundload(unsigned ID, const char* filename, bool looped); /* ã‚µã‚¦ãƒ³ãƒ‰èª­ã¿è¾¼ã¿ */
+void bgmstop(); /* BGMåœæ­¢ */
+void bgmplay(unsigned ID); /* ï¼¢ï¼§ï¼­å†ç”Ÿ */
+void setvolume(); /* éŸ³é‡è¨­å®šã‚’åæ˜  */
 
 }
 }

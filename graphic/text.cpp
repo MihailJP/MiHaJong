@@ -1,4 +1,4 @@
-#include "text.h"
+ï»¿#include "text.h"
 #include "resource.h"
 #include "geometry.h"
 #include "../common/strcode.h"
@@ -52,11 +52,11 @@ CallDigitRenderer::~CallDigitRenderer() {
 ScoreDigitRenderer::~ScoreDigitRenderer() {
 }
 
-/* V‹K‚Ì•¶š—ñƒIƒuƒWƒFƒNƒg‚ğì¬‚·‚é */
+/* æ–°è¦ã®æ–‡å­—åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã™ã‚‹ */
 void ITextRenderer::NewText(unsigned int ID, const std::wstring& str, int x, int y, float scale, float width, ArgbColor color) {
-	if (StringData.size() <= ID) StringData.resize(ID + 1, nullptr); // ”z—ñ‚ÌŠg’£
+	if (StringData.size() <= ID) StringData.resize(ID + 1, nullptr); // é…åˆ—ã®æ‹¡å¼µ
 	bool TextChanged = (!StringData[ID]) || (StringData[ID]->str != str);
-	if (StringData[ID] && TextChanged) delete StringData[ID]; // Šù‚É‘¶İ‚µ‚½ê‡
+	if (StringData[ID] && TextChanged) delete StringData[ID]; // æ—¢ã«å­˜åœ¨ã—ãŸå ´åˆ
 	if (TextChanged) StringData[ID] = new StringAttr;
 	StringData[ID]->X = x; StringData[ID]->Y = y;
 	StringData[ID]->scale = scale; StringData[ID]->width = width;
@@ -72,21 +72,21 @@ void ITextRenderer::NewText(unsigned int ID, const std::string& str, int x, int 
 	NewText(ID, CodeConv::ANSItoWIDE(str), x, y, scale, width, color);
 }
 
-/* •¶š—ñƒIƒuƒWƒFƒNƒg‚ÌŒãn–– */
+/* æ–‡å­—åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å¾Œå§‹æœ« */
 void ITextRenderer::DelText(unsigned int ID) {
 	if (StringData.size() <= ID) return;
 	delete StringData[ID]; StringData[ID] = nullptr;
 	deleteSprite(ID);
 }
 
-/* ƒXƒvƒ‰ƒCƒgÄ\’z */
+/* ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆå†æ§‹ç¯‰ */
 void ITextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrAdvance, float cursorPos) {
 	sprite->X = StringData[ID]->X + chrAdvance * cursorPos - FontPadding();
 	sprite->Y = StringData[ID]->Y - FontPadding();
 	sprite->widthScale = StringData[ID]->scale * StringData[ID]->width;
 	sprite->heightScale = StringData[ID]->scale;
 	sprite->color = StringData[ID]->color;
-	/* s—ñ‚ğŒvZ‚·‚é */
+	/* è¡Œåˆ—ã‚’è¨ˆç®—ã™ã‚‹ */
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix m; D3DXMatrixIdentity(&m);
 	D3DXMatrixIdentity(&sprite->matrix);
@@ -99,7 +99,7 @@ void ITextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrA
 	D3DXMatrixScaling(&m, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);
 #else
-	/* DirectX‚ÆOpenGL‚¾‚ÆÀ•WŒ´“_‚ªˆá‚¤ */
+	/* DirectXã¨OpenGLã ã¨åº§æ¨™åŸç‚¹ãŒé•ã† */
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix(); glLoadIdentity();
 	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
@@ -112,14 +112,14 @@ void ITextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrA
 	glPopMatrix();
 	sprite->matrix = matrix;
 #endif
-	/* ‚±‚±‚Ü‚Å */
+	/* ã“ã“ã¾ã§ */
 }
 void ITextRenderer::reconstruct(unsigned int ID, bool rescanStr) {
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(SpriteMutex);
-	if (SpriteData.size() <= ID) SpriteData.resize(ID + 1, std::vector<SpriteAttr*>()); // ”z—ñ‚ÌŠg’£
-	if ((!SpriteData[ID].empty()) && rescanStr) deleteSprite(ID); // Šù‚É‘¶İ‚µ‚½ê‡
-	if (!StringData[ID]) /* ‚Ê‚é‚Û */
-		return; /* ƒKƒb */
+	if (SpriteData.size() <= ID) SpriteData.resize(ID + 1, std::vector<SpriteAttr*>()); // é…åˆ—ã®æ‹¡å¼µ
+	if ((!SpriteData[ID].empty()) && rescanStr) deleteSprite(ID); // æ—¢ã«å­˜åœ¨ã—ãŸå ´åˆ
+	if (!StringData[ID]) /* ã¬ã‚‹ã½ */
+		return; /* ã‚¬ãƒƒ */
 	float chrAdvance = (FontWidth() - FontPadding() * 2) * StringData[ID]->scale * StringData[ID]->width;
 	float cursorPos = 0;
 	if (rescanStr) {
@@ -146,7 +146,7 @@ void ITextRenderer::reconstruct() {
 		reconstruct(i);
 }
 
-/* ƒXƒvƒ‰ƒCƒg‚ğíœ‚·‚é */
+/* ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’å‰Šé™¤ã™ã‚‹ */
 void ITextRenderer::deleteSprite(unsigned int ID) {
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(SpriteMutex);
 	for (const auto& k : SpriteData[ID])
@@ -160,7 +160,7 @@ void ITextRenderer::deleteSprite() {
 	SpriteData.clear();
 }
 
-/* ƒŒƒ“ƒ_ƒŠƒ“ƒO */
+/* ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚° */
 void ITextRenderer::Render() {
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(SpriteMutex);
 	for (const auto& i : SpriteData) {
@@ -179,11 +179,11 @@ void ITextRenderer::Render() {
 	}
 }
 
-/* •¶š—ñ‚Ì•‚ğŒvZ */
+/* æ–‡å­—åˆ—ã®å¹…ã‚’è¨ˆç®— */
 unsigned ITextRenderer::strWidthByCols(const std::wstring& str) {
 	unsigned cols = 0;
 	for (const auto& k : str)
-		cols += (fontmap->map(k).first) ? /* ‘SŠp */ 2 : /* ”¼Šp */ 1;
+		cols += (fontmap->map(k).first) ? /* å…¨è§’ */ 2 : /* åŠè§’ */ 1;
 	return cols;
 }
 unsigned ITextRenderer::strWidthByCols(const std::string& str) {

@@ -1,4 +1,4 @@
-#include "titling.h"
+ï»¿#include "titling.h"
 #include "../../gametbl.h"
 #include "../../event.h"
 
@@ -55,14 +55,14 @@ TableSubsceneTitlingHonba::TableSubsceneTitlingHonba(DevicePtr device) : TableSu
 TableSubsceneTitlingHonba::~TableSubsceneTitlingHonba() {
 }
 
-const std::wstring TableSubsceneTitlingHonba::Numeral = L"0‚P‚Q‚R‚S‚T‚U‚V‚W‚X";
+const std::wstring TableSubsceneTitlingHonba::Numeral = L"0ï¼‘ï¼’ï¼“ï¼”ï¼•ï¼–ï¼—ï¼˜ï¼™";
 
 void TableSubsceneTitlingHonba::Render() {
 	std::wstringstream o;
 	const int honba = GameStatus::gameStat()->Honba;
 	if (honba < 10) o << Numeral.substr(honba, 1);
 	else o << honba;
-	o << L"–{ê";
+	o << L"æœ¬å ´";
 	FadeinStr(o.str());
 	myTextRenderer->Render();
 }

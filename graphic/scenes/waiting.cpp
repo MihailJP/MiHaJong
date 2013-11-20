@@ -1,4 +1,4 @@
-#include "waiting.h"
+ï»¿#include "waiting.h"
 #include <cmath>
 #include "../event.h"
 #include "../rule.h"
@@ -30,7 +30,7 @@ void ConnectionWaitingProto::showCentered(unsigned id, CodeConv::tstring txt, in
 			blink ? ((255 + (int)(75.0 * (cos((double)myTimer.elapsed() / 1000000.0 * TwoTimesPi) - 1.0))) << 24) | 0x00ffffff : 0xffffffff);
 }
 void ConnectionWaitingProto::waiting_title() {
-	showCentered(0, _T("Ú‘±‘Ò‹@’†"), 300, 3.0f, false);
+	showCentered(0, _T("æŽ¥ç¶šå¾…æ©Ÿä¸­"), 300, 3.0f, false);
 }
 void ConnectionWaitingProto::waiting_desc() {
 	const CodeConv::tstring txt(waiting_desc_str());
@@ -48,7 +48,7 @@ void ServerWait::Render() {
 	clearWithGameTypeColor();
 	waiting_title();
 	waiting_desc();
-	showCentered(2, _T("XƒL[‚Ü‚½‚ÍESCƒL[‚ð‰Ÿ‚·‚ÆŒ»Ý‚Ì–ÊŽq‚ÉCOMƒvƒŒƒCƒ„[‚ð“ü‚ê‚ÄŠJŽn‚µ‚Ü‚·"), 900, 1.0f, false);
+	showCentered(2, _T("Xã‚­ãƒ¼ã¾ãŸã¯ESCã‚­ãƒ¼ã‚’æŠ¼ã™ã¨ç¾åœ¨ã®é¢å­ã«COMãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’å…¥ã‚Œã¦é–‹å§‹ã—ã¾ã™"), 900, 1.0f, false);
 	myTextRenderer->Render();
 }
 void ServerWait::SetSubscene(unsigned int scene_ID) {
@@ -66,7 +66,7 @@ void ServerWait::KeyboardInput(const XEvent* od)
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{
-	case DIK_ESCAPE: case DIK_X: // ƒLƒƒƒ“ƒZƒ‹
+	case DIK_ESCAPE: case DIK_X: // ã‚­ãƒ£ãƒ³ã‚»ãƒ«
 #ifdef _WIN32
 		if (od->dwData)
 #else /*_WIN32*/
@@ -81,21 +81,21 @@ void ServerWait::KeyboardInput(const XEvent* od)
 CodeConv::tstring ServerWait::waiting_desc_str() {
 	switch (subsceneID) {
 	case srvwSubscene1of4:
-		return _T("Œ»Ý‚Ì‘Ò‹@l”F‚P/‚Sl");
+		return _T("ç¾åœ¨ã®å¾…æ©Ÿäººæ•°ï¼šï¼‘/ï¼”äºº");
 	case srvwSubscene1of3:
-		return _T("Œ»Ý‚Ì‘Ò‹@l”F‚P/‚Rl");
+		return _T("ç¾åœ¨ã®å¾…æ©Ÿäººæ•°ï¼šï¼‘/ï¼“äºº");
 	case srvwSubscene2of4:
-		return _T("Œ»Ý‚Ì‘Ò‹@l”F‚Q/‚Sl");
+		return _T("ç¾åœ¨ã®å¾…æ©Ÿäººæ•°ï¼šï¼’/ï¼”äºº");
 	case srvwSubscene2of3:
-		return _T("Œ»Ý‚Ì‘Ò‹@l”F‚Q/‚Rl");
+		return _T("ç¾åœ¨ã®å¾…æ©Ÿäººæ•°ï¼šï¼’/ï¼“äºº");
 	case srvwSubscene3of4:
-		return _T("Œ»Ý‚Ì‘Ò‹@l”F‚R/‚Sl");
+		return _T("ç¾åœ¨ã®å¾…æ©Ÿäººæ•°ï¼šï¼“/ï¼”äºº");
 	case srvwSubscene3of3:
-		return _T("Œ»Ý‚Ì‘Ò‹@l”F‚R/‚Rl");
+		return _T("ç¾åœ¨ã®å¾…æ©Ÿäººæ•°ï¼šï¼“/ï¼“äºº");
 	case srvwSubscene4of4:
-		return _T("Œ»Ý‚Ì‘Ò‹@l”F‚S/‚Sl");
+		return _T("ç¾åœ¨ã®å¾…æ©Ÿäººæ•°ï¼šï¼”/ï¼”äºº");
 	default:
-		return _T("‚µ‚Î‚ç‚­‚¨‘Ò‚¿‚­‚¾‚³‚¢");
+		return _T("ã—ã°ã‚‰ããŠå¾…ã¡ãã ã•ã„");
 	}
 }
 
@@ -109,7 +109,7 @@ void ClientWait::Render() {
 	clearWithGameTypeColor();
 	waiting_title();
 	waiting_desc();
-	showCentered(2, _T("‚µ‚Î‚ç‚­‚¨‘Ò‚¿‚­‚¾‚³‚¢"), 900, 1.0f, false);
+	showCentered(2, _T("ã—ã°ã‚‰ããŠå¾…ã¡ãã ã•ã„"), 900, 1.0f, false);
 	myTextRenderer->Render();
 }
 void ClientWait::SetSubscene(unsigned int scene_ID) {
@@ -120,13 +120,13 @@ CodeConv::tstring ClientWait::waiting_desc_str() {
 	case cliwSubsceneConnecting:
 		{
 			const std::string addr(rules::getPreferenceRawStr(1 /*hardcoded*/));
-			const CodeConv::tstring msg(CodeConv::EnsureTStr(addr) + _T("‚ÉÚ‘±‚µ‚Ä‚¢‚Ü‚·"));
+			const CodeConv::tstring msg(CodeConv::EnsureTStr(addr) + _T("ã«æŽ¥ç¶šã—ã¦ã„ã¾ã™"));
 			return msg;
 		}
 	case cliwSubsceneWaiting:
-		return _T("–ÊŽq‚ª‘µ‚¤‚Ì‚ð‘Ò‚Á‚Ä‚¢‚Ü‚·");
+		return _T("é¢å­ãŒæƒã†ã®ã‚’å¾…ã£ã¦ã„ã¾ã™");
 	default:
-		return _T("ˆ—’†‚Å‚·");
+		return _T("å‡¦ç†ä¸­ã§ã™");
 	}
 }
 
@@ -139,9 +139,9 @@ ConnectionWaitFailed::~ConnectionWaitFailed() {
 }
 void ConnectionWaitFailed::Render() {
 	const std::string addr(rules::getPreferenceRawStr(1 /*hardcoded*/));
-	const CodeConv::tstring errmsg(CodeConv::EnsureTStr(addr) + _T("‚ÉÚ‘±‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½"));
+	const CodeConv::tstring errmsg(CodeConv::EnsureTStr(addr) + _T("ã«æŽ¥ç¶šã§ãã¾ã›ã‚“ã§ã—ãŸ"));
 	clearWithGameTypeColor();
-	showCentered(0, _T("Ú‘±Ž¸”s"), 300, 3.0f, false);
+	showCentered(0, _T("æŽ¥ç¶šå¤±æ•—"), 300, 3.0f, false);
 	showCentered(1, errmsg, 660, 1.5f, false);
 	myTextRenderer->Render();
 }

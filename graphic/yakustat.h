@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "exports.h"
 #include "../common/yakurslt.h"

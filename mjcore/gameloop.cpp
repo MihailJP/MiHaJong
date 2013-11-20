@@ -1,4 +1,4 @@
-#include "gameloop.h"
+ï»¿#include "gameloop.h"
 
 #ifndef _WIN32
 #include <unistd.h>
@@ -21,64 +21,64 @@
 #include "../common/chrono.h"
 #include "../common/sleep.h"
 
-/* ”¼‘‘‚Ìis */
+/* åŠè˜ã®é€²è¡Œ */
 EndType doTableTurn(GameTable* const gameStat) {
 	{
 		CodeConv::tostringstream o;
-		o << _T("ƒvƒŒƒCƒ„[ [") << (int)gameStat->CurrentPlayer.Active << _T("] ‚Ìƒcƒ‚”Ô‚Å‚·B");
+		o << _T("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ [") << (int)gameStat->CurrentPlayer.Active << _T("] ã®ãƒ„ãƒ¢ç•ªã§ã™ã€‚");
 		info(o.str().c_str());
 	}
-	/* •Ï”‚Ì‰Šú‰» */
-	calcdoukasen(gameStat); // “±‰Îü‚ÌˆÊ’u‚ğXV
+	/* å¤‰æ•°ã®åˆæœŸåŒ– */
+	calcdoukasen(gameStat); // å°ç«ç·šã®ä½ç½®ã‚’æ›´æ–°
 	if (!gameStat->KangFlag.kangFlag) {
-		/* ˜A‘±È‚Ì‰ñ”‚Æ“ªÈ˜aƒtƒ‰ƒO‚ğƒŠƒZƒbƒg */
+		/* é€£ç¶šæ§“ã®å›æ•°ã¨é ­æ§“å’Œãƒ•ãƒ©ã‚°ã‚’ãƒªã‚»ãƒƒãƒˆ */
 		gameStat->KangFlag.chainFlag = 0;
 		gameStat->KangFlag.topFlag = false;
 	}
 	gameStat->CurrentDiscard.tile = NoTile;
 	gameStat->CurrentDiscard.red = Normal;
-	/* ƒEƒHƒbƒ`ƒ‚[ƒh‚Ì‚Í‹“_‚ğƒcƒ‚”Ô‚Ìl‚ÉˆÚ‚· */
+	/* ã‚¦ã‚©ãƒƒãƒãƒ¢ãƒ¼ãƒ‰ã®æ™‚ã¯è¦–ç‚¹ã‚’ãƒ„ãƒ¢ç•ªã®äººã«ç§»ã™ */
 	if (EnvTable::Instantiate()->WatchModeFlag)
 		gameStat->PlayerID = gameStat->CurrentPlayer.Active;
-	/* Ä•`‰æ */
+	/* å†æç”» */
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
-	/* –Ì‘Å‚Ìˆ— */
+	/* æ‘¸æ‰“ã®å‡¦ç† */
 	DiscardTileNum DiscardTileIndex = getdahai(gameStat);
 	if (DiscardTileIndex.type == DiscardTileNum::Disconnect)
 		return Disconnect;
-	/* ƒEƒFƒCƒg‚ğ“ü‚ê‚é */
+	/* ã‚¦ã‚§ã‚¤ãƒˆã‚’å…¥ã‚Œã‚‹ */
 	threadYield();
 	threadYield();
 	EndType RoundEndType = procdahai(gameStat, DiscardTileIndex);
 	if (RoundEndType != Continuing)
 		return RoundEndType;
 	threadSleep(80);
-	/* ‰h˜a‚Ìˆ— */
-	RoundEndType = ronhuproc(gameStat); // ‰h˜a‚Ìˆ—
+	/* æ „å’Œã®å‡¦ç† */
+	RoundEndType = ronhuproc(gameStat); // æ „å’Œã®å‡¦ç†
 	if (RoundEndType != Continuing) return RoundEndType;
 	threadYield();
-	/* “r’†—¬‹Ç‚Ì”»’è */
+	/* é€”ä¸­æµå±€ã®åˆ¤å®š */
 	EndType round_abort_type = endround::checkroundabort(gameStat);
 	if (round_abort_type != Continuing) return round_abort_type;
-	/* Ì”v‚ğƒ|ƒ“A‚Ü‚½‚Í‘å–¾È‚·‚éê‡‚Ìˆ— */
+	/* æ¨ç‰Œã‚’ãƒãƒ³ã€ã¾ãŸã¯å¤§æ˜æ§“ã™ã‚‹å ´åˆã®å‡¦ç† */
 	if (executeFuuro(gameStat, DiscardTileIndex))
-		return Continuing; /* –Â‚«‚ª‚ ‚Á‚½ê‡A–Â‚¢‚½ƒvƒŒ[ƒ„[‚É‡”Ô‚ğˆÚ‚µ‚Ä–ß‚é */
-	/* ƒEƒFƒCƒg‚ğ“ü‚ê‚é */
+		return Continuing; /* é³´ããŒã‚ã£ãŸå ´åˆã€é³´ã„ãŸãƒ—ãƒ¬ãƒ¼ãƒ¤ãƒ¼ã«é †ç•ªã‚’ç§»ã—ã¦æˆ»ã‚‹ */
+	/* ã‚¦ã‚§ã‚¤ãƒˆã‚’å…¥ã‚Œã‚‹ */
 	threadSleep(100);
-	/* Ÿ‚ÌƒvƒŒƒCƒ„[‚ª”v‚ğ©–Ì‚é */
+	/* æ¬¡ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒç‰Œã‚’è‡ªæ‘¸ã‚‹ */
 	tsumoproc(gameStat);
-	// ‘Å”v‚Ö–ß‚é
+	// æ‰“ç‰Œã¸æˆ»ã‚‹
 	return Continuing;
 }
 
-/* ”¼‘‘‚Ìis */
+/* åŠè˜ã®é€²è¡Œ */
 bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 	{
 		CodeConv::tostringstream o;
-		o << _T("‹Ç”Ô† [") << gameStat->GameRound << _T("] ‚ğŠJn‚µ‚Ü‚µ‚½B");
+		o << _T("å±€ç•ªå· [") << gameStat->GameRound << _T("] ã‚’é–‹å§‹ã—ã¾ã—ãŸã€‚");
 		info(o.str().c_str());
 	}
-	/* ƒ`ƒƒƒbƒg‚Ì“¯Šú */
+	/* ãƒãƒ£ãƒƒãƒˆã®åŒæœŸ */
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 		mihajong_socket::puts(SOCK_CHAT,
 #if defined(_WIN32)
@@ -86,23 +86,23 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 #else
 			_T("8\n"));
 #endif
-	/* ƒEƒHƒbƒ`ƒ‚[ƒh‚Ì‚Í‹“_‚ğe‚ÉˆÚ‚· */
+	/* ã‚¦ã‚©ãƒƒãƒãƒ¢ãƒ¼ãƒ‰ã®æ™‚ã¯è¦–ç‚¹ã‚’è¦ªã«ç§»ã™ */
 	gameStat->CurrentPlayer.Active = -1;
 	if (EnvTable::Instantiate()->WatchModeFlag)
 		gameStat->PlayerID = gameStat->GameRound % Players;
-	/* ”j‰ñ”ª˜A‘‘‚ÌŒãn–– */
+	/* ç ´å›å…«é€£è˜ã®å¾Œå§‹æœ« */
 	if (gameStat->AgariChain == -1) gameStat->AgariChain = 1;
-	/* ”¼‘‘‚Ì‰Šú‰»‚Æ”z”v‚ğs‚È‚¤ */
+	/* åŠè˜ã®åˆæœŸåŒ–ã¨é…ç‰Œã‚’è¡Œãªã† */
 	tableinit(gameStat);
-	/* ”z”vI—¹‚Ìˆ— */
+	/* é…ç‰Œçµ‚äº†æ™‚ã®å‡¦ç† */
 	for (PlayerID i = 0; i < Players; i++) {
 		gameStat->Player[i].HandStat = handUpright;
 		lipai(gameStat, i);
 	}
-	gameStat->CurrentPlayer.Active = gameStat->GameRound % Players; // Å‰‚Ée‚©‚çÌ”v‚ğs‚È‚¤
-	info(_T("”z”v‚ğŠ®—¹‚µ‚Ü‚µ‚½B"));
-	gameStat->TurnRound = 1; // ”z”v‚ªI‚í‚Á‚½‚ç1„–Ú
-	/* –Ì‘Åƒ‹[ƒv */
+	gameStat->CurrentPlayer.Active = gameStat->GameRound % Players; // æœ€åˆã«è¦ªã‹ã‚‰æ¨ç‰Œã‚’è¡Œãªã†
+	info(_T("é…ç‰Œã‚’å®Œäº†ã—ã¾ã—ãŸã€‚"));
+	gameStat->TurnRound = 1; // é…ç‰ŒãŒçµ‚ã‚ã£ãŸã‚‰1å·¡ç›®
+	/* æ‘¸æ‰“ãƒ«ãƒ¼ãƒ— */
 	volatile EndType roundEndType = Continuing;
 	do {
 		do {
@@ -123,7 +123,7 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 	while (false);
 #endif /* GUOBIAO */
 	mihajong_graphic::ui::WaitUIWithTimeout(5000);
-	// ”¼‘‘I—¹”»’è
+	// åŠè˜çµ‚äº†åˆ¤å®š
 	return endround::nextRound(gameStat, roundEndType, OrigTurn);
 }
 
@@ -140,15 +140,15 @@ uint32_t titlescreen() {
 
 }
 
-/* ƒQ[ƒ€ŠJnˆ— */
+/* ã‚²ãƒ¼ãƒ é–‹å§‹å‡¦ç† */
 void startgame(GameTypeID gameType) {
 	while (true) {
-		/* •Ï”—Ş‚Ì‰Šú‰» */
+		/* å¤‰æ•°é¡ã®åˆæœŸåŒ– */
 		GameTable* gameStat = initializeGameTable(gameType);
-		info(_T("ƒQ[ƒ€î•ñ‚ğ‰Šú‰»‚µ‚Ü‚µ‚½B"));
+		info(_T("ã‚²ãƒ¼ãƒ æƒ…å ±ã‚’åˆæœŸåŒ–ã—ã¾ã—ãŸã€‚"));
 		mihajong_socket::server::rotation_reset();
-		RuleData::applyPreference(); // ŠÂ‹«İ’è‚ğ”½‰f
-		sound::Play(sound::IDs::musTitle); // ƒ^ƒCƒgƒ‹‹È‚ğ—¬‚·
+		RuleData::applyPreference(); // ç’°å¢ƒè¨­å®šã‚’åæ˜ 
+		sound::Play(sound::IDs::musTitle); // ã‚¿ã‚¤ãƒˆãƒ«æ›²ã‚’æµã™
 		unsigned ClientNumber = 0u;
 	start:
 		std::string serverAddr;
@@ -156,7 +156,7 @@ void startgame(GameTypeID gameType) {
 			gameStat->chkGameType(Sanma) ? 50010 :
 			gameStat->chkGameType(Sanma4) ? 50030 :
 			gameStat->chkGameType(SanmaS) ? 50060 : 50000;
-		switch (titlescreen()) { // ƒ^ƒCƒgƒ‹‰æ–Ê
+		switch (titlescreen()) { // ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢
 		case 1:
 			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
 			EnvTable::Instantiate()->PlayerDat[0].PlayerName =
@@ -172,7 +172,7 @@ void startgame(GameTypeID gameType) {
 		case 3:
 			RemoteConnection::startClient(serverAddr, ClientNumber, gamePort);
 			if (EnvTable::Instantiate()->GameMode == EnvTable::Standalone)
-				goto start; // Ú‘±¸”s‚Ì‚Í–ß‚é
+				goto start; // æ¥ç¶šå¤±æ•—ã®æ™‚ã¯æˆ»ã‚‹
 			break;
 		case 4:
 			mihajong_graphic::Transit(mihajong_graphic::sceneConfig);
@@ -181,20 +181,20 @@ void startgame(GameTypeID gameType) {
 		case 5:
 			mihajong_graphic::Transit(mihajong_graphic::sceneSetting);
 			mihajong_graphic::ui::WaitUI();
-			RuleData::applyPreference(); // ŠÂ‹«İ’è‚ğ”½‰f
+			RuleData::applyPreference(); // ç’°å¢ƒè¨­å®šã‚’åæ˜ 
 			goto start;
 		case 6:
 			return;
 		}
-		auto PositionArray = SeatShuffler::shuffle(ClientNumber); // eŒˆ‚ß‚Ìˆ—
-		gameinit(&GameStat, gameType, serverAddr, PositionArray, ClientNumber); // ”¼‘‘‚Ì‰Šú‰»ˆ—
+		auto PositionArray = SeatShuffler::shuffle(ClientNumber); // è¦ªæ±ºã‚ã®å‡¦ç†
+		gameinit(&GameStat, gameType, serverAddr, PositionArray, ClientNumber); // åŠè˜ã®åˆæœŸåŒ–å‡¦ç†
 
-		/* ”¼‘‘‚Ìis */
+		/* åŠè˜ã®é€²è¡Œ */
 		bool endFlag = false; int OrigTurn = 0, OrigHonba = 0;
 		do {
 			endFlag = doTableRound(gameStat, OrigTurn, OrigHonba);
 		} while (!endFlag);
-		// ”¼‘‘I—¹
+		// åŠè˜çµ‚äº†æ™‚
 		gameResult(gameStat, OrigTurn, OrigHonba);
 	}
 }

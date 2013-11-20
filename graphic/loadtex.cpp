@@ -1,4 +1,4 @@
-#include "loadtex.h"
+ï»¿#include "loadtex.h"
 #include "resource.h"
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 #include <gdiplus.h>
@@ -26,14 +26,14 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 	using namespace Gdiplus;
 #endif
-	assert(((intptr_t)resource & 0xffff0000) == 0); // ãˆÊƒ[ƒh‚ª0‚È‚ç•¶š—ñ‚Å‚Í‚È‚­ƒŠƒ\[ƒX”Ô†‚Æ‚İ‚È‚³‚ê‚é(Win32API‚Ìd—l)
-	if (Textures.find((intptr_t)resource) != Textures.end()) { // Šù‚Éƒ[ƒhÏ‚İ‚ÌƒeƒNƒXƒ`ƒƒ
+	assert(((intptr_t)resource & 0xffff0000) == 0); // ä¸Šä½ãƒ¯ãƒ¼ãƒ‰ãŒ0ãªã‚‰æ–‡å­—åˆ—ã§ã¯ãªããƒªã‚½ãƒ¼ã‚¹ç•ªå·ã¨ã¿ãªã•ã‚Œã‚‹(Win32APIã®ä»•æ§˜)
+	if (Textures.find((intptr_t)resource) != Textures.end()) { // æ—¢ã«ãƒ­ãƒ¼ãƒ‰æ¸ˆã¿ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 		Textures[(intptr_t)resource]->AddRef();
 #endif
 		*texture = Textures[(intptr_t)resource];
 		return;
-	} else { // ƒ[ƒh‚³‚ê‚Ä‚¢‚È‚¢ê‡
+	} else { // ãƒ­ãƒ¼ãƒ‰ã•ã‚Œã¦ã„ãªã„å ´åˆ
 #ifdef _WIN32
 		HRSRC Resource = FindResource(GraphicDLL, resource, MAKEINTRESOURCE(PNG_FILE));
 		HGLOBAL ResourceMem = LoadResource(GraphicDLL, Resource);
@@ -52,17 +52,17 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 			*texture = Textures[(intptr_t)resource];
 			return; // Congratulations, your texture has been loaded.
 		case D3DERR_NOTAVAILABLE:
-			throw _T("ƒeƒNƒXƒ`ƒƒ‚Ì¶¬‚É¸”s‚µ‚Ü‚µ‚½B");
+			throw _T("ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚");
 		case D3DERR_OUTOFVIDEOMEMORY:
-			throw _T("ƒeƒNƒXƒ`ƒƒ‚Ì¶¬‚É¸”s‚µ‚Ü‚µ‚½BVRAM‚ª‘«‚è‚Ü‚¹‚ñB");
+			throw _T("ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚VRAMãŒè¶³ã‚Šã¾ã›ã‚“ã€‚");
 		case D3DERR_INVALIDCALL:
-			throw _T("ƒeƒNƒXƒ`ƒƒ‚Ì¶¬‚É¸”s‚µ‚Ü‚µ‚½Bƒpƒ‰ƒ[ƒ^‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñB");
+			throw _T("ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“ã€‚");
 		case D3DXERR_INVALIDDATA:
-			throw _T("ƒeƒNƒXƒ`ƒƒ‚Ì¶¬‚É¸”s‚µ‚Ü‚µ‚½Bƒf[ƒ^‚ªˆÙí‚Å‚·B");
+			throw _T("ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚ãƒ‡ãƒ¼ã‚¿ãŒç•°å¸¸ã§ã™ã€‚");
 		case E_OUTOFMEMORY:
-			throw _T("ƒeƒNƒXƒ`ƒƒ‚Ì¶¬‚É¸”s‚µ‚Ü‚µ‚½Bƒƒ‚ƒŠ‚ª‘«‚è‚Ü‚¹‚ñB");
+			throw _T("ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚ãƒ¡ãƒ¢ãƒªãŒè¶³ã‚Šã¾ã›ã‚“ã€‚");
 		default: // This may not happen...
-			throw _T("ƒeƒNƒXƒ`ƒƒ‚Ì¶¬‚É¸”s‚µ‚Ü‚µ‚½BŒ´ˆö•s–¾‚ÌƒGƒ‰[‚Å‚·B");
+			throw _T("ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚åŸå› ä¸æ˜ã®ã‚¨ãƒ©ãƒ¼ã§ã™ã€‚");
 		}
 #else
 		Textures[(intptr_t)resource] = 0;
@@ -103,47 +103,47 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		return;
 #endif
 #else /* _WIN32 */
-		/* ƒeƒNƒXƒ`ƒƒ‚Ì‰¼‰Šú‰» */
+		/* ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ä»®åˆæœŸåŒ– */
 		Textures[(intptr_t)resource] = 0;
 		glEnable(GL_TEXTURE_2D);
 		glGenTextures(1, &Textures[(intptr_t)resource]);
 		TextureWidth[Textures[(intptr_t)resource]] =
 		TextureHeight[Textures[(intptr_t)resource]] = 0;
 		glBindTexture(GL_TEXTURE_2D, Textures[(intptr_t)resource]);
-		/* ƒtƒ@ƒCƒ‹‚ğƒI[ƒvƒ“ */
+		/* ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚ªãƒ¼ãƒ—ãƒ³ */
 		std::string fileName = dataFileName((intptr_t)resource);
 		CodeConv::tstring fileNameT = CodeConv::EnsureTStr(fileName);
 		FILE* pngFile = fopen(fileName.c_str(), "rb");
 		if (!pngFile)
-			throw (CodeConv::tstring(_T("fopen()¸”sBƒeƒNƒXƒ`ƒƒ‰æ‘œ ")) + fileNameT + CodeConv::tstring(_T(" ‚ª“Ç‚İ‚ß‚Ü‚¹‚ñ‚Å‚µ‚½B"))).c_str();
-		/* ƒVƒOƒlƒ`ƒƒ‚ÌŠm”F */
+			throw (CodeConv::tstring(_T("fopen()å¤±æ•—ã€‚ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”»åƒ ")) + fileNameT + CodeConv::tstring(_T(" ãŒèª­ã¿è¾¼ã‚ã¾ã›ã‚“ã§ã—ãŸã€‚"))).c_str();
+		/* ã‚·ã‚°ãƒãƒãƒ£ã®ç¢ºèª */
 		unsigned char header[8];
 		fread(header, 1, 8, pngFile);
 		if (png_sig_cmp(header, 0, 8)) {
 			fclose(pngFile);
-			throw (fileNameT + CodeConv::tstring(_T(" ‚ÍPNGƒtƒ@ƒCƒ‹‚Å‚Í‚ ‚è‚Ü‚¹‚ñI"))).c_str();
+			throw (fileNameT + CodeConv::tstring(_T(" ã¯PNGãƒ•ã‚¡ã‚¤ãƒ«ã§ã¯ã‚ã‚Šã¾ã›ã‚“ï¼"))).c_str();
 		}
-		/* “Ç‚İ‚İ€”õ */
+		/* èª­ã¿è¾¼ã¿æº–å‚™ */
 		png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 		if (!pngPtr) {
 			fclose(pngFile);
-			throw _T("png_create_read_struct¸”sII");
+			throw _T("png_create_read_structå¤±æ•—ï¼ï¼");
 		}
 		png_infop infoPtr = png_create_info_struct(pngPtr);
 		if (!infoPtr) {
 			png_destroy_read_struct(&pngPtr, nullptr, nullptr);
 			fclose(pngFile);
-			throw _T("png_create_info_struct¸”sII");
+			throw _T("png_create_info_structå¤±æ•—ï¼ï¼");
 		}
-		if (setjmp(png_jmpbuf(pngPtr))) { /* C++‚È‚Ì‚Ésetjmp‚Æ‚©Š¨•Ù‚µ‚Ä‚­‚êB */
+		if (setjmp(png_jmpbuf(pngPtr))) { /* C++ãªã®ã«setjmpã¨ã‹å‹˜å¼ã—ã¦ãã‚Œã€‚ */
 			png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
 			fclose(pngFile);
-			throw (fileNameT + CodeConv::tstring(_T(" ‚Ì“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½"))).c_str();
+			throw (fileNameT + CodeConv::tstring(_T(" ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ"))).c_str();
 		}
-		/* ƒtƒ@ƒCƒ‹ƒ|ƒCƒ“ƒ^‚ğ“n‚· */
+		/* ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿ã‚’æ¸¡ã™ */
 		png_init_io(pngPtr, pngFile);
 		png_set_sig_bytes(pngPtr, 8);
-		/* “Ç‚İ‚İ */
+		/* èª­ã¿è¾¼ã¿ */
 		png_read_png(pngPtr, infoPtr,
 			PNG_TRANSFORM_PACKING | PNG_TRANSFORM_STRIP_16,
 			nullptr);
@@ -154,15 +154,15 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		char* imageDat = new char[pngWidth * pngHeight * 4];
 		for (int y = 0; y < pngHeight; ++y) {
 			switch (pngChannels) {
-			case 4: /* RGBAƒJƒ‰[ */
+			case 4: /* RGBAã‚«ãƒ©ãƒ¼ */
 				memcpy(
 					imageDat + y * pngWidth * pngChannels,
-					rows[y /* Linux/libpng‚¾‚Æ‹t‚É‚·‚é•K—v‚ª‚È‚¢H */],
+					rows[y /* Linux/libpngã ã¨é€†ã«ã™ã‚‹å¿…è¦ãŒãªã„ï¼Ÿ */],
 					pngWidth * pngChannels);
 				break;
-			case 2: /* ƒAƒ‹ƒtƒ@•t‚«ƒOƒŒ[ƒXƒP[ƒ‹ */
+			case 2: /* ã‚¢ãƒ«ãƒ•ã‚¡ä»˜ãã‚°ãƒ¬ãƒ¼ã‚¹ã‚±ãƒ¼ãƒ« */
 				for (int x = 0; x < pngWidth; ++x) {
-					/* RGBA‚Ì‡‚ÉŠi”[ */
+					/* RGBAã®é †ã«æ ¼ç´ */
 					imageDat[    (y * pngWidth + x) * 4] =
 						imageDat[(y * pngWidth + x) * 4 + 1] =
 						imageDat[(y * pngWidth + x) * 4 + 2] = rows[y][x * 2];
@@ -170,7 +170,7 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 				}
 				break;
 			default:
-				assert(false); // ƒAƒ‹ƒtƒ@ƒ`ƒƒƒ“ƒlƒ‹–³‚«‚à‚ÌƒXƒvƒ‰ƒCƒg‰æ‘œ‚Ì‘Ši‚È‚µI
+				assert(false); // ã‚¢ãƒ«ãƒ•ã‚¡ãƒãƒ£ãƒ³ãƒãƒ«ç„¡ãã‚‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆç”»åƒã®è³‡æ ¼ãªã—ï¼
 			}
 		}
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -181,7 +181,7 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 			GL_RGBA, GL_UNSIGNED_BYTE, imageDat);
 		TextureWidth[Textures[(intptr_t)resource]] = pngWidth;
 		TextureHeight[Textures[(intptr_t)resource]] = pngHeight;
-		/* ‰ğ•ú */
+		/* è§£æ”¾ */
 		delete[] imageDat;
 		png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
 		fclose(pngFile);
@@ -192,7 +192,7 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 
 void UnloadAllTextures() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-	// Direct3D‚Ì‚İBOpenGL‚Å‚Í•s—vH
+	// Direct3Dã®ã¿ã€‚OpenGLã§ã¯ä¸è¦ï¼Ÿ
 	for (const auto& k : Textures) {
 		ULONG refs = k.second->Release();
 		CodeConv::tostringstream o;

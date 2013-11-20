@@ -1,4 +1,4 @@
-#include "logger.h"
+ï»¿#include "logger.h"
 #include <windows.h>
 #include <process.h>
 #include <string>
@@ -8,7 +8,7 @@
 #include <fstream>
 #include "../common/mutex.h"
 
-/* ŠÈˆÕƒƒMƒ“ƒOƒc[ƒ‹ */
+/* ç°¡æ˜“ãƒ­ã‚®ãƒ³ã‚°ãƒ„ãƒ¼ãƒ« */
 
 //#define SYNCMODE
 
@@ -27,16 +27,16 @@ static HANDLE hWriteFinishEvent;
 
 static deque<LogMsg> msgQueue;
 
-DWORD Logger::LoggerThread(LPVOID lp) { // ƒƒMƒ“ƒOÀs—pƒXƒŒƒbƒh
+DWORD Logger::LoggerThread(LPVOID lp) { // ãƒ­ã‚®ãƒ³ã‚°å®Ÿè¡Œç”¨ã‚¹ãƒ¬ãƒƒãƒ‰
 	while (1) {
-		/* ‘Ò‹@ */
+		/* å¾…æ©Ÿ */
 		WaitForSingleObject(hEvent, INFINITE);
 		while (1) {
-			/* ƒLƒ…[‚©‚çpop‚·‚é */
+			/* ã‚­ãƒ¥ãƒ¼ã‹ã‚‰popã™ã‚‹ */
 			LogMsg currentLogMsg = TraceMsg(_T(""));
 			MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(cs);
 			bool finished = [&currentLogMsg]() -> bool {
-				if (msgQueue.empty()) { // ƒLƒ…[‚ª‹ó‚¾‚Á‚½‚ç”²‚¯‚é
+				if (msgQueue.empty()) { // ã‚­ãƒ¥ãƒ¼ãŒç©ºã ã£ãŸã‚‰æŠœã‘ã‚‹
 #ifdef SYNCMODE
 					SetEvent(hWriteFinishEvent);
 #endif
@@ -47,14 +47,14 @@ DWORD Logger::LoggerThread(LPVOID lp) { // ƒƒMƒ“ƒOÀs—pƒXƒŒƒbƒh
 				return false;
 			} ();
 			lock.unlock();
-			if (finished) break; // ƒLƒ…[‚ª‹ó‚¾‚Á‚½‚ç”²‚¯‚é
-			/* ƒƒbƒZ[ƒW‚ğ‘‚«o‚· */
+			if (finished) break; // ã‚­ãƒ¥ãƒ¼ãŒç©ºã ã£ãŸã‚‰æŠœã‘ã‚‹
+			/* ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ›¸ãå‡ºã™ */
 			*logStream << EncodeStr(currentLogMsg.toString()) << endl;
 		}
 	}
 }
 
-void Logger::enqueue(LogMsg msgdat) { // ƒLƒ…[‚Épush‚·‚é
+void Logger::enqueue(LogMsg msgdat) { // ã‚­ãƒ¥ãƒ¼ã«pushã™ã‚‹
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(cs);
 	msgQueue.push_back(LogMsg(msgdat));
 	lock.unlock();
@@ -66,7 +66,7 @@ void Logger::enqueue(LogMsg msgdat) { // ƒLƒ…[‚Épush‚·‚é
 
 extern "C" {
 
-/* ‰Šú‰»ˆ— */
+/* åˆæœŸåŒ–å‡¦ç† */
 
 __declspec(dllexport) void initLogger(const char* fname) {
 	logger = new Logger();
@@ -86,7 +86,7 @@ __declspec(dllexport) void initLogger(const char* fname) {
 	ResumeThread(hThread);
 }
 
-/* ƒƒbƒZ[ƒW‚ğƒLƒ…[‚É“o˜^ */
+/* ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ã‚­ãƒ¥ãƒ¼ã«ç™»éŒ² */
 
 __declspec(dllexport) void trace(LPCTSTR msg) { logger->enqueue(TraceMsg(msg)); }
 __declspec(dllexport) void debug(LPCTSTR msg) { logger->enqueue(DebugMsg(msg)); }

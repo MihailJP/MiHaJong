@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <cstdint>
 #include <type_traits>
@@ -7,21 +7,21 @@
 namespace mihajong_structs {
 
 struct MachihaiTileInfo {
-	bool MachihaiFlag; // ‘Ò‚¿”v‚É‚È‚Á‚Ä‚¢‚é‚©‚Ìƒtƒ‰ƒO
-	int8_t MachihaiCount; // ‘Ò‚¿”v‚Ìc‚è–‡”
+	bool MachihaiFlag; // å¾…ã¡ç‰Œã«ãªã£ã¦ã„ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
+	int8_t MachihaiCount; // å¾…ã¡ç‰Œã®æ®‹ã‚Šæšæ•°
 };
 static_assert(std::is_pod<MachihaiTileInfo>::value, "MachihaiTileInfo is not POD");
 
 template struct InfoByTile<MachihaiTileInfo>;
-struct MachihaiInfo { // ‘Ò‚¿”v‚Æ‚©‚Ìî•ñ‚ğŠi”[(chkFuritenŠÖ”—p)
-	bool FuritenFlag; // ƒtƒŠƒeƒ“‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
-	InfoByTile<MachihaiTileInfo> Machihai; // ‘Ò‚¿”vî•ñ
-	int8_t MachihaiTotal; // ‘Ò‚¿”v‚Ì‡Œv–‡”
-	int8_t MachiMen; // ‰½–Ê‘Ò‚¿H
+struct MachihaiInfo { // å¾…ã¡ç‰Œã¨ã‹ã®æƒ…å ±ã‚’æ ¼ç´(chkFuritené–¢æ•°ç”¨)
+	bool FuritenFlag; // ãƒ•ãƒªãƒ†ãƒ³ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
+	InfoByTile<MachihaiTileInfo> Machihai; // å¾…ã¡ç‰Œæƒ…å ±
+	int8_t MachihaiTotal; // å¾…ã¡ç‰Œã®åˆè¨ˆæšæ•°
+	int8_t MachiMen; // ä½•é¢å¾…ã¡ï¼Ÿ
 };
 static_assert(std::is_pod<MachihaiInfo>::value, "MachihaiInfo is not POD");
 
-struct TileStatus { // gettilestatus—p
+struct TileStatus { // gettilestatusç”¨
 	bool isExistent, canFormQuad,
 		seqMidWait, seqDoubleSideWait, seqSingleSideWait,
 		formsPair, formsSequence, formsTriplet;

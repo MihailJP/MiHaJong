@@ -1,4 +1,4 @@
-#include "button.h"
+ï»¿#include "button.h"
 #include "../loadtex.h"
 #include "../resource.h"
 #include <cassert>
@@ -45,7 +45,7 @@ void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat, int X, int Y, unsi
 
 void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat) {
 	if (mySprites.size() <= ButtonID)
-		throw _T("ƒ{ƒ^ƒ“‚ª‰Šú‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+		throw _T("ãƒœã‚¿ãƒ³ãŒåˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã›ã‚“");
 	mySprites[ButtonID] = std::make_tuple(stat,
 		std::get<1>(mySprites[ButtonID]), std::get<2>(mySprites[ButtonID]),
 		std::get<3>(mySprites[ButtonID]), std::get<4>(mySprites[ButtonID]),
@@ -66,7 +66,7 @@ void ButtonPic::Render() {
 		D3DXMatrixTranslation(&mat2, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
 #else
 		glPushMatrix(); glLoadIdentity();
-		// DirectX‚Æ‚ÍŠî€‚ªˆÙ‚È‚éH@OpenGL‚Ìê‡‚±‚±‚Í’PˆÊs—ñ‚Ì‚Ü‚Ü‚Å‚æ‚¢
+		// DirectXã¨ã¯åŸºæº–ãŒç•°ãªã‚‹ï¼Ÿã€€OpenGLã®å ´åˆã“ã“ã¯å˜ä½è¡Œåˆ—ã®ã¾ã¾ã§ã‚ˆã„
 		TransformMatrix mat; glGetFloatv(GL_MODELVIEW_MATRIX, &mat[0]);
 		glPopMatrix();
 #endif

@@ -1,8 +1,8 @@
-#include "discard.h"
+ï»¿#include "discard.h"
 
 #include "gametbl.h"
 
-/* ]—ˆ‚Ì‘Å”vƒR[ƒh‚É’¼‚· */
+/* å¾“æ¥ã®æ‰“ç‰Œã‚³ãƒ¼ãƒ‰ã«ç›´ã™ */
 int DiscardTileNum::toSingleInt() const {
 	switch (this->type) {
 		case Agari: return -1;
@@ -11,7 +11,7 @@ int DiscardTileNum::toSingleInt() const {
 		default: return (int)this->type * TypeStep + (int)this->id;
 	}
 }
-/* ]—ˆ‚Ì‘Å”vƒR[ƒh‚©‚ç•ÏŠ· */
+/* å¾“æ¥ã®æ‰“ç‰Œã‚³ãƒ¼ãƒ‰ã‹ã‚‰å¤‰æ› */
 DiscardTileNum DiscardTileNum::fromSingleInt(int val) {
 	DiscardTileNum discardID;
 	switch (val) {

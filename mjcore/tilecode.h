@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <cstdint>
 #ifdef MJCORE_EXPORTS
@@ -10,7 +10,7 @@
 
 #include "../common/tilecode.h"
 
-// ”v‚Ìí—Ş
+// ç‰Œã®ç¨®é¡
 #define TileCodeMaximum      mihajong_structs::TileCodeMaximum
 #define TileSuitStep         mihajong_structs::TileSuitStep
 #define TILE_NUMERAL_COLORS    mihajong_structs::TileNumeralColors

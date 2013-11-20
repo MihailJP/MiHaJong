@@ -1,4 +1,4 @@
-#include "server.h"
+ï»¿#include "server.h"
 #include <climits>
 #ifndef _WIN32
 #include <unistd.h>
@@ -10,21 +10,21 @@ namespace mihajong_socket {
 namespace server {
 	starter* starterThread = nullptr;
 	unsigned int NumberOfPlayers = 4;
-	CodeConv::tstring getString(unsigned int socketID) { // •¶š—ñ‚ğæ“¾(“¯Šú)
+	CodeConv::tstring getString(unsigned int socketID) { // æ–‡å­—åˆ—ã‚’å–å¾—(åŒæœŸ)
 		std::string tmpString; unsigned int l = 0u;
-		while (true) { // •¶š—ñŠJnƒVƒOƒlƒ`ƒƒ‚ğó‚¯æ‚é
+		while (true) { // æ–‡å­—åˆ—é–‹å§‹ã‚·ã‚°ãƒãƒãƒ£ã‚’å—ã‘å–ã‚‹
 			if (sockets[socketID]->syncgetc() == protocol::StartString_Signature)
 				break;
 		}
-		l = sockets[socketID]->syncgetc(); // •¶š—ñ‚Ì’·‚³‚ğó‚¯æ‚é
+		l = sockets[socketID]->syncgetc(); // æ–‡å­—åˆ—ã®é•·ã•ã‚’å—ã‘å–ã‚‹
 		unsigned char tmpchr[sizeof(int)] = {0};
-		for (unsigned int sp = 0; sp < l; ++sp) { // •¶š—ñ‚ğóM‚·‚é
+		for (unsigned int sp = 0; sp < l; ++sp) { // æ–‡å­—åˆ—ã‚’å—ä¿¡ã™ã‚‹
 			tmpchr[0] = sockets[socketID]->syncgetc();
 			tmpString += std::string(reinterpret_cast<char*>(tmpchr));
 		}
 		return CodeConv::DecodeStr(tmpString);
 	}
-	void putString(unsigned int socketID, const CodeConv::tstring& sendingStr) { // •¶š—ñ‚ğ‘—M
+	void putString(unsigned int socketID, const CodeConv::tstring& sendingStr) { // æ–‡å­—åˆ—ã‚’é€ä¿¡
 		sockets[socketID]->putc(protocol::StartString_Signature);
 		unsigned strsz = CodeConv::EncodeStr(sendingStr).length();
 		if (strsz > UCHAR_MAX) {
@@ -38,7 +38,7 @@ namespace server {
 
 	// ---------------------------------------------------------------------
 
-	starter::starter (const CodeConv::tstring& InputPlayerName, unsigned short port, const char* const * const rule) { // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	starter::starter (const CodeConv::tstring& InputPlayerName, unsigned short port, const char* const * const rule) { // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		terminated = finished = false;
 		playerName[0] = CodeConv::tstring(_T("[A]")) + InputPlayerName;
 		playerName[1] = CodeConv::tstring(_T("[b]COM"));
@@ -55,7 +55,7 @@ namespace server {
 
 	// ---------------------------------------------------------------------
 
-	int starter::preparationThread () { // Ú‘±‚ğ‘Ò‚¿AÚ‘±ˆ—‚ğ‚·‚é
+	int starter::preparationThread () { // æ¥ç¶šã‚’å¾…ã¡ã€æ¥ç¶šå‡¦ç†ã‚’ã™ã‚‹
 		sockets[0] = new Sock(portnum);
 		CurrentConnection = 1;
 		while (!terminated) {
@@ -63,59 +63,59 @@ namespace server {
 				sockets[0]->putc(CurrentConnection + 1);
 				delete sockets[0]; sockets[0] = nullptr;
 				sockets[CurrentConnection] = new Sock(portnum + CurrentConnection);
-				sockets[CurrentConnection]->wait_until_connected(); // Ú‘±‚ğ‘Ò‚Â
-				TCHAR tmpsignature[] = _T("[A]"); tmpsignature[1] += CurrentConnection; // ‰pš
+				sockets[CurrentConnection]->wait_until_connected(); // æ¥ç¶šã‚’å¾…ã¤
+				TCHAR tmpsignature[] = _T("[A]"); tmpsignature[1] += CurrentConnection; // è‹±å­—
 				playerName[CurrentConnection] = CodeConv::tstring(tmpsignature) + getString(CurrentConnection);
-				sockets[0] = new Sock(portnum); // Ä“xlistenŠJn
+				sockets[0] = new Sock(portnum); // å†åº¦listené–‹å§‹
 				++CurrentConnection;
 			}
 			if (CurrentConnection >= NumberOfPlayers) break;
 			threadSleep(50); // Yield
 		}
-		delete sockets[0]; sockets[0] = nullptr; // ‘Ò‹@—p‚Ìƒ\ƒPƒbƒg‚ğ•Â‚¶‚é
+		delete sockets[0]; sockets[0] = nullptr; // å¾…æ©Ÿç”¨ã®ã‚½ã‚±ãƒƒãƒˆã‚’é–‰ã˜ã‚‹
 		send(protocol::Server_StartGame_Signature);
 		for (unsigned int i = 0; i < NumberOfPlayers; ++i)
-			sendstr(playerName[i]); // –¼‘O‚ğ‘—M
+			sendstr(playerName[i]); // åå‰ã‚’é€ä¿¡
 		for (unsigned i = 0; i < RULE_LINES; ++i)
-			sendstr(CodeConv::EnsureTStr(ruleConf[i])); // ƒ‹[ƒ‹‚ğ‘—M
+			sendstr(CodeConv::EnsureTStr(ruleConf[i])); // ãƒ«ãƒ¼ãƒ«ã‚’é€ä¿¡
 		finished = true;
 		return 0;
 	}
 
 	// ---------------------------------------------------------------------
 
-	void starter::initiate (starter* inst) { // CreateThread()‚É“n‚·ˆø”—p
+	void starter::initiate (starter* inst) { // CreateThread()ã«æ¸¡ã™å¼•æ•°ç”¨
 		inst->preparationThread();
 	}
-	void starter::startThread () { // ƒXƒŒƒbƒh‚ğŠJn‚·‚é
+	void starter::startThread () { // ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’é–‹å§‹ã™ã‚‹
 		myThread = THREADLIB::thread(initiate, this);
 	}
 
-	void starter::terminate () { // ‚·‚®‚ÉŠJn
+	void starter::terminate () { // ã™ãã«é–‹å§‹
 		terminated = true;
 	}
-	bool starter::isFinished () { // ‘Ò‹@—pƒXƒŒƒbƒh‚ªI‚í‚Á‚½‚©‚Ç‚¤‚©
+	bool starter::isFinished () { // å¾…æ©Ÿç”¨ã‚¹ãƒ¬ãƒƒãƒ‰ãŒçµ‚ã‚ã£ãŸã‹ã©ã†ã‹
 		return finished;
 	}
-	unsigned int starter::chkCurrentConnection () { // Œ»İ‚ÌÚ‘±”
+	unsigned int starter::chkCurrentConnection () { // ç¾åœ¨ã®æ¥ç¶šæ•°
 		return CurrentConnection;
 	}
-	CodeConv::tstring starter::getPlayerName (unsigned id) { // ƒvƒŒƒCƒ„[–¼
+	CodeConv::tstring starter::getPlayerName (unsigned id) { // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å
 		return playerName[id];
 	}
 
-	DLL void start (LPCTSTR const name, int port, int players, const char* const * const rule) { // ƒT[ƒo[‚ğŠJn‚³‚¹‚é(DLL)
+	DLL void start (LPCTSTR const name, int port, int players, const char* const * const rule) { // ã‚µãƒ¼ãƒãƒ¼ã‚’é–‹å§‹ã•ã›ã‚‹(DLL)
 		NumberOfPlayers = (unsigned int)players;
 		starterThread = new starter(name, (unsigned short)port, rule);
 		starterThread->startThread();
 	}
-	DLL void doStart() { // Ú‘±‘Ò‹@‚ğ‚â‚ßA’¼‚¿‚ÉŠJn‚·‚é
+	DLL void doStart() { // æ¥ç¶šå¾…æ©Ÿã‚’ã‚„ã‚ã€ç›´ã¡ã«é–‹å§‹ã™ã‚‹
 		starterThread->terminate();
 	}
-	DLL int isStartingFinished () { // ‘Ò‹@—pƒXƒŒƒbƒh‚ªI‚í‚Á‚½‚©‚Ç‚¤‚©
+	DLL int isStartingFinished () { // å¾…æ©Ÿç”¨ã‚¹ãƒ¬ãƒƒãƒ‰ãŒçµ‚ã‚ã£ãŸã‹ã©ã†ã‹
 		return starterThread->isFinished() ? 1 : 0;
 	}
-	DLL int chkCurrentConnection () { // Œ»İ‚ÌÚ‘±”
+	DLL int chkCurrentConnection () { // ç¾åœ¨ã®æ¥ç¶šæ•°
 		return (int)starterThread->chkCurrentConnection();
 	}
 	DLL void getPlayerNames (LPTSTR playerName1, LPTSTR playerName2, LPTSTR playerName3, LPTSTR playerName4, unsigned bufsz) {
@@ -131,40 +131,40 @@ namespace server {
 		_tcsncpy(playerName4, starterThread->getPlayerName(3).c_str(), bufsz);
 #endif
 	}
-	DLL void releaseobj () { // ƒfƒXƒgƒ‰ƒNƒ^‚ğŒÄ‚Ô‚¾‚¯
+	DLL void releaseobj () { // ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’å‘¼ã¶ã ã‘
 		delete starterThread; starterThread = nullptr;
 	}
 
 	// ---------------------------------------------------------------------
 
-	DLL void send (unsigned char SendingMsg) { // ƒT[ƒo[‚©‚ç‚Ì‘—M
+	DLL void send (unsigned char SendingMsg) { // ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ã®é€ä¿¡
 		for (unsigned int i = 1; i < NumberOfPlayers; ++i) {
 			try {
 				if (sockets[i]&&(sockets[i]->connected()))
 					sockets[i]->putc(SendingMsg);
 			} catch (socket_error& err) {
 				CodeConv::tostringstream o;
-				o << _T("ƒNƒ‰ƒCƒAƒ“ƒg [") << i << _T("] ‚Ö‚Ì‘—M‚É¸”s ƒGƒ‰[ƒR[ƒh [") << err.error_code() << _T(']');
+				o << _T("ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆ [") << i << _T("] ã¸ã®é€ä¿¡ã«å¤±æ•— ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ [") << err.error_code() << _T(']');
 				error(o.str().c_str());
 			}
 		}
 	}
-	void sendstr (const CodeConv::tstring& sendingStr) { // ƒT[ƒo[‚©‚ç‚Ì•¶š—ñ‘—M
+	void sendstr (const CodeConv::tstring& sendingStr) { // ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ã®æ–‡å­—åˆ—é€ä¿¡
 		for (unsigned int i = 1; i < NumberOfPlayers; ++i)
 			if (sockets[i]&&(sockets[i]->connected())) putString(i, sendingStr);
 	}
-	DLL void send (int SendingMsg, void*) { // ƒT[ƒo[‚©‚ç‚Ì‘—M
+	DLL void send (int SendingMsg, void*) { // ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ã®é€ä¿¡
 		send((unsigned char)SendingMsg);
 	}
 
 	// ---------------------------------------------------------------------
 
-	std::array<unsigned, 3> ServerCheckRotation; // ƒNƒ‰ƒCƒAƒ“ƒg‚Ì“Ç‚İo‚µ—Dæ‡ˆÊ
+	std::array<unsigned, 3> ServerCheckRotation; // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã®èª­ã¿å‡ºã—å„ªå…ˆé †ä½
 
-	DLL void rotation_reset () { // æ“¾—Dæ‡ˆÊ‚ÌƒŠƒZƒbƒg
+	DLL void rotation_reset () { // å–å¾—å„ªå…ˆé †ä½ã®ãƒªã‚»ãƒƒãƒˆ
 		for (unsigned i = 0; i < 3; ++i) ServerCheckRotation[i] = i + 1;
 	}
-	DLL void receive (volatile int* const ServerReceived, int* const ReceivedMsg) { // æ“¾‚·‚é
+	DLL void receive (volatile int* const ServerReceived, int* const ReceivedMsg) { // å–å¾—ã™ã‚‹
 		*ServerReceived = 0; *ReceivedMsg = 1023; bool finished = false;
 		for (unsigned i = 0; i < (NumberOfPlayers - 1); ++i) {
 			if (sockets[ServerCheckRotation[i]] != nullptr) {
@@ -183,11 +183,11 @@ namespace server {
 					*ReceivedMsg = 1023;
 					finished = true;
 				}
-				// ‚©‚Â‚Ä‚Í‚±‚±‚ÅƒƒO‚ğ‘—‚Á‚Ä‚¢‚½
+				// ã‹ã¤ã¦ã¯ã“ã“ã§ãƒ­ã‚°ã‚’é€ã£ã¦ã„ãŸ
 			}
 			if (finished) break;
 		}
-		{ // æ“¾—Dæ‡ˆÊ‚ğƒVƒtƒg
+		{ // å–å¾—å„ªå…ˆé †ä½ã‚’ã‚·ãƒ•ãƒˆ
 			unsigned tmp = ServerCheckRotation[0];
 			ServerCheckRotation[0] = ServerCheckRotation[1];
 			ServerCheckRotation[1] = ServerCheckRotation[2];

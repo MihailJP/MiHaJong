@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <type_traits>
 #ifdef _WIN32
@@ -10,28 +10,28 @@
 namespace mihajong_structs {
 
 struct YakuResult {
-	static const int SemiMangan = 12500; // ”¼–ŠÑ
-	static const int LimitMinus = 100; // ƒ}ƒCƒiƒX–|‚Ì‰ºŒÀ
-	static const unsigned int nameBufSize = 1024; // –¼‘Oƒoƒbƒtƒ@‚ÌƒTƒCƒY
-	bool isValid; // ˜a—¹‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
-	int BasePoints; // •„
-	int CoreHan, CoreSemiMangan; // –|
-	int BonusHan, BonusSemiMangan; // –|i”›‚è‚ğ–‚½‚³‚È‚¢j
-	int DoraQuantity; // ƒhƒ‰‚Ì”
-	int UraDoraQuantity; // — ƒhƒ‰‚Ì”
-	int AkaDoraQuantity; // Ôƒhƒ‰‚Ì”
-	int AoDoraQuantity; // Âƒhƒ‰‚Ì”
-	int AliceDora; // ƒAƒŠƒXƒhƒ‰‚Ì”
-	int FlowerQuantity; // ‰Ô”v‚Ì”
-	LargeNum AgariPoints; // ‡Œv˜a—¹“_
+	static const int SemiMangan = 12500; // åŠæº€è²«
+	static const int LimitMinus = 100; // ãƒã‚¤ãƒŠã‚¹ç¿»ã®ä¸‹é™
+	static const unsigned int nameBufSize = 1024; // åå‰ãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
+	bool isValid; // å’Œäº†ã£ã¦ã„ã‚‹ã‹ã©ã†ã‹
+	int BasePoints; // ç¬¦
+	int CoreHan, CoreSemiMangan; // ç¿»
+	int BonusHan, BonusSemiMangan; // ç¿»ï¼ˆç¸›ã‚Šã‚’æº€ãŸã•ãªã„ï¼‰
+	int DoraQuantity; // ãƒ‰ãƒ©ã®æ•°
+	int UraDoraQuantity; // è£ãƒ‰ãƒ©ã®æ•°
+	int AkaDoraQuantity; // èµ¤ãƒ‰ãƒ©ã®æ•°
+	int AoDoraQuantity; // é’ãƒ‰ãƒ©ã®æ•°
+	int AliceDora; // ã‚¢ãƒªã‚¹ãƒ‰ãƒ©ã®æ•°
+	int FlowerQuantity; // èŠ±ç‰Œã®æ•°
+	LargeNum AgariPoints; // åˆè¨ˆå’Œäº†ç‚¹
 	TCHAR yakuNameList[nameBufSize];
 	TCHAR yakuValList[nameBufSize];
 	TCHAR yakumanNameList[nameBufSize];
 	TCHAR yakumanValList[nameBufSize];
 	// -----------------------------------------------------------------
-	MeldBuf MianziDat; // –Êq‚É•ª‰ğ‚µ‚½ƒf[ƒ^
+	MeldBuf MianziDat; // é¢å­ã«åˆ†è§£ã—ãŸãƒ‡ãƒ¼ã‚¿
 	// -----------------------------------------------------------------
-	static void Init(YakuResult* const myInstance) { // ƒCƒ“ƒXƒ^ƒ“ƒX‚ğ‰Šú‰»‚·‚é
+	static void Init(YakuResult* const myInstance) { // ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’åˆæœŸåŒ–ã™ã‚‹
 		myInstance->isValid = false;
 		myInstance->BasePoints = 20;
 		myInstance->CoreHan = myInstance->CoreSemiMangan =
@@ -45,7 +45,7 @@ struct YakuResult {
 		memset(myInstance->yakumanNameList, 0, nameBufSize);
 		memset(myInstance->yakumanValList, 0, nameBufSize);
 	}
-	void Init() {Init(this);} // ƒCƒ“ƒXƒ^ƒ“ƒX‚ğ‰Šú‰»‚·‚é
+	void Init() {Init(this);} // ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’åˆæœŸåŒ–ã™ã‚‹
 };
 static_assert(std::is_pod<YakuResult>::value, "YakuResult is not POD");
 

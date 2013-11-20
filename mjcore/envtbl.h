@@ -1,17 +1,17 @@
-#pragma once
+ï»¿#pragma once
 
 #include <cstdint>
 #include <string>
 #include "gametbl.h"
 
-class EnvTable { // ‘ì‚É‚Í’¼ÚŠÖŒW‚È‚¢ƒf[ƒ^ [singleton]
+class EnvTable { // å“ã«ã¯ç›´æ¥é–¢ä¿‚ãªã„ãƒ‡ãƒ¼ã‚¿ [singleton]
 private: // singleton
 	EnvTable();
 	EnvTable(const EnvTable&) = delete; // Delete unexpected copy constructor
 	EnvTable& operator= (const EnvTable&) = delete; // Delete unexpected assign operator
 
 public:
-	// “à•”ƒNƒ‰ƒX‚Æ‚©‚ğ’è‹`‚·‚é
+	// å†…éƒ¨ã‚¯ãƒ©ã‚¹ã¨ã‹ã‚’å®šç¾©ã™ã‚‹
 	class PlayerLabel {
 	public:
 		CodeConv::tstring PlayerName;
@@ -24,7 +24,7 @@ public:
 	};
 	static EnvTable* Instantiate(); // Singleton instance accessor
 
-	// ƒf[ƒ^
+	// ãƒ‡ãƒ¼ã‚¿
 	InfoByPlayer<PlayerLabel> PlayerDat;
 	ClientType GameMode;
 	bool WatchModeFlag;

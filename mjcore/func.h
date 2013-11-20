@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <cstdint>
 #ifdef MJCORE_EXPORTS
@@ -29,17 +29,17 @@ using mihajong_structs::PlayerRankList;
 // -------------------------------------------------------------------------
 
 #ifdef MJCORE_EXPORTS
-/* ‚ ‚éƒvƒŒƒCƒ„[‚É‘Î‚µ‚Äw’è‚µ‚½ƒvƒŒƒCƒ„[‚ª‚Ç‚±(‰º‰ÆA‘Î–ÊAã‰Æ)‚É‚¢‚é‚©’²‚×‚é */
+/* ã‚ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«å¯¾ã—ã¦æŒ‡å®šã—ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒã©ã“(ä¸‹å®¶ã€å¯¾é¢ã€ä¸Šå®¶)ã«ã„ã‚‹ã‹èª¿ã¹ã‚‹ */
 seatRelative inline playerRelative(PlayerID targetPlayer, PlayerID basePlayer) {
 	return (seatRelative)((Players + targetPlayer - basePlayer) % Players);
 }
 
-/* ‚ ‚éƒvƒŒƒCƒ„[‚Ì(‰º‰ÆA‘Î–ÊAã‰Æ)‚ğ’²‚×‚é */
+/* ã‚ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®(ä¸‹å®¶ã€å¯¾é¢ã€ä¸Šå®¶)ã‚’èª¿ã¹ã‚‹ */
 PlayerID inline RelativePositionOf(PlayerID targetPlayer, seatRelative relative) {
 	return (PlayerID)(((int)targetPlayer + (int)relative) % Players);
 }
 
-/* ˆêü‚·‚é‚Ü‚Å‚É•K—v‚Èê‚Ì” */
+/* ä¸€å‘¨ã™ã‚‹ã¾ã§ã«å¿…è¦ãªå ´ã®æ•° */
 inline int roundLoopRate() {
 #ifdef GUOBIAO
 	return 16;
@@ -49,71 +49,71 @@ inline int roundLoopRate() {
 #endif /* GUOBIAO */
 }
 
-/* ‡ˆÊ‚ğŒvZ‚·‚é */
+/* é †ä½ã‚’è¨ˆç®—ã™ã‚‹ */
 PlayerRankList calcRank(const GameTable* const gameStat);
 
-/* •ï‚©‚Ç‚¤‚©‚Ì”»’è */
+/* åŒ…ã‹ã©ã†ã‹ã®åˆ¤å®š */
 bool isPao(const GameTable* const gameStat, PlayerID agariPlayer, PlayerID paoPlayer);
 bool isPaoAgari(const GameTable* const gameStat, PlayerID agariPlayer);
 bool isGotPao(const GameTable* const gameStat, PlayerID paoPlayer);
 PlayerID getPaoPlayer(const GameTable* const gameStat, PlayerID agariPlayer);
 
-/* ƒƒ“‚µ‚½ƒvƒŒƒCƒ„[‚Ì” */
+/* ãƒ­ãƒ³ã—ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ•° */
 int RonPlayers(const GameTable* const gameStat);
 
-/* u“Œ‰Ævu“ì‰Ævu¼‰Ævu–k‰Æv‚Ì•¶š—ñ‚ğ•Ô‚· */
+/* ã€Œæ±å®¶ã€ã€Œå—å®¶ã€ã€Œè¥¿å®¶ã€ã€ŒåŒ—å®¶ã€ã®æ–‡å­—åˆ—ã‚’è¿”ã™ */
 CodeConv::tstring inline windName(seatAbsolute wind) {
 	switch (wind) {
-		case sEast: return CodeConv::tstring(_T("“Œ‰Æ"));
-		case sSouth: return CodeConv::tstring(_T("“ì‰Æ"));
-		case sWest: return CodeConv::tstring(_T("¼‰Æ"));
-		case sNorth: return CodeConv::tstring(_T("–k‰Æ"));
+		case sEast: return CodeConv::tstring(_T("æ±å®¶"));
+		case sSouth: return CodeConv::tstring(_T("å—å®¶"));
+		case sWest: return CodeConv::tstring(_T("è¥¿å®¶"));
+		case sNorth: return CodeConv::tstring(_T("åŒ—å®¶"));
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ˆÙí‚Èˆø”‚Å‚·"));
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ç•°å¸¸ãªå¼•æ•°ã§ã™"));
 			return CodeConv::tstring(_T("????")); break;
 	}
 }
 
-/* u“Œ›‹Çv‚È‚Ç‚Ì•¶š—ñ‚ğ•Ô‚· */
+/* ã€Œæ±â—‹å±€ã€ãªã©ã®æ–‡å­—åˆ—ã‚’è¿”ã™ */
 CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat) {
 	CodeConv::tostringstream roundNameTxt; roundNameTxt.str(_T(""));
 	switch (roundNum / Players) {
-		case 0: roundNameTxt << _T("“Œ"); break;
-		case 1: roundNameTxt << _T("“ì"); break;
-		case 2: roundNameTxt << _T("¼"); break;
-		case 3: roundNameTxt << _T("–k"); break;
-		case 4: roundNameTxt << _T("”’"); break;
-		case 5: roundNameTxt << _T("”­"); break;
-		case 6: roundNameTxt << _T("’†"); break;
+		case 0: roundNameTxt << _T("æ±"); break;
+		case 1: roundNameTxt << _T("å—"); break;
+		case 2: roundNameTxt << _T("è¥¿"); break;
+		case 3: roundNameTxt << _T("åŒ—"); break;
+		case 4: roundNameTxt << _T("ç™½"); break;
+		case 5: roundNameTxt << _T("ç™º"); break;
+		case 6: roundNameTxt << _T("ä¸­"); break;
 		default: 
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ˆÙí‚Èˆø”‚Å‚·Bê•—‚ğ‰ğÍ‚Å‚«‚Ü‚¹‚ñB"));
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ç•°å¸¸ãªå¼•æ•°ã§ã™ã€‚å ´é¢¨ã‚’è§£æã§ãã¾ã›ã‚“ã€‚"));
 			roundNameTxt << _T("??");
 	}
 #ifndef GUOBIAO
 	if (RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game")) {
 		switch (int k = (gameStat->LoopRound * ACTUAL_PLAYERS + roundNum % Players)) {
-			case 0: roundNameTxt << _T("ˆê‹Ç"); break;
-			case 1: roundNameTxt << _T("“ñ‹Ç"); break;
-			case 2: roundNameTxt << _T("O‹Ç"); break;
-			case 3: roundNameTxt << _T("l‹Ç"); break;
-			case 4: roundNameTxt << _T("ŒÜ‹Ç"); break;
-			case 5: roundNameTxt << _T("˜Z‹Ç"); break;
-			case 6: roundNameTxt << _T("µ‹Ç"); break;
-			case 7: roundNameTxt << _T("”ª‹Ç"); break;
-			case 8: roundNameTxt << _T("‹ã‹Ç"); break;
-			case 9: roundNameTxt << _T("\‹Ç"); break;
-			default: roundNameTxt << (k+1) << _T("‹Ç"); break;
+			case 0: roundNameTxt << _T("ä¸€å±€"); break;
+			case 1: roundNameTxt << _T("äºŒå±€"); break;
+			case 2: roundNameTxt << _T("ä¸‰å±€"); break;
+			case 3: roundNameTxt << _T("å››å±€"); break;
+			case 4: roundNameTxt << _T("äº”å±€"); break;
+			case 5: roundNameTxt << _T("å…­å±€"); break;
+			case 6: roundNameTxt << _T("ä¸ƒå±€"); break;
+			case 7: roundNameTxt << _T("å…«å±€"); break;
+			case 8: roundNameTxt << _T("ä¹å±€"); break;
+			case 9: roundNameTxt << _T("åå±€"); break;
+			default: roundNameTxt << (k+1) << _T("å±€"); break;
 		}
 	} else {
 #endif /* GUOBIAO */
 		switch (roundNum % Players) {
-			case 0: roundNameTxt << _T("ˆê‹Ç"); break;
-			case 1: roundNameTxt << _T("“ñ‹Ç"); break;
-			case 2: roundNameTxt << _T("O‹Ç"); break;
-			case 3: roundNameTxt << _T("l‹Ç"); break;
+			case 0: roundNameTxt << _T("ä¸€å±€"); break;
+			case 1: roundNameTxt << _T("äºŒå±€"); break;
+			case 2: roundNameTxt << _T("ä¸‰å±€"); break;
+			case 3: roundNameTxt << _T("å››å±€"); break;
 			default:
-				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ˆÙí‚Èˆø”‚Å‚·B“¯ˆêê‚Ì5‹Ç–ÚˆÈ~‚Å‚·B"));
-				roundNameTxt << _T("??‹Ç"); break;
+				RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ç•°å¸¸ãªå¼•æ•°ã§ã™ã€‚åŒä¸€å ´ã®5å±€ç›®ä»¥é™ã§ã™ã€‚"));
+				roundNameTxt << _T("??å±€"); break;
 		}
 #ifndef GUOBIAO
 	}
@@ -121,45 +121,45 @@ CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat
 	return CodeConv::tstring(roundNameTxt.str());
 }
 
-/* ”v‚Ì–¼‘O‚Ì•¶š—ñ‚ğ•Ô‚· */
+/* ç‰Œã®åå‰ã®æ–‡å­—åˆ—ã‚’è¿”ã™ */
 CodeConv::tstring inline TileName(TileCode tile) {
 	switch (tile) {
-		case CharacterOne:   return CodeConv::tstring(_T("ˆêäİ"));
-		case CharacterTwo:   return CodeConv::tstring(_T("“ñäİ"));
-		case CharacterThree: return CodeConv::tstring(_T("Oäİ"));
-		case CharacterFour:  return CodeConv::tstring(_T("läİ"));
-		case CharacterFive:  return CodeConv::tstring(_T("ŒÜäİ"));
-		case CharacterSix:   return CodeConv::tstring(_T("˜Zäİ"));
-		case CharacterSeven: return CodeConv::tstring(_T("µäİ"));
-		case CharacterEight: return CodeConv::tstring(_T("”ªäİ"));
-		case CharacterNine:  return CodeConv::tstring(_T("‹ãäİ"));
-		case CircleOne:      return CodeConv::tstring(_T("ˆê“›"));
-		case CircleTwo:      return CodeConv::tstring(_T("“ñ“›"));
-		case CircleThree:    return CodeConv::tstring(_T("O“›"));
-		case CircleFour:     return CodeConv::tstring(_T("l“›"));
-		case CircleFive:     return CodeConv::tstring(_T("ŒÜ“›"));
-		case CircleSix:      return CodeConv::tstring(_T("˜Z“›"));
-		case CircleSeven:    return CodeConv::tstring(_T("µ“›"));
-		case CircleEight:    return CodeConv::tstring(_T("”ª“›"));
-		case CircleNine:     return CodeConv::tstring(_T("‹ã“›"));
-		case BambooOne:      return CodeConv::tstring(_T("ˆêõ"));
-		case BambooTwo:      return CodeConv::tstring(_T("“ñõ"));
-		case BambooThree:    return CodeConv::tstring(_T("Oõ"));
-		case BambooFour:     return CodeConv::tstring(_T("lõ"));
-		case BambooFive:     return CodeConv::tstring(_T("ŒÜõ"));
-		case BambooSix:      return CodeConv::tstring(_T("˜Zõ"));
-		case BambooSeven:    return CodeConv::tstring(_T("µõ"));
-		case BambooEight:    return CodeConv::tstring(_T("”ªõ"));
-		case BambooNine:     return CodeConv::tstring(_T("‹ãõ"));
-		case EastWind:       return CodeConv::tstring(_T("“Œ"));
-		case SouthWind:      return CodeConv::tstring(_T("“ì"));
-		case WestWind:       return CodeConv::tstring(_T("¼"));
-		case NorthWind:      return CodeConv::tstring(_T("–k"));
-		case WhiteDragon:    return CodeConv::tstring(_T("”’"));
-		case GreenDragon:    return CodeConv::tstring(_T("á¢"));
-		case RedDragon:      return CodeConv::tstring(_T("’†"));
+		case CharacterOne:   return CodeConv::tstring(_T("ä¸€è¬"));
+		case CharacterTwo:   return CodeConv::tstring(_T("äºŒè¬"));
+		case CharacterThree: return CodeConv::tstring(_T("ä¸‰è¬"));
+		case CharacterFour:  return CodeConv::tstring(_T("å››è¬"));
+		case CharacterFive:  return CodeConv::tstring(_T("äº”è¬"));
+		case CharacterSix:   return CodeConv::tstring(_T("å…­è¬"));
+		case CharacterSeven: return CodeConv::tstring(_T("ä¸ƒè¬"));
+		case CharacterEight: return CodeConv::tstring(_T("å…«è¬"));
+		case CharacterNine:  return CodeConv::tstring(_T("ä¹è¬"));
+		case CircleOne:      return CodeConv::tstring(_T("ä¸€ç­’"));
+		case CircleTwo:      return CodeConv::tstring(_T("äºŒç­’"));
+		case CircleThree:    return CodeConv::tstring(_T("ä¸‰ç­’"));
+		case CircleFour:     return CodeConv::tstring(_T("å››ç­’"));
+		case CircleFive:     return CodeConv::tstring(_T("äº”ç­’"));
+		case CircleSix:      return CodeConv::tstring(_T("å…­ç­’"));
+		case CircleSeven:    return CodeConv::tstring(_T("ä¸ƒç­’"));
+		case CircleEight:    return CodeConv::tstring(_T("å…«ç­’"));
+		case CircleNine:     return CodeConv::tstring(_T("ä¹ç­’"));
+		case BambooOne:      return CodeConv::tstring(_T("ä¸€ç´¢"));
+		case BambooTwo:      return CodeConv::tstring(_T("äºŒç´¢"));
+		case BambooThree:    return CodeConv::tstring(_T("ä¸‰ç´¢"));
+		case BambooFour:     return CodeConv::tstring(_T("å››ç´¢"));
+		case BambooFive:     return CodeConv::tstring(_T("äº”ç´¢"));
+		case BambooSix:      return CodeConv::tstring(_T("å…­ç´¢"));
+		case BambooSeven:    return CodeConv::tstring(_T("ä¸ƒç´¢"));
+		case BambooEight:    return CodeConv::tstring(_T("å…«ç´¢"));
+		case BambooNine:     return CodeConv::tstring(_T("ä¹ç´¢"));
+		case EastWind:       return CodeConv::tstring(_T("æ±"));
+		case SouthWind:      return CodeConv::tstring(_T("å—"));
+		case WestWind:       return CodeConv::tstring(_T("è¥¿"));
+		case NorthWind:      return CodeConv::tstring(_T("åŒ—"));
+		case WhiteDragon:    return CodeConv::tstring(_T("ç™½"));
+		case GreenDragon:    return CodeConv::tstring(_T("ç™¼"));
+		case RedDragon:      return CodeConv::tstring(_T("ä¸­"));
 		default:
-			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ˆÙí‚Èˆø”‚Å‚·"));
+			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("ç•°å¸¸ãªå¼•æ•°ã§ã™"));
 			return CodeConv::tstring(_T("????"));
 	}
 }

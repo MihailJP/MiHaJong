@@ -1,4 +1,4 @@
-#include "prepare.h"
+ï»¿#include "prepare.h"
 
 #include <cstdint>
 #include <algorithm>
@@ -23,22 +23,22 @@
 #include "../common/sleep.h"
 
 #define settile(TileCode, pos) {tilepos[TileCode] = pos; for (unsigned int i = 0; i < 4u; ++i) {gameStat->Deck[pos++].tile = TileCode;}}
-inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // ”v‚ğ•À‚×‚é
-	unsigned int p = 0; // ”v‚ÌˆÊ’uID
+inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // ç‰Œã‚’ä¸¦ã¹ã‚‹
+	unsigned int p = 0; // ç‰Œã®ä½ç½®ID
 	if (gameStat->chkGameType(SanmaX)) {
-		settile(CharacterOne, p); // äİq
-		settile(CharacterNine, p); // äİq
+		settile(CharacterOne, p); // è¬å­
+		settile(CharacterNine, p); // è¬å­
 	} else {
 		for (unsigned int k = 1u; k <= 9u; ++k)
-			settile((TileCode)(TileSuitCharacters + k), p); // äİq
+			settile((TileCode)(TileSuitCharacters + k), p); // è¬å­
 	}
 	for (unsigned int k = 1u; k <= 9u; ++k)
-		settile((TileCode)(TileSuitCircles + k), p); // “›q
+		settile((TileCode)(TileSuitCircles + k), p); // ç­’å­
 	for (unsigned int k = 1u; k <= 9u; ++k)
-		settile((TileCode)(TileSuitBamboos + k), p); // õq
+		settile((TileCode)(TileSuitBamboos + k), p); // ç´¢å­
 	if (!gameStat->chkGameType(SanmaS)) {
 		for (unsigned int k = 1u; k <= 7u; ++k)
-			settile((TileCode)(TileSuitHonors + k), p); // š”v
+			settile((TileCode)(TileSuitHonors + k), p); // å­—ç‰Œ
 #ifndef GUOBIAO
 		if (RuleData::chkRule("flower_tiles", "seasons") || RuleData::chkRule("flower_tiles", "8tiles")) {
 #endif /* GUOBIAO */
@@ -58,32 +58,32 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 }
 
 #ifndef GUOBIAO
-inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Ôƒhƒ‰‚ğİ’è‚·‚é
+inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // èµ¤ãƒ‰ãƒ©ã‚’è¨­å®šã™ã‚‹
 	{
 		const char tileRules[9][16] = {
 			"red_one", "red_two", "red_three", "red_four", "red_five",
 			"red_six", "red_seven", "red_eight", "red_nine",
 		};
-		for (unsigned int i = 0; i < 9; ++i) { // ””v‚ÌÔƒhƒ‰
-			if (RuleData::chkRule(tileRules[i], "character_suit") || // äİq
+		for (unsigned int i = 0; i < 9; ++i) { // æ•°ç‰Œã®èµ¤ãƒ‰ãƒ©
+			if (RuleData::chkRule(tileRules[i], "character_suit") || // è¬å­
 				RuleData::chkRule(tileRules[i], "character_circle_suit") ||
 				RuleData::chkRule(tileRules[i], "character_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "all_three_suits"))
 				gameStat->Deck[tilepos[TileSuitCharacters + i + 1]].red = AkaDora;
-			if (RuleData::chkRule(tileRules[i], "circle_suit") || // “›q
+			if (RuleData::chkRule(tileRules[i], "circle_suit") || // ç­’å­
 				RuleData::chkRule(tileRules[i], "character_circle_suit") ||
 				RuleData::chkRule(tileRules[i], "circle_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "all_three_suits"))
 				gameStat->Deck[tilepos[TileSuitCircles + i + 1]].red = AkaDora;
-			if (RuleData::chkRule(tileRules[i], "bamboo_suit") || // õq
+			if (RuleData::chkRule(tileRules[i], "bamboo_suit") || // ç´¢å­
 				RuleData::chkRule(tileRules[i], "circle_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "character_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "all_three_suits"))
 				gameStat->Deck[tilepos[TileSuitBamboos + i + 1]].red = AkaDora;
 		}
 	}
-	// 5‚Ìƒhƒ‰‚Í“Áê
-	if (gameStat->chkGameType(SanmaX)) { // O–ƒ
+	// 5ã®ãƒ‰ãƒ©ã¯ç‰¹æ®Š
+	if (gameStat->chkGameType(SanmaX)) { // ä¸‰éº»
 		if (RuleData::chkRule("red_five", "2tiles")) {
 			gameStat->Deck[tilepos[CircleFive]].red = AkaDora;
 			gameStat->Deck[tilepos[BambooFive]].red = AkaDora;
@@ -98,7 +98,7 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Ôƒhƒ
 			gameStat->Deck[tilepos[CircleFive]].red = AkaDora;
 			gameStat->Deck[tilepos[CircleFive] + 1].red = AkaDora;
 		}
-	} else { // l–ƒE””vO–ƒ
+	} else { // å››éº»ãƒ»æ•°ç‰Œä¸‰éº»
 		if (RuleData::chkRule("red_five", "3tiles")) {
 			gameStat->Deck[tilepos[CharacterFive]].red = AkaDora;
 			gameStat->Deck[tilepos[CircleFive]].red = AkaDora;
@@ -126,7 +126,7 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Ôƒhƒ
 	{
 		const char tileRules[2][16] = {"red_west", "red_north",};
 		const TileCode tileCodes[2] = {WestWind, NorthWind,};
-		for (unsigned int i = 0; i < 2; ++i) { // š”v‚ÌÔƒhƒ‰
+		for (unsigned int i = 0; i < 2; ++i) { // å­—ç‰Œã®èµ¤ãƒ‰ãƒ©
 			if (RuleData::chkRule(tileRules[i], "4tiles") || RuleData::chkRule(tileRules[i], "3tiles") ||
 				RuleData::chkRule(tileRules[i], "2tiles") || RuleData::chkRule(tileRules[i], "1tile"))
 				gameStat->Deck[tilepos[tileCodes[i]]].red = AkaDora;
@@ -140,27 +140,27 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Ôƒhƒ
 		}
 	}
 	{
-		if (RuleData::chkRule("haku_potchi", "1tile_dora")) // ƒI[ƒ‹ƒ}ƒCƒeƒB[ˆµ‚¢‚Í‚¹‚¸AÔƒhƒ‰‚Æ“¯‚¶ˆµ‚¢
-			gameStat->Deck[tilepos[WhiteDragon]].red = AkaDora; // ”’ƒ|ƒbƒ`
+		if (RuleData::chkRule("haku_potchi", "1tile_dora")) // ã‚ªãƒ¼ãƒ«ãƒã‚¤ãƒ†ã‚£ãƒ¼æ‰±ã„ã¯ã›ãšã€èµ¤ãƒ‰ãƒ©ã¨åŒã˜æ‰±ã„
+			gameStat->Deck[tilepos[WhiteDragon]].red = AkaDora; // ç™½ãƒãƒƒãƒ
 	}
 }
 
-inline void bluetiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Âƒhƒ‰‚ğİ’è‚·‚é
+inline void bluetiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // é’ãƒ‰ãƒ©ã‚’è¨­å®šã™ã‚‹
 	{
 		const char tileRules[3][16] = {"blue_one", "blue_five", "blue_nine",};
 		const unsigned int tileNum[3] = {1, 5, 9,};
-		for (unsigned int i = 0; i < 3; ++i) { // ””v‚ÌÂƒhƒ‰
-			if (RuleData::chkRule(tileRules[i], "character_suit") || // äİq
+		for (unsigned int i = 0; i < 3; ++i) { // æ•°ç‰Œã®é’ãƒ‰ãƒ©
+			if (RuleData::chkRule(tileRules[i], "character_suit") || // è¬å­
 				RuleData::chkRule(tileRules[i], "character_circle_suit") ||
 				RuleData::chkRule(tileRules[i], "character_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "all_three_suits"))
 				gameStat->Deck[tilepos[TileSuitCharacters + tileNum[i]] + 3].red = AoDora;
-			if (RuleData::chkRule(tileRules[i], "circle_suit") || // “›q
+			if (RuleData::chkRule(tileRules[i], "circle_suit") || // ç­’å­
 				RuleData::chkRule(tileRules[i], "character_circle_suit") ||
 				RuleData::chkRule(tileRules[i], "circle_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "all_three_suits"))
 				gameStat->Deck[tilepos[TileSuitCircles + tileNum[i]] + 3].red = AoDora;
-			if (RuleData::chkRule(tileRules[i], "bamboo_suit") || // õq
+			if (RuleData::chkRule(tileRules[i], "bamboo_suit") || // ç´¢å­
 				RuleData::chkRule(tileRules[i], "circle_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "character_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "all_three_suits"))
@@ -174,9 +174,9 @@ inline void bluetiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // Âƒh
 }
 #endif /* GUOBIAO */
 
-inline void shuffletiles(GameTable* const gameStat, UInt8ByTile& tilepos, unsigned int tiles) { // ô”v‚·‚é
+inline void shuffletiles(GameTable* const gameStat, UInt8ByTile& tilepos, unsigned int tiles) { // æ´—ç‰Œã™ã‚‹
 	if (EnvTable::Instantiate()->GameMode != EnvTable::Client) {
-		for (unsigned int i = 0; i < tiles; ++i) { // ô”v‚·‚é
+		for (unsigned int i = 0; i < tiles; ++i) { // æ´—ç‰Œã™ã‚‹
 			unsigned int tmppos = i + RndNum::rnd(tiles - i);
 			Tile tmptile = gameStat->Deck[tmppos];
 			gameStat->Deck[tmppos] = gameStat->Deck[i];
@@ -185,7 +185,7 @@ inline void shuffletiles(GameTable* const gameStat, UInt8ByTile& tilepos, unsign
 	}
 }
 
-void shuffle(GameTable* const gameStat) { // ”v‚ğƒoƒbƒtƒ@‚É•À‚×‚ÄAô”v
+void shuffle(GameTable* const gameStat) { // ç‰Œã‚’ãƒãƒƒãƒ•ã‚¡ã«ä¸¦ã¹ã¦ã€æ´—ç‰Œ
 	UInt8ByTile tilepos;
 	unsigned int tiles = inittiles(gameStat, tilepos);
 #ifndef GUOBIAO
@@ -198,32 +198,32 @@ void shuffle(GameTable* const gameStat) { // ”v‚ğƒoƒbƒtƒ@‚É•À‚×‚ÄAô”v
 #ifndef GUOBIAO
 #define nagatadora(TileCode) {++gameStat->DoraFlag.Omote[TileCode]; haifu::haifurecdora(TileCode);}
 inline void DoraAdding(GameTable* const gameStat) {
-	setdora(gameStat, 0); // •\ƒhƒ‰‚ğİ’è‚·‚é
+	setdora(gameStat, 0); // è¡¨ãƒ‰ãƒ©ã‚’è¨­å®šã™ã‚‹
 	if (RuleData::chkRuleApplied("uradora"))
-		setdora(gameStat, 1); // — ƒhƒ‰‚ğİ’è‚·‚é
+		setdora(gameStat, 1); // è£ãƒ‰ãƒ©ã‚’è¨­å®šã™ã‚‹
 	haifu::haifurecdorap();
 }
 
-void initdora(GameTable* const gameStat) { // ƒhƒ‰‚Ìİ’è
+void initdora(GameTable* const gameStat) { // ãƒ‰ãƒ©ã®è¨­å®š
 	if (gameStat->chkGameType(AllSanma))
-		gameStat->DoraPointer = 102 - gameStat->ExtraRinshan; // ƒhƒ‰•\¦”v‚Ìƒ|ƒCƒ“ƒ^
-	else gameStat->DoraPointer = 130; // ƒhƒ‰•\¦”v‚Ìƒ|ƒCƒ“ƒ^
-	if (RuleData::chkRuleApplied("nagatacho")) { // ‰i“c’¬ƒ‹[ƒ‹
-		nagatadora(BambooSeven); // µõ‚Íí‚Éƒhƒ‰
+		gameStat->DoraPointer = 102 - gameStat->ExtraRinshan; // ãƒ‰ãƒ©è¡¨ç¤ºç‰Œã®ãƒã‚¤ãƒ³ã‚¿
+	else gameStat->DoraPointer = 130; // ãƒ‰ãƒ©è¡¨ç¤ºç‰Œã®ãƒã‚¤ãƒ³ã‚¿
+	if (RuleData::chkRuleApplied("nagatacho")) { // æ°¸ç”°ç”ºãƒ«ãƒ¼ãƒ«
+		nagatadora(BambooSeven); // ä¸ƒç´¢ã¯å¸¸ã«ãƒ‰ãƒ©
 		for (int i = 0; i <= (RuleData::chkRule("dice_roll", "roll_twice") ? 0 : 2); i += 2) {
 			unsigned int dice = gameStat->Dice[i + 0].Number + gameStat->Dice[i + 1].Number;
-			if (dice <= 8) { // 2`8‚Í‚»‚Ì””v‚ªƒhƒ‰@O–ƒ‚Å‚Íäİq‚ª‚È‚¢‚Ì‚Å•Êˆ—
+			if (dice <= 8) { // 2ã€œ8ã¯ãã®æ•°ç‰ŒãŒãƒ‰ãƒ©ã€€ä¸‰éº»ã§ã¯è¬å­ãŒãªã„ã®ã§åˆ¥å‡¦ç†
 				if (!gameStat->chkGameType(SanmaX))
 					nagatadora(static_cast<TileCode>(TileSuitCharacters + dice));
 				nagatadora(    static_cast<TileCode>(TileSuitCircles    + dice));
 				nagatadora(    static_cast<TileCode>(TileSuitBamboos    + dice));
-			} else if (dice == 9) { // 9‚Í‚»‚Ì‚Ü‚Ü9‚ªƒhƒ‰
+			} else if (dice == 9) { // 9ã¯ãã®ã¾ã¾9ãŒãƒ‰ãƒ©
 				nagatadora(CharacterNine); nagatadora(CircleNine); nagatadora(BambooNine);
-			} else if (dice == 10) { // 10‚ÍOŒ³”v‚ªƒhƒ‰
+			} else if (dice == 10) { // 10ã¯ä¸‰å…ƒç‰ŒãŒãƒ‰ãƒ©
 				nagatadora(WhiteDragon); nagatadora(GreenDragon); nagatadora(RedDragon);
-			} else if (dice == 11) { // 11‚Í””v‚Ì1‚ªƒhƒ‰
+			} else if (dice == 11) { // 11ã¯æ•°ç‰Œã®1ãŒãƒ‰ãƒ©
 				nagatadora(CharacterOne); nagatadora(CircleOne); nagatadora(BambooOne);
-			} else if (dice == 12) { // 12‚Í•—”v‘S‚Äƒhƒ‰
+			} else if (dice == 12) { // 12ã¯é¢¨ç‰Œå…¨ã¦ãƒ‰ãƒ©
 				nagatadora(EastWind); nagatadora(SouthWind); nagatadora(WestWind); nagatadora(NorthWind);
 			}
 		}
@@ -232,7 +232,7 @@ void initdora(GameTable* const gameStat) { // ƒhƒ‰‚Ìİ’è
 	DoraAdding(gameStat);
 	if (RuleData::chkRule("dora_twice", "yes") ||
 		(RuleData::chkRule("dora_twice", "only_when_doublets") && (gameStat->Dice[0].Number == gameStat->Dice[1].Number))) {
-			gameStat->DoraPointer -= 2; /*ƒhƒ‰ƒhƒ‰‘ì*/
+			gameStat->DoraPointer -= 2; /*ãƒ‰ãƒ©ãƒ‰ãƒ©å“*/
 			DoraAdding(gameStat);
 	}
 }
@@ -246,7 +246,7 @@ void SeatShuffler::shuffleSeat () {
 			if (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 1)
 				mihajong_socket::listen(SOCK_CHAT - 1 + EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag,
 				PORT_CHAT - 1 + EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag);
-	// ‘Ş”ğ
+	// é€€é¿
 	InfoByPlayer<EnvTable::PlayerLabel> TmpPlayerDat;
 	for (PlayerID i = 0; i < Players; i++) {
 		TmpPlayerDat[i].PlayerName = EnvTable::Instantiate()->PlayerDat[i].PlayerName;
@@ -254,32 +254,32 @@ void SeatShuffler::shuffleSeat () {
 	}
 	std::vector<PlayerID> TmpPosition;
 	for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++) TmpPosition.push_back(i);
-	// êŒˆ‚ß
+	// å ´æ±ºã‚
 	if (EnvTable::Instantiate()->GameMode != EnvTable::Client) {
-		// êŒˆ‚ßˆ—
+		// å ´æ±ºã‚å‡¦ç†
 		std::random_shuffle(TmpPosition.begin(), TmpPosition.end(),
 			[] (unsigned max) {return RndNum::rnd(max);});
-		// ƒT[ƒo[‚Å‚ ‚ê‚ÎŒ‹‰Ê‚ğ‘—M
+		// ã‚µãƒ¼ãƒãƒ¼ã§ã‚ã‚Œã°çµæœã‚’é€ä¿¡
 		if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
 			for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++)
 				mihajong_socket::server::send(TmpPosition[i]);
 	} else {
-		// ƒNƒ‰ƒCƒAƒ“ƒg‚Å‚ ‚ê‚ÎóM‚·‚é
+		// ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã§ã‚ã‚Œã°å—ä¿¡ã™ã‚‹
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++) {
 			int receivedByte;
-			while ((receivedByte = mihajong_socket::getc(0)) == -1) // óM‘Ò‚¿
+			while ((receivedByte = mihajong_socket::getc(0)) == -1) // å—ä¿¡å¾…ã¡
 				threadYield();
 			TmpPosition[i] = receivedByte;
 		}
 	}
-	// ƒVƒƒƒbƒtƒ‹Œ‹‰Ê‚ğ‘‚«‚İ
+	// ã‚·ãƒ£ãƒƒãƒ•ãƒ«çµæœã‚’æ›¸ãè¾¼ã¿
 	for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++) {
 		EnvTable::Instantiate()->PlayerDat[TmpPosition[i]].PlayerName = TmpPlayerDat[i].PlayerName;
 		EnvTable::Instantiate()->PlayerDat[TmpPosition[i]].RemotePlayerFlag = TmpPlayerDat[i].RemotePlayerFlag;
 		posarry[i] = TmpPosition[i];
 	}
 
-	// ƒŠƒ‚[ƒg‚Æ‚µ‚Äƒ}[ƒN
+	// ãƒªãƒ¢ãƒ¼ãƒˆã¨ã—ã¦ãƒãƒ¼ã‚¯
 	/*PlayerID tmpPlayer = TmpPosition[ClientNumber];
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++)
@@ -324,28 +324,28 @@ std::array<int, Players> SeatShuffler::shuffle (unsigned cNumber) {
 
 // -------------------------------------------------------------------------
 
-/* ”¼‘‘‚Ì‰Šú‰» */
+/* åŠè˜ã®åˆæœŸåŒ– */
 void gameinit(GameTable* gameStat, GameTypeID gameType, const std::string& ServerAddress, const std::array<int, 4>& PositionArray, unsigned ClientNumber) {
 	gameStat = initializeGameTable(gameType);
 	gameStat->PlayerID = PositionArray[ClientNumber];
 	haifu::haifubufinit();
 	chat::initchat(ServerAddress.c_str(), ClientNumber);
-	yaku::yakuCalculator::init(); // –ğƒJƒ^ƒƒO‚Ì‰Šú‰»
-	aiscript::initscript(); // AI‚Ì‰Šú‰»
+	yaku::yakuCalculator::init(); // å½¹ã‚«ã‚¿ãƒ­ã‚°ã®åˆæœŸåŒ–
+	aiscript::initscript(); // AIã®åˆæœŸåŒ–
 	return;
 }
 
-/* ‘ì‚Ì‰Šú‰» */
+/* å“ã®åˆæœŸåŒ– */
 namespace {
 	void skippableWait(unsigned milliseconds) {
 		static bool reallyWait = true;
-		if (milliseconds == 0) // ƒtƒ‰ƒO‚ğƒŠƒZƒbƒg
+		if (milliseconds == 0) // ãƒ•ãƒ©ã‚°ã‚’ãƒªã‚»ãƒƒãƒˆ
 			reallyWait = true;
-		if ((milliseconds) && (reallyWait) && (mihajong_graphic::ui::WaitUIWithTimeout(milliseconds) != 0xffffffff)) // ‘Ò‹@‚·‚é
+		if ((milliseconds) && (reallyWait) && (mihajong_graphic::ui::WaitUIWithTimeout(milliseconds) != 0xffffffff)) // å¾…æ©Ÿã™ã‚‹
 			reallyWait = false;
 	}
 	void init_ai(const GameTable* const gameStat) {
-		aiscript::initephemeral(); // AI‚Ìephemeralƒe[ƒuƒ‹‚ğ‰Šú‰»
+		aiscript::initephemeral(); // AIã®ephemeralãƒ†ãƒ¼ãƒ–ãƒ«ã‚’åˆæœŸåŒ–
 		for (PlayerID i = 0; i < Players; i++)
 			aiscript::initcall(makesandBox(gameStat, i), i);
 	}
@@ -366,33 +366,33 @@ namespace {
 		}
 	}
 	void syncTableStat(GameTable* const gameStat) {
-		// ê•—‚Ìƒf[ƒ^‚ğ‘—MB‚Æ‚è‚ ‚¦‚¸‚P‚Uü–Ú‚Ì–kl‹Ç‚Ü‚Å‘Î‰
+		// å ´é¢¨ã®ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡ã€‚ã¨ã‚Šã‚ãˆãšï¼‘ï¼–å‘¨ç›®ã®åŒ—å››å±€ã¾ã§å¯¾å¿œ
 		statsync(gameStat, gameStat->LoopRound * roundLoopRate() + gameStat->GameRound,
 			[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 				gameStat->LoopRound = ReceivedMsg / roundLoopRate();
 				gameStat->GameRound = ReceivedMsg % roundLoopRate();
 				return true;
 			});
-		// Ï‚İ–_‚Ìƒf[ƒ^‚ğ‘—MB‚Æ‚è‚ ‚¦‚¸‚Q‚T‚T–{ê‚Ü‚Å‘Î‰
+		// ç©ã¿æ£’ã®ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡ã€‚ã¨ã‚Šã‚ãˆãšï¼’ï¼•ï¼•æœ¬å ´ã¾ã§å¯¾å¿œ
 		statsync(gameStat, gameStat->Honba,
 			[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 				gameStat->Honba = ReceivedMsg;
 				return true;
 			});
-		// ‹Ÿ‘õ–{”‚Ìƒf[ƒ^‚ğ‘—MB‚Æ‚è‚ ‚¦‚¸‚Q‚T‚T‚O‚O‚O“_‚Ü‚Å‘Î‰
+		// ä¾›è¨—æœ¬æ•°ã®ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡ã€‚ã¨ã‚Šã‚ãˆãšï¼’ï¼•ï¼•ï¼ï¼ï¼ç‚¹ã¾ã§å¯¾å¿œ
 		statsync(gameStat, gameStat->Deposit,
 			[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 				gameStat->Deposit = ReceivedMsg;
 				return true;
 			});
-		// ”ª˜A‘‘‚Ì”»’è‚Ég‚¤ƒf[ƒ^‚ğ‘—M
+		// å…«é€£è˜ã®åˆ¤å®šã«ä½¿ã†ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡
 		statsync(gameStat, ((gameStat->LastAgariPlayer + 1) << 4) + gameStat->AgariChain,
 			[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 				gameStat->LastAgariPlayer = (ReceivedMsg + 1) / 16 - 1;
 				gameStat->AgariChain = (ReceivedMsg + 1) % 16 - 1;
 				return true;
 			});
-		// ‚¿“_‚Ìƒf[ƒ^‚ğ‘—MB•„†‚İ‚Å33ƒoƒCƒg‚¸‚ÂEƒXƒ‚[ƒ‹ƒGƒ“ƒfƒBƒAƒ“
+		// æŒã¡ç‚¹ã®ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡ã€‚ç¬¦å·è¾¼ã¿ã§33ãƒã‚¤ãƒˆãšã¤ãƒ»ã‚¹ãƒ¢ãƒ¼ãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³
 		for (PlayerID player = 0; player < Players; player++) {
 			for (int i = 0; i < DIGIT_GROUPS; i++)
 				for (int j = 0; j < 4; j++)
@@ -408,7 +408,7 @@ namespace {
 					return true;
 				});
 		}
-		// Ä’¹‚Ìƒf[ƒ^‚ğ‘—M
+		// ç„¼é³¥ã®ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡
 		statsync(gameStat, (gameStat->Player[0].YakitoriFlag ? 8 : 0) + (gameStat->Player[1].YakitoriFlag ? 4 : 0) + (gameStat->Player[2].YakitoriFlag ? 2 : 0) + (gameStat->Player[3].YakitoriFlag ? 1 : 0),
 			[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 				gameStat->Player[0].YakitoriFlag = ReceivedMsg & 0x08;
@@ -417,7 +417,7 @@ namespace {
 				gameStat->Player[3].YakitoriFlag = ReceivedMsg & 0x01;
 				return true;
 			});
-		// ƒ`ƒbƒv‚Ìƒf[ƒ^‚ğ‘—MBˆê‰}‚P‚Q‚V‚Ü‚Å‘Î‰
+		// ãƒãƒƒãƒ—ã®ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡ã€‚ä¸€å¿œÂ±ï¼‘ï¼’ï¼—ã¾ã§å¯¾å¿œ
 		for (PlayerID player = 0; player < Players; player++)
 			/* Excess-128 */
 			statsync(gameStat, gameStat->Player[player].playerChip + 128,
@@ -425,7 +425,7 @@ namespace {
 					gameStat->Player[player].playerChip = (int)ReceivedMsg - 128;
 					return true;
 				});
-		// l”n˜H‰ğ‹Öƒtƒ‰ƒO‚ğ‘—M
+		// å››é¦¬è·¯è§£ç¦ãƒ•ãƒ©ã‚°ã‚’é€ä¿¡
 		statsync(gameStat, (gameStat->Player[0].SumaroFlag ? 8 : 0) + (gameStat->Player[1].SumaroFlag ? 4 : 0) + (gameStat->Player[2].SumaroFlag ? 2 : 0) + (gameStat->Player[3].SumaroFlag ? 1 : 0),
 			[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 				gameStat->Player[0].SumaroFlag = ReceivedMsg & 0x08;
@@ -435,15 +435,15 @@ namespace {
 				return true;
 			});
 	}
-	void choosebgm(const GameTable* const gameStat) { // BGM‚ğ–Â‚ç‚·
+	void choosebgm(const GameTable* const gameStat) { // BGMã‚’é³´ã‚‰ã™
 		if (((gameStat->LoopRound * roundLoopRate() + gameStat->GameRound) == gameStat->GameLength) &&
 			(gameStat->GameLength > 0))
-			sound::util::bgmplay(sound::IDs::musFinal); // ƒI[ƒ‰ƒX‚¾‚¯“Á•Ê
+			sound::util::bgmplay(sound::IDs::musFinal); // ã‚ªãƒ¼ãƒ©ã‚¹ã ã‘ç‰¹åˆ¥
 #ifndef GUOBIAO
 		else if ((gameStat->Honba >= 5) && RuleData::chkRule("ryanshiba", "from_5honba"))
-			sound::util::bgmplay(sound::IDs::musShibari); // ƒŠƒƒƒ“ƒVƒoê—pBGM
+			sound::util::bgmplay(sound::IDs::musShibari); // ãƒªãƒ£ãƒ³ã‚·ãƒæ™‚å°‚ç”¨BGM
 		else if ((gameStat->Honba >= 4) && RuleData::chkRule("ryanshiba", "from_4honba"))
-			sound::util::bgmplay(sound::IDs::musShibari); // ƒŠƒƒƒ“ƒVƒoê—pBGM
+			sound::util::bgmplay(sound::IDs::musShibari); // ãƒªãƒ£ãƒ³ã‚·ãƒæ™‚å°‚ç”¨BGM
 #endif /* GUOBIAO */
 		else
 			sound::util::bgmplay(sound::IDs::BgmStart + gameStat->GameRound);
@@ -453,14 +453,14 @@ namespace {
 		CodeConv::tstring tmpStatus;
 		if (gameStat->Honba) {
 			CodeConv::tostringstream o;
-			o << roundName(gameStat->GameRound, gameStat) << gameStat->Honba << _T("–{ê");
+			o << roundName(gameStat->GameRound, gameStat) << gameStat->Honba << _T("æœ¬å ´");
 			tmpStatus = o.str();
 		} else {
 			tmpStatus = roundName(gameStat->GameRound, gameStat);
 		}
 		chat::appendchat((CodeConv::tstring(_T("-------------\n*** ")) + tmpStatus + CodeConv::tstring(_T("\n"))).c_str());
 		for (PlayerID i = 0; i < Players; ++i)
-			mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::None); /* ”­º•¶š—ñ‚ğÁ‹ */
+			mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::None); /* ç™ºå£°æ–‡å­—åˆ—ã‚’æ¶ˆå» */
 		EnvTable* env = EnvTable::Instantiate();
 		if (gameStat->LoopRound % 2 == 0) {
 			switch (gameStat->GameRound / Players) {
@@ -530,9 +530,9 @@ namespace {
 		else
 			tmpNumberOfTiles = 140;
 #endif /* GUOBIAO */
-		for (unsigned i = 0; i < tmpNumberOfTiles; i++) // ƒT[ƒo[‚Ìê‡A”vR‚Ìƒf[ƒ^‚ğ‘—M
+		for (unsigned i = 0; i < tmpNumberOfTiles; i++) // ã‚µãƒ¼ãƒãƒ¼ã®å ´åˆã€ç‰Œå±±ã®ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡
 			statsync(gameStat, gameStat->Deck[i].tile + (gameStat->Deck[i].red * TileNonflowerMax) + mihajong_socket::protocol::StartRound_Tile_Excess,
-				[i](GameTable* const gameStat, int ReceivedMsg) -> bool { // ƒNƒ‰ƒCƒAƒ“ƒg‚Ìê‡Aƒf[ƒ^‚ğóM
+				[i](GameTable* const gameStat, int ReceivedMsg) -> bool { // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã®å ´åˆã€ãƒ‡ãƒ¼ã‚¿ã‚’å—ä¿¡
 					if ( ((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) > TileNonflowerMax) &&
 						((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) < TileSuitFlowers) ) {
 							gameStat->Deck[i].tile = (TileCode)((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) % TileNonflowerMax);
@@ -546,13 +546,13 @@ namespace {
 	}
 	bool rolldice(GameTable* const gameStat, bool doraAlreadyAdded, unsigned diceOffset) {
 		uint8_t tmpDeadTiles = gameStat->DeadTiles;
-		// æÎ‚ğU‚é
+		// è³½ã‚’æŒ¯ã‚‹
 		for (unsigned i = 0; i < 2; i++) {
 			gameStat->Dice[i + diceOffset].Number = RndNum::dice();
 			gameStat->Dice[i + diceOffset].Direction = RndNum::rnd(4);
 		}
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
-		for (unsigned k = 0; k < 10; k++) { // æÎ‚ğU‚é
+		for (unsigned k = 0; k < 10; k++) { // è³½ã‚’æŒ¯ã‚‹
 			for (unsigned i = 0; i < 2; i++) {
 				gameStat->Dice[i + diceOffset].Number = RndNum::dice();
 				gameStat->Dice[i + diceOffset].Direction = RndNum::rnd(4);
@@ -561,7 +561,7 @@ namespace {
 			mihajong_graphic::GameStatus::updateGameStat(gameStat); skippableWait(80);
 		}
 		sound::Play(sound::IDs::sndSaikoro);
-		/* ƒTƒCƒRƒ‚Ìo–Ú‚ğ‘—M */
+		/* ã‚µã‚¤ã‚³ãƒ­ã®å‡ºç›®ã‚’é€ä¿¡ */
 		for (unsigned i = 0; i < 2; i++)
 			statsync(gameStat, gameStat->Dice[i + diceOffset].Number + mihajong_socket::protocol::StartRound_Dice_Excess,
 				[i, diceOffset](GameTable* const gameStat, int ReceivedMsg) -> bool {
@@ -574,8 +574,8 @@ namespace {
 		if ((!doraAlreadyAdded) && (RuleData::chkRule("dora_twice", "yes") ||
 			(RuleData::chkRule("dora_twice", "only_when_doublets") &&
 			(gameStat->Dice[0 + diceOffset].Number == gameStat->Dice[1 + diceOffset].Number))))
-			gameStat->DeadTiles += 2; /* ƒhƒ‰ƒhƒ‰‘ì‚È‚ç‰¤”v‚Ì”‚ğ‘‚â‚· */
-		calcWareme(gameStat); // Š„‚ê–Ú
+			gameStat->DeadTiles += 2; /* ãƒ‰ãƒ©ãƒ‰ãƒ©å“ãªã‚‰ç‹ç‰Œã®æ•°ã‚’å¢—ã‚„ã™ */
+		calcWareme(gameStat); // å‰²ã‚Œç›®
 		if (RuleData::chkRule("dice_roll", "roll_twice")) {
 #endif /* GUOBIAO */
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
@@ -585,8 +585,8 @@ namespace {
 #endif /* GUOBIAO */
 		return tmpDeadTiles != gameStat->DeadTiles;
 	}
-	void haipai(GameTable* const gameStat) { // ”z”v
-		for (int i = 0; i < (gameStat->chkGameType(AllSanma) ? 36 : 48); i++) { // ‚Q›ï‚¸‚Â‚ğ‚R‰ñ
+	void haipai(GameTable* const gameStat) { // é…ç‰Œ
+		for (int i = 0; i < (gameStat->chkGameType(AllSanma) ? 36 : 48); i++) { // ï¼’å¹¢ãšã¤ã‚’ï¼“å›
 			unsigned handIndex = i % 4 + (i / (gameStat->chkGameType(AllSanma) ? 12 : 16)) * 4;
 			PlayerID player;
 			if (gameStat->chkGameType(Sanma4))
@@ -607,7 +607,7 @@ namespace {
 			}
 		}
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
-		for (int i = 0; i < (gameStat->chkGameType(AllSanma) ? 4 : 5); i++) { // ‚P–‡‚¸‚Â‚ğ‚P‰ñAe‚Ìƒ`ƒ‡ƒ“ƒ`ƒ‡ƒ“
+		for (int i = 0; i < (gameStat->chkGameType(AllSanma) ? 4 : 5); i++) { // ï¼‘æšãšã¤ã‚’ï¼‘å›ã€è¦ªã®ãƒãƒ§ãƒ³ãƒãƒ§ãƒ³
 			unsigned handIndex = i / (gameStat->chkGameType(AllSanma) ? 3 : 4) + 12;
 			PlayerID player;
 			if (gameStat->chkGameType(Sanma4))
@@ -625,7 +625,7 @@ namespace {
 		}
 
 #ifndef GUOBIAO
-		initdora(gameStat); // ƒhƒ‰‚ğ‚ß‚­‚é
+		initdora(gameStat); // ãƒ‰ãƒ©ã‚’ã‚ãã‚‹
 
 		sound::Play(sound::IDs::sndMekuri);
 #endif /* GUOBIAO */
@@ -636,7 +636,7 @@ namespace {
 	}
 }
 void tableinit(GameTable* const gameStat) {
-	for (int i = 0; i < Players; ++i) { // ‘ã‘–‚³‚¹‚éˆ—
+	for (int i = 0; i < Players; ++i) { // ä»£èµ°ã•ã›ã‚‹å‡¦ç†
 		if (gameStat->Player[i].ConnectionLost) {
 			EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = 0;
 			gameStat->Player[i].ConnectionLost = false;
@@ -644,12 +644,12 @@ void tableinit(GameTable* const gameStat) {
 	}
 	init_ai(gameStat);
 	inittable(gameStat);
-	// ‹Ç‚ÌŠJn‚Å“¯Šú‚·‚éB1.7Œn—ñ‚Ü‚Å‚Í‚±‚Ì‚Æ‚«—‚¿–ß‚è‚ª‰Â”\(—‚¿–ß‚è‹@”\‚Í1.8‚Å”p~‚³‚ê‚Ü‚µ‚½)
+	// å±€ã®é–‹å§‹ã§åŒæœŸã™ã‚‹ã€‚1.7ç³»åˆ—ã¾ã§ã¯ã“ã®ã¨ãè½ã¡æˆ»ã‚ŠãŒå¯èƒ½(è½ã¡æˆ»ã‚Šæ©Ÿèƒ½ã¯1.8ã§å»ƒæ­¢ã•ã‚Œã¾ã—ãŸ)
 	statsync(gameStat, mihajong_socket::protocol::Server_StartRound_Signature,
 		[](GameTable* const gameStat, int ReceivedMsg) -> bool {
 			if (ReceivedMsg == mihajong_socket::protocol::Server_StartRound_Signature) {
 				return true;
-			} else if (ReceivedMsg == 1023) { // ‰ñü‚ªØ‚ê‚Ä‚½‚ç
+			} else if (ReceivedMsg == 1023) { // å›ç·šãŒåˆ‡ã‚Œã¦ãŸã‚‰
 				EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
 				for (int i = 0; i < Players; ++i)
 					EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = 0;
@@ -658,23 +658,23 @@ void tableinit(GameTable* const gameStat) {
 				return false;
 			}
 		});
-	// ”v•ˆƒoƒbƒtƒ@‚Ì‰Šú‰»
+	// ç‰Œè­œãƒãƒƒãƒ•ã‚¡ã®åˆæœŸåŒ–
 	haifu::haifuinit();
-	/* ‘ì‚Ìî•ñ‚ğ“¯Šú */
+	/* å“ã®æƒ…å ±ã‚’åŒæœŸ */
 	syncTableStat(gameStat);
-	// BGM‚ğ–Â‚ç‚·
+	// BGMã‚’é³´ã‚‰ã™
 	choosebgm(gameStat);
-	// ‰æ–Ê‚Ì€”õ
+	// ç”»é¢ã®æº–å‚™
 	screen(gameStat);
-	// ô”v
+	// æ´—ç‰Œ
 	tileshuffle(gameStat);
-	// æÎ‚ğU‚é
+	// è³½ã‚’æŒ¯ã‚‹
 	bool doraFlag = rolldice(gameStat, false, 0);
 #ifndef GUOBIAO
 	if (RuleData::chkRule("dice_roll", "roll_twice"))
 #endif /* GUOBIAO */
-		(void)rolldice(gameStat, doraFlag, 2); // “ñ“xU‚è‚Ì2‰ñ–Ú
-	// ”z”v
+		(void)rolldice(gameStat, doraFlag, 2); // äºŒåº¦æŒ¯ã‚Šã®2å›ç›®
+	// é…ç‰Œ
 	haipai(gameStat);
 	return;
 }

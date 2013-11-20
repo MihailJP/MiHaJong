@@ -1,4 +1,4 @@
-#include "yaku.h"
+ï»¿#include "yaku.h"
 #include <algorithm>
 using std::max;
 
@@ -83,10 +83,10 @@ yaku::yakuCalculator::Yaku::YAKU_HAN::YAKU_HAN(HAN han) {coreHan = han; bonusHan
 yaku::yakuCalculator::Yaku::YAKU_HAN::YAKU_HAN(HAN han, HAN bonus) {coreHan = han; bonusHan = bonus;}
 
 bool yaku::yakuCalculator::Yaku::checkYaku(const MENTSU_ANALYSIS* const mentsu) {
-	// –ğ‚ğ”»’è‚·‚é
+	// å½¹ã‚’åˆ¤å®šã™ã‚‹
 	return this->yakuProc(mentsu);
 }
-CodeConv::tstring yaku::yakuCalculator::Yaku::getName() {return this->yakuName;} // –ğ‚Ì–¼‘O‚ğæ“¾‚·‚é
+CodeConv::tstring yaku::yakuCalculator::Yaku::getName() {return this->yakuName;} // å½¹ã®åå‰ã‚’å–å¾—ã™ã‚‹
 yaku::yakuCalculator::Yaku::HANFUNC yaku::yakuCalculator::Yaku::getHan() {return han;}
 yaku::yakuCalculator::Yaku::YAKU_HAN yaku::yakuCalculator::Yaku::getHan(const MENTSU_ANALYSIS* const mentsu)
 {

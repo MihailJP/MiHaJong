@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <type_traits>
 #include "ykclass.h"
@@ -12,19 +12,19 @@ struct yaku::ParseMode {
 };
 
 
-class yaku::mentsuParser { // –Êqƒp[ƒT
+class yaku::mentsuParser { // é¢å­ãƒ‘ãƒ¼ã‚µ
 #ifdef MJCORE_EXPORTS
 	static_assert(std::is_pod<yaku::ParseMode>::value, "ParseMode is not POD");
 #endif
 private:
 	static bool makementsu_shuntsu(Int8ByTile& countForMentsu, MeldBuf MianziDat,
-		int* const ProcessedMelds, TileCode tile); /* ‡q‚Ìˆ— */
+		int* const ProcessedMelds, TileCode tile); /* é †å­ã®å‡¦ç† */
 	static void makementsu_koutsu(Int8ByTile& countForMentsu, MeldBuf MianziDat,
-		int* const ProcessedMelds, TileCode tile); /* q‚Ìˆ— */
+		int* const ProcessedMelds, TileCode tile); /* åˆ»å­ã®å‡¦ç† */
 public:
 	static void makementsu(const GameTable* const gameStat,
 		PlayerID targetPlayer, ParseMode AtamaCode,
-		int* const ProcessedMelds, MeldBuf MianziDat); /* –Êq‚É•ª‰ğ‚·‚é */
+		int* const ProcessedMelds, MeldBuf MianziDat); /* é¢å­ã«åˆ†è§£ã™ã‚‹ */
 public: /* Monostate class: cannot be instantiated */
 	mentsuParser() = delete;
 	mentsuParser(const mentsuParser&) = delete;

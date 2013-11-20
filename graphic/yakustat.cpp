@@ -1,4 +1,4 @@
-#include "yakustat.h"
+﻿#include "yakustat.h"
 #include <cstring>
 
 namespace mihajong_graphic {

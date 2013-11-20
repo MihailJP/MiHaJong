@@ -6,7 +6,7 @@ libmihajong_astro_la_LDFLAGS = -no-undefined -release $(VERSION)
 if WITH_WINAPI
 libmihajong_astro_la_LIBADD = ver.o
 endif
-libmihajong_astro_la_CFLAGS = -DASTRO_EXPORTS --input-charset=cp932
+libmihajong_astro_la_CFLAGS = -DASTRO_EXPORTS
 EXTRA_DIST = \
 	astro.vcxproj astro.vcxproj.filters astro.vcxproj.user
 if WITH_WINAPI

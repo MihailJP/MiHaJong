@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "tablesub.h"
 #include "../../text.h"
@@ -12,14 +12,14 @@ protected:
 	static const int timeY = 900;
 	static const unsigned timeResolution = 1000000u;
 	TextRenderer* myTextRenderer;
-	int timeout_val; /* §ŒÀŠÔ‚ğƒ~ƒŠ•b‚Å */
+	int timeout_val; /* åˆ¶é™æ™‚é–“ã‚’ãƒŸãƒªç§’ã§ */
 	void showTimeout();
 public:
 	TableSubscenePlayerProto(DevicePtr device);
 	TableSubscenePlayerProto(const TableSubscenePlayerProto&) = delete; // Delete unexpected copy constructor
 	TableSubscenePlayerProto& operator= (const TableSubscenePlayerProto&) = delete; // Delete unexpected assign operator
 	virtual ~TableSubscenePlayerProto();
-	std::int32_t timeout(); // ƒ^ƒCƒ€ƒAƒEƒg”»’è—piƒI[ƒo[ƒ‰ƒCƒhj
+	std::int32_t timeout(); // ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆåˆ¤å®šç”¨ï¼ˆã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ï¼‰
 };
 
 class TableSubscenePlayerDahai : public TableSubscenePlayerProto {

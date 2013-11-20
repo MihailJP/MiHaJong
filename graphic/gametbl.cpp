@@ -1,4 +1,4 @@
-#include "gametbl.h"
+﻿#include "gametbl.h"
 #include <cstring>
 
 namespace mihajong_graphic {

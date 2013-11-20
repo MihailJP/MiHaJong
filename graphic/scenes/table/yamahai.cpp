@@ -1,4 +1,4 @@
-#include "yamahai.h"
+ï»¿#include "yamahai.h"
 #include "../../rule.h"
 #include "../../utils.h"
 #include <cassert>
@@ -7,7 +7,7 @@ namespace mihajong_graphic {
 
 using utils::playerRelative;
 
-/* R”v‚Ì•\¦ */
+/* å±±ç‰Œã®è¡¨ç¤º */
 void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer, PlayerID trueTargetPlayer) {
 	std::tuple<unsigned, unsigned, unsigned, unsigned> yamahaiAttr;
 	if (gameStat->gameType & GuobiaoMJ)
@@ -25,7 +25,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		const unsigned yamahaiMode = std::get<0>(yamahaiAttr);
 		const unsigned dice = gameStat->Dice[0].Number + gameStat->Dice[1].Number;
 		const unsigned dice2 = gameStat->Dice[2].Number + gameStat->Dice[3].Number;
-		if ((gameStat->Dice[0].Number == 0) && (gameStat->Dice[1].Number == 0)) return 0; // –¢İ’è
+		if ((gameStat->Dice[0].Number == 0) && (gameStat->Dice[1].Number == 0)) return 0; // æœªè¨­å®š
 		assert((dice >= 2) && (dice <= 12));
 		switch (yamahaiMode) {
 		case 0:
@@ -64,14 +64,14 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 	auto getRinshanFlag2 = getRinshanFlag(2);
 	auto getRinshanFlag1 = getRinshanFlag(1);
 	const bool shorterWall = (std::get<0>(yamahaiAttr) == 2) && (gameStat->playerwind(trueTargetPlayer) % 2 == 1);
-	if (gameStat->chkGameType(GuobiaoMJ) && (gameStat->tilesLeft() == 0)) { // ’†‘ƒ‹[ƒ‹‚ÅÅŒã‚Ì”v‚Ü‚Å©–Ì‚Á‚½ê‡
+	if (gameStat->chkGameType(GuobiaoMJ) && (gameStat->tilesLeft() == 0)) { // ä¸­å›½ãƒ«ãƒ¼ãƒ«ã§æœ€å¾Œã®ç‰Œã¾ã§è‡ªæ‘¸ã£ãŸå ´åˆ
 		for (int i = 0; i < 144; ++i)
 			TileTexture->DelTile(i);
 		return;
 	}
 	switch (tmpPlayerCode) {
 	case sOpposite:
-		for (int i = (18 - std::get<2>(yamahaiAttr) + (shorterWall ? 1 : 0)) * 2; i < 36; i += 2) { /* ‘Î–Ê‘¤‚ÌR */
+		for (int i = (18 - std::get<2>(yamahaiAttr) + (shorterWall ? 1 : 0)) * 2; i < 36; i += 2) { /* å¯¾é¢å´ã®å±± */
 			unsigned tileNum = calcTileNum((34 - (i - (shorterWall ? 2 : 0))) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
@@ -85,7 +85,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		}
 		break;
 	case sLeft:
-		for (int i = 0; i < (std::get<2>(yamahaiAttr) - (shorterWall ? 1 : 0)) * 2; i += 2) { /* ã‰Æ‘¤‚ÌR */
+		for (int i = 0; i < (std::get<2>(yamahaiAttr) - (shorterWall ? 1 : 0)) * 2; i += 2) { /* ä¸Šå®¶å´ã®å±± */
 			unsigned tileNum = calcTileNum((i + (shorterWall ? 2 : 0)) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
@@ -99,7 +99,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		}
 		break;
 	case sRight:
-		for (int i = (18 - std::get<2>(yamahaiAttr) + (shorterWall ? 1 : 0)) * 2; i < 36; i += 2) { /* ‰º‰Æ‘¤‚ÌR */
+		for (int i = (18 - std::get<2>(yamahaiAttr) + (shorterWall ? 1 : 0)) * 2; i < 36; i += 2) { /* ä¸‹å®¶å´ã®å±± */
 			unsigned tileNum = calcTileNum((34 - (i - (shorterWall ? 2 : 0))) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
@@ -113,7 +113,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		}
 		break;
 	case sSelf:
-		for (int i = 0; i < (std::get<2>(yamahaiAttr) - (shorterWall ? 1 : 0)) * 2; i += 2) { /* ©•ª‚ÌR */
+		for (int i = 0; i < (std::get<2>(yamahaiAttr) - (shorterWall ? 1 : 0)) * 2; i += 2) { /* è‡ªåˆ†ã®å±± */
 			unsigned tileNum = calcTileNum((i + (shorterWall ? 2 : 0)) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k  >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));

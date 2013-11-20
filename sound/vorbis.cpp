@@ -1,4 +1,4 @@
-#include "snddata.h"
+ï»¿#include "snddata.h"
 #ifdef VORBIS_SUPPORT
 #ifdef __MINGW32__ /* Workaround */
 #undef __MINGW32__
@@ -14,27 +14,27 @@
 #include <iomanip>
 #include "../common/strcode.h"
 
-/* OGGƒtƒ@ƒCƒ‹“Ç‚İ‚İ */
+/* OGGãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ */
 void sound::OggData::Prepare(const std::string& filename) {
 	std::memset(&format, 0, sizeof(format));
 #if defined(USE_XAUDIO2)
 	std::memset(&bufInfo, 0, sizeof(buffer));
 #endif
-	// ƒtƒ@ƒCƒ‹‚ğŠJ‚­
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 	FILE* file;
 #ifdef _MSC_VER
 	if (fopen_s(&file, filename.c_str(), "rb"))
 #else
 	if ((file = fopen(filename.c_str(), "rb")) == nullptr)
 #endif
-		throw CodeConv::tstring(_T("ƒtƒ@ƒCƒ‹‚ğŠJ‚¯‚Ü‚¹‚ñ‚Å‚µ‚½"));
+		throw CodeConv::tstring(_T("ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã‘ã¾ã›ã‚“ã§ã—ãŸ"));
 	OggVorbis_File* ovFile(new OggVorbis_File());
 	if (ov_open(file, ovFile, nullptr, 0)) {
-		fclose(file); throw CodeConv::tstring(_T("Ogg Vorbis ƒtƒ@ƒCƒ‹‚Å‚Í‚ ‚è‚Ü‚¹‚ñ"));
+		fclose(file); throw CodeConv::tstring(_T("Ogg Vorbis ãƒ•ã‚¡ã‚¤ãƒ«ã§ã¯ã‚ã‚Šã¾ã›ã‚“"));
 	}
-	// ƒƒ^ƒf[ƒ^“Ç‚İ‚İ
+	// ãƒ¡ã‚¿ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
 	const vorbis_info *info(ov_info(ovFile, -1));
-	if (!info) throw CodeConv::tstring(_T("Ogg Vorbis ƒtƒH[ƒ}ƒbƒg‚ªæ“¾‚Å‚«‚Ü‚¹‚ñ"));
+	if (!info) throw CodeConv::tstring(_T("Ogg Vorbis ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆãŒå–å¾—ã§ãã¾ã›ã‚“"));
 	std::memset(&format, 0, sizeof(format));
 #ifdef _WIN32
 	format.wFormatTag = WAVE_FORMAT_PCM;
@@ -47,18 +47,18 @@ void sound::OggData::Prepare(const std::string& filename) {
 	format.nSamplesPerSec = info->rate;
 	format.wBitsPerSample = 16;
 	format.nAvgBytesPerSec = format.nSamplesPerSec * format.nBlockAlign;
-	// ƒf[ƒ^“Ç‚İ‚İ
+	// ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
 	char* buf = (char*)calloc(1, 1 << 22 /* 4 MiB */);
 	long bytes_read = 0; int current = 0;
 	do {
 		bytes_read = ov_read(ovFile, buf, (1 << 22) - 1, 0, 2, 1, &current);
-		if (bytes_read == OV_HOLE) throw CodeConv::tstring(_T("“Ç‚İ‚İ‚ÍOV_HOLE‚Å¸”s‚µ‚Ü‚µ‚½"));
-		else if (bytes_read == OV_EBADLINK) throw CodeConv::tstring(_T("“Ç‚İ‚İ‚ÍOV_EBADLINK‚Å¸”s‚µ‚Ü‚µ‚½"));
-		else if (bytes_read == OV_EINVAL) throw CodeConv::tstring(_T("“Ç‚İ‚İ‚ÍOV_EINVAL‚Å¸”s‚µ‚Ü‚µ‚½"));
+		if (bytes_read == OV_HOLE) throw CodeConv::tstring(_T("èª­ã¿è¾¼ã¿ã¯OV_HOLEã§å¤±æ•—ã—ã¾ã—ãŸ"));
+		else if (bytes_read == OV_EBADLINK) throw CodeConv::tstring(_T("èª­ã¿è¾¼ã¿ã¯OV_EBADLINKã§å¤±æ•—ã—ã¾ã—ãŸ"));
+		else if (bytes_read == OV_EINVAL) throw CodeConv::tstring(_T("èª­ã¿è¾¼ã¿ã¯OV_EINVALã§å¤±æ•—ã—ã¾ã—ãŸ"));
 		else if (bytes_read)
 			buffer.insert(buffer.end(), &buf[0], &buf[bytes_read]);
 	} while (bytes_read);
-	// “Ç‚İI‚í‚è
+	// èª­ã¿çµ‚ã‚ã‚Š
 	fclose(file); delete ovFile;
 	free(buf); buf = nullptr;
 }

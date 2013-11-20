@@ -38,7 +38,7 @@ libmihajong_graphic_la_SOURCES = \
 	scenes/table/tiletip.h scenes/table/yamahai.h \
 	widgets/button.h widgets/checkbox.h widgets/editbox.h widgets/logwnd.h
 libmihajong_graphic_la_LDFLAGS = -no-undefined -release $(VERSION)
-libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS --input-charset=cp932
+libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS
 if WITH_DIRECTX
 libmihajong_graphic_la_CXXFLAGS += -DWITH_DIRECTX
 endif

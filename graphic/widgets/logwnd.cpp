@@ -1,4 +1,4 @@
-#include "logwnd.h"
+Ôªø#include "logwnd.h"
 #include "../resource.h"
 #include "../loadtex.h"
 #include "../sprite.h"
@@ -80,7 +80,7 @@ TransformMatrix LogWindow::getMatrix(int X, int Y, unsigned width) {
 #else
 	glPushMatrix(); glLoadIdentity();
 	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
-	// â°ïùägëÂÇÕïsóv
+	// Ê®™ÂπÖÊã°Â§ß„ÅØ‰∏çË¶Å
 	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
 	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
 	TransformMatrix mat; glGetFloatv(GL_MODELVIEW_MATRIX, &mat[0]);
@@ -120,8 +120,8 @@ void LogWindow::Render() {
 	}
 	if (reconstFlag) {
 		unsigned linenum = 0;
-		for (unsigned i = (unsigned)(max(0, (signed)lines.size() - (signed)height)); i < lines.size(); ++i) { // ÉçÉOÇÃç≈å„ÇÃïîï™Çï\é¶
-		//for (unsigned i = 0; i < min(height, lines.size()); ++i) { // ÉçÉOÇÃç≈èâÇÃïîï™Çï\é¶
+		for (unsigned i = (unsigned)(max(0, (signed)lines.size() - (signed)height)); i < lines.size(); ++i) { // „É≠„Ç∞„ÅÆÊúÄÂæå„ÅÆÈÉ®ÂàÜ„ÇíË°®Á§∫
+		//for (unsigned i = 0; i < min(height, lines.size()); ++i) { // „É≠„Ç∞„ÅÆÊúÄÂàù„ÅÆÈÉ®ÂàÜ„ÇíË°®Á§∫
 			myTextRenderer->NewText(linenum, lines[i], x, y + lineheight * linenum);
 			++linenum;
 		}
@@ -130,7 +130,7 @@ void LogWindow::Render() {
 	myTextRenderer->Render();
 }
 
-void LogWindow::reconstruct_lines() { // çsÇ…ï™äÑ
+void LogWindow::reconstruct_lines() { // Ë°å„Å´ÂàÜÂâ≤
 	lines.clear();
 	unsigned startPos = 0, currentDigit = 0;
 	CodeConv::tstring tmplog;
@@ -149,21 +149,21 @@ void LogWindow::reconstruct_lines() { // çsÇ…ï™äÑ
 			if (currentDigit > width) {
 				/*  0    0    1    1   1|
 				**  0....5....0....5...9v
-				**  aÇ¢ÇÎÇÕÇ…ÇŸÇ÷Ç∆ÇøÇËÇ 
+				**  a„ÅÑ„Çç„ÅØ„Å´„Åª„Å∏„Å®„Å°„Çä„Å¨
 				**  01 2 3 4 5 6 7 8 9 10 */
 				lines.push_back(tmplog.substr(startPos, i - startPos));
 				startPos = i; currentDigit = 2;
 			} else if ((currentDigit == width) && (isLeadingByte(tmplog, i))) {
 				/*  0    0    1    1   1|
 				**  0....5....0....5...9v
-				**  aÇ¢ÇÎÇÕÇ…ÇŸÇ÷Ç∆ÇøÇËÇ 
+				**  a„ÅÑ„Çç„ÅØ„Å´„Åª„Å∏„Å®„Å°„Çä„Å¨
 				**  012345678901234567890 */
 				lines.push_back(tmplog.substr(startPos, i - startPos));
 				startPos = i; currentDigit = 1;
 			} else if (currentDigit == width) {
 				/*  0    0    1    1   1|
 				**  0....5....0....5...9v
-				**  Ç¢ÇÎÇÕÇ…ÇŸÇ÷Ç∆ÇøÇËÇ ÇÈ
+				**  „ÅÑ„Çç„ÅØ„Å´„Åª„Å∏„Å®„Å°„Çä„Å¨„Çã
 				**  0 1 2 3 4 5 6 7 8 9 10 */
 				lines.push_back(tmplog.substr(startPos, i - startPos + 1));
 				startPos = i + 1; currentDigit = (isFullWidth(tmplog[i]) ? 2 : 1);

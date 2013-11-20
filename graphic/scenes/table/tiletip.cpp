@@ -1,4 +1,4 @@
-#include "tiletip.h"
+ï»¿#include "tiletip.h"
 #include "tehai.h"
 #include "nakibtn.h"
 #include "../../gametbl.h"
@@ -27,25 +27,25 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 	if ((tileCursor >= 0) && (!caller->tehaiReconst->isEnabled(tileCursor))) {
 		tipText = _T("");
 	} else if (tileCursor >= 0) {
-		/* ‘Å”v‰¼’è */
+		/* æ‰“ç‰Œä»®å®š */
 		GameTable tmpGameStat; memcpy(&tmpGameStat, GameStatus::gameStat(), sizeof (GameTable));
 		tmpGameStat.statOfMine().Hand[tileCursor].tile = tmpGameStat.statOfMine().Tsumohai().tile;
 		tmpGameStat.statOfMine().Tsumohai().tile = NoTile;
 		/*  */
 		CodeConv::tostringstream o;
 		utils::Shanten shanten = utils::calcShanten(&tmpGameStat, tmpGameStat.PlayerID, utils::shantenAll);
-		if (shanten > 0) { // •s’®‚Ì‚ÍŒü’®•\¦
-			o << (int)shanten << _T("Œü’®");
+		if (shanten > 0) { // ä¸è´ã®æ™‚ã¯å‘è´è¡¨ç¤º
+			o << (int)shanten << _T("å‘è´");
 		} else {
-			/* ‘Ò‚¿”v‚Ì”‚ğ•\¦ */
+			/* å¾…ã¡ç‰Œã®æ•°ã‚’è¡¨ç¤º */
 			MachihaiInfo machiInfo = utils::chkFuriten(&tmpGameStat, tmpGameStat.PlayerID);
 			if ((tmpGameStat.gameType & RichiMJ) && (machiInfo.FuritenFlag))
-				o << _T("[U’®]");
+				o << _T("[æŒ¯è´]");
 			if (machiInfo.MachihaiTotal == 0)
-				o << _T("ƒ ƒJ ƒ‰");
+				o << _T("ç´” ã‚« ãƒ©");
 			else
-				o << _T("‚ ‚Æ") << std::setw(2) << std::setfill(_T(' ')) << (int)machiInfo.MachihaiTotal << _T("–‡");
-			/* ‘Ò‚¿”v•\¦ */
+				o << _T("ã‚ã¨") << std::setw(2) << std::setfill(_T(' ')) << (int)machiInfo.MachihaiTotal << _T("æš");
+			/* å¾…ã¡ç‰Œè¡¨ç¤º */
 			int i = 0;
 			for (int j = 1; j < TileNonflowerMax; ++j) {
 				if (machiInfo.Machihai[j].MachihaiFlag) {
@@ -59,10 +59,10 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 			}
 		}
 		tipText = o.str();
-	} else { // ”v‘I‘ğˆÈŠO‚ÌƒtƒŠƒeƒ“•\¦
+	} else { // ç‰Œé¸æŠæ™‚ä»¥å¤–ã®ãƒ•ãƒªãƒ†ãƒ³è¡¨ç¤º
 		MachihaiInfo machiInfo = utils::chkFuriten(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 		if ((GameStatus::gameStat()->gameType & RichiMJ) && (machiInfo.FuritenFlag || GameStatus::gameStat()->statOfMine().DoujunFuriten))
-			tipText = _T("[U’®]");
+			tipText = _T("[æŒ¯è´]");
 		if (caller->buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) {
 			TileCode discardTile = GameStatus::gameStat()->CurrentDiscard.tile;
 			auto render = [this, &tipText] (unsigned tileID, TileCode tileCode) -> void {
@@ -76,15 +76,15 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 					(caller->buttonReconst->getCursor() == buttonID));
 			};
 			if (chkCursor(ButtonReconst::btnChii1)) {
-				tipText += _T("•›˜I"); render(0, discardTile); render(1, TileCode(discardTile + 1)); render(2, TileCode(discardTile + 2));
+				tipText += _T("å‰¯éœ²"); render(0, discardTile); render(1, TileCode(discardTile + 1)); render(2, TileCode(discardTile + 2));
 			} else if (chkCursor(ButtonReconst::btnChii2)) {
-				tipText += _T("•›˜I"); render(0, TileCode(discardTile - 1)); render(1, discardTile); render(2, TileCode(discardTile + 1));
+				tipText += _T("å‰¯éœ²"); render(0, TileCode(discardTile - 1)); render(1, discardTile); render(2, TileCode(discardTile + 1));
 			} else if (chkCursor(ButtonReconst::btnChii3)) {
-				tipText += _T("•›˜I"); render(0, TileCode(discardTile - 2)); render(1, TileCode(discardTile - 1)); render(2, discardTile);
+				tipText += _T("å‰¯éœ²"); render(0, TileCode(discardTile - 2)); render(1, TileCode(discardTile - 1)); render(2, discardTile);
 			} else if (chkCursor(ButtonReconst::btnPon)) {
-				tipText += _T("•›˜I"); render(0, discardTile); render(1, discardTile); render(2, discardTile);
+				tipText += _T("å‰¯éœ²"); render(0, discardTile); render(1, discardTile); render(2, discardTile);
 			} else if (chkCursor(ButtonReconst::btnKan)) {
-				tipText += _T("•›˜I"); render(0, discardTile); render(1, discardTile); render(2, discardTile); render(3, discardTile);
+				tipText += _T("å‰¯éœ²"); render(0, discardTile); render(1, discardTile); render(2, discardTile); render(3, discardTile);
 			}
 		}
 	}

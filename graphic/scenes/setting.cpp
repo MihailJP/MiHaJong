@@ -1,4 +1,4 @@
-#include "setting.h"
+ï»¿#include "setting.h"
 #include "../event.h"
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
@@ -19,7 +19,7 @@ PreferenceConfigScene::PreferenceConfigScene(ScreenManipulator* const manipulato
 }
 void PreferenceConfigScene::objInit() {
 #endif /*_WIN32*/
-	CreateButton(0, 1240, 1000, 156, 48, _T("‚n ‚j"));
+	CreateButton(0, 1240, 1000, 156, 48, _T("ï¼¯ ï¼«"));
 	CreateButton(1, 1060, 1000, 156, 48, _T("CANCEL"));
 	redrawItems();
 }
@@ -31,11 +31,11 @@ PreferenceConfigScene::~PreferenceConfigScene() {
 }
 
 void PreferenceConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName, const CodeConv::tstring& prmContent) {
-	// €–Ú‚ğ•\¦
-	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ƒAƒX”ä~0.75(‰¡•’²®—p)
+	// é …ç›®ã‚’è¡¨ç¤º
+	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ã‚¢ã‚¹æ¯”Ã—0.75(æ¨ªå¹…èª¿æ•´ç”¨)
 	const unsigned ItemNum = (menuCursor / RULES_IN_PAGE * RULES_IN_PAGE) + prmID;
-	unsigned itmNameCols = strwidth(prmName); // Œ…”(“ú–{Œê‚Í2Œ…)
-	ArgbColor baseColor = ((prmContent == _T("‚m^‚`")) || ((prmContent.empty()) && (rules::getPreferenceInputSize(ItemNum) == 0))) ? 0x00bfbfbf : 0x00ffffff;
+	unsigned itmNameCols = strwidth(prmName); // æ¡æ•°(æ—¥æœ¬èªã¯2æ¡)
+	ArgbColor baseColor = ((prmContent == _T("ï¼®ï¼ï¼¡")) || ((prmContent.empty()) && (rules::getPreferenceInputSize(ItemNum) == 0))) ? 0x00bfbfbf : 0x00ffffff;
 	ArgbColor menuColor = ((menuCursor % RULES_IN_PAGE == prmID) && (buttonCursor == -1)) ? 0xff000000 : 0x7f000000;
 	const int xPos = (prmID / 20 * 720 + 50), yPos = 135 + (prmID % 20) * 40;
 	myTextRenderer->NewText(prmID * 3, prmName,
@@ -50,7 +50,7 @@ void PreferenceConfigScene::itemText(unsigned prmID, const CodeConv::tstring& pr
 	setRegion(prmID,
 		(prmID / 20 * 720 + 50) , 135 + (prmID % 20) * 40,
 		(prmID / 20 * 720 + 670), 135 + (prmID % 20) * 40 + 35);
-	if (rules::getPreferenceInputSize(ItemNum)) { // ƒGƒfƒBƒbƒgƒ{ƒbƒNƒX
+	if (rules::getPreferenceInputSize(ItemNum)) { // ã‚¨ãƒ‡ã‚£ãƒƒãƒˆãƒœãƒƒã‚¯ã‚¹
 		if (editBoxes[prmID] == nullptr) {
 			editBoxes[prmID] = new EditBox(caller->getHWnd(), caller->getDevice(),
 				(xPos + 162 + 4) * WidthRate, yPos + 6, 32, 1.5f);
@@ -64,7 +64,7 @@ void PreferenceConfigScene::itemText(unsigned prmID, const CodeConv::tstring& pr
 }
 
 void PreferenceConfigScene::redrawItems() {
-	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ƒAƒX”ä~0.75(‰¡•’²®—p)
+	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ã‚¢ã‚¹æ¯”Ã—0.75(æ¨ªå¹…èª¿æ•´ç”¨)
 	for (int i = 0; i < RULES_IN_PAGE; i++) {
 		const unsigned ItemNum = (menuCursor / RULES_IN_PAGE * RULES_IN_PAGE) + i;
 		TCHAR menuitem[128]; rules::getPreferenceName(menuitem, 128, ItemNum);
@@ -75,13 +75,13 @@ void PreferenceConfigScene::redrawItems() {
 void PreferenceConfigScene::ShowPageCaption() {
 }
 void PreferenceConfigScene::ShowMessageBelow() {
-	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ƒAƒX”ä~0.75(‰¡•’²®—p)
+	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // ã‚¢ã‚¹æ¯”Ã—0.75(æ¨ªå¹…èª¿æ•´ç”¨)
 	TimerMicrosec t = myTimer.elapsed();
 	CodeConv::tstring caption = _T("");
 	if (getActiveTextbox() != -1) {
 		switch ((t / 5000000u) % 2) {
 		case 0:
-			caption = CodeConv::tstring(_T("•¶š“ü—Í’†  Esc/Tab/Enter:–ß‚é"));
+			caption = CodeConv::tstring(_T("æ–‡å­—å…¥åŠ›ä¸­  Esc/Tab/Enter:æˆ»ã‚‹"));
 			break;
 		case 1:
 			caption = verInfoText();
@@ -96,16 +96,16 @@ void PreferenceConfigScene::ShowMessageBelow() {
 				caption = verInfoText();
 			break;
 		case 1:
-			caption = CodeConv::tstring(_T("ƒL[ƒ{[ƒh‘€ì  ª/«:ƒJ[ƒ\ƒ‹ˆÚ“®  ©/¨:‘I‘ğ’†‚Ì€–Ú‚ğ•ÏX  Esc/X:ƒ{ƒ^ƒ“‘I‘ğ‚Ö"));
+			caption = CodeConv::tstring(_T("ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æ“ä½œ  â†‘/â†“:ã‚«ãƒ¼ã‚½ãƒ«ç§»å‹•  â†/â†’:é¸æŠä¸­ã®é …ç›®ã‚’å¤‰æ›´  Esc/X:ãƒœã‚¿ãƒ³é¸æŠã¸"));
 			break;
 		case 2:
-			caption = CodeConv::tstring(_T("ƒL[ƒ{[ƒh‘€ì  Home/End:¶‰EƒJƒ‰ƒ€ŠÔ‚ÌˆÚ“®  PageUp/PageDown:ƒy[ƒWŠÔ‚ÌˆÚ“®"));
+			caption = CodeConv::tstring(_T("ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æ“ä½œ  Home/End:å·¦å³ã‚«ãƒ©ãƒ é–“ã®ç§»å‹•  PageUp/PageDown:ãƒšãƒ¼ã‚¸é–“ã®ç§»å‹•"));
 			break;
 		case 3:
-			caption = CodeConv::tstring(_T("ƒL[ƒ{[ƒh‘€ì  Tab/Enter/Space/ZF•¶š“ü—Íƒ‚[ƒh"));
+			caption = CodeConv::tstring(_T("ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æ“ä½œ  Tab/Enter/Space/Zï¼šæ–‡å­—å…¥åŠ›ãƒ¢ãƒ¼ãƒ‰"));
 			break;
 		case 4:
-			caption = CodeConv::tstring(_T("ƒ}ƒEƒX‘€ì  €–Úã‚Å¶ƒNƒŠƒbƒN/ƒzƒC[ƒ‹‰ñ“]:‘I‘ğ’†‚Ì€–Ú‚ğ•ÏX/•¶š“ü—Íƒ‚[ƒh"));
+			caption = CodeConv::tstring(_T("ãƒã‚¦ã‚¹æ“ä½œ  é …ç›®ä¸Šã§å·¦ã‚¯ãƒªãƒƒã‚¯/ãƒ›ã‚¤ãƒ¼ãƒ«å›è»¢:é¸æŠä¸­ã®é …ç›®ã‚’å¤‰æ›´/æ–‡å­—å…¥åŠ›ãƒ¢ãƒ¼ãƒ‰"));
 			break;
 		}
 	} else {
@@ -113,28 +113,28 @@ void PreferenceConfigScene::ShowMessageBelow() {
 		case 0:
 			switch (buttonCursor) {
 			case 0:
-				caption = _T("İ’è‚ğ•Û‘¶‚µAƒ^ƒCƒgƒ‹‰æ–Ê‚É–ß‚è‚Ü‚·");
+				caption = _T("è¨­å®šã‚’ä¿å­˜ã—ã€ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã«æˆ»ã‚Šã¾ã™");
 				break;
 			case 1:
-				caption = _T("İ’è‚ğ”jŠü‚µAƒ^ƒCƒgƒ‹‰æ–Ê‚É–ß‚è‚Ü‚·");
+				caption = _T("è¨­å®šã‚’ç ´æ£„ã—ã€ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã«æˆ»ã‚Šã¾ã™");
 				break;
 			case 2:
-				caption = _T("Ÿ‚Ìƒy[ƒW‚ÉˆÚ“®‚µ‚Ü‚·");
+				caption = _T("æ¬¡ã®ãƒšãƒ¼ã‚¸ã«ç§»å‹•ã—ã¾ã™");
 				break;
 			case 3:
-				caption = _T("‘O‚Ìƒy[ƒW‚ÉˆÚ“®‚µ‚Ü‚·");
+				caption = _T("å‰ã®ãƒšãƒ¼ã‚¸ã«ç§»å‹•ã—ã¾ã™");
 				break;
 			}
 			break;
 		case 1:
-			caption = CodeConv::tstring(_T("ƒL[ƒ{[ƒh‘€ì  ©/¨:ƒJ[ƒ\ƒ‹ˆÚ“®  Enter/Space/Z:Œˆ’è  Esc/X:ƒ‹[ƒ‹İ’è‚É–ß‚é"));
+			caption = CodeConv::tstring(_T("ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æ“ä½œ  â†/â†’:ã‚«ãƒ¼ã‚½ãƒ«ç§»å‹•  Enter/Space/Z:æ±ºå®š  Esc/X:ãƒ«ãƒ¼ãƒ«è¨­å®šã«æˆ»ã‚‹"));
 			break;
 		case 2:
-			caption = CodeConv::tstring(_T("’ÊM‘Îí‚Ìƒ‹[ƒ‹İ’è‚ÍƒzƒXƒg‘¤‚Ìİ’è‚ª“K—p‚³‚ê‚Ü‚·"));
+			caption = CodeConv::tstring(_T("é€šä¿¡å¯¾æˆ¦æ™‚ã®ãƒ«ãƒ¼ãƒ«è¨­å®šã¯ãƒ›ã‚¹ãƒˆå´ã®è¨­å®šãŒé©ç”¨ã•ã‚Œã¾ã™"));
 			break;
 		}
 	}
-	unsigned captionCols = strwidth(caption); // Œ…”(“ú–{Œê‚Í2Œ…)
+	unsigned captionCols = strwidth(caption); // æ¡æ•°(æ—¥æœ¬èªã¯2æ¡)
 	myTextRenderer->NewText(120, caption,
 		(720 - 9 * ((captionCols > 76) ? 76 : captionCols)) * WidthRate, 955, 1.0f,
 		(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate : WidthRate,
@@ -151,7 +151,7 @@ void PreferenceConfigScene::savePreference() {
 	memset(&PrefConf[0][0], 0, sizeof(PrefConf));
 	for (unsigned i = 0; i < PREFERENCE_ITEMS; i++) {
 		TCHAR preftxt[128]; rules::getPreferenceTxt(preftxt, 128, i, 0);
-		if ((CodeConv::tstring(preftxt) == _T("")) || (CodeConv::tstring(preftxt) == _T("‚m^‚`")))
+		if ((CodeConv::tstring(preftxt) == _T("")) || (CodeConv::tstring(preftxt) == _T("ï¼®ï¼ï¼¡")))
 			PrefConf[i / RULE_IN_LINE][i % RULE_IN_LINE] = '-';
 		else
 			PrefConf[i / RULE_IN_LINE][i % RULE_IN_LINE] = rules::digit[prefstat[i]];
@@ -215,7 +215,7 @@ void PreferenceConfigScene::BtnEvent_Content_Roll_Down() {
 }
 
 void PreferenceConfigScene::setVolume() {
-	/* XXX: ‚±‚±‚ÍƒRƒ“ƒtƒBƒO”Ô†‚ğƒn[ƒhƒR[ƒfƒBƒ“ƒO */
+	/* XXX: ã“ã“ã¯ã‚³ãƒ³ãƒ•ã‚£ã‚°ç•ªå·ã‚’ãƒãƒ¼ãƒ‰ã‚³ãƒ¼ãƒ‡ã‚£ãƒ³ã‚° */
 	using namespace sound;
 	auto getvolume = [this] (unsigned index) -> double {
 		int volperc = ((20 + prefstat[index]) % 21) * 5;
@@ -251,7 +251,7 @@ void PreferenceConfigScene::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) 
 }
 void PreferenceConfigScene::KeyboardInput(WPARAM wParam, LPARAM lParam)
 #else /*_WIN32*/
-/* TODO: Linux‚Å‚Í“ú–{Œê“ü—Í‚ª–¢À‘• */
+/* TODO: Linuxã§ã¯æ—¥æœ¬èªå…¥åŠ›ãŒæœªå®Ÿè£… */
 void PreferenceConfigScene::KeyboardInput(const XEvent* od)
 #endif /*_WIN32*/
 {

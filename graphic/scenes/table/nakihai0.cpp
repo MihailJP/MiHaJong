@@ -1,4 +1,4 @@
-#include "nakihai0.h"
+ï»¿#include "nakihai0.h"
 //#include "../../gametbl.h"
 #include "../../rule.h"
 #include "../../utils.h"
@@ -8,7 +8,7 @@ namespace mihajong_graphic {
 
 using utils::playerRelative;
 
-/* –Â‚¢‚½”v‚ð•\Ž¦‚·‚é */
+/* é³´ã„ãŸç‰Œã‚’è¡¨ç¤ºã™ã‚‹ */
 void ShowNakihai::NakihaiAnkan(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID) {
 	const MeldCode* const tile = &(gameStat->Player[targetPlayer].Meld[meldID]);
 	assert((meldID > 0) && (meldID <= gameStat->Player[targetPlayer].MeldPointer));

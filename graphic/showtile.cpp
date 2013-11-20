@@ -1,4 +1,4 @@
-#include "showtile.h"
+ï»¿#include "showtile.h"
 #include "resource.h"
 #include "loadtex.h"
 #include "geometry.h"
@@ -18,10 +18,10 @@ ShowTile::~ShowTile() {
 #endif
 }
 
-/* V‹K‚Ì”vƒIƒuƒWƒFƒNƒg‚ğì¬‚·‚é */
+/* æ–°è¦ã®ç‰Œã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã™ã‚‹ */
 void ShowTile::NewTile(unsigned int ID, TileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, ArgbColor filterCol) {
 	const TileDescriptor empty = {false, NoTile, Normal, 0, 0, Portrait, Obverse, 0xffffffff};
-	if (mySprites.size() <= ID) mySprites.resize(ID + 1, empty); // ”z—ñ‚ÌŠg’£
+	if (mySprites.size() <= ID) mySprites.resize(ID + 1, empty); // é…åˆ—ã®æ‹¡å¼µ
 	mySprites[ID].exist = true;
 	mySprites[ID].tile = tile; mySprites[ID].red = red;
 	mySprites[ID].X = x; mySprites[ID].Y = y;
@@ -29,14 +29,14 @@ void ShowTile::NewTile(unsigned int ID, TileCode tile, doraCol red, int x, int y
 	mySprites[ID].color = filterCol;
 }
 
-/* ”vƒIƒuƒWƒFƒNƒg‚ÌŒãn–– */
+/* ç‰Œã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å¾Œå§‹æœ« */
 void ShowTile::DelTile(unsigned int ID) {
 	if (mySprites.size() > ID) {
 		mySprites[ID].exist = false;
 	}
 }
 
-/* ƒŒƒ“ƒ_ƒŠƒ“ƒO */
+/* ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚° */
 void ShowTile::RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY) {
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(TileTexture, tile->X, tile->Y,
 		CenterX*2, CenterY*2, tile->color, rect, CenterX, CenterY);

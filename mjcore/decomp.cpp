@@ -1,4 +1,4 @@
-#include "decomp.h"
+ï»¿#include "decomp.h"
 
 #include <cassert>
 #include "lzma/LzmaLib.h"
@@ -14,7 +14,7 @@
 
 using std::min;
 
-/* –Êqƒf[ƒ^‰Šú‰» */
+/* é¢å­ãƒ‡ãƒ¼ã‚¿åˆæœŸåŒ– */
 namespace Compressed {
 
 void Data::decompress(int FileID_) {
@@ -38,12 +38,12 @@ void Data::decompress(int FileID_) {
 	free(compressedData); compressedData = nullptr;
 	if (result != SZ_OK) {
 		CodeConv::tostringstream o;
-		o << _T("LZMAƒXƒgƒŠ[ƒ€‚ÌƒfƒR[ƒh‚É¸”s‚µ‚Ü‚µ‚½Bƒtƒ@ƒCƒ‹‚ª‰ó‚ê‚Ä‚¢‚é‹ñ‚ª‚ ‚è‚Ü‚·B") <<
-			_T("ƒGƒ‰[ƒR[ƒh: ") << result;
+		o << _T("LZMAã‚¹ãƒˆãƒªãƒ¼ãƒ ã®ãƒ‡ã‚³ãƒ¼ãƒ‰ã«å¤±æ•—ã—ã¾ã—ãŸã€‚ãƒ•ã‚¡ã‚¤ãƒ«ãŒå£Šã‚Œã¦ã„ã‚‹è™ãŒã‚ã‚Šã¾ã™ã€‚") <<
+			_T("ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰: ") << result;
 		Raise(EXCEPTION_MJCORE_DECOMPRESSION_FAILURE, o.str().c_str());
 	}
 	else {
-		info(_T("LZMAƒXƒgƒŠ[ƒ€‚ğƒfƒR[ƒh‚µ‚Ü‚µ‚½B"));
+		info(_T("LZMAã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚’ãƒ‡ã‚³ãƒ¼ãƒ‰ã—ã¾ã—ãŸã€‚"));
 	}
 	return;
 }
@@ -74,22 +74,22 @@ void Data::verify(LPCTSTR Description_, const uint8_t* const expectedDigest_) {
 	}
 	if (mdUnmatch) {
 		CodeConv::tostringstream o;
-		o << Description_ << _T("‚ÌSHA256ƒnƒbƒVƒ…’l‚ªˆê’v‚µ‚Ü‚¹‚ñ‚Å‚µ‚½B") <<
-			_T("ƒtƒ@ƒCƒ‹‚ª‰ó‚ê‚Ä‚¢‚é‹ñ‚ª‚ ‚è‚Ü‚·B") << std::endl <<
-			_T("Šú‘Ò‚³‚ê‚éƒnƒbƒVƒ…’l: ") <<
+		o << Description_ << _T("ã®SHA256ãƒãƒƒã‚·ãƒ¥å€¤ãŒä¸€è‡´ã—ã¾ã›ã‚“ã§ã—ãŸã€‚") <<
+			_T("ãƒ•ã‚¡ã‚¤ãƒ«ãŒå£Šã‚Œã¦ã„ã‚‹è™ãŒã‚ã‚Šã¾ã™ã€‚") << std::endl <<
+			_T("æœŸå¾…ã•ã‚Œã‚‹ãƒãƒƒã‚·ãƒ¥å€¤: ") <<
 			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(expectedDigest_, expectedDigest_ + 32))) << std::endl <<
-			_T("ÀÛ‚ÌƒnƒbƒVƒ…’l: ") <<
+			_T("å®Ÿéš›ã®ãƒãƒƒã‚·ãƒ¥å€¤: ") <<
 			CodeConv::EnsureTStr(bytesToHexString(std::vector<uint8_t>(actualDigest, actualDigest + 32)));
 		Raise(EXCEPTION_MJCORE_HASH_MISMATCH, o.str().c_str());
 	}
 	else {
 		CodeConv::tostringstream o;
-		o << Description_ << _T("‚ÌSHA256ƒnƒbƒVƒ…’l‚ÌÆ‡‚É¬Œ÷‚µ‚Ü‚µ‚½B");
+		o << Description_ << _T("ã®SHA256ãƒãƒƒã‚·ãƒ¥å€¤ã®ç…§åˆã«æˆåŠŸã—ã¾ã—ãŸã€‚");
 		info(o.str().c_str());
 	}
 }
 
-Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDigest_) { // ‰Šú‰»
+Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDigest_) { // åˆæœŸåŒ–
 	try {
 		decompress(FileID_);
 		verify(Description_, expectedDigest_);
@@ -122,7 +122,7 @@ Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDiges
 	}
 #else /*_WIN32*/
 	catch (...) {
-		/* TODO: –¢À‘•‰ÓŠ */
+		/* TODO: æœªå®Ÿè£…ç®‡æ‰€ */
 		throw;
 	}
 #endif /*_WIN32*/
@@ -135,7 +135,7 @@ Data::~Data() {
 LPCTSTR Data::Description = nullptr;
 const uint8_t Data::expectedDigest[32] = {0,};
 
-LPCTSTR file_mentz_dat::Description = _T("–Êq\¬ƒf[ƒ^ƒx[ƒX");
+LPCTSTR file_mentz_dat::Description = _T("é¢å­æ§‹æˆãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹");
 const uint8_t file_mentz_dat::expectedDigest[32] = {
 	0x38, 0x27, 0x3a, 0x13, 0x49, 0x94, 0xd3, 0x77,
 	0x0e, 0x09, 0x05, 0xd4, 0xf5, 0xf7, 0xbb, 0x30,

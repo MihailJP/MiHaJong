@@ -1,4 +1,4 @@
-#include "window.h"
+ï»¿#include "window.h"
 #include "../common/version.h"
 #include "extchar.h"
 #include "loadtex.h"
@@ -37,9 +37,9 @@ LRESULT MainWindow::keyev(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-LRESULT CALLBACK MainWindow::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) { // ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
+LRESULT CALLBACK MainWindow::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) { // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
 	switch (message) {
-	case WM_DESTROY: // ƒEƒBƒ“ƒhƒE‚ð•Â‚¶‚½Žž
+	case WM_DESTROY: // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é–‰ã˜ãŸæ™‚
 		PostQuitMessage(0);
 		break;
 	case WM_KEYDOWN:
@@ -57,7 +57,7 @@ LRESULT CALLBACK MainWindow::WinProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	return 0;
 }
 
-void MainWindow::initWindowClass(HINSTANCE hThisInst, LPCTSTR icon) { // ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX‚Ì‰Šú‰»
+void MainWindow::initWindowClass(HINSTANCE hThisInst, LPCTSTR icon) { // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®åˆæœŸåŒ–
 	WNDCLASSEX myWindowClass;
 	
 	myWindowClass.hInstance = hThisInst;
@@ -78,7 +78,7 @@ void MainWindow::initWindowClass(HINSTANCE hThisInst, LPCTSTR icon) { // ƒEƒBƒ“ƒ
 	myWindowClass.hbrBackground = nullptr;
 	
 	if (!RegisterClassEx(&myWindowClass))
-		throw _T("ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX‚Ì“o˜^‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+		throw _T("ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®ç™»éŒ²ã«å¤±æ•—ã—ã¾ã—ãŸ");
 	else return;
 }
 
@@ -108,13 +108,13 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen) 
 #endif
 		WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
 		nullptr, nullptr, hThisInst, nullptr);
-	if (!hWnd) throw _T("ƒEƒBƒ“ƒhƒE‚Ì¶¬‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+	if (!hWnd) throw _T("ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸ");
 	ShowWindow(hWnd, nWinMode);
 	UpdateWindow(hWnd);
 
 #ifndef WITH_DIRECTX
-	/* ƒtƒ‹ƒXƒNƒŠ[ƒ“‚É‚·‚éˆ—(WinAPI) */
-	/* DirectX‚Ìê‡‚ÍDirectX‘¤‚ÌÝ’è‚Å‚Å‚«‚é‚ªAOpenGL‚Ìê‡‚ÍWinAPI‚ÅÝ’è‚ª•K—v(GLUT‚ÍŽg—p‚µ‚È‚¢) */
+	/* ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã«ã™ã‚‹å‡¦ç†(WinAPI) */
+	/* DirectXã®å ´åˆã¯DirectXå´ã®è¨­å®šã§ã§ãã‚‹ãŒã€OpenGLã®å ´åˆã¯WinAPIã§è¨­å®šãŒå¿…è¦(GLUTã¯ä½¿ç”¨ã—ãªã„) */
 	if (fullscreen) {
 		DEVMODE dMode; ZeroMemory(&dMode, sizeof dMode);
 		dMode.dmSize = sizeof dMode;
@@ -122,36 +122,36 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen) 
 		dMode.dmPelsHeight = WindowHeight;
 		dMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT;
 		if (FAILED(ChangeDisplaySettings(&dMode, CDS_FULLSCREEN)))
-			throw _T("ƒtƒ‹ƒXƒNƒŠ[ƒ“‚É‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½");
+			throw _T("ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã«ã§ãã¾ã›ã‚“ã§ã—ãŸ");
 	}
 #endif
 	return;
 }
 #else /*_WIN32*/
-bool MainWindow::WinProc(MainWindow* mainWindow) { // ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
-	if (XPending(mainWindow->disp)) { // ƒCƒxƒ“ƒg‚ ‚è
+bool MainWindow::WinProc(MainWindow* mainWindow) { // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
+	if (XPending(mainWindow->disp)) { // ã‚¤ãƒ™ãƒ³ãƒˆã‚ã‚Š
 		XEvent event;
-		XNextEvent(mainWindow->disp, &event); // ƒCƒxƒ“ƒg‘Ò‹@
+		XNextEvent(mainWindow->disp, &event); // ã‚¤ãƒ™ãƒ³ãƒˆå¾…æ©Ÿ
 		
 		switch (event.type) {
 		case ClientMessage:
-			if (event.xclient.data.l[0] == mainWindow->wmDelMsg) { // ƒEƒBƒ“ƒhƒE‚ð•Â‚¶‚½Žž
+			if (event.xclient.data.l[0] == mainWindow->wmDelMsg) { // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é–‰ã˜ãŸæ™‚
 				XFlush(mainWindow->disp);
 				return false;
 			}
 			break;
-		case MotionNotify: // ƒ}ƒEƒXƒ|ƒCƒ“ƒ^‚ÌˆÚ“®
-		case ButtonPress: // ƒ}ƒEƒXƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚½Žž
-		case ButtonRelease: // ƒ}ƒEƒXƒ{ƒ^ƒ“‚ð—£‚µ‚½Žž
+		case MotionNotify: // ãƒžã‚¦ã‚¹ãƒã‚¤ãƒ³ã‚¿ã®ç§»å‹•
+		case ButtonPress: // ãƒžã‚¦ã‚¹ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸæ™‚
+		case ButtonRelease: // ãƒžã‚¦ã‚¹ãƒœã‚¿ãƒ³ã‚’é›¢ã—ãŸæ™‚
 			mainWindow->myScreenManipulator->mouseInputProc(&event);
 			break;
-		case KeyPress: // ƒL[‚ð‰Ÿ‚µ‚½Žž
-		case KeyRelease: // ƒL[‚ð—£‚µ‚½Žž
+		case KeyPress: // ã‚­ãƒ¼ã‚’æŠ¼ã—ãŸæ™‚
+		case KeyRelease: // ã‚­ãƒ¼ã‚’é›¢ã—ãŸæ™‚
 			mainWindow->myScreenManipulator->kbdInputProc(&event);
 			break;
 		}
 		return true;
-	} else { // ƒCƒxƒ“ƒg‚È‚µ
+	} else { // ã‚¤ãƒ™ãƒ³ãƒˆãªã—
 		mainWindow->Render();
 		return true;
 	}
@@ -159,8 +159,8 @@ bool MainWindow::WinProc(MainWindow* mainWindow) { // ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
 
 void MainWindow::initWindow(void* hThisInst, int nWinMode, bool fullscreen) {
 	XInitThreads();
-	disp = XOpenDisplay(nullptr); // Ú‘±æƒfƒBƒXƒvƒŒƒC‚Í DISPLAY ‚ÅŽw’è
-	if (disp == nullptr) throw _T("ƒfƒBƒXƒvƒŒƒC‚ÉÚ‘±o—ˆ‚Ü‚¹‚ñBCannot connect to display.");
+	disp = XOpenDisplay(nullptr); // æŽ¥ç¶šå…ˆãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ã¯ DISPLAY ã§æŒ‡å®š
+	if (disp == nullptr) throw _T("ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ã«æŽ¥ç¶šå‡ºæ¥ã¾ã›ã‚“ã€‚Cannot connect to display.");
 	int screen = DefaultScreen(disp);
 	hWnd = XCreateSimpleWindow(
 		disp,
@@ -171,10 +171,10 @@ void MainWindow::initWindow(void* hThisInst, int nWinMode, bool fullscreen) {
 		WhitePixel(disp, screen));
 	
 	std::string wName(CodeConv::toANSI(WindowCaption));
-	XStoreName(disp, hWnd, wName.c_str()); // ƒEƒBƒ“ƒhƒEƒLƒƒƒvƒVƒ‡ƒ“‚ðÝ’è
+	XStoreName(disp, hWnd, wName.c_str()); // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚­ãƒ£ãƒ—ã‚·ãƒ§ãƒ³ã‚’è¨­å®š
 
 	XSizeHints hints;
-	hints.flags = PMinSize|PMaxSize; // ƒEƒBƒ“ƒhƒEƒTƒCƒY‚ðŒÅ’è
+	hints.flags = PMinSize|PMaxSize; // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºã‚’å›ºå®š
 	hints.min_width = hints.max_width = WindowWidth;
 	hints.min_height = hints.max_height = WindowHeight;
 	XSetWMNormalHints(disp, hWnd, &hints);
@@ -218,11 +218,11 @@ MainWindow::~MainWindow() {
 #endif /*_WIN32*/
 }
 
-void MainWindow::Render() { // ƒEƒBƒ“ƒhƒE‚ÌÄ•`‰æ
+void MainWindow::Render() { // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®å†æç”»
 	if (myScreenManipulator) {
 		myScreenManipulator->Render();
 #ifdef _WIN32
-		// Windows‚Ì‚ÝBLinux‚Å‚Í•Ê‚Ì‰ÓŠ‚Å“ü—ÍƒCƒxƒ“ƒg‚ðˆµ‚¤‚Ì‚Å•s—v
+		// Windowsã®ã¿ã€‚Linuxã§ã¯åˆ¥ã®ç®‡æ‰€ã§å…¥åŠ›ã‚¤ãƒ™ãƒ³ãƒˆã‚’æ‰±ã†ã®ã§ä¸è¦
 		ValidateRect(hWnd, nullptr);
 		if (myInputManipulator)
 			myScreenManipulator->inputProc(myInputManipulator);
@@ -231,12 +231,12 @@ void MainWindow::Render() { // ƒEƒBƒ“ƒhƒE‚ÌÄ•`‰æ
 	return;
 }
 
-void MainWindow::transit(sceneID scene) { // ƒV[ƒ“Ø‚è‘Ö‚¦
+void MainWindow::transit(sceneID scene) { // ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
 	if (myScreenManipulator)
 		myScreenManipulator->transit(scene);
 }
 
-void MainWindow::subscene(unsigned int subsceneID) { // ƒTƒuƒV[ƒ“Ø‚è‘Ö‚¦
+void MainWindow::subscene(unsigned int subsceneID) { // ã‚µãƒ–ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
 	if (myScreenManipulator)
 		myScreenManipulator->subscene(subsceneID);
 }

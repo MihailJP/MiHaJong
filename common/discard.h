@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include <cstdint>
 #include <type_traits>
 
 namespace mihajong_structs {
 
-struct DiscardTileNum { /* ‘Å”vƒR[ƒh—p */
+struct DiscardTileNum { /* æ‰“ç‰Œã‚³ãƒ¼ãƒ‰ç”¨ */
 	enum discardType : uint8_t {
 		Normal, Ankan, Kakan, Riichi, Flower, OpenRiichi,
 		Agari, Kyuushu, Disconnect

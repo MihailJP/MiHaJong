@@ -1,59 +1,59 @@
-#pragma once
+﻿#pragma once
 
 #include <cstdint>
 
 namespace mihajong_socket {
 namespace protocol {
-	// Port 50000 �ɃN���C�A���g�ڑ����A�T�[�o�[�̓N���C�A���g�ԍ�(1 byte)��Ԃ��Đؒf����B
-	// Port (50000 + Client�� - 1) �ɍĐڑ����A�N���C�A���g�͎����̖��O�𑗐M����B
-	// ���̌�A�N���C�A���g�͊J�n���}��ҋ@����B
-	// �����̃|�[�g�ԍ��͎l�l�ł��o�[�W�����̏ꍇ
+	// Port 50000 にクライアント接続時、サーバーはクライアント番号(1 byte)を返して切断する。
+	// Port (50000 + Client№ - 1) に再接続し、クライアントは自分の名前を送信する。
+	// その後、クライアントは開始合図を待機する。
+	// ※このポート番号は四人打ちバージョンの場合
 
-	// ������c�c B8 LL SS SS SS ...
-	//            LL = ������̒���(bytes)
-	//            SS = ������̒��g(LL bytes, up to 255)
-	const uint8_t StartString_Signature = 0xb8; // ������J�n�̃V�O�l�`��
+	// 文字列…… B8 LL SS SS SS ...
+	//            LL = 文字列の長さ(bytes)
+	//            SS = 文字列の中身(LL bytes, up to 255)
+	const uint8_t StartString_Signature = 0xb8; // 文字列開始のシグネチャ
 	
-	// �J�n�̃V�O�l�`���c�c B4 NAME1 NAME2 NAME3 NAME4 RULES
-	//                      NAME1 to NAME4 = �v���C���[��
-	//                      RULES = ���[���ݒ�(80�������ɋ�؂�)
-	const uint8_t Server_StartGame_Signature = 0xb4; // �T�[�o�[����v���C�J�n�̃V�O�l�`��
+	// 開始のシグネチャ…… B4 NAME1 NAME2 NAME3 NAME4 RULES
+	//                      NAME1 to NAME4 = プレイヤー名
+	//                      RULES = ルール設定(80文字ずつに区切る)
+	const uint8_t Server_StartGame_Signature = 0xb4; // サーバーからプレイ開始のシグネチャ
 	
-	// �J�n�̃V�O�l�`���c�c B6 RN HB RB PR SCORE1 SCORE2 SCORE3 SCORE4 YK CH CH CH CH SU \
+	// 開始のシグネチャ…… B6 RN HB RB PR SCORE1 SCORE2 SCORE3 SCORE4 YK CH CH CH CH SU \
 	//                      DECK DI DI
-	//                      RN = �ǔԍ�(��1��=0�A��2��=1�A�ȉ����l�ɂ��ē�4��=7)
-	//                      HB = �ςݖ_�̐�
-	//                      RB = ���[�`�_�̐�
-	//                      PR = ���A������p((�ŏI�a���v���C���[�ԍ�(�Ȃ����-1) + 1) << 4 + �A���a����)
-	//                      SCORE1 to SCORE4 = �����_
-	//                      YK = �Ă����t���O(bit4�`bit7 = 0, bit3 = Player0, ..., bit0 = Player3)
-	//                      CH = �`�b�v(excess-128, Player0 to Player3)
-	//                      YK = �l�n�H���փt���O(bit4�`bit7 = 0, bit3 = Player0, ..., bit0 = Player3)
-	//                      DECK = ���v�ς݂̎R�v
-	//                      DI = �T�C�R���̖�(0xa9�`0xae)
-	const uint8_t Server_StartRound_Signature = 0xb6; // �T�[�o�[����ǊJ�n�̃V�O�l�`��
-	const uint8_t StartRound_Dice_Excess = 0xa8; // �T�C�R���̏o�� 0xa9�`0xae
-	const uint8_t StartRound_Tile_Excess = 0x10; // �v�ԍ��̃Q�^
+	//                      RN = 局番号(東1局=0、東2局=1、以下同様にして南4局=7)
+	//                      HB = 積み棒の数
+	//                      RB = リーチ棒の数
+	//                      PR = 八連荘判定用((最終和了プレイヤー番号(なければ-1) + 1) << 4 + 連続和了数)
+	//                      SCORE1 to SCORE4 = 持ち点
+	//                      YK = 焼き鳥フラグ(bit4〜bit7 = 0, bit3 = Player0, ..., bit0 = Player3)
+	//                      CH = チップ(excess-128, Player0 to Player3)
+	//                      YK = 四馬路解禁フラグ(bit4〜bit7 = 0, bit3 = Player0, ..., bit0 = Player3)
+	//                      DECK = 洗牌済みの山牌
+	//                      DI = サイコロの目(0xa9〜0xae)
+	const uint8_t Server_StartRound_Signature = 0xb6; // サーバーから局開始のシグネチャ
+	const uint8_t StartRound_Dice_Excess = 0xa8; // サイコロの出目 0xa9〜0xae
+	const uint8_t StartRound_Tile_Excess = 0x10; // 牌番号のゲタ
 
-	// �̔v�R�[�h����M�p
-	const uint8_t Dahai_Type_Normal_Offset = 0x60; // ���ʂ̎̔v (0x60 .. 0x6d)
-	const uint8_t Dahai_Type_Ankan_Offset = 0x70; // �Þ�
-	const uint8_t Dahai_Type_Kakan_Offset = 0x80; // ����
-	const uint8_t Dahai_Type_Riichi_Offset = 0x90; // ����
-	const uint8_t Dahai_Type_ORiichi_Offset = 0xc0; // �I�[�v������
-	const uint8_t Dahai_Type_Flower_Offset = 0xd0; // �Ԕv
-	const uint8_t Dahai_Kyuushu = 0x6e; // ����v
-	const uint8_t Dahai_Tsumo = 0x6f; // �a��
-	const uint8_t Dahai_Remote_Disconnect = 0x9f; // �c�����̃v���C���[�̐ڑ����؂ꂽ�ꍇ�̕���
+	// 捨牌コード送受信用
+	const uint8_t Dahai_Type_Normal_Offset = 0x60; // 普通の捨牌 (0x60 .. 0x6d)
+	const uint8_t Dahai_Type_Ankan_Offset = 0x70; // 暗槓
+	const uint8_t Dahai_Type_Kakan_Offset = 0x80; // 加槓
+	const uint8_t Dahai_Type_Riichi_Offset = 0x90; // 立直
+	const uint8_t Dahai_Type_ORiichi_Offset = 0xc0; // オープン立直
+	const uint8_t Dahai_Type_Flower_Offset = 0xd0; // 花牌
+	const uint8_t Dahai_Kyuushu = 0x6e; // 九種九牌
+	const uint8_t Dahai_Tsumo = 0x6f; // 和了
+	const uint8_t Dahai_Remote_Disconnect = 0x9f; // ツモ順のプレイヤーの接続が切れた場合の符牒
 
-	// ���R�[�h����M�p
-	const uint8_t Naki_Ignore = 0xa0; // ����
-	const uint8_t Naki_Ron = 0xa1; // ����
-	const uint8_t Naki_Pon = 0xa2; // �|��
-	const uint8_t Naki_Kan = 0xa3; // ����
-	const uint8_t Naki_Chii_Lower = 0xa4; // ���`�[
-	const uint8_t Naki_Chii_Middle = 0xa5; // ���`�[
-	const uint8_t Naki_Chii_Upper = 0xa6; // �E�`�[
-	const uint8_t Naki_Remote_Disconnect = 0xa7; // ���̖₢���킹���Ƀv���C���[�̐ڑ����؂ꂽ�ꍇ�̕���
+	// 鳴きコード送受信用
+	const uint8_t Naki_Ignore = 0xa0; // 無視
+	const uint8_t Naki_Ron = 0xa1; // ロン
+	const uint8_t Naki_Pon = 0xa2; // ポン
+	const uint8_t Naki_Kan = 0xa3; // 明槓
+	const uint8_t Naki_Chii_Lower = 0xa4; // 左チー
+	const uint8_t Naki_Chii_Middle = 0xa5; // 中チー
+	const uint8_t Naki_Chii_Upper = 0xa6; // 右チー
+	const uint8_t Naki_Remote_Disconnect = 0xa7; // 鳴きの問い合わせ中にプレイヤーの接続が切れた場合の符牒
 }
 }
