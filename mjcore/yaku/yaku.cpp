@@ -553,6 +553,7 @@ void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const 
 		if (NumOfMelds < SizeOfMeldBuffer) { // 条件を満たしてないなら抜けます
 			return;
 		}
+		assert(NumOfMelds == SizeOfMeldBuffer);
 		calcbasepoints(gameStat, analysis); // 符を計算する
 		analysis->DuiziCount = countingFacility::countDuiz(analysis->MianziDat);
 		analysis->KeziCount = countingFacility::countKez(analysis->MianziDat, &analysis->TotalKezi);

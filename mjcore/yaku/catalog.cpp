@@ -1,6 +1,7 @@
 ﻿#include "catalog.h"
 
 #include "../../common/strcode.h"
+#include <cassert>
 
 /* シングルトン インスタンス アクセサ */
 yaku::yakuCalculator::YakuCatalog* yaku::yakuCalculator::YakuCatalog::Instantiate() {
@@ -120,6 +121,11 @@ bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALY
 					count[k] += analysis->DuiziCount[Tiles[k][i]] + analysis->ShunziCount[Tiles[k][i]];
 				else
 					count[k] += analysis->TileCount[Tiles[k][i]];
+	if (analysis->shanten[shantenRegular] == -1) {
+		assert(count[0] + count[1] + count[2] + count[3] == SizeOfMeldBuffer);
+	} else {
+		assert(count[0] + count[1] + count[2] + count[3] == NumOfTilesInHand);
+	}
 	return ((count[0] ? 1 : 0) + (count[1] ? 1 : 0) + (count[2] ? 1 : 0) == 1) &&
 		((!chin_itsu) || (count[3] ? false: true));
 };
