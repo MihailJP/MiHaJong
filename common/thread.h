@@ -8,8 +8,10 @@
 #else /*OLDER_BOOST_SLEEP*/
 #define SLEEP_FOR sleep_for
 #endif /*OLDER_BOOST_SLEEP*/
+#define MVCONTAINER boost::container
 #else /*WITH_BOOST_THREAD*/
 #include <thread>
 #define THREADLIB std
 #define SLEEP_FOR sleep_for
+#define MVCONTAINER std
 #endif /*WITH_BOOST_THREAD*/
