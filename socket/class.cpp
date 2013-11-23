@@ -128,7 +128,7 @@ bool mihajong_socket::Sock::connected () { // 接続されているかを確認
 	return threadPtr->isConnected();
 }
 
-void mihajong_socket::Sock::wait_until_connected () { // 文字通りのことをやる
+void mihajong_socket::Sock::wait_until_connected () try { // 文字通りのことをやる
 	{
 		CodeConv::tostringstream o;
 		o << _T("接続待機 ポート [") << portnum << _T("]");
@@ -140,7 +140,10 @@ void mihajong_socket::Sock::wait_until_connected () { // 文字通りのこと�
 		o << _T("接続待機完了 ポート [") << portnum << _T("]");
 		info(o.str().c_str());
 	}
-};
+} catch (socket_error&) {
+	if (!dynamic_cast<server_thread*>(threadPtr))
+		throw;
+}
 unsigned char mihajong_socket::Sock::getc () { // 読み込み(非同期)
 	unsigned char byte;
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
