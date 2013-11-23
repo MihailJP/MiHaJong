@@ -712,6 +712,8 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 		if (yakuInfo->AgariPoints < calcprm[i].result.AgariPoints)
 			memcpy(yakuInfo, &calcprm[i].result, sizeof(YAKUSTAT));
 	}
+
+	delete[] calcprm;
 }
 
 // 役が成立しているか判定する
