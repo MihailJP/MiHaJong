@@ -360,8 +360,8 @@ int mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの�
 #ifdef _WIN32
 	u_long arg = 1; ioctlsocket(*mySock, FIONBIO, &arg); // non-blocking モードに設定
 #else /* _WIN32 */
-	int socketFlag = fcntl(*listenerSock, F_GETFL, 0);
-	fcntl(*listenerSock, F_SETFL, socketFlag | O_NONBLOCK); // non-blocking モードに設定
+	int socketFlag = fcntl(*mySock, F_GETFL, 0);
+	fcntl(*mySock, F_SETFL, socketFlag | O_NONBLOCK); // non-blocking モードに設定
 #endif /* _WIN32 */
 	connecting = true;
 	if (int err = establishConnection()) { // 接続
