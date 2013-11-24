@@ -699,7 +699,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	}
 	// 計算を実行
 	for (int i = 4; i < 160; i++) { // 0〜3はNoTileなのでやらなくていい
-		myThreads.push_back(THREADLIB::thread(CalculatorThread::calculator, &calcprm[i].result, &calcprm[i].pMode, gameStat, &analysis));
+		myThreads.push_back(THREADLIB::thread(CalculatorThread::calculator, &calcprm[i].result, &calcprm[i].pMode, gameStat, &calcprm[i].analysis));
 	}
 	for (auto& thread : myThreads)
 		thread.join(); // 同期
