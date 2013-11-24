@@ -101,8 +101,14 @@ DLL int hangup (int sock_id) { // 接続を切る
 }
 
 DLL int bye () { // ソケットのクリンナップ
+	for (auto& socket : sockets) {
+		delete socket;
+		socket = nullptr;
+	}
 #ifdef _WIN32 // Linuxでは不要
 	return WSACleanup();
+#else /* _WIN32 */
+	return 0;
 #endif /* _WIN32 */
 }
 
