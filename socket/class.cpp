@@ -224,14 +224,13 @@ void mihajong_socket::Sock::puts (const CodeConv::tstring& str) { // 文字列�
 
 void mihajong_socket::Sock::disconnect () { // 接続を切る
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
-	if (!threadPtr) throw already_closed();
-	threadPtr->terminate();
+	if (threadPtr) threadPtr->terminate();
 #ifdef _WIN32
 	closesocket(sock);
 #else
 	close(sock);
 #endif
-	delete threadPtr;
+	if (threadPtr) delete threadPtr;
 	threadPtr = nullptr;
 }
 
