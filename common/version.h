@@ -23,7 +23,7 @@
 #define SOCKET_MAJOR_VER 2
 #define SOCKET_MINOR_VER 2
 #define SOCKET_PATCH_VER 0
-#define SOCKET_VER "2.2.0"
+#define SOCKET_VER "2.2.1"
 
 #define SOUND_MAJOR_VER 2
 #define SOUND_MINOR_VER 2

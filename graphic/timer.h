@@ -1,10 +1,8 @@
 #pragma once
 
-#include <cstdint>
+#include "../common/clock.h"
 
 namespace mihajong_graphic {
-
-typedef uint64_t TimerMicrosec;
 
 class Timer {
 private:

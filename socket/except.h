@@ -75,4 +75,9 @@ class send_error : public socket_error { // 送信に失敗した
 public:
 	send_error(const int err) : socket_error("Send error", err) {};
 };
+
+class already_closed : public socket_error { // すでに接続を閉じている場合
+public:
+	already_closed() : socket_error("Socket already closed") {};
+};
 }
