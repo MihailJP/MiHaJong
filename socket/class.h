@@ -17,6 +17,7 @@
 #endif /* _WIN32 */
 #include "except.h"
 #include "logger.h"
+#include "../common/clock.h"
 
 namespace mihajong_socket {
 
@@ -90,6 +91,8 @@ protected:
 	volatile bool sender_closed; // 送信が全て終わったかのフラグ
 	volatile bool receive_ended; // 受信が全て終わったかのフラグ
 	volatile bool receiver_closed; // 受信が全て終わったかのフラグ
+	volatile TimerMicrosec terminate_time; // 打ち切り命令の時間
+	static const TimerMicrosec disconnection_timeout = 3000000ULL; // 切断処理タイムアウト
 	sockaddr_in myAddr; // アドレス情報[親スレッドから書き込み]
 	std::queue<unsigned char> myMailBox; // 受け取ったバイト列
 	MUTEXLIB::recursive_mutex myRecvQueueCS; // 受信バッファ用ミューテックス(クリティカルセクションに変更)

@@ -227,6 +227,7 @@ mihajong_socket::Sock::network_thread::network_thread(Sock* caller) {
 	myCaller = caller;
 	errtype = errNone; errcode = 0;
 	terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting = false;
+	terminate_time = 0;
 }
 
 mihajong_socket::Sock::network_thread::~network_thread() {
@@ -286,6 +287,8 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 			if (recvsz) trace(o.str().c_str());
 		} // 受信用ミューテックスを解放
 		if (recvsz == 0) {receive_ended = true;} // 受信終了？
+		if (terminated && (terminate_time != 0) && (terminate_time + disconnection_timeout < getCurrentTime())) // タイムアウト用
+			receive_ended = true; // 受信待機を中止
 	} else { // 受信できない時
 #ifdef _WIN32
 		switch (int err = WSAGetLastError()) {
@@ -467,10 +470,11 @@ void mihajong_socket::Sock::network_thread::wait_until_sent() { // 送信キュ�
 
 void mihajong_socket::Sock::network_thread::terminate () { // 切断する
 	terminated = true; // フラグを立てる
+	terminate_time = getCurrentTime();
 	wait_until_sent(); // 送信が完了するまで待つ
 	myThread.join(); // スレッドが終了するまで待つ
 	terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting =  false; // フラグの後始末
-	errtype = errNone; errcode = 0;
+	terminate_time = 0; errtype = errNone; errcode = 0;
 }
 
 // -------------------------------------------------------------------------
