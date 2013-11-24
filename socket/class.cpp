@@ -81,6 +81,7 @@ void mihajong_socket::Sock::listen (uint16_t port) { // サーバー開始
 }
 
 void mihajong_socket::Sock::listen () { // サーバー開始
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
 	threadPtr = new server_thread(this);
 	threadPtr->setaddr(addr);
 	threadPtr->setsock(&sock, &lsock);
@@ -113,6 +114,7 @@ void mihajong_socket::Sock::connect (const std::string& destination, uint16_t po
 }
 
 void mihajong_socket::Sock::connect () { // クライアント再接続
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
 	threadPtr = new client_thread(this);
 	threadPtr->setaddr(addr);
 	threadPtr->setsock(&sock);
@@ -120,6 +122,8 @@ void mihajong_socket::Sock::connect () { // クライアント再接続
 }
 
 bool mihajong_socket::Sock::connected () { // 接続されているかを確認
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	if (!threadPtr) throw already_closed();
 	threadPtr->chkError();
 	return threadPtr->isConnected();
 }
@@ -139,6 +143,8 @@ void mihajong_socket::Sock::wait_until_connected () { // 文字通りのこと�
 };
 unsigned char mihajong_socket::Sock::getc () { // 読み込み(非同期)
 	unsigned char byte;
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	if (!threadPtr) throw already_closed();
 	threadPtr->chkError();
 	byte = threadPtr->read();
 	{
@@ -177,6 +183,8 @@ unsigned char mihajong_socket::Sock::syncgetc () { // 読み込み(同期)
 CodeConv::tstring mihajong_socket::Sock::gets () { // NewLineまで読み込み
 	//trace("文字列をNWL(0x0a)まで取得します。");
 	CodeConv::tstring str;
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	if (!threadPtr) throw already_closed();
 	threadPtr->chkError();
 	str = threadPtr->readline();
 	{
@@ -188,6 +196,8 @@ CodeConv::tstring mihajong_socket::Sock::gets () { // NewLineまで読み込み
 }
 
 void mihajong_socket::Sock::putc (unsigned char byte) { // 書き込み
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	if (!threadPtr) throw already_closed();
 	{
 		CodeConv::tostringstream o;
 		o << _T("バイト送信 enqueue ポート [") << portnum << _T("] バイト [0x") <<
@@ -199,6 +209,8 @@ void mihajong_socket::Sock::putc (unsigned char byte) { // 書き込み
 }
 
 void mihajong_socket::Sock::puts (const CodeConv::tstring& str) { // 文字列書き込み
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	if (!threadPtr) throw already_closed();
 	{
 		CodeConv::tostringstream o;
 		o << _T("文字列送信処理 ポート [") << portnum << _T("] 長さ [") << str.length() << _T("] 文字列 [") << str << _T("]");
@@ -211,6 +223,8 @@ void mihajong_socket::Sock::puts (const CodeConv::tstring& str) { // 文字列�
 }
 
 void mihajong_socket::Sock::disconnect () { // 接続を切る
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	if (!threadPtr) throw already_closed();
 	threadPtr->terminate();
 #ifdef _WIN32
 	closesocket(sock);

@@ -38,6 +38,7 @@ private:
 	sockaddr_in addr;
 	SocketDescriptor sock, lsock;
 	network_thread* threadPtr;
+	MUTEXLIB::recursive_mutex threadExistenceMutex;
 	uint16_t portnum;
 public:
 	Sock () {} // ソケット初期化
