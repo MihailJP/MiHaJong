@@ -1,4 +1,6 @@
 ﻿#include "socket.h"
+#include "../common/thread.h"
+#include "../common/mutex.h"
 
 namespace mihajong_socket {
 
@@ -7,6 +9,7 @@ WSADATA SocketInfo;
 HINSTANCE dllInst;
 #endif /* _WIN32 */
 std::array<Sock*, numOfSockets> sockets = {nullptr,};
+MVCONTAINER::array<MUTEXLIB::recursive_mutex, numOfSockets> socketExistenceMutex;
 
 void errordlg (socket_error& err) { // エラーダイアログ【廃止】
 	//MessageBox(nullptr, CodeConv::EnsureTStr(err.what()).c_str(), _T("Socket Error"), MB_ICONERROR | MB_TOPMOST | MB_OK);
@@ -24,6 +27,7 @@ catch (socket_error& err) {
 }
 
 DLL int listen (int sock_id, int port) try { // サーバー待ち受け開始
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
 	sockets[sock_id] = new Sock(port); // 接続する
 	return 0;
 }
@@ -33,6 +37,7 @@ catch (socket_error& err) {
 }
 
 DLL int connect (int sock_id, const char* const addr, int port) try { // クライアント接続開始
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
 	sockets[sock_id] = new Sock(addr, port); // 接続する
 	return 0;
 }
@@ -42,6 +47,7 @@ catch (socket_error& err) {
 }
 
 DLL int connected (int sock_id) try { // 接続されているか確認
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
 	return sockets[sock_id]->connected() ? 1 : 0; // 接続されているか確認
 }
 catch (socket_error& err) { // 送信失敗時
@@ -50,6 +56,7 @@ catch (socket_error& err) { // 送信失敗時
 }
 
 DLL int putc (int sock_id, int byte) try { // 1バイト送信
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
 	sockets[sock_id]->putc((unsigned char)byte); // 1バイト送信
 	return 0;
 }
@@ -59,6 +66,7 @@ catch (socket_error& err) { // 送信失敗時
 }
 
 DLL int puts (int sock_id, LPCTSTR const str) try { // 文字列送信
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
 	sockets[sock_id]->puts(CodeConv::tstring(str)); // null-terminated (C-style) string 送信
 	return 0;
 }
@@ -68,6 +76,7 @@ catch (socket_error& err) { // 送信失敗時
 }
 
 DLL int getc (int sock_id) try { // 1バイト受信
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
 	return (int)sockets[sock_id]->getc(); // 1バイト受信
 }
 catch (queue_empty&) { // まだ受信するデータがない場合
@@ -79,6 +88,7 @@ catch (socket_error& err) { // 受信失敗時
 }
 
 DLL int gets (int sock_id, LPTSTR const stringline, int bufsize) try { // 1行受信
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
 #if defined(_MSC_VER)
 	_tcscpy_s(stringline, bufsize, sockets[sock_id]->gets().c_str());
 #else
@@ -95,16 +105,15 @@ catch (socket_error& err) { // 受信失敗時
 }
 
 DLL int hangup (int sock_id) { // 接続を切る
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
 	delete sockets[sock_id];
 	sockets[sock_id] = nullptr;
 	return 0;
 }
 
 DLL int bye () { // ソケットのクリンナップ
-	for (auto& socket : sockets) {
-		delete socket;
-		socket = nullptr;
-	}
+	for (unsigned i = 0; i < numOfSockets; ++i)
+		hangup(i);
 #ifdef _WIN32 // Linuxでは不要
 	return WSACleanup();
 #else /* _WIN32 */
