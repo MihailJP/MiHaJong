@@ -11,6 +11,8 @@ HINSTANCE dllInst;
 std::array<Sock*, numOfSockets> sockets = {nullptr,};
 MVCONTAINER::array<MUTEXLIB::recursive_mutex, numOfSockets> socketExistenceMutex;
 
+const int Error_NoSuchSocket = -32768;
+
 void errordlg (socket_error& err) { // エラーダイアログ【廃止】
 	//MessageBox(nullptr, CodeConv::EnsureTStr(err.what()).c_str(), _T("Socket Error"), MB_ICONERROR | MB_TOPMOST | MB_OK);
 }
@@ -48,6 +50,7 @@ catch (socket_error& err) {
 
 DLL int connected (int sock_id) try { // 接続されているか確認
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
+	if (!sockets[sock_id]) return Error_NoSuchSocket;
 	return sockets[sock_id]->connected() ? 1 : 0; // 接続されているか確認
 }
 catch (socket_error& err) { // 送信失敗時
@@ -57,6 +60,7 @@ catch (socket_error& err) { // 送信失敗時
 
 DLL int putc (int sock_id, int byte) try { // 1バイト送信
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
+	if (!sockets[sock_id]) return Error_NoSuchSocket;
 	sockets[sock_id]->putc((unsigned char)byte); // 1バイト送信
 	return 0;
 }
@@ -67,6 +71,7 @@ catch (socket_error& err) { // 送信失敗時
 
 DLL int puts (int sock_id, LPCTSTR const str) try { // 文字列送信
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
+	if (!sockets[sock_id]) return Error_NoSuchSocket;
 	sockets[sock_id]->puts(CodeConv::tstring(str)); // null-terminated (C-style) string 送信
 	return 0;
 }
@@ -77,6 +82,7 @@ catch (socket_error& err) { // 送信失敗時
 
 DLL int getc (int sock_id) try { // 1バイト受信
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
+	if (!sockets[sock_id]) return Error_NoSuchSocket;
 	return (int)sockets[sock_id]->getc(); // 1バイト受信
 }
 catch (queue_empty&) { // まだ受信するデータがない場合
@@ -89,6 +95,7 @@ catch (socket_error& err) { // 受信失敗時
 
 DLL int gets (int sock_id, LPTSTR const stringline, int bufsize) try { // 1行受信
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
+	if (!sockets[sock_id]) return Error_NoSuchSocket;
 #if defined(_MSC_VER)
 	_tcscpy_s(stringline, bufsize, sockets[sock_id]->gets().c_str());
 #else
@@ -106,7 +113,7 @@ catch (socket_error& err) { // 受信失敗時
 
 DLL int hangup (int sock_id) { // 接続を切る
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
-	delete sockets[sock_id];
+	if (sockets[sock_id]) delete sockets[sock_id];
 	sockets[sock_id] = nullptr;
 	return 0;
 }
