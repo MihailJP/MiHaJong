@@ -301,8 +301,6 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 			if (recvsz) trace(o.str().c_str());
 		} // 受信用ミューテックスを解放
 		if (recvsz == 0) {receive_ended = true;} // 受信終了？
-		if (terminated && (terminate_time != 0) && (terminate_time + disconnection_timeout < getCurrentTime())) // タイムアウト用
-			receive_ended = true; // 受信待機を中止
 	} else { // 受信できない時
 #ifdef _WIN32
 		switch (int err = WSAGetLastError()) {
@@ -322,6 +320,8 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 		}
 #endif /* _WIN32 */
 	}
+	if (terminated && (terminate_time != 0) && (terminate_time + disconnection_timeout < getCurrentTime())) // タイムアウト用
+		receive_ended = true; // 受信待機を中止
 	return 0;
 }
 
