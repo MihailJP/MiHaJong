@@ -364,7 +364,7 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 		case EINPROGRESS:
 			break; // このエラーは無視する
 		default:
-			errtype = errSend; errcode = errno; terminated = finished = true; connected = false;
+			errtype = errSend; errcode = errno; terminated = true; connected = false;
 			return -((int)errtype);
 		}
 	}

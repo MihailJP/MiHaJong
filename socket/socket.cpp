@@ -1,5 +1,4 @@
 ﻿#include "socket.h"
-#include "../common/thread.h"
 #include "../common/mutex.h"
 
 namespace mihajong_socket {
@@ -9,7 +8,7 @@ WSADATA SocketInfo;
 HINSTANCE dllInst;
 #endif /* _WIN32 */
 std::array<Sock*, numOfSockets> sockets = {nullptr,};
-MVCONTAINER::array<MUTEXLIB::recursive_mutex, numOfSockets> socketExistenceMutex;
+std::array<MUTEXLIB::recursive_mutex, numOfSockets> socketExistenceMutex;
 
 const int Error_NoSuchSocket = -32768;
 
