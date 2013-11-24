@@ -226,7 +226,7 @@ void mihajong_socket::Sock::disconnect () { // 接続を切る
 mihajong_socket::Sock::network_thread::network_thread(Sock* caller) {
 	myCaller = caller;
 	errtype = errNone; errcode = 0;
-	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting = false;
+	terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting = false;
 }
 
 mihajong_socket::Sock::network_thread::~network_thread() {
@@ -292,7 +292,7 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 		case WSAEWOULDBLOCK:
 			break; // データがない場合
 		default: // エラー処理
-			errtype = errRecv; errcode = err; terminated = finished = true; connected = false;
+			errtype = errRecv; errcode = err; terminated = true; connected = false;
 			return -((int)errtype);
 		}
 #else /* _WIN32 */
@@ -300,7 +300,7 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 		case EINPROGRESS:
 			break; // データがない場合
 		default: // エラー処理
-			errtype = errRecv; errcode = errno; terminated = finished = true; connected = false;
+			errtype = errRecv; errcode = errno; terminated = true; connected = false;
 			return -((int)errtype);
 		}
 #endif /* _WIN32 */
@@ -338,7 +338,7 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 		case WSAEWOULDBLOCK:
 			break; // このエラーは無視する
 		default:
-			errtype = errSend; errcode = err; terminated = finished = true; connected = false;
+			errtype = errSend; errcode = err; terminated = true; connected = false;
 			return -((int)errtype);
 		}
 	}
@@ -394,7 +394,6 @@ int mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの�
 		threadSleep(20);
 	}
 	{CodeConv::tostringstream o; o << _T("送受信スレッドループの終了 ポート[") << myCaller->portnum << _T("]"); debug(o.str().c_str());}
-	finished = true;
 	return 0;
 }
 
@@ -469,9 +468,8 @@ void mihajong_socket::Sock::network_thread::wait_until_sent() { // 送信キュ�
 void mihajong_socket::Sock::network_thread::terminate () { // 切断する
 	terminated = true; // フラグを立てる
 	wait_until_sent(); // 送信が完了するまで待つ
-	while ((!finished) && (connected || connecting))
-		threadSleep(10); // スレッドが終了するまで待つ
-	finished = terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting =  false; // フラグの後始末
+	myThread.join(); // スレッドが終了するまで待つ
+	terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting =  false; // フラグの後始末
 	errtype = errNone; errcode = 0;
 }
 
