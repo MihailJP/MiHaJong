@@ -553,6 +553,7 @@ void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const 
 		if (NumOfMelds < SizeOfMeldBuffer) { // 条件を満たしてないなら抜けます
 			return;
 		}
+		assert(NumOfMelds == SizeOfMeldBuffer);
 		calcbasepoints(gameStat, analysis); // 符を計算する
 		analysis->DuiziCount = countingFacility::countDuiz(analysis->MianziDat);
 		analysis->KeziCount = countingFacility::countKez(analysis->MianziDat, &analysis->TotalKezi);
@@ -689,11 +690,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
-#ifdef WITH_BOOST_THREAD
-	boost::container::vector<THREADLIB::thread> myThreads;
-#else
-	std::vector<THREADLIB::thread> myThreads;
-#endif
+	MVCONTAINER::vector<THREADLIB::thread> myThreads;
 	for (int i = 0; i < 160; i++) {
 		calcprm[i].pMode.AtamaCode = (TileCode)(i / 4);
 		calcprm[i].pMode.Order = (ParseOrder)(i % 4);
@@ -702,7 +699,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	}
 	// 計算を実行
 	for (int i = 4; i < 160; i++) { // 0〜3はNoTileなのでやらなくていい
-		myThreads.push_back(THREADLIB::thread(CalculatorThread::calculator, &calcprm[i].result, &calcprm[i].pMode, gameStat, &analysis));
+		myThreads.push_back(THREADLIB::thread(CalculatorThread::calculator, &calcprm[i].result, &calcprm[i].pMode, gameStat, &calcprm[i].analysis));
 	}
 	for (auto& thread : myThreads)
 		thread.join(); // 同期
@@ -711,6 +708,8 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 		if (yakuInfo->AgariPoints < calcprm[i].result.AgariPoints)
 			memcpy(yakuInfo, &calcprm[i].result, sizeof(YAKUSTAT));
 	}
+
+	delete[] calcprm;
 }
 
 // 役が成立しているか判定する
