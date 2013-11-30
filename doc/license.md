@@ -67,7 +67,9 @@ Wikimedia Commons ユーザーの Enceladus 氏により撮影され、MihailJP 
 
 フォントデータについて
 ----------------------
-　フォントデータは「梅ゴシック」を使用しています。
+　フォントデータは「梅明朝」「CMU Serif」および「GlyphWikiのデータ」を使用しています。
+
+### 梅フォントのライセンス ###
 
 > これらのフォントはフリー（自由な）ソフトウエアです。
 > あらゆる改変の有無に関わらず、また商業的な利用であっても、自由にご利用、
@@ -78,6 +80,56 @@ Wikimedia Commons ユーザーの Enceladus 氏により撮影され、MihailJP 
 > either commercially and noncommercially. THESE FONTS ARE PROVIDED "AS IS" WITHOUT WARRANTY.
 
 参照：[http://sourceforge.jp/projects/ume-font/wiki/FrontPage](http://sourceforge.jp/projects/ume-font/wiki/FrontPage)
+
+### Computer Modern Unicode フォントのライセンス ###
+
+> Andrey V. Panov (C) 2005
+>
+> All rights reserved.
+>
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, and/or sell copies of the
+> Software, and to permit persons to whom the Software is furnished to do so,
+> provided that the above copyright notice(s) and this permission notice appear
+> in all copies of the Software and that both the above copyright notice(s) and
+> this permission notice appear in supporting documentation.
+>
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS.
+> IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS NOTICE BE
+> LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES, OR
+> ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
+> IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+> OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+>
+> Except as contained in this notice, the name of a copyright holder shall not
+> be used in advertising or otherwise to promote the sale, use or other
+> dealings in this Software without prior written authorization of the
+> copyright holder.
+>
+> As a special exception, if you create a document which uses these fonts, and
+> embed these fonts or unaltered portions of these fonts into the document,
+> these fonts does not by itself cause the resulting document to be covered by
+> the X11 License. This exception does not however invalidate any other reasons
+> why the document might be covered by the X11 License. If you modify these
+> fonts, you may extend this exception to your version of the fonts, but you
+> are not obligated to do so. If you do not wish to do so, delete this
+> exception statement from your version.
+
+参照：[http://cm-unicode.sourceforge.net/license.html](http://cm-unicode.sourceforge.net/license.html)
+
+### GlyphWiki データ及び記事のライセンス ###
+
+> グリフウィキに登録されているグリフデータおよび記事は、誰もが自由に利用できることとします。
+> あらゆる改変の有無に関わらず、また商業的な利用であっても、自由に利用、複製、再配布することができます。
+> 著作者表示も特に制限を設けません。新しいフォントのベースデータとして用いることや、
+> そのままコピーしたものをフォントとして著作物とすることを妨げません。
+> 記事中に引用されている部分については、グリフウィキには著作権はありませんので引用元のライセンスを確認してください。 
+
+参照：[http://glyphwiki.org/wiki/GlyphWiki:データ・記事のライセンス](http://glyphwiki.org/wiki/GlyphWiki:%E3%83%87%E3%83%BC%E3%82%BF%E3%83%BB%E8%A8%98%E4%BA%8B%E3%81%AE%E3%83%A9%E3%82%A4%E3%82%BB%E3%83%B3%E3%82%B9)
 
 
 使用した効果音のデータについて
