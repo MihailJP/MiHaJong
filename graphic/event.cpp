@@ -57,7 +57,7 @@ uint32_t Event::wait(int32_t timeout) {
 #ifdef OLDER_BOOST_WAIT
 				r = myEvent.timed_wait(lock, CHRONO::posix_time::milliseconds(timeout)) == false;
 #else
-				r = myEvent.wait_for(lock, CHRONO::chrono::milliseconds(timeout)) == std::cv_status::timeout;
+				r = myEvent.wait_for(lock, CHRONO::chrono::milliseconds(timeout)) == CONDVAR::cv_status::timeout;
 #endif
 			return r;
 		} ();

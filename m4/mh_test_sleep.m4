@@ -5,7 +5,7 @@ AC_DEFUN([MH_TEST_SLEEP], [
 	CPPFLAGS_TMP=$CPPFLAGS
 	CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 	LDFLAGS_TMP=$LDFLAGS
-	LDFLAGS="$LDFLAGS_TMP -lboost_thread -lboost_chrono"
+	LDFLAGS="$LDFLAGS_TMP -lboost_system -lboost_thread -lboost_chrono"
 # boost::this_thread::sleep_for (for newer version)
 	AC_MSG_CHECKING([for boost::this_thread::sleep_for])
 	AC_RUN_IFELSE(
@@ -25,7 +25,7 @@ int main() {
 		[AC_MSG_RESULT([no])
 # boost::this_thread::sleep (for older version)
 		 AC_MSG_CHECKING([for boost::this_thread::sleep])
-		 LDFLAGS="$LDFLAGS_TMP -lboost_thread -lboost_date_time"
+		 LDFLAGS="$LDFLAGS_TMP -lboost_system -lboost_thread -lboost_date_time"
 		 AC_RUN_IFELSE(
 			[ AC_LANG_SOURCE([[
 #include <boost/date_time.hpp>
