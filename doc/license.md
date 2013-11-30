@@ -65,6 +65,21 @@ Wikimedia Commons ユーザーの Enceladus 氏により撮影され、MihailJP 
 参照：[https://commons.wikimedia.org/wiki/File:20110319_Supermoon.jpg](https://commons.wikimedia.org/wiki/File:20110319_Supermoon.jpg)
 
 
+フォントデータについて
+----------------------
+　フォントデータは「梅ゴシック」を使用しています。
+
+> これらのフォントはフリー（自由な）ソフトウエアです。
+> あらゆる改変の有無に関わらず、また商業的な利用であっても、自由にご利用、
+> 複製、再配布することができますが、全て無保証とさせていただきます。
+>
+> These fonts are free software.
+> Unlimited permission is granted to use, copy, and distribute it, with or without modification,
+> either commercially and noncommercially. THESE FONTS ARE PROVIDED "AS IS" WITHOUT WARRANTY.
+
+参照：[http://sourceforge.jp/projects/ume-font/wiki/FrontPage](http://sourceforge.jp/projects/ume-font/wiki/FrontPage)
+
+
 使用した効果音のデータについて
 ------------------------------
 　「ザ・マッチメイカァズ」で配布されているフリー素材を使用しております。
