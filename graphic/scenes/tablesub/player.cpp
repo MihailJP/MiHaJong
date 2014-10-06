@@ -6,6 +6,10 @@
 #include "../../../common/bgmid.h"
 #include "../../rule.h"
 
+namespace mihajong_graphic {
+
+// -------------------------------------------------------------------------
+
 namespace {
 
 int getTimeRule(const char* ruleTag, int dflt_msec) {
@@ -32,10 +36,6 @@ int getTimeRule(const char* ruleTag, int dflt_msec) {
 
 // -------------------------------------------------------------------------
 
-
-namespace mihajong_graphic {
-
-// -------------------------------------------------------------------------
 
 TableSubscenePlayerProto::TableSubscenePlayerProto(DevicePtr device) : TableSubscene(device) {
 	myTextRenderer = new TextRenderer(device);
