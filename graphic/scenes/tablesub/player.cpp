@@ -4,6 +4,34 @@
 #include <iomanip>
 #include "../../../sound/sound.h"
 #include "../../../common/bgmid.h"
+#include "../../rule.h"
+
+namespace {
+
+int getTimeRule(const char* ruleTag, int dflt_msec) {
+	if      (rules::CheckRule(ruleTag,  "5sec")) return  5000;
+	else if (rules::CheckRule(ruleTag,  "6sec")) return  6000;
+	else if (rules::CheckRule(ruleTag,  "7sec")) return  7000;
+	else if (rules::CheckRule(ruleTag,  "8sec")) return  8000;
+	else if (rules::CheckRule(ruleTag,  "9sec")) return  9000;
+	else if (rules::CheckRule(ruleTag, "10sec")) return 10000;
+	else if (rules::CheckRule(ruleTag, "11sec")) return 11000;
+	else if (rules::CheckRule(ruleTag, "12sec")) return 12000;
+	else if (rules::CheckRule(ruleTag, "13sec")) return 13000;
+	else if (rules::CheckRule(ruleTag, "14sec")) return 14000;
+	else if (rules::CheckRule(ruleTag, "15sec")) return 15000;
+	else if (rules::CheckRule(ruleTag, "16sec")) return 16000;
+	else if (rules::CheckRule(ruleTag, "17sec")) return 17000;
+	else if (rules::CheckRule(ruleTag, "18sec")) return 18000;
+	else if (rules::CheckRule(ruleTag, "19sec")) return 19000;
+	else if (rules::CheckRule(ruleTag, "20sec")) return 20000;
+	else return dflt_msec;
+}
+
+}
+
+// -------------------------------------------------------------------------
+
 
 namespace mihajong_graphic {
 
@@ -36,7 +64,7 @@ void TableSubscenePlayerProto::showTimeout() {
 // -------------------------------------------------------------------------
 
 TableSubscenePlayerDahai::TableSubscenePlayerDahai(DevicePtr device) : TableSubscenePlayerProto(device) {
-	timeout_val = 15000;
+	timeout_val = getTimeRule("dahai_time", 15000);
 }
 
 TableSubscenePlayerDahai::~TableSubscenePlayerDahai() {
@@ -49,7 +77,7 @@ void TableSubscenePlayerDahai::Render() {
 // -------------------------------------------------------------------------
 
 TableSubscenePlayerNakiProto::TableSubscenePlayerNakiProto(DevicePtr device) : TableSubscenePlayerProto(device) {
-	timeout_val = 10000;
+	timeout_val = getTimeRule("fuuro_time", 10000);
 }
 
 TableSubscenePlayerNakiProto::~TableSubscenePlayerNakiProto() {
