@@ -13,22 +13,22 @@ namespace mihajong_graphic {
 namespace {
 
 int getTimeRule(const char* ruleTag, int dflt_msec) {
-	if      (rules::CheckRule(ruleTag,  "5sec")) return  5000;
-	else if (rules::CheckRule(ruleTag,  "6sec")) return  6000;
-	else if (rules::CheckRule(ruleTag,  "7sec")) return  7000;
-	else if (rules::CheckRule(ruleTag,  "8sec")) return  8000;
-	else if (rules::CheckRule(ruleTag,  "9sec")) return  9000;
-	else if (rules::CheckRule(ruleTag, "10sec")) return 10000;
-	else if (rules::CheckRule(ruleTag, "11sec")) return 11000;
-	else if (rules::CheckRule(ruleTag, "12sec")) return 12000;
-	else if (rules::CheckRule(ruleTag, "13sec")) return 13000;
-	else if (rules::CheckRule(ruleTag, "14sec")) return 14000;
-	else if (rules::CheckRule(ruleTag, "15sec")) return 15000;
-	else if (rules::CheckRule(ruleTag, "16sec")) return 16000;
-	else if (rules::CheckRule(ruleTag, "17sec")) return 17000;
-	else if (rules::CheckRule(ruleTag, "18sec")) return 18000;
-	else if (rules::CheckRule(ruleTag, "19sec")) return 19000;
-	else if (rules::CheckRule(ruleTag, "20sec")) return 20000;
+	if      (rules::chkRule(ruleTag,  "5sec")) return  5000;
+	else if (rules::chkRule(ruleTag,  "6sec")) return  6000;
+	else if (rules::chkRule(ruleTag,  "7sec")) return  7000;
+	else if (rules::chkRule(ruleTag,  "8sec")) return  8000;
+	else if (rules::chkRule(ruleTag,  "9sec")) return  9000;
+	else if (rules::chkRule(ruleTag, "10sec")) return 10000;
+	else if (rules::chkRule(ruleTag, "11sec")) return 11000;
+	else if (rules::chkRule(ruleTag, "12sec")) return 12000;
+	else if (rules::chkRule(ruleTag, "13sec")) return 13000;
+	else if (rules::chkRule(ruleTag, "14sec")) return 14000;
+	else if (rules::chkRule(ruleTag, "15sec")) return 15000;
+	else if (rules::chkRule(ruleTag, "16sec")) return 16000;
+	else if (rules::chkRule(ruleTag, "17sec")) return 17000;
+	else if (rules::chkRule(ruleTag, "18sec")) return 18000;
+	else if (rules::chkRule(ruleTag, "19sec")) return 19000;
+	else if (rules::chkRule(ruleTag, "20sec")) return 20000;
 	else return dflt_msec;
 }
 
