@@ -109,3 +109,4 @@ mentzdat/test/*.txt
 mentzdat/test/testprog
 !doc/Makefile
 doc/*.html
+compile

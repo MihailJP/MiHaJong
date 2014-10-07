@@ -259,14 +259,14 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 				setcursor();
 				BtnEvent_Content_Roll_Up();
 			} else if (region == 40) {
-				BtnEvent_Content_Page_Next();
+				BtnEvent_Content_Page_Prev();
 			}
 		} else if (od->xbutton.button == Button5) { // ホイールの操作（マイナス方向）
 			if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
 				setcursor();
 				BtnEvent_Content_Roll_Down();
 			} else if (region == 40) {
-				BtnEvent_Content_Page_Prev();
+				BtnEvent_Content_Page_Next();
 			}
 		}
 		break;
