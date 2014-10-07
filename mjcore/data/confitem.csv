@@ -57,8 +57,8 @@
 63,15,0,,,,,,base_point_mantissa_tens,原点(仮数部甲),ユーザー設定の返し点を設定します(十の位),3,4,5,6,7,8,9,0,1,2,,,,,,,,,,
 64,15,0,,,,,,base_point_mantissa_ones,原点(仮数部乙),ユーザー設定の返し点を設定します(一の位),0,1,2,3,4,5,6,7,8,9,,,,,,,,,,
 65,15,0,,,,,,base_point_exponent,原点(指数部),ユーザー設定の返し点を設定します(単位),exp_03,exp_04,exp_05,exp_06,exp_07,exp_08,exp_09,exp_10,exp_11,exp_12,exp_13,exp_14,exp_15,exp_16,exp_17,exp_02,,,,
-66,15,0,,,,,,dahai_time,打牌制限時間,打牌選択の制限時間を設定します,15sec,16sec,17sec,18sec,19sec,20sec,5sec,6sec,7sec,8sec,9sec,10sec,11sec,12sec,13sec,14sec,,,,
-67,15,0,,,,,,fuuro_time,副露選択時間,副露選択の制限時間を設定します,10sec,11sec,12sec,13sec,14sec,15sec,16sec,17sec,18sec,19sec,20sec,5sec,6sec,7sec,8sec,9sec,,,,
+78,15,0,,,,,,dahai_time,打牌制限時間,打牌選択の制限時間を設定します,15sec,16sec,17sec,18sec,19sec,20sec,5sec,6sec,7sec,8sec,9sec,10sec,11sec,12sec,13sec,14sec,,,,
+79,15,0,,,,,,fuuro_time,副露選択時間,副露選択の制限時間を設定します,10sec,11sec,12sec,13sec,14sec,15sec,16sec,17sec,18sec,19sec,20sec,5sec,6sec,7sec,8sec,9sec,,,,
 80,15,0,,カスタムウマ設定,,,,point_basis_a2_mantissa_tens,Ａ２位・仮数部甲,ユーザー設定のウマを設定します(十の位),0,1,2,3,4,5,6,7,8,9,-9,-8,-7,-6,-5,-4,-3,-2,-1,-0
 81,15,0,,,,,,point_basis_a2_mantissa_ones,Ａ２位・仮数部乙,ユーザー設定のウマを設定します(一の位),0,1,2,3,4,5,6,7,8,9,,,,,,,,,,
 82,15,0,,,,,,point_basis_a2_exponent,Ａ２位・指数部,１人浮きのウマを設定します(単位),exp_00,exp_01,exp_02,exp_03,exp_04,exp_05,exp_06,exp_07,exp_08,exp_09,exp_10,exp_11,exp_12,exp_13,exp_14,exp_15,,,,
