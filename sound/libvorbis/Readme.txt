@@ -1,7 +1,8 @@
 For Windows build by VC++:
 First of all, put libvorbis source code in this directory.
-Second, build libvorbis_static.lib and libvorbisfile_static.lib.
-After build, put them in this directory.
+Then, open win32/VS2010/vorbis_static.sln and build
+libvorbis_static.lib and libvorbisfile_static.lib for each
+platform and configuration.
 libvorbis is available at http://www.xiph.org/downloads/.
 
 

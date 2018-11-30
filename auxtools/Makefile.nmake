@@ -1,5 +1,5 @@
-DATAPATH=$(SolutionDir)mjcore\data\ 
-DOCPATH=$(SolutionDir)doc\ 
+DATAPATH=..\mjcore\data\ 
+DOCPATH=..\doc\ 
 
 TARGETS_COMPRESS_CONFITEM_CSV=$(DATAPATH)confitem.csv.lzma $(DATAPATH)confitem_csv.cpp $(DATAPATH)confitem_csv.h
 TARGETS_COMPRESS_CONFITEM_INI=$(DATAPATH)confitem.ini.lzma $(DATAPATH)confitem_ini.cpp $(DATAPATH)confitem_ini.h

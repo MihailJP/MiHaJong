@@ -68,29 +68,29 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>nmake /nologo /f Makefile.nmake SolutionDir=$(SolutionDir)</NMakeBuildCommandLine>
-    <NMakeCleanCommandLine>"$(VCInstallDir)\bin\nmake.exe" /nologo /f Makefile.nmake SolutionDir=$(SolutionDir) clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>nmake /nologo /a /f Makefile.nmake SolutionDir=$(SolutionDir)</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /nologo /f Makefile.nmake</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>nmake /nologo /n /f Makefile.nmake clean</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>nmake /nologo /a /f Makefile.nmake</NMakeReBuildCommandLine>
     <NMakeOutput />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug(Wide)|Win32'">
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>nmake /nologo /f Makefile.nmake SolutionDir=$(SolutionDir)</NMakeBuildCommandLine>
-    <NMakeCleanCommandLine>"$(VCInstallDir)\bin\nmake.exe" /nologo /f Makefile.nmake SolutionDir=$(SolutionDir) clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>nmake /nologo /a /f Makefile.nmake SolutionDir=$(SolutionDir)</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /nologo /f Makefile.nmake</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>nmake /nologo /n /f Makefile.nmake clean</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>nmake /nologo /a /f Makefile.nmake</NMakeReBuildCommandLine>
     <NMakeOutput />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>nmake /nologo /f Makefile.nmake SolutionDir=$(SolutionDir)</NMakeBuildCommandLine>
-    <NMakeCleanCommandLine>"$(VCInstallDir)\bin\nmake.exe" /nologo /f Makefile.nmake SolutionDir=$(SolutionDir) clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>nmake /nologo /a /f Makefile.nmake SolutionDir=$(SolutionDir)</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /nologo /f Makefile.nmake</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>nmake /nologo /n /f Makefile.nmake clean</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>nmake /nologo /a /f Makefile.nmake</NMakeReBuildCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release(Wide)|Win32'">
     <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>nmake /nologo /f Makefile.nmake SolutionDir=$(SolutionDir)</NMakeBuildCommandLine>
-    <NMakeCleanCommandLine>"$(VCInstallDir)\bin\nmake.exe" /nologo /f Makefile.nmake SolutionDir=$(SolutionDir) clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>nmake /nologo /a /f Makefile.nmake SolutionDir=$(SolutionDir)</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /nologo /f Makefile.nmake</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>nmake /nologo /n /f Makefile.nmake clean</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>nmake /nologo /a /f Makefile.nmake</NMakeReBuildCommandLine>
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
