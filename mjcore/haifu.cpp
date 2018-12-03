@@ -1106,8 +1106,7 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 		nomDeVent[wind] << _T("\" score=\"")
 		<< origPoint[player].to_str_plain() << _T('"');
 	if (origPoint[player] != gameStat->Player[player].PlayerScore) // 点数が一致しないなら
-		XhaifuBuffer << _T(" score-after=\"") <<
-			gameStat->Player[player].PlayerScore.bignumtoplaintext() << _T("\" delta=\"") <<
+		XhaifuBuffer << _T(" delta=\"") <<
 			((LNum)gameStat->Player[player].PlayerScore -
 			origPoint[player]).to_str_plain() << _T('"');
 #ifndef GUOBIAO

@@ -117,13 +117,11 @@
 						<xsl:call-template name="stylize-sign">
 							<xsl:with-param name="val" select="@score" />
 						</xsl:call-template>
-						<xsl:if test="@score-after">
+						<xsl:if test="@delta">
 							<xsl:text> → </xsl:text>
 							<xsl:call-template name="stylize-sign">
-								<xsl:with-param name="val" select="@score-after" />
+								<xsl:with-param name="val" select="number(@score)+number(@delta)" />
 							</xsl:call-template>
-						</xsl:if>
-						<xsl:if test="@delta">
 							<xsl:text> (</xsl:text>
 							<xsl:call-template name="stylize-sign">
 								<xsl:with-param name="val" select="@delta" />
