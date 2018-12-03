@@ -322,7 +322,11 @@ void haifu::haifubufinit() {
 		GameStat.chkGameType(GuobiaoMJ) ? _T("guobiao") : _T(""))
 		<< _T("\">") << std::endl;
 	RuleData::forEachRule([&](std::string key, std::string val) -> void {
-		XhaifuBuffer << _T("\t\t\t<rule key=\"") << CodeConv::EnsureTStr(key) << _T("\" val=\"") <<
+		if (((val != "no") || (RuleData::getRuleItemTag(key, 0) != "no")) &&
+			((key.substr(0, 12) != "point_basis_") || RuleData::chkRule("point_basis", "custom")) &&
+			((key.substr(0, 15) != "starting_point_") || RuleData::chkRule("starting_point", "custom")) &&
+			(val != "N/A"))
+			XhaifuBuffer << _T("\t\t\t<rule key=\"") << CodeConv::EnsureTStr(key) << _T("\" val=\"") <<
 			CodeConv::EnsureTStr(val) << _T("\" />") << std::endl;
 	});
 	XhaifuBuffer << _T("\t\t</ruleset>") << std::endl;
