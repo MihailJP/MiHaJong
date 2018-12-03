@@ -2,14 +2,16 @@ MiHaJong core library depends on Lua static library.
 Pre-compiled binary is available from LuaBinaries project.
 http://luabinaries.sourceforge.net/
 
-Download and unzip lua-5.2.1_Win32_YOURCOMPILER_lib.zip here.
-For Visual C++ 2010, you need lua-5.2.1_Win32_vc10_lib.zip.
-For MinGW (not yet tested), lua-5.2.1_Win32_mingw4_lib.zip.
+Download and unzip lua-5.3.4_Win32_YOURCOMPILER_lib.zip and
+lua-5.3.4_Win64_YOURCOMPILER_lib.zip here.
+For Visual C++ 2017, you need lua-5.3.4_Win32_vc15_lib.zip.
+Rename lua53.lib to lua53_Win32.lib or lua53_x64.lib depending on the
+target platform.
 
 The license follows:
 
 /******************************************************************************
-* Copyright (C) 1994-2012 Lua.org, PUC-Rio.
+* Copyright (C) 1994-2017 Lua.org, PUC-Rio.
 *
 * Permission is hereby granted, free of charge, to any person obtaining
 * a copy of this software and associated documentation files (the

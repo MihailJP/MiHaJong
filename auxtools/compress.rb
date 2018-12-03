@@ -48,9 +48,9 @@ File.open(srcfile, "rb") {|source|
 		}
 	else
 		command = is_win?() ?
-			"python #{File.expand_path(File.dirname(__FILE__)).gsub(/\//, "\\")}\\compress.py" :
-			"python #{File.expand_path(File.dirname(__FILE__))}/compress.py"
-		if not system("#{command} #{srcfile.to_s}") then
+			"python \"#{File.expand_path(File.dirname(__FILE__)).gsub(/\//, "\\")}\\compress.py\"" :
+			"python \"#{File.expand_path(File.dirname(__FILE__))}/compress.py\""
+		if not system("#{command} \"#{srcfile.to_s}\"") then
 			throw("Failure in #{command}")
 		end
 	end
