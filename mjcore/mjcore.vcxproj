@@ -208,7 +208,6 @@
     <ClCompile Include="ai\filesel.cpp" />
     <ClCompile Include="ai\gftbl.cpp" />
     <ClCompile Include="ai\riskchk.cpp" />
-    <ClCompile Include="chat.cpp" />
     <ClCompile Include="data\confitem_csv.cpp" />
     <ClCompile Include="data\confitem_ini.cpp" />
     <ClCompile Include="data\prefitem_csv.cpp" />
@@ -274,7 +273,6 @@
     <ClInclude Include="ai\class.h" />
     <ClInclude Include="ai\functbl.h" />
     <ClInclude Include="ai\filesel.h" />
-    <ClInclude Include="chat.h" />
     <ClInclude Include="confitms.h" />
     <ClInclude Include="data\confitem_csv.h" />
     <ClInclude Include="data\confitem_ini.h" />

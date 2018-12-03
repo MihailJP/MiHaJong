@@ -18,7 +18,6 @@
 #include "sound.h"
 #include "random.h"
 #include "../graphic/graphic.h"
-#include "chat.h"
 #include "ruletbl.h"
 #include "../common/sleep.h"
 
@@ -241,11 +240,6 @@ void initdora(GameTable* const gameStat) { // ドラの設定
 // -------------------------------------------------------------------------
 
 void SeatShuffler::shuffleSeat () {
-	if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
-		for (PlayerID i = 0; i < Players; ++i)
-			if (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag > 1)
-				mihajong_socket::listen(SOCK_CHAT - 1 + EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag,
-				PORT_CHAT - 1 + EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag);
 	// 退避
 	InfoByPlayer<EnvTable::PlayerLabel> TmpPlayerDat;
 	for (PlayerID i = 0; i < Players; i++) {
@@ -329,7 +323,6 @@ void gameinit(GameTable* gameStat, GameTypeID gameType, const std::string& Serve
 	gameStat = initializeGameTable(gameType);
 	gameStat->PlayerID = PositionArray[ClientNumber];
 	haifu::haifubufinit();
-	chat::initchat(ServerAddress.c_str(), ClientNumber);
 	yaku::yakuCalculator::init(); // 役カタログの初期化
 	aiscript::initscript(); // AIの初期化
 	return;
@@ -458,7 +451,6 @@ namespace {
 		} else {
 			tmpStatus = roundName(gameStat->GameRound, gameStat);
 		}
-		chat::appendchat((CodeConv::tstring(_T("-------------\n*** ")) + tmpStatus + CodeConv::tstring(_T("\n"))).c_str());
 		for (PlayerID i = 0; i < Players; ++i)
 			mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::None); /* 発声文字列を消去 */
 		EnvTable* env = EnvTable::Instantiate();

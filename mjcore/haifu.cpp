@@ -10,7 +10,6 @@
 #include "largenum.h"
 #include "envtbl.h"
 #include "../common/version.h"
-#include "chat.h"
 #include "ruletbl.h"
 
 /* 雀牌の名前データ */
@@ -1073,12 +1072,6 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 			(int)gameStat->Player[player].playerChip;
 
 #endif /* GUOBIAO */
-	{
-		CodeConv::tostringstream p;
-		p << _T("*** ") << EnvTable::Instantiate()->PlayerDat[player].PlayerName << _T("(") <<
-			windName(wind) << _T(") ") << o.str();
-		chat::chatobj->sysmsg(p.str());
-	}
 					
 	// 出力
 	haifuBuffer << windName(wind) << _T(" ") <<
@@ -1239,9 +1232,6 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	fileout.open((filename1.str() + std::string("_haifu_") + // プレーンテキスト形式牌譜
 		filename2.str() + std::string(".txt")).c_str());
 	fileout << CodeConv::EncodeStr(haifuBuffer.str()); fileout.close();
-	fileout.open((filename1.str() + std::string("_chat_") + // チャットログ
-		filename2.str() + std::string(".txt")).c_str());
-	fileout << CodeConv::EncodeStr(chat::chatobj->getlog()); fileout.close();
 	fileout.open((filename1.str() + std::string("_haifu_") + // HTML形式牌譜
 		filename2.str() + std::string(".htm")).c_str());
 	fileout << CodeConv::EncodeStr(HThaifuBuffer.str()); fileout.close();

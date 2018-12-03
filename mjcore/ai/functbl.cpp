@@ -7,7 +7,6 @@
 #include "../random.h"
 #include "../../common/version.h"
 #include "../logging.h"
-#include "../chat.h"
 
 const char* aiscript::table::functable::tblname = "mihajong"; // table name
 const char* aiscript::table::functable::gametbl::tblname = "gametbl"; // table name
@@ -331,7 +330,7 @@ PlayerID aiscript::table::functable::getPlayerID(lua_State* const L) {
 	return player - 1;
 }
 
-/* チャット出力 */
+/* 廃止:チャット出力 */
 int aiscript::table::functable::say(lua_State* const L) {
 	int n = lua_gettop(L); CodeConv::tstring msgstr = _T("");
 	if (n > 0) {
@@ -339,7 +338,7 @@ int aiscript::table::functable::say(lua_State* const L) {
 			msgstr += CodeConv::DecodeStr(luaL_tolstring(L, i, nullptr)); lua_pop(L, 1);
 			if (i < n) msgstr += _T(" ");
 		}
-		chat::sendchatx(getPlayerID(L), msgstr.c_str());
 	}
+	warn("mihajong.sayは廃止されました。");
 	return 0;
 }

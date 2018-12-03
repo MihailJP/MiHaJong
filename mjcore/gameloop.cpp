@@ -17,7 +17,6 @@
 #include "result.h"
 #include "ruletbl.h"
 #include "remote.h"
-#include "chat.h"
 #include "../common/chrono.h"
 #include "../common/sleep.h"
 
@@ -78,14 +77,6 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 		o << _T("局番号 [") << gameStat->GameRound << _T("] を開始しました。");
 		info(o.str().c_str());
 	}
-	/* チャットの同期 */
-	if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
-		mihajong_socket::puts(SOCK_CHAT,
-#if defined(_WIN32)
-			_T("8\r\n"));
-#else
-			_T("8\n"));
-#endif
 	/* ウォッチモードの時は視点を親に移す */
 	gameStat->CurrentPlayer.Active = -1;
 	if (EnvTable::Instantiate()->WatchModeFlag)
