@@ -21,6 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7CC2860A-273F-4908-8235-1EC880D13346}</ProjectGuid>
     <RootNamespace>sound</RootNamespace>
+    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -66,19 +67,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.bin</TargetExt>
     <IncludePath>$(ProjectDir)libogg\include\;$(ProjectDir)libvorbis\include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug(Wide)|Win32'">
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.bin</TargetExt>
     <IncludePath>$(ProjectDir)libogg\include\;$(ProjectDir)libvorbis\include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.bin</TargetExt>
     <IncludePath>$(ProjectDir)libogg\include\;$(ProjectDir)libvorbis\include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release(Wide)|Win32'">
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.bin</TargetExt>
     <IncludePath>$(ProjectDir)libogg\include\;$(ProjectDir)libvorbis\include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
