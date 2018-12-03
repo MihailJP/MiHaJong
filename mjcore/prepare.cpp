@@ -201,7 +201,6 @@ inline void DoraAdding(GameTable* const gameStat) {
 	setdora(gameStat, 0); // 表ドラを設定する
 	if (RuleData::chkRuleApplied("uradora"))
 		setdora(gameStat, 1); // 裏ドラを設定する
-	haifu::haifurecdorap();
 }
 
 void initdora(GameTable* const gameStat) { // ドラの設定
@@ -227,7 +226,6 @@ void initdora(GameTable* const gameStat) { // ドラの設定
 				nagatadora(EastWind); nagatadora(SouthWind); nagatadora(WestWind); nagatadora(NorthWind);
 			}
 		}
-		haifu::haifurecdorap();
 	}
 	DoraAdding(gameStat);
 	if (RuleData::chkRule("dora_twice", "yes") ||

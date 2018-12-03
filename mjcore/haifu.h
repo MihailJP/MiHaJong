@@ -19,11 +19,10 @@ private:
 #endif
 
 	/* 雀牌の名前データ */
-	static const CodeConv::tstring tilecodelabel, HTtilecodelabel1, HTtilecodelabel2;
 	static const std::array<CodeConv::tstring, TileFlowerMax> Xtilerefcode;
 
 	static InfoByPlayer<LNum> origPoint;
-	static CodeConv::tostringstream haifuBuffer, HThaifuBuffer, XMLhaifuBuffer, XhaifuBuffer, XhaifuBufferBody;
+	static CodeConv::tostringstream XMLhaifuBuffer, XhaifuBuffer, XhaifuBufferBody;
 	static bool haifukanflag;
 
 	class PlayerStream {
@@ -41,7 +40,7 @@ private:
 		HaifuStreams(const HaifuStreams&) = delete; // Delete unexpected copy constructor
 		HaifuStreams& operator= (const HaifuStreams&) = delete; // Delete unexpected assign operator
 	};
-	static HaifuStreams haifuP, HThaifuP, XhaifuP;
+	static HaifuStreams XhaifuP;
 
 	class tools {
 	public:
@@ -51,32 +50,21 @@ private:
 
 		static void haifuRecTime(CodeConv::tstring tagName);
 		static void haifuskipX(PlayerID targetPlayer);
-		static void haifuskip(
-			HaifuStreams* haifuP, HaifuStreams* HThaifuP,
-			PlayerID PassivePlayer, PlayerID ActivePlayer
-			);
+		static void haifuskip(PlayerID PassivePlayer, PlayerID ActivePlayer);
 		static CodeConv::tstring haifudoraClass(doraCol Akadora);
 		static CodeConv::tstring haifudoraClassX(doraCol Akadora);
-		static void recordDoraStream(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, CodeConv::tostringstream* const x, TileCode tmpDora);
-		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, bool rotate);
-		static void recordTile_Inline(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, doraCol kakanCol);
-		static void recordTile_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h, Tile tlCode, bool omitXml = false, CodeConv::tstring tagName = _T("tile"), bool keepOpen = false);
-		static void recordBlank_Table(CodeConv::tostringstream* const p, CodeConv::tostringstream* const h);
-		static void haifuwritetsumohai(
-			HaifuStreams* haifuP, HaifuStreams* HThaifuP,
-			PlayerID ActivePlayer, Tile tlCode,
-			CodeConv::tstring PText, CodeConv::tstring HTText, CodeConv::tstring XAttr
-			);
-		static void haifuskipall(HaifuStreams* haifuP, HaifuStreams* HThaifuP, PlayerID PassivePlayer);
+		static void recordDoraStream(CodeConv::tostringstream* const x, TileCode tmpDora);
+		static void recordTile_Inline(Tile tlCode, bool rotate);
+		static void recordTile_Inline(Tile tlCode, doraCol kakanCol);
+		static void recordTile_Table(Tile tlCode, CodeConv::tstring tagName = _T("tile"), bool keepOpen = false);
+		static void haifuwritetsumohai(PlayerID ActivePlayer, Tile tlCode, CodeConv::tstring XAttr);
+		static void haifuskipall(PlayerID PassivePlayer);
 
 		class kan_sub {
 		public:
-			static void recordKanOrFlower(
-				const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
-				HaifuStreams* haifuP, HaifuStreams* HThaifuP
-				);
-			static void inline recordChanKan(const GameTable* const gameStat, CodeConv::tstring pTxt, CodeConv::tstring hTxt, CodeConv::tstring XAttrA, CodeConv::tstring XAttrB);
-			static void inline recordKan(const GameTable* const gameStat, CodeConv::tstring pTxt, CodeConv::tstring hTxt, CodeConv::tstring XAttrA, CodeConv::tstring XAttrB);
+			static void recordKanOrFlower(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);
+			static void inline recordChanKan(const GameTable* const gameStat, CodeConv::tstring XAttrA, CodeConv::tstring XAttrB);
+			static void inline recordKan(const GameTable* const gameStat, CodeConv::tstring XAttrA, CodeConv::tstring XAttrB);
 		public: /* Monostate class: cannot be instantiated */
 			kan_sub() = delete;
 			kan_sub(const kan_sub&) = delete;
@@ -111,7 +99,6 @@ private:
 			};
 
 			static void hfScoreWriteOut(const GameTable* const gameStat, PlayerID player, seatAbsolute wind);
-			static void hfWriteOut(const GameTable* const gameStat, PlayerID player);
 
 		public:
 			static void hfWriteHead(const GameTable* const gameStat,
@@ -145,8 +132,6 @@ public:
 	static void haifurecalicedora(TileCode tmpDora);
 	static void haifualicedoraupd();
 	static void haifuresetalicedora();
-
-	static void haifurecdorap();
 
 	static void haifurecmota(const GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);
 
