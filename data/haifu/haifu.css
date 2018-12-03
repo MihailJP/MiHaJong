@@ -2,6 +2,9 @@
 table {
 	border-collapse: collapse;
 }
+.dice {
+	font: 1.4em "GL-Antique";
+}
 h2 .tile {
 	font: 1.8em "GL-MahjongTile";
 }

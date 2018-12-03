@@ -78,6 +78,22 @@
 				</span>
 			</xsl:if>
 		</h2>
+		<xsl:if test="round-description/dice">
+			<p>
+				<xsl:text>サイコロ :</xsl:text>
+				<xsl:for-each select="round-description/dice">
+					<xsl:text> </xsl:text>
+					<span class="dice">
+						<xsl:call-template name="dice-face">
+							<xsl:with-param name="val" select="@face1" />
+						</xsl:call-template>
+						<xsl:call-template name="dice-face">
+							<xsl:with-param name="val" select="@face2" />
+						</xsl:call-template>
+					</span>
+				</xsl:for-each>
+			</p>
+		</xsl:if>
 		<p>結果：<xsl:value-of select="round-description/result" /></p>
 		<table>
 			<xsl:variable name="cols" select="40" />
@@ -585,6 +601,20 @@
 			<xsl:otherwise>
 				<xsl:value-of select="$val" />
 			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- サイコロの目（１〜６） -->
+	<xsl:template name="dice-face">
+		<xsl:param name="val" />
+		<xsl:choose>
+			<xsl:when test="$val =  1" >&#x2680;</xsl:when>
+			<xsl:when test="$val =  2" >&#x2681;</xsl:when>
+			<xsl:when test="$val =  3" >&#x2682;</xsl:when>
+			<xsl:when test="$val =  4" >&#x2683;</xsl:when>
+			<xsl:when test="$val =  5" >&#x2684;</xsl:when>
+			<xsl:when test="$val =  6" >&#x2685;</xsl:when>
+			<xsl:otherwise><xsl:value-of select="$val" /></xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>

@@ -808,6 +808,13 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 #endif /* GUOBIAO */
 			_T("\" />") << std::endl;
 		XhaifuBuffer << _T("\t\t\t<result>") << ResultDesc << _T("</result>") << std::endl;
+		XhaifuBuffer << _T("\t\t\t<dice face1=\"") << (int)gameStat->Dice[0].Number <<
+			_T("\" face2=\"") << (int)gameStat->Dice[1].Number << _T("\" />") << std::endl;
+#ifndef GUOBIAO
+		if (RuleData::chkRule("dice_roll", "roll_twice"))
+#endif /* GUOBIAO */
+			XhaifuBuffer << _T("\t\t\t<dice face1=\"") << (int)gameStat->Dice[2].Number <<
+			_T("\" face2=\"") << (int)gameStat->Dice[3].Number << _T("\" />") << std::endl;
 #ifndef GUOBIAO
 		XhaifuBuffer << _T("\t\t\t<dora>") << std::endl <<
 			XhaifuP.dora.str() << _T("\t\t\t</dora>") << std::endl;
