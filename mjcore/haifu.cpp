@@ -1117,6 +1117,26 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 	if (RuleData::chkRuleApplied("chip")) // チップありの時
 		XhaifuBuffer << _T(" chip=\"") <<
 			(int)gameStat->Player[player].playerChip << _T('"');
+	{
+		CodeConv::tstring tmpStr;
+		if (gameStat->Player[player].AgariHouki) { // アガリ放棄
+			tmpStr += _T("アガリ放棄");
+		}
+		if (RuleData::chkRuleApplied("wareme") && (gameStat->WaremePlayer == player)) { // 割れ目ルールのとき
+			if (!tmpStr.empty()) tmpStr += _T("、");
+			if ((RuleData::chkRule("wareme", "greater_wareme")) &&
+				((gameStat->Dice[0].Number == gameStat->Dice[1].Number) ||
+				((gameStat->Dice[2].Number != 0) && (gameStat->Dice[2].Number == gameStat->Dice[3].Number))))
+				tmpStr += _T("大"); // サイコロがゾロ目の時はさらに倍
+			tmpStr += _T("割れ目");
+		}
+		if (RuleData::chkRuleApplied("doukasen") && (gameStat->DoukasenPlayer == player)) { // 導火線ルールの時
+			if (!tmpStr.empty()) tmpStr += _T("、");
+			tmpStr += _T("導火線");
+		}
+		if (!tmpStr.empty())
+			XhaifuBuffer << _T(" comment=\"") << tmpStr << _T("\"");
+	}
 #endif /* GUOBIAO */
 	XhaifuBuffer << _T(" />") << std::endl;
 }
