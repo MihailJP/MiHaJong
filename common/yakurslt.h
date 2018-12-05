@@ -14,6 +14,7 @@ struct YakuResult {
 	static const int LimitMinus = 100; // マイナス翻の下限
 	static const unsigned int nameBufSize = 1024; // 名前バッファのサイズ
 	bool isValid; // 和了っているかどうか
+	bool isYakuman; // 役満であるか（倍満設定の人和なども含む）
 	int BasePoints; // 符
 	int CoreHan, CoreSemiMangan; // 翻
 	int BonusHan, BonusSemiMangan; // 翻（縛りを満たさない）
@@ -32,7 +33,7 @@ struct YakuResult {
 	MeldBuf MianziDat; // 面子に分解したデータ
 	// -----------------------------------------------------------------
 	YakuResult() { // インスタンスを初期化する
-		isValid = false;
+		isValid = isYakuman = false;
 		BasePoints = 20;
 		CoreHan = CoreSemiMangan =
 			BonusHan = BonusSemiMangan =

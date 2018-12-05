@@ -49,33 +49,6 @@ TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
 #endif
 }
 
-bool TableSubsceneAgariScreenProto::YakumanMode() {
-	bool agariScreenMode = false;
-	if (GameStatus::gameStat()->gameType & GuobiaoMJ) {
-		const mihajong_structs::YakuResult yakuInfo = YakuResult::getYakuStat();
-		const int tmpTotalHan = yakuInfo.CoreHan + yakuInfo.BonusHan;
-		const int tmpTotalMangan = yakuInfo.CoreSemiMangan + yakuInfo.BonusSemiMangan;
-		if (tmpTotalMangan >= 8)
-			agariScreenMode = true;
-		else if ((tmpTotalMangan >= 6) &&
-			((tmpTotalHan < 12) ||
-			((tmpTotalHan < 13) && (rules::chkRule("kazoe_border", "13han_or_more"))) ||
-			((tmpTotalMangan < 8) && (rules::chkRule("kazoe_border", "no")))))
-			agariScreenMode = true;
-		else if ((tmpTotalMangan >= 4) &&
-			((tmpTotalHan < 10) ||
-			((tmpTotalHan < 11) && (rules::chkRule("sanbaiman_border", "11han_or_more")))))
-			agariScreenMode = true;
-		else if ((tmpTotalMangan >= 3) && (tmpTotalHan < 8))
-			agariScreenMode = true;
-		else if ((tmpTotalMangan >= 2) && (tmpTotalHan < 6))
-			agariScreenMode = true;
-		else
-			agariScreenMode = false;
-	}
-	return agariScreenMode;
-}
-
 TableSubsceneAgariScreenProto::AgariStyle TableSubsceneAgariScreenProto::getAgariStyle() {
 	const GameTable* const gameStat = GameStatus::gameStat();
 	if (gameStat->CurrentPlayer.Agari == gameStat->PlayerID) {
@@ -113,8 +86,8 @@ void TableSubsceneAgariScreenProto::parseYakuList() {
 #endif
 	typedef std::vector<CodeConv::tstring> TStrList;
 	LPTSTR yakuNameUnified = nullptr, yakuValUnified = nullptr;
-	LPCTSTR yakuName = YakumanMode() ? yakuData.yakumanNameList : yakuData.yakuNameList;
-	LPCTSTR yakuVal  = YakumanMode() ? yakuData.yakumanValList  : yakuData.yakuValList;
+	LPCTSTR yakuName = yakuData.isYakuman ? yakuData.yakumanNameList : yakuData.yakuNameList;
+	LPCTSTR yakuVal  = yakuData.isYakuman ? yakuData.yakumanValList  : yakuData.yakuValList;
 	if ((GameStatus::gameStat()->gameType & RichiMJ)&&(!rules::chkRule("limitless", "no"))) {
 		const size_t bufsz = yakuData.nameBufSize * 2;
 		yakuNameUnified = new TCHAR[bufsz]; yakuNameUnified[0] = _T('\0');
@@ -158,7 +131,7 @@ void TableSubsceneAgariScreenProto::parseYakuList() {
 	};
 	TStrList yakuNameList(splitstr(yakuName)), yakuValList(splitstr(yakuVal));
 	for (int i = 0; i < std::min(yakuNameList.size(), yakuValList.size()); ++i)
-		if (YakumanMode())
+		if (yakuData.isYakuman)
 			yakuList.push_back(std::make_pair(yakuNameList[i], _T("")));
 		else
 			yakuList.push_back(std::make_pair(yakuNameList[i], yakuValList[i]));
@@ -445,7 +418,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
 		sound::Play(sound::IDs::sndYakulst2);
 		soundFlag = false;
 	}
-	if (myCaller->YakumanMode()) return;
+	if (YakuResult::getYakuStat().isYakuman) return;
 	if (GameStatus::gameStat()->gameType & GuobiaoMJ) return; // 中国ルールでは不要な情報なので
 	const double anmTime = 0.75;
 	const int han = (YakuResult::getYakuStat().CoreHan + YakuResult::getYakuStat().BonusHan);
@@ -532,7 +505,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructChipAmount() {
 	if (rules::chkRule("chip", "no")) return;
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 	if (Zeit <= 0.0) return;
-	if (myCaller->YakumanMode()) return;
+	if (YakuResult::getYakuStat().isYakuman) return;
 	const double anmTime = 0.75;
 	CodeConv::tostringstream o;
 	o << _T("チップ") << std::setw(2) << std::setfill(_T(' ')) << YakuResult::getChipVal();

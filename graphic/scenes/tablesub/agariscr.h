@@ -24,7 +24,6 @@ protected:
 	static const int handPosY = BaseY + 56;
 	static const double yakuInterval;
 	static const double yakuAnimStartSecond;
-	bool YakumanMode();
 	enum AgariStyle {agariMine, agariFurikomi, agariOthers,};
 	static AgariStyle getAgariStyle();
 	static ArgbColor baseColor();
