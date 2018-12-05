@@ -16,6 +16,7 @@ struct DiscardTileNum { /* 打牌コード用 */
 	int toSingleInt() const;
 	static DiscardTileNum fromSingleInt(int);
 };
-static_assert(std::is_pod<DiscardTileNum>::value, "DiscardTileNum is not POD");
+static_assert(std::is_trivially_copyable<DiscardTileNum>::value, "DiscardTileNum is not trivially copyable");
+static_assert(std::is_standard_layout<DiscardTileNum>::value, "DiscardTileNum is not standard layout");
 
 } /* namespace */

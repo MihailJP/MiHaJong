@@ -47,6 +47,7 @@ struct YakuResult {
 	}
 	void Init() {Init(this);} // インスタンスを初期化する
 };
-static_assert(std::is_pod<YakuResult>::value, "YakuResult is not POD");
+static_assert(std::is_trivially_copyable<YakuResult>::value, "YakuResult is not trivially copyable");
+static_assert(std::is_standard_layout<YakuResult>::value, "YakuResult is not standard layout");
 
 } /* namespace */

@@ -71,7 +71,8 @@ private:
 		const bool* TsumoAgariFlag; // ツモアガリどうかのフラグ
 	};
 #ifdef MJCORE_EXPORTS
-	static_assert(std::is_pod<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not POD");
+	static_assert(std::is_trivially_copyable<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not trivially copyable");
+	static_assert(std::is_standard_layout<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not standard layout");
 #endif
 	typedef std::function<bool (const MENTSU_ANALYSIS* const)> YAKUFUNC;
 
@@ -81,7 +82,8 @@ private:
 		YAKUSTAT result;
 	};
 #ifdef MJCORE_EXPORTS
-	static_assert(std::is_pod<CalculatorParam>::value, "CalculatorParam is not POD");
+	static_assert(std::is_trivially_copyable<CalculatorParam>::value, "CalculatorParam is not trivially copyable");
+	static_assert(std::is_standard_layout<CalculatorParam>::value, "CalculatorParam is not standard layout");
 #endif
 
 	class Yaku {
