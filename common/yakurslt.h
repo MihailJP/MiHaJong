@@ -32,6 +32,9 @@ struct YakuResult {
 	// -----------------------------------------------------------------
 	MeldBuf MianziDat; // 面子に分解したデータ
 	// -----------------------------------------------------------------
+	int TotalHan() {return CoreHan + BonusHan;} // ドラ込みの翻
+	int TotalSemiMangan() {return CoreSemiMangan + BonusSemiMangan;}
+	// -----------------------------------------------------------------
 	YakuResult() { // インスタンスを初期化する
 		isValid = isYakuman = false;
 		BasePoints = 20;

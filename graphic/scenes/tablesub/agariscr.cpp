@@ -421,14 +421,13 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
 	if (YakuResult::getYakuStat().isYakuman) return;
 	if (GameStatus::gameStat()->gameType & GuobiaoMJ) return; // 中国ルールでは不要な情報なので
 	const double anmTime = 0.75;
-	const int han = (YakuResult::getYakuStat().CoreHan + YakuResult::getYakuStat().BonusHan);
 	CodeConv::tostringstream o;
 	o << std::setw(3) << std::setfill(_T(' ')) << YakuResult::getYakuStat().BasePoints << _T("符") <<
-		std::setw(2) << std::setfill(_T(' ')) << han << _T("飜");
+		std::setw(2) << std::setfill(_T(' ')) << YakuResult::getYakuStat().TotalHan() << _T("飜");
 	const int x = BaseX + yakuWndWidth - 32 - 27 * 9;
 	const int y = BaseY + 650;
 	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
-	txtRenderer->NewText(0, o.str(), x, y, 1.0f, (han >= 100) ? (1.5f * 0.9f) : 1.5f, color);
+	txtRenderer->NewText(0, o.str(), x, y, 1.0f, (YakuResult::getYakuStat().TotalHan() >= 100) ? (1.5f * 0.9f) : 1.5f, color);
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
