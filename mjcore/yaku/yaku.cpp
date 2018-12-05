@@ -664,7 +664,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Tsumohai());
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
-	YAKUSTAT result; YAKUSTAT::Init(&result);
+	YAKUSTAT result;
 	const ParseMode pMode = {NoTile, Ke_Shun};
 	// 計算を実行
 	THREADLIB::thread myThread(CalculatorThread::calculator, &result, &pMode, gameStat, &analysis);
@@ -695,7 +695,6 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 		calcprm[i].pMode.AtamaCode = (TileCode)(i / 4);
 		calcprm[i].pMode.Order = (ParseOrder)(i % 4);
 		memcpy(&calcprm[i].analysis, &analysis, sizeof(MENTSU_ANALYSIS));
-		YAKUSTAT::Init(&calcprm[i].result);
 	}
 	// 計算を実行
 	for (int i = 4; i < 160; i++) { // 0〜3はNoTileなのでやらなくていい
@@ -719,7 +718,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 	o << _T("役判定処理を開始 プレイヤー [") << (int)targetPlayer << _T("]");
 	debug(o.str().c_str());
 	// 初期化
-	YAKUSTAT yakuInfo; YAKUSTAT::Init(&yakuInfo);
+	YAKUSTAT yakuInfo;
 	// シャンテン数をチェック
 	Shanten shanten[SHANTEN_PAGES];
 	for (int i = 0; i < SHANTEN_PAGES; i++)
