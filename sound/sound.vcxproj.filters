@@ -16,6 +16,18 @@
     <Filter Include="GuruGuruSMF">
       <UniqueIdentifier>{ba0a8e23-9720-406b-83e6-7dcdaeb8922f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{a3589778-3f8d-48dc-b617-036931790b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\ヘッダー ファイル">
+      <UniqueIdentifier>{0f2819fa-c91d-4b96-ae72-e4deab57eba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GuruGuruSMF\ソース ファイル">
+      <UniqueIdentifier>{42261cb1-6f27-4a69-b3a3-2825b1f8053a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GuruGuruSMF\ヘッダー ファイル">
+      <UniqueIdentifier>{a01eea7f-a80f-40be-8058-68e0d06fa418}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sound.cpp">
@@ -30,14 +42,14 @@
     <ClCompile Include="midi.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GuruGuruSMF\GuruGuruSMF4_Cpp_Static.cpp">
-      <Filter>GuruGuruSMF</Filter>
-    </ClCompile>
     <ClCompile Include="vorbis.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="logger.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GuruGuruSMF\GuruGuruSMF4_Cpp_Static.cpp">
+      <Filter>GuruGuruSMF\ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -50,14 +62,23 @@
     <ClInclude Include="snddata.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GuruGuruSMF\GuruGuruSMF4_Cpp.h">
-      <Filter>GuruGuruSMF</Filter>
-    </ClInclude>
     <ClInclude Include="logger.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GuruGuruSMF\GuruGuruSMF4_Cpp.h">
+      <Filter>GuruGuruSMF\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\strcode.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\version.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\mutex.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
