@@ -461,7 +461,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 	if (Zeit <= 0.0) return;
 	const double anmTime = 0.75;
-	const CodeConv::tstring scoreTxt = YakuResult::getAgariScore().bignumtotext(_T(""), _T("-"));
+	const CodeConv::tstring scoreTxt = YakuResult::getAgariScore().to_str(_T(""), _T("-"));
 	assert(scoreTxt != _T("0"));
 	const unsigned txtWidthNoAdj = digitRenderer->strWidthByCols(scoreTxt) / 2u;
 	const unsigned txtWidth = std::min(txtWidthNoAdj, 6u);

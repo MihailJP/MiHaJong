@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include "../common/strcode.h"
+#include "../common/largenum.h"
 #include "gametbl.h"
 #include "func.h"
 #include "discard.h"
 #include "endtype.h"
-#include "largenum.h"
 #include <array>
 
 // 牌譜関係のコードはクラスに隔離しておきましょうか。
@@ -22,7 +22,7 @@ private:
 	static const CodeConv::tstring tilecodelabel, HTtilecodelabel1, HTtilecodelabel2;
 	static const std::array<CodeConv::tstring, TileFlowerMax> Xtilerefcode;
 
-	static InfoByPlayer<LNum> origPoint;
+	static InfoByPlayer<LargeNum> origPoint;
 	static CodeConv::tostringstream haifuBuffer, HThaifuBuffer, XMLhaifuBuffer, XhaifuBuffer, XhaifuBufferBody;
 	static bool haifukanflag;
 

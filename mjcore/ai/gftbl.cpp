@@ -118,7 +118,7 @@ int aiscript::table::functable::gametbl::luafunc::getbakaze(lua_State* const L) 
 int aiscript::table::functable::gametbl::luafunc::getbasepoint(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L); // dummy
-	lua_pushinteger(L, BasePoint());
+	lua_pushinteger(L, static_cast<lua_Integer>(BasePoint()));
 	return 1;
 }
 

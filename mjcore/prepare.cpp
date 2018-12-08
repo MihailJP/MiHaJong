@@ -394,7 +394,7 @@ namespace {
 			});
 		// 持ち点のデータを送信。符号込みで33バイトずつ・スモールエンディアン
 		for (PlayerID player = 0; player < Players; player++) {
-			for (int i = 0; i < DIGIT_GROUPS; i++)
+			for (int i = 0; i < DigitGroups; i++)
 				for (int j = 0; j < 4; j++)
 					statsync(gameStat, (gameStat->Player[player].PlayerScore.digitGroup[i] >> (j * 8)) & 0xff,
 						[player, i, j](GameTable* const gameStat, int ReceivedMsg) -> bool {
@@ -402,7 +402,7 @@ namespace {
 							gameStat->Player[player].PlayerScore.digitGroup[i] |= (int)ReceivedMsg << (j * 8);
 							return true;
 						});
-			statsync(gameStat, (gameStat->Player[player].PlayerScore < (LNum)0) ? 0x01 : 0x00,
+			statsync(gameStat, (gameStat->Player[player].PlayerScore < (LargeNum)0) ? 0x01 : 0x00,
 				[player](GameTable* const gameStat, int ReceivedMsg) -> bool {
 					if (ReceivedMsg) gameStat->Player[player].PlayerScore *= -1;
 					return true;

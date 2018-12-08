@@ -59,7 +59,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		}
 		return ans;
 	}
-	CodeConv::tstring bignumtotext(CodeConv::tstring plusSign, CodeConv::tstring minusSign) const {
+	CodeConv::tstring to_str(CodeConv::tstring plusSign, CodeConv::tstring minusSign) const {
 		// 文字列表現に直す
 		static const CodeConv::tstring unitname[] = {
 			_T(""), _T("万"), _T("億"),_T("兆"), 
@@ -83,7 +83,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		}
 		return o.str();
 	}
-	CodeConv::tstring bignumtoplaintext(CodeConv::tstring plusSign = _T(""), CodeConv::tstring minusSign = _T("-")) const {
+	CodeConv::tstring to_str_plain(CodeConv::tstring plusSign = _T(""), CodeConv::tstring minusSign = _T("-")) const {
 		// 文字列表現に直す
 		CodeConv::tostringstream o;
 		// 符号

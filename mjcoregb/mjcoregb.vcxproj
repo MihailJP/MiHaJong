@@ -225,7 +225,6 @@
     <ClCompile Include="..\mjcore\gametbl.cpp" />
     <ClCompile Include="..\mjcore\haifu.cpp" />
     <ClCompile Include="..\mjcore\init.cpp" />
-    <ClCompile Include="..\mjcore\largenum.cpp" />
     <ClCompile Include="..\mjcore\logging.cpp" />
     <ClCompile Include="..\mjcore\lzma\Alloc.c" />
     <ClCompile Include="..\mjcore\lzma\LzFind.c" />
@@ -313,7 +312,6 @@
     <ClInclude Include="..\mjcore\gametbl.h" />
     <ClInclude Include="..\mjcore\haifu.h" />
     <ClInclude Include="..\mjcore\init.h" />
-    <ClInclude Include="..\mjcore\largenum.h" />
     <ClInclude Include="..\mjcore\logging.h" />
     <ClInclude Include="..\mjcore\lzma\Alloc.h" />
     <ClInclude Include="..\mjcore\lzma\LzFind.h" />
