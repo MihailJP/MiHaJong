@@ -9,10 +9,10 @@
 
 /* non-POD wrapper */
 LNum::LNum() {
-	myVal = LargeNum::fromInt(0);
+	myVal = LargeNum(0);
 }
 LNum::LNum(int32_t val) {
-	myVal = LargeNum::fromInt(val);
+	myVal = LargeNum(val);
 }
 LNum::LNum(const LargeNum& val) {
 	for (int i = 0; i < DIGIT_GROUPS; i++)
@@ -23,7 +23,7 @@ LNum::LNum(const LNum& val) {
 		myVal.digitGroup[i] = LargeNum(val).digitGroup[i];
 }
 LNum& LNum::operator=(int32_t val) {
-	myVal = LargeNum::fromInt(val);
+	myVal = LargeNum(val);
 	return *this;
 }
 LNum& LNum::operator=(const LargeNum& val) {
@@ -37,7 +37,7 @@ LNum& LNum::operator=(const LNum& val) {
 	return *this;
 }
 LNum::operator LargeNum() const {return myVal;}
-LNum::operator double() const {return myVal.bignumtodbl();}
+LNum::operator double() const {return static_cast<double>(myVal);}
 LNum::operator CodeConv::tstring() const {return myVal.bignumtotext(_T(""), _T("-"));}
 CodeConv::tstring LNum::to_str(CodeConv::tstring plusSign, CodeConv::tstring minusSign) const {
 	return myVal.bignumtotext(plusSign, minusSign);

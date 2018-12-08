@@ -283,8 +283,8 @@ std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scor
 			&(GameStatus::gameStat()->Player[playerID()].PlayerScore);
 		const int digit[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
 		int sign;
-		if      (*score > LargeNum::fromInt(0)) sign =  1;
-		else if (*score < LargeNum::fromInt(0)) sign = -1;
+		if      (*score > 0) sign =  1;
+		else if (*score < 0) sign = -1;
 		else                                    sign =  0;
 		for (int i = DigitGroups - 1; i >= 0; --i) {
 			for (int j = ((i == DigitGroups - 1) ? 9 : 7); j >= 0; --j) {

@@ -185,13 +185,13 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 		return false;
 	} else {
 		if (bgmFlag) {
-			if (YakuResult::getYakuStat().AgariPoints < LargeNum::fromInt(GameStatus::gameStat()->chkGameType(GuobiaoMJ) ? 24 : 2000)) {
+			if (YakuResult::getYakuStat().AgariPoints < (GameStatus::gameStat()->chkGameType(GuobiaoMJ) ? 24 : 2000)) {
 				switch (getAgariStyle()) {
 					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf1); break;
 					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi1); break;
 					case agariOthers:   sound::util::bgmplay(sound::IDs::musAgariOther1); break;
 				}
-			} else if (YakuResult::getYakuStat().AgariPoints < LargeNum::fromInt(GameStatus::gameStat()->chkGameType(GuobiaoMJ) ? 64 :8000)) {
+			} else if (YakuResult::getYakuStat().AgariPoints < (GameStatus::gameStat()->chkGameType(GuobiaoMJ) ? 64 : 8000)) {
 				switch (getAgariStyle()) {
 					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf2); break;
 					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi2); break;
@@ -486,7 +486,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
 		if (Zeit <= 0.0) return;
 		const double anmTime = 0.75;
 
-		const unsigned score = (unsigned)(YakuResult::getYakuStat().AgariPoints.bignumtodbl());
+		const unsigned score = static_cast<unsigned>(YakuResult::getYakuStat().AgariPoints);
 		CodeConv::tstring tmptxt; unsigned strWidth = 0;
 		if      (score ==  2000) {tmptxt = _T("満貫");   strWidth = 4;}
 		else if (score ==  3000) {tmptxt = _T("跳満");   strWidth = 4;}
