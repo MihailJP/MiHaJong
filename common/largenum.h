@@ -251,6 +251,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 	const bool operator<=(const LargeNum& cmp) const { return (this->compare(cmp) <= 0); }
 	const bool operator>=(const LargeNum& cmp) const { return (this->compare(cmp) >= 0); }
 };
-static_assert(std::is_pod<LargeNum>::value, "LargeNum is not POD");
+static_assert(std::is_trivially_copyable<LargeNum>::value, "LargeNum is not trivially copyable");
+static_assert(std::is_standard_layout<LargeNum>::value, "LargeNum is not standard layout");
 
 } /* namespace */

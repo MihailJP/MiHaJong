@@ -80,6 +80,26 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 		else doubling(yStat); // 計算する
 	}
 
+#ifndef GUOBIAO
+	if (totalSemiMangan >= 8)
+		yStat->isYakuman = true;
+	else if ((totalSemiMangan >= 6) &&
+		((totalHan < 12) ||
+		((totalHan < 13) && (RuleData::chkRule("kazoe_border", "13han_or_more"))) ||
+			((totalSemiMangan < 8) && (RuleData::chkRule("kazoe_border", "no")))))
+		yStat->isYakuman = true;
+	else if ((totalSemiMangan >= 4) &&
+		((totalHan < 10) ||
+		((totalHan < 11) && (RuleData::chkRule("sanbaiman_border", "11han_or_more")))))
+		yStat->isYakuman = true;
+	else if ((totalSemiMangan >= 3) && (totalHan < 8))
+		yStat->isYakuman = true;
+	else if ((totalSemiMangan >= 2) && (totalHan < 6))
+		yStat->isYakuman = true;
+	else
+		yStat->isYakuman = false;
+#endif /* GUOBIAO */
+
 	{ // トレース用
 		CodeConv::tostringstream o;
 		o << _T("計算結果は [");
@@ -664,7 +684,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Tsumohai());
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
-	YAKUSTAT result; YAKUSTAT::Init(&result);
+	YAKUSTAT result;
 	const ParseMode pMode = {NoTile, Ke_Shun};
 	// 計算を実行
 	THREADLIB::thread myThread(CalculatorThread::calculator, &result, &pMode, gameStat, &analysis);
@@ -695,7 +715,6 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 		calcprm[i].pMode.AtamaCode = (TileCode)(i / 4);
 		calcprm[i].pMode.Order = (ParseOrder)(i % 4);
 		memcpy(&calcprm[i].analysis, &analysis, sizeof(MENTSU_ANALYSIS));
-		YAKUSTAT::Init(&calcprm[i].result);
 	}
 	// 計算を実行
 	for (int i = 4; i < 160; i++) { // 0〜3はNoTileなのでやらなくていい
@@ -719,7 +738,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 	o << _T("役判定処理を開始 プレイヤー [") << (int)targetPlayer << _T("]");
 	debug(o.str().c_str());
 	// 初期化
-	YAKUSTAT yakuInfo; YAKUSTAT::Init(&yakuInfo);
+	YAKUSTAT yakuInfo;
 	// シャンテン数をチェック
 	Shanten shanten[SHANTEN_PAGES];
 	for (int i = 0; i < SHANTEN_PAGES; i++)

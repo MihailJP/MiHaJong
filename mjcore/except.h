@@ -24,7 +24,8 @@ EXPORT_STRUCT ErrorInfo {
 };
 
 #ifdef MJCORE_EXPORTS
-static_assert(std::is_pod<ErrorInfo>::value, "ErrorInfo is not POD");
+static_assert(std::is_trivially_copyable<ErrorInfo>::value, "ErrorInfo is not trivially copyable");
+static_assert(std::is_standard_layout<ErrorInfo>::value, "ErrorInfo is not standard layout");
 #endif
 
 void StackTraceToArray();
