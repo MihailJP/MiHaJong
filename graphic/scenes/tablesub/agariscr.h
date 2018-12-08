@@ -33,8 +33,8 @@ protected:
 	TextRenderer* myTextRenderer;
 protected:
 	mihajong_structs::YakuResult yakuData;
-	std::vector<std::pair<CodeConv::tstring, CodeConv::tstring> > yakuList;
-	void parseYakuList();
+	YakuListType yakuList;
+
 protected:
 	void renderWindow();
 	class AgariTehai; AgariTehai* agariTehai;

@@ -29,7 +29,7 @@ TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(DevicePtr device) :
 	myDevice = device;
 	LoadTexture(device, &windowTexture, MAKEINTRESOURCE(IDB_PNG_AGARI_WINDOW));
 	yakuData = YakuResult::getYakuStat();
-	parseYakuList();
+	(void)yakuData.yakuList(&yakuList);
 	myTextRenderer = new TextRenderer(device);
 	agariTehai = new AgariTehai(this);
 	agariNaki = new AgariNaki(this);
@@ -77,67 +77,6 @@ ArgbColor TableSubsceneAgariScreenProto::baseColor() {
 		case agariFurikomi: return 0xffff7f7f;
 		case agariOthers:   return 0xffffffff;
 		default:            return 0x00000000;
-	}
-}
-
-void TableSubsceneAgariScreenProto::parseYakuList() {
-#if !defined(_MSC_VER)
-	using std::min;
-#endif
-	typedef std::vector<CodeConv::tstring> TStrList;
-	LPTSTR yakuNameUnified = nullptr, yakuValUnified = nullptr;
-	LPCTSTR yakuName = yakuData.isYakuman ? yakuData.yakumanNameList : yakuData.yakuNameList;
-	LPCTSTR yakuVal  = yakuData.isYakuman ? yakuData.yakumanValList  : yakuData.yakuValList;
-	if ((GameStatus::gameStat()->gameType & RichiMJ)&&(!rules::chkRule("limitless", "no"))) {
-		const size_t bufsz = yakuData.nameBufSize * 2;
-		yakuNameUnified = new TCHAR[bufsz]; yakuNameUnified[0] = _T('\0');
-		yakuValUnified = new TCHAR[bufsz]; yakuValUnified[0] = _T('\0');
-#if defined(_MSC_VER)
-		_tcscpy_s(yakuNameUnified, bufsz, yakuData.yakumanNameList);
-#else
-		_tcsncpy(yakuNameUnified, yakuData.yakumanNameList, bufsz - _tcslen(yakuNameUnified));
-#endif
-		for (TCHAR* k = yakuNameUnified; *k != _T('\0'); ++k)
-			if (*k == _T('\n'))
-#if defined(_MSC_VER)
-				_tcscat_s(yakuValUnified, bufsz, _T("\r\n"));
-#elif defined(_WIN32)
-				_tcsncat(yakuValUnified, _T("\r\n"), bufsz - _tcslen(yakuValUnified));
-#else
-				_tcsncat(yakuValUnified, _T("\n"), bufsz - _tcslen(yakuValUnified));
-#endif
-#if defined(_MSC_VER)
-		_tcscat_s(yakuNameUnified, bufsz, yakuData.yakuNameList);
-		_tcscat_s(yakuValUnified, bufsz, yakuData.yakuValList);
-#else
-		_tcsncat(yakuNameUnified, yakuData.yakuNameList, bufsz - _tcslen(yakuNameUnified));
-		_tcsncat(yakuValUnified, yakuData.yakuValList, bufsz - _tcslen(yakuValUnified));
-#endif
-		yakuName = yakuNameUnified; yakuVal = yakuValUnified;
-	}
-	CodeConv::tstring yakuNameTxt, yakuValTxt;
-	auto splitstr = [](LPCTSTR str) -> TStrList { // 改行で分割
-		TStrList txtlst;
-		LPCTSTR ssptr = str; LPCTSTR sptr = ssptr;
-		for (; *sptr != _T('\0'); ++sptr) {
-			if (*sptr == _T('\n')) { // 改行が現れたら
-				txtlst.push_back(CodeConv::tstring(ssptr, sptr - (*(sptr - 1) == _T('\r') ? 1 : 0)));
-				ssptr = sptr + 1;
-			}
-		}
-		CodeConv::tstring laststr(ssptr, sptr - (*(sptr - 1) == _T('\r') ? 1 : 0));
-		if (!laststr.empty()) txtlst.push_back(laststr);
-		return txtlst;
-	};
-	TStrList yakuNameList(splitstr(yakuName)), yakuValList(splitstr(yakuVal));
-	for (int i = 0; i < std::min(yakuNameList.size(), yakuValList.size()); ++i)
-		if (yakuData.isYakuman)
-			yakuList.push_back(std::make_pair(yakuNameList[i], _T("")));
-		else
-			yakuList.push_back(std::make_pair(yakuNameList[i], yakuValList[i]));
-	if ((GameStatus::gameStat()->gameType & RichiMJ)&&(!rules::chkRule("limitless", "no"))) {
-		delete[] yakuNameUnified;
-		delete[] yakuValUnified;
 	}
 }
 

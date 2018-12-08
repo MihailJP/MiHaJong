@@ -194,6 +194,7 @@ inline std::string WIDEtoANSI(std::wstring str) {
 }
 typedef std::basic_string<TCHAR> tstring;
 typedef std::basic_ostringstream<TCHAR> tostringstream;
+typedef std::basic_istringstream<TCHAR> tistringstream;
 #ifdef UNICODE
 inline std::string toANSI(std::wstring str) {return WIDEtoANSI(str);}
 inline std::string toUTF8(std::wstring str) {return WIDEtoUTF8(str);}
@@ -211,5 +212,20 @@ inline std::string EncodeStr(std::string str) {return str;}
 inline std::string EnsureTStr(std::string str) {return str;}
 inline std::string EnsureTStr(std::wstring str) {return WIDEtoANSI(str);}
 #endif
+
+template<class CharT, class Traits = std::char_traits<CharT> >
+auto split(const std::basic_string<CharT>& str, CharT delimiter) {
+	std::basic_istringstream<CharT, Traits> stream(str);
+	std::basic_string<CharT, Traits> row;
+	std::vector<std::basic_string<CharT, Traits> > result;
+	while (std::getline(stream, row, delimiter)) {
+		if ((delimiter == stream.widen('\n')) && (row.back() == stream.widen('\r'))) row.pop_back();
+		result.push_back(row);
+	}
+	return result;
+}
+template<class CharT> auto split(const CharT* str, CharT delimiter) {
+	return split(std::basic_string<CharT>(str), delimiter);
+}
 
 }
