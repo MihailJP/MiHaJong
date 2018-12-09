@@ -110,17 +110,19 @@ void GameTableScreen::SutehaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		}
 	}
 	for (unsigned i = 0; i < gameStat->Player[targetPlayer].DiscardPointer; ++i) {
-		if ((gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardRiichi) ||
-			(gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardRiichiTaken))
-			riichiFlag = true;
-		if ((gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardNormal) ||
-			(gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardRiichi)) {
+		if (gameStat->Player[targetPlayer].Discard[i + 1].tcode.tile != NoTile) { // WORKAROUND: 何故かNoTileになる問題（花牌を親が抜いていて子が1巡目にポン）
+			if ((gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardRiichi) ||
+				(gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardRiichiTaken))
+				riichiFlag = true;
+			if ((gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardNormal) ||
+				(gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardRiichi)) {
 				if (riichiFlag) {
 					ReconstructSutehai_rotated(gameStat, targetPlayer, i, tilePosCol, tilePosRow, shiftPosFlag);
 					riichiFlag = false;
 				} else {
 					ReconstructSutehai_portrait(gameStat, targetPlayer, i, tilePosCol, tilePosRow, shiftPosFlag);
 				}
+			}
 		}
 	}
 }
