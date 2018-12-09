@@ -12,6 +12,7 @@
 #include "../common/version.h"
 #include "chat.h"
 #include "ruletbl.h"
+#include "yaku/yaku.h"
 
 /* 雀牌の名前データ */
 const CodeConv::tstring haifu::tilecodelabel =
@@ -1067,7 +1068,7 @@ void haifu::tools::hfwriter::finalformWriter::hfExposedMeld(const GameTable* con
 	}
 }
 
-void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, PlayerID player, seatAbsolute wind) {
+void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, PlayerID player, seatAbsolute wind, EndType RoundEndType) {
 	// 点数の変動
 	CodeConv::tostringstream o;
 	o << _T(" ") << origPoint[player].to_str(_T(""), _T("△"));
@@ -1138,7 +1139,25 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 			XhaifuBuffer << _T(" comment=\"") << tmpStr << _T("\"");
 	}
 #endif /* GUOBIAO */
-	XhaifuBuffer << _T(" />") << std::endl;
+	if (RoundEndType == Agari) { // 役リスト
+		const yaku::YAKUSTAT& yakuData(yaku::yakuCalculator::countyaku(gameStat, player));
+		mihajong_structs::YakuListType yakuList;
+		yakuData.yakuList(&yakuList, true);
+		if (yakuData.isValid) {
+			XhaifuBuffer << _T(">") << std::endl;
+			for (const auto& yaku : yakuList) {
+				XhaifuBuffer << _T("\t\t\t\t\t<yaku name=\"") << yaku.first << _T("\"");
+				if (!yaku.second.empty())
+					XhaifuBuffer << _T(" value=\"") << yaku.second << _T("\"");
+				XhaifuBuffer << _T(" />") << std::endl;
+			}
+			XhaifuBuffer << _T("\t\t\t\t</player>") << std::endl;
+		} else {
+			XhaifuBuffer << _T(" />") << std::endl;
+		}
+	} else {
+		XhaifuBuffer << _T(" />") << std::endl;
+	}
 }
 
 void haifu::tools::hfwriter::hfWriteOut(const GameTable* const gameStat, PlayerID player) {
@@ -1191,7 +1210,7 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 		finalformWriter::hfFlower(gameStat, k);
 		finalformWriter::hfExposedMeld(gameStat, k);
 		// 点棒状況を書き出す
-		hfScoreWriteOut(gameStat, k, (seatAbsolute)i);
+		hfScoreWriteOut(gameStat, k, (seatAbsolute)i, RoundEndType);
 		// 色々書き出し
 		if ((!gameStat->chkGameType(Sanma4))||(i < 3))
 			hfWriteOut(gameStat, k);

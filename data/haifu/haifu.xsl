@@ -140,6 +140,24 @@
 						</xsl:if>
 					</td>
 				</tr>
+				<!-- プレイヤー別の情報：あがっていたら役を表示 -->
+				<xsl:if test="yaku">
+					<tr>
+						<td colspan="{$cols}">
+							<xsl:for-each select="yaku">
+								<xsl:if test="position() &gt; 1">
+									<xsl:text>、</xsl:text>
+								</xsl:if>
+								<xsl:value-of select="@name" />
+								<xsl:if test="@value">
+									<xsl:text> (</xsl:text>
+									<xsl:value-of select="@value" />
+									<xsl:text>)</xsl:text>
+								</xsl:if>
+							</xsl:for-each>
+						</td>
+					</tr>
+				</xsl:if>
 				<!-- プレイヤー別の情報：配牌 -->
 				<tr>
 					<td class="label">配牌</td>

@@ -110,7 +110,7 @@ private:
 				~finalformWriter() = delete;
 			};
 
-			static void hfScoreWriteOut(const GameTable* const gameStat, PlayerID player, seatAbsolute wind);
+			static void hfScoreWriteOut(const GameTable* const gameStat, PlayerID player, seatAbsolute wind, EndType RoundEndType);
 			static void hfWriteOut(const GameTable* const gameStat, PlayerID player);
 
 		public:
