@@ -480,12 +480,12 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 						case sWest:  ResultDesc += _T("西家"); break;
 						case sNorth: ResultDesc += _T("北家"); break;
 					}
-					LNum AgariPointRaw = 0;
+					LargeNum AgariPointRaw = 0;
 					if      (RuleData::chkRule("nagashi_mangan", "mangan"))  AgariPointRaw = 2000;
 					else if (RuleData::chkRule("nagashi_mangan", "haneman")) AgariPointRaw = 3000;
 					else if (RuleData::chkRule("nagashi_mangan", "baiman"))  AgariPointRaw = 4000;
 					else if (RuleData::chkRule("nagashi_mangan", "yakuman")) AgariPointRaw = 8000;
-					LNum agariPoint; // ダミー。この変数は使用しない。
+					LargeNum agariPoint; // ダミー。この変数は使用しない。
 					agari::calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), cnt);
 				}
 			}
@@ -521,9 +521,9 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 void endround::transferChonboPenalty(GameTable* gameStat, PlayerID targetPlayer) {
 	transfer::resetDelta();
 #ifdef GUOBIAO
-	LNum AgariPoint = 0, AgariPointRaw = 10 - 8;
+	LargeNum AgariPoint = 0, AgariPointRaw = 10 - 8;
 #else /* GUOBIAO */
-	LNum AgariPoint = 0, AgariPointRaw = 2000;
+	LargeNum AgariPoint = 0, AgariPointRaw = 2000;
 #endif /* GUOBIAO */
 	agari::calcAgariPoints(gameStat, AgariPoint, AgariPointRaw, transfer::getDelta(), targetPlayer);
 	transfer::negateDelta();
@@ -575,7 +575,7 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 			((RoundEndType == Agari) || (RuleData::chkRule("agariyame", "yes_also_ready")))) {
 				PlayerRankList Rank = calcRank(gameStat);
 				if ((Rank[gameStat->GameRound % (int)Players] == 1) &&
-					(gameStat->Player[gameStat->GameRound % (int)Players].PlayerScore >= (LNum)BasePoint()))
+					(gameStat->Player[gameStat->GameRound % (int)Players].PlayerScore >= (LargeNum)BasePoint()))
 					return true;
 		}
 	}
@@ -617,7 +617,7 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 		return true;
 #else /* GUOBIAO */
 		for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
-			if (gameStat->Player[i].PlayerScore >= (LNum)BasePoint())
+			if (gameStat->Player[i].PlayerScore >= (LargeNum)BasePoint())
 				return true;
 		// 延長戦なし設定
 		if (RuleData::chkRule("sudden_death_length", "no")) return true;
@@ -665,7 +665,7 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 // -------------------------------------------------------------------------
 
 namespace {
-	InfoByPlayer<LNum> delta;
+	InfoByPlayer<LargeNum> delta;
 
 	std::tuple<bool, signed short> checkExponent(PlayerID player, unsigned group, unsigned digit) {
 		if (((LargeNum)delta[player]).digitGroup[group] / (int)pow(10.0, (int)digit) != 0) {
@@ -691,8 +691,8 @@ namespace {
 		bool finishFlag = false; signed short mantissa = 0;
 		for (PlayerID i = 0; i < Players; ++i) {
 			mihajong_graphic::callvalue::CallValue callVal = {0, 0u};
-			for (int j = DIGIT_GROUPS - 1; j >= 0; --j) {
-				for (int k = (j == DIGIT_GROUPS - 1) ? 9 : 7; k >= 0; --k) {
+			for (int j = DigitGroups - 1; j >= 0; --j) {
+				for (int k = (j == DigitGroups - 1) ? 9 : 7; k >= 0; --k) {
 					std::tie(finishFlag, mantissa) = checkExponent(i, j, k);
 					if (finishFlag) {
 						callVal.Exponent = j * 8 + k;
@@ -710,14 +710,14 @@ namespace {
 	}
 }
 
-InfoByPlayer<LNum>& endround::transfer::getDelta() {
+InfoByPlayer<LargeNum>& endround::transfer::getDelta() {
 	return delta;
 }
 void endround::transfer::resetDelta() {
 	for (PlayerID i = 0; i < Players; ++i)
 		delta[i] = 0;
 }
-void endround::transfer::addDelta(PlayerID player, const LNum& deltaVal) {
+void endround::transfer::addDelta(PlayerID player, const LargeNum& deltaVal) {
 	delta[player] += deltaVal;
 }
 void endround::transfer::negateDelta() {
@@ -746,6 +746,6 @@ void endround::transfer::transferChip(GameTable* gameStat, unsigned subscene, un
 	sound::Play(sound::IDs::sndPage);
 	mihajong_graphic::ui::WaitUIWithTimeout(wait);
 	for (PlayerID i = 0; i < Players; ++i)
-		gameStat->Player[i].playerChip += delta[i];
+		gameStat->Player[i].playerChip += static_cast<int>(delta[i]);
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 }

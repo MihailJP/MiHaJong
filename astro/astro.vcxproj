@@ -170,6 +170,7 @@
     <ClCompile Include="sunrise.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\version.h" />
     <ClInclude Include="astro.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

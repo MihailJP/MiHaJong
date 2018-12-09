@@ -125,6 +125,10 @@
     <ClCompile Include="mihasanm.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\gametype.h" />
+    <ClInclude Include="..\common\sleep.h" />
+    <ClInclude Include="..\common\thread.h" />
+    <ClInclude Include="..\common\version.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

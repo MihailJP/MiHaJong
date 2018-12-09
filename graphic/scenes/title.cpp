@@ -14,6 +14,15 @@
 #include "../keycode.h"
 #endif /*_WIN32*/
 
+#ifdef max
+#undef max
+#endif
+#ifdef min
+#undef min
+#endif
+using std::max;
+using std::min;
+
 namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------

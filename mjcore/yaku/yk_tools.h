@@ -14,7 +14,8 @@ struct yaku::ParseMode {
 
 class yaku::mentsuParser { // 面子パーサ
 #ifdef MJCORE_EXPORTS
-	static_assert(std::is_pod<yaku::ParseMode>::value, "ParseMode is not POD");
+	static_assert(std::is_trivially_copyable<yaku::ParseMode>::value, "ParseMode is not trivially copyable");
+	static_assert(std::is_standard_layout<yaku::ParseMode>::value, "ParseMode is not standard layout");
 #endif
 private:
 	static bool makementsu_shuntsu(Int8ByTile& countForMentsu, MeldBuf MianziDat,

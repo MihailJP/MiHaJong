@@ -31,22 +31,23 @@ struct YakuResult {
 	// -----------------------------------------------------------------
 	MeldBuf MianziDat; // 面子に分解したデータ
 	// -----------------------------------------------------------------
-	static void Init(YakuResult* const myInstance) { // インスタンスを初期化する
-		myInstance->isValid = false;
-		myInstance->BasePoints = 20;
-		myInstance->CoreHan = myInstance->CoreSemiMangan =
-			myInstance->BonusHan = myInstance->BonusSemiMangan =
-			myInstance->DoraQuantity = myInstance->UraDoraQuantity =
-			myInstance->AkaDoraQuantity = myInstance->AoDoraQuantity =
-			myInstance->AliceDora = myInstance->FlowerQuantity = 0;
-		myInstance->AgariPoints = LargeNum::fromInt(0);
-		memset(myInstance->yakuNameList, 0, nameBufSize);
-		memset(myInstance->yakuValList, 0, nameBufSize);
-		memset(myInstance->yakumanNameList, 0, nameBufSize);
-		memset(myInstance->yakumanValList, 0, nameBufSize);
+	YakuResult() { // インスタンスを初期化する
+		isValid = false;
+		BasePoints = 20;
+		CoreHan = CoreSemiMangan =
+			BonusHan = BonusSemiMangan =
+			DoraQuantity = UraDoraQuantity =
+			AkaDoraQuantity = AoDoraQuantity =
+			AliceDora = FlowerQuantity = 0;
+		AgariPoints = 0;
+		memset(yakuNameList, 0, nameBufSize);
+		memset(yakuValList, 0, nameBufSize);
+		memset(yakumanNameList, 0, nameBufSize);
+		memset(yakumanValList, 0, nameBufSize);
 	}
-	void Init() {Init(this);} // インスタンスを初期化する
+	~YakuResult() = default;
 };
-static_assert(std::is_pod<YakuResult>::value, "YakuResult is not POD");
+static_assert(std::is_trivially_copyable<YakuResult>::value, "YakuResult is not trivially copyable");
+static_assert(std::is_standard_layout<YakuResult>::value, "YakuResult is not standard layout");
 
 } /* namespace */
