@@ -134,6 +134,10 @@
 								<xsl:with-param name="val" select="@chip" />
 							</xsl:call-template>
 						</xsl:if>
+						<xsl:if test="@comment">
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="@comment" />
+						</xsl:if>
 					</td>
 				</tr>
 				<!-- プレイヤー別の情報：配牌 -->
