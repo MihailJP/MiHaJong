@@ -27,15 +27,15 @@ void Data::decompress(int FileID_) {
 	int result;
 	LoadFileInResource(FileID_, LZMA_STREAM, size, compressedBuf);
 	assert(size > 13);
-	uint8_t* compressedData = (uint8_t *)malloc(size+1);
+	uint8_t* compressedData = new uint8_t[size+1];
 	memcpy(compressedData, compressedBuf, size);
 	compressedData[size] = 0;
 	decompressedSize = *((size_t *)(compressedData+5));
-	DecompressedData = (uint8_t *)malloc(decompressedSize);
+	DecompressedData = new uint8_t[decompressedSize];
 	result = LzmaUncompress(DecompressedData, &decompressedSize,
 		(const uint8_t *)(compressedData+13),
 		(SizeT *)&size, (const uint8_t *)compressedData, 5);
-	free(compressedData); compressedData = nullptr;
+	delete[] compressedData; compressedData = nullptr;
 	if (result != SZ_OK) {
 		CodeConv::tostringstream o;
 		o << _T("LZMAストリームのデコードに失敗しました。ファイルが壊れている虞があります。") <<
@@ -129,7 +129,7 @@ Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDiges
 }
 
 Data::~Data() {
-	free(DecompressedData); DecompressedData = nullptr;
+	delete[] DecompressedData; DecompressedData = nullptr;
 }
 
 LPCTSTR Data::Description = nullptr;
