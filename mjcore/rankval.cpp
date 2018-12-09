@@ -37,10 +37,10 @@ RankVal* RankVal::Instantiate() {
 }
 
 /* 値を取得 */
-static LNum getCustomVal(unsigned playersAboveBase, unsigned rank) {
+static LargeNum getCustomVal(unsigned playersAboveBase, unsigned rank) {
 	std::ostringstream tagNameStream;
 	tagNameStream << "point_basis_" << (char)('a' + ((playersAboveBase + 3) % 4)) << (char)('0' + rank);
-	LNum point(
+	LargeNum point(
 		(RuleData::chkRule(tagNameStream.str() + "_mantissa_tens")[0] == '-' ? (-1) : 1) *
 		(abs(std::atoi(RuleData::chkRule(tagNameStream.str() + "_mantissa_tens").c_str())) * 10 +
 		std::atoi(RuleData::chkRule(tagNameStream.str() + "_mantissa_ones").c_str()))
@@ -56,7 +56,7 @@ static LNum getCustomVal(unsigned playersAboveBase, unsigned rank) {
 	return point;
 }
 
-LNum RankVal::getRankVal(const GameTable* gameStat, const std::string& ruletag, unsigned playersAboveBase, unsigned rank) const {
+LargeNum RankVal::getRankVal(const GameTable* gameStat, const std::string& ruletag, unsigned playersAboveBase, unsigned rank) const {
 	using namespace CodeConv;
 	const std::string ruleTagVal =
 		std::string(gameStat->chkGameType(SanmaT) ? "T:" : "Q:") + ruletag;
@@ -80,7 +80,7 @@ LNum RankVal::getRankVal(const GameTable* gameStat, const std::string& ruletag, 
 			return -(
 				getCustomVal(abvBase, 2) +
 				getCustomVal(abvBase, 3) +
-				(gameStat->chkGameType(SanmaT) ? (LNum)0 : getCustomVal(abvBase, 4)));
+				(gameStat->chkGameType(SanmaT) ? (LargeNum)0 : getCustomVal(abvBase, 4)));
 		} else { /* トップ以外の場合 */
 			return getCustomVal(abvBase, rank);
 		}

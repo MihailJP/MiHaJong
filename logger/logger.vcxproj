@@ -173,6 +173,9 @@
     <ClCompile Include="logger.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\mutex.h" />
+    <ClInclude Include="..\common\strcode.h" />
+    <ClInclude Include="..\common\version.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

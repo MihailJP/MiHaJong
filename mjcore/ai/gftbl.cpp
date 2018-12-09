@@ -93,7 +93,7 @@ int aiscript::table::functable::gametbl::luafunc::evaluate(lua_State* const L) {
 		TableAdd(L, "fu", (lua_Integer)evaluation.BasePoints); // 符
 		TableAdd(L, "han", (lua_Integer)(evaluation.TotalHan())); // 飜
 		TableAdd(L, "mangan", (double)(evaluation.TotalSemiMangan()) / 2.0); // 満貫
-		TableAdd(L, "points", evaluation.AgariPoints.bignumtodbl()); // 点数
+		TableAdd(L, "points", (double)evaluation.AgariPoints); // 点数
 	}
 	return 1;
 }
@@ -118,7 +118,7 @@ int aiscript::table::functable::gametbl::luafunc::getbakaze(lua_State* const L) 
 int aiscript::table::functable::gametbl::luafunc::getbasepoint(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L); // dummy
-	lua_pushinteger(L, BasePoint());
+	lua_pushinteger(L, static_cast<lua_Integer>(BasePoint()));
 	return 1;
 }
 
@@ -315,7 +315,7 @@ int aiscript::table::functable::gametbl::luafunc::getscore(lua_State* const L) {
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	lua_pushnumber(L, gameStat->Player[player].PlayerScore.bignumtodbl()); // 持ち点をdoubleにしてスタックに積む
+	lua_pushnumber(L, static_cast<double>(gameStat->Player[player].PlayerScore)); // 持ち点をdoubleにしてスタックに積む
 	return 1;
 }
 

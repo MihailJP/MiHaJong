@@ -180,7 +180,7 @@ void ResultScreen::RankRenderer::RenderNameScore() {
 
 	CodeConv::tostringstream punctaticum_;
 	punctaticum_ << _T("素点：") <<
-		(GameStatus::gameStat()->Player[player].PlayerScore.bignumtotext(_T(""), _T("△")));
+		(GameStatus::gameStat()->Player[player].PlayerScore.to_str(_T(""), _T("△")));
 	const int chipVal = GameStatus::gameStat()->Player[player].playerChip;
 	if ((GameStatus::gameStat()->gameType & RichiMJ) && (!rules::chkRule("chip", "no"))) {
 		if (chipVal > 0)
@@ -212,10 +212,10 @@ void ResultScreen::RankRenderer::RenderScore() {
 	const float scale = (tempus >= animTime) ? 1.0f :
 		1.0f + pow((float)(animTime - tempus) / (float)animTime * 3.5f, 2);
 	const LargeNum point(FinalScoreDat::getData(player));
-	const CodeConv::tstring scoreTxt(point.bignumtotext(_T("+"), _T("△")));
+	const CodeConv::tstring scoreTxt(point.to_str(_T("+"), _T("△")));
 	const ArgbColor color =
-		(point > LargeNum::fromInt(0)) ? 0xffccffcc :
-		(point < LargeNum::fromInt(0)) ? 0xffffcccc : 0xffffffcc;
+		(point > 0) ? 0xffccffcc :
+		(point < 0) ? 0xffffcccc : 0xffffffcc;
 	const unsigned strWidth = scoreRenderer->strWidthByCols(scoreTxt) / 2u;
 	scoreRenderer->NewText(0, scoreTxt,
 		(1000 + 96 * std::max((signed)widthLimit - (signed)strWidth, 0) -

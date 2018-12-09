@@ -7,7 +7,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif /*_WIN32*/
-#include "largenum.h"
+#include "../common/largenum.h"
 #include "envtbl.h"
 #include "../common/version.h"
 #include "chat.h"
@@ -33,7 +33,7 @@ const std::array<CodeConv::tstring, TileFlowerMax> haifu::Xtilerefcode = {
 	_T(""), _T("&spring;"), _T("&summer;"), _T("&autumn;"), _T("&winter;"), _T("&joker;"), _T("&plum;"),  _T("&orchid;"), _T("&chrys;"), _T("&bamboo;"),
 };
 
-InfoByPlayer<LNum> haifu::origPoint;
+InfoByPlayer<LargeNum> haifu::origPoint;
 CodeConv::tostringstream haifu::XMLhaifuBuffer, haifu::XhaifuBuffer, haifu::XhaifuBufferBody;
 bool haifu::haifukanflag = false;
 
@@ -749,8 +749,8 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 	o << _T(" ") << origPoint[player].to_str(_T(""), _T("△"));
 	if (origPoint[player] != gameStat->Player[player].PlayerScore) // 点数が一致しないなら
 		o << _T(" → ") <<
-			gameStat->Player[player].PlayerScore.bignumtotext(_T(""), _T("△")) << _T(" (") <<
-			((LNum)gameStat->Player[player].PlayerScore -
+			gameStat->Player[player].PlayerScore.to_str(_T(""), _T("△")) << _T(" (") <<
+			((LargeNum)gameStat->Player[player].PlayerScore -
 			origPoint[player]).to_str(_T("+"), _T("-")) <<
 			_T(")");
 #ifndef GUOBIAO
@@ -778,7 +778,7 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 		<< origPoint[player].to_str_plain() << _T('"');
 	if (origPoint[player] != gameStat->Player[player].PlayerScore) // 点数が一致しないなら
 		XhaifuBuffer << _T(" delta=\"") <<
-			((LNum)gameStat->Player[player].PlayerScore -
+			((LargeNum)gameStat->Player[player].PlayerScore -
 			origPoint[player]).to_str_plain() << _T('"');
 #ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("chip")) // チップありの時

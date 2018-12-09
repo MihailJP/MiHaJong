@@ -49,6 +49,12 @@
     <Filter Include="ヘッダー ファイル\data">
       <UniqueIdentifier>{f747bb56-455a-4436-b2eb-7c02e3fc5af2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{f2d9aa4f-b36d-423b-879d-4540c0cfc0ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\ヘッダー ファイル">
+      <UniqueIdentifier>{ac6a9dbe-6b04-422c-854c-7e672bcdd9c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\mjcore\agari.cpp">
@@ -88,9 +94,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="..\mjcore\init.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="..\mjcore\largenum.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="..\mjcore\logging.cpp">
@@ -296,9 +299,6 @@
     <ClInclude Include="..\mjcore\init.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\mjcore\largenum.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\mjcore\logging.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -433,6 +433,63 @@
     </ClInclude>
     <ClInclude Include="..\mjcore\yaku\yvalue.h">
       <Filter>ヘッダー ファイル\yaku</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\bgmid.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\chrono.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\discard.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\gametbl.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\largenum.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\machihai.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\mutex.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\nmrules.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\seatrank.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\shanten.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\sleep.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\strcode.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\thread.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\tilecode.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\version.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\yakurslt.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\clock.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\condvar.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\gametype.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -60,7 +60,7 @@ struct YakuResult {
 			DoraQuantity = UraDoraQuantity =
 			AkaDoraQuantity = AoDoraQuantity =
 			AliceDora = FlowerQuantity = 0;
-		AgariPoints = LargeNum::fromInt(0);
+		AgariPoints = 0;
 		memset(yakuNameList, 0, nameBufSize);
 		memset(yakuValList, 0, nameBufSize);
 		memset(yakumanNameList, 0, nameBufSize);

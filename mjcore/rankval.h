@@ -3,8 +3,8 @@
 #include <string>
 #include <map>
 #include <array>
+#include "../common/largenum.h"
 #include "gametbl.h"
-#include "largenum.h"
 
 class RankVal {
 private: /* Singleton class idiom */
@@ -16,5 +16,5 @@ private:
 	std::map<std::string, RankValSet> rankValueMap; // ウマ設定一覧
 public:
 	static RankVal* Instantiate(); // Singleton instance accessor
-	LNum getRankVal(const GameTable* gameStat, const std::string& ruletag, unsigned playersAboveBase, unsigned rank) const;
+	LargeNum getRankVal(const GameTable* gameStat, const std::string& ruletag, unsigned playersAboveBase, unsigned rank) const;
 };

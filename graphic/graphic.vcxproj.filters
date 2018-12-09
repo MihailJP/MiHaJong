@@ -37,6 +37,12 @@
     <Filter Include="ヘッダー ファイル\widgets">
       <UniqueIdentifier>{7a57851c-121d-453d-b306-d5f286265e37}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{3729b9e0-7965-4698-91cf-884b00ddd818}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\ヘッダー ファイル">
+      <UniqueIdentifier>{e240f589-93ce-4e71-9b18-3795b8e28510}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="scrmanip.cpp">
@@ -418,6 +424,63 @@
     </ClInclude>
     <ClInclude Include="scenes\table\clock.h">
       <Filter>ヘッダー ファイル\scenes\table</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\bgmid.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\chrono.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\clock.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\condvar.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\discard.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\gametbl.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\largenum.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\machihai.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\mutex.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\nmrules.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\seatrank.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\shanten.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\sleep.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\strcode.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\thread.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\tilecode.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\version.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\yakurslt.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\gametype.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
