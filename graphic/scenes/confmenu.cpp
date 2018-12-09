@@ -23,17 +23,14 @@ ConfigMenuProto::~ConfigMenuProto() {
 }
 
 void ConfigMenuProto::CreateButton(unsigned btnID, int X, int Y, unsigned Width, unsigned Height, const CodeConv::tstring& caption) {
-	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
 	myButtonPic->setButton(btnID, ButtonPic::clear,
-		X * (WidthRate * Geometry::WindowScale()), Y * Geometry::WindowScale(),
-		Width * (WidthRate * Geometry::WindowScale()), Height * Geometry::WindowScale(),
+		scaleX(X), scaleY(Y), scaleW(Width), scaleH(Height),
 		0xffffffff, caption, true);
 	setRegion(btnID + btnRegionStart, X, Y, X + Width, Y + Height);
 }
 
 void ConfigMenuProto::Render() {
 	clearWithGameTypeColor(); // バッファクリア
-	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
 #ifndef _WIN32
 	if (!menuInitFlag) {
 		objInit();
@@ -41,7 +38,7 @@ void ConfigMenuProto::Render() {
 	}
 #endif /*_WIN32*/
 	{
-		myTextRenderer->NewText(123, Caption(), 540 * WidthRate, 25, 2.0f, WidthRate, 0xffffffff);
+		myTextRenderer->NewText(123, Caption(), adjX(540), 25, 2.0f, WidthRate(), 0xffffffff);
 	}
 	ShowMessageBelow();
 	ShowPageCaption();
@@ -175,9 +172,7 @@ void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)
 void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 #endif /*_WIN32*/
 {
-	const int scaledX = (int)((float)X / Geometry::WindowScale() / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight));
-	const int scaledY = (int)((float)Y / Geometry::WindowScale());
-	const int region = whichRegion(scaledX, scaledY);
+	const int region = whichRegion(scaleInvX(X), scaleInvY(Y));
 #if 0
 	{
 		CodeConv::tostringstream o;

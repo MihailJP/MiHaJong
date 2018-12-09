@@ -86,26 +86,26 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 		myTextRenderer->NewText(ID,
 		menustr, X + virt_width * pow(1.0 - t / (double)(endF - startF), 2.0),
 		Y, 2.0f,
-		1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
+		1.6f * WidthRate(),
 		0x33ffffff);
 	} else if (t >= (double)(endF - startF)) {
 		if (ID == (menuCursor - 1))
 			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f,
-			1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
+			1.6f * WidthRate(),
 			0xcc000000 | (0x00ffffff & hsv2rgb(t - (double)(endF - startF), 0.25, 1.0))
 			);
 		else
 			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f,
-			1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
+			1.6f * WidthRate(),
 			0x33ffffff);
 	}
-	setRegion(ID, X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight), Y,
-		(Geometry::BaseSize * 4 / 3) - X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight), Y + 71);
+	setRegion(ID, X / WidthRate(), Y,
+		(Geometry::BaseSize * 4 / 3) - X / WidthRate(), Y + 71);
 }
 
 void TitleScreen::menuLabels() {
 	auto center = [](unsigned cols) {
-		return (signed(Geometry::BaseSize * 2 / 3) - signed(1.6 * 18 * cols)) * ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight);
+		return (signed(Geometry::BaseSize * 2 / 3) - signed(1.6 * 18 * cols)) * WidthRate();
 	};
 	menuLabelSlide(0, _T("Standalone Game"), center(15), 400, 120, 180);
 	menuLabelSlide(1, _T("Network Game (Server)"), center(21), 480, 125, 180);
@@ -186,9 +186,7 @@ void TitleScreen::MouseInput(const XEvent* od, int X, int Y)
 #endif /*_WIN32*/
 {
 	const bool flag1 = (myTimer.elapsed() > 180u * timePerFrame);
-	const int scaledX = (int)((float)X / Geometry::WindowScale() / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight));
-	const int scaledY = (int)((float)Y / Geometry::WindowScale());
-	const int region = whichRegion(scaledX, scaledY);
+	const int region = whichRegion(scaleInvX(X), scaleInvY(Y));
 #if 0
 	{
 		CodeConv::tostringstream o;
@@ -275,7 +273,7 @@ void TitleScreen::TitleSprite::show(int X, int Y, float scale, uint8_t opacity) 
 	D3DXMatrixScaling(&matrix1, scale, scale, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixTranslation(&matrix1, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1,
-		(float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight * Geometry::WindowScale(),
+		WidthRate() * Geometry::WindowScale(),
 		Geometry::WindowScale(),
 		0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 #else
@@ -285,7 +283,7 @@ void TitleScreen::TitleSprite::show(int X, int Y, float scale, uint8_t opacity) 
 	glScalef(scale, scale, 1.0f);
 	glTranslatef(-(float)X * Geometry::WindowScale(), (float)Y * Geometry::WindowScale(), 0.0f);
 	glScalef(
-		(float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight * Geometry::WindowScale(),
+		WidthRate() * Geometry::WindowScale(),
 		Geometry::WindowScale(), 1.0f);
 	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
 	TransformMatrix matrix; glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);

@@ -1,4 +1,5 @@
 #include "proto.h"
+#include "../geometry.h"
 
 namespace mihajong_graphic {
 
@@ -23,6 +24,33 @@ void Scene::setRegion(unsigned regionID, int Left, int Top, int Right, int Botto
 void Scene::setRegion(unsigned regionID, const Region& region) {
 	setRegion(regionID, region.Left, region.Top, region.Right, region.Bottom);
 }
+
+float Scene::WidthRate() {
+	return static_cast<float>(Geometry::WindowWidth) * 0.75f / static_cast<float>(Geometry::WindowHeight);
+}
+
+int Scene::scaleX(int x) {
+	return static_cast<int>(static_cast<float>(x) * (WidthRate() * Geometry::WindowScale()));
+}
+int Scene::scaleY(int y) {
+	return static_cast<int>(static_cast<float>(y) * Geometry::WindowScale());
+}
+unsigned int Scene::scaleW(unsigned int width) {
+	return static_cast<unsigned int>(static_cast<float>(width) * (WidthRate() * Geometry::WindowScale()));
+}
+unsigned int Scene::scaleH(unsigned int height) {
+	return static_cast<unsigned int>(static_cast<float>(height) * Geometry::WindowScale());
+}
+int Scene::scaleInvX(int x) {
+	return static_cast<int>(static_cast<float>(x) / WidthRate() / Geometry::WindowScale());
+}
+int Scene::scaleInvY(int y) {
+	return static_cast<int>(static_cast<float>(y) / Geometry::WindowScale());
+}
+int Scene::adjX(int x) {
+	return static_cast<int>(static_cast<float>(x) * WidthRate());
+}
+
 
 #ifdef _WIN32
 void Scene::PadInput(LPDIDEVICEOBJECTDATA od) {
