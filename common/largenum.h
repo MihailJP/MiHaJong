@@ -24,7 +24,10 @@ const unsigned int DigitGroups = 8;
 struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 	int32_t digitGroup[DigitGroups];
 
-	LargeNum() = default;
+	LargeNum() {
+		for (int i = 0; i < DigitGroups; ++i)
+			digitGroup[i] = 0;
+	}
 
 	void fix() { // 正規形に直す
 		for (int i = 0; i < (DigitGroups - 1); i++) {
@@ -167,11 +170,23 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 	}
 	static_assert(std::numeric_limits<uint64_t>::max() == 18'446'744'073'709'551'615uLL, "Maximum of uint64_t is not 18,446,744,073,709,551,615");
 
-	LargeNum(int val) {
-		LargeNum num;
-		for (int i = 0; i < DigitGroups; i++) num.digitGroup[i] = 0;
-		num.digitGroup[0] = (val % 100000000);
-		num.digitGroup[1] = (val / 100000000);
+	LargeNum(int32_t val) : LargeNum() {
+		digitGroup[0] = (val % 100'000'000);
+		digitGroup[1] = (val / 100'000'000);
+	}
+	LargeNum(uint32_t val) : LargeNum() {
+		digitGroup[0] = (val % 100'000'000);
+		digitGroup[1] = (val / 100'000'000);
+	}
+	LargeNum(int64_t val) : LargeNum() {
+		digitGroup[0] = static_cast<int32_t>(val % 100'000'000uLL);
+		digitGroup[1] = static_cast<int32_t>(val % 1'000'000'000'000'000uLL / 100'000'000uLL);
+		digitGroup[2] = static_cast<int32_t>(val / 1'000'000'000'000'000uLL);
+	}
+	LargeNum(uint64_t val) : LargeNum() {
+		digitGroup[0] = static_cast<int32_t>(val % 100'000'000uLL);
+		digitGroup[1] = static_cast<int32_t>(val % 1'000'000'000'000'000uLL / 100'000'000uLL);
+		digitGroup[2] = static_cast<int32_t>(val / 1'000'000'000'000'000uLL);
 	}
 	void ceilHundred() { // 100点単位に切り上げ
 		if (this->digitGroup[0] % 100 != 0) {
