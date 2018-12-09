@@ -455,7 +455,6 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 				if (RuleData::chkRuleApplied("kandora") && RuleData::chkRuleApplied("uradora")) {
 					setdora(gameStat, 1); // 裏ドラを設定する
 				}
-				haifu::haifurecdorap();
 			}
 			/* 包の判定 */
 			checkpao(gameStat);
