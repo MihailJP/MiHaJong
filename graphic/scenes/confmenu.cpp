@@ -293,7 +293,7 @@ CodeConv::tstring ConfigMenuProto::verInfoText() {
 	return o.str();
 #else /*_WIN32*/
 	CodeConv::tostringstream o;
-	time_t Zeitzahl = time(nullptr); tm Zeit = *localtime(&Zeitzahl);
+	time_t Zeitzahl = time(nullptr); tm Zeit; = localtime_s(&Zeit, &Zeitzahl);
 	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / 現在日時 ") <<
 		std::setw(4) << (Zeit.tm_year + 1900) << _T("年") <<
 		std::setw(2) << (Zeit.tm_mon + 1) << _T("月") <<

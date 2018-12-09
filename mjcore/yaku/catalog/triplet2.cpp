@@ -657,7 +657,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 				return (nowTime.wMonth == 12) && (nowTime.wDay == 25);
 #else /*_WIN32*/
 				time_t nowTimeVal = time(nullptr);
-				tm nowTime = *localtime(&nowTimeVal);
+				tm nowTime;
+				localtime_s(&nowTime, &nowTimeVal);
 				return ((nowTime.tm_mon + 1) == 12) && (nowTime.tm_mday == 25);
 #endif /*_WIN32*/
 			};
@@ -696,7 +697,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 				return (nowTime.wMonth == 1) && (nowTime.wDay <= 2);
 #else /*_WIN32*/
 				time_t nowTimeVal = time(nullptr);
-				tm nowTime = *localtime(&nowTimeVal);
+				tm nowTime;
+				localtime_s(&nowTime, &nowTimeVal);
 				return ((nowTime.tm_mon + 1) == 1) && (nowTime.tm_mday <= 2);
 #endif /*_WIN32*/
 			};

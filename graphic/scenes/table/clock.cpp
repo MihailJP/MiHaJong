@@ -171,12 +171,13 @@ void GameTableScreen::Clock::renderPanel() {
 
 void GameTableScreen::Clock::renderHour() {
 	time_t Zeit = time(nullptr);
-	tm* lt = localtime(&Zeit);
+	tm lt;
+	localtime_s(&lt, &Zeit);
 
 	RECT rect = {1024, 512, 1536, 1024};
 
 	const float pi = atan2(1.0f, 1.0f) * 4.0f;
-	const float angle = (float)((lt->tm_hour % 12) * 60 + lt->tm_min) * pi / 360.0f;
+	const float angle = static_cast<float>((lt.tm_hour % 12) * 60 + lt.tm_min) * pi / 360.0f;
 
 	TransformMatrix matrix;
 	setClockMatrix(&matrix, angle);
@@ -187,12 +188,13 @@ void GameTableScreen::Clock::renderHour() {
 
 void GameTableScreen::Clock::renderMinute() {
 	time_t Zeit = time(nullptr);
-	tm* lt = localtime(&Zeit);
+	tm lt;
+	localtime_s(&lt, &Zeit);
 
 	RECT rect = {1024, 0, 1536, 512};
 
 	const float pi = atan2(1.0f, 1.0f) * 4.0f;
-	const float angle = (float)((lt->tm_min % 60) * 60 + lt->tm_sec) * pi / 1800.0f;
+	const float angle = static_cast<float>((lt.tm_min % 60) * 60 + lt.tm_sec) * pi / 1800.0f;
 
 	TransformMatrix matrix;
 	setClockMatrix(&matrix, angle);

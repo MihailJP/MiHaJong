@@ -57,7 +57,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				return (nowTime.wMonth == 4) && (nowTime.wDay == 1);
 #else /*_WIN32*/
 				time_t nowTimeVal = time(nullptr);
-				tm nowTime = *localtime(&nowTimeVal);
+				tm nowTime;
+				localtime_s(&nowTime, &nowTimeVal);
 				return ((nowTime.tm_mon + 1) == 4) && (nowTime.tm_mday == 1);
 #endif /*_WIN32*/
 			};
@@ -516,7 +517,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					if ((nowTime.wMonth == 2) && (nowTime.wDay == 29))
 #else /*_WIN32*/
 					time_t nowTimeVal = time(nullptr);
-					tm nowTime = *localtime(&nowTimeVal);
+					tm nowTime;
+					localtime_s(&nowTime, &nowTimeVal);
 					if (((nowTime.tm_mon + 1) == 2) && (nowTime.tm_mday == 29))
 #endif /*_WIN32*/
 						return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman;
@@ -528,7 +530,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				bool isLeapYear = (nowTime.wYear % 400 == 0) || ((nowTime.wYear % 4 == 0) && (nowTime.wYear % 100 != 0));
 #else /*_WIN32*/
 				time_t nowTimeVal = time(nullptr);
-				tm nowTime = *localtime(&nowTimeVal);
+				tm nowTime;
+				localtime_s(&nowTime, &nowTimeVal);
 				const int year = nowTime.tm_year + 1900;
 				bool isLeapYear = (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
 #endif /*_WIN32*/

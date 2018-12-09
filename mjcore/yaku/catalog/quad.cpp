@@ -210,9 +210,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 				}();
 				timespec Zeitzahl; tm Zeit, ZeitMitternacht;
 				clock_gettime(CLOCK_REALTIME, &Zeitzahl);
-				memcpy(&Zeit, localtime(&Zeitzahl.tv_sec), sizeof (tm));
-				memcpy(&ZeitMitternacht, localtime(&Zeitzahl.tv_sec), sizeof (tm));
-				timespec HeuteMitternacht; memset (&HeuteMitternacht, 0, sizeof (timespec));
+				localtime_s(&Zeit, &Zeitzahl.tv_sec);
+				localtime_s(&ZeitMitternacht, &Zeitzahl.tv_sec);
+				timespec HeuteMitternacht; memset(&HeuteMitternacht, 0, sizeof (timespec));
 				ZeitMitternacht.tm_year = Zeit.tm_year;
 				ZeitMitternacht.tm_mon = Zeit.tm_mon;
 				ZeitMitternacht.tm_mday = Zeit.tm_mday;

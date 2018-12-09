@@ -358,7 +358,8 @@ void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // 現在時刻タ�
 		_T("</") << tagName << _T(">") << std::endl;
 #else /*_WIN32*/
 	timespec tempus; clock_gettime(CLOCK_REALTIME, &tempus);
-	tm currTime = *localtime(&tempus.tv_sec);
+	tm currTime;
+	localtime_s(&currTime, &tempus.tv_sec);
 	const signed long tz = []() -> signed long {
 		time_t t1 = 86400; // GNU Cはそうではないが、time_tがunsignedの処理系を見たことがあるので86400とする
 		tm* tmDat = gmtime(&t1); // 協定世界時を算出
@@ -1226,7 +1227,8 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	filename2 << std::setw(2) << std::setfill('0') << ltime.wMinute;
 #else /*_WIN32*/
 	time_t tempus = time(nullptr);
-	tm ltime = *localtime(&tempus);
+	tm ltime;
+	localtime_s(&ltime, &tempus);
 	filename2 << std::setw(4) << std::setfill('0') << (ltime.tm_year + 1900);
 	filename2 << std::setw(2) << std::setfill('0') << (ltime.tm_mon + 1);
 	filename2 << std::setw(2) << std::setfill('0') << ltime.tm_mday << "_";
