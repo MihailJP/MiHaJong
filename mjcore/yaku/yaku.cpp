@@ -80,6 +80,26 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 		else doubling(yStat); // 計算する
 	}
 
+#ifndef GUOBIAO
+	if (totalSemiMangan >= 8)
+		yStat->isYakuman = true;
+	else if ((totalSemiMangan >= 6) &&
+		((totalHan < 12) ||
+		((totalHan < 13) && (RuleData::chkRule("kazoe_border", "13han_or_more"))) ||
+			((totalSemiMangan < 8) && (RuleData::chkRule("kazoe_border", "no")))))
+		yStat->isYakuman = true;
+	else if ((totalSemiMangan >= 4) &&
+		((totalHan < 10) ||
+		((totalHan < 11) && (RuleData::chkRule("sanbaiman_border", "11han_or_more")))))
+		yStat->isYakuman = true;
+	else if ((totalSemiMangan >= 3) && (totalHan < 8))
+		yStat->isYakuman = true;
+	else if ((totalSemiMangan >= 2) && (totalHan < 6))
+		yStat->isYakuman = true;
+	else
+		yStat->isYakuman = false;
+#endif /* GUOBIAO */
+
 	{ // トレース用
 		CodeConv::tostringstream o;
 		o << _T("計算結果は [");

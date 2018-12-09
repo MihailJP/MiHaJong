@@ -91,8 +91,8 @@ int aiscript::table::functable::gametbl::luafunc::evaluate(lua_State* const L) {
 	if (evaluation.isValid) {
 		TableAdd(L, "isvalid", yaku::yakuCalculator::checkShibari(&tmpGameStat, &evaluation)); // 縛りを満たしているか
 		TableAdd(L, "fu", (lua_Integer)evaluation.BasePoints); // 符
-		TableAdd(L, "han", (lua_Integer)(evaluation.CoreHan + evaluation.BonusHan)); // 飜
-		TableAdd(L, "mangan", (double)(evaluation.CoreSemiMangan + evaluation.BonusSemiMangan) / 2.0); // 満貫
+		TableAdd(L, "han", (lua_Integer)(evaluation.TotalHan())); // 飜
+		TableAdd(L, "mangan", (double)(evaluation.TotalSemiMangan()) / 2.0); // 満貫
 		TableAdd(L, "points", (double)evaluation.AgariPoints); // 点数
 	}
 	return 1;

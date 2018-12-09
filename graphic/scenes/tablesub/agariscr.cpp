@@ -29,7 +29,7 @@ TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(DevicePtr device) :
 	myDevice = device;
 	LoadTexture(device, &windowTexture, MAKEINTRESOURCE(IDB_PNG_AGARI_WINDOW));
 	yakuData = YakuResult::getYakuStat();
-	parseYakuList();
+	(void)yakuData.yakuList(&yakuList);
 	myTextRenderer = new TextRenderer(device);
 	agariTehai = new AgariTehai(this);
 	agariNaki = new AgariNaki(this);
@@ -47,33 +47,6 @@ TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	windowTexture->Release();
 #endif
-}
-
-bool TableSubsceneAgariScreenProto::YakumanMode() {
-	bool agariScreenMode = false;
-	if (GameStatus::gameStat()->gameType & GuobiaoMJ) {
-		const mihajong_structs::YakuResult yakuInfo = YakuResult::getYakuStat();
-		const int tmpTotalHan = yakuInfo.CoreHan + yakuInfo.BonusHan;
-		const int tmpTotalMangan = yakuInfo.CoreSemiMangan + yakuInfo.BonusSemiMangan;
-		if (tmpTotalMangan >= 8)
-			agariScreenMode = true;
-		else if ((tmpTotalMangan >= 6) &&
-			((tmpTotalHan < 12) ||
-			((tmpTotalHan < 13) && (rules::chkRule("kazoe_border", "13han_or_more"))) ||
-			((tmpTotalMangan < 8) && (rules::chkRule("kazoe_border", "no")))))
-			agariScreenMode = true;
-		else if ((tmpTotalMangan >= 4) &&
-			((tmpTotalHan < 10) ||
-			((tmpTotalHan < 11) && (rules::chkRule("sanbaiman_border", "11han_or_more")))))
-			agariScreenMode = true;
-		else if ((tmpTotalMangan >= 3) && (tmpTotalHan < 8))
-			agariScreenMode = true;
-		else if ((tmpTotalMangan >= 2) && (tmpTotalHan < 6))
-			agariScreenMode = true;
-		else
-			agariScreenMode = false;
-	}
-	return agariScreenMode;
 }
 
 TableSubsceneAgariScreenProto::AgariStyle TableSubsceneAgariScreenProto::getAgariStyle() {
@@ -104,67 +77,6 @@ ArgbColor TableSubsceneAgariScreenProto::baseColor() {
 		case agariFurikomi: return 0xffff7f7f;
 		case agariOthers:   return 0xffffffff;
 		default:            return 0x00000000;
-	}
-}
-
-void TableSubsceneAgariScreenProto::parseYakuList() {
-#if !defined(_MSC_VER)
-	using std::min;
-#endif
-	typedef std::vector<CodeConv::tstring> TStrList;
-	LPTSTR yakuNameUnified = nullptr, yakuValUnified = nullptr;
-	LPCTSTR yakuName = YakumanMode() ? yakuData.yakumanNameList : yakuData.yakuNameList;
-	LPCTSTR yakuVal  = YakumanMode() ? yakuData.yakumanValList  : yakuData.yakuValList;
-	if ((GameStatus::gameStat()->gameType & RichiMJ)&&(!rules::chkRule("limitless", "no"))) {
-		const size_t bufsz = yakuData.nameBufSize * 2;
-		yakuNameUnified = new TCHAR[bufsz]; yakuNameUnified[0] = _T('\0');
-		yakuValUnified = new TCHAR[bufsz]; yakuValUnified[0] = _T('\0');
-#if defined(_MSC_VER)
-		_tcscpy_s(yakuNameUnified, bufsz, yakuData.yakumanNameList);
-#else
-		_tcsncpy(yakuNameUnified, yakuData.yakumanNameList, bufsz - _tcslen(yakuNameUnified));
-#endif
-		for (TCHAR* k = yakuNameUnified; *k != _T('\0'); ++k)
-			if (*k == _T('\n'))
-#if defined(_MSC_VER)
-				_tcscat_s(yakuValUnified, bufsz, _T("\r\n"));
-#elif defined(_WIN32)
-				_tcsncat(yakuValUnified, _T("\r\n"), bufsz - _tcslen(yakuValUnified));
-#else
-				_tcsncat(yakuValUnified, _T("\n"), bufsz - _tcslen(yakuValUnified));
-#endif
-#if defined(_MSC_VER)
-		_tcscat_s(yakuNameUnified, bufsz, yakuData.yakuNameList);
-		_tcscat_s(yakuValUnified, bufsz, yakuData.yakuValList);
-#else
-		_tcsncat(yakuNameUnified, yakuData.yakuNameList, bufsz - _tcslen(yakuNameUnified));
-		_tcsncat(yakuValUnified, yakuData.yakuValList, bufsz - _tcslen(yakuValUnified));
-#endif
-		yakuName = yakuNameUnified; yakuVal = yakuValUnified;
-	}
-	CodeConv::tstring yakuNameTxt, yakuValTxt;
-	auto splitstr = [](LPCTSTR str) -> TStrList { // 改行で分割
-		TStrList txtlst;
-		LPCTSTR ssptr = str; LPCTSTR sptr = ssptr;
-		for (; *sptr != _T('\0'); ++sptr) {
-			if (*sptr == _T('\n')) { // 改行が現れたら
-				txtlst.push_back(CodeConv::tstring(ssptr, sptr - (*(sptr - 1) == _T('\r') ? 1 : 0)));
-				ssptr = sptr + 1;
-			}
-		}
-		CodeConv::tstring laststr(ssptr, sptr - (*(sptr - 1) == _T('\r') ? 1 : 0));
-		if (!laststr.empty()) txtlst.push_back(laststr);
-		return txtlst;
-	};
-	TStrList yakuNameList(splitstr(yakuName)), yakuValList(splitstr(yakuVal));
-	for (int i = 0; i < std::min(yakuNameList.size(), yakuValList.size()); ++i)
-		if (YakumanMode())
-			yakuList.push_back(std::make_pair(yakuNameList[i], _T("")));
-		else
-			yakuList.push_back(std::make_pair(yakuNameList[i], yakuValList[i]));
-	if ((GameStatus::gameStat()->gameType & RichiMJ)&&(!rules::chkRule("limitless", "no"))) {
-		delete[] yakuNameUnified;
-		delete[] yakuValUnified;
 	}
 }
 
@@ -445,17 +357,16 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
 		sound::Play(sound::IDs::sndYakulst2);
 		soundFlag = false;
 	}
-	if (myCaller->YakumanMode()) return;
+	if (YakuResult::getYakuStat().isYakuman) return;
 	if (GameStatus::gameStat()->gameType & GuobiaoMJ) return; // 中国ルールでは不要な情報なので
 	const double anmTime = 0.75;
-	const int han = (YakuResult::getYakuStat().CoreHan + YakuResult::getYakuStat().BonusHan);
 	CodeConv::tostringstream o;
 	o << std::setw(3) << std::setfill(_T(' ')) << YakuResult::getYakuStat().BasePoints << _T("符") <<
-		std::setw(2) << std::setfill(_T(' ')) << han << _T("飜");
+		std::setw(2) << std::setfill(_T(' ')) << YakuResult::getYakuStat().TotalHan() << _T("飜");
 	const int x = BaseX + yakuWndWidth - 32 - 27 * 9;
 	const int y = BaseY + 650;
 	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
-	txtRenderer->NewText(0, o.str(), x, y, 1.0f, (han >= 100) ? (1.5f * 0.9f) : 1.5f, color);
+	txtRenderer->NewText(0, o.str(), x, y, 1.0f, (YakuResult::getYakuStat().TotalHan() >= 100) ? (1.5f * 0.9f) : 1.5f, color);
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
@@ -532,7 +443,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructChipAmount() {
 	if (rules::chkRule("chip", "no")) return;
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 	if (Zeit <= 0.0) return;
-	if (myCaller->YakumanMode()) return;
+	if (YakuResult::getYakuStat().isYakuman) return;
 	const double anmTime = 0.75;
 	CodeConv::tostringstream o;
 	o << _T("チップ") << std::setw(2) << std::setfill(_T(' ')) << YakuResult::getChipVal();
