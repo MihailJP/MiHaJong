@@ -1,5 +1,6 @@
 ﻿#include "../catalog.h"
 #include "../../../astro/astro.h"
+#include "../../../common/strcode.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 #ifndef GUOBIAO
@@ -20,7 +21,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("四杠"), yaku::yakuCalculator::Yaku::yval_88,
-		_T("碰碰和"), _T("単調将"),
+		PengPengHu, _T("単調将"),
 #else /* GUOBIAO */
 		_T("四槓子"), get_yaku_han("suukantsu"),
 		_T("対々和"),

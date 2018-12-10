@@ -1,13 +1,14 @@
 ﻿#include "../catalog.h"
 
 #include "../../func.h"
+#include "../../../common/strcode.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 四暗刻 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("四暗刻"), yaku::yakuCalculator::Yaku::yval_64,
-		_T("碰碰和"), _T("三暗刻"), _T("双暗刻"), _T("門前清"),
+		PengPengHu, _T("三暗刻"), _T("双暗刻"), _T("門前清"),
 #else /* GUOBIAO */
 		_T("四暗刻"), yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 		_T("対々和"), _T("三暗刻"),
@@ -112,7 +113,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #ifdef GUOBIAO
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("一色四節高"), yaku::yakuCalculator::Yaku::yval_48,
-		_T("碰碰和"), _T("一色三節高"),
+		PengPengHu, _T("一色三節高"),
 		suurenkoh
 	));
 #else /* GUOBIAO */
@@ -365,7 +366,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("大四風会"), yaku::yakuCalculator::Yaku::yval_88,
-		_T("圏風刻"), _T("門風刻"), _T("三風刻"), _T("碰碰和"), _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"),
+		_T("圏風刻"), _T("門風刻"), _T("三風刻"), PengPengHu, _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"),
 #else /* GUOBIAO */
 		_T("大四喜"), (RuleData::chkRuleApplied("double_yakuman")) ?
 		yaku::yakuCalculator::Yaku::yval_double_yakuman : yaku::yakuCalculator::Yaku::yval_yakuman,
@@ -401,7 +402,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 対々和 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("碰碰和"), yaku::yakuCalculator::Yaku::yval_6,
+		PengPengHu, yaku::yakuCalculator::Yaku::yval_6,
 #else /* GUOBIAO */
 		_T("対々和"), yaku::yakuCalculator::Yaku::yval_2han,
 #endif /* GUOBIAO */

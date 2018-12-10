@@ -1,4 +1,5 @@
 ﻿#include "../catalog.h"
+#include "../../../common/strcode.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 #ifndef GUOBIAO
@@ -20,7 +21,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 			_T("全双刻"), yaku::yakuCalculator::Yaku::yval_24,
-			_T("碰碰和"), _T("断幺"),
+			PengPengHu, _T("断幺"),
 #else /* GUOBIAO */
 			_T("偶数対々和"), get_yaku_han("even_toitoi"),
 			_T("対々和"), _T("断幺九"),

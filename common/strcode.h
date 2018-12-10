@@ -40,8 +40,10 @@ typedef const char* LPCTSTR;
 
 #ifdef UNICODE
 #define PON L"碰"
+constexpr wchar_t* PengPengHu = L"碰碰和";
 #else /* UNICODE */
 #define PON "ポン"
+constexpr char* PengPengHu = "ポンポン和";
 #endif /* UNICODE */
 
 namespace CodeConv {
