@@ -46,7 +46,7 @@ struct aiscript::ScriptStates {
 class aiscript::table {
 private:
 	static inline void TableAdd(lua_State* const L, const char* const key, lua_Integer val) {
-		lua_pushnumber(L, val); lua_setfield(L, -2, key);
+		lua_pushinteger(L, val); lua_setfield(L, -2, key);
 	}
 	static inline void TableAdd(lua_State* const L, const char* const key, lua_Number val) {
 		lua_pushnumber(L, val); lua_setfield(L, -2, key);
@@ -55,13 +55,13 @@ private:
 		lua_pushboolean(L, val); lua_setfield(L, -2, key);
 	}
 	static inline void TableAdd(lua_State* const L, lua_Integer key, lua_Integer val) {
-		lua_pushnumber(L, key); lua_pushnumber(L, val); lua_settable(L, -3);
+		lua_pushinteger(L, key); lua_pushinteger(L, val); lua_settable(L, -3);
 	}
 	static inline void TableAdd(lua_State* const L, lua_Integer key, lua_Number val) {
-		lua_pushnumber(L, key); lua_pushnumber(L, val); lua_settable(L, -3);
+		lua_pushinteger(L, key); lua_pushnumber(L, val); lua_settable(L, -3);
 	}
 	static inline void TableAdd(lua_State* const L, lua_Integer key, bool val) {
-		lua_pushnumber(L, key); lua_pushboolean(L, val); lua_settable(L, -3);
+		lua_pushinteger(L, key); lua_pushboolean(L, val); lua_settable(L, -3);
 	}
 	static inline void TableAdd(lua_State* const L, const char* const, const Tile val);
 	static inline void TableAdd(lua_State* const L, const char* const, const MeldCode val);

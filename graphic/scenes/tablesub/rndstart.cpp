@@ -21,10 +21,13 @@ const std::wstring TableSubsceneBeginning::Numeral = L"一二三四五六七八�
 void TableSubsceneBeginning::ZoomChar(unsigned ID, const std::wstring& str, int xOffset, uint64_t Anfang, uint64_t Ende) {
 	const uint64_t Zeit = myTimer.elapsed();
 	if ((Zeit >= Anfang) && (Zeit < Ende)) {
-		float size = pow(3.0f - ((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 2.0f), 2);
+		float ZeitProzent = static_cast<float>(Zeit - Anfang) / static_cast<float>(Ende - Anfang);
+		float size = pow(3.0f - (ZeitProzent * 2.0f), 2);
 		myTextRenderer->NewText(ID, CodeConv::EnsureTStr(str),
-			TableSize / 2 - (224 * size) / 2 + xOffset, TableSize / 2 - 192 + 112 - (224 * size) / 2,
-			size, 1.0f, (unsigned int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f) << 24 | 0x00ffffff);
+			TableSize / 2 - static_cast<int>((224.0f * size) / 2.0f) + xOffset,
+			TableSize / 2 - 192 + 112 - static_cast<int>((224.0f * size) / 2.0f),
+			size, 1.0f,
+			static_cast<unsigned>(ZeitProzent * 255.0f) << 24 | 0x00ffffff);
 	} else if (Zeit >= Ende) {
 		myTextRenderer->NewText(ID, CodeConv::EnsureTStr(str), TableSize / 2 - 112 + xOffset, TableSize / 2 - 192);
 	} else {

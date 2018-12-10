@@ -188,19 +188,19 @@ void aiscript::calcDiscard_threaded(DiscardTileNum& answer, const GameTable* gam
 		}
 		if ((answer.type == DiscardTileNum::Agari) || (answer.type == DiscardTileNum::Kyuushu) ||
 			(answer.type == DiscardTileNum::Disconnect)) { // 番号指定が不要な場合
-				answer.id = NumOfTilesInHand - 1; // 2番めの返り値は無視
+				answer.id = static_cast<uint8_t>(NumOfTilesInHand - 1); // 2番めの返り値は無視
 		} else {
-			int i = lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -1, &flag);
+			lua_Integer i = lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -1, &flag);
 			if (!flag) {
 				warn(_T("2番目の返り値が数値ではありません。ツモ切りとみなします。"));
-				answer.id = NumOfTilesInHand - 1; // fallback
+				answer.id = static_cast<uint8_t>(NumOfTilesInHand - 1); // fallback
 			} else if ((i >= 1)&&(i <= NumOfTilesInHand)) {
-				answer.id = i - 1; // オリジンを1にする仕様……
+				answer.id = static_cast<uint8_t>(i - 1); // オリジンを1にする仕様……
 			} else if ((i <= -1)&&(i >= -((int)NumOfTilesInHand))) { // マイナスを指定した場合の処理
-				answer.id = NumOfTilesInHand + i;
+				answer.id = static_cast<uint8_t>(NumOfTilesInHand + i);
 			} else {
 				warn(_T("2番目の返り値が範囲外です。ツモ切りとみなします。"));
-				answer.id = NumOfTilesInHand - 1; // fallback
+				answer.id = static_cast<uint8_t>(NumOfTilesInHand - 1); // fallback
 			}
 		}
 		lua_pop(status[gameStat->CurrentPlayer.Active].state, 2);

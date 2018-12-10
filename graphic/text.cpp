@@ -81,7 +81,7 @@ void ITextRenderer::DelText(unsigned int ID) {
 
 /* スプライト再構築 */
 void ITextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrAdvance, float cursorPos) {
-	sprite->X = StringData[ID]->X + chrAdvance * cursorPos - FontPadding();
+	sprite->X = static_cast<int>(static_cast<float>(StringData[ID]->X) + chrAdvance * cursorPos - static_cast<float>(FontPadding()));
 	sprite->Y = StringData[ID]->Y - FontPadding();
 	sprite->widthScale = StringData[ID]->scale * StringData[ID]->width;
 	sprite->heightScale = StringData[ID]->scale;

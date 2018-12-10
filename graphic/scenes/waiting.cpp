@@ -24,7 +24,7 @@ void ConnectionWaitingProto::showCentered(unsigned id, CodeConv::tstring txt, in
 		myTextRenderer->DelText(id);
 	else
 		myTextRenderer->NewText(id, txt,
-			(Geometry::WindowWidth / Geometry::WindowScale() - myTextRenderer->strWidthByPix(txt) * sizeRate) / 2,
+			static_cast<int>(static_cast<float>(Geometry::WindowWidth) / Geometry::WindowScale() - static_cast<float>(myTextRenderer->strWidthByPix(txt)) * sizeRate) / 2,
 			y, sizeRate, WidthRate(),
 			blink ? ((255 + (int)(75.0 * (cos((double)myTimer.elapsed() / 1000000.0 * TwoTimesPi) - 1.0))) << 24) | 0x00ffffff : 0xffffffff);
 }

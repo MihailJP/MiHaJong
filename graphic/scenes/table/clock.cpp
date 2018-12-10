@@ -126,7 +126,7 @@ void GameTableScreen::Clock::renderShadow() {
 			circleVert[i].x = sqrt(Radius * Radius - x1 * x1) * x2 + CenterX;
 			circleVert[i].y = angleNum * Radius * 2.0f + Top;
 		} else if ((mp.MoonPhase > 0.5) && (i % 2 == 0)) {
-			const float x2 = mp.MoonIllum * 2.0f - 1.0f;
+			const float x2 = static_cast<float>(mp.MoonIllum * 2.0 - 1.0);
 			circleVert[i].x = sqrt(Radius * Radius - x1 * x1) * x2 + CenterX;
 			circleVert[i].y = angleNum * Radius * 2.0f + Top;
 		}

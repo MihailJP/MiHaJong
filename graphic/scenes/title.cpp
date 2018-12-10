@@ -80,32 +80,32 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 			return 0xffffffff;
 		}
 	};
-	double t = ((double)myTimer.elapsed() / (double)timePerFrame - (double)startF);
-	float virt_width = (float)Geometry::WindowWidth / Geometry::WindowScale();
-	if ((t >= 0.0f) && (t < (double)(endF - startF))) {
+	double t = static_cast<double>(myTimer.elapsed()) / static_cast<double>(timePerFrame) - static_cast<double>(startF);
+	float virt_width = static_cast<float>(Geometry::WindowWidth) / Geometry::WindowScale();
+	if ((t >= 0.0) && (t < static_cast<double>(endF - startF))) {
 		myTextRenderer->NewText(ID,
-		menustr, X + virt_width * pow(1.0 - t / (double)(endF - startF), 2.0),
+		menustr, X + static_cast<int>(virt_width * pow(1.0 - t / static_cast<double>(endF - startF), 2)),
 		Y, 2.0f,
 		1.6f * WidthRate(),
 		0x33ffffff);
-	} else if (t >= (double)(endF - startF)) {
+	} else if (t >= static_cast<double>(endF - startF)) {
 		if (ID == (menuCursor - 1))
 			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f,
 			1.6f * WidthRate(),
-			0xcc000000 | (0x00ffffff & hsv2rgb(t - (double)(endF - startF), 0.25, 1.0))
+			0xcc000000 | (0x00ffffff & hsv2rgb(t - static_cast<double>(endF - startF), 0.25, 1))
 			);
 		else
 			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f,
 			1.6f * WidthRate(),
 			0x33ffffff);
 	}
-	setRegion(ID, X / WidthRate(), Y,
-		(Geometry::BaseSize * 4 / 3) - X / WidthRate(), Y + 71);
+	setRegion(ID, static_cast<int>(static_cast<float>(X) / WidthRate()), Y,
+		(Geometry::BaseSize * 4 / 3) - static_cast<int>(static_cast<float>(X) / WidthRate()), Y + 71);
 }
 
 void TitleScreen::menuLabels() {
 	auto center = [](unsigned cols) {
-		return (signed(Geometry::BaseSize * 2 / 3) - signed(1.6 * 18 * cols)) * WidthRate();
+		return static_cast<int>((static_cast<int>(Geometry::BaseSize * 2 / 3) - static_cast<int>(1.6 * 18 * cols)) * WidthRate());
 	};
 	menuLabelSlide(0, _T("Standalone Game"), center(15), 400, 120, 180);
 	menuLabelSlide(1, _T("Network Game (Server)"), center(21), 480, 125, 180);

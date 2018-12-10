@@ -13,8 +13,8 @@ GameTable* aiscript::table::functable::gametbl::getGameStatAddr(lua_State* const
 /* プレイヤー番号を取得 */
 PlayerID aiscript::table::functable::gametbl::getPlayerID(lua_State* const L, int index) {
 	PlayerID player; int n = lua_gettop(L);
-	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) player = lua_tointeger(L, index);
-	else {lua_getfield(L, 1, "playerid"); player = lua_tointeger(L, -1); lua_pop(L, 1);}
+	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) player = static_cast<Player_ID>(lua_tointeger(L, index));
+	else {lua_getfield(L, 1, "playerid"); player = static_cast<Player_ID>(lua_tointeger(L, -1)); lua_pop(L, 1);}
 	return player - 1;
 }
 

@@ -42,7 +42,7 @@ void FPSIndicator::Render() {
 		}
 	}
 	/* 表示する */
-	textRenderer->NewText(0, fpsstr, 0, 0, 0.75, 1.333333);
+	textRenderer->NewText(0, fpsstr, 0, 0, 0.75f, 1.333333f);
 	textRenderer->Render();
 }
 

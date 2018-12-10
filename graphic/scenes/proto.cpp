@@ -60,7 +60,7 @@ void Scene::PadInput(LPDIDEVICEOBJECTDATA od) {
 	tmpObjDat.dwSequence = od->dwSequence;
 	tmpObjDat.dwTimeStamp = od->dwTimeStamp;
 	tmpObjDat.uAppData = od->uAppData;
-	signed short axisVal = tmpObjDat.dwData;
+	signed short axisVal = static_cast<short>(tmpObjDat.dwData);
 	switch (od->dwOfs) {
 	case DIJOFS_X:
 		if (axisVal < 0)

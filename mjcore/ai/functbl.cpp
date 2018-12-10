@@ -187,7 +187,7 @@ int aiscript::table::functable::random(lua_State* const L) {
 		if (lua_isnil(L, 1)) {
 			lua_pushnumber(L, RndNum::rnd()); break; // 連続一様乱数
 		} else if (lua_isnumber(L, 1)) { // 離散一様乱数
-			int i = lua_tointeger(L, 1);
+			int i = static_cast<int>(lua_tointeger(L, 1));
 			if (i >= 1) lua_pushinteger(L, RndNum::rnd(i - 1) + 1);
 			else lua_pushnil(L);
 		} else {lua_pushnil(L);}
@@ -196,7 +196,7 @@ int aiscript::table::functable::random(lua_State* const L) {
 		if ((lua_isnil(L, 1)) && (lua_isnil(L, 2))) {
 			lua_pushnumber(L, RndNum::rnd()); break; // 連続一様乱数
 		} else if ((lua_isnumber(L, 1)) && (lua_isnil(L, 2))) { // 離散一様乱数
-			int i = lua_tointeger(L, 1);
+			int i = static_cast<int>(lua_tointeger(L, 1));
 			if (i >= 1) lua_pushinteger(L, RndNum::rnd(i - 1) + 1);
 			else lua_pushnil(L);
 		} else if ((lua_isnumber(L, 1)) && (lua_isnumber(L, 2))) {
@@ -326,7 +326,7 @@ PlayerID aiscript::table::functable::getPlayerID(lua_State* const L) {
 	lua_getglobal(L, tblname);
 	lua_pushstring(L, "gametbl"); lua_gettable(L, -2);
 	lua_pushstring(L, "playerid"); lua_gettable(L, -2);
-	player = lua_tointeger(L, -1);
+	player = static_cast<PlayerID>(lua_tointeger(L, -1));
 	lua_pop(L, 3);
 	return player - 1;
 }

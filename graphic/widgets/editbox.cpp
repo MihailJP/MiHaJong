@@ -47,23 +47,23 @@ EditBox::~EditBox() {
 TransformMatrix EditBox::getMatrix(int X, int Y, unsigned width) {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix mat, mat1; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat1);
-	D3DXMatrixTranslation(&mat, -X, -Y, 0.0f);
-	D3DXMatrixScaling(&mat1, (float)(width * halffontsz) / 77.0f, 1.0f, 0.0f);
+	D3DXMatrixTranslation(&mat, -static_cast<float>(X), -static_cast<float>(Y), 0.0f);
+	D3DXMatrixScaling(&mat1, static_cast<float>(width * halffontsz) / 77.0f, 1.0f, 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
 	D3DXMatrixScaling(&mat1, myScale, myScale, 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
-	D3DXMatrixTranslation(&mat1, X, Y, 0.0f);
+	D3DXMatrixTranslation(&mat1, static_cast<float>(X), static_cast<float>(Y), 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
 	D3DXMatrixScaling(&mat1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
 #else
 	glPushMatrix(); glLoadIdentity();
-	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
-	glTranslatef((float)X * Geometry::WindowScale(), -(float)Y * Geometry::WindowScale(), 0.0f);
+	glTranslatef(0.0f, static_cast<float>(Geometry::WindowHeight), 0.0f);
+	glTranslatef(static_cast<float>(X) * Geometry::WindowScale(), -static_cast<float>(Y) * Geometry::WindowScale(), 0.0f);
 	glScalef(myScale, myScale, 1.0f);
-	glTranslatef(-(float)X * Geometry::WindowScale(), (float)Y * Geometry::WindowScale(), 0.0f);
+	glTranslatef(-static_cast<float>(X) * Geometry::WindowScale(), static_cast<float>(Y) * Geometry::WindowScale(), 0.0f);
 	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
-	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
 	TransformMatrix mat; glGetFloatv(GL_MODELVIEW_MATRIX, &mat[0]);
 	glPopMatrix();
 #endif
@@ -166,7 +166,9 @@ void EditBox::renderNormalText(IMStat& imStat, unsigned start, unsigned end, int
 		else if (cols == width) end_ = i + 1;
 	}
 	if (isLeadingByte(myText, end_ - 1)) --end_;
-	myTextRenderer->NewText(TextID++, myText.substr(start_, end_ - start_), X + startcol * myScale * halffontsz, Y, myScale, 1.0f, 0xffffffff);
+	myTextRenderer->NewText(TextID++, myText.substr(start_, end_ - start_),
+		X + static_cast<int>(static_cast<float>(startcol) * myScale * halffontsz),
+		Y, myScale, 1.0f, 0xffffffff);
 }
 
 void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsigned& cols, signed& cursorcol) {
@@ -208,7 +210,9 @@ void EditBox::renderIMText(IMStat& imStat, int X, int Y, unsigned& TextID, unsig
 				color = 0xffff0000; break;
 			}
 			if (isLeadingByte(convStr, i - 1)) --i;
-			myTextRenderer->NewText(TextID++, convStr.substr(startchr, i - startchr), X + startcol * myScale * halffontsz, Y, myScale, 1.0f, color);
+			myTextRenderer->NewText(TextID++, convStr.substr(startchr, i - startchr),
+				X + static_cast<int>(static_cast<float>(startcol) * myScale * halffontsz),
+				Y, myScale, 1.0f, color);
 			startcol = cols; startchr = i;
 			if ((cols >= width) || (i == convStr.size())) break;
 		}
@@ -238,7 +242,9 @@ void EditBox::renderIMCandidates(IMStat& imStat, int X, int Y, unsigned& TextID)
 	for (unsigned i = pageStart; (i < candidates.size()) && (i < (pageStart + pageSize)); i++) {
 		CodeConv::tostringstream o;
 		o << (i - pageStart + 1) << ". " << candidates[i];
-		myTextRenderer->NewText(TextID++, o.str(), X, Y + 20 * myScale * (i - pageStart + 1), myScale, 1.0f,
+		myTextRenderer->NewText(TextID++, o.str(), X,
+			Y + static_cast<int>(20.0f * myScale * static_cast<float>(i - pageStart + 1)),
+			myScale, 1.0f,
 			(candidateNum == i) ? 0xffff6600 : 0xffffffff);
 	}
 }
@@ -338,8 +344,8 @@ void EditBox::Render() {
 
 	/* Candidate words */
 	if (isActive) {
-		renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + 20 * myScale, TextID);
-		renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + 20 * myScale, TextID);
+		renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + static_cast<int>(20.0f * myScale), TextID);
+		renderIMCandidates(imStat, X + cursorcol * halffontsz, Y + static_cast<int>(20.0f * myScale), TextID);
 	}
 
 	/* Commit */

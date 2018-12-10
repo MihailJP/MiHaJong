@@ -17,6 +17,14 @@
 
 namespace mihajong_graphic {
 
+namespace {
+
+template <typename T> T scaleToWindow(T val) {
+	return static_cast<T>(static_cast<float>(val) * Geometry::WindowScale());
+}
+
+}
+
 const GameTableScreen::ButtonReconst::BtnData
 	GameTableScreen::ButtonReconst::buttonDat[2][GameTableScreen::ButtonReconst::btnMAXIMUM] = {
 		{
@@ -100,9 +108,9 @@ void GameTableScreen::ButtonReconst::Render() {
 		btnColor.rgbaAsStruct.b = (unsigned)((double)btnColor.rgbaAsStruct.b * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
 		buttons->setButton(cursor,
 			(sunkenButton == cursor) ? ButtonPic::sunken : (buttonEnabled[cursor] ? ButtonPic::raised : ButtonPic::clear),
-			buttonDat[currentButtonSet][cursor].x * Geometry::WindowScale(),
-			buttonDat[currentButtonSet][cursor].y * Geometry::WindowScale(),
-			117 * Geometry::WindowScale(), 36 * Geometry::WindowScale(),
+			scaleToWindow(buttonDat[currentButtonSet][cursor].x),
+			scaleToWindow(buttonDat[currentButtonSet][cursor].y),
+			scaleToWindow(117u), scaleToWindow(36u),
 			btnColor.rgbaAsOneValue, buttonDat[currentButtonSet][cursor].label);
 	}
 	buttons->Render();
@@ -121,9 +129,9 @@ void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 	}*/
 	buttons->setButton(buttonID,
 		(sunkenButton == buttonID) ? ButtonPic::sunken : (buttonEnabled[buttonID] ? ButtonPic::raised : ButtonPic::clear),
-		buttonDat[currentButtonSet][buttonID].x * Geometry::WindowScale(),
-		buttonDat[currentButtonSet][buttonID].y * Geometry::WindowScale(),
-		117 * Geometry::WindowScale(), 36 * Geometry::WindowScale(),
+		scaleToWindow(buttonDat[currentButtonSet][buttonID].x),
+		scaleToWindow(buttonDat[currentButtonSet][buttonID].y),
+		scaleToWindow(117u), scaleToWindow(36u),
 		btnColor.rgbaAsOneValue, buttonDat[currentButtonSet][buttonID].label);
 	caller->setRegion(buttonID + ButtonRegionNum,
 		buttonDat[currentButtonSet][buttonID].x      , buttonDat[currentButtonSet][buttonID].y,

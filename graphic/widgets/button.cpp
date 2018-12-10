@@ -29,7 +29,7 @@ void ButtonPic::setText(unsigned ButtonID) {
 	const int ypos = (int)((float)(Y + (6.0f * Height / 48.0f)) / Geometry::WindowScale());
 	const unsigned w = myTextRenderer->strWidthByCols(caption);
 	myTextRenderer->NewText(ButtonID, caption,
-		(w < 8) ? xpos + (9 * (8 - w) * (Width / 156.0f / Geometry::WindowScale())) : xpos, ypos,
+		(w < 8) ? xpos + static_cast<int>(9.0f * (8.0f - static_cast<float>(w)) * (static_cast<float>(Width) / 156.0f / Geometry::WindowScale())) : xpos, ypos,
 		Height / 48.0f / Geometry::WindowScale(),
 		((w > 8) ? 8.0f / (float)w : 1.0f) * (adjustWidth ? Scene::WidthRate() : 1.0f),
 		(std::get<0>(mySprites[ButtonID]) == clear) ? 0x3fffffff : 0xffffffff);

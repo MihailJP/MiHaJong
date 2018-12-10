@@ -68,8 +68,8 @@ void SpriteRenderer::ShowSprite(
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix defaultMatrix; D3DXMatrixIdentity(&defaultMatrix);
 	D3DXMatrixScaling(&defaultMatrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
-	D3DXVECTOR3 Center(CenterX, CenterY, 0);
-	D3DXVECTOR3 Pos((float)X, (float)Y, 0);
+	D3DXVECTOR3 Center(static_cast<float>(CenterX), static_cast<float>(CenterY), 0.0f);
+	D3DXVECTOR3 Pos(static_cast<float>(X), static_cast<float>(Y), 0.0f);
 	sprite->SetTransform(matrix ? matrix : &defaultMatrix);
 	sprite->Draw(texture, rect ? rect : &defaultRect, &Center, &Pos, color);
 	sprite->Flush();

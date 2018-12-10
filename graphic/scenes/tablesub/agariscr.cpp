@@ -474,10 +474,10 @@ void TableSubsceneAgariScreenProto::ShowScore::Render() {
 void TableSubsceneAgariScreenProto::skipEvent() {
 	if (seconds() < yakuAnimStartSecond) {
 		sound::Play(sound::IDs::sndClick);
-		myTimer.skipTo(yakuAnimStartSecond * 1000000);
+		myTimer.skipTo(static_cast<TimerMicrosec>(yakuAnimStartSecond * 1000000));
 	} else if (seconds() < (yakuAnimStartSecond + yakuInterval * yakuList.size())) {
 		sound::Play(sound::IDs::sndClick);
-		myTimer.skipTo((yakuAnimStartSecond + yakuInterval * yakuList.size()) * 1000000);
+		myTimer.skipTo(static_cast<TimerMicrosec>((yakuAnimStartSecond + yakuInterval * yakuList.size()) * 1000000));
 	} else {
 		sound::Play(sound::IDs::sndClick);
 		ui::UIEvent->set(0);

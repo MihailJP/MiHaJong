@@ -209,7 +209,7 @@ void sound::SoundData::setVolume(double volume) {
 		ampvol = 0.0;
 	else
 		ampvol = pow(10.0, (abs(volume) - 1.0) * 100.0 / 40.0);
-	if (FAILED(hr = voice->SetVolume(ampvol))) {
+	if (FAILED(hr = voice->SetVolume(static_cast<float>(ampvol)))) {
 #else
 	int dBvol;
 	if (volume == 0.0)
