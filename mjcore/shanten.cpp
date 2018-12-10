@@ -112,7 +112,7 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerI
 	mianzi += gameStat->Player[playerID].MeldPointer;
 	
 	int mianziCount = 0;
-	if (mianzi + tarzi > limit) {
+	if (mianzi + tarzi > static_cast<int>(limit)) {
 		// 面子多多のとき
 		ans = (mianzi * 2) + (limit - mianzi);
 		// 面子多多でも、頭がある時は頭も数える

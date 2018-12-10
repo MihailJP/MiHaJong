@@ -27,9 +27,9 @@ LargeNum endround::agari::agaricalc(const LargeNum& AgariPointRaw, int agariBair
 }
 LargeNum endround::agari::agaricalc(const LargeNum& AgariPointRaw, rat agariBairitsu, rat agariBairitsu2, int agariCount, rat agariBairitsu3, int agariCount2) {
 	LargeNum agariPointArray = (AgariPointRaw * agariBairitsu.getNumerator() / agariBairitsu.getDenominator() + 99) / 100 * 100;
-	for (unsigned i = 0; i < agariCount; ++i)
+	for (int i = 0; i < agariCount; ++i)
 		agariPointArray += (AgariPointRaw * agariBairitsu2.getNumerator() / agariBairitsu2.getDenominator() + 99) / 100 * 100;
-	for (unsigned i = 0; i < agariCount2; ++i)
+	for (int i = 0; i < agariCount2; ++i)
 		agariPointArray += (AgariPointRaw * agariBairitsu3.getNumerator() / agariBairitsu3.getDenominator() + 99) / 100 * 100;
 	return agariPointArray;
 }

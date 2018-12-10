@@ -20,7 +20,7 @@ RankVal::RankVal() {
 	CSVReader::parsecsv(parsedCsv, csvDat.c_str()); // CSVをパース
 
 	/* 数値に直して格納 */
-	for (int i = 1 /* 最初の行は見出しなので飛ばす */; i < parsedCsv.size(); ++i) {
+	for (unsigned int i = 1 /* 最初の行は見出しなので飛ばす */; i < parsedCsv.size(); ++i) {
 		RankValSet values;
 		for (int j = 0; j < Players + 1; ++j)
 			for (int k = 0; k < Players - 1; ++k)

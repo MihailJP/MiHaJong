@@ -7,6 +7,7 @@
 #ifndef _WIN32
 #include "../keycode.h"
 #endif /*_WIN32*/
+#include <cassert>
 
 namespace mihajong_graphic {
 
@@ -73,7 +74,8 @@ void ConfigMenuProto::BtnEvent_Content_Item_Prev(unsigned short val) {
 }
 void ConfigMenuProto::BtnEvent_Content_Item_Next(unsigned short val) {
 	sound::Play(sound::IDs::sndCursor);
-	if ((menuCursor += val) >= numberOfItems()) menuCursor = numberOfItems() - 1;
+	assert(numberOfItems() > 0);
+	if (static_cast<unsigned>(menuCursor += val) >= numberOfItems()) menuCursor = numberOfItems() - 1;
 	myTimer.skipTo(0); redrawItems();
 }
 void ConfigMenuProto::BtnEvent_Content_Page_Prev() {
@@ -83,7 +85,7 @@ void ConfigMenuProto::BtnEvent_Content_Page_Prev() {
 }
 void ConfigMenuProto::BtnEvent_Content_Page_Next() {
 	sound::Play(sound::IDs::sndClick);
-	if ((menuCursor += itemsPerPage()) >= numberOfItems()) menuCursor -= itemsPerPage();
+	if (static_cast<unsigned>(menuCursor += itemsPerPage()) >= numberOfItems()) menuCursor -= itemsPerPage();
 	myTimer.skipTo(0); redrawItems();
 }
 
@@ -96,7 +98,7 @@ void ConfigMenuProto::BtnEvent_Button_Prev() {
 }
 void ConfigMenuProto::BtnEvent_Button_Next() {
 	sound::Play(sound::IDs::sndCursor);
-	if ((++buttonCursor) >= numberOfButtons()) buttonCursor = 0;
+	if (static_cast<unsigned>(++buttonCursor) >= numberOfButtons()) buttonCursor = 0;
 	for (unsigned i = 0; i < numberOfButtons(); i++)
 		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
 	myTimer.skipTo(0); redrawItems();
@@ -183,7 +185,8 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 	}
 #endif
 	auto setcursor = [&]() -> void {
-		if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
+		assert(itemsPerPage() > 0);
+		if ((region >= 0) && (region <= (static_cast<int>(itemsPerPage()) - 1))) {
 			if ((region != menuCursor % itemsPerPage()) || (buttonCursor != -1)) {
 				sound::Play(sound::IDs::sndCursor);
 				menuCursor = menuCursor / itemsPerPage() * itemsPerPage() + region;
@@ -192,7 +195,7 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 				myTimer.skipTo(0); redrawItems();
 			}
 		}
-		else if ((region >= btnRegionStart) && (region <= (btnRegionStart + numberOfButtons() - 1))) {
+		else if ((region >= static_cast<int>(btnRegionStart)) && (region <= static_cast<int>(btnRegionStart + numberOfButtons() - 1))) {
 			if (region != (buttonCursor + btnRegionStart)) {
 				sound::Play(sound::IDs::sndCursor);
 				buttonCursor = region - btnRegionStart;
@@ -217,7 +220,8 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 		break;
 #ifdef _WIN32
 	case DIMOFS_Z: // ホイールの操作
-		if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
+		assert(itemsPerPage() > 0);
+		if ((region >= 0) && (region <= static_cast<int>(itemsPerPage() - 1))) {
 			setcursor();
 			if ((LONG)od->dwData > 0) BtnEvent_Content_Roll_Up();
 			else if ((LONG)od->dwData < 0) BtnEvent_Content_Roll_Down();
@@ -229,7 +233,8 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 		}
 		break;
 	case DIMOFS_BUTTON0: // 左クリック
-		if ((od->dwData) && (region >= 0) && (region <= (itemsPerPage() - 1)))
+		assert(itemsPerPage() > 0);
+		if ((od->dwData) && (region >= 0) && (region <= static_cast<int>(itemsPerPage() - 1)))
 #else /*_WIN32*/
 	case ButtonPress: // マウスの左ボタン
 		if ((od->xbutton.button == Button1) && (region >= 0) && (region <= (itemsPerPage() - 1)))
@@ -239,7 +244,7 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 			BtnEvent_Content_Roll_Up();
 		}
 #ifdef _WIN32
-		else if ((region >= btnRegionStart) && (region < (btnRegionStart + numberOfButtons()))) {
+		else if ((region >= static_cast<int>(btnRegionStart)) && (region < static_cast<int>(btnRegionStart + numberOfButtons()))) {
 			setcursor();
 			if (od->dwData) BtnEvent_OK_Down();
 			else BtnEvent_OK_Up();

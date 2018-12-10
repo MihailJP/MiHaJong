@@ -40,7 +40,7 @@ void TableSubsceneBeginning::Render() {
 	const int roundcode = GameStatus::gameStat()->LoopRound * 16 + GameStatus::gameStat()->GameRound;
 	int64_t timeOffset = (roundcode >= GameStatus::gameStat()->GameLength) ? 1000000 : 0;
 
-	if (myTimer.elapsed() < timeOffset) {
+	if (static_cast<int64_t>(myTimer.elapsed()) < timeOffset) {
 		if (roundcode > GameStatus::gameStat()->GameLength) {
 			ZoomChar(0, L"延", -256, 0, 250000);
 			ZoomChar(1, L"長",    0, 0, 250000);

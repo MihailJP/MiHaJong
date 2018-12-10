@@ -174,7 +174,7 @@ namespace {
 		std::array<bool, Players> NagashiManganFlag = {false,};
 #ifndef GUOBIAO
 		if (RoundEndType == Ryuukyoku) {
-			for (unsigned i = 0; i < ACTUAL_PLAYERS; ++i) {
+			for (int i = 0; i < ACTUAL_PLAYERS; ++i) {
 				if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(i) == sNorth))
 					continue; // 四人三麻の場合北家は無視
 				if (RuleData::chkRuleApplied("nagashi_mangan") && isNagashiMangan(gameStat, i)) {
@@ -253,7 +253,7 @@ namespace {
 				}
 			}
 		}
-		if ((TenpaiCnt > 0) && (TenpaiCnt < ACTUAL_PLAYERS))
+		if ((TenpaiCnt > 0u) && (TenpaiCnt < static_cast<unsigned>(ACTUAL_PLAYERS)))
 			transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValNotenBappu, 2500);
 	}
 

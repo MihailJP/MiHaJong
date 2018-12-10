@@ -516,7 +516,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			{
 				TileCode tc;
 				if (analysis->shanten[shantenRegular] == -1)
-				for (int i = 0; i < ((analysis->shanten[shantenRegular] == -1) ?
+				for (unsigned int i = 0; i < ((analysis->shanten[shantenRegular] == -1) ?
 					SizeOfMeldBuffer : NumOfTilesInHand); i++) {
 						if (analysis->shanten[shantenRegular] == -1) tc = analysis->MianziDat[i].tile;
 						else if (analysis->shanten[shantenPairs] == -1) tc = analysis->PlayerStat->Hand[i].tile;

@@ -293,7 +293,7 @@ void EditBox::scroll(IMStat& imStat) {
 #else /*_WIN32*/
 		0;
 #endif /*_WIN32*/
-	const unsigned trueRBound = (scrollRBound(imStat) < paragraphLength) ? 0 : (scrollRBound(imStat) - paragraphLength);
+	const unsigned trueRBound = (static_cast<signed>(scrollRBound(imStat)) < paragraphLength) ? 0 : (scrollRBound(imStat) - paragraphLength);
 	unsigned textRightmostToFill = s.size(), fillCols = 0u;
 	for (; textRightmostToFill > 0; textRightmostToFill--) {
 		if (isFullWidth(s[textRightmostToFill - 1])) fillCols += 2;

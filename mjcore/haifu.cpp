@@ -1155,7 +1155,7 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << (int)k << _T("\">") << std::endl;
 #endif /* GUOBIAO */
 		if (gameStat->chkGameType(SanmaT))
-			if (((OrigTurn % Players) + i) >= ACTUAL_PLAYERS)
+			if (((OrigTurn % static_cast<int>(Players)) + i) >= ACTUAL_PLAYERS)
 				k = (k + 1) % Players;
 		// 副露面子を出力する
 		finalformWriter::hfFinalForm(gameStat, k, RoundEndType);
