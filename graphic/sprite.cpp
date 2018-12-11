@@ -74,7 +74,7 @@ void SpriteRenderer::ShowSprite(
 	sprite->Draw(texture, rect ? rect : &defaultRect, &Center, &Pos, color);
 	sprite->Flush();
 #else
-	const TransformMatrix defaultMatrix = {
+	constexpr TransformMatrix defaultMatrix = {
 		Geometry::WindowScale(), 0,                                                         0, 0,
 		0,                       Geometry::WindowScale(),                                   0, 0,
 		0,                       0,                                                         1, 0,
@@ -100,10 +100,10 @@ void SpriteRenderer::ShowSprite(
 		(double)((color & 0x0000ff00) >>  8) / 255.0,
 		(double)((color & 0x000000ff)      ) / 255.0,
 		(double)((color & 0xff000000) >> 24) / 255.0);
-	const double lpos = (double)txRect->left   / (double)getTextureWidth (nullptr, texture);
-	const double rpos = (double)txRect->right  / (double)getTextureWidth (nullptr, texture);
-	const double tpos = (double)txRect->top    / (double)getTextureHeight(nullptr, texture);
-	const double bpos = (double)txRect->bottom / (double)getTextureHeight(nullptr, texture);
+	constexpr double lpos = (double)txRect->left   / (double)getTextureWidth (nullptr, texture);
+	constexpr double rpos = (double)txRect->right  / (double)getTextureWidth (nullptr, texture);
+	constexpr double tpos = (double)txRect->top    / (double)getTextureHeight(nullptr, texture);
+	constexpr double bpos = (double)txRect->bottom / (double)getTextureHeight(nullptr, texture);
 	glTexCoord2d(lpos, bpos); glVertex2i(X         - CenterX, Geometry::WindowHeight - (Y + Height - CenterY));
 	glTexCoord2d(rpos, bpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y + Height - CenterY));
 	glTexCoord2d(rpos, tpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y          - CenterY));

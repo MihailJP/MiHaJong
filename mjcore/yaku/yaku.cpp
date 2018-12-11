@@ -685,7 +685,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	YAKUSTAT result;
-	const ParseMode pMode = {NoTile, Ke_Shun};
+	constexpr ParseMode pMode = {NoTile, Ke_Shun};
 	// 計算を実行
 	THREADLIB::thread myThread(CalculatorThread::calculator, &result, &pMode, gameStat, &analysis);
 	myThread.join(); // 同期

@@ -12,12 +12,12 @@ namespace protocol {
 	// 文字列…… B8 LL SS SS SS ...
 	//            LL = 文字列の長さ(bytes)
 	//            SS = 文字列の中身(LL bytes, up to 255)
-	const uint8_t StartString_Signature = 0xb8; // 文字列開始のシグネチャ
+	constexpr uint8_t StartString_Signature = 0xb8; // 文字列開始のシグネチャ
 	
 	// 開始のシグネチャ…… B4 NAME1 NAME2 NAME3 NAME4 RULES
 	//                      NAME1 to NAME4 = プレイヤー名
 	//                      RULES = ルール設定(80文字ずつに区切る)
-	const uint8_t Server_StartGame_Signature = 0xb4; // サーバーからプレイ開始のシグネチャ
+	constexpr uint8_t Server_StartGame_Signature = 0xb4; // サーバーからプレイ開始のシグネチャ
 	
 	// 開始のシグネチャ…… B6 RN HB RB PR SCORE1 SCORE2 SCORE3 SCORE4 YK CH CH CH CH SU \
 	//                      DECK DI DI
@@ -31,29 +31,29 @@ namespace protocol {
 	//                      YK = 四馬路解禁フラグ(bit4〜bit7 = 0, bit3 = Player0, ..., bit0 = Player3)
 	//                      DECK = 洗牌済みの山牌
 	//                      DI = サイコロの目(0xa9〜0xae)
-	const uint8_t Server_StartRound_Signature = 0xb6; // サーバーから局開始のシグネチャ
-	const uint8_t StartRound_Dice_Excess = 0xa8; // サイコロの出目 0xa9〜0xae
-	const uint8_t StartRound_Tile_Excess = 0x10; // 牌番号のゲタ
+	constexpr uint8_t Server_StartRound_Signature = 0xb6; // サーバーから局開始のシグネチャ
+	constexpr uint8_t StartRound_Dice_Excess = 0xa8; // サイコロの出目 0xa9〜0xae
+	constexpr uint8_t StartRound_Tile_Excess = 0x10; // 牌番号のゲタ
 
 	// 捨牌コード送受信用
-	const uint8_t Dahai_Type_Normal_Offset = 0x60; // 普通の捨牌 (0x60 .. 0x6d)
-	const uint8_t Dahai_Type_Ankan_Offset = 0x70; // 暗槓
-	const uint8_t Dahai_Type_Kakan_Offset = 0x80; // 加槓
-	const uint8_t Dahai_Type_Riichi_Offset = 0x90; // 立直
-	const uint8_t Dahai_Type_ORiichi_Offset = 0xc0; // オープン立直
-	const uint8_t Dahai_Type_Flower_Offset = 0xd0; // 花牌
-	const uint8_t Dahai_Kyuushu = 0x6e; // 九種九牌
-	const uint8_t Dahai_Tsumo = 0x6f; // 和了
-	const uint8_t Dahai_Remote_Disconnect = 0x9f; // ツモ順のプレイヤーの接続が切れた場合の符牒
+	constexpr uint8_t Dahai_Type_Normal_Offset = 0x60; // 普通の捨牌 (0x60 .. 0x6d)
+	constexpr uint8_t Dahai_Type_Ankan_Offset = 0x70; // 暗槓
+	constexpr uint8_t Dahai_Type_Kakan_Offset = 0x80; // 加槓
+	constexpr uint8_t Dahai_Type_Riichi_Offset = 0x90; // 立直
+	constexpr uint8_t Dahai_Type_ORiichi_Offset = 0xc0; // オープン立直
+	constexpr uint8_t Dahai_Type_Flower_Offset = 0xd0; // 花牌
+	constexpr uint8_t Dahai_Kyuushu = 0x6e; // 九種九牌
+	constexpr uint8_t Dahai_Tsumo = 0x6f; // 和了
+	constexpr uint8_t Dahai_Remote_Disconnect = 0x9f; // ツモ順のプレイヤーの接続が切れた場合の符牒
 
 	// 鳴きコード送受信用
-	const uint8_t Naki_Ignore = 0xa0; // 無視
-	const uint8_t Naki_Ron = 0xa1; // ロン
-	const uint8_t Naki_Pon = 0xa2; // ポン
-	const uint8_t Naki_Kan = 0xa3; // 明槓
-	const uint8_t Naki_Chii_Lower = 0xa4; // 左チー
-	const uint8_t Naki_Chii_Middle = 0xa5; // 中チー
-	const uint8_t Naki_Chii_Upper = 0xa6; // 右チー
-	const uint8_t Naki_Remote_Disconnect = 0xa7; // 鳴きの問い合わせ中にプレイヤーの接続が切れた場合の符牒
+	constexpr uint8_t Naki_Ignore = 0xa0; // 無視
+	constexpr uint8_t Naki_Ron = 0xa1; // ロン
+	constexpr uint8_t Naki_Pon = 0xa2; // ポン
+	constexpr uint8_t Naki_Kan = 0xa3; // 明槓
+	constexpr uint8_t Naki_Chii_Lower = 0xa4; // 左チー
+	constexpr uint8_t Naki_Chii_Middle = 0xa5; // 中チー
+	constexpr uint8_t Naki_Chii_Upper = 0xa6; // 右チー
+	constexpr uint8_t Naki_Remote_Disconnect = 0xa7; // 鳴きの問い合わせ中にプレイヤーの接続が切れた場合の符牒
 }
 }

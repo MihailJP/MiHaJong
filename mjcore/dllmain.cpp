@@ -157,7 +157,7 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 void MJCore_Terminate_Handler() {
 	try {throw;}
 	catch (std::exception& e) { // 例外クラスのインスタンスだった場合
-		const type_info& exceptionType = typeid(e);
+		constexpr type_info& exceptionType = typeid(e);
 		CodeConv::tostringstream dmsg, lmsg;
 		dmsg << _T("ハンドルされない例外 ") << exceptionType.name() <<
 			_T(" が発生したため強制終了されます。") << std::endl <<
@@ -201,6 +201,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 #include "except.h"
 
 ErrorInfo errorInfo;
-const uintptr_t errorInfoPtr[1] = {(uintptr_t)(&errorInfo)};
+constexpr uintptr_t errorInfoPtr[1] = {(uintptr_t)(&errorInfo)};
 
 #endif /*_WIN32*/

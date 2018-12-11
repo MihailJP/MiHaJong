@@ -10,6 +10,8 @@
 #include "../../../astro/astro.h"
 #include <ctime>
 
+constexpr float pi = 3.1415927f;
+
 namespace mihajong_graphic {
 
 GameTableScreen::Clock::Clock(GameTableScreen* caller) {
@@ -38,7 +40,7 @@ void GameTableScreen::Clock::setClockMatrix(TransformMatrix* matrix, float angle
 	D3DXMatrixTranslation(&tmpMatrix, clockPosX * Geometry::WindowScale(), clockPosY * Geometry::WindowScale(), 0);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
 #else
-	const float
+	constexpr float
 		phi = (float)scaledClockDiameter,
 		h = Geometry::WindowHeight,
 		s = Geometry::WindowScale(),
@@ -104,8 +106,6 @@ void GameTableScreen::Clock::renderShadow() {
 		CenterY = (Top + Bottom) / 2.0f,
 		Radius = CenterX - Left;
 
-	const float pi = atan2(1.0f, 1.0f) * 4.0f;
-
 #ifdef _WIN32
 	SYSTEMTIME st; GetSystemTime(&st);
 #else /* _WIN32 */
@@ -113,7 +113,7 @@ void GameTableScreen::Clock::renderShadow() {
 #endif /* _WIN32 */
 	MOONPHASE mp = calc_moon_phase(systime_to_julian(&st));
 
-	const unsigned vertices = 60;
+	constexpr unsigned vertices = 60;
 	Vertex circleVert[vertices];
 	for (unsigned i = 0; i < vertices; ++i) {
 		const float angleNum = (float)((i + 1) / 2) / (float)(vertices / 2);
@@ -176,7 +176,6 @@ void GameTableScreen::Clock::renderHour() {
 
 	RECT rect = {1024, 512, 1536, 1024};
 
-	const float pi = atan2(1.0f, 1.0f) * 4.0f;
 	const float angle = static_cast<float>((lt.tm_hour % 12) * 60 + lt.tm_min) * pi / 360.0f;
 
 	TransformMatrix matrix;
@@ -193,7 +192,6 @@ void GameTableScreen::Clock::renderMinute() {
 
 	RECT rect = {1024, 0, 1536, 512};
 
-	const float pi = atan2(1.0f, 1.0f) * 4.0f;
 	const float angle = static_cast<float>((lt.tm_min % 60) * 60 + lt.tm_sec) * pi / 1800.0f;
 
 	TransformMatrix matrix;

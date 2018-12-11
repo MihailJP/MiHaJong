@@ -34,7 +34,7 @@
 namespace mihajong_socket {
 #ifdef SOCKET_EXPORTS
 class Sock;
-const unsigned int numOfSockets = 32u;
+constexpr unsigned int numOfSockets = 32u;
 extern std::array<Sock*, numOfSockets> sockets;
 #ifdef _WIN32
 extern WSADATA SocketInfo;

@@ -111,8 +111,8 @@ inline void aiscript::table::functable::meldTypeCode(lua_State* const L) {
 
 /* 牌の番号 */
 inline void aiscript::table::functable::tileCode(lua_State* const L) {
-	const char suitname[3][16] = {"Character","Circle","Bamboo",};
-	const char numeral[9][8] = {"One","Two","Three","Four","Five","Six","Seven","Eight","Nine",};
+	constexpr char suitname[3][16] = {"Character","Circle","Bamboo",};
+	constexpr char numeral[9][8] = {"One","Two","Three","Four","Five","Six","Seven","Eight","Nine",};
 	lua_newtable(L);
 	for (int suit = 0; suit < TileSuitHonors; suit += TileSuitStep) { // 数牌(ループ)
 		lua_newtable(L);

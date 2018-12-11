@@ -10,7 +10,7 @@ HINSTANCE dllInst;
 std::array<Sock*, numOfSockets> sockets = {nullptr,};
 std::array<MUTEXLIB::recursive_mutex, numOfSockets> socketExistenceMutex;
 
-const int Error_NoSuchSocket = -32768;
+constexpr int Error_NoSuchSocket = -32768;
 
 void errordlg (socket_error& err) { // エラーダイアログ【廃止】
 	//MessageBox(nullptr, CodeConv::EnsureTStr(err.what()).c_str(), _T("Socket Error"), MB_ICONERROR | MB_TOPMOST | MB_OK);

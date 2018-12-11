@@ -47,7 +47,7 @@ haifu::HaifuStreams haifu::haifuP, haifu::HThaifuP, haifu::XhaifuP;
 #ifdef GUOBIAO
 namespace { // 席替え後のプレイヤー番号対照
 	unsigned currWindNum = 0;
-	const unsigned playerNumberList[4][4] = {
+	constexpr unsigned playerNumberList[4][4] = {
 		{0, 1, 2, 3}, {1, 0, 3, 2}, {2, 3, 1, 0}, {3, 2, 0, 1}
 	};
 }
@@ -360,7 +360,7 @@ void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // 現在時刻タ�
 	timespec tempus; clock_gettime(CLOCK_REALTIME, &tempus);
 	tm currTime;
 	localtime_s(&currTime, &tempus.tv_sec);
-	const signed long tz = []() -> signed long {
+	constexpr signed long tz = []() -> signed long {
 		time_t t1 = 86400; // GNU Cはそうではないが、time_tがunsignedの処理系を見たことがあるので86400とする
 		tm* tmDat = gmtime(&t1); // 協定世界時を算出
 		time_t t2 = mktime(tmDat); // わざと地方時と解釈することで時差を求める
@@ -798,7 +798,7 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 			_T("east"), _T("south"), _T("west"), _T("north"), _T("white"), _T("green"), _T("red"),
 		};
 #ifdef GUOBIAO
-		const bool eastOnly = false;
+		constexpr bool eastOnly = false;
 #else /* GUOBIAO */
 		const bool eastOnly = RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game");
 #endif /* GUOBIAO */

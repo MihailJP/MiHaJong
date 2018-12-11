@@ -354,7 +354,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	case Agari: {
 #ifdef GUOBIAO
-		const bool RenchanFlag = false;
+		constexpr bool RenchanFlag = false;
 #else /* GUOBIAO */
 		const bool RenchanFlag =
 			(gameStat->playerwind(gameStat->CurrentPlayer.Agari) == sEast) &&

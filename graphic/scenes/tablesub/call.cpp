@@ -46,7 +46,7 @@ TableSubsceneCallZoomProto::~TableSubsceneCallZoomProto() {
 void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
 	if (callType == calltext::None) return;
 	const std::uint64_t curr = myTimer.elapsed();
-	const int animationLength = 250000;
+	constexpr int animationLength = 250000;
 	const float scale = (curr >= animationLength) ? 1.0f : pow((float)(animationLength - (signed)curr) / 2.5e5f + 1.0f, 2);
 	const ArgbColor col = (uint32_t)(
 		(curr >= animationLength) ? 255 :
@@ -105,7 +105,7 @@ TableSubsceneCallFadeProto::~TableSubsceneCallFadeProto() {
 void TableSubsceneCallFadeProto::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
 	if (callType == calltext::None) return;
 	const std::uint64_t curr = myTimer.elapsed();
-	const int animationLength = 250000;
+	constexpr int animationLength = 250000;
 	const ArgbColor col = (uint32_t)(
 		(curr >= animationLength) ? 255 :
 		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2))

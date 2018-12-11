@@ -924,7 +924,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				const int suit[3][2] = {
+				constexpr int suit[3][2] = {
 					{TileSuitCharacters, TileSuitCircles},
 					{TileSuitCharacters, TileSuitBamboos},
 					{TileSuitCircles, TileSuitBamboos},

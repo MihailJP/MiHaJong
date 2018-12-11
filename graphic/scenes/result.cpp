@@ -58,7 +58,7 @@ void ResultScreen::KeyboardInput(const XEvent* od)
 	const bool flag = ((myTimer.elapsed() > 3000000u) && (od->dwData));
 	switch (od->dwOfs)
 #else /*_WIN32*/
-	const bool flag = ((myTimer.elapsed() > 3000000u) && (od->type == KeyPress));
+	constexpr bool flag = ((myTimer.elapsed() > 3000000u) && (od->type == KeyPress));
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{
@@ -199,7 +199,7 @@ void ResultScreen::RankRenderer::RenderNameScore() {
 }
 
 void ResultScreen::RankRenderer::RenderScore() {
-	const unsigned widthLimit = 4u;
+	constexpr unsigned widthLimit = 4u;
 	const uint64_t tempus = myTimer.elapsed();
 	const ArgbColor aColor = (uint32_t)((tempus >= animTime) ? 255 :
 		(255 - (int)(200.0 - ((double)tempus / ((double)animTime / 200.0)))))

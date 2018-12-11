@@ -39,7 +39,7 @@ const TileCode* Honor_Major_Tiles() {
 }
 TileCode Honor_Major_Tiles(int code) {
 	assert((code >= 0)&&(code < 13));
-	static const TileCode* YaojiuPai = Honor_Major_Tiles();
+	const TileCode* YaojiuPai = Honor_Major_Tiles();
 	return YaojiuPai[code];
 }
 /* 一九字牌かどうか調べる */

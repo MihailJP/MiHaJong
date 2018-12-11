@@ -72,8 +72,8 @@ inline void setCP(unsigned int CodePage) {
 	std::cerr << "Failed to set code page to " << CodePage << std::endl;
 }
 
-const unsigned CP_UTF8 = 65001u;
-const unsigned CP_ACP = 932u;
+constexpr unsigned CP_UTF8 = 65001u;
+constexpr unsigned CP_ACP = 932u;
 
 inline MUTEXLIB::recursive_mutex& conversionMutex() {
 	static MUTEXLIB::recursive_mutex myMutex;
@@ -89,14 +89,14 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	MultiByteToWideChar(CodePage, 0, str.c_str(), -1, buf, bufsize);
 #else /* _WIN32 */
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(conversionMutex());
-	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
+	constexpr std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
 	volatile /* Do not optimize memset() out asshole!!! */
 		char* srcBuf = new char[str.length() + 1]; /* source buffer */
 	memset(const_cast<char*>(srcBuf), 0, str.length() + 1); strncpy(const_cast<char*>(srcBuf), str.c_str(), str.length());
-	const char* srcPtr = const_cast<char*>(srcBuf);
-	const size_t bufsize = mbsrtowcs(nullptr, &srcPtr, 0, &mbStat);
+	constexpr char* srcPtr = const_cast<char*>(srcBuf);
+	constexpr size_t bufsize = mbsrtowcs(nullptr, &srcPtr, 0, &mbStat);
 	if (bufsize == (size_t)-1) {
 		setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
 		delete[] srcBuf;
@@ -122,7 +122,7 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 	WideCharToMultiByte(CodePage, 0, str.c_str(), -1, buf, bufsize, nullptr, nullptr);
 #else /* _WIN32 */
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(conversionMutex());
-	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
+	constexpr std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
 	wchar_t* srcBuf = new wchar_t[str.length() + 1]; /* source buffer */

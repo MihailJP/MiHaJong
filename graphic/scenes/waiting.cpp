@@ -8,6 +8,8 @@
 #include "../keycode.h"
 #endif /*_WIN32*/
 
+constexpr double TwoTimesPi = 6.283185307179586476;
+
 namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
@@ -19,7 +21,6 @@ ConnectionWaitingProto::~ConnectionWaitingProto() {
 	delete myTextRenderer;
 }
 void ConnectionWaitingProto::showCentered(unsigned id, CodeConv::tstring txt, int y, float sizeRate, bool blink) {
-	const double TwoTimesPi = atan2(1.0, 1.0) * 8;
 	if (txt.empty())
 		myTextRenderer->DelText(id);
 	else

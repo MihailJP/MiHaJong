@@ -19,7 +19,7 @@
 
 namespace mihajong_structs {
 
-const unsigned int DigitGroups = 8;
+constexpr unsigned int DigitGroups = 8;
 
 struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 	int32_t digitGroup[DigitGroups];

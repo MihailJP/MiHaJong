@@ -96,7 +96,7 @@ void GameTableScreen::Reconstruct(const GameTable* gameStat) {
 		for (PlayerID i = 0; i < 4; i++)
 			ReconstructPlayer(gameStat, i, i);
 	} else if (gameStat->chkGameType(Sanma4)) {
-		const PlayerID tobePlayed[4][4] = {
+		constexpr PlayerID tobePlayed[4][4] = {
 			{0, 1, 2, 3}, {3, 1, 2, 0}, {1, 3, 2, 0}, {1, 2, 3, 0},
 		};
 		for (PlayerID i = 0; i < 4; i++) {
@@ -111,9 +111,9 @@ void GameTableScreen::Reconstruct(const GameTable* gameStat) {
 
 /* 供託点棒などの情報を表示 */
 void GameTableScreen::ShowStatus(const GameTable* gameStat) {
-	const wchar_t* const WindName = L"東南西北白發中";
-	const wchar_t* const Numeral = L"一二三四五六七八九十";
-	const wchar_t* const FWDigit = L"０１２３４５６７８９";
+	constexpr wchar_t* const WindName = L"東南西北白發中";
+	constexpr wchar_t* const Numeral = L"一二三四五六七八九十";
+	constexpr wchar_t* const FWDigit = L"０１２３４５６７８９";
 	CodeConv::tostringstream o;
 	o << CodeConv::EnsureTStr(std::wstring(WindName + gameStat->GameRound / 4, WindName + gameStat->GameRound / 4 + 1));
 	if (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game")) { // 東場のみのルール

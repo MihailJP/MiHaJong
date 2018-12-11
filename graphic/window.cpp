@@ -10,8 +10,8 @@
 
 namespace mihajong_graphic {
 
-const LPCTSTR MainWindow::myWindowClassName = _T("mihajong_main");
-const LPCTSTR MainWindow::WindowCaption = _T("MiHaJong ver. ") _T(MIHAJONG_VER);
+constexpr LPCTSTR MainWindow::myWindowClassName = _T("mihajong_main");
+constexpr LPCTSTR MainWindow::WindowCaption = _T("MiHaJong ver. ") _T(MIHAJONG_VER);
 unsigned& MainWindow::WindowWidth = Geometry::WindowWidth;
 unsigned& MainWindow::WindowHeight = Geometry::WindowHeight;
 extern MainWindow* myMainWindow;

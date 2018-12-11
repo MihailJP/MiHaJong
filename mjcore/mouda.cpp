@@ -219,7 +219,7 @@ namespace { /* 内部処理分割用 */
 	}
 	EndType procDahaiSubKan(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 暗槓・加槓するときの処理 */
 #ifdef GUOBIAO
-		const unsigned kanLim = 16;
+		constexpr unsigned kanLim = 16;
 #else /* GUOBIAO */
 		const unsigned kanLim = (RuleData::chkRuleApplied("fifth_kong") ? 5 : 4);
 #endif /* GUOBIAO */

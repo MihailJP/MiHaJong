@@ -133,10 +133,10 @@ Data::~Data() {
 }
 
 LPCTSTR Data::Description = nullptr;
-const uint8_t Data::expectedDigest[32] = {0,};
+constexpr uint8_t Data::expectedDigest[32] = {0,};
 
 LPCTSTR file_mentz_dat::Description = _T("面子構成データベース");
-const uint8_t file_mentz_dat::expectedDigest[32] = {
+constexpr uint8_t file_mentz_dat::expectedDigest[32] = {
 	0x38, 0x27, 0x3a, 0x13, 0x49, 0x94, 0xd3, 0x77,
 	0x0e, 0x09, 0x05, 0xd4, 0xf5, 0xf7, 0xbb, 0x30,
 	0x81, 0x0a, 0x9f, 0x8d, 0xd4, 0x4d, 0xe8, 0x24,

@@ -25,7 +25,7 @@ template <typename T> T scaleToWindow(T val) {
 
 }
 
-const GameTableScreen::ButtonReconst::BtnData
+constexpr GameTableScreen::ButtonReconst::BtnData
 	GameTableScreen::ButtonReconst::buttonDat[2][GameTableScreen::ButtonReconst::btnMAXIMUM] = {
 		{
 			{_T("左チー"),   5 + 117 * 0, Geometry::BaseSize - 40, 0xffccff66},

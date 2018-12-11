@@ -55,7 +55,7 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 #ifndef _MSC_VER
 		using std::max; using std::min;
 #endif
-		const double circleAngle = 360.0;
+		constexpr double circleAngle = 360.0;
 		const double h = Hue - floor(Hue / circleAngle) * circleAngle;
 		const double s = max(0.0, min(1.0, Saturation));
 		const double v = max(0.0, min(1.0, Value));
@@ -134,7 +134,7 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 	const bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->dwData));
 	switch (od->dwOfs)
 #else /*_WIN32*/
-	const bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->type == KeyPress));
+	constexpr bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->type == KeyPress));
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{

@@ -114,7 +114,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 #else /*_WIN32*/
 	size_t size = 0;
 #endif /*_WIN32*/
-	const uint8_t* csv = nullptr;
+	constexpr uint8_t* csv = nullptr;
 	char *csvdat = new char[csvfile->getDataSize() + 4]; memset(csvdat, 0, csvfile->getDataSize()+4);
 #ifdef _MSC_VER
 	memcpy_s(csvdat, csvfile->getDataSize()+4, csvfile->getData(), csvfile->getDataSize());
@@ -166,7 +166,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_ini(Compressed::Data* inifile) {
 #else /*_WIN32*/
 	size_t size = 0;
 #endif /*_WIN32*/
-	const uint8_t* ini = nullptr;
+	constexpr uint8_t* ini = nullptr;
 	char *inidat = new char[inifile->getDataSize() + 4]; memset(inidat, 0, inifile->getDataSize()+4);
 #ifdef _MSC_VER
 	memcpy_s(inidat, inifile->getDataSize()+4, inifile->getData(), inifile->getDataSize());

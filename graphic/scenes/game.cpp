@@ -27,7 +27,7 @@ const std::array<CodeConv::tstring, TableProtoScene::NumOfCheckBoxes> TableProto
 TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR));
 	InitScorePanel();
-	const Region nullRegion = {0, 0, -1, -1};
+	constexpr Region nullRegion = {0, 0, -1, -1};
 	for (int i = 0; i < NumOfCheckBoxes; ++i) {
 		checkBoxes[i] = new CheckBox(manipulator->getDevice(), labels[i], Geometry::BaseSize + 20, 940 + i * 40);
 		setRegion(i + CheckboxRegionOffset,
@@ -178,7 +178,7 @@ TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativeP
 	initialized = false;
 }
 void TableProtoScene::ScoreBoard::objInit() {
-	const int x = xpos, y = ypos;
+	constexpr int x = xpos, y = ypos;
 #endif /*_WIN32*/
 	// 行列の構築
 #if defined(_WIN32) && defined(WITH_DIRECTX)
@@ -281,7 +281,7 @@ std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scor
 		const LargeNum* const score = (scoreMode == scoreDiff) ?
 			&playerScoreDiff :
 			&(GameStatus::gameStat()->Player[playerID()].PlayerScore);
-		const int digit[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
+		constexpr int digit[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
 		int sign;
 		if      (*score > 0) sign =  1;
 		else if (*score < 0) sign = -1;

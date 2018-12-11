@@ -114,7 +114,7 @@ void ConfigMenuProto::KeyboardInput(const XEvent* od)
 	const bool keyDown = od->dwData;
 	switch (od->dwOfs)
 #else /*_WIN32*/
-	const bool keyDown = od->type == KeyPress;
+	constexpr bool keyDown = od->type == KeyPress;
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{

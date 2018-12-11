@@ -19,7 +19,7 @@ PlayerID aiscript::table::functable::gametbl::getPlayerID(lua_State* const L, in
 }
 
 /* 牌の種類ごとの表をスタックに積む */
-const std::array<TileCode, 35> aiscript::table::functable::gametbl::validTiles = {
+constexpr std::array<TileCode, 35> aiscript::table::functable::gametbl::validTiles = {
 	CharacterOne, CharacterTwo, CharacterThree, CharacterFour, CharacterFive,
 	CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
 	CircleOne, CircleTwo, CircleThree, CircleFour, CircleFive,
@@ -458,8 +458,8 @@ int aiscript::table::functable::gametbl::luafunc::getyakuhaiwind(lua_State* cons
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
 	lua_newtable(L); // 返り値を格納
-	const TileCode windtiles[4] = {EastWind, SouthWind, WestWind, NorthWind,};
-	const char windname[4][8] = {"East", "South", "West", "North",};
+	constexpr TileCode windtiles[4] = {EastWind, SouthWind, WestWind, NorthWind,};
+	constexpr char windname[4][8] = {"East", "South", "West", "North",};
 	for (int i = 0; i < 4; i++) {
 		bool flag = false;
 		if (windtiles[i] ==

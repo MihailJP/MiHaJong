@@ -532,7 +532,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				time_t nowTimeVal = time(nullptr);
 				tm nowTime;
 				localtime_s(&nowTime, &nowTimeVal);
-				const int year = nowTime.tm_year + 1900;
+				constexpr int year = nowTime.tm_year + 1900;
 				bool isLeapYear = (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
 #endif /*_WIN32*/
 				if (!isLeapYear) return false;

@@ -11,7 +11,7 @@ int Scene::whichRegion(int X, int Y) {
 	return regionNum;
 }
 
-const Scene::Region Scene::NullRegion = {0, 0, -1, -1};
+constexpr Scene::Region Scene::NullRegion = {0, 0, -1, -1};
 
 void Scene::setRegion(unsigned regionID, int Left, int Top, int Right, int Bottom) {
 	if (regions.size() <= regionID)

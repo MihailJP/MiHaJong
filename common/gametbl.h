@@ -25,13 +25,13 @@ static_assert(std::is_standard_layout<Tile>::value, "Tile is not standard layout
 
 // -------------------------------------------------------------------------
 
-const unsigned int Players = 4;
+constexpr unsigned int Players = 4;
 #ifdef MJCORE_EXPORTS
 #define ACTUAL_PLAYERS (GameStat.chkGameType(SanmaT) ? 3 : 4)
 #endif
-const unsigned int NumOfTilesInHand = 14;
-const unsigned int TsumohaiIndex = NumOfTilesInHand - 1;
-const unsigned int SizeOfDiscardBuffer = 33;
+constexpr unsigned int NumOfTilesInHand = 14;
+constexpr unsigned int TsumohaiIndex = NumOfTilesInHand - 1;
+constexpr unsigned int SizeOfDiscardBuffer = 33;
 
 typedef int8_t PlayerID; // プレイヤー番号
 
@@ -85,7 +85,7 @@ typedef Tile HandTiles[NumOfTilesInHand];
 
 // -------------------------------------------------------------------------
 
-const unsigned int SutehaiTypeStep = 200;
+constexpr unsigned int SutehaiTypeStep = 200;
 enum DiscardStat : uint8_t {
 	discardNormal,
 	discardTaken,
@@ -103,8 +103,8 @@ static_assert(std::is_standard_layout<DiscardTile>::value, "DiscardTile is not s
 
 // -------------------------------------------------------------------------
 
-const unsigned int SizeOfMeldBuffer = 5;
-const unsigned int MeldTypeStep = 1000;
+constexpr unsigned int SizeOfMeldBuffer = 5;
+constexpr unsigned int MeldTypeStep = 1000;
 enum MeldStat : uint8_t {
 	meldSequenceConcealed,      // 手の内の順子
 	meldSequenceExposedLower,   // 小さい方をチー
@@ -158,7 +158,7 @@ static_assert(std::is_standard_layout<PaoStat>::value, "PaoStat is not standard 
 
 // -------------------------------------------------------------------------
 
-const unsigned SizeOfDeckBuf = 144;
+constexpr unsigned SizeOfDeckBuf = 144;
 typedef Tile DeckBuf[SizeOfDeckBuf]; // 最初はunionでやろうと思ったけどおかしくなるのでやめた
 
 // -------------------------------------------------------------------------
@@ -330,7 +330,7 @@ static_assert(std::is_standard_layout<GameTable>::value, "GameTable is not stand
 // -------------------------------------------------------------------------
 
 // 食い変え判定用の gameStat->AgariSpecialStat 番号
-const unsigned int agariKuikae = 999;
+constexpr unsigned int agariKuikae = 999;
 
 // -------------------------------------------------------------------------
 

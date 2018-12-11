@@ -328,13 +328,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				bool yakuFlag = false;
 				if (analysis->shanten[shantenRegular] == -1) {
 					int yakuFlagCount = 0;
-					const TileCode targetKezi[] = {CharacterOne, CharacterNine,};
-					const TileCode targetShunzi[] = {CharacterOne, CharacterSeven,};
+					constexpr TileCode targetKezi[] = {CharacterOne, CharacterNine,};
+					constexpr TileCode targetShunzi[] = {CharacterOne, CharacterSeven,};
 					if (yaku::countingFacility::countSpecMentz(analysis->MianziDat, targetKezi, 2, targetShunzi, 2, false) == 0)
 						yakuFlag = true;
 				} else if (analysis->shanten[shantenPairs] == -1) {
 					int yakuFlagCount = 0;
-					const TileCode targetDuizi[] = {CharacterOne, CharacterNine,};
+					constexpr TileCode targetDuizi[] = {CharacterOne, CharacterNine,};
 					if (yaku::countingFacility::countPairs(analysis->TileCount, targetDuizi, 2) == 0)
 						yakuFlag = true;
 				}

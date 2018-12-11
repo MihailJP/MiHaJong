@@ -99,7 +99,7 @@ namespace client {
 	CodeConv::tstring starter::getPlayerName (unsigned id) { // プレイヤー名
 		return playerName[id];
 	}
-	const char* starter::getRules (unsigned line) {
+	constexpr char* starter::getRules (unsigned line) {
 		return ruleConf[line];
 	}
 	int starter::getClientNumber () { // クライアント番号

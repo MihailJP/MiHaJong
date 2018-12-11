@@ -358,21 +358,21 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		));
 	/* 西湖十景系列の役 */
 	{
-		const int Rules = 10;
-		const char tmpRuleCodeList[Rules][32] = {
+		constexpr int Rules = 10;
+		constexpr char tmpRuleCodeList[Rules][32] = {
 			"shuangfeng_zhayun", "nanbing_wanzhong", "leifeng_xizhao", "liulang_wenying", "duanqiao_canxue",
 			"sudi_chunxiao", "huagang_guanyu", "santan_yinyue", "quyuan_fenghe", "pinghu_qiuyue",
 		};
-		const TileCode tmpTileCodeList[Rules][2] = {
+		constexpr TileCode tmpTileCodeList[Rules][2] = {
 			{EastWind, BambooEight}, {SouthWind, RedDragon}, {WestWind, CircleEight}, {NorthWind, CharacterEight},
 			{WhiteDragon, BambooTwo}, {GreenDragon, CharacterTwo}, {RedDragon, CircleTwo},
 			{WhiteDragon, CharacterOne}, {GreenDragon, CircleOne}, {RedDragon, BambooOne},
 		};
-		const int tmpStraightColorList[Rules] = {
+		constexpr int tmpStraightColorList[Rules] = {
 			TileSuitCharacters, TileSuitCircles, TileSuitBamboos, TileSuitCircles, TileSuitCharacters,
 			TileSuitCircles, TileSuitBamboos, TileSuitCharacters, TileSuitCircles, TileSuitBamboos,
 		};
-		const TCHAR tmpYakuNameList[Rules][16] = {
+		constexpr TCHAR tmpYakuNameList[Rules][16] = {
 			_T("双峰挿雲"), _T("南屏晩鍾"), _T("雷峰夕照"), _T("柳浪聞鶯"), _T("断橋残雪"),
 			_T("蘇堤春暁"), _T("花港観魚"), _T("三譚印月"), _T("曲院風荷"), _T("平湖秋月"),
 		};

@@ -60,7 +60,7 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 #ifndef GUOBIAO
 inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 赤ドラを設定する
 	{
-		const char tileRules[9][16] = {
+		constexpr char tileRules[9][16] = {
 			"red_one", "red_two", "red_three", "red_four", "red_five",
 			"red_six", "red_seven", "red_eight", "red_nine",
 		};
@@ -124,8 +124,8 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 赤�
 		}
 	}
 	{
-		const char tileRules[2][16] = {"red_west", "red_north",};
-		const TileCode tileCodes[2] = {WestWind, NorthWind,};
+		constexpr char tileRules[2][16] = {"red_west", "red_north",};
+		constexpr TileCode tileCodes[2] = {WestWind, NorthWind,};
 		for (unsigned int i = 0; i < 2; ++i) { // 字牌の赤ドラ
 			if (RuleData::chkRule(tileRules[i], "4tiles") || RuleData::chkRule(tileRules[i], "3tiles") ||
 				RuleData::chkRule(tileRules[i], "2tiles") || RuleData::chkRule(tileRules[i], "1tile"))
@@ -147,8 +147,8 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 赤�
 
 inline void bluetiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 青ドラを設定する
 	{
-		const char tileRules[3][16] = {"blue_one", "blue_five", "blue_nine",};
-		const unsigned int tileNum[3] = {1, 5, 9,};
+		constexpr char tileRules[3][16] = {"blue_one", "blue_five", "blue_nine",};
+		constexpr unsigned int tileNum[3] = {1, 5, 9,};
 		for (unsigned int i = 0; i < 3; ++i) { // 数牌の青ドラ
 			if (RuleData::chkRule(tileRules[i], "character_suit") || // 萬子
 				RuleData::chkRule(tileRules[i], "character_circle_suit") ||

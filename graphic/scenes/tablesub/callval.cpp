@@ -33,7 +33,7 @@ void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 	assert(c_val.Exponent >= 2u); // 小数には対応しない
 
 	const std::uint64_t curr = myTimer.elapsed();
-	const int animationLength = 250000;
+	constexpr int animationLength = 250000;
 	const ArgbColor col = (uint32_t)(
 		(curr >= animationLength) ? 255 :
 		(int)std::pow((float)(curr * 255) / animationLength / 16.0f, 2)) << 24 |

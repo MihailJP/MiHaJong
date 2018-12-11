@@ -25,7 +25,7 @@ public:
 	Data(const Data&) = delete; // Delete unexpected copy constructor
 	Data& operator= (const Data&) = delete; // Delete unexpected assign operator
 	virtual ~Data() = 0;
-	const uint8_t* getData() {return DecompressedData;}
+	constexpr uint8_t* getData() {return DecompressedData;}
 	size_t getDataSize() {return decompressedSize;}
 };
 /* Compressed file object for mentz.dat */

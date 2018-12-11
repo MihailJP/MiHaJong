@@ -9,11 +9,11 @@
 #include "../chat.h"
 #include "../../common/strcode.h"
 
-const DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NumOfTilesInHand - 1};
+constexpr DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NumOfTilesInHand - 1};
 
 aiscript::ScriptStates aiscript::status[Players] = {{nullptr, false}};
-const char aiscript::fncname_discard[8] = "ontsumo"; // 捨牌決定用関数の名前
-const char aiscript::fncname_call[3][12] = {"ondiscard", "onkakan", "onankan",}; // 鳴き決定用関数の名前
+constexpr char aiscript::fncname_discard[8] = "ontsumo"; // 捨牌決定用関数の名前
+constexpr char aiscript::fncname_call[3][12] = {"ondiscard", "onkakan", "onankan",}; // 鳴き決定用関数の名前
 
 bool aiscript::callFunc(const GameTable* const gameStat, PlayerID PlayerID, const char* const function_name, bool is_mandatory) {
 	if (status[PlayerID].scriptLoaded) { /* 正しく読み込まれているなら */
