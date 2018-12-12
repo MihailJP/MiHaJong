@@ -731,15 +731,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				switch (TileCode tc = analysis->TsumoHai->tile) {
 				case EastWind: case SouthWind: case WestWind: case NorthWind: // 風牌だった
 					yakuFlag = (!*analysis->TsumoAgariFlag); // 仮にフラグ設定
-					if (tc == Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->player))) // 自風だった
+					if (tc == Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->player)))) // 自風だった
 						yakuFlag = false;
 					if (tc == Wind2Tile(analysis->GameStat->GameRound / 4)) // 場風だった
 							yakuFlag = false;
 					if (RuleData::chkRuleApplied("kaimenkaze") &&
-						(tc == Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer)))) // 開門風だった
+						(tc == Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer))))) // 開門風だった
 							yakuFlag = false;
 					if (RuleData::chkRuleApplied("urakaze") &&
-						(tc == Wind2Tile((uint8_t)analysis->GameStat->playerwind(RelativePositionOf(analysis->player, sOpposite))))) // 裏風だった
+						(tc == Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(RelativePositionOf(analysis->player, sOpposite)))))) // 裏風だった
 							yakuFlag = false;
 					break;
 				default: // 風牌じゃなかった

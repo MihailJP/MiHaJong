@@ -510,27 +510,27 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				for (int i = 1; i < TileSuitHonors; i++) {
 					// 123 123 234 234: 牌式24420
 					if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+1] >= 2) &&
-						((analysis->MianziDat[0].tile == (TileCode)i) ||
-						(analysis->MianziDat[0].tile == (TileCode)(i + 3))))
+						((analysis->MianziDat[0].tile == static_cast<TileCode>(i)) ||
+						(analysis->MianziDat[0].tile == static_cast<TileCode>(i + 3))))
 						return true;
 					// 123 123 234 345: 牌式23421
 					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+1] >= 1) &&
 						(analysis->ShunziCount[i+2] >= 1) &&
-						((analysis->MianziDat[0].tile == (TileCode)i) ||
-						(analysis->MianziDat[0].tile == (TileCode)(i + 3))))
+						((analysis->MianziDat[0].tile == static_cast<TileCode>(i)) ||
+						(analysis->MianziDat[0].tile == static_cast<TileCode>(i + 3))))
 						return true;
 					// 123 123 345 345: 牌式22422
 					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+2] >= 2) &&
-						((analysis->MianziDat[0].tile == (TileCode)i) ||
-						(analysis->MianziDat[0].tile == (TileCode)(i + 1)) ||
-						(analysis->MianziDat[0].tile == (TileCode)(i + 3)) ||
-						(analysis->MianziDat[0].tile == (TileCode)(i + 4))))
+						((analysis->MianziDat[0].tile == static_cast<TileCode>(i)) ||
+						(analysis->MianziDat[0].tile == static_cast<TileCode>(i + 1)) ||
+						(analysis->MianziDat[0].tile == static_cast<TileCode>(i + 3)) ||
+						(analysis->MianziDat[0].tile == static_cast<TileCode>(i + 4))))
 						return true;
 					// 123 234 345 345: 牌式12432
 					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[i+1] >= 1) &&
 						(analysis->ShunziCount[i+2] >= 2) &&
-						((analysis->MianziDat[0].tile == (TileCode)i) ||
-						(analysis->MianziDat[0].tile == (TileCode)(i + 3))))
+						((analysis->MianziDat[0].tile == static_cast<TileCode>(i)) ||
+						(analysis->MianziDat[0].tile == static_cast<TileCode>(i + 3))))
 						return true;
 				}
 				return false;
@@ -594,7 +594,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		auto suukuisan =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 1; i < TileSuitHonors; i++) {
-					if (analysis->MianziDat[0].tile == (TileCode)i) {
+					if (analysis->MianziDat[0].tile == static_cast<TileCode>(i)) {
 						if (analysis->ShunziCount[i] >= 2)
 							return true;
 						else if (i < 1) continue;
@@ -918,11 +918,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(i, Han),
 				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null),
 				[i](const MENTSU_ANALYSIS* const analysis) -> bool {
-					unsigned tileCount = (unsigned)analysis->TileCount[CircleFive];
+					unsigned tileCount = static_cast<unsigned>(analysis->TileCount[CircleFive]);
 					tileCount += 3 * (analysis->KeziCount[CircleFive] - analysis->AnKeziCount[CircleFive]);
 					tileCount += (analysis->KangziCount[CircleFive] - analysis->AnKangziCount[CircleFive]);
 					for (unsigned int j = 3; j <= 5; ++j)
-						tileCount += (analysis->ShunziCount[(TileCode)(TileSuitCircles + j)] - analysis->AnShunziCount[(TileCode)(TileSuitCircles + j)]);
+						tileCount += (analysis->ShunziCount[static_cast<TileCode>(TileSuitCircles + j)] - analysis->AnShunziCount[static_cast<TileCode>(TileSuitCircles + j)]);
 					return ((analysis->KeziCount[EastWind] >= 1) && (tileCount == i));
 				}
 			));
@@ -946,17 +946,17 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				auto f =
 					[chktiles, i](const MENTSU_ANALYSIS* const analysis) -> bool {
 						const TileCode kezi[] = {
-							(TileCode)(i+TileSuitCharacters),
-							(TileCode)(i+TileSuitCircles),
-							(TileCode)(i+TileSuitBamboos),
+							static_cast<TileCode>(i+TileSuitCharacters),
+							static_cast<TileCode>(i+TileSuitCircles),
+							static_cast<TileCode>(i+TileSuitBamboos),
 						};
 						const TileCode shunzi[] = {
-							(TileCode)(i+TileSuitCharacters), (TileCode)(i+TileSuitCircles),
-							(TileCode)(i+TileSuitBamboos),
-							(TileCode)(i+TileSuitCharacters-1), (TileCode)(i+TileSuitCircles-1),
-							(TileCode)(i+TileSuitBamboos-1),
-							(TileCode)(i+TileSuitCharacters-2), (TileCode)(i+TileSuitCircles-2),
-							(TileCode)(i+TileSuitBamboos-2),
+							static_cast<TileCode>(i+TileSuitCharacters), static_cast<TileCode>(i+TileSuitCircles),
+							static_cast<TileCode>(i+TileSuitBamboos),
+							static_cast<TileCode>(i+TileSuitCharacters-1), static_cast<TileCode>(i+TileSuitCircles-1),
+							static_cast<TileCode>(i+TileSuitBamboos-1),
+							static_cast<TileCode>(i+TileSuitCharacters-2), static_cast<TileCode>(i+TileSuitCircles-2),
+							static_cast<TileCode>(i+TileSuitBamboos-2),
 						};
 						return chktiles(analysis, kezi, 3,
 							&shunzi[i <= 7 ? 0 : 3 * (i - 7)],

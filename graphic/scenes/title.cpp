@@ -41,12 +41,12 @@ TitleScreen::~TitleScreen() {
 }
 
 void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF) {
-	double t = ((double)myTimer.elapsed() / (double)timePerFrame - (double)startF) / 2.0;
-	if ((t >= 0.0f) && (t < ((float)(endF - startF) * 1.1118f)))
+	double t = (static_cast<double>(myTimer.elapsed()) / static_cast<double>(timePerFrame) - static_cast<double>(startF)) / 2.0;
+	if ((t >= 0.0f) && (t < (static_cast<float>(endF - startF) * 1.1118f)))
 		sprite->show(X, Y,
-			powf((float)((double)(endF - startF) - t) / (float)(endF - startF) * 4.0f, 2.0f) + 0.8f,
-			(int)(96.0f * (2.0f - sqrt(abs((float)((double)(endF - startF) - t) / (float)(endF - startF) * 4.0f)))));
-	else if (t >= ((float)(endF - startF) * 1.1118f))
+			powf(static_cast<float>(static_cast<double>(endF - startF) - t) / static_cast<float>(endF - startF) * 4.0f, 2.0f) + 0.8f,
+			static_cast<int>(96.0f * (2.0f - sqrt(abs(static_cast<float>(static_cast<double>(endF - startF) - t) / static_cast<float>(endF - startF) * 4.0f)))));
+	else if (t >= (static_cast<float>(endF - startF) * 1.1118f))
 		sprite->show(X, Y, 1.0f, 128);
 }
 
@@ -59,23 +59,23 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 		const double h = Hue - floor(Hue / circleAngle) * circleAngle;
 		const double s = max(0.0, min(1.0, Saturation));
 		const double v = max(0.0, min(1.0, Value));
-		const double f = h / 60.0 - ((int)h / 60);
+		const double f = h / 60.0 - (static_cast<int>(h) / 60);
 		const double p = v * (1.0 - s);
 		const double q = v * (1.0 - f * s);
 		const double t = v * (1.0 - (1.0 - f) * s);
-		switch ((int)h / 60) {
+		switch (static_cast<int>(h) / 60) {
 		case 0:
-			return ((int)(v * 255) << 16) | ((int)(t * 255) << 8) | (int)(p * 255);
+			return (static_cast<int>(v * 255) << 16) | (static_cast<int>(t * 255) << 8) | static_cast<int>(p * 255);
 		case 1:
-			return ((int)(q * 255) << 16) | ((int)(v * 255) << 8) | (int)(p * 255);
+			return (static_cast<int>(q * 255) << 16) | (static_cast<int>(v * 255) << 8) | static_cast<int>(p * 255);
 		case 2:
-			return ((int)(p * 255) << 16) | ((int)(v * 255) << 8) | (int)(t * 255);
+			return (static_cast<int>(p * 255) << 16) | (static_cast<int>(v * 255) << 8) | static_cast<int>(t * 255);
 		case 3:
-			return ((int)(p * 255) << 16) | ((int)(q * 255) << 8) | (int)(v * 255);
+			return (static_cast<int>(p * 255) << 16) | (static_cast<int>(q * 255) << 8) | static_cast<int>(v * 255);
 		case 4:
-			return ((int)(t * 255) << 16) | ((int)(p * 255) << 8) | (int)(v * 255);
+			return (static_cast<int>(t * 255) << 16) | (static_cast<int>(p * 255) << 8) | static_cast<int>(v * 255);
 		case 5:
-			return ((int)(v * 255) << 16) | ((int)(p * 255) << 8) | (int)(q * 255);
+			return (static_cast<int>(v * 255) << 16) | (static_cast<int>(p * 255) << 8) | static_cast<int>(q * 255);
 		default:
 			return 0xffffffff;
 		}
@@ -269,23 +269,23 @@ void TitleScreen::TitleSprite::show(int X, int Y, float scale, uint8_t opacity) 
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix matrix, matrix1;
 	D3DXMatrixIdentity(&matrix);
-	D3DXMatrixTranslation(&matrix1, (float)(-X), (float)(-Y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
+	D3DXMatrixTranslation(&matrix1, static_cast<float>(-X), static_cast<float>(-Y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1, scale, scale, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixTranslation(&matrix1, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
+	D3DXMatrixTranslation(&matrix1, static_cast<float>(X), static_cast<float>(Y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1,
 		WidthRate() * Geometry::WindowScale(),
 		Geometry::WindowScale(),
 		0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 #else
 	glPushMatrix(); glLoadIdentity();
-	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
-	glTranslatef((float)X * Geometry::WindowScale(), -(float)Y * Geometry::WindowScale(), 0.0f);
+	glTranslatef(0.0f, static_cast<float>(Geometry::WindowHeight), 0.0f);
+	glTranslatef(static_cast<float>(X) * Geometry::WindowScale(), -static_cast<float>(Y) * Geometry::WindowScale(), 0.0f);
 	glScalef(scale, scale, 1.0f);
-	glTranslatef(-(float)X * Geometry::WindowScale(), (float)Y * Geometry::WindowScale(), 0.0f);
+	glTranslatef(-static_cast<float>(X) * Geometry::WindowScale(), static_cast<float>(Y) * Geometry::WindowScale(), 0.0f);
 	glScalef(
 		WidthRate() * Geometry::WindowScale(),
 		Geometry::WindowScale(), 1.0f);
-	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
 	TransformMatrix matrix; glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);
 	glPopMatrix();
 #endif

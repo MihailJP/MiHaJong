@@ -135,7 +135,7 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 		memset(tmpstr, 0, MB_LEN_MAX);
 		int rslt = wctomb(tmpstr, str[pos]);
 		if (str[pos] <= 0x007f) { // Keep 7bit ASCII
-			tmpstr[0] = (char)(int)(str[pos]); tmpstr[1] = 0;
+			tmpstr[0] = static_cast<char>(int)(str[pos]); tmpstr[1] = 0;
 			buf += std::string(tmpstr);
 		} else if (rslt != -1) {
 			buf += std::string(tmpstr);

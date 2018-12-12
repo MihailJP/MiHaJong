@@ -44,7 +44,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByPlayer:添字が範囲外です (") << (int)playerID << _T(")");
+			o << _T("InfoByPlayer:添字が範囲外です (") << static_cast<int>(playerID) << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 #ifdef _MSC_VER
@@ -55,7 +55,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した
 		}
 	}
 	const T& operator[](const int playerID) const {
-		return InfoByPlayer::operator[]((PlayerID)playerID);
+		return InfoByPlayer::operator[](static_cast<PlayerID>(playerID));
 	}
 	T& operator[](const PlayerID playerID) {
 		if ((playerID >= 0)&&(playerID < Players)) {
@@ -64,7 +64,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByPlayer:添字が範囲外です (") << (int)playerID << _T(")");
+			o << _T("InfoByPlayer:添字が範囲外です (") << static_cast<int>(playerID) << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 #ifdef _MSC_VER
@@ -75,7 +75,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した
 		}
 	}
 	T& operator[](const int playerID) {
-		return InfoByPlayer::operator[]((PlayerID)playerID);
+		return InfoByPlayer::operator[](static_cast<PlayerID>(playerID));
 	}
 };
 
@@ -312,15 +312,15 @@ struct GameTable { // 卓の情報を格納する
 
 	seatAbsolute playerwind(Player_ID player, int currentRound) const { // プレイヤーの自風がどれか調べる
 		if (chkGameType(SanmaT))
-			return (seatAbsolute)((player + 24 - (currentRound - ( currentRound / 4))) % 3);
-		else return (seatAbsolute)((player + 32 - currentRound) % 4);
+			return static_cast<seatAbsolute>((player + 24 - (currentRound - ( currentRound / 4))) % 3);
+		else return static_cast<seatAbsolute>((player + 32 - currentRound) % 4);
 	}
 	seatAbsolute playerwind(Player_ID player) const { // プレイヤーの自風がどれか調べる
 		return playerwind(player, GameRound);
 	}
 
 	int tilesLeft() const { // 王牌を除いた山牌の残り枚数
-		return ((int)RinshanPointer - ((int)DeadTiles - 1) - (int)TilePointer);
+		return (static_cast<int>(RinshanPointer) - (static_cast<int>(DeadTiles) - 1) - static_cast<int>(TilePointer));
 	}
 
 };

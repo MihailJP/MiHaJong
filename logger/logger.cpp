@@ -81,7 +81,7 @@ __declspec(dllexport) void initLogger(const char* fname) {
 #ifdef SYNCMODE
 	hWriteFinishEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 #endif
-	hThread = CreateThread(NULL, 0, Logger::LoggerThread, (LPVOID)logger,
+	hThread = CreateThread(NULL, 0, Logger::LoggerThread, reinterpret_cast<LPVOID>(logger),
 		CREATE_SUSPENDED, &threadID);
 	ResumeThread(hThread);
 }

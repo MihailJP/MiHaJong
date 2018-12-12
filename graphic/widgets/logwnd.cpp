@@ -120,7 +120,7 @@ void LogWindow::Render() {
 	}
 	if (reconstFlag) {
 		unsigned linenum = 0;
-		for (unsigned i = (unsigned)(max(0, (signed)lines.size() - (signed)height)); i < lines.size(); ++i) { // ログの最後の部分を表示
+		for (unsigned i = static_cast<unsigned>(max(0, static_cast<signed>(lines.size()) - static_cast<signed>(height))); i < lines.size(); ++i) { // ログの最後の部分を表示
 		//for (unsigned i = 0; i < min(height, lines.size()); ++i) { // ログの最初の部分を表示
 			myTextRenderer->NewText(linenum, lines[i], x, y + lineheight * linenum);
 			++linenum;

@@ -151,7 +151,7 @@ void aiscript::GameStatToLuaTable(lua_State* const L, const GameTable* const gam
 	lua_remove(L, -2); // content of 'mihajong' table is no longer needed
 	lua_getmetatable(L, -1); // get metatable
 	lua_getfield(L, -1, "__index"); // get '__index' metamethod (table)
-	lua_pushlightuserdata(L, (void *)gameStat); // gameStat pointer
+	lua_pushlightuserdata(L, reinterpret_cast<void *>(const_cast<GameTable*>(gameStat))); // gameStat pointer
 	lua_setfield(L, -2, "addr"); // set 'addr' field
 	lua_setfield(L, -2, "__index"); // update '__index' metamethod (table)
 	lua_setmetatable(L, -2); // update metatable
@@ -170,7 +170,7 @@ DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 }
 void aiscript::calcDiscard_threaded(DiscardTileNum& answer, const GameTable* gameStat) {
 	CodeConv::tostringstream o;
-	o << _T("AIの打牌処理に入ります。プレイヤー [") << (int)gameStat->CurrentPlayer.Active << _T("]");
+	o << _T("AIの打牌処理に入ります。プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("]");
 	info(o.str().c_str());
 	if (callFunc(gameStat, gameStat->CurrentPlayer.Active, fncname_discard, true)) {
 		answer = DiscardThrough;
@@ -196,7 +196,7 @@ void aiscript::calcDiscard_threaded(DiscardTileNum& answer, const GameTable* gam
 				answer.id = static_cast<uint8_t>(NumOfTilesInHand - 1); // fallback
 			} else if ((i >= 1)&&(i <= NumOfTilesInHand)) {
 				answer.id = static_cast<uint8_t>(i - 1); // オリジンを1にする仕様……
-			} else if ((i <= -1)&&(i >= -((int)NumOfTilesInHand))) { // マイナスを指定した場合の処理
+			} else if ((i <= -1)&&(i >= -static_cast<int>(NumOfTilesInHand))) { // マイナスを指定した場合の処理
 				answer.id = static_cast<uint8_t>(NumOfTilesInHand + i);
 			} else {
 				warn(_T("2番目の返り値が範囲外です。ツモ切りとみなします。"));
@@ -220,7 +220,7 @@ void aiscript::determine_meld(GameTable* const gameStat) {
 
 void aiscript::calcCall_threaded(GameTable* gameStat) {
 	CodeConv::tostringstream o;
-	o << _T("AIの副露判定に入ります。プレイヤー [") << (int)gameStat->CurrentPlayer.Passive << _T("]");
+	o << _T("AIの副露判定に入ります。プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Passive) << _T("]");
 	info(o.str().c_str());
 	gameStat->statOfPassive().DeclarationFlag.Chi = chiiNone; // リセット
 	gameStat->statOfPassive().DeclarationFlag.Pon =
@@ -231,7 +231,7 @@ void aiscript::calcCall_threaded(GameTable* gameStat) {
 	} else {
 		/* 実行完了 */
 		int flag = 0;
-		MeldCallID meldtype = (MeldCallID)lua_tointegerx(status[gameStat->CurrentPlayer.Passive].state, -2, &flag);
+		MeldCallID meldtype = static_cast<MeldCallID>(lua_tointegerx(status[gameStat->CurrentPlayer.Passive].state, -2, &flag));
 		if (!flag) {
 			warn(_T("1番目の返り値が数値ではありません。無視します。"));
 		} else {

@@ -30,15 +30,15 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 		settile(CharacterNine, p); // 萬子
 	} else {
 		for (unsigned int k = 1u; k <= 9u; ++k)
-			settile((TileCode)(TileSuitCharacters + k), p); // 萬子
+			settile(static_cast<TileCode>(TileSuitCharacters + k), p); // 萬子
 	}
 	for (unsigned int k = 1u; k <= 9u; ++k)
-		settile((TileCode)(TileSuitCircles + k), p); // 筒子
+		settile(static_cast<TileCode>(TileSuitCircles + k), p); // 筒子
 	for (unsigned int k = 1u; k <= 9u; ++k)
-		settile((TileCode)(TileSuitBamboos + k), p); // 索子
+		settile(static_cast<TileCode>(TileSuitBamboos + k), p); // 索子
 	if (!gameStat->chkGameType(SanmaS)) {
 		for (unsigned int k = 1u; k <= 7u; ++k)
-			settile((TileCode)(TileSuitHonors + k), p); // 字牌
+			settile(static_cast<TileCode>(TileSuitHonors + k), p); // 字牌
 #ifndef GUOBIAO
 		if (RuleData::chkRule("flower_tiles", "seasons") || RuleData::chkRule("flower_tiles", "8tiles")) {
 #endif /* GUOBIAO */
@@ -288,19 +288,19 @@ void SeatShuffler::shuffleSeat () {
 
 	{
 		CodeConv::tostringstream o;
-		o << _T("ClientNumber [") << (int)ClientNumber << _T("]");
+		o << _T("ClientNumber [") << static_cast<int>(ClientNumber) << _T("]");
 		debug(o.str().c_str());
 	}
 	{
 		CodeConv::tostringstream o; o << _T("TmpPosition ");
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++)
-			o << (i ? _T(" ") : _T("[")) << (int)TmpPosition[i];
+			o << (i ? _T(" ") : _T("[")) << static_cast<int>(TmpPosition[i]);
 		o << _T("]"); debug(o.str().c_str());
 	}
 	{
 		CodeConv::tostringstream o; o << _T("Remote? ");
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++)
-			o << (i ? _T(" ") : _T("[")) << (int)EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag;
+			o << (i ? _T(" ") : _T("[")) << static_cast<int>(EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag);
 		o << _T("]"); debug(o.str().c_str());
 	}
 	{
@@ -399,10 +399,10 @@ namespace {
 					statsync(gameStat, (gameStat->Player[player].PlayerScore.digitGroup[i] >> (j * 8)) & 0xff,
 						[player, i, j](GameTable* const gameStat, int ReceivedMsg) -> bool {
 							if (!j) gameStat->Player[player].PlayerScore.digitGroup[i] = 0;
-							gameStat->Player[player].PlayerScore.digitGroup[i] |= (int)ReceivedMsg << (j * 8);
+							gameStat->Player[player].PlayerScore.digitGroup[i] |= static_cast<int>(ReceivedMsg) << (j * 8);
 							return true;
 						});
-			statsync(gameStat, (gameStat->Player[player].PlayerScore < (LargeNum)0) ? 0x01 : 0x00,
+			statsync(gameStat, (gameStat->Player[player].PlayerScore < 0) ? 0x01 : 0x00,
 				[player](GameTable* const gameStat, int ReceivedMsg) -> bool {
 					if (ReceivedMsg) gameStat->Player[player].PlayerScore *= -1;
 					return true;
@@ -422,7 +422,7 @@ namespace {
 			/* Excess-128 */
 			statsync(gameStat, gameStat->Player[player].playerChip + 128,
 				[player](GameTable* const gameStat, int ReceivedMsg) -> bool {
-					gameStat->Player[player].playerChip = (int)ReceivedMsg - 128;
+					gameStat->Player[player].playerChip = static_cast<int>(ReceivedMsg) - 128;
 					return true;
 				});
 		// 四馬路解禁フラグを送信
@@ -535,10 +535,10 @@ namespace {
 				[i](GameTable* const gameStat, int ReceivedMsg) -> bool { // クライアントの場合、データを受信
 					if ( ((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) > TileNonflowerMax) &&
 						((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) < TileSuitFlowers) ) {
-							gameStat->Deck[i].tile = (TileCode)((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) % TileNonflowerMax);
-							gameStat->Deck[i].red  = (doraCol)((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) / TileNonflowerMax);
+							gameStat->Deck[i].tile = static_cast<TileCode>((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) % TileNonflowerMax);
+							gameStat->Deck[i].red  = static_cast<doraCol>((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) / TileNonflowerMax);
 					} else {
-						gameStat->Deck[i].tile = (TileCode)(ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess);
+						gameStat->Deck[i].tile = static_cast<TileCode>(ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess);
 						gameStat->Deck[i].red = Normal;
 					}
 					return true;

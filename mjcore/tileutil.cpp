@@ -55,12 +55,12 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 	// 理牌する
 
 	CodeConv::tostringstream o;
-	o.str(_T("")); o << _T("理牌を行います。プレイヤー [") << (int)targetPlayer << _T("]"); debug(o.str());
+	o.str(_T("")); o << _T("理牌を行います。プレイヤー [") << static_cast<int>(targetPlayer) << _T("]"); debug(o.str());
 
 	/* 手牌データをデバッグログに出力：ビフォー */
 	o.str(_T("")); o << _T("理牌前の手牌 [");
 	for (int i = 0; i < NumOfTilesInHand; i++)
-		o << std::setw(2) << std::setfill(_T('0')) << (int)gameStat->Player[targetPlayer].Hand[i].tile
+		o << std::setw(2) << std::setfill(_T('0')) << static_cast<int>(gameStat->Player[targetPlayer].Hand[i].tile)
 		<< ((i < (NumOfTilesInHand - 1)) ? _T(" ") : _T(""));
 	o << _T("]"); trace(o.str());
 
@@ -108,7 +108,7 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 	/* 手牌データをデバッグログに出力：アフター */
 	o.str(_T("")); o << _T("理牌後の手牌 [");
 	for (int i = 0; i < NumOfTilesInHand; i++)
-		o << std::setw(2) << std::setfill(_T('0')) << (int)gameStat->Player[targetPlayer].Hand[i].tile
+		o << std::setw(2) << std::setfill(_T('0')) << static_cast<int>(gameStat->Player[targetPlayer].Hand[i].tile)
 		<< ((i < (NumOfTilesInHand - 1)) ? _T(" ") : _T(""));
 	o << _T("]"); trace(o.str());
 
@@ -324,8 +324,8 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 	MachihaiInfo machihaiInfo; memset(&machihaiInfo, 0, sizeof(machihaiInfo)); // 初期化
 	GameTable tmpGameStat; memcpy(&tmpGameStat, gameStat, sizeof(GameTable)); // テンポラリ卓情報オブジェクト(ここからは仮定法の世界……)
 
-	for (TileCode i = CharacterOne; i < Flower; i = (TileCode)((int)i + 1)) {
-		if ((int)i % TileSuitStep == 0) continue; // ない牌だったら戻る
+	for (TileCode i = CharacterOne; i < Flower; i = static_cast<TileCode>(static_cast<int>(i) + 1)) {
+		if (static_cast<int>(i) % TileSuitStep == 0) continue; // ない牌だったら戻る
 		tmpGameStat.Player[targetPlayer].Tsumohai().tile = i;
 		if (ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, shantenAll) == -1) { // 待ちになっていたら
 			machihaiInfo.MachiMen++; machihaiInfo.Machihai[i].MachihaiFlag = true; // フラグをセットしましょう
@@ -377,7 +377,7 @@ void chkOpenMachi(GameTable* const gameStat, PlayerID targetPlayer) {
 		if (i % TileSuitStep == 0) continue;
 		if (i % TileSuitStep > RedDragon) continue;
 		/* まずは、ある牌をツモったと仮定します */
-		gameStat->Player[targetPlayer].Tsumohai().tile = (TileCode)i;
+		gameStat->Player[targetPlayer].Tsumohai().tile = static_cast<TileCode>(i);
 		/* もしそれが和了になっていたら、フラグをセットしましょう */
 		if (ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenAll) == -1)
 			gameStat->OpenRichiWait[i] = true;
@@ -403,24 +403,24 @@ MJCORE bool chkdaopaiability(const GameTable* const gameStat, PlayerID targetPla
 /* ドラを設定する */
 namespace setdora_tools {
 	TileCode getNextOf(const GameTable* const gameStat, TileCode tc) { // ネクスト牌
-		TileCode ans = (TileCode)((int)tc + 1);
+		TileCode ans = static_cast<TileCode>(static_cast<int>(tc) + 1);
 		if ((gameStat->chkGameType(SanmaX))&&(ans == CharacterTwo)) ans = CharacterNine;
-		else if (ans == (TileCode)10) ans = CharacterOne;
-		else if (ans == (TileCode)20) ans = CircleOne;
-		else if (ans == (TileCode)30) ans = BambooOne;
-		else if (ans == (TileCode)35) ans = EastWind;
-		else if (ans == (TileCode)38) ans = WhiteDragon;
+		else if (ans == static_cast<TileCode>(10)) ans = CharacterOne;
+		else if (ans == static_cast<TileCode>(20)) ans = CircleOne;
+		else if (ans == static_cast<TileCode>(30)) ans = BambooOne;
+		else if (ans == static_cast<TileCode>(35)) ans = EastWind;
+		else if (ans == static_cast<TileCode>(38)) ans = WhiteDragon;
 		return ans;
 	}
 
 	TileCode getPrevOf(const GameTable* const gameStat, TileCode tc) { // 前の牌
-		TileCode ans = (TileCode)((int)tc - 1);
+		TileCode ans = static_cast<TileCode>(static_cast<int>(tc) - 1);
 		if ((gameStat->chkGameType(SanmaX))&&(ans == CharacterEight)) ans = CharacterOne;
-		else if (ans == (TileCode)0) ans = CharacterNine;
-		else if (ans == (TileCode)10) ans = CircleNine;
-		else if (ans == (TileCode)20) ans = BambooNine;
-		else if (ans == (TileCode)30) ans = NorthWind;
-		else if (ans == (TileCode)34) ans = RedDragon;
+		else if (ans == static_cast<TileCode>(0)) ans = CharacterNine;
+		else if (ans == static_cast<TileCode>(10)) ans = CircleNine;
+		else if (ans == static_cast<TileCode>(20)) ans = BambooNine;
+		else if (ans == static_cast<TileCode>(30)) ans = NorthWind;
+		else if (ans == static_cast<TileCode>(34)) ans = RedDragon;
 		return ans;
 	}
 
@@ -431,10 +431,10 @@ namespace setdora_tools {
 				CodeConv::tostringstream o;
 				if (Mode) gameStat->DoraFlag.Ura[i]++;	// ドラを設定する
 				else gameStat->DoraFlag.Omote[i]++;	// ドラを設定する
-				o << _T("牌コード [") << (int)tc << _T("] をドラにしました。");
+				o << _T("牌コード [") << static_cast<int>(tc) << _T("] をドラにしました。");
 				debug(o.str().c_str());
-				if (Mode) haifu::haifurecuradora((TileCode)i);
-				else haifu::haifurecdora((TileCode)i);
+				if (Mode) haifu::haifurecuradora(static_cast<TileCode>(i));
+				else haifu::haifurecdora(static_cast<TileCode>(i));
 		}
 	}
 }
@@ -442,7 +442,7 @@ namespace setdora_tools {
 void setdora(GameTable* const gameStat, int Mode) {
 	CodeConv::tostringstream o;
 	o << _T("ドラの追加 ポインタ [") << gameStat->DoraPointer <<
-		_T("] 牌コード [") << (int)gameStat->Deck[gameStat->DoraPointer + Mode].tile <<
+		_T("] 牌コード [") << static_cast<int>(gameStat->Deck[gameStat->DoraPointer + Mode].tile) <<
 		_T("] モード [") << Mode << _T("]");
 	debug(o.str().c_str());
 	if (gameStat->Deck[gameStat->DoraPointer + Mode].tile > TileSuitFlowers) {
@@ -481,12 +481,12 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 		Int8ByTile tlCount = countTilesInHand(gameStat, targetPlayer);
 		if (tlCount[gameStat->Player[targetPlayer].Tsumohai().tile] < 4) {
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
+				static_cast<int>(gameStat->Player[targetPlayer].Tsumohai().tile) <<
 				_T("] は、4枚揃っていません。"); debug(o.str());
 			return true;
 		} else {
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
+				static_cast<int>(gameStat->Player[targetPlayer].Tsumohai().tile) <<
 				_T("] は、手牌に合わせて4枚あります。"); debug(o.str());
 			return false;
 		}
@@ -498,19 +498,19 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 		case EastWind: case SouthWind: case WestWind: case NorthWind:
 		case WhiteDragon: case GreenDragon: case RedDragon:
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
+				static_cast<int>(gameStat->Player[targetPlayer].Tsumohai().tile) <<
 				_T("] は字牌です。"); debug(o.str());
 			return 1;
 		case Spring: case Summer: case Autumn: case Winter:
 		case Plum: case Orchid: case Chrysanthemum: case Bamboo:
 			/* 花牌を槓？　ご冗談を */
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
+				static_cast<int>(gameStat->Player[targetPlayer].Tsumohai().tile) <<
 				_T("] は花牌です。"); debug(o.str());
 			return 2;
 		default:
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
+				static_cast<int>(gameStat->Player[targetPlayer].Tsumohai().tile) <<
 				_T("] は数牌です。"); debug(o.str());
 			return 0;
 		}
@@ -545,12 +545,12 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 		Shanten shanten = ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, shantenAll);
 		if (shanten == 1) {
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
+				static_cast<int>(gameStat->Player[targetPlayer].Tsumohai().tile) <<
 				_T("] は、アタマ候補です。"); debug(o.str());
 			return true;
 		} else {
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				(int)gameStat->Player[targetPlayer].Tsumohai().tile <<
+				static_cast<int>(gameStat->Player[targetPlayer].Tsumohai().tile) <<
 				_T("] は、アタマ候補ではありません。"); debug(o.str());
 			return false;
 		}
@@ -606,7 +606,7 @@ MJCORE bool chkAnkanAbility(const GameTable* const gameStat, PlayerID targetPlay
 	 */
 
 	CodeConv::tostringstream o;
-	o.str(_T("")); o << _T("暗槓の可否を判定します。プレイヤー [") << (int)targetPlayer << _T("]"); debug(o.str());
+	o.str(_T("")); o << _T("暗槓の可否を判定します。プレイヤー [") << static_cast<int>(targetPlayer) << _T("]"); debug(o.str());
 
 	/* ツモった牌が４枚揃ってないなら当然に槓は不可能 */
 	/* 立直後であり送り槓はできないのでツモった牌だけ調べればよい */

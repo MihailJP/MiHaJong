@@ -60,7 +60,7 @@ catch (socket_error& err) { // 送信失敗時
 DLL int putc (int sock_id, int byte) try { // 1バイト送信
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
 	if (!sockets[sock_id]) return Error_NoSuchSocket;
-	sockets[sock_id]->putc((unsigned char)byte); // 1バイト送信
+	sockets[sock_id]->putc(static_cast<unsigned char>(byte)); // 1バイト送信
 	return 0;
 }
 catch (socket_error& err) { // 送信失敗時
@@ -82,7 +82,7 @@ catch (socket_error& err) { // 送信失敗時
 DLL int getc (int sock_id) try { // 1バイト受信
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(socketExistenceMutex[sock_id]);
 	if (!sockets[sock_id]) return Error_NoSuchSocket;
-	return (int)sockets[sock_id]->getc(); // 1バイト受信
+	return static_cast<int>(sockets[sock_id]->getc()); // 1バイト受信
 }
 catch (queue_empty&) { // まだ受信するデータがない場合
 	return -1;

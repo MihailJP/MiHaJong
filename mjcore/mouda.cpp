@@ -369,9 +369,9 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 	EndType RoundEndType = Continuing;
 	{
 		CodeConv::tostringstream o;
-		o << _T("プレイヤー [") << (int)gameStat->CurrentPlayer.Active <<
-			_T("] 打牌タイプ [") << (int)DiscardTileIndex.type <<
-			_T("] 手牌番号 [") << (int)DiscardTileIndex.id << _T("]");
+		o << _T("プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Active) <<
+			_T("] 打牌タイプ [") << static_cast<int>(DiscardTileIndex.type) <<
+			_T("] 手牌番号 [") << static_cast<int>(DiscardTileIndex.id) << _T("]");
 		info(o.str().c_str());
 	}
 	/* 立直していない同順振聴ならその期限のため振聴を解除する */

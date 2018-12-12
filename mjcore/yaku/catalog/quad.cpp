@@ -201,7 +201,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 				GetTimeZoneInformation(&Zeitzone); // タイムゾーンを取得する
 				GetLocalTime(&Zeit); // WINAPIを使ってローカル時刻を取得
 				SYSTEMTIME HeuteMitternacht = {Zeit.wYear, Zeit.wMonth, Zeit.wDayOfWeek, Zeit.wDay, 0, 0, 0, 0}; // 当日0時のSYSTEMTIME
-				double JulianischeDatum = systime_to_julian(&HeuteMitternacht) - ((double)Zeitzone.Bias / 1440.0); // ローカル時間で当日0時のユリウス日
+				double JulianischeDatum = systime_to_julian(&HeuteMitternacht) - (static_cast<double>(Zeitzone.Bias) / 1440.0); // ローカル時間で当日0時のユリウス日
 #else /*_WIN32*/
 				const signed long Zeitzone = []() -> signed long {
 					time_t t1 = 86400; // GNU Cはそうではないが、time_tがunsignedの処理系を見たことがあるので86400とする
@@ -218,7 +218,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 				ZeitMitternacht.tm_mon = Zeit.tm_mon;
 				ZeitMitternacht.tm_mday = Zeit.tm_mday;
 				HeuteMitternacht.tv_sec = mktime(&ZeitMitternacht);
-				double JulianischeDatum = systime_to_julian(&HeuteMitternacht) - ((double)(Zeitzone / 60) / 1440.0);
+				double JulianischeDatum = systime_to_julian(&HeuteMitternacht) - (static_cast<double>(Zeitzone / 60) / 1440.0);
 #endif /*_WIN32*/
 				return /* 翌日が立春か判定する。立春とは太陽が黄経315度の子午線を通過する日である。 */
 					(sun_ecliptic_longitude(JulianischeDatum + 1.0) <= 315.0) &&

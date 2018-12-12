@@ -30,7 +30,7 @@ void sound::MidiData::setVolume(double volume) {
 	if (abs(volume) >= 1.0)
 		vol = 0;
 	else
-		vol = (int)(-(abs(volume - 1) * 127));
+		vol = static_cast<int>(-(abs(volume - 1) * 127));
 	GGS->SetMasterVolume(vol);
 }
 

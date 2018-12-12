@@ -33,7 +33,7 @@ void FPSIndicator::Render() {
 			_sntprintf(fpsstr, fpsstr_size, _T("--.-- FPS"));
 #endif
 		} else {
-			currentFPS = 1000000.0f / ((float)(RedrawTime.back() - RedrawTime.front()) / (float)(RedrawTime.size() - 1));
+			currentFPS = 1000000.0f / (static_cast<float>(RedrawTime.back() - RedrawTime.front()) / static_cast<float>(RedrawTime.size() - 1));
 #if defined(_MSC_VER)
 			_stprintf_s(fpsstr, fpsstr_size, _T("%5.2f FPS"), currentFPS);
 #else

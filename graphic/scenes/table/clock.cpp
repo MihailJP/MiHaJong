@@ -29,22 +29,25 @@ void GameTableScreen::Clock::setClockMatrix(TransformMatrix* matrix, float angle
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
 	D3DXMatrixTranslation(&tmpMatrix, -clockPosX * Geometry::WindowScale(), -clockPosY * Geometry::WindowScale(), 0);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-	D3DXMatrixTranslation(&tmpMatrix, -((float)clockDiameter / 2.0f) * Geometry::WindowScale(), -((float)clockDiameter / 2.0f) * Geometry::WindowScale(), 0);
+	D3DXMatrixTranslation(&tmpMatrix, -(static_cast<float>(clockDiameter) / 2.0f) * Geometry::WindowScale(),
+		-(static_cast<float>(clockDiameter) / 2.0f) * Geometry::WindowScale(), 0);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
 	D3DXMatrixRotationZ(&tmpMatrix, angle);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-	D3DXMatrixTranslation(&tmpMatrix, ((float)clockDiameter / 2.0f) * Geometry::WindowScale(), ((float)clockDiameter / 2.0f) * Geometry::WindowScale(), 0);
+	D3DXMatrixTranslation(&tmpMatrix, (static_cast<float>(clockDiameter) / 2.0f) * Geometry::WindowScale(),
+		(static_cast<float>(clockDiameter) / 2.0f) * Geometry::WindowScale(), 0);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-	D3DXMatrixScaling(&tmpMatrix, (float)scaledClockDiameter / (float)clockDiameter, (float)scaledClockDiameter / (float)clockDiameter, 0.0f);
+	D3DXMatrixScaling(&tmpMatrix, static_cast<float>(scaledClockDiameter) / static_cast<float>(clockDiameter),
+		static_cast<float>(scaledClockDiameter) / static_cast<float>(clockDiameter), 0.0f);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
 	D3DXMatrixTranslation(&tmpMatrix, clockPosX * Geometry::WindowScale(), clockPosY * Geometry::WindowScale(), 0);
 	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
 #else
 	constexpr float
-		phi = (float)scaledClockDiameter,
+		phi = static_cast<float>(scaledClockDiameter),
 		h = Geometry::WindowHeight,
 		s = Geometry::WindowScale(),
-		r = ((float)clockDiameter / 2.0f),
+		r = (static_cast<float>(clockDiameter) / 2.0f),
 		x = clockPosX, y = clockPosY,
 		theta = angle;
 
@@ -98,10 +101,12 @@ void GameTableScreen::Clock::renderMoon() {
 void GameTableScreen::Clock::renderShadow() {
 	struct Vertex {float x, y, z; uint32_t color;};
 
-	const float Top = ((float)clockPosY + 2.0f) * Geometry::WindowScale(),
-		Bottom = ((float)clockPosY + (float)clockDiameter * ((float)scaledClockDiameter / (float)clockDiameter) - 2.0f) * Geometry::WindowScale(),
-		Left = ((float)clockPosX + 2.0f) * Geometry::WindowScale(),
-		Right = ((float)clockPosX + (float)clockDiameter * ((float)scaledClockDiameter / (float)clockDiameter) - 2.0f) * Geometry::WindowScale(),
+	const float Top = (static_cast<float>(clockPosY) + 2.0f) * Geometry::WindowScale(),
+		Bottom = (static_cast<float>(clockPosY) + static_cast<float>(clockDiameter) *
+			(static_cast<float>(scaledClockDiameter) / static_cast<float>(clockDiameter)) - 2.0f) * Geometry::WindowScale(),
+		Left = (static_cast<float>(clockPosX) + 2.0f) * Geometry::WindowScale(),
+		Right = (static_cast<float>(clockPosX) + static_cast<float>(clockDiameter) *
+			(static_cast<float>(scaledClockDiameter) / static_cast<float>(clockDiameter)) - 2.0f) * Geometry::WindowScale(),
 		CenterX = (Left + Right) / 2.0f,
 		CenterY = (Top + Bottom) / 2.0f,
 		Radius = CenterX - Left;
@@ -116,13 +121,13 @@ void GameTableScreen::Clock::renderShadow() {
 	constexpr unsigned vertices = 60;
 	Vertex circleVert[vertices];
 	for (unsigned i = 0; i < vertices; ++i) {
-		const float angleNum = (float)((i + 1) / 2) / (float)(vertices / 2);
+		const float angleNum = static_cast<float>((i + 1) / 2) / static_cast<float>(vertices / 2);
 		const float angle = angleNum * pi * (i % 2 == 0 ? 1.0f : -1.0f);
 		circleVert[i].x = CenterX - Radius * sin(angle);
 		circleVert[i].y = CenterY - Radius * cos(angle);
 		const float x1 = (angleNum - 0.5f) * 2.0f * Radius;
 		if ((mp.MoonPhase < 0.5) && (i % 2 == 1)) {
-			const float x2 = 1.0f - (float)mp.MoonIllum * 2.0f;
+			const float x2 = 1.0f - static_cast<float>(mp.MoonIllum) * 2.0f;
 			circleVert[i].x = sqrt(Radius * Radius - x1 * x1) * x2 + CenterX;
 			circleVert[i].y = angleNum * Radius * 2.0f + Top;
 		} else if ((mp.MoonPhase > 0.5) && (i % 2 == 0)) {
@@ -148,10 +153,10 @@ void GameTableScreen::Clock::renderShadow() {
 	glBegin(GL_TRIANGLE_STRIP);
 	for (unsigned i = 0; i < vertices; ++i) {
 		glColor4d(
-			(double)((circleVert[i].color & 0x00ff0000) >> 16) / 255.0,
-			(double)((circleVert[i].color & 0x0000ff00) >>  8) / 255.0,
-			(double)((circleVert[i].color & 0x000000ff)      ) / 255.0,
-			(double)((circleVert[i].color & 0xff000000) >> 24) / 255.0);
+			static_cast<double>((circleVert[i].color & 0x00ff0000) >> 16) / 255.0,
+			static_cast<double>((circleVert[i].color & 0x0000ff00) >>  8) / 255.0,
+			static_cast<double>((circleVert[i].color & 0x000000ff)      ) / 255.0,
+			static_cast<double>((circleVert[i].color & 0xff000000) >> 24) / 255.0);
 		glVertex2f(circleVert[i].x, circleVert[i].y);
 	}
 	glEnd();

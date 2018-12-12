@@ -263,10 +263,10 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 					abort(); // ABEND by overflow
 #endif
 			}
-			else if (i == (DigitGroups - 1)) ans.digitGroup[i] += (int32_t)tmpdigit;
+			else if (i == (DigitGroups - 1)) ans.digitGroup[i] += static_cast<int32_t>(tmpdigit);
 			else {
-				ans.digitGroup[i] += (int32_t)(tmpdigit % 100000000L);
-				ans.digitGroup[i + 1] += (int32_t)(tmpdigit / 100000000L);
+				ans.digitGroup[i] += static_cast<int32_t>(tmpdigit % 100000000L);
+				ans.digitGroup[i + 1] += static_cast<int32_t>(tmpdigit / 100000000L);
 			}
 		}
 		ans.fix();
@@ -284,10 +284,10 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 					abort(); // ABEND by overflow
 #endif
 			}
-			else if (i == (DigitGroups - 1)) ans.digitGroup[i] += (int32_t)tmpdigit;
+			else if (i == (DigitGroups - 1)) ans.digitGroup[i] += static_cast<int32_t>(tmpdigit);
 			else {
-				ans.digitGroup[i] += (int32_t)(tmpdigit % 100000000L);
-				ans.digitGroup[i + 1] += (int32_t)(tmpdigit / 100000000L);
+				ans.digitGroup[i] += static_cast<int32_t>(tmpdigit % 100000000L);
+				ans.digitGroup[i + 1] += static_cast<int32_t>(tmpdigit / 100000000L);
 			}
 		}
 		for (int i = 0; i < DigitGroups; i++) digitGroup[i] = ans.digitGroup[i];
@@ -299,10 +299,10 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		int64_t tmpdigit[DigitGroups];
 		for (int i = 0; i < DigitGroups; i++) tmpdigit[i] = digitGroup[i];
 		for (int i = DigitGroups - 1; i >= 0; i--) {
-			if (i > 0) tmpdigit[i - 1] += (tmpdigit[i] % (int64_t)divisor) * 100000000L;
-			tmpdigit[i] /= (int64_t)divisor;
+			if (i > 0) tmpdigit[i - 1] += (tmpdigit[i] % static_cast<int64_t>(divisor)) * 100000000L;
+			tmpdigit[i] /= static_cast<int64_t>(divisor);
 		}
-		for (int i = 0; i < DigitGroups; i++) ans.digitGroup[i] = (int32_t)(tmpdigit[i] & 0xffffffffull);
+		for (int i = 0; i < DigitGroups; i++) ans.digitGroup[i] = static_cast<int32_t>(tmpdigit[i] & 0xffffffffull);
 		ans.fix();
 		return ans;
 	}
@@ -311,10 +311,10 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		int64_t tmpdigit[DigitGroups];
 		for (int i = 0; i < DigitGroups; i++) tmpdigit[i] = digitGroup[i];
 		for (int i = DigitGroups - 1; i >= 0; i--) {
-			if (i > 0) tmpdigit[i - 1] += (tmpdigit[i] % (int64_t)divisor) * 100000000L;
-			tmpdigit[i] /= (int64_t)divisor;
+			if (i > 0) tmpdigit[i - 1] += (tmpdigit[i] % static_cast<int64_t>(divisor)) * 100000000L;
+			tmpdigit[i] /= static_cast<int64_t>(divisor);
 		}
-		for (int i = 0; i < DigitGroups; i++) digitGroup[i] = (int32_t)(tmpdigit[i] & 0xffffffffull);
+		for (int i = 0; i < DigitGroups; i++) digitGroup[i] = static_cast<int32_t>(tmpdigit[i] & 0xffffffffull);
 		fix();
 		return *this;
 	}

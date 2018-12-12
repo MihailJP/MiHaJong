@@ -71,11 +71,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			bool yakuFlag = false;
 			for (int i = 0; i < pdsize; i++) {
 				for (int k = 1; k <= (9 - step * 4); k++)
-					if ((analysis->DuiziCount[(int)(parsedat[i * fldsize + 0] - _T('0')) * TileSuitStep + k + step * 0] >= 1) &&
-						(analysis->KeziCount[(int)(parsedat[i * fldsize + 1] - _T('0')) * TileSuitStep + k + step * 1] >= 1) &&
-						(analysis->KeziCount[(int)(parsedat[i * fldsize + 2] - _T('0')) * TileSuitStep + k + step * 2] >= 1) &&
-						(analysis->KeziCount[(int)(parsedat[i * fldsize + 3] - _T('0')) * TileSuitStep + k + step * 3] >= 1) &&
-						(analysis->DuiziCount[(int)(parsedat[i * fldsize + 4] - _T('0')) * TileSuitStep + k + step * 4] >= 1) )
+					if ((analysis->DuiziCount[static_cast<int>(parsedat[i * fldsize + 0] - _T('0')) * TileSuitStep + k + step * 0] >= 1) &&
+						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 1] - _T('0')) * TileSuitStep + k + step * 1] >= 1) &&
+						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 2] - _T('0')) * TileSuitStep + k + step * 2] >= 1) &&
+						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 3] - _T('0')) * TileSuitStep + k + step * 3] >= 1) &&
+						(analysis->DuiziCount[static_cast<int>(parsedat[i * fldsize + 4] - _T('0')) * TileSuitStep + k + step * 4] >= 1) )
 						yakuFlag = true;
 			}
 			return yakuFlag;
@@ -87,10 +87,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			bool yakuFlag = false;
 			for (int i = 0; i < pdsize; i++) {
 				for (int k = 1; k <= (9 - step * (suurnkoh ? 3 : 2)); k++)
-					if ((analysis->KeziCount[(int)(parsedat[i * fldsize + 0] - _T('0')) * TileSuitStep + k + step * 0] >= 1) &&
-						(analysis->KeziCount[(int)(parsedat[i * fldsize + 1] - _T('0')) * TileSuitStep + k + step * 1] >= 1) &&
-						(analysis->KeziCount[(int)(parsedat[i * fldsize + 2] - _T('0')) * TileSuitStep + k + step * 2] >= 1) &&
-						((!suurnkoh)||(analysis->KeziCount[(int)(parsedat[i * fldsize + 3] - _T('0')) * TileSuitStep + k + step * 3] >= 1)) )
+					if ((analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 0] - _T('0')) * TileSuitStep + k + step * 0] >= 1) &&
+						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 1] - _T('0')) * TileSuitStep + k + step * 1] >= 1) &&
+						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 2] - _T('0')) * TileSuitStep + k + step * 2] >= 1) &&
+						((!suurnkoh)||(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 3] - _T('0')) * TileSuitStep + k + step * 3] >= 1)) )
 						yakuFlag = true;
 			}
 			return yakuFlag;
@@ -101,14 +101,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("金梯"), get_yaku_han("golden_ladder"),
 			_T("清一色"), _T("対々和"), _T("小四連刻"), _T("四連刻"), _T("三連刻"), _T("小三連刻"),
 			[wulianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return wulianke(analysis, (const char*)&parsedat_monochrome5[0], 3, 8, 1);
+				return wulianke(analysis, reinterpret_cast<const char*>(&parsedat_monochrome5[0]), 3, 8, 1);
 			}
 		));
 #endif /* GUOBIAO */
 	/* 四連刻 */
 	auto suurenkoh =
 		[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return lianke(analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 1, true);
+			return lianke(analysis, reinterpret_cast<const char*>(&parsedat_monochrome4[0]), 3, 8, 1, true);
 		};
 #ifdef GUOBIAO
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -138,13 +138,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				bool yakuFlag = false;
 				for (auto i = parsedat_monochrome5.begin(); i != parsedat_monochrome5.end(); i++) {
 					for (int k = 1; k <= 5; k++)
-						if ((analysis->DuiziCount[(int)((*i)[0] - _T('0')) * TileSuitStep + k + 0] >= 1) &&
-							(analysis->KeziCount[(int)((*i)[1] - _T('0')) * TileSuitStep + k + 1] >= 1) &&
-							(analysis->KeziCount[(int)((*i)[2] - _T('0')) * TileSuitStep + k + 2] >= 1) &&
-							(analysis->KeziCount[(int)((*i)[3] - _T('0')) * TileSuitStep + k + 3] >= 1) &&
-							(analysis->DuiziCount[(int)((*i)[4] - _T('0')) * TileSuitStep + k + 4] >= 1) &&
-							((analysis->TsumoHai->tile == (TileCode)((int)((*i)[0] - _T('0')) * TileSuitStep + k + 0)) ||
-							(analysis->TsumoHai->tile == (TileCode)((int)((*i)[4] - _T('0')) * TileSuitStep + k + 4)))
+						if ((analysis->DuiziCount[static_cast<int>((*i)[0] - _T('0')) * TileSuitStep + k + 0] >= 1) &&
+							(analysis->KeziCount[static_cast<int>((*i)[1] - _T('0')) * TileSuitStep + k + 1] >= 1) &&
+							(analysis->KeziCount[static_cast<int>((*i)[2] - _T('0')) * TileSuitStep + k + 2] >= 1) &&
+							(analysis->KeziCount[static_cast<int>((*i)[3] - _T('0')) * TileSuitStep + k + 3] >= 1) &&
+							(analysis->DuiziCount[static_cast<int>((*i)[4] - _T('0')) * TileSuitStep + k + 4] >= 1) &&
+							((analysis->TsumoHai->tile == static_cast<TileCode>(static_cast<int>((*i)[0] - _T('0')) * TileSuitStep + k + 0)) ||
+							(analysis->TsumoHai->tile == static_cast<TileCode>(static_cast<int>((*i)[4] - _T('0')) * TileSuitStep + k + 4)))
 							)
 							yakuFlag = true;
 				}
@@ -155,7 +155,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 三連刻 */
 	auto sanrenkoh =
 		[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return lianke(analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 1, false);
+			return lianke(analysis, reinterpret_cast<const char*>(&parsedat_monochrome3[0]), 3, 4, 1, false);
 		};
 #ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("sanrenkoh"))
@@ -438,7 +438,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	));
 	auto jikaze =
 		[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return (chkYakuhai(analysis)[Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->player))] >= 1);
+			return (chkYakuhai(analysis)[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->player)))] >= 1);
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
@@ -470,7 +470,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRuleApplied("kaimenkaze")) {
 		kaimenkaze =
 			[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (chkYakuhai(analysis)[Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer))] >= 1);
+				return (chkYakuhai(analysis)[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer)))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("役牌・開門風"), get_yaku_han("kaimenkaze"),
@@ -485,8 +485,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRuleApplied("urakaze")) {
 		urakaze =
 			[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (chkYakuhai(analysis)[Wind2Tile((uint8_t)analysis->GameStat->playerwind(
-					RelativePositionOf(analysis->player, sOpposite)))] >= 1);
+				return (chkYakuhai(analysis)[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(
+					RelativePositionOf(analysis->player, sOpposite))))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("役牌・裏風"), get_yaku_han("urakaze"),
@@ -753,7 +753,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("四跳牌刻"), get_yaku_han("suuchaopaikoh"),
 			_T("対々和"), _T("跳牌刻"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_monochrome4[0], 3, 8, 2, true);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_monochrome4[0]), 3, 8, 2, true);
 			}
 		));
 	/* 跳牌刻 */
@@ -761,7 +761,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("跳牌刻"), get_yaku_han("chaopaikoh"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 2, false);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_monochrome3[0]), 3, 4, 2, false);
 			}
 		));
 	/* 筋牌刻 */
@@ -769,7 +769,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("筋牌刻"), get_yaku_han("chinpaikoh"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 3, false);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_monochrome3[0]), 3, 4, 3, false);
 			}
 		));
 	/* 頂三刻 */
@@ -777,7 +777,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("頂三刻"), get_yaku_han("tinsankoh"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_monochrome3[0], 3, 4, 4, false);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_monochrome3[0]), 3, 4, 4, false);
 			}
 		));
 
@@ -789,7 +789,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("銀梯"), get_yaku_han("silver_ladder"),
 			_T("二色四連刻"), _T("二色三連刻"), _T("対々和"),
 			[wulianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return wulianke(analysis, (const char*)&parsedat_bichrome5[0], 90, 8, 1);
+				return wulianke(analysis, reinterpret_cast<const char*>(&parsedat_bichrome5[0]), 90, 8, 1);
 			}
 		));
 	/* 二色四連刻 */
@@ -798,7 +798,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("二色四連刻"), get_yaku_han("nishoku_sanrenkoh"),
 			_T("二色三連刻"), _T("対々和"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_bichrome4[0], 42, 8, 1, true);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_bichrome4[0]), 42, 8, 1, true);
 			}
 		));
 	/* 二色三連刻 */
@@ -806,7 +806,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("二色三連刻"), get_yaku_han("silver_ladder"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_bichrome3[0], 18, 4, 1, false);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_bichrome3[0]), 18, 4, 1, false);
 			}
 		));
 	/* 二色四跳牌刻 */
@@ -815,7 +815,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("二色四跳牌刻"), get_yaku_han("nishoku_suuchaopaikoh"),
 			_T("二色跳牌刻"), _T("対々和"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_bichrome4[0], 42, 8, 2, true);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_bichrome4[0]), 42, 8, 2, true);
 			}
 		));
 	/* 二色跳牌刻 */
@@ -823,7 +823,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("二色跳牌刻"), get_yaku_han("nishoku_chaopaikoh"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_bichrome3[0], 18, 4, 2, false);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_bichrome3[0]), 18, 4, 2, false);
 			}
 		));
 	/* 二色筋牌刻 */
@@ -831,7 +831,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("二色筋牌刻"), get_yaku_han("nishoku_chinpaikoh"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_bichrome3[0], 18, 4, 3, false);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_bichrome3[0]), 18, 4, 3, false);
 			}
 		));
 	/* 二色頂三刻 */
@@ -839,7 +839,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("二色頂三刻"), get_yaku_han("nishoku_tinsankoh"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_bichrome3[0], 18, 4, 4, false);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_bichrome3[0]), 18, 4, 4, false);
 			}
 		));
 
@@ -851,7 +851,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("雲梯"), get_yaku_han("sky_ladder"),
 			_T("三色四連刻"), _T("三色連刻"), _T("対々和"),
 			[wulianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return wulianke(analysis, (const char*)&parsedat_trichrome5[0], 150, 8, 1);
+				return wulianke(analysis, reinterpret_cast<const char*>(&parsedat_trichrome5[0]), 150, 8, 1);
 			}
 		));
 	/* 三色四連刻 */
@@ -860,7 +860,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("三色四連刻"), get_yaku_han("sanshoku_suurenkoh"),
 			_T("三色連刻"), _T("対々和"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_trichrome4[0], 36, 8, 1, true);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_trichrome4[0]), 36, 8, 1, true);
 			}
 		));
 	/* 三色連刻 */
@@ -873,7 +873,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("三色連刻"), get_yaku_han("sanshoku_renkoh"),
 #endif /* GUOBIAO */
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 1, false);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_trichrome3[0]), 6, 4, 1, false);
 			}
 		));
 #ifndef GUOBIAO
@@ -883,7 +883,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("三色四跳牌刻"), get_yaku_han("sanshoku_suuchaopaikoh"),
 			_T("三色跳牌刻"), _T("対々和"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_trichrome4[0], 36, 8, 2, true);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_trichrome4[0]), 36, 8, 2, true);
 			}
 		));
 	/* 三色跳牌刻 */
@@ -891,7 +891,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("三色跳牌刻"), get_yaku_han("sanshoku_chaopaikoh"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 2, false);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_trichrome3[0]), 6, 4, 2, false);
 			}
 		));
 	/* 三色筋牌刻 */
@@ -899,7 +899,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("三色筋牌刻"), get_yaku_han("sanshoku_chinpaikoh"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 3, false);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_trichrome3[0]), 6, 4, 3, false);
 			}
 		));
 	/* 三色頂三刻 */
@@ -907,7 +907,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("三色頂三刻"), get_yaku_han("sanshoku_tinsankoh"),
 			[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return lianke(analysis, (const char*)&parsedat_trichrome3[0], 6, 4, 4, false);
+				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_trichrome3[0]), 6, 4, 4, false);
 			}
 		));
 

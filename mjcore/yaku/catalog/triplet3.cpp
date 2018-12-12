@@ -295,8 +295,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("対々和"), _T("混老頭"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (Wind2Tile(analysis->GameStat->GameRound / 4) != // ダブ風でなくて
-					Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->player))) &&
-					(analysis->DuiziCount[Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->player))] >= 1) && // 自風があり
+					Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->player)))) &&
+					(analysis->DuiziCount[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->player)))] >= 1) && // 自風があり
 					(analysis->DuiziCount[Wind2Tile(analysis->GameStat->GameRound / 4)] >= 1) && // 場風があり
 					(analysis->DuiziCount[CircleOne] >= 1) && (analysis->DuiziCount[BambooOne] >= 1) &&
 					(analysis->DuiziCount[WhiteDragon] >= 1);
@@ -433,7 +433,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool pairIsHonor = false; bool flag = false;
 				for (int i = TileSuitHonors; i < TileNonflowerMax; i++)
-					if (analysis->MianziDat[0].tile == (TileCode)i)
+					if (analysis->MianziDat[0].tile == static_cast<TileCode>(i))
 						pairIsHonor = true;
 				for (int i = 0; i < TileSuitHonors; i += TileSuitStep) {
 					if ((analysis->KeziCount[i + 3] >= 1) &&
@@ -441,10 +441,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 						(analysis->KeziCount[NorthWind] >= 1) &&
 						(pairIsHonor)) {
 							if ((analysis->ShunziCount[i + 4] >= 1) &&
-								(analysis->TsumoHai->tile == (TileCode)(i + 6)))
+								(analysis->TsumoHai->tile == static_cast<TileCode>(i + 6)))
 								flag = true;
 							if ((analysis->ShunziCount[i + 3] >= 1) &&
-								(analysis->TsumoHai->tile == (TileCode)(i + 3)))
+								(analysis->TsumoHai->tile == static_cast<TileCode>(i + 3)))
 								flag = true;
 					}
 				}
@@ -782,7 +782,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 						flag1 = true;
 				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
 					if ((analysis->KeziCount[i + 8] >= 1) &&
-						(analysis->TsumoHai->tile == (TileCode)(i + 8)))
+						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 8)))
 						flag2 = true;
 				return flag1 && flag2 &&
 					(analysis->MianziDat[0].tile == SouthWind);

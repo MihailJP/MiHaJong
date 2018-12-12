@@ -90,14 +90,14 @@ template <class T> struct InfoByTile { // 牌ごとに指定した型による�
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByTile:添字が範囲外です (") << (int)tile << _T(")");
+			o << _T("InfoByTile:添字が範囲外です (") << static_cast<int>(tile) << _T(")");
 			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 			return val[NoTile];
 		}
 	}
 	const T& operator[](const int tile) const {
-		return InfoByTile::operator[]((TileCode)tile);
+		return InfoByTile::operator[](static_cast<TileCode>(tile));
 	}
 	T& operator[](const TileCode tile) {
 		if ((tile >= NoTile)&&(tile < TileNonflowerMax))
@@ -107,14 +107,14 @@ template <class T> struct InfoByTile { // 牌ごとに指定した型による�
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByTile:添字が範囲外です (") << (int)tile << _T(")");
+			o << _T("InfoByTile:添字が範囲外です (") << static_cast<int>(tile) << _T(")");
 			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 			return val[NoTile];
 		}
 	}
 	T& operator[](const int tile) {
-		return InfoByTile::operator[]((TileCode)tile);
+		return InfoByTile::operator[](static_cast<TileCode>(tile));
 	}
 };
 

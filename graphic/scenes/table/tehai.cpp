@@ -25,9 +25,9 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, Playe
 		[this](int i) -> ArgbColor {
 			Color tileColor; tileColor.rgbaAsOneValue = 0xffffffff;
 			if (tileCursor == i) {
-				const double Zeit = (double)(myTimer.currTime() % 9000000ULL);
-				tileColor.rgbaAsStruct.g = (unsigned)((double)tileColor.rgbaAsStruct.g * (sin(Zeit / 450000.0 * M_PI) / 5.0 + 0.75));
-				tileColor.rgbaAsStruct.b = (unsigned)((double)tileColor.rgbaAsStruct.b * (sin(Zeit / 450000.0 * M_PI) / 5.0 + 0.75));
+				const double Zeit = static_cast<double>(myTimer.currTime() % 9000000ULL);
+				tileColor.rgbaAsStruct.g = static_cast<unsigned>(static_cast<double>(tileColor.rgbaAsStruct.g) * (sin(Zeit / 450000.0 * M_PI) / 5.0 + 0.75));
+				tileColor.rgbaAsStruct.b = static_cast<unsigned>(static_cast<double>(tileColor.rgbaAsStruct.b) * (sin(Zeit / 450000.0 * M_PI) / 5.0 + 0.75));
 			}
 			if (!tileEnabled[i]) { // 暗転処理
 				tileColor.rgbaAsStruct.r /= 3;

@@ -54,9 +54,9 @@ namespace {
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i)
 			sumOfScore += score[i];
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i) {
-			if ((rank[i] == 1) && (sumOfScore <= (LargeNum)0)) // トップ賞
+			if ((rank[i] == 1) && (sumOfScore <= 0)) // トップ賞
 				score[i] -= sumOfScore;
-			if ((rank[i] == ACTUAL_PLAYERS) && (sumOfScore > (LargeNum)0)) // マイナスオカ
+			if ((rank[i] == ACTUAL_PLAYERS) && (sumOfScore > 0)) // マイナスオカ
 				score[i] -= sumOfScore;
 		}
 	}
@@ -85,9 +85,9 @@ namespace {
 	void calcScore(const GameTable* gameStat) {
 		InfoByPlayer<LargeNum> playerScore;
 		for (PlayerID i = 0; i < Players; ++i) // 点数処理
-			playerScore[i] = gameStat->Player[i].PlayerScore - (LargeNum)BasePoint();
+			playerScore[i] = gameStat->Player[i].PlayerScore - BasePoint();
 		for (PlayerID i = 0; i < Players; ++i) // チップを反映
-			playerScore[i] += gameStat->Player[i].playerChip * (signed)chipRate();
+			playerScore[i] += gameStat->Player[i].playerChip * static_cast<signed>(chipRate());
 		calcUma(gameStat, playerScore); // ウマを加算する
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i) // 丸め処理
 			playerScore[i] = roundScore(playerScore[i]);

@@ -30,11 +30,11 @@ void Data::decompress(int FileID_) {
 	uint8_t* compressedData = new uint8_t[size+1];
 	memcpy(compressedData, compressedBuf, size);
 	compressedData[size] = 0;
-	decompressedSize = *((size_t *)(compressedData+5));
+	decompressedSize = *(reinterpret_cast<size_t *>(compressedData+5));
 	DecompressedData = new uint8_t[decompressedSize];
 	result = LzmaUncompress(DecompressedData, &decompressedSize,
-		(const uint8_t *)(compressedData+13),
-		(SizeT *)&size, (const uint8_t *)compressedData, 5);
+		reinterpret_cast<const uint8_t *>(compressedData+13),
+		reinterpret_cast<SizeT *>(&size), reinterpret_cast<const uint8_t *>(compressedData), 5);
 	delete[] compressedData; compressedData = nullptr;
 	if (result != SZ_OK) {
 		CodeConv::tostringstream o;
@@ -60,7 +60,7 @@ std::string Data::bytesToHexString(std::vector<uint8_t> byteStr) {
 	for (unsigned int i = 0; i < byteStr.size(); i++) {
 		std::ostringstream o;
 		o.setf(std::ios::right); o.fill('0'); o.width(2);
-		o << std::hex << (int)byteStr[i];
+		o << std::hex << static_cast<int>(byteStr[i]);
 		hx += o.str();
 	}
 	return hx;
@@ -99,7 +99,7 @@ Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDiges
 		ErrorInfo *errStat = nullptr;
 		switch (e->ExceptionRecord->ExceptionCode) {
 		case EXCEPTION_MJCORE_DECOMPRESSION_FAILURE:
-			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
+			errStat = reinterpret_cast<ErrorInfo *>(e->ExceptionRecord->ExceptionInformation[0]);
 			MessageBox(nullptr, CodeConv::EnsureTStr(errStat->msg).c_str(), _T("LZMA decompression error"),
 				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
 #ifdef _MSC_VER
@@ -108,7 +108,7 @@ Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDiges
 			abort();
 #endif
 		case EXCEPTION_MJCORE_HASH_MISMATCH:
-			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
+			errStat = reinterpret_cast<ErrorInfo *>(e->ExceptionRecord->ExceptionInformation[0]);
 			MessageBox(nullptr, CodeConv::EnsureTStr(errStat->msg).c_str(), _T("SHA256 verification error"),
 				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
 #ifdef _MSC_VER

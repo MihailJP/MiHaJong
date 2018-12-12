@@ -62,10 +62,10 @@ void ShowTile::Render() {
 					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding),
 				};
 				RECT rectrev = {
-					((int)BackSide % 10) * (VertTileWidth + TexturePadding),
-					((int)BackSide / 10) * (VertTileHeight + TexturePadding),
-					((int)BackSide % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding,
-					((int)BackSide / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding,
+					(static_cast<int>(BackSide) % 10) * (VertTileWidth + TexturePadding),
+					(static_cast<int>(BackSide) / 10) * (VertTileHeight + TexturePadding),
+					(static_cast<int>(BackSide) % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding,
+					(static_cast<int>(BackSide) / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding,
 				};
 				switch (k.side) {
 				case Obverse:
@@ -100,10 +100,10 @@ void ShowTile::Render() {
 					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding),
 				};
 				RECT rectrev = {
-					((int)BackSide % 10) * (HoriTileWidth + TexturePadding),
-					((int)BackSide / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows,
-					((int)BackSide % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding,
-					((int)BackSide / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding,
+					(static_cast<int>(BackSide) % 10) * (HoriTileWidth + TexturePadding),
+					(static_cast<int>(BackSide) / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows,
+					(static_cast<int>(BackSide) % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding,
+					(static_cast<int>(BackSide) / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding,
 				};
 				RECT rectside = {
 					2 * TileCols * (HoriTileWidth + TexturePadding),

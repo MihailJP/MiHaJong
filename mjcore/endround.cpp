@@ -64,8 +64,8 @@ namespace { // 内部処理に使う関数
 		CodeConv::tostringstream o;
 		o << _T("喰い変えを検出しました。") <<
 			(chonbo ? _T("チョンボ") : _T("和了り放棄")) << _T("として扱います。打牌 [") <<
-			(int)gameStat->CurrentDiscard.tile << _T("] 鳴いた牌 [") <<
-			(int)gameStat->PreviousMeld.Discard << _T("]");
+			static_cast<int>(gameStat->CurrentDiscard.tile) << _T("] 鳴いた牌 [") <<
+			static_cast<int>(gameStat->PreviousMeld.Discard) << _T("]");
 		info(o.str().c_str());
 		sound::Play(sound::IDs::sndCuohu);
 	}
@@ -243,13 +243,13 @@ namespace {
 				if ((TenpaiCnt > 0) && (TenpaiCnt < 3)) {
 					if (isTenpai(gameStat, i))
 						addDelta(i, 3000 / TenpaiCnt);
-					else addDelta(i, -3000 / (signed)(3 - TenpaiCnt));
+					else addDelta(i, -3000 / static_cast<signed>(3 - TenpaiCnt));
 				}
 			} else { // 四麻の場合
 				if ((TenpaiCnt > 0) && (TenpaiCnt < 4)) {
 					if (isTenpai(gameStat, i))
 						addDelta(i, 3000 / TenpaiCnt);
-					else addDelta(i, -3000 / (signed)(4 - TenpaiCnt));
+					else addDelta(i, -3000 / static_cast<signed>(4 - TenpaiCnt));
 				}
 			}
 		}
@@ -289,7 +289,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	CodeConv::tstring ResultDesc; 
 	{
 		CodeConv::tostringstream o;
-		o << _T("局を終了 終了コード [") << (int)RoundEndType << _T(']');
+		o << _T("局を終了 終了コード [") << static_cast<int>(RoundEndType) << _T(']');
 	}
 #ifndef GUOBIAO
 	/* 流し満貫の判定 */
@@ -574,8 +574,8 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 			((OrigTurn + gameStat->LoopRound * roundLoopRate()) == gameStat->GameLength) &&
 			((RoundEndType == Agari) || (RuleData::chkRule("agariyame", "yes_also_ready")))) {
 				PlayerRankList Rank = calcRank(gameStat);
-				if ((Rank[gameStat->GameRound % (int)Players] == 1) &&
-					(gameStat->Player[gameStat->GameRound % (int)Players].PlayerScore >= (LargeNum)BasePoint()))
+				if ((Rank[gameStat->GameRound % static_cast<int>(Players)] == 1) &&
+					(gameStat->Player[gameStat->GameRound % static_cast<int>(Players)].PlayerScore >= BasePoint()))
 					return true;
 		}
 	}
@@ -617,7 +617,7 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 		return true;
 #else /* GUOBIAO */
 		for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
-			if (gameStat->Player[i].PlayerScore >= (LargeNum)BasePoint())
+			if (gameStat->Player[i].PlayerScore >= BasePoint())
 				return true;
 		// 延長戦なし設定
 		if (RuleData::chkRule("sudden_death_length", "no")) return true;
@@ -668,22 +668,22 @@ namespace {
 	InfoByPlayer<LargeNum> delta;
 
 	std::tuple<bool, signed short> checkExponent(PlayerID player, unsigned group, unsigned digit) {
-		if (((LargeNum)delta[player]).digitGroup[group] / (int)pow(10.0, (int)digit) != 0) {
+		if (delta[player].digitGroup[group] / static_cast<int>(pow(10.0, static_cast<int>(digit))) != 0) {
 			if (digit == 0) {
 				assert(group != 0);
 				return std::make_tuple(true,
-					(((LargeNum)delta[player]).digitGroup[group] % 10) * 100 + ((LargeNum)delta[player]).digitGroup[group - 1] / 1000000);
+					(delta[player].digitGroup[group] % 10) * 100 + delta[player].digitGroup[group - 1] / 1000000);
 			} else if (digit == 1) {
 				assert(group != 0);
 				return std::make_tuple(true,
-					(((LargeNum)delta[player]).digitGroup[group] % 100) * 10 + ((LargeNum)delta[player]).digitGroup[group - 1] / 10000000);
+					(delta[player].digitGroup[group] % 100) * 10 + delta[player].digitGroup[group - 1] / 10000000);
 			} else {
 				return std::make_tuple(true,
-					(((LargeNum)delta[player]).digitGroup[group] / ((int)pow(10.0, (int)digit - 2))) % 1000);
+					(delta[player].digitGroup[group] / (static_cast<int>(pow(10.0, static_cast<int>(digit) - 2)))) % 1000);
 			}
 		}
 		else if ((group == 0) && (digit == 2))
-			return std::make_tuple(true, ((LargeNum)delta[player]).digitGroup[0]);
+			return std::make_tuple(true, delta[player].digitGroup[0]);
 		else return std::make_tuple(false, 0);
 	}
 
@@ -737,7 +737,7 @@ void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, 
 	sound::Play(sound::IDs::sndPage);
 	mihajong_graphic::ui::WaitUIWithTimeout(wait);
 	for (PlayerID i = 0; i < Players; ++i)
-		gameStat->Player[i].PlayerScore += (LargeNum)delta[i];
+		gameStat->Player[i].PlayerScore += delta[i];
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 }
 void endround::transfer::transferChip(GameTable* gameStat, unsigned subscene, unsigned wait) {

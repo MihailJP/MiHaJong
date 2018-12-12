@@ -217,7 +217,7 @@ void sound::SoundData::setVolume(double volume) {
 	else if (abs(volume) >= 1.0)
 		dBvol = DSBVOLUME_MAX;
 	else
-		dBvol = (int)((abs(volume) - 1.0) * 5000.0);
+		dBvol = static_cast<int>((abs(volume) - 1.0) * 5000.0);
 	if (FAILED(hr = voice->SetVolume(dBvol))) {
 #endif
 		CodeConv::tostringstream o; o << _T("SetVolume失敗！！ (0x") <<

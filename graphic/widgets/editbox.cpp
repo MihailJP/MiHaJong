@@ -73,18 +73,18 @@ TransformMatrix EditBox::getMatrix(int X, int Y, unsigned width) {
 void EditBox::renderFrame(int X, int Y, unsigned width) {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix matrixScale; D3DXMatrixIdentity(&matrixScale); TransformMatrix matrixScale1; D3DXMatrixIdentity(&matrixScale1);
-	D3DXMatrixTranslation(&matrixScale, (float)(-X), (float)(-Y), 0.0f);
+	D3DXMatrixTranslation(&matrixScale, static_cast<float>(-X), static_cast<float>(-Y), 0.0f);
 	D3DXMatrixScaling(&matrixScale1, myScale, myScale, 1.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
-	D3DXMatrixTranslation(&matrixScale1, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
+	D3DXMatrixTranslation(&matrixScale1, static_cast<float>(X), static_cast<float>(Y), 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
 	D3DXMatrixScaling(&matrixScale1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
 #else
 	glPushMatrix(); glLoadIdentity();
-	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
-	glTranslatef((float)X * Geometry::WindowScale(), -(float)Y * Geometry::WindowScale(), 0.0f);
+	glTranslatef(0.0f, static_cast<float>(Geometry::WindowHeight), 0.0f);
+	glTranslatef(static_cast<float>(X) * Geometry::WindowScale(), -static_cast<float>(Y) * Geometry::WindowScale(), 0.0f);
 	glScalef(myScale, myScale, 1.0f);
-	glTranslatef(-(float)X * Geometry::WindowScale(), (float)Y * Geometry::WindowScale(), 0.0f);
+	glTranslatef(-static_cast<float>(X) * Geometry::WindowScale(), static_cast<float>(Y) * Geometry::WindowScale(), 0.0f);
 	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
-	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
 	TransformMatrix matrixScale; glGetFloatv(GL_MODELVIEW_MATRIX, &matrixScale[0]);
 	glPopMatrix();
 #endif
@@ -107,18 +107,18 @@ void EditBox::renderIMCandidateFrame(int X, int Y, unsigned width, unsigned line
 	auto drawLine = [&rect, &spriteNum, X, Y, width, this](int y) -> void {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 		TransformMatrix matrixScale; D3DXMatrixIdentity(&matrixScale); TransformMatrix matrixScale1; D3DXMatrixIdentity(&matrixScale1);
-		D3DXMatrixTranslation(&matrixScale, (float)(-X), (float)(-Y), 0.0f);
+		D3DXMatrixTranslation(&matrixScale, static_cast<float>(-X), static_cast<float>(-Y), 0.0f);
 		D3DXMatrixScaling(&matrixScale1, myScale, myScale, 1.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
-		D3DXMatrixTranslation(&matrixScale1, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
+		D3DXMatrixTranslation(&matrixScale1, static_cast<float>(X), static_cast<float>(Y), 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
 		D3DXMatrixScaling(&matrixScale1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&matrixScale, &matrixScale, &matrixScale1);
 #else
 		glPushMatrix(); glLoadIdentity();
-		glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
-		glTranslatef((float)X * Geometry::WindowScale(), -(float)Y * Geometry::WindowScale(), 0.0f);
+		glTranslatef(0.0f, static_cast<float>(Geometry::WindowHeight), 0.0f);
+		glTranslatef(static_cast<float>(X) * Geometry::WindowScale(), -static_cast<float>(Y) * Geometry::WindowScale(), 0.0f);
 		glScalef(myScale, myScale, 1.0f);
-		glTranslatef(-(float)X * Geometry::WindowScale(), (float)Y * Geometry::WindowScale(), 0.0f);
+		glTranslatef(-static_cast<float>(X) * Geometry::WindowScale(), static_cast<float>(Y) * Geometry::WindowScale(), 0.0f);
 		glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
-		glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+		glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
 		TransformMatrix matrixScale; glGetFloatv(GL_MODELVIEW_MATRIX, &matrixScale[0]);
 		glPopMatrix();
 #endif
@@ -252,7 +252,7 @@ void EditBox::renderIMCandidates(IMStat& imStat, int X, int Y, unsigned& TextID)
 void EditBox::renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol) {
 	ArgbColor color =
 		(imStat.isOpened() ? 0xffcc0000 : 0xff000066) |
-		((int)(sin((double)myTimer.elapsed() / 200000.0) * 96.0 + 120.0) << 8);
+		(static_cast<int>(sin(static_cast<double>(myTimer.elapsed()) / 200000.0) * 96.0 + 120.0) << 8);
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	D3DXVECTOR2 vec[] = {
 		D3DXVECTOR2(Geometry::WindowScale() * (X + cursorcol * myScale * halffontsz), Geometry::WindowScale() * Y),
@@ -267,13 +267,15 @@ void EditBox::renderCursor(IMStat& imStat, int X, int Y, signed& cursorcol) {
 	glPushMatrix(); glLoadIdentity(); // ここで行列をリセットしておかないとおかしな事になる
 	glLineWidth(2);
 	glColor4d(
-		(double)((color & 0x00ff0000) >> 16) / 255.0,
-		(double)((color & 0x0000ff00) >>  8) / 255.0,
-		(double)((color & 0x000000ff)      ) / 255.0,
-		(double)((color & 0xff000000) >> 24) / 255.0);
+		static_cast<double>((color & 0x00ff0000) >> 16) / 255.0,
+		static_cast<double>((color & 0x0000ff00) >>  8) / 255.0,
+		static_cast<double>((color & 0x000000ff)      ) / 255.0,
+		static_cast<double>((color & 0xff000000) >> 24) / 255.0);
 	glBegin(GL_LINES);
-	glVertex2f((X + (float)cursorcol * myScale * (float)halffontsz) * Geometry::WindowScale(), Geometry::WindowHeight - Y * Geometry::WindowScale());
-	glVertex2f((X + (float)cursorcol * myScale * (float)halffontsz) * Geometry::WindowScale(), Geometry::WindowHeight - (Y + int(18.0f * myScale)) * Geometry::WindowScale());
+	glVertex2f((X + static_cast<float>(cursorcol) * myScale * static_cast<float>(halffontsz)) * Geometry::WindowScale(),
+		Geometry::WindowHeight - Y * Geometry::WindowScale());
+	glVertex2f((X + static_cast<float>(cursorcol) * myScale * static_cast<float>(halffontsz)) * Geometry::WindowScale(),
+		Geometry::WindowHeight - (Y + int(18.0f * myScale)) * Geometry::WindowScale());
 	glEnd();
 	glFlush();
 	glPopMatrix();
@@ -406,7 +408,7 @@ void EditBox::KeyboardInput(const XEvent* od)
 		/* Do nothing */
 	} else {
 #ifdef _WIN32
-		WCHAR Letter[2] = {(WCHAR)wParam, 0};
+		WCHAR Letter[2] = {static_cast<WCHAR>(wParam), 0};
 #else /*_WIN32*/
 		volatile char keyStr[256];
 		memset(const_cast<char*>(keyStr), 0, 256);
@@ -479,7 +481,7 @@ EditBox::IMStat::~IMStat() {
 }
 
 bool EditBox::IMStat::isOpened() {
-	return (bool)ImmGetOpenStatus(hIMC);
+	return static_cast<bool>(ImmGetOpenStatus(hIMC));
 }
 
 std::tuple<DWORD, DWORD> EditBox::IMStat::getConvStat() {
@@ -490,7 +492,7 @@ std::tuple<DWORD, DWORD> EditBox::IMStat::getConvStat() {
 
 std::vector<BYTE> EditBox::IMStat::getCompositionString(DWORD InfoType) {
 	std::vector<BYTE> data;
-	DWORD bufSize = (DWORD)ImmGetCompositionString(hIMC, InfoType, nullptr, 0);
+	DWORD bufSize = static_cast<DWORD>(ImmGetCompositionString(hIMC, InfoType, nullptr, 0));
 	if ((bufSize == IMM_ERROR_NODATA) || (bufSize == IMM_ERROR_GENERAL)) {
 		return std::vector<BYTE>();
 	} else if (bufSize) {
@@ -523,20 +525,21 @@ int EditBox::IMStat::getGCSCursorPos() {
 }
 
 std::tuple<unsigned, std::vector<CodeConv::tstring>, unsigned, unsigned> EditBox::IMStat::getCandidateList() {
-	DWORD BufSize = ImmGetCandidateList(hIMC, 0, nullptr, 0);
+	const DWORD BufSize = ImmGetCandidateList(hIMC, 0, nullptr, 0);
 	BYTE* buf = new BYTE[BufSize];
-	if (ImmGetCandidateList(hIMC, 0, reinterpret_cast<LPCANDIDATELIST>(buf), BufSize)) {
-		unsigned selection = reinterpret_cast<LPCANDIDATELIST>(buf)->dwSelection;
-		unsigned count = reinterpret_cast<LPCANDIDATELIST>(buf)->dwCount;
-		unsigned start = reinterpret_cast<LPCANDIDATELIST>(buf)->dwPageStart;
-		unsigned pagesize = reinterpret_cast<LPCANDIDATELIST>(buf)->dwPageSize;
+	auto candidateList = reinterpret_cast<LPCANDIDATELIST>(buf);
+	if (ImmGetCandidateList(hIMC, 0, candidateList, BufSize)) {
+		unsigned selection = candidateList->dwSelection;
+		unsigned count = candidateList->dwCount;
+		unsigned start = candidateList->dwPageStart;
+		unsigned pagesize = candidateList->dwPageSize;
 		std::vector<CodeConv::tstring> candidates; candidates.resize(count);
 		for (unsigned i = 0; i < count; i++)
-			candidates[i] = CodeConv::tstring((LPTSTR)(buf + (reinterpret_cast<LPCANDIDATELIST>(buf)->dwOffset[i])));
-		delete[] buf;
+			candidates[i] = CodeConv::tstring(reinterpret_cast<LPTSTR>(buf + (candidateList->dwOffset[i])));
+		delete[] buf; buf = nullptr; candidateList = nullptr;
 		return std::make_tuple(selection, candidates, start, pagesize);
 	} else {
-		delete[] buf;
+		delete[] buf; buf = nullptr; candidateList = nullptr;
 		return std::make_tuple(0, std::vector<CodeConv::tstring>(), 0, 0);
 	}
 }

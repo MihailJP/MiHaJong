@@ -45,8 +45,8 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	clockPanel = new Clock(this);
 	tileTipReconst = new TileTipReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
-	const unsigned logWidth = (unsigned)floor(0.5f + // VC++2010ではround()が使えない
-		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
+	const unsigned logWidth = static_cast<unsigned>(floor(0.5f + // VC++2010ではround()が使えない
+		static_cast<float>((static_cast<signed>(Geometry::WindowWidth) - static_cast<signed>(Geometry::WindowHeight)) / Geometry::WindowScale() - 36)) / 9u);
 	logWindow = new logwnd::LogWindow(caller->getHWnd(), caller->getDevice(),
 		1100, 100, logWidth, 20);
 	chatInput = new EditBox(caller->getHWnd(), caller->getDevice(),
@@ -155,10 +155,10 @@ void GameTableScreen::cls() {
 		roundColor(), 1.0f, 0); // バッファクリア
 #else
 	glClearColor(
-		(double)((roundColor() & 0x00ff0000) >> 16) / 255.0,
-		(double)((roundColor() & 0x0000ff00) >>  8) / 255.0,
-		(double)((roundColor() & 0x000000ff)      ) / 255.0,
-		(double)((roundColor() & 0xff000000) >> 24) / 255.0);
+		static_cast<double>((roundColor() & 0x00ff0000) >> 16) / 255.0,
+		static_cast<double>((roundColor() & 0x0000ff00) >>  8) / 255.0,
+		static_cast<double>((roundColor() & 0x000000ff)      ) / 255.0,
+		static_cast<double>((roundColor() & 0xff000000) >> 24) / 255.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 #endif
 }
@@ -553,8 +553,8 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 {
 	TableProtoScene::MouseInput(od, X, Y);
 	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
-	const int scaledX = (int)((float)X / Geometry::WindowScale());
-	const int scaledY = (int)((float)Y / Geometry::WindowScale());
+	const int scaledX = static_cast<int>(static_cast<float>(X) / Geometry::WindowScale());
+	const int scaledY = static_cast<int>(static_cast<float>(Y) / Geometry::WindowScale());
 	const int region = whichRegion(scaledX, scaledY);
 	const bool isCursorEnabled = tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled();
 	const bool isValidTile = (region >= 0) && (region < NumOfTilesInHand) &&
@@ -658,9 +658,11 @@ void GameTableScreen::FinishTileChoice() {
 	if (tehaiReconst->isCursorEnabled() && tehaiReconst->isEnabled(tehaiReconst->getTileCursor())) {
 		const Int8ByTile TileCount = utils::countTilesInHand(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
 		if ((tileSelectMode == DiscardTileNum::Ankan) && (TileCount[GameStatus::gameStat()->statOfActive().Hand[tehaiReconst->getTileCursor()].tile] == 1))
-			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(DiscardTileNum::Kakan * DiscardTileNum::TypeStep)); // 加槓の場合
+			ui::UIEvent->set(static_cast<unsigned>(tehaiReconst->getTileCursor()) +
+			static_cast<unsigned>(DiscardTileNum::Kakan * DiscardTileNum::TypeStep)); // 加槓の場合
 		else
-			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // 牌の番号を設定
+			ui::UIEvent->set(static_cast<unsigned>(tehaiReconst->getTileCursor()) +
+			static_cast<unsigned>(tileSelectMode * DiscardTileNum::TypeStep)); // 牌の番号を設定
 	} else {
 		sound::Play(sound::IDs::sndCuohu);
 	}

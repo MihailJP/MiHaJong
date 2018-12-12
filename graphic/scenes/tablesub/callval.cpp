@@ -34,9 +34,9 @@ void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 
 	const std::uint64_t curr = myTimer.elapsed();
 	constexpr int animationLength = 250000;
-	const ArgbColor col = (uint32_t)(
+	const ArgbColor col = static_cast<uint32_t>(
 		(curr >= animationLength) ? 255 :
-		(int)std::pow((float)(curr * 255) / animationLength / 16.0f, 2)) << 24 |
+		static_cast<int>(std::pow(static_cast<float>(curr * 255) / animationLength / 16.0f, 2))) << 24 |
 		(c_val.Mantissa > 0 ? 0x00cc0000 : 0x00ff0000) |
 		(c_val.Mantissa < 0 ? 0x0000cc00 : 0x0000ff00) |
 		0x000000cc;
@@ -52,16 +52,16 @@ void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 		} else { // 青天ルール用
 			switch (c_val.Exponent % 4) {
 			case 0:
-				o << ((int)std::abs(c_val.Mantissa) / 100) << _T('.') << ((int)std::abs(c_val.Mantissa) % 100);
+				o << (static_cast<int>(std::abs(c_val.Mantissa)) / 100) << _T('.') << (static_cast<int>(std::abs(c_val.Mantissa)) % 100);
 				break;
 			case 1:
-				o << ((int)std::abs(c_val.Mantissa) / 10) << _T('.') << ((int)std::abs(c_val.Mantissa) % 10);
+				o << (static_cast<int>(std::abs(c_val.Mantissa)) / 10) << _T('.') << (static_cast<int>(std::abs(c_val.Mantissa)) % 10);
 				break;
 			case 2:
-				o << (int)std::abs(c_val.Mantissa);
+				o << static_cast<int>(std::abs(c_val.Mantissa));
 				break;
 			case 3:
-				o << (int)std::abs(c_val.Mantissa) << _T('0');
+				o << static_cast<int>(std::abs(c_val.Mantissa)) << _T('0');
 				break;
 			}
 			callLen = o.str().size() + 1u;

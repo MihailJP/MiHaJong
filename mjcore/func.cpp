@@ -28,9 +28,9 @@ PlayerRankList calcRank(const GameTable* const gameStat) {
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		rankList[i] = 1;
 		for (int j = 0; j < ACTUAL_PLAYERS; j++) {
-			if ((LargeNum)gameStat->Player[j].PlayerScore > gameStat->Player[i].PlayerScore)
+			if (gameStat->Player[j].PlayerScore > gameStat->Player[i].PlayerScore)
 				rankList[i]++;
-			if (((LargeNum)gameStat->Player[j].PlayerScore == gameStat->Player[i].PlayerScore) &&
+			if ((gameStat->Player[j].PlayerScore == gameStat->Player[i].PlayerScore) &&
 				(i > j)) rankList[i]++; // 同着の場合は起家に近い側が上位
 		}
 	}
@@ -129,7 +129,7 @@ LargeNum BasePoint() {
 
 /* 浮いているか判定する関数 */
 bool isAboveBase(const GameTable* const gameStat, PlayerID player) {
-	return gameStat->Player[player].PlayerScore >= (LargeNum)BasePoint();
+	return gameStat->Player[player].PlayerScore >= BasePoint();
 }
 
 /* 非負整数1桁なら全角・それ以外は半角 */
@@ -246,8 +246,8 @@ bool isRichiReqSatisfied (const GameTable* const gameStat, PlayerID targetPlayer
 	return false;
 #else /* GUOBIAO */
 	bool Flag = true;
-	if (gameStat->Player[targetPlayer].PlayerScore < (LargeNum)1000) Flag = false;
-	else if ((gameStat->Player[targetPlayer].PlayerScore == (LargeNum)1000) &&
+	if (gameStat->Player[targetPlayer].PlayerScore < 1000) Flag = false;
+	else if ((gameStat->Player[targetPlayer].PlayerScore == 1000) &&
 		(RuleData::chkRule("riichi_requisite", "require_1100"))) Flag = false;
 	if (RuleData::chkRule("riichi_requisite", "no")) Flag = true;
 	if (RuleData::chkRule("buttobi_border", "no")) Flag = true;
@@ -262,9 +262,9 @@ bool isDobon (const GameTable* const gameStat, PlayerID targetPlayer) {
 #else /* GUOBIAO */
 	if (!RuleData::chkRuleApplied("buttobi_border"))
 		return false;
-	else if (gameStat->Player[targetPlayer].PlayerScore < (LargeNum)0)
+	else if (gameStat->Player[targetPlayer].PlayerScore < 0)
 		return true;
-	else if ((gameStat->Player[targetPlayer].PlayerScore == (LargeNum)0) &&
+	else if ((gameStat->Player[targetPlayer].PlayerScore == 0) &&
 		RuleData::chkRule("buttobi_border", "nonpositive"))
 		return true;
 	else return false;
@@ -277,19 +277,19 @@ bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer) {
 	return false;
 #else /* GUOBIAO */
 	if (RuleData::chkRule("teppen", "50000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= (LargeNum)50000))
+		(gameStat->Player[targetPlayer].PlayerScore >= 50000))
 		return true;
 	else if (RuleData::chkRule("teppen", "55000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= (LargeNum)55000))
+		(gameStat->Player[targetPlayer].PlayerScore >= 55000))
 		return true;
 	else if (RuleData::chkRule("teppen", "60000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= (LargeNum)60000))
+		(gameStat->Player[targetPlayer].PlayerScore >= 60000))
 		return true;
 	else if (RuleData::chkRule("teppen", "65000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= (LargeNum)65000))
+		(gameStat->Player[targetPlayer].PlayerScore >= 65000))
 		return true;
 	else if (RuleData::chkRule("teppen", "70000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= (LargeNum)70000))
+		(gameStat->Player[targetPlayer].PlayerScore >= 70000))
 		return true;
 	else return false;
 #endif /* GUOBIAO */

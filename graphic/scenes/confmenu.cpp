@@ -223,12 +223,12 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 		assert(itemsPerPage() > 0);
 		if ((region >= 0) && (region <= static_cast<int>(itemsPerPage() - 1))) {
 			setcursor();
-			if ((LONG)od->dwData > 0) BtnEvent_Content_Roll_Up();
-			else if ((LONG)od->dwData < 0) BtnEvent_Content_Roll_Down();
+			if (static_cast<LONG>(od->dwData) > 0) BtnEvent_Content_Roll_Up();
+			else if (static_cast<LONG>(od->dwData) < 0) BtnEvent_Content_Roll_Down();
 		} else if (region == 40) {
-			if ((LONG)od->dwData > 0)
+			if (static_cast<LONG>(od->dwData) > 0)
 				BtnEvent_Content_Page_Next();
-			else if ((LONG)od->dwData < 0)
+			else if (static_cast<LONG>(od->dwData) < 0)
 				BtnEvent_Content_Page_Prev();
 		}
 		break;

@@ -47,26 +47,26 @@ void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType
 	if (callType == calltext::None) return;
 	const std::uint64_t curr = myTimer.elapsed();
 	constexpr int animationLength = 250000;
-	const float scale = (curr >= animationLength) ? 1.0f : pow((float)(animationLength - (signed)curr) / 2.5e5f + 1.0f, 2);
-	const ArgbColor col = (uint32_t)(
+	const float scale = (curr >= animationLength) ? 1.0f : pow(static_cast<float>(animationLength - static_cast<signed>(curr)) / 2.5e5f + 1.0f, 2);
+	const ArgbColor col = static_cast<uint32_t>(
 		(curr >= animationLength) ? 255 :
-		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2))
+		static_cast<int>(pow(static_cast<float>(curr * 255) / animationLength / 16.0f, 2)))
 		<< 24 | 0x00ffffff;
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix matrix, matrix1;
 	D3DXMatrixIdentity(&matrix); D3DXMatrixIdentity(&matrix1);
-	D3DXMatrixTranslation(&matrix1, (float)(-x), (float)(-y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
+	D3DXMatrixTranslation(&matrix1, static_cast<float>(-x), static_cast<float>(-y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1, scale, scale, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixTranslation(&matrix1, (float)x, (float)y, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
+	D3DXMatrixTranslation(&matrix1, static_cast<float>(x), static_cast<float>(y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 #else
 	glPushMatrix(); glLoadIdentity();
-	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
-	glTranslatef((float)x * Geometry::WindowScale(), -(float)y * Geometry::WindowScale(), 0.0f);
+	glTranslatef(0.0f, static_cast<float>(Geometry::WindowHeight), 0.0f);
+	glTranslatef(static_cast<float>(x) * Geometry::WindowScale(), -static_cast<float>(y) * Geometry::WindowScale(), 0.0f);
 	glScalef(scale, scale, 1.0f);
-	glTranslatef(-(float)x * Geometry::WindowScale(), (float)y * Geometry::WindowScale(), 0.0f);
+	glTranslatef(-static_cast<float>(x) * Geometry::WindowScale(), static_cast<float>(y) * Geometry::WindowScale(), 0.0f);
 	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
-	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
 	TransformMatrix matrix; glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);
 	glPopMatrix();
 #endif
@@ -106,9 +106,9 @@ void TableSubsceneCallFadeProto::ShowCallMsg(PlayerID player, calltext::CallType
 	if (callType == calltext::None) return;
 	const std::uint64_t curr = myTimer.elapsed();
 	constexpr int animationLength = 250000;
-	const ArgbColor col = (uint32_t)(
+	const ArgbColor col = static_cast<uint32_t>(
 		(curr >= animationLength) ? 255 :
-		(int)pow((float)(curr * 255) / animationLength / 16.0f, 2))
+		static_cast<int>(pow(static_cast<float>(curr * 255) / animationLength / 16.0f, 2)))
 		<< 24 | 0x00ffffff;
 	RECT rect = {
 		0  , 96 * (callType    ),

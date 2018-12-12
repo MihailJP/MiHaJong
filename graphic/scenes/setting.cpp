@@ -39,7 +39,7 @@ void PreferenceConfigScene::itemText(unsigned prmID, const CodeConv::tstring& pr
 	const int xPos = (prmID / 20 * 720 + 50), yPos = 135 + (prmID % 20) * 40;
 	myTextRenderer->NewText(prmID * 3, prmName,
 		adjX(xPos), yPos, 1.0f,
-		WidthRate() * ((itmNameCols <= 8) ? 1.0f : 8.0f / (float)itmNameCols),
+		WidthRate() * ((itmNameCols <= 8) ? 1.0f : 8.0f / static_cast<float>(itmNameCols)),
 		menuColor | baseColor);
 	myTextRenderer->NewText(prmID * 3 + 1, _T(":"),
 		adjX(xPos + 144), yPos, 1.0, WidthRate(), menuColor | baseColor);
@@ -216,7 +216,7 @@ void PreferenceConfigScene::setVolume() {
 	using namespace sound;
 	auto getvolume = [this] (unsigned index) -> double {
 		int volperc = ((20 + prefstat[index]) % 21) * 5;
-		return (double)volperc / 100.0;
+		return static_cast<double>(volperc) / 100.0;
 	};
 	for (unsigned i = IDs::BgmStart; i <= IDs::BgmEnd; i++)
 		SetVolume(i, getvolume(5));

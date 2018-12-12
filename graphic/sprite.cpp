@@ -27,18 +27,18 @@ SpriteRenderer::~SpriteRenderer() {
 
 /* インスタンス化 */
 SpriteRenderer* SpriteRenderer::instantiate(DevicePtr device) {
-	if (renderer.find((intptr_t)device) != renderer.end()) { // デバイスに対応するスプライトがすでにある
-		return renderer[(intptr_t)device];
+	if (renderer.find(reinterpret_cast<intptr_t>(device)) != renderer.end()) { // デバイスに対応するスプライトがすでにある
+		return renderer[reinterpret_cast<intptr_t>(device)];
 	} else { // デバイスに対応するスプライトは初回の使用(初期化が必要)
-		renderer[(intptr_t)device] = new SpriteRenderer(device);
-		return renderer[(intptr_t)device];
+		renderer[reinterpret_cast<intptr_t>(device)] = new SpriteRenderer(device);
+		return renderer[reinterpret_cast<intptr_t>(device)];
 	}
 }
 
 void SpriteRenderer::delInstance(DevicePtr device) {
-	if (renderer.find((intptr_t)device) != renderer.end()) {
-		delete renderer[(intptr_t)device];
-		renderer.erase((intptr_t)device);
+	if (renderer.find(reinterpret_cast<intptr_t>(device)) != renderer.end()) {
+		delete renderer[reinterpret_cast<intptr_t>(device)];
+		renderer.erase(reinterpret_cast<intptr_t>(device));
 	}
 }
 
@@ -96,14 +96,14 @@ void SpriteRenderer::ShowSprite(
 
 	glBegin(GL_QUADS);
 	glColor4d(
-		(double)((color & 0x00ff0000) >> 16) / 255.0,
-		(double)((color & 0x0000ff00) >>  8) / 255.0,
-		(double)((color & 0x000000ff)      ) / 255.0,
-		(double)((color & 0xff000000) >> 24) / 255.0);
-	constexpr double lpos = (double)txRect->left   / (double)getTextureWidth (nullptr, texture);
-	constexpr double rpos = (double)txRect->right  / (double)getTextureWidth (nullptr, texture);
-	constexpr double tpos = (double)txRect->top    / (double)getTextureHeight(nullptr, texture);
-	constexpr double bpos = (double)txRect->bottom / (double)getTextureHeight(nullptr, texture);
+		static_cast<double>((color & 0x00ff0000) >> 16) / 255.0,
+		static_cast<double>((color & 0x0000ff00) >>  8) / 255.0,
+		static_cast<double>((color & 0x000000ff)      ) / 255.0,
+		static_cast<double>((color & 0xff000000) >> 24) / 255.0);
+	constexpr double lpos = static_cast<double>(txRect->left  ) / static_cast<double>(getTextureWidth (nullptr, texture));
+	constexpr double rpos = static_cast<double>(txRect->right ) / static_cast<double>(getTextureWidth (nullptr, texture));
+	constexpr double tpos = static_cast<double>(txRect->top   ) / static_cast<double>(getTextureHeight(nullptr, texture));
+	constexpr double bpos = static_cast<double>(txRect->bottom) / static_cast<double>(getTextureHeight(nullptr, texture));
 	glTexCoord2d(lpos, bpos); glVertex2i(X         - CenterX, Geometry::WindowHeight - (Y + Height - CenterY));
 	glTexCoord2d(rpos, bpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y + Height - CenterY));
 	glTexCoord2d(rpos, tpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y          - CenterY));

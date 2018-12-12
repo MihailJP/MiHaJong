@@ -36,7 +36,7 @@ void RuleConfigScene::itemText(unsigned prmID, const CodeConv::tstring& prmName,
 	ArgbColor menuColor = ((menuCursor % RULES_IN_PAGE == prmID) && (buttonCursor == -1)) ? 0xff000000 : 0x7f000000;
 	myTextRenderer->NewText(prmID * 3, prmName,
 		adjX(prmID / 20 * 720 + 50), 135 + (prmID % 20) * 40, 1.0f,
-		WidthRate() * ((itmNameCols <= 8) ? 1.0f : 8.0f / (float)itmNameCols),
+		WidthRate() * ((itmNameCols <= 8) ? 1.0f : 8.0f / static_cast<float>(itmNameCols)),
 		menuColor | baseColor);
 	myTextRenderer->NewText(prmID * 3 + 1, _T(":"),
 		adjX(prmID / 20 * 720 + 50 + 144), 135 + (prmID % 20) * 40, 1.0, WidthRate(), menuColor | baseColor);
@@ -131,7 +131,7 @@ void RuleConfigScene::ShowMessageBelow() {
 	unsigned captionCols = strwidth(caption); // 桁数(日本語は2桁)
 	myTextRenderer->NewText(120, caption,
 		adjX(720 - 9 * ((captionCols > 76) ? 76 : captionCols)), 955, 1.0f,
-		(captionCols > 76) ? 76.0f / (float)captionCols * WidthRate() : WidthRate(),
+		(captionCols > 76) ? 76.0f / static_cast<float>(captionCols) * WidthRate() : WidthRate(),
 		((t % 5000000u) < 500000u) ? (55u + ((t % 5000000u) / 2500u)) << 24 | 0x00ffffff : 0xffffffff);
 }
 

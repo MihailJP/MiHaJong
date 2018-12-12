@@ -38,7 +38,7 @@ void ResultScreen::Render() {
 	clearWithGameTypeColor();
 
 	titleRenderer->NewText(0, _T("終　　局"), adjX(272), 60, 1.0f, WidthRate(),
-		(myTimer.elapsed() < 1000000) ? (((unsigned int)(255 - (1000000 - myTimer.elapsed()) / 5000) << 24) | 0x00ffffff) : 0xffffffff);
+		(myTimer.elapsed() < 1000000) ? ((static_cast<unsigned int>(255 - (1000000 - myTimer.elapsed()) / 5000) << 24) | 0x00ffffff) : 0xffffffff);
 	titleRenderer->Render();
 
 	for (int i = (GameStatus::gameStat()->chkGameType(SanmaT) ? 1 : 0); i < Players; ++i)
@@ -161,13 +161,13 @@ void ResultScreen::RankRenderer::RenderRank() {
 
 void ResultScreen::RankRenderer::RenderNameScore() {
 	const uint64_t tempus = myTimer.elapsed();
-	const ArgbColor aColor = (uint32_t)((tempus >= animTime) ? 255 :
-		(255 - (int)(200.0 - ((double)tempus / (double)animTime * 200.0))))
+	const ArgbColor aColor = static_cast<uint32_t>((tempus >= animTime) ? 255 :
+		(255 - static_cast<int>(200.0 - (static_cast<double>(tempus) / static_cast<double>(animTime) * 200.0))))
 		<< 24 | 0x00ffffff;
 	const ArgbColor color = (player != GameStatus::gameStat()->PlayerID) ? 0xffffffff :
 		0xffff0000 |
-		((uint32_t)(200.0 - sin((double)myTimer.elapsed() * M_PI / 500000.0) * 50.0) << 8) |
-		(uint32_t)(200.0 - sin((double)myTimer.elapsed() * M_PI / 500000.0) * 50.0);
+		(static_cast<uint32_t>(200.0 - sin(static_cast<double>(myTimer.elapsed()) * M_PI / 500000.0) * 50.0) << 8) |
+		static_cast<uint32_t>(200.0 - sin(static_cast<double>(myTimer.elapsed()) * M_PI / 500000.0) * 50.0);
 	const CodeConv::tstring nomen(utils::getName(player));
 	const unsigned latitudoNominis = nameRenderer->strWidthByCols(nomen);
 	nameRenderer->NewText(0, nomen, adjX(150), BaseY + 10, 3.0f,
@@ -201,11 +201,11 @@ void ResultScreen::RankRenderer::RenderNameScore() {
 void ResultScreen::RankRenderer::RenderScore() {
 	constexpr unsigned widthLimit = 4u;
 	const uint64_t tempus = myTimer.elapsed();
-	const ArgbColor aColor = (uint32_t)((tempus >= animTime) ? 255 :
-		(255 - (int)(200.0 - ((double)tempus / ((double)animTime / 200.0)))))
+	const ArgbColor aColor = static_cast<uint32_t>((tempus >= animTime) ? 255 :
+		(255 - static_cast<int>(200.0 - (static_cast<double>(tempus) / (static_cast<double>(animTime) / 200.0)))))
 		<< 24 | 0x00ffffff;
 	const float scale = (tempus >= animTime) ? 1.0f :
-		1.0f + pow((float)(animTime - tempus) / (float)animTime * 3.5f, 2);
+		1.0f + pow(static_cast<float>(animTime - tempus) / static_cast<float>(animTime) * 3.5f, 2);
 	const LargeNum point(FinalScoreDat::getData(player));
 	const CodeConv::tstring scoreTxt(point.to_str(_T("+"), _T("△")));
 	const ArgbColor color =

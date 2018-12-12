@@ -102,10 +102,10 @@ void GameTableScreen::ButtonReconst::Render() {
 	if (cursor != CursorDisabled) {
 #include "color.h"
 		Color btnColor; btnColor.rgbaAsOneValue = buttonDat[currentButtonSet][cursor].color;
-		const double Zeit = (double)(myTimer.currTime() % 9000000ULL);
-		btnColor.rgbaAsStruct.r = (unsigned)((double)btnColor.rgbaAsStruct.r * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
-		btnColor.rgbaAsStruct.g = (unsigned)((double)btnColor.rgbaAsStruct.g * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
-		btnColor.rgbaAsStruct.b = (unsigned)((double)btnColor.rgbaAsStruct.b * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
+		const double Zeit = static_cast<double>(myTimer.currTime() % 9000000ULL);
+		btnColor.rgbaAsStruct.r = static_cast<unsigned>(static_cast<double>(btnColor.rgbaAsStruct.r) * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
+		btnColor.rgbaAsStruct.g = static_cast<unsigned>(static_cast<double>(btnColor.rgbaAsStruct.g) * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
+		btnColor.rgbaAsStruct.b = static_cast<unsigned>(static_cast<double>(btnColor.rgbaAsStruct.b) * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
 		buttons->setButton(cursor,
 			(sunkenButton == cursor) ? ButtonPic::sunken : (buttonEnabled[cursor] ? ButtonPic::raised : ButtonPic::clear),
 			scaleToWindow(buttonDat[currentButtonSet][cursor].x),
@@ -140,7 +140,7 @@ void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 void GameTableScreen::ButtonReconst::reconstruct() {
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
 	for (unsigned i = 0; i < btnMAXIMUM; ++i)
-		reconstruct((ButtonID)i);
+		reconstruct(static_cast<ButtonID>(i));
 }
 
 void GameTableScreen::ButtonReconst::ChangeButtonSet(ButtonSet btnSet) {
@@ -325,7 +325,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		this->setSunkenButton(button);
 		for (int i = 0; i < btnMAXIMUM; ++i)
 			if (i != button)
-				this->disable((ButtonID)i);
+				this->disable(static_cast<ButtonID>(i));
 		this->reconstruct();
 		caller->tehaiReconst->enable();
 		for (int i = 0; i < NumOfTilesInHand; ++i) {
@@ -337,7 +337,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
 	sound::Play(sound::IDs::sndButton);
-	if (!this->isEnabled((ButtonID)this->getCursor())) {
+	if (!this->isEnabled(static_cast<ButtonID>(this->getCursor()))) {
 		sound::Play(sound::IDs::sndCuohu);
 	} else if (this->getButtonSet() == btnSetTsumo) {
 		auto isTenpaiTile = [](int i, GameTable* tmpStat) -> bool {

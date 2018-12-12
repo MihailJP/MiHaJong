@@ -93,7 +93,7 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerI
 	for (int suit = 0; suit < TILE_NUMERAL_COLORS; suit++) {
 		unsigned int statcode = 0; unsigned int qDigit = 1;
 		for (int i = 1; i <= 9; i++) {
-			statcode += std::min((int)tileCount[suit * TileSuitStep + i], 4) * qDigit;
+			statcode += std::min(static_cast<int>(tileCount[suit * TileSuitStep + i]), 4) * qDigit;
 			qDigit *= 5;
 		}
 		uint8_t tmpdat = mentsuAnalysisDat[statcode * 4 + ((mode & (3 << (2 * suit))) >> (2 * suit))];
@@ -427,7 +427,7 @@ Shanten ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, Pla
 			WhiteDragon, GreenDragon, RedDragon,
 		};
 		for (int j = 0; j < 7; j++)
-			tileArrange[j] = (TileCode)(i * TileSuitStep + j + 1);
+			tileArrange[j] = static_cast<TileCode>(i * TileSuitStep + j + 1);
 
 		int yakuTileCount = 0;
 		for (int j = 0; j < NumOfTilesInHand; j++) {
